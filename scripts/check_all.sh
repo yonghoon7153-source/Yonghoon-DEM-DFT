@@ -245,7 +245,8 @@ run 'webapp: ca_ext_labels (S1 표지 · 봉인 밖 템플릿)' python3 webapp/t
 #    끔 비트 같음 C0 (기준 d1768cf0c 의 step3_sigma) · PIECE (멤버십 셀 = `_fibre_segment_ijk`) · FA+CJ (S1 face_alpha 와 한 솔브에 같이 = 거부 ·
 #    A · B 합침) · 증서 봉인값 (rtol 1e-12 · ε_I 1e-4) 기계적 재유도.  고치기 전 = 2/22 · 2/11 PASS.  `--quick` = C0 무작위 침대 수를 줄인다.
 run 'carbon_junction (Rint ② S2 · S3 · 시험 먼저)' python3 scripts/test_carbon_junction.py
-run 'step3_conv_cert (STEP3 수렴 증서 · 시험 먼저)' python3 scripts/test_step3_conv_cert.py
+# step3_conv_cert (STEP3 수렴 증서) = 게이트 밖 · 손으로 돌린다 — 10-20 실측 2,305 s (부하 8–12 · 합성 직접해 대조 탐침) 라 매 커밋 게이트에 넣지 않는다.
+#   python3 scripts/test_step3_conv_cert.py   (리뷰 핀 · 판정 런 전 · 수렴 코드를 바꾼 커밋 뒤 한 번)
 #  ★ 2026-10-20 (Rint ② S0 · 설계 v1 §2 · 등록 R §2-1) — 표현 원장 (raster 만 · 솔브 없음): 기하 원시 · 접합 census 미리보기 · 격자 원시 ·
 #    계획 (식 · 해시 · 개정 커밋 대조) · 스키마 (σ · 전류 칸 없음) · 끝-끝 (payload 실물로 생산 raster 입력을 잡는다).  구현 전 = 0/23 PASS.
 run 'ca_s0_census (Rint ② S0 표현 원장 · 시험 먼저)' python3 scripts/test_ca_s0_census.py
