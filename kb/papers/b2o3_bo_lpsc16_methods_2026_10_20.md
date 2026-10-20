@@ -32,8 +32,9 @@ reference 정리 · 정의를 정확하게 · compact) 을 맞췄다 (적용 표
 > ⏩ **정본 편집본은 Docs 문서다**: https://claude.ai/artifact/T1VW5kXxfbi1ToVH7GxyuM
 > (BML 작성 가이드 `Writing_scientific_papers_BML_v1.docx` + 교수님 어록 13 항 + method docx 형식 반영 · 문장별 설명 표 · 참고문헌 15 개 · 원고 숫자 출처 표).
 > 첫 초안 (981 단어) 은 이 파일의 git 이력 (`5fcea55e`) 에 있다. 이 판은 891 단어.
+> **Word 파일**: `kb/papers/b2o3_bo_lpsc16_methods_2026_10_20.docx` — 사용자가 준 method 템플릿 (`method___.docx`) 의 패키지를 그대로 쓰고 본문만 바꿨다: Times New Roman 12 pt · 2 줄 간격 · 첫 줄 들여쓰기 · italic 절 제목 '2.5.' · 인용은 문장부호 뒤 위첨자 번호 · 첨자는 Word 첨자 · 수식 3 개는 Word 수식 개체 (OMML). 이 md 의 [n] 표기는 Word 에서 위첨자다.
 
-**2.X. Computational methods**
+**2.5. Computational Methods**
 
 First-principles density functional theory (DFT) calculations were performed using Quantum ESPRESSO with the Perdew–Burke–Ernzerhof generalized gradient approximation [1,2]. Pseudopotentials from the SSSP efficiency library (ultrasoft for Li, B, P, S, and Cl; projector augmented-wave (PAW) for O) were used with kinetic energy cutoffs of 60 Ry for the wavefunctions and 480 Ry for the charge density [3]. The Brillouin zone was sampled with Γ-centered Monkhorst–Pack grids, and Marzari–Vanderbilt smearing of 0.01 Ry was applied [4]. Ionic positions were relaxed until all force components fell below 10⁻⁴ Ry bohr⁻¹ (10⁻³ Ry bohr⁻¹ for O-LPSC1.6), with a self-consistent field (SCF) convergence threshold of 10⁻⁸ Ry.
 
@@ -59,7 +60,7 @@ E_{\mathrm{BV}} = \left(V_{\mathrm{Li}} - 1\right)^{2}, \quad V_{\mathrm{Li}} = 
 
 The density of states (DOS) and projected DOS (PDOS) of BO-LPSC1.6 were calculated non-self-consistently with the optimized tetrahedron method and projections onto atomic orbitals [10], and were broadened with a 0.05 eV Gaussian for display. Energies were referenced to the valence band maximum (VBM), which was taken from the Kohn–Sham eigenvalues of a fixed-occupation calculation. The electron localization function (ELF) was calculated from the SCF valence density [11], and its value at the bond midpoint was averaged over all bonds of each type (bonds identified within 2.15, 1.9, 2.3, 2.9, and 2.95 Å for B–S, P–O, P–S, Li–S, and Li–Cl, respectively).
 
-Crystal orbital Hamilton population (COHP) analysis [12] was performed with LOBSTER 5.1.1 [13,14]. Because LOBSTER requires PAW wavefunctions, the SCF and non-self-consistent (no symmetry, 960 bands) calculations were repeated on the same structure with PAW datasets from PSlibrary [15], and the wavefunctions were projected onto the pbeVaspFit2015 basis (Li 1s, 2s, 2p; B and O 2s, 2p; P, S, and Cl 3s, 3p), with a charge spilling of 1.19%. Integrated COHP (ICOHP) values up to the Fermi level were averaged over each bond type. Bond lengths were averaged over first-shell pairs in the *V*₀ structures (P–S 1.8–2.5, P–O 1.3–1.9, B–S 1.5–2.2, Li–S 1.9–3.2, and Li–Cl 2.0–3.4 Å).
+Crystal orbital Hamilton population (COHP) analysis [12] was performed with LOBSTER 5.1.1 [13,14]. Because LOBSTER requires PAW wavefunctions, the SCF and non-self-consistent (no symmetry, 960 bands) calculations were repeated on the same structure with PAW datasets from PSlibrary [15], and the wavefunctions were projected onto the pbeVaspFit2015 basis (Li 1*s*, 2*s*, 2*p*; B and O 2*s*, 2*p*; P, S, and Cl 3*s*, 3*p*), with a charge spilling of 1.19%. Integrated COHP (ICOHP) values up to the Fermi level were averaged over each bond type. Bond lengths were averaged over first-shell pairs in the *V*₀ structures (P–S 1.8–2.5, P–O 1.3–1.9, B–S 1.5–2.2, Li–S 1.9–3.2, and Li–Cl 2.0–3.4 Å).
 
 ---
 
@@ -105,7 +106,7 @@ Crystal orbital Hamilton population (COHP) analysis [12] was performed with LOBS
    O 는 우리 세트의 O 가 모두 `O.pbe-n-kjpaw_psl.0.1.UPF` (PAW). 이 조합이 SSSP efficiency 세트와 같다.
    ⇒ 원본 입력의 B·O 두 줄이 `b_pbe_v1.4.uspp…` · `O.pbe-n-kjpaw_psl.0.1…` 이면 본문 그대로 확정.
 2. [5] UMA 저자 18 명 전체 순서 (저널이 전 저자를 요구하면).
-3. 절 번호 `2.X` · 참고문헌 번호를 원고 목록에 합치기 · Word 로 옮긴 뒤 첨자·italic·minus 다시 보기 (BML [3]).
+3. 참고문헌 번호를 원고 목록에 합치기 (Word 파일은 템플릿대로 2.5 절 · 위첨자 인용) · 붙여 넣은 뒤 첨자·italic·minus 다시 보기 (BML [3]).
 
 ## 원고 숫자의 출처 — Methods 와 맞추려면 볼 곳 (판단 없이 위치만)
 
