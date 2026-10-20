@@ -136,12 +136,20 @@ def probe_sigma_table():
     return t
 
 
+def _step3_module(mod):
+    """`step3_sigma` 모듈 (주어지면 그것).  인자 이름과 지역 import 를 한 함수에 묶지 않는다
+    (check_method_discipline 지역 import 그림자 검사)."""
+    if mod is not None:
+        return mod
+    import step3_sigma
+    return step3_sigma
+
+
 def probe_system(sid, sig, vox=PROBE_VOX, s3=None):
     """생산 조립 (`solve_sigma_z`) 이 만든 행렬 L · b · 판 간선을 붙잡는다 (직접해로 푼다 — 그 해가 기준).
     → dict(L, b, Ab, gb, At, gt, phi_direct, idx)."""
     from scipy.sparse.linalg import spsolve
-    if s3 is None:
-        import step3_sigma as s3
+    s3 = _step3_module(s3)
     cap = {}
     old = s3._solve_cg
 
@@ -197,8 +205,7 @@ def junction_variant(sysd, sid, rj_ohm=PROBE_RJ_OHM):
 
 def probe_table(seeds=PROBE_SEEDS, rtols=PROBE_RTOLS, maxiter=PROBE_MAXITER, s3=None):
     """봉인 표 — 행마다 seed · 꼴 · rtol · info · 잔차 · 생산 술어 · σ 오차 (직접해 대비) · 판 전류 불균형 · 증서."""
-    if s3 is None:
-        import step3_sigma as s3
+    s3 = _step3_module(s3)
     rows = []
     old_mi = s3.CG_MAXITER
     s3.CG_MAXITER = int(maxiter)
@@ -214,9 +221,6 @@ def probe_table(seeds=PROBE_SEEDS, rtols=PROBE_RTOLS, maxiter=PROBE_MAXITER, s3=
                     return s3._solve_cg(L_, b_, x0=x0, rtol=rtol)
                 for rt in rtols:
                     it = [0]
-
-                    def _cb(xk):
-                        it[0] += 1
                     phi, info = _cg_count(s3, L, b, rt, it)
                     resid = float(np.linalg.norm(L @ phi - b) / max(np.linalg.norm(b), 1e-30))
                     prod_ok = bool(int(info) == 0 and math.isfinite(resid) and resid <= PROD_RESID_MAX)
