@@ -245,6 +245,15 @@ run 'webapp: ca_ext_labels (S1 표지 · 봉인 밖 템플릿)' python3 webapp/t
 #    끔 비트 같음 C0 (기준 d1768cf0c 의 step3_sigma) · PIECE (멤버십 셀 = `_fibre_segment_ijk`) · FA+CJ (S1 face_alpha 와 한 솔브에 같이 = 거부 ·
 #    A · B 합침) · 증서 봉인값 (rtol 1e-12 · ε_I 1e-4) 기계적 재유도.  고치기 전 = 2/22 · 2/11 PASS.  `--quick` = C0 무작위 침대 수를 줄인다.
 run 'carbon_junction (Rint ② S2 · S3 · 시험 먼저)' python3 scripts/test_carbon_junction.py
+#  ★ 2026-10-20 (Rint ② B6 · 설계 v1 §4-2 · §5-2 · §6 · §7 · 1저자 N1–N18 권고대로) — payload 의 탄소 접합 · SDCP 수정자 배선 · 조합 정책
+#    (face_alpha + cjunc = 거부 · face_alpha / cjunc + rtol = 허용) · 러너 다음 세대 손잡이 · 판정기 소비자 검사 (기본 끔 · 끄면 옛 경로 그대로):
+#    ca_ext_b6 = run_contract 등록 · payload 끝-끝 (고치기 전 1/50 · `--old-scripts DIR` = 끔 비트 대조 B) · 10-20 실측 50 s ·
+#    ca_ext_runner = 러너를 실제로 부른다 (가짜 python3 = 규율 관문 둘만 건너뜀 · payload 실물) · 발사 전 거부 40 + payload 거부 대조 ·
+#    이름 태그 · SKIP 함정 · 규칙 L 격리 (고치기 전 23/114 · `--old-runner PATH` = 끔 경로 NB) · 10-20 실측 92 s ·
+#    ca_ext_verdict = 판정기 (ca_ext_record_ok · p2 ↔ p3ca 섞임 · 증서 없음 = 미게시) · 실물 코호트 (고치기 전 11/31 · `--old-verdict PATH`) · 49 s.
+run 'ca_ext_b6 (Rint ② B6 payload 배선 · 조합 정책 · 시험 먼저)' python3 scripts/test_ca_ext_b6.py
+run 'ca_ext_runner (Rint ② B6 러너 다음 세대 손잡이 · 시험 먼저)' python3 scripts/test_ca_ext_runner.py
+run 'ca_ext_verdict (Rint ② B6 판정기 소비자 검사 · 시험 먼저)' python3 scripts/test_ca_ext_verdict.py
 # step3_conv_cert (STEP3 수렴 증서) = 게이트 밖 · 손으로 돌린다 — 10-20 실측 2,305 s (부하 8–12 · 합성 직접해 대조 탐침) 라 매 커밋 게이트에 넣지 않는다.
 #   python3 scripts/test_step3_conv_cert.py   (리뷰 핀 · 판정 런 전 · 수렴 코드를 바꾼 커밋 뒤 한 번)
 #  ★ 2026-10-20 (Rint ② S0 · 설계 v1 §2 · 등록 R §2-1) — 표현 원장 (raster 만 · 솔브 없음): 기하 원시 · 접합 census 미리보기 · 격자 원시 ·
