@@ -254,6 +254,10 @@ run 'carbon_junction (Rint ② S2 · S3 · 시험 먼저)' python3 scripts/test_
 run 'ca_ext_b6 (Rint ② B6 payload 배선 · 조합 정책 · 시험 먼저)' python3 scripts/test_ca_ext_b6.py
 run 'ca_ext_runner (Rint ② B6 러너 다음 세대 손잡이 · 시험 먼저)' python3 scripts/test_ca_ext_runner.py
 run 'ca_ext_verdict (Rint ② B6 판정기 소비자 검사 · 시험 먼저)' python3 scripts/test_ca_ext_verdict.py
+#  ★ 2026-10-20 (Rint ② 2 일 차 Z1) — 러너 · 판정기 굳히기: SIGMA_FIBRE_BULK (직경 보존 · 손계산 · payload 다시 계산 대조 · 이름 태그) ·
+#    다음 세대 노브 = STEP3_RTOL 필수 (팔 시작 전) · 사슬 env 오염 = 거부 · compare_dirs 의 ca_ext 축 · 판정기 --expect-generation
+#    (고치기 전 17/86 · `--old-scripts DIR` = 끔 경로 ZB) · 10-20 실측 42 s.
+run 'ca_ext_z1 (Rint ② Z1 러너 · 판정기 굳히기 · 시험 먼저)' python3 scripts/test_ca_ext_z1.py
 # step3_conv_cert (STEP3 수렴 증서) = 게이트 밖 · 손으로 돌린다 — 10-20 실측 2,305 s (부하 8–12 · 합성 직접해 대조 탐침) 라 매 커밋 게이트에 넣지 않는다.
 #   python3 scripts/test_step3_conv_cert.py   (리뷰 핀 · 판정 런 전 · 수렴 코드를 바꾼 커밋 뒤 한 번)
 #  ★ 2026-10-20 (Rint ② S0 · 설계 v1 §2 · 등록 R §2-1) — 표현 원장 (raster 만 · 솔브 없음): 기하 원시 · 접합 census 미리보기 · 격자 원시 ·

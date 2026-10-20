@@ -506,6 +506,36 @@ def t_compare():
     axes = V.ca_ext_axes() if hasattr(V, 'ca_ext_axes') else ()
     chk('Z4n 축 이름 = run_contract.CA_EXT_SUBBLOCKS (하위 블록) + ca_ext_protocol_fields (칸) — 같은 원천',
         set(axes) == {f'ca_ext.{k}' for k in RC.CA_EXT_SUBBLOCKS} | set(RC.ca_ext_protocol_fields()), sorted(axes)[:6])
+    #  순수 함수 대조 (ca_ext_contrast) — 실물 매니페스트 (E = 접합 + 수정자) 를 칸 하나씩 바꿔 본다
+    import copy
+    me = V.collect(E)[1]['DBE'][0]['_manifest']
+    fn = getattr(V, 'ca_ext_contrast', None)
+
+    def _mut(f):
+        m = copy.deepcopy(me)
+        f(m['ca_ext'])
+        return m
+
+    def _tol(b):
+        for k in ('tol_ff_um', 'tol_P_um', 'tol_sj_um'):
+            b['cjunc']['protocol'][k] = 0.4
+        b['sdcp_mod']['protocol']['tol_sj_um'] = 0.4
+    mt = _mut(_tol)
+    res = {nm: (fn(me, m, exp) if fn else None) for nm, (m, exp) in {
+        'tol·하위 블록': (mt, {'ca_ext.cjunc'}), 'tol·칸': (mt, {'ca_ext.cjunc.tol_ff_um'}), 'tol·R_j 만': (mt, {'ca_ext.cjunc.R_j_ohm'}),
+        '증거만': (_mut(lambda b: b['cjunc']['evidence']['counts'].update(n_edge=99)), set()),
+        'schema': (_mut(lambda b: b.update(schema='ca-ext-v9')), {'ca_ext.cjunc'}),
+        '사본 칸 · 최상위 등록': (_mut(lambda b: b['cjunc']['protocol'].update(ptfe_stamp='centerline')), {'ptfe_stamp'}),
+        '사본 칸 · 등록 없음': (_mut(lambda b: b['cjunc']['protocol'].update(ptfe_stamp='centerline')), {'sdcp_yield_to_vgcf'})}.items()}
+    chk('Z4o ca_ext_contrast — tol_ff 를 바꾸면 (형제 tol_P · tol_sj · sdcp_mod.tol_sj 가 따라 다르다) 하위 블록 축 · tol_ff 칸 축 = 설명됨 · '
+        'R_j 칸만 = 등록 밖 넷',
+        fn is not None and res['tol·하위 블록'][0] == [] and res['tol·칸'][0] == [] and set(res['tol·R_j 만'][0]) == {
+            'ca_ext.cjunc.tol_ff_um', 'ca_ext.cjunc.tol_P_um', 'ca_ext.cjunc.tol_sj_um', 'ca_ext.sdcp_mod.tol_sj_um'},
+        {k: res[k] for k in ('tol·하위 블록', 'tol·칸', 'tol·R_j 만')} if fn else None)
+    chk('Z4p 증거만 다름 = 차이 아님 (결과) · schema 다름 = 등록해도 위반 · 사본 칸 (cjunc.protocol.ptfe_stamp) = 최상위 ptfe_stamp 를 '
+        '등록하면 설명 · 아니면 위반', fn is not None and res['증거만'] == ([], set()) and 'ca_ext.schema' in res['schema'][0]
+        and res['사본 칸 · 최상위 등록'][0] == [] and res['사본 칸 · 등록 없음'][0] == ['ca_ext.cjunc.ptfe_stamp'],
+        {k: res[k] for k in ('증거만', 'schema', '사본 칸 · 최상위 등록', '사본 칸 · 등록 없음')} if fn else None)
 
 
 # ═════════════════════════ Z5 — --expect-generation ═════════════════════════

@@ -148,6 +148,11 @@ FIELD_CONTRACT = {
                                      derived_from=('interface_rint_e_ohm_cm2', 'interface_rint_i_ohm_cm2')),
     'interface_rint_e_ohm_cm2': dict(scope='physics', across_dir=True, generation=True),
     'interface_rint_i_ohm_cm2': dict(scope='physics', across_dir=True, generation=True),
+    #  ★ 2026-10-20 (Rint ② Z1 · 설계 v1 §1-2 #1 · #2) — σ_VGCF 의 **출처 기록** (러너 `SIGMA_FIBRE_BULK` · payload `--sigma-vgcf-bulk` ·
+    #    `record` 회계 = 규약 해시 밖).  generation 축: **섞이면 HOLD · 전부 없으면 통과** (옛 payload = 키 없음 = 옛 bulk 100 · override 세대) ·
+    #    두 디렉터리 사이에서도 고정 (FIBRE 감도처럼 bulk 를 바꾸는 대조는 `sigma_vgcf_S_cm,sigma_vgcf_bulk_S_cm` 을 둘 다 등록).
+    'sigma_vgcf_bulk_S_cm':     dict(scope='physics', across_dir=True, generation=True),
+    'sigma_vgcf_rule':          dict(scope='physics', across_dir=True, generation=True),
     # ── 침대 정체성 — 침대 **안**에서만 고정 (FA-06: SBE 에 SDCP 가 없는 것은 정상) ──
     'additive_E_GPa':       dict(scope='bed', across_dir=True, generation=True),
     'input_digest':         dict(scope='bed', across_dir=True, generation=True),
@@ -239,6 +244,104 @@ MANIFEST_DERIVED_OF = {
     'physics_protocol_expected': 'physics_protocol_id',
 }
 
+#: ★ 2026-10-20 (Rint ② Z1 · 설계 v1 §7) — 다음 세대 블록 키 — `compare_dirs` 가 **전용 대조** (`ca_ext_contrast`) 로 본다.
+#   옛 판은 이 둘이 어느 분류에도 없어 다음 세대 두 디렉터리 대조가 `manifest_unswept_keys` 로 늘 HOLD 였다.
+#   · `ca_ext`           = 하위 블록 protocol = 등록 축 (`ca_ext.<하위>` · `ca_ext.<하위>.<칸>`) · evidence = 런 결과 · schema = 같아야 (등록 불가)
+#   · `ca_ext_requested` = 하위 블록 켬의 그림자 (매니페스트마다 `run_contract.ca_ext_record_ok` 가 요청 ↔ 블록을 먼저 대조한다)
+MANIFEST_CA_EXT_KEYS = {
+    'ca_ext': '다음 세대 블록 — protocol = 등록 축 (ca_ext_contrast) · evidence = 런 결과 · schema = 고정',
+    'ca_ext_requested': '하위 블록 켬의 그림자 (validate_contract 의 ca_ext_record_ok 가 블록과 대조)',
+}
+
+
+def ca_ext_axes():
+    """→ `--expect-differ` 가 받는 다음 세대 축 이름 (정렬) — 정본 = `run_contract.CA_EXT_SUBBLOCKS` (하위 블록) ·
+    `run_contract.ca_ext_protocol_fields()` (protocol 칸 'ca_ext.<하위>.<칸>') · 사본 없음."""
+    return tuple(sorted({f'ca_ext.{k}' for k in _RC.CA_EXT_SUBBLOCKS} | set(_RC.ca_ext_protocol_fields())))
+
+
+def _ca_ext_protocols(man):
+    """매니페스트 → {하위 블록: protocol} (블록이 없으면 빈 dict · schema 칸 제외)."""
+    blk = man.get('ca_ext') if isinstance(man, dict) and isinstance(man.get('ca_ext'), dict) else {}
+    return {k: (v.get('protocol') if isinstance(v, dict) else None) for k, v in blk.items() if k != 'schema'}
+
+
+def _ca_ext_axis_value(man, name):
+    """다음 세대 축 이름 → 그 매니페스트의 값 (정규 직렬 · 없으면 None) — 파생 id 차이를 등록 축으로 설명할 때 쓴다."""
+    parts = str(name).split('.')
+    p = _ca_ext_protocols(man)
+    if len(parts) == 2:
+        return _canon(p[parts[1]]) if parts[1] in p else None
+    if len(parts) == 3 and isinstance(p.get(parts[1]), dict) and parts[2] in p[parts[1]]:
+        return _canon(p[parts[1]][parts[2]])
+    return None
+
+
+def _row_axis(row, name):
+    """판정기 행 → 등록 축 값 (`ca_ext.*` = 행의 raw 매니페스트 블록에서 · 그 밖 = 행 필드)."""
+    if isinstance(name, str) and name.startswith('ca_ext.'):
+        return _ca_ext_axis_value(row.get('_manifest') or {}, name)
+    return row.get(name)
+
+
+def _ca_ext_siblings(field):
+    """protocol 칸 → 같은 payload 플래그가 **함께** 정하는 칸 (자기 포함 · 정본 = `CLI_ACCOUNTING` 의 protocol_ext 묶음 —
+    예: `--step3-cjunc-tol-ff-um` → tol_ff · tol_P · tol_sj · sdcp_mod.tol_sj).  등록한 칸의 형제가 따라 다른 것은 위반이 아니다."""
+    out = {field}
+    for _o, (_c, _f) in _RC.CLI_ACCOUNTING.items():
+        if _c == 'protocol_ext' and _f and field in _f:
+            out |= set(_f)
+    return out
+
+
+def ca_ext_contrast(man_a, man_b, expect_differ):
+    """두 매니페스트의 다음 세대 블록 차이 → `(등록 밖 차이 [이름], 실제로 다른 등록 축 {이름})`.
+
+    ★ 설명되는 차이: ① 하위 블록이 한쪽에만 = `ca_ext.<하위>` 를 등록했을 때만 (칸 등록으로는 안 된다 — 켜고 끔은 블록 축)
+      ② protocol 칸 = `ca_ext.<하위>` · `ca_ext.<하위>.<칸>` · 등록한 칸의 CLI 형제 · 같은 이름의 최상위 등록 축 (예: cjunc protocol 의
+      `ptfe_stamp` = 최상위 `ptfe_stamp` 의 사본) · evidence = 런 결과 (면제) · schema 차이 = 늘 위반."""
+    exp = set(expect_differ or ())
+    ma = man_a if isinstance(man_a, dict) else {}
+    mb = man_b if isinstance(man_b, dict) else {}
+    bad, differed = [], set()
+    if isinstance(ma.get('ca_ext'), dict) and isinstance(mb.get('ca_ext'), dict) \
+            and ma['ca_ext'].get('schema') != mb['ca_ext'].get('schema'):
+        bad.append('ca_ext.schema')
+    keys_ok = set()
+    _fields = None
+    for x in exp:
+        if x.startswith('ca_ext.') and x.count('.') == 2:
+            keys_ok |= _ca_ext_siblings(x)
+        elif x.startswith('ca_ext.') and x.count('.') == 1:
+            #  하위 블록 축 = 그 블록의 칸 전부 + 그 칸을 정하는 플래그가 **다른 블록에** 함께 정하는 칸 (예: cjunc tol_ff → sdcp_mod.tol_sj)
+            _fields = _fields if _fields is not None else _RC.ca_ext_protocol_fields()
+            for f in _fields:
+                if f.startswith(x + '.'):
+                    keys_ok |= _ca_ext_siblings(f)
+    pa, pb = _ca_ext_protocols(ma), _ca_ext_protocols(mb)
+    for sub in sorted(set(pa) | set(pb)):
+        ax = f'ca_ext.{sub}'
+        if (sub in pa) != (sub in pb):
+            if ax in exp:
+                differed.add(ax)
+            else:
+                bad.append(ax)
+            continue
+        qa = pa[sub] if isinstance(pa[sub], dict) else {}
+        qb = pb[sub] if isinstance(pb[sub], dict) else {}
+        for k in sorted(set(qa) | set(qb)):
+            if (k in qa) == (k in qb) and _canon(qa.get(k)) == _canon(qb.get(k)):
+                continue
+            kx = f'{ax}.{k}'
+            if ax in exp:
+                differed.add(ax)
+            elif kx in keys_ok or (k in exp and k in FIELD_CONTRACT):
+                if kx in exp:
+                    differed.add(kx)
+            else:
+                bad.append(kx)
+    return bad, differed
+
 
 #: 사전등록 origin factorial — prereg §4 `{0, vox/2}³` (8점).
 #  ★★★ 2026-08-25 (R5-CX-04, Codex 5차) — 옛 게이트는 **존재·유일성·집합일치·개수**만 봤다.
@@ -265,6 +368,8 @@ def manifest_unswept_keys(man_a, man_b):
     ★ 값이 같든 다르든 상관없이 **분류되지 않은 키**를 돌려준다 — 분류를 강제하는 것이
       목적이다.  "지금은 우연히 같다" 는 계약이 아니다."""
     _known = (set(FIELD_CONTRACT) | set(MANIFEST_RESULT_KEYS) | set(MANIFEST_DERIVED_OF)
+              #  ★ Z1 (10-20) — 다음 세대 블록 키 (전용 대조 `ca_ext_contrast`)
+              | set(MANIFEST_CA_EXT_KEYS)
               #  `vox_um` 은 레지스트리에서 `vox` 라는 짧은 이름을 쓴다 (리더가 접는다).
               | {'vox_um', 'origin_shift_um'})
     return sorted(k for k in (set(man_a or {}) | set(man_b or {})) if k not in _known)
@@ -278,6 +383,8 @@ def manifest_raw_diff(man_a, man_b, expect_differ):
     out = []
     for k in sorted(set(man_a or {}) | set(man_b or {})):
         if k in MANIFEST_RESULT_KEYS or k in _exp:
+            continue
+        if k in MANIFEST_CA_EXT_KEYS:                   # ★ Z1 — `ca_ext_contrast` 가 칸 단위로 본다 (통째 비교 = evidence 차이로 늘 HOLD)
             continue
         #  ★ 레지스트리가 **파생**이라고 선언한 필드는 위 `_XDIR_FIELDS` 루프가 이미
         #    정확히 다룬다 (등록 축이 실제로 달라졌을 때만 허용).  여기서 다시 세면
@@ -330,7 +437,9 @@ _GEN_FIELDS_LEGACY = ('sigma_ion_se_S_cm', 'sigma_ion_sdcp_S_cm',
                #  ★ 2026-10-02 (①, CL-81) — 계면 저항 규약 셋 (레지스트리와 같은 집합 유지 = ㊷c).
                'interface_model', 'interface_rint_e_ohm_cm2', 'interface_rint_i_ohm_cm2',
                #  ★ 2026-10-03 (RINT-20) — PTFE 차단 범위 (실물 매니페스트에 있던 미분류 키).
-               'ptfe_block_scope')
+               'ptfe_block_scope',
+               #  ★ 2026-10-20 (Rint ② Z1) — σ_VGCF 출처 기록 (bulk · 직경 보존 식 이름).
+               'sigma_vgcf_bulk_S_cm', 'sigma_vgcf_rule')
 
 #  ⚠ `mpm_seed` 는 **팔마다 달라야 하는 축이 될 수도 있다** (코팅처럼 시딩 자체가 확률적인
 #  경우 = seed 앙상블).  현행 origin 앙상블은 같은 압밀 산물을 재사용하므로 seed 가 고정이고,
@@ -538,7 +647,7 @@ def seal_lines(v):
 
 
 def validate_contract(arms, seed_ensemble=False, require_arms=None,
-                      require_ionic=False, require_digest=False, where=''):
+                      require_ionic=False, require_digest=False, where='', expect_generation=None):
     """`_validate_contract_raw` 에 **어디서 깨졌는지** 접두사를 붙인다.
 
     ⚠ 얇은 껍질인 이유: 사유 문자열이 21곳에서 만들어지므로 각 자리에 접두사를 심으면
@@ -546,14 +655,15 @@ def validate_contract(arms, seed_ensemble=False, require_arms=None,
     _h, _info = _validate_contract_raw(arms, seed_ensemble=seed_ensemble,
                                        require_arms=require_arms,
                                        require_ionic=require_ionic,
-                                       require_digest=require_digest)
+                                       require_digest=require_digest,
+                                       expect_generation=expect_generation)
     if _h and where and _h.get('reason'):
         _h = dict(_h, reason=f'[{where}] ' + _h['reason'])
     return _h, _info
 
 
 def _validate_contract_raw(arms, seed_ensemble=False, require_arms=None,
-                           require_ionic=False, require_digest=False):
+                           require_ionic=False, require_digest=False, expect_generation=None):
     """한 디렉터리의 **실행 계약 검증**.  통과면 `(None, info)` · 위반이면 `(hold, info)`.
 
     ★★★ 왜 떼어냈나 (2026-08-25, Codex 재리뷰 조건 5): 이 검사들이 `verdict()` 안에
@@ -629,6 +739,21 @@ def _validate_contract_raw(arms, seed_ensemble=False, require_arms=None,
                     reason='GENERATION_MIX| 규약 세대 섞임 — '
                            + ' · '.join(f'{_g} {len(_v)}팔 ({_v[0]} …)' for _g, _v in sorted(_gens.items()))
                            + ' — 현 세대 (p2) 와 다음 세대 (p3ca · ca_ext 블록) 팔은 한 판정에 섞을 수 없다 (설계 v1 §7)'), info
+    #  ★★ 2026-10-20 (Rint ② Z1 · 설계 v1 §7 네 번째 방어) — **등록 세대를 기대값으로 받는다** (`--expect-generation`).
+    #    섞임 검사 (위) 는 코호트 전체가 **같이** 다른 세대면 못 잡는다 — 다음 세대로 돌라고 한 런이 노브가 조용히 빠져 전부 p2 로
+    #    나오거나 (2026-09-02 의 "읽지 않는 축" 부류) 그 반대.  다시 계산한 id 의 접두 (`p2-` · `p3ca-`) 로 센다 · `unknown:*` = 기대 세대가 아니다.
+    #    기대가 없으면 (기본) 이 검사는 돌지 않는다 = 옛 동작 그대로.
+    if expect_generation is not None:
+        _ge = [(_r['file'], str(_RC.physics_protocol_id(_r.get('_manifest') or {})))
+               for _k in arms for _r in arms[_k]]
+        _off = [(_f, _p) for _f, _p in _ge if not _p.startswith(f'{expect_generation}-')]
+        if _off or not _ge:
+            _seen = sorted({_p.split('-', 1)[0] if not _p.startswith('unknown:') else _p for _f, _p in _ge})
+            return dict(decision='HOLD', hold_code='GENERATION_EXPECT', expected_generation=expect_generation,
+                        off_generation=[_f for _f, _p in _off],
+                        reason=(f'GENERATION_EXPECT| 기대 세대 {expect_generation} 인데 ' + (
+                                f'다른 세대 팔 {len(_off)}개 ({_off[0][0]}: {_off[0][1]}) — 이 코호트의 세대 = {_seen}'
+                                if _off else '팔이 없다') + ' — 등록한 세대로 돌지 않은 코호트는 판정하지 않는다 (설계 v1 §7 네 번째 방어)')), info
     #  ★★ 2026-08-19 (A5) — 세대 혼합 게이트.  **고정-인자 검사보다 먼저** 돈다: 기록이 있는
     #    팔과 없는 팔이 섞이면 아래 "다르면 HOLD" 는 None 을 건너뛰어 **통과시켜 버리기** 때문이다.
     _gen_ex = {_SEED_FIELD} if seed_ensemble else set()
@@ -980,7 +1105,7 @@ def _validate_contract_raw(arms, seed_ensemble=False, require_arms=None,
 
 
 def verdict(arms, seed_ensemble=False, require_arms=None, require_ionic=False,
-            require_digest=False):
+            require_digest=False, expect_generation=None):
     """prereg §5 판정.  **순서를 바꾸지 말 것.**
 
     `seed_ensemble=True` 는 **`mpm_seed` 하나만** 고정 인자에서 면제한다 (코팅처럼 시딩
@@ -996,7 +1121,8 @@ def verdict(arms, seed_ensemble=False, require_arms=None, require_ionic=False,
     _hold, _info = validate_contract(arms, seed_ensemble=seed_ensemble,
                                      require_arms=require_arms,
                                      require_ionic=require_ionic,
-                                     require_digest=require_digest)
+                                     require_digest=require_digest,
+                                     expect_generation=expect_generation)
     out.update(_info)
     if _hold:
         return dict(out, **_hold)
@@ -1100,6 +1226,9 @@ def _selftest():
                 interface_model='r1-phase-boundary-series',
                 interface_rint_e_ohm_cm2={'AM_S|VGCF': 1e-3},
                 interface_rint_i_ohm_cm2={'SDCP|SE': 2.5e-2},
+                #  ★ 2026-10-20 (Z1) — σ_VGCF 출처 기록 둘 (generation 축 · 안 실으면 ㊷a ⓒ 가 검증 못 한다 · 값 = 옛 bulk 100 · vox 0.15 꼴)
+                sigma_vgcf_bulk_S_cm=100.0,
+                sigma_vgcf_rule='diameter_preserving:harmonic:phase=2:d_ref_um=0.15:round=6g',
                 sigma_am_s_S_cm=0.010, sigma_am_p_S_cm=0.005, cam='nmc811',
                 temp_c=25.0, ea_ion_ev=0.29, mpm_seed=3,
                 se_E_GPa=1.53, se_nu=0.49, se_sigma_y_GPa=0.30,
@@ -2638,7 +2767,7 @@ def _canon(v):
     return json.dumps(v, sort_keys=True) if isinstance(v, (dict, list)) else v
 
 
-def compare_dirs(dir_a, dir_b, expect_differ):
+def compare_dirs(dir_a, dir_b, expect_differ, expect_generation=None):
     """두 디렉터리를 **한 축만 다른 대조쌍**으로 검증하고 이득 감소율을 낸다.
 
     ★★ 왜 (2026-08-20, CL-45): 감소율은 **두 디렉터리를 빼서** 나오는데, 판정기의 고정-인자
@@ -2666,6 +2795,12 @@ def compare_dirs(dir_a, dir_b, expect_differ):
         _h, _ = validate_contract(_ar, where=f'디렉터리 {_tag}')
         if _h:
             return dict(out, **_h)
+    #  ★ Z1 (10-20) — 등록 세대 기대 (`--expect-generation`) 는 두 디렉터리에 같이 건다 (p2 ↔ p3ca 대조는 기대 없이 돈다).
+    if expect_generation is not None:
+        for _tag, _ar in (('A', arms_a), ('B', arms_b)):
+            _h, _ = validate_contract(_ar, where=f'디렉터리 {_tag}', expect_generation=expect_generation)
+            if _h:
+                return dict(out, **_h)
     pairs, differed = [], set()
     for bed in ('SBE', 'DBE'):
         ka = {tuple(round(float(x), 9) for x in (r.get('origin_shift_um') or [])): r
@@ -2694,6 +2829,16 @@ def compare_dirs(dir_a, dir_b, expect_differ):
                                 reason=f'{bed} {key} 의 `{fld}` 가 두 디렉터리에서 다르다 '
                                        f'({ra[fld]} vs {rb[fld]}) — **같은 침대가 아니다**.  '
                                        f'감소율은 침대가 같을 때만 뜻이 있다')
+            #  ★★ 2026-10-20 (Rint ② Z1 · 설계 v1 §7) — 다음 세대 블록 `ca_ext` 는 **하위 블록 · 칸 단위** 로 본다 (등록 축 =
+            #    `ca_ext.<하위>` · `ca_ext.<하위>.<칸>` — 정본 run_contract) · evidence = 런 결과 · 등록 밖 차이 = HOLD.
+            #    ⚠ 레지스트리 루프보다 **먼저** — 거기서는 파생 id 차이로만 서서 어느 칸이 등록 밖인지 말하지 못한다.
+            _cad, _cdf = ca_ext_contrast(ra.get('_manifest') or {}, rb.get('_manifest') or {}, expect_differ)
+            if _cad:
+                return dict(out, decision='HOLD', hold_code='CA_EXT_UNREGISTERED',
+                            reason=f'{bed} {key} 에서 다음 세대 블록 `ca_ext` 의 등록 밖 차이 {_cad[:8]} — 대조쌍은 '
+                                   f'`{sorted(expect_differ)}` **만** 달라야 한다 (하위 블록 켬 · 끔 = `ca_ext.<하위>` 축 · '
+                                   f'protocol 칸 = `ca_ext.<하위>.<칸>` · evidence 는 결과라 면제)')
+            differed |= _cdf
             #  ★★ 2026-08-25 (CDXR3-5) — **`_XDIR_FIELDS`** 를 쓴다.  옛 판은
             #    `_FIXED_FIELDS` 만 봐서 세대 인자(σ_AM·σ_ion·온도·침대 E)가 두 디렉터리
             #    사이에서 **자유롭게 달라져도 `measured`** 를 냈다 (Codex 실측).
@@ -2711,7 +2856,8 @@ def compare_dirs(dir_a, dir_b, expect_differ):
                     #    그 부모 중 등록 축이 실제로 달라졌을 때만 허용한다.  'PROTOCOL_FIELDS' 는 종전대로.
                     _par = (list(expect_differ) if _dfrom == 'PROTOCOL_FIELDS'
                             else [x for x in _dfrom if x in expect_differ])
-                    if any(_canon(ra.get(_x)) != _canon(rb.get(_x)) for _x in _par):
+                    #  ★ Z1 (10-20) — 등록 축 값은 `_row_axis` 로 (다음 세대 축 `ca_ext.*` 는 행 필드가 아니라 raw 매니페스트 블록에 있다)
+                    if any(_canon(_row_axis(ra, _x)) != _canon(_row_axis(rb, _x)) for _x in _par):
                         continue
                     return dict(out, decision='HOLD',
                                 reason=f'{bed} {key} 에서 파생 필드 `{fld}` 가 다른데 등록 축 '
@@ -2843,7 +2989,14 @@ if __name__ == '__main__':
                          '(CL-44/CL-45 류).  `--expect-differ` 로 다를 축을 명시해야 한다')
     ap.add_argument('--expect-differ', default='',
                     help='대조쌍에서 **다를 것으로 등록된** 인자, 쉼표 구분 '
-                         '(예: sdcp_yield_to_vgcf).  그 밖이 다르면 HOLD, 그것이 같아도 HOLD')
+                         '(예: sdcp_yield_to_vgcf · 다음 세대 = ca_ext.cjunc · ca_ext.cjunc.R_j_ohm).  '
+                         '그 밖이 다르면 HOLD, 그것이 같아도 HOLD')
+    #  ★ 2026-10-20 (Rint ② Z1 · 설계 v1 §7 네 번째 방어) — 코호트의 **등록 세대** 를 선언한다 (다시 계산한 id 접두 · 다르면 HOLD).
+    ap.add_argument('--expect-generation', default=None, choices=(_RC.PROTOCOL_SCHEMA, _RC.CA_EXT_PREFIX),
+                    help=f'코호트 전체의 규약 세대를 선언 ({_RC.PROTOCOL_SCHEMA} = 현 세대 · {_RC.CA_EXT_PREFIX} = 다음 세대 ca_ext) — '
+                         '다시 계산한 physics_protocol_id 의 접두가 다른 팔 (unknown:* 포함) 이 하나라도 있으면 HOLD '
+                         '(GENERATION_EXPECT).  판정 · --seal-only · --compare-dir (두 디렉터리 모두) 에서만 — '
+                         '--scan · --collect-only 와 함께 = 거부 (판정이 없다)')
     a = ap.parse_args()
     if a.selftest:
         raise SystemExit(_selftest())
@@ -2858,6 +3011,9 @@ if __name__ == '__main__':
         raise SystemExit(f'모드는 하나만 쓸 수 있다 (받은 것: {" ".join(_modes)}).  '
                          f'봉인은 결과를 보지 않는 검사이고 나머지는 결과를 내는 것이다 — '
                          f'섞으면 봉인이 우회된다 (M-R3-01)')
+    if a.expect_generation is not None and (a.scan or a.collect_only):
+        ap.error(f'--expect-generation {a.expect_generation} 은 판정 · --seal-only · --compare-dir 에서만 뜻이 있다 '
+                 f'(--scan · --collect-only 는 판정을 하지 않는다 — 조용한 no-op 금지)')
     if a.scan:
         _rows = scan(os.path.expanduser(a.scan))
         if not _rows:
@@ -2878,9 +3034,10 @@ if __name__ == '__main__':
         if not _exp:
             raise SystemExit('`--expect-differ` 가 비었다 — 무엇이 달라야 하는지 **먼저 등록**해야 '
                              '"그 밖은 같다" 를 검사할 수 있다 (fail-closed)')
-        _bad = _exp - set(_FIXED_FIELDS)
+        #  ★ Z1 (10-20) — 다음 세대 축 (`ca_ext.<하위>` · `ca_ext.<하위>.<칸>` · 정본 run_contract) 도 등록할 수 있다.
+        _bad = _exp - set(_FIXED_FIELDS) - set(ca_ext_axes())
         if _bad:
-            raise SystemExit(f'알 수 없는 인자 {sorted(_bad)} — 가능: {list(_FIXED_FIELDS)}')
+            raise SystemExit(f'알 수 없는 인자 {sorted(_bad)} — 가능: {list(_FIXED_FIELDS)} + 다음 세대 {list(ca_ext_axes())}')
         #  ★★★ 2026-08-25 (R3-CX-06) — **파생 필드는 실험 축이 아니다.**  Codex 실측:
         #    raw 축은 그대로 두고 stored id 만 바꿔 `--expect-differ physics_protocol_id`
         #    로 주면 `measured` 가 났다.  id 는 raw 축의 해시이므로 그것을 "바꾼" 실험은
@@ -2890,7 +3047,7 @@ if __name__ == '__main__':
             raise SystemExit(f'`--expect-differ` 에 파생 필드 {_der} 는 쓸 수 없다 — '
                              f'raw 축의 해시이지 독립 축이 아니다.  바꾸려는 raw 축을 '
                              f'직접 등록할 것 (R3-CX-06)')
-        c = compare_dirs(a.dir, a.compare_dir, _exp)
+        c = compare_dirs(a.dir, a.compare_dir, _exp, expect_generation=a.expect_generation)
         print(f'\n══ 대조쌍 검증 ══\n  결정: **{c["decision"]}**\n  근거: {c["reason"]}')
         if c['decision'] == 'measured':
             print(f'\n  A (대조)   비 = {c["ratio_a"]:.6f}   G = {c["gain_a"]:+.5f}  '
@@ -2933,13 +3090,14 @@ if __name__ == '__main__':
         raise SystemExit(0)
     if a.seal_only:
         _v = verdict(arms, seed_ensemble=a.seed_ensemble, require_arms=a.require_arms,
-                     require_ionic=a.require_ionic, require_digest=a.require_digest)
+                     require_ionic=a.require_ionic, require_digest=a.require_digest,
+                     expect_generation=a.expect_generation)
         _ok, _lines = seal_lines(_v)
         print('\n'.join(_lines))
         raise SystemExit(0 if _ok else 1)
     v = verdict(arms, seed_ensemble=a.seed_ensemble,
                 require_arms=a.require_arms, require_ionic=a.require_ionic,
-                require_digest=a.require_digest)
+                require_digest=a.require_digest, expect_generation=a.expect_generation)
     #  ★ 2026-08-31 — `hold_code` 를 **출력에 싣는다.**  이전에는 사람이 읽는 `reason` 만
     #    나가서, 기계(축약기·패키지 검사기)가 "어느 사유로 막혔는지" 를 stdout 에서
     #    **읽을 수 없었다** — 실측: 진단 tree 격리를 확인하려는 두 검사가 사유 문자열을
