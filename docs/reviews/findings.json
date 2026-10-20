@@ -12029,14 +12029,14 @@
       "title": "조인 정수 토큰 정규식 `\\d` 가 전각 숫자 (`１`) 를 받는다 — e3 정확 정수 검사가 ASCII 숫자만이라는 뜻과 다르다",
       "severity": "P3",
       "status": "claimed_fixed",
-      "note": "10-20 RIMPR 수정 에이전트 보고 (고치지 않음) · 자리 scripts/rint_iface_join.py `_INT_RE` · 생산 덤프 (ASCII %g) 무영향 · 진단 관문 완결성 (P3).  ★ 10-20 Codex 재확인 (핀 2b9efa253) §4: 원자 ID · type · step · count · 접촉 ID · scaffold type 을 전각으로 바꾼 합성 입력 = 조인 PASS / 정량 ACCEPT · 입자 지문 · atom id 대응은 ASCII 와 같음 (실수 열 전각은 %g 규약으로 거부) — *ASCII 생산 덤프 지원* 범위를 명시하고 open 을 유지하면 별도 보강으로 미룰 수 있다 (진단 · 개발 범위 조건부 · 무제한 형식 지원 · 정량 생산 허가로 읽지 않음 · verified / closed 로 바꾸지 않음) · ASCII 0 앞자리 정규화 때문에 긴 유니코드 0 덧붙임은 수치가 같아도 거부될 수 있다 (같은 어휘 계약 · 증거 notes/numeric.md) · 우리 트리 재현 (10-20) = 판정값 차이 0 · ⬜ 수정 계획 Q4 = docs/reviews/rimprr_fix_plan_20261020.md (1저자 비준 대기).  ✅ 10-20 수정 (1저자 *\"권고대로해\"* = 수정 계획 Q4 (가) · 시험 먼저 `12d894c09` → 수정 `a2cfd0365`): `_INT_RE` 의 `\\d` → `[0-9]` — 전각 · 아라비아-인도 숫자 = int_token (e3 정확 정수 = ASCII 숫자만 · 생산 덤프 ASCII %g 무영향 · ASCII 부호 · 앞 0 (`+100` · `000100` · `-0`) = PASS 그대로).  시험 scripts/test_rint_g2_join.py J14 (e3 정수 위치 아홉 하나씩 · 아라비아-인도 원자 id · 전부 = 11 건 × 입구 REJECT · 계획 join_gate_failed · 정량 관문 거부 + ASCII 양성 3) — 고치기 전 22 FAIL · 3 PASS → 뒤 25/25.  범위 밖 (관찰 · 고치지 않음): scaffold 머리줄 step 정규식 `_STEP_RE` 도 `\\d` (주석의 step 값 읽기 · 값 대응은 ASCII 와 같음).  ⬜ Codex 재확인 = Rint ② 설계 리뷰 회차 (Q6 (나)).  ★ 10-20 같은 부류 보강 (PB1 · 1저자 *\"다 권고대로 해\"* · 시험 먼저 `af8d1d501` → 수정 `263c9502b` · v5): scaffold 실수 열 (x y z r) = ASCII 고정소수 `[+-]?[0-9]+(\\.[0-9]+)?` — Decimal · float 이 받던 전각 · 아라비아-인도 숫자 · 밑줄 · 지수 꼴 · 유니코드 공백 덧붙임 (`x.strip()` 이 떼던 것) = `numeric_format` (`scaffold_grammar`) + 주석 아닌 줄 어휘 (`scaffold_lexical` · 주석 줄 = 관문 밖 — case15 · kit 머리줄 U+2014 · 한국어) · 빈 줄 · 주석 · 토큰 떼기 = ASCII 공백 · 탭만 · 리포 docs/data 의 scaffold 41 파일 (2,042,453 행) = 고정소수 아닌 토큰 0 · 어휘 0 (생산 `%.6f`) · scaffold 머리줄 step 선언 (위 *\"범위 밖 관찰\"* 의 `_STEP_RE` `\\d`) = 옛 문법 (`\\s` · `\\d` · re.I 유니코드) 으로 찾고 선언 전체가 ASCII (re.ASCII — ſ 접기 없음) 이고 int64 일 때만 값 (`int()` 없음) — `# step １００` · `step<U+3000>100` · `ſtep 100` · `step 100١` (+ 덤프 1001) · 5,000 자리 step = `int_token` (`scaffold_step` · 고치기 전 = G-frame 주장으로 PASS / int() 한도 ValueError) · 시험 J17 (5 × 2 + 양성 2) · J18 (5 × 2 + 양성 2 + 대조 1) — 고치기 전 J17 2/12 · J18 3/13 → 뒤 12/12 · 13/13 · Codex 수치 탐침 113 = v4 대비 판정 뒤집힘 0 (scaffold 지수 꼴 `1e306` 8 · 원자 x 전각 1 = 사유 하나 더).  ⬜ Codex 재확인 = 설계 리뷰 요청서 Part B.",
+      "note": "10-20 RIMPR 수정 에이전트 보고 (고치지 않음) · 자리 scripts/rint_iface_join.py `_INT_RE` · 생산 덤프 (ASCII %g) 무영향 · 진단 관문 완결성 (P3).  ★ 10-20 Codex 재확인 (핀 2b9efa253) §4: 원자 ID · type · step · count · 접촉 ID · scaffold type 을 전각으로 바꾼 합성 입력 = 조인 PASS / 정량 ACCEPT · 입자 지문 · atom id 대응은 ASCII 와 같음 (실수 열 전각은 %g 규약으로 거부) — *ASCII 생산 덤프 지원* 범위를 명시하고 open 을 유지하면 별도 보강으로 미룰 수 있다 (진단 · 개발 범위 조건부 · 무제한 형식 지원 · 정량 생산 허가로 읽지 않음 · verified / closed 로 바꾸지 않음) · ASCII 0 앞자리 정규화 때문에 긴 유니코드 0 덧붙임은 수치가 같아도 거부될 수 있다 (같은 어휘 계약 · 증거 notes/numeric.md) · 우리 트리 재현 (10-20) = 판정값 차이 0 · ⬜ 수정 계획 Q4 = docs/reviews/rimprr_fix_plan_20261020.md (1저자 비준 대기).  ✅ 10-20 수정 (1저자 *\"권고대로해\"* = 수정 계획 Q4 (가) · 시험 먼저 `12d894c09` → 수정 `a2cfd0365`): `_INT_RE` 의 `\\d` → `[0-9]` — 전각 · 아라비아-인도 숫자 = int_token (e3 정확 정수 = ASCII 숫자만 · 생산 덤프 ASCII %g 무영향 · ASCII 부호 · 앞 0 (`+100` · `000100` · `-0`) = PASS 그대로).  시험 scripts/test_rint_g2_join.py J14 (e3 정수 위치 아홉 하나씩 · 아라비아-인도 원자 id · 전부 = 11 건 × 입구 REJECT · 계획 join_gate_failed · 정량 관문 거부 + ASCII 양성 3) — 고치기 전 22 FAIL · 3 PASS → 뒤 25/25.  범위 밖 (관찰 · 고치지 않음): scaffold 머리줄 step 정규식 `_STEP_RE` 도 `\\d` (주석의 step 값 읽기 · 값 대응은 ASCII 와 같음).  ⬜ Codex 재확인 = Rint ② 설계 리뷰 회차 (Q6 (나)).  ★ 10-20 같은 부류 보강 (PB1 · 1저자 *\"다 권고대로 해\"* · 시험 먼저 `af8d1d501` → 수정 `263c9502b` · v5): scaffold 실수 열 (x y z r) = ASCII 고정소수 `[+-]?[0-9]+(\\.[0-9]+)?` — Decimal · float 이 받던 전각 · 아라비아-인도 숫자 · 밑줄 · 지수 꼴 · 유니코드 공백 덧붙임 (`x.strip()` 이 떼던 것) = `numeric_format` (`scaffold_grammar`) + 주석 아닌 줄 어휘 (`scaffold_lexical` · 주석 줄 = 관문 밖 — case15 · kit 머리줄 U+2014 · 한국어) · 빈 줄 · 주석 · 토큰 떼기 = ASCII 공백 · 탭만 · 리포 docs/data 의 scaffold 41 파일 (2,042,453 행) = 고정소수 아닌 토큰 0 · 어휘 0 (생산 `%.6f`) · scaffold 머리줄 step 선언 (위 *\"범위 밖 관찰\"* 의 `_STEP_RE` `\\d`) = 옛 문법 (`\\s` · `\\d` · re.I 유니코드) 으로 찾고 선언 전체가 ASCII (re.ASCII — ſ 접기 없음) 이고 int64 일 때만 값 (`int()` 없음) — `# step １００` · `step<U+3000>100` · `ſtep 100` · `step 100١` (+ 덤프 1001) · 5,000 자리 step = `int_token` (`scaffold_step` · 고치기 전 = G-frame 주장으로 PASS / int() 한도 ValueError) · 시험 J17 (5 × 2 + 양성 2) · J18 (5 × 2 + 양성 2 + 대조 1) — 고치기 전 J17 2/12 · J18 3/13 → 뒤 12/12 · 13/13 · Codex 수치 탐침 113 = v4 대비 판정 뒤집힘 0 (scaffold 지수 꼴 `1e306` 8 · 원자 x 전각 1 = 사유 하나 더).  ⬜ Codex 재확인 = 설계 리뷰 요청서 Part B.  ✅ 10-20 밤 F1 (PB1 사전 공격 리뷰 · 같은 부류): scaffold step 선언이 숫자 뒤 낱말 글자 · 안쪽 점 꼬리를 버리던 것 + `laststep` 왼쪽 경계 = 시험 먼저 037e9f61c (313/324) → 수정 e25038bde (JOIN_VERSION v6 · 324/324).  잔여 (비-낱말 꼬리 · 한정) = 설계 리뷰 요청서 Part B-2 \"한정 더\" ①.",
       "evidence_tests": [
         "scripts/test_rint_g2_join.py J14 (수정 전 코드 = 3/25 → 수정 `a2cfd0365` = 25/25)",
         "docs/reviews/codex_review_rint_join_rimpr_q7_recheck_20261020.md §4 (Q4 — 전각 정수 PASS / ACCEPT · ASCII 범위 명시 + open 유지면 연기 가능)",
         "docs/reviews/codex_rint_join_rimpr_q7_recheck_evidence_20261020/evidence/numeric_current.json (unicode_fullwidth_integers · int_token_boundaries)",
         "scripts/test_rint_g2_join.py J17 · J18 (시험 먼저 `af8d1d501` · 수정 전 코드 = J17 2/12 · J18 3/13 → 수정 `263c9502b` = 12/12 · 13/13)"
       ],
-      "claimed_fixed_sha": "263c9502b"
+      "claimed_fixed_sha": "e25038bde"
     },
     {
       "found_by": "claude 10-20 RIMPR-01 · 02 수정 중 (작업 트리 에이전트 보고 · 고치지 않음)",
@@ -12163,6 +12163,16 @@
       "evidence_tests": [
         "scripts/mpm_webapp_payload.py"
       ]
+    },
+    {
+      "id": "SELF-128",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude 10-20 밤 PB1 사전 공격 리뷰 (독립 에이전트 · diff 만 · 문장 대조 ⑤)",
+      "opened_in": "docs/reviews/codex_rint_carbon_additive_design_request_20261020.md",
+      "title": "PB1 기록 문장의 과장 · 단위 섞임 — 커밋 af8d1d501 메시지 \"fails = the 39 new counterexamples\" (실패 검사 78 = 반례 39 × 2) · 263c9502b 메시지 \"anything else → int_token · none is silently dropped\" (꼬리를 조용히 버렸다 = F1) · \"rejected at the entrance\" (BOM · 디코드 오류 · 구조 손상은 입구 전 예외) · 요청서 B-1 최소 재생 \"둘 다 거부\" · 전각 정수 사유 · \"J15P (양성 18)\" · \"41 파일\" · B-0 판 표지 · 계획 §3 의 새 칸 · \"push 안 함\"",
+      "note": "정정 = 요청서 Part B (B-0 판 표지 · B-1 최소 재생 · 전각 정수 사유 · J15P 입력 12 · 검사 18 · F1 줄 · 한정 더 ①–⑦) · 계획 rimprr §3 끝 (push 됨 · J15P · 41 = 36 + 5 · 새 칸 · F1) · 원장 RIMPR-03 (F1).  커밋 메시지 둘은 고칠 수 없다 (push 됨) = 이 항목으로 기록.  같은 부류 = SELF-124 · SELF-125 (시험 수 · 범위 표기).  claimed_fixed = 이 정정 커밋 push 뒤."
     }
   ]
 }
