@@ -38,6 +38,7 @@ v3 §5 J2a–J12 · v3.1 (겹치면 뒤가 이긴다) · 1저자 10-20 N1–N18 
 """
 import hashlib
 import math
+import struct
 
 import numpy as np
 from scipy import ndimage, sparse
@@ -221,7 +222,45 @@ def fibre_pieces(Q, gap_tol):
     return np.split(ar, brk) if len(brk) else [ar]
 
 
+#: 지문 (RINT-23 · 2026-10-20 2 일 차) — 같은 내용 = 같은 지문 (객체 · 프로세스 무관) · 내용 한 글자 다름 = 다른 지문.
+#:   숫자 배열 = dtype · 모양 · C 순서 바이트 (옛 그대로 · 비트 유지) · 객체 배열 = 원소 **내용** 직렬화 (형 표지 · 길이 접두 · UTF-8 ·
+#:   C 순서) — 옛 판은 객체 배열의 `x.data` = 원소 **포인터** 바이트를 해시했다 (원장 `instances['reason']` 의 f-문자열 사유 → 같은 입력으로
+#:   다시 만든 원장 · 계획 지문이 프로세스 안 · 사이에서 갈렸다 = 거짓 거부).  내용 직렬화가 정의되지 않은 값 (임의 객체 · set — repr 에
+#:   주소 · 해시 순서가 들어간다) = TypeError (조용히 주소로 지문을 만들지 않는다).
+_FP_OBJ_HEADER = b'objarr-v1'
+_FP_SCALARS = (str, bytes, bool, int, float, complex, type(None))
+_FP_NP_KINDS = 'biufcSUMm'                 # repr 이 내용만 담는 numpy 스칼라 종류 (객체 'O' · 구조체 'V' 제외)
+
+
+def _fp_len(b):
+    return len(b).to_bytes(8, 'big')
+
+
+def _fp_obj_item(v):
+    """객체 배열 원소 하나 → 내용 바이트 (형 표지 + 길이 접두 · 문자열 = UTF-8 · 실수 = float64 큰 끝 바이트 · 중첩 = 그 `_fp`)."""
+    if v is None:
+        return b'N'
+    if isinstance(v, (bool, np.bool_)):
+        return b'T' if bool(v) else b'F'
+    if isinstance(v, str):                                   # np.str_ 포함
+        b = v.encode('utf-8')
+        return b'S' + _fp_len(b) + b
+    if isinstance(v, (bytes, bytearray)):                    # np.bytes_ 포함
+        b = bytes(v)
+        return b'Y' + _fp_len(b) + b
+    if isinstance(v, (int, np.integer)):
+        b = str(int(v)).encode('ascii')
+        return b'I' + _fp_len(b) + b
+    if isinstance(v, float) or (isinstance(v, np.floating) and v.dtype.itemsize <= 8):
+        return b'R' + struct.pack('>d', float(v))
+    if isinstance(v, (list, tuple, dict, np.ndarray)):
+        return b'X' + _fp(v).encode('ascii')                 # 고정 길이 (32 hex)
+    raise TypeError(f'② 탄소 접합 지문: 객체 배열 원소 형 {type(v).__name__} — 내용 직렬화가 정의되지 않았다 '
+                    f'(포인터 · repr 주소로 지문을 만들지 않는다 · RINT-23) — 거부')
+
+
 def _fp(*parts):
+    """원장 · 계획 지문 (E5) — dict (키 정렬) · 목록 · 배열 · 스칼라.  RINT-23 규칙은 위 머리 주석."""
     h = hashlib.blake2b(digest_size=16)
     for p in parts:
         if isinstance(p, dict):
@@ -234,14 +273,27 @@ def _fp(*parts):
                 h.update(_fp(q).encode())
             h.update(b')')
         elif isinstance(p, np.ndarray):
-            x = np.ascontiguousarray(p)
-            h.update(x.dtype.str.encode()); h.update(repr(x.shape).encode()); h.update(x.data)
-        else:
+            if p.dtype.hasobject:                            # 객체 (· 구조체 객체 칸) 배열 = 내용 직렬화 (포인터 바이트 아님)
+                h.update(_FP_OBJ_HEADER); h.update(repr(p.shape).encode())
+                for v in p.reshape(-1, order='C'):
+                    h.update(_fp_obj_item(v))
+            else:
+                x = np.ascontiguousarray(p)
+                h.update(x.dtype.str.encode()); h.update(repr(x.shape).encode()); h.update(x.data)
+        elif isinstance(p, _FP_SCALARS) or (isinstance(p, np.generic) and p.dtype.kind in _FP_NP_KINDS):
             h.update(repr(p).encode())
+        else:
+            raise TypeError(f'② 탄소 접합 지문: 값 형 {type(p).__name__} — 내용 직렬화가 정의되지 않았다 (repr 에 주소 · 해시 순서가 '
+                            f'들어갈 수 있다 · RINT-23) — 거부')
     return h.hexdigest()
 
 
 def _grid_fp(a):
+    """격자 지문 — `step3_sigma._grid_fp` (사본 금지).  격자는 수치 배열 계약 — 객체 (· 구조체 객체 칸) dtype 격자는 원소 **포인터**
+    바이트가 지문에 들어가 재현되지 않으므로 (RINT-23 부류) 넘기기 전에 거부한다."""
+    if a is not None and np.asarray(a).dtype.hasobject:
+        raise TypeError(f'② 탄소 접합: 격자 지문 — 객체 dtype ({np.asarray(a).dtype}) 격자 거부 (포인터 바이트 · RINT-23 부류 · '
+                        f'격자는 수치 배열)')
     import step3_sigma as _s3
     return _s3._grid_fp(a)
 

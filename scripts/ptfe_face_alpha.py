@@ -65,7 +65,11 @@ _SID_NAME = {1: 'AM_S', 2: 'AM_P', 3: 'VGCF', 4: 'SuperP', 5: 'SDCP', 6: 'SE', 7
 
 
 def _grid_fp(a):
-    """격자 지문 — `step3_sigma._grid_fp` 그대로 (사본 금지 · 규율 ①)."""
+    """격자 지문 — `step3_sigma._grid_fp` 그대로 (사본 금지 · 규율 ①).  격자는 수치 배열 계약 — 객체 (· 구조체 객체 칸) dtype 격자는
+    원소 **포인터** 바이트가 지문에 들어가 프로세스 사이에서 재현되지 않으므로 (RINT-23 부류 · 2 일 차) 넘기기 전에 거부한다."""
+    if a is not None and np.asarray(a).dtype.hasobject:
+        raise TypeError(f'face_alpha: 격자 지문 — 객체 dtype ({np.asarray(a).dtype}) 격자 거부 (포인터 바이트 · RINT-23 부류 · '
+                        f'격자는 수치 배열)')
     from step3_sigma import _grid_fp as _g
     return _g(a)
 

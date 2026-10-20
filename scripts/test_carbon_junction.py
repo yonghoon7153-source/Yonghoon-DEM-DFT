@@ -1687,8 +1687,11 @@ def t_fp():
     w3 = list(_FP_WORDS); w3[3] = w3[3].replace('접합', '접힙')
     chk('FP-b 한 글자 다름 (ASCII · 한글) → 다른 지문', CJ._fp(a) != CJ._fp(_objarr([_rt(w) for w in w2]))
         and CJ._fp(a) != CJ._fp(_objarr([_rt(w) for w in w3])))
-    pairs = ((['ab', 'c'], ['a', 'bc']), (['a|b'], ['a', 'b']), (['a', 'b'], ['b', 'a']), (['x'], ['x', '']),
-             (['1'], [1]), ([None], ['None']), ([True], [1]), ([1.0], [1]), ([b'ab'], ['ab']))
+    #  같은 모양 쌍이 경계 · 길이 접두를 본다 (모양이 다르면 머리의 모양만으로도 갈린다) — 변이 판별: '|'·'' 결합 · repr 결합 ([1, 23] ~
+    #  [12, 3]) · 형 표지만 있고 길이 접두 없음 (['aSb', 'c'] ~ ['a', 'bSc'])
+    pairs = ((['ab', 'c'], ['a', 'bc']), (['a|b', 'c'], ['a', 'b|c']), (['aSb', 'c'], ['a', 'bSc']), ([1, 23], [12, 3]),
+             (['a', 'b'], ['b', 'a']), (['x'], ['x', '']), (['1'], [1]), ([None], ['None']), ([True], [1]), ([1.0], [1]),
+             ([b'ab'], ['ab']))
     bad = [f'{p}~{q}' for p, q in pairs if CJ._fp(_objarr([_rt(x) if isinstance(x, str) else x for x in p]))
            == CJ._fp(_objarr([_rt(x) if isinstance(x, str) else x for x in q]))]
     sq = _objarr([_rt('ab'), _rt('cd')])
