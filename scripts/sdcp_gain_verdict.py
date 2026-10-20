@@ -612,6 +612,23 @@ def _validate_contract_raw(arms, seed_ensemble=False, require_arms=None,
             return dict(decision='HOLD',
                         reason=f'{k} 에 **중복 origin** 이 있다 ({len(_sh) - len(set(_sh))}건) — '
                                f'같은 위상을 여러 번 세면 표준오차가 가짜로 작아진다'), info
+    #  ★★ 2026-10-20 (Rint ② B6 · 설계 v1 §7 소비자) — **규약 세대 섞임** = 거부.  현 세대 (`p2-`) 팔과 다음 세대 (`p3ca-` ·
+    #    ca_ext 블록) 팔은 같은 실험이 아니다 — 저장값이 아니라 **다시 계산한** id 의 접두로 센다 (`unknown:` 은 아래 protocol_ok 가
+    #    잡는다).  ⚠ 아래 고정 인자 루프도 id 차이로 HOLD 하지만 "팔마다 다르다" 만 말해 세대 섞임인지 못 가린다 → 먼저 이름을 대고 선다.
+    _gens = {}
+    for _k in arms:
+        for _r in arms[_k]:
+            _pid = str(_RC.physics_protocol_id(_r.get('_manifest') or {}))
+            for _g in (_RC.CA_EXT_PREFIX, _RC.PROTOCOL_SCHEMA):
+                if _pid.startswith(_g + '-'):
+                    _gens.setdefault(_g, []).append(_r['file'])
+                    break
+    if len(_gens) > 1:
+        return dict(decision='HOLD', hold_code='GENERATION_MIX',
+                    generations={_g: len(_v) for _g, _v in sorted(_gens.items())},
+                    reason='GENERATION_MIX| 규약 세대 섞임 — '
+                           + ' · '.join(f'{_g} {len(_v)}팔 ({_v[0]} …)' for _g, _v in sorted(_gens.items()))
+                           + ' — 현 세대 (p2) 와 다음 세대 (p3ca · ca_ext 블록) 팔은 한 판정에 섞을 수 없다 (설계 v1 §7)'), info
     #  ★★ 2026-08-19 (A5) — 세대 혼합 게이트.  **고정-인자 검사보다 먼저** 돈다: 기록이 있는
     #    팔과 없는 팔이 섞이면 아래 "다르면 HOLD" 는 None 을 건너뛰어 **통과시켜 버리기** 때문이다.
     _gen_ex = {_SEED_FIELD} if seed_ensemble else set()
@@ -705,6 +722,22 @@ def _validate_contract_raw(arms, seed_ensemble=False, require_arms=None,
                     reason=f'전자 수렴이 확인되지 않는 팔 {len(_eb)}개 '
                            f'({_eb[0][0]}: {_eb[0][1]}) — cg_info=0 ∧ unconverged=False ∧ '
                            f'0 ≤ resid ≤ {CG_RESID_MAX:g} 를 모두 만족해야 한다 (M-R3-04)'), info
+    #  ★★ 2026-10-20 (Rint ② B6 · 설계 v1 §6 · N15) — **다음 세대 팔의 수렴 증서** (`run_contract.next_gen_cert_ok` — 전자 증서 필수 ·
+    #    이온을 계획해 푼 팔은 이온 증서도 · 기록된 수로 ⓐ ⓑ ⓒ 를 다시 판정 · 증서 σ = 결과 σ).  증서 칸 없음 (`--step3-rtol` 없이 돈 팔) ·
+    #    실패 = **미게시 팔로 센다** — 미게시 팔이 하나라도 있는 코호트는 사전등록 코호트가 아니므로 판정하지 않는다.  옛 세대 (p2) = 규칙 밖.
+    #    (지금 수렴 술어 (cg_info · resid) 는 다음 세대 꼴에서 틀린 σ 를 수렴으로 인증한다 — 설계 §6 탐침)
+    _ngc = []
+    for _k in arms:
+        for _r in arms[_k]:
+            _ok, _why = _RC.next_gen_cert_ok(_r.get('_step3') or {})
+            if not _ok:
+                _ngc.append((_r['file'], _why))
+    if _ngc:
+        return dict(decision='HOLD', hold_code='NEXTGEN_UNPUBLISHED', n_unpublished=len(_ngc),
+                    unpublished=[_f for _f, _w in _ngc],
+                    reason=f'NEXTGEN_UNPUBLISHED| 다음 세대 팔 {len(_ngc)}개가 수렴 증서 계약을 못 채운다 ({_ngc[0][0]}: '
+                           f'{_ngc[0][1]}) — 미게시 팔로 '
+                           f'센다 · 미게시 팔이 있는 코호트는 판정하지 않는다 (설계 v1 §6 · `STEP3_RTOL` 로 다시 돌릴 것)'), info
     #  ★★★ 2026-08-25 (R3-CX-04, Codex 3차) — **계획과 관측을 소비한다.**
     #    옛 판은 `component_plan` 과 `ptfe_cells_observed` 를 매니페스트에 적기만 하고
     #    아무도 읽지 않았다 = 증거가 아니라 장식.  Codex 가 둘 다 통과시켰다:
@@ -739,6 +772,9 @@ def _validate_contract_raw(arms, seed_ensemble=False, require_arms=None,
                               (lambda: _RC.ptfe_record_ok(_man), 'PTFE 기록'),
                               #  ★ G1-2 (RINT-02) — ① 계면 요청 ↔ 네 솔브 적용 영수증 (producer · check_arm 과 같은 함수)
                               (lambda: _RC.interface_record_ok(_man), '계면 영수증'),
+                              #  ★ 2026-10-20 (Rint ② B6 · 설계 v1 §7) — 다음 세대 블록 `ca_ext` (S1 face_alpha · S2 cjunc · S3
+                              #    sdcp_mod) — producer (게시 전) · check_arm 과 **같은 함수**.  블록 없음 + 기능 끔 = 통과 (옛 세대).
+                              (lambda: _RC.ca_ext_record_ok(_man), 'ca_ext 기록'),
                               (lambda: (_RC.plan_ok(_man['component_plan'])
                                         if _man.get('component_plan') is not None
                                         else (True, None)), '계획 스키마'),
