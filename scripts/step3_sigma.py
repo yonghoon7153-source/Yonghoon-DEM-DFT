@@ -1888,6 +1888,12 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
         if _same and pid is None:
             raise ValueError(f'solve_sigma_z: 같은 상 계면 {_same} 은 입자 번호 pid 가 있어야 한다 — 없으면 면 0 '
                              f'으로 조용히 무효 (unsupported identity · RINT-02/14)')
+    #  ② S1 × S2 (2026-10-20 · A · B 합침) — face_alpha 와 cjunc 를 **한 솔브에 같이** 주는 조합은 설계가 아직 정의하지 않았다
+    #    (α 를 받은 면의 멤버십 재배선 · 접합 간선 · P-junc 법칙과의 관계 미정).  `require_plan` 은 cjunc 를, `cjunc_require_quantitative`
+    #    는 face_alpha 를 모른다 → 여기서 조립 전에 거부 (CG 0) · 둘 중 하나만 주면 아래 각 관문 그대로.  결정 = 1저자 · Codex.
+    if face_alpha is not None and cjunc is not None:
+        raise ValueError('solve_sigma_z: face_alpha (S1 PTFE 면 개구율) 와 cjunc (S2/S3 탄소 접합) 동시 사용 거부 — 설계가 조합을 '
+                         '아직 정의하지 않았다 (α 를 받은 면의 접합 재배선 · P-junc 법칙과의 관계 미정 · 1저자 · Codex 결정 전)')
     #  ② S1 (2026-10-20 · Rint ② · 설계 v1 §3 · R18 Q6) — PTFE 면 개구율 `face_alpha` = ptfe_face_alpha.build_plan(...) 의 결과.
     #    None (기본) 이면 아래 어떤 줄도 바뀌지 않는다 (옛 조립 · 연결성 · 반환 키 비트 같음).  계획 무결성 · 격자 · 지문은
     #    `require_plan` 이 조립 전에 본다 (CG 0) · r1 표 · ①′ · 주기와 동시 = 거부 (v0 미정의 조합 · seam 미지원).
