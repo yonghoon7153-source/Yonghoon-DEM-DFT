@@ -30,6 +30,14 @@ docs/data/case15_corner_20261001/ (atom · contact 1,710,000 + case15_am_scaffol
   J7  미인증 면적 — `%g` 합성 근동심 쌍 (d 하한 ≤ 0) 의 면적 100 sim² · 참 면적 둘 다 PASS 아님 (area_uncertified) · 양성 합성 PASS
   J8  소비 경로 — 합성 조인 → 원장 → 계획 (join=…) → 정량 관문: 변이마다 거부 · 양성 통과
   J9  양성 유지 기록 — real_14 · case15 전 AM–AM 행 인증 (tested = 행 수) · 음수 면적 = AM–AM 밖 행만 (case15 AM_P–SE 2 행 · 인증 대상 밖)
+  ── RIMPR-01 · 02 (Codex 10-15 · 판정문 docs/reviews/codex_review_rint_g2_impl_fix_recheck_20261015.md §2 · §3 — 시험 먼저) ──
+  J10 파서 전수 소비 — Codex 반례 (블록 안 24 열 접촉 행 · 7 열 원자 행 · 블록 끝 짧은 행 · 필수 열 중복 (뒤 열 nan) · step `100 0.9` ·
+      count `1 garbage`) + 같은 뿌리 (TIMESTEP 절 둘째 줄 · 줄 안 VT · 모르는 ITEM 절 · 절 두 번 · BOX BOUNDS 넷째 줄 · 프레임 앞 줄 ·
+      TIMESTEP · NUMBER OF 머리 줄 뒤 토큰) →
+      입구 REJECT · 계획 join_gate_failed · 정량 관문 거부 · 양성 차단 대조 (폭 정상 중복 행 = 그대로 REJECT) · 빈 줄 처리 보존 (옛 판과 같은
+      결과 — 머리 바로 다음 · 경계 줄 사이 빈 줄 = REJECT · 절 끝 · 행 절 안 빈 줄 = PASS) · D19 양성 · real_14 전 행 소비
+  J11 float64 입구 — scaffold 반경 · 좌표 1e309 · 고정소수 ±10^309 (Decimal 유한 · float64 무한) · µm 변환 넘침 · int64 넘는 정수 토큰
+      (id · type · step) → 입구 REJECT (구조화 · 예외 아님) · 계획 · 정량 관문 거부 · int64 최댓값 id = PASS
 """
 import argparse
 import contextlib
@@ -440,8 +448,9 @@ def tilt_box(lines, tilts):
     return lines
 
 
-def synth(tag, *, fmt='g6', distance=0.0015, area=None, badpos=None, baddelta=None, radius=0.001, tilts=None):
+def synth(tag, *, fmt='g6', distance=0.0015, area=None, badpos=None, baddelta=None, radius=0.001, tilts=None, edit=None):
     """두 AM_P 구 합성 (Codex `join_synthetic.py` 꼴 · 상자 단위) — fmt 'g6' = `%g` (생산 포맷) · '16' = `%.15e` (16 유효숫자 균일).
+    edit = 쓰기 직전 줄 목록 [scaffold, atom, contact] 을 고치는 함수 (RIMPR-01 · 02 반례 — 파일 줄 단위 변이 · 기본 None = 그대로).
     → (scaffold, atom, contact) 경로 · 참 면적 (lens_geometry)."""
     from lens_geometry import intersection_disc_area
     c = np.array([[0.002, 0.002, 0.002], [0.002 + distance, 0.002, 0.002]])
@@ -462,6 +471,8 @@ def synth(tag, *, fmt='g6', distance=0.0015, area=None, badpos=None, baddelta=No
     if tilts is not None:
         at, ct = tilt_box(at, (tilts[0], '0', '0')), tilt_box(ct, (tilts[1], '0', '0'))
     sc = [','.join(['1', *(f'{x:.12f}' for x in [*c[i], radius])]) for i in range(2)]
+    if edit is not None:
+        edit([sc, at, ct])
     paths = []
     for suffix, lines in (('sc.csv', sc), ('atom.dump', at), ('contact.dump', ct)):
         paths.append(write_copy(lines, f'syn_{tag}_{suffix}'))
@@ -607,6 +618,231 @@ def t_positive_scope():
     chk('J9 기록 entrance: 규칙 문구 · 비유한 0 · 비정수 0 · 지원 상자 (직교 · pp pp ff) · 형식 g6',
         e.get('status') == 'PASS' and e.get('n_nonfinite') == 0 and e.get('n_int_token_bad') == 0
         and e.get('box') == {'atom': 'orthogonal', 'contact': 'orthogonal'} and (e.get('format') or {}).get('rule') == 'g6', repr(e)[:400])
+
+
+# ═════════════════════════ RIMPR-01 · 02 (Codex 10-15) ═════════════════════════
+LAW3 = dict(gap_law='cut', unreg_law='cut', ambiguous_arm='cut')
+RT_PP = {'AM_P|AM_P': 1e-3}
+
+
+def consumer_ctx():
+    """합성 기준 조인 → 0.25 µm raster → 원장 (J8 · Codex join_independent 꼴) — 변이 조인을 **같은 원장**의 계획 · 정량 관문에 넣는다."""
+    (sc, at, ct), _ = synth('ctx', fmt='g6')
+    base = J.am_iface_join(sc, at, ct, type_map=TM1)
+    c, r, t = (base['particles'][k] for k in ('c_um', 'r_um', 't'))
+    sid, _pid = quiet(S3.rasterize, c, r, t, None, None, (0, 0, 0), (6, 4, 4), 0.25, bridge_um=0.24)
+    L = S3.am_iface_ledger(c, r, t, sid, sid, (0, 0, 0), 0.25, delta_bound_um=base['g_geo']['delta_bound_um'], bridge_um=0.24)
+    return base, sid, L
+
+
+def try_join(paths, **kw):
+    """조인 실행 — 예외도 결과로 (고치기 전 코드는 일부 반례에서 ValueError · OverflowError 로 끝난다 · 사례 단위로 기록)."""
+    try:
+        return J.am_iface_join(*paths, type_map=TM1, **kw), None
+    except Exception as e:                                  # noqa: BLE001
+        return None, f'{type(e).__name__}: {e}'
+
+
+def entrance_reject(jm, err, want):
+    """조인 = REJECT · 사유 `want` 가 **입구** (관문 계산 전) 에서 · 관문 = 계산 안 함 (skipped)."""
+    if jm is None:
+        return False, err
+    ok = (jm['status'] == 'REJECT' and any(x['code'] == want and x['gate'] == 'entrance' for x in jm['rejections'])
+          and 'skipped' in jm['g_geo'] and 'skipped' in jm['g_frame'])
+    return ok, f"{jm['status']} {[(x['code'], x['gate']) for x in jm['rejections']]}"
+
+
+def consumer_blocks(jm, sid, L):
+    """후속 계획이 조인 REJECT 를 이어받는가 — 계획 join_gate_failed · 정량 관문 (vox 0.25 = 원장 격자) 거부."""
+    if jm is None:
+        return False, '조인 예외 — 계획에 넣을 기록 없음'
+    Pm = S3.am_iface_plan(L, RT_PP, join=jm, **LAW3)
+    ok = 'join_gate_failed' in codes(Pm) and raises(lambda: S3.iface_require_quantitative(Pm, sid=sid, vox=0.25))
+    return ok, repr(codes(Pm))
+
+
+def _dup_col(item_row, col):
+    """열 머리에 이미 있는 필수 열 `col` 을 하나 더 (뒤 열 값 = nan · Codex duplicate_radius_column 꼴)."""
+    def ed(Ls):
+        k = item_row[0]
+        Ls[k][item_row[1]] += ' ' + col
+        for r_ in item_row[2]:
+            Ls[k][r_] += ' nan'
+    return ed
+
+
+def _set(fi, row, val):
+    def ed(Ls):
+        Ls[fi][row] = val
+    return ed
+
+
+def _ins(fi, row, val_of):
+    def ed(Ls):
+        Ls[fi].insert(row, val_of(Ls))
+    return ed
+
+
+@case('J10 조인 파서 전수 소비 — 버린 행 · 열 · 토큰 = 입구 REJECT · 후속 계획 이어받음 (RIMPR-01)')
+def t_parser_complete():
+    print('J10 — 합성 두 구 (r 0.001 · 거리 0.0015 · δ 0.0005 sim) 파일 줄 변이 · 고치기 전 = 전부 PASS / 정량 ACCEPT (판정문 §2)')
+    base, sid, L = consumer_ctx()
+    Pb = S3.am_iface_plan(L, RT_PP, join=base, **LAW3)
+    chk('J10 양성: 합성 기준 조인 PASS · 계획 거부 없음 · 정량 관문 (vox 0.25) 통과',
+        base['status'] == 'PASS' and Pb['rejections'] == [] and S3.iface_require_quantitative(Pb, sid=sid, vox=0.25) is Pb,
+        repr(codes(base)) + repr(codes(Pb)))
+    #  줄 번호 (synth): atom 9 · 10 = 행 · 8 = ATOMS 머리 · 1 = step · 3 = 머리 수 / contact 9 = 행 · 8 = ENTRIES 머리 · 1 · 3 / scaffold 0 · 1
+    codex = (
+        ('접촉 24 열 행을 블록 안 정상 행 앞에 (선언 1 · 실제 2 · Codex)', _ins(2, 9, lambda Ls: Ls[2][9] + ' 0'), 'row_width'),
+        ('원자 7 열 행을 블록 안 정상 행들 앞에 (선언 2 · 실제 3 · Codex)', _ins(1, 9, lambda Ls: Ls[1][9] + ' 0'), 'row_width'),
+        ('접촉 블록 끝에 4 토큰 행 (Codex malformed_extra_contact_row)', lambda Ls: Ls[2].append('0.002 0.002 nan malformed'), 'row_width'),
+        ('원자 블록 끝에 3 토큰 행 (Codex malformed_extra_atom_row)', lambda Ls: Ls[1].append('3 1 nan'), 'row_width'),
+        ('원자 radius 필수 열 중복 (뒤 열 nan · 폭 7 = 7 · Codex)', _dup_col((1, 8, (9, 10)), 'radius'), 'header_duplicate'),
+        ('접촉 c_cpl[22] 필수 열 중복 (뒤 열 nan)', _dup_col((2, 8, (9,)), 'c_cpl[22]'), 'header_duplicate'),
+        ('접촉 step 줄 `100 0.9` (Codex)', _set(2, 1, '100 0.9'), 'int_token'),
+        ('접촉 count 줄 `1 garbage` (Codex)', _set(2, 3, '1 garbage'), 'int_token'),
+        ('원자 step 줄 `100 0.9`', _set(1, 1, '100 0.9'), 'int_token'),
+        ('원자 count 줄 `2 garbage`', _set(1, 3, '2 garbage'), 'int_token'),
+    )
+    same_root = (
+        ('접촉 TIMESTEP 절 둘째 줄 `0.9` (절 몸통 전수)', _ins(2, 2, lambda Ls: '0.9'), 'int_token'),
+        ('접촉 step 줄 `100<VT>0.9` (splitlines 가 줄을 쪼갠다)', _set(2, 1, '100\x0b0.9'), 'int_token'),
+        ('접촉 프레임 안 모르는 ITEM 절 (`ITEM: FOO` · `1 2 3`)', lambda Ls: Ls[2].__setitem__(slice(8, 8), ['ITEM: FOO', '1 2 3']),
+         'frame_layout'),
+        ('접촉 NUMBER OF ENTRIES 절 두 번', lambda Ls: Ls[2].__setitem__(slice(4, 4), ['ITEM: NUMBER OF ENTRIES', '1']), 'frame_layout'),
+        ('접촉 BOX BOUNDS 절 넷째 줄 (`0 0.01`)', _ins(2, 8, lambda Ls: '0 0.01'), 'box_format'),
+        ('접촉 첫 프레임 앞 비어 있지 않은 줄', _ins(2, 0, lambda Ls: 'junk'), 'frame_layout'),
+        ('접촉 TIMESTEP 머리 줄 뒤 토큰 (`ITEM: TIMESTEP 0.9`)', _set(2, 0, 'ITEM: TIMESTEP 0.9'), 'frame_layout'),
+        ('원자 NUMBER OF ATOMS 머리 줄 뒤 토큰 (`ITEM: NUMBER OF ATOMS 7`)', _set(1, 2, 'ITEM: NUMBER OF ATOMS 7'), 'frame_layout'),
+    )
+    for gi, (group, rows) in enumerate((('Codex 반례', codex), ('같은 뿌리 (판정문 밖 · 버리던 줄)', same_root))):
+        for k, (tag, ed, want) in enumerate(rows):
+            (sc, at, ct), _ = synth(f'r1_{gi}_{k}', fmt='g6', edit=ed)
+            jm, err = try_join((sc, at, ct))
+            ok, why = entrance_reject(jm, err, want)
+            chk(f'J10 [{group}] {tag} → 입구 REJECT ({want}) · 관문 계산 안 함', ok, why)
+            ok, why = consumer_blocks(jm, sid, L)
+            chk(f'J10 [{group}] {tag} → 계획 join_gate_failed · 정량 관문 거부 (고치기 전 = 정량 ACCEPT)', ok, why)
+    #  양성 차단 대조 — 폭이 정상인 중복 행은 전부 소비돼 그대로 REJECT (열 수 사유 아님)
+    for k, (tag, ed, want) in enumerate((
+            ('접촉 폭 정상 중복 행 (선언 1 · 실제 2)', _ins(2, 9, lambda Ls: Ls[2][9]), {'count_mismatch', 'dem_duplicate_pair'}),
+            ('원자 폭 정상 중복 행 (선언 2 · 실제 3)', _ins(1, 9, lambda Ls: Ls[1][9]), {'count_mismatch', 'atom_id_duplicate'}))):
+        (sc, at, ct), _ = synth(f'r1_ctl{k}', fmt='g6', edit=ed)
+        jm, err = try_join((sc, at, ct))
+        chk(f'J10 양성 차단 대조: {tag} → REJECT {sorted(want)} 유지 · row_width 아님',
+            jm is not None and jm['status'] == 'REJECT' and want <= set(codes(jm)) and 'row_width' not in codes(jm),
+            err or repr(codes(jm)))
+    #  빈 줄 처리 보존 — 절 전수 소비가 빈 줄을 옛 판 (고정 위치 읽기) 보다 느슨하게 하지 않는다 (고치기 전 · 뒤 모두 같은 결과여야 한다)
+    def blank_ok(Ls):
+        _sc, at_, ct_ = Ls
+        ct_.insert(8, '')                                   # BOX BOUNDS 내용 뒤 (ENTRIES 머리 앞) = 절 끝
+        ct_.insert(2, '   ')                                # TIMESTEP 값 뒤 = 절 끝 (공백뿐)
+        ct_.append('')
+        at_.insert(10, '')                                  # 행 절 안 (두 원자 행 사이)
+        at_.append('  ')
+    for k, (tag, ed, want) in enumerate((
+            ('접촉 TIMESTEP 머리 바로 다음 빈 줄 (값 앞)', _ins(2, 1, lambda Ls: ''), 'int_token'),
+            ('접촉 BOX BOUNDS 경계 줄 사이 빈 줄', _ins(2, 6, lambda Ls: ''), 'box_format'))):
+        (sc, at, ct), _ = synth(f'r1_blank{k}', fmt='g6', edit=ed)
+        jm, err = try_join((sc, at, ct))
+        ok, why = entrance_reject(jm, err, want)
+        chk(f'J10 빈 줄 보존: {tag} → 입구 REJECT ({want}) — 옛 판과 같음', ok, why)
+    (sc, at, ct), _ = synth('r1_blank_ok', fmt='g6', edit=blank_ok)
+    jm, err = try_join((sc, at, ct))
+    chk('J10 빈 줄 보존: 절 끝 · 행 절 안 · 파일 끝 빈 줄 → PASS (내용 아님 — 옛 판과 같음)',
+        jm is not None and jm['status'] == 'PASS' and jm['rejections'] == [], err or repr(codes(jm)))
+    #  양성 — D19 선언된 재사용 (다른 step · 같은 기하)
+    (sc, at, ct), _ = synth('r1_d19', fmt='g6', edit=_set(2, 1, '101'))
+    jd, err = try_join((sc, at, ct), geom_reuse={'atom_step': 100, 'contact_step': 101, 'reason': '시험 — D19 같은 기하'})
+    ok = False
+    if jd is not None:
+        Pd = S3.am_iface_plan(L, RT_PP, join=jd, **LAW3)
+        ok = (jd['status'] == 'PASS' and (jd['geom_reuse'] or {}).get('status') == 'accepted' and Pd['rejections'] == []
+              and S3.iface_require_quantitative(Pd, sid=sid, vox=0.25) is Pd)
+    chk('J10 양성: D19 선언된 재사용 (atom 100 · contact 101) → PASS · 계획 거부 없음 · 정량 관문 통과', ok,
+        err or repr(codes(jd)))
+    #  정상 real_14 기록 — 전 행 소비 (물리 행 = 머리 수) · 열 수 불일치 0 · 필수 열 중복 없음 · 프레임 배치 깨끗
+    e = join_r14().get('entrance') or {}
+    chk('J10 정상 real_14: 물리 행 33,289 · 106,563 (= 머리 수) · 열 수 불일치 0 · 필수 열 중복 없음 · 프레임 배치 위반 0',
+        e.get('n_rows_physical') == {'atom': 33289, 'contact': 106563} and e.get('n_row_width_bad') == 0
+        and e.get('header_duplicate') == {'atom': [], 'contact': []}
+        and isinstance(e.get('frame_layout'), dict) and sum(e['frame_layout'].values()) == 0,
+        repr({k: e.get(k) for k in ('n_rows_physical', 'n_row_width_bad', 'header_duplicate', 'frame_layout')}))
+
+
+@case('J11 float64 유한 · µm 변환 · int64 정수 = 입구 REJECT (RIMPR-02)')
+def t_float64_entrance():
+    print('J11 — scaffold 토큰 = Decimal 유한 · float64 무한 (1e309 · 고정소수 10^309) · µm 변환 넘침 · int64 넘는 정수 토큰')
+    base, sid, L = consumer_ctx()
+    big = '1' + '0' * 309 + '.000000000000'
+
+    def scaf(row, col, val):
+        def ed(Ls):
+            v = Ls[0][row].split(',')
+            v[col] = val
+            Ls[0][row] = ','.join(v)
+        return ed
+
+    def far(Ls):
+        """한 구만 (scaffold x = 10^306 고정소수 · 원자 x `1e+306`) · 접촉 0 행 — float64 유한이지만 µm 변환 (×1000) = inf."""
+        sc, at, ct = Ls
+        del sc[1]
+        v = sc[0].split(',')
+        v[1] = '1' + '0' * 306 + '.000000000000'
+        sc[0] = ','.join(v)
+        del at[10]
+        at[3] = '1'
+        w = at[9].split()
+        w[2] = '1e+306'
+        at[9] = ' '.join(w)
+        del ct[9]
+        ct[3] = '0'
+
+    def ct_tok(col, val):
+        def ed(Ls):
+            v = Ls[2][9].split()
+            v[col] = val
+            Ls[2][9] = ' '.join(v)
+        return ed
+
+    def both_steps(val):
+        def ed(Ls):
+            Ls[1][1] = val
+            Ls[2][1] = val
+        return ed
+
+    i64_over = '9223372036854775808'
+    rows = (
+        ('scaffold 반경 `1e309` (Codex)', scaf(1, 4, '1e309'), 'nonfinite_value', 'scaffold'),
+        ('scaffold 반경 고정소수 10^309 (Codex)', scaf(1, 4, big), 'nonfinite_value', 'scaffold'),
+        ('scaffold 반경 고정소수 −10^309 (Codex)', scaf(1, 4, '-' + big), 'nonfinite_value', 'scaffold'),
+        ('scaffold x 고정소수 10^309 (고치기 전 = cKDTree ValueError)', scaf(1, 1, big), 'nonfinite_value', 'scaffold'),
+        ('scaffold x `-1e309`', scaf(1, 1, '-1e309'), 'nonfinite_value', 'scaffold'),
+        ('µm 변환 넘침 — 한 구 x 10^306 sim (float64 유한 · ×1000 = inf · 고치기 전 = PASS · c_um inf)', far, 'nonfinite_value',
+         'scaffold_um'),
+        ('원자 id int64 넘침 `9223372036854775808` (Codex · 고치기 전 = OverflowError)',
+         lambda Ls: Ls[1].__setitem__(9, i64_over + Ls[1][9][1:]), 'int_token', 'atom_id'),
+        ('접촉 id1 int64 넘침', ct_tok(6, i64_over), 'int_token', 'contact_id1'),
+        ('scaffold type int64 넘침', scaf(0, 0, i64_over), 'int_token', 'scaffold_type'),
+        ('두 덤프 step int64 넘침 (e3 = int64 정수 · 같은 규칙)', both_steps(i64_over), 'int_token', 'atom_step'),
+    )
+    for k, (tag, ed, want, where) in enumerate(rows):
+        (sc, at, ct), _ = synth(f'r2_{k}', fmt='g6', edit=ed)
+        jm, err = try_join((sc, at, ct))
+        ok, why = entrance_reject(jm, err, want)
+        ent = (jm or {}).get('entrance') or {}
+        cnt = (ent.get('nonfinite') or {}) if want == 'nonfinite_value' else (ent.get('int_token_bad') or {})
+        chk(f'J11 {tag} → 입구 REJECT ({want} · {where} ≥ 1) · 관문 계산 안 함', ok and int(cnt.get(where, 0)) >= 1,
+            why + f' {where}={cnt.get(where)!r}')
+        ok, why = consumer_blocks(jm, sid, L)
+        chk(f'J11 {tag} → 계획 join_gate_failed · 정량 관문 거부', ok, why)
+    #  경계 양성 — int64 최댓값 id 는 정확한 정수 (range 검사의 한 끝 · 같은 기하)
+    i64_max = '9223372036854775807'
+    (sc, at, ct), _ = synth('r2_i64max', fmt='g6',
+                            edit=lambda Ls: (Ls[1].__setitem__(9, i64_max + Ls[1][9][1:]), ct_tok(6, i64_max)(Ls)))
+    jm, err = try_join((sc, at, ct))
+    chk('J11 경계 양성: 원자 · 접촉 id = int64 최댓값 9223372036854775807 → PASS (거부 없음)',
+        jm is not None and jm['status'] == 'PASS' and jm['rejections'] == [], err or repr(codes(jm)))
 
 
 def main():
