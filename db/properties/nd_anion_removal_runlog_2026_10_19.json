@@ -144,5 +144,11 @@
   "프로브_검사용": "CPU pw.x 1 랭크 ≈ 4 초 — Estimated max dynamical RAM 27.97 GB → need 38,257 MiB (×1.3 + 1024)",
   "GPU": "총 49,140 · 사용 37,204 (r2 pw.x 205682 하나 · 다른 잡 없음) · 빔 11,936 MiB → 결정 pause (r2 를 다음 BFGS 줄 직후 EXIT · SCF 혼자 · 끝나면 r2 restart)",
   "by": "agent · 2026-10-20"
+ },
+ "⏩_v2_본_실행_2026_10_20_0921": {
+  "tmux": "gabia ndsvac (≈ 09:21) · worktree /data/work/wt_svac_1020 @d0521b38e · OUT /data/work/runs/nd_s_vacancy_2026_10_20",
+  "결정": "pause · GPU 런타임 ✓ ldd → nvhpc 24.11 hpcx-2.20 libmpi · OMP 1",
+  "r2_정지": "09:21:02 시작 — pw.x 205682 · in 00_control_relax.restart.in · out 00_control_relax.out · --no_runner · 새 출력의 BFGS 줄 4 개에서 다음 줄 기다림 (최대 14,400 s · 03:42 재개 뒤 4 스텝 ≈ 1.4 h/스텝)",
+  "by": "agent · 2026-10-20"
  }
 }
