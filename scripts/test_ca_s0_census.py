@@ -517,7 +517,15 @@ def t_e2e_stage1():
     cp = rep['census_preview']
     chk('E1i 접합 census = B0 미리보기 표지 · VV 0 (섬유 하나)',
         cp['status'] == 'b0_preview' and 'verdict_use' in cp and cp['vv']['n_instances'] == 0, str(cp.get('status')))
-    chk('E1j α 분포 = 미구현 표지 (S1 함수 없음 · 사본 금지)', L['alpha']['status'] == 'not_available')
+    al = L.get('alpha') or {}
+    named = [x.strip() for x in str(al.get('function', '')).replace('ptfe_face_alpha.', '').split('·') if x.strip()]
+    import ptfe_face_alpha as FA
+    chk('E1j α 분포 = S1 함수로 계산 (status computed · 사유 문장에 "함수가 없다" 류 주장 없음 · 이름 붙은 함수가 ptfe_face_alpha 에 실제로 '
+        '있다 · K 8 · rope · off 격자)',
+        al.get('status') == 'computed' and str(al.get('function', '')).startswith('ptfe_face_alpha.') and len(named) >= 3
+        and all(callable(getattr(FA, nm, None)) for nm in named) and '없다' not in json.dumps(al, ensure_ascii=False)
+        and al.get('K') == FA.K_SEALED and al.get('dia_law') == 'rope' and al.get('grid') == 'off'
+        and al.get('operator') == FA.S1_OPERATOR_VERSION, str({k: al.get(k) for k in ('status', 'function', 'reason')}))
     chk('S0-2 보고 · 계획에 σ · 전류 · 소산 칸 없음',
         S0.schema_forbidden_keys(rep) == [] and S0.schema_forbidden_keys(json.loads(STATE['planA'])) == [],
         str(S0.schema_forbidden_keys(rep)[:5]))
@@ -848,6 +856,92 @@ def t_e2e_registry():
         f"입력 점 {len(ph_in)} ↔ {n_pts} · n_ptfe_cov {jc.get('n_ptfe_cov')}")
 
 
+#  ── 픽스처 AL (단계 1 · α 분포 판별) — 촘촘한 SE 판 (0.1 µm 간격 두 층 = SE|SE 면) 을 가로지르는 PTFE (이온 α < 1) ·
+#     AM_S · AM_P 두 구가 x 4.5 에서 맞닿고 그 면을 지나는 PTFE (전자 AM_S|AM_P α < 1) ──
+AL_SE = np.array([[4.05 + 0.1 * i, 8.05 + 0.1 * j, z] for i in range(10) for j in range(10) for z in (3.05, 3.15)])
+AL_PA = np.column_stack([3.8 + 0.1 * np.arange(15), np.full(15, 8.5), np.full(15, 3.1)])
+AL_PB = np.column_stack([np.full(11, 4.5), 3.5 + 0.1 * np.arange(11), np.full(11, 2.0)])
+AL_AM = [(1, 4.0, 4.0, 2.0, 0.5), (2, 5.0, 4.0, 2.0, 0.5), (2, 8.0, 1.0, 2.5, 1.0)]
+
+
+def _arg(call, idx, name):
+    """엿본 호출 (위치 인자, 키워드, 결과) 에서 인자 하나 — 위치 또는 키워드."""
+    a, k = call[0], call[1]
+    return a[idx] if len(a) > idx else k.get(name)
+
+
+def _spy_alpha():
+    """ptfe_face_alpha.build_capsules · build_plan 엿보기 — 부른 인자 · 결과를 모은다 (값은 그대로)."""
+    import ptfe_face_alpha as FA
+    rec = {'caps': [], 'plan': []}
+    o_c, o_p = FA.build_capsules, FA.build_plan
+
+    def caps_spy(*a, **k):
+        r = o_c(*a, **k)
+        rec['caps'].append((a, k, r))
+        return r
+
+    def plan_spy(*a, **k):
+        r = o_p(*a, **k)
+        rec['plan'].append((a, k, r))
+        return r
+    FA.build_capsules, FA.build_plan = caps_spy, plan_spy
+    return FA, (o_c, o_p), rec
+
+
+def t_e2e_alpha():
+    tmp = STATE['tmp']
+    kit = write_kit(tmp, 'kit_AL', vgcf=[F1], ptfe=[AL_PA, AL_PB], se=np.vstack([SE, AL_SE]), am=AL_AM,
+                    vol={'VGCF': 0.04, 'PTFE': 0.1})
+    out = os.path.join(tmp, 'outAL')
+    FA, orig, rec = _spy_alpha()
+    try:
+        _stage(1, [kit], out)
+    finally:
+        FA.build_capsules, FA.build_plan = orig
+    rep = _load(os.path.join(out, 's0_stage1_kit_AL.json'))
+    al = (rep.get('ledger') or {}).get('alpha') or {}
+    faces = al.get('faces') or {}
+    fe, fi = faces.get('electronic') or {}, faces.get('ionic') or {}
+    chk('A1 α 분포 판별 픽스처 — 이온 SE|SE 면 α < 1 행 > 0 · 전자 AM_S|AM_P 면 α < 1 행 > 0 (면 부류별 수 · Σ(1 − α)h² 기록)',
+        al.get('status') == 'computed' and (fi.get('by_class') or {}).get('SE|SE', {}).get('n_alpha_lt1', 0) > 0
+        and (fe.get('by_class') or {}).get('AM_S|AM_P', {}).get('n_alpha_lt1', 0) > 0
+        and all('blocked_area_um2' in v for v in list((fe.get('by_class') or {}).values()) + list((fi.get('by_class') or {}).values())),
+        f"전자 {fe.get('by_class')} · 이온 {fi.get('by_class')}")
+    plans = {r[1].get('channel'): r for r in rec['plan']}
+    ok_calls = (len(rec['caps']) == 1 and set(plans) == {'electronic', 'ionic'} and len(rec['plan']) == 2)
+    same = False
+    if ok_calls:
+        sid_e = np.asarray(_arg(plans['electronic'], 0, 'sid'))
+        caps_r = rec['caps'][0][2]
+        same = (not (sid_e == 7).any() and S0._hist(sid_e) == rep['raster']['cells_by_sid']['off']
+                and np.array_equal(np.asarray(_arg(plans['ionic'], 0, 'sid')), sid_e)
+                and plans['electronic'][1].get('pid') is not None and plans['ionic'][1].get('pid') is None
+                and all(plans[c][1].get('K', FA.K_SEALED) == FA.K_SEALED for c in plans)
+                and rec['caps'][0][1].get('dia_law', 'rope') == 'rope'
+                and _arg(plans['electronic'], 2, 'caps') is caps_r and _arg(plans['ionic'], 2, 'caps') is caps_r
+                and len(np.asarray(_arg(rec['caps'][0], 0, 'pts'))) == len(AL_PA) + len(AL_PB)
+                and json.loads(json.dumps(FA.plan_face_summary(plans['electronic'][2]))) == fe
+                and json.loads(json.dumps(FA.plan_face_summary(plans['ionic'][2]))) == fi
+                and json.loads(json.dumps(FA.capsule_summary(caps_r))) == al.get('capsules'))
+    chk('A2 같은 함수 — S0 가 build_capsules (PTFE 행 전부 · rope) 한 번 · build_plan 두 번 (off 격자 · 전자 = pid · 이온 = pid 없음 · '
+        'K 8 · 같은 캡슐) 을 불렀고 보고 = 그 계획 · 캡슐 요약 그대로', ok_calls and same,
+        f"캡슐 {len(rec['caps'])} · 계획 {sorted(plans)}")
+    vol = al.get('volume') or {}
+    ptc = al.get('off_grid_ptfe_point_cells')
+    m4 = np.asarray(_arg(rec['caps'][0], 0, 'pts')) if rec['caps'] else None
+    want_pc = (FA.ptfe_point_cell_census(np.asarray(_arg(plans['electronic'], 0, 'sid')), m4, (0.0, 0.0, 0.0), VOX)
+               if (ok_calls and m4 is not None) else None)
+    chk('A3 캡슐 부피 기록 (S1 volume_record · 참부피 = mpm_metrics PTFE) · off 격자 PTFE 점 셀 sid 분포 (S1 ptfe_point_cell_census) · '
+        '이 표 = 원장 capsule 과 같은 부피 (1e-12 상대)',
+        vol.get('true_um3') == 0.1 and vol.get('status') in ('in_band', 'out_of_band') and want_pc is not None and ptc == want_pc
+        and close(vol.get('capsule_um3'), (rep['ledger'].get('capsule') or {}).get('volume_ratio', math.nan) * 0.1,
+                  1e-12 * max(1.0, abs(float(vol.get('capsule_um3') or 0.0)))),
+        f'{vol} · 점 셀 {ptc} ↔ {want_pc}')
+    chk('A4 S0-2 — α 블록에 σ · 전류 · 소산 칸 없음 (면 기하 · 수만)', S0.schema_forbidden_keys(al) == []
+        and S0.schema_forbidden_keys(rep) == [], str(S0.schema_forbidden_keys(al)))
+
+
 FAKE_PAYLOAD = '''import sys
 import step3_sigma as _s3
 
@@ -914,6 +1008,7 @@ def main():
             run('E11', t_e2e_box_plate)
             run('E10', t_e2e_no_capture)
             print('── R 접합 census = cjunc_registry (같은 함수)'); run('R', t_e2e_registry)
+            print('── A α 분포 = ptfe_face_alpha 함수 (같은 함수)'); run('A', t_e2e_alpha)
         else:
             chk('E 묶음 — 픽스처 A 단계 1 이 서지 않아 나머지 끝-끝 시험을 못 돈다', False)
     finally:
