@@ -13,7 +13,7 @@
   · SDCP 가 덮은 VGCF · AM 셀 · SDCP 가 덮은 섬유 구간 (경로 셀 열의 연속 구간) · SDCP 경유 섬유 연결 수 (둘 이상 fid 에 닿는 SDCP 덩어리)
   · 교차 셀 멤버십 (≥ 2 · ≥ 3) · 캡슐 부피 비 (F11) · 문턱 입력 u (VGCF 경로 점 간격 중앙값 / 2)
   · 접합 census — **판정 · 보고 판** (`junction_census` · 2 일 차) = B3 `carbon_junction.cjunc_registry` 를 **그대로** 부른다
-    (사본 없음 · 설계 §2 ① · §4-1 끝): off 격자 (= face_alpha 의 sid 격자) · 계획 문턱 · s_min 미등록 (거르지 않음) →
+    (사본 없음 · 설계 §2 ① · §4-1 끝): off 격자 (= face_alpha 의 sid 격자) · 계획 문턱 · s_min 안 씀 (거르지 않음) →
     원장 census · 긴 접촉 수 · L_c 분포 (요약 + 후보별 npz) · 자기 (같은 가닥) 후보마다 경로 호 길이 s (s_min 근거 · 목록) ·
     길이 법칙 배율 합 · PTFE 덮임 · SDCP 근접 수 (`s0_junctions_<킷>.npz` = 후보별 배열)
   · 접합 기하 census — **B0 미리보기** (표지 `b0_preview` · 판정 · 보고에 쓰지 않는다):
@@ -36,8 +36,9 @@
            이 작업 트리 HEAD 의 조상 · 그 커밋의 계획 파일 sha256 이 그 커밋의 등록 R 문서에 있음 · 계획 식 재유도 · 정준 바이트.
 
 한정 (보고에 같이 싣는다): 기하만 · MPM 마지막 프레임 · instance = 관통 포함 기하 근접 (MPM 은 섬유 접촉 역학을 풀지 않는다) ·
-  접촉 길이 L_c 의 정의가 계약 (J8) · 설계에 **없다** → touch (d ≤ r_fi + r_fj) · band (d ≤ 검출 문턱) 두 판을 같이 낸다 ·
-  포트 · 자기 접촉 · VA 문턱 = 미리보기 정의 (보고의 notes) · α 분포 = S1 함수가 생긴 뒤 (사본 금지).
+  접촉 길이 L_c = 설계 §1-2 #13 (Q17) touch (판정 · 보고 판 = cjunc_registry) · 미리보기는 touch · band 두 판을 비교용으로 낸다 ·
+  포트 · 자기 접촉 · VA 문턱 (미리보기) = 미리보기 정의 (보고의 notes) ·
+  α 분포 = S1 `ptfe_face_alpha` 함수 그대로 (`alpha_census` · off 격자 · 면 자격 = 생산 σ 표 함수의 양수 패턴 · raster-only · 2 일 차).
 
   python3 scripts/ca_s0_census.py --stage 1 --kit ~/sdcp/kit_SBE_vgcf100 --out ~/sdcp/ca1_s0_sbe
   python3 scripts/ca_s0_census.py --stage 2 --threshold-commit <sha> --plan-path docs/data/<…>/cjunc_plan.json \\
@@ -69,6 +70,7 @@ if _SELF_DIR not in sys.path:
 
 import step3_sigma as s3                          # noqa: E402  (생산 raster · 경로 셀 · SID_NAME)
 import carbon_junction as cj                      # noqa: E402  (접합 census 판정 · 보고 판 = cjunc_registry 그대로)
+import ptfe_face_alpha as fa                      # noqa: E402  (α 분포 = S1 face_alpha 함수 그대로 · 사본 금지)
 from fibre_segment_raster import cell_of, n_components_6face, segment_cells   # noqa: E402
 
 #: 생산 모듈 (payload · raster) 이 있는 폴더 = step3_sigma 가 있는 곳 (정상 사용 = 이 도구와 같은 scripts/ · 변이 판을 리포 밖에서
@@ -82,6 +84,12 @@ TOOL_VERSION = 's0-b3-registry-v1'               # 옛 s0-b0-preview-v1 = 미리
 #: 접합 census (판정 · 보고 판) 의 격자 — off (= 잡은 생산 입력에서 PTFE 행을 뺀 raster = ptfe_stamp off · face_alpha 의 sid 격자 ·
 #  다음 세대 판정 격자).  원장에는 PTFE 행을 포함한 전 상 입력을 준다 (P-junc 덮임 판정 · PTFE 는 셀을 찍지 않는다).
 JUNCTION_GRID = 'off'
+#: α 분포 (설계 §2 ① 끝 행 · 2 일 차) 의 면 자격 = 채널 도체 (σ > 0) 패턴 — 생산 σ 표 함수 (`step3_sigma.electronic_sigma_table` ·
+#  `ionic_sigma_table`) 에 양수 단위값을 넣은 것 (payload 기본 = σ_PTFE 0 · σ_SWCNT > 0 · SWCNT 이온 투명).  α 는 면 기하 (캡슐 ∩ 면
+#  구적) 라 σ 크기와 무관하고, 어느 sid 쌍 면에 α 를 거는가만 σ > 0 으로 정해진다 (`ptfe_face_alpha._channel_cond`).
+ALPHA_SIG_E = s3.electronic_sigma_table(1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0)
+ALPHA_SIG_I = s3.ionic_sigma_table(1.0, 1.0, False)
+ALPHA_DIA_LAW = 'rope'                            # (가) 주 = 모든 경로 Ø0.248 µm (설계 §3-1 · N12 · DIA_UNCHECKED)
 R_DOC_DEFAULT = 'docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md'
 #: 등록 R §2-1 · 설계 §1-2 #11 · #18 · #29 — 식은 지금 고정 (N17).
 R_PORT_UM = 0.30                 # 포트 탐색 반경 (물리 단위 · 격자에 묶지 않는다 · RINTG-05 부류)
@@ -119,12 +127,14 @@ except Exception:                # noqa: BLE001
     R_F_UM = None
 NOTES = (
     '접합 census 판정 · 보고 판 = junction_census (B3 carbon_junction.cjunc_registry 그대로 · off 격자 · 계획 문턱 · '
-    's_min 미등록 = 거르지 않음 · 후보별 배열 = s0_junctions_<킷>.npz) · census_preview = B0 미리보기 (판정 · 보고에 쓰지 않는다)',
+    's_min 안 씀 (S0 계획에 칸 없음) = 거르지 않음 · 후보별 배열 = s0_junctions_<킷>.npz) · census_preview = B0 미리보기 '
+    '(판정 · 보고에 쓰지 않는다)',
     '자기 (같은 가닥) 후보의 경로 호 길이 s = 원장 규칙 (두 쪽 셀 조각 최근접점 쌍 · ε 띠 · 띠 안 = 작은 s) — s_min 을 정하는 근거 · '
     's_min 숫자는 등록 R §2-1 개정 (이 도구는 고르지 않는다)',
-    '접촉 길이 L_c 의 정의가 계약 (J8 · v2 §3-8) · 설계 · 등록 R 에 없다 — touch (d ≤ r_fi + r_fj 인 중심선 길이) · '
-    'band (d ≤ 검출 문턱 r_fi + r_fj + tol_ff 인 중심선 길이) 두 판 · 긴 접촉 수 = 판마다 · 수직 스침도 band 판에서는 '
-    '2√(thr² − (2r_f)²) = 0.335 µm > L_par 0.30 (tol_ff 0.075 일 때)',
+    f'접촉 길이 L_c = 설계 §1-2 #13 (1저자 10-20 밤 Q17) touch — 두 가닥 각각에서 중심선 거리 ≤ r_fi + r_fj 인 구간 길이의 '
+    f'최댓값 (판정 · 보고 판 junction_census = cjunc_registry 규칙 {cj.CJUNC_LC_RULE} · 길이 법칙 {cj.CJUNC_LEN_LAW}) · '
+    'census_preview 의 두 판 (touch · band = d ≤ 검출 문턱 r_fi + r_fj + tol_ff 인 중심선 길이) 은 비교용 · band 판에서는 수직 '
+    '스침도 2√(thr² − (2r_f)²) = 0.335 µm > L_par 0.30 (tol_ff 0.075 일 때)',
     'instance = 관통 포함 기하 근접 — MPM 은 섬유 접촉 역학을 풀지 않는다 · 중심선 위치 = MPM 점 간격만큼 불확도',
     '자기 접촉 (미리보기 정의) = 같은 fid · 선분 번호 차 ≥ 2 · d ≤ thr · 두 최근접점의 호 길이 차 > (π/2)·thr',
     '포트 (미리보기 정의) = 최근접점이 든 셀이 그 fid 경로 셀이고 sid 3 이면 직접 · 아니면 그 fid 경로 셀 중 sid 3 · '
@@ -757,6 +767,41 @@ def junction_census(kw, sid, *, tol_ff, L_par, r_port, tol_P, tol_sj, r_ptfe, r_
     return block, arrays
 
 
+# ══ α 분포 — S1 face_alpha 함수 그대로 (raster-only) ══════════════════════════════════════════════════════════════
+def alpha_census(kw, sid, pid, true_ptfe_um3):
+    """α 분포 (설계 §2 ① 끝 행 · §3-2 출력) — S1 `ptfe_face_alpha` 함수를 **그대로** 부른다 (사본 금지 · 솔브 없음):
+    캡슐 (`build_capsules` · 잡은 입력의 PTFE 행 전부 · 지름 법칙 rope) → 채널마다 계획 (`build_plan` · `sid` = off 격자 = face_alpha 의
+    sid 격자 · 전자 = pid 로 같은 AM 입자 면제 · K = 봉인값) → 면 부류별 α < 1 · α = 0 수 · Σ(1 − α)h² (`plan_face_summary`) ·
+    캡슐 부피 기록 (`volume_record` · 참부피 = mpm_metrics PTFE) · off 격자 PTFE 점 셀 sid 분포 (`ptfe_point_cell_census` — 설계 §3-2
+    '"S0 와 같은 함수"').  면 자격 = `ALPHA_SIG_E` · `ALPHA_SIG_I` 의 σ > 0 패턴.  판 결합 면 = α 미적용 (S1 v0 `PLATE_RULE`).
+    → 보고 블록.  S1 함수가 입력을 거부하면 S0Error."""
+    P = np.asarray(kw['add_pts'], np.float64)
+    m4 = np.asarray(kw['add_phase']) == PTFE
+    lo = tuple(float(x) for x in kw['box_lo'])
+    vox = float(kw['vox'])
+    try:
+        caps = fa.build_capsules(P[m4], np.asarray(kw['add_fid'])[m4], np.asarray(kw['add_kind'])[m4], dia_law=ALPHA_DIA_LAW)
+        pe = fa.build_plan(sid, ALPHA_SIG_E, caps, lo=lo, vox=vox, channel='electronic', pid=pid)
+        pi = fa.build_plan(sid, ALPHA_SIG_I, caps, lo=lo, vox=vox, channel='ionic')
+    except (ValueError, TypeError) as e:
+        raise S0Error(f'α 분포 (ptfe_face_alpha) 가 입력을 거부했다: {e}') from e
+    return {
+        'status': 'computed',
+        'function': 'ptfe_face_alpha.build_capsules · build_plan · plan_face_summary · volume_record · ptfe_point_cell_census',
+        'operator': fa.S1_OPERATOR_VERSION, 'K': int(pe['K']), 'dia_law': ALPHA_DIA_LAW, 'grid': JUNCTION_GRID,
+        'eligible_sids': {'electronic': [int(i) for i in np.flatnonzero(ALPHA_SIG_E > 0)],
+                          'ionic': [int(i) for i in np.flatnonzero(ALPHA_SIG_I > 0)]},
+        'eligibility_rule': ('channel cells = sid with positive entries of the production table functions '
+                             '(electronic_sigma_table / ionic_sigma_table) at unit values; alpha is face geometry '
+                             '(capsule over face quadrature) and does not depend on the magnitudes'),
+        'capsules': fa.capsule_summary(caps), 'volume': fa.volume_record(caps['volume_um3'], true_ptfe_um3),
+        'faces': {'electronic': fa.plan_face_summary(pe), 'ionic': fa.plan_face_summary(pi)},
+        'off_grid_ptfe_point_cells': fa.ptfe_point_cell_census(sid, P[m4], lo, vox),
+        'plate_rule': fa.PLATE_RULE,
+        'note': 'raster-only (솔브 없음) · S1 판정 런의 payload 는 같은 함수로 런의 σ 표를 써서 ca_ext.ptfe_face 에 싣는다',
+    }
+
+
 # ══ 계획 (등록 R §2-1) ══════════════════════════════════════════════════════════════════════════════════════════
 def plan_bytes_of(plan):
     """정준 바이트 — 정렬 키 · ASCII · 공백 없음 · NaN 금지 · 끝 줄바꿈 하나."""
@@ -1110,7 +1155,7 @@ def _check_captured(kw, vox, bridge_um, sdcp_d):
                 raise S0Error('잡은 se_pts 에 비유한 값')
 
 
-def _raster(kw, drop=()):
+def _raster(kw, drop=(), with_pid=False):
     k = dict(kw)
     if drop:
         keep = ~np.isin(np.asarray(k['add_phase']), drop)
@@ -1118,6 +1163,8 @@ def _raster(kw, drop=()):
             if k.get(nm) is not None:
                 k[nm] = np.asarray(k[nm])[keep]
     sid, pid = s3.rasterize(**k)
+    if with_pid:
+        return sid, pid
     del pid
     return sid
 
@@ -1212,7 +1259,7 @@ def census_kit(kit, out_dir, *, stage, plan=None, plan_sha=None, plan_source=Non
     st = _s3_state()
     try:
         prod = _raster(kw)
-        off = _raster(kw, drop=(PTFE,))
+        off, off_pid = _raster(kw, drop=(PTFE,), with_pid=True)     # pid = α 전자 채널의 같은 AM 입자 면제 (face_alpha 계획 입력)
         has_sdcp = bool((np.asarray(kw['add_phase']) == SDCP).any())
         nos = _raster(kw, drop=(SDCP,)) if has_sdcp else None
         off_nos = _raster(kw, drop=(PTFE, SDCP)) if has_sdcp else None
@@ -1314,8 +1361,8 @@ def census_kit(kit, out_dir, *, stage, plan=None, plan_sha=None, plan_source=Non
                              'definition': 'per piece: sum(segment length x pi r_P^2) + one sphere 4/3 pi r_P^3; overlaps not subtracted'}
     else:
         ledger['capsule'] = None
-    ledger['alpha'] = {'status': 'not_available',
-                       'reason': 'S1 face_alpha 함수가 이 트리에 없다 (B2 · 다른 묶음) — 같은 함수 호출만 허용 · 사본 금지 (설계 §2 ①)'}
+    ledger['alpha'] = alpha_census(kw, off, off_pid, vols.get('PTFE'))       # S1 ptfe_face_alpha 함수 그대로 (raster-only)
+    del off_pid
     # ── 접합 census 미리보기 ──
     vv = vv_census(vpaths, R_F_UM, tol_ff, L_par)
     I = vv['inst']
@@ -1534,6 +1581,12 @@ def _summary(rep):
                      f"{L['sdcp_stretch']['off']['n_runs']} · SDCP 경유 섬유 연결 (off) {L['sdcp_via']['off']['n_bridging']}")
     if L['capsule']:
         lines.append(f"  캡슐 부피 비 {L['capsule']['volume_ratio']:.4f} (밴드 {L['capsule']['f11_band']} 안 = {L['capsule']['in_band']})")
+    A = L.get('alpha') or {}
+    if A.get('status') == 'computed':
+        fe, fi = (A.get('faces') or {}).get('electronic') or {}, (A.get('faces') or {}).get('ionic') or {}
+        lines.append(f"  α (S1 ptfe_face_alpha · {A.get('grid')} 격자 · K {A.get('K')} · {A.get('dia_law')}) 전자 α<1 면 "
+                     f"{fe.get('n_rows')} (α=0 {fe.get('n_cut_rows')}) · 이온 α<1 면 {fi.get('n_rows')} (α=0 {fi.get('n_cut_rows')}) · "
+                     f"캡슐 부피 {(A.get('volume') or {}).get('status')}")
     ti, tu = rep['threshold_inputs'], rep['thresholds_used']
     lines.append(f"  점 간격 중앙값 {ti['spacing_median_um']:.6g} µm (n {ti['n_spacings']}) → u {ti['u_um']:.6g} · "
                  f"tol_ff {tu['tol_ff_um']:.6g} · L_par {tu['L_par_um']:.6g} · r_port {tu['r_port_um']:.6g}")

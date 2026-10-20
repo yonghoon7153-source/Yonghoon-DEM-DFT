@@ -526,6 +526,12 @@ def t_e2e_stage1():
         and all(callable(getattr(FA, nm, None)) for nm in named) and '없다' not in json.dumps(al, ensure_ascii=False)
         and al.get('K') == FA.K_SEALED and al.get('dia_law') == 'rope' and al.get('grid') == 'off'
         and al.get('operator') == FA.S1_OPERATOR_VERSION, str({k: al.get(k) for k in ('status', 'function', 'reason')}))
+    notes = rep.get('notes') or []
+    import carbon_junction as CJ
+    chk('E1o 보고 notes 의 L_c 문장 — 판정 · 보고 판 L_c = 설계 §1-2 #13 (Q17) touch = cjunc_registry 규칙 이름 · '
+        '"설계 · 등록 R 에 없다" 류 옛 주장 없음 (미리보기 두 판은 비교용)',
+        any(CJ.CJUNC_LC_RULE in n for n in notes) and not any('에 없다' in n for n in notes),
+        str([n[:60] for n in notes if 'L_c' in n]))
     chk('S0-2 보고 · 계획에 σ · 전류 · 소산 칸 없음',
         S0.schema_forbidden_keys(rep) == [] and S0.schema_forbidden_keys(json.loads(STATE['planA'])) == [],
         str(S0.schema_forbidden_keys(rep)[:5]))
@@ -857,11 +863,11 @@ def t_e2e_registry():
 
 
 #  ── 픽스처 AL (단계 1 · α 분포 판별) — 촘촘한 SE 판 (0.1 µm 간격 두 층 = SE|SE 면) 을 가로지르는 PTFE (이온 α < 1) ·
-#     AM_S · AM_P 두 구가 x 4.5 에서 맞닿고 그 면을 지나는 PTFE (전자 AM_S|AM_P α < 1) ──
+#     F1 (y 4.55) 아래에 붙은 AM 구 (꼭대기 y 4.5) 와 그 AM|VGCF 면 (y = 4.5) 을 지나는 PTFE (전자 AM|VGCF α < 1) ──
 AL_SE = np.array([[4.05 + 0.1 * i, 8.05 + 0.1 * j, z] for i in range(10) for j in range(10) for z in (3.05, 3.15)])
 AL_PA = np.column_stack([3.8 + 0.1 * np.arange(15), np.full(15, 8.5), np.full(15, 3.1)])
-AL_PB = np.column_stack([np.full(11, 4.5), 3.5 + 0.1 * np.arange(11), np.full(11, 2.0)])
-AL_AM = [(1, 4.0, 4.0, 2.0, 0.5), (2, 5.0, 4.0, 2.0, 0.5), (2, 8.0, 1.0, 2.5, 1.0)]
+AL_PB = np.column_stack([np.full(13, 4.0), 3.6 + 0.1 * np.arange(13), np.full(13, 2.05)])
+AL_AM = [(1, 4.0, 4.0, 2.05, 0.5), (2, 8.0, 1.0, 2.5, 1.0)]
 
 
 def _arg(call, idx, name):
@@ -895,17 +901,34 @@ def t_e2e_alpha():
                     vol={'VGCF': 0.04, 'PTFE': 0.1})
     out = os.path.join(tmp, 'outAL')
     FA, orig, rec = _spy_alpha()
+    o_cap, got_kw = S0.capture_raster_inputs, {}
+
+    def cap_spy(*a, **k):
+        r = o_cap(*a, **k)
+        got_kw['kw'] = r
+        return r
+    S0.capture_raster_inputs = cap_spy
     try:
         _stage(1, [kit], out)
     finally:
         FA.build_capsules, FA.build_plan = orig
+        S0.capture_raster_inputs = o_cap
+    #  독립 기대 off 격자 · pid = 잡은 생산 입력에서 PTFE (phase 4) 행을 뺀 생산 rasterize (ptfe_stamp off 의 _cond_ph)
+    want_sid = want_pid = None
+    if 'kw' in got_kw:
+        k2 = dict(got_kw['kw'])
+        keep = ~np.isin(np.asarray(k2['add_phase']), (4,))
+        for nm in ('add_pts', 'add_phase', 'add_fid', 'add_kind'):
+            k2[nm] = np.asarray(k2[nm])[keep]
+        want_sid, want_pid = S3.rasterize(**k2)
     rep = _load(os.path.join(out, 's0_stage1_kit_AL.json'))
     al = (rep.get('ledger') or {}).get('alpha') or {}
     faces = al.get('faces') or {}
     fe, fi = faces.get('electronic') or {}, faces.get('ionic') or {}
-    chk('A1 α 분포 판별 픽스처 — 이온 SE|SE 면 α < 1 행 > 0 · 전자 AM_S|AM_P 면 α < 1 행 > 0 (면 부류별 수 · Σ(1 − α)h² 기록)',
+    am_vgcf = sum(v.get('n_alpha_lt1', 0) for k, v in (fe.get('by_class') or {}).items() if k in ('AM_S|VGCF', 'AM_P|VGCF'))
+    chk('A1 α 분포 판별 픽스처 — 이온 SE|SE 면 α < 1 행 > 0 · 전자 AM|VGCF 면 α < 1 행 > 0 (면 부류별 수 · Σ(1 − α)h² 기록)',
         al.get('status') == 'computed' and (fi.get('by_class') or {}).get('SE|SE', {}).get('n_alpha_lt1', 0) > 0
-        and (fe.get('by_class') or {}).get('AM_S|AM_P', {}).get('n_alpha_lt1', 0) > 0
+        and am_vgcf > 0
         and all('blocked_area_um2' in v for v in list((fe.get('by_class') or {}).values()) + list((fi.get('by_class') or {}).values())),
         f"전자 {fe.get('by_class')} · 이온 {fi.get('by_class')}")
     plans = {r[1].get('channel'): r for r in rec['plan']}
@@ -915,8 +938,10 @@ def t_e2e_alpha():
         sid_e = np.asarray(_arg(plans['electronic'], 0, 'sid'))
         caps_r = rec['caps'][0][2]
         same = (not (sid_e == 7).any() and S0._hist(sid_e) == rep['raster']['cells_by_sid']['off']
+                and want_sid is not None and np.array_equal(sid_e, want_sid)
                 and np.array_equal(np.asarray(_arg(plans['ionic'], 0, 'sid')), sid_e)
                 and plans['electronic'][1].get('pid') is not None and plans['ionic'][1].get('pid') is None
+                and np.array_equal(np.asarray(plans['electronic'][1].get('pid')), want_pid)
                 and all(plans[c][1].get('K', FA.K_SEALED) == FA.K_SEALED for c in plans)
                 and rec['caps'][0][1].get('dia_law', 'rope') == 'rope'
                 and _arg(plans['electronic'], 2, 'caps') is caps_r and _arg(plans['ionic'], 2, 'caps') is caps_r
@@ -924,8 +949,8 @@ def t_e2e_alpha():
                 and json.loads(json.dumps(FA.plan_face_summary(plans['electronic'][2]))) == fe
                 and json.loads(json.dumps(FA.plan_face_summary(plans['ionic'][2]))) == fi
                 and json.loads(json.dumps(FA.capsule_summary(caps_r))) == al.get('capsules'))
-    chk('A2 같은 함수 — S0 가 build_capsules (PTFE 행 전부 · rope) 한 번 · build_plan 두 번 (off 격자 · 전자 = pid · 이온 = pid 없음 · '
-        'K 8 · 같은 캡슐) 을 불렀고 보고 = 그 계획 · 캡슐 요약 그대로', ok_calls and same,
+    chk('A2 같은 함수 — S0 가 build_capsules (PTFE 행 전부 · rope) 한 번 · build_plan 두 번 (off 격자 = PTFE 행 뺀 생산 rasterize · '
+        '전자 = 그 pid · 이온 = pid 없음 · K 8 · 같은 캡슐) 을 불렀고 보고 = 그 계획 · 캡슐 요약 그대로', ok_calls and same,
         f"캡슐 {len(rec['caps'])} · 계획 {sorted(plans)}")
     vol = al.get('volume') or {}
     ptc = al.get('off_grid_ptfe_point_cells')
