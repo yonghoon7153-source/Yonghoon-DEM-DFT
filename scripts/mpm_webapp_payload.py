@@ -884,18 +884,18 @@ def _cjunc_entry_contract(a):
     a._cj_on = bool(getattr(a, 'step3_cjunc', False))
     a._cj_req = a._sd_req = None
     a._ca_req = ()
-    _given = [fl for att, _k, fl in CJUNC_CLI if getattr(a, att, None) is not None]
+    _lim = getattr(a, 'step3_cjunc_rj_limit', None)           # ★ Z3 — 극한 런 표지 (inf 바닥 · zero 천장 · 등록 R §3-1)
+    _given = [fl for att, _k, fl in CJUNC_CLI if getattr(a, att, None) is not None] \
+        + (['--step3-cjunc-rj-limit'] if _lim is not None else [])
     if a._cj_on:
         bad = []
         for att, _k, fl in CJUNC_CLI:
             if getattr(a, att, None) is None:
                 bad.append(('MISSING', f'{fl} 가 없다 — 기본값 없음 (결과 전 선언 · 정량이면 거부 · 숫자 = 등록 R §2-1)'))
-        if a._ptfe_stamp == 'face_alpha':
-            bad.append(('FACE_ALPHA_COMBO', '--ptfe-stamp face_alpha 와 --step3-cjunc 를 한 런에 — 설계가 조합을 아직 정의하지 않았다 '
-                                            '(α 를 받은 면의 접합 재배선 · P-junc 법칙 관계 미정 · solve_sigma_z 도 거부 · 1저자 · Codex 결정 전)'))
-        if getattr(a, 'step3_cjunc_ptfe_jlaw', None) == 'P1':
-            bad.append(('P1_NEEDS_FACE_ALPHA', 'P1 (덮인 접합 절단) 은 face_alpha 에서만 — face_alpha + 접합이 미정의라 지금은 닿지 않는다 '
-                                               '(centerline 은 이미 VGCF 셀을 sid 7 로 자른다 · 설계 §4-1)'))
+        #  ★ Z3 — face_alpha + 접합 = 받는다 (설계 §3 · §4 조합 규칙 · 등록 R §10 꼴 · B6 통합 때의 임시 거부를 뺐다) · P1 = face_alpha 에서만
+        if getattr(a, 'step3_cjunc_ptfe_jlaw', None) == 'P1' and a._ptfe_stamp != 'face_alpha':
+            bad.append(('P1_NEEDS_FACE_ALPHA', f'P1 (덮인 접합 절단) 은 --ptfe-stamp face_alpha 에서만 (지금 `{a._ptfe_stamp}` — centerline 은 '
+                                               f'이미 VGCF 셀을 sid 7 로 자른다 · off 는 PTFE 표현이 없다 · 설계 §4-1)'))
         if a.periodic:
             bad.append(('PERIODIC', '--periodic — 정량 모드 거부 (raster 가 주기 영상을 안 만든다 · J10)'))
         if a.joule_heat:
@@ -923,14 +923,16 @@ def _cjunc_entry_contract(a):
         if not any(c == 'MISSING' for c, _w in bad):
             import ca_ext_cjunc as _cjw
             _req = {k: getattr(a, att) for att, k, _fl in CJUNC_CLI}
-            try:                                           # 값 정의역만 (P1 · face_alpha 는 위 자기 코드)
-                _cjw.cjunc_protocol_record(ptfe_stamp=('centerline' if a._ptfe_stamp == 'centerline' else 'off'),
-                                           **dict(_req, ptfe_jlaw='P0'))
+            try:                                           # 값 정의역만 (P1 은 위 자기 코드) · ★ Z3 — 극한 표지 ↔ R_j 짝 (모순 = VALUE)
+                _cjw.cjunc_protocol_record(ptfe_stamp=(a._ptfe_stamp if a._ptfe_stamp in ('centerline', 'face_alpha') else 'off'),
+                                           rj_limit=_lim, **dict(_req, ptfe_jlaw='P0'))
             except (ValueError, TypeError) as _e:
                 bad.append(('VALUE', str(_e)))
         if bad:
             raise SystemExit('\n'.join(f'S2_CJUNC_REFUSED|{c}| {w}' for c, w in bad))
         a._cj_req = {k: getattr(a, att) for att, k, _fl in CJUNC_CLI}
+        if _lim is not None:
+            a._cj_req['rj_limit'] = _lim
     elif _given:
         raise SystemExit(f'S2_CJUNC_REFUSED|FLAG_WITHOUT_CJUNC| {", ".join(_given)} 는 --step3-cjunc 일 때만 뜻이 있다 (조용한 no-op 금지)')
     if getattr(a, 'step3_sdcp_mod_c', None) is not None:
@@ -947,6 +949,7 @@ def _cjunc_entry_contract(a):
     if (getattr(a, 'expect_physics', '') or '').strip() and a._ca_req:
         import ca_ext_cjunc as _cjw
         _need = ([f'ca_ext.cjunc.{k}' for k in _cjw.REQUEST_KEYS_CJUNC] if a._cj_on else []) \
+            + (['ca_ext.cjunc.rj_limit'] if (a._cj_on and _lim is not None) else []) \
             + ([f'ca_ext.sdcp_mod.{k}' for k in _cjw.REQUEST_KEYS_SDCP] if a._sd_req is not None else [])
         _miss = [k for k in _need if k not in a._physics_expect]
         if _miss:
@@ -1465,13 +1468,17 @@ def main():
                          'two_pop = 13 / 87 두 집단 민감도 · 보고만).  --ptfe-stamp face_alpha 일 때만')
     #  ★ 2026-10-20 (Rint ② B6 · 설계 v1 §4-2 · §5-2 · §7) — S2 탄소 접합 (VGCF–VGCF R_j v0) · S3 SDCP 접합 수정자.  기본 끔 = 옛 경로 ·
     #    매니페스트 바이트 같음 (code_sha · exec_env 빼고).  켜면 다음 세대 블록 `ca_ext.cjunc` (+ `ca_ext.sdcp_mod`) · id `p3ca-` ·
-    #    v0 = LEAN 2 · 3 플래그만 · 전자 채널만 · face_alpha 와 한 런 = 거부 (설계 미정의 조합).  숫자 (tol_ff · s_min) = 등록 R §2-1
-    #    (S0 단계 1) — 기본값 없음 (없으면 거부).  기구 = carbon_junction (API 그대로) · 배선 · 검증기 = ca_ext_cjunc.
+    #    v0 = LEAN 2 · 3 플래그만 · 전자 채널만 · ★ Z3 — face_alpha 와 한 런 = 받는다 (설계 조합 규칙 · P1 = face_alpha 에서만).
+    #    숫자 (tol_ff · s_min) = 등록 R §2-1 (S0 단계 1) — 기본값 없음 (없으면 거부).  기구 = carbon_junction (API 그대로) · 배선 · 검증기 = ca_ext_cjunc.
     ap.add_argument('--step3-cjunc', action='store_true',
                     help='S2 탄소 접합 켜기 (VGCF–VGCF 접합 instance 마다 포트 직접 간선 g = 1e4 m / R_j · 길이 법칙 len_scaled_v0 · '
                          'R_j = 모형 내부 보정값, 재료값 아님).  아래 여섯 값을 전부 명시해야 한다 (기본값 없음)')
     ap.add_argument('--step3-cjunc-rj', type=float, default=None, metavar='OHM',
-                    help='S2 R_j,0 [옴 / VV instance] — 유한 양수 (정량).  극한 0 · 무한 = 사다리 진단 전용 (이 배선 밖)')
+                    help='S2 R_j,0 [옴 / VV instance] — 유한 양수 (정량).  극한 0 · inf = 사다리 진단 전용 — --step3-cjunc-rj-limit 와 짝일 때만')
+    ap.add_argument('--step3-cjunc-rj-limit', default=None, choices=('inf', 'zero'),
+                    help='S2 극한 런 (등록 R 3-1 · 사다리 진단 · 판정 값 아님): inf = 바닥 (--step3-cjunc-rj inf · 접합 간선 없음 · '
+                         '발자국 면 끊긴 채) · zero = 천장 (--step3-cjunc-rj 0 · 접합 양 끝 정확한 축약 · 단락 = 유한 σ 로 위장 안 함).  '
+                         '매니페스트 protocol = R_j_ohm null / 0.0 + rj_limit · quantitative False')
     ap.add_argument('--step3-cjunc-len-law', default=None, choices=('len_scaled_v0',),
                     help='S2 접합 길이 법칙 선언 (carbon_junction 의 법칙과 다르면 거부)')
     ap.add_argument('--step3-cjunc-unreg-law', default=None, choices=('cut', 'fused'),
@@ -1481,7 +1488,7 @@ def main():
     ap.add_argument('--step3-cjunc-tol-ff-um', type=float, default=None, metavar='UM',
                     help='S2 접합 검출 tol_ff (µm · = tol_P = tol_sj · 숫자 = S0 단계 1 · 없으면 거부)')
     ap.add_argument('--step3-cjunc-ptfe-jlaw', default=None, choices=('P0', 'P1'),
-                    help='S2 PTFE–접합 법칙 끝 (P0 영향 없음 · P1 덮인 접합 절단 = face_alpha 에서만 → face_alpha + 접합 미정의라 지금 거부)')
+                    help='S2 PTFE–접합 법칙 끝 (P0 영향 없음 · P1 덮인 접합 절단 = --ptfe-stamp face_alpha 에서만 · off · centerline + P1 = 거부)')
     ap.add_argument('--step3-sdcp-mod-c', default=None, choices=('0', '1'),
                     help='S3 SDCP 접합 수정자 c (0 젖음 효과 없음 · 1 근접 접합 축약 끝) — --step3-cjunc 와만 (S2 없이 거부)')
     ap.add_argument('--sigma-swcnt', type=float, default=100.0,
@@ -2487,6 +2494,8 @@ def main():
                                    + (' ⚠UNCONVERGED' if _res3.get('unconverged') else ''))}
                 if _res3.get('conv_cert') is not None:     # 수렴 증서 (--step3-rtol 일 때만 · 끔 = 키 없음)
                     step3['conv_cert'] = dict(_res3['conv_cert'])
+                if _res3.get('cg_iters') is not None:      # ★ Z3 — CG 반복 수 (증서 켤 때만 · 수렴했어도 · 숫자 탐침 칸 · σ 아님)
+                    step3['cg_iters'] = int(_res3['cg_iters'])
                 if _p998e is not None:                      # 정량 컬러바 스케일 (뷰어 라벨용): 내부
                     # jmag=σ_hm·Δφ_face=J·vox_cm → J[A/cm²]=jmag/vox_cm (ΔV=1V 선형해).
                     # ⟨J_z⟩=σ_eff·ΔV/L.  focus=J/⟨J_z⟩=바이어스-무관 집중계수 (균일도체=1 검산).
@@ -2731,6 +2740,9 @@ def main():
                         'bare_cg_info': int(_res3b.get('cg_info', 0) or 0),
                         'bare_unconverged': bool(_res3b.get('unconverged', False)),
                         'bare_cg_resid': float(_res3b['resid']),
+                        #  ★ Z3 — 보조 두 솔브의 CG 반복 수 (증서 켤 때만 · 끔 = 옛 키 그대로)
+                        **({'wetted_cg_iters': int(_res3w['cg_iters'])} if _res3w.get('cg_iters') is not None else {}),
+                        **({'bare_cg_iters': int(_res3b['cg_iters'])} if _res3b.get('cg_iters') is not None else {}),
                         'n_bottom_contacts': {'wetted': (_res3w.get('n_plate_vox') or (None,))[0],
                                               'bare': (_res3b.get('n_plate_vox') or (None,))[0],
                                               'canonical_plate': (_res3.get('n_plate_vox') or (None,))[0]},
@@ -2923,6 +2935,8 @@ def main():
                     step3['ion_resid'] = float(_res3i['resid'])
                     if _res3i.get('conv_cert') is not None:     # 수렴 증서 (--step3-rtol 일 때만)
                         step3['ion_conv_cert'] = dict(_res3i['conv_cert'])
+                    if _res3i.get('cg_iters') is not None:      # ★ Z3 — 이온 솔브 CG 반복 수 (증서 켤 때만)
+                        step3['ion_cg_iters'] = int(_res3i['cg_iters'])
                     print(f"  STEP3 σ_ion_eff = {_sig_str(a, step3['sigma_ion_eff_S_cm'])} "
                           f"S/cm  ({_res3i['n_dof']:,} dof, resid {_res3i['resid']:.1e}, "
                           f"{_time.time()-_t1:.0f}s)"

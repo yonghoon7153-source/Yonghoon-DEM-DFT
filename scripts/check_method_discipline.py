@@ -925,7 +925,9 @@ _RUNNER_AXES = ('LEAN', 'VOX', 'ARMS', 'SIGMA_PTFE', 'PTFE_STAMP', 'FIBRE_STAMP'
                 'CJUNC', 'CJUNC_RJ', 'CJUNC_LEN_LAW', 'CJUNC_UNREG_LAW', 'CJUNC_S_MIN_UM', 'CJUNC_TOL_FF_UM',
                 'CJUNC_PTFE_JLAW', 'SDCP_MOD_C', 'STEP3_RTOL',
                 #  ★ 2026-10-20 (Rint ② Z1) — 열째 손잡이 VGCF bulk σ (같은 정본 표 · 부모 셸의 값이 탐침으로 새면 끔 탐침이 _fb 팔이 된다).
-                'SIGMA_FIBRE_BULK')
+                'SIGMA_FIBRE_BULK',
+                #  ★ 2026-10-20 (Rint ② Z3) — 팔 고르기 (부모 셸의 ARM_LIST 가 탐침으로 새면 `ARMS=2` 탐침이 "ARMS 와 동시" 로 멈춘다).
+                'ARM_LIST')
 
 
 def _hermetic_env(env):

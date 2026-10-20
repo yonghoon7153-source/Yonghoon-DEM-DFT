@@ -13,8 +13,12 @@
   · 검증기 `cjunc_block_problem` · `sdcp_mod_block_problem` = `run_contract.ca_ext_record_ok` 가 producer (게시 전) · `check_arm` ·
     판정기에서 같이 부른다 (사본 없음 · `run_contract.CA_EXT_SUBBLOCKS` 등록)
 ⛔ 지위 = 기구 · 배선만 — R_j 는 모형 내부 보정값 (재료값 아님) · 정량 판정 = 등록 R 비준 · Codex GO · S0 문턱 개정 뒤.
-⛔ face_alpha (S1) + cjunc (S2) 한 런 = 거부 (설계가 조합을 정의하지 않았다 · `solve_sigma_z` 와 같은 규칙) → P1 (덮인 접합 절단) 도
-  지금은 닿지 않는다 (P1 = face_alpha 에서만).
+★ Z3 (10-20) — face_alpha (S1) + cjunc (S2) 한 런 = 받는다 (설계 §3 · §4 조합 규칙 · 등록 R §10 꼴 · B6 통합 때의 임시 거부를 뺐다) ·
+  P1 (덮인 접합 절단) = face_alpha 에서만 · centerline + P1 · off + P1 = 거부 그대로.
+★ Z3 (10-20) — 극한 런 (등록 R §3-1 · 사다리 진단 · 판정 값 아님): 바닥 R_j → ∞ (`rj_limit` 'inf' · `R_j_ohm` null · 접합 간선 없음 ·
+  발자국 면은 끊긴 채) · 천장 R_j → 0 (`rj_limit` 'zero' · `R_j_ohm` 0.0 · 접합 양 끝 정확한 축약 · J11 단락 = 유한 σ 로 위장 안 함) —
+  protocol `quantitative` False · `allow_rj_limits` True (한 꼴 — JSON 은 inf 를 못 쓴다 → 수 칸 null + 문자열 표지 · 영수증 요청도 같은 꼴).
+  원장 거부 사유는 정량 런과 같게 막는다 (같은 그래프 — 사다리의 바닥 · 천장 · 점이 한 그래프).
 """
 import math
 
@@ -43,7 +47,11 @@ SDCP_RULE = "R_j' = R_j,0 (1 - c a_j) · c = 1 = 근접 instance 축약 경로 (
 CJUNC_PROTOCOL_KEYS = ('wiring', 'model', 'schema', 'len_law', 'rules', 'R_j_ohm', 'unreg_law', 'ptfe_jlaw', 'ptfe_stamp',
                        'r_f_um', 'tol_ff_um', 'L_par_um', 'r_port_um', 's_min_um', 'gap_tol', 'tol_P_um', 'tol_sj_um',
                        'r_ptfe_um', 'r_sdcp_um', 'rj_reference_plane', 'half_cell_in_edge', 'quantitative', 'allow_rj_limits',
-                       'channel')
+                       'channel',
+                       #  ★ Z3 — 극한 런 표지 (있을 때만 · 'inf' 바닥 · 'zero' 천장 · 정량 런 protocol 에는 칸이 없다 = 옛 바이트)
+                       'rj_limit')
+#: ★ Z3 (10-20 · 등록 R §3-1) — 극한 런 표지 (사다리 진단 · 판정 값 아님).  낱말 둘뿐 — 대소문자 · 다른 낱말 · bool = 거부.
+RJ_LIMITS = ('inf', 'zero')
 SDCP_MOD_PROTOCOL_KEYS = ('wiring', 'model', 'c', 'tol_sj_um', 'r_sdcp_um', 'rule')
 #: 표지 (설계 §4-6 · §5-6) — 웹앱 템플릿은 매니페스트의 이 문자열을 **읽어** 띄운다 (사본을 두지 않는다)
 LABEL_CJUNC = ('탄소 접합 R_j (모형 내부 보정값 · 재료값 아님 · VGCF–VGCF 만 · VGCF–AM · SDCP–VGCF 접점 = 옛 융합 '
@@ -109,10 +117,30 @@ def canonical_rules():
     return dict(_RULES[0])
 
 
-def cjunc_protocol_record(*, R_j_ohm, len_law, unreg_law, s_min_um, tol_ff_um, ptfe_jlaw, ptfe_stamp):
+def rj_limit_value(R_j_ohm, rj_limit):
+    """★ Z3 — 극한 런 꼴 (등록 R §3-1) → (protocol 의 R_j_ohm, 표지 | None).  표지 없음 = 정량 (R_j 유한 > 0) · 'inf' = 바닥
+    (R_j_ohm null — CLI 의 float inf 도 같은 꼴로) · 'zero' = 천장 (R_j_ohm 0.0).  표지 ↔ 값 모순 · 모르는 표지 = ValueError."""
+    if rj_limit is None:
+        return _num(R_j_ohm, 'R_j_ohm', positive=True), None
+    if isinstance(rj_limit, bool) or not isinstance(rj_limit, str) or rj_limit not in RJ_LIMITS:
+        raise ValueError(f'rj_limit = {rj_limit!r} — 극한 표지는 {RJ_LIMITS} 낱말만 (대소문자 · 다른 낱말 · bool 거부)')
+    if rj_limit == 'inf':
+        ok = R_j_ohm is None or (isinstance(R_j_ohm, (float, np.floating)) and not isinstance(R_j_ohm, bool)
+                                 and math.isinf(float(R_j_ohm)) and float(R_j_ohm) > 0)
+        if not ok:
+            raise ValueError(f'rj_limit inf (바닥) 인데 R_j_ohm = {R_j_ohm!r} — null (또는 CLI 의 +inf) 이어야 한다 (표지 ↔ 값 모순)')
+        return None, 'inf'
+    if isinstance(R_j_ohm, (bool, np.bool_)) or not isinstance(R_j_ohm, (int, float, np.integer, np.floating)) \
+            or float(R_j_ohm) != 0.0 or math.copysign(1.0, float(R_j_ohm)) < 0:
+        raise ValueError(f'rj_limit zero (천장) 인데 R_j_ohm = {R_j_ohm!r} — 0.0 이어야 한다 (표지 ↔ 값 모순)')
+    return 0.0, 'zero'
+
+
+def cjunc_protocol_record(*, R_j_ohm, len_law, unreg_law, s_min_um, tol_ff_um, ptfe_jlaw, ptfe_stamp, rj_limit=None):
     """`ca_ext.cjunc.protocol` — 물리 칸 (p3ca id 에 들어간다).  선언 값 여섯 + 이 코드의 상수 (모델 판 · 규칙 판 · 고정 문턱).
-    정량만 (R_j 유한 > 0 · s_min 등록 · tol_ff 유한 ≥ 0) · face_alpha 와 한 런 = 거부 · P1 = face_alpha 에서만 (→ 지금 거부)."""
-    R = _num(R_j_ohm, 'R_j_ohm', positive=True)
+    정량 (R_j 유한 > 0 · s_min 등록 · tol_ff 유한 ≥ 0) 또는 ★ Z3 극한 런 (`rj_limit` — `rj_limit_value`) · ptfe_stamp = off · centerline ·
+    face_alpha (Z3 — 조합 받음) · P1 = face_alpha 에서만 (centerline 은 이미 VGCF 셀을 sid 7 로 자른다 · off 는 PTFE 표현이 없다)."""
+    R, lim = rj_limit_value(R_j_ohm, rj_limit)
     if len_law != CJ.CJUNC_LEN_LAW:
         raise ValueError(f'접합 길이 법칙 {len_law!r} ≠ 이 코드의 {CJ.CJUNC_LEN_LAW!r} (선언 필수 · 옛 판 · 다른 판 섞임 거부)')
     if unreg_law not in CJ.UNREG_LAWS:
@@ -121,18 +149,20 @@ def cjunc_protocol_record(*, R_j_ohm, len_law, unreg_law, s_min_um, tol_ff_um, p
     t = _num(tol_ff_um, 'tol_ff_um')
     if ptfe_jlaw not in CJ.PTFE_JLAWS:
         raise ValueError(f'PTFE–접합 법칙 {ptfe_jlaw!r} ∉ {CJ.PTFE_JLAWS}')
-    if ptfe_stamp not in ('off', 'centerline'):
-        raise ValueError(f'ptfe_stamp = {ptfe_stamp!r} — 접합 (S2) 은 off · centerline 에서만 (face_alpha + 접합 = 설계 미정의 조합 · '
-                         f'capsule = 예약값)')
-    if ptfe_jlaw == 'P1':
-        raise ValueError('PTFE–접합 법칙 P1 (덮인 접합 절단) 은 face_alpha 에서만 — face_alpha + 접합 조합이 아직 정의되지 않아 '
-                         '지금은 닿지 않는다 (centerline 은 이미 VGCF 셀을 sid 7 로 자른다 · 설계 §4-1)')
-    return {'wiring': WIRING_VERSION, 'model': CJ.CJUNC_MODEL_VERSION, 'schema': CJ.CJUNC_SCHEMA, 'len_law': CJ.CJUNC_LEN_LAW,
-            'rules': canonical_rules(), 'R_j_ohm': R, 'unreg_law': str(unreg_law), 'ptfe_jlaw': str(ptfe_jlaw),
-            'ptfe_stamp': str(ptfe_stamp), 'r_f_um': float(R_F_UM), 'tol_ff_um': t, 'L_par_um': float(L_PAR_UM),
-            'r_port_um': float(R_PORT_UM), 's_min_um': s, 'gap_tol': float(GAP_TOL), 'tol_P_um': t, 'tol_sj_um': t,
-            'r_ptfe_um': float(CJ.PTFE_R_UM), 'r_sdcp_um': float(CJ.SDCP_R_UM), 'rj_reference_plane': CJ.RJ_REFERENCE_PLANE,
-            'half_cell_in_edge': False, 'quantitative': True, 'allow_rj_limits': False, 'channel': CHANNEL}
+    if ptfe_stamp not in ('off', 'centerline', 'face_alpha'):
+        raise ValueError(f'ptfe_stamp = {ptfe_stamp!r} — 접합 (S2) 은 off · centerline · face_alpha 에서만 (capsule = 예약값)')
+    if ptfe_jlaw == 'P1' and ptfe_stamp != 'face_alpha':
+        raise ValueError(f'PTFE–접합 법칙 P1 (덮인 접합 절단) 은 face_alpha 에서만 ({ptfe_stamp} — centerline 은 이미 VGCF 셀을 sid 7 로 '
+                         f'자른다 · off 는 PTFE 표현이 없다 · 설계 §4-1)')
+    out = {'wiring': WIRING_VERSION, 'model': CJ.CJUNC_MODEL_VERSION, 'schema': CJ.CJUNC_SCHEMA, 'len_law': CJ.CJUNC_LEN_LAW,
+           'rules': canonical_rules(), 'R_j_ohm': R, 'unreg_law': str(unreg_law), 'ptfe_jlaw': str(ptfe_jlaw),
+           'ptfe_stamp': str(ptfe_stamp), 'r_f_um': float(R_F_UM), 'tol_ff_um': t, 'L_par_um': float(L_PAR_UM),
+           'r_port_um': float(R_PORT_UM), 's_min_um': s, 'gap_tol': float(GAP_TOL), 'tol_P_um': t, 'tol_sj_um': t,
+           'r_ptfe_um': float(CJ.PTFE_R_UM), 'r_sdcp_um': float(CJ.SDCP_R_UM), 'rj_reference_plane': CJ.RJ_REFERENCE_PLANE,
+           'half_cell_in_edge': False, 'quantitative': True, 'allow_rj_limits': False, 'channel': CHANNEL}
+    if lim is not None:                                       # ★ Z3 — 극한 런 = 사다리 진단 (판정 값 아님) · 정량 런은 이 칸이 없다
+        out.update(rj_limit=lim, quantitative=False, allow_rj_limits=True)
+    return out
 
 
 def sdcp_mod_protocol_record(*, c, tol_sj_um):
@@ -160,8 +190,14 @@ def sdcp_mod_evidence_record(*, n_sdcp_near, n_contracted_by_c):
 
 def payload_prepare(sid, *, lo, vox, pts, phase, fid, kind, cjunc, sdcp_mod=None, ptfe_stamp):
     """payload 한 런의 S2 (+ S3) 준비 — 원장 (기하) → 정량 계획.  cjunc = 선언 dict (`REQUEST_KEYS_CJUNC`) · sdcp_mod = {'c': c} | None.
-    거부 사유가 하나라도 있으면 ValueError (조립 전 · CG 0 · payload 가 구조화 사유로 멈춘다)."""
-    prot = cjunc_protocol_record(ptfe_stamp=ptfe_stamp, **{k: cjunc.get(k) for k in REQUEST_KEYS_CJUNC})
+    거부 사유가 하나라도 있으면 ValueError (조립 전 · CG 0 · payload 가 구조화 사유로 멈춘다).
+    ★ Z3 — `cjunc['rj_limit']` ('inf' · 'zero') = 극한 런 (사다리 진단) — 계획은 `allow_rj_limits` · 원장 거부 사유는 정량 런과 같게 막는다."""
+    _unk = sorted(k for k in cjunc if k not in REQUEST_KEYS_CJUNC + ('rj_limit',))
+    if _unk:
+        raise ValueError(f'모르는 접합 선언 칸 {_unk} (선언 칸 = {REQUEST_KEYS_CJUNC} + rj_limit)')
+    prot = cjunc_protocol_record(ptfe_stamp=ptfe_stamp, rj_limit=cjunc.get('rj_limit'),
+                                 **{k: cjunc.get(k) for k in REQUEST_KEYS_CJUNC})
+    lim = prot.get('rj_limit')
     sdp = None if sdcp_mod is None else sdcp_mod_protocol_record(c=sdcp_mod.get('c'), tol_sj_um=prot['tol_ff_um'])
     reg = CJ.cjunc_registry(sid, lo, vox, pts, phase, fid, kind, r_f_um=prot['r_f_um'], tol_ff_um=prot['tol_ff_um'],
                             L_par_um=prot['L_par_um'], r_port_um=prot['r_port_um'], s_min_um=prot['s_min_um'],
@@ -173,8 +209,12 @@ def payload_prepare(sid, *, lo, vox, pts, phase, fid, kind, cjunc, sdcp_mod=None
     for k in ('r_f_um', 'tol_ff_um', 'L_par_um', 'r_port_um', 's_min_um', 'gap_tol', 'tol_P_um', 'tol_sj_um', 'r_ptfe_um', 'r_sdcp_um'):
         if _thr.get(k) != prot[k]:
             raise ValueError(f'원장 문턱 {k} = {_thr.get(k)!r} ≠ protocol {prot[k]!r}')
-    plan = CJ.cjunc_plan(reg, prot['R_j_ohm'], unreg_law=prot['unreg_law'], ptfe_stamp=prot['ptfe_stamp'],
-                         ptfe_jlaw=prot['ptfe_jlaw'], sdcp_mod=(None if sdp is None else {'c': sdp['c']}), quantitative=True)
+    if lim is not None and reg['rejections']:                 # ★ Z3 — 극한 런도 정량 런과 같은 그래프여야 한다 (사다리의 바닥 · 천장 · 점)
+        raise ValueError('정량 거부 사유 (극한 런도 같게) — ' + ' · '.join(f"{x.get('code')}(n={x.get('n')})" for x in reg['rejections']))
+    R0 = math.inf if lim == 'inf' else prot['R_j_ohm']
+    plan = CJ.cjunc_plan(reg, R0, unreg_law=prot['unreg_law'], ptfe_stamp=prot['ptfe_stamp'],
+                         ptfe_jlaw=prot['ptfe_jlaw'], sdcp_mod=(None if sdp is None else {'c': sdp['c']}),
+                         quantitative=(lim is None), allow_rj_limits=(lim is not None))
     if plan['rejections']:
         raise ValueError('정량 거부 사유 — ' + ' · '.join(f"{x.get('code')}(n={x.get('n')})" for x in plan['rejections']))
     return {'plan': plan, 'protocol': prot, 'sdcp_protocol': sdp,
@@ -286,29 +326,44 @@ def cjunc_block_problem(man):
         return 'shape| cjunc = {protocol, evidence} dict 이어야 한다'
     prot, ev = blk['protocol'], blk['evidence']
     ps = man.get('ptfe_stamp')
-    if ps == 'face_alpha' or 'ptfe_face' in (man.get('ca_ext') or {}):
-        return ('combo| face_alpha (S1) + cjunc (S2) 한 런 = 설계 미정의 조합 — 거부 (solve_sigma_z 와 같은 규칙 · 1저자 · Codex 결정 전)')
+    #  ★ Z3 — face_alpha (S1) + cjunc (S2) 한 런 = 받는다 (B6 통합 때의 임시 거부를 뺐다 · ptfe_face 블록은 그 검증기 · 요청 ↔ 블록 = run_contract)
     try:
-        want = cjunc_protocol_record(ptfe_stamp=ps, **{k: prot.get(k) for k in REQUEST_KEYS_CJUNC})
+        want = cjunc_protocol_record(ptfe_stamp=ps, rj_limit=prot.get('rj_limit'), **{k: prot.get(k) for k in REQUEST_KEYS_CJUNC})
     except (ValueError, TypeError) as e:
         return f'protocol| {e}'
     if prot != want:
         return 'protocol| 이 코드의 정본과 다르다 ' + str(sorted(k for k in set(prot) | set(want) if prot.get(k) != want.get(k)))
+    lim = prot.get('rj_limit')
     why = _v0_problem(man)
     if why:
         return why
     fpd = ev.get('fp') if isinstance(ev.get('fp'), dict) else {}
     if not (isinstance(fpd.get('registry'), str) and fpd['registry']):
         return 'fp| 증거의 원장 지문이 없다'
+    if ps == 'face_alpha':                                    # ★ Z3 — 조합 런: 접합 원장의 sid 격자 = face_alpha 의 off 격자 (같은 솔브 · 같은 지문 함수)
+        _pf = (((man.get('ca_ext') or {}).get('ptfe_face') or {}).get('evidence') or {}).get('fp') \
+            if isinstance(man.get('ca_ext'), dict) else None
+        _so = _pf.get('sid_off') if isinstance(_pf, dict) else None
+        if not isinstance(fpd.get('sid'), str) or _so != fpd.get('sid'):
+            return (f'fp| 조합 런 — 접합 원장 sid 지문 {fpd.get("sid")!r} ≠ face_alpha off 격자 지문 {_so!r} '
+                    f'(같은 솔브 · 같은 격자여야 한다)')
     cnt = ev.get('counts') if isinstance(ev.get('counts'), dict) else None
     if cnt is None or any(not _int(cnt.get(k)) or cnt.get(k) < 0 for k in _COUNT_INT):
         return f'counts| 원장 수 기록 모양 ({cnt!r})'
     if cnt['n_instances'] != cnt['n_edge'] + cnt['n_contract'] + cnt['n_cut_p1'] + cnt['n_unrealized'] + cnt['n_none_inf']:
         return f'counts| instance 수 ≠ 간선 + 축약 + 절단 + 미실현 + 극한 ({cnt})'
-    if cnt['n_none_inf'] != 0:
+    if lim is None and cnt['n_none_inf'] != 0:
         return 'counts| R_j = ∞ 극한 instance — 정량 (R_j 유한 > 0) 과 모순'
+    if lim == 'inf' and cnt['n_edge'] != 0:                   # ★ Z3 — 바닥: 접합 간선 없음 (근접 축약 = S3 c 1 몫만 · 아래 수정자 대조)
+        return f'counts| 바닥 (R_j = ∞) 인데 접합 간선 {cnt["n_edge"]} — 극한 instance 여야 한다'
+    if lim == 'zero' and (cnt['n_edge'] != 0 or cnt['n_none_inf'] != 0
+                          or cnt['n_contract'] != cnt['n_instances'] - cnt['n_cut_p1'] - cnt['n_unrealized']):
+        return (f'counts| 천장 (R_j = 0) 인데 간선 {cnt["n_edge"]} · 극한 {cnt["n_none_inf"]} · 축약 {cnt["n_contract"]} — 실현 · 미절단 '
+                f'instance 는 전부 축약 (S3 없이)')
     if prot['ptfe_jlaw'] == 'P0' and cnt['n_cut_p1'] != 0:
         return 'counts| P0 인데 P1 절단 instance > 0'
+    if prot['ptfe_jlaw'] == 'P1' and cnt['n_cut_p1'] > cnt['n_ptfe_cov']:
+        return f'counts| P1 절단 {cnt["n_cut_p1"]} > PTFE 덮임 {cnt["n_ptfe_cov"]} (덮인 instance 만 끊는다)'
     rc = ev.get('receipts')
     if not isinstance(rc, dict) or set(rc) != set(SOLVES):
         return f'receipts| 키 {sorted(rc) if isinstance(rc, dict) else rc!r} ≠ {sorted(SOLVES)}'
@@ -359,8 +414,8 @@ def cjunc_block_problem(man):
         return f'sdcp| 접합 증거의 수정자 c = {c_rec!r} ↔ sdcp_mod 블록 {"있음" if sd is not None else "없음"}'
     if sd is not None and sd['protocol'].get('c') != c_rec:
         return f'sdcp| 접합 증거의 c {c_rec!r} ≠ 수정자 블록 c {sd["protocol"].get("c")!r}'
-    if c_rec is None and cnt['n_contract'] != 0:
-        return 'counts| 수정자 없이 축약 instance > 0 (R_j 유한 > 0 이면 축약 = S3 c = 1 뿐)'
+    if c_rec is None and cnt['n_contract'] != 0 and lim != 'zero':
+        return 'counts| 수정자 없이 축약 instance > 0 (R_j 유한 > 0 이면 축약 = S3 c = 1 뿐 · 천장 극한만 예외)'
     if ev.get('status') != CJ.CJUNC_STATUS or ev.get('qualifiers') != list(CJ.CJUNC_QUALIFIERS):
         return 'qualifiers| 지위 · 필수 한정어가 producer 상수와 다르다'
     if ev.get('diagnostics') != DIAGNOSTICS_V0:
@@ -394,13 +449,19 @@ def sdcp_mod_block_problem(man):
     n_near, n_ctr = ev.get('n_sdcp_near'), ev.get('n_contracted_by_c')
     if not _int(n_near) or not _int(n_ctr) or n_near < 0 or n_ctr < 0:
         return f'evidence| 근접 · 축약 수 모양 ({n_near!r}, {n_ctr!r})'
-    if n_near != cnt.get('n_sdcp_near') or n_ctr != cnt.get('n_contracted_by_c') or n_ctr != cnt.get('n_contract'):
+    lim = cj['protocol'].get('rj_limit')                      # ★ Z3 — 천장 (R_j = 0) 은 축약이 R_j 의 몫이다 (c 몫 0)
+    if n_near != cnt.get('n_sdcp_near') or n_ctr != cnt.get('n_contracted_by_c') \
+            or (n_ctr != cnt.get('n_contract') if lim != 'zero' else n_ctr != 0):
         return (f'evidence| 근접 {n_near} · 축약 {n_ctr} ≠ 접합 원장 (근접 {cnt.get("n_sdcp_near")!r} · c 축약 '
-                f'{cnt.get("n_contracted_by_c")!r} · 축약 {cnt.get("n_contract")!r})')
+                f'{cnt.get("n_contracted_by_c")!r} · 축약 {cnt.get("n_contract")!r}{" · 천장 = c 몫 0" if lim == "zero" else ""})')
     if prot['c'] == 0.0 and n_ctr != 0:
         return f'evidence| c = 0 인데 축약 {n_ctr}'
-    if prot['c'] == 1.0 and cj['protocol'].get('ptfe_jlaw') == 'P0' and n_ctr != n_near:
+    if prot['c'] == 1.0 and lim != 'zero' and cj['protocol'].get('ptfe_jlaw') == 'P0' and n_ctr != n_near:
         return f'evidence| c = 1 (P0) 인데 축약 {n_ctr} ≠ 근접 {n_near} (근접 instance 는 전부 축약 경로)'
+    if prot['c'] == 1.0 and lim != 'zero' and cj['protocol'].get('ptfe_jlaw') == 'P1' \
+            and not (n_near - cnt.get('n_cut_p1', 0) <= n_ctr <= n_near):
+        return (f'evidence| c = 1 (P1) 인데 축약 {n_ctr} — 근접 {n_near} 중 P1 이 먼저 끊은 것 (≤ 절단 '
+                f'{cnt.get("n_cut_p1")!r}) 만 빠질 수 있다 (N18)')
     if ev.get('s3_discriminating') is not (n_near > 0):
         return f'evidence| 판별 표지 {ev.get("s3_discriminating")!r} ↔ 근접 {n_near} (SDCP 0 침대 = 구성상 no-op)'
     if ev.get('label') != LABEL_SDCP:

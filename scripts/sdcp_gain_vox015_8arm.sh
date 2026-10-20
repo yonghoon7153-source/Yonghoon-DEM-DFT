@@ -22,7 +22,10 @@
 #   # ★ 다음 세대 (Rint ② B6 · 설계 v1 §7 · 기본 끔 · 판정 런 = 등록 R 비준 · Codex GO 뒤) — 값 여섯은 기본값 없음:
 #   #   CJUNC=1 CJUNC_RJ=<Ω> CJUNC_LEN_LAW=len_scaled_v0 CJUNC_UNREG_LAW=cut CJUNC_S_MIN_UM=<µm> CJUNC_TOL_FF_UM=<µm> \
 #   #   CJUNC_PTFE_JLAW=P0 [SDCP_MOD_C=0|1] STEP3_RTOL=1e-12 PTFE_STAMP=centerline LEAN=2 bash …/sdcp_gain_vox015_8arm.sh
-#   #   S1 면 개구율:  PTFE_STAMP=face_alpha LEAN=2|3 STEP3_RTOL=1e-12 bash …   (face_alpha + CJUNC = 거부 · 조합 미정의)
+#   #   S1 면 개구율:  PTFE_STAMP=face_alpha LEAN=2|3 STEP3_RTOL=1e-12 bash …
+#   #   ★ Z3 (10-20) — PTFE_STAMP=face_alpha + CJUNC=1 = 한 런 (설계 조합 규칙 · 등록 R §10 꼴) · CJUNC_PTFE_JLAW=P1 = face_alpha 에서만 ·
+#   #     극한 런 (등록 R §3-1 · 사다리 진단): CJUNC_RJ=inf (바닥 · 접합 간선 없음) · CJUNC_RJ=0 (천장 · 접합 양 끝 축약) ·
+#   #     팔 고르기 ARM_LIST=1,2 (origin 검사 · a0 를 다시 돌지 않는다 · ARMS 와 동시 = 거부 · 진단 런)
 #   #   ★ Z1 (10-20) — CJUNC=1 · PTFE_STAMP=face_alpha · SDCP_MOD_C 는 STEP3_RTOL **필수** (없으면 팔 시작 전 거부 · 기본값 없음).
 #   #   VGCF σ = bulk 에서 직경 보존:  SIGMA_FIBRE_BULK=1e4 (S/cm · Endo 단섬유 · 설계 §1-2 #1 · #2 → vox 0.15 에서 7853.98) · 팔 이름 `_fb<값>` ·
 #   #   SIGMA_VGCF_OVERRIDE 와 동시 = 거부 · 끔 (기본) = 옛 bulk 100 그대로.
@@ -30,7 +33,36 @@ set -uo pipefail
 
 VOX="${VOX:-0.15}"
 BRIDGE_UM="${BRIDGE_UM:-0.48}"          # prereg §5 — 격자와 무관하게 고정
+_ARMS_GIVEN="${ARMS+1}"                  # ★ Z3 — ARMS 를 명시했나 (ARM_LIST 와 동시 = 거부)
 ARMS="${ARMS:-8}"
+#  ★ Z3 (2026-10-20 · 등록 R §3-3 · §4-2) — **팔 고르기 `ARM_LIST`** (예 `1,2`) — origin 검사에서 a0 를 다시 돌지 않게.
+#    정규 목록 = 0–7 한 자리 번호 · 쉼표 (공백 · 빈 칸 · 부호 · 앞 0 · 8 이상 · 유니코드 숫자 · 개행 = 거부) · 정렬 (2,1 = 1,2) · 중복 = 거부 ·
+#    `ARMS` 와 동시 = 거부 · 0..N−1 (접두 · 전부 포함) = `ARMS=N` 과 같은 팔 집합이라 거부 (같은 팔 집합에 이름 하나).
+#    팔 이름 = 그 origin 번호 (`_a1` · `_a2`) · ARMS = 팔 수 (진단 런 · 생산 봉인 없음) · OUTDIR `_arm<N>_arml<목록>` · 영수증 `arm_list`
+#    (선택 칸 · `receipt_match` 가 팔 origin ↔ 고른 팔 대조).  미설정 (기본) = 옛 ARMS 거동 · 이름 · 영수증 그대로.
+ARM_LIST_TAG=""
+if [ -n "${ARM_LIST+1}" ]; then
+  if [ -n "$_ARMS_GIVEN" ]; then
+    echo "[p2] ABORT — ARM_LIST='$ARM_LIST' 와 ARMS=$ARMS 를 같이 줬다 (하나만 — 팔 고르기는 ARM_LIST 가 팔 수를 정한다)"; exit 2
+  fi
+  if [ "$(printf '%s' "$ARM_LIST" | wc -l)" -ne 0 ] || ! printf '%s' "$ARM_LIST" | LC_ALL=C grep -qxE '[0-7](,[0-7])*'; then
+    echo "[p2] ABORT — ARM_LIST='$ARM_LIST' 는 0–7 한 자리 번호를 쉼표로 (예 1,2 · 공백 · 빈 칸 · 부호 · 앞 0 · 8 이상 · 유니코드 숫자 = 거부)"; exit 2
+  fi
+  _AL_ALL="$(printf '%s' "$ARM_LIST" | tr ',' '\n' | LC_ALL=C sort -n | tr '\n' ',')"
+  _AL_UNI="$(printf '%s' "$ARM_LIST" | tr ',' '\n' | LC_ALL=C sort -nu | tr '\n' ',')"
+  if [ "$_AL_ALL" != "$_AL_UNI" ]; then
+    echo "[p2] ABORT — ARM_LIST='$ARM_LIST' 에 같은 번호가 두 번 (중복 = 거부)"; exit 2
+  fi
+  ARM_LIST="${_AL_UNI%,}"
+  ARMS=$(( $(printf '%s' "$ARM_LIST" | tr -cd ',' | wc -c) + 1 ))
+  if [ "$ARM_LIST" = "$(seq -s, 0 $((ARMS - 1)))" ]; then
+    echo "[p2] ABORT — ARM_LIST=$ARM_LIST = 팔 0..$((ARMS - 1)) = ARMS=$ARMS 와 같은 팔 집합 — ARMS=$ARMS 로 (같은 팔 집합에 이름 하나)"; exit 2
+  fi
+  ARM_LIST_TAG="_arml${ARM_LIST//,/-}"
+  echo "[p2] ★ 팔 고르기 ARM_LIST=$ARM_LIST ($ARMS 팔 · 진단 런 · 생산 봉인 없음)"
+else
+  ARM_LIST=""
+fi
 #  ★★★ 2026-08-25 (R3-CX-09, Codex 3차) — **진단 런이 생산 이름공간을 못 쓴다.**
 #    옛 판은 ⓐ ARMS > 8 을 허용했고(실제 shift 는 8개뿐이라 조용히 8 로 잘린다)
 #    ⓑ 명시 `OUTDIR` 이 조립된 `_armN` 태그를 **통째로 덮어** `ARMS=2 OUTDIR=<생산경로>`
@@ -61,7 +93,7 @@ _KITS_DEFAULT="kit_SBE kit_DBE"
 PREREG_ARMS=8
 AR_TAG=""
 if [ "$ARMS" -ne "$PREREG_ARMS" ]; then
-  AR_TAG="_arm$ARMS"
+  AR_TAG="_arm$ARMS$ARM_LIST_TAG"        # ★ Z3 — 팔 고르기면 목록 태그 (`_arm2_arml1-2` · 끔 = 빈 문자열 = 옛 이름)
   echo "[p2] ⚠ ARMS=$ARMS ≠ 사전등록 $PREREG_ARMS — **진단 런**이다."
   echo "     OUTDIR 에 $AR_TAG 를 붙여 생산 산출물과 갈라 놓는다.  생산 봉인은 걸지 않는다."
 fi
@@ -424,7 +456,7 @@ fi
 #    러너가 **정한 것만** 선언한다.  σ_VGCF 축은 `--expect-physics` 가 팔 단위로 봉인하고
 #    payload 가 불일치면 exit 4 를 낸다 (다른 겹).  선언하지 않은 축은 `receipt_match` 가
 #    요구하지 않는다 — 모르는 것을 아는 척하지 않는다.
-_RCPT_JSON="$(python3 - "$SCR" "$VOX" "$BRIDGE_UM" "$FIBRE_STAMP" "${SDCP_SPHERE_D:-}" \
+_RCPT_JSON="$(P2_ARM_LIST="$ARM_LIST" python3 - "$SCR" "$VOX" "$BRIDGE_UM" "$FIBRE_STAMP" "${SDCP_SPHERE_D:-}" \
                   "${SDCP_YIELD_VGCF:-0}" "${PTFE_STAMP:-off}" "${SIGMA_PTFE:-}" \
                   "${SIGMA_VGCF_OVERRIDE:-}" \
                   "$PERIODIC_ON" "$ARMS" "${EXPECT_BACKEND:-gpu}" "${SDCP_BRIDGE:-}" \
@@ -456,6 +488,9 @@ rec = {'vox_um': vox, 'bridge_um': float(_br), 'fibre_stamp': _fs,
        'periodic_xy': (_per == '1'),
        'arms': int(_arms), 'expect_backend': _bk,
        'origins': [list(o) for o in RC.expected_origins_for(vox)]}
+#  ★ Z3 — 팔 고르기 (`ARM_LIST` · 정규 목록) = 영수증 선택 칸 (있을 때만 digest 에 · 끔 = 옛 영수증 바이트) — 팔 번호 = origin 일정의 자리
+if os.environ.get('P2_ARM_LIST', ''):
+    rec['arm_list'] = [int(_x) for _x in os.environ['P2_ARM_LIST'].split(',')]
 if _sbrg:
     rec['sdcp_bridge_um'] = float(_sbrg)   # 판별 축 — 러너가 정한 것만 선언
 #  ★ 두 이온 σ — **러너가 정했을 때만** 선언한다 (RECEIPT_AXES 규약).  기본값으로 돌면
@@ -551,6 +586,11 @@ OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${AS_TAG
 if [ "$ARMS" -ne 8 ] && [ "${OUTDIR#*_arm$ARMS}" = "$OUTDIR" ]; then
   OUTDIR="${OUTDIR}_arm${ARMS}"
   echo "[p2] ⚠ 진단 런($ARMS 팔) — OUTDIR 에 강제 접미사: $OUTDIR"
+fi
+#  ★ Z3 — 팔 고르기 런은 목록 태그도 강제한다 (`ARMS=2` 의 `_arm2` 디렉터리와 `ARM_LIST=1,2` 가 섞이지 않게 · 영수증 대조가 둘째 겹)
+if [ -n "$ARM_LIST_TAG" ] && [ "${OUTDIR#*$ARM_LIST_TAG}" = "$OUTDIR" ]; then
+  OUTDIR="${OUTDIR}${ARM_LIST_TAG}"
+  echo "[p2] ⚠ 팔 고르기 런 — OUTDIR 에 강제 접미사: $OUTDIR"
 fi
 #  ★★★ 2026-08-25 (R4-CX-08, Codex 4차) — **접미사는 문자열이다.**  `user_arm2` 를
 #    production 디렉터리로 가리키는 junction/symlink 를 만들면 문자열 검사는 통과하고
@@ -838,10 +878,15 @@ PY
   mv "$FRESH" "$OUT"
 }
 
-echo "[p2] vox $VOX · 브리지 $BRIDGE_UM µm 고정 · 섬유 $FIBRE_STAMP · $ARMS 팔 · out $OUTDIR"
+echo "[p2] vox $VOX · 브리지 $BRIDGE_UM µm 고정 · 섬유 $FIBRE_STAMP · $ARMS 팔${ARM_LIST:+ (ARM_LIST=$ARM_LIST)} · out $OUTDIR"
 i=0
 for SH in "${SHIFTS[@]}"; do
-  [ "$i" -ge "$ARMS" ] && break
+  if [ -n "$ARM_LIST" ]; then
+    #  ★ Z3 — 팔 고르기: 고른 번호만 (팔 이름 = origin 번호 그대로) · 나머지는 건너뛴다
+    case ",$ARM_LIST," in *",$i,"*) ;; *) i=$((i+1)); continue;; esac
+  else
+    [ "$i" -ge "$ARMS" ] && break
+  fi
   for K in $KITS; do
     [ -d "$K" ] || { echo "[p2] ABORT — $K 없음 (~/sdcp 에서 돌릴 것)"; exit 2; }
     #  ★ fail-fast — 한 팔이 실패하면 **전체를 멈춘다**.  실패한 팔을 빼고 계속하면

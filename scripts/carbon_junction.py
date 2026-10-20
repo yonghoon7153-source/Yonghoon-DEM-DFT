@@ -1273,7 +1273,10 @@ def cjunc_plan(reg, R_j_ohm, *, unreg_law, ptfe_stamp, ptfe_jlaw='P0', sdcp_mod=
         if ptfe_jlaw == 'P1' and inst['ptfe_cov'][k]:
             mode[k] = MODE_CUT_P1                            # N18 — 덮인 접합은 c 와 무관하게 먼저 절단
             continue
-        r = R0 if c is None else float(sdcp_rj_eff(R0, c, a[k]))
+        if c is not None and math.isinf(R0) and c * a[k] == 1.0:
+            r = 0.0                                          # Z3 — 바닥 (R_j,0 = ∞) 의 c = 1 근접 = 축약 (∞·0 = NaN 금지 · 유한 R_j,0 은 아래 식 그대로)
+        else:
+            r = R0 if c is None else float(sdcp_rj_eff(R0, c, a[k]))
         rje[k] = r
         if r == 0.0:
             mode[k] = MODE_CONTRACT

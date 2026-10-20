@@ -444,6 +444,10 @@ _CG_RTOL_DEFAULT = 1.0e-8
 #: 수렴 증서 (ⓐ 정지 rtol ≤ 봉인 · ⓑ 판 전류 불균형 ≤ ε_I · ⓒ rtol/100 이어 풀기 |Δσ|/σ ≤ 1e-4 — `step3_conv_cert`) — 켜면 실패 = 미수렴.
 #:   기본 False = 이 파일의 솔브 결과 · 키가 옛 그대로.
 CONV_CERT = False
+#: ★ Z3 (2026-10-20 · 등록 R §11 숫자 탐침 칸 — σ 아님) — 마지막 `_solve_cg` 의 CG **반복 수** (수렴했을 때도).  수렴 증서
+#:   (`CONV_CERT`) 를 켰을 때만 센다 (CG callback) — 끔 = 옛 호출 그대로 (callback 인자 없음 · 해 · info 비트 같음).
+#:   `None` = 안 셌다 (증서 끔 · 시험이 바꿔 낀 솔버).  `solve_sigma_z` 가 해 (`cg_iters`) · 증서 (`iters` · `resolve_iters`) 로 옮긴다.
+LAST_CG = {'iters': None}
 
 
 def _amg_M(L):
@@ -491,6 +495,14 @@ def _solve_cg(L, b, x0=None, rtol=None):
     diag = L.diagonal()
     _rt = CG_RTOL if rtol is None else float(rtol)
     _x0k = {} if x0 is None else {'x0': np.asarray(x0, np.float64)}
+    #  ★ Z3 — 반복 수 (증서 켤 때만 · 끔 = 빈 dict 라 아래 호출들이 옛 인자 그대로)
+    LAST_CG['iters'] = None
+    _cnt = [0]
+    _cbk = {}
+    if CONV_CERT:
+        def _tick(_xk):
+            _cnt[0] += 1
+        _cbk = {'callback': _tick}
     LAST_BACKEND.update(requested=('gpu' if GPU_SOLVE else 'cpu'),
                         used=None, fallback_reason=None, precond=None)
     LAST_BACKEND.pop('rtol', None)
@@ -506,10 +518,13 @@ def _solve_cg(L, b, x0=None, rtol=None):
             Mg = cxs.diags(1.0 / cp.asarray(diag))
             _x0g = {} if x0 is None else {'x0': cp.asarray(x0, dtype=np.float64)}
             try:
-                xg, info = cg_gpu(Lg, bg, tol=_rt, maxiter=CG_MAXITER, M=Mg, **_x0g)
+                xg, info = cg_gpu(Lg, bg, tol=_rt, maxiter=CG_MAXITER, M=Mg, **_x0g, **_cbk)
             except TypeError:                              # newer CuPy renamed tol → rtol/atol
-                xg, info = cg_gpu(Lg, bg, rtol=_rt, atol=0.0, maxiter=CG_MAXITER, M=Mg, **_x0g)
+                _cnt[0] = 0
+                xg, info = cg_gpu(Lg, bg, rtol=_rt, atol=0.0, maxiter=CG_MAXITER, M=Mg, **_x0g, **_cbk)
             LAST_BACKEND.update(used='gpu', precond='jacobi')   # v1: GPU 경로는 Jacobi 유지
+            if _cbk:
+                LAST_CG['iters'] = int(_cnt[0])
             return cp.asnumpy(xg), int(info)
         except Exception as _e:
             LAST_BACKEND['fallback_reason'] = f'{type(_e).__name__}: {_e}'
@@ -528,10 +543,15 @@ def _solve_cg(L, b, x0=None, rtol=None):
     LAST_BACKEND['precond'] = 'amg' if Minv is not None else 'jacobi'
     if Minv is None:
         Minv = sparse.diags(1.0 / diag)
+    _cnt[0] = 0
     try:
-        return cg(L, b, rtol=_rt, maxiter=CG_MAXITER, M=Minv, **_x0k)
+        _r = cg(L, b, rtol=_rt, maxiter=CG_MAXITER, M=Minv, **_x0k, **_cbk)
     except TypeError:                                      # scipy < 1.12 has no rtol kwarg
-        return cg(L, b, tol=_rt, maxiter=CG_MAXITER, M=Minv, **_x0k)
+        _cnt[0] = 0
+        _r = cg(L, b, tol=_rt, maxiter=CG_MAXITER, M=Minv, **_x0k, **_cbk)
+    if _cbk:
+        LAST_CG['iters'] = int(_cnt[0])
+    return _r
 
 
 def _ball_cells(centre_um, rad_um, lo, vox, n):
@@ -1888,12 +1908,16 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
         if _same and pid is None:
             raise ValueError(f'solve_sigma_z: 같은 상 계면 {_same} 은 입자 번호 pid 가 있어야 한다 — 없으면 면 0 '
                              f'으로 조용히 무효 (unsupported identity · RINT-02/14)')
-    #  ② S1 × S2 (2026-10-20 · A · B 합침) — face_alpha 와 cjunc 를 **한 솔브에 같이** 주는 조합은 설계가 아직 정의하지 않았다
-    #    (α 를 받은 면의 멤버십 재배선 · 접합 간선 · P-junc 법칙과의 관계 미정).  `require_plan` 은 cjunc 를, `cjunc_require_quantitative`
-    #    는 face_alpha 를 모른다 → 여기서 조립 전에 거부 (CG 0) · 둘 중 하나만 주면 아래 각 관문 그대로.  결정 = 1저자 · Codex.
-    if face_alpha is not None and cjunc is not None:
-        raise ValueError('solve_sigma_z: face_alpha (S1 PTFE 면 개구율) 와 cjunc (S2/S3 탄소 접합) 동시 사용 거부 — 설계가 조합을 '
-                         '아직 정의하지 않았다 (α 를 받은 면의 접합 재배선 · P-junc 법칙과의 관계 미정 · 1저자 · Codex 결정 전)')
+    #  ② S1 × S2 (Z3 10-20 · 설계 v1 §3 · §4 · 등록 R §10 꼴 `PTFE_STAMP=face_alpha` + 접합 + P0/P1) — 한 솔브에 같이 준다.
+    #    조합 규칙 (설계 그대로 · 순서가 규칙이다): ① `couple()` 이 α (면 개구율) 를 **먼저** 융합 면에 곱하고 α = 0 면은 행렬에서 뺀다
+    #    (`_pfa.assemble_axis` 의 `_keep` — a2 · b2 · g 를 같은 마스크로 압축) ② 그 면들을 접합 조립기가 받아 멤버십 재배선 · 발자국 절단 ·
+    #    접합 간선을 넣는다 (`_cjs.add_faces` — 조립기는 dof → 셀 번호로 sid 를 다시 읽으므로 압축된 a2 · b2 · g 셋이면 일관) ③ PTFE 가
+    #    접합 끝을 덮을 때는 P0/P1 법칙만 (`cjunc_plan` 의 덮임 판정 · 접합 간선은 면이 아니라 α 가 곱해지지 않는다 — 이중 계상 금지) ·
+    #    접합이 끊는 면 (VV 자리 · 자기 · 미등록) 은 같은 탄소 상 면이라 α 면제 (`ptfe_face_alpha._exempt_mask`) → 두 연산이 같은 면을 겹쳐
+    #    가리지 않는다.  관문 = 각자 그대로 (`require_plan` · `cjunc_require_quantitative`) · 연결성 = 접합 조립기의 실제 그래프 (α = 0 면이
+    #    빠진 뒤) · face_alpha 의 사방 절단 셀 수 = 같은 기록 함수.
+    #    ⚠ 2026-10-20 B6 통합 때 넣은 **임시** 동시 거부 (설계 §3 · §4 의 동시 거부 목록에 없던 것) 를 Z3 가 뺐다.  centerline + P1 거부는
+    #      그대로 (`cjunc_plan` · `ca_ext_cjunc`).
     #  ② S1 (2026-10-20 · Rint ② · 설계 v1 §3 · R18 Q6) — PTFE 면 개구율 `face_alpha` = ptfe_face_alpha.build_plan(...) 의 결과.
     #    None (기본) 이면 아래 어떤 줄도 바뀌지 않는다 (옛 조립 · 연결성 · 반환 키 비트 같음).  계획 무결성 · 격자 · 지문은
     #    `require_plan` 이 조립 전에 본다 (CG 0) · r1 표 · ①′ · 주기와 동시 = 거부 (v0 미정의 조합 · seam 미지원).
@@ -2017,6 +2041,8 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
     #   수 있으나, 프로덕션 조밀 베드는 본류가 bulk로 x=0 에 닿아 실질 영향 미미(경계 몇 입자).
     if _cjp is not None:
         lab, _nl = cond.astype(np.int32), 1               # ② — 셀 라벨로 가지치기하지 않는다 (실제 그래프 = 조립 뒤 · J7 · J12)
+        if _fap is not None and _fap['n_cut_rows'] > 0:   # Z3 — 조합: α = 0 면은 조립기 그래프에서 빠진다 · 사방 절단 셀 수 = 같은 기록
+            _fa_iso = _pfa.isolated_by_cut(cond, _pfa.cut_lin(_fap))
     elif _ifp is not None and _ifp['n_cut_rows'] > 0:
         #  ①′ E3 — 절단 면 (g = 0) 을 뺀 **실제 간선** 그래프로 떠 있는 성분을 가린다 (셀 6-연결 라벨은 절단을 모른다).
         #    절단이 없으면 위 옛 라벨 그대로 (성분 집합이 같다 → I2 비트 같음).
@@ -2188,7 +2214,9 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
         n_through_dof = int(_cjs.stats['n_through_dof']); n_plate_reachable_dof = n_dof
     print(f'    STEP3 solve: {n_dof:,} dof, plate contacts {n_pb:,}/{n_pt:,} — CG running '
           f'({"GPU" if GPU_SOLVE else "CPU"}, 수 분 소요 가능)…', flush=True)
+    LAST_CG['iters'] = None                                # Z3 — 바꿔 낀 솔버가 앞 호출의 수를 물려받지 않게
     phi, info = _solve_cg(L, b)
+    _it_main = LAST_CG.get('iters')                        # Z3 — 증서 켤 때만 int (끔 = None · 결과 키에 안 싣는다)
     resid = float(np.linalg.norm(L @ phi - b) / max(np.linalg.norm(b), 1e-30))
     #  review F2: NEVER ship a silent bad σ.  ★ RGL-01 (Codex 10-05) — **비유한 잔차도 미수렴**이다.  옛 술어
     #    `bool(info) or resid > 1e-6` 는 info 0 + resid NaN 을 놓쳤다 (NaN > 1e-6 = False → 경고 없음 · unconverged False).
@@ -2211,8 +2239,18 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
     _cert = None
     if CONV_CERT:                                          # 수렴 증서 (설계 §6 · 끔 = 이 블록 없음 · 결과 키 그대로)
         import step3_conv_cert as _cc
+        _rit = [None]
+
+        def _resolve(L_, b_, x0_, rt_):                    # ⓒ 이어 풀기 — 같은 솔버 · 반복 수만 따로 받는다 (Z3)
+            LAST_CG['iters'] = None
+            _rr = _solve_cg(L_, b_, x0=x0_, rtol=rt_)
+            _rit[0] = LAST_CG.get('iters')
+            return _rr
         _cert = _cc.certify(L, b, phi, int(info) if info else 0, resid, CG_RTOL, _Ab, _gb, _At, _gt,
-                            (z_plate - z_b) / _A, lambda L_, b_, x0_, rt_: _solve_cg(L_, b_, x0=x0_, rtol=rt_))
+                            (z_plate - z_b) / _A, _resolve)
+        #  ★ Z3 — 반복 수 (수렴했어도 · 숫자 탐침 칸 · 게시 조건 아님 — `run_contract.conv_cert_problem` 은 보지 않는다)
+        _cert['iters'] = _it_main
+        _cert['resolve_iters'] = _rit[0]
         if not _cert['ok']:
             print(f"  ⚠ STEP3 수렴 증서 실패 (ⓐ {_cert['pass_a']} · ⓑ {_cert['pass_b']} 불균형 {_cert['imbalance']:.2e} · "
                   f"ⓒ {_cert['pass_c']} Δσ {_cert['dsigma_rel']:.2e}) — 미수렴 = 미게시", flush=True)
@@ -2241,6 +2279,7 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
            'unconverged': unconv}
     if _cert is not None:
         out['conv_cert'] = _cert
+        out['cg_iters'] = _it_main                         # Z3 — 증서를 켠 해만 (끔 = 옛 키 그대로)
     if _cjs is not None:                                   # ② — 원장을 읽는 소산 분담 · 접합 전류 (E1 · E2 · E4′)
         _cjr = _cjs.record(phi)
         out['cjunc'] = dict(_cjm.early_record(_cjp), **_cjs.stats,

@@ -126,6 +126,8 @@ CLI_ACCOUNTING = {
     '--step3-cjunc-tol-ff-um': ('protocol_ext', ('ca_ext.cjunc.tol_ff_um', 'ca_ext.cjunc.tol_P_um', 'ca_ext.cjunc.tol_sj_um',
                                                  'ca_ext.sdcp_mod.tol_sj_um')),
     '--step3-cjunc-ptfe-jlaw': ('protocol_ext', ('ca_ext.cjunc.ptfe_jlaw',)),
+    #  ★ Z3 (10-20 · 등록 R §3-1) — 극한 런 표지 (inf 바닥 · zero 천장 · `--step3-cjunc-rj` 과 짝 · 사다리 진단)
+    '--step3-cjunc-rj-limit': ('protocol_ext', ('ca_ext.cjunc.rj_limit',)),
     '--step3-sdcp-mod-c': ('protocol_ext', ('ca_ext.sdcp_mod.c',)),
     #  ★ `ptfe_zero_dof` = (스탬프 ON) ∧ (σ_PTFE == 0) — 두 옵션이 함께 정한다.
     '--ptfe-stamp': ('protocol', ('ptfe_stamp', 'ptfe_zero_dof')),
@@ -307,7 +309,9 @@ RECEIPT_AXES_NODIGEST = ('field_requested', 'sigma_am_s_S_cm', 'sigma_sdcp_S_cm'
 #   코호트 디렉터리 이름 보존 · `RECEIPT_AXES` 에 넣으면 `rec.get(k) = None` 이 본문에 들어가 옛 digest 가 전부 바뀐다).
 #   대조는 `receipt_match` 가 매니페스트 블록 (`ca_ext.<하위>.protocol`) · `backend.rtol` 과 한다 (요청 없는 블록 · rtol 도 거부).
 #  ★ 2026-10-20 (Rint ② Z1) — VGCF bulk σ (`SIGMA_FIBRE_BULK`) 와 그 식 이름 · 같은 규칙 (있을 때만 digest · 매니페스트 기록과 대조).
-RECEIPT_OPTIONAL = ('ca_ext_request', 'step3_rtol', 'sigma_vgcf_bulk_S_cm', 'sigma_vgcf_rule')
+RECEIPT_OPTIONAL = ('ca_ext_request', 'step3_rtol', 'sigma_vgcf_bulk_S_cm', 'sigma_vgcf_rule',
+                    #  ★ Z3 (10-20) — 러너 팔 고르기 `ARM_LIST` (있을 때만 · 고른 팔 번호 = origin 일정의 자리 · 진단 런)
+                    'arm_list')
 
 
 def expected_origins_for(vox):
@@ -370,6 +374,20 @@ def receipt_match(rec, man, origin=None):
         if _o not in _known:
             return False, (f'RCPT|origin|alien| {_o} 는 영수증의 origin 일정에 없다 — '
                            f'{len(_known)}개 중 어느 것도 아니다')
+    #  ★ Z3 (10-20) — 팔 고르기 (`ARM_LIST`) 영수증: 팔 번호 = origin 일정 (정렬 = 러너 SHIFTS 순서) 의 자리 → 이 팔의 origin 이 **고른 팔**의
+    #    origin 이어야 한다 (같은 OUTDIR 에 고르지 않은 팔 · 옛 a0 가 섞이지 않게).  칸이 없으면 옛 거동 (검사 없음).
+    if 'arm_list' in rec:
+        _al, _og = rec.get('arm_list'), rec.get('origins')
+        if (not isinstance(_al, list) or not _al or any(type(i) is not int or i < 0 for i in _al)      # noqa: E721
+                or _al != sorted(set(_al)) or not isinstance(_og, list) or max(_al) >= len(_og) or rec.get('arms') != len(_al)):
+            return False, (f'RCPT|arm_list|shape| arm_list = {_al!r} (정렬 · 중복 없음 · 0 ≤ i < origin 수 · arms = 길이 '
+                           f'{rec.get("arms")!r})')
+        if origin is not None:
+            _o = tuple(round(float(x), 9) for x in origin)
+            _sel = {tuple(round(float(x), 9) for x in _og[i]) for i in _al}
+            if _o not in _sel:
+                return False, (f'RCPT|arm_list|unselected| origin {_o} 는 고른 팔 {_al} 의 origin 이 아니다 — 이 OUTDIR 의 런이 '
+                               f'만든 팔이 아니다')
     _xp = _receipt_ext_problem(rec, man)              # ★ B6 — 다음 세대 요청 · rtol (선택 칸 · 없으면 옛 거동)
     if _xp:
         return False, _xp
@@ -695,10 +713,12 @@ def ca_ext_record_ok(man):
     return True, None
 
 
-def ca_ext_request_problem(req):
+def ca_ext_request_problem(req, ptfe_stamp='off'):
     """★ 2026-10-20 (Rint ② B6 · 러너 발사 전 계약 검사) — 러너가 선언하는 다음 세대 요청 → 문제 | None.
     선언 축 = 매니페스트 축: 하위 블록 이름 · 칸 집합 (`ca_ext_cjunc.REQUEST_KEYS_*`) · 칸이 protocol 정본 (`ca_ext_protocol_fields`) 안 ·
-    값 = 그 정본 함수로 다시 만들 수 있다 (정량 · c ∈ {0, 1} · P1 = 지금 거부).  S3 만 = 거부 (S2 없이)."""
+    값 = 그 정본 함수로 다시 만들 수 있다 (정량 · c ∈ {0, 1}).  S3 만 = 거부 (S2 없이).
+    ★ Z3 — `ptfe_stamp` (러너 · 영수증의 PTFE 규약 · 기본 off) 로 다시 만든다 → P1 = face_alpha 에서만 통과 · 접합 선언 칸에 극한 표지
+      `rj_limit` ('inf' · 'zero' — 등록 R §3-1 바닥 · 천장 · 있을 때만) 를 받는다 (`R_j_ohm` null · 0.0 과 한 꼴)."""
     if not isinstance(req, dict) or not req:
         return f'요청이 비지 않은 dict 가 아니다 ({req!r})'
     _bad = sorted(k for k in req if k not in CA_EXT_REQUESTABLE)
@@ -713,13 +733,15 @@ def ca_ext_request_problem(req):
         return f'정본을 못 읽었다 ({type(e).__name__}: {e})'
     for sub, kv in req.items():
         keys = _cw.REQUEST_KEYS_CJUNC if sub == 'cjunc' else _cw.REQUEST_KEYS_SDCP
+        if sub == 'cjunc' and isinstance(kv, dict) and 'rj_limit' in kv:
+            keys = tuple(keys) + ('rj_limit',)                   # ★ Z3 — 극한 런 표지 (있을 때만)
         if not isinstance(kv, dict) or set(kv) != set(keys):
             return f'{sub}: 선언 칸 {sorted(kv) if isinstance(kv, dict) else kv!r} ≠ {sorted(keys)}'
         _off = sorted(f'ca_ext.{sub}.{k}' for k in kv if f'ca_ext.{sub}.{k}' not in _fields)
         if _off:
             return f'{sub}: 선언 칸 {_off} 이 매니페스트 protocol 정본에 없다'
     try:
-        _cw.cjunc_protocol_record(ptfe_stamp='off', **req['cjunc'])
+        _cw.cjunc_protocol_record(ptfe_stamp=ptfe_stamp, **req['cjunc'])
         if 'sdcp_mod' in req:
             _cw.sdcp_mod_protocol_record(c=req['sdcp_mod']['c'], tol_sj_um=req['cjunc']['tol_ff_um'])
     except (ValueError, TypeError) as e:
@@ -807,6 +829,8 @@ RUNNER_CA_EXT_ENV = (
 )
 #: 러너 수 칸 — ASCII 10 진 (부호 · 공백 · 밑줄 · 유니코드 숫자 · nan · inf 낱말 거부 · 넘침 (1e999) 은 유한성 검사가 잡는다)
 _RUNNER_NUM_RE = r'(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?'
+#: ★ Z3 — 글자 그대로 0 인 10 진 (가수의 숫자가 전부 0 · 지수는 아무것) — 천장 극한 R_j 0 의 표기 (언더플로로 0 이 된 글자와 가른다)
+_RUNNER_ZERO_RE = r'(?:0+(?:\.0*)?|\.0+)(?:[eE][+-]?[0-9]+)?'
 _RUNNER_TOKEN_RE = r'[A-Za-z0-9_]+'
 _RUNNER_SAFE_RE = r'[A-Za-z0-9._=,+ -]*'          # 러너가 생성 스크립트에 박는 문자 (R5-CX-01 — `$` · 따옴표 · 구분자 · 개행 없음)
 _RUNNER_CJ_NUM = ('R_j_ohm', 's_min_um', 'tol_ff_um')
@@ -862,12 +886,22 @@ def runner_ca_ext(env, *, ptfe_stamp='off', lean='0', fibre_stamp='segment', per
             cj, bad = {}, []
             for n, k in cj_named:
                 v = raw[n]
-                if k in _RUNNER_CJ_NUM:
+                if k == 'R_j_ohm' and v == 'inf':
+                    #  ★ Z3 (등록 R §3-1) — 바닥 극한 = 낱말 `inf` 하나 (INF · Infinity · +inf · 1e999 넘침 = 아래 ASCII 10 진 규칙이 거부) →
+                    #    요청 = R_j_ohm null + rj_limit 'inf' (JSON 은 inf 를 못 쓴다 · 매니페스트 protocol 과 한 꼴)
+                    cj[k] = None
+                    cj['rj_limit'] = 'inf'
+                elif k in _RUNNER_CJ_NUM:
                     x = _runner_float(v)
                     if x is None:
                         bad.append(f'{n}={v!r} (ASCII 10 진 · 유한 · 부호 없음)')
+                    elif k == 'R_j_ohm' and x == 0.0 and not _re.fullmatch(_RUNNER_ZERO_RE, v):
+                        #  ★ Z3 — 0 이 아닌 글자가 float 에서 0 으로 떨어졌다 (언더플로 · 예 1e-400) — 천장 극한으로 바꾸지 않는다
+                        bad.append(f'{n}={v!r} — 0 이 아닌 값이 float 에서 0 으로 떨어진다 (언더플로 · 천장 극한은 글자 그대로 0 만)')
                     else:
                         cj[k] = x
+                        if k == 'R_j_ohm' and x == 0.0:           # ★ Z3 — 천장 극한 = 글자 그대로 0 인 10 진 (0 · 0.0 · 0e0 — 같은 물리 = 같은 요청)
+                            cj['rj_limit'] = 'zero'
                 elif _re.fullmatch(_RUNNER_TOKEN_RE, v):
                     cj[k] = v
                 else:
@@ -889,7 +923,7 @@ def runner_ca_ext(env, *, ptfe_stamp='off', lean='0', fibre_stamp='segment', per
         else:
             req['sdcp_mod'] = {'c': float(c)}
     if 'cjunc' in req:
-        why = ca_ext_request_problem(req)
+        why = ca_ext_request_problem(req, ptfe_stamp=str(ptfe_stamp))   # ★ Z3 — 러너의 PTFE 규약으로 (P1 = face_alpha 에서만)
         if why:
             _p('REQUEST', why)
     fa = str(ptfe_stamp) == 'face_alpha'
@@ -903,8 +937,7 @@ def runner_ca_ext(env, *, ptfe_stamp='off', lean='0', fibre_stamp='segment', per
         if periodic:
             _p('PERIODIC', f'{_lab} 인데 MPM_PERIODIC_SIGMA=1 — 정량 모드 거부 (주기 seam 미지원)')
     if on:
-        if fa:
-            _p('FACE_ALPHA_COMBO', 'PTFE_STAMP=face_alpha + CJUNC=1 — 설계가 조합을 아직 정의하지 않았다 (payload · solve_sigma_z 도 거부)')
+        #  ★ Z3 — PTFE_STAMP=face_alpha + CJUNC=1 = 받는다 (설계 §3 · §4 조합 규칙 · 등록 R §10 꼴 · B6 통합 때의 임시 거부를 뺐다)
         if _gt0(sdcp_bridge):
             _p('SDCP_BRIDGE', f'SDCP_BRIDGE={sdcp_bridge} — SDCP 브리지 진단 팔과 접합 동시 = 거부 (설계 §4-3)')
         if str(sigma_vgcf_override or '') != '' and not _gt0(sigma_vgcf_override):
@@ -991,18 +1024,27 @@ def runner_ca_ext_view(rec):
     req = rec.get('ca_ext_request')
     fl, xp, tg = [], [], []
     if req is not None:
-        why = ca_ext_request_problem(req)
+        why = ca_ext_request_problem(req, ptfe_stamp=rec.get('ptfe_stamp', 'off'))   # ★ Z3 — 영수증의 PTFE 규약으로 (P1 = face_alpha 에서만)
         if why:
             raise ValueError(f'영수증의 ca_ext_request 가 정본 검사를 못 지난다 — {why}')
         import ca_ext_cjunc as _cw
         cj = req['cjunc']
+        lim = cj.get('rj_limit')
         fl.append(_ca_ext_cli_flag('cjunc', None, switch=True))
         for k in _cw.REQUEST_KEYS_CJUNC:
+            if k == 'R_j_ohm' and lim == 'inf':
+                #  ★ Z3 — 바닥: payload 인자 = `inf` (float · 극한 표지와 짝) · 선언 = 매니페스트 protocol 값 (null → `None`)
+                fl += [_ca_ext_cli_flag('cjunc', k), 'inf']
+                xp.append(f'ca_ext.cjunc.{k}=None')
+                continue
             sv = repr(float(cj[k])) if k in _RUNNER_CJ_NUM else str(cj[k])
             fl += [_ca_ext_cli_flag('cjunc', k), sv]
             xp.append(f'ca_ext.cjunc.{k}={sv}')
+        if lim is not None:                                       # ★ Z3 — 극한 표지 (payload 플래그 · 선언 칸 = protocol `rj_limit`)
+            fl += [_ca_ext_cli_flag('cjunc', 'rj_limit'), str(lim)]
+            xp.append(f'ca_ext.cjunc.rj_limit={lim}')
         h8 = _hl.sha256(_json.dumps(cj, sort_keys=True, separators=(',', ':'), allow_nan=False).encode()).hexdigest()[:8]
-        tg.append(f'_cj{_runner_tag_num(cj["R_j_ohm"])}_{h8}')
+        tg.append(f'_cj{"inf" if lim == "inf" else _runner_tag_num(cj["R_j_ohm"])}_{h8}')
         if 'sdcp_mod' in req:
             cv = float(req['sdcp_mod']['c'])
             fl += [_ca_ext_cli_flag('sdcp_mod', 'c'), str(int(cv))]

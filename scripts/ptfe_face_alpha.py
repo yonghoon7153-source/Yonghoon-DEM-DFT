@@ -761,7 +761,10 @@ def payload_prepare(sid, pid, *, lo, vox, sig_e, sig_i, pts, fid, kind, channels
         plans['ionic'] = build_plan(sid, sig_i, caps, lo=lo, vox=vox, channel='ionic')
     return {'caps': caps, 'plans': plans, 'protocol': protocol_record(channels, dia_law),
             'volume': volume_record(caps['volume_um3'], true_volume_um3),
-            'census': ptfe_point_cell_census(sid, pts, lo, vox)}
+            'census': ptfe_point_cell_census(sid, pts, lo, vox),
+            #  ★ Z3 (10-20) — off 격자 sid 지문 (face_alpha 의 sid 격자 = `ptfe_stamp off` 격자 · 같은 함수 `step3_sigma._grid_fp` = 접합 원장
+            #    `fp.sid` · S0 off 격자와 같은 꼴) — 사슬이 같은 킷 · 같은 래스터 런끼리 · 조합 런의 접합 원장과 대조한다.
+            'sid_off': _grid_fp(sid)}
 
 
 def payload_block(prep, receipts):
@@ -772,7 +775,7 @@ def payload_block(prep, receipts):
                          receipts={k: receipts.get(k) or {'status': 'missing', 'why': '영수증 없음'} for k in SOLVES},
                          off_grid_ptfe_point_cells=prep['census'],
                          fp={'caps': prep['caps']['fp'], 'plan_electronic': (pe['fp_plan'] if pe else None),
-                             'plan_ionic': (pi['fp_plan'] if pi else None)})
+                             'plan_ionic': (pi['fp_plan'] if pi else None), 'sid_off': prep['sid_off']})
     return {'protocol': dict(prep['protocol']), 'evidence': ev}
 
 
@@ -817,6 +820,10 @@ def ptfe_face_block_problem(man):
     if not isinstance(rc, dict) or set(rc) != set(SOLVES):
         return f'receipts| 키 {sorted(rc) if isinstance(rc, dict) else rc!r} ≠ {sorted(SOLVES)}'
     fpd = ev.get('fp') if isinstance(ev.get('fp'), dict) else {}
+    #  ★ Z3 — off 격자 sid 지문 (격자 지문 꼴 = blake2b 16 바이트 소문자 hex 32 · 없음 · 모양 틀림 = 거부)
+    _so = fpd.get('sid_off')
+    if not (isinstance(_so, str) and len(_so) == 32 and all(ch in '0123456789abcdef' for ch in _so)):
+        return f'fp| off 격자 sid 지문 sid_off = {_so!r} (소문자 hex 32 — `step3_sigma._grid_fp`)'
     for name in SOLVES:
         r = rc[name]
         if not isinstance(r, dict):
