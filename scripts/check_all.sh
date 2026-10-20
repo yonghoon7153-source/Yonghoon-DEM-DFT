@@ -240,6 +240,15 @@ run 'rint_g2_am_iface (①′ AM–AM 계약 v3.1 · 반례 먼저)' python3 scr
 #    22+31 FAIL · 웹앱 표지 2 PASS · 7 FAIL.  `--old-scripts DIR` (기반 scripts 사본) 을 주면 끔 경로 비트 대조 B1 · B2 도 돈다.
 run 'ptfe_face_alpha (Rint ② S1 · 시험 먼저)' python3 scripts/test_ptfe_face_alpha.py
 run 'webapp: ca_ext_labels (S1 표지 · 봉인 밖 템플릿)' python3 webapp/test_ca_ext_labels.py
+#  ★ 2026-10-20 (Rint ② S2 · S3 · 설계 v1 §4 · §5 · §6 · 1저자 N1–N18 권고대로) — 탄소 접합 R_j v0 · SDCP 접합 수정자 · STEP3 수렴 증서
+#    (기본 끔 · 끄면 옛 경로 비트 같음): 손으로 세운 회로 (직렬 사슬 · 사다리) · 축약 · 절단 · 실제 그래프 가지치기 · 관문 (조립 전 거부 · CG 0) ·
+#    끔 비트 같음 C0 (기준 d1768cf0c 의 step3_sigma) · PIECE (멤버십 셀 = `_fibre_segment_ijk`) · FA+CJ (S1 face_alpha 와 한 솔브에 같이 = 거부 ·
+#    A · B 합침) · 증서 봉인값 (rtol 1e-12 · ε_I 1e-4) 기계적 재유도.  고치기 전 = 2/22 · 2/11 PASS.  `--quick` = C0 무작위 침대 수를 줄인다.
+run 'carbon_junction (Rint ② S2 · S3 · 시험 먼저)' python3 scripts/test_carbon_junction.py
+run 'step3_conv_cert (STEP3 수렴 증서 · 시험 먼저)' python3 scripts/test_step3_conv_cert.py
+#  ★ 2026-10-20 (Rint ② S0 · 설계 v1 §2 · 등록 R §2-1) — 표현 원장 (raster 만 · 솔브 없음): 기하 원시 · 접합 census 미리보기 · 격자 원시 ·
+#    계획 (식 · 해시 · 개정 커밋 대조) · 스키마 (σ · 전류 칸 없음) · 끝-끝 (payload 실물로 생산 raster 입력을 잡는다).  구현 전 = 0/23 PASS.
+run 'ca_s0_census (Rint ② S0 표현 원장 · 시험 먼저)' python3 scripts/test_ca_s0_census.py
 #  ★ 2026-10-04 (τ 결정 16 ② · 1저자 비준 *"권고대로"*) — 안 A: 망 솔버 띠 선택을 `boundary_sets` 로 추출 (추출 전 기준값과 비트 동일)
 #    + 쓴 규칙 · 띠 폭 기록 (LHS-17 · TAU-14) · 이온 인계 열 도우미 `tau_flux` (v2 §5 · 게이트 G1–G6 · 생산자 ↔ 소비자 계약).
 run 'network boundary_rule (안 A · 동작 중립)' python3 scripts/test_network_boundary_rule.py
