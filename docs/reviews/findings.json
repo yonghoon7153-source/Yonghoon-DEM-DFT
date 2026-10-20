@@ -10975,31 +10975,30 @@
     {
       "id": "RIMPR-01",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-15 Rint G2 ①′ 수정 재확인 (검토 핀 dcb97f1ed · 실제 함수 반례 · 정상 원장 → 변이 파일 조인 → am_iface_plan → iface_require_quantitative 실 호출)",
       "opened_in": "docs/reviews/codex_review_rint_g2_impl_fix_recheck_20261015.md",
       "title": "조인 파서가 입력 일부를 검증 전에 버린다 — 데이터 블록에서 열 수가 다른 행 (접촉 · 원자) 은 조용히 빠지고, 중복 필수 열은 첫 열만 읽고, step · count 줄의 뒤 토큰은 무시된다 → 틀린 파일이 정상 부분집합으로 조인 PASS · 후속 정량 관문 ACCEPT",
-      "note": "판정문 §2 · 자리 (핀 dcb97f1ed): scripts/rint_iface_join.py:222–306 (224 · 234 = 첫 토큰만 · 250–253 = 길이 다른 행 버림 · 280 · 306 = hdr.index 첫 열).  반례 = 합성 AM 두 구 (r 1 µm · 거리 1.5 · δ 0.5 · 교차 원판 면적 1.3744467859455347e−6 sim²) — 24 열 접촉 행 삽입 · 7 열 원자 행 삽입 · radius 중복 (뒤 열 nan · n_nonfinite 0) · step `100 0.9` · count `1 garbage` = 전부 PASS / ACCEPT · 폭 정상 중복 행 = REJECT (양성 차단 대조).  σ 값 변화 주장 아님 · 정상 real14 · case15 계산은 정상.  최소 해결 = 블록의 비어 있지 않은 모든 행 세기 + 열 수 불일치 명시 REJECT · 필수 열 이름 정확히 한 번 · step/count 줄 = 정확히 한 정수 토큰 · 정상 %g 두 침대 · D19 양성 유지 · 후속 계획이 REJECT 를 이어받음 (허용오차 변경 · 수치 재계산 불요).  권고 (Q7 · 승인된 wrapper 범위 밖이라 따로 표기): 일반 관문의 모든 막 행 유한 · 비음수 (r=0 보존).  ⬜ 수정 계획 = 세미나 뒤 (1저자 10-15 — 24 시간 세미나 집중).",
+      "note": "판정문 §2 · 자리 (핀 dcb97f1ed): scripts/rint_iface_join.py:222–306 (224 · 234 = 첫 토큰만 · 250–253 = 길이 다른 행 버림 · 280 · 306 = hdr.index 첫 열).  반례 = 합성 AM 두 구 (r 1 µm · 거리 1.5 · δ 0.5 · 교차 원판 면적 1.3744467859455347e−6 sim²) — 24 열 접촉 행 삽입 · 7 열 원자 행 삽입 · radius 중복 (뒤 열 nan · n_nonfinite 0) · step `100 0.9` · count `1 garbage` = 전부 PASS / ACCEPT · 폭 정상 중복 행 = REJECT (양성 차단 대조).  σ 값 변화 주장 아님 · 정상 real14 · case15 계산은 정상.  최소 해결 = 블록의 비어 있지 않은 모든 행 세기 + 열 수 불일치 명시 REJECT · 필수 열 이름 정확히 한 번 · step/count 줄 = 정확히 한 정수 토큰 · 정상 %g 두 침대 · D19 양성 유지 · 후속 계획이 REJECT 를 이어받음 (허용오차 변경 · 수치 재계산 불요).  권고 (Q7 · 승인된 wrapper 범위 밖이라 따로 표기): 일반 관문의 모든 막 행 유한 · 비음수 (r=0 보존).  ⬜ 수정 계획 = 세미나 뒤 (1저자 10-15 — 24 시간 세미나 집중).  ✅ 10-20 수정 (1저자 *\"Rint 관련해서 계속 gate 굴려봐 codex 리뷰 받고\"* · 시험 먼저 · 작업 트리 에이전트 → 본 가지) `3b9d51789` — 판정문 최소 해결 + 같은 부류 보강 (프레임 전 줄 절 배정 frame_layout · 상자 경계 줄 정확히 셋 · step/count int64 · µm 변환 유한 — 1저자 비준 대기) · Codex 짧은 재확인 요청서 docs/reviews/codex_rint_join_rimpr_fix_recheck_request_20261020.md.",
       "evidence_tests": [
-        "docs/reviews/codex_review_rint_g2_impl_fix_recheck_20261015.md §2",
-        "docs/reviews/codex_rint_g2_impl_fix_recheck_evidence_20261015/evidence/join_independent.json · join_parent_replay.json",
-        "docs/reviews/codex_rint_g2_impl_fix_recheck_evidence_20261015/probes/join_independent.py · join_parent_replay.py (실행하지 않음)"
-      ]
+        "scripts/test_rint_g2_join.py (고치기 전 78/135 → 138/138 · 새 반례 J10 37 · J11 20 · 정상 real_14 · case15 · D19 그대로)"
+      ],
+      "claimed_fixed_sha": "3b9d51789"
     },
     {
       "id": "RIMPR-02",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-15 Rint G2 ①′ 수정 재확인 (검토 핀 dcb97f1ed)",
       "opened_in": "docs/reviews/codex_review_rint_g2_impl_fix_recheck_20261015.md",
       "title": "scaffold 반경 · 좌표의 유한성을 Decimal 로만 세고 실제로 쓰는 float64 로는 안 센다 — 1e309 (또는 같은 크기 고정소수) 반경은 float64 inf 인데 조인 PASS · n_nonfinite 0 (원장 생성기가 뒤에서 거부)",
-      "note": "판정문 §3 · 자리 (핀 dcb97f1ed): scripts/rint_iface_join.py:339–357 (Decimal.is_finite 로 셈 → float64 변환 → 양수 검사는 isfinite 값만).  음수 고정소수 변이 = −inf 도 같음.  한정: 생산 σ 오염 주장 아님 — 원장 생성 step3_sigma.py:1054 의 독립 유한성 검사가 ValueError · 정상 원장과 섞어도 입자 지문 불일치로 거부 ⇒ 조인 증서의 잘못된 PASS · 진단 완결성 문제 (P3).  최소 해결 = 실제 float64 좌표 · 반경 · 단위변환 결과의 유한성을 입구에서 검사 (±10^309 = structured REJECT · 정상 두 침대 PASS) · int64 넘는 정수 토큰의 OverflowError 도 같은 입구 오류 처리에 포함 가능.  ⬜ 세미나 뒤.",
+      "note": "판정문 §3 · 자리 (핀 dcb97f1ed): scripts/rint_iface_join.py:339–357 (Decimal.is_finite 로 셈 → float64 변환 → 양수 검사는 isfinite 값만).  음수 고정소수 변이 = −inf 도 같음.  한정: 생산 σ 오염 주장 아님 — 원장 생성 step3_sigma.py:1054 의 독립 유한성 검사가 ValueError · 정상 원장과 섞어도 입자 지문 불일치로 거부 ⇒ 조인 증서의 잘못된 PASS · 진단 완결성 문제 (P3).  최소 해결 = 실제 float64 좌표 · 반경 · 단위변환 결과의 유한성을 입구에서 검사 (±10^309 = structured REJECT · 정상 두 침대 PASS) · int64 넘는 정수 토큰의 OverflowError 도 같은 입구 오류 처리에 포함 가능.  ⬜ 세미나 뒤.  ✅ 10-20 수정 (1저자 *\"Rint 관련해서 계속 gate 굴려봐 codex 리뷰 받고\"* · 시험 먼저 · 작업 트리 에이전트 → 본 가지) `3b9d51789` — 판정문 최소 해결 + 같은 부류 보강 (프레임 전 줄 절 배정 frame_layout · 상자 경계 줄 정확히 셋 · step/count int64 · µm 변환 유한 — 1저자 비준 대기) · Codex 짧은 재확인 요청서 docs/reviews/codex_rint_join_rimpr_fix_recheck_request_20261020.md.",
       "evidence_tests": [
-        "docs/reviews/codex_review_rint_g2_impl_fix_recheck_20261015.md §3",
-        "docs/reviews/codex_rint_g2_impl_fix_recheck_evidence_20261015/evidence/join_independent.json (scaffold_*overflow · overflow_matching_ledger)"
-      ]
+        "scripts/test_rint_g2_join.py (고치기 전 78/135 → 138/138 · 새 반례 J10 37 · J11 20 · 정상 real_14 · case15 · D19 그대로)"
+      ],
+      "claimed_fixed_sha": "3b9d51789"
     },
     {
       "id": "L214-01",
@@ -11996,6 +11995,28 @@
       "opened_in": "docs/reviews/sdcp_sigma_e_dcp_anchor_registration_v2_20261019.md",
       "title": "R1 새 킷 복사 명령의 rsync `--exclude 'run_*'` 가 런 폴더뿐 아니라 `run_mpm.sh` · `run_a1_anchors.sh` 파일까지 뺐다 — 킷 구조를 보지 않고 쓴 패턴 (등록 v2 §7 R1 줄의 \"`run_*` 제외\" 문구도 같은 뜻으로 읽힌다)",
       "note": "영향 없음 — 같은 명령의 확인 단계 (mpm3d 줄 1 · gpu-mem 28 1) 가 run_mpm.sh 없음으로 멈춰 수정 · 발사가 없었다.  처리 = `--exclude 'run_*/'` (디렉터리만) 로 다시 채움 · diff 두 줄 확인 뒤 발사 · 등록 §7 에 정정 표지.  교훈 = 지시문의 패턴도 실제 폴더 목록 (ls) 을 보고 쓴다 (CLAUDE.md \"확인하지 않은 추정을 지시문에 쓰지 않는다\").",
+      "evidence_tests": []
+    },
+    {
+      "found_by": "claude 10-20 RIMPR-01 · 02 수정 중 (작업 트리 에이전트 보고 · 고치지 않음)",
+      "opened_in": "docs/reviews/codex_rint_join_rimpr_fix_recheck_request_20261020.md",
+      "owner": "claude",
+      "id": "RIMPR-03",
+      "title": "조인 정수 토큰 정규식 `\\d` 가 전각 숫자 (`１`) 를 받는다 — e3 정확 정수 검사가 ASCII 숫자만이라는 뜻과 다르다",
+      "severity": "P3",
+      "status": "open",
+      "note": "10-20 RIMPR 수정 에이전트 보고 (고치지 않음) · 자리 scripts/rint_iface_join.py `_INT_RE` · 생산 덤프 (ASCII %g) 무영향 · 진단 관문 완결성 (P3).",
+      "evidence_tests": []
+    },
+    {
+      "found_by": "claude 10-20 RIMPR-01 · 02 수정 중 (작업 트리 에이전트 보고 · 고치지 않음)",
+      "opened_in": "docs/reviews/codex_rint_join_rimpr_fix_recheck_request_20261020.md",
+      "owner": "claude",
+      "id": "RIMPR-04",
+      "title": "아주 큰 유한 입력이 조인 관문 산술 안에서 넘친다 — 좌표 ~1e160 이면 delta_bound_um = inf (입구 유한 검사 뒤 산술 단계)",
+      "severity": "P3",
+      "status": "open",
+      "note": "10-20 RIMPR 수정 에이전트 보고 (고치지 않음) · RIMPR-02 범위 밖 (입구 검사는 실제 float64 값 · µm 변환값까지) · 생산 침대 무영향 · 진단 관문 완결성 (P3).",
       "evidence_tests": []
     }
   ]
