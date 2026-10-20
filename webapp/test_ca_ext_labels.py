@@ -13,6 +13,13 @@
   W3  face_alpha 인데 관측 PTFE 셀 > 0 = 불일치 경고 (두 행)
   W4  봉인 `build_meta` (읽기만) 가 face_alpha 매니페스트에서 `PTFE face_alpha` 칩을 낸다
 
+  ★ 2026-10-20 (Rint ② B6 · 설계 §4-6 · §5-6 · 시험 먼저) — S2 탄소 접합 · S3 SDCP 수정자 표지 (같은 두 행 · 매니페스트 값을 읽기만):
+  W8  두 행이 `ca_ext.cjunc` · `ca_ext.sdcp_mod` 를 읽는다 · 표지 문자열 사본 없음 (producer 상수 `ca_ext_cjunc.LABEL_*` 하나)
+  W9  Jinja 렌더 — 접합 = 표지 · R_j · P0/P1 · 세대 접두 · 수정자 = 표지 · c · 판별 표지 False = no-op 알림 · 요청 ↔ 블록 불일치 ·
+      블록 ↔ 세대 id 불일치 경고 · 옛 meta = 아무것도 없음
+  W10 JS 행 (node 실행) — 같은 경우들
+  W11 봉인 `build_meta` (읽기만) 가 매니페스트를 그대로 싣는다 (템플릿이 읽는 자리) — 규약 칩의 접합 표시는 봉인이라 미룸
+
   python3 webapp/test_ca_ext_labels.py
 """
 import os
@@ -36,6 +43,94 @@ def chk(name, cond, why=''):
         _fail.append(name)
         print(f'  FAIL  {name}' + (f'  ({why})' if why else ''))
     return cond
+
+
+def _cj_meta(lab_cj, lab_sd, *, c=None, disc=None, pid='p3ca-0123456789abcdef', block=True, req=None):
+    """템플릿이 읽는 칸만 실은 매니페스트 (S2 · S3 블록 꼴 = ca_ext_cjunc 의 기록 함수가 내는 키)."""
+    m = {'ptfe_stamp': 'off', 'ptfe_cells_observed': 0, 'physics_protocol_id': pid,
+         'ca_ext_requested': (req if req is not None else (['cjunc'] + (['sdcp_mod'] if c is not None else [])))}
+    if block:
+        m['ca_ext'] = {'schema': 'ca-ext-v1',
+                       'cjunc': {'protocol': {'R_j_ohm': 1000000.0, 'ptfe_jlaw': 'P0'}, 'evidence': {'label': lab_cj}}}
+        if c is not None:
+            m['ca_ext']['sdcp_mod'] = {'protocol': {'c': c}, 'evidence': {'label': lab_sd, 's3_discriminating': disc}}
+    return {'id': 'x', 'has_additives': True, 'recipe': 'VGCF 3', 'convention_label': 'PTFE off',
+            'mpm_metrics': {'step3': {'manifest': m}}}
+
+
+#: 렌더 경우 — (이름, meta, 있어야 할 조각, 없어야 할 조각) · 조각 '{CJ}' · '{SD}' = 표지 문자열 (렌더러마다 이스케이프)
+_B6_CASES = (
+    ('접합', dict(), ('{CJ}', 'R_j', '1000000', 'Ω', 'P0', 'p3ca'), ('{SD}', '블록 없음', '기록 불일치')),
+    ('접합 + 수정자 c 1 (판별)', dict(c=1.0, disc=True), ('{CJ}', '{SD}', 'c = 1'), ('구성상 no-op', '블록 없음')),
+    ('접합 + 수정자 (SDCP 0 침대)', dict(c=0.0, disc=False), ('{CJ}', '{SD}', 'c = 0', '구성상 no-op'), ('블록 없음',)),
+    ('요청 · 블록 없음', dict(block=False), ('블록 없음', 'unknown:ca_ext'), ('{CJ}', '🔗')),
+    ('블록인데 id 가 p2', dict(pid='p2-0123456789abcdef'), ('{CJ}', '기록 불일치'), ()),
+)
+
+
+def _b6_labels(tpl, jinja, js, jinja2, REG):
+    """② B6 — S2 탄소 접합 · S3 SDCP 수정자 표지 (W8–W11)."""
+    try:
+        import ca_ext_cjunc as CW
+    except Exception as e:                                  # noqa: BLE001 — 구현 전 (모듈 없음) 도 기록
+        CW = None
+        print(f'  ⚠ ca_ext_cjunc 를 못 불러온다 ({type(e).__name__}: {e})')
+    lab_cj = getattr(CW, 'LABEL_CJUNC', '') if CW else ''
+    lab_sd = getattr(CW, 'LABEL_SDCP', '') if CW else ''
+    chk('W8a Jinja 행이 매니페스트 ca_ext.cjunc · ca_ext.sdcp_mod 를 읽는다',
+        len(jinja) == 1 and all(t in jinja[0] for t in ('cjunc', 'sdcp_mod', 'label')), len(jinja))
+    chk('W8b JS 행이 매니페스트 ca_ext.cjunc · ca_ext.sdcp_mod 를 읽는다',
+        len(js) == 1 and all(t in js[0] for t in ('cjunc', 'sdcp_mod', 'label')), len(js))
+    chk('W8c S2 · S3 표지 문자열 사본을 템플릿에 두지 않는다 (producer 상수 하나)',
+        bool(lab_cj) and bool(lab_sd) and lab_cj not in tpl and lab_sd not in tpl)
+    metas = [(nm, _cj_meta(lab_cj, lab_sd, **kw), want, avoid) for nm, kw, want, avoid in _B6_CASES]
+    old_meta = {'id': 'o', 'has_additives': True, 'recipe': 'VGCF 3', 'mpm_metrics': {}}
+
+    def _check(lbl, outs, esc):
+        for (nm, _m, want, avoid), out in zip(metas, outs):
+            sub = lambda t: t.replace('{CJ}', esc(lab_cj) if lab_cj else '\0').replace('{SD}', esc(lab_sd) if lab_sd else '\0')   # noqa: E731
+            miss = [t for t in want if sub(t) not in (out or '')]
+            bad = [t for t in avoid if sub(t) in (out or '')]
+            chk(f'{lbl} [{nm}] — 있어야 할 조각 {len(want)} · 없어야 할 조각 {len(avoid)}', out is not None and not miss and not bad,
+                (miss, bad, (out or '')[-260:]))
+    if jinja2 is not None and len(jinja) == 1:
+        from markupsafe import escape as _escape
+        env = jinja2.Environment(autoescape=True)
+        row = env.from_string(jinja[0])
+        outs = [row.render(it=m) for _nm, m, _w, _a in metas]
+        _check('W9 Jinja', outs, lambda s: str(_escape(s)))
+        o_old = row.render(it=old_meta)
+        chk('W9 Jinja [옛 meta (매니페스트 없음)] — 접합 · 수정자 표지 · 경고 없음',
+            '🔗' not in o_old and '🧴' not in o_old and '블록 없음' not in o_old, o_old[-160:])
+    else:
+        print('  SKIP  W9 (jinja2 없음)')
+    import shutil as _sh
+    if _sh.which('node') is None:
+        print('  SKIP  W10 (node 없음)')
+    else:
+        import json as _json
+        from test_closed_param_labels import js_fn, run_node
+        script = ('const made = [];\n'
+                  'const document = {getElementById: (id) => ({style: {}, textContent: "", insertBefore: () => {}, '
+                  'firstChild: null, querySelectorAll: () => []}), createElement: (t) => { const o = {dataset: {}, style: {}}; '
+                  'made.push(o); return o; }};\n' + js_fn(tpl, 'labAddRow') + '\n'
+                  f'const cases = {_json.dumps([m for _nm, m, _w, _a in metas] + [old_meta], ensure_ascii=False)};\n'
+                  'const out = cases.map(c => { labAddRow(c); return made[made.length - 1].innerHTML; });\n'
+                  'console.log(JSON.stringify(out));\n')
+        try:
+            outs = run_node(script)
+            _check('W10 JS', outs[:-1], lambda s: s)
+            chk('W10 JS [옛 meta] — 접합 · 수정자 표지 · 경고 없음',
+                '🔗' not in outs[-1] and '🧴' not in outs[-1] and '블록 없음' not in outs[-1], outs[-1][-160:])
+        except Exception as e:                              # noqa: BLE001
+            chk('W10 JS 행 (node 실행)', False, f'{type(e).__name__}: {e}')
+    data = {'mpm_metrics': {'step3': {'manifest': dict(_cj_meta(lab_cj, lab_sd, c=1.0, disc=True)['mpm_metrics']['step3']['manifest'],
+                                                       ptfe_stamp_requested='off', vox_um=0.15)}}}
+    meta = REG.build_meta(data, 'cj_case', uploaded_at='2026-10-20 00:00', size_mb=0.1)
+    _mm = ((meta.get('mpm_metrics') or {}).get('step3') or {}).get('manifest') or {}
+    chk('W11 봉인 build_meta (읽기만) 가 매니페스트를 그대로 싣는다 — 템플릿이 읽는 ca_ext.cjunc · sdcp_mod 자리가 meta 에 있다',
+        ((_mm.get('ca_ext') or {}).get('cjunc') or {}).get('evidence', {}).get('label') == lab_cj
+        and ((_mm.get('ca_ext') or {}).get('sdcp_mod') or {}).get('protocol', {}).get('c') == 1.0, sorted(_mm))
 
 
 def main():
@@ -119,6 +214,7 @@ def main():
     chk('W4 봉인 build_meta → 규약 칩 "PTFE face_alpha" · 불일치 없음',
         'PTFE face_alpha' in meta.get('convention_label', '') and meta.get('convention_mismatch') == [],
         (meta.get('convention_label'), meta.get('convention_mismatch')))
+    _b6_labels(tpl, jinja, js, jinja2, REG)
     print(f'\n{_ok} PASS · {len(_fail)} FAIL')
     if _fail:
         for n in _fail:
