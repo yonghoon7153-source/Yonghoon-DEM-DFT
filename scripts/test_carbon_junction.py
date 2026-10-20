@@ -28,7 +28,19 @@ r_port = 2.0 (= 2h) · gap_tol 2.0 · σ_VGCF = 100 S/cm → 축방향 면 g = �
   T1-11  port_tie — 등거리 두 후보 → 정준 방향 경로 번호가 작은 셀 · 동률 수 · 점 역순 · 섬유 순서에 σ 불변
   T1-12  site_cut — 같은 쌍 두 자리 중 한 자리만 instance → 그 발자국 면만 절단 · 다른 자리 = 미등록 법칙 (cut ≤ fused)
   T1-5′  lead_reference — 단자 기준 R_j · 리드 빼기 · 음수 = 거부 (v0 = 모형 내부값만)
-  J8     long_contact — 긴 평행 접촉 = 정량 거부 · 시험 모드 = 기록
+  ── 길이 법칙 v0 (1저자 10-20 밤 Q17 · J8 "긴 접촉 = 정량 거부" 를 대체): G_j = max(1, L_c/L_par)/R_j,0 ──
+  LEN-X  깊은 직교 교차 (L_c = L_par) → 배율 1 · σ = 옛 점 접합 회로 (1e-12)
+  LEN-BIT 긴 접촉 없는 침대 9 개 = 구현 B (61b6a9ec5 · 점 접합) 와 σ · n_dof · cg_info · resid · 접합 전류 비트 같음
+  LEN-P  나란한 두 섬유 L_c = 3 L_par → 배율 3 → σ = 판 + 섬유 + 접합 1/(3/R_j,0) 해석 회로 (기계 정밀도 · cut · fused)
+  LEN-O  비스듬한 깊은 교차 → 배율 = 1/sin θ · 90° 에서 1 정확히 · 연속 · 각도에 단조
+  J8     long_contact — 긴 접촉 = 표지 · 집계 칸 그대로 · 정량 거부 없음 (옛 동작 제거) · 정량 솔브 진행
+  FOOT   절단 발자국 = 접촉 run 전체 — fused 법칙에서도 run 위 A|B 융합 면 0 (면 tombstone · 간선 원장 · σ 해석)
+  KINK   U 자로 접힌 한 섬유 — 경로 호 길이 s (손으로 잰 값) · s < s_min = 접합 없음 (옛 복셀 융합 그대로 = 옛 경로 σ) ·
+         s ≥ s_min = 자기 접합 하나 (절단 + R_j 간선 × 같은 배율) · s_min 없음 + 정량 = 구조화 거부 · 자기 L_c = 닿음 규칙
+  INV    점 역순 · 원점 이동 · 섬유 번호 바꿈 → sid · instance 수 · 배율 · σ 같음 (LP · KU)
+  SMIN   s_min_um = 필수 키워드 · 기본값 없음 · 비유한 · 음수 · bool · 문자 거부
+  REC    기록 — 법칙 이름 len_scaled_v0 · s_min · L_c 분위 · 배율 합 · 자기 접합 (후보 · 거른 수 · 남은 수 · s 분포) · 지문에 s_min
+  MUT-LEN 변이 넷 (배율 제곱 · max(1, ·) 빼기 · s 거르기 끔 · 발자국 = 최근접 쌍만) 이 위 시험에 걸린다
   J11    electrode_short — 축약 무리가 두 판에 다 닿으면 단락 상태 (유한 σ 로 위장하지 않는다)
   C6     energy — Σ P (면 + 접합 + 판) = I·ΔV · 접합 몫 = −∂lnσ/∂lnR_j (중심 FD)
   C8     guards — r1 · ①′ · 주기 · return_field · 다른 vox · sid · 계획 · 원장 변조 · NaN · 길이 불일치 · 떨어진 같은 fid · kind 없음 ·
@@ -164,21 +176,43 @@ def cat_rows(*rs):
 NO_AM = (np.zeros((0, 3)), np.zeros(0), np.zeros(0, np.int64))
 
 
-def bed(addr, n, am=NO_AM, stamp=None, vox=H, **kw):
-    """격자 (sid, pid) — 생산 `rasterize` (선분 스탬프).  stamp = 스탬프할 행 마스크 (None = 전부) — face_alpha 침대는 PTFE 를 뺀다."""
+def bed(addr, n, am=NO_AM, stamp=None, vox=H, lo=(0.0, 0.0, 0.0), **kw):
+    """격자 (sid, pid) — 생산 `rasterize` (선분 스탬프).  stamp = 스탬프할 행 마스크 (None = 전부) — face_alpha 침대는 PTFE 를 뺀다.
+    lo = 상자 원점 (원점 이동 불변 시험 · 격자는 lo 기준이라 sid 는 같아야 한다)."""
     P, PH, F, K = addr
     m = np.ones(len(P), bool) if stamp is None else stamp
-    lo = (0.0, 0.0, 0.0)
-    hi = tuple(float(x) * vox for x in n)
+    lo = tuple(float(x) for x in lo)
+    hi = tuple(lo[i] + float(n[i]) * vox for i in range(3))
     sid, pid = S3.rasterize(am[0], am[1], am[2], P[m], PH[m], lo, hi, vox, add_fid=F[m], add_kind=K[m], **kw)
     return sid, pid
 
 
-def registry(sid, addr, vox=H, **kw):
+S_MIN = 3.0                      # 꺾임 자기 접합 거르기 문턱 s_min [µm · fixture 단위] — 시험 명시 값 (생산 숫자 = S0 단계 1 뒤 R §2-1)
+
+
+def _cj_has_smin():
+    import inspect
+    try:
+        return 's_min_um' in inspect.signature(CJ.cjunc_registry).parameters
+    except (TypeError, ValueError, AttributeError):
+        return False
+
+
+def reg_kw(kw):
+    """cjunc_registry 문턱 키워드 — s_min_um 은 필수 (기본값 없음) 라 시험은 명시 값을 넘긴다.
+    ⚠ 고치기 전 코드 (61b6a9ec5 · s_min 인자 없음) 에서는 그 키만 빼고 부른다 — 그 결손은 SMIN 시험이 따로 잡고, 나머지 시험은
+      서명 오류로 한꺼번에 무너지지 않고 **각자의 이유**로 통과 · 실패한다 (반례 수 ≠ 검사 수 · SELF-124).  고친 코드에서는 늘 넘긴다."""
+    k = dict(kw)
+    if 's_min_um' in k and not _cj_has_smin():
+        k.pop('s_min_um')
+    return k
+
+
+def registry(sid, addr, vox=H, lo=(0.0, 0.0, 0.0), **kw):
     P, PH, F, K = addr
-    k = dict(r_f_um=RF, tol_ff_um=TOL, L_par_um=LPAR, r_port_um=RPORT, gap_tol=2.0)
+    k = dict(r_f_um=RF, tol_ff_um=TOL, L_par_um=LPAR, r_port_um=RPORT, gap_tol=2.0, s_min_um=S_MIN)
     k.update(kw)
-    return quiet(CJ.cjunc_registry, sid, (0.0, 0.0, 0.0), vox, P, PH, F, K, **k)
+    return quiet(CJ.cjunc_registry, sid, tuple(float(x) for x in lo), vox, P, PH, F, K, **reg_kw(k))
 
 
 def plan(reg, rj, **kw):
@@ -255,6 +289,36 @@ F6 = [[(1.5, 1.5, 0.5), (1.5, 1.5, 4.5)],
 #  F10 site_cut: F6 의 둘째 자리를 x 2.9 로 — 셀은 면 인접 (2,1,4)|(1,1,4) 인데 중심선 거리 1.4 > 1.1 (미등록)
 F10 = [[(1.5, 1.5, 0.5), (1.5, 1.5, 4.5)],
        [(2.5, 1.5, 1.5), (4.5, 1.5, 1.5), (4.5, 1.5, 4.5), (2.9, 1.5, 4.5), (2.9, 1.5, 8.5)]]
+#  K3 crossing_k3 (T1-8): 한 셀 (2,2,2) 에서 세 가닥 직교 교차
+K3_N = (5, 5, 5)
+K3 = [[(2.5, 2.5, 0.5), (2.5, 2.5, 4.5)], [(0.5, 2.5, 2.5), (4.5, 2.5, 2.5)], [(2.5, 0.5, 2.5), (2.5, 4.5, 2.5)]]
+#  T110 self_contact (T1-10): 같은 fid 가 돌아와 (1,1,1)|(2,1,1) 면으로 닿는다 (경로 호 길이 s = 7 > S_MIN)
+T110_N = (5, 5, 8)
+T110 = [[(1.5, 1.5, 0.5), (1.5, 1.5, 3.5), (3.5, 1.5, 3.5), (3.5, 1.5, 1.5), (2.5, 1.5, 1.5), (2.5, 3.5, 1.5),
+         (2.5, 3.5, 7.5)]]
+
+# ── 길이 법칙 v0 픽스처 (J8 대체 · 1저자 10-20 밤 Q17) ──
+#  LX 깊은 직교 교차: A (1,1,0..5) 아래 판 · B 가로 (0..4,1,3) 뒤 위로 (4,1,3..7) 위 판 — 중심선이 (1.5,1.5,3.5) 에서 만난다 (d0 = 0) ·
+#     닿음 길이 = 각 가닥 2·(r_A + r_B) = L_par 정확히 → 배율 1 · 회로 = 판 + A 3 면 + 접합 + B 7 면 + 판
+LX_N = (6, 3, 8)
+LX = [[(1.5, 1.5, 0.5), (1.5, 1.5, 5.5)], [(0.5, 1.5, 3.5), (4.5, 1.5, 3.5), (4.5, 1.5, 7.5)]]
+LX_I = lambda rj: chain_I([G_PL] + [G_AX] * 3 + [1e4 / rj] + [G_AX] * 7 + [G_PL])   # noqa: E731
+#  LP 나란한 두 섬유: A (1,1,0..7) 아래 판 · B (2,1,2..10) 위 판 · 중심선 거리 0.6 (< r_A + r_B = 1) · 겹침 z [2.5, 7.7] = 5.2 →
+#     닿음 길이 = 겹침 + √(1 − 0.6²) = 5.2 + 0.8 = 6.0 = 3 L_par (A 는 아래로 · B 는 위로 0.8 더 닿는다) → 배율 3 ·
+#     포트는 같은 높이 (평행 최근접점 · 동률 = 같은 방향 규칙) → 회로 = 판 + 섬유 10 면 + 접합 1/(3/R_j,0) + 판.
+#     ⚠ 거리를 정확히 r_A + r_B (1.0) 로 두면 닿음 경계가 접선이라 (거리 = √(1 + δ²)) sqrt 반올림이 δ ≲ 1.5e-8 을 닿음으로 세어
+#       L_c = 6 + 1.8e-8 (구현 B 실측 · 고치기 전 실행) — 기계 정밀도 회로 대조가 깨진다.  0.6 이면 경계가 횡단 (기울기 0.8) 이다.
+LP_N = (5, 3, 11)
+LP = [[(1.5, 1.5, 0.5), (1.5, 1.5, 7.7)], [(2.1, 1.5, 2.5), (2.1, 1.5, 10.5)]]
+LP_I = lambda rj, m=3.0: chain_I([G_PL] + [G_AX] * 10 + [m * 1e4 / rj] + [G_PL])   # noqa: E731
+#  KU U 자로 접힌 한 섬유: 다리 1 위로 (1,1,0..4) · 위 가로 · 다리 2 아래로 (x 2.5 → 2.3 기울어 다리 1 에 다가간다 · (2,1,4..1)) ·
+#     아래 가로 (2..4,1,1) · 다리 3 위로 (4,1,1..7) 위 판.  다리 1 ↔ 다리 2 = 같은 fid 비연속 면 셋 (z 1 · 2 · 3) = 자기 접합 후보 하나.
+#     두 최근접점 = (1.5,1.5,1.5) ↔ (2.3,1.5,1.5) (거리 0.8 · 유일) → 경로 호 길이 s = 3 + 1 + √(0.2² + 3²)
+KU_N = (6, 3, 8)
+KU = [[(1.5, 1.5, 0.5), (1.5, 1.5, 4.5), (2.5, 1.5, 4.5), (2.3, 1.5, 1.5), (4.5, 1.5, 1.5), (4.5, 1.5, 7.5)]]
+KU_S = 3.0 + 1.0 + math.sqrt(0.2 ** 2 + 3.0 ** 2)
+#  KW 같은 U 인데 다리 2 가 x 2.7 (중심선 거리 1.2 > r_f + r_f) — 셀은 면으로 닿지만 중심선은 닿지 않는다 → 자기 L_c (닿음) = 0
+KW = [[(1.5, 1.5, 0.5), (1.5, 1.5, 4.5), (2.7, 1.5, 4.5), (2.7, 1.5, 1.5), (4.5, 1.5, 1.5), (4.5, 1.5, 7.5)]]
 
 
 def seq_cells(verts, vox=H):
@@ -369,8 +433,8 @@ def t_piece():
         ijk, ph = S3._fibre_segment_ijk(P, PH, F, np.zeros(3), 0.5, np.array(n), 2.0, add_kind=K)
         want = {tuple(c) for c in ijk[ph == 2]}
         try:
-            reg = quiet(CJ.cjunc_registry, sid, (0., 0., 0.), 0.5, P, PH, F, K, r_f_um=0.25, tol_ff_um=0.05,
-                        L_par_um=1.0, r_port_um=1.0, gap_tol=2.0)
+            reg = quiet(CJ.cjunc_registry, sid, (0., 0., 0.), 0.5, P, PH, F, K,
+                        **reg_kw(dict(r_f_um=0.25, tol_ff_um=0.05, L_par_um=1.0, r_port_um=1.0, gap_tol=2.0, s_min_um=1.5)))
             pos = reg['positions']
             inb = pos['lin'] >= 0
             got = {tuple(int(v) for v in np.unravel_index(int(l), n)) for l in pos['lin'][inb]}
@@ -538,9 +602,8 @@ def t_t16_multi():
 
 @case('T1-8')
 def t_t18_k3():
-    n = (5, 5, 5)
-    polys = [[(2.5, 2.5, 0.5), (2.5, 2.5, 4.5)], [(0.5, 2.5, 2.5), (4.5, 2.5, 2.5)], [(2.5, 0.5, 2.5), (2.5, 4.5, 2.5)]]
-    P = rows(polys)
+    n = K3_N
+    P = rows(K3)
     sid, _ = bed(P, n)
     reg = registry(sid, P)
     inst = reg['instances']
@@ -569,9 +632,8 @@ def t_t19_fiber_sphere():
 
 @case('T1-10')
 def t_t110_self():
-    n = (5, 5, 8)
-    poly = [[(1.5, 1.5, 0.5), (1.5, 1.5, 3.5), (3.5, 1.5, 3.5), (3.5, 1.5, 1.5), (2.5, 1.5, 1.5), (2.5, 3.5, 1.5),
-             (2.5, 3.5, 7.5)]]
+    n = T110_N
+    poly = T110
     P = rows(poly)
     sid, _ = bed(P, n)
     reg = registry(sid, P)
@@ -650,20 +712,330 @@ def t_t15_lead():
     chk('T1-5′ R_j 극한 (0 · ∞) = 사다리 천장 · 바닥 표지 없이 정량 거부', raises(lambda: plan(reg, 0.0)) and raises(lambda: plan(reg, math.inf)))
 
 
+# ═════════════════════════ 길이 법칙 v0 (J8 대체 · 1저자 10-20 밤 Q17 = 권고대로) ═════════════════════════
+#  G_j = max(1, L_c/L_par) / R_j,0 — 긴 접촉 = 점 접합 L_c/L_par 개가 나란히 (선 접촉 협착 ∝ 길이의 1차 근사) · 새 손잡이 없음 ·
+#  L_c = 닿음 (두 가닥 각각에서 중심선 거리 ≤ r_fi + r_fj 인 길이의 최댓값 · B 정의) · 간선 = instance 하나 (lumped) ·
+#  절단 발자국 = 접촉 run 전체 · 꺾임 자기 접합 = 두 최근접점 사이 경로 호 길이 s < s_min 이면 접합 아님 (옛 복셀 융합 그대로).
+#  기대값 = 손으로 세운 회로 · 손으로 잰 길이 (모듈 함수로 정답을 다시 만들지 않는다).
+BASE_CJ_COMMIT = '61b6a9ec5'     # 점 접합 (길이 법칙 전 · 구현 B 끝) — 긴 접촉 없는 침대의 비트 같음 기준
+
+
+def _plan_mult(p):
+    """계획의 instance 배율 배열 (없으면 None — 고치기 전 코드)."""
+    m = p.get('mult') if isinstance(p, dict) else None
+    return None if m is None else np.asarray(m, np.float64)
+
+
+def _try(fn, default=math.nan):
+    try:
+        return quiet(fn)
+    except Exception as e:                                 # noqa: BLE001 — 거부 · 예외 = 기대값을 못 냄 (그 검사 실패)
+        print(f'    (예외 {type(e).__name__}: {str(e)[:160]})')
+        return default
+
+
+def _load_base_cj():
+    try:
+        src = subprocess.run(['git', '-C', ROOT, 'show', f'{BASE_CJ_COMMIT}:scripts/carbon_junction.py'],
+                             capture_output=True, check=True).stdout
+    except Exception as e:                                 # noqa: BLE001
+        return None, f'git show 실패 {type(e).__name__}: {e}'
+    d = tempfile.mkdtemp(prefix='cjbase_')
+    p = os.path.join(d, 'carbon_junction_base_61b6.py')
+    with open(p, 'wb') as fh:
+        fh.write(src)
+    spec = importlib.util.spec_from_file_location('carbon_junction_base_61b6', p)
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    return m, ''
+
+
+@contextlib.contextmanager
+def cj_module(mod):
+    """solve_sigma_z 는 호출 때 `import carbon_junction` 을 한다 — 기준 모듈로 풀 때 그 이름을 잠시 바꿔 끼운다."""
+    old = sys.modules.get('carbon_junction')
+    sys.modules['carbon_junction'] = mod
+    try:
+        yield
+    finally:
+        if old is None:
+            sys.modules.pop('carbon_junction', None)
+        else:
+            sys.modules['carbon_junction'] = old
+
+
+def _chain_edges(nn):
+    return [(i, i + 1, G_AX) for i in range(nn - 1)]
+
+
+@case('LEN-X')
+def t_len_cross():
+    P = rows(LX)
+    sid, _ = bed(P, LX_N)
+    reg = registry(sid, P)
+    inst = reg['instances']
+    chk('LEN-X 깊은 직교 교차 — instance 하나 · d0 = 0 · L_c = L_par = 2(r_A + r_B) (손으로 잰 닿음 길이 · 1e-12)',
+        len(inst['fi']) == 1 and abs(float(inst['d0'][0])) < 1e-12 and abs(float(inst['Lc'][0]) - LPAR) < 1e-12,
+        f"n {len(inst['fi'])} d0 {inst['d0']} Lc {inst['Lc']}")
+    m = _plan_mult(plan(reg, 1e3))
+    chk('LEN-X 배율 = 1 정확히 (max(1, L_c/L_par) · 경계 L_c = L_par 에서 연속)', m is not None and len(m) == 1 and m[0] == 1.0,
+        f'{m}')
+    errs = [rel(_try(lambda rj=rj: I_of(solve(sid, sig_e(), LX_N, plan(reg, rj)), LX_N)), LX_I(rj)) for rj in (1e1, 1e3, 1e5)]
+    chk('LEN-X σ = 옛 점 접합 회로 (판 + A 3 면 + R_j + B 7 면 + 판 · R_j 10 · 1e3 · 1e5 Ω · 1e-12)', max(errs) < 1e-12, f'{errs}')
+
+
+@case('LEN-BIT')
+def t_len_bitid():
+    """긴 접촉 없는 침대 (배율 전부 1) = 구현 B (61b6a9ec5 · 점 접합) 와 σ · n_dof · cg_info · resid · 접합 전류 비트 같음."""
+    base, why = _load_base_cj()
+    if not chk(f'LEN-BIT 기준 모듈 (커밋 {BASE_CJ_COMMIT} 의 carbon_junction) 을 읽었다', base is not None, why):
+        return
+    fx = (('F1', F1, F1_N), ('F2', F2, F2_N), ('F3', F3, F3_N), ('F5', F5, F5_N), ('F6', F6, F6_N), ('F10', F10, F6_N),
+          ('LX', LX, LX_N), ('K3', K3, K3_N), ('T110', T110, T110_N))
+    bad = []
+    for nm, polys, n in fx:
+        P = rows(polys)
+        sid, _ = bed(P, n)
+        for rj in (1e2, 3e3):
+            try:
+                rn = solve(sid, sig_e(), n, plan(registry(sid, P), rj))
+                kb = dict(r_f_um=RF, tol_ff_um=TOL, L_par_um=LPAR, r_port_um=RPORT, gap_tol=2.0)
+                regb = quiet(base.cjunc_registry, sid, (0.0, 0.0, 0.0), H, *P, **kb)
+                pb = base.cjunc_plan(regb, rj, unreg_law='cut', ptfe_stamp='off')
+                with cj_module(base):
+                    rb = solve(sid, sig_e(), n, pb)
+                same = (np.float64(rn['sigma_eff']).tobytes() == np.float64(rb['sigma_eff']).tobytes()
+                        and rn['n_dof'] == rb['n_dof'] and rn.get('cg_info') == rb.get('cg_info')
+                        and np.float64(rn.get('resid', 0.0)).tobytes() == np.float64(rb.get('resid', 0.0)).tobytes()
+                        and np.asarray(rn['_cjunc']['junction_current_code']).tobytes()
+                        == np.asarray(rb['_cjunc']['junction_current_code']).tobytes())
+            except Exception as e:                         # noqa: BLE001
+                same = False
+                print(f'    LEN-BIT {nm} R_j {rj}: {type(e).__name__}: {e}')
+            if not same:
+                bad.append(f'{nm}@{rj:g}')
+    chk(f'LEN-BIT 긴 접촉 없는 침대 {len(fx)} 개 × R_j 둘 = 점 접합 (구현 B) 과 σ · n_dof · cg_info · resid · 접합 전류 비트 같음',
+        not bad, f'{bad}')
+
+
+@case('LEN-P')
+def t_len_parallel():
+    P = rows(LP)
+    sid, _ = bed(P, LP_N)
+    reg = registry(sid, P)
+    inst = reg['instances']
+    chk('LEN-P 나란한 두 섬유 — instance 하나 · L_c = 6.0 = 3 L_par (손으로 센 겹침 · 1e-12)',
+        len(inst['fi']) == 1 and abs(float(inst['Lc'][0]) - 3.0 * LPAR) < 1e-12, f"n {len(inst['fi'])} Lc {inst['Lc']}")
+    m = _plan_mult(plan(reg, 1e3))
+    chk('LEN-P 배율 = max(1, L_c/L_par) = 3 (1e-12)', m is not None and len(m) == 1 and abs(m[0] - 3.0) < 1e-12, f'{m}')
+    errs = []
+    for rj in (1e1, 1e3, 1e5):
+        for law in ('cut', 'fused'):
+            errs.append(rel(_try(lambda rj=rj, law=law: I_of(solve(sid, sig_e(), LP_N, plan(reg, rj, unreg_law=law)), LP_N)),
+                            LP_I(rj)))
+    chk('LEN-P σ = 해석 회로 (판 + 섬유 10 면 + 접합 1/(3/R_j,0) + 판 · R_j 10 · 1e3 · 1e5 Ω · 미등록 cut · fused · 기계 정밀도 1e-12)',
+        max(errs) < 1e-12, f'{errs}')
+
+
+@case('LEN-O')
+def t_len_oblique():
+    n = (12, 12, 5)
+    C = np.array([6.0, 6.0, 2.5])
+    ths = (90.0, 89.9, 80.0, 60.0, 45.0, 30.0)
+    ms, n_inst = [], []
+    for th in ths:
+        u = np.array([math.cos(math.radians(th)), math.sin(math.radians(th)), 0.0])
+        polys = [[(2.0, 6.0, 2.5), (10.0, 6.0, 2.5)], [tuple(C - 4.0 * u), tuple(C + 4.0 * u)]]
+        P = rows(polys)
+        sid, _ = bed(P, n)
+        reg = registry(sid, P)
+        n_inst.append(len(reg['instances']['fi']))
+        m = _plan_mult(plan(reg, 1e3, quantitative=False))
+        ms.append(float(m[0]) if m is not None and len(m) == 1 else math.nan)
+    want = [1.0 / math.sin(math.radians(t)) for t in ths]     # 깊은 교차 (d0 = 0) · 각 θ: 닿음 길이 = 2(r_i + r_j)/sin θ
+    chk('LEN-O 비스듬한 깊은 교차 — instance 하나씩 · 배율 = 1/sin θ (손으로 잰 닿음 길이 · 1e-9)',
+        n_inst == [1] * len(ths) and all(abs(a - b) <= 1e-9 * b for a, b in zip(ms, want)), f'{n_inst} {ms} ↔ {want}')
+    chk('LEN-O 경계 연속 — 직교 (90°) 배율 = 1 정확히 · 89.9° = 1 + (0, 2e-6) (뛰지 않는다)',
+        ms[0] == 1.0 and 0.0 < ms[1] - 1.0 < 2e-6, f'{ms[:2]}')
+    chk('LEN-O 각도에 단조 — θ 가 작아질수록 배율이 엄격히 커진다 (90 · 89.9 · 80 · 60 · 45 · 30°) · 모두 ≥ 1',
+        all(ms[i + 1] > ms[i] for i in range(len(ms) - 1)) and min(ms) >= 1.0, f'{ms}')
+
+
 @case('J8')
 def t_j8_long():
-    n = (5, 3, 9)
-    polys = [[(1.5, 1.5, 0.5), (1.5, 1.5, 6.5)], [(2.5, 1.5, 2.5), (2.5, 1.5, 8.5)]]   # 4 µm 나란히 (거리 1.0)
-    P = rows(polys)
-    sid, _ = bed(P, n)
+    P = rows(LP)
+    sid, _ = bed(P, LP_N)
     reg = registry(sid, P)
+    cen = reg['census']
     nl = int(np.sum(reg['instances']['long']))
-    chk('J8 긴 평행 접촉 (L_c > L_par) = 수 기록', nl >= 1, f'{nl}')
-    chk('J8 정량 모드 = 거부 (계획 · 솔브 둘 다)', raises(lambda: solve(sid, sig_e(), n, plan(reg, 1e3)))
-        or any(x['code'] == 'long_contact' for x in plan(reg, 1e3)['rejections']))
-    p_t = plan(reg, 1e3, quantitative=False)
-    r = solve(sid, sig_e(), n, p_t)
-    chk('J8 시험 모드 (quantitative=False) = 진행 · 기록 (긴 접촉 수 영수증)', r['sigma_eff'] > 0 and r['cjunc']['n_long'] >= 1)
+    chk('J8 긴 접촉 (L_c > L_par) = 표지 · 집계 칸 그대로 (instance long · census n_long_distinct · L_c 최댓값)',
+        nl == 1 and cen.get('n_long_distinct') == 1 and abs(float((cen.get('Lc_um') or {}).get('max', math.nan)) - 6.0) < 1e-12,
+        f"{nl} {cen.get('n_long_distinct')} {cen.get('Lc_um')}")
+    pq = plan(reg, 1e3)
+    chk('J8 옛 동작 제거 — 긴 접촉이 있어도 정량 계획에 거부 사유 없음 (long_contact · 길이 법칙이 그 자리를 맡는다)',
+        not pq['rejections'], f"{[x['code'] for x in pq['rejections']]}")
+    r = _try(lambda: solve(sid, sig_e(), LP_N, pq), None)
+    chk('J8 정량 솔브 진행 · 기록 (긴 접촉 수 1 영수증 · solved)',
+        r is not None and r['sigma_eff'] > 0 and r['cjunc'].get('n_long') == 1 and r['cjunc'].get('solved') is True)
+
+
+@case('FOOT')
+def t_footprint():
+    """절단 발자국 = 접촉 run 전체 — 긴 접촉 위의 A|B 융합 면이 하나라도 남으면 (미등록 법칙 fused) 접합 간선을 병렬로 우회한다."""
+    P = rows(LP)
+    sid, _ = bed(P, LP_N)
+    reg = registry(sid, P)
+    ft = reg['faces']
+    pos = reg['positions']
+    vv = (ft['pa'] >= 0) & (ft['pb'] >= 0)
+    fa = np.where(vv, pos['fid'][np.maximum(ft['pa'], 0)], -1)
+    fb = np.where(vv, pos['fid'][np.maximum(ft['pb'], 0)], -1)
+    pair = vv & (np.minimum(fa, fb) == 10) & (np.maximum(fa, fb) == 20)
+    n_site = int(np.sum(pair & (ft['kind'] == CJ.K_CUT_SITE)))
+    n_unreg = int(np.sum(pair & (ft['kind'] == CJ.K_UNREG)))
+    chk('FOOT 원장 — A|B 접촉 면 6 개 (z 2..7 · 손으로 센 run) 전부 자리 절단 · 미등록 0', n_site == 6 and n_unreg == 0,
+        f'site {n_site} unreg {n_unreg}')
+    rj = 1e3
+    rt = _try(lambda: solve(sid, sig_e(), LP_N, plan(reg, rj, unreg_law='fused', quantitative=False)), None)
+    ok_t = (rt is not None and rt['cjunc']['tombstones']['cut_site'] == 6 and rt['cjunc']['n_unreg_fused'] == 0
+            and not np.any(rt['_cjunc']['sys']['CAT'] == 2))           # 간선 원장에 vv_unreg_fused (2) 없음
+    chk('FOOT 미등록 법칙 fused 에서도 run 위 융합 i|j 면 0 — 면 tombstone 6 · 미등록 융합 0 · 간선 원장에 융합 VV 간선 없음', ok_t)
+    I = _try(lambda: I_of(solve(sid, sig_e(), LP_N, plan(reg, rj, unreg_law='fused')), LP_N))
+    chk('FOOT fused · 정량 σ = 해석 회로 (우회 없음 · 1e-12)', rel(I, LP_I(rj)) < 1e-12, f'{I} ↔ {LP_I(rj)}')
+
+
+@case('KINK')
+def t_kink():
+    P = rows(KU)
+    sid, _ = bed(P, KU_N)
+    seq = seq_cells(KU[0])
+    nn = len(seq)
+    ix = {c: seq.index(c) for c in seq}
+    lo_ = _try(lambda: registry(sid, P, s_min_um=KU_S - 0.5), None)       # s ≥ s_min → 진짜 접힘 (접합)
+    hi_ = _try(lambda: registry(sid, P, s_min_um=KU_S + 0.5), None)       # s < s_min → 같은 가닥의 연속
+    s_rec = (((lo_ or {}).get('census') or {}).get('self_s_um') or {}).get('min')
+    chk('KINK s = 두 최근접점 사이 경로 호 길이 = 3 + 1 + √(0.2² + 3²) (손으로 잰 값 · 1e-9)',
+        s_rec is not None and abs(float(s_rec) - KU_S) < 1e-9, f'{s_rec} ↔ {KU_S}')
+    ok = lo_ is not None and hi_ is not None
+    nlo = int(np.sum(lo_['instances']['self'])) if ok else -1
+    nhi = int(np.sum(hi_['instances']['self'])) if ok else -1
+    clo = lo_['census'] if ok else {}
+    chi = hi_['census'] if ok else {}
+    chk('KINK s ≥ s_min = 자기 접합 하나 · s < s_min = 접합 없음 (후보 1 · 거른 수 · 남은 수 기록)',
+        nlo == 1 and nhi == 0 and clo.get('n_self_candidates') == 1 and clo.get('n_self_kept') == 1
+        and clo.get('n_self_filtered') == 0 and chi.get('n_self_kept') == 0 and chi.get('n_self_filtered') == 1,
+        f'{nlo} {nhi} · {[clo.get(k) for k in ("n_self_candidates", "n_self_kept", "n_self_filtered")]} · '
+        f'{[chi.get(k) for k in ("n_self_candidates", "n_self_kept", "n_self_filtered")]}')
+    rj = 1e3
+    E_f = _chain_edges(nn) + [(ix[(1, 1, k)], ix[(2, 1, k)], G_AX) for k in (1, 2, 3)]
+    w_f = ref_I(nn, E_f, [(0, G_PL)], [(nn - 1, G_PL)])
+    I_leg = I_of(solve_legacy(sid, sig_e(), KU_N), KU_N)
+    Ih = _try(lambda: I_of(solve(sid, sig_e(), KU_N, plan(hi_, rj)), KU_N))
+    chk('KINK s < s_min — 접합 · 절단 없음 = 옛 복셀 융합 그대로 (σ = 옛 경로 = 사다리 기준 1e-12)',
+        rel(Ih, I_leg) < 1e-12 and rel(Ih, w_f) < 1e-12, f'{Ih} ↔ 옛 {I_leg} · 사다리 {w_f}')
+    E_j = _chain_edges(nn) + [(ix[(1, 1, 1)], ix[(2, 1, 1)], 1.5 * 1e4 / rj)]    # 자기 면 셋 절단 · 포트 = B 의 대표 항목
+    w_j = ref_I(nn, E_j, [(0, G_PL)], [(nn - 1, G_PL)])
+    Il = _try(lambda: I_of(solve(sid, sig_e(), KU_N, plan(lo_, rj)), KU_N))
+    chk('KINK s ≥ s_min — 자기 면 셋 절단 + R_j 간선 × 같은 법칙 배율 (닿음 L_c 3.0 → 1.5 · 사다리 기준 1e-12)',
+        rel(Il, w_j) < 1e-12, f'{Il} ↔ {w_j}')
+    rn = _try(lambda: registry(sid, P, s_min_um=None), None)
+    pq = _try(lambda: plan(rn, rj), None) if rn is not None else None
+    chk('KINK s_min 없음 + 정량 = 구조화 거부 (계획 거부 사유 self_s_min_missing · 솔브 입구 거부 · CG 전)',
+        pq is not None and any(x.get('code') == 'self_s_min_missing' for x in pq['rejections'])
+        and raises(lambda: solve(sid, sig_e(), KU_N, pq)))
+    pt = _try(lambda: plan(rn, rj, quantitative=False), None) if rn is not None else None
+    chk('KINK s_min 없음 + 시험 모드 = 진행 · 거르기 안 함 표지 (자기 접합 그대로 · self_filter = off_s_min_missing)',
+        pt is not None and not pt['rejections'] and rn['census'].get('self_filter') == 'off_s_min_missing'
+        and int(np.sum(rn['instances']['self'])) == 1)
+    PW = rows(KW)
+    sidw, _ = bed(PW, KU_N)
+    rw = _try(lambda: registry(sidw, PW, s_min_um=1.0), None)
+    lcw = rw['instances']['Lc'][rw['instances']['self']] if rw is not None else []
+    mw = _plan_mult(plan(rw, rj)) if rw is not None else None
+    chk('KINK 자기 접합 L_c = 닿음 규칙 (셀 셈 아님) — 면으로 닿는 셀 셋 · 중심선 1.2 > r_f + r_f → L_c 0 · 배율 1',
+        len(lcw) == 1 and float(lcw[0]) == 0.0 and mw is not None and list(mw) == [1.0], f'{list(lcw)} {mw}')
+
+
+@case('INV')
+def t_invariance():
+    rj = 1e3
+
+    def run(polys, n, smin, fids=None, shift=(0.0, 0.0, 0.0), rev=False):
+        pl_ = [v[::-1] for v in polys] if rev else polys
+        P0 = rows(pl_, fids=fids)
+        P = (P0[0] + np.asarray(shift, np.float64), P0[1], P0[2], P0[3])
+        sid, _ = bed(P, n, lo=shift)
+        reg = registry(sid, P, lo=shift, s_min_um=smin)
+        pq = plan(reg, rj)
+        return sid, len(reg['instances']['fi']), _plan_mult(pq), I_of(solve(sid, sig_e(), n, pq), n)
+
+    for nm, polys, n, smin, fids in (('LP', LP, LP_N, S_MIN, [77, 33]), ('KU', KU, KU_N, KU_S - 0.5, [55])):
+        b = _try(lambda: run(polys, n, smin), None)
+        outs = {'점 역순': _try(lambda: run(polys, n, smin, rev=True), None),
+                '원점 이동 (8, −4, 16)': _try(lambda: run(polys, n, smin, shift=(8.0, -4.0, 16.0)), None),
+                '섬유 번호 바꿈': _try(lambda: run(polys, n, smin, fids=fids), None)}
+        for what, o in outs.items():
+            ok = (b is not None and o is not None and b[2] is not None and o[2] is not None and o[0].tobytes() == b[0].tobytes()
+                  and o[1] == b[1] and len(o[2]) == len(b[2])
+                  and np.allclose(np.sort(o[2]), np.sort(b[2]), rtol=1e-12, atol=0.0) and rel(o[3], b[3]) < 1e-12)
+            chk(f'INV {nm} {what} → sid · instance 수 · 배율 · σ 같음 (1e-12)', ok,
+                f'{None if b is None else (b[1], b[2], b[3])} ↔ {None if o is None else (o[1], o[2], o[3])}')
+
+
+@case('SMIN')
+def t_smin():
+    import inspect
+    try:
+        prm = inspect.signature(CJ.cjunc_registry).parameters.get('s_min_um')
+    except (TypeError, ValueError, AttributeError):
+        prm = None
+    chk('SMIN s_min_um = 필수 키워드 · 기본값 없음 (r_f · tol_ff · L_par · r_port 와 같은 꼴)',
+        prm is not None and prm.kind == prm.KEYWORD_ONLY and prm.default is prm.empty, f'{prm}')
+    P = rows(KU)
+    sid, _ = bed(P, KU_N)
+    k = dict(r_f_um=RF, tol_ff_um=TOL, L_par_um=LPAR, r_port_um=RPORT, gap_tol=2.0)
+    chk('SMIN 빠뜨림 = 거부 (TypeError · 조용한 기본값 없음)',
+        prm is not None and raises(lambda: CJ.cjunc_registry(sid, (0.0, 0.0, 0.0), H, *P, **k), TypeError))
+    bad = (float('nan'), -1.0, math.inf, True, 'x')
+    chk('SMIN 비유한 · 음수 · bool · 문자 = 거부 (조립 전)',
+        prm is not None and all(raises(lambda v=v: CJ.cjunc_registry(sid, (0.0, 0.0, 0.0), H, *P, s_min_um=v, **k)) for v in bad))
+
+
+@case('REC')
+def t_record():
+    P = rows(LP)
+    sid, _ = bed(P, LP_N)
+    reg = registry(sid, P)
+    cen, thr, rules = reg['census'], reg['thresholds'], reg['rules']
+    lc = cen.get('Lc_um') or {}
+    lm = cen.get('len_mult') or {}
+    chk('REC 원장 — 법칙 이름 len_scaled_v0 · s_min 문턱 · L_c 분포 (최댓값 · 분위 p90 · p99 · 중앙값) · 배율 합 (3)',
+        rules.get('len_law') == 'len_scaled_v0' and thr.get('s_min_um') == S_MIN
+        and all(x in lc for x in ('max', 'p90', 'p99', 'median'))
+        and abs(float(lm.get('sum', math.nan)) - 3.0) < 1e-12 and abs(float(lm.get('max', math.nan)) - 3.0) < 1e-12,
+        f"{rules.get('len_law')} {thr.get('s_min_um')} {lc} {lm}")
+    pr = plan(reg, 1e3)['record']
+    cn = pr.get('counts', {})
+    chk('REC 계획 기록 — 법칙 이름 · 긴 접촉 수 1 · 간선 배율 합 3 · 한정어 = 길이 법칙 (J8 정량 거부 문장 없음)',
+        pr.get('len_law') == 'len_scaled_v0' and cn.get('n_long') == 1
+        and abs(float(cn.get('len_mult_sum_edge', math.nan)) - 3.0) < 1e-12
+        and any('L_c/L_par' in q for q in pr.get('qualifiers', ())) and not any('정량 거부 (J8)' in q for q in pr.get('qualifiers', ())),
+        f"{pr.get('len_law')} {cn}")
+    PK = rows(KU)
+    sidk, _ = bed(PK, KU_N)
+    r1 = _try(lambda: registry(sidk, PK, s_min_um=KU_S - 0.5), None)
+    r2 = _try(lambda: registry(sidk, PK, s_min_um=KU_S + 0.5), None)
+    c1 = (r1 or {}).get('census') or {}
+    chk('REC 자기 접합 기록 — 후보 · 남은 수 · 거른 수 · s 분포 (최솟값 · 중앙값 · 최댓값) · 거르기 적용 표지',
+        c1.get('n_self_candidates') == 1 and c1.get('n_self_kept') == 1 and c1.get('n_self_filtered') == 0
+        and all(x in (c1.get('self_s_um') or {}) for x in ('min', 'median', 'max')) and c1.get('self_filter') == 'applied',
+        f'{c1}')
+    r3 = _try(lambda: registry(sidk, PK, s_min_um=KU_S - 1.0), None)       # r1 과 같은 분류 (둘 다 접합) — s_min 숫자만 다르다
+    chk('REC 지문에 s_min 포함 — 분류가 같고 s_min 숫자만 다른 두 원장의 원장 지문이 다르다 (instance 표는 같다)',
+        r1 is not None and r3 is not None and r1['thresholds'].get('s_min_um') != r3['thresholds'].get('s_min_um')
+        and len(r1['instances']['fi']) == len(r3['instances']['fi']) == 1 and r1['fp']['registry'] != r3['fp']['registry'])
+    chk('REC 거른 원장 (s < s_min) — 거른 수 1 · 남은 수 0', r2 is not None and r2['census'].get('n_self_filtered') == 1
+        and r2['census'].get('n_self_kept') == 0)
 
 
 @case('J11')
@@ -730,7 +1102,8 @@ def t_c8_guards():
     Pl = (P[0], P[1], P[2][:-1], P[3])
     g.append(('길이 불일치 (fid 한 줄 모자람)', raises(lambda: registry(sid, Pl))))
     g.append(('kind 없음 (연속 중심선 아님)', raises(lambda: quiet(CJ.cjunc_registry, sid, (0., 0., 0.), H, P[0], P[1], P[2], None,
-                                                              r_f_um=RF, tol_ff_um=TOL, L_par_um=LPAR, r_port_um=RPORT))))
+                                                              **reg_kw(dict(r_f_um=RF, tol_ff_um=TOL, L_par_um=LPAR,
+                                                                            r_port_um=RPORT, s_min_um=S_MIN))))))
     Fs = P[2].copy(); i0 = np.flatnonzero(Fs == 10)[2]; Fs[i0] = 20
     Ps = (P[0], P[1], Fs, P[3])
     rs = registry(sid, Ps)
@@ -891,8 +1264,9 @@ def t_s3():
     rp = (sd, np.full(len(sd), 5), np.arange(len(sd)) + 1, np.zeros(len(sd), int))
     sidp, _ = S3.rasterize(*NO_AM, rp[0], rp[1], (0., 0., 0.), tuple(box), 0.5, se_pts=rng.uniform(0, box, (20000, 3)),
                            sdcp_sphere_d_um=1.0, add_fid=rp[2], add_kind=rp[3])
-    regp = quiet(CJ.cjunc_registry, sidp, (0., 0., 0.), 0.5, *rp, r_f_um=0.25, tol_ff_um=0.05, L_par_um=1.0, r_port_um=1.0,
-                 tol_sj_um=0.05, r_sdcp_um=0.5)
+    regp = quiet(CJ.cjunc_registry, sidp, (0., 0., 0.), 0.5, *rp,
+                 **reg_kw(dict(r_f_um=0.25, tol_ff_um=0.05, L_par_um=1.0, r_port_um=1.0, tol_sj_um=0.05, r_sdcp_um=0.5,
+                               s_min_um=1.5)))
     pc0 = plan(regp, 1e3, sdcp_mod={'c': 0.0}); pc1 = plan(regp, 1e3, sdcp_mod={'c': 1.0})
     rc0 = solve(sidp, sig_e(), n, pc0, vox=0.5); rc1 = solve(sidp, sig_e(), n, pc1, vox=0.5)
     chk('S3-7 펠릿 9:1 (탄소 없음) — c 0 ↔ 1 σ_e 비트 같음 = 구성상 no-op (판별력 없음 기록)',
@@ -1021,6 +1395,64 @@ def t_mutants():
     I4 = run_with(PairCut, lambda: I_of(solve(sid10, sig_e(), F6_N, plan(reg10, 3e3, unreg_law='fused')), F6_N))
     wf = _f6_reference(3e3, second_site=True, fused_second=True)
     chk('MUT 쌍 단위 절단 (미등록 자리까지 자름) → T1-12 fused 기준에서 벗어난다', I4 is None or rel(I4, wf) > 1e-6, f'{I4} {wf}')
+
+
+@case('MUT-LEN')
+def t_mut_len():
+    """길이 법칙 변이 넷 — 모듈 훅을 바꿔 끼운 변이가 새 시험 (해석 회로 · 원장) 에 **걸려야** 한다.  훅이 없으면 (고치기 전) 실패."""
+    def hook(name):
+        return CJ is not None and callable(getattr(CJ, name, None))
+
+    @contextlib.contextmanager
+    def patched(name, fn):
+        old = getattr(CJ, name)
+        setattr(CJ, name, fn)
+        try:
+            yield
+        finally:
+            setattr(CJ, name, old)
+
+    rj = 1e3
+    Plp = rows(LP)
+    sidlp, _ = bed(Plp, LP_N)
+    P1_ = rows(F1)
+    sid1, _ = bed(P1_, F1_N)
+    Pku = rows(KU)
+    sidku, _ = bed(Pku, KU_N)
+
+    def lp_err(law='cut'):
+        return rel(_try(lambda: I_of(solve(sidlp, sig_e(), LP_N, plan(registry(sidlp, Plp), rj, unreg_law=law)), LP_N)), LP_I(rj))
+
+    def f1_err():
+        return rel(_try(lambda: I_of(solve(sid1, sig_e(), F1_N, plan(registry(sid1, P1_), rj)), F1_N)), F1_I(rj))
+
+    def ku_cont_ok():
+        """s < s_min — 자기 접합 0 · σ = 옛 경로 (1e-12)."""
+        reg = _try(lambda: registry(sidku, Pku, s_min_um=KU_S + 0.5), None)
+        if reg is None:
+            return False
+        Ih = _try(lambda: I_of(solve(sidku, sig_e(), KU_N, plan(reg, rj)), KU_N))
+        return int(np.sum(reg['instances']['self'])) == 0 and rel(Ih, I_of(solve_legacy(sidku, sig_e(), KU_N), KU_N)) < 1e-12
+
+    cases = (
+        ('배율 제곱 → LEN-P 해석에서 벗어난다', 'junction_len_mult',
+         lambda Lc, Lp: np.maximum(1.0, np.asarray(Lc, np.float64) / Lp) ** 2, lambda: lp_err() < 1e-12, lambda: lp_err() > 1e-6),
+        ('max(1, ·) 빼기 (짧은 접촉이 약해짐) → C1 해석에서 벗어난다', 'junction_len_mult',
+         lambda Lc, Lp: np.asarray(Lc, np.float64) / Lp, lambda: f1_err() < 1e-12, lambda: f1_err() > 1e-6),
+        ('s 거르기 끔 → s < s_min 인데 자기 접합이 생긴다 (KINK 연속 기준 실패)', '_self_is_junction',
+         lambda s, smin: np.ones(np.shape(np.atleast_1d(s)), bool), ku_cont_ok, lambda: not ku_cont_ok()),
+        ('발자국 = 최근접 선분 쌍만 → run 위 A|B 면이 fused 로 남아 LEN-P (fused) 해석에서 벗어난다', '_footprint_segs',
+         lambda inst, k: (np.atleast_1d(inst['si_min'][k]), np.atleast_1d(inst['sj_min'][k])),
+         lambda: lp_err('fused') < 1e-12, lambda: lp_err('fused') > 1e-6),
+    )
+    for nm, name, fn, base_ok, caught in cases:
+        h = hook(name)
+        b = bool(base_ok()) if h else False
+        c = None
+        if h:
+            with patched(name, fn):
+                c = bool(caught())
+        chk(f'MUT-LEN {nm} (훅 `{name}` 있음 · 변이 전 통과 · 변이 실패)', h and b and c is True, f'hook {h} base {b} caught {c}')
 
 
 def main():
