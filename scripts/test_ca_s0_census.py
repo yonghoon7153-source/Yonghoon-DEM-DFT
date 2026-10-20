@@ -20,6 +20,9 @@ docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md §2-1 (문턱
   E   끝-끝 (payload 를 실제로 돌려 생산 raster 입력을 잡는다) — 픽스처 A (SBE 꼴 · 손계산 원장) · B (DBE 꼴) ·
       단계 관문 (S0-7) · 거부 (S0-5) · 순열 불변 (S0-4) · 상자 밖 · 판 위 (S0-6) · 위생 · 솔브 0 · 킷 폴더 불변 (S0-3) ·
       payload 자신의 rasterize-only 원장과 셀 수 대조 · 가로채기 안 걸림 = 거부
+  R   접합 census 의 판정 · 보고 판 = B3 `carbon_junction.cjunc_registry` 와 **같은 함수** (설계 §4-1 끝 · 2 일 차) — 픽스처 J
+      (나란한 두 섬유 = 긴 접촉 손계산 · U 자 섬유 = 자기 후보 · s 손계산) · 엿보기 (S0 가 그 함수를 off 격자 · 계획 문턱 · s_min 미등록
+      으로 부르고 보고 · npz 가 그 원장 값 그대로) · 후보별 목록 (s · L_c · 배율) · 배율 합 · σ 칸 없음 · 단계 2 (픽스처 B)
 """
 import hashlib
 import json
@@ -582,6 +585,18 @@ def t_e2e_stage2():
     chk('E7l 섬유당 접합 간격 ℓ_j — 3.9 · 4.9 µm', sorted(np.round(z['lj_um'], 9).tolist()) == [3.9, 4.9],
         str(z['lj_um']))
     chk('E7m npz 키에도 σ 칸 없음', S0.schema_forbidden_keys({k: 0 for k in z.files}) == [])
+    jc = rep.get('junction_census') or {}
+    cen = jc.get('census') or {}
+    zjp = os.path.join(out, 's0_junctions_kit_B.npz')
+    zj = np.load(zjp) if os.path.exists(zjp) else None
+    lc2 = 2 * math.sqrt(0.0225 - 0.01)
+    chk('E7n 단계 2 접합 census (원장 · 같은 함수 · off 격자) — VV 1 · L_c = 2√(0.15² − 0.1²) = %.6f · 배율 1 · 긴 접촉 0 · '
+        '자기 후보 0 · SDCP 근접 0' % lc2,
+        jc.get('function') == 'carbon_junction.cjunc_registry' and jc.get('grid') == 'off'
+        and cen.get('n_instances_distinct') == 1 and cen.get('n_instances_self') == 0 and jc.get('n_long') == 0
+        and zj is not None and len(zj['Lc']) == 1 and close(zj['Lc'][0], lc2, 1e-9) and float(zj['mult'][0]) == 1.0
+        and jc.get('n_sdcp_near') == 0 and S0.schema_forbidden_keys({k: 0 for k in zj.files}) == [],
+        str({k: jc.get(k) for k in ('function', 'grid', 'n_long', 'n_sdcp_near')}))
 
 
 def t_e2e_payload_crosscheck():
@@ -712,6 +727,114 @@ def t_e2e_box_plate():
         va['tol_fs_um'] == 0.0 and va['n_instances'] == 1 and close(va['gap_um']['min'], 1.05 - 1.075, 1e-9), str(va))
 
 
+#  ── 픽스처 J (단계 1 · vox 0.15 = r_f/h 0.5 — test_carbon_junction 의 KU 를 0.15 µm 로 줄인 꼴) ──
+#  J1 · J2 = 나란한 두 VGCF (중심 간격 0.12 µm < 2 r_f · 겹침 x [4.02, 5.02]) → 닿음 길이 (J1 쪽) = 1 + 2√(0.15² − 0.12²) = 1.18 µm ·
+#  배율 1.18 / 0.30.  KU = U 자로 접힌 한 섬유 (다리 1 · 기운 다리 2 · 중심선 최근접 0.8 h = 0.12 µm 유일) → 자기 후보 하나 ·
+#  s = h (3 + 1 + √(0.2² + 3²)) · 자기 L_c = 3 h = 0.45 µm (배율 1.5).  꼭짓점 + 0.01 µm (셀 경계에 점이 놓이지 않게 · 셀 구조 = KU 그대로).
+J_H = 0.15
+J_KU = [(1.5, 1.5, 0.5), (1.5, 1.5, 4.5), (2.5, 1.5, 4.5), (2.3, 1.5, 1.5), (4.5, 1.5, 1.5), (4.5, 1.5, 7.5)]
+J_KU_S = J_H * (3.0 + 1.0 + math.sqrt(0.2 ** 2 + 3.0 ** 2))
+J_LC_PAR = 1.0 + 2.0 * math.sqrt(0.15 ** 2 - 0.12 ** 2)
+
+
+def _densify(verts, step):
+    V = np.asarray(verts, float)
+    out = [V[0]]
+    for a, b in zip(V[:-1], V[1:]):
+        n = max(1, int(math.ceil(np.linalg.norm(b - a) / step - 1e-12)))
+        for i in range(1, n + 1):
+            out.append(a + (b - a) * (i / n))
+    return np.asarray(out)
+
+
+def _kit_j_fibres():
+    J1 = np.column_stack([3.02 + 0.1 * np.arange(31), np.full(31, 6.04), np.full(31, 2.0)])
+    J2 = np.column_stack([4.02 + 0.1 * np.arange(11), np.full(11, 6.16), np.full(11, 2.0)])
+    KU = np.array([3.01, 3.01, 2.11]) + J_H * _densify(J_KU, 0.25)
+    return [J1, J2, KU]
+
+
+def _spy_registry():
+    """carbon_junction.cjunc_registry 엿보기 — 부른 인자 · 돌려준 원장을 모은다 (값은 그대로 돌려준다)."""
+    import carbon_junction as CJ
+    calls = []
+    orig = CJ.cjunc_registry
+
+    def spy(*a, **k):
+        r = orig(*a, **k)
+        calls.append((a, k, r))
+        return r
+    CJ.cjunc_registry = spy
+    return CJ, orig, calls
+
+
+def t_e2e_registry():
+    tmp = STATE['tmp']
+    kitJ = write_kit(tmp, 'kit_J', vgcf=_kit_j_fibres(), ptfe=[], vol={'VGCF': 0.05})
+    out = os.path.join(tmp, 'outJ')
+    CJ, orig, calls = _spy_registry()
+    try:
+        S0.run_stage(1, [kitJ], out, vox=J_H, bridge_um=0.48, sdcp_sphere_d=0.30)
+    finally:
+        CJ.cjunc_registry = orig
+    rep = _load(os.path.join(out, 's0_stage1_kit_J.json'))
+    jc = rep.get('junction_census') or {}
+    thr = jc.get('thresholds') or {}
+    chk('R1 접합 census (판정 · 보고 판) = carbon_junction.cjunc_registry — 표지 · off 격자 · s_min 미등록 (거르지 않음) · '
+        '길이 법칙 len_scaled_v0 · B0 미리보기는 표지 그대로',
+        jc.get('function') == 'carbon_junction.cjunc_registry' and jc.get('status') == 'registry' and jc.get('grid') == 'off'
+        and 's_min_um' in thr and thr.get('s_min_um') is None and jc.get('len_law') == 'len_scaled_v0'
+        and rep.get('census_preview', {}).get('status') == 'b0_preview', str({k: jc.get(k) for k in ('function', 'status', 'grid')}))
+    reg = calls[0][2] if len(calls) == 1 else None
+    a_, k_ = (calls[0][0], calls[0][1]) if reg is not None else ((), {})
+    sid = a_[0] if a_ else None
+    pv = rep.get('thresholds_used') or {}
+    same_in = (reg is not None and sid is not None and not (np.asarray(sid) == 7).any()
+               and S0._hist(np.asarray(sid)) == rep['raster']['cells_by_sid']['off'] and k_.get('s_min_um', 0) is None
+               and all(k_.get(a) == pv.get(b) for a, b in (('tol_ff_um', 'tol_ff_um'), ('L_par_um', 'L_par_um'),
+                                                          ('r_port_um', 'r_port_um'), ('tol_P_um', 'tol_P_um'),
+                                                          ('tol_sj_um', 'tol_sj_um'), ('r_f_um', 'r_f_um'))))
+    z = None
+    zp = os.path.join(out, 's0_junctions_kit_J.npz')
+    if os.path.exists(zp):
+        z = np.load(zp)
+    same_out = (reg is not None and z is not None and jc.get('census') == json.loads(json.dumps(reg['census']))
+                and np.array_equal(z['Lc'], reg['instances']['Lc']) and np.array_equal(z['mult'], reg['instances']['mult'])
+                and np.array_equal(z['s'], reg['instances']['s'], equal_nan=True)
+                and np.array_equal(z['is_self'], reg['instances']['self'])
+                and jc.get('n_long') == int(np.sum(reg['instances']['long']))
+                and jc.get('len_mult_sum') == float(np.sum(reg['instances']['mult'])))
+    chk('R2 같은 함수 — S0 가 cjunc_registry 를 한 번 (off 격자 · 계획 문턱 · s_min None) 불렀고 보고 · npz = 그 원장 값 '
+        '(census · L_c · 배율 · s · 자기 표지 · 긴 접촉 수 · 배율 합)', same_in and same_out,
+        f'호출 {len(calls)} · 입력 {same_in} · 출력 {same_out}')
+    inst = reg['instances'] if reg is not None else None
+    dl = []
+    if inst is not None:
+        dl = [q for q in range(len(inst['fi'])) if not inst['self'][q]]
+    chk('R3 손계산 — 나란한 두 섬유 (중심 간격 0.12 · 겹침 1.0 µm) → VV instance 1 · L_c = 1 + 2√(0.15² − 0.12²) = %.6f · '
+        '배율 L_c / 0.30 · 긴 접촉' % J_LC_PAR,
+        inst is not None and len(dl) == 1 and close(inst['Lc'][dl[0]], J_LC_PAR, 1e-9)
+        and close(inst['mult'][dl[0]], J_LC_PAR / 0.30, 1e-9) and bool(inst['long'][dl[0]]),
+        str([(float(inst['Lc'][q]), float(inst['mult'][q])) for q in dl]) if inst is not None else 'no registry')
+    sc = jc.get('self_candidates') or []
+    cen = jc.get('census') or {}
+    chk('R4 손계산 — U 자 섬유 (KU × 0.15) → 자기 후보 1 · s = 0.15 (4 + √9.04) = %.6f · 자기 L_c 0.45 · 배율 1.5 · '
+        '거르지 않음 (s_min 미등록 · 거른 수 0)' % J_KU_S,
+        len(sc) == 1 and close(sc[0].get('s_um'), J_KU_S, 1e-9) and close(sc[0].get('Lc_um'), 0.45, 1e-9)
+        and close(sc[0].get('mult'), 1.5, 1e-9) and cen.get('n_self_candidates') == 1 and cen.get('n_self_filtered') == 0
+        and cen.get('self_filter') == 'off_s_min_missing', str(sc))
+    lc = jc.get('long_contacts') or []
+    want_sum = J_LC_PAR / 0.30 + 1.5
+    chk('R5 후보별 목록 — 긴 접촉 2 (distinct 1 · self 1) · 배율 합 = %.6f · 배율 > 1 수 2 · npz 키 (후보마다 L_c · 배율 · s)' % want_sum,
+        jc.get('n_long') == 2 and jc.get('n_long_distinct') == 1 and jc.get('n_long_self') == 1 and len(lc) == 2
+        and sorted(x.get('kind') for x in lc) == ['distinct', 'self'] and close(jc.get('len_mult_sum'), want_sum, 1e-9)
+        and jc.get('n_mult_gt1') == 2 and z is not None and {'Lc', 'mult', 's', 'is_self', 'fi', 'fj'} <= set(z.files),
+        str({k: jc.get(k) for k in ('n_long', 'n_long_distinct', 'n_long_self', 'len_mult_sum', 'n_mult_gt1')}))
+    chk('R6 S0-2 — 보고 · 접합 npz 에 σ · 전류 · 소산 칸 없음 (원장 = 기하만)',
+        S0.schema_forbidden_keys(rep) == [] and z is not None and S0.schema_forbidden_keys({k: 0 for k in z.files}) == [],
+        str(S0.schema_forbidden_keys(rep)[:5]))
+
+
 FAKE_PAYLOAD = '''import sys
 import step3_sigma as _s3
 
@@ -777,6 +900,7 @@ def main():
             run('E8', t_e2e_reject_inputs)
             run('E11', t_e2e_box_plate)
             run('E10', t_e2e_no_capture)
+            print('── R 접합 census = cjunc_registry (같은 함수)'); run('R', t_e2e_registry)
         else:
             chk('E 묶음 — 픽스처 A 단계 1 이 서지 않아 나머지 끝-끝 시험을 못 돈다', False)
     finally:
