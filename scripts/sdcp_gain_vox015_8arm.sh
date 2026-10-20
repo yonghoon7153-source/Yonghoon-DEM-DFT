@@ -19,6 +19,10 @@
 #   setsid nohup bash ~/dem-sk/scripts/sdcp_gain_vox015_8arm.sh > p2.log 2>&1 &
 #   tail -f p2.log
 #   # 팔 하나만 시험:  ARMS=1 bash ~/dem-sk/scripts/sdcp_gain_vox015_8arm.sh
+#   # ★ 다음 세대 (Rint ② B6 · 설계 v1 §7 · 기본 끔 · 판정 런 = 등록 R 비준 · Codex GO 뒤) — 값 여섯은 기본값 없음:
+#   #   CJUNC=1 CJUNC_RJ=<Ω> CJUNC_LEN_LAW=len_scaled_v0 CJUNC_UNREG_LAW=cut CJUNC_S_MIN_UM=<µm> CJUNC_TOL_FF_UM=<µm> \
+#   #   CJUNC_PTFE_JLAW=P0 [SDCP_MOD_C=0|1] STEP3_RTOL=1e-12 PTFE_STAMP=centerline LEAN=2 bash …/sdcp_gain_vox015_8arm.sh
+#   #   S1 면 개구율:  PTFE_STAMP=face_alpha LEAN=2|3 STEP3_RTOL=1e-12 bash …   (face_alpha + CJUNC = 거부 · 조합 미정의)
 set -uo pipefail
 
 VOX="${VOX:-0.15}"
@@ -79,9 +83,11 @@ SCR="${P2_SCR:-$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)}"
 #    이름만 인정하고, 축 이름꼴(`SIGMA_*`·`SDCP_*`·`PTFE_*`)인데 안 읽는 것이 설정돼
 #    있으면 **죽는다**.  주석에 이름이 적힌 것만으로는 통과하지 않는다 (`$VAR` 역참조를 본다).
 _SELF="${P2_SELF:-${BASH_SOURCE[0]:-$0}}"
+#  ★ 2026-10-20 (Rint ② B6) — 다음 세대 손잡이 `CJUNC*` 도 축 이름꼴이다 (오타 · 배선 이전 러너 = 죽음).  `STEP3_RTOL` 은 이름꼴 밖
+#    (러너가 `STEP3_VOX` 를 하위 프로세스 env 로 쓴다 — `STEP3_` 를 통째로 넣으면 부모 셸의 그 이름이 거짓 거부를 낸다 · 한정어).
 if [ -r "$_SELF" ]; then
   _p2_unread=""
-  for _v in $(env | sed -n 's/^\(SIGMA_[A-Z0-9_]*\|SDCP_[A-Z0-9_]*\|PTFE_[A-Z0-9_]*\)=.*/\1/p'); do
+  for _v in $(env | sed -n 's/^\(SIGMA_[A-Z0-9_]*\|SDCP_[A-Z0-9_]*\|PTFE_[A-Z0-9_]*\|CJUNC[A-Z0-9_]*\)=.*/\1/p'); do
     grep -qE '\$\{?'"$_v"'\b' "$_SELF" || _p2_unread="$_p2_unread $_v"
   done
   if [ -n "$_p2_unread" ]; then
@@ -94,7 +100,7 @@ if [ -r "$_SELF" ]; then
     echo "     오타라면 이름을 고칠 것.  러너: $_SELF"
     exit 2
   fi
-elif env | grep -qE '^(SIGMA_|SDCP_|PTFE_)[A-Z0-9_]*='; then
+elif env | grep -qE '^(SIGMA_|SDCP_|PTFE_|CJUNC)[A-Z0-9_]*='; then
   #  자기 소스를 못 읽는 경로(`bash -s` 등)에서 축 env 가 실려 오면 **판정 불가**다.
   #  fail-open 하면 위 사고가 그대로 재발하므로 여기서도 죽는다.
   echo "[p2] ABORT — 축 env 가 설정됐는데 러너가 자기 소스($_SELF)를 못 읽어 배선을 확인할 수 없다."
@@ -243,14 +249,19 @@ fi
 #      섞이고 SKIP 캐시가 오염된다 (H4 와 같은 실수).  그래서 전용 변수를 둔다.
 PS_FLAG=""; PS_TAG=""
 if [ -n "${PTFE_STAMP:-}" ]; then
+  #  ★ 2026-10-20 (Rint ② B6 · 설계 v1 §3-2 · §7) — `face_alpha` (S1 면 개구율 · 다음 세대 `p3ca`) 를 받는다.  조합 (LEAN 2 · 3 만 ·
+  #    σ_PTFE > 0 · 차단 · 주기 · 점 스탬프 · CJUNC 동시 = 거부) 은 아래 영수증 조립의 발사 전 검사 (`run_contract.runner_ca_ext`) 가 본다.
   case "$PTFE_STAMP" in
-    off|centerline) ;;
+    off|centerline|face_alpha) ;;
     capsule) echo "[p2] ABORT — PTFE_STAMP=capsule 은 **예약값이고 미구현**이다 (payload 가 " \
                   "unsupported_protocol 로 중단한다).  D-1 census 뒤에 구현한다"; exit 2;;
-    *) echo "[p2] ABORT — PTFE_STAMP 는 off 또는 centerline (받은 값: $PTFE_STAMP)"; exit 2;;
+    *) echo "[p2] ABORT — PTFE_STAMP 는 off · centerline · face_alpha (받은 값: $PTFE_STAMP)"; exit 2;;
   esac
   PS_FLAG=" --ptfe-stamp $PTFE_STAMP"; PS_TAG="_pts${PTFE_STAMP}"
-  if [ -z "${SIGMA_PTFE:-}" ] && [ "$PTFE_STAMP" != "off" ]; then
+  if [ "$PTFE_STAMP" = "face_alpha" ]; then
+    echo "[p2] ★ **다음 세대 S1** — PTFE 면 개구율 face_alpha (셀을 찍지 않는 면 연산자 · Ø0.248 rope = 규약 선택 ·" \
+         " 생산 규약 아님 · v0 = LEAN 2 · 3 · 판정 런 = 등록 R 비준 · Codex GO 뒤)"
+  elif [ -z "${SIGMA_PTFE:-}" ] && [ "$PTFE_STAMP" != "off" ]; then
     echo "[p2] ★ **진단 팔** — PTFE 스탬프 $PTFE_STAMP · σ_PTFE 미지정 = **exact-zero DOF**." \
          " 생산 규약 아님 (CDXR2-6)"
   else
@@ -282,7 +293,11 @@ fi
 #    `--step3-amg` 전부 통과했다.  **없는 것을 다 적는 방식은 원리적으로 진다.**
 #    ⇒ 진단용으로 안전하다고 **명시한 것만** 통과시킨다 (solver 물리를 안 바꾸는 축).
 #      새 축이 필요하면 여기 적으면서 "왜 물리를 안 바꾸는가" 를 같이 적는다.
-_P2_ALLOWED='--step3-maxiter --step3-rtol --gpu-mem --n-vox --void-max'
+#  ★★ 2026-10-20 (Rint ② B6 · 설계 v1 §6 · §7) — `--step3-rtol` 을 허용목록에서 **뺀다** (러너 축 `STEP3_RTOL` 로 옮겼다).
+#    rtol 은 이제 영수증 선택 칸 (`step3_rtol`) 이고 `receipt_match` 가 팔의 `backend.rtol` 과 대조한다 — P2_EXTRA 로 주면 영수증에
+#    안 실려 **모든 팔이 계산을 다 한 뒤** check_arm 에서 거부된다 (`RCPT|step3_rtol|unrequested|`).  설계 §7 은 rtol 을 P2_EXTRA
+#    수치 노브로 적었지만 그 뒤 영수증이 rtol 을 묶었다 ⇒ 러너 축이 맞다 (OUTDIR · 팔 이름 태그 `_rt…` 도 같이 갈린다).
+_P2_ALLOWED='--step3-maxiter --gpu-mem --n-vox --void-max'
 if [ -n "${P2_EXTRA:-}" ]; then
   for _tok in $P2_EXTRA; do
     case "$_tok" in
@@ -291,6 +306,7 @@ if [ -n "${P2_EXTRA:-}" ]; then
         case " $_P2_ALLOWED " in
           *" $_k "*) ;;
           *)
+            [ "$_k" = "--step3-rtol" ] && echo "ABORT — \`--step3-rtol\` 은 러너 축 STEP3_RTOL 로 줄 것 (영수증 · OUTDIR · 수렴 증서 대조 · 설계 v1 §6)."
             echo "ABORT — P2_EXTRA 의 \`$_k\` 는 허용 목록에 없다."
             echo "  P2_EXTRA 는 조립 문자열 **맨 뒤**라 러너의 \`--expect-physics\` 선언을 덮는다."
             echo "  허용(진단·수치 전용): $_P2_ALLOWED"
@@ -411,7 +427,11 @@ _RCPT_JSON="$(python3 - "$SCR" "$VOX" "$BRIDGE_UM" "$FIBRE_STAMP" "${SDCP_SPHERE
                   "$PERIODIC_ON" "$ARMS" "${EXPECT_BACKEND:-gpu}" "${SDCP_BRIDGE:-}" \
                   "${LEAN:-0}" "${SIGMA_ION_SDCP:-}" "${SIGMA_ION_SE:-}" \
                   "${PTFE_BLOCK_UM:-}" "${PTFE_BLOCK_SCOPE:-}" \
-                  "${SIGMA_AM_S_OVERRIDE:-}" "${SIGMA_SDCP_OVERRIDE:-}" <<'PYRCPT'
+                  "${SIGMA_AM_S_OVERRIDE:-}" "${SIGMA_SDCP_OVERRIDE:-}" \
+                  "CJUNC=${CJUNC:-}" "CJUNC_RJ=${CJUNC_RJ:-}" "CJUNC_LEN_LAW=${CJUNC_LEN_LAW:-}" \
+                  "CJUNC_UNREG_LAW=${CJUNC_UNREG_LAW:-}" "CJUNC_S_MIN_UM=${CJUNC_S_MIN_UM:-}" \
+                  "CJUNC_TOL_FF_UM=${CJUNC_TOL_FF_UM:-}" "CJUNC_PTFE_JLAW=${CJUNC_PTFE_JLAW:-}" \
+                  "SDCP_MOD_C=${SDCP_MOD_C:-}" "STEP3_RTOL=${STEP3_RTOL:-}" <<'PYRCPT'
 import json, os, sys
 sys.path.insert(0, sys.argv[1])
 import run_contract as RC
@@ -477,6 +497,18 @@ if _ams:
     rec['sigma_am_s_S_cm'] = float(_ams)
 if _sdsg:
     rec['sigma_sdcp_S_cm'] = float(_sdsg)
+#  ★★ 2026-10-20 (Rint ② B6 · 설계 v1 §7 러너) — 다음 세대 손잡이 (`run_contract.RUNNER_CA_EXT_ENV` · argv 21 번부터 NAME=값) →
+#    **발사 전 계약 검사** (값 · 선언 칸 = 매니페스트 protocol 정본 · 러너 축 조합 · rtol 봉인 상한) + 영수증 선택 칸
+#    (`ca_ext_request` · `step3_rtol` — 있을 때만 digest 에 들어간다 · 끔 = 옛 영수증 바이트 · 옛 OUTDIR).  문제가 있으면 디렉터리를 만들기 전에 선다.
+_ng_env = dict(_a.split('=', 1) for _a in sys.argv[21:])
+_ng = RC.runner_ca_ext(_ng_env, ptfe_stamp=_ps, lean=_lean, fibre_stamp=_fs, periodic=(_per == '1'),
+                       sdcp_bridge=_sbrg, sigma_vgcf_override=_sg, sigma_ptfe=_pt,
+                       ptfe_block_um=_pbu, ptfe_block_scope=_pbs)
+if _ng['problems']:
+    for _pr in _ng['problems']:
+        sys.stderr.write(f'[p2] ABORT — {_pr}\n')
+    raise SystemExit(2)
+rec.update(_ng['receipt'])
 #  ★ code SHA 는 payload 와 **같은 함수**로 (사본을 두면 갈라진다)
 try:
     import mpm_webapp_payload as _P
@@ -488,7 +520,19 @@ print(json.dumps(rec, ensure_ascii=False, sort_keys=True))
 PYRCPT
 )" || { echo "[p2] ABORT — 런 영수증을 못 만들었다"; exit 2; }
 _RCPT_TAG="_r$(printf '%s' "$_RCPT_JSON" | python3 -c 'import json,sys; print(json.load(sys.stdin)["receipt_digest"])')"
-OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${AS_TAG}${SD_SIG_TAG}${YV_TAG}${PT_TAG}${PS_TAG}${SBRG_TAG}${FS_TAG}${SION_TAG}${PB_TAG}${AR_TAG}${LEAN_TAG}${_RCPT_TAG}}"
+#  ★★ 2026-10-20 (Rint ② B6 · 설계 v1 §7) — 다음 세대 payload 인자 · `--expect-physics` 선언 칸 · 이름 태그를 **영수증에서** 만든다
+#    (`run_contract.runner_ca_ext_view` — 플래그 이름 = CLI_ACCOUNTING 정본 · 값 = 정규 표기 · 사본 없음 · 선언한 축 = 넘긴 인자 = 영수증).
+#    NG_TAG = OUTDIR · 팔 이름 (`_cj<R_j>_<요청 해시>` · `_c<0|1>` · `_rt<rtol>`) · NG_ATAG = 팔 이름 (+ face_alpha `_fa`) — 옛 팔과 이름이
+#    겹치지 않는다 (명시 OUTDIR 의 SKIP 캐시 함정) · 끔 (기본) = 넷 다 빈 문자열 → 옛 OUTDIR · 옛 팔 이름 · 옛 인자 그대로.
+NG_TAG=""; NG_ATAG=""; NG_FLAG=""; NG_DECL=""
+_NG_VIEW="$(printf '%s' "$_RCPT_JSON" | python3 -c 'import json, sys; sys.path.insert(0, sys.argv[1]); import run_contract as RC; v = RC.runner_ca_ext_view(json.load(sys.stdin)); print("\n".join((v["tag"], v["arm_tag"], v["flags"], v["expect"])))' "$SCR")" \
+  || { echo "[p2] ABORT — 다음 세대 인자 (태그 · payload 인자 · 선언) 를 영수증에서 못 만들었다"; exit 2; }
+{ IFS= read -r NG_TAG; IFS= read -r NG_ATAG; IFS= read -r NG_FLAG; IFS= read -r NG_DECL; } <<< "$_NG_VIEW"
+#  ⚠ 이 넷은 생성 스크립트에 박힌다 — 허용 밖 문자 (`$` · 따옴표 · 구분자 · 개행) 가 있으면 돌기 전에 선다 (R5-CX-01 꼴 · 두 겹).
+if printf '%s' "$NG_TAG$NG_ATAG$NG_FLAG$NG_DECL" | LC_ALL=C grep -q '[^A-Za-z0-9._=,+ -]'; then
+  echo "[p2] ABORT — 다음 세대 인자에 허용 밖 문자가 있다 (tag=$NG_TAG flags=$NG_FLAG decl=$NG_DECL)"; exit 2
+fi
+OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${AS_TAG}${SD_SIG_TAG}${YV_TAG}${PT_TAG}${PS_TAG}${SBRG_TAG}${NG_TAG}${FS_TAG}${SION_TAG}${PB_TAG}${AR_TAG}${LEAN_TAG}${_RCPT_TAG}}"
 #  ★★★ R3-CX-09 — 진단 런(ARMS≠8)은 **사용자가 준 OUTDIR 에도** 접미사를 강제한다.
 #    안 그러면 `ARMS=2 OUTDIR=<생산경로>` 로 2팔 산출물이 8팔 디렉터리에 섞인다.
 #  ★ 2026-09-01 — 검사를 **끝자리**에서 **포함**으로 바꾼다.  기본 OUTDIR 은 이미
@@ -507,7 +551,7 @@ fi
 #    production 디렉터리로 가리키는 junction/symlink 를 만들면 문자열 검사는 통과하고
 #    **resolved path 는 production** 이 된다 (Codex 실측).  ⇒ 실경로로 충돌을 본다.
 if [ "$ARMS" -ne 8 ]; then
-  _PROD="$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${AS_TAG}${SD_SIG_TAG}${YV_TAG}${PT_TAG}${PS_TAG}${SBRG_TAG}${FS_TAG}${SION_TAG}${PB_TAG}${LEAN_TAG}"
+  _PROD="$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${AS_TAG}${SD_SIG_TAG}${YV_TAG}${PT_TAG}${PS_TAG}${SBRG_TAG}${NG_TAG}${FS_TAG}${SION_TAG}${PB_TAG}${LEAN_TAG}"
   mkdir -p "$OUTDIR" 2>/dev/null || true
   _R_OUT="$(cd "$OUTDIR" 2>/dev/null && pwd -P || echo "$OUTDIR")"
   _R_PROD="$([ -d "$_PROD" ] && cd "$_PROD" && pwd -P || echo "$_PROD")"
@@ -697,11 +741,14 @@ PY
   #    `check_method_discipline` 의 러너 설정 탐침이 payload 를 안 거치기 때문이다.
   XP="$XP,ptfe_stamp=${PTFE_STAMP:-off}"
   XP="$XP,sigma_ptfe_S_cm=${SIGMA_PTFE:-0}"
+  #  ★ 2026-10-20 (Rint ② B6) — 켠 다음 세대 블록의 선언 칸 (영수증에서 · 끔 = 빈 문자열).  payload 는 켠 블록의 칸이 선언에 **다** 있어야
+  #    돈다 (`CA_EXT_EXPECT|INCOMPLETE|`) · 값이 갈리면 exit 4 (PROTOCOL_MISMATCH) — 선언한 축 = 매니페스트 축.
+  XP="$XP$NG_DECL"
   local XP_FLAG=" --expect-physics $XP"
   local SHF="$RUN/${TAG}.$$.sh"
   ( cd "$RUN" && P2_SCR="$SCR" python3 "$SCR/sr01_stamp_compare.py" \
       --extract-payload "$KIT/run_mpm.sh" --stamp "$FIBRE_STAMP" \
-      --extra-flags "--sigma-vgcf $SIGMA${AS_FLAG}${SD_SIG_FLAG} --step3-vox $VOX --step3-bridge-um $BRIDGE_UM --step3-origin-shift $SH$SD_FLAG$YV_FLAG$PT_FLAG$PS_FLAG$SBRG_FLAG$RQG_FLAG$EP_FLAG$XP_FLAG$FS_FLAG$SION_FLAG$PB_FLAG$LEAN_FLAGS${P2_EXTRA:+ $P2_EXTRA}" \
+      --extra-flags "--sigma-vgcf $SIGMA${AS_FLAG}${SD_SIG_FLAG} --step3-vox $VOX --step3-bridge-um $BRIDGE_UM --step3-origin-shift $SH$SD_FLAG$YV_FLAG$PT_FLAG$PS_FLAG$SBRG_FLAG$RQG_FLAG$EP_FLAG$XP_FLAG$FS_FLAG$SION_FLAG$PB_FLAG$NG_FLAG$LEAN_FLAGS${P2_EXTRA:+ $P2_EXTRA}" \
       --tag "$TAG" --out-name "$(basename "$OUT")" > "$SHF.body" ) || return 1
   { echo 'set -uo pipefail'; echo "KIT=\"$KIT\""; echo "SCR=\"$SCR\"";
     #  ★ R4-CX-03 — `:+` 는 값 `0` 도 nonempty 라 켰다.  `= 1` 만 켠다.
@@ -742,6 +789,10 @@ PY
                 ${SDCP_SPHERE_D:+"--step3-sdcp-sphere-d $SDCP_SPHERE_D"}; do
     grep -q -- "$NEEDLE" "$SHF" || { echo "[p2] ABORT — 미주입: $NEEDLE"; return 1; }
   done
+  #  ★ 2026-10-20 (Rint ② B6) — 다음 세대 인자도 **실제로** 박혔는가 (고정 문자열 대조 · 조용히 빠지면 옛 세대 팔이 새 이름으로 남는다)
+  if [ -n "$NG_FLAG" ] && ! grep -qF -- "${NG_FLAG# }" "$SHF"; then
+    echo "[p2] ABORT — 미주입: 다음 세대 인자 (${NG_FLAG# })"; return 1
+  fi
   echo "[p2] ── $TAG  shift=($SH)  σ_VGCF=$SIGMA"
   #  ★★ 2026-08-19 — **피크 호스트 RAM 을 실측**한다.  vox 0.10 이 가용 57 GB 에서
   #    조립 중 OOM 으로 죽었는데(로그가 `STEP3 solve:` 전에 아무 에러 없이 끊김 =
@@ -787,8 +838,9 @@ for SH in "${SHIFTS[@]}"; do
     [ -d "$K" ] || { echo "[p2] ABORT — $K 없음 (~/sdcp 에서 돌릴 것)"; exit 2; }
     #  ★ fail-fast — 한 팔이 실패하면 **전체를 멈춘다**.  실패한 팔을 빼고 계속하면
     #    팔 수가 달라져 앙상블이 오염된다 (판정기가 HOLD 를 내겠지만 GPU 시간을 버린다).
-    if ! run_arm "$(cd "$K" && pwd)" "$SH" "p2_${K#kit_}${SD_TAG}_a${i}"; then
-      echo "[p2] ABORT — 팔 p2_${K#kit_}${SD_TAG}_a${i} 실패.  원인을 고치고 다시 돌릴 것"
+    #  ★ 2026-10-20 (Rint ② B6) — 팔 이름에 다음 세대 태그 (`NG_ATAG` · 끔 = 빈 문자열 = 옛 이름 그대로)
+    if ! run_arm "$(cd "$K" && pwd)" "$SH" "p2_${K#kit_}${SD_TAG}${NG_ATAG}_a${i}"; then
+      echo "[p2] ABORT — 팔 p2_${K#kit_}${SD_TAG}${NG_ATAG}_a${i} 실패.  원인을 고치고 다시 돌릴 것"
       echo "     (이미 끝난 팔은 $OUTDIR 에 남아 있어 다음 실행에서 SKIP 된다)"
       exit 1
     fi

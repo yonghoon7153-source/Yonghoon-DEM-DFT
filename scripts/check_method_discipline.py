@@ -918,7 +918,12 @@ _RUNNER_AXES = ('LEAN', 'VOX', 'ARMS', 'SIGMA_PTFE', 'PTFE_STAMP', 'FIBRE_STAMP'
                 #  ★ 2026-09-02 — closure 스윕의 두 대비 축 + 게이트 전용 문.
                 #    ⚠ 이제 안 넣으면 **두 겹으로** 막힌다: 격리가 뚫리는 옛 경로에 더해,
                 #    러너의 새 env fail-closed 가 `bash -s` 경로에서 ABORT 를 낸다.
-                'SIGMA_AM_S_OVERRIDE', 'SIGMA_SDCP_OVERRIDE', 'P2_ENV_GUARD_ONLY', 'P2_SELF')
+                'SIGMA_AM_S_OVERRIDE', 'SIGMA_SDCP_OVERRIDE', 'P2_ENV_GUARD_ONLY', 'P2_SELF',
+                #  ★ 2026-10-20 (Rint ② B6) — 다음 세대 손잡이 아홉 (정본 = `run_contract.RUNNER_CA_EXT_ENV` · 이 목록과 같아야 한다 —
+                #    L-K6 과 `scripts/test_ca_ext_runner.py` N9 가 대조).  안 넣으면 부모 셸의 `CJUNC=1` 이 LEAN 미지정 탐침으로 새어
+                #    러너의 발사 전 검사가 탐침을 멈추고 → 규칙 L 이 빨개져 **생산이 막힌다** (위 경고와 같은 부류).
+                'CJUNC', 'CJUNC_RJ', 'CJUNC_LEN_LAW', 'CJUNC_UNREG_LAW', 'CJUNC_S_MIN_UM', 'CJUNC_TOL_FF_UM',
+                'CJUNC_PTFE_JLAW', 'SDCP_MOD_C', 'STEP3_RTOL')
 
 
 def _hermetic_env(env):
@@ -2195,9 +2200,10 @@ def _selftest():
 
     chk('L-K5: 새 축 KITS 가 프로브 격리 목록에 있다 (없으면 생산이 막힌다)',
         'KITS' in _RUNNER_AXES)
-    chk('L-K6: 러너가 쓰는 env 축이 전부 격리 목록에 있다',
+    import run_contract as _rcK6                # ★ 2026-10-20 (Rint ② B6) — 다음 세대 손잡이 표 (정본) 도 격리 목록에 있어야 한다
+    chk('L-K6: 러너가 쓰는 env 축이 전부 격리 목록에 있다 (다음 세대 손잡이 표 포함)',
         not [a for a in ('KITS', 'LEAN', 'VOX', 'ARMS', 'BRIDGE_UM', 'PTFE_STAMP', 'FIBRE_STAMP')
-             if a not in _RUNNER_AXES])
+             + tuple(n for n, _s, _k in _rcK6.RUNNER_CA_EXT_ENV) if a not in _RUNNER_AXES])
 
     # ── 규칙 N — 리포가 통과하고, **되살리면 잡히는가** (사본에서만 훼손) ──────────────
     _ksrc = open(os.path.join(ROOT, _KIT_GEN), encoding='utf-8').read()

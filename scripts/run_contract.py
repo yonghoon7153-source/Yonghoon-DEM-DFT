@@ -769,6 +769,215 @@ def next_gen_cert_ok(step3):
     return True, None
 
 
+#: ★ 2026-10-20 (Rint ② B6 · 설계 v1 §7 러너) — 러너 `scripts/sdcp_gain_vox015_8arm.sh` 의 **다음 세대 손잡이** = (env 이름, 하위 블록, 선언 칸).
+#   러너 (영수증 조립) · 규율 검사기 (`check_method_discipline._RUNNER_AXES` — 규칙 L 탐침 격리) · 시험이 이 표 하나를 본다.
+#   전부 비우면 (기본) 옛 영수증 · 옛 OUTDIR · 옛 팔 이름 · 옛 payload 인자 그대로.  S1 face_alpha 의 손잡이는 기존 `PTFE_STAMP` 축이다.
+#   ⚠ `STEP3_RTOL` 은 러너 env 게이트의 이름꼴 (SIGMA_ · SDCP_ · PTFE_ · CJUNC) 밖이다 — 러너가 `STEP3_VOX` 를 하위 프로세스 env 로 쓰므로
+#     `STEP3_` 를 통째로 넣으면 부모 셸의 그 이름이 거짓 거부를 낸다 ⇒ `STEP3_RTOL` 의 오타 (예: STEP3_RTOOL) 는 게이트가 못 잡는다 (한정어).
+RUNNER_CA_EXT_ENV = (
+    ('CJUNC', 'cjunc', None),                      # S2 켜기 — 비움 · 0 = 끔 · 1 = 켬
+    ('CJUNC_RJ', 'cjunc', 'R_j_ohm'),
+    ('CJUNC_LEN_LAW', 'cjunc', 'len_law'),
+    ('CJUNC_UNREG_LAW', 'cjunc', 'unreg_law'),
+    ('CJUNC_S_MIN_UM', 'cjunc', 's_min_um'),
+    ('CJUNC_TOL_FF_UM', 'cjunc', 'tol_ff_um'),
+    ('CJUNC_PTFE_JLAW', 'cjunc', 'ptfe_jlaw'),
+    ('SDCP_MOD_C', 'sdcp_mod', 'c'),               # S3 — 0 · 1 (payload 선택지 그대로 · S2 와만)
+    ('STEP3_RTOL', None, 'step3_rtol'),            # 정지 rtol + 수렴 증서 (numeric · 영수증 선택 칸)
+)
+#: 러너 수 칸 — ASCII 10 진 (부호 · 공백 · 밑줄 · 유니코드 숫자 · nan · inf 낱말 거부 · 넘침 (1e999) 은 유한성 검사가 잡는다)
+_RUNNER_NUM_RE = r'(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?'
+_RUNNER_TOKEN_RE = r'[A-Za-z0-9_]+'
+_RUNNER_SAFE_RE = r'[A-Za-z0-9._=,+ -]*'          # 러너가 생성 스크립트에 박는 문자 (R5-CX-01 — `$` · 따옴표 · 구분자 · 개행 없음)
+_RUNNER_CJ_NUM = ('R_j_ohm', 's_min_um', 'tol_ff_um')
+
+
+def _runner_float(raw):
+    """러너 env 문자열 → 유한 float | None (엄격 · 조용한 강제 없음)."""
+    import re as _re
+    if not isinstance(raw, str) or not _re.fullmatch(_RUNNER_NUM_RE, raw):
+        return None
+    x = float(raw)
+    return x if math.isfinite(x) else None
+
+
+def runner_ca_ext(env, *, ptfe_stamp='off', lean='0', fibre_stamp='segment', periodic=False, sdcp_bridge='',
+                  sigma_vgcf_override='', sigma_ptfe='', ptfe_block_um='', ptfe_block_scope=''):
+    """★ 2026-10-20 (Rint ② B6) — 러너 env (문자열 · 비움 = 끔) → `{'receipt': 영수증 선택 칸, 'problems': [구조화 사유]}` = **발사 전
+    계약 검사** (설계 v1 §7 · §4-3 · §5-2 · §6).  러너의 영수증 조립 (heredoc) 이 부른다 — 문제가 하나라도 있으면 OUTDIR 을 만들기 전에 선다.
+    · 값: 수 = ASCII 10 진 · 유한 (`_RUNNER_NUM_RE`) · 법칙 = 낱말 토큰 · c = '0' | '1' (payload 선택지)
+    · 선언 칸 = 매니페스트 protocol 정본 (`ca_ext_request_problem` — 칸 집합 · 정본 함수로 다시 만들 수 있는 값 · P1 = 지금 거부)
+    · 조합 = 러너가 가진 축만 (LEAN · 섬유 스탬프 · 주기 · SDCP 브리지 · σ_VGCF 고정 · PTFE σ · 차단) — payload 입구 거부의 **부분집합**
+      (`scripts/test_ca_ext_runner.py` N6b 가 같은 조합을 payload 에 직접 넣어 거부를 확인한다 · 과잉차단 금지)
+    · rtol = (0, 봉인 상한] (`step3_conv_cert.CERT_RTOL_MAX`) — 밖이면 증서 ⓐ 가 반드시 실패해 미게시 팔만 만든다 (계산 낭비 차단)
+    payload 인자 · `--expect-physics` 선언 칸 · 이름 태그는 `runner_ca_ext_view` 가 **영수증에서** 만든다 (사본 없음)."""
+    import re as _re
+    probs = []
+
+    def _p(code, why):
+        probs.append(f'RUNNER_CA_EXT|{code}| {why}')
+
+    def _gt0(v):
+        try:
+            return float(v) > 0.0
+        except (TypeError, ValueError):
+            return False
+    env = env if isinstance(env, dict) else {}
+    names = [n for n, _s, _k in RUNNER_CA_EXT_ENV]
+    _unk = sorted(k for k in env if k not in names)
+    if _unk:
+        _p('UNKNOWN', f'모르는 손잡이 {_unk} (아는 것: {names})')
+    raw = {n: (env.get(n) if isinstance(env.get(n), str) else '') for n in names}
+    sw = raw['CJUNC']
+    if sw not in ('', '0', '1'):
+        _p('SWITCH', f'CJUNC = {sw!r} — 비움 · 0 (끔) · 1 (켬) 만')
+    on = sw == '1'
+    cj_named = [(n, k) for n, s, k in RUNNER_CA_EXT_ENV if s == 'cjunc' and k]
+    req = {}
+    if on:
+        miss = [n for n, _k in cj_named if raw[n] == '']
+        if miss:
+            _p('MISSING', f'CJUNC=1 인데 {miss} 가 없다 — 기본값 없음 (결과 전 선언 · 숫자 = 등록 R §2-1 · S0 단계 1)')
+        else:
+            cj, bad = {}, []
+            for n, k in cj_named:
+                v = raw[n]
+                if k in _RUNNER_CJ_NUM:
+                    x = _runner_float(v)
+                    if x is None:
+                        bad.append(f'{n}={v!r} (ASCII 10 진 · 유한 · 부호 없음)')
+                    else:
+                        cj[k] = x
+                elif _re.fullmatch(_RUNNER_TOKEN_RE, v):
+                    cj[k] = v
+                else:
+                    bad.append(f'{n}={v!r} (낱말 토큰)')
+            if bad:
+                _p('VALUE', ' · '.join(bad))
+            else:
+                req['cjunc'] = cj
+    else:
+        given = [n for n, _k in cj_named if raw[n] != '']
+        if given:
+            _p('FLAG_WITHOUT_CJUNC', f'{given} 는 CJUNC=1 일 때만 뜻이 있다 (조용한 no-op 금지)')
+    c = raw['SDCP_MOD_C']
+    if c != '':
+        if not on:
+            _p('NO_CJUNC', f'SDCP_MOD_C={c!r} — S3 SDCP 수정자는 S2 탄소 접합 (CJUNC=1) 과만 (설계 §5-2)')
+        elif c not in ('0', '1'):
+            _p('VALUE', f'SDCP_MOD_C={c!r} — 0 · 1 만 (payload `--step3-sdcp-mod-c` 선택지 · 정량 시나리오 두 끝 · 설계 §5-2)')
+        else:
+            req['sdcp_mod'] = {'c': float(c)}
+    if 'cjunc' in req:
+        why = ca_ext_request_problem(req)
+        if why:
+            _p('REQUEST', why)
+    fa = str(ptfe_stamp) == 'face_alpha'
+    for _lab, _on in (('CJUNC=1', on), ('PTFE_STAMP=face_alpha', fa)):
+        if not _on:
+            continue
+        if str(lean) not in ('2', '3'):
+            _p('LEAN', f'{_lab} 인데 LEAN={lean} — v0 = LEAN 2 · 3 만 (원장을 안 읽는 솔브 · 진단 · 필드 · 설계 §7 LEAN 표)')
+        if str(fibre_stamp) != 'segment':
+            _p('SEGMENT', f'{_lab} 인데 FIBRE_STAMP={fibre_stamp} — 선분 스탬프 (연속 중심선) 에서만')
+        if periodic:
+            _p('PERIODIC', f'{_lab} 인데 MPM_PERIODIC_SIGMA=1 — 정량 모드 거부 (주기 seam 미지원)')
+    if on:
+        if fa:
+            _p('FACE_ALPHA_COMBO', 'PTFE_STAMP=face_alpha + CJUNC=1 — 설계가 조합을 아직 정의하지 않았다 (payload · solve_sigma_z 도 거부)')
+        if _gt0(sdcp_bridge):
+            _p('SDCP_BRIDGE', f'SDCP_BRIDGE={sdcp_bridge} — SDCP 브리지 진단 팔과 접합 동시 = 거부 (설계 §4-3)')
+        if str(sigma_vgcf_override or '') != '' and not _gt0(sigma_vgcf_override):
+            _p('VGCF_INSULATING', f'SIGMA_VGCF_OVERRIDE={sigma_vgcf_override} — 전자 채널에서 VGCF 가 절연이면 접합이 뜻을 잃는다')
+    if fa:
+        if _gt0(sigma_ptfe):
+            _p('SIGMA_PTFE', f'SIGMA_PTFE={sigma_ptfe} — face_alpha 는 PTFE 셀이 없어 σ_PTFE 가 걸릴 자리가 없다 (조용한 no-op)')
+        if _gt0(ptfe_block_um) or str(ptfe_block_scope or '') not in ('', 'se'):
+            _p('PTFE_BLOCK', f'PTFE_BLOCK_UM={ptfe_block_um!r} · PTFE_BLOCK_SCOPE={ptfe_block_scope!r} — PTFE 셀이 없어 차단이 조용한 no-op')
+    rec = {}
+    rt = raw['STEP3_RTOL']
+    if rt != '':
+        x = _runner_float(rt)
+        if x is None:
+            _p('VALUE', f'STEP3_RTOL={rt!r} (ASCII 10 진 · 유한)')
+        else:
+            import step3_conv_cert as _cc
+            if not (0.0 < x <= _cc.CERT_RTOL_MAX):
+                _p('RTOL', f'STEP3_RTOL={rt} — (0, {_cc.CERT_RTOL_MAX:g}] 밖 — 수렴 증서 ⓐ 가 반드시 실패해 미게시 팔만 만든다 '
+                           f'(봉인 상한 · 설계 §6)')
+            else:
+                rec['step3_rtol'] = x
+    if req:
+        rec['ca_ext_request'] = req
+    return {'receipt': ({} if probs else rec), 'problems': probs}
+
+
+def _runner_tag_num(x):
+    """수 → 무손실 · 정규 이름 조각 (repr 최단 왕복 표기 · 끝 '.0' 떼기 · '.' → p · '-' → m · '+' 떼기 — `2.5` ↔ `25` 가 갈린다)."""
+    s = repr(float(x))
+    if s.endswith('.0'):
+        s = s[:-2]
+    return s.replace('+', '').replace('.', 'p').replace('-', 'm')
+
+
+def _ca_ext_cli_flag(sub, key, *, switch=False):
+    """선언 칸 → payload 플래그 — `CLI_ACCOUNTING` 의 protocol_ext 칸 (규칙 M 이 실물 파서와 대조하는 정본) 에서 거꾸로 찾는다 (사본 없음).
+    `switch` = 켜는 플래그 (그 하위 블록의 모델 판 칸 하나만 내는 것)."""
+    want = (f'ca_ext.{sub}.model',) if switch else None
+    hit = [o for o, (cat, flds) in CLI_ACCOUNTING.items()
+           if cat == 'protocol_ext' and flds and (tuple(flds) == want if switch else flds[0] == f'ca_ext.{sub}.{key}')]
+    if len(hit) != 1:
+        raise ValueError(f'ca_ext.{sub}.{key or "model"} 를 내는 payload 플래그가 {len(hit)} 개다 (정확히 1 개여야 · CLI_ACCOUNTING)')
+    return hit[0]
+
+
+def runner_ca_ext_view(rec):
+    """★ 2026-10-20 (Rint ② B6) — 러너 영수증 → `{'flags', 'expect', 'tag', 'arm_tag'}` — payload 인자 · `--expect-physics` 선언 칸 · 이름
+    태그를 **영수증 하나에서** 만든다 (선언한 축 = 넘긴 인자 = 영수증 = 매니페스트 축 · `receipt_match` 가 팔마다 대조).
+    · flags   = ' --step3-cjunc --step3-cjunc-rj <repr> … --step3-sdcp-mod-c <0|1> --step3-rtol <repr>' (끔 = '')
+    · expect  = ',ca_ext.cjunc.<칸>=<값> …' (러너의 선언 뒤에 붙인다 · payload 는 켠 블록의 칸이 다 선언돼야 돈다 · 끔 = '')
+    · tag     = '_cj<R_j>_<요청 해시 8>' + '_c<0|1>' + '_rt<rtol>' (무손실 정규 표기 · OUTDIR 과 팔 이름 · 같은 물리 = 같은 이름)
+    · arm_tag = ('_fa' if face_alpha) + tag — 팔 이름 (옛 팔과 이름이 겹치지 않게 · 명시 OUTDIR 의 SKIP 캐시 함정)
+    ⚠ 요청이 정본 검사를 못 지나거나 출력에 생성 스크립트 밖 문자가 있으면 ValueError (영수증이 손으로 바뀐 경우 · fail-closed)."""
+    import hashlib as _hl
+    import json as _json
+    import re as _re
+    rec = rec if isinstance(rec, dict) else {}
+    req = rec.get('ca_ext_request')
+    fl, xp, tg = [], [], []
+    if req is not None:
+        why = ca_ext_request_problem(req)
+        if why:
+            raise ValueError(f'영수증의 ca_ext_request 가 정본 검사를 못 지난다 — {why}')
+        import ca_ext_cjunc as _cw
+        cj = req['cjunc']
+        fl.append(_ca_ext_cli_flag('cjunc', None, switch=True))
+        for k in _cw.REQUEST_KEYS_CJUNC:
+            sv = repr(float(cj[k])) if k in _RUNNER_CJ_NUM else str(cj[k])
+            fl += [_ca_ext_cli_flag('cjunc', k), sv]
+            xp.append(f'ca_ext.cjunc.{k}={sv}')
+        h8 = _hl.sha256(_json.dumps(cj, sort_keys=True, separators=(',', ':'), allow_nan=False).encode()).hexdigest()[:8]
+        tg.append(f'_cj{_runner_tag_num(cj["R_j_ohm"])}_{h8}')
+        if 'sdcp_mod' in req:
+            cv = float(req['sdcp_mod']['c'])
+            fl += [_ca_ext_cli_flag('sdcp_mod', 'c'), str(int(cv))]
+            xp.append(f'ca_ext.sdcp_mod.c={cv!r}')
+            tg.append(f'_c{int(cv)}')
+    rt = rec.get('step3_rtol')
+    if rt is not None:
+        if '--step3-rtol' not in CLI_ACCOUNTING:
+            raise ValueError('--step3-rtol 이 CLI_ACCOUNTING 에 없다 (payload 플래그 정본)')
+        fl += ['--step3-rtol', repr(float(rt))]
+        tg.append(f'_rt{_runner_tag_num(rt)}')
+    tag = ''.join(tg)
+    out = {'flags': ''.join(' ' + x for x in fl), 'expect': ''.join(',' + x for x in xp), 'tag': tag,
+           'arm_tag': ('_fa' if rec.get('ptfe_stamp') == 'face_alpha' else '') + tag}
+    _bad = [k for k, v in out.items() if not _re.fullmatch(_RUNNER_SAFE_RE, v)]
+    if _bad:
+        raise ValueError(f'러너 인자 {_bad} 에 생성 스크립트 밖 문자가 있다 ({out})')
+    return out
+
+
 def protocol_ok(man):
     """매니페스트 → `(ok, reason|None)`.  **저장된 id 를 믿지 않고 다시 계산한다.**
 
