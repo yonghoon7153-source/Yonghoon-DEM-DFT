@@ -12173,6 +12173,20 @@
       "opened_in": "docs/reviews/codex_rint_carbon_additive_design_request_20261020.md",
       "title": "PB1 기록 문장의 과장 · 단위 섞임 — 커밋 af8d1d501 메시지 \"fails = the 39 new counterexamples\" (실패 검사 78 = 반례 39 × 2) · 263c9502b 메시지 \"anything else → int_token · none is silently dropped\" (꼬리를 조용히 버렸다 = F1) · \"rejected at the entrance\" (BOM · 디코드 오류 · 구조 손상은 입구 전 예외) · 요청서 B-1 최소 재생 \"둘 다 거부\" · 전각 정수 사유 · \"J15P (양성 18)\" · \"41 파일\" · B-0 판 표지 · 계획 §3 의 새 칸 · \"push 안 함\"",
       "note": "정정 = 요청서 Part B (B-0 판 표지 · B-1 최소 재생 · 전각 정수 사유 · J15P 입력 12 · 검사 18 · F1 줄 · 한정 더 ①–⑦) · 계획 rimprr §3 끝 (push 됨 · J15P · 41 = 36 + 5 · 새 칸 · F1) · 원장 RIMPR-03 (F1).  커밋 메시지 둘은 고칠 수 없다 (push 됨) = 이 항목으로 기록.  같은 부류 = SELF-124 · SELF-125 (시험 수 · 범위 표기).  claimed_fixed = 이 정정 커밋 push 뒤."
+    },
+    {
+      "id": "RINT-23",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude 10-20 밤 (Q17 길이 법칙 구현 에이전트 실측)",
+      "opened_in": "docs/reviews/rint_carbon_additive_design_v1_20261020.md",
+      "title": "`scripts/carbon_junction.py` 의 지문 함수 `_fp` 가 객체 배열 (dtype=object) 의 포인터 바이트를 해시한다 — 문자열이 같아도 객체가 다르면 지문이 달라져, 탄소 접합 원장 · 계획 지문이 프로세스 사이에서 재현되지 않을 수 있다 (거짓 거부 쪽 · 런 사슬의 계획 대조를 막는다)",
+      "note": "구현 B 부터 있던 성질 (Q17 구현이 실측) · 거짓 수용이 아니라 거짓 거부 쪽 (fail-closed) 이지만 판정 런 사슬 (계획 해시 · 원장 지문 대조) 이 서려면 **런 전에 반드시** 고친다 — 시험 먼저 (두 프로세스 · 같은 내용 다른 객체 → 지문 같아야 함) → 객체 배열은 내용 직렬화 (정렬된 문자열 · 길이 접두) 로 해시 · 숫자 배열은 dtype · shape · C 순서 바이트.  같은 부류 = 지문 · 증서 결합 (RINTV · G2RR 계열).",
+      "evidence_tests": [
+        "scripts/carbon_junction.py",
+        "scripts/test_carbon_junction.py"
+      ]
     }
   ]
 }
