@@ -9391,6 +9391,59 @@
     "근거_발화": "AskUserQuestion 답 (2026-10-20 · 이 세션): '어디서 돌릴까요? (필요한 GPU 메모리가 약 38 GB라 kgy 24 GB에는 안 들어가요)' → 'gabia · r2 잠깐 세움 (권고)'",
     "decision_digest": "sha256:871eddc39b3f472ea3ec4047f6ae082cdc3fa2efdebd5ca75188d9cd33053648"
    }
+  },
+  {
+   "id": "D-2026-10-20-nd-s-vacancy-closed",
+   "schema_version": 2,
+   "kind": "closure",
+   "scope": null,
+   "slot": "nd_s_vacancy_neutral_closure",
+   "applies_to": {
+    "systems": [
+     "nd_at_li_120atom_ppswap"
+    ],
+    "tasks": [
+     "s_vacancy_near_far"
+    ],
+    "methods": [
+     "qe_paw_scf_frozen"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "Nd 옆 · 먼 S 빈자리 (중성 · 얼린 격자) — 닫는다: 구분 안 됨 (ΔE −0.11 eV · n 2 대 2 · 겹침 · 문턱 0.3 미만) · 넷 다 부분 점유 (금속성) 단서 · 카드 §6 그대로",
+   "statement": "마감 기록 db/properties/nd_s_vacancy_closed_2026_10_20.json. 허용 문장은 하나 — 「같은 셀 · 얼린 격자 · 중성 (닫힌 껍질) 에서 Nd 옆 · 먼 자유 S 의 빈자리 에너지는 이 표본 (n 2 대 2) 으로 구분되지 않는다 (차 −0.11 eV · 넷 다 부분 점유 (금속성)).」 · 부호만 보고 '옆이 덜' 로 읽지 않는다 · 한 자리 값만 인용하지 않는다 · 카드 §1a 금지 그대로.",
+   "decision_state": "proposed",
+   "record_kind": "closure",
+   "results_seen": true,
+   "card": "db/properties/nd_s_vacancy_closed_2026_10_20.json",
+   "record": "db/properties/nd_anion_removal_runlog_2026_10_19.json",
+   "amends": [],
+   "depends_on": [
+    "D-2026-10-20-nd-s-vacancy-neutral"
+   ],
+   "evidence": [
+    "db/raw/nd_s_vacancy_2026_10_20 (ec303b1ae · SHA ✓)",
+    "db/properties/nd_anion_removal_runlog_2026_10_19.json '✅_v2_판독_2026_10_20'"
+   ],
+   "reopen_criteria": [
+    "이완 판 · 다른 자리 · Cl (스핀 선언) · Nd@P 모델은 새 카드 (카드 §6)",
+    "'자리를 하나 더 봤다' 는 재개 사유가 아니다"
+   ],
+   "proposed_by": "claude-session-2026-10-20 (본 세션 복귀)",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-10-20",
+     "state": "proposed",
+     "by": "agent",
+     "note": "카드 §6 '4 개 판독으로 닫는다' — 네 점 수렴 (§4 발동 없음) · 판독 갈래 '구분 안 됨' + 금속성 단서. 비준 = 사용자 (CEI · 1저자 = 실험 쪽)."
+    }
+   ],
+   "ratification": {
+    "state": "proposed"
+   }
   }
  ]
 }
