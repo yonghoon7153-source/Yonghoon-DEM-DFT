@@ -1837,6 +1837,14 @@ def am_iface_raw_perm_diag(am_c, am_r, am_t, perm_a, perm_b, box_lo, box_hi, vox
     return out
 
 
+def _fa_refuse(res, what):
+    """② S1 v0 (2026-10-20 · 설계 v1 §3-3 · E2) — 면 α 를 원장에서 안 읽는 진단 (je · 소산 분담 · |J| 점군 · Joule) 은 face_alpha
+    해를 거부한다 (조화평균을 다시 계산하면 막힌 면의 전류가 과대 · fail-closed).  끈 해는 아무것도 안 한다 (비트 같음)."""
+    if isinstance(res, dict) and (res.get('_face_alpha') is not None or res.get('face_alpha') is not None):
+        import ptfe_face_alpha as _pfa
+        _pfa.refuse_diag(res, what)
+
+
 #: ★★★ **플레이트 결합 규약 판**.  이 문자열이 바뀌면 σ_e 절대값이 바뀐다 —
 #   `p2` = 2026-08-25 (CDXR3-6) 가장 바깥 **점유 고체**를 먼저 정하고 그것이 도체일 때만
 #   플레이트에 붙인다.  `p1` = 그 이전, `cond`(σ>0) 로 표면을 골라 절연 고체를 **관통**했다.
@@ -1847,7 +1855,7 @@ PLATE_RULE_VERSION = 'p2-occupied-surface-first'
 
 def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, plate_band_um=None,
                   z_bot_um=None, plate_band_bot_um=None, bot_allowed=None, periodic_xy=False,
-                  area_um2=None, rint=None, pid=None, iface=None, cjunc=None):
+                  area_um2=None, rint=None, pid=None, iface=None, face_alpha=None, cjunc=None):
     """Effective through-plane (z) σ of the voxel σ-id grid.  Finite volume, harmonic-mean face
     conductance g = (2σaσb/(σa+σb))·vox (cubic voxels: face area vox² / distance vox), collector
     plate φ=1 at the bed bottom, φ=0 plate at the bed top, lateral Neumann.
@@ -1880,6 +1888,17 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
         if _same and pid is None:
             raise ValueError(f'solve_sigma_z: 같은 상 계면 {_same} 은 입자 번호 pid 가 있어야 한다 — 없으면 면 0 '
                              f'으로 조용히 무효 (unsupported identity · RINT-02/14)')
+    #  ② S1 (2026-10-20 · Rint ② · 설계 v1 §3 · R18 Q6) — PTFE 면 개구율 `face_alpha` = ptfe_face_alpha.build_plan(...) 의 결과.
+    #    None (기본) 이면 아래 어떤 줄도 바뀌지 않는다 (옛 조립 · 연결성 · 반환 키 비트 같음).  계획 무결성 · 격자 · 지문은
+    #    `require_plan` 이 조립 전에 본다 (CG 0) · r1 표 · ①′ · 주기와 동시 = 거부 (v0 미정의 조합 · seam 미지원).
+    _pfa = _fap = None
+    _fa_used, _fa_iso = {}, 0
+    if face_alpha is not None:
+        import ptfe_face_alpha as _pfa
+        if rint is not None or iface is not None or periodic_xy:
+            raise ValueError('solve_sigma_z: face_alpha 는 r1 계면 표 (rint) · ①′ iface · periodic_xy 와 함께 쓸 수 없다 '
+                             '(v0 — 정의되지 않은 결합 · 주기 seam 미지원 · 설계 v1 §3-3)')
+        _fap = _pfa.require_plan(face_alpha, sid, sigma_of_sid, vox, pid=pid)
     #  ①′ AM–AM 막 (2026-10-07 · Rint G2 · 기구만 · 정량 채택 HOLD) — `iface` = am_iface_plan(...) 의 결과.  None (기본) 이면
     #    아래 어떤 줄도 바뀌지 않는다 (옛 조립 · 연결성 · 반환 dict 키 비트 같음).  거부 입력 · r1 동시 · 주기 · 다른 격자 → 거부.
     _ifp = (iface_require_quantitative(iface, sid, sigma_of_sid, rint=_rint, periodic_xy=periodic_xy, vox=vox)
@@ -1909,6 +1928,8 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
         #  ①′ — 조기 반환 해에도 기록 (solved False) · iface 를 안 줬으면 dict 를 **그대로** 돌려준다 (옛 키 그대로).
         if _ifp is not None:
             d['iface'] = dict(_ifp['record'], solved=False)
+        if _fap is not None:                               # ② S1 — 조기 반환 해에도 기록 (solved False · 영수증 = failed)
+            d['face_alpha'] = _pfa.solve_record(_fap, {}, solved=False)
         if _cjp is not None:                                 # ② — 조기 반환 해에도 계획 기록 (solved False · 사유)
             d['cjunc'] = _cjm.early_record(_cjp, d.get('reason'))
             if _cjs is not None and getattr(_cjs, 'stats', None):
@@ -1994,6 +2015,10 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
         #  ①′ E3 — 절단 면 (g = 0) 을 뺀 **실제 간선** 그래프로 떠 있는 성분을 가린다 (셀 6-연결 라벨은 절단을 모른다).
         #    절단이 없으면 위 옛 라벨 그대로 (성분 집합이 같다 → I2 비트 같음).
         lab, _nl = _iface_label_cut(cond, tuple(ax['lin'][ax['cut']] for ax in _ifp['axes']))
+    elif _fap is not None and _fap['n_cut_rows'] > 0:
+        #  ② S1 E3 — α = 0 면 (절단) 을 뺀 **실제 간선** 그래프 (①′ 와 같은 함수) · 사방 절단 셀 수는 기록 (가지치기 전 cond).
+        lab, _nl = _iface_label_cut(cond, _pfa.cut_lin(_fap))
+        _fa_iso = _pfa.isolated_by_cut(cond, _pfa.cut_lin(_fap))
     else:
         lab, _nl = ndimage.label(cond)                     # 6-connectivity = the face-coupling graph
     _ii, _jj = np.where(bot_m); _lb = lab[_ii, _jj, k_first[bot_m]]
@@ -2098,7 +2123,12 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
         a2, b2 = A[m], B[m]
         if _ifp is not None and axis is not None:          # ①′ AM–AM 막 · 절단 (원장 행만 · 나머지 면 그대로)
             g, a2, b2 = _ifa_assemble(axis, m, sa[m], sb[m], g, a2, b2)
+        if _fap is not None and axis is not None:          # ② S1 — g = α·g0 (계획 행만 · α = 0 면은 행렬에서 뺀다 · 나머지 그대로)
+            g, _keep = _pfa.assemble_axis(_fap, axis, m, g, _fa_used)
+            if _keep is not None:
+                a2, b2 = a2[_keep], b2[_keep]
         if _cjs is not None:                               # ② — 면은 탄소 접합 조립기가 받는다 (멤버십 재배선 · 절단 · 법칙)
+            #    면별 배열은 a2 · b2 · g 셋뿐 (sid · pid 는 조립기가 dof → 셀 번호로 다시 읽는다) — 위 `_keep` 압축이 그대로 넘어간다.
             _cjs.add_faces(axis, a2, b2, g)
             return
         rows.append(a2); cols.append(b2); vals.append(-g)
@@ -2123,6 +2153,8 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
             return 0, None, None, None
         dist = np.maximum(np.abs(zc[kk2[m]] - plane), 0.5 * vox)
         g = sa[m] * vox * vox / dist
+        if _fap is not None:                               # ② S1 v0 — 판 결합 α 미적용 (배율 1) · 판 쪽 면 가로지름 기둥 수만 기록
+            g = g * _pfa.plate_coupling_factor(_fap, ii[m], jj[m], kk2[m], 'bot' if phi_p != 0.0 else 'top')
         np.add.at(diag, A[m], g)
         if phi_p != 0.0:
             np.add.at(b, A[m], g * phi_p)
@@ -2247,6 +2279,10 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
                          'shape': tuple(sid.shape), 'axes': _axes, 'contact_current_code': _Ic,
                          'fp_sid': _grid_fp(sid), 'fp_sig': _grid_fp(np.asarray(sigma_of_sid, np.float64)),
                          'fp_phi': _grid_fp(out['phi']) if return_field else None, 'fp_edges': _iface_edges_fp(_axes)}
+    if _fap is not None:
+        #  ② S1 기록 + 간선 원장 (E1 · E5) — 조립이 **실제로 쓴** α 행 (축마다 아래 셀 번호 · α · g) + 지문 (sid · σ · φ · 원장).
+        out['face_alpha'] = _pfa.solve_record(_fap, _fa_used, solved=True, n_isolated=_fa_iso)
+        out['_face_alpha'] = _pfa.edges_ctx(_fap, _fa_used, sid, sigma_of_sid, out.get('phi'))
     return out
 
 
@@ -2258,6 +2294,7 @@ def per_particle_current(res, sid, pid, sigma_of_sid, n_am):
     (0 ≤ pid < n_am)**.  옛 판은 pid ≥ 0 만 봐서, 첨가제 스탬프가 sid 만 바꾸고 남긴 AM 번호를 가진 **탄소 셀**의
     전류를 AM 평균에 넣었다 (r 무관 · 합성 반례 121–127× · 순위 역전 · 08-16 심층 리뷰 §7 은 셀 수로 "무해" 라
     적었으나 전류 가중으로는 아니다).  반응 · AM 표면 patch 는 이미 AM sid 로 먼저 가려 무관."""
+    _fa_refuse(res, 'per_particle_current')                # ② S1 v0 — face_alpha 해 거부 (E2 · 끈 해 = 비트 같음)
     if 'phi' not in res:                                   # early-returned solve (see res['reason'])
         return np.zeros(n_am, np.float64)
     P, cond = res['phi'], res['cond']
@@ -2310,6 +2347,7 @@ def phase_current_share(res, sid, sigma_of_sid, periodic_xy=None, return_total=F
     `periodic_xy` 는 인자 → `res['periodic_xy']` 순으로 결정하고, **둘 다 없으면 거부**한다
     (fail-closed — 옛 res 를 조용히 비주기로 읽으면 같은 결함이 되살아난다).
     """
+    _fa_refuse(res, 'phase_current_share')                 # ② S1 v0 — face_alpha 해 거부 (E2 · 끈 해 = 비트 같음)
     if 'phi' not in res:
         return ({}, 0.0) if return_total else {}
     if periodic_xy is None:
@@ -2685,6 +2723,7 @@ def joule_hotspot(res, sid, sigma_of_sid, vox, sel_sids, box_lo=(0.0, 0.0, 0.0),
     ★한계 (정직): 절대 ΔT(K) 온도상승은 Poisson 열확산(∇·(k∇ΔT)=−q) + 실전류 스케일 + LPSCl 분해
     Arrhenius Eₐ 앵커가 필요(미보유) → v2.  이 함수는 발열 '생성' 분포(hot-spot 위치)까지만 정직 산출.
     Returns dict(pts_um [N,3], q [N], hot_frac_50, conc_ratio, n) 또는 None.  viewer가 percentile 정규화."""
+    _fa_refuse(res, 'joule_hotspot')                       # ② S1 v0 — face_alpha 해 거부 (E2 · 끈 해 = 비트 같음)
     if 'phi' not in res:
         return None
     P, cond = res['phi'], res['cond']
@@ -2761,6 +2800,7 @@ def field_point_cloud(res, sid, sigma_of_sid, vox, sel_sids, box_lo=(0.0, 0.0, 0
       처음부터 `conc_ratio`·`hot_frac_50` 을 추출 **전**에 쟀다(:1284-1287); 이 함수만
       규약이 갈려 있었다.  ⇒ 둘을 같은 규약으로 맞춘다.
       ⚠ `stats` 는 **내부 jmag 단위**(= J·vox_cm)다 — 소비자가 `/vox_cm` 로 A/cm² 로 바꾼다."""
+    _fa_refuse(res, 'field_point_cloud')                   # ② S1 v0 — face_alpha 해 거부 (E2 · 끈 해 = 비트 같음)
     if 'phi' not in res:
         return None, None, None
     P, cond = res['phi'], res['cond']

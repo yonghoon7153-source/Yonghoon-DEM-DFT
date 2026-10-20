@@ -343,22 +343,23 @@ def t_f2():
     ref = ref_sigma(np.where(sid > 0, SIG_SE, 0.0), h, {(2, lin_mid): 0.0})
     chk('F2-b 기둥 절단 → 관통 없음 (σ 0 · reason) = 손 절단 참조 0',
         r['sigma_eff'] == 0.0 and r.get('reason') == 'no_through_component' and ref == 0.0, (r.get('reason'), ref))
-    #  옆 셀이 절단 면 하나로만 붙은 침대 — 절단되면 떠 있는 성분으로 가지치기된다 (E3 · 실제 간선 그래프)
-    sid2 = np.zeros((2, 1, 4), np.int8)
+    #  옆 셀이 절단 면 하나로만 붙은 침대 — 절단되면 떠 있는 성분으로 가지치기된다 (E3 · 실제 간선 그래프).
+    #  ⚠ 판 결합 띠 = vox + 0.1 µm (h 0.125 에서 1.8h) — 옆 셀은 두 판 모두에서 띠 밖 (nz 6 · k 2) 이어야 떠 있다.
+    sid2 = np.zeros((2, 1, 6), np.int8)
     sid2[0] = 6
-    sid2[1, 0, 1] = 6
-    cap2 = caps_of(line((h, -h, 1.5 * h), (h, 2 * h, 1.5 * h), 13))        # x = h 면 위 (옆 셀의 유일한 면)
+    sid2[1, 0, 2] = 6
+    cap2 = caps_of(line((h, -h, 2.5 * h), (h, 2 * h, 2.5 * h), 13))        # x = h 면 위 (옆 셀의 유일한 면)
     p2 = plan_of(sid2, ti(), cap2, h, 'ionic')
     a2 = plan_alpha_dict(p2)
-    lin_side = int(np.ravel_multi_index((0, 0, 1), sid2.shape))
+    lin_side = int(np.ravel_multi_index((0, 0, 2), sid2.shape))
     chk('F2-c 옆 면 α = 0', a2.get((0, lin_side)) == 0.0, a2.get((0, lin_side)))
     r2 = solve(sid2, ti(), h, plan=p2)
     s2 = np.where(sid2 > 0, SIG_SE, 0.0)
     ref2 = ref_sigma(s2, h, a2)
     chk('F2-d σ = 독립 참조 (같은 α · 손 절단) 1e-12', abs(r2['sigma_eff'] - ref2) <= 1e-12 * max(ref2, 1e-30),
         (r2['sigma_eff'], ref2))
-    chk('F2-e 옆 셀 가지치기 (n_floating_dropped 1 · n_dof 4)',
-        r2.get('n_floating_dropped') == 1 and r2.get('n_dof') == 4, (r2.get('n_floating_dropped'), r2.get('n_dof')))
+    chk('F2-e 옆 셀 가지치기 (n_floating_dropped 1 · n_dof 6)',
+        r2.get('n_floating_dropped') == 1 and r2.get('n_dof') == 6, (r2.get('n_floating_dropped'), r2.get('n_dof')))
     chk('F2-f 기록 n_isolated_by_cut = 1', (r2.get('face_alpha') or {}).get('n_isolated_by_cut') == 1,
         r2.get('face_alpha'))
 
@@ -420,7 +421,7 @@ def t_f4():
             I = g * (phi[c] - phi[nb])
             net[c] += I
             net[nb] -= I
-    (cb, gb, _pb), (ct, gt, _pt) = r['plate_edges']['bot'], r['plate_edges']['top']
+    (cb, gb, _), (ct, gt, _) = r['plate_edges']['bot'], r['plate_edges']['top']
     Ib = float(np.sum(gb * (1.0 - phi[cb])))
     It = float(np.sum(gt * (phi[ct] - 0.0)))
     np.add.at(net, cb, -gb * (1.0 - phi[cb]))
@@ -698,6 +699,21 @@ def _f16_alpha_check(K_list=(8, 1024)):
     return worst
 
 
+def ref_alpha_K(pts, h, K, r, z_face):
+    """**독립** K × K 중점 구적 (생산 코드 밖 · 선분마다 루프) — 정사각형 [0,h]² × {z = z_face} 면의 열린 분율."""
+    u = (np.arange(K) + 0.5) / K * h
+    X, Y = np.meshgrid(u, u, indexing='ij')
+    Q = np.stack([X.ravel(), Y.ravel(), np.full(K * K, z_face)], -1)
+    inside = np.zeros(K * K, bool)
+    P = np.asarray(pts, np.float64)
+    for a, b in zip(P[:-1], P[1:]):
+        d = b - a
+        t = np.clip(((Q - a) @ d) / (d @ d), 0.0, 1.0)
+        w = Q - a - t[:, None] * d
+        inside |= (w * w).sum(1) <= r * r
+    return 1.0 - inside.sum() / float(K * K)
+
+
 def _f16_series_check():
     h = F16_H
     sid = _ion_slab((1, 1, 2))
@@ -705,9 +721,11 @@ def _f16_series_check():
         cp = caps_of(pts)
         pl = plan_of(sid, ti(), cp, h, 'ionic')
         al = plan_alpha_dict(pl).get((2, 0), 1.0)
+        al_ref = ref_alpha_K(pts, h, 8, FA.ROPE_D_UM / 2.0, h)
+        chk(f'F16-구적 {nm}: 계획 α_K8 = 독립 K=8 중점 구적 (정확)', al == al_ref, (al, al_ref))
         r = solve(sid, ti(), h, plan=pl)
-        want = 2.0 * SIG_SE * al / (al + 1.0)
-        chk(f'F16-직렬 {nm}: σ = 2σα/(α+1) (α_K8 {al:.6f}) 1e-12',
+        want = 2.0 * SIG_SE * al_ref / (al_ref + 1.0)
+        chk(f'F16-직렬 {nm}: σ = 2σα/(α+1) (독립 α_K8 {al_ref:.6f}) 1e-12',
             abs(r['sigma_eff'] - want) <= 1e-12 * want, (r['sigma_eff'], want))
 
 
@@ -1264,17 +1282,20 @@ def t_bitid():
     fixtures.append(('AM block', am, te, np.zeros(am.shape, np.int32)))
     from scipy.sparse.linalg import spsolve
     for nm, sid, tab, pid in fixtures:
-        outs = []
-        for mod in (OLD, S3):
-            o = mod._solve_cg
-            mod._solve_cg = lambda L, b: (spsolve(L.tocsc(), b), 0)
-            try:
-                outs.append(quiet(mod.solve_sigma_z, sid, tab(), H, return_field=True, z_top_um=sid.shape[2] * H,
-                                  z_bot_um=0.0, pid=pid))
-            finally:
-                mod._solve_cg = o
-        chk(f'B1 솔버 끔 [{nm}] — σ · n_dof · φ 비트 같음 (옛 ↔ 새)', same_solve(outs[0], outs[1]),
-            (outs[0]['sigma_eff'], outs[1]['sigma_eff']))
+        for how in ('직접', 'CG'):
+            outs = []
+            for mod in (OLD, S3):
+                o = mod._solve_cg
+                if how == '직접':
+                    mod._solve_cg = lambda L, b: (spsolve(L.tocsc(), b), 0)
+                try:
+                    outs.append(quiet(mod.solve_sigma_z, sid, tab(), H, return_field=True, z_top_um=sid.shape[2] * H,
+                                      z_bot_um=0.0, pid=pid))
+                finally:
+                    mod._solve_cg = o
+            chk(f'B1 솔버 끔 [{nm} · {how}] — σ · n_dof · φ 비트 같음 (옛 ↔ 새)', same_solve(outs[0], outs[1])
+                and outs[0].get('resid') == outs[1].get('resid') and sorted(outs[0]) == sorted(outs[1]),
+                (outs[0]['sigma_eff'], outs[1]['sigma_eff']))
     if ARGS.skip_payload:
         return
     td = tempfile.mkdtemp(prefix='s1fa_b_')
