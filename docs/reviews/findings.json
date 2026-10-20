@@ -12094,12 +12094,12 @@
     {
       "id": "SELF-125",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "claude 10-20 내부 사전 리뷰 (Codex 요청 전 · 문장 대조 · 공격 두 에이전트 · 대상 = 조인 수정 `12d894c09` · `a2cfd0365` · `654385e4c` 의 요청서 · 원장 · 계획 · 커밋 메시지 · 시험 출력 · CLAUDE.md · 진행 기록)",
       "opened_in": "docs/reviews/codex_rint_carbon_additive_design_request_20261020.md",
       "title": "내부 사전 리뷰 (10-20) 가 찾은 우리 기록의 과장 · 범위 부족 11 곳 (A–K) — 범위 없는 \"NUMERIC_MODULES 6 무변경\" · 판정문 인용에 괄호 끼움 · 78/135 출처 묶음 · 표지 없는 78/135 · 판이 다른 줄 번호 · 코드와 다른 경계 서술 · 부정확한 커밋 메시지 · 시험 출력 문구 · 계획 제목 · CLAUDE.md \"회귀 전부\" · 진행 기록 \"전각 22\"",
-      "note": "10-20 내부 사전 리뷰 (Codex 요청 전 · 문장 대조 · 공격 두 에이전트 · 1저자 10-20 *\"codex go 나올때까지는 안할거야 · 좀 잘좀 해봐\"* 뒤의 사전 공격 리뷰 규칙) 가 우리 기록에서 찾은 과장 · 범위 부족 11 곳 — 항목 · 자리 · 정정 (한 줄씩): (A) 원장 `SELF-124` note · 조인 요청서 15 행 — *\"S3 NUMERIC_MODULES 6 무변경\"* 범위 없음 → 두 Rint 커밋 ∩ (CODE_FILES 32 ∪ NUMERIC_MODULES 6) = 0 · 대조 핀 → 리뷰 핀 구간에서는 CODE_FILES 네 파일이 다르고 그중 `scripts/network_conductivity.py` 는 NUMERIC_MODULES 6 에도 든다 (판정문 §7 의 같은 점 = 설계 리뷰 요청서 Part B-2 정정 알림) — 고침 = `SELF-124` note · 요청서 15 행 표지 / (B) 조인 요청서 15 행 · 원장 `SELF-124` note (같은 꼴: 수정 계획 Q5 행 · 설계 리뷰 요청서 Part B-2) — 판정문 §7 권장 문장 인용 안에 커밋 괄호를 끼우고 \"32개\" 를 \"32 개\" 로 → 인용은 원문 그대로 · 덧붙임은 인용 밖 — 고침 = 네 자리 표지 · `SELF-124` note / (C) 조인 요청서 22 행 (§1 표 시험 칸) — *\"78/135 = 시험 작성 중간 시점\"* 을 판정문 §1 출처로 묶음 → 78/135 = 저자 보고 (그 시험 판이 커밋에 없어 재현 불가 — 판정문 §1 도 입증 안 함) · 판정문 §1 이 입증한 것 = 현재 시험 138 을 옛 코드에 81/138 (57 FAIL) — 고침 = 요청서 22 행 표지 / (D) 조인 요청서 53 행 — *\"고치기 전 숫자 78/135 …\"* 에 정정 표지 없음 → §1 표의 표지로 갈음 — 고침 = 요청서 53 행 표지 / (E) 원장 `SELF-124` note — 요청서 행 번호 12 · 11 · 19 · 50 = 리뷰 핀 판 → 지금 판 14 · 13 · 22 · 53 — 고침 = `SELF-124` note · 요청서 머리 (3 행) 안내 (표지는 줄을 늘리지 않고 붙였다) / (F) 원장 `RIMPR-R01` · 조인 요청서 · 계획 · 모듈 docstring 의 경계 서술 — *\"줄 끝 · 공백 · 탭\"* ↔ 코드 `isspace()` (유니코드 공백 · U+001F 도 경계) → 코드를 서술대로 고침 (PB1 · `263c9502b` · `rest[0] not in ' \\t'`) — 서술이 참이 됐다 / (G) 커밋 `a2cfd0365` 메시지 — *\"assigned only by marker followed by boundary\"* 부정확 — 실제 = 표지로 시작하면 그 절로 읽고 경계가 없으면 `header_boundary` 로 거부 — 커밋 메시지는 고칠 수 없다 = 기록만 (원장 `RIMPR-R01` note · 진행 기록 10-20 19) / (H) 시험 `scripts/test_rint_g2_join.py` J13 머리 출력 — *\"고치기 전 = 조인 PASS / 정량 ACCEPT\"* (③④ 는 계획이 이미 `join_particles_mismatch`) → *\"고치기 전 = 조인 PASS (① 정량 ACCEPT · ③④ 는 계획이 이미 join_particles_mismatch) · 1e150 대조 = REJECT\"* — 고침 = `af8d1d501` / (I) 조인 수정 계획 제목 (docs/reviews/rimprr_fix_plan_20261020.md) — *\"결과 0 건 · 초안\"* → *\"등록 시 결과 0 건 · ✅ 비준 10-20 · 수정 결과 = §3 끝\"* — 고침 = 계획 제목 / (J) CLAUDE.md Rint 줄 — *\"회귀 전부 · 원장 claimed_fixed\"* → *\"회귀 8 통과 · 원장 RIMPR-R01 · 03 · SELF-124 claimed_fixed · RIMPR-04 open\"* — 고침 = CLAUDE.md / (K) 진행 기록 docs/session_20260923_progress.md 10-20 16 줄 — *\"J14 전각 22\"* → *\"J14 전각 · 아라비아-인도 22\"* — 고침 = 진행 기록.  고침 = 이 원장 항목을 넣은 기록 커밋 (H = 시험 먼저 `af8d1d501` · F = 수정 `263c9502b` · G = 기록만) — push 뒤 claimed_fixed (자기 SHA 를 쓸 수 없다 · `SELF-119` · `SELF-120` 선례 · 검사기 규칙 ② = claimed_fixed 는 HEAD 에서 닿는 SHA 필요).  교훈 = 인용은 원문 그대로 (덧붙임은 인용 밖) · \"무변경\" · \"전부\" 류 문장은 구간 (커밋 · 핀) 과 집합 (어느 목록 · 어느 시험 판) 을 같이 적는다 · 줄 번호는 판을 같이 적는다.",
+      "note": "10-20 내부 사전 리뷰 (Codex 요청 전 · 문장 대조 · 공격 두 에이전트 · 1저자 10-20 *\"codex go 나올때까지는 안할거야 · 좀 잘좀 해봐\"* 뒤의 사전 공격 리뷰 규칙) 가 우리 기록에서 찾은 과장 · 범위 부족 11 곳 — 항목 · 자리 · 정정 (한 줄씩): (A) 원장 `SELF-124` note · 조인 요청서 15 행 — *\"S3 NUMERIC_MODULES 6 무변경\"* 범위 없음 → 두 Rint 커밋 ∩ (CODE_FILES 32 ∪ NUMERIC_MODULES 6) = 0 · 대조 핀 → 리뷰 핀 구간에서는 CODE_FILES 네 파일이 다르고 그중 `scripts/network_conductivity.py` 는 NUMERIC_MODULES 6 에도 든다 (판정문 §7 의 같은 점 = 설계 리뷰 요청서 Part B-2 정정 알림) — 고침 = `SELF-124` note · 요청서 15 행 표지 / (B) 조인 요청서 15 행 · 원장 `SELF-124` note (같은 꼴: 수정 계획 Q5 행 · 설계 리뷰 요청서 Part B-2) — 판정문 §7 권장 문장 인용 안에 커밋 괄호를 끼우고 \"32개\" 를 \"32 개\" 로 → 인용은 원문 그대로 · 덧붙임은 인용 밖 — 고침 = 네 자리 표지 · `SELF-124` note / (C) 조인 요청서 22 행 (§1 표 시험 칸) — *\"78/135 = 시험 작성 중간 시점\"* 을 판정문 §1 출처로 묶음 → 78/135 = 저자 보고 (그 시험 판이 커밋에 없어 재현 불가 — 판정문 §1 도 입증 안 함) · 판정문 §1 이 입증한 것 = 현재 시험 138 을 옛 코드에 81/138 (57 FAIL) — 고침 = 요청서 22 행 표지 / (D) 조인 요청서 53 행 — *\"고치기 전 숫자 78/135 …\"* 에 정정 표지 없음 → §1 표의 표지로 갈음 — 고침 = 요청서 53 행 표지 / (E) 원장 `SELF-124` note — 요청서 행 번호 12 · 11 · 19 · 50 = 리뷰 핀 판 → 지금 판 14 · 13 · 22 · 53 — 고침 = `SELF-124` note · 요청서 머리 (3 행) 안내 (표지는 줄을 늘리지 않고 붙였다) / (F) 원장 `RIMPR-R01` · 조인 요청서 · 계획 · 모듈 docstring 의 경계 서술 — *\"줄 끝 · 공백 · 탭\"* ↔ 코드 `isspace()` (유니코드 공백 · U+001F 도 경계) → 코드를 서술대로 고침 (PB1 · `263c9502b` · `rest[0] not in ' \\t'`) — 서술이 참이 됐다 / (G) 커밋 `a2cfd0365` 메시지 — *\"assigned only by marker followed by boundary\"* 부정확 — 실제 = 표지로 시작하면 그 절로 읽고 경계가 없으면 `header_boundary` 로 거부 — 커밋 메시지는 고칠 수 없다 = 기록만 (원장 `RIMPR-R01` note · 진행 기록 10-20 19) / (H) 시험 `scripts/test_rint_g2_join.py` J13 머리 출력 — *\"고치기 전 = 조인 PASS / 정량 ACCEPT\"* (③④ 는 계획이 이미 `join_particles_mismatch`) → *\"고치기 전 = 조인 PASS (① 정량 ACCEPT · ③④ 는 계획이 이미 join_particles_mismatch) · 1e150 대조 = REJECT\"* — 고침 = `af8d1d501` / (I) 조인 수정 계획 제목 (docs/reviews/rimprr_fix_plan_20261020.md) — *\"결과 0 건 · 초안\"* → *\"등록 시 결과 0 건 · ✅ 비준 10-20 · 수정 결과 = §3 끝\"* — 고침 = 계획 제목 / (J) CLAUDE.md Rint 줄 — *\"회귀 전부 · 원장 claimed_fixed\"* → *\"회귀 8 통과 · 원장 RIMPR-R01 · 03 · SELF-124 claimed_fixed · RIMPR-04 open\"* — 고침 = CLAUDE.md / (K) 진행 기록 docs/session_20260923_progress.md 10-20 16 줄 — *\"J14 전각 22\"* → *\"J14 전각 · 아라비아-인도 22\"* — 고침 = 진행 기록.  고침 = 이 원장 항목을 넣은 기록 커밋 (H = 시험 먼저 `af8d1d501` · F = 수정 `263c9502b` · G = 기록만) — push 뒤 claimed_fixed (자기 SHA 를 쓸 수 없다 · `SELF-119` · `SELF-120` 선례 · 검사기 규칙 ② = claimed_fixed 는 HEAD 에서 닿는 SHA 필요).  교훈 = 인용은 원문 그대로 (덧붙임은 인용 밖) · \"무변경\" · \"전부\" 류 문장은 구간 (커밋 · 핀) 과 집합 (어느 목록 · 어느 시험 판) 을 같이 적는다 · 줄 번호는 판을 같이 적는다.  ✅ 10-20 밤: 정정을 적용한 기록 커밋 = c4bdf18c9 (push 됨) → claimed_fixed.  그 뒤 PB1 사전 공격 리뷰가 찾은 문장 정정 (공격 ⑤) = 별도 SELF (요청서 Part B 정정 커밋에서).",
       "evidence_tests": [
         "docs/reviews/codex_rint_join_rimpr_fix_recheck_request_20261020.md (3 · 15 · 22 · 53 행 표지 — A · B · C · D · E)",
         "docs/reviews/rimprr_fix_plan_20261020.md (제목 — I · Q5 행 — B)",
@@ -12108,7 +12108,8 @@
         "docs/session_20260923_progress.md (10-20 16 — K · 10-20 19 — G)",
         "scripts/test_rint_g2_join.py (J13 머리 출력 — H · `af8d1d501`)",
         "scripts/rint_iface_join.py (`_item_section` 경계 — F · `263c9502b`)"
-      ]
+      ],
+      "claimed_fixed_sha": "c4bdf18c9"
     },
     {
       "id": "SELF-100",
@@ -12138,6 +12139,29 @@
       "evidence_tests": [
         "docs/reviews/ms_change_checklist_sdcp_v2_20261019.md",
         "docs/reviews/sdcp_sigma_e_dcp_anchor_registration_v2_20261019.md"
+      ]
+    },
+    {
+      "id": "SELF-127",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude 10-20 밤 (구현 B 의 리포 재현 시험이 설계 숫자와 다름을 보고)",
+      "opened_in": "docs/reviews/rint_carbon_additive_design_v1_20261020.md",
+      "title": "설계 K7 · §6 표 · N15 행 · 요청서 숫자 표에 사전 리뷰 탐침의 수렴 오차 (−11.8 % · −0.76 % · +6.0 %) 를 실었는데 그 탐침 스크립트를 남기지 않았다 — 같은 꼴 설명으로 다시 만든 리포 시험은 접합 없는 꼴에서 그 숫자를 재현하지 못했다 (σ 오차 ≤ 1.5e-8 · 거짓 수렴은 접합 간선 꼴에서만 0.50–0.78 %)",
+      "note": "근거 = 구현 B 보고 (10-20 · 리포 시험 `scripts/test_step3_conv_cert.py` 27/27 · 합성 24 × 24 × 72 · vox 0.15 · 매달린 섬유 · σ_fibre 7,853.98 · σ_NCM 0.0041) · 사전 리뷰 탐침 기록 = 스크래치 요지만 (스크립트 · 입력 지움).  결론 \"지금 생산 술어는 다음 세대 꼴에서 틀린 σ 를 수렴으로 낼 수 있다\" 는 리포 시험으로 선다 (접합 간선 꼴) · 크기 숫자는 리포 시험 값으로 바꾼다.  정정 = 설계 K7 · §6 정정 줄 · N15 행 · 요청서 A13 · A23 · 숫자 표 (이 항목을 올린 커밋) → claimed_fixed 는 push 뒤.  교훈 = 요청서 · 설계에 싣는 탐침 숫자는 탐침 스크립트를 리포 (또는 증거 폴더) 에 남긴 것만 · 아니면 [탐침 · 스크립트 없음] 표지.  같은 부류 = SELF-94 · SELF-119 · SELF-124 (요청서 문장 과장)."
+    },
+    {
+      "id": "RINT-22",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude 10-20 (Rint ② S0 구현 에이전트 C 관찰)",
+      "opened_in": "docs/reviews/rint_carbon_additive_design_v1_20261020.md",
+      "title": "`scripts/mpm_webapp_payload.py` 가 STEP3 try 블록 안에서만 묶는 `_s3` 를 그 밖에서 읽는다 (3236 행 근처) — `--no-step3` 와 `--fibre` 를 같이 주면 UnboundLocalError 로 죽는다 (생산 경로 밖 · 생산 러너는 이 조합을 쓰지 않는다)",
+      "note": "고치지 않음 (관찰만 · 10-20) — 시험 먼저 (조합 실행 → UnboundLocalError 재현) → `_s3` 를 블록 밖에서 미리 None 으로 두거나 그 줄을 STEP3 안으로 → 구조화 오류 또는 정상 진행.  생산 출력 무영향 (조합이 생산 명령에 없다 — 러너 · 킷 run_mpm.sh grep 으로 확인할 것).  웹앱 화면 없음.  기록 자리 = 구현 C 의 kgy 명령 문서 (`docs/reviews/rint2_kgy_commands_20261020.md`) 의 관찰 줄 · 설계 문서는 opened_in 자리로만.",
+      "evidence_tests": [
+        "scripts/mpm_webapp_payload.py"
       ]
     }
   ]
