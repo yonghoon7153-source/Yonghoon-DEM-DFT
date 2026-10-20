@@ -21,6 +21,8 @@
   N3  + SDCP 수정자 c = 1 (DBE 근접 1 · SBE 판별 표지 False)
   N4  face_alpha + rtol (LEAN 2) · N5 face_alpha + rtol (LEAN 3 · 이온 증서)
   N6  발사 전 거부 (구조화 사유 · 디렉터리를 만들지 않는다) · N6b payload 도 같은 조합을 거부한다 (러너 거부 ⊆ payload 거부 = 과잉차단 없음)
+      ★ Z3 (10-20) — face_alpha + 접합 · 극한 R_j (`inf` · `0`) 은 거부 목록에서 뺐다 (받는다 — N10 · test_ca_ext_z3 B · C)
+  N10 ★ Z3 — face_alpha + 접합 (P0 · P1) + rtol 한 런 (두 하위 블록 · p3ca · check_arm · 접합 sid = off 격자 sid_off)
   N7  OUTDIR · 팔 태그 — 다른 요청 = 다른 이름 · 같은 물리 (표기만 다름) = 같은 이름 (무손실 · 정규) · 선언 칸 · 인자 꼴
   N8  SKIP 캐시 함정 — 옛 팔이 있는 OUTDIR 을 명시해도 옛 팔을 재사용 · 삭제하지 않는다 (CLAUDE.md Lee 절의 함정)
   N9  규율 검사기 격리 — 부모 셸의 새 축 env 가 규칙 L 탐침을 오염시키지 않는다 (격리 목록에서 빼면 오염 = 판별력)
@@ -106,7 +108,7 @@ NEW_ENV_NAMES = ('CJUNC', 'CJUNC_RJ', 'CJUNC_LEN_LAW', 'CJUNC_UNREG_LAW', 'CJUNC
 CJ_RT_ENV = dict(CJ_ENV, STEP3_RTOL='1e-12')
 #: 러너 축 이름꼴 — 부모 셸에서 물려받지 않게 기본 env 에서 걷어낸다
 _AXIS_PREFIX = ('SIGMA_', 'SDCP_', 'PTFE_', 'CJUNC', 'STEP3_', 'MPM_', 'P2_')
-_AXIS_EXACT = ('LEAN', 'VOX', 'ARMS', 'KITS', 'FIBRE_STAMP', 'BRIDGE_UM', 'OUTDIR', 'EXPECT_PROTOCOL', 'EXPECT_BACKEND',
+_AXIS_EXACT = ('LEAN', 'VOX', 'ARMS', 'ARM_LIST', 'KITS', 'FIBRE_STAMP', 'BRIDGE_UM', 'OUTDIR', 'EXPECT_PROTOCOL', 'EXPECT_BACKEND',
                'VIRTUAL_ENV')
 
 
@@ -383,6 +385,35 @@ def t_fa3():
     _fa_e2e('N5', '3')
 
 
+# ═════════════════════════ N10 — face_alpha + 탄소 접합 + rtol (★ Z3 10-20 · 조합 받음) ═════════════════════════
+@case('N10 face_alpha + 접합 (P0 · P1) + rtol — 한 런 · 두 하위 블록 · p3ca · check_arm · 접합 sid = off 격자 sid')
+def t_combo():
+    import sr01_stamp_compare as SC
+    for law in ('P0', 'P1'):
+        ws = make_ws(f'n10_{law}')
+        r = run_runner(ws, dict(CJ_ENV, PTFE_STAMP='face_alpha', STEP3_RTOL='1e-12', CJUNC_PTFE_JLAW=law))
+        pat = re.compile(r'^p2_(SBE|DBE)_fa' + r'_cj1000000_[0-9a-f]{8}' + r'_rt1em12_a0\.json$')
+        chk(f'N10a [{law}] 러너 rc 0 · 팔 둘 · 이름 = p2_<침대>_fa_cj1000000_<h8>_rt1em12_a0', r.rc == 0 and len(r.arms) == 2
+            and all(pat.match(a) for a in r.arms), (r.rc, r.arms, r.log[-900:]))
+        rc = r.receipt or {}
+        chk(f'N10b [{law}] 영수증 — ptfe_stamp face_alpha · ca_ext_request 접합 (ptfe_jlaw {law}) · 정본 요청 검사 (face_alpha 로) 통과',
+            rc.get('ptfe_stamp') == 'face_alpha' and ((rc.get('ca_ext_request') or {}).get('cjunc') or {}).get('ptfe_jlaw') == law
+            and RC.ca_ext_request_problem(rc.get('ca_ext_request') or {}, ptfe_stamp='face_alpha') is None, rc.get('ca_ext_request'))
+        for a in r.arms:
+            p = os.path.join(r.outdir, a)
+            s3, m = manifest_of(p)
+            ca = m.get('ca_ext') or {}
+            sid = ((ca.get('cjunc') or {}).get('evidence') or {}).get('fp', {}).get('sid')
+            off = ((ca.get('ptfe_face') or {}).get('evidence') or {}).get('fp', {}).get('sid_off')
+            chk(f'N10c [{law} · {a[:6]}] 팔 = p3ca · 하위 블록 ptfe_face + cjunc · ca_ext_record_ok · receipt_match · 게시 조건 · '
+                f'check_arm (cpu) · 접합 원장 sid = off 격자 sid_off',
+                str(m.get('physics_protocol_id', '')).startswith('p3ca-') and sorted(ca) == ['cjunc', 'ptfe_face', 'schema']
+                and RC.ca_ext_record_ok(m) == (True, None) and RC.receipt_match(rc, m)[0] and RC.next_gen_cert_ok(s3)[0]
+                and SC.check_arm(p, 'segment', expect_backend='cpu', receipt=rc) is None and isinstance(sid, str) and sid == off,
+                (m.get('physics_protocol_id'), sorted(ca), RC.ca_ext_record_ok(m), SC.check_arm(p, 'segment', expect_backend='cpu',
+                                                                                              receipt=rc)))
+
+
 # ═════════════════════════ N6 — 발사 전 거부 ═════════════════════════
 REFUSE = [
     # (이름, env 덧쓰기, 로그에 있어야 할 사유 꼬리)
@@ -394,10 +425,13 @@ REFUSE = [
     ('수정자 c = 0.5', dict(CJ_ENV, SDCP_MOD_C='0.5'), 'RUNNER_CA_EXT|VALUE|'),
     ('수정자 c = 1.0 (payload 선택지 0 · 1 밖)', dict(CJ_ENV, SDCP_MOD_C='1.0'), 'RUNNER_CA_EXT|VALUE|'),
     ('R_j nan', dict(CJ_ENV, CJUNC_RJ='nan'), 'RUNNER_CA_EXT|VALUE|'),
-    ('R_j inf', dict(CJ_ENV, CJUNC_RJ='inf'), 'RUNNER_CA_EXT|VALUE|'),
+    #  ★ Z3 (10-20) — 낱말 `inf` (바닥) · ASCII 10 진 0 (천장) = 극한 런으로 받는다 (등록 R §3-1 · 시험 = test_ca_ext_z3 B) ·
+    #    다른 inf 표기 · 넘침은 그대로 거부
+    ('R_j INF (극한 낱말은 inf 하나)', dict(CJ_ENV, CJUNC_RJ='INF'), 'RUNNER_CA_EXT|VALUE|'),
+    ('R_j +inf', dict(CJ_ENV, CJUNC_RJ='+inf'), 'RUNNER_CA_EXT|VALUE|'),
     ('R_j 1e999 (넘침 → inf)', dict(CJ_ENV, CJUNC_RJ='1e999'), 'RUNNER_CA_EXT|VALUE|'),
     ('R_j 음수', dict(CJ_ENV, CJUNC_RJ='-1e6'), 'RUNNER_CA_EXT|VALUE|'),
-    ('R_j 0 (정량 아님)', dict(CJ_ENV, CJUNC_RJ='0'), 'RUNNER_CA_EXT|REQUEST|'),
+    ('R_j −0 (부호)', dict(CJ_ENV, CJUNC_RJ='-0'), 'RUNNER_CA_EXT|VALUE|'),
     ('R_j 끝 공백', dict(CJ_ENV, CJUNC_RJ='1e6 '), 'RUNNER_CA_EXT|VALUE|'),
     ('R_j 유니코드 숫자 (١٠)', dict(CJ_ENV, CJUNC_RJ='١٠'), 'RUNNER_CA_EXT|VALUE|'),
     ('R_j 밑줄 (1_000)', dict(CJ_ENV, CJUNC_RJ='1_000'), 'RUNNER_CA_EXT|VALUE|'),
@@ -413,7 +447,9 @@ REFUSE = [
     ('접합 + 주기', dict(CJ_ENV, MPM_PERIODIC_SIGMA='1'), 'RUNNER_CA_EXT|PERIODIC|'),
     ('접합 + SDCP 브리지 진단 팔', dict(CJ_ENV, SDCP_SPHERE_D='0.30', SDCP_BRIDGE='0.3'), 'RUNNER_CA_EXT|SDCP_BRIDGE|'),
     ('접합 + σ_VGCF 고정 0', dict(CJ_ENV, SIGMA_VGCF_OVERRIDE='0'), 'RUNNER_CA_EXT|VGCF_INSULATING|'),
-    ('접합 + face_alpha (조합 미정의)', dict(CJ_ENV, PTFE_STAMP='face_alpha'), 'RUNNER_CA_EXT|FACE_ALPHA_COMBO|'),
+    #  ★ Z3 (10-20) — '접합 + face_alpha (조합 미정의)' 거부는 뺐다 (설계 조합 규칙 · 양성 = N10)
+    ('접합 + P1 + centerline (P1 = face_alpha 에서만)', dict(CJ_ENV, CJUNC_PTFE_JLAW='P1', PTFE_STAMP='centerline'),
+     'RUNNER_CA_EXT|REQUEST|'),
     ('face_alpha + LEAN 미지정', {'PTFE_STAMP': 'face_alpha', 'LEAN': None}, 'RUNNER_CA_EXT|LEAN|'),
     ('face_alpha + LEAN 1', {'PTFE_STAMP': 'face_alpha', 'LEAN': '1'}, 'RUNNER_CA_EXT|LEAN|'),
     ('face_alpha + LEAN 4', {'PTFE_STAMP': 'face_alpha', 'LEAN': '4'}, 'RUNNER_CA_EXT|LEAN|'),
@@ -450,7 +486,8 @@ MIRROR = [
     ('접합 + 주기', B6.OFF + B6.LEAN2 + B6.CJ + ['--periodic'], 'S2_CJUNC_REFUSED|PERIODIC|'),
     ('접합 + SDCP 브리지', B6.OFF + B6.LEAN2 + B6.CJ + ['--step3-sdcp-bridge', '0.3'], 'S2_CJUNC_REFUSED|SDCP_BRIDGE|'),
     ('접합 + σ_VGCF 0', B6.OFF + B6.LEAN2 + B6.CJ + ['--sigma-vgcf', '0'], 'S2_CJUNC_REFUSED|VGCF_INSULATING|'),
-    ('접합 + face_alpha', ['--ptfe-stamp', 'face_alpha'] + B6.LEAN2 + B6.CJ, 'S2_CJUNC_REFUSED|FACE_ALPHA_COMBO|'),
+    ('접합 + P1 + centerline', ['--ptfe-stamp', 'centerline'] + B6.LEAN2 + B6.cj_with(ptfe_jlaw='P1'),
+     'S2_CJUNC_REFUSED|P1_NEEDS_FACE_ALPHA|'),
     ('face_alpha + LEAN 1', ['--ptfe-stamp', 'face_alpha'] + _L1, 'S1_FACE_ALPHA_REFUSED|COLLECTOR|'),
     ('face_alpha + LEAN 4', ['--ptfe-stamp', 'face_alpha'] + _L4, 'S1_FACE_ALPHA_REFUSED|FIELD|'),
     ('face_alpha + σ_PTFE', ['--ptfe-stamp', 'face_alpha', '--sigma-ptfe', '1e-16'] + B6.LEAN2, 'S1_FACE_ALPHA_REFUSED|SIGMA_PTFE|'),

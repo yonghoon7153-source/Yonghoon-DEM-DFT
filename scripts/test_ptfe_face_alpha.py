@@ -1049,7 +1049,9 @@ def fa_manifest(channels=('electronic', 'ionic'), dia_law='rope', ionic_plan=Fal
                             volume=FA.volume_record(1.5, None), faces={'electronic': None, 'ionic': None},
                             receipts=rc, off_grid_ptfe_point_cells={'0': 3, '6': 5},
                             fp={'caps': 'c' * 32, 'plan_electronic': ('e' * 32 if 'electronic' in channels else None),
-                                'plan_ionic': None})
+                                'plan_ionic': None,
+                                #  ★ Z3 (10-20) — off 격자 sid 지문 (필수 · `step3_sigma._grid_fp` 꼴 소문자 hex 32)
+                                'sid_off': 'd' * 32})
     m['ca_ext'] = {'schema': RC.CA_EXT_SCHEMA, 'ptfe_face': {'protocol': prot, 'evidence': ev}}
     m['physics_protocol_id'] = RC.physics_protocol_id(m)
     return m
@@ -1112,6 +1114,8 @@ def t_rc():
         '관측 PTFE 셀 > 0': lambda x: x.update(ptfe_cells_observed=4),
         '진단 상태 빠짐': lambda x: E(x).pop('diagnostics'),
         '계획 지문 ↔ 영수증 불일치': lambda x: E(x)['receipts']['electronic_main'].update(fp_plan='f' * 32),
+        'off 격자 sid 지문 없음 (★ Z3)': lambda x: E(x)['fp'].pop('sid_off'),
+        'off 격자 sid 지문 모양 (대문자 · ★ Z3)': lambda x: E(x)['fp'].update(sid_off='D' * 32),
         'ptfe_stamp off 인데 블록': lambda x: x.update(ptfe_stamp='off'),
         #  소비자 쪽 조합 거부 = producer 거부의 짝 (payload 를 거치지 않은 매니페스트도 같은 판정)
         'σ_PTFE > 0': lambda x: x.update(sigma_ptfe_S_cm=0.5),

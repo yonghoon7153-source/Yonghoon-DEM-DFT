@@ -14,8 +14,10 @@
   R  run_contract — cjunc · sdcp_mod 하위 블록 등록 (생산자 · 소비자 같은 함수) · 요청 칸 `ca_ext_requested` · p3ca id ·
      unknown:ca_ext · 계약 위반 변이 · 영수증 (digest 옛 값 보존 · 요청 ↔ 블록 대조 · rtol) · 러너 요청 검사 · 수렴 증서 · CLI 회계 (규칙 M)
   P  payload 끝-끝 — 접합 · SDCP 수정자 CLI · 입구 거부 (구조화 사유) · 매니페스트 · 영수증 (LEAN 표) · 물리 상식 (Rayleigh) ·
-     조합 정책 (face_alpha + cjunc = 거부 · face_alpha + rtol = 허용 · cjunc + rtol = 허용) · --expect-physics 의 ca_ext 칸
-  B  (--old-scripts) 끔 비트 동일 — payload 매니페스트 (code_sha · exec_env 빼고) · step3 값
+     조합 정책 (★ Z3 10-20 — face_alpha + cjunc = 허용 (옛 B6 임시 거부 뺌 · 조합 규칙 전수 = test_ca_ext_z3 A) · face_alpha + rtol
+     = 허용 · cjunc + rtol = 허용) · --expect-physics 의 ca_ext 칸
+  B  (--old-scripts) 끔 비트 동일 — payload 매니페스트 (code_sha · exec_env 빼고) · step3 값 (★ Z3 새 기록 칸 = face_alpha 런의
+     `ca_ext.ptfe_face.evidence.fp.sid_off` · rtol 런의 CG 반복 수 `step3.cg_iters` · 증서 `iters` · `resolve_iters` 만 빼고 대조)
 ⚠ PASS 는 배선 · 계약 · 구현의 증거이지 R_j 값 · 판정 (R) 의 물리 검증이 아니다.
 """
 import argparse
@@ -186,7 +188,7 @@ def t_rc():
         's_min 음수': lambda x: Pp(x).update(s_min_um=-0.1),
         'P1 (face_alpha 아님)': lambda x: Pp(x).update(ptfe_jlaw='P1'),
         'protocol 의 ptfe_stamp ≠ 매니페스트': lambda x: Pp(x).update(ptfe_stamp='centerline'),
-        'face_alpha + 접합 (조합 미정의)': lambda x: x.update(ptfe_stamp='face_alpha'),
+        'ptfe_stamp 만 face_alpha (ptfe_face 블록 없음 · 접합 protocol 은 off)': lambda x: x.update(ptfe_stamp='face_alpha'),
         '점 스탬프': lambda x: x.update(fibre_stamp='point'),
         '주기 xy': lambda x: x.update(periodic_xy=True),
         '필드 요청 (LEAN 4)': lambda x: x.update(field_requested=True),
@@ -239,7 +241,8 @@ def t_rc():
     m_fa = deep(m)
     m_fa['ptfe_stamp'] = 'face_alpha'
     m_fa['ca_ext']['ptfe_face'] = {'protocol': {}, 'evidence': {}}
-    chk('R9 face_alpha + 접합 블록 한 매니페스트 = 거부 (조합 미정의 · 소비자 쪽 짝)', not RC.ca_ext_record_ok(m_fa)[0])
+    chk('R9 face_alpha + 접합 — ptfe_face 블록이 빈 꼴 (protocol · 증거 없음) = 거부 (★ Z3 조합은 받지만 각 블록 검증기는 그대로 · '
+        '조합 양성 = P15c · test_ca_ext_z3 AP1)', not RC.ca_ext_record_ok(m_fa)[0])
     #  ── 영수증 (러너 ↔ 매니페스트) — 옛 digest 보존 · 요청 대조 · rtol ──
     _rcpts = [json.load(open(os.path.join(ROOT, 'docs/data', d, 'run_receipt.json'), encoding='utf-8'))
               for d in ('w4_ptfe_centerline_20260827', 'w4b_ptfe_off_20260827')]
@@ -444,8 +447,9 @@ def t_payload():
             'MISSING (tol_ff 없음 · 기본값 없음)': (OFF + LEAN2 + cj_with(tol_ff_um=None), 'MISSING'),
             'MISSING (PTFE–접합 법칙 없음)': (OFF + LEAN2 + cj_with(ptfe_jlaw=None), 'MISSING'),
             'FLAG_WITHOUT_CJUNC (R_j 만)': (OFF + LEAN2 + ['--step3-cjunc-rj', '1e6'], 'FLAG_WITHOUT_CJUNC'),
-            'FACE_ALPHA_COMBO (face_alpha + 접합)': (['--ptfe-stamp', 'face_alpha'] + LEAN2 + CJ, 'FACE_ALPHA_COMBO'),
+            #  ★ Z3 (10-20) — 'FACE_ALPHA_COMBO (face_alpha + 접합)' 거부는 뺐다 (설계 조합 규칙 · 양성 = 아래 P15c)
             'P1_NEEDS_FACE_ALPHA': (OFF + LEAN2 + cj_with(ptfe_jlaw='P1'), 'P1_NEEDS_FACE_ALPHA'),
+            'P1_NEEDS_FACE_ALPHA (centerline)': (['--ptfe-stamp', 'centerline'] + LEAN2 + cj_with(ptfe_jlaw='P1'), 'P1_NEEDS_FACE_ALPHA'),
             'PERIODIC': (OFF + LEAN2 + CJ + ['--periodic'], 'PERIODIC'),
             'JOULE': (OFF + LEAN2 + CJ + ['--joule-heat'], 'JOULE'),
             'STEP4_GRID': (OFF + LEAN2 + CJ + ['--save-step4-grid', 'g.npz'], 'STEP4_GRID'),
@@ -553,7 +557,7 @@ def t_payload():
             _rb == 0 and (r3.get('ionic') or {}).get('status') == 'not_requested'
             and s3_of(l3_cj).get('sigma_ion_eff_S_cm') == s3_of(l3_off).get('sigma_ion_eff_S_cm')
             and RC.ca_ext_record_ok(man_of(l3_cj)) == (True, None), (_rb, _lb.strip()[-300:]))
-        #  ── 조합 정책 (설계 미정의 조합 = 거부 · 다음 세대 판정 꼴 = 허용) ──
+        #  ── 조합 정책 (다음 세대 판정 꼴 = 허용 · ★ Z3 face_alpha + 접합 = 허용 — 옛 임시 거부 뺌) ──
         rc_fr, log_fr, p_fr = run_payload(d, ['--ptfe-stamp', 'face_alpha', '--step3-rtol', '1e-12'] + LEAN2, out='fa_rtol.json')
         mfr = man_of(p_fr)
         cert = s3_of(p_fr).get('conv_cert') or {}
@@ -575,6 +579,14 @@ def t_payload():
             (rc_cr, log_cr.strip()[-300:], cert2.get('ok')))
         chk('P15b rtol 은 규약 id 밖 (numeric) — 접합 + rtol 의 p3ca id = 접합만의 id',
             mcr.get('physics_protocol_id') == m.get('physics_protocol_id'), (mcr.get('physics_protocol_id'), m.get('physics_protocol_id')))
+        rc_fc, log_fc, p_fc = run_payload(d, ['--ptfe-stamp', 'face_alpha'] + LEAN2 + CJ + ['--step3-rtol', '1e-12'], out='fa_cj_rtol.json')
+        mfc = man_of(p_fc)
+        chk('P15c ★ Z3 face_alpha + 접합 + rtol = 허용 (옛 FACE_ALPHA_COMBO 거부 뺌) — rc 0 · 하위 블록 ptfe_face + cjunc · 요청 칸 [cjunc] · '
+            'p3ca · ca_ext_record_ok · 게시 조건 · 접합 protocol 의 ptfe_stamp = face_alpha',
+            rc_fc == 0 and sorted(mfc.get('ca_ext') or {}) == ['cjunc', 'ptfe_face', 'schema'] and mfc.get('ca_ext_requested') == ['cjunc']
+            and str(mfc.get('physics_protocol_id', '')).startswith('p3ca-') and RC.ca_ext_record_ok(mfc) == (True, None)
+            and RC.next_gen_cert_ok(s3_of(p_fc))[0] and (cj_block(p_fc).get('protocol') or {}).get('ptfe_stamp') == 'face_alpha',
+            (rc_fc, log_fc.strip()[-300:], RC.ca_ext_record_ok(mfc) if mfc else None))
         #  ── --expect-physics 의 ca_ext 칸 (러너 선언 = 매니페스트 축) ──
         XPB = ('vox_um=1.0,bridge_um=1.2,sigma_vgcf_S_cm=100.0,fibre_stamp=segment,sdcp_stamp=point,sdcp_yield_to_vgcf=False,'
                'periodic_xy=False,ptfe_stamp=off,sigma_ptfe_S_cm=0')
@@ -647,10 +659,26 @@ def t_bitid():
                 m_new.pop(k, None)
             s_old = {k: v for k, v in s3_of(r_old[2]).items() if k != 'manifest'}
             s_new = {k: v for k, v in s3_of(r_new[2]).items() if k != 'manifest'}
+            #  ★ Z3 — 새 기록 칸 (켠 노브에서만 · 그 밖은 바이트 같아야 한다): face_alpha 런의 off 격자 sid 지문 · rtol (증서) 런의 CG 반복 수
+            new_flds = []
+            _fp = (((m_new.get('ca_ext') or {}).get('ptfe_face') or {}).get('evidence') or {}).get('fp')
+            if isinstance(_fp, dict) and 'sid_off' in _fp:
+                _fp.pop('sid_off')
+                new_flds.append('fp.sid_off')
+            for _k in ('cg_iters', 'ion_cg_iters'):
+                if _k in s_new:
+                    s_new.pop(_k)
+                    new_flds.append(_k)
+            for _ck in ('conv_cert', 'ion_conv_cert'):
+                if isinstance(s_new.get(_ck), dict) and {'iters', 'resolve_iters'} & set(s_new[_ck]):
+                    s_new[_ck] = {k: v for k, v in s_new[_ck].items() if k not in ('iters', 'resolve_iters')}
+                    new_flds.append(f'{_ck}.iters')
+            want_new = {'face_alpha LEAN2': ['fp.sid_off'], 'off LEAN2 + rtol 1e-12': ['cg_iters', 'conv_cert.iters']}.get(nm, [])
             diff = sorted(k for k in set(m_old) | set(m_new) if m_old.get(k) != m_new.get(k))
-            chk(f'B1 payload [{nm}] — 매니페스트 (code_sha · exec_env 빼고) 바이트 같음 · id 같음 · step3 값 같음',
+            chk(f'B1 payload [{nm}] — 매니페스트 (code_sha · exec_env 빼고) 바이트 같음 · id 같음 · step3 값 같음'
+                + (f' (새 기록 칸 {want_new} 만 빼고)' if want_new else ' (새 기록 칸 없음)'),
                 r_old[0] == 0 and r_new[0] == 0 and json.dumps(m_old, sort_keys=True) == json.dumps(m_new, sort_keys=True)
-                and s_old == s_new, (r_old[0], r_new[0], diff[:6]))
+                and s_old == s_new and new_flds == want_new, (r_old[0], r_new[0], diff[:6], new_flds))
     finally:
         shutil.rmtree(td, ignore_errors=True)
 

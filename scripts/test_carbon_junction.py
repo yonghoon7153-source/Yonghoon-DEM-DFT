@@ -47,7 +47,9 @@ r_port = 2.0 (= 2h) · gap_tol 2.0 · σ_VGCF = 100 S/cm → 축방향 면 g = �
          VGCF 절연 채널 · 법칙 미선언 · R_j 극한 → 조립 전 거부 (CG 호출 0)
   P-1/2  PTFE–접합 법칙 — P1 = 덮인 instance 만 절단 · P0 = 영향 없음 · 경계 = 정확히 tol_P 포함 · centerline + P1 = 거부 ·
          (P1, c = 1) = 절단 먼저 (N18)
-  FA+CJ  S1 face_alpha × S2 cjunc 를 한 솔브에 같이 = 조립 전 거부 (설계 미정의 조합 · CG 0) · 양성 대조 = 같은 두 계획이 각각 홀로는 받아들여짐
+  FA+CJ  S1 face_alpha × S2 cjunc 를 한 솔브에 같이 = ★ Z3 (10-20) 받음 (설계 조합 규칙 — α 먼저 · 접합 훅 다음 · α 는 접합 간선에 안 걸림 ·
+         옛 임시 거부를 뺐다) · 각각 홀로도 받음 · 조합 σ ≤ 접합만 σ (α ≤ 1 · Rayleigh) · 접합 기록 = 접합만과 같음
+         (조합 규칙의 전수 시험 = `scripts/test_ca_ext_z3.py` A)
   S3-1…11 SDCP 접합 수정자 (c = 0 비트 같음 · SBE no-op · c 단조 · c = 1 축약 · 순열 · 경계 · 펠릿 no-op · 변이 · S2 없이 거부 ·
          sid 불변 · 우선순위)
   SV     SV 면 · SDCP 셀 소산 몫 · SV_DOMINANT 표지 · SDCP 경유 섬유 연결 수
@@ -1235,13 +1237,13 @@ def t_pjunc():
         int(pp['mode'][0]) == CJ.MODE_CUT_P1 and bool(regs['instances']['a_sdcp'][0]), f"{pp['mode']}")
 
 
-# ═════════════════════════ FA+CJ — S1 face_alpha × S2 cjunc 동시 = 거부 (A · B 합침 10-20) ═════════════════════════
+# ═════════════════════════ FA+CJ — S1 face_alpha × S2 cjunc 한 솔브 (★ Z3 10-20 = 받음 · 옛 B6 임시 거부 뺌) ═════════════════════════
 @case('FA+CJ')
 def t_fa_cj_both_refused():
-    """한 솔브에 S1 면 개구율 (face_alpha 계획) 과 S2 탄소 접합 (cjunc 계획) 을 **같이** 주는 조합은 설계가 아직 정의하지 않았다
-    (α 를 받은 면의 멤버십 재배선 · P-junc 법칙과의 관계 미정 — 1저자 · Codex 결정 전).  `require_plan` 은 cjunc 를,
-    `cjunc_require_quantitative` 는 face_alpha 를 모른다 → 솔버 입구가 조립 전에 거부해야 한다 (CG 0).
-    양성 대조 = 같은 침대 · 같은 두 계획이 **각각 홀로는** 받아들여진다 (거부 사유가 계획 결함이 아니라 '동시' 임을 가린다)."""
+    """한 솔브에 S1 면 개구율 (face_alpha 계획) 과 S2 탄소 접합 (cjunc 계획) 을 **같이** 준다 — ★ Z3 (10-20) 설계 조합 규칙 (설계 §3 · §4 ·
+    등록 R §10 꼴): α 를 `couple()` 에서 먼저 융합 면에 곱하고 (α = 0 면 = `_keep` 제거) · 그 다음 접합 훅이 발자국 면을 끊고 접합 간선을
+    넣는다 · PTFE 가 접합 끝을 덮을 때는 P0/P1 법칙만 (α 를 접합 간선에 곱하지 않는다).  옛 판 (B6 통합) 은 이 조합을 조립 전에 임시로
+    거부했다 (그 거부를 뺐다 — 함수 이름은 회귀 기록용으로 둔다).  양성 대조 = 같은 침대 · 같은 두 계획이 각각 홀로도 받아들여진다."""
     import ptfe_face_alpha as FA
     P = rows(F1)
     sd = rows([[(1.5, 2.5, 3.5)]], phase=5, kind=0, fid0=700)          # SDCP 셀 (1,2,3) — 교차 VGCF 셀 (1,1,3) 과 y 면 (y = 2) 공유
@@ -1264,13 +1266,18 @@ def t_fa_cj_both_refused():
     err, res = None, None
     try:
         res = solve(sid, sig, F1_N, cj, face_alpha=fa, pid=pid)
-    except (ValueError, TypeError) as e:                   # 다른 예외 = 거부 계약 위반 (아래 실패로 드러난다)
+    except (ValueError, TypeError) as e:
         err = e
-    msg = str(err) if err is not None else ''
-    chk('FA+CJ 동시 (face_alpha + cjunc) = 조립 전 거부 · 사유 = 동시 사용 (계획 결함 아님) · CG 호출 0',
-        err is not None and 'face_alpha' in msg and 'cjunc' in msg and '동시' in msg and _CG_CALLS[0] == 0,
-        f'예외 {type(err).__name__ if err else None}: {msg[:120]} · CG {_CG_CALLS[0]} · '
-        f"풀린 해 키 {sorted(k for k in (res or {}) if k in ('face_alpha', 'cjunc'))}")
+    res = res or {}
+    _rj = (res.get('cjunc') or {})
+    _keys = ('n_junction_edges', 'n_contracted', 'n_extra_dofs', 'tombstones')
+    chk('FA+CJ 동시 (face_alpha + cjunc) = ★ Z3 받음 · 두 기록 다 · 계획 행 씀 · 조합 σ ≤ 접합만 σ (α ≤ 1 · Rayleigh) · '
+        '접합 기록 (간선 · 축약 · 추가 dof · 끊은 면) = 접합만과 같음 (α 가 접합 간선에 안 걸림)',
+        err is None and _CG_CALLS[0] >= 1 and (res.get('face_alpha') or {}).get('n_rows_used') == 1 and _rj.get('solved') is True
+        and 0.0 < res.get('sigma_eff', 0.0) <= r_cj['sigma_eff'] * (1.0 + 1e-12)
+        and all(_rj.get(k) == r_cj['cjunc'].get(k) for k in _keys),
+        f'예외 {type(err).__name__ if err else None}: {str(err)[:120]} · CG {_CG_CALLS[0]} · '
+        f"σ {res.get('sigma_eff')} ↔ 접합만 {r_cj['sigma_eff']} · {[(k, _rj.get(k), r_cj['cjunc'].get(k)) for k in _keys]}")
 
 
 # ═════════════════════════ S3 ═════════════════════════
