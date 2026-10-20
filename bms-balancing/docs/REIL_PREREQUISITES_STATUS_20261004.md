@@ -1872,3 +1872,31 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
     기록에는 있다 — `03_green.source_sha256.txt`). E0 · N1 의 판정에는 영향이 없다 (시험만 했다). E1 의 독립 사전 대조 범위에 넣어야 한다.
 - **다음:** 정정 범위안 `docs/REIL_C4E_E1_REVISION_SCOPE_20261015.md` (N1–N6 + S1 · 파일 · 대조 · 명령 · E1-0 한정 승인 구조) → **사용자 범위 채택** → 비활성
   초안 · 수정 승인안 · 사전 검토 발송문. 그 전에는 초안 작성 · 실행 0.
+
+## §75 C4-E · E1 정정 범위 채택 (사용자 결정) — 비활성 초안 넷 · 승인 요청 v2 (E1-0 한정) · 사전 검토 발송문 v2 (2026-10-20 KST · 정적 검사만 · 실행 0 · 덧붙임 — 위 §0–§74 는 그대로)
+
+- **사용자 (2026-10-20):** "권고대로 진행" — 정정 범위안 (`56a97783`) 의 권장 둘을 그대로 채택: (1) N1–N6 + S1 범위대로 비활성 초안을 쓰고 사전 검토 발송문까지
+  만든 뒤 멈춤 · (2) S1 은 launcher 쪽 고정 (다섯 모듈 · SOURCES 불변). 이 채택은 launcher · 실행기 복사 · 시험 · 탐침 · 읽기 경로 · fetch · run 승인이 아니다.
+- **고정한 초안 넷 (docs · `.py.txt`):**
+
+  | 초안 | sha256 | bytes | 복사할 곳 (E1-0 승인 뒤) |
+  |---|---|---:|---|
+  | `REIL_C4E1_LAUNCHER_DRAFT_v2_20261020.py.txt` — launcher v2 | `ab33844fbdaa4e6939871abec09953783cfccd7b4d32ee023ab8691cdb814398` | 47,030 | `scripts/reil_c4e1_launch.py` |
+  | `REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v2_20261020.py.txt` — RED 골격 (함수 34) | `5617a16aa8b093bac485e0bf775109c77ba9699d43301cf503e783365798b362` | 13,404 | 같은 곳 (RED 때) |
+  | `REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v2_20261020.py.txt` — 대조 24 | `c1dc5b4353fa97e29b988604b612c7f40e46d3562980bde40dfd4712e4fde4ea` | 41,093 | `tests/test_reil_c4e1_launch.py` |
+  | `REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt` — E1-0 외곽 실행기 | `aae2ec14c4d652ef9a9e5b1c45bf52896d2234dce16eac77942911e596669fed` | 12,849 | `<E0>/00_step_runner.py` |
+
+- **정정 대응 (요청서 v2 §2):** N1 — 셋의 같은 이름 패키지 · 확장 정적 검사 + 탐침의 `find_spec` (경로 명시 · 부모 import · 대상 실행 0) 으로 origin · loader 를
+  승인 `.py` 에 결속 · N2 — /proc 의 PID 소멸만 사라짐 · 그 밖 오류 unknown 확정 · N3 — kill 결과 · 유한 대기 (10 · 5 · 5 s) · 미종료 기록 · 단계별 오류 ·
+  `launched` · meta 실패 rc 4 · Git 기록 rc · HEAD 불변 · N4 — `GIT_*` 허용 목록 (CA 만) · fetch 전 Git 설정 금지 키 · 유효 출처 · fetch 뒤 받은 저장소 결속 ·
+  N5 — subreaper 외곽 실행기 (timeout 때 자손 전체 SIGKILL · 끝에서 스스로 끝나기 5 s 관측 → 넘으면 SIGKILL · killed) · N6 — E1-0 한정 · 정확한 명령 · 첫 실패
+  중지 · 첫 시험 전 봉인 · 활동 범위 셋 · 새 총수 · S1 — 실행 파일 둘 · 봉인 lock 결속.
+- **새 총수:** 대조 24 (기존 14 정정 + 새 10) · RED 선언 24 실패 · 모두 NotImplementedError · GREEN 선언 51 (E0 21 + N1 6 + 새 24).
+- **정적 검사 (실행 0):** AST 파싱 넷 · 이름 검사 (`__file__` 외 미해결 0) · 골격 import · 상수 구간 = 고정 구현 · 탐침 코드 파싱 · 대조가 쓰는 `L.*` 가 모두 고정 구현에
+  정의됨 · 대조 24 RED 표지 · 비밀 검사 0 · 인용한 시험 행 범위 확인. 실제 E1 환경의 고정 상수 (봉인 MANIFEST → lock → 머리줄 · 실행 파일 둘의 크기 · sha ·
+  일반 파일 · 셋의 가림 없음 · `scripts/__init__*` 없음) 는 읽기로만 다시 확인했다.
+- **작성 중 고친 것:** 외곽 실행기의 끝 확인을 "살아 있는 자손을 보면 즉시 SIGKILL" 에서 "5 s 안에 스스로 끝나기를 관측 → 넘으면 SIGKILL · killed" 로 바꿨다
+  (스스로 끝나는 보조 프로세스를 실패로 만들지 않게). 첫 고정 sha `40aca7b9…` 는 커밋 전에 버렸고 위 sha 가 정본이다.
+- **문서:** 승인 요청 v2 `docs/REIL_C4E_E1_APPROVAL_REQUEST_v2_20261020.md` (`c2a204dd…` · E1-0 한정 · E1-1–3 고정 계획 · 밝힐 것 12) · 사전 검토 발송문 v2
+  `docs/REIL_C4E_E1_PREREVIEW_SEND_v2_20261020.md` (`8f6c3aac…` · 질문 5).
+- **다음:** 사전 검토 발송 (사용자 결정) → 수용 → 사용자의 E1-0 한정 승인 → E1-0 → 결과 검토 → E1-1–3 승인 요청. 이 기록은 어느 단계의 실행 승인도 아니다.
