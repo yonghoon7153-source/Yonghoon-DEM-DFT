@@ -136,5 +136,13 @@
   "⚠_worktree": "r2 재개 드라이버가 /data/work/wt_ndrm_1019/tools/sei/restart_qe_relax.sh 로 돈다 (러너의 RESTART_TOOL = 그 worktree) ⇒ wt_ndrm_1019 를 지우거나 pull 하지 않는다 — v2 러너가 r2 를 세웠다가 자기 worktree (wt_svac_1020) 의 드라이버로 다시 걸면 풀린다",
   "v1_원자료": "gabia /data/work/runs/nd_anion_removal_2026_10_19 (run.log · MANIFEST.json · rm_*/scf.in · rm_Cl114/scf.out.1020005728 (첫 시도) · rm_Cl114/scf.out (재시도) · probe/) — v2 회수 때 같이 저장소로 (진단 증거)",
   "by": "agent · 2026-10-20"
+ },
+ "✅_v2_DRY_RUN_2026_10_20_0911": {
+  "worktree": "gabia /data/work/wt_svac_1020 @d0521b38e (detached · FETCH_HEAD)",
+  "PAW_md5": "v1 과 같다 — Li 4449e4b2 · Nd af9d8c60 · P 06b8cad1 · O 0234752a · S a0db168f · Cl daecd58d",
+  "입력": "4 (neutral · 전자 586) · 순서 rm_S51 rm_S112 rm_S54 rm_S115 (MANIFEST = 실행 순서 · 프로브 = rm_S51)",
+  "프로브_검사용": "CPU pw.x 1 랭크 ≈ 4 초 — Estimated max dynamical RAM 27.97 GB → need 38,257 MiB (×1.3 + 1024)",
+  "GPU": "총 49,140 · 사용 37,204 (r2 pw.x 205682 하나 · 다른 잡 없음) · 빔 11,936 MiB → 결정 pause (r2 를 다음 BFGS 줄 직후 EXIT · SCF 혼자 · 끝나면 r2 restart)",
+  "by": "agent · 2026-10-20"
  }
 }
