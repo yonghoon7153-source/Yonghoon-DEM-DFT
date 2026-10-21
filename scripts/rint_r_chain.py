@@ -27,7 +27,8 @@
 ★ 3판 (10-21 · D · 등록 R 3판 · Codex RCA-01 · 02 · 06 · 08 · 09 · 10 · 13 · 사전 리뷰 PRE-design-01 · 05 · 코디네이터 Q-E · Q-F · Q-G):
   · 계획 `rint-r-plan-v2` = v1 칸 + 결과 전 등록 숫자 넷 (점 수 상한 · 역상 R 비 상한 · SV 반사실 문턱 · 범위) — 하나라도 null = 멈춤
   · 두 계획 대조 (S0 `ca-cjunc-plan-v1` ↔ R) · 등록 `| S0 계획 해시 |` 줄 (§2-1 · §10-2 ⑪)
-  · 해 상태 (positive · zero · short — `run_contract.next_gen_state`) = 확장 실수 0 · +∞ · 모든 비교 = ln (단위 불변 · §5-0)
+  · 해 상태 (positive · zero · short — `run_contract.next_gen_state`) = 확장 실수 0 · ~~+∞~~ (★ 4판 Q1: short = NOT_COMPUTED) · 모든 비교 = ln
+    (단위 불변 · §5-0)
   · 끝 규칙 (§3-2b · 실제 SBE 역상 · 끝 확인 런 · 바깥 실측 이웃) + 끝 origin (세 origin 합집합을 바깥에서 · PRE-design-01 Q-E) ·
     e_min = 국소 진단 (멈추지 않는다) · 역상 R 비 상한 = 계획 (⬜ · 'none' = 상한 없음으로 등록)
   · DBE origin = 네 모서리 × 세 R (§4-2) · 한 R 이라도 넘으면 그 모서리 세 R 전부 8 팔 평균
@@ -36,6 +37,10 @@
   · SV 반사실 (CJUNC_SV_CF · 계획 범위 · 비 > 문턱 = `SV_DEPENDENT` · 못 읽음 = `SV_UNCHECKED` · 옛 `SV_DOMINANT` 철회 · RCA-06) —
     사슬은 비 · 상태만 읽는다 (끊는 면의 정의 무관 · PRE-impl-04 · `ca_ext_svcf.chain_view`)
   · 감도 단계 = 주 판정 단계 (사다리 둘 · 예측) 가 끝난 뒤에만 (`--after-main` · 판정이 묶음을 대조 · Q-F)
+★ 4판 (10-21 · DQ · 등록 R 4판 · 1저자 10-21 Q1 · Q2 "권고대로"):
+  · Q1 (§5-0 ①–③ · §4-2 ③ · R4-Q5) 단락 (ELECTRODE_SHORT · J11) = 생산자 미게시 → 그 런 = NOT_COMPUTED (사유 = 상태 이름 ELECTRODE_SHORT) —
+    +∞ 로 판정에 오지 않는다 · 이 등록의 풀이 상태 = POSITIVE_SOLVED · VALID_ZERO_TOPOLOGY · NOT_COMPUTED 셋 (`registration_state`) ·
+    예측 단계의 NOT_COMPUTED = 등록 결과 (사다리와 같은 뜻 · 판정이 원 팔에서 다시 계산) · 판정 기록 `reasons` = 단계 · 법칙 · 사유
 """
 import argparse
 import glob
@@ -160,6 +165,14 @@ DECISION = {**{(v, b): None for v in GRADES + CALIB_ORDER for b in (False, True)
             ('GAP_ENVELOPE_ONLY', False): SENTENCE_GAP, ('GAP_ENVELOPE_ONLY', True): SENTENCE_GAP}
 STATE_VERDICTS = {'positive': frozenset(GRADES), 'point': frozenset({'PASS_INFORMATIVE', 'FAIL'}),
                   'extended': frozenset({'UNINFORMATIVE', 'GAP_ENVELOPE_ONLY', 'FAIL'}), 'calib': frozenset(CALIB_ORDER)}
+#: ★ 4판 (10-21 · 1저자 Q1 "권고대로" · 등록 R 4판 §5-0 ①–③ · §4-2 ③ · R4-Q5) — 이 등록의 풀이 상태 셋 ↔ 생산자 기록 상태
+#   (`run_contract.next_gen_state` · 정본): 단락 (ELECTRODE_SHORT · J11) = 생산자 미게시 (`run_contract.conv_cert_problem` — 게시 가능 =
+#   POSITIVE_SOLVED · VALID_ZERO_TOPOLOGY 뿐) → 그 런 = NOT_COMPUTED · 사유 = 상태 이름 (σ +∞ 로 판정에 오지 않는다 · 다른 멈춤 이름
+#   (RUNNER_RC · CA_EXT_RECORD …) 으로 흐리지 않는다 — 기록 자체는 온전해야 러너가 옮기고 사슬이 이 이름을 남긴다).
+SHORT_STATUS = 'ELECTRODE_SHORT'          # = step3_conv_cert.STATUS_SHORT (시험 Z07 이 대조 · 이 모듈은 numpy 없이 뜬다)
+REG_STATES = {'positive': ('POSITIVE_SOLVED', None), 'zero': ('VALID_ZERO_TOPOLOGY', None), 'short': ('NOT_COMPUTED', SHORT_STATUS)}
+#: ★ 4판 (Q1) — 예측 단계의 등록 결과 (사다리의 REGISTERED_OUTCOMES 와 같은 뜻 · 판정이 원 팔에서 다시 계산한다) · 그 밖 멈춤 = STOPPED
+PREDICT_OUTCOMES = frozenset({'NOT_COMPUTED'})
 
 STOPS = {
     'OUTDIR_NOT_EMPTY': '출력 폴더가 이미 있고 비어 있지 않다 (러너 SKIP 캐시 · 옛 산출물)',
@@ -205,14 +218,15 @@ STOPS = {
 
 
 class Stop(Exception):
-    """구조화 멈춤 — code (STOPS 이름) · cause (원인 칸 · σ 를 가린 문장) · run (그 런 이름)."""
+    """구조화 멈춤 — code (STOPS 이름) · cause (원인 칸 · σ 를 가린 문장) · run (그 런 이름) · ★ 4판 (Q1) reason = 구조화 사유 (등록 문장이
+    이름을 정한 것만 — 지금 = 단락의 상태 이름 `ELECTRODE_SHORT` · 그 밖 None)."""
 
-    def __init__(self, code, cause, run=None):
+    def __init__(self, code, cause, run=None, reason=None):
         super().__init__(f'{code}: {cause}')
-        self.code, self.cause, self.run = code, str(cause), run
+        self.code, self.cause, self.run, self.reason = code, str(cause), run, reason
 
     def record(self):
-        return {'code': self.code, 'what': STOPS.get(self.code, self.code), 'cause': self.cause, 'run': self.run}
+        return {'code': self.code, 'what': STOPS.get(self.code, self.code), 'cause': self.cause, 'run': self.run, 'reason': self.reason}
 
 
 class RealContract:
@@ -281,7 +295,15 @@ def elasticity(Ra, sa, Rb, sb):
     return abs((math.log(sb) - math.log(sa)) / (math.log(Rb) - math.log(Ra)))
 
 
-# ── §5-0 확장 실수 [0, +∞] (0 = VALID_ZERO_TOPOLOGY · +∞ = 단락) — 모든 비교 = ln 차 (단위 불변 · RCA-13) ──
+def registration_state(state):
+    """★ 4판 (Q1 · 등록 R 4판 §5-0) — 생산자 기록 상태 (`run_contract.next_gen_state` 의 첫 값) → (이 등록의 풀이 상태, 사유).
+    positive → POSITIVE_SOLVED · zero → VALID_ZERO_TOPOLOGY · short → NOT_COMPUTED (사유 ELECTRODE_SHORT · 생산자 미게시) · 상태가 안 섬
+    (None) · 모르는 상태 → NOT_COMPUTED (사유 None — 그 상태 문장은 멈춤 원인 칸에)."""
+    return REG_STATES.get(state, ('NOT_COMPUTED', None))
+
+
+# ── §5-0 확장 실수 [0, +∞] (0 = VALID_ZERO_TOPOLOGY) — 모든 비교 = ln 차 (단위 불변 · RCA-13) · ★ 4판 (Q1): 단락은 +∞ 로 판정에 오지 않는다
+#    (NOT_COMPUTED) — 아래 도구는 +∞ 를 다룰 수 있게 둔다 (값 쪽 일반성 · 판정 입력으로는 0 만 온다) ──
 def ln_diff(a, b):
     """ln b − ln a 를 확장 실수에서 — 같은 끝 (0·0 · ∞·∞) = 0 · 0 → 양 · 양 → ∞ = +∞ · 그 반대 = −∞."""
     a, b = float(a), float(b)
@@ -344,7 +366,8 @@ def in_law_sets(I, x):
 
 
 def judge(vals, x=EXP_DBE_MS, ref=CUR_GEN_DBE_MS):
-    """§5-0 – §5-5 판정 함수 (주 판정 · 감도 변이가 같은 것) — vals = {(c, 법칙, R 역할): σ} (같은 단위 · 확장 실수 0 · +∞) →
+    """§5-0 – §5-5 판정 함수 (주 판정 · 감도 변이가 같은 것) — vals = {(c, 법칙, R 역할): σ} (같은 단위 · 확장 실수 0 (· +∞ = 도구만 ·
+    ★ 4판 Q1 단락은 NOT_COMPUTED 라 판정 입력에 없다)) →
     법칙별 I_P · U = ∪ I_P · E (envelope) · 상태 (positive · point · extended) · 판정 이름 · W · p · d · 방향 · S.
     모든 비교 = ln (단위 불변 · x · ref 도 같은 단위 · RCA-13) · 등급 W = E 의 폭 (2판 그대로 · R3-Q5)."""
     G0x = math.log(x / ref)
@@ -372,7 +395,7 @@ def judge(vals, x=EXP_DBE_MS, ref=CUR_GEN_DBE_MS):
     if state == 'positive':
         p, p_why = math.log(x / lo) / W, None
     else:
-        p, p_why = None, ('point_interval' if state == 'point' else 'extended_interval (zero · short 끝 · W = +∞)')
+        p, p_why = None, ('point_interval' if state == 'point' else 'extended_interval (zero 끝 · W = +∞)')
     if ext:
         S, mid, S_why = None, None, 'extended_interval'
     else:
@@ -402,7 +425,7 @@ def blocking_of(flags):
 
 def sv_assess(recs, threshold, scope):
     """§5-6 SV 행 (RCA-06 · Q4) — 모서리 런 (arm 0) 의 반사실 기록 → (표지, 모서리별 기록).
-    비 > 문턱 (등록 문장 '넘으면') = `SV_DEPENDENT` · 기록을 못 읽음 (없음 · 비를 싣지 않는 상태 · 주 해가 0 · +∞) · 문턱 없음 = `SV_UNCHECKED` ·
+    비 > 문턱 (등록 문장 '넘으면') = `SV_DEPENDENT` · 기록을 못 읽음 (없음 · 비를 싣지 않는 상태 · 주 해가 0) · 문턱 없음 = `SV_UNCHECKED` ·
     읽는 칸 = 비 · 상태 (`ca_ext_svcf.chain_view` · 끊는 면의 정의 무관 · PRE-impl-04).  ⚠ producer 의 자기 표지 비교는 ≥ (그 배선의 문턱
     = 늘 None · 이 사슬은 쓰지 않는다)."""
     rr_scope = ('R_j_lo', 'R_j0', 'R_j_hi') if scope == 'all3' else ('R_j0',)
@@ -840,7 +863,10 @@ def arm_file_shas(outdir):
 def read_run(outdir, req, plan, contract, sid_reg, want_sha=None):
     """런 폴더 하나 → [팔 기록 …] (번호 순).  등록 R §10 멈춤 목록의 팔 쪽 전부 — 어긋나면 Stop (원인 칸 = σ 를 가린 문장).
     ★ 3판 — 해 상태 (§5-0 · `run_contract.next_gen_state` · 정본): positive (증서 ⓐ–ⓓ · σ > 0) · zero (VALID_ZERO_TOPOLOGY · σ = 0) ·
-    short (ELECTRODE_SHORT · σ = +∞) · 그 밖 = NOT_COMPUTED.  팔 기록의 σ = 확장 실수 (0 · +∞ 그대로).
+    ~~short (ELECTRODE_SHORT · σ = +∞)~~ · 그 밖 = NOT_COMPUTED.  팔 기록의 σ = 확장 실수 (0 그대로).
+    ★ 4판 (10-21 · 1저자 Q1 · 등록 R 4판 §5-0 ①–③ · §4-2 ③) — short (ELECTRODE_SHORT · J11) = 생산자 미게시 → 기록 검사 (계약 · 매니페스트 ·
+    LEAN · sid) 를 다 지난 뒤 이 런 = NOT_COMPUTED (멈춤 사유 reason = ELECTRODE_SHORT · `registration_state`) — 기록이 요청과 다르면 그 멈춤
+    이름이 먼저다 (단락이 계약 위반을 가리지 않는다).
     ★ 10-21 (PRE-impl-07 병합) — 순서 = 세대 (GENERATION) · ca_ext 기록 (CA_EXT_RECORD) → 해 상태 (증서 · 증서 ↔ 런 결합) → 팔 계약 · 매니페스트."""
     outdir = Path(outdir)
     name = req.get('name')
@@ -886,8 +912,8 @@ def read_run(outdir, req, plan, contract, sid_reg, want_sha=None):
         sv = [s3.get('sigma_e_eff_S_cm'), (cert or {}).get('sigma'), (cert or {}).get('sigma_resolve')]
         sv = [float(x) for x in sv if isinstance(x, (int, float)) and not isinstance(x, bool)]
 
-        def stop(code, why):
-            raise Stop(code, mask_sigma(f'{os.path.basename(p)}: {why}', sv), name)
+        def stop(code, why, reason=None):
+            raise Stop(code, mask_sigma(f'{os.path.basename(p)}: {why}', sv), name, reason=reason)
         #  ★ 10-21 (사전 리뷰 PRE-impl-07 병합 · B 권고) — 기록 (세대 · ca_ext) 먼저, 해 상태 (증서 · 증서 ↔ 런 결합) 는 그 뒤: 결합은 맞는 세대 ·
         #    맞는 기록 위에서만 뜻이 있다 (옛 순서 = 상태 먼저 → unknown:ca_ext 팔이 GENERATION 대신 CERT|bind| NOT_COMPUTED 로 멈췄다)
         pid = RC.physics_protocol_id(man)
@@ -926,10 +952,12 @@ def read_run(outdir, req, plan, contract, sid_reg, want_sha=None):
         key = sid_group(req['kit'], req['variant'], i)
         if sid_reg.setdefault(key, sid) != sid:
             stop('SID_GRID', f'{key} 의 sid 지문이 앞 런과 다르다')
-        if state == 'zero':
+        reg, reg_why = registration_state(state)          # ★ 4판 (Q1) — 이 등록의 풀이 상태 셋 (§5-0)
+        if reg == 'NOT_COMPUTED':
+            stop('NOT_COMPUTED', f'해 상태 (§5-0 · 4판) {state} → {reg} (사유 {reg_why}) — 단락 (J11 · 판–판 0 저항 축약) = 생산자 미게시 · '
+                                 f'σ 값 없음 (+∞ 로 판정에 오지 않는다 · 등록 R 4판 §5-0 ①–③)', reason=reg_why)
+        if reg == 'VALID_ZERO_TOPOLOGY':
             sigma = 0.0
-        elif state == 'short':
-            sigma = math.inf
         else:
             sig = s3.get('sigma_e_eff_S_cm')
             if isinstance(sig, bool) or not isinstance(sig, (int, float)) or not math.isfinite(sig) or sig <= 0:
@@ -1142,8 +1170,8 @@ class Ladder:
         return self.org[key]
 
     def _monotone(self):
-        """§3-2 비단조 — R 이 커지는데 ln σ 가 τ_mono 넘게 오르면 멈춤 · 확장 실수 그대로 (바닥 0 · 천장 +∞ 는 끝 점이라 위반이 못 된다 ·
-        유한 R 의 0 다음 양수 = +∞ 오름 = 위반)."""
+        """§3-2 비단조 — R 이 커지는데 ln σ 가 τ_mono 넘게 오르면 멈춤 · 확장 실수 그대로 (바닥 0 은 끝 점이라 위반이 못 된다 ·
+        유한 R 의 0 다음 양수 = +∞ 오름 = 위반 · ★ 4판 Q1: 천장 단락은 NOT_COMPUTED 라 점으로 오지 않는다)."""
         ps = sorted((R, k, s) for k, (R, s) in self.pts.items())
         for (_ra, ka, sa), (_rb, kb, sb) in zip(ps, ps[1:]):
             d = ln_diff(sa, sb)
@@ -1206,7 +1234,8 @@ class Ladder:
         sC = self._get('ceiling', LIMIT_RJ['ceiling'])
         if not (sF <= T <= sC):
             raise Stop('CALIB_IMPOSSIBLE', '1.63 mS/cm 이 [바닥, 천장] 밖 (값은 봉인)')
-        #  §3-1 · §5-0 ② — 바닥 zero (σ 0) · 천장 short (σ +∞) 는 정상 (|0/T − 1| = 1 · ∞ → EDGE 아님)
+        #  §3-1 · §5-0 ② — 바닥 zero (σ 0) 는 정상 (|0/T − 1| = 1 → EDGE 아님) · ★ 4판 (Q1) 천장 단락 (ELECTRODE_SHORT) = 게시 안 됨 →
+        #    천장 런에서 이미 NOT_COMPUTED (사유 ELECTRODE_SHORT · `read_run`) — 여기 오지 않는다
         if abs(sF / T - 1.0) <= CONFIRM_TOL or abs(sC / T - 1.0) <= CONFIRM_TOL:
             raise Stop('CALIB_EDGE', f'1.63 이 바닥 또는 천장의 {CONFIRM_TOL:.0%} 안 — R_j,0 가 하나로 안 정해진다')
         for e in LADDER_START_LOG10:
@@ -1482,7 +1511,7 @@ def stage_ladder(a, contract):
               f'반씩 {L["n_bisect"]} · 확인 {len(L["confirms"])} · 국소 e ≥ e_min {L["local_e_ge_emin"]} · origin {(L["origin"] or {}).get("status")}'
               + (f' · 표지 {s["flags"]}' if s['flags'] else ''))
     else:
-        print(f'보정 = {s["status"]}')
+        print(f'보정 = {s["status"]}' + (f' (사유 {(s.get("stop") or {}).get("reason")})' if (s.get('stop') or {}).get('reason') else ''))
     print(f'요약 → {out / "ladder_summary.json"}')
     return 0 if s['status'] == 'CALIBRATED' else 3
 
@@ -1592,12 +1621,15 @@ def stage_predict(a, contract):
                 s['status'] = 'PREDICTED'
             finally:
                 s['checks'], s['origin'], s['runs'] = pr.checks, pr.origin, rn.records
-        except Stop:
-            s['status'] = 'STOPPED'
+        except Stop as e:
+            #  ★ 4판 (Q1) — NOT_COMPUTED (풀이 · 증서 실패 · 단락 ELECTRODE_SHORT) = 예측 단계의 등록 결과 (사다리와 같은 뜻 · 판정이 원 팔에서
+            #    다시 계산해 이름 · 사유를 남긴다) · 그 밖 멈춤 (계약 · 기록 · 일관 검사 …) = STOPPED (판정 입력 아님)
+            s['status'] = e.code if e.code in PREDICT_OUTCOMES else 'STOPPED'
             raise
     except Stop as e:
         s['stop'] = e.record()
-        s['status'] = 'STOPPED'
+        if s['status'] is None:
+            s['status'] = 'STOPPED'
         print_stop(e)
     if a.dry_run and not ran:
         return 3
@@ -1606,6 +1638,8 @@ def stage_predict(a, contract):
     if s['status'] == 'PREDICTED':
         n_adj = sum(1 for o in (s['origin'] or []) if o['status'] == 'adjusted')
         print(f'예측 = PREDICTED · 런 {len(s["runs"])} · 같은 P 일관 통과 · origin 규칙이 옮긴 모서리 {n_adj}')
+    else:
+        print(f'예측 = {s["status"]}' + (f' (사유 {(s.get("stop") or {}).get("reason")})' if (s.get('stop') or {}).get('reason') else ''))
     print(f'요약 → {out / "predict_summary.json"}')
     return 0 if s['status'] == 'PREDICTED' else 3
 
@@ -1616,36 +1650,55 @@ def _replay_ladder(d, s, contract, sid_reg, cert_reg):
     rp = Replay(d, s, plan, contract, sid_reg, cert_reg)
     lad = Ladder(lambda role, rj, arms: rp.run(SBE_KIT, role, s['law'], LADDER_C, rj, arms), max_points=ladder_cap(plan),
                  ratio_max=plan['calib_rj_ratio_max'])
-    status = 'CALIBRATED'
+    status, stop = 'CALIBRATED', None
     try:
         lad.run()
         lad.origin()
     except Stop as e:
         if e.code not in REGISTERED_OUTCOMES:
             raise
-        status = e.code
+        status, stop = e.code, e.record()                     # ★ 4판 (Q1) — 등록 결과의 사유 (멈춤 기록 · 원 팔에서 다시 계산)
     rp.done()
     if status != s.get('status') or lad.st != s.get('ladder') or lad.flags != s.get('flags'):
         diff = [k for k in set(lad.st) | set(s.get('ladder') or {}) if lad.st.get(k) != (s.get('ladder') or {}).get(k)]
         raise Stop('REPLAY_MISMATCH', f'{Path(d).name}: 원 팔에서 다시 계산한 사다리 ≠ 요약 (상태 {status} ↔ {s.get("status")} · 칸 {sorted(diff)})')
-    return {'status': status, 'st': lad.st, 'sealed': lad.sealed, 'flags': lad.flags, 'pts': lad.pts}
+    return {'status': status, 'stop': stop, 'st': lad.st, 'sealed': lad.sealed, 'flags': lad.flags, 'pts': lad.pts}
 
 
 def _replay_predict(d, s, lads, contract, sid_reg, cert_reg):
+    """예측 단계 다시 계산 → (Predict, 상태 PREDICTED | NOT_COMPUTED, 멈춤 기록 | None) · ★ 4판 (Q1) — NOT_COMPUTED (단락 · 증서 실패) = 등록
+    결과 (사다리 `_replay_ladder` 와 같은 꼴) · 다시 계산한 상태 · 검사 · origin 결정 ≠ 요약 = REPLAY_MISMATCH."""
     rp = Replay(d, s, s['plan']['content'], contract, sid_reg, cert_reg)
     pr = Predict(rp.run, lads, s.get('variant'), sv_scope=(s.get('sv_cf') or {}).get('scope'))
-    pr.run()
+    status, stop = 'PREDICTED', None
+    try:
+        pr.run()
+    except Stop as e:
+        if e.code not in PREDICT_OUTCOMES:
+            raise
+        status, stop = e.code, e.record()
     rp.done()
-    if pr.checks != s.get('checks') or pr.origin != s.get('origin'):
-        raise Stop('REPLAY_MISMATCH', f'{Path(d).name}: 원 팔에서 다시 계산한 예측 검사 · origin 결정 ≠ 요약')
-    return pr
+    if status != s.get('status') or pr.checks != s.get('checks') or pr.origin != s.get('origin'):
+        raise Stop('REPLAY_MISMATCH', f'{Path(d).name}: 원 팔에서 다시 계산한 예측 (상태 {status} ↔ {s.get("status")}) · 검사 · origin 결정 '
+                                      f'≠ 요약')
+    return pr, status, stop
+
+
+def _why(stage, law, variant, stop):
+    """★ 4판 (Q1) — 판정 기록의 사유 한 줄 (§5-5b NOT_COMPUTED · CALIB_* 행 '사유 (상태 · 멈춤 코드) 보고') — 멈춤 기록에서 (σ 를 가린 원인 칸)."""
+    st = stop or {}
+    return {'stage': stage, 'law': law, 'variant': variant, 'code': st.get('code'), 'reason': st.get('reason'), 'run': st.get('run'),
+            'cause': st.get('cause')}
 
 
 def judge_set(statuses, vals):
-    """같은 판정 함수 (§5-6 · Codex RCA-09) — 법칙별 사다리 상태 + 예측 값 (S/cm · 확장 실수) → 판정 dict.  주 판정 · 감도 변이가 이것 하나."""
+    """같은 판정 함수 (§5-6 · Codex RCA-09) — 법칙별 사다리 상태 + 예측 값 (S/cm · 확장 실수) → 판정 dict.  주 판정 · 감도 변이가 이것 하나.
+    ★ 4판 (Q1 · §5-0 ①) — 사다리 둘이 보정됐는데 vals = None = 예측 단계가 NOT_COMPUTED (등록 결과) → 판정 NOT_COMPUTED."""
     bad = [statuses[law] for law in LAWS if statuses[law] != 'CALIBRATED']
     if bad:
         return {'verdict': min(bad, key=CALIB_ORDER.index), 'state': 'calib'}
+    if vals is None:
+        return {'verdict': 'NOT_COMPUTED', 'state': 'calib'}
     return judge({k: v * 1e3 for k, v in vals.items()})
 
 
@@ -1696,7 +1749,7 @@ def verdict_compute(dirs, reg_path, contract):
     pub = {'tool': TOOL, 'schema': SCHEMA, 'stage': 'verdict', 'verdict': None, 'state': None, 'stop': None, 'flags': [],
            'blocking_flags': [], 'qualifiers': list(QUALIFIERS), 'report_category': {REPORT_CATEGORY: list(ASSUMED_UNVALIDATED)},
            'verdict_note': VERDICT_NOTE, 'sentence_allowed': False, 'sentence': None, 'calib': {}, 'variants': {},
-           'inputs': [], 'arms': [], 'registration': None, 'grid_sentence': GRID_SENTENCE}
+           'inputs': [], 'arms': [], 'registration': None, 'grid_sentence': GRID_SENTENCE, 'reasons': []}
     stages, seen = [], set()
     for d in dirs:
         rd = Path(d).resolve()
@@ -1776,6 +1829,8 @@ def verdict_compute(dirs, reg_path, contract):
                                'ends_sigma_mScm': {k: v * 1e3 for k, v in L['sealed']['ends_sigma'].items()},
                                'origin': L['sealed']['origin']}
     statuses = {law: main_l[law][3]['status'] for law in LAWS}
+    #  ★ 4판 (Q1 · §5-5b NOT_COMPUTED · CALIB_* 행) — 판정 기록의 사유 (주 판정 단계만 · 원 팔에서 다시 계산한 멈춤 기록)
+    pub['reasons'] = [_why('ladder', law, None, main_l[law][3]['stop']) for law in LAWS if statuses[law] != 'CALIBRATED']
 
     def predict_of(variant, lads):
         if variant not in pred_in:
@@ -1793,9 +1848,19 @@ def verdict_compute(dirs, reg_path, contract):
         pub.update({k: P[k] for k in ('verdict', 'state', 'flags', 'blocking_flags', 'sentence_allowed', 'sentence')})
         res['certificates_dsigma_rel'] = dict(cert_reg)
         return pub, _clean(res)
-    pr = predict_of(None, main_l)
-    if pr is None:
+    got_pr = predict_of(None, main_l)
+    if got_pr is None:
         raise Stop('INPUT_MISSING', '주 예측 폴더가 없다 (사다리 둘 다 보정됨)')
+    pr, p_status, p_stop = got_pr
+    if p_status != 'PREDICTED':
+        #  ★ 4판 (Q1 · §5-0 ① ③ · §4-2 ③) — 예측 단계 NOT_COMPUTED (DBE 모서리 · origin 팔의 단락 · 증서 실패) = 판정 NOT_COMPUTED (등록 결과 ·
+        #    rc 0 · 멈춤 아님) · 사유 = 그 멈춤 기록 · 감도 · SV 대조는 보지 않는다 (주 판정이 없다)
+        pub['reasons'].append(_why('predict', None, None, p_stop))
+        P, PJ = assemble({'statuses': statuses, 'vals': None, 'flags': m_flags}, {}, None)
+        pub.update({k: P[k] for k in ('verdict', 'state', 'flags', 'blocking_flags', 'sentence_allowed', 'sentence')})
+        res['predict'] = {'status': p_status, 'stop': p_stop}
+        res['certificates_dsigma_rel'] = dict(cert_reg)
+        return pub, _clean(res)
     main_pred_sha = pred_in[None][2]
     vals = pr.values()
     plan_main = pred_in[None][1]['plan']['content']
@@ -1816,7 +1881,9 @@ def verdict_compute(dirs, reg_path, contract):
             if vp is None:
                 vres[V] = None                          # 사다리는 됐는데 예측을 안 돌렸다 = 안 돌림
                 continue
-            vres[V] = {'statuses': vst, 'vals': vp.values(), 'flags': vflags}
+            vpr, v_status, _v_stop = vp
+            #  ★ 4판 (Q1) — 변이 예측 NOT_COMPUTED (등록 결과) = 그 변이 판정 NOT_COMPUTED (vals None · `judge_set`)
+            vres[V] = {'statuses': vst, 'vals': (vpr.values() if v_status == 'PREDICTED' else None), 'flags': vflags}
         else:
             vres[V] = {'statuses': vst, 'vals': None, 'flags': vflags}
     P, PJ = assemble({'statuses': statuses, 'vals': vals, 'flags': m_flags}, vres, (svf, svd))
@@ -1855,7 +1922,7 @@ def verdict_compute(dirs, reg_path, contract):
 
 
 def _clean(obj):
-    """결과 JSON — NaN · inf 를 null 로 (allow_nan=False 직렬화 · 다시 판정 바이트 대조 · +∞ 상태는 상태 칸이 따로 적는다)."""
+    """결과 JSON — NaN · inf 를 null 로 (allow_nan=False 직렬화 · 다시 판정 바이트 대조 · +∞ (zero 끝의 W 등) 는 상태 칸이 따로 적는다)."""
     if isinstance(obj, dict):
         return {str(k): _clean(v) for k, v in obj.items()}
     if isinstance(obj, (list, tuple)):
@@ -1870,7 +1937,7 @@ def _stopped_pub(e, dirs, reg):
             'blocking_flags': [], 'qualifiers': list(QUALIFIERS), 'report_category': {REPORT_CATEGORY: list(ASSUMED_UNVALIDATED)},
             'verdict_note': VERDICT_NOTE, 'sentence_allowed': False, 'sentence': None, 'calib': {}, 'variants': {},
             'grid_sentence': GRID_SENTENCE, 'inputs': [str(Path(d).resolve()) for d in dirs], 'arms': [],
-            'registration': (str(Path(reg).resolve()) if reg else None)}
+            'registration': (str(Path(reg).resolve()) if reg else None), 'reasons': []}
 
 
 def stage_verdict(a, contract):
@@ -1898,7 +1965,9 @@ def stage_verdict(a, contract):
         except OSError:
             pass
     print(f'판정 = {pub["verdict"]} (상태 {pub.get("state")}) · 표지 {pub["flags"] or "없음"} · 차단 {pub.get("blocking_flags") or "없음"} · '
-          f'§7-1 문장 {"허용" if pub["sentence_allowed"] else "금지"}' + (f' · 사다리 {pub["calib"]}' if pub.get('calib') else ''))
+          f'§7-1 문장 {"허용" if pub["sentence_allowed"] else "금지"}' + (f' · 사다리 {pub["calib"]}' if pub.get('calib') else '')
+          + (' · 사유 ' + ' · '.join(f'{w.get("stage")} {w.get("law") or ""} {w.get("code")} {w.get("reason") or ""}'.replace('  ', ' ').strip()
+                                    for w in pub['reasons']) if pub.get('reasons') else ''))
     if a.show_results:
         if res is None:
             print('--show-results — 판정이 없어 열지 않는다 (멈춤)')

@@ -256,7 +256,9 @@ def check_arm(path, want, expect_backend=None, receipt=None):
         return (f'manifest 에 실패/누락 component 가 있다: {sorted(set(_fm))} '
                 f'(status={_man.get("status")}) — 재활용하지 말 것')
     #  ★★ 2026-10-21 (D · 등록 R §5-0 · Codex RCA-13 · 1저자 Q7 ③) — **다음 세대 팔의 해 상태** (`run_contract.next_gen_state` — 사슬과
-    #    같은 함수).  VALID_ZERO_TOPOLOGY (바닥 극한 · σ 0 이 정상 결과) · ELECTRODE_SHORT (J11 · σ = +∞ · σ 칸 None) 는 **조기 반환 해**라
+    #    같은 함수).  VALID_ZERO_TOPOLOGY (바닥 극한 · σ 0 이 정상 결과) · ELECTRODE_SHORT (J11 · σ 칸 None · ★ 4판 (10-21 · 1저자 Q1) =
+    #    게시 안 되는 상태의 온전한 기록 — σ +∞ 아님 · 이 함수가 받아야 러너가 옮기고 사슬이 그 런을 NOT_COMPUTED · 사유 ELECTRODE_SHORT 로
+    #    남긴다 (거부하면 러너 rc 1 → 사슬 RUNNER_RC = 사유가 흐려진다)) 는 **조기 반환 해**라
     #    전자 component 가 not_solvable · σ > 0 아님 · backend 기록 없음 (CG 가 안 돌았다) — 증서가 그 상태를 결합할 때만 아래 세 검사
     #    (complete · 수치 증거 · backend) 를 그 상태의 꼴로 바꾼다.  옛 세대 (p2) · 증서 없는 σ 0 · 상태 위반 = 그대로 거부 (옛 거동).
     #  ⚠ 이 함수는 상태를 **완화에만** 쓴다 — 상태 증서가 서지 않으면 (None) 옛 검사 흐름 그대로 (새 거부를 더하지 않는다 · 증서 판정 =
@@ -298,7 +300,7 @@ def check_arm(path, want, expect_backend=None, receipt=None):
     #    `isinstance(ci,(int,float))` + `int(ci)` 로 **`cg_info = 0.5` 가 절삭돼 통과**했고
     #    (Codex 실측) 판정기의 사본도 똑같이 뚫려 있었다.  ⇒ `run_contract` 하나만 본다.
     #    `numeric_ok` 는 σ_e 유한 양수 · dof 양의 정수 · 수렴 conjunction 을 한 번에 본다.
-    #  ★ 10-21 (D) — 영값 · 단락 상태 = σ 가 정의상 양의 유한값이 아니다 (0 · +∞) · CG 가 안 돈 해 → 수치 증거 (σ > 0 · dof · 수렴 3 칸) 대신
+    #  ★ 10-21 (D) — 영값 · 단락 상태 = σ 가 정의상 양의 유한값이 아니다 (0 · 값 없음 (단락 = 게시 안 됨 · 4판)) · CG 가 안 돈 해 → 수치 증거 (σ > 0 · dof · 수렴 3 칸) 대신
     #    상태 증서 (위 `next_gen_state`) 가 그 자리를 맡는다.  그 밖 = 옛 검사 그대로.
     if not _ng_nonpos:
         _nok, _nwhy = _RC.numeric_ok(s)
@@ -333,7 +335,7 @@ def check_arm(path, want, expect_backend=None, receipt=None):
     #  ⚠ 계획이 없으면 required 를 파생할 수 없다 (옛 팔) — 전자축은 위 `numeric_ok` 소관.
     if _man.get('component_plan') is not None:
         _req_c = _RC.required_components(plan=_man['component_plan'])
-        if _ng_nonpos:                                   # ★ 10-21 (D) — 전자 결과 = 상태 증서 (σ 0 · +∞ 는 "유한 양수" 증거 꼴이 아니다)
+        if _ng_nonpos:                                   # ★ 10-21 (D) — 전자 결과 = 상태 증서 (σ 0 · 값 없음 (단락) 은 "유한 양수" 증거 꼴이 아니다)
             _req_c = tuple(c for c in _req_c if c != 'electronic')
         _eok, _ewhy = _RC.component_evidence_ok(s, _req_c)
         if not _eok:

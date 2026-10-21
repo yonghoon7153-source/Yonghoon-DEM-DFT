@@ -1019,8 +1019,12 @@ def _ion_cert_problem(s, man):
 
 
 #: ★ 2026-10-21 (D · 등록 R §5-0 · Codex RCA-13 · 1저자 Q7 ③) — 다음 세대 팔의 해 상태 (사슬 · check_arm 이 같은 함수로 본다).
-#   positive = 양의 유한 σ (증서 ⓐ–ⓓ) · zero = VALID_ZERO_TOPOLOGY (σ 0 이 정상 결과) · short = ELECTRODE_SHORT (J11 · σ = +∞ ·
+#   positive = 양의 유한 σ (증서 ⓐ–ⓓ) · zero = VALID_ZERO_TOPOLOGY (σ 0 이 정상 결과) · short = ELECTRODE_SHORT 의 **온전한 기록** (J11 ·
 #   유한 σ 로 위장하지 않는다 → 결과 σ 칸 = None) — 그 밖 = (None, 사유) = 사슬에서 NOT_COMPUTED.
+#   ★ 4판 (10-21 · 1저자 Q1 "권고대로" · 등록 R 4판 §5-0 ①–③ · R4-Q5) — short 는 σ = +∞ 가 **아니다**: 생산자가 게시하지 않는 상태
+#   (`conv_cert_problem` — 게시 가능 = POSITIVE_SOLVED · VALID_ZERO_TOPOLOGY 뿐) 의 기록이라 check_arm 은 그 기록을 받고 (러너가 옮긴다 —
+#   거부하면 러너 rc ≠ 0 → 사슬 RUNNER_RC 로 사유가 흐려진다) · 사슬은 그 런을 NOT_COMPUTED (사유 ELECTRODE_SHORT ·
+#   `rint_r_chain.registration_state`) 로 센다.
 NG_STATES = ('positive', 'zero', 'short')
 
 
@@ -1032,6 +1036,7 @@ def next_gen_state(step3):
         not_solvable / 행렬 그래프 = 사유 없음 · 전자 complete · 수렴 3 칸 (CG 가 돌았다)
       · short — 증서 판 · 상태 ELECTRODE_SHORT · ok False · 봉인 상수 · 결과 사유 = 증서 사유 (단락 사유) · 결과 σ = None (0 · 유한값 =
         위장 = 거부) · 전자 not_solvable · 접합 블록의 솔브 기록 short True · solved False · 축약 instance > 0 (단락은 축약에서만 생긴다) ·
+        ★ 4판 (Q1) 'short' = 게시 안 되는 상태의 온전한 기록 (σ +∞ 아님 · 사슬 = NOT_COMPUTED 사유 ELECTRODE_SHORT) ·
         ★ 10-21 (사전 리뷰 PRE-impl-07 병합) 증서 ↔ 런 결합 (`cert_binding_problem` · 주 전자 채널 — 영값 · 양의 해와 같은 함수 · 옛 판 =
         격자 지문 hex32 꼴만 = 다른 침대의 단락 증서를 받았다) · 이온을 푼 팔의 이온 증서 = 그 런의 매니페스트 · 채널 ionic
     ⚠ 상태는 위상 사실이지 σ 값이 아니다 — 값 봉인 (사슬) 은 σ 숫자만 가린다."""
@@ -1089,7 +1094,8 @@ def next_gen_state(step3):
         if not isinstance(rs, str) or rs != cert.get('reason') or _cc.classify_reason(rs) != _cc.STATUS_SHORT:
             return None, f'STATE|short| 결과 사유 {rs!r} ↔ 증서 사유 {cert.get("reason")!r} (같은 단락 사유여야 한다)'
         if sig is not None:
-            return None, f'STATE|short| 결과 σ {sig!r} — 단락 (σ = +∞) 을 유한 σ 로 위장하지 않는다 (None 이어야 · 등록 R §5-0)'
+            return None, (f'STATE|short| 결과 σ {sig!r} — 단락을 유한 σ 로 위장하지 않는다 (σ 칸 None 이어야 · 게시 안 되는 상태 · '
+                          f'등록 R 4판 §5-0)')
         if comp != 'not_solvable':
             return None, f'STATE|short| 전자 component = {comp!r} (not_solvable 이어야)'
         cj = ((man.get('ca_ext') or {}).get('cjunc') or {}) if isinstance(man.get('ca_ext'), dict) else {}

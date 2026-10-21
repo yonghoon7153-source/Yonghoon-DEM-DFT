@@ -883,14 +883,17 @@ _DIS_THERMAL = '--no-thermal (σ_e 전용 스윕)'
 _DIS_PORE = '--no-pore (σ_e 전용 스윕; DR3-07 로 vox ≤ 0.125 pore-τ 는 어차피 인용 금지)'
 _DIS_PNM = '--no-pore (σ_e 전용 스윕)'
 
-#: ★ 2026-10-21 (D · 등록 R §5-0) — 조기 반환 사유 중 σ 가 +∞ 인 것 (J11 판–판 0 저항 단락 · 접합 축약에서만 · `step3_conv_cert.SHORT_REASONS`
+#: ★ 2026-10-21 (D · 등록 R §5-0) — 조기 반환 사유 중 단락인 것 (J11 판–판 0 저항 단락 · 접합 축약에서만 · `step3_conv_cert.SHORT_REASONS`
 #   와 같은 낱말 — 시험 S10 이 대조).  그 해는 유한 σ 로 위장하지 않는다 → 결과 σ 칸 = None (0.0 은 "끊김" 의 정반대 뜻이다).
+#   ★ 4판 (10-21 · 1저자 Q1 · 등록 R 4판 §5-0 ①–③ · R4-Q5) — 단락 = 게시 안 되는 상태 (σ 값 없음 · +∞ 도 아니다 · `run_contract.conv_cert_problem`):
+#   이 payload 는 그 **기록** (σ None · 상태 증서) 을 그대로 쓴다 — 러너가 옮겨야 사슬이 그 런을 NOT_COMPUTED (사유 ELECTRODE_SHORT) 로 남긴다
+#   (기록을 거부하면 러너 rc ≠ 0 → 사슬 RUNNER_RC = 사유가 흐려진다 · 시험 b6 SP9–SP13 · 사슬 e2e E9).
 STEP3_SHORT_REASONS = ('cjunc_electrode_short',)
 
 
 def _step3_early(res3, vox):
     """조기 반환 해 (솔버가 CG 없이 σ 를 정한 해) 의 step3 조립 — 한 곳.  옛 dict (σ 0.0 · 사유 · vox) 그대로에 ★ 10-21 (D):
-    ① 단락 사유 (J11) = σ None (등록 R §5-0 — short = +∞ · 유한 σ 로 위장 안 함) ② 상태 증서 (`conv_cert` — 증서 켤 때만 · VALID_ZERO_TOPOLOGY ·
+    ① 단락 사유 (J11) = σ None (등록 R 4판 §5-0 — 단락 = 게시 안 됨 · σ 값 없음 · 유한 σ 로 위장 안 함) ② 상태 증서 (`conv_cert` — 증서 켤 때만 · VALID_ZERO_TOPOLOGY ·
     ELECTRODE_SHORT · NOT_CERTIFIABLE) 를 복사 (사본 dict · 옛 판은 버려서 영값 바닥 팔을 사슬이 증서 없음으로 멈췄다).  증서 끔 + 단락 아님 =
     옛 dict 와 키 · 값 · 순서가 같다 (끈 경로 비트 같음)."""
     rs = res3.get('reason')
@@ -1199,7 +1202,7 @@ def _payload_reject_reason(a, step3):
     #    `cg_resid=NaN` · `cg_info=99` 인 payload 를 전부 게시했다 (Codex 실측 4종).
     #    게시 순서를 고친 것과 **검사 내용**은 다른 문제다.
     #  ★★ 2026-10-21 (D · 등록 R §5-0 · Codex RCA-13) — 다음 세대 팔의 **영값 위상 · 단락 상태** (`run_contract.next_gen_state` — check_arm ·
-    #    사슬과 같은 함수) 는 σ 가 정의상 양의 유한값이 아니다 (0 · +∞ · CG 없음) → 전자 수치 증거 대신 상태 증서가 그 자리를 맡는다.
+    #    사슬과 같은 함수) 는 σ 가 정의상 양의 유한값이 아니다 (0 · 값 없음 (단락 = 게시 안 되는 상태 · 4판) · CG 없음) → 전자 수치 증거 대신 상태 증서가 그 자리를 맡는다.
     #    상태가 안 서면 (증서 없음 · 위반) 옛 검사 그대로 (σ 0 · None 을 거부).  ⚠ 완화에만 쓴다 — 새 거부를 더하지 않는다.
     _ngs_p, _ngw_p = _RC.next_gen_state(step3)
     _ng_nonpos_p = _ngs_p in ('zero', 'short')
