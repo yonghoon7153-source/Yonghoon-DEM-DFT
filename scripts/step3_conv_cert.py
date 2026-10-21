@@ -24,8 +24,12 @@
                  두 끝까지 거리 ≤ τ·G.  ⚠ 판정문 · 계획의 문자 그대로 ("G ∈ [하한, 상한]") 는 쓰지 않았다: 판 전류는 잔차의 1 차 ·
                  구간은 2 차라 정상 수렴 해의 G 가 구간 **밖**에 놓인다 (탐침 침대 rtol 1e-12: 폭 1e-10 · G 오차 2.5e-8 — T4e) →
                  문자 그대로면 모든 정상 해를 거부.  보장 오차 꼴은 문자 그대로의 조건을 포함한다 (G ∈ 구간 이고 폭 ≤ τG ⇒ 통과).
-                 부동소수 보수 (`TARGET_FP_RULE`): 합 = 묶음 `math.fsum` (정확 반올림) · 순서 고정 (넓이 우선 층 · 배열 순서) · U · W 여유
-                 (1 + 8u) · 판 흐름 −2u|F| · 노드 결손 반올림 상한 (2·차수 + 8)·u·Σ|흐름| — float64 오차 해석이지 구간 산술 증명은 아니다.
+                 부동소수 보수 (`TARGET_FP_RULE` v2): 합 = 묶음 `math.fsum` (정확 반올림 · 상한 2u) · 순서 고정 (넓이 우선 층 · 배열 순서) ·
+                 항 반올림 (U 항 4u · W 항 2u) 의 2 배를 묶음 상한에 더함 · U · W 끝 여유 (1 + 8u) · 판 흐름 −2u|F| · 분자의 뺄셈 반올림
+                 −4u(|F| + D) (절대) · 하한 끝 (1 − 4u) · 노드 결손 반올림 상한 (2·차수 + 8)·u·Σ|흐름| — float64 오차 해석 (상대 반올림 모형
+                 |δ| ≤ u) 이지 구간 산술 증명은 아니다.  모형 밖 (곱 · 나눗셈이 부정규 범위 · 완전 밑넘침 · 넘침) = NOT_CERTIFIABLE.
+                 판정 비교 = 정확 분수 (τ = 1/10⁴ · 칼날에서 float 나눗셈이 통과 쪽으로 기울지 않게) ·
+                 입력 = 수 dtype 만 (글자 · bool 을 float 로 조용히 바꾸지 않는다) · 원장 허용 = 반올림 수준 (대칭 상대 1e-12 · 행 합 항 수 비례).
 해 상태 (★ 2026-10-21 · RCA-13 · Q7 일부 — `status`): POSITIVE_SOLVED (관통 성분 있음 · 증서 ⓐ–ⓓ 필요) · VALID_ZERO_TOPOLOGY (조립 ·
   축약 · 절단 그래프에 두 판을 잇는 성분이 없다 = σ 0 이 **정상 결과** · 증서 실패 아님 · 게시 σ 가 정확히 0 일 때만) ·
   ELECTRODE_SHORT (축약 무리가 두 판을 잇는다) · NOT_CERTIFIABLE (그 밖 — 얇은 침대 · 모르는 사유 · 원장 ↔ 행렬 불일치 · 비유한 φ).
@@ -67,7 +71,8 @@ PROD_RESID_MAX = 1.0e-6
 #: ⓓ 목표량 증서 — 보장할 상대 오차 τ (설계 §6 의 목표 1e-4 그대로 · `SEAL_ERR_TOL` · `CERT_RESOLVE_TOL` 과 같은 수 · 새 합격선 아님)
 CERT_TARGET_TOL = 1.0e-4
 TARGET_VERSION = 'target-cert-v1'
-TARGET_FP_RULE = 'fsum-bfs-defect-margin-v1'   # 부동소수 보수 규칙 (머리 주석 ⓓ) — 바꾸면 이름도 바꾼다
+TARGET_FP_RULE = 'fsum-bfs-defect-margin-v2'   # 부동소수 보수 규칙 (머리 주석 ⓓ) — 바꾸면 이름도 바꾼다 (★ 10-21 v2: 항 반올림 · 분자 절대
+#                                                여유 · 밑넘침 거부 · 정확 분수 판정 — v1 은 세 묶음 최악 정렬에서 1 차 여유 0)
 #: 해 상태 (RCA-13) — 게시 가능 = POSITIVE_SOLVED (ok) · VALID_ZERO_TOPOLOGY (ok) 뿐
 STATUS_POSITIVE = 'POSITIVE_SOLVED'
 STATUS_ZERO = 'VALID_ZERO_TOPOLOGY'
@@ -79,7 +84,10 @@ ZERO_REASONS = ('no_through_component', 'all_floating_dropped', 'no_plate_contac
 SHORT_REASONS = ('cjunc_electrode_short',)
 ZERO_SOURCES = ('early_return', 'matrix_graph')
 _UNIT = 2.0 ** -53                             # float64 단위 반올림 u
-_LEDGER_TOL = 64.0 * _UNIT                     # 원장 ↔ 행렬 대조 (행 합 · b) 허용 = 조립 합 순서 반올림 여유
+_LEDGER_TOL = 64.0 * _UNIT                     # 원장 ↔ 행렬 대조 (행 합 · b) 허용 = 조립 합 순서 반올림 여유 × (그 행의 항 수 + 8)
+_SYM_TOL = 1.0e-12                             # L 대칭 (값) 허용 — 상대 · 중복 간선을 두 방향에서 다른 순서로 더한 반올림 (k·u) 만 받는다
+_NUM_KINDS = 'fiu'                             # 받는 수 dtype (부동 · 정수) — 글자 · bool · object · 복소 = 거부 (조용히 바꿔 계산하지 않는다)
+_TINY = 2.0 ** -1022                           # 가장 작은 정규수 — 이보다 작은 0 아닌 곱 = 상대 반올림 모형 밖 (`_uflow`)
 _FSUM_CHUNK = 1 << 20
 
 PROBE_SHAPE = (24, 24, 72)
@@ -149,6 +157,8 @@ def _plate_input_problem(phi, Ab, gb, At, gt):
     p = np.asarray(phi)
     if p.ndim != 1:
         return f'phi shape {p.shape} (1-D 이어야 한다)'
+    if p.dtype.kind not in _NUM_KINDS:
+        return f'phi dtype {p.dtype} (수 배열 — 글자 · bool · object 를 float 로 조용히 바꿔 계산하지 않는다)'
     for nm, A_, g_ in (('bot', Ab, gb), ('top', At, gt)):
         if A_ is None or not len(A_):
             continue
@@ -159,6 +169,8 @@ def _plate_input_problem(phi, Ab, gb, At, gt):
             return f'plate {nm}: index out of range [0, {len(p)})'
         if g_ is None or np.asarray(g_).shape != A_.shape:
             return f'plate {nm}: conductance length ≠ index length'
+        if np.asarray(g_).dtype.kind not in _NUM_KINDS:
+            return f'plate {nm}: conductance dtype {np.asarray(g_).dtype} (수 배열)'
     return None
 
 
@@ -215,14 +227,30 @@ def _certify_abc(L, b, phi, info, resid, rtol_used, Ab, gb, At, gt, scale, resol
 # ═════════════════════════ ⓓ 목표량 증서 (Codex RCA-07 · 1저자 10-21 Q5 (가)) ═════════════════════════
 def _fsum_bound(x):
     """Σ x (float64 배열) → (합, 절대 오차 상한).  묶음 (2²⁰) 마다 `math.fsum` (정확 반올림) 뒤 묶음 합을 다시 `fsum` —
-    상한 = 2u · (Σ_k |묶음 합_k| + |합|) (묶음 합 반올림 + 마지막 반올림 · 넉넉히 2 배).  항 자체의 반올림은 호출자가 따로 센다."""
+    상한 = 2u · (Σ_k |묶음 합_k| + |합|) (묶음 합 반올림 + 마지막 반올림 · 넉넉히 2 배).  항 자체의 반올림은 호출자가 따로 센다.
+    합이 넘치면 (`math.fsum` OverflowError · ±inf 섞임 ValueError) 예외 대신 (inf, inf) — 호출자가 비유한으로 거부한다."""
     x = np.asarray(x, np.float64).ravel()
-    if x.size <= _FSUM_CHUNK:
-        s = math.fsum(x.tolist())
-        return s, 2.0 * _UNIT * abs(s)
-    parts = [math.fsum(x[i:i + _FSUM_CHUNK].tolist()) for i in range(0, x.size, _FSUM_CHUNK)]
-    s = math.fsum(parts)
-    return s, 2.0 * _UNIT * (math.fsum(abs(p) for p in parts) + abs(s))
+    try:
+        if x.size <= _FSUM_CHUNK:
+            s = math.fsum(x.tolist())
+            return s, 2.0 * _UNIT * abs(s)
+        parts = [math.fsum(x[i:i + _FSUM_CHUNK].tolist()) for i in range(0, x.size, _FSUM_CHUNK)]
+        s = math.fsum(parts)
+        return s, 2.0 * _UNIT * (math.fsum(abs(p) for p in parts) + abs(s))
+    except (OverflowError, ValueError):
+        return math.inf, math.inf
+
+
+def _uflow(z, *ops):
+    """곱 · 나눗셈 결과 z (피연산자 ops) 가 상대 반올림 모형 (fl(x∘y) = (x∘y)(1+δ) · |δ| ≤ u) 밖인가 — 0 아닌 |z| < 2⁻¹⁰²² (부정규 ·
+    절대 오차 2⁻¹⁰⁷⁵ 가 상대 여유를 넘을 수 있다) 또는 0 아닌 피연산자들의 결과가 0 (완전 밑넘침).  덧셈 · 뺄셈은 점진 밑넘침으로 늘 모형 안."""
+    z = np.asarray(z)
+    az = np.abs(z)
+    bad = (az > 0.0) & (az < _TINY)
+    nz = np.ones(z.shape, bool)
+    for o in ops:
+        nz &= np.asarray(o) != 0.0
+    return bool(bad.any() or (nz & (z == 0)).any())
 
 
 def _target_empty(problem=None):
@@ -237,9 +265,13 @@ def _target_empty(problem=None):
 
 def _ledger(L, b, Ab, gb, At, gt):
     """행렬 L · 우변 b ↔ 간선 원장 대조 → (원장 dict | None, 문제 | None).
-    원장 = L 위 삼각의 비대각 (g = −L_uv > 0 · 0 은 버린다) + 판 간선 (아래 φ 1 · 위 φ 0).  거부 (fail-closed): 정방 아님 · 비유한 ·
-    비대칭 (모양 · 값 4u) · 양의 비대각 (음 컨덕턴스) · 행 합 ≠ 그 노드의 판 결합 합 (원장 밖 대각 = 접지 · 64u) · b ≠ 아래 판 결합 합 ·
-    판 g 비유한 · ≤ 0.  ⚠ L 은 바꾸지 않는다 (정준 꼴이 아니면 사본)."""
+    원장 = L 위 삼각의 비대각 (g = −L_uv > 0 · 0 은 버린다) + 판 간선 (아래 φ 1 · 위 φ 0).  거부 (fail-closed): 정방 아님 · 수 dtype
+    아님 (글자 · bool · object — 검사 전에 float 로 바꾸지 않는다) · 비유한 · 비대칭 (모양 · 값 상대 `_SYM_TOL`) · 양의 비대각 (음
+    컨덕턴스) · 행 합 ≠ 그 노드의 판 결합 합 (원장 밖 대각 = 접지 · 허용 64u × (그 행 칸 수 + 판 간선 수 + 8) × (|행| 합 + 판 결합)) ·
+    b ≠ 아래 판 결합 합 (64u × (아래 판 간선 수 + 8)) · 판 g 비유한 · ≤ 0.
+    허용은 반올림 수준만 (`scripts/test_step3_target_cert.py` T15 — 중복 간선 합 순서 · 큰 차수 행의 대각 반올림 · b 합 순서는 받고 참
+    비대칭 1e-9 · 참 접지 1e-6 · 참 b 불일치 1e-6 은 거부).  원장 G* 는 비대각 · 판 g 로만 정해지므로 받은 반올림 비대칭 (≤ 1e-12) 이 바꾸는 G* 는 상대 1e-12 이하
+    (G* 는 g 에 대해 단조 · 1 차 동차).  ⚠ L 은 바꾸지 않는다 (정준 꼴이 아니면 사본)."""
     from scipy import sparse
     try:
         Lc = sparse.csr_matrix(L)
@@ -247,6 +279,8 @@ def _ledger(L, b, Ab, gb, At, gt):
         return None, f'L 을 CSR 로 못 읽는다 ({type(e).__name__})'
     if Lc.ndim != 2 or Lc.shape[0] != Lc.shape[1]:
         return None, f'L shape {Lc.shape} (정방이어야 한다)'
+    if Lc.dtype.kind not in _NUM_KINDS:
+        return None, f'L dtype {Lc.dtype} (수 행렬이어야 한다)'
     n = int(Lc.shape[0])
     if Lc.dtype != np.float64:
         Lc = Lc.astype(np.float64)
@@ -263,7 +297,7 @@ def _ledger(L, b, Ab, gb, At, gt):
         M.sort_indices()
     if not (np.array_equal(up.indptr, lw.indptr) and np.array_equal(up.indices, lw.indices)):
         return None, 'L 비대칭 (모양)'
-    if up.nnz and (np.abs(up.data - lw.data) > 4.0 * _UNIT * np.maximum(np.abs(up.data), np.abs(lw.data))).any():
+    if up.nnz and (np.abs(up.data - lw.data) > _SYM_TOL * np.maximum(np.abs(up.data), np.abs(lw.data))).any():
         return None, 'L 비대칭 (값)'
     if up.nnz and (up.data > 0.0).any():
         return None, 'L 비대각 > 0 (음 컨덕턴스 — 수동 저항망이 아니다)'
@@ -274,23 +308,34 @@ def _ledger(L, b, Ab, gb, At, gt):
             return None, f'판 {nm} 간선 번호 dtype {A_.dtype} · 모양 {A_.shape} (1 차원 정수 — 조용히 바꾸지 않는다)'
         idx.append(A_.astype(np.int64).ravel())
     Ab, At = idx
-    gb = np.zeros(0) if gb is None else np.asarray(gb, np.float64).ravel()
-    gt = np.zeros(0) if gt is None else np.asarray(gt, np.float64).ravel()
+    gg = []
+    for nm, g_ in (('bot', gb), ('top', gt)):
+        g_ = np.zeros(0) if g_ is None else np.asarray(g_)
+        if g_.size and g_.dtype.kind not in _NUM_KINDS:
+            return None, f'판 {nm} 컨덕턴스 dtype {g_.dtype} (수 배열 — 조용히 바꾸지 않는다)'
+        gg.append(g_.astype(np.float64).ravel())
+    gb, gt = gg
     for nm, A_, g_ in (('bot', Ab, gb), ('top', At, gt)):
         if A_.shape != g_.shape or (len(A_) and (A_.min() < 0 or A_.max() >= n)):
             return None, f'판 {nm} 간선 번호 · 길이'
         if len(g_) and not (np.isfinite(g_).all() and (g_ > 0.0).all()):
             return None, f'판 {nm} 컨덕턴스 비유한 · ≤ 0'
-    bv = np.asarray(b, np.float64).ravel()
+    b0 = np.asarray(b)
+    if b0.dtype.kind not in _NUM_KINDS:
+        return None, f'b dtype {b0.dtype} (수 배열 — 조용히 바꾸지 않는다)'
+    bv = b0.astype(np.float64).ravel()
     if bv.shape != (n,) or not np.isfinite(bv).all():
         return None, f'b 모양 {bv.shape} · 비유한'
     rs = np.asarray(Lc.sum(axis=1)).ravel()
     ar = np.asarray(abs(Lc).sum(axis=1)).ravel()
     bb = np.bincount(Ab, gb, n) if len(Ab) else np.zeros(n)
     pl = bb + (np.bincount(At, gt, n) if len(At) else np.zeros(n))
-    if (np.abs(rs - pl) > _LEDGER_TOL * (ar + pl)).any():
+    kb = np.bincount(Ab, minlength=n) if len(Ab) else np.zeros(n, np.int64)
+    kt = np.bincount(At, minlength=n) if len(At) else np.zeros(n, np.int64)
+    tol_r = _LEDGER_TOL * (np.diff(Lc.indptr) + kb + kt + 8.0) * (ar + pl)
+    if (np.abs(rs - pl) > tol_r).any():
         return None, '행 합 ≠ 판 결합 합 (원장 밖 대각 항 — 접지 · 다른 경계)'
-    if (np.abs(bv - bb) > _LEDGER_TOL * (np.abs(bv) + bb)).any():
+    if (np.abs(bv - bb) > _LEDGER_TOL * (kb + 8.0) * (np.abs(bv) + bb)).any():
         return None, 'b ≠ 아래 판 결합 합 (아래 판 φ 1 · 위 판 φ 0 이 아닌 경계)'
     rows = np.repeat(np.arange(n, dtype=np.int64), np.diff(up.indptr))
     keep = up.data < 0.0
@@ -372,8 +417,9 @@ def _node_balance(n, eu, ev, c, Ab, cb, At, ct):
 
 def target_bracket(L, b, phi, Ab, gb, At, gt, *, _tree=True, _defect_term=True):
     """ⓓ — 행렬 L · b (생산 조립) 와 판 간선 (Ab, gb · At, gt) 의 원장 위에서 근사 φ 로 G* 를 감싼다 → dict (`target_*` 칸).
-    상한 = U · (1 + 8u) (항 반올림 ≤ 4u · fsum 상한 더함) · 하한 = (F − D)² / W⁺ · (1 − 4u) (F = 판 흐름 − fsum 상한 · D = 남은
-    결손의 보수 합 · W⁺ = W 상한) — 두 판 중 큰 쪽.  관통 성분이 없으면 위상 'zero' (하한 0 · 상한 U).
+    상한 = (U + fsum 상한 + 항 반올림 8u·U) · (1 + 8u) · 하한 = (F − D − 4u(|F| + D))² / W⁺ · (1 − 4u) (F = 판 흐름 − fsum 상한 ·
+    D = 남은 결손의 보수 합 · W⁺ = (W + fsum 상한 + 항 반올림 4u·W) · (1 + 8u)) — 두 판 중 큰 쪽.  관통 성분이 없으면 위상 'zero'
+    (하한 0 · 상한 U).  흐름 · 합 넘침 · 곱의 부정규 범위 (`_uflow`) = 원장 문제 칸 (NOT_CERTIFIABLE) · 부정규 하한 = 0 (안전한 쪽).
     `_tree` · `_defect_term` = 시험 전용 (트리 보정 · 결손 항을 끈 변이 — 생산은 둘 다 켠다)."""
     rec = _target_empty()
     led, prob = _ledger(L, b, Ab, gb, At, gt)
@@ -396,15 +442,33 @@ def target_bracket(L, b, phi, Ab, gb, At, gt, *, _tree=True, _defect_term=True):
     on_t[lab[At]] = True
     rec.update(target_n_through_components=int((on_b & on_t).sum()),
                target_n_floating_nodes=int((~(on_b | on_t))[lab].sum()))
-    dphi = p[eu] - p[ev]
-    c = eg * dphi
-    cb = gb * (1.0 - p[Ab])
-    ct = gt * p[At]
-    u1, e1 = _fsum_bound(c * dphi)
-    u2, e2 = _fsum_bound(cb * (1.0 - p[Ab]))
-    u3, e3 = _fsum_bound(ct * p[At])
+    with np.errstate(over='ignore', invalid='ignore', under='ignore'):
+        dphi = p[eu] - p[ev]
+        c = eg * dphi
+        cb = gb * (1.0 - p[Ab])
+        ct = gt * p[At]
+        tu = (c * dphi, cb * (1.0 - p[Ab]), ct * p[At])   # U 의 항 g Δφ² (한 번만 만든다 — 생산 침대 간선 수억 · 메모리)
+        fin_u = all(bool(np.isfinite(t).all()) for t in tu)
+        ufl_u = (_uflow(c, eg, dphi) or _uflow(tu[0], c, dphi) or _uflow(cb, gb, 1.0 - p[Ab])
+                 or _uflow(tu[1], cb, 1.0 - p[Ab]) or _uflow(ct, gt, p[At]) or _uflow(tu[2], ct, p[At]))
+    del dphi
+    if not fin_u:                                          # 넘침 = φ 가 이 망의 근사 해가 아니다 (fsum 예외 대신 NOT_CERTIFIABLE)
+        rec.update(_target_empty('φ: 흐름 · 에너지 항 넘침 (비유한)'))
+        return rec
+    if ufl_u:                                              # 밑넘침 = 상대 반올림 모형 밖 (여유가 보장하지 못한다 · 생산 범위 밖)
+        rec.update(_target_empty('φ · g: 흐름 · 에너지 항 부정규 범위 (밑넘침 — 상대 반올림 모형 밖)'))
+        return rec
+    u1, e1 = _fsum_bound(tu[0])
+    u2, e2 = _fsum_bound(tu[1])
+    u3, e3 = _fsum_bound(tu[2])
+    del tu
+    #  항 반올림 상한 (Δφ · g·Δφ · ·Δφ 의 반올림 넷 = 항마다 상대 ≤ 4u · 항이 모두 ≥ 0) — 2 배 (8u) 를 묶음 상한에 더한다
+    e1, e2, e3 = e1 + 8.0 * _UNIT * abs(u1), e2 + 8.0 * _UNIT * abs(u2), e3 + 8.0 * _UNIT * abs(u3)
     U = math.fsum([u1, u2, u3])
     hi = (U + e1 + e2 + e3) * (1.0 + 8.0 * _UNIT)
+    if not math.isfinite(hi):
+        rec.update(_target_empty('φ: 에너지 합 넘침 (비유한)'))
+        return rec
     rec.update(target_U=float(U), target_hi=float(hi))
     if not (on_b & on_t).any():
         rec.update(target_topology='zero', target_lo=0.0)
@@ -438,16 +502,30 @@ def target_bracket(L, b, phi, Ab, gb, At, gt, *, _tree=True, _defect_term=True):
             if m2.any():
                 ct[pedge[lv[m2]]] += a[m2]
             acc[lv] = 0.0
-    d2 = _node_balance(n, eu, ev, c, Ab, cb, At, ct)
-    a2 = np.bincount(eu, np.abs(c), n) + np.bincount(ev, np.abs(c), n)
-    deg = np.bincount(eu, minlength=n) + np.bincount(ev, minlength=n)
-    if len(Ab):
-        a2 = a2 + np.bincount(Ab, np.abs(cb), n)
-        deg = deg + np.bincount(Ab, minlength=n)
-    if len(At):
-        a2 = a2 + np.bincount(At, np.abs(ct), n)
-        deg = deg + np.bincount(At, minlength=n)
-    err = (2.0 * deg + 8.0) * _UNIT * a2                   # 노드 합 (bincount 순차 합 · 네 묶음 합침) 의 반올림 상한 (넉넉히)
+    with np.errstate(over='ignore', invalid='ignore', under='ignore'):
+        d2 = _node_balance(n, eu, ev, c, Ab, cb, At, ct)
+        a2 = np.bincount(eu, np.abs(c), n) + np.bincount(ev, np.abs(c), n)
+        deg = np.bincount(eu, minlength=n) + np.bincount(ev, minlength=n)
+        if len(Ab):
+            a2 = a2 + np.bincount(Ab, np.abs(cb), n)
+            deg = deg + np.bincount(Ab, minlength=n)
+        if len(At):
+            a2 = a2 + np.bincount(At, np.abs(ct), n)
+            deg = deg + np.bincount(At, minlength=n)
+        err = (2.0 * deg + 8.0) * _UNIT * a2               # 노드 합 (bincount 순차 합 · 네 묶음 합침) 의 반올림 상한 (넉넉히)
+        qg = (c / eg, cb / gb, ct / gt)
+        wq = (c * qg[0], cb * qg[1], ct * qg[2])           # q²/g = q·(q/g) (q² 넘침 없이 · 항마다 반올림 둘 = 상대 ≤ 2u)
+        fin_l = bool(np.isfinite(c).all() and np.isfinite(cb).all() and np.isfinite(ct).all() and np.isfinite(err).all()
+                     and np.isfinite(d2).all() and all(np.isfinite(w).all() for w in wq))
+        ufl_l = any(_uflow(r_, q_, g_) or _uflow(w_, q_, r_)
+                    for q_, g_, r_, w_ in ((c, eg, qg[0], wq[0]), (cb, gb, qg[1], wq[1]), (ct, gt, qg[2], wq[2])))
+    del qg
+    if not fin_l:                                          # 트리로 민 흐름 · 결손 · Σq²/g 가 넘쳤다 — 하한을 세울 수 없다
+        rec.update(_target_empty('φ: 보정 흐름 · 결손 · Σq²/g 넘침 (비유한)'))
+        return rec
+    if ufl_l:
+        rec.update(_target_empty('φ · g: 보정 흐름 q/g · q²/g 부정규 범위 (밑넘침 — 상대 반올림 모형 밖)'))
+        return rec
     if _defect_term:
         dp, dpe = _fsum_bound(np.maximum(d2 + err, 0.0))
         dm, dme = _fsum_bound(np.maximum(err - d2, 0.0))
@@ -457,13 +535,26 @@ def target_bracket(L, b, phi, Ab, gb, At, gt, *, _tree=True, _defect_term=True):
         Dp = Dm = 0.0
     FB, FBe = _fsum_bound(cb)
     FT, FTe = _fsum_bound(ct)
-    w1, we1 = _fsum_bound(c * c / eg)
-    w2, we2 = _fsum_bound(cb * cb / gb)
-    w3, we3 = _fsum_bound(ct * ct / gt)
+    w1, we1 = _fsum_bound(wq[0])
+    w2, we2 = _fsum_bound(wq[1])
+    w3, we3 = _fsum_bound(wq[2])
+    del wq
+    #  항 반올림 상한 (q/g · q·(q/g) = 상대 ≤ 2u · 항 ≥ 0) — 2 배 (4u) 를 묶음 상한에 더한다
+    we1, we2, we3 = we1 + 4.0 * _UNIT * abs(w1), we2 + 4.0 * _UNIT * abs(w2), we3 + 4.0 * _UNIT * abs(w3)
     W = math.fsum([w1, w2, w3])
     Whi = (W + we1 + we2 + we3) * (1.0 + 8.0 * _UNIT)
-    num = max(FB - FBe - Dp, FT - FTe - Dm)
-    lo = (num * num / Whi) * (1.0 - 4.0 * _UNIT) if (num > 0.0 and Whi > 0.0 and math.isfinite(Whi)) else 0.0
+    if not all(math.isfinite(v) for v in (Dp, Dm, FB, FBe, FT, FTe, W, Whi)):
+        rec.update(_target_empty('φ: 하한 합 넘침 (비유한)'))
+        return rec
+    #  분자 = 판 흐름 − 그 반올림 상한 − 결손 상한 · 뺄셈 두 번의 반올림 (≤ u·크기 · 각) 을 절대 여유로 뺀다 (상쇄가 커도 분자가 참값을
+    #  넘지 않게 — 상대 여유 (1 − 4u) 는 마지막 곱 · 나눗셈 몫)
+    num = max(FB - FBe - Dp - 4.0 * _UNIT * (abs(FB) + Dp), FT - FTe - Dm - 4.0 * _UNIT * (abs(FT) + Dm))
+    lo = (num * (num / Whi)) * (1.0 - 4.0 * _UNIT) if (num > 0.0 and Whi > 0.0) else 0.0
+    if not math.isfinite(lo):                              # num²/W 넘침 — 하한을 세울 수 없다
+        rec.update(_target_empty('φ: 하한 넘침 (비유한)'))
+        return rec
+    if 0.0 < lo < _TINY or (num > 0.0 and Whi > 0.0 and 0.0 < num / Whi < _TINY):
+        lo = 0.0                                           # 부정규 하한 = 상대 모형 밖 → 0 (안전한 쪽 · 판정은 하한 0 이면 실패)
     rec.update(target_lo=float(lo), target_W=float(W), target_flow_bot=float(FB), target_flow_top=float(FT),
                target_kcl_defect_bound=float(Dp + Dm))
     return rec
@@ -471,13 +562,17 @@ def target_bracket(L, b, phi, Ab, gb, At, gt, *, _tree=True, _defect_term=True):
 
 def target_judge(lo, hi, G, tol=CERT_TARGET_TOL):
     """ⓓ 판정 (생산 · `run_contract.conv_cert_problem` 공용 — 같은 함수) — 구간 [lo, hi] ∋ G* 에서 게시 G 의 보장 상대 오차.
-    통과 = 0 < lo ≤ hi 유한 · G > 0 유한 · (hi − lo)/G ≤ tol · max(hi − G, G − lo)/G ≤ tol (⇒ |G − G*| ≤ tol·G)."""
+    통과 = 0 < lo ≤ hi 유한 · G > 0 유한 · (hi − lo) ≤ τ·G · max(hi − G, G − lo) ≤ τ·G (⇒ |G − G*| ≤ τ·G).
+    ★ 비교는 **정확 분수** (lo · hi · G = 그 float 의 정확값 · τ = tol 의 10 진 글자 그대로 (1e-4 → 1/10⁴)) — float 나눗셈 (w > tol) 의
+    반올림이 칼날 (보장 오차가 τ 를 1e-20 넘는 해) 에서 통과 쪽으로 기울지 않게 (`scripts/test_step3_target_cert.py` T19).  기록 칸
+    `target_width_rel` · `target_err_bound_rel` 은 float 상대값 (사람이 읽는 값 · 판정에 쓰지 않는다)."""
+    from fractions import Fraction
     out = {'pass_d': False, 'target_width_rel': None, 'target_err_bound_rel': None, 'target_in_bracket': None, 'target_why': None}
 
     def _num(x):
         return isinstance(x, (int, float, np.floating, np.integer)) and not isinstance(x, (bool, np.bool_)) and math.isfinite(x)
-    if not (_num(lo) and _num(hi) and _num(G)):
-        out['target_why'] = f'non-finite / non-numeric (lo {lo!r} · hi {hi!r} · G {G!r})'
+    if not (_num(lo) and _num(hi) and _num(G) and _num(tol) and float(tol) > 0.0):
+        out['target_why'] = f'non-finite / non-numeric (lo {lo!r} · hi {hi!r} · G {G!r} · tol {tol!r})'
         return out
     lo, hi, G = float(lo), float(hi), float(G)
     if not (0.0 < lo <= hi):
@@ -489,10 +584,14 @@ def target_judge(lo, hi, G, tol=CERT_TARGET_TOL):
     w = (hi - lo) / G
     e = max(hi - G, G - lo) / G
     out.update(target_width_rel=w, target_err_bound_rel=e, target_in_bracket=bool(lo <= G <= hi))
-    if w > tol:
-        out['target_why'] = f'bracket width {w:.3e} > {tol:g} (bound too loose to certify)'
-    elif e > tol:
-        out['target_why'] = f'posted G error bound {e:.3e} > {tol:g}'
+    FL, FH, FG = Fraction(lo), Fraction(hi), Fraction(G)
+    lim = Fraction(repr(float(tol))) * FG
+    fw = FH - FL
+    fe = max(FH - FG, FG - FL)
+    if fw > lim:
+        out['target_why'] = f'bracket width {w:.3e} > {float(tol):g} (bound too loose to certify · exact comparison)'
+    elif fe > lim:
+        out['target_why'] = f'posted G error bound {e:.3e} > {float(tol):g} (exact comparison)'
     else:
         out['pass_d'] = True
     return out

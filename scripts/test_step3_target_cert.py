@@ -511,6 +511,17 @@ def t15():
     chk('T15c 대조 — 참 비대칭 (상대 1e-9) · 참 접지 (대각 +1e-6 상대) 는 그대로 NOT_CERTIFIABLE',
         c3.get('status') == getattr(CC, 'STATUS_NOT_CERTIFIABLE', '?') and c4.get('status') == getattr(CC, 'STATUS_NOT_CERTIFIABLE', '?'),
         (c3.get('target_ledger_problem'), c4.get('target_ledger_problem')))
+    #  ★ 변이 표가 찾은 것 — T15c 의 비대칭은 행 합 검사도 잡아서 대칭 검사 하나를 가르지 못했다.  행 합을 맞춘 참 비대칭 (원장 = 위 삼각 그대로 ·
+    #  행렬만 비대칭 = 솔버가 다른 계를 푼다) 은 대칭 검사만 잡는다.
+    L6 = L.tolil()
+    d10 = L[1, 0] * 1e-9
+    L6[1, 0] = L[1, 0] + d10
+    L6[1, 1] = L[1, 1] - d10                              # 행 1 합 그대로 (반올림 안)
+    L6 = L6.tocsr()
+    c7 = _cert_of(L6, b, phi, np.array([0]), np.array([1.0]), np.array([1]), np.array([1.0]))
+    chk('T15f 행 합을 맞춘 참 비대칭 (상대 1e-9) → NOT_CERTIFIABLE · 사유 = 비대칭 (대칭 검사만 잡는 꼴)',
+        c7.get('status') == getattr(CC, 'STATUS_NOT_CERTIFIABLE', '?') and '비대칭' in str(c7.get('target_ledger_problem')),
+        c7.get('target_ledger_problem'))
     #  b 의 합 순서 — 한 노드에 아래 판 간선 301 개 (1e16 + 1 × 300).  조립이 1 들을 먼저 더하면 b = 1e16 + 300 · 원장 (bincount = 배열
     #  순서 · 1e16 먼저) 은 1e16 → 차 300 (반올림 · 64u 고정 허용 ≈ 142 밖) → 받는다.  참 불일치 (b + 1e-6 상대) 는 거부.
     kb = 300
@@ -1282,7 +1293,7 @@ MUTANTS = (
      ('T7h [b 숫자 글자',)),
     ('밑넘침 검사 뺌', 'step3_conv_cert', (('    return bool(bad.any() or (nz & (z == 0)).any())', '    return False'),), ('t7',),
      ('T7u [부정규', 'T7u [곱 완전')),
-    ('대칭 허용을 넓게 (1e-12 → 1e-3)', 'step3_conv_cert', (('_SYM_TOL = 1.0e-12 ', '_SYM_TOL = 1.0e-3 '),), ('t15',), ('T15c',)),
+    ('대칭 허용을 넓게 (1e-12 → 1e-3)', 'step3_conv_cert', (('_SYM_TOL = 1.0e-12 ', '_SYM_TOL = 1.0e-3 '),), ('t15',), ('T15f',)),
     ('행 합 허용에서 항 수 비례 뺌 (고정 64u)', 'step3_conv_cert',
      (('tol_r = _LEDGER_TOL * (np.diff(Lc.indptr) + kb + kt + 8.0) * (ar + pl)', 'tol_r = _LEDGER_TOL * (ar + pl)'),), ('t15',),
      ('T15b',)),

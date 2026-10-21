@@ -812,8 +812,10 @@ def conv_cert_problem(cert, sigma):
         return 'CERT|inconsistent| ok ≠ ⓐ ∧ ⓑ ∧ ⓒ ∧ ⓓ'
     if not cert['ok']:
         return f"CERT|failed| ⓐ {cert['pass_a']} · ⓑ {cert['pass_b']} · ⓒ {cert['pass_c']} · ⓓ {cert['pass_d']}"
+    #  ★ 10-21 (굳히기) — 부동소수 보수 규칙 (`target_fp`) 도 봉인: 다른 규칙 (옛 여유) 으로 만든 구간을 이 코드의 판정으로 받지 않는다
     for k, want in (('rtol_max', _cc.CERT_RTOL_MAX), ('eps_I', _cc.CERT_EPS_I), ('resolve_tol', _cc.CERT_RESOLVE_TOL),
-                    ('target_tol', _cc.CERT_TARGET_TOL), ('target_version', _cc.TARGET_VERSION)):
+                    ('target_tol', _cc.CERT_TARGET_TOL), ('target_version', _cc.TARGET_VERSION),
+                    ('target_fp', _cc.TARGET_FP_RULE)):
         if cert.get(k) != want:
             return f'CERT|seal| {k} = {cert.get(k)!r} ≠ 이 코드의 봉인 {want!r}'
 
