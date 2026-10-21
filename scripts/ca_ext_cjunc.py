@@ -179,12 +179,110 @@ def sdcp_mod_protocol_record(*, c, tol_sj_um):
             'r_sdcp_um': float(CJ.SDCP_R_UM), 'rule': SDCP_RULE}
 
 
-def cjunc_evidence_record(*, counts, census, solve, receipts, fp, sdcp_mod_c, rejections=()):
-    """`ca_ext.cjunc.evidence` — 증거 (id 밖 · `cjunc_block_problem` 이 대조)."""
-    return {'counts': _jsonable(dict(counts)), 'census': _jsonable(dict(census)), 'solve': _jsonable(dict(solve)),
-            'receipts': _jsonable(dict(receipts)), 'fp': _jsonable(dict(fp)), 'rejections': _jsonable(list(rejections)),
-            'sdcp_mod_c': (None if sdcp_mod_c is None else float(sdcp_mod_c)), 'status': CJ.CJUNC_STATUS,
-            'qualifiers': list(CJ.CJUNC_QUALIFIERS), 'diagnostics': dict(DIAGNOSTICS_V0), 'label': LABEL_CJUNC}
+def cjunc_evidence_record(*, counts, census, solve, receipts, fp, sdcp_mod_c, rejections=(), sv_cf_request=None):
+    """`ca_ext.cjunc.evidence` — 증거 (id 밖 · `cjunc_block_problem` 이 대조).  ★ 10-21 (D) — sv_cf_request = SV 반사실 대조 요청
+    ({'threshold': None | 실수 ≥ 1}) · None = 끔 (칸 없음 = 옛 바이트)."""
+    out = {'counts': _jsonable(dict(counts)), 'census': _jsonable(dict(census)), 'solve': _jsonable(dict(solve)),
+           'receipts': _jsonable(dict(receipts)), 'fp': _jsonable(dict(fp)), 'rejections': _jsonable(list(rejections)),
+           'sdcp_mod_c': (None if sdcp_mod_c is None else float(sdcp_mod_c)), 'status': CJ.CJUNC_STATUS,
+           'qualifiers': list(CJ.CJUNC_QUALIFIERS), 'diagnostics': dict(DIAGNOSTICS_V0), 'label': LABEL_CJUNC}
+    if sv_cf_request is not None:
+        out['sv_counterfactual_request'] = _jsonable(dict(sv_cf_request))
+    return out
+
+
+#: ★ 2026-10-21 (D · 등록 R §5-6 SV 행 · Codex RCA-06) — SV 반사실 기록의 상태 어휘 (`carbon_junction.CjuncSolver.sv_counterfactual` ·
+#   `step3_sigma` 의 main_unconverged) — computed = 비 유한 · no_through_without_sv = 비 +∞ (위상 · JSON = null + `ratio_limit` 'inf') ·
+#   그 밖 = 비 없음.  사슬은 computed · no_through_without_sv 만 판정에 쓰고 나머지는 SV_UNCHECKED (등록 R §5-6).
+SV_CF_STATUSES = ('computed', 'no_through_without_sv', 'unconverged', 'nonpositive_cut_current', 'nonpositive_full_current',
+                  'main_unconverged', 'cjunc_electrode_short', 'all_floating_dropped', 'no_through_component')
+SV_CF_KIND = 'counterfactual_cut_sv_faces'
+_SV_CF_FLAGS = (None, 'SV_DEPENDENT')
+
+
+def _fin_or_none(x):
+    if isinstance(x, (bool, np.bool_)) or not isinstance(x, (int, float, np.integer, np.floating)):
+        return None
+    v = float(x)
+    return v if math.isfinite(v) else None
+
+
+def sv_cf_record(rec):
+    """반사실 원 기록 → 증거 투영 (JSON 유한 · 판정 칸만 · 사본 아님 — 원 기록의 값을 그대로 옮긴다).
+    비 +∞ (위상 — 두 판을 잇는 성분이 SV 면에만 있었다) = `sv_counterfactual_ratio` null + `ratio_limit` 'inf' (극한 R_j 의 `R_j_ohm` null +
+    `rj_limit` 'inf' 와 한 꼴) · 반사실 해의 증서 = 판 · 상태 · ok · ⓐ–ⓓ 만 (비유한 수 칸을 증거에 싣지 않는다)."""
+    if not isinstance(rec, dict):
+        return None
+    r_ = rec.get('sv_counterfactual_ratio')
+    lim = None
+    if isinstance(r_, (float, np.floating)) and math.isinf(float(r_)) and float(r_) > 0:
+        r_, lim = None, 'inf'
+    elif r_ is not None:
+        r_ = _fin_or_none(r_) if not isinstance(r_, str) else r_   # 문자열 · NaN = 검증기가 거부 (조용히 바꾸지 않는다 — NaN 은 None)
+    cc = rec.get('conv_cert')
+    ccs = ({k: cc.get(k) for k in ('version', 'status', 'ok', 'pass_a', 'pass_b', 'pass_c', 'pass_d')} if isinstance(cc, dict) else None)
+    bk = rec.get('backend_last_solve')
+    out = {'kind': rec.get('kind'), 'requested': rec.get('requested'), 'threshold': rec.get('threshold'), 'status': rec.get('status'),
+           'n_sv_faces_cut': rec.get('n_sv_faces_cut'), 'G_full_code': _fin_or_none(rec.get('G_full_code')),
+           'G_cut_code': _fin_or_none(rec.get('G_cut_code')), 'sv_counterfactual_ratio': r_, 'ratio_limit': lim,
+           'flag': rec.get('flag'), 'cg_info': rec.get('cg_info'), 'resid': _fin_or_none(rec.get('resid')), 'conv_cert': ccs,
+           'backend_last_solve': ({k: bk.get(k) for k in ('used', 'requested', 'precond', 'fallback_reason')} if isinstance(bk, dict) else None)}
+    return _jsonable(out)
+
+
+def _sv_cf_request_problem(req):
+    if not isinstance(req, dict) or set(req) != {'threshold'}:
+        return f"요청 꼴 {req!r} (= {{'threshold': None | 실수 ≥ 1}})"
+    t = req['threshold']
+    if t is None:
+        return None
+    if isinstance(t, bool) or not isinstance(t, (int, float)) or not math.isfinite(float(t)) or float(t) < 1.0:
+        return f'요청 문턱 {t!r} (유한 실수 ≥ 1 · 비 G_full/G_cut ≥ 1 = Rayleigh)'
+    return None
+
+
+def sv_cf_problem(ev, solved):
+    """증거의 SV 반사실 요청 ↔ 기록 → 문제 | None.  solved = 주 전자 솔브가 풀렸나 (영수증 applied · absent_geometry).
+    요청 없음 ⟹ 기록 없음 · 요청 + 풀림 ⟹ 기록 (모양 · 상태 · 비 · 표지가 서로 맞게) · 요청 + 조기 반환 ⟹ 기록 없음 (주 해가 없다)."""
+    sol = ev.get('solve') if isinstance(ev.get('solve'), dict) else {}
+    has_req, has_rec = 'sv_counterfactual_request' in ev, 'sv_counterfactual' in sol
+    if not has_req:
+        return 'sv_cf| 요청 없는 반사실 기록 (지금 요청한 런의 것이 아니다)' if has_rec else None
+    req = ev['sv_counterfactual_request']
+    why = _sv_cf_request_problem(req)
+    if why:
+        return f'sv_cf| {why}'
+    if not solved:
+        return 'sv_cf| 주 솔브가 조기 반환했는데 반사실 기록이 있다 (주 해 없이 비를 낼 수 없다)' if has_rec else None
+    rec = sol.get('sv_counterfactual')
+    if not isinstance(rec, dict):
+        return 'sv_cf| 요청했고 주 솔브가 풀렸는데 반사실 기록이 없다 (배선 누락)'
+    if rec.get('kind') != SV_CF_KIND or rec.get('requested') is not True:
+        return f'sv_cf| 기록 종류 {rec.get("kind")!r} · requested {rec.get("requested")!r}'
+    thr = req['threshold']
+    if rec.get('threshold') != thr:
+        return f'sv_cf| 기록 문턱 {rec.get("threshold")!r} ≠ 요청 {thr!r}'
+    st = rec.get('status')
+    if st not in SV_CF_STATUSES:
+        return f'sv_cf| 모르는 상태 {st!r}'
+    r_, lim, fl = rec.get('sv_counterfactual_ratio'), rec.get('ratio_limit'), rec.get('flag')
+    if st == 'computed':
+        if isinstance(r_, bool) or not isinstance(r_, float) or not math.isfinite(r_) or not r_ > 0.0 or lim is not None:
+            return f'sv_cf| computed 인데 비 {r_!r} · 표지 {lim!r} (유한 양수 · 표지 없음)'
+    elif st == 'no_through_without_sv':
+        if r_ is not None or lim != 'inf':
+            return f'sv_cf| no_through_without_sv 인데 비 {r_!r} · 표지 {lim!r} (null · inf — 위상의 +∞)'
+    elif r_ is not None or lim is not None:
+        return f'sv_cf| {st} 인데 비 {r_!r} · 표지 {lim!r} (비 없음)'
+    if fl not in _SV_CF_FLAGS:
+        return f'sv_cf| 모르는 표지 {fl!r}'
+    dep = thr is not None and (lim == 'inf' or (st == 'computed' and r_ >= float(thr)))
+    if (fl == 'SV_DEPENDENT') != dep:
+        return f'sv_cf| 표지 {fl!r} ↔ 문턱 {thr!r} · 비 {r_!r} · 표지 {lim!r} (문턱 판정과 기록이 갈렸다)'
+    nf = rec.get('n_sv_faces_cut')
+    if nf is not None and (type(nf) is not int or nf < 0):        # noqa: E721
+        return f'sv_cf| 끊은 SV 면 수 {nf!r}'
+    return None
 
 
 def sdcp_mod_evidence_record(*, n_sdcp_near, n_contracted_by_c):
@@ -193,10 +291,12 @@ def sdcp_mod_evidence_record(*, n_sdcp_near, n_contracted_by_c):
             's3_discriminating': bool(int(n_sdcp_near) > 0), 'label': LABEL_SDCP}
 
 
-def payload_prepare(sid, *, lo, vox, pts, phase, fid, kind, cjunc, sdcp_mod=None, ptfe_stamp):
+def payload_prepare(sid, *, lo, vox, pts, phase, fid, kind, cjunc, sdcp_mod=None, ptfe_stamp, sv_counterfactual=None):
     """payload 한 런의 S2 (+ S3) 준비 — 원장 (기하) → 정량 계획.  cjunc = 선언 dict (`REQUEST_KEYS_CJUNC`) · sdcp_mod = {'c': c} | None.
     거부 사유가 하나라도 있으면 ValueError (조립 전 · CG 0 · payload 가 구조화 사유로 멈춘다).
-    ★ Z3 — `cjunc['rj_limit']` ('inf' · 'zero') = 극한 런 (사다리 진단) — 계획은 `allow_rj_limits` · 원장 거부 사유는 정량 런과 같게 막는다."""
+    ★ Z3 — `cjunc['rj_limit']` ('inf' · 'zero') = 극한 런 (사다리 진단) — 계획은 `allow_rj_limits` · 원장 거부 사유는 정량 런과 같게 막는다.
+    ★ 10-21 (D · 등록 R §5-6) — sv_counterfactual = SV 반사실 대조 노브 ({'threshold': None | 실수 ≥ 1} · None = 끔 = 옛 계획 · 옛 지문) —
+      `carbon_junction.cjunc_plan` 그대로 넘긴다 (요청 꼴 검사 = 그 함수 · 사본 없음)."""
     _unk = sorted(k for k in cjunc if k not in REQUEST_KEYS_CJUNC + ('rj_limit',))
     if _unk:
         raise ValueError(f'모르는 접합 선언 칸 {_unk} (선언 칸 = {REQUEST_KEYS_CJUNC} + rj_limit)')
@@ -217,12 +317,18 @@ def payload_prepare(sid, *, lo, vox, pts, phase, fid, kind, cjunc, sdcp_mod=None
     if lim is not None and reg['rejections']:                 # ★ Z3 — 극한 런도 정량 런과 같은 그래프여야 한다 (사다리의 바닥 · 천장 · 점)
         raise ValueError('정량 거부 사유 (극한 런도 같게) — ' + ' · '.join(f"{x.get('code')}(n={x.get('n')})" for x in reg['rejections']))
     R0 = math.inf if lim == 'inf' else prot['R_j_ohm']
-    plan = CJ.cjunc_plan(reg, R0, unreg_law=prot['unreg_law'], ptfe_stamp=prot['ptfe_stamp'],
-                         ptfe_jlaw=prot['ptfe_jlaw'], sdcp_mod=(None if sdp is None else {'c': sdp['c']}),
-                         quantitative=(lim is None), allow_rj_limits=(lim is not None))
+    _pk = dict(unreg_law=prot['unreg_law'], ptfe_stamp=prot['ptfe_stamp'], ptfe_jlaw=prot['ptfe_jlaw'],
+               sdcp_mod=(None if sdp is None else {'c': sdp['c']}), quantitative=(lim is None), allow_rj_limits=(lim is not None))
+    if sv_counterfactual is None:                             # 끔 = 옛 호출 그대로 (키워드 없음 · 예외 경로도 옛 그대로)
+        plan = CJ.cjunc_plan(reg, R0, **_pk)
+    else:
+        try:
+            plan = CJ.cjunc_plan(reg, R0, sv_counterfactual=sv_counterfactual, **_pk)
+        except TypeError as e:                                # 노브 꼴 거부 (cjunc_plan 의 TypeError) 도 같은 구조화 사유로
+            raise ValueError(str(e)) from None
     if plan['rejections']:
         raise ValueError('정량 거부 사유 — ' + ' · '.join(f"{x.get('code')}(n={x.get('n')})" for x in plan['rejections']))
-    return {'plan': plan, 'protocol': prot, 'sdcp_protocol': sdp,
+    return {'plan': plan, 'protocol': prot, 'sdcp_protocol': sdp, 'sv_cf_request': plan.get('sv_counterfactual'),
             'fp': {'registry': reg['fp']['registry'], 'sid': reg['fp']['sid'], 'plan_rows': plan['fp_rows'],
                    'centreline': reg['fp']['centreline'], 'membership': reg['fp']['membership']},
             'counts': _jsonable(plan['record']['counts']), 'census': _jsonable(reg['census'])}
@@ -266,7 +372,10 @@ def solve_receipt(res, prep, *, name, disabled_why=None):
 def _solve_summary(rec):
     if not isinstance(rec, dict):
         return {'solved': False, 'reason': '주 솔브 cjunc 기록 없음'}
-    return _jsonable({k: rec.get(k) for k in _SOLVE_KEYS if k in rec})
+    out = {k: rec.get(k) for k in _SOLVE_KEYS if k in rec}
+    if 'sv_counterfactual' in out:                            # ★ 10-21 (D) — 반사실 기록 = 증거 투영 (JSON 유한 · inf 비 = null + 'inf')
+        out['sv_counterfactual'] = sv_cf_record(out['sv_counterfactual'])
+    return _jsonable(out)
 
 
 def payload_blocks(prep, receipts, res_main):
@@ -276,7 +385,7 @@ def payload_blocks(prep, receipts, res_main):
     ev = cjunc_evidence_record(counts=prep['counts'], census=prep['census'], solve=_solve_summary(rec),
                                receipts={k: receipts.get(k) or {'status': 'missing', 'why': '영수증 없음'} for k in SOLVES},
                                fp=dict(prep['fp']), sdcp_mod_c=(None if sdp is None else sdp['c']),
-                               rejections=list(prep['plan']['rejections']))
+                               rejections=list(prep['plan']['rejections']), sv_cf_request=prep.get('sv_cf_request'))
     out = {SUB_CJUNC: {'protocol': dict(prep['protocol']), 'evidence': ev}}
     if sdp is not None:
         out[SUB_SDCP] = {'protocol': dict(sdp),
@@ -431,6 +540,10 @@ def cjunc_block_problem(man):
             return f'solve| 축약 수 {solve.get("n_contracted")!r} ≠ 원장 {cnt["n_contract"]}'
         if solve.get('short') is not False:
             return f'solve| 단락 상태 {solve.get("short")!r} — 판–판 0 저항 경로는 유한 σ 로 게시하지 않는다 (J11)'
+    #  ★ 10-21 (D · 등록 R §5-6 SV 행) — SV 반사실 요청 ↔ 기록 (요청 없음 = 칸 없음 = 옛 바이트 · 검사 없음)
+    why = sv_cf_problem(ev, main['status'] in ('applied', 'absent_geometry'))
+    if why:
+        return why
     if ev.get('rejections') != []:
         return f'rejections| 정량 거부 사유가 남았다 {ev.get("rejections")!r}'
     sd = _block(man, SUB_SDCP)

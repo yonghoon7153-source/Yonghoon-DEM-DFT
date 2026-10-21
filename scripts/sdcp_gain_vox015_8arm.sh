@@ -29,6 +29,8 @@
 #   #   ★ Z1 (10-20) — CJUNC=1 · PTFE_STAMP=face_alpha · SDCP_MOD_C 는 STEP3_RTOL **필수** (없으면 팔 시작 전 거부 · 기본값 없음).
 #   #   VGCF σ = bulk 에서 직경 보존:  SIGMA_FIBRE_BULK=1e4 (S/cm · Endo 단섬유 · 설계 §1-2 #1 · #2 → vox 0.15 에서 7853.98) · 팔 이름 `_fb<값>` ·
 #   #   SIGMA_VGCF_OVERRIDE 와 동시 = 거부 · 끔 (기본) = 옛 bulk 100 그대로.
+#   #   ★ 10-21 (D · 등록 R §5-6) — SV 반사실 대조: CJUNC_SV_CF=1 (CJUNC=1 과만 · 같은 런 안 추가 풀이 · 주 σ 그대로 · 팔 이름 `_svcf` ·
+#   #     문턱 = 사슬 계획 · 보통은 사슬 `rint_r_chain.py --stage predict` 가 모서리 런에 정한다).
 set -uo pipefail
 
 VOX="${VOX:-0.15}"
@@ -467,7 +469,7 @@ _RCPT_JSON="$(P2_ARM_LIST="$ARM_LIST" python3 - "$SCR" "$VOX" "$BRIDGE_UM" "$FIB
                   "CJUNC_UNREG_LAW=${CJUNC_UNREG_LAW:-}" "CJUNC_S_MIN_UM=${CJUNC_S_MIN_UM:-}" \
                   "CJUNC_TOL_FF_UM=${CJUNC_TOL_FF_UM:-}" "CJUNC_PTFE_JLAW=${CJUNC_PTFE_JLAW:-}" \
                   "SDCP_MOD_C=${SDCP_MOD_C:-}" "STEP3_RTOL=${STEP3_RTOL:-}" \
-                  "SIGMA_FIBRE_BULK=${SIGMA_FIBRE_BULK:-}" <<'PYRCPT'
+                  "SIGMA_FIBRE_BULK=${SIGMA_FIBRE_BULK:-}" "CJUNC_SV_CF=${CJUNC_SV_CF:-}" <<'PYRCPT'
 import json, os, sys
 sys.path.insert(0, sys.argv[1])
 import run_contract as RC

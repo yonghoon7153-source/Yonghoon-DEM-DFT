@@ -255,9 +255,17 @@ def check_arm(path, want, expect_backend=None, receipt=None):
     if _fm:
         return (f'manifest 에 실패/누락 component 가 있다: {sorted(set(_fm))} '
                 f'(status={_man.get("status")}) — 재활용하지 말 것')
+    #  ★★ 2026-10-21 (D · 등록 R §5-0 · Codex RCA-13 · 1저자 Q7 ③) — **다음 세대 팔의 해 상태** (`run_contract.next_gen_state` — 사슬과
+    #    같은 함수).  VALID_ZERO_TOPOLOGY (바닥 극한 · σ 0 이 정상 결과) · ELECTRODE_SHORT (J11 · σ = +∞ · σ 칸 None) 는 **조기 반환 해**라
+    #    전자 component 가 not_solvable · σ > 0 아님 · backend 기록 없음 (CG 가 안 돌았다) — 증서가 그 상태를 결합할 때만 아래 세 검사
+    #    (complete · 수치 증거 · backend) 를 그 상태의 꼴로 바꾼다.  옛 세대 (p2) · 증서 없는 σ 0 · 상태 위반 = 그대로 거부 (옛 거동).
+    #  ⚠ 이 함수는 상태를 **완화에만** 쓴다 — 상태 증서가 서지 않으면 (None) 옛 검사 흐름 그대로 (새 거부를 더하지 않는다 · 증서 판정 =
+    #    사슬 · 판정기의 `next_gen_cert_ok` 몫).  그래서 σ 0 · σ None 인데 상태가 안 서는 팔은 아래 옛 검사가 거부한다.
+    _ngs, _ngw = _RC.next_gen_state(s)
+    _ng_nonpos = _ngs in ('zero', 'short')
     #  ★ required component 가 **실제로 있고 complete** 인가.  없는 것은 통과가 아니다.
     _comp = (s.get('manifest') or {}).get('components')
-    if _comp is not None:
+    if _comp is not None and not _ng_nonpos:
         for _need in ('electronic',):                  # σ_e 팔의 최소 요구
             _cv = _comp.get(_need)
             if not isinstance(_cv, dict) or _cv.get('status') != 'complete':
@@ -290,9 +298,12 @@ def check_arm(path, want, expect_backend=None, receipt=None):
     #    `isinstance(ci,(int,float))` + `int(ci)` 로 **`cg_info = 0.5` 가 절삭돼 통과**했고
     #    (Codex 실측) 판정기의 사본도 똑같이 뚫려 있었다.  ⇒ `run_contract` 하나만 본다.
     #    `numeric_ok` 는 σ_e 유한 양수 · dof 양의 정수 · 수렴 conjunction 을 한 번에 본다.
-    _nok, _nwhy = _RC.numeric_ok(s)
-    if not _nok:
-        return f'수치 증거가 계약을 만족하지 않는다 — {_nwhy}'
+    #  ★ 10-21 (D) — 영값 · 단락 상태 = σ 가 정의상 양의 유한값이 아니다 (0 · +∞) · CG 가 안 돈 해 → 수치 증거 (σ > 0 · dof · 수렴 3 칸) 대신
+    #    상태 증서 (위 `next_gen_state`) 가 그 자리를 맡는다.  그 밖 = 옛 검사 그대로.
+    if not _ng_nonpos:
+        _nok, _nwhy = _RC.numeric_ok(s)
+        if not _nok:
+            return f'수치 증거가 계약을 만족하지 않는다 — {_nwhy}'
     #  ★★★ 2026-08-25 (R4-CX-02/05) — producer 와 **같은 계약**을 캐시 검사에도 건다.
     #    옛 판은 전자 top-level 만 봐서 계획 스키마·타입·비전자 증거가 전부 통과했다.
     _man = (s.get('manifest') or {})
@@ -321,11 +332,16 @@ def check_arm(path, want, expect_backend=None, receipt=None):
             return f'component_plan 스키마가 계약과 다르다 — {_pwhy}'
     #  ⚠ 계획이 없으면 required 를 파생할 수 없다 (옛 팔) — 전자축은 위 `numeric_ok` 소관.
     if _man.get('component_plan') is not None:
-        _eok, _ewhy = _RC.component_evidence_ok(
-            s, _RC.required_components(plan=_man['component_plan']))
+        _req_c = _RC.required_components(plan=_man['component_plan'])
+        if _ng_nonpos:                                   # ★ 10-21 (D) — 전자 결과 = 상태 증서 (σ 0 · +∞ 는 "유한 양수" 증거 꼴이 아니다)
+            _req_c = tuple(c for c in _req_c if c != 'electronic')
+        _eok, _ewhy = _RC.component_evidence_ok(s, _req_c)
         if not _eok:
             return f'계획한 component 의 증거가 없다 — {_ewhy}'
-    if expect_backend:
+    #  ★ 10-21 (D) — 조기 반환 상태 (영값 · 단락 · CG 없음) 는 backend 가 정의되지 않는다 (위상 판정 = CPU 조립 · `_solve_cg` 를 안 불렀다).
+    #    단 행렬 그래프 영값 (CG 가 돈 영값) 은 backend 가 있어야 한다 — 조기 반환 (전자 not_solvable) 일 때만 건너뛴다.
+    _no_cg = _ng_nonpos and ((_man.get('components') or {}).get('electronic') or {}).get('status') == 'not_solvable'
+    if expect_backend and not _no_cg:
         got = backend_of(s)
         #  ★ 2026-08-25 (CDXR3-2) — **fail-closed**.  옛 판은 `got` 이 비면 통과시켰다
         #    (backend metadata 를 지운 mutant 가 그대로 통과).  모르는 것은 통과가 아니다.
