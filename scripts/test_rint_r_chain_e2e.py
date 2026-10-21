@@ -22,6 +22,9 @@
   E7  값 봉인 (실물) — 사슬 화면 · ladder_summary.json · 러너 로그에 팔 σ 숫자 없음 (가짜 러너 시험 X01 의 실물 짝)
   E6  (현재 꼴 기록) 생산 킷 꼴 payload 줄 (`--joule-heat` · `--save-step4-grid` — `mpm_input_from_case.py` 이 늘 싣는다) = 다음 세대 런
       거부 (payload 입구 JOULE · STEP4_GRID) → 사슬 RUNNER_RC (fail-closed) — 실제 런을 막는 것.  고치면 이 검사를 바꾼다.
+  E8  ★ 3판 (10-21 · 등록 R §5-0) 바닥 VALID_ZERO_TOPOLOGY (실물) — AM 이 판에 안 닿는 침대 (접합을 끊으면 두 판을 잇는 성분이 없다) ·
+      실제 payload 의 조기 반환 해 (σ 0 · 상태 증서) 가 정본 계약 · 사슬을 지나 사다리가 계속된다 (2판 = ARM_UNREADABLE · NOT_COMPUTED)
+  ★ 3판 — 계획 `rint-r-plan-v2` (결과 전 등록 숫자 넷 = 시험 값) · S0 계획 (`ca_s0_census.make_plan` · 정준 바이트) · 등록 사본 두 줄 · `--s0-plan`
 ⚠ PASS 는 사슬 · 러너 · payload 배선이 실물로 이어진다는 증거이지 R_j 값 · 판정의 물리 검증이 아니다 (픽스처 σ 는 의미 없다).
 """
 import argparse
@@ -93,12 +96,13 @@ def _line(a, b, step=0.03):
     return a[None] + np.linspace(0.0, 1.0, n)[:, None] * (b - a)[None]
 
 
-def make_bed(d, sdcp=False):
+def make_bed(d, sdcp=False, am_floating=False):
     """AM_S 기둥 (r 0.3 µm 구 셋 · 겹침 = 아래 판 ↔ 위 판 우회로 · 바닥 σ 의 몫) + SE 격자점 + **세로 VGCF 두 가닥이 Z_J 에서 끝을 맞댄다**
-    (아래 판 ↔ 접합 ↔ 위 판 = 직렬 · 접합 instance 하나) + PTFE 줄 하나 (AM 목을 가로지른다 · face_alpha 행 > 0) + (sdcp) SDCP 점 하나."""
+    (아래 판 ↔ 접합 ↔ 위 판 = 직렬 · 접합 instance 하나) + PTFE 줄 하나 (AM 목을 가로지른다 · face_alpha 행 > 0) + (sdcp) SDCP 점 하나.
+    ★ 3판 — am_floating = AM 구 둘이 판에 안 닿는다 (가운데 · r 0.15 µm) → 바닥 (R_j → ∞) 에 관통 성분 없음 = VALID_ZERO_TOPOLOGY (E8)."""
     rows = ['# type,x,y,z,r  (Rint ② Z3 사슬 끝-끝 픽스처 · LIGGGHTS 단위 mm)']
-    for z in (0.3, 0.75, 1.2):
-        rows.append('2,%.9f,%.9f,%.9f,%.9f' % (0.45e-3, 0.45e-3, z * 1e-3, 0.3e-3))
+    for z in ((0.6, 0.9) if am_floating else (0.3, 0.75, 1.2)):
+        rows.append('2,%.9f,%.9f,%.9f,%.9f' % (0.45e-3, 0.45e-3, z * 1e-3, (0.15e-3 if am_floating else 0.3e-3)))
     with open(os.path.join(d, 'am.csv'), 'w', encoding='utf-8') as f:
         f.write('\n'.join(rows) + '\n')
     g = np.arange(0.0375, L_LAT, 0.075)
@@ -120,13 +124,13 @@ def make_bed(d, sdcp=False):
     return d
 
 
-def make_root(name, kit_sh=KIT_SH):
+def make_root(name, kit_sh=KIT_SH, am_floating=False):
     ws = os.path.join(TD, name)
     os.makedirs(ws)
     for kit, sdcp in ((SBE_KIT, False), (DBE_KIT, True)):
         run = os.path.join(ws, kit, 'run_1')
         os.makedirs(run)
-        make_bed(run, sdcp=sdcp)
+        make_bed(run, sdcp=sdcp, am_floating=am_floating)
         with open(os.path.join(ws, kit, 'run_mpm.sh'), 'w', encoding='utf-8') as f:
             f.write(kit_sh)
         os.symlink('run_1', os.path.join(ws, kit, 'latest_run'))
@@ -135,23 +139,31 @@ def make_root(name, kit_sh=KIT_SH):
 
 
 def make_plan_and_reg():
-    plan = {'schema': RR.PLAN_SCHEMA, 'len_law': 'len_scaled_v0', 'unreg_law': 'cut', 's_min_um': 0.6, 'tol_ff_um': 0.05,
-            'step3_rtol': 1e-12, 'p2_extra': '--step3-maxiter 60000'}
+    """★ 3판 — R 런 계획 v2 (결과 전 등록 숫자 넷 = 시험 값 · 등록 숫자 아님) · S0 단계 1 계획 (정본 make_plan · 정준 바이트) ·
+    등록 사본 (| 계획 해시 | · | S0 계획 해시 | 두 줄)."""
+    import ca_s0_census as S0
+    plan = {'schema': 'rint-r-plan-v2', 'len_law': 'len_scaled_v0', 'unreg_law': 'cut', 's_min_um': 0.6, 'tol_ff_um': 0.05,
+            'step3_rtol': 1e-12, 'p2_extra': '--step3-maxiter 60000', 'max_ladder_points': 12, 'calib_rj_ratio_max': 'none',
+            'sv_cf_threshold': 2.0, 'sv_cf_scope': 'R_j0'}
     pp = os.path.join(TD, 'plan.json')
     with open(pp, 'w', encoding='utf-8') as f:
         json.dump(plan, f, indent=1, sort_keys=True)
     sha = hashlib.sha256(open(pp, 'rb').read()).hexdigest()
+    _p, s0b, s0sha = S0.make_plan(0.05, S0.R_F_UM, S0.GAP_TOL_PRODUCTION, {'fixture': 'test_rint_r_chain_e2e'})
+    sp = os.path.join(TD, 's0_plan.json')
+    with open(sp, 'wb') as f:
+        f.write(s0b)
     out = []
     for ln in open(REG_DOC, encoding='utf-8').read().splitlines():
-        if ln.startswith('| 계획 해시 |'):
+        if ln.startswith('| 계획 해시 |') or ln.startswith('| S0 계획 해시 |'):
             cells = ln.split('|')
-            cells[-2] = f' `{sha}` '
+            cells[-2] = f' `{sha if ln.startswith("| 계획 해시 |") else s0sha}` '
             ln = '|'.join(cells)
         out.append(ln)
     rp = os.path.join(TD, 'reg_ok.md')
     with open(rp, 'w', encoding='utf-8') as f:
         f.write('\n'.join(out) + '\n')
-    return pp, rp
+    return pp, sp, rp
 
 
 @contextlib.contextmanager
@@ -172,9 +184,9 @@ def chain_env(ws):
 
 
 def run_ladder(ws, out, law='P0', max_hours='0.5'):
-    pp, rp = make_plan_and_reg()
+    pp, sp, rp = make_plan_and_reg()
     argv = ['--stage', 'ladder', '--law', law, '--target', str(RR.TARGET_SBE_MS), '--runner', RUNNER, '--root', ws, '--plan', pp,
-            '--registration', rp, '--max-hours', max_hours, '--out', out]
+            '--s0-plan', sp, '--registration', rp, '--max-hours', max_hours, '--out', out]
     buf = io.StringIO()
     t0 = time.time()
     had = hasattr(RR, 'EXPECT_BACKEND')
@@ -290,6 +302,34 @@ def t_ladder():
         print(f'    E5 건너뜀 — 사다리 상태 {s.get("status")} (origin 검사는 CALIBRATED 뒤에만 · 픽스처 σ 가 표적을 안 끼면 정상)')
 
 
+def t_zero_floor():
+    ws = make_root('e8', am_floating=True)
+    out = os.path.join(TD, 'runs', 'e8_P0')
+    r = run_ladder(ws, out)
+    s = r['sum'] or {}
+    runs = s.get('runs') or []
+    roles = [x.get('role') for x in runs]
+    stop = s.get('stop') or {}
+    print(f'    보고 E8 — 사슬 rc {r["rc"]} · 상태 {s.get("status")} · 런 {len(runs)} ({roles}) · {r["seconds"]:.0f} s · 멈춤 {stop.get("code")} · '
+          f'상태 기록 {(s.get("ladder") or {}).get("states")}')
+    f0 = (runs[0].get('arms_read') or [{}])[0] if runs else {}
+    chk('E8a 바닥 (CJUNC_RJ=inf · AM 이 판에 안 닿음) = 실제 payload 조기 반환 해 → 팔 상태 zero (σ 0 · 증서 VALID_ZERO_TOPOLOGY) · 정본 계약 통과 · '
+        '사슬이 받아 다음 런 (천장) 으로',
+        len(runs) >= 2 and roles[:2] == ['floor', 'ceiling'] and runs[0].get('rc') == 0 and f0.get('state') == 'zero',
+        (r['rc'], roles, f0, stop, r['so'][-1500:]))
+    if runs and runs[0].get('arms_read'):
+        s3, m, _rc = arm_doc(out, runs[0])
+        cc = s3.get('conv_cert') or {}
+        chk('E8b 바닥 팔 — σ 정확히 0.0 · 증서 상태 VALID_ZERO_TOPOLOGY · 출처 early_return · 사유 = 결과 사유 (영값 위상) · 전자 not_solvable',
+            s3.get('sigma_e_eff_S_cm') == 0.0 and cc.get('status') == 'VALID_ZERO_TOPOLOGY' and cc.get('zero_source') == 'early_return'
+            and cc.get('reason') == s3.get('reason') and ((m.get('components') or {}).get('electronic') or {}).get('status') == 'not_solvable',
+            (s3.get('sigma_e_eff_S_cm'), cc.get('status'), cc.get('zero_source'), s3.get('reason')))
+    chk('E8c 사다리가 등록 결과 이름으로 끝난다 · 바닥에서 멈추지 않는다 (ARM_UNREADABLE · NOT_COMPUTED · 계약 · 러너 멈춤 아님)',
+        s.get('status') in RR.REGISTERED_OUTCOMES | {'CALIBRATED'} and stop.get('run') != (runs[0].get('name') if runs else None)
+        and stop.get('code') not in ('RUNNER_RC', 'ARM_CONTRACT', 'CA_EXT_RECORD', 'MANIFEST_MISMATCH', 'GENERATION', 'SID_GRID',
+                                     'RECEIPT_LEAN', 'ARM_JSON_COUNT', 'ARM_UNREADABLE', 'TIME_LIMIT'), (s.get('status'), stop))
+
+
 def t_prod_form():
     ws = make_root('e6', kit_sh=KIT_SH_PROD)
     out = os.path.join(TD, 'runs', 'e6_P0')
@@ -324,7 +364,7 @@ def main():
     t0 = time.time()
     sel = [x for x in ARGS.only.split(',') if x]
     try:
-        for tag, fn in (('E1', t_ladder), ('E6', t_prod_form)):
+        for tag, fn in (('E1', t_ladder), ('E6', t_prod_form), ('E8', t_zero_floor)):
             if sel and tag not in sel:
                 continue
             print(f'\n── {tag}')
