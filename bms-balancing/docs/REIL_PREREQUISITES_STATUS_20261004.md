@@ -2010,3 +2010,43 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
   `GIT_OBJECT_DIRECTORY` · `GIT_TRACE*` 등) 은 없다 — 정정은 이 관측에 기대지 않고 규칙으로 고정한다 (V3-04).
 - **다음:** 정정 범위안 v4 `docs/REIL_C4E_E1_REVISION_SCOPE_v4_20261021.md` → 사용자 범위 채택 → 비활성 초안 v4 · 승인 요청 v4 · 사전 검토 발송문 v4.
   그 전에는 초안 작성 · 실행 0.
+
+## §79 C4-E · E1 정정 범위 v4 채택 (사용자 결정) — 비활성 초안 다섯 · 승인 요청 v4 (E1-0 한정) · 사전 검토 발송문 v4 (2026-10-21 KST · 정적 검사만 · 실행 0 · 덧붙임 — 위 §0–§78 은 그대로)
+
+- **사용자 (2026-10-21):** "권고대로" — 범위안 v4 (`2e2a20c6`) 의 권장 둘을 그대로 채택: (1) 범위대로 비활성 초안 · 승인 요청 v4 · 사전 검토 발송문 v4 까지
+  쓰고 멈춤 (정적 검사만 · 실행 0) · (2) V3-04 = A (수동 Git 기록을 없애고 외곽 실행기 기록만 증거로 · 절차 Git 앞에 env 이름 허용 목록 중지 조건). 이 채택은
+  launcher · 실행기 복사 · 시험 · driver · 탐침 · 읽기 경로 · fetch · run 승인이 아니다.
+- **고정한 초안 다섯 (docs · `.py.txt`):**
+
+  | 초안 | sha256 | bytes | 복사할 곳 (E1-0 승인 뒤) |
+  |---|---|---:|---|
+  | `REIL_C4E1_LAUNCHER_DRAFT_v4_20261021.py.txt` — launcher v4 | `6584d2dc75303f10a61bf13c260074b9a089a7774f7311618ed1c12f11cd5aa8` | 51,598 | `scripts/reil_c4e1_launch.py` (GREEN 직전) |
+  | `REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v4_20261021.py.txt` — RED 골격 (함수 35) | `b3b56fe3a2aa62e06671b78bcf8cbd3a288fb5a969534bd82025657264f0245c` | 13,646 | 같은 곳 (RED 둘) |
+  | `REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v4_20261021.py.txt` — launcher 대조 27 | `4ceb9bdb2a21975db483c726e603260142f7d495be7e602f97320a220e8109b8` | 49,369 | `tests/test_reil_c4e1_launch.py` |
+  | `REIL_C4E1_RUNNER_CONTROLS_DRAFT_v2_20261021.py.txt` — 외곽 실행기 대조 11 | `4d2e9ab47a65cab275529938ff123e6e450499501dc56e5405a58de3f1101897` | 34,773 | `tests/test_reil_c4e1_runner.py` |
+  | `REIL_C4E1_STEP_RUNNER_DRAFT_v4_20261021.py.txt` — E1-0 외곽 실행기 v4 (봉인 표 포함) | `091daff02ec2887294de917a24b76c11ec0a6ff2e6def63c4c81a9f853e25960` | 35,948 | `<E0>/00_step_runner.py` |
+
+- **정정 대응 (요청서 v4 §2 · §3-2):** V3-01 — 정리 기한은 run_step 이 정리 단계에 들어갈 때 한 번 만들고 cleanup 은 받기만 함 (`deadline` 필수) · 모든 루프가
+  관측 시작 전에 기한 검사 · 기한 뒤에는 즉시 동작 (회수 · SIGKILL) · 비차단 확인 · 기록만 · 관측 0 / kill 뒤 재관측 없음 → `unverified` · cleanup 안의 예외는
+  cleanup 이 잡아 같은 기한으로 비상 동작 · 복구는 같은 기한 · `times.cleanup_s` 는 정리 원점부터 / V3-02 — launcher · 실행기 `entry_exists` (lstat) / V3-03 —
+  실행기 `proc_table` · launcher `proc_members` 바이트 읽기 · PID 별 넓은 포착 · 스캔 계속 / V3-04 (A) — `00_start.txt` · `04_end.json` 은 Git 없음 · 수동
+  porcelain 파일 둘 삭제 · 증거의 Git 상태는 실행기 기록만 · 절차 Git 앞의 `GIT_*` 이름 확인 (허용 목록 `GIT_ASKPASS` · `GIT_CONFIG_COUNT` ·
+  `GIT_CONFIG_KEY_<n>` · `GIT_CONFIG_VALUE_<n>` · `GIT_EDITOR` · `GIT_SSL_CAINFO` · `GIT_TERMINAL_PROMPT` · 밖이면 멈춤 · 고정 명령 · a 와 f 결과 기록 ·
+  b–e 도 같은 줄에서) · 코드 변화 없음 / V3-N1 — 실행기 `errors` 항목 셋 (prepare / SourceMismatch · prepare / SubreaperFailed · record / GitRecordFailed) /
+  S5 (자체) — launcher `git_run` · 실행기 `git` 의 `errors="replace"`.
+- **새 총수 (범위안 v4 §2 의 계획과 같음):** launcher 대조 27 (v3 26 + l27 · l12 · l14 수정) · 외곽 실행기 대조 11 (v3 8 + r9 · r10 · r11 · r2 · r3 · r6 · r7
+  수정) · RED-L 27 실패 (모두 NotImplementedError) · RED-R 11 실패 (v2 실행기 바이트 — r1 AssertionError + r2–r11 AttributeError) · GREEN 65 (E0 21 + N1 6 +
+  27 + 11 · 건너뜀 0) · driver 8 회 (r6 1 · r7 6 · r8 1). 새 · 수정 대조의 입력 · 기대 · 이유 · 호출 경로는 요청서 v4 §6 의 표 (회신 §78 의 주의).
+- **정적 검사 (실행 0):** AST 파싱 다섯 · 이름 검사 (`__file__` 외 미해결 0) · ruff `--isolated` pyflakes 규칙 (골격의 미사용 import 11 외 0 — v3 골격과 같은
+  설계) · 골격의 import · 상수 61 문 (+ `if __name__` 블록) = 고정 구현 (AST 동일) · 함수 35 의 이름 · 순서 · 서명 동일 · 골격 본문 모두 NotImplementedError ·
+  `L.*` 39 (`__file__` 포함) · `R.*` 16 이 대상에 있음 (r2–r11 첫 줄의 이름은 v2 에 없음) · 봉인 표 = 초안 넷 · HEAD 의 기존 열하나 (불일치 0) · 절차 Git 이름
+  확인 명령의 구문 · 허용 목록 패턴 (이름 문자열로만 대조 · env 를 읽지 않음) · 비밀 검사 0 건. 골격은 `make_skeleton_v4.py`, 봉인 표는 `fill_runner_v3.py`
+  (같은 정적 치환) 로 만들었고, 봉인 표는 초안 넷 확정 뒤 한 번 채웠다.
+- **밝힌 것 (요청서 v4 §8 — 21 · 새로 넣은 것):** RED-R 은 v2 바이트의 인터페이스 RED 이고 새 반례 대조가 v3 바이트에서 실패하는지는 시험하지 않음 (정적 판단만
+  · V3-01 의 행동은 v3 에 `deadline` 인자가 없어 대조로 재현 불가 — 발송문 Q5 로 물음) · 기한 전에 시작한 관측 하나의 길이에는 상한이 없음 · launcher 정리
+  루프는 이번 정정 대상 아님 (E1-1–3 요청에서) · 이름 확인은 `GIT_*` 이름만 · 정리 안의 예외는 단계 수준 `errors` 에 따로 넣지 않음 · `SubreaperFailed` 대조
+  없음 · `unverified` 는 새 끝 상태.
+- **문서:** 승인 요청 v4 `docs/REIL_C4E_E1_APPROVAL_REQUEST_v4_20261021.md` (`2078cc50…` · 38,474 B · E1-0 한정 · 단계 셋 · Git 없는 수동 기록 · 절차 Git
+  중지 조건 · 밝힐 것 21) · 사전 검토 발송문 v4 `docs/REIL_C4E_E1_PREREVIEW_SEND_v4_20261021.md` (`f5238873…` · 질문 6).
+- **다음:** 사전 검토 발송 (사용자 결정) → 수용 → 사용자의 E1-0 한정 승인 → E1-0 → 결과 검토 → E1-1–3 승인 요청 (FUTURE-01 정정 · E1-0b 포함). 이 기록은
+  어느 단계의 실행 승인도 아니다.
