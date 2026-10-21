@@ -2698,6 +2698,41 @@ def t_near_tie():
         f"{None if not ok_ else (float(I['Lc'][dis[0]]), [np.asarray(S['X_j'][e]).round(6).tolist() for e in rows_])} ↔ {foot_l}")
 
 
+@case('JI-KNOB')
+def t_ji_knob():
+    """원장 기록 둘 (10-21 · 시험은 구현 뒤 · 변이 표에서 보탬):
+    ① instance 접합 전류 = 그 instance 분산 간선 전류의 **합** — CX (A → B 가 접합으로만 · 간선 5) 에서 instance 하나의 전류 = 단자 전류 (1e-10)
+       · 간선별 전류 합과 같다 (분산판 v0 의 record · 옛 = instance 하나 = 간선 하나).
+    ② 반사실 노브는 계획 지문 (`plan_rows_fp`) 에 든다 — 계획을 만든 뒤 문턱만 바꾸면 (2.0 → 1.0) 솔브 입구 거부 · 노브를 빼도 거부."""
+    P = rows(CX)
+    sid, _ = bed(P, CX_N)
+    reg = _try(lambda: registry(sid, P), None)
+    r = _try(lambda: solve(sid, sig_e(), CX_N, plan(reg, 200.0)), None)
+    ok_ = r is not None and len(reg['instances']['fi']) == 1
+    jI = np.asarray(r['_cjunc']['junction_current_code']) if ok_ else None
+    sub_I = None
+    if ok_:
+        s = r['_cjunc']['sys']
+        js = np.flatnonzero(np.asarray(s['CAT']) == CJ._CAT['vv_junction'])
+        phi = np.asarray(r['_cjunc']['phi_dof'])
+        sub_I = float(np.sum(np.asarray(s['G'])[js] * (phi[np.asarray(s['u'])[js]] - phi[np.asarray(s['v'])[js]])))
+    I = I_of(r, CX_N) if ok_ else math.nan
+    chk('JI-KNOB ① CX — instance 접합 전류 = 분산 간선 5 전류 합 = 단자 전류 (1e-10)',
+        ok_ and len(jI) == 1 and len(np.flatnonzero(np.asarray(r['_cjunc']['sys']['CAT']) == CJ._CAT['vv_junction'])) == 5
+        and rel(abs(float(jI[0])), I) < 1e-10 and rel(float(jI[0]), sub_I) < 1e-12, f'{jI} · 간선 합 {sub_I} · I {I}')
+    P2 = cat_rows(rows(SVX), rows(SVX_SDCP, phase=5, kind=0, fid0=700))
+    sid2, _ = bed(P2, SVX_N)
+    reg2 = _try(lambda: registry(sid2, P2, tol_sj_um=0.1, r_sdcp_um=0.5), None)
+    pl = _try(lambda: plan(reg2, SVX_RJ, sv_counterfactual={'threshold': 2.0}), None)
+    good = _try(lambda: solve(sid2, sig_e(), SVX_N, pl), None) if pl is not None else None
+    pl_t = dict(pl or {}, sv_counterfactual={'threshold': 1.0})
+    pl_d = dict(pl or {}, sv_counterfactual=None)
+    chk('JI-KNOB ② 노브 = 계획 지문 — 정상 계획은 풀린다 · 만든 뒤 문턱만 바꿈 (2.0 → 1.0) = 입구 거부 · 노브 뺌 = 입구 거부',
+        good is not None and good.get('cjunc', {}).get('sv_counterfactual', {}).get('threshold') == 2.0
+        and raises(lambda: solve(sid2, sig_e(), SVX_N, pl_t)) and raises(lambda: solve(sid2, sig_e(), SVX_N, pl_d)),
+        f"{None if good is None else good.get('cjunc', {}).get('sv_counterfactual', {}).get('threshold')}")
+
+
 @case('OFF-IND')
 def t_off_independent():
     """보장 — 접합 끔 (cjunc=None) 솔브는 carbon_junction 을 부르지도 읽지도 않는다 (구조 증거 · C0 의 옛 기준 비트 대조와 별개):
