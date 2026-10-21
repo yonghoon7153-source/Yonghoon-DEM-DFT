@@ -1013,9 +1013,13 @@ def t_states_payload():
         rc_b, log_b, q_b = run_payload(dd, OFF + LEAN2 + CJ + ['--step3-rtol', '1e-12', '--step3-cjunc-sv-cf'], out='cf_on.json')
         ea, eb = (cj_block(q_a).get('evidence') or {}), (cj_block(q_b).get('evidence') or {})
         svb = (eb.get('solve') or {}).get('sv_counterfactual') or {}
-        chk('SP5 노브 켬 — rc 0 · 증거 요청 {threshold: None} · 기록 (종류 · 요청 · 상태 · 문턱 None · 표지 None) · ca_ext_record_ok',
+        #  ★ 10-21 (A 병합) — 기록 종류 = producer 정본 상수 (`carbon_junction.CJUNC_SV_CF_KIND` · A v3 = SV 다리만 끊음 · 옛 글자
+        #    'counterfactual_cut_sv_faces' = SV 면 전부 = 다른 양) — 시험이 옛 정의 이름을 박아 두지 않는다
+        import carbon_junction as _cjm
+        chk('SP5 노브 켬 — rc 0 · 증거 요청 {threshold: None} · 기록 (종류 = producer 상수 · 요청 · 상태 · 문턱 None · 표지 None) · '
+            'ca_ext_record_ok',
             rc_b == 0 and eb.get('sv_counterfactual_request') == {'threshold': None}
-            and svb.get('kind') == 'counterfactual_cut_sv_faces' and svb.get('requested') is True
+            and svb.get('kind') == getattr(_cjm, 'CJUNC_SV_CF_KIND', 'counterfactual_cut_sv_faces') and svb.get('requested') is True
             and svb.get('status') in ('computed', 'no_through_without_sv') and svb.get('threshold') is None and svb.get('flag') is None
             and RC.ca_ext_record_ok(man_of(q_b)) == (True, None), (rc_b, svb, log_b.strip()[-400:]))
         chk('SP6 노브 켬 = 주 결과 그대로 — σ 비트 같음 · 증서 같음 · p3ca id 같음 · protocol 같음 · 끈 런에는 요청 · 기록 칸 없음',
@@ -1042,8 +1046,8 @@ def t_states_payload():
 #:   경우 표지 = 그 칸이 나와도 되는 켠 노브 (face_alpha · rtol · cjunc) — 노브를 다 끈 경우 (off · centerline · LEAN 3) 에는
 #:   어떤 칸도 허용되지 않는다 (끈 경로 비트 같음).  σ · n_dof · CG 결과 칸은 표에 없다 = 언제나 실패.
 #:   세대: Z3 = 기반이 ff9d72afe (Z3) 이전일 때 · RCA1 = 기반 47d23baba ↔ a76f59d0d (Codex RCA 수정 1 회차 — B 증서 v2 · S1 부피 ·
-#:   A 접합 v2) · RCA2 = a76f59d0d 뒤 B 의 증서 ↔ 런 결합 (PRE-impl-07).  ⚠ 새 칸을 더하는 묶음은 같은 커밋에서 이 표에 한 줄 (세대 표지) 을
-#:   올린다 · 바로 앞 기반과는 `--expect-identical`.
+#:   A 접합 v2) · RCA2 = a76f59d0d 뒤 B 의 증서 ↔ 런 결합 (PRE-impl-07) · A 의 접합 v3 (PRE-impl-01–06 · Q-A–Q-D).  ⚠ 새 칸을 더하는
+#:   묶음은 같은 커밋에서 이 표에 한 줄 (세대 표지) 을 올린다 · 바로 앞 기반과는 `--expect-identical`.
 OLD_DIFF_ALLOW = (
     ('Z3', '+', r'manifest\.ca_ext\.ptfe_face\.evidence\.fp\.sid_off', 'face_alpha', 'off 격자 sid 지문 (Z3)'),
     ('Z3', '+', r'(ion_)?cg_iters', 'rtol', 'CG 반복 수 (Z3)'),
@@ -1074,6 +1078,15 @@ OLD_DIFF_ALLOW = (
     #  RCA2 · B — 증서 ↔ 런 결합 (사전 리뷰 PRE-impl-07 · `step3_conv_cert.bind_record` · 판 cert-bind-v1) — 증서를 켠 경우만 · 새 칸만
     ('RCA2', '+', r'(ion_)?conv_cert\.(bind_version|fp_sid|fp_sig|fp_face_plan|fp_cjunc_registry|fp_cjunc_rows)', 'rtol',
      'B 증서 ↔ 런 결합 칸 (PRE-impl-07)'),
+    #  RCA2 · A — 접합 v3 (사전 리뷰 PRE-impl-01–06 · 1저자 Q-A–Q-D · 모델 r3-carbon-junction-port-v3) — 접합 경우만 · σ 는 표에 없다
+    ('RCA2', '+', r'manifest\.ca_ext\.cjunc\.evidence\.census\.(n_bridging_components|n_closed_paths_joined|n_instances_same_fid_pieces|'
+                  r'n_piece_cell_meets|n_ring_pieces|n_sdcp_components_touching|n_seam_alias|n_self_revisits_path_broken|'
+                  r'n_sv_faces_cut_rows|n_sv_faces_kept_self|n_unsplit_bridging_components|piece_rule|sv_cf_rule)', 'cjunc',
+     'A 접합 v3 census — 조각 = 섬유 · 고리 이음매 · 자기 = 중심선 근접 (Q-A · Q-B) · SV 다리 (Q-D)'),
+    ('RCA2', '~', r'manifest\.ca_ext\.cjunc\.evidence\.fp\.(centreline|membership)', 'cjunc',
+     'A 접합 v3 원장 입력 지문 (조각 · 덮인 포트 = 옮기지 않음 · Q-A · Q-C)'),
+    ('RCA2', '+', r'manifest\.ca_ext\.cjunc\.protocol\.rules\.(piece|sv_cf)', 'cjunc', 'A 접합 규칙 v3 (조각 · SV 반사실 = 다리만)'),
+    ('RCA2', '~', r'manifest\.ca_ext\.cjunc\.protocol\.rules\.(self_lc|self_s)', 'cjunc', 'A 자기 접합 규칙 v2 (접합 쌍 · 가장 가까운 점)'),
 )
 #: 허용이 아니라 이유만 붙이는 칸 (기반 사본의 환경 차이 — 고치는 길: 사본 옆에 docs/ 두기 · 링크)
 OLD_DIFF_HINTS = (

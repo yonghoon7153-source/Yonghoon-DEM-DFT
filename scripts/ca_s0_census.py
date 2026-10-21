@@ -1696,8 +1696,8 @@ def main(argv=None):
     ap.add_argument('--out', required=True, help='새 출력 폴더 (있으면 비어 있어야)')
     ap.add_argument('--threshold-commit', default=None, help='단계 2 — 등록 R §2-1 개정 커밋 sha')
     ap.add_argument('--plan-path', default=None, help='단계 2 — 그 커밋 안 계획 파일의 리포 상대 경로')
-    ap.add_argument('--r-plan-path', default=None, help='단계 2 — 같은 개정 커밋 안 R 런 사슬 계획 (rint-r-plan-v1 · s_min 봉인) 의 리포 '
-                                                         '상대 경로 (sha256 = 등록 R "| 계획 해시 |" 줄)')
+    ap.add_argument('--r-plan-path', default=None, help='단계 2 — 같은 개정 커밋 안 R 런 사슬 계획 (사슬 3 판 rint-r-plan-v2 · s_min 봉인) 의 '
+                                                         '리포 상대 경로 (sha256 = 등록 R "| 계획 해시 |" 줄)')
     ap.add_argument('--r-doc', default=R_DOC_DEFAULT, help='계획 sha256 이 적힌 등록 R 문서 (리포 상대)')
     ap.add_argument('--repo', default=ROOT, help='개정 커밋을 확인할 저장소 (기본 = 이 도구의 작업 트리)')
     ap.add_argument('--vox', type=float, default=0.15)

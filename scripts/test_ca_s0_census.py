@@ -306,14 +306,18 @@ def _git(repo, *a):
                           capture_output=True, text=True, check=True).stdout.strip()
 
 
-R_PLAN_REL = 'docs/data/s0/rint_r_plan.json'     # ★ 10-21 (PRE-design-04) — R 런 사슬 계획 (rint-r-plan-v1) 파일 (같은 개정 커밋)
+R_PLAN_REL = 'docs/data/s0/rint_r_plan.json'     # ★ 10-21 (PRE-design-04) — R 런 사슬 계획 (사슬 `PLAN_SCHEMA`) 파일 (같은 개정 커밋)
 
 
 def r_plan_bytes(tol_ff, **over):
-    """R 런 사슬 계획 (`rint_r_chain.load_plan` 꼴 · 칸 일곱) 바이트 — tol_ff_um = S0 계획 values_um.tol_ff (등록 R §2-1 두 계획 대조)."""
+    """R 런 사슬 계획 (`rint_r_chain.load_plan` 꼴) 바이트 — tol_ff_um = S0 계획 values_um.tol_ff (등록 R §2-1 두 계획 대조).
+    ★ 10-21 (A 병합 · 사슬 3 판) — 꼴 = 사슬의 `PLAN_SCHEMA` (rint-r-plan-v2 = v1 칸 일곱 + 결과 전 등록 숫자 넷 — 옛 v1 은 사슬이
+    PLAN_INVALID 로 거부 · 사슬 시험 N02) · 숫자 넷 = 사슬 시험 고정물 값 (16 · 'none' · 2.0 · 'R_j0' · 관문은 그 넷의 값을 보지 않는다)."""
     import carbon_junction as _cj
-    obj = {'schema': 'rint-r-plan-v1', 'len_law': _cj.CJUNC_LEN_LAW, 'unreg_law': 'cut', 's_min_um': 0.6,
-           'tol_ff_um': float(tol_ff), 'step3_rtol': 1e-12, 'p2_extra': ''}
+    import rint_r_chain as _rrc
+    obj = {'schema': _rrc.PLAN_SCHEMA, 'len_law': _cj.CJUNC_LEN_LAW, 'unreg_law': 'cut', 's_min_um': 0.6,
+           'tol_ff_um': float(tol_ff), 'step3_rtol': 1e-12, 'p2_extra': '',
+           'max_ladder_points': 16, 'calib_rj_ratio_max': 'none', 'sv_cf_threshold': 2.0, 'sv_cf_scope': 'R_j0'}
     obj.update(over)
     return (json.dumps(obj, sort_keys=True) + '\n').encode('utf-8')
 
@@ -341,7 +345,7 @@ def make_plan_repo(d, plan_bytes, plan_sha, *, put_hash=True, put_plan=True, r_p
     r_sha = hashlib.sha256(r_plan).hexdigest() if r_plan else '⬜'
     doc = '# R §2-1 개정\n'
     if r_row is not None:
-        doc += f'| 계획 해시 | R 런 사슬 계획 (rint-r-plan-v1) sha256 | {r_sha if r_row == "auto" else r_row} |\n'
+        doc += f'| 계획 해시 | R 런 사슬 계획 (rint-r-plan-v2) sha256 | {r_sha if r_row == "auto" else r_row} |\n'
     if put_hash:
         doc += f'| S0 계획 해시 | S0 단계 1 계획 (ca-cjunc-plan-v1) sha256 | {plan_sha if s0_row == "auto" else s0_row} |\n'
     else:
