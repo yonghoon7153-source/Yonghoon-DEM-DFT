@@ -2474,6 +2474,10 @@ def t_cax_subedges():
     good_k = dict(extra=2, n_subedges=5, n_edge=5, len_mult_max=2.5, n_long=1)
     chk('CAX-SUB 바탕 (k 1 · n_subedges 칸 없음 = instance 수) · k > 1 꼴 (instance 3 · 간선 5 · 배율 최대 2.5) = 받는다 (지킴)',
         ok(m) and ok(var(**good_k)), (RCm.ca_ext_record_ok(m), RCm.ca_ext_record_ok(var(**good_k))))
+    #  옛 꼴 기록 (배율 최대 · n_subedges 칸 둘 다 없음 = 점 접합만 · test_rint_r_chain 합성 매니페스트 꼴) = 받는다 — 칸이 없으면 간선 = instance
+    #  여야 한다 (k > 1 기록이 칸을 빼면 거부).  ★ 10-21 회귀 (test_rint_r_chain 32/89) 로 고침 — 첫 판은 칸 없음을 무조건 거부했다.
+    chk('CAX-SUB 옛 꼴 (배율 최대 칸 없음 · 간선 = instance · n_long 1) = 받는다 (지킴 · 옛 합성 매니페스트)',
+        ok(var(len_mult_max='__drop__', n_long=1)), RCm.ca_ext_record_ok(var(len_mult_max='__drop__', n_long=1)))
     bad_new = {
         '간선 5 > instance 3 인데 배율 최대 1.0 (긴 접촉 없음 = 모든 k 1)': dict(good_k, len_mult_max=1.0),
         '배율 최대 2.5 (긴 접촉 있음 = k ≥ 2) 인데 간선 = instance': dict(len_mult_max=2.5),
@@ -2481,7 +2485,8 @@ def t_cax_subedges():
         '배율 최대 0.5 (< 1)': dict(len_mult_max=0.5),
         '배율 최대 True (bool == 1.0)': dict(len_mult_max=True),
         "배율 최대 문자열 '1.0'": dict(len_mult_max='1.0'),
-        '배율 최대 빠짐 (instance > 0)': dict(len_mult_max='__drop__'),
+        '배율 최대 빠짐인데 간선 5 > instance 3 (k > 1 기록이 칸을 뺌)': dict(good_k, len_mult_max='__drop__'),
+        '배율 최대 None (instance > 0)': dict(len_mult_max=None),
     }
     for nm, upd in bad_new.items():
         chk(f'CAX-SUB 거부 [{nm}]', not ok(var(**upd)), RCm.ca_ext_record_ok(var(**upd)))
