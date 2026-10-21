@@ -66,7 +66,10 @@
   ⛔ 2026-09-18 정정: 이 줄은 *"modelc 는 실행본이 **영구** 미해소"* 라고 적혀 있었고 **7일 낡았었다**.
   원장이 이미 해소로 바뀐 뒤에도 여기가 안 바뀌어서, 다음 사람이 멀쩡한 값을 의심하게 만든다
   (실제로 그랬다). **원장을 고쳤으면 이 파일도 같이 본다.**
-- **BVSE** (tools/comp1_v3/): softBV Li–X R0 = S 2.105 / Cl 2.249 / O 1.466, b=0.37; BVSE=(BVS−1)²;
+- **BVSE** (tools/comp1_v3/): ⛔ **softBV 가 아니다** — b=0.37 고정 Brown 형식 BV 합, Li–X R0 = S 2.105 / Cl 2.249 / O 1.466
+  (Li–O 만 Brown–Altermatt 값으로 확인 · **S·Cl 은 출처 기록 없음** · 이 값이면 실제 Li 자리 BVS ≈ 1.7); BVSE=(BVS−1)² (valence² · Morse·Coulomb 항 없음 · eV 아님);
+  ⚠ 2026-10-21 정정: 이 줄이 'softBV' 라고 적혀 있어서 B₂O₃ 원고 Methods 가 softBV 논문(Chen & Adams 2017)을 출처로 달았다 —
+  코드 주석('Brown')과 `kb/concepts/bvse.md`(07-27 정정)는 이미 아니라고 했다. 문헌 BVSE(Morse형 eV)와 같은 축에 놓지 않는다.
   ~0.25 Å voxel; 채널% = above-min ≤ iso. **정량·순위는 원본 주기셀 값만** 인용(큐빅 박스는 표시용, ±1.3%p 표본 편차).
 - **MLIP-MD** (tools/modelc_v3/, tools/ionic/): UMA-s-1p1(omat), Langevin NVT, dt 2 fs, friction 0.02,
   equilib 5 ps / prod 200 ps, **MSD 창 2–50 ps 고정**, 아레니우스는 600/800/1000 K 3점(400/500 K 제외 판정),
