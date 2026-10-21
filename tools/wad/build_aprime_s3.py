@@ -393,13 +393,22 @@ def seal_p2s(relax_dir, geom_dir, out, date=None, gaps=P2S_GAPS, ledger=None, pr
     bp = os.path.join(geom_dir, "build_record.json")
     rec_build = json.load(open(bp, encoding="utf-8"))
     par = {name: _p2s_parent(relax_dir, geom_dir, rec_build, name, sub, term) for name, sub, term in P2S_SAMPLES}
+    # G1p ③ 마스크 정책 기준 = 부모 빌드 초기 구조 (카드 'G2 와 같다') — 이완 구조로 다시 정하면 기판 위끝이 내려가 중심면이 움직이고
+    # 중심면 위 동률 원자가 '남음' 깃발이 된다 (2026-10-21 실측 S_A 6 · Li_A 3 · 마스크 자체는 빌드 정책과 같았다)
+    from ase.io import read as _read
+    pref = {}
+    for name, sub, _t in P2S_SAMPLES:
+        p0 = os.path.join(geom_dir, sub, "bound.extxyz")
+        if _sha(p0) != par[name][1]["sha256"]["bound"]:
+            raise SlabError(f"{name}: 빌드 초기 구조 sha 가 meta 와 다르다 — G1p ③ 마스크 정책 기준으로 쓸 수 없다")
+        pref[name] = _read(p0)
     preds, chosen = [], None
     for gap in gaps:
         S_ = {}
         for name, (at, gm, info) in par.items():
             is_ads = _ads_mask(at, "P2S")
             b, f, em = B.make_endpoints(at, is_ads, gap)
-            pr, prec = B.p05_probe(b, f, dz=B.P05_DZ_A, gap=gap, ads_elements=("C",), fixed_idx=gm["fixed_idx"])
+            pr, prec = B.p05_probe(b, f, dz=B.P05_DZ_A, gap=gap, ads_elements=("C",), fixed_idx=gm["fixed_idx"], policy_ref=pref[name])
             if prec.get("interface_check_flags"):
                 raise SlabError(f"{name}_p05: G1p ③ interface_check 깃발 {prec['interface_check_flags']}")
             S_[name] = {"is_ads": is_ads, "bound": b, "far": f, "p05": pr, "p05_rec": prec, "endpoints": em,
@@ -454,6 +463,7 @@ def seal_p2s(relax_dir, geom_dir, out, date=None, gaps=P2S_GAPS, ledger=None, pr
            "p05": {name: {"parent_bound_sha256": P.struct[f"{name}_bound"], "probe_sha256": P.struct[f"{name}_p05_bound"], "far_shared_sha256": P.struct[f"{name}_far"],
                           "transform": s["p05_rec"]["transform"], "rigid_check_memory": s["p05_rec"]["rigid_check"], "rigid_check_files": p05_file[name],
                           "shared_far": s["p05_rec"]["shared_far"], "interface_check_flags": s["p05_rec"]["interface_check_flags"],
+                          "mask_policy_ref": ("부모 빌드 초기 구조 (G2 와 같은 기준 · 카드 G1p ③)" if s["p05_rec"].get("mask_policy_ref") == "given" else "탐침"),
                           "gap_direct_image_A": s["p05_rec"]["gap_direct_image_A"]} for name, s in S_.items()},
            "⛔": "구조·계보·D3 몫 예측만 — UMA·VASP 에너지 없음 · 이 파일을 고치지 않는다 (다시 만들면 새 봉인)"}
     mp = os.path.join(out, "p2s_seal_manifest.json")
@@ -581,6 +591,24 @@ def _selftest():
            and all(abs(p["trigger_J_m2"] - 0.008) < 1e-12 for p in sm["d3_g3_prediction"]), (gb.cell.array[2, 2], gc.cell.array[2, 2]))
         sm2 = seal_p2s(R0, pgeom, os.path.join(T, "s0b"), date="2026-10-17")
         ck("P2′ 봉인: 결정성 — 두 번 봉인해도 구조 sha 동일", sm2["structures_sha256"] == sm["structures_sha256"])
+
+        # G1p ③ 회귀 (2026-10-21 실측): 이완이 기판 위끝을 내려 중심면이 움직여도 마스크 기준은 빌드 초기 구조 (G2 와 같다) — Li_A 의 맨 위 Li 만
+        # 0.6 Å 내린다 (PS₄ 를 안 건드린다) · 실제 봉인은 S_A 6 · Li_A 3 동률 원자로 멈췄다
+        def lower_top_li(name, meta, d):
+            if name != "Li_A":
+                return
+            p = os.path.join(d, "relaxed.extxyz"); at = read(p); x = at.get_positions(); sym = np.array(at.get_chemical_symbols())
+            sub = ~_ads_mask(at, "P2S"); top = sub & (sym == "Li") & (x[:, 2] > x[sub, 2].max() - 0.3)
+            x[top, 2] -= 0.6; at.set_positions(x); write(p, at)
+            meta["relaxed_sha256"] = _sha(p)
+        Rl = fake_relax(os.path.join(T, "rl"), mut=lower_top_li)
+        atl = read(os.path.join(Rl, "P2S_li_outer/A", "relaxed.extxyz"))
+        gml = json.load(open(os.path.join(pgeom, "P2S_li_outer/A", "meta.json"), encoding="utf-8"))
+        moved = S.fixed_mask_policy(atl, ads_elements=("C",)) != sorted(gml["fixed_idx"])
+        sml = seal_p2s(Rl, pgeom, os.path.join(T, "sl"), date="2026-10-17")
+        ck("G1p ③ 회귀: 이완 구조로 정책을 다시 정하면 집합이 바뀌는데 (전제) p05 깃발 0 · 기준 = 부모 빌드 초기 구조",
+           moved and all(not v["interface_check_flags"] and v["mask_policy_ref"].startswith("부모 빌드 초기 구조") for v in sml["p05"].values()),
+           (moved, {k: (v["interface_check_flags"], v["mask_policy_ref"]) for k, v in sml["p05"].items()}))
         cnt = {"n": 0}
 
         def pred_first(*a):

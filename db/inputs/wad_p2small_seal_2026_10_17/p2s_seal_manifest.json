@@ -1,0 +1,341 @@
+{
+ "schema": "p2s_seal/v1",
+ "date": "2026-10-21",
+ "card": "db/properties/wad_p2small_vasp_card_2026_10_15.json",
+ "decision": {
+  "id": "D-2026-10-15-wad-p2small-vasp-card",
+  "state_at_seal": "active"
+ },
+ "relax_dir": "db/raw/wad_p2small_relax_2026_10_17/relax",
+ "geom_dir": "db/inputs/wad_p2small_geometries_2026_10_17",
+ "build_record_sha256": "c4c693ff9e295c8c93fdd8f986eeaa8ee7bce99136e688e32013f6379d1146bf",
+ "code_sha256": {
+  "tools/wad/build_aprime_s3.py": "75a7026385a16e37305fdf7c0ca2e0ec5ee44212c8fcdd1c885257fa75506883",
+  "tools/wad/build_aprime_interfaces.py": "5558ea34759f5cbf38d7799856bae0050ef95ad58a02bd4900fd6a04dfcca8ca",
+  "tools/wad/se_sym_slab.py": "bff4e0d423950593612bf708b9010fccdb589a8fcb23f8a54541e458ddf96e8d",
+  "tools/wad/relax_uma_d3.py": "f218193d805923c2f3b1fb08a1bfb8803396be9d9cca67028e0f99a86492d5ac",
+  "tools/wad/build_v5_vasp_package.py": "e89b6af10f56411139e17b60a15d136ca593ee83357721b1ca693c5a1a97eca5"
+ },
+ "endpoint_gap_A": 10.0,
+ "gap_rule": "기본 10.0 Å · 80 % 규칙 발동 시 한 번만 12.0 Å (카드 '발송 전 D3 만 예측')",
+ "d3_g3_prediction": [
+  {
+   "gap_A": 10.0,
+   "E_D3_2body_eV": {
+    "bound": -60.550114025454036,
+    "far": -56.429467581231066,
+    "c2_bound": -60.54290118360862,
+    "c2_far_i": -56.39325169726715,
+    "c2_far_ii": -56.37752127191636
+   },
+   "area_A2": 303.314845,
+   "dW_D3_i_J_m2": 0.0015320053470631034,
+   "dW_D3_ii_J_m2": 0.002362921485119185,
+   "trigger_J_m2": 0.008,
+   "triggered": false,
+   "d3_ref": "build_v5_vasp_package.d3_ref_eV (simple-dftd3 2체 · VASP 절단 50.2 / 21.17 Å · 3축 주기)"
+  }
+ ],
+ "structures_sha256": {
+  "S_A_bound": "922c55304c03495b861f33eb4a7e68f94fb2203a319a6b240c95b11475672d2e",
+  "S_A_far": "89cee1cbaece8ce92be283de0f8a545ad326d0dd558515062eb4e5b7afd6e7a9",
+  "S_A_p05_bound": "36669da6b89ed8e1416162c13ba5cb64b5606b51dbaa64612a9afc958397ac33",
+  "Li_A_bound": "8eaa8b9b69f46ad9a308373218571611c10fc016dc16e9692b96de02cb89dfc3",
+  "Li_A_far": "a0b58abadef9915a31382499d7bafb9c19adcb7fb56c49dc36561f3837171881",
+  "Li_A_p05_bound": "5005372b59229acd592b6bf869c3a35884a54335f813d7cdf0a6d824881c2d7b",
+  "S_A_G3_c2_bound": "a437c28d90b94d054de416d524f324603af005cf55ae3240706fa3782c60e8e9",
+  "S_A_G3_c2_far_i": "e24130e5a3a1889d8e11c2f0235c781f41003b8a39098fb50f1c43af3d70683d",
+  "S_A_G3_c2_far_ii": "80d7f2830619c7d759f25f60c985985096aa5bb5b34313ef40088454e773d029"
+ },
+ "sets": {
+  "S_A": {
+   "structures": [
+    "S_A_bound",
+    "S_A_far",
+    "S_A_p05_bound"
+   ],
+   "dipfield": {
+    "emaxpos": 0.84473,
+    "eopreg": 0.02823,
+    "region_A": [
+     29.921,
+     30.921
+    ],
+    "clearance_A": {
+     "to_top_atom": 5.0,
+     "to_substrate_bottom_image": 5.0
+    }
+   },
+   "c_A": 35.4211
+  },
+  "Li_A": {
+   "structures": [
+    "Li_A_bound",
+    "Li_A_far",
+    "Li_A_p05_bound"
+   ],
+   "dipfield": {
+    "emaxpos": 0.83169,
+    "eopreg": 0.0306,
+    "region_A": [
+     27.179,
+     28.179
+    ],
+    "clearance_A": {
+     "to_top_atom": 5.0,
+     "to_substrate_bottom_image": 5.0
+    }
+   },
+   "c_A": 32.6786
+  },
+  "S_A_G3": {
+   "structures": [
+    "S_A_G3_c2_bound",
+    "S_A_G3_c2_far_i",
+    "S_A_G3_c2_far_ii"
+   ],
+   "dipfield": {
+    "emaxpos": 0.85302,
+    "eopreg": 0.02672,
+    "region_A": [
+     31.921,
+     32.921
+    ],
+    "clearance_A": {
+     "to_top_atom": 5.0,
+     "to_substrate_bottom_image": 5.0
+    }
+   },
+   "c_A": 37.4211,
+   "far_gaps_direct_image_A": {
+    "i": [
+     10.0,
+     13.0
+    ],
+    "ii": [
+     12.0,
+     11.0
+    ]
+   }
+  }
+ },
+ "samples_W_pairs": {
+  "S_A": [
+   "S_A_bound",
+   "S_A_far"
+  ],
+  "S_A_p05": [
+   "S_A_p05_bound",
+   "S_A_far"
+  ],
+  "Li_A": [
+   "Li_A_bound",
+   "Li_A_far"
+  ],
+  "Li_A_p05": [
+   "Li_A_p05_bound",
+   "Li_A_far"
+  ]
+ },
+ "G3_pairs": {
+  "base": [
+   "S_A_bound",
+   "S_A_far"
+  ],
+  "i": [
+   "S_A_G3_c2_bound",
+   "S_A_G3_c2_far_i"
+  ],
+  "ii": [
+   "S_A_G3_c2_bound",
+   "S_A_G3_c2_far_ii"
+  ]
+ },
+ "parents": {
+  "S_A": {
+   "lineage": {
+    "relaxed_sha256": "82f7a470b9f8d8f32713e931eee59efc4042ecfbdccc49bbe1748c2641713310",
+    "relax_meta_sha256": "6afdf46b3956a066b167a059eb5ec78cfd0c1f52e538c89940d433404737b761",
+    "interface_check_sha256": "3aa570fb849b2b98dd92fea97dbceb75e1265bb42611dcef0ab1ecd024dd11ed",
+    "init_sha256": "d6ceddfd90b9db732cedd2d3daa91a16de869bc97ad7056d313869aafed6e9eb"
+   },
+   "G1": {
+    "converged_fmax": true,
+    "fmax_free_final_eV_A": 0.01643,
+    "steps_taken": 894
+   },
+   "G2_flags": [],
+   "binding": {
+    "model": "uma-s-1p1",
+    "task": "omat",
+    "inference_settings": "default",
+    "checkpoint_sha16": "07068e9c76702ca1",
+    "d3_impl": "simple-dftd3 (python)",
+    "fairchem.core": "2.21.0",
+    "d3_version": "1.6.0"
+   },
+   "disp_max_A": 1.955,
+   "endpoints": {
+    "c_A": 35.4211,
+    "delta_A": 7.1548,
+    "d0_A": 2.8452,
+    "gap_rule_A": 10.0,
+    "bound_gap_direct_image_A": [
+     2.8452,
+     18.1548
+    ],
+    "far_gap_direct_image_A": [
+     10.0,
+     11.0
+    ]
+   },
+   "fixed_idx_n": 90,
+   "sealed_bound_sha256": "922c55304c03495b861f33eb4a7e68f94fb2203a319a6b240c95b11475672d2e",
+   "sealed_far_sha256": "89cee1cbaece8ce92be283de0f8a545ad326d0dd558515062eb4e5b7afd6e7a9"
+  },
+  "Li_A": {
+   "lineage": {
+    "relaxed_sha256": "a4f876d250f56d0eb3f0990ed40d0b030d55698e15086307400109b0e3717633",
+    "relax_meta_sha256": "f7273d1ba045d24f39c647ed04130cc201cbaaf66787c9c20b88b32371ac1877",
+    "interface_check_sha256": "bb49d40f206bd2912e35788faa29f3da70fa3da522ffcedb383438fbbf95f3ce",
+    "init_sha256": "706b94a794b85451abe450359fd8c0544c67c3d74ea8a68578bf702600a61eae"
+   },
+   "G1": {
+    "converged_fmax": true,
+    "fmax_free_final_eV_A": 0.01919,
+    "steps_taken": 430
+   },
+   "G2_flags": [],
+   "binding": {
+    "model": "uma-s-1p1",
+    "task": "omat",
+    "inference_settings": "default",
+    "checkpoint_sha16": "07068e9c76702ca1",
+    "d3_impl": "simple-dftd3 (python)",
+    "fairchem.core": "2.21.0",
+    "d3_version": "1.6.0"
+   },
+   "disp_max_A": 3.085,
+   "endpoints": {
+    "c_A": 32.6786,
+    "delta_A": 6.6408,
+    "d0_A": 3.3592,
+    "gap_rule_A": 10.0,
+    "bound_gap_direct_image_A": [
+     3.3592,
+     17.6408
+    ],
+    "far_gap_direct_image_A": [
+     10.0,
+     11.0
+    ]
+   },
+   "fixed_idx_n": 69,
+   "sealed_bound_sha256": "8eaa8b9b69f46ad9a308373218571611c10fc016dc16e9692b96de02cb89dfc3",
+   "sealed_far_sha256": "a0b58abadef9915a31382499d7bafb9c19adcb7fb56c49dc36561f3837171881"
+  }
+ },
+ "p05": {
+  "S_A": {
+   "parent_bound_sha256": "922c55304c03495b861f33eb4a7e68f94fb2203a319a6b240c95b11475672d2e",
+   "probe_sha256": "36669da6b89ed8e1416162c13ba5cb64b5606b51dbaa64612a9afc958397ac33",
+   "far_shared_sha256": "89cee1cbaece8ce92be283de0f8a545ad326d0dd558515062eb4e5b7afd6e7a9",
+   "transform": {
+    "kind": "흡착층 강체 +z (비이완)",
+    "dz_A": 0.5,
+    "ads_elements": [
+     "C"
+    ],
+    "tol_A": 1e-06
+   },
+   "rigid_check_memory": {
+    "ok": true,
+    "violations": [],
+    "dz_A": 0.5,
+    "tol_A": 1e-06,
+    "max_err_ads_A": 0.0,
+    "max_err_sub_A": 0.0,
+    "n_ads": 224,
+    "n_sub": 174
+   },
+   "rigid_check_files": {
+    "ok": true,
+    "violations": [],
+    "dz_A": 0.5,
+    "tol_A": 1e-06,
+    "max_err_ads_A": 0.0,
+    "max_err_sub_A": 0.0,
+    "n_ads": 224,
+    "n_sub": 174
+   },
+   "shared_far": {
+    "ok": true,
+    "max_err_A": 0.0,
+    "rule": "make_endpoints(탐침, gap 10.0) 의 far ≡ 부모 far"
+   },
+   "interface_check_flags": [],
+   "mask_policy_ref": "부모 빌드 초기 구조 (G2 와 같은 기준 · 카드 G1p ③)",
+   "gap_direct_image_A": {
+    "parent": [
+     2.8452,
+     18.1548
+    ],
+    "probe": [
+     3.3452,
+     17.6548
+    ]
+   }
+  },
+  "Li_A": {
+   "parent_bound_sha256": "8eaa8b9b69f46ad9a308373218571611c10fc016dc16e9692b96de02cb89dfc3",
+   "probe_sha256": "5005372b59229acd592b6bf869c3a35884a54335f813d7cdf0a6d824881c2d7b",
+   "far_shared_sha256": "a0b58abadef9915a31382499d7bafb9c19adcb7fb56c49dc36561f3837171881",
+   "transform": {
+    "kind": "흡착층 강체 +z (비이완)",
+    "dz_A": 0.5,
+    "ads_elements": [
+     "C"
+    ],
+    "tol_A": 1e-06
+   },
+   "rigid_check_memory": {
+    "ok": true,
+    "violations": [],
+    "dz_A": 0.5,
+    "tol_A": 1e-06,
+    "max_err_ads_A": 1.7763568394002505e-15,
+    "max_err_sub_A": 0.0,
+    "n_ads": 224,
+    "n_sub": 138
+   },
+   "rigid_check_files": {
+    "ok": true,
+    "violations": [],
+    "dz_A": 0.5,
+    "tol_A": 1e-06,
+    "max_err_ads_A": 1.7763568394002505e-15,
+    "max_err_sub_A": 0.0,
+    "n_ads": 224,
+    "n_sub": 138
+   },
+   "shared_far": {
+    "ok": true,
+    "max_err_A": 3.552713678800501e-15,
+    "rule": "make_endpoints(탐침, gap 10.0) 의 far ≡ 부모 far"
+   },
+   "interface_check_flags": [],
+   "mask_policy_ref": "부모 빌드 초기 구조 (G2 와 같은 기준 · 카드 G1p ③)",
+   "gap_direct_image_A": {
+    "parent": [
+     3.3592,
+     17.6408
+    ],
+    "probe": [
+     3.8592,
+     17.1408
+    ]
+   }
+  }
+ },
+ "⛔": "구조·계보·D3 몫 예측만 — UMA·VASP 에너지 없음 · 이 파일을 고치지 않는다 (다시 만들면 새 봉인)"
+}

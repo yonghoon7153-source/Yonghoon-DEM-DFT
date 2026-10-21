@@ -79,5 +79,15 @@
   "상태": "21:24:34 ▶ P2S_s_outer/A 이완 시작 (그다음 P2S_li_outer/A)",
   "⏭": "'■ 큐 끝 · 끝 코드 0' → 회수 (relax · logs · SHA256SUMS → db/raw/wad_p2small_relax_2026_10_17/) → build_aprime_s3.py --seal_p2s → 봉인 커밋 → ④ UMA 단일점 (run_uma_sp_kgy.sh) → ⑤ Codex CZ",
   "by": "agent · 2026-10-21"
+ },
+ "②_회수_봉인_2026_10_21": {
+  "회수": "kgy 21:42:18 '■ 큐 끝 · 끝 코드 0' (S_A FIRE 894 · fmax 0.0164 · Li_A 430 · fmax 0.0192 · 둘 다 수렴) → 사용자 커밋 6d3538d9 (opt.traj 제외) · SHA256SUMS 13 줄 — 기계 · 레포 사본 · 클라우드 셋 다 일치",
+  "봉인_1차_거부": "build_aprime_s3.py --seal_p2s → '⛔ S_A_p05: G1p ③ interface_check 깃발 [고정 마스크가 정책 far_half 집합(84 개)과 다르다 — 빠짐 0 · 남음 6]' (Li_A 도 같은 꼴 66 · 남음 3)",
+  "원인": "p05_probe 의 interface_check 가 마스크 정책 (기판 중심면 아래) 을 **이완된 부모로 만든 탐침**에서 다시 계산했다 — 이완이 기판 위끝을 내렸고 (S_A 11.148 → 10.792 Å · Li_A 8.702 → 8.135 Å) 중심면이 움직여 (5.824 → 5.646 · 4.601 → 4.317 Å) 빌드 때 중심면 위에 정확히 놓인 동률 S (S_A 6 · Li_A 3 · 동률은 '고정' 쪽 규칙) 가 '남음' 이 됐다. 마스크 자체는 빌드 초기 구조의 정책과 같다 (S_A 90 = 90 · Li_A 69 = 69 · 부모 G2 통과) ⇒ 깃발은 검사 기준의 오류 (카드 G1p ③ 'G2 와 같다' = 기준은 빌드 초기 구조)",
+  "고침": "se_sym_slab.interface_check(policy_ref=) · build_aprime_interfaces.p05_probe(policy_ref=) · build_aprime_s3.seal_p2s 가 부모 빌드 초기 구조 (sha = meta) 를 기준으로 넘기고 manifest p05 에 mask_policy_ref 를 적는다 · 기본값 None = 옛 동작 · sha16 se_sym_slab bff4e0d423950593 · build_aprime_interfaces 5558ea34759f5cbf · build_aprime_s3 75a7026385a16e37",
+  "시험": "se_sym_slab 122/122 (새 2 — 위끝을 내려 중심면을 옮기면 기본은 마스크 깃발 · 기준을 주면 0 · ⛔ 원자 순서 다른 기준 거부) · build_aprime_s3 41/41 (새 1 — 가짜 이완에서 Li_A 맨 위 Li 를 0.6 Å 내리면 정책 집합이 바뀌는데 봉인 p05 깃발 0 · 실제와 같은 '66 · 남음 3' 꼴을 재현) · build_aprime_interfaces 75/75 · 깨기 3/3 (seal 이 기준 안 넘김 · p05_probe 가 안 넘김 · interface_check 가 무시)",
+  "봉인": "db/inputs/wad_p2small_seal_2026_10_17/ — 구조 9 · 끝점 직접 간격 10.0 Å · D3 만 G3 예측 80 % 규칙 발동 안 함 · G1 S_A·Li_A 통과 · p05 깃발 0 (마스크 기준 = 부모 빌드 초기 구조) · manifest sha256 65a0ca0e376b3c67…",
+  "⏭": "④ UMA 단일점 (kgy · run_uma_sp_kgy.sh · 봉인 커밋 판) → 회수 → ⑤ Codex CZ (프롬프트에 이 G1p ③ 기준 고침을 싣는다)",
+  "by": "agent · 2026-10-21"
  }
 }

@@ -505,12 +505,13 @@ def check_rigid_shift(parent, probe, is_ads, dz=P05_DZ_A, tol=RIGID_TOL_A):
             "n_ads": int(is_ads.sum()), "n_sub": int((~is_ads).sum())}
 
 
-def p05_probe(parent_bound, parent_far, dz=P05_DZ_A, gap=10.0, ads_elements=("C",), fixed_idx=None):
+def p05_probe(parent_bound, parent_far, dz=P05_DZ_A, gap=10.0, ads_elements=("C",), fixed_idx=None, policy_ref=None):
     """카드 §1b · G1p — 이완한 부모 bound (make_endpoints 로 정규화한 것) 에서 흡착층 전체를 +dz 강체 이동한 **비이완 탐침**.
     far 는 부모와 공유한다 — 같은 규칙 (make_endpoints) 이 탐침에 주는 far 가 부모 far 와 같은지 확인해서 공유를 정당화한다.
 
     반환 (probe, rec): rec = G1p ① 강체 이동 (check_rigid_shift) · 공유 far 정합 · 쌍극자 구간 (탐침·far 집합 = 부모·far 집합) ·
-      G1p ③ interface_check 깃발 (fixed_idx 를 주면) · 간격 (직접 +dz · 영상 −dz).
+      G1p ③ interface_check 깃발 (fixed_idx 를 주면 · 마스크 정책 기준 = policy_ref 를 주면 그 구조 = 부모 빌드 초기 구조 ·
+      안 주면 탐침 자체 — 이완한 부모의 탐침에서는 중심면이 움직여 동률 원자가 깃발이 된다 · 2026-10-21) · 간격 (직접 +dz · 영상 −dz).
     거부 (SlabError): dz ≤ 0 · 흡착층 꼭대기가 셀 위끝을 넘음 · 부모가 끝점 정규화본이 아님 · 공유 far 불일치 (부모 직접 간격 > gap − dz) ·
       쌍극자 구간 불일치 · 강체 이동 검사 실패.
     ⛔ 못 하는 것: 이완하지 않는다 · sha 사슬 봉인은 부르는 쪽 (S3 와 같은 봉인 단계) 이 한다 — 여기선 변환 기록만 준다.
@@ -552,7 +553,9 @@ def p05_probe(parent_bound, parent_far, dz=P05_DZ_A, gap=10.0, ads_elements=("C"
            "rigid_check": rig, "shared_far": {"ok": True, "max_err_A": max(e_far, e_cell), "rule": f"make_endpoints(탐침, gap {gap}) 의 far ≡ 부모 far"},
            "dip_same_as_parent": True, "dipfield": d_pro, "gap_direct_image_A": {"parent": gaps(parent_bound), "probe": gaps(probe)}}
     if fixed_idx is not None:
-        rec["interface_check_flags"] = S.interface_check(probe, parent_far, ads_elements=ads_elements, fixed_idx=fixed_idx)["flags"]
+        rec["interface_check_flags"] = S.interface_check(probe, parent_far, ads_elements=ads_elements, fixed_idx=fixed_idx,
+                                                         policy_ref=policy_ref)["flags"]
+        rec["mask_policy_ref"] = "given" if policy_ref is not None else "probe"
     return probe, rec
 
 

@@ -1149,7 +1149,7 @@ def _validate_idx(idx, n, name):
 
 
 def interface_check(init, final, ads_elements=("Ag", "C", "H"), substrate_elements=SE_ELEMENTS, fixed_idx=None,
-                    fixed_policy="far_half", lateral_fixed_idx=(), pen_thr=IFC_PEN_THR_A, bond_tol=IFC_BOND_TOL):
+                    fixed_policy="far_half", lateral_fixed_idx=(), pen_thr=IFC_PEN_THR_A, bond_tol=IFC_BOND_TOL, policy_ref=None):
     """UMA 이완 전(init) ↔ 후(final) 계면 모델 — 같은 셀·원자 · 유한성 · 고정 마스크(필수 · 정책 집합과 일치) · 흡착면 고정 ·
     PS₄ 온전·짝 (기판에 P·S 가 있을 때 · 아니면 '해당 없음') · 몸체 안 결합 ±15 % · 비혼합 범위 · 측방 제약.
 
@@ -1157,6 +1157,9 @@ def interface_check(init, final, ads_elements=("Ag", "C", "H"), substrate_elemen
       · 역할: 기판 = substrate_elements (SE 는 Li·P·S·Cl · V2 는 Ag) · 흡착층 = ads_elements. 둘 밖의 원소가 있으면 멈춘다.
       · 법선 = **초기 구조**에서 흡착층 평균 z − 기판 평균 z 의 부호 (최종 구조로 다시 정하지 않는다). z 비주기 · 면내 최소영상.
       · 고정 마스크 = 필수 · 정수 · 범위 안 · 흡착층 원자 없음 · `fixed_mask_policy(init)` 와 **집합이 같아야** 한다 (다르면 깃발).
+        policy_ref 를 주면 정책 집합을 init 대신 그 구조에서 계산한다 (원자 순서가 init 과 같아야 한다) — 이완한 부모에서 만든
+        탐침 (p05) 은 마스크가 부모 **빌드 초기 구조**의 정책이라 그 구조를 준다 (외주 2차 카드 G1p ③ 'G2 와 같다' · 2026-10-21:
+        이완으로 기판 위끝이 내려가 중심면이 움직이면 중심면 위 동률 원자가 '남음' 으로 잡혔다 · S_A 6 · Li_A 3).
       · 흡착면: 최종 구조에서 흡착층 평균 z 가 기판 쪽으로 넘어가거나 흡착 원자가 기판 중심면 너머로 가면 깃발.
       · 첫 흡착층 평면 z_ref = 최종 구조에서 기판에 가장 가까운 흡착 원자로부터 IFC_FIRST_LAYER_A 안 흡착 원자들의 평균 z.
       · 침투 p_i = z_i(final) − z_ref (기판 원자 전부). 비혼합 범위 = 모든 p_i ≤ −pen_thr.
@@ -1200,7 +1203,12 @@ def interface_check(init, final, ads_elements=("Ag", "C", "H"), substrate_elemen
     ads_in_mask = [i for i in fixed if is_ads[i]]
     if ads_in_mask:
         flags.append(f"고정 마스크에 흡착층 원자 {len(ads_in_mask)} 개 — 기판 마스크가 아니다")
-    expected = fixed_mask_policy(init, ads_elements, substrate_elements, fixed_policy)
+    ref = init
+    if policy_ref is not None:
+        if policy_ref.get_chemical_symbols() != s0:
+            raise SlabError("policy_ref 의 원자 수·순서가 init 과 다르다 — 마스크 정책 기준으로 쓸 수 없다")
+        ref = policy_ref
+    expected = fixed_mask_policy(ref, ads_elements, substrate_elements, fixed_policy)
     missing, extra = sorted(set(expected) - set(fixed)), sorted(set(fixed) - set(expected))
     if missing or extra:
         flags.append(f"고정 마스크가 정책 '{fixed_policy}' 집합({len(expected)} 개)과 다르다 — 빠짐 {len(missing)} · 남음 {len(extra)}")
@@ -1320,6 +1328,21 @@ def _selftest_interface_check(ck):
     x[free_se] += np.random.default_rng(0).normal(0, 0.03, (len(free_se), 3)); fin.set_positions(x)
     o = interface_check(init, fin, fixed_idx=fixed)
     ck("interface_check 양성: 자유 원자 0.03 Å 흔들림 → 깃발 0", not o["flags"], o["flags"])
+    # policy_ref (2026-10-21 · 외주 2차 G1p ③): 기판 위끝이 내려가 중심면이 움직인 구조에서도 마스크 기준을 빌드 초기 구조로 둔다
+    mv = init.copy(); x = mv.get_positions()
+    top = np.zeros(len(mv), bool); top[:n_se] = x[:n_se, 2] > x[:n_se, 2].max() - 1.5
+    x[top, 2] -= 1.5; mv.set_positions(x)
+    pre = fixed_mask_policy(mv) != fixed
+    mflag = lambda f: [s for s in f if "고정 마스크가 정책" in s]
+    o_old = interface_check(mv, mv, fixed_idx=fixed)
+    o_ref = interface_check(mv, mv, fixed_idx=fixed, policy_ref=init)
+    ck("interface_check policy_ref: 위끝을 내려 중심면이 움직이면 (전제: 정책 집합이 바뀐다) 기본은 마스크 깃발 · 빌드 초기 구조 기준이면 마스크 깃발 0",
+       pre and mflag(o_old["flags"]) and not mflag(o_ref["flags"]), (pre, mflag(o_old["flags"]), mflag(o_ref["flags"])))
+    try:
+        interface_check(mv, mv, fixed_idx=fixed, policy_ref=init[::-1]); bad = False
+    except SlabError:
+        bad = True
+    ck("⛔음성 interface_check policy_ref: 원자 순서가 다른 기준 → 거부 (다른 구조로 마스크를 맞추지 않는다)", bad)
     # ⛔ BY 4경로
     fin = init.copy(); x = fin.get_positions()
     li = next(i for i in free_se if init.get_chemical_symbols()[i] == "Li" and x[i, 2] > ztop - 3)
