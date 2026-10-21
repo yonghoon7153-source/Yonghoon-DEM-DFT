@@ -992,6 +992,64 @@ def t_states_payload():
 
 
 # ═════════════════════════ B 묶음 — 끔 비트 동일 (고치기 전 코드 대조) ═════════════════════════
+@case('B0u --old-scripts 대조의 경로 차이 · 허용 목록 (합성 · 기반 사본 없이 · ★ 10-21 D 브리프 묶음 5)')
+def t_old_allow_unit():
+    import re as _re
+    f_diff, f_prob = globals().get('old_tree_diff'), globals().get('old_diff_problems')
+    f_tags, table = globals().get('case_tags'), globals().get('OLD_DIFF_ALLOW')
+    ok = callable(f_diff) and callable(f_prob) and callable(f_tags) and isinstance(table, tuple) and len(table) > 0
+    chk('B0u-0 도구 (old_tree_diff · old_diff_problems · case_tags · OLD_DIFF_ALLOW) 가 한 곳 (이 파일 · z3 O 묶음이 import)', ok,
+        (callable(f_diff), callable(f_prob), callable(f_tags), type(table).__name__))
+    if not ok:
+        return
+    d = f_diff({'a': {'b': 1, 'c': [1], 'x': 1}, 'd': 2, 'f': {'g': 1}}, {'a': {'b': 1, 'c': [1, 2], 'e': 3, 'x': 1.0}, 'f': 5})
+    chk('B0u-1 경로 차이 — 양쪽 dict 일 때만 내려감 · 목록 통째 · 새 칸 + · 없어진 칸 − · 값 ~ (1 ↔ 1.0 도 다름 = 바이트 기준) · 경로 순',
+        d == [('~', 'a.c'), ('+', 'a.e'), ('~', 'a.x'), ('-', 'd'), ('~', 'f')], d)
+    chk('B0u-2 같은 값 = 차이 없음 (NaN 끼리 · 키 순서 무관)', f_diff({'a': float('nan'), 'b': {'y': 1, 'x': 2}},
+                                                                {'b': {'x': 2, 'y': 1}, 'a': float('nan')}) == [])
+    off, fa, rt, cj = (f_tags(x) for x in (['--ptfe-stamp', 'off'], ['--ptfe-stamp', 'face_alpha', '--step3-rtol', '1e-12'],
+                                           ['--step3-rtol', '1e-12'], ['--step3-cjunc', '--step3-cjunc-rj-ohm', '1e6']))
+    chk('B0u-3 경우 표지 — off = 없음 · face_alpha + rtol = 둘 · cjunc', off == set() and fa == {'face_alpha', 'rtol'}
+        and rt == {'rtol'} and 'cjunc' in cj and 'face_alpha' not in cj, (off, fa, rt, cj))
+    SID = 'manifest.ca_ext.ptfe_face.evidence.fp.sid_off'
+    cases = (
+        ('Z3 sid_off — face_alpha 경우', [('+', SID)], {'face_alpha'}, 0, 1),
+        ('Z3 sid_off — 끈 경우 (off) = 실패', [('+', SID)], set(), 1, 0),
+        ('Z3 sid_off — rtol 경우 = 실패 (표지 밖)', [('+', SID)], {'rtol'}, 1, 0),
+        ('sid_off 꼬리 붙은 경로 = 실패 (전체 일치)', [('+', SID + '_extra')], {'face_alpha'}, 1, 0),
+        ('sid_off 없어짐 (−) = 실패 (연산 다름)', [('-', SID)], {'face_alpha'}, 1, 0),
+        ('CG 반복 수 + 증서 반복 수 — rtol', [('+', 'cg_iters'), ('+', 'conv_cert.iters'), ('+', 'ion_conv_cert.resolve_iters')],
+         {'rtol'}, 0, 3),
+        ('증서 v2 칸 · 판 — rtol', [('+', 'conv_cert.status'), ('+', 'conv_cert.target_lo'), ('~', 'conv_cert.version')], {'rtol'}, 0, 3),
+        ('증서 판 없어짐 (−) = 실패', [('-', 'conv_cert.version')], {'rtol'}, 1, 0),
+        ('σ 값 바뀜 = 언제나 실패', [('~', 'sigma_e_eff_S_cm')], {'face_alpha', 'rtol', 'cjunc'}, 1, 0),
+        ('S1 부피 · 면 α 진단 — face_alpha', [('+', 'manifest.ca_ext.ptfe_face.evidence.volume.capsule_union_um3'),
+                                          ('+', 'manifest.ca_ext.ptfe_face.evidence.faces.electronic.alpha_zero_faces')], {'face_alpha'}, 0, 2),
+        ('S1 부피 칸 — cjunc 만 켠 경우 = 실패', [('+', 'manifest.ca_ext.ptfe_face.evidence.volume.ratio_basis')], {'cjunc'}, 1, 0),
+        ('접합 SV 이름 바뀜 — cjunc', [('-', 'manifest.ca_ext.cjunc.evidence.solve.sv_dominant'),
+                                   ('+', 'manifest.ca_ext.cjunc.evidence.solve.sv_local_dissipation')], {'cjunc'}, 0, 2),
+        ('p3ca id 바뀜 — cjunc 만 · face_alpha 는 실패', [('~', 'manifest.physics_protocol_id')], {'face_alpha'}, 1, 0),
+        ('접합 칸 — 끈 경우 = 실패', [('+', 'manifest.ca_ext.cjunc.evidence.counts.n_subedges')], set(), 1, 0),
+    )
+    for nm, diffs, tags, n_bad, n_seen in cases:
+        probs, seen = f_prob(diffs, tags)
+        chk(f'B0u-4 [{nm}] — 문제 {n_bad} · 허용 {n_seen}', len(probs) == n_bad and len(seen) == n_seen, (probs, seen))
+    probs, _seen = f_prob([('+', SID)], {'face_alpha'}, expect_identical=True)
+    chk('B0u-5 --expect-identical = 허용 목록을 안 쓴다 (허용 칸도 실패)', len(probs) == 1, probs)
+    probs, _seen = f_prob([('~', 'collector.anchors_source')], set())
+    chk('B0u-6 기반 사본 환경 차이 (docs/ 없음 → 집전체 앵커 대체) = 실패 + 이유 표시 (허용 아님)',
+        len(probs) == 1 and 'docs' in probs[0], probs)
+    bad_rx = []
+    for row in table:
+        try:
+            _re.compile(row[2])
+        except Exception as e:                              # noqa: BLE001 — 표 결함은 실패로 기록
+            bad_rx.append((row[2], f'{type(e).__name__}: {e}'))
+    chk('B0u-7 표 꼴 — (세대, 연산 ∈ {+,−,~}, 정규식, 경우 표지 ∈ {face_alpha, rtol, cjunc}, 사유) · 정규식 컴파일',
+        not bad_rx and all(len(r) == 5 and r[1] in ('+', '-', '~') and r[3] in ('face_alpha', 'rtol', 'cjunc') and r[4] for r in table),
+        bad_rx)
+
+
 @case('B 끔 비트 동일 — 고치기 전 payload 와 대조 (--old-scripts)')
 def t_bitid():
     if not ARGS.old_scripts:
