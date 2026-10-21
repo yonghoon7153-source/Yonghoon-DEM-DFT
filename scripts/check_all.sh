@@ -262,7 +262,10 @@ run 'ca_ext_z1 (Rint ② Z1 러너 · 판정기 굳히기 · 시험 먼저)' pyt
 run 'rint_r_chain (Rint ② R 런 사슬 · 사다리 · 예측 · 판정 · 가짜 러너 · 시험 먼저)' python3 scripts/test_rint_r_chain.py
 run 'ca_ext_z3 (Rint ② Z3 face_alpha + 탄소 접합 한 런 · 극한 런 · ARM_LIST · sid_off · CG 반복 수 · 시험 먼저)' python3 scripts/test_ca_ext_z3.py
 run 'rint_r_chain_e2e (Rint ② R 사슬 · 실제 러너 끝-끝 · 픽스처 킷 · CPU)' python3 scripts/test_rint_r_chain_e2e.py
-# step3_conv_cert (STEP3 수렴 증서) = 게이트 밖 · 손으로 돌린다 — 10-20 실측 2,305 s (부하 8–12 · 합성 직접해 대조 탐침) 라 매 커밋 게이트에 넣지 않는다.
+run 'step3_target_cert (STEP3 목표량 증서 ⓓ · RCA-07 · 13 · 해 상태 · 빠른 판 · 시험 먼저)' python3 scripts/test_step3_target_cert.py
+run 'step3_conv_cert (STEP3 수렴 증서 A/B/C · 봉인 표 · 10-21 실측 115–124 s 로 게이트에 넣음)' python3 scripts/test_step3_conv_cert.py
+# (10-21 · 1저자 *"더 꼼꼼하게"* → 위 두 줄로 게이트에 넣음 · 실측 115–124 s · 부하 낮음 · BLAS 스레드 1 · 옛 2,305 s 는 부하 8–12 때 · ⚠ K8b 는 OpenBLAS Sandybridge 경로에서 실패 = 봉인값의 경로 의존 (원장 RCA-07 메모) · 긴 판 `python3 scripts/test_step3_target_cert.py --long` ≈ 400 s = 게이트 밖 · 증서 코드를 바꾼 커밋 뒤 한 번)
+# ~~step3_conv_cert (STEP3 수렴 증서) = 게이트 밖 · 손으로 돌린다~~ — 10-20 실측 2,305 s (부하 8–12 · 합성 직접해 대조 탐침) 라 매 커밋 게이트에 넣지 않는다.
 #   python3 scripts/test_step3_conv_cert.py   (리뷰 핀 · 판정 런 전 · 수렴 코드를 바꾼 커밋 뒤 한 번)
 #  ★ 2026-10-20 (Rint ② S0 · 설계 v1 §2 · 등록 R §2-1) — 표현 원장 (raster 만 · 솔브 없음): 기하 원시 · 접합 census 미리보기 · 격자 원시 ·
 #    계획 (식 · 해시 · 개정 커밋 대조) · 스키마 (σ · 전류 칸 없음) · 끝-끝 (payload 실물로 생산 raster 입력을 잡는다).  구현 전 = 0/23 PASS.
