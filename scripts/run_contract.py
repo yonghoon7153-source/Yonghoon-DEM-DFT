@@ -835,13 +835,17 @@ def _zero_cert_problem(cert, sigma, _cc):
     return None
 
 
-def conv_cert_problem(cert, sigma):
+def conv_cert_problem(cert, sigma, man, channel='electronic'):
     """★ 2026-10-20 (Rint ② B6 · 설계 v1 §6 · N15) — 다음 세대 판정 해의 **수렴 증서** → 문제 | None.
     플래그를 믿지 않는다 — 기록된 수 (rtol · 불균형 · 이어 풀기 Δσ · info) 로 ⓐ ⓑ ⓒ 를 다시 판정 · 봉인값 = 이 코드의 상수
     (`step3_conv_cert`) · 증서 σ = 결과 σ (증서 ↔ 결과 결합 · 상대 1e-9).  칸 없음 = `--step3-rtol` 없이 돈 런 = 미게시.
     ★ 2026-10-21 (Codex RCA-07 · RCA-13 · 1저자 Q5 (가) · Q7 일부) — 증서 판 v2: **상태 먼저 분기** — VALID_ZERO_TOPOLOGY (σ 0 정상 ·
-    `_zero_cert_problem`) · POSITIVE_SOLVED (아래 ⓐ ⓑ ⓒ + ⓓ 목표량 증서를 기록된 하한 · 상한 · 게시 판 전류로 **같은 판정 함수**
-    `step3_conv_cert.target_judge` 에 다시 넣는다 · 게시 판 전류 × scale = 증서 σ) · 그 밖 상태 (단락 · 증서 못 세움 · 모름) = 미게시."""
+    `_zero_cert_problem`) · POSITIVE_SOLVED (`_positive_cert_problem` — ⓐ ⓑ ⓒ + ⓓ 목표량 증서를 기록된 하한 · 상한 · 게시 판 전류로
+    **같은 판정 함수** `step3_conv_cert.target_judge` 에 다시 넣는다 · 게시 판 전류 × scale = 증서 σ) · 그 밖 상태 (단락 · 증서 못 세움 ·
+    모름) = 미게시.
+    ★ 2026-10-21 (사전 리뷰 PRE-impl-07 · 1저자 "권고대로 해") — 안 검사를 다 지난 증서 (영값 · 양의 해) 를 그 런의 매니페스트 `man` ·
+    채널 `channel` ('electronic' = 주 전자 솔브 · 'ionic') 의 정본 지문 칸과 대조한다 (`cert_binding_problem`) — 다른 침대 · 다른 계획 ·
+    다른 채널의 증서 = 거부.  `man` 은 필수 (기본값 없음 — 결합을 조용히 건너뛰는 호출 길이 없다)."""
     import step3_conv_cert as _cc
     if not isinstance(cert, dict):
         return 'CERT|absent| 수렴 증서 칸이 없다 (--step3-rtol 없이 돈 런 · 다음 세대 판정 = 미게시 팔)'
@@ -849,10 +853,17 @@ def conv_cert_problem(cert, sigma):
         return f'CERT|version| {cert.get("version")!r} ≠ {_cc.CERT_VERSION!r}'
     st = cert.get('status')
     if st == _cc.STATUS_ZERO:
-        return _zero_cert_problem(cert, sigma, _cc)
-    if st != _cc.STATUS_POSITIVE:
+        why = _zero_cert_problem(cert, sigma, _cc)
+    elif st == _cc.STATUS_POSITIVE:
+        why = _positive_cert_problem(cert, sigma, _cc)
+    else:
         return (f'CERT|status| {st!r} — 게시 가능한 상태는 {_cc.STATUS_POSITIVE} · {_cc.STATUS_ZERO} 뿐 '
                 f'(단락 · 증서 못 세움 · 모르는 상태 = 미게시)')
+    return why or cert_binding_problem(cert, man, channel)
+
+
+def _positive_cert_problem(cert, sigma, _cc):
+    """POSITIVE_SOLVED 증서의 안 검사 (ⓐ ⓑ ⓒ ⓓ · 봉인 · σ 결합) → 문제 | None (★ 10-21 PRE-impl-07 — `conv_cert_problem` 본문을 옮김 · 글 그대로)."""
     for k in ('ok', 'pass_a', 'pass_b', 'pass_c', 'pass_d'):
         if type(cert.get(k)) is not bool:                        # noqa: E721
             return f'CERT|type| {k} = {cert.get(k)!r} (bool 이어야 한다)'
@@ -895,21 +906,104 @@ def conv_cert_problem(cert, sigma):
     return None
 
 
+#: ★ 2026-10-21 (사전 리뷰 PRE-impl-07) — 증서 ↔ 런 결합의 채널 (주 전자 솔브 `conv_cert` · 이온 솔브 `ion_conv_cert`)
+CERT_BIND_CHANNELS = ('electronic', 'ionic')
+
+
+def _hex32(v):
+    return isinstance(v, str) and len(v) == 32 and all(ch in '0123456789abcdef' for ch in v)
+
+
+def cert_binding_problem(cert, man, channel):
+    """★ 2026-10-21 (사전 리뷰 PRE-impl-07 · 1저자 "권고대로 해") — 수렴 증서 ↔ 그 런 결합 → 문제 | None.
+    옛 판: 영값 증서의 격자 지문 (`fp_sid` · `fp_sig`) 은 hex32 형식만 보고 σ 결합 (0 = 0) 은 아무것도 묶지 않아 **다른 침대의 영값 증서**를
+    받았다 · 양의 해 증서는 지문 칸이 없어 σ 결합 (상대 1e-9) 뿐 — 같은 σ 의 다른 침대 · 다른 계획 증서를 받았다.
+    증서 결합 칸 (`step3_conv_cert.bind_record` · 판 `BIND_VERSION` · 솔버가 그 솔브의 입력에서 낸다) ↔ 매니페스트의 **정본** 지문 칸:
+      격자  `fp_sid` = 접합 원장 `ca_ext.cjunc.evidence.fp.sid` (솔버 입구 `cjunc_require_quantitative` 가 실제 sid 와 대조한 값) ·
+            접합이 없으면 face_alpha off 격자 `ca_ext.ptfe_face.evidence.fp.sid_off` · 둘 다 없으면 거부 (묶을 칸이 없다).
+            조합 런의 두 칸 일치 = `ca_ext_cjunc.cjunc_block_problem` 의 몫 — 여기서 다시 판정하지 않는다 (매니페스트 자기 일관 = ca_ext 계약 ·
+            사슬 `rint_r_chain.read_run` 의 멈춤 코드 CA_EXT_RECORD · SID_GRID 를 그대로 둔다).
+      계획  face_alpha = `plan_<채널>` (칸 필수 · 값 None = 그 채널 계획 없음 · 계획 지문이 σ 표 · pid · 캡슐 · 행 지문을 품는다) ·
+            접합 = 전자 채널만 (`registry` · `plan_rows` · 이온 증서는 둘 다 None — 접합 = 주 전자 솔브만).
+    ⚠ 한정어 — σ 표 지문 `fp_sig` 는 형식 (hex32) 만 · face_alpha 런은 계획 지문으로 묶이지만 **접합만 (off · centerline) 런의 σ 표는
+      매니페스트와 묶이지 않는다** (매니페스트 σ 칸에서 표를 다시 만드는 길 = 표 인자 묶음의 사본 → 이번에 안 함) · 계 (행렬 L · b) 지문은
+      없다 (결합 = 솔브 입력까지 · 증서 수 ↔ 게시 σ 는 σ · I_bot × scale 결합)."""
+    import step3_conv_cert as _cc
+    if channel not in CERT_BIND_CHANNELS:
+        return f'CERT|bind| 채널 {channel!r} ∉ {CERT_BIND_CHANNELS}'
+    if not isinstance(cert, dict):
+        return f'CERT|bind| 증서가 dict 가 아니다 ({type(cert).__name__})'
+    if not isinstance(man, dict):
+        return f'CERT|bind| 매니페스트가 dict 가 아니다 ({type(man).__name__}) — 증서를 이 런에 묶을 수 없다'
+    if cert.get('bind_version') != _cc.BIND_VERSION:
+        return f'CERT|bind| 결합 판 {cert.get("bind_version")!r} ≠ 이 코드의 {_cc.BIND_VERSION!r} (결합 칸 없는 옛 증서 · 다른 판)'
+    _miss = [k for k in _cc.BIND_KEYS if k not in cert]
+    if _miss:
+        return f'CERT|bind| 증서 결합 칸 {_miss} 이 없다'
+    ca = man.get('ca_ext') if isinstance(man.get('ca_ext'), dict) else {}
+
+    def _fp_of(sub):
+        if sub not in ca:
+            return None
+        ev = ca[sub].get('evidence') if isinstance(ca[sub], dict) else None
+        fp = ev.get('fp') if isinstance(ev, dict) else None
+        return fp if isinstance(fp, dict) else {}
+    cjf, faf = _fp_of('cjunc'), _fp_of('ptfe_face')
+    if cjf is not None:
+        want_sid, src = cjf.get('sid'), 'ca_ext.cjunc.evidence.fp.sid'
+    elif faf is not None:
+        want_sid, src = faf.get('sid_off'), 'ca_ext.ptfe_face.evidence.fp.sid_off'
+    else:
+        return ('CERT|bind| 매니페스트에 격자 지문 칸이 없다 (ca_ext.cjunc · ca_ext.ptfe_face 의 evidence.fp) — 증서를 이 런에 묶을 수 '
+                '없다')
+    if not _hex32(want_sid):
+        return f'CERT|bind| 매니페스트 {src} = {want_sid!r} (격자 지문 소문자 hex 32)'
+    for k in ('fp_sid', 'fp_sig'):
+        if not _hex32(cert.get(k)):
+            return f'CERT|bind| 증서 {k} = {cert.get(k)!r} (격자 지문 소문자 hex 32 — `step3_sigma._grid_fp`)'
+    if cert.get('fp_sid') != want_sid:
+        return f'CERT|bind| 증서 격자 지문 {cert.get("fp_sid")} ≠ 매니페스트 {src} {want_sid} — 다른 침대 · 다른 격자의 증서'
+    want_fa = None
+    if faf is not None:
+        _k = f'plan_{channel}'
+        if _k not in faf:
+            return f'CERT|bind| 매니페스트 ca_ext.ptfe_face.evidence.fp 에 {_k} 칸이 없다 (값 None = 그 채널 계획 없음)'
+        want_fa = faf[_k]
+    if cert.get('fp_face_plan') != want_fa:
+        return (f'CERT|bind| 증서 face_alpha 계획 지문 {cert.get("fp_face_plan")!r} ≠ 매니페스트 {channel} 계획 지문 {want_fa!r} — '
+                f'다른 계획 · 다른 채널의 증서')
+    want_cj = (None, None)
+    if cjf is not None and channel == 'electronic':
+        if not (_hex32(cjf.get('registry')) and _hex32(cjf.get('plan_rows'))):
+            return (f'CERT|bind| 매니페스트 ca_ext.cjunc.evidence.fp 의 registry {cjf.get("registry")!r} · plan_rows '
+                    f'{cjf.get("plan_rows")!r} (둘 다 소문자 hex 32 — 접합 런의 주 전자 솔브는 계획이 있다)')
+        want_cj = (cjf['registry'], cjf['plan_rows'])
+    if (cert.get('fp_cjunc_registry'), cert.get('fp_cjunc_rows')) != want_cj:
+        return (f'CERT|bind| 증서 접합 지문 ({cert.get("fp_cjunc_registry")!r}, {cert.get("fp_cjunc_rows")!r}) ≠ 매니페스트 {want_cj!r} '
+                f'(접합 = 주 전자 솔브만) — 다른 계획 · 다른 채널의 증서')
+    _bad = [v for v in (want_fa,) + want_cj if v is not None and not _hex32(v)]
+    if _bad:
+        return f'CERT|bind| 계획 지문 {_bad[0]!r} (소문자 hex 32)'
+    return None
+
+
 def next_gen_cert_ok(step3):
     """★ 2026-10-20 (Rint ② B6) — 다음 세대 (`ca_ext` 블록 · 요청이 있는) 팔의 **게시 조건** → `(ok, why)`.
     전자 증서 (`step3.conv_cert`) 필수 · 이온을 계획해 푼 팔은 이온 증서 (`step3.ion_conv_cert`) 도 · 옛 세대 (p2) = 이 규칙 밖 (통과).
-    판정기가 팔 JSON 마다 부른다 — 실패 = 미게시 팔로 센다 (설계 §6 · 지금 생산 술어는 다음 세대 꼴에서 틀린 σ 를 수렴으로 인증한다)."""
+    판정기가 팔 JSON 마다 부른다 — 실패 = 미게시 팔로 센다 (설계 §6 · 지금 생산 술어는 다음 세대 꼴에서 틀린 σ 를 수렴으로 인증한다).
+    ★ 2026-10-21 (사전 리뷰 PRE-impl-07) — 증서마다 그 런의 매니페스트 · 채널과 결합 (`cert_binding_problem`) · 실패 사유 머리
+    `NEXTGEN|<채널>| CERT|bind|` (결합 실패 = 증서 출처 위반 — 수렴 실패 (`CERT|a|` 등) 와 가를 수 있다)."""
     s = step3 if isinstance(step3, dict) else {}
     man = s.get('manifest') if isinstance(s.get('manifest'), dict) else {}
     if not ('ca_ext' in man or _ca_ext_requested(man)):
         return True, None
-    why = conv_cert_problem(s.get('conv_cert'), s.get('sigma_e_eff_S_cm'))
+    why = conv_cert_problem(s.get('conv_cert'), s.get('sigma_e_eff_S_cm'), man, 'electronic')
     if why:
         return False, f'NEXTGEN|electronic| {why}'
     plan = man.get('component_plan') if isinstance(man.get('component_plan'), dict) else {}
     _ist = ((man.get('components') or {}).get('ionic') or {}).get('status') if isinstance(man.get('components'), dict) else None
     if plan.get('ionic') is True and _ist != 'not_solvable':
-        why = conv_cert_problem(s.get('ion_conv_cert'), s.get('sigma_ion_eff_S_cm'))
+        why = conv_cert_problem(s.get('ion_conv_cert'), s.get('sigma_ion_eff_S_cm'), man, 'ionic')
         if why:
             return False, f'NEXTGEN|ionic| {why}'
     return True, None
