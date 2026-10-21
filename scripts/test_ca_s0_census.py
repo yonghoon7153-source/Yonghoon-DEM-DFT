@@ -428,11 +428,25 @@ def t_plan_commit():
         ('L3p R 런 계획 꼴 틀림 (칸 하나 더) → 거부', dict(r_plan=r_plan_bytes(tol, extra_key=1))),
         ('L3q `| 계획 해시 |` 줄 둘 → 거부', dict(extra_doc='| 계획 해시 | 다른 줄 | ' + 'a' * 64 + ' |\n')),
         ('L3r `| S0 계획 해시 |` 줄 둘 → 거부', dict(extra_doc=f'| S0 계획 해시 | 다른 줄 | {h} |\n')),
+        #  ★ 4판 (10-21 · 1저자 Q-G 비준 · 등록 R 4판 §11 ④ · §3-2 · §3-2b ④ · §5-6) — 결과 전 등록 숫자 (점 수 상한 · 역상 폭 상한 · SV 반사실
+        #    문턱 · 범위) 는 Codex 회신 뒤 · S0 단계 2 (DBE) 열람 **전** — 단계 2 의 인자 커밋에 있어야 한다 → R 런 계획의 그 칸이 null (⬜) 이면 관문이
+        #    거부 (사슬 `rint_r_chain.require_plan_numbers` 와 같은 함수 · 옛 관문 = load_plan 꼴 검사만 · null 을 받았다)
+        *((f'L3v R 런 계획 결과 전 등록 숫자 {k} = null (⬜ · Q-G — 단계 2 전에 등록) → 거부', dict(r_plan=r_plan_bytes(tol, **{k: None})))
+          for k in ('max_ladder_points', 'calib_rj_ratio_max', 'sv_cf_threshold', 'sv_cf_scope')),
     )
     for nm, kw in neg:
         with tempfile.TemporaryDirectory() as d:
             repo, sha, prel, rrel = make_plan_repo(d, b, h, **kw)
             chk(nm, raises(lambda: _vpc(repo, sha, prel, rrel), S0.S0Error))
+    with tempfile.TemporaryDirectory() as d:                 # ★ 4판 (Q-G) — 옳은 이유: 사슬과 같은 멈춤 코드 (사본 없음)
+        repo, sha, prel, rrel = make_plan_repo(d, b, h, r_plan=r_plan_bytes(tol, sv_cf_threshold=None))
+        try:
+            _vpc(repo, sha, prel, rrel)
+            why = 'no error'
+        except S0.S0Error as e:
+            why = str(e)
+        chk('L3w Q-G 거부 사유 = 사슬 require_plan_numbers 의 PLAN_NUMBER_UNREGISTERED (sv_cf_threshold · 단계 2 전 등록)',
+            'PLAN_NUMBER_UNREGISTERED' in why and 'sv_cf_threshold' in why, why)
     with tempfile.TemporaryDirectory() as d:
         repo, sha, prel, rrel = make_plan_repo(d, b, h)
         chk('L3s R 런 계획 경로 = 리포 상대 ASCII (절대 · .. · 공백 = 거부)',
