@@ -315,5 +315,11 @@
   "러너": "db/inputs/lpscl_glass_model_check_2026_10_19/run_qe_sp_kgy.sh (sha16 43faab827c2cc2dc) — Nd EOS 잠금 /tmp/ndsite_eos.lock 이 풀릴 때까지 flock 대기 → VRAM 여유 ≥ 20,000 MiB 기다림 (남의 잡 안 죽임 · 상한 96 h) → run_force_check_scf.sh 를 sp → pulay → kpt (LOCK /tmp/li2s_qe_sp.lock · 물러나면 다시 부름 ≤ 20) · selftest 9 · 깨기 4/4 (잠금 대기 · 순서 · mode 검사 · VRAM 대기)",
   "메모리": "kgy 에 CPU 빌드 pw.x 기록 없음 → 블록이 있으면 검사용 프로브 (≤ 120 초 · timeout) · 없으면 09-18 실측 (Γ ≈ 13.5 GB · 8.1 분) 근거로 sp 는 들어간다고 보고 pulay · kpt 를 뒤에",
   "by": "agent · 2026-10-21"
+ },
+ "✅_묶음_발사_kgy_2026_10_21_2100": {
+  "발사": "kgy tmux li2s_qe_sp 10-21 21:00:01 · worktree ~/wt_mcsp_1021 (f1c49a2c · 도구 sha16 eac72dfe7c12d08d · 러너 sha16 43faab827c2cc2dc 사용자 출력 일치) · RUN ~/work/runs/li2s_model_check_sp_2026_10_21 (sp 10 · pulay 2 · kpt 1 · k = A_s3 · c_입력_설정 ✓ · scf.in 13) · 로그 RUN/chain.log",
+  "상태": "'Nd EOS 잠금 대기 (/tmp/ndsite_eos.lock)' — 바로 풀리지 않았다 = Nd 러너가 그 잠금을 잡고 있다 · 내부 러너 run_force_check_scf.sh sha16 e6fc5b25e4f2b3ad (Nd 발사판과 같은 러너) · 풀리면 VRAM ≥ 20,000 MiB 확인 뒤 sp → pulay → kpt",
+  "예상_어림": "Nd EOS 남은 4 점 (MP_07 x102 진행 · 점당 ≈ 10 h) → ≈ 10-23 오전 · 그 뒤 li2s ≈ 3 h · 그다음 Nd --fit · V₀ 이완",
+  "by": "agent · 2026-10-21"
  }
 }
