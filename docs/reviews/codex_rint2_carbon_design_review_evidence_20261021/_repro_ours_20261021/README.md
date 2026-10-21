@@ -91,7 +91,7 @@ RCA-07 의 결론 자체 (A/B/C 통과 ≠ 1e-4 인증) 는 우리 환경에서�
 
 | # | 차이 | 크기 | 원인 (추정 표지) | 판정 영향 |
 |---|---|---|---|---|
-| ① | RCA-07 주 반례 (`small=True`, 대비 6.59e11) 첫 CG 판 전류 | G 상대 4.0e-7 · 오차 −1.88593e-4 → −1.88990e-4 · 불균형 9.15e-5 → **1.47e-4** | 같은 10 반복 · 같은 행렬 · SciPy cg / NumPy 반올림 차 (SciPy 1.17.1 ↔ 1.16.3 · NumPy 2.4.6 ↔ 2.5.3 — 어느 쪽인지 미분리 · 추정) | **ⓑ 판 균형 실패 → ok False** (Codex 는 ε_I 의 91 % 자리 · 칼날 위). 이 사례만으로는 우리 환경에서 "A/B/C 통과 반례" 가 아니다 |
+| ① | RCA-07 주 반례 (`small=True`, 대비 6.59e11) 첫 CG 판 전류 | G 상대 4.0e-7 · 오차 −1.88593e-4 → −1.88990e-4 · 불균형 9.15e-5 → **1.47e-4** | ~~같은 10 반복 · 같은 행렬 · SciPy cg / NumPy 반올림 차 (SciPy 1.17.1 ↔ 1.16.3 · NumPy 2.4.6 ↔ 2.5.3 — 어느 쪽인지 미분리 · 추정)~~ → **(10-21 뒤 · §10) OpenBLAS CPU 계산 경로 (이 컨테이너 AVX-512 SkylakeX ↔ AVX2 Haswell) · 라이브러리 판 무관** (Codex 판 환경도 우리와 218/218 같음 · Haswell 경로면 두 환경 모두 Codex 와 218/218 같음) | **ⓑ 판 균형 실패 → ok False** (Codex 는 ε_I 의 91 % 자리 · 칼날 위). 이 사례만으로는 우리 환경에서 "A/B/C 통과 반례" 가 아니다 |
 | ② | RCA-07 연결 보조 · 23 반복 사례 | 상대 3.8e-8 · 4.4e-5 (G) | 같은 원인 | 없음 — 둘 다 우리도 A/B/C 통과 · 오차 −0.9037 % · +5.558e-4 → RCA-07 결론 유지 |
 | ③ | search seed 611 | 143,478 / 200,000 표본 (80 s 예산 · nice · 동시 부하) | 벽시계 예산 | 없음 — 최대 오차 표본 57,686 이 예산 안 · 같은 표본 |
 | ④ | RINT2-B-01 | 원문 시험 4 단언 (J12P CRLF ×2 · J15P CR · J15P 섞임) | Windows text 쓰기 LF→CRLF 뒤 재치환 | Linux 324/324 = 저자 Linux 주장과 같음 · Windows 전용 확인 |
@@ -149,3 +149,37 @@ RCA-07 의 결론 자체 (A/B/C 통과 ≠ 1e-4 인증) 는 우리 환경에서�
 
 2 MB 넘는 파일 없음 · 탐침이 만든 합성 픽스처 (`part_b/tmp` 3.8 MB · 결정적 재생성) 는 넣지 않음 — SHA 는 `part_b_evidence/structure_fixture_manifest.json` · `independent_join_checks.json`.
 `source/` 사본 (65 MB) · 2b9efa253 트리 · 작업 사본은 끝나고 지움 — 다시 만들려면 `tools/rebuild_source.py` · `tools/setup_partb.py`.
+
+## 10. 원인 분리 — OpenBLAS 계산 경로 (10-21 뒤 · 1저자 Q3 (가) *"다 권고대로 가"*)
+
+자료 = `env_kernel_20261021/` (탐침 JSON 8 · 봉인 표 로그 5 · `env.json` · 도구).  핀 소스는 같은 git 객체로 다시 만들었다 (1,161 / 1,161).
+
+| 실험 | 결과 |
+|---|---|
+| Codex 판 환경 (Python 3.12.3 · NumPy 2.5.3 · SciPy 1.16.3 · 같은 컨테이너 · 기본 경로) | 우리 기본 환경 (3.11.15 · 2.4.6 · 1.17.1) 과 `convergence_probes` 218 값 **218/218 비트 같음** → 라이브러리 판은 원인이 아니다 |
+| `OPENBLAS_CORETYPE=Haswell` (AVX2) · 스레드 1 | **두 환경 모두** Codex JSON 과 218/218 비트 같음 (주 반례 판 불균형 9.147795533580172e-05 · 오차 −1.8859300240869903e-4 · ok True) |
+| 같은 탐침 · 경로별 (Py 3.12 환경) | Haswell = Zen = Sandybridge = Nehalem = Codex 값 · Prescott (Katmai) 불균형 9.1389e-5 · **SkylakeX (이 컨테이너 기본 · AVX-512) 1.4720e-4 → ok False** |
+
+봉인 표 (`scripts/step3_conv_cert.py --table` · 핀 · 24 행 · 좋은 해 불균형 최대 ~ 나쁜 해 최소):
+
+| 경로 · 스레드 | ε_I 구간 | 봉인 규칙이 고른 ε_I | 나쁜 해 수 | 나쁜 해가 증서 전체 통과 |
+|---|---|---|---|---|
+| SkylakeX 1 (기본 · 게이트 · 재현 기준) | [5.761865700e-5, 1.238832900e-4) | 1e-4 | 4 | 0 |
+| SkylakeX 4 | [4.887566936e-5, 1.145707358e-4) | 1e-4 | 5 | 0 |
+| Haswell 1 (= Codex) | [5.685205629e-5, 1.342172833e-4) | 1e-4 | 4 | 0 |
+| Haswell 4 | [5.317737615e-5, 1.060343271e-4) | 1e-4 | 4 | 0 |
+| Nehalem 1 | [7.022571814e-5, 1.325052310e-4) | 1e-4 | 5 | 0 |
+| Sandybridge 1 | [5.231393285e-5, **9.789932998e-5**) | **7.156464891e-5** | 5 | 0 |
+
+뜻:
+- RCA-07 주 반례의 판정 뒤집힘 (§5 ①) 은 **OpenBLAS CPU 계산 경로** 차이다 (AVX-512 SkylakeX ↔ AVX2 Haswell) — OS · Python · NumPy · SciPy 판이 아니다.  같은 경로 · 같은 스레드면 판이 달라도 비트 같다.
+- 10-20 요청서 · 설계 문서의 구간 [4.89 × 10⁻⁵, 1.146 × 10⁻⁴) = **SkylakeX · 4 스레드** 값과 끝자리까지 같다 (그 실행에 스레드 고정이 없었던 것으로 본다 · 추정).  게이트 · 재현 기준 (스레드 1) 에서는 [5.762e-5, 1.239e-4).
+- ⚠ **Sandybridge · 스레드 1 에서는 봉인값 ε_I 1e-4 가 구간 밖**이다 — 봉인 규칙이 7.156e-5 를 고르고 `scripts/test_step3_conv_cert.py` K8b (봉인 = 코드 상수) 가 그 경로에서 실패한다.  그 경로의 나쁜 행 (junction · seed 0 · rtol 1e-10 · σ 오차 1.005e-4 · 불균형 9.790e-5) 은 ⓑ 를 통과하지만 ⓐ · ⓒ 에서 거부돼 **증서 전체는 거부**한다.  여섯 조합 모두 "나쁜 해가 증서 전체를 통과" 0 건.
+- ⇒ ⓑ 의 봉인 ε_I 는 계산 경로 · 스레드마다 다시 봉인해야 하는 **경험적 값**이다 (판정문 RCA-07 의 "환경별 기록" 이 이것) · 판정은 경로와 무관한 목표량 증서 ⓓ 로 한다 (수정 계획 Q5 (가)).
+
+재현:
+```bash
+# 핀 소스 = tools/rebuild_source.py (§2) · 탐침 사본 = env_kernel_20261021/tools/convergence_probes_envcodex_copy.py (출력 경로만 바꿈)
+OPENBLAS_CORETYPE=Haswell OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python3 -I -X utf8 -B geometry/convergence_probes.py
+cd source && OPENBLAS_CORETYPE=Sandybridge OPENBLAS_NUM_THREADS=1 python3 -I -X utf8 -B scripts/step3_conv_cert.py --table
+```

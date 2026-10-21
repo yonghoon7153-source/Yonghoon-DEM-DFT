@@ -1,0 +1,28 @@
+    STEP3 solve: 41,472 dof, plate contacts 576/576 — CG running (CPU, 수 분 소요 가능)…
+    STEP3 solve: 41,472 dof, plate contacts 576/576 — CG running (CPU, 수 분 소요 가능)…
+    STEP3 solve: 41,472 dof, plate contacts 576/576 — CG running (CPU, 수 분 소요 가능)…
+plain     seed 0 rtol 1e-08 info 0 resid 9.67e-09 prod_ok True  σerr 7.530e-09 imb 1.296e-07 cert False (a False b True c True) it 691
+plain     seed 0 rtol 1e-10 info 0 resid 9.88e-11 prod_ok True  σerr 1.512e-08 imb 2.414e-08 cert False (a False b True c True) it 893
+plain     seed 0 rtol 1e-12 info 0 resid 9.97e-13 prod_ok True  σerr 1.532e-08 imb 2.605e-08 cert True (a True b True c True) it 1095
+plain     seed 0 rtol 1e-14 info 0 resid 1.77e-14 prod_ok True  σerr 1.510e-08 imb 2.583e-08 cert True (a True b True c True) it 1283
+junction  seed 0 rtol 1e-08 info 0 resid 9.65e-09 prod_ok True  σerr 1.136e-02 imb 1.129e-02 cert False (a False b False c False) it 2484
+junction  seed 0 rtol 1e-10 info 0 resid 9.99e-11 prod_ok True  σerr 3.091e-05 imb 2.843e-05 cert False (a False b True c True) it 3196
+junction  seed 0 rtol 1e-12 info 0 resid 9.95e-13 prod_ok True  σerr 4.351e-07 imb 4.600e-07 cert True (a True b True c True) it 4175
+junction  seed 0 rtol 1e-14 info 0 resid 2.92e-14 prod_ok True  σerr 6.128e-08 imb 7.285e-08 cert True (a True b True c True) it 5034
+plain     seed 1 rtol 1e-08 info 0 resid 9.82e-09 prod_ok True  σerr 1.175e-08 imb 4.691e-07 cert False (a False b True c True) it 692
+plain     seed 1 rtol 1e-10 info 0 resid 9.49e-11 prod_ok True  σerr 1.160e-08 imb 1.777e-08 cert False (a False b True c True) it 896
+plain     seed 1 rtol 1e-12 info 0 resid 9.67e-13 prod_ok True  σerr 1.140e-08 imb 1.916e-08 cert True (a True b True c True) it 1091
+plain     seed 1 rtol 1e-14 info 0 resid 1.76e-14 prod_ok True  σerr 1.196e-08 imb 1.970e-08 cert True (a True b True c True) it 1286
+junction  seed 1 rtol 1e-08 info 0 resid 9.21e-09 prod_ok True  σerr 1.788e-03 imb 1.737e-03 cert False (a False b False c False) it 2218
+junction  seed 1 rtol 1e-10 info 0 resid 9.97e-11 prod_ok True  σerr 1.044e-04 imb 1.060e-04 cert False (a False b False c False) it 3257
+junction  seed 1 rtol 1e-12 info 0 resid 9.60e-13 prod_ok True  σerr 1.890e-06 imb 1.876e-06 cert True (a True b True c True) it 4254
+junction  seed 1 rtol 1e-14 info 0 resid 2.86e-14 prod_ok True  σerr 2.080e-08 imb 2.734e-08 cert True (a True b True c True) it 5048
+plain     seed 2 rtol 1e-08 info 0 resid 9.76e-09 prod_ok True  σerr 7.382e-09 imb 7.304e-08 cert False (a False b True c True) it 731
+plain     seed 2 rtol 1e-10 info 0 resid 9.59e-11 prod_ok True  σerr 1.460e-08 imb 2.524e-08 cert False (a False b True c True) it 935
+plain     seed 2 rtol 1e-12 info 0 resid 9.94e-13 prod_ok True  σerr 1.492e-08 imb 1.995e-08 cert True (a True b True c True) it 1133
+plain     seed 2 rtol 1e-14 info 0 resid 1.68e-14 prod_ok True  σerr 1.496e-08 imb 1.996e-08 cert True (a True b True c True) it 1326
+junction  seed 2 rtol 1e-08 info 0 resid 9.39e-09 prod_ok True  σerr 5.835e-03 imb 5.830e-03 cert False (a False b False c False) it 2520
+junction  seed 2 rtol 1e-10 info 0 resid 9.86e-11 prod_ok True  σerr 5.353e-05 imb 5.318e-05 cert False (a False b True c True) it 3419
+junction  seed 2 rtol 1e-12 info 0 resid 9.90e-13 prod_ok True  σerr 7.818e-07 imb 7.861e-07 cert True (a True b True c True) it 4591
+junction  seed 2 rtol 1e-14 info 0 resid 2.82e-14 prod_ok True  σerr 2.993e-09 imb 2.995e-09 cert True (a True b True c True) it 5376
+{'rtol_stop': 1e-12, 'eps_I': 0.0001, 'interval': (5.3177376152822224e-05, 0.00010603432707246199), 'b_diagnostic_only': False, 'n_rows': 24, 'n_good': 20, 'n_bad': 4, 'err_tol': 0.0001, 'eps_start': 0.0001}
