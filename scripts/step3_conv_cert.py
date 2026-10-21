@@ -34,6 +34,12 @@
   축약 · 절단 그래프에 두 판을 잇는 성분이 없다 = σ 0 이 **정상 결과** · 증서 실패 아님 · 게시 σ 가 정확히 0 일 때만) ·
   ELECTRODE_SHORT (축약 무리가 두 판을 잇는다) · NOT_CERTIFIABLE (그 밖 — 얇은 침대 · 모르는 사유 · 원장 ↔ 행렬 불일치 · 비유한 φ).
   조기 반환 해 (솔버가 CG 없이 σ 0 을 낸 해) 는 `early_record` · 푼 해는 `certify` 가 같은 판 (`CERT_VERSION`) 으로 낸다.
+증서 ↔ 런 결합 (★ 2026-10-21 · 사전 리뷰 PRE-impl-07 · 1저자 "권고대로 해" — `bind_record` · 판 `BIND_VERSION`): 솔버가 증서 (영값 ·
+  양의 해 · 조기 반환 · 행렬 그래프) 에 그 해의 솔브 입력 지문을 싣는다 — 격자 `fp_sid` · σ 표 `fp_sig` (`step3_sigma._grid_fp`) ·
+  face_alpha 계획 `fp_face_plan` (`fp_plan` — σ 표 · pid · 캡슐 · 행 지문을 품는다) · 접합 원장 `fp_cjunc_registry` · 계획 행
+  `fp_cjunc_rows`.  `run_contract.cert_binding_problem` 이 매니페스트의 정본 지문 칸과 대조한다 (옛 판: 영값 증서 지문 = hex32 형식만 ·
+  σ 결합 0 = 0 은 아무것도 안 묶었다 → 다른 침대의 영값 증서를 받았다 · 양의 해 증서는 지문 칸이 없었다).
+  ⚠ 계 (행렬 L · b) 지문은 아니다 — 결합 = 솔브 입력 (격자 · σ 표 · 계획) 까지.
 
 봉인 (설계 §6 절차 3 · 결과 전 · 합성 직접해 대조 — 실침대 σ 를 보지 않는다):
   `probe_table()` = 24 × 24 × 72 · vox 0.15 · AM (σ 0.0041) 바탕에 아래 판에서 자라 위 판에 안 닿는 섬유 기둥 (σ 7,853.98 · 셀 10 %) ·
@@ -83,6 +89,9 @@ CERT_STATUSES = (STATUS_POSITIVE, STATUS_ZERO, STATUS_SHORT, STATUS_NOT_CERTIFIA
 ZERO_REASONS = ('no_through_component', 'all_floating_dropped', 'no_plate_contact', 'no_conductive_voxels')
 SHORT_REASONS = ('cjunc_electrode_short',)
 ZERO_SOURCES = ('early_return', 'matrix_graph')
+#: ★ 2026-10-21 (사전 리뷰 PRE-impl-07) — 증서 ↔ 런 결합 칸 (`bind_record`) · 판 이름 (바꾸면 이름도 바꾼다 · 계약이 봉인한다)
+BIND_VERSION = 'cert-bind-v1'
+BIND_KEYS = ('fp_sid', 'fp_sig', 'fp_face_plan', 'fp_cjunc_registry', 'fp_cjunc_rows')
 _UNIT = 2.0 ** -53                             # float64 단위 반올림 u
 _LEDGER_TOL = 64.0 * _UNIT                     # 원장 ↔ 행렬 대조 (행 합 · b) 허용 = 조립 합 순서 반올림 여유 × (그 행의 항 수 + 8)
 _SYM_TOL = 1.0e-12                             # L 대칭 (값) 허용 — 상대 · 중복 간선을 두 방향에서 다른 순서로 더한 반올림 (k·u) 만 받는다
@@ -609,11 +618,21 @@ def classify_reason(reason):
     return STATUS_NOT_CERTIFIABLE
 
 
-def early_record(res, *, zero_graph, fp_sid, fp_sig):
+def bind_record(*, fp_sid, fp_sig, fp_face_plan=None, fp_cjunc_registry=None, fp_cjunc_rows=None):
+    """★ 2026-10-21 (사전 리뷰 PRE-impl-07) — 증서 ↔ 런 결합 칸 (영값 · 양의 해 같은 칸 · 솔버가 솔브 입력에서 낸다):
+    fp_sid · fp_sig = 그 해의 sid · σ 표 격자 지문 (`step3_sigma._grid_fp`) · fp_face_plan = 그 솔브의 face_alpha 계획 지문 (`fp_plan` ·
+    없으면 None) · fp_cjunc_registry · fp_cjunc_rows = 그 솔브의 탄소 접합 원장 · 계획 행 지문 (없으면 None).  대조 =
+    `run_contract.cert_binding_problem` (매니페스트의 정본 지문 칸 · 채널)."""
+    return {'bind_version': BIND_VERSION, 'fp_sid': fp_sid, 'fp_sig': fp_sig, 'fp_face_plan': fp_face_plan,
+            'fp_cjunc_registry': fp_cjunc_registry, 'fp_cjunc_rows': fp_cjunc_rows}
+
+
+def early_record(res, *, zero_graph, fp_sid, fp_sig, fp_face_plan=None, fp_cjunc_registry=None, fp_cjunc_rows=None):
     """조기 반환 해 (솔버가 CG 없이 σ 0 을 냈다) 의 상태 증서 — 같은 판 (`CERT_VERSION`) · ⓐ–ⓓ 칸 = None (해당 없음).
     VALID_ZERO_TOPOLOGY = 영값 위상 사유 · 관통 dof 0 (있으면) · σ 정확히 0 · ok True (σ 0 이 정상 결과 — 바닥 극한 R_j = ∞).
     모순 (영값 사유인데 관통 dof > 0 · σ ≠ 0) = NOT_CERTIFIABLE.  zero_graph = 그 0 을 정한 그래프 (조립 · 축약 · 절단 — 솔버가 준다) ·
-    fp_sid · fp_sig = 그 해의 sid · σ 격자 지문 (`step3_sigma._grid_fp`)."""
+    fp_sid · fp_sig = 그 해의 sid · σ 격자 지문 (`step3_sigma._grid_fp`) · ★ 10-21 (PRE-impl-07) 계획 지문 셋 = `bind_record` 와 같은 칸
+    (증서 ↔ 런 결합 — 영값 증서는 σ 0 = 0 이 아무것도 안 묶으므로 이 칸이 유일한 결합이다)."""
     res = res if isinstance(res, dict) else {}
     reason = res.get('reason')
     st = classify_reason(reason)
@@ -634,6 +653,9 @@ def early_record(res, *, zero_graph, fp_sid, fp_sig):
            'sigma': 0.0, 'fp_sid': fp_sid, 'fp_sig': fp_sig,
            'rtol_max': CERT_RTOL_MAX, 'eps_I': CERT_EPS_I, 'resolve_tol': CERT_RESOLVE_TOL, 'target_tol': CERT_TARGET_TOL,
            'target_version': TARGET_VERSION, 'pass_a': None, 'pass_b': None, 'pass_c': None, 'pass_d': None}
+    #  ★ 10-21 (PRE-impl-07) — 결합 칸 (fp_sid · fp_sig 는 위 자리 그대로 · 판 이름과 계획 지문 셋이 뒤에 붙는다)
+    rec.update(bind_record(fp_sid=fp_sid, fp_sig=fp_sig, fp_face_plan=fp_face_plan,
+                           fp_cjunc_registry=fp_cjunc_registry, fp_cjunc_rows=fp_cjunc_rows))
     return rec
 
 

@@ -211,6 +211,39 @@ def lean2(kind):
             'ionic': {'status': 'disabled', 'why': 'LEAN 2 (--no-ion)'}}
 
 
+#  ★ 3판 — 해 상태 (등록 R §5-0): 세계 `states` 규칙 = 조기 반환 영값 (VALID_ZERO_TOPOLOGY · 바닥) · 단락 (ELECTRODE_SHORT · J11 · 천장 /
+#    c 1 축약) — payload `_step3_early` 꼴 (σ 0.0 · None · 사유 · 상태 증서 · 전자 not_solvable · 주 영수증 failed)
+ST = None
+for f in W.get('states', []):
+    ok = True
+    for k, v in (f.get('match') or {}).items():
+        ok = ok and ((v in kit) if k == 'kit_has' else str(ctx.get(k)) == str(v))
+    if ok:
+        ST = f['state']
+        break
+REASON = {'zero': 'no_through_component', 'short': 'cjunc_electrode_short'}.get(ST)
+SVCF = E.get('CJUNC_SV_CF', '') == '1'
+
+
+def sv_record():
+    """SV 반사실 기록 (증거 투영 꼴 · `ca_ext_svcf.sv_cf_record`) — 세계 `sv_cf` 규칙 (첫 일치) · 기본 = computed 1.2."""
+    rule = {'status': 'computed', 'ratio': 1.2}
+    for f in W.get('sv_cf', []):
+        ok = True
+        for k, v in (f.get('match') or {}).items():
+            ok = ok and ((v in kit) if k == 'kit_has' else str(ctx.get(k)) == str(v))
+        if ok:
+            rule = f
+            break
+    st = rule['status']
+    r_ = rule.get('ratio') if st == 'computed' else None
+    return {'kind': rule.get('kind', 'counterfactual_cut_sv_faces'), 'requested': True, 'threshold': None, 'status': st, 'flag': None,
+            'cg_info': (0 if st in ('computed', 'unconverged') else None), 'sv_counterfactual_ratio': r_,
+            'ratio_limit': ('inf' if st == 'no_through_without_sv' else None), 'G_full_code': 2.5,
+            'G_cut_code': (2.5 / r_ if r_ else (0.0 if st == 'no_through_without_sv' else None)), 'resid': (1e-13 if r_ else None),
+            'n_sv_faces_cut': 4, 'conv_cert': None, 'backend_last_solve': None}
+
+
 def manifest(i, si):
     #  격자 지문 — 킷 · 래스터 (vox · SDCP 양보) · origin (팔 번호) 마다 (R_j · c · P 는 래스터를 안 바꾼다) · 소문자 hex 32
     sid = hx('sid|%s|%r|%s|%d' % (kit, vox, yv, i))
@@ -227,15 +260,22 @@ def manifest(i, si):
         rc_cj['electronic_main'] = dict(rc_cj['electronic_main'], status='failed', solved=False, why='fake fault')
     if hit('lean_wetted'):                     # 집전체 솔브에 접합 적용 (LEAN 2 표 밖 — 정본 계약이 먼저 잡는다)
         rc_cj['electronic_wetted'] = {'status': 'applied'}
-    solve = {'solved': True, 'short': False, 'sv_dominant': False, 'n_junction_edges': n_edge, 'n_contracted': n_ctr,
-             'dissipation_share': {'junction': (0.4 if n_edge else 0.0), 'va_face': 0.2, 'sv_face': 0.05, 'sdcp_cell': 0.02}}
-    if hit('sv_dominant'):
-        solve['sv_dominant'] = True
-    if hit('sv_missing'):
-        solve.pop('sv_dominant')
+    #  ★ 3판 — 옛 `sv_dominant` 철회 (RCA-06) → `sv_local_dissipation` (진단) · 반사실 기록 = CJUNC_SV_CF 런만
+    solve = {'solved': True, 'short': False, 'n_junction_edges': n_edge, 'n_contracted': n_ctr,
+             'dissipation_share': {'junction': (0.4 if n_edge else 0.0), 'va_face': 0.2, 'sv_face': 0.05, 'sdcp_cell': 0.02},
+             'sv_local_dissipation': {'kind': 'diagnostic_local_dissipation', 'sv_share': 0.07, 'vv_junction_share': 0.4,
+                                      'meaning': 'fake'}}
+    if SVCF:
+        solve['sv_counterfactual'] = sv_record()
+    if REASON:                                 # 조기 반환 해 — 주 솔브 없음 (payload `_step3_early` · `solve_receipt` 꼴)
+        rc_cj['electronic_main'] = {'status': 'failed', 'why': REASON, 'n_instances': N_INST, 'n_junction_edges': 0, 'solved': False,
+                                    'fp_registry': regfp}
+        solve = {'solved': False, 'reason': REASON, 'short': ST == 'short', 'n_contracted': n_ctr, 'n_junction_edges': 0}
     fa_plan = hx('plan_e|' + sid)
     rc_fa = dict(lean2('fa'), electronic_main={'status': 'applied', 'n_rows_used': 5, 'n_cut_used': 1, 'n_isolated_by_cut': 0,
                                                'plate_cross_columns': 0, 'solved': True, 'fp_plan': fa_plan})
+    if REASON:
+        rc_fa['electronic_main'] = dict(rc_fa['electronic_main'], status='failed', why=REASON, n_rows_used=0, solved=False)
     fa_fp = {'caps': hx('caps|' + kit), 'plan_electronic': fa_plan, 'plan_ionic': None, 'sid_off': sid}
     if hit('sid_off_other'):                   # off 격자 지문 ≠ 접합 원장 지문 (같은 솔브인데) — 정본 계약이 잡는다
         fa_fp['sid_off'] = '0' * 32
@@ -256,6 +296,8 @@ def manifest(i, si):
                                         'membership': hx('mem|' + kit)},
                                  'rejections': [], 'sdcp_mod_c': (None if c == '' else float(c)), 'status': T['cj_status'],
                                  'qualifiers': cp_(T['cj_qual']), 'diagnostics': cp_(T['cj_diag']), 'label': T['cj_label']}}}
+    if SVCF:                                   # ★ 3판 — 사슬이 켠 런만 (producer 문턱 = None · 문턱 = 사슬 계획)
+        ca['cjunc']['evidence']['sv_counterfactual_request'] = {'threshold': None}
     req = ['cjunc']
     if c != '':
         ca['sdcp_mod'] = {'protocol': cp_(T['sd'][c]),
@@ -273,9 +315,12 @@ def manifest(i, si):
            'sigma_superp_S_cm': 0.0, 'sigma_swcnt_S_cm': 0.0, 'swcnt_ion_block': False, 'dilate_z': 0.0, 'se_source': 'file:se.npy',
            'origin_shift_um': list(shifts[i]), 'ptfe_cells_observed': 0, 'field_requested': False,
            'component_plan': {'electronic': True, 'ionic': False, 'thermal': False, 'pore': False, 'collector': False},
-           'components': {'electronic': {'status': 'complete', 'backend': {'used': backend}}},
-           'backend': {'used': backend, 'rtol': rtol}, 'code_sha': 'fake0000', 'input_digest': 'in-' + kit,
+           'components': ({'electronic': {'status': 'not_solvable', 'reason': REASON}} if REASON else
+                          {'electronic': {'status': 'complete', 'backend': {'used': backend}}}),
+           'backend': ({} if REASON else {'used': backend, 'rtol': rtol}), 'code_sha': 'fake0000', 'input_digest': 'in-' + kit,
            'ca_ext_requested': req, 'ca_ext': ca}
+    if REASON:
+        man['backend_last_solve'] = {}
     if hit('p2gen'):
         man.pop('ca_ext')
         man.pop('ca_ext_requested')
@@ -294,7 +339,7 @@ def manifest(i, si):
     return man
 
 
-def cert(si):
+def cert(si, man):
     ok = not hit('certfail')
     return {'version': CERT['version'], 'rtol_used': rtol, 'rtol_max': CERT['rtol_max'], 'eps_I': CERT['eps_I'],
             'resolve_rtol': max(rtol * 1e-2, 1e-14), 'resolve_rtol_floor': 1e-14, 'resolve_tol': CERT['resolve_tol'],
@@ -303,17 +348,43 @@ def cert(si):
             'iters': 321, 'resolve_iters': 17,
             #  ★ 10-21 증서 v2 — 상태 · ⓓ (구간 [1, 1] ∋ 게시 판 전류 1 · scale = σ)
             'status': CERT['status'], 'pass_d': True, 'target_tol': CERT['target_tol'], 'target_version': CERT['target_version'],
-            'target_fp': CERT['target_fp'], 'target_ledger_ok': True, 'target_topology': 'through', 'target_lo': 1.0,
-            'target_hi': 1.0, 'scale': si}
+            'target_fp': CERT['target_fp'], 'target_ledger_ok': True, 'target_topology': 'through',
+            #  ★ 4판 (Q2-2 · §3-2b ③″) — 세계 'cert_e' = 그 팔 증서의 보장 오차 (구간 [1 − e, 1] ∋ 게시 판 전류 1 · 폭 = 오차 = e ≤ τ)
+            'target_lo': 1.0 - float(W.get('cert_e', 0.0)), 'target_hi': 1.0, 'scale': si,
+            #  ★ 10-21 (사전 리뷰 PRE-impl-07 · B 픽스처 패치) — 증서 ↔ 런 결합 칸 = 그 팔 매니페스트의 정본 지문 (접합 원장 sid · registry ·
+            #    plan_rows · face_alpha 전자 계획) · σ 표 지문 = 킷마다 (가짜)
+            **_bind(man)}
+
+
+def _bind(man):
+    ca = man.get('ca_ext') or {}
+    cjf = ((ca.get('cjunc') or {}).get('evidence') or {}).get('fp') or {}
+    faf = ((ca.get('ptfe_face') or {}).get('evidence') or {}).get('fp') or {}
+    return {'bind_version': CERT['bind_version'], 'fp_sid': cjf.get('sid', faf.get('sid_off')), 'fp_sig': hx('sig|' + kit),
+            'fp_face_plan': faf.get('plan_electronic'), 'fp_cjunc_registry': cjf.get('registry'),
+            'fp_cjunc_rows': cjf.get('plan_rows')}
+
+
+def early_cert(i, man):
+    """조기 반환 해의 상태 증서 (정본 `step3_conv_cert.early_record` 로 만든 틀) — ★ 10-21 (PRE-impl-07 병합) 결합 칸 = 그 팔 매니페스트의
+    정본 지문 (솔버 `_cert_bind_kw` 꼴 · 양의 해 증서와 같은 칸)."""
+    ce = cp_(T['early_' + ST])
+    ce.update(_bind(man))
+    return ce
 
 
 tag = rj.replace('.', 'p').replace('+', '').replace('-', 'm')
 for i in idx:
     si = s0 * af[i]
-    st = {'sigma_e_eff_S_cm': si, 'cg_info': 0, 'unconverged': False, 'cg_resid': 3e-13, 'n_dof': 1234, 'vox_um': vox,
-          'status': 'complete', 'manifest': manifest(i, si), 'conv_cert': cert(si), 'cg_iters': 321}
+    man_i = manifest(i, si)
+    if REASON:
+        st = {'sigma_e_eff_S_cm': (0.0 if ST == 'zero' else None), 'reason': REASON, 'vox_um': vox, 'manifest': man_i,
+              'conv_cert': early_cert(i, man_i)}
+    else:
+        st = {'sigma_e_eff_S_cm': si, 'cg_info': 0, 'unconverged': False, 'cg_resid': 3e-13, 'n_dof': 1234, 'vox_um': vox,
+              'status': 'complete', 'manifest': man_i, 'conv_cert': cert(si, man_i), 'cg_iters': 321}
     json.dump({'mpm_metrics': {'step3': st}}, open(os.path.join(out, 'p2_%s_sph_fa_cj%s_c%s_a%d.json' % (kit[4:], tag, c, i)), 'w'))
-    jl('ledger.jsonl', {'sigma': si})
+    jl('ledger.jsonl', {'sigma': (si if not REASON else 0.0)})
 cj_req = {'R_j_ohm': Rv, 'len_law': E['CJUNC_LEN_LAW'], 'unreg_law': unreg, 's_min_um': s_min, 'tol_ff_um': tol_ff, 'ptfe_jlaw': law}
 if lim:
     cj_req['rj_limit'] = lim
@@ -328,6 +399,8 @@ rec = {'vox_um': vox, 'bridge_um': float(E['BRIDGE_UM']), 'fibre_stamp': 'segmen
        'ca_ext_request': req, 'step3_rtol': rtol, 'code_sha': 'fake0000'}
 if 'ARM_LIST' in E:
     rec['arm_list'] = idx
+if SVCF:
+    rec['sv_counterfactual'] = True
 json.dump(rec, open(os.path.join(out, 'run_receipt.json'), 'w'), sort_keys=True)
 if hit('rejected'):
     open(os.path.join(out, '.rejected_20261020T000000Z'), 'w').write('reason=seal_broken\n')
@@ -339,8 +412,10 @@ print('[fake] STEP3 sigma_e_eff = [sealed]')
 # ═════════════════════════ 세계 (σ 모형 · 고장) ═════════════════════════
 PW_SBE = {'kind': 'power', 's_ref': 2.0e-3, 'R_ref': 1e6, 'e': 0.25, 'floor': 0.3e-3, 'ceiling': 30e-3}
 ARM_SMALL = [1.0, 1.0004, 0.9997, 1.0002, 0.9999, 1.0001, 0.9998, 1.0003]
+#: ★ 3판 — SBE origin 팔 1 · 2 = arm 0 그대로 (끝 origin 규칙 Q-E 가 기본 세계에서 끝을 밀지 않게 · 밀기 = L21 · U10) · 나머지 팔 = 작은 흔들림
+ARM_SBE = [1.0, 1.0, 1.0, 1.0002, 0.9999, 1.0001, 0.9998, 1.0003]
 PW = {'sbe': PW_SBE, 'law_factor': {'P0': 1.0, 'P1': 0.95}, 'c_factor': {'0': 0.92, '1': 1.08}, 'dbe_scale': 2.87,
-      'arm_factor': ARM_SMALL, 'arm_factor_dbe': ARM_SMALL,
+      'arm_factor': ARM_SBE, 'arm_factor_dbe': ARM_SMALL,
       'var_sbe': {'FIBRE': 0.9, 'UNREG': 1.05, 'GRID': 0.97}, 'var_dbe': {'SVORDER': 1.01}}
 
 
@@ -352,6 +427,7 @@ def record_templates():
         import carbon_junction as CJ
         import ptfe_face_alpha as FA
         import run_contract as RCm
+        import step3_conv_cert as CCm
         import step3_sigma as S3
         p = FX['plan_obj']
         cj = {}
@@ -368,7 +444,11 @@ def record_templates():
                      'cj_label': CW.LABEL_CJUNC, 'sd_label': CW.LABEL_SDCP,
                      'fa': FA.protocol_record(('electronic', 'ionic'), 'rope'), 'fa_diag': dict(FA.DIAGNOSTICS_V0), 'fa_label': FA.LABEL,
                      'fa_volume': FA.volume_record(0.05, 0.06), 'vgcf_rule': S3.VGCF_SIGMA_RULE,
-                     'fa_exempt': dict(FA.EXEMPT_ASSUMPTIONS)}
+                     'fa_exempt': dict(FA.EXEMPT_ASSUMPTIONS),
+                     #  ★ 3판 — 조기 반환 해의 상태 증서 틀 (정본 함수 · 가짜 러너가 격자 지문만 채운다)
+                     **{f'early_{k}': CCm.early_record({'sigma_eff': 0.0, 'n_dof': 1234, 'reason': rs}, zero_graph='cjunc_assembled',
+                                                       fp_sid='0' * 32, fp_sig='0' * 32)
+                        for k, rs in (('zero', 'no_through_component'), ('short', 'cjunc_electrode_short'))}}
     return FX['tpl']
 
 
@@ -383,7 +463,8 @@ def world(name, base=None, **kw):
     W.update({'dir': str(d), 'scripts': str(SCRIPTS), 'model_src': MODEL_SRC, 'tpl': record_templates(),
               'cert': {'version': CC.CERT_VERSION, 'rtol_max': CC.CERT_RTOL_MAX, 'eps_I': CC.CERT_EPS_I,
                        'resolve_tol': CC.CERT_RESOLVE_TOL, 'target_tol': CC.CERT_TARGET_TOL,
-                       'target_version': CC.TARGET_VERSION, 'target_fp': CC.TARGET_FP_RULE, 'status': CC.STATUS_POSITIVE}})
+                       'target_version': CC.TARGET_VERSION, 'target_fp': CC.TARGET_FP_RULE, 'status': CC.STATUS_POSITIVE,
+                       'bind_version': CC.BIND_VERSION}})
     (d / 'world.json').write_text(json.dumps(W), encoding='utf-8')
     return str(d / 'world.json')
 
@@ -424,30 +505,46 @@ def fixtures():
     FX['root'] = Path(TD) / 'root'
     for k in (SBE_KIT, DBE_KIT):
         (FX['root'] / k).mkdir(parents=True)
-    plan = {'schema': 'rint-r-plan-v1', 'len_law': 'len_scaled_v0', 'unreg_law': 'cut', 's_min_um': 0.6, 'tol_ff_um': 0.05,
-            'step3_rtol': 1e-12, 'p2_extra': '--step3-maxiter 60000'}
+    #  ★ 3판 — R 런 계획 v2 (결과 전 등록 숫자 넷 = 시험 값 · 등록 숫자가 아니다) · S0 단계 1 계획 (정본 함수 make_plan · 정준 바이트)
+    plan = {'schema': 'rint-r-plan-v2', 'len_law': 'len_scaled_v0', 'unreg_law': 'cut', 's_min_um': 0.6, 'tol_ff_um': 0.05,
+            'step3_rtol': 1e-12, 'p2_extra': '--step3-maxiter 60000', 'max_ladder_points': 16, 'calib_rj_ratio_max': 'none',
+            'sv_cf_threshold': 2.0, 'sv_cf_scope': 'R_j0'}
     FX['plan_obj'] = plan
-    FX['plan'] = Path(TD) / 'plan.json'
-    FX['plan'].write_text(json.dumps(plan, indent=1, sort_keys=True), encoding='utf-8')
-    sha = hashlib.sha256(FX['plan'].read_bytes()).hexdigest()
-    FX['plan_sha'] = sha
+    import ca_s0_census as S0m
+    s0p, s0b, s0sha = S0m.make_plan(0.05, S0m.R_F_UM, S0m.GAP_TOL_PRODUCTION, {'fixture': 'test_rint_r_chain', 'kit': SBE_KIT})
+    FX['s0_obj'], FX['s0_sha'] = s0p, s0sha
+    FX['s0'] = Path(TD) / 's0_plan.json'
+    FX['s0'].write_bytes(s0b)
     text = REG_DOC.read_text(encoding='utf-8')
     FX['reg_text'] = text
 
-    def reg_with(cell, name):
+    def reg_with(cell, name, s0cell=f'`{s0sha}`'):
         out = []
         for ln in text.splitlines():
-            if ln.startswith('| 계획 해시 |'):
+            if ln.startswith('| 계획 해시 |') or ln.startswith('| S0 계획 해시 |'):
                 cells = ln.split('|')
-                cells[-2] = f' {cell} '
+                cells[-2] = f' {cell if ln.startswith("| 계획 해시 |") else s0cell} '
                 ln = '|'.join(cells)
             out.append(ln)
         p = Path(TD) / name
         p.write_text('\n'.join(out) + '\n', encoding='utf-8')
         return p
-    FX['reg_ok'] = reg_with(f'`{sha}`', 'reg_ok.md')
+    FX['reg_with'] = reg_with
+    FX['plan'], FX['plan_sha'], FX['reg_ok'] = plan_set('plan', reg_name='reg_ok.md')
+    sha = FX['plan_sha']
     FX['reg_other'] = reg_with('0' * 64, 'reg_other.md')
     FX['reg_unreg'] = reg_with('⬜', 'reg_unreg.md')
+    FX['reg_s0_unreg'] = reg_with(f'`{sha}`', 'reg_s0_unreg.md', s0cell='⬜')
+    FX['reg_s0_other'] = reg_with(f'`{sha}`', 'reg_s0_other.md', s0cell='`' + '1' * 64 + '`')
+
+
+def plan_set(name, reg_name=None, **over):
+    """계획 한 벌 (기본 계획 + 바꾼 칸) → (계획 경로, sha256, 그 해시를 채운 등록 사본) — 계획마다 등록 사본 하나 (해시가 다르다)."""
+    plan = dict(FX['plan_obj'], **over)
+    p = Path(TD) / f'{name}.json'
+    p.write_text(json.dumps(plan, indent=1, sort_keys=True), encoding='utf-8')
+    sha = hashlib.sha256(p.read_bytes()).hexdigest()
+    return p, sha, FX['reg_with'](f'`{sha}`', reg_name or f'reg_{name}.md')
 
 
 @contextlib.contextmanager
@@ -493,27 +590,30 @@ def pass_contract():
     return PassContract()
 
 
-def ladder(tag, wpath, law='P0', variant=None, extra=(), reg=None, max_hours='2', env=None, prefill=False, contract=None):
+def ladder(tag, wpath, law='P0', variant=None, extra=(), reg=None, max_hours='2', env=None, prefill=False, contract=None,
+           plan=None, s0=None, after=None):
     out = Path(TD) / 'runs' / tag
     if prefill:
         out.mkdir(parents=True)
         (out / 'old.txt').write_text('x')
     argv = ['--stage', 'ladder', '--law', law, '--target', '1.63', '--runner', FX['runner'], '--root', FX['root'],
-            '--plan', FX['plan'], '--registration', reg or FX['reg_ok'], '--max-hours', max_hours, '--out', out]
+            '--plan', plan or FX['plan'], '--s0-plan', s0 or FX['s0'], '--registration', reg or FX['reg_ok'], '--max-hours', max_hours,
+            '--out', out]
     if variant:
         argv += ['--variant', variant]
+        argv += ['--after-main', after if after is not None else s_main_predict()['out']]   # ★ Q-F — 감도 = 주 판정 단계 뒤
     rc, so = call(argv + list(extra), wpath, env, contract=contract)
     sp = out / 'ladder_summary.json'
     return {'rc': rc, 'out': out, 'so': so, 'sum': json.loads(sp.read_text(encoding='utf-8')) if sp.exists() else None,
             'world': wpath}
 
 
-def predict(tag, wpath, ladders, variant=None, extra=(), reg=None, max_hours='2'):
+def predict(tag, wpath, ladders, variant=None, extra=(), reg=None, max_hours='2', after=None):
     out = Path(TD) / 'runs' / tag
     argv = ['--stage', 'predict', '--ladders', *ladders, '--kit', DBE_KIT, '--runner', FX['runner'], '--root', FX['root'],
             '--registration', reg or FX['reg_ok'], '--max-hours', max_hours, '--out', out]
     if variant:
-        argv += ['--variant', variant]
+        argv += ['--variant', variant, '--after-main', after if after is not None else s_main_predict()['out']]
     rc, so = call(argv + list(extra), wpath)
     sp = out / 'predict_summary.json'
     return {'rc': rc, 'out': out, 'so': so, 'sum': json.loads(sp.read_text(encoding='utf-8')) if sp.exists() else None,
@@ -615,21 +715,48 @@ def eval_L02(res):
     return got == want, f'R_j,0 {got!r} ↔ 손계산 {want!r}'
 
 
-def eval_L03(res):
+def eval_L03(res, law='P0'):
+    """§3-2b 끝 규칙 손계산 — 후보 = 참 역상 (거듭제곱이라 ln–ln 보간이 정확) · 끝 = 후보 (확인 런이 바깥) 또는 바깥 실측 이웃 · 바깥 감쌈."""
     W = wdata(res['world'])
-    rt = r0_power(W)
-    lo, hi = float(lad(res).get('R_j_lo') or 'nan'), float(lad(res).get('R_j_hi') or 'nan')
-    wl, wh = rt * 1.02 ** (-1.0 / W['sbe']['e']), rt * 0.98 ** (-1.0 / W['sbe']['e'])
-    return rel(lo, wl) < 1e-9 and rel(hi, wh) < 1e-9, f'lo {lo!r} ↔ {wl!r} · hi {hi!r} ↔ {wh!r}'
+    L = lad(res)
+    rt = r0_power(W, law)
+    e = W['sbe']['e']
+    T = {'lo': T_S * 1.02, 'hi': T_S * 0.98}
+    true = {'lo': rt * 1.02 ** (-1.0 / e), 'hi': rt * 0.98 ** (-1.0 / e)}
+    ends = L.get('ends') or {}
+    pts = {k: sig_main(W, SBE_KIT, k, law) for k in L.get('order', []) if k not in ('inf', '0')}
+    bad = []
+    for side in ('lo', 'hi'):
+        en = ends.get(side) or {}
+        cand = en.get('candidate')
+        if cand is None or rel(float(cand), true[side]) > 1e-9:
+            bad.append(f'{side} 후보 {cand} ↔ 참 {true[side]!r}')
+            continue
+        sc = sig_main(W, SBE_KIT, cand, law)
+        out_ok = (sc >= T[side]) if side == 'lo' else (sc <= T[side])
+        pool = [float(k) for k, s in pts.items() if ((s >= T[side]) if side == 'lo' else (s <= T[side]))]
+        want = float(cand) if out_ok else (max(pool) if side == 'lo' else min(pool))
+        got = float(L.get('R_j_lo' if side == 'lo' else 'R_j_hi') or 'nan')
+        if got != want or en.get('source') != ('candidate' if out_ok else 'outer_neighbor') or en.get('origin_pushes') != 0:
+            bad.append(f'{side} 끝 {got!r} ↔ 손계산 {want!r} ({en.get("source")} · 밀기 {en.get("origin_pushes")})')
+        if (side == 'lo' and got > true['lo'] * (1 + 1e-12)) or (side == 'hi' and got < true['hi'] * (1 - 1e-12)):
+            bad.append(f'{side} 바깥 감쌈 깨짐 {got!r} · 참 {true[side]!r}')
+    ratio = float(L.get('R_j_hi') or 'nan') / float(L.get('R_j_lo') or 'nan')
+    if not (isinstance(L.get('R_ratio'), float) and rel(L['R_ratio'], ratio) < 1e-12):
+        bad.append(f'R_ratio {L.get("R_ratio")!r} ↔ {ratio!r}')
+    return not bad, bad
 
 
-@check('L01', '정상 사다리 (거듭제곱) — CALIBRATED · 바닥 · 천장 · 1e4 · 1e6 · 1e8 · 반씩 둘 (1e7 · 10^6.5) · 확인 하나')
+@check('L01', '정상 사다리 (거듭제곱) — CALIBRATED · 바닥 · 천장 · 1e4 · 1e6 · 1e8 · 반씩 둘 (1e7 · 10^6.5) · 확인 하나 · 끝 확인 둘 (lo · hi 후보)')
 def t_L01():
     r = s_main('P0')
     L = lad(r)
-    want = ['inf', '0', '10000.0', '1000000.0', '100000000.0', '10000000.0', repr(10 ** 6.5), L.get('R_j0')]
+    ends = L.get('ends') or {}
+    want = ['inf', '0', '10000.0', '1000000.0', '100000000.0', '10000000.0', repr(10 ** 6.5), L.get('R_j0'),
+            (ends.get('lo') or {}).get('candidate'), (ends.get('hi') or {}).get('candidate')]
     return (r['rc'] == 0 and r['sum']['status'] == 'CALIBRATED' and L.get('order') == want and L.get('n_bisect') == 2
-            and L.get('n_ext') == 0, (r['rc'], r['sum'] and r['sum'].get('status'), L.get('order'), stop_code(r)))
+            and L.get('n_ext') == 0 and L.get('n_runs') == 10 and L.get('states', {}).get('inf') == 'positive',
+            (r['rc'], r['sum'] and r['sum'].get('status'), L.get('order'), stop_code(r)))
 
 
 @check('L02', 'R_j,0 손계산 = R_ref·(s_ref/1.63)^(1/e) 의 유효숫자 3 자리 (2.27e6 · ln–ln 보간이 거듭제곱에서 정확)')
@@ -637,17 +764,19 @@ def t_L02():
     return eval_L02(s_main('P0'))
 
 
-@check('L03', 'R_j,lo · R_j,hi 손계산 = 참 근 × 1.02^(−1/e) · 0.98^(−1/e) (보간식 · ±2 %)')
+@check('L03', '§3-2b 끝 규칙 (3판 · RCA-01) — 후보 = 참 역상 · 끝 확인 런 → 후보 (바깥) 또는 바깥 실측 이웃 · 참 허용집합을 바깥에서 감싼다 · '
+               '역상 R 비 기록')
 def t_L03():
     return eval_L03(s_main('P0'))
 
 
-@check('L04', '끼는 이웃 비 ≤ 10^0.5 · 확인 1 회 통과 · 식별 통과 · 점 수 ≤ 12')
+@check('L04', '끼는 이웃 비 ≤ 10^0.5 · 확인 1 회 통과 · 국소 e ≥ e_min (진단) · 점 수 ≤ 계획 상한 · 상한 없음 (none) = width_ok None')
 def t_L04():
     L = lad(s_main('P0'))
     a, b = (float(x) for x in L.get('bracket') or ('nan', 'nan'))
-    return (math.log10(b / a) <= 0.5 + 1e-9 and L.get('identifiable') is True and [c['ok'] for c in L.get('confirms', [])] == [True]
-            and L.get('n_runs', 99) <= 12, (L.get('bracket'), L.get('confirms'), L.get('n_runs')))
+    return (math.log10(b / a) <= 0.5 + 1e-9 and L.get('local_e_ge_emin') is True and [c['ok'] for c in L.get('confirms', [])] == [True]
+            and L.get('n_runs', 99) <= FX['plan_obj']['max_ladder_points'] and L.get('ratio_cap') == 'none' and L.get('width_ok') is None,
+            (L.get('bracket'), L.get('confirms'), L.get('n_runs'), L.get('width_ok')))
 
 
 @check('L05', '×100 아래 확장 — 세 점 모두 표적 아래 → 1e2 → 반씩 → R_j,0 = 1e4·(1.2/1.63)^4 의 3 자리 (2.94e3)')
@@ -708,15 +837,34 @@ def t_L10():
     return r['sum']['status'] == 'CALIB_EDGE' and roles(r) == ['floor', 'ceiling'], (r['sum']['status'], roles(r))
 
 
-def run_L11(tag):
+def run_L11(tag, **kw):
     W0 = dict(PW, sbe=dict(PW_SBE, s_ref=1.65e-3, e=0.01))
-    return ladder(tag, world(tag, W0))
+    return ladder(tag, world(tag, W0), **kw)
 
 
-@check('L11', 'CALIB_UNIDENTIFIED — 탄성 e = 0.01 < e_min (0.02/ln√10) · 확인 런 없음')
+def eval_L11(r):
+    L = lad(r)
+    true_ratio = (1.02 / 0.98) ** (1.0 / 0.01)              # 참 역상 R 비 (거듭제곱 e 0.01) = 54.6
+    return (r['sum']['status'] == 'CALIBRATED' and L.get('local_e_ge_emin') is False and 'confirm' in roles(r)
+            and isinstance(L.get('R_ratio'), float) and L['R_ratio'] >= true_ratio * (1 - 1e-9),
+            (r['sum']['status'], L.get('local_e_ge_emin'), L.get('R_ratio'), true_ratio, stop_code(r)))
+
+
+@check('L11', '3판 e_min = 국소 진단 (RCA-01 · R3-Q3) — 탄성 e = 0.01 < e_min 이어도 멈추지 않는다 · 확인 · 끝 규칙 → CALIBRATED (상한 none) · '
+               '역상 R 비 ≥ 참 54.6 · local_e_ge_emin False 기록')
 def t_L11():
-    r = scen('L11', lambda: run_L11('L11'))
-    return (r['sum']['status'] == 'CALIB_UNIDENTIFIED' and 'confirm' not in roles(r), (r['sum']['status'], roles(r)))
+    return eval_L11(scen('L11', lambda: run_L11('L11')))
+
+
+@check('L11b', '역상 R 비 상한이 등록되면 (계획 calib_rj_ratio_max 50) — 실제 역상 폭 54.6 이상 > 50 → CALIB_UNIDENTIFIED (§3-2b ④ · 3판 뜻)')
+def t_L11b():
+    def go():
+        p, _sha, reg = plan_set('cap50', calib_rj_ratio_max=50.0)
+        return run_L11('L11b', plan=p, reg=reg)
+    r = scen('L11b', go)
+    L = lad(r)
+    return (r['sum']['status'] == 'CALIB_UNIDENTIFIED' and L.get('width_ok') is False and L.get('R_ratio', 0) > 50.0,
+            (r['sum']['status'], L.get('width_ok'), L.get('R_ratio'), stop_code(r)))
 
 
 @check('L12', 'CALIB_UNCONFIRMED — 확인 두 번 다 2 % 넘음 (확인 런 정확히 둘)')
@@ -726,9 +874,11 @@ def t_L12():
             and [c['ok'] for c in lad(r).get('confirms', [])] == [False, False], (r['sum']['status'], roles(r)))
 
 
-@check('L13', '확인 한 번 실패 → 그 점을 넣고 다시 보간 → 둘째 확인 통과 (CALIBRATED · 확인 2)')
+@check('L13', '확인 한 번 실패 → 그 점을 넣고 다시 보간 → 둘째 확인 통과 (CALIBRATED · 확인 2) — ★ 3판: 곡률로 (매끈한 로지스틱 β 1.5 · Rc 1e4) · '
+               '옛 잡음 범프 (×1.03) 는 끝 런 사이에서 비단조 (τ_mono) 로 잡힌다 = 세계가 단조가 아니다')
 def t_L13():
-    r = scen('L13', lambda: ladder('L13', world('L13', dict(PW, bump_seq=[1.03, 1.0222]))))
+    LW13 = dict(PW, sbe={'kind': 'logistic', 'f': 0.5e-3, 'C': 20e-3, 'Rc': 1e4, 'beta': 1.5, 'floor': 0.5e-3, 'ceiling': 20e-3})
+    r = scen('L13', lambda: ladder('L13', world('L13', LW13)))
     L = lad(r)
     return (r['sum']['status'] == 'CALIBRATED' and [c['ok'] for c in L.get('confirms', [])] == [False, True]
             and L['confirms'][0]['rj'] in L.get('order', []), (r['sum']['status'], L.get('confirms')))
@@ -755,14 +905,18 @@ def t_L15():
 
 def run_L16(tag):
     W0 = dict(PW, sbe=dict(PW_SBE, s_ref=10e-3, R_ref=1e8, e=0.05, floor=0.5e-3, ceiling=100e-3))
-    return ladder(tag, world(tag, W0))
+    if 'cap12' not in FX:
+        FX['cap12'] = plan_set('cap12', max_ladder_points=12)
+    p, _sha, reg = FX['cap12']
+    return ladder(tag, world(tag, W0), plan=p, reg=reg)
 
 
-@check('L16', 'CALIB_LADDER_EXHAUSTED — 런 12 개 (바닥 · 천장 · 셋 · ×100 일곱) 뒤 13 째 요청에서')
+@check('L16', 'CALIB_LADDER_EXHAUSTED — 계획 점 수 상한 12 (시험 값) · 런 12 개 (바닥 · 천장 · 셋 · ×100 일곱) 뒤 13 째 요청에서 · 상한 = 계획 칸 '
+               '(사슬 기본값 없음)')
 def t_L16():
     r = scen('L16', lambda: run_L16('L16'))
-    return (r['sum']['status'] == 'CALIB_LADDER_EXHAUSTED' and len(roles(r)) == 12 and n_calls(r['world']) == 12,
-            (r['sum']['status'], len(roles(r))))
+    return (r['sum']['status'] == 'CALIB_LADDER_EXHAUSTED' and len(roles(r)) == 12 and n_calls(r['world']) == 12
+            and r['sum'].get('constants', {}).get('max_ladder_points') == 12, (r['sum']['status'], len(roles(r))))
 
 
 @check('L17', 'NOT_COMPUTED — 1e6 점 수렴 증서 실패 → 그 점 NOT_COMPUTED · 사다리 멈춤 (뒤 런 없음)')
@@ -781,12 +935,17 @@ def t_L18():
 def eval_L18(r):
     o = lad(r).get('origin') or {}
     runs = [x for x in r['sum'].get('runs', []) if x['role'] == 'origin']
+    eruns = [x for x in r['sum'].get('runs', []) if x['role'] == 'end_origin']
     ev = [e for e in env_log(r['world']) if 'ARM_LIST' in e]
     ar = (runs[0].get('arms_read') or []) if runs else []
+    L = lad(r)
     return (o.get('status') == 'pass' and len(runs) == 1 and 'origin3' not in roles(r) and 'origin8' not in roles(r)
-            and r['sum'].get('flags') == [] and len(ev) == 1 and ev[0].get('ARM_LIST') == '1,2' and 'ARMS' not in ev[0]
+            and r['sum'].get('flags') == [] and len(ev) == 1 + len(eruns) and all(e.get('ARM_LIST') == '1,2' and 'ARMS' not in e for e in ev)
             and [a.get('index') for a in ar] == [1, 2] and not [a for a in ar if a['file'].endswith('_a0.json')]
-            and len({a.get('sid_fp') for a in ar}) == 2,
+            and len({a.get('sid_fp') for a in ar}) == 2
+            #  ★ Q-E — 끝마다 origin 팔 1 · 2 (끝 R) · 점 수에 안 센다
+            and sorted(x['rj'] for x in eruns) == sorted({L.get('R_j_lo'), L.get('R_j_hi')} - {L.get('R_j0')})
+            and L.get('n_runs') == len(L.get('order', [])),
             (o, roles(r), ev, [(a.get('index'), a.get('file')) for a in ar], stop_code(r)))
 
 
@@ -937,7 +1096,7 @@ def t_S19():
         w = world('S19')
         out = Path(TD) / 'runs' / 'S19'
         rc, so = call(['--stage', 'ladder', '--law', 'P0', '--target', '1.64', '--runner', FX['runner'], '--root', FX['root'],
-                       '--plan', FX['plan'], '--registration', FX['reg_ok'], '--max-hours', '1', '--out', out], w)
+                       '--plan', FX['plan'], '--s0-plan', FX['s0'], '--registration', FX['reg_ok'], '--max-hours', '1', '--out', out], w)
         sp = out / 'ladder_summary.json'
         return {'rc': rc, 'so': so, 'world': w, 'sum': json.loads(sp.read_text()) if sp.exists() else None}
     r = scen('S19', go)
@@ -1023,15 +1182,38 @@ def t_S27():
 
 
 # ── P 예측 ──
-@check('P01', '예측 — SBE c no-op 런 둘 · 모서리 12 런 (arm 0) · origin 넷 (ARM_LIST=1,2 · ARMS 없음 · a0 다시 안 돎) · 상태 PREDICTED')
+@check('P01', '예측 — SBE c no-op 런 둘 · 모서리 12 런 (arm 0) · origin = 네 모서리 × 세 R = 12 (ARM_LIST=1,2 · §4-2 3판 · RCA-02) · '
+               '상태 PREDICTED')
 def t_P01():
     r = s_main_predict()
     rl = roles(r)
     ev = [e for e in env_log(r['world']) if 'ARM_LIST' in e]
     return (r['rc'] == 0 and r['sum']['status'] == 'PREDICTED' and rl.count('sbe_noop') == 2 and rl.count('corner') == 12
-            and rl.count('origin') == 4 and 'origin3' not in rl and 'origin8' not in rl and len(ev) == 4
-            and all(e.get('ARM_LIST') == '1,2' and 'ARMS' not in e and 'DBE' in e.get('KITS', '') for e in ev),
+            and rl.count('origin') == 12 and 'origin3' not in rl and 'origin8' not in rl and len(ev) == 12
+            and all(e.get('ARM_LIST') == '1,2' and 'ARMS' not in e and 'DBE' in e.get('KITS', '') for e in ev)
+            and all(set(o.get('per_R', {})) == {'R_j_lo', 'R_j0', 'R_j_hi'} for o in r['sum'].get('origin', [])),
             (r['rc'], r['sum'] and r['sum']['status'], rl, stop_code(r)))
+
+
+@check('P01b', 'SV 반사실 (§5-6 SV 행 · 계획 범위 R_j0) — CJUNC_SV_CF=1 은 DBE 모서리 × R_j,0 런 넷에만 (다른 R · origin · SBE no-op 없음) · '
+               '팔 증거 요청 {threshold: null} · 영수증 sv_counterfactual True · 팔 기록 sv_cf_status = computed')
+def t_P01b():
+    r = s_main_predict()
+    L = {law: lad(s_main(law)) for law in ('P0', 'P1')}
+    on = [e for e in env_log(r['world']) if e.get('CJUNC_SV_CF') == '1']
+    want = sorted((law, L[law]['R_j0']) for law in ('P0', 'P1') for _c in ('0', '1'))
+    got = sorted((e['CJUNC_PTFE_JLAW'], e['CJUNC_RJ']) for e in on)
+    runs = [x for x in r['sum'].get('runs', []) if x.get('sv_cf')]
+    ok_arm = True
+    for x in runs:
+        d = Path(r['out']) / x['outdir']
+        a = json.loads((d / x['arms_read'][0]['file']).read_text(encoding='utf-8'))['mpm_metrics']['step3']['manifest']
+        rcpt = json.loads((d / 'run_receipt.json').read_text(encoding='utf-8'))
+        ok_arm &= (a['ca_ext']['cjunc']['evidence'].get('sv_counterfactual_request') == {'threshold': None}
+                   and rcpt.get('sv_counterfactual') is True and x['arms_read'][0].get('sv_cf_status') == 'computed'
+                   and x['role'] == 'corner' and x.get('arm_list') is None)
+    return (got == want and len(runs) == 4 and ok_arm and all('KITS' in e and 'DBE' in e['KITS'] and 'ARMS' in e for e in on),
+            (got, want, [x.get('role') for x in runs]))
 
 
 @check('P02', 'R_j 는 사다리 요약에서 — 모서리 런의 CJUNC_RJ = 사다리 R_j,lo · R_j,0 · R_j,hi 문자열 그대로 (사람 옮김 없음)')
@@ -1070,7 +1252,7 @@ def s_origin_dbe():
     return scen('P05', go)
 
 
-@check('P05', 'origin §4-2 — 넘는 모서리 넷 → 8 팔 · R_j,0 값 = 8 팔 평균 · lo · hi 같은 로그 차 (판정 결과 손계산)')
+@check('P05', 'origin §4-2 3판 — 넘는 모서리 넷 → 모서리마다 세 R 전부 8 팔 (런 12) · 값 = 그 R 의 8 팔 평균 (판정 결과 손계산)')
 def t_P05():
     sc = s_origin_dbe()
     p, v = sc['pred'], sc['ver']
@@ -1084,7 +1266,7 @@ def t_P05():
                 vals.append(sig_main(W, DBE_KIT, L[k], law, c) * mean8)
     lo, hi = min(vals) * 1e3, max(vals) * 1e3
     got = (v['r'] or {}).get('interval_mScm') or [math.nan, math.nan]
-    ok_runs = roles(p).count('origin8') == 4 and all(o['status'] == 'adjusted' for o in p['sum'].get('origin', []))
+    ok_runs = roles(p).count('origin8') == 12 and all(o['status'] == 'adjusted' for o in p['sum'].get('origin', []))
     return ok_runs and rel(got[0], lo) < 1e-12 and rel(got[1], hi) < 1e-12, (roles(p), got, [lo, hi])
 
 
@@ -1121,20 +1303,32 @@ def t_V01():
     return ok, (v['v'] and v['v'].get('verdict'), R.get('interval_mScm'), [lo, hi], R.get('W'), Wd)
 
 
-@check('V02', '감도 넷 안 돌림 → FIBRE · UNREG · GRID · SVORDER _UNCHECKED · §7-1 문장 금지 (판정 이름은 그대로)')
+V02_BLK = ['FIBRE_UNCHECKED', 'GRID_UNCHECKED', 'SVORDER_UNCHECKED', 'UNREG_UNCHECKED']
+
+
+@check('V02', '감도 넷 안 돌림 → FIBRE · UNREG · GRID · SVORDER _UNCHECKED · §7-1 문장 금지 (판정 이름은 그대로) · ★ 4판 (Q2-4 · §5-5b · ⑰) 문장 = '
+               '"계산기 판정 이름 `PASS_INFORMATIVE` · 차단 표지 <넷> — 판정 문장 보류 · 감도 미완료" · 표지마다 사유 (안 돌림) · 감도 미완료 표지')
 def t_V02():
     v = s_verdict_main()['v']
-    want = {'FIBRE_UNCHECKED', 'UNREG_UNCHECKED', 'GRID_UNCHECKED', 'SVORDER_UNCHECKED'}
-    return (want <= set(v['flags']) and v['sentence_allowed'] is False and v['verdict'] == 'PASS_INFORMATIVE',
-            (v['flags'], v['sentence_allowed']))
+    want = set(V02_BLK)
+    rs = v.get('blocking_reasons') or {}
+    return (want <= set(v['flags']) and v['sentence_allowed'] is False and v['verdict'] == 'PASS_INFORMATIVE'
+            and v.get('sentence') == want_sentence('positive', 'PASS_INFORMATIVE', V02_BLK, sens=True)
+            and set(rs) == want and all(rs[f] == '안 돌림' for f in want) and v.get('sensitivity_incomplete') is True,
+            (v['flags'], v['sentence_allowed'], v.get('sentence'), rs, v.get('sensitivity_incomplete')))
 
 
-@check('V03', '감도 넷 다 돌림 · 둔감 → 표지 없음 → §7-1 문장 허용 · DIA_UNCHECKED 한정어는 늘')
+@check('V03', '감도 넷 다 돌림 · 둔감 · SV 반사실 비 1.2 < 문턱 2 → 차단 표지 없음 → §7-1 문장 (판정문 §5-3 문안) 허용 · 보고 범주 '
+               'ASSUMED_UNVALIDATED (DIA_UNCHECKED 포함) 는 늘 · ★ 4판 (Q2-6) 한정어 ①–⑱ · 계산기 상태 주석 · 감도 완료 · 사유 없음')
 def t_V03():
     v = s_verdict_full()['v']
-    return (v['verdict'] == 'PASS_INFORMATIVE' and v['flags'] == [] and v['sentence_allowed'] is True
-            and isinstance(v.get('sentence'), str) and v['sentence'] in FX['reg_text'] and 'DIA_UNCHECKED' in v.get('qualifiers', []),
-            (v['verdict'], v['flags'], v['sentence_allowed'], v.get('stop')))
+    cat = (v.get('report_category') or {}).get('ASSUMED_UNVALIDATED') or []
+    return (v['verdict'] == 'PASS_INFORMATIVE' and v['flags'] == [] and v.get('blocking_flags') == [] and v['sentence_allowed'] is True
+            and isinstance(v.get('sentence'), str) and v['sentence'] in FX['reg_text'] and v['sentence'] == T_PASS
+            and any('DIA_UNCHECKED' in x for x in cat) and len(v.get('qualifiers', [])) == 18
+            and '계산기 상태' in (v.get('verdict_note') or '') and v.get('sensitivity_incomplete') is False
+            and v.get('blocking_reasons') == {},
+            (v['verdict'], v['flags'], v['sentence_allowed'], v.get('stop'), len(v.get('qualifiers', []))))
 
 
 @check('V04', 'GRID 변이에서 DBE ×1.6 → 등급 바뀜 → GRID_SENSITIVE · 문장 금지')
@@ -1149,25 +1343,38 @@ def t_V04():
     return ('GRID_SENSITIVE' in v['flags'] and v['sentence_allowed'] is False, (v['flags'], v.get('stop')))
 
 
-def sv_set(tag, fault):
+def sv_set(tag, rule, extra_world=None):
+    """주 사다리 + SV 반사실 규칙 하나 (P1 · c 1 · R_j,0 모서리) 를 넣은 예측 → 판정."""
     def go():
-        p = predict(tag, world(tag, dict(PW, faults=[{'do': fault, 'match': {'kit_has': 'DBE', 'rj': lad(s_main('P1'))['R_j0'],
-                                                                              'c': '1'}}])),
-                    [s_main('P0')['out'], s_main('P1')['out']])
+        m = {'kit_has': 'DBE', 'rj': lad(s_main('P1'))['R_j0'], 'c': '1'}
+        W = dict(PW, sv_cf=[dict(rule, match=m)], **(extra_world or {}))
+        p = predict(tag, world(tag, W), [s_main('P0')['out'], s_main('P1')['out']])
         return verdict(tag + '_v', [s_main('P0')['out'], s_main('P1')['out'], p['out']])
     return scen(tag, go)
 
 
-@check('V05', 'SV_DOMINANT — 모서리 하나의 sv_dominant = True → 표지 · 문장 금지')
+@check('V05', 'SV_DEPENDENT (3판 · RCA-06) — 한 모서리의 반사실 비 3.0 > 계획 문턱 2.0 → 차단 표지 · §7-1 문장 금지 (판정 이름은 그대로) · '
+               '옛 SV_DOMINANT 없음')
 def t_V05():
-    v = sv_set('V05', 'sv_dominant')['v']
-    return 'SV_DOMINANT' in (v or {}).get('flags', []), (v and v.get('flags'), v and v.get('stop'))
+    v = (sv_set('V05', {'status': 'computed', 'ratio': 3.0})['v'] or {})
+    return ('SV_DEPENDENT' in v.get('flags', []) and 'SV_DEPENDENT' in v.get('blocking_flags', []) and v.get('sentence_allowed') is False
+            and 'SV_DOMINANT' not in v.get('flags', []) and 'SV_UNCHECKED' not in v.get('flags', []),
+            (v.get('flags'), v.get('stop')))
 
 
-@check('V06', 'SV 소산 분담 없음 (sv_dominant 칸 없음 = NOT_COMPUTED) → SV_DOMINANT 와 같게')
+@check('V06', 'SV_UNCHECKED — 한 모서리의 반사실 기록이 비를 싣지 않는 상태 (unconverged) → 못 읽음 = 차단 (§5-6 · 모르는 것을 의존 없음으로 읽지 않는다)')
 def t_V06():
-    v = sv_set('V06', 'sv_missing')['v']
-    return 'SV_DOMINANT' in (v or {}).get('flags', []), (v and v.get('flags'), v and v.get('stop'))
+    v = (sv_set('V06', {'status': 'unconverged'})['v'] or {})
+    return ('SV_UNCHECKED' in v.get('flags', []) and 'SV_DEPENDENT' not in v.get('flags', []) and v.get('sentence_allowed') is False,
+            (v.get('flags'), v.get('stop')))
+
+
+@check('V06b', 'SV 반사실 비 = 문턱 2.0 (같음) → SV_DEPENDENT 아님 (등록 문장 "넘으면") · no_through_without_sv (비 +∞) → SV_DEPENDENT')
+def t_V06b():
+    v1 = (sv_set('V06b1', {'status': 'computed', 'ratio': 2.0})['v'] or {})
+    v2 = (sv_set('V06b2', {'status': 'no_through_without_sv'})['v'] or {})
+    return ('SV_DEPENDENT' not in v1.get('flags', ['?']) and 'SV_UNCHECKED' not in v1.get('flags', ['?'])
+            and 'SV_DEPENDENT' in v2.get('flags', []), (v1.get('flags'), v2.get('flags'), v1.get('stop'), v2.get('stop')))
 
 
 @check('V07', 'CALIB_ORIGIN_SENSITIVE (P0 사다리 origin 넘음) → 판정 표지 · 문장 금지')
@@ -1263,11 +1470,17 @@ def t_V13():
             and v.get('calib') == {'P0': 'NOT_COMPUTED', 'P1': 'CALIBRATED'}, (r['rc'], v.get('verdict'), v.get('stop'), v.get('calib')))
 
 
-@check('V14', '감도 변이 사다리에는 origin 런이 없다 (등록 §10 런 수 = 사다리 ≤ 12 × 2 + DBE 4) · 주 사다리만 §3-3')
+@check('V14', '3판 — 감도 변이 = 주 판정과 같은 판정 함수 (§5-6 · RCA-09): 변이 사다리도 SBE origin (§3-3) · 끝 origin · 변이 예측도 네 모서리 × 세 R + '
+               'DBE origin 세 R (§10 런 수 표 3판) · 변이 예측에는 SV 반사실 없음')
 def t_V14():
-    lads = s_variant_set('FIBRE')['ladders']
-    bad = [(o['sum']['law'], roles(o)) for o in lads if {'origin', 'origin3', 'origin8'} & set(roles(o)) or lad(o).get('origin') is not None]
-    return (not bad and all(o['sum']['status'] == 'CALIBRATED' for o in lads), bad)
+    vs = s_variant_set('FIBRE')
+    lads, pr = vs['ladders'], vs['pred']
+    bad = [(o['sum']['law'], roles(o)) for o in lads if 'origin' not in roles(o) or (lad(o).get('origin') or {}).get('status') != 'pass']
+    rl = roles(pr)
+    ev = [e for e in env_log(pr['world']) if e.get('CJUNC_SV_CF') == '1']
+    return (not bad and all(o['sum']['status'] == 'CALIBRATED' for o in lads) and pr['sum']['status'] == 'PREDICTED'
+            and rl.count('corner') == 12 and rl.count('origin') == 12 and rl.count('sbe_noop') == 2 and not ev,
+            (bad, rl, len(ev)))
 
 
 @check('V15', '판정 코드 ≠ 단계 코드 (지금 사슬 HEAD 가 다르다) → CODE_PIN_MISMATCH · 판정 NOT_COMPUTED')
@@ -1365,7 +1578,8 @@ def t_X04():
     w = world('X04')
     out = Path(TD) / 'runs' / 'X04'
     rc, so = call(['--stage', 'ladder', '--law', 'P0', '--target', '1.63', '--runner', FX['runner'], '--root', FX['root'],
-                   '--plan', FX['plan'], '--registration', FX['reg_ok'], '--max-hours', '1', '--out', out, '--dry-run'], w)
+                   '--plan', FX['plan'], '--s0-plan', FX['s0'], '--registration', FX['reg_ok'], '--max-hours', '1', '--out', out,
+                   '--dry-run'], w)
     lines = [x for x in so.splitlines() if 'bash ' in x]
     rjs = [re.search(r'CJUNC_RJ=(\S+)', x).group(1) for x in lines if 'CJUNC_RJ=' in x]
     return (rc == 0 and not out.exists() and n_calls(w) == 0 and rjs == ['inf', '0', '10000.0', '1000000.0', '100000000.0']
@@ -1376,17 +1590,32 @@ def t_X04():
 @check('X05', '등록 문서에 이 도구의 숫자 · 이름 · 문장이 있다 (상수 대조 · 사본 금지의 짝)')
 def t_X05():
     t = FX['reg_text']
-    need = ['1.63', '4.68', '1.8877', '0.454', '0.908', '1e-3', '10^0.5', '12', '0.02', '0.1 W', 'kit_SBE_vgcf100',
+    need = ['1.63', '4.68', '1.8877', '0.454', '0.908', '1e-3', '10^0.5', '0.02', '0.1 W', 'kit_SBE_vgcf100',
             'kit_DBE_sdcp1um_vgcf100', 'CALIB_IMPOSSIBLE', 'CALIB_EDGE', 'CALIB_UNIDENTIFIED', 'CALIB_UNCONFIRMED',
             'CALIB_NONMONOTONE', 'CALIB_LADDER_EXHAUSTED', 'NOT_COMPUTED', 'PASS_INFORMATIVE', 'CONSISTENT_WEAK', 'UNINFORMATIVE',
-            'CALIB_ORIGIN_SENSITIVE', 'SV_DOMINANT', 'DIA_UNCHECKED', RR.SENTENCE_PASS]
+            'CALIB_ORIGIN_SENSITIVE', 'DIA_UNCHECKED', RR.SENTENCE_PASS,
+            #  ★ 3판 — 상태 · 판정 · 표지 · 문장 · 두 계획 (등록 R §5-0 · §5-5 · §5-6a · §7-1 · §2-1)
+            'VALID_ZERO_TOPOLOGY', 'GAP_ENVELOPE_ONLY', 'ASSUMED_UNVALIDATED', 'SV_DEPENDENT', 'SV_UNCHECKED', RR.SENTENCE_GAP,
+            RR.SENTENCE_WEAK, 'S0 계획 해시', RR.S0_PLAN_SCHEMA, 'sv_counterfactual_ratio', *RR.BLOCKING_FLAGS]
     miss = [n for n in need if n not in t]
     consts = (RR.TARGET_SBE_MS == 1.63 and RR.EXP_DBE_MS == 4.68 and RR.CUR_GEN_DBE_MS == 1.8877 and RR.CONFIRM_TOL == 0.02
-              and RR.TAU_MONO == 1e-3 and RR.NEIGHBOR_LOG10_MAX == 0.5 and RR.MAX_LADDER_POINTS == 12
+              and RR.TAU_MONO == 1e-3 and RR.NEIGHBOR_LOG10_MAX == 0.5 and not hasattr(RR, 'MAX_LADDER_POINTS')
               and RR.ORIGIN_SBE_MAX == 0.02 and RR.ORIGIN_DBE_FRAC_W == 0.1 and RR.SENS_SHIFT_FRAC_G0 == 0.1
               and RR.LADDER_START_LOG10 == (4.0, 6.0, 8.0) and RR.LADDER_EXT_LOG10 == 2.0 and RR.MAX_CONFIRM == 2
-              and abs(RR.E_MIN - 0.02 / math.log(math.sqrt(10.0))) < 1e-15 and abs(RR.G0 - math.log(4.68 / 1.8877)) < 1e-15)
-    return not miss and consts, (miss, consts)
+              and abs(RR.E_MIN - 0.02 / math.log(math.sqrt(10.0))) < 1e-15 and abs(RR.G0 - math.log(4.68 / 1.8877)) < 1e-15
+              and len(RR.BLOCKING_FLAGS) == 11 and 'DIA_UNCHECKED' not in RR.BLOCKING_FLAGS and len(RR.QUALIFIERS) == 18
+              and RR.QUALIFIERS[16:] == ('Q17_sensitivity_incomplete', 'Q18_P_two_ends_only'))
+    return not miss and consts, (miss, consts, len(RR.QUALIFIERS))
+
+
+@check('X05b', '★ 4판 (Q2-4 · Q2-6) 결정표 칸 글자 · ⑰ ⑱ 문장 · 보호 띠 · W₊ · 이름 우선순위가 등록 문서 (4판) 에 그대로 있다 (시험 상수 대조 · 사본 금지의 짝)')
+def t_X05b():
+    t = FX['reg_text']
+    need = [T_PASS, T_PASS_BLK[0].rstrip(), T_PASS_BLK[1].strip(), T_WEAK, T_UNINF, T_GAP, T_Q18, T_FAIL, T_CALIB, T_NC, T_BLK[0].strip(),
+            T_POINT, T_SENS, '⑰', '⑱', 'P 는 두 끝 (P0 · P1) 만 등록했다', 'target_err_bound_rel', 'W₊', '하나라도 `NOT_COMPUTED` 면 판정 전체 = `NOT_COMPUTED`',
+            '`<V>_UNCHECKED`']
+    miss = [n for n in need if n not in t]
+    return not miss, miss
 
 
 @check('X06', '바닥 · 천장 극한 = 러너 env CJUNC_RJ=inf · 0 (런 순서 첫 둘) · 팔 protocol 표지 rj_limit inf · zero (R_j_ohm null · 0.0 · '
@@ -1427,8 +1656,8 @@ def t_X08():
     w = world('X08')
     out = Path(TD) / 'runs' / 'X08'
     rc, so = call(['--stage', 'ladder', '--law', 'P0', '--target', '1.63', '--runner', FX['runner'], '--root', FX['root'],
-                   '--plan', FX['plan'], '--registration', FX['reg_ok'], '--max-hours', '1', '--out', out, '--dry-run'], w,
-                  env={'EXPECT_BACKEND': 'cpu'})
+                   '--plan', FX['plan'], '--s0-plan', FX['s0'], '--registration', FX['reg_ok'], '--max-hours', '1', '--out', out,
+                   '--dry-run'], w, env={'EXPECT_BACKEND': 'cpu'})
     lines = [x for x in so.splitlines() if 'bash ' in x]
     return (rc == 0 and getattr(RR, 'EXPECT_BACKEND', None) == 'gpu' and len(lines) == 5
             and all('EXPECT_BACKEND=gpu' in x and 'EXPECT_BACKEND=cpu' not in x for x in lines), (rc, lines[:1]))
@@ -1451,6 +1680,1020 @@ def t_X10():
     return (bool(ar) and all(a.get('cg_iters') == 321 and a.get('resolve_iters') == 17 for a in ar)
             and 'CG 반복 321' in r['so'] and '이어 풀기 17' in r['so'], ([(a.get('cg_iters'), a.get('resolve_iters')) for a in ar[:3]],
                                                                      r['so'][-300:]))
+
+
+# ── U 3판 손 회로 · 판정 함수 (등록 R 3판 · Codex 반례 · 사전 리뷰 · 가짜 러너 없이 사슬 함수를 직접) ──
+def _arms_of(arms):
+    return list(range(arms)) if isinstance(arms, int) else list(arms)
+
+
+def ladder_fetch(S_mS, err=0.0, read=1.0):
+    """Ladder 의 fetch — S_mS(R [Ω], 팔 번호) [mS/cm] → 팔 기록 (S/cm · 상태 positive).  ★ 4판 (Q2-2 · §3-2b ③″) — err = 그 런 증서의
+    보장 오차 (`err_rel` · 사슬 read_run 이 증서에서 다시 계산해 싣는 칸) · read = 판독 배수 (증서 허용 안의 낮은 판독 · 반례)."""
+    def fetch(role, key, arms):
+        R = RR.rj_float(key)
+        return [{'sigma': S_mS(R, i) * 1e-3 * read, 'state': 'positive', 'err_rel': err} for i in _arms_of(arms)]
+    return fetch
+
+
+RCA01_SCALE = 10 ** 4.75
+
+
+def rca01_S(R, i=0):
+    """Codex RCA-01 양의 저항망 SBE — S = 1.597 + 0.0363/(r + 0.1) mS/cm · r = R_j/10^4.75 Ω (origin 무관)."""
+    return 1.597 if R == math.inf else 1.597 + 0.0363 / (R / RCA01_SCALE + 0.1)
+
+
+def rca01_D(R):
+    return 3.0 + 1.0 / (R / RCA01_SCALE + 0.1)
+
+
+#: 사전 리뷰 PRE-design-05 의 기대값 = 등록 규칙 (§3-2b) 의 정확한 출력 (probe_registration_v3.json 'a_rca01')
+RCA01_WANT = {'R0': 64000.0, 'R_lo': 10000.0, 'R_hi': 5990349.747386915, 'ratio': 599.0349747386915, 'n_points': 12,
+              'e': 0.01885983292807937, 'W': 0.7852375308170946, 'D_lo': 3.009378649805871, 'D_hi': 6.599350001971149,
+              'true_lo': 25493.94971213578, 'true_hi': 5097624.112852485, 'cand_lo': 26758.370822762055}
+
+
+def run_U01():
+    lad_ = RR.Ladder(ladder_fetch(rca01_S), max_points=12, ratio_max='none')
+    lad_.run()
+    lad_.origin()
+    st = lad_.st
+    R = {k: RR.rj_float(st[k]) for k in ('R_j_lo', 'R_j0', 'R_j_hi')}
+    J = RR.judge({('0', 'P0', k): rca01_D(v) for k, v in R.items()})
+    return lad_, R, J
+
+
+def eval_U01():
+    lad_, R, J = run_U01()
+    st, w = lad_.st, RCA01_WANT
+    ok = (R['R_j0'] == w['R0'] and R['R_j_lo'] == w['R_lo'] and rel(R['R_j_hi'], w['R_hi']) < 1e-9
+          and rel(st['R_ratio'], w['ratio']) < 1e-9 and st['n_runs'] == w['n_points'] and st['local_e_ge_emin'] is True
+          and rel(lad_.sealed['e'], w['e']) < 1e-9
+          and st['ends']['lo']['source'] == 'outer_neighbor' and rel(float(st['ends']['lo']['candidate']), w['cand_lo']) < 1e-9
+          and st['ends']['hi']['source'] == 'candidate'
+          and R['R_j_lo'] <= w['true_lo'] and R['R_j_hi'] >= w['true_hi']                     # 성질 — 참 허용집합 바깥 감쌈
+          and J['verdict'] == 'CONSISTENT_WEAK' and rel(J['W'], w['W']) < 1e-9
+          and rel(J['interval_mScm'][0], w['D_lo']) < 1e-9 and rel(J['interval_mScm'][1], w['D_hi']) < 1e-9)
+    return ok, (R, st.get('R_ratio'), st.get('n_runs'), J.get('verdict'), J.get('W'), st.get('ends'))
+
+
+@check('U01', 'RCA-01 (§3-2b ⑧ · PRE-design-05) — Codex 양의 저항망: 끝 = 실제 역상 · R_lo 10,000 (후보 26,758 확인 실패 → 바깥 실측 이웃) · '
+               'R_hi 5,990,349.75 (후보 확인) · R 비 599.03 · 12 점 · 참 [25,494 · 5,097,624] 바깥 감쌈 · DBE W 0.785238 CONSISTENT_WEAK '
+               '(2판 보간 = PASS W 0.419)')
+def t_U01():
+    return eval_U01()
+
+
+def rca02_fetch(kit, role, law, c, rj, arms, sv_cf=False):
+    """Codex RCA-02 — DBE arm 0 = 3.02 + 1/(r + 0.1) · arm 1–7 = 1.02 + 3.2/(r + 0.1) (r = 1 에서 모두 3.9290909) · SBE no-op = 사다리 값."""
+    if kit == SBE_KIT:
+        return [{'sigma': 1.63e-3, 'n_sdcp_near': 0, 'state': 'positive'}]
+    r = float(rj)
+    a0, oth = 3.02 + 1.0 / (r + 0.1), 1.02 + 3.2 / (r + 0.1)
+    return [{'sigma': (a0 if i == 0 else oth) * 1e-3, 'state': 'positive', 'n_sdcp_near': 7} for i in _arms_of(arms)]
+
+
+def eval_U02():
+    lads = {law: {'R_j_lo': '0.5', 'R_j0': '1.0', 'R_j_hi': '2.0', 'r0_sigma': 1.63e-3} for law in ('P0', 'P1')}
+    pr = RR.Predict(rca02_fetch, lads, None, sv_scope=None)
+    pr.run()
+    J = RR.judge({k: v * 1e3 for k, v in pr.values().items()})
+    ok = (J['verdict'] == 'CONSISTENT_WEAK' and rel(J['interval_mScm'][0], 2.662857142857143) < 1e-12
+          and rel(J['interval_mScm'][1], 6.1450000000000005) < 1e-12 and rel(J['W'], 0.8362390828158665) < 1e-12
+          and all(o['status'] == 'adjusted' and o['per_R'] == {'R_j_lo': 'over', 'R_j0': 'pass', 'R_j_hi': 'over'} for o in pr.origin))
+    return ok, (J.get('verdict'), J.get('interval_mScm'), J.get('W'), pr.origin[:1])
+
+
+@check('U02', 'RCA-02 (§4-2 3판) — 중앙 (R_j,0) 산포 0 인데 양끝 origin 산포 0.304 · 0.318 > 0.1 W → 모서리마다 세 R 전부 8 팔 평균 → '
+               '[2.6629, 6.1450] W 0.8362 CONSISTENT_WEAK (2판 = R_j,0 만 점검 · arm 0 [3.4962, 4.6867] PASS)')
+def t_U02():
+    return eval_U02()
+
+
+#: ★ 4판 (Q2-4 · 등록 R 4판 §5-5b 결정표 · §5-1 · §7-1 ⑰ ⑱) — 칸 글자 (시험 상수 · 사슬 상수를 베끼지 않는다 · 등록 문서 대조 = X05b)
+T_PASS = ('SBE 측정 한 점으로 각 법칙의 내부 접합 저항을 보정하였다. 사전에 고정한 시나리오와 보정 허용집합의 계산 결과를 이미 알려진 '
+          'DBE 측정값과 비교하였다. 모형 종류와 시나리오 방향은 해당 DBE 값 및 기존 빗나감을 알고 선정했으므로, 이 비교는 독립 '
+          'holdout 검증이나 접합 물성의 식별이 아니다.')
+T_PASS_BLK = ('계산기 판정 이름 `PASS_INFORMATIVE` · 차단 표지 ', ' — 판정 문장 보류')
+T_WEAK = '넓은 시나리오 구간 안에 들었다'
+T_UNINF = '예측 주장 없음 (구간이 현 세대 빗나감보다 넓다)'
+T_GAP = '어느 법칙의 허용집합에도 포함되지 않았으나 전체 envelope 에는 포함'
+T_Q18 = 'P 는 두 끝만 등록했다 (사이 감쇠는 모형 밖)'
+T_FAIL = '빗나감 d · d/G0 · 방향 · §8 보고 (해석 금지 §8)'
+T_CALIB = '판정 없음 — 법칙별 이름 · 사유 · 바닥 · 천장 · e · 끝 후보 보고'
+T_NC = '판정 없음 — 사유 (상태 · 멈춤 코드) 보고'
+T_BLK = ('(차단 표지 ', ')')
+T_POINT = '점 구간'
+T_SENS = '감도 미완료'
+REG_CALIB6 = ('CALIB_IMPOSSIBLE', 'CALIB_EDGE', 'CALIB_UNIDENTIFIED', 'CALIB_UNCONFIRMED', 'CALIB_NONMONOTONE', 'CALIB_LADDER_EXHAUSTED')
+
+
+def want_sentence(state, verdict, blocking=(), sens=False):
+    """등록 R 4판 §5-5b 결정표의 칸 하나 (시험 쪽 독립 조립) — 차단 표지 목록 = 사전 순 · ' · ' 로 잇는다 · 오른쪽 칸 = 왼쪽 칸 + 공백 + "(차단 표지 <목록>)"
+    (PASS = 헤드라인 대신 "계산기 판정 이름 …" ) · GAP = 판정문 §5-3 문안 + ⑱ · 점 구간 · 감도 미완료 (⑰) = 결과 문장 끝에 ' · ' 로 덧붙인다 ·
+    CALIB_* · NOT_COMPUTED = 판정 없음 칸 (차단 표지 · 점 · 감도 해당 없음)."""
+    if verdict in REG_CALIB6:
+        return T_CALIB
+    if verdict == 'NOT_COMPUTED':
+        return T_NC
+    lst = ' · '.join(sorted(set(blocking)))
+    base = {'PASS_INFORMATIVE': T_PASS, 'CONSISTENT_WEAK': T_WEAK, 'UNINFORMATIVE': T_UNINF, 'GAP_ENVELOPE_ONLY': T_GAP + ' · ' + T_Q18,
+            'FAIL': T_FAIL}[verdict]
+    if blocking:
+        s = (T_PASS_BLK[0] + lst + T_PASS_BLK[1]) if verdict == 'PASS_INFORMATIVE' else base + ' ' + T_BLK[0] + lst + T_BLK[1]
+    else:
+        s = base
+    if state == 'point':
+        s += ' · ' + T_POINT
+    if sens:
+        s += ' · ' + T_SENS
+    return s
+
+
+def rca08_vals():
+    v = {}
+    for c in ('0', '1'):
+        for rr, a, b in (('R_j_lo', 4.0, 5.4), ('R_j0', 3.9, 5.3), ('R_j_hi', 3.8, 5.2)):
+            v[(c, 'P0', rr)], v[(c, 'P1', rr)] = a, b
+    return v
+
+
+def eval_U03():
+    J = RR.judge(rca08_vals())
+    s = RR.decide_sentence(J['state'], J['verdict'], [])
+    ok = (J['verdict'] == 'GAP_ENVELOPE_ONLY' and J['in_law'] == [] and J['in_E'] is True and J['in_U'] is False
+          and J['I_law_mScm'] == {'P0': [3.8, 4.0], 'P1': [5.2, 5.4]} and J['direction'] == 'gap' and J['d'] == 0.0
+          and rel(J['W'], 0.3513978868378886) < 1e-9 and s == T_GAP + ' · ' + T_Q18 and rel(J['d_to_U'], math.log(5.2 / 4.68)) < 1e-12)
+    return ok, (J.get('verdict'), J.get('in_law'), J.get('W'), s)
+
+
+@check('U03', 'RCA-08 (§5-1 · §5-5 3판) — I_P0 [3.8, 4.0] · I_P1 [5.2, 5.4] · 4.68 = E ∖ U → GAP_ENVELOPE_ONLY (2판 hull W 0.351 = PASS) · '
+               '문장 = 판정문 §5-3 GAP 문안 + ★ 4판 ⑱ (§5-1 · §5-5b "P 는 두 끝만 등록했다 (사이 감쇠는 모형 밖)") · 법칙 집합까지 ln 거리 기록')
+def t_U03():
+    return eval_U03()
+
+
+def rca09_main():
+    v = {}
+    for (c, law), (lo, mid, hi) in {('0', 'P0'): (4.45, 4.40, 4.30), ('1', 'P0'): (4.50, 4.45, 4.40), ('0', 'P1'): (4.55, 4.50, 4.45),
+                                    ('1', 'P1'): (4.80, 4.55, 4.50)}.items():
+        v[(c, law, 'R_j_lo')], v[(c, law, 'R_j0')], v[(c, law, 'R_j_hi')] = lo * 1e-3, mid * 1e-3, hi * 1e-3
+    return v
+
+
+CAL2 = {'P0': 'CALIBRATED', 'P1': 'CALIBRATED'}
+
+
+def eval_U04(which):
+    main = {'statuses': CAL2, 'vals': rca09_main(), 'flags': []}
+    if which == 'noop':
+        vv = dict(main['vals'])
+    else:
+        vv = {k: (v if k[2] == 'R_j0' else (7.0e-3 if k[2] == 'R_j_lo' else 3.0e-3)) for k, v in main['vals'].items()}
+    var = {'statuses': CAL2, 'vals': vv, 'flags': []}
+    pub, res = RR.assemble(main, {'FIBRE': var, 'UNREG': dict(main), 'GRID': dict(main), 'SVORDER': dict(main)}, ([], {}))
+    if which == 'noop':
+        return (pub['verdict'] == 'PASS_INFORMATIVE' and 'FIBRE_SENSITIVE' not in pub['flags'] and pub['flags'] == []
+                and pub['sentence'] == RR.SENTENCE_PASS, (pub['verdict'], pub['flags'], res['judge'].get('W')))
+    return (pub['verdict'] == 'PASS_INFORMATIVE' and 'FIBRE_SENSITIVE' in pub['flags'] and pub['sentence_allowed'] is False
+            and res['variants']['FIBRE']['verdict'] == 'CONSISTENT_WEAK', (pub['verdict'], pub['flags'], res['variants'].get('FIBRE')))
+
+
+@check('U04', 'RCA-09 (§5-6 3판) — 같은 판정 함수: 주 판정 (허용폭 포함 [4.30, 4.80] W 0.110 PASS) ↔ 엄밀한 no-op 변이 = PASS 그대로 '
+               '(중앙 네 점만 판정하면 W 0.0335 FAIL = 거짓 SENSITIVE) · 표지 없음 · §7-1 문장')
+def t_U04():
+    return eval_U04('noop')
+
+
+@check('U04b', 'RCA-09 같은 부류 — 변이가 중앙 네 점은 같고 양끝만 넓다 ([3.0, 7.0]) → 같은 판정 함수 = CONSISTENT_WEAK ≠ PASS → FIBRE_SENSITIVE '
+                '(2판 = 중앙 네 점끼리 비교 → 둘 다 FAIL → 놓침)')
+def t_U04b():
+    return eval_U04('wide')
+
+
+def eval_U05():
+    nb = RR.blocking_of(['DIA_UNCHECKED', 'XYZ_UNCHECKED', 'FOO_SENSITIVE', 'SV_DOMINANT', 'Q9_ptfe_diameter_convention'])
+    each = all(RR.blocking_of([f, 'DIA_UNCHECKED']) == [f] for f in RR.BLOCKING_FLAGS)
+    s = RR.decide_sentence('positive', 'PASS_INFORMATIVE', RR.blocking_of(['DIA_UNCHECKED']))
+    return nb == [] and each and s == T_PASS and len(RR.BLOCKING_FLAGS) == 11, (nb, each, s)
+
+
+@check('U05', 'RCA-10 (§5-6a) — 차단 표지 = 닫힌 집합 11 · DIA_UNCHECKED · 모르는 *_UNCHECKED · *_SENSITIVE · 옛 SV_DOMINANT = 차단 아님 · '
+               '닫힌 집합 이름 하나하나 = 차단 · DIA 만 있으면 PASS 문장 허용')
+def t_U05():
+    return eval_U05()
+
+
+def _judge_close(a, b):
+    for k in ('verdict', 'state', 'in_law', 'in_U', 'in_E', 'direction', 'p_why', 'S_why'):
+        if a[k] != b[k]:
+            return False
+    for k in ('W', 'p', 'd', 'd_over_G0', 'S', 'd_to_U'):
+        x, y = a[k], b[k]
+        if (x is None) != (y is None) or (x is not None and not (x == y or (math.isfinite(x) and rel(x, y) < 1e-12))):
+            return False
+    return True
+
+
+def eval_U06():
+    cases = {'pass': {k: v * 1e3 for k, v in rca09_main().items()}, 'gap': rca08_vals(), 'weak': None}
+    cases['weak'] = {k: (v if k[2] != 'R_j_lo' else 7.0) for k, v in cases['pass'].items()}
+    bad = []
+    for nm, vals in cases.items():
+        a = RR.judge(vals)
+        b = RR.judge({k: v * 1e-3 for k, v in vals.items()}, x=4.68e-3, ref=1.8877e-3)
+        if not _judge_close(a, b):
+            bad.append(f'단위 [{nm}] {a["verdict"]} ↔ {b["verdict"]}')
+    #  τ_mono = ln σ 차 — 1000 → 999.5 mS/cm 를 절대차 (0.5) 로 재면 거부 · 같은 양 S/cm (0.0005) 는 통과 = 쓰지 않는다 (판정문 RCA-13)
+    for scale in (1.0, 1e-3):
+        lad_ = RR.Ladder(lambda *a: None, max_points=4)
+        lad_.pts = {'1.0': (1.0, 999.5 * scale), '2.0': (2.0, 1000.0 * scale)}
+        try:
+            lad_._monotone()
+        except RR.Stop as e:
+            bad.append(f'평탄 ({scale}) 을 비단조로 {e.code}')
+        lad_.pts = {'1.0': (1.0, 999.0 * scale), '2.0': (2.0, 1000.0 * scale)}      # ln 차 1.0005e-3 > τ_mono
+        try:
+            lad_._monotone()
+            bad.append(f'비단조 ({scale}) 를 놓침')
+        except RR.Stop as e:
+            if e.code != 'CALIB_NONMONOTONE':
+                bad.append(e.code)
+    if not (RR.ln_diff(999.5, 1000.0) == RR.ln_diff(999.5e-3, 1000.0e-3) or rel(RR.ln_diff(999.5, 1000.0), RR.ln_diff(0.9995, 1.0)) < 1e-9):
+        bad.append('ln_diff 단위 의존')
+    #  0/0 · 점 · 확장 실수 끝 (§5-0 ③ ④ · 예외 없이)
+    one = lambda v: {(c, law, rr): v for c in ('0', '1') for law in ('P0', 'P1') for rr in ('R_j_lo', 'R_j0', 'R_j_hi')}   # noqa: E731
+    Jp = RR.judge(one(4.68))
+    Jf = RR.judge(one(3.0))
+    Jz = RR.judge(one(0.0))
+    Ji = RR.judge(one(math.inf))
+    mix = one(5.0)
+    mix[('0', 'P0', 'R_j_hi')] = 0.0
+    Jm = RR.judge(mix)
+    gz = {k: (0.0 if k[1] == 'P0' else math.inf) for k in one(1.0)}
+    Jg = RR.judge(gz)
+    tbl = [(Jp, ('PASS_INFORMATIVE', 'point', 0.0, None)), (Jf, ('FAIL', 'point', 0.0, None)),
+           (Jz, ('FAIL', 'extended', math.inf, None)), (Ji, ('FAIL', 'extended', math.inf, None)),
+           (Jm, ('UNINFORMATIVE', 'extended', math.inf, None)), (Jg, ('GAP_ENVELOPE_ONLY', 'extended', math.inf, None))]
+    for J, (v, s, W, p) in tbl:
+        if (J['verdict'], J['state'], J['W'], J['p']) != (v, s, W, p):
+            bad.append(f'{J["verdict"]}/{J["state"]}/{J["W"]}/{J["p"]} ≠ {v}/{s}/{W}/{p}')
+    if not (Jz['d'] == math.inf and Jz['direction'] == 'above' and Ji['d'] == math.inf and Ji['direction'] == 'below'
+            and Jz['S'] is None and Jm['S'] is None and Jp['S'] is not None and Jf['p'] is None
+            and rel(Jf['d'], math.log(4.68 / 3.0)) < 1e-12):
+        bad.append(f'끝 거리 · 방향 · S {Jz["d"]} {Jz["direction"]} {Ji["direction"]} {Jz["S"]}')
+    #  ★ 4판 (Q2-3 · §4-2 PRE-design-10) — W 가 +∞ · 0 이면 문턱의 W = W₊ (arm 0 양수 값의 폭 · 없으면 0 = 문턱 0 · 보수 쪽) · 세 origin 상태가
+    #    다르면 = 넘음 (3판 = W +∞ → 문턱 +∞ → 늘 통과)
+    try:
+        dob = (RR.dbe_origin_ok([0.0, 0.0, 0.0], 0.0) == (True, 0.0) and RR.dbe_origin_ok([1.0, 2.0], math.inf)[0] is False
+               and RR.dbe_origin_ok([1.0, 2.0], math.inf, w_pos=10.0)[0] is True
+               and RR.dbe_origin_ok([1.0, 1.0, 1.0], 0.0, states=['zero', 'positive', 'positive'])[0] is False
+               and RR.dbe_origin_ok([3.0, 3.0, 3.0], 0.5, states=['positive'] * 3) == (True, 0.0))
+    except TypeError as e:
+        dob = False
+        bad.append(f'dbe_origin_ok 4판 인자 {e}')
+    if not (RR.ln_spread([0.0, 0.0, 0.0]) == 0.0 and RR.ln_spread([0.0, 1.0]) == math.inf and RR.ln_spread([math.inf, math.inf]) == 0.0
+            and dob and RR.mean_ext([1.0, math.inf]) == math.inf):
+        bad.append('확장 실수 도구')
+    return not bad, bad
+
+
+@check('U06', 'RCA-13 (§5-0 · §3-2) — 단위 불변 (S/cm ↔ mS/cm · 판정 · W · p · d · S) · τ_mono = ln 차 (999.5 → 1000 평탄 · 999 → 1000 비단조 · '
+               '두 단위 같음) · 0/0 · 점 구간 (W 0 · p null) · zero 끝 (W +∞ · p · S null · d +∞ 방향 · ★ 4판 단락은 판정에 오지 않는다 — +∞ 값은 '
+               '도구만) · gap · 확장 실수 도구 (★ 4판 dbe_origin_ok — W₊ · 상태 다름 = 넘음)')
+def t_U06():
+    return eval_U06()
+
+
+U07_BLK = ['SV_DEPENDENT', 'FIBRE_UNCHECKED']                 # 차단 표지 둘 (순서 섞음 — <목록> = 사전 순)
+ALLOWED = {('positive', v) for v in ('PASS_INFORMATIVE', 'CONSISTENT_WEAK', 'UNINFORMATIVE', 'GAP_ENVELOPE_ONLY', 'FAIL')} | {
+    ('point', 'PASS_INFORMATIVE'), ('point', 'FAIL'), ('extended', 'UNINFORMATIVE'), ('extended', 'GAP_ENVELOPE_ONLY'), ('extended', 'FAIL')} | {
+    ('calib', c) for c in REG_CALIB6 + ('NOT_COMPUTED',)}
+
+
+def eval_U07():
+    """★ 4판 (Q2-4 · 등록 R 4판 §5-5b) — 결정표 전수: (상태 4 × 판정 12) × 차단 {없음 · 둘} × 감도 미완료 {아님 · 맞음} → 칸 글자 하나 (등록 표 그대로 ·
+    시험 쪽 독립 조립 `want_sentence`) · 짝이 안 맞는 상태 · 이름 = ValueError · 차단 목록에 닫힌 집합 밖 이름 · bool = 구현 결함 (ValueError)."""
+    bad, n_ok, n_bad = [], 0, 0
+    names = ('PASS_INFORMATIVE', 'CONSISTENT_WEAK', 'UNINFORMATIVE', 'GAP_ENVELOPE_ONLY', 'FAIL') + REG_CALIB6 + ('NOT_COMPUTED',)
+    for st in ('positive', 'point', 'extended', 'calib'):
+        for v in names:
+            for blk in ([], list(U07_BLK)):
+                for sens in (False, True):
+                    try:
+                        got = RR.decide_sentence(st, v, blk, sens_incomplete=sens)
+                        if (st, v) not in ALLOWED or got != want_sentence(st, v, blk, sens):
+                            bad.append((st, v, blk, sens, got))
+                        n_ok += 1
+                    except (ValueError, TypeError) as e:
+                        if (st, v) in ALLOWED:
+                            bad.append((st, v, blk, sens, f'{type(e).__name__}: {e}'))
+                        n_bad += 1
+    for wrong in (['DIA_UNCHECKED'], ['XYZ_UNCHECKED'], True, False):
+        try:
+            RR.decide_sentence('positive', 'PASS_INFORMATIVE', wrong)
+            bad.append(('닫힌 집합 밖 · bool 을 받았다', wrong))
+        except (ValueError, TypeError):
+            pass
+    return not bad and n_ok == 4 * len(ALLOWED) and n_ok + n_bad == 4 * 12 * 2 * 2, (bad[:4], n_ok, n_bad)
+
+
+@check('U07', '★ 4판 결정표 (§5-5b · PRE-design-09 · R4-Q7) 전수 — (상태 4 × 판정 12) × 차단 {없음 · 둘} × 감도 미완료 = 칸 글자 하나: PASS = §7-1 헤드라인 · '
+               '차단 = "계산기 판정 이름 `PASS_INFORMATIVE` · 차단 표지 <목록> — 판정 문장 보류" · WEAK · UNINF · GAP (+ ⑱) · FAIL = 왼쪽 칸 + '
+               '"(차단 표지 <목록>)" · CALIB_* · NOT_COMPUTED = 판정 없음 칸 · 점 구간 · 감도 미완료 (⑰) 덧붙임 · 허용 짝 17 · 짝 밖 · 닫힌 집합 밖 = '
+               'ValueError (3판 = 차단 PASS · UNINF · FAIL · CALIB 문장 없음)')
+def t_U07():
+    return eval_U07()
+
+
+def eval_U08():
+    def rec(st, r):
+        return {'sv_cf': {'status': st, 'ratio': r}}
+    base = {(c, law, rr): rec('computed', 1.2) for c in ('0', '1') for law in ('P0', 'P1') for rr in ('R_j_lo', 'R_j0', 'R_j_hi')}
+    cases = []
+    for nm, upd, thr, scope, want in (
+            ('비 1.2 < 2', {}, 2.0, 'R_j0', []),
+            ('비 = 문턱 (넘지 않음)', {('1', 'P1', 'R_j0'): rec('computed', 2.0)}, 2.0, 'R_j0', []),
+            ('비 2.0000001 > 2', {('1', 'P1', 'R_j0'): rec('computed', 2.0000001)}, 2.0, 'R_j0', ['SV_DEPENDENT']),
+            ('비 +∞ (위상)', {('0', 'P0', 'R_j0'): rec('no_through_without_sv', math.inf)}, 2.0, 'R_j0', ['SV_DEPENDENT']),
+            ('미수렴 (비 없음)', {('0', 'P1', 'R_j0'): rec('unconverged', None)}, 2.0, 'R_j0', ['SV_UNCHECKED']),
+            ('기록 없음 (조기 반환 모서리)', {('0', 'P1', 'R_j0'): {'sv_cf': None}}, 2.0, 'R_j0', ['SV_UNCHECKED']),
+            ('범위 밖 모서리의 큰 비 (R_j0 범위)', {('1', 'P1', 'R_j_hi'): rec('computed', 9.0)}, 2.0, 'R_j0', []),
+            ('범위 all3 — 같은 큰 비', {('1', 'P1', 'R_j_hi'): rec('computed', 9.0)}, 2.0, 'all3', ['SV_DEPENDENT']),
+            ('문턱 없음 (null)', {}, None, 'R_j0', ['SV_UNCHECKED'])):
+        r = dict(base)
+        r.update(upd)
+        f, d = RR.sv_assess(r, thr, scope)
+        cases.append((nm, sorted(f) == sorted(want), f, len(d['corners'])))
+    n_scope = {s: len(RR.sv_assess(base, 2.0, s)[1]['corners']) for s in ('R_j0', 'all3')}
+    return all(c[1] for c in cases) and n_scope == {'R_j0': 4, 'all3': 12}, ([c for c in cases if not c[1]], n_scope)
+
+
+@check('U08', 'SV 반사실 판정 (§5-6 SV 행 · RCA-06) — 비 > 문턱 = SV_DEPENDENT (= 문턱 은 아님 · "넘으면") · 비 +∞ = 의존 · 비 없는 상태 · 기록 없음 · '
+               '문턱 null = SV_UNCHECKED · 범위 R_j0 (모서리 넷) ↔ all3 (열둘)')
+def t_U08():
+    return eval_U08()
+
+
+def predes01_S(R, i):
+    """사전 리뷰 PRE-design-01 — arm 0 S = 1.43 + 0.2/r · arm 1–7 S = 1.53 + 0.1/r (r = R/1e6 · r = 1 에서 모두 1.63 · 중앙 산포 ≈ 0)."""
+    if R == math.inf:
+        return 1.43 if i == 0 else 1.53
+    r = max(R / 1e6, 1e-6)
+    return (1.43 + 0.2 / r) if i == 0 else (1.53 + 0.1 / r)
+
+
+def eval_U10():
+    lad_ = RR.Ladder(ladder_fetch(predes01_S), max_points=24, ratio_max='none')
+    lad_.run()
+    lad_.origin()
+    st = lad_.st
+    T = {'lo': 1.63 * 1.02, 'hi': 1.63 * 0.98}
+    bad = []
+    for side, key in (('lo', st['R_j_lo']), ('hi', st['R_j_hi'])):
+        R = RR.rj_float(key)
+        for i in (0, 1, 2):
+            s = predes01_S(R, i)
+            if (side == 'lo' and s < T['lo']) or (side == 'hi' and s > T['hi']):
+                bad.append(f'{side} 끝 {key} 의 arm {i} σ {s:.5f} 가 띠 안 (합집합 바깥 감쌈 깨짐)')
+    pushed = sum(int((st['ends'][s_] or {}).get('origin_pushes', 0)) for s_ in ('lo', 'hi'))
+    if pushed < 1:
+        bad.append('끝 origin 밀기 없음 (arm 0 끝이 arm 1 · 2 의 띠 안인데)')
+    if not (st['origin'] or {}).get('status') == 'pass':
+        bad.append(f'R_j,0 origin {st["origin"]} (중앙 산포 ≈ 0 = pass 여야 — 중앙 검사만으로는 못 잡는 부류)')
+    return not bad, (bad, st['R_j_lo'], st['R_j_hi'], st['ends'])
+
+
+@check('U10', 'PRE-design-01 (Q-E · P1) — 중앙 (R_j,0) 산포 2.2e-16 · CALIB_ORIGIN_SENSITIVE 안 걸리는데 arm 1 · 2 의 허용집합이 arm 0 보다 넓다 → '
+               '끝에서 arm 1 · 2 도 돌려 하나라도 띠 안이면 바깥 실측 이웃으로 → 끝의 세 origin 이 모두 띠 밖 (합집합을 바깥에서 감쌈)')
+def t_U10():
+    return eval_U10()
+
+
+# ── ★ 4판 Q2 (1저자 10-21 "권고대로") — 등록 R 4판 규칙 여섯 (시험 먼저 · 기대 = 등록 규칙의 정확한 출력) ──
+#  Q2-1 §3-2c 이름 우선순위 ─────────────────────────────────────────────
+def eval_U11():
+    bad = []
+    for c in REG_CALIB6:
+        for st in ({'P0': 'NOT_COMPUTED', 'P1': c}, {'P0': c, 'P1': 'NOT_COMPUTED'}):
+            if RR.judge_set(st, None) != {'verdict': 'NOT_COMPUTED', 'state': 'calib'}:
+                bad.append((st, RR.judge_set(st, None)))
+        for st in ({'P0': c, 'P1': 'CALIBRATED'}, {'P0': 'CALIBRATED', 'P1': c}):
+            if RR.judge_set(st, None) != {'verdict': c, 'state': 'calib'}:
+                bad.append((st, RR.judge_set(st, None)))
+    for i, a in enumerate(REG_CALIB6):                      # 둘 다 CALIB_* = 등록 나열 순서의 첫 이름
+        for b in REG_CALIB6:
+            want = a if i <= REG_CALIB6.index(b) else b
+            if RR.judge_set({'P0': a, 'P1': b}, None)['verdict'] != want:
+                bad.append((a, b, RR.judge_set({'P0': a, 'P1': b}, None)))
+    if RR.judge_set({'P0': 'NOT_COMPUTED', 'P1': 'NOT_COMPUTED'}, None)['verdict'] != 'NOT_COMPUTED':
+        bad.append('NC NC')
+    return not bad, bad[:4]
+
+
+@check('U11', '★ 4판 Q2-1 (§3-2c · PRE-design-08) — 두 법칙 이름이 다르면 하나라도 NOT_COMPUTED = 판정 전체 NOT_COMPUTED (상태 먼저) · 아니면 '
+               '등록 나열 순서의 첫 CALIB_* · 반례 P0 NOT_COMPUTED · P1 CALIB_EDGE → NOT_COMPUTED (3판 = CALIB_EDGE · CALIB_ORDER 끝)')
+def t_U11():
+    return eval_U11()
+
+
+def run_U11b():
+    def go():
+        #  P1 법칙 배수 0.95 가 바닥에도 걸린다 → 바닥 1.60e-3 / 0.95 (P1 바닥 = 1.60e-3 · 1.63 의 2 % 안 = CALIB_EDGE · L10 의 P1 짝)
+        p1 = ladder('U11b_P1', world('U11b_P1', dict(PW, sbe=dict(PW_SBE, floor=1.60e-3 / 0.95, s_ref=40e-3))), law='P1')
+        l17 = scen('L17', lambda: ladder('L17', world('L17', dict(PW, faults=[{'do': 'certfail', 'match': {'rj': '1000000.0'}}]))))
+        return {'p1': p1, 'v': verdict('U11b_v', [l17['out'], p1['out']])}
+    return scen('U11b', go)
+
+
+@check('U11b', '★ 4판 Q2-1 (사슬) — P0 사다리 NOT_COMPUTED (증서 실패 · L17) + P1 사다리 CALIB_EDGE → 판정 NOT_COMPUTED (rc 0 · 법칙별 이름 늘 보고 · '
+                '사유 둘)')
+def t_U11b():
+    sc = run_U11b()
+    v = sc['v']['v'] or {}
+    rs = sorted((w.get('law'), w.get('code')) for w in (v.get('reasons') or []))
+    return (sc['p1']['sum']['status'] == 'CALIB_EDGE' and sc['v']['rc'] == 0 and v.get('verdict') == 'NOT_COMPUTED'
+            and v.get('calib') == {'P0': 'NOT_COMPUTED', 'P1': 'CALIB_EDGE'} and rs == [('P0', 'NOT_COMPUTED'), ('P1', 'CALIB_EDGE')],
+            (sc['p1']['sum']['status'], v.get('verdict'), v.get('calib'), rs))
+
+
+#  Q2-2 §3-2b ③″ 보호 띠 ───────────────────────────────────────────────
+def run_U01e(err, S=None, read=1.0, cap=12):
+    lad_ = RR.Ladder(ladder_fetch(S or rca01_S, err=err, read=read), max_points=cap, ratio_max='none')
+    status = 'CALIBRATED'
+    try:
+        lad_.run()
+        lad_.origin()
+    except RR.Stop as e:
+        status = e.code
+    st = lad_.st
+    R = {k: (RR.rj_float(st[k]) if st.get(k) else None) for k in ('R_j_lo', 'R_j0', 'R_j_hi')}
+    J = RR.judge({('0', 'P0', k): rca01_D(v) for k, v in R.items()}) if status == 'CALIBRATED' else None
+    return lad_, status, R, J
+
+
+#: 등록 R 4판 §3-2b ⑧ — 증서 보장 오차 e ≥ 3.728e-5 → hi 끝 = 바깥 이웃 1e7 · 비 1,000 · W 0.786487 · 같은 등급 (CONSISTENT_WEAK)
+U01E_W = math.log(rca01_D(1e4) / rca01_D(1e7))
+
+
+def eval_U01e():
+    bad = []
+    for e, want_hi in ((1e-4, 1e7), (3.8e-5, 1e7), (3.7e-5, RCA01_WANT['R_hi']), (0.0, RCA01_WANT['R_hi'])):
+        lad_, status, R, J = run_U01e(e)
+        st = lad_.st
+        hi_src = (st.get('ends') or {}).get('hi', {}).get('source')
+        if status != 'CALIBRATED' or R['R_j_lo'] != 1e4 or R['R_j0'] != RCA01_WANT['R0'] or rel(R['R_j_hi'], want_hi) > 1e-9:
+            bad.append((e, status, R, hi_src))
+            continue
+        if want_hi == 1e7:
+            if not (rel(st['R_ratio'], 1000.0) < 1e-12 and J['verdict'] == 'CONSISTENT_WEAK' and rel(J['W'], U01E_W) < 1e-12
+                    and abs(J['W'] - 0.786487) < 5e-7 and hi_src == 'outer_neighbor'):
+                bad.append((e, st['R_ratio'], J['verdict'], J['W'], hi_src))
+        elif not (rel(st['R_ratio'], RCA01_WANT['ratio']) < 1e-9 and J['verdict'] == 'CONSISTENT_WEAK' and rel(J['W'], RCA01_WANT['W']) < 1e-9
+                  and hi_src == 'candidate'):
+            bad.append((e, st['R_ratio'], J['verdict'], J['W'], hi_src))
+    return not bad, bad
+
+
+@check('U01e', '★ 4판 Q2-2 (§3-2b ③″ ⑧ · PRE-design-12 · R4-Q2 · R4-Q3) — 끝 판정 = 판독 [σ(1 − e), σ(1 + e)] (e = 그 런 증서 보장 오차) 가 띠에 '
+                '걸치면 바깥으로: RCA-01 회로 e = 0 · 3.7e-5 → 비 599.03 (후보) · e = 3.8e-5 · 1e-4 (≥ 3.728e-5) → hi 끝 = 바깥 이웃 1e7 · 비 1,000 · '
+                'W 0.786487 · CONSISTENT_WEAK (3판 = 띠 없음 · 늘 599.03)')
+def t_U01e():
+    return eval_U01e()
+
+
+T_MINUS = 1.63 * 0.98
+U12_F = T_MINUS * (1.0 - 5e-5)                              # 등록 R 4판 §3-2b ③″ 반례 — 바닥 F = T⁻(1 − 5e-5) (|F/1.63 − 1| = 0.02005)
+U12_TRUE_HI = (0.05 / (T_MINUS - U12_F) - 0.1) * 1e5        # 참 R_hi (S(R) = T⁻) = 6.259e7 Ω
+
+
+def u12_S(R, i=0):
+    """반례 SBE — S = F + 0.05/(r + 0.1) mS/cm · r = R/1e5 Ω (origin 무관)."""
+    return U12_F if R == math.inf else U12_F + 0.05 / (R / 1e5 + 0.1)
+
+
+def eval_U12():
+    a = run_U01e(1e-4, S=u12_S, cap=24)                     # 판독 오차 e 1e-4 ≥ 5e-5 → 바닥이 EDGE 띠에 걸친다
+    b = run_U01e(4e-5, S=u12_S, cap=24)                     # e 4e-5 < 5e-5 → EDGE 아님
+    ok = (a[1] == 'CALIB_EDGE' and a[0].st['n_runs'] == 2 and b[1] != 'CALIB_EDGE' and b[0].st['n_runs'] > 2
+          and abs(abs(U12_F / 1.63 - 1.0) - 0.02005) < 1e-5 and abs(U12_TRUE_HI - 6.259e7) < 1e4)
+    return ok, (a[1], a[0].st['n_runs'], b[1], b[0].st['n_runs'], U12_TRUE_HI)
+
+
+@check('U12', '★ 4판 Q2-2 (§3-1 · §3-2b ③″) — EDGE 판정에도 보호 띠: 바닥 F = T⁻(1 − 5e-5) (EDGE 안 걸림 · |F/1.63 − 1| = 0.02005) · 판독 오차 '
+               'e = 1e-4 → [F(1 − e), F(1 + e)] 가 EDGE 띠에 걸침 → CALIB_EDGE (바닥 · 천장 두 런 뒤 · 3판 = EDGE 아님 · 사다리 계속) · e = 4e-5 → EDGE 아님')
+def t_U12():
+    return eval_U12()
+
+
+def eval_U12b():
+    lad_, status, R, _J = run_U01e(4e-5, S=u12_S, read=1.0 - 4e-5, cap=24)
+    ok = (status == 'CALIBRATED' and R['R_j_hi'] >= U12_TRUE_HI * (1.0 - 1e-12)) or status == 'CALIB_LADDER_EXHAUSTED'
+    return ok, (status, R, U12_TRUE_HI, (lad_.st.get('ends') or {}).get('hi'))
+
+
+@check('U12b', '★ 4판 Q2-2 (§3-2b ③″ 반례 · 보수 쪽) — 증서 허용 안의 낮은 판독 (σ × (1 − e) · e 4e-5) 에서도 hi 끝은 참 끝 6.259e7 의 바깥 (≥) 이거나 '
+                '사다리 소진 (CALIB_LADDER_EXHAUSTED) — 안쪽 끝 (낮은 판독이 "≤ T⁻" 로 읽힌 자리) 을 쓰지 않는다 (3판 = 안쪽 끝)')
+def t_U12b():
+    return eval_U12b()
+
+
+def eval_L22():
+    """사슬 배선 — read_run 이 증서 (target_lo · target_hi · I_bot) 에서 보장 오차를 다시 계산해 팔 기록 err_rel 로 싣고 · 사다리가 그 값으로 띠를 잰다."""
+    e = 9e-5
+    w = ladder('L22', world('L22', dict(PW, cert_e=e)))
+    edge = ladder('L22e', world('L22e', dict(PW, cert_e=e, sbe=dict(PW_SBE, floor=U12_F * 1e-3))))
+    edge0 = ladder('L22z', world('L22z', dict(PW, sbe=dict(PW_SBE, floor=U12_F * 1e-3))))
+    ers = (lad(w).get('err_rel') or {})
+    pub = [a.get('err_rel') for r in (w['sum'] or {}).get('runs', []) for a in (r.get('arms_read') or [])]
+    fin = [v for k, v in ers.items() if k != 'inf']
+    ok = (bool(fin) and all(isinstance(v, float) and rel(v, e) < 1e-6 for v in fin) and all(isinstance(v, float) for v in pub)
+          and edge['sum']['status'] == 'CALIB_EDGE' and roles(edge) == ['floor', 'ceiling'] and edge0['sum']['status'] != 'CALIB_EDGE'
+          and len(roles(edge0)) > 2)
+    return ok, (sorted(set(round(v, 12) for v in fin)), pub[:3], edge['sum']['status'], roles(edge), edge0['sum']['status'])
+
+
+@check('L22', '★ 4판 Q2-2 (사슬 배선 · 가짜 러너) — 증서 보장 오차 9e-5 = 팔 기록 err_rel (증서 구간에서 다시 계산 · 공개 칸) · 사다리 기록 err_rel · '
+               '바닥 T⁻(1 − 5e-5) 침대 = 증서 오차 9e-5 면 CALIB_EDGE (두 런) · 0 이면 EDGE 아님')
+def t_L22():
+    return eval_L22()
+
+
+#  Q2-3 §4-2 W₊ · 상태 다름 ─────────────────────────────────────────────
+def u13_fetch(spec):
+    """spec[(c, 법칙)] = (arm 0 σ mS · 상태, origin 팔 1 · 2 σ mS · 상태, 8 팔 런의 팔 1–7 σ mS) — 세 R 같은 값 · SBE no-op = 1.63."""
+    def fetch(kit, role, law, c, rj, arms, sv_cf=False):
+        if kit == SBE_KIT:
+            return [{'sigma': 1.63e-3, 'n_sdcp_near': 0, 'state': 'positive', 'err_rel': 0.0}]
+        (a0, s0), (o12, so), o8 = spec[(c, law)]
+        out = []
+        for i in _arms_of(arms):
+            v, st = (a0, s0) if i == 0 else ((o8, 'positive') if isinstance(arms, int) else (o12, so))
+            out.append({'sigma': v * 1e-3, 'state': st, 'n_sdcp_near': 7, 'err_rel': 0.0})
+        return out
+    return fetch
+
+
+U13_LADS = {law: {'R_j_lo': '0.5', 'R_j0': '1.0', 'R_j_hi': '2.0', 'r0_sigma': 1.63e-3} for law in ('P0', 'P1')}
+
+
+def run_U13(spec):
+    pr = RR.Predict(u13_fetch(spec), U13_LADS, None, sv_scope=None)
+    pr.run()
+    return pr, RR.judge({k: v * 1e3 for k, v in pr.values().items()})
+
+
+def eval_U13():
+    spec = {('0', 'P0'): ((0.0, 'zero'), (6.0, 'positive'), 6.0), ('1', 'P0'): ((3.0, 'positive'), (3.0, 'positive'), 3.0),
+            ('0', 'P1'): ((3.5, 'positive'), (3.5, 'positive'), 3.5), ('1', 'P1'): ((4.0, 'positive'), (4.0, 'positive'), 4.0)}
+    pr, J = run_U13(spec)
+    org = {f'c{o["c"]}_{o["law"]}': o for o in pr.origin}
+    ok = (J['verdict'] == 'CONSISTENT_WEAK' and rel(J['interval_mScm'][0], 3.0) < 1e-12 and rel(J['interval_mScm'][1], 5.25) < 1e-12
+          and rel(J['W'], math.log(1.75)) < 1e-12
+          and abs(J['W'] - 0.5596) < 5e-5 and org['c0_P0']['status'] == 'adjusted'
+          and all(org[k]['status'] == 'pass' for k in ('c1_P0', 'c0_P1', 'c1_P1')))
+    return ok, (J.get('verdict'), J.get('interval_mScm'), J.get('W'), {k: (o['status'], o['per_R']) for k, o in org.items()})
+
+
+@check('U13', '★ 4판 Q2-3 (§4-2 PRE-design-10 ① · R4-Q4) — 한 모서리 · R 의 세 origin 상태가 다르면 = 넘음 (8 팔 평균 · zero 는 0 으로 더함): 등록 반례 '
+               'arm 0 {0 (VALID_ZERO) · 3.0 · 3.5 · 4.0} · zero 모서리 arm 1 · 2 = 6.0 → 그 모서리 5.25 → [3.0, 5.25] · W 0.5596 · CONSISTENT_WEAK '
+               '(3판 = W +∞ → 문턱 +∞ → 전환 없음 → FAIL)')
+def t_U13():
+    return eval_U13()
+
+
+def eval_U13b():
+    spec = {('0', 'P0'): ((0.0, 'zero'), (0.0, 'zero'), 0.0), ('1', 'P0'): ((3.0, 'positive'), (3.0, 'positive'), 3.0),
+            ('0', 'P1'): ((3.5, 'positive'), (3.5, 'positive'), 3.5), ('1', 'P1'): ((4.0, 'positive'), (4.2, 'positive'), 4.2)}
+    pr, J = run_U13(spec)
+    org = {f'c{o["c"]}_{o["law"]}': o for o in pr.origin}
+    wp = math.log(4.0 / 3.0)
+    mean8 = (4.0 + 7 * 4.2) / 8.0
+    v = pr.values()
+    ok = (rel(pr.sealed.get('W_pos', math.nan), wp) < 1e-12 and pr.sealed['W0'] == math.inf and org['c1_P1']['status'] == 'adjusted'
+          and org['c0_P0']['status'] == 'pass' and all(rel(v[('1', 'P1', rr)] * 1e3, mean8) < 1e-12 for rr in RR.RJ_ROLES)
+          and math.log(4.2 / 4.0) > 0.1 * wp)
+    return ok, (pr.sealed.get('W_pos'), pr.sealed.get('W0'), {k: o['status'] for k, o in org.items()})
+
+
+@check('U13b', '★ 4판 Q2-3 (§4-2 ②) — 상태는 같은데 W (arm 0 첫 폭) 가 +∞ (다른 모서리의 zero) → 문턱의 W = W₊ (arm 0 양수 값의 폭 ln(4/3)) · '
+                'c1 P1 의 origin 산포 ln 1.05 > 0.1 W₊ → 넘음 → 세 R 8 팔 평균 4.175 · zero 모서리 (세 origin 다 zero) = 통과 (3판 = 문턱 +∞ → 통과)')
+def t_U13b():
+    return eval_U13b()
+
+
+#  Q2-5 §5-6 변이 표지 ─────────────────────────────────────────────────
+def eval_U14():
+    main = {'statuses': CAL2, 'vals': rca09_main(), 'flags': []}
+    same = lambda **kw: dict(main, **kw)                    # noqa: E731
+    cases = {
+        'a 변이 예측 NOT_COMPUTED (vals None)': (same(vals=None), 'FIBRE_UNCHECKED', 'FIBRE_SENSITIVE', '변이 판정 NOT_COMPUTED'),
+        'b 변이 사다리 NOT_COMPUTED': (same(statuses={'P0': 'NOT_COMPUTED', 'P1': 'CALIBRATED'}, vals=None), 'FIBRE_UNCHECKED',
+                                       'FIBRE_SENSITIVE', '변이 판정 NOT_COMPUTED'),
+        'c 변이 이름 같음 + 변이 자신의 CALIB_ORIGIN_SENSITIVE': (same(flags=['CALIB_ORIGIN_SENSITIVE']), 'FIBRE_UNCHECKED',
+                                                                 'FIBRE_SENSITIVE', '변이 자신의 차단 표지 CALIB_ORIGIN_SENSITIVE'),
+        'd 변이 CALIB_EDGE (결과 이름 · 다름)': (same(statuses={'P0': 'CALIB_EDGE', 'P1': 'CALIBRATED'}, vals=None), 'FIBRE_SENSITIVE',
+                                                'FIBRE_UNCHECKED', '변이 판정 이름 CALIB_EDGE'),
+        'e 변이 이름 다름 + 자신의 CALIB_ORIGIN_SENSITIVE': (same(vals={k: (v if k[2] == 'R_j0' else (7.0e-3 if k[2] == 'R_j_lo' else 3.0e-3))
+                                                                     for k, v in main['vals'].items()}, flags=['CALIB_ORIGIN_SENSITIVE']),
+                                                          'FIBRE_SENSITIVE', 'FIBRE_UNCHECKED', '변이 판정 이름 CONSISTENT_WEAK'),
+    }
+    bad = []
+    for nm, (var, want, avoid, why) in cases.items():
+        pub, _res = RR.assemble(main, {'FIBRE': var, 'UNREG': dict(main), 'GRID': dict(main), 'SVORDER': dict(main)}, ([], {}))
+        rs = pub.get('blocking_reasons') or {}
+        if not (want in pub['flags'] and avoid not in pub['flags'] and 'CALIB_ORIGIN_SENSITIVE' not in pub['flags']
+                and str(rs.get(want, '')).startswith(why) and pub['sentence_allowed'] is False):
+            bad.append((nm, pub['flags'], rs, pub.get('variants', {}).get('FIBRE')))
+    return not bad, bad
+
+
+@check('U14', '★ 4판 Q2-5 (§5-6 PRE-design-17 ② ③ ④ ⑤ · R4-Q8) — 변이 NOT_COMPUTED (예측 · 사다리) → <V>_UNCHECKED (3판 = _SENSITIVE) · 변이 이름 같음 + '
+               '자신의 CALIB_ORIGIN_SENSITIVE → <V>_UNCHECKED · 결과 이름 다름 (CALIB_* 포함) → <V>_SENSITIVE (② 먼저) · 변이 자신의 표지는 주 표지 '
+               '목록에 옮기지 않는다 · 표지마다 사유')
+def t_U14():
+    return eval_U14()
+
+
+def run_V18():
+    def go():
+        dirs = list(main_dirs())
+        vl0 = ladder('V18_P0', world('V18_P0', dict(PW, faults=[{'do': 'certfail', 'match': {'rj': '1000000.0'}}])), law='P0',
+                     variant='FIBRE')
+        vl1 = ladder('V18_P1', world('V18_P1'), law='P1', variant='FIBRE')
+        return {'l': [vl0, vl1], 'v': verdict('V18_v', dirs + [vl0['out'], vl1['out']])}
+    return scen('V18', go)
+
+
+@check('V18', '★ 4판 Q2-5 (사슬) — 감도 FIBRE 사다리 P0 가 NOT_COMPUTED (증서 실패) → FIBRE 판정 NOT_COMPUTED → FIBRE_UNCHECKED (FIBRE_SENSITIVE 아님 · '
+               '3판 = 이름 다름 → SENSITIVE) · 주 판정 이름 그대로')
+def t_V18():
+    sc = run_V18()
+    v = sc['v']['v'] or {}
+    fv = (v.get('variants') or {}).get('FIBRE') or {}
+    return (sc['l'][0]['sum']['status'] == 'NOT_COMPUTED' and v.get('verdict') == 'PASS_INFORMATIVE' and 'FIBRE_UNCHECKED' in v.get('flags', [])
+            and 'FIBRE_SENSITIVE' not in v.get('flags', []) and fv.get('verdict') == 'NOT_COMPUTED',
+            (sc['l'][0]['sum']['status'], v.get('verdict'), v.get('flags'), fv))
+
+
+#  Q2 가장자리 (보호 띠 연장 · 판정 없음 칸 · 표지마다 사유) — 두 번째 시험 먼저 ───────────────────────
+U12C_TP = 1.63 * 1.02                                       # T⁺ (mS/cm)
+#: S(1e4) = T⁺(1 + 3e-5) 가 되게 고른 k — 판독 오차 e 1e-4 면 1e4 점이 T⁺ 띠에 걸치고 더 작은 R 실측 점은 아직 없다
+U12C_K = (U12C_TP * (1.0 + 3e-5) - 1.597) * (1e4 / RCA01_SCALE + 0.1)
+
+
+def u12c_S(R, i=0):
+    """보호 띠 연장 — RCA-01 꼴 S = 1.597 + k/(r + 0.1) mS/cm (r = R/10^4.75 · origin 무관)."""
+    return 1.597 if R == math.inf else 1.597 + U12C_K / (R / RCA01_SCALE + 0.1)
+
+
+def eval_U12c():
+    true_lo = (U12C_K / (U12C_TP - 1.597) - 0.1) * RCA01_SCALE           # 참 R_lo (S = T⁺) ≈ 10,011.9 Ω
+    try:
+        a = run_U01e(1e-4, S=u12c_S, cap=24)
+        b = run_U01e(0.0, S=u12c_S, cap=24)
+    except Exception as e:                                  # noqa: BLE001 — 바깥 실측 점이 없을 때 사슬이 죽으면 (max([]) …) 실패
+        return False, f'{type(e).__name__}: {e}'
+    lad_, status, R, _J = a
+    lo = (lad_.st.get('ends') or {}).get('lo') or {}
+    ok = (status == 'CALIBRATED' and R['R_j_lo'] == 100.0 and lo.get('source') == 'outer_neighbor' and '100.0' in lad_.st['order']
+          and lad_.st['n_ext'] >= 1 and R['R_j_lo'] <= true_lo
+          and u12c_S(1e4) * (1.0 - 1e-4) < U12C_TP <= u12c_S(1e4) and u12c_S(1e2) * (1.0 - 1e-4) >= U12C_TP
+          and b[1] == 'CALIBRATED' and b[2]['R_j_lo'] == 1e4 and b[0].st['n_ext'] == 0)
+    return ok, (status, R, lo.get('source'), lad_.st['n_ext'], b[1], b[2], true_lo)
+
+
+@check('U12c', '★ 4판 Q2-2 (§3-2b ③″ · 구현 가장자리) — 바깥 실측 점이 보호 띠로 다 걸치면 (1e4 점 σ = T⁺(1 + 3e-5) · e 1e-4 · 더 작은 R 실측 '
+                '없음) 사다리 규칙 그대로 같은 쪽 ×100 새 점 (1e2) 을 돌아 끝으로 (③′ 연장 꼴 · 죽지 않는다 · 참 끝 10,011.9 의 바깥) · e = 0 이면 3판 그대로 '
+                '(끝 1e4 · 연장 없음)')
+def t_U12c():
+    return eval_U12c()
+
+
+@check('V19', '★ 4판 (Q2-4 · §5-5b 같은 레코드 = 같은 문장) — 판정 기록 문장 칸: CALIB_EDGE (V08) = 판정 없음 칸 (법칙별 이름 · 사유 · …) · 등록 결과 '
+               'NOT_COMPUTED (V13) = 판정 없음 칸 (사유) · 사슬 멈춤 (S21 DUPLICATE_RUN) = 같은 NOT_COMPUTED 칸 + 사유 = 멈춤 코드 (단계 verdict) · '
+               '감도 미완료 칸 = 해당 없음 (null) (3판 = 셋 다 문장 null · 멈춤 사유 없음)')
+def t_V19():
+    v8 = scen('V08', lambda: verdict('V08', [run_L10()['out'], s_main('P1')['out']]))['v'] or {}
+    v13 = scen('V13', lambda: verdict('V13', [scen('L17', lambda: ladder('L17', world('L17', dict(
+        PW, faults=[{'do': 'certfail', 'match': {'rj': '1000000.0'}}]))))['out'], s_main('P1')['out']]))['v'] or {}
+    s21 = scen('S21', lambda: verdict('S21', main_dirs() + [s_main('P0')['out']]))['v'] or {}
+    rs = s21.get('reasons') or []
+    ok = (v8.get('verdict') == 'CALIB_EDGE' and v8.get('sentence') == T_CALIB and v8.get('sensitivity_incomplete', 'x') is None
+          and v13.get('verdict') == 'NOT_COMPUTED' and v13.get('sentence') == T_NC and v13.get('sensitivity_incomplete', 'x') is None
+          and s21.get('verdict') == 'NOT_COMPUTED' and s21.get('sentence') == T_NC and s21.get('blocking_reasons') == {}
+          and s21.get('sensitivity_incomplete', 'x') is None and len(rs) == 1 and rs[0].get('stage') == 'verdict'
+          and rs[0].get('code') == 'DUPLICATE_RUN')
+    return ok, (v8.get('sentence'), v13.get('sentence'), s21.get('sentence'), rs)
+
+
+@check('V20', '★ 4판 (Q2-4 · §5-5b "표지마다 사유") — SV_DEPENDENT = 대조 비 > 문턱 2.0 (모서리 c1_P1_R_j0 · 비 값은 결과에만) · SV_UNCHECKED = '
+               '못 읽음 (모서리) · CALIB_ORIGIN_SENSITIVE = 세 값 (§3-3) · 안 돌린 변이 = 안 돌림 · 차단 표지마다 사유 하나 (빈 칸 없음)')
+def t_V20():
+    def go7():
+        l0 = scen('L19', lambda: run_L19('L19'))
+        p = predict('V07_p', world('V07_p'), [l0['out'], s_main('P1')['out']])
+        return verdict('V07', [l0['out'], s_main('P1')['out'], p['out']])
+    v5 = sv_set('V05', {'status': 'computed', 'ratio': 3.0})['v'] or {}
+    v6 = sv_set('V06', {'status': 'unconverged'})['v'] or {}
+    v7 = scen('V07', go7)['v'] or {}
+    r5, r6, r7 = (v.get('blocking_reasons') or {} for v in (v5, v6, v7))
+    full = all(set(r) == set(v.get('blocking_flags') or []) and r and all(isinstance(x, str) and x for x in r.values())
+               for r, v in ((r5, v5), (r6, v6), (r7, v7)))
+    ok = (full and str(r5.get('SV_DEPENDENT', '')).startswith('대조 비 > 문턱 2.0') and 'c1_P1_R_j0' in r5.get('SV_DEPENDENT', '')
+          and '3.0' not in r5.get('SV_DEPENDENT', '') and str(r6.get('SV_UNCHECKED', '')).startswith('대조 비를 못 읽음')
+          and 'c1_P1_R_j0' in r6.get('SV_UNCHECKED', '') and str(r7.get('CALIB_ORIGIN_SENSITIVE', '')).startswith('세 값')
+          and r5.get('FIBRE_UNCHECKED') == '안 돌림')
+    return ok, (r5, r6, r7)
+
+
+# ── Z 해 상태 · C 두 계획 · N 계획 숫자 · F 단계 순서 (가짜 러너) ──
+def z_world(tag, states):
+    return world(tag, dict(PW, states=states))
+
+
+@check('Z01', '바닥 VALID_ZERO_TOPOLOGY (조기 반환 · σ 0 · 증서 영값) — 정본 계약 (ca_ext_record_ok · check_arm) 통과 · 사슬이 받아 사다리 계속 · '
+               'CALIBRATED · 상태 기록 zero (등록 R §5-0 ② — 2판 = ARM_UNREADABLE · NOT_COMPUTED 멈춤)')
+def t_Z01():
+    r = scen('Z01', lambda: ladder('Z01', z_world('Z01', [{'match': {'rj': 'inf'}, 'state': 'zero'}])))
+    L = lad(r)
+    f0 = ((r['sum'] or {}).get('runs') or [{}])[0]
+    return (r['rc'] == 0 and r['sum']['status'] == 'CALIBRATED' and L.get('states', {}).get('inf') == 'zero'
+            and (f0.get('arms_read') or [{}])[0].get('state') == 'zero' and roles(r)[:2] == ['floor', 'ceiling'],
+            (r['rc'], r['sum'] and r['sum']['status'], stop_code(r), L.get('states')))
+
+
+#: ★ 4판 (10-21 · 1저자 Q1 "권고대로" · 등록 R 4판 §5-0 ①–③ · §4-2 ③ · R4-Q5) — 단락 (ELECTRODE_SHORT) = 생산자 미게시 → 그 런 = NOT_COMPUTED ·
+#   사유 = 상태 이름 ELECTRODE_SHORT (+∞ 로 판정에 오지 않는다 · 다른 멈춤 이름 (RUNNER_RC · CA_EXT_RECORD …) 으로 흐리지 않는다)
+SHORT = 'ELECTRODE_SHORT'
+
+
+def stop_rec(res):
+    return (res.get('sum') or res.get('v') or {}).get('stop') or {}
+
+
+def eval_short_stage(r, stage_status_key='status', role=None):
+    """단계 하나가 단락 팔에서 등록 결과 NOT_COMPUTED (사유 ELECTRODE_SHORT) 로 끝났나 — 러너 rc 0 (팔은 정본 계약을 지났다) · 멈춘 런 = 그 런."""
+    s = r.get('sum') or {}
+    st = stop_rec(r)
+    runs = s.get('runs') or []
+    hit = [x for x in runs if x.get('name') == st.get('run')]
+    ok = (r['rc'] == 3 and s.get(stage_status_key) == 'NOT_COMPUTED' and st.get('code') == 'NOT_COMPUTED' and st.get('reason') == SHORT
+          and len(hit) == 1 and hit[0].get('rc') == 0 and bool(hit[0].get('arms_read')) and SHORT in str(st.get('cause'))
+          and (role is None or hit[0].get('role') == role))
+    return ok, (r['rc'], s.get(stage_status_key), st, [(x.get('role'), x.get('rc')) for x in runs][-3:])
+
+
+def eval_short_verdict(v, stage, law=None):
+    """판정 = 등록 결과 NOT_COMPUTED (rc 0 · 멈춤 아님) · 사유 기록 (stage · law · code NOT_COMPUTED · reason ELECTRODE_SHORT) · 결과에 +∞ 구간 없음."""
+    p = v.get('v') or {}
+    rs = [x for x in (p.get('reasons') or []) if isinstance(x, dict)]
+    want = [x for x in rs if x.get('stage') == stage and x.get('law') == law and x.get('code') == 'NOT_COMPUTED' and x.get('reason') == SHORT]
+    ok = (v['rc'] == 0 and p.get('verdict') == 'NOT_COMPUTED' and p.get('state') == 'calib' and p.get('stop') is None and len(want) == 1
+          and 'interval_mScm' not in (v.get('r') or {}))
+    return ok, (v['rc'], p.get('verdict'), p.get('stop'), rs, sorted((v.get('r') or {}))[:6])
+
+
+@check('Z02', '★ 4판 (Q1 · §5-0 ② · R4-Q5) 천장 ELECTRODE_SHORT (J11 · 생산자 미게시) — 사다리 = NOT_COMPUTED (등록 결과 · 사유 ELECTRODE_SHORT · '
+               '바닥 · 천장 두 런 뒤 · 천장 런 rc 0 = 팔은 정본 계약을 지났다) · 판정 (P1 주 사다리와) = NOT_COMPUTED rc 0 · 사유 기록 '
+               '(3판 = 받아서 σ +∞ · CALIBRATED)')
+def t_Z02():
+    r = scen('Z02', lambda: ladder('Z02', z_world('Z02', [{'match': {'rj': '0'}, 'state': 'short'}])))
+    ok1, why1 = eval_short_stage(r, role='ceiling')
+    v = scen('Z02_v', lambda: verdict('Z02_v', [r['out'], s_main('P1')['out']]))
+    ok2, why2 = eval_short_verdict(v, 'ladder', 'P0')
+    ok3 = roles(r) == ['floor', 'ceiling'] and '0' not in lad(r).get('states', {}) and (v['v'] or {}).get('calib') == {
+        'P0': 'NOT_COMPUTED', 'P1': 'CALIBRATED'}
+    return ok1 and ok2 and ok3, (why1, why2, roles(r), lad(r).get('states'))
+
+
+def z_pred(tag, states):
+    def go():
+        p = predict(tag, world(tag, dict(PW, states=states)), [s_main('P0')['out'], s_main('P1')['out']])
+        return {'pred': p, 'ver': verdict(tag + '_v', [s_main('P0')['out'], s_main('P1')['out'], p['out']])}
+    return scen(tag, go)
+
+
+@check('Z03', 'DBE 모서리 하나 VALID_ZERO_TOPOLOGY (P0 c0 R_j,hi) — 확장 실수 0 그대로 구간에 · W +∞ · 4.68 ∈ U → UNINFORMATIVE · p · S null · '
+               '상태 extended · 그 모서리 origin 팔도 0 (산포 0)')
+def t_Z03():
+    sc = z_pred('Z03', [{'match': {'kit_has': 'DBE', 'law': 'P0', 'c': '0', 'rj': lad(s_main('P0'))['R_j_hi']}, 'state': 'zero'}])
+    v, r = sc['ver']['v'] or {}, sc['ver']['r'] or {}
+    return (sc['pred']['sum']['status'] == 'PREDICTED' and v.get('verdict') == 'UNINFORMATIVE' and v.get('state') == 'extended'
+            and r.get('W') is None and r.get('p') is None and r.get('S') is None and r.get('interval_mScm', [None])[0] == 0.0
+            and (r.get('corners_state') or {}).get('c0_P0', {}).get('R_j_hi') == 'zero',
+            (v.get('verdict'), v.get('state'), v.get('stop'), r.get('interval_mScm')))
+
+
+@check('Z04', '★ 4판 (Q1 · §5-0 ③) DBE 모서리 하나 ELECTRODE_SHORT (P1 c1 R_j,0 · c 1 축약) — 예측 = NOT_COMPUTED (등록 결과 · 사유 '
+               'ELECTRODE_SHORT · 그 모서리 런에서 멈춤) · 판정 = NOT_COMPUTED rc 0 · 사유 기록 (예측 단계) · +∞ 구간 없음 '
+               '(3판 = σ +∞ · UNINFORMATIVE)')
+def t_Z04():
+    sc = z_pred('Z04', [{'match': {'kit_has': 'DBE', 'law': 'P1', 'c': '1', 'rj': lad(s_main('P1'))['R_j0']}, 'state': 'short'}])
+    ok1, why1 = eval_short_stage(sc['pred'], role='corner')
+    ok2, why2 = eval_short_verdict(sc['ver'], 'predict')
+    return ok1 and ok2, (why1, why2)
+
+
+@check('Z05', '★ 4판 (Q1 · §4-2 ③) DBE origin 팔 (arm 1 · 2 · P0 c1 R_j,0 · c 1 축약 모서리) 이 ELECTRODE_SHORT — origin 값으로 단락이 오지 '
+               '않는다 → 예측 = NOT_COMPUTED (사유 ELECTRODE_SHORT · origin 런에서 멈춤) · 판정 = NOT_COMPUTED rc 0 (3판 = 산포 +∞ → 8 팔 평균)')
+def t_Z05():
+    sc = z_pred('Z05', [{'match': {'kit_has': 'DBE', 'law': 'P0', 'c': '1', 'rj': lad(s_main('P0'))['R_j0'], 'arms': 2},
+                         'state': 'short'}])
+    ok1, why1 = eval_short_stage(sc['pred'], role='origin')
+    ok2, why2 = eval_short_verdict(sc['ver'], 'predict')
+    return ok1 and ok2, (why1, why2)
+
+
+@check('Z07', '★ 4판 (Q1) 사슬의 등록 풀이 상태 셋 (§5-0) — 생산자 기록 상태 (run_contract.next_gen_state) positive · zero · short → '
+               'POSITIVE_SOLVED · VALID_ZERO_TOPOLOGY · NOT_COMPUTED (사유 ELECTRODE_SHORT = 생산자 상태 상수) · 상태 안 섬 (None) = NOT_COMPUTED')
+def t_Z07():
+    import run_contract as RCm
+    import step3_conv_cert as CCm
+    f = getattr(RR, 'registration_state', None)
+    if not callable(f):
+        return False, 'registration_state 없음'
+    got = {k: f(k) for k in ('positive', 'zero', 'short', None)}
+    want = {'positive': ('POSITIVE_SOLVED', None), 'zero': ('VALID_ZERO_TOPOLOGY', None), 'short': ('NOT_COMPUTED', CCm.STATUS_SHORT),
+            None: ('NOT_COMPUTED', None)}
+    return (got == want and CCm.STATUS_SHORT == SHORT and set(RCm.NG_STATES) == {'positive', 'zero', 'short'}
+            and CCm.STATUS_POSITIVE == 'POSITIVE_SOLVED' and CCm.STATUS_ZERO == 'VALID_ZERO_TOPOLOGY', (got, RCm.NG_STATES))
+
+
+def s0_variant(tag, mutate=None, raw=None):
+    """S0 계획 변이 파일 → 경로 (mutate = 정준 바이트로 다시 쓴 손댄 내용 · raw = 그대로 쓸 바이트)."""
+    import ca_s0_census as S0m
+    p = Path(TD) / f's0_{tag}.json'
+    if raw is not None:
+        p.write_bytes(raw)
+    else:
+        obj = copy.deepcopy(FX['s0_obj'])
+        mutate(obj)
+        p.write_bytes(S0m.plan_bytes_of(obj))
+    return p
+
+
+def c_case(tag, code, **kw):
+    r = scen(tag, lambda: ladder(tag, world(tag), **kw))
+    return (r['rc'] == 3 and stop_code(r) == code and n_calls(r['world']) == 0, (r['rc'], stop_code(r), (r['sum'] or {}).get('stop')))
+
+
+@check('C01', '두 계획 대조 — S0 계획이 정준 바이트가 아님 (같은 내용 · 들여쓰기) → S0_PLAN_INVALID · 러너 0 회')
+def t_C01():
+    return c_case('C01', 'S0_PLAN_INVALID', s0=s0_variant('C01', raw=json.dumps(FX['s0_obj'], indent=1, sort_keys=True).encode()))
+
+
+@check('C02', 'S0 계획 식 위반 (tol_ff ≠ min(u, r_f) · 정준 바이트로 다시 써도) → S0_PLAN_INVALID (정본 ca_s0_census.check_plan)')
+def t_C02():
+    return c_case('C02', 'S0_PLAN_INVALID', s0=s0_variant('C02', mutate=lambda o: o['values_um'].update(tol_ff=0.04)))
+
+
+@check('C03', '등록 §2-1 | S0 계획 해시 | 칸 ⬜ → S0_PLAN_HASH_UNREGISTERED · 러너 0 회')
+def t_C03():
+    return c_case('C03', 'S0_PLAN_HASH_UNREGISTERED', reg=FX['reg_s0_unreg'])
+
+
+@check('C04', 'S0 계획 sha256 ≠ 등록 칸 → S0_PLAN_HASH_MISMATCH')
+def t_C04():
+    return c_case('C04', 'S0_PLAN_HASH_MISMATCH', reg=FX['reg_s0_other'])
+
+
+def c_plan(tag, code, **over):
+    p, _sha, reg = plan_set(tag, **over)
+    return c_case(tag, code, plan=p, reg=reg)
+
+
+@check('C05', 'R 계획 tol_ff_um 0.04 ≠ S0 values_um.tol_ff 0.05 (같은 float 이어야) → PLAN_CROSS_MISMATCH (§2-1 · §10-2 ⑪)')
+def t_C05():
+    return c_plan('C05', 'PLAN_CROSS_MISMATCH', tol_ff_um=0.04)
+
+
+@check('C06', 'R 계획 step3_rtol 1e-13 ≠ §3-5 봉인 CERT_RTOL_MAX 1e-12 → PLAN_CROSS_MISMATCH')
+def t_C06():
+    return c_plan('C06', 'PLAN_CROSS_MISMATCH', step3_rtol=1e-13)
+
+
+@check('C07', 'R 계획 len_law len_scaled_v1 ≠ 등록 v0 길이 법칙 (carbon_junction.CJUNC_LEN_LAW) → PLAN_CROSS_MISMATCH')
+def t_C07():
+    return c_plan('C07', 'PLAN_CROSS_MISMATCH', len_law='len_scaled_v1')
+
+
+@check('C08', '--s0-plan 없음 → 인자 오류 (rc 2) · 러너 0 회 (두 계획 대조 없이 σ 런 없음)')
+def t_C08():
+    w = world('C08')
+    out = Path(TD) / 'runs' / 'C08'
+    rc, _so = call(['--stage', 'ladder', '--law', 'P0', '--runner', FX['runner'], '--root', FX['root'], '--plan', FX['plan'],
+                    '--registration', FX['reg_ok'], '--max-hours', '1', '--out', out], w)
+    return rc == 2 and n_calls(w) == 0 and not out.exists(), (rc, n_calls(w))
+
+
+@check('C09', 'S0 계획 schema 다름 (ca-cjunc-plan-v0) → S0_PLAN_INVALID')
+def t_C09():
+    return c_case('C09', 'S0_PLAN_INVALID', s0=s0_variant('C09', mutate=lambda o: o.update(schema='ca-cjunc-plan-v0')))
+
+
+@check('N01', '결과 전 등록 숫자 넷 (점 수 상한 · 역상 R 비 상한 · SV 문턱 · 범위) 중 하나라도 null (⬜) → PLAN_NUMBER_UNREGISTERED · 러너 0 회 '
+               '(★ Q-G: SV 문턱이 ⬜ 인 채로 DBE 단계에 못 간다)')
+def t_N01():
+    rs = [c_plan(f'N01_{k}', 'PLAN_NUMBER_UNREGISTERED', **{k: None}) for k in
+          ('max_ladder_points', 'calib_rj_ratio_max', 'sv_cf_threshold', 'sv_cf_scope')]
+    return all(x[0] for x in rs), [x[1] for x in rs]
+
+
+@check('N02', '옛 계획 rint-r-plan-v1 (칸 일곱) → PLAN_INVALID (3판 사슬은 결과 전 등록 숫자 칸 없이 돌지 않는다)')
+def t_N02():
+    p = Path(TD) / 'plan_v1.json'
+    old = {k: v for k, v in FX['plan_obj'].items() if k in ('schema', 'len_law', 'unreg_law', 's_min_um', 'tol_ff_um', 'step3_rtol',
+                                                           'p2_extra')}
+    old['schema'] = 'rint-r-plan-v1'
+    p.write_text(json.dumps(old, indent=1, sort_keys=True), encoding='utf-8')
+    reg = FX['reg_with'](f'`{hashlib.sha256(p.read_bytes()).hexdigest()}`', 'reg_plan_v1.md')
+    return c_case('N02', 'PLAN_INVALID', plan=p, reg=reg)
+
+
+@check('N03', '계획 숫자 꼴 — 점 수 0 · True · 역상 비 상한 1.0 · "None" · SV 문턱 0.5 · 범위 R_j_lo → PLAN_INVALID (값을 고치지 않는다)')
+def t_N03():
+    rs = [c_plan(f'N03_{i}', 'PLAN_INVALID', **{k: v}) for i, (k, v) in enumerate(
+        (('max_ladder_points', 0), ('max_ladder_points', True), ('calib_rj_ratio_max', 1.0), ('calib_rj_ratio_max', 'None'),
+         ('sv_cf_threshold', 0.5), ('sv_cf_scope', 'R_j_lo')))]
+    return all(x[0] for x in rs), [x[1] for x in rs]
+
+
+@check('F01', 'Q-F — 감도 변이 사다리 · 예측에 --after-main 이 없다 → MAIN_NOT_DONE · 러너 0 회 (주 판정 단계 뒤에만)')
+def t_F01():
+    a = c_case('F01a', 'MAIN_NOT_DONE', variant='FIBRE', after='')
+    r = scen('F01b', lambda: predict('F01b', world('F01b'), [s_main('P0')['out'], s_main('P1')['out']], variant='SVORDER', after=''))
+    return a[0] and r['rc'] == 3 and stop_code(r) == 'MAIN_NOT_DONE' and n_calls(r['world']) == 0, (a[1], stop_code(r))
+
+
+@check('F02', 'Q-F — --after-main 이 주 예측이 아님 (사다리 폴더 · 멈춘 예측 P03) → MAIN_NOT_DONE · 러너 0 회')
+def t_F02():
+    a = c_case('F02a', 'MAIN_NOT_DONE', variant='UNREG', after=str(s_main('P0')['out']))
+    t_P03()
+    b = c_case('F02b', 'MAIN_NOT_DONE', variant='UNREG', after=str(SCEN['P03']['out']))
+    return a[0] and b[0], (a[1], b[1])
+
+
+@check('F03', 'Q-F — 판정: 감도 단계가 묶인 주 예측 (after_main sha256) ≠ 판정 입력의 주 예측 → MAIN_BINDING · 판정 NOT_COMPUTED')
+def t_F03():
+    def go():
+        vs = s_variant_set('FIBRE')
+        dst = Path(TD) / 'runs' / 'F03_pred'
+        shutil.copytree(vs['pred']['out'], dst)
+        sp = dst / 'predict_summary.json'
+        s = json.loads(sp.read_text(encoding='utf-8'))
+        s['after_main']['summary_sha256'] = '0' * 64
+        sp.write_text(json.dumps(s, ensure_ascii=False, indent=1, sort_keys=True) + '\n', encoding='utf-8')
+        return verdict('F03', list(main_dirs()) + [o['out'] for o in vs['ladders']] + [dst])
+    r = scen('F03', go)
+    return (r['rc'] == 3 and stop_code(r) == 'MAIN_BINDING' and (r['v'] or {}).get('verdict') == 'NOT_COMPUTED', (r['rc'], stop_code(r)))
+
+
+@check('F04', '--after-main 은 --variant 와만 (주 단계에 주면 인자 오류 rc 2)')
+def t_F04():
+    w = world('F04')
+    rc, _so = call(['--stage', 'ladder', '--law', 'P0', '--runner', FX['runner'], '--root', FX['root'], '--plan', FX['plan'],
+                    '--s0-plan', FX['s0'], '--registration', FX['reg_ok'], '--max-hours', '1', '--out', Path(TD) / 'runs' / 'F04',
+                    '--after-main', str(s_main_predict()['out'])], w)
+    return rc == 2 and n_calls(w) == 0, rc
+
+
+@check('L21', 'Q-E 배선 (가짜 러너) — SBE origin 팔 1 · 2 가 arm 0 과 조금 다르면 (×1.0004 · ×0.9997) 끝 후보에서 띠 안 → 끝을 바깥 실측 이웃으로 · '
+               'end_origin 런 (ARM_LIST=1,2 · 끝 R) · 밀기 기록 · 세 origin 이 끝에서 모두 띠 밖 (모형 손계산)')
+def t_L21():
+    r = scen('L21', lambda: ladder('L21', world('L21', dict(PW, arm_factor=ARM_SMALL))))
+    L = lad(r)
+    W = wdata(r['world'])
+    af = W['arm_factor']
+    T = {'lo': T_S * 1.02, 'hi': T_S * 0.98}
+    bad = []
+    for side, k in (('lo', L.get('R_j_lo')), ('hi', L.get('R_j_hi'))):
+        for i in (0, 1, 2):
+            s = sig_main(W, SBE_KIT, k, 'P0') * af[i]
+            if (side == 'lo' and s < T['lo']) or (side == 'hi' and s > T['hi']):
+                bad.append((side, k, i, s))
+    pushes = [((L.get('ends') or {}).get(s) or {}).get('origin_pushes') for s in ('lo', 'hi')]
+    er = [x for x in r['sum'].get('runs', []) if x['role'] == 'end_origin']
+    return (r['sum']['status'] == 'CALIBRATED' and not bad and sum(pushes) >= 1 and er and all(x.get('arm_list') == [1, 2] for x in er),
+            (r['sum']['status'], bad, pushes, [x['rj'] for x in er], stop_code(r)))
+
+
+@check('V17', 'SV 범위 all3 (계획) — 모서리 열둘 전부 CJUNC_SV_CF=1 · R_j,hi 모서리의 큰 비 (9.0) → SV_DEPENDENT (R_j0 범위면 못 본다 — U08)')
+def t_V17():
+    def go():
+        p, _sha, reg = plan_set('svall3', sv_cf_scope='all3')
+        l0 = ladder('V17_P0', world('V17_P0'), law='P0', plan=p, reg=reg)
+        l1 = ladder('V17_P1', world('V17_P1'), law='P1', plan=p, reg=reg)
+        m = {'kit_has': 'DBE', 'law': 'P1', 'c': '1', 'rj': lad(l1)['R_j_hi']}
+        pr = predict('V17_pred', world('V17_pred', dict(PW, sv_cf=[{'match': m, 'status': 'computed', 'ratio': 9.0}])),
+                     [l0['out'], l1['out']], reg=reg)
+        v = verdict('V17_v', [l0['out'], l1['out'], pr['out']], reg=reg)
+        return {'pred': pr, 'v': v}
+    sc = scen('V17', go)
+    on = [e for e in env_log(sc['pred']['world']) if e.get('CJUNC_SV_CF') == '1']
+    v = sc['v']['v'] or {}
+    return (len(on) == 12 and 'SV_DEPENDENT' in v.get('flags', []), (len(on), v.get('flags'), v.get('stop')))
 
 
 # ── M 변이 (시험이 떨어져야 한다) ──
@@ -1488,12 +2731,14 @@ def t_M03():
     return mutant('M03', {'sbe_origin_ok': lambda vals: (True, 0.0)}, lambda: eval_L19(run_L19('M03')))
 
 
-@check('M04', '변이: e_min 끔 (0) → L11 이 CALIB_UNIDENTIFIED 를 못 낸다')
+@check('M04', '변이: 2판 e_min 빠른 멈춤을 되살림 (국소 e < e_min → CALIB_UNIDENTIFIED) → L11 (3판 = 진단 · CALIBRATED) 이 떨어진다')
 def t_M04():
-    def ev():
-        r = run_L11('M04')
-        return r['sum']['status'] == 'CALIB_UNIDENTIFIED', r['sum']['status']
-    return mutant('M04', {'E_MIN': 0.0}, ev)
+    class LadderEStop(RR.Ladder):
+        def _ends(self):
+            if self.st['local_e_ge_emin'] is False:
+                raise RR.Stop('CALIB_UNIDENTIFIED', 'mutant — 2판 e_min 멈춤')
+            return super()._ends()
+    return mutant('M04', {'Ladder': LadderEStop}, lambda: eval_L11(run_L11('M04')))
 
 
 @check('M05', '변이: τ_mono 끔 (∞) → L14 가 CALIB_NONMONOTONE 을 못 낸다')
@@ -1509,12 +2754,12 @@ def t_M06():
     return mutant('M06', {'sha_mismatch': lambda path, want: None}, lambda: eval_S22(run_S22('M06')))
 
 
-@check('M07', '변이: 점 수 상한 12 → 13 → L16 (런 정확히 12) 이 떨어진다')
+@check('M07', '변이: 점 수 상한을 계획 칸 + 1 로 (사슬이 숫자를 고른다) → L16 (계획 12 · 런 정확히 12) 이 떨어진다')
 def t_M07():
     def ev():
         r = run_L16('M07')
         return r['sum']['status'] == 'CALIB_LADDER_EXHAUSTED' and len(roles(r)) == 12, (r['sum']['status'], len(roles(r)))
-    return mutant('M07', {'MAX_LADDER_POINTS': 13}, ev)
+    return mutant('M07', {'ladder_cap': lambda plan: int(plan['max_ladder_points']) + 1}, ev)
 
 
 def _contract_without(which):
@@ -1547,6 +2792,297 @@ def t_M09():
 def t_M10():
     return mutant('M10', {'sid_group': lambda kit, variant, origin_idx: RR.variant_raster(kit, variant)},
                   lambda: eval_L18(ladder('M10', world('M10'))))
+
+
+#  ── 3판 변이 — 끝 규칙 (사전 리뷰 PRE-design-05 의 M1–M4 · 끝 origin 밀기는 끈다 — 밀기 따로 = M21) ──
+def _no_push(lad_, side, X, end):
+    return end, 0, []
+
+
+def _end_m1(lad_, side, X):                                  # M1 — 확인 실패한 후보를 그대로 끝으로
+    end, ent = RR_ORIG['end_pick'](lad_, side, X)
+    return ent['candidate'], ent
+
+
+def _end_m2(lad_, side, X):                                  # M2 — 확인 실패면 안쪽 이웃 (끼는 이웃 중 띠 안 쪽)
+    end, ent = RR_ORIG['end_pick'](lad_, side, X)
+    if ent['confirm_ok']:
+        return end, ent
+    ka, kb = ent['bracket']
+    return (kb if side == 'lo' else ka), ent
+
+
+def _end_old(sides):                                         # M3 · M4 — 2판 보간식 (R_j,0 을 낀 이웃에서 · 그 점을 끝으로 · 확인 결과 무시)
+    def f(lad_, side, X):
+        if side not in sides:
+            return RR_ORIG['end_pick'](lad_, side, X)
+        ka, kb = lad_.st['bracket']
+        (Ra, sa), (Rb, sb) = lad_.pts[ka], lad_.pts[kb]
+        key = RR.rj_key(RR.interp_lnln(Ra, sa, Rb, sb, X))
+        if key not in lad_.pts:                              # 끝 σ 를 봉인 칸에 싣기 위해 한 번 돌린다 (끝 선택은 2판 그대로 — 확인 결과를 보지 않는다)
+            lad_._get('end_confirm', key)
+        return key, {'bracket': [ka, kb], 'candidate': key, 'confirm_reused': None, 'confirm_ok': None, 'source': 'old_interp'}
+    return f
+
+
+RR_ORIG = {}
+
+
+def end_mutant(name, fn):
+    RR_ORIG['end_pick'] = RR.end_pick
+    return mutant(name, {'end_pick': fn, 'end_origin_push': _no_push}, eval_U01)
+
+
+@check('M11', '변이 M1 (끝 = 확인 실패한 후보 26,758) → U01 이 떨어진다 (W 0.4536 PASS 로 줄어든다)')
+def t_M11():
+    return end_mutant('M11', _end_m1)
+
+
+@check('M12', '변이 M2 (끝 = 안쪽 이웃 31,622.8 · 비 189.4 · FAIL) → U01 이 떨어진다 (PRE-design-05 — "약 200 · PASS 면 실패" 시험은 통과시켰다)')
+def t_M12():
+    return end_mutant('M12', _end_m2)
+
+
+@check('M13', '변이 M3 (hi 끝만 2판 보간 · 비 18.7 · WEAK) → U01 이 떨어진다 (판정 이름만 보면 놓친다 · 끝 값으로 잡는다)')
+def t_M13():
+    return end_mutant('M13', _end_old(('hi',)))
+
+
+@check('M14', '변이 M4 (양끝 2판 보간 · 비 8.34 · PASS) → U01 이 떨어진다')
+def t_M14():
+    return end_mutant('M14', _end_old(('lo', 'hi')))
+
+
+@check('M15', '변이: DBE origin 을 R_j,0 에서만 (2판) → U02 (RCA-02) 가 떨어진다')
+def t_M15():
+    return mutant('M15', {'ORIGIN_CHECK_ROLES': ('R_j0',)}, eval_U02)
+
+
+@check('M16', '변이: 4.68 ∈ U 를 envelope (hull) 로 → U03 (RCA-08 GAP) 이 떨어진다')
+def t_M16():
+    def hull(I, x):
+        return sorted(I) if min(a for a, _b in I.values()) <= x <= max(b for _a, b in I.values()) else []
+    return mutant('M16', {'in_law_sets': hull}, eval_U03)
+
+
+@check('M17', '변이: 판정 함수가 중앙 (R_j,0) 네 점만 (2판 감도 비교) → U04b (양끝만 넓은 변이의 SENSITIVE) 가 떨어진다')
+def t_M17():
+    orig = RR.judge_set
+
+    def centre_only(statuses, vals):
+        return orig(statuses, None if vals is None else {k: v for k, v in vals.items() if k[2] == 'R_j0'})
+    return mutant('M17', {'judge_set': centre_only}, lambda: eval_U04('wide'))
+
+
+@check('M18', '변이: 차단 표지를 와일드카드 (*_SENSITIVE · *_UNCHECKED 꼬리) 로 → U05 (닫힌 집합) 가 떨어진다')
+def t_M18():
+    def suffix(flags):
+        return sorted(f for f in set(flags) if f.endswith('_SENSITIVE') or f.endswith('_UNCHECKED'))
+    return mutant('M18', {'blocking_of': suffix}, eval_U05)
+
+
+@check('M19', '변이: ln 차 대신 절대차 → U06 (단위 불변 · τ_mono) 이 떨어진다')
+def t_M19():
+    def absdiff(a, b):
+        return float(b) - float(a)
+    return mutant('M19', {'ln_diff': absdiff}, eval_U06)
+
+
+@check('M20', '변이: SV 문턱 비교를 ≥ 로 (비 = 문턱 도 의존) → U08 이 떨어진다 (등록 문장 "넘으면")')
+def t_M20():
+    orig = RR.sv_assess
+
+    def ge(recs, threshold, scope):
+        f, d = orig(recs, threshold, scope)
+        if threshold is not None and any(isinstance((a.get('sv_cf') or {}).get('ratio'), float)
+                                         and (a['sv_cf']['ratio'] >= threshold) for a in recs.values()) and 'SV_DEPENDENT' not in f:
+            f = sorted(f + ['SV_DEPENDENT'])
+        return f, d
+    return mutant('M20', {'sv_assess': ge}, eval_U08)
+
+
+@check('M21', '변이: 끝 origin 밀기 끔 (Q-E 없음) → U10 (PRE-design-01 합집합 바깥 감쌈) 이 떨어진다')
+def t_M21():
+    return mutant('M21', {'end_origin_push': _no_push}, eval_U10)
+
+
+@check('M22', '변이: 조기 반환 해 상태를 받지 않음 (2판 — 양수 σ 만) → Z01 (바닥 영값) 이 떨어진다')
+def t_M22():
+    def old_state(s3):
+        st, why = RC_ORIG['next_gen_state'](s3)
+        return (st, why) if st in ('positive', 'legacy') else (None, 'mutant — 2판: 양수 σ 만')
+    import run_contract as RCm
+    RC_ORIG['next_gen_state'] = RCm.next_gen_state
+    old = RR.RC.next_gen_state
+    try:
+        RR.RC.next_gen_state = old_state
+        r = ladder('M22', z_world('M22', [{'match': {'rj': 'inf'}, 'state': 'zero'}]))
+        ok = r['rc'] == 0 and r['sum']['status'] == 'CALIBRATED' and lad(r).get('states', {}).get('inf') == 'zero'
+    except Exception as e:                                  # noqa: BLE001
+        ok = False
+        r = {'sum': {'status': f'{type(e).__name__}: {e}'}}
+    finally:
+        RR.RC.next_gen_state = old
+    return (not ok), f'M22 → Z01 꼴 {"통과 (변이를 못 잡음)" if ok else "실패 (잡음)"} · {(r.get("sum") or {}).get("status")}'
+
+
+RC_ORIG = {}
+
+
+@check('M27', '★ 4판 (Q1) 변이: 단락 → 등록 풀이 상태 NOT_COMPUTED 를 끔 (short 를 양의 해 자리로 · 3판 짝) → Z02 꼴 (천장 단락) 이 떨어진다 '
+              '(NOT_COMPUTED · 사유 ELECTRODE_SHORT 가 아니다)')
+def t_M27():
+    def ev():
+        r = ladder('M27', z_world('M27', [{'match': {'rj': '0'}, 'state': 'short'}]))
+        return eval_short_stage(r, role='ceiling')
+    rs = dict(getattr(RR, 'REG_STATES'))
+    rs['short'] = ('POSITIVE_SOLVED', None)
+    return mutant('M27', {'REG_STATES': rs}, ev)
+
+
+@check('M28', '★ 4판 (Q1) 변이: 예측 단계의 NOT_COMPUTED 를 등록 결과로 받지 않음 (STOPPED · 3판 꼴) → Z04 꼴 (DBE 모서리 단락) 판정이 '
+              'INPUT_STAGE_STOPPED 로 흐려진다 = 떨어진다')
+def t_M28():
+    def ev():
+        m = {'kit_has': 'DBE', 'law': 'P1', 'c': '1', 'rj': lad(s_main('P1'))['R_j0']}
+        p = predict('M28', world('M28', dict(PW, states=[{'match': m, 'state': 'short'}])), [s_main('P0')['out'], s_main('P1')['out']])
+        v = verdict('M28_v', [s_main('P0')['out'], s_main('P1')['out'], p['out']])
+        ok1, w1 = eval_short_stage(p, role='corner')
+        ok2, w2 = eval_short_verdict(v, 'predict')
+        return ok1 and ok2, (w1, w2)
+    return mutant('M28', {'PREDICT_OUTCOMES': frozenset()}, ev)
+
+
+#  ── ★ 4판 Q2 변이 (고친 곳마다 3판 꼴로 한 줄 되돌림 → 새 시험이 떨어져야 한다) ──
+@check('M29', '★ 4판 Q2-1 변이: 이름 우선순위를 3판으로 (CALIB_ORDER 끝의 NOT_COMPUTED 가 진다 · min 순서) → U11 이 떨어진다')
+def t_M29():
+    def old_judge_set(statuses, vals):
+        bad = [statuses[law] for law in RR.LAWS if statuses[law] != 'CALIBRATED']
+        if bad:
+            return {'verdict': min(bad, key=RR.CALIB_ORDER.index), 'state': 'calib'}
+        return RR_ORIG['judge_set'](statuses, vals)
+    RR_ORIG['judge_set'] = RR.judge_set
+    return mutant('M29', {'judge_set': old_judge_set}, eval_U11)
+
+
+@check('M30', '★ 4판 Q2-2 변이: 끝 판정의 보호 띠 끔 (e 무시 · 3판 outside_band) → U01e (e ≥ 3.728e-5 → 1e7 · 비 1,000) 가 떨어진다')
+def t_M30():
+    def no_band(s, X, lo, e=0.0):
+        return s >= X if lo else s <= X
+    return mutant('M30', {'outside_band': no_band}, eval_U01e)
+
+
+@check('M31', '★ 4판 Q2-2 변이: EDGE 판정의 보호 띠 끔 (3판 |σ/T − 1| ≤ 2 % 만) → U12 (바닥 T⁻(1 − 5e-5) · e 1e-4 → CALIB_EDGE) 가 떨어진다')
+def t_M31():
+    def no_band_edge(s, e, T, tol=RR.CONFIRM_TOL):
+        return abs(s / T - 1.0) <= tol
+    return mutant('M31', {'edge_hit': no_band_edge}, eval_U12)
+
+
+@check('M32', '★ 4판 Q2-3 변이: dbe_origin_ok 를 3판으로 (상태 무시 · W +∞ → 문턱 +∞) → U13 (상태 다름 = 넘음 · [3.0, 5.25]) 이 떨어진다')
+def t_M32():
+    def old_ok(vals, W0, states=None, w_pos=None):
+        sp = RR.ln_spread(vals)
+        thr = RR.ORIGIN_DBE_FRAC_W * W0 if W0 != math.inf else math.inf
+        return sp <= thr, sp
+    return mutant('M32', {'dbe_origin_ok': old_ok}, eval_U13)
+
+
+@check('M33', '★ 4판 Q2-3 변이: W₊ 대신 W (+∞ 그대로) 를 문턱에 → U13b (W₊ 로 넘음 · 4.175) 가 떨어진다')
+def t_M33():
+    orig = RR.dbe_origin_ok
+
+    def w_inf(vals, W0, states=None, w_pos=None):
+        return orig(vals, W0, states=states, w_pos=(math.inf if W0 == math.inf else w_pos))
+    return mutant('M33', {'dbe_origin_ok': w_inf}, eval_U13b)
+
+
+@check('M34', '★ 4판 Q2-4 변이: 결정표 오른쪽 칸을 3판으로 (차단 표지가 있으면 PASS 문장 없음 · None) → U07 이 떨어진다')
+def t_M34():
+    orig = RR.decide_sentence
+
+    def old_dec(state, verdict, blocking, sens_incomplete=False):
+        s = orig(state, verdict, blocking, sens_incomplete=sens_incomplete)
+        return None if (verdict == 'PASS_INFORMATIVE' and blocking) else s
+    return mutant('M34', {'decide_sentence': old_dec}, eval_U07)
+
+
+@check('M35', '★ 4판 Q2-5 변이: 변이 NOT_COMPUTED 를 이름 비교로 (3판 · <V>_SENSITIVE) → U14 가 떨어진다')
+def t_M35():
+    orig = RR.variant_flag
+
+    def old_flag(V, vJ, J, vflags):
+        if vJ['verdict'] == 'NOT_COMPUTED' and vJ['verdict'] != J['verdict']:
+            return f'{V}_SENSITIVE', True, f'변이 판정 이름 {vJ["verdict"]}'
+        return orig(V, vJ, J, vflags)
+    return mutant('M35', {'variant_flag': old_flag}, eval_U14)
+
+
+@check('M36', '★ 4판 Q2-5 변이: 변이 자신의 CALIB_ORIGIN_SENSITIVE 를 안 봄 → U14 (c) 가 떨어진다')
+def t_M36():
+    orig = RR.variant_flag
+
+    def no_own(V, vJ, J, vflags):
+        return orig(V, vJ, J, [f for f in vflags if f != 'CALIB_ORIGIN_SENSITIVE'])
+    return mutant('M36', {'variant_flag': no_own}, eval_U14)
+
+
+@check('M37', '★ 4판 Q2-6 변이: 한정어 ⑰ ⑱ 없음 (①–⑯) → X05 가 떨어진다')
+def t_M37():
+    return mutant('M37', {'QUALIFIERS': RR.QUALIFIERS[:16]}, t_X05)
+
+
+@check('M23', '변이: 두 계획 대조 끔 → C05 (tol_ff 다름) 가 PLAN_CROSS_MISMATCH 를 못 낸다')
+def t_M23():
+    return mutant('M23', {'plans_cross_problems': lambda plan, s0: []},
+                  lambda: c_plan('M23', 'PLAN_CROSS_MISMATCH', tol_ff_um=0.04))
+
+
+@check('M24', '변이: 결과 전 등록 숫자 검사 끔 → N01 (SV 문턱 null) 이 PLAN_NUMBER_UNREGISTERED 를 못 낸다 (Q-G)')
+def t_M24():
+    return mutant('M24', {'require_plan_numbers': lambda plan: None},
+                  lambda: c_plan('M24', 'PLAN_NUMBER_UNREGISTERED', sv_cf_threshold=None))
+
+
+@check('M25', '변이: 감도 단계의 주 판정 묶음 검사 끔 → F01 (--after-main 없음) 이 MAIN_NOT_DONE 을 못 낸다 (Q-F)')
+def t_M25():
+    return mutant('M25', {'check_after_main': lambda after_dir, plan_sha, s0_sha, code: None},
+                  lambda: c_case('M25', 'MAIN_NOT_DONE', variant='FIBRE', after=''))
+
+
+def _read_run_state_first():
+    """`read_run` 원문에서 해 상태 블록 (`next_gen_state` · 수렴 계약) 을 기록 검사 (세대 · ca_ext) 앞으로 옮긴 사본 (10-21 PRE-impl-07 병합
+    이전 순서) — 사슬 모듈 이름공간의 사본에서 컴파일 (Stop · RC · SVCF 는 같은 객체).  자리 글이 정확히 한 번씩 없으면 예외 = M26 실패."""
+    import inspect
+    src = inspect.getsource(RR.read_run)
+    marks = ('        pid = RC.physics_protocol_id(man)\n', '        state, swhy = RC.next_gen_state(s3)\n',
+             '        why = contract.arm_problem(p, rcpt)\n')
+    if [src.count(m) for m in marks] != [1, 1, 1]:
+        raise AssertionError(f'M26 변이 자리 {[src.count(m) for m in marks]} (정확히 한 번씩이어야 한다)')
+    a, b, c = (src.index(m) for m in marks)
+    if not a < b < c:
+        raise AssertionError(f'M26 변이 자리 순서 {(a, b, c)} (기록 → 해 상태 → 팔 계약 이어야 한다)')
+    src = src[:a] + src[b:c] + src[a:b] + src[c:]
+    g = dict(vars(RR))
+    exec(compile(src, str(RR.__file__) + ' [변이 M26]', 'exec'), g)   # noqa: S102 — 시험 전용 변이 (mutant 가 되돌린다)
+    return g['read_run']
+
+
+@check('M26', '변이: 해 상태 (증서 · 증서 ↔ 런 결합) 를 기록 검사 (세대 · ca_ext) 앞으로 (PRE-impl-07 병합 이전 순서) → S07 꼴 (unknown:ca_ext) 이 '
+              'GENERATION 을 못 낸다 (옳은 이유 = NOT_COMPUTED · CERT|bind|)')
+def t_M26():
+    fn = _read_run_state_first()
+    seen = {}
+
+    def ev():
+        ok, why = stop_case('M26', [{'do': 'unknown_caext', 'match': {'rj': '0'}}], 'GENERATION')
+        seen['why'] = why
+        return ok, why
+    caught, msg = mutant('M26', {'read_run': fn}, ev)
+    w = seen.get('why') or ()
+    st = w[2] if len(w) > 2 and isinstance(w[2], dict) else {}
+    right = len(w) > 1 and w[1] == 'NOT_COMPUTED' and 'CERT|bind|' in str(st.get('cause'))
+    return caught and right and RR.read_run is not fn, (msg, w[:2], str(st.get('cause'))[:160])
 
 
 # ═════════════════════════ 실행 ═════════════════════════

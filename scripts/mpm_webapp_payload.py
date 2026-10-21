@@ -876,6 +876,34 @@ CJUNC_CLI = (('step3_cjunc_rj', 'R_j_ohm', '--step3-cjunc-rj'),
              ('step3_cjunc_ptfe_jlaw', 'ptfe_jlaw', '--step3-cjunc-ptfe-jlaw'))
 
 
+#: LEAN 표시 사유 (끈 component · 양의 해 가지와 ★ 10-21 (D) 조기 반환 가지가 같은 문자열을 쓴다 — 한 곳 · 바이트 그대로)
+_DIS_COLLECTOR = '--no-collector (σ_e 전용 스윕; shift 팔에서는 _bot_mask 가 origin 을 안 더해 값 자체가 무효)'
+_DIS_ION = '--no-ion (σ_e 전용 스윕; DR3-07 로 vox ≤ 0.125 σ_ion 은 어차피 인용 금지)'
+_DIS_THERMAL = '--no-thermal (σ_e 전용 스윕)'
+_DIS_PORE = '--no-pore (σ_e 전용 스윕; DR3-07 로 vox ≤ 0.125 pore-τ 는 어차피 인용 금지)'
+_DIS_PNM = '--no-pore (σ_e 전용 스윕)'
+
+#: ★ 2026-10-21 (D · 등록 R §5-0) — 조기 반환 사유 중 단락인 것 (J11 판–판 0 저항 단락 · 접합 축약에서만 · `step3_conv_cert.SHORT_REASONS`
+#   와 같은 낱말 — 시험 S10 이 대조).  그 해는 유한 σ 로 위장하지 않는다 → 결과 σ 칸 = None (0.0 은 "끊김" 의 정반대 뜻이다).
+#   ★ 4판 (10-21 · 1저자 Q1 · 등록 R 4판 §5-0 ①–③ · R4-Q5) — 단락 = 게시 안 되는 상태 (σ 값 없음 · +∞ 도 아니다 · `run_contract.conv_cert_problem`):
+#   이 payload 는 그 **기록** (σ None · 상태 증서) 을 그대로 쓴다 — 러너가 옮겨야 사슬이 그 런을 NOT_COMPUTED (사유 ELECTRODE_SHORT) 로 남긴다
+#   (기록을 거부하면 러너 rc ≠ 0 → 사슬 RUNNER_RC = 사유가 흐려진다 · 시험 b6 SP9–SP13 · 사슬 e2e E9).
+STEP3_SHORT_REASONS = ('cjunc_electrode_short',)
+
+
+def _step3_early(res3, vox):
+    """조기 반환 해 (솔버가 CG 없이 σ 를 정한 해) 의 step3 조립 — 한 곳.  옛 dict (σ 0.0 · 사유 · vox) 그대로에 ★ 10-21 (D):
+    ① 단락 사유 (J11) = σ None (등록 R 4판 §5-0 — 단락 = 게시 안 됨 · σ 값 없음 · 유한 σ 로 위장 안 함) ② 상태 증서 (`conv_cert` — 증서 켤 때만 · VALID_ZERO_TOPOLOGY ·
+    ELECTRODE_SHORT · NOT_CERTIFIABLE) 를 복사 (사본 dict · 옛 판은 버려서 영값 바닥 팔을 사슬이 증서 없음으로 멈췄다).  증서 끔 + 단락 아님 =
+    옛 dict 와 키 · 값 · 순서가 같다 (끈 경로 비트 같음)."""
+    rs = res3.get('reason')
+    head = str(rs or '').split('(', 1)[0]
+    out = {'sigma_e_eff_S_cm': (None if head in STEP3_SHORT_REASONS else 0.0), 'reason': rs, 'vox_um': vox}
+    if isinstance(res3.get('conv_cert'), dict):
+        out['conv_cert'] = dict(res3['conv_cert'])
+    return out
+
+
 def _cjunc_entry_contract(a):
     """② B6 (설계 v1 §4-2 · §4-3 · §5-2 · §7) — S2 · S3 요청을 **GPU 전에** 확정한다 → `a._cj_on` · `a._cj_req` · `a._sd_req` · `a._ca_req`.
     거부 = 구조화 사유 `S2_CJUNC_REFUSED|<코드>|` (전부 한 번에) · S3 만 = `S3_SDCP_MOD_REFUSED|NO_CJUNC|` · `--expect-physics` 의 ca_ext 칸 =
@@ -884,9 +912,12 @@ def _cjunc_entry_contract(a):
     a._cj_on = bool(getattr(a, 'step3_cjunc', False))
     a._cj_req = a._sd_req = None
     a._ca_req = ()
+    #  ★ 10-21 (D · 등록 R §5-6) — SV 반사실 대조 요청 (문턱 None = producer 는 비만 · 문턱 = 사슬 계획) · 끔 = None (옛 계획 · 옛 바이트)
+    a._cj_sv_cf = None
     _lim = getattr(a, 'step3_cjunc_rj_limit', None)           # ★ Z3 — 극한 런 표지 (inf 바닥 · zero 천장 · 등록 R §3-1)
     _given = [fl for att, _k, fl in CJUNC_CLI if getattr(a, att, None) is not None] \
-        + (['--step3-cjunc-rj-limit'] if _lim is not None else [])
+        + (['--step3-cjunc-rj-limit'] if _lim is not None else []) \
+        + (['--step3-cjunc-sv-cf'] if getattr(a, 'step3_cjunc_sv_cf', False) else [])
     if a._cj_on:
         bad = []
         for att, _k, fl in CJUNC_CLI:
@@ -896,6 +927,11 @@ def _cjunc_entry_contract(a):
         if getattr(a, 'step3_cjunc_ptfe_jlaw', None) == 'P1' and a._ptfe_stamp != 'face_alpha':
             bad.append(('P1_NEEDS_FACE_ALPHA', f'P1 (덮인 접합 절단) 은 --ptfe-stamp face_alpha 에서만 (지금 `{a._ptfe_stamp}` — centerline 은 '
                                                f'이미 VGCF 셀을 sid 7 로 자른다 · off 는 PTFE 표현이 없다 · 설계 §4-1)'))
+        #  ★ 10-21 (D · 사전 리뷰 PRE-impl-03 ① · 코디네이터 Q-C) — centerline + 접합 = 거부 (P0 도): centerline 이 접점 셀을 sid 7 로 덮으면
+        #    포트가 옆 셀로 옮겨 붙어 절연체를 더했는데 σ 가 오른다 (Rayleigh 위반 · 합성 +5.88 %).  접합 모듈 쪽 거부 = A · 입구 = 여기 · 러너 = 같은 코드
+        if a._ptfe_stamp == 'centerline':
+            bad.append(('PTFE_CENTERLINE', '--ptfe-stamp centerline + --step3-cjunc — 덮인 접점 셀의 포트 옮김이 Rayleigh 를 깬다 '
+                                           '(PRE-impl-03) · 접합은 off · face_alpha 에서만 (Rayleigh 를 지킬 때까지 정량 거부)'))
         if a.periodic:
             bad.append(('PERIODIC', '--periodic — 정량 모드 거부 (raster 가 주기 영상을 안 만든다 · J10)'))
         if a.joule_heat:
@@ -933,6 +969,8 @@ def _cjunc_entry_contract(a):
         a._cj_req = {k: getattr(a, att) for att, k, _fl in CJUNC_CLI}
         if _lim is not None:
             a._cj_req['rj_limit'] = _lim
+        if getattr(a, 'step3_cjunc_sv_cf', False):
+            a._cj_sv_cf = {'threshold': None}
     elif _given:
         raise SystemExit(f'S2_CJUNC_REFUSED|FLAG_WITHOUT_CJUNC| {", ".join(_given)} 는 --step3-cjunc 일 때만 뜻이 있다 (조용한 no-op 금지)')
     if getattr(a, 'step3_sdcp_mod_c', None) is not None:
@@ -1163,7 +1201,12 @@ def _payload_reject_reason(a, step3):
     #  ★★★ R3-CX-05 — **수치 증거**.  옛 판은 status 문자열만 봐서 `sigma_e=None` ·
     #    `cg_resid=NaN` · `cg_info=99` 인 payload 를 전부 게시했다 (Codex 실측 4종).
     #    게시 순서를 고친 것과 **검사 내용**은 다른 문제다.
-    if not a.allow_partial_step3:
+    #  ★★ 2026-10-21 (D · 등록 R §5-0 · Codex RCA-13) — 다음 세대 팔의 **영값 위상 · 단락 상태** (`run_contract.next_gen_state` — check_arm ·
+    #    사슬과 같은 함수) 는 σ 가 정의상 양의 유한값이 아니다 (0 · 값 없음 (단락 = 게시 안 되는 상태 · 4판) · CG 없음) → 전자 수치 증거 대신 상태 증서가 그 자리를 맡는다.
+    #    상태가 안 서면 (증서 없음 · 위반) 옛 검사 그대로 (σ 0 · None 을 거부).  ⚠ 완화에만 쓴다 — 새 거부를 더하지 않는다.
+    _ngs_p, _ngw_p = _RC.next_gen_state(step3)
+    _ng_nonpos_p = _ngs_p in ('zero', 'short')
+    if not a.allow_partial_step3 and not _ng_nonpos_p:
         _nok, _nwhy = _RC.numeric_ok(step3)
         if not _nok:
             return f'STEP3_NUMERIC_EVIDENCE: {_nwhy}'
@@ -1192,7 +1235,7 @@ def _payload_reject_reason(a, step3):
             _pok, _pwhy = _RC.plan_ok(_m.get('component_plan'))
             if not _pok:
                 return f'STEP3_PLAN: {_pwhy}'
-        _eok, _ewhy = _RC.component_evidence_ok(step3, _req)
+        _eok, _ewhy = _RC.component_evidence_ok(step3, ([c for c in _req if c != 'electronic'] if _ng_nonpos_p else _req))
         if not _eok:
             return f'STEP3_EVIDENCE: {_ewhy}'
     #  ★★ R3-CX-04 / R4-CX-02 — PTFE 도장과 실제 효과.  **부재·음수·오타입도** 잡는다
@@ -1491,6 +1534,11 @@ def main():
                     help='S2 PTFE–접합 법칙 끝 (P0 영향 없음 · P1 덮인 접합 절단 = --ptfe-stamp face_alpha 에서만 · off · centerline + P1 = 거부)')
     ap.add_argument('--step3-sdcp-mod-c', default=None, choices=('0', '1'),
                     help='S3 SDCP 접합 수정자 c (0 젖음 효과 없음 · 1 근접 접합 축약 끝) — --step3-cjunc 와만 (S2 없이 거부)')
+    #  ★ 2026-10-21 (D · 등록 R §5-6 SV 행 · Codex RCA-06 · 1저자 Q4 (가)) — SV 반사실 대조 (같은 런 안 추가 풀이 · 주 σ 그대로 · 규약 id 밖).
+    ap.add_argument('--step3-cjunc-sv-cf', action='store_true',
+                    help='S2 SV 반사실 대조 — 같은 침대 · 같은 R_j 에서 SV 융합 면 (SDCP–VGCF) 을 끊은 판을 한 번 더 풀어 단자 G 비를 '
+                         '증거 (ca_ext.cjunc.evidence.solve.sv_counterfactual) 에 싣는다 · 주 σ 해 · 규약 id 는 그대로 · 문턱 = 사슬 계획 '
+                         '(등록 R 5-6 · producer 는 비만) · --step3-cjunc 와만')
     ap.add_argument('--sigma-swcnt', type=float, default=100.0,
                     help='σ_e SWCNT sheath (S/cm) — A14.  VGCF급 lit order ⚠hook: 개별 SWCNT 축방향은 '
                          '1e4-1e5 S/cm급이나 vein-번들 film 유효값은 미앵커.  ⚠ koo2026의 0.20 S/cm은 '
@@ -2357,7 +2405,8 @@ def main():
                 try:
                     _cj_prep = _cjw.payload_prepare(sid3, lo=_lo3, vox=a.step3_vox, pts=(se[_mcj] - _off) * UM,
                                                     phase=phase[_mcj], fid=_fid_all[_mcj], kind=_kind_all[_mcj],
-                                                    cjunc=a._cj_req, sdcp_mod=a._sd_req, ptfe_stamp=a._ptfe_stamp)
+                                                    cjunc=a._cj_req, sdcp_mod=a._sd_req, ptfe_stamp=a._ptfe_stamp,
+                                                    **({'sv_counterfactual': a._cj_sv_cf} if a._cj_sv_cf is not None else {}))
                 except ValueError as _e_cj:
                     raise SystemExit(f'S2_CJUNC_REFUSED|PLAN| {_e_cj}')
                 _cjc = _cj_prep['counts']
@@ -2398,7 +2447,35 @@ def main():
             if _res3.get('reason'):
                 print(f"  ⚠ STEP3 σ_e not solvable: {_res3['reason']}")
                 _s3mark('electronic', 'not_solvable', _res3['reason'])
-                step3 = {'sigma_e_eff_S_cm': 0.0, 'reason': _res3['reason'], 'vox_um': a.step3_vox}
+                step3 = _step3_early(_res3, a.step3_vox)   # ★ 10-21 (D) — 상태 증서 복사 · 단락 = σ None (증서 끔 = 옛 dict 그대로)
+                #  ★ 10-21 (D · 등록 R §5-0) — 다음 세대 (S1 · S2) 조기 반환 해 = **영값 위상 · 단락도 결과다** (바닥 극한 R_j → ∞ 등).
+                #    옛 경로는 아래 (양의 해 가지) 의 LEAN 표시 · 끈 솔브 영수증을 건너뛰어 component 가 `missing` · 영수증이 `missing` 으로
+                #    남았다 (게시 거부 · 사슬 RUNNER_RC).  같은 표시 · 같은 영수증을 여기서 낸다 — 끈 것만 (LEAN 플래그) · 계획한 이온
+                #    (LEAN 3) 은 그대로 missing (이 해에서 이온 솔브가 안 돌았다 = 게시 거부 · fail-closed).  옛 세대 = 이 블록 없음 (옛 바이트).
+                if _cj_prep is not None or _fa_prep is not None:
+                    if a.no_collector:
+                        _s3mark('collector_geom', 'disabled', _DIS_COLLECTOR)
+                        for _nmr in ('electronic_wetted', 'electronic_bare'):
+                            a._iface_rcpt[_nmr] = _RC.interface_receipt(None, _s3.rint_table_record(a._rint_e),
+                                                                        disabled_why='--no-collector')
+                            if _fa_prep is not None:
+                                a._fa_rcpt[_nmr] = _pfa.solve_receipt(None, None, requested='electronic' in a._fa_channels,
+                                                                      disabled_why='--no-collector')
+                            if _cj_prep is not None:
+                                a._cj_rcpt[_nmr] = _cjw.solve_receipt(None, _cj_prep, name=_nmr, disabled_why='--no-collector')
+                    if a.no_ion:
+                        _s3mark('ionic', 'disabled', _DIS_ION)
+                        a._iface_rcpt['ionic'] = _RC.interface_receipt(None, _s3.rint_table_record(a._rint_i), disabled_why='--no-ion')
+                        if _fa_prep is not None:
+                            a._fa_rcpt['ionic'] = _pfa.solve_receipt(None, None, requested='ionic' in a._fa_channels,
+                                                                     disabled_why='--no-ion')
+                        if _cj_prep is not None:
+                            a._cj_rcpt['ionic'] = _cjw.solve_receipt(None, _cj_prep, name='ionic', disabled_why='--no-ion')
+                    if a.no_thermal:
+                        _s3mark('thermal', 'disabled', _DIS_THERMAL)
+                    if a.no_pore:
+                        _s3mark('pore', 'disabled', _DIS_PORE)
+                        _s3mark('pnm', 'disabled', _DIS_PNM)
             elif _res3['n_dof']:
                 #  ② S1 v0 — face_alpha 해의 je 는 미계산 (진단이 면 α 를 원장에서 안 읽는다 · E2 · 증거 diagnostics 표).
                 #  ② B6 — cjunc 해도 같다 (멤버십 dof · 접합 간선 원장을 안 읽는다 · 장도 없다).
@@ -2671,8 +2748,7 @@ def main():
                 #   ⚠ 게다가 shift 팔에서는 `_bot_mask` 가 origin 이동을 안 더해 **어차피 틀린 값**이다
                 #   (러너 주석이 이미 그렇게 적고 있었다).  ⇒ 스윕에서는 끈다: 시간 3배 절약 + OOM 해소.
                 if a.no_collector:
-                    _s3mark('collector_geom', 'disabled',
-                            '--no-collector (σ_e 전용 스윕; shift 팔에서는 _bot_mask 가 origin 을 안 더해 값 자체가 무효)')
+                    _s3mark('collector_geom', 'disabled', _DIS_COLLECTOR)
                     print('  STEP3: --no-collector — 집전체 기하 솔브 2회 건너뜀 (wetted/bare)', flush=True)
                     _res3w = _res3b = None
                     jb_am = None
@@ -2826,8 +2902,7 @@ def main():
                 #  ⚠ **끈 것과 못 푼 것을 구분한다** — n_dof=0 스텁으로 아래 분기를 건너뛰되
                 #    상태는 `disabled` 로 남긴다.  `not_solvable`(SE 미퍼콜) 로 적으면 거짓말이다.
                 if a.no_ion:
-                    _s3mark('ionic', 'disabled', '--no-ion (σ_e 전용 스윕; DR3-07 로 vox ≤ 0.125 '
-                                                 'σ_ion 은 어차피 인용 금지)')
+                    _s3mark('ionic', 'disabled', _DIS_ION)
                     print('  STEP3: --no-ion — 이온 솔브 건너뜀 (σ_e 전용).  '
                           'σ_ion·τ_full·Track-B 는 이 payload 에 **없다**', flush=True)
                     _res3i = {'n_dof': 0}
@@ -3077,7 +3152,7 @@ def main():
                     #    `missing` 으로 채워졌고, 내가 오늘 넣은 required 게이트가 그것을
                     #    실패로 세어 **LEAN=1/2 생산 스윕 팔 전부가 exit 3** 이 됐다.
                     #    (ion·pore 는 이미 disabled 를 적고 있었다 — thermal 만 빠져 있었다.)
-                    _s3mark('thermal', 'disabled', '--no-thermal (σ_e 전용 스윕)')
+                    _s3mark('thermal', 'disabled', _DIS_THERMAL)
                 if not a.no_thermal:
                     try:
                         _kt, _kprov = _s3.thermal_k_table(k_carbon=a.k_carbon)
@@ -3167,9 +3242,8 @@ def main():
                     #  ★ 2026-08-18 — vox ≤ 0.125 에서 pore-τ 는 **인용 금지**(DR3-07)이고 실제로
                     #    터졌다 (τ 1,415 @0.15 → 4.97e9 @0.125, closed-from-top 28.5 → 99.2 %).
                     #    쓸 수 없는 값을 위해 300 s 와 10 GB 를 쓸 이유가 없다.  상태는 남긴다.
-                    _s3mark('pore', 'disabled', '--no-pore (σ_e 전용 스윕; DR3-07 로 vox ≤ 0.125 '
-                                                'pore-τ 는 어차피 인용 금지)')
-                    _s3mark('pnm', 'disabled', '--no-pore (σ_e 전용 스윕)')
+                    _s3mark('pore', 'disabled', _DIS_PORE)
+                    _s3mark('pnm', 'disabled', _DIS_PNM)
                     print('  STEP3: --no-pore — pore-τ·PNM 건너뜀 (σ_e 전용)', flush=True)
                 try:
                     if a.no_pore:
@@ -3536,6 +3610,11 @@ def main():
             import ca_ext_cjunc as _cjw_m
             step3['manifest'].setdefault('ca_ext', {'schema': _RC.CA_EXT_SCHEMA}).update(
                 _cjw_m.payload_blocks(_cj_prep, a._cj_rcpt, _cj_res_main))
+            #  ★ 10-21 (D · 등록 R §5-6 SV 행) — SV 반사실 노브를 켰을 때만: 증거에 요청 + 원 기록의 JSON 투영 (D 모듈 `ca_ext_svcf` ·
+            #    접합 블록 함수 밖 · 끊는 면의 정의에 기대지 않는다 — 사전 리뷰 PRE-impl-04) · 끔 = 칸 없음 = 옛 바이트
+            if getattr(a, '_cj_sv_cf', None) is not None:
+                import ca_ext_svcf as _svcf_m
+                _svcf_m.attach_evidence(step3['manifest']['ca_ext']['cjunc']['evidence'], a._cj_sv_cf)
         #  ★★ 2026-10-20 (Rint ② Z1) — σ_VGCF 출처 기록 (bulk · 직경 보존 식 이름 · 입구에서 같은 함수로 다시 계산해 --sigma-vgcf 와 대조했다).
         #    플래그를 줬을 때만 (끈 매니페스트는 키 자체가 없다 = 옛 바이트) · 규약 해시 밖 (record — σ 자체는 sigma_vgcf_S_cm).
         if getattr(a, '_vgcf_bulk', None):

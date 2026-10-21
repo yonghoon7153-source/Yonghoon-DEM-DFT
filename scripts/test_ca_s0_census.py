@@ -15,7 +15,9 @@ docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md §2-1 (문턱
       교차 셀 멤버십 · 섬유–구 (J2b · T1-9)
   L   계획 — 식 (tol_ff = min(u, r_f) · L_par = 2(r_fi + r_fj) · r_port 0.30 · tol_P = tol_sj = tol_ff · K 8 · k 2) ·
       정준 바이트 · sha256 · 손댄 계획 거부 · 개정 커밋 대조 (임시 git 저장소: 통과 · 없음 · 조상 아님 · 해시 없음 ·
-      계획 없음 · 전각 sha)
+      계획 없음 · 전각 sha) · ★ 10-21 (사전 리뷰 PRE-design-04) 단계 2 관문 = 같은 커밋의 두 줄 (`| S0 계획 해시 |` 끝 칸 = S0 계획 ·
+      `| 계획 해시 |` 끝 칸 = R 런 사슬 계획 · ⬜ = 거부) · R 런 계획 파일 (`--r-plan-path`) sha256 = 그 줄 · 꼴 (`rint_r_chain.load_plan`) ·
+      tol_ff_um = S0 values_um.tol_ff · len_law = 이 코드의 법칙 · s_min 등록 (숫자)
   S   스키마 — σ · 전류 · 소산 칸 없음 (S0-2)
   E   끝-끝 (payload 를 실제로 돌려 생산 raster 입력을 잡는다) — 픽스처 A (SBE 꼴 · 손계산 원장) · B (DBE 꼴) ·
       단계 관문 (S0-7) · 거부 (S0-5) · 순열 불변 (S0-4) · 상자 밖 · 판 위 (S0-6) · 위생 · 솔브 0 · 킷 폴더 불변 (S0-3) ·
@@ -304,8 +306,28 @@ def _git(repo, *a):
                           capture_output=True, text=True, check=True).stdout.strip()
 
 
-def make_plan_repo(d, plan_bytes, plan_sha, *, put_hash=True, put_plan=True):
-    """임시 git 저장소 — R 문서 (계획 해시 줄) + 계획 파일을 한 커밋에.  → (repo, sha, plan_rel, r_doc_rel)."""
+R_PLAN_REL = 'docs/data/s0/rint_r_plan.json'     # ★ 10-21 (PRE-design-04) — R 런 사슬 계획 (사슬 `PLAN_SCHEMA`) 파일 (같은 개정 커밋)
+
+
+def r_plan_bytes(tol_ff, **over):
+    """R 런 사슬 계획 (`rint_r_chain.load_plan` 꼴) 바이트 — tol_ff_um = S0 계획 values_um.tol_ff (등록 R §2-1 두 계획 대조).
+    ★ 10-21 (A 병합 · 사슬 3 판) — 꼴 = 사슬의 `PLAN_SCHEMA` (rint-r-plan-v2 = v1 칸 일곱 + 결과 전 등록 숫자 넷 — 옛 v1 은 사슬이
+    PLAN_INVALID 로 거부 · 사슬 시험 N02) · 숫자 넷 = 사슬 시험 고정물 값 (16 · 'none' · 2.0 · 'R_j0' · 관문은 그 넷의 값을 보지 않는다)."""
+    import carbon_junction as _cj
+    import rint_r_chain as _rrc
+    obj = {'schema': _rrc.PLAN_SCHEMA, 'len_law': _cj.CJUNC_LEN_LAW, 'unreg_law': 'cut', 's_min_um': 0.6,
+           'tol_ff_um': float(tol_ff), 'step3_rtol': 1e-12, 'p2_extra': '',
+           'max_ladder_points': 16, 'calib_rj_ratio_max': 'none', 'sv_cf_threshold': 2.0, 'sv_cf_scope': 'R_j0'}
+    obj.update(over)
+    return (json.dumps(obj, sort_keys=True) + '\n').encode('utf-8')
+
+
+def make_plan_repo(d, plan_bytes, plan_sha, *, put_hash=True, put_plan=True, r_plan=None, r_row='auto', s0_row='auto',
+                   extra_doc=''):
+    """임시 git 저장소 — R 문서 (계획 해시 줄 둘) + 계획 파일 둘을 한 커밋에.  → (repo, sha, plan_rel, r_doc_rel).
+    ★ 10-21 (PRE-design-04) — 등록 R §2-1 의 두 줄: `| 계획 해시 |` (R 런 사슬 계획 · 끝 칸) · `| S0 계획 해시 |` (S0 단계 1 계획 · 끝 칸).
+    put_hash False = S0 줄 없음 · r_row None = R 줄 없음 · 'auto' = 파일의 sha256 · 문자열 = 그 값 (⬜ 포함) · r_plan = R 런 계획 바이트
+    (None = 기본 꼴 · tol_ff = S0 계획 값 · False = 파일 없음) · extra_doc = 문서 끝에 덧붙일 줄 (S0 해시를 줄 밖에 두는 반례)."""
     repo = os.path.join(d, 'repo')
     os.makedirs(os.path.join(repo, 'docs', 'reviews'))
     os.makedirs(os.path.join(repo, 'docs', 'data', 's0'))
@@ -314,45 +336,143 @@ def make_plan_repo(d, plan_bytes, plan_sha, *, put_hash=True, put_plan=True):
     with open(os.path.join(repo, 'README'), 'w') as f:
         f.write('base\n')
     _git(repo, 'add', '-A'); _git(repo, 'commit', '-qm', 'base')
+    if r_plan is None:
+        try:
+            tol = json.loads(plan_bytes.decode('ascii'))['values_um']['tol_ff']
+        except Exception:                                    # noqa: BLE001 — 깨진 S0 계획 반례 = 아무 숫자
+            tol = 0.075
+        r_plan = r_plan_bytes(tol)
+    r_sha = hashlib.sha256(r_plan).hexdigest() if r_plan else '⬜'
+    doc = '# R §2-1 개정\n'
+    if r_row is not None:
+        doc += f'| 계획 해시 | R 런 사슬 계획 (rint-r-plan-v2) sha256 | {r_sha if r_row == "auto" else r_row} |\n'
+    if put_hash:
+        doc += f'| S0 계획 해시 | S0 단계 1 계획 (ca-cjunc-plan-v1) sha256 | {plan_sha if s0_row == "auto" else s0_row} |\n'
+    else:
+        doc += '(해시 없음)\n'
+    doc += extra_doc
     with open(os.path.join(repo, r_rel), 'w', encoding='utf-8') as f:
-        f.write('# R §2-1 개정\n' + (f'| 계획 해시 | `CJUNC_PLAN` sha256 | {plan_sha} |\n' if put_hash else '(해시 없음)\n'))
+        f.write(doc)
     if put_plan:
         with open(os.path.join(repo, p_rel), 'wb') as f:
             f.write(plan_bytes)
+    if r_plan:
+        with open(os.path.join(repo, R_PLAN_REL), 'wb') as f:
+            f.write(r_plan)
     _git(repo, 'add', '-A'); _git(repo, 'commit', '-qm', 'R 2-1 revision')
     return repo, _git(repo, 'rev-parse', 'HEAD'), p_rel, r_rel
+
+
+def _has_kw(fn, name):
+    import inspect
+    try:
+        return name in inspect.signature(fn).parameters
+    except (TypeError, ValueError):
+        return False
+
+
+def _vpc(repo, sha, prel, rrel, rp=R_PLAN_REL):
+    """단계 2 관문 — ★ 10-21 (PRE-design-04) R 런 계획 경로를 넘긴다 (고치기 전 판 = 인자 없음 → 그 키만 빼고 부른다: 반례가
+    그 판에서 **통과** 하는 것 = 옳은 이유의 실패)."""
+    if _has_kw(S0.verify_plan_commit, 'r_plan_path'):
+        return S0.verify_plan_commit(repo, sha, prel, r_doc=rrel, r_plan_path=rp)
+    return S0.verify_plan_commit(repo, sha, prel, r_doc=rrel)
+
+
+def _s2kw(rp=R_PLAN_REL):
+    return {'r_plan_path': rp} if _has_kw(S0.run_stage, 'r_plan_path') else {}
 
 
 def t_plan_commit():
     p, b, h = S0.make_plan(0.15, R_F, 2.0, _src())
     with tempfile.TemporaryDirectory() as d:
         repo, sha, prel, rrel = make_plan_repo(d, b, h)
-        ok = S0.verify_plan_commit(repo, sha, prel, r_doc=rrel)
+        ok = _vpc(repo, sha, prel, rrel)
         chk('L3a 개정 커밋 · 계획 · 해시 일치 → 통과 (계획 · sha256 · 전체 sha)',
             ok[1] == h and ok[0]['values_um'] == p['values_um'] and ok[2] == sha)
-        chk('L3b 없는 커밋 거부', raises(lambda: S0.verify_plan_commit(repo, 'deadbeef' * 5, prel, r_doc=rrel),
-                                          S0.S0Error))
-        chk('L3c 전각 · 비 ASCII sha 거부', raises(lambda: S0.verify_plan_commit(repo, '０' * 40, prel, r_doc=rrel),
-                                                  S0.S0Error))
-        chk('L3d 계획 경로 없음 거부', raises(lambda: S0.verify_plan_commit(repo, sha, 'docs/none.json', r_doc=rrel),
-                                            S0.S0Error))
+        rb = r_plan_bytes(p['values_um']['tol_ff'])
+        ri = ok[3] if len(ok) > 3 else None
+        chk('L3a2 ★ R 런 계획 결합 기록 — 경로 · sha256 (= 같은 커밋의 `| 계획 해시 |` 끝 칸) · s_min · tol_ff (= S0 tol_ff) · 법칙',
+            isinstance(ri, dict) and ri.get('path') == R_PLAN_REL and ri.get('sha256') == hashlib.sha256(rb).hexdigest()
+            and ri.get('s_min_um') == 0.6 and ri.get('tol_ff_um') == p['values_um']['tol_ff']
+            and ri.get('len_law') == 'len_scaled_v0', str(ri))
+        chk('L3b 없는 커밋 거부', raises(lambda: _vpc(repo, 'deadbeef' * 5, prel, rrel), S0.S0Error))
+        chk('L3c 전각 · 비 ASCII sha 거부', raises(lambda: _vpc(repo, '０' * 40, prel, rrel), S0.S0Error))
+        chk('L3d 계획 경로 없음 거부', raises(lambda: _vpc(repo, sha, 'docs/none.json', rrel), S0.S0Error))
         # 조상 아님 — 다른 가지의 커밋
         base = _git(repo, 'rev-parse', 'HEAD~1')
         _git(repo, 'checkout', '-q', '-b', 'side', base)
         with open(os.path.join(repo, 'side.txt'), 'w') as f:
             f.write('x\n')
         _git(repo, 'add', '-A'); _git(repo, 'commit', '-qm', 'side')
-        chk('L3e HEAD 의 조상 아닌 커밋 거부 (가지 밖)',
-            raises(lambda: S0.verify_plan_commit(repo, sha, prel, r_doc=rrel), S0.S0Error))
+        chk('L3e HEAD 의 조상 아닌 커밋 거부 (가지 밖)', raises(lambda: _vpc(repo, sha, prel, rrel), S0.S0Error))
     with tempfile.TemporaryDirectory() as d:
         repo, sha, prel, rrel = make_plan_repo(d, b, h, put_hash=False)
-        chk('L3f R 문서에 계획 해시 없음 거부', raises(lambda: S0.verify_plan_commit(repo, sha, prel, r_doc=rrel),
-                                                    S0.S0Error))
+        chk('L3f R 문서에 계획 해시 없음 거부', raises(lambda: _vpc(repo, sha, prel, rrel), S0.S0Error))
     with tempfile.TemporaryDirectory() as d:
         bb = b.replace(b'"gap_tol":2.0', b'"gap_tol":2.5')
         repo, sha, prel, rrel = make_plan_repo(d, bb, hashlib.sha256(bb).hexdigest())
-        chk('L3g 커밋 안 계획이 식 어긋남 (손댐) → 거부', raises(lambda: S0.verify_plan_commit(repo, sha, prel, r_doc=rrel),
-                                                         S0.S0Error))
+        chk('L3g 커밋 안 계획이 식 어긋남 (손댐) → 거부', raises(lambda: _vpc(repo, sha, prel, rrel), S0.S0Error))
+    #  ★ 10-21 (사전 리뷰 PRE-design-04 · 등록 R §2-1 · §2-1b · §11 ④) — 단계 2 관문 = 같은 개정 커밋의 두 계획 · 두 줄.  반례 (버림 저장소 ·
+    #    탐침 probe_stage2_gate 꼴): 옛 관문은 S0 해시가 문서 **어디에든** 있으면 통과 (`h in 문서`) · R 런 계획 줄 · s_min 을 안 봤다.
+    tol = p['values_um']['tol_ff']
+    neg = (
+        ('L3h S0 해시가 `| S0 계획 해시 |` 줄 밖 (산문 줄) · 그 줄 = ⬜ → 거부', dict(s0_row='⬜', extra_doc=f'(참고: {h})\n')),
+        ('L3i R 런 계획 줄 (`| 계획 해시 |`) = ⬜ (s_min 미등록 · 탐침 꼴) → 거부', dict(r_row='⬜')),
+        ('L3j R 런 계획 줄 없음 → 거부', dict(r_row=None)),
+        ('L3k R 런 계획 줄 = 64 hex 인데 파일 sha256 와 다름 → 거부', dict(r_row='0' * 64)),
+        ('L3l R 런 계획 파일 없음 (줄만) → 거부', dict(r_plan=False, r_row='1' * 64)),
+        ('L3m R 런 계획 tol_ff_um ≠ S0 values_um.tol_ff (두 계획 대조) → 거부', dict(r_plan=r_plan_bytes(tol * 0.5))),
+        ('L3n R 런 계획 s_min_um = null (미등록 숫자) → 거부', dict(r_plan=r_plan_bytes(tol, s_min_um=None))),
+        ('L3o R 런 계획 len_law ≠ 이 코드의 길이 법칙 → 거부', dict(r_plan=r_plan_bytes(tol, len_law='len_scaled_v9'))),
+        ('L3p R 런 계획 꼴 틀림 (칸 하나 더) → 거부', dict(r_plan=r_plan_bytes(tol, extra_key=1))),
+        ('L3q `| 계획 해시 |` 줄 둘 → 거부', dict(extra_doc='| 계획 해시 | 다른 줄 | ' + 'a' * 64 + ' |\n')),
+        ('L3r `| S0 계획 해시 |` 줄 둘 → 거부', dict(extra_doc=f'| S0 계획 해시 | 다른 줄 | {h} |\n')),
+        #  ★ 4판 (10-21 · 1저자 Q-G 비준 · 등록 R 4판 §11 ④ · §3-2 · §3-2b ④ · §5-6) — 결과 전 등록 숫자 (점 수 상한 · 역상 폭 상한 · SV 반사실
+        #    문턱 · 범위) 는 Codex 회신 뒤 · S0 단계 2 (DBE) 열람 **전** — 단계 2 의 인자 커밋에 있어야 한다 → R 런 계획의 그 칸이 null (⬜) 이면 관문이
+        #    거부 (사슬 `rint_r_chain.require_plan_numbers` 와 같은 함수 · 옛 관문 = load_plan 꼴 검사만 · null 을 받았다)
+        *((f'L3v R 런 계획 결과 전 등록 숫자 {k} = null (⬜ · Q-G — 단계 2 전에 등록) → 거부', dict(r_plan=r_plan_bytes(tol, **{k: None})))
+          for k in ('max_ladder_points', 'calib_rj_ratio_max', 'sv_cf_threshold', 'sv_cf_scope')),
+    )
+    for nm, kw in neg:
+        with tempfile.TemporaryDirectory() as d:
+            repo, sha, prel, rrel = make_plan_repo(d, b, h, **kw)
+            chk(nm, raises(lambda: _vpc(repo, sha, prel, rrel), S0.S0Error))
+    with tempfile.TemporaryDirectory() as d:                 # ★ 4판 (Q-G) — 옳은 이유: 사슬과 같은 멈춤 코드 (사본 없음)
+        repo, sha, prel, rrel = make_plan_repo(d, b, h, r_plan=r_plan_bytes(tol, sv_cf_threshold=None))
+        try:
+            _vpc(repo, sha, prel, rrel)
+            why = 'no error'
+        except S0.S0Error as e:
+            why = str(e)
+        chk('L3w Q-G 거부 사유 = 사슬 require_plan_numbers 의 PLAN_NUMBER_UNREGISTERED (sv_cf_threshold · 단계 2 전 등록)',
+            'PLAN_NUMBER_UNREGISTERED' in why and 'sv_cf_threshold' in why, why)
+    with tempfile.TemporaryDirectory() as d:
+        repo, sha, prel, rrel = make_plan_repo(d, b, h)
+        chk('L3s R 런 계획 경로 = 리포 상대 ASCII (절대 · .. · 공백 = 거부)',
+            all(raises(lambda q=q: _vpc(repo, sha, prel, rrel, rp=q), S0.S0Error)
+                for q in ('/abs/plan.json', '../plan.json', 'docs/a b.json')))
+        out = os.path.join(d, 'out_s2')
+        try:
+            S0.run_stage(2, [os.path.join(d, 'no_kit')], out, threshold_commit=sha, plan_path=prel, repo=repo, r_doc=rrel)
+            why = 'no error'
+        except S0.S0Error as e:
+            why = str(e)
+        except Exception as e:                                # noqa: BLE001
+            why = f'{type(e).__name__}: {e}'
+        chk('L3t 단계 2 · --r-plan-path 없음 → 관문에서 거부 (킷을 보기 전 · 사유에 r-plan-path)', 'r-plan-path' in why, why)
+        import contextlib
+        import io
+        er = io.StringIO()
+        try:
+            with contextlib.redirect_stderr(er), contextlib.redirect_stdout(io.StringIO()):
+                rc = S0.main(['--stage', '2', '--kit', os.path.join(d, 'no_kit'), '--out', os.path.join(d, 'out_cli'),
+                              '--threshold-commit', sha, '--plan-path', prel, '--r-plan-path', R_PLAN_REL, '--r-doc', rrel,
+                              '--repo', repo])
+        except SystemExit as e:
+            rc = f'SystemExit {e.code}'
+        chk('L3u CLI --r-plan-path 받음 — 관문 통과 뒤 킷 없음으로 rc 2 (인자 오류 아님)',
+            rc == 2 and 'r-plan-path' not in er.getvalue() and 'unrecognized' not in er.getvalue(), f'{rc} {er.getvalue()[-200:]}')
 
 
 def t_schema():
@@ -563,10 +683,15 @@ def t_e2e_stage2():
     planA = STATE['planA']; h = hashlib.sha256(planA).hexdigest()
     repo, sha, prel, rrel = make_plan_repo(os.path.join(tmp, 'g'), planA, h)
     out = os.path.join(tmp, 'outB2')
-    _stage(2, [STATE['kitB']], out, threshold_commit=sha, plan_path=prel, repo=repo, r_doc=rrel)
+    _stage(2, [STATE['kitB']], out, threshold_commit=sha, plan_path=prel, repo=repo, r_doc=rrel, **_s2kw())
     rep = _load(os.path.join(out, 's0_stage2_kit_B.json'))
     STATE['repB'] = rep
     chk('E7a 단계 2 — 계획 = 커밋에서 (sha · 해시)', rep['plan']['source'] == f'commit:{sha}' and rep['plan']['sha256'] == h)
+    rpb = r_plan_bytes(json.loads(planA.decode('ascii'))['values_um']['tol_ff'])
+    rpr = (rep.get('plan') or {}).get('r_plan') or {}
+    chk('E7a2 ★ 단계 2 보고 — R 런 계획 결합 (경로 · sha256 = 커밋의 `| 계획 해시 |` · s_min 봉인 · tol_ff = S0 tol_ff)',
+        rpr.get('path') == R_PLAN_REL and rpr.get('sha256') == hashlib.sha256(rpb).hexdigest() and rpr.get('s_min_um') == 0.6
+        and rpr.get('tol_ff_um') == json.loads(planA.decode('ascii'))['values_um']['tol_ff'], str(rpr))
     cbs = rep['raster']['cells_by_sid']
     chk('E7b 생산 VGCF 86 · SDCP 19 · PTFE 50 / off VGCF 87 / SDCP 없는 생산 VGCF 89',
         cbs['prod'].get('3') == 86 and cbs['prod'].get('5') == 19 and cbs['prod'].get('7') == 50
@@ -659,7 +784,7 @@ def t_e2e_perm():
     kitP = write_kit(tmp, 'kit_Bperm', vgcf=[F1, F2], ptfe=[P1], sdcp=S1,
                      vol={'VGCF': 0.09, 'PTFE': 0.1, 'SDCP': V_SDCP1}, mutate=_perm_mutate)
     out = os.path.join(tmp, 'outBP')
-    _stage(2, [kitP], out, threshold_commit=sha, plan_path=prel, repo=repo, r_doc=rrel)
+    _stage(2, [kitP], out, threshold_commit=sha, plan_path=prel, repo=repo, r_doc=rrel, **_s2kw())
     a, b = STATE['repB'], _load(os.path.join(out, 's0_stage2_kit_Bperm.json'))
     za = np.load(os.path.join(tmp, 'outB2', 's0_instances_kit_B.npz'))
     zb = np.load(os.path.join(out, 's0_instances_kit_Bperm.npz'))
@@ -751,6 +876,14 @@ J_H = 0.15
 J_KU = [(1.5, 1.5, 0.5), (1.5, 1.5, 4.5), (2.5, 1.5, 4.5), (2.3, 1.5, 1.5), (4.5, 1.5, 1.5), (4.5, 1.5, 7.5)]
 J_KU_S = J_H * (3.0 + 1.0 + math.sqrt(0.2 ** 2 + 3.0 ** 2))
 J_LC_PAR = 1.0 + 2.0 * math.sqrt(0.15 ** 2 - 0.12 ** 2)
+#: ★ 10-21 (사전 리뷰 PRE-impl-02 · 1저자 Q-B) — 자기 접합 = 같은 조각 중심선 쌍 (d ≤ D) · 바닥 (s > D · s > (π/2)·d — 곧은 이웃 · 꺾임
+#   모서리 아님) · S0 = s_min 없음 (바닥 쌍 전부) · L_c = 그 쌍들의 닿음 (중심선 · 셀 조각 아님).  U 자 (KU × 0.15 · 다리 1 x 1.5 · 다리 2
+#   (2.5, 4.5) → (2.3, 1.5) 13 등분 · KU 단위 T = 2 r_f / 0.15 = 1 · D = 1.125): 다리 1 쪽 닿음 = z 0.9 (다리 2 아래끝 (2.3, 1.5) 까지 1) …
+#   z* (다리 1 맨 위 선분이 바닥을 지나는 짝 = 다리 2 둘째 선분 · 그 위끝 (2.5 − 0.2/13, 4.5 − 3/13) 까지 1 · 첫 선분 짝은 s < (π/2)·d 라
+#   바닥 밖) → L_c = 0.15 (z* − 0.9) · 다리 2 쪽 (둘째 선분부터 + 아래 가로 0.2) 은 더 짧다.  (옛 = 면 항목 셀 조각 0.45)
+_J_X2 = 2.5 - 0.2 / 13.0
+_J_Z2 = 4.5 - 3.0 / 13.0
+J_KU_LC = J_H * (_J_Z2 + math.sqrt(1.0 - (_J_X2 - 1.5) ** 2) - 0.9)
 
 
 def _densify(verts, step):
@@ -838,13 +971,13 @@ def t_e2e_registry():
         str([(float(inst['Lc'][q]), float(inst['mult'][q])) for q in dl]) if inst is not None else 'no registry')
     sc = jc.get('self_candidates') or []
     cen = jc.get('census') or {}
-    chk('R4 손계산 — U 자 섬유 (KU × 0.15) → 자기 후보 1 · s = 0.15 (4 + √9.04) = %.6f · 자기 L_c 0.45 · 배율 1.5 · '
-        '거르지 않음 (s_min 미등록 · 거른 수 0)' % J_KU_S,
-        len(sc) == 1 and close(sc[0].get('s_um'), J_KU_S, 1e-9) and close(sc[0].get('Lc_um'), 0.45, 1e-9)
-        and close(sc[0].get('mult'), 1.5, 1e-9) and cen.get('n_self_candidates') == 1 and cen.get('n_self_filtered') == 0
-        and cen.get('self_filter') == 'off_s_min_missing', str(sc))
+    chk('R4 손계산 — U 자 섬유 (KU × 0.15) → 자기 후보 1 · s = 0.15 (4 + √9.04) = %.6f · 자기 L_c = 중심선 닿음 %.9f (★ 10-21 · 옛 '
+        '셀 조각 0.45) · 배율 L_c/0.30 · 거르지 않음 (s_min 미등록 · 거른 수 0)' % (J_KU_S, J_KU_LC),
+        len(sc) == 1 and close(sc[0].get('s_um'), J_KU_S, 1e-9) and close(sc[0].get('Lc_um'), J_KU_LC, 1e-9)
+        and close(sc[0].get('mult'), J_KU_LC / 0.30, 1e-9) and cen.get('n_self_candidates') == 1
+        and cen.get('n_self_filtered') == 0 and cen.get('self_filter') == 'off_s_min_missing', str(sc))
     lc = jc.get('long_contacts') or []
-    want_sum = J_LC_PAR / 0.30 + 1.5
+    want_sum = J_LC_PAR / 0.30 + J_KU_LC / 0.30
     chk('R5 후보별 목록 — 긴 접촉 2 (distinct 1 · self 1) · 배율 합 = %.6f · 배율 > 1 수 2 · npz 키 (후보마다 L_c · 배율 · s)' % want_sum,
         jc.get('n_long') == 2 and jc.get('n_long_distinct') == 1 and jc.get('n_long_self') == 1 and len(lc) == 2
         and sorted(x.get('kind') for x in lc) == ['distinct', 'self'] and close(jc.get('len_mult_sum'), want_sum, 1e-9)
@@ -898,24 +1031,34 @@ def t_e2e_registry_q11():
     jc = rep.get('junction_census') or {}
     cen = jc.get('census') or {}
     rv = jc.get('revisit') or {}
-    chk('R8 같은 셀 비연속 재방문 (판정문 RCA-03 고리) — 쌍 4 · 셀 4 · 섬유 1 · s 분포 (재방문 든 자기 후보 1 · 유한) · 원장 census 와 '
+    #  ★ 10-21 (Q-B) — 재방문 s = 그 쌍 (같은 조각 · 같은 셀 두 가지) 의 경로 호 간격 (쌍마다 4 · 옛 = 재방문 든 자기 후보마다 1)
+    chk('R8 같은 셀 비연속 재방문 (판정문 RCA-03 고리) — 쌍 4 · 셀 4 · 섬유 1 · s 분포 (쌍마다 4 · 유한 · 양수) · 원장 census 와 '
         '보고 블록 같은 값',
         cen.get('n_revisit_pairs') == 4 and cen.get('n_revisit_cells') == 4 and cen.get('n_revisit_fibres') == 1
         and rv.get('n_pairs') == 4 and rv.get('n_cells') == 4 and rv.get('n_fibres') == 1
-        and (rv.get('s_um') or {}).get('n') == 1 and math.isfinite(float((rv.get('s_um') or {}).get('min', math.nan))),
+        and (rv.get('s_um') or {}).get('n') == 4 and math.isfinite(float((rv.get('s_um') or {}).get('min', math.nan)))
+        and float((rv.get('s_um') or {}).get('min', 0.0)) > 0.0,
         str({'census': {k: cen.get(k) for k in ('n_revisit_pairs', 'n_revisit_cells', 'n_revisit_fibres')}, 'revisit': rv}))
     chk('R8 포트 동률 수 (간선 단위) — T1-11 꼴 쌍의 A 접점 (셀 경계 · ε 띠) = 1 (고리 · 나란한 쌍 등분 간선은 동률 없음)',
         jc.get('n_port_ties') == 1 and cen.get('n_port_ties') == 1, str((jc.get('n_port_ties'), cen.get('n_port_ties'))))
     sub = jc.get('subedges') or {}
-    chk('R8 긴 접촉 · 분산 간선 — 긴 instance 1 (L_c %.4f · k 7) · 간선 9 (자기 1 + 7 + T1-11 꼴 1) · 긴 접촉 간선 7' % RV_LC,
-        jc.get('n_long') == 1 and sub.get('n') == 9 and sub.get('n_long') == 7 and cen.get('n_subedges') == 9, str(sub))
+    zq = np.load(os.path.join(out, 's0_junctions_kit_RV.npz')) if os.path.exists(os.path.join(out, 's0_junctions_kit_RV.npz')) else None
+    #  ★ 10-21 (Q-B) — 자기 후보 (머리핀) 의 L_c = 중심선 닿음 (S0 = s_min 없음 · 바닥 쌍 전부 — 옛 셀 조각보다 길다 · k 는 원장 값) →
+    #    간선 수 = Σ k (나란한 쌍 7 + T1-11 꼴 1 + 자기 k_s) · 긴 접촉 = 나란한 쌍 + (자기 L_c > L_par 이면 자기)
+    ks = int(np.asarray(zq['nsub'])[np.asarray(zq['is_self'], bool)].sum()) if zq is not None else -1
+    n_self = int(np.sum(np.asarray(zq['is_self'], bool))) if zq is not None else -1
+    ls = int(np.sum(np.asarray(zq['long'], bool) & np.asarray(zq['is_self'], bool))) if zq is not None else -1
+    chk('R8 긴 접촉 · 분산 간선 — 나란한 쌍 긴 instance (L_c %.4f · k 7) · 자기 후보 1 (k_s ≥ 1) · 간선 = 7 + 1 + k_s · 긴 접촉 간선 = '
+        '7 + (자기가 길면 k_s)' % RV_LC,
+        n_self == 1 and ks >= 1 and jc.get('n_long') == 1 + ls and sub.get('n') == 8 + ks
+        and sub.get('n_long') == 7 + (ks if ls else 0) and cen.get('n_subedges') == 8 + ks, f'{sub} · 자기 {n_self} k {ks} 긴 {ls}')
     chk('R8 간선별 PTFE 덮임 — 덮인 간선 1 (첫 등분점) · 부분 덮임 instance 1 · instance 대표점 덮임 1 (옛 칸 그대로)',
         sub.get('n_ptfe_cov') == 1 and sub.get('n_instances_ptfe_partial') == 1 and jc.get('n_ptfe_cov') == 1, str(sub))
     zp = os.path.join(out, 's0_junctions_kit_RV.npz')
     z = np.load(zp) if os.path.exists(zp) else None
     chk('R8 npz — 간선별 배열 (instance 번호 · PTFE 덮임 · SDCP 근접 · 실현) · S0-2 σ · 전류 · 소산 칸 없음',
         z is not None and {'sub_inst', 'sub_ptfe_cov', 'sub_a_sdcp', 'sub_realized'} <= set(z.files)
-        and int(np.sum(z['sub_ptfe_cov'])) == 1 and len(z['sub_inst']) == 9
+        and int(np.sum(z['sub_ptfe_cov'])) == 1 and len(z['sub_inst']) == 8 + ks
         and S0.schema_forbidden_keys(rep) == [] and S0.schema_forbidden_keys({k: 0 for k in z.files}) == [],
         str(None if z is None else sorted(z.files)))
 

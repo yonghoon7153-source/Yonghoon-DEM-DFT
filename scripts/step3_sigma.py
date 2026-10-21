@@ -443,6 +443,8 @@ CG_RTOL = 1.0e-8
 _CG_RTOL_DEFAULT = 1.0e-8
 #: 수렴 증서 (ⓐ 정지 rtol ≤ 봉인 · ⓑ 판 전류 불균형 ≤ ε_I · ⓒ rtol/100 이어 풀기 |Δσ|/σ ≤ 1e-4 · ★ 10-21 ⓓ 목표량 증서 (에너지 상한 ·
 #:   보정 흐름 하한 → 게시 G 의 보장 오차 ≤ 1e-4) · 해 상태 — `step3_conv_cert`) — 켜면 실패 = 미수렴.  조기 반환 해에도 상태 증서.
+#:   ★ 10-21 (사전 리뷰 PRE-impl-07) — 주 솔브의 증서 (양의 해 · 영값 · 조기 반환) 에 결합 칸 (그 솔브의 격자 · σ 표 · 계획 지문 —
+#:   `step3_conv_cert.bind_record`) · SV 반사실 진단 솔브의 증서 (접합 기록 안) 는 결합 칸 없음 (계약 밖 진단).
 #:   기본 False = 이 파일의 솔브 결과 · 키가 옛 그대로.
 CONV_CERT = False
 #: ★ Z3 (2026-10-20 · 등록 R §11 숫자 탐침 칸 — σ 아님) — 마지막 `_solve_cg` 의 CG **반복 수** (수렴했을 때도).  수렴 증서
@@ -1969,14 +1971,23 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
             return 'face_alpha_cut'
         return 'cell6'
 
+    def _cert_bind_kw():
+        #  ★ 10-21 (사전 리뷰 PRE-impl-07 · 1저자 "권고대로 해") — 증서 ↔ 런 결합 칸 (영값 · 양의 해 같은 칸 · `step3_conv_cert.bind_record`):
+        #    이 솔브의 입력 지문 — 격자 · σ 표 (`_grid_fp`) · face_alpha 계획 (`require_plan` 이 대조한 fp_plan) · 접합 원장 · 계획 행
+        #    (`cjunc_require_quantitative` 가 대조한 값).  계약 (`run_contract.cert_binding_problem`) 이 매니페스트의 정본 지문 칸과 맞춘다.
+        return {'fp_sid': _grid_fp(sid), 'fp_sig': _grid_fp(np.asarray(sigma_of_sid, np.float64)),
+                'fp_face_plan': (_fap['fp_plan'] if _fap is not None else None),
+                'fp_cjunc_registry': (_cjp['registry']['fp']['registry'] if _cjp is not None else None),
+                'fp_cjunc_rows': (_cjp['fp_rows'] if _cjp is not None else None)}
+
     def _ret(d):
         if CONV_CERT:
             #  ★ 10-21 (Codex RCA-13 · 1저자 Q7 일부) — 조기 반환 해의 **상태 증서** (CG 없이 낸 σ 0): 두 판을 잇는 성분이 없는 사유 =
             #    VALID_ZERO_TOPOLOGY (σ 0 = 정상 결과 · 바닥 극한 R_j = ∞ 를 증서 없음으로 멈추지 않는다) · 단락 · 얇은 침대 · 모르는 사유 =
             #    게시 불가 상태.  증서 끔 = 이 블록 없음 (옛 키 그대로).
+            #    ★ 10-21 (PRE-impl-07) — 결합 칸 = 격자 · σ 표 + 계획 지문 셋 (`_cert_bind_kw` · 양의 해 증서와 같은 칸)
             import step3_conv_cert as _ccz
-            d['conv_cert'] = _ccz.early_record(d, zero_graph=_zero_graph(d.get('reason')), fp_sid=_grid_fp(sid),
-                                               fp_sig=_grid_fp(np.asarray(sigma_of_sid, np.float64)))
+            d['conv_cert'] = _ccz.early_record(d, zero_graph=_zero_graph(d.get('reason')), **_cert_bind_kw())
         #  ①′ — 조기 반환 해에도 기록 (solved False) · iface 를 안 줬으면 dict 를 **그대로** 돌려준다 (옛 키 그대로).
         if _ifp is not None:
             d['iface'] = dict(_ifp['record'], solved=False)
@@ -2273,6 +2284,8 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
         #  ★ Z3 — 반복 수 (수렴했어도 · 숫자 탐침 칸 · 게시 조건 아님 — `run_contract.conv_cert_problem` 은 보지 않는다)
         _cert['iters'] = _it_main
         _cert['resolve_iters'] = _rit[0]
+        #  ★ 10-21 (사전 리뷰 PRE-impl-07) — 증서 ↔ 런 결합 칸 (양의 해 · 행렬 그래프 영값 · 증서 못 세움 모두 · 조기 반환 증서와 같은 칸)
+        _cert.update(_cc.bind_record(**_cert_bind_kw()))
         if not _cert['ok']:
             print(f"  ⚠ STEP3 수렴 증서 실패 [{_cert.get('status')}] (ⓐ {_cert['pass_a']} · ⓑ {_cert['pass_b']} 불균형 "
                   f"{_cert['imbalance']:.2e} · ⓒ {_cert['pass_c']} Δσ {_cert['dsigma_rel']:.2e} · ⓓ {_cert.get('pass_d')} "
@@ -2311,9 +2324,10 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
         out['_cjunc'] = {'kind': 'cjunc_edges', 'version': _cjm.CJUNC_MODEL_VERSION, 'phi_dof': phi, 'sys': _cjs.sys,
                          'junction_inst': _cjs.junction_edge_inst, 'junction_sub': getattr(_cjs, 'junction_edge_sub', None),
                          'junction_current_code': _cjr['junction_current_code'], 'fp_sid': _grid_fp(sid)}
-        if _cjp.get('sv_counterfactual') is not None:      # ★ 10-21 (Codex RCA-06 · Q4 (가)) — 선택 노브: SV 면 끊은 판의 단자 G 비 (진단)
+        if _cjp.get('sv_counterfactual') is not None:      # ★ 10-21 (Codex RCA-06 · Q4 (가)) — 선택 노브: SV 다리 끊은 판의 단자 G 비 (진단)
             if unconv:                                     #   주 해가 미수렴 · 증서 실패 = 비를 내지 않는다 (분자 G 를 믿을 수 없다)
-                out['cjunc']['sv_counterfactual'] = {'kind': 'counterfactual_cut_sv_faces', 'requested': True,
+                #  ★ 10-21 (사전 리뷰 PRE-impl-04 · Q-D) — 기록 종류 = 원장 정본 상수 (반사실 = SV 다리만 끊음 · 옛 'SV 면 전부' 와 다른 양)
+                out['cjunc']['sv_counterfactual'] = {'kind': _cjm.CJUNC_SV_CF_KIND, 'rule': _cjm.CJUNC_SV_CF_RULE, 'requested': True,
                                                      'threshold': _cjp['sv_counterfactual'].get('threshold'),
                                                      'status': 'main_unconverged', 'sv_counterfactual_ratio': None,
                                                      'flag': None, 'conv_cert': None, 'backend_last_solve': None}

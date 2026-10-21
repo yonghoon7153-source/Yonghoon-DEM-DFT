@@ -25,6 +25,12 @@ Q7 일부).
   T18 변이 표 (증서 · 계약 한 줄 · 기준선에서 통과한 단언이 변이에서 실패해야 적발 · 빠른 판 = 변이 자리 존재만)
   T19 칼날 (정확 분수 판정 = 보수)
   T20 묶음 합 `_fsum_bound` (2²⁰ 넘는 배열 = 생산 침대의 길 · 묶음 사이 상쇄) 오차 상한 · 합 넘침 = (inf, inf)
+증서 ↔ 런 결합 (★ 10-21 사전 리뷰 PRE-impl-07 · 1저자 "권고대로 해"):
+  T21 증서의 격자 · 계획 지문 ↔ 매니페스트 정본 지문 칸 (생산 배선 함수가 만든 것) — 지문만 바꾼 영값 증서 (판정문 반례) · 다른 침대의
+      영값 증서 · 같은 σ 의 다른 침대 (거울) · 다른 접합 계획 (cut ↔ fused) · 다른 face_alpha 계획 (PTFE 자리) · 채널 맞바꿈 · 지문 칸
+      없는 매니페스트 = 거부 · 정당한 짝 = 받는다 · 두 인자 호출 = TypeError
+  T22 실제 payload (face_alpha + 접합 + rtol · LEAN 3) 끝-끝 — 정당한 런 통과 · 같은 σ 의 다른 계획 런 증서 = 거부
+  T23 기반 (a76f59d0d) 대조 — 증서 끔 = 결과 같음 · 증서 켬 = 기반 칸 그대로 · 더해진 칸 = 결합 칸뿐
 빠른 판 (기본 · 게이트) ↔ 긴 판 (`--long` · 따로): 긴 판만 = T5 표본 1,500 (빠른 300) · T16 무작위 200 (빠른 40) · T17 순열 20
   (빠른 3) + 탐침 순열 (T17b) + OpenBLAS 경로 자식 여섯 (T17c) · T4 접합 탐침 · T14 시간 (간선 > 2²⁰ 계) · T18 변이 표.
 
@@ -39,6 +45,7 @@ import io
 import json
 import math
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -50,6 +57,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCRIPTS = os.path.join(ROOT, 'scripts')
 sys.path.insert(0, SCRIPTS)
 BASE_COMMIT = '47d23baba'                 # 이 수정의 기반 (Z3 합친 메인) — 끈 경로 비트 대조 · A/B/C 값 대조
+BIND_BASE = 'a76f59d0d'                   # ★ 10-21 증서 ↔ 런 결합 (PRE-impl-07) 의 기반 — T23 끈 경로 · 새 칸 대조
 
 S3 = CC = RC = None
 ARGS = None
@@ -678,8 +686,9 @@ def t11():
         {k: cc.get(k) for k in ('status', 'pass_d', 'ok', 'target_err_bound_rel', 'scale')})
 
 
-def _load_base(rel, name):
-    src = subprocess.run(['git', '-C', ROOT, 'show', f'{BASE_COMMIT}:{rel}'], capture_output=True, check=True).stdout
+def _load_base(rel, name, commit=None):
+    src = subprocess.run(['git', '-C', ROOT, 'show', f'{commit or BASE_COMMIT}:{rel}'], capture_output=True,
+                         check=True).stdout
     d = tempfile.mkdtemp(prefix='tcbase_')
     p = os.path.join(d, name + '.py')
     with open(p, 'wb') as fh:
@@ -776,10 +785,35 @@ def _real_cert():
     return dict(r['conv_cert']), float(r['sigma_eff'])
 
 
+def _ccp(cert, sigma, man=None, channel='electronic'):
+    """`run_contract.conv_cert_problem` — 결합 판 (★ 10-21 PRE-impl-07 · 매니페스트 · 채널 필수) 과 옛 판 (두 인자 · 결합 없음) 둘 다
+    부른다 (시험 먼저 기록용 — 옛 판에서 결합 시험은 '다른 침대 증서를 받는다' 는 옳은 이유로 실패한다).  새 판에서는 늘 넷을 넘긴다."""
+    import inspect
+    if len(inspect.signature(RC.conv_cert_problem).parameters) >= 3:
+        return RC.conv_cert_problem(cert, sigma, man, channel)
+    return RC.conv_cert_problem(cert, sigma)
+
+
+def _man_of_cert(cert, channel='electronic'):
+    """증서 자신의 결합 칸으로 맞춘 최소 매니페스트 — 결합이 **아닌** 칸 (ⓐ–ⓓ · 상태 · 영값) 을 보는 시험용 (T13).  결합 시험 (T21) 은
+    생산 배선 함수 (`ca_ext_cjunc.payload_prepare` · `ptfe_face_alpha.payload_block`) 가 만든 지문 칸을 쓴다 (사본 아님)."""
+    c = cert if isinstance(cert, dict) else {}
+    ca = {}
+    if c.get('fp_cjunc_registry') is not None or c.get('fp_cjunc_rows') is not None:
+        ca['cjunc'] = {'evidence': {'fp': {'sid': c.get('fp_sid'), 'registry': c.get('fp_cjunc_registry'),
+                                           'plan_rows': c.get('fp_cjunc_rows')}}}
+    if c.get('fp_face_plan') is not None or 'cjunc' not in ca:
+        other = 'ionic' if channel == 'electronic' else 'electronic'
+        ca['ptfe_face'] = {'evidence': {'fp': {'sid_off': c.get('fp_sid'), f'plan_{channel}': c.get('fp_face_plan'),
+                                               f'plan_{other}': None}}}
+    return {'ca_ext': ca}
+
+
 @case('T13 run_contract.conv_cert_problem — ⓓ 를 기록된 수로 다시 판정 · 상태 먼저 분기 · 영값 위상 σ 0 수용 · 나머지 거부')
 def t13():
     good, sig = _real_cert()
-    chk('T13a 실제 양의 증서 → 문제 없음', RC.conv_cert_problem(good, sig) is None, RC.conv_cert_problem(good, sig))
+    mg = _man_of_cert(good)
+    chk('T13a 실제 양의 증서 → 문제 없음', _ccp(good, sig, mg) is None, _ccp(good, sig, mg))
     lo, hi, G = good.get('target_lo', 1.0), good.get('target_hi', 1.0), good.get('I_bot', 1.0)
     muts = {
         '판 v1 (ⓓ 없는 옛 증서)': lambda c: {k: v for k, v in dict(c, version='conv-cert-v1').items() if not k.startswith('target_')},
@@ -805,11 +839,12 @@ def t13():
         '위상 영인데 POSITIVE': lambda c: dict(c, target_topology='zero'),
     }
     for nm, fn in muts.items():
-        chk(f'T13b 거부 [{nm}]', RC.conv_cert_problem(fn(dict(good)), sig) is not None)
+        chk(f'T13b 거부 [{nm}]', _ccp(fn(dict(good)), sig, mg) is not None)
     zero = CC.early_record({'sigma_eff': 0.0, 'n_dof': 4, 'n_through_dof': 0, 'reason': 'no_through_component'},
                            zero_graph='cell6', fp_sid='a' * 32, fp_sig='b' * 32)
+    mz = _man_of_cert(zero)
     chk('T13c 영값 위상 증서 + 결과 σ 0 → 문제 없음 (바닥 극한 σ 0 = 정상 결과 · NOT_COMPUTED 로 멈추지 않는다)',
-        RC.conv_cert_problem(zero, 0.0) is None, RC.conv_cert_problem(zero, 0.0))
+        _ccp(zero, 0.0, mz) is None, _ccp(zero, 0.0, mz))
     zmut = {
         '결과 σ ≠ 0': (zero, 1e-9),
         '증서 σ ≠ 0': (dict(zero, sigma=1e-12), 0.0),
@@ -821,13 +856,13 @@ def t13():
         '결과 σ bool': (zero, False),
     }
     for nm, (cz, sg) in zmut.items():
-        chk(f'T13d 영값 증서 거부 [{nm}]', RC.conv_cert_problem(cz, sg) is not None)
+        chk(f'T13d 영값 증서 거부 [{nm}]', _ccp(cz, sg, mz) is not None)
     short = CC.early_record({'sigma_eff': 0.0, 'n_dof': 4, 'reason': 'cjunc_electrode_short'}, zero_graph='cjunc_assembled',
                             fp_sid='a' * 32, fp_sig='b' * 32)
-    chk('T13e 단락 증서 → 거부 (게시 가능 상태 아님)', RC.conv_cert_problem(short, 0.0) is not None)
+    chk('T13e 단락 증서 → 거부 (게시 가능 상태 아님)', _ccp(short, 0.0, _man_of_cert(short)) is not None)
     chk('T13f 다음 세대 게시 조건 — 영값 위상 팔 (σ 0) 통과 · 증서 없는 팔 거부',
-        RC.next_gen_cert_ok({'sigma_e_eff_S_cm': 0.0, 'manifest': {'ca_ext': {}}, 'conv_cert': zero})[0]
-        and not RC.next_gen_cert_ok({'sigma_e_eff_S_cm': 0.0, 'manifest': {'ca_ext': {}}})[0])
+        RC.next_gen_cert_ok({'sigma_e_eff_S_cm': 0.0, 'manifest': mz, 'conv_cert': zero})[0]
+        and not RC.next_gen_cert_ok({'sigma_e_eff_S_cm': 0.0, 'manifest': mz})[0])
 
 
 @case('T14 시간 비용 (기록 · 합격선 없음) — 탐침 침대 41,472 dof · 무작위 격자 393,216 dof (간선 > 2²⁰ = 묶음 합 길)', long_only=True)
@@ -1259,6 +1294,335 @@ def t20():
     chk('T20b 합 넘침 (1.7e308 × 4) → (inf, inf) · 예외 아님 (호출자가 비유한으로 NOT_CERTIFIABLE)', ok, r)
 
 
+# ═════════════════════════ 증서 ↔ 런 결합 (사전 리뷰 PRE-impl-07 · 1저자 10-21 "권고대로 해") ═════════════════════════
+#  반례 (판정문 PRE-impl-07 · 탐침 `probe_zero_binding.py`): CX 바닥 (R_j = ∞) 의 실제 영값 증서에서 지문만 바꾼 사본을
+#  `conv_cert_problem` · `next_gen_cert_ok` 가 받았다 — 영값 증서의 `fp_sid` · `fp_sig` 는 hex32 형식만 · σ 결합 (0 = 0) 은 아무것도 묶지
+#  않는다 · 양의 해 증서는 지문 칸 자체가 없었다 (σ 1e-9 결합뿐 — 같은 σ 의 다른 침대 · 다른 계획 증서를 받는다).
+#  침대 = 생산 단위 (test_ca_ext_z3 와 같은 값 — vox 0.15 · r_f 0.075 · tol_ff 0.05 · s_min 0.6) · 매니페스트 지문 칸 = 생산 배선 함수
+#  (`ca_ext_cjunc.payload_prepare` 의 fp · `ptfe_face_alpha.payload_block` 의 evidence.fp) 가 만든 것 그대로 (사본 없음).
+BH = 0.15
+BN = (6, 3, 8)
+BREQ = {'R_j_ohm': 1.0e6, 'len_law': 'len_scaled_v0', 'unreg_law': 'cut', 's_min_um': 0.6, 'tol_ff_um': 0.05, 'ptfe_jlaw': 'P0'}
+#: PTFE 선 둘 — 도체 면 (VGCF 기둥 · SE 기둥) 에서 r_P + 여유 밖 (α < 1 행 0 · 캡슐 지문만 다르다 → 같은 계 · 같은 σ · 다른 계획 지문)
+PT1 = ((0.88, 0.0, 0.60), (0.88, 0.45, 0.60))
+PT2 = ((0.88, 0.0, 0.30), (0.88, 0.45, 0.30))
+_BIND_NEW = ('bind_version', 'fp_sid', 'fp_sig', 'fp_face_plan', 'fp_cjunc_registry', 'fp_cjunc_rows')
+
+
+def _bcell(ix, iy, iz, mirror=False):
+    x = (BN[0] - 1 - ix) if mirror else ix
+    return ((x + 0.5) * BH, (iy + 0.5) * BH, (iz + 0.5) * BH)
+
+
+def _bline(a, b, step=BH / 3.0):
+    a, b = np.asarray(a, np.float64), np.asarray(b, np.float64)
+    n = max(1, int(math.ceil(np.linalg.norm(b - a) / step - 1e-12)))
+    return np.asarray([a + (b - a) * (i / n) for i in range(n + 1)])
+
+
+def _bed_rows(name, ptfe=None, mirror=False):
+    """Z = VGCF A (x 1 · z 0..3 · 아래 판) + B (x 2 · z 3..7 · 위 판) — 끝 셀이 면으로 맞닿는 접합 instance 하나 · Z2 = 같은 꼴, 맞닿는
+    층 4 (다른 격자) · P = Z + 우회 VGCF C (x 4 · 두 판) · mirror = x 거울 (같은 회로 · 다른 격자) · ptfe = PTFE 선 (µm) 또는 None."""
+    zc = {'Z': 3, 'Z2': 4, 'P': 3}[name]
+    polys = [(_bcell(1, 1, 0, mirror), _bcell(1, 1, zc, mirror)), (_bcell(2, 1, zc, mirror), _bcell(2, 1, 7, mirror))]
+    if name == 'P':
+        polys.append((_bcell(4, 1, 0, mirror), _bcell(4, 1, 7, mirror)))
+    P, PH, F, K = [], [], [], []
+    for i, (a, b) in enumerate(polys):
+        pts = _bline(a, b)
+        P.append(pts); PH.append(np.full(len(pts), 2)); F.append(np.full(len(pts), 10 + 10 * i)); K.append(np.full(len(pts), 1))
+    if ptfe is not None:
+        pts = _bline(*ptfe)
+        P.append(pts); PH.append(np.full(len(pts), 4)); F.append(np.full(len(pts), 900)); K.append(np.full(len(pts), 1))
+    return (np.vstack(P), np.concatenate(PH).astype(np.int64), np.concatenate(F).astype(np.int64),
+            np.concatenate(K).astype(np.int64))
+
+
+def _bsig():
+    return (S3.electronic_sigma_table(0.0041, 0.0041, 7853.98, 10.0, 256.6), S3.ionic_sigma_table(0.3e-3, 3e-3))
+
+
+def _brun(name, cfg, ptfe=None, mirror=False, unreg='cut', se=True, cert=True):
+    """침대 · 배선 (cj = 접합만 · fa = face_alpha 만 · cjfa = 둘) → 실제 솔브 둘 (전자 · 이온 · 증서 켬 · 생산 CG) + 생산 배선 함수가 만든
+    매니페스트 지문 칸 → {'s3': step3 꼴 블록, 'sid', 'cj', 'fa'}.  Z · Z2 의 접합 = 바닥 극한 (R_j = ∞ · 자리 면 절단 → 관통 없음).
+    se = SE 기둥 (x 0 · 이온 채널 관통 — 이온 증서 양의 해) · False 면 이온 도체 없음 (이온 증서 = 영값)."""
+    import ca_ext_cjunc as CW
+    import ptfe_face_alpha as FA
+    P, PH, F, K = _bed_rows(name, ptfe=ptfe, mirror=mirror)
+    m = PH != 4                                             # face_alpha 침대 = off 격자 (PTFE 셀 없음)
+    hi = tuple(BN[i] * BH for i in range(3))
+    se_pts = (np.asarray([_bcell(0, 1, k, mirror) for k in range(BN[2])], np.float64) if se else None)
+    sid, pid = S3.rasterize(np.zeros((0, 3)), np.zeros(0), np.zeros(0, np.int64), P[m], PH[m], (0.0, 0.0, 0.0), hi, BH,
+                            se_pts=se_pts, add_fid=F[m], add_kind=K[m])
+    sig_e, sig_i = _bsig()
+    ca, cj, fa = {}, None, None
+    if cfg in ('cj', 'cjfa'):
+        req = dict(BREQ, unreg_law=unreg)
+        if name in ('Z', 'Z2'):
+            req.update(R_j_ohm=None, rj_limit='inf')
+        mc = np.isin(PH, CW.ADD_PHASES)
+        cj = quiet(CW.payload_prepare, sid, lo=(0.0, 0.0, 0.0), vox=BH, pts=P[mc], phase=PH[mc], fid=F[mc], kind=K[mc], cjunc=req,
+                   sdcp_mod=None, ptfe_stamp=('face_alpha' if cfg == 'cjfa' else 'off'))
+        ca['cjunc'] = {'evidence': {'fp': dict(cj['fp'])}}
+    if cfg in ('fa', 'cjfa'):
+        m4 = PH == 4
+        fa = quiet(FA.payload_prepare, sid, pid, lo=(0.0, 0.0, 0.0), vox=BH, sig_e=sig_e, sig_i=sig_i, pts=P[m4], fid=F[m4],
+                   kind=K[m4], channels=('electronic', 'ionic'), dia_law='rope', true_volume_um3=None, build_ionic=True)
+        ca['ptfe_face'] = {'evidence': {'fp': dict(FA.payload_block(fa, {})['evidence']['fp'])}}
+    kw_e, kw_i = {}, {}
+    if cj is not None:
+        kw_e['cjunc'] = cj['plan']
+    if fa is not None:
+        kw_e.update(face_alpha=fa['plans']['electronic'], pid=pid)
+        kw_i['face_alpha'] = fa['plans']['ionic']
+    knobs = dict(CONV_CERT=True, CG_RTOL=1e-12) if cert else dict(CONV_CERT=False)
+    with s3_knobs(GPU_SOLVE=False, AMG_SOLVE=False, **knobs):
+        r_e = quiet(S3.solve_sigma_z, sid, sig_e, BH, z_top_um=BN[2] * BH, z_bot_um=0.0, **kw_e)
+        r_i = quiet(S3.solve_sigma_z, sid, sig_i, BH, z_top_um=BN[2] * BH, z_bot_um=0.0, **kw_i)
+    man = {'ca_ext': ca, 'component_plan': {'electronic': True, 'ionic': True}, 'components': {'ionic': {'status': 'complete'}}}
+    s3 = {'sigma_e_eff_S_cm': float(r_e['sigma_eff']), 'sigma_ion_eff_S_cm': float(r_i['sigma_eff']), 'manifest': man,
+          'conv_cert': dict(r_e.get('conv_cert') or {}), 'ion_conv_cert': dict(r_i.get('conv_cert') or {})}
+    return {'s3': s3, 'sid': sid, 'cj': cj, 'fa': fa, 'r_e': r_e, 'r_i': r_i}
+
+
+def _ng(s3, **repl):
+    return RC.next_gen_cert_ok(dict(s3, **repl))
+
+
+def _rej(run, cert=None, man=None, channel='electronic'):
+    """그 런의 칸 (σ · 매니페스트) 에 증서 (기본 = 그 런의 것) 를 붙여 계약이 거부하는가 — conv_cert_problem · next_gen_cert_ok 둘 다."""
+    s3 = run['s3']
+    sk = 'conv_cert' if channel == 'electronic' else 'ion_conv_cert'
+    sg = s3['sigma_e_eff_S_cm'] if channel == 'electronic' else s3['sigma_ion_eff_S_cm']
+    c = s3[sk] if cert is None else cert
+    m = s3['manifest'] if man is None else man
+    p = _ccp(c, sg, m, channel)
+    ok, why = RC.next_gen_cert_ok(dict(s3, manifest=m, **{sk: c}))
+    return (p is not None and not ok), (p, why)
+
+
+def _acc(run):
+    s3 = run['s3']
+    pe = _ccp(s3['conv_cert'], s3['sigma_e_eff_S_cm'], s3['manifest'], 'electronic')
+    pi = _ccp(s3['ion_conv_cert'], s3['sigma_ion_eff_S_cm'], s3['manifest'], 'ionic')
+    return pe is None and pi is None and RC.next_gen_cert_ok(s3) == (True, None), (pe, pi, RC.next_gen_cert_ok(s3))
+
+
+@case('T21 증서 ↔ 런 결합 (사전 리뷰 PRE-impl-07) — 증서의 격자 · 계획 지문 = 매니페스트의 정본 지문 칸 (접합 원장 sid · registry · '
+      'plan_rows · face_alpha sid_off · plan_<채널>) · 다른 침대 · 다른 계획 · 다른 채널 · 지문 칸 없는 매니페스트 = 거부 (영값 · 양의 해 둘 다)')
+def t21():
+    Z, POS = getattr(CC, 'STATUS_ZERO', '?'), getattr(CC, 'STATUS_POSITIVE', '?')
+    z = _brun('Z', 'cjfa', ptfe=PT1)
+    z2 = _brun('Z2', 'cjfa', ptfe=PT1)
+    p = _brun('P', 'cjfa', ptfe=PT1)
+    pc = _brun('P', 'cj')
+    pcm = _brun('P', 'cj', mirror=True)
+    pcf = _brun('P', 'cj', unreg='fused')
+    pf1 = _brun('P', 'fa', ptfe=PT1)
+    pf2 = _brun('P', 'fa', ptfe=PT2)
+    zn = _brun('Z', 'cjfa', ptfe=PT1, se=False)
+    zc = _brun('Z', 'cj')
+    st = {nm: (r['s3']['conv_cert'].get('status'), r['s3']['ion_conv_cert'].get('status'))
+          for nm, r in (('Z', z), ('Z2', z2), ('P', p), ('Pc', pc), ('Pcm', pcm), ('Pcf', pcf), ('Pf1', pf1), ('Pf2', pf2),
+                        ('Zn', zn), ('Zc', zc))}
+    chk('T21 고정물 — 바닥 극한 (Z · Z2 · Zc) 전자 = VALID_ZERO (조기 반환 · 관통 없음) · P 꼴 = POSITIVE · SE 기둥 이온 = POSITIVE · '
+        'SE 없음 (Zn) 이온 = VALID_ZERO',
+        all(st[k][0] == Z for k in ('Z', 'Z2', 'Zc', 'Zn')) and all(st[k][0] == POS for k in ('P', 'Pc', 'Pcm', 'Pcf', 'Pf1', 'Pf2'))
+        and all(st[k][1] == POS for k in st if k != 'Zn') and st['Zn'][1] == Z
+        and z['s3']['conv_cert'].get('zero_source') == 'early_return'
+        and str(z['r_e'].get('reason', '')).startswith('no_through_component'), st)
+    #  ── 정당한 짝 (자기 런의 증서 · 매니페스트) = 받는다 — 고치기 전에도 받는다 (결합이 정당한 런을 막지 않는다) ──
+    for nm, r in (('Z cjfa · 영값 + 이온 양', z), ('Z2 cjfa', z2), ('P cjfa · 양 + 이온 양', p), ('P cj', pc), ('P cj 거울', pcm),
+                  ('P cj fused', pcf), ('P fa PT1', pf1), ('P fa PT2', pf2), ('Z cjfa SE 없음 · 영값 + 영값', zn), ('Z cj', zc)):
+        ok, why = _acc(r)
+        chk(f'T21a 정당한 짝 [{nm}] — 자기 증서 + 자기 매니페스트 = 전자 · 이온 둘 다 문제 없음 · next_gen_cert_ok (True, None)', ok, why)
+    #  ── PRE-impl-07 반례 그대로 — 실제 영값 증서에서 지문만 바꾼 사본 ──
+    ze = z['s3']['conv_cert']
+    forged = dict(ze, fp_sid='0123456789abcdef' * 2, fp_sig='fedcba9876543210' * 2)
+    ok, why = _rej(z, forged)
+    chk('T21b PRE-impl-07 반례 — 바닥 극한 실제 영값 증서의 지문만 바꾼 사본 → conv_cert_problem · next_gen_cert_ok 거부', ok, why)
+    #  ── 실제 다른 침대의 영값 증서 · 다른 침대의 매니페스트 ──
+    chk('T21c 다른 침대 (Z2 — 맞닿는 층만 다름 · 둘 다 정당한 영값) 의 실제 영값 증서를 Z 런에 붙임 → 거부 (σ 0 = 0 은 아무것도 안 묶는다)',
+        *_rej(z, z2['s3']['conv_cert']))
+    chk('T21d Z 의 자기 영값 증서 + 다른 침대 (Z2) 의 매니페스트 → 거부', *_rej(z, man=z2['s3']['manifest']))
+    #  ── 양의 해 — σ 결합 (1e-9) 이 못 가르는 다른 침대 · 다른 계획 (σ 같음 = 전제 · 기록) ──
+    sp, spm = pc['s3']['sigma_e_eff_S_cm'], pcm['s3']['sigma_e_eff_S_cm']
+    chk('T21e 전제 — 거울 침대 (같은 회로 · 다른 격자) σ 같음 (상대 1e-12 · 옛 σ 결합 1e-9 안) · 격자 다름',
+        abs(sp - spm) <= 1e-12 * sp and pc['sid'].tobytes() != pcm['sid'].tobytes(), (sp, spm))
+    chk('T21e 거울 침대의 양의 증서 (σ 같음) 를 P 런에 붙임 → 거부 (격자 지문 · 접합 계획 지문)', *_rej(pc, pcm['s3']['conv_cert']))
+    sf = pcf['s3']['sigma_e_eff_S_cm']
+    chk('T21f 전제 — 같은 침대 · 미등록 면 법칙만 다름 (cut ↔ fused · 미등록 VV 면 0) = 같은 격자 · 같은 σ (바이트) · 다른 접합 계획 지문',
+        pc['sid'].tobytes() == pcf['sid'].tobytes() and sf == sp and pc['cj']['fp']['plan_rows'] != pcf['cj']['fp']['plan_rows'],
+        (sf, sp))
+    chk('T21f 접합 계획 지문 — fused 런의 증서를 cut 런에 붙임 → 거부 (σ · 격자 같음 · 계획 행 지문 다름)', *_rej(pc, pcf['s3']['conv_cert']))
+    fe1, fe2 = pf1['fa']['plans']['electronic']['fp_plan'], pf2['fa']['plans']['electronic']['fp_plan']
+    chk('T21g 전제 — 같은 침대 · PTFE 캡슐 자리만 다름 (도체 면 밖 · α 행 0) = 같은 격자 · 같은 σ (바이트) · 다른 face_alpha 계획 지문',
+        pf1['sid'].tobytes() == pf2['sid'].tobytes() and pf1['s3']['sigma_e_eff_S_cm'] == pf2['s3']['sigma_e_eff_S_cm']
+        and fe1 != fe2, (pf1['s3']['sigma_e_eff_S_cm'], pf2['s3']['sigma_e_eff_S_cm']))
+    chk('T21g face_alpha 계획 지문 — PT2 런의 전자 증서를 PT1 런에 붙임 → 거부', *_rej(pf1, pf2['s3']['conv_cert']))
+    chk('T21g face_alpha 계획 지문 — PT2 런의 이온 증서를 PT1 런의 이온 자리에 → 거부',
+        *_rej(pf1, pf2['s3']['ion_conv_cert'], channel='ionic'))
+    #  ── 채널 — 전자 · 이온 둘 다 영값 (σ 0 = 0) 인 런에서 증서를 맞바꿈 ──
+    zne, zni = zn['s3']['conv_cert'], zn['s3']['ion_conv_cert']
+    ok1, w1 = _rej(zn, zni, channel='electronic')
+    ok2, w2 = _rej(zn, zne, channel='ionic')
+    chk('T21h 채널 — 영값 · 영값 런에서 이온 증서를 전자 자리에 · 전자 증서를 이온 자리에 → 둘 다 거부 (face_alpha 채널 계획 · 접합 = 전자 주 '
+        '솔브만)', ok1 and ok2, (w1, w2))
+    #  ── 매니페스트에 지문 칸이 없다 · 모양이 틀리다 ──
+    for nm, mm in (('ca_ext 비었다', {'ca_ext': {}}), ('하위 블록에 evidence 없음', {'ca_ext': {'cjunc': {}, 'ptfe_face': {}}}),
+                   ('매니페스트 None', None), ('매니페스트 dict 아님', ['ca_ext'])):
+        p_ = _ccp(ze, 0.0, mm, 'electronic')
+        ok_ = RC.next_gen_cert_ok({'sigma_e_eff_S_cm': 0.0, 'manifest': mm, 'conv_cert': ze})[0] if isinstance(mm, dict) else False
+        chk(f'T21i 지문 칸 없는 매니페스트 [{nm}] → conv_cert_problem 거부' + (' · next_gen_cert_ok 거부' if isinstance(mm, dict) else ''),
+            p_ is not None and not ok_, p_)
+    #  ── 칸 하나씩 (증서 · 매니페스트) ──
+    pe, pman = p['s3']['conv_cert'], p['s3']['manifest']
+    cjfp = pman['ca_ext']['cjunc']['evidence']['fp']
+    fafp = pman['ca_ext']['ptfe_face']['evidence']['fp']
+
+    def _m(cj=None, fa=None):
+        out = json.loads(json.dumps(pman))
+        if cj is not None:
+            out['ca_ext']['cjunc']['evidence']['fp'] = cj
+        if fa is not None:
+            out['ca_ext']['ptfe_face']['evidence']['fp'] = fa
+        return out
+    cert_muts = {
+        '결합 판 칸 빠짐': {k: v for k, v in pe.items() if k != 'bind_version'},
+        '결합 판 다름': dict(pe, bind_version='cert-bind-v0'),
+        '격자 지문 대문자 (같은 수)': dict(pe, fp_sid=str(pe.get('fp_sid')).upper()),
+        'σ 표 지문 hex 아님': dict(pe, fp_sig='x' * 32),
+        'σ 표 지문 빠짐': {k: v for k, v in pe.items() if k != 'fp_sig'},
+        'face_alpha 계획 지문 None (face_alpha 런인데)': dict(pe, fp_face_plan=None),
+        '접합 계획 행 지문 다름': dict(pe, fp_cjunc_rows='0' * 32),
+        '접합 원장 지문 None': dict(pe, fp_cjunc_registry=None),
+    }
+    for nm, c in cert_muts.items():
+        chk(f'T21j 증서 칸 [{nm}] → 거부', *_rej(p, c))
+    pi_ = p['s3']['ion_conv_cert']
+    chk('T21j 이온 증서가 접합 지문을 싣는다 (접합 = 전자 주 솔브만) → 거부',
+        *_rej(p, dict(pi_, fp_cjunc_registry=pe.get('fp_cjunc_registry'), fp_cjunc_rows=pe.get('fp_cjunc_rows')), channel='ionic'))
+    man_muts = {
+        'face_alpha fp 에 plan_electronic 칸 없음': _m(fa={k: v for k, v in fafp.items() if k != 'plan_electronic'}),
+        '접합 fp 에 plan_rows 칸 없음': _m(cj={k: v for k, v in cjfp.items() if k != 'plan_rows'}),
+        '접합 fp 에 registry 칸 없음': _m(cj={k: v for k, v in cjfp.items() if k != 'registry'}),
+        '접합 fp sid hex 아님': _m(cj=dict(cjfp, sid='s' * 32)),
+        '접합 fp sid 다른 hex': _m(cj=dict(cjfp, sid='a' * 32)),
+    }
+    for nm, mm in man_muts.items():
+        chk(f'T21j 매니페스트 칸 [{nm}] → 거부', *_rej(p, man=mm))
+    chk('T21j 접합 런 매니페스트 registry None + 증서도 None (둘이 같아도) → 거부 (접합 런의 주 전자 솔브는 계획이 있다 · 사전 공격 리뷰)',
+        *_rej(p, dict(pe, fp_cjunc_registry=None), man=_m(cj=dict(cjfp, registry=None))))
+    #  ── 정본 격자 칸 — 조합 런 = 접합 원장 sid (솔버 입구가 실제 격자와 대조) · off 격자 sid_off 와의 일치 = ca_ext 계약 (cjunc_block_problem) 몫 ──
+    ok, why = _rej(p, man=_m(fa=dict(fafp, sid_off='b' * 32)))
+    chk('T21k 정본 칸 — 조합 런에서 sid_off 만 틀림 (접합 원장 sid 맞음) → 증서 결합은 받는다 (매니페스트 자기 일관 = ca_ext 계약 · 사슬 멈춤 '
+        '코드 CA_EXT_RECORD 그대로)', not ok and _ccp(pe, p['s3']['sigma_e_eff_S_cm'], _m(fa=dict(fafp, sid_off='b' * 32))) is None, why)
+    pfm = json.loads(json.dumps(pf1['s3']['manifest']))
+    pfm['ca_ext']['ptfe_face']['evidence']['fp']['sid_off'] = 'c' * 32
+    chk('T21k 정본 칸 — face_alpha 만 런 (접합 없음) 은 sid_off 가 정본 · 다른 hex → 거부', *_rej(pf1, man=pfm))
+    #  ── API — 매니페스트 없이 부르면 (두 인자) 결합을 건너뛰는 길이 없다 ──
+    try:
+        RC.conv_cert_problem(ze, 0.0)
+        api = '두 인자 호출이 통과 (결합 생략 길)'
+    except TypeError as e:
+        api = f'TypeError: {e}'
+    chk('T21l API — conv_cert_problem(증서, σ) (매니페스트 없이) = TypeError (조용히 결합을 건너뛰는 기본값 없음)', api.startswith('TypeError'),
+        api)
+    #  ── 증서 결합 칸 = 솔브 입력의 정본 지문 (같은 함수 · 계획 객체의 칸) ──
+    pe_rec = {k: pe.get(k) for k in _BIND_NEW}
+    want = {'bind_version': getattr(CC, 'BIND_VERSION', '?'), 'fp_sid': S3._grid_fp(p['sid']),
+            'fp_sig': S3._grid_fp(np.asarray(_bsig()[0], np.float64)), 'fp_face_plan': p['fa']['plans']['electronic']['fp_plan'],
+            'fp_cjunc_registry': p['cj']['plan']['registry']['fp']['registry'], 'fp_cjunc_rows': p['cj']['plan']['fp_rows']}
+    chk('T21m 양의 증서 결합 칸 = 솔브 입력 지문 (step3_sigma._grid_fp(sid) · σ 표 · face_alpha 계획 fp_plan · 접합 원장 · 계획 행)',
+        pe_rec == want, (pe_rec, want))
+    ze_rec = {k: ze.get(k) for k in _BIND_NEW}
+    want_z = {'bind_version': getattr(CC, 'BIND_VERSION', '?'), 'fp_sid': S3._grid_fp(z['sid']),
+              'fp_sig': S3._grid_fp(np.asarray(_bsig()[0], np.float64)), 'fp_face_plan': z['fa']['plans']['electronic']['fp_plan'],
+              'fp_cjunc_registry': z['cj']['plan']['registry']['fp']['registry'], 'fp_cjunc_rows': z['cj']['plan']['fp_rows']}
+    chk('T21m 조기 반환 영값 증서 결합 칸 = 같은 지문 (계획 지문까지)', ze_rec == want_z, (ze_rec, want_z))
+    zi_rec = {k: zn['s3']['ion_conv_cert'].get(k) for k in _BIND_NEW}
+    want_i = {'bind_version': getattr(CC, 'BIND_VERSION', '?'), 'fp_sid': S3._grid_fp(zn['sid']),
+              'fp_sig': S3._grid_fp(np.asarray(_bsig()[1], np.float64)), 'fp_face_plan': zn['fa']['plans']['ionic']['fp_plan'],
+              'fp_cjunc_registry': None, 'fp_cjunc_rows': None}
+    chk('T21m 이온 영값 증서 결합 칸 = 이온 σ 표 · 이온 face_alpha 계획 · 접합 칸 None', zi_rec == want_i, (zi_rec, want_i))
+
+
+@case('T22 payload 끝-끝 결합 — 실제 생산 payload (face_alpha + 접합 + rtol · LEAN 3) 의 매니페스트 ↔ 증서 · 정당한 런 = next_gen_cert_ok '
+      '통과 · 같은 σ 의 다른 계획 (미등록 면 법칙) 런 증서를 붙이면 거부')
+def t22():
+    sys.path.insert(0, SCRIPTS)
+    import test_ca_ext_b6 as B6
+    B6.ARGS = argparse.Namespace(skip_payload=False, old_scripts='', only='')
+    td = tempfile.mkdtemp(prefix='tc_bind_')
+    try:
+        d = os.path.join(td, 'w')
+        os.makedirs(d)
+        B6.make_fixture(d)
+        base = ['--ptfe-stamp', 'face_alpha'] + B6.LEAN3 + ['--step3-rtol', '1e-12']
+        rc1, log1, p1 = quiet(B6.run_payload, d, base + B6.CJ, out='bind_cut.json')
+        rc2, log2, p2 = quiet(B6.run_payload, d, base + B6.cj_with(unreg_law='fused'), out='bind_fused.json')
+        s1, s2 = B6.s3_of(p1), B6.s3_of(p2)
+        chk('T22a payload 두 런 rc 0 · 전자 · 이온 증서 있음', rc1 == 0 and rc2 == 0 and isinstance(s1.get('conv_cert'), dict)
+            and isinstance(s1.get('ion_conv_cert'), dict) and isinstance(s2.get('conv_cert'), dict),
+            (rc1, rc2, (log1 or '')[-300:], (log2 or '')[-300:]))
+        chk('T22b 정당한 런 (자기 증서 · 자기 매니페스트) → next_gen_cert_ok (True, None) — 두 런',
+            RC.next_gen_cert_ok(s1) == (True, None) and RC.next_gen_cert_ok(s2) == (True, None),
+            (RC.next_gen_cert_ok(s1), RC.next_gen_cert_ok(s2)))
+        m1 = s1.get('manifest') or {}
+        cjf = (((m1.get('ca_ext') or {}).get('cjunc') or {}).get('evidence') or {}).get('fp') or {}
+        faf = (((m1.get('ca_ext') or {}).get('ptfe_face') or {}).get('evidence') or {}).get('fp') or {}
+        c1, i1 = s1.get('conv_cert') or {}, s1.get('ion_conv_cert') or {}
+        chk('T22c 생산 증서 결합 칸 = 생산 매니페스트 지문 (전자: 접합 sid · registry · plan_rows · sid_off · plan_electronic / 이온: '
+            'plan_ionic · 접합 칸 None)',
+            c1.get('fp_sid') == cjf.get('sid') == faf.get('sid_off') and c1.get('fp_cjunc_registry') == cjf.get('registry')
+            and c1.get('fp_cjunc_rows') == cjf.get('plan_rows') and c1.get('fp_face_plan') == faf.get('plan_electronic')
+            and i1.get('fp_sid') == cjf.get('sid') and i1.get('fp_face_plan') == faf.get('plan_ionic')
+            and i1.get('fp_cjunc_registry') is None and i1.get('fp_cjunc_rows') is None,
+            ({k: c1.get(k) for k in _BIND_NEW}, cjf, faf))
+        se1, se2 = s1.get('sigma_e_eff_S_cm'), s2.get('sigma_e_eff_S_cm')
+        print(f'    (σ_e cut {se1!r} · fused {se2!r} · 같음 = {se1 == se2})')
+        ok, why = RC.next_gen_cert_ok(dict(s1, conv_cert=s2.get('conv_cert')))
+        chk('T22d fused 런의 전자 증서를 cut 런에 붙임 → next_gen_cert_ok 거부 (σ 같아도 · 접합 계획 지문)', not ok and se1 == se2, (ok, why))
+    finally:
+        shutil.rmtree(td, ignore_errors=True)
+
+
+@case('T23 끈 경로 · 기반 (a76f59d0d) 대조 — 증서 끔: 접합 · face_alpha 솔브 결과 전체 같음 · 증서 켬: 기반 증서 칸 값 그대로 · 새 칸 = 결합 '
+      '칸뿐 (양의 해 여섯 · 조기 반환 넷)')
+def t23():
+    S3b = quiet(_load_base, 'scripts/step3_sigma.py', 'step3_sigma_base_bind', BIND_BASE)
+    CCb = quiet(_load_base, 'scripts/step3_conv_cert.py', 'step3_conv_cert_base_bind', BIND_BASE)
+    new_pos, new_early = set(_BIND_NEW), set(_BIND_NEW) - {'fp_sid', 'fp_sig'}
+    for nm, cfg, bed in (('Z cjfa · 조기 반환 영값', 'cjfa', 'Z'), ('P cjfa · 양', 'cjfa', 'P'), ('P fa · 양', 'fa', 'P'),
+                         ('P cj · 양', 'cj', 'P')):
+        outs_off, outs_on = [], []
+        for mod, ccm in ((S3b, CCb), (S3, CC)):
+            saved = sys.modules.get('step3_conv_cert')
+            sys.modules['step3_conv_cert'] = ccm
+            g = globals()
+            old_s3 = g['S3']
+            g['S3'] = mod
+            try:
+                outs_off.append(_brun(bed, cfg, ptfe=PT1 if 'fa' in cfg else None, cert=False)['r_e'])
+                outs_on.append(_brun(bed, cfg, ptfe=PT1 if 'fa' in cfg else None)['r_e'])
+            finally:
+                g['S3'] = old_s3
+                if saved is None:
+                    sys.modules.pop('step3_conv_cert', None)
+                else:
+                    sys.modules['step3_conv_cert'] = saved
+        r_off_b, r_off_n = outs_off
+        chk(f'T23a [{nm}] 증서 끔 — 기반 ↔ 새 전자 솔브 결과 (키 · 값 · 배열 바이트) 같음 · 증서 칸 없음',
+            _same(r_off_b, r_off_n) and 'conv_cert' not in r_off_n, sorted(set(r_off_b) ^ set(r_off_n)))
+        cb, cn = outs_on[0].get('conv_cert') or {}, outs_on[1].get('conv_cert') or {}
+        rest = [k for k in outs_on[0] if k != 'conv_cert' and not _same(outs_on[0][k], outs_on[1].get(k))]
+        diff = [k for k in cb if not _same(cb[k], cn.get(k))]
+        added = set(cn) - set(cb)
+        want = new_early if cn.get('zero_source') == 'early_return' else new_pos
+        chk(f'T23b [{nm}] 증서 켬 — 솔브 결과 (증서 밖) 같음 · 기반 증서의 모든 칸 값 같음 · 더해진 칸 = 결합 칸 {sorted(want)} 뿐',
+            not rest and not diff and added == want, (rest, diff, sorted(added)))
+
+
 # ═════════════════════════ T18 변이 시험 (소스 몇 글자 · 되돌린다) ═════════════════════════
 #: (이름, 모듈, ((바꿀 원문 (정확히 한 번), 바꿀 글), …), 돌릴 시험, 잡아야 할 시험 이름 접두)
 MUTANTS = (
@@ -1299,6 +1663,44 @@ MUTANTS = (
      ('T15b',)),
     ('계약이 부동소수 보수 규칙을 봉인하지 않음', 'run_contract',
      (("                    ('target_fp', _cc.TARGET_FP_RULE)):", '                    ):'),), ('t13',), ('T13b 거부 [부동소수 보수 규칙',)),
+    #  ★ 10-21 (사전 리뷰 PRE-impl-07) — 증서 ↔ 런 결합의 자리 (계약 · 솔버 · 증서 기록)
+    ('계약이 결합을 안 본다 (증서 안 검사만)', 'run_contract',
+     (('    return why or cert_binding_problem(cert, man, channel)', '    return why'),), ('t21',), ('T21b', 'T21c', 'T21e')),
+    ('격자 지문 = 모양만 (같음 대조 뺌)', 'run_contract', (("    if cert.get('fp_sid') != want_sid:", '    if False:'),), ('t21',),
+     ('T21b', 'T21c', 'T21d')),
+    ('face_alpha 계획 지문 대조 뺌', 'run_contract', (("    if cert.get('fp_face_plan') != want_fa:", '    if False:'),), ('t21',),
+     ('T21g',)),
+    ('접합 계획 지문 대조 뺌', 'run_contract',
+     (("    if (cert.get('fp_cjunc_registry'), cert.get('fp_cjunc_rows')) != want_cj:", '    if False:'),), ('t21',), ('T21f',)),
+    ('이온 증서를 전자 채널로 대조', 'run_contract',
+     (("s.get('sigma_ion_eff_S_cm'), man, 'ionic')", "s.get('sigma_ion_eff_S_cm'), man, 'electronic')"),), ('t21',), ('T21a', 'T21g')),
+    ('접합 지문을 채널 안 가리고 요구', 'run_contract',
+     (("    if cjf is not None and channel == 'electronic':", '    if cjf is not None:'),), ('t21',), ('T21a',)),
+    ('결합 판 이름 봉인 뺌', 'run_contract', (("    if cert.get('bind_version') != _cc.BIND_VERSION:", '    if False:'),), ('t21',),
+     ('T21j 증서 칸 [결합 판',)),
+    ('정본 격자 칸 = off 격자 먼저 (접합 원장 뒤)', 'run_contract',
+     (("    if cjf is not None:\n        want_sid, src = cjf.get('sid'), 'ca_ext.cjunc.evidence.fp.sid'\n    elif faf is not None:\n"
+       "        want_sid, src = faf.get('sid_off'), 'ca_ext.ptfe_face.evidence.fp.sid_off'\n",
+       "    if faf is not None:\n        want_sid, src = faf.get('sid_off'), 'ca_ext.ptfe_face.evidence.fp.sid_off'\n    elif cjf is not None:\n"
+       "        want_sid, src = cjf.get('sid'), 'ca_ext.cjunc.evidence.fp.sid'\n"),), ('t21',), ('T21k',)),
+    ('솔버가 격자 지문 자리에 σ 표 지문', 'step3_sigma',
+     (("        return {'fp_sid': _grid_fp(sid), ", "        return {'fp_sid': _grid_fp(np.asarray(sigma_of_sid, np.float64)), "),),
+     ('t21',), ('T21a', 'T21m')),
+    ('솔버가 face_alpha 계획 지문을 안 싣는다', 'step3_sigma',
+     (("'fp_face_plan': (_fap['fp_plan'] if _fap is not None else None),", "'fp_face_plan': None,"),), ('t21',), ('T21a', 'T21m')),
+    ('솔버가 접합 계획 행 지문을 안 싣는다', 'step3_sigma',
+     (("'fp_cjunc_rows': (_cjp['fp_rows'] if _cjp is not None else None)}", "'fp_cjunc_rows': None}"),), ('t21',),
+     ('T21a', 'T21m')),
+    ('조기 반환 증서에 계획 지문 안 실음 (격자 둘만 · 옛 꼴)', 'step3_sigma',
+     (("zero_graph=_zero_graph(d.get('reason')), **_cert_bind_kw())",
+       "zero_graph=_zero_graph(d.get('reason')), fp_sid=_grid_fp(sid),\n"
+       "                                               fp_sig=_grid_fp(np.asarray(sigma_of_sid, np.float64)))"),), ('t21',),
+     ('T21a', 'T21m')),
+    ('양의 해 증서에 결합 칸 안 실음 (옛 꼴)', 'step3_sigma', (('        _cert.update(_cc.bind_record(**_cert_bind_kw()))', '        pass'),),
+     ('t21',), ('T21a', 'T21m')),
+    ('조기 반환 기록이 계획 지문을 버림', 'step3_conv_cert',
+     (('fp_face_plan=fp_face_plan,\n                           fp_cjunc_registry=fp_cjunc_registry, fp_cjunc_rows=fp_cjunc_rows))',
+       'fp_face_plan=None,\n                           fp_cjunc_registry=None, fp_cjunc_rows=None))'),), ('t21',), ('T21a', 'T21m')),
 )
 
 
@@ -1337,8 +1739,8 @@ def _muted(fns, run):
 @case('T18 변이 시험 — 증서 · 계약 구현 몇 글자를 틀리게 하면 시험이 옳은 이유로 실패한다 (변이 표 · 원 모듈로 되돌림 · 기준선 통과 단언만 '
       '센다 · 빠른 판 = 변이 자리 존재만)')
 def t18():
-    global CC, RC
-    fns = {'t1': t1, 't3': t3, 't6': t6, 't7': t7, 't13': t13, 't15': t15, 't16': t16, 't19': t19}
+    global CC, RC, S3
+    fns = {'t1': t1, 't3': t3, 't6': t6, 't7': t7, 't13': t13, 't15': t15, 't16': t16, 't19': t19, 't21': t21}
     srcs = {}
     for mod in sorted({m[1] for m in MUTANTS}):
         with open(os.path.join(SCRIPTS, mod + '.py'), encoding='utf-8') as fh:
@@ -1360,7 +1762,7 @@ def t18():
         (base_fail[:4], base_err))
     table = []
     for nm, mod, pairs, run, want in MUTANTS:
-        orig_cc, orig_rc = CC, RC
+        orig_cc, orig_rc, orig_s3 = CC, RC, S3
         saved = sys.modules.get(mod)
         try:
             m = _mutant(mod, pairs)
@@ -1370,12 +1772,14 @@ def t18():
         sys.modules[mod] = m
         if mod == 'step3_conv_cert':
             CC = m
+        elif mod == 'step3_sigma':
+            S3 = m
         else:
             RC = m
         try:
             res, err = _muted(fns, run)
         finally:
-            CC, RC = orig_cc, orig_rc
+            CC, RC, S3 = orig_cc, orig_rc, orig_s3
             if saved is None:
                 sys.modules.pop(mod, None)
             else:
@@ -1388,9 +1792,9 @@ def t18():
     print('    변이 표 (이름 · 돌린 단언 · 실패 · 옳은 이유 (기준선 통과 → 변이 실패) 수 · 예):')
     for row in table:
         print(f'      {row[0]:40s} {row[1]:4d} {row[2]:4d} {row[3]:4d}  {row[4]}')
-    chk('T18 되돌림 — 변이 뒤 시험이 쓰는 모듈 = 원 모듈 (sys.modules · 전역 CC · RC · 변이 표지 없음)',
-        CC is sys.modules.get('step3_conv_cert') and RC is sys.modules.get('run_contract')
-        and '__mutant__' not in CC.__dict__ and '__mutant__' not in RC.__dict__, (CC, RC))
+    chk('T18 되돌림 — 변이 뒤 시험이 쓰는 모듈 = 원 모듈 (sys.modules · 전역 CC · RC · S3 · 변이 표지 없음)',
+        CC is sys.modules.get('step3_conv_cert') and RC is sys.modules.get('run_contract') and S3 is sys.modules.get('step3_sigma')
+        and '__mutant__' not in CC.__dict__ and '__mutant__' not in RC.__dict__ and '__mutant__' not in S3.__dict__, (CC, RC, S3))
 
 
 def main():

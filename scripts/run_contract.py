@@ -129,6 +129,11 @@ CLI_ACCOUNTING = {
     #  ★ Z3 (10-20 · 등록 R §3-1) — 극한 런 표지 (inf 바닥 · zero 천장 · `--step3-cjunc-rj` 과 짝 · 사다리 진단)
     '--step3-cjunc-rj-limit': ('protocol_ext', ('ca_ext.cjunc.rj_limit',)),
     '--step3-sdcp-mod-c': ('protocol_ext', ('ca_ext.sdcp_mod.c',)),
+    #  ★ 2026-10-21 (D · 등록 R §5-6 SV 행 · Codex RCA-06 · 1저자 Q4 (가)) — SV 반사실 대조 (같은 침대 · 같은 R_j 에서 SV 융합 면을 끊은
+    #    판의 단자 G 비 · 같은 런 안 추가 풀이).  주 σ_e 해를 바꾸지 않는다 (노브 켬 = 주 결과 · 출처 비트 같음 · 시험 SP6) → 규약 id 밖
+    #    (`protocol_ext` 아님 · p3ca id 그대로) · 추가 솔브 = `solve` · 요청 = 증거 `ca_ext.cjunc.evidence.sv_counterfactual_request` ·
+    #    영수증 선택 칸 `sv_counterfactual` (대조 = `_receipt_ext_problem`) · 문턱 = 사슬 계획 (등록 R §5-6 · producer 는 비만 낸다).
+    '--step3-cjunc-sv-cf': ('solve', None),
     #  ★ `ptfe_zero_dof` = (스탬프 ON) ∧ (σ_PTFE == 0) — 두 옵션이 함께 정한다.
     '--ptfe-stamp': ('protocol', ('ptfe_stamp', 'ptfe_zero_dof')),
     '--sigma-ptfe': ('protocol', ('sigma_ptfe_S_cm', 'ptfe_zero_dof')),
@@ -311,7 +316,9 @@ RECEIPT_AXES_NODIGEST = ('field_requested', 'sigma_am_s_S_cm', 'sigma_sdcp_S_cm'
 #  ★ 2026-10-20 (Rint ② Z1) — VGCF bulk σ (`SIGMA_FIBRE_BULK`) 와 그 식 이름 · 같은 규칙 (있을 때만 digest · 매니페스트 기록과 대조).
 RECEIPT_OPTIONAL = ('ca_ext_request', 'step3_rtol', 'sigma_vgcf_bulk_S_cm', 'sigma_vgcf_rule',
                     #  ★ Z3 (10-20) — 러너 팔 고르기 `ARM_LIST` (있을 때만 · 고른 팔 번호 = origin 일정의 자리 · 진단 런)
-                    'arm_list')
+                    'arm_list',
+                    #  ★ 10-21 (D · 등록 R §5-6) — SV 반사실 대조 노브 `CJUNC_SV_CF` (있을 때만 = True · 끔 = 칸 없음 = 옛 digest)
+                    'sv_counterfactual')
 
 
 def expected_origins_for(vox):
@@ -431,6 +438,15 @@ def _receipt_ext_problem(rec, man):
                 if not _same_num(prot[k], v):
                     return (f'RCPT|ca_ext.{sub}.{k}|differ| 러너 선언 {v!r} ≠ 결과 {prot[k]!r} — 이 팔은 러너가 의도한 '
                             f'접합 규약으로 돌지 않았다')
+    #  ★ 2026-10-21 (D · 등록 R §5-6 SV 행) — SV 반사실 요청: 영수증 `sv_counterfactual` True ⟺ 증거 `sv_counterfactual_request` 있음
+    #    (요청 없는 기록 · 기록 없는 요청 = 지금 요청한 런의 것이 아니다 · SKIP 캐시 함정 — rtol 과 같은 꼴).
+    _cjev = ((_blk.get('cjunc') or {}).get('evidence') or {}) if isinstance(_blk.get('cjunc'), dict) else {}
+    _sv_r = rec.get('sv_counterfactual')
+    if _sv_r is not None and _sv_r is not True:
+        return f'RCPT|sv_counterfactual|shape| 영수증의 sv_counterfactual = {_sv_r!r} (True 또는 칸 없음)'
+    if (_sv_r is True) != ('sv_counterfactual_request' in _cjev):
+        return (f'RCPT|sv_counterfactual|{"missing" if _sv_r else "unrequested"}| 러너 SV 반사실 요청 {bool(_sv_r)} ↔ 팔의 증거 요청 '
+                f'{"있음" if "sv_counterfactual_request" in _cjev else "없음"} — 지금 요청한 런의 것이 아니다')
     rt = rec.get('step3_rtol')
     _bk = man.get('backend') if isinstance(man.get('backend'), dict) else {}
     mrt = _bk.get('rtol')
@@ -439,7 +455,10 @@ def _receipt_ext_problem(rec, man):
             return (f'RCPT|step3_rtol|unrequested| 러너는 정지 rtol 을 정하지 않았는데 팔의 backend.rtol = {mrt!r} '
                     f'(수렴 증서 세대가 다른 팔)')
     elif mrt is None:
-        return f'RCPT|step3_rtol|missing| 러너는 rtol {rt!r} 로 돌라고 했는데 팔에 backend.rtol 이 없다 (증서 없는 옛 꼴)'
+        #  ★ 2026-10-21 (D · 등록 R §5-0) — 솔브가 하나도 안 돈 팔 (조기 반환 = 영값 위상 · 단락 · 판 접촉 없음) 은 rtol 을 결합할 CG 가 없다
+        #    (`_solve_cg` 만 backend.rtol 을 적는다) → 그 팔만 받는다.  상태 자체는 증서 (`next_gen_state`) 가 따로 본다.
+        if not _no_solve_ran(man):
+            return f'RCPT|step3_rtol|missing| 러너는 rtol {rt!r} 로 돌라고 했는데 팔에 backend.rtol 이 없다 (증서 없는 옛 꼴)'
     elif not _same_num(mrt, rt):
         return f'RCPT|step3_rtol|differ| 러너 {rt!r} ≠ 결과 {mrt!r}'
     #  ★ 2026-10-20 (Rint ② Z1) — VGCF bulk σ · 식 이름 (`SIGMA_FIBRE_BULK` ↔ payload `--sigma-vgcf-bulk` 기록).  요청 없는 기록도 거부 —
@@ -455,6 +474,21 @@ def _receipt_ext_problem(rec, man):
         elif not _same_num(mv, rv):
             return f'RCPT|{k}|differ| 러너 {rv!r} ≠ 결과 {mv!r}'
     return None
+
+
+#: ★ 2026-10-21 (D) — 솔브가 돈 component 상태 (`_s3mark` 어휘) — 이 중 하나라도 있으면 CG 가 돌았다 (backend 기록이 있어야 한다)
+_SOLVED_STATUSES = ('complete', 'unconverged')
+
+
+def _no_solve_ran(man):
+    """매니페스트의 component 가 하나도 풀리지 않았는가 (전자 = not_solvable · 나머지 = 끔 · 계획 밖) — 조기 반환 팔.
+    component 기록이 없거나 모양이 틀리면 False (모르는 것을 '안 돌았다' 로 읽지 않는다)."""
+    comps = man.get('components') if isinstance(man, dict) else None
+    if not isinstance(comps, dict) or not isinstance(comps.get('electronic'), dict):
+        return False
+    if comps['electronic'].get('status') != 'not_solvable':
+        return False
+    return not any(isinstance(v, dict) and v.get('status') in _SOLVED_STATUSES for v in comps.values())
 
 
 def _canon_num(v):
@@ -710,6 +744,20 @@ def ca_ext_record_ok(man):
             return False, f'CAEXT|{k}|unverifiable| {type(e).__name__}: {e}'
         if prob:
             return False, f'CAEXT|{k}| {prob}'
+    #  ★ 2026-10-21 (D · 등록 R §5-6 SV 행) — SV 반사실 요청 ↔ 기록 (D 모듈 `ca_ext_svcf` · 접합 블록 검증기 뒤 · 끊는 면의 정의 무관 ·
+    #    요청 없음 = 칸 없음 = 검사 없음 = 옛 판정 그대로)
+    _cjb = m['ca_ext'].get('cjunc')
+    if isinstance(_cjb, dict) and isinstance(_cjb.get('evidence'), dict):
+        try:
+            import ca_ext_svcf as _sv
+            _ev = _cjb['evidence']
+            _ms = ((_ev.get('receipts') or {}).get('electronic_main') or {}).get('status') \
+                if isinstance(_ev.get('receipts'), dict) else None
+            prob = _sv.sv_cf_problem(_ev, _ms in ('applied', 'absent_geometry'))
+        except Exception as e:                                   # noqa: BLE001 — 확인 못 한 것을 통과시키지 않는다
+            return False, f'CAEXT|cjunc|unverifiable| {type(e).__name__}: {e}'
+        if prob:
+            return False, f'CAEXT|cjunc| {prob}'
     return True, None
 
 
@@ -787,13 +835,17 @@ def _zero_cert_problem(cert, sigma, _cc):
     return None
 
 
-def conv_cert_problem(cert, sigma):
+def conv_cert_problem(cert, sigma, man, channel='electronic'):
     """★ 2026-10-20 (Rint ② B6 · 설계 v1 §6 · N15) — 다음 세대 판정 해의 **수렴 증서** → 문제 | None.
     플래그를 믿지 않는다 — 기록된 수 (rtol · 불균형 · 이어 풀기 Δσ · info) 로 ⓐ ⓑ ⓒ 를 다시 판정 · 봉인값 = 이 코드의 상수
     (`step3_conv_cert`) · 증서 σ = 결과 σ (증서 ↔ 결과 결합 · 상대 1e-9).  칸 없음 = `--step3-rtol` 없이 돈 런 = 미게시.
     ★ 2026-10-21 (Codex RCA-07 · RCA-13 · 1저자 Q5 (가) · Q7 일부) — 증서 판 v2: **상태 먼저 분기** — VALID_ZERO_TOPOLOGY (σ 0 정상 ·
-    `_zero_cert_problem`) · POSITIVE_SOLVED (아래 ⓐ ⓑ ⓒ + ⓓ 목표량 증서를 기록된 하한 · 상한 · 게시 판 전류로 **같은 판정 함수**
-    `step3_conv_cert.target_judge` 에 다시 넣는다 · 게시 판 전류 × scale = 증서 σ) · 그 밖 상태 (단락 · 증서 못 세움 · 모름) = 미게시."""
+    `_zero_cert_problem`) · POSITIVE_SOLVED (`_positive_cert_problem` — ⓐ ⓑ ⓒ + ⓓ 목표량 증서를 기록된 하한 · 상한 · 게시 판 전류로
+    **같은 판정 함수** `step3_conv_cert.target_judge` 에 다시 넣는다 · 게시 판 전류 × scale = 증서 σ) · 그 밖 상태 (단락 · 증서 못 세움 ·
+    모름) = 미게시.
+    ★ 2026-10-21 (사전 리뷰 PRE-impl-07 · 1저자 "권고대로 해") — 안 검사를 다 지난 증서 (영값 · 양의 해) 를 그 런의 매니페스트 `man` ·
+    채널 `channel` ('electronic' = 주 전자 솔브 · 'ionic') 의 정본 지문 칸과 대조한다 (`cert_binding_problem`) — 다른 침대 · 다른 계획 ·
+    다른 채널의 증서 = 거부.  `man` 은 필수 (기본값 없음 — 결합을 조용히 건너뛰는 호출 길이 없다)."""
     import step3_conv_cert as _cc
     if not isinstance(cert, dict):
         return 'CERT|absent| 수렴 증서 칸이 없다 (--step3-rtol 없이 돈 런 · 다음 세대 판정 = 미게시 팔)'
@@ -801,10 +853,17 @@ def conv_cert_problem(cert, sigma):
         return f'CERT|version| {cert.get("version")!r} ≠ {_cc.CERT_VERSION!r}'
     st = cert.get('status')
     if st == _cc.STATUS_ZERO:
-        return _zero_cert_problem(cert, sigma, _cc)
-    if st != _cc.STATUS_POSITIVE:
+        why = _zero_cert_problem(cert, sigma, _cc)
+    elif st == _cc.STATUS_POSITIVE:
+        why = _positive_cert_problem(cert, sigma, _cc)
+    else:
         return (f'CERT|status| {st!r} — 게시 가능한 상태는 {_cc.STATUS_POSITIVE} · {_cc.STATUS_ZERO} 뿐 '
                 f'(단락 · 증서 못 세움 · 모르는 상태 = 미게시)')
+    return why or cert_binding_problem(cert, man, channel)
+
+
+def _positive_cert_problem(cert, sigma, _cc):
+    """POSITIVE_SOLVED 증서의 안 검사 (ⓐ ⓑ ⓒ ⓓ · 봉인 · σ 결합) → 문제 | None (★ 10-21 PRE-impl-07 — `conv_cert_problem` 본문을 옮김 · 글 그대로)."""
     for k in ('ok', 'pass_a', 'pass_b', 'pass_c', 'pass_d'):
         if type(cert.get(k)) is not bool:                        # noqa: E721
             return f'CERT|type| {k} = {cert.get(k)!r} (bool 이어야 한다)'
@@ -847,24 +906,214 @@ def conv_cert_problem(cert, sigma):
     return None
 
 
+#: ★ 2026-10-21 (사전 리뷰 PRE-impl-07) — 증서 ↔ 런 결합의 채널 (주 전자 솔브 `conv_cert` · 이온 솔브 `ion_conv_cert`)
+CERT_BIND_CHANNELS = ('electronic', 'ionic')
+
+
+def _hex32(v):
+    return isinstance(v, str) and len(v) == 32 and all(ch in '0123456789abcdef' for ch in v)
+
+
+def cert_binding_problem(cert, man, channel):
+    """★ 2026-10-21 (사전 리뷰 PRE-impl-07 · 1저자 "권고대로 해") — 수렴 증서 ↔ 그 런 결합 → 문제 | None.
+    옛 판: 영값 증서의 격자 지문 (`fp_sid` · `fp_sig`) 은 hex32 형식만 보고 σ 결합 (0 = 0) 은 아무것도 묶지 않아 **다른 침대의 영값 증서**를
+    받았다 · 양의 해 증서는 지문 칸이 없어 σ 결합 (상대 1e-9) 뿐 — 같은 σ 의 다른 침대 · 다른 계획 증서를 받았다.
+    증서 결합 칸 (`step3_conv_cert.bind_record` · 판 `BIND_VERSION` · 솔버가 그 솔브의 입력에서 낸다) ↔ 매니페스트의 **정본** 지문 칸:
+      격자  `fp_sid` = 접합 원장 `ca_ext.cjunc.evidence.fp.sid` (솔버 입구 `cjunc_require_quantitative` 가 실제 sid 와 대조한 값) ·
+            접합이 없으면 face_alpha off 격자 `ca_ext.ptfe_face.evidence.fp.sid_off` · 둘 다 없으면 거부 (묶을 칸이 없다).
+            조합 런의 두 칸 일치 = `ca_ext_cjunc.cjunc_block_problem` 의 몫 — 여기서 다시 판정하지 않는다 (매니페스트 자기 일관 = ca_ext 계약 ·
+            사슬 `rint_r_chain.read_run` 의 멈춤 코드 CA_EXT_RECORD · SID_GRID 를 그대로 둔다).
+      계획  face_alpha = `plan_<채널>` (칸 필수 · 값 None = 그 채널 계획 없음 · 계획 지문이 σ 표 · pid · 캡슐 · 행 지문을 품는다) ·
+            접합 = 전자 채널만 (`registry` · `plan_rows` · 이온 증서는 둘 다 None — 접합 = 주 전자 솔브만).
+    ⚠ 한정어 — σ 표 지문 `fp_sig` 는 형식 (hex32) 만 · face_alpha 런은 계획 지문으로 묶이지만 **접합만 (off · centerline) 런의 σ 표는
+      매니페스트와 묶이지 않는다** (매니페스트 σ 칸에서 표를 다시 만드는 길 = 표 인자 묶음의 사본 → 이번에 안 함) · 계 (행렬 L · b) 지문은
+      없다 (결합 = 솔브 입력까지 · 증서 수 ↔ 게시 σ 는 σ · I_bot × scale 결합)."""
+    import step3_conv_cert as _cc
+    if channel not in CERT_BIND_CHANNELS:
+        return f'CERT|bind| 채널 {channel!r} ∉ {CERT_BIND_CHANNELS}'
+    if not isinstance(cert, dict):
+        return f'CERT|bind| 증서가 dict 가 아니다 ({type(cert).__name__})'
+    if not isinstance(man, dict):
+        return f'CERT|bind| 매니페스트가 dict 가 아니다 ({type(man).__name__}) — 증서를 이 런에 묶을 수 없다'
+    if cert.get('bind_version') != _cc.BIND_VERSION:
+        return f'CERT|bind| 결합 판 {cert.get("bind_version")!r} ≠ 이 코드의 {_cc.BIND_VERSION!r} (결합 칸 없는 옛 증서 · 다른 판)'
+    _miss = [k for k in _cc.BIND_KEYS if k not in cert]
+    if _miss:
+        return f'CERT|bind| 증서 결합 칸 {_miss} 이 없다'
+    ca = man.get('ca_ext') if isinstance(man.get('ca_ext'), dict) else {}
+
+    def _fp_of(sub):
+        if sub not in ca:
+            return None
+        ev = ca[sub].get('evidence') if isinstance(ca[sub], dict) else None
+        fp = ev.get('fp') if isinstance(ev, dict) else None
+        return fp if isinstance(fp, dict) else {}
+    cjf, faf = _fp_of('cjunc'), _fp_of('ptfe_face')
+    if cjf is not None:
+        want_sid, src = cjf.get('sid'), 'ca_ext.cjunc.evidence.fp.sid'
+    elif faf is not None:
+        want_sid, src = faf.get('sid_off'), 'ca_ext.ptfe_face.evidence.fp.sid_off'
+    else:
+        return ('CERT|bind| 매니페스트에 격자 지문 칸이 없다 (ca_ext.cjunc · ca_ext.ptfe_face 의 evidence.fp) — 증서를 이 런에 묶을 수 '
+                '없다')
+    if not _hex32(want_sid):
+        return f'CERT|bind| 매니페스트 {src} = {want_sid!r} (격자 지문 소문자 hex 32)'
+    for k in ('fp_sid', 'fp_sig'):
+        if not _hex32(cert.get(k)):
+            return f'CERT|bind| 증서 {k} = {cert.get(k)!r} (격자 지문 소문자 hex 32 — `step3_sigma._grid_fp`)'
+    if cert.get('fp_sid') != want_sid:
+        return f'CERT|bind| 증서 격자 지문 {cert.get("fp_sid")} ≠ 매니페스트 {src} {want_sid} — 다른 침대 · 다른 격자의 증서'
+    want_fa = None
+    if faf is not None:
+        _k = f'plan_{channel}'
+        if _k not in faf:
+            return f'CERT|bind| 매니페스트 ca_ext.ptfe_face.evidence.fp 에 {_k} 칸이 없다 (값 None = 그 채널 계획 없음)'
+        want_fa = faf[_k]
+    if cert.get('fp_face_plan') != want_fa:
+        return (f'CERT|bind| 증서 face_alpha 계획 지문 {cert.get("fp_face_plan")!r} ≠ 매니페스트 {channel} 계획 지문 {want_fa!r} — '
+                f'다른 계획 · 다른 채널의 증서')
+    want_cj = (None, None)
+    if cjf is not None and channel == 'electronic':
+        if not (_hex32(cjf.get('registry')) and _hex32(cjf.get('plan_rows'))):
+            return (f'CERT|bind| 매니페스트 ca_ext.cjunc.evidence.fp 의 registry {cjf.get("registry")!r} · plan_rows '
+                    f'{cjf.get("plan_rows")!r} (둘 다 소문자 hex 32 — 접합 런의 주 전자 솔브는 계획이 있다)')
+        want_cj = (cjf['registry'], cjf['plan_rows'])
+    if (cert.get('fp_cjunc_registry'), cert.get('fp_cjunc_rows')) != want_cj:
+        return (f'CERT|bind| 증서 접합 지문 ({cert.get("fp_cjunc_registry")!r}, {cert.get("fp_cjunc_rows")!r}) ≠ 매니페스트 {want_cj!r} '
+                f'(접합 = 주 전자 솔브만) — 다른 계획 · 다른 채널의 증서')
+    _bad = [v for v in (want_fa,) + want_cj if v is not None and not _hex32(v)]
+    if _bad:
+        return f'CERT|bind| 계획 지문 {_bad[0]!r} (소문자 hex 32)'
+    return None
+
+
 def next_gen_cert_ok(step3):
     """★ 2026-10-20 (Rint ② B6) — 다음 세대 (`ca_ext` 블록 · 요청이 있는) 팔의 **게시 조건** → `(ok, why)`.
     전자 증서 (`step3.conv_cert`) 필수 · 이온을 계획해 푼 팔은 이온 증서 (`step3.ion_conv_cert`) 도 · 옛 세대 (p2) = 이 규칙 밖 (통과).
-    판정기가 팔 JSON 마다 부른다 — 실패 = 미게시 팔로 센다 (설계 §6 · 지금 생산 술어는 다음 세대 꼴에서 틀린 σ 를 수렴으로 인증한다)."""
+    판정기가 팔 JSON 마다 부른다 — 실패 = 미게시 팔로 센다 (설계 §6 · 지금 생산 술어는 다음 세대 꼴에서 틀린 σ 를 수렴으로 인증한다).
+    ★ 2026-10-21 (사전 리뷰 PRE-impl-07) — 증서마다 그 런의 매니페스트 · 채널과 결합 (`cert_binding_problem`) · 실패 사유 머리
+    `NEXTGEN|<채널>| CERT|bind|` (결합 실패 = 증서 출처 위반 — 수렴 실패 (`CERT|a|` 등) 와 가를 수 있다)."""
     s = step3 if isinstance(step3, dict) else {}
     man = s.get('manifest') if isinstance(s.get('manifest'), dict) else {}
     if not ('ca_ext' in man or _ca_ext_requested(man)):
         return True, None
-    why = conv_cert_problem(s.get('conv_cert'), s.get('sigma_e_eff_S_cm'))
+    why = conv_cert_problem(s.get('conv_cert'), s.get('sigma_e_eff_S_cm'), man, 'electronic')
     if why:
         return False, f'NEXTGEN|electronic| {why}'
+    why = _ion_cert_problem(s, man)
+    if why:
+        return False, f'NEXTGEN|ionic| {why}'
+    return True, None
+
+
+def _ion_cert_problem(s, man):
+    """이온을 계획해 푼 팔 (`component_plan.ionic` True · 이온 component ≠ not_solvable) 의 **이온 증서** → 문제 | None (그 밖 = None).
+    ★ 2026-10-21 (사전 리뷰 PRE-impl-07 병합) — `next_gen_cert_ok` (양의 해 · 영값) 와 `next_gen_state` 의 단락 가지가 이 함수 하나를 부른다:
+    그 런의 매니페스트 · 채널 ionic 으로 결합 (`conv_cert_problem` → `cert_binding_problem`).  옛 단락 가지 = 매니페스트 없는 두 인자 호출
+    (B 의 결합 뒤 TypeError) · 같은 글을 두 곳에 두면 변이 시험 (`test_step3_target_cert` T18) 의 자리가 둘이 된다."""
     plan = man.get('component_plan') if isinstance(man.get('component_plan'), dict) else {}
     _ist = ((man.get('components') or {}).get('ionic') or {}).get('status') if isinstance(man.get('components'), dict) else None
     if plan.get('ionic') is True and _ist != 'not_solvable':
-        why = conv_cert_problem(s.get('ion_conv_cert'), s.get('sigma_ion_eff_S_cm'))
+        return conv_cert_problem(s.get('ion_conv_cert'), s.get('sigma_ion_eff_S_cm'), man, 'ionic')
+    return None
+
+
+#: ★ 2026-10-21 (D · 등록 R §5-0 · Codex RCA-13 · 1저자 Q7 ③) — 다음 세대 팔의 해 상태 (사슬 · check_arm 이 같은 함수로 본다).
+#   positive = 양의 유한 σ (증서 ⓐ–ⓓ) · zero = VALID_ZERO_TOPOLOGY (σ 0 이 정상 결과) · short = ELECTRODE_SHORT 의 **온전한 기록** (J11 ·
+#   유한 σ 로 위장하지 않는다 → 결과 σ 칸 = None) — 그 밖 = (None, 사유) = 사슬에서 NOT_COMPUTED.
+#   ★ 4판 (10-21 · 1저자 Q1 "권고대로" · 등록 R 4판 §5-0 ①–③ · R4-Q5) — short 는 σ = +∞ 가 **아니다**: 생산자가 게시하지 않는 상태
+#   (`conv_cert_problem` — 게시 가능 = POSITIVE_SOLVED · VALID_ZERO_TOPOLOGY 뿐) 의 기록이라 check_arm 은 그 기록을 받고 (러너가 옮긴다 —
+#   거부하면 러너 rc ≠ 0 → 사슬 RUNNER_RC 로 사유가 흐려진다) · 사슬은 그 런을 NOT_COMPUTED (사유 ELECTRODE_SHORT ·
+#   `rint_r_chain.registration_state`) 로 센다.
+NG_STATES = ('positive', 'zero', 'short')
+
+
+def next_gen_state(step3):
+    """다음 세대 팔 (`ca_ext` 블록 · 요청) → `(상태, None)` | `(None, 사유)` · 옛 세대 = `('legacy', None)` (이 규칙 밖).
+    플래그를 믿지 않는다 — 상태마다 증서 ↔ 결과 ↔ 매니페스트를 다시 결합한다:
+      · positive — `next_gen_cert_ok` (ⓐ–ⓓ · 증서 σ = 결과 σ) · 결과 σ 유한 > 0
+      · zero — 같은 함수 (`_zero_cert_problem` · σ 둘 다 정확히 0) + 출처별: 조기 반환 = 결과 사유 = 증서 사유 (영값 위상 사유) · 전자 component
+        not_solvable / 행렬 그래프 = 사유 없음 · 전자 complete · 수렴 3 칸 (CG 가 돌았다)
+      · short — 증서 판 · 상태 ELECTRODE_SHORT · ok False · 봉인 상수 · 결과 사유 = 증서 사유 (단락 사유) · 결과 σ = None (0 · 유한값 =
+        위장 = 거부) · 전자 not_solvable · 접합 블록의 솔브 기록 short True · solved False · 축약 instance > 0 (단락은 축약에서만 생긴다) ·
+        ★ 4판 (Q1) 'short' = 게시 안 되는 상태의 온전한 기록 (σ +∞ 아님 · 사슬 = NOT_COMPUTED 사유 ELECTRODE_SHORT) ·
+        ★ 10-21 (사전 리뷰 PRE-impl-07 병합) 증서 ↔ 런 결합 (`cert_binding_problem` · 주 전자 채널 — 영값 · 양의 해와 같은 함수 · 옛 판 =
+        격자 지문 hex32 꼴만 = 다른 침대의 단락 증서를 받았다) · 이온을 푼 팔의 이온 증서 = 그 런의 매니페스트 · 채널 ionic
+    ⚠ 상태는 위상 사실이지 σ 값이 아니다 — 값 봉인 (사슬) 은 σ 숫자만 가린다."""
+    import step3_conv_cert as _cc
+    s = step3 if isinstance(step3, dict) else {}
+    man = s.get('manifest') if isinstance(s.get('manifest'), dict) else {}
+    if not ('ca_ext' in man or _ca_ext_requested(man)):
+        return 'legacy', None
+    cert = s.get('conv_cert')
+    if not isinstance(cert, dict):
+        return None, 'STATE|absent| 수렴 · 상태 증서가 없다 (--step3-rtol 없이 돈 런 · 조기 반환 σ 0 을 증서 없이 받지 않는다)'
+    if cert.get('version') != _cc.CERT_VERSION:
+        return None, f'STATE|version| {cert.get("version")!r} ≠ {_cc.CERT_VERSION!r}'
+    st = cert.get('status')
+    comp = ((man.get('components') or {}).get('electronic') or {}).get('status') if isinstance(man.get('components'), dict) else None
+    sig = s.get('sigma_e_eff_S_cm')
+    if st == _cc.STATUS_POSITIVE:
+        ok, why = next_gen_cert_ok(s)
+        if not ok:
+            return None, f'STATE|positive| {why}'
+        if not (_fin_num(sig) and sig > 0.0):
+            return None, f'STATE|positive| 결과 σ {sig!r} (유한 양수여야 한다)'
+        return 'positive', None
+    if st == _cc.STATUS_ZERO:
+        ok, why = next_gen_cert_ok(s)
+        if not ok:
+            return None, f'STATE|zero| {why}'
+        src = cert.get('zero_source')
+        if src == 'early_return':
+            rs = s.get('reason')
+            if not isinstance(rs, str) or rs != cert.get('reason') or _cc.classify_reason(rs) != _cc.STATUS_ZERO:
+                return None, f'STATE|zero| 결과 사유 {rs!r} ↔ 증서 사유 {cert.get("reason")!r} (같은 영값 위상 사유여야 한다)'
+            if comp != 'not_solvable':
+                return None, f'STATE|zero| 조기 반환인데 전자 component = {comp!r} (not_solvable 이어야 — 솔브 완료로 적지 않는다)'
+        else:                                                    # matrix_graph (`_zero_cert_problem` 이 출처를 이미 둘로 닫았다)
+            if s.get('reason') is not None or comp != 'complete':
+                return None, f'STATE|zero| 행렬 그래프 영값인데 사유 {s.get("reason")!r} · 전자 component {comp!r}'
+            okc, whyc = conv_ok(s.get('cg_info'), s.get('unconverged'), s.get('cg_resid'))
+            if not okc:
+                return None, f'STATE|zero| 행렬 그래프 영값인데 수렴 계약 {whyc}'
+        return 'zero', None
+    if st == _cc.STATUS_SHORT:
+        for k, want in (('rtol_max', _cc.CERT_RTOL_MAX), ('eps_I', _cc.CERT_EPS_I), ('resolve_tol', _cc.CERT_RESOLVE_TOL),
+                        ('target_tol', _cc.CERT_TARGET_TOL), ('target_version', _cc.TARGET_VERSION)):
+            if cert.get(k) != want:
+                return None, f'STATE|short|seal| {k} = {cert.get(k)!r} ≠ 이 코드의 봉인 {want!r}'
+        if cert.get('ok') is not False or cert.get('zero_source') != 'early_return':
+            return None, f'STATE|short| 증서 ok {cert.get("ok")!r} · 출처 {cert.get("zero_source")!r} (False · early_return 이어야)'
+        #  ★ 10-21 (사전 리뷰 PRE-impl-07 병합 · B 결합) — 단락 증서도 조기 반환 증서라 결합 칸을 싣는다 (`step3_conv_cert.early_record`) →
+        #    그 런의 매니페스트 · 주 전자 채널과 같은 결합 함수 (격자 지문 hex32 꼴 검사를 포함한다 · 옛 판은 꼴만 봤다)
+        why = cert_binding_problem(cert, man, 'electronic')
         if why:
-            return False, f'NEXTGEN|ionic| {why}'
-    return True, None
+            return None, f'STATE|short| {why}'
+        rs = s.get('reason')
+        if not isinstance(rs, str) or rs != cert.get('reason') or _cc.classify_reason(rs) != _cc.STATUS_SHORT:
+            return None, f'STATE|short| 결과 사유 {rs!r} ↔ 증서 사유 {cert.get("reason")!r} (같은 단락 사유여야 한다)'
+        if sig is not None:
+            return None, (f'STATE|short| 결과 σ {sig!r} — 단락을 유한 σ 로 위장하지 않는다 (σ 칸 None 이어야 · 게시 안 되는 상태 · '
+                          f'등록 R 4판 §5-0)')
+        if comp != 'not_solvable':
+            return None, f'STATE|short| 전자 component = {comp!r} (not_solvable 이어야)'
+        cj = ((man.get('ca_ext') or {}).get('cjunc') or {}) if isinstance(man.get('ca_ext'), dict) else {}
+        ev = cj.get('evidence') if isinstance(cj.get('evidence'), dict) else {}
+        sv = ev.get('solve') if isinstance(ev.get('solve'), dict) else {}
+        cnt = ev.get('counts') if isinstance(ev.get('counts'), dict) else {}
+        if sv.get('short') is not True or sv.get('solved') is not False or sv.get('reason') != rs:
+            return None, (f'STATE|short| 접합 솔브 기록 short {sv.get("short")!r} · solved {sv.get("solved")!r} · 사유 {sv.get("reason")!r} '
+                          f'(단락은 접합 축약의 기록이 있어야 한다)')
+        nc = cnt.get('n_contract')
+        if type(nc) is not int or nc <= 0:                       # noqa: E721
+            return None, f'STATE|short| 축약 instance {nc!r} — 단락은 축약 무리에서만 생긴다 (J11)'
+        why = _ion_cert_problem(s, man)        # 이온을 푼 팔 = 이온 증서는 그대로 (전자 단락은 이온 해와 무관) · ★ PRE-impl-07 병합 — 매니페스트 · 채널
+        if why:
+            return None, f'STATE|short|ionic| {why}'
+        return 'short', None
+    return None, (f'STATE|status| {st!r} — 받는 상태는 {_cc.STATUS_POSITIVE} · {_cc.STATUS_ZERO} · {_cc.STATUS_SHORT} '
+                  f'(증서 못 세움 · 모르는 상태 = NOT_COMPUTED)')
 
 
 #: ★ 2026-10-20 (Rint ② B6 · 설계 v1 §7 러너) — 러너 `scripts/sdcp_gain_vox015_8arm.sh` 의 **다음 세대 손잡이** = (env 이름, 하위 블록, 선언 칸).
@@ -885,6 +1134,10 @@ RUNNER_CA_EXT_ENV = (
     #  ★ 2026-10-20 (Rint ② Z1 · 설계 v1 §1-2 #1 · #2 · §7) — VGCF bulk σ [S/cm] → 직경 보존 복셀 σ_VGCF (팔마다 · 같은 함수
     #    `step3_sigma.vgcf_sigma_from_bulk` · 옛 기본 bulk 100 과 같은 자리) · `SIGMA_VGCF_OVERRIDE` 와 동시 = 거부 · 영수증 선택 칸.
     ('SIGMA_FIBRE_BULK', None, 'sigma_vgcf_bulk_S_cm'),
+    #  ★ 2026-10-21 (D · 등록 R §5-6 SV 행 · Codex RCA-06 · 1저자 Q4 (가)) — SV 반사실 대조 (비움 · 0 = 끔 · 1 = 켬 · CJUNC=1 과만) ·
+    #    영수증 선택 칸 (켬 = True) · payload `--step3-cjunc-sv-cf` · 팔 태그 `_svcf` · 선언 칸 아님 (protocol 밖 · 주 σ 그대로) ·
+    #    문턱 = 사슬 계획 (producer 는 비만 낸다 — 판정 = 사슬 판정 계산기 · 등록 R §5-7).
+    ('CJUNC_SV_CF', None, 'sv_counterfactual'),
 )
 #: 러너 수 칸 — ASCII 10 진 (부호 · 공백 · 밑줄 · 유니코드 숫자 · nan · inf 낱말 거부 · 넘침 (1e999) 은 유한성 검사가 잡는다)
 _RUNNER_NUM_RE = r'(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?'
@@ -973,6 +1226,11 @@ def runner_ca_ext(env, *, ptfe_stamp='off', lean='0', fibre_stamp='segment', per
         given = [n for n, _k in cj_named if raw[n] != '']
         if given:
             _p('FLAG_WITHOUT_CJUNC', f'{given} 는 CJUNC=1 일 때만 뜻이 있다 (조용한 no-op 금지)')
+    _svcf = raw['CJUNC_SV_CF']                                   # ★ 10-21 (D) — SV 반사실 대조 (비움 · 0 = 끔 · 1 = 켬)
+    if _svcf not in ('', '0', '1'):
+        _p('VALUE', f'CJUNC_SV_CF={_svcf!r} — 비움 · 0 (끔) · 1 (켬) 만 (등록 R §5-6 SV 반사실 대조 · 문턱 = 사슬 계획)')
+    elif _svcf == '1' and not on:
+        _p('FLAG_WITHOUT_CJUNC', 'CJUNC_SV_CF=1 은 CJUNC=1 일 때만 뜻이 있다 (SV 반사실 = 접합 원장의 SV 면 · 조용한 no-op 금지)')
     c = raw['SDCP_MOD_C']
     if c != '':
         if not on:
@@ -985,6 +1243,10 @@ def runner_ca_ext(env, *, ptfe_stamp='off', lean='0', fibre_stamp='segment', per
         why = ca_ext_request_problem(req, ptfe_stamp=str(ptfe_stamp))   # ★ Z3 — 러너의 PTFE 규약으로 (P1 = face_alpha 에서만)
         if why:
             _p('REQUEST', why)
+    if on and str(ptfe_stamp) == 'centerline':
+        #  ★ 10-21 (D · 사전 리뷰 PRE-impl-03 ① · 코디네이터 Q-C) — centerline + 접합 = 발사 전 거부 (P0 도 · payload 입구 PTFE_CENTERLINE 과 같은 조합)
+        _p('PTFE_CENTERLINE', 'CJUNC=1 + PTFE_STAMP=centerline — 덮인 접점 셀의 포트 옮김이 Rayleigh 를 깬다 (PRE-impl-03) · 접합은 off · '
+                              'face_alpha 에서만')
     fa = str(ptfe_stamp) == 'face_alpha'
     for _lab, _on in (('CJUNC=1', on), ('PTFE_STAMP=face_alpha', fa)):
         if not _on:
@@ -1045,6 +1307,8 @@ def runner_ca_ext(env, *, ptfe_stamp='off', lean='0', fibre_stamp='segment', per
             rec['sigma_vgcf_rule'] = _s3r.VGCF_SIGMA_RULE
     if req:
         rec['ca_ext_request'] = req
+    if _svcf == '1' and on:
+        rec['sv_counterfactual'] = True                          # ★ 10-21 (D) — 선택 칸 (켬일 때만 · 끔 = 칸 없음 = 옛 digest)
     return {'receipt': ({} if probs else rec), 'problems': probs}
 
 
@@ -1132,6 +1396,16 @@ def runner_ca_ext_view(rec):
         vgcf_bulk = repr(_x)
         fl += [_hit[0], vgcf_bulk]
         tg.append(f'_fb{_runner_tag_num(_x)}')
+    #  ★ 2026-10-21 (D · 등록 R §5-6) — SV 반사실 대조: payload 켜기 플래그 (CLI 회계 정본에 있어야) · 이름 태그 `_svcf` (OUTDIR · 팔 이름 ·
+    #    끈 팔과 이름이 겹치지 않게) · 선언 (--expect-physics) 없음 (protocol 밖).  접합 요청 없이 켬 = 손으로 바뀐 영수증 = 거부.
+    _sv = rec.get('sv_counterfactual')
+    if _sv is not None:
+        if _sv is not True or req is None or 'cjunc' not in (req or {}):
+            raise ValueError(f'영수증의 sv_counterfactual = {_sv!r} — True + 접합 요청 (ca_ext_request.cjunc) 과만')
+        if '--step3-cjunc-sv-cf' not in CLI_ACCOUNTING:
+            raise ValueError('--step3-cjunc-sv-cf 가 CLI_ACCOUNTING 에 없다 (payload 플래그 정본)')
+        fl.append('--step3-cjunc-sv-cf')
+        tg.append('_svcf')
     tag = ''.join(tg)
     out = {'flags': ''.join(' ' + x for x in fl), 'expect': ''.join(',' + x for x in xp), 'tag': tag,
            'arm_tag': ('_fa' if rec.get('ptfe_stamp') == 'face_alpha' else '') + tag, 'vgcf_bulk': vgcf_bulk}
