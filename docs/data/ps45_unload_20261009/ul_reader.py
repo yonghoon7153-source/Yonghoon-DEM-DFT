@@ -2076,7 +2076,8 @@ def _mk_rj(root, bed, P, mut=None):
     for p in (os.path.join(root, bed, 'in', f'atom_{s0}.liggghts'), os.path.join(R_, 'g2', f'atom_{s0}.liggghts')):
         os.makedirs(os.path.dirname(p), exist_ok=True)
         dup = mut == 'g2_dup_id' and p.startswith(R_)   # ULPR-03 — R/g2 원자 덤프에 같은 ID 두 줄 (첫 줄 x 다름 · 선언 수 = 행 수)
-        ul_lib.write_custom(p, s0, cols, ([dict(rows[0], x=0.9)] if dup else []) + rows, fmt=lambda x: f'{x:g}')
+        hstep = s0 - 1000 if mut == 'g2_both_step' else s0   # ULPR-03 — 두 원자 덤프 머리 step 둘 다 S0 − 1000 (서로는 같다)
+        ul_lib.write_custom(p, hstep, cols, ([dict(rows[0], x=0.9)] if dup else []) + rows, fmt=lambda x: f'{x:g}')
     ccols = [f'c_cpl[{c}]' for c in range(1, 27)]
     crow = dict(zip(ccols, [0.001, 0.01, 0.01, 0.0015, 0.01, 0.01, 1, 2, 0, -0.5, 0, 0, -0.5, 0, 0, 0, 0.01, 0, 0, 0, 0, 1e-8, 1e-5, 0.00125, 0.01, 0.01]))
     for p in (os.path.join(root, bed, 'in', f'contact_{s0}.liggghts'), os.path.join(R_, 'g2', f'contact_{s0}.liggghts')):
@@ -3149,6 +3150,11 @@ def selftest() -> int:
             lambda: (lambda r: r['status'] == 'UNCONFIRMED' and r['checks']['G2'].get('status') == 'NOT_COMPUTED'
                      and any('ID 중복' in w for w in r['checks']['G2'].get('why', [])))(rv(good, 'g2_dup_id', full=True))
             and rv_gate(good, 'g2_dup_id') == ('UNCONFIRMED', False))
+        chk('R35 ULPR-03 복원: R/g2 · 원 in/ 원자 덤프 머리 step 둘 다 S0 − 1,000 (서로는 같다) → G2 관측 결손 NOT_COMPUTED (머리 step ≠ 요청 S0 — 서로 같다는 것만으로 '
+            'PASS 하지 않는다) · UNCONFIRMED (S0 프레임 머리 검사와 이중) · 다음 제출 거부',
+            lambda: (lambda r: r['status'] == 'UNCONFIRMED' and r['checks']['G2'].get('status') == 'NOT_COMPUTED'
+                     and any('요청' in w for w in r['checks']['G2'].get('why', [])))(rv(good, 'g2_both_step', full=True))
+            and rv_gate(good, 'g2_both_step') == ('UNCONFIRMED', False))
         clg = {}
         try:
             shutil.rmtree(os.path.join(root, B73), ignore_errors=True)
@@ -3441,6 +3447,17 @@ def selftest() -> int:
             '(사유 ULPR-01) · UVa 거부',
             lambda: holds(bad, lambda u, s, g, rr: u['primary_status'] != 'OK' and u['rho_pct'] is None and any('ULPR-01' in w for w in u['why']) and not g[0]),
             show(bad))
+        # 위 꼴은 옛 RM (단 끝 사건) 이 새 단 줄과 같은 k · step 이라 '둘 다 증명' 모순으로도 걸린다 — 창 기록 역행 규칙만 따로 지키는 꼴 (사후 변이 시험 10-21:
+        # 그 규칙을 끈 판이 이 블록 전부를 통과했다) = 단 끝 사건이 아닌 옛 창 사건 하나 · 옛 창 기록 없음 · 새 시도는 끝까지.
+        bad2 = ut_mix(kr=3, old_events=[('SEPARATED', 2)], new_nw=4, new_line=True, new_ev=True, rest=True)
+        ok2 = ut_mix(kr=3, old_nw=2, old_events=[('SEPARATED', 2)], new_nw=4, new_line=True, new_ev=True, rest=True)
+        chk('R37 ULPR-01 모순 (옛 창 사건만 · 옛 창 기록 없음): RESUME 앞 경계 뒤 옛 창 사건 (단 k 4 창 2 의 step · 단 끝 사건 아님 — 단 줄 증명과 무관) 이 있는데 '
+            '옛 시도 창이 없다 (창 역행 없음) · 새 시도가 단 k 4 를 끝까지 (창 넷 · 단 줄 · RM · 요약) → 버리지 · 고르지 않고 주 값 미식별 (사유 = 창 기록 역행 없음) · '
+            'UVa 거부 · 대조 = 같은 꼴에 옛 창 둘이 남은 기록 → 주 값 OK (ρ 0.2026… · 남긴 줄 2) · UVa 허용',
+            lambda: (holds(bad2, lambda u, s, g, rr: u['primary_status'] != 'OK' and u['rho_pct'] is None and not g[0]
+                           and any('창 기록 역행' in p for p in rr['problems']))
+                     and holds(ok2, lambda *r: okp(*r, 2))),
+            f'{show(bad2)} | {show(ok2)}')
 
         def gap_case():
             r = ut_mix(kr=1, old_nw=2, new_nw=4, new_line=True, new_ev=True, rest=True)
