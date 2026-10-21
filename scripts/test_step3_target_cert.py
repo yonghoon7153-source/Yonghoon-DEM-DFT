@@ -15,9 +15,22 @@ Q7 일부).
 반례 (판정문 §3 · 증거 `docs/reviews/codex_rint2_carbon_design_review_evidence_20261021/geometry/convergence_probes.py`):
   주 (11 자유도 · 첫 CG 10 회) · 연결 보조 (7 자유도 · 모든 노드가 관통 성분) · 23 반복 (24 자유도) — 실제 생산 `_solve_cg` 가 만든 해.
   ⚠ 합성 고대비 망 (6.6e11 · 5.1e14) — 실침대 오차 크기 주장 아님.
+엄밀성 · 환경 (★ 10-21 · 1저자 "더 꼼꼼하게"):
+  T7h 검사 전 정규화 (숫자 글자 · bool 을 float 로 바꿔 계산) · 넘침 → NOT_CERTIFIABLE (예외 아님)
+  T7u 밑넘침 (부정규 g · 곱이 0 으로) → NOT_CERTIFIABLE (상대 반올림 모형 밖) · 작지만 정상 범위 (1e-290) 는 통과
+  T15 원장 허용 = 반올림 수준만 (중복 합 순서 비대칭 · 큰 차수 행 합 반올림 · b 합 순서는 받고 · 참 비대칭 · 참 접지 · 참 b 불일치는 거부)
+  T16 손계산 회로 (정확 분수 G* — 직렬 · 병렬 · 고리 · 막다른 노드 · 대비 1e12 · 1e15 · 다리 · 영값 · R_j = ∞ · 무작위 200)
+  T17 반올림 순서 (노드 순열) · OpenBLAS 경로 6 꼴 (Haswell · SkylakeX × 스레드 1 · 4 · Sandybridge · Nehalem · 자식 프로세스) —
+      분명한 사례 = 결론 같음 · 칼날 (실제 오차 ≈ τ · 봉인 표 접합 rtol 1e-10 행) = 통과하면 실제 오차 ≤ τ
+  T18 변이 표 (증서 · 계약 한 줄 · 기준선에서 통과한 단언이 변이에서 실패해야 적발 · 빠른 판 = 변이 자리 존재만)
+  T19 칼날 (정확 분수 판정 = 보수)
+  T20 묶음 합 `_fsum_bound` (2²⁰ 넘는 배열 = 생산 침대의 길 · 묶음 사이 상쇄) 오차 상한 · 합 넘침 = (inf, inf)
+빠른 판 (기본 · 게이트) ↔ 긴 판 (`--long` · 따로): 긴 판만 = T5 표본 1,500 (빠른 300) · T16 무작위 200 (빠른 40) · T17 순열 20
+  (빠른 3) + 탐침 순열 (T17b) + OpenBLAS 경로 자식 여섯 (T17c) · T4 접합 탐침 · T14 시간 (간선 > 2²⁰ 계) · T18 변이 표.
 
-  python3 scripts/test_step3_target_cert.py               # 전부 (빠름 · 수십 초)
-  python3 scripts/test_step3_target_cert.py --only T1,T13 # 이름 접두
+  python3 scripts/test_step3_target_cert.py               # 빠른 판 (게이트)
+  python3 scripts/test_step3_target_cert.py --long        # 긴 판 (자식 프로세스 넷 · 변이 표 — 따로 · nice)
+  python3 scripts/test_step3_target_cert.py --only T1,T13 # 시험 번호 (첫 낱말 정확히)
 """
 import argparse
 import contextlib
@@ -42,11 +55,15 @@ S3 = CC = RC = None
 ARGS = None
 _ok, _fail = 0, []
 CASES = []
+_MUTE = []                      # 변이 모드 (T18) — chk 결과를 여기 모으고 전역 집계 · 출력에 넣지 않는다
 
 
 def chk(name, cond, why=''):
     global _ok
     cond = bool(cond)
+    if _MUTE:
+        _MUTE[-1].append((name, cond))
+        return cond
     if cond:
         _ok += 1
         print(f'  PASS  {name}')
@@ -56,9 +73,10 @@ def chk(name, cond, why=''):
     return cond
 
 
-def case(tag):
+def case(tag, long_only=False):
+    """시험 단위 등록 — long_only = 긴 판 (`--long`) 에서만 돈다 (게이트 = 빠른 판 · 메인 10-21)."""
     def deco(fn):
-        CASES.append((tag, fn))
+        CASES.append((tag, fn, long_only))
         return fn
     return deco
 
@@ -229,7 +247,7 @@ def te():
     return S3.electronic_sigma_table(0.01, 0.005, 100.0, 10.0, 250.0)
 
 
-@case('T4 양성 (정상 수렴) — 정확 해 · 무작위 침대 생산 CG · 봉인 탐침 침대 (섬유 · 접합) rtol 1e-12 → ⓓ 통과')
+@case('T4 양성 (정상 수렴) — 정확 해 · 무작위 침대 생산 CG · 봉인 탐침 침대 (섬유 · 긴 판은 접합도) rtol 1e-12 → ⓓ 통과')
 def t4():
     L, b, phi, Ab, gb, At, gt = _exact2()
     c = quiet(CC.certify, L, b, phi, 0, 0.0, 1e-12, Ab, gb, At, gt, 1.0, lambda L_, b_, x0, rt: (phi, 0))
@@ -246,7 +264,10 @@ def t4():
         and r['unconverged'] is False, {k: cc.get(k) for k in ('status', 'pass_d', 'ok', 'target_err_bound_rel')})
     sidp = CC.probe_bed(0)
     base = quiet(CC.probe_system, sidp, CC.probe_sigma_table(), s3=S3)
-    for variant, sysd in (('plain', base), ('junction', quiet(CC.junction_variant, base, sidp))):
+    variants = [('plain', base)]
+    if ARGS.long:                                          # 접합 꼴 = 긴 판 (빠른 판 = plain 하나 · 같은 침대)
+        variants.append(('junction', quiet(CC.junction_variant, base, sidp)))
+    for variant, sysd in variants:
         Lp, bp = sysd['L'], sysd['b']
         rows = {}
         for rt in (1e-8, 1e-12):
@@ -321,17 +342,19 @@ def _search(variant, N, seed=611):
     return out
 
 
-@case('T5 건전성 — Codex 생성기 그대로 (seed 611 · 막다른 / 연결 각 1,500) · ⓓ 거짓 통과 0 · 구간 빗나감 0')
+@case('T5 건전성 — Codex 생성기 그대로 (seed 611 · 막다른 / 연결 각 N — 빠른 판 300 · 긴 판 1,500) · ⓓ 거짓 통과 0 · 구간 빗나감 0')
 def t5():
+    N = int(ARGS.search_n)
+    nb, npd = max(20, N // 15), max(10, N // 30)           # 판별력 · 비보수 하한 (N 1,500 → 100 · 50 = 처음 판 그대로)
     with s3_knobs(GPU_SOLVE=False, AMG_SOLVE=False, CG_MAXITER=300):
         for variant in ('deadend', 'connected'):
             t0 = time.time()
-            o = quiet(_search, variant, int(ARGS.search_n))
+            o = quiet(_search, variant, N)
             print(f'    [{variant}] {o} ({time.time() - t0:.1f}s)')
-            chk(f'T5a [{variant}] 생산 술어 거짓 수렴 (info 0 · 오차 > 1e-4) 이 많다 = 판별력 있는 표본 (≥ 100)', o['bad'] >= 100, o)
+            chk(f'T5a [{variant}] 생산 술어 거짓 수렴 (info 0 · 오차 > 1e-4) 이 많다 = 판별력 있는 표본 (≥ {nb} · N {N})', o['bad'] >= nb, o)
             chk(f'T5b [{variant}] 그 해들 중 ⓓ · 증서 통과 0 (거짓 통과 없음)', o['false_d'] == 0 and o['problem'] == 0, o)
             chk(f'T5c [{variant}] 모든 해에서 구간이 정확 G* 를 담는다 (빗나감 0)', o['miss'] == 0, o)
-            chk(f'T5d [{variant}] ⓓ 가 모든 해를 거부하지는 않는다 (통과 ≥ 50 — 보수만이 아니다)', o['pass_d'] >= 50, o)
+            chk(f'T5d [{variant}] ⓓ 가 모든 해를 거부하지는 않는다 (통과 ≥ {npd} — 보수만이 아니다)', o['pass_d'] >= npd, o)
 
 
 @case('T6 q 보존성 · 결손 항 · 트리 보정 — 보정 뒤 KCL 결손 ≪ 원 결손 · F_bot = F_top · 결손 항 없는 순진한 하한은 G* 를 넘는다')
@@ -394,6 +417,121 @@ def t7():
     c0 = _cert_of(L, b, phi, Ab, gb, At, gt)
     chk('T7 대조 — 같은 계 정상 원장 → POSITIVE_SOLVED · 원장 문제 없음', c0.get('status') == getattr(CC, 'STATUS_POSITIVE', '?')
         and c0.get('target_ledger_ok') is True and c0.get('target_ledger_problem') is None, c0.get('target_ledger_problem'))
+    #  ★ 사전 공격 리뷰 (CLAUDE.md ②) — 검사 전 정규화 (숫자 글자 · bool 을 float 로 조용히 바꿔 계산) · 넘침 (fsum ±inf 예외)
+    hard = {
+        'φ 숫자 글자 (\'0.75\')': (L, b, np.array(['0.75', '0.25']), Ab, gb, At, gt),
+        'φ bool': (L, b, np.array([True, False]), Ab, gb, At, gt),
+        'gb 숫자 글자': (L, b, phi, Ab, np.array(['2.0']), At, gt),
+        'b 숫자 글자': (L, np.array(['2.0', '0']), phi, Ab, gb, At, gt),
+        'φ 넘침 (±1.7e308 → 흐름 ±inf)': (L, b, np.array([1.7e308, -1.7e308]), Ab, gb, At, gt),
+    }
+    for nm, args in hard.items():
+        try:
+            with np.errstate(over='ignore', invalid='ignore'):  # 넘침 경우의 numpy 경고만 끈다 (예외 · 판정은 그대로 본다)
+                c = _cert_of(*args)
+        except Exception as e:                              # noqa: BLE001
+            chk(f'T7h [{nm}] → 예외 없이 NOT_CERTIFIABLE', False, f'{type(e).__name__}: {e}')
+            continue
+        chk(f'T7h [{nm}] → NOT_CERTIFIABLE · ok False (조용히 바꿔 계산하지 않는다 · 예외 아님)',
+            c.get('status') == getattr(CC, 'STATUS_NOT_CERTIFIABLE', '?') and c.get('ok') is False,
+            {k: c.get(k) for k in ('status', 'ok', 'target_ledger_problem')})
+    #  ★ 사전 공격 리뷰 — 밑넘침 (넘침의 쌍둥이).  상한 · 하한의 여유는 상대 반올림 모형 (|δ| ≤ u) 위에 있다 — 곱이 부정규 범위 (< 2⁻¹⁰²²)
+    #  로 떨어지면 절대 오차 (2⁻¹⁰⁷⁵) 가 상대 여유를 넘을 수 있다 → 모형 밖 = NOT_CERTIFIABLE (생산 g ≥ 1e-17 · Δφ ≥ 1e-17 근처라 닿지 않는다)
+    from fractions import Fraction as Fr
+    for nm, gv, phi_u in (('부정규 g (1e-310 직렬 · 정확 해)', 1e-310, None),
+                          ('곱 완전 밑넘침 (g 1e-200 · Δφ 1e-150 → 0)', 1e-200, np.array([1e-150, 0.0]))):
+        edges, bot, top = [(0, 1, gv)], [(0, gv)], [(1, gv)]
+        Ls, bs, Abs, gbs, Ats, gts = _hand_system(2, edges, bot, top)
+        ps = np.array([float(x) for x in _fr_solve(2, edges, bot, top)[0]]) if phi_u is None else phi_u
+        cs = _cert_of(Ls, bs, ps, Abs, gbs, Ats, gts)
+        chk(f'T7u [{nm}] → NOT_CERTIFIABLE (상대 반올림 모형 밖 · 예외 아님)', cs.get('status') == getattr(CC, 'STATUS_NOT_CERTIFIABLE', '?')
+            and cs.get('ok') is False, {k: cs.get(k) for k in ('status', 'ok', 'pass_d', 'target_ledger_problem')})
+    edges, bot, top = [(0, 1, 1e-290)], [(0, 1e-290)], [(1, 1e-290)]
+    Ls, bs, Abs, gbs, Ats, gts = _hand_system(2, edges, bot, top)
+    pfr, Gs = _fr_solve(2, edges, bot, top)
+    cs = _cert_of(Ls, bs, np.array([float(x) for x in pfr]), Abs, gbs, Ats, gts)
+    chk('T7u 대조 — 작지만 정상 범위 (g 1e-290 · 항 ~1e-291) 정확 해 → POSITIVE_SOLVED · ⓓ 통과 · 구간 ∋ G* (분수) (거짓 거부 없음)',
+        cs.get('status') == getattr(CC, 'STATUS_POSITIVE', '?') and cs.get('pass_d') is True and _fin(cs.get('target_lo'))
+        and _fin(cs.get('target_hi')) and Fr(cs['target_lo']) <= Gs <= Fr(cs['target_hi']),
+        {k: cs.get(k) for k in ('status', 'pass_d', 'target_lo', 'target_hi')} | {'G*': float(Gs)})
+
+
+@case('T15 원장 허용 = 반올림 수준만 — 중복 합 순서가 다른 비대칭 (1e16 + 1 × 40) · 큰 차수 행 합 반올림 (1e16 + 1 × 200 이 대각에서 사라짐) '
+      '· b 합 순서 (판 간선 301 개) = 받는다 (거짓 거부 없음) · 참 비대칭 · 참 접지 · 참 b 불일치는 그대로 거부')
+def t15():
+    from scipy import sparse
+    from scipy.sparse.linalg import spsolve
+    big = 1e16
+    #  병렬 41 간선 (1e16 + 1 × 40) 을 두 방향에서 다른 순서로 더한 결과 그대로: (0,1) = 1e16 먼저 → 1 들이 묻혀 −1e16 ·
+    #  (1,0) = 1 들 먼저 → −(1e16 + 40).  (scipy 의 중복 합 순서에 기대지 않고 CSR 배열을 직접 쓴다 — 결정적)
+    L = sparse.csr_matrix((np.array([big + 42.0, -big, -(big + 40.0), big + 42.0]), np.array([0, 1, 0, 1]), np.array([0, 2, 4])),
+                          shape=(2, 2))
+    asym = abs(L[0, 1] - L[1, 0]) / abs(L[0, 1])
+    b = np.array([1.0, 0.0])
+    phi = spsolve(L.tocsc(), b)
+    c = _cert_of(L, b, phi, np.array([0]), np.array([1.0]), np.array([1]), np.array([1.0]))
+    from fractions import Fraction as Fr
+    Gs = 1 / (1 + 1 / Fr(big) + 1)                        # 원장 (위 삼각 g 1e16 · 판 1 · 1) 의 정확 직렬 G* (분수)
+    chk(f'T15a 합 순서만 다른 (0,1) ↔ (1,0) (상대 차 {asym:.1e} = 36u · 반올림) → 원장 받음 · POSITIVE_SOLVED · 구간 ∋ 원장 G* (분수)',
+        asym > 4 * 2.0 ** -53 and c.get('target_ledger_ok') is True and c.get('status') == getattr(CC, 'STATUS_POSITIVE', '?')
+        and _fin(c.get('target_lo')) and _fin(c.get('target_hi')) and Fr(c['target_lo']) <= Gs <= Fr(c['target_hi']),
+        (asym, c.get('target_ledger_problem'), c.get('status'), c.get('target_lo'), c.get('target_hi')))
+    n_dead = 200                                          # 노드 0: 위로 1e16 · 막다른 노드 200 개 (각 g 1 · 아래 판 g 1)
+    diag0 = 0.0
+    for x in [big] + [1.0] * n_dead:                       # 생산 조립처럼 앞에서부터 더한다 — 1 들이 1e16 에 묻혀 사라진다
+        diag0 += x
+    diag0 += 1.0                                          # 노드 0 의 아래 판 결합
+    nn = 2 + n_dead
+    rr, cc_, vv = [0, 1], [1, 0], [-big, -big]
+    for j in range(2, nn):
+        rr += [0, j]
+        cc_ += [j, 0]
+        vv += [-1.0, -1.0]
+    rr += list(range(nn))
+    cc_ += list(range(nn))
+    vv += [diag0, big + 1.0] + [2.0] * n_dead
+    L2 = sparse.coo_matrix((vv, (rr, cc_)), shape=(nn, nn)).tocsr()
+    Ab2 = np.r_[0, np.arange(2, nn)].astype(np.int64)
+    gb2 = np.ones(len(Ab2))
+    b2 = np.bincount(Ab2, gb2, nn)
+    p2 = spsolve(L2.tocsc(), b2)
+    lost = (big + n_dead + 1.0) - diag0
+    c2 = _cert_of(L2, b2, p2, Ab2, gb2, np.array([1]), np.array([1.0]))
+    G2 = 1 / (1 / (1 + Fr(n_dead, 2)) + 1 / Fr(big) + 1)  # 원장 G* (분수): 아래 판 → 노드 0 = 직접 1 + 200 길 (각 1/2) · 1e16 · 위 판 1
+    chk(f'T15b 차수 201 행 — 대각 반올림으로 {lost:.0f} 이 사라진 행 합 (반올림 · 64u 고정 허용 밖) → 원장 받음 · POSITIVE_SOLVED · '
+        f'구간 ∋ 원장 G* (분수 · 이 φ 는 반올림된 행렬의 해라 원장 망의 해가 아니다 — 판정은 ⓓ 가 한다 · 건전성만 본다)',
+        lost >= n_dead and c2.get('target_ledger_ok') is True and c2.get('status') == getattr(CC, 'STATUS_POSITIVE', '?')
+        and _fin(c2.get('target_lo')) and _fin(c2.get('target_hi')) and Fr(c2['target_lo']) <= G2 <= Fr(c2['target_hi']),
+        (lost, c2.get('target_ledger_problem'), c2.get('status'), c2.get('target_lo'), float(G2), c2.get('target_hi')))
+    L3 = L.tolil()
+    L3[1, 0] = L[1, 0] * (1 + 1e-9)
+    c3 = _cert_of(L3.tocsr(), b, phi, np.array([0]), np.array([1.0]), np.array([1]), np.array([1.0]))
+    L4 = (L + sparse.diags([1e-6 * big, 0.0])).tocsr()
+    c4 = _cert_of(L4, b, phi, np.array([0]), np.array([1.0]), np.array([1]), np.array([1.0]))
+    chk('T15c 대조 — 참 비대칭 (상대 1e-9) · 참 접지 (대각 +1e-6 상대) 는 그대로 NOT_CERTIFIABLE',
+        c3.get('status') == getattr(CC, 'STATUS_NOT_CERTIFIABLE', '?') and c4.get('status') == getattr(CC, 'STATUS_NOT_CERTIFIABLE', '?'),
+        (c3.get('target_ledger_problem'), c4.get('target_ledger_problem')))
+    #  b 의 합 순서 — 한 노드에 아래 판 간선 301 개 (1e16 + 1 × 300).  조립이 1 들을 먼저 더하면 b = 1e16 + 300 · 원장 (bincount = 배열
+    #  순서 · 1e16 먼저) 은 1e16 → 차 300 (반올림 · 64u 고정 허용 ≈ 142 밖) → 받는다.  참 불일치 (b + 1e-6 상대) 는 거부.
+    kb = 300
+    gb5 = np.r_[big, np.ones(kb)]
+    Ab5 = np.zeros(kb + 1, np.int64)
+    b0 = 0.0
+    for x in list(np.ones(kb)) + [big]:                    # 1 들 먼저 (생산과 다른 순서)
+        b0 += x
+    L5 = sparse.csr_matrix(np.array([[b0 + 1.0, -1.0], [-1.0, 2.0]]))   # 노드 0: 판 결합 (b0) + 면 1 · 노드 1: 면 1 + 위 판 1
+    b5 = np.array([b0, 0.0])
+    p5 = spsolve(L5.tocsc(), b5)
+    c5 = _cert_of(L5, b5, p5, Ab5, gb5, np.array([1]), np.array([1.0]))
+    bb5 = float(np.bincount(Ab5, gb5, 2)[0])
+    G5 = 1 / (1 / (Fr(big) + kb) + 2)                     # 원장 G* (분수 · 판 간선 301 개의 정확 합 1e16 + 300 → 면 1 → 위 판 1)
+    chk(f'T15d 한 노드 아래 판 간선 {kb + 1} 개 — b 합 순서만 다름 (b − 원장 = {b0 - bb5:.0f}) → 원장 받음 · POSITIVE_SOLVED · 구간 ∋ G* (분수)',
+        abs(b0 - bb5) >= kb - 2 and c5.get('target_ledger_ok') is True and c5.get('status') == getattr(CC, 'STATUS_POSITIVE', '?')
+        and _fin(c5.get('target_lo')) and _fin(c5.get('target_hi')) and Fr(c5['target_lo']) <= G5 <= Fr(c5['target_hi']),
+        (b0 - bb5, c5.get('target_ledger_problem'), c5.get('status'), c5.get('target_lo'), float(G5), c5.get('target_hi')))
+    c6 = _cert_of(L5, b5 * (1 + 1e-6), p5, Ab5, gb5, np.array([1]), np.array([1.0]))
+    chk('T15e 대조 — b 참 불일치 (상대 1e-6) 는 그대로 NOT_CERTIFIABLE', c6.get('status') == getattr(CC, 'STATUS_NOT_CERTIFIABLE', '?'),
+        c6.get('target_ledger_problem'))
 
 
 @case('T8 떠 있는 성분 · 병렬 판 간선 · 한 노드 두 판 — 구간 유효 · 정확 해면 통과')
@@ -650,6 +788,8 @@ def t13():
         'inf 상한': lambda c: dict(c, target_hi=float('inf')),
         'I_bot · scale ≠ σ (구간 ↔ 게시값 결합)': lambda c: dict(c, I_bot=G * (1 + 1e-6)),
         '목표 허용 손으로 (1e-2)': lambda c: dict(c, target_tol=1e-2),
+        '부동소수 보수 규칙 판본 다름 (옛 v1 여유)': lambda c: dict(c, target_fp='fsum-bfs-defect-margin-v1'),
+        '부동소수 보수 규칙 칸 빠짐': lambda c: {k: v for k, v in c.items() if k != 'target_fp'},
         '원장 실패인데 통과 표지': lambda c: dict(c, target_ledger_ok=False),
         '위상 영인데 POSITIVE': lambda c: dict(c, target_topology='zero'),
     }
@@ -679,7 +819,7 @@ def t13():
         and not RC.next_gen_cert_ok({'sigma_e_eff_S_cm': 0.0, 'manifest': {'ca_ext': {}}})[0])
 
 
-@case('T14 시간 비용 (기록 · 합격선 없음) — 탐침 침대 41,472 dof · 무작위 격자 147,456 dof')
+@case('T14 시간 비용 (기록 · 합격선 없음) — 탐침 침대 41,472 dof · 무작위 격자 393,216 dof (간선 > 2²⁰ = 묶음 합 길)', long_only=True)
 def t14():
     sidp = CC.probe_bed(0)
     base = quiet(CC.probe_system, sidp, CC.probe_sigma_table(), s3=S3)
@@ -687,41 +827,604 @@ def t14():
     r = CC.target_bracket(base['L'], base['b'], base['phi_direct'], base['Ab'], base['gb'], base['At'], base['gt'])
     t1 = time.perf_counter()
     print(f'    탐침 침대 n {base["L"].shape[0]:,} · nnz {base["L"].nnz:,} · ⓓ {t1 - t0:.3f} s · 트리 층 {r.get("target_tree_levels")}')
-    L, b, phi, Ab, gb, At, gt = _grid_system((48, 48, 64), 2, direct=False)
+    L, b, phi, Ab, gb, At, gt = _grid_system((64, 64, 96), 2, direct=False)
     t0 = time.perf_counter()
     r2 = CC.target_bracket(L, b, phi, Ab, gb, At, gt)
     t1 = time.perf_counter()
-    print(f'    무작위 격자 n {L.shape[0]:,} · nnz {L.nnz:,} · ⓓ {t1 - t0:.3f} s ({1e6 * (t1 - t0) / L.shape[0]:.2f} µs/dof) · '
-          f'트리 층 {r2.get("target_tree_levels")}')
+    print(f'    무작위 격자 n {L.shape[0]:,} · nnz {L.nnz:,} · 간선 {r2.get("target_n_edges")} · ⓓ {t1 - t0:.3f} s '
+          f'({1e6 * (t1 - t0) / L.shape[0]:.2f} µs/dof) · 트리 층 {r2.get("target_tree_levels")}')
     chk('T14 두 계 모두 관통 · 유한 구간 (시간은 기록)', r.get('target_topology') == r2.get('target_topology') == 'through'
         and _fin(r.get('target_lo')) and _fin(r2.get('target_hi')))
+    w2 = (r2['target_hi'] - r2['target_lo']) / r2['target_hi'] if _fin(r2.get('target_hi')) and r2['target_hi'] > 0 else math.inf
+    chk(f'T14b 간선 > 2²⁰ (묶음 합 길 · 생산 침대 꼴) 계 — 원장 받음 · 0 < 하한 ≤ 상한 · 상대 폭 {w2:.1e} < 1e-6 (생산 CG rtol 1e-10 해)',
+        isinstance(r2.get('target_n_edges'), int) and r2['target_n_edges'] > (1 << 20) and r2.get('target_ledger_ok') is True
+        and 0.0 < r2.get('target_lo', 0.0) <= r2.get('target_hi', 0.0) and w2 < 1e-6, (r2.get('target_n_edges'), w2))
+
+
+# ═════════════════════════ T16 손계산 회로 (정확 분수 G*) ═════════════════════════
+def _fr_solve(n, edges, bot, top):
+    """손 회로 정확 풀이 (분수 가우스 소거) → (φ 분수 목록, G* 분수).  아래 판 φ 1 · 위 판 φ 0 · 간선 = (u, v, g) · 판 = (노드, g) · g = float
+    (그 float 의 정확한 값을 분수로 — 원장과 같은 수)."""
+    from fractions import Fraction as Fr
+    A = [[Fr(0)] * n for _ in range(n)]
+    r = [Fr(0)] * n
+    for u, v, g in edges:
+        g = Fr(g)
+        A[u][u] += g
+        A[v][v] += g
+        A[u][v] -= g
+        A[v][u] -= g
+    for i, g in bot:
+        A[i][i] += Fr(g)
+        r[i] += Fr(g)
+    for i, g in top:
+        A[i][i] += Fr(g)
+    M = [row[:] + [r[i]] for i, row in enumerate(A)]
+    for col in range(n):
+        piv = next(i for i in range(col, n) if M[i][col] != 0)
+        M[col], M[piv] = M[piv], M[col]
+        p = M[col][col]
+        M[col] = [x / p for x in M[col]]
+        for i in range(n):
+            if i != col and M[i][col] != 0:
+                f = M[i][col]
+                M[i] = [a - f * b for a, b in zip(M[i], M[col])]
+    phi = [M[i][n] for i in range(n)]
+    G = sum((Fr(g) * (1 - phi[i]) for i, g in bot), Fr(0))
+    return phi, G
+
+
+def _fr_energy(phi, edges, bot, top):
+    """임의 φ (float 목록) 의 정확 에너지 Σ g (Δφ)² (분수) — Dirichlet 원리의 좌변."""
+    from fractions import Fraction as Fr
+    p = [Fr(x) for x in phi]
+    e = sum((Fr(g) * (p[u] - p[v]) ** 2 for u, v, g in edges), Fr(0))
+    e += sum((Fr(g) * (1 - p[i]) ** 2 for i, g in bot), Fr(0))
+    e += sum((Fr(g) * p[i] ** 2 for i, g in top), Fr(0))
+    return e
+
+
+def _hand_system(n, edges, bot, top):
+    from scipy import sparse
+    A = np.zeros((n, n))
+    b = np.zeros(n)
+    for u, v, g in edges:
+        A[u, u] += g
+        A[v, v] += g
+        A[u, v] -= g
+        A[v, u] -= g
+    for i, g in bot:
+        A[i, i] += g
+        b[i] += g
+    for i, g in top:
+        A[i, i] += g
+    return (sparse.csr_matrix(A), b, np.array([i for i, _ in bot], np.int64), np.array([g for _, g in bot], np.float64),
+            np.array([i for i, _ in top], np.int64), np.array([g for _, g in top], np.float64))
+
+
+#: 손계산 회로 — (이름, 노드 수, 간선, 아래 판, 위 판, 닫힌꼴 G* (분수 문자열 · 풀이와 대조) 또는 None)
+HAND = (
+    ('직렬 (2 · 3 · 5)', 2, [(0, 1, 3.0)], [(0, 2.0)], [(1, 5.0)], '30/31'),
+    ('병렬 (두 가지 · 판–노드–판 1·1 ‖ 2·6)', 2, [], [(0, 1.0), (1, 2.0)], [(0, 1.0), (1, 6.0)], '2'),
+    ('병렬 안 고리 (직접 1 ‖ 2·2 우회)', 3, [(0, 1, 1.0), (0, 2, 2.0), (2, 1, 2.0)], [(0, 1.0)], [(1, 1.0)], '2/5'),
+    ('막다른 노드 (판 하나 · 경로 곁가지)', 4, [(0, 1, 3.0), (0, 3, 4.0)], [(0, 2.0), (2, 7.0)], [(1, 5.0)], '30/31'),
+    ('대비 1e12 직렬 (1 · 1e12 · 1)', 2, [(0, 1, 1e12)], [(0, 1.0)], [(1, 1.0)], None),
+    ('대비 1e15 막다른 판 노드 (Codex 꼴)', 3, [(0, 1, 1.0)], [(0, 1.0), (2, 1e15)], [(1, 1.0)], '1/3'),
+    ('대비 1e-12 병렬 가지', 3, [(0, 2, 1e-12), (2, 1, 1e-12), (0, 1, 1.0)], [(0, 1.0)], [(1, 1.0)], None),
+    ('다리 (Wheatstone · 전 자유도 한 관통 성분 · 고리)', 2, [(0, 1, 5.0)], [(0, 1.0), (1, 2.0)], [(0, 3.0), (1, 4.0)], None),
+    ('연결 막다른 (1e12 판 노드를 1e-6 다리로 경로에)', 3, [(0, 1, 1.0), (2, 0, 1e-6)], [(0, 1.0), (2, 1e12)], [(1, 1.0)], None),
+)
+
+
+@case('T16 손계산 회로 (정확 분수 G*) — 직렬 · 병렬 · 고리 · 막다른 노드 · 대비 1e12 · 1e15 · 다리 (전 자유도 관통) · 정확 영값: '
+      '상한 ≥ G* ≥ 하한 (분수 비교) · 망가뜨린 φ 는 거부 · 영값은 VALID_ZERO_TOPOLOGY')
+def t16():
+    from fractions import Fraction as Fr
+    tau = Fr(1, 10 ** 4)
+    for nm, n, edges, bot, top, closed in HAND:
+        phi_fr, Gs = _fr_solve(n, edges, bot, top)
+        if closed is not None:
+            chk(f'T16-0 [{nm}] 분수 풀이 = 닫힌꼴 G* {closed}', Gs == Fr(closed), (Gs, closed))
+        L, b, Ab, gb, At, gt = _hand_system(n, edges, bot, top)
+        phi = np.array([float(x) for x in phi_fr])
+        c = _cert_of(L, b, phi, Ab, gb, At, gt)
+        lo, hi = c.get('target_lo'), c.get('target_hi')
+        ok_num = _fin(lo) and _fin(hi)
+        chk(f'T16a [{nm}] 정확 해 → POSITIVE_SOLVED · ⓓ 통과 · 상한 ≥ G* ≥ 하한 (분수) · 구간 상대 폭 ≤ 1e-12',
+            c.get('status') == getattr(CC, 'STATUS_POSITIVE', '?') and c.get('pass_d') is True and ok_num
+            and Fr(lo) <= Gs <= Fr(hi) and (Fr(hi) - Fr(lo)) <= Fr(1, 10 ** 12) * Gs,
+            {k: c.get(k) for k in ('status', 'pass_d', 'target_lo', 'target_hi')} | {'G*': float(Gs)})
+        e_fr = _fr_energy(phi, edges, bot, top)
+        chk(f'T16b [{nm}] Dirichlet — 정확 에너지 (분수) ≥ G* · 기록 상한 ≥ 정확 에너지 (부동소수 여유가 덮는다)',
+            ok_num and e_fr >= Gs and Fr(hi) >= e_fr, (float(e_fr - Gs), float(Fr(hi) - e_fr) if ok_num else None))
+        for dl in (1e-3, 1e-13):
+            pb = phi.copy()
+            pb[0] += dl
+            cb = _cert_of(L, b, pb, Ab, gb, At, gt)
+            lb, hb = cb.get('target_lo'), cb.get('target_hi')
+            sound = _fin(lb) and _fin(hb) and Fr(lb) <= Gs <= Fr(hb) and _fr_energy(pb, edges, bot, top) <= Fr(hb)
+            Gp = cb.get('I_bot')
+            if dl == 1e-3:
+                chk(f'T16c [{nm}] φ 를 망가뜨림 (노드 0 + 1e-3) → ⓓ 거부 · 구간은 여전히 G* 를 담는다 (건전)',
+                    cb.get('pass_d') is False and cb.get('ok') is False and sound,
+                    {k: cb.get(k) for k in ('pass_d', 'target_why', 'target_lo', 'target_hi')} | {'G*': float(Gs)})
+            else:
+                exact_ok = _fin(Gp) and abs(Fr(Gp) - Gs) <= tau * Fr(Gp)
+                chk(f'T16d [{nm}] 아주 작게 (+1e-13) → 건전 · 통과면 게시 G 의 실제 오차 ≤ 1e-4 (분수)',
+                    sound and (cb.get('pass_d') is not True or exact_ok), {k: cb.get(k) for k in ('pass_d', 'target_err_bound_rel')})
+    for nm, n, edges, bot, top in (('정확 영값 (두 판 각각 한 노드)', 2, [], [(0, 1.0)], [(1, 1.0)]),
+                                   ('바닥 극한 R_j = ∞ (사슬 가운데 접합 없음)', 4, [(0, 1, 1.0), (2, 3, 1.0)], [(0, 1.0)], [(3, 1.0)])):
+        phi_fr, Gs = _fr_solve(n, edges, bot, top)
+        L, b, Ab, gb, At, gt = _hand_system(n, edges, bot, top)
+        phi = np.array([float(x) for x in phi_fr])
+        c = _cert_of(L, b, phi, Ab, gb, At, gt)
+        chk(f'T16e [{nm}] G* = 0 (분수) · 정확 해 → VALID_ZERO_TOPOLOGY · ok True · 게시 0 · 상한 ≥ 0 = 하한',
+            Gs == 0 and c.get('status') == getattr(CC, 'STATUS_ZERO', '?') and c.get('ok') is True and c.get('sigma') == 0.0
+            and c.get('target_lo') == 0.0 and _fin(c.get('target_hi')) and c['target_hi'] >= 0.0,
+            {k: c.get(k) for k in ('status', 'ok', 'sigma', 'target_lo', 'target_hi')})
+        pb = phi.copy()
+        pb[0] = 1.0 - 1e-9
+        cb = _cert_of(L, b, pb, Ab, gb, At, gt)
+        chk(f'T16f [{nm}] 영값 위상인데 φ 를 망가뜨려 게시 전류 ≠ 0 → ok False (영값 위상 그대로 · CG 오차를 0 으로 바꾸지 않는다)',
+            cb.get('status') == getattr(CC, 'STATUS_ZERO', '?') and cb.get('ok') is False and cb.get('sigma') != 0.0,
+            {k: cb.get(k) for k in ('status', 'ok', 'sigma')})
+    rng = np.random.default_rng(161)
+    n_case = n_pass = n_bad = 0
+    miss = []
+    false_pass = []
+    under = []                                              # 기록 상한 < 그 φ 의 정확 에너지 (부동소수 여유가 못 덮음)
+    for k in range(int(ARGS.circuits_n)):
+        n = int(rng.integers(2, 7))
+        edges = [(i, i + 1, float(10.0 ** rng.uniform(-6, 6))) for i in range(n - 1)]
+        for _ in range(int(rng.integers(0, n + 1))):
+            u, v = (int(x) for x in rng.choice(n, 2, replace=False))
+            edges.append((min(u, v), max(u, v), float(10.0 ** rng.uniform(-6, 6))))
+        bot = [(0, float(10.0 ** rng.uniform(-3, 3)))] + [(int(i), float(10.0 ** rng.uniform(-6, 6)))
+                                                          for i in rng.choice(n, int(rng.integers(0, 2)), replace=False)]
+        top = [(n - 1, float(10.0 ** rng.uniform(-3, 3)))]
+        phi_fr, Gs = _fr_solve(n, edges, bot, top)
+        L, b, Ab, gb, At, gt = _hand_system(n, edges, bot, top)
+        for dl in (0.0, 10.0 ** rng.uniform(-9, -2)):
+            phi = np.array([float(x) for x in phi_fr])
+            if dl:
+                phi[int(rng.integers(0, n))] += dl
+                n_bad += 1
+            c = _cert_of(L, b, phi, Ab, gb, At, gt)
+            n_case += 1
+            lo, hi, Gp = c.get('target_lo'), c.get('target_hi'), c.get('I_bot')
+            if not (_fin(lo) and _fin(hi) and Fr(lo) <= Gs <= Fr(hi)):
+                miss.append((k, dl, lo, float(Gs), hi))
+            if _fin(hi) and Fr(hi) < _fr_energy(phi, edges, bot, top):
+                under.append((k, dl, hi, float(_fr_energy(phi, edges, bot, top))))
+            if c.get('pass_d') is True:
+                n_pass += 1
+                if not (_fin(Gp) and abs(Fr(Gp) - Gs) <= tau * Fr(Gp)):
+                    false_pass.append((k, dl, Gp, float(Gs)))
+    print(f'    무작위 손 회로 {n_case} 해 (망가뜨림 {n_bad}) · ⓓ 통과 {n_pass} · 구간 빗나감 {len(miss)} · 거짓 통과 {len(false_pass)}')
+    chk(f'T16g 무작위 손 회로 {int(ARGS.circuits_n)} 개 (노드 2–6 · g 1e-6–1e6 · 정확 해 + 망가뜨린 해) — 구간이 정확 분수 G* 를 다 담는다',
+        not miss, miss[:3])
+    chk('T16h 같은 표본 — ⓓ 통과한 해의 게시 G 는 정확 분수 G* 와 상대 1e-4 안 (거짓 통과 0) · 통과 ≥ 1 (보수만이 아니다)',
+        not false_pass and n_pass >= 1, (false_pass[:3], n_pass))
+    chk('T16i 같은 표본 — 기록 상한 ≥ 그 φ 의 정확 에너지 (분수 · Dirichlet 좌변 그 자체 · 부동소수 여유가 항 · 합 반올림을 덮는다)',
+        not under, under[:3])
+
+
+# ═════════════════════════ T17 반올림 순서 · BLAS 스레드 · 칼날 ═════════════════════════
+def _permute(L, b, Ab, At, seed):
+    from scipy import sparse
+    n = L.shape[0]
+    perm = np.random.default_rng(seed).permutation(n)
+    inv = np.empty(n, np.int64)
+    inv[perm] = np.arange(n)
+    P = sparse.csr_matrix((np.ones(n), (np.arange(n), perm)), shape=(n, n))
+    return (P @ L @ P.T).tocsr(), b[perm], inv[np.asarray(Ab)], inv[np.asarray(At)]
+
+
+def _cg_cert(L, b, Ab, gb, At, gt, rt=1e-12, maxiter=1000):
+    with s3_knobs(GPU_SOLVE=False, AMG_SOLVE=False, CG_MAXITER=maxiter):
+        phi, info = quiet(S3._solve_cg, L, b, rtol=rt)
+        resid = float(np.linalg.norm(L @ phi - b) / np.linalg.norm(b))
+        return quiet(CC.certify, L, b, phi, int(info), resid, rt, Ab, gb, At, gt, 1.0, _resolve)
+
+
+def _decisions(c):
+    return {k: c.get(k) for k in ('pass_a', 'pass_b', 'pass_c', 'pass_d', 'ok', 'status')}
+
+
+#: T17c 탐침 rtol — 1e-10 = 봉인 표의 칼날 행 (메인 10-21: Sandybridge 경로에서 접합 seed 0 rtol 1e-10 의 σ 오차 1.005e-4 ·
+#   불균형 9.790e-5 = ε_I 구간 위 끝 → K8b 실패 · ⓐ ⓒ 가 거부)
+PROBE_ENV_RTOLS = (1e-8, 1e-10, 1e-12)
+#: T17c 환경 꼴 — OpenBLAS 계산 경로 × 스레드 (메인 10-21 봉인 표 6 조합 그대로 · 기본 = 이 CPU 의 SkylakeX)
+PROBE_ENVS = (('Haswell', '1'), ('default', '1'), ('default', '4'), ('Haswell', '4'), ('Sandybridge', '1'), ('Nehalem', '1'))
+
+
+def probe_env():
+    """`--probe-env` (자식 프로세스) — 같은 문제의 판정을 JSON 한 줄로 (T17c 가 OpenBLAS 경로 × 스레드 꼴 `PROBE_ENVS` 로 띄워 대조)."""
+    out = {}
+    for which in CODEX:
+        L, b, Ab, gb, At, gt, _Gs = codex_chain(which)
+        c = _cg_cert(L, b, Ab, gb, At, gt)
+        out[which] = _decisions(c) | {'sigma_hex': float(c['sigma']).hex(), 'imbalance': c.get('imbalance'),
+                                      'err_bound': c.get('target_err_bound_rel'), 'width': c.get('target_width_rel')}
+    sidp = CC.probe_bed(0)
+    base = quiet(CC.probe_system, sidp, CC.probe_sigma_table(), s3=S3)
+    for variant, sysd in (('plain', base), ('junction', quiet(CC.junction_variant, base, sidp))):
+        for rt in PROBE_ENV_RTOLS:
+            c = _cg_cert(sysd['L'], sysd['b'], sysd['Ab'], sysd['gb'], sysd['At'], sysd['gt'], rt=rt, maxiter=400000)
+            out[f'probe_{variant}_{rt:.0e}'] = _decisions(c) | {'sigma_hex': float(c['sigma']).hex(), 'imbalance': c.get('imbalance'),
+                                                                'err_bound': c.get('target_err_bound_rel'),
+                                                                'width': c.get('target_width_rel')}
+    try:
+        from threadpoolctl import threadpool_info
+        out['_blas'] = [{k: d.get(k) for k in ('internal_api', 'prefix', 'version', 'num_threads', 'architecture')}
+                        for d in threadpool_info()]
+    except Exception as e:                                  # noqa: BLE001
+        out['_blas'] = f'n/a ({type(e).__name__})'
+    print('PROBE_ENV ' + json.dumps(out, sort_keys=True))
+
+
+#: 칼날 (상대 오차 상한이 정확히 1e-4 를 1.1e-20 넘는 (lo, hi, G) — float 나눗셈 비교면 통과 · 정확 분수 비교면 거부).  G = m·2⁻⁵² (m ≡ 9999 mod 10⁴)
+KNIFE = ((float.fromhex('0x1.fd70a3d70875fp+0'), float.fromhex('0x1.fd7dae8186635p+0')),
+         (float.fromhex('0x1.fd70a3d70604fp+0'), float.fromhex('0x1.fd7dae8183f24p+0')),
+         (float.fromhex('0x1.fd70a3d70393fp+0'), float.fromhex('0x1.fd7dae8181813p+0')))
+
+
+@case('T17 반올림 순서 · OpenBLAS 경로 · 스레드 — 노드 순열 (빠른 판 3 · 긴 판 20) · 긴 판: 탐침 순열 · OpenBLAS 경로 6 꼴 (Haswell · '
+      'SkylakeX × 1 · 4 · Sandybridge · Nehalem) — 분명한 사례는 ⓓ 결론 같음 · 칼날 사례는 통과하면 실제 오차 ≤ 1e-4 (ⓑ 는 뒤집힐 수 있다 — 기록)')
+def t17():
+    flips = {}
+    for which in CODEX:
+        L, b, Ab, gb, At, gt, Gs = codex_chain(which)
+        c0 = _cg_cert(L, b, Ab, gb, At, gt)
+        dec = [_decisions(c0)]
+        for s in range(int(ARGS.perm_n)):
+            Lq, bq, Abq, Atq = _permute(L, b, Ab, At, 100 + s)
+            dec.append(_decisions(_cg_cert(Lq, bq, Abq, gb, Atq, gt)))
+        flips[which] = {k: sum(d[k] != dec[0][k] for d in dec[1:]) for k in ('pass_a', 'pass_b', 'pass_c', 'pass_d', 'ok')}
+        print(f'    [{which}] 노드 순열 {int(ARGS.perm_n)} 개 — 판정이 원 순서와 다른 수 {flips[which]} (원 {dec[0]})')
+        chk(f'T17a [{which}] 노드 순열 {int(ARGS.perm_n)} 개 (CG 합 순서가 바뀐다) — ⓓ · 증서 결론 전부 같음 (거부 · POSITIVE_SOLVED)',
+            all(d['pass_d'] is False and d['ok'] is False and d['status'] == getattr(CC, 'STATUS_POSITIVE', '?') for d in dec),
+            flips[which])
+    if not ARGS.long:
+        print('    (T17b 탐침 침대 순열 · T17c OpenBLAS 경로 × 스레드 자식 여섯 = 긴 판 전용 — --long)')
+        return
+    sidp = CC.probe_bed(0)
+    base = quiet(CC.probe_system, sidp, CC.probe_sigma_table(), s3=S3)
+    sys_probe = []
+    for variant, sysd in (('plain', base), ('junction', quiet(CC.junction_variant, base, sidp))):
+        sys_probe.append((variant, sysd))
+        for rt in (1e-8, 1e-12):
+            ds = []
+            for s in (None, 7, 8):
+                L, b, Ab, At = sysd['L'], sysd['b'], sysd['Ab'], sysd['At']
+                if s is not None:
+                    L, b, Ab, At = _permute(L, b, Ab, At, s)
+                ds.append(_decisions(_cg_cert(L, b, Ab, sysd['gb'], At, sysd['gt'], rt=rt, maxiter=400000)))
+            chk(f'T17b [탐침 {variant} · rtol {rt:.0e}] 노드 순열 둘 — ⓓ 결론 같음 (ⓐ ⓑ ⓒ 차이는 기록)',
+                len({d['pass_d'] for d in ds}) == 1, ds)
+    #  ── 환경 꼴 (자식 프로세스 · 환경변수는 프로세스 시작 전에) — OpenBLAS 계산 경로 (`PROBE_ENVS` — Haswell = Codex 와 비트 같은 경로 ·
+    #     기본 = 이 CPU 의 SkylakeX · Sandybridge · Nehalem) × 스레드.  판정 규칙:
+    #       분명한 사례 (모든 환경에서 실제 오차 > τ = 분명한 거부 · 보장 오차 상한 ≤ τ/2 = 분명한 통과 · 구간 폭 > τ = 분명한 거부) →
+    #         ⓓ · 상태 결론이 모든 환경에서 같아야 한다.
+    #       칼날 사례 (그 밖 — 실제 오차가 τ 근처라 해가 경로마다 τ 의 양쪽에 놓일 수 있다 · 예: 봉인 표의 접합 rtol 1e-10 행) →
+    #         판정이 경로마다 달라도 되지만 (각 해의 판정이므로) 통과한 해는 전부 실제 오차 ≤ τ (건전 · 보수 쪽 = 거부).
+    #     ⓐ ⓑ ⓒ 의 칼날 (주 반례 ⓑ 불균형 9.15e-5 ↔ 1.47e-4) 은 경로마다 다르게 판정되는 것이 정상 — 기록 (단언 아님).
+    envs = {}
+    for ct, nthr in PROBE_ENVS:
+        env = {k: v for k, v in os.environ.items() if k not in ('PYTHONPATH', 'PYTHONHOME', 'OPENBLAS_CORETYPE')}
+        env.update(OPENBLAS_NUM_THREADS=nthr, OMP_NUM_THREADS=nthr, MKL_NUM_THREADS=nthr, NUMEXPR_NUM_THREADS=nthr)
+        if ct != 'default':
+            env['OPENBLAS_CORETYPE'] = ct
+        p = subprocess.run([sys.executable, '-I', os.path.abspath(__file__), '--probe-env'], capture_output=True, text=True,
+                           env=env, timeout=7200)
+        line = [x for x in p.stdout.splitlines() if x.startswith('PROBE_ENV ')]
+        envs[f'{ct}/{nthr}'] = (json.loads(line[-1][len('PROBE_ENV '):]) if (p.returncode == 0 and line)
+                                else {'_error': (p.returncode, p.stderr[-400:])})
+    refs = {which: codex_chain(which)[-1] for which in CODEX}            # Codex = 정확 직렬 공식 G*
+    for variant, sysd in sys_probe:                                      # 탐침 = 같은 행렬 직접해 (자기 오차 ≪ 1e-6)
+        Ib0, _ = CC.plate_currents(sysd['phi_direct'], sysd['Ab'], sysd['gb'], sysd['At'], sysd['gt'])
+        for rt in PROBE_ENV_RTOLS:
+            refs[f'probe_{variant}_{rt:.0e}'] = Ib0
+    keys = sorted(refs)
+    errs = {e: v['_error'] for e, v in envs.items() if '_error' in v}
+    arch = {e: sorted({str(d.get('architecture')) for d in (v.get('_blas') or [])
+                       if isinstance(d, dict) and d.get('internal_api') == 'openblas'})
+            for e, v in envs.items() if '_error' not in v}
+    tau, slack = 1e-4, 1e-6                                 # 탐침 참조 = 직접해 (자기 오차 ~1e-8) — 실제 오차 판정의 여유
+
+    def _act(k, r):                                         # 실제 상대 오차 (게시 G 기준 · 참조값 대비)
+        G = float.fromhex(r['sigma_hex']) if isinstance(r.get('sigma_hex'), str) else math.nan
+        return abs(G - refs[k]) / abs(G) if _fin(G) and G != 0.0 else math.inf
+    kind = {}
+    for k in keys:
+        rs = [envs[e].get(k) or {} for e in envs if '_error' not in envs[e]]
+        acts = [_act(k, r) for r in rs]
+        ebs = [r.get('err_bound') if _fin(r.get('err_bound')) else math.inf for r in rs]
+        wds = [r.get('width') if _fin(r.get('width')) else math.inf for r in rs]
+        if rs and min(acts) > tau + slack:
+            kind[k] = '분명 거부 (실제 오차 > τ)'
+        elif rs and min(wds) > tau:
+            kind[k] = '분명 거부 (구간 폭 > τ)'
+        elif rs and max(ebs) <= tau / 2:
+            kind[k] = '분명 통과 (상한 ≤ τ/2)'
+        else:
+            kind[k] = '칼날'
+    print(f'    환경 꼴 표 (OpenBLAS 실제 경로 {arch}) — 칸 = ⓐⓑⓒⓓ (1 통과 · 0 거부) · ⓓ 보장 오차 상한 · 실제 오차 · ⓑ 불균형:')
+    if len({tuple(a) for a in arch.values()}) < 2:
+        print('    ⚠ 이 기계에서 두 설정이 같은 OpenBLAS 경로 — 아래 표는 경로 차를 보지 못한다 (스레드 차만)')
+    for k in keys:
+        print(f'      {k:20s} [{kind[k]}]')
+        for e in envs:
+            r = envs[e].get(k) or {}
+            f = ''.join('1' if r.get(x) else '0' for x in ('pass_a', 'pass_b', 'pass_c', 'pass_d'))
+            eb, im = r.get('err_bound'), r.get('imbalance')
+            print(f'          {e:14s} {f}  상한 {eb if not isinstance(eb, float) else format(eb, ".3e")}  실제 {_act(k, r):.3e}  '
+                  f'불균형 {im if not isinstance(im, float) else format(im, ".3e")}' if r else f'          {e:14s} -')
+    clear = [k for k in keys if kind[k] != '칼날']
+    same_d = all(len({(envs[e].get(k) or {}).get('pass_d') for e in envs}) == 1
+                 and len({(envs[e].get(k) or {}).get('status') for e in envs}) == 1 for k in clear)
+    unsound = []
+    for e, out in envs.items():
+        for k in keys:
+            r = out.get(k) or {}
+            if r.get('pass_d') is True:
+                lim = tau if k in CODEX else tau + slack
+                if not _act(k, r) <= lim:
+                    unsound.append((e, k, _act(k, r)))
+    abc_flip = [k for k in keys if len({tuple((envs[e].get(k) or {}).get(x) for x in ('pass_a', 'pass_b', 'pass_c')) for e in envs}) > 1]
+    d_flip = [k for k in keys if len({(envs[e].get(k) or {}).get('pass_d') for e in envs}) > 1]
+    bit_flip = [k for k in keys if len({(envs[e].get(k) or {}).get('sigma_hex') for e in envs}) > 1]
+    print(f'    σ 비트가 환경마다 다른 사례 {bit_flip} · ⓐ ⓑ ⓒ 판정이 환경마다 다른 사례 (칼날 · 정상 · 기록) {abc_flip} · '
+          f'ⓓ 판정이 환경마다 다른 사례 {d_flip} (칼날만 허용)')
+    must_clear = set(CODEX) | {f'probe_{v}_{r:.0e}' for v in ('plain', 'junction') for r in (1e-8, 1e-12)}
+    chk(f'T17c 환경 꼴 {len(PROBE_ENVS)} (OpenBLAS 경로 × 스레드 · 자식 프로세스) — 분명한 사례 {len(clear)}/{len(keys)} (Codex 셋 · 탐침 '
+        'rtol 1e-8 · 1e-12 는 반드시 분명) 는 ⓓ · 상태 결론이 모든 환경에서 같음', not errs and same_d and must_clear <= set(clear),
+        errs or ([(k, kind[k]) for k in d_flip], sorted(must_clear - set(clear))))
+    chk('T17c2 같은 표 — 어느 환경 · 어느 사례 (칼날 포함) 에서든 ⓓ 통과한 해의 실제 오차 ≤ 1e-4 (참조 = Codex 정확 직렬 G* · 탐침 직접해) '
+        '— 보수 · 거짓 통과 0', not errs and not unsound, unsound[:3])
+    hw = [e for e in envs if e.startswith('Haswell/') and arch.get(e) and all(a == 'Haswell' for a in arch[e])]
+    if hw:
+        m = [envs[e].get('main') or {} for e in hw]
+        chk('T17c3 Haswell 경로 (Codex 와 같은 계산 경로) — 주 반례가 Codex 판정문 그대로 ⓐ ⓑ ⓒ 를 다 통과하는데 ⓓ 가 거부 '
+            '(ⓓ 가 막는 것이 이 꼴이다)', all(r.get('pass_a') and r.get('pass_b') and r.get('pass_c') and r.get('pass_d') is False
+                                             and r.get('ok') is False for r in m), m)
+    else:
+        print(f'    (T17c3 생략 — 이 기계에서 OPENBLAS_CORETYPE=Haswell 이 실제 경로를 바꾸지 않았다: {arch})')
+
+
+@case('T19 칼날 — 보장 오차 상한이 τ = 1e-4 를 1.1e-20 넘는 (lo, hi, G) 는 거부 (정확 분수 비교 · float 나눗셈이면 통과) · 한 ulp 안쪽은 통과 · '
+      '증서 전체 칼날 훑기 (단조 · 통과 점은 정확 오차 ≤ 1e-4)')
+def t19():
+    from fractions import Fraction as Fr
+    tau = Fr(1, 10 ** 4)
+    for i, (G, hi) in enumerate(KNIFE):
+        ex = (Fr(hi) - Fr(G)) / Fr(G)
+        flt = not ((hi - G) / G > 1e-4)
+        j = CC.target_judge(G, hi, G)
+        chk(f'T19a 칼날 {i} — 정확 오차 상한이 τ 를 {float(ex - tau):.1e} 넘는다 (float 나눗셈 비교면 통과 = {flt}) → ⓓ 거부 (보수 · 정확 비교)',
+            ex > tau and j.get('pass_d') is False, (j.get('pass_d'), j.get('target_why')))
+        hi2 = math.nextafter(hi, 0.0)
+        j2 = CC.target_judge(G, hi2, G)
+        chk(f'T19b 칼날 {i} 한 ulp 안쪽 (정확 오차 상한 ≤ τ) → 통과 (보수가 지나치지 않다)',
+            (Fr(hi2) - Fr(G)) / Fr(G) <= tau and j2.get('pass_d') is True, (j2.get('pass_d'), j2.get('target_why')))
+    j_in = CC.target_judge(1.0, 1.0 + 2.0 ** -20, 1.0)                # 정확히 τ 아래 (폭 = 오차 = 9.5e-7)
+    chk('T19c 칼날 대조 — 안쪽 (9.5e-7 ≪ τ) 은 통과', j_in.get('pass_d') is True, j_in)
+    L, b, phi, Ab, gb, At, gt = _exact2()
+    scan = []
+    for dl in np.linspace(0.24e-4, 0.26e-4, 41):
+        pb = phi.copy()
+        pb[0] += dl                                         # 게시 G = 2 (1 − φ₀) 를 −2δ 옮긴다 (G* 0.5) — 상대 ≈ 4δ · 칼날 δ ≈ 2.5e-5
+        cb = _cert_of(L, b, pb, Ab, gb, At, gt)
+        Gp = cb.get('I_bot')
+        scan.append((float(dl), cb.get('pass_d'), cb.get('target_err_bound_rel'),
+                     bool(_fin(Gp) and abs(Fr(Gp) - Fr(1, 2)) <= tau * Fr(Gp))))
+    passes = [s for s in scan if s[1] is True]
+    mono = all(not (scan[i][1] is not True and scan[i + 1][1] is True) for i in range(len(scan) - 1))
+    chk('T19d 증서 전체 칼날 훑기 (두 셀 직렬 · 게시 오차 ≈ 1e-4 둘레 41 점) — 통과는 앞쪽 연속 구간 (단조) · 통과한 점은 전부 정확 오차 ≤ 1e-4 · '
+        '통과 · 거부 둘 다 있다', mono and passes and len(passes) < len(scan) and all(s[3] for s in passes),
+        [(round(s[0] * 1e6, 3), s[1], s[2]) for s in scan[18:24]])
+
+
+@case('T20 묶음 합 (`_fsum_bound`) — 2²⁰ 넘는 배열 (생산 침대 = 간선 수천만 → 묶음 길) 의 합 · 오차 상한이 한 번의 정확 반올림 합 (math.fsum) '
+      '을 덮는다 (양수 · 묶음 사이 큰 상쇄) · 합 넘침 = 예외 대신 (inf, inf)')
+def t20():
+    rng = np.random.default_rng(2020)
+    n = (1 << 20) + 4099
+    pos = 10.0 ** rng.uniform(-8, 8, n)
+    mix = rng.standard_normal(n) * 10.0 ** rng.uniform(-3, 3, n)
+    mix[:1000] += 1e20                                      # 첫 묶음 = +1e20 · 둘째 묶음 = −1e20 (묶음 사이 상쇄)
+    mix[(1 << 20):(1 << 20) + 1000] -= 1e20
+    for nm, x in (('양수', pos), ('묶음 사이 상쇄', mix)):
+        s, e = CC._fsum_bound(x)
+        ref = math.fsum(x.tolist())                         # 정확 합의 정확 반올림 (오차 ≤ u|ref|)
+        chk(f'T20a [{nm} · n {n:,}] 묶음 합 오차 상한 ≥ |묶음 합 − 정확 반올림 합| + u|정확 반올림 합| (정확 합까지 덮는다)',
+            _fin(s) and _fin(e) and abs(s - ref) + 2.0 ** -53 * abs(ref) <= e, (s, ref, e))
+    big = np.full(4, 1.7e308)
+    try:
+        r = CC._fsum_bound(big)
+        ok = (r[0] == math.inf and r[1] == math.inf)
+    except Exception as ex:                                 # noqa: BLE001
+        ok, r = False, f'{type(ex).__name__}: {ex}'
+    chk('T20b 합 넘침 (1.7e308 × 4) → (inf, inf) · 예외 아님 (호출자가 비유한으로 NOT_CERTIFIABLE)', ok, r)
+
+
+# ═════════════════════════ T18 변이 시험 (소스 몇 글자 · 되돌린다) ═════════════════════════
+#: (이름, 모듈, ((바꿀 원문 (정확히 한 번), 바꿀 글), …), 돌릴 시험, 잡아야 할 시험 이름 접두)
+MUTANTS = (
+    ('U 에서 내부 간선 하나 뺌', 'step3_conv_cert', (('u1, e1 = _fsum_bound(tu[0])', 'u1, e1 = _fsum_bound(tu[0][:-1])'),),
+     ('t16',), ('T16a', 'T16b', 'T16i')),
+    ('q 트리 보정 생략', 'step3_conv_cert', (('    if _tree:\n        acc = d.copy()', '    if False:\n        acc = d.copy()'),),
+     ('t6', 't1'), ('T6c', 'T1c')),
+    ('오차 상한 비교 부등호 반대', 'step3_conv_cert', (('elif fe > lim:', 'elif fe < lim:'),), ('t1',), ('T1a',)),
+    ('결손 항 뺌 (D = 0)', 'step3_conv_cert', (('    if _defect_term:\n', '    if False:\n'),), ('t6',), ('T6c',)),
+    ('상한의 부동소수 여유 뺌 (상한 = 계산된 U 그대로)', 'step3_conv_cert',
+     (('hi = (U + e1 + e2 + e3) * (1.0 + 8.0 * _UNIT)', 'hi = U'),), ('t16',), ('T16a', 'T16b', 'T16g', 'T16i')),
+    ('원장 행 합 검사 뺌', 'step3_conv_cert', (("    if (np.abs(rs - pl) > ", "    if False and (np.abs(rs - pl) > "),), ('t7',),
+     ('T7 [접지',)),
+    ('영값 위상의 정확 0 요구 뺌', 'step3_conv_cert',
+     (("zero_exact = bool(out['I_bot'] == 0.0 and out['I_top'] == 0.0 and out['sigma'] == 0.0)", 'zero_exact = True'),),
+     ('t3', 't16'), ('T3c', 'T16f')),
+    ('구간 폭 검사 뺌', 'step3_conv_cert', (('    if fw > lim:', '    if False:'),), ('t13',), ('T13b 거부 [구간 폭',)),
+    ('게시값 대신 위 판 전류로 판정', 'step3_conv_cert', (("jd = target_judge(tb['target_lo'], tb['target_hi'], out['I_bot'])",
+                                                  "jd = target_judge(tb['target_lo'], tb['target_hi'], out['I_top'])"),),
+     ('t1',), ('T1a',)),
+    ('계약이 ⓓ 를 다시 판정하지 않음', 'run_contract', (("    if jd['pass_d'] is not True:", '    if False:'),), ('t13',),
+     ('T13b 거부 [구간이 G',)),
+    ('계약이 영값 σ 0 을 요구하지 않음', 'run_contract', (('and s == 0.0 and _fin_num(sigma) and sigma == 0.0', 'and _fin_num(sigma)'),),
+     ('t13',), ('T13d 영값 증서 거부 [결과 σ',)),
+    #  ★ 굳히기 (사전 공격 리뷰) 의 자리 — 정확 분수 판정 · 입력 dtype · 밑넘침 · 원장 허용의 두 방향 (너무 넓게 · 너무 좁게)
+    ('판정 비교를 float 나눗셈으로 (정확 분수 뺌)', 'step3_conv_cert',
+     (('    if fw > lim:', '    if w > tol:'), ('elif fe > lim:', 'elif e > tol:')), ('t19',), ('T19a',)),
+    ('φ dtype 검사 뺌 (숫자 글자 · bool 을 float 로)', 'step3_conv_cert',
+     (("    if p.dtype.kind not in _NUM_KINDS:\n        return f'phi dtype", "    if False:\n        return f'phi dtype"),),
+     ('t7',), ('T7h [φ 숫자 글자', 'T7h [φ bool')),
+    ('b dtype 검사 뺌', 'step3_conv_cert', (('    if b0.dtype.kind not in _NUM_KINDS:', '    if False:'),), ('t7',),
+     ('T7h [b 숫자 글자',)),
+    ('밑넘침 검사 뺌', 'step3_conv_cert', (('    return bool(bad.any() or (nz & (z == 0)).any())', '    return False'),), ('t7',),
+     ('T7u [부정규', 'T7u [곱 완전')),
+    ('대칭 허용을 넓게 (1e-12 → 1e-3)', 'step3_conv_cert', (('_SYM_TOL = 1.0e-12 ', '_SYM_TOL = 1.0e-3 '),), ('t15',), ('T15c',)),
+    ('행 합 허용에서 항 수 비례 뺌 (고정 64u)', 'step3_conv_cert',
+     (('tol_r = _LEDGER_TOL * (np.diff(Lc.indptr) + kb + kt + 8.0) * (ar + pl)', 'tol_r = _LEDGER_TOL * (ar + pl)'),), ('t15',),
+     ('T15b',)),
+    ('계약이 부동소수 보수 규칙을 봉인하지 않음', 'run_contract',
+     (("                    ('target_fp', _cc.TARGET_FP_RULE)):", '                    ):'),), ('t13',), ('T13b 거부 [부동소수 보수 규칙',)),
+)
+
+
+def _mutant(modname, pairs):
+    path = os.path.join(SCRIPTS, modname + '.py')
+    with open(path, encoding='utf-8') as fh:
+        src = fh.read()
+    for old, _new in pairs:
+        if src.count(old) != 1:
+            raise AssertionError(f'{modname}: 변이 자리 {src.count(old)} 곳 (정확히 1 이어야 한다): {old!r}')
+    for old, new in pairs:
+        src = src.replace(old, new)
+    m = type(sys)(modname)
+    m.__file__ = path
+    m.__dict__['__mutant__'] = tuple(pairs)
+    exec(compile(src, path + ' [변이]', 'exec'), m.__dict__)   # noqa: S102 — 시험 전용 변이 (되돌린다)
+    return m
+
+
+def _muted(fns, run):
+    """시험 함수들을 조용히 돌려 (단언 이름, 결과) 목록을 모은다 — 함수가 예외로 죽으면 그것도 실패 단언 하나."""
+    _MUTE.append([])
+    err = None
+    try:
+        for f in run:
+            try:
+                quiet(fns[f])
+            except Exception as e:                          # noqa: BLE001 — 변이가 시험을 죽여도 적발이다
+                err = f'{type(e).__name__}: {e}'
+                _MUTE[-1].append((f'{f}: 예외', False))
+    finally:
+        res = _MUTE.pop()
+    return res, err
+
+
+@case('T18 변이 시험 — 증서 · 계약 구현 몇 글자를 틀리게 하면 시험이 옳은 이유로 실패한다 (변이 표 · 원 모듈로 되돌림 · 기준선 통과 단언만 '
+      '센다 · 빠른 판 = 변이 자리 존재만)')
+def t18():
+    global CC, RC
+    fns = {'t1': t1, 't3': t3, 't6': t6, 't7': t7, 't13': t13, 't15': t15, 't16': t16, 't19': t19}
+    srcs = {}
+    for mod in sorted({m[1] for m in MUTANTS}):
+        with open(os.path.join(SCRIPTS, mod + '.py'), encoding='utf-8') as fh:
+            srcs[mod] = fh.read()
+    miss = [(nm, old) for nm, mod, pairs, _r, _w in MUTANTS for old, _n in pairs if srcs[mod].count(old) != 1]
+    chk(f'T18 변이 자리 {sum(len(m[2]) for m in MUTANTS)} 곳이 모듈에 정확히 한 번씩 (시험 ↔ 구현 글자 대조 · 변이 {len(MUTANTS)})',
+        not miss, miss[:3])
+    if not ARGS.long:
+        print('    (변이 표 = 긴 판 전용 — --long)')
+        return
+    #  기준선 — 변이 없이 같은 시험.  변이에서 실패한 단언 중 **기준선에서 통과한** 것만 적발 근거로 센다 (원래 실패하는 단언으로 적발을
+    #  꾸미지 않는다 · 같은 이름이 여럿이면 전부 통과해야 통과로 친다).
+    base_res, base_err = _muted(fns, sorted({f for m in MUTANTS for f in m[3]}))
+    base_pass = {}
+    for n, c in base_res:
+        base_pass[n] = base_pass.get(n, True) and c
+    base_fail = [n for n, v in base_pass.items() if not v]
+    chk(f'T18 기준선 — 변이 없이 돌린 단언 {len(base_res)} 개 전부 통과 (예외 없음)', not base_fail and base_err is None,
+        (base_fail[:4], base_err))
+    table = []
+    for nm, mod, pairs, run, want in MUTANTS:
+        orig_cc, orig_rc = CC, RC
+        saved = sys.modules.get(mod)
+        try:
+            m = _mutant(mod, pairs)
+        except Exception as e:                              # noqa: BLE001
+            chk(f'T18 [{nm}] 변이 만들기', False, f'{type(e).__name__}: {e}')
+            continue
+        sys.modules[mod] = m
+        if mod == 'step3_conv_cert':
+            CC = m
+        else:
+            RC = m
+        try:
+            res, err = _muted(fns, run)
+        finally:
+            CC, RC = orig_cc, orig_rc
+            if saved is None:
+                sys.modules.pop(mod, None)
+            else:
+                sys.modules[mod] = saved
+        failed = [n for n, c in res if not c]
+        right = [n for n in failed if base_pass.get(n) is True and any(n.startswith(w) for w in want)]
+        table.append((nm, len(res), len(failed), len(right), right[:2]))
+        chk(f'T18 [{nm}] 적발 — 실패 {len(failed)}/{len(res)} · 옳은 이유 (기준선에서 통과한 기대 시험 {want} 가 실패) {len(right)} · '
+            f'{right[:2]}', bool(right), (failed[:4], err))
+    print('    변이 표 (이름 · 돌린 단언 · 실패 · 옳은 이유 (기준선 통과 → 변이 실패) 수 · 예):')
+    for row in table:
+        print(f'      {row[0]:40s} {row[1]:4d} {row[2]:4d} {row[3]:4d}  {row[4]}')
+    chk('T18 되돌림 — 변이 뒤 시험이 쓰는 모듈 = 원 모듈 (sys.modules · 전역 CC · RC · 변이 표지 없음)',
+        CC is sys.modules.get('step3_conv_cert') and RC is sys.modules.get('run_contract')
+        and '__mutant__' not in CC.__dict__ and '__mutant__' not in RC.__dict__, (CC, RC))
 
 
 def main():
     global S3, CC, RC, ARGS
-    ap = argparse.ArgumentParser(description='STEP3 수렴 증서 ⓓ 목표량 증서 + 해 상태 시험 (시험 먼저)')
-    ap.add_argument('--only', default='', help='쉼표로 나눈 이름 접두 (예: T1,T13)')
-    ap.add_argument('--search-n', default=1500, type=int, help='T5 표본 수 (변형마다 · 기본 1,500)')
+    ap = argparse.ArgumentParser(description='STEP3 수렴 증서 ⓓ 목표량 증서 + 해 상태 시험 (시험 먼저 · 기본 = 빠른 판 · --long = 긴 판)')
+    ap.add_argument('--only', default='', help='쉼표로 나눈 시험 번호 (첫 낱말 정확히 · 예: T1,T13)')
+    ap.add_argument('--long', action='store_true',
+                    help='긴 판 — 표본 크게 (T5 1,500 · T16 200 · T17 순열 20) + 탐침 순열 · OpenBLAS 경로 자식 여섯 (T17) · 시간 (T14) · '
+                         '변이 표 (T18).  게이트에는 빠른 판만 (메인 10-21)')
+    ap.add_argument('--search-n', default=None, type=int, help='T5 표본 수 (변형마다 · 빠른 판 300 · 긴 판 1,500)')
+    ap.add_argument('--circuits-n', default=None, type=int, help='T16 무작위 손 회로 수 (빠른 판 40 · 긴 판 200)')
+    ap.add_argument('--perm-n', default=None, type=int, help='T17 Codex 사례마다 노드 순열 수 (빠른 판 3 · 긴 판 20)')
+    ap.add_argument('--probe-env', action='store_true', help='(T17 자식 프로세스) 판정을 JSON 한 줄로 찍고 끝낸다')
     ARGS = ap.parse_args()
+    for k, fast, slow in (('search_n', 300, 1500), ('circuits_n', 40, 200), ('perm_n', 3, 20)):
+        if getattr(ARGS, k) is None:
+            setattr(ARGS, k, slow if ARGS.long else fast)
     import step3_sigma as _s3
     S3 = _s3
     import step3_conv_cert as _cc
     CC = _cc
     import run_contract as _rc
     RC = _rc
+    if ARGS.probe_env:
+        probe_env()
+        return 0
     only = [x.strip() for x in ARGS.only.split(',') if x.strip()]
+    mode = '긴 판' if ARGS.long else '빠른 판'
     t0 = time.time()
-    for tag, fn in CASES:
-        if only and not any(tag.startswith(o) for o in only):
+    for tag, fn, long_only in CASES:
+        if only and tag.split()[0] not in only:
+            continue
+        if long_only and not ARGS.long:
+            print(f'\n── {tag}\n    (긴 판 전용 — 빠른 판에서는 돌지 않는다 · --long)')
             continue
         print(f'\n── {tag}')
+        tc = time.time()
         try:
             fn()
         except Exception as e:                              # noqa: BLE001 — 구현 전 (API 없음) 도 시험 단위로 기록
             import traceback
             traceback.print_exc(limit=3)
             chk(f'{tag.split()[0]}: 실행', False, f'{type(e).__name__}: {e}')
-    print(f'\n== test_step3_target_cert: {_ok}/{_ok + len(_fail)} PASS ({time.time() - t0:.1f} s)')
+        print(f'    ({tag.split()[0]} {time.time() - tc:.1f} s)')
+    print(f'\n== test_step3_target_cert [{mode}]: {_ok}/{_ok + len(_fail)} PASS ({time.time() - t0:.1f} s)')
     if _fail:
         print('FAIL: ' + ' · '.join(_fail))
     return 0 if not _fail else 1
