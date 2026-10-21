@@ -12393,6 +12393,71 @@
       "evidence_tests": [
         "scripts/test_rint_g2_join.py"
       ]
+    },
+    {
+      "id": "WEB-10",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 세션 10-21 웹앱 점검 에이전트 (1저자 화면 10-20 · SDCP final a0 SBE ↔ DBE 비교의 AM_P 칸 0)",
+      "opened_in": "docs/session_20260923_progress.md",
+      "title": "MPM lab 요약 복사 문구가 AM_P 상이 없는 침대 (SDCP SBE · DBE = AM_S 한 상) 에 \"coverage AM_P : Hertz 0 / Tabor 0 %\" 를 적는다 — 없는 상을 측정된 0 으로 보인다 (비교표는 10-21 고침 · 이 문구는 봉인 app.py 경로라 남김)",
+      "note": "자리: webapp/templates/mpm_lab.html:294 (문구) ← webapp/app.py:9182 (요약 경로 · 봉인 32 · 상별 입자 수 없이 metrics 만 준다).  뿌리 = 생산자가 없는 상에 0.0 을 싣는다: scripts/mpm_webapp_payload.py:240 (max(len(idx),1)) · scripts/mpm3d_compaction.py:1141 (tot==0 → 0.0 · FAM §12-6 md5 봉인 대상) — 같은 경우 강체 짝은 None (mpm_webapp_payload.py:261).  ✅ 1저자 10-21 [웹앱] Q1 *\"권고대로\"* = \"생산자가 없는 상을 0 대신 None 으로 싣는다\" 는 결정과 묶어 214 발사 뒤 (봉인이 풀린 뒤) 한 번에 고친다 (시험 먼저 · 웹앱 같은 묶음).  같은 묶음에서 볼 것 = viewer3d.js:7999 단일 뷰어 칩 (있는 상의 참 0 이 숨겨질 수 있음 · 관찰 · 시험으로 확인 전).  비교표 (showLabCompareModal) 는 10-21 고침 (시험 먼저 16/23 → 23/23 · webapp/test_mpm_lab_cmp_absent_phase.py).",
+      "evidence_tests": [
+        "webapp/test_mpm_lab_cmp_absent_phase.py (비교표만 · 요약 문구는 아직 시험 없음)"
+      ]
+    },
+    {
+      "id": "ULPR-01",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 세션 10-21 사전 공격 리뷰 (독립 에이전트 · 리뷰 핀 92e6cda4d · 키트 docs/data/ps45_unload_20261009/ · Codex 재확인 2 발송 전)",
+      "opened_in": "docs/reviews/codex_dem_unloading_kit_fix_recheck2_request_20261015.md",
+      "title": "이어 돌린 새 시도가 단 k_r+1 줄을 다시 쓰기 전에 끝나면 (TIMEOUT · GUARD · 이동 중 TIMEOUT) 옛 시도의 그 단 줄이 남아 정상 관측으로 쓰인다 — primary OK · ρ 0.2026077873428664 % · UVa ALLOW (같은 꼴 fresh 런 = UNIDENTIFIED · 거부) · 교차 전 단은 LOWER_BOUND 0.2251 → 0.2701 %",
+      "note": "수정 전 판 eaecfba2a 에도 있음 (이번 수정이 만든 것 아님) · Codex 재확인 Q2 의 네 경우 (짧음 · 같음 · 김 · 무승인) 밖의 다섯째 경우.  고칠 후보: ① 단 줄 ↔ 그 단 창 기록 대조 (창 수 · 마지막 창 step) ② 되감기에서 버린 옛 사건 구간의 창 · 단 줄도 정리.  ✅ 1저자 10-21 *\"권고대로\"* = 고친 뒤 발송 (시험 먼저 · 판독기만 · 덱 · 봉인 규칙 · 실행 2 영향 없음 추정).  탐침 = 스크래치 prereview_unload/probe_resume_unfinished.py (반입 예정).  사전 리뷰 판정문 = 스크래치 prereview_unload/REVIEW.md (고칠 때 반입).",
+      "evidence_tests": [
+        "docs/data/ps45_unload_20261009/ul_runner_test.py"
+      ]
+    },
+    {
+      "id": "ULPR-02",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 세션 10-21 사전 공격 리뷰 (독립 에이전트 · 리뷰 핀 92e6cda4d · 키트 docs/data/ps45_unload_20261009/ · Codex 재확인 2 발송 전)",
+      "opened_in": "docs/reviews/codex_dem_unloading_kit_fix_recheck2_request_20261015.md",
+      "title": "ULKRF 수정이 더한 사유 줄 · 조건 6 개 (resume_from 밖 RESUME · k/step 숫자 아님 · 상태 파일 불일치 · 되감기 k>k_r · kit 판독기 목록 대조 · 재판독 rc) 를 하나씩 꺼도 자체시험 182/182 그대로 — 시험이 그 줄을 지키지 않는다",
+      "note": "동작은 사전 리뷰 탐침으로 맞다고 확인 · 시험 보강 (변이 6 이 각각 옳은 이유로 실패).  사전 리뷰 판정문 = 스크래치 prereview_unload/REVIEW.md (고칠 때 반입).",
+      "evidence_tests": [
+        "docs/data/ps45_unload_20261009/ul_runner_test.py"
+      ]
+    },
+    {
+      "id": "ULPR-03",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 세션 10-21 사전 공격 리뷰 (독립 에이전트 · 리뷰 핀 92e6cda4d · 키트 docs/data/ps45_unload_20261009/ · Codex 재확인 2 발송 전)",
+      "opened_in": "docs/reviews/codex_dem_unloading_kit_fix_recheck2_request_20261015.md",
+      "title": "G2 원자 비교 파서 (_dump_tokens) 가 같은 ID 두 줄 · 다른 TIMESTEP · 잘린 덧줄에도 PASS — README 의 \"모든 경로에서 … ID 고유\" 와 어긋남 (G2c 를 고친 자리 바로 옆)",
+      "note": "거부로 고치고 시험 먼저.  사전 리뷰 판정문 = 스크래치 prereview_unload/REVIEW.md (고칠 때 반입).",
+      "evidence_tests": [
+        "docs/data/ps45_unload_20261009/ul_runner_test.py"
+      ]
+    },
+    {
+      "id": "ULPR-04",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 세션 10-21 사전 공격 리뷰 (독립 에이전트 · 리뷰 핀 92e6cda4d · 키트 docs/data/ps45_unload_20261009/ · Codex 재확인 2 발송 전)",
+      "opened_in": "docs/reviews/codex_dem_unloading_kit_fix_recheck2_request_20261015.md",
+      "title": "G2c 열 결손이 VALUE_MISMATCH 로 분류된다 — 등록 §14-10 은 관측 결손 = UNCONFIRMED",
+      "note": "✅ 1저자 10-21 [언로딩] Q2 *\"권고대로\"* = 등록 §14-10 대로 UNCONFIRMED 로 바꾼다 (시험 먼저 · 요청서 Q3 에 반영).  사전 리뷰 판정문 = 스크래치 prereview_unload/REVIEW.md (고칠 때 반입).",
+      "evidence_tests": [
+        "docs/data/ps45_unload_20261009/ul_runner_test.py"
+      ]
     }
   ]
 }
