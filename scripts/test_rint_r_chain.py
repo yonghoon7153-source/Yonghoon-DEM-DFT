@@ -2337,6 +2337,77 @@ def t_V18():
             (sc['l'][0]['sum']['status'], v.get('verdict'), v.get('flags'), fv))
 
 
+#  Q2 가장자리 (보호 띠 연장 · 판정 없음 칸 · 표지마다 사유) — 두 번째 시험 먼저 ───────────────────────
+U12C_TP = 1.63 * 1.02                                       # T⁺ (mS/cm)
+#: S(1e4) = T⁺(1 + 3e-5) 가 되게 고른 k — 판독 오차 e 1e-4 면 1e4 점이 T⁺ 띠에 걸치고 더 작은 R 실측 점은 아직 없다
+U12C_K = (U12C_TP * (1.0 + 3e-5) - 1.597) * (1e4 / RCA01_SCALE + 0.1)
+
+
+def u12c_S(R, i=0):
+    """보호 띠 연장 — RCA-01 꼴 S = 1.597 + k/(r + 0.1) mS/cm (r = R/10^4.75 · origin 무관)."""
+    return 1.597 if R == math.inf else 1.597 + U12C_K / (R / RCA01_SCALE + 0.1)
+
+
+def eval_U12c():
+    true_lo = (U12C_K / (U12C_TP - 1.597) - 0.1) * RCA01_SCALE           # 참 R_lo (S = T⁺) ≈ 10,011.9 Ω
+    try:
+        a = run_U01e(1e-4, S=u12c_S, cap=24)
+        b = run_U01e(0.0, S=u12c_S, cap=24)
+    except Exception as e:                                  # noqa: BLE001 — 바깥 실측 점이 없을 때 사슬이 죽으면 (max([]) …) 실패
+        return False, f'{type(e).__name__}: {e}'
+    lad_, status, R, _J = a
+    lo = (lad_.st.get('ends') or {}).get('lo') or {}
+    ok = (status == 'CALIBRATED' and R['R_j_lo'] == 100.0 and lo.get('source') == 'outer_neighbor' and '100.0' in lad_.st['order']
+          and lad_.st['n_ext'] >= 1 and R['R_j_lo'] <= true_lo
+          and u12c_S(1e4) * (1.0 - 1e-4) < U12C_TP <= u12c_S(1e4) and u12c_S(1e2) * (1.0 - 1e-4) >= U12C_TP
+          and b[1] == 'CALIBRATED' and b[2]['R_j_lo'] == 1e4 and b[0].st['n_ext'] == 0)
+    return ok, (status, R, lo.get('source'), lad_.st['n_ext'], b[1], b[2], true_lo)
+
+
+@check('U12c', '★ 4판 Q2-2 (§3-2b ③″ · 구현 가장자리) — 바깥 실측 점이 보호 띠로 다 걸치면 (1e4 점 σ = T⁺(1 + 3e-5) · e 1e-4 · 더 작은 R 실측 '
+                '없음) 사다리 규칙 그대로 같은 쪽 ×100 새 점 (1e2) 을 돌아 끝으로 (③′ 연장 꼴 · 죽지 않는다 · 참 끝 10,011.9 의 바깥) · e = 0 이면 3판 그대로 '
+                '(끝 1e4 · 연장 없음)')
+def t_U12c():
+    return eval_U12c()
+
+
+@check('V19', '★ 4판 (Q2-4 · §5-5b 같은 레코드 = 같은 문장) — 판정 기록 문장 칸: CALIB_EDGE (V08) = 판정 없음 칸 (법칙별 이름 · 사유 · …) · 등록 결과 '
+               'NOT_COMPUTED (V13) = 판정 없음 칸 (사유) · 사슬 멈춤 (S21 DUPLICATE_RUN) = 같은 NOT_COMPUTED 칸 + 사유 = 멈춤 코드 (단계 verdict) · '
+               '감도 미완료 칸 = 해당 없음 (null) (3판 = 셋 다 문장 null · 멈춤 사유 없음)')
+def t_V19():
+    v8 = scen('V08', lambda: verdict('V08', [run_L10()['out'], s_main('P1')['out']]))['v'] or {}
+    v13 = scen('V13', lambda: verdict('V13', [scen('L17', lambda: ladder('L17', world('L17', dict(
+        PW, faults=[{'do': 'certfail', 'match': {'rj': '1000000.0'}}]))))['out'], s_main('P1')['out']]))['v'] or {}
+    s21 = scen('S21', lambda: verdict('S21', main_dirs() + [s_main('P0')['out']]))['v'] or {}
+    rs = s21.get('reasons') or []
+    ok = (v8.get('verdict') == 'CALIB_EDGE' and v8.get('sentence') == T_CALIB and v8.get('sensitivity_incomplete', 'x') is None
+          and v13.get('verdict') == 'NOT_COMPUTED' and v13.get('sentence') == T_NC and v13.get('sensitivity_incomplete', 'x') is None
+          and s21.get('verdict') == 'NOT_COMPUTED' and s21.get('sentence') == T_NC and s21.get('blocking_reasons') == {}
+          and s21.get('sensitivity_incomplete', 'x') is None and len(rs) == 1 and rs[0].get('stage') == 'verdict'
+          and rs[0].get('code') == 'DUPLICATE_RUN')
+    return ok, (v8.get('sentence'), v13.get('sentence'), s21.get('sentence'), rs)
+
+
+@check('V20', '★ 4판 (Q2-4 · §5-5b "표지마다 사유") — SV_DEPENDENT = 대조 비 > 문턱 2.0 (모서리 c1_P1_R_j0 · 비 값은 결과에만) · SV_UNCHECKED = '
+               '못 읽음 (모서리) · CALIB_ORIGIN_SENSITIVE = 세 값 (§3-3) · 안 돌린 변이 = 안 돌림 · 차단 표지마다 사유 하나 (빈 칸 없음)')
+def t_V20():
+    def go7():
+        l0 = scen('L19', lambda: run_L19('L19'))
+        p = predict('V07_p', world('V07_p'), [l0['out'], s_main('P1')['out']])
+        return verdict('V07', [l0['out'], s_main('P1')['out'], p['out']])
+    v5 = sv_set('V05', {'status': 'computed', 'ratio': 3.0})['v'] or {}
+    v6 = sv_set('V06', {'status': 'unconverged'})['v'] or {}
+    v7 = scen('V07', go7)['v'] or {}
+    r5, r6, r7 = (v.get('blocking_reasons') or {} for v in (v5, v6, v7))
+    full = all(set(r) == set(v.get('blocking_flags') or []) and r and all(isinstance(x, str) and x for x in r.values())
+               for r, v in ((r5, v5), (r6, v6), (r7, v7)))
+    ok = (full and str(r5.get('SV_DEPENDENT', '')).startswith('대조 비 > 문턱 2.0') and 'c1_P1_R_j0' in r5.get('SV_DEPENDENT', '')
+          and '3.0' not in r5.get('SV_DEPENDENT', '') and str(r6.get('SV_UNCHECKED', '')).startswith('대조 비를 못 읽음')
+          and 'c1_P1_R_j0' in r6.get('SV_UNCHECKED', '') and str(r7.get('CALIB_ORIGIN_SENSITIVE', '')).startswith('세 값')
+          and r5.get('FIBRE_UNCHECKED') == '안 돌림')
+    return ok, (r5, r6, r7)
+
+
 # ── Z 해 상태 · C 두 계획 · N 계획 숫자 · F 단계 순서 (가짜 러너) ──
 def z_world(tag, states):
     return world(tag, dict(PW, states=states))
