@@ -163,6 +163,9 @@
   · pw.x 를 던지기 전 `nvidia-smi` 로 **python3(UMA)가 GPU 를 쓰고 있는지** 본다 — kgy 도 공유다.
   · **uma python = `/home/kgy/apps/miniforge3/envs/uma/bin/python`** (실측 2026-09-20 ·
     fairchem ok · torch 2.8.0+cu128). envs 는 `dft · mpm · uma` 셋이다.
+    ⭐ **2026-10-21: uma env 에 simple-dftd3 (python `dftd3`) 1.6.0 을 pip 로 깔았다** — 그 전엔 없어서 W_ad ② 러너 (UMA+D3 · `--d3 dftd3`) 가
+    시작을 거부했다 (`No module named 'dftd3'` · kgy 에서 UMA+D3 를 돌린 첫 번째). gabia 와 같은 판 · cp311 manylinux_2_28 휠 ·
+    `pip install --dry-run` 에서 dftd3 하나만 (cffi · pycparser 는 있었다) · numpy 2.4.6 · torch 그대로. D3 구현을 바꾸지 않는다.
     ⚠ `/proc/<pid>/exe` 는 `…/bin/python3.11` 로 풀리는데, **버전이 안 박힌 `…/bin/python` 을
     쓴다** — 3.11 이 올라가도 안 깨진다. base 는 `/home/kgy/apps/miniforge3/bin/python3` 라
     `import fairchem` 이 실패한다. tmux·자식 프로세스엔 **절대경로**를 박는다
