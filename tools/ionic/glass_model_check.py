@@ -8,6 +8,12 @@
   python3 tools/ionic/glass_model_check.py --bvse --out <json>         # 열 구조 BVSE → β1/β2 · onset 판정 · 문장
   python3 tools/ionic/glass_model_check.py --selftest
 
+축소안 (카드 9_개정_2026_10_21_단일점_축소 · QE 13 잡 = x = 1.00 PBE 단일점 10 + Pulay 2 + k 1):
+  python3 tools/ionic/glass_model_check.py --qe_inputs --mode sp --pseudo_dir <기계 PP> --out <폴더>
+        → <폴더>/sp/<라벨>/ · pulay/ecut_hi_<라벨>/ · kpt/k222_<라벨>/ (run_force_check_scf.sh 를 폴더마다 한 번)
+  python3 tools/ionic/glass_model_check.py --sp --qe_root <폴더> --out <json>
+        → ε₁ (UMA BM3 압력 곡선의 강체 이동 1차 근사) · B ±20 % 띠 · Pulay · k · D3 압력 · 갈래 · 분해 · 문장
+
 순서 (카드 §2): `--bvse` 는 **대조 잡을 먼저 돌리고** 어긋나면 열 구조를 읽지 않는다 (회신 CX 상시 절차).
 
 ⛔ 이 도구가 못 하는 것
@@ -20,6 +26,8 @@
   · 통계는 '완전 분리' 하나뿐이다 (n ≤ 5 · 정확 양측 순위합 p = 2 / C(n_A + n_B, n_A)).
     분리가 아니면 '구분되지 않았다' 까지고, '같다' 라고 쓰지 않는다 (채널 부피).
   · B 의 담금질 기계별 두 무리 (kgy 1·2 · gabia 3·4·5) 와 밀도 효과는 **기록만** 한다 — 판정에 안 쓴다.
+  · 축소안 (`--sp`) 은 PBE 평형 부피를 **구하지 않는다** — x = 1.00 한 점의 압력 차를 UMA 곡선에 얹은 1차 추정이다.
+    PBE 곡률 (B₀) 은 재지 않고 ±20 % 띠로만 덮는다 · PBE 이완 몫 (UMA 기하 위 단일점) 은 재지 않는다.
 """
 from __future__ import annotations
 
@@ -217,7 +225,7 @@ def bvse_sentence(o, card) -> str:
     ma, mb = o["channel_median_A"], o["channel_median_B"]
     if o["channel_branch"] == "β1":
         word = "크다" if o["channel_separation"] == "A>B" else "작다"
-        s = (f"정적 BV 지도 (S · Cl · softBV 매개변수 · 0 K UMA 구조) 에서 iso {iso} 채널 부피는 A 유리가 B 유리보다 {word} "
+        s = (f"정적 BV 지도 (S · Cl · Brown 형식 BV 매개변수 (b 0.37 고정 · softBV 아님) · 0 K UMA 구조) 에서 iso {iso} 채널 부피는 A 유리가 B 유리보다 {word} "
              f"(중앙 {ma:.2f} % 대 {mb:.2f} % · 구조 {o['n_A']} · {o['n_B']} 완전 분리 · 정확 양측 p = {o['exact_p_two_sided']:.3f}) "
              f"— 정적 기하 지표이고 확산계수 · 활성화 에너지가 아니다.")
     else:
@@ -404,8 +412,12 @@ def read_qe_point(d) -> dict:
 def d3_energies(geom, card) -> dict:
     """simple-dftd3 · PBE BJ (카드 상수) · 3D 주기 — 2체 (s9 주) 와 ATM (s9 atm) 의 에너지 (eV)."""
     from ase.io import read
+    return d3_energies_atoms(read(str(geom)), card)
+
+
+def d3_energies_atoms(at, card) -> dict:
+    """d3_energies 와 같다 — 파일 대신 Atoms (축소안의 부피 중앙차분이 스케일한 기하를 넘긴다)."""
     from dftd3.interface import DispersionModel, RationalDampingParam
-    at = read(str(geom))
     p = dict(card["d3"])
     s9m, s9a = p.pop("s9_main"), p.pop("s9_atm")
     bohr, hartree = 0.529177210903, 27.211386245988
@@ -672,6 +684,325 @@ def run_eos(card, uma_root=UMA_PATH_ROOT, qe_root=QE_ROOT, out_path=None, d3_fn=
     return res
 
 
+# ───────────────────────── 축소안: x = 1.00 단일점 (카드 9_개정_2026_10_21_단일점_축소) ─────────────────────────
+QE_SP_ROOT = REPO / "db" / "raw" / "lpscl_glass_model_check_2026_10_19" / "qe_sp"
+SP_DIRS = ("sp", "pulay", "kpt")
+
+
+def _uma_point(uma_root, lab, x):
+    J = json.loads((pathlib.Path(uma_root) / lab / "uma_path.json").read_text(encoding="utf-8"))
+    p1 = [p for p in J["points"] if abs(p["x"] - float(x)) < 1e-9]
+    if not p1:
+        raise ValueError(f"⛔ {lab}: x = {float(x):.2f} 점이 없다")
+    return J, p1[0]
+
+
+def sp_k_label(card, uma_root) -> str:
+    """k 대조 구조 — 대조 시드 둘 중 x = 1.00 셀이 작은 쪽 (카드 sp_k_control_rule · k 표집 오차가 큰 쪽)."""
+    if card.get("sp_k_control_rule") != "smaller_V_of_control_seeds":
+        raise KeyError("⛔ 카드에 sp_k_control_rule (smaller_V_of_control_seeds) 이 없다")
+    vols = {f"{s}_s{n}": _uma_point(uma_root, f"{s}_s{n}", card["sp_x"])[1]["V_A3"]
+            for s, n in sorted(card["control_seeds"].items())}
+    return min(vols, key=vols.get)
+
+
+def make_qe_inputs_sp(card, uma_root, out_root, pseudo_dir, log=print) -> dict:
+    """축소안 13 잡 — <out>/sp/<라벨>/ (구조마다) · pulay/ecut_hi_<대조 시드>/ · kpt/k222_<k 구조>/ (scf.in + struct.xyz) · MANIFEST.json.
+
+    run_force_check_scf.sh 는 <폴더>/*/scf.in (깊이 2) 를 읽고 폴더 안 SCF 설정이 같아야 돈다 — ecut 이 다른 Pulay 를 따로 둔다.
+    ⛔ 못 하는 것: 돌리지 않는다 · x = 1.00 밖의 점 · 카드 밖 설정 · 유사포텐셜이 없으면 거부 · 기하 sha 가 다르면 거부."""
+    import hashlib
+    from ase.io import read
+    uma_root, out_root = pathlib.Path(uma_root), pathlib.Path(out_root)
+    pp = GDI.preflight_pseudos(["Li", "P", "S", "Cl"], pseudo_dir, card["qe"]["pp"])
+    x1 = float(card["sp_x"])
+    man = {"card": str(CARD.relative_to(REPO)), "mode": "sp", "pseudo_dir": str(pseudo_dir), "pseudos": pp, "jobs": []}
+    bad_all = []
+
+    def emit(d, lab, kind):
+        _, p = _uma_point(uma_root, lab, x1)
+        g = uma_root / lab / p["geom"]
+        if hashlib.sha256(g.read_bytes()).hexdigest() != p["geom_sha256"]:
+            raise ValueError(f"⛔ {g}: 기하 sha 가 uma_path.json 과 다르다")
+        t = qe_text(read(str(g)), d.name, card, pseudo_dir, kind)
+        b = check_qe_input(t, card, kind)
+        d.mkdir(parents=True, exist_ok=True)
+        (d / "scf.in").write_text(t)
+        (d / "struct.xyz").write_bytes(g.read_bytes())
+        man["jobs"].append({"dir": str(d.relative_to(out_root)), "kind": kind, "source": f"{lab}/{p['geom']}",
+                            "geom_sha256": p["geom_sha256"], "scf_in_sha256": hashlib.sha256(t.encode()).hexdigest(),
+                            "check": b or "✓"})
+        bad_all.extend(f"{d.relative_to(out_root)}: {x}" for x in b)
+
+    labels = sorted(p.name for p in uma_root.iterdir() if (p / "uma_path.json").is_file())
+    for lab in labels:
+        emit(out_root / "sp" / lab, lab, "path")
+    for sysn, seed in sorted(card["control_seeds"].items()):
+        emit(out_root / "pulay" / f"ecut_hi_{sysn}_s{seed}", f"{sysn}_s{seed}", "ecut_hi")
+    klab = sp_k_label(card, uma_root)
+    emit(out_root / "kpt" / f"k222_{klab}", klab, "k222")
+    man["k_label"] = klab
+    man["c_입력_설정"] = "✓" if not bad_all else bad_all
+    out_root.mkdir(parents=True, exist_ok=True)
+    (out_root / "MANIFEST.json").write_text(json.dumps(man, ensure_ascii=False, indent=1) + "\n")
+    n = {k: sum(1 for j in man["jobs"] if j["dir"].startswith(k + "/")) for k in SP_DIRS}
+    log(f"축소안 입력 sp {n['sp']} · pulay {n['pulay']} · kpt {n['kpt']} (k = {klab}) → {out_root} · "
+        f"c_입력_설정 {'✓' if not bad_all else '⛔'}")
+    if bad_all:
+        raise ValueError("⛔ 카드와 다른 입력 — " + " · ".join(bad_all[:5]))
+    return man
+
+
+def bm3_P(V, V0, B0, Bp):
+    """BM3 압력 (GPa · B₀ GPa) — bm3_fit 이 맞추는 ASE birchmurnaghan 에너지의 −dE/dV."""
+    r = V0 / np.asarray(V, float)
+    return 1.5 * B0 * (r ** (7 / 3) - r ** (5 / 3)) * (1 + 0.75 * (Bp - 4) * (r ** (2 / 3) - 1))
+
+
+def bm3_root(target, V0, B0, Bp, Vlo, Vhi):
+    """P(V) = target 의 근 (이분법 · [Vlo, Vhi]) — 범위 양끝에서 부호가 안 바뀌면 None (외삽하지 않는다)."""
+    f = lambda V: float(bm3_P(V, V0, B0, Bp)) - float(target)
+    a, b = float(Vlo), float(Vhi)
+    fa, fb = f(a), f(b)
+    if fa == 0:
+        return a
+    if fb == 0:
+        return b
+    if fa * fb > 0:
+        return None
+    for _ in range(200):
+        m = 0.5 * (a + b)
+        fm = f(m)
+        if fa * fm <= 0:
+            b = m
+        else:
+            a, fa = m, fm
+        if b - a < 1e-10 * m:
+            break
+    return 0.5 * (a + b)
+
+
+def d3_pressure(geom, card, e_fn=None) -> dict:
+    """x = 1.00 기하의 D3 압력 (GPa · QE 부호 압축 +) — 분율 좌표 고정 · 부피 (1 ± h) 등방 스케일 두 점의 중앙차분.
+
+    h = 카드 sp_d3_fd_dV_rel · e_fn(atoms) → {E_d3_eV, E_d3_atm_eV} (기본 simple-dftd3 · 카드 상수)."""
+    from ase.io import read
+    h = float(card["sp_d3_fd_dV_rel"])
+    at0 = read(str(geom))
+    e_fn = e_fn or (lambda a: d3_energies_atoms(a, card))
+    E, V = {}, {}
+    for sgn in (+1, -1):
+        a = at0.copy()
+        a.set_cell(a.cell.array * (1 + sgn * h) ** (1 / 3), scale_atoms=True)
+        E[sgn], V[sgn] = e_fn(a), a.get_volume()
+    dV = V[+1] - V[-1]
+    return {"P_d3_GPa": -(E[+1]["E_d3_eV"] - E[-1]["E_d3_eV"]) / dV * GPA,
+            "P_d3_atm_GPa": -(E[+1]["E_d3_atm_eV"] - E[-1]["E_d3_atm_eV"]) / dV * GPA}
+
+
+def read_structure_sp(lab, card, uma_root, qe_root, d3p_fn=None) -> dict:
+    """한 구조 — UMA 경로 BM3 (7 점 · 토폴로지 · 수렴 · 자기일관 규칙 그대로) + x = 1.00 PBE 단일점 + D3 압력. ε 는 finish_sp."""
+    import hashlib
+    from ase.io import read
+    d3p_fn = d3p_fn or (lambda g: d3_pressure(g, card))
+    J = json.loads((pathlib.Path(uma_root) / lab / "uma_path.json").read_text(encoding="utf-8"))
+    pts = sorted(J["points"], key=lambda p: p["x"])
+    out = {"label": lab, "system": lab.split("_")[0], "seed": int(lab.split("_s")[1]), "V_final_A3": J["meta"]["V_final_A3"]}
+    ref = [p for p in pts if abs(p["x"] - float(card["sp_x"])) < 1e-9]
+    if not ref:
+        return {**out, "status": "경로 불량", "why": "x = 1.00 점이 없다"}
+    ref = ref[0]
+    topo0 = (ref["n_PS"], ref["n_SS"])
+    good, excl = [], []
+    for p in pts:
+        if not p["converged"]:
+            excl.append({"x": p["x"], "why": "UMA 이완 미수렴"})
+        elif (p["n_PS"], p["n_SS"]) != topo0:
+            excl.append({"x": p["x"], "why": f"토폴로지 변화 (P–S {p['n_PS']} · S–S {p['n_SS']} 대 x=1.00 {topo0})"})
+        else:
+            good.append(p)
+    out.update({"n_points": len(good), "excluded": excl})
+    if len(good) < int(card["min_points_fit"]):
+        return {**out, "status": "경로 불량", "why": f"유효 UMA 점 {len(good)} < {card['min_points_fit']}"}
+    g = pathlib.Path(uma_root) / lab / ref["geom"]
+    at = read(str(g))
+    fit = bm3_fit([p["V_A3"] for p in good], [p["E_eV"] for p in good])
+    fit["rms_meV_atom"] = fit["rms_meV_cell"] / len(at)
+    fit["x0"] = fit["V0_A3"] / out["V_final_A3"]
+    out["fit_UMA"] = fit
+    vr = p_root([p["V_A3"] for p in good], [p["P_virial_GPa"] for p in good])
+    sc = None if vr is None else fit["V0_A3"] / vr - 1
+    out["uma_selfconsistency_rel"] = sc
+    if sc is None or abs(sc) > float(card["uma_selfconsistency_tol"]):
+        return {**out, "status": "경로 불량", "why": f"UMA 자기일관 {sc} (문턱 {card['uma_selfconsistency_tol']})"}
+    d = pathlib.Path(qe_root) / "sp" / lab
+    if not (d / "scf.out").is_file():
+        return {**out, "status": "QE 없음", "why": "sp/<라벨>/scf.out 없음"}
+    try:
+        q = read_qe_point(d)
+    except ValueError as e:
+        return {**out, "status": "QE 없음", "why": f"QE 출력 거부 ({e})"}
+    if not q["ok"]:
+        return {**out, "status": "QE 없음", "why": "QE 미수렴"}
+    if not (d / "struct.xyz").is_file() or hashlib.sha256((d / "struct.xyz").read_bytes()).hexdigest() != ref["geom_sha256"]:
+        return {**out, "status": "QE 없음", "why": "QE 입력 기하가 UMA x = 1.00 기하와 다르다 (또는 struct.xyz 없음)"}
+    syms = at.get_chemical_symbols()
+    Fm = np.linalg.norm(q["F"], axis=1)
+    out.update({"V1_A3": ref["V_A3"], "P_uma_x1_GPa": ref["P_virial_GPa"], "P_pbe_x1_raw_GPa": q["P_GPa"],
+                "dP_pbe_minus_uma_raw_GPa": q["P_GPa"] - ref["P_virial_GPa"],
+                "P_uma_bm3_x1_GPa": float(bm3_P(ref["V_A3"], fit["V0_A3"], fit["B0_GPa"], fit["Bp"])),
+                "V_ref_A3": float(at.get_masses().sum()) * AMU_G / float(card["rho_ref_g_cm3"][out["system"]])})
+    out["P3"] = {"P_uma_GPa": ref["P_virial_GPa"], "P_pbe_GPa": q["P_GPa"], "dP_GPa": ref["P_virial_GPa"] - q["P_GPa"],
+                 "max_dsigma_GPa": float(np.abs(-np.asarray(ref["sigma_GPa"]) - q["sigma_GPa"]).max()),
+                 "F_pbe_rms_eV_A": float(np.sqrt((Fm ** 2).mean())),
+                 "F_pbe_rms_by_el": {el: float(np.sqrt((Fm[[i for i, s in enumerate(syms) if s == el]] ** 2).mean()))
+                                     for el in sorted(set(syms))}}
+    out.update(d3p_fn(g))
+    return {**out, "status": "읽음"}
+
+
+def finish_sp(r, card, shift_GPa=0.0) -> dict:
+    """ε₁ · b_B · ε_D3 · 분해 — ΔP = 원 ΔP + Pulay 이동 (계 단위). 근이 x 범위 밖이면 '1차 근사 범위 밖'."""
+    f = r["fit_UMA"]
+    V0, B0, Bp = f["V0_A3"], f["B0_GPa"], f["Bp"]
+    lo, hi = (float(x) * r["V_final_A3"] for x in card["sp_root_x_range"])
+    dP = r["dP_pbe_minus_uma_raw_GPa"] + float(shift_GPa)
+    r = {**r, "pulay_shift_GPa": float(shift_GPa), "dP_pbe_minus_uma_GPa": dP}
+    Vp = bm3_root(-dP, V0, B0, Bp, lo, hi)                   # PBE 곡선 ≈ UMA 곡선 + ΔP → P_UMA(V) = −ΔP
+    Vd = bm3_root(-(dP + r["P_d3_GPa"]), V0, B0, Bp, lo, hi)
+    vb = [bm3_root(-dP, V0, B0 * float(s), Bp, lo, hi) for s in card["sp_B_band_scale"]]
+    if Vp is None or Vd is None or any(v is None for v in vb):
+        return {**r, "status": "1차 근사 범위 밖",
+                "why": f"ΔP {dP:+.3f} GPa (D3 {r['P_d3_GPa']:+.3f}) 의 근이 x ∈ {card['sp_root_x_range']} 밖"}
+    eps = Vp / V0 - 1
+    Vda = bm3_root(-(dP + r["P_d3_atm_GPa"]), V0, B0, Bp, lo, hi)
+    Vf, Vref = r["V_final_A3"], r["V_ref_A3"]
+    return {**r, "status": "유효", "V0_UMA_A3": V0, "V0_PBE_est_A3": Vp, "V0_PBE_D3_est_A3": Vd,
+            "eps_pbe_uma": eps, "b_B": max(abs((v / V0 - 1) - eps) for v in vb),
+            "eps_d3": Vd / Vp - 1, "eps_d3_atm_record": None if Vda is None else Vda / Vp - 1,
+            "decomp_pct": {"d_열": 100 * math.log(Vf / V0), "d_모델": 100 * math.log(V0 / Vp),
+                           "d_분산": 100 * math.log(Vp / Vd), "d_나머지": 100 * math.log(Vd / Vref),
+                           "합": 100 * math.log(Vf / Vref), "V_ref_A3": Vref}}
+
+
+def sp_controls(card, uma_root, qe_root) -> dict:
+    """Pulay (계마다 · 문턱 넘으면 이동) · k (하나 · 문턱 넘으면 띠 몫) — 못 읽으면 '없음' 과 이유 (보류로 만들지 않는다)."""
+    qe_root = pathlib.Path(qe_root)
+    out = {"pulay": {}, "k": None}
+    for sysn, seed in sorted(card["control_seeds"].items()):
+        lab = f"{sysn}_s{seed}"
+        rec = {"label": lab}
+        try:
+            base, hi = read_qe_point(qe_root / "sp" / lab), read_qe_point(qe_root / "pulay" / f"ecut_hi_{lab}")
+            if not (base["ok"] and hi["ok"]):
+                raise ValueError("미수렴")
+            dP = hi["P_GPa"] - base["P_GPa"]
+            app = abs(dP) > float(card["pulay_trigger_GPa"])
+            rec.update({"dP_cut_GPa": dP, "applied": app, "shift_GPa": dP if app else 0.0})
+        except (OSError, ValueError) as e:
+            rec.update({"dP_cut_GPa": None, "applied": False, "shift_GPa": 0.0, "why": f"Pulay 대조 없음 ({e})"})
+        out["pulay"][sysn] = rec
+    klab = sp_k_label(card, uma_root)
+    rec = {"label": klab}
+    try:
+        base, k = read_qe_point(qe_root / "sp" / klab), read_qe_point(qe_root / "kpt" / f"k222_{klab}")
+        if not (base["ok"] and k["ok"]):
+            raise ValueError("미수렴")
+        dP = k["P_GPa"] - base["P_GPa"]
+        rec.update({"dP_k_GPa": dP, "triggered": abs(dP) > float(card["k_band_trigger_GPa"])})
+    except (OSError, ValueError) as e:
+        rec.update({"dP_k_GPa": None, "triggered": False, "why": f"k 대조 없음 ({e})"})
+    out["k"] = rec
+    return out
+
+
+def sp_sentences(sysres) -> list[str]:
+    """카드 9_개정 의 문장 — §1a 틀 + '(x = 1.00 단일점 · 1차 근사 · ±20 % 띠)' · 대조 없음 단서 · p0 재개 규칙."""
+    s = []
+    pct = lambda x: f"{100 * x:+.1f} %"
+    q = "(x = 1.00 단일점 · UMA 곡선의 압력 이동 1차 근사 · 체적탄성률 ±20 % 띠)"
+    for sysn, o in sorted(sysres.items()):
+        nm = {"A": "a-Li₄PS₄Cl", "B": "a-Li₃PS₄"}[sysn]
+        notes = " ".join(o.get("notes", []))
+        if o["branch"] in ("구조 부족", "보류"):
+            s.append(f"[{sysn}] {o['branch']} — {o.get('why', '')} {notes}".rstrip()); continue
+        rng = f"[{pct(o['eps_range'][0])}, {pct(o['eps_range'][1])}]"
+        head = f"[{sysn} · {nm}] 중앙 ε₁ {pct(o['eps_median'])} {rng} · 띠 ±{100 * o['band']:.1f} % · 구조 {o['n_valid']} {q}"
+        body = {"p1": "x = 1.00 압력 차로 추정한 PBE 평형 부피가 UMA 의 0 K 평형 부피와 3 % 안이다 — 실험 유리 대비 저밀도에서 UMA–PBE 차의 몫은 크지 않다 (분해 표 d_모델).",
+                "p2": "추정한 PBE 평형 부피가 UMA 보다 작다 — 저밀도의 일부 (분해 표 d_모델) 는 UMA 가 자기 참조 (PBE) 보다 성기게 만든 몫이다.",
+                "p3": "추정한 PBE 평형 부피가 UMA 보다 크다 — 저밀도는 UMA–PBE 차로 설명되지 않는다 (PBE 로 가면 더 성기다).",
+                "p0": "추정한 UMA–PBE 부피 차는 3 % 문턱 근처라 일치 · 불일치를 가르지 않는다."}[o["branch"]]
+        s.append(f"{head} — {body}" + (" (구조 범위가 문턱을 걸친다)" if o.get("range_straddles") else "") + (f" {notes}" if notes else ""))
+        if o.get("eps_d3_median") is not None:
+            s.append(f"[{sysn}] PBE 에 D3(BJ) 2체 분산 압력을 더하면 추정 평형 부피가 중앙 {pct(o['eps_d3_median'])} "
+                     f"[{pct(o['eps_d3_range'][0])}, {pct(o['eps_d3_range'][1])}] 바뀐다 (x = 1.00 단일점의 D3 압력 · 1차 근사 — D3 자체 이완은 안 봤다).")
+        dm = o["decomp_median_pct"]
+        s.append(f"[{sysn}] 분해 (ln-부피 % · 중앙 · 1차 근사): 열 {dm['d_열']:+.1f} · 모델 {dm['d_모델']:+.1f} · 분산 {dm['d_분산']:+.1f} · "
+                 f"나머지 {dm['d_나머지']:+.1f} = 합 {dm['합']:+.1f} — 나머지는 준비 경로 · 0 K 대 실온 · 실험 기준 (1.88 · 열간프레스 유리 펠릿) · "
+                 f"토폴로지 중 어디서 오는지 가르지 않는다 (단서).")
+        if o["branch"] == "p0":
+            s.append(f"[{sysn}] ⏩ 재개 규칙 발동 — 대조 시드 하나에 PBE 경로 7 점 (≈ 1 GPU-h) 로 1차 근사를 확인한다 (발동 ≠ 자동 실행 · 안 하면 사용자 명시 결정으로 닫는다).")
+    br = {k: v.get("branch") for k, v in sysres.items()}
+    if br.get("A") == "p1" and br.get("B") == "p1":
+        s.append("A–B MD 비교 (600 K c2 · 650 K b2) 가 3 % 를 넘는 조성 의존 모델 밀도 오차로 기울지 않았다.")
+    elif br.get("A") in ("p1", "p2", "p3", "p0") and br.get("B") in ("p1", "p2", "p3", "p0") and br["A"] != br["B"]:
+        s.append(f"두 계의 갈래가 다르다 (A {br['A']} · B {br['B']}) — c2 · b2 문장 옆에 단서로 단다 (판정은 안 바꾼다).")
+    s.append("⛔ D · R · Ea · σ 아님 · 'PBE 평형 부피를 구했다' 아님 (1차 추정) · 'UMA 는 정확하다' 를 이 구조 · 0 K 부피 · 우리 QE PBE 밖으로 넓히지 않는다 · 'PBE+D3 가 정답' 아님.")
+    return s
+
+
+def run_sp(card, uma_root=UMA_PATH_ROOT, qe_root=QE_SP_ROOT, out_path=None, d3p_fn=None, log=print) -> dict:
+    """축소안 판독 — 구조 읽기 → 대조 (Pulay 이동 · k 띠) → ε₁ · 띠 · 갈래 · 문장."""
+    labels = sorted(p.name for p in pathlib.Path(uma_root).iterdir() if (p / "uma_path.json").is_file())
+    raw = {lab: read_structure_sp(lab, card, uma_root, qe_root, d3p_fn) for lab in labels}
+    ctl = sp_controls(card, uma_root, qe_root)
+    per = {lab: (finish_sp(r, card, ctl["pulay"][r["system"]]["shift_GPa"]) if r["status"] == "읽음" else r)
+           for lab, r in raw.items()}
+    sysres = {}
+    for sysn in ("A", "B"):
+        rows = [r for r in per.values() if r["system"] == sysn]
+        v = [r for r in rows if r["status"] == "유효"]
+        notes, band, parts = [], None, {}
+        pc, k = ctl["pulay"][sysn], ctl["k"]
+        if pc.get("why"):
+            notes.append("(Pulay 대조 없음)")
+        elif pc["applied"]:
+            notes.append(f"(Pulay 보정 {pc['dP_cut_GPa']:+.3f} GPa 적용)")
+        if k["dP_k_GPa"] is None:
+            notes.append("(k 대조 없음 · Γ 만)")
+        if v:
+            bB = median([r["b_B"] for r in v])
+            kterm = abs(k["dP_k_GPa"]) / median([r["fit_UMA"]["B0_GPa"] for r in v]) if k["triggered"] else 0.0
+            band, parts = bB + kterm, {"b_B": bB, "k": kterm}
+        o = system_branch(rows, card, band)
+        o.update({"band_parts": parts, "notes": notes})
+        sysres[sysn] = o
+    sent = sp_sentences(sysres)
+    for lab, r in per.items():
+        ex = f" · 뺀 UMA 점 {len(r['excluded'])}" if r.get("excluded") else ""
+        log(f"  {lab}: {r['status']}{ex}" + (f" · ΔP {r['dP_pbe_minus_uma_GPa']:+.3f} GPa · ε₁ {100 * r['eps_pbe_uma']:+.2f} %"
+                                             if "eps_pbe_uma" in r else f" · {r.get('why', '')}"))
+    for x in sent:
+        log(x)
+
+    def clean(o):
+        if isinstance(o, dict):
+            return {kk: clean(vv) for kk, vv in o.items()}
+        if isinstance(o, list):
+            return [clean(vv) for vv in o]
+        if isinstance(o, np.ndarray):
+            return o.tolist()
+        if isinstance(o, pathlib.Path):
+            return str(o)
+        return o
+    res = {"card": str(CARD.relative_to(REPO)), "mode": "sp", "structures": clean(per), "controls": clean(ctl),
+           "systems": clean(sysres), "sentences": sent}
+    if out_path:
+        pathlib.Path(out_path).write_text(json.dumps(res, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+        log(f"→ {out_path}")
+    return res
+
+
 # ───────────────────────── selftest ─────────────────────────
 def _selftest_eos(chk, card, td) -> None:
     """합성 BM3 자료로 압력–부피 판독 배선을 본다 (QE · UMA 아님) — 음성 경로 포함."""
@@ -796,6 +1127,184 @@ def _selftest_eos(chk, card, td) -> None:
         chk(True, "[음성] bfgs 미수렴 relax → ValueError")
 
 
+def _selftest_sp(chk, card, td) -> None:
+    """축소안 판독 배선 — 합성 BM3 (UMA) + x = 1.00 PBE 압력 → ε₁ 복원 · 띠 · Pulay · k · D3 · 범위 밖 · 입력 (음성 포함).
+    시험 쪽 BM3 압력식 · 근 찾기는 도구 (bm3_P · bm3_root) 와 따로 적는다 (같은 식을 두 번 믿지 않게)."""
+    import copy
+    import hashlib
+    import shutil
+    from ase import Atoms
+    from ase.io import write
+
+    def bm3E(V, V0, E0, B, Bp):
+        b = B / GPA
+        eta = (V0 / V) ** (2 / 3)
+        return E0 + 9 * V0 * b / 16 * ((eta - 1) ** 3 * Bp + (eta - 1) ** 2 * (6 - 4 * eta))
+
+    def bm3P_t(V, V0, B, Bp):
+        r = V0 / np.asarray(V, float)
+        return 1.5 * B * (r ** (7 / 3) - r ** (5 / 3)) * (1 + 0.75 * (Bp - 4) * (r ** (2 / 3) - 1))
+
+    def scan_root(fun, lo, hi, n=400001):
+        V = np.linspace(lo, hi, n)
+        F = fun(V)
+        i = np.where(np.sign(F[:-1]) != np.sign(F[1:]))[0]
+        if not len(i):
+            return None
+        i = int(i[0])
+        return float(V[i] + (V[i + 1] - V[i]) * F[i] / (F[i] - F[i + 1]))
+
+    def qe_out(P, conv=True):
+        kb = P * 10
+        f = "".join(f"     atom {i + 1:4d} type  1   force =     0.00100000    0.00000000   -0.00100000\n" for i in range(4))
+        return ("     Program PWSCF v.7.4.1 starts on 21Oct2026\n"
+                + ("     convergence has been achieved in  12 iterations\n" if conv else "")
+                + f"!    total energy              =   {-20.0 / GDI.RY_TO_EV:.8f} Ry\n"
+                + "     Forces acting on atoms (cartesian axes, Ry/au):\n\n" + f + "\n"
+                + f"     total   stress  (Ry/bohr**3)                   (kbar)     P=  {kb:12.4f}\n"
+                + f"   0.00000000   0.00000000   0.00000000        {kb:10.4f}  0.00  0.00\n"
+                + f"   0.00000000   0.00000000   0.00000000          0.00 {kb:10.4f}  0.00\n"
+                + f"   0.00000000   0.00000000   0.00000000          0.00  0.00 {kb:10.4f}\n\n"
+                + "     JOB DONE.\n")
+
+    Vf, Bu, Bpu = 1000.0, 20.0, 4.5
+    scales = [float(x) for x in card["path_scales"]]
+    lo, hi = (float(x) * Vf for x in card["sp_root_x_range"])
+
+    def build(root, lab, Vu0, Ppbe, mismatch=False, no_sp=False, vf=Vf):
+        d = root / "uma" / lab
+        d.mkdir(parents=True, exist_ok=True)
+        pts = []
+        for x in scales:
+            V = vf * x
+            at = Atoms("PS3", positions=[[0, 0, 0], [2.0, 0, 0], [0, 2.0, 0], [0, 0, 2.0]], cell=[V ** (1 / 3)] * 3, pbc=True)
+            g = d / f"{xtag(x)}.xyz"
+            write(str(g), at, format="extxyz")
+            P = float(bm3P_t(V, Vu0, Bu, Bpu))
+            pts.append({"x": x, "V_A3": V, "E_eV": bm3E(V, Vu0, -10.0, Bu, Bpu), "P_virial_GPa": P,
+                        "sigma_GPa": (-np.eye(3) * P).tolist(), "Fmax_eV_A": 0.01, "steps": 10, "converged": True,
+                        "n_PS": 3, "n_SS": 0, "geom": g.name, "geom_sha256": hashlib.sha256(g.read_bytes()).hexdigest()})
+        (d / "uma_path.json").write_text(json.dumps({"meta": {"V_final_A3": vf}, "points": pts}))
+        if not no_sp:
+            q = root / "qe" / "sp" / lab
+            q.mkdir(parents=True, exist_ok=True)
+            (q / "scf.out").write_text(qe_out(float(Ppbe(vf))))
+            (q / "struct.xyz").write_bytes((d / "x1.00.xyz").read_bytes() + (b"\n" if mismatch else b""))
+
+    def ctl(root, sub, name, P):
+        q = root / "qe" / sub / name
+        q.mkdir(parents=True, exist_ok=True)
+        (q / "scf.out").write_text(qe_out(P))
+
+    d3c = lambda g: {"P_d3_GPa": -0.30, "P_d3_atm_GPa": -0.31}
+    root = td / "sp1"
+    Vu0 = 0.98 * Vf
+    build(root, "A_s1", Vu0, lambda V: bm3P_t(V, Vu0, Bu, Bpu) + 0.4)
+    r = finish_sp(read_structure_sp("A_s1", card, root / "uma", root / "qe", d3c), card)
+    e_exp = scan_root(lambda V: bm3P_t(V, Vu0, Bu, Bpu) + 0.4, lo, hi) / Vu0 - 1
+    chk(r["status"] == "유효" and abs(r["eps_pbe_uma"] - e_exp) < 1e-6 and r["eps_pbe_uma"] > 0,
+        f"[양성] 강체 이동 ΔP +0.4 GPa → ε₁ {100 * r['eps_pbe_uma']:+.3f} % (독립 근 {100 * e_exp:+.3f} % · PBE 가 더 밀어내면 +)")
+    chk(abs(r["dP_pbe_minus_uma_GPa"] - 0.4) < 1e-3 and abs(r["P3"]["dP_GPa"] + 0.4) < 1e-3,
+        "[양성] ΔP = P_PBE − P_UMA (+0.4) · P3 기록은 원 정의 P_UMA − P_PBE (−0.4)")
+    chk(r["eps_d3"] < 0, f"[양성] D3 압력 −0.30 GPa → 추정 부피가 줄어든다 ({100 * r['eps_d3']:+.2f} %)")
+    dm = r["decomp_pct"]
+    chk(abs(dm["d_열"] + dm["d_모델"] + dm["d_분산"] + dm["d_나머지"] - dm["합"]) < 1e-9, "[양성] 분해 네 항의 합 = 총")
+    # 곡률이 다른 PBE (참 BM3 V₀ 0.97 · B 22) — 1차 근사 오차가 ±20 % 띠 안
+    build(root, "A_s2", Vu0, lambda V: bm3P_t(V, 0.97 * Vf, 22.0, Bpu))
+    r2 = finish_sp(read_structure_sp("A_s2", card, root / "uma", root / "qe", d3c), card)
+    e_true = 0.97 / 0.98 - 1
+    chk(0 < abs(r2["eps_pbe_uma"] - e_true) <= r2["b_B"],
+        f"[양성] B 가 10 % 다른 참 곡선: |ε₁ − ε_참| {100 * abs(r2['eps_pbe_uma'] - e_true):.3f} %p ≤ 띠 {100 * r2['b_B']:.3f} %")
+    # 범위 밖 · QE 없음 · 기하 불일치
+    build(root, "A_s4", Vu0, lambda V: bm3P_t(V, Vu0, Bu, Bpu) + 15.0)
+    r4 = finish_sp(read_structure_sp("A_s4", card, root / "uma", root / "qe", d3c), card)
+    chk(r4["status"] == "1차 근사 범위 밖", "[음성] ΔP +15 GPa → 근이 x 범위 밖 → '1차 근사 범위 밖' (외삽 안 함)")
+    build(root, "A_s5", Vu0, None, no_sp=True)
+    chk(read_structure_sp("A_s5", card, root / "uma", root / "qe", d3c)["status"] == "QE 없음", "[음성] sp 출력 없음 → 'QE 없음'")
+    build(root, "A_s6", Vu0, lambda V: bm3P_t(V, Vu0, Bu, Bpu), mismatch=True)
+    r6 = read_structure_sp("A_s6", card, root / "uma", root / "qe", d3c)
+    chk(r6["status"] == "QE 없음" and "기하" in r6["why"], "[음성] QE 입력 기하 ≠ UMA x = 1.00 → 'QE 없음'")
+    # D3 중앙차분 — E = −c/V 이면 P = −c/V² (음수)
+    at = Atoms("PS3", positions=[[0, 0, 0], [2.0, 0, 0], [0, 2.0, 0], [0, 0, 2.0]], cell=[10.0] * 3, pbc=True)
+    gx = td / "d3fd.xyz"
+    write(str(gx), at, format="extxyz")
+    c = 50.0
+    pd = d3_pressure(gx, card, e_fn=lambda a: {"E_d3_eV": -c / a.get_volume(), "E_d3_atm_eV": -2 * c / a.get_volume()})
+    want = -c / 1000.0 ** 2 * GPA
+    chk(abs(pd["P_d3_GPa"] / want - 1) < 1e-4 and pd["P_d3_GPa"] < 0 and abs(pd["P_d3_atm_GPa"] / (2 * want) - 1) < 1e-4,
+        f"[양성] D3 압력 중앙차분 {pd['P_d3_GPa']:.4f} GPa = −c/V² ({want:.4f}) · 끌어당김 = 음의 압력")
+    # 전체 판독 — A (A_s1 · A_s2 · A_s3 대조) · B (B_s1 · B_s2 · B_s4 대조) · Pulay · k
+    rt = td / "sp2"
+    for lab, sh in (("A_s1", 0.30), ("A_s2", 0.35), ("A_s3", 0.40), ("B_s1", -0.20), ("B_s2", -0.25), ("B_s4", -0.30)):
+        build(rt, lab, Vu0, (lambda s: (lambda V: bm3P_t(V, Vu0, Bu, Bpu) + s))(sh))
+    Pb = lambda lab: read_qe_point(rt / "qe" / "sp" / lab)["P_GPa"]
+    ctl(rt, "pulay", "ecut_hi_A_s3", Pb("A_s3") + 0.08)
+    ctl(rt, "pulay", "ecut_hi_B_s4", Pb("B_s4") + 0.03)
+    ctl(rt, "kpt", "k222_A_s3", Pb("A_s3") + 0.15)
+    res = run_sp(card, rt / "uma", rt / "qe", None, d3c, log=lambda *a: None)
+    sA, sB, st = res["systems"]["A"], res["systems"]["B"], res["structures"]
+    eA1 = scan_root(lambda V: bm3P_t(V, Vu0, Bu, Bpu) + 0.30 + 0.08, lo, hi) / Vu0 - 1
+    chk(abs(st["A_s1"]["pulay_shift_GPa"] - 0.08) < 1e-3 and abs(st["A_s1"]["eps_pbe_uma"] - eA1) < 1e-6
+        and st["B_s1"]["pulay_shift_GPa"] == 0.0,
+        "[양성] Pulay |ΔP_cut| 0.08 > 0.05 → A 구조 전부 이동 · B 0.03 → 이동 없음")
+    chk(abs(sA["band_parts"]["k"] - 0.15 / Bu) < 1e-4 and abs(sA["band"] - (sA["band_parts"]["b_B"] + 0.15 / Bu)) < 1e-12
+        and abs(sB["band_parts"]["k"] - 0.15 / Bu) < 1e-4,
+        f"[양성] k |ΔP_k| 0.15 > 0.1 GPa → 두 계 띠에 |ΔP_k|/B₀ = {100 * 0.15 / Bu:.2f} % 더함")
+    chk(sA["branch"] in ("p1", "p0", "p3") and sB["branch"] in ("p1", "p0", "p2") and any("1차 근사" in x for x in res["sentences"])
+        and any(x.startswith("⛔") for x in res["sentences"]), f"[양성] 갈래 A {sA['branch']} · B {sB['branch']} · 문장 단서")
+    ctl(rt, "kpt", "k222_A_s3", Pb("A_s3") + 0.05)
+    res2 = run_sp(card, rt / "uma", rt / "qe", None, d3c, log=lambda *a: None)
+    chk(res2["systems"]["A"]["band_parts"]["k"] == 0.0, "[음성] k |ΔP_k| 0.05 ≤ 0.1 → k 몫 0")
+    shutil.rmtree(rt / "qe" / "kpt")
+    shutil.rmtree(rt / "qe" / "pulay" / "ecut_hi_B_s4")
+    res3 = run_sp(card, rt / "uma", rt / "qe", None, d3c, log=lambda *a: None)
+    s3 = res3["systems"]
+    chk("(k 대조 없음 · Γ 만)" in s3["A"]["notes"] and s3["A"]["branch"] not in ("보류", "구조 부족")
+        and "(Pulay 대조 없음)" in s3["B"]["notes"] and s3["B"]["branch"] not in ("보류", "구조 부족"),
+        "[음성] k · Pulay 대조 없음 → 보류가 아니라 문장 단서 (개정 규칙)")
+    shutil.rmtree(rt / "qe" / "sp" / "B_s2")
+    chk(run_sp(card, rt / "uma", rt / "qe", None, d3c, log=lambda *a: None)["systems"]["B"]["branch"] == "구조 부족",
+        "[음성] B 유효 구조 2 < 3 → 구조 부족")
+    mk = lambda e: {"status": "유효", "eps_pbe_uma": e, "eps_d3": -0.05,
+                    "decomp_pct": {"d_열": 1, "d_모델": 1, "d_분산": 5, "d_나머지": 10, "합": 17}}
+    o0 = system_branch([mk(-0.025), mk(-0.025), mk(-0.02)], card, 0.01)
+    o0.update({"band_parts": {}, "notes": []})
+    chk(any("재개 규칙 발동" in x for x in sp_sentences({"A": o0})), "[양성] p0 → 재개 규칙 발동 문장 (경로 7 점 · 자동 실행 아님)")
+    # 입력 생성 — 가짜 PP · k 구조 = 대조 시드 중 작은 셀 (B_s4 를 작게)
+    ri = td / "sp3"
+    build(ri, "A_s1", Vu0, None, no_sp=True)
+    build(ri, "A_s3", Vu0, None, no_sp=True)
+    build(ri, "B_s4", 0.98 * 900.0, None, no_sp=True, vf=900.0)
+    ppd = td / "pp_sp"
+    ppd.mkdir()
+    for f in card["qe"]["pp"].values():
+        (ppd / f).write_text("fake")
+    man = make_qe_inputs_sp(card, ri / "uma", ri / "in", str(ppd), log=lambda *a: None)
+    dirs = sorted(j["dir"] for j in man["jobs"])
+    chk(dirs == ["kpt/k222_B_s4", "pulay/ecut_hi_A_s3", "pulay/ecut_hi_B_s4", "sp/A_s1", "sp/A_s3", "sp/B_s4"]
+        and man["k_label"] == "B_s4" and man["c_입력_설정"] == "✓", f"[양성] 축소안 입력 배치 {dirs} · k = 작은 셀 B_s4")
+    t_sp = (ri / "in" / "sp" / "A_s1" / "scf.in").read_text()
+    t_hi = (ri / "in" / "pulay" / "ecut_hi_A_s3" / "scf.in").read_text()
+    t_k = (ri / "in" / "kpt" / "k222_B_s4" / "scf.in").read_text()
+    chk(re.search(r"^K_POINTS gamma", t_sp, re.M) and re.search(r"ecutwfc\s*=\s*64", t_hi)
+        and re.search(r"^K_POINTS automatic\n\s*2\s+2\s+2", t_k, re.M), "[양성] sp Γ · pulay 64/640 · kpt 2×2×2")
+    J = json.loads((ri / "uma" / "A_s1" / "uma_path.json").read_text())
+    J["points"] = [p for p in J["points"] if abs(p["x"] - 1.0) > 1e-9]
+    (ri / "uma" / "A_s1" / "uma_path.json").write_text(json.dumps(J))
+    try:
+        make_qe_inputs_sp(card, ri / "uma", ri / "in2", str(ppd), log=lambda *a: None)
+        chk(False, "[음성] x = 1.00 점 없는 구조 → 죽어야 한다")
+    except ValueError:
+        chk(True, "[음성] x = 1.00 점 없는 구조 → ValueError")
+    bad = copy.deepcopy(card)
+    bad.pop("sp_k_control_rule")
+    try:
+        sp_k_label(bad, ri / "uma")
+        chk(False, "[음성] sp_k_control_rule 없는 카드 → 죽어야 한다")
+    except KeyError:
+        chk(True, "[음성] sp_k_control_rule 없는 카드 → KeyError")
+
+
 def _selftest() -> int:
     import copy
     import tempfile
@@ -908,6 +1417,7 @@ def _selftest() -> int:
 
     # 압력–부피 판독 (합성 자료) + 실제 D3 한 번
     _selftest_eos(chk, card, td)
+    _selftest_sp(chk, card, td)
     e3 = d3_energies(xyz, card)
     chk(e3["E_d3_eV"] < 0 and e3["E_d3_atm_eV"] != e3["E_d3_eV"], f"[양성] simple-dftd3 실행 (2체 {e3['E_d3_eV']:.4f} · ATM {e3['E_d3_atm_eV']:.4f} eV)")
     n_ok, n_bad = ok
@@ -926,6 +1436,9 @@ def main() -> int:
     ap.add_argument("--uma_path", default=str(UMA_PATH_ROOT), help="UMA 경로 루트 (<라벨>/uma_path.json)")
     ap.add_argument("--qe_root", default=str(QE_ROOT), help="--eos: QE 출력 루트 (<라벨>/x<..>/scf.out · controls/)")
     ap.add_argument("--pseudo_dir", help="--qe_inputs: 실행 기계의 유사포텐셜 폴더 (해시를 MANIFEST 에)")
+    ap.add_argument("--mode", choices=("path", "sp"), default="path",
+                    help="--qe_inputs: path = 원 설계 (경로 70 + 대조 6) · sp = 축소안 13 잡 (카드 9_개정)")
+    ap.add_argument("--sp", action="store_true", help="축소안 판독 (UMA 경로 + x = 1.00 PBE 단일점 + Pulay · k + D3)")
     a = ap.parse_args()
     if a.selftest:
         return _selftest()
@@ -940,12 +1453,16 @@ def main() -> int:
     if a.qe_inputs:
         if not (a.out and a.pseudo_dir):
             ap.error("--qe_inputs 는 --out 과 --pseudo_dir 이 필요하다")
-        make_qe_inputs(card, a.uma_path, a.out, a.pseudo_dir)
+        (make_qe_inputs_sp if a.mode == "sp" else make_qe_inputs)(card, a.uma_path, a.out, a.pseudo_dir)
         return 0
+    if a.sp:
+        qr = QE_SP_ROOT if a.qe_root == str(QE_ROOT) else a.qe_root
+        r = run_sp(card, a.uma_path, qr, a.out)
+        return 0 if all(v.get("branch") in ("p0", "p1", "p2", "p3") for v in r["systems"].values()) else 3
     if a.eos:
         r = run_eos(card, a.uma_path, a.qe_root, a.out)
         return 0 if all(v.get("branch") not in (None,) for v in r["systems"].values()) else 3
-    ap.error("--bvse · --bvse_control · --qe_inputs · --eos · --selftest 중 하나")
+    ap.error("--bvse · --bvse_control · --qe_inputs · --eos · --sp · --selftest 중 하나")
     return 2
 
 

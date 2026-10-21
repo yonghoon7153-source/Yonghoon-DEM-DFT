@@ -9053,7 +9053,7 @@
     ]
    },
    "title": "li2s 소셀 유리 모델 검증 (잠정) — UMA↔DFT 압력–부피 대조 (같은 구조 · 0 K 등방 이온 이완 경로 · UMA · PBE · PBE+D3 BM3 평형 부피) + 정적 BVSE 지도 (A 5 · B 5) · 수송 카드 아님 (트랙 li2s · 외부 1저자 동의 대기 = 편지 DA)",
-   "statement": "카드 db/properties/lpscl_smallcell_glass_model_check_estimand_2026_10_19.json. 주 보고량 ε_V(PBE|UMA) = V₀^PBE / V₀^UMA − 1 (구조마다 · 계 중앙값) — 경로 x_V ∈ {0.85 … 1.03} 7 점 (연장 규칙 한 번) · UMA default 고정셀 FIRE 0.02 eV/Å 이완 기하 위 QE PBE 단일점 (09-16 소셀 카드 §3b 설정 · 52/520 · Γ) · D3(BJ) 2체 · ASE BM3. 갈래 p1 |중앙 ε| + 띠 ≤ 3 % · p2 · p3 · p0 (띠 = 밀도 중앙 시드 PBE 이완 대조 |δP| / B₀ + k 대조) · 분해 표 (d_열 · d_모델 · d_분산 · d_나머지) · 대조 잡 (UMA 자기일관 0.5 % · 이완 · k · Pulay · BVSE 정본 재현 · 입력 설정) 결과 전. BVSE = iso 0.5 채널 % 주 · 완전 분리 (계마다 ≥ 4) 일 때만 '구분'. D · R · Ea · σ 를 다루지 않는다.",
+   "statement": "카드 db/properties/lpscl_smallcell_glass_model_check_estimand_2026_10_19.json. 주 보고량 ε_V(PBE|UMA) = V₀^PBE / V₀^UMA − 1 (구조마다 · 계 중앙값) — 경로 x_V ∈ {0.85 … 1.03} 7 점 (연장 규칙 한 번) · UMA default 고정셀 FIRE 0.02 eV/Å 이완 기하 위 QE PBE 단일점 (09-16 소셀 카드 §3b 설정 · 52/520 · Γ) · D3(BJ) 2체 · ASE BM3. 갈래 p1 |중앙 ε| + 띠 ≤ 3 % · p2 · p3 · p0 (띠 = 밀도 중앙 시드 PBE 이완 대조 |δP| / B₀ + k 대조) · 분해 표 (d_열 · d_모델 · d_분산 · d_나머지) · 대조 잡 (UMA 자기일관 0.5 % · 이완 · k · Pulay · BVSE 정본 재현 · 입력 설정) 결과 전. BVSE = iso 0.5 채널 % 주 · 완전 분리 (계마다 ≥ 4) 일 때만 '구분'. D · R · Ea · σ 를 다루지 않는다. ⏩ 10-21 결과 전 축소 개정 (카드 9_개정_2026_10_21_단일점_축소): QE 76 → 13 잡 (x = 1.00 PBE 단일점 10 · Pulay 64/640 2 · k 2×2×2 1) · ε₁ = UMA BM3 압력 곡선의 강체 이동 1차 근사 (ΔP = P_PBE − P_UMA) · 체적탄성률 ±20 % 띠 · 문턱 · 갈래 그대로 · p0 이면 대조 시드 하나에 경로 7 점 (재개 규칙).",
    "rationale": "회신 CX 미해결 ① *'UMA↔DFT 단일점·압력–부피 대조 … 그게 이 항목을 실제로 가를 측정입니다'* · 사용자 10-19 *'그냥 닫아? … 전혀 발전적이지 않은거 같은데'* → *'이것만 하고 합쳐서 편지 보내자'*.",
    "decision_state": "proposed",
    "record_kind": "estimand",
@@ -9084,7 +9084,7 @@
      "date": "2026-10-19"
     }
    ],
-   "_note": "proposed — 사용자 실행 승인 (10-19 '이것만 하고 합쳐서 편지 보내자') · 외부 1저자 동의는 편지 DA Q-DA-4 · 원장 active 전환은 그 뒤 사용자 비준."
+   "_note": "proposed — 사용자 실행 승인 (10-19 '이것만 하고 합쳐서 편지 보내자') · 외부 1저자 동의는 편지 DA Q-DA-4 · 원장 active 전환은 그 뒤 사용자 비준. · 10-21 사용자 *'그럼 해도 될듯'* (축소안 실행 승인 · kgy Nd EOS 뒤 tmux 묶음) — 외부 1저자 동의는 여전히 편지 DA Q-DA-4."
   },
   {
    "id": "D-2026-10-19-nd-anion-removal",

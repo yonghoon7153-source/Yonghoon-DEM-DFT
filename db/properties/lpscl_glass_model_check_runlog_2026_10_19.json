@@ -302,5 +302,18 @@
   "⚠_출처_빈칸": "uma_path.json meta 의 fairchem 버전이 '?' (러너가 못 읽음) — UMA 체크포인트 · 모드 · 장치는 기록됨 · 다음 kgy 블록 때 버전 한 줄 받아 둘 것",
   "다음": "QE 단계 = kgy Nd EOS (≈ 10-26) 뒤 kgy GPU (사용자 기계 결정) — --qe_inputs (kgy pseudo_dir) → 메모리 프로브 (검사용 · CPU) → 경로 70 + 대조 6 → 회수 → --eos",
   "by": "agent · 2026-10-20"
+ },
+ "✅_축소안_개정_도구_러너_결과_전_2026_10_21": {
+  "왜": "사용자 10-21 *'EOS 70점을 한다는거잖아 말이 된다 생각해? 원자도 120개인데?'* → 축소안 → *'그럼 해도 될듯'* · *'이거 다음에 바로 되게 tmux로 묶어놓자'* (kgy Nd EOS 뒤)",
+  "카드": "9_개정_2026_10_21_단일점_축소 (QE 76 → 13 잡 · ≈ 3 GPU-h · 문턱 · 갈래 규칙 그대로 · k 대조 없음 → 보류 대신 문장 단서 · p0 이면 대조 시드 경로 7 점 재개 규칙) · 결정 D-2026-10-19-lpscl-smallcell-glass-model-check (proposed) statement · _note 에 같은 줄",
+  "도구": "tools/ionic/glass_model_check.py (sha16 eac72dfe7c12d08d) — --qe_inputs --mode sp (sp 10 · pulay 2 · kpt 1 · k 구조 = 대조 시드 중 작은 셀 = A_s3) · --sp 판독 (ε₁ = UMA BM3 압력 곡선의 강체 이동 근 · B ±20 % 띠 · Pulay 이동 · k 띠 · D3 압력 = 부피 ±0.5 % 중앙차분) · path 모드 코드는 안 바꿈",
+  "selftest": "68/68 (새 20 — ΔP +0.4 GPa 강체 이동 ε₁ 독립 근과 1e-6 일치 · B 10 % 다른 참 곡선 오차 0.140 %p ≤ 띠 0.279 % · Pulay 0.08 이동 / 0.03 안 함 · k 0.15 띠 / 0.05 없음 · k · Pulay 없음 → 단서 (보류 아님) · 범위 밖 · QE 없음 · 기하 불일치 · D3 중앙차분 = −c/V² · 입력 배치 · ⛔ x = 1.00 없음 · ⛔ 카드 규칙 없음)",
+  "깨기": "7/7 잡힘 — ΔP 부호 · Pulay 이동 무시 · B 띠 0 · D3 부호 · k 문턱 무시 · Pulay 문턱 무시 · k 구조 = 큰 셀",
+  "대조_잡": "--bvse 재실행 = 커밋된 bvse/bvse_readout.json 과 글자 그대로 같다 (도구 고친 뒤 과거 판독 재현 · 회신 CX 상시 절차)",
+  "라벨_정정": "BVSE 문장 · 카드 §1a β1 · §3 의 'softBV 매개변수 · softBV-lite' → 'Brown 형식 BV 매개변수 (b 0.37 고정 · softBV 아님)' (CLAUDE.md BVSE 줄 10-21 정정과 같은 오기 · 숫자 불변) — 이 runlog 의 ✅_BVSE_판독_2026_10_19 '문장_도구' 는 옛 라벨 그대로 둔다 (기록) · 편지 · 마감 문서에는 새 라벨로 옮긴다",
+  "실자료_건식_판독_UMA_쪽만": "QE 출력 없이 --sp 를 실제 UMA 경로에 돌림 (입력 생성 sp 10 · pulay 2 · kpt 1 · c_입력_설정 ✓) — ⚠ A_s2 가 c_UMA_자기일관 −0.595 % (문턱 0.5 % · 10-19 카드 규칙) 로 '경로 불량' → ε 판독에서 빠진다 (원 설계에서도 같은 규칙 · QE 결과 아님) · A 는 4 구조로 판독 (≥ 3) · A_s2 의 sp 잡은 P3 기록용으로 그대로 돌린다",
+  "러너": "db/inputs/lpscl_glass_model_check_2026_10_19/run_qe_sp_kgy.sh (sha16 43faab827c2cc2dc) — Nd EOS 잠금 /tmp/ndsite_eos.lock 이 풀릴 때까지 flock 대기 → VRAM 여유 ≥ 20,000 MiB 기다림 (남의 잡 안 죽임 · 상한 96 h) → run_force_check_scf.sh 를 sp → pulay → kpt (LOCK /tmp/li2s_qe_sp.lock · 물러나면 다시 부름 ≤ 20) · selftest 9 · 깨기 4/4 (잠금 대기 · 순서 · mode 검사 · VRAM 대기)",
+  "메모리": "kgy 에 CPU 빌드 pw.x 기록 없음 → 블록이 있으면 검사용 프로브 (≤ 120 초 · timeout) · 없으면 09-18 실측 (Γ ≈ 13.5 GB · 8.1 분) 근거로 sp 는 들어간다고 보고 pulay · kpt 를 뒤에",
+  "by": "agent · 2026-10-21"
  }
 }
