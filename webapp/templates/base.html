@@ -50,6 +50,12 @@
       <li><a href="/mixer" class="{% if active == 'mixer' %}active{% endif %}">
         <span class="icon">&#x1F300;</span> 믹서 (이력 · 침대)
       </a></li>
+      {# 10-21: Rint 설명 (1저자 *"이것도 dem webapp에 추가해줭"*).  app.py 는 봉인 32 라 라우트를 못 만든다 →
+         정적 페이지 (webapp/static/explain/) 를 링크한다 · 시험 webapp/test_rint_explainer_page.py #}
+      <li><a href="/static/explain/rint_overview_20261021.html"
+             title="Rint (접촉 · 계면 저항) 을 시뮬레이션에 넣는 일 — 무엇을 넣나 · 어디서 막히나 · 그림 6 장 (10-21)">
+        <span class="icon">&#x1F517;</span> Rint 설명
+      </a></li>
       <li><a href="/audit" class="{% if active == 'audit' %}active{% endif %}">
         <span class="icon">&#x2705;</span> Trust Audit
       </a></li>
