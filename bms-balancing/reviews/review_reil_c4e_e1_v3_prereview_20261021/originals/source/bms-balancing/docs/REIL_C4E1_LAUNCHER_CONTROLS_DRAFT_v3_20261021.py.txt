@@ -1,0 +1,739 @@
+"""REIL C4-E · E1 단계 실행기 v3 대조 26 (승인 요청 `docs/REIL_C4E_E1_APPROVAL_REQUEST_v3_20261021.md` §6) — 독립 사전 대조 · 고정 명령 · 유한 정리 ·
+외부 단계 판정 · 사전 검토 §74 의 N1–N4 · 자체 발견 S1 · v2 사전 검토 §76 의 V2-02 · V2-04 · 자체 발견 S2–S4.
+
+RED 는 골격 (`scripts/reil_c4e1_launch.py` 의 함수가 모두 NotImplementedError) 에서 26 개 모두 NotImplementedError 로 실패해야 하고, GREEN 은 고정 구현에서
+26 개 모두 통과해야 한다. 이 파일은 우리 실행 모듈 다섯 · 실제 자료 · optimizer · 네트워크를 쓰지 않는다. 띄우는 것은 tmp 의 가짜 run 스크립트 (stdlib) ·
+손주 sleep · 해석기 탐침 (`-c`) · tmp 안의 로컬 git (init · 빈 커밋 · rev-parse · remote add · config · ls-remote --get-url) 뿐이다. fixture 가 직접
+부르는 git 은 launcher 와 독립인 `_git_env()` 로 상속 `GIT_*` · 비밀 형태 이름을 모두 빼고 시스템 · 사용자 설정을 읽지 않는다 (V2-02 · S3). 기존 시험
+파일은 고치지 않는다.
+"""
+from __future__ import annotations
+
+import ast
+import hashlib
+import importlib.machinery
+import json
+import os
+import re
+import signal
+import subprocess
+import sys
+import time
+import zipfile
+from pathlib import Path
+from types import SimpleNamespace
+
+import pytest
+
+from scripts import reil_c4e1_launch as L
+
+RELS = ("scripts/reil_c4e_run.py", "scripts/reil_c4_e3a.py", "scripts/reil_c4_monitor.py", "scripts/reil_c5_pilot.py", "scripts/reil_p0.py")
+ENV = "degradation-degeneracy/tools/env_profile.py"
+C6P = "bms-balancing/scripts/reil_c6_profile.py"
+PY = Path(sys.executable)
+FAST = {"identity": 30.0, "fetch": 30.0, "run": 30.0}
+SP = "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad"
+BMS = "/home/user/Yonghoon-DEM-DFT/bms-balancing"
+URL = "https://github.com/REIL-UConn/Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics.git"
+COMMIT = "1188c371e5836df4a7e5f5acf336a34ffd4027e6"
+GITID = ["-c", "user.name=fixture", "-c", "user.email=fixture@example.invalid"]
+SECRETISH = re.compile(r"TOKEN|SECRET|PASSW|ACCESS_KEY|CREDENTIAL|COOKIE", re.I)
+
+#: tmp 트리의 `scripts/reil_c4e_run.py` 자리에 두는 가짜 (stdlib · git 은 tmp 안 로컬만) — 고정 argv 를 받아 FAKE_MODE 대로 움직인다
+FAKE_RUN = r'''import hashlib, json, os, subprocess, sys, time
+from pathlib import Path
+RELS = ("scripts/reil_c4e_run.py", "scripts/reil_c4_e3a.py", "scripts/reil_c4_monitor.py", "scripts/reil_c5_pilot.py", "scripts/reil_p0.py")
+URL = "https://github.com/REIL-UConn/Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics.git"
+COMMIT = "1188c371e5836df4a7e5f5acf336a34ffd4027e6"
+bms = Path(__file__).resolve().parents[1]
+mark = bms.parent
+mode, args = os.environ.get("FAKE_MODE", "ok"), sys.argv[1:]
+(mark / "LAUNCHED").write_text(" ".join(args))
+(mark / "CHILD_ENV").write_text(json.dumps(sorted(k for k in os.environ if "TOKEN" in k or k.startswith("GIT_") and k != "GIT_SSL_CAINFO"
+                                                  and k != "GIT_TERMINAL_PROMPT")))
+if args[0] == "fetch":
+    dest = Path(args[args.index("--dest") + 1])
+    dest.mkdir(parents=True)
+    gd = dest / "git"
+    subprocess.run(["git", "init", "-q", str(gd)], check=True)
+    subprocess.run(["git", "-C", str(gd), "remote", "add", "origin", "https://example.invalid/other.git" if mode == "badremote" else URL],
+                   check=True)
+    (gd / ".git" / "shallow").write_text(("0" * 40 if mode == "badshallow" else COMMIT) + "\n")
+    if mode == "alternates":
+        (gd / ".git" / "objects" / "info").mkdir(parents=True, exist_ok=True)
+        (gd / ".git" / "objects" / "info" / "alternates").write_text("/elsewhere/objects\n")
+    (dest / "LFP_Data.xlsx").write_bytes(b"other" if mode == "baddata" else b"xlsx-bytes")
+    (dest / "util_LFP.py").write_bytes(b"util-bytes")
+    print(json.dumps({"ok": True}))
+    sys.exit(0)
+out = Path(args[args.index("--out") + 1])
+out.mkdir(parents=True)
+if mode == "sleep":
+    g = subprocess.Popen([sys.executable, "-I", "-B", "-c", "import time; time.sleep(60)"])
+    (mark / "GRANDCHILD").write_text(str(g.pid))
+    time.sleep(60)
+if mode == "mutate":
+    with open(bms / "scripts" / "reil_c4_e3a.py", "ab") as f:
+        f.write(b"# changed during the run\n")
+table = {}
+for r in RELS:
+    b = (bms / r).read_bytes()
+    table[r] = {"path": str(bms / r), "sha256": hashlib.sha256(b).hexdigest(), "bytes": len(b)}
+if mode == "badpath":
+    table["scripts/reil_p0.py"] = dict(table["scripts/reil_p0.py"], path="/elsewhere/scripts/reil_p0.py")
+(out / "IDENTITY.json").write_text(json.dumps({"start": table, "end": table, "changed": []}))
+done = mode != "incomplete"
+print("a line from their code")
+print(json.dumps({"ok": done, "final": {"complete": done, "E3a": "COMPLETE" if done else "INCOMPLETE"}}))
+sys.exit(0 if done else 2)
+'''
+
+
+def _sha(b: bytes) -> str:
+    return hashlib.sha256(b).hexdigest()
+
+
+def _git_env() -> dict:
+    """fixture 가 직접 부르는 git 의 env (launcher 와 독립 · V2-02 · S3) — 상속 `GIT_*` · 비밀 형태 이름을 모두 빼고, 시스템 · 사용자 설정 (조건부 포함 ·
+    서명 · 템플릿) 을 읽지 않는다."""
+    env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_") and not SECRETISH.search(k)}
+    env.update(GIT_TERMINAL_PROMPT="0", GIT_CONFIG_NOSYSTEM="1", GIT_CONFIG_GLOBAL=os.devnull)
+    return env
+
+
+def _git(*args) -> str:
+    r = subprocess.run(["git", *args], env=_git_env(), capture_output=True, text=True, timeout=60)
+    assert r.returncode == 0, (args, r.stderr[-500:])
+    return r.stdout
+
+
+def _write_list(d: Path, files: dict, schema="reil-c4e-sources-v1", raw: bytes | None = None):
+    d.mkdir(parents=True)
+    b = raw if raw is not None else json.dumps({"schema": schema, "files": files}, sort_keys=True, indent=1).encode()
+    (d / "SOURCES.json").write_bytes(b)
+    return d / "SOURCES.json", _sha(b)
+
+
+def _seal(d: Path, env_sha: str, *, lock_env_sha: str | None = None):
+    """가짜 C6 봉인 — lock 머리줄에 env_profile sha256 · MANIFEST 가 lock 을 덮는다 → (lock sha, MANIFEST sha)."""
+    d.mkdir(parents=True)
+    lock = f"# REIL C6 lock — 대조용 가짜 (env_profile.py · 그 파일 sha256 {lock_env_sha or env_sha})\n# 둘째 줄\n".encode()
+    (d / "REIL_C6.lock.txt").write_bytes(lock)
+    man = json.dumps({"REIL_C6.lock.txt": _sha(lock)}, sort_keys=True).encode()
+    (d / "MANIFEST.json").write_bytes(man)
+    return _sha(lock), _sha(man)
+
+
+def _tree(tmp: Path, *, git: bool = True) -> SimpleNamespace:
+    """tmp 안의 가짜 저장소 (bms-balancing/scripts 다섯 · `__init__` 없음 · 목록 밖 실행 파일 둘) · 목록 · 봉인 · 자료 · 증거 · 작업 폴더."""
+    tmp.mkdir(parents=True, exist_ok=True)
+    tmp = tmp.resolve()
+    repo = tmp / "repo"
+    bms = repo / "bms-balancing"
+    (bms / "scripts").mkdir(parents=True)
+    content = {r: f"# {r} (대조용 가짜 · 실행하지 않음)\n".encode() for r in RELS}
+    content["scripts/reil_c4e_run.py"] = FAKE_RUN.encode()
+    for r, b in content.items():
+        (bms / r).write_bytes(b)
+    extra_content = {C6P: b"# reil_c6_profile (fake)\n", ENV: b"# env_profile (fake)\n"}
+    for r, b in extra_content.items():
+        (repo / r).parent.mkdir(parents=True, exist_ok=True)
+        (repo / r).write_bytes(b)
+    extra = {r: {"sha256": _sha(b), "bytes": len(b)} for r, b in extra_content.items()}
+    entries = {r: {"sha256": _sha(b), "bytes": len(b)} for r, b in content.items()}
+    lst, lsha = _write_list(tmp / "list", entries)
+    lock_sha, man_sha = _seal(tmp / "seal", extra[ENV]["sha256"])
+    data = tmp / "data"
+    data.mkdir()
+    (data / "LFP_Data.xlsx").write_bytes(b"xlsx-bytes")
+    (data / "util_LFP.py").write_bytes(b"util-bytes")
+    data_files = {"LFP_Data.xlsx": {"sha256": _sha(b"xlsx-bytes"), "bytes": 10}, "util_LFP.py": {"sha256": _sha(b"util-bytes"), "bytes": 10}}
+    ev = tmp / "ev"
+    ev.mkdir()
+    if git:
+        _git("init", "-q", "--template=", str(repo))
+        _git("-C", str(repo), *GITID, "commit", "-q", "--allow-empty", "-m", "fixture")
+    return SimpleNamespace(tmp=tmp, repo=repo, bms=bms, list=lst, lsha=lsha, entries=entries, extra=extra, seal=tmp / "seal",
+                           lock_sha=lock_sha, man_sha=man_sha, data=data, data_files=data_files, ev=ev, work=tmp / "work")
+
+
+def _pre(t, step="run", *, sources=None, sha=None, argv=None, env_extra=None, data=None, extra=None, man_sha=None):
+    prefix = t.work / "pycache" / f"pre_{step}"
+    prefix.mkdir(parents=True, exist_ok=True)
+    env, _ = L.child_env({**os.environ, **(env_extra or {})}, t.work)
+    src, s, d = sources or t.list, sha or t.lsha, data or t.data
+    argv = argv or L.build_argv(step, t.ev, "§99", prefix, py=PY, bms=t.bms, seal=t.seal, data=d, sources=src, sources_sha256=s,
+                                seal_manifest_sha256=man_sha or t.man_sha)
+    return L.precheck(step, t.ev, argv, prefix, env=env, repo=t.repo, py=PY, seal=t.seal, work=t.work, data=d, data_files=t.data_files,
+                      sources=src, sources_sha256=s, seal_manifest_sha256=man_sha or t.man_sha, lock_sha256=t.lock_sha,
+                      extra=extra or t.extra)
+
+
+def _launch(t, step="run", mode="ok", extra_env=None, **kw):
+    opts = dict(repo=t.repo, py=PY, venv=Path(sys.prefix), seal=t.seal, work=t.work, data=t.data, data_files=t.data_files, sources=t.list,
+                sources_sha256=t.lsha, seal_manifest_sha256=t.man_sha, lock_sha256=t.lock_sha, extra=t.extra, timeouts=FAST,
+                env_base={**os.environ, "FAKE_MODE": mode, **(extra_env or {})})
+    opts.update(kw)
+    return L.launch(step, t.ev, "§99", **opts)
+
+
+def _meta(t, name="05_run"):
+    return json.loads((t.ev / f"{name}.meta.json").read_text(encoding="utf-8"))
+
+
+def _state(pid):
+    """/proc/<pid>/stat 의 상태 글자 — 파일 없음 (소멸) 만 None. 그 밖 읽기 오류는 그대로 올린다 (관측 불능을 종료로 보지 않는다)."""
+    try:
+        s = Path(f"/proc/{pid}/stat").read_text()
+    except FileNotFoundError:
+        return None
+    return s[s.rindex(")") + 2:].split()[0]
+
+
+def test_l1_precheck_passes_only_with_fixed_list_exact_bytes_seal_binding_clean_interpreter_and_approved_specs(tmp_path):
+    """[RED 실패 — 골격 NotImplementedError] 고정 목록 · 다섯 모듈 · 목록 밖 실행 파일 둘 · 봉인 lock 결속 · 탐침 플래그 · 섀도 없음 · `scripts`
+    네임스페이스 · 셋의 origin = 승인 `.py` (SourceFileLoader · PathFinder) · 자료 → 사전 대조 통과 (문제 0)."""
+    t = _tree(tmp_path)
+    pre = _pre(t)
+    assert pre["ok"] is True and pre["problems"] == []
+    assert sorted(pre["modules"]) == sorted(RELS) and all(r["ok"] for r in pre["modules"].values())
+    assert sorted(pre["extra_executed"]) == sorted([C6P, ENV]) and all(r["ok"] for r in pre["extra_executed"].values())
+    assert pre["seal_lock"]["lock_sha256"] == t.lock_sha and pre["seal_lock"]["manifest_sha256"] == t.man_sha
+    probe = pre["probe"]
+    assert probe["isolated"] == 1 and probe["dont_write_bytecode"] == 1 and probe["safe_path"] is True
+    assert probe["pycache_prefix"] == str(t.work / "pycache" / "pre_run")
+    assert probe["specs"]["scripts"]["locations"][0] == str(t.bms / "scripts")
+    for leaf in ("reil_c4_e3a", "reil_c4_monitor", "reil_c5_pilot"):
+        s = probe["specs"][f"scripts.{leaf}"]
+        assert (s["origin"], s["loader"], s["finder"]) == (str(t.bms / "scripts" / f"{leaf}.py"), L.SOURCE_LOADER, L.PATHFINDER)
+    assert all(r["ok"] for r in pre["data"].values())
+
+
+def test_l2_list_sha_schema_path_set_entry_format_and_non_json_each_block(tmp_path):
+    """[RED 실패 — 골격] 고정 sha 와 다른 목록 · schema 다름 · 넷 · 목록 밖 · 대문자 sha · 음수 · bool bytes · JSON 아님 → 각각 실패."""
+    t = _tree(tmp_path)
+    e, p7 = t.entries, t.entries["scripts/reil_p0.py"]
+    cases = {"schema": _write_list(t.tmp / "schema", e, schema="reil-c4e-sources-v0"),
+             "four": _write_list(t.tmp / "four", {k: v for k, v in e.items() if k != "scripts/reil_p0.py"}),
+             "extra": _write_list(t.tmp / "extra", dict(e, **{"scripts/reil_c4_h.py": dict(p7)})),
+             "upper": _write_list(t.tmp / "upper", dict(e, **{"scripts/reil_p0.py": {"sha256": p7["sha256"].upper(), "bytes": p7["bytes"]}})),
+             "negative": _write_list(t.tmp / "negative", dict(e, **{"scripts/reil_p0.py": {"sha256": p7["sha256"], "bytes": -1}})),
+             "boolbytes": _write_list(t.tmp / "boolbytes", dict(e, **{"scripts/reil_p0.py": {"sha256": p7["sha256"], "bytes": True}})),
+             "nonjson": _write_list(t.tmp / "nonjson", {}, raw=b"not json\n")}
+    want = {"schema": "형식", "four": "경로 집합", "extra": "경로 집합", "upper": "항목", "negative": "항목", "boolbytes": "항목", "nonjson": "JSON"}
+    for name, (p, sha) in cases.items():
+        pre = _pre(t, sources=p, sha=sha)
+        assert pre["ok"] is False and any(want[name] in x for x in pre["problems"]), name
+    pre = _pre(t, sha="0" * 64)
+    assert pre["ok"] is False and any("목록 sha256" in x for x in pre["problems"])
+
+
+def test_l3_changed_same_size_missing_symlinked_module_or_linked_parent_each_block(tmp_path):
+    """[RED 실패 — 골격] 모듈 하나 +1 바이트 · 같은 크기 다른 바이트 · 없음 · 같은 바이트의 심볼릭 링크 · 링크된 상위 폴더 → 각각 실패."""
+    for kind in ("append", "same_size", "missing", "symlink", "parent_link"):
+        t = _tree(tmp_path / kind)
+        target = t.bms / "scripts" / "reil_c4_monitor.py"
+        b = target.read_bytes()
+        if kind == "append":
+            target.write_bytes(b + b"x")
+        elif kind == "same_size":
+            target.write_bytes(b[:-2] + b"?\n")
+        elif kind == "missing":
+            target.unlink()
+        elif kind == "symlink":
+            real = t.tmp / "real_monitor.py"
+            real.write_bytes(b)
+            target.unlink()
+            target.symlink_to(real)
+        else:
+            moved = t.repo / "real_bms"
+            t.bms.rename(moved)
+            t.bms.symlink_to(moved, target_is_directory=True)
+        pre = _pre(t)
+        assert pre["ok"] is False and any("reil_c4_monitor.py" in x for x in pre["problems"]), kind
+
+
+def test_l4_a_shadowing_scripts_package_module_zip_entry_or_our_init_blocks(tmp_path):
+    """[RED 실패 — 골격] 자식 sys.path 의 `scripts/__init__.py` · `scripts.py` · zip 안 `scripts/__init__.py` · 빈 항목 · 우리 bms 의 `scripts.py` ·
+    우리 `scripts/__init__.py` → 문제. `__init__` 없는 같은 이름 폴더 (네임스페이스 조각) 만 있으면 문제 없음."""
+    t = _tree(tmp_path / "t", git=False)
+    clean = tmp_path / "clean"
+    (clean / "scripts").mkdir(parents=True)
+    assert L.shadow_problems([str(clean)], t.bms) == []
+    pkg = tmp_path / "pkg"
+    (pkg / "scripts").mkdir(parents=True)
+    (pkg / "scripts" / "__init__.py").write_text("")
+    mod = tmp_path / "mod"
+    mod.mkdir()
+    (mod / "scripts.py").write_text("")
+    zp = tmp_path / "z.zip"
+    with zipfile.ZipFile(zp, "w") as z:
+        z.writestr("scripts/__init__.py", "")
+    for entries in ([str(pkg)], [str(mod)], [str(zp)], [""]):
+        assert L.shadow_problems(entries, t.bms), entries
+    (t.bms / "scripts.py").write_text("")
+    assert L.shadow_problems([str(clean)], t.bms)
+    (t.bms / "scripts.py").unlink()
+    (t.bms / "scripts" / "__init__.py").write_text("")
+    assert L.shadow_problems([str(clean)], t.bms) and _pre(t)["ok"] is False
+
+
+def test_l5_interpreter_flags_fixed_argv_head_and_run_script_path_are_checked(tmp_path):
+    """[RED 실패 — 골격] 탐침의 isolated · dont_write_bytecode · safe_path · pycache_prefix · executable 중 하나라도 다르면 문제 · argv 머리 (해석기 ·
+    -I · -B · -X pycache_prefix) 를 바꾸거나 실행 스크립트를 대조 경로 밖으로 바꾸면 사전 대조 실패."""
+    t = _tree(tmp_path, git=False)
+    prefix = t.work / "pycache" / "x"
+    good = {"executable": str(PY), "isolated": 1, "ignore_environment": 1, "no_user_site": 1, "safe_path": True, "dont_write_bytecode": 1,
+            "pycache_prefix": str(prefix)}
+    assert L.flag_problems(good, prefix, PY) == []
+    for k, bad in (("isolated", 0), ("dont_write_bytecode", 0), ("safe_path", False), ("pycache_prefix", None), ("executable", "/usr/bin/python3")):
+        assert L.flag_problems(dict(good, **{k: bad}), prefix, PY), k
+    pre_prefix = t.work / "pycache" / "pre_run"
+    pre_prefix.mkdir(parents=True)
+    argv = L.build_argv("run", t.ev, "§99", pre_prefix, py=PY, bms=t.bms, seal=t.seal, data=t.data, sources=t.list, sources_sha256=t.lsha,
+                        seal_manifest_sha256=t.man_sha)
+    assert _pre(t, argv=argv[:2] + argv[3:])["ok"] is False
+    other = list(argv)
+    other[5] = str(t.tmp / "elsewhere.py")
+    assert _pre(t, argv=other)["ok"] is False
+
+
+def test_l6_stage_verdict_is_the_and_of_precheck_child_rc_timeout_and_postcheck():
+    """[RED 실패 — 골격] 다섯 항이 모두 참일 때만 complete — 하나씩 거짓 · rc None · rc False (bool) · rc 2 · rc −9 · timeout · timeout None 이면 incomplete."""
+    base = dict(precheck_ok=True, child_ok=True, rc=0, timed_out=False, postcheck_ok=True)
+    good = L.stage_verdict(**base)
+    assert good["complete"] is True and good["rule"] == "precheck_ok AND child_ok AND rc_0 AND timeout_false AND postcheck_ok"
+    for k, v in (("precheck_ok", False), ("child_ok", False), ("postcheck_ok", False), ("timed_out", True), ("timed_out", None), ("rc", None),
+                 ("rc", False), ("rc", 2), ("rc", -9)):
+        assert L.stage_verdict(**dict(base, **{k: v}))["complete"] is False, (k, v)
+
+
+def test_l7_child_result_reads_the_last_stdout_line_and_needs_final_complete_for_run():
+    """[RED 실패 — 골격] run: 마지막 줄 ok true AND final.complete true 만 참 (앞줄 잡음 허용) · 마지막 줄이 JSON 객체가 아니면 거짓 ·
+    identity / fetch: 마지막 줄 ok true 만 참."""
+    assert L.child_result("run", 'noise\n{"ok": true, "final": {"complete": true, "E3a": "COMPLETE"}}\n')[0] is True
+    for text in ('{"ok": true, "final": {"complete": false}}', '{"ok": false, "final": {"complete": true}}', '{"ok": true}',
+                 '{"ok": true, "final": {"complete": true}}\ntrailing garbage', "", '{"ok": false, "stop": "x"}'):
+        assert L.child_result("run", text)[0] is False, text
+    assert L.child_result("fetch", '{"ok": true, "files": {}}')[0] is True
+    assert L.child_result("identity", '{"ok": false, "problems": ["p"]}')[0] is False
+    assert L.child_result("fetch", "[1, 2]")[0] is False
+
+
+def test_l8_identity_link_binds_the_run_import_paths_to_the_checked_paths(tmp_path):
+    """[RED 실패 — 골격] run 의 IDENTITY.json 시작 · 끝 표 모듈 행 = 사전 대조 경로 · 목록 → 문제 없음. 경로 다름 · sha 다름 · 끝 표 없음 · 행 없음 ·
+    JSON 아님 · 파일 없음 · 사전 대조 모듈이 다섯이 아님 → 문제."""
+    t = _tree(tmp_path / "t", git=False)
+    mods = _pre(t)["modules"]
+    table = {r: {"path": row["path"], "sha256": row["expected"]["sha256"], "bytes": row["expected"]["bytes"]} for r, row in mods.items()}
+    p = tmp_path / "IDENTITY.json"
+    p.write_text(json.dumps({"start": table, "end": table}))
+    assert L.identity_link(p, mods) == []
+    bad_path = dict(table, **{"scripts/reil_p0.py": dict(table["scripts/reil_p0.py"], path="/x/scripts/reil_p0.py")})
+    bad_sha = dict(table, **{"scripts/reil_c4_e3a.py": dict(table["scripts/reil_c4_e3a.py"], sha256="0" * 64)})
+    no_row = {k: v for k, v in table.items() if k != "scripts/reil_c4_monitor.py"}
+    for doc in ({"start": table, "end": bad_path}, {"start": bad_sha, "end": table}, {"start": table}, {"start": no_row, "end": table}):
+        p.write_text(json.dumps(doc))
+        assert L.identity_link(p, mods), sorted(doc)
+    p.write_text("not json")
+    assert L.identity_link(p, mods) and L.identity_link(tmp_path / "absent.json", mods)
+    p.write_text(json.dumps({"start": table, "end": table}))
+    assert L.identity_link(p, {k: v for k, v in mods.items() if k != "scripts/reil_p0.py"})
+
+
+def test_l9_a_failed_precheck_never_starts_the_child_and_records_launched_false(tmp_path):
+    """[RED 실패 — 골격] 고정 sha 와 다른 목록 → launch 1 · 가짜 run 의 표식 없음 · precheck.json · meta.json (launched false · stage false) ·
+    stdout / stderr 로그 없음."""
+    t = _tree(tmp_path)
+    assert _launch(t, sources_sha256="0" * 64) == 1
+    m = _meta(t)
+    assert not (t.repo / "LAUNCHED").exists() and m["launched"] is False and m["precheck_ok"] is False
+    assert m["stage"]["complete"] is False and (t.ev / "05_run.precheck.json").exists()
+    assert not (t.ev / "05_run.stdout.log").exists() and not (t.ev / "05_run.stderr.log").exists()
+
+
+def test_l10_a_passing_precheck_runs_the_fixed_child_and_completes_only_when_every_term_holds(tmp_path):
+    """[RED 실패 — 골격] 통과 → 고정 argv 의 가짜 run (표식 · argv) · 자식 env 에 토큰 · `GIT_*` (CA · 프롬프트 밖) 없음 · rc 0 · 사후 대조 (모듈 ·
+    실행 파일 둘 · 자료 · IDENTITY 결속 · pycache 0 · 그룹 empty · Git 기록 · HEAD 불변) · stage complete → launch 0. run 이 INCOMPLETE (rc 2) 면
+    child_ok false · IDENTITY 경로가 다르면 postcheck false → launch 1."""
+    t = _tree(tmp_path / "ok")
+    assert _launch(t, extra_env={"FAKE_TOKEN_X": "not-a-real-value", "GIT_CONFIG_COUNT": "1", "GIT_DIR": "/elsewhere"}) == 0
+    m = _meta(t)
+    assert m["launched"] is True and m["child"]["rc"] == 0 and m["child"]["timed_out"] is False and m["stage"]["complete"] is True
+    assert m["postcheck"]["ok"] is True and m["postcheck"]["identity_link"] == [] and m["child"]["group"]["status"] == "empty"
+    assert m["errors"] == [] and m["first_error"] is None
+    assert (t.repo / "LAUNCHED").read_text().split()[0] == "run" and m["argv"][5] == str(t.bms / "scripts" / "reil_c4e_run.py")
+    assert json.loads((t.repo / "CHILD_ENV").read_text()) == []
+    assert {"FAKE_TOKEN_X", "GIT_CONFIG_COUNT", "GIT_DIR"} <= set(m["env_removed_names"])
+    for mode, term in (("incomplete", "child_ok"), ("badpath", "postcheck_ok")):
+        t2 = _tree(tmp_path / mode)
+        assert _launch(t2, mode=mode) == 1
+        m2 = _meta(t2)
+        assert m2["launched"] is True and m2["stage"]["complete"] is False and m2["stage"]["terms"][term] is False, mode
+
+
+def test_l11_timeout_kills_the_whole_process_group_including_grandchildren(tmp_path):
+    """[RED 실패 — 골격] run 이 손주 프로세스를 띄우고 잠든다 → timeout (3 s) → 그룹 SIGKILL (보냄) · 제한 시간 안에 끝남 · timed_out · stage false ·
+    손주는 살아 있지 않다 (소멸 또는 좀비 — 그 밖 읽기 오류는 시험 실패)."""
+    t = _tree(tmp_path)
+    assert _launch(t, mode="sleep", timeouts=dict(FAST, run=3.0)) == 1
+    m = _meta(t)
+    assert m["child"]["timed_out"] is True and m["child"]["exited_after_kill"] is True and m["child"]["kill"][0]["result"] == "sent"
+    assert m["stage"]["complete"] is False and m["stage"]["terms"]["timeout_false"] is False
+    pid, deadline = int((t.repo / "GRANDCHILD").read_text()), time.monotonic() + 5.0
+    state = _state(pid)
+    while state not in (None, "Z") and time.monotonic() < deadline:
+        time.sleep(0.05)
+        state = _state(pid)
+    assert state in (None, "Z")
+
+
+def test_l12_refuses_to_overwrite_records_or_reuse_a_pycache_folder(tmp_path):
+    """[RED 실패 — 골격] 같은 단계의 기록이 이미 있거나 pycache 폴더가 이미 있으면 SystemExit — 탐침 · 자식을 띄우지 않고 아무것도 쓰거나 만들지 않는다
+    (의도된 거부는 준비 오류 기록과 섞이지 않는다 · V2-04)."""
+    t = _tree(tmp_path, git=False)
+    (t.ev / "05_run.meta.json").write_text("{}")
+    with pytest.raises(SystemExit, match="덮어쓰지 않는다"):
+        _launch(t)
+    assert sorted(p.name for p in t.ev.iterdir()) == ["05_run.meta.json"] and not t.work.exists()
+    (t.ev / "05_run.meta.json").unlink()
+    (t.work / "pycache" / "05_run").mkdir(parents=True)
+    with pytest.raises(SystemExit, match="pycache"):
+        _launch(t)
+    assert not list(t.ev.iterdir()) and not (t.work / "mpl").exists() and not (t.repo / "LAUNCHED").exists()
+
+
+def test_l13_postcheck_catches_a_module_changed_during_the_child_wrong_fetched_bytes_and_a_reused_data_folder(tmp_path):
+    """[RED 실패 — 골격] run 도중 모듈 하나가 바뀜 → 실행기의 직접 재해시로 사후 실패. fetch 가 기대와 다른 바이트를 쓰면 사후 실패 · 맞는 바이트 ·
+    고정 출처의 로컬 저장소면 complete. 자료 폴더가 이미 있으면 fetch 사전 실패 (launched false)."""
+    t = _tree(tmp_path / "mutate")
+    assert _launch(t, mode="mutate") == 1
+    m = _meta(t)
+    assert m["stage"]["terms"]["postcheck_ok"] is False and any("reil_c4_e3a.py" in x for x in m["postcheck"]["problems"])
+    t2 = _tree(tmp_path / "baddata")
+    assert _launch(t2, step="fetch", mode="baddata", data=t2.tmp / "fresh") == 1
+    m2 = _meta(t2, "04_fetch")
+    assert m2["launched"] is True and m2["stage"]["terms"]["postcheck_ok"] is False
+    assert any("LFP_Data.xlsx" in x for x in m2["postcheck"]["problems"])
+    t3 = _tree(tmp_path / "fetch_ok")
+    assert _launch(t3, step="fetch", data=t3.tmp / "fresh") == 0 and _meta(t3, "04_fetch")["stage"]["complete"] is True
+    t4 = _tree(tmp_path / "exists")
+    assert _launch(t4, step="fetch") == 1 and _meta(t4, "04_fetch")["launched"] is False
+
+
+def test_l14_independence_fixed_commands_constants_and_main_rules(tmp_path):
+    """[RED 실패 — 골격] stdlib 만 import · 동적 import · exec 0 · 고정 상수 (경로 · 목록 · 실행 파일 둘 · 봉인 lock · 출처 · 자료 · helper · 시간 ·
+    단계 이름 · 셋) · 세 단계 argv 문자 그대로 · main 의 승인 절 · 증거 폴더 규칙."""
+    tree = ast.parse(Path(L.__file__).read_text(encoding="utf-8"))
+    mods = ({a.name for n in ast.walk(tree) if isinstance(n, ast.Import) for a in n.names}
+            | {n.module for n in ast.walk(tree) if isinstance(n, ast.ImportFrom)})
+    assert mods <= {"__future__", "argparse", "datetime", "hashlib", "importlib.machinery", "json", "os", "re", "resource", "shutil",
+                    "signal", "stat", "subprocess", "sys", "time", "zipfile", "pathlib"}, mods
+    names = {n.attr for n in ast.walk(tree) if isinstance(n, ast.Attribute)} | {n.id for n in ast.walk(tree) if isinstance(n, ast.Name)}
+    assert not names & {"import_module", "__import__", "exec", "eval", "spec_from_file_location", "SourceFileLoader", "exec_module"}
+    assert (str(L.PY), str(L.VENV), str(L.SEAL), str(L.SOURCES), str(L.DATA), str(L.WORK), str(L.PROC)) == (
+        f"{SP}/reil_c4env/venv/bin/python", f"{SP}/reil_c4env/venv", f"{BMS}/reil_c6_rebuild_20261013",
+        f"{BMS}/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json", f"{SP}/c4e1/data", f"{SP}/c4e1", "/proc")
+    assert L.SOURCES_SHA256 == "2a7b2b49b9809d1a9301398388894a1f7a73afb55acc1a5070e3f77ce0393d52" and L.MODULE_RELPATHS == RELS
+    assert L.SEAL_MANIFEST_SHA256 == "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc"
+    assert L.C6_LOCK_SHA256 == "ea91156cac99fac17830818f17fd4a260a93722269f720171e0ab9b2a75c1faa"
+    assert L.EXTRA_EXECUTED == {C6P: {"bytes": 15_915, "sha256": "408afc4bb5eb1069583b955e0eb6215bf48dd9259ad474c230549d1b3642df5d"},
+                                ENV: {"bytes": 22_333, "sha256": "83b0d8365d039d75050d087fe980ad7b64818686b699e5d06da1c0ad63148563"}}
+    assert L.IDENTITY_HELPER_SHA256 == "92bb3bca2dcd56982bd4d4ddc02bb8ed84615d5b1b6af6385d69b66c8f5df900"
+    assert (L.SOURCE_URL, L.SOURCE_COMMIT, L.LEAVES) == (URL, COMMIT, ("reil_c4_e3a", "reil_c4_monitor", "reil_c5_pilot"))
+    assert L.DATA_FILES == {"LFP_Data.xlsx": {"bytes": 10_841_377, "sha256": "fd50e09542be7adb2270963d65a6e7b5ccae1473a512f68462c2dd419d620ee1"},
+                            "util_LFP.py": {"bytes": 33_754, "sha256": "3c19e45ef8a64ce67cda1f623551e758d4c0f67086bbae02b978428d78de1c76"}}
+    assert (L.TIMEOUTS, L.KILL_WAIT_S, L.GROUP_GRACE_S) == ({"identity": 60.0, "fetch": 300.0, "run": 10_800.0}, 10.0, 5.0)
+    assert L.STEPS == {"identity": "03_identity", "fetch": "04_fetch", "run": "05_run"}
+    ev, pre = Path(f"{BMS}/evidence/reil_c4e1_20261021"), Path(f"{SP}/c4e1/pycache/05_run")
+    head = [f"{SP}/reil_c4env/venv/bin/python", "-I", "-B", "-X", f"pycache_prefix={SP}/c4e1/pycache/05_run"]
+    run_script, seal_sha = f"{BMS}/scripts/reil_c4e_run.py", "4f12094897b53463097e78dafc0bfe5f37c1d76bb1a6266c0a907d755fb2ebdc"
+    assert L.build_argv("run", ev, "§80", pre) == head + [
+        run_script, "run", "--venv", f"{SP}/reil_c4env/venv", "--seal", f"{BMS}/reil_c6_rebuild_20261013", "--seal-manifest-sha256", seal_sha,
+        "--xlsx", f"{SP}/c4e1/data/LFP_Data.xlsx", "--util", f"{SP}/c4e1/data/util_LFP.py",
+        "--sources", f"{BMS}/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json",
+        "--sources-sha256", "2a7b2b49b9809d1a9301398388894a1f7a73afb55acc1a5070e3f77ce0393d52",
+        "--out", f"{BMS}/evidence/reil_c4e1_20261021/run",
+        "--approval", "상태 문서 §80 (사용자 E1-1–3 승인 · docs/REIL_C4E_E1_APPROVAL_REQUEST_v3_20261021.md)"]
+    assert L.build_argv("fetch", ev, "§80", pre) == head + [run_script, "fetch", "--dest", f"{SP}/c4e1/data"]
+    assert L.build_argv("identity", ev, "§80", pre) == head + [
+        f"{BMS}/evidence/reil_c4e1_20261021/00_identity_c4.py", f"{SP}/reil_c4env/venv", f"{BMS}/reil_c6_rebuild_20261013", seal_sha,
+        f"{BMS}/evidence/reil_c4e1_20261021/03_identity.json"]
+    with pytest.raises(ValueError):
+        L.build_argv("plan-e", ev, "§80", pre)
+    with pytest.raises(SystemExit, match="승인 절"):
+        L.main(["run", "--evidence", str(tmp_path), "--approval-section", "80"])
+    for bad in (str(tmp_path), f"{BMS}/evidence/reil_c4e1_29991231", f"{BMS}/evidence/reil_c4e0_20261014"):
+        with pytest.raises(SystemExit, match="증거 폴더"):
+            L.main(["run", "--evidence", bad, "--approval-section", "§80"])
+
+
+def test_l15_a_leaf_package_beside_an_approved_module_blocks_without_executing_it(tmp_path):
+    """[RED 실패 — 골격] (N1) 승인 `reil_c4_e3a.py` 는 그대로 두고 `scripts/reil_c4_e3a/__init__.py` (실행되면 표식을 남김) 를 더하면 → 정적 검사 ·
+    탐침의 find_spec 둘 다 승인 소스가 아니라고 보고 사전 실패 · 자식 0 · 표식 없음 (탐침이 실행하지 않았다)."""
+    t = _tree(tmp_path)
+    pkg = t.bms / "scripts" / "reil_c4_e3a"
+    pkg.mkdir()
+    (pkg / "__init__.py").write_text(f"open({str(t.tmp / 'SHADOW_RAN')!r}, 'w').write('x')\n")
+    pre = _pre(t)
+    assert pre["ok"] is False and any("reil_c4_e3a" in x and "패키지" in x for x in pre["problems"])
+    assert pre["probe"]["specs"]["scripts.reil_c4_e3a"]["origin"] == str(pkg / "__init__.py")
+    assert any("scripts.reil_c4_e3a 의 적재 선택" in x for x in pre["problems"])
+    assert _launch(t) == 1 and _meta(t)["launched"] is False
+    assert not (t.tmp / "SHADOW_RAN").exists() and not (t.repo / "LAUNCHED").exists()
+
+
+def test_l16_a_leaf_extension_module_beside_an_approved_module_blocks(tmp_path):
+    """[RED 실패 — 골격] (N1) 승인 `reil_c4_monitor.py` 옆에 같은 이름 확장 모듈 파일 (FileFinder 는 확장을 `.py` 보다 먼저) → 정적 검사 · 탐침 둘 다
+    사전 실패 · 자식 0."""
+    t = _tree(tmp_path)
+    ext = t.bms / "scripts" / f"reil_c4_monitor{importlib.machinery.EXTENSION_SUFFIXES[0]}"
+    ext.write_bytes(b"\x7fELF not a real extension")
+    pre = _pre(t)
+    assert pre["ok"] is False and any("확장 모듈" in x for x in pre["problems"])
+    assert pre["probe"]["specs"]["scripts.reil_c4_monitor"]["origin"] == str(ext)
+    assert _launch(t) == 1 and _meta(t)["launched"] is False and not (t.repo / "LAUNCHED").exists()
+
+
+def test_l17_extra_executed_files_and_the_seal_lock_binding_each_block(tmp_path):
+    """[RED 실패 — 골격] (S1) reil_c6_profile 바이트 변경 · env_profile 바이트 변경 · lock 머리줄의 env_profile sha 가 다름 (MANIFEST 는 맞음) ·
+    MANIFEST 고정값 다름 → 각각 사전 실패."""
+    t = _tree(tmp_path / "c6")
+    (t.repo / C6P).write_bytes(b"# reil_c6_profile changed\n")
+    assert any(C6P in x for x in _pre(t)["problems"])
+    t = _tree(tmp_path / "env")
+    (t.repo / ENV).write_bytes(b"# env_profile changed\n")
+    assert any(ENV in x for x in _pre(t)["problems"])
+    t = _tree(tmp_path / "lock")
+    lock_sha, man_sha = _seal(t.tmp / "seal2", t.extra[ENV]["sha256"], lock_env_sha="0" * 64)
+    t.seal, t.lock_sha, t.man_sha = t.tmp / "seal2", lock_sha, man_sha
+    pre = _pre(t)
+    assert pre["ok"] is False and any("머리줄" in x for x in pre["problems"])
+    t = _tree(tmp_path / "manifest")
+    pre = _pre(t, man_sha="0" * 64)
+    assert pre["ok"] is False and any("MANIFEST sha256" in x for x in pre["problems"])
+
+
+def test_l18_process_observation_errors_stay_unknown_and_only_vanished_pids_are_gone(tmp_path):
+    """[RED 실패 — 골격] (N2) 가짜 /proc — 살아 있는 구성원 → alive · 좀비만 → empty · 다른 PID 의 권한 오류 → unknown · 파싱 불능 → unknown · 목록
+    실패 → unknown · 소멸 (FileNotFoundError) → 사라짐 (empty) · 첫 관측의 오류는 뒤의 정상 관측으로 지우지 않는다."""
+    proc = tmp_path / "proc"
+
+    def mk(pid, state, pgrp, comm="fake name (x)"):
+        (proc / str(pid)).mkdir(parents=True, exist_ok=True)
+        (proc / str(pid) / "stat").write_text(f"{pid} ({comm}) {state} 1 {pgrp} 0 0\n")
+
+    mk(101, "S", 777)
+    mk(102, "Z", 777)
+    mk(103, "S", 888)
+    assert L.group_status(777, grace=0.2, proc=proc)["status"] == "alive"
+    (proc / "101" / "stat").unlink()
+    (proc / "101").rmdir()
+    assert L.group_status(777, grace=0.2, proc=proc)["status"] == "empty"
+    calls = []
+
+    def denied(p):
+        calls.append(p.parent.name)
+        if p.parent.name == "103" and len([c for c in calls if c == "103"]) == 1:
+            raise PermissionError("denied (시험 주입)")
+        return p.read_text()
+
+    r = L.group_status(777, grace=0.2, proc=proc, read=denied)
+    assert r["status"] == "unknown" and r["errors"] and calls.count("103") == 1
+
+    def vanished(p):
+        if p.parent.name == "103":
+            raise FileNotFoundError("gone")
+        return p.read_text()
+
+    r = L.group_status(777, grace=0.2, proc=proc, read=vanished)
+    assert r["status"] == "empty" and L.proc_members(777, proc=proc, read=vanished)["vanished"] == 1
+    mk(104, "S", 777)
+    (proc / "104" / "stat").write_text("garbage without parentheses\n")
+    assert L.group_status(777, grace=0.2, proc=proc)["status"] == "unknown"
+    assert L.group_status(777, grace=0.2, proc=tmp_path / "absent")["status"] == "unknown"
+
+
+def test_l19_a_failed_kill_with_a_running_child_ends_within_bounded_waits_and_records_unexited(tmp_path):
+    """[RED 실패 — 골격] (N3 · S2) killpg 가 PermissionError (주입) 이고 자식은 계속 돈다 → timeout 2 s · kill 대기 1 s · 그룹 관측 0.5 s ×2 뒤 launch 가
+    돌아온다 (20 s 안) · 미종료 · kill 결과 permission 둘 · 그룹 alive · stage false · meta 기록 · 대기 (wait_s) 와 정리 (cleanup_s) 시간이 따로 남는다.
+    시험이 자식을 따로 정리한다."""
+
+    def no_kill(pgid, sig):
+        raise PermissionError("denied (시험 주입)")
+
+    t = _tree(tmp_path)
+    t0 = time.monotonic()
+    rc = _launch(t, mode="sleep", timeouts=dict(FAST, run=2.0), killpg=no_kill, kill_wait=1.0, grace=0.5)
+    dt = time.monotonic() - t0
+    m = _meta(t)
+    try:
+        assert rc == 1 and dt < 20.0
+        assert m["child"]["timed_out"] is True and m["child"]["exited_after_kill"] is False and m["child"]["rc"] is None
+        assert [k["result"] for k in m["child"]["kill"]] == ["permission", "permission"] and m["child"]["group"]["status"] == "alive"
+        assert m["stage"]["complete"] is False and any("미종료" in x for x in m["postcheck"]["problems"])
+        assert m["child"]["wait_s"] >= 2.0 and m["child"]["cleanup_s"] >= 1.0 and "elapsed_s" not in m["child"]
+    finally:
+        try:
+            os.killpg(m["child"]["pgid"], signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+
+
+def test_l20_exceptions_in_precheck_start_and_postcheck_are_recorded_with_phase_and_launched_state(tmp_path, monkeypatch):
+    """[RED 실패 — 골격] (N3) 사전 대조 예외 → 첫 오류 단계 precheck · launched false · 자식 0 / 자식 시작 예외 (popen 주입) → 단계 start · launched
+    false / 사후 대조 예외 → 단계 postcheck · launched true · stage false. 셋 다 meta 를 남긴다."""
+    t = _tree(tmp_path / "pre")
+    real_pre = L.precheck
+
+    def boom(*a, **k):
+        raise RuntimeError("precheck boom (시험 주입)")
+
+    monkeypatch.setattr(L, "precheck", boom)
+    assert _launch(t) == 1
+    m = _meta(t)
+    assert m["first_error"]["phase"] == "precheck" and m["launched"] is False and not (t.repo / "LAUNCHED").exists()
+    monkeypatch.setattr(L, "precheck", real_pre)
+
+    def no_start(*a, **k):
+        raise OSError("cannot start (시험 주입)")
+
+    t = _tree(tmp_path / "start")
+    assert _launch(t, popen=no_start) == 1
+    m = _meta(t)
+    assert m["first_error"]["phase"] == "start" and m["launched"] is False and m["child"]["started"] is False
+    t = _tree(tmp_path / "post")
+    monkeypatch.setattr(L, "postcheck", lambda *a, **k: (_ for _ in ()).throw(RuntimeError("postcheck boom (시험 주입)")))
+    assert _launch(t) == 1
+    m = _meta(t)
+    assert m["first_error"]["phase"] == "postcheck" and m["launched"] is True and m["stage"]["complete"] is False
+
+
+def test_l21_a_failed_start_record_never_starts_the_child_and_is_not_treated_as_empty_normal_output(tmp_path):
+    """[RED 실패 — 골격] (N3 · S4) git 저장소가 아닌 곳 → 시작 HEAD · porcelain 기록 실패 → 자식을 띄우지 않는다 (launched false · 가짜 run 표식 · 로그
+    없음) · 첫 오류 단계 record (GitRecordFailed) · stage false · 기록의 rc 는 그대로 남는다."""
+    t = _tree(tmp_path, git=False)
+    assert _launch(t) == 1
+    m = _meta(t)
+    assert m["launched"] is False and m["child"] is None and not (t.repo / "LAUNCHED").exists() and m["precheck_ok"] is True
+    assert m["first_error"]["phase"] == "record" and m["first_error"]["type"] == "GitRecordFailed" and "head_start" in m["first_error"]["message"]
+    assert m["records"]["head_start"]["rc"] != 0 and m["records"]["porcelain_start"]["rc"] != 0 and m["stage"]["complete"] is False
+    assert not (t.ev / "05_run.stdout.log").exists() and not (t.ev / "05_run.stderr.log").exists()
+
+
+def test_l22_child_env_keeps_only_the_ca_among_git_variables_and_removes_secrets(tmp_path):
+    """[RED 실패 — 골격] (N4) 저장소 · 객체 · index · trace · exec · proxy · ssh · config · askpass 의 `GIT_*` 와 토큰 · `SSH_ASKPASS` 를 뺀다 · `GIT_SSL_CAINFO` ·
+    프록시 · PATH 는 둔다 · `GIT_TERMINAL_PROMPT=0`."""
+    names = ("GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR", "GIT_OBJECT_DIRECTORY", "GIT_ALTERNATE_OBJECT_DIRECTORIES", "GIT_INDEX_FILE",
+             "GIT_TRACE", "GIT_TRACE_PACKET", "GIT_EXEC_PATH", "GIT_PROXY_COMMAND", "GIT_SSH_COMMAND", "GIT_CONFIG_COUNT", "GIT_CONFIG_KEY_0",
+             "GIT_CONFIG_GLOBAL", "GIT_ASKPASS", "GIT_TERMINAL_PROMPT")
+    base = {**{n: "/x" for n in names}, "GITHUB_TOKEN": "t", "SSH_ASKPASS": "a", "HTTPS_PROXY": "http://127.0.0.1:1", "GIT_SSL_CAINFO": "/c",
+            "PATH": "/usr/bin", "HOME": "/root"}
+    env, removed = L.child_env(base, tmp_path)
+    assert removed == sorted(set(names) | {"GITHUB_TOKEN", "SSH_ASKPASS"}) and not (set(removed) - {"GIT_TERMINAL_PROMPT"}) & set(env)
+    assert (env["HTTPS_PROXY"], env["GIT_SSL_CAINFO"], env["PATH"], env["HOME"], env["GIT_TERMINAL_PROMPT"]) == (
+        "http://127.0.0.1:1", "/c", "/usr/bin", "/root", "0")
+    assert sorted(k for k in env if k.startswith("GIT_")) == ["GIT_SSL_CAINFO", "GIT_TERMINAL_PROMPT"]
+
+
+def test_l23_fetch_precheck_refuses_url_rewrite_proxy_and_tls_off_settings(tmp_path):
+    """[RED 실패 — 골격] (N4) 가짜 HOME 의 `.gitconfig` — `url.<x>.insteadOf = https://github.com/` (유효 출처도 바뀜) · `http.proxy` · `http.sslVerify = false`
+    → 각각 fetch 사전 실패 · 자식 0. 깨끗한 설정이면 사전 통과 (유효 출처 = 고정 URL)."""
+    confs = {"rewrite": '[url "https://example.invalid/"]\n\tinsteadOf = https://github.com/\n',
+             "proxy": "[http]\n\tproxy = http://127.0.0.1:9\n", "tlsoff": "[http]\n\tsslVerify = false\n"}
+    for name, conf in confs.items():
+        t = _tree(tmp_path / name)
+        home = t.tmp / "home"
+        home.mkdir()
+        (home / ".gitconfig").write_text(conf)
+        pre = _pre(t, "fetch", data=t.tmp / "fresh", env_extra={"HOME": str(home)})
+        assert pre["ok"] is False and any("git 설정" in x for x in pre["problems"]), name
+        assert _launch(t, step="fetch", data=t.tmp / "fresh", extra_env={"HOME": str(home)}) == 1, name
+        assert _meta(t, "04_fetch")["launched"] is False and not (t.repo / "LAUNCHED").exists()
+    t = _tree(tmp_path / "rewrite_url")
+    home = t.tmp / "home"
+    home.mkdir()
+    (home / ".gitconfig").write_text(confs["rewrite"])
+    pre = _pre(t, "fetch", data=t.tmp / "fresh", env_extra={"HOME": str(home)})
+    assert any("유효 출처" in x for x in pre["problems"])
+    t = _tree(tmp_path / "clean")
+    home = t.tmp / "home"
+    home.mkdir()
+    pre = _pre(t, "fetch", data=t.tmp / "fresh", env_extra={"HOME": str(home)})
+    assert pre["ok"] is True and pre["source"]["get_url"]["out"].strip() == URL
+
+
+def test_l24_fetch_postcheck_binds_the_received_repository_to_the_fixed_source(tmp_path):
+    """[RED 실패 — 골격] (N4) 가짜 fetch 가 다른 remote URL · 다른 shallow 커밋 · alternates 가 있는 저장소를 남기면 → 각각 사후 실패 · stage false
+    (고정 출처 · 고정 커밋 · alternates 없음이면 complete — l13)."""
+    for mode, word in (("badremote", "remote.origin.url"), ("badshallow", "shallow"), ("alternates", "alternates")):
+        t = _tree(tmp_path / mode)
+        assert _launch(t, step="fetch", mode=mode, data=t.tmp / "fresh") == 1, mode
+        m = _meta(t, "04_fetch")
+        assert m["launched"] is True and m["stage"]["terms"]["postcheck_ok"] is False, mode
+        assert any(word in x for x in m["postcheck"]["problems"]), mode
+
+
+def test_l25_inherited_git_location_and_trace_variables_reach_neither_fixture_nor_launcher_git(tmp_path, monkeypatch):
+    """[RED 실패 — 골격] (V2-02) 상속 env 에 다른 저장소의 GIT_DIR · 허용 밖 기존 폴더의 GIT_OBJECT_DIRECTORY · GIT_INDEX_FILE · GIT_TRACE 를 넣어도 →
+    fixture git 은 tmp 저장소에 쓰고, launcher 의 시작 · 끝 기록 · fetch 사전 · 사후 Git 검사 · 가짜 fetch 의 git 은 표지 폴더에 아무것도 쓰지 않는다 ·
+    다른 저장소 불변 · 기록 HEAD = fixture 저장소 · 뺀 이름 기록 · 자식이 본 GIT_* 없음 · fetch complete."""
+    other = tmp_path / "other"
+    _git("init", "-q", "--template=", str(other))
+    _git("-C", str(other), *GITID, "commit", "-q", "--allow-empty", "-m", "other")
+    other_head = _git("-C", str(other), "rev-parse", "HEAD").strip()
+    other_files = sorted(str(p) for p in (other / ".git").rglob("*"))
+    sentinel = tmp_path / "sentinel"
+    (sentinel / "objects").mkdir(parents=True)
+    bad = {"GIT_DIR": str(other / ".git"), "GIT_OBJECT_DIRECTORY": str(sentinel / "objects"), "GIT_INDEX_FILE": str(sentinel / "index"),
+           "GIT_TRACE": str(sentinel / "trace.log")}
+    for k, v in bad.items():
+        monkeypatch.setenv(k, v)
+    t = _tree(tmp_path / "t")
+    head = _git("-C", str(t.repo), "rev-parse", "HEAD").strip()
+    assert _launch(t, step="fetch", data=t.tmp / "fresh") == 0
+    m = _meta(t, "04_fetch")
+    assert m["records"]["head_start"]["out"] == head == m["records"]["head_end"]["out"] and head != other_head
+    assert set(bad) <= set(m["env_removed_names"]) and json.loads((t.repo / "CHILD_ENV").read_text()) == []
+    assert [p.name for p in sentinel.rglob("*")] == ["objects"]
+    assert _git("-C", str(other), "rev-parse", "HEAD").strip() == other_head
+    assert sorted(str(p) for p in (other / ".git").rglob("*")) == other_files
+
+
+def test_l26_preparation_failures_are_recorded_as_phase_prepare_and_never_start_the_child(tmp_path, monkeypatch, capsys):
+    """[RED 실패 — 골격] (V2-04) 작업 폴더 자리가 파일 (폴더 생성 실패) → meta 의 first_error.phase prepare · launched false · 자식 0 · 사전 대조 기록
+    없음 · 반환 1 / 디스크 조회 OSError (주입) → 같음 / 준비 실패에 meta 까지 쓸 수 없음 (주입) → 반환 4 · stderr 마지막 줄 JSON 의 first_error.phase
+    prepare · launched false · complete false · meta 없음."""
+    t = _tree(tmp_path / "work_file")
+    t.work.write_text("not a folder")
+    assert _launch(t) == 1
+    m = _meta(t)
+    assert m["first_error"]["phase"] == "prepare" and m["launched"] is False and m["stage"]["complete"] is False and "argv" not in m
+    assert not (t.repo / "LAUNCHED").exists() and not (t.ev / "05_run.precheck.json").exists()
+
+    def no_disk(path):
+        raise OSError("disk query failed (시험 주입)")
+
+    t = _tree(tmp_path / "disk")
+    with monkeypatch.context() as mp:
+        mp.setattr(L.shutil, "disk_usage", no_disk)
+        assert _launch(t) == 1
+    m = _meta(t)
+    assert m["first_error"]["phase"] == "prepare" and "disk query failed" in m["first_error"]["message"] and m["launched"] is False
+    assert not (t.repo / "LAUNCHED").exists() and not (t.ev / "05_run.precheck.json").exists()
+    real_write = L.write_new
+
+    def no_meta(path, text):
+        if str(path).endswith(".meta.json"):
+            raise OSError("cannot write meta (시험 주입)")
+        return real_write(path, text)
+
+    t = _tree(tmp_path / "meta")
+    t.work.write_text("not a folder")
+    capsys.readouterr()
+    with monkeypatch.context() as mp:
+        mp.setattr(L, "write_new", no_meta)
+        assert _launch(t) == 4
+    line = json.loads(capsys.readouterr().err.strip().splitlines()[-1])
+    assert line["first_error"]["phase"] == "prepare" and line["launched"] is False and line["complete"] is False and "meta_write_failed" in line
+    assert not (t.ev / "05_run.meta.json").exists()

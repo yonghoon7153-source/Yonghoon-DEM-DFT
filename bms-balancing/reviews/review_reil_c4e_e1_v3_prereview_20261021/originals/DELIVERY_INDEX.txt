@@ -1,0 +1,25 @@
+REIL C4E E1 v3 ultra 사전 검토 전달 목록
+2026-10-21
+
+읽을 순서:
+1. CODEX_REPLY_KO.txt — Claude에게 전달할 짧은 회신
+2. REVIEW_KO.md — 정정 근거·정적 반례·수용 범위·권한 경계
+3. REVIEW_DECISION.json — 기계 판독 판정: P2 네 건 + P3 문구 한 건
+
+식별 및 자료 근거:
+- SOURCE_IDENTITIES.json / CAPTURE_METADATA.json — 고정 commit 21개, 첨부 2개의 식별
+- STATIC_DATA_CHECKS.json — 자체 자료 105조건, 후보 시험 아님
+- FUNCTION_SPANS.json — 새 초안 5개의 함수/클래스 145 원문 구간
+- SELECTED_REVIEW_INPUTS_BEFORE.json / SELECTED_REVIEW_INPUTS_AFTER.json — 로컬 선택 23개만 보존 대조
+- ACTIVITY_NOTES.json — 자체 diff 출력 인코딩 오류 포함
+- source/ — 읽기 전용 검토용 수신 사본. 실행 금지
+- tools/ — 검토자가 작성한 자료 검사·포장 도구. 후보 하네스가 아님
+
+포장:
+- REIL_C4E_E1_V3_ULTRA_REVIEW_20261021.zip — 위 자료와 PACKAGE_MANIFEST.json
+- ZIP 밖 DELIVERY_RECEIPT.json / PACKAGE_TOOL_RETURN.json / FINAL_CHECK.json — 포장 식별·실제 반환 전사·최종 재읽기
+- 자기 자신 또는 이후 도구 반환을 이미 포함했다고 주장하지 않음
+
+자료 집합·크기·SHA256·CRC를 ZIP 재읽기로 대조합니다.
+판정은 정정 후 재검토이며 E1-0이나 후속 실행 승인, 기능 PASS가 아닙니다.
+기존 원본·원격 저장소에는 쓰지 않았고 외부 발송하지 않았습니다.

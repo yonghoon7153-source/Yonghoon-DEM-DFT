@@ -1,0 +1,481 @@
+"""REIL C4-E · E1-0 외곽 단계 실행기 v3 (승인 요청 v3 §4 · 정정 범위안 v3 · v2 사전 검토 §76 의 V2-01–05 · 자체 발견 S4) — pytest 한 번을 새 세션으로
+띄우고, 실행기가 subreaper 가 되어 timeout 과 끝에서 자손 전체 (별도 세션 포함) 를 소유 · 정리 · 확인한다 (stdlib · Linux).
+
+    /usr/bin/python3.11 -I <E>/00_step_runner.py <단계> <timeout_s> -- <argv…>     (<E> = 이 파일이 있는 증거 폴더 · reil_c4e1_0_YYYYMMDD)
+
+- 단계는 `EXPECT` 의 셋 (01_red_launcher · 02_red_runner · 03_green) 뿐이다. cwd 는 bms-balancing/. 재시도 없음 · 덮어쓰지 않는다.
+- 의도된 거부 (인자 · 단계 이름 · 폴더 규칙 · 기존 기록 파일) — 어떤 파일 · 폴더도 만들기 전 SystemExit (메시지만 · 해석기 rc 1). 기록용
+  `except Exception` 은 SystemExit 를 잡지 않는다.
+- 준비 (기록되는 단계 prepare · V2-04): 상속 env 정제 (V2-02 — launcher `child_env` 와 같은 규칙: 비밀 형태 이름 · SSH_ASKPASS · GIT_SSL_CAINFO 밖의
+  모든 GIT_* 를 빼고 GIT_TERMINAL_PROMPT=0 · 이름만 기록 · 이 env 가 실행기 자신의 Git 기록과 pytest env 의 바탕이다 — 첫 Git 호출 전) · mpl / tmp 폴더 ·
+  자기 sha (기록만) · 디스크 · 원천 해시 (V2-05 — 고정 목록 TARGETS 를 해시해 `<단계>.source_sha256.txt` 에 쓰고 EXPECT[단계] 와 대조 · 하나라도 다르면
+  자식 0) · PR_SET_CHILD_SUBREAPER · 시작 Git 기록 (HEAD · porcelain — 실패하면 자식 0 · S4). 자식 전에 멈추면 meta (started false) · 반환 3.
+- 정리 (V2-01 · V2-03): 공통 절대 기한 하나 (정리 시작 + CLEANUP_S). timeout 이면 그룹 SIGKILL → KILL_WAIT_S (기한 안) 동안 /proc ppid 사슬로 찾은
+  살아 있는 자손 (pytest · 별도 세션 포함) SIGKILL 반복 — pytest 가 끝나고 살아 있는 자손이 없으면 멈춤 → pytest 회수 (남은 시간만 · 하한 없음) → settle
+  (스스로 끝나기 관측 SETTLE_S → 남으면 SIGKILL → 기한까지 재관측). 기한 뒤에는 새 대기를 시작하지 않는다 (기한 직전에 시작한 /proc 관측 한 번만 넘을 수
+  있다). /proc 관측은 모두 proc_table 하나를 거치고, 반복마다 한 번 관측한 표를 회수와 자손 판정에 같이 쓴다. 관측 (목록 · 읽기 · 파싱) · 회수 · kill
+  오류는 단계 하나의 누적 기록 (ledger) 에 쌓이고, 하나라도 있으면 끝 상태는 unknown 이다 (뒤의 정상 관측이 지우지 않는다). PID 소멸만 "사라짐" 이다.
+- 끝 기록: porcelain · HEAD · 원천 해시 다시 (`<단계>.source_sha256_end.txt` · EXPECT 와 대조) · 시간 경계 셋 (child_s · cleanup_s · records_s).
+- runner_ok = 시작 AND timeout 없음 AND 끝 상태 empty AND 기한 안 AND 시작 · 끝 Git 기록 성공 · HEAD 불변 AND 끝 원천 해시 = EXPECT AND 단계 오류 0.
+  pytest rc 의 해석 (RED 는 실패가 기대값) 은 승인 요청이 정한다.
+- 반환: 0 = runner_ok AND pytest rc 0 · 1 = 그 밖 (meta 있음) · 3 = 자식 시작 전에 멈춤 (meta 있음) · 4 = meta 를 쓰지 못함 (stderr 한 줄 JSON).
+- 자원은 사후 관측이다 (RUSAGE_CHILDREN · 디스크 · 증거 바이트 — 강제 상한이 아니다). /proc 스캔은 비원자적이고 PID 번호로 보내는 kill 은 생성 신원을
+  보장하지 않는다 — 모든 자손의 연속 소유 · 종료 증명이 아니다. 실행기 자신의 sha 는 기록만 한다 (자기 해시를 자기 안에 둘 수 없다).
+"""
+import ctypes
+import datetime
+import hashlib
+import json
+import os
+import re
+import resource
+import shutil
+import signal
+import stat
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+REPO = Path("/home/user/Yonghoon-DEM-DFT")
+BMS = REPO / "bms-balancing"
+E = Path(__file__).resolve().parent
+SP = Path("/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad")
+WORK = SP / "c4e1_steps"
+#: launcher `SECRET` · `GIT_KEEP` · `DROP` 과 같은 규칙 (V2-02)
+SECRET = re.compile(r"TOKEN|SECRET|PASSW|ACCESS_KEY|CREDENTIAL|COOKIE|^GIT_CONFIG_", re.I)
+GIT_KEEP = ("GIT_SSL_CAINFO",)
+DROP = ("SSH_ASKPASS",)
+CHILD_SET = {"PYTHONDONTWRITEBYTECODE": "1", "MPLBACKEND": "Agg", "OMP_NUM_THREADS": "1", "OPENBLAS_NUM_THREADS": "1", "MKL_NUM_THREADS": "1"}
+PR_SET_CHILD_SUBREAPER = 36
+#: 정리의 공통 절대 기한 (요청서 v3 의 "정리 ≤ 15 s") — timeout 경로 7 + 3 + 5 · 정상 경로 3 + 12
+CLEANUP_S = 15.0
+KILL_WAIT_S = 7.0
+SETTLE_S = 3.0
+POLL_S = 0.1
+GIT_TIMEOUT_S = 60.0
+PROC = Path("/proc")
+EVIDENCE_NAME = re.compile(r"^reil_c4e1_0_20[0-9]{6}$")
+LAUNCH = "bms-balancing/scripts/reil_c4e1_launch.py"
+#: V2-05 — 단계마다 자식 전 · 끝에 해시하는 고정 목록 14 (저장소 기준 경로 · 이 순서로 기록)
+TARGETS = (LAUNCH, "bms-balancing/tests/test_reil_c4e1_launch.py", "bms-balancing/tests/test_reil_c4e1_runner.py",
+           "bms-balancing/tests/test_reil_c4e.py", "bms-balancing/tests/test_reil_c4e_fix.py", "bms-balancing/scripts/reil_c4e_run.py",
+           "bms-balancing/scripts/reil_c4_e3a.py", "bms-balancing/scripts/reil_c4_monitor.py", "bms-balancing/scripts/reil_c5_pilot.py",
+           "bms-balancing/scripts/reil_p0.py", "bms-balancing/scripts/reil_c6_profile.py", "degradation-degeneracy/tools/env_profile.py",
+           "bms-balancing/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json",
+           "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt")
+#: 단계에 따라 바뀌지 않는 13 — 대조 둘 (v3 초안과 같은 바이트) · 기존 시험 둘 · 다섯 모듈 (SOURCES.json) · S1 의 둘 · SOURCES.json · v2 실행기 초안
+_FIXED = {"bms-balancing/tests/test_reil_c4e1_launch.py": {"bytes": 46_977, "sha256": "f00ba0fb9e333fe77cae275507203e8ced086d6e80d6c08a7aec5d98860ce002"},
+          "bms-balancing/tests/test_reil_c4e1_runner.py": {"bytes": 25_328, "sha256": "555263464f2eddad1df1b1f9d201c947e990d026bb29bc4c95a74256c2a0ddfc"},
+          "bms-balancing/tests/test_reil_c4e.py": {"bytes": 57_482, "sha256": "687de63c3a7614834fa9063d26f29122b9876c381de9f3d43f759ec5e204d38e"},
+          "bms-balancing/tests/test_reil_c4e_fix.py": {"bytes": 19_506, "sha256": "7a09d4386a740e9eba9145372e59ed7e1385ce5523fd7ce38dc095d5e4053bd2"},
+          "bms-balancing/scripts/reil_c4e_run.py": {"bytes": 53_853, "sha256": "a94f535fd8ab5718b0ed47e0322a067300f808ef42c530cd95668aa77f0a53a9"},
+          "bms-balancing/scripts/reil_c4_e3a.py": {"bytes": 32_311, "sha256": "33b855378fb76634eb314f8cfb0428151ce1ec8b9045bc8447d8e17354a41ac3"},
+          "bms-balancing/scripts/reil_c4_monitor.py": {"bytes": 21_546,
+                                                       "sha256": "e6ef8ff617342393a9d3a45c98751b563a3f1e9871c6fa3b540b47f4bfbc071b"},
+          "bms-balancing/scripts/reil_c5_pilot.py": {"bytes": 47_164, "sha256": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6"},
+          "bms-balancing/scripts/reil_p0.py": {"bytes": 23_941, "sha256": "793b326ebf86a6db3b855d828aff4d6b6dddc824bed8d00f4161537b1cc06e3a"},
+          "bms-balancing/scripts/reil_c6_profile.py": {"bytes": 15_915,
+                                                       "sha256": "408afc4bb5eb1069583b955e0eb6215bf48dd9259ad474c230549d1b3642df5d"},
+          "degradation-degeneracy/tools/env_profile.py": {"bytes": 22_333,
+                                                          "sha256": "83b0d8365d039d75050d087fe980ad7b64818686b699e5d06da1c0ad63148563"},
+          "bms-balancing/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json": {
+              "bytes": 1_100, "sha256": "2a7b2b49b9809d1a9301398388894a1f7a73afb55acc1a5070e3f77ce0393d52"},
+          "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt": {
+              "bytes": 12_849, "sha256": "aae2ec14c4d652ef9a9e5b1c45bf52896d2234dce16eac77942911e596669fed"}}
+#: launcher 자리 — RED 둘은 골격 v3 · GREEN 은 고정 구현 v3
+SKELETON = {"bytes": 13_501, "sha256": "b77c6aa87cb7468063c258665a6b85765eab9f04e2607eb856444362b7374030"}
+IMPL = {"bytes": 49_873, "sha256": "124a154dfbd662aaa49fcf21327bf48a08e190da5bd9d02ae28cf86072b71503"}
+#: V2-05 — 단계별 봉인 기대값 (요청서 v3 §4-4 의 표와 같다 · 첫 시험 전 커밋으로 봉인)
+EXPECT = {"01_red_launcher": {LAUNCH: SKELETON, **_FIXED}, "02_red_runner": {LAUNCH: SKELETON, **_FIXED}, "03_green": {LAUNCH: IMPL, **_FIXED}}
+
+
+def utc() -> str:
+    return datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
+
+
+def sha256(b: bytes) -> str:
+    return hashlib.sha256(b).hexdigest()
+
+
+def dump(obj) -> str:
+    return json.dumps(obj, ensure_ascii=False, indent=1, sort_keys=True, default=str) + "\n"
+
+
+def write_new(path, text: str) -> None:
+    with open(path, "x", encoding="utf-8") as f:
+        f.write(text)
+
+
+# ---------------------------------------------------------------- env · Git (V2-02)
+def base_env(environ) -> tuple:
+    """정제 env → (env, 뺀 이름). launcher `child_env` 와 같은 규칙: 비밀 형태 이름 · SSH_ASKPASS · GIT_SSL_CAINFO 밖의 모든 GIT_* 를 빼고
+    GIT_TERMINAL_PROMPT=0. 값은 기록하지 않는다. 실행기 자신의 Git 기록과 pytest env 의 바탕 — 첫 Git 호출 전에 만든다."""
+    removed = sorted(k for k in environ if SECRET.search(k) or k in DROP or (k.startswith("GIT_") and k not in GIT_KEEP))
+    env = {k: v for k, v in environ.items() if k not in removed}
+    env["GIT_TERMINAL_PROMPT"] = "0"
+    return env, removed
+
+
+def git(args, *, env, cwd=REPO, timeout=GIT_TIMEOUT_S) -> dict:
+    """기록용 git — env 를 반드시 받는다 (기본값 없음 · 상속 env 로 부르지 않는다). rc · 오류를 그대로 남긴다 (빈 정상 출력으로 바꾸지 않는다)."""
+    argv = ["git", "-C", str(cwd), *[str(a) for a in args]]
+    try:
+        r = subprocess.run(argv, env=env, capture_output=True, text=True, timeout=timeout)
+        return {"argv": argv, "rc": r.returncode, "out": r.stdout, "err": r.stderr[-500:]}
+    except (OSError, subprocess.TimeoutExpired) as e:
+        return {"argv": argv, "rc": None, "out": "", "err": "", "error": f"{e.__class__.__name__}: {e}"}
+
+
+def record_problems(records: dict, heads=("head_start", "head_end"), porcelains=("porcelain_start", "porcelain_end")) -> list:
+    """Git 기록 (기본: HEAD 시작 · 끝 · porcelain 시작 · 끝) 이 성공했고 단계 중 HEAD 가 그대로인가. 시작만 볼 때는 시작 키만 준다 (S4)."""
+    probs, seen = [], {}
+    for k in heads:
+        r = records.get(k) or {}
+        h = (r.get("out") or "").strip()
+        if r.get("rc") != 0 or not re.fullmatch(r"[0-9a-f]{40}", h):
+            probs.append(f"Git 기록 {k} 실패 (rc {r.get('rc')} {r.get('error', '')})")
+        else:
+            seen[k] = h
+    for k in porcelains:
+        r = records.get(k) or {}
+        if r.get("rc") != 0:
+            probs.append(f"Git 기록 {k} 실패 (rc {r.get('rc')} {r.get('error', '')})")
+    if len(seen) == 2 and seen.get("head_start") != seen.get("head_end"):
+        probs.append(f"단계 중 HEAD 가 바뀌었다: {seen.get('head_start')} → {seen.get('head_end')}")
+    return probs
+
+
+# ---------------------------------------------------------------- 원천 해시 (V2-05)
+def read_regular(path) -> tuple:
+    """일반 파일만 읽는다 → (바이트, None) · 아니면 (None, 사유). 절대 경로 · lstat 이 일반 파일 · resolve 가 자기 자신 (링크된 상위 폴더 거부) · 읽기 오류도
+    사유로."""
+    p = Path(path)
+    if not p.is_absolute():
+        return None, "절대 경로가 아니다"
+    try:
+        st = os.lstat(p)
+    except OSError as e:
+        return None, f"없음 ({e.__class__.__name__})"
+    if not stat.S_ISREG(st.st_mode):
+        return None, "일반 파일이 아니다 (심볼릭 링크 · 디렉터리 등)"
+    try:
+        if p.resolve() != p:
+            return None, f"resolve 경로가 다르다: {p.resolve()}"
+        return p.read_bytes(), None
+    except OSError as e:
+        return None, f"읽기 실패 ({e.__class__.__name__}: {e})"
+
+
+def source_table(repo, targets) -> dict:
+    """고정 목록 (저장소 기준 경로) 의 실제 바이트 → {경로: {sha256, bytes}} · 읽지 못한 행은 {why}."""
+    rows = {}
+    for rel in targets:
+        b, why = read_regular(Path(repo) / rel)
+        rows[rel] = {"why": why} if b is None else {"sha256": sha256(b), "bytes": len(b)}
+    return rows
+
+
+def source_problems(rows: dict, expect: dict) -> list:
+    """원천 표 ↔ 봉인 기대값 — 경로 집합이 같고 모든 행이 기대 sha256 · bytes 와 같아야 한다 (끝 diff 로 사전 봉인을 대신하지 않는다)."""
+    probs = []
+    if set(rows) != set(expect):
+        probs.append(f"원천 목록 경로 집합이 다르다 — 누락 {sorted(set(expect) - set(rows))} · 목록 밖 {sorted(set(rows) - set(expect))}")
+    for rel, want in expect.items():
+        r = rows.get(rel)
+        if r is None:
+            continue
+        if "why" in r:
+            probs.append(f"{rel}: {r['why']}")
+        elif (r.get("sha256"), r.get("bytes")) != (want.get("sha256"), want.get("bytes")):
+            probs.append(f"{rel}: sha256 {r.get('sha256')} · {r.get('bytes')} B ≠ 기대 {want}")
+    return probs
+
+
+def source_text(rows: dict, self_path, self_sha) -> str:
+    """기록 파일 본문 — 목록 순서의 `sha256  경로` 줄 (sha256sum 형식) · 읽지 못한 행은 `-  경로  (사유)` · 끝줄에 실행기 자신 (대조 밖)."""
+    lines = [f"{r['sha256']}  {rel}" if "sha256" in r else f"-  {rel}  ({r['why']})" for rel, r in rows.items()]
+    lines.append(f"# 실행기 자신 (대조 밖) {self_sha}  {self_path}")
+    return "\n".join(lines) + "\n"
+
+
+# ---------------------------------------------------------------- /proc 관측 · 정리 (V2-01 · V2-03)
+def proc_table(proc=PROC, read=None) -> tuple:
+    """{pid: (ppid, 상태)} · 오류 — PID 소멸 (FileNotFoundError · ProcessLookupError) 만 건너뛰고 그 밖 읽기 · 파싱 · 목록 오류는 남긴다. 실행기의 /proc
+    관측은 모두 이 함수 하나를 거친다 (대조 r1 · r2 가 이 자리에 오류를 주입한다)."""
+    read = read or (lambda q: q.read_text())
+    table, errors = {}, []
+    try:
+        entries = [d for d in Path(proc).iterdir() if d.name.isdigit()]
+    except OSError as e:
+        return table, [f"list: {e.__class__.__name__}: {e}"]
+    for d in entries:
+        try:
+            s = read(d / "stat")
+        except (FileNotFoundError, ProcessLookupError):
+            continue
+        except OSError as e:
+            errors.append(f"{d.name}: {e.__class__.__name__}: {e}")
+            continue
+        try:
+            rest = s[s.rindex(")") + 2:].split()
+            table[int(d.name)] = (int(rest[1]), rest[0])
+        except (ValueError, IndexError) as e:
+            errors.append(f"{d.name}: 파싱 실패 {e}")
+    return table, errors
+
+
+def observe(ledger: list, where: str, *, proc=PROC, read=None) -> dict:
+    """/proc 한 번 → 표. 오류는 ledger 에 {where, utc, error} 로 쌓는다 (지우지 않는다)."""
+    table, errors = proc_table(proc, read)
+    ledger += [{"where": where, "utc": utc(), "error": e} for e in errors]
+    return table
+
+
+def descendants(table: dict, root: int) -> list:
+    """표에서 root 의 자손 [(pid, 상태)] — ppid 사슬 (별도 세션 포함 · subreaper 라 고아도 root 밑으로 온다)."""
+    kids = {}
+    for pid, (ppid, _) in table.items():
+        kids.setdefault(ppid, []).append(pid)
+    out, todo, seen = [], list(kids.get(root, [])), set()
+    while todo:
+        pid = todo.pop()
+        if pid in seen:
+            continue
+        seen.add(pid)
+        out.append((pid, table[pid][1]))
+        todo += kids.get(pid, [])
+    return sorted(out)
+
+
+def reap(table: dict, me: int, skip: int, ledger: list, *, waitpid=os.waitpid) -> list:
+    """표에서 이 실행기의 좀비 자식을 PID 지정으로 회수한다 — pytest (skip) 는 Popen 이 회수하므로 건드리지 않는다. 회수 오류는 ledger 로."""
+    got = []
+    for pid, (ppid, state) in table.items():
+        if ppid == me and pid != skip and state == "Z":
+            try:
+                if waitpid(pid, os.WNOHANG)[0] == pid:
+                    got.append(pid)
+            except OSError as e:
+                ledger.append({"where": "reap", "utc": utc(), "error": f"{pid}: {e.__class__.__name__}: {e}"})
+    return got
+
+
+def kill(pids, ledger: list, *, killer=os.kill) -> list:
+    """PID 마다 SIGKILL → [[pid, 결과]] — 이미 없음은 결과일 뿐이고, 그 밖 오류는 ledger 로."""
+    res = []
+    for pid in pids:
+        try:
+            killer(pid, signal.SIGKILL)
+            res.append([pid, "sent"])
+        except ProcessLookupError:
+            res.append([pid, "no_process"])
+        except OSError as e:
+            res.append([pid, f"{e.__class__.__name__}: {e}"])
+            ledger.append({"where": "kill", "utc": utc(), "error": f"{pid}: {e.__class__.__name__}: {e}"})
+    return res
+
+
+def settle(skip, limit=SETTLE_S, *, ledger=None, deadline=None, me=None, clock=time.monotonic, sleep=time.sleep, proc=PROC, read=None,
+           waitpid=os.waitpid, killer=os.kill) -> dict:
+    """끝 확인 — limit 초 (기한 안) 동안 살아 있는 (좀비 아닌) 자손이 스스로 끝나기를 관측한다 (좀비는 회수) → 끝나면 empty. 넘으면 SIGKILL 뒤 기한까지
+    재관측 → killed (있었고 정리됨) / alive. ledger 에 오류가 하나라도 있으면 (이 호출 전 정리 단계의 것 포함) unknown — 뒤의 정상 관측이 지우지 않는다.
+    deadline 을 주지 않으면 지금 + CLEANUP_S."""
+    ledger = [] if ledger is None else ledger
+    me = os.getpid() if me is None else me
+    t0 = clock()
+    deadline = t0 + CLEANUP_S if deadline is None else deadline
+    reaped, first = [], {}
+
+    def watch(until, where):
+        while True:
+            table = observe(ledger, where, proc=proc, read=read)
+            reaped.extend(reap(table, me, skip, ledger, waitpid=waitpid))
+            desc = descendants(table, me)
+            alive = [q for q, s in desc if s != "Z"]
+            first.setdefault("alive", alive)
+            left = until - clock()
+            if not alive or left <= 0:
+                return alive, [q for q, s in desc if s == "Z"]
+            sleep(min(POLL_S, left))
+
+    alive, zombies = watch(min(deadline, t0 + limit), "settle")
+    kills = []
+    if alive:
+        kills = kill(alive, ledger, killer=killer)
+        alive, zombies = watch(deadline, "settle_after_kill")
+    status = "unknown" if ledger else ("empty" if not kills else ("alive" if alive else "killed"))
+    return {"status": status, "alive": alive, "first_alive": first.get("alive"), "zombies": zombies, "kills": kills, "reaped": reaped,
+            "errors": list(ledger), "first_error": ledger[0] if ledger else None, "deadline_hit": clock() >= deadline}
+
+
+def cleanup(p, timed_out, *, ledger, me=None, clock=time.monotonic, sleep=time.sleep, proc=PROC, read=None, killpg=os.killpg,
+            killer=os.kill, waitpid=os.waitpid, cleanup_s=CLEANUP_S, kill_wait_s=KILL_WAIT_S, settle_s=SETTLE_S) -> dict:
+    """정리 — 공통 절대 기한 하나 (시작 + cleanup_s). timeout 이면 그룹 SIGKILL → kill_wait_s (기한 안) 동안 살아 있는 자손 (pytest 포함) SIGKILL 반복 —
+    pytest 가 끝나고 살아 있는 자손이 없으면 멈춤 → pytest 회수 (남은 시간만 · 하한 없음) → settle (settle_s 의 스스로 끝나기 관측 → 남으면 SIGKILL →
+    기한까지 재관측). 기한 뒤에는 새 대기를 시작하지 않는다. 관측 · 회수 · kill 오류는 모두 같은 ledger 로."""
+    me = os.getpid() if me is None else me
+    t0 = clock()
+    deadline = t0 + cleanup_s
+    rec = {"timed_out": timed_out, "kills": [], "exited_after_kill": None, "rc_after_kill": None}
+    if timed_out:
+        try:
+            killpg(p.pid, signal.SIGKILL)
+            rec["kills"].append(["group", p.pid, "sent"])
+        except ProcessLookupError:
+            rec["kills"].append(["group", p.pid, "no_process"])
+        except OSError as e:
+            rec["kills"].append(["group", p.pid, f"{e.__class__.__name__}: {e}"])
+            ledger.append({"where": "group_kill", "utc": utc(), "error": f"{p.pid}: {e.__class__.__name__}: {e}"})
+        until = min(deadline, t0 + kill_wait_s)
+        while True:
+            table = observe(ledger, "timeout", proc=proc, read=read)
+            live = [q for q, s in descendants(table, me) if s != "Z"]
+            if live:
+                rec["kills"] += [["pid", *k] for k in kill(live, ledger, killer=killer)]
+            left = until - clock()
+            if (p.poll() is not None and not live) or left <= 0:
+                break
+            sleep(min(POLL_S, left))
+        try:
+            rec["rc_after_kill"] = p.wait(timeout=max(0.0, until - clock()))
+            rec["exited_after_kill"] = True
+        except subprocess.TimeoutExpired:
+            rec["exited_after_kill"] = False
+    s = settle(p.pid, settle_s, ledger=ledger, deadline=deadline, me=me, clock=clock, sleep=sleep, proc=proc, read=read, waitpid=waitpid,
+               killer=killer)
+    rec.update(settle=s, status=s["status"], deadline_hit=s["deadline_hit"], cleanup_s=round(clock() - t0, 3))
+    return rec
+
+
+def subreaper() -> tuple:
+    """PR_SET_CHILD_SUBREAPER 를 켠다 → (성공, errno). 켜지면 이 프로세스의 자손이 고아가 될 때 init 대신 이 프로세스 밑으로 온다."""
+    libc = ctypes.CDLL(None, use_errno=True)
+    if libc.prctl(PR_SET_CHILD_SUBREAPER, 1, 0, 0, 0) == 0:
+        return True, None
+    return False, ctypes.get_errno()
+
+
+# ---------------------------------------------------------------- 단계 하나
+def run_step(name, timeout, argv, *, repo=REPO, bms=BMS, e=E, work=WORK, expect=EXPECT, targets=TARGETS, environ=None,
+             popen=subprocess.Popen, clock=time.monotonic) -> int:
+    """단계 하나 (모듈 docstring) → 반환 0 · 1 · 3 · 4. 의도된 거부는 어떤 파일 · 폴더도 만들기 전 SystemExit."""
+    repo, bms, e, work = Path(repo), Path(bms), Path(e), Path(work)
+    if name not in expect:
+        raise SystemExit(f"단계는 {sorted(expect)} 뿐이다: {name!r}")
+    if e.parent != bms / "evidence" or not EVIDENCE_NAME.match(e.name):
+        raise SystemExit(f"실행기는 {bms / 'evidence'}/reil_c4e1_0_YYYYMMDD/ 안에 있어야 한다: {e}")
+    files = {k: e / f"{name}.{k}" for k in ("meta.json", "stdout.log", "stderr.log", "porcelain_start.txt", "porcelain_end.txt",
+                                            "source_sha256.txt", "source_sha256_end.txt")}
+    meta = {"step": name, "argv": list(argv), "cwd": str(bms), "timeout_s": timeout, "cleanup_s": CLEANUP_S, "kill_wait_s": KILL_WAIT_S,
+            "settle_s": SETTLE_S, "targets": list(targets), "start_utc": utc()}
+    errors, problems, end_problems, ledger, records, times = [], [], [], [], {}, {}
+    phase, p, rc, cl, timed_out, started, self_sha = "prepare", None, None, None, False, False, None
+    self_path = Path(__file__).resolve()
+    t0 = clock()
+    try:
+        taken = [str(q) for q in files.values() if q.exists()]
+        if taken:
+            raise SystemExit(f"이미 있다 — 덮어쓰지 않는다: {taken}")
+        env, removed = base_env(dict(os.environ if environ is None else environ))
+        child_env = dict(env, **CHILD_SET, MPLCONFIGDIR=str(work / "mpl"), TMPDIR=str(work / "tmp"), REIL_C4_FIX_EVIDENCE=str(e),
+                         REIL_C4_FIX_STEP=name)
+        meta.update(env_removed_names=removed, env_set={k: child_env[k] for k in (*CHILD_SET, "MPLCONFIGDIR", "TMPDIR", "REIL_C4_FIX_EVIDENCE",
+                                                                                  "REIL_C4_FIX_STEP", "GIT_TERMINAL_PROMPT")})
+        for d in (work / "mpl", work / "tmp"):
+            d.mkdir(parents=True, exist_ok=True)
+        self_sha = sha256(self_path.read_bytes())
+        meta["runner"] = {"path": str(self_path), "sha256": self_sha}  # 기록용 · 검증 아님
+        meta["disk_free_start_bytes"] = shutil.disk_usage(bms).free
+        rows = source_table(repo, targets)
+        write_new(files["source_sha256.txt"], source_text(rows, self_path, self_sha))
+        meta["source_start"] = rows
+        problems += source_problems(rows, expect[name])
+        if not problems:
+            ok, err = subreaper()
+            meta.update(subreaper=ok, subreaper_errno=err)
+            if not ok:
+                problems.append(f"PR_SET_CHILD_SUBREAPER 실패 (errno {err})")
+        if not problems:
+            phase = "record"
+            records["head_start"] = git(["rev-parse", "HEAD"], env=env, cwd=repo)
+            records["porcelain_start"] = git(["status", "--porcelain=v1", "--untracked-files=all"], env=env, cwd=repo)
+            write_new(files["porcelain_start.txt"], records["porcelain_start"]["out"])
+            problems += record_problems(records, heads=("head_start",), porcelains=("porcelain_start",))
+        if not problems:
+            phase = "start"
+            with open(files["stdout.log"], "xb") as fo, open(files["stderr.log"], "xb") as fe:
+                t1 = clock()
+                p = popen(list(argv), cwd=str(bms), env=child_env, stdout=fo, stderr=fe, start_new_session=True)
+                started = True
+                phase = "wait"
+                try:
+                    rc = p.wait(timeout=timeout)
+                except subprocess.TimeoutExpired:
+                    timed_out = True
+                times["child_s"] = round(clock() - t1, 3)
+                phase = "cleanup"
+                cl = cleanup(p, timed_out, ledger=ledger, clock=clock)
+                if timed_out:
+                    rc = cl.get("rc_after_kill")
+            phase = "record"
+            t2 = clock()
+            records["porcelain_end"] = git(["status", "--porcelain=v1", "--untracked-files=all"], env=env, cwd=repo)
+            write_new(files["porcelain_end.txt"], records["porcelain_end"]["out"])
+            records["head_end"] = git(["rev-parse", "HEAD"], env=env, cwd=repo)
+            rows_end = source_table(repo, targets)
+            write_new(files["source_sha256_end.txt"], source_text(rows_end, self_path, self_sha))
+            meta["source_end"] = rows_end
+            end_problems += source_problems(rows_end, expect[name]) + record_problems(records)
+            times["records_s"] = round(clock() - t2, 3)
+    except Exception as ex:  # noqa: BLE001 — 어느 단계의 예외든 기록한다 (SystemExit 는 잡지 않는다)
+        errors.append({"phase": phase, "type": ex.__class__.__name__, "message": str(ex)[:500]})
+        if p is not None and cl is None:  # 자식이 시작된 뒤의 예외 — 정리를 거친다 (공통 기한 안)
+            try:
+                cl = cleanup(p, p.poll() is None, ledger=ledger, clock=clock)
+            except Exception as ex2:  # noqa: BLE001
+                errors.append({"phase": "cleanup", "type": ex2.__class__.__name__, "message": str(ex2)[:500]})
+    for key, look in (("disk_free_end_bytes", lambda: shutil.disk_usage(bms).free),
+                      ("evidence_bytes_before_meta", lambda: sum(q.stat().st_size for q in e.rglob("*") if q.is_file()))):
+        try:
+            meta[key] = look()
+        except Exception as ex:  # noqa: BLE001 — 끝 관측의 실패도 오류로 남기고 meta 는 계속 쓴다
+            errors.append({"phase": "end", "type": ex.__class__.__name__, "message": str(ex)[:500]})
+    times["total_s"] = round(clock() - t0, 3)
+    cl = cl or {}
+    runner_ok = (started and not timed_out and cl.get("status") == "empty" and cl.get("deadline_hit") is False and not problems
+                 and not end_problems and not errors)
+    meta.update(started=started, problems=problems, end_problems=end_problems, pgid=None if p is None else p.pid, rc=rc, timed_out=timed_out,
+                cleanup=cl or None, errors=errors, first_error=errors[0] if errors else None, runner_ok=runner_ok, times=times,
+                records={k: {kk: vv for kk, vv in v.items() if kk != "out"} | ({"out": v.get("out", "").strip()} if k.startswith("head") else {})
+                         for k, v in records.items()},
+                end_utc=utc(), child_maxrss_kib=resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss)
+    try:
+        write_new(files["meta.json"], dump(meta))
+    except Exception as ex:  # noqa: BLE001 — 기록 자체가 불가능하면 외부 stderr · 반환 4 로 한계를 분리한다
+        sys.stderr.write(json.dumps({"step": name, "meta_write_failed": f"{ex.__class__.__name__}: {ex}", "started": started,
+                                     "first_error": errors[0] if errors else None, "problems": problems[:5], "runner_ok": False},
+                                    ensure_ascii=False) + "\n")
+        return 4
+    print(json.dumps({"step": name, "started": started, "rc": rc, "timed_out": timed_out, "end": cl.get("status"), "runner_ok": runner_ok,
+                      "times": times}, ensure_ascii=False))
+    if not started:
+        return 3
+    return 0 if (runner_ok and rc == 0) else 1
+
+
+def main(argv=None) -> int:
+    a = sys.argv[1:] if argv is None else list(argv)
+    if len(a) < 4 or a[2] != "--":
+        raise SystemExit("사용: 00_step_runner.py <단계> <timeout_s> -- <argv…>")
+    try:
+        timeout = float(a[1])
+    except ValueError:
+        raise SystemExit(f"timeout_s 가 수가 아니다: {a[1]!r}") from None
+    if not 0 < timeout <= 3600:
+        raise SystemExit(f"timeout_s 는 0 초과 3600 이하: {timeout}")
+    return run_step(a[0], timeout, a[3:])
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -1,0 +1,548 @@
+{
+  "kind": "REVIEWER_STATIC_DATA_CHECKS_NOT_TARGET_TESTS",
+  "utc": "2026-10-21T07:17:46.458102+00:00",
+  "commit": "0c9c48e8c5b55bd7b9355fdba5a6833c01fabfb8",
+  "checks": [
+    {
+      "name": "git_blob:bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "git_blob:bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "git_blob:bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "git_blob:bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_20261021.py.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "git_blob:bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v3_20261021.py.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "git_blob:bms-balancing/docs/REIL_C4E_E1_REVISION_SCOPE_v3_20261021.md",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "git_blob:bms-balancing/docs/REIL_C4E_E1_APPROVAL_REQUEST_v3_20261021.md",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "git_blob:bms-balancing/docs/REIL_C4E_E1_PREREVIEW_SEND_v3_20261021.md",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "git_blob:bms-balancing/tests/test_reil_c4e.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "git_blob:bms-balancing/tests/test_reil_c4e_fix.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "git_blob:bms-balancing/scripts/reil_c4e_run.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "git_blob:bms-balancing/scripts/reil_c4_e3a.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "git_blob:bms-balancing/scripts/reil_c4_monitor.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "git_blob:bms-balancing/scripts/reil_c5_pilot.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "git_blob:bms-balancing/scripts/reil_p0.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "git_blob:bms-balancing/scripts/reil_c6_profile.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "git_blob:degradation-degeneracy/tools/env_profile.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "git_blob:bms-balancing/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "git_blob:bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "git_blob:bms-balancing/reil_c6_rebuild_20261013/REIL_C6.lock.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "git_blob:bms-balancing/reil_c6_rebuild_20261013/MANIFEST.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "capture_count",
+      "matched": true,
+      "detail": 21
+    },
+    {
+      "name": "uploaded_equals_pinned:REIL_C4E_E1_APPROVAL_REQUEST_v3_20261021.md",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "uploaded_equals_pinned:REIL_C4E_E1_PREREVIEW_SEND_v3_20261021.md",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "launcher_skeleton_function_set",
+      "matched": true,
+      "detail": 34
+    },
+    {
+      "name": "launcher_skeleton_signatures",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "skeleton_all_functions_raise_NotImplementedError",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "launcher_skeleton_imports_constants",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "targets_exact:01_red_launcher",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:01_red_launcher:bms-balancing/scripts/reil_c4e1_launch.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:01_red_launcher:bms-balancing/tests/test_reil_c4e1_launch.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:01_red_launcher:bms-balancing/tests/test_reil_c4e1_runner.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:01_red_launcher:bms-balancing/tests/test_reil_c4e.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:01_red_launcher:bms-balancing/tests/test_reil_c4e_fix.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:01_red_launcher:bms-balancing/scripts/reil_c4e_run.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:01_red_launcher:bms-balancing/scripts/reil_c4_e3a.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:01_red_launcher:bms-balancing/scripts/reil_c4_monitor.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:01_red_launcher:bms-balancing/scripts/reil_c5_pilot.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:01_red_launcher:bms-balancing/scripts/reil_p0.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:01_red_launcher:bms-balancing/scripts/reil_c6_profile.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:01_red_launcher:degradation-degeneracy/tools/env_profile.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:01_red_launcher:bms-balancing/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:01_red_launcher:bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "targets_exact:02_red_runner",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:02_red_runner:bms-balancing/scripts/reil_c4e1_launch.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:02_red_runner:bms-balancing/tests/test_reil_c4e1_launch.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:02_red_runner:bms-balancing/tests/test_reil_c4e1_runner.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:02_red_runner:bms-balancing/tests/test_reil_c4e.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:02_red_runner:bms-balancing/tests/test_reil_c4e_fix.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:02_red_runner:bms-balancing/scripts/reil_c4e_run.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:02_red_runner:bms-balancing/scripts/reil_c4_e3a.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:02_red_runner:bms-balancing/scripts/reil_c4_monitor.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:02_red_runner:bms-balancing/scripts/reil_c5_pilot.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:02_red_runner:bms-balancing/scripts/reil_p0.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:02_red_runner:bms-balancing/scripts/reil_c6_profile.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:02_red_runner:degradation-degeneracy/tools/env_profile.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:02_red_runner:bms-balancing/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:02_red_runner:bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "targets_exact:03_green",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:03_green:bms-balancing/scripts/reil_c4e1_launch.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:03_green:bms-balancing/tests/test_reil_c4e1_launch.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:03_green:bms-balancing/tests/test_reil_c4e1_runner.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:03_green:bms-balancing/tests/test_reil_c4e.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:03_green:bms-balancing/tests/test_reil_c4e_fix.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:03_green:bms-balancing/scripts/reil_c4e_run.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:03_green:bms-balancing/scripts/reil_c4_e3a.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:03_green:bms-balancing/scripts/reil_c4_monitor.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:03_green:bms-balancing/scripts/reil_c5_pilot.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:03_green:bms-balancing/scripts/reil_p0.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:03_green:bms-balancing/scripts/reil_c6_profile.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:03_green:degradation-degeneracy/tools/env_profile.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:03_green:bms-balancing/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expected_identity:03_green:bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "expect_only_launcher_varies",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "test_function_count:baseline",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "test_no_decorators:baseline",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "test_function_count:fix",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "test_no_decorators:fix",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "test_function_count:launcher",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "test_no_decorators:launcher",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "test_function_count:runner",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "test_no_decorators:runner",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "planned_green_count_61",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "planned_new_controls_34",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "five_module_source_binding:scripts/reil_c4_e3a.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "five_module_source_binding:scripts/reil_c4_monitor.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "five_module_source_binding:scripts/reil_c4e_run.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "five_module_source_binding:scripts/reil_c5_pilot.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "five_module_source_binding:scripts/reil_p0.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "seal_manifest_fixed_hash",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "manifest_lock_binding",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "lock_env_profile_header",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "prior_v2_reference_unchanged:bms-balancing/tests/test_reil_c4e.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "prior_v2_reference_unchanged:bms-balancing/tests/test_reil_c4e_fix.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "prior_v2_reference_unchanged:bms-balancing/scripts/reil_c4e_run.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "prior_v2_reference_unchanged:bms-balancing/scripts/reil_c4_e3a.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "prior_v2_reference_unchanged:bms-balancing/scripts/reil_c4_monitor.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "prior_v2_reference_unchanged:bms-balancing/scripts/reil_c5_pilot.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "prior_v2_reference_unchanged:bms-balancing/scripts/reil_p0.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "prior_v2_reference_unchanged:bms-balancing/scripts/reil_c6_profile.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "prior_v2_reference_unchanged:degradation-degeneracy/tools/env_profile.py",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "prior_v2_reference_unchanged:bms-balancing/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "prior_v2_reference_unchanged:bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "prior_v2_reference_unchanged:bms-balancing/reil_c6_rebuild_20261013/REIL_C6.lock.txt",
+      "matched": true,
+      "detail": null
+    },
+    {
+      "name": "prior_v2_reference_unchanged:bms-balancing/reil_c6_rebuild_20261013/MANIFEST.json",
+      "matched": true,
+      "detail": null
+    }
+  ],
+  "all_matched": true,
+  "source_count": 21,
+  "ast_parsed_source_count": 15,
+  "function_class_spans": 145,
+  "test_function_counts": {
+    "baseline": 21,
+    "fix": 6,
+    "launcher": 26,
+    "runner": 8
+  },
+  "same_prior_reference_count": 13,
+  "target_imports": 0,
+  "target_calls": 0,
+  "target_tests": 0,
+  "git_fixture_runs": 0,
+  "interpretation": "Identity/AST/data checks only. Neither functional PASS nor execution approval."
+}

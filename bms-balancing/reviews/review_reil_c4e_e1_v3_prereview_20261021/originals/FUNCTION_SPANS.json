@@ -1,0 +1,1310 @@
+{
+  "scope": "Top-level functions/classes of five v3 drafts, including line endings; no execution",
+  "spans": [
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+      "name": "utc",
+      "line_start": 145,
+      "line_end": 146,
+      "byte_start_0": 10993,
+      "byte_end_exclusive": 11111,
+      "sha256": "7bf7a2d18cac8717ab21e0f8c1f6c5dbc19e83c3e9a5a013896e48e39081e821"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+      "name": "sha256",
+      "line_start": 149,
+      "line_end": 150,
+      "byte_start_0": 11113,
+      "byte_end_exclusive": 11183,
+      "sha256": "05a0650a040e1d160f647ef1e2b44213d344e59323300b79b970bf13608e4055"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+      "name": "is_sha256",
+      "line_start": 153,
+      "line_end": 154,
+      "byte_start_0": 11185,
+      "byte_end_exclusive": 11302,
+      "sha256": "3b918de232c5a8a94c2d32dd5290ed1798840e3bb53f8d50bedc70a2f50b671b"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+      "name": "dump",
+      "line_start": 157,
+      "line_end": 158,
+      "byte_start_0": 11304,
+      "byte_end_exclusive": 11419,
+      "sha256": "b8432936fdb3d2927996ea3e9de58834b29e074d9de018dd53a6950a08324f1b"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+      "name": "write_new",
+      "line_start": 161,
+      "line_end": 163,
+      "byte_start_0": 11421,
+      "byte_end_exclusive": 11532,
+      "sha256": "dc952d078f35e06c3c4123477e44cd22a3f3ce74e3ad22b449c288058dd59a67"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+      "name": "read_regular",
+      "line_start": 167,
+      "line_end": 183,
+      "byte_start_0": 11615,
+      "byte_end_exclusive": 12419,
+      "sha256": "568dfe3e404c8dfdc0f9f5ff0f30208a8be31441a3acdb66bfb8c1a4c424aca5"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+      "name": "load_sources",
+      "line_start": 186,
+      "line_end": 211,
+      "byte_start_0": 12421,
+      "byte_end_exclusive": 13873,
+      "sha256": "b5a4cbd0b9abd20998b2c65847e51cff59623c3dceb79f0ead0f72e670b72768"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+      "name": "check_files",
+      "line_start": 214,
+      "line_end": 230,
+      "byte_start_0": 13875,
+      "byte_end_exclusive": 14683,
+      "sha256": "c62fe18ed4e8005e2d86c4487d0327de2896f5727116f85167a3514d704af6b9"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+      "name": "seal_lock_problems",
+      "line_start": 233,
+      "line_end": 258,
+      "byte_start_0": 14685,
+      "byte_end_exclusive": 16248,
+      "sha256": "aea5cfe905bd45a7a0d8dc724f9ee246ee6fd5bb2c439e013d4a75e034b7676c"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+      "name": "leaf_shadow_problems",
+      "line_start": 261,
+      "line_end": 270,
+      "byte_start_0": 16250,
+      "byte_end_exclusive": 17067,
+      "sha256": "b735b5acc5526402cee0fd08798f929f8419a5ab7f5304922294f590acf075ae"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+      "name": "shadow_problems",
+      "line_start": 273,
+      "line_end": 293,
+      "byte_start_0": 17069,
+      "byte_end_exclusive": 18487,
+      "sha256": "3ee78c42a1bc1541457f5ea4fa26fdf4214002c894563e60b4d59d990694bf78"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+      "name": "spec_problems",
+      "line_start": 296,
+      "line_end": 310,
+      "byte_start_0": 18489,
+      "byte_end_exclusive": 19795,
+      "sha256": "51cfd9b34daead75ec54c4fdae797800e77338216fae80ff17db961b035d11a5"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+      "name": "interp",
+      "line_start": 313,
+      "line_end": 315,
+      "byte_start_0": 19797,
+      "byte_end_exclusive": 19966,
+      "sha256": "d06b8cdf697d4455cc21ba31e87a570dfb8f7ffc9cce838ae931dae37e74d91d"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+      "name": "flag_problems",
+      "line_start": 318,
+      "line_end": 321,
+      "byte_start_0": 19968,
+      "byte_end_exclusive": 20315,
+      "sha256": "cd1caf3093ee7d72042a79ab376e1fdf55a06ddd57e31d7145450d6209937694"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+      "name": "probe",
+      "line_start": 324,
+      "line_end": 337,
+      "byte_start_0": 20317,
+      "byte_end_exclusive": 21285,
+      "sha256": "ca2ed16e743f95225273e986cc5c36b9c9205ece7e85016c6fb41292726fea3b"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+      "name": "build_argv",
+      "line_start": 340,
+      "line_end": 353,
+      "byte_start_0": 21287,
+      "byte_end_exclusive": 22520,
+      "sha256": "056acb7007f5bf0d7abe0aef4dfafc680e2a0d1054861f0a8961900459861dfd"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+      "name": "child_env",
+      "line_start": 356,
+      "line_end": 362,
+      "byte_start_0": 22522,
+      "byte_end_exclusive": 23167,
+      "sha256": "ae26488d1ec0733ea7cfdfb1e3e2da1af3204b143ac6342059566fe9e1034df5"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+      "name": "git_run",
+      "line_start": 366,
+      "line_end": 373,
+      "byte_start_0": 23259,
+      "byte_end_exclusive": 23914,
+      "sha256": "5a0136a263f2eda980201deed48ee80f2d798e79070d268c60a29a1abd1a5cc2"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+      "name": "git_config_problems",
+      "line_start": 376,
+      "line_end": 387,
+      "byte_start_0": 23916,
+      "byte_end_exclusive": 24688,
+      "sha256": "c118f32cf1132539c529aa14b036bbeca25de8c8cf14c562dcacee904f824897"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+      "name": "fetch_source_precheck",
+      "line_start": 390,
+      "line_end": 401,
+      "byte_start_0": 24690,
+      "byte_end_exclusive": 25449,
+      "sha256": "59bde434f9ed31c3fe86e60fe3c419222787ed79f0934166d0dc7797fe9dd545"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+      "name": "fetch_source_postcheck",
+      "line_start": 404,
+      "line_end": 423,
+      "byte_start_0": 25451,
+      "byte_end_exclusive": 26916,
+      "sha256": "0910795673247cd2ce795373dadd73bfcdedc5a6f1e6b449ff3c7347d4069337"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+      "name": "record_problems",
+      "line_start": 426,
+      "line_end": 443,
+      "byte_start_0": 26918,
+      "byte_end_exclusive": 27985,
+      "sha256": "bb4a831b08cdd6107cc80d748c51d162d3b4a5619ec0e62aa6ed7287e5824b69"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+      "name": "precheck",
+      "line_start": 447,
+      "line_end": 492,
+      "byte_start_0": 28088,
+      "byte_end_exclusive": 30944,
+      "sha256": "a62826517a07ca4d3569ac89a36cfa1df3c9fcc0d5042294f58c7d951a3a727f"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+      "name": "identity_link",
+      "line_start": 495,
+      "line_end": 517,
+      "byte_start_0": 30946,
+      "byte_end_exclusive": 32297,
+      "sha256": "270aa46d84f3e768fcc15ea367fad636d1c0efc6687d46e9bbc267bab2b48aa4"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+      "name": "postcheck",
+      "line_start": 520,
+      "line_end": 552,
+      "byte_start_0": 32299,
+      "byte_end_exclusive": 34128,
+      "sha256": "87efe109e033842e533f6563b06a014c4218f788480436f6faade7562d83d9df"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+      "name": "child_result",
+      "line_start": 555,
+      "line_end": 568,
+      "byte_start_0": 34130,
+      "byte_end_exclusive": 35002,
+      "sha256": "fc65c713415dda1d64428fad82ed71b7dc7966623e4fea0054d076f88f0a6ec4"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+      "name": "stage_verdict",
+      "line_start": 571,
+      "line_end": 576,
+      "byte_start_0": 35004,
+      "byte_end_exclusive": 35562,
+      "sha256": "a1386e915843a7a93c6ac191d5e585b1be20828ecbb386734321dd45541b061a"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+      "name": "proc_members",
+      "line_start": 580,
+      "line_end": 607,
+      "byte_start_0": 35672,
+      "byte_end_exclusive": 37037,
+      "sha256": "83e7854dac0fe3f48f629f8532ab6eb1a922ac4f9e33ef0b1cea4814182cf317"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+      "name": "group_status",
+      "line_start": 610,
+      "line_end": 623,
+      "byte_start_0": 37039,
+      "byte_end_exclusive": 37912,
+      "sha256": "dbe824bd1cb2143fccb54292f5fd7bfa87f8cc13427f4db8fc611690bdc7365e"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+      "name": "kill_group",
+      "line_start": 626,
+      "line_end": 636,
+      "byte_start_0": 37914,
+      "byte_end_exclusive": 38484,
+      "sha256": "cc3ed9c7932d211b04e45d76dde9afd512dfdc4e6d62b8ba4ad646022f4e7fad"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+      "name": "run_child",
+      "line_start": 639,
+      "line_end": 673,
+      "byte_start_0": 38486,
+      "byte_end_exclusive": 40711,
+      "sha256": "a7d89615d0e519596eb38eb74fc2356f27a73b114002094abbb3d5e06a34e87e"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+      "name": "git_out",
+      "line_start": 676,
+      "line_end": 678,
+      "byte_start_0": 40713,
+      "byte_end_exclusive": 40988,
+      "sha256": "c9e1ea89a1233e0619000bce6ff70b36e0bb711609e636ab3bc2c279048ad545"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+      "name": "launch",
+      "line_start": 682,
+      "line_end": 776,
+      "byte_start_0": 41071,
+      "byte_end_exclusive": 49063,
+      "sha256": "c42c5bace1af48a8e3d80be8a47ac35214f1f53c1d4bfbbf1200bf81e5763278"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+      "name": "main",
+      "line_start": 779,
+      "line_end": 790,
+      "byte_start_0": 49065,
+      "byte_end_exclusive": 49823,
+      "sha256": "cc37c8cb50e3acfa10826778f77e51903dac741b8ca83b6d534fcbbe466b449b"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt",
+      "name": "utc",
+      "line_start": 114,
+      "line_end": 115,
+      "byte_start_0": 6585,
+      "byte_end_exclusive": 6714,
+      "sha256": "1b8f95f7d2419bc7c723c561005742a385dc123d24d61ca5a82620be3acbc298"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt",
+      "name": "sha256",
+      "line_start": 118,
+      "line_end": 119,
+      "byte_start_0": 6716,
+      "byte_end_exclusive": 6856,
+      "sha256": "29a3119c496398d24923fff177e0d3fc3a549824b0d1cb7896fdc9ff7aa6e57e"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt",
+      "name": "is_sha256",
+      "line_start": 122,
+      "line_end": 123,
+      "byte_start_0": 6858,
+      "byte_end_exclusive": 6995,
+      "sha256": "da7a92b4dc5768f6697869b93e2be709555357fdce0f89bcc8a803207dd00582"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt",
+      "name": "dump",
+      "line_start": 126,
+      "line_end": 127,
+      "byte_start_0": 6997,
+      "byte_end_exclusive": 7130,
+      "sha256": "9c4a037b9fe5c248c82e3e1ed30e0c0d4d1a5dad3ff8502061bc8330ad2a3d4b"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt",
+      "name": "write_new",
+      "line_start": 130,
+      "line_end": 131,
+      "byte_start_0": 7132,
+      "byte_end_exclusive": 7283,
+      "sha256": "fe8c679a35a3b40775369f7c6306141d67127ecb05999f73f5b8e0592c4f1ff8"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt",
+      "name": "read_regular",
+      "line_start": 134,
+      "line_end": 135,
+      "byte_start_0": 7285,
+      "byte_end_exclusive": 7429,
+      "sha256": "44292768d2a9543dd57dc0b971b94421a5288718c891ea3b336d032d5b3872e7"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt",
+      "name": "load_sources",
+      "line_start": 138,
+      "line_end": 139,
+      "byte_start_0": 7431,
+      "byte_end_exclusive": 7640,
+      "sha256": "9b930e24bef2255bc0da0c1750c4b451f2a0be48ea4f29c974d79fe86466f082"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt",
+      "name": "check_files",
+      "line_start": 142,
+      "line_end": 143,
+      "byte_start_0": 7642,
+      "byte_end_exclusive": 7801,
+      "sha256": "f7c42e1d355e196bc69a6b201e85f1f7e8334a83ad59781d09315519a1ae7147"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt",
+      "name": "seal_lock_problems",
+      "line_start": 146,
+      "line_end": 147,
+      "byte_start_0": 7803,
+      "byte_end_exclusive": 8003,
+      "sha256": "6df8665dcb0e278f3a98c8f8ab22a62f8086ba3938919d1a2058a68f2cabf51f"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt",
+      "name": "leaf_shadow_problems",
+      "line_start": 150,
+      "line_end": 151,
+      "byte_start_0": 8005,
+      "byte_end_exclusive": 8174,
+      "sha256": "19760a794e40f9969469bdb4b78df6161dce2e7a03dc6685870ef221c55130dc"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt",
+      "name": "shadow_problems",
+      "line_start": 154,
+      "line_end": 155,
+      "byte_start_0": 8176,
+      "byte_end_exclusive": 8334,
+      "sha256": "11f2e0a339f83dc858539e8884c73c3042128397780c2217f87eb24299031768"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt",
+      "name": "spec_problems",
+      "line_start": 158,
+      "line_end": 159,
+      "byte_start_0": 8336,
+      "byte_end_exclusive": 8505,
+      "sha256": "44e1895be7e3408204c71bc3a4e371df257bf9b0dc5eb0383b349ebd9e291ff4"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt",
+      "name": "interp",
+      "line_start": 162,
+      "line_end": 163,
+      "byte_start_0": 8507,
+      "byte_end_exclusive": 8650,
+      "sha256": "6b3cccbfae787067ca4a777775af265836cb406e50fd0d4d49d513e2274d3cf1"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt",
+      "name": "flag_problems",
+      "line_start": 166,
+      "line_end": 167,
+      "byte_start_0": 8652,
+      "byte_end_exclusive": 8819,
+      "sha256": "93f4fe70250514d6bbb2616de4d403f0a60e9312398ef835234f9bf728339f72"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt",
+      "name": "probe",
+      "line_start": 170,
+      "line_end": 171,
+      "byte_start_0": 8821,
+      "byte_end_exclusive": 9011,
+      "sha256": "ce649509533b4bb8a8bdba51b38f7db1d7fe993a810b17bb1ad76f8d954ab14c"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt",
+      "name": "build_argv",
+      "line_start": 174,
+      "line_end": 176,
+      "byte_start_0": 9013,
+      "byte_end_exclusive": 9339,
+      "sha256": "8b6ed62ffd211e520303133d1c5c68d0bca3a6005065c32cb8289a1043750deb"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt",
+      "name": "child_env",
+      "line_start": 179,
+      "line_end": 180,
+      "byte_start_0": 9341,
+      "byte_end_exclusive": 9499,
+      "sha256": "0ead0d119ddc23b64c49e6e083ddcda6874927bd10e200e80d80f27b067eed4f"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt",
+      "name": "git_run",
+      "line_start": 183,
+      "line_end": 184,
+      "byte_start_0": 9501,
+      "byte_end_exclusive": 9685,
+      "sha256": "45e76a1dc1b06635dcf35dbce6b9273b783585151e982e0e8fd0d11277e73874"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt",
+      "name": "git_config_problems",
+      "line_start": 187,
+      "line_end": 188,
+      "byte_start_0": 9687,
+      "byte_end_exclusive": 9845,
+      "sha256": "19949bfc167609e530526394c0625577a054705457f6acbe6ba3d3bf4f1655fa"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt",
+      "name": "fetch_source_precheck",
+      "line_start": 191,
+      "line_end": 192,
+      "byte_start_0": 9847,
+      "byte_end_exclusive": 10020,
+      "sha256": "8a0fcbce5adadf2256b12c89fde9272236875cbcafefd25a735a38cab67b58fe"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt",
+      "name": "fetch_source_postcheck",
+      "line_start": 195,
+      "line_end": 196,
+      "byte_start_0": 10022,
+      "byte_end_exclusive": 10219,
+      "sha256": "de8e29b00adfa4cbd8ebf18a7dd90511ca1a51cc211d6de72ea1ced851f6b014"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt",
+      "name": "record_problems",
+      "line_start": 199,
+      "line_end": 200,
+      "byte_start_0": 10221,
+      "byte_end_exclusive": 10459,
+      "sha256": "abb48c283833fbc9cf278cb500bfe71435c523fe082fff06cc0a1b405fa8045f"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt",
+      "name": "precheck",
+      "line_start": 203,
+      "line_end": 206,
+      "byte_start_0": 10461,
+      "byte_end_exclusive": 10911,
+      "sha256": "445c394a3bbca7a4e9d61f4f0c690bb9855ca2d2a0e66f5de7108acc046fa325"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt",
+      "name": "identity_link",
+      "line_start": 209,
+      "line_end": 210,
+      "byte_start_0": 10913,
+      "byte_end_exclusive": 11101,
+      "sha256": "06fa6fadadf2905c41a80ff349c5b0d5f1c9edc23c3c877b1d5c5dfa0dcd8b85"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt",
+      "name": "postcheck",
+      "line_start": 213,
+      "line_end": 215,
+      "byte_start_0": 11103,
+      "byte_end_exclusive": 11376,
+      "sha256": "0376dc4d2e0bcd0bd21a0ed279de85b6c75655439a9b454631d4a1db0dd98507"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt",
+      "name": "child_result",
+      "line_start": 218,
+      "line_end": 219,
+      "byte_start_0": 11378,
+      "byte_end_exclusive": 11540,
+      "sha256": "ff83ee1e2a0831cb8a9901cc5c6a4a6f7799782a0d3d0d6c9d2cff8c27f629d9"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt",
+      "name": "stage_verdict",
+      "line_start": 222,
+      "line_end": 223,
+      "byte_start_0": 11542,
+      "byte_end_exclusive": 11735,
+      "sha256": "0a93bc635273e0b5e0da4a8f558cdc54c380bc486317e6af573b188836ce2719"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt",
+      "name": "proc_members",
+      "line_start": 226,
+      "line_end": 227,
+      "byte_start_0": 11737,
+      "byte_end_exclusive": 11905,
+      "sha256": "a35ce3f3c3cead7deaca74a0e1cc626f02c57ee6d449cc3aab7d5e60bab36a84"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt",
+      "name": "group_status",
+      "line_start": 230,
+      "line_end": 231,
+      "byte_start_0": 11907,
+      "byte_end_exclusive": 12096,
+      "sha256": "de4e407b384acea26a418cedf58a5ffc03881143c141bd2d7108df247a90c2ce"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt",
+      "name": "kill_group",
+      "line_start": 234,
+      "line_end": 235,
+      "byte_start_0": 12098,
+      "byte_end_exclusive": 12257,
+      "sha256": "2536fb8afcf69d66647863d7971d4ac7320fa38eb094db44e47060832b835507"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt",
+      "name": "run_child",
+      "line_start": 238,
+      "line_end": 240,
+      "byte_start_0": 12259,
+      "byte_end_exclusive": 12559,
+      "sha256": "f96683031fa35153cd99a41587934844738ddf30450082d7d491bd813c1bdb46"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt",
+      "name": "git_out",
+      "line_start": 243,
+      "line_end": 244,
+      "byte_start_0": 12561,
+      "byte_end_exclusive": 12711,
+      "sha256": "883c36205dc4a7d11162f89f18a105d3d4408448fe14cc052615fe90f212c949"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt",
+      "name": "launch",
+      "line_start": 247,
+      "line_end": 251,
+      "byte_start_0": 12713,
+      "byte_end_exclusive": 13310,
+      "sha256": "f1ceecbfdeaa6547c511c7ebeec793cbffecd98605821d9046ce2e22739591c2"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt",
+      "name": "main",
+      "line_start": 254,
+      "line_end": 255,
+      "byte_start_0": 13312,
+      "byte_end_exclusive": 13451,
+      "sha256": "2d13625868dba46487c0aecc7fe07c27cc9e76111384b1233f746be11403c27f"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "_sha",
+      "line_start": 92,
+      "line_end": 93,
+      "byte_start_0": 4982,
+      "byte_end_exclusive": 5050,
+      "sha256": "b77a3c290fde65ef341727372a781c98c6a9a2cf96d32c6753db43c3ad895f10"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "_git_env",
+      "line_start": 96,
+      "line_end": 101,
+      "byte_start_0": 5052,
+      "byte_end_exclusive": 5537,
+      "sha256": "137c232eadb0c693c1d8ef753f3efc290d26aab5b323ff611a95d157c8da09fd"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "_git",
+      "line_start": 104,
+      "line_end": 107,
+      "byte_start_0": 5539,
+      "byte_end_exclusive": 5736,
+      "sha256": "4827350e94351d04441d5d31d0e98c591bdc85e6313fa5a992226c406fa64d3f"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "_write_list",
+      "line_start": 110,
+      "line_end": 114,
+      "byte_start_0": 5738,
+      "byte_end_exclusive": 6056,
+      "sha256": "9df1e084da2ceab288bc3220157cbc20a6e3798c039d608a4221fa78a387c29f"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "_seal",
+      "line_start": 117,
+      "line_end": 124,
+      "byte_start_0": 6058,
+      "byte_end_exclusive": 6629,
+      "sha256": "3ff6a6b8fb95c37591d06b864bfa860ae5649861c42af8b6f594a03ef763ecb5"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "_tree",
+      "line_start": 127,
+      "line_end": 157,
+      "byte_start_0": 6631,
+      "byte_end_exclusive": 8501,
+      "sha256": "39971c918f763496b676f4c2596e77244853cf1f3bf3d1b4785bf08144b99c07"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "_pre",
+      "line_start": 160,
+      "line_end": 169,
+      "byte_start_0": 8503,
+      "byte_end_exclusive": 9355,
+      "sha256": "0e2fc6983324c971e1d4feb9fa7b273856a6d9eb90a1fa94351266632c62f545"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "_launch",
+      "line_start": 172,
+      "line_end": 177,
+      "byte_start_0": 9357,
+      "byte_end_exclusive": 9831,
+      "sha256": "b45a535d1386b3aa646d1a7bc59c042af4fafc467fda400c6c0ca2931ee3477b"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "_meta",
+      "line_start": 180,
+      "line_end": 181,
+      "byte_start_0": 9833,
+      "byte_end_exclusive": 9942,
+      "sha256": "1ab7d62b0276fa1398fa8b9fefdb60185a23c93ef167a7dff334692f13a2877f"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "_state",
+      "line_start": 184,
+      "line_end": 190,
+      "byte_start_0": 9944,
+      "byte_end_exclusive": 10288,
+      "sha256": "cc60a3d76b6252bea5a90bd33671b33e4a739bebb12c4d7fc69b6acef5158dbf"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "test_l1_precheck_passes_only_with_fixed_list_exact_bytes_seal_binding_clean_interpreter_and_approved_specs",
+      "line_start": 193,
+      "line_end": 209,
+      "byte_start_0": 10290,
+      "byte_end_exclusive": 11742,
+      "sha256": "237c54860c221758993d6542c96c20a79a9e2572468b7eca6ca0bb71fd1f1c6c"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "test_l2_list_sha_schema_path_set_entry_format_and_non_json_each_block",
+      "line_start": 212,
+      "line_end": 228,
+      "byte_start_0": 11744,
+      "byte_end_exclusive": 13325,
+      "sha256": "6595dc955e7c9e5ab1849bd1f579dc75c01169f15f85d91bccdda0062db77c6e"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "test_l3_changed_same_size_missing_symlinked_module_or_linked_parent_each_block",
+      "line_start": 231,
+      "line_end": 253,
+      "byte_start_0": 13327,
+      "byte_end_exclusive": 14470,
+      "sha256": "1c894bbaa576b000cdee0e6800d663aefbf8cda3d949c13faf6e1aa248d0e0c0"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "test_l4_a_shadowing_scripts_package_module_zip_entry_or_our_init_blocks",
+      "line_start": 256,
+      "line_end": 278,
+      "byte_start_0": 14472,
+      "byte_end_exclusive": 15744,
+      "sha256": "ae39206a461530dc4f6e192c963103a1f722b8efbdbaf1b3a961606f2434dc11"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "test_l5_interpreter_flags_fixed_argv_head_and_run_script_path_are_checked",
+      "line_start": 281,
+      "line_end": 298,
+      "byte_start_0": 15746,
+      "byte_end_exclusive": 17126,
+      "sha256": "52255cac7b839c54b2de321e02536b3d24f80ebb52be6d2ca3e4a6118728e550"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "test_l6_stage_verdict_is_the_and_of_precheck_child_rc_timeout_and_postcheck",
+      "line_start": 301,
+      "line_end": 308,
+      "byte_start_0": 17128,
+      "byte_end_exclusive": 17941,
+      "sha256": "6f4f98846a9134a5c43cc3dab8a137a52812a130fa35f8dfd51c2da0937cff7b"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "test_l7_child_result_reads_the_last_stdout_line_and_needs_final_complete_for_run",
+      "line_start": 311,
+      "line_end": 320,
+      "byte_start_0": 17943,
+      "byte_end_exclusive": 18891,
+      "sha256": "116332a14e05cb30efa01266b2848eb0363932d6ce10eb8c0a0acc7fc624136e"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "test_l8_identity_link_binds_the_run_import_paths_to_the_checked_paths",
+      "line_start": 323,
+      "line_end": 341,
+      "byte_start_0": 18893,
+      "byte_end_exclusive": 20425,
+      "sha256": "81c712dd7cf3846e394cb56e032b6722b11518e26d28703724858ab724da3462"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "test_l9_a_failed_precheck_never_starts_the_child_and_records_launched_false",
+      "line_start": 344,
+      "line_end": 352,
+      "byte_start_0": 20427,
+      "byte_end_exclusive": 21109,
+      "sha256": "94f7276f201bb2b707f43404f0b1b7e4f4d8b8154dc6be16778a48ac86fceeff"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "test_l10_a_passing_precheck_runs_the_fixed_child_and_completes_only_when_every_term_holds",
+      "line_start": 355,
+      "line_end": 372,
+      "byte_start_0": 21111,
+      "byte_end_exclusive": 22737,
+      "sha256": "8630ca95c59171e11b1267a26ed031a84f21aacd309acaa844684f3ceeb5b848"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "test_l11_timeout_kills_the_whole_process_group_including_grandchildren",
+      "line_start": 375,
+      "line_end": 388,
+      "byte_start_0": 22739,
+      "byte_end_exclusive": 23720,
+      "sha256": "a3bd87ffccb9acfbdaba77d86fa668f0fcf99ee3c3cff2ecfdae7dd534e471f3"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "test_l12_refuses_to_overwrite_records_or_reuse_a_pycache_folder",
+      "line_start": 391,
+      "line_end": 403,
+      "byte_start_0": 23722,
+      "byte_end_exclusive": 24636,
+      "sha256": "2761196837e8423cc413a69342f1ded83d8312b326b31ee350009a1028220dad"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "test_l13_postcheck_catches_a_module_changed_during_the_child_wrong_fetched_bytes_and_a_reused_data_folder",
+      "line_start": 406,
+      "line_end": 421,
+      "byte_start_0": 24638,
+      "byte_end_exclusive": 25894,
+      "sha256": "23907bf47f924f5e811a5a5af1f4f57bca9ed894fd793d8265af0d344025d1e7"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "test_l14_independence_fixed_commands_constants_and_main_rules",
+      "line_start": 424,
+      "line_end": 468,
+      "byte_start_0": 25896,
+      "byte_end_exclusive": 30503,
+      "sha256": "c096af00bd06c417d71615f6793aece00eb82352dd8416e65db0e936f0140e4c"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "test_l15_a_leaf_package_beside_an_approved_module_blocks_without_executing_it",
+      "line_start": 471,
+      "line_end": 483,
+      "byte_start_0": 30505,
+      "byte_end_exclusive": 31559,
+      "sha256": "4d007ec4d2aa9e7c4463d62e8a4e624384504252f50e695d7d00f09162167ead"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "test_l16_a_leaf_extension_module_beside_an_approved_module_blocks",
+      "line_start": 486,
+      "line_end": 495,
+      "byte_start_0": 31561,
+      "byte_end_exclusive": 32319,
+      "sha256": "9ca8845f85dca237f3e0be65bcdcd758ca7459d444b28b2bac756f6c9cef450d"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "test_l17_extra_executed_files_and_the_seal_lock_binding_each_block",
+      "line_start": 498,
+      "line_end": 514,
+      "byte_start_0": 32321,
+      "byte_end_exclusive": 33386,
+      "sha256": "5e0d24398ce57532d8e8712618d5d904b0fb743c351b30a70751d31647103c9a"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "test_l18_process_observation_errors_stay_unknown_and_only_vanished_pids_are_gone",
+      "line_start": 517,
+      "line_end": 554,
+      "byte_start_0": 33388,
+      "byte_end_exclusive": 35284,
+      "sha256": "a5fa7678f5c35e272afd99411d5ba303ff36a28ccd0ae744efe94a08d57c15fd"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "test_l19_a_failed_kill_with_a_running_child_ends_within_bounded_waits_and_records_unexited",
+      "line_start": 557,
+      "line_end": 580,
+      "byte_start_0": 35286,
+      "byte_end_exclusive": 36761,
+      "sha256": "ef278de52e671f59d19c78bfef7b5c4ecd97396fab74f67d9883ee20585d5eed"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "test_l20_exceptions_in_precheck_start_and_postcheck_are_recorded_with_phase_and_launched_state",
+      "line_start": 583,
+      "line_end": 609,
+      "byte_start_0": 36763,
+      "byte_end_exclusive": 38192,
+      "sha256": "de7ec649338eff52b0882991798de9052fa8898a35897c88a0577ff5a50dc4eb"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "test_l21_a_failed_start_record_never_starts_the_child_and_is_not_treated_as_empty_normal_output",
+      "line_start": 612,
+      "line_end": 621,
+      "byte_start_0": 38194,
+      "byte_end_exclusive": 39198,
+      "sha256": "e87a9e96beac11b5a5496156b01534c5a3d383e14462d7388cd54b1fc3296a58"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "test_l22_child_env_keeps_only_the_ca_among_git_variables_and_removes_secrets",
+      "line_start": 624,
+      "line_end": 636,
+      "byte_start_0": 39200,
+      "byte_end_exclusive": 40553,
+      "sha256": "21909f2e028833eb2198a0d58ccd637a9897a7c013e860f3f4e31c9eee3ac3f7"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "test_l23_fetch_precheck_refuses_url_rewrite_proxy_and_tls_off_settings",
+      "line_start": 639,
+      "line_end": 663,
+      "byte_start_0": 40555,
+      "byte_end_exclusive": 42207,
+      "sha256": "47148a92186f9e3725e946eb5b2291467f52845dfe6699b578a347294a6d55be"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "test_l24_fetch_postcheck_binds_the_received_repository_to_the_fixed_source",
+      "line_start": 666,
+      "line_end": 674,
+      "byte_start_0": 42209,
+      "byte_end_exclusive": 43001,
+      "sha256": "a664466bfce714515194a1d700eb806757b3d4af933a987e13f1bc382ccd9a86"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "test_l25_inherited_git_location_and_trace_variables_reach_neither_fixture_nor_launcher_git",
+      "line_start": 677,
+      "line_end": 700,
+      "byte_start_0": 43003,
+      "byte_end_exclusive": 44898,
+      "sha256": "c7f7fd0ff1b0247435f5dfe283bc163bf90125d42276ecc51c745059c0f02005"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt",
+      "name": "test_l26_preparation_failures_are_recorded_as_phase_prepare_and_never_start_the_child",
+      "line_start": 703,
+      "line_end": 739,
+      "byte_start_0": 44900,
+      "byte_end_exclusive": 46977,
+      "sha256": "0eb030a8ac9bfd3e2eb444e16dca4beae644c7f71c24a4491de66eef12e5ca17"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_20261021.py.txt",
+      "name": "_load",
+      "line_start": 40,
+      "line_end": 46,
+      "byte_start_0": 2587,
+      "byte_end_exclusive": 2981,
+      "sha256": "294e50a2f6dfc85e52494013c18b49a25dfaedfaa126dd0d828d95ec5a4b972c"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_20261021.py.txt",
+      "name": "_Clock",
+      "line_start": 91,
+      "line_end": 102,
+      "byte_start_0": 4821,
+      "byte_end_exclusive": 5114,
+      "sha256": "0117f58997c5aedecb023d4bb772d9d5a21fb50acc9d7af0b273379534161b7c"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_20261021.py.txt",
+      "name": "_P",
+      "line_start": 105,
+      "line_end": 120,
+      "byte_start_0": 5116,
+      "byte_end_exclusive": 5919,
+      "sha256": "3cf1f91f4a4bcb501c2e1300263d7600e9d19948307f8c7b4eeb66fdb0ce2819"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_20261021.py.txt",
+      "name": "_git_env",
+      "line_start": 123,
+      "line_end": 127,
+      "byte_start_0": 5921,
+      "byte_end_exclusive": 6331,
+      "sha256": "9755932ccc7a1e988fd743ed067c104682c132331317fcd87ed7c2746b8c070f"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_20261021.py.txt",
+      "name": "_git",
+      "line_start": 130,
+      "line_end": 133,
+      "byte_start_0": 6333,
+      "byte_end_exclusive": 6530,
+      "sha256": "4827350e94351d04441d5d31d0e98c591bdc85e6313fa5a992226c406fa64d3f"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_20261021.py.txt",
+      "name": "_repo",
+      "line_start": 136,
+      "line_end": 139,
+      "byte_start_0": 6532,
+      "byte_end_exclusive": 6716,
+      "sha256": "ebcb394325d849e35362bf2e24d762c9802e4a095034c3e85ecc354cc6a894c3"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_20261021.py.txt",
+      "name": "_head",
+      "line_start": 142,
+      "line_end": 143,
+      "byte_start_0": 6718,
+      "byte_end_exclusive": 6810,
+      "sha256": "342585226c2c8c4d0d375312cd327cb39e57c2b592e1d4ebdf6082ee24e65e80"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_20261021.py.txt",
+      "name": "_sentinels",
+      "line_start": 146,
+      "line_end": 151,
+      "byte_start_0": 6812,
+      "byte_end_exclusive": 7312,
+      "sha256": "a324f74e1ea3b1321a2555145aeeab7ace7c43172de8e16961da59db9703871e"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_20261021.py.txt",
+      "name": "_rtree",
+      "line_start": 154,
+      "line_end": 168,
+      "byte_start_0": 7314,
+      "byte_end_exclusive": 8159,
+      "sha256": "bfad213a9263c18f095d4e1c2e99f4effb1efb3a552ae527105f240e7e2f6474"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_20261021.py.txt",
+      "name": "_environ",
+      "line_start": 171,
+      "line_end": 175,
+      "byte_start_0": 8161,
+      "byte_end_exclusive": 8427,
+      "sha256": "d038cae2754c4f17ced9fbb84f25793e71b0bbbc7f81b7814ae52ebfeac3cecb"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_20261021.py.txt",
+      "name": "_drive",
+      "line_start": 178,
+      "line_end": 184,
+      "byte_start_0": 8429,
+      "byte_end_exclusive": 9103,
+      "sha256": "9ca0615dd0470c638ac07f678d7acf2f5dd624dd98ea497c40420e20144bb591"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_20261021.py.txt",
+      "name": "_meta",
+      "line_start": 187,
+      "line_end": 188,
+      "byte_start_0": 9105,
+      "byte_end_exclusive": 9204,
+      "sha256": "0c0d03a892fb26ff6d23b4d1acab352009887fc35394f6b7a6d4507d91aac050"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_20261021.py.txt",
+      "name": "test_r1_an_observation_error_followed_by_a_clean_empty_observation_stays_unknown",
+      "line_start": 191,
+      "line_end": 203,
+      "byte_start_0": 9206,
+      "byte_end_exclusive": 9954,
+      "sha256": "dc2d87f8cbe35ad78074564fcec2208a2aedeae2b7273a2054d4c9673e0b3cb0"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_20261021.py.txt",
+      "name": "test_r2_observation_errors_during_the_timeout_loop_are_kept_to_the_end",
+      "line_start": 206,
+      "line_end": 225,
+      "byte_start_0": 9956,
+      "byte_end_exclusive": 11174,
+      "sha256": "821a4cb7efb3f5f3b92f912247ba54873241c0063c679cab4efd15b38c5d32af"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_20261021.py.txt",
+      "name": "test_r3_cleanup_never_waits_past_one_common_deadline_and_records_its_own_duration",
+      "line_start": 228,
+      "line_end": 262,
+      "byte_start_0": 11176,
+      "byte_end_exclusive": 13761,
+      "sha256": "e12f55573144db0d78b8d257c0f80f4caf0f2ac0eaabec362a30f2b460d4e506"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_20261021.py.txt",
+      "name": "test_r4_the_runner_cleans_inherited_git_variables_before_its_first_git_call",
+      "line_start": 265,
+      "line_end": 288,
+      "byte_start_0": 13763,
+      "byte_end_exclusive": 15842,
+      "sha256": "f298c897f6700d5e8d15a65fdabf1c7fa10f0413c87eda51cd1d7ca7660aab5b"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_20261021.py.txt",
+      "name": "test_r5_source_table_hashes_the_fixed_targets_and_any_difference_from_the_sealed_table_is_a_problem",
+      "line_start": 291,
+      "line_end": 338,
+      "byte_start_0": 15844,
+      "byte_end_exclusive": 18908,
+      "sha256": "b1db8358abfda00e7c8aaa964cb8ec1abcb1797023e3a252f8d9dbb837cab0e4"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_20261021.py.txt",
+      "name": "test_r6_a_normal_step_writes_both_source_tables_and_records_from_the_right_repo_with_a_clean_child_env",
+      "line_start": 341,
+      "line_end": 367,
+      "byte_start_0": 18910,
+      "byte_end_exclusive": 21055,
+      "sha256": "f57d7155c938c0c707b626dfcb386c5900faf679364fba9522c0e87d8d045447"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_20261021.py.txt",
+      "name": "test_r7_preparation_failures_stop_before_the_child_and_intentional_refusals_write_nothing",
+      "line_start": 370,
+      "line_end": 405,
+      "byte_start_0": 21057,
+      "byte_end_exclusive": 24042,
+      "sha256": "d74aa321a73e16df52e2ffece1eec55ed32fad610171f4f8a86257cfffc0df19"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_RUNNER_CONTROLS_DRAFT_20261021.py.txt",
+      "name": "test_r8_a_real_timeout_kills_the_group_and_an_orphaned_other_session_grandchild_within_the_deadline",
+      "line_start": 408,
+      "line_end": 423,
+      "byte_start_0": 24044,
+      "byte_end_exclusive": 25328,
+      "sha256": "d9a1c293816f2cdac4897f00791f2ffb8eb8731d4662c70c3b80f55b3a09bf35"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v3_20261021.py.txt",
+      "name": "utc",
+      "line_start": 93,
+      "line_end": 94,
+      "byte_start_0": 8541,
+      "byte_end_exclusive": 8659,
+      "sha256": "7bf7a2d18cac8717ab21e0f8c1f6c5dbc19e83c3e9a5a013896e48e39081e821"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v3_20261021.py.txt",
+      "name": "sha256",
+      "line_start": 97,
+      "line_end": 98,
+      "byte_start_0": 8661,
+      "byte_end_exclusive": 8731,
+      "sha256": "05a0650a040e1d160f647ef1e2b44213d344e59323300b79b970bf13608e4055"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v3_20261021.py.txt",
+      "name": "dump",
+      "line_start": 101,
+      "line_end": 102,
+      "byte_start_0": 8733,
+      "byte_end_exclusive": 8848,
+      "sha256": "b8432936fdb3d2927996ea3e9de58834b29e074d9de018dd53a6950a08324f1b"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v3_20261021.py.txt",
+      "name": "write_new",
+      "line_start": 105,
+      "line_end": 107,
+      "byte_start_0": 8850,
+      "byte_end_exclusive": 8961,
+      "sha256": "dc952d078f35e06c3c4123477e44cd22a3f3ce74e3ad22b449c288058dd59a67"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v3_20261021.py.txt",
+      "name": "base_env",
+      "line_start": 111,
+      "line_end": 117,
+      "byte_start_0": 9049,
+      "byte_end_exclusive": 9649,
+      "sha256": "68e65108c69a48f7bcb1b6eb4f04efbb7a11eb3342aeccbd6b84fbe76bd4939d"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v3_20261021.py.txt",
+      "name": "git",
+      "line_start": 120,
+      "line_end": 127,
+      "byte_start_0": 9651,
+      "byte_end_exclusive": 10322,
+      "sha256": "46327588a02887632d210e3b0df2aee04c88bb2d17c2a2e394788e51eb9095f7"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v3_20261021.py.txt",
+      "name": "record_problems",
+      "line_start": 130,
+      "line_end": 146,
+      "byte_start_0": 10324,
+      "byte_end_exclusive": 11327,
+      "sha256": "84f98bd5b29b81df66bab208616225f1ec894f8773d45ff2d47f965018012076"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v3_20261021.py.txt",
+      "name": "read_regular",
+      "line_start": 150,
+      "line_end": 167,
+      "byte_start_0": 11418,
+      "byte_end_exclusive": 12253,
+      "sha256": "4a2c866e85237b403d6dc2ed80dad06e553e71fcbe2b2e632a5d4111b1e899dc"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v3_20261021.py.txt",
+      "name": "source_table",
+      "line_start": 170,
+      "line_end": 176,
+      "byte_start_0": 12255,
+      "byte_end_exclusive": 12620,
+      "sha256": "efd1016778faed368fe40512460d042b732c9ca441d25e8832cccc7de1b47922"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v3_20261021.py.txt",
+      "name": "source_problems",
+      "line_start": 179,
+      "line_end": 192,
+      "byte_start_0": 12622,
+      "byte_end_exclusive": 13453,
+      "sha256": "c81df035024435d259b6d7ca697a42d03640f4c33983f79576f9270a54a7f5e2"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v3_20261021.py.txt",
+      "name": "source_text",
+      "line_start": 195,
+      "line_end": 199,
+      "byte_start_0": 13455,
+      "byte_end_exclusive": 13919,
+      "sha256": "374337a462fcdea915692991d8047ac2f6d62c98ca0fe6f40b32d498e1036b12"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v3_20261021.py.txt",
+      "name": "proc_table",
+      "line_start": 203,
+      "line_end": 225,
+      "byte_start_0": 14028,
+      "byte_end_exclusive": 15128,
+      "sha256": "6c29eb2863261e251ae72d8a2ebd098ef5a39ed64693668f89f7866191f058a4"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v3_20261021.py.txt",
+      "name": "observe",
+      "line_start": 228,
+      "line_end": 232,
+      "byte_start_0": 15130,
+      "byte_end_exclusive": 15448,
+      "sha256": "0803c4bcffd53b6a38eb1a20efe8e50c2c0b0ceb3dfb4c5469325f0330f90f6b"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v3_20261021.py.txt",
+      "name": "descendants",
+      "line_start": 235,
+      "line_end": 248,
+      "byte_start_0": 15450,
+      "byte_end_exclusive": 16005,
+      "sha256": "2d3b51a8786eb2eab535148f0e2ce053393a7b0b7a00f5ec9ea10cd9c75f772e"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v3_20261021.py.txt",
+      "name": "reap",
+      "line_start": 251,
+      "line_end": 261,
+      "byte_start_0": 16007,
+      "byte_end_exclusive": 16661,
+      "sha256": "c3aac35b72c644c0a1a1d5ddfe0bc576749344fb36c1a283b8ef779ea5cfd4be"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v3_20261021.py.txt",
+      "name": "kill",
+      "line_start": 264,
+      "line_end": 276,
+      "byte_start_0": 16663,
+      "byte_end_exclusive": 17258,
+      "sha256": "e055115e34e9c1b796ad08d255df44191b552133fa6c33e29b0b2858a9d927a2"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v3_20261021.py.txt",
+      "name": "settle",
+      "line_start": 279,
+      "line_end": 309,
+      "byte_start_0": 17260,
+      "byte_end_exclusive": 19173,
+      "sha256": "f2ace6c7e2e0df2df735d16680266218ba192b64e11e8c97cd2684826b8a5db0"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v3_20261021.py.txt",
+      "name": "cleanup",
+      "line_start": 312,
+      "line_end": 348,
+      "byte_start_0": 19175,
+      "byte_end_exclusive": 21594,
+      "sha256": "2749fe46726d6f1d4ad73db57aed19bcca8d95836dfe94d4de8b4749ca9e6593"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v3_20261021.py.txt",
+      "name": "subreaper",
+      "line_start": 351,
+      "line_end": 356,
+      "byte_start_0": 21596,
+      "byte_end_exclusive": 21960,
+      "sha256": "3cb5bb1a4faa92364b0e4e50dcd5cab76b8a69de12b564a2624dcac58325a2f9"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v3_20261021.py.txt",
+      "name": "run_step",
+      "line_start": 360,
+      "line_end": 464,
+      "byte_start_0": 22043,
+      "byte_end_exclusive": 29448,
+      "sha256": "8ac98273eb7bd1c823a1807bf666284bbd892b3d6d7a073a6114e77ae98ef68f"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_v3_20261021.py.txt",
+      "name": "main",
+      "line_start": 467,
+      "line_end": 477,
+      "byte_start_0": 29450,
+      "byte_end_exclusive": 29945,
+      "sha256": "b354e7524a72516c1c24994c88d339dc518fd7a441f139bb0f8aa2827aa8650c"
+    }
+  ]
+}

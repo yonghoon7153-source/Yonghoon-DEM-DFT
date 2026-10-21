@@ -1,0 +1,152 @@
+{
+  "kind": "REIL_C4E_E1_V3_STATIC_PREREVIEW_DECISION",
+  "date": "2026-10-21",
+  "commit": "0c9c48e8c5b55bd7b9355fdba5a6833c01fabfb8",
+  "decision": "CHANGES_REQUIRED_NO_EXECUTION",
+  "current_execution_blocking_findings": 4,
+  "separate_document_alignment_findings": 1,
+  "findings": [
+    {
+      "id": "V3-01",
+      "priority": 2,
+      "area": "cleanup_common_deadline",
+      "summary": "Expired-deadline new observations and exception recovery deadline reset",
+      "locations": [
+        [
+          "REIL_C4E1_STEP_RUNNER_DRAFT_v3_20261021.py.txt",
+          290,
+          306
+        ],
+        [
+          "REIL_C4E1_STEP_RUNNER_DRAFT_v3_20261021.py.txt",
+          319,
+          346
+        ],
+        [
+          "REIL_C4E1_STEP_RUNNER_DRAFT_v3_20261021.py.txt",
+          431,
+          437
+        ]
+      ],
+      "basis": "static_reachable_path_not_executed"
+    },
+    {
+      "id": "V3-02",
+      "priority": 2,
+      "area": "intentional_refusal",
+      "summary": "Dangling meta symlink passes exists() and child can run before rc4",
+      "locations": [
+        [
+          "REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+          701,
+          705
+        ],
+        [
+          "REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+          769,
+          773
+        ],
+        [
+          "REIL_C4E1_STEP_RUNNER_DRAFT_v3_20261021.py.txt",
+          377,
+          379
+        ],
+        [
+          "REIL_C4E1_STEP_RUNNER_DRAFT_v3_20261021.py.txt",
+          453,
+          459
+        ]
+      ],
+      "not_claimed": "No successful overwrite or false-success claim"
+    },
+    {
+      "id": "V3-03",
+      "priority": 2,
+      "area": "observation_error_ledger",
+      "summary": "Decode error escapes per-PID catch, loses earlier per-scan errors and can interrupt descendant cleanup",
+      "locations": [
+        [
+          "REIL_C4E1_STEP_RUNNER_DRAFT_v3_20261021.py.txt",
+          203,
+          231
+        ],
+        [
+          "REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt",
+          580,
+          603
+        ]
+      ],
+      "not_claimed": "Outer errors still prevent runner_ok; not observed on target OS"
+    },
+    {
+      "id": "V3-04",
+      "priority": 2,
+      "area": "manual_git_evidence",
+      "summary": "Manual start/end Git commands bypass environment cleaning",
+      "locations": [
+        [
+          "REIL_C4E_E1_APPROVAL_REQUEST_v3_20261021.md",
+          152,
+          155
+        ]
+      ],
+      "boundary": "Current E1-0 manual evidence; separate from repaired code call sites and future fetch configuration"
+    },
+    {
+      "id": "V3-N1",
+      "priority": 3,
+      "area": "documentation_alignment",
+      "summary": "S4 runner first_error promise differs from actual problems-only record",
+      "locations": [
+        [
+          "REIL_C4E_E1_APPROVAL_REQUEST_v3_20261021.md",
+          61,
+          61
+        ],
+        [
+          "REIL_C4E1_STEP_RUNNER_DRAFT_v3_20261021.py.txt",
+          401,
+          404
+        ],
+        [
+          "REIL_C4E1_STEP_RUNNER_DRAFT_v3_20261021.py.txt",
+          449,
+          449
+        ]
+      ],
+      "not_claimed": "Child blocking works"
+    }
+  ],
+  "accepted_static_scope": [
+    "Code Git environment wiring",
+    "TARGETS/EXPECT 14 per stage and pre/post producer",
+    "Named prepare exception capture",
+    "S1 byte/hash/lock binding",
+    "N1 shadow-check baseline retained",
+    "61 test function count and proposed RED path compatibility",
+    "Future E1-0b/E1-1-3 boundary"
+  ],
+  "planned_test_functions": {
+    "baseline": 21,
+    "fix": 6,
+    "launcher": 26,
+    "runner": 8,
+    "total": 61
+  },
+  "executed_tests": 0,
+  "target_imports": 0,
+  "target_calls": 0,
+  "actual_process_Job_experiments": 0,
+  "probe_runs": 0,
+  "git_fixture_runs": 0,
+  "COMSOL_runs": 0,
+  "production_changes": 0,
+  "external_writes": 0,
+  "implementation_approval": false,
+  "execution_approval": false,
+  "E1_0_started": false,
+  "E1_1_3_approved": false,
+  "FUTURE_01": "DEFERRED_SEPARATE_APPROVAL_NOT_COUNTED_AS_CURRENT_FINDING",
+  "review_depth": "Three independent ultra-depth subreviews plus root cross-check",
+  "scope_note": "REIL E1-0 review only. Does not alter unrelated COMSOL microshort contract/native state."
+}

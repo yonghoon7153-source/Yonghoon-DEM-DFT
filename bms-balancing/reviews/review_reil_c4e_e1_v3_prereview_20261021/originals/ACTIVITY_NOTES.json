@@ -1,0 +1,28 @@
+{
+  "kind": "REVIEW_ACTIVITY_NOTES",
+  "received_code_executed": false,
+  "own_data_utility": {
+    "file": "tools/static_review_data.py",
+    "tool_chunk": "5719b1",
+    "rc": 0,
+    "conditions": 105,
+    "all_matched": true,
+    "meaning": "Reviewer-created byte/JSON/AST checks, not target tests"
+  },
+  "own_diff_display_error": {
+    "tool_chunk": "3d6834",
+    "rc": 1,
+    "error": "UnicodeEncodeError: cp949 cannot encode em dash in console output",
+    "scope": "Reviewer-created read-only text diff print; no candidate import or call, no source writes",
+    "subsequent_display": {
+      "tool_chunk": "44c282",
+      "rc": 0,
+      "change": "Own Python stdout UTF-8 option",
+      "not_target_retest": true
+    }
+  },
+  "selected_input_scope": "Two uploads plus 21 local immutable-commit source captures. BEFORE after initial reading, before report. No remote whole-work preservation claim.",
+  "budget_seconds": null,
+  "whole_review_elapsed_claim": null,
+  "source_of_past_claims": "Author documents are evidence, not independent re-observation or current authorization."
+}

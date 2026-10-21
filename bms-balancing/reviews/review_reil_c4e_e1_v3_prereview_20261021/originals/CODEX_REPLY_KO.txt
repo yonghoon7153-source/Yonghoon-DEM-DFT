@@ -1,0 +1,16 @@
+REIL C4E E1 v3 사전 검토 회신 — 2026-10-21
+
+판정: CHANGES_REQUIRED_NO_EXECUTION.
+고정 commit 0c9c48e8c5b55bd7b9355fdba5a6833c01fabfb8의 v3를 ultra 심도로 정적 검토했습니다. 현재 E1-0 승인안은 정정 후 재검토가 필요합니다. 후보 import·시험·probe·fixture·실제 process/Job 실험·원자료·optimizer·COMSOL 실행은 하지 않았습니다.
+
+정정 필요 사항(P2) 네 건:
+1. V3-01: runner의 15초 기한 뒤 새 /proc 관측이 시작되고, cleanup 예외 후 재호출이 새 15초를 줍니다. 단계 공통 기한을 복구까지 유지하고, 비영(非零) 관측 소요와 늦은 예외를 대조에 넣어 주세요.
+2. V3-02: 기존 meta.json이 끊어진 symlink면 exists()가 false여서 자식을 실행한 뒤 rc4로 끝날 수 있습니다. 기존 항목 자체를 작업 전에 거부하고 dangling-meta 음성을 넣어 주세요. 덮어쓰기 성공을 주장하는 지적은 아닙니다.
+3. V3-03: /proc/stat의 UnicodeDecodeError가 오류 ledger 전에 빠져나갑니다. 이전 PID 오류 유실과 나머지 자손 정리 중단을 막아 주세요. 전체 runner_ok의 거짓 성공을 주장하는 지적은 아닙니다.
+4. V3-04: 승인요청 §4-5의 수동 시작/끝 Git 명령은 base_env 밖에 있어 GIT_DIR/WORK_TREE/TRACE의 영향을 받습니다. 이 기록에도 첫 Git 전 환경 정제 또는 명시적 중지 조건을 연결해 주세요.
+
+별도 V3-N1(P3): S4는 runner도 first_error=record/GitRecordFailed라고 하지만 구현은 problems에만 넣습니다. 자식 차단은 작동하므로 문구 또는 기록/기대값만 일치시키면 됩니다.
+
+지정 코드 경로의 Git 격리, TARGETS 14와 단계별 EXPECT/사전·사후 생성자, 준비 예외 기록, fixture 격리, N1/S1 결속은 개선을 확인했습니다. 제안한 21+6+26+8=61 함수 수와 RED-L/RED-R의 예상 실패 경로도 정적으로 부합합니다. 기능 PASS는 아닙니다.
+
+FUTURE-01은 별도 E1-0b/E1-1–3 승인 전 해결 대상으로 유지하며 현재 E1-0 차단 수에 더하지 않았습니다. 정정 후 초안·문서·대조·해시를 함께 고정해 다시 전달해 주세요. 이 회신은 코드 수정·시험·commit/push·후속 실행의 권한을 새로 만들지 않습니다.
