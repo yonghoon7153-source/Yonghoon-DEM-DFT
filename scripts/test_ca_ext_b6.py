@@ -765,6 +765,16 @@ def t_states():
         r_ok = r_bad = (None, f'{type(e).__name__}: {e}')
     chk('S3i 단락 팔 + 이온 계획 — 이온 증서 정상 = short · 이온 증서 격자 지문 ≠ 매니페스트 = 거부 (채널 ionic 결합)',
         r_ok == ('short', None) and r_bad[0] is None and 'CERT|bind|' in str(r_bad[1]), (r_ok, r_bad))
+    #  ★ 10-21 (D2 · 옳은 이유) — 위 결합 경우 (영값 셋 · 단락 셋) 의 거부 사유 = 결합 함수 (`CERT|bind|`) · 상태 머리 (STATE|zero| · STATE|short|)
+    #    (S2 · S3 은 거부만 본다 — 다른 검사가 우연히 거부해도 통과하므로 결합 자리를 여기서 못 박는다)
+    _bind_nm = ('증서 격자 지문 ≠ 매니페스트 sid', '증서 결합 판 없음 (옛 증서)', '증서 접합')
+    _bz = [(nm, ngs(zmut(fn))) for nm, fn in bad_zero.items() if nm.startswith(_bind_nm)]
+    _bs = [(nm, ngs(zmut(fn, sh))) for nm, fn in bad_short.items() if nm.startswith(_bind_nm)]
+    chk('S3b 결합 거부의 사유 — 영값 셋 = STATE|zero| … CERT|bind| · 단락 셋 = STATE|short| CERT|bind| (옳은 이유)',
+        len(_bz) == 3 and len(_bs) == 3
+        and all(r[0] is None and str(r[1]).startswith('STATE|zero|') and 'CERT|bind|' in str(r[1]) for _n, r in _bz)
+        and all(r[0] is None and str(r[1]).startswith('STATE|short| CERT|bind|') for _n, r in _bs),
+        [(n, str(r[1])[:90]) for n, r in _bz + _bs])
     bad_pos = {'증서 실패 (ok False)': lambda x: x['conv_cert'].update(ok=False, pass_b=False),
                '증서 없음': lambda x: x.pop('conv_cert'),
                'σ ≠ 증서 σ': lambda x: x.update(sigma_e_eff_S_cm=0.06)}
@@ -1032,7 +1042,8 @@ def t_states_payload():
 #:   경우 표지 = 그 칸이 나와도 되는 켠 노브 (face_alpha · rtol · cjunc) — 노브를 다 끈 경우 (off · centerline · LEAN 3) 에는
 #:   어떤 칸도 허용되지 않는다 (끈 경로 비트 같음).  σ · n_dof · CG 결과 칸은 표에 없다 = 언제나 실패.
 #:   세대: Z3 = 기반이 ff9d72afe (Z3) 이전일 때 · RCA1 = 기반 47d23baba ↔ a76f59d0d (Codex RCA 수정 1 회차 — B 증서 v2 · S1 부피 ·
-#:   A 접합 v2).  ⚠ 새 칸을 더하는 묶음은 같은 커밋에서 이 표에 한 줄 (세대 표지) 을 올린다 · 바로 앞 기반과는 `--expect-identical`.
+#:   A 접합 v2) · RCA2 = a76f59d0d 뒤 B 의 증서 ↔ 런 결합 (PRE-impl-07).  ⚠ 새 칸을 더하는 묶음은 같은 커밋에서 이 표에 한 줄 (세대 표지) 을
+#:   올린다 · 바로 앞 기반과는 `--expect-identical`.
 OLD_DIFF_ALLOW = (
     ('Z3', '+', r'manifest\.ca_ext\.ptfe_face\.evidence\.fp\.sid_off', 'face_alpha', 'off 격자 sid 지문 (Z3)'),
     ('Z3', '+', r'(ion_)?cg_iters', 'rtol', 'CG 반복 수 (Z3)'),
@@ -1060,6 +1071,9 @@ OLD_DIFF_ALLOW = (
     ('RCA1', '+', r'manifest\.ca_ext\.cjunc\.protocol\.rules\.(branch|cp|dist|order)', 'cjunc',
      'A 접합 규칙 v2 (가지 · 최근접점 · 분산판 · 순서)'),
     ('RCA1', '~', r'manifest\.physics_protocol_id', 'cjunc', 'A 접합 규약 판이 바뀌면 p3ca id 가 바뀐다 (같은 함수로 다시 계산)'),
+    #  RCA2 · B — 증서 ↔ 런 결합 (사전 리뷰 PRE-impl-07 · `step3_conv_cert.bind_record` · 판 cert-bind-v1) — 증서를 켠 경우만 · 새 칸만
+    ('RCA2', '+', r'(ion_)?conv_cert\.(bind_version|fp_sid|fp_sig|fp_face_plan|fp_cjunc_registry|fp_cjunc_rows)', 'rtol',
+     'B 증서 ↔ 런 결합 칸 (PRE-impl-07)'),
 )
 #: 허용이 아니라 이유만 붙이는 칸 (기반 사본의 환경 차이 — 고치는 길: 사본 옆에 docs/ 두기 · 링크)
 OLD_DIFF_HINTS = (

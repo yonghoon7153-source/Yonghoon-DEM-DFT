@@ -2466,6 +2466,41 @@ def t_M25():
                   lambda: c_case('M25', 'MAIN_NOT_DONE', variant='FIBRE', after=''))
 
 
+def _read_run_state_first():
+    """`read_run` 원문에서 해 상태 블록 (`next_gen_state` · 수렴 계약) 을 기록 검사 (세대 · ca_ext) 앞으로 옮긴 사본 (10-21 PRE-impl-07 병합
+    이전 순서) — 사슬 모듈 이름공간의 사본에서 컴파일 (Stop · RC · SVCF 는 같은 객체).  자리 글이 정확히 한 번씩 없으면 예외 = M26 실패."""
+    import inspect
+    src = inspect.getsource(RR.read_run)
+    marks = ('        pid = RC.physics_protocol_id(man)\n', '        state, swhy = RC.next_gen_state(s3)\n',
+             '        why = contract.arm_problem(p, rcpt)\n')
+    if [src.count(m) for m in marks] != [1, 1, 1]:
+        raise AssertionError(f'M26 변이 자리 {[src.count(m) for m in marks]} (정확히 한 번씩이어야 한다)')
+    a, b, c = (src.index(m) for m in marks)
+    if not a < b < c:
+        raise AssertionError(f'M26 변이 자리 순서 {(a, b, c)} (기록 → 해 상태 → 팔 계약 이어야 한다)')
+    src = src[:a] + src[b:c] + src[a:b] + src[c:]
+    g = dict(vars(RR))
+    exec(compile(src, str(RR.__file__) + ' [변이 M26]', 'exec'), g)   # noqa: S102 — 시험 전용 변이 (mutant 가 되돌린다)
+    return g['read_run']
+
+
+@check('M26', '변이: 해 상태 (증서 · 증서 ↔ 런 결합) 를 기록 검사 (세대 · ca_ext) 앞으로 (PRE-impl-07 병합 이전 순서) → S07 꼴 (unknown:ca_ext) 이 '
+              'GENERATION 을 못 낸다 (옳은 이유 = NOT_COMPUTED · CERT|bind|)')
+def t_M26():
+    fn = _read_run_state_first()
+    seen = {}
+
+    def ev():
+        ok, why = stop_case('M26', [{'do': 'unknown_caext', 'match': {'rj': '0'}}], 'GENERATION')
+        seen['why'] = why
+        return ok, why
+    caught, msg = mutant('M26', {'read_run': fn}, ev)
+    w = seen.get('why') or ()
+    st = w[2] if len(w) > 2 and isinstance(w[2], dict) else {}
+    right = len(w) > 1 and w[1] == 'NOT_COMPUTED' and 'CERT|bind|' in str(st.get('cause'))
+    return caught and right and RR.read_run is not fn, (msg, w[:2], str(st.get('cause'))[:160])
+
+
 # ═════════════════════════ 실행 ═════════════════════════
 def main(argv=None):
     global RR, TD

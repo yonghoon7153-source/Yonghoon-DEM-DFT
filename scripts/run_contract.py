@@ -1000,13 +1000,22 @@ def next_gen_cert_ok(step3):
     why = conv_cert_problem(s.get('conv_cert'), s.get('sigma_e_eff_S_cm'), man, 'electronic')
     if why:
         return False, f'NEXTGEN|electronic| {why}'
+    why = _ion_cert_problem(s, man)
+    if why:
+        return False, f'NEXTGEN|ionic| {why}'
+    return True, None
+
+
+def _ion_cert_problem(s, man):
+    """이온을 계획해 푼 팔 (`component_plan.ionic` True · 이온 component ≠ not_solvable) 의 **이온 증서** → 문제 | None (그 밖 = None).
+    ★ 2026-10-21 (사전 리뷰 PRE-impl-07 병합) — `next_gen_cert_ok` (양의 해 · 영값) 와 `next_gen_state` 의 단락 가지가 이 함수 하나를 부른다:
+    그 런의 매니페스트 · 채널 ionic 으로 결합 (`conv_cert_problem` → `cert_binding_problem`).  옛 단락 가지 = 매니페스트 없는 두 인자 호출
+    (B 의 결합 뒤 TypeError) · 같은 글을 두 곳에 두면 변이 시험 (`test_step3_target_cert` T18) 의 자리가 둘이 된다."""
     plan = man.get('component_plan') if isinstance(man.get('component_plan'), dict) else {}
     _ist = ((man.get('components') or {}).get('ionic') or {}).get('status') if isinstance(man.get('components'), dict) else None
     if plan.get('ionic') is True and _ist != 'not_solvable':
-        why = conv_cert_problem(s.get('ion_conv_cert'), s.get('sigma_ion_eff_S_cm'), man, 'ionic')
-        if why:
-            return False, f'NEXTGEN|ionic| {why}'
-    return True, None
+        return conv_cert_problem(s.get('ion_conv_cert'), s.get('sigma_ion_eff_S_cm'), man, 'ionic')
+    return None
 
 
 #: ★ 2026-10-21 (D · 등록 R §5-0 · Codex RCA-13 · 1저자 Q7 ③) — 다음 세대 팔의 해 상태 (사슬 · check_arm 이 같은 함수로 본다).
@@ -1015,18 +1024,16 @@ def next_gen_cert_ok(step3):
 NG_STATES = ('positive', 'zero', 'short')
 
 
-def _hex32(v):
-    return isinstance(v, str) and len(v) == 32 and all(ch in '0123456789abcdef' for ch in v)
-
-
 def next_gen_state(step3):
     """다음 세대 팔 (`ca_ext` 블록 · 요청) → `(상태, None)` | `(None, 사유)` · 옛 세대 = `('legacy', None)` (이 규칙 밖).
     플래그를 믿지 않는다 — 상태마다 증서 ↔ 결과 ↔ 매니페스트를 다시 결합한다:
       · positive — `next_gen_cert_ok` (ⓐ–ⓓ · 증서 σ = 결과 σ) · 결과 σ 유한 > 0
       · zero — 같은 함수 (`_zero_cert_problem` · σ 둘 다 정확히 0) + 출처별: 조기 반환 = 결과 사유 = 증서 사유 (영값 위상 사유) · 전자 component
         not_solvable / 행렬 그래프 = 사유 없음 · 전자 complete · 수렴 3 칸 (CG 가 돌았다)
-      · short — 증서 판 · 상태 ELECTRODE_SHORT · ok False · 봉인 상수 · 격자 지문 · 결과 사유 = 증서 사유 (단락 사유) · 결과 σ = None (0 · 유한값 =
-        위장 = 거부) · 전자 not_solvable · 접합 블록의 솔브 기록 short True · solved False · 축약 instance > 0 (단락은 축약에서만 생긴다)
+      · short — 증서 판 · 상태 ELECTRODE_SHORT · ok False · 봉인 상수 · 결과 사유 = 증서 사유 (단락 사유) · 결과 σ = None (0 · 유한값 =
+        위장 = 거부) · 전자 not_solvable · 접합 블록의 솔브 기록 short True · solved False · 축약 instance > 0 (단락은 축약에서만 생긴다) ·
+        ★ 10-21 (사전 리뷰 PRE-impl-07 병합) 증서 ↔ 런 결합 (`cert_binding_problem` · 주 전자 채널 — 영값 · 양의 해와 같은 함수 · 옛 판 =
+        격자 지문 hex32 꼴만 = 다른 침대의 단락 증서를 받았다) · 이온을 푼 팔의 이온 증서 = 그 런의 매니페스트 · 채널 ionic
     ⚠ 상태는 위상 사실이지 σ 값이 아니다 — 값 봉인 (사슬) 은 σ 숫자만 가린다."""
     import step3_conv_cert as _cc
     s = step3 if isinstance(step3, dict) else {}
@@ -1073,8 +1080,11 @@ def next_gen_state(step3):
                 return None, f'STATE|short|seal| {k} = {cert.get(k)!r} ≠ 이 코드의 봉인 {want!r}'
         if cert.get('ok') is not False or cert.get('zero_source') != 'early_return':
             return None, f'STATE|short| 증서 ok {cert.get("ok")!r} · 출처 {cert.get("zero_source")!r} (False · early_return 이어야)'
-        if not (_hex32(cert.get('fp_sid')) and _hex32(cert.get('fp_sig'))):
-            return None, 'STATE|short| 증서 격자 지문 (fp_sid · fp_sig) 이 소문자 hex 32 가 아니다'
+        #  ★ 10-21 (사전 리뷰 PRE-impl-07 병합 · B 결합) — 단락 증서도 조기 반환 증서라 결합 칸을 싣는다 (`step3_conv_cert.early_record`) →
+        #    그 런의 매니페스트 · 주 전자 채널과 같은 결합 함수 (격자 지문 hex32 꼴 검사를 포함한다 · 옛 판은 꼴만 봤다)
+        why = cert_binding_problem(cert, man, 'electronic')
+        if why:
+            return None, f'STATE|short| {why}'
         rs = s.get('reason')
         if not isinstance(rs, str) or rs != cert.get('reason') or _cc.classify_reason(rs) != _cc.STATUS_SHORT:
             return None, f'STATE|short| 결과 사유 {rs!r} ↔ 증서 사유 {cert.get("reason")!r} (같은 단락 사유여야 한다)'
@@ -1092,12 +1102,9 @@ def next_gen_state(step3):
         nc = cnt.get('n_contract')
         if type(nc) is not int or nc <= 0:                       # noqa: E721
             return None, f'STATE|short| 축약 instance {nc!r} — 단락은 축약 무리에서만 생긴다 (J11)'
-        plan = man.get('component_plan') if isinstance(man.get('component_plan'), dict) else {}
-        _ist = ((man.get('components') or {}).get('ionic') or {}).get('status')
-        if plan.get('ionic') is True and _ist != 'not_solvable':     # 이온을 푼 팔 = 이온 증서는 그대로 (전자 단락은 이온 해와 무관)
-            why = conv_cert_problem(s.get('ion_conv_cert'), s.get('sigma_ion_eff_S_cm'))
-            if why:
-                return None, f'STATE|short|ionic| {why}'
+        why = _ion_cert_problem(s, man)        # 이온을 푼 팔 = 이온 증서는 그대로 (전자 단락은 이온 해와 무관) · ★ PRE-impl-07 병합 — 매니페스트 · 채널
+        if why:
+            return None, f'STATE|short|ionic| {why}'
         return 'short', None
     return None, (f'STATE|status| {st!r} — 받는 상태는 {_cc.STATUS_POSITIVE} · {_cc.STATUS_ZERO} · {_cc.STATUS_SHORT} '
                   f'(증서 못 세움 · 모르는 상태 = NOT_COMPUTED)')
