@@ -2667,6 +2667,37 @@ def t_side():
         f"{None if not ok_ else (float(I['Lc'][0]), int(I['nsub'][0]), list(S['side']), np.asarray(S['X_j']).round(6).tolist(), _sub_cells(reg))}")
 
 
+#  NEAR — 분산판 등분점의 맞은편 최근접점이 둘 (ε 띠) 인 꼴 (손 해석): A (i) = x 축 (y 1.5 · z 1.5 · x 0.5–8.5) · B (j) = 얕은 Λ (밑 (2.5, 2.1) ·
+#  꼭짓점 (4.5, 2.3) · 밑 (6.5, 2.1) · z 1.5) 뒤 오른 밑에서 위 (z 4.5) 로 · −x 로 (1.5, 2.1, 4.5) 끝 → B 정준 시작 = (1.5, 2.1, 4.5) (끝점 사전식)
+#  → 오른 팔을 먼저 지난다.  A 닿음 [1.7, 7.3] = 5.6 > B 4.82 → L_c 5.6 · k 3 · 정의 쪽 A · 가운데 등분점 X_i = (4.5, 1.5, 1.5) → B 의 두 팔
+#  수선발 (대칭 · 꼭짓점 0.8 보다 가깝다 · t = (a² − d·h)/(a² + h²) = 0.960396 · a 2 · h 0.2 · d 0.6) = (4.5 ∓ 0.079208, 2.292079) 등거리 →
+#  ε 띠 안 사전식 최소 = 왼 팔 (x 4.420792).  띠를 빼고 첫 점 = 정준 순서 첫 (오른 팔 · 10-21 변이 M25 생존 → 보탬 · 시험은 구현 뒤).
+NEAR_N = (10, 4, 6)
+NEAR = [[(0.5, 1.5, 1.5), (8.5, 1.5, 1.5)],
+        [(1.5, 2.1, 4.5), (6.5, 2.1, 4.5), (6.5, 2.1, 1.5), (4.5, 2.3, 1.5), (2.5, 2.1, 1.5)]]
+
+
+@case('NEAR')
+def t_near_tie():
+    P = rows(NEAR)
+    sid, _ = bed(P, NEAR_N)
+    reg = _try(lambda: registry(sid, P), None)
+    I = (reg or {}).get('instances') or {}
+    S = (reg or {}).get('subedges') or {}
+    dis = [q for q in range(len(I.get('fi', []))) if not I['self'][q]]
+    t = (4.0 - 0.6 * 0.2) / (4.0 + 0.2 * 0.2)
+    foot_l = (2.5 + 2.0 * t, 2.1 + 0.2 * t, 1.5)
+    ok_ = reg is not None and len(dis) == 1 and int(I['nsub'][dis[0]]) == 3
+    rows_ = [e for e in range(len(S.get('inst', []))) if ok_ and int(S['inst'][e]) == dis[0]]
+    mid = [e for e in rows_ if int(S['j'][e]) == 1]
+    chk('NEAR 손 해석 — A–B instance 1 · L_c 5.6 · k 3 · 정의 쪽 A (side 0) · 가운데 등분점 X_i = (4.5, 1.5, 1.5) · 맞은편 X_j = 왼 팔 수선발 '
+        '(4.420792, 2.292079, 1.5) (1e-9 · 두 팔 등거리 ε 띠 → 사전식 최소)',
+        ok_ and abs(float(I['Lc'][dis[0]]) - 5.6) < 1e-9 and len(mid) == 1 and int(S['side'][mid[0]]) == 0
+        and np.allclose(np.asarray(S['X_i'][mid[0]]), [4.5, 1.5, 1.5], rtol=0, atol=1e-9)
+        and np.allclose(np.asarray(S['X_j'][mid[0]]), foot_l, rtol=0, atol=1e-9),
+        f"{None if not ok_ else (float(I['Lc'][dis[0]]), [np.asarray(S['X_j'][e]).round(6).tolist() for e in rows_])} ↔ {foot_l}")
+
+
 @case('OFF-IND')
 def t_off_independent():
     """보장 — 접합 끔 (cjunc=None) 솔브는 carbon_junction 을 부르지도 읽지도 않는다 (구조 증거 · C0 의 옛 기준 비트 대조와 별개):
