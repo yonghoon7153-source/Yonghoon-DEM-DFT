@@ -1567,7 +1567,10 @@ def _sv_cf_request(v):
         return {'threshold': None}
     if isinstance(t, (bool, np.bool_)) or not isinstance(t, (int, float, np.floating, np.integer)):
         raise TypeError(f'cjunc_plan: sv_counterfactual 문턱 = 실수: {t!r}')
-    tf = float(t)
+    try:
+        tf = float(t)
+    except OverflowError:                                    # float 로 못 옮기는 큰 정수 (10**400) — 거부 계약 (ValueError) 으로
+        raise ValueError(f'cjunc_plan: sv_counterfactual 문턱 = 유한 ≥ 1 (float 넘침): {t!r}') from None
     if not (math.isfinite(tf) and tf >= 1.0):
         raise ValueError(f'cjunc_plan: sv_counterfactual 문턱 = 유한 ≥ 1 (비 G_full/G_cut ≥ 1 · Rayleigh): {t!r}')
     return {'threshold': tf}
