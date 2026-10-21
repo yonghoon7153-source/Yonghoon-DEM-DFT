@@ -858,9 +858,11 @@ def t_L12():
             and [c['ok'] for c in lad(r).get('confirms', [])] == [False, False], (r['sum']['status'], roles(r)))
 
 
-@check('L13', '확인 한 번 실패 → 그 점을 넣고 다시 보간 → 둘째 확인 통과 (CALIBRATED · 확인 2)')
+@check('L13', '확인 한 번 실패 → 그 점을 넣고 다시 보간 → 둘째 확인 통과 (CALIBRATED · 확인 2) — ★ 3판: 곡률로 (매끈한 로지스틱 β 1.5 · Rc 1e4) · '
+               '옛 잡음 범프 (×1.03) 는 끝 런 사이에서 비단조 (τ_mono) 로 잡힌다 = 세계가 단조가 아니다')
 def t_L13():
-    r = scen('L13', lambda: ladder('L13', world('L13', dict(PW, bump_seq=[1.03, 1.0222]))))
+    LW13 = dict(PW, sbe={'kind': 'logistic', 'f': 0.5e-3, 'C': 20e-3, 'Rc': 1e4, 'beta': 1.5, 'floor': 0.5e-3, 'ceiling': 20e-3})
+    r = scen('L13', lambda: ladder('L13', world('L13', LW13)))
     L = lad(r)
     return (r['sum']['status'] == 'CALIBRATED' and [c['ok'] for c in L.get('confirms', [])] == [False, True]
             and L['confirms'][0]['rj'] in L.get('order', []), (r['sum']['status'], L.get('confirms')))
@@ -2314,14 +2316,16 @@ def _end_m2(lad_, side, X):                                  # M2 — 확인 실
     return (kb if side == 'lo' else ka), ent
 
 
-def _end_old(sides):                                         # M3 · M4 — 2판 보간식 (R_j,0 을 낀 이웃에서 · 확인 런 없음)
+def _end_old(sides):                                         # M3 · M4 — 2판 보간식 (R_j,0 을 낀 이웃에서 · 그 점을 끝으로 · 확인 결과 무시)
     def f(lad_, side, X):
         if side not in sides:
             return RR_ORIG['end_pick'](lad_, side, X)
         ka, kb = lad_.st['bracket']
         (Ra, sa), (Rb, sb) = lad_.pts[ka], lad_.pts[kb]
-        return RR.rj_key(RR.interp_lnln(Ra, sa, Rb, sb, X)), {'bracket': [ka, kb], 'candidate': None, 'confirm_reused': None,
-                                                               'confirm_ok': None, 'source': 'old_interp'}
+        key = RR.rj_key(RR.interp_lnln(Ra, sa, Rb, sb, X))
+        if key not in lad_.pts:                              # 끝 σ 를 봉인 칸에 싣기 위해 한 번 돌린다 (끝 선택은 2판 그대로 — 확인 결과를 보지 않는다)
+            lad_._get('end_confirm', key)
+        return key, {'bracket': [ka, kb], 'candidate': key, 'confirm_reused': None, 'confirm_ok': None, 'source': 'old_interp'}
     return f
 
 
