@@ -2003,12 +2003,48 @@ def t_Z01():
             (r['rc'], r['sum'] and r['sum']['status'], stop_code(r), L.get('states')))
 
 
-@check('Z02', '천장 ELECTRODE_SHORT (J11 · σ = +∞ · 결과 σ null) — 받아서 사다리 계속 · CALIBRATED · 상태 short (2판 = CA_EXT_RECORD · NOT_COMPUTED)')
+#: ★ 4판 (10-21 · 1저자 Q1 "권고대로" · 등록 R 4판 §5-0 ①–③ · §4-2 ③ · R4-Q5) — 단락 (ELECTRODE_SHORT) = 생산자 미게시 → 그 런 = NOT_COMPUTED ·
+#   사유 = 상태 이름 ELECTRODE_SHORT (+∞ 로 판정에 오지 않는다 · 다른 멈춤 이름 (RUNNER_RC · CA_EXT_RECORD …) 으로 흐리지 않는다)
+SHORT = 'ELECTRODE_SHORT'
+
+
+def stop_rec(res):
+    return (res.get('sum') or res.get('v') or {}).get('stop') or {}
+
+
+def eval_short_stage(r, stage_status_key='status', role=None):
+    """단계 하나가 단락 팔에서 등록 결과 NOT_COMPUTED (사유 ELECTRODE_SHORT) 로 끝났나 — 러너 rc 0 (팔은 정본 계약을 지났다) · 멈춘 런 = 그 런."""
+    s = r.get('sum') or {}
+    st = stop_rec(r)
+    runs = s.get('runs') or []
+    hit = [x for x in runs if x.get('name') == st.get('run')]
+    ok = (r['rc'] == 3 and s.get(stage_status_key) == 'NOT_COMPUTED' and st.get('code') == 'NOT_COMPUTED' and st.get('reason') == SHORT
+          and len(hit) == 1 and hit[0].get('rc') == 0 and bool(hit[0].get('arms_read')) and SHORT in str(st.get('cause'))
+          and (role is None or hit[0].get('role') == role))
+    return ok, (r['rc'], s.get(stage_status_key), st, [(x.get('role'), x.get('rc')) for x in runs][-3:])
+
+
+def eval_short_verdict(v, stage, law=None):
+    """판정 = 등록 결과 NOT_COMPUTED (rc 0 · 멈춤 아님) · 사유 기록 (stage · law · code NOT_COMPUTED · reason ELECTRODE_SHORT) · 결과에 +∞ 구간 없음."""
+    p = v.get('v') or {}
+    rs = [x for x in (p.get('reasons') or []) if isinstance(x, dict)]
+    want = [x for x in rs if x.get('stage') == stage and x.get('law') == law and x.get('code') == 'NOT_COMPUTED' and x.get('reason') == SHORT]
+    ok = (v['rc'] == 0 and p.get('verdict') == 'NOT_COMPUTED' and p.get('state') == 'calib' and p.get('stop') is None and len(want) == 1
+          and 'interval_mScm' not in (v.get('r') or {}))
+    return ok, (v['rc'], p.get('verdict'), p.get('stop'), rs, sorted((v.get('r') or {}))[:6])
+
+
+@check('Z02', '★ 4판 (Q1 · §5-0 ② · R4-Q5) 천장 ELECTRODE_SHORT (J11 · 생산자 미게시) — 사다리 = NOT_COMPUTED (등록 결과 · 사유 ELECTRODE_SHORT · '
+               '바닥 · 천장 두 런 뒤 · 천장 런 rc 0 = 팔은 정본 계약을 지났다) · 판정 (P1 주 사다리와) = NOT_COMPUTED rc 0 · 사유 기록 '
+               '(3판 = 받아서 σ +∞ · CALIBRATED)')
 def t_Z02():
     r = scen('Z02', lambda: ladder('Z02', z_world('Z02', [{'match': {'rj': '0'}, 'state': 'short'}])))
-    L = lad(r)
-    return (r['rc'] == 0 and r['sum']['status'] == 'CALIBRATED' and L.get('states', {}).get('0') == 'short',
-            (r['rc'], r['sum'] and r['sum']['status'], stop_code(r), L.get('states')))
+    ok1, why1 = eval_short_stage(r, role='ceiling')
+    v = scen('Z02_v', lambda: verdict('Z02_v', [r['out'], s_main('P1')['out']]))
+    ok2, why2 = eval_short_verdict(v, 'ladder', 'P0')
+    ok3 = roles(r) == ['floor', 'ceiling'] and '0' not in lad(r).get('states', {}) and (v['v'] or {}).get('calib') == {
+        'P0': 'NOT_COMPUTED', 'P1': 'CALIBRATED'}
+    return ok1 and ok2 and ok3, (why1, why2, roles(r), lad(r).get('states'))
 
 
 def z_pred(tag, states):
@@ -2029,15 +2065,39 @@ def t_Z03():
             (v.get('verdict'), v.get('state'), v.get('stop'), r.get('interval_mScm')))
 
 
-@check('Z04', 'DBE 모서리 하나 ELECTRODE_SHORT (P1 c1 R_j,0 · c 1 축약) — σ +∞ · 같은 P 일관 (c1 ≥ c0) 통과 · 구간 위 끝 = +∞ (JSON null) · '
-               'UNINFORMATIVE · SV 범위 모서리인데 반사실 기록 없음 (주 해 없음) → SV_UNCHECKED')
+@check('Z04', '★ 4판 (Q1 · §5-0 ③) DBE 모서리 하나 ELECTRODE_SHORT (P1 c1 R_j,0 · c 1 축약) — 예측 = NOT_COMPUTED (등록 결과 · 사유 '
+               'ELECTRODE_SHORT · 그 모서리 런에서 멈춤) · 판정 = NOT_COMPUTED rc 0 · 사유 기록 (예측 단계) · +∞ 구간 없음 '
+               '(3판 = σ +∞ · UNINFORMATIVE)')
 def t_Z04():
     sc = z_pred('Z04', [{'match': {'kit_has': 'DBE', 'law': 'P1', 'c': '1', 'rj': lad(s_main('P1'))['R_j0']}, 'state': 'short'}])
-    v, r = sc['ver']['v'] or {}, sc['ver']['r'] or {}
-    return (sc['pred']['sum']['status'] == 'PREDICTED' and v.get('verdict') == 'UNINFORMATIVE' and v.get('state') == 'extended'
-            and 'SV_UNCHECKED' in v.get('flags', []) and (r.get('corners_state') or {}).get('c1_P1', {}).get('R_j0') == 'short'
-            and (r.get('interval_mScm') or [0, 0])[1] is None,
-            (v.get('verdict'), v.get('state'), v.get('flags'), v.get('stop'), r.get('interval_mScm')))
+    ok1, why1 = eval_short_stage(sc['pred'], role='corner')
+    ok2, why2 = eval_short_verdict(sc['ver'], 'predict')
+    return ok1 and ok2, (why1, why2)
+
+
+@check('Z05', '★ 4판 (Q1 · §4-2 ③) DBE origin 팔 (arm 1 · 2 · P0 c1 R_j,0 · c 1 축약 모서리) 이 ELECTRODE_SHORT — origin 값으로 단락이 오지 '
+               '않는다 → 예측 = NOT_COMPUTED (사유 ELECTRODE_SHORT · origin 런에서 멈춤) · 판정 = NOT_COMPUTED rc 0 (3판 = 산포 +∞ → 8 팔 평균)')
+def t_Z05():
+    sc = z_pred('Z05', [{'match': {'kit_has': 'DBE', 'law': 'P0', 'c': '1', 'rj': lad(s_main('P0'))['R_j0'], 'arms': 2},
+                         'state': 'short'}])
+    ok1, why1 = eval_short_stage(sc['pred'], role='origin')
+    ok2, why2 = eval_short_verdict(sc['ver'], 'predict')
+    return ok1 and ok2, (why1, why2)
+
+
+@check('Z07', '★ 4판 (Q1) 사슬의 등록 풀이 상태 셋 (§5-0) — 생산자 기록 상태 (run_contract.next_gen_state) positive · zero · short → '
+               'POSITIVE_SOLVED · VALID_ZERO_TOPOLOGY · NOT_COMPUTED (사유 ELECTRODE_SHORT = 생산자 상태 상수) · 상태 안 섬 (None) = NOT_COMPUTED')
+def t_Z07():
+    import run_contract as RCm
+    import step3_conv_cert as CCm
+    f = getattr(RR, 'registration_state', None)
+    if not callable(f):
+        return False, 'registration_state 없음'
+    got = {k: f(k) for k in ('positive', 'zero', 'short', None)}
+    want = {'positive': ('POSITIVE_SOLVED', None), 'zero': ('VALID_ZERO_TOPOLOGY', None), 'short': ('NOT_COMPUTED', CCm.STATUS_SHORT),
+            None: ('NOT_COMPUTED', None)}
+    return (got == want and CCm.STATUS_SHORT == SHORT and set(RCm.NG_STATES) == {'positive', 'zero', 'short'}
+            and CCm.STATUS_POSITIVE == 'POSITIVE_SOLVED' and CCm.STATUS_ZERO == 'VALID_ZERO_TOPOLOGY', (got, RCm.NG_STATES))
 
 
 def s0_variant(tag, mutate=None, raw=None):
@@ -2446,6 +2506,30 @@ def t_M22():
 
 
 RC_ORIG = {}
+
+
+@check('M27', '★ 4판 (Q1) 변이: 단락 → 등록 풀이 상태 NOT_COMPUTED 를 끔 (short 를 양의 해 자리로 · 3판 짝) → Z02 꼴 (천장 단락) 이 떨어진다 '
+              '(NOT_COMPUTED · 사유 ELECTRODE_SHORT 가 아니다)')
+def t_M27():
+    def ev():
+        r = ladder('M27', z_world('M27', [{'match': {'rj': '0'}, 'state': 'short'}]))
+        return eval_short_stage(r, role='ceiling')
+    rs = dict(getattr(RR, 'REG_STATES'))
+    rs['short'] = ('POSITIVE_SOLVED', None)
+    return mutant('M27', {'REG_STATES': rs}, ev)
+
+
+@check('M28', '★ 4판 (Q1) 변이: 예측 단계의 NOT_COMPUTED 를 등록 결과로 받지 않음 (STOPPED · 3판 꼴) → Z04 꼴 (DBE 모서리 단락) 판정이 '
+              'INPUT_STAGE_STOPPED 로 흐려진다 = 떨어진다')
+def t_M28():
+    def ev():
+        m = {'kit_has': 'DBE', 'law': 'P1', 'c': '1', 'rj': lad(s_main('P1'))['R_j0']}
+        p = predict('M28', world('M28', dict(PW, states=[{'match': m, 'state': 'short'}])), [s_main('P0')['out'], s_main('P1')['out']])
+        v = verdict('M28_v', [s_main('P0')['out'], s_main('P1')['out'], p['out']])
+        ok1, w1 = eval_short_stage(p, role='corner')
+        ok2, w2 = eval_short_verdict(v, 'predict')
+        return ok1 and ok2, (w1, w2)
+    return mutant('M28', {'PREDICT_OUTCOMES': frozenset()}, ev)
 
 
 @check('M23', '변이: 두 계획 대조 끔 → C05 (tol_ff 다름) 가 PLAN_CROSS_MISMATCH 를 못 낸다')

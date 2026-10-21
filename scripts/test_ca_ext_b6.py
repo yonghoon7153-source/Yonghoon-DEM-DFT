@@ -973,6 +973,28 @@ def make_fixture_nofloor(d):
     return d
 
 
+def make_fixture_thin_cross(d):
+    """★ 4판 (10-21 · 1저자 Q1) 단락 침대 — 두 층 (0–2 µm · vox 1.0) · VGCF V1 (x 방향 · 아래 층 z 0.5) 와 V2 (y 방향 · 위 층 z 1.5) 가 셀
+    (24, 24) 기둥에서 엇갈린다 (중심선 거리 1.0 µm · 접합 instance 하나 · 포트 = 셀 중심) · SE 가 두 층을 채운다 (V1 기둥의 위 · V2 기둥의 아래 =
+    절연 고체) → V1 = 아래 판 접점 · V2 = 위 판 접점 · 접합을 축약하면 (천장 R_j → 0) 축약 무리가 두 판에 다 닿는다 = J11 단락 · 바닥 (R_j → ∞)
+    = 관통 성분 없음 (VALID_ZERO_TOPOLOGY) · 유한 R_j = 양의 해.  AM = 판 · 섬유와 떨어진 작은 구 둘 (격자에 안 찍힌다).  tol_ff = 1.0 µm 로 돌린다."""
+    with open(os.path.join(d, 'am.csv'), 'w', encoding='utf-8') as f:
+        f.write('# type,x,y,z,r  (Rint ② 4판 Q1 단락 침대)\n2,0.014000,0.014000,0.001000,0.000300\n2,0.034000,0.034000,0.001000,0.000300\n')
+    g = np.arange(12.0, 36.01, 0.75)
+    gz = np.array([0.25, 0.75, 1.25, 1.75])
+    se = np.array([[x, y, z] for x in g for y in g for z in gz], np.float64)
+    blocks = [(_box(se), 1, -1, 0),
+              (_box(line((12.5, 24.5, 0.5), (36.5, 24.5, 0.5), 97)), 2, 0, 1),        # V1 (아래 층 · x 방향)
+              (_box(line((24.5, 12.5, 1.5), (24.5, 36.5, 1.5), 97)), 2, 1, 1)]        # V2 (위 층 · y 방향)
+    pts = np.vstack([b[0] for b in blocks])
+    np.save(os.path.join(d, 'se.npy'), pts)
+    np.save(os.path.join(d, 'phase.npy'), np.concatenate([np.full(len(b[0]), b[1], np.int32) for b in blocks]))
+    np.save(os.path.join(d, 'fibre.npy'), np.concatenate([np.full(len(b[0]), b[2], np.int32) for b in blocks]))
+    np.save(os.path.join(d, 'fibre_kind.npy'), np.concatenate([np.full(len(b[0]), b[3], np.int8) for b in blocks]))
+    np.save(os.path.join(d, 'fibre_dia.npy'), np.ones(len(pts)))
+    return d
+
+
 @case('SP 해 상태 · SV 반사실 — payload 끝-끝 (시험 먼저 · 10-21 D)')
 def t_states_payload():
     if ARGS.skip_payload:
@@ -1035,6 +1057,47 @@ def t_states_payload():
         rc_x, log_x, _p = run_payload(dd, OFF + LEAN2 + ['--step3-cjunc-sv-cf'], out='cf_noc.json')
         chk('SP8 노브만 (접합 없이) → 입구 거부 S2_CJUNC_REFUSED|FLAG_WITHOUT_CJUNC|', rc_x != 0 and 'S2_CJUNC_REFUSED|FLAG_WITHOUT_CJUNC|' in log_x,
             (rc_x, log_x.strip()[-200:]))
+        #  ── ★ 4판 (10-21 · 1저자 Q1 "권고대로" · 등록 R 4판 §5-0 ①–③ · R4-Q5) 단락 payload 끝-끝 — 실제 J11 단락 (두 층 엇갈림 침대 · 천장) ──
+        #     생산자 계약 = 단락은 게시 안 됨 (σ 값 없음 · `conv_cert_problem` = 게시 불가) · 팔 기록 자체는 온전해야 러너가 옮긴다 (check_arm 이
+        #     거부하면 러너 rc 1 → 사슬 RUNNER_RC = 사유가 흐려진다) · 사슬 이름 = NOT_COMPUTED · 사유 ELECTRODE_SHORT (+∞ 아님)
+        os.makedirs(os.path.join(td, 'thin'))
+        th = make_fixture_thin_cross(os.path.join(td, 'thin'))
+        TOL1 = dict(tol_ff_um='1.0')
+        rc_s, log_s, p_s = run_payload(th, OFF + LEAN2 + cj_with(rj='0', **TOL1) + ['--step3-cjunc-rj-limit', 'zero', '--step3-rtol', '1e-12'],
+                                       out='ceil.json')
+        s3s = s3_of(p_s)
+        cs = s3s.get('conv_cert') or {}
+        cnt_s = (cj_block(p_s).get('evidence') or {}).get('counts') or {}
+        chk('SP9 천장 (R_j → 0) · 두 층 엇갈림 침대 · rtol — 실제 J11 단락: rc 0 · σ None (0 도 +∞ 도 아님) · 사유 cjunc_electrode_short · 증서 '
+            'ELECTRODE_SHORT (early_return · ok False) · 축약 instance 1 · 전자 not_solvable',
+            rc_s == 0 and 'sigma_e_eff_S_cm' in s3s and s3s.get('sigma_e_eff_S_cm') is None
+            and str(s3s.get('reason', '')).startswith('cjunc_electrode_short') and cs.get('status') == CC.STATUS_SHORT
+            and cs.get('zero_source') == 'early_return' and cs.get('ok') is False and cnt_s.get('n_contract') == 1
+            and ((man_of(p_s).get('components') or {}).get('electronic') or {}).get('status') == 'not_solvable',
+            (rc_s, s3s.get('sigma_e_eff_S_cm'), s3s.get('reason'), cs.get('status'), cnt_s, log_s.strip()[-400:]))
+        ngc_ok, ngc_why = RC.next_gen_cert_ok(s3s) if p_s else (None, None)
+        chk('SP10 생산자 계약 — 단락 = 게시 불가 (next_gen_cert_ok 거부 · CERT|status| "게시 가능한 상태는 … 뿐") · 기록은 온전 (next_gen_state = short · '
+            'ca_ext_record_ok 통과)',
+            ngc_ok is False and 'CERT|status|' in str(ngc_why) and RC.next_gen_state(s3s) == ('short', None)
+            and RC.ca_ext_record_ok(man_of(p_s)) == (True, None), (ngc_ok, ngc_why, RC.next_gen_state(s3s)))
+        r_cs = SC.check_arm(os.path.join(th, 'ceil.json'), 'segment', expect_backend='cpu') if p_s else 'payload 없음'
+        chk('SP11 check_arm (러너가 옮기기 전 · 같은 함수) 이 단락 기록을 받는다 — 거부하면 러너 rc 1 → 사슬 RUNNER_RC (사유가 흐려진다)', r_cs is None, r_cs)
+        try:
+            import rint_r_chain as RRc
+            _rs = RRc.registration_state(RC.next_gen_state(s3s)[0])
+        except Exception as e:                              # noqa: BLE001 — 고치기 전 (함수 없음) 도 시험 단위로
+            _rs = f'{type(e).__name__}: {e}'
+        chk('SP12 사슬 이름 (등록 R 4판 §5-0 풀이 상태 셋) — 이 실제 단락 팔 = NOT_COMPUTED · 사유 ELECTRODE_SHORT (σ +∞ 로 판정에 오지 않는다)',
+            _rs == ('NOT_COMPUTED', CC.STATUS_SHORT), _rs)
+        rc_f, _lf, p_f = run_payload(th, OFF + LEAN2 + cj_with(rj='inf', **TOL1) + ['--step3-cjunc-rj-limit', 'inf', '--step3-rtol', '1e-12'],
+                                     out='floor.json')
+        rc_q, _lq, p_q = run_payload(th, OFF + LEAN2 + cj_with(rj='1e6', **TOL1) + ['--step3-rtol', '1e-12'], out='q.json')
+        sf, sq = s3_of(p_f), s3_of(p_q)
+        chk('SP13 같은 침대 대조 — 바닥 (R_j → ∞) = VALID_ZERO_TOPOLOGY (σ 0.0) · R_j 1e6 = POSITIVE_SOLVED (σ > 0) — 단락은 천장 축약에서만',
+            rc_f == 0 and rc_q == 0 and sf.get('sigma_e_eff_S_cm') == 0.0 and (sf.get('conv_cert') or {}).get('status') == CC.STATUS_ZERO
+            and isinstance(sq.get('sigma_e_eff_S_cm'), float) and sq['sigma_e_eff_S_cm'] > 0.0
+            and (sq.get('conv_cert') or {}).get('status') == CC.STATUS_POSITIVE,
+            (rc_f, sf.get('sigma_e_eff_S_cm'), (sf.get('conv_cert') or {}).get('status'), rc_q, sq.get('sigma_e_eff_S_cm')))
     finally:
         shutil.rmtree(td, ignore_errors=True)
 

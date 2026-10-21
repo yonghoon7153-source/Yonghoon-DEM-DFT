@@ -22,8 +22,9 @@
 
   ★ 2026-10-21 (D · 등록 R 3판 §5-0 · §5-6 SV 행 · 사전 리뷰 PRE-impl-08 · 시험 먼저) — 같은 두 행 (매니페스트 · step3 값을 읽기만):
   W12 해 상태 — `step3.conv_cert` · `step3.ion_conv_cert` 의 상태 (`step3_conv_cert.STATUS_*` 와 같은 낱말) — VALID_ZERO_TOPOLOGY =
-      "σ = 0 · 두 판을 잇는 성분 없음 (정상 결과)" · ELECTRODE_SHORT = "σ = +∞ (J11 단락 · 유한 σ 로 게시하지 않음)" · NOT_CERTIFIABLE =
-      경고 · POSITIVE_SOLVED · 증서 없음 = 표지 없음 (Jinja · JS)
+      "σ = 0 · 두 판을 잇는 성분 없음 (정상 결과)" · ELECTRODE_SHORT = ★ 4판 (10-21 · 1저자 Q1 · 등록 R 4판 §5-0) "게시 안 됨 · 사슬 판정
+      NOT_COMPUTED (사유 ELECTRODE_SHORT · J11 단락)" (3판 = "σ = +∞" 철회) · NOT_CERTIFIABLE = 경고 · POSITIVE_SOLVED · 증서 없음 = 표지 없음
+      (Jinja · JS)
   W13 SV 반사실 — 증거 `solve.sv_counterfactual` 의 비 (유한 · +∞ = ratio_limit 'inf') · 상태 · producer 표지 (SV_DEPENDENT) ·
       문턱 = 사슬 계획 (화면은 비만 · 판정은 사슬) · 기록 없음 = 줄 없음
   W14 접합 한정어 (PRE-impl-08) — 증거 `qualifiers` (producer `carbon_junction.CJUNC_QUALIFIERS`) 가 화면에 그대로 · 설계 v1 §4-6 의
@@ -192,7 +193,8 @@ def _d_states(tpl, jinja, js, jinja2):
               'flag': None}
     cases = (
         ('σ_e 영값 위상', _d_meta(cert=ZERO), (ZERO, 'σ_e', 'σ = 0', '두 판을 잇는 성분'), (SHORT, NOTC, 'SV 반사실')),
-        ('σ_e 단락', _d_meta(cert=SHORT), (SHORT, 'σ_e', 'σ = +∞', 'J11'), (ZERO, NOTC)),
+        #  ★ 4판 (10-21 · 1저자 Q1 · 등록 R 4판 §5-0 · R4-Q5) — 단락 = 생산자 미게시 · 사슬 판정 = NOT_COMPUTED (사유 ELECTRODE_SHORT) · σ +∞ 아님
+        ('σ_e 단락', _d_meta(cert=SHORT), (SHORT, 'σ_e', '게시 안 됨', 'NOT_COMPUTED', 'J11'), (ZERO, NOTC, 'σ = +∞', '+∞')),
         ('σ_e 증서 못 정함', _d_meta(cert=NOTC), (NOTC, 'σ_e'), (ZERO, SHORT)),
         ('σ_ion 영값 위상', _d_meta(cert=POS, ion_cert=ZERO), (ZERO, 'σ_ion', 'σ = 0'), (SHORT, NOTC)),
         ('양의 해', _d_meta(cert=POS), (), (ZERO, SHORT, NOTC, 'σ = +∞')),

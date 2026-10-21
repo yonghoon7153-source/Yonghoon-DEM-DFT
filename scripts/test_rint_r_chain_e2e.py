@@ -24,6 +24,9 @@
       거부 (payload 입구 JOULE · STEP4_GRID) → 사슬 RUNNER_RC (fail-closed) — 실제 런을 막는 것.  고치면 이 검사를 바꾼다.
   E8  ★ 3판 (10-21 · 등록 R §5-0) 바닥 VALID_ZERO_TOPOLOGY (실물) — AM 이 판에 안 닿는 침대 (접합을 끊으면 두 판을 잇는 성분이 없다) ·
       실제 payload 의 조기 반환 해 (σ 0 · 상태 증서) 가 정본 계약 · 사슬을 지나 사다리가 계속된다 (2판 = ARM_UNREADABLE · NOT_COMPUTED)
+  E9  ★ 4판 (10-21 · 1저자 Q1 · 등록 R 4판 §5-0 ① ② · R4-Q5) 천장 ELECTRODE_SHORT (실물) — 두 층 엇갈림 침대 (`make_bed_thin_cross`) ·
+      실제 payload 의 J11 단락 기록 (σ None · 증서 ELECTRODE_SHORT) 이 정본 check_arm 을 지나 러너 rc 0 · 사슬 = NOT_COMPUTED (사유
+      ELECTRODE_SHORT · 천장 런) — RUNNER_RC · CA_EXT_RECORD 로 흐려지지 않는다 (3판 = σ +∞ 로 받아 사다리를 계속했다)
   ★ 3판 — 계획 `rint-r-plan-v2` (결과 전 등록 숫자 넷 = 시험 값) · S0 계획 (`ca_s0_census.make_plan` · 정준 바이트) · 등록 사본 두 줄 · `--s0-plan`
 ⚠ PASS 는 사슬 · 러너 · payload 배선이 실물로 이어진다는 증거이지 R_j 값 · 판정의 물리 검증이 아니다 (픽스처 σ 는 의미 없다).
 """
@@ -124,13 +127,47 @@ def make_bed(d, sdcp=False, am_floating=False):
     return d
 
 
-def make_root(name, kit_sh=KIT_SH, am_floating=False):
+THIN_UM = 0.3                                              # µm — ★ 4판 E9 단락 침대 두께 (vox 0.15 두 층)
+
+
+def make_bed_thin_cross(d, sdcp=False):
+    """★ 4판 (10-21 · 1저자 Q1) E9 단락 침대 — 두 층 (0–0.3 µm · vox 0.15) · VGCF A (x 방향 · 아래 층 z 0.075) 와 B (y 방향 · 위 층 z 0.225)
+    가 (FX_XY, FX_XY) 기둥에서 엇갈린다 (중심선 거리 0.15 = r_A + r_B · 접합 instance 하나) · SE 격자가 두 층을 채운다 (A 기둥의 위 · B 기둥의
+    아래 = 절연 고체 → A = 아래 판 접점 · B = 위 판 접점) → 천장 (R_j → 0 · 축약) = 축약 무리가 두 판에 다 닿음 = J11 단락 · 바닥 = 관통 성분
+    없음.  AM = 격자에 안 찍히는 작은 구 둘 (판 · 섬유와 떨어짐) · PTFE 줄 (아래 층 · 섬유와 떨어짐) · 위 판 = metrics `thickness_um` 0.3."""
+    rows = ['# type,x,y,z,r  (Rint ② 4판 E9 단락 침대 · LIGGGHTS 단위 mm)',
+            '2,%.9f,%.9f,%.9f,%.9f' % (0.30e-3, 0.30e-3, 0.15e-3, 0.05e-3), '2,%.9f,%.9f,%.9f,%.9f' % (1.35e-3, 0.30e-3, 0.15e-3, 0.05e-3)]
+    with open(os.path.join(d, 'am.csv'), 'w', encoding='utf-8') as f:
+        f.write('\n'.join(rows) + '\n')
+    g = np.arange(0.0375, L_LAT, 0.075)
+    se = np.array([[x, y, z] for x in g for y in g for z in (0.0375, 0.1125, 0.1875, 0.2625)], np.float64)
+    blocks = [(_box(se), 1, -1, 0),
+              (_box(_line((0.02, FX_XY, 0.075), (1.48, FX_XY, 0.075))), 2, 0, 1),     # VGCF A (아래 층 · x 방향)
+              (_box(_line((FX_XY, 0.02, 0.225), (FX_XY, 1.48, 0.225))), 2, 1, 1),     # VGCF B (위 층 · y 방향)
+              (_box(_line((0.05, 0.60, 0.075), (0.60, 0.60, 0.075))), 4, 2, 1)]       # PTFE 줄 (아래 층 · 섬유 · 엇갈림 · AM 과 떨어짐)
+    if sdcp:
+        blocks.append((_box(np.array([[0.30, 1.30, 0.225]])), 5, -1, 0))
+    pts = np.vstack([b[0] for b in blocks])
+    np.save(os.path.join(d, 'se.npy'), pts)
+    np.save(os.path.join(d, 'phase.npy'), np.concatenate([np.full(len(b[0]), b[1], np.int32) for b in blocks]))
+    np.save(os.path.join(d, 'fibre.npy'), np.concatenate([np.full(len(b[0]), b[2], np.int32) for b in blocks]))
+    np.save(os.path.join(d, 'fibre_kind.npy'), np.concatenate([np.full(len(b[0]), b[3], np.int8) for b in blocks]))
+    np.save(os.path.join(d, 'fibre_dia.npy'), np.ones(len(pts)))
+    with open(os.path.join(d, 'box.json'), 'w', encoding='utf-8') as f:
+        json.dump({'um_box_um': UM, 'thickness_um': THIN_UM}, f)
+    return d
+
+
+def make_root(name, kit_sh=KIT_SH, am_floating=False, thin_cross=False):
     ws = os.path.join(TD, name)
     os.makedirs(ws)
     for kit, sdcp in ((SBE_KIT, False), (DBE_KIT, True)):
         run = os.path.join(ws, kit, 'run_1')
         os.makedirs(run)
-        make_bed(run, sdcp=sdcp, am_floating=am_floating)
+        if thin_cross:
+            make_bed_thin_cross(run, sdcp=sdcp)
+        else:
+            make_bed(run, sdcp=sdcp, am_floating=am_floating)
         with open(os.path.join(ws, kit, 'run_mpm.sh'), 'w', encoding='utf-8') as f:
             f.write(kit_sh)
         os.symlink('run_1', os.path.join(ws, kit, 'latest_run'))
@@ -330,6 +367,40 @@ def t_zero_floor():
                                      'RECEIPT_LEAN', 'ARM_JSON_COUNT', 'ARM_UNREADABLE', 'TIME_LIMIT'), (s.get('status'), stop))
 
 
+def t_short_ceiling():
+    """★ 4판 (10-21 · 1저자 Q1 "권고대로" · 등록 R 4판 §5-0 ① ② · R4-Q5) — 천장 단락 실물: 실제 payload 가 J11 단락 기록 (σ None · 증서
+    ELECTRODE_SHORT) 을 쓰고 · 실제 러너가 정본 check_arm 을 지나 옮기고 (rc 0) · 사슬이 그 런을 NOT_COMPUTED (사유 ELECTRODE_SHORT) 로 끝낸다 —
+    RUNNER_RC · CA_EXT_RECORD · ARM_CONTRACT 같은 다른 멈춤 이름으로 흐려지지 않는다 · 사다리는 천장에서 멈춘다 (σ +∞ 로 계속하지 않는다)."""
+    ws = make_root('e9', thin_cross=True)
+    out = os.path.join(TD, 'runs', 'e9_P0')
+    r = run_ladder(ws, out)
+    s = r['sum'] or {}
+    runs = s.get('runs') or []
+    roles = [x.get('role') for x in runs]
+    stop = s.get('stop') or {}
+    print(f'    보고 E9 — 사슬 rc {r["rc"]} · 상태 {s.get("status")} · 런 {len(runs)} ({roles}) · {r["seconds"]:.0f} s · 멈춤 {stop.get("code")} · '
+          f'사유 {stop.get("reason")} · 런 {stop.get("run")}')
+    chk('E9a 바닥 (R_j → ∞) = 실제 payload 영값 위상 (팔 상태 zero) · 천장 (R_j → 0) 런 = 러너 rc 0 (정본 check_arm 이 단락 기록을 받아 옮겼다) · '
+        '런 둘에서 멈춤',
+        roles == ['floor', 'ceiling'] and runs[0].get('rc') == 0 and runs[1].get('rc') == 0
+        and ((runs[0].get('arms_read') or [{}])[0]).get('state') == 'zero' and bool(runs[1].get('arms_read')),
+        (r['rc'], roles, [x.get('rc') for x in runs], stop, r['so'][-1500:]))
+    chk('E9b 사다리 = 등록 결과 NOT_COMPUTED · 멈춤 코드 NOT_COMPUTED · 사유 ELECTRODE_SHORT · 멈춘 런 = 천장 (RUNNER_RC · CA_EXT_RECORD · '
+        'ARM_CONTRACT · MANIFEST_MISMATCH 아님) · rc 3',
+        r['rc'] == 3 and s.get('status') == 'NOT_COMPUTED' and stop.get('code') == 'NOT_COMPUTED' and stop.get('reason') == 'ELECTRODE_SHORT'
+        and len(runs) == 2 and stop.get('run') == runs[1].get('name'), (r['rc'], s.get('status'), stop))
+    if len(runs) >= 2 and runs[1].get('arms_read'):
+        s3, m, _rc = arm_doc(out, runs[1])
+        cc = s3.get('conv_cert') or {}
+        cnt = ((m.get('ca_ext') or {}).get('cjunc') or {}).get('evidence', {}).get('counts') or {}
+        chk('E9c 천장 팔 (실물) — σ None · 사유 cjunc_electrode_short · 증서 ELECTRODE_SHORT (early_return · ok False) · 축약 instance ≥ 1 · '
+            '전자 not_solvable',
+            'sigma_e_eff_S_cm' in s3 and s3.get('sigma_e_eff_S_cm') is None and str(s3.get('reason', '')).startswith('cjunc_electrode_short')
+            and cc.get('status') == 'ELECTRODE_SHORT' and cc.get('zero_source') == 'early_return' and cc.get('ok') is False
+            and (cnt.get('n_contract') or 0) >= 1 and ((m.get('components') or {}).get('electronic') or {}).get('status') == 'not_solvable',
+            (s3.get('sigma_e_eff_S_cm'), s3.get('reason'), cc.get('status'), cnt))
+
+
 def t_prod_form():
     ws = make_root('e6', kit_sh=KIT_SH_PROD)
     out = os.path.join(TD, 'runs', 'e6_P0')
@@ -364,7 +435,7 @@ def main():
     t0 = time.time()
     sel = [x for x in ARGS.only.split(',') if x]
     try:
-        for tag, fn in (('E1', t_ladder), ('E6', t_prod_form), ('E8', t_zero_floor)):
+        for tag, fn in (('E1', t_ladder), ('E6', t_prod_form), ('E8', t_zero_floor), ('E9', t_short_ceiling)):
             if sel and tag not in sel:
                 continue
             print(f'\n── {tag}')
