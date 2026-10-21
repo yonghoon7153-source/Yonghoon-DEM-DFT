@@ -13,6 +13,7 @@
 * 대상 설계 v1 = `docs/reviews/mixer_d3_se_flowability_anchor_design_20261015.md` · v2 = `…_design_v2_20261021.md`.
 * 종료 코드 0 = 모든 검사에서 v1 = 반례 재현 · v2 = 잡음 + 대조 통과.  v2 규칙이 없으면 (시험 먼저 단계) 1.
 """
+import functools
 import importlib.util
 import math
 import os
@@ -138,6 +139,7 @@ def t_cdf(t, nu):
     return 1.0 - p if t > 0 else p
 
 
+@functools.lru_cache(maxsize=None)
 def t975(nu):
     lo, hi = 0.0, 1000.0
     for _ in range(200):
@@ -349,12 +351,37 @@ def line_fit(xs_pts, ys_pts):
     return math.degrees(math.atan(k)), math.sqrt(sum(r * r for r in res) / n)
 
 
+EXT_FACTOR = 0.95                     # v2 R13 위쪽 확장 수준 = 세대 천장 × 0.95 (⬜ Qv2-8)
+G_THINKY = 268.0                      # mixing_model_design §18-1 Thinky 표 (실험 혼합기 미확인 · MXD3-19)
+T2_SIM_S = 1.6                        # T2 한 런 모사 시간 [추정 · v1 §3-2 그대로] = 정착 + 0.5 바퀴 버림 + 1.5 바퀴 측정
+THRU = (70.0, 63.0)                   # step/s (10 만 parcel · NP 20 · dev-bo 실측 — v1 §3-2)
+SLOTS = 3                             # ibb QOS 60 CPU = NP 20 세 슬롯
+
+
+@functools.lru_cache(maxsize=None)
 def computed_numbers(gen):
-    g1, g20 = gen_numbers(gen, 1.0), gen_numbers(gen, 20.0)
+    g1, g20, g200 =gen_numbers(gen, 1.0), gen_numbers(gen, 20.0), gen_numbers(gen, 1.0, cgf=200.0)
     r20 = (g20['E_se'], g20['rho_se'], g20['d_se'])
     r1 = (g1['E_se'], g1['rho_se'], g1['d_se'])
+    r200 = (g200['E_se'], g200['rho_se'], g200['d_se'])
     v_ceil = v_stick_mm_s(g1['ceil'], *r20)
-    return {
+    p = g1['p']
+    dn, d = p['dens'], p['d']
+    w = {k: math.pi / 6.0 * d[k] ** 3 * dn[m.PHASE_MECH[k][1]] for k in d}
+    fac = {k: (d[k] / d['SE']) * (w['SE'] / w[k]) for k in ('AM_P', 'AM_S')}
+    ext = EXT_FACTOR * g1['ceil']
+    steps = 1.0 / g20['dt']
+    rho_mix = 100.0 / sum(p['wt'][k] / p['dens'][m.PHASE_MECH[k][1]] for k in p['wt'])
+    th, lo, hi = 0.0, 0.0, 2.0 * math.pi
+    for _ in range(200):
+        th = 0.5 * (lo + hi)
+        if (th - math.sin(th)) / (2.0 * math.pi) > 0.30:
+            hi = th
+        else:
+            lo = th
+    depth = 1.0 - math.cos(lo / 2.0)
+    vol_cm3 = g1['vdrum'] * 1e6
+    out = {
         'drum_D_mm': g1['D_mm'], 'drum_L_mm': g1['L_mm'], 'rpm': g1['rpm'], 'wR_mm_s': g1['wR'],
         'n_per_fill': g1['n_per_fill'], 'n_f011': 0.11 * g1['n_per_fill'], 'n_f030': 0.30 * g1['n_per_fill'],
         'n_slice': 0.30 * math.pi * g1['p']['R'] ** 2 * 2e-3 * 0.6 / g1['vpar'],
@@ -364,7 +391,45 @@ def computed_numbers(gen):
         'vstick_212_x20': v_stick_mm_s(GRID[6], *r20), 'vstick_637_x20': v_stick_mm_s(GRID[7], *r20),
         'vstick_ceil_x20': v_ceil, 'vstick_ceil_over_wR': v_ceil / g20['wR'],
         'se_vol_pct': g1['se_vol'], 'se_num_pct': g1['se_num'], 'd_over_amp': g1['d_over_amp'],
+        # ── 아래는 v2 문서에만 나오는 숫자 (v1 대조 없음) ──
+        'd_over_se': g1['d_over_se'], 'real_d_over_se': g1['D_mm'] * 1e3 / m.D_REAL_UM['SE'],
+        'vstick_0212_soft': v_stick_mm_s(GRID[0], *r1),
+        'vstick_21_x20': v_stick_mm_s(GRID[4], *r20),
+        'vstick_21_g': v_stick_mm_s(GRID[4] / G_THINKY, *r20), 'vstick_212_g': v_stick_mm_s(GRID[6] / G_THINKY, *r20),
+        'vstick_637_g': v_stick_mm_s(GRID[7] / G_THINKY, *r20), 'vstick_637_g_over_wR': v_stick_mm_s(GRID[7] / G_THINKY, *r20) / g20['wR'],
+        'ext_level': ext, 'ov_ext_soft': se_overlap_pct(ext, *r1), 'ext_ratio': ext / GRID[-1],
+        'ceil_ratio': g1['ceil'] / GRID[-1], 'ov_1010_soft': se_overlap_pct(1010.0, *r1), 'ov_1020_soft': se_overlap_pct(1020.0, *r1),
+        'ceiling_cgf200': g200['ceil'], 'ov_637_cgf200': se_overlap_pct(GRID[-1], *r200),
+        'bo_aa_ratio_amp': 1.0 / fac['AM_P'], 'bo_aa_ratio_ams': 1.0 / fac['AM_S'],
+        'boaa_amp_21_031': GRID[4] * 0.31 * fac['AM_P'], 'boaa_ams_21_031': GRID[4] * 0.31 * fac['AM_S'],
+        'boaa_amp_21_1': GRID[4] * fac['AM_P'], 'boaa_ams_21_1': GRID[4] * fac['AM_S'],
+        'boaa_amp_637_031': GRID[7] * 0.31 * fac['AM_P'], 'boaa_ams_637_031': GRID[7] * 0.31 * fac['AM_S'],
+        'boaa_amp_ceil_031': g1['ceil'] * 0.31 * fac['AM_P'], 'boaa_ams_ceil_031': g1['ceil'] * 0.31 * fac['AM_S'],
+        'steps_1s_x20': steps, 'h_1s_lo': steps / THRU[0] / 3600.0, 'h_1s_hi': steps / THRU[1] / 3600.0,
+        't2_run_d_lo': T2_SIM_S * steps / THRU[0] / 86400.0, 't2_run_d_hi': T2_SIM_S * steps / THRU[1] / 86400.0,
+        't5_pa': 0.6 * rho_mix * 1e3 * 9.81 * depth * p['R'], 'rho_mix': rho_mix, 'depth_over_R': depth,
+        't2_cell_cm3': vol_cm3, 't2_mass_lo_g': 0.11 * vol_cm3 * 0.5, 't2_mass_hi_g': 0.30 * vol_cm3 * 0.9,
+        'rpm_r13': m.rpm_for_fr(m.FR_ANCHOR, 0.013),
+        't975_2': t975(2), 't975_4': t975(4), 't975_8': t975(8),
+        'ext_low': GRID[0] / math.sqrt(10.0), 'per_decade_vstick': 10.0 ** (5.0 / 6.0),
     }
+    # 계산 예산 [추정] — T2 = 위 식 · T1 · C2 런 = v1 §3-6 의 [추정] 값 × (이 세대 ×20 step/s ÷ gen1 ×20 step/s)
+    sc = steps / (1.0 / gen_numbers(GEN1, 20.0)['dt'])
+    t2 = (out['t2_run_d_lo'], out['t2_run_d_hi'])
+    t1s, t1p, t1t, c2r = (0.2 * sc, 1.0 * sc), (0.1 * sc, 0.7 * sc), (0.5 * sc, 4.0 * sc), (0.5 * sc, 1.5 * sc)
+    out.update({
+        'dt_scale': sc, 't1_short_lo': t1s[0], 't1_short_hi': t1s[1], 't1_pour_lo': t1p[0], 't1_pour_hi': t1p[1],
+        't1_tap_lo': t1t[0], 't1_tap_hi': t1t[1], 'c2_run_lo': c2r[0], 'c2_run_hi': c2r[1],
+        'c0_lo': (9 * t2[0] + 6 * t1s[0]) / SLOTS, 'c0_hi': (9 * t2[1] + 6 * t1s[1]) / SLOTS,
+        'c1_lo': (12 * t2[0] + 8 * t1t[0] + 4 * t1p[0]) / SLOTS, 'c1_hi': (12 * t2[1] + 8 * t1t[1] + 4 * t1p[1]) / SLOTS,
+        # C2 (R09) = T3 (구간 안 1–3 수준 + 바깥 이웃 2 = 3–5 수준) × 2 시드 + T3 벽 끝 1 = 7–11 런
+        #           + T2 다른 두 속도 × (3–5 수준) × 1 시드 = 6–10 T2 런 (v1 Q2 의 검증 둘 다 · v1 §3-6 은 T3 만 셌다)
+        'c2_t3_runs_lo': 7, 'c2_t3_runs_hi': 11, 'c2_t2_runs_lo': 6, 'c2_t2_runs_hi': 10,
+        'c2_lo': (7 * c2r[0] + 6 * t2[0]) / SLOTS, 'c2_hi': (11 * c2r[1] + 10 * t2[1]) / SLOTS,
+    })
+    out['sum_lo'] = out['c0_lo'] + out['c1_lo'] + out['c2_lo']
+    out['sum_hi'] = out['c0_hi'] + out['c1_hi'] + out['c2_hi']
+    return out
 
 
 def matches(typed, val):
@@ -501,10 +566,10 @@ def c04(R):
     b_ok = cov / trials >= 0.95
     # (c) NP — 곡선 NP 20 · 재시도 NP 10
     c_ok = not R.run_np_ok(10, 20) and R.run_np_ok(20, 20)
-    # (d) T2 정상 상태 — 시드 1 개 수준 (u_DEM 없음) · 두 창 평균이 3° 차이 (블록 SE 0.3°) / 차이 0
-    w1 = [40.0 + rng.gauss(0, 0.6) for _ in range(4)]
-    w2 = [43.0 + rng.gauss(0, 0.6) for _ in range(4)]
-    w3 = [40.0 + rng.gauss(0, 0.6) for _ in range(4)]
+    # (d) T2 정상 상태 — 시드 1 개 수준 (u_DEM 없음) · 두 창 (블록 4 개씩) 평균이 3° 차이 / 차이 0.05° (블록 값 고정)
+    w1 = [40.6, 39.5, 40.3, 39.6]
+    w2 = [43.4, 42.6, 43.3, 42.7]
+    w3 = [40.4, 39.7, 40.5, 39.6]
     s_drift, s_flat = R.steady(w1, w2, None), R.steady(w1, w3, None)
     d_ok = s_drift is False and s_flat is True
     caught = a_ok and b_ok and c_ok and d_ok
@@ -556,10 +621,10 @@ def c08(R):
     """MXD3-08 — 등록 · 측정 · 봉인 · 열람 순서 (사건 순서 모형)."""
     # 사건 이름 — v1 = S3_commit (등록 하나 · SOP 포함) · v2 = S3a_commit (규칙 · SOP) + S3b_commit (C0 뒤 확정값) — 두 판이 다
     #   읽도록 순서열마다 두 이름을 함께 둔다 (S3_commit = S3b 와 같은 자리).
-    X1 = ['C0_start', 'measure_start', 'measure_end', 'C0_end', 'S3a_commit', 'S3_commit', 'S3b_commit',
-          'curve_seal', 'raw_open']                                       # 측정이 SOP 커밋보다 먼저
+    X1 = ['C0_start', 'measure_start', 'measure_end', 'raw_push_enc', 'C0_end', 'S3a_commit', 'S3_commit',
+          'S3b_commit', 'curve_seal', 'key_commit', 'raw_open']           # 측정이 SOP 커밋보다 먼저 (그 밖은 다 지킴)
     X2 = ['S3a_commit', 'C0_start', 'C0_end', 'S3_commit', 'S3b_commit', 'measure_start', 'measure_end',
-          'raw_push_plain', 'curve_seal', 'key_commit', 'raw_open']       # 원자료 평문 push 가 곡선 봉인보다 먼저
+          'raw_push_enc', 'raw_push_plain', 'curve_seal', 'key_commit', 'raw_open']   # 원자료 평문 push 가 곡선 봉인보다 먼저
     Y = ['S3a_commit', 'C0_start', 'measure_start', 'measure_end', 'raw_push_enc', 'C0_end', 'S3_commit',
          'S3b_commit', 'curve_seal', 'key_commit', 'raw_open']
     a, b, c = R.order_ok(X1), R.order_ok(X2), R.order_ok(Y)
@@ -624,6 +689,8 @@ def c12(R):
     lab, g1 = computed_numbers(LAB), computed_numbers(GEN1)
     doc = R.doc_numbers()
     bad = [k for k, v in doc.items() if not matches(v, lab[k])]
+    lacking = sorted(set(DESIGN_V1_NUMBERS) - set(doc))           # 빈 표로 '통과' 하지 않게 — v1 숫자 자리를 전부 다시 적어야 한다
+    bad += [f'{k} (없음)' for k in lacking]
     ctrl = [k for k, v in DESIGN_V1_NUMBERS.items() if not matches(v, g1[k])]
     caught = not bad
     ok = not ctrl                                              # 같은 비교가 v1 숫자를 gen1 계산값에는 받아들인다 (비교 장치 대조)
@@ -635,16 +702,18 @@ def c13(R):
     """MXD3-13 — F3 확장 (위 = 천장 · 아래 = 마찰 바닥)."""
     g = gen_numbers(LAB)
     ceil = g['ceil']
-    up = R.f3(X, [35, 36, 38, 40, 42, 44, 46, 48], lambda x: 48.0, 52.0, 3.0, ceil)
-    up_ok = up['status'] == '확장' and up['level'] <= ceil and se_overlap_pct(up['level'], g['E_se'], g['rho_se'], g['d_se']) <= 1.0
+    up = R.f3(X, [35, 37, 40, 43, 46, 50, 55, 60], lambda x: 60.0, 64.0, 3.0, ceil)    # 위 끝이 아직 오르는 곡선 · 측정이 그 위
+    up_ok = (up['status'] == '확장' and up['level'] is not None and up['level'] <= ceil
+             and se_overlap_pct(up['level'], g['E_se'], g['rho_se'], g['d_se']) <= 1.0)
     flat = [35.0, 35.2, 36.0, 40.0, 44.0, 48.0, 50.0, 51.0]
     dn = R.f3(X, flat, lambda x: 35.0, 31.0, 3.0, ceil)
     dn_ok = dn['status'] == '마찰 바닥'
-    steep = [35.0, 38.0, 40.0, 42.0, 44.0, 46.0, 48.0, 50.0]
-    dc = R.f3(X, steep, lambda x: 35.0 + 3.0 * (x - X[0]) / (X[1] - X[0]), 31.0, 3.0, ceil)
+    steep = [35.0, 39.0, 42.0, 44.0, 46.0, 48.0, 50.0, 52.0]                # 바닥 칸 |ΔI| 4 > 띠 3 (평평하지 않음)
+    dc = R.f3(X, steep, lambda x: 35.0 + 4.0 * (x - X[0]) / (X[1] - X[0]), 31.0, 3.0, ceil)
     ok = dc['status'] == '확장'
     caught = up_ok and dn_ok
-    return caught, ok, (f'위 확장 수준 {up.get("level", float("nan")):.1f} (천장 {ceil:.1f}) → 가능? {up_ok} · '
+    lev = up.get('level')
+    return caught, ok, (f'위 확장 → {up["status"]}' + (f' 수준 {lev:.1f}' if lev is not None else '') + f' (천장 {ceil:.1f}) → 가능? {up_ok} · '
                         f'바닥 평평 + 측정이 아래 → {dn["status"]} | 대조 (바닥이 기울어짐) → {dc["status"]}')
 
 
@@ -688,7 +757,8 @@ def c15(R):
 def c17(R):
     """MXD3-17 — 결과 전에 정해야 할 정의가 다 있는가."""
     dfn = R.definitions()
-    missing = [k for k, v in dfn.items() if v is None or str(v).endswith('참조만')]
+    keys = set(RulesV1().definitions())                            # v1 이 비워 둔 자리 전부가 있어야 한다 (빈 dict 로 '통과' 방지)
+    missing = sorted(k for k in keys if k not in dfn or dfn[k] is None or str(dfn[k]).endswith('참조만'))
     return not missing, True, f'빠진 정의 = {missing or "없음"}'
 
 
@@ -697,15 +767,235 @@ CHECKS = [('C01', c01), ('C02', c02), ('C03', c03), ('C04', c04), ('C05', c05), 
           ('C15', c15), ('C17', c17)]
 
 
-# ───────────────────────── v2 규칙 = 다음 커밋 (설계 v2 · 시험 먼저) ─────────────────────────
+# ───────────────────────── v2 규칙 (설계 v2 `…_design_v2_20261021.md` 의 R01–R17 · 권고 기본값 = ⬜ 1저자 비준 대기) ─────────────────────────
 
-RulesV2 = None
+class RulesV2(RulesV1):
+    name = 'v2'
+    KAPPA = 1.0              # R02 봉인 전 세분 문턱 = κ · 2 · u_ref (⬜ Qv2-1)
+    R_MAX = 2                # R02 세분 최대 회수 (⬜ Qv2-1)
+    TOL_MU_R = 0.5 * m.MU_R  # R01 검출 허용 |Δμ_r| = 덱 μ_r ±50 % (⬜ Qv2-6)
+    EPS_FIT_D = 1.0          # R06 자유표면 맞춤 잔차 RMS 상한 (단위 = SE parcel 지름 d) (⬜ Qv2-7)
+    F_WRAP = 0.05            # R06 벽 두름 분율 상한 (⬜ Qv2-7)
+
+    # R02 — 봉인 전 세분 (DEM 곡선만 · 결과 무관): 이웃 |ΔI| > κ·2·u_ref 인 칸에 기하 중점 수준을 더한다 (최대 R_MAX 회)
+    def refine(self, xs, f, u2):
+        thr = self.KAPPA * u2
+        for _ in range(self.R_MAX):
+            new = [xs[0]]
+            for a, b in zip(xs, xs[1:]):
+                if abs(f(b) - f(a)) > thr:
+                    new.append(0.5 * (a + b))
+                new.append(b)
+            if len(new) == len(xs):
+                break
+            xs = new
+        return xs
+
+    # R02 — 칸 포괄: 칸마다 띠 = √((t_exp·u_exp)² + (t_ν·u_칸)²) + |ΔI_칸| (칸 안 단조면 참 Bo 를 포함) · u_칸 = 두 끝 중 큰 쪽
+    #      (ν = None = σ 를 안다고 보는 경우 → 배수 2) · 빈 집합이면 어느 Bo 끝 너머인지 (F10)
+    def accept(self, xs, I, u, mm, u_exp, nu=None, t_exp=2.0, interp=True, **kw):
+        if any(v is None for v in u):
+            return None
+        tD = 2.0 if nu is None else t975(nu)
+        segs = []
+        for k in range(len(xs) - 1):
+            uc = max(u[k], u[k + 1])
+            band = math.sqrt((t_exp * u_exp) ** 2 + (tD * uc) ** 2) + (abs(I[k + 1] - I[k]) if interp else 0.0)
+            s = seg_within(xs[k], xs[k + 1], I[k], I[k + 1], mm, band)
+            if s:
+                segs.append(s)
+        comps = merge(segs)
+        return dict(comps=comps, side=None if comps else side_of(xs, I, mm))
+
+    def accept_stat_only(self, xs, I, u, mm, u_exp, nu=None, **kw):
+        return self.accept(xs, I, u, mm, u_exp, nu=nu, interp=False)
+
+    # R03 — 연결 성분 하나일 때만 앵커 (그 성분의 log 중점) · 여럿 = F9 '모호' · 한 시험이 빔 = F10 '그 시험 표현 밖 (끝)'
+    def anchor(self, A1, A2):
+        for A, nm in ((A1, 'T1'), (A2, 'T2')):
+            if not A['comps']:
+                return dict(status='F10', side=f'{nm} {A.get("side") or "?"}')
+        C = intersect(A1['comps'], A2['comps'])
+        if not C:
+            return dict(status='F5')
+        if len(C) > 1:
+            return dict(status='F9', comps=C)
+        return dict(status='anchor', x=0.5 * (C[0][0] + C[0][1]), comps=C)
+
+    # R01 — B 의 검출 한계 Δμ_r,min = (w₁ + w₂)/|b₁/a₁ − b₂/a₂| · 허용보다 크면 '일치 미검사' (비지 않은 교집합 ≠ 마찰 세트 확인)
+    def b_check(self, x1, w1, x2, w2, ratios, tol):
+        dr = abs(ratios[0] - ratios[1])
+        dmin = (w1 + w2) / dr if dr > 0 else float('inf')
+        if abs(x1 - x2) > w1 + w2:
+            return dict(status='F5', certifies_friction=False, dmin=dmin)
+        if dmin <= tol:
+            return dict(status='통과', certifies_friction=True, dmin=dmin, note=f'검출 한계 {dmin:.3f}')
+        return dict(status='일치 미검사', certifies_friction=False, dmin=dmin, note=f'검출 한계 {dmin:.3g} > 허용 {tol:.4g}')
+
+    # R04 — u_DEM = 같은 시험 · 2 시드 이상 수준의 합동 SD / √(그 수준 시드 수) · 자유도 = Σ(n − 1) · 배수 = t(ν)
+    #      2 시드 수준이 없으면 그 시험은 판정 밖 (보조)
+    def u_dem(self, seeds_by_level):
+        multi = [v for v in seeds_by_level if len(v) >= 2]
+        if not multi:
+            return [None] * len(seeds_by_level), '판정 밖 (보조)'
+        dof = sum(len(v) - 1 for v in multi)
+        s_pool = math.sqrt(sum(sum((a - sum(v) / len(v)) ** 2 for a in v) for v in multi) / dof)
+        return [s_pool / math.sqrt(len(v)) for v in seeds_by_level], f'합동 (자유도 {dof})'
+
+    def band_multiplier(self, nu):
+        return 2.0 if nu is None else t975(nu)
+
+    def interp_error(self, dI):
+        return abs(dI)
+
+    # R04 — T2 정상 상태 = 두 측정 창의 블록 평균 차 ≤ 2·SE (런 안 · u_DEM 과 무관 · 시드 1 개 수준에도 정의)
+    def steady(self, w1, w2, u_dem):
+        se = math.sqrt(sd(w1) ** 2 / len(w1) + sd(w2) ** 2 / len(w2))
+        return abs(sum(w1) / len(w1) - sum(w2) / len(w2)) <= 2.0 * se
+
+    # R04 — 곡선 · 재시도 · u_DEM 런은 같은 NP (D12 = NP 20) · 다르면 그 런 제외
+    def run_np_ok(self, run_np, curve_np):
+        return run_np == curve_np
+
+    # R05 — 중심 곡선 = 벽 점착 0 · 감도 = 두 끝 (γ_W/γ_SE 0 ↔ 0.0256 = ρ 1) · 벽이 닿는 시험 전부
+    def wall_sensitivity(self):
+        return dict(gammas=(0.0, m.GM_WALL_HARE2026), tests={'T1', 'T2', 'T3'})
+
+    # R06 — T2 각은 정의 가능할 때만: 맞춤 잔차 RMS ≤ 1 d · 벽 두름 분율 ≤ 5 % (결과 전) · 아니면 '관측 불가' (F2b)
+    def t2_angle(self, xs_pts, ys_pts, d, wrap_frac):
+        ang, rms = line_fit(xs_pts, ys_pts)
+        if rms > self.EPS_FIT_D * d or wrap_frac > self.F_WRAP:
+            return dict(status='관측 불가', angle=ang)
+        return dict(status='각', angle=ang)
+
+    # R07 — 넘기는 것 = 구간 (두 끝 · 중심) · Bo* ↔ Bo*/G 선택 = S6 등록 · G = 실험 혼합기 확인 뒤 (MXD3-19)
+    def transfer(self):
+        return dict(value='interval', interval=True, G='MXD3-19 (자료 대기)', convention='S6 등록: Bo* (1 g 그대로) 또는 Bo*/G (D10)')
+
+    # R08 — S3a (규칙 · SOP) < 측정 시작 · 측정 직후 암호화 묶음 push · S3b (C0 뒤 확정값) < 곡선 봉인 < 열람
+    #      · 평문 원자료 반입 = 열람 뒤 · 열쇠 커밋 = 봉인 뒤 ~ 열람 전
+    def order_ok(self, seq):
+        idx = {e: i for i, e in enumerate(seq)}
+        need = ('S3a_commit', 'measure_start', 'measure_end', 'raw_push_enc', 'S3b_commit', 'curve_seal', 'raw_open')
+        if any(e not in idx for e in need):
+            return False
+        ok = (idx['S3a_commit'] < idx['measure_start'] < idx['measure_end'] < idx['raw_push_enc'] < idx['raw_open']
+              and idx['S3b_commit'] < idx['curve_seal'] < idx['raw_open'])
+        if 'C0_end' in idx:
+            ok = ok and idx['C0_end'] < idx['S3b_commit']
+        if 'raw_push_plain' in idx:
+            ok = ok and idx['raw_push_plain'] > idx['raw_open']
+        if 'key_commit' in idx:
+            ok = ok and idx['curve_seal'] < idx['key_commit'] < idx['raw_open']
+        return ok
+
+    # R09 — 예측 = 구간 안 수준 전부 · 이웃 밖 수준과 갈릴 때만 '판별력 있는 검증' · 구간 안에서 갈리면 '불확정'
+    def validation(self, preds, i_lo, i_hi, measured):
+        inner = {preds[i] for i in range(i_lo, i_hi + 1)}
+        outs = [preds[i] for i in (i_lo - 1, i_hi + 1) if 0 <= i < len(preds)]
+        if len(inner) > 1:
+            return dict(status='불확정 (구간 안에서 갈림)', discriminating=False)
+        v = next(iter(inner))
+        disc = any(o != v for o in outs)
+        return dict(status=('통과' if measured == v else '실패'), discriminating=disc)
+
+    # R10 — 계약을 검사할 수 있는 기하 (지금 = 드럼 + 끝판) · 검사 결과 ≤ 1 % 인 런만 앵커 계산에
+    def include_run(self, run, supported):
+        return bool(supported) and run['overlap'] is not None and run['overlap'] <= 1.0
+
+    # R11 — 시험 덱 = 상 셋 (AM 타입은 두되 개수 0) · 등록 ρ 팔 블록과 바이트 같음 · 드럼 = 실험 원통 치수 (등록)
+    def test_deck(self):
+        return dict(phases=('AM_P', 'AM_S', 'SE'), drum='registered')
+
+    def doc_numbers(self):
+        return V2_DOC_NUMBERS
+
+    # R13 — F3′: 위 = 세대 천장 × 0.95 한 단계 · 아래 = 바닥 평평 (|ΔI₀₁| ≤ 띠) 이면 확장 없이 '마찰 바닥' (Q3 경로)
+    def f3(self, xs, I, f, mm, band, ceiling):
+        if mm > max(I) + band:
+            if abs(I[-1] - I[-2]) <= band:
+                return dict(status='위 포화', level=None)
+            return dict(status='확장', level=EXT_FACTOR * ceiling)
+        if mm < min(I) - band:
+            if abs(I[1] - I[0]) <= band:
+                return dict(status='마찰 바닥', level=None)
+            lo = xs[0] - 0.5
+            if abs(f(lo) - mm) <= band:
+                return dict(status='확장', level=10 ** lo)
+            return dict(status='표현 범위 밖', level=10 ** lo)
+        return dict(status='안')
+
+    # R14 — u_exp = 날 평균들의 표준오차 · 배수 t(날 − 1) · 판독 (계통) 은 2·u_판독 로 합성 · 날 ≥ 3 × 반복 ≥ 3 (⬜ Qv2-4)
+    def u_exp_band(self, days, u_read):
+        dm = [sum(dd) / len(dd) for dd in days]
+        nd = len(dm)
+        return sum(dm) / nd, math.sqrt((t975(nd - 1) * sd(dm) / math.sqrt(nd)) ** 2 + (2.0 * u_read) ** 2)
+
+    def exp_plan(self):
+        return [3, 3, 3]
+
+    # R15 — ρ_flow 는 Bo_AA(ρ = 0.31) 가 식별 하한 (격자 최소 Bo) 이상일 때만 값 · 아니면 위쪽 한계만
+    def rho_flow(self, bo_aa_at_thesis_edge, bo_id):
+        return '교차 가능' if bo_aa_at_thesis_edge >= bo_id else '위쪽 한계만'
+
+    # R17 — 결과 전 정의 (권고 기본값 = ⬜ Qv2-13)
+    def definitions(self):
+        return dict(t2_primary='측정 창 평균 동적 각 (사태 최대 · 최소 · 요동 = 보고)',
+                    f1_pair='봉인 곡선의 이웃 차 |ΔI| 중앙값의 ½ (곡선과 함께 봉인)',
+                    tap_match='손 탭 = 낙하 높이 · 횟수 맞춤 (Γ 미측정 한정어) · 측정기 = Γ · 횟수 맞춤',
+                    ext_seeds='C1 과 같은 시드 규칙 (결과 전)',
+                    raw_custody='측정 직후 암호화 묶음 push · 열쇠 = 곡선 봉인 뒤 커밋',
+                    policy_stage='launch_policy v5 — d3-c0 · d3-c1 · d3-c2 (② 회차 코드)',
+                    f8_rule='D13: 빠진 원자 ≤ 10 · id 1..N · 집합 불변 = TECH 아님 · 그 밖 = TECH → 같은 NP 재시도 1 회 → 결측')
+
+
+#: 설계 v2 에 적힌 숫자 (그 문서 표기 그대로) — C12 가 lab20261014 계산값과 표기 자릿수 안에서 같은지 본다
+#   (v1 자리 22 개 + v2 에만 나오는 숫자 · 문서에 숫자를 더하면 여기에도 더한다)
+V2_DOC_NUMBERS = {
+    # v1 자리 (같은 열쇠 · lab 값)
+    'drum_D_mm': '25.17', 'drum_L_mm': '5.03', 'rpm': '76.68', 'wR_mm_s': '101.0',
+    'n_per_fill': '8.27e5', 'n_f011': '9.09e4', 'n_f030': '2.48e5', 'n_slice': '9.86e4',
+    'dt_x20': '2.373e-7', 'ceiling_soft': '1015.4', 'ov_637_soft': '0.733', 'ov_850_soft': '0.888',
+    'ov_637_x20': '0.0995', 'bo_1pct_x20': '2.03e4', 'vstick_0212_x20': '0.055', 'vstick_212_x20': '17.47',
+    'vstick_637_x20': '43.64', 'vstick_ceil_x20': '64.3', 'vstick_ceil_over_wR': '0.64',
+    'se_vol_pct': '39.95', 'se_num_pct': '99.16', 'd_over_amp': '18.5',
+    # v2 에만
+    'd_over_se': '166', 'real_d_over_se': '2.5e4', 'vstick_0212_soft': '0.150', 'vstick_21_x20': '2.56',
+    'vstick_21_g': '0.024', 'vstick_212_g': '0.166', 'vstick_637_g': '0.413', 'vstick_637_g_over_wR': '0.0041',
+    'ext_level': '964.7', 'ov_ext_soft': '0.966', 'ext_ratio': '1.514', 'ceil_ratio': '1.593',
+    'ov_1010_soft': '0.996', 'ov_1020_soft': '1.003', 'ceiling_cgf200': '768.7', 'ov_637_cgf200': '0.883',
+    'bo_aa_ratio_amp': '239.5', 'bo_aa_ratio_ams': '47.3',
+    'boaa_amp_21_031': '0.0275', 'boaa_ams_21_031': '0.139', 'boaa_amp_21_1': '0.0887', 'boaa_ams_21_1': '0.449',
+    'boaa_amp_637_031': '0.825', 'boaa_ams_637_031': '4.18', 'boaa_amp_ceil_031': '1.31', 'boaa_ams_ceil_031': '6.65',
+    'steps_1s_x20': '4.214e6', 'h_1s_lo': '16.7', 'h_1s_hi': '18.6', 't2_run_d_lo': '1.11', 't2_run_d_hi': '1.24',
+    't5_pa': '179.8', 'rho_mix': '3.567', 'depth_over_R': '0.680',
+    't2_cell_cm3': '2.50', 't2_mass_lo_g': '0.14', 't2_mass_hi_g': '0.68', 'rpm_r13': '75.4',
+    't975_2': '4.303', 't975_4': '2.776', 't975_8': '2.306', 'ext_low': '0.0672', 'per_decade_vstick': '6.8',
+    'dt_scale': '1.104', 't1_short_lo': '0.22', 't1_short_hi': '1.10', 't1_pour_lo': '0.11', 't1_pour_hi': '0.77',
+    't1_tap_lo': '0.55', 't1_tap_hi': '4.42', 'c2_run_lo': '0.55', 'c2_run_hi': '1.66',
+    'c0_lo': '3.8', 'c0_hi': '5.9', 'c1_lo': '6.1', 'c1_hi': '17.8',
+    'c2_t3_runs_lo': '7', 'c2_t3_runs_hi': '11', 'c2_t2_runs_lo': '6', 'c2_t2_runs_hi': '10', 'c2_lo': '3.5', 'c2_hi': '10.2',
+    'sum_lo': '13.4', 'sum_hi': '33.9',
+}
+
+
+def print_numbers():
+    print('[N] 숫자 — lab20261014 (v2 문서) · gen1 (이력 칸) · CGF 151.4 · N 100000 · 생성기 함수 그대로')
+    lab, g1 = computed_numbers(LAB), computed_numbers(GEN1)
+    for k in lab:
+        print(f'    {k:24s} lab {lab[k]:.6g}   gen1 {g1[k]:.6g}')
+    print('    (예산 [추정] — T2 런 = 1.6 s 모사 × ×20 step/s ÷ 처리량 70–63 step/s · T1 · T3 런 = v1 §3-6 [추정] × dt_scale · '
+          'C0 = T2 9 + T1 짧은 탭 6 · C1 기본 = T2 12 + T1 탭 8 + 붓기 4 · C2 = T3 7–11 + T2 다른 속도 6–10 · 3 슬롯)')
+    print('    F_SW/F_SS = 2√(0.0256·ρ):', ' · '.join(f'ρ {r:g} {2 * math.sqrt(m.GM_WALL_HARE2026 * r):.3f}' for r in (0.0, 0.01, 0.1, 0.31, 1.0)))
+    print('    격자 Bo_code:', ' · '.join(f'{b:.4g}' for b in GRID), '· Bo_po:', ' · '.join(f'{b / 6.75:.3g}' for b in GRID))
 
 
 # ───────────────────────── 실행 ─────────────────────────
 
 def main():
     print('[t] Student t 0.975 분위:', ' · '.join(f'ν {nu} {t975(nu):.3f}' for nu in (1, 2, 3, 4, 5, 6, 8)))
+    print_numbers()
+    print()
     rulesets = [RulesV1()] + ([RulesV2()] if RulesV2 else [])
     all_ok = True
     print('\n[C] 규칙 검사 — 반례: v1 = 잘못 받아들임 (재현) · v2 = 잡음 · 대조: v2 가 옳은 경우를 받아들임')
