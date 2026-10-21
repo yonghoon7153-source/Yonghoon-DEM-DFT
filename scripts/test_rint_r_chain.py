@@ -348,8 +348,9 @@ def cert(si, man):
             'iters': 321, 'resolve_iters': 17,
             #  ★ 10-21 증서 v2 — 상태 · ⓓ (구간 [1, 1] ∋ 게시 판 전류 1 · scale = σ)
             'status': CERT['status'], 'pass_d': True, 'target_tol': CERT['target_tol'], 'target_version': CERT['target_version'],
-            'target_fp': CERT['target_fp'], 'target_ledger_ok': True, 'target_topology': 'through', 'target_lo': 1.0,
-            'target_hi': 1.0, 'scale': si,
+            'target_fp': CERT['target_fp'], 'target_ledger_ok': True, 'target_topology': 'through',
+            #  ★ 4판 (Q2-2 · §3-2b ③″) — 세계 'cert_e' = 그 팔 증서의 보장 오차 (구간 [1 − e, 1] ∋ 게시 판 전류 1 · 폭 = 오차 = e ≤ τ)
+            'target_lo': 1.0 - float(W.get('cert_e', 0.0)), 'target_hi': 1.0, 'scale': si,
             #  ★ 10-21 (사전 리뷰 PRE-impl-07 · B 픽스처 패치) — 증서 ↔ 런 결합 칸 = 그 팔 매니페스트의 정본 지문 (접합 원장 sid · registry ·
             #    plan_rows · face_alpha 전자 계획) · σ 표 지문 = 킷마다 (가짜)
             **_bind(man)}
@@ -1302,24 +1303,32 @@ def t_V01():
     return ok, (v['v'] and v['v'].get('verdict'), R.get('interval_mScm'), [lo, hi], R.get('W'), Wd)
 
 
-@check('V02', '감도 넷 안 돌림 → FIBRE · UNREG · GRID · SVORDER _UNCHECKED · §7-1 문장 금지 (판정 이름은 그대로)')
+V02_BLK = ['FIBRE_UNCHECKED', 'GRID_UNCHECKED', 'SVORDER_UNCHECKED', 'UNREG_UNCHECKED']
+
+
+@check('V02', '감도 넷 안 돌림 → FIBRE · UNREG · GRID · SVORDER _UNCHECKED · §7-1 문장 금지 (판정 이름은 그대로) · ★ 4판 (Q2-4 · §5-5b · ⑰) 문장 = '
+               '"계산기 판정 이름 `PASS_INFORMATIVE` · 차단 표지 <넷> — 판정 문장 보류 · 감도 미완료" · 표지마다 사유 (안 돌림) · 감도 미완료 표지')
 def t_V02():
     v = s_verdict_main()['v']
-    want = {'FIBRE_UNCHECKED', 'UNREG_UNCHECKED', 'GRID_UNCHECKED', 'SVORDER_UNCHECKED'}
-    return (want <= set(v['flags']) and v['sentence_allowed'] is False and v['verdict'] == 'PASS_INFORMATIVE',
-            (v['flags'], v['sentence_allowed']))
+    want = set(V02_BLK)
+    rs = v.get('blocking_reasons') or {}
+    return (want <= set(v['flags']) and v['sentence_allowed'] is False and v['verdict'] == 'PASS_INFORMATIVE'
+            and v.get('sentence') == want_sentence('positive', 'PASS_INFORMATIVE', V02_BLK, sens=True)
+            and set(rs) == want and all(rs[f] == '안 돌림' for f in want) and v.get('sensitivity_incomplete') is True,
+            (v['flags'], v['sentence_allowed'], v.get('sentence'), rs, v.get('sensitivity_incomplete')))
 
 
 @check('V03', '감도 넷 다 돌림 · 둔감 · SV 반사실 비 1.2 < 문턱 2 → 차단 표지 없음 → §7-1 문장 (판정문 §5-3 문안) 허용 · 보고 범주 '
-               'ASSUMED_UNVALIDATED (DIA_UNCHECKED 포함) 는 늘 · 한정어 ①–⑯ · 계산기 상태 주석')
+               'ASSUMED_UNVALIDATED (DIA_UNCHECKED 포함) 는 늘 · ★ 4판 (Q2-6) 한정어 ①–⑱ · 계산기 상태 주석 · 감도 완료 · 사유 없음')
 def t_V03():
     v = s_verdict_full()['v']
     cat = (v.get('report_category') or {}).get('ASSUMED_UNVALIDATED') or []
     return (v['verdict'] == 'PASS_INFORMATIVE' and v['flags'] == [] and v.get('blocking_flags') == [] and v['sentence_allowed'] is True
-            and isinstance(v.get('sentence'), str) and v['sentence'] in FX['reg_text'] and v['sentence'] == RR.SENTENCE_PASS
-            and any('DIA_UNCHECKED' in x for x in cat) and len(v.get('qualifiers', [])) == 16
-            and '계산기 상태' in (v.get('verdict_note') or ''),
-            (v['verdict'], v['flags'], v['sentence_allowed'], v.get('stop')))
+            and isinstance(v.get('sentence'), str) and v['sentence'] in FX['reg_text'] and v['sentence'] == T_PASS
+            and any('DIA_UNCHECKED' in x for x in cat) and len(v.get('qualifiers', [])) == 18
+            and '계산기 상태' in (v.get('verdict_note') or '') and v.get('sensitivity_incomplete') is False
+            and v.get('blocking_reasons') == {},
+            (v['verdict'], v['flags'], v['sentence_allowed'], v.get('stop'), len(v.get('qualifiers', []))))
 
 
 @check('V04', 'GRID 변이에서 DBE ×1.6 → 등급 바뀜 → GRID_SENSITIVE · 문장 금지')
@@ -1594,8 +1603,19 @@ def t_X05():
               and RR.ORIGIN_SBE_MAX == 0.02 and RR.ORIGIN_DBE_FRAC_W == 0.1 and RR.SENS_SHIFT_FRAC_G0 == 0.1
               and RR.LADDER_START_LOG10 == (4.0, 6.0, 8.0) and RR.LADDER_EXT_LOG10 == 2.0 and RR.MAX_CONFIRM == 2
               and abs(RR.E_MIN - 0.02 / math.log(math.sqrt(10.0))) < 1e-15 and abs(RR.G0 - math.log(4.68 / 1.8877)) < 1e-15
-              and len(RR.BLOCKING_FLAGS) == 11 and 'DIA_UNCHECKED' not in RR.BLOCKING_FLAGS and len(RR.QUALIFIERS) == 16)
-    return not miss and consts, (miss, consts)
+              and len(RR.BLOCKING_FLAGS) == 11 and 'DIA_UNCHECKED' not in RR.BLOCKING_FLAGS and len(RR.QUALIFIERS) == 18
+              and RR.QUALIFIERS[16:] == ('Q17_sensitivity_incomplete', 'Q18_P_two_ends_only'))
+    return not miss and consts, (miss, consts, len(RR.QUALIFIERS))
+
+
+@check('X05b', '★ 4판 (Q2-4 · Q2-6) 결정표 칸 글자 · ⑰ ⑱ 문장 · 보호 띠 · W₊ · 이름 우선순위가 등록 문서 (4판) 에 그대로 있다 (시험 상수 대조 · 사본 금지의 짝)')
+def t_X05b():
+    t = FX['reg_text']
+    need = [T_PASS, T_PASS_BLK[0].rstrip(), T_PASS_BLK[1].strip(), T_WEAK, T_UNINF, T_GAP, T_Q18, T_FAIL, T_CALIB, T_NC, T_BLK[0].strip(),
+            T_POINT, T_SENS, '⑰', '⑱', 'P 는 두 끝 (P0 · P1) 만 등록했다', 'target_err_bound_rel', 'W₊', '하나라도 `NOT_COMPUTED` 면 판정 전체 = `NOT_COMPUTED`',
+            '`<V>_UNCHECKED`']
+    miss = [n for n in need if n not in t]
+    return not miss, miss
 
 
 @check('X06', '바닥 · 천장 극한 = 러너 env CJUNC_RJ=inf · 0 (런 순서 첫 둘) · 팔 protocol 표지 rj_limit inf · zero (R_j_ohm null · 0.0 · '
@@ -1667,11 +1687,12 @@ def _arms_of(arms):
     return list(range(arms)) if isinstance(arms, int) else list(arms)
 
 
-def ladder_fetch(S_mS):
-    """Ladder 의 fetch — S_mS(R [Ω], 팔 번호) [mS/cm] → 팔 기록 (S/cm · 상태 positive)."""
+def ladder_fetch(S_mS, err=0.0, read=1.0):
+    """Ladder 의 fetch — S_mS(R [Ω], 팔 번호) [mS/cm] → 팔 기록 (S/cm · 상태 positive).  ★ 4판 (Q2-2 · §3-2b ③″) — err = 그 런 증서의
+    보장 오차 (`err_rel` · 사슬 read_run 이 증서에서 다시 계산해 싣는 칸) · read = 판독 배수 (증서 허용 안의 낮은 판독 · 반례)."""
     def fetch(role, key, arms):
         R = RR.rj_float(key)
-        return [{'sigma': S_mS(R, i) * 1e-3, 'state': 'positive'} for i in _arms_of(arms)]
+        return [{'sigma': S_mS(R, i) * 1e-3 * read, 'state': 'positive', 'err_rel': err} for i in _arms_of(arms)]
     return fetch
 
 
@@ -1750,6 +1771,46 @@ def t_U02():
     return eval_U02()
 
 
+#: ★ 4판 (Q2-4 · 등록 R 4판 §5-5b 결정표 · §5-1 · §7-1 ⑰ ⑱) — 칸 글자 (시험 상수 · 사슬 상수를 베끼지 않는다 · 등록 문서 대조 = X05b)
+T_PASS = ('SBE 측정 한 점으로 각 법칙의 내부 접합 저항을 보정하였다. 사전에 고정한 시나리오와 보정 허용집합의 계산 결과를 이미 알려진 '
+          'DBE 측정값과 비교하였다. 모형 종류와 시나리오 방향은 해당 DBE 값 및 기존 빗나감을 알고 선정했으므로, 이 비교는 독립 '
+          'holdout 검증이나 접합 물성의 식별이 아니다.')
+T_PASS_BLK = ('계산기 판정 이름 `PASS_INFORMATIVE` · 차단 표지 ', ' — 판정 문장 보류')
+T_WEAK = '넓은 시나리오 구간 안에 들었다'
+T_UNINF = '예측 주장 없음 (구간이 현 세대 빗나감보다 넓다)'
+T_GAP = '어느 법칙의 허용집합에도 포함되지 않았으나 전체 envelope 에는 포함'
+T_Q18 = 'P 는 두 끝만 등록했다 (사이 감쇠는 모형 밖)'
+T_FAIL = '빗나감 d · d/G0 · 방향 · §8 보고 (해석 금지 §8)'
+T_CALIB = '판정 없음 — 법칙별 이름 · 사유 · 바닥 · 천장 · e · 끝 후보 보고'
+T_NC = '판정 없음 — 사유 (상태 · 멈춤 코드) 보고'
+T_BLK = ('(차단 표지 ', ')')
+T_POINT = '점 구간'
+T_SENS = '감도 미완료'
+REG_CALIB6 = ('CALIB_IMPOSSIBLE', 'CALIB_EDGE', 'CALIB_UNIDENTIFIED', 'CALIB_UNCONFIRMED', 'CALIB_NONMONOTONE', 'CALIB_LADDER_EXHAUSTED')
+
+
+def want_sentence(state, verdict, blocking=(), sens=False):
+    """등록 R 4판 §5-5b 결정표의 칸 하나 (시험 쪽 독립 조립) — 차단 표지 목록 = 사전 순 · ' · ' 로 잇는다 · 오른쪽 칸 = 왼쪽 칸 + 공백 + "(차단 표지 <목록>)"
+    (PASS = 헤드라인 대신 "계산기 판정 이름 …" ) · GAP = 판정문 §5-3 문안 + ⑱ · 점 구간 · 감도 미완료 (⑰) = 결과 문장 끝에 ' · ' 로 덧붙인다 ·
+    CALIB_* · NOT_COMPUTED = 판정 없음 칸 (차단 표지 · 점 · 감도 해당 없음)."""
+    if verdict in REG_CALIB6:
+        return T_CALIB
+    if verdict == 'NOT_COMPUTED':
+        return T_NC
+    lst = ' · '.join(sorted(set(blocking)))
+    base = {'PASS_INFORMATIVE': T_PASS, 'CONSISTENT_WEAK': T_WEAK, 'UNINFORMATIVE': T_UNINF, 'GAP_ENVELOPE_ONLY': T_GAP + ' · ' + T_Q18,
+            'FAIL': T_FAIL}[verdict]
+    if blocking:
+        s = (T_PASS_BLK[0] + lst + T_PASS_BLK[1]) if verdict == 'PASS_INFORMATIVE' else base + ' ' + T_BLK[0] + lst + T_BLK[1]
+    else:
+        s = base
+    if state == 'point':
+        s += ' · ' + T_POINT
+    if sens:
+        s += ' · ' + T_SENS
+    return s
+
+
 def rca08_vals():
     v = {}
     for c in ('0', '1'):
@@ -1760,15 +1821,15 @@ def rca08_vals():
 
 def eval_U03():
     J = RR.judge(rca08_vals())
-    s = RR.decide_sentence(J['state'], J['verdict'], False)
+    s = RR.decide_sentence(J['state'], J['verdict'], [])
     ok = (J['verdict'] == 'GAP_ENVELOPE_ONLY' and J['in_law'] == [] and J['in_E'] is True and J['in_U'] is False
           and J['I_law_mScm'] == {'P0': [3.8, 4.0], 'P1': [5.2, 5.4]} and J['direction'] == 'gap' and J['d'] == 0.0
-          and rel(J['W'], 0.3513978868378886) < 1e-9 and s == RR.SENTENCE_GAP and rel(J['d_to_U'], math.log(5.2 / 4.68)) < 1e-12)
+          and rel(J['W'], 0.3513978868378886) < 1e-9 and s == T_GAP + ' · ' + T_Q18 and rel(J['d_to_U'], math.log(5.2 / 4.68)) < 1e-12)
     return ok, (J.get('verdict'), J.get('in_law'), J.get('W'), s)
 
 
 @check('U03', 'RCA-08 (§5-1 · §5-5 3판) — I_P0 [3.8, 4.0] · I_P1 [5.2, 5.4] · 4.68 = E ∖ U → GAP_ENVELOPE_ONLY (2판 hull W 0.351 = PASS) · '
-               '문장 = 판정문 §5-3 GAP 문안 · 법칙 집합까지 ln 거리 기록')
+               '문장 = 판정문 §5-3 GAP 문안 + ★ 4판 ⑱ (§5-1 · §5-5b "P 는 두 끝만 등록했다 (사이 감쇠는 모형 밖)") · 법칙 집합까지 ln 거리 기록')
 def t_U03():
     return eval_U03()
 
@@ -1814,8 +1875,8 @@ def t_U04b():
 def eval_U05():
     nb = RR.blocking_of(['DIA_UNCHECKED', 'XYZ_UNCHECKED', 'FOO_SENSITIVE', 'SV_DOMINANT', 'Q9_ptfe_diameter_convention'])
     each = all(RR.blocking_of([f, 'DIA_UNCHECKED']) == [f] for f in RR.BLOCKING_FLAGS)
-    s = RR.decide_sentence('positive', 'PASS_INFORMATIVE', bool(RR.blocking_of(['DIA_UNCHECKED'])))
-    return nb == [] and each and s == RR.SENTENCE_PASS and len(RR.BLOCKING_FLAGS) == 11, (nb, each, s)
+    s = RR.decide_sentence('positive', 'PASS_INFORMATIVE', RR.blocking_of(['DIA_UNCHECKED']))
+    return nb == [] and each and s == T_PASS and len(RR.BLOCKING_FLAGS) == 11, (nb, each, s)
 
 
 @check('U05', 'RCA-10 (§5-6a) — 차단 표지 = 닫힌 집합 11 · DIA_UNCHECKED · 모르는 *_UNCHECKED · *_SENSITIVE · 옛 SV_DOMINANT = 차단 아님 · '
@@ -1882,43 +1943,66 @@ def eval_U06():
             and Jz['S'] is None and Jm['S'] is None and Jp['S'] is not None and Jf['p'] is None
             and rel(Jf['d'], math.log(4.68 / 3.0)) < 1e-12):
         bad.append(f'끝 거리 · 방향 · S {Jz["d"]} {Jz["direction"]} {Ji["direction"]} {Jz["S"]}')
+    #  ★ 4판 (Q2-3 · §4-2 PRE-design-10) — W 가 +∞ · 0 이면 문턱의 W = W₊ (arm 0 양수 값의 폭 · 없으면 0 = 문턱 0 · 보수 쪽) · 세 origin 상태가
+    #    다르면 = 넘음 (3판 = W +∞ → 문턱 +∞ → 늘 통과)
+    try:
+        dob = (RR.dbe_origin_ok([0.0, 0.0, 0.0], 0.0) == (True, 0.0) and RR.dbe_origin_ok([1.0, 2.0], math.inf)[0] is False
+               and RR.dbe_origin_ok([1.0, 2.0], math.inf, w_pos=10.0)[0] is True
+               and RR.dbe_origin_ok([1.0, 1.0, 1.0], 0.0, states=['zero', 'positive', 'positive'])[0] is False
+               and RR.dbe_origin_ok([3.0, 3.0, 3.0], 0.5, states=['positive'] * 3) == (True, 0.0))
+    except TypeError as e:
+        dob = False
+        bad.append(f'dbe_origin_ok 4판 인자 {e}')
     if not (RR.ln_spread([0.0, 0.0, 0.0]) == 0.0 and RR.ln_spread([0.0, 1.0]) == math.inf and RR.ln_spread([math.inf, math.inf]) == 0.0
-            and RR.dbe_origin_ok([0.0, 0.0, 0.0], 0.0) == (True, 0.0) and RR.dbe_origin_ok([1.0, 2.0], math.inf)[0] is True
-            and RR.mean_ext([1.0, math.inf]) == math.inf):
+            and dob and RR.mean_ext([1.0, math.inf]) == math.inf):
         bad.append('확장 실수 도구')
     return not bad, bad
 
 
 @check('U06', 'RCA-13 (§5-0 · §3-2) — 단위 불변 (S/cm ↔ mS/cm · 판정 · W · p · d · S) · τ_mono = ln 차 (999.5 → 1000 평탄 · 999 → 1000 비단조 · '
-               '두 단위 같음) · 0/0 · 점 구간 (W 0 · p null) · zero · short 끝 (W +∞ · p · S null · d +∞ 방향) · gap · 확장 실수 도구')
+               '두 단위 같음) · 0/0 · 점 구간 (W 0 · p null) · zero 끝 (W +∞ · p · S null · d +∞ 방향 · ★ 4판 단락은 판정에 오지 않는다 — +∞ 값은 '
+               '도구만) · gap · 확장 실수 도구 (★ 4판 dbe_origin_ok — W₊ · 상태 다름 = 넘음)')
 def t_U06():
     return eval_U06()
 
 
+U07_BLK = ['SV_DEPENDENT', 'FIBRE_UNCHECKED']                 # 차단 표지 둘 (순서 섞음 — <목록> = 사전 순)
+ALLOWED = {('positive', v) for v in ('PASS_INFORMATIVE', 'CONSISTENT_WEAK', 'UNINFORMATIVE', 'GAP_ENVELOPE_ONLY', 'FAIL')} | {
+    ('point', 'PASS_INFORMATIVE'), ('point', 'FAIL'), ('extended', 'UNINFORMATIVE'), ('extended', 'GAP_ENVELOPE_ONLY'), ('extended', 'FAIL')} | {
+    ('calib', c) for c in REG_CALIB6 + ('NOT_COMPUTED',)}
+
+
 def eval_U07():
-    want = {('positive', 'PASS_INFORMATIVE'): (RR.SENTENCE_PASS, None), ('positive', 'CONSISTENT_WEAK'): (RR.SENTENCE_WEAK,) * 2,
-            ('positive', 'UNINFORMATIVE'): (None, None), ('positive', 'GAP_ENVELOPE_ONLY'): (RR.SENTENCE_GAP,) * 2,
-            ('positive', 'FAIL'): (None, None), ('point', 'PASS_INFORMATIVE'): (RR.SENTENCE_PASS, None), ('point', 'FAIL'): (None, None),
-            ('extended', 'UNINFORMATIVE'): (None, None), ('extended', 'GAP_ENVELOPE_ONLY'): (RR.SENTENCE_GAP,) * 2,
-            ('extended', 'FAIL'): (None, None), **{('calib', c): (None, None) for c in RR.CALIB_ORDER}}
+    """★ 4판 (Q2-4 · 등록 R 4판 §5-5b) — 결정표 전수: (상태 4 × 판정 12) × 차단 {없음 · 둘} × 감도 미완료 {아님 · 맞음} → 칸 글자 하나 (등록 표 그대로 ·
+    시험 쪽 독립 조립 `want_sentence`) · 짝이 안 맞는 상태 · 이름 = ValueError · 차단 목록에 닫힌 집합 밖 이름 · bool = 구현 결함 (ValueError)."""
     bad, n_ok, n_bad = [], 0, 0
+    names = ('PASS_INFORMATIVE', 'CONSISTENT_WEAK', 'UNINFORMATIVE', 'GAP_ENVELOPE_ONLY', 'FAIL') + REG_CALIB6 + ('NOT_COMPUTED',)
     for st in ('positive', 'point', 'extended', 'calib'):
-        for v in RR.GRADES + RR.CALIB_ORDER:
-            for b in (False, True):
-                try:
-                    got = RR.decide_sentence(st, v, b)
-                    if (st, v) not in want or got != want[(st, v)][int(b)]:
-                        bad.append((st, v, b, got))
-                    n_ok += 1
-                except ValueError:
-                    if (st, v) in want:
-                        bad.append((st, v, b, 'ValueError'))
-                    n_bad += 1
-    return not bad and n_ok == 2 * len(want) and n_ok + n_bad == 4 * 12 * 2, (bad[:4], n_ok, n_bad)
+        for v in names:
+            for blk in ([], list(U07_BLK)):
+                for sens in (False, True):
+                    try:
+                        got = RR.decide_sentence(st, v, blk, sens_incomplete=sens)
+                        if (st, v) not in ALLOWED or got != want_sentence(st, v, blk, sens):
+                            bad.append((st, v, blk, sens, got))
+                        n_ok += 1
+                    except (ValueError, TypeError) as e:
+                        if (st, v) in ALLOWED:
+                            bad.append((st, v, blk, sens, f'{type(e).__name__}: {e}'))
+                        n_bad += 1
+    for wrong in (['DIA_UNCHECKED'], ['XYZ_UNCHECKED'], True, False):
+        try:
+            RR.decide_sentence('positive', 'PASS_INFORMATIVE', wrong)
+            bad.append(('닫힌 집합 밖 · bool 을 받았다', wrong))
+        except (ValueError, TypeError):
+            pass
+    return not bad and n_ok == 4 * len(ALLOWED) and n_ok + n_bad == 4 * 12 * 2 * 2, (bad[:4], n_ok, n_bad)
 
 
-@check('U07', '결정표 (§5-7 · PRE-design-09) 전수 — (상태 4 × 판정 12 × 차단 2) · 허용 짝 34 = 문장 하나 (PASS = 차단 없을 때만 · WEAK · GAP 문장 = '
-               '차단과 무관 · 나머지 문장 없음) · 짝이 안 맞는 상태 · 이름 62 = 구현 결함 (ValueError)')
+@check('U07', '★ 4판 결정표 (§5-5b · PRE-design-09 · R4-Q7) 전수 — (상태 4 × 판정 12) × 차단 {없음 · 둘} × 감도 미완료 = 칸 글자 하나: PASS = §7-1 헤드라인 · '
+               '차단 = "계산기 판정 이름 `PASS_INFORMATIVE` · 차단 표지 <목록> — 판정 문장 보류" · WEAK · UNINF · GAP (+ ⑱) · FAIL = 왼쪽 칸 + '
+               '"(차단 표지 <목록>)" · CALIB_* · NOT_COMPUTED = 판정 없음 칸 · 점 구간 · 감도 미완료 (⑰) 덧붙임 · 허용 짝 17 · 짝 밖 · 닫힌 집합 밖 = '
+               'ValueError (3판 = 차단 PASS · UNINF · FAIL · CALIB 문장 없음)')
 def t_U07():
     return eval_U07()
 
@@ -1985,6 +2069,272 @@ def eval_U10():
                '끝에서 arm 1 · 2 도 돌려 하나라도 띠 안이면 바깥 실측 이웃으로 → 끝의 세 origin 이 모두 띠 밖 (합집합을 바깥에서 감쌈)')
 def t_U10():
     return eval_U10()
+
+
+# ── ★ 4판 Q2 (1저자 10-21 "권고대로") — 등록 R 4판 규칙 여섯 (시험 먼저 · 기대 = 등록 규칙의 정확한 출력) ──
+#  Q2-1 §3-2c 이름 우선순위 ─────────────────────────────────────────────
+def eval_U11():
+    bad = []
+    for c in REG_CALIB6:
+        for st in ({'P0': 'NOT_COMPUTED', 'P1': c}, {'P0': c, 'P1': 'NOT_COMPUTED'}):
+            if RR.judge_set(st, None) != {'verdict': 'NOT_COMPUTED', 'state': 'calib'}:
+                bad.append((st, RR.judge_set(st, None)))
+        for st in ({'P0': c, 'P1': 'CALIBRATED'}, {'P0': 'CALIBRATED', 'P1': c}):
+            if RR.judge_set(st, None) != {'verdict': c, 'state': 'calib'}:
+                bad.append((st, RR.judge_set(st, None)))
+    for i, a in enumerate(REG_CALIB6):                      # 둘 다 CALIB_* = 등록 나열 순서의 첫 이름
+        for b in REG_CALIB6:
+            want = a if i <= REG_CALIB6.index(b) else b
+            if RR.judge_set({'P0': a, 'P1': b}, None)['verdict'] != want:
+                bad.append((a, b, RR.judge_set({'P0': a, 'P1': b}, None)))
+    if RR.judge_set({'P0': 'NOT_COMPUTED', 'P1': 'NOT_COMPUTED'}, None)['verdict'] != 'NOT_COMPUTED':
+        bad.append('NC NC')
+    return not bad, bad[:4]
+
+
+@check('U11', '★ 4판 Q2-1 (§3-2c · PRE-design-08) — 두 법칙 이름이 다르면 하나라도 NOT_COMPUTED = 판정 전체 NOT_COMPUTED (상태 먼저) · 아니면 '
+               '등록 나열 순서의 첫 CALIB_* · 반례 P0 NOT_COMPUTED · P1 CALIB_EDGE → NOT_COMPUTED (3판 = CALIB_EDGE · CALIB_ORDER 끝)')
+def t_U11():
+    return eval_U11()
+
+
+def run_U11b():
+    def go():
+        #  P1 법칙 배수 0.95 가 바닥에도 걸린다 → 바닥 1.60e-3 / 0.95 (P1 바닥 = 1.60e-3 · 1.63 의 2 % 안 = CALIB_EDGE · L10 의 P1 짝)
+        p1 = ladder('U11b_P1', world('U11b_P1', dict(PW, sbe=dict(PW_SBE, floor=1.60e-3 / 0.95, s_ref=40e-3))), law='P1')
+        l17 = scen('L17', lambda: ladder('L17', world('L17', dict(PW, faults=[{'do': 'certfail', 'match': {'rj': '1000000.0'}}]))))
+        return {'p1': p1, 'v': verdict('U11b_v', [l17['out'], p1['out']])}
+    return scen('U11b', go)
+
+
+@check('U11b', '★ 4판 Q2-1 (사슬) — P0 사다리 NOT_COMPUTED (증서 실패 · L17) + P1 사다리 CALIB_EDGE → 판정 NOT_COMPUTED (rc 0 · 법칙별 이름 늘 보고 · '
+                '사유 둘)')
+def t_U11b():
+    sc = run_U11b()
+    v = sc['v']['v'] or {}
+    rs = sorted((w.get('law'), w.get('code')) for w in (v.get('reasons') or []))
+    return (sc['p1']['sum']['status'] == 'CALIB_EDGE' and sc['v']['rc'] == 0 and v.get('verdict') == 'NOT_COMPUTED'
+            and v.get('calib') == {'P0': 'NOT_COMPUTED', 'P1': 'CALIB_EDGE'} and rs == [('P0', 'NOT_COMPUTED'), ('P1', 'CALIB_EDGE')],
+            (sc['p1']['sum']['status'], v.get('verdict'), v.get('calib'), rs))
+
+
+#  Q2-2 §3-2b ③″ 보호 띠 ───────────────────────────────────────────────
+def run_U01e(err, S=None, read=1.0, cap=12):
+    lad_ = RR.Ladder(ladder_fetch(S or rca01_S, err=err, read=read), max_points=cap, ratio_max='none')
+    status = 'CALIBRATED'
+    try:
+        lad_.run()
+        lad_.origin()
+    except RR.Stop as e:
+        status = e.code
+    st = lad_.st
+    R = {k: (RR.rj_float(st[k]) if st.get(k) else None) for k in ('R_j_lo', 'R_j0', 'R_j_hi')}
+    J = RR.judge({('0', 'P0', k): rca01_D(v) for k, v in R.items()}) if status == 'CALIBRATED' else None
+    return lad_, status, R, J
+
+
+#: 등록 R 4판 §3-2b ⑧ — 증서 보장 오차 e ≥ 3.728e-5 → hi 끝 = 바깥 이웃 1e7 · 비 1,000 · W 0.786487 · 같은 등급 (CONSISTENT_WEAK)
+U01E_W = math.log(rca01_D(1e4) / rca01_D(1e7))
+
+
+def eval_U01e():
+    bad = []
+    for e, want_hi in ((1e-4, 1e7), (3.8e-5, 1e7), (3.7e-5, RCA01_WANT['R_hi']), (0.0, RCA01_WANT['R_hi'])):
+        lad_, status, R, J = run_U01e(e)
+        st = lad_.st
+        hi_src = (st.get('ends') or {}).get('hi', {}).get('source')
+        if status != 'CALIBRATED' or R['R_j_lo'] != 1e4 or R['R_j0'] != RCA01_WANT['R0'] or rel(R['R_j_hi'], want_hi) > 1e-9:
+            bad.append((e, status, R, hi_src))
+            continue
+        if want_hi == 1e7:
+            if not (rel(st['R_ratio'], 1000.0) < 1e-12 and J['verdict'] == 'CONSISTENT_WEAK' and rel(J['W'], U01E_W) < 1e-12
+                    and abs(J['W'] - 0.786487) < 5e-7 and hi_src == 'outer_neighbor'):
+                bad.append((e, st['R_ratio'], J['verdict'], J['W'], hi_src))
+        elif not (rel(st['R_ratio'], RCA01_WANT['ratio']) < 1e-9 and J['verdict'] == 'CONSISTENT_WEAK' and rel(J['W'], RCA01_WANT['W']) < 1e-9
+                  and hi_src == 'candidate'):
+            bad.append((e, st['R_ratio'], J['verdict'], J['W'], hi_src))
+    return not bad, bad
+
+
+@check('U01e', '★ 4판 Q2-2 (§3-2b ③″ ⑧ · PRE-design-12 · R4-Q2 · R4-Q3) — 끝 판정 = 판독 [σ(1 − e), σ(1 + e)] (e = 그 런 증서 보장 오차) 가 띠에 '
+                '걸치면 바깥으로: RCA-01 회로 e = 0 · 3.7e-5 → 비 599.03 (후보) · e = 3.8e-5 · 1e-4 (≥ 3.728e-5) → hi 끝 = 바깥 이웃 1e7 · 비 1,000 · '
+                'W 0.786487 · CONSISTENT_WEAK (3판 = 띠 없음 · 늘 599.03)')
+def t_U01e():
+    return eval_U01e()
+
+
+T_MINUS = 1.63 * 0.98
+U12_F = T_MINUS * (1.0 - 5e-5)                              # 등록 R 4판 §3-2b ③″ 반례 — 바닥 F = T⁻(1 − 5e-5) (|F/1.63 − 1| = 0.02005)
+U12_TRUE_HI = (0.05 / (T_MINUS - U12_F) - 0.1) * 1e5        # 참 R_hi (S(R) = T⁻) = 6.259e7 Ω
+
+
+def u12_S(R, i=0):
+    """반례 SBE — S = F + 0.05/(r + 0.1) mS/cm · r = R/1e5 Ω (origin 무관)."""
+    return U12_F if R == math.inf else U12_F + 0.05 / (R / 1e5 + 0.1)
+
+
+def eval_U12():
+    a = run_U01e(1e-4, S=u12_S, cap=24)                     # 판독 오차 e 1e-4 ≥ 5e-5 → 바닥이 EDGE 띠에 걸친다
+    b = run_U01e(4e-5, S=u12_S, cap=24)                     # e 4e-5 < 5e-5 → EDGE 아님
+    ok = (a[1] == 'CALIB_EDGE' and a[0].st['n_runs'] == 2 and b[1] != 'CALIB_EDGE' and b[0].st['n_runs'] > 2
+          and abs(abs(U12_F / 1.63 - 1.0) - 0.02005) < 1e-5 and abs(U12_TRUE_HI - 6.259e7) < 1e4)
+    return ok, (a[1], a[0].st['n_runs'], b[1], b[0].st['n_runs'], U12_TRUE_HI)
+
+
+@check('U12', '★ 4판 Q2-2 (§3-1 · §3-2b ③″) — EDGE 판정에도 보호 띠: 바닥 F = T⁻(1 − 5e-5) (EDGE 안 걸림 · |F/1.63 − 1| = 0.02005) · 판독 오차 '
+               'e = 1e-4 → [F(1 − e), F(1 + e)] 가 EDGE 띠에 걸침 → CALIB_EDGE (바닥 · 천장 두 런 뒤 · 3판 = EDGE 아님 · 사다리 계속) · e = 4e-5 → EDGE 아님')
+def t_U12():
+    return eval_U12()
+
+
+def eval_U12b():
+    lad_, status, R, _J = run_U01e(4e-5, S=u12_S, read=1.0 - 4e-5, cap=24)
+    ok = (status == 'CALIBRATED' and R['R_j_hi'] >= U12_TRUE_HI * (1.0 - 1e-12)) or status == 'CALIB_LADDER_EXHAUSTED'
+    return ok, (status, R, U12_TRUE_HI, (lad_.st.get('ends') or {}).get('hi'))
+
+
+@check('U12b', '★ 4판 Q2-2 (§3-2b ③″ 반례 · 보수 쪽) — 증서 허용 안의 낮은 판독 (σ × (1 − e) · e 4e-5) 에서도 hi 끝은 참 끝 6.259e7 의 바깥 (≥) 이거나 '
+                '사다리 소진 (CALIB_LADDER_EXHAUSTED) — 안쪽 끝 (낮은 판독이 "≤ T⁻" 로 읽힌 자리) 을 쓰지 않는다 (3판 = 안쪽 끝)')
+def t_U12b():
+    return eval_U12b()
+
+
+def eval_L22():
+    """사슬 배선 — read_run 이 증서 (target_lo · target_hi · I_bot) 에서 보장 오차를 다시 계산해 팔 기록 err_rel 로 싣고 · 사다리가 그 값으로 띠를 잰다."""
+    e = 9e-5
+    w = ladder('L22', world('L22', dict(PW, cert_e=e)))
+    edge = ladder('L22e', world('L22e', dict(PW, cert_e=e, sbe=dict(PW_SBE, floor=U12_F * 1e-3))))
+    edge0 = ladder('L22z', world('L22z', dict(PW, sbe=dict(PW_SBE, floor=U12_F * 1e-3))))
+    ers = (lad(w).get('err_rel') or {})
+    pub = [a.get('err_rel') for r in (w['sum'] or {}).get('runs', []) for a in (r.get('arms_read') or [])]
+    fin = [v for k, v in ers.items() if k != 'inf']
+    ok = (bool(fin) and all(isinstance(v, float) and rel(v, e) < 1e-6 for v in fin) and all(isinstance(v, float) for v in pub)
+          and edge['sum']['status'] == 'CALIB_EDGE' and roles(edge) == ['floor', 'ceiling'] and edge0['sum']['status'] != 'CALIB_EDGE'
+          and len(roles(edge0)) > 2)
+    return ok, (sorted(set(round(v, 12) for v in fin)), pub[:3], edge['sum']['status'], roles(edge), edge0['sum']['status'])
+
+
+@check('L22', '★ 4판 Q2-2 (사슬 배선 · 가짜 러너) — 증서 보장 오차 9e-5 = 팔 기록 err_rel (증서 구간에서 다시 계산 · 공개 칸) · 사다리 기록 err_rel · '
+               '바닥 T⁻(1 − 5e-5) 침대 = 증서 오차 9e-5 면 CALIB_EDGE (두 런) · 0 이면 EDGE 아님')
+def t_L22():
+    return eval_L22()
+
+
+#  Q2-3 §4-2 W₊ · 상태 다름 ─────────────────────────────────────────────
+def u13_fetch(spec):
+    """spec[(c, 법칙)] = (arm 0 σ mS · 상태, origin 팔 1 · 2 σ mS · 상태, 8 팔 런의 팔 1–7 σ mS) — 세 R 같은 값 · SBE no-op = 1.63."""
+    def fetch(kit, role, law, c, rj, arms, sv_cf=False):
+        if kit == SBE_KIT:
+            return [{'sigma': 1.63e-3, 'n_sdcp_near': 0, 'state': 'positive', 'err_rel': 0.0}]
+        (a0, s0), (o12, so), o8 = spec[(c, law)]
+        out = []
+        for i in _arms_of(arms):
+            v, st = (a0, s0) if i == 0 else ((o8, 'positive') if isinstance(arms, int) else (o12, so))
+            out.append({'sigma': v * 1e-3, 'state': st, 'n_sdcp_near': 7, 'err_rel': 0.0})
+        return out
+    return fetch
+
+
+U13_LADS = {law: {'R_j_lo': '0.5', 'R_j0': '1.0', 'R_j_hi': '2.0', 'r0_sigma': 1.63e-3} for law in ('P0', 'P1')}
+
+
+def run_U13(spec):
+    pr = RR.Predict(u13_fetch(spec), U13_LADS, None, sv_scope=None)
+    pr.run()
+    return pr, RR.judge({k: v * 1e3 for k, v in pr.values().items()})
+
+
+def eval_U13():
+    spec = {('0', 'P0'): ((0.0, 'zero'), (6.0, 'positive'), 6.0), ('1', 'P0'): ((3.0, 'positive'), (3.0, 'positive'), 3.0),
+            ('0', 'P1'): ((3.5, 'positive'), (3.5, 'positive'), 3.5), ('1', 'P1'): ((4.0, 'positive'), (4.0, 'positive'), 4.0)}
+    pr, J = run_U13(spec)
+    org = {f'c{o["c"]}_{o["law"]}': o for o in pr.origin}
+    ok = (J['verdict'] == 'CONSISTENT_WEAK' and rel(J['interval_mScm'][0], 3.0) < 1e-12 and rel(J['interval_mScm'][1], 5.25) < 1e-12
+          and rel(J['W'], math.log(1.75)) < 1e-12
+          and abs(J['W'] - 0.5596) < 5e-5 and org['c0_P0']['status'] == 'adjusted'
+          and all(org[k]['status'] == 'pass' for k in ('c1_P0', 'c0_P1', 'c1_P1')))
+    return ok, (J.get('verdict'), J.get('interval_mScm'), J.get('W'), {k: (o['status'], o['per_R']) for k, o in org.items()})
+
+
+@check('U13', '★ 4판 Q2-3 (§4-2 PRE-design-10 ① · R4-Q4) — 한 모서리 · R 의 세 origin 상태가 다르면 = 넘음 (8 팔 평균 · zero 는 0 으로 더함): 등록 반례 '
+               'arm 0 {0 (VALID_ZERO) · 3.0 · 3.5 · 4.0} · zero 모서리 arm 1 · 2 = 6.0 → 그 모서리 5.25 → [3.0, 5.25] · W 0.5596 · CONSISTENT_WEAK '
+               '(3판 = W +∞ → 문턱 +∞ → 전환 없음 → FAIL)')
+def t_U13():
+    return eval_U13()
+
+
+def eval_U13b():
+    spec = {('0', 'P0'): ((0.0, 'zero'), (0.0, 'zero'), 0.0), ('1', 'P0'): ((3.0, 'positive'), (3.0, 'positive'), 3.0),
+            ('0', 'P1'): ((3.5, 'positive'), (3.5, 'positive'), 3.5), ('1', 'P1'): ((4.0, 'positive'), (4.2, 'positive'), 4.2)}
+    pr, J = run_U13(spec)
+    org = {f'c{o["c"]}_{o["law"]}': o for o in pr.origin}
+    wp = math.log(4.0 / 3.0)
+    mean8 = (4.0 + 7 * 4.2) / 8.0
+    v = pr.values()
+    ok = (rel(pr.sealed.get('W_pos', math.nan), wp) < 1e-12 and pr.sealed['W0'] == math.inf and org['c1_P1']['status'] == 'adjusted'
+          and org['c0_P0']['status'] == 'pass' and all(rel(v[('1', 'P1', rr)] * 1e3, mean8) < 1e-12 for rr in RR.RJ_ROLES)
+          and math.log(4.2 / 4.0) > 0.1 * wp)
+    return ok, (pr.sealed.get('W_pos'), pr.sealed.get('W0'), {k: o['status'] for k, o in org.items()})
+
+
+@check('U13b', '★ 4판 Q2-3 (§4-2 ②) — 상태는 같은데 W (arm 0 첫 폭) 가 +∞ (다른 모서리의 zero) → 문턱의 W = W₊ (arm 0 양수 값의 폭 ln(4/3)) · '
+                'c1 P1 의 origin 산포 ln 1.05 > 0.1 W₊ → 넘음 → 세 R 8 팔 평균 4.175 · zero 모서리 (세 origin 다 zero) = 통과 (3판 = 문턱 +∞ → 통과)')
+def t_U13b():
+    return eval_U13b()
+
+
+#  Q2-5 §5-6 변이 표지 ─────────────────────────────────────────────────
+def eval_U14():
+    main = {'statuses': CAL2, 'vals': rca09_main(), 'flags': []}
+    same = lambda **kw: dict(main, **kw)                    # noqa: E731
+    cases = {
+        'a 변이 예측 NOT_COMPUTED (vals None)': (same(vals=None), 'FIBRE_UNCHECKED', 'FIBRE_SENSITIVE', '변이 판정 NOT_COMPUTED'),
+        'b 변이 사다리 NOT_COMPUTED': (same(statuses={'P0': 'NOT_COMPUTED', 'P1': 'CALIBRATED'}, vals=None), 'FIBRE_UNCHECKED',
+                                       'FIBRE_SENSITIVE', '변이 판정 NOT_COMPUTED'),
+        'c 변이 이름 같음 + 변이 자신의 CALIB_ORIGIN_SENSITIVE': (same(flags=['CALIB_ORIGIN_SENSITIVE']), 'FIBRE_UNCHECKED',
+                                                                 'FIBRE_SENSITIVE', '변이 자신의 차단 표지 CALIB_ORIGIN_SENSITIVE'),
+        'd 변이 CALIB_EDGE (결과 이름 · 다름)': (same(statuses={'P0': 'CALIB_EDGE', 'P1': 'CALIBRATED'}, vals=None), 'FIBRE_SENSITIVE',
+                                                'FIBRE_UNCHECKED', '변이 판정 이름 CALIB_EDGE'),
+        'e 변이 이름 다름 + 자신의 CALIB_ORIGIN_SENSITIVE': (same(vals={k: (v if k[2] == 'R_j0' else (7.0e-3 if k[2] == 'R_j_lo' else 3.0e-3))
+                                                                     for k, v in main['vals'].items()}, flags=['CALIB_ORIGIN_SENSITIVE']),
+                                                          'FIBRE_SENSITIVE', 'FIBRE_UNCHECKED', '변이 판정 이름 CONSISTENT_WEAK'),
+    }
+    bad = []
+    for nm, (var, want, avoid, why) in cases.items():
+        pub, _res = RR.assemble(main, {'FIBRE': var, 'UNREG': dict(main), 'GRID': dict(main), 'SVORDER': dict(main)}, ([], {}))
+        rs = pub.get('blocking_reasons') or {}
+        if not (want in pub['flags'] and avoid not in pub['flags'] and 'CALIB_ORIGIN_SENSITIVE' not in pub['flags']
+                and str(rs.get(want, '')).startswith(why) and pub['sentence_allowed'] is False):
+            bad.append((nm, pub['flags'], rs, pub.get('variants', {}).get('FIBRE')))
+    return not bad, bad
+
+
+@check('U14', '★ 4판 Q2-5 (§5-6 PRE-design-17 ② ③ ④ ⑤ · R4-Q8) — 변이 NOT_COMPUTED (예측 · 사다리) → <V>_UNCHECKED (3판 = _SENSITIVE) · 변이 이름 같음 + '
+               '자신의 CALIB_ORIGIN_SENSITIVE → <V>_UNCHECKED · 결과 이름 다름 (CALIB_* 포함) → <V>_SENSITIVE (② 먼저) · 변이 자신의 표지는 주 표지 '
+               '목록에 옮기지 않는다 · 표지마다 사유')
+def t_U14():
+    return eval_U14()
+
+
+def run_V18():
+    def go():
+        dirs = list(main_dirs())
+        vl0 = ladder('V18_P0', world('V18_P0', dict(PW, faults=[{'do': 'certfail', 'match': {'rj': '1000000.0'}}])), law='P0',
+                     variant='FIBRE')
+        vl1 = ladder('V18_P1', world('V18_P1'), law='P1', variant='FIBRE')
+        return {'l': [vl0, vl1], 'v': verdict('V18_v', dirs + [vl0['out'], vl1['out']])}
+    return scen('V18', go)
+
+
+@check('V18', '★ 4판 Q2-5 (사슬) — 감도 FIBRE 사다리 P0 가 NOT_COMPUTED (증서 실패) → FIBRE 판정 NOT_COMPUTED → FIBRE_UNCHECKED (FIBRE_SENSITIVE 아님 · '
+               '3판 = 이름 다름 → SENSITIVE) · 주 판정 이름 그대로')
+def t_V18():
+    sc = run_V18()
+    v = sc['v']['v'] or {}
+    fv = (v.get('variants') or {}).get('FIBRE') or {}
+    return (sc['l'][0]['sum']['status'] == 'NOT_COMPUTED' and v.get('verdict') == 'PASS_INFORMATIVE' and 'FIBRE_UNCHECKED' in v.get('flags', [])
+            and 'FIBRE_SENSITIVE' not in v.get('flags', []) and fv.get('verdict') == 'NOT_COMPUTED',
+            (sc['l'][0]['sum']['status'], v.get('verdict'), v.get('flags'), fv))
 
 
 # ── Z 해 상태 · C 두 계획 · N 계획 숫자 · F 단계 순서 (가짜 러너) ──
@@ -2530,6 +2880,85 @@ def t_M28():
         ok2, w2 = eval_short_verdict(v, 'predict')
         return ok1 and ok2, (w1, w2)
     return mutant('M28', {'PREDICT_OUTCOMES': frozenset()}, ev)
+
+
+#  ── ★ 4판 Q2 변이 (고친 곳마다 3판 꼴로 한 줄 되돌림 → 새 시험이 떨어져야 한다) ──
+@check('M29', '★ 4판 Q2-1 변이: 이름 우선순위를 3판으로 (CALIB_ORDER 끝의 NOT_COMPUTED 가 진다 · min 순서) → U11 이 떨어진다')
+def t_M29():
+    def old_judge_set(statuses, vals):
+        bad = [statuses[law] for law in RR.LAWS if statuses[law] != 'CALIBRATED']
+        if bad:
+            return {'verdict': min(bad, key=RR.CALIB_ORDER.index), 'state': 'calib'}
+        return RR_ORIG['judge_set'](statuses, vals)
+    RR_ORIG['judge_set'] = RR.judge_set
+    return mutant('M29', {'judge_set': old_judge_set}, eval_U11)
+
+
+@check('M30', '★ 4판 Q2-2 변이: 끝 판정의 보호 띠 끔 (e 무시 · 3판 outside_band) → U01e (e ≥ 3.728e-5 → 1e7 · 비 1,000) 가 떨어진다')
+def t_M30():
+    def no_band(s, X, lo, e=0.0):
+        return s >= X if lo else s <= X
+    return mutant('M30', {'outside_band': no_band}, eval_U01e)
+
+
+@check('M31', '★ 4판 Q2-2 변이: EDGE 판정의 보호 띠 끔 (3판 |σ/T − 1| ≤ 2 % 만) → U12 (바닥 T⁻(1 − 5e-5) · e 1e-4 → CALIB_EDGE) 가 떨어진다')
+def t_M31():
+    def no_band_edge(s, e, T, tol=RR.CONFIRM_TOL):
+        return abs(s / T - 1.0) <= tol
+    return mutant('M31', {'edge_hit': no_band_edge}, eval_U12)
+
+
+@check('M32', '★ 4판 Q2-3 변이: dbe_origin_ok 를 3판으로 (상태 무시 · W +∞ → 문턱 +∞) → U13 (상태 다름 = 넘음 · [3.0, 5.25]) 이 떨어진다')
+def t_M32():
+    def old_ok(vals, W0, states=None, w_pos=None):
+        sp = RR.ln_spread(vals)
+        thr = RR.ORIGIN_DBE_FRAC_W * W0 if W0 != math.inf else math.inf
+        return sp <= thr, sp
+    return mutant('M32', {'dbe_origin_ok': old_ok}, eval_U13)
+
+
+@check('M33', '★ 4판 Q2-3 변이: W₊ 대신 W (+∞ 그대로) 를 문턱에 → U13b (W₊ 로 넘음 · 4.175) 가 떨어진다')
+def t_M33():
+    orig = RR.dbe_origin_ok
+
+    def w_inf(vals, W0, states=None, w_pos=None):
+        return orig(vals, W0, states=states, w_pos=(math.inf if W0 == math.inf else w_pos))
+    return mutant('M33', {'dbe_origin_ok': w_inf}, eval_U13b)
+
+
+@check('M34', '★ 4판 Q2-4 변이: 결정표 오른쪽 칸을 3판으로 (차단 표지가 있으면 PASS 문장 없음 · None) → U07 이 떨어진다')
+def t_M34():
+    orig = RR.decide_sentence
+
+    def old_dec(state, verdict, blocking, sens_incomplete=False):
+        s = orig(state, verdict, blocking, sens_incomplete=sens_incomplete)
+        return None if (verdict == 'PASS_INFORMATIVE' and blocking) else s
+    return mutant('M34', {'decide_sentence': old_dec}, eval_U07)
+
+
+@check('M35', '★ 4판 Q2-5 변이: 변이 NOT_COMPUTED 를 이름 비교로 (3판 · <V>_SENSITIVE) → U14 가 떨어진다')
+def t_M35():
+    orig = RR.variant_flag
+
+    def old_flag(V, vJ, J, vflags):
+        if vJ['verdict'] == 'NOT_COMPUTED' and vJ['verdict'] != J['verdict']:
+            return f'{V}_SENSITIVE', True, f'변이 판정 이름 {vJ["verdict"]}'
+        return orig(V, vJ, J, vflags)
+    return mutant('M35', {'variant_flag': old_flag}, eval_U14)
+
+
+@check('M36', '★ 4판 Q2-5 변이: 변이 자신의 CALIB_ORIGIN_SENSITIVE 를 안 봄 → U14 (c) 가 떨어진다')
+def t_M36():
+    orig = RR.variant_flag
+
+    def no_own(V, vJ, J, vflags):
+        return orig(V, vJ, J, [f for f in vflags if f != 'CALIB_ORIGIN_SENSITIVE'])
+    return mutant('M36', {'variant_flag': no_own}, eval_U14)
+
+
+@check('M37', '★ 4판 Q2-6 변이: 한정어 ⑰ ⑱ 없음 (①–⑯) → X05 가 떨어진다')
+def t_M37():
+    return mutant('M37', {'QUALIFIERS': RR.QUALIFIERS[:16]}, t_X05)
 
 
 @check('M23', '변이: 두 계획 대조 끔 → C05 (tol_ff 다름) 가 PLAN_CROSS_MISMATCH 를 못 낸다')
