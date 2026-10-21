@@ -605,12 +605,14 @@ def _selftest() -> int:
     #    활성 §3 지문 — `docs/reviews/lhs214_relaunch_package_20261020.md` §1) 을 넣은 정상 비준 상태에서 S0b 만 실패했다 (121/122).  상수 대신:
     #    상태 (fp_state) 가 정한 지문 = 체크아웃 code_fp (64 자리 전체 — registered = 등록 §3 · pending = 대기 선언) · registered 면 대기 선언 없음 (비준 · 재등록이
     #    지운다) · 보충 등록의 (활성 §3 · 대기 선언) = 194 등록의 값 (같은 함수 registration_values 로 읽음 — 보충 §3 "= 194 와 같다" · 한 봉인 ·
-    #    194 쪽 봉인 지문 문제 (§3 값 둘 · 대기 값 둘 · 대기 = 등록) 가 있으면 거짓 — 문제면 값이 None 이라 None = None 으로 통과시키지 않는다).
+    #    두 등록 (보충 · 194) 어느 쪽이든 봉인 지문 문제 (§3 값 둘 · 대기 값 둘 · 대기 = 등록) 가 있으면 거짓 — 문제면 값이 None 이라 None = None 으로 통과시키지
+    #    않는다 · ★ 10-21 SUPR-04 = 보충 쪽 (옛 판은 194 쪽 문제만 받아 보충 쪽 대기 값 둘 · 대기 = 등록 을 참으로 냈다)).
     #    시험의 기대만 바뀐다 — 도구 판정 (receipt · R0 · D1 · E2 · F5 · G5) 은 그대로.
     REG194 = 'docs/reviews/lhs_network_batch_registration_20261007_g2.md'
 
-    def s0b_fp(reg_, base_, base_probs=()):
-        """(참 거짓, 사유) — reg_ = 보충 등록 값 · base_ · base_probs = 194 등록의 값 · 문제 목록 (셋 다 registration_values 의 반환)."""
+    def s0b_fp(reg_, base_, base_probs=(), reg_probs=()):
+        """(참 거짓, 사유) — reg_ · reg_probs = 보충 등록의 값 · 문제 목록 · base_ · base_probs = 194 등록의 값 · 문제 목록 (넷 다 registration_values 의 반환).
+        ★ 10-21 SUPR-04 — 보충 쪽 봉인 지문 문제도 거짓 (옛 판은 194 쪽만 보아 보충 쪽 문제 → 값 None = 194 의 None 으로 참)."""
         def h12(x):
             return f'{x[:12]}…' if x else str(x)
         r_, p_ = reg_.get('code_fp'), reg_.get('code_fp_pending')
@@ -619,6 +621,9 @@ def _selftest() -> int:
             return False, f'상태 undeclared — {why_}'
         if st_ == 'registered' and p_ is not None:
             return False, f'상태 registered 인데 대기 선언이 남았다 ({h12(p_)} — 비준 · 재등록은 대기 선언을 지운다)'
+        sp_ = [x for x in reg_probs if str(x).startswith('등록 문서 code_fp')]
+        if sp_:
+            return False, f'보충 등록의 봉인 지문 문제 {sp_}'
         bp_ = [x for x in base_probs if str(x).startswith('등록 문서 code_fp')]
         if bp_:
             return False, f'194 등록의 봉인 지문 문제 {bp_}'
@@ -652,8 +657,8 @@ def _selftest() -> int:
         """(참 거짓, 상세) — S0b 판정식: §2 네 값 (반입 파일 다시 계산 dg0) · 두 문서의 신원 · s0b_fp (두 문서를 도구 registration_values 로 읽은 값 · 문제)."""
         reg, preg = registration_values(reg_doc=supp_doc)          # 이름 reg · v194 · p194 = S0b 옛 판의 부르는 줄 그대로
         v194, p194 = registration_values(reg_doc=doc194)
-        fp0_ok, fp0_why = s0b_fp(reg, v194, p194)
-        who_ = [f'{lb_} 자리 문서 {d_} — §2 케이스 수 {v_.get("n")} · ids {str(v_.get("ids_sha256"))[:12]}… ≠ 실행기 등록 표 {nm_}'
+        fp0_ok, fp0_why = s0b_fp(reg, v194, p194, preg)
+        who_ =[f'{lb_} 자리 문서 {d_} — §2 케이스 수 {v_.get("n")} · ids {str(v_.get("ids_sha256"))[:12]}… ≠ 실행기 등록 표 {nm_}'
                 for lb_, d_, v_, nm_ in (('보충', supp_doc, reg, SET), ('194', doc194, v194, 'production194'))
                 if not (ID_TBL[nm_].get('n') is not None and v_.get('n') == ID_TBL[nm_]['n'] and v_.get('ids_sha256') == ID_TBL[nm_].get('ids_sha256'))]
         if who_:
@@ -669,6 +674,7 @@ def _selftest() -> int:
         f'★ 10-21 봉인 지문 [상태 {state}] = 상태가 정한 지문 (registered = 등록 §3 · 대기 선언 없음 / pending = 대기 선언) = 체크아웃 code_fp 64 자리 전체 · '
         '보충 등록의 활성 §3 · 대기 선언 = 194 등록의 값 (같은 함수로 읽음) — 옛 판의 지문 앞자리 상수 대신 (비준판 121/122 · 1저자 10-21 Q1) · '
         '★ 10-21 SUPR-05 판정 = s0b_docs (실물 경로 REG_DOC · REG194 — S11h 가 같은 함수를 섞인 경로 쌍으로) · 두 문서의 신원 = 실행기 등록 표 (supp20 · production194) · '
+        '★ 10-21 SUPR-04 두 등록 어느 쪽이든 봉인 지문 문제 (대기 값 둘 · 대기 = 등록 · §3 값 둘) = 거짓 · '
         '값은 문서 · 반입 파일에서 (도구에 사본 없음 · 값 None 안전)', ok0b, det0b)
     with tempfile.TemporaryDirectory(prefix='supp20_receipt_') as td:
         td = Path(td)
@@ -1235,9 +1241,10 @@ def _selftest() -> int:
             return reg_variant(f's0b_{tag}', registered, pending), reg_variant(f's0b194_{tag}', rb_, pb_, src=t194)
 
         def fp_pair(tag, registered, pending=(), base=None):
-            """(보충 등록 값, 194 등록 값, 194 문제 목록) — fp_paths 의 사본 쌍을 도구 registration_values 로 읽음 (s0b_fp 에 값으로)."""
+            """(보충 등록 값, 194 등록 값, 194 문제 목록, 보충 문제 목록) — fp_paths 의 사본 쌍을 도구 registration_values 로 읽음 (s0b_fp 에 값으로 · 인자 순서 그대로)."""
             ps_, p194_ = fp_paths(tag, registered, pending, base)
-            return (registration_values(reg_doc=ps_)[0], *registration_values(reg_doc=p194_))
+            vs_, prs_ = registration_values(reg_doc=ps_)
+            return (vs_, *registration_values(reg_doc=p194_), prs_)
         TW_FP = fp_now[:12] + P_SIM[12:]          # 체크아웃 지문과 앞 12 자리만 같은 값 (상태 판정이 앞자리만 보면 registered 로 읽는다)
         TW_R = R_SIM[:12] + P_SIM2[12:]           # 모의 등록 값과 앞 12 자리만 같은 값 (교차 대조가 앞자리만 보면 같다고 읽는다)
         g_cases = dict(registered=(fp_pair('reg', fp_now), True), pending=(fp_pair('pend', R_SIM, (fp_now,)), True),
