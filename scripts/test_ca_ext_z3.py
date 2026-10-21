@@ -404,17 +404,20 @@ def t_A():
     except Exception as e:                                  # noqa: BLE001
         chk('A11 (vii) 원장 · 소산 항등식', False, f'{type(e).__name__}: {e}')
     #  ── 계약 함수 (payload 없이) — 조합 · P1 = face_alpha 에서만 · centerline + P1 거부 그대로 ──
+    #  ★ 10-21 (사전 리뷰 PRE-impl-03 · 1저자 Q-C) — 접합 + centerline = P0 도 거부 (centerline 이 접점 셀을 sid 7 로 덮으면 옛 판은 포트를
+    #    옆 셀로 옮겨 절연체를 더해 σ 가 올랐다 · Rayleigh 위반) — 접합은 off · face_alpha 에서만
     req = {'R_j_ohm': 1e6, 'len_law': 'len_scaled_v0', 'unreg_law': 'cut', 's_min_um': 0.5, 'tol_ff_um': 0.5}
     okp = []
     for ps, law, want_ok in (('face_alpha', 'P0', True), ('face_alpha', 'P1', True), ('off', 'P1', False),
-                             ('centerline', 'P1', False), ('off', 'P0', True), ('centerline', 'P0', True)):
+                             ('centerline', 'P1', False), ('off', 'P0', True), ('centerline', 'P0', False)):
         try:
             CW.cjunc_protocol_record(ptfe_stamp=ps, ptfe_jlaw=law, **req)
             got_ok = True
         except (ValueError, TypeError):
             got_ok = False
         okp.append((ps, law, got_ok == want_ok))
-    chk('A12 cjunc_protocol_record — face_alpha + 접합 (P0 · P1) 받음 · off · centerline + P1 = 거부 · off · centerline + P0 받음',
+    chk('A12 cjunc_protocol_record — face_alpha + 접합 (P0 · P1) 받음 · off · centerline + P1 = 거부 · off + P0 받음 · '
+        'centerline + P0 = 거부 (★ 10-21 Q-C)',
         all(x[2] for x in okp), okp)
     rq = {'cjunc': dict(req, ptfe_jlaw='P1')}
     try:
