@@ -315,11 +315,5 @@
   "러너": "db/inputs/lpscl_glass_model_check_2026_10_19/run_qe_sp_kgy.sh (sha16 43faab827c2cc2dc) — Nd EOS 잠금 /tmp/ndsite_eos.lock 이 풀릴 때까지 flock 대기 → VRAM 여유 ≥ 20,000 MiB 기다림 (남의 잡 안 죽임 · 상한 96 h) → run_force_check_scf.sh 를 sp → pulay → kpt (LOCK /tmp/li2s_qe_sp.lock · 물러나면 다시 부름 ≤ 20) · selftest 9 · 깨기 4/4 (잠금 대기 · 순서 · mode 검사 · VRAM 대기)",
   "메모리": "kgy 에 CPU 빌드 pw.x 기록 없음 → 블록이 있으면 검사용 프로브 (≤ 120 초 · timeout) · 없으면 09-18 실측 (Γ ≈ 13.5 GB · 8.1 분) 근거로 sp 는 들어간다고 보고 pulay · kpt 를 뒤에",
   "by": "agent · 2026-10-21"
- },
- "✅_프로브_안_함_사용자_2026_10_21": {
-  "사용자": "*'아니 cpu 빌드는 왜 들여보는거야 · gpu로 할건데'* — 묶기 전 CPU 메모리 프로브 (검사용 · run 아님) 를 뺀다",
-  "근거": "sp (Γ · 52/520) 는 09-18 kgy 3090 실측 (≈ 13.5 GB · 점당 8.1 분) 으로 들어간다 · pulay (64/640) · kpt (2×2×2) 는 순서 끝에 두었고 못 들면 그 잡 실패로 기록 (카드 9_개정 Pulay · k 규칙) · 시작 전 VRAM 여유 ≥ 20,000 MiB 는 러너가 본다 · 각 잡의 'Estimated max dynamical RAM' 은 GPU 출력 머리에 찍힌다 (회수 때 기록)",
-  "블록": "① worktree ~/wt_mcsp_1021 (f1c49a2c) → ② --qe_inputs --mode sp → ④ tmux li2s_qe_sp (③ 프로브 없음)",
-  "by": "agent · 2026-10-21"
  }
 }
