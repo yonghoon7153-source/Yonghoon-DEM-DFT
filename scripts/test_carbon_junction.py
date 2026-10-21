@@ -1913,6 +1913,47 @@ def _cx_ref(rj, contract=(), cut=(), ptfe_extra=()):
     return ref_I(nA + len(seqB), E, [(0, G_PL)], [(rep[nA + len(seqB) - 1], G_PL)])
 
 
+#  RCA04-V — 두 VGCF 가 정확히 같은 점에서 시작하는 V 꼴 (첫 선분 방향 (1,0,1) · (2,0,1) — x 성분 둘 다 양수).  옛 경로 순서 키 = 정준 점열
+#  사전식 → 첫 점이 같으면 **둘째 점** 이 가른다 → B 만 공선 세분 (0.25 → 0.125) 하면 둘째 점이 시작점 쪽으로 다가와 순서가 뒤집힌다 (조각 ·
+#  dof 번호 · 계 바이트 · σ 끝자리 — 10-21 사전 공격 리뷰 탐침 8.55011429066427 ↔ …29).  새 키 = (정준 첫 점, 정준 끝 점, 점열) — 끝점은
+#  공선 세분 · 점 역순에 불변.  ⚠ 남은 한계: 두 끝점이 **다** 같은 두 경로 · 닫힌 고리 (끝점 같음) 는 점열이 가른다 (세분 의존).
+#  ⚠ 이 접촉은 길다 (L_c 3.13 > L_par 2 → k 2 · 배율 1.565) — 접합 G = 배율/k·1e4/R_j 의 L_c 가 선분별 닿음 길이의 **부동소수 합** 이라
+#    (정확하지 않은) 세분에서는 G 가 끝자리 몇 ulp 다를 수 있다 → 계의 구조 (u · v · 부류 · 판) 는 비트 · G · σ 는 상대 1e-13 로 본다
+#    (k = 1 점 접합 · 이진 정확 세분의 비트 같음 = RCA04 · PCP).
+VSH_N = (6, 3, 8)
+VSH = [[(1.25, 1.5, 0.5), (3.25, 1.5, 2.5), (3.25, 1.5, 7.5)], [(1.25, 1.5, 0.5), (5.25, 1.5, 2.5), (5.25, 1.5, 7.5)]]
+
+
+@case('RCA04-V')
+def t_rca04_vshape():
+    def run(stepB, fids=(10, 20), rev=False):
+        vb = VSH[1][::-1] if rev else VSH[1]
+        P = cat_rows(rows([VSH[0]], fids=[fids[0]]), rows([vb], step=stepB, fids=[fids[1]]))
+        return _try(lambda: _solve_full(P, VSH_N), None)
+
+    def struct(o):
+        s = (o[2].get('_cjunc') or {}).get('sys') or {}
+        return tuple(np.asarray(s[k]).tobytes() for k in ('u', 'v', 'CAT', 'Ab', 'gb', 'At', 'gt')) if s else None
+
+    def g_rel(o, b):
+        ga, gb_ = np.asarray(o[2]['_cjunc']['sys']['G']), np.asarray(b[2]['_cjunc']['sys']['G'])
+        return float(np.max(np.abs(ga - gb_) / np.abs(gb_))) if ga.shape == gb_.shape else math.inf
+    b0 = run(0.25)
+    order0 = None if b0 is None else [int(b0[1]['positions']['fid'][np.flatnonzero(b0[1]['positions']['piece'] == g)[0]])
+                                      for g in sorted(set(b0[1]['positions']['piece'].tolist()))]
+    chk('RCA04-V 바탕 — 접촉 instance 1 (긴 접촉 · k 2) · 정준 경로 순서 = A (끝점 (3.25,…) < (5.25,…)) 먼저',
+        b0 is not None and len(b0[1]['instances']['fi']) == 1 and int(b0[1]['instances']['nsub'][0]) == 2 and order0 == [10, 20],
+        f'{order0}')
+    for nm, o in (('B 공선 세분 0.125', run(0.125)), ('fid 재명명', run(0.25, (20, 10))), ('세분 + 재명명', run(0.125, (20, 10))),
+                  ('B 점 역순', run(0.25, rev=True))):
+        ok_ = b0 is not None and o is not None
+        chk(f'RCA04-V {nm} → 같은 sid · 간선 포트 셀 · 계 구조 (u · v · 부류 · 판) 비트 같음 · G · σ 상대 ≤ 1e-13 (L_c 합 반올림)',
+            ok_ and o[0].tobytes() == b0[0].tobytes() and _sub_cells(o[1]) == _sub_cells(b0[1]) and struct(o) == struct(b0)
+            and g_rel(o, b0) <= 1e-13 and rel(o[2]['sigma_eff'], b0[2]['sigma_eff']) <= 1e-13,
+            f"{None if not ok_ else (repr(o[2]['sigma_eff']), _sub_cells(o[1]), g_rel(o, b0))} ↔ "
+            f"{None if b0 is None else (repr(b0[2]['sigma_eff']), _sub_cells(b0[1]))}")
+
+
 @case('RCA04-DUP')
 def t_rca04_duplicate():
     """같은 기하 경로 둘 (fid 둘) — 기하 정준 순서 (`CJUNC_ORDER_RULE`) 로 갈리지 않는 짝 (★ 10-21 RCA-04 · 시험은 구현 뒤에 보탬 — 고치기 전
