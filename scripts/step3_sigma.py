@@ -2286,8 +2286,16 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
                             **{k_: v_ for k_, v_ in _cjr.items() if k_ != 'junction_current_code'})
         out['cjunc']['solved'] = True
         out['_cjunc'] = {'kind': 'cjunc_edges', 'version': _cjm.CJUNC_MODEL_VERSION, 'phi_dof': phi, 'sys': _cjs.sys,
-                         'junction_inst': _cjs.junction_edge_inst, 'junction_current_code': _cjr['junction_current_code'],
-                         'fp_sid': _grid_fp(sid)}
+                         'junction_inst': _cjs.junction_edge_inst, 'junction_sub': getattr(_cjs, 'junction_edge_sub', None),
+                         'junction_current_code': _cjr['junction_current_code'], 'fp_sid': _grid_fp(sid)}
+        if _cjp.get('sv_counterfactual') is not None:      # ★ 10-21 (Codex RCA-06 · Q4 (가)) — 선택 노브: SV 면 끊은 판의 단자 G 비 (진단)
+            if unconv:                                     #   주 해가 미수렴 · 증서 실패 = 비를 내지 않는다 (분자 G 를 믿을 수 없다)
+                out['cjunc']['sv_counterfactual'] = {'kind': 'counterfactual_cut_sv_faces', 'requested': True,
+                                                     'threshold': _cjp['sv_counterfactual'].get('threshold'),
+                                                     'status': 'main_unconverged', 'sv_counterfactual_ratio': None,
+                                                     'flag': None}
+            else:
+                out['cjunc']['sv_counterfactual'] = _cjs.sv_counterfactual(_solve_cg, I, _cjp['sv_counterfactual'])
     if return_field:
         P = np.zeros(sid.shape, np.float64); P[cond] = phi
         out['phi'] = P; out['cond'] = cond

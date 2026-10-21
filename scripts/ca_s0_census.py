@@ -734,6 +734,20 @@ def junction_census(kw, sid, *, tol_ff, L_par, r_port, tol_P, tol_sj, r_ptfe, r_
               'mult': _jf(mult[q]), 'd0_um': _jf(I['d0'][q]), 's_um': _jf(s[q]), 'realized': bool(real[q])}
              for q in np.flatnonzero(lng)]
     longc.sort(key=lambda d: (-(d['Lc_um'] or 0.0), d['fi'], d['fj']))
+    #  ★ 10-21 (Codex RCA-03 · 04 · 05 · 1저자 Q11 일부) — census 보탬: 같은 셀 비연속 재방문 · 포트 동률 (간선 단위) · 분산 간선 (긴 접촉) ·
+    #    간선별 PTFE 덮임 · 부분 덮임 instance — 전부 원장 census (같은 함수) 그대로 옮긴다 (사본 계산 없음)
+    S = reg['subedges']
+    cen = reg['census']
+    sub_inst = np.asarray(S['inst'], np.int64)
+    revisit = {'n_pairs': cen.get('n_revisit_pairs'), 'n_cells': cen.get('n_revisit_cells'),
+               'n_fibres': cen.get('n_revisit_fibres'), 's_um': cen.get('revisit_s_um'),
+               'n_path_only': cen.get('n_self_revisits_path_only'),
+               'rule': reg['rules'].get('branch'), 'meaning': '같은 fid 가 같은 셀을 비연속으로 다시 지난 가지 쌍 (가지마다 따로 · 합치지 않음 · '
+                                                           'RCA-03) — s = 그 쌍이 든 자기 후보의 경로 호 길이'}
+    subedges = {'n': cen.get('n_subedges'), 'n_long': cen.get('n_subedges_long'), 'n_ptfe_cov': cen.get('n_subedges_ptfe_cov'),
+                'n_instances_ptfe_partial': cen.get('n_instances_ptfe_partial'), 'n_sdcp_near': cen.get('n_subedges_sdcp_near'),
+                'n_unrealized': cen.get('n_subedges_unrealized'), 'rule': reg['rules'].get('dist'),
+                'k_per_instance': _dist(np.asarray(I['nsub'], np.float64))}
     block = {
         'status': 'registry',
         'function': 'carbon_junction.cjunc_registry',
@@ -755,6 +769,7 @@ def junction_census(kw, sid, *, tol_ff, L_par, r_port, tol_P, tol_sj, r_ptfe, r_
         'self_s_um': _dist(s[isself]),
         'port_search_um': _dist(np.asarray(I['port_search_um'], np.float64)[real]),
         'n_ptfe_cov': int(np.sum(I['ptfe_cov'])), 'n_sdcp_near': int(np.sum(I['a_sdcp'])),
+        'revisit': revisit, 'n_port_ties': cen.get('n_port_ties'), 'subedges': subedges,
         'self_candidates': selfc,
         'long_contacts': longc,
     }
@@ -763,7 +778,12 @@ def junction_census(kw, sid, *, tol_ff, L_par, r_port, tol_P, tol_sj, r_ptfe, r_
               'self_dk_min': np.asarray(I['self_dk_min'], np.int64), 'realized': real,
               'reason': np.asarray([str(x) for x in I['reason']], dtype=str),
               'port_search_um': np.asarray(I['port_search_um'], np.float64), 'cp': np.asarray(I['cp'], np.float64),
-              'ptfe_cov': np.asarray(I['ptfe_cov'], bool), 'a_sdcp': np.asarray(I['a_sdcp'], bool)}
+              'ptfe_cov': np.asarray(I['ptfe_cov'], bool), 'a_sdcp': np.asarray(I['a_sdcp'], bool),
+              'nsub': np.asarray(I['nsub'], np.int64), 'self_n_revisit': np.asarray(I['self_n_revisit'], np.int64),
+              'sub_inst': sub_inst, 'sub_ptfe_cov': np.asarray(S['ptfe_cov'], bool),
+              'sub_a_sdcp': np.asarray(S['a_sdcp'], bool), 'sub_realized': np.asarray(S['realized'], bool),
+              'sub_cp': np.asarray(S['cp'], np.float64), 'sub_tie_i': np.asarray(S['tie_i'], bool),
+              'sub_tie_j': np.asarray(S['tie_j'], bool)}
     return block, arrays
 
 
@@ -1597,6 +1617,10 @@ def _summary(rep):
                      f"{jc.get('n_self_candidates')} (s 최소 {ss.get('min')} · 중앙 {ss.get('p50')} µm · 거르지 않음 = S0 는 s_min 안 씀) · "
                      f"긴 접촉 {J.get('n_long')} (distinct {J.get('n_long_distinct')} · self {J.get('n_long_self')}) · 배율 합 "
                      f"{J.get('len_mult_sum'):.6g} · 미실현 {jc.get('n_unrealized_by_reason')} · 후보별 → {J.get('arrays_file')}")
+        rv, sb = J.get('revisit') or {}, J.get('subedges') or {}
+        lines.append(f"  [census 보탬 10-21] 같은 셀 비연속 재방문 쌍 {rv.get('n_pairs')} · 셀 {rv.get('n_cells')} · 섬유 "
+                     f"{rv.get('n_fibres')} · s {rv.get('s_um')} · 포트 동률 {J.get('n_port_ties')} · 분산 간선 {sb.get('n')} (긴 접촉 "
+                     f"{sb.get('n_long')}) · 간선별 PTFE 덮임 {sb.get('n_ptfe_cov')} · 부분 덮임 instance {sb.get('n_instances_ptfe_partial')}")
     vv = C['vv']
     lines.append(f"  [B0 미리보기] VV {vv['n_instances']} · 자기 {vv['n_self']} · 긴 접촉 (> L_par) touch {vv['n_long']['touch']} "
                  f"· band {vv['n_long']['band']} · 관통 {vv['penetrating']} · 위치 {vv['location']}")

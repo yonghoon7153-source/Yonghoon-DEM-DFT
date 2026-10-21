@@ -62,13 +62,18 @@ LABEL_SDCP = ('SDCP 접점 시나리오 c ∈ {0 · 1} — 재료 예측 아님 
 DIAGNOSTICS_V0 = {'je': 'not_computed', 'dissipation_share_step3': 'not_computed (원장을 안 읽는다 · E2)',
                   'dissipation_share_ledger': 'evidence.solve.dissipation_share', 'field': 'refused', 'joule': 'refused',
                   'step4_grid': 'refused', 'phi_profile_electronic': 'not_computed'}
-#: 원장 · 계획 수 (cjunc_plan 기록 counts) 중 정수 칸
+#: 원장 · 계획 수 (cjunc_plan 기록 counts) 중 정수 칸 — ★ 10-21 (cjunc-v2 · Codex RCA-05 분산판 v0): 모드 수 (간선 · 축약 · 절단 · 미실현 ·
+#  극한) · 근접 · 덮임 = **간선 단위** (`n_subedges` = 분산 간선 수 · k 1 침대 = instance 수와 같다) · n_instances = instance 수.
+#  `n_subedges` 칸이 없는 기록 = 간선 수 = instance 수로 읽는다 (옛 꼴 · 그때 모드 합 = instance 수 — k > 1 기록이 칸을 빼면 합이 맞지 않아
+#  거부된다 · 칸이 있으면 정수 · 합 · instance 수 이상을 다 본다)
 _COUNT_INT = ('n_instances', 'n_edge', 'n_contract', 'n_cut_p1', 'n_unrealized', 'n_none_inf', 'n_long', 'n_sdcp_near',
               'n_contracted_by_c', 'n_ptfe_cov')
-#: 솔브 기록 (res['cjunc']) 에서 증거로 옮기는 칸
+#: 솔브 기록 (res['cjunc']) 에서 증거로 옮기는 칸 — ★ 10-21: `sv_dominant` (지배성 표지 · RCA-06 철회) → `sv_local_dissipation` (진단) ·
+#  반사실 대조 (`sv_counterfactual` · 노브를 켠 런만) · `n_self_merged_revisits` (옛 재방문 합침 · RCA-03 철회) → `n_self_revisits_path_only`
 _SOLVE_KEYS = ('solved', 'reason', 'n_extra_dofs', 'n_contracted', 'n_floating_dropped', 'n_through_dof', 'n_plate_reachable_dof',
-               'short', 'tombstones', 'n_unreg_fused', 'n_junction_edges', 'n_self_fused_faces', 'n_self_merged_revisits',
-               'P_total_code', 'P_sum_check_code', 'dissipation_share', 'sv_dominant', 'sv_face_abs_current_over_I', 'I_bot_code')
+               'short', 'tombstones', 'n_unreg_fused', 'n_junction_edges', 'n_self_fused_faces', 'n_self_revisits_path_only',
+               'P_total_code', 'P_sum_check_code', 'dissipation_share', 'sv_local_dissipation', 'sv_counterfactual',
+               'sv_face_abs_current_over_I', 'I_bot_code')
 
 
 def _jsonable(x):
@@ -350,16 +355,21 @@ def cjunc_block_problem(man):
     cnt = ev.get('counts') if isinstance(ev.get('counts'), dict) else None
     if cnt is None or any(not _int(cnt.get(k)) or cnt.get(k) < 0 for k in _COUNT_INT):
         return f'counts| 원장 수 기록 모양 ({cnt!r})'
-    if cnt['n_instances'] != cnt['n_edge'] + cnt['n_contract'] + cnt['n_cut_p1'] + cnt['n_unrealized'] + cnt['n_none_inf']:
-        return f'counts| instance 수 ≠ 간선 + 축약 + 절단 + 미실현 + 극한 ({cnt})'
+    n_sub = cnt.get('n_subedges', cnt['n_instances'])
+    if not _int(n_sub) or n_sub < 0:
+        return f'counts| 분산 간선 수 기록 모양 ({n_sub!r})'
+    if n_sub != cnt['n_edge'] + cnt['n_contract'] + cnt['n_cut_p1'] + cnt['n_unrealized'] + cnt['n_none_inf']:
+        return f'counts| 분산 간선 수 ≠ 간선 + 축약 + 절단 + 미실현 + 극한 ({cnt})'
+    if n_sub < cnt['n_instances'] or (cnt['n_instances'] == 0) != (n_sub == 0):
+        return f'counts| 분산 간선 수 {n_sub} ↔ instance 수 {cnt["n_instances"]} (instance 마다 간선 ≥ 1)'
     if lim is None and cnt['n_none_inf'] != 0:
         return 'counts| R_j = ∞ 극한 instance — 정량 (R_j 유한 > 0) 과 모순'
     if lim == 'inf' and cnt['n_edge'] != 0:                   # ★ Z3 — 바닥: 접합 간선 없음 (근접 축약 = S3 c 1 몫만 · 아래 수정자 대조)
         return f'counts| 바닥 (R_j = ∞) 인데 접합 간선 {cnt["n_edge"]} — 극한 instance 여야 한다'
     if lim == 'zero' and (cnt['n_edge'] != 0 or cnt['n_none_inf'] != 0
-                          or cnt['n_contract'] != cnt['n_instances'] - cnt['n_cut_p1'] - cnt['n_unrealized']):
+                          or cnt['n_contract'] != n_sub - cnt['n_cut_p1'] - cnt['n_unrealized']):
         return (f'counts| 천장 (R_j = 0) 인데 간선 {cnt["n_edge"]} · 극한 {cnt["n_none_inf"]} · 축약 {cnt["n_contract"]} — 실현 · 미절단 '
-                f'instance 는 전부 축약 (S3 없이)')
+                f'간선은 전부 축약 (S3 없이)')
     if prot['ptfe_jlaw'] == 'P0' and cnt['n_cut_p1'] != 0:
         return 'counts| P0 인데 P1 절단 instance > 0'
     if prot['ptfe_jlaw'] == 'P1' and cnt['n_cut_p1'] > cnt['n_ptfe_cov']:
