@@ -12402,12 +12402,12 @@
       "found_by": "codex 10-21 Rint ② 설계 리뷰 (리뷰 핀 5dc6f7f0b · 독립 양의 저항망 · 정확 기하 · 핀의 실제 판독 함수 · 실침대 런 없음)",
       "opened_in": "docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md",
       "title": "등록 R §6: 국소 ±2 % 할선 s 로 유한 접촉저항 Rc 보정의 부호까지 확정할 수 없다 — 유한 구간 평균 탄성이 필요",
-      "note": "판정문 §2 RCA-12 · 자리 R:120 · D:24 · R_b = R_measured − R_c · Rc = 1 Ω 문턱 3.9967891509 은 맞음 · 반례 S=9.78/(r+5) · D=a[1+1/(r+0.01)] (a 1.15998247439619 · R_S 7.016 · R_D 2.178 Ω) · ±2 % 할선 s 2.9703 → 문서식 예측/측정 1.1710 (높음) ↔ 같은 망 유한 이동 정확 계산 0.4933 (낮음) · 유한 구간 평균 s 8.5927.  최소 해결 = 미소 Rc 1차 해석으로 한정 또는 유한 구간 s 평균 · 적분 · 0 ≤ Rc < min(R_S, R_D) 명시 · 미측정 Rc 로 실패 방향 보장 안 함 · 판정선은 그대로 (설명 지위만).  재현 = probe_registration.py contact_bias. ★ 10-21 RI 메인 통합 (병합 `3b3aa50e2` = Rint ② 사슬 · 접합 · Q1/Q2 줄 26 커밋 · 기반 `a76f59d0d` → `0ecfb912b` + 항목 9 `f60bd56ed` · 근거 = 수정 계획 `docs/reviews/rint2_design_fix_plan_20261021.md` §5 대응표 (A = Q1–Q4 · B = Q5 · C = Q6–Q10 · 사전 리뷰 Q-A–Q-G · 1저자 10-21 Q1 · Q2) + 합친 트리 회귀 (4판 문서 · 이 메모의 시험 수 = 그 출력)) = claimed_fixed — 고친 곳 = C 등록 3판 §6 (메인 `9fa4fb18b` · 미소 R_c 1차 해석으로 한정 · 0 ≤ R_c < min(R_S, R_D) · 미측정 R_c 로 실패 방향 보장 문장 철회 · 판정선 그대로) · 이 줄 D 사슬 3판 s 분모 = 끝 두 점의 실제 Δ ln σ_SBE (§3-2b ⑦ · §10-2 ⑰ · 판정 밖 보고값 · 고정 시험 없음) · 확인 = Codex 재검토.",
+      "note": "판정문 §2 RCA-12 · 자리 R:120 · D:24 · R_b = R_measured − R_c · Rc = 1 Ω 문턱 3.9967891509 은 맞음 · 반례 S=9.78/(r+5) · D=a[1+1/(r+0.01)] (a 1.15998247439619 · R_S 7.016 · R_D 2.178 Ω) · ±2 % 할선 s 2.9703 → 문서식 예측/측정 1.1710 (높음) ↔ 같은 망 유한 이동 정확 계산 0.4933 (낮음) · 유한 구간 평균 s 8.5927.  최소 해결 = 미소 Rc 1차 해석으로 한정 또는 유한 구간 s 평균 · 적분 · 0 ≤ Rc < min(R_S, R_D) 명시 · 미측정 Rc 로 실패 방향 보장 안 함 · 판정선은 그대로 (설명 지위만).  재현 = probe_registration.py contact_bias. ★ 10-21 RI 메인 통합 (병합 `3b3aa50e2` = Rint ② 사슬 · 접합 · Q1/Q2 줄 26 커밋 · 기반 `a76f59d0d` → `0ecfb912b` + 항목 9 `f60bd56ed` · 근거 = 수정 계획 `docs/reviews/rint2_design_fix_plan_20261021.md` §5 대응표 (A = Q1–Q4 · B = Q5 · C = Q6–Q10 · 사전 리뷰 Q-A–Q-G · 1저자 10-21 Q1 · Q2) + 합친 트리 회귀 (4판 문서 · 이 메모의 시험 수 = 그 출력)) = claimed_fixed — 고친 곳 = C 등록 3판 §6 (메인 `9fa4fb18b` · 미소 R_c 1차 해석으로 한정 · 0 ≤ R_c < min(R_S, R_D) · 미측정 R_c 로 실패 방향 보장 문장 철회 · 판정선 그대로) · 이 줄 D 사슬 3판 s 분모 = 끝 두 점의 실제 Δ ln σ_SBE (§3-2b ⑦ · §10-2 ⑰ · 판정 밖 보고값 · 고정 시험 없음) · 확인 = Codex 재검토. · (10-21 메인 정정) claimed_fixed_sha = 실제로 고친 커밋 9fa4fb18b (등록 R 3판 §6 문서 수정 · Rint ② 줄 병합 3b3aa50e2 는 이 항목을 바꾸지 않았다)",
       "evidence_tests": [
         "docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md §6 (10-21 · Codex RCA-12 · 1저자 Q9 문단 — 문서 수정 · 시험 없음)",
         "docs/reviews/codex_rint2_carbon_design_review_evidence_20261021/registration/probe_registration.py"
       ],
-      "claimed_fixed_sha": "3b3aa50e2"
+      "claimed_fixed_sha": "9fa4fb18b"
     },
     {
       "id": "RCA-13",

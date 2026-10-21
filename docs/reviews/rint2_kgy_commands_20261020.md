@@ -400,7 +400,7 @@ python3 ~/dem-ca1/scripts/<사다리 사슬> --stage verdict --runs ~/sdcp/ca1_l
 cd ~/dem-ca1 && git log --oneline -1 && git status --porcelain --untracked-files=no | head    # 핀 · 깨끗해야
 . ~/dem-venv/bin/activate && unset SIGMA_VGCF_OVERRIDE
 
-# (0) R 런 계획 파일 = 등록 R §2-1 개정 커밋의 파일 (rint-r-plan-v1 · 칸 = schema · len_law · unreg_law · s_min_um · tol_ff_um · step3_rtol · p2_extra) 바이트 그대로
+# (0) R 런 계획 파일 = 등록 R §2-1 개정 커밋의 파일 (~~rint-r-plan-v1 · 칸 = schema · len_law · unreg_law · s_min_um · tol_ff_um · step3_rtol · p2_extra~~ → (10-21 · 4판 정정 · 코드 이름) rint-r-plan-v2 · 칸 11 = 그 일곱 + 결과 전 등록 숫자 넷 max_ladder_points · calib_rj_ratio_max · sv_cf_threshold · sv_cf_scope · `rint_r_chain.PLAN_KEYS` · 일곱 칸 꼴 = 사슬이 PLAN_INVALID 로 거부) 바이트 그대로
 cp ~/dem-ca1/<§2-1 개정 커밋의 R 런 계획 경로> ~/sdcp/ca1_plan.json
 sha256sum ~/sdcp/ca1_plan.json      # = 등록 R §2-1 '| 계획 해시 |' 줄 끝 칸 (다르면 사슬이 PLAN_HASH_MISMATCH · 칸이 ⬜ 면 PLAN_HASH_UNREGISTERED 로 멈춘다)
 
