@@ -2408,6 +2408,115 @@ def t_V20():
     return ok, (r5, r6, r7)
 
 
+#  ★ RI (10-21 · 등록 R 4판 §5-6 ③ · 1저자 10-21 Q2 범위 = 코드를 등록에 맞춤) — 멈춘 단계 (STOPPED · 등록 결과 이름이 아닌 멈춤) ──────────
+#  §5-6 ③ "변이 판정 = `NOT_COMPUTED` (풀이 · 증서 실패 · 단락 · 멈춤) → `<V>_UNCHECKED`" — 감도 변이 단계가 멈추면 그 변이 판정 = NOT_COMPUTED
+#  → <V>_UNCHECKED (차단 · PASS 문장은 계속 막힌다) · 주 판정은 그대로 계산한다 (4판 사슬 = 변이 단계 하나가 멈춰도 INPUT_STAGE_STOPPED 로 판정
+#  전체 거부).  주 판정 단계의 멈춤 = 판정 전체 NOT_COMPUTED (§5-5 사슬 멈춤 행 · 그대로 · V23).  멈춘 변이 단계도 판정 입력 검사 (계획 ·
+#  S0 · 등록 숫자 · 코드 핀 · 주 예측 묶음 · 예측 ↔ 사다리) 는 그대로 받는다 (V24 — 등록이 정하지 않은 자리 = 지금 동작 · 보고).
+V21_BLK = ['FIBRE_UNCHECKED', 'GRID_UNCHECKED', 'SVORDER_UNCHECKED', 'UNREG_UNCHECKED']
+
+
+def run_V21_ladders():
+    """FIBRE 변이 사다리 둘 — P0 = 러너 rc 2 (1e4 점 · RUNNER_RC · STOPPED) · P1 = 보정됨 (판정이 원 팔에서 다시 계산)."""
+    def go():
+        vl0 = ladder('V21_P0', world('V21_P0', dict(PW, faults=[{'do': 'rc2', 'match': {'rj': '10000.0'}}])), law='P0',
+                     variant='FIBRE')
+        vl1 = ladder('V21_P1', world('V21_P1'), law='P1', variant='FIBRE')
+        return [vl0, vl1]
+    return scen('V21_l', go)
+
+
+def run_V22_predict():
+    """SVORDER 변이 예측 — 주 사다리 · 주 예측 묶음을 기록한 뒤 첫 DBE 모서리 런에서 러너 rc 2 (RUNNER_RC · STOPPED)."""
+    return scen('V22_p', lambda: predict('V22_p', world('V22_p', dict(PW, faults=[{'do': 'rc2', 'match': {'kit_has': 'DBE'}}])),
+                                         [s_main('P0')['out'], s_main('P1')['out']], variant='SVORDER'))
+
+
+def stopped_variant_ok(v, V):
+    """멈춘 변이 V 의 판정 기록 — 주 판정을 계산했다 (rc 0 · 멈춤 없음 · 주 숫자 = 변이 없는 주 판정 V01 과 같음) · <V>_UNCHECKED (차단 표지) ·
+    <V>_SENSITIVE 아님 (이름 비교 안 함) · 변이 판정 NOT_COMPUTED (돌림 = checked) · 사유 = 변이 판정 NOT_COMPUTED (§5-6 ③) · §7-1 문장 금지 ·
+    판정 입력 기록에 그 변이의 멈춘 단계 (STOPPED)."""
+    P, R = v['v'] or {}, v['r'] or {}
+    main_r = s_verdict_main()['r'] or {}
+    pv = (P.get('variants') or {}).get(V) or {}
+    rs = P.get('blocking_reasons') or {}
+    fl = P.get('flags') or []
+    stopped_in = [x for x in P.get('inputs') or [] if isinstance(x, dict) and x.get('variant') == V and x.get('status') == 'STOPPED']
+    ok = (v['rc'] == 0 and P.get('stop') is None and P.get('verdict') == 'PASS_INFORMATIVE'
+          and f'{V}_UNCHECKED' in fl and f'{V}_UNCHECKED' in (P.get('blocking_flags') or []) and f'{V}_SENSITIVE' not in fl
+          and pv.get('checked') is True and pv.get('verdict') == 'NOT_COMPUTED' and pv.get('grade_changed') is None
+          and pv.get('flag') == f'{V}_UNCHECKED' and str(rs.get(f'{V}_UNCHECKED', '')).startswith('변이 판정 NOT_COMPUTED')
+          and P.get('sentence_allowed') is False and len(stopped_in) >= 1
+          and R.get('interval_mScm') is not None and R.get('interval_mScm') == main_r.get('interval_mScm') and R.get('W') == main_r.get('W')
+          and ((R.get('variants') or {}).get(V) or {}).get('verdict') == 'NOT_COMPUTED'
+          and P.get('sentence') == want_sentence('positive', 'PASS_INFORMATIVE', V21_BLK, sens=True))
+    return ok, (v['rc'], P.get('verdict'), (P.get('stop') or {}).get('code'), fl, pv, rs.get(f'{V}_UNCHECKED'), len(stopped_in),
+                P.get('sentence'))
+
+
+def eval_V21(tag):
+    lv = run_V21_ladders()
+    fix = (lv[0]['rc'] == 3 and (lv[0]['sum'] or {}).get('status') == 'STOPPED' and stop_code(lv[0]) == 'RUNNER_RC'
+           and ((lv[0]['sum'] or {}).get('after_main') or {}).get('summary_sha256') and (lv[1]['sum'] or {}).get('status') == 'CALIBRATED')
+    ok, why = stopped_variant_ok(verdict(tag, main_dirs() + [x['out'] for x in lv]), 'FIBRE')
+    return bool(fix) and ok, (bool(fix), why)
+
+
+def eval_V22(tag):
+    p = run_V22_predict()
+    s = p['sum'] or {}
+    fix = (p['rc'] == 3 and s.get('status') == 'STOPPED' and stop_code(p) == 'RUNNER_RC' and s.get('ladders')
+           and (s.get('after_main') or {}).get('summary_sha256'))
+    ok, why = stopped_variant_ok(verdict(tag, main_dirs() + [p['out']]), 'SVORDER')
+    return bool(fix) and ok, (bool(fix), why)
+
+
+@check('V21', '★ RI (§5-6 ③) — 감도 FIBRE 사다리 P0 가 멈춤 (러너 rc 2 · RUNNER_RC · STOPPED) · P1 보정됨 → 판정 = 주 판정 (rc 0 · 주 숫자 같음) + '
+               'FIBRE_UNCHECKED (변이 판정 NOT_COMPUTED · 이름 비교 안 함 · 차단) · 문장 = 결정표 오른쪽 칸 · 다시 판정 같음 (4판 사슬 = '
+               'INPUT_STAGE_STOPPED 로 판정 전체 거부)')
+def t_V21():
+    ok, why = eval_V21('V21_v')
+    rc, so = call(['--stage', 'verdict', '--reverify', Path(TD) / 'runs' / 'V21_v', '--registration', FX['reg_ok']])
+    return ok and rc == 0 and 'REVERIFY_SAME' in so, (why, rc, so[-200:])
+
+
+@check('V22', '★ RI (§5-6 ③) — 감도 SVORDER 예측이 멈춤 (주 묶음 기록 뒤 · 첫 DBE 모서리 러너 rc 2 · STOPPED) → 판정 = 주 판정 + SVORDER_UNCHECKED '
+               '(변이 판정 NOT_COMPUTED · 차단 · 4판 사슬 = INPUT_STAGE_STOPPED)')
+def t_V22():
+    return eval_V22('V22_v')
+
+
+def eval_V23(ta, tb):
+    t_P03()
+    out = []
+    for r in (verdict(ta, [run_S02()['out'], s_main('P1')['out']]),
+              verdict(tb, [s_main('P0')['out'], s_main('P1')['out'], SCEN['P03']['out']])):
+        P = r['v'] or {}
+        rs = P.get('reasons') or []
+        out.append((r['rc'] == 3 and P.get('verdict') == 'NOT_COMPUTED' and stop_code(r) == 'INPUT_STAGE_STOPPED' and r['r'] is None
+                    and P.get('sentence') == T_NC and len(rs) == 1 and rs[0].get('code') == 'INPUT_STAGE_STOPPED',
+                    (r['rc'], stop_code(r), P.get('sentence'), rs)))
+    return all(o[0] for o in out), [o[1] for o in out]
+
+
+@check('V23', '★ RI (§5-5 사슬 멈춤 행 · 그대로) — 주 판정 단계의 멈춤은 여전히 판정 전체 NOT_COMPUTED: 주 사다리 P0 멈춤 (S02 · RUNNER_RC) · 주 예측 '
+               '멈춤 (P03 · SAME_P_CONSISTENCY) → INPUT_STAGE_STOPPED · rc 3 · 결과 파일 없음 · 문장 = NOT_COMPUTED 칸 · 사유 = 멈춤 코드')
+def t_V23():
+    return scen('V23', lambda: eval_V23('V23a', 'V23b'))
+
+
+@check('V24', '★ RI — 멈춘 변이 단계도 판정 입력 검사는 그대로 (4판 사슬은 그 검사 전에 판정 전체를 거부했다): 주 예측 묶음을 기록하기 전에 멈춘 '
+               'SVORDER 예측 (F01b · MAIN_NOT_DONE · after_main 없음) → MAIN_BINDING · 판정 NOT_COMPUTED · rc 3 (등록이 정하지 않은 자리 = 지금 동작)')
+def t_V24():
+    t_F01()
+    f = SCEN['F01b']['sum'] or {}
+    r = scen('V24', lambda: verdict('V24', main_dirs() + [SCEN['F01b']['out']]))
+    P = r['v'] or {}
+    return (r['rc'] == 3 and P.get('verdict') == 'NOT_COMPUTED' and stop_code(r) == 'MAIN_BINDING' and r['r'] is None
+            and f.get('status') == 'STOPPED' and f.get('variant') == 'SVORDER' and f.get('after_main') is None,
+            (r['rc'], stop_code(r), f.get('status'), f.get('after_main')))
+
+
 # ── Z 해 상태 · C 두 계획 · N 계획 숫자 · F 단계 순서 (가짜 러너) ──
 def z_world(tag, states):
     return world(tag, dict(PW, states=states))
@@ -3030,6 +3139,29 @@ def t_M36():
 @check('M37', '★ 4판 Q2-6 변이: 한정어 ⑰ ⑱ 없음 (①–⑯) → X05 가 떨어진다')
 def t_M37():
     return mutant('M37', {'QUALIFIERS': RR.QUALIFIERS[:16]}, t_X05)
+
+
+#  ── ★ RI 변이 (§5-6 ③ 멈춘 변이 단계 · 고친 곳마다 한 줄 되돌림 → 새 시험이 떨어져야 한다) ──
+@check('M38', '★ RI 변이: 멈춘 단계 거부를 4판 사슬 꼴로 (주 · 변이 가리지 않고 STOPPED = 판정 전체 거부) → V21 · V22 (멈춘 변이 = <V>_UNCHECKED) 가 '
+              '떨어진다')
+def t_M38():
+    def old(s):
+        return s.get('status') == 'STOPPED'
+    a = mutant('M38a', {'stopped_stage_rejects_verdict': old}, lambda: eval_V21('M38a_v'))
+    b = mutant('M38b', {'stopped_stage_rejects_verdict': old}, lambda: eval_V22('M38b_v'))
+    return a[0] and b[0], (a[1], b[1])
+
+
+@check('M39', '★ RI 변이: 주 판정 단계의 멈춤도 거부하지 않음 → V23 (주 사다리 · 주 예측 멈춤 = INPUT_STAGE_STOPPED) 이 떨어진다')
+def t_M39():
+    return mutant('M39', {'stopped_stage_rejects_verdict': lambda s: False}, lambda: eval_V23('M39a', 'M39b'))
+
+
+@check('M40', '★ RI 변이: 멈춘 변이 단계를 NOT_COMPUTED 로 두지 않고 원 팔에서 다시 계산 → V21 · V22 가 떨어진다')
+def t_M40():
+    a = mutant('M40a', {'variant_stage_stopped': lambda s: False}, lambda: eval_V21('M40a_v'))
+    b = mutant('M40b', {'variant_stage_stopped': lambda s: False}, lambda: eval_V22('M40b_v'))
+    return a[0] and b[0], (a[1], b[1])
 
 
 @check('M23', '변이: 두 계획 대조 끔 → C05 (tol_ff 다름) 가 PLAN_CROSS_MISMATCH 를 못 낸다')
