@@ -363,9 +363,13 @@ def cjunc_block_problem(man):
     if n_sub < cnt['n_instances'] or (cnt['n_instances'] == 0) != (n_sub == 0):
         return f'counts| 분산 간선 수 {n_sub} ↔ instance 수 {cnt["n_instances"]} (instance 마다 간선 ≥ 1)'
     #  ★ 10-21 (사전 공격 리뷰 · RCA-05 v0) — 간선 수 ↔ 길이 법칙 배율 결합: 배율 최대 = 1 ⟺ 모든 instance k = 1 ⟺ 간선 = instance
-    #    (`carbon_junction._n_sub` 의 문턱 = `junction_len_mult` 와 같은 식 r = L_c/L_par > 1 + 1e-9 · n_long 은 곱 꼴이라 쓰지 않는다)
+    #    (`carbon_junction._n_sub` 의 문턱 = `junction_len_mult` 와 같은 식 r = L_c/L_par > 1 + 1e-9 · n_long 은 곱 꼴이라 쓰지 않는다).
+    #    칸이 없는 기록 = 옛 꼴 (점 접합만) → 간선 = instance 여야 한다 (k > 1 기록이 칸을 빼면 거부 · 옛 합성 매니페스트는 받는다).
     _lm = cnt.get('len_mult_max')
-    if cnt['n_instances'] == 0:
+    if 'len_mult_max' not in cnt:
+        if n_sub != cnt['n_instances']:
+            return f'counts| 배율 최대 칸 없음 (옛 꼴 = 점 접합만) 인데 분산 간선 {n_sub} ≠ instance {cnt["n_instances"]}'
+    elif cnt['n_instances'] == 0:
         if _lm is not None:
             return f'counts| instance 0 인데 배율 최대 {_lm!r} (None 이어야 한다)'
     elif not (isinstance(_lm, float) and math.isfinite(_lm) and _lm >= 1.0):
