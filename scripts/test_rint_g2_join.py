@@ -155,8 +155,10 @@ def text_lines(path):
 
 
 def write_copy(lines, name):
+    """시험 사본 쓰기 — 줄 끝 = LF 고정 (★ RINT2-B-01 · Codex 10-21 §6-3: newline 미지정이면 Windows 글자 모드가 LF → CRLF 로 바꾸고, 저장 꼴
+    시험이 그것을 다시 CRLF 로 바꿔 CRCRLF 를 만들었다 — 생산 판독기 결함 아님 · 판독기는 그대로).  CR · CRLF 꼴은 이 LF 바이트에서 만든다."""
     p = os.path.join(TMP, name)
-    with open(p, 'w', encoding='utf-8') as fh:
+    with open(p, 'w', encoding='utf-8', newline='\n') as fh:
         fh.write('\n'.join(lines))
     return p
 
