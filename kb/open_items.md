@@ -19,7 +19,7 @@
   - 읽으면서 고친 우리 쪽 오기: BVSE 'softBV' 이름표 (CLAUDE.md · `kb/concepts/bvse.md` · ebd59696) · LPSC₁.₆ ELF 는 다른 SCF (SG15 ONCV 80/320 Ry) 라고 SI 에 밝힘 · DOS 7×7×1 · MSD 식 (S1) 은 실행 코드 그대로 (시간 원점 하나).
   - ⏭ 1저자 회신 대기. **1저자에게 아직 안 간 것 = 원고 쪽 메모** (원고 MD 단락의 σ = 단일 시드 273 K 판 · 'room-temperature' ↔ 273 K · BO MD 값 = HZ-b2o3-md-ea BLOCKED · BO Eₐ 끝자리 출처 없음 · BVSE 두 값이 그림용 상자 값 (원래 셀이면 LPSC₁.₆ ↔ O-LPSC₁.₆ 순서 뒤집힘) · ELF Table S2 가 NC 와 USPP 를 섞음 · 'Hamiltonian' · '60 ps' · 'XX.XX' 빈칸 둘 · Schlipf–Gygi 권·쪽) — 보낼지 = 사용자 (위치 = md 8h–8l · '원고 숫자의 출처' 표). ✅ **결정 (사용자 10-21 *'이거는 굳이야'*): 안 보낸다** — 메모는 기록으로만 남는다.
   - ✅ (가) LPSC₁.₆ ELF 를 USPP 60/480 으로 다시 계산 — **안 한다** (사용자 10-21 *'이거는 굳이야'* · SI 의 '별도 SCF' 문장 그대로). 남은 열린 선택 (사용자): BVSE R₀ (Li–S · Li–Cl) 출처 없음 → Brese–O'Keeffe 값 민감도 (CPU 수 분 · 모든 BVSE 숫자에 걸림 · 트랙 우리 DFT 기준선).
-- 원격 상태는 ⏭-NOW-z19 (10-20) 기록 그대로 — 10-21 은 B₂O₃ Methods 만 했고 원격 실측 없음.
+- 원격: 그 밖은 ⏭-NOW-z19 (10-20) 기록 그대로. 👁 **kgy Nd 자리 EOS 10-21 17:54 (사용자 붙여넣기)** — 수렴 8 / 12 (MLi_04 여섯 · MP_07 x0.98 · x1.00 · x1.00 616 분) · MP_07 x1.02 진행 · 오류 0 · MP_07 점마다 ≈ 10 h → 남은 넷 끝 ≈ 10-23 오전 (어림) → `--fit` · V₀ relax · ΔG (기록 `ndo_site_dft_runlog_2026_10_15.json` `관측_2026_10_21_1754` · 에너지는 판독 도구로만).
 
 ### ⏭-NOW-z19. 2026-10-20 — 본 세션 복귀 · Nd S 빈자리 v2 판독 (CEI) · 사용자 확인 대기
 - ✅ **본 세션 복귀 (트랙 공통)** — 서브 세션 135 커밋을 빨리감기로 들임 (e19e7ebf4 → 34142a3d9 · 복귀 카드 `kb/projects/handoff_2026_10_20_return_to_origin.md` 경우 A · 충돌 없음) · ■2 점검이 기대값 그대로: kb lint 0 · 결정 142 · 판정 8 · 그래프 무결성 ✅ · 규약 0 위반 · 웹 시험 2 failed (기존 둘) · 635 passed · 2 skipped · selftest 일곱 전부 통과 (Nd 떼어내기 30 · gabia 러너 42 · 유리 검증 48 · 담금질 113 · EOS 입력 27 · 계면 빌더 75 · 2차 VASP 묶음 53).
