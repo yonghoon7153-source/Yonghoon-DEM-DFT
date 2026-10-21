@@ -2023,20 +2023,25 @@ class CjuncAssembler:
                 'sv_local_dissipation': sld,
                 'sv_face_abs_current_over_I': sv_I, 'junction_current_code': jI, 'I_bot_code': I_bot}
 
-    def sv_counterfactual(self, solve, I_full, request):
+    def sv_counterfactual(self, solve, I_full, request, certify=None):
         """반사실 대조 (10-21 Codex RCA-06 · 1저자 Q4 (가) · 선택 노브) — 같은 침대 · 같은 R_j · 같은 판 입력에서 SV 융합 면 (SDCP–VGCF 면 ·
         부류 sv_face) 만 끊은 계의 단자 전류 I_cut → `sv_counterfactual_ratio` = I_full / I_cut (≥ 1 · Rayleigh).  문턱 (request) 이 있을
-        때만 비교 표지 `SV_DEPENDENT` (비 ≥ 문턱) — 문턱 기본값 없음 (등록이 채운다).  SV 면 없이 관통 없음 = 비 inf (SV 의존 경로만)."""
+        때만 비교 표지 `SV_DEPENDENT` (비 ≥ 문턱) — 문턱 기본값 없음 (등록이 채운다).
+        비 inf (`no_through_without_sv`) = **위상** 에서만 — SV 면을 끊은 조립 그래프에 관통 성분이 없을 때 (가지치기 사유).  관통 성분이
+        있는데 푼 I_cut ≤ 0 · 비유한 = 수치 실패 (`nonpositive_cut_current` · 비 없음 — 양의 컨덕턴스 그래프의 관통 전류는 해석적으로 > 0).
+        certify = 수렴 증서 (주 해와 같은 함수 · `step3_sigma` 가 CONV_CERT 일 때 넘긴다) — (L, b, φ, info, 잔차, Ab, gb, At, gt) → dict ·
+        증서 실패 = 미수렴 (비 · 표지 없음 · 주 해 증서만 보고 분모를 믿지 않는다 · 10-21 사전 공격 리뷰)."""
         thr = request.get('threshold') if isinstance(request, dict) else None
         Ab, gb, At, gt, cb, ct = self._plate_in
         out, st = self._assemble(Ab, gb, At, gt, cb, ct, drop_cat=_CAT['sv_face'])
         rec = {'kind': 'counterfactual_cut_sv_faces', 'requested': True, 'threshold': thr,
                'n_sv_faces_cut': int(st['n_sv_edges']), 'G_full_code': float(I_full), 'G_cut_code': None,
-               'sv_counterfactual_ratio': None, 'flag': None, 'cg_info': None, 'resid': None}
-        if out.get('reason'):
+               'sv_counterfactual_ratio': None, 'flag': None, 'cg_info': None, 'resid': None, 'conv_cert': None}
+        if not (math.isfinite(float(I_full)) and float(I_full) > 0.0):
+            rec.update(status='nonpositive_full_current')       # 주 해 단자 전류 ≤ 0 · 비유한 — 비의 분자를 믿을 수 없다 (풀지 않는다)
+        elif out.get('reason'):
             if out['reason'] in ('no_through_component', 'all_floating_dropped'):
-                rec.update(status='no_through_without_sv', G_cut_code=0.0,
-                           sv_counterfactual_ratio=(math.inf if I_full > 0 else None))
+                rec.update(status='no_through_without_sv', G_cut_code=0.0, sv_counterfactual_ratio=math.inf)
             else:
                 rec.update(status=str(out['reason']))
         else:
@@ -2044,12 +2049,16 @@ class CjuncAssembler:
             resid = float(np.linalg.norm(out['L'] @ phi_c - out['b']) / max(np.linalg.norm(out['b']), 1e-30))
             I_c = float(np.sum(out['gb'] * (1.0 - phi_c[out['Ab']])))
             rec.update(cg_info=int(info) if info else 0, resid=resid, G_cut_code=I_c)
-            if bool(info) or not np.isfinite(resid) or resid > 1e-6:
+            cert = None
+            if certify is not None:
+                cert = certify(out['L'], out['b'], phi_c, info, resid, out['Ab'], out['gb'], out['At'], out['gt'])
+                rec['conv_cert'] = cert
+            if bool(info) or not np.isfinite(resid) or resid > 1e-6 or (cert is not None and not cert.get('ok')):
                 rec.update(status='unconverged')
-            elif I_c > 0.0:
+            elif math.isfinite(I_c) and I_c > 0.0:
                 rec.update(status='computed', sv_counterfactual_ratio=float(I_full / I_c))
             else:
-                rec.update(status='no_through_without_sv', sv_counterfactual_ratio=(math.inf if I_full > 0 else None))
+                rec.update(status='nonpositive_cut_current')       # 관통 성분이 있는데 I_cut ≤ 0 — 수치 실패 (위상 서술 아님)
         r_ = rec['sv_counterfactual_ratio']
         if thr is not None and r_ is not None and r_ >= thr:
             rec['flag'] = 'SV_DEPENDENT'

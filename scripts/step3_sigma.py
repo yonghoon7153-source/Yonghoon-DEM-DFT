@@ -2293,9 +2293,27 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
                 out['cjunc']['sv_counterfactual'] = {'kind': 'counterfactual_cut_sv_faces', 'requested': True,
                                                      'threshold': _cjp['sv_counterfactual'].get('threshold'),
                                                      'status': 'main_unconverged', 'sv_counterfactual_ratio': None,
-                                                     'flag': None}
+                                                     'flag': None, 'conv_cert': None, 'backend_last_solve': None}
             else:
-                out['cjunc']['sv_counterfactual'] = _cjs.sv_counterfactual(_solve_cg, I, _cjp['sv_counterfactual'])
+                #  ★ 10-21 (사전 공격 리뷰) — 반사실 솔브는 진단이다: ① 모듈 전역 출처 (`LAST_BACKEND` · `LAST_CG` — 매니페스트
+                #    'backend_last_solve' 가 읽는다) 를 주 해 쪽 그대로 되돌리고 반사실 솔브의 backend 는 자기 기록에 싣는다 (노브 켬 = 주 결과
+                #    출처가 노브 끔과 같다) ② 수렴 증서를 켠 런 (CONV_CERT) 은 반사실 솔브도 주 해와 **같은 증서 함수** 를 지나야 비를 낸다.
+                _cf_cert = None
+                if CONV_CERT:
+                    import step3_conv_cert as _cc
+                    _cf_scale = (z_plate - z_b) / _A
+
+                    def _cf_cert(L_, b_, phi_, info_, resid_, Ab_, gb_, At_, gt_):
+                        return _cc.certify(L_, b_, phi_, int(info_) if info_ else 0, resid_, CG_RTOL, Ab_, gb_, At_, gt_, _cf_scale,
+                                           lambda L2, b2, x02, rt2: _solve_cg(L2, b2, x0=x02, rtol=rt2))
+                _bk0, _cg0 = dict(LAST_BACKEND), dict(LAST_CG)
+                try:
+                    _svc = _cjs.sv_counterfactual(_solve_cg, I, _cjp['sv_counterfactual'], certify=_cf_cert)
+                    _svc['backend_last_solve'] = dict(LAST_BACKEND) if _svc.get('cg_info') is not None else None
+                finally:
+                    LAST_BACKEND.clear(); LAST_BACKEND.update(_bk0)
+                    LAST_CG.clear(); LAST_CG.update(_cg0)
+                out['cjunc']['sv_counterfactual'] = _svc
     if return_field:
         P = np.zeros(sid.shape, np.float64); P[cond] = phi
         out['phi'] = P; out['cond'] = cond
