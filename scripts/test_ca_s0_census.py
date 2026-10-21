@@ -864,13 +864,17 @@ def t_e2e_registry():
         f"입력 점 {len(ph_in)} ↔ {n_pts} · n_ptfe_cov {jc.get('n_ptfe_cov')}")
 
 
-#  ── 픽스처 RV (단계 1 · ★ 10-21 Codex RCA-03 · 05 · Q11 일부 — census 보탬 · 시험 먼저) ──
+#  ── 픽스처 RV (단계 1 · ★ 10-21 Codex RCA-03 · 04 · 05 · Q11 일부 — census 보탬 · 시험 먼저) ──
 #  RV_LOOP = 판정문 RCA-03 폴리라인 (h 0.15 · 셀 경계에서 0.01 떨어진 꼭짓점) 을 (3.0, 3.0, 2.1) 로 옮긴 것 (셀 구조 그대로) → 같은 fid 가
-#  셀 넷을 두 번씩 지난다 (재방문 쌍 4 · 셀 4 · 섬유 1) · 자기 후보 하나 · 그 접점 = y 셀 경계 위 → 두 포트 다 ε 띠 동률 (2).
+#  셀 넷을 두 번씩 지난다 (재방문 쌍 4 · 셀 4 · 섬유 1) · 자기 후보 하나 (L_c < L_par → 간선 1 · 동률 없음).
 #  RV_P1 · RV_P2 = 나란한 두 VGCF (중심 간격 0.12 · 겹침 x [4.02, 5.82]) → 닿음 L_c = 1.8 + 2√(0.15² − 0.12²) = 1.98 → k = 7 분산 간선
 #  (긴 접촉 간선 7) · RV_PT = 그 접촉 시작 근처 (x 4.07) 를 가로지르는 PTFE (z +0.2) → 첫 등분 간선만 덮임 (1/7 · 부분 덮임 instance 1).
+#  RV_TA · RV_TB = test_carbon_junction T1-11 꼴 × 0.15 (+ (6.0, 1.5, 0.3) · 격자 원점 0 이라 셀 경계 그대로) — A 의 접점 z 0.75 가 두 셀
+#  중심에서 등거리 → 포트 동률 1 (ε 띠 · 셀 정수 좌표 사전식).
 RV_LOOP = [(.01, .01, .01), (.44, .01, .01), (.44, .44, .01), (.44, .44, .14), (.44, .14, .14), (.01, .14, .14)]
 RV_LC = 1.8 + 2.0 * math.sqrt(0.15 ** 2 - 0.12 ** 2)
+RV_TA = [(1.5, 1.5, 0.5), (1.5, 1.5, 5.5)]
+RV_TB = [(2.5, 1.5, 3.0), (4.5, 1.5, 3.0), (4.5, 1.5, 7.5)]
 
 
 def _kit_rv():
@@ -878,7 +882,10 @@ def _kit_rv():
     P1 = np.column_stack([3.02 + 0.1 * np.arange(31), np.full(31, 6.04), np.full(31, 2.0)])
     P2 = np.column_stack([4.02 + 0.1 * np.arange(19), np.full(19, 6.16), np.full(19, 2.0)])
     PT = np.column_stack([np.full(11, 4.07), 5.6 + 0.1 * np.arange(11), np.full(11, 2.2)])
-    return [loop, P1, P2], [PT]
+    off = np.array([6.0, 1.5, 0.3])
+    TA = off + J_H * _densify(RV_TA, 0.25)
+    TB = off + J_H * _densify(RV_TB, 0.25)
+    return [loop, P1, P2, TA, TB], [PT]
 
 
 def t_e2e_registry_q11():
@@ -897,18 +904,18 @@ def t_e2e_registry_q11():
         and rv.get('n_pairs') == 4 and rv.get('n_cells') == 4 and rv.get('n_fibres') == 1
         and (rv.get('s_um') or {}).get('n') == 1 and math.isfinite(float((rv.get('s_um') or {}).get('min', math.nan))),
         str({'census': {k: cen.get(k) for k in ('n_revisit_pairs', 'n_revisit_cells', 'n_revisit_fibres')}, 'revisit': rv}))
-    chk('R8 포트 동률 수 — 고리 자기 접합 두 포트 (셀 경계 위 접점 · ε 띠) = 2 (나란한 쌍 등분 간선은 동률 없음)',
-        jc.get('n_port_ties') == 2 and cen.get('n_port_ties') == 2, str((jc.get('n_port_ties'), cen.get('n_port_ties'))))
+    chk('R8 포트 동률 수 (간선 단위) — T1-11 꼴 쌍의 A 접점 (셀 경계 · ε 띠) = 1 (고리 · 나란한 쌍 등분 간선은 동률 없음)',
+        jc.get('n_port_ties') == 1 and cen.get('n_port_ties') == 1, str((jc.get('n_port_ties'), cen.get('n_port_ties'))))
     sub = jc.get('subedges') or {}
-    chk('R8 긴 접촉 · 분산 간선 — 긴 instance 1 (L_c %.4f · k 7) · 간선 8 (자기 1 + 7) · 긴 접촉 간선 7' % RV_LC,
-        jc.get('n_long') == 1 and sub.get('n') == 8 and sub.get('n_long') == 7 and cen.get('n_subedges') == 8, str(sub))
+    chk('R8 긴 접촉 · 분산 간선 — 긴 instance 1 (L_c %.4f · k 7) · 간선 9 (자기 1 + 7 + T1-11 꼴 1) · 긴 접촉 간선 7' % RV_LC,
+        jc.get('n_long') == 1 and sub.get('n') == 9 and sub.get('n_long') == 7 and cen.get('n_subedges') == 9, str(sub))
     chk('R8 간선별 PTFE 덮임 — 덮인 간선 1 (첫 등분점) · 부분 덮임 instance 1 · instance 대표점 덮임 1 (옛 칸 그대로)',
         sub.get('n_ptfe_cov') == 1 and sub.get('n_instances_ptfe_partial') == 1 and jc.get('n_ptfe_cov') == 1, str(sub))
     zp = os.path.join(out, 's0_junctions_kit_RV.npz')
     z = np.load(zp) if os.path.exists(zp) else None
     chk('R8 npz — 간선별 배열 (instance 번호 · PTFE 덮임 · SDCP 근접 · 실현) · S0-2 σ · 전류 · 소산 칸 없음',
         z is not None and {'sub_inst', 'sub_ptfe_cov', 'sub_a_sdcp', 'sub_realized'} <= set(z.files)
-        and int(np.sum(z['sub_ptfe_cov'])) == 1 and len(z['sub_inst']) == 8
+        and int(np.sum(z['sub_ptfe_cov'])) == 1 and len(z['sub_inst']) == 9
         and S0.schema_forbidden_keys(rep) == [] and S0.schema_forbidden_keys({k: 0 for k in z.files}) == [],
         str(None if z is None else sorted(z.files)))
 
