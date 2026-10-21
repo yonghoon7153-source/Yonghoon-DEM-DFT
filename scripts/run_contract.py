@@ -744,6 +744,20 @@ def ca_ext_record_ok(man):
             return False, f'CAEXT|{k}|unverifiable| {type(e).__name__}: {e}'
         if prob:
             return False, f'CAEXT|{k}| {prob}'
+    #  ★ 2026-10-21 (D · 등록 R §5-6 SV 행) — SV 반사실 요청 ↔ 기록 (D 모듈 `ca_ext_svcf` · 접합 블록 검증기 뒤 · 끊는 면의 정의 무관 ·
+    #    요청 없음 = 칸 없음 = 검사 없음 = 옛 판정 그대로)
+    _cjb = m['ca_ext'].get('cjunc')
+    if isinstance(_cjb, dict) and isinstance(_cjb.get('evidence'), dict):
+        try:
+            import ca_ext_svcf as _sv
+            _ev = _cjb['evidence']
+            _ms = ((_ev.get('receipts') or {}).get('electronic_main') or {}).get('status') \
+                if isinstance(_ev.get('receipts'), dict) else None
+            prob = _sv.sv_cf_problem(_ev, _ms in ('applied', 'absent_geometry'))
+        except Exception as e:                                   # noqa: BLE001 — 확인 못 한 것을 통과시키지 않는다
+            return False, f'CAEXT|cjunc|unverifiable| {type(e).__name__}: {e}'
+        if prob:
+            return False, f'CAEXT|cjunc| {prob}'
     return True, None
 
 
@@ -1122,6 +1136,10 @@ def runner_ca_ext(env, *, ptfe_stamp='off', lean='0', fibre_stamp='segment', per
         why = ca_ext_request_problem(req, ptfe_stamp=str(ptfe_stamp))   # ★ Z3 — 러너의 PTFE 규약으로 (P1 = face_alpha 에서만)
         if why:
             _p('REQUEST', why)
+    if on and str(ptfe_stamp) == 'centerline':
+        #  ★ 10-21 (D · 사전 리뷰 PRE-impl-03 ① · 코디네이터 Q-C) — centerline + 접합 = 발사 전 거부 (P0 도 · payload 입구 PTFE_CENTERLINE 과 같은 조합)
+        _p('PTFE_CENTERLINE', 'CJUNC=1 + PTFE_STAMP=centerline — 덮인 접점 셀의 포트 옮김이 Rayleigh 를 깬다 (PRE-impl-03) · 접합은 off · '
+                              'face_alpha 에서만')
     fa = str(ptfe_stamp) == 'face_alpha'
     for _lab, _on in (('CJUNC=1', on), ('PTFE_STAMP=face_alpha', fa)):
         if not _on:

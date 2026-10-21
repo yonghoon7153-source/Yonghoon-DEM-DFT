@@ -924,6 +924,11 @@ def _cjunc_entry_contract(a):
         if getattr(a, 'step3_cjunc_ptfe_jlaw', None) == 'P1' and a._ptfe_stamp != 'face_alpha':
             bad.append(('P1_NEEDS_FACE_ALPHA', f'P1 (덮인 접합 절단) 은 --ptfe-stamp face_alpha 에서만 (지금 `{a._ptfe_stamp}` — centerline 은 '
                                                f'이미 VGCF 셀을 sid 7 로 자른다 · off 는 PTFE 표현이 없다 · 설계 §4-1)'))
+        #  ★ 10-21 (D · 사전 리뷰 PRE-impl-03 ① · 코디네이터 Q-C) — centerline + 접합 = 거부 (P0 도): centerline 이 접점 셀을 sid 7 로 덮으면
+        #    포트가 옆 셀로 옮겨 붙어 절연체를 더했는데 σ 가 오른다 (Rayleigh 위반 · 합성 +5.88 %).  접합 모듈 쪽 거부 = A · 입구 = 여기 · 러너 = 같은 코드
+        if a._ptfe_stamp == 'centerline':
+            bad.append(('PTFE_CENTERLINE', '--ptfe-stamp centerline + --step3-cjunc — 덮인 접점 셀의 포트 옮김이 Rayleigh 를 깬다 '
+                                           '(PRE-impl-03) · 접합은 off · face_alpha 에서만 (Rayleigh 를 지킬 때까지 정량 거부)'))
         if a.periodic:
             bad.append(('PERIODIC', '--periodic — 정량 모드 거부 (raster 가 주기 영상을 안 만든다 · J10)'))
         if a.joule_heat:
@@ -3602,6 +3607,11 @@ def main():
             import ca_ext_cjunc as _cjw_m
             step3['manifest'].setdefault('ca_ext', {'schema': _RC.CA_EXT_SCHEMA}).update(
                 _cjw_m.payload_blocks(_cj_prep, a._cj_rcpt, _cj_res_main))
+            #  ★ 10-21 (D · 등록 R §5-6 SV 행) — SV 반사실 노브를 켰을 때만: 증거에 요청 + 원 기록의 JSON 투영 (D 모듈 `ca_ext_svcf` ·
+            #    접합 블록 함수 밖 · 끊는 면의 정의에 기대지 않는다 — 사전 리뷰 PRE-impl-04) · 끔 = 칸 없음 = 옛 바이트
+            if getattr(a, '_cj_sv_cf', None) is not None:
+                import ca_ext_svcf as _svcf_m
+                _svcf_m.attach_evidence(step3['manifest']['ca_ext']['cjunc']['evidence'], a._cj_sv_cf)
         #  ★★ 2026-10-20 (Rint ② Z1) — σ_VGCF 출처 기록 (bulk · 직경 보존 식 이름 · 입구에서 같은 함수로 다시 계산해 --sigma-vgcf 와 대조했다).
         #    플래그를 줬을 때만 (끈 매니페스트는 키 자체가 없다 = 옛 바이트) · 규약 해시 밖 (record — σ 자체는 sigma_vgcf_S_cm).
         if getattr(a, '_vgcf_bulk', None):
