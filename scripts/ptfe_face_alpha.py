@@ -22,6 +22,15 @@
   지름을 부피에 다시 맞추지 않는다).
 부피 (F11): 조각 (gap 분할 뒤 연속 폴리라인) 마다 Σ(선분 길이 · π r²) + 구 하나 (4/3 · π r³ = 조각 양끝 반구) · 경로 사이 겹침 미차감.
   실침대 비 = `CL-60` 등록의 2 배 밴드 [0.5, 2] 안이어야 S1 사용 — 밖이면 기록 (`out_of_band`) · R 판정 = NOT_COMPUTED (판정 사슬 소관).
+  ★ 10-21 (Codex A4 · Q11) — 이 수는 **명목 tube 체적** (`VOLUME_BASIS`) 이지 굽은 · 자기 중첩 · 교차 캡슐의 **합집합 체적이 아니다**
+  (교차 두 캡슐이면 Steinmetz 16r³/3 만큼 크다 — F19).  기록 칸 이름을 나눈다: `capsule_nominal_um3` (= 옛 `capsule_um3` · 밴드 비의 기준) ·
+  `capsule_union_um3` = None (v0 미계산 · `capsule_union_status`).
+구적 (★ 10-21 · Codex §4-1 · Q11) — K = 8 고정은 결과 뒤 조정을 막지만 정확하지는 않다: 정사각형 ∩ 중앙 원 (r/h 0.65) 의 참 α = 0.01345 인데
+  K 4 · K 8 중점 구적 = 0 (거짓 절단 → 유일 경로면 단자 G 0 · F18).  면적 오차 (≤ 1/K²) 와 연결성 · 단자 G 처분을 나눠 기록한다:
+  계획 `false_cut_check` = α = 0 면 수 · 그중 고운 구적 (K_refine = 2K) 에서 열리는 수 (진단 · 판정 · α 값은 그대로 K 8).
+면제 가정 표지 (★ 10-21 · Codex §4-1) — 같은 AM pid 면제 = 한 입자 안을 자르지 않는 정의 · 같은 탄소 sid · SDCP|SDCP 면제 = 여러 물체를 한
+  연속체로 묶는 **상 수준 융합 가정** (`EXEMPT_ASSUMPTIONS` · 증거 칸 `exempt_assumptions` · 계약이 대조).  VV 누락은 S2 P-junc 가 일부 보충 ·
+  SDCP–SDCP 가 같은 방식으로 검증됐다는 뜻은 아니다.
 
 ⛔ 지위 — 다음 세대 (`p3ca`) 기구 · 기본 끔 (`solve_sigma_z(face_alpha=None)` = 옛 경로 비트 같음) · 생산 규약은 `centerline` (CL-60)
   그대로 · 이름 *"partial-volume PTFE"* 금지 (R18 P1-1) · 지름을 우리 피브릴의 물성 · 측정값으로 해석하지 않는다 · 펠릿 0.97 에
@@ -48,7 +57,14 @@ CHANNEL_CHOICES = ('both', 'electronic', 'ionic')
 GAP_TOL = 2.0                                  # 폴리라인 끊기 = 선분 스탬프와 같은 규칙 (`step3_sigma._fibre_segment_ijk` · §1-2 #25)
 VOLUME_BAND = (0.5, 2.0)                       # CL-60 등록 2 배 밴드 (ptfe_convention_prereg_20260829.md §2-1)
 PLATE_RULE = 'v0-not-applied'                  # 판 결합 면에 α 를 걸지 않는다 (기둥 수만 기록)
-EXEMPT_RULE = 'same-object-v1'                 # 같은 AM pid · 같은 탄소 상 · SDCP|SDCP
+EXEMPT_RULE = 'same-object-v1'                 # 같은 AM pid · 같은 탄소 상 · SDCP|SDCP (★ 10-21 — 뒤 둘은 같은 물체가 아니라 상 융합 가정)
+#: ★ 10-21 (Codex §4-1 · Q11) — 면제의 뜻 표지 (증거 칸 · p3ca id 밖 · 물리 규칙은 EXEMPT_RULE 그대로)
+EXEMPT_ASSUMPTIONS = {'am_same_pid': 'same_particle_interior', 'carbon_same_sid': 'phase_level_fusion_assumed',
+                      'sdcp_sdcp': 'phase_level_fusion_assumed'}
+#: ★ 10-21 (Codex A4 · Q11) — 기록 부피의 정의 (명목 tube = Σ 선분 πr²L + 조각마다 구 하나 · 겹침 · 굽힘 미차감 — 합집합 아님)
+VOLUME_BASIS = 'nominal_tube_v1'
+#: ★ 10-21 (Codex §4-1) — 거짓 절단 진단의 고운 구적 배수 (K_refine = 2K · 진단만 · α 값 · 판정은 봉인 K 그대로)
+FALSE_CUT_REFINE = 2
 FACE_RULE = 'face-classes-v1'                  # 전자 = 다른 상 · 같은 sid AM 다른 pid / 이온 = SE|SE · SE|SDCP (면제 밖)
 CENTERLINE_SOURCE = 'mpm-phase4-fid-kind-v1'   # 중심선 = MPM phase 4 점 · `fibre.npy` fid · `_kind.npy` (경로)
 SOLVES = ('electronic_main', 'electronic_wetted', 'electronic_bare', 'ionic')   # = run_contract.INTERFACE_SOLVES 키
@@ -222,8 +238,9 @@ def capsule_volume_um3(caps):
 
 
 def capsule_summary(caps):
+    #  ★ 10-21 — volume_um3 = 명목 tube 체적 (VOLUME_BASIS · 합집합 아님) — 이름 칸을 같이 싣는다
     return {k: caps[k] for k in ('n_paths', 'n_pieces', 'n_point_pieces', 'n_segments', 'volume_um3')} | {
-        'dia_classes': dict(caps['dia_classes'])}
+        'dia_classes': dict(caps['dia_classes']), 'volume_basis': VOLUME_BASIS}
 
 
 def _tree(caps):
@@ -443,10 +460,27 @@ def build_plan(sid, sigma_of_sid, caps, *, lo, vox, channel, pid=None, K=K_SEALE
             'n_rows': int(sum(len(a['lin']) for a in axes)),
             'n_cut_rows': int(sum(int((a['alpha'] == 0).sum()) for a in axes)),
             'caps': caps, 'fp_sid': _grid_fp(sid), 'fp_sig': _grid_fp(np.asarray(sigma_of_sid, np.float64)),
-            'fp_pid': (_grid_fp(pid) if pid is not None else None), 'fp_caps': caps['fp']}
+            'fp_pid': (_grid_fp(pid) if pid is not None else None), 'fp_caps': caps['fp'],
+            'false_cut_check': false_cut_check(caps, axes, shape, lo, h, K)}
     plan['fp_rows'] = rows_fp(plan['axes'])
     plan['fp_plan'] = plan_fp(plan)
     return plan
+
+
+def false_cut_check(caps, axes, shape, lo, vox, K):
+    """★ 10-21 (Codex §4-1 · Q11) — 거짓 절단 진단: 계획의 α = 0 면 (절단) 을 고운 구적 K_refine = `FALSE_CUT_REFINE`·K 로 다시 봐서
+    열리는 (α > 0) 수를 센다.  진단만 — 계획 α · 절단 · 판정은 봉인 K 그대로 (K 를 결과 뒤에 고르지 않는다).  열리는 수 > 0 = 그 면의 절단이
+    구적 해상도 탓일 수 있다 (면적 오차는 ≤ 1/K² 로 작아도 유일 경로면 단자 G 가 0 으로 바뀐다 — 연결성 처분은 따로 본다)."""
+    Kr = int(FALSE_CUT_REFINE) * int(K)
+    n0 = n_open = 0
+    for ax, a in enumerate(axes):
+        cut = np.asarray(a['alpha']) == 0.0
+        if not cut.any():
+            continue
+        low = np.stack(np.unravel_index(np.asarray(a['lin'], np.int64)[cut], tuple(shape)), -1)
+        n0 += int(cut.sum())
+        n_open += int((face_alpha_values(caps, ax, low, lo, vox, Kr) > 0.0).sum())
+    return {'K': int(K), 'K_refine': Kr, 'n_alpha_zero': n0, 'n_open_at_refine': n_open}
 
 
 def require_plan(plan, sid, sigma_of_sid, vox, pid=None):
@@ -694,13 +728,18 @@ def volume_band_status(capsule_um3, true_um3):
 
 
 def volume_record(capsule_um3, true_um3):
+    """부피 기록 — capsule_um3 = 명목 tube 체적 (옛 칸 이름 그대로 · 소비자 호환).  ★ 10-21 (Codex A4 · Q11): 이름을 나눈 칸을 같이 싣는다 —
+    capsule_nominal_um3 (같은 값 · 밴드 비의 기준 `ratio_basis`) · capsule_union_um3 = None (합집합 체적 v0 미계산 · 겹침 · 굽힘 미차감 —
+    명목 ≥ 합집합) · 체적 정의 이름 (`VOLUME_BASIS`)."""
     ratio, st = volume_band_status(capsule_um3, true_um3)
     t = None
     try:
         t = float(true_um3) if true_um3 is not None and math.isfinite(float(true_um3)) else None
     except (TypeError, ValueError):
         t = None
-    return {'capsule_um3': float(capsule_um3), 'true_um3': t, 'ratio': ratio, 'band': list(VOLUME_BAND), 'status': st}
+    return {'capsule_um3': float(capsule_um3), 'true_um3': t, 'ratio': ratio, 'band': list(VOLUME_BAND), 'status': st,
+            'capsule_nominal_um3': float(capsule_um3), 'capsule_union_um3': None, 'capsule_union_status': 'not_computed_v0',
+            'capsule_volume_basis': VOLUME_BASIS, 'ratio_basis': 'capsule_nominal_um3'}
 
 
 def ptfe_point_cell_census(sid, pts, lo, vox):
@@ -736,7 +775,8 @@ def evidence_record(*, capsules, volume, faces, receipts, off_grid_ptfe_point_ce
     """`ca_ext.ptfe_face.evidence` — 증거 (id 에 안 들어간다 · `ptfe_face_block_problem` 이 대조한다)."""
     return {'capsules': dict(capsules), 'volume': dict(volume), 'faces': dict(faces), 'receipts': dict(receipts),
             'off_grid_ptfe_point_cells': dict(off_grid_ptfe_point_cells), 'fp': dict(fp),
-            'diagnostics': dict(DIAGNOSTICS_V0 if diagnostics is None else diagnostics), 'label': LABEL}
+            'diagnostics': dict(DIAGNOSTICS_V0 if diagnostics is None else diagnostics), 'label': LABEL,
+            'exempt_assumptions': dict(EXEMPT_ASSUMPTIONS)}           # ★ 10-21 — 같은 sid 면제 = 상 수준 융합 가정 표지 (Codex §4-1)
 
 
 def _jsonable_counts(counts):
@@ -747,7 +787,11 @@ def _jsonable_counts(counts):
 def plan_face_summary(plan):
     if plan is None:
         return None
-    return {'n_rows': int(plan['n_rows']), 'n_cut_rows': int(plan['n_cut_rows']), 'by_class': _jsonable_counts(plan['counts'])}
+    fc = plan.get('false_cut_check') if isinstance(plan.get('false_cut_check'), dict) else {}
+    #  ★ 10-21 (Codex §4-1 · Q11) — 진단 칸: α = 0 면 수 (= n_cut_rows · 이름 그대로) · 그중 고운 구적에서 열리는 수 · 그 구적 K
+    return {'n_rows': int(plan['n_rows']), 'n_cut_rows': int(plan['n_cut_rows']), 'by_class': _jsonable_counts(plan['counts']),
+            'alpha_zero_faces': int(plan['n_cut_rows']), 'alpha_zero_open_at_refine': fc.get('n_open_at_refine'),
+            'alpha_refine_K': fc.get('K_refine')}
 
 
 def payload_prepare(sid, pid, *, lo, vox, sig_e, sig_i, pts, fid, kind, channels, dia_law, true_volume_um3, build_ionic=True):
@@ -875,4 +919,7 @@ def ptfe_face_block_problem(man):
         return 'diagnostics| v0 진단 표 (je · 소산 분담 미계산 · 필드 · Joule 거부) 가 아니다'
     if ev.get('label') != LABEL:
         return 'label| 표지 문자열이 producer 상수와 다르다'
+    if ev.get('exempt_assumptions') != EXEMPT_ASSUMPTIONS:            # ★ 10-21 — 면제 = 상 수준 융합 가정 표지 (Codex §4-1)
+        return (f'exempt| 같은 sid 면제의 가정 표지 {ev.get("exempt_assumptions")!r} ≠ producer 상수 (같은 탄소 sid · SDCP|SDCP = '
+                f'상 수준 융합 가정)')
     return None
