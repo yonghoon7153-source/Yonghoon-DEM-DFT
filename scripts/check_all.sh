@@ -226,6 +226,7 @@ run 'g2_network_reread --selftest' python3 scripts/g2_network_reread.py --selfte
 run 'webapp: gen2_stamp_record' python3 webapp/test_gen2_stamp_record.py  # 10-06 밤 G2RR-01 — 도장 ↔ 레코드 세대 대조 (실 생산자 → 게시 → 인계): Codex 도장 변이 (unknown · null · legacy · one_null_legacy_shape) · 키 하나씩 결손 · null · unknown · legacy · 타입 → τ P4 거부 · 역사 경로 = 확인된 역사 도장 스키마 (194 v1.2 실측 194/194) · 배치 manifest 기대 세대 · 웹앱 망 세대 행 (옛 코드 6/23)
 run 'webapp: hetero_transcript'   python3 webapp/test_hetero_transcript_page.py   # 10-05 이종기술 회의록 — 회의 둘 (09-18 · 10-02) 고르기 · 회의 종합 · 등록부 밖 키 404 · /hetero 논지 정본 비준 블록 (docs/hetero_thesis.md 에서 읽음 · fail-closed)
 run 'webapp: rint_explainer (Rint 설명 정적 페이지 + 사이드바 링크 · 봉인 app.py 무변경 · 10-21)'   python3 webapp/test_rint_explainer_page.py
+run 'webapp: mpm_lab_cmp_absent_phase (MPM lab 비교표 · 없는 상 = — · 참 0 유지 · 10-21)'   python3 webapp/test_mpm_lab_cmp_absent_phase.py
 #  ★ 2026-10-03 (Codex r_int 1단계 RINT-02 · 13 · 14 · 20) — ① 계면 요청 ↔ 네 솔브 적용 영수증을 **실물 producer** 로.
 #    `solve_sigma_z(..., rint=)` 호출 넷을 AST 로 찾아 하나씩 `rint=` 를 지우면 게시가 거부돼야 한다 (주 솔브만 보던
 #    옛 사후 단언은 wetted/bare 배선 삭제를 초록으로 냈다) · CLI 모순 요청 · check_arm 영수증 변조 · 레지스트리 전수 분류.
