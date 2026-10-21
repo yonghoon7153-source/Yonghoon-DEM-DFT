@@ -16,8 +16,10 @@
   P  payload 끝-끝 — 접합 · SDCP 수정자 CLI · 입구 거부 (구조화 사유) · 매니페스트 · 영수증 (LEAN 표) · 물리 상식 (Rayleigh) ·
      조합 정책 (★ Z3 10-20 — face_alpha + cjunc = 허용 (옛 B6 임시 거부 뺌 · 조합 규칙 전수 = test_ca_ext_z3 A) · face_alpha + rtol
      = 허용 · cjunc + rtol = 허용) · --expect-physics 의 ca_ext 칸
-  B  (--old-scripts) 끔 비트 동일 — payload 매니페스트 (code_sha · exec_env 빼고) · step3 값 (★ Z3 새 기록 칸 = face_alpha 런의
-     `ca_ext.ptfe_face.evidence.fp.sid_off` · rtol 런의 CG 반복 수 `step3.cg_iters` · 증서 `iters` · `resolve_iters` 만 빼고 대조)
+  B  (--old-scripts) 끔 비트 동일 — payload 매니페스트 (code_sha · exec_env 빼고) · step3 값.  ★ 10-21 (D · 브리프 묶음 5): 경로 차이
+     전부를 한 표 `OLD_DIFF_ALLOW` (세대 Z3 · RCA1 — 켠 노브의 새 칸만) 로 판정 · 끈 경우 = 차이 0 · `--expect-identical` (기반 =
+     바로 앞 커밋) = 표 없이 차이 0 · B0u = 그 표 · 함수의 합성 단위 시험 (기반 사본 없이).  z3 O 묶음이 같은 표 · 함수를 쓴다.
+     ⚠ 기반 사본 옆에 docs/ 가 있어야 한다 (집전체 앵커 CSV — 없으면 대체 값 차이가 이유와 함께 실패).
 ⚠ PASS 는 배선 · 계약 · 구현의 증거이지 R_j 값 · 판정 (R) 의 물리 검증이 아니다.
 """
 import argparse
@@ -676,7 +678,6 @@ def _sv_raw(status='computed', ratio=1.25, threshold=None, flag=None):
 
 @case('S 해 상태 (영값 · 단락) · SV 반사실 노브 — 계약 · 러너 · payload (시험 먼저 · 10-21 D)')
 def t_states():
-    import step3_conv_cert as CC
     ngs = getattr(RC, 'next_gen_state', None)
     chk('S0 run_contract.next_gen_state 가 있다 (다음 세대 해 상태 → positive · zero · short · legacy)', callable(ngs))
     if not callable(ngs):
@@ -992,6 +993,107 @@ def t_states_payload():
 
 
 # ═════════════════════════ B 묶음 — 끔 비트 동일 (고치기 전 코드 대조) ═════════════════════════
+#: ★ 10-21 (D · 브리프 묶음 5) — `--old-scripts` 대조에서 나와도 되는 칸 (한 곳 · z3 O 묶음도 이 표 · 함수를 쓴다).
+#:   한 줄 = (세대, 연산, 경로 정규식 (전체 일치), 경우 표지, 사유) — 연산 '+' 새 칸 · '-' 없어진 칸 · '~' 값 바뀜 ·
+#:   경로 = payload step3 를 {'manifest': 매니페스트 (code_sha · exec_env 빼고), 그 밖 step3 칸} 으로 본 점 경로.
+#:   경우 표지 = 그 칸이 나와도 되는 켠 노브 (face_alpha · rtol · cjunc) — 노브를 다 끈 경우 (off · centerline · LEAN 3) 에는
+#:   어떤 칸도 허용되지 않는다 (끈 경로 비트 같음).  σ · n_dof · CG 결과 칸은 표에 없다 = 언제나 실패.
+#:   세대: Z3 = 기반이 ff9d72afe (Z3) 이전일 때 · RCA1 = 기반 47d23baba ↔ a76f59d0d (Codex RCA 수정 1 회차 — B 증서 v2 · S1 부피 ·
+#:   A 접합 v2).  ⚠ 새 칸을 더하는 묶음은 같은 커밋에서 이 표에 한 줄 (세대 표지) 을 올린다 · 바로 앞 기반과는 `--expect-identical`.
+OLD_DIFF_ALLOW = (
+    ('Z3', '+', r'manifest\.ca_ext\.ptfe_face\.evidence\.fp\.sid_off', 'face_alpha', 'off 격자 sid 지문 (Z3)'),
+    ('Z3', '+', r'(ion_)?cg_iters', 'rtol', 'CG 반복 수 (Z3)'),
+    ('Z3', '+', r'(ion_)?conv_cert\.(iters|resolve_iters)', 'rtol', '증서 반복 수 (Z3)'),
+    ('RCA1', '+', r'(ion_)?conv_cert\.(status|pass_d|scale|target_[A-Za-z0-9_]+)', 'rtol',
+     'B 증서 v2 — 상태 (§5-0) · ⓓ 목표량 증서 (RCA-07 · RCA-13)'),
+    ('RCA1', '~', r'(ion_)?conv_cert\.version', 'rtol', 'B 증서 판 conv-cert-v1 → v2'),
+    ('RCA1', '+', r'manifest\.ca_ext\.ptfe_face\.evidence\.capsules\.volume_basis', 'face_alpha', 'B S1 캡슐 부피 기준'),
+    ('RCA1', '+', r'manifest\.ca_ext\.ptfe_face\.evidence\.exempt_assumptions', 'face_alpha', 'B S1 면제 가정 표'),
+    ('RCA1', '+', r'manifest\.ca_ext\.ptfe_face\.evidence\.faces\.[A-Za-z_]+\.alpha_(zero_faces|zero_open_at_refine|refine_K)',
+     'face_alpha', 'B S1 α 0 면 진단'),
+    ('RCA1', '+', r'manifest\.ca_ext\.ptfe_face\.evidence\.volume\.(capsule_nominal_um3|capsule_union_um3|capsule_union_status|'
+                  r'capsule_volume_basis|ratio_basis)', 'face_alpha', 'B S1 캡슐 부피 칸'),
+    ('RCA1', '+', r'manifest\.ca_ext\.cjunc\.evidence\.census\.(n_instances_ptfe_partial|n_revisit_(cells|fibres|pairs)|'
+                  r'n_self_revisits_path_only|n_subedges(_long|_ptfe_cov|_sdcp_near|_unrealized)?|revisit_s_um|subedge_rule)', 'cjunc',
+     'A 접합 v2 census — 가지 · 같은 셀 재방문 (RCA-03) · 분산판 v0 (RCA-05)'),
+    ('RCA1', '-', r'manifest\.ca_ext\.cjunc\.evidence\.(census|solve)\.n_self_merged_revisits', 'cjunc', 'A 재방문 합침 철회 (RCA-03)'),
+    ('RCA1', '+', r'manifest\.ca_ext\.cjunc\.evidence\.solve\.n_self_revisits_path_only', 'cjunc', 'A 경로로만 본 재방문 수'),
+    ('RCA1', '+', r'manifest\.ca_ext\.cjunc\.evidence\.counts\.n_subedges', 'cjunc', 'A 분산판 v0 간선 수'),
+    ('RCA1', '~', r'manifest\.ca_ext\.cjunc\.evidence\.(fp\.(plan_rows|registry)|receipts\.[A-Za-z_]+\.fp_registry|qualifiers)',
+     'cjunc', 'A 접합 계획 · 원장 지문 · 한정어 (판 v2)'),
+    ('RCA1', '-', r'manifest\.ca_ext\.cjunc\.evidence\.solve\.sv_dominant', 'cjunc', 'A SV_DOMINANT 철회 (RCA-06)'),
+    ('RCA1', '+', r'manifest\.ca_ext\.cjunc\.evidence\.solve\.sv_local_dissipation', 'cjunc', 'A SV 국소 소산 진단 (RCA-06)'),
+    ('RCA1', '~', r'manifest\.ca_ext\.cjunc\.protocol\.(model|schema|rules\.(port|self))', 'cjunc', 'A 접합 규약 판 v2'),
+    ('RCA1', '+', r'manifest\.ca_ext\.cjunc\.protocol\.rules\.(branch|cp|dist|order)', 'cjunc',
+     'A 접합 규칙 v2 (가지 · 최근접점 · 분산판 · 순서)'),
+    ('RCA1', '~', r'manifest\.physics_protocol_id', 'cjunc', 'A 접합 규약 판이 바뀌면 p3ca id 가 바뀐다 (같은 함수로 다시 계산)'),
+)
+#: 허용이 아니라 이유만 붙이는 칸 (기반 사본의 환경 차이 — 고치는 길: 사본 옆에 docs/ 두기 · 링크)
+OLD_DIFF_HINTS = (
+    (r'collector\.(anchors_source|pristine_precision)', '기반 사본 옆에 docs/ 가 없다 (집전체 앵커 CSV 를 못 읽어 대체 값) — '
+                                                       '<사본>/../docs 를 리포 docs/ 로 링크'),
+)
+
+
+def old_tree_diff(a, b, p=''):
+    """두 JSON 꼴 값의 차이 → [(연산, 점 경로)] (경로 순).  양쪽 다 dict 일 때만 내려간다 · 목록 · 값은 통째로 JSON 바이트 비교
+    (1 ↔ 1.0 도 다름 · NaN 끼리 같음).  '+' = 새 쪽에만 · '-' = 옛 쪽에만 · '~' = 값 다름."""
+    out = []
+    if isinstance(a, dict) and isinstance(b, dict):
+        for k in sorted(set(a) | set(b), key=str):
+            q = f'{p}.{k}' if p else str(k)
+            if k not in a:
+                out.append(('+', q))
+            elif k not in b:
+                out.append(('-', q))
+            else:
+                out += old_tree_diff(a[k], b[k], q)
+    elif json.dumps(a, sort_keys=True) != json.dumps(b, sort_keys=True):
+        out.append(('~', p))
+    return out
+
+
+def case_tags(extra):
+    """payload 인자 → 켠 노브 표지 집합 (face_alpha · rtol · cjunc) — 허용 목록의 경우 표지와 같은 낱말."""
+    ex = list(extra)
+    tags = set()
+    for i, a in enumerate(ex):
+        if a == '--ptfe-stamp' and i + 1 < len(ex) and ex[i + 1] == 'face_alpha':
+            tags.add('face_alpha')
+        elif a == '--step3-rtol':
+            tags.add('rtol')
+        elif a == '--step3-cjunc':
+            tags.add('cjunc')
+    return tags
+
+
+def old_diff_problems(diffs, tags, expect_identical=False):
+    """차이 목록 → (문제 목록, 허용된 칸 [(세대, 연산, 경로)]).  tags = 이 경우에 켠 노브.  expect_identical = 표를 안 쓰고 차이 0 만."""
+    import re as _re
+    probs, seen = [], []
+    for op, path in diffs:
+        if expect_identical:
+            probs.append(f'{op} {path} (--expect-identical: 차이 0 이어야)')
+            continue
+        hit = [g for g, o, rx, t, _why in OLD_DIFF_ALLOW if o == op and t in tags and _re.fullmatch(rx, path)]
+        if hit:
+            seen.append((hit[0], op, path))
+            continue
+        hint = next((h for rx, h in OLD_DIFF_HINTS if _re.fullmatch(rx, path)), '')
+        probs.append(f'{op} {path} (허용 목록 밖{" · " + hint if hint else ""})')
+    return probs, seen
+
+
+def payload_tree(data):
+    """payload 결과 → 대조 나무 {'manifest': 매니페스트 (code_sha · exec_env 빼고), 그 밖 step3 칸} (B1 · z3 O2 같은 꼴)."""
+    m = dict(man_of(data))
+    for k in ('code_sha', 'exec_env'):
+        m.pop(k, None)
+    t = {k: v for k, v in s3_of(data).items() if k != 'manifest'}
+    t['manifest'] = m
+    return t
+
+
 @case('B0u --old-scripts 대조의 경로 차이 · 허용 목록 (합성 · 기반 사본 없이 · ★ 10-21 D 브리프 묶음 5)')
 def t_old_allow_unit():
     import re as _re
@@ -1079,39 +1181,24 @@ def t_bitid():
     try:
         os.makedirs(os.path.join(td, 'w'))
         d = make_fixture(os.path.join(td, 'w'), sdcp=True)
+        #  ★ 10-21 (D · 브리프 묶음 5) — 옛 판은 Z3 새 칸 (sid_off · cg_iters · iters) 을 새 쪽에서만 빼서 Z3 이전 기반에서만 맞았다.
+        #    이제 경로 차이 전부를 한 표 (OLD_DIFF_ALLOW) 로 판정한다: 끈 경우 = 차이 0 · 켠 경우 = 그 노브 표지의 칸만 ·
+        #    --expect-identical (바로 앞 기반) = 차이 0.  접합 · face_alpha + rtol 경우를 더했다 (A · B 새 칸이 나오는 자리).
         for nm, extra in (('off LEAN2', OFF + LEAN2), ('centerline LEAN2', ['--ptfe-stamp', 'centerline'] + LEAN2),
                           ('off LEAN3', OFF + LEAN3), ('face_alpha LEAN2', ['--ptfe-stamp', 'face_alpha'] + LEAN2),
-                          ('off LEAN2 + rtol 1e-12', OFF + LEAN2 + ['--step3-rtol', '1e-12'])):
-            r_old = run_payload(d, extra, out=f'old_{nm.replace(" ", "_")}.json',
-                                payload=os.path.join(ARGS.old_scripts, 'mpm_webapp_payload.py'))
-            r_new = run_payload(d, extra, out=f'new_{nm.replace(" ", "_")}.json')
-            m_old = dict(man_of(r_old[2]))
-            m_new = dict(man_of(r_new[2]))
-            for k in ('code_sha', 'exec_env'):
-                m_old.pop(k, None)
-                m_new.pop(k, None)
-            s_old = {k: v for k, v in s3_of(r_old[2]).items() if k != 'manifest'}
-            s_new = {k: v for k, v in s3_of(r_new[2]).items() if k != 'manifest'}
-            #  ★ Z3 — 새 기록 칸 (켠 노브에서만 · 그 밖은 바이트 같아야 한다): face_alpha 런의 off 격자 sid 지문 · rtol (증서) 런의 CG 반복 수
-            new_flds = []
-            _fp = (((m_new.get('ca_ext') or {}).get('ptfe_face') or {}).get('evidence') or {}).get('fp')
-            if isinstance(_fp, dict) and 'sid_off' in _fp:
-                _fp.pop('sid_off')
-                new_flds.append('fp.sid_off')
-            for _k in ('cg_iters', 'ion_cg_iters'):
-                if _k in s_new:
-                    s_new.pop(_k)
-                    new_flds.append(_k)
-            for _ck in ('conv_cert', 'ion_conv_cert'):
-                if isinstance(s_new.get(_ck), dict) and {'iters', 'resolve_iters'} & set(s_new[_ck]):
-                    s_new[_ck] = {k: v for k, v in s_new[_ck].items() if k not in ('iters', 'resolve_iters')}
-                    new_flds.append(f'{_ck}.iters')
-            want_new = {'face_alpha LEAN2': ['fp.sid_off'], 'off LEAN2 + rtol 1e-12': ['cg_iters', 'conv_cert.iters']}.get(nm, [])
-            diff = sorted(k for k in set(m_old) | set(m_new) if m_old.get(k) != m_new.get(k))
-            chk(f'B1 payload [{nm}] — 매니페스트 (code_sha · exec_env 빼고) 바이트 같음 · id 같음 · step3 값 같음'
-                + (f' (새 기록 칸 {want_new} 만 빼고)' if want_new else ' (새 기록 칸 없음)'),
-                r_old[0] == 0 and r_new[0] == 0 and json.dumps(m_old, sort_keys=True) == json.dumps(m_new, sort_keys=True)
-                and s_old == s_new and new_flds == want_new, (r_old[0], r_new[0], diff[:6], new_flds))
+                          ('off LEAN2 + rtol 1e-12', OFF + LEAN2 + ['--step3-rtol', '1e-12']),
+                          ('off LEAN2 + 접합', OFF + LEAN2 + CJ),
+                          ('face_alpha LEAN2 + rtol', ['--ptfe-stamp', 'face_alpha'] + LEAN2 + ['--step3-rtol', '1e-12'])):
+            tag = f'{len(nm)}_{sum(map(ord, nm)) % 99991}'
+            r_old = run_payload(d, extra, out=f'old_{tag}.json', payload=os.path.join(ARGS.old_scripts, 'mpm_webapp_payload.py'))
+            r_new = run_payload(d, extra, out=f'new_{tag}.json')
+            diffs = old_tree_diff(payload_tree(r_old[2]), payload_tree(r_new[2]))
+            _ident = bool(getattr(ARGS, 'expect_identical', False))
+            probs, seen = old_diff_problems(diffs, case_tags(extra), expect_identical=_ident)
+            gens = sorted({g for g, _o, _p in seen})
+            chk(f'B1 payload [{nm}] — 기반 ↔ 새: 차이가 허용 목록 (경우 표지 {sorted(case_tags(extra)) or "끔"}) 안'
+                + (' · --expect-identical = 차이 0' if _ident else f' · 허용된 칸 {len(seen)} (세대 {gens or "-"})'),
+                r_old[0] == 0 and r_new[0] == 0 and not probs, (r_old[0], r_new[0], probs[:6]))
     finally:
         shutil.rmtree(td, ignore_errors=True)
 
@@ -1119,7 +1206,9 @@ def t_bitid():
 def main():
     global RC, CW, ARGS
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('--old-scripts', default='', help='고치기 전 scripts/ 사본 (B 묶음 · 끔 비트 동일 대조)')
+    ap.add_argument('--old-scripts', default='', help='고치기 전 scripts/ 사본 (B 묶음 · 끔 비트 동일 대조 · 사본 옆에 docs/ 링크)')
+    ap.add_argument('--expect-identical', action='store_true',
+                    help='B 묶음 — 허용 목록을 쓰지 않고 차이 0 만 통과 (기반 = 바로 앞 커밋 · 끈 · 켠 경우 모두)')
     ap.add_argument('--skip-payload', action='store_true')
     ap.add_argument('--only', default='', help='쉼표로 나눈 이름 접두 (예: R,P)')
     ARGS = ap.parse_args()

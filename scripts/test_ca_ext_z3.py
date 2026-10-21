@@ -27,7 +27,8 @@
      검증기 (없음 · 모양 · 조합 불일치 = 거부)
   E  CG 반복 수 기록 — 수렴했을 때도 (주 · 보조 · ⓒ 이어 풀기) · 증서 켤 때만 (끔 = 옛 키 그대로) · 독립 셈과 같음
   O  (--old-scripts) 끈 경로 비트 대조 — 새 노브 끔 = 기반 코드와 매니페스트 (code_sha · exec_env 빼고) · step3 값 같음 ·
-     face_alpha 만 (접합 끔) 솔브 비트 같음
+     face_alpha 만 (접합 끔) 솔브 비트 같음.  ★ 10-21 (D · 브리프 묶음 5): payload 대조는 b6 의 한 표 (`OLD_DIFF_ALLOW` · 켠 노브의
+     새 칸만 · 끈 경우 차이 0) · `--expect-identical` (기반 = 바로 앞 커밋) = 차이 0 · 기반 사본 옆에 docs/ 링크
 ⚠ PASS 는 배선 · 계약 · 구현의 증거이지 R_j 값 · 판정 (R) 의 물리 검증이 아니다.
 """
 import argparse
@@ -986,32 +987,22 @@ def t_O():
                              ('off LEAN2 + rtol', B6.OFF + B6.LEAN2 + ['--step3-rtol', '1e-12'], ('iters',)),
                              ('face_alpha LEAN2 + rtol', ['--ptfe-stamp', 'face_alpha'] + B6.LEAN2 + ['--step3-rtol', '1e-12'],
                               ('iters', 'sid_off'))):
-        ro = B6.run_payload(d, extra, out=f'old_{len(nm)}_{abs(hash(nm)) % 9973}.json',
+        ro = B6.run_payload(d, extra, out=f'old_{len(nm)}_{sum(map(ord, nm)) % 99991}.json',
                             payload=os.path.join(old, 'mpm_webapp_payload.py'))
-        rn = B6.run_payload(d, extra, out=f'new_{len(nm)}_{abs(hash(nm)) % 9973}.json')
-        mo, mn = dict(B6.man_of(ro[2])), dict(B6.man_of(rn[2]))
-        for k in ('code_sha', 'exec_env'):
-            mo.pop(k, None)
-            mn.pop(k, None)
-        so = {k: v for k, v in B6.s3_of(ro[2]).items() if k != 'manifest'}
+        rn = B6.run_payload(d, extra, out=f'new_{len(nm)}_{sum(map(ord, nm)) % 99991}.json')
         sn = {k: v for k, v in B6.s3_of(rn[2]).items() if k != 'manifest'}
-        if 'sid_off' in allow:
-            fp = (((mn.get('ca_ext') or {}).get('ptfe_face') or {}).get('evidence') or {}).get('fp') or {}
-            fp.pop('sid_off', None)
-        if 'iters' in allow:
-            for k in NEW_S3:
-                sn.pop(k, None)
-            for ck in ('conv_cert', 'ion_conv_cert'):
-                if isinstance(sn.get(ck), dict):
-                    sn[ck] = {k: v for k, v in sn[ck].items() if k not in ('iters', 'resolve_iters')}
-        else:
+        if 'iters' not in allow:
             chk(f'O2 [{nm}] 새 기록 칸 없음 (반복 수 · sid_off 는 켠 노브에서만)', not [k for k in sn if k in NEW_S3],
                 sorted(k for k in sn if k in NEW_S3))
-        diff = sorted(k for k in set(mo) | set(mn) if mo.get(k) != mn.get(k))
-        chk(f'O2 payload [{nm}] — 기반 ↔ 새: 매니페스트 (code_sha · exec_env 빼고{" · 새 칸 " + str(allow) if allow else ""}) '
-            f'바이트 같음 · id 같음 · step3 값 같음',
-            ro[0] == 0 and rn[0] == 0 and json.dumps(mo, sort_keys=True) == json.dumps(mn, sort_keys=True) and so == sn,
-            (ro[0], rn[0], diff[:6], sorted(k for k in set(so) | set(sn) if so.get(k) != sn.get(k))[:6]))
+        #  ★ 10-21 (D · 브리프 묶음 5) — 옛 판은 Z3 새 칸을 새 쪽에서만 빼서 Z3 이전 기반에서만 맞았다 → b6 의 한 표 (OLD_DIFF_ALLOW ·
+        #    켠 노브 표지의 칸만 · 끈 경우 차이 0) · --expect-identical (바로 앞 기반) = 차이 0
+        diffs = B6.old_tree_diff(B6.payload_tree(ro[2]), B6.payload_tree(rn[2]))
+        tags = B6.case_tags(extra)
+        probs, seen = B6.old_diff_problems(diffs, tags, expect_identical=bool(getattr(ARGS, 'expect_identical', False)))
+        chk(f'O2 payload [{nm}] — 기반 ↔ 새: 차이가 허용 목록 (경우 표지 {sorted(tags) or "끔"}) 안'
+            + (' · --expect-identical = 차이 0' if getattr(ARGS, 'expect_identical', False)
+               else f' · 허용된 칸 {len(seen)} (세대 {sorted({g for g, _o, _p in seen}) or "-"})'),
+            ro[0] == 0 and rn[0] == 0 and not probs, (ro[0], rn[0], probs[:6]))
 
 
 def main():
@@ -1019,7 +1010,9 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--only', default='', help='쉼표로 나눈 이름 접두 (예: A,B)')
     ap.add_argument('--skip-payload', action='store_true', help='payload · 러너 끝-끝 빼고')
-    ap.add_argument('--old-scripts', default='', help='O 묶음 — 기반 커밋 scripts/ 사본')
+    ap.add_argument('--old-scripts', default='', help='O 묶음 — 기반 커밋 scripts/ 사본 (사본 옆에 docs/ 링크)')
+    ap.add_argument('--expect-identical', action='store_true',
+                    help='O 묶음 — 허용 목록 (test_ca_ext_b6.OLD_DIFF_ALLOW) 을 쓰지 않고 차이 0 만 통과 (기반 = 바로 앞 커밋)')
     ap.add_argument('--keep', action='store_true')
     ARGS = ap.parse_args()
     import step3_sigma as _s3
