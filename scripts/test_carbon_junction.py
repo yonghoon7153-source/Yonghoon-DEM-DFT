@@ -2495,6 +2495,108 @@ def t_cax_subedges():
         chk(f'CAX-SUB 거부 (지킴) [{nm}]', not ok(var(**upd)), RCm.ca_ext_record_ok(var(**upd)))
 
 
+@case('PCP-EPS')
+def t_pcp_eps():
+    """PCP 를 비이진 원점으로 통째로 옮긴 침대 (10-21 변이 M16 생존 → 보탬 · 시험은 구현 뒤): 나란한 겹침의 최근접 쌍 거리가 반올림으로
+    조금씩 달라진다 → 접점 = ε 띠 (거리² 1e-9 µm²) 안 중점 사전식 최소 = 겹침 아래 끝 (z 4.0 + o_z) · 포트 (1,1,3)–(2,1,4) · σ = 손 회로
+    (1e-12).  옛 'argmin 첫 쌍' 은 반올림이 고른 쌍 (원점 이동에 접점이 움직인다)."""
+    rj = 1e3
+    want = chain_I([G_PL] + [G_AX] * 3 + [1e4 / rj] + [G_AX] * 5 + [G_PL])
+    for o in ((0.6, 0.6, 0.6), (0.123, 0.456, 0.789)):     # 옮긴 꼭짓점 사이 길이가 점 간격의 정수배로 남는 원점 (densify_exact 조건)
+        sh = [[tuple(np.asarray(p, np.float64) + np.asarray(o)) for p in v] for v in PCP]
+        P = rows_exact(sh)
+        sid = _try(lambda: bed(P, PCP_N, lo=o)[0], None)
+        reg = _try(lambda: registry(sid, P, lo=o), None)
+        r = _try(lambda: solve(sid, sig_e(), PCP_N, plan(reg, rj)), None) if reg is not None else None
+        I = (reg or {}).get('instances') or {}
+        ok_ = r is not None and len(I.get('fi', [])) == 1
+        chk(f'PCP-EPS 원점 {o} — 접점 z = 4.0 + o_z (1e-12) · 포트 (1,1,3)–(2,1,4) · σ = 손 회로 (1e-12)',
+            ok_ and abs(float(I['Ci'][0][2]) - (4.0 + o[2])) < 1e-12 and (_pcells(reg, 0, 'i'), _pcells(reg, 0, 'j')) == ((1, 1, 3), (2, 1, 4))
+            and rel(I_of(r, PCP_N), want) < 1e-12,
+            f"{None if not ok_ else (I['Ci'][0].tolist(), _pcells(reg, 0, 'i'), _pcells(reg, 0, 'j'), I_of(r, PCP_N))} ↔ {want}")
+
+
+#  PCP-FAR — PCP 의 A 아래 끝에만 짧은 꼬리 ((1.5 → 1.75, ·, 0.5) · 같은 셀 (1,1,0) · B 와 멀다) 를 단 꼴: 끝점 사전식이 바뀌어 A 의 정준
+#  방향이 위 → 아래로 뒤집힌다 → 겹침 [4.0, 5.0] 을 내려가며 지난다.  접점 = ε 띠 중점 사전식 최소 = z 4.0 (방향 무관) → 포트 · 계 · σ =
+#  PCP 와 같다.  옛 'argmin 첫 쌍' (정준 경로 순서의 첫 최근접 쌍) 은 겹침 위 끝 z 5.0 → A 포트 (1,1,4) (10-21 변이 M16 생존 → 보탬 ·
+#  시험은 구현 뒤).
+PCP_AFAR = [(1.75, 1.5, 0.5), (1.5, 1.5, 0.5), (1.5, 1.5, 5.0)]
+
+
+@case('PCP-FAR')
+def t_pcp_far():
+    rj = 1e3
+    want = chain_I([G_PL] + [G_AX] * 3 + [1e4 / rj] + [G_AX] * 5 + [G_PL])
+    b0 = _try(lambda: _solve_full(rows_exact(PCP), PCP_N), None)
+    for nm, polys in (('A 아래 끝 꼬리', [PCP_AFAR, PCP[1]]), ('A 아래 끝 꼬리 + 점 역순', [PCP_AFAR[::-1], PCP[1][::-1]])):
+        o = _try(lambda polys=polys: _solve_full(rows_exact(polys), PCP_N), None)
+        I = (o[1]['instances'] if o is not None else {})
+        flip = None
+        if o is not None:
+            A_ = o[1]['positions']
+            m = A_['fid'] == 10
+            flip = bool(A_['ijk'][m][0][2] > A_['ijk'][m][-1][2])          # A 의 정준 첫 위치가 위쪽 = 내려간다
+        chk(f'PCP-FAR {nm} — 같은 sid · A 정준 방향 = 내려감 · 접점 z 4.0 · 포트 (1,1,3)–(2,1,4) · 계 바이트 · σ 비트 = PCP · σ = 손 회로 '
+            '(1e-12)',
+            b0 is not None and o is not None and o[0].tobytes() == b0[0].tobytes() and flip is True and len(I['fi']) == 1
+            and float(I['Ci'][0][2]) == 4.0 and (_pcells(o[1], 0, 'i'), _pcells(o[1], 0, 'j')) == ((1, 1, 3), (2, 1, 4))
+            and sys_bytes(o[2]) == sys_bytes(b0[2])
+            and np.float64(o[2]['sigma_eff']).tobytes() == np.float64(b0[2]['sigma_eff']).tobytes()
+            and rel(I_of(o[2], PCP_N), want) < 1e-12,
+            f"{None if o is None else (flip, I['Ci'][0].tolist(), _pcells(o[1], 0, 'i'), _pcells(o[1], 0, 'j'), I_of(o[2], PCP_N))}")
+
+
+@case('CP-ORD')
+def t_cp_order():
+    """instance 접점 (`CJUNC_CP_RULE`) 은 후보 쌍 나열 순서에 무관해야 한다 — 후보 쌍은 `cKDTree.query_pairs` 의 출력 (순서 = 구현 정의 · 트리
+    모양) 이다.  그 출력을 뒤집거나 (시드 고정) 무작위로 섞어도 접점 · 포트 · 간선 원장 · 계 · σ 비트 같음 (PCP · PCP-FAR · LP 긴 접촉 ·
+    CX 5 노드 꼴).  ★ 10-21 변이 M16 ('argmin 첫 쌍' = 나열 순서의 첫 최소 쌍) 이 고정 침대 전부를 통과해 (트리 순서가 우연히 사전식 최소
+    쌍을 먼저 냈다) 보탬 · 시험은 구현 뒤."""
+    import scipy.spatial as SPS
+    real = SPS.cKDTree
+
+    class _Wrap:
+        def __init__(self, t, how):
+            self._t, self._how = t, how
+
+        def __getattr__(self, k):
+            return getattr(self._t, k)
+
+        def query_pairs(self, *a, **k):
+            out = self._t.query_pairs(*a, **k)
+            if not isinstance(out, np.ndarray) or len(out) < 2:
+                return out
+            if self._how == 'rev':
+                return out[::-1].copy()
+            return out[np.random.default_rng(7).permutation(len(out))].copy()
+
+    @contextlib.contextmanager
+    def order(how):
+        SPS.cKDTree = (lambda *a, **k: _Wrap(real(*a, **k), how)) if how else real
+        try:
+            yield
+        finally:
+            SPS.cKDTree = real
+
+    def rec(P, n):
+        sid, _ = bed(P, n)
+        reg = registry(sid, P)
+        r = solve(sid, sig_e(), n, plan(reg, 1e3))
+        I, S = reg['instances'], reg['subedges']
+        return (np.asarray(I['Ci']).tobytes(), np.asarray(I['Cj']).tobytes(), np.asarray(S['X_i']).tobytes(),
+                np.asarray(S['X_j']).tobytes(), tuple(_sub_cells(reg)), sys_bytes(r), np.float64(r['sigma_eff']).tobytes())
+    beds = (('PCP', rows_exact(PCP), PCP_N), ('PCP-FAR', rows_exact([PCP_AFAR, PCP[1]]), PCP_N), ('LP 긴 접촉', rows(LP), LP_N),
+            ('CX 5 노드 꼴', rows(CX), CX_N))
+    for nm, P, n in beds:
+        base = _try(lambda P=P, n=n: rec(P, n), None)
+        for how in ('rev', 'perm'):
+            with order(how):
+                o = _try(lambda P=P, n=n: rec(P, n), None)
+            chk(f'CP-ORD {nm} · 후보 쌍 {"뒤집음" if how == "rev" else "무작위 섞음 (시드 7)"} → 접점 · 등분점 · 간선 포트 셀 · 계 · σ 비트 같음',
+                base is not None and o is not None and o == base,
+                None if (base is None or o is None) else [k for k, (x, y) in enumerate(zip(o, base)) if x != y])
+
+
 @case('OFF-IND')
 def t_off_independent():
     """보장 — 접합 끔 (cjunc=None) 솔브는 carbon_junction 을 부르지도 읽지도 않는다 (구조 증거 · C0 의 옛 기준 비트 대조와 별개):
