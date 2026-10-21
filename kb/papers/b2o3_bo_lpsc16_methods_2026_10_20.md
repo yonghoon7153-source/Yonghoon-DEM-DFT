@@ -32,17 +32,17 @@ reference 정리 · 정의를 정확하게 · compact) 을 맞췄다 (적용 표
 > ⏩ **정본 편집본은 Docs 문서다**: https://claude.ai/artifact/T1VW5kXxfbi1ToVH7GxyuM
 > (BML 작성 가이드 `Writing_scientific_papers_BML_v1.docx` + 교수님 어록 13 항 + method docx 형식 반영 · 문장별 설명 표 · 참고문헌 15 개 · 원고 숫자 출처 표).
 > 첫 초안 (981 단어) 은 이 파일의 git 이력 (`5fcea55e`) 에 있다. 이 판은 891 단어.
-> **Word 파일**: `kb/papers/b2o3_bo_lpsc16_methods_2026_10_20.docx` — 사용자가 준 method 템플릿 (`method___.docx`) 의 패키지를 그대로 쓰고 본문만 바꿨다: Times New Roman 12 pt · 2 줄 간격 · 첫 줄 들여쓰기 · italic 절 제목 '2.5.' · 인용은 문장부호 뒤 위첨자 번호 · 첨자는 Word 첨자 · 수식 3 개는 Word 수식 개체 (OMML). 이 md 의 [n] 표기는 Word 에서 위첨자다.
+> **Word 파일**: `kb/papers/b2o3_bo_lpsc16_methods_2026_10_20.docx` — 사용자가 준 method 템플릿 (`method___.docx`) 의 패키지를 그대로 쓰고 본문만 바꿨다: Times New Roman 12 pt · 2 줄 간격 · 첫 줄 들여쓰기 · italic 절 제목 '2.5.' · 인용은 문장부호 뒤 위첨자 [n] (원고 양식 · 10-21) · 첨자는 Word 첨자 · 수식 3 개는 Word 수식 개체 (OMML). 이 md 의 [n] 표기는 Word 에서 위첨자다.
 
 **2.5. Computational Methods**
 
-First-principles density functional theory (DFT) calculations were performed using Quantum ESPRESSO with the Perdew–Burke–Ernzerhof generalized gradient approximation [1,2]. Pseudopotentials from the SSSP efficiency library (ultrasoft for Li, B, P, S, and Cl; projector augmented-wave (PAW) for O) were used with kinetic energy cutoffs of 60 Ry for the wavefunctions and 480 Ry for the charge density [3]. The Brillouin zone was sampled with Γ-centered Monkhorst–Pack grids, and Marzari–Vanderbilt smearing of 0.01 Ry was applied [4]. Ionic positions were relaxed until all force components fell below 10⁻⁴ Ry bohr⁻¹ (10⁻³ Ry bohr⁻¹ for O-LPSC1.6), with a self-consistent field (SCF) convergence threshold of 10⁻⁸ Ry.
+First-principles density functional theory (DFT) calculations were performed using Quantum ESPRESSO with the Perdew–Burke–Ernzerhof generalized gradient approximation.[1–4] Pseudopotentials from the SSSP efficiency library (ultrasoft for Li, B, P, S, and Cl; projector augmented-wave (PAW) for O) were used with kinetic energy cutoffs of 60 Ry for the wavefunctions and 480 Ry for the charge density.[5] The Brillouin zone was sampled with Γ-centered Monkhorst–Pack grids, and Marzari–Vanderbilt smearing of 0.01 Ry was applied.[6] Ionic positions were relaxed until all force components fell below 10⁻⁴ Ry bohr⁻¹ (10⁻³ Ry bohr⁻¹ for O-LPSC1.6), with a self-consistent field (SCF) convergence threshold of 10⁻⁸ Ry.
 
-Three structural models were constructed. LPSC1.6 was represented by a 62-atom supercell (Li₂₇P₅S₂₂Cl₈, five formula units) obtained by stacking the primitive argyrodite cell (*a* ≈ 7.0 Å, *α* = 60°) five times along the *c* axis. Its anion and Li⁺ disorder was sampled with the Universal Model for Atoms (UMA) machine-learning interatomic potential [5]: the 45 distributions of S²⁻ and Cl⁻ over the free-anion (4a/4d) sites were ranked by UMA energy, Li⁺ arrangements were sampled for the lowest-energy anion distributions, and the lowest-energy configuration was annealed by UMA-based molecular dynamics (MD) at 500 K for 50 ps. O-LPSC1.6 (Li₂₇P₅S₂₁OCl₈, i.e., Li₅.₄PS₄.₂O₀.₂Cl₁.₆) was obtained by replacing one S²⁻ with O²⁻ at the lowest-UMA-energy site among four candidates (one free S²⁻ site and three PS₄ corners). BO-LPSC1.6 (Li₅₈P₈B₂S₄₁O₃Cl₁₆, i.e., Li₅.₈P₀.₈B₀.₂S₄.₁O₀.₃Cl₁.₆; 128 atoms) was built by doubling the LPSC1.6 cell along *c* and introducing one B₂O₃ unit, with two B³⁺ on P⁵⁺ (4b) sites, three O²⁻ on S²⁻ sites, and four additional Li⁺ for charge compensation; its dopant configurations were pre-screened by Ewald electrostatic energy and relaxed with UMA. Because one B₂O₃ unit is the smallest substitution this cell can accommodate, the model corresponds to *x* = 0.2, which is higher than the experimental *x* = 0.03.
+Three structural models were constructed. LPSC1.6 was represented by a 62-atom supercell (Li₂₇P₅S₂₂Cl₈, five formula units) obtained by stacking the primitive argyrodite cell (*a* ≈ 7.0 Å, *α* = 60°) five times along the *c* axis. Its anion and Li⁺ disorder was sampled with the Universal Model for Atoms (UMA) machine-learning interatomic potential:[7] the 45 distributions of S²⁻ and Cl⁻ over the free-anion (4a/4d) sites were ranked by UMA energy, Li⁺ arrangements were sampled for the lowest-energy anion distributions, and the lowest-energy configuration was annealed by UMA-based molecular dynamics (MD) at 500 K for 50 ps. O-LPSC1.6 (Li₂₇P₅S₂₁OCl₈, i.e., Li₅.₄PS₄.₂O₀.₂Cl₁.₆) was obtained by replacing one S²⁻ with O²⁻ at the lowest-UMA-energy site among four candidates (one free S²⁻ site and three PS₄ corners). BO-LPSC1.6 (Li₅₈P₈B₂S₄₁O₃Cl₁₆, i.e., Li₅.₈P₀.₈B₀.₂S₄.₁O₀.₃Cl₁.₆; 128 atoms) was built by doubling the LPSC1.6 cell along *c* and introducing one B₂O₃ unit, with two B³⁺ on P⁵⁺ (4b) sites, three O²⁻ on S²⁻ sites, and four additional Li⁺ for charge compensation; its dopant configurations were pre-screened by Ewald electrostatic energy and relaxed with UMA. Because one B₂O₃ unit is the smallest substitution this cell can accommodate, the model corresponds to *x* = 0.2, which is higher than the experimental *x* = 0.03.
 
-For each model, the UMA-optimized cell was isotropically scaled to 0.96–1.06 (LPSC1.6, 11 volumes), 0.94–1.06 (O-LPSC1.6, 7 volumes), or 0.96–1.04 (BO-LPSC1.6, 5 volumes) of its volume, and the ionic positions were relaxed by DFT at each fixed cell. The energy–volume data were fitted to the third-order Birch–Murnaghan equation of state to obtain the equilibrium volume (*V*₀) and bulk modulus (*B*₀) [6], and the ions were finally relaxed at *V*₀; these structures were used in all subsequent analyses. Variable-cell relaxation was not used because a single static configuration of disordered argyrodite does not retain the cubic symmetry of its time-averaged structure.
+For each model, the UMA-optimized cell was isotropically scaled to 0.96–1.06 (LPSC1.6, 11 volumes), 0.94–1.06 (O-LPSC1.6, 7 volumes), or 0.96–1.04 (BO-LPSC1.6, 5 volumes) of its volume, and the ionic positions were relaxed by DFT at each fixed cell. The energy–volume data were fitted to the third-order Birch–Murnaghan equation of state to obtain the equilibrium volume (*V*₀) and bulk modulus (*B*₀),[8] and the ions were finally relaxed at *V*₀; these structures were used in all subsequent analyses. Variable-cell relaxation was not used because a single static configuration of disordered argyrodite does not retain the cubic symmetry of its time-averaged structure.
 
-Li⁺ transport was simulated by MD with the UMA-s-1p1 model (OMat task) in the Atomic Simulation Environment (ASE) [5,7]. The *V*₀ cells (62, 62, and 128 atoms for LPSC1.6, O-LPSC1.6, and BO-LPSC1.6, respectively) were simulated in the *NVT* ensemble with a Langevin thermostat (time step 2 fs, friction 0.02 in ASE units) at 600, 800, and 1000 K, with 5 ps of equilibration followed by 200 ps of production. At each temperature, three (LPSC1.6 and BO-LPSC1.6) or four (O-LPSC1.6) independent runs with different random seeds were performed. The Li⁺ diffusion coefficient (*D*) was obtained from a linear fit of the mean square displacement (MSD), MSD = 6*Dt* + *c*, over 2–50 ps with a free intercept *c*. The activation energy (*E*ₐ) was obtained by fitting Eq. (1) to *D* at the three temperatures, and the ionic conductivity (*σ*) was estimated from Eq. (2) with a Haven ratio of 1 and *D* extrapolated to 273 K by Eq. (1), where *n* is the Li⁺ number density and *q* is the Li⁺ charge.
+Li⁺ transport was simulated by MD with the UMA-s-1p1 model (OMat task) in the Atomic Simulation Environment (ASE).[7,9] The *V*₀ cells (62, 62, and 128 atoms for LPSC1.6, O-LPSC1.6, and BO-LPSC1.6, respectively) were simulated in the *NVT* ensemble with a Langevin thermostat (time step 2 fs, friction 0.02 in ASE units) at 600, 800, and 1000 K, with 5 ps of equilibration followed by 200 ps of production. At each temperature, three (LPSC1.6 and BO-LPSC1.6) or four (O-LPSC1.6) independent runs with different random seeds were performed. The Li⁺ diffusion coefficient (*D*) was obtained from a linear fit of the mean square displacement (MSD), MSD = 6*Dt* + *c*, over 2–50 ps with a free intercept *c*. The activation energy (*E*ₐ) was obtained by fitting Eq. (1) to *D* at the three temperatures, and the ionic conductivity (*σ*) was estimated from Eq. (2) with a Haven ratio of 1 and *D* extrapolated to 273 K by Eq. (1), where *n* is the Li⁺ number density and *q* is the Li⁺ charge.
 
 ```latex
 D = D_{0}\exp\left(-\frac{E_{\mathrm{a}}}{k_{\mathrm{B}}T}\right) \qquad (1)
@@ -52,51 +52,42 @@ D = D_{0}\exp\left(-\frac{E_{\mathrm{a}}}{k_{\mathrm{B}}T}\right) \qquad (1)
 \sigma = \frac{n q^{2} D}{k_{\mathrm{B}} T} \qquad (2)
 ```
 
-Li⁺ migration pathways were mapped with the bond valence site energy (BVSE) approach on the *V*₀ structures [8,9]. On a grid with ~0.25 Å spacing, the bond valence sum of a Li⁺ probe was computed over all anions within 5 Å using the softBV parameters (*R*₀ = 2.105, 2.249, and 1.466 Å for Li–S, Li–Cl, and Li–O, respectively; *b* = 0.37 Å), and the site energy was approximated by Eq. (3), where *R* is the Li⁺–anion distance. The Li⁺-accessible volume fraction was defined as the fraction of grid points within 0.5 (valence units)² of the global minimum of the periodic map; for display, the maps were resampled into ~9.9 Å near-cubic boxes.
+Li⁺ migration pathways were mapped with the bond valence site energy (BVSE) approach on the *V*₀ structures.[10,11] On a grid with ~0.25 Å spacing, the bond valence sum of a Li⁺ probe was computed over all anions within 5 Å using the softBV parameters (*R*₀ = 2.105, 2.249, and 1.466 Å for Li–S, Li–Cl, and Li–O, respectively; *b* = 0.37 Å), and the site energy was approximated by Eq. (3), where *R* is the Li⁺–anion distance. The Li⁺-accessible volume fraction was defined as the fraction of grid points within 0.5 (valence units)² of the global minimum of the periodic map; for display, the maps were resampled into ~9.9 Å near-cubic boxes.
 
 ```latex
 E_{\mathrm{BV}} = \left(V_{\mathrm{Li}} - 1\right)^{2}, \quad V_{\mathrm{Li}} = \sum_{X} \exp\left(\frac{R_{0} - R}{b}\right) \qquad (3)
 ```
 
-The density of states (DOS) and projected DOS (PDOS) of BO-LPSC1.6 were calculated non-self-consistently with the optimized tetrahedron method and projections onto atomic orbitals [10], and were broadened with a 0.05 eV Gaussian for display. Energies were referenced to the valence band maximum (VBM), which was taken from the Kohn–Sham eigenvalues of a fixed-occupation calculation. The electron localization function (ELF) was calculated from the SCF valence density [11], and its value at the bond midpoint was averaged over all bonds of each type (bonds identified within 2.15, 1.9, 2.3, 2.9, and 2.95 Å for B–S, P–O, P–S, Li–S, and Li–Cl, respectively).
+The density of states (DOS) and projected DOS (PDOS) of BO-LPSC1.6 were calculated non-self-consistently with the optimized tetrahedron method and projections onto atomic orbitals,[12] and were broadened with a 0.05 eV Gaussian for display. Energies were referenced to the valence band maximum (VBM), which was taken from the Kohn–Sham eigenvalues of a fixed-occupation calculation. The electron localization function (ELF) was calculated from the SCF valence density,[13] and its value at the bond midpoint was averaged over all bonds of each type (bonds identified within 2.15, 1.9, 2.3, 2.9, and 2.95 Å for B–S, P–O, P–S, Li–S, and Li–Cl, respectively).
 
-Crystal orbital Hamilton population (COHP) analysis [12] was performed with LOBSTER 5.1.1 [13,14]. Because LOBSTER requires PAW wavefunctions, the SCF and non-self-consistent (no symmetry, 960 bands) calculations were repeated on the same structure with PAW datasets from PSlibrary [15], and the wavefunctions were projected onto the pbeVaspFit2015 basis (Li 1*s*, 2*s*, 2*p*; B and O 2*s*, 2*p*; P, S, and Cl 3*s*, 3*p*), with a charge spilling of 1.19%. Integrated COHP (ICOHP) values up to the Fermi level were averaged over each bond type. Bond lengths were averaged over first-shell pairs in the *V*₀ structures (P–S 1.8–2.5, P–O 1.3–1.9, B–S 1.5–2.2, Li–S 1.9–3.2, and Li–Cl 2.0–3.4 Å).
+Crystal orbital Hamilton population (COHP) analysis[14] was performed with LOBSTER 5.1.1.[15,16] Because LOBSTER requires PAW wavefunctions, the SCF and non-self-consistent (no symmetry, 960 bands) calculations were repeated on the same structure with PAW datasets from PSlibrary,[17] and the wavefunctions were projected onto the pbeVaspFit2015 basis (Li 1*s*, 2*s*, 2*p*; B and O 2*s*, 2*p*; P, S, and Cl 3*s*, 3*p*), with a charge spilling of 1.19%. Integrated COHP (ICOHP) values up to the Fermi level were averaged over each bond type. Bond lengths were averaged over first-shell pairs in the *V*₀ structures (P–S 1.8–2.5, P–O 1.3–1.9, B–S 1.5–2.2, Li–S 1.9–3.2, and Li–Cl 2.0–3.4 Å).
 
 ---
 
-## 참고문헌 (BML 양식 · 2026-10-20 검색 목록으로 확인)
+## 참고문헌 (원고 양식 · 17 개 · 2026-10-21)
 
-[1] P. Giannozzi, S. Baroni, N. Bonini, M. Calandra, R. Car, C. Cavazzoni, D. Ceresoli, G. L. Chiarotti, M. Cococcioni, I. Dabo, A. Dal Corso, S. de Gironcoli, S. Fabris, G. Fratesi, R. Gebauer, U. Gerstmann, C. Gougoussis, A. Kokalj, M. Lazzeri, L. Martin-Samos, N. Marzari, F. Mauri, R. Mazzarello, S. Paolini, A. Pasquarello, L. Paulatto, C. Sbraccia, S. Scandolo, G. Sclauzero, A. P. Seitsonen, A. Smogunov, P. Umari, R. M. Wentzcovitch, QUANTUM ESPRESSO: a modular and open-source software project for quantum simulations of materials, J. Phys.: Condens. Matter 21 (2009) 395502. https://doi.org/10.1088/0953-8984/21/39/395502.
+원고 (`Manuscript.docx`, 사용자 10-21 업로드 · 저장소 밖) 의 Literature 양식: `번호.<tab>저자, *저널* 연도, *권*, 쪽.` — 제목·DOI 없음 · 본문 인용은 문장부호 뒤 위첨자 `[n]` (Wiley 꼴).
+QE 는 공식 인용 안내 (https://www.quantum-espresso.org/cite/) 대로 2009 · 2017 · **2020 (GPU 판을 써서)** 셋 — 사용자 10-21 *'권고대로 해'*.
 
-[2] J. P. Perdew, K. Burke, M. Ernzerhof, Generalized gradient approximation made simple, Phys. Rev. Lett. 77 (1996) 3865–3868. https://doi.org/10.1103/PhysRevLett.77.3865.
+1. P. Giannozzi, S. Baroni, N. Bonini, M. Calandra, R. Car, C. Cavazzoni, D. Ceresoli, G. L. Chiarotti, M. Cococcioni, I. Dabo, A. Dal Corso, S. de Gironcoli, S. Fabris, G. Fratesi, R. Gebauer, U. Gerstmann, C. Gougoussis, A. Kokalj, M. Lazzeri, L. Martin-Samos, N. Marzari, F. Mauri, R. Mazzarello, S. Paolini, A. Pasquarello, L. Paulatto, C. Sbraccia, S. Scandolo, G. Sclauzero, A. P. Seitsonen, A. Smogunov, P. Umari, R. M. Wentzcovitch, *J. Phys.: Condens. Matter* 2009, *21*, 395502.
+2. P. Giannozzi, O. Andreussi, T. Brumme, O. Bunau, M. Buongiorno Nardelli, M. Calandra, R. Car, C. Cavazzoni, D. Ceresoli, M. Cococcioni, N. Colonna, I. Carnimeo, A. Dal Corso, S. de Gironcoli, P. Delugas, R. A. DiStasio Jr., A. Ferretti, A. Floris, G. Fratesi, G. Fugallo, R. Gebauer, U. Gerstmann, F. Giustino, T. Gorni, J. Jia, M. Kawamura, H.-Y. Ko, A. Kokalj, E. Küçükbenli, M. Lazzeri, M. Marsili, N. Marzari, F. Mauri, N. L. Nguyen, H.-V. Nguyen, A. Otero-de-la-Roza, L. Paulatto, S. Poncé, D. Rocca, R. Sabatini, B. Santra, M. Schlipf, A. P. Seitsonen, A. Smogunov, I. Timrov, T. Thonhauser, P. Umari, N. Vast, X. Wu, S. Baroni, *J. Phys.: Condens. Matter* 2017, *29*, 465901.
+3. P. Giannozzi, O. Baseggio, P. Bonfà, D. Brunato, R. Car, I. Carnimeo, C. Cavazzoni, S. de Gironcoli, P. Delugas, F. Ferrari Ruffino, A. Ferretti, N. Marzari, I. Timrov, A. Urru, S. Baroni, *J. Chem. Phys.* 2020, *152*, 154105.
+4. J. P. Perdew, K. Burke, M. Ernzerhof, *Phys. Rev. Lett.* 1996, *77*, 3865–3868.
+5. G. Prandini, A. Marrazzo, I. E. Castelli, N. Mounet, N. Marzari, *npj Comput. Mater.* 2018, *4*, 72.
+6. N. Marzari, D. Vanderbilt, A. De Vita, M. C. Payne, *Phys. Rev. Lett.* 1999, *82*, 3296–3299.
+7. B. M. Wood, M. Dzamba, X. Fu, M. Gao, M. Shuaibi, L. Barroso-Luque, K. Abdelmaqsoud, V. Gharakhanyan, J. R. Kitchin, D. S. Levine, K. Michel, A. Sriram, T. Cohen, A. Das, A. Rizvi, S. J. Sahoo, Z. W. Ulissi, C. L. Zitnick, *arXiv* 2025, arXiv:2506.23971.
+8. F. Birch, *Phys. Rev.* 1947, *71*, 809–824.
+9. A. H. Larsen, J. J. Mortensen, J. Blomqvist, I. E. Castelli, R. Christensen, M. Dułak, J. Friis, M. N. Groves, B. Hammer, C. Hargus, E. D. Hermes, P. C. Jennings, P. B. Jensen, J. Kermode, J. R. Kitchin, E. L. Kolsbjerg, J. Kubal, K. Kaasbjerg, S. Lysgaard, J. B. Maronsson, T. Maxson, T. Olsen, L. Pastewka, A. Peterson, C. Rostgaard, J. Schiøtz, O. Schütt, M. Strange, K. S. Thygesen, T. Vegge, L. Vilhelmsen, M. Walter, Z. Zeng, K. W. Jacobsen, *J. Phys.: Condens. Matter* 2017, *29*, 273002.
+10. R. P. Rao, S. Adams, *Phys. Status Solidi A* 2011, *208*, 1804–1807.
+11. H. Chen, S. Adams, *IUCrJ* 2017, *4*, 614–625.
+12. M. Kawamura, Y. Gohda, S. Tsuneyuki, *Phys. Rev. B* 2014, *89*, 094515.
+13. A. D. Becke, K. E. Edgecombe, *J. Chem. Phys.* 1990, *92*, 5397–5403.
+14. R. Dronskowski, P. E. Blöchl, *J. Phys. Chem.* 1993, *97*, 8617–8624.
+15. S. Maintz, V. L. Deringer, A. L. Tchougréeff, R. Dronskowski, *J. Comput. Chem.* 2016, *37*, 1030–1035.
+16. R. Nelson, C. Ertural, J. George, V. L. Deringer, G. Hautier, R. Dronskowski, *J. Comput. Chem.* 2020, *41*, 1931–1940.
+17. A. Dal Corso, *Comput. Mater. Sci.* 2014, *95*, 337–350.
 
-[3] G. Prandini, A. Marrazzo, I. E. Castelli, N. Mounet, N. Marzari, Precision and efficiency in solid-state pseudopotential calculations, npj Comput. Mater. 4 (2018) 72. https://doi.org/10.1038/s41524-018-0127-2.
-
-[4] N. Marzari, D. Vanderbilt, A. De Vita, M. C. Payne, Thermal contraction and disordering of the Al(110) surface, Phys. Rev. Lett. 82 (1999) 3296–3299. https://doi.org/10.1103/PhysRevLett.82.3296.
-
-[5] B. M. Wood, M. Dzamba, X. Fu, M. Gao, M. Shuaibi, et al., UMA: A family of universal models for atoms, Adv. Neural Inf. Process. Syst. 38 (2025); arXiv:2506.23971.
-
-[6] F. Birch, Finite elastic strain of cubic crystals, Phys. Rev. 71 (1947) 809–824. https://doi.org/10.1103/PhysRev.71.809.
-
-[7] A. H. Larsen, J. J. Mortensen, J. Blomqvist, I. E. Castelli, R. Christensen, M. Dułak, J. Friis, M. N. Groves, B. Hammer, C. Hargus, E. D. Hermes, P. C. Jennings, P. B. Jensen, J. Kermode, J. R. Kitchin, E. L. Kolsbjerg, J. Kubal, K. Kaasbjerg, S. Lysgaard, J. B. Maronsson, T. Maxson, T. Olsen, L. Pastewka, A. Peterson, C. Rostgaard, J. Schiøtz, O. Schütt, M. Strange, K. S. Thygesen, T. Vegge, L. Vilhelmsen, M. Walter, Z. Zeng, K. W. Jacobsen, The atomic simulation environment—a Python library for working with atoms, J. Phys.: Condens. Matter 29 (2017) 273002. https://doi.org/10.1088/1361-648X/aa680e.
-
-[8] R. P. Rao, S. Adams, Studies of lithium argyrodite solid electrolytes for all-solid-state batteries, Phys. Status Solidi A 208 (2011) 1804–1807. https://doi.org/10.1002/pssa.201001117.
-
-[9] H. Chen, S. Adams, Bond softness sensitive bond-valence parameters for crystal structure plausibility tests, IUCrJ 4 (2017) 614–625. https://doi.org/10.1107/S2052252517010211.
-
-[10] M. Kawamura, Y. Gohda, S. Tsuneyuki, Improved tetrahedron method for the Brillouin-zone integration applicable to response functions, Phys. Rev. B 89 (2014) 094515. https://doi.org/10.1103/PhysRevB.89.094515.
-
-[11] A. D. Becke, K. E. Edgecombe, A simple measure of electron localization in atomic and molecular systems, J. Chem. Phys. 92 (1990) 5397–5403. https://doi.org/10.1063/1.458517.
-
-[12] R. Dronskowski, P. E. Blöchl, Crystal orbital Hamilton populations (COHP): energy-resolved visualization of chemical bonding in solids based on density-functional calculations, J. Phys. Chem. 97 (1993) 8617–8624. https://doi.org/10.1021/j100135a014.
-
-[13] S. Maintz, V. L. Deringer, A. L. Tchougréeff, R. Dronskowski, LOBSTER: A tool to extract chemical bonding from plane-wave based DFT, J. Comput. Chem. 37 (2016) 1030–1035. https://doi.org/10.1002/jcc.24300.
-
-[14] R. Nelson, C. Ertural, J. George, V. L. Deringer, G. Hautier, R. Dronskowski, LOBSTER: Local orbital projections, atomic charges, and chemical-bonding analysis from projector-augmented-wave-based density-functional theory, J. Comput. Chem. 41 (2020) 1931–1940. https://doi.org/10.1002/jcc.26353.
-
-[15] A. Dal Corso, Pseudopotentials periodic table: From H to Pu, Comput. Mater. Sci. 95 (2014) 337–350. https://doi.org/10.1016/j.commatsci.2014.07.043.
-
-확인 방법: api.crossref.org 는 이 세션 프록시가 막았다 (403 · 우회하지 않음) → 웹 검색 목록 (출판사·기관 저장소·PMC) 으로 저자·권·쪽·DOI 를 대조했다. [8] 은 litdb `rao2011_argyrodite_se_studies_bvse` · [2]·[6] 은 표준 인용이라 재확인 안 함 · [5] 는 18 명 저자 순서를 끝까지 확인 못 해 앞 5 명 + et al.
+확인 방법: api.crossref.org 는 이 세션 프록시가 막았다 (403 · 우회하지 않음) → 웹 검색 목록 (출판사·기관 저장소·PMC·arXiv) 으로 저자·권·쪽을 대조했다. QE 2017 (50 명 · Paderborn·Princeton 기록 순서) · QE 2020 (15 명 · DOI 10.1063/5.0005082) · UMA (18 명 · arXiv 순서 — NeurIPS 판은 뒤 다섯 명 순서가 달라 arXiv 판으로 인용) 확인. 10 은 litdb `rao2011_argyrodite_se_studies_bvse` · 4 · 8 은 표준 인용이라 재확인 안 함.
 
 ## 빈칸 · 확인할 것
 
@@ -105,7 +96,7 @@ Crystal orbital Hamilton population (COHP) analysis [12] was performed with LOBS
    B 는 `tools/electronic/icohp_paw_kisti.sh` 머리 주석 *"the champion SCF used USPP (P/S/B)"* ·
    O 는 우리 세트의 O 가 모두 `O.pbe-n-kjpaw_psl.0.1.UPF` (PAW). 이 조합이 SSSP efficiency 세트와 같다.
    ⇒ 원본 입력의 B·O 두 줄이 `b_pbe_v1.4.uspp…` · `O.pbe-n-kjpaw_psl.0.1…` 이면 본문 그대로 확정.
-2. [5] UMA 저자 18 명 전체 순서 (저널이 전 저자를 요구하면).
+2. ✅ UMA 저자 18 명 — arXiv 순서로 다 적음 (10-21).
 3. 참고문헌 번호를 원고 목록에 합치기 (Word 파일은 템플릿대로 2.5 절 · 위첨자 인용) · 붙여 넣은 뒤 첨자·italic·minus 다시 보기 (BML [3]).
 
 ## 원고 숫자의 출처 — Methods 와 맞추려면 볼 곳 (판단 없이 위치만)
