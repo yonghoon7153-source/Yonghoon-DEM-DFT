@@ -12458,6 +12458,97 @@
       "evidence_tests": [
         "docs/data/ps45_unload_20261009/ul_runner_test.py"
       ]
+    },
+    {
+      "id": "MXD2-01",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 세션 10-21 믹서 D2 사전 공격 리뷰 (독립 에이전트 · 기반 a76f59d0d · 판정문 스크래치 prereview_mixer_d2/REVIEW.md · 고칠 때 반입)",
+      "opened_in": "docs/hetero_thesis.md",
+      "title": "덱 되읽기 (REG_DENSITY = gen1 전용) · 덱 비교 (D2 허용목록 · 셀 이름 없음) · 스모크 (gen1 계획 수) 가 lab 세대 · D2 규칙을 모른다 — lab 덱 표 E 되읽기 rc 1 · 같은 ρ 세계 코팅 ↔ 비코팅 짝 (CED 7 원소 다름) 비교 A·B·U·E·EB 전부 rc 1 · S1 계획 산출물 미구현",
+      "note": "✅ 1저자 10-21 [믹서] Q1 *\"권고대로 해줘\"* = 고친다 (시험 먼저 · Codex 는 D3 요청서와 같은 회차).  변이 24 중 16 포착 · 8 생존 (M04 · M06 · M13 · M15 · M16 · M18 외).",
+      "evidence_tests": [
+        "scripts/make_mixer_deck.py (--selftest)"
+      ]
+    },
+    {
+      "id": "MXD2-02",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 세션 10-21 믹서 D2 사전 공격 리뷰 (독립 에이전트 · 기반 a76f59d0d · 판정문 스크래치 prereview_mixer_d2/REVIEW.md · 고칠 때 반입)",
+      "opened_in": "docs/hetero_thesis.md",
+      "title": "절대 수준에 gen1 ρ_SE 를 쓰는 변이 (M04) · meta 의 bo_se 를 상수로 기록하는 변이 (M16) 가 셀프테스트 143/143 통과 — 덱 Bo 가 선언과 ×1.2195 · ×2.354 어긋나도 diff --allow E 1/1 PASS",
+      "note": "✅ 1저자 10-21 [믹서] Q1 *\"권고대로 해줘\"* = 고친다 (시험 먼저 · Codex 는 D3 요청서와 같은 회차).  변이 24 중 16 포착 · 8 생존 (M04 · M06 · M13 · M15 · M16 · M18 외).",
+      "evidence_tests": [
+        "scripts/make_mixer_deck.py (--selftest)"
+      ]
+    },
+    {
+      "id": "MXD2-03",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 세션 10-21 믹서 D2 사전 공격 리뷰 (독립 에이전트 · 기반 a76f59d0d · 판정문 스크래치 prereview_mixer_d2/REVIEW.md · 고칠 때 반입)",
+      "opened_in": "docs/hetero_thesis.md",
+      "title": "혼합쌍 천장 검사를 빼는 변이 (M06) 가 산다 — γ_AM 10 · Bo 800 에서 HEAD 는 거부 · 변이 판은 AM_P–SE 1.418 % 덱을 씀",
+      "note": "✅ 1저자 10-21 [믹서] Q1 *\"권고대로 해줘\"* = 고친다 (시험 먼저 · Codex 는 D3 요청서와 같은 회차).  변이 24 중 16 포착 · 8 생존 (M04 · M06 · M13 · M15 · M16 · M18 외).",
+      "evidence_tests": [
+        "scripts/make_mixer_deck.py (--selftest)"
+      ]
+    },
+    {
+      "id": "MXD2-04",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 세션 10-21 믹서 D2 사전 공격 리뷰 (독립 에이전트 · 기반 a76f59d0d · 판정문 스크래치 prereview_mixer_d2/REVIEW.md · 고칠 때 반입)",
+      "opened_in": "docs/hetero_thesis.md",
+      "title": "극단 입력 수용 — γ 1e-200 곱 언더플로로 AM_P–AM_P CED 0 · Bo 1e-310 수용 · '0_3' 이 3.0 으로 읽힘 · 팔 이름 'GM\\n' 이 덱에 주석 아닌 줄을 만듦 (라이브러리 경로)",
+      "note": "✅ 1저자 10-21 [믹서] Q1 *\"권고대로 해줘\"* = 고친다 (시험 먼저 · Codex 는 D3 요청서와 같은 회차).  변이 24 중 16 포착 · 8 생존 (M04 · M06 · M13 · M15 · M16 · M18 외).",
+      "evidence_tests": [
+        "scripts/make_mixer_deck.py (--selftest)"
+      ]
+    },
+    {
+      "id": "MXD2-05",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 세션 10-21 믹서 D2 사전 공격 리뷰 (독립 에이전트 · 기반 a76f59d0d · 판정문 스크래치 prereview_mixer_d2/REVIEW.md · 고칠 때 반입)",
+      "opened_in": "docs/hetero_thesis.md",
+      "title": "벽을 비코팅 NCM 에 묶는 결정 (D2 Q2) 을 코드가 강제하지 않음 · ρ ↔ 팔 γ 어긋남 수용 · 도움말 · 주석이 열린 질문처럼 읽힘",
+      "note": "✅ 1저자 10-21 [믹서] Q1 *\"권고대로 해줘\"* = 고친다 (시험 먼저 · Codex 는 D3 요청서와 같은 회차).  변이 24 중 16 포착 · 8 생존 (M04 · M06 · M13 · M15 · M16 · M18 외).",
+      "evidence_tests": [
+        "scripts/make_mixer_deck.py (--selftest)"
+      ]
+    },
+    {
+      "id": "MXD2-06",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 세션 10-21 믹서 D2 사전 공격 리뷰 (독립 에이전트 · 기반 a76f59d0d · 판정문 스크래치 prereview_mixer_d2/REVIEW.md · 고칠 때 반입)",
+      "opened_in": "docs/hetero_thesis.md",
+      "title": "D2 덱 9/9 의 옛 벽 주석 (\"÷ 1.842\") · registered / schema 옛 값 · /mixer devlog 에 --dens-gen 필수 누락 · 변이 M13 · M15 · M18 생존",
+      "note": "✅ 1저자 10-21 [믹서] Q1 *\"권고대로 해줘\"* = 고친다 (시험 먼저 · Codex 는 D3 요청서와 같은 회차).  변이 24 중 16 포착 · 8 생존 (M04 · M06 · M13 · M15 · M16 · M18 외).",
+      "evidence_tests": [
+        "scripts/make_mixer_deck.py (--selftest)"
+      ]
+    },
+    {
+      "id": "MXD2-07",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 세션 10-21 믹서 D2 사전 공격 리뷰 (독립 에이전트 · 기반 a76f59d0d · 판정문 스크래치 prereview_mixer_d2/REVIEW.md · 고칠 때 반입)",
+      "opened_in": "docs/hetero_thesis.md",
+      "title": "D3 설계 문서 (docs/reviews/mixer_d3_se_flowability_anchor_design_20261015.md) 의 천장 수치 = gen1 값 — lab 세대에서는 637.32 → 0.733 % · 850 수용 · 상한 ≈ 1.01×10³ (문서 · 정정 표지로)",
+      "note": "✅ 1저자 10-21 [믹서] Q1 *\"권고대로 해줘\"* = 고친다 (시험 먼저 · Codex 는 D3 요청서와 같은 회차).  변이 24 중 16 포착 · 8 생존 (M04 · M06 · M13 · M15 · M16 · M18 외).",
+      "evidence_tests": [
+        "scripts/make_mixer_deck.py (--selftest)"
+      ]
     }
   ]
 }
