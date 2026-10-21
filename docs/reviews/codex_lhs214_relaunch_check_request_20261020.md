@@ -1,35 +1,119 @@
-# Codex 짧은 발사 확인 요청 — LHS214 다시 발사 다섯 단계 (초안 · 2026-10-20 밤 · ⬜ 1저자 Q5 · 발송 = 1저자)
-
-- 묶음 문서: `docs/reviews/lhs214_relaunch_package_20261020.md` (§1 비준 문안 · §2 재결합 표 · §3 B7 승인 핀 · §4 WSL 사전 점검 · §5 확인표 · 부록 A 명령 · 출력).
-- B7 승인 핀: ⬜ (비준 문안이 들어간 push 된 본 가지 커밋 · 40 자리 · 사전 점검 · 발사가 쓰는 SHA) · 리뷰 핀: ⬜ (메인 — 사전 점검 기록을 반입한 커밋 · 코드 = 승인 핀과 바이트 같음 · 문서만 다름) ·
-  가지 `claude/stoic-knuth-NObVQ` · 대조 핀 = `34713ac96` (Codex 10-20 판정 `docs/reviews/codex_review_lhs214cx_fix_recheck_20261020.md` 의 검토 핀).
-- 보낼 때 함께: WSL 사전 점검 묶음 `lhs_preflight_<S>_<T>.tgz` (sha256 ⬜) · 반입 폴더 ⬜ · 194 손 대조 표 (묶음 문서 §5 · 채운 판) · (Q3 = (가) 이면) 영수증 도구 시험 변경 커밋 ⬜.
-- ⚠ 이 초안은 사전 점검 반입 뒤에 채워 보낸다 — ⬜ 칸이 남아 있으면 보내지 않는다.
+# Codex 짧은 발사 확인 요청 — LHS214 다시 발사 다섯 단계 (초안 2 · 2026-10-21 · ⬜ 1저자 Q5 · 발송 = 1저자)
 
 ## 0. 이번에 닫는 것 / 닫지 않는 것
 
-| 닫는 것 (확인 요청) | 닫지 않는 것 |
+**닫는 것 (확인 요청)**
+
+| # | 무엇 | 자리 | 상태 (이 컨테이너 · 비준 커밋 트리 · 부록 A) |
+|---|---|---|---|
+| ① | 비준판 문안 — 194 §3 · §5 머리 · §9-8 · §9-9 / 보충 §3 · §5 머리 · §9-3 · §9-4 | 비준 커밋 `a45a980e9` | 묶음 §1-4 · §1-5 diff 그대로 — 바꾼 것은 날짜 자리 (`⬜(날짜)` → `10-21 ·`) 뿐 · 두 문서 = 그 diff 를 붙인 바이트 |
+| ② | 지문 재결합 — 두 등록 §3 활성 = 실행기 `code_fp(code_hashes())` · 인계 도구 · 배포 빌더 = 194 §3 ✅ 줄 | 비준 커밋 · 묶음 §2 | 다시 잼 = `2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb` · 보충 컨테이너 영수증 rc 0 · 실패 칸 없음 |
+| ③ | B7 승인 핀 — 정의 · 대조 자리 | 묶음 §3 | 정의 그대로 · 핀 값 = ⬜ 1저자 (후보 = 비준 커밋 `a45a980e9` 또는 그 뒤 문서만 바뀐 push 된 커밋) |
+| ④ | 새 핀 · 새 ROOT 둘 WSL 사전 점검 기록 | 묶음 §4 · 반입 폴더 ⬜ | ⬜ — 반입 뒤 이 요청서를 채워 보낸다 |
+| — | 보충 영수증 selftest S0b 의 봉인 지문 기대 (묶음 §6 Q3 (가) · 1저자 10-21 Q1) | 코드 커밋 `e9267000b` · 증거 `docs/reviews/lhs214_relaunch_s0b_evidence_20261021/` | 비준 사본에서 121/122 (S0b) → 고친 판 123/123 (pending · 비준 둘 다) · Q5 |
+
+**닫지 않는 것**
+
+| 무엇 | 상태 |
 |---|---|
-| 판정문 §5 다섯 단계 중 ①–④ 의 증거가 등록 · 리뷰 핀 · 실제 WSL 기록으로 채워졌는가 (비준판 문안 · 지문 재결합 · B7 승인 핀 · 새 ROOT 둘 사전 점검) | ⑤ 1저자 발사 승인 · 실제 194 · 보충 20 실행 · 결과 · 등록 §5 관문 · v1.3 배포 (H0 model_limit → 주 타깃 HOLD) · S3 (별도 HOLD · 재봉인 의무) · `L214R-S03` · `S05` (open) · σ₀ 1.5 솔버 상수 (이번 재봉인 밖) |
+| ⑤ 1저자 발사 승인 · 실제 194 · 보충 20 실행 · 결과 · 등록 §5 관문 | ⛔ 별도 승인 (비준 ≠ 발사 승인 — 두 등록 머리 줄) |
+| v1.3 배포 | HOLD — H0 model_limit 행 = 주 타깃 배포 HOLD (194 §9-8 ⑤) |
+| S3 | 별도 HOLD — `scripts/network_conductivity.py` 바뀜 → 재봉인 의무 |
+| `L214R-S03` · `L214R-S05` | open · 한정 유지 (S05 = v1.3 뒤 · 1저자 10-20 Q6) |
+| σ₀ 1.5 솔버 상수 | 이번 재봉인 밖 (1저자 10-20 Q4) |
+| SUP20 영수증을 일반 실행 게이트에 | 넣지 않음 (1저자 10-20) |
+| 등록 194 §9-9 · 보충 §9-4 의 *대화 원문 ⬜* | 메인 — 비준 커밋은 날짜 자리만 채웠다 |
+| 묶음 문서의 영수증 selftest 기대 수 | §1-6 (2 단계 *"지금 문서 122/122 · 비준 사본 122/122"* · 명령 주석 *"Q3 처리 뒤 122/122 PASS"*) · §4 결과 전 기대 단계 2 (*"영수증 122/122 (Q3 처리 뒤 …)"*) = 코드 커밋 전 예상 · 실제 = **123/123** (새 검사 S11g 하나) — 묶음 문서는 이 커밋들에서 고치지 않았다 (WSL 사전 점검 전에 메인이 고칠 자리) |
 
-## 1. 대조 핀 → 리뷰 핀 사이 바뀐 것 (⬜ 리뷰 핀에서 다시 확인 · 묶음 문서 부록 A 명령)
+## 1. 핀
 
-| 무엇 | 기대 |
+- 가지 `claude/stoic-knuth-NObVQ` · 이 작업의 기준 = 본 가지 머리 `a76f59d0d16c58b2f7816d67a3432f94367e46f0` · 대조 핀 = `34713ac9650ece7c8d59b7c4d9a2aefccee693ea` (Codex 10-20 판정 `docs/reviews/codex_review_lhs214cx_fix_recheck_20261020.md` 의 검토 핀).
+- 코드 커밋 (S0b) = `e9267000b4e01ea3a4447be70fc9e11a398f8841` (부모 = 기준 머리) · 비준 커밋 = `a45a980e9450308c90a44a3d2c1a127a1beab12f` (부모 = 코드 커밋) — 작업 트리 커밋 SHA 다.  메인이 그대로 fast-forward 하면 같고, cherry-pick · rebase 하면 바뀐다 (그때 다시 채운다).
+- B7 승인 핀 = ⬜ (1저자) · 리뷰 핀 = ⬜ (메인 — 사전 점검 기록을 반입한 커밋 · 코드 = 승인 핀과 바이트 같음 · 문서만 다름).
+- 보낼 때 함께: WSL 사전 점검 묶음 `lhs_preflight_<S>_<T>.tgz` (sha256 ⬜) · 반입 폴더 ⬜ · 194 손 대조 표 (묶음 §5 · 채운 판) ⬜.
+- ⚠ ⬜ 칸이 남아 있으면 보내지 않는다.
+
+## 2. 대조 핀 → 비준 커밋 — LHS214 발사 관련 파일 (부록 A)
+
+| 무엇 | 실측 |
 |---|---|
-| 봉인 32 · 인계 도구 2 · 배포 빌더 · 실행기 · 스모크 | 바이트 같음 (`git diff --quiet 34713ac96 <리뷰 핀> -- …` rc 0) · `code_fp` = `2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb` |
-| 두 등록 문서 | 묶음 문서 §1-4 · §1-5 diff 만 (날짜 · 대화 원문 채움) — 대기 선언 삭제 · §3 활성 = 위 지문 · 역사 · 결과 열람 뒤 이력 |
-| `scripts/supp20_input_receipt.py` | Q3 = (가) 이면 selftest `S0b` 의 지문 기대를 상태별로 바꾼 시험 변경만 (판정식 · 대조 칸 무변경) — 아니면 무변경 |
-| 기록 | 묶음 문서 · 사전 점검 반입 폴더 · 진행 기록 |
+| 봉인 32 (`CODE_FILES`) | `git diff --quiet 34713ac96 a45a980e9 -- <32>` rc 0 · `code_fp` = `2149f873…c3eb` |
+| 인계 도구 2 · 배포 빌더 · 실행기 · 스모크 | rc 0 (sha256 = 묶음 §2 #14–#17 · #19 그대로) |
+| `scripts/supp20_input_receipt.py` | 코드 커밋만 — `_selftest` 안 (AST: 최상위 문 59 중 바뀐 것 = `_selftest` 하나) · sha256 `2c7e0b81…` → `3d6110be…` (묶음 §2 #18 *"Q3 이면 또 바뀐다"*) |
+| 두 등록 문서 | 비준 커밋만 — 194 sha256 `7fd158cb…` → `2c3ed36f…` · 보충 `b2389709…` → `7cad47d1…` (= 묶음 diff 를 붙인 바이트) |
+| 기록 | 재고 대장 한 줄 (`docs/reviews/selftest_inventory.tsv` · 영수증 도구 행 · 기록만) · 증거 폴더 · 이 요청서 |
 
-## 2. 질문
+## 3. 질문
 
-- **Q1.** 비준판 문안 (194 §3 · §5 머리 · §9-8 · §9-9 / 보충 §3 · §5 머리 · §9-3 · §9-4) 이 판정문 §5 ① — 대기 선언을 승인 지문으로 자동 취급하지 않음 · 역사 보존 · 결과 열람 뒤 변경 이력 — 을 채우는가.  (묶음 §1-3: 비준 사본의 영수증 컨테이너 범위 rc 0 · 지금 문서 rc 1 [D1])
-- **Q2.** 재결합 표 (묶음 §2 — 봉인 32 · 기대 세대 · 입력 ID · raw 표 · 코호트 TSV · 인계 도구 · 배포 빌더 · 지연 import 90 → 92 의 이유) 가 ② 를 채우는가 · 인계 도구 · 배포 빌더 지문을 194 §3 ✅ 줄에 두는 자리가 맞는가.
+- **Q1.** 비준판 문안이 판정문 §5 ① — 대기 선언을 승인 지문으로 자동 취급하지 않음 · 역사 보존 · 결과 열람 뒤 변경 이력 — 을 채우는가.  (실측: 보충 `registration_values` = §3 `2149f873…` · 대기 None · 문제 0 · 컨테이너 영수증 rc 0 · 비준 전 문서는 rc 1 [D1])
+- **Q2.** 재결합 (묶음 §2 — 봉인 32 · 기대 세대 · 입력 ID · raw 표 · 코호트 TSV · 인계 도구 · 배포 빌더 · 지연 import 90 → 92 의 이유) 이 ② 를 채우는가 · 인계 도구 · 배포 빌더 지문을 194 §3 ✅ 줄에 두는 자리가 맞는가.
 - **Q3.** B7 승인 핀 정의와 대조 자리 (P10 · E2 · D1 · F5–F7 · G5 · G7 · H1 · `runner.sha256` = 기록 전용 — 묶음 §3) 가 ③ 을 채우는가.
-- **Q4.** WSL 사전 점검 기록 (같은 핀 · 같은 지문 · fast16 + real4 · 관측된 의존성 = 보통 / 격리 (-I) 판 · P5 · P8 · 두 새 ROOT · 전체 로그 + 완료 영수증 · 194 손 대조 전체 값) 이 ④ 를 채우는가.
-- **Q5.** (Q3 = (가) 이면) `S0b` 상태별 기대가 시험 약화가 아닌가 — 비준 전 122/122 · 비준 사본 121/122 (실패 = `S0b` 하나) → 고친 뒤 122/122 (묶음 §1-3 · 부록 A-13).
+- **Q4.** WSL 사전 점검 기록 (같은 핀 · 같은 지문 · fast16 + real4 · 관측된 의존성 = 보통 / 격리 (-I) 판 · P5 · P8 · 두 새 ROOT · 전체 로그 + 완료 영수증 · 194 손 대조 전체 값) 이 ④ 를 채우는가.  ⬜ 반입 뒤.
+- **Q5.** S0b 의 새 기대가 시험 약화가 아닌가 — 앞자리 상수 둘 (`e8b2496b…` · `2149f873…`) 을 빼고: 상태가 정한 지문 (registered = 등록 §3 · pending = 대기 선언) = 체크아웃 `code_fp` 64 자리 전체 · registered 면 대기 선언 없음 · 보충 등록의 (§3 · 대기) = 194 등록 (같은 함수 `registration_values`) · 194 쪽 봉인 지문 문제 = 거짓.  새 S11g = 그 기대를 일곱 꼴의 등록 사본 쌍에 (참 2 · 거짓 5).
+  수: 고치기 전 판 122/122 (pending) · 비준 사본 121/122 (S0b) → 새 시험 + 옛 식 122/123 (S11g) · 121/123 (S0b · S11g) → 고친 판 123/123 (둘 다 · 비준 커밋 트리도 123/123) ·
+  변이 넷 (가드 하나씩 끔 · m1 · m2 = 커밋된 문서 · m3 · m4 = 비준 커밋 트리) = 넷 다 122/123 · S11g 실패 (잡은 꼴 = ratified_pending_left · supp_only_ratified + pending_base_differs · base_pending_conflict · undeclared).
+  새 엄격: 한 등록만 비준한 트리 = S0b 실패 (옛 판은 194 만 비준이면 122/122 통과) — 맞는가 (증거 §3 · §5).
 - **Q6.** 새 결함이 있나 — 있으면 등급 · 반례.
 
-## 3. 하지 않은 것 (요청 범위 밖)
+## 4. 회귀 (이 컨테이너 · 비준 커밋 트리 · `nice -n 19` · BLAS 한 스레드 · 60 s 안의 것은 그대로 · 넘는 것은 기계 전체 잠금 아래 한 번에 하나)
 
-실제 194 · 보충 20 발사 · 결과 · §5 관문 · 인계 · v1.3 배포 · S3 · 재봉인 · A4 재수행 (봉인 32 무변경) · `check_all.sh` 전체 (게이트는 메인).
+| 시험 | 결과 |
+|---|---|
+| `scripts/supp20_input_receipt.py --selftest` | rc 0 · **123/123** · 상태 registered (35 s) |
+| `scripts/g2_network_reread.py --selftest` | rc 0 · *"✓ 전부 통과"* · 검사 줄 ✓ 29 · ✗ 0 (12 s) |
+| `scripts/run_network_194_parallel.py --selftest` | rc 0 · *"✓ 전부 통과 (139/139)"* (기계 잠금 아래 · 잠금 대기 포함 565 s) — 묶음 §4 단계 2 의 실행기 기대 139/139 와 같음 (이 컨테이너) |
+| `python3 scripts/check_doc_refs.py` | rc 0 · *"✓ 깨진 참조 없음"* — 이 요청서 · 증거 README 마지막 판 (문서 커밋 직전 작업 트리) 에서 다시 돌려 같음 |
+| `python3 scripts/check_review_findings.py` | rc 0 · *"원장 자기일관 ✓"* (26 s) |
+| `python3 scripts/check_method_discipline.py` | rc 0 · *"0 오류 (15 경고)"* — 경고 15 = 다른 파일 (grade_engine · lhs_design_dataset · mpm3d 등 지역 import 그림자) · 이 커밋들의 파일 없음 (50 s) |
+| 변이 m3 · m4 (`s0b_fp` 가드 끔 · 비준 커밋 트리) | 둘 다 122/123 · S11g 실패 (base_pending_conflict · undeclared) — 되돌린 뒤 도구 sha256 `3d6110be…` |
+
+`scripts/check_all.sh` 전체 = 메인 (이 회차에서 돌리지 않았다).  fast16 · real4 = WSL 사전 점검 2 단계 (이 컨테이너엔 원자료가 없다).
+
+## 5. 하지 않은 것 (요청 범위 밖)
+
+실제 194 · 보충 20 발사 · 결과 · §5 관문 · 인계 · v1.3 배포 · S3 · 재봉인 · A4 재수행 (봉인 32 무변경) · 묶음 문서 고침 (기대 수 = §0 표) · 원장 · 진행 기록 (메인).
+
+## 6. 한정
+
+- 수는 이 컨테이너 (Linux · Python 3.11.15 · NumPy 2.4.6 · SciPy 1.17.1 · networkx 3.6.1) 의 실측이다 — WSL 실측이 아니다 (10-14 WSL = Python 3.12.3 · NumPy 2.5.2 · SciPy 1.18.1 · networkx 3.7).
+- S0b 두 등록 대조는 두 문서가 **같은 엉뚱한 값으로 함께** 바뀌면 못 잡는다 — registered 상태에서는 체크아웃 지문 전체가 기준이라 그 경우 undeclared = 실패 · pending 상태는 발사 대조 (D1 · E2 · F5 · G5) 가 이미 막는다 (증거 §5).
+
+## 부록 A. 명령 · 출력 (이 컨테이너 · 10-21 · 작업 트리 = 비준 커밋 + 이 요청서)
+
+```bash
+C=e9267000b4e01ea3a4447be70fc9e11a398f8841; R=a45a980e9450308c90a44a3d2c1a127a1beab12f
+FILES=$(python3 -c "import sys; sys.path.insert(0, 'scripts'); import run_network_194_parallel as N; print(' '.join(N.CODE_FILES))")
+git diff --quiet 34713ac96 "$R" -- $FILES; echo "sealed32 rc=$?"
+git diff --quiet 34713ac96 "$R" -- scripts/lhs_design_dataset.py scripts/g2_network_reread.py scripts/lhs_release_build.py scripts/run_network_194_parallel.py scripts/wsl_network_smoke.py; echo "tools rc=$?"
+git diff --name-only "$C^" "$C"; git diff --name-only "$R^" "$R"
+for d in docs/reviews/lhs_network_batch_registration_20261007_g2.md docs/reviews/lhs_network_batch_registration_20261012_supp20.md; do git show "$R:$d" | sha256sum; git show "34713ac96:$d" | sha256sum; done
+git show "$C:scripts/supp20_input_receipt.py" | sha256sum; git show "a76f59d0d:scripts/supp20_input_receipt.py" | sha256sum
+python3 - <<'PY'
+import sys; sys.path.insert(0, 'scripts')
+import run_network_194_parallel as N, supp20_input_receipt as S
+print('code_fp', N.code_fp(N.code_hashes()))
+v, p = S.registration_values(); print('supp', v['code_fp'], v['code_fp_pending'], p)
+v1, p1 = S.registration_values(reg_doc='docs/reviews/lhs_network_batch_registration_20261007_g2.md')
+print('194', v1['code_fp'], v1['code_fp_pending'], [x for x in p1 if x.startswith('등록 문서 code_fp')])
+r = S.receipt(); print('receipt', r['rc'], sorted(c['id'] for c in r['checks'] if not c['ok']), len(r['checks']))
+PY
+```
+
+출력 (요지 — 파일 목록은 줄여 적음):
+
+```text
+sealed32 rc=0
+tools rc=0
+C 가 바꾼 파일 = scripts/supp20_input_receipt.py · docs/reviews/selftest_inventory.tsv · docs/reviews/lhs214_relaunch_s0b_evidence_20261021/ (README.md + tests/ 로그 11)
+R 가 바꾼 파일 = docs/reviews/lhs_network_batch_registration_20261007_g2.md · docs/reviews/lhs_network_batch_registration_20261012_supp20.md
+194   @R 2c3ed36f97aa7ec8b0c377cfe3c07093b7902cb552f7bdc3da6a607659303114 · @34713ac96 7fd158cb5b130e2150e58e5938c92b80731fc3292ef8e363346adfc2b62e1699
+보충  @R 7cad47d191445bb6adb4ae0c6aeebd4fb147c2ce3824792f365b47f8ebfd8397 · @34713ac96 b2389709695cf3e94095a1855014b44868914362d112e5e0e29d084fc9e11032
+영수증 도구 @C 3d6110be24d24bf91ad1e71232a2e5dad580cf95178d6135b13aa6ca6de6f950 · @a76f59d0d 2c7e0b81dbe81d0518e27c8e1781959b9cc983509a1ce66001028faa3768a2f9
+code_fp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb
+supp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb None []
+194 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb None []
+receipt 0 [] 11
+```
+
+- 날짜 자리 대조: 비준 커밋의 두 문서에서 `10-21 ·` 을 `⬜(날짜)` 로 되돌리면 비준 전 문서 (코드 커밋 판 = `a76f59d0d` 판 = 대조 핀 판) 에 묶음 diff (원문 그대로) 를 붙인 글과 같다 — 194 = 8 자리 · 보충 = 7 자리 (묶음 diff 의 `⬜(날짜)` 수와 같음) · 비준 전 문서에 `10-21 ·` 0 개.
+- AST: `a76f59d0d` 판 ↔ 코드 커밋 판 — 최상위 문 59 · 바뀐 것 `_selftest` 하나 (끝 `if __name__` 블록 = 줄 번호만 다름).
