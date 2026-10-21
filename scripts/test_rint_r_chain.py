@@ -1608,14 +1608,18 @@ def t_X05():
     return not miss and consts, (miss, consts, len(RR.QUALIFIERS))
 
 
-@check('X05b', '★ 4판 (Q2-4 · Q2-6) 결정표 칸 글자 · ⑰ ⑱ 문장 · 보호 띠 · W₊ · 이름 우선순위가 등록 문서 (4판) 에 그대로 있다 (시험 상수 대조 · 사본 금지의 짝)')
+@check('X05b', '★ 4판 (Q2-4 · Q2-6) 결정표 칸 글자 · ⑰ ⑱ 문장 · 보호 띠 · W₊ · 이름 우선순위가 등록 문서 (4판) 에 그대로 있다 (시험 상수 대조 · 사본 금지의 짝) · '
+                '★ RI 4판 정정 — ⑱ · UNINFORMATIVE 문장이 등록에서 하나 (§5-1 = §7-1 ⑱ · §5-5 = §5-5b · 사슬 꼴)')
 def t_X05b():
     t = FX['reg_text']
     need = [T_PASS, T_PASS_BLK[0].rstrip(), T_PASS_BLK[1].strip(), T_WEAK, T_UNINF, T_GAP, T_Q18, T_FAIL, T_CALIB, T_NC, T_BLK[0].strip(),
-            T_POINT, T_SENS, '⑰', '⑱', 'P 는 두 끝 (P0 · P1) 만 등록했다', 'target_err_bound_rel', 'W₊', '하나라도 `NOT_COMPUTED` 면 판정 전체 = `NOT_COMPUTED`',
+            T_POINT, T_SENS, '⑰', '⑱', 'target_err_bound_rel', 'W₊', '하나라도 `NOT_COMPUTED` 면 판정 전체 = `NOT_COMPUTED`',
             '`<V>_UNCHECKED`']
     miss = [n for n in need if n not in t]
-    return not miss, miss
+    #  ★ RI (10-21 · 4판 정정) — 옛 §7-1 ⑱ 꼴 ('P 는 두 끝 (P0 · P1) 만 등록했다 — …') 은 이제 철회 표지 (~~ ~~) 안에만 남는다 → 그 낱말을 요구하면
+    #    철회 문장으로 통과한다 (거짓 초록).  대신 사슬 꼴 문장이 두 자리 (§5-1 · §7-1 ⑱ / §5-5 표 · §5-5b) 에 다 있는지 센다.
+    one = {'Q18': t.count(T_Q18), 'UNINF': t.count(T_UNINF)}
+    return not miss and all(n >= 2 for n in one.values()), (miss, one)
 
 
 @check('X06', '바닥 · 천장 극한 = 러너 env CJUNC_RJ=inf · 0 (런 순서 첫 둘) · 팔 protocol 표지 rj_limit inf · zero (R_j_ohm null · 0.0 · '
