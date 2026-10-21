@@ -485,15 +485,18 @@ def selftest():
         ul_lib.write_local(os.path.join(td, 'e.c'), 3200000, ccols, base + [crow(1, 2, -0.6, 0.01)])
         chk('C2 G2c 다른 값 중복 키 = FAIL', lambda: g2c_compare(os.path.join(td, 'e.c'), os.path.join(td, 'o.c'))['status'] == 'FAIL')
         ul_lib.write_local(os.path.join(td, 'f.c'), 3200000, ccols, [crow(1, 2.5, -0.5, 0.01), base[1], base[2]])
-        chk('C3 ULKRR-04 G2c 쌍 참조 소수 ID (2 → 2.5 — 정수 2 로 잘려 같은 키가 되지 않는다) = FAIL',
-            lambda: g2c_compare(os.path.join(td, 'f.c'), os.path.join(td, 'o.c'))['status'] == 'FAIL')
+        chk('C3 ULKRR-04 G2c 쌍 참조 소수 ID (2 → 2.5 — 정수 2 로 잘려 같은 키가 되지 않는다) = PASS 아님 · 관측 결손 NOT_COMPUTED + 사유 '
+            '(ULPR-04 — 파서 문제 = 관측 결손 · 등록 §14-10 · 옛 판 = FAIL)',
+            lambda: (lambda g: g['status'] == 'NOT_COMPUTED' and any('정수' in w for w in g['why']))(g2c_compare(os.path.join(td, 'f.c'), os.path.join(td, 'o.c'))))
         fa = os.path.join(td, 'f.a')
         ul_lib.write_custom(fa, 3200000, cols, rows, fmt=fmt)
         fa_text = open(fa).read().replace('\n2 3 ', '\n2.5 3 ', 1)
         open(fa, 'w').write(fa_text)
-        chk('C3 ULKRR-04 G2 원자 ID 소수 (2 → 2.5) = FAIL (글자 그대로 정수 변환 — 잘라서 같은 원자로 보지 않는다)',
-            lambda: '\n2.5 3 ' in open(fa).read() and g2_compare(fa, os.path.join(td, 'o.a'))['status'] == 'FAIL')
-        # ── ULKRF-03 (Codex 수정 재확인 10-15 · g2c_c_cpl7_missing · g2c_c_cpl8_missing) — 필수 열 결손 = 파서 ok 거짓을 먼저 → FAIL + 사유 (KeyError 아님) ──
+        chk('C3 ULKRR-04 G2 원자 ID 소수 (2 → 2.5) = PASS 아님 (잘라서 같은 원자로 보지 않는다) · 관측 결손 NOT_COMPUTED + 사유 (ULPR-03 · 04 — 옛 판 = FAIL)',
+            lambda: '\n2.5 3 ' in open(fa).read() and (lambda g: g['status'] == 'NOT_COMPUTED' and any('정수' in w for w in g['why']))(
+                g2_compare(fa, os.path.join(td, 'o.a'))))
+        # ── ULKRF-03 (Codex 수정 재확인 10-15 · g2c_c_cpl7_missing · g2c_c_cpl8_missing) — 필수 열 결손 = 파서 ok 거짓을 먼저 (KeyError 아님) ·
+        #    ULPR-04 (사전 리뷰 10-21 · 1저자 Q2 권고대로) — 그 결손 = 관측 결손 → NOT_COMPUTED + 사유 (복원 UNCONFIRMED · 등록 §14-10 — 수치 불일치 FAIL 과 따로) ──
         for col in ('c_cpl[7]', 'c_cpl[8]'):
             for side in ('test', 'orig'):
                 nc = os.path.join(td, f'nc_{side}_{col[6]}.c')
@@ -502,10 +505,64 @@ def selftest():
                 with open(nc, 'w', newline='\n') as f:
                     f.write(txt)
                 pair = (nc, os.path.join(td, 'o.c')) if side == 'test' else (os.path.join(td, 's.c'), nc)
-                chk(f'C4 ULKRF-03 G2c {"시험" if side == "test" else "원"} 쪽 쌍 덤프 머리 {col} → not_{col} (필수 열 결손) = 예외 없이 FAIL + 사유 '
-                    '(파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)',
-                    lambda pair=pair, nc=nc, col=col: (lambda g: g['status'] == 'FAIL' and any('열 이름' in w for w in g['why'])
+                chk(f'C4 ULKRF-03 G2c {"시험" if side == "test" else "원"} 쪽 쌍 덤프 머리 {col} → not_{col} (필수 열 결손) = 예외 없이 관측 결손 NOT_COMPUTED + 사유 '
+                    '(파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다 · ULPR-04 — 옛 판 = FAIL)',
+                    lambda pair=pair, nc=nc, col=col: (lambda g: g['status'] == 'NOT_COMPUTED' and any('열 이름' in w for w in g['why'])
                                                        and f'not_{col}' in open(nc).read())(g2c_compare(*pair)))
+        chk('C4 ULPR-04 대조: G2c 수치 불일치 (접선 힘 상대 2e-5) 는 그대로 FAIL (관측 결손 NOT_COMPUTED 와 따로)',
+            lambda: g2c_compare(os.path.join(td, 'b.c'), os.path.join(td, 'o.c'))['status'] == 'FAIL')
+        # ── ULPR-03 (사전 리뷰 10-21 PRE-UL-03) — G2 원자 비교도 관측 파싱 규칙 (전부 읽힘 · 행 수 = 선언 · 머리 step = 요청 · ID 고유 — README §4 관측 파싱) ·
+        #    아니면 관측 결손 NOT_COMPUTED + 사유 (옛 판 _dump_tokens = 같은 ID 뒤 줄이 덮음 · 머리 · 선언 수 안 봄 · 열 수 다른 줄 건너뜀 → PASS) · 같은 부류 G2c 머리 step ──
+        g2cols = ['id', 'type', 'x', 'y', 'z', 'radius', 'vx', 'vy', 'vz']
+        g2base = [{'id': i, 'type': 3, 'x': 0.001 * i, 'y': 0.002, 'z': 0.003, 'radius': 0.0005, 'vx': 0.0, 'vy': 0.0, 'vz': 0.0} for i in range(1, 6)]
+        o2 = os.path.join(td, 'o2.a')
+        ul_lib.write_custom(o2, 3200000, g2cols, g2base)
+        t_ok = os.path.join(td, 't_ok.a')
+        ul_lib.write_custom(t_ok, 3200000, g2cols, list(reversed(g2base)))
+        t_dup = os.path.join(td, 't_dup.a')
+        ul_lib.write_custom(t_dup, 3200000, g2cols, [dict(g2base[2], x=0.9)] + g2base)   # 원자 3 두 줄 (첫 줄 x 다름 · 뒤 줄 = 원) · 선언 6 = 행 수
+        t_step = os.path.join(td, 't_step.a')
+        ul_lib.write_custom(t_step, 9999999, g2cols, g2base)
+        t_trunc = os.path.join(td, 't_trunc.a')
+        ul_lib.write_custom(t_trunc, 3200000, g2cols, g2base)
+        with open(t_trunc, 'a', newline='\n') as f:
+            f.write('3 3 0.9\n')                                                             # 원자 3 의 잘린 (열 수 다른) 덧줄
+        o_w, t_w = os.path.join(td, 'o_w.a'), os.path.join(td, 't_w.a')
+        ul_lib.write_custom(o_w, 3199000, g2cols, g2base)
+        ul_lib.write_custom(t_w, 3199000, g2cols, g2base)
+
+        def g2_obs(g, word):
+            return g['status'] == 'NOT_COMPUTED' and any(word in w for w in g['why'])
+        chk('C5 ULPR-03 대조: 같은 원자 (행 순서 무관) = G2 PASS · 값 하나 다름 = FAIL (수치 불일치는 그대로)',
+            lambda: g2_compare(t_ok, o2)['status'] == 'PASS' and g2_compare(os.path.join(td, 'm.a'), os.path.join(td, 'o.a'))['status'] == 'FAIL')
+        chk('C5 ULPR-03 G2 시험 덤프에 같은 ID 두 줄 (원자 3 · 첫 줄 x 다름 · 선언 수 = 행 수 6) → PASS 아님 · 관측 결손 NOT_COMPUTED + 사유 (ID 중복 · 옛 판 = PASS)',
+            lambda: g2_obs(g2_compare(t_dup, o2), 'ID 중복'))
+        chk('C5 ULPR-03 G2 시험 덤프 머리 TIMESTEP 9,999,999 (원 3,200,000) → 관측 결손 NOT_COMPUTED + 사유 (머리 step · 옛 판 = PASS)',
+            lambda: g2_obs(g2_compare(t_step, o2), '머리 step'))
+        chk('C5 ULPR-03 G2 시험 덤프 끝에 열 수 다른 (잘린) 덧줄 → 관측 결손 NOT_COMPUTED + 사유 (열 수 · 옛 판 = 건너뛰고 PASS)',
+            lambda: g2_obs(g2_compare(t_trunc, o2), '열 수'))
+        chk('C5 ULPR-03 G2 요청 step (호출자 S0 · R_M) 결합 — 두 덤프 머리 step 이 서로 같아도 요청 step (3,200,000) 과 다르면 (3,199,000) 관측 결손 NOT_COMPUTED · '
+            '요청 step 과 같으면 PASS (옛 판 = 요청 step 을 받지 않음)',
+            lambda: g2_obs(g2_compare(t_w, o_w, step=3200000), '머리 step') and g2_compare(t_w, o_w)['status'] == 'PASS'
+            and g2_compare(t_ok, o2, step=3200000)['status'] == 'PASS' and g2_obs(g2_compare(t_step, o2, step=3200000), '머리 step'))
+        sc_ = os.path.join(td, 's_step.c')
+        ul_lib.write_local(sc_, 3199000, ccols, swapped)
+        chk('C5 ULPR-03 같은 부류 — G2c 시험 쌍 덤프 머리 step 3,199,000 (원 3,200,000) → 관측 결손 NOT_COMPUTED + 사유 (옛 판 = PASS) · 요청 step 결합 · 정상 PASS',
+            lambda: g2_obs(g2c_compare(sc_, os.path.join(td, 'o.c')), '머리 step') and g2_obs(g2c_compare(sc_, os.path.join(td, 'o.c'), step=3200000), '머리 step')
+            and g2c_compare(os.path.join(td, 's.c'), os.path.join(td, 'o.c'), step=3200000)['status'] == 'PASS')
+        o_n, t_n = os.path.join(td, 'o_nan.a'), os.path.join(td, 't_nan.a')
+        for p_ in (o_n, t_n):
+            ul_lib.write_custom(p_, 3200000, g2cols, [dict(g2base[0], vx=float('nan'))] + g2base[1:])
+        o_e, t_e = os.path.join(td, 'o_empty.a'), os.path.join(td, 't_empty.a')
+        for p_ in (o_e, t_e):
+            ul_lib.write_custom(p_, 3200000, g2cols, [])
+        ce_o, ce_t = os.path.join(td, 'ce_o.c'), os.path.join(td, 'ce_t.c')
+        for p_ in (ce_o, ce_t):
+            ul_lib.write_local(p_, 3200000, ccols, [])
+        chk('C5 ULPR-03 같은 부류 — 비교 열에 NaN (두 덤프 같은 자리 · 옛 판 = 글자 nan = nan 으로 PASS) → 관측 결손 NOT_COMPUTED (비유한) · 빈 덤프 둘 '
+            '(원자 0 · 쌍 접촉 0 — 옛 판 = 빈 표 둘이 같아 PASS) → NOT_COMPUTED (판별력 없음) · 원자 있는 원 ↔ 빈 시험 = FAIL (원자 빠짐 — 수치 불일치)',
+            lambda: g2_obs(g2_compare(t_n, o_n), '비유한') and g2_obs(g2_compare(t_e, o_e), '비교 대상 없음') and g2_obs(g2c_compare(ce_t, ce_o), '비교 대상 없음')
+            and g2_compare(t_e, o2)['status'] == 'FAIL')
         stl = 'solid x\n  facet normal 0 0 -1\n    outer loop\n      vertex 0 0 {z}\n      vertex 0 0.05 {z}\n      vertex 0.05 0.05 {z}\n'
         for name, z in (('m1.stl', '0.111252'), ('m2.stl', '0.111254')):
             open(os.path.join(td, name), 'w').write(stl.format(z=z))
