@@ -595,8 +595,9 @@ def t12():
             with s3_knobs(GPU_SOLVE=False, AMG_SOLVE=False, CG_MAXITER=1000):
                 outs.append(quiet(mod.certify, L, b, phi, int(info), resid, 1e-12, Ab, gb, At, gt, 1.0, _resolve))
         old, new = outs
-        diff = [k for k in old if k != 'version' and not _same(old[k], new.get(k))]
-        chk(f'T12b [{which}] 증서 켬 — A/B/C 칸 (기반 증서의 모든 칸 · 판 이름 빼고) 값 같음 (경험 검사 그대로)', not diff, diff)
+        #  ok = 논리곱 — 뜻이 바뀐 칸 (ⓓ 포함) 이라 뺀다 · 나머지 기반 칸 (ⓐ ⓑ ⓒ 의 수 · 판정 · 이어 풀기) 은 그대로여야 한다
+        diff = [k for k in old if k not in ('version', 'ok') and not _same(old[k], new.get(k))]
+        chk(f'T12b [{which}] 증서 켬 — A/B/C 칸 (기반 증서의 모든 칸 · 판 이름 · 논리곱 ok 빼고) 값 같음 (경험 검사 그대로)', not diff, diff)
     sid = rand_bed((5, 5, 10), 11)
     outs = []
     for mod, ccm in ((S3b, CCb), (S3, CC)):

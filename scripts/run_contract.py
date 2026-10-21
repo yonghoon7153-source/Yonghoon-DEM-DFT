@@ -749,28 +749,75 @@ def ca_ext_request_problem(req, ptfe_stamp='off'):
     return None
 
 
+def _fin_num(x):
+    return not isinstance(x, bool) and isinstance(x, (int, float)) and math.isfinite(x)
+
+
+def _zero_cert_problem(cert, sigma, _cc):
+    """★ 2026-10-21 (Codex RCA-13 · 1저자 Q7 일부) — VALID_ZERO_TOPOLOGY 증서 (두 판을 잇는 성분이 없는 해 = σ 0 이 정상 결과) → 문제 | None.
+    σ 0 을 **정확히** 요구 (증서 · 결과 둘 다 · bool 아님) · 관통 dof 0 · ok True · 출처 = 조기 반환 (영값 위상 사유 · 격자 지문 hex32) 또는
+    행렬 그래프 (사유 없음 · 원장 일치 · 위상 'zero' · 게시 판 전류 정확히 0) · 봉인값 = 이 코드.  CG 실패를 0 으로 받는 길이 아니다."""
+    if cert.get('ok') is not True:
+        return f'CERT|zero| ok = {cert.get("ok")!r} (영값 위상 증서는 ok True 여야 한다)'
+    for k, want in (('rtol_max', _cc.CERT_RTOL_MAX), ('eps_I', _cc.CERT_EPS_I), ('resolve_tol', _cc.CERT_RESOLVE_TOL),
+                    ('target_tol', _cc.CERT_TARGET_TOL), ('target_version', _cc.TARGET_VERSION)):
+        if cert.get(k) != want:
+            return f'CERT|seal| {k} = {cert.get(k)!r} ≠ 이 코드의 봉인 {want!r}'
+    src = cert.get('zero_source')
+    if src == 'early_return':
+        if _cc.classify_reason(cert.get('reason')) != _cc.STATUS_ZERO:
+            return f'CERT|zero| 조기 반환 사유 {cert.get("reason")!r} 는 영값 위상 사유가 아니다 ({_cc.ZERO_REASONS})'
+        for k in ('fp_sid', 'fp_sig'):
+            v = cert.get(k)
+            if not (isinstance(v, str) and len(v) == 32 and all(ch in '0123456789abcdef' for ch in v)):
+                return f'CERT|zero| {k} = {v!r} (격자 지문 소문자 hex 32 — `step3_sigma._grid_fp`)'
+    elif src == 'matrix_graph':
+        if cert.get('reason') is not None or cert.get('target_topology') != 'zero' or cert.get('target_ledger_ok') is not True \
+                or cert.get('zero_exact') is not True:
+            return (f'CERT|zero| 행렬 그래프 출처인데 사유 {cert.get("reason")!r} · 위상 {cert.get("target_topology")!r} · '
+                    f'원장 {cert.get("target_ledger_ok")!r} · 정확 0 {cert.get("zero_exact")!r}')
+    else:
+        return f'CERT|zero| 출처 {src!r} ∉ {_cc.ZERO_SOURCES}'
+    ntd = cert.get('n_through_dof')
+    if type(ntd) is not int or ntd != 0:                         # noqa: E721
+        return f'CERT|zero| n_through_dof = {ntd!r} (관통 성분이 없어야 영값 위상)'
+    s = cert.get('sigma')
+    if not (_fin_num(s) and s == 0.0 and _fin_num(sigma) and sigma == 0.0):
+        return f'CERT|zero| 증서 σ {s!r} · 결과 σ {sigma!r} — 영값 위상은 둘 다 정확히 0'
+    return None
+
+
 def conv_cert_problem(cert, sigma):
     """★ 2026-10-20 (Rint ② B6 · 설계 v1 §6 · N15) — 다음 세대 판정 해의 **수렴 증서** → 문제 | None.
     플래그를 믿지 않는다 — 기록된 수 (rtol · 불균형 · 이어 풀기 Δσ · info) 로 ⓐ ⓑ ⓒ 를 다시 판정 · 봉인값 = 이 코드의 상수
-    (`step3_conv_cert`) · 증서 σ = 결과 σ (증서 ↔ 결과 결합 · 상대 1e-9).  칸 없음 = `--step3-rtol` 없이 돈 런 = 미게시."""
+    (`step3_conv_cert`) · 증서 σ = 결과 σ (증서 ↔ 결과 결합 · 상대 1e-9).  칸 없음 = `--step3-rtol` 없이 돈 런 = 미게시.
+    ★ 2026-10-21 (Codex RCA-07 · RCA-13 · 1저자 Q5 (가) · Q7 일부) — 증서 판 v2: **상태 먼저 분기** — VALID_ZERO_TOPOLOGY (σ 0 정상 ·
+    `_zero_cert_problem`) · POSITIVE_SOLVED (아래 ⓐ ⓑ ⓒ + ⓓ 목표량 증서를 기록된 하한 · 상한 · 게시 판 전류로 **같은 판정 함수**
+    `step3_conv_cert.target_judge` 에 다시 넣는다 · 게시 판 전류 × scale = 증서 σ) · 그 밖 상태 (단락 · 증서 못 세움 · 모름) = 미게시."""
     import step3_conv_cert as _cc
     if not isinstance(cert, dict):
         return 'CERT|absent| 수렴 증서 칸이 없다 (--step3-rtol 없이 돈 런 · 다음 세대 판정 = 미게시 팔)'
     if cert.get('version') != _cc.CERT_VERSION:
         return f'CERT|version| {cert.get("version")!r} ≠ {_cc.CERT_VERSION!r}'
-    for k in ('ok', 'pass_a', 'pass_b', 'pass_c'):
+    st = cert.get('status')
+    if st == _cc.STATUS_ZERO:
+        return _zero_cert_problem(cert, sigma, _cc)
+    if st != _cc.STATUS_POSITIVE:
+        return (f'CERT|status| {st!r} — 게시 가능한 상태는 {_cc.STATUS_POSITIVE} · {_cc.STATUS_ZERO} 뿐 '
+                f'(단락 · 증서 못 세움 · 모르는 상태 = 미게시)')
+    for k in ('ok', 'pass_a', 'pass_b', 'pass_c', 'pass_d'):
         if type(cert.get(k)) is not bool:                        # noqa: E721
             return f'CERT|type| {k} = {cert.get(k)!r} (bool 이어야 한다)'
-    if cert['ok'] is not (cert['pass_a'] and cert['pass_b'] and cert['pass_c']):
-        return 'CERT|inconsistent| ok ≠ ⓐ ∧ ⓑ ∧ ⓒ'
+    if cert['ok'] is not (cert['pass_a'] and cert['pass_b'] and cert['pass_c'] and cert['pass_d']):
+        return 'CERT|inconsistent| ok ≠ ⓐ ∧ ⓑ ∧ ⓒ ∧ ⓓ'
     if not cert['ok']:
-        return f"CERT|failed| ⓐ {cert['pass_a']} · ⓑ {cert['pass_b']} · ⓒ {cert['pass_c']}"
-    for k, want in (('rtol_max', _cc.CERT_RTOL_MAX), ('eps_I', _cc.CERT_EPS_I), ('resolve_tol', _cc.CERT_RESOLVE_TOL)):
+        return f"CERT|failed| ⓐ {cert['pass_a']} · ⓑ {cert['pass_b']} · ⓒ {cert['pass_c']} · ⓓ {cert['pass_d']}"
+    for k, want in (('rtol_max', _cc.CERT_RTOL_MAX), ('eps_I', _cc.CERT_EPS_I), ('resolve_tol', _cc.CERT_RESOLVE_TOL),
+                    ('target_tol', _cc.CERT_TARGET_TOL), ('target_version', _cc.TARGET_VERSION)):
         if cert.get(k) != want:
             return f'CERT|seal| {k} = {cert.get(k)!r} ≠ 이 코드의 봉인 {want!r}'
 
-    def _fin(x):
-        return not isinstance(x, bool) and isinstance(x, (int, float)) and math.isfinite(x)
+    _fin = _fin_num
     rt, rs = cert.get('rtol_used'), cert.get('resid')
     if not (_fin(rt) and 0.0 < rt <= _cc.CERT_RTOL_MAX) or type(cert.get('info')) is not int \
             or cert['info'] != 0 or not _fin(rs):                # noqa: E721
@@ -785,6 +832,16 @@ def conv_cert_problem(cert, sigma):
     s = cert.get('sigma')
     if not (_fin(s) and _fin(sigma) and sigma > 0.0 and abs(s - sigma) <= 1e-9 * abs(sigma)):
         return f'CERT|sigma| 증서 σ {s!r} ≠ 결과 σ {sigma!r} — 증서가 이 결과의 것이 아니다'
+    #  ★ 10-21 — ⓓ 를 기록된 수로 다시 판정 (생산과 같은 함수 · 플래그를 믿지 않는다) + 구간 (코드 단위) ↔ 게시 σ 결합
+    if cert.get('target_ledger_ok') is not True or cert.get('target_topology') != 'through':
+        return (f'CERT|d| 원장 {cert.get("target_ledger_ok")!r} · 위상 {cert.get("target_topology")!r} — 양의 해 증서는 원장 일치 · '
+                f'관통 위상이어야 한다')
+    ib, sc = cert.get('I_bot'), cert.get('scale')
+    if not (_fin(ib) and _fin(sc) and sc > 0.0 and abs(ib * sc - s) <= 1e-12 * abs(s)):
+        return f'CERT|d| 게시 판 전류 {ib!r} × scale {sc!r} ≠ 증서 σ {s!r} — 구간이 이 게시값의 것이 아니다'
+    jd = _cc.target_judge(cert.get('target_lo'), cert.get('target_hi'), ib)
+    if jd['pass_d'] is not True:
+        return f"CERT|d| 목표량 증서를 수로 다시 보면 실패 — {jd['target_why']}"
     return None
 
 

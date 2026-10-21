@@ -441,7 +441,8 @@ CG_MAXITER = 30000
 #:   기본이 아닐 때만 LAST_BACKEND 에 'rtol' 이 실린다 (끔 = 매니페스트 바이트 그대로).
 CG_RTOL = 1.0e-8
 _CG_RTOL_DEFAULT = 1.0e-8
-#: 수렴 증서 (ⓐ 정지 rtol ≤ 봉인 · ⓑ 판 전류 불균형 ≤ ε_I · ⓒ rtol/100 이어 풀기 |Δσ|/σ ≤ 1e-4 — `step3_conv_cert`) — 켜면 실패 = 미수렴.
+#: 수렴 증서 (ⓐ 정지 rtol ≤ 봉인 · ⓑ 판 전류 불균형 ≤ ε_I · ⓒ rtol/100 이어 풀기 |Δσ|/σ ≤ 1e-4 · ★ 10-21 ⓓ 목표량 증서 (에너지 상한 ·
+#:   보정 흐름 하한 → 게시 G 의 보장 오차 ≤ 1e-4) · 해 상태 — `step3_conv_cert`) — 켜면 실패 = 미수렴.  조기 반환 해에도 상태 증서.
 #:   기본 False = 이 파일의 솔브 결과 · 키가 옛 그대로.
 CONV_CERT = False
 #: ★ Z3 (2026-10-20 · 등록 R §11 숫자 탐침 칸 — σ 아님) — 마지막 `_solve_cg` 의 CG **반복 수** (수렴했을 때도).  수렴 증서
@@ -1954,7 +1955,28 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
                 'n_faces_rint': int(sum(_faces.values())),
                 'faces_by_pair': dict(sorted(_faces.items())), 'solved': bool(solved)}
 
+    def _zero_graph(reason):
+        #  ★ 10-21 (RCA-13) — 조기 반환 σ 0 을 정한 그래프 (아래 연결성 분기와 같은 조건 · 증서 기록용 이름)
+        head = str(reason or '').split('(', 1)[0]
+        if head in ('no_conductive_voxels', 'degenerate_thin_bed', 'no_plate_contact'):
+            return {'no_conductive_voxels': 'conductor_mask', 'degenerate_thin_bed': 'geometry',
+                    'no_plate_contact': 'plate_mask'}[head]
+        if _cjp is not None:
+            return 'cjunc_assembled'
+        if _ifp is not None and _ifp['n_cut_rows'] > 0:
+            return 'iface_cut'
+        if _fap is not None and _fap['n_cut_rows'] > 0:
+            return 'face_alpha_cut'
+        return 'cell6'
+
     def _ret(d):
+        if CONV_CERT:
+            #  ★ 10-21 (Codex RCA-13 · 1저자 Q7 일부) — 조기 반환 해의 **상태 증서** (CG 없이 낸 σ 0): 두 판을 잇는 성분이 없는 사유 =
+            #    VALID_ZERO_TOPOLOGY (σ 0 = 정상 결과 · 바닥 극한 R_j = ∞ 를 증서 없음으로 멈추지 않는다) · 단락 · 얇은 침대 · 모르는 사유 =
+            #    게시 불가 상태.  증서 끔 = 이 블록 없음 (옛 키 그대로).
+            import step3_conv_cert as _ccz
+            d['conv_cert'] = _ccz.early_record(d, zero_graph=_zero_graph(d.get('reason')), fp_sid=_grid_fp(sid),
+                                               fp_sig=_grid_fp(np.asarray(sigma_of_sid, np.float64)))
         #  ①′ — 조기 반환 해에도 기록 (solved False) · iface 를 안 줬으면 dict 를 **그대로** 돌려준다 (옛 키 그대로).
         if _ifp is not None:
             d['iface'] = dict(_ifp['record'], solved=False)
@@ -2252,8 +2274,9 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
         _cert['iters'] = _it_main
         _cert['resolve_iters'] = _rit[0]
         if not _cert['ok']:
-            print(f"  ⚠ STEP3 수렴 증서 실패 (ⓐ {_cert['pass_a']} · ⓑ {_cert['pass_b']} 불균형 {_cert['imbalance']:.2e} · "
-                  f"ⓒ {_cert['pass_c']} Δσ {_cert['dsigma_rel']:.2e}) — 미수렴 = 미게시", flush=True)
+            print(f"  ⚠ STEP3 수렴 증서 실패 [{_cert.get('status')}] (ⓐ {_cert['pass_a']} · ⓑ {_cert['pass_b']} 불균형 "
+                  f"{_cert['imbalance']:.2e} · ⓒ {_cert['pass_c']} Δσ {_cert['dsigma_rel']:.2e} · ⓓ {_cert.get('pass_d')} "
+                  f"{_cert.get('target_why') or ''}) — 미수렴 = 미게시", flush=True)
             unconv = True
     out = {'sigma_eff': float(sigma_eff), 'n_dof': n_dof, 'n_floating_dropped': n_float,
            # ★ n_dof 는 **합집합**(한쪽 플레이트에라도 닿음).  아래 둘을 병기해 이름을 정직하게.
