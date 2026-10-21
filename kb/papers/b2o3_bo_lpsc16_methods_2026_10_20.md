@@ -91,11 +91,12 @@ QE 는 공식 인용 안내 (https://www.quantum-espresso.org/cite/) 대로 2009
 
 ## 빈칸 · 확인할 것
 
-1. **B·O 유사포텐셜 파일 이름** — b2o3 SCF 의 `ATOMIC_SPECIES` 는 저장소에 없다 (KISTI 백업 `b2o3_eos/` 에만).
-   근거로 쓴 것: Li·P·S·Cl 은 modelc 입력 (`tools/electronic/standard_dos/modelc/modelc_scf.in`) 에서 확인 ·
-   B 는 `tools/electronic/icohp_paw_kisti.sh` 머리 주석 *"the champion SCF used USPP (P/S/B)"* ·
-   O 는 우리 세트의 O 가 모두 `O.pbe-n-kjpaw_psl.0.1.UPF` (PAW). 이 조합이 SSSP efficiency 세트와 같다.
-   ⇒ 원본 입력의 B·O 두 줄이 `b_pbe_v1.4.uspp…` · `O.pbe-n-kjpaw_psl.0.1…` 이면 본문 그대로 확정.
+1. ✅ **B·O 유사퍼텐셜 확인됨 (2026-10-21)** — 사용자가 외장 SSD 백업 A 에서 직접 확인:
+   `D:\v100\kisti_backup_2026-07-14\kgy_b2o3_eos_2026-07-14\b2o3_eos\b2o3_nscf_dos.in` 22–27 행 (`b2o3_scf_atomic.in` 도 같음) —
+   Li `li_pbe_v1.4.uspp.F.UPF` · P `P.pbe-n-rrkjus_psl.1.0.0.UPF` · B `b_pbe_v1.4.uspp.F.UPF` · S `s_pbe_v1.4.uspp.F.UPF` · O `O.pbe-n-kjpaw_psl.0.1.UPF` · Cl `cl_pbe_v1.4.uspp.F.UPF`
+   ⇒ Li·B·S·Cl = GBRV v1.4 USPP · P = PSlibrary 1.0.0 USPP · O = PSlibrary 0.1 PAW — 2 번 문장 (SSSP efficiency · O 만 PAW) 그대로 맞다.
+   ⚠ 같은 폴더 `nscf_lobster.out` 도 이 USPP 세트를 읽었다 — LOBSTER 가 USPP 를 거부해서 버린 첫 시도이고, 보고한 ICOHP 는 all-PAW 로 다시 돌린 계산이다
+   (`db/properties/b2o3_icohp.json` `method` · `tools/electronic/icohp_paw_kisti.sh`). 그 출력 (`b2o3_paw_scf.out` · `nscf_paw.out`) 의 PseudoPot 줄을 보면 마지막 문단도 같은 방식으로 확정된다.
 2. ✅ UMA 저자 18 명 — arXiv 순서로 다 적음 (10-21).
 3. 참고문헌 번호를 원고 목록에 합치기 (Word 파일은 템플릿대로 2.5 절 · 위첨자 인용) · 붙여 넣은 뒤 첨자·italic·minus 다시 보기 (BML [3]).
 
