@@ -1,0 +1,12 @@
+
+── B 끔 비트 동일 — 고치기 전 payload 와 대조 (--old-scripts)
+  PASS  B0 커밋된 영수증 44 개 — 새 receipt_digest = 고치기 전 함수 (OUTDIR 이름 · 코호트 디렉터리 보존)
+  PASS  B0b 커밋된 영수증 ↔ 같은 디렉터리 팔 34 짝 — receipt_match 판정이 고치기 전과 같다
+  PASS  B1 payload [off LEAN2] — 매니페스트 (code_sha · exec_env 빼고) 바이트 같음 · id 같음 · step3 값 같음
+  PASS  B1 payload [centerline LEAN2] — 매니페스트 (code_sha · exec_env 빼고) 바이트 같음 · id 같음 · step3 값 같음
+  PASS  B1 payload [off LEAN3] — 매니페스트 (code_sha · exec_env 빼고) 바이트 같음 · id 같음 · step3 값 같음
+  PASS  B1 payload [face_alpha LEAN2] — 매니페스트 (code_sha · exec_env 빼고) 바이트 같음 · id 같음 · step3 값 같음
+  PASS  B1 payload [off LEAN2 + rtol 1e-12] — 매니페스트 (code_sha · exec_env 빼고) 바이트 같음 · id 같음 · step3 값 같음
+
+7 PASS · 0 FAIL
+ELAPSED_S=19.7 RC=0

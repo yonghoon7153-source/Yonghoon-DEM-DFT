@@ -1,0 +1,34 @@
+── ① 파일 · 한 파일로 닫힘
+  PASS  정적 파일이 webapp/static/explain/ 에 있다
+  PASS  <title> 이 있다
+  PASS  태그 짝이 맞다 (닫히지 않은 · 엇갈린 태그 0)
+  PASS  <script> 없음
+  PASS  외부 자원 (http · https · //) 없음
+── ② 내용 표지
+  PASS  그림 6 장 (<figure>)
+  PASS  그림마다 설명 (svg role="img" + aria-label)
+  PASS  "처음 보는 분께" 상자
+  PASS  CONTACT_FREE (지금 복셀 σ 의 빈틈) 설명
+  PASS  DBE 비교는 "독립 holdout 검증 아님" 표지
+── ③ α = 열린 면적 비율 (개구율)
+  PASS  거꾸로 쓴 문장 ("가리는 비율 α") 없음
+  PASS  α 를 열린 비율 · 개구율로 적는다
+── ④ 천 단위 콤마 없음 (보이는 글)
+  PASS  보이는 글의 천 단위 콤마 0 (찾은 것 [])
+── ⑤ 웹앱으로 돌아가는 링크
+  PASS  href="/" (DEM/MPM Analyzer 로)
+── ⑦ 핵심 수치 (정본 그대로)
+  PASS  SBE 실측 mS/cm 1.63
+  PASS  DBE 실측 mS/cm 4.68
+  PASS  현 세대 σ* S/cm 0.347
+  PASS  DBE 단독 보정 S/cm 2.618
+── ⑥ 사이드바 링크 · 실제 서빙
+  PASS  base.html 사이드바에 링크
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+  PASS  GET /static/explain/rint_overview_20261021.html → 200
+  PASS  text/html 로 서빙
+  PASS  서빙된 바이트 = 리포 파일
+  PASS  렌더된 화면 (/seminar) 사이드바에 링크가 보인다
+
+== test_rint_explainer_page: 23/23 PASS

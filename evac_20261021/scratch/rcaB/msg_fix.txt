@@ -1,0 +1,38 @@
+STEP3 certificate (d) hardening: input dtypes, rounding-level ledger tolerance, FP rule v2, underflow / overflow, exact judge, target_fp seal
+
+step3_conv_cert:
+- inputs: phi, plate g, b and L must be numeric dtypes (float / int); numeric strings, bool, object are refused
+  (NOT_CERTIFIABLE) instead of being silently converted to float before the check.
+- ledger tolerance = rounding only: symmetry relative 1e-12 (was 4u: duplicate entries summed in a different order
+  differ by k u), row sum 64u x (stored entries in the row + plate edges + 8) x (|row| + plate coupling), b 64u x
+  (bottom plate edges + 8) x (|b| + coupling).  True asymmetry 1e-9 (also with consistent row sums), true ground
+  1e-6 and true b mismatch 1e-6 are still refused.
+- FP rule v2 (fsum-bfs-defect-margin-v2): term rounding added to the group bounds (U terms 4u -> + 8u|u_g|, W terms
+  2u -> + 4u|w_g|) and the lower-bound numerator reduced by 4u(|F| + D) absolute (cancellation-safe).  Error analysis:
+  in the worst-case alignment of every rounding, v1 had first-order slack 0 for the upper bound (three groups) and for
+  the lower bound (numerator subtractions); v2 has >= 8u and >= 2u (proof gap closed; sampling found no
+  counterexample to v1 - T16i passes before and after).  W terms q (q/g) instead of q q / g; lower bound
+  num (num / W) instead of num num / W (v1 underflowed num^2 to 0 for g ~ 1e-290 and refused an exact solution, T7u).
+  Products / quotients in the subnormal range or underflowing to 0 -> NOT_CERTIFIABLE (outside the relative rounding
+  model; production g >= ~1e-17 never gets near 1e-308); a subnormal lower bound is set to 0 (safe side).
+  Overflowing flows or sums -> NOT_CERTIFIABLE (math.fsum OverflowError / ValueError caught in _fsum_bound ->
+  (inf, inf)).  U terms built once (memory: production beds have 1e8+ edges); cost unchanged (393,216 dof,
+  1.16 M edges: 1.376 s before, 1.365 s after).
+- target_judge compares exactly (Fraction; tau = the decimal 1e-4 = 1/10^4): the knife-edge triple whose guaranteed
+  error exceeds 1e-4 by 1.1e-20 is refused (the float division passed it); one ulp inside passes.
+run_contract.conv_cert_problem: target_fp is sealed with the other constants (a bracket built with another FP rule is
+refused).
+test: T15f (true asymmetry with consistent row sums - the mutation table showed T15c's asymmetric case was also caught
+by the row-sum check, so the symmetry-tolerance mutant went undetected; T15f passes before and after the fix).
+
+OpenBLAS path matrix (T17c, six combinations of the main's seal-table run): every clear case gives the same (d)
+decision on all paths; on the seal table's knife row (probe junction seed 0 rtol 1e-10) the solutions themselves
+differ by path - actual error 5.4e-5 (Haswell 1), 5.8e-5 (SkylakeX 1), 3.1e-5 (Haswell 4) -> (d) pass;
+1.12e-4 (SkylakeX 4), 1.005e-4 (Sandybridge 1, where B passes it: imbalance 9.79e-5), 1.33e-4 (Nehalem 1) ->
+(d) refuse; bound - actual <= 4.1e-6 on every path; no pass with actual error > 1e-4 on any path.
+
+pre-fix fast 174/192 -> post-fix fast 193/193 (17 s; + T15f) · long 194/223 -> 224/224 (399 s; T18: 18 of 18
+mutants caught for the right reason)
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

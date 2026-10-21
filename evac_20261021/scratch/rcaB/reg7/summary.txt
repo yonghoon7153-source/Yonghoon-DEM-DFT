@@ -1,0 +1,13 @@
+wt	target_fast	rc=0	3043s	== test_step3_target_cert [빠른 판]: 252/252 PASS (21.4 s)
+wt	target_long	rc=0	1473s	== test_step3_target_cert [긴 판]: 297/297 PASS (1133.9 s)
+wt	conv_cert	rc=0	1416s	== test_step3_conv_cert: 27/27 PASS
+wt	rc_selftest	rc=0	1s	run_contract selftest: 124/124 PASS
+wt	s3_selftest	rc=0	2s	SELFTEST PASS
+wt	s3_selftest_rint	rc=0	1s	STEP3 RINT SELFTEST PASS
+fix	ca_b6	rc=0	54s	161 PASS · 0 FAIL
+fix	ca_b6_old	rc=1	69s	  - B1 payload [off LEAN2 + rtol 1e-12] — 매니페스트 (code_sha · exec_env 빼고) 바이트 같음 · id 같음 · step3 값 같음 (새 기록 칸 ['cg_iters', 'conv_cert.iters'] 만 빼고)
+fix	rint_chain	rc=1	43s	test_rint_r_chain: 88/89 PASS (42.6 s)   FAILED: ['S07']
+wt	ca_b6	rc=1	39s	  - P: 실행
+wt	rint_chain	rc=1	11s	test_rint_r_chain: 27/89 PASS (11.0 s)   FAILED: ['L01', 'L02', 'L03', 'L04', 'L05', 'L06', 'L07', 'L08', 'L09', 'L10', 'L11', 'L12', 'L13', 'L14', 'L15', 'L16', 'L17', 'L18', 'L19', 'L20', 'S02', 'S03', 'S05', 'S06', 'S07', 'S08', 'S09', '
+wt	cmd_selftest	rc=0	131s	check_method_discipline v3 selftest: 128/128 PASS
+wt	cmd_noarg	rc=0	50s	✓ 방법론 규율: 0 오류 (15 경고)

@@ -1,0 +1,10 @@
+HEAD 5dc6f7f0b dirty=0
+join rc=0 t=229s ::  324 PASS · 0 FAIL 
+join138 rc=0 t=214s ::  138 PASS · 0 FAIL 
+am_iface rc=0 t=11s ::  136 PASS · 0 FAIL 
+rrm rc=0 t=7s ::  55 PASS · 0 FAIL 
+t4census rc=0 t=1s ::  8 PASS · 0 FAIL 
+t43 rc=0 t=1s ::  6 PASS · 0 FAIL 
+t2dev rc=0 t=1s ::  23 PASS · 0 FAIL 
+t41 rc=0 t=1s ::   ✓ ④ 거부 없음 · N8 · N8b 0 · a_lt_h 정의 (contact_of = 1)   [] SELFTEST PASS 
+DONE

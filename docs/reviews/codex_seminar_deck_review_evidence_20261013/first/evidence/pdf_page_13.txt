@@ -1,8 +1,0 @@
-13Battery Materials Lab.
- Problem 3 — compaction mechanics: over-compaction and load 
-sharing
-• Large–large NCM contacts carry 48–60 % of the vertical stress; 7:3 is the minimum.
-• Its five-composition order matches the measured porosity order (n = 5, exploratory; the 
-experimental set is a selected subset).
-Limits
-< contribution to σzz by contact type > < SE von Mises stress, four stages (0–150 MPa) >

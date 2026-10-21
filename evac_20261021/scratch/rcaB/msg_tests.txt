@@ -1,0 +1,38 @@
+STEP3 certificate (d) rigor round: tests first (hand circuits, rounding order, OpenBLAS paths, knife edge, mutations, input / ledger / underflow hardening)
+
+Follow-up to Codex RCA-07 / RCA-13 (1st author 10-21: deadline 10-31, "more thorough"). Test file only.
+
+- Fast default (gate, ~16 s) vs --long (separate run, ~8 min; main 10-21): --long = T5 1,500 per variant (fast 300),
+  T16 random circuits 200 (fast 40), T17 permutations 20 (fast 3) + probe-bed permutations + six child processes
+  (OPENBLAS_CORETYPE Haswell / default SkylakeX x threads 1 / 4, Sandybridge 1, Nehalem 1 = the six combinations of
+  the main's seal-table run), T4 junction probe, T14 timing (393,216 dof, edges > 2^20 = chunked-sum path),
+  T18 mutation table.  --only matches the case number exactly; each case prints its time.
+- T7h input normalisation (numeric strings, bool silently converted to float) and overflow -> NOT_CERTIFIABLE, no exception.
+- T7u underflow (twin of overflow): subnormal conductances and a product that underflows to 0 -> NOT_CERTIFIABLE;
+  control g 1e-290 exact solution -> POSITIVE_SOLVED, (d) pass, bracket contains the exact fraction G*.
+- T15 ledger tolerance = rounding only: duplicate-sum asymmetry (36u), diagonal rounding of a degree-201 row,
+  b summed in a different order (301 plate edges) are accepted (bracket contains the exact fraction G*); true
+  asymmetry 1e-9, true ground 1e-6, true b mismatch 1e-6 are still refused.
+- T13b the contract seals target_fp (FP rule) like the other constants.
+- T16 hand circuits with exact Fraction G* (series, parallel, loop, dead end, contrast 1e12 and 1e15, Wheatstone
+  bridge with all dofs in one through component, exact zero, R_j = inf floor) + random circuits: upper >= exact
+  energy of the given phi (T16i) >= G* >= lower, broken phi refused, no false pass.
+- T17 node permutations (CG summation order) and the OpenBLAS path matrix: clear cases (Codex three, probe rtol
+  1e-8 / 1e-12, probe plain 1e-10) give the same (d) decision and status on all six paths; the knife row of the
+  seal table (probe junction rtol 1e-10: actual error 3.1e-5 .. 1.33e-4 by path, 1.005e-4 on Sandybridge where B
+  passes it) may differ by path, and every pass has actual error <= 1e-4 (soundness on every path); on the Haswell
+  path the Codex main counterexample passes A/B/C and (d) refuses it (A/B/C knife edge differs by path: recorded).
+- T18 mutation table with an unmutated baseline (a mutant counts as caught only if a check that passed in the
+  baseline fails under it); fast mode checks only that all mutation anchors exist exactly once.
+- T19 knife edge: (lo, hi, G) whose guaranteed error exceeds 1e-4 by 1.1e-20 must be refused (float division
+  passes it); one ulp inside passes.  T20 chunked fsum bound (> 2^20 terms, cancellation across chunks); sum
+  overflow -> (inf, inf), not an exception.
+
+pre-fix fast 174/192 (fails = 18 checks: 17 from 7 findings - numeric strings / bool 4, overflow 2, underflow 2,
+num^2 underflow refusing an exact solution 1, ledger tolerance 3, target_fp seal 2, float judge on the knife 3 - and
+the anchor check 1, the mutation anchors of the new code) · long 194/223 (the same 18 + T18 baseline 1 +
+10 mutants whose anchors are in the new code; T17c / T17c2 / T17c3 pass already: the v1 bracket was sound on
+these paths, the fixes are input / ledger / FP-model / judge hardening)
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

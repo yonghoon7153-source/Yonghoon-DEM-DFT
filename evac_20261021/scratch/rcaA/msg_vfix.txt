@@ -1,0 +1,15 @@
+Rint 2 S2 RCA-04 path order key = (canonical first point, last point, sequence)
+
+carbon_junction._canonical_paths: paths are ordered by the canonical first point, then the canonical
+last point, then the point sequence (CJUNC_ORDER_RULE canonical_first_last_then_point_sequence_lex_v2).
+Endpoints do not move under collinear subdivision or reversal, so two fibres sharing a start point
+keep their order; duplicate detection unchanged (equal keys <=> equal canonical sequences).
+Remaining limit (documented): two paths with both endpoints equal, or closed loops, are still
+ordered by the sequence (subdivision dependent).
+
+Pre-fix (parent = tests-first commit): test_carbon_junction --quick 237/239 (fails = 2 checks from
+1 counterexample).  After: 239/239; test_ca_s0_census 126/126; test_ca_ext_b6 161/161;
+test_ca_ext_z3 84/84.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

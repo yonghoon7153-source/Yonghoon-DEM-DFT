@@ -1,7 +1,0 @@
-
-STDERR
-Traceback (most recent call last):
-  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\dem_unloading_kit_reverify_20261014\legacy_probes\reader_adversarial.py", line 75, in <module>
-    assert vbad["primary_status"] == "OK" and r.gate(str(root), B, "UVa", P)[0]
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError

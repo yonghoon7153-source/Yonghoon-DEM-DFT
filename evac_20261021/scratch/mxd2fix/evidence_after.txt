@@ -1,0 +1,12 @@
+readback E LC lab soft->ref20: PASS | -
+readback E GMuu lab soft->ref20: PASS | -
+diff --allow A GMuu->GMcc: FAIL | outside [('AM_P', 'SE'), ('AM_P', 'WALL'), ('AM_S', 'SE'), ('AM_S', 'WALL')] | e_rule []
+diff --allow B GMuu->GMcc: FAIL | outside [('AM_P', 'SE'), ('AM_S', 'SE')] | e_rule []
+diff --allow U GMuu->GMcc: FAIL | outside [] | e_rule []
+diff --allow E GMuu->GMcc: FAIL | outside [] | e_rule ['E 비교인데 SE 영률도 dt 도 같다 — 강성 · dt 변화가 없다 (같은 강성의 LC↔LH 는 --allow B)']
+diff --allow EB GMuu->GMcc: FAIL | outside [] | e_rule ['E 비교인데 SE 영률도 dt 도 같다 — 강성 · dt 변화가 없다 (같은 강성의 LC↔LH 는 --allow B)']
+diff --allow GM: (no exception)
+diff --allow E on M04-like pair (all CED x (2.00/1.64)^(1/3), header still says Bo 0.5): FAIL
+parse_cell D2 name: accepted
+smoke _expected_counts(dict(stiffen_se=20, dens_gen=lab)): {1: 143, 2: 699, 3: 99158} | lab plan: {1: 143, 2: 699, 3: 99158}
+rc=0 elapsed=0.4s

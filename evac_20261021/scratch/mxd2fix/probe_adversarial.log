@@ -1,0 +1,14 @@
+a dup decl line                                  ['D2 머리: γ/γ_SE 선언 (γ · γ_W · Bo_SE) 줄 2 개 — 정확히 하나여야 한다']
+b nan token                                      ["D2 머리: 선언 수 {'AM_P': 'nan'} — ASCII 십진수 · 유한 양수가 아니다"]
+f fullwidth token                                ["D2 머리: 선언 수 {'AM_P': '０.３'} — ASCII 십진수 · 유한 양수가 아니다"]
+c0 E soft->ref same Bo (control)                 PASS
+c readback E soft Bo0.4 -> ref Bo0.5             ('FAIL', ["E soft04 → ref05: E 는 같은 팔 — 두 덱 모두 D2 이고 D2 선언 (γ · γ_W · Bo · ρ · 벽 규칙 · 표면 · 삽입) 이 같다 (((('AM_P', '0.3'), ('AM_S', '0.3'), ('SE', '1'), ('bo', '0.4'), ('gw', '0.00768'), ('rho', '0.3')), 'hare2026_x_rho_uncoated_ncm', (('AM_P', 'uncoated'), ('AM_S', 'uncoated')), True) ⇄ ((('AM_P', '0.3'), ('AM_S', '0.3'), ('SE', '1'), ('bo', '0.5'), ('gw', '0.00768'), ('rho', '0.3')), 'hare2026_x_rho_uncoated_ncm', (('AM_P', 'uncoated'), ('AM_S', 'uncoated')), True))"])
+c diff E soft Bo0.4 -> ref Bo0.5                 ('FAIL', ["E 의 두 D2 덱은 같은 팔이어야 한다 — 선언이 다르다 (γ · γ_W · Bo · ρ · 벽 규칙 · 표면 · 세대: {'AM_P': '0.3', 'AM_S': '0.3', 'SE': '1', 'gw': '0.00768', 'bo': '0.4', 'rho': '0.3'} · {'AM_P': 'uncoated', 'AM_S': 'uncoated'} ⇄ {'AM_P': '0.3', 'AM_S': '0.3', 'SE': '1', 'gw': '0.00768', 'bo': '0.5', 'rho': '0.3'} · {'AM_P': 'uncoated', 'AM_S': 'uncoated'})"], ['AM_P–AM_P: 84177.6 → 90677.5 (쌍별 규칙 84177.6 · E* ×1 → CED ×1)'])
+d readback GM uu(ncm) -> cc(explicit same γ_W)   ('FAIL', ["GM uu → cc_explicit: 같은 ρ 세계 — 밀도 세대 · 벽 규칙 · ρ_비코팅 · γ_W · SE γ · Bo_SE · 삽입이 같다 (NCM 표면만 바뀐다) (다른 칸 ['벽 규칙'] · ρ 0.3 → 0.3 · γ_W 0.00768 → 0.00768 · Bo 0.5 → 0.5)"])
+d diff GM uu(ncm) -> cc(explicit)                ('FAIL', ["GM 은 같은 ρ 세계 비교다 — 다른 칸 ['벽 규칙'] (ρ 0.3 → 0.3 · γ_W 0.00768 → 0.00768 · Bo 0.5 → 0.5 · 세대 lab20261014 → lab20261014)"])
+e diff B with D2 decks                           ('FAIL', [], [('AM_P', 'SE'), ('AM_S', 'SE')])
+g header head removed + meta                     ['D2 기록 (deck_meta.json): 메타는 D2 결합 규칙 (adhesion_rule) 인데 덱 머리에 "★ D2 결합 규칙 (기하평균" 선언이 없다']
+h diff E D2 soft -> head-stripped ref            ('FAIL', ['E 는 같은 팔 · 다른 강성 — D2 결합 규칙 덱과 옛 팔 덱을 짝짓지 않는다'])
+i GM ok control                                  ('PASS', 'PASS')
+j GM reversed (cc -> uu)                         ('PASS', 'PASS')
+rc=0 elapsed=0.2s

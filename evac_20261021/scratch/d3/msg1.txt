@@ -1,0 +1,18 @@
+Ledger: MXD3-01..21 (mixer D3 design pre-review findings; fix in design v2)
+
+The pre-Codex attack review of the D3 design (SE-SE flowability anchor) found
+17 items (request section 2-3, D3K-01..17); they are opened here as
+MXD3-01..17 with the same numbers, plus four author data waits that block the
+registration or the transfer step (MXD3-18 equipment list, 19 experimental
+mixer identity and G, 20 who measures, 21 SE lot, PSD and true density).
+
+Grades follow the main-session rule: a broken guarantee that would invalidate
+the anchor, its interval or the blinding is P1 (01, 02, 03, 04, 05, 08, 10);
+conditional, classification and pre-result definition items are P2; wording
+and density-generation numbers are P3 (12 overlaps MXD2-07, which the D3 v2
+design closes).  The author decided on 10-21 to fix the broken guarantees in
+the design before the first Codex round; each note records the planned
+handling.  All items stay open; claimed_fixed is left to the main integration.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

@@ -1,0 +1,35 @@
+{
+ "n_table": 32,
+ "n_checkline": 7,
+ "checkline_files": [
+  "scripts/g2_network_reread.py",
+  "scripts/lhs_design_dataset.py",
+  "scripts/lhs_release_build.py",
+  "scripts/network_conductivity.py",
+  "scripts/tau_flux.py",
+  "webapp/app.py",
+  "webapp/pipeline_service.py"
+ ],
+ "checkline_eq_actual": {
+  "scripts/network_conductivity.py": true,
+  "scripts/tau_flux.py": true,
+  "webapp/app.py": true,
+  "webapp/pipeline_service.py": true,
+  "scripts/lhs_design_dataset.py": true,
+  "scripts/g2_network_reread.py": true,
+  "scripts/lhs_release_build.py": true
+ },
+ "table_rows_eq_actual": 28,
+ "table_rows_ne": [
+  "scripts/network_conductivity.py",
+  "scripts/tau_flux.py",
+  "webapp/app.py",
+  "webapp/pipeline_service.py"
+ ],
+ "merged_eq_actual_all": true,
+ "code_fp_merged": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+ "code_fp_actual": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+ "checkline_code_fp": [
+  "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+ ]
+}

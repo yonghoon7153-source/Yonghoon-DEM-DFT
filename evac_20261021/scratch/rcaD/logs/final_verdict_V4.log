@@ -1,0 +1,8 @@
+
+── V4 옛 세대 (p2) 코호트 — 새 사유로 HOLD 되지 않는다 (--old-verdict 면 판정 JSON 바이트 대조)
+  PASS  V4a [w4_ptfe_centerline_20260827] 봉인 코호트 판정이 새 사유 (GENERATION_MIX·NEXTGEN_UNPUBLISHED·CAEXT) 가 아니다 · 모든 팔 p2
+  PASS  V4a [w4b_ptfe_off_20260827] 봉인 코호트 판정이 새 사유 (GENERATION_MIX·NEXTGEN_UNPUBLISHED·CAEXT) 가 아니다 · 모든 팔 p2
+  PASS  V4b 커밋된 팔 디렉터리 17 개 × (require_arms 없음 · 8) — 판정 JSON 이 고치기 전 판정기와 바이트 같다
+
+3 PASS · 0 FAIL
+rc=0 seconds=1

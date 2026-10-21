@@ -1,0 +1,87 @@
+{
+ "impl": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rcaA2/impl",
+ "base": {
+  "cj:CEN,KINK-R,RCA03,QD,QC": "== test_carbon_junction: 30/30 PASS",
+  "cj:KINK,RCA03,SELFD,REC,CEN": "== test_carbon_junction: 32/32 PASS",
+  "cj:RING": "== test_carbon_junction: 7/7 PASS",
+  "cj:SELFD,RCA03,KINK,RING,CEN": "== test_carbon_junction: 34/34 PASS",
+  "s0:t_plan_commit": "22 PASS · 0 FAIL"
+ },
+ "rows": [
+  {
+   "mutant": "M10 자기 L_c = 두 쪽 선분 전부 짝 (접합 쌍 제한 끔)",
+   "file": "carbon_junction.py",
+   "tests": "KINK,RCA03,SELFD,REC,CEN",
+   "base_rc": 0,
+   "base_summary": "== test_carbon_junction: 32/32 PASS",
+   "rc": 1,
+   "summary": "== test_carbon_junction: 31/32 PASS",
+   "caught": true,
+   "fails": [
+    "FAIL  KINK KU s_min 없음 — U 자기 접합 하나 · s = KU_S · L_c = 접합 쌍의 닿음만 = 손 값 3.543966411 (1e-9 · 두 쪽 선분 전부 짝 = 3.6)  ([0] (7.006659275674581, 3.6000000000000005) ↔ 7.006659275674581 · 3.543966410640008)",
+    "FAIL: KINK KU s_min 없음 — U 자기 접합 하나 · s = KU_S · L_c = 접합 쌍의 닿음만 = 손 값 3.543966411 (1e-9 · 두 쪽 선분 전부 짝 = 3.6)"
+   ]
+  },
+  {
+   "mutant": "M12 쌍 무리 고리 둘레 잇기 끔",
+   "file": "carbon_junction.py",
+   "tests": "RING",
+   "base_rc": 0,
+   "base_summary": "== test_carbon_junction: 7/7 PASS",
+   "rc": 1,
+   "summary": "== test_carbon_junction: 6/7 PASS",
+   "caught": true,
+   "fails": [
+    "FAIL  RING 닫힌 머리핀 (이음매 = 다리 가운데) — 고리 조각 1 · 다리 사이 자기 접합 = 하나 (이음매를 지나는 쌍 무리 · 고리 둘레 이웃)  (1 · 자기 2)",
+    "FAIL: RING 닫힌 머리핀 (이음매 = 다리 가운데) — 고리 조각 1 · 다리 사이 자기 접합 = 하나 (이음매를 지나는 쌍 무리 · 고리 둘레 이웃)"
+   ]
+  },
+  {
+   "mutant": "M19 자기 분산판 맞은편 = 짝 제한 끔",
+   "file": "carbon_junction.py",
+   "tests": "SELFD,RCA03,KINK,RING,CEN",
+   "base_rc": 0,
+   "base_summary": "== test_carbon_junction: 34/34 PASS",
+   "rc": 0,
+   "summary": "== test_carbon_junction: 34/34 PASS",
+   "caught": false,
+   "fails": []
+  },
+  {
+   "mutant": "M25 단계 2 --r-plan-path 필수 끔",
+   "file": "ca_s0_census.py",
+   "tests": "t_plan_commit",
+   "base_rc": 0,
+   "base_summary": "22 PASS · 0 FAIL",
+   "rc": 0,
+   "summary": "22 PASS · 0 FAIL",
+   "caught": false,
+   "fails": []
+  },
+  {
+   "mutant": "M26 같은 셀 재방문 = 별칭 짝도 셈",
+   "file": "carbon_junction.py",
+   "tests": "RING",
+   "base_rc": 0,
+   "base_summary": "== test_carbon_junction: 7/7 PASS",
+   "rc": 0,
+   "summary": "== test_carbon_junction: 7/7 PASS",
+   "caught": false,
+   "fails": []
+  },
+  {
+   "mutant": "M27 경로로만 = 경로 끊김 검사 끔",
+   "file": "carbon_junction.py",
+   "tests": "CEN,KINK-R,RCA03,QD,QC",
+   "base_rc": 0,
+   "base_summary": "== test_carbon_junction: 30/30 PASS",
+   "rc": 1,
+   "summary": "== test_carbon_junction: 29/30 PASS",
+   "caught": true,
+   "fails": [
+    "FAIL  CEN KR + SDCP 가 두 가지 사이 위치 (2,1,4) 를 덮음 — 재방문 쌍 1 · 경로 끊김 1 · 경로로만 0 (덮인 위치 = 경로 아님)  (5 {'n_revisit_pairs': 1, 'n_self_revisits_path_broken': 0, 'n_self_revisits_path_only': 1})",
+    "FAIL: CEN KR + SDCP 가 두 가지 사이 위치 (2,1,4) 를 덮음 — 재방문 쌍 1 · 경로 끊김 1 · 경로로만 0 (덮인 위치 = 경로 아님)"
+   ]
+  }
+ ]
+}

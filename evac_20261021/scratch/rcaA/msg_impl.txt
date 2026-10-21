@@ -1,0 +1,37 @@
+Rint 2 S2 RCA-03/04/05/06 + Q11 census: branch membership, geometric ports, distributed v0, SV diagnostic
+
+Carbon junction v2 (CJUNC_MODEL_VERSION r3-carbon-junction-port-v2, schema cjunc-v2), 1st author 10-21
+Q1-Q4 (ga) and Q11 (census part); junction-off path unchanged.
+- RCA-03 (Q1): membership key = (cell, fid, branch) (CJUNC_BRANCH_RULE); same-cell non-contiguous
+  revisits of one fid are separate branches and are never merged in the cell; s < s_min = path only
+  (recorded n_self_revisits_path_only, old n_self_merged_revisits withdrawn), s >= s_min = R_j edge;
+  self-junction contact = the s-defining nearest pair, ports chosen among each side's positions.
+- RCA-04 (Q2): ports by a direction-free geometric rule (CJUNC_PORT_RULE): centre distance within
+  r_port, eps band (1e-9 um^2) tie -> lexicographic integer cell index, same-cell branches ->
+  centreline distance, then canonical (piece, k); no path index.  Path order is geometric
+  (CJUNC_ORDER_RULE: canonical oriented point sequence, fid labels unused; same geometry twice incl.
+  reversed = rejected 'duplicate_path_reversed'); pair orientation and instance order by canonical
+  piece; instance contact point = lexicographic-min midpoint of the eps band of nearest pairs
+  (CJUNC_CP_RULE).
+- RCA-05 (Q3): distributed v0 (CJUNC_DIST_RULE): k = ceil(Lc/Lpar) sub-edges per instance (same 1e-9
+  band as the long-contact flag; k = 1 = old point junction, bit-identical), each G = total G/k with
+  total G = max(1, Lc/Lpar)/R_j0 (length law unchanged), positions = midpoints of k equal parts of the
+  defining side's touch runs (same primitives as Lc), nearest point on the other side, geometric
+  ports; PTFE cover (P0/P1) and SDCP proximity (c) per sub-edge.  Registry 'subedges', plan rows per
+  sub-edge, counts per sub-edge + n_subedges; quantitative gate checks g == 1e4*m/(k*R_j').
+- RCA-06 (Q4): sv_dominant withdrawn -> sv_local_dissipation (diagnostic only, no dominance claim);
+  optional knob cjunc_plan(sv_counterfactual={'threshold': None | finite >= 1}): same bed, same R_j,
+  SV faces (SDCP-VGCF) cut -> sv_counterfactual_ratio = G_full/G_cut; SV_DEPENDENT only when a threshold
+  is given (no default); main solve unconverged -> no ratio.
+- Q11 census: same-cell non-contiguous revisits (pairs/cells/fibres/s), port ties per sub-edge,
+  sub-edges (long), per-sub-edge PTFE cover, partially covered instances - from cjunc_registry, in
+  ca_s0_census block + npz (no sigma fields).
+- ca_ext_cjunc: evidence keys follow (sv_local_dissipation, sv_counterfactual,
+  n_self_revisits_path_only); count identity per sub-edge (n_subedges absent = n_instances).
+
+Pre-fix (parent = tests-first commit): test_carbon_junction --quick 168/211 (fails = 43 checks from 4
+Codex counterexample families RCA-03/04/05/06 + census + resident mutants); test_ca_s0_census 121/126
+(fails = 5 checks, R8).  After: 211/211 and 126/126.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

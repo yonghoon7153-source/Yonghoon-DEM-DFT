@@ -1,8 +1,0 @@
-  코드 a9422d2e7 (HEAD) dirty=False · 봉인 지문 code_fp e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71 (CODE_FILES 32)
-  원자료 · 메시 문제 0 건
-  기대 망 세대 (expected_network_generation — 이 체크아웃의 봉인 코드에서 유도): 'g2' · 세대 계약 문제 0 · 모드 ['hertz', 'physics', 'hertz_h12']
-  전이 의존 닫힘 5 모듈 ⊆ 봉인 CODE_FILES 32 — ✓
-  지연 import 분류 — 봉인 파일의 함수 안 리포 import 3 · 분류 밖 0 — ✓
-  fork · 프로세스 풀 API (봉인 경로 — 관측 영수증 밖 · G2RR4-02) 0 줄 — ✓
-  입력 지문 (ID · 코호트 · 원자료 sha256 = 수확 JSON raw) — 케이스 20 · ids_sha256 991cf1150b183f64bc69926a8b3e7c05453ec47e13b89ba3a6ad2fd2c981c694 · raw_sha256_table_sha256 a7aaa3c8c7683f1835a096acb83ecdb055eaf5f129221f7067c5f34462807d0e · 원자료 sha 결손 0
-  ⚠ Codex 세대 2 재검증 2 (10-07) = HOLD — 새 194 생산 · v1.3 인계는 Codex GO · 1저자 발사 승인 뒤 (등록 docs/reviews/lhs_network_batch_registration_20261007_g2.md).  이 실행기는 그 판정을 대신하지 않는다 — 어느 코드 · 세대로 돌았는지는 manifest.json 이 증명한다.

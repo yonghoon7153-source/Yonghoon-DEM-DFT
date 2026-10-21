@@ -1,0 +1,12 @@
+(0.5, 20.0, 1.5, 3.0, 12, [{'rj': '6720.0', 'ok': False, 'reused': False}, {'rj': '6440.0', 'ok': True, 'reused': False}])
+(0.5, 20.0, 1.5, 3.25, 11, [{'rj': '11800.0', 'ok': False, 'reused': False}, {'rj': '11400.0', 'ok': True, 'reused': False}])
+(0.5, 20.0, 1.5, 3.375, 11, [{'rj': '16200.0', 'ok': False, 'reused': False}, {'rj': '15300.0', 'ok': True, 'reused': False}])
+(0.5, 20.0, 1.5, 3.5, 11, [{'rj': '21200.0', 'ok': False, 'reused': False}, {'rj': '20400.0', 'ok': True, 'reused': False}])
+(0.5, 20.0, 1.5, 3.75, 11, [{'rj': '37400.0', 'ok': False, 'reused': False}, {'rj': '36100.0', 'ok': True, 'reused': False}])
+(0.5, 20.0, 1.5, 3.875, 11, [{'rj': '51300.0', 'ok': False, 'reused': False}, {'rj': '48300.0', 'ok': True, 'reused': False}])
+(0.5, 20.0, 1.5, 4.0, 11, [{'rj': '67200.0', 'ok': False, 'reused': False}, {'rj': '64400.0', 'ok': True, 'reused': False}])
+(0.5, 20.0, 1.5, 4.25, 11, [{'rj': '118000.0', 'ok': False, 'reused': False}, {'rj': '114000.0', 'ok': True, 'reused': False}])
+(0.5, 20.0, 1.5, 4.375, 11, [{'rj': '162000.0', 'ok': False, 'reused': False}, {'rj': '153000.0', 'ok': True, 'reused': False}])
+(0.5, 20.0, 1.5, 4.5, 11, [{'rj': '212000.0', 'ok': False, 'reused': False}, {'rj': '204000.0', 'ok': True, 'reused': False}])
+290
+rc=0 seconds=0

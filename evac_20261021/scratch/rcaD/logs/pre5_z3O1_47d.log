@@ -1,0 +1,6 @@
+
+── O 끈 경로 비트 대조 (--old-scripts = 기반 커밋 scripts/)
+  PASS  O1 (ii) face_alpha 만 (접합 끔) — 기반 코드 ↔ 새 코드 σ · n_dof · cg_info · resid · face_alpha 기록 비트 같음
+
+test_ca_ext_z3: 1 PASS · 0 FAIL (1.4 s)
+rc=0 seconds=2

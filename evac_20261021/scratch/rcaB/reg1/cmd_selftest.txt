@@ -1,0 +1,142 @@
+  PASS  L-K1: 킷 목록이 인자화돼 있다
+  PASS  L-K2: 루프가 그 변수를 쓴다 (하드코딩 잔재 없음)
+  PASS  L-K3: 비-SDCP 킷이면 SDCP 봉인을 건너뛴다
+  PASS  L-K4: 기본값이 SDCP 두 킷 그대로 (기존 경로 불변)
+  PASS  L-K5: 새 축 KITS 가 프로브 격리 목록에 있다 (없으면 생산이 막힌다)
+  PASS  L-K6: 러너가 쓰는 env 축이 전부 격리 목록에 있다 (다음 세대 손잡이 표 포함)
+  PASS  N-1: 리포의 킷 생성기가 지금 통과한다
+  PASS  N-2: 하드코딩 라벨을 되살리면 잡는다 (반례)
+  PASS  N-3: QS 를 조립하고도 안 찍으면 잡는다 (반례)
+  PASS  N-4: 검사가 공허하지 않다 — 대상에 QS 조립부가 실재한다
+  PASS  N-5: 결함을 설명하는 **주석**은 통과한다 (검사가 문서화를 벌하지 않는다)
+  PASS  O-1: 원고·빌더 산문이 지금 통과한다
+  PASS  O-2: 영국식(fibres · voxelisation · idealised)을 넣으면 잡는다 (반례)
+  PASS  O-3: US 로 유효한 낱말은 안 잡는다 (analyses · organism · characteristic · emphasis · realistic)
+  PASS  O-4: 백틱 안의 코드 식별자는 안 잡는다 (`--fibre-buckle` · `fibre_stamp`)
+  PASS  A: 프로브가 6-face 를 거동으로 읽는다
+  PASS  A: 프로브가 26-conn 을 거동으로 읽는다
+  PASS  A: 프로브는 독스트링 경고에 흔들리지 않는다 (v1 오탐 해소)
+  PASS  F: import 보다 앞에서 쓴 이름을 잡는다 (실사고 재현)
+  PASS  F: 앞에서 일반 대입된 이름은 **오탐하지 않는다** (첫 판이 12건 오탐했다)
+  PASS  F: 그래도 대입↔import 충돌은 경고로 남긴다
+  PASS  F: 정상 순서는 통과 (과잉차단 아님)
+  PASS  F: 생산 파일이 현재 깨끗하다 (회귀 방지)
+  PASS  A: 등록부를 비우면 오류 (v1 은 통과했다)
+  PASS  A3: 선언 6-face ↔ 거동 26-conn 이면 오류
+  PASS  A3: label_fn 이 26-conn 인데 6-face 로 선언 → 오류
+  PASS  A3: label_fn 이 6-face 이고 선언도 6-face → 통과
+  PASS  A3: label_fn/label_site 가 아예 없으면 오류 (검증되지 않는 선언)
+  PASS  A3: label_fn 이 안 불러와지면 fail-closed (warn 아님)
+  PASS  A3: 프로브가 unknown 이면 fail-closed
+  PASS  A3: AST 가 econn 의 26-conn 을 읽는다
+  PASS  A3: AST 가 STEP3 솔버의 6-face 를 읽는다
+  PASS  A3: AST 대조가 틀린 선언을 잡는다 (econn 을 6-face 로 선언)
+  PASS  A3: 없는 함수를 가리키면 fail-closed
+  PASS  A3: 진단이 import 안 되면 오류 (v2 는 SOLVERS 만 봤다)
+  PASS  B: 동상 대각은 판별력 있다
+  PASS  B: ★스태거 대각(k=2)을 거부 — v1 의 핵심 구멍
+  PASS  B: rung 을 비우면 오류 (v1 은 통과했다)
+  PASS  B: rung 실행 실패가 오류 (v1 은 warns 였다)
+  PASS  C: 원본 CL-01 형태를 거부
+  PASS  C: ★표기만 바꾼 우회(공백)도 거부
+  PASS  C: ★표기만 바꾼 우회(마침표)도 거부
+  PASS  C: ★표기만 바꾼 우회(전각)도 거부
+  PASS  C: 0 vs 0.0 도 같은 예측으로 본다
+  PASS  C: ★분해능 아래 차이를 거부 (E_SE 1.35≡1.5 형태)
+  PASS  C: ★상보 부등호(< X vs >= X)는 판별적 — 과잉차단 안 함 (CL-10 때 발생)
+  PASS  C: ★구간 겹침을 거부
+  PASS  C·D: ★★같은 실패를 새 id·live 로 재발시켜도 거부 (v1 의 가장 위험한 구멍)
+  PASS  D: 세는 양 패턴이 se_se_cn·f_perc·plugged_frac 을 잡는다
+  PASS  D: 귀결을 verdict 로 옮겨도 스캔된다
+  PASS  D: bridge="." 같은 빈 다리는 인정 안 한다
+  PASS  D: ★검증-귀결 어휘는 shared_input 을 요구한다 (S4 흡수)
+  PASS  E: ★량 범주 오류를 거부 (K vs 영률)
+  PASS  C-8: 규약 기록은 h0/h1 없이 provenance 로 통과 (과잉차단 해소)
+  PASS  D-6: parity_certified 는 합법적 bridge 다 (동어반복 요구 해소)
+  PASS  py38: unparse 없이도 같은 소스 복원 ('np.ones((3, 3, 3), bool)')
+  PASS  py38: 모르는 노드는 추측하지 않고 <Type> 로 남긴다 (fail-closed 유지)
+  PASS  G-0: 기준 픽스처는 통과한다 (G 시험의 전제)
+  PASS  G-1: superseded_by + live 는 거부 (CL-20 이 이 상태로 통과했었다)
+  PASS  G-2: superseded_by + retired 는 통과 (과잉차단 없음)
+  PASS  G-3: superseded_by 없는 live 는 그대로 통과
+  PASS  H-1: 홑 `%` 가 든 help 는 거부 (argparse 가 실제로 죽는 형태)
+  PASS  H-2: `%%` 와 `%(default)s` 는 통과 (과잉차단 없음)
+  PASS  H-3: 리포 전체가 지금 통과한다 (0 오류)
+  PASS  K-1: 리포가 지금 통과한다 (7개 전부 두 곳에 배선)
+  PASS  K-2: ★ 음성 대조 — check_all 에서 한 줄 빼면 **잡는다** (1건)
+  PASS  K-3: ★ 음성 대조 — CI yml 에서 빼도 **잡는다** (드리프트 금지)
+  PASS  K-4: ★ 목록에 있는 selftest 가 **실재하는 파일**이다 (선언만 있고 파일이 없으면 규칙 K 자신이 가짜 보증이 된다)
+  PASS  K-5: ★★ 죽은 줄 18종을 배선으로 세지 않는다 (통과한 것: [])
+  PASS  K-6: ★ 진짜 호출 3종은 받아들인다 (거부된 것: [])
+  PASS  K-7: ★★ **검사기가** 주석+echo 만 남은 check_all 을 거부한다 (helper 직접 호출이 아니라 `check_selftest_wiring` 자신) — 호출부를 옛 부분문자열로 되돌리면 여기서 빨간불 (1건)
+  PASS  L-1: 리포의 러너가 지금 통과한다 (LEAN·EXPECT_PROTOCOL·PREREG_ARMS·진단분리)
+  PASS  L-1b: ★ 러너에 **없는** 변수를 조립 줄에 넣으면 프로브가 죽는다 (오타 검출력 유지 — 자동 seed 가 덮지 않는다)
+  PASS  L-1c: ★★ 러너가 **대입하는** 새 축은 seed 목록을 안 고쳐도 통과한다 (SBRG·RQG 에서 두 번 난 부류의 재발 방지)
+  PASS  L-1d: ★ 알려진 한계 — 죽은 가지의 대입도 자동 seed 된다 (제어흐름 미인식).  이 시험은 그 사실을 **고정**한다: 통과하면 한계가 그대로, 실패하면 누군가 제어흐름 인식을 넣었다는 뜻이니 이 주석을 지울 것 (Codex R7 Q4b)
+  PASS  L-1e: ★★ 조립 줄의 FLAG 15개가 전부 **무조건 대입**을 갖는다 (15개) — 조건부 대입만 있으면 조건이 거짓일 때 러너가 죽는다
+  PASS  L-1f: ★★ 한 줄에 `TAG=""; FLAG=""` 로 적어도 자동 seed 가 **뒤엣것을 본다** (줄머리 앵커가 FLAG 를 먼저 적는 우연한 순서에 기대고 있었다)
+  PASS  L-1g: ★ 참조 추출이 `${VAR}` 중괄호 꼴을 본다 (안 보면 그 플래그가 L-1e 방어선 **밖으로 조용히** 나간다)
+  PASS  L-1h: ★★ 무조건/조건부 판별이 살아 있다 — 줄머리·`;` 뒤는 무조건, `&&`·`then` 뒤는 **조건부**로 남는다 (넓히면서 이 구분을 잃으면 L-1e 가 항상-참으로 썩는다)
+  PASS  L-1i: ★ 대입 추출이 네 꼴을 다 본다 (줄머리·`;`·`&&`·`then`) — 자동 seed 의 조건은 "러너가 **텍스트로** 대입하는가" 이므로 조건부도 포함이다
+  PASS  L-1j: ★★ 러너가 **읽지 않는** 축 env 를 받으면 죽는다 (조용히 무시되면 그 팔은 옳은 숫자를 내면서 아무것도 시험하지 않는다 — 2026-09-02 실측)
+  PASS  L-1k: ★ 러너가 **읽는** 축 env 셋은 통과한다 — 게이트가 전부를 막으면 생산이 선다
+  PASS  L-1l: ★★ 배선 **이전** 러너를 세우면 안 배선된 둘만 지목하고 죽는다 (SIGMA_VGCF_OVERRIDE 는 옛 판도 읽으므로 지목 대상이 아니다 = 가려서 문다)
+  PASS  L-1m: ★★ 사전등록 격자의 `2.5` 와 `25` 가 **다른 디렉터리**로 간다 — 같으면 러너가 기존 영수증을 맞다고 읽고 **다른 σ 의 팔을 재사용**한다 (실험 둘이 한 곳에서 섞인다)
+  PASS  L-1n: ★ 등록된 격자값 10개가 **전부 서로 다른** 디렉터리를 받는다 (10개) — 무손실 규칙의 전수 확인
+  PASS  L-2: ★ LEAN=2 에서 `--no-collector` 를 빼면 **잡는다** (1건)
+  PASS  L-3: ★★ `$EP_FLAG` 를 인자열에서 빼면 **잡는다** — 변수는 그대로 있고 **쓰이지 않을 뿐**이라 grep 으로는 안 보인다 (1건)
+  PASS  L-4: ★★ 사전등록 팔 수가 `$ARMS` 를 따라가면 **잡는다** (자기가 자기한테 요구하는 봉인) (1건)
+  PASS  L-5a ★ 조립 태그만 지우면 **강제 접미사가 막는다** (과잉차단 아님, 0건)
+  PASS  L-5: ★★ 두 겹을 **다** 지우면 잡는다 — 진단 런이 생산 OUTDIR 에 쓴다 (3건)
+  PASS  L-6: ★★ `RUNNER_CONFIG_END` 표지가 없으면 **거부**한다 (fail-closed — 어디까지가 설정인지 모르면 실행하지 않는다) (1건)
+  PASS  L-14: ★★ `echo "… --seal-only"` 안내문은 순서 증거가 아니다 (live 호출만 센다) (2건)
+  PASS  L-12: ★★ 봉인 **실패** 경로가 원값을 자동으로 찍으면 잡는다 — metadata 를 일부러 깨뜨려 raw table 을 보는 경로 (R3-CX-02) (1건)
+  PASS  L-13: ★★ 진단 런이 **사용자 OUTDIR** 을 그대로 쓰면 잡는다 — 2팔이 8팔 디렉터리에 섞인다 (R3-CX-09) (1건)
+  PASS  L-10: ★ 최종 봉인에서 `--require-digest` 를 빼면 **잡는다** (1건)
+  PASS  L-14a: OUTDIR 에 영수증 digest 가 붙는다
+  PASS  L-14b: ★★ 설정이 다르면 OUTDIR 이 **전부 다르다** (6/6 고유) — 캐시가 설정을 넘나들 수 없다 (R5-CX-03: `.30`/`.40` 이 같은 `_sph` 를 쓰던 구멍)
+  PASS  L-14c: ★★ **살아 있는** `--check-arm` 호출 4개가 전부 `--receipt` 를 넘긴다 (4개) — 안 넘기면 러너 의도와 대조가 없다 (R5-CX-03)
+  PASS  J-4a: ★★ 봉인 중 regime 라벨이 **값과 무관하게 상수**다 (R5-CX-10) — ['[봉인]']
+  PASS  J-4b: ★ 봉인이 아니면 라벨이 값을 구분한다 (진단 기능은 살아 있다)
+  PASS  L-13(변수 참조): ★★ `P2_EXTRA` 주입이 **실행으로** 거부된다 (R5-CX-01)
+  PASS  L-13(구분자): ★★ `P2_EXTRA` 주입이 **실행으로** 거부된다 (R5-CX-01)
+  PASS  L-13(명령치환): ★★ `P2_EXTRA` 주입이 **실행으로** 거부된다 (R5-CX-01)
+  PASS  L-13(개행): ★★ `P2_EXTRA` 주입이 **실행으로** 거부된다 (R5-CX-01)
+  PASS  L-13(정상 증인): 허용 축 `--step3-maxiter=99999` 는 통과
+  PASS  L-11: ★★ `P2_EXTRA` 금지 검사를 무력화하면 **잡는다** — 주의 주석은 게이트가 아니다 (1건)
+  PASS  L-8: ★★ 러너 자기설정 선언(`$XP_FLAG`)이 인자열에서 빠지면 **잡는다** — 첫 팔의 id 를 베끼면 첫 팔이 진리가 된다 (조건 4) (1건)
+  PASS  L-9: ★ 선언에서 축 하나(vox_um)를 빼면 **잡는다** (1건)
+  PASS  L-7: ★★ 원값 덤프(`--collect-only`)가 봉인보다 앞서면 **잡는다** — 결과를 보고 봉인을 통과시킬지 고를 수 있으면 눈먼 봉인이 아니다 (1건)
+  PASS  M-1: 실물 파서를 잡는다 (parse_args 가로채기)
+  PASS  M-2: helper 모듈이 등록한 옵션도 잡힌다 (--temp-c·--ea-ion-ev — 초판 AST 가 놓쳤다)
+  PASS  M-3: 리포 실물이 지금 통과한다 (79 옵션 · 규약 축 전수 도달)
+  PASS  M-4: 새 옵션이 회계 없이 생기면 → M_UNACCOUNTED
+  PASS  M-5: 파서에서 사라진 옵션이 회계에 남으면 → M_STALE
+  PASS  M-6: `protocol` 인데 규약 축에 없는 필드를 대면 → M_NOTINPROTOCOL
+  PASS  M-7: `derived` 가 없는 축을 가리켜도 → M_NOTINPROTOCOL
+  PASS  M-8: 규약 축을 아무 CLI 도 못 가리키면 → M_ORPHAN_FIELD
+  PASS  M-9: 코드 상수로 선언하면 고아가 아니다 (plate_rule 규약)
+  PASS  M-12: ★★ `protocol` 축은 producer 가 **실제로 기록**한다 (선언만 있는 축 없음)
+  PASS  M-13: ★★ 안 적히는 축을 `protocol` 로 선언하면 → M_UNWRITTEN
+  PASS  M-10: 범주 어휘 오타 → M_BADCAT
+  PASS  M-11: `--dilate-z`·`--se-proxy` 가 규약 축을 가리킨다 (A1 2차 적발)
+      · J 스모크 [plain  (--fibre 없음 = 첨가제 없는 킷)] 실행 중 … (상한 900s — 느린 기계에서는 수 분 걸린다)
+        완료 2s
+      · J 스모크 [fibre  (--phase/--fibre 있음 = 첨가제 킷)] 실행 중 … (상한 900s — 느린 기계에서는 수 분 걸린다)
+        완료 1s
+      · J 스모크 [lean2  (러너 LEAN=2 = σ_e 전용 생산 경로)] 실행 중 … (상한 900s — 느린 기계에서는 수 분 걸린다)
+        완료 1s
+  PASS  J-1: 두 팔(±--fibre)이 지금 통과한다 (STEP3 manifest 가 complete)
+      · J 스모크 [plain  (--fibre 없음 = 첨가제 없는 킷)] 실행 중 … (상한 900s — 느린 기계에서는 수 분 걸린다)
+        완료 1s
+      · J 스모크 [fibre  (--phase/--fibre 있음 = 첨가제 킷)] 실행 중 … (상한 900s — 느린 기계에서는 수 분 걸린다)
+        완료 1s
+      · J 스모크 [lean2  (러너 LEAN=2 = σ_e 전용 생산 경로)] 실행 중 … (상한 900s — 느린 기계에서는 수 분 걸린다)
+        완료 1s
+  PASS  J-2: ★ 음성 대조 — `_dia_all`/`_kind_all` hoist 를 지우면 **잡는다**
+  PASS  J-3a: ★ electronic=complete 한 줄만 적은 가짜 producer 를 J_COMPONENT 로 잡는다
+  PASS  J-3b: ★ 전부 disabled 로 적은 변형을 J_COMPONENT 로 잡는다
+  PASS  J-3d: ★★ 상태·수치가 다 있어도 **CG 증거가 없으면** 잡는다 (Codex 통과 변형)
+  PASS  J-3c: ★ 상태는 맞는데 **수치가 없는** 변형을 잡는다 (자가보고)
+
+check_method_discipline v3 selftest: 128/128 PASS

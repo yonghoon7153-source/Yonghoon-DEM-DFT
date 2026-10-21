@@ -1,0 +1,50 @@
+{
+ "diff_blocks_n": {
+  "a69963967": 2,
+  "f82929b06": 2,
+  "7f99be67c": 2
+ },
+ "diff_blocks_same_a699_f829_head": true,
+ "placeholder_in_diff": {
+  "194": 8,
+  "supp": 7
+ },
+ "placeholder_in_diff_added_lines_only": {
+  "194": 8,
+  "supp": 7
+ },
+ "apply_rc": [
+  0,
+  0
+ ],
+ "apply_err": [
+  "Checking patch docs/reviews/lhs_network_batch_registration_20261007_g2.md...\nApplied patch docs/reviews/lhs_network_batch_registration_20261007_g2.md cleanly.\n",
+  "Checking patch docs/reviews/lhs_network_batch_registration_20261012_supp20.md...\nApplied patch docs/reviews/lhs_network_batch_registration_20261012_supp20.md cleanly.\n"
+ ],
+ "194_pre_has_10-21·": 0,
+ "194_rat_has_10-21·": 8,
+ "194_rat_reverted_equals_applied": true,
+ "194_rat_to_head_changed_lines": [
+  "-- 9-9 **비준 · 변경 이력 (✅ 10-21 · 1저자 비준 · L214 개정 §9-8 · 결과 열람 뒤 정책 개정 — 10-14 실행 결과 (194 done 186 · 실패 8 · 보충 20 done 14 · 실패 6) 를 본 뒤)** — 대화 원문 ⬜ · 비준 커밋 = 이 줄을 담은 커밋 (메인 세션).",
+  "+- 9-9 **비준 · 변경 이력 (✅ 10-21 · 1저자 비준 · L214 개정 §9-8 · 결과 열람 뒤 정책 개정 — 10-14 실행 결과 (194 done 186 · 실패 8 · 보충 20 done 14 · 실패 6) 를 본 뒤)** — 대화 원문 = 1저자 10-21 (06:10 UTC · 메인 세션) 이 질문 *\"[LHS] Q1. 보충 영수증 selftest S0b (121/122) 를 비준 커밋 전에 작은 코드 커밋으로 고칩니다. 시험 먼저 쓰고, 고친 뒤 비준 커밋을 만들고 Codex 확인 요청서를 정리합니다. 발송은 1저자가 합니다.\"* 에 *\"다 진행하자\"* · 비준 커밋 = `f82929b06` (메인 세션 · 묶음 §1-4 diff 를 날짜 자리만 채워 넣음) · 이 대화 원문은 같은 날 뒤 커밋에서 채움."
+ ],
+ "194_sha256": {
+  "34713ac96": "7fd158cb5b130e2150e58e5938c92b80731fc3292ef8e363346adfc2b62e1699",
+  "fe23f2b83": "7fd158cb5b130e2150e58e5938c92b80731fc3292ef8e363346adfc2b62e1699",
+  "f82929b06": "2c3ed36f97aa7ec8b0c377cfe3c07093b7902cb552f7bdc3da6a607659303114",
+  "7f99be67c": "4a3695e48a9deb982c3793a7e678415492a5012d76b020932d9e18e1f86da205"
+ },
+ "supp_pre_has_10-21·": 0,
+ "supp_rat_has_10-21·": 7,
+ "supp_rat_reverted_equals_applied": true,
+ "supp_rat_to_head_changed_lines": [
+  "-- 9-4 **비준 · 변경 이력 (✅ 10-21 · 1저자 비준 · L214 개정 §9-3 · 결과 열람 뒤 정책 개정 — 10-14 실행 결과 (done 14 · 실패 6) 를 본 뒤)** — 194 등록 §9-9 와 같은 비준 · 대화 원문 ⬜.",
+  "+- 9-4 **비준 · 변경 이력 (✅ 10-21 · 1저자 비준 · L214 개정 §9-3 · 결과 열람 뒤 정책 개정 — 10-14 실행 결과 (done 14 · 실패 6) 를 본 뒤)** — 194 등록 §9-9 와 같은 비준 · 대화 원문 = 194 등록 §9-9 와 같음 (1저자 10-21 *\"다 진행하자\"* — [LHS] Q1 에 대해) · 비준 커밋 = `f82929b06` (묶음 §1-5 diff · 날짜 자리만 채움) · 이 대화 원문은 같은 날 뒤 커밋에서 채움."
+ ],
+ "supp_sha256": {
+  "34713ac96": "b2389709695cf3e94095a1855014b44868914362d112e5e0e29d084fc9e11032",
+  "fe23f2b83": "b2389709695cf3e94095a1855014b44868914362d112e5e0e29d084fc9e11032",
+  "f82929b06": "7cad47d191445bb6adb4ae0c6aeebd4fb147c2ce3824792f365b47f8ebfd8397",
+  "7f99be67c": "a154beceb8736b3bebc0399bdb75db42e83026f637881e7bd14d1c0187152c52"
+ }
+}

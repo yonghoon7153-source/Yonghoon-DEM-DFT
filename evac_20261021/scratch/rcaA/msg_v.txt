@@ -1,0 +1,11 @@
+Rint 2 S2 RCA-05 evidence validator: bind sub-edge count to len_mult_max
+
+ca_ext_cjunc.cjunc_block_problem: n_instances 0 -> len_mult_max must be None; otherwise
+len_mult_max must be a finite float >= 1 (bool / string / NaN / < 1 / missing rejected) and
+len_mult_max == 1 <=> n_subedges == n_instances (same threshold as carbon_junction._n_sub).
+
+Pre-fix (parent = tests-first commit): test_carbon_junction --quick 224/231 (fails = 7 checks from
+2 counterexample families).  After: 231/231; test_ca_ext_b6 161/161; test_ca_ext_z3 84/84.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

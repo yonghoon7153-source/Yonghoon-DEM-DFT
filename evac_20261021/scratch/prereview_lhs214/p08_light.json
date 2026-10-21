@@ -1,0 +1,60 @@
+{
+ "env": {
+  "python": "3.11.15",
+  "numpy": "2.4.6",
+  "scipy": "1.17.1",
+  "networkx": "3.6.1"
+ },
+ "pkg_sha256_same": {
+  "scripts/lhs_design_dataset.py": true,
+  "scripts/g2_network_reread.py": true,
+  "scripts/lhs_release_build.py": true,
+  "scripts/run_network_194_parallel.py": true,
+  "scripts/wsl_network_smoke.py": true
+ },
+ "handover_files": [
+  "scripts/lhs_design_dataset.py",
+  "scripts/g2_network_reread.py"
+ ],
+ "doc_commits_34713..HEAD": {
+  "docs/reviews/lhs_network_batch_registration_20261007_g2.md": [
+   "7f99be67c LHS214 relaunch: main SHAs in the check request, bundle counts 123/123, verbatim ratification quote, ledger SUPR-03",
+   "f82929b06 Ratify the L214 amendment in the 194 and supp20 registrations (relaunch package 1-4 and 1-5, dated 10-21)"
+  ],
+  "docs/reviews/lhs_network_batch_registration_20261012_supp20.md": [
+   "7f99be67c LHS214 relaunch: main SHAs in the check request, bundle counts 123/123, verbatim ratification quote, ledger SUPR-03",
+   "f82929b06 Ratify the L214 amendment in the 194 and supp20 registrations (relaunch package 1-4 and 1-5, dated 10-21)"
+  ]
+ },
+ "tool_commits_34713..HEAD": [
+  "fe23f2b83 supp20 receipt selftest S0b: expect the state-designated seal fingerprint, not hard-coded prefixes"
+ ],
+ "pre_doc_receipt": {
+  "rc": 1,
+  "bad": [
+   "D1"
+  ],
+  "n": 11,
+  "D1": {
+   "now": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+   "registered": "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71",
+   "pending": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+  },
+  "values": {
+   "code_fp": "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71",
+   "pending": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+  },
+  "probs": []
+ },
+ "closure": {
+  "n": 30,
+  "outside": [],
+  "errors": []
+ },
+ "lazy": {
+  "n": 92,
+  "unclassified": [],
+  "stale": []
+ },
+ "fork": []
+}

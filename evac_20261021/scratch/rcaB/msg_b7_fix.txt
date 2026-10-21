@@ -1,0 +1,42 @@
+STEP3 certificate to run binding: grid and plan fingerprints vs the manifest (pre-review PRE-impl-07)
+
+Every main-solve certificate (positive, matrix-graph zero, early-return
+zero, not-certifiable; the SV counterfactual's diagnostic certificate
+inside the junction record is unchanged) now carries the solve input
+fingerprints
+(step3_conv_cert.bind_record, version cert-bind-v1): grid fp_sid and
+sigma table fp_sig (step3_sigma._grid_fp), the face_alpha plan
+fingerprint fp_face_plan (fp_plan, which covers sigma table, pid,
+capsules and rows), and the carbon junction registry / plan row
+fingerprints.  The solver takes them from the plans it already
+verified at its entrance (require_plan, cjunc_require_quantitative).
+
+run_contract.conv_cert_problem(cert, sigma, man, channel) now requires
+the run manifest (no default: there is no call path that silently skips
+the binding) and, after the internal checks pass, calls
+cert_binding_problem: the certificate grid fingerprint must equal the
+manifest's canonical grid field (junction registry sid, else face_alpha
+sid_off; neither = refused), the face_alpha plan fingerprint must equal
+plan_<channel>, the junction fingerprints must equal registry /
+plan_rows for the main electronic solve and be None for the ionic one;
+all fingerprints lowercase hex 32.  The consistency of sid and sid_off
+in a combination run stays with ca_ext_cjunc.cjunc_block_problem (the
+chain keeps its CA_EXT_RECORD / SID_GRID stop codes).
+next_gen_cert_ok passes the manifest and the channel.
+
+Qualifiers (in the docstrings): the sigma table is bound to the manifest
+only through the face_alpha plan; junction-only runs (off, centerline)
+record fp_sig but the manifest has no field to compare it with.  There is
+no system (L, b) fingerprint: the binding reaches the solve inputs.
+
+Same-class addition from the self attack review: a junction manifest
+whose registry is None is refused even when the certificate also says
+None (T21j).
+
+post-fix fast 252/252 (pre-fix 213/252 with the final test file:
+39 fails = 30 checks from the PRE-impl-07 counterexample and its
+same-class variants, 4 recorded-field checks, 4 base-comparison checks,
+1 mutation-anchor check)
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

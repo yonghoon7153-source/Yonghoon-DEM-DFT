@@ -1,0 +1,767 @@
+{
+ "ULPR02_out_of_rf_reason_removed": {
+  "file": "ul_reader.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_reader": {
+    "rc": 1,
+    "n_ok": 211,
+    "n_fail": 1,
+    "fails": [
+     "R33 ULPR-02 승인된 RESUME 바로 뒤에 러너 resume_from 밖 step (s_r + 1) 의 RESUME 한 줄 (사건 되감기 · 행 교체에는 걸리지 않는 자리) → 사유 (∉ 러너 resume_from) · 주 값 미식별 · UVa 거부 (그 사유 줄이 없으면 OK"
+    ],
+    "last": [
+     "selftest: FAIL (1 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {
+   "R33 ULPR-02 승인된 RESUME 바로 뒤에 러너 resume_from 밖": true
+  },
+  "must_pass_ok": {
+   "R33 대조": true
+  },
+  "killed": true,
+  "as_expected": true
+ },
+ "ULPR02_nonnumeric_reason_removed": {
+  "file": "ul_reader.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_reader": {
+    "rc": 1,
+    "n_ok": 211,
+    "n_fail": 1,
+    "fails": [
+     "R33 ULPR-02 승인된 RESUME 바로 뒤에 k 숫자 아닌 RESUME (RESUME,x,s_r) → 사유 (k · step 숫자 아님) · 주 값 미식별 · UVa 거부 (그 사유 줄이 없으면 허용)  —"
+    ],
+    "last": [
+     "selftest: FAIL (1 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {
+   "R33 ULPR-02 승인된 RESUME 바로 뒤에 k 숫자 아닌": true
+  },
+  "must_pass_ok": {
+   "R33 대조": true
+  },
+  "killed": true,
+  "as_expected": true
+ },
+ "ULPR02_state_mismatch_reason_removed": {
+  "file": "ul_reader.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_reader": {
+    "rc": 1,
+    "n_ok": 211,
+    "n_fail": 1,
+    "fails": [
+     "R33 ULPR-02 상태 파일 ul_k 0 ≠ RESUME 사건 k 1 → 사유 = 사건 ↔ 상태 파일 불일치 (≠ 상태 파일 — 행 교체 쪽 ULKRR-02 사유만으로 통과하지 않는다) · UVa 거부  —"
+    ],
+    "last": [
+     "selftest: FAIL (1 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {
+   "R33 ULPR-02 상태 파일 ul_k 0": true
+  },
+  "must_pass_ok": {
+   "R33 대조": true
+  },
+  "killed": true,
+  "as_expected": true
+ },
+ "ULPR02_rewind_k_condition_removed": {
+  "file": "ul_reader.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_reader": {
+    "rc": 1,
+    "n_ok": 211,
+    "n_fail": 1,
+    "fails": [
+     "R33 ULPR-02 사건 되감기 — RESUME 앞 경계 뒤 사건의 k 가 k_r (1) → 버릴 사건 k > k_r 아님 → 그 사건을 버리지 않는다 · 사유 · 주 값 미식별 · UVa 거부 (그 조건이 없으면 그 사건을 버리고 OK · 허용)  —"
+    ],
+    "last": [
+     "selftest: FAIL (1 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {
+   "R33 ULPR-02 사건 되감기": true
+  },
+  "must_pass_ok": {
+   "R33 대조": true
+  },
+  "killed": true,
+  "as_expected": true
+ },
+ "ULPR02_kit_sums_reader_line_check_removed": {
+  "file": "ul_reader.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_reader": {
+    "rc": 1,
+    "n_ok": 211,
+    "n_fail": 1,
+    "fails": [
+     "R36 ULPR-02 그 런 kit 사본 판독기 = 봉인 바이트 그대로인데 그 런 kit SHA256SUMS 의 판독기 줄만 다른 값 (sums_sha256 맞춤 · 사전 리뷰 Q3a) → 목록 대조로 재판독하지 않고 사전 점검 거부 (사유 = 그 런 kit SHA256SUMS 의 re"
+    ],
+    "last": [
+     "selftest: FAIL (1 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {
+   "R36 ULPR-02 그 런 kit 사본 판독기": true
+  },
+  "must_pass_ok": {
+   "R36 Q3 양성": true
+  },
+  "killed": true,
+  "as_expected": true
+ },
+ "ULPR02_reread_rc_check_removed": {
+  "file": "ul_reader.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_reader": {
+    "rc": 1,
+    "n_ok": 211,
+    "n_fail": 1,
+    "fails": [
+     "R36 ULPR-02 재판독 프로세스 rc ≠ 0 — 판독기가 PASS 판정 JSON (검사 19 참 · exit_code 0) 을 쓰고 rc 3 으로 끝남 → 재판독 문제 (rc 3 · 사유) · 같은 판독기 rc 0 = 문제 없음 (rc 조건만 다르다 · 그 조건이 없으면 rc 3 "
+    ],
+    "last": [
+     "selftest: FAIL (1 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {
+   "R36 ULPR-02 재판독 프로세스 rc": true
+  },
+  "must_pass_ok": {
+   "R36 Q3 양성": true
+  },
+  "killed": true,
+  "as_expected": true
+ },
+ "ULPR01_no_evidence_drop_off": {
+  "file": "ul_reader.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_reader": {
+    "rc": 1,
+    "n_ok": 209,
+    "n_fail": 3,
+    "fails": [
+     "R37 ULPR-01 옛 시도 = 단 k 4 창 넷 · 단 줄 · RM 사건 뒤 요약 전 끊김 → RESUME (k 3 · s_r) → 새 시도가 단 k 4 로 이동 중 TIMEOUT (새 창 없음 · 옛 판 = 옛 창 넷 · 단 줄 그대로 OK) → 옛 단 줄 · 창 · 사건을 쓰지 ",
+     "R37 ULPR-01 교차 전 단 — 옛 시도 = 단 k 3 창 넷 · 단 줄 (사건 없는 단) 뒤 끊김 → RESUME (k 2) → 새 시도 이동 중 끝 (새 창 · 사건 없음 — 경계 뒤 줄이 어느 시도 것인지 기록으로 가를 수 없다) → 그 단 줄을 쓰지 않는다 = fresh 하",
+     "R37 시도 미확정 = 쓰지 않는다 (보수): 같은 꼴에서 단 끝 상태 파일 · 사건 · 경계 뒤 다른 단 · 창 역행이 없다 (단 줄 → restart 사이 끊김 — 옛 · 새 어느 시도 줄인지 기록으로 가를 수 없다) → 경계 뒤 줄 (창 넷 · 단 줄) 을 쓰지 않는다 = 단 k "
+    ],
+    "last": [
+     "selftest: FAIL (3 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {
+   "R37 ULPR-01 옛 시도 = 단 k 4 창 넷 · 단 줄 · RM 사건 뒤 요약 전 끊김 → RESUME (k 3 · s_r) → 새 시도가 단 k 4 로 이동 중": true,
+   "R37 ULPR-01 교차 전 단 — 옛 시도 = 단 k 3 창 넷 · 단 줄 (사건 없는 단) 뒤 끊김 → RESUME (k 2) → 새 시도 이동 중 끝": true,
+   "R37 시도 미확정": true
+  },
+  "must_pass_ok": {
+   "R37 대조": true,
+   "R37 양성 대조": true,
+   "R28 양성 대조": true,
+   "R33 대조": true,
+   "R34 대조": true,
+   "R34 ULKRF-02 같은 길이": true,
+   "R10 ": true
+  },
+  "killed": true,
+  "as_expected": true
+ },
+ "ULPR01_old_holdend_proof_off": {
+  "file": "ul_reader.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_reader": {
+    "rc": 1,
+    "n_ok": 211,
+    "n_fail": 1,
+    "fails": [
+     "R37 ULPR-01 옛 단 줄 (n_windows 4) 이 옛 창 둘만 남긴 손상 기록 · RM 사건 → 새 시도 창 넷 뒤 TIMEOUT (단 줄이 새 창과 맞고 옛 창과는 다르다) → 버린 옛 단 끝 사건 (같은 k · step) = 옛 시도 단 줄 → 쓰지 않는다 = fresh "
+    ],
+    "last": [
+     "selftest: FAIL (1 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {
+   "R37 ULPR-01 옛 단 줄 (n_windows 4)": true
+  },
+  "must_pass_ok": {
+   "R37 대조": true,
+   "R37 양성 대조": true,
+   "R28 양성 대조": true,
+   "R33 대조": true,
+   "R34 대조": true,
+   "R34 ULKRF-02 같은 길이": true,
+   "R10 ": true
+  },
+  "killed": true,
+  "as_expected": true
+ },
+ "ULPR01_ambiguous_line_kept": {
+  "file": "ul_reader.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_reader": {
+    "rc": 1,
+    "n_ok": 211,
+    "n_fail": 1,
+    "fails": [
+     "R37 ULPR-01 교차 전 단 — 옛 시도 = 단 k 3 창 넷 · 단 줄 (사건 없는 단) 뒤 끊김 → RESUME (k 2) → 새 시도 옛 시도와 같은 창 넷 (사건 없는 단 — 단 줄이 어느 시도 것인지 기록으로 가를 수 없다) → 그 단 줄을 쓰지 않는다 = fresh 하한"
+    ],
+    "last": [
+     "selftest: FAIL (1 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {
+   "R37 ULPR-01 교차 전 단 — 옛 시도 = 단 k 3 창 넷 · 단 줄 (사건 없는 단) 뒤 끊김 → RESUME (k 2) → 새 시도 옛 시도와 같은 창 넷": true
+  },
+  "must_pass_ok": {
+   "R37 대조": true,
+   "R37 양성 대조": true,
+   "R28 양성 대조": true,
+   "R33 대조": true,
+   "R34 대조": true,
+   "R34 ULKRF-02 같은 길이": true,
+   "R10 ": true
+  },
+  "killed": true,
+  "as_expected": true
+ },
+ "ULPR01_old_windows_only_drop_off": {
+  "file": "ul_reader.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_reader": {
+    "rc": 1,
+    "n_ok": 211,
+    "n_fail": 1,
+    "fails": [
+     "R37 ULPR-01 교차 전 단 — 옛 시도 = 단 k 3 창 넷 · 단 줄 (사건 없는 단) 뒤 끊김 → RESUME (k 2) → 새 시도 창 둘 (옛 판 = 옛 단 줄로 하한 0.27014371645715524 %) → 그 단 줄을 쓰지 않는다 = fresh 하한 그대로 (LOW"
+    ],
+    "last": [
+     "selftest: FAIL (1 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {
+   "R37 ULPR-01 교차 전 단 — 옛 시도 = 단 k 3 창 넷 · 단 줄 (사건 없는 단) 뒤 끊김 → RESUME (k 2) → 새 시도 창 둘": true
+  },
+  "must_pass_ok": {
+   "R37 대조": true,
+   "R37 양성 대조": true,
+   "R28 양성 대조": true,
+   "R33 대조": true,
+   "R34 대조": true,
+   "R34 ULKRF-02 같은 길이": true,
+   "R10 ": true
+  },
+  "killed": true,
+  "as_expected": true
+ },
+ "ULPR01_consistency_check_off": {
+  "file": "ul_reader.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_reader": {
+    "rc": 1,
+    "n_ok": 211,
+    "n_fail": 1,
+    "fails": [
+     "R37 ULPR-01 경계 뒤 단 줄 ↔ 그 단 창 기록 (n_windows · w 1 … n · 마지막 창 step) — 새 시도 단 k 3 의 창 w 2 줄 빠짐 → 시도 섞임 · 결손 = 주 값 미식별 (사유 ULPR-01) · UVa 거부  — primary=OK rho=0.20"
+    ],
+    "last": [
+     "selftest: FAIL (1 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {
+   "R37 ULPR-01 경계 뒤 단 줄 ↔ 그 단 창 기록": true
+  },
+  "must_pass_ok": {
+   "R37 대조": true,
+   "R37 양성 대조": true,
+   "R28 양성 대조": true,
+   "R33 대조": true,
+   "R34 대조": true,
+   "R34 ULKRF-02 같은 길이": true,
+   "R10 ": true
+  },
+  "killed": true,
+  "as_expected": true
+ },
+ "ULPR01_state_file_evidence_off": {
+  "file": "ul_reader.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_reader": {
+    "rc": 1,
+    "n_ok": 211,
+    "n_fail": 1,
+    "fails": [
+     "R37 양성 대조: 사건 없는 단 — 옛 시도 이동 중 끊김 → 새 시도가 단 k 2 를 끝내고 단 끝 restart · 상태 파일 (state_unload_<그 단 끝>) 뒤 k 3 이동 중 끝 (상태 파일 = 새 시도가 그 단 줄을 썼다) → 단 줄 그대로 · fresh 와 같은 하"
+    ],
+    "last": [
+     "selftest: FAIL (1 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {
+   "R37 양성 대조: 사건 없는 단": true
+  },
+  "must_pass_ok": {
+   "R37 대조": true,
+   "R28 양성 대조": true,
+   "R33 대조": true
+  },
+  "killed": true,
+  "as_expected": true
+ },
+ "ULPR01_new_holdend_proof_off": {
+  "file": "ul_reader.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_reader": {
+    "rc": 1,
+    "n_ok": 211,
+    "n_fail": 1,
+    "fails": [
+     "R37 양성 대조: 옛 시도 = 단 k 4 창 넷 (단 줄 전 · 다섯째 창 중 끊김) → 새 시도 = 창 넷 · 단 줄 · RM 사건 · 요약 (단 줄 ↔ 창이 옛 · 새 둘 다와 맞는다 — RESUME 뒤 새 시도 RM 사건 (그 단 끝 사건 · 같은 k · step) = 새 시도 "
+    ],
+    "last": [
+     "selftest: FAIL (1 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {
+   "R37 양성 대조: 옛 시도 = 단 k 4 창 넷 (단 줄 전": true
+  },
+  "must_pass_ok": {
+   "R37 대조": true,
+   "R28 양성 대조": true,
+   "R33 대조": true
+  },
+  "killed": true,
+  "as_expected": true
+ },
+ "ULPR01_later_stage_evidence_off": {
+  "file": "ul_reader.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_reader": {
+    "rc": 1,
+    "n_ok": 211,
+    "n_fail": 1,
+    "fails": [
+     "R37 양성 대조: 새 시도 증거 = 경계 뒤 단 k 3 창 (k ≥ k_r + 2 — 옛 시도는 단 k_r + 1 줄만 남길 수 있다) · 단 끝 상태 파일 · 사건 없음 (지워진 restart 폴더 꼴) → 단 k 2 단 줄 그대로 = fresh 와 같은 하한 (k 2) · 남긴 줄"
+    ],
+    "last": [
+     "selftest: FAIL (1 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {
+   "R37 양성 대조: 새 시도 증거 = 경계 뒤 단 k 3 창": true
+  },
+  "must_pass_ok": {
+   "R37 대조": true,
+   "R28 양성 대조": true,
+   "R33 대조": true
+  },
+  "killed": true,
+  "as_expected": true
+ },
+ "ULPR01_contradiction_off": {
+  "file": "ul_reader.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_reader": {
+    "rc": 1,
+    "n_ok": 211,
+    "n_fail": 1,
+    "fails": [
+     "R37 ULPR-01 모순 (옛 창 사건만 · 옛 창 기록 없음): RESUME 앞 경계 뒤 옛 창 사건 (단 k 4 창 2 의 step · 단 끝 사건 아님 — 단 줄 증명과 무관) 이 있는데 옛 시도 창이 없다 (창 역행 없음) · 새 시도가 단 k 4 를 끝까지 (창 넷 · 단 줄"
+    ],
+    "last": [
+     "selftest: FAIL (1 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {
+   "R37 ULPR-01 모순": true
+  },
+  "must_pass_ok": {
+   "R37 대조": true,
+   "R37 양성 대조": true,
+   "R28 양성 대조": true,
+   "R33 대조": true,
+   "R34 대조": true,
+   "R34 ULKRF-02 같은 길이": true,
+   "R10 ": true
+  },
+  "killed": true,
+  "as_expected": true
+ },
+ "ULPR01_whole_tail_pass_off": {
+  "file": "ul_reader.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_reader": {
+    "rc": 1,
+    "n_ok": 200,
+    "n_fail": 12,
+    "fails": [
+     "R37 ULPR-01 옛 시도 = 단 k 4 창 넷 · 단 줄 · RM 사건 뒤 요약 전 끊김 → RESUME (k 3 · s_r) → 새 시도가 단 k 4 창 둘 뒤 TIMEOUT (옛 판 = OK ρ 0.2026… · UVa 허용) → 옛 단 줄 · 창 · 사건을 쓰지 않는다 = 같",
+     "R37 ULPR-01 옛 시도 = 단 k 4 창 넷 · 단 줄 · RM 사건 뒤 요약 전 끊김 → RESUME (k 3 · s_r) → 새 시도가 단 k 4 창 둘 뒤 GUARD (요약 GUARD · 옛 판 = OK · UVa 허용) → 옛 단 줄 · 창 · 사건을 쓰지 않는다 = 같은",
+     "R37 ULPR-01 옛 시도 = 단 k 4 창 넷 · 단 줄 · RM 사건 뒤 요약 전 끊김 → RESUME (k 3 · s_r) → 새 시도가 단 k 4 로 이동 중 TIMEOUT (새 창 없음 · 옛 판 = 옛 창 넷 · 단 줄 그대로 OK) → 옛 단 줄 · 창 · 사건을 쓰지 ",
+     "R37 ULPR-01 옛 시도 = 단 k 4 창 넷 · 단 줄 · RM 사건 뒤 요약 전 끊김 → RESUME (k 3 · s_r) → 새 시도가 옛 시도와 같은 창 수 (넷) 뒤 단 줄 전 TIMEOUT (단 줄 ↔ 창 수 · 마지막 창 step 이 옛 · 새 둘 다와 같다) → 옛 ",
+     "R37 ULPR-01 교차 전 단 — 옛 시도 = 단 k 3 창 넷 · 단 줄 (사건 없는 단) 뒤 끊김 → RESUME (k 2) → 새 시도 창 둘 (옛 판 = 옛 단 줄로 하한 0.27014371645715524 %) → 그 단 줄을 쓰지 않는다 = fresh 하한 그대로 (LOW",
+     "R37 ULPR-01 교차 전 단 — 옛 시도 = 단 k 3 창 넷 · 단 줄 (사건 없는 단) 뒤 끊김 → RESUME (k 2) → 새 시도 옛 시도와 같은 창 넷 (사건 없는 단 — 단 줄이 어느 시도 것인지 기록으로 가를 수 없다) → 그 단 줄을 쓰지 않는다 = fresh 하한",
+     "R37 ULPR-01 교차 전 단 — 옛 시도 = 단 k 3 창 넷 · 단 줄 (사건 없는 단) 뒤 끊김 → RESUME (k 2) → 새 시도 이동 중 끝 (새 창 · 사건 없음 — 경계 뒤 줄이 어느 시도 것인지 기록으로 가를 수 없다) → 그 단 줄을 쓰지 않는다 = fresh 하",
+     "R37 시도 미확정 = 쓰지 않는다 (보수): 같은 꼴에서 단 끝 상태 파일 · 사건 · 경계 뒤 다른 단 · 창 역행이 없다 (단 줄 → restart 사이 끊김 — 옛 · 새 어느 시도 줄인지 기록으로 가를 수 없다) → 경계 뒤 줄 (창 넷 · 단 줄) 을 쓰지 않는다 = 단 k ",
+     "R37 ULPR-01 옛 단 줄 (n_windows 4) 이 옛 창 둘만 남긴 손상 기록 · RM 사건 → 새 시도 창 넷 뒤 TIMEOUT (단 줄이 새 창과 맞고 옛 창과는 다르다) → 버린 옛 단 끝 사건 (같은 k · step) = 옛 시도 단 줄 → 쓰지 않는다 = fresh ",
+     "R37 ULPR-01 모순: RESUME 앞에 경계 뒤 옛 사건 (RM) 이 있는데 옛 시도 창이 없다 (창 역행 없음) · 새 시도 기록은 있다 → 버리지 · 고르지 않고 주 값 미식별 (사유 ULPR-01) · UVa 거부  — primary=OK rho=0.2026077873428",
+     "R37 ULPR-01 모순 (옛 창 사건만 · 옛 창 기록 없음): RESUME 앞 경계 뒤 옛 창 사건 (단 k 4 창 2 의 step · 단 끝 사건 아님 — 단 줄 증명과 무관) 이 있는데 옛 시도 창이 없다 (창 역행 없음) · 새 시도가 단 k 4 를 끝까지 (창 넷 · 단 줄",
+     "R37 ULPR-01 경계 뒤 단 줄 ↔ 그 단 창 기록 (n_windows · w 1 … n · 마지막 창 step) — 새 시도 단 k 3 의 창 w 2 줄 빠짐 → 시도 섞임 · 결손 = 주 값 미식별 (사유 ULPR-01) · UVa 거부  — primary=OK rho=0.20"
+    ],
+    "last": [
+     "selftest: FAIL (12 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {
+   "R37 ULPR-01 옛 시도 = 단 k 4 창 넷 · 단 줄 · RM 사건 뒤 요약 전 끊김 → RESUME (k 3 · s_r) → 새 시도가 단 k 4 창 둘 뒤 TIMEOUT": true,
+   "R37 ULPR-01 옛 시도 = 단 k 4 창 넷 · 단 줄 · RM 사건 뒤 요약 전 끊김 → RESUME (k 3 · s_r) → 새 시도가 단 k 4 로 이동 중": true,
+   "R37 ULPR-01 교차 전 단 — 옛 시도 = 단 k 3 창 넷 · 단 줄 (사건 없는 단) 뒤 끊김 → RESUME (k 2) → 새 시도 창 둘": true,
+   "R37 시도 미확정": true,
+   "R37 ULPR-01 모순": true,
+   "R37 ULPR-01 경계 뒤 단 줄 ↔ 그 단 창 기록": true
+  },
+  "must_pass_ok": {
+   "R37 대조": true,
+   "R28 양성 대조": true,
+   "R33 대조": true,
+   "R34 대조": true
+  },
+  "killed": true,
+  "as_expected": true
+ },
+ "ULPR03_g2_dup_check_off": {
+  "file": "ul_gates.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_gates": {
+    "rc": 1,
+    "n_ok": 48,
+    "n_fail": 1,
+    "fails": [
+     "C5 ULPR-03 G2 시험 덤프에 같은 ID 두 줄 (원자 3 · 첫 줄 x 다름 · 선언 수 = 행 수 6) → PASS 아님 · 관측 결손 NOT_COMPUTED + 사유 (ID 중복 · 옛 판 = PASS)  —"
+    ],
+    "last": [
+     "selftest: FAIL (1 실패)"
+    ]
+   },
+   "ul_reader": {
+    "rc": 1,
+    "n_ok": 210,
+    "n_fail": 2,
+    "fails": [
+     "R35 ULPR-03 복원: R/g2 원자 덤프에 같은 ID 두 줄 (첫 줄 x 다름 · 선언 수 = 행 수 — 옛 판 = 뒤 줄이 덮어 G2 PASS · RESTORED) → G2 관측 결손 NOT_COMPUTED (ID 중복) → UNCONFIRMED · 다음 제출 거부  —",
+     "R16 ULPR-03 중력 팔 R_M 원자 덤프에 같은 ID 두 줄 (첫 줄 x 다름 · 뒤 줄 = 출처 · 선언 수 = 행 수 — 옛 판 = 뒤 줄이 덮어 G2 PASS) → G2 관측 결손 NOT_COMPUTED (ID 중복) → 복원 PASS 아님 = TECH (C12)  —"
+    ],
+    "last": [
+     "selftest: FAIL (2 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {
+   "C5 ULPR-03 G2 시험 덤프에 같은 ID": true,
+   "R35 ULPR-03 복원": true,
+   "R16 ULPR-03 중력 팔 R_M 원자 덤프에 같은 ID": true
+  },
+  "must_pass_ok": {
+   "C5 ULPR-03 대조": true,
+   "R14 복원 판정 조립": true
+  },
+  "killed": true,
+  "as_expected": true
+ },
+ "ULPR03_g2_requested_step_off": {
+  "file": "ul_gates.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_gates": {
+    "rc": 1,
+    "n_ok": 48,
+    "n_fail": 1,
+    "fails": [
+     "C5 ULPR-03 G2 요청 step (호출자 S0 · R_M) 결합 — 두 덤프 머리 step 이 서로 같아도 요청 step (3,200,000) 과 다르면 (3,199,000) 관측 결손 NOT_COMPUTED · 요청 step 과 같으면 PASS (옛 판 = 요청 step 을 받"
+    ],
+    "last": [
+     "selftest: FAIL (1 실패)"
+    ]
+   },
+   "ul_reader": {
+    "rc": 1,
+    "n_ok": 210,
+    "n_fail": 2,
+    "fails": [
+     "R35 ULPR-03 복원: R/g2 · 원 in/ 원자 덤프 머리 step 둘 다 S0 − 1,000 (서로는 같다) → G2 관측 결손 NOT_COMPUTED (머리 step ≠ 요청 S0 — 서로 같다는 것만으로 PASS 하지 않는다) · UNCONFIRMED (S0 프레임 머리 ",
+     "R16 ULPR-03 중력 팔 R_M 원자 덤프 두 개의 머리 step 이 서로 같지만 R_M − 1 (요청 step = R_M · START 사건) → G2 관측 결손 NOT_COMPUTED (머리 step) → TECH (요청 step 결합 · 서로 같다는 것만으로 PASS 하지 않"
+    ],
+    "last": [
+     "selftest: FAIL (2 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {
+   "C5 ULPR-03 G2 요청 step": true,
+   "R16 ULPR-03 중력 팔 R_M 원자 덤프 두 개": true
+  },
+  "must_pass_ok": {
+   "C5 ULPR-03 대조": true
+  },
+  "killed": true,
+  "as_expected": true
+ },
+ "ULPR03_g2_pair_step_off": {
+  "file": "ul_gates.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_gates": {
+    "rc": 1,
+    "n_ok": 48,
+    "n_fail": 1,
+    "fails": [
+     "C5 ULPR-03 G2 시험 덤프 머리 TIMESTEP 9,999,999 (원 3,200,000) → 관측 결손 NOT_COMPUTED + 사유 (머리 step · 옛 판 = PASS)  —"
+    ],
+    "last": [
+     "selftest: FAIL (1 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {
+   "C5 ULPR-03 G2 시험 덤프 머리 TIMESTEP": true
+  },
+  "must_pass_ok": {
+   "C5 ULPR-03 대조": true
+  },
+  "killed": true,
+  "as_expected": true
+ },
+ "ULPR03_g2_empty_both_off": {
+  "file": "ul_gates.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_gates": {
+    "rc": 1,
+    "n_ok": 48,
+    "n_fail": 1,
+    "fails": [
+     "C5 ULPR-03 같은 부류 — 비교 열에 NaN (두 덤프 같은 자리 · 옛 판 = 글자 nan = nan 으로 PASS) → 관측 결손 NOT_COMPUTED (비유한) · 빈 덤프 둘 (원자 0 · 쌍 접촉 0 — 옛 판 = 빈 표 둘이 같아 PASS) → NOT_COMPUTED"
+    ],
+    "last": [
+     "selftest: FAIL (1 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {
+   "C5 ULPR-03 같은 부류 — 비교 열에 NaN": true
+  },
+  "must_pass_ok": {
+   "C5 ULPR-03 대조": true
+  },
+  "killed": true,
+  "as_expected": true
+ },
+ "ULPR03_g2c_pair_step_off": {
+  "file": "ul_gates.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_gates": {
+    "rc": 1,
+    "n_ok": 48,
+    "n_fail": 1,
+    "fails": [
+     "C5 ULPR-03 같은 부류 — G2c 시험 쌍 덤프 머리 step 3,199,000 (원 3,200,000) → 관측 결손 NOT_COMPUTED + 사유 (옛 판 = PASS) · 요청 step 결합 · 정상 PASS  —"
+    ],
+    "last": [
+     "selftest: FAIL (1 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {
+   "C5 ULPR-03 같은 부류 — G2c 시험 쌍 덤프 머리 step": true
+  },
+  "must_pass_ok": {
+   "C5 ULPR-03 대조": true
+  },
+  "killed": true,
+  "as_expected": true
+ },
+ "ULPR04_g2c_observation_loss_as_FAIL": {
+  "file": "ul_gates.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_gates": {
+    "rc": 1,
+    "n_ok": 42,
+    "n_fail": 7,
+    "fails": [
+     "C3 ULKRR-04 G2c 쌍 참조 소수 ID (2 → 2.5 — 정수 2 로 잘려 같은 키가 되지 않는다) = PASS 아님 · 관측 결손 NOT_COMPUTED + 사유 (ULPR-04 — 파서 문제 = 관측 결손 · 등록 §14-10 · 옛 판 = FAIL)  —",
+     "C4 ULKRF-03 G2c 시험 쪽 쌍 덤프 머리 c_cpl[7] → not_c_cpl[7] (필수 열 결손) = 예외 없이 관측 결손 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다 · ULPR-04 — 옛 판 = FAIL)  —",
+     "C4 ULKRF-03 G2c 원 쪽 쌍 덤프 머리 c_cpl[7] → not_c_cpl[7] (필수 열 결손) = 예외 없이 관측 결손 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다 · ULPR-04 — 옛 판 = FAIL)  —",
+     "C4 ULKRF-03 G2c 시험 쪽 쌍 덤프 머리 c_cpl[8] → not_c_cpl[8] (필수 열 결손) = 예외 없이 관측 결손 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다 · ULPR-04 — 옛 판 = FAIL)  —",
+     "C4 ULKRF-03 G2c 원 쪽 쌍 덤프 머리 c_cpl[8] → not_c_cpl[8] (필수 열 결손) = 예외 없이 관측 결손 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다 · ULPR-04 — 옛 판 = FAIL)  —",
+     "C5 ULPR-03 같은 부류 — G2c 시험 쌍 덤프 머리 step 3,199,000 (원 3,200,000) → 관측 결손 NOT_COMPUTED + 사유 (옛 판 = PASS) · 요청 step 결합 · 정상 PASS  —",
+     "C5 ULPR-03 같은 부류 — 비교 열에 NaN (두 덤프 같은 자리 · 옛 판 = 글자 nan = nan 으로 PASS) → 관측 결손 NOT_COMPUTED (비유한) · 빈 덤프 둘 (원자 0 · 쌍 접촉 0 — 옛 판 = 빈 표 둘이 같아 PASS) → NOT_COMPUTED"
+    ],
+    "last": [
+     "selftest: FAIL (7 실패)"
+    ]
+   },
+   "ul_reader": {
+    "rc": 1,
+    "n_ok": 207,
+    "n_fail": 5,
+    "fails": [
+     "R35 ULKRF-03 · ULPR-04 복원 R/g2 쌍 덤프 머리 c_cpl[7] → not_c_cpl[7] (Codex g2c_c_cpl7_missing) → 예외 없이 G2c 관측 결손 NOT_COMPUTED + 사유 (열 이름) · 복원 UNCONFIRMED (VALUE_MIS",
+     "R35 ULKRF-03 · ULPR-04 복원 R/g2 쌍 덤프 머리 c_cpl[8] → not_c_cpl[8] (Codex g2c_c_cpl8_missing) → 예외 없이 G2c 관측 결손 NOT_COMPUTED + 사유 (열 이름) · 복원 UNCONFIRMED (VALUE_MIS",
+     "R35 ULKRF-03 · ULPR-04 복원 원 in/ 쌍 덤프 머리 c_cpl[7] → not_c_cpl[7] → 예외 없이 G2c 관측 결손 NOT_COMPUTED + 사유 (열 이름) · 복원 UNCONFIRMED (VALUE_MISMATCH 아님 · 등록 §14-10) · RE",
+     "R35 ULKRF-03 · ULPR-04 복원 원 in/ 쌍 덤프 머리 c_cpl[8] → not_c_cpl[8] → 예외 없이 G2c 관측 결손 NOT_COMPUTED + 사유 (열 이름) · 복원 UNCONFIRMED (VALUE_MISMATCH 아님 · 등록 §14-10) · RE",
+     "R35 ULKRF-03 · ULPR-04 실제 restore CLI — R/g2 쌍 덤프 머리 c_cpl[7] 결손 → rc 2 (Traceback · rc 1 아님 · 다른 UNCONFIRMED 와 같은 rc) · restore_verdict.json = UNCONFIRMED (RES"
+    ],
+    "last": [
+     "selftest: FAIL (5 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {
+   "C4 ULKRF-03 G2c 시험 쪽": true,
+   "C4 ULKRF-03 G2c 원 쪽": true,
+   "C3 ULKRR-04 G2c": true,
+   "R35 ULKRF-03 · ULPR-04 복원": true,
+   "R35 ULKRF-03 · ULPR-04 실제 restore CLI": true
+  },
+  "must_pass_ok": {
+   "C4 ULPR-04 대조": true,
+   "R35 ULPR-04 대조": true
+  },
+  "killed": true,
+  "as_expected": true
+ },
+ "ULPR04_g2_observation_loss_as_FAIL": {
+  "file": "ul_gates.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_gates": {
+    "rc": 1,
+    "n_ok": 43,
+    "n_fail": 6,
+    "fails": [
+     "C3 ULKRR-04 G2 원자 ID 소수 (2 → 2.5) = PASS 아님 (잘라서 같은 원자로 보지 않는다) · 관측 결손 NOT_COMPUTED + 사유 (ULPR-03 · 04 — 옛 판 = FAIL)  —",
+     "C5 ULPR-03 G2 시험 덤프에 같은 ID 두 줄 (원자 3 · 첫 줄 x 다름 · 선언 수 = 행 수 6) → PASS 아님 · 관측 결손 NOT_COMPUTED + 사유 (ID 중복 · 옛 판 = PASS)  —",
+     "C5 ULPR-03 G2 시험 덤프 머리 TIMESTEP 9,999,999 (원 3,200,000) → 관측 결손 NOT_COMPUTED + 사유 (머리 step · 옛 판 = PASS)  —",
+     "C5 ULPR-03 G2 시험 덤프 끝에 열 수 다른 (잘린) 덧줄 → 관측 결손 NOT_COMPUTED + 사유 (열 수 · 옛 판 = 건너뛰고 PASS)  —",
+     "C5 ULPR-03 G2 요청 step (호출자 S0 · R_M) 결합 — 두 덤프 머리 step 이 서로 같아도 요청 step (3,200,000) 과 다르면 (3,199,000) 관측 결손 NOT_COMPUTED · 요청 step 과 같으면 PASS (옛 판 = 요청 step 을 받",
+     "C5 ULPR-03 같은 부류 — 비교 열에 NaN (두 덤프 같은 자리 · 옛 판 = 글자 nan = nan 으로 PASS) → 관측 결손 NOT_COMPUTED (비유한) · 빈 덤프 둘 (원자 0 · 쌍 접촉 0 — 옛 판 = 빈 표 둘이 같아 PASS) → NOT_COMPUTED"
+    ],
+    "last": [
+     "selftest: FAIL (6 실패)"
+    ]
+   },
+   "ul_reader": {
+    "rc": 1,
+    "n_ok": 208,
+    "n_fail": 4,
+    "fails": [
+     "R35 ULPR-03 복원: R/g2 원자 덤프에 같은 ID 두 줄 (첫 줄 x 다름 · 선언 수 = 행 수 — 옛 판 = 뒤 줄이 덮어 G2 PASS · RESTORED) → G2 관측 결손 NOT_COMPUTED (ID 중복) → UNCONFIRMED · 다음 제출 거부  —",
+     "R35 ULPR-03 복원: R/g2 · 원 in/ 원자 덤프 머리 step 둘 다 S0 − 1,000 (서로는 같다) → G2 관측 결손 NOT_COMPUTED (머리 step ≠ 요청 S0 — 서로 같다는 것만으로 PASS 하지 않는다) · UNCONFIRMED (S0 프레임 머리 ",
+     "R16 ULPR-03 중력 팔 R_M 원자 덤프에 같은 ID 두 줄 (첫 줄 x 다름 · 뒤 줄 = 출처 · 선언 수 = 행 수 — 옛 판 = 뒤 줄이 덮어 G2 PASS) → G2 관측 결손 NOT_COMPUTED (ID 중복) → 복원 PASS 아님 = TECH (C12)  —",
+     "R16 ULPR-03 중력 팔 R_M 원자 덤프 두 개의 머리 step 이 서로 같지만 R_M − 1 (요청 step = R_M · START 사건) → G2 관측 결손 NOT_COMPUTED (머리 step) → TECH (요청 step 결합 · 서로 같다는 것만으로 PASS 하지 않"
+    ],
+    "last": [
+     "selftest: FAIL (4 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {
+   "C3 ULKRR-04 G2 원자 ID": true,
+   "C5 ULPR-03 G2 시험 덤프에 같은 ID": true,
+   "R35 ULPR-03 복원": true
+  },
+  "must_pass_ok": {
+   "C5 ULPR-03 대조": true
+  },
+  "killed": true,
+  "as_expected": true
+ },
+ "ULPR03_reader_restore_step_arg_off": {
+  "file": "ul_reader.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_reader": {
+    "rc": 1,
+    "n_ok": 211,
+    "n_fail": 1,
+    "fails": [
+     "R35 ULPR-03 복원: R/g2 · 원 in/ 원자 덤프 머리 step 둘 다 S0 − 1,000 (서로는 같다) → G2 관측 결손 NOT_COMPUTED (머리 step ≠ 요청 S0 — 서로 같다는 것만으로 PASS 하지 않는다) · UNCONFIRMED (S0 프레임 머리 "
+    ],
+    "last": [
+     "selftest: FAIL (1 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {
+   "R35 ULPR-03 복원: R/g2 · 원 in/ 원자 덤프 머리 step 둘 다": true
+  },
+  "must_pass_ok": {
+   "R35 ULPR-04 대조": true
+  },
+  "killed": true,
+  "as_expected": true
+ },
+ "ULPR03_reader_gravity_step_arg_off": {
+  "file": "ul_reader.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_reader": {
+    "rc": 1,
+    "n_ok": 211,
+    "n_fail": 1,
+    "fails": [
+     "R16 ULPR-03 중력 팔 R_M 원자 덤프 두 개의 머리 step 이 서로 같지만 R_M − 1 (요청 step = R_M · START 사건) → G2 관측 결손 NOT_COMPUTED (머리 step) → TECH (요청 step 결합 · 서로 같다는 것만으로 PASS 하지 않"
+    ],
+    "last": [
+     "selftest: FAIL (1 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {
+   "R16 ULPR-03 중력 팔 R_M 원자 덤프 두 개": true
+  },
+  "must_pass_ok": {
+   "R16 중력 팔 복원": true
+  },
+  "killed": true,
+  "as_expected": true
+ }
+}

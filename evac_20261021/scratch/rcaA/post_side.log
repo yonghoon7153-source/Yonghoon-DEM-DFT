@@ -1,0 +1,5 @@
+── SIDE
+  PASS  SIDE 손 해석 — L_c 4.6 · k 3 · 정의 쪽 = B (side 1) · 등분점 X_j = (2.1, 1.5, 2.9667 · 4.5 · 6.0333) · 맞은편 X_i = (1.5, 1.5, 3 · 4.5 · 6) (1e-9) · B 포트 셀 (2,1,2) · (2,1,4) · (2,1,6)
+
+== test_carbon_junction: 1/1 PASS
+[nrun] wall 0.6 s · exit 0

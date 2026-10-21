@@ -1,0 +1,29 @@
+Rint 2 D: webapp solve states, SV counterfactual ratio, junction qualifiers
+
+webapp/templates/mpm_lab.html, the convention cell of both rows (Jinja
+server row and JS row), read-only from the payload:
+- solve state lines from step3.conv_cert / step3.ion_conv_cert:
+  VALID_ZERO_TOPOLOGY (sigma 0, no through component, a result),
+  ELECTRODE_SHORT (sigma +inf, J11, not published as finite),
+  NOT_CERTIFIABLE (warning); nothing for a positive solve or no
+  certificate.
+- SV counterfactual line under the junction label: ratio (finite, +inf
+  from ratio_limit 'inf', else a dash), producer status and flag,
+  "threshold = chain plan" (the verdict is the chain's, the screen shows
+  the ratio only).
+- the producer qualifier list (evidence.qualifiers =
+  carbon_junction.CJUNC_QUALIFIERS) in a collapsed block, rendered as is
+  (no copy in the template; the JS row escapes it like markupsafe).
+  This is where the three design v1 4-6 markers reach the screen; the
+  label constant LABEL_CJUNC itself is not changed here (its file is the
+  junction owner's).
+Old records (no certificate, no SV record, no qualifiers) render as
+before.
+
+webapp/test_ca_ext_labels.py: pre-fix 34/54 -> 54/54.  Seven template
+mutants (inf branch, JS escape, state spelling, ion key, flag,
+qualifier loop, short shown as finite) each fail the check they target.
+webapp/test_rint_scope_labels.py 31/31 (same template).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

@@ -1,9 +1,0 @@
-[N] /single — null 메트릭 (서버 Jinja 툴팁 세 개)
-  PASS  N1 대조 — 정상 케이스 200 · 세 툴팁 수치 그대로 (σ_brug/σ_grain = 0.2400 · σ_brug / σ_ionic = 0.7200 / 0.2400 · σ_Bruggeman = 0.7200 mS/cm)
-  PASS  N2 ★ sigma_ratio null (Codex 반례) → 200 · σ_brug/σ_grain 끝 줄 = — · 나머지 두 툴팁 = 일반 문구 (고치기 전: 500 — single.html %.4f)
-  PASS  N3 ★ sigma_ratio 키 없음 → 200 · σ_brug/σ_grain 끝 줄 = — (고치기 전: 지어낸 '0.0000')
-  PASS  N4 ★ sigma_ratio null + phi_se 없음 (Codex 둘째 반례) → 200 · σ_brug / σ_ionic = 일반 문구 (고치기 전: 500 — 툴팁 곱셈)
-  PASS  N5 ★ 같은 툴팁 블록의 다른 값 null (phi_se · tortuosity_recommended + _mean) → 200 (고치기 전: 500) {'phi_se': 200, 'tortuosity_recommended': 200}
-  PASS  N6 대조 — R_brug_over_full null → 200 (Codex 대조 · 고치기 전도 200)
-
-test_single_null_metrics: 6/6 PASS

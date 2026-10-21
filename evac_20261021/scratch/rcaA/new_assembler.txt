@@ -1,0 +1,201 @@
+    def build(self, Ab, gb, At, gt, cb=None, ct=None):
+        """주 계 — 멤버십 dof · 분산 접합 간선 · 축약 · 절단 · 실제 그래프 가지치기 · 관통 · 단락 (J11).  반사실 대조가 같은 판 입력을
+        다시 쓰도록 보관한다 (`sv_counterfactual`)."""
+        self._plate_in = (Ab, gb, At, gt, cb, ct)
+        out, st = self._assemble(Ab, gb, At, gt, cb, ct, drop_cat=None)
+        self.junction_edge_sub = st['e']
+        self.junction_edge_inst = np.asarray(self.reg['subedges']['inst'], np.int64)[st['e']]
+        self.n_contracted = st['n_contracted']
+        self.stats = st['stats']
+        self.n_sv_edges = st['n_sv_edges']
+        if 'reason' not in out:
+            self.sys = st['sys']
+            self._jidx = st['jidx']
+            self._jsub = st['jsub']
+        return out
+
+    def _assemble(self, Ab, gb, At, gt, cb=None, ct=None, drop_cat=None):
+        """계 조립 (부작용 없음) — drop_cat = 그 부류 간선을 빼고 (반사실 대조 · SV 면).  → (솔버 입력 | 사유, 상태)."""
+        plan, reg = self.plan, self.reg
+        sub = reg['subedges']
+        #  분산 접합 간선 (간선마다 한 행 · 10-21 RCA-05) · 축약 — 주 계의 간선 목록 (self.E) 은 바꾸지 않는다 (지역 사본)
+        mode = plan['mode']
+        pu = self.pos_dof[np.maximum(sub['port_i'], 0)]; pv = self.pos_dof[np.maximum(sub['port_j'], 0)]
+        e = np.flatnonzero(mode == MODE_EDGE)
+        Elist = list(self.E)
+        if len(e):
+            gj = plan['g_code'][e]
+            Elist.append((pu[e], pv[e], gj, np.full(len(e), _CAT['vv_junction']), np.full(len(e), np.nan),
+                          np.full(len(e), np.nan), np.full(len(e), 3), np.full(len(e), 3), e.astype(np.int64)))
+        rep = np.arange(self.n_total)
+        #  ★ 10-21 (RCA-03) — 재방문 가지는 합치지 않는다 (옛: s < s_min 재방문 = 두 위치 한 노드 · 비연속 가닥 단락).
+        #  접합 축약 (R_j′ = 0 · J6) — 단락 판정 (J11) 대상은 이 무리뿐
+        con = np.flatnonzero(mode == MODE_CONTRACT)
+        uf = _UF()
+        for k in con:
+            uf.union(int(rep[pu[k]]), int(rep[pv[k]]))
+        members = {}
+        for x in list(uf.p):
+            members.setdefault(uf.find(x), []).append(x)
+        if members:
+            jr = np.arange(self.n_total)
+            for r_, ms in members.items():
+                jr[np.asarray(ms)] = r_
+            rep = jr[rep]
+        n_contracted = int(len(con))
+        Ab2 = rep[self._plate_owner(Ab, False)] if Ab is not None else np.zeros(0, np.int64)
+        At2 = rep[self._plate_owner(At, True)] if At is not None else np.zeros(0, np.int64)
+        gb = np.asarray(gb if gb is not None else [], np.float64); gt = np.asarray(gt if gt is not None else [], np.float64)
+        U = np.concatenate([x[0] for x in Elist]) if Elist else np.zeros(0, np.int64)
+        V = np.concatenate([x[1] for x in Elist]) if Elist else np.zeros(0, np.int64)
+        G = np.concatenate([x[2] for x in Elist]) if Elist else np.zeros(0)
+        CAT = np.concatenate([x[3] for x in Elist]) if Elist else np.zeros(0, np.int64)
+        SA = np.concatenate([x[4] for x in Elist]) if Elist else np.zeros(0)
+        SB = np.concatenate([x[5] for x in Elist]) if Elist else np.zeros(0)
+        IA = np.concatenate([x[6] for x in Elist]) if Elist else np.zeros(0, np.int64)
+        IB = np.concatenate([x[7] for x in Elist]) if Elist else np.zeros(0, np.int64)
+        TG = np.concatenate([x[8] for x in Elist]) if Elist else np.zeros(0, np.int64)
+        U = rep[U]; V = rep[V]
+        keep = (U != V) & (G > 0.0)
+        n_sv_edges = int(np.sum(keep & (CAT == _CAT['sv_face'])))
+        if drop_cat is not None:
+            keep &= CAT != drop_cat
+        U, V, G, CAT, SA, SB, IA, IB, TG = (U[keep], V[keep], G[keep], CAT[keep], SA[keep], SB[keep], IA[keep], IB[keep],
+                                            TG[keep])
+        # 단락 (J11) — 축약 무리가 두 판에 다 닿음
+        short = False
+        big = [r_ for r_, ms in members.items() if len(ms) >= 2]
+        if big:
+            bs = set(Ab2.tolist()); ts = set(At2.tolist())
+            short = any((r_ in bs and r_ in ts) for r_ in big)
+        # 실제 그래프 연결 성분 (J7 · J12 · E3)
+        from scipy.sparse.csgraph import connected_components
+        n = self.n_total
+        A = sparse.coo_matrix((np.ones(len(U), np.int8), (U, V)), shape=(n, n))
+        ncomp, lab = connected_components(A, directed=False)
+        is_rep = rep == np.arange(n)
+        bot_c = np.zeros(ncomp, bool); top_c = np.zeros(ncomp, bool)
+        bot_c[lab[Ab2]] = True; top_c[lab[At2]] = True
+        kept_c = bot_c | top_c
+        thr_c = bot_c & top_c
+        kept = kept_c[lab] & is_rep
+        n_kept = int(kept.sum())
+        n_through = int((thr_c[lab] & is_rep).sum())
+        n_path_only = int(len(np.asarray(reg.get('self_revisit_pairs', np.zeros((0, 2)))).reshape(-1, 2)))
+        stats = {'n_extra_dofs': int(self.n_total - self.n_cells), 'n_contracted': n_contracted,
+                 'n_floating_dropped': int((is_rep & ~kept).sum()), 'n_through_dof': n_through,
+                 'n_plate_reachable_dof': n_kept, 'short': bool(short), 'tombstones': dict(self.tomb),
+                 'n_unreg_fused': int(self.n_unreg_fused), 'n_junction_edges': int(np.sum(TG >= 0)),
+                 'n_self_fused_faces': int(self.n_self_fused), 'n_self_revisits_path_only': n_path_only}
+        st = {'e': e, 'n_contracted': n_contracted, 'stats': stats, 'n_sv_edges': n_sv_edges}
+        if short:
+            return {'reason': 'cjunc_electrode_short'}, st
+        if n_kept == 0:
+            return {'reason': 'all_floating_dropped'}, st
+        if n_through == 0:
+            return {'reason': 'no_through_component'}, st
+        new = -np.ones(n, np.int64)
+        new[kept] = np.arange(n_kept)
+        ek = kept[U] & kept[V]
+        U, V, G, CAT, SA, SB, IA, IB, TG = U[ek], V[ek], G[ek], CAT[ek], SA[ek], SB[ek], IA[ek], IB[ek], TG[ek]
+        jidx = np.flatnonzero(TG >= 0)
+        st['jidx'] = jidx
+        st['jsub'] = TG[jidx]
+        u, v = new[U], new[V]
+        bk = kept[Ab2]; tk = kept[At2]
+        Abn, gbn = new[Ab2[bk]], gb[bk]
+        Atn, gtn = new[At2[tk]], gt[tk]
+        cbn = tuple(np.asarray(x)[bk] for x in cb) if cb is not None else None
+        ctn = tuple(np.asarray(x)[tk] for x in ct) if ct is not None else None
+        diag = np.zeros(n_kept)
+        np.add.at(diag, u, G); np.add.at(diag, v, G)
+        np.add.at(diag, Abn, gbn); np.add.at(diag, Atn, gtn)
+        b = np.zeros(n_kept)
+        np.add.at(b, Abn, gbn)
+        L = sparse.coo_matrix((np.concatenate([-G, -G, diag]), (np.concatenate([u, v, np.arange(n_kept)]),
+                                                                  np.concatenate([v, u, np.arange(n_kept)]))),
+                              shape=(n_kept, n_kept)).tocsr()
+        st['sys'] = {'u': u, 'v': v, 'G': G, 'CAT': CAT, 'SA': SA, 'SB': SB, 'IA': IA, 'IB': IB, 'Ab': Abn, 'gb': gbn,
+                     'At': Atn, 'gt': gtn, 'n': n_kept}
+        return {'L': L, 'b': b, 'Ab': Abn, 'gb': gbn, 'At': Atn, 'gt': gtn, 'cb': cbn, 'ct': ctn, 'n_dof': n_kept}, st
+
+    def record(self, phi):
+        """원장을 읽는 소산 분담 · 접합 전류 (E1 · E2 · E4′) — 같은 단위 (코드) 로만 합친다.  접합 전류 = instance 마다 그 간선 합.
+        ★ 10-21 (RCA-06) — 옛 `sv_dominant` (지배성 표지) 철회 → `sv_local_dissipation` (국소 소산 몫 진단 · 지배성 보증 아님)."""
+        s = self.sys
+        u, v, G, CAT = s['u'], s['v'], s['G'], s['CAT']
+        dphi = phi[u] - phi[v]
+        P = G * dphi * dphi
+        Pb = s['gb'] * (phi[s['Ab']] - 1.0) ** 2
+        Pt = s['gt'] * (phi[s['At']]) ** 2
+        Ptot = float(P.sum() + Pb.sum() + Pt.sum())
+        share = {k: 0.0 for k in _CAT}
+        share['sdcp_cell'] = 0.0
+        share['plate'] = float(Pb.sum() + Pt.sum())
+        sv = CAT == _CAT['sv_face']
+        share['sv_face'] = float(P[sv].sum())
+        rest = ~sv
+        ia5 = (s['IA'] == 5) & rest; ib5 = (s['IB'] == 5) & rest
+        with np.errstate(invalid='ignore', divide='ignore'):
+            fa = np.where(ia5, s['SB'] / (s['SA'] + s['SB']), 0.0)        # a 쪽 (SDCP) 반셀 몫 = σb/(σa+σb)
+            fb = np.where(ib5, s['SA'] / (s['SA'] + s['SB']), 0.0)
+        fa = np.nan_to_num(fa); fb = np.nan_to_num(fb)
+        ps = P * (fa + fb)
+        share['sdcp_cell'] = float(ps[rest].sum())
+        for k, c in _CAT.items():
+            if k == 'sv_face':
+                continue
+            m = CAT == c
+            share[k] = float((P[m] * (1.0 - fa[m] - fb[m])).sum())
+        tot = sum(share.values())
+        frac = {k: (x / Ptot if Ptot > 0 else 0.0) for k, x in share.items()}
+        nI = len(self.reg['instances']['fi'])
+        jI = np.full(nI, np.nan)                             # instance 마다 접합 전류 (그 간선 합 · 간선 없는 instance = NaN)
+        if len(self._jidx):
+            qi = np.asarray(self.reg['subedges']['inst'], np.int64)[self._jsub]
+            acc = np.zeros(nI)
+            np.add.at(acc, qi, G[self._jidx] * dphi[self._jidx])
+            has = np.zeros(nI, bool); has[qi] = True
+            jI[has] = acc[has]
+        I_bot = float(np.sum(s['gb'] * (1.0 - phi[s['Ab']])))
+        sv_I = float(np.sum(np.abs(G[sv] * dphi[sv]))) / I_bot if I_bot > 0 else None
+        sld = {'kind': 'diagnostic_local_dissipation', 'sv_share': float(frac['sv_face'] + frac['sdcp_cell']),
+               'vv_junction_share': float(frac['vv_junction']),
+               'meaning': 'SV 면 + SDCP 셀 소산 몫 = 국소 저항 민감도 — 경로 지배 · 우회 크기 보증 아님 (RCA-06 · 반사실 대조 = 선택 노브)'}
+        return {'P_total_code': Ptot, 'P_sum_check_code': float(tot), 'dissipation_share': frac,
+                'sv_local_dissipation': sld,
+                'sv_face_abs_current_over_I': sv_I, 'junction_current_code': jI, 'I_bot_code': I_bot}
+
+    def sv_counterfactual(self, solve, I_full, request):
+        """반사실 대조 (10-21 Codex RCA-06 · 1저자 Q4 (가) · 선택 노브) — 같은 침대 · 같은 R_j · 같은 판 입력에서 SV 융합 면 (SDCP–VGCF 면 ·
+        부류 sv_face) 만 끊은 계의 단자 전류 I_cut → `sv_counterfactual_ratio` = I_full / I_cut (≥ 1 · Rayleigh).  문턱 (request) 이 있을
+        때만 비교 표지 `SV_DEPENDENT` (비 ≥ 문턱) — 문턱 기본값 없음 (등록이 채운다).  SV 면 없이 관통 없음 = 비 inf (SV 의존 경로만)."""
+        thr = request.get('threshold') if isinstance(request, dict) else None
+        Ab, gb, At, gt, cb, ct = self._plate_in
+        out, st = self._assemble(Ab, gb, At, gt, cb, ct, drop_cat=_CAT['sv_face'])
+        rec = {'kind': 'counterfactual_cut_sv_faces', 'requested': True, 'threshold': thr,
+               'n_sv_faces_cut': int(st['n_sv_edges']), 'G_full_code': float(I_full), 'G_cut_code': None,
+               'sv_counterfactual_ratio': None, 'flag': None, 'cg_info': None, 'resid': None}
+        if out.get('reason'):
+            if out['reason'] in ('no_through_component', 'all_floating_dropped'):
+                rec.update(status='no_through_without_sv', G_cut_code=0.0,
+                           sv_counterfactual_ratio=(math.inf if I_full > 0 else None))
+            else:
+                rec.update(status=str(out['reason']))
+        else:
+            phi_c, info = solve(out['L'], out['b'])
+            resid = float(np.linalg.norm(out['L'] @ phi_c - out['b']) / max(np.linalg.norm(out['b']), 1e-30))
+            I_c = float(np.sum(out['gb'] * (1.0 - phi_c[out['Ab']])))
+            rec.update(cg_info=int(info) if info else 0, resid=resid, G_cut_code=I_c)
+            if bool(info) or not np.isfinite(resid) or resid > 1e-6:
+                rec.update(status='unconverged')
+            elif I_c > 0.0:
+                rec.update(status='computed', sv_counterfactual_ratio=float(I_full / I_c))
+            else:
+                rec.update(status='no_through_without_sv', sv_counterfactual_ratio=(math.inf if I_full > 0 else None))
+        r_ = rec['sv_counterfactual_ratio']
+        if thr is not None and r_ is not None and r_ >= thr:
+            rec['flag'] = 'SV_DEPENDENT'
+        return rec
+
+

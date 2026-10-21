@@ -1,0 +1,17 @@
+
+── B 끔 비트 동일 — 고치기 전 payload 와 대조 (--old-scripts)
+  PASS  B0 커밋된 영수증 44 개 — 새 receipt_digest = 고치기 전 함수 (OUTDIR 이름 · 코호트 디렉터리 보존)
+  PASS  B0b 커밋된 영수증 ↔ 같은 디렉터리 팔 34 짝 — receipt_match 판정이 고치기 전과 같다
+  FAIL  B1 payload [off LEAN2] — 매니페스트 (code_sha · exec_env 빼고) 바이트 같음 · id 같음 · step3 값 같음 (새 기록 칸 없음)  ((0, 0, [], []))
+  FAIL  B1 payload [centerline LEAN2] — 매니페스트 (code_sha · exec_env 빼고) 바이트 같음 · id 같음 · step3 값 같음 (새 기록 칸 없음)  ((0, 0, [], []))
+  FAIL  B1 payload [off LEAN3] — 매니페스트 (code_sha · exec_env 빼고) 바이트 같음 · id 같음 · step3 값 같음 (새 기록 칸 없음)  ((0, 0, [], []))
+  FAIL  B1 payload [face_alpha LEAN2] — 매니페스트 (code_sha · exec_env 빼고) 바이트 같음 · id 같음 · step3 값 같음 (새 기록 칸 ['fp.sid_off'] 만 빼고)  ((0, 0, ['ca_ext'], ['fp.sid_off']))
+  FAIL  B1 payload [off LEAN2 + rtol 1e-12] — 매니페스트 (code_sha · exec_env 빼고) 바이트 같음 · id 같음 · step3 값 같음 (새 기록 칸 ['cg_iters', 'conv_cert.iters'] 만 빼고)  ((0, 0, [], ['cg_iters', 'conv_cert.iters']))
+
+2 PASS · 5 FAIL
+  - B1 payload [off LEAN2] — 매니페스트 (code_sha · exec_env 빼고) 바이트 같음 · id 같음 · step3 값 같음 (새 기록 칸 없음)
+  - B1 payload [centerline LEAN2] — 매니페스트 (code_sha · exec_env 빼고) 바이트 같음 · id 같음 · step3 값 같음 (새 기록 칸 없음)
+  - B1 payload [off LEAN3] — 매니페스트 (code_sha · exec_env 빼고) 바이트 같음 · id 같음 · step3 값 같음 (새 기록 칸 없음)
+  - B1 payload [face_alpha LEAN2] — 매니페스트 (code_sha · exec_env 빼고) 바이트 같음 · id 같음 · step3 값 같음 (새 기록 칸 ['fp.sid_off'] 만 빼고)
+  - B1 payload [off LEAN2 + rtol 1e-12] — 매니페스트 (code_sha · exec_env 빼고) 바이트 같음 · id 같음 · step3 값 같음 (새 기록 칸 ['cg_iters', 'conv_cert.iters'] 만 빼고)
+rc=1 seconds=15

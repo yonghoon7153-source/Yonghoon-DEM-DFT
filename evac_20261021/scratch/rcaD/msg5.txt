@@ -1,0 +1,35 @@
+Rint 2 D: chain 3rd edition (registration R 3rd ed.): tests first
+
+Registration R 3rd edition 3-2 / 3-2b / 3-3 / 4-2 / 5-0 - 5-7 / 7-1 / 2-1,
+Codex RCA-01 02 06 08 09 10 13, pre-review PRE-design-01 05 09,
+coordinator Q-E Q-F Q-G.
+
+Fake runner: solve states (early-return VALID_ZERO_TOPOLOGY / J11
+ELECTRODE_SHORT, certificate template from step3_conv_cert.early_record),
+SV counterfactual records under CJUNC_SV_CF (projected form), retracted
+sv_dominant replaced by sv_local_dissipation; plan rint-r-plan-v2 (four
+pre-result numbers as test values), S0 plan from ca_s0_census.make_plan
+(canonical bytes), registration copies with both hash rows, --s0-plan,
+--after-main for sensitivity stages.
+
+New checks: U01 RCA-01 ends (R_lo 10,000 outer neighbour, R_hi
+5,990,349.75, ratio 599.03, 12 points, W 0.785238 CONSISTENT_WEAK) and
+mutants M11-M14 (pre-review M1-M4); U02 RCA-02 origin at three R; U03
+RCA-08 GAP_ENVELOPE_ONLY; U04 / U04b RCA-09 same verdict function; U05
+RCA-10 closed blocking set; U06 RCA-13 unit invariance, ln tau_mono,
+0/0, extended reals; U07 decision table (34 allowed, 62 refused); U08 SV
+counterfactual rule; U10 PRE-design-01 three-origin union at the ends;
+Z01-Z04 zero / short states end to end; C01-C09 two-plan cross-check;
+N01-N03 plan numbers (Q-G); F01-F04 stage order (Q-F); L21 end-origin
+wiring; V17 SV scope all3; P01b SV wiring; mutants M15-M25.
+Updated: L01 L03 L04 L11 (+L11b) L16 L18 P01 P05 V03 V05 V06 (+V06b) V14
+X04 X05 X08 M04 M07.  e2e: plan v2 + S0 plan + E8 zero floor (real
+payload).
+
+pre-fix: test_rint_r_chain 15/139 (fails = 124 checks: every scenario check
+stops on the unrecognised --s0-plan / plan v2 of the 2nd-edition chain;
+the hand-circuit checks U01-U10 and mutants M11-M25 fail on the missing
+3rd-edition API), e2e 0/5 (same argument).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

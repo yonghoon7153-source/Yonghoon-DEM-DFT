@@ -1,0 +1,28 @@
+  PASS  W1 표지 문자열 한정어 (PTFE 면 개구율 · α · Ø0.248 rope · 규약 선택 · 불투과 가정 · 전자/이온)
+  PASS  W2a Jinja 행이 매니페스트 ca_ext.ptfe_face 표지를 읽는다
+  PASS  W2b JS 행이 매니페스트 ca_ext.ptfe_face 표지를 읽는다
+  PASS  W2c 표지 문자열 사본을 템플릿에 두지 않는다 (producer 상수 하나)
+  PASS  W3 face_alpha + 관측 PTFE 셀 > 0 = 불일치 경고 (두 행)
+  PASS  W5 템플릿 전체가 Jinja 문법으로 파싱된다
+  PASS  W6 Jinja 행 렌더 — face_alpha = 표지 · 셀 > 0 = 경고 · 옛 meta (매니페스트 없음) = 둘 다 없음
+  PASS  W7 JS 행 (node 실행) — face_alpha = 표지 · 셀 > 0 = 경고 · 옛 meta = 둘 다 없음
+  PASS  W4 봉인 build_meta → 규약 칩 "PTFE face_alpha" · 불일치 없음
+  PASS  W8a Jinja 행이 매니페스트 ca_ext.cjunc · ca_ext.sdcp_mod 를 읽는다
+  PASS  W8b JS 행이 매니페스트 ca_ext.cjunc · ca_ext.sdcp_mod 를 읽는다
+  PASS  W8c S2 · S3 표지 문자열 사본을 템플릿에 두지 않는다 (producer 상수 하나)
+  PASS  W9 Jinja [접합] — 있어야 할 조각 6 · 없어야 할 조각 3
+  PASS  W9 Jinja [접합 + 수정자 c 1 (판별)] — 있어야 할 조각 3 · 없어야 할 조각 2
+  PASS  W9 Jinja [접합 + 수정자 (SDCP 0 침대)] — 있어야 할 조각 4 · 없어야 할 조각 1
+  PASS  W9 Jinja [요청 · 블록 없음] — 있어야 할 조각 2 · 없어야 할 조각 2
+  PASS  W9 Jinja [블록인데 id 가 p2] — 있어야 할 조각 2 · 없어야 할 조각 0
+  PASS  W9 Jinja [옛 meta (매니페스트 없음)] — 접합 · 수정자 표지 · 경고 없음
+  PASS  W10 JS [접합] — 있어야 할 조각 6 · 없어야 할 조각 3
+  PASS  W10 JS [접합 + 수정자 c 1 (판별)] — 있어야 할 조각 3 · 없어야 할 조각 2
+  PASS  W10 JS [접합 + 수정자 (SDCP 0 침대)] — 있어야 할 조각 4 · 없어야 할 조각 1
+  PASS  W10 JS [요청 · 블록 없음] — 있어야 할 조각 2 · 없어야 할 조각 2
+  PASS  W10 JS [블록인데 id 가 p2] — 있어야 할 조각 2 · 없어야 할 조각 0
+  PASS  W10 JS [옛 meta] — 접합 · 수정자 표지 · 경고 없음
+  PASS  W11 봉인 build_meta (읽기만) 가 매니페스트를 그대로 싣는다 — 템플릿이 읽는 ca_ext.cjunc · sdcp_mod 자리가 meta 에 있다
+
+25 PASS · 0 FAIL
+rc=0 seconds=1

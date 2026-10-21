@@ -1,0 +1,30 @@
+Rint 2 D: zero/short solve states and SV counterfactual knob wiring
+
+Registration R section 5-0 / 5-6 SV row, Codex RCA-13 / RCA-06.
+
+- run_contract.next_gen_state(step3): positive / zero / short / legacy,
+  binding certificate, result sigma, reason and manifest per state (a short
+  must post sigma None, carry a contraction and a cjunc short record; a zero
+  goes through the same zero-certificate function as next_gen_cert_ok).
+- check_arm and the payload publish gate use it only to relax the sigma > 0,
+  electronic-complete and backend checks for state-certified zero / short
+  arms; uncertified sigma 0 and every legacy path are refused as before.
+- payload: early-return step3 assembled in one helper (_step3_early): the
+  certificate is copied (it was dropped), a J11 short posts sigma None, and
+  for next-generation runs the LEAN-disabled components and disabled-solve
+  receipts are marked as on the solved branch (shared reason constants,
+  byte-identical strings).
+- receipt_match: no backend.rtol is accepted only when no component solved.
+- SV counterfactual knob CJUNC_SV_CF (runner), receipt sv_counterfactual,
+  payload --step3-cjunc-sv-cf (CLI accounting: solve), cjunc_plan
+  sv_counterfactual {'threshold': None}; evidence carries the request and a
+  JSON-finite projection of the record (inf ratio = null + ratio_limit
+  'inf'); cjunc_block_problem validates request, record and flag together;
+  the threshold stays with the chain plan.  Protocol and p3ca id unchanged.
+
+Off path: no knob and no next-generation block = old code paths (only
+string constants were factored, byte-identical).  Tests: b6 S+SP 88/88,
+b6 R 104/104, runner N0/N7/N9 21/21, run_contract selftest 124/124.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

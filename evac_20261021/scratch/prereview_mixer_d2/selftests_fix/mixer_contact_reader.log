@@ -1,0 +1,33 @@
+  PASS  ⓪ 고정구: 7.57e-05 + 7.57e-05 == 1.514e-4 · 제곱도 같다 (비엄격 ≤ 면 G4 가 접촉으로 들어온다) · 0.9·Σr < Σr < 2·0.9·Σr
+  PASS  ① 정상 2 바퀴 런 → OK · mode rot2 · t₀ step 250 · bin 1 = [450, 500, 550] (판독기 bin_window_files 격자)
+  PASS  ② (s1) 홑 SE = 크기 1 성분 · 끝끼리 안 닿는 사슬 3 = 한 성분 — t₀ 성분 수 10 · 크기 1 성분 7
+  PASS  ③ (s1) 떨어진 두 덩어리 (2 · 4) = 두 성분 — 군집 SE 분율 9/16 · 가장 큰 성분 4/16 · 수평균 크기 16/10 · 히스토그램
+  PASS  ④ ★ 정확히 맞닿은 쌍 (d == r_i + r_j) 은 접촉이 아니다 (엄격 부등식) — G4 = 홑 둘 · SE–SE 접촉 6
+  PASS  ⑤ (s2) 두 AM 에 닿은 SE 는 분율에서 한 번 (아무 AM 4/16) · AM 당 수에서 두 번 (쌍 AM_P 2 + AM_S 3)
+  PASS  ⑥ (s2) AM_P · AM_S 따로 — AM_P 분율 2/16 · AM 당 1.0 / AM_S 3/16 · 3.0
+  PASS  ⑦ bin 1 프레임별 값 (C0 · C1 · C0) · 평균 · SD (ddof 1) = 손 계산
+  PASS  ⑧ E0 (회전 0) = 자기 t₀ (250) 만 · bin 1 = NOT_APPLICABLE (TECH 아님) · 값 = C0
+  PASS  ⑨ type → 상 대응 불일치 (deck_meta 에 SE 없음 · AM_S 둘) → TECH · 값 없음
+  PASS  ⑨b 덤프에 계획 밖 type (4 = 벽 · 모든 프레임) → TECH
+  PASS  ⑨c deck_meta.json 없음 → TECH (type 을 추정으로 메우지 않는다)
+  PASS  ⑨d deck_meta.deck_sha256 ≠ in.mixer → TECH (이 런의 메타가 아니다)
+  PASS  ⑨e deck_meta schema /2 (선택 키 · 밀도 세대 · D2) 는 /1 과 같이 읽는다 (값 = C0) · 모르는 /3 은 TECH
+  PASS  ⑩ 반경 불일치 — bin 프레임 하나의 SE 반경 7.6e-05 ≠ 계획 7.57e-05 → TECH
+  PASS  ⑩b in.mixer 템플릿 반경 (7.6e-05) ≠ deck_meta radius_m → TECH
+  PASS  ⑪ 계획 프레임 결손 — bin 1 의 500 없음 → TECH · 계획 t₀ 250 없음 → TECH (앞 프레임으로 대신하지 않는다)
+  PASS  ⑫ 원자 id 중복 (bin 프레임) → TECH
+  PASS  ⑫b 같은 step (500) 의 덤프 둘 → TECH (어느 것이 참인지 모른다)
+  PASS  ⑬ NaN 좌표 (bin 프레임) → TECH
+  PASS  ⑭ 원자 집합이 t₀ 과 다르다 (bin 프레임에서 SE 하나 사라짐) → TECH
+  PASS  ⑭b t₀ 원자 수 (21) ≠ deck_meta n_atoms_planned (100000) → TECH
+  PASS  ⑮ SE 0 개 → UNDEFINED (정의 불가 · 예외 없음) · 값 None — 0 을 값처럼 내지 않는다
+  PASS  ⑯ 계획 바퀴 수가 0 · 2 가 아니면 (3 바퀴 덱) → TECH (등록 = 2 바퀴 계획의 bin 1)
+  PASS  ⑰ M 없음 — 판독기에서 가져오는 이름 = 프레임 선택뿐 (deck_plan · _t0_exact · bin_window_files ⊆ 가져온 것 ⊆ 허용) · 결과 키에 M · S0 · SR · s2 (칸 분산) 없음
+  PASS  ⑱ 연 덤프 = 계획 t₀ + bin 1 정확히 — bin 0 (300 · 350 · 400) 은 열지 않는다
+  PASS  ⑲ 해상도 (보고 전용) — 확실 ⊆ 등록 ⊆ 가능 · 정확히 맞닿은 G4 는 가능에만 (SE–SE 6 · 6 · 7) · 가능 쪽 군집 분율 11/16 · 확실 쪽 = 등록 값
+  PASS  ⑲b 유효숫자 = max(관측, 6) — %g 값 → 6 · %.9g 값 → 9 · 반폭(0.005, 6) = 5e-9 · 반폭(0.0304637, 6) = 5e-8 · 0 → 0 (lhs_contact_audit v2 규칙 · SELF-63)
+  PASS  ⑳ 엄격 JSON (allow_nan=False) · 출처 — 판독기 sha256 · 덱 · 메타 sha256 · 덤프 4 장 (step · 이름 · sha256) · 묶음 sha256
+  PASS  ⑳b TECH 결과도 엄격 JSON · 사유 문자열 · 값 없음 (t₀ · bin None)
+  PASS  ㉑ 형식 검사 뒤 · 읽기 사이에 덤프가 바뀌면 → TECH (sha256 앞뒤 대조 · 섞인 값 없음)
+
+mixer_contact_reader selftest: 31/31 PASS

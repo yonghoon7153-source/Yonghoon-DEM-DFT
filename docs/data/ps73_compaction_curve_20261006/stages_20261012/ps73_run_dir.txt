@@ -1,3 +1,0 @@
-run_dir /home/yonghoon/dem_test/ps45/ps_7_3_r45
-host ibb-master
-2026-10-12T22:12:06+09:00

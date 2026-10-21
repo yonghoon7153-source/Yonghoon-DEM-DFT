@@ -1,0 +1,45 @@
+STEP3 certificate to run binding (pre-review PRE-impl-07): tests first
+
+The zero certificate (VALID_ZERO_TOPOLOGY) carries the grid fingerprints
+fp_sid / fp_sig, but the contract only checked their hex32 shape, and the
+sigma binding (certificate sigma = result sigma) binds nothing when both
+are 0.  A real bottom-limit (R_j = inf) zero certificate with only its
+fingerprints replaced was accepted by conv_cert_problem and
+next_gen_cert_ok.  The positive certificate has no fingerprint at all, so
+a certificate from another bed or another plan with the same sigma
+(within 1e-9) is accepted too.
+
+New tests (scripts/test_step3_target_cert.py):
+- T21 (fast, in-process): production-unit beds (vox 0.15, r_f 0.075),
+  manifest fingerprint fields built by the production wiring functions
+  (ca_ext_cjunc.payload_prepare fp, ptfe_face_alpha.payload_block
+  evidence.fp).  Legit pairs accepted (10 runs: cjunc, face_alpha, both,
+  zero and positive, electronic and ionic).  Rejected: the PRE-impl-07
+  counterexample (forged fingerprints), a real zero certificate from
+  another bed (both directions), a positive certificate from the mirror
+  bed (same sigma within 1e-12), a certificate from the same bed with a
+  different junction plan (cut vs fused, same sigma bytes) or a different
+  face_alpha plan (PTFE capsule moved, same sigma bytes), electronic /
+  ionic certificates swapped (both zero), manifests without fingerprint
+  fields, single field changes in the certificate or the manifest.
+  Canonical grid field = junction registry sid (sid_off consistency stays
+  with the ca_ext contract).  conv_cert_problem(cert, sigma) without a
+  manifest = TypeError.  Recorded binding fields = solve input
+  fingerprints.
+- T22 (fast, payload end-to-end): face_alpha + junction + rtol, LEAN 3;
+  legit runs pass next_gen_cert_ok; the fused run certificate attached
+  to the cut run (same sigma) is rejected.
+- T23 (fast): against a76f59d0d, certificate off = identical solve
+  results; certificate on = base certificate fields unchanged, added
+  fields = binding fields only.
+- T13 calls the contract through a two-API shim with a matching
+  manifest (internal checks unchanged).
+- T18: 14 new mutants (contract, solver, early record) and step3_sigma
+  support in the mutation harness.
+
+pre-fix 213/251 (fails = 29 checks from the PRE-impl-07 counterexample
+and its same-class variants, 4 recorded-field checks, 4 base-comparison
+checks, 1 mutation-anchor check)
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

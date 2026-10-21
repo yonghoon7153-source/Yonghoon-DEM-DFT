@@ -1,0 +1,97 @@
+{
+ "lib_cases": 342,
+ "lib_identical": 342,
+ "lib_refused_both": 21,
+ "cli_cases": 14,
+ "cli_identical": 14,
+ "cli_both_rc0": 11,
+ "cli_rc": [
+  [
+   "default",
+   0,
+   0,
+   1
+  ],
+  [
+   "LC_campaign",
+   0,
+   0,
+   1
+  ],
+  [
+   "LC_ref20",
+   0,
+   0,
+   2
+  ],
+  [
+   "E0_ref20_rev0",
+   0,
+   0,
+   2
+  ],
+  [
+   "LH_ref20_dthalf",
+   0,
+   0,
+   2
+  ],
+  [
+   "LU637_ref20_fullprec",
+   0,
+   0,
+   2
+  ],
+  [
+   "all_arms_8000_cgf151.4",
+   0,
+   0,
+   19
+  ],
+  [
+   "all_arms_100k_ref20",
+   0,
+   0,
+   38
+  ],
+  [
+   "all_arms_cgf200_refuse_LU637",
+   1,
+   1,
+   0
+  ],
+  [
+   "LA_baffles2",
+   0,
+   0,
+   2
+  ],
+  [
+   "E1_rpm60_offband",
+   0,
+   0,
+   1
+  ],
+  [
+   "LC_stiff20_nohold_refuse",
+   1,
+   1,
+   0
+  ],
+  [
+   "composite_seed_refuse",
+   1,
+   1,
+   0
+  ],
+  [
+   "no_out_print_only",
+   0,
+   0,
+   null
+  ]
+ ],
+ "cli_files_compared": 70,
+ "lib_bad": [],
+ "cli_bad": []
+}

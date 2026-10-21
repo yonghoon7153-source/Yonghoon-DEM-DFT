@@ -1,0 +1,29 @@
+M01 조각 = fid 규칙 (서로 다른 섬유 = fid 다름만) → CAUGHT | == test_carbon_junction: 2/10 PASS
+M02 바닥 = s > D 만 → CAUGHT | == test_carbon_junction: 8/12 PASS
+M03 고리 이음매 별칭 끔 → CAUGHT | == test_carbon_junction: 2/6 PASS
+M04 포트 후보 = 살아있는 위치만 (옛 옮김) → CAUGHT | == test_carbon_junction: 5/7 PASS
+M05 SV 반사실 = 성분 SV 면 전부 끊음 → CAUGHT | == test_carbon_junction: 4/5 PASS
+M06 닫힌 경로 이음매 잇기 끔 → CAUGHT | == test_carbon_junction: 4/6 PASS
+M07 덮인 포트 = 그대로 실현 (미실현 안 함) → CAUGHT | == test_carbon_junction: 5/7 PASS
+M08 같은 조각 면 연속 판정 끔 (늘 접촉) → CAUGHT | == test_carbon_junction: 7/12 PASS
+M09 SV 무리 '지남' = 사이 위치 살아있음 (뒤집음) → CAUGHT | == test_carbon_junction: 4/5 PASS
+M10 자기 L_c = 두 쪽 선분 전부 짝 (접합 쌍 제한 끔) → NOT CAUGHT | == test_carbon_junction: 30/30 PASS
+M11 고리 s 둘레 짧은 쪽 끔 → CAUGHT | == test_carbon_junction: 5/6 PASS
+M12 쌍 무리 고리 둘레 잇기 끔 → NOT CAUGHT | == test_carbon_junction: 6/6 PASS
+M13 조립기 이음매 별칭 dof 끔 → CAUGHT | == test_carbon_junction: 4/6 PASS
+M14 SV 다리 표지 0 (끊을 것 없음) → CAUGHT | == test_carbon_junction: 4/5 PASS
+M15 계획 centerline 거부 끔 → CAUGHT | == test_carbon_junction: 5/7 PASS
+M16 솔브 입구 centerline 거부 끔 → CAUGHT | == test_carbon_junction: 5/7 PASS
+M17 protocol centerline 받음 → CAUGHT | == test_carbon_junction: 6/7 PASS
+M18 자기 포트 후보 = 조각 전부 (쪽 제한 끔) → CAUGHT | == test_carbon_junction: 28/29 PASS
+M19 자기 분산판 맞은편 = 짝 제한 끔 → NOT CAUGHT | == test_carbon_junction: 31/31 PASS
+M20 미수렴 반사실 종류 = 옛 문자열 → CAUGHT | == test_carbon_junction: 7/8 PASS
+M21 S0 해시 = 문서 어디에든 (옛) → CAUGHT | 20 PASS · 2 FAIL
+M22 두 계획 tol_ff 대조 끔 → CAUGHT | 21 PASS · 1 FAIL
+M23 두 계획 len_law 대조 끔 → CAUGHT | 21 PASS · 1 FAIL
+M24 R 런 계획 파일 sha 대조 끔 → CAUGHT | 21 PASS · 1 FAIL
+M25 단계 2 --r-plan-path 필수 끔 → NOT CAUGHT | 22 PASS · 0 FAIL
+M26 같은 셀 재방문 = 별칭 짝도 셈 → NOT CAUGHT | == test_carbon_junction: 6/6 PASS
+M27 경로로만 = 경로 끊김 검사 끔 → NOT CAUGHT | == test_carbon_junction: 29/29 PASS
+wrote /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rcaA2/logs/mutsweep.json
+rc=0

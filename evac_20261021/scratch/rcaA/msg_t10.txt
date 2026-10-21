@@ -1,0 +1,13 @@
+Rint 2 S2 RCA-05 validator test: old-form record without len_mult_max (regression found, tests first)
+
+Regression found by test_rint_r_chain (32/89 on 98e837630, 89/89 on base): its synthetic manifests
+carry the old count form (no len_mult_max, no n_subedges, n_long 1) and the first validator change
+rejected every record without len_mult_max.  CAX-SUB now requires: old form (len_mult_max absent,
+sub-edges = instances) accepted; len_mult_max absent with 5 sub-edges > 3 instances (a k > 1 record
+dropping the field) rejected; explicit None with instances > 0 rejected.
+
+Pre-fix (parent 7b29d26dc): CAX-SUB 13/14 (fails = 1 check from 1 counterexample: old-form record
+rejected).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

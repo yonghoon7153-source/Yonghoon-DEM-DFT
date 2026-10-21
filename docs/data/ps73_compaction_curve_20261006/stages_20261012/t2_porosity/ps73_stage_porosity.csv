@@ -1,6 +1,0 @@
-stage,step,time_ms,plate_um,eps_sphere_pct,eps_union_pct,union_mc_std_pct,n_center_above_plate,n_touch_plate,n_fully_above_plate,overhang_plate_over_box_pct,atom_top_um,role
-Initial compression,405000,405.000,138.252,31.6854,31.7833,0.0233,0,0,0,0.00000,132.048,stage
-50 MPa,1665000,1665.000,125.652,24.8350,24.9817,0.0216,0,832,0,0.00230,126.120,stage
-300 MPa (end of compression),3125000,3125.000,111.052,14.9531,16.5312,0.0186,11,1981,10,0.03505,112.543,stage
-After relaxation,3225000,3225.000,111.052,14.9536,16.4945,0.0186,11,1881,9,0.01747,112.418,stage
-After relaxation — stress frame (union check),3220000,3220.000,111.052,14.9536,16.4941,0.0186,11,1881,9,0.01746,112.418,check (ps45 union summary frame · stress frame)

@@ -1,0 +1,26 @@
+Rint 2 D: webapp solve states, SV counterfactual ratio, junction qualifiers: tests first
+
+webapp/test_ca_ext_labels.py, same two rows of webapp/templates/
+mpm_lab.html (Jinja server row and JS row), read-only from the payload:
+- W12 solve states from step3.conv_cert / step3.ion_conv_cert, words
+  spelled as step3_conv_cert.STATUS_* (VALID_ZERO_TOPOLOGY = sigma 0,
+  no through component, a result; ELECTRODE_SHORT = sigma +inf, J11,
+  not published as a finite sigma; NOT_CERTIFIABLE = warning; positive
+  solve and no certificate = no marker).
+- W13 SV counterfactual line from evidence.solve.sv_counterfactual:
+  ratio (finite, or +inf via ratio_limit 'inf', else a dash), status,
+  producer flag; threshold = chain plan (the screen shows the ratio
+  only, the verdict is the chain's).
+- W14 junction qualifiers (pre-review PRE-impl-08): the producer list
+  evidence.qualifiers (carbon_junction.CJUNC_QUALIFIERS) is rendered as
+  is; the three markers of design v1 4-6 (distributed plate, same-cell
+  revisit per branch, SV diagnostic with a separate counterfactual) are
+  checked on the rendered output; no copy of a qualifier in the
+  template; an old record without qualifiers shows none of the three.
+
+pre-fix 34/54 (fails = 20 checks: W12a, W14a and nine render cases in
+each of the two renderers; W14b, the producer list carrying the three
+markers, already passes).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

@@ -1,9 +1,0 @@
-audit_validation_flags — 자기신고 감사의 자기일관 (L4-03)
-  ✓ 감사가 정상 종료한다   rc=0
-  ✓ ① 분모가 5 다 — 깨진 JSON 을 빼지 않는다
-  ✓ ② 통과는 양성 대조 1건뿐 (3/3 100 % 가 아니다)
-  ✓ ④ 읽기 실패를 이름으로 센다
-  ✓ ①② 자기신고 모순을 센다
-  ✓ ③ 자기신고 비-bool 을 센다
-  ✓ 요약이 "all assessable gates True" 라고 말하지 않는다
-AUDIT SELFTEST PASS

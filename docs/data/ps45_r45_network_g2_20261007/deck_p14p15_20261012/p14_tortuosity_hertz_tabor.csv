@@ -1,7 +1,0 @@
-﻿PC:SC mass ratio,Transport tortuosity (Hertz),Transport tortuosity (Tabor),Basis
-,,,
-0:10,7.243301376,4.12277375,Hertz = main (TSV tau2_ion_hertz) · Tabor = sensitivity (TSV tau2_ion_physics)
-3:7,5.973260094,3.345650761,Hertz = main (TSV tau2_ion_hertz) · Tabor = sensitivity (TSV tau2_ion_physics)
-5:5,5.449510208,3.050822835,Hertz = main (TSV tau2_ion_hertz) · Tabor = sensitivity (TSV tau2_ion_physics)
-7:3,5.029724354,2.775934387,Hertz = main (TSV tau2_ion_hertz) · Tabor = sensitivity (TSV tau2_ion_physics)
-10:0,5.286356866,3.128223717,Hertz = main (TSV tau2_ion_hertz) · Tabor = sensitivity (TSV tau2_ion_physics)

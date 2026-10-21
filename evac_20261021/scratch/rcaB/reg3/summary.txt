@@ -1,0 +1,1 @@
+conv_cert_full	rc=0	122s	== test_step3_conv_cert: 27/27 PASS

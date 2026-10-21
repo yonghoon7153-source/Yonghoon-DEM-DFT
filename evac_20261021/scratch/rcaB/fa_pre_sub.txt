@@ -1,0 +1,31 @@
+step3_sigma = /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a9a78b0be0713b231/scripts/step3_sigma.py
+
+── F18 K = 8 거짓 절단 (한계 기록 · Codex 10-21 §4-1) — 정사각형 ∩ 중앙 원 (r/h 0.65 · 정확 α 0.01345) · K4 · K8 = 0 · K16 0.015625 · 면적 오차 ↔ 연결성 · 단자 G 처분 분리 · 진단 칸 (α = 0 면 · 고운 구적에서 열리는 수)
+  PASS  F18-a 정확 열린 면적분율 = 0.0134549613712 (닫힌꼴 · 1e-12)
+  PASS  F18-b 한계 — K 4 · K 8 (봉인) 중점 구적 = 0 (열린 네 귀퉁이를 구적점이 못 본다 = 거짓 절단)
+  PASS  F18-c 고운 구적 — K 16 = 0.015625 (4/256) · K 32 = 0.01171875 (12/1024) · 정확값 둘레
+  PASS  F18-d 처분 분리 — 면적 오차 |α8 − α| ≤ 1/K² (구적 한 칸 · 작다) 인데 단자 G 는 위상이 바뀐다: K8 계획 = 유일 경로 절단 → σ 0 (관통 성분 없음) ↔ K16 계획 σ = 2σα/(α+1) > 0 (1e-12) · 정확 α 의 σ 와 같은 자릿수
+  FAIL  F18-e 진단 칸 — 계획 false_cut_check (K 8 · 고운 K 16 · α = 0 면 1 · 그중 K16 에서 열림 1) · 증거 요약 alpha_zero_faces 1 · alpha_zero_open_at_refine 1 · alpha_refine_K 16  (({}, {'alpha_zero_faces': None, 'alpha_zero_open_at_refine': None, 'alpha_refine_K': None}))
+  FAIL  F18-f 대조 — 참 절단 (r/h 0.8 · 정확 α 0) 은 고운 구적에서도 막힘 → 열림 수 0 (진단이 참 절단을 거짓으로 세지 않는다)
+  FAIL  F18-g K16 계획 — α = 0 면 없음 (고운 K 32 로 볼 것도 없다 · 칸은 그대로 기록)
+
+── F19 명목 체적 ↔ 합집합 체적 (이름 분리 · Codex 10-21 A4 · F11 한정) — 기록 칸 = 명목 (Σ πr²L + 조각마다 구 하나 · 겹침 미차감) · 합집합 = 미계산 칸 · 밴드 비의 기준 = 명목
+  FAIL  F19-a volume_record — capsule_nominal_um3 = capsule_um3 (옛 칸 그대로) · capsule_union_um3 None · 미계산 표지 · 비의 기준 = 명목 · 체적 정의 이름  ({'capsule_um3': 1.5, 'true_um3': 1.0, 'ratio': 1.5, 'band': [0.5, 2.0], 'status': 'in_band'})
+  FAIL  F19-b 한계 — 교차 두 캡슐: 기록 (명목) = 2(πr²L + 4/3πr³) · 참 합집합 = 명목 − 16r³/3 (9.0 % 작다) → 명목 ≠ 합집합 · 요약 칸에 체적 정의 이름  ((0.1125831531540146, 0.1125831531540146, 0.10241449182068127, None))
+
+── F20 같은 sid 면제 = 상 수준 융합 가정 (표지 · Codex 10-21 §4-1) — 같은 AM pid = 한 입자 안 · 같은 탄소 sid · SDCP|SDCP = 여러 물체를 한 연속체로 묶는 가정 · 증거 칸 · 계약이 producer 상수와 대조
+  FAIL  F20-a 표지 상수 — AM 같은 pid = same_particle_interior · 탄소 같은 sid (VGCF · SuperP · SWCNT) · SDCP|SDCP = phase_level_fusion_assumed
+  FAIL  F20-b 증거 칸 exempt_assumptions = 표지 상수 (evidence_record) · 정상 매니페스트 계약 통과  ((None, (True, None)))
+  FAIL  F20-c ca_ext_record_ok 거부 [표지 빠짐]  ((True, None))
+  FAIL  F20-c ca_ext_record_ok 거부 [융합 가정을 같은 물체로 바꿈]  ((True, None))
+
+4 PASS · 9 FAIL
+  - F18-e 진단 칸 — 계획 false_cut_check (K 8 · 고운 K 16 · α = 0 면 1 · 그중 K16 에서 열림 1) · 증거 요약 alpha_zero_faces 1 · alpha_zero_open_at_refine 1 · alpha_refine_K 16
+  - F18-f 대조 — 참 절단 (r/h 0.8 · 정확 α 0) 은 고운 구적에서도 막힘 → 열림 수 0 (진단이 참 절단을 거짓으로 세지 않는다)
+  - F18-g K16 계획 — α = 0 면 없음 (고운 K 32 로 볼 것도 없다 · 칸은 그대로 기록)
+  - F19-a volume_record — capsule_nominal_um3 = capsule_um3 (옛 칸 그대로) · capsule_union_um3 None · 미계산 표지 · 비의 기준 = 명목 · 체적 정의 이름
+  - F19-b 한계 — 교차 두 캡슐: 기록 (명목) = 2(πr²L + 4/3πr³) · 참 합집합 = 명목 − 16r³/3 (9.0 % 작다) → 명목 ≠ 합집합 · 요약 칸에 체적 정의 이름
+  - F20-a 표지 상수 — AM 같은 pid = same_particle_interior · 탄소 같은 sid (VGCF · SuperP · SWCNT) · SDCP|SDCP = phase_level_fusion_assumed
+  - F20-b 증거 칸 exempt_assumptions = 표지 상수 (evidence_record) · 정상 매니페스트 계약 통과
+  - F20-c ca_ext_record_ok 거부 [표지 빠짐]
+  - F20-c ca_ext_record_ok 거부 [융합 가정을 같은 물체로 바꿈]

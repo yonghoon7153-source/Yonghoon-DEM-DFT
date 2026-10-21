@@ -1,0 +1,9 @@
+
+── ZB 끔 경로 — 고치기 전 run_contract (--old-scripts) 와 digest · 발사 전 검사 · 이름 태그 · receipt_match 같음
+  PASS  ZB1 커밋된 영수증 44 개 — receipt_digest 가 고치기 전과 같다
+  PASS  ZB2 bulk 없는 env 6 가지 (끔 · centerline · rtol · 접합 + rtol · + c · face_alpha + rtol) — 발사 전 검사 · 영수증 · 이름 태그 · 인자가 고치기 전과 같다 (새 칸 vgcf_bulk = 빈 문자열)
+  PASS  ZB3 봉인 코호트 32 팔 — receipt_match · physics_protocol_id 가 고치기 전과 같다
+    (0.4 s)
+
+3 PASS · 0 FAIL  (0.4 s)
+rc=0 seconds=1

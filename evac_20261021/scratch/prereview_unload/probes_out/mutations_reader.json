@@ -1,0 +1,329 @@
+{
+ "ULKRF01_dup_check_removed": {
+  "file": "ul_reader.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_reader": {
+    "rc": 1,
+    "n_ok": 179,
+    "n_fail": 3,
+    "fails": [
+     "R33 ULKRF-01 러너 resume_from 한 줄 · 상태 파일 하나 · 같은 RESUME (k 1 · s_r) 두 줄 · 끊긴 시도 묶음 둘 (Codex one_auth_two_rollbacks — 옛 판 = 승인 둘 · 두 번 되감아 주 값",
+     "R33 ULKRF-01 같은 RESUME 두 줄 · 되감기 한 번 (Codex duplicate_event_only — 옛 판 = 사유 없이 허용) → 같은 경계 사건 중복 = 사유 있는 거부 · UVa 거부  —",
+     "R33 ULKRF-01 같은 step · 다른 k 의 RESUME (k 1 · k 2 · 상태 파일 ul_k 1 — 상충 · 옛 판 = 허용) → 승인 없음 · 사유 있는 거부 · UVa 거부  —"
+    ],
+    "last": [
+     "selftest: FAIL (3 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {
+   "R33 ULKRF-01 러너 resume_from 한 줄": true,
+   "R33 ULKRF-01 같은 RESUME 두 줄": true,
+   "R33 ULKRF-01 같은 step": true
+  },
+  "must_pass_ok": {
+   "R33 대조": true
+  },
+  "killed": true
+ },
+ "ULKRF01_out_of_rf_problem_removed": {
+  "file": "ul_reader.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_reader": {
+    "rc": 0,
+    "n_ok": 182,
+    "n_fail": 0,
+    "fails": [],
+    "last": [
+     "selftest: PASS (0 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {},
+  "must_pass_ok": {},
+  "killed": false
+ },
+ "ULKRF01_nonnumeric_problem_removed": {
+  "file": "ul_reader.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_reader": {
+    "rc": 0,
+    "n_ok": 182,
+    "n_fail": 0,
+    "fails": [],
+    "last": [
+     "selftest: PASS (0 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {},
+  "must_pass_ok": {},
+  "killed": false
+ },
+ "ULKRF01_event_rewind_k_condition_removed": {
+  "file": "ul_reader.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_reader": {
+    "rc": 0,
+    "n_ok": 182,
+    "n_fail": 0,
+    "fails": [],
+    "last": [
+     "selftest: PASS (0 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {},
+  "must_pass_ok": {},
+  "killed": false
+ },
+ "ULKRF01_state_mismatch_problem_removed": {
+  "file": "ul_reader.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_reader": {
+    "rc": 0,
+    "n_ok": 182,
+    "n_fail": 0,
+    "fails": [],
+    "last": [
+     "selftest: PASS (0 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {},
+  "must_pass_ok": {},
+  "killed": false
+ },
+ "ULKRF02_kback_off": {
+  "file": "ul_reader.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_reader": {
+    "rc": 1,
+    "n_ok": 181,
+    "n_fail": 1,
+    "fails": [
+     "R34 ULKRF-02 승인된 이어 돌림 — 옛 시도 단 k 2 = 4 창 (단 끝 3,360,000) · 새 시도 = 5 창 (3,370,000 · 옛 것보다 늦다 — 단 CSV 에 step 역행 없음 · Codex resume_completed_h"
+    ],
+    "last": [
+     "selftest: FAIL (1 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {
+   "R34 ULKRF-02 승인된 이어 돌림": true
+  },
+  "must_pass_ok": {
+   "R34 대조": true,
+   "R34 ULKRF-02 같은 길이": true,
+   "R34 ULKRF-02 승인 없는": true
+  },
+  "killed": true
+ },
+ "ULKRF02_kback_also_windows": {
+  "file": "ul_reader.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_reader": {
+    "rc": 1,
+    "n_ok": 20,
+    "n_fail": 23,
+    "fails": [
+     "R1 ULR1-02 측정 뒤 TIMEOUT — 사다리 0.2 · 0.25 · 0.3 · 0.35 µm / 1.2 · 0.8 · 0.6 · 0.4 MPa · +2 확인 끝 · 분리 전 시간 끝 → primary OK · ρ = 0.202607787342",
+     "R1 ULR1-02 교차 전 TIMEOUT · 마지막 정상 단까지 정상 · 접촉 · 단조 → LOWER_BOUND (ρ > ρ(0.3 µm)) · 점 추정 없음  —",
+     "R2 ULR1-01 결정표 t1: ρ_UB 1.0 · ρ_UT 1.04 → δ_dt 0.04 → 다음 = UVa (UB · UT 끝 뒤에만) · ρ_UV 1.03 (기준 1.0) → 튜플 t1 · 7:3 최종 팔 UB  —",
+     "R2 ULR1-01 결정표 t2: ρ_UB 1.0 · ρ_UT 1.04 → δ_dt 0.04 → 다음 = UVa (UB · UT 끝 뒤에만) · ρ_UV 1.2 (기준 1.0) → 튜플 t2 · 7:3 최종 팔 UVa  —",
+     "R2 ULR1-01 결정표 t3: ρ_UB 1.0 · ρ_UT 1.2 → δ_dt 0.20 → 다음 = UVb (UB · UT 끝 뒤에만) · ρ_UV 1.22 (기준 1.2) → 튜플 t3 · 7:3 최종 팔 UT3  —",
+     "R2 ULR1-01 결정표 t4: ρ_UB 1.0 · ρ_UT 1.2 → δ_dt 0.20 → 다음 = UVb (UB · UT 끝 뒤에만) · ρ_UV 1.4 (기준 1.2) → 튜플 t4 · 7:3 최종 팔 UVb  —",
+     "R2 ULR1-01 경계 δ = 0.10 정확히 (ρ 1.0 ↔ 1.1 · 부동소수 0.10000000000000009) = ≤ 쪽 → dt* = dt₀ · δ_v 0.10 → t1 (UB)  —",
+     "R4 k* 의 마지막 두 창 thermo σ_P 0.5 MPa (> P_meas / 3) → NOISE_FLOOR (주 값 아님 · 선택 UNRESOLVED)  —",
+     "R5 관문: δ_dt 0.2 → dt* = dt₀/2 → UVb 만 허용 · UVa 거부  —",
+     "R5 ULR1-05 결정표 3 행 (UT 채택) → UTc (UT 의 R_M 에서 이어 돌림) 허용 · UT3 를 S0 에서 새로 (7:3) 거부 · G_UT3 허용 (R_M = UT)  —",
+     "R5 다른 침대: 복원 전 거부 · 복원 뒤에는 최종 튜플의 팔 (UT3) 만 허용 · UB · UVa 거부  —",
+     "R20 대조: UB · UT 정상 (교차 k 2 · 확인 k 3 · 4 정상) → UT OK · δ_dt 0 → UVa 허용  —",
+     "R20 Q1 확인 두 단에서 판이 떨어짐 (벽 접촉 0 · 정상 · S3 PASS · 유한) → 주 값 OK 그대로 (판 접촉은 확인 단 조건이 아니다)  —",
+     "R21 ULKR-02 첫 A 단 (k 0 → 1) 교차 · 반등 없음 → ρ 0.1798695599526285 · 괄호 [0, 0.2] µm · 합집합 = 그 괄호 (옛 코드 = null)  —",
+     "R21 ULKR-02 첫 A 단 교차 + 뒤 반등 (1.2 → 0.7) → 합집합 외곽 [0, 0.4] µm (옛 [0.3, 0.4]) · 0:10 괄호 [0.2, 0.25] µm 와 10 쌍 = OVERLAP (옛 SEPARATED)  —",
+     "R21 ULKR-02 확인 뒤 단 하나 P̄ 비유한 → 주 값 OK 그대로 · 합집합 미계산 (null · 사유 — 10 쌍 표 미식별)  —",
+     "R23 대조: UB ρ 0.2026 · UT ρ 0.3827 (R_M 에서 멈춤 · RM_STOP) · UVb = UT → 선택 t3 (UT3 = UT + UTc)  —",
+     "R23 ULKR-03 UTc = 해시로 묶인 UT 부모 관측 (복사 없음) + 이어 돌림 → UTc 판독 주 값 = UT 주 값 (OK · ρ 0.3827035983143033) · 이어 돌림 OK  — KeyError: 'primary_status'",
+     "R23 ULKR-03 최종 report (t3) = UT 주 값 (OK · ρ 0.3827) + UTc 보조 관측 (분리 · 분리 뒤 4 창 · trajectory DONE · 출처 UTc)  — KeyError: 'primary_status'",
+     "R23 ULKR-03 UTc 시작 뒤 UT 부모 파일 (screen.txt) 이 바뀜 (sha256 ≠ 목록) → UTc 이어 돌림 무효 · UTc 주 값 UNIDENTIFIED · report = UT 주 값 그대로 · 보조 SEP_INCOMPLET",
+     "R23 ULKR-03 옛 러너 꼴 (UT 기록 CSV 를 UTc 에 복사) → 경계 중복 (R_M step 이하 UTc 기록) → 이어 돌림 무효 · report = UT 주 값 + 보조 SEP_INCOMPLETE  —",
+     "R23 ULKR-03 경계 누락 (UTc 첫 단 k = k_RM + 2) → 이어 돌림 무효 · report = UT 주 값 + 보조 SEP_INCOMPLETE  —",
+     "R23 ULKR-03 run_manifest 의 rm_step ≠ 부모 RM 사건 step → 이어 돌림 무효 (부모 기록 끝 ≠ R_M)  —"
+    ],
+    "last": [
+     "  ✗ R23 ULKR-03 run_manifest 의 rm_step ≠ 부모 RM 사건 step → 이어 돌림 무효 (부모 기록 끝 ≠ R_M)  —"
+    ]
+   }
+  },
+  "must_fail_hit": {},
+  "must_pass_ok": {},
+  "killed": true
+ },
+ "ULKRF03_early_return_removed": {
+  "file": "ul_gates.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_gates": {
+    "rc": 1,
+    "n_ok": 37,
+    "n_fail": 4,
+    "fails": [
+     "C4 ULKRF-03 G2c 시험 쪽 쌍 덤프 머리 c_cpl[7] → not_c_cpl[7] (필수 열 결손) = 예외 없이 FAIL + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  — KeyError: 'c_cpl[7]",
+     "C4 ULKRF-03 G2c 원 쪽 쌍 덤프 머리 c_cpl[7] → not_c_cpl[7] (필수 열 결손) = 예외 없이 FAIL + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  — KeyError: 'c_cpl[7]'",
+     "C4 ULKRF-03 G2c 시험 쪽 쌍 덤프 머리 c_cpl[8] → not_c_cpl[8] (필수 열 결손) = 예외 없이 FAIL + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  — KeyError: 'c_cpl[8]",
+     "C4 ULKRF-03 G2c 원 쪽 쌍 덤프 머리 c_cpl[8] → not_c_cpl[8] (필수 열 결손) = 예외 없이 FAIL + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  — KeyError: 'c_cpl[8]'"
+    ],
+    "last": [
+     "selftest: FAIL (4 실패)"
+    ]
+   },
+   "ul_reader": {
+    "rc": 1,
+    "n_ok": 177,
+    "n_fail": 5,
+    "fails": [
+     "R35 ULKRF-03 복원 R/g2 쌍 덤프 머리 c_cpl[7] → not_c_cpl[7] (Codex g2c_c_cpl7_missing) → 예외 없이 G2c FAIL + 사유 (열 이름) · RESTORED 아님 · 다음 제출 (UB) 거부  ",
+     "R35 ULKRF-03 복원 R/g2 쌍 덤프 머리 c_cpl[8] → not_c_cpl[8] (Codex g2c_c_cpl8_missing) → 예외 없이 G2c FAIL + 사유 (열 이름) · RESTORED 아님 · 다음 제출 (UB) 거부  ",
+     "R35 ULKRF-03 복원 원 in/ 쌍 덤프 머리 c_cpl[7] → not_c_cpl[7] → 예외 없이 G2c FAIL + 사유 (열 이름) · RESTORED 아님 · 다음 제출 (UB) 거부  — KeyError: 'c_cpl[7]'",
+     "R35 ULKRF-03 복원 원 in/ 쌍 덤프 머리 c_cpl[8] → not_c_cpl[8] → 예외 없이 G2c FAIL + 사유 (열 이름) · RESTORED 아님 · 다음 제출 (UB) 거부  — KeyError: 'c_cpl[8]'",
+     "R35 ULKRF-03 실제 restore CLI — R/g2 쌍 덤프 머리 c_cpl[7] 결손 → rc 2 (Traceback · rc 1 아님) · restore_verdict.json = RESTORED 아님 (증서 미발행) · G2c FAIL"
+    ],
+    "last": [
+     "selftest: FAIL (5 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {
+   "C4 ULKRF-03": true,
+   "R35 ULKRF-03": true
+  },
+  "must_pass_ok": {},
+  "killed": true
+ },
+ "Q3_listed_check_removed": {
+  "file": "ul_reader.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_reader": {
+    "rc": 0,
+    "n_ok": 182,
+    "n_fail": 0,
+    "fails": [],
+    "last": [
+     "selftest: PASS (0 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {},
+  "must_pass_ok": {},
+  "killed": false
+ },
+ "Q3_rc_check_removed": {
+  "file": "ul_reader.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_reader": {
+    "rc": 0,
+    "n_ok": 182,
+    "n_fail": 0,
+    "fails": [],
+    "last": [
+     "selftest: PASS (0 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {},
+  "must_pass_ok": {},
+  "killed": false
+ },
+ "Q3_diff_check_removed": {
+  "file": "ul_reader.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_reader": {
+    "rc": 0,
+    "n_ok": 182,
+    "n_fail": 0,
+    "fails": [],
+    "last": [
+     "selftest: PASS (0 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {},
+  "must_pass_ok": {},
+  "killed": false
+ },
+ "Q4_int_token_off": {
+  "file": "ul_lib.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_lib": {
+    "rc": 1,
+    "n_ok": 22,
+    "n_fail": 2,
+    "fails": [
+     "L14 Q4 원자 덤프 ID 정수 토큰 9007199254740993 (2^53 + 1) — float 를 거치지 않는다 → exact_id · ids_of 거부 (2^53 으로 둔갑해 받지 않는다) · 정상 토큰 1 · 2 = 그대로 (1 · 2) ",
+     "L14 Q4 쌍 덤프 참조 열 (c_cpl[7] · c_cpl[8]) 같은 규칙 — 정수 토큰 2^53 + 1 거부 · 소수 꼴 정확한 정수 2.0 그대로 (2) · 2.0000000000000001 (float 가 정수 2.0 으로 가린다) = 파서"
+    ],
+    "last": [
+     "selftest: FAIL (2 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {
+   "L14 Q4 원자 덤프": true,
+   "L14 Q4 쌍 덤프": true
+  },
+  "must_pass_ok": {},
+  "killed": true
+ },
+ "Q4_decimal_mask_off": {
+  "file": "ul_lib.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_lib": {
+    "rc": 1,
+    "n_ok": 23,
+    "n_fail": 1,
+    "fails": [
+     "L14 Q4 쌍 덤프 참조 열 (c_cpl[7] · c_cpl[8]) 같은 규칙 — 정수 토큰 2^53 + 1 거부 · 소수 꼴 정확한 정수 2.0 그대로 (2) · 2.0000000000000001 (float 가 정수 2.0 으로 가린다) = 파서"
+    ],
+    "last": [
+     "selftest: FAIL (1 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {
+   "L14 Q4 쌍 덤프": true
+  },
+  "must_pass_ok": {},
+  "killed": true
+ },
+ "Q4_lf_writer_reverted": {
+  "file": "ul_reader.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_reader": {
+    "rc": 0,
+    "n_ok": 182,
+    "n_fail": 0,
+    "fails": [],
+    "last": [
+     "selftest: PASS (0 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {},
+  "must_pass_ok": {},
+  "killed": false
+ }
+}

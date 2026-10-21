@@ -1,0 +1,14 @@
+Rint 2 S2 RCA-04 test: same-geometry paths (exact / reversed duplicate) rejected in quantitative mode
+
+The geometric path order (CJUNC_ORDER_RULE) cannot separate two fids with the same canonical point
+sequence; 355ff961d rejects that case ('duplicate_path_reversed') but had no dedicated test.  This
+test was written after the implementation (deviation from tests-first, recorded): exact duplicate
+-> 'duplicate_path' (old rule), reversed duplicate -> 'duplicate_path_reversed', both refused by the
+quantitative gate (ValueError) and accepted with quantitative=False; two paths differing in one
+non-collinear point -> no duplicate code.
+
+Base 47d23baba code: 2/3 (reversed duplicate not rejected, fails = 1 check from 1 counterexample);
+current: 3/3.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

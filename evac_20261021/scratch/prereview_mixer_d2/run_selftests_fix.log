@@ -1,0 +1,6 @@
+make_mixer_deck rc=0 6s :: make_mixer_deck selftest: 154/154 PASS
+mixer_deck_readback rc=0 1s :: mixer_deck_readback selftest: 31/31 PASS
+mixer_deck_diff rc=0 2s :: mixer_deck_diff selftest: 61/61 PASS
+mixer_smoke_blind rc=0 63s :: 
+mixer_contact_reader rc=0 1s :: mixer_contact_reader selftest: 31/31 PASS
+test_launcher rc=0 169s :: test_launcher: 138 PASS / 0 FAIL

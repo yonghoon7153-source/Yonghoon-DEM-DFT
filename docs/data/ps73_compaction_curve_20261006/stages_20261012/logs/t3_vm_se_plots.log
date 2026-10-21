@@ -1,8 +1,0 @@
-LW OK · 판 0.111052 = plate.csv True · 접촉 {'n': 562646, 'n_duplicate_unordered_pairs': 0, 'n_self_pairs': 0, 'n_delta_nonpositive': 0}
-  SE_only    n  52464 (벽  2770)  평균 82.24  중앙 80.19  p25 58.06  p75 104.1  p90 127.2 MPa
-  PC_only    n  45381 (벽   406)  평균 121.1  중앙 95.41  p25 60.52  p75 146.2  p90 211.7 MPa
-  SC_only    n  47289 (벽   551)  평균 112.5  중앙 98.63  p25 67.96  p75 139.6  p90 190.7 MPa
-  PC_and_SC  n  13626 (벽     0)  평균 201.1  중앙 150.5  p25 83.63  p75 272.1  p90 439.5 MPa
-  no_contact n      1 (벽     1)  평균 —  중앙 —  p25 —  p75 —  p90 — MPa
-  ALL_SE     n 158761 (벽  3728)  평균 113.1  중앙 91.73  p25 62.76  p75 131.7  p90 194.2 MPa
-rc=0

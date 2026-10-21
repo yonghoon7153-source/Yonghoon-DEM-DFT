@@ -1,0 +1,675 @@
+{
+ "kit": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_unload/m_pin/docs/data/ps45_unload_20261009",
+ "cases": {
+  "A0_fresh_complete": {
+   "primary_status": "OK",
+   "rho_pct": 0.2026077873428664,
+   "lower_bound_pct": null,
+   "trajectory_status": "RM_STOP",
+   "n_superseded_rows": 0,
+   "steps_k": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "steps_Pbar": [
+    0.16,
+    0.0012,
+    0.0008,
+    0.0006,
+    0.0004
+   ],
+   "windows_k_last": [
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     1
+    ],
+    [
+     4,
+     2
+    ],
+    [
+     4,
+     3
+    ],
+    [
+     4,
+     4
+    ]
+   ],
+   "events": [
+    [
+     "START",
+     0,
+     3200000
+    ],
+    [
+     "CROSS",
+     2,
+     3310000
+    ],
+    [
+     "RM",
+     4,
+     3390000
+    ]
+   ],
+   "resume_auth": [],
+   "problems": [],
+   "why": [],
+   "selection": "need_UV",
+   "next": [
+    "UVa"
+   ],
+   "gate_UVa": true,
+   "gate_why": "δ_dt 0.0 → dt* dt0 → UVa"
+  },
+  "A1_fresh_timeout_in_k4": {
+   "primary_status": "UNIDENTIFIED",
+   "rho_pct": null,
+   "lower_bound_pct": null,
+   "trajectory_status": "TIMEOUT",
+   "n_superseded_rows": 0,
+   "steps_k": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "steps_Pbar": [
+    0.16,
+    0.0012,
+    0.0008,
+    0.0006
+   ],
+   "windows_k_last": [
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     1
+    ],
+    [
+     4,
+     2
+    ]
+   ],
+   "events": [
+    [
+     "START",
+     0,
+     3200000
+    ],
+    [
+     "CROSS",
+     2,
+     3310000
+    ]
+   ],
+   "resume_auth": [],
+   "problems": [],
+   "why": [
+    "확인 단 2 없음 (주 측정 미완료 · 하한 · 점 추정 자동 발행 없음)"
+   ],
+   "selection": "SELECTION_UNRESOLVED",
+   "next": [],
+   "gate_UVa": false,
+   "gate_why": "선택 단계 SELECTION_UNRESOLVED · 다음 [] (끝점 무효 — UB OK · UT UNIDENTIFIED (δ_dt 없음)) — UV 는 UB · UT 끝점 판독 뒤 dt* 의 팔 하나만"
+  },
+  "A2_resumed_timeout_in_k4": {
+   "primary_status": "OK",
+   "rho_pct": 0.2026077873428664,
+   "lower_bound_pct": null,
+   "trajectory_status": "TIMEOUT",
+   "n_superseded_rows": 4,
+   "steps_k": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "steps_Pbar": [
+    0.16,
+    0.0012,
+    0.0008,
+    0.0006,
+    0.0004
+   ],
+   "windows_k_last": [
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     1
+    ],
+    [
+     4,
+     2
+    ]
+   ],
+   "events": [
+    [
+     "START",
+     0,
+     3200000
+    ],
+    [
+     "CROSS",
+     2,
+     3310000
+    ],
+    [
+     "RESUME",
+     3,
+     3350000
+    ]
+   ],
+   "resume_auth": [
+    [
+     3,
+     3350000
+    ]
+   ],
+   "problems": [],
+   "why": [],
+   "selection": "need_UV",
+   "next": [
+    "UVa"
+   ],
+   "gate_UVa": true,
+   "gate_why": "δ_dt 0.0 → dt* dt0 → UVa"
+  },
+  "A3_fresh_guard_in_k4": {
+   "primary_status": "UNIDENTIFIED",
+   "rho_pct": null,
+   "lower_bound_pct": null,
+   "trajectory_status": "GUARD",
+   "n_superseded_rows": 0,
+   "steps_k": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "steps_Pbar": [
+    0.16,
+    0.0012,
+    0.0008,
+    0.0006
+   ],
+   "windows_k_last": [
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     1
+    ],
+    [
+     4,
+     2
+    ]
+   ],
+   "events": [
+    [
+     "START",
+     0,
+     3200000
+    ],
+    [
+     "CROSS",
+     2,
+     3310000
+    ],
+    [
+     "GUARD",
+     4,
+     3370000
+    ]
+   ],
+   "resume_auth": [],
+   "problems": [],
+   "why": [
+    "확인 단 2 없음 (주 측정 미완료 · 하한 · 점 추정 자동 발행 없음)"
+   ],
+   "selection": "SELECTION_UNRESOLVED",
+   "next": [],
+   "gate_UVa": false,
+   "gate_why": "선택 단계 SELECTION_UNRESOLVED · 다음 [] (끝점 무효 — UB OK · UT UNIDENTIFIED (δ_dt 없음)) — UV 는 UB · UT 끝점 판독 뒤 dt* 의 팔 하나만"
+  },
+  "A4_resumed_guard_in_k4": {
+   "primary_status": "OK",
+   "rho_pct": 0.2026077873428664,
+   "lower_bound_pct": null,
+   "trajectory_status": "GUARD",
+   "n_superseded_rows": 4,
+   "steps_k": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "steps_Pbar": [
+    0.16,
+    0.0012,
+    0.0008,
+    0.0006,
+    0.0004
+   ],
+   "windows_k_last": [
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     1
+    ],
+    [
+     4,
+     2
+    ]
+   ],
+   "events": [
+    [
+     "START",
+     0,
+     3200000
+    ],
+    [
+     "CROSS",
+     2,
+     3310000
+    ],
+    [
+     "RESUME",
+     3,
+     3350000
+    ],
+    [
+     "GUARD",
+     4,
+     3370000
+    ]
+   ],
+   "resume_auth": [
+    [
+     3,
+     3350000
+    ]
+   ],
+   "problems": [],
+   "why": [],
+   "selection": "need_UV",
+   "next": [
+    "UVa"
+   ],
+   "gate_UVa": true,
+   "gate_why": "δ_dt 0.0 → dt* dt0 → UVa"
+  },
+  "A5_resumed_timeout_in_k4_move_no_new_window": {
+   "primary_status": "OK",
+   "rho_pct": 0.2026077873428664,
+   "lower_bound_pct": null,
+   "trajectory_status": "TIMEOUT",
+   "n_superseded_rows": 0,
+   "steps_k": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "steps_Pbar": [
+    0.16,
+    0.0012,
+    0.0008,
+    0.0006,
+    0.0004
+   ],
+   "windows_k_last": [
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     1
+    ],
+    [
+     4,
+     2
+    ],
+    [
+     4,
+     3
+    ],
+    [
+     4,
+     4
+    ]
+   ],
+   "events": [
+    [
+     "START",
+     0,
+     3200000
+    ],
+    [
+     "CROSS",
+     2,
+     3310000
+    ],
+    [
+     "RESUME",
+     3,
+     3350000
+    ]
+   ],
+   "resume_auth": [
+    [
+     3,
+     3350000
+    ]
+   ],
+   "problems": [],
+   "why": [],
+   "selection": "need_UV",
+   "next": [
+    "UVa"
+   ],
+   "gate_UVa": true,
+   "gate_why": "δ_dt 0.0 → dt* dt0 → UVa"
+  },
+  "A6_resume_from_but_no_RESUME_event_single_attempt_record": {
+   "primary_status": "OK",
+   "rho_pct": 0.2026077873428664,
+   "lower_bound_pct": null,
+   "trajectory_status": "TIMEOUT",
+   "n_superseded_rows": 0,
+   "steps_k": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "steps_Pbar": [
+    0.16,
+    0.0012,
+    0.0008,
+    0.0006,
+    0.0004
+   ],
+   "windows_k_last": [
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     1
+    ],
+    [
+     4,
+     2
+    ],
+    [
+     4,
+     3
+    ],
+    [
+     4,
+     4
+    ]
+   ],
+   "events": [
+    [
+     "START",
+     0,
+     3200000
+    ],
+    [
+     "CROSS",
+     2,
+     3310000
+    ],
+    [
+     "RM",
+     4,
+     3390000
+    ],
+    [
+     "RM",
+     4,
+     3390000
+    ]
+   ],
+   "resume_auth": [],
+   "problems": [],
+   "why": [],
+   "selection": "need_UV",
+   "next": [
+    "UVa"
+   ],
+   "gate_UVa": true,
+   "gate_why": "δ_dt 0.0 → dt* dt0 → UVa"
+  },
+  "B1_fresh_timeout_in_k3_nocross": {
+   "primary_status": "LOWER_BOUND",
+   "rho_pct": null,
+   "lower_bound_pct": 0.225119763714296,
+   "trajectory_status": "TIMEOUT",
+   "n_superseded_rows": 0,
+   "steps_k": [
+    0,
+    1,
+    2
+   ],
+   "steps_Pbar": [
+    0.16,
+    0.0016,
+    0.0014
+   ],
+   "windows_k_last": [
+    [
+     2,
+     1
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     2
+    ]
+   ],
+   "events": [
+    [
+     "START",
+     0,
+     3200000
+    ]
+   ],
+   "resume_auth": [],
+   "problems": [],
+   "why": [],
+   "selection": "SELECTION_UNRESOLVED",
+   "next": [],
+   "gate_UVa": false,
+   "gate_why": "선택 단계 SELECTION_UNRESOLVED · 다음 [] (끝점 무효 — UB OK · UT LOWER_BOUND (δ_dt 없음)) — UV 는 UB · UT 끝점 판독 뒤 dt* 의 팔 하나만"
+  },
+  "B2_resumed_timeout_in_k3_nocross": {
+   "primary_status": "LOWER_BOUND",
+   "rho_pct": null,
+   "lower_bound_pct": 0.27014371645715524,
+   "trajectory_status": "TIMEOUT",
+   "n_superseded_rows": 4,
+   "steps_k": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "steps_Pbar": [
+    0.16,
+    0.0016,
+    0.0014,
+    0.0012
+   ],
+   "windows_k_last": [
+    [
+     2,
+     1
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     2
+    ]
+   ],
+   "events": [
+    [
+     "START",
+     0,
+     3200000
+    ],
+    [
+     "RESUME",
+     2,
+     3310000
+    ]
+   ],
+   "resume_auth": [
+    [
+     2,
+     3310000
+    ]
+   ],
+   "problems": [],
+   "why": [],
+   "selection": "SELECTION_UNRESOLVED",
+   "next": [],
+   "gate_UVa": false,
+   "gate_why": "선택 단계 SELECTION_UNRESOLVED · 다음 [] (끝점 무효 — UB OK · UT LOWER_BOUND (δ_dt 없음)) — UV 는 UB · UT 끝점 판독 뒤 dt* 의 팔 하나만"
+  }
+ },
+ "expect_met": {
+  "A0_fresh_complete": true,
+  "A1_fresh_timeout_in_k4": true,
+  "A2_resumed_timeout_in_k4": false,
+  "A3_fresh_guard_in_k4": true,
+  "A4_resumed_guard_in_k4": false,
+  "A5_resumed_timeout_in_k4_move_no_new_window": false,
+  "A6_resume_from_but_no_RESUME_event_single_attempt_record": true,
+  "B1_fresh_timeout_in_k3_nocross": true,
+  "B2_resumed_timeout_in_k3_nocross": false
+ },
+ "failed_expectations": [
+  "A2_resumed_timeout_in_k4",
+  "A4_resumed_guard_in_k4",
+  "A5_resumed_timeout_in_k4_move_no_new_window",
+  "B2_resumed_timeout_in_k3_nocross"
+ ]
+}

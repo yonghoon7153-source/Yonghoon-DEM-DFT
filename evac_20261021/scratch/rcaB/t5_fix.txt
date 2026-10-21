@@ -1,0 +1,23 @@
+
+── T5 건전성 — Codex 생성기 그대로 (seed 611 · 막다른 / 연결 각 N — 빠른 판 300 · 긴 판 1,500) · ⓓ 거짓 통과 0 · 구간 빗나감 0
+    [deadend] {'n': 300, 'bad': 277, 'false_d': 0, 'miss': 0, 'pass_d': 23, 'abc_false': 0, 'problem': 0} (1.2s)
+  PASS  T5a [deadend] 생산 술어 거짓 수렴 (info 0 · 오차 > 1e-4) 이 많다 = 판별력 있는 표본 (≥ 20 · N 300)
+  PASS  T5b [deadend] 그 해들 중 ⓓ · 증서 통과 0 (거짓 통과 없음)
+  PASS  T5c [deadend] 모든 해에서 구간이 정확 G* 를 담는다 (빗나감 0)
+  PASS  T5d [deadend] ⓓ 가 모든 해를 거부하지는 않는다 (통과 ≥ 10 — 보수만이 아니다)
+    [connected] {'n': 300, 'bad': 270, 'false_d': 0, 'miss': 0, 'pass_d': 30, 'abc_false': 0, 'problem': 0} (1.2s)
+  PASS  T5a [connected] 생산 술어 거짓 수렴 (info 0 · 오차 > 1e-4) 이 많다 = 판별력 있는 표본 (≥ 20 · N 300)
+  PASS  T5b [connected] 그 해들 중 ⓓ · 증서 통과 0 (거짓 통과 없음)
+  PASS  T5c [connected] 모든 해에서 구간이 정확 G* 를 담는다 (빗나감 0)
+  PASS  T5d [connected] ⓓ 가 모든 해를 거부하지는 않는다 (통과 ≥ 10 — 보수만이 아니다)
+    (T5 2.4 s)
+
+── T11 solve_sigma_z 통합 — 증서 켬: 조기 반환 해에 상태 증서 (영값 위상 · 얇은 침대) · 양의 해에 ⓓ · 증서 끔 = 칸 없음
+  PASS  T11a [no_through_component] 사유 그대로 · 증서 상태 VALID_ZERO_TOPOLOGY · ok = (영값일 때만) · σ 0 · 지문 hex32 · 증서 끔이면 칸 없음
+  PASS  T11a [no_plate_contact] 사유 그대로 · 증서 상태 VALID_ZERO_TOPOLOGY · ok = (영값일 때만) · σ 0 · 지문 hex32 · 증서 끔이면 칸 없음
+  PASS  T11a [no_conductive_voxels] 사유 그대로 · 증서 상태 VALID_ZERO_TOPOLOGY · ok = (영값일 때만) · σ 0 · 지문 hex32 · 증서 끔이면 칸 없음
+  PASS  T11a [degenerate_thin_bed] 사유 그대로 · 증서 상태 NOT_CERTIFIABLE · ok = (영값일 때만) · σ 0 · 지문 hex32 · 증서 끔이면 칸 없음
+  PASS  T11b 양의 해 → POSITIVE_SOLVED · ⓓ 칸 (하한 · 상한 · 보장 오차) · 증서 σ = 결과 σ · scale 기록
+    (T11 0.0 s)
+
+== test_step3_target_cert [빠른 판]: 13/13 PASS (2.4 s)

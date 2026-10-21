@@ -1,0 +1,31 @@
+Mixer D2 MXD2-01..06: tests first (fail on the current tools)
+
+The counterexamples of the 10-21 D2 pre-attack review move into the
+selftests before any fix (author 10-21: fix all, tests first). Only test
+code changes in this commit; every new check fails on the current code
+for the reason it names:
+
+- make_mixer_deck: GM/DG/MX checks -- Q2 wall binding (gamma_W =
+  0.0256*rho, NCM gamma in {1, rho}, explicit wall only for all-coated
+  arms), mixed-pair overlap ceiling incl. the stiffened path, absolute
+  Bo and record binding, extreme inputs (gamma 1e-200, Bo below the
+  floor, control characters, arm name with a newline), ASCII numeric CLI
+  tokens ('0_3', full-width digits, nan), D2 record (wall comment, header
+  table = deck values, schema /2, registered text, layered insertion).
+  Existing GM tests rewritten to Q2-valid arms. 147/154 before the fix.
+- mixer_deck_readback: MX1-7 (lab generation decks, D2 rule re-check
+  from deck text, table GM, deck_meta.json binding, copies vs the
+  generator). 24/31 before.
+- mixer_deck_diff: MX1-6 (--allow GM, D2 declaration vs value under
+  --allow E incl. the M04-like pair, D2 cell grammar, cell name -> CLI
+  arguments -> byte-identical deck). 55/61 before.
+- mixer_contact_reader: 9e (deck_meta schema /2 read like /1, unknown
+  /3 refused). 30/31 before.
+- mixer_smoke_blind: 9c (planned per-phase counts from the cell's
+  density generation). 30/31 before.
+- test_launcher.sh: D2-1 / D2-2 (run_all.sh / resume_all.sh never launch
+  or resume D2 cells; one list of surface states). 136 PASS / 2 FAIL
+  before.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

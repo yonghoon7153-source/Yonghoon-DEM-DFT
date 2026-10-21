@@ -1,0 +1,29 @@
+
+── V0 정상 코호트 양성 — 접합 + rtol (8 origin × 두 침대) · face_alpha + rtol · 접합 LEAN 3
+    ⚠ 코호트 cj_rt 를 못 만들었다: [('SBE', 1, 4, 'ylines (of 3 total)  Ø rel 1.00..1.00\n  additive dispersion (A5/E2): VGCF D=6.69 nn_med=9.862µm(×2.01)  PTFE D=7.73 nn_med=11.938µm(×2.62)  conductive_all D=6.69 nn_med=9.862µm(×2.01)\n\n✗ STEP3_NUMERIC_EVIDENCE: SIGMA_E| sigma_e_eff_S_cm=0.0 (유한한 양수여야 한다)\n  최종 파일명을 쓰지 않는다 — 진단본: p2_SBE_a1.json.failed'), ('DBE', 1, 4, 'ylines (of 3 total)  Ø rel 1.00..1.00\n  additive dispersion (A5/E2): VGCF D=6.69 nn_med=9.862µm(×2.01)  PTFE D=7.73 nn_med=11.938µm(×2.62)  conductive_all D=6.83 nn_med=9.824µm(×2.01)\n\n✗ STEP3_NUMERIC_EVIDENCE: SIGMA_E| sigma_e_eff_S_cm=0.0 (유한한 양수여야 한다)\n  최종 파일명을 쓰지 않는다 — 진단본: p2_DBE_a1.json.failed')]
+  FAIL  V0a 코호트 16 팔을 만들었다 (payload rc 0)
+
+── V1 변조 팔 — 증거 칸 하나 → HOLD (ca_ext_record_ok · 규약 id 그대로)
+  FAIL  V1 선행 (코호트)
+
+── V2 섞인 코호트 — 현 세대 p2 ↔ 다음 세대 p3ca → HOLD GENERATION_MIX
+  FAIL  V2 선행 (코호트)
+
+── V3 증서 없음 / 실패 = 미게시 팔 → HOLD NEXTGEN_UNPUBLISHED
+  FAIL  V3 선행 (코호트)
+
+── V4 옛 세대 (p2) 코호트 — 새 사유로 HOLD 되지 않는다 (--old-verdict 면 판정 JSON 바이트 대조)
+  PASS  V4a [w4_ptfe_centerline_20260827] 봉인 코호트 판정이 새 사유 (GENERATION_MIX·NEXTGEN_UNPUBLISHED·CAEXT) 가 아니다 · 모든 팔 p2
+  PASS  V4a [w4b_ptfe_off_20260827] 봉인 코호트 판정이 새 사유 (GENERATION_MIX·NEXTGEN_UNPUBLISHED·CAEXT) 가 아니다 · 모든 팔 p2
+    (--old-verdict 없음 — 바이트 대조 건너뜀)
+
+── V5 CLI --seal-only — 변조 · 섞임 · 증서 없음의 봉인 사유 (원값 누설 없음)
+  FAIL  V5 선행 (코호트)
+
+2 PASS · 5 FAIL
+  - V0a 코호트 16 팔을 만들었다 (payload rc 0)
+  - V1 선행 (코호트)
+  - V2 선행 (코호트)
+  - V3 선행 (코호트)
+  - V5 선행 (코호트)
+ELAPSED_S=24.6 RC=1

@@ -1,0 +1,33 @@
+  PASS  ① ★ 커밋 실제 덱 셋 (LC_ref_r2 · LU637_ref_r2 · E0_ref) → read_restart <절대경로> 한 번 · 바로 뒤 EXACT_STEP 출력 · create_box · 삽입 · 템플릿 · 분포 · unfix · write_restart · restart · shell · region · 원 dump (dmp) 없음 · dump hp · g6 (id type x y z radius) · dump_modify hp 형식 토큰 6 = 열 수 (%d %d %.17g ×4 · 생성기 dump_modify_format 과 같다) · run 은 `run 0` 하나뿐이고 마지막 명령
+  PASS  ② 남기는 명령 = 원 덱 그대로 (글자 · 순서) — 재료 (m1–m5 · mC · m9) · 접촉 (pair_style · pair_coeff) · timestep · 중력 · 메시 (Drum · Front · Back) · 벽 · 적분 · compute · thermo · move/mesh (mvD · mvF · mvB) · atom_style … units
+  PASS  ③ 체크포인트 경로가 절대경로가 아니거나 LIGGGHTS 가 뜻을 붙이는 글자 (공백 · % · * · $ · #) 면 거부
+  PASS  ④ 체크포인트 파일 = 덱에서 — settled = write_restart · a · b = `restart N a b` (LC: 200,000 · E0: 51,871)
+  PASS  ⑤ LC_ref_r2 계획 산술 (덱에서) — t₀ 1,037,408 · 정착 끝 (settled) 1,037,429 = t₀ + 21 (bin 0) · 끝 7,139,962 · 마지막 두 체크포인트 6,800,000 · 7,000,000 = 둘 다 bin 1 (판독기 bin 식) · 셋 다 덤프 격자 밖 (등록 프레임이 아니다)
+  PASS  ⑥ ★ deck: 새 폴더에 in.exact · exact_receipt.json · run_exact.sbatch · 빈 exact/ · STL 셋 = 런 폴더 원본으로의 심볼릭 링크 · read_restart = 체크포인트 실제 경로 · 영수증 (체크포인트 sha256 · 머리 step 1,037,429 · bin 0 · t₀ + 21 · 덱 sha256) · sbatch (-n 1 · mpirun -np 1 · cd 작업 폴더) · ★ 런 폴더 나무 (이름 · 내용 · 링크) 가 앞뒤 같다
+  PASS  ⑦ deck 거부 (아무것도 쓰기 전): 작업 폴더 = 런 폴더 · 런 폴더 안 · 이미 쓴 폴더 · 모르는 ckpt · 체크포인트 없음 · 덱 입력 (STL) 없음 · in.mixer ≠ deck_meta.deck_sha256 — 거부한 작업 폴더는 생기지 않고 런 폴더는 그대로
+  PASS  ⑧ 체크포인트 머리 (write_restart.cpp header — 플래그 int + 값) → step 6,800,000 · nprocs · units · bigint 8 · 플래그 어긋남 · 짧은 파일 = ValueError · 머리를 못 읽으면 덱은 만들고 영수증에 step 미상 + 사유 (read 가 덤프 TIMESTEP · 로그로 잇는다)
+  PASS  ⑨ read: 합성 런 · 체크포인트 셋 → OK · rot2 · 프레임 step 순 (251 settled · 300 b · 450 a) · bin 0 · 0 · 1 · 등록 bin 1 창 안 = 450 만 · t₀ 기준 +1 · +50 · +200 · 덤프 격자 위 = 300 · 450
+  PASS  ⑩ ★ 정확 값 = 독립 산술 (double 좌표 · 모든 쌍) · 등록 규칙 @ %g = 독립 산술 (반올림 좌표) — 고정구 [(('AM_P', 'kept'), 1), (('AM_P', 'lost'), 2), (('AM_S', 'deep'), 1), (('AM_S', 'lost'), 1), (('SE', 'deep'), 2), (('SE', 'gained'), 2), (('SE', 'kept'), 2), (('SE', 'lost'), 3)] → SE–SE 참 접촉 7 · 반올림 등록 6 (놓침 3 · 없는데 셈 2) · AM_P–SE 3 → 1 · AM_S–SE 2 → 1
+  PASS  ⑪ ★ 불변식 확실 ≤ 정확 ≤ 가능 — 모든 스칼라 (s1 셋 · s2 다섯) · 접촉 수 · 모든 프레임 · 정확 쪽 범위는 접힌다 (hp 유효숫자 ≥ 13 · lo = 등록 = hi) · 반올림 쪽은 6 유효숫자 · 범위가 열려 있다
+  PASS  ⑫ (iii) 에뮬레이션 = 합성 %g 파일 (LIGGGHTS 기본 형식 · 값 뒤 공백) — g6 MATCH · 원자 31 × 값 4
+  PASS  ⑬ g6 토큰 하나 (x 의 마지막 자리) 가 에뮬레이션과 다르면 TECH
+  PASS  ⑭ 원자 집합 · type 이 t₀ 덤프와 다르면 TECH — (a) 원자 하나 없음 (b) 한 원자의 type 이 바뀜 (SE → AM_S)
+  PASS  ⑮ hp 가 %.17g 가 아니면 (dump_modify format 이 안 먹어 기본 %g 로 찍힘) TECH — 정확 값으로 읽지 않는다
+  PASS  ⑮b 원자 0 개인 hp · g6 덤프 (형식 검사는 넘는다) → TECH (예외로 죽지 않는다)
+  PASS  ⑯ 덱을 만든 뒤 체크포인트가 바뀌면 (sha256 다시 계산) TECH
+  PASS  ⑰ 덤프 TIMESTEP ≠ 체크포인트 머리 step (settled 폴더에 step 252 덤프) → TECH · 로그의 EXACT_STEP ≠ TIMESTEP 도 TECH
+  PASS  ⑱ 영수증의 런 폴더 ≠ read 에 준 런 폴더 → TECH (다른 런의 체크포인트 덤프)
+  PASS  ⑲ 영수증 없음 (덤프를 작업 폴더 밖으로 옮김) → TECH (출처 사슬이 끊긴다)
+  PASS  ⑳ 엄격 JSON (allow_nan=False) · 출처 sha256 — 이 도구 · 판독기 · 체크포인트 셋 · 정확 덱 셋 · 덤프 (hp · g6) · 원 덱
+  PASS  ㉑ ★ read 는 런 폴더 · 작업 폴더 셋에 아무것도 쓰지 않는다 (나무 지문 — 이름 · 내용 · 링크 — 이 read 앞뒤 같다)
+  PASS  ㉒ M 없음 — measure_mixing_index 에서 가져오는 이름 ⊆ 프레임 선택 · bin 식 (deck_plan · planned_t0 · bin_of) · 결과 키에 M · S0 · SR · s2 없음
+  PASS  ㉓ E0 (회전 0 · t₀ 만) — settled 프레임 OK · mode t0_only · bin 없음 (회전 런이 아니다) · t₀ + 1 · g6 없음 = NOT_GIVEN · 정확 값 = 독립 산술
+  PASS  ㉓b report (사람이 읽는 출력) 가 회전 런 (프레임 3 · g6 MATCH) · E0 · TECH 결과에서 예외 없이 돈다
+  PASS  ㉓c main read 는 report 전에 결과 JSON 을 쓴다 — report 가 예외로 죽어도 (결함 주입) 엄격 JSON 이 남고 값 = 독립 산술
+  PASS  ㉔ 결함 주입: 반올림 쪽 가능 (hi) 이 정확 값보다 작게 나오면 → TECH "불변식" (값을 내지 않는다)
+  PASS  ㉕ 결함 주입: 판독기 접촉 수가 독립 재계수 (_pair_audit — 같은 후보 · classify_pairs) 와 다르면 → TECH "도구 불일치"
+  PASS  ㉖ t₀ 원자 수 (31) ≠ deck_meta n_atoms_planned (33) → TECH (판독기 analyse_run 과 같은 규칙 — 체크포인트 프레임도 같은 원자 기준)
+  PASS  ㉘ ★ 판독기 반경 자릿수 바닥 (S = max(관측, 6) → 반경 반폭 AM 5e-10 · SE 5e-11 m) — 겹침 0.3 nm AM_S–SE 는 판독기 규칙 그대로의 hp 범위에서 열리지만 (확실 0 · 가능 1), hp 반경 = 계획 템플릿 double (비트 같음) 이면 반올림이 없으므로 hp 정밀도 감사는 모호 0 · 접힘 — 정확 값 = 1 접촉
+  PASS  ㉗ bin 식 경계 = 판독기 bin_of 그대로 — 합성 계획 (t₀ 250 · 바퀴 160) 409 → bin 0 · 410 → 1 · 569 → 1 · 570 → 2 · bin 1 창 [410, 569] · LC_ref_r2 계획 창 [4,089,172, 7,139,962] (4,089,171 은 bin 0) 이 등록 프레임 4,119,120–7,139,808 을 품는다
+
+mixer_exact_frames selftest: 31/31 PASS

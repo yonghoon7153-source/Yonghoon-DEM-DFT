@@ -1,0 +1,114 @@
+  ⚠ ca_ext_cjunc 를 못 불러온다 (ModuleNotFoundError: No module named 'ca_ext_cjunc')
+
+── R run_contract — cjunc · sdcp_mod 하위 블록 · 요청 칸 · p3ca · unknown:ca_ext · 영수증 · 요청 검사 · 증서 · CLI 회계
+  FAIL  R1 하위 블록 등록 — cjunc · sdcp_mod 가 ptfe_face 와 같은 꼴 (모듈 · 검증기 · protocol 정본 키)  (['ptfe_face'])
+  FAIL  R2 protocol_ext 칸 정본에 접합 · 수정자 칸 (R_j · 법칙 둘 · s_min · tol_ff · P · c)
+  FAIL  R: 실행  (AttributeError: 'NoneType' object has no attribute 'cjunc_protocol_record')
+
+── P payload 끝-끝 — 접합 · 수정자 · 입구 거부 · 매니페스트 · 영수증 · 조합 정책 · --expect-physics ca_ext 칸
+  FAIL  P-거부 [MISSING (R_j 없음)] → rc ≠ 0 · S2_CJUNC_REFUSED|MISSING|  ((2, 'yload.py: error: unrecognized arguments: --step3-cjunc --step3-cjunc-len-law len_scaled_v0 --step3-cjunc-unreg-law cut --step3-cjunc-s-min-um 0.5 --step3-cjunc-tol-ff-um 0.5 --step3-cjunc-ptfe-jlaw P0'))
+  FAIL  P-거부 [MISSING (길이 법칙 없음)] → rc ≠ 0 · S2_CJUNC_REFUSED|MISSING|  ((2, ']\nmpm_webapp_payload.py: error: unrecognized arguments: --step3-cjunc --step3-cjunc-rj 1e6 --step3-cjunc-unreg-law cut --step3-cjunc-s-min-um 0.5 --step3-cjunc-tol-ff-um 0.5 --step3-cjunc-ptfe-jlaw P0'))
+  FAIL  P-거부 [MISSING (미등록 면 법칙 없음)] → rc ≠ 0 · S2_CJUNC_REFUSED|MISSING|  ((2, 'bapp_payload.py: error: unrecognized arguments: --step3-cjunc --step3-cjunc-rj 1e6 --step3-cjunc-len-law len_scaled_v0 --step3-cjunc-s-min-um 0.5 --step3-cjunc-tol-ff-um 0.5 --step3-cjunc-ptfe-jlaw P0'))
+  FAIL  P-거부 [MISSING (s_min 없음 · 정량이면 거부)] → rc ≠ 0 · S2_CJUNC_REFUSED|MISSING|  ((2, 'app_payload.py: error: unrecognized arguments: --step3-cjunc --step3-cjunc-rj 1e6 --step3-cjunc-len-law len_scaled_v0 --step3-cjunc-unreg-law cut --step3-cjunc-tol-ff-um 0.5 --step3-cjunc-ptfe-jlaw P0'))
+  FAIL  P-거부 [MISSING (tol_ff 없음 · 기본값 없음)] → rc ≠ 0 · S2_CJUNC_REFUSED|MISSING|  ((2, 'bapp_payload.py: error: unrecognized arguments: --step3-cjunc --step3-cjunc-rj 1e6 --step3-cjunc-len-law len_scaled_v0 --step3-cjunc-unreg-law cut --step3-cjunc-s-min-um 0.5 --step3-cjunc-ptfe-jlaw P0'))
+  FAIL  P-거부 [MISSING (PTFE–접합 법칙 없음)] → rc ≠ 0 · S2_CJUNC_REFUSED|MISSING|  ((2, 'app_payload.py: error: unrecognized arguments: --step3-cjunc --step3-cjunc-rj 1e6 --step3-cjunc-len-law len_scaled_v0 --step3-cjunc-unreg-law cut --step3-cjunc-s-min-um 0.5 --step3-cjunc-tol-ff-um 0.5'))
+  FAIL  P-거부 [FLAG_WITHOUT_CJUNC (R_j 만)] → rc ≠ 0 · S2_CJUNC_REFUSED|FLAG_WITHOUT_CJUNC|  ((2, '                        [--allow-mixed-t-ionic] [--selftest-provenance]\n                             [--selftest-temperature]\nmpm_webapp_payload.py: error: unrecognized arguments: --step3-cjunc-rj 1e6'))
+  FAIL  P-거부 [FACE_ALPHA_COMBO (face_alpha + 접합)] → rc ≠ 0 · S2_CJUNC_REFUSED|FACE_ALPHA_COMBO|  ((2, 'cognized arguments: --step3-cjunc --step3-cjunc-rj 1e6 --step3-cjunc-len-law len_scaled_v0 --step3-cjunc-unreg-law cut --step3-cjunc-s-min-um 0.5 --step3-cjunc-tol-ff-um 0.5 --step3-cjunc-ptfe-jlaw P0'))
+  FAIL  P-거부 [P1_NEEDS_FACE_ALPHA] → rc ≠ 0 · S2_CJUNC_REFUSED|P1_NEEDS_FACE_ALPHA|  ((2, 'cognized arguments: --step3-cjunc --step3-cjunc-rj 1e6 --step3-cjunc-len-law len_scaled_v0 --step3-cjunc-unreg-law cut --step3-cjunc-s-min-um 0.5 --step3-cjunc-tol-ff-um 0.5 --step3-cjunc-ptfe-jlaw P1'))
+  FAIL  P-거부 [PERIODIC] → rc ≠ 0 · S2_CJUNC_REFUSED|PERIODIC|  ((2, 'cognized arguments: --step3-cjunc --step3-cjunc-rj 1e6 --step3-cjunc-len-law len_scaled_v0 --step3-cjunc-unreg-law cut --step3-cjunc-s-min-um 0.5 --step3-cjunc-tol-ff-um 0.5 --step3-cjunc-ptfe-jlaw P0'))
+  FAIL  P-거부 [JOULE] → rc ≠ 0 · S2_CJUNC_REFUSED|JOULE|  ((2, 'cognized arguments: --step3-cjunc --step3-cjunc-rj 1e6 --step3-cjunc-len-law len_scaled_v0 --step3-cjunc-unreg-law cut --step3-cjunc-s-min-um 0.5 --step3-cjunc-tol-ff-um 0.5 --step3-cjunc-ptfe-jlaw P0'))
+  FAIL  P-거부 [STEP4_GRID] → rc ≠ 0 · S2_CJUNC_REFUSED|STEP4_GRID|  ((2, 'cognized arguments: --step3-cjunc --step3-cjunc-rj 1e6 --step3-cjunc-len-law len_scaled_v0 --step3-cjunc-unreg-law cut --step3-cjunc-s-min-um 0.5 --step3-cjunc-tol-ff-um 0.5 --step3-cjunc-ptfe-jlaw P0'))
+  FAIL  P-거부 [RINT] → rc ≠ 0 · S2_CJUNC_REFUSED|RINT|  ((2, 'cognized arguments: --step3-cjunc --step3-cjunc-rj 1e6 --step3-cjunc-len-law len_scaled_v0 --step3-cjunc-unreg-law cut --step3-cjunc-s-min-um 0.5 --step3-cjunc-tol-ff-um 0.5 --step3-cjunc-ptfe-jlaw P0'))
+  FAIL  P-거부 [NO_STEP3] → rc ≠ 0 · S2_CJUNC_REFUSED|NO_STEP3|  ((2, 'cognized arguments: --step3-cjunc --step3-cjunc-rj 1e6 --step3-cjunc-len-law len_scaled_v0 --step3-cjunc-unreg-law cut --step3-cjunc-s-min-um 0.5 --step3-cjunc-tol-ff-um 0.5 --step3-cjunc-ptfe-jlaw P0'))
+  FAIL  P-거부 [SDCP_BRIDGE (진단 팔)] → rc ≠ 0 · S2_CJUNC_REFUSED|SDCP_BRIDGE|  ((2, 'cognized arguments: --step3-cjunc --step3-cjunc-rj 1e6 --step3-cjunc-len-law len_scaled_v0 --step3-cjunc-unreg-law cut --step3-cjunc-s-min-um 0.5 --step3-cjunc-tol-ff-um 0.5 --step3-cjunc-ptfe-jlaw P0'))
+  FAIL  P-거부 [VGCF_INSULATING (σ 0)] → rc ≠ 0 · S2_CJUNC_REFUSED|VGCF_INSULATING|  ((2, 'cognized arguments: --step3-cjunc --step3-cjunc-rj 1e6 --step3-cjunc-len-law len_scaled_v0 --step3-cjunc-unreg-law cut --step3-cjunc-s-min-um 0.5 --step3-cjunc-tol-ff-um 0.5 --step3-cjunc-ptfe-jlaw P0'))
+  FAIL  P-거부 [FIELD (LEAN 4)] → rc ≠ 0 · S2_CJUNC_REFUSED|FIELD|  ((2, 'cognized arguments: --step3-cjunc --step3-cjunc-rj 1e6 --step3-cjunc-len-law len_scaled_v0 --step3-cjunc-unreg-law cut --step3-cjunc-s-min-um 0.5 --step3-cjunc-tol-ff-um 0.5 --step3-cjunc-ptfe-jlaw P0'))
+  FAIL  P-거부 [COLLECTOR] → rc ≠ 0 · S2_CJUNC_REFUSED|COLLECTOR|  ((2, 'cognized arguments: --step3-cjunc --step3-cjunc-rj 1e6 --step3-cjunc-len-law len_scaled_v0 --step3-cjunc-unreg-law cut --step3-cjunc-s-min-um 0.5 --step3-cjunc-tol-ff-um 0.5 --step3-cjunc-ptfe-jlaw P0'))
+  FAIL  P-거부 [THERMAL] → rc ≠ 0 · S2_CJUNC_REFUSED|THERMAL|  ((2, 'cognized arguments: --step3-cjunc --step3-cjunc-rj 1e6 --step3-cjunc-len-law len_scaled_v0 --step3-cjunc-unreg-law cut --step3-cjunc-s-min-um 0.5 --step3-cjunc-tol-ff-um 0.5 --step3-cjunc-ptfe-jlaw P0'))
+  FAIL  P-거부 [PORE] → rc ≠ 0 · S2_CJUNC_REFUSED|PORE|  ((2, 'cognized arguments: --step3-cjunc --step3-cjunc-rj 1e6 --step3-cjunc-len-law len_scaled_v0 --step3-cjunc-unreg-law cut --step3-cjunc-s-min-um 0.5 --step3-cjunc-tol-ff-um 0.5 --step3-cjunc-ptfe-jlaw P0'))
+  FAIL  P-거부 [STEP4] → rc ≠ 0 · S2_CJUNC_REFUSED|STEP4|  ((2, 'cognized arguments: --step3-cjunc --step3-cjunc-rj 1e6 --step3-cjunc-len-law len_scaled_v0 --step3-cjunc-unreg-law cut --step3-cjunc-s-min-um 0.5 --step3-cjunc-tol-ff-um 0.5 --step3-cjunc-ptfe-jlaw P0'))
+  FAIL  P-거부 [TRACKB] → rc ≠ 0 · S2_CJUNC_REFUSED|TRACKB|  ((2, 'cognized arguments: --step3-cjunc --step3-cjunc-rj 1e6 --step3-cjunc-len-law len_scaled_v0 --step3-cjunc-unreg-law cut --step3-cjunc-s-min-um 0.5 --step3-cjunc-tol-ff-um 0.5 --step3-cjunc-ptfe-jlaw P0'))
+  FAIL  P-거부 [VALUE (R_j 0)] → rc ≠ 0 · S2_CJUNC_REFUSED|VALUE|  ((2, 'recognized arguments: --step3-cjunc --step3-cjunc-rj 0 --step3-cjunc-len-law len_scaled_v0 --step3-cjunc-unreg-law cut --step3-cjunc-s-min-um 0.5 --step3-cjunc-tol-ff-um 0.5 --step3-cjunc-ptfe-jlaw P0'))
+  FAIL  P-거부 [VALUE (R_j nan)] → rc ≠ 0 · S2_CJUNC_REFUSED|VALUE|  ((2, 'cognized arguments: --step3-cjunc --step3-cjunc-rj nan --step3-cjunc-len-law len_scaled_v0 --step3-cjunc-unreg-law cut --step3-cjunc-s-min-um 0.5 --step3-cjunc-tol-ff-um 0.5 --step3-cjunc-ptfe-jlaw P0'))
+  FAIL  P-거부 [VALUE (R_j inf)] → rc ≠ 0 · S2_CJUNC_REFUSED|VALUE|  ((2, 'cognized arguments: --step3-cjunc --step3-cjunc-rj inf --step3-cjunc-len-law len_scaled_v0 --step3-cjunc-unreg-law cut --step3-cjunc-s-min-um 0.5 --step3-cjunc-tol-ff-um 0.5 --step3-cjunc-ptfe-jlaw P0'))
+  FAIL  P-거부 [VALUE (s_min 음수)] → rc ≠ 0 · S2_CJUNC_REFUSED|VALUE|  ((2, 'ognized arguments: --step3-cjunc --step3-cjunc-rj 1e6 --step3-cjunc-len-law len_scaled_v0 --step3-cjunc-unreg-law cut --step3-cjunc-s-min-um -0.1 --step3-cjunc-tol-ff-um 0.5 --step3-cjunc-ptfe-jlaw P0'))
+  FAIL  P-거부 [VALUE (tol_ff 음수)] → rc ≠ 0 · S2_CJUNC_REFUSED|VALUE|  ((2, 'ognized arguments: --step3-cjunc --step3-cjunc-rj 1e6 --step3-cjunc-len-law len_scaled_v0 --step3-cjunc-unreg-law cut --step3-cjunc-s-min-um 0.5 --step3-cjunc-tol-ff-um -0.1 --step3-cjunc-ptfe-jlaw P0'))
+  FAIL  P-거부 [NO_PHASE] → S2_CJUNC_REFUSED|NO_PHASE|  ((2, 'cognized arguments: --step3-cjunc --step3-cjunc-rj 1e6 --step3-cjunc-len-law len_scaled_v0 --step3-cjunc-unreg-law cut --step3-cjunc-s-min-um 0.5 --step3-cjunc-tol-ff-um 0.5 --step3-cjunc-ptfe-jlaw P0'))
+  FAIL  P-거부 [NO_FIBRE] → S2_CJUNC_REFUSED|NO_FIBRE|  ((2, 'cognized arguments: --step3-cjunc --step3-cjunc-rj 1e6 --step3-cjunc-len-law len_scaled_v0 --step3-cjunc-unreg-law cut --step3-cjunc-s-min-um 0.5 --step3-cjunc-tol-ff-um 0.5 --step3-cjunc-ptfe-jlaw P0'))
+  FAIL  P-거부 [SEGMENT (점 스탬프)] → S2_CJUNC_REFUSED|SEGMENT|  ((2, 'cognized arguments: --step3-cjunc --step3-cjunc-rj 1e6 --step3-cjunc-len-law len_scaled_v0 --step3-cjunc-unreg-law cut --step3-cjunc-s-min-um 0.5 --step3-cjunc-tol-ff-um 0.5 --step3-cjunc-ptfe-jlaw P0'))
+  FAIL  P-거부 [S3 수정자만 (S2 없이)] → S3_SDCP_MOD_REFUSED|NO_CJUNC|  ((2, '                        [--allow-mixed-t-ionic] [--selftest-provenance]\n                             [--selftest-temperature]\nmpm_webapp_payload.py: error: unrecognized arguments: --step3-sdcp-mod-c 1'))
+  PASS  P-거부 [c = 0.5 (정량은 0 · 1)] → rc ≠ 0
+  FAIL  P1 접합 LEAN 2 — rc 0  (                            [--save-step4-grid SAVE_STEP4_GRID]
+                             [--temp-c TEMP_C] [--ea-ion-ev EA_ION_EV]
+                             [--allow-mixed-t-ionic] [--selftest-provenance]
+                             [--selftest-temperature]
+mpm_webapp_payload.py: error: unrecognized arguments: --step3-cjunc --step3-cjunc-rj 1e6 --step3-cjunc-len-law len_scaled_v0 --step3-cjunc-unreg-law cut --step3-cjunc-s-min-um 0.5 --step3-cjunc-tol-ff-um 0.5 --step3-cjunc-ptfe-jlaw P0)
+  FAIL  P2 매니페스트 — 요청 칸 [cjunc] · 블록 · p3ca id · protocol_ok · ca_ext_record_ok  ((None, None))
+  FAIL  P3 protocol = CLI 값 (R_j 1e6 · len_scaled_v0 · cut · s_min 0.5 · tol_ff 0.5 · P0 · ptfe off)
+  FAIL  P4 영수증 (LEAN 2 표) — 주 applied · wetted/bare disabled · 이온 disabled
+  FAIL  P5 원장 — instance 1 · 간선 1 · 축약 0 · 풀림 · 접합 간선 1  (({}, None))
+  FAIL  P6 진단 미계산 (E2 · v0) — 소산 분담 None · je 없음 · 진단 표
+  FAIL  P7 check_arm (sr01) 이 실제 산출물을 받는다
+  FAIL  P8 σ_e 순서 — off (융합 = R_j → 0 극한) ≥ R_j 1e2 > 1e6 > 1e8 > 0 (직렬 사슬 · 같은 그래프)  ((0.03954460775870077, 0.0, 0.0, 0.0))
+  FAIL  P9 R_j 가 다르면 p3ca id 가 다르다 · 같은 R_j 의 두 침대 (SDCP 유무) 는 같은 id
+  FAIL  P9b 같은 R_j · 같은 설정의 두 침대 (SDCP 유무) = 같은 p3ca id  ((None, None))
+  FAIL  P10 c = 1 — 요청 칸 [cjunc, sdcp_mod] · 블록 둘 · ca_ext_record_ok · 근접 1 · 축약 1  ((2, '                    [--selftest-temperature]\nmpm_webapp_payload.py: error: unrecognized arguments: --step3-cjunc --step3-cjunc-rj 1e6 --step3-cjunc-len-law len_scaled_v0 --step3-cjunc-unreg-law cut --step3-cjunc-s-min-um 0.5 --step3-cjunc-tol-ff-um 0.5 --step3-cjunc-ptfe-jlaw P0 --step3-sdcp-mod-c 1', {}))
+  FAIL  P11 c = 0 = 수정자 없는 접합과 σ 비트 같음 · c = 1 ≥ c = 0 (Rayleigh · 같은 그래프)  ((0.0, 0.0, 0.0))
+  FAIL  P12 SBE (SDCP 없음) + c = 1 = 근접 0 · σ 가 수정자 없는 접합과 비트 같음 · 판별 표지 False  ((None, 0.0))
+  FAIL  P13 LEAN 3 — 이온 영수증 not_requested · σ_ion = off 비트 같음 · ca_ext_record_ok  ((2, 'provenance]\n                             [--selftest-temperature]\nmpm_webapp_payload.py: error: unrecognized arguments: --step3-cjunc --step3-cjunc-rj 1e6 --step3-cjunc-len-law len_scaled_v0 --step3-cjunc-unreg-law cut --step3-cjunc-s-min-um 0.5 --step3-cjunc-tol-ff-um 0.5 --step3-cjunc-ptfe-jlaw P0'))
+  FAIL  P: 실행  (AttributeError: module 'run_contract' has no attribute 'conv_cert_problem')
+
+── B 끔 비트 동일 — 고치기 전 payload 와 대조 (--old-scripts)
+    (--old-scripts 없음 — 건너뜀 · 커밋 증거는 그 인자로 돌린 기록)
+
+1 PASS · 49 FAIL
+  - R1 하위 블록 등록 — cjunc · sdcp_mod 가 ptfe_face 와 같은 꼴 (모듈 · 검증기 · protocol 정본 키)
+  - R2 protocol_ext 칸 정본에 접합 · 수정자 칸 (R_j · 법칙 둘 · s_min · tol_ff · P · c)
+  - R: 실행
+  - P-거부 [MISSING (R_j 없음)] → rc ≠ 0 · S2_CJUNC_REFUSED|MISSING|
+  - P-거부 [MISSING (길이 법칙 없음)] → rc ≠ 0 · S2_CJUNC_REFUSED|MISSING|
+  - P-거부 [MISSING (미등록 면 법칙 없음)] → rc ≠ 0 · S2_CJUNC_REFUSED|MISSING|
+  - P-거부 [MISSING (s_min 없음 · 정량이면 거부)] → rc ≠ 0 · S2_CJUNC_REFUSED|MISSING|
+  - P-거부 [MISSING (tol_ff 없음 · 기본값 없음)] → rc ≠ 0 · S2_CJUNC_REFUSED|MISSING|
+  - P-거부 [MISSING (PTFE–접합 법칙 없음)] → rc ≠ 0 · S2_CJUNC_REFUSED|MISSING|
+  - P-거부 [FLAG_WITHOUT_CJUNC (R_j 만)] → rc ≠ 0 · S2_CJUNC_REFUSED|FLAG_WITHOUT_CJUNC|
+  - P-거부 [FACE_ALPHA_COMBO (face_alpha + 접합)] → rc ≠ 0 · S2_CJUNC_REFUSED|FACE_ALPHA_COMBO|
+  - P-거부 [P1_NEEDS_FACE_ALPHA] → rc ≠ 0 · S2_CJUNC_REFUSED|P1_NEEDS_FACE_ALPHA|
+  - P-거부 [PERIODIC] → rc ≠ 0 · S2_CJUNC_REFUSED|PERIODIC|
+  - P-거부 [JOULE] → rc ≠ 0 · S2_CJUNC_REFUSED|JOULE|
+  - P-거부 [STEP4_GRID] → rc ≠ 0 · S2_CJUNC_REFUSED|STEP4_GRID|
+  - P-거부 [RINT] → rc ≠ 0 · S2_CJUNC_REFUSED|RINT|
+  - P-거부 [NO_STEP3] → rc ≠ 0 · S2_CJUNC_REFUSED|NO_STEP3|
+  - P-거부 [SDCP_BRIDGE (진단 팔)] → rc ≠ 0 · S2_CJUNC_REFUSED|SDCP_BRIDGE|
+  - P-거부 [VGCF_INSULATING (σ 0)] → rc ≠ 0 · S2_CJUNC_REFUSED|VGCF_INSULATING|
+  - P-거부 [FIELD (LEAN 4)] → rc ≠ 0 · S2_CJUNC_REFUSED|FIELD|
+  - P-거부 [COLLECTOR] → rc ≠ 0 · S2_CJUNC_REFUSED|COLLECTOR|
+  - P-거부 [THERMAL] → rc ≠ 0 · S2_CJUNC_REFUSED|THERMAL|
+  - P-거부 [PORE] → rc ≠ 0 · S2_CJUNC_REFUSED|PORE|
+  - P-거부 [STEP4] → rc ≠ 0 · S2_CJUNC_REFUSED|STEP4|
+  - P-거부 [TRACKB] → rc ≠ 0 · S2_CJUNC_REFUSED|TRACKB|
+  - P-거부 [VALUE (R_j 0)] → rc ≠ 0 · S2_CJUNC_REFUSED|VALUE|
+  - P-거부 [VALUE (R_j nan)] → rc ≠ 0 · S2_CJUNC_REFUSED|VALUE|
+  - P-거부 [VALUE (R_j inf)] → rc ≠ 0 · S2_CJUNC_REFUSED|VALUE|
+  - P-거부 [VALUE (s_min 음수)] → rc ≠ 0 · S2_CJUNC_REFUSED|VALUE|
+  - P-거부 [VALUE (tol_ff 음수)] → rc ≠ 0 · S2_CJUNC_REFUSED|VALUE|
+  - P-거부 [NO_PHASE] → S2_CJUNC_REFUSED|NO_PHASE|
+  - P-거부 [NO_FIBRE] → S2_CJUNC_REFUSED|NO_FIBRE|
+  - P-거부 [SEGMENT (점 스탬프)] → S2_CJUNC_REFUSED|SEGMENT|
+  - P-거부 [S3 수정자만 (S2 없이)] → S3_SDCP_MOD_REFUSED|NO_CJUNC|
+  - P1 접합 LEAN 2 — rc 0
+  - P2 매니페스트 — 요청 칸 [cjunc] · 블록 · p3ca id · protocol_ok · ca_ext_record_ok
+  - P3 protocol = CLI 값 (R_j 1e6 · len_scaled_v0 · cut · s_min 0.5 · tol_ff 0.5 · P0 · ptfe off)
+  - P4 영수증 (LEAN 2 표) — 주 applied · wetted/bare disabled · 이온 disabled
+  - P5 원장 — instance 1 · 간선 1 · 축약 0 · 풀림 · 접합 간선 1
+  - P6 진단 미계산 (E2 · v0) — 소산 분담 None · je 없음 · 진단 표
+  - P7 check_arm (sr01) 이 실제 산출물을 받는다
+  - P8 σ_e 순서 — off (융합 = R_j → 0 극한) ≥ R_j 1e2 > 1e6 > 1e8 > 0 (직렬 사슬 · 같은 그래프)
+  - P9 R_j 가 다르면 p3ca id 가 다르다 · 같은 R_j 의 두 침대 (SDCP 유무) 는 같은 id
+  - P9b 같은 R_j · 같은 설정의 두 침대 (SDCP 유무) = 같은 p3ca id
+  - P10 c = 1 — 요청 칸 [cjunc, sdcp_mod] · 블록 둘 · ca_ext_record_ok · 근접 1 · 축약 1
+  - P11 c = 0 = 수정자 없는 접합과 σ 비트 같음 · c = 1 ≥ c = 0 (Rayleigh · 같은 그래프)
+  - P12 SBE (SDCP 없음) + c = 1 = 근접 0 · σ 가 수정자 없는 접합과 비트 같음 · 판별 표지 False
+  - P13 LEAN 3 — 이온 영수증 not_requested · σ_ion = off 비트 같음 · ca_ext_record_ok
+  - P: 실행
+ELAPSED_S=14.8 RC=1

@@ -1,0 +1,15 @@
+
+── E1
+    보고 E1 — 사슬 rc 3 · 상태 STOPPED · 런 1 (['floor']) · 1 s · 멈춤 RUNNER_RC
+  FAIL  E1a 실제 러너 — 바닥 · 천장 · 사다리 점 하나 이상이 rc 0 · 팔 계약 (정본 ca_ext_record_ok · check_arm · 수렴 증서) 통과  ((3, ['floor'], {'cause': 'rc 2 (로그 /tmp/rint_r_chain_e2e_nb1q8qun/runs/e1_P0/logs/L01_floor.log)', 'code': 'RUNNER_RC', 'run': 'L01_floor', 'what': '러너 rc ≠ 0'}, '사다리 P0 — SBE arm 0 · LEAN 2 · 표적 1.63 mS/cm (값은 봉인 — 상태 · 반복 · 잔차 · 시간만)\n멈춤 [RUNNER_RC] 러너 rc ≠ 0 — rc 2 (로그 /tmp/rint_r_chain_e2e_nb1q8qun/runs/e1_P0/logs/L01_floor.log) (런 L01_floor)\n보정 = STOPPED\n요약 → /tmp/rint_r_chain_e2e_nb1q8qun/runs/e1_P0/ladder_summary.json\n'))
+  FAIL  E1b 사다리가 등록 결과 이름으로 끝난다 (STOPPED · 계약 · 러너 멈춤 아님)  (('STOPPED', {'cause': 'rc 2 (로그 /tmp/rint_r_chain_e2e_nb1q8qun/runs/e1_P0/logs/L01_floor.log)', 'code': 'RUNNER_RC', 'run': 'L01_floor', 'what': '러너 rc ≠ 0'}))
+
+── E6
+    보고 E6 — 사슬 rc 3 · 상태 STOPPED · 멈춤 RUNNER_RC · 런 1 · payload 거부 사유 []
+  FAIL  E6 (현재 꼴 기록) 생산 킷 꼴 payload 줄 (--joule-heat · --save-step4-grid) = 첫 런 (바닥) 에서 payload 입구 거부 (JOULE · STEP4_GRID) → 러너 rc ≠ 0 → 사슬 RUNNER_RC (fail-closed · 팔 없음) — 실제 런을 막는 것  ((3, {'cause': 'rc 2 (로그 /tmp/rint_r_chain_e2e_nb1q8qun/runs/e6_P0/logs/L01_floor.log)', 'code': 'RUNNER_RC', 'run': 'L01_floor', 'what': '러너 rc ≠ 0'}, [], "[p2] ⚠ ARMS=1 ≠ 사전등록 8 — **진단 런**이다.\n     OUTDIR 에 _arm1 를 붙여 생산 산출물과 갈라 놓는다.  생산 봉인은 걸지 않는다.\n[p2] ★ SDCP **부피-보존 구 스탬프** Ø0.30 µm (점 스탬프가 아니다)\n[p2] ★ **다음 세대 S1** — PTFE 면 개구율 face_alpha (셀을 찍지 않는 면 연산자 · Ø0.248 rope = 규약 선택 ·  생산 규약 아님 · v0 = LEAN 2 · 3 · 판정 런 = 등록 R 비준 · Codex GO 뒤)\n[p2] ★ LEAN=2 (σ_e 전용) — 이온·pore-τ·집전체기하 를 전부 끈다 (팔당 솔브 3회 → 1회)\n[p2] ABORT — RUNNER_CA_EXT|VALUE| CJUNC_RJ='inf' (ASCII 10 진 · 유한 · 부호 없음)\n[p2] ABORT — RUNNER_CA_EXT|FACE_ALPHA_COMBO| PTFE_STAMP=face_alpha + CJUNC=1 — 설계가 조합을 아직 정의하지 않았다 (payload · solve_sigma_z 도 거부)\n[p2] ABORT — 런 영수증을 못 만들었다\n"))
+
+test_rint_r_chain_e2e: 0 PASS · 3 FAIL (1.4 s)
+  - E1a 실제 러너 — 바닥 · 천장 · 사다리 점 하나 이상이 rc 0 · 팔 계약 (정본 ca_ext_record_ok · check_arm · 수렴 증서) 통과
+  - E1b 사다리가 등록 결과 이름으로 끝난다 (STOPPED · 계약 · 러너 멈춤 아님)
+  - E6 (현재 꼴 기록) 생산 킷 꼴 payload 줄 (--joule-heat · --save-step4-grid) = 첫 런 (바닥) 에서 payload 입구 거부 (JOULE · STEP4_GRID) → 러너 rc ≠ 0 → 사슬 RUNNER_RC (fail-closed · 팔 없음) — 실제 런을 막는 것
+rc=1 seconds=1

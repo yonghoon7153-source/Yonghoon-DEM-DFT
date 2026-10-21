@@ -1,0 +1,143 @@
+{
+ "schema": "np194_preflight_receipt/v1",
+ "runner": {
+  "path": "scripts/run_network_194_parallel.py",
+  "sha256": "f4048aca55b912628278dbdd7b184ac449723736cd3f4f5cdc7eeca31294921a",
+  "launcher_schema": "network_parallel_launcher/v1",
+  "launch_format": "network_parallel_launch/v3"
+ },
+ "argv": [
+  "run",
+  "--root",
+  "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_lhs214/p13_out/netsupp20_x",
+  "--cohorts",
+  "lhss",
+  "--dry-run",
+  "--observe-imports",
+  "--preflight-receipt",
+  "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_lhs214/p13_out/netsupp20_x_preflight_1021_091214.json"
+ ],
+ "process_argv": [
+  "scripts/run_network_194_parallel.py",
+  "run",
+  "--root",
+  "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_lhs214/p13_out/netsupp20_x",
+  "--cohorts",
+  "lhss",
+  "--dry-run",
+  "--observe-imports",
+  "--preflight-receipt",
+  "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_lhs214/p13_out/netsupp20_x_preflight_1021_091214.json"
+ ],
+ "cwd": "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a47d0294c3c4038d6",
+ "repo_root": "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a47d0294c3c4038d6",
+ "args": {
+  "cmd": "run",
+  "root": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_lhs214/p13_out/netsupp20_x",
+  "cohorts": "lhss",
+  "case": [],
+  "order": "cost",
+  "dry_run": true,
+  "observe_imports": true,
+  "allow_dirty": false,
+  "allow_missing_raw": false,
+  "skip_batch_selftest": false,
+  "worker_script": "",
+  "root_from": "",
+  "root_to": "",
+  "python": "/usr/local/bin/python3",
+  "lanes": 20,
+  "mem_budget_gb": null,
+  "mem_reserve_gb": 2.0,
+  "min_free_gb": 1.0,
+  "network_lock": "per-case",
+  "no_merge": false,
+  "preflight_receipt": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_lhs214/p13_out/netsupp20_x_preflight_1021_091214.json",
+  "lhs_harvest": "",
+  "lhs_cohort": "",
+  "lhsx_harvest": "",
+  "lhsx_cohort": "",
+  "lhss_harvest": "",
+  "lhss_cohort": ""
+ },
+ "dry_run": true,
+ "root": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_lhs214/p13_out/netsupp20_x",
+ "receipt_path": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_lhs214/p13_out/netsupp20_x_preflight_1021_091214.json",
+ "stage": "stopped",
+ "started": "2026-10-21T09:12:20",
+ "ended": "2026-10-21T09:12:24",
+ "tz": "+0000",
+ "git": {
+  "sha": "7f99be67c7bd66416e2b125e62cba50ca6f8a03a",
+  "short": "7f99be67c",
+  "branch": "worktree-agent-a47d0294c3c4038d6",
+  "dirty": false,
+  "porcelain": []
+ },
+ "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+ "code_files": 32,
+ "plan": {
+  "cohorts": [
+   "lhss"
+  ],
+  "n": 20,
+  "registered_production_set": "supp20"
+ },
+ "input_digest": {
+  "n": 20,
+  "ids_sha256": "991cf1150b183f64bc69926a8b3e7c05453ec47e13b89ba3a6ad2fd2c981c694",
+  "raw_sha256_table_sha256": "a7aaa3c8c7683f1835a096acb83ecdb055eaf5f129221f7067c5f34462807d0e",
+  "missing_raw_sha": [],
+  "cohort_tsv_sha256": {
+   "lhss": "69d3f913072288b1d6b8ca8a14e43b0bc8f80e8836a8f79a9b26b2d8ed6dcaf7"
+  }
+ },
+ "observe_imports": true,
+ "checks": {
+  "dependency_closure": {
+   "ok": true,
+   "n_files": 30,
+   "outside": [],
+   "errors": []
+  },
+  "lazy_import_census": {
+   "ok": true,
+   "n_lazy": 92,
+   "unclassified": []
+  },
+  "fork_census": {
+   "ok": true,
+   "n": 0,
+   "lines": []
+  }
+ },
+ "generation": {
+  "generation": "g2",
+  "n_problems": 0,
+  "modes": [
+   "hertz",
+   "physics",
+   "hertz_h12"
+  ],
+  "error": ""
+ },
+ "n_raw_problems": 60,
+ "warn": [
+  "레인 20 > 쓸 수 있는 CPU 4 — 레인당 1 코어가 아니다 (과다 구독)",
+  "처음 20 건 (큐 앞 = 가장 큰 침대) 의 메모리 추정 합 21.7 GB > MemAvailable 13.98 GB — 예산 관문이 동시 수를 줄인다 (추정은 real_14 기준 · WSL 시범으로 고칠 것)"
+ ],
+ "stop": [
+  "원자료 · 메시 문제 60 건 (예: [('lhss_002', 'atom 파일 없음: /home/yonghoon71/lhss_local/lhss_002/post_lhss_002/atom_2790000.liggghts'), ('lhss_002', 'contact 파일 없음: /home/yonghoon71/lhss_local/lhss_002/post_lhss_002/contact_2790000.liggghts'), ('lhss_002', 'deck 파일 없음: /home/yonghoon71/lhss_local/lhss_002/input_lhss_002.liggghts')]) — 경로 치환 (--root-from/--root-to) 확인 · 그래도 돌리려면 --allow-missing-raw (그 케이스는 배치가 REFUSED 로 남긴다)"
+ ],
+ "aborted": null,
+ "completed": false,
+ "completion_marker": null,
+ "exit_code": 2,
+ "exception": null,
+ "log": {
+  "path": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_lhs214/p13_out/netsupp20_x_preflight_1021_091214.log",
+  "sha256": "29f51136c2c1618e6d7ce1b233eb0a9234798d15d1db315f15232062aa5dada1",
+  "bytes": 5315,
+  "encoding": "utf-8"
+ }
+}

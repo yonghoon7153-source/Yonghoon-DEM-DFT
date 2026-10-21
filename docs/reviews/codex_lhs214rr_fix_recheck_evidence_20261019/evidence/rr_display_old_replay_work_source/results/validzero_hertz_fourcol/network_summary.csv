@@ -1,8 +1,0 @@
-metric,H,P,delta
-── Network Solver (Hertzian DEM-native) ──,,,
-σ_ionic (mS/cm),17.0,19.0,+11.8%
-R_brug (과대추정 배수),31.0×,37.0×,+19.4%
-Contact-free / Full,31.0×,37.0×,+19.4%
-σ_brug / σ_ionic,41.0×,43.0×,+4.9%
-σ_ionic ratio (physics/Hertzian),1.12×,1.12×,0%
-SE Volume Fraction,0.5,0.5,0%

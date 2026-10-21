@@ -1,0 +1,21 @@
+Rint 2 B6 verdict: ca_ext_record_ok per arm, p2 <-> p3ca generation mix and next-generation certificate gates
+
+scripts/sdcp_gain_verdict.py (_validate_contract_raw, shared by verdict / --seal-only / compare_dirs):
+- GENERATION_MIX: arms are classified by the recomputed physics_protocol_id prefix (p2- current generation, p3ca-
+  next generation; unknown:* is left to protocol_ok); both present -> HOLD with the counts per generation. Placed
+  before the generation-field gate, so the reason names the mix (the fixed-field loop would only say the id differs).
+- NEXTGEN_UNPUBLISHED (after the electronic convergence gate): run_contract.next_gen_cert_ok per arm (electronic
+  certificate required for ca_ext arms, ionic certificate when ionic was planned and solved; numbers re-judged,
+  certificate sigma = result sigma); certificate absent or failed = unpublished arm, listed in the hold; a cohort with
+  unpublished arms is not judged. p2 arms are outside this rule.
+- Contract loop gains run_contract.ca_ext_record_ok (same function as the producer and check_arm), hold code CAEXT.
+- The two new reasons start with their code (GENERATION_MIX| / NEXTGEN_UNPUBLISHED|) so the --seal-only line the
+  runner prints names them (seal_lines prints the reason only).
+- Off path: the verdict JSON of all 17 committed arm directories (with and without require_arms 8) is byte-equal to
+  the pre-change verdict.
+
+scripts/test_ca_ext_verdict.py: pre-fix 11/31 -> 31/31 (49 s); with --old-verdict (aff73c4d5 verdict) 32/32.
+Regressions: sdcp_gain_verdict --selftest 177/177.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

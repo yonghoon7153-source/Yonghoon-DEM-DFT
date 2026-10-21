@@ -1,0 +1,22 @@
+HEAD 01c2f73c6 dirty=2
+cjunc rc=0 t=14s :: == test_carbon_junction: 263/263 PASS
+s0 rc=0 t=16s :: 126 PASS · 0 FAIL
+target_cert rc=0 t=21s :: == test_step3_target_cert [빠른 판]: 193/193 PASS (20.6 s)
+s3_self rc=0 t=1s :: SELFTEST PASS
+s3_rint rc=0 t=1s :: STEP3 RINT SELFTEST PASS
+contract rc=0 t=1s :: run_contract selftest: 124/124 PASS
+b6 rc=0 t=41s :: 161 PASS · 0 FAIL
+chain rc=0 t=37s :: test_rint_r_chain: 89/89 PASS (37.1 s)
+z3 rc=0 t=34s :: test_ca_ext_z3: 84 PASS · 0 FAIL (32.6 s)
+z1 rc=0 t=39s :: 95 PASS · 0 FAIL  (38.9 s)
+runner rc=0 t=93s :: 123 PASS · 0 FAIL
+verdict rc=0 t=40s :: 31 PASS · 0 FAIL
+labels rc=0 t=1s :: 25 PASS · 0 FAIL
+explainer rc=0 t=0s :: == test_rint_explainer_page: 23/23 PASS
+e2e rc=0 t=69s :: test_rint_r_chain_e2e: 10 PASS · 0 FAIL (68.4 s)
+ptfe_old rc=0 t=89s :: 253 PASS · 0 FAIL
+conv_cert rc=0 t=124s :: == test_step3_conv_cert: 27/27 PASS
+join rc=0 t=212s :: 326 PASS · 0 FAIL
+disc_self rc=0 t=99s :: check_method_discipline v3 selftest: 128/128 PASS
+disc rc=0 t=38s ::   ✓ 규칙 L — 러너 배선을 실행으로 확인 (LEAN=2 7플래그 · EXPECT_PROTOCOL 통과 · PREREG_ARMS 상�
+DONE

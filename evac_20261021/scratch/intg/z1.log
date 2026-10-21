@@ -1,0 +1,131 @@
+
+── Z1a 손계산 — step3_sigma.vgcf_sigma_from_bulk (러너 · payload 가 같은 함수) ↔ 독립 식 · 설계 §1-2 #2 값
+  PASS  Z1a0 함수 · 식 이름 · 기준 지름 상수가 있다 (VGCF_DIA_REF_UM = additives.VGCF_D)
+  PASS  Z1a1 설계 §1-2 #2 손계산 — vox 0.15 · 1e4 → 7853.98 · vox 0.4 · 100 → 11.0447 (옛 값 재현) · vox 0.125 · 1e4 → 11309.7 · 옛 기본 (100 · vox 0.15) 78.5398 · Endo ÷10 (1e3) 785.398
+  PASS  Z1a2 독립 식 σ_bulk·π·0.15²/4/vox² 와 일곱 점 모두 같다 (PTFE · SE 점은 식에 안 들어간다)
+  PASS  Z1a3 VGCF Ø 비균일 · VGCF 없음 · 길이 다름 = ValueError (러너 옛 판의 ABORT 와 같은 조건 · 조용한 강제 없음)
+  PASS  Z1a4 식 이름이 기준 지름을 말한다 (기록만 봐도 식이 정해진다)
+  PASS  Z1a5 결과 σ 가 유한 > 0 이 아니면 (넘침 · 언더플로 · nan · inf · 0) ValueError — "inf" · "0" 문자열을 payload 에 넘기지 않는다
+    (0.4 s)
+
+── Z1b 러너 발사 전 검사 — SIGMA_FIBRE_BULK 값 · SIGMA_VGCF_OVERRIDE 동시 = 거부 · 영수증 선택 칸
+  PASS  Z1b0 손잡이 표에 SIGMA_FIBRE_BULK (선언 칸 sigma_vgcf_bulk_S_cm) — 기존 아홉은 그대로 (이름 · 순서)
+  PASS  Z1b1 SIGMA_FIBRE_BULK=1e4 → 문제 없음 · 영수증 = bulk 10000.0 (float) + 식 이름
+  PASS  Z1b2 같은 값 다른 표기 (10000 · 1E4 · 1.0e4 · 1e+4 · 10000.000) = 같은 영수증 (정규 float)
+  PASS  Z1b3 SIGMA_FIBRE_BULK + SIGMA_VGCF_OVERRIDE → RUNNER_CA_EXT|SIGMA_VGCF_BOTH| (구조화 사유 · 설계 §7)
+  PASS  Z1b4 값이 나빠도 동시 거부는 따로 이름을 댄다 (bulk nan + override 0 → SIGMA_VGCF_BOTH · VALUE 둘 다)
+  PASS  Z1b5 나쁜 값 열넷 (nan · inf · 넘침 · 음수 · 0 · 공백 · 유니코드 숫자 · 밑줄 · 변수 · 16 진 · 꼬리 글자 · 부호) → VALUE
+  PASS  Z1b6 빈 값 = 끔 (옛 영수증 · 문제 없음)
+  PASS  Z1b7 다음 세대 판정 런 꼴 (접합 + rtol + bulk) → 문제 없음 · 영수증 = 요청 · rtol · bulk · 식 이름
+    (0.0 s)
+
+── Z1c 이름 태그 · payload 인자 · 영수증 digest — 끔 = 옛 그대로 · 켬 = 옛 팔과 다른 이름
+  PASS  Z1c1 영수증 (bulk 1e4) → payload 인자 ` --sigma-vgcf-bulk 10000.0` · 태그 `_fb10000` (OUTDIR · 팔 이름) · 값 줄 10000.0
+  PASS  Z1c2 끔 영수증 → 다섯 칸 다 빈 문자열 (옛 조립 그대로)
+  PASS  Z1c3 무손실 태그 — 2.5 → _fb2p5 · 25 → _fb25 · 1e3 → _fb1000 · 1e20 → _fb1e20
+  PASS  Z1c4 접합 + rtol + bulk → 태그 = _cj… · _rt1em12 · _fb10000 순 · 인자 끝 = --sigma-vgcf-bulk 10000.0
+  PASS  Z1c5 face_alpha + rtol + bulk → 팔 태그 `_fa_rt1em12_fb10000`
+  PASS  Z1c6 digest — bulk 칸이 없으면 그대로 · 있으면 다르다 (옛 OUTDIR · 코호트 이름 보존 · 새 설정은 새 디렉터리)
+  PASS  Z1c7 payload 플래그 `--sigma-vgcf-bulk` = CLI 회계 record (기록 · 규약 해시 밖 — σ 자체는 --sigma-vgcf 가 규약 축)
+  PASS  Z1c8 손으로 바뀐 영수증 (bulk = bool · 문자열 · nan · 0 · 식 이름 없음 · 빈 · 수) → 이름 태그를 만들지 않는다 (ValueError · fail-closed)
+    (0.0 s)
+
+── Z1d receipt_match — 영수증 bulk · 식 이름 ↔ 매니페스트 (없음 · 다름 · 요청 안 한 기록)
+  PASS  Z1d [같음] → 통과
+  PASS  Z1d [매니페스트에 기록 없음] → RCPT|sigma_vgcf_bulk_S_cm|missing|
+  PASS  Z1d [bulk 다름 (1e3)] → RCPT|sigma_vgcf_bulk_S_cm|differ|
+  PASS  Z1d [식 이름 다름] → RCPT|sigma_vgcf_rule|differ|
+  PASS  Z1d [식 이름 없음] → RCPT|sigma_vgcf_rule|missing|
+  PASS  Z1d [요청 안 한 기록 (영수증 끔 · 팔에 bulk)] → RCPT|sigma_vgcf_bulk_S_cm|unrequested|
+  PASS  Z1d [bulk nan] → RCPT|sigma_vgcf_bulk_S_cm|differ|
+    (0.0 s)
+
+── Z1e payload — --sigma-vgcf-bulk 기록 (bulk · 식 이름) · 같은 함수로 다시 계산해 --sigma-vgcf 와 대조 · 끔 = 키 없음
+  PASS  Z1e1 bulk 1e4 · σ 176.715 (vox 1.0 손계산) → rc 0 · 매니페스트 σ 176.715 · bulk 10000.0 · 식 이름
+  PASS  Z1e2 기록은 규약 해시 밖 — 같은 σ 를 bulk 없이 준 런과 physics_protocol_id 같음 (p2) · 끈 런은 bulk · 식 이름 키가 없다
+  PASS  Z1e [다시 계산 ≠ --sigma-vgcf (100 ↔ 176.715)] → payload 거부 `SIGMA_VGCF_BULK_REFUSED|MISMATCH|` · 산출물 없음
+  PASS  Z1e [반올림 한 자리 다름 (176.714)] → payload 거부 `SIGMA_VGCF_BULK_REFUSED|MISMATCH|` · 산출물 없음
+  PASS  Z1e [bulk nan] → payload 거부 `SIGMA_VGCF_BULK_REFUSED|VALUE|` · 산출물 없음
+  PASS  Z1e [bulk 0] → payload 거부 `SIGMA_VGCF_BULK_REFUSED|VALUE|` · 산출물 없음
+  PASS  Z1e [bulk -1e4 (= 꼴 · argparse 가 음수를 옵션으로 읽지 않게)] → payload 거부 `SIGMA_VGCF_BULK_REFUSED|VALUE|` · 산출물 없음
+  PASS  Z1e [--fibre-dia 없음] → payload 거부 `SIGMA_VGCF_BULK_REFUSED|NO_DIA|` · 산출물 없음
+  PASS  Z1e [--no-step3] → payload 거부 `SIGMA_VGCF_BULK_REFUSED|NO_STEP3|` · 산출물 없음
+    (4.7 s)
+
+── Z1f 러너 실물 — SIGMA_FIBRE_BULK=1e4 → payload 인자 · 영수증 · 팔 이름 · 매니페스트 · check_arm (vox 1.0 침대)
+  PASS  Z1f1 끔 · 켬 둘 다 rc 0 · 켬 팔 이름 = p2_<침대>_fb10000_a0 (옛 p2_<침대>_a0 와 다르다)
+  PASS  Z1f2 payload 인자 — 끔 σ 1.76715 (= 손계산 100 · vox 1.0 · 옛 값) · 켬 σ 176.715 (= 손계산 1e4) · 켬에만 --sigma-vgcf-bulk 10000.0
+  PASS  Z1f3 --expect-physics 의 sigma_vgcf_S_cm = 176.715 (선언한 σ = 넘긴 σ = 매니페스트 σ)
+  PASS  Z1f4 영수증 = bulk 10000.0 + 식 이름 · sigma_vgcf_S_cm (override 칸) 은 없다
+  PASS  Z1f5 팔 매니페스트 = σ 176.715 · bulk · 식 이름 · receipt_match 통과 · p2 세대 (bulk 만 = 옛 세대 · σ 가 다를 뿐)
+  PASS  Z1f6 OUTDIR 이름에 _fb10000 · 끔 런과 다른 디렉터리
+  PASS  Z1f [bulk + SIGMA_VGCF_OVERRIDE] → rc 2 · `RUNNER_CA_EXT|SIGMA_VGCF_BOTH|` · 새 디렉터리 없음 · payload 미호출
+  PASS  Z1f [bulk nan] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  Z1f [bulk 0] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  Z1f7 SKIP 함정 — 옛 팔 재사용 안 함 · 두 파일 그대로 · 새 팔은 새 이름 (_fb10000) 으로만
+    (12.5 s)
+
+── Z2 다음 세대 노브 (CJUNC=1 · face_alpha · SDCP_MOD_C) = STEP3_RTOL 필수 — 팔 시작 전 거부 · 옛 세대 그대로
+  PASS  Z2 [CJUNC=1 (값 여섯 다)] rtol 없음 → RTOL_REQUIRED · rtol 1e-12 → 그 사유 없음
+  PASS  Z2 [CJUNC=1 + SDCP_MOD_C=1] rtol 없음 → RTOL_REQUIRED · rtol 1e-12 → 그 사유 없음
+  PASS  Z2 [PTFE_STAMP=face_alpha (LEAN 2)] rtol 없음 → RTOL_REQUIRED · rtol 1e-12 → 그 사유 없음
+  PASS  Z2 [PTFE_STAMP=face_alpha (LEAN 3)] rtol 없음 → RTOL_REQUIRED · rtol 1e-12 → 그 사유 없음
+  PASS  Z2 [SDCP_MOD_C 만 (S2 없이)] rtol 없음 → RTOL_REQUIRED · rtol 1e-12 → 그 사유 없음
+  PASS  Z2 [끔 (기본)] → RTOL_REQUIRED 없음 (옛 세대 · 끈 노브는 그대로)
+  PASS  Z2 [centerline (현 세대 생산)] → RTOL_REQUIRED 없음 (옛 세대 · 끈 노브는 그대로)
+  PASS  Z2 [SIGMA_FIBRE_BULK 만 (현 세대 꼴)] → RTOL_REQUIRED 없음 (옛 세대 · 끈 노브는 그대로)
+  PASS  Z2 [CJUNC=0 (끔)] → RTOL_REQUIRED 없음 (옛 세대 · 끈 노브는 그대로)
+  PASS  Z2 [STEP3_RTOL 만] → RTOL_REQUIRED 없음 (옛 세대 · 끈 노브는 그대로)
+  PASS  Z2b 사유가 봉인 상한과 "기본값 없음" 을 말한다 (사람이 값을 고른다)
+  PASS  Z2c 러너 실물 [접합 (LEAN 2 · 값 여섯) · rtol 없음] → rc 2 · RUNNER_CA_EXT|RTOL_REQUIRED| · 새 디렉터리 없음 · payload 미호출 (GPU 전)
+  PASS  Z2c 러너 실물 [face_alpha (LEAN 2) · rtol 없음] → rc 2 · RUNNER_CA_EXT|RTOL_REQUIRED| · 새 디렉터리 없음 · payload 미호출 (GPU 전)
+    (1.2 s)
+
+── Z3 sdcp_anchor_v2_chain — 부모 셸의 다음 세대 노브 (CJUNC* · SDCP_MOD_C · STEP3_RTOL · SIGMA_FIBRE_BULK) = 거부 (지우지 않는다)
+  PASS  Z3a 깨끗한 env → 사슬이 돈다 (rc 0 · 런 다섯 · 가짜 러너)
+  PASS  Z3b 부모 env 의 열하나 (값 1 · 빈 값 둘 다) → 러너 부르기 전 멈춤 · 사유 NEXTGEN_ENV + 그 이름 · 런 0 · 출력 폴더 없음
+  PASS  Z3c dry-run 도 같은 이유로 멈춘다 (찍은 명령이 실제 런과 갈리지 않게)
+  PASS  Z3d 사슬이 덮어쓰는 축 (PTFE_STAMP) · 지우는 축 (SIGMA_ION_*) 은 그대로 (거부 대상 아님 · 옛 동작)
+  PASS  Z3e 거부 이름 = run_contract.RUNNER_CA_EXT_ENV 의 이름 전부 (정본 하나 · 사본 없음) + CJUNC 접두
+    (0.5 s)
+
+── Z4 compare_dirs — ca_ext 하위 블록 · 칸 = 등록 축 · 증거 = 결과 · 등록 밖 차이 = HOLD · CLI --expect-differ
+  PASS  Z4a0 코호트 다섯 (각 두 팔) 을 만들었다
+  PASS  Z4a1 판별력 전제 — A ↔ B 증거 (evidence.solve) 가 실제로 다르다 · 분류 안 된 키 없음 (옛 판: ca_ext · ca_ext_requested)
+  PASS  Z4b R_j 사다리 두 점 (1e6 ↔ 1e4) · --expect-differ ca_ext.cjunc.R_j_ohm → measured (증거 차이 = 결과)
+  PASS  Z4c 같은 쌍 · 하위 블록 축 ca_ext.cjunc → measured
+  PASS  Z4d R_j 만 등록했는데 tol_ff 도 다르다 → HOLD (등록 밖 칸 이름 tol_ff_um)
+  PASS  Z4e R_j + tol_ff 등록 → measured (tol_P · tol_sj = 같은 CLI 플래그가 정하는 칸 · CLI 회계 정본)
+  PASS  Z4f 같은 디렉터리끼리 · ca_ext.cjunc 등록 → HOLD (노브가 안 걸렸다 · 감소율 0 = 실험 없음)
+  PASS  Z4g 현 세대 (p2 · rtol) ↔ 다음 세대 (접합) · ca_ext.cjunc 등록 → measured (블록 켬 = 등록 축 · 요청 칸 · id = 파생)
+  PASS  Z4h p2 ↔ 접합인데 칸 (R_j) 만 등록 → HOLD (블록이 켜지고 꺼진 것은 하위 블록 축으로만 등록)
+  PASS  Z4i 수정자 c = 1 켬 · ca_ext.sdcp_mod 등록 → measured
+  PASS  Z4j 수정자 켬인데 ca_ext.cjunc 만 등록 → HOLD (sdcp_mod = 등록 밖)
+  PASS  Z4k 다른 축을 등록했는데 접합 R_j 가 다르다 → HOLD (옛 계약 그대로 · 등록 밖 = HOLD)
+  PASS  Z4l CLI --expect-differ ca_ext.cjunc.R_j_ohm → rc 0 · measured
+  PASS  Z4m CLI 모르는 축 `ca_ext.bogus` → 거부 (rc ≠ 0 · 대조 안 함 · 사유에 그 이름)
+  PASS  Z4m CLI 모르는 축 `ca_ext.cjunc.bogus_key` → 거부 (rc ≠ 0 · 대조 안 함 · 사유에 그 이름)
+  PASS  Z4m CLI 모르는 축 `ca_ext` → 거부 (rc ≠ 0 · 대조 안 함 · 사유에 그 이름)
+  PASS  Z4n 축 이름 = run_contract.CA_EXT_SUBBLOCKS (하위 블록) + ca_ext_protocol_fields (칸) — 같은 원천
+  PASS  Z4o ca_ext_contrast — tol_ff 를 바꾸면 (형제 tol_P · tol_sj · sdcp_mod.tol_sj 가 따라 다르다) 하위 블록 축 · tol_ff 칸 축 = 설명됨 · R_j 칸만 = 등록 밖 넷
+  PASS  Z4p 증거만 다름 = 차이 아님 (결과) · schema 다름 = 등록해도 위반 · 사본 칸 (cjunc.protocol.ptfe_stamp) = 최상위 ptfe_stamp 를 등록하면 설명 · 아니면 위반
+  PASS  Z4q 하위 블록 축과 그 칸을 **같이** 등록 · R_j 만 다름 → 둘 다 "실제로 다름" (거짓 "노브 안 걸림" 없음) · compare_dirs measured
+    (17.9 s)
+
+── Z5 판정기 --expect-generation — 코호트 세대 (p2 · p3ca) 선언 · 다르면 거부 (설계 §7 네 번째 방어)
+  PASS  Z5a [p3ca 코호트 · 기대 p3ca] → 통과
+  PASS  Z5a [p3ca 코호트 · 기대 p2] → HOLD GENERATION_EXPECT
+  PASS  Z5a [p2 코호트 · 기대 p2] → 통과
+  PASS  Z5a [p2 코호트 · 기대 p3ca] → HOLD GENERATION_EXPECT
+  PASS  Z5b 규약 id = unknown:* 팔 + 기대 p2 → HOLD GENERATION_EXPECT (세대를 모르는 팔은 기대 세대가 아니다)
+  PASS  Z5c 기대 없음 (기본) = 옛 동작 — p2 코호트에 새 사유 없음
+  PASS  Z5d compare_dirs 도 두 디렉터리에 같은 기대 — p3ca 쌍 · 기대 p3ca → measured · 기대 p2 → HOLD GENERATION_EXPECT
+  PASS  Z5e CLI --seal-only --expect-generation p3ca — p2 디렉터리 = 봉인 깨짐 (사유 GENERATION_EXPECT) · p3ca 디렉터리 = 그 사유 없음
+  PASS  Z5f CLI 모르는 세대 (p9) = 거부 · --collect-only · --scan 과 함께 = 거부 (판정이 없는 모드에서 조용한 no-op 금지)
+    (1.6 s)
+
+── ZB 끔 경로 — 고치기 전 run_contract (--old-scripts) 와 digest · 발사 전 검사 · 이름 태그 · receipt_match 같음
+    (--old-scripts 없음 — 건너뜀 · 커밋 증거는 그 인자로 돌린 기록)
+    (0.0 s)
+
+95 PASS · 0 FAIL  (38.9 s)

@@ -1,0 +1,9 @@
+HEAD d9404ccb2 dirty=0
+b6 rc=0 t=50s ::  160 PASS · 0 FAIL 
+runner rc=0 t=88s ::  114 PASS · 0 FAIL 
+verdict rc=1 t=43s ::   - V3e rtol 없이 돈 접합 팔 (실물 · 증서 칸 없음) 이 섞이면 → HOLD NEXTGEN_UNPUBLISHED   - V3f rtol 없이 돈 face_alpha 팔 (실물) → HOLD NEXTGEN_UNPUBLISHED 
+labels rc=0 t=2s ::  25 PASS · 0 FAIL 
+cjunc rc=0 t=10s ::  == test_carbon_junction: 163/163 PASS 
+s0 rc=0 t=20s ::  121 PASS · 0 FAIL 
+ptfe_old rc=0 t=95s ::  238 PASS · 0 FAIL 
+DONE

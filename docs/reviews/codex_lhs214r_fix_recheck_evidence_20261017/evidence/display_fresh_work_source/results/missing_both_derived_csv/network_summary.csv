@@ -1,7 +1,0 @@
-metric,value
-── Network Solver (Hertzian DEM-native) ──,
-σ_ionic (mS/cm),17.0
-R_brug (과대추정 배수),31.0×
-Contact-free / Full,31.0×
-σ_brug / σ_ionic,41.0×
-SE Volume Fraction,0.5

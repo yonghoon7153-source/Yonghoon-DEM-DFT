@@ -1,0 +1,8 @@
+check_all.sh: register the Rint 2 B6 tests (payload wiring, runner knobs, verdict consumer checks)
+
+Adds scripts/test_ca_ext_b6.py, scripts/test_ca_ext_runner.py and scripts/test_ca_ext_verdict.py next to the other
+Rint 2 tests, same run-line form. Measured on 10-20 (4 cores, alone): b6 50 s, runner 92 s, verdict 49 s; the runner
+test is over 60 s (it calls the real runner and payload) - whether it stays in the gate is for the main session.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

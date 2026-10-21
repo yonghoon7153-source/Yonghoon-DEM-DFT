@@ -1,5 +1,0 @@
-Traceback (most recent call last):
-  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\gen2_network_reverify7_20261012\probes\r7_parent_cli.py", line 27, in <module>
-    assert row[label]==dict(rc=want,n_fail=want,S0=True,S0b=not bool(want)),row
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError: {'name': 'positive', 'parent': {'rc': 1, 'n_fail': 1, 'S0': False, 'S0b': True}, 'current': {'rc': 1, 'n_fail': 1, 'S0': False, 'S0b': True}}

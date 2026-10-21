@@ -1,0 +1,10 @@
+HEAD aef62d81a  dirty=0
+cjunc rc=0 t=9s ::  == test_carbon_junction: 163/163 PASS 
+s0 rc=0 t=21s ::  121 PASS · 0 FAIL 
+labels rc=0 t=0s ::  9 PASS · 0 FAIL 
+st3 rc=0 t=2s :: joule-stats-budget-invariant: q 의 전수 p99.8·N 이 max_points 에 불변  OK SELFTEST PASS 
+st3rint rc=0 t=0s ::   OK   ⓛ3 포함 항목 = bulk 셀 J²/σ — ['bulk_cell_J2_over_sigma'] STEP3 RINT SELFTEST PASS 
+cmd_self rc=0 t=99s ::  check_method_discipline v3 selftest: 128/128 PASS 
+cmd_repo rc=0 t=41s ::   ⚠ test_rint_t4_census.py: `T` 이 함수 `main` 에서 대입(:53)과 import(:50) 양쪽에 묶인다 — 그 import 가 실행되면 앞의 값이 덮인다 (오류는 아니지만 이름을 갈라 놓을 것) ✓ �
+ptfe rc=0 t=87s ::  227 PASS · 0 FAIL 
+DONE

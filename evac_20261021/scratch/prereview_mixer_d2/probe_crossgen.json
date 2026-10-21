@@ -1,0 +1,74 @@
+[
+ {
+  "allow": "E",
+  "old": "LC_soft_gen1",
+  "new": "LC_ref20_lab",
+  "rc": 1,
+  "tail": [
+   "   ⛔ CED 밖 차이: ['#7: region reg block -0.0151083 0.0151083 -0.0151083 0.0151083 -0.0151083 0.0151083 units box  ⇄  region reg block -0.0144707 0.0144707 -0.0144707 0.0144707 -0.0144707 0.0144707 units box', '#21: fix Drum all mesh/surface file Drum.stl type 4 scale 0.0262754  ⇄  fix Drum all mesh/surface file Drum.stl type 4 scale 0.0251665', '#22: fix Front all mesh/surface file Front.stl type 4 scale 0.0262754  ⇄  fix Front all mesh/surface file Front.stl type 4 scale 0.0251665', '#23: fix Back all mesh/surface file Back.stl type 4 scale 0.0262754  ⇄  fix Back all mesh/surface file Back.stl type 4 scale 0.0251665', '#25: fix pt1 all particletemplate/sphere 10487 atom_type 1 density constant 4800 radius constant 0.0006813  ⇄  fix pt1 all particletemplate/sphere 10487 atom_type 1 density constant 4850 radius constant 0.0006813', '#26: fix pt2 all particletemplate/sphere 11887 atom_type 2 density constant 4800 radius constant 0.0003028  ⇄  fix pt2 all particletemplate/sphere 11887 atom_type 2 density constant 4850 radius constant 0.0003028', '#27: fix pt3 all particletemplate/sphere 13901 atom_type 3 density constant 2000 radius constant 7.57e-05  ⇄  fix pt3 all particletemplate/sphere 13901 atom_type 3 density constant 1640 radius constant 7.57e-05', '#30: region ins_reg cylinder x 0.0 0.0 0.0118239 -0.00236478 0.00236478 units box  ⇄  region ins_reg cylinder x 0.0 0.0 0.0113249 -0.00226498 0.00226498 units box']",
+   "   ⛔ E 규칙 위반: ['물리 시간 — 정착 2F·dt 0.271854548 → 0.266063608 s (허용 0.000273)', '물리 시간 — 회전 N·dt 1.59914909 → 1.56508415 s (허용 0.0016)', 'AM_P–AM_P: 108795 → 101831 (쌍별 규칙 108795 · E* ×1 → CED ×1)', 'AM_P–AM_S: 108795 → 101831 (쌍별 규칙 108795 · E* ×1 → CED ×1)', 'AM_P–SE: 10458.2 → 64338.8 (쌍별 규칙 68738.6 · E* ×16.8506 → CED ×6.5727)', 'AM_P–WALL: 59063.2 → 55282.5 (쌍별 규칙 59063.2 · E* ×1 → CED ×1)', 'AM_S–AM_S: 142562 → 133437 (쌍별 규칙 142562 · E* ×1 → CED ×1)', 'AM_S–SE: 10458.2 → 64338.8 (쌍별 규칙 68738.6 · E* ×16.8506 → CED ×6.5727)']",
+   "",
+   "0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지"
+  ]
+ },
+ {
+  "allow": "E",
+  "old": "LC_soft_gen1",
+  "new": "LC_soft_lab",
+  "rc": 1,
+  "tail": [
+   "   ⛔ CED 밖 차이: ['#7: region reg block -0.0151083 0.0151083 -0.0151083 0.0151083 -0.0151083 0.0151083 units box  ⇄  region reg block -0.0144707 0.0144707 -0.0144707 0.0144707 -0.0144707 0.0144707 units box', '#21: fix Drum all mesh/surface file Drum.stl type 4 scale 0.0262754  ⇄  fix Drum all mesh/surface file Drum.stl type 4 scale 0.0251665', '#22: fix Front all mesh/surface file Front.stl type 4 scale 0.0262754  ⇄  fix Front all mesh/surface file Front.stl type 4 scale 0.0251665', '#23: fix Back all mesh/surface file Back.stl type 4 scale 0.0262754  ⇄  fix Back all mesh/surface file Back.stl type 4 scale 0.0251665', '#25: fix pt1 all particletemplate/sphere 10487 atom_type 1 density constant 4800 radius constant 0.0006813  ⇄  fix pt1 all particletemplate/sphere 10487 atom_type 1 density constant 4850 radius constant 0.0006813', '#26: fix pt2 all particletemplate/sphere 11887 atom_type 2 density constant 4800 radius constant 0.0003028  ⇄  fix pt2 all particletemplate/sphere 11887 atom_type 2 density constant 4850 radius constant 0.0003028', '#27: fix pt3 all particletemplate/sphere 13901 atom_type 3 density constant 2000 radius constant 7.57e-05  ⇄  fix pt3 all particletemplate/sphere 13901 atom_type 3 density constant 1640 radius constant 7.57e-05', '#30: region ins_reg cylinder x 0.0 0.0 0.0118239 -0.00236478 0.00236478 units box  ⇄  region ins_reg cylinder x 0.0 0.0 0.0113249 -0.00226498 0.00226498 units box']",
+   "   ⛔ E 규칙 위반: ['dt 7.055e-07 → 7.092e-07 (비 0.99478285392) — 정확히 1/k (k 정수 ≥ 2) 가 아니다', 'dt ×1/1: run 이 정확히 1 배가 아니다 ([1, 192668, 192668, 2266689] → [1, 187584, 187584, 2206879] · run 1 은 그대로)', 'dt ×1/1: 덤프 간격 11333 → 11034 (정확히 1 배여야 덤프 시각이 같다)', 'AM_P–AM_P: 108795 → 101831 (쌍별 규칙 108795 · E* ×1 → CED ×1)', 'AM_P–AM_S: 108795 → 101831 (쌍별 규칙 108795 · E* ×1 → CED ×1)', 'AM_P–SE: 10458.2 → 9788.8 (쌍별 규칙 10458.2 · E* ×1 → CED ×1)', 'AM_P–WALL: 59063.2 → 55282.5 (쌍별 규칙 59063.2 · E* ×1 → CED ×1)', 'AM_S–AM_S: 142562 → 133437 (쌍별 규칙 142562 · E* ×1 → CED ×1)']",
+   "",
+   "0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지"
+  ]
+ },
+ {
+  "allow": "U",
+  "old": "LC_soft_gen1",
+  "new": "LC_soft_lab",
+  "rc": 1,
+  "tail": [
+   "   ⛔ CED 밖 차이: ['#7: region reg block -0.0151083 0.0151083 -0.0151083 0.0151083 -0.0151083 0.0151083 units box  ⇄  region reg block -0.0144707 0.0144707 -0.0144707 0.0144707 -0.0144707 0.0144707 units box', '#19: timestep 7.055e-07  ⇄  timestep 7.092e-07', '#21: fix Drum all mesh/surface file Drum.stl type 4 scale 0.0262754  ⇄  fix Drum all mesh/surface file Drum.stl type 4 scale 0.0251665', '#22: fix Front all mesh/surface file Front.stl type 4 scale 0.0262754  ⇄  fix Front all mesh/surface file Front.stl type 4 scale 0.0251665', '#23: fix Back all mesh/surface file Back.stl type 4 scale 0.0262754  ⇄  fix Back all mesh/surface file Back.stl type 4 scale 0.0251665', '#25: fix pt1 all particletemplate/sphere 10487 atom_type 1 density constant 4800 radius constant 0.0006813  ⇄  fix pt1 all particletemplate/sphere 10487 atom_type 1 density constant 4850 radius constant 0.0006813', '#26: fix pt2 all particletemplate/sphere 11887 atom_type 2 density constant 4800 radius constant 0.0003028  ⇄  fix pt2 all particletemplate/sphere 11887 atom_type 2 density constant 4850 radius constant 0.0003028', '#27: fix pt3 all particletemplate/sphere 13901 atom_type 3 density constant 2000 radius constant 7.57e-05  ⇄  fix pt3 all particletemplate/sphere 13901 atom_type 3 density constant 1640 radius constant 7.57e-05']",
+   "   ⛔ 개입 방향 반대 (증가여야 한다): ['공통 배율 ×0.9359906 < 1 — U 는 같은 γ 세계를 키운다 (증가여야 한다)']",
+   "",
+   "0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지"
+  ]
+ },
+ {
+  "allow": "B",
+  "old": "LC_soft_gen1",
+  "new": "LC_soft_lab",
+  "rc": 1,
+  "tail": [
+   "   ⛔ 허용목록 밖 CED 변화: [('AM_P', 'SE'), ('AM_S', 'SE'), ('SE', 'SE'), ('SE', 'WALL')]",
+   "   ⛔ 개입 방향 반대 (증가여야 한다): [('AM_P', 'AM_P'), ('AM_P', 'AM_S'), ('AM_P', 'WALL'), ('AM_S', 'AM_S'), ('AM_S', 'WALL')]",
+   "",
+   "0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지"
+  ]
+ },
+ {
+  "allow": "E",
+  "old": "GM1_soft_gen1",
+  "new": "GM1_ref20_lab",
+  "rc": 1,
+  "tail": [
+   "   ⛔ CED 밖 차이: ['#7: region reg block -0.0151083 0.0151083 -0.0151083 0.0151083 -0.0151083 0.0151083 units box  ⇄  region reg block -0.0144707 0.0144707 -0.0144707 0.0144707 -0.0144707 0.0144707 units box', '#21: fix Drum all mesh/surface file Drum.stl type 4 scale 0.0262754  ⇄  fix Drum all mesh/surface file Drum.stl type 4 scale 0.0251665', '#22: fix Front all mesh/surface file Front.stl type 4 scale 0.0262754  ⇄  fix Front all mesh/surface file Front.stl type 4 scale 0.0251665', '#23: fix Back all mesh/surface file Back.stl type 4 scale 0.0262754  ⇄  fix Back all mesh/surface file Back.stl type 4 scale 0.0251665', '#25: fix pt1 all particletemplate/sphere 10487 atom_type 1 density constant 4800 radius constant 0.0006813  ⇄  fix pt1 all particletemplate/sphere 10487 atom_type 1 density constant 4850 radius constant 0.0006813', '#26: fix pt2 all particletemplate/sphere 11887 atom_type 2 density constant 4800 radius constant 0.0003028  ⇄  fix pt2 all particletemplate/sphere 11887 atom_type 2 density constant 4850 radius constant 0.0003028', '#27: fix pt3 all particletemplate/sphere 13901 atom_type 3 density constant 2000 radius constant 7.57e-05  ⇄  fix pt3 all particletemplate/sphere 13901 atom_type 3 density constant 1640 radius constant 7.57e-05', '#30: region ins_reg cylinder x 0.0 0.0 0.0118239 -0.00236478 0.00236478 units box  ⇄  region ins_reg cylinder x 0.0 0.0 0.0113249 -0.00226498 0.00226498 units box']",
+   "   ⛔ E 규칙 위반: ['물리 시간 — 정착 2F·dt 0.271854548 → 0.266063608 s (허용 0.000273)', '물리 시간 — 회전 N·dt 1.59914909 → 1.56508415 s (허용 0.0016)', 'AM_P–AM_P: 108795 → 101831 (쌍별 규칙 108795 · E* ×1 → CED ×1)', 'AM_P–AM_S: 127907 → 119720 (쌍별 규칙 127907 · E* ×1 → CED ×1)', 'AM_P–SE: 13557.9 → 83407.8 (쌍별 규칙 89112 · E* ×16.8506 → CED ×6.5727)', 'AM_P–WALL: 52654.2 → 49283.8 (쌍별 규칙 52654.2 · E* ×1 → CED ×1)', 'AM_S–AM_S: 142562 → 133437 (쌍별 규칙 142562 · E* ×1 → CED ×1)', 'AM_S–SE: 14100.8 → 86747.7 (쌍별 규칙 92680.3 · E* ×16.8506 → CED ×6.5727)']",
+   "",
+   "0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지"
+  ]
+ },
+ {
+  "allow": "U",
+  "old": "GM1_soft_gen1",
+  "new": "GM1_soft_lab",
+  "rc": 1,
+  "tail": [
+   "   ⛔ CED 밖 차이: ['#7: region reg block -0.0151083 0.0151083 -0.0151083 0.0151083 -0.0151083 0.0151083 units box  ⇄  region reg block -0.0144707 0.0144707 -0.0144707 0.0144707 -0.0144707 0.0144707 units box', '#19: timestep 7.055e-07  ⇄  timestep 7.092e-07', '#21: fix Drum all mesh/surface file Drum.stl type 4 scale 0.0262754  ⇄  fix Drum all mesh/surface file Drum.stl type 4 scale 0.0251665', '#22: fix Front all mesh/surface file Front.stl type 4 scale 0.0262754  ⇄  fix Front all mesh/surface file Front.stl type 4 scale 0.0251665', '#23: fix Back all mesh/surface file Back.stl type 4 scale 0.0262754  ⇄  fix Back all mesh/surface file Back.stl type 4 scale 0.0251665', '#25: fix pt1 all particletemplate/sphere 10487 atom_type 1 density constant 4800 radius constant 0.0006813  ⇄  fix pt1 all particletemplate/sphere 10487 atom_type 1 density constant 4850 radius constant 0.0006813', '#26: fix pt2 all particletemplate/sphere 11887 atom_type 2 density constant 4800 radius constant 0.0003028  ⇄  fix pt2 all particletemplate/sphere 11887 atom_type 2 density constant 4850 radius constant 0.0003028', '#27: fix pt3 all particletemplate/sphere 13901 atom_type 3 density constant 2000 radius constant 7.57e-05  ⇄  fix pt3 all particletemplate/sphere 13901 atom_type 3 density constant 1640 radius constant 7.57e-05']",
+   "   ⛔ 개입 방향 반대 (증가여야 한다): ['공통 배율 ×0.9359899 < 1 — U 는 같은 γ 세계를 키운다 (증가여야 한다)']",
+   "",
+   "0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지"
+  ]
+ }
+]

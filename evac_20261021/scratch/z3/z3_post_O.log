@@ -1,0 +1,16 @@
+
+── O 끈 경로 비트 대조 (--old-scripts = 기반 커밋 scripts/)
+  PASS  O1 (ii) face_alpha 만 (접합 끔) — 기반 코드 ↔ 새 코드 σ · n_dof · cg_info · resid · face_alpha 기록 비트 같음
+  PASS  O2 [off LEAN2] 새 기록 칸 없음 (반복 수 · sid_off 는 켠 노브에서만)
+  PASS  O2 payload [off LEAN2] — 기반 ↔ 새: 매니페스트 (code_sha · exec_env 빼고) 바이트 같음 · id 같음 · step3 값 같음
+  PASS  O2 [centerline LEAN2] 새 기록 칸 없음 (반복 수 · sid_off 는 켠 노브에서만)
+  PASS  O2 payload [centerline LEAN2] — 기반 ↔ 새: 매니페스트 (code_sha · exec_env 빼고) 바이트 같음 · id 같음 · step3 값 같음
+  PASS  O2 [off LEAN3] 새 기록 칸 없음 (반복 수 · sid_off 는 켠 노브에서만)
+  PASS  O2 payload [off LEAN3] — 기반 ↔ 새: 매니페스트 (code_sha · exec_env 빼고) 바이트 같음 · id 같음 · step3 값 같음
+  PASS  O2 [off LEAN2 + 접합 (정량)] 새 기록 칸 없음 (반복 수 · sid_off 는 켠 노브에서만)
+  PASS  O2 payload [off LEAN2 + 접합 (정량)] — 기반 ↔ 새: 매니페스트 (code_sha · exec_env 빼고) 바이트 같음 · id 같음 · step3 값 같음
+  PASS  O2 payload [off LEAN2 + rtol] — 기반 ↔ 새: 매니페스트 (code_sha · exec_env 빼고 · 새 칸 ('iters',)) 바이트 같음 · id 같음 · step3 값 같음
+  PASS  O2 payload [face_alpha LEAN2 + rtol] — 기반 ↔ 새: 매니페스트 (code_sha · exec_env 빼고 · 새 칸 ('iters', 'sid_off')) 바이트 같음 · id 같음 · step3 값 같음
+
+test_ca_ext_z3: 11 PASS · 0 FAIL (16.1 s)
+rc=0 seconds=17

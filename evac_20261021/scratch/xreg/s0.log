@@ -1,0 +1,131 @@
+── G 기하 원시
+  PASS  G1a 수직 엇갈림 — d = 0.3 · s = t = 0.5
+  PASS  G1b 평행 겹침 — d = 0.15
+  PASS  G1c 퇴화 (점–선분) — d = 1
+  PASS  G1d 무작위 300 쌍 (평행 40 포함) — d ≤ 표본 최솟값 + 1e-12 · 차이 ≤ 표본 해상도 한계 (|d1| + |d2|)/800
+  PASS  G1e 최근접점이 선분 위 · 거리 일치
+  PASS  G2a 조각 — 2.1 µm 틈에서 둘로 (4 점 · 3 점)
+  PASS  G2b 점 간격 = 조각 안 간격만 (틈 제외) — 중앙값 0.3 · u 0.15 · n 5
+  PASS  G2c 한 점 · 두 점 경로 — 조각 하나
+── C 접합 census 미리보기
+  PASS  C1a 평행 접촉 — instance 1
+  PASS  C1b L_touch = 겹침 길이 1.0 (퇴화 경계 1e-8) · L_band = 1 + 2√(thr² − 0.15²) = 1.335410
+  PASS  C1c 긴 접촉 (> L_par 0.30) — 두 판 모두 1 · 각 0°
+  PASS  C2a 수직 스침 — L_touch ≈ 0 · L_band = 2√(thr² − 0.15²) = 0.335410 · 틈 0
+  PASS  C2b ★ 정의 쟁점 — 같은 수직 스침이 band 판에서는 긴 접촉 (0.335 > 0.30) · touch 판에서는 아님
+  PASS  C3 수직 관통 — 틈 −0.05 · L_touch 2√(0.15²−0.1²) · L_band 2√(thr²−0.1²) · 90°
+  PASS  C4 떨어진 두 자리 — instance 2
+  PASS  C5 꼭짓점 걸침 — instance 1 (조각 · 선분 경계 넘어도)
+  PASS  C6a U 턴 — 자기 접촉 instance 1
+  PASS  C6b 직선 — 자기 접촉 0
+  PASS  C6c 날카로운 꺾임 (반원 아님) — 자기 접촉 0
+  PASS  C7 문턱 — thr + 0.01 → 0 · thr − 0.001 → 1 (L_touch 0)
+  PASS  C8 섬유 순열 · 이름 불변 — 수 · 분포 같음
+  PASS  C8b 무작위 40 섬유 — instance ≥ 5 · 순열 · 이름 바꿔도 분포가 비트 같음
+  PASS  C9 정의 표지 — lc_definition 이 두 판을 이름으로 싣는다
+── P 격자 원시
+  PASS  P1 복셀 관계 — same · face · edge · vertex · apart
+  PASS  P2a 포트 직접 — 셀 (9,2,2) · 거리 0
+  PASS  P2b 덮임 (SDCP) → 탐색 — 등거리 (8 · 10) 동률 = 경로 열 번호 작은 (8,2,2) · 거리 0.1
+  PASS  P2c r_port 안에 sid 3 없음 → 미실현
+  PASS  P2d 상자 밖 → outside_box
+  PASS  P3 SDCP 경유 — 덩어리 2 · 두 섬유를 잇는 것 1 · fid 쌍 1
+  PASS  P4 SDCP 셀 1 · 2 · 3 개 사이 → 깊이 1 · 2 · 없음 (k = 2)
+  PASS  P5 교차 셀 — 멤버십 ≥ 2 한 셀 · ≥ 3 한 셀 (2,1,1)
+  PASS  P6 섬유–구 (T1-9) — d 2.12 아님 · 2.07 맞음 → instance 1
+── L 계획
+  PASS  L1a 식 — u 0.15 → tol_ff = min(u, r_f) = 0.075 · L_par 0.30 · r_port 0.30 · tol_P = tol_sj = tol_ff
+  PASS  L1b u 0.05 → tol_ff 0.05
+  PASS  L1c K_alpha 8 · k 2 · gap_tol 2.0
+  PASS  L1d 정준 바이트 · sha256 = 바이트의 sha256 · 다시 만들어도 같음
+  PASS  L1e 계획에 σ 칸 없음
+  PASS  L2a 손댄 계획 (tol_ff ≠ min(u, r_f)) 거부
+  PASS  L2b 비유한 u 거부
+  PASS  L2c 다른 스키마 거부
+  PASS  L2d 정상 계획 통과
+  PASS  L3a 개정 커밋 · 계획 · 해시 일치 → 통과 (계획 · sha256 · 전체 sha)
+  PASS  L3b 없는 커밋 거부
+  PASS  L3c 전각 · 비 ASCII sha 거부
+  PASS  L3d 계획 경로 없음 거부
+  PASS  L3e HEAD 의 조상 아닌 커밋 거부 (가지 밖)
+  PASS  L3f R 문서에 계획 해시 없음 거부
+  PASS  L3g 커밋 안 계획이 식 어긋남 (손댐) → 거부
+── S 스키마
+  PASS  S1a σ 칸 찾기 (중첩 · 목록)
+  PASS  S1b 전류 · 소산 · 컨덕턴스 칸도
+  PASS  S1c 깨끗한 dict
+── E 끝-끝 (payload 실물)
+  PASS  E3 솔브 0 — solve_sigma_z · _solve_cg · solve_thermal 를 터지게 해도 단계 1 완주
+  PASS  E2a 위생 — rasterize · GPU · CG 노브가 원래 그대로
+  PASS  E2b 위생 — 같은 입력의 rasterize 결과 비트 같음 (전 · 후)
+  PASS  E4a 킷 폴더 불변 (이름 · 크기 · mtime)
+  PASS  E4b payload 산출물 없음 (가로채기 = rasterize 전에 멈춤)
+  PASS  E1a 생산 격자 — VGCF 39 · PTFE 50 · SE 324 (손계산)
+  PASS  E1b off 격자 (= face_alpha sid 격자) — VGCF 40 · PTFE 0 · AM 같음
+  PASS  E1c PTFE 가 덮은 셀 — off sid {3: 1 · 0: 49}
+  PASS  E1d PTFE 가 끊은 VGCF 경로 — 1 개 · 조각 +1
+  PASS  E1e 표현 부피 비 — VGCF 0.975 (생산) · 1.0 (off) · PTFE 0.5
+  PASS  E1f 캡슐 부피 비 = (Σ 선분 원기둥 + 조각마다 구 하나) / V_true — 2.446816 · 밴드 [0.5, 2] 밖
+  PASS  E1g 문턱 입력 — 점 간격 중앙값 0.3 · u 0.15 · tol_ff 0.075 · L_par 0.30 · r_port 0.30
+  PASS  E1h 계획 파일 sha256 = 보고의 plan.sha256 · 계획 = stage1 계산
+  PASS  E1i 접합 census = B0 미리보기 표지 · VV 0 (섬유 하나)
+  PASS  E1j α 분포 = S1 함수로 계산 (status computed · 사유 문장에 "함수가 없다" 류 주장 없음 · 이름 붙은 함수가 ptfe_face_alpha 에 실제로 있다 · K 8 · rope · off 격자)
+  PASS  E1o 보고 notes 의 L_c 문장 — 판정 · 보고 판 L_c = 설계 §1-2 #13 (Q17) touch = cjunc_registry 규칙 이름 · "설계 · 등록 R 에 없다" 류 옛 주장 없음 (미리보기 두 판은 비교용)
+  PASS  S0-2 보고 · 계획에 σ · 전류 · 소산 칸 없음
+  PASS  E1k 코드 · 입력 지문 기록 (git · 파일 sha256 · 침대 점 수)
+  PASS  E6 단계 1 + SDCP 있는 침대 → 거부 (DBE 분포는 개정 커밋 뒤)
+  PASS  E6b 그 거부가 가로채기 전 (payload 로그 없음 · 헛통과 방지 = 거부가 실제로 일어났을 때만)
+  PASS  S0-7a 단계 2 + 개정 커밋 없음 → 거부
+  PASS  S0-7b 단계 1 에 킷 둘 → 거부
+  PASS  E7a 단계 2 — 계획 = 커밋에서 (sha · 해시)
+  PASS  E7b 생산 VGCF 86 · SDCP 19 · PTFE 50 / off VGCF 87 / SDCP 없는 생산 VGCF 89
+  PASS  E7c SDCP 가 덮은 셀 — {VGCF 3 · 기공 16} (생산 · off 같음)
+  PASS  E7d SDCP 가 덮은 섬유 구간 — 1 구간 · 3 셀 · 섬유 1
+  PASS  E7d2 섬유 축방향 경로가 지나는 3|5 면 (설계 §3-1 ⚠ 회색 지대) — 구간 양 끝 2
+  PASS  E7e SDCP 표현 부피 비 = 19 셀 · vox³ / V_true
+  PASS  E7f SDCP 경유 섬유 연결 — 덩어리 1 · 두 섬유 잇는 것 0
+  PASS  E7g VV instance 1 — 틈 −0.05 · L_touch 0.2236 · L_band 0.4031 · 90° · 긴 접촉 touch 0 / band 1
+  PASS  E7h 포트 (off 격자) — 둘 다 직접 · 복셀 관계 face
+  PASS  E7i PTFE 근접 = |m − PTFE 중심선| − r_P − r_f = 0.802249
+  PASS  E7j SDCP 근접 = |m − c_s| − r_s = 1.850625
+  PASS  E7k SV 후보 — 쌍 1 · 섬유에 닿는 SDCP 1 · 둘 이상 섬유 0
+  PASS  E7l 섬유당 접합 간격 ℓ_j — 3.9 · 4.9 µm
+  PASS  E7m npz 키에도 σ 칸 없음
+  PASS  E7n 단계 2 접합 census (원장 · 같은 함수 · off 격자) — VV 1 · L_c = 2√(0.15² − 0.1²) = 0.223607 · 배율 1 · 긴 접촉 0 · 자기 후보 0 · SDCP 근접 0
+  PASS  E5a payload 원장 생성 (rc 0)
+  PASS  E5b payload rasterize-only cells_by_sid == S0 생산 격자
+  PASS  S0-4a 순열 (SE 행 섞음 · 섬유 블록 순서 · fid 이름 · SDCP 행) — 격자 셀 수 같음
+  PASS  S0-4b 원장 같음
+  PASS  S0-4c census 분포 같음
+  PASS  S0-5a fibre 길이 ≠ 점 수 → 거부 (조용한 강등 없음)
+  PASS  S0-5b phase 길이 ≠ 점 수 → 거부
+  PASS  S0-5c NaN 좌표 → 거부
+  PASS  S0-5d +inf 좌표 → 거부
+  PASS  S0-5e −inf 좌표 → 거부
+  PASS  S0-5f 같은 fid 가 떨어진 두 블록 → 거부
+  PASS  S0-5g fibre_kind.npy 없음 → 거부 (연속 중심선 근거 없음)
+  PASS  S0-5h VGCF 행 kind ≠ 1 (경로 아님) → 거부
+  PASS  S0-5i 정확 중복 경로 → 거부
+  PASS  S0-5j 출력 폴더가 비어 있지 않음 → 거부
+  PASS  S0-6a 판 위 (z 3.55 > 두께 3.5) instance → above_top_plate 1
+  PASS  S0-6b 상자 밖 VGCF 점 수 기록 (x > 9.2 µm → 3)
+  PASS  E11c VA (J2b · tol_fs 0) — 틈 +0.04 섬유 아님 · −0.025 섬유 1 instance (보고값 = 생산 상수 경로)
+  PASS  E10a --no-step3 킷 (payload 가 rasterize 전 · 뒤 경로에서 예외) → S0Error 로 거부 (fail-closed)
+  PASS  E10b payload main 이 rasterize 없이 정상 종료 → 거부 (가로채기 안 걸림)
+  PASS  E10c payload 예외 (ValueError) → S0Error · rasterize 원상
+  PASS  E10d rasterize 호출 → 인자 (기본값 채움) 를 잡고 멈춤 · 원상 복구
+── R 접합 census = cjunc_registry (같은 함수)
+  PASS  R1 접합 census (판정 · 보고 판) = carbon_junction.cjunc_registry — 표지 · off 격자 · s_min 미등록 (거르지 않음) · 길이 법칙 len_scaled_v0 · B0 미리보기는 표지 그대로
+  PASS  R2 같은 함수 — S0 가 cjunc_registry 를 한 번 (off 격자 · 계획 문턱 · s_min None) 불렀고 보고 · npz = 그 원장 값 (census · L_c · 배율 · s · 자기 표지 · 긴 접촉 수 · 배율 합)
+  PASS  R3 손계산 — 나란한 두 섬유 (중심 간격 0.12 · 겹침 1.0 µm) → VV instance 1 · L_c = 1 + 2√(0.15² − 0.12²) = 1.180000 · 배율 L_c / 0.30 · 긴 접촉
+  PASS  R4 손계산 — U 자 섬유 (KU × 0.15) → 자기 후보 1 · s = 0.15 (4 + √9.04) = 1.050999 · 자기 L_c 0.45 · 배율 1.5 · 거르지 않음 (s_min 미등록 · 거른 수 0)
+  PASS  R5 후보별 목록 — 긴 접촉 2 (distinct 1 · self 1) · 배율 합 = 5.433333 · 배율 > 1 수 2 · npz 키 (후보마다 L_c · 배율 · s)
+  PASS  R6 S0-2 — 보고 · 접합 npz 에 σ · 전류 · 소산 칸 없음 (원장 = 기하만)
+  PASS  R7 원장 입력 = 잡은 첨가제 입력 전부 (PTFE 행 포함 · P-junc 덮임) — 접촉선 위 0.2 µm PTFE → 그 instance 만 덮임 (n_ptfe_cov 1 · 자기 후보는 아님)
+── A α 분포 = ptfe_face_alpha 함수 (같은 함수)
+  PASS  A1 α 분포 판별 픽스처 — 이온 SE|SE 면 α < 1 행 > 0 · 전자 AM|VGCF 면 α < 1 행 > 0 (면 부류별 수 · Σ(1 − α)h² 기록)
+  PASS  A2 같은 함수 — S0 가 build_capsules (PTFE 행 전부 · rope) 한 번 · build_plan 두 번 (off 격자 = PTFE 행 뺀 생산 rasterize · 전자 = 그 pid · 이온 = pid 없음 · K 8 · 같은 캡슐) 을 불렀고 보고 = 그 계획 · 캡슐 요약 그대로
+  PASS  A3 캡슐 부피 기록 (S1 volume_record · 참부피 = mpm_metrics PTFE) · off 격자 PTFE 점 셀 sid 분포 (S1 ptfe_point_cell_census) · 이 표 = 원장 capsule 과 같은 부피 (1e-12 상대)
+  PASS  A4 S0-2 — α 블록에 σ · 전류 · 소산 칸 없음 (면 기하 · 수만)
+
+121 PASS · 0 FAIL

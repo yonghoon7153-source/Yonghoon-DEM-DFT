@@ -1,3 +1,0 @@
-geometry_probe_results {"exact": 142, "rel_le_1e-12": 2, "path": 0, "diff": 0, "missing_in_ours": 0, "extra_in_ours": 0, "type_diff": 0}
-   {"key": "$.long_contact_lumping[2].G_lumped", "class": "rel_le_1e-12", "codex": 0.23809523809523803, "ours": 0.23809523809523792, "rel": 4.662936703425659e-16}
-   {"key": "$.long_contact_lumping[2].relative_error", "class": "rel_le_1e-12", "codex": -0.4360902255639103, "ours": -0.4360902255639105, "rel": 5.091712492246399e-16}

@@ -1,0 +1,25 @@
+Rint 2 Z3 R run chain: real contract, ARM_LIST origin, limit markers, sid_off (tests first)
+
+test_rint_r_chain.py: the fake contract is gone; the chain runs with RealContract (run_contract.ca_ext_record_ok,
+sr01_stamp_compare.check_arm).  The fake runner (-S, no numpy) writes real-form ca_ext blocks from canonical record
+templates built by the canonical functions in the test process (cjunc / sdcp_mod / ptfe_face protocols, labels,
+diagnostics, qualifiers, volume record, VGCF sigma rule) and fills only per-run fields (R_j, ledger counts with the
+checker identities, per-origin sid fingerprints, sid_off, sigma).  It mirrors the runner forms: ARM_LIST (refused with
+ARMS, forced OUTDIR suffixes), limit markers rj_limit inf / zero with R_j null / 0.0, receipt arm_list, VGCF bulk
+fields, EXPECT_BACKEND.  Faults moved so each one hits the layer it is meant to test (both receipt and manifest for
+sigma_AM_S and rtol -> chain MANIFEST_MISMATCH; manifest only -> real check_arm ARM_CONTRACT; LEAN, PTFE cells,
+sid_off -> real contract CA_EXT_RECORD; chain's own sid_off check through a pass-through contract, X09).
+New / changed checks: L18 and P01 (origin = one ARM_LIST=1,2 run, no ARMS, no a0 re-run, per-origin sid), S14 (ARM_LIST
+and EXPECT_BACKEND scrubbed), S24-S27, X06-X10, mutants M08-M10 (real contract layers, per-origin sid group).
+New test_rint_r_chain_e2e.py: the chain with the real runner and real payload on a production-unit fixture kit
+(vox 0.15, 1.5 um box via um_box_um, CPU): floor -> ceiling -> ladder points -> confirm -> ARM_LIST origin, records,
+sigma order, sid_off, CG iterations, value seal; E6 records the current blocker for production kits.
+
+pre-fix (Z3 runner / payload API, base chain c7bbd8474): test_rint_r_chain 26/89 (fails = 63 checks from 6
+counterexamples: limit markers inf / zero and rj_limit in the receipt request, per-origin sid fingerprints,
+ARM_LIST origin, EXPECT_BACKEND, required sid_off, CG iteration fields), test_rint_r_chain_e2e 1/3 (fails = 2 from 1
+counterexample: the base chain cannot pass EXPECT_BACKEND, so the runner's fresh check_arm refuses the CPU floor arm
+(backend cpu, expected gpu) and the chain stops RUNNER_RC at the first run).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

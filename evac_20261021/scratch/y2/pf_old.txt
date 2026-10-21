@@ -1,0 +1,8 @@
+f-string is missing placeholders
+f-string is missing placeholders
+f-string is missing placeholders
+local variable '_man' is assigned to but never used
+local variable 'nb' is assigned to but never used
+redefinition of unused '_js' from line 1678
+redefinition of unused '_sp' from line 1678
+redefinition of unused '_sys3' from line 1678

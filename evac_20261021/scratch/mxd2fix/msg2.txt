@@ -1,0 +1,39 @@
+Mixer D2 generator: enforce the Q2 wall, input ranges and an honest D2 record (MXD2-03..06)
+
+- MXD2-05 (Q2, author 10-14: the wall is bound to the uncoated NCM):
+  with rho_uncoated_ncm, gamma_W must equal 0.0256*rho and each NCM
+  phase gamma must be 1 (coated) or rho (uncoated); an explicit wall
+  (--gm-gamma-wall) is accepted only for all-coated arms and its implied
+  rho = gamma_W/0.0256 is recorded. Help and comments no longer read Q2
+  as an open question.
+- MXD2-04: supported ranges gamma/rho/gamma_W in [1e-6, 1e6] and Bo_SE
+  in [1e-6, 1e4] (refused outside, non-finite refused with its own
+  reason); post-condition that F0_SS and every non-wall-wall CED are
+  finite normal positives; arm names by fullmatch (a trailing newline
+  is refused); arm descriptions without control characters; CLI numeric
+  tokens ASCII decimal only ('0_3', full-width digits, nan, inf refused).
+- MXD2-03: the mixed-pair ceiling (all pairs, incl. the stiffened path)
+  is pinned by tests; the code path is unchanged.
+- MXD2-06: the wall comment of D2 decks names the geometric-mean rule,
+  the header wall line follows the rule (uncoated-NCM binding or
+  explicit coated) and a NCM surface / insertion line is added;
+  deck_meta adhesion_rule records wall_rule, surface, layered and rho;
+  schema mixer_deck_meta/2 when optional keys are present; D2 registered
+  text = no pre-registration yet. Devlog v1.6 CLI line now shows the
+  required --dens-gen and --gm-wall-ncm (dated correction).
+
+Default path (no D2 options) stays byte-identical: library 342/342
+(21 refused on both sides) and CLI 14/14 (70 files) against both the
+previous HEAD generator and the pre-D2 generator. The review's 9 D2
+decks regenerate with comment and deck_meta (adhesion_rule, registered,
+schema) changes only -- non-comment commands token-identical, pairs
+table identical; 2 of them (AM_S 0.5 in a rho 0.3 world, explicit wall
+with uncoated phases) are now refused by Q2.
+
+make_mixer_deck selftest 147/154 -> 154/154. Mutation probe on the new
+generator: 32/32 killed with a clean control (the review's 24, incl. the
+8 former survivors M04 M05 M06 M07 M13 M15 M16 M18, plus 8 on the new
+guards).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

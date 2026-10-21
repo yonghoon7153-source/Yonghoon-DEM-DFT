@@ -1,0 +1,12 @@
+── CP-ORD
+  PASS  CP-ORD PCP · 후보 쌍 뒤집음 → 접점 · 등분점 · 간선 포트 셀 · 계 · σ 비트 같음
+  PASS  CP-ORD PCP · 후보 쌍 무작위 섞음 (시드 7) → 접점 · 등분점 · 간선 포트 셀 · 계 · σ 비트 같음
+  PASS  CP-ORD PCP-FAR · 후보 쌍 뒤집음 → 접점 · 등분점 · 간선 포트 셀 · 계 · σ 비트 같음
+  PASS  CP-ORD PCP-FAR · 후보 쌍 무작위 섞음 (시드 7) → 접점 · 등분점 · 간선 포트 셀 · 계 · σ 비트 같음
+  PASS  CP-ORD LP 긴 접촉 · 후보 쌍 뒤집음 → 접점 · 등분점 · 간선 포트 셀 · 계 · σ 비트 같음
+  PASS  CP-ORD LP 긴 접촉 · 후보 쌍 무작위 섞음 (시드 7) → 접점 · 등분점 · 간선 포트 셀 · 계 · σ 비트 같음
+  PASS  CP-ORD CX 5 노드 꼴 · 후보 쌍 뒤집음 → 접점 · 등분점 · 간선 포트 셀 · 계 · σ 비트 같음
+  PASS  CP-ORD CX 5 노드 꼴 · 후보 쌍 무작위 섞음 (시드 7) → 접점 · 등분점 · 간선 포트 셀 · 계 · σ 비트 같음
+
+== test_carbon_junction: 8/8 PASS
+[nrun] wall 1.1 s · exit 0

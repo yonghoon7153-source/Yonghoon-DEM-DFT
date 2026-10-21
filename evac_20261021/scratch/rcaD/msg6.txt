@@ -1,0 +1,52 @@
+Rint 2 D: chain 3rd edition (registration R 3rd ed.)
+
+scripts/rint_r_chain.py rewritten to registration R 3rd edition:
+end rule 3-2b (T+ / T- end targets, end confirm, outer measured
+neighbour, budget -> CALIB_LADDER_EXHAUSTED; e_min = diagnostic only),
+origin at all three R (3-3 SBE, 4-2 DBE four corners x three R, 8-arm
+mean for the whole corner), states 5-0 (VALID_ZERO_TOPOLOGY = sigma 0,
+ELECTRODE_SHORT = +inf, extended-real ln comparisons, unit invariant),
+5-5 table with GAP_ENVELOPE_ONLY, 5-6 sensitivity through the same
+verdict function, SV counterfactual row (ratio > plan threshold ->
+SV_DEPENDENT, unreadable / no threshold / no record -> SV_UNCHECKED),
+5-6a closed blocking set (11) vs report category ASSUMED_UNVALIDATED,
+5-7 decision table, 7-1 headline = verdict 5-3 text, qualifiers 1-16.
+
+Plan rint-r-plan-v2 (v1 seven keys + max_ladder_points,
+calib_rj_ratio_max ('none' allowed), sv_cf_threshold, sv_cf_scope);
+a null pre-result number stops the chain before any sigma run
+(PLAN_NUMBER_UNREGISTERED, coordinator Q-G).  Two-plan cross-check:
+S0 plan ca-cjunc-plan-v1 (--s0-plan, ca_s0_census.check_plan, canonical
+bytes) <-> registration row and <-> R plan (tol_ff, tol_P, tol_sj,
+L_par, r_port, VGCF r_f, step3 rtol = CERT_RTOL_MAX, length law, unreg
+cut).  Q-E: the end candidates are also run at origin arms 1 and 2; if
+any origin is inside the target band the end moves outward (outer
+measured neighbour) -> the allowed set is the union over three origins.
+Q-F: sensitivity stages need --after-main bound to the main predict
+summary (sha256), else MAIN_NOT_DONE / MAIN_BINDING.  SV counterfactual
+runs only in the main predict (CJUNC_SV_CF=1 within sv_cf_scope); the
+chain reads only status / ratio through ca_ext_svcf.chain_view
+(independent of how the counterfactual cuts faces, PRE-impl-04).
+
+Test changes after the tests-first commit (2c4510d88), both in
+scripts/test_rint_r_chain.py:
+- L13: the world is now a smooth logistic response (beta 1.5,
+  Rc 1e4) whose first R_j,0 confirm fails on interpolation curvature
+  and the second passes.  The old world (noise bumps x1.03) is
+  non-monotone between the end runs, so CALIB_NONMONOTONE is the right
+  3rd-edition answer there; the check was testing the wrong world.
+- M13 / M14 mutants (2nd-edition end interpolation) now run the
+  interpolated end point before returning it, so they fail on values
+  (M13: R_hi 186,736, ratio 18.67, W 0.6954 CONSISTENT_WEAK instead of
+  599.03 / 0.7852; M14: ratio 8.341, W 0.4194 PASS) and not on a
+  KeyError of the mutant itself.
+
+Results (one at a time, nice 19, one BLAS thread):
+- test_rint_r_chain: pre-fix 15/139 -> 139/139 (131 s); mutants
+  M01-M25 all caught, each for the value / stop it targets.
+- test_rint_r_chain_e2e (real payload runs): pre-fix 0 PASS 5 FAIL
+  (each scenario's first check fails on the unrecognised --s0-plan, the
+  rest are not reached) -> 13 PASS 0 FAIL (205 s), incl. E8 zero floor.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

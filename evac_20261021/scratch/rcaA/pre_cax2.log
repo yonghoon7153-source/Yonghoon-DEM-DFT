@@ -1,0 +1,19 @@
+── CAX-SUB
+  PASS  CAX-SUB 바탕 (k 1 · n_subedges 칸 없음 = instance 수) · k > 1 꼴 (instance 3 · 간선 5 · 배율 최대 2.5) = 받는다 (지킴)
+  FAIL  CAX-SUB 옛 꼴 (배율 최대 칸 없음 · 간선 = instance · n_long 1) = 받는다 (지킴 · 옛 합성 매니페스트)  ((False, 'CAEXT|cjunc| counts| 배율 최대 기록 모양 (None) — 유한 ≥ 1 실수 (길이 법칙 v0 max(1, L_c/L_par))'))
+  PASS  CAX-SUB 거부 [간선 5 > instance 3 인데 배율 최대 1.0 (긴 접촉 없음 = 모든 k 1)]
+  PASS  CAX-SUB 거부 [배율 최대 2.5 (긴 접촉 있음 = k ≥ 2) 인데 간선 = instance]
+  PASS  CAX-SUB 거부 [배율 최대 NaN]
+  PASS  CAX-SUB 거부 [배율 최대 0.5 (< 1)]
+  PASS  CAX-SUB 거부 [배율 최대 True (bool == 1.0)]
+  PASS  CAX-SUB 거부 [배율 최대 문자열 '1.0']
+  PASS  CAX-SUB 거부 [배율 최대 빠짐인데 간선 5 > instance 3 (k > 1 기록이 칸을 뺌)]
+  PASS  CAX-SUB 거부 [배율 최대 None (instance > 0)]
+  PASS  CAX-SUB 거부 (지킴) [n_subedges 칸 없음인데 모드 합 5 (instance 3)]
+  PASS  CAX-SUB 거부 (지킴) [n_subedges True]
+  PASS  CAX-SUB 거부 (지킴) [n_subedges 5.0 (실수)]
+  PASS  CAX-SUB 거부 (지킴) [n_subedges 2 < instance 3 (모드 합 2)]
+
+== test_carbon_junction: 13/14 PASS
+FAIL: CAX-SUB 옛 꼴 (배율 최대 칸 없음 · 간선 = instance · n_long 1) = 받는다 (지킴 · 옛 합성 매니페스트)
+[nrun] wall 0.6 s · exit 1

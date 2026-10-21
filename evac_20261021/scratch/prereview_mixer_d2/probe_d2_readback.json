@@ -1,0 +1,1343 @@
+{
+ "coated_g1_w0256_lab_soft": {
+  "rc": 0,
+  "stderr_tail": [],
+  "rows": [
+   {
+    "pair": "AM_P-AM_P",
+    "ced": 101831.0,
+    "F0_ratio": 8.999925911238188,
+    "want": 9.0,
+    "rel": -8.232084645731774e-06,
+    "pulloff_ratio": 9.000030479561925,
+    "pulloff_rel": 3.3866179915964523e-06,
+    "delta0_over_rmin": 3.764066750840664e-07,
+    "sym": true
+   },
+   {
+    "pair": "AM_P-AM_S",
+    "ced": 119720.0,
+    "F0_ratio": 5.538501813087628,
+    "want": 5.538461538461539,
+    "rel": 7.271807488162807e-06,
+    "pulloff_ratio": 5.5385654949844065,
+    "pulloff_rel": 1.876992773985897e-05,
+    "delta0_over_rmin": 7.203770497361919e-07,
+    "sym": true
+   },
+   {
+    "pair": "AM_P-SE",
+    "ced": 12690.0,
+    "F0_ratio": 1.7999814784821384,
+    "want": 1.8,
+    "rel": -1.0289732145341013e-05,
+    "pulloff_ratio": 1.799976164559543,
+    "pulloff_rel": -1.3241911365091674e-05,
+    "delta0_over_rmin": 2.7184247702467376e-05,
+    "sym": true
+   },
+   {
+    "pair": "AM_P-WALL",
+    "ced": 49283.8,
+    "F0_ratio": 2.880005884944279,
+    "want": 2.8800000000000003,
+    "rel": 2.0433834300170872e-06,
+    "pulloff_ratio": 2.880039477888727,
+    "pulloff_rel": 1.3707600252210739e-05,
+    "delta0_over_rmin": 1.2443930700494423e-07,
+    "sym": true
+   },
+   {
+    "pair": "AM_S-AM_S",
+    "ced": 133437.0,
+    "F0_ratio": 4.000024765768258,
+    "want": 4.0,
+    "rel": 6.191442064595876e-06,
+    "pulloff_ratio": 4.0000708987927025,
+    "pulloff_rel": 1.7724698175625164e-05,
+    "delta0_over_rmin": 6.463233377590579e-07,
+    "sym": true
+   },
+   {
+    "pair": "AM_S-SE",
+    "ced": 13198.2,
+    "F0_ratio": 1.6000083189855143,
+    "want": 1.5999999999999999,
+    "rel": 5.1993659464510955e-06,
+    "pulloff_ratio": 1.600008992297595,
+    "pulloff_rel": 5.620185997035065e-06,
+    "delta0_over_rmin": 2.6137916279802033e-05,
+    "sym": true
+   },
+   {
+    "pair": "AM_S-WALL",
+    "ced": 64580.0,
+    "F0_ratio": 1.2799997993335663,
+    "want": 1.28,
+    "rel": -1.5677065134944712e-07,
+    "pulloff_ratio": 1.280014653353135,
+    "pulloff_rel": 1.1447932136698924e-05,
+    "delta0_over_rmin": 2.136708571872328e-07,
+    "sym": true
+   },
+   {
+    "pair": "SE-SE",
+    "ced": 9788.8,
+    "F0_ratio": 1.0,
+    "want": 1.0,
+    "rel": 0.0,
+    "pulloff_ratio": 1.0,
+    "pulloff_rel": 0.0,
+    "delta0_over_rmin": 3.524146504272415e-05,
+    "sym": true
+   },
+   {
+    "pair": "SE-WALL",
+    "ced": 6665.46,
+    "F0_ratio": 0.3200008410052411,
+    "want": 0.32,
+    "rel": 2.628141378524518e-06,
+    "pulloff_ratio": 0.32000283351258985,
+    "pulloff_rel": 8.854726843310345e-06,
+    "delta0_over_rmin": 8.280840263555555e-06,
+    "sym": true
+   },
+   {
+    "pair": "WALL-WALL",
+    "ced": 0.0,
+    "ok": true
+   }
+  ],
+  "max_rel_F0": 1.0289732145341013e-05,
+  "max_rel_pulloff": 1.876992773985897e-05,
+  "worst_delta0_over_rmin": 3.524146504272415e-05,
+  "bo_se_read": 0.21243982656133936,
+  "bo_se_rel": -8.164124488674318e-07,
+  "all_sym": true,
+  "wall_wall_zero": true,
+  "meta_rule": "geomean",
+  "meta_gamma": {
+   "AM_P": 1.0,
+   "AM_S": 1.0,
+   "SE": 1.0
+  },
+  "meta_gamma_wall": 0.0256,
+  "meta_bo": 0.21244,
+  "meta_wall_rule": null,
+  "meta_rho": null,
+  "meta_dens_gen": "lab20261014",
+  "rho_se_deck": 1640.0,
+  "header_rows": 9,
+  "header_vs_mine_max_rel": 1.0289838024979403e-05,
+  "stale_wall_comment": [
+   "# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = 입자값 ÷ 1.842).  옛 판은 type 2 = AM_S 를 빌려 썼다"
+  ],
+  "wall_ced_div_comment_present": true,
+  "meta_pairs_F0_ratio": [
+   [
+    "AM_P–AM_P",
+    1.0
+   ],
+   [
+    "AM_P–AM_S",
+    1.0
+   ],
+   [
+    "AM_P–SE",
+    1.0
+   ]
+  ]
+ },
+ "uncoated_r03_ncm_lab_soft": {
+  "rc": 0,
+  "stderr_tail": [],
+  "rows": [
+   {
+    "pair": "AM_P-AM_P",
+    "ced": 68169.2,
+    "F0_ratio": 2.6999983604263127,
+    "want": 2.7,
+    "rel": -6.072495138953471e-07,
+    "pulloff_ratio": 2.700029908480641,
+    "pulloff_rel": 1.1077215052113232e-05,
+    "delta0_over_rmin": 1.686839234954346e-07,
+    "sym": true
+   },
+   {
+    "pair": "AM_P-AM_S",
+    "ced": 80144.3,
+    "F0_ratio": 1.6615373097016475,
+    "want": 1.6615384615384619,
+    "rel": -6.932351197530551e-07,
+    "pulloff_ratio": 1.661556652817004,
+    "pulloff_rel": 1.0948454678194608e-05,
+    "delta0_over_rmin": 3.2282839877298146e-07,
+    "sym": true
+   },
+   {
+    "pair": "AM_P-SE",
+    "ced": 10382.9,
+    "F0_ratio": 0.9859143407894742,
+    "want": 0.985900603509299,
+    "rel": 1.393373746427784e-05,
+    "pulloff_ratio": 0.9859162207743355,
+    "pulloff_rel": 1.584060805015497e-05,
+    "delta0_over_rmin": 1.8198325016700783e-05,
+    "sym": true
+   },
+   {
+    "pair": "AM_P-WALL",
+    "ced": 32992.2,
+    "F0_ratio": 0.8640017949244558,
+    "want": 0.8640000000000001,
+    "rel": 2.077458860716419e-06,
+    "pulloff_ratio": 0.8640119123643312,
+    "pulloff_rel": 1.3787458716496559e-05,
+    "delta0_over_rmin": 5.576629137386179e-08,
+    "sym": true
+   },
+   {
+    "pair": "AM_S-AM_S",
+    "ced": 89327.0,
+    "F0_ratio": 1.2000024097708035,
+    "want": 1.2,
+    "rel": 2.008142336418217e-06,
+    "pulloff_ratio": 1.200016394161393,
+    "pulloff_rel": 1.3661801161024556e-05,
+    "delta0_over_rmin": 2.8964283959138837e-07,
+    "sym": true
+   },
+   {
+    "pair": "AM_S-SE",
+    "ced": 10798.6,
+    "F0_ratio": 0.8763558464851386,
+    "want": 0.8763560920082657,
+    "rel": -2.801636563853904e-07,
+    "pulloff_ratio": 0.8763594962758576,
+    "pulloff_rel": 3.884571149859184e-06,
+    "delta0_over_rmin": 1.749751848544876e-05,
+    "sym": true
+   },
+   {
+    "pair": "AM_S-WALL",
+    "ced": 43232.0,
+    "F0_ratio": 0.3840004749692218,
+    "want": 0.384,
+    "rel": 1.2368990149891346e-06,
+    "pulloff_ratio": 0.384004961368236,
+    "pulloff_rel": 1.2920229781165915e-05,
+    "delta0_over_rmin": 9.575464832679013e-08,
+    "sym": true
+   },
+   {
+    "pair": "SE-SE",
+    "ced": 9788.8,
+    "F0_ratio": 1.0,
+    "want": 1.0,
+    "rel": 0.0,
+    "pulloff_ratio": 1.0,
+    "pulloff_rel": 0.0,
+    "delta0_over_rmin": 3.524146504272415e-05,
+    "sym": true
+   },
+   {
+    "pair": "SE-WALL",
+    "ced": 5453.6,
+    "F0_ratio": 0.17527120928579648,
+    "want": 0.17527121840165316,
+    "rel": -5.201000352617058e-08,
+    "pulloff_ratio": 0.17527262048018658,
+    "pulloff_rel": 7.999479584741565e-06,
+    "delta0_over_rmin": 5.543457421925066e-06,
+    "sym": true
+   },
+   {
+    "pair": "WALL-WALL",
+    "ced": 0.0,
+    "ok": true
+   }
+  ],
+  "max_rel_F0": 1.393373746427784e-05,
+  "max_rel_pulloff": 1.584060805015497e-05,
+  "worst_delta0_over_rmin": 3.524146504272415e-05,
+  "bo_se_read": 0.21243982656133936,
+  "bo_se_rel": -8.164124488674318e-07,
+  "all_sym": true,
+  "wall_wall_zero": true,
+  "meta_rule": "geomean",
+  "meta_gamma": {
+   "AM_P": 0.3,
+   "AM_S": 0.3,
+   "SE": 1.0
+  },
+  "meta_gamma_wall": 0.00768,
+  "meta_bo": 0.21244,
+  "meta_wall_rule": "hare2026_x_rho_uncoated_ncm",
+  "meta_rho": 0.3,
+  "meta_dens_gen": "lab20261014",
+  "rho_se_deck": 1640.0,
+  "header_rows": 9,
+  "header_vs_mine_max_rel": 1.353138799409237e-05,
+  "stale_wall_comment": [
+   "# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = 입자값 ÷ 1.842).  옛 판은 type 2 = AM_S 를 빌려 썼다"
+  ],
+  "wall_ced_div_comment_present": true,
+  "meta_pairs_F0_ratio": [
+   [
+    "AM_P–AM_P",
+    1.0
+   ],
+   [
+    "AM_P–AM_S",
+    1.0
+   ],
+   [
+    "AM_P–SE",
+    1.0
+   ]
+  ]
+ },
+ "coated_world_r03_ncm_lab_soft": {
+  "rc": 0,
+  "stderr_tail": [],
+  "rows": [
+   {
+    "pair": "AM_P-AM_P",
+    "ced": 101831.0,
+    "F0_ratio": 8.999925911238188,
+    "want": 9.0,
+    "rel": -8.232084645731774e-06,
+    "pulloff_ratio": 9.000030479561925,
+    "pulloff_rel": 3.3866179915964523e-06,
+    "delta0_over_rmin": 3.764066750840664e-07,
+    "sym": true
+   },
+   {
+    "pair": "AM_P-AM_S",
+    "ced": 119720.0,
+    "F0_ratio": 5.538501813087628,
+    "want": 5.538461538461539,
+    "rel": 7.271807488162807e-06,
+    "pulloff_ratio": 5.5385654949844065,
+    "pulloff_rel": 1.876992773985897e-05,
+    "delta0_over_rmin": 7.203770497361919e-07,
+    "sym": true
+   },
+   {
+    "pair": "AM_P-SE",
+    "ced": 12690.0,
+    "F0_ratio": 1.7999814784821384,
+    "want": 1.8,
+    "rel": -1.0289732145341013e-05,
+    "pulloff_ratio": 1.799976164559543,
+    "pulloff_rel": -1.3241911365091674e-05,
+    "delta0_over_rmin": 2.7184247702467376e-05,
+    "sym": true
+   },
+   {
+    "pair": "AM_P-WALL",
+    "ced": 40323.4,
+    "F0_ratio": 1.5774378145732237,
+    "want": 1.5774409656148787,
+    "rel": -1.9975655023429795e-06,
+    "pulloff_ratio": 1.577456257372221,
+    "pulloff_rel": 9.694028287432488e-06,
+    "delta0_over_rmin": 8.330354797728124e-08,
+    "sym": true
+   },
+   {
+    "pair": "AM_S-AM_S",
+    "ced": 133437.0,
+    "F0_ratio": 4.000024765768258,
+    "want": 4.0,
+    "rel": 6.191442064595876e-06,
+    "pulloff_ratio": 4.0000708987927025,
+    "pulloff_rel": 1.7724698175625164e-05,
+    "delta0_over_rmin": 6.463233377590579e-07,
+    "sym": true
+   },
+   {
+    "pair": "AM_S-SE",
+    "ced": 13198.2,
+    "F0_ratio": 1.6000083189855143,
+    "want": 1.5999999999999999,
+    "rel": 5.1993659464510955e-06,
+    "pulloff_ratio": 1.600008992297595,
+    "pulloff_rel": 5.620185997035065e-06,
+    "delta0_over_rmin": 2.6137916279802033e-05,
+    "sym": true
+   },
+   {
+    "pair": "AM_S-WALL",
+    "ced": 52838.7,
+    "F0_ratio": 0.7010873833091104,
+    "want": 0.7010848736066126,
+    "rel": 3.5797413298066516e-06,
+    "pulloff_ratio": 0.7010955522343654,
+    "pulloff_rel": 1.5231576310892336e-05,
+    "delta0_over_rmin": 1.4303866858284753e-07,
+    "sym": true
+   },
+   {
+    "pair": "SE-SE",
+    "ced": 9788.8,
+    "F0_ratio": 1.0,
+    "want": 1.0,
+    "rel": 0.0,
+    "pulloff_ratio": 1.0,
+    "pulloff_rel": 0.0,
+    "delta0_over_rmin": 3.524146504272415e-05,
+    "sym": true
+   },
+   {
+    "pair": "SE-WALL",
+    "ced": 5453.6,
+    "F0_ratio": 0.17527120928579648,
+    "want": 0.17527121840165316,
+    "rel": -5.201000352617058e-08,
+    "pulloff_ratio": 0.17527262048018658,
+    "pulloff_rel": 7.999479584741565e-06,
+    "delta0_over_rmin": 5.543457421925066e-06,
+    "sym": true
+   },
+   {
+    "pair": "WALL-WALL",
+    "ced": 0.0,
+    "ok": true
+   }
+  ],
+  "max_rel_F0": 1.0289732145341013e-05,
+  "max_rel_pulloff": 1.876992773985897e-05,
+  "worst_delta0_over_rmin": 3.524146504272415e-05,
+  "bo_se_read": 0.21243982656133936,
+  "bo_se_rel": -8.164124488674318e-07,
+  "all_sym": true,
+  "wall_wall_zero": true,
+  "meta_rule": "geomean",
+  "meta_gamma": {
+   "AM_P": 1.0,
+   "AM_S": 1.0,
+   "SE": 1.0
+  },
+  "meta_gamma_wall": 0.00768,
+  "meta_bo": 0.21244,
+  "meta_wall_rule": "hare2026_x_rho_uncoated_ncm",
+  "meta_rho": 0.3,
+  "meta_dens_gen": "lab20261014",
+  "rho_se_deck": 1640.0,
+  "header_rows": 9,
+  "header_vs_mine_max_rel": 1.0289838024979403e-05,
+  "stale_wall_comment": [
+   "# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = 입자값 ÷ 1.842).  옛 판은 type 2 = AM_S 를 빌려 썼다"
+  ],
+  "wall_ced_div_comment_present": true,
+  "meta_pairs_F0_ratio": [
+   [
+    "AM_P–AM_P",
+    1.0
+   ],
+   [
+    "AM_P–AM_S",
+    1.0
+   ],
+   [
+    "AM_P–SE",
+    1.0
+   ]
+  ]
+ },
+ "mixed_03_05_w0256_lab_ref20": {
+  "rc": 0,
+  "stderr_tail": [],
+  "rows": [
+   {
+    "pair": "AM_P-AM_P",
+    "ced": 68169.2,
+    "F0_ratio": 2.699997806509979,
+    "want": 2.7,
+    "rel": -8.124037115253557e-07,
+    "pulloff_ratio": 2.700001941344403,
+    "pulloff_rel": 7.190164454939918e-07,
+    "delta0_over_rmin": 1.686839234954346e-07,
+    "sym": true
+   },
+   {
+    "pair": "AM_P-AM_S",
+    "ced": 87266.5,
+    "F0_ratio": 2.1450368765151886,
+    "want": 2.145036930207185,
+    "rel": -2.5030802874859148e-08,
+    "pulloff_ratio": 2.145040021011409,
+    "pulloff_rel": 1.4409095621115142e-06,
+    "delta0_over_rmin": 3.827556128869045e-07,
+    "sym": true
+   },
+   {
+    "pair": "AM_P-SE",
+    "ced": 68243.4,
+    "F0_ratio": 0.9859025734222444,
+    "want": 0.985900603509299,
+    "rel": 1.998084734333716e-06,
+    "pulloff_ratio": 0.9859026694886519,
+    "pulloff_rel": 2.095524990641806e-06,
+    "delta0_over_rmin": 2.7687537894200145e-06,
+    "sym": true
+   },
+   {
+    "pair": "AM_P-WALL",
+    "ced": 40323.4,
+    "F0_ratio": 1.5774374909550382,
+    "want": 1.5774409656148787,
+    "rel": -2.202719414756693e-06,
+    "pulloff_ratio": 1.5774399179480094,
+    "pulloff_rel": -6.641559919806639e-07,
+    "delta0_over_rmin": 8.330354797728124e-08,
+    "sym": true
+   },
+   {
+    "pair": "AM_S-AM_S",
+    "ced": 105909.0,
+    "F0_ratio": 2.0000110046191115,
+    "want": 2.0,
+    "rel": 5.502309555760476e-06,
+    "pulloff_ratio": 2.000013922800762,
+    "pulloff_rel": 6.9614003810336555e-06,
+    "delta0_over_rmin": 4.0715805777114133e-07,
+    "sym": true
+   },
+   {
+    "pair": "AM_S-SE",
+    "ced": 77283.4,
+    "F0_ratio": 1.1313725771110812,
+    "want": 1.131370849898476,
+    "rel": 1.5266546820047466e-06,
+    "pulloff_ratio": 1.131372832317595,
+    "pulloff_rel": 1.7522275026493617e-06,
+    "delta0_over_rmin": 3.1563339294599324e-06,
+    "sym": true
+   },
+   {
+    "pair": "AM_S-WALL",
+    "ced": 57534.3,
+    "F0_ratio": 0.9050992209331042,
+    "want": 0.9050966799187808,
+    "rel": 2.8074507174569163e-06,
+    "pulloff_ratio": 0.9051005614228337,
+    "pulloff_rel": 4.288496620263871e-06,
+    "delta0_over_rmin": 1.6959103006795182e-07,
+    "sym": true
+   },
+   {
+    "pair": "SE-SE",
+    "ced": 72124.5,
+    "F0_ratio": 1.0,
+    "want": 1.0,
+    "rel": 0.0,
+    "pulloff_ratio": 1.0,
+    "pulloff_rel": 0.0,
+    "delta0_over_rmin": 4.783003331498426e-06,
+    "sym": true
+   },
+   {
+    "pair": "SE-WALL",
+    "ced": 45335.1,
+    "F0_ratio": 0.3200003257510515,
+    "want": 0.32,
+    "rel": 1.0179720357772482e-06,
+    "pulloff_ratio": 0.3200005761304458,
+    "pulloff_rel": 1.8004076431932248e-06,
+    "delta0_over_rmin": 1.2175010531062288e-06,
+    "sym": true
+   },
+   {
+    "pair": "WALL-WALL",
+    "ced": 0.0,
+    "ok": true
+   }
+  ],
+  "max_rel_F0": 5.502309555760476e-06,
+  "max_rel_pulloff": 6.9614003810336555e-06,
+  "worst_delta0_over_rmin": 4.783003331498426e-06,
+  "bo_se_read": 0.21243987014429694,
+  "bo_se_rel": -6.112582520145793e-07,
+  "all_sym": true,
+  "wall_wall_zero": true,
+  "meta_rule": "geomean",
+  "meta_gamma": {
+   "AM_P": 0.3,
+   "AM_S": 0.5,
+   "SE": 1.0
+  },
+  "meta_gamma_wall": 0.0256,
+  "meta_bo": 0.21244,
+  "meta_wall_rule": null,
+  "meta_rho": null,
+  "meta_dens_gen": "lab20261014",
+  "rho_se_deck": 1640.0,
+  "header_rows": 9,
+  "header_vs_mine_max_rel": 5.502279280533706e-06,
+  "stale_wall_comment": [
+   "# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = 입자값 ÷ 1.842).  옛 판은 type 2 = AM_S 를 빌려 썼다"
+  ],
+  "wall_ced_div_comment_present": true,
+  "meta_pairs_F0_ratio": [
+   [
+    "AM_P–AM_P",
+    1.0
+   ],
+   [
+    "AM_P–AM_S",
+    1.0
+   ],
+   [
+    "AM_P–SE",
+    0.9999999999999993
+   ]
+  ]
+ },
+ "coated_g1_gen1_soft": {
+  "rc": 0,
+  "stderr_tail": [],
+  "rows": [
+   {
+    "pair": "AM_P-AM_P",
+    "ced": 108795.0,
+    "F0_ratio": 9.000015451998943,
+    "want": 9.0,
+    "rel": 1.7168887713747694e-06,
+    "pulloff_ratio": 9.000134814654349,
+    "pulloff_rel": 1.4979406038673204e-05,
+    "delta0_over_rmin": 4.2965035228339265e-07,
+    "sym": true
+   },
+   {
+    "pair": "AM_P-AM_S",
+    "ced": 127907.0,
+    "F0_ratio": 5.538506293236655,
+    "want": 5.538461538461539,
+    "rel": 8.08072328495335e-06,
+    "pulloff_ratio": 5.538578990132576,
+    "pulloff_rel": 2.120655171489183e-05,
+    "delta0_over_rmin": 8.222711968740872e-07,
+    "sym": true
+   },
+   {
+    "pair": "AM_P-SE",
+    "ced": 13557.9,
+    "F0_ratio": 1.8000227173150345,
+    "want": 1.8,
+    "rel": 1.2620730574619543e-05,
+    "pulloff_ratio": 1.8000166509485012,
+    "pulloff_rel": 9.250526945114856e-06,
+    "delta0_over_rmin": 3.102979649253668e-05,
+    "sym": true
+   },
+   {
+    "pair": "AM_P-WALL",
+    "ced": 52654.2,
+    "F0_ratio": 2.8800326355306294,
+    "want": 2.8800000000000003,
+    "rel": 1.1331781468504332e-05,
+    "pulloff_ratio": 2.8800709801408946,
+    "pulloff_rel": 2.464588225503661e-05,
+    "delta0_over_rmin": 1.420414994818821e-07,
+    "sym": true
+   },
+   {
+    "pair": "AM_S-AM_S",
+    "ced": 142562.0,
+    "F0_ratio": 4.000025386620053,
+    "want": 4.0,
+    "rel": 6.346655013311775e-06,
+    "pulloff_ratio": 4.000078037437056,
+    "pulloff_rel": 1.9509359264091586e-05,
+    "delta0_over_rmin": 7.377425934030922e-07,
+    "sym": true
+   },
+   {
+    "pair": "AM_S-SE",
+    "ced": 14100.8,
+    "F0_ratio": 1.6000255606793787,
+    "want": 1.5999999999999999,
+    "rel": 1.597542461184709e-05,
+    "pulloff_ratio": 1.6000263289444134,
+    "pulloff_rel": 1.6455590258424024e-05,
+    "delta0_over_rmin": 2.9835207163023967e-05,
+    "sym": true
+   },
+   {
+    "pair": "AM_S-WALL",
+    "ced": 68996.5,
+    "F0_ratio": 1.2800133492992505,
+    "want": 1.28,
+    "rel": 1.0429140039347473e-05,
+    "pulloff_ratio": 1.2800303044156367,
+    "pulloff_rel": 2.3675324716254664e-05,
+    "delta0_over_rmin": 2.438952444707312e-07,
+    "sym": true
+   },
+   {
+    "pair": "SE-SE",
+    "ced": 10458.2,
+    "F0_ratio": 1.0,
+    "want": 1.0,
+    "rel": 0.0,
+    "pulloff_ratio": 1.0,
+    "pulloff_rel": 0.0,
+    "delta0_over_rmin": 4.022619269147477e-05,
+    "sym": true
+   },
+   {
+    "pair": "SE-WALL",
+    "ced": 7121.29,
+    "F0_ratio": 0.3200031791580558,
+    "want": 0.32,
+    "rel": 9.934868924421636e-06,
+    "pulloff_ratio": 0.3200054534743042,
+    "pulloff_rel": 1.7042107200548884e-05,
+    "delta0_over_rmin": 9.452169434278138e-06,
+    "sym": true
+   },
+   {
+    "pair": "WALL-WALL",
+    "ced": 0.0,
+    "ok": true
+   }
+  ],
+  "max_rel_F0": 1.597542461184709e-05,
+  "max_rel_pulloff": 2.464588225503661e-05,
+  "worst_delta0_over_rmin": 4.022619269147477e-05,
+  "bo_se_read": 0.21243802411235277,
+  "bo_se_rel": -9.300920952859393e-06,
+  "all_sym": true,
+  "wall_wall_zero": true,
+  "meta_rule": "geomean",
+  "meta_gamma": {
+   "AM_P": 1.0,
+   "AM_S": 1.0,
+   "SE": 1.0
+  },
+  "meta_gamma_wall": 0.0256,
+  "meta_bo": 0.21244,
+  "meta_wall_rule": null,
+  "meta_rho": null,
+  "meta_dens_gen": "gen1",
+  "rho_se_deck": 2000.0,
+  "header_rows": 9,
+  "header_vs_mine_max_rel": 1.597516940154975e-05,
+  "stale_wall_comment": [
+   "# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = 입자값 ÷ 1.842).  옛 판은 type 2 = AM_S 를 빌려 썼다"
+  ],
+  "wall_ced_div_comment_present": true,
+  "meta_pairs_F0_ratio": [
+   [
+    "AM_P–AM_P",
+    1.0
+   ],
+   [
+    "AM_P–AM_S",
+    1.0
+   ],
+   [
+    "AM_P–SE",
+    1.0
+   ]
+  ]
+ },
+ "sticky_AM_r10_ncm_lab_soft": {
+  "rc": 0,
+  "stderr_tail": [],
+  "rows": [
+   {
+    "pair": "AM_P-AM_P",
+    "ced": 628723.0,
+    "F0_ratio": 89.99975276260119,
+    "want": 90.00000000000001,
+    "rel": -2.7470822091535396e-06,
+    "pulloff_ratio": 90.00800487598929,
+    "pulloff_rel": 8.89430665473867e-05,
+    "delta0_over_rmin": 1.434881364596258e-05,
+    "sym": true
+   },
+   {
+    "pair": "AM_P-AM_S",
+    "ced": 739169.0,
+    "F0_ratio": 55.38444088737017,
+    "want": 55.384615384615394,
+    "rel": -3.1506447054630016e-06,
+    "pulloff_ratio": 55.38925535773338,
+    "pulloff_rel": 8.377729240804932e-05,
+    "delta0_over_rmin": 2.7460847820623742e-05,
+    "sym": true
+   },
+   {
+    "pair": "AM_P-SE",
+    "ced": 53379.5,
+    "F0_ratio": 5.692080564892314,
+    "want": 5.692099788303083,
+    "rel": -3.3772090237693675e-06,
+    "pulloff_ratio": 5.691149561729805,
+    "pulloff_rel": -0.0001669377924875537,
+    "delta0_over_rmin": 0.00048099778627716506,
+    "sym": true
+   },
+   {
+    "pair": "AM_P-WALL",
+    "ced": 304286.0,
+    "F0_ratio": 28.79990752814862,
+    "want": 28.8,
+    "rel": -3.2108281730058863e-06,
+    "pulloff_ratio": 28.802594876801127,
+    "pulloff_rel": 9.009988892794141e-05,
+    "delta0_over_rmin": 4.743655628332647e-06,
+    "sym": true
+   },
+   {
+    "pair": "AM_S-AM_S",
+    "ced": 823860.0,
+    "F0_ratio": 39.99986159803577,
+    "want": 40.0,
+    "rel": -3.4600491056746563e-06,
+    "pulloff_ratio": 40.00339200314885,
+    "pulloff_rel": 8.480007872124773e-05,
+    "delta0_over_rmin": 2.46379253056929e-05,
+    "sym": true
+   },
+   {
+    "pair": "AM_S-SE",
+    "ced": 55516.9,
+    "F0_ratio": 5.059622461685803,
+    "want": 5.059644256269407,
+    "rel": -4.307532802672043e-06,
+    "pulloff_ratio": 5.059096740158245,
+    "pulloff_rel": -0.00010821237293179298,
+    "delta0_over_rmin": 0.0004624789468800718,
+    "sym": true
+   },
+   {
+    "pair": "AM_S-WALL",
+    "ced": 398727.0,
+    "F0_ratio": 12.79991479913013,
+    "want": 12.8,
+    "rel": -6.656317958597668e-06,
+    "pulloff_ratio": 12.801080143607619,
+    "pulloff_rel": 8.438621934514501e-05,
+    "delta0_over_rmin": 8.14517652975217e-06,
+    "sym": true
+   },
+   {
+    "pair": "SE-SE",
+    "ced": 28052.7,
+    "F0_ratio": 1.0,
+    "want": 1.0,
+    "rel": 0.0,
+    "pulloff_ratio": 1.0,
+    "pulloff_rel": 0.0,
+    "delta0_over_rmin": 0.00028943055570927376,
+    "sym": true
+   },
+   {
+    "pair": "SE-WALL",
+    "ced": 28037.6,
+    "F0_ratio": 1.0119233347052763,
+    "want": 1.0119288512538813,
+    "rel": -5.451518254706578e-06,
+    "pulloff_ratio": 1.0119221176519815,
+    "pulloff_rel": -6.654224643853901e-06,
+    "delta0_over_rmin": 0.00014651963405506077,
+    "sym": true
+   },
+   {
+    "pair": "WALL-WALL",
+    "ced": 0.0,
+    "ok": true
+   }
+  ],
+  "max_rel_F0": 6.656317958597668e-06,
+  "max_rel_pulloff": 0.0001669377924875537,
+  "worst_delta0_over_rmin": 0.00048099778627716506,
+  "bo_se_read": 5.000018074354154,
+  "bo_se_rel": 3.614870830670469e-06,
+  "all_sym": true,
+  "wall_wall_zero": true,
+  "meta_rule": "geomean",
+  "meta_gamma": {
+   "AM_P": 10.0,
+   "AM_S": 10.0,
+   "SE": 1.0
+  },
+  "meta_gamma_wall": 0.256,
+  "meta_bo": 5.0,
+  "meta_wall_rule": "hare2026_x_rho_uncoated_ncm",
+  "meta_rho": 10.0,
+  "meta_dens_gen": "lab20261014",
+  "rho_se_deck": 1640.0,
+  "header_rows": 9,
+  "header_vs_mine_max_rel": 6.656362265378135e-06,
+  "stale_wall_comment": [
+   "# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = 입자값 ÷ 1.842).  옛 판은 type 2 = AM_S 를 빌려 썼다"
+  ],
+  "wall_ced_div_comment_present": true,
+  "meta_pairs_F0_ratio": [
+   [
+    "AM_P–AM_P",
+    1.0
+   ],
+   [
+    "AM_P–AM_S",
+    1.0
+   ],
+   [
+    "AM_P–SE",
+    1.0
+   ]
+  ]
+ },
+ "coated_g1_bo637_lab_soft": {
+  "rc": 0,
+  "stderr_tail": [],
+  "rows": [
+   {
+    "pair": "AM_P-AM_P",
+    "ced": 1468660.0,
+    "F0_ratio": 8.999963958963313,
+    "want": 9.0,
+    "rel": -4.0045596318982746e-06,
+    "pulloff_ratio": 9.021702143123424,
+    "pulloff_rel": 0.002411349235935889,
+    "delta0_over_rmin": 7.829604638693569e-05,
+    "sym": true
+   },
+   {
+    "pair": "AM_P-AM_S",
+    "ced": 1726660.0,
+    "F0_ratio": 5.538481688059581,
+    "want": 5.538461538461539,
+    "rel": 3.6381218686543093e-06,
+    "pulloff_ratio": 5.551714884052848,
+    "pulloff_rel": 0.0023929651762086834,
+    "delta0_over_rmin": 0.00014984425899099892,
+    "sym": true
+   },
+   {
+    "pair": "AM_P-SE",
+    "ced": 183022.0,
+    "F0_ratio": 1.799994269144561,
+    "want": 1.8,
+    "rel": -3.183808577222891e-06,
+    "pulloff_ratio": 1.798892970151045,
+    "pulloff_rel": -0.0006150165827527587,
+    "delta0_over_rmin": 0.005654584108952006,
+    "sym": true
+   },
+   {
+    "pair": "AM_P-WALL",
+    "ced": 710795.0,
+    "F0_ratio": 2.8799965664815192,
+    "want": 2.8800000000000003,
+    "rel": -1.1921939170322915e-06,
+    "pulloff_ratio": 2.886978331793235,
+    "pulloff_rel": 0.002423031872651027,
+    "delta0_over_rmin": 2.5884390268953284e-05,
+    "sym": true
+   },
+   {
+    "pair": "AM_S-AM_S",
+    "ced": 1924490.0,
+    "F0_ratio": 3.9999900425110955,
+    "want": 4.0,
+    "rel": -2.489372226133213e-06,
+    "pulloff_ratio": 4.009576438187774,
+    "pulloff_rel": 0.0023941095469435236,
+    "delta0_over_rmin": 0.00013444003495371665,
+    "sym": true
+   },
+   {
+    "pair": "AM_S-SE",
+    "ced": 190351.0,
+    "F0_ratio": 1.600006234940851,
+    "want": 1.5999999999999999,
+    "rel": 3.8968380320358875e-06,
+    "pulloff_ratio": 1.6001444570914967,
+    "pulloff_rel": 9.028568218560906e-05,
+    "delta0_over_rmin": 0.0054369066654088565,
+    "sym": true
+   },
+   {
+    "pair": "AM_S-WALL",
+    "ced": 931405.0,
+    "F0_ratio": 1.2799987228095027,
+    "want": 1.28,
+    "rel": -9.9780507600844e-07,
+    "pulloff_ratio": 1.2830858538691743,
+    "pulloff_rel": 0.0024108233352924113,
+    "delta0_over_rmin": 4.4445351060812336e-05,
+    "sym": true
+   },
+   {
+    "pair": "SE-SE",
+    "ced": 141179.0,
+    "F0_ratio": 1.0,
+    "want": 1.0,
+    "rel": 0.0,
+    "pulloff_ratio": 1.0,
+    "pulloff_rel": 0.0,
+    "delta0_over_rmin": 0.007330527824711341,
+    "sym": true
+   },
+   {
+    "pair": "SE-WALL",
+    "ced": 96132.5,
+    "F0_ratio": 0.319999656243571,
+    "want": 0.32,
+    "rel": -1.0742388405482473e-06,
+    "pulloff_ratio": 0.32041314683071553,
+    "pulloff_rel": 0.0012910838459860852,
+    "delta0_over_rmin": 0.0017224817430397873,
+    "sym": true
+   },
+   {
+    "pair": "WALL-WALL",
+    "ced": 0.0,
+    "ok": true
+   }
+  ],
+  "max_rel_F0": 4.0045596318982746e-06,
+  "max_rel_pulloff": 0.002423031872651027,
+  "worst_delta0_over_rmin": 0.007330527824711341,
+  "bo_se_read": 637.320482688243,
+  "bo_se_rel": 7.573718743270064e-07,
+  "all_sym": true,
+  "wall_wall_zero": true,
+  "meta_rule": "geomean",
+  "meta_gamma": {
+   "AM_P": 1.0,
+   "AM_S": 1.0,
+   "SE": 1.0
+  },
+  "meta_gamma_wall": 0.0256,
+  "meta_bo": 637.32,
+  "meta_wall_rule": null,
+  "meta_rho": null,
+  "meta_dens_gen": "lab20261014",
+  "rho_se_deck": 1640.0,
+  "header_rows": 9,
+  "header_vs_mine_max_rel": 4.0045756684037315e-06,
+  "stale_wall_comment": [
+   "# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = 입자값 ÷ 1.842).  옛 판은 type 2 = AM_S 를 빌려 썼다"
+  ],
+  "wall_ced_div_comment_present": true,
+  "meta_pairs_F0_ratio": [
+   [
+    "AM_P–AM_P",
+    1.0
+   ],
+   [
+    "AM_P–AM_S",
+    1.0
+   ],
+   [
+    "AM_P–SE",
+    1.0
+   ]
+  ]
+ },
+ "coated_g1_bo637_gen1_soft": {
+  "rc": 0,
+  "stderr_tail": [],
+  "rows": [
+   {
+    "pair": "AM_P-AM_P",
+    "ced": 1569100.0,
+    "F0_ratio": 8.999976934585167,
+    "want": 9.0,
+    "rel": -2.562823870344566e-06,
+    "pulloff_ratio": 9.02478713554261,
+    "pulloff_rel": 0.002754126171401028,
+    "delta0_over_rmin": 8.937139645984521e-05,
+    "sym": true
+   },
+   {
+    "pair": "AM_P-AM_S",
+    "ced": 1844740.0,
+    "F0_ratio": 5.53845068364835,
+    "want": 5.538461538461539,
+    "rel": -1.959896825942664e-06,
+    "pulloff_ratio": 5.553553801448723,
+    "pulloff_rel": 0.0027249919282414936,
+    "delta0_over_rmin": 0.00017103964306877897,
+    "sym": true
+   },
+   {
+    "pair": "AM_P-SE",
+    "ced": 195539.0,
+    "F0_ratio": 1.8000060317532387,
+    "want": 1.8,
+    "rel": 3.3509740213766293e-06,
+    "pulloff_ratio": 1.7987495853898032,
+    "pulloff_rel": -0.0006946747834426503,
+    "delta0_over_rmin": 0.006454473979379059,
+    "sym": true
+   },
+   {
+    "pair": "AM_P-WALL",
+    "ced": 759404.0,
+    "F0_ratio": 2.879984017842033,
+    "want": 2.8800000000000003,
+    "rel": -5.5493604053102885e-06,
+    "pulloff_ratio": 2.8879524060269164,
+    "pulloff_rel": 0.0027612520926791895,
+    "delta0_over_rmin": 2.9545746795984802e-05,
+    "sym": true
+   },
+   {
+    "pair": "AM_S-AM_S",
+    "ced": 2056100.0,
+    "F0_ratio": 3.9999742194235464,
+    "want": 4.0,
+    "rel": -6.445144113409462e-06,
+    "pulloff_ratio": 4.010915257244223,
+    "pulloff_rel": 0.0027288143110557606,
+    "delta0_over_rmin": 0.00015345666842577483,
+    "sym": true
+   },
+   {
+    "pair": "AM_S-SE",
+    "ced": 203368.0,
+    "F0_ratio": 1.5999875337437912,
+    "want": 1.5999999999999999,
+    "rel": -7.791410130408849e-06,
+    "pulloff_ratio": 1.6001450500455774,
+    "pulloff_rel": 9.065627848592328e-05,
+    "delta0_over_rmin": 0.006205928782711283,
+    "sym": true
+   },
+   {
+    "pair": "AM_S-WALL",
+    "ced": 995101.0,
+    "F0_ratio": 1.2799938659240626,
+    "want": 1.28,
+    "rel": -4.792246826146318e-06,
+    "pulloff_ratio": 1.2835172463763826,
+    "pulloff_rel": 0.002747848731548874,
+    "delta0_over_rmin": 5.0732181353165634e-05,
+    "sym": true
+   },
+   {
+    "pair": "SE-SE",
+    "ced": 150834.0,
+    "F0_ratio": 1.0,
+    "want": 1.0,
+    "rel": 0.0,
+    "pulloff_ratio": 1.0,
+    "pulloff_rel": 0.0,
+    "delta0_over_rmin": 0.008367457988245435,
+    "sym": true
+   },
+   {
+    "pair": "SE-WALL",
+    "ced": 102707.0,
+    "F0_ratio": 0.32000111596889397,
+    "want": 0.32,
+    "rel": 3.4874027936560026e-06,
+    "pulloff_ratio": 0.3204729412656473,
+    "pulloff_rel": 0.001477941455147791,
+    "delta0_over_rmin": 0.001966139109724039,
+    "sym": true
+   },
+   {
+    "pair": "WALL-WALL",
+    "ced": 0.0,
+    "ok": true
+   }
+  ],
+  "max_rel_F0": 7.791410130408849e-06,
+  "max_rel_pulloff": 0.0027612520926791895,
+  "worst_delta0_over_rmin": 0.008367457988245435,
+  "bo_se_read": 637.322380614273,
+  "bo_se_rel": 3.7353515862648123e-06,
+  "all_sym": true,
+  "wall_wall_zero": true,
+  "meta_rule": "geomean",
+  "meta_gamma": {
+   "AM_P": 1.0,
+   "AM_S": 1.0,
+   "SE": 1.0
+  },
+  "meta_gamma_wall": 0.0256,
+  "meta_bo": 637.32,
+  "meta_wall_rule": null,
+  "meta_rho": null,
+  "meta_dens_gen": "gen1",
+  "rho_se_deck": 2000.0,
+  "header_rows": 9,
+  "header_vs_mine_max_rel": 7.791470837181791e-06,
+  "stale_wall_comment": [
+   "# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = 입자값 ÷ 1.842).  옛 판은 type 2 = AM_S 를 빌려 썼다"
+  ],
+  "wall_ced_div_comment_present": true,
+  "meta_pairs_F0_ratio": [
+   [
+    "AM_P–AM_P",
+    1.0
+   ],
+   [
+    "AM_P–AM_S",
+    1.0
+   ],
+   [
+    "AM_P–SE",
+    1.0
+   ]
+  ]
+ },
+ "mixed_ref20_dthalf_fullprec": {
+  "rc": 0,
+  "stderr_tail": [],
+  "rows": [
+   {
+    "pair": "AM_P-AM_P",
+    "ced": 68169.2,
+    "F0_ratio": 2.699997806509979,
+    "want": 2.7,
+    "rel": -8.124037115253557e-07,
+    "pulloff_ratio": 2.700001941344403,
+    "pulloff_rel": 7.190164454939918e-07,
+    "delta0_over_rmin": 1.686839234954346e-07,
+    "sym": true
+   },
+   {
+    "pair": "AM_P-AM_S",
+    "ced": 87266.5,
+    "F0_ratio": 2.1450368765151886,
+    "want": 2.145036930207185,
+    "rel": -2.5030802874859148e-08,
+    "pulloff_ratio": 2.145040021011409,
+    "pulloff_rel": 1.4409095621115142e-06,
+    "delta0_over_rmin": 3.827556128869045e-07,
+    "sym": true
+   },
+   {
+    "pair": "AM_P-SE",
+    "ced": 68243.4,
+    "F0_ratio": 0.9859025734222444,
+    "want": 0.985900603509299,
+    "rel": 1.998084734333716e-06,
+    "pulloff_ratio": 0.9859026694886519,
+    "pulloff_rel": 2.095524990641806e-06,
+    "delta0_over_rmin": 2.7687537894200145e-06,
+    "sym": true
+   },
+   {
+    "pair": "AM_P-WALL",
+    "ced": 32992.2,
+    "F0_ratio": 0.8640016176707532,
+    "want": 0.8640000000000001,
+    "rel": 1.8723041124157902e-06,
+    "pulloff_ratio": 0.86400296285648,
+    "pulloff_rel": 3.429232036999963e-06,
+    "delta0_over_rmin": 5.576629137386179e-08,
+    "sym": true
+   },
+   {
+    "pair": "AM_S-AM_S",
+    "ced": 105909.0,
+    "F0_ratio": 2.0000110046191115,
+    "want": 2.0,
+    "rel": 5.502309555760476e-06,
+    "pulloff_ratio": 2.000013922800762,
+    "pulloff_rel": 6.9614003810336555e-06,
+    "delta0_over_rmin": 4.0715805777114133e-07,
+    "sym": true
+   },
+   {
+    "pair": "AM_S-SE",
+    "ced": 77283.4,
+    "F0_ratio": 1.1313725771110812,
+    "want": 1.131370849898476,
+    "rel": 1.5266546820047466e-06,
+    "pulloff_ratio": 1.131372832317595,
+    "pulloff_rel": 1.7522275026493617e-06,
+    "delta0_over_rmin": 3.1563339294599324e-06,
+    "sym": true
+   },
+   {
+    "pair": "AM_S-WALL",
+    "ced": 47073.9,
+    "F0_ratio": 0.4957425903310539,
+    "want": 0.4957418683145494,
+    "rel": 1.4564364050340117e-06,
+    "pulloff_ratio": 0.4957433430745355,
+    "pulloff_rel": 2.97485461753233e-06,
+    "delta0_over_rmin": 1.1352972131251597e-07,
+    "sym": true
+   },
+   {
+    "pair": "SE-SE",
+    "ced": 72124.5,
+    "F0_ratio": 1.0,
+    "want": 1.0,
+    "rel": 0.0,
+    "pulloff_ratio": 1.0,
+    "pulloff_rel": 0.0,
+    "delta0_over_rmin": 4.783003331498426e-06,
+    "sym": true
+   },
+   {
+    "pair": "SE-WALL",
+    "ced": 37092.7,
+    "F0_ratio": 0.17527179218895345,
+    "want": 0.17527121840165316,
+    "rel": 3.2737109123548436e-06,
+    "pulloff_ratio": 0.17527197635481193,
+    "pulloff_rel": 4.324458776849838e-06,
+    "delta0_over_rmin": 8.150365473785831e-07,
+    "sym": true
+   },
+   {
+    "pair": "WALL-WALL",
+    "ced": 0.0,
+    "ok": true
+   }
+  ],
+  "max_rel_F0": 5.502309555760476e-06,
+  "max_rel_pulloff": 6.9614003810336555e-06,
+  "worst_delta0_over_rmin": 4.783003331498426e-06,
+  "bo_se_read": 0.21243987014429694,
+  "bo_se_rel": -6.112582520145793e-07,
+  "all_sym": true,
+  "wall_wall_zero": true,
+  "meta_rule": "geomean",
+  "meta_gamma": {
+   "AM_P": 0.3,
+   "AM_S": 0.5,
+   "SE": 1.0
+  },
+  "meta_gamma_wall": 0.00768,
+  "meta_bo": 0.21244,
+  "meta_wall_rule": "hare2026_x_rho_uncoated_ncm",
+  "meta_rho": 0.3,
+  "meta_dens_gen": "lab20261014",
+  "rho_se_deck": 1640.0,
+  "header_rows": 9,
+  "header_vs_mine_max_rel": 5.502279280533706e-06,
+  "stale_wall_comment": [
+   "# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = 입자값 ÷ 1.842).  옛 판은 type 2 = AM_S 를 빌려 썼다"
+  ],
+  "wall_ced_div_comment_present": true,
+  "meta_pairs_F0_ratio": [
+   [
+    "AM_P–AM_P",
+    1.0
+   ],
+   [
+    "AM_P–AM_S",
+    1.0
+   ],
+   [
+    "AM_P–SE",
+    0.9999999999999993
+   ]
+  ]
+ }
+}

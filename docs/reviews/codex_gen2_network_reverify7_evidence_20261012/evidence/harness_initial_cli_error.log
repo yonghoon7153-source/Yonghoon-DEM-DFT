@@ -1,7 +1,0 @@
-[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
-[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
-Traceback (most recent call last):
-  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\gen2_network_reverify7_20261012\probes\r7_cli.py", line 49, in <module>
-    rows.append(dict(name=name,rc=rc,n_fail=result['n_fail'],expected_rc=want,checks=result['checks'],matched=rc==want and result['n_fail']==want))
-                                                                                     ~~~~~~^^^^^^^^^^
-KeyError: 'checks'

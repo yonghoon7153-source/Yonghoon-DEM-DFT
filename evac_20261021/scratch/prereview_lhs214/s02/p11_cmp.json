@@ -1,0 +1,26 @@
+{
+ "core": {
+  "n_now": 10,
+  "n_rec": 10,
+  "identical": true,
+  "differing": []
+ },
+ "axis": {
+  "n_now": 6,
+  "n_rec": 6,
+  "identical": true,
+  "differing": []
+ },
+ "mutants": {
+  "n_now": 12,
+  "n_rec": 12,
+  "identical": true,
+  "differing": []
+ },
+ "failclosed": {
+  "n_now": 4,
+  "n_rec": 4,
+  "identical": true,
+  "differing": []
+ }
+}

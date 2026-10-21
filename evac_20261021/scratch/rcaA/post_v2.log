@@ -1,0 +1,9 @@
+── RCA04-V
+  PASS  RCA04-V 바탕 — 접촉 instance 1 (긴 접촉 · k 2) · 정준 경로 순서 = A (끝점 (3.25,…) < (5.25,…)) 먼저
+  PASS  RCA04-V B 공선 세분 0.125 → 같은 sid · 간선 포트 셀 · 계 구조 (u · v · 부류 · 판) 비트 같음 · G · σ 상대 ≤ 1e-13 (L_c 합 반올림)
+  PASS  RCA04-V fid 재명명 → 같은 sid · 간선 포트 셀 · 계 구조 (u · v · 부류 · 판) 비트 같음 · G · σ 상대 ≤ 1e-13 (L_c 합 반올림)
+  PASS  RCA04-V 세분 + 재명명 → 같은 sid · 간선 포트 셀 · 계 구조 (u · v · 부류 · 판) 비트 같음 · G · σ 상대 ≤ 1e-13 (L_c 합 반올림)
+  PASS  RCA04-V B 점 역순 → 같은 sid · 간선 포트 셀 · 계 구조 (u · v · 부류 · 판) 비트 같음 · G · σ 상대 ≤ 1e-13 (L_c 합 반올림)
+
+== test_carbon_junction: 5/5 PASS
+[nrun] wall 1.6 s · exit 0

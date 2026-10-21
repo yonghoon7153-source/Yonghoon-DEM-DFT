@@ -1,0 +1,304 @@
+{
+ "coated_g1_w0256_lab_soft": {
+  "rc_old": 0,
+  "rc_new": 0,
+  "refused_new": null,
+  "diff_lines": [
+   "-#   벽 γ_W/γ_SE = 명시 입력 (묶는 규칙 표기 없음)",
+   "+#   벽 γ_W/γ_SE = 명시 입력 0.0256 — NCM 상 γ 전부 1 (코팅 · 같은 γ 세계) 인 팔만 (1저자 10-14 Q2) · 이 벽의 비코팅 NCM 함의 ρ = γ_W/0.0256 = 1",
+   "+#   NCM 표면 (Q2 · 코팅 = γ 1 · 비코팅 = γ ρ): AM_P 코팅 · AM_S 코팅 · 삽입 = 층상 (AM → SE · D11 (가))",
+   "-# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = 입자값 ÷ 1.842).  옛 판은 type 2 = AM_S 를 빌려 썼다",
+   "+# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = D2 기하평균 W_iW = 2√(γ_iγ_W) · γ_W/γ_SE 0.0256 — 머리 블록).  옛 판은 type 2 = AM_S 를 빌려 썼다"
+  ],
+  "diff_non_comment": [],
+  "cmds_token_identical": true,
+  "meta_changed_keys": [
+   "adhesion_rule",
+   "registered",
+   "schema"
+  ],
+  "meta_schema": [
+   "mixer_deck_meta/1",
+   "mixer_deck_meta/2"
+  ],
+  "meta_registered_new": "D2 결합 규칙 덱 — 결과 전 등록 없음 (개발 · 등록 전 · 결과 0) · 규칙 = 1저자 10-14 D2 (가) docs/mixer_paper_pipeline_draft_20261013.md §4 · 벽 = 1저자 10-14 Q2 docs/mixer_d2_wall_gamma_derivation_20261014.md §5 · 밀도 세대 lab20261014 = 결과 전 등록 없음 (docs/density_generations_20261014.md · 1저자 10-14 밤 · 앞으로만)",
+  "adhesion_rule_changed": {
+   "layered": [
+    null,
+    true
+   ],
+   "rho_world": [
+    null,
+    1.0
+   ],
+   "surface": [
+    null,
+    {
+     "AM_P": "coated",
+     "AM_S": "coated"
+    }
+   ],
+   "wall_rule": [
+    null,
+    "explicit_coated"
+   ]
+  },
+  "meta_pairs_identical": true
+ },
+ "uncoated_r03_ncm_lab_soft": {
+  "rc_old": 0,
+  "rc_new": 0,
+  "refused_new": null,
+  "diff_lines": [
+   "+#   NCM 표면 (Q2 · 코팅 = γ 1 · 비코팅 = γ ρ): AM_P 비코팅 · AM_S 비코팅 · 삽입 = 층상 (AM → SE · D11 (가))",
+   "-# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = 입자값 ÷ 1.842).  옛 판은 type 2 = AM_S 를 빌려 썼다",
+   "+# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = D2 기하평균 W_iW = 2√(γ_iγ_W) · γ_W/γ_SE 0.00768 — 머리 블록).  옛 판은 type 2 = AM_S 를 빌려 썼다"
+  ],
+  "diff_non_comment": [],
+  "cmds_token_identical": true,
+  "meta_changed_keys": [
+   "adhesion_rule",
+   "registered",
+   "schema"
+  ],
+  "meta_schema": [
+   "mixer_deck_meta/1",
+   "mixer_deck_meta/2"
+  ],
+  "meta_registered_new": "D2 결합 규칙 덱 — 결과 전 등록 없음 (개발 · 등록 전 · 결과 0) · 규칙 = 1저자 10-14 D2 (가) docs/mixer_paper_pipeline_draft_20261013.md §4 · 벽 = 1저자 10-14 Q2 docs/mixer_d2_wall_gamma_derivation_20261014.md §5 · 밀도 세대 lab20261014 = 결과 전 등록 없음 (docs/density_generations_20261014.md · 1저자 10-14 밤 · 앞으로만)",
+  "adhesion_rule_changed": {
+   "layered": [
+    null,
+    true
+   ],
+   "surface": [
+    null,
+    {
+     "AM_P": "uncoated",
+     "AM_S": "uncoated"
+    }
+   ]
+  },
+  "meta_pairs_identical": true
+ },
+ "coated_world_r03_ncm_lab_soft": {
+  "rc_old": 0,
+  "rc_new": 0,
+  "refused_new": null,
+  "diff_lines": [
+   "+#   NCM 표면 (Q2 · 코팅 = γ 1 · 비코팅 = γ ρ): AM_P 코팅 · AM_S 코팅 · 삽입 = 층상 (AM → SE · D11 (가))",
+   "-# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = 입자값 ÷ 1.842).  옛 판은 type 2 = AM_S 를 빌려 썼다",
+   "+# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = D2 기하평균 W_iW = 2√(γ_iγ_W) · γ_W/γ_SE 0.00768 — 머리 블록).  옛 판은 type 2 = AM_S 를 빌려 썼다"
+  ],
+  "diff_non_comment": [],
+  "cmds_token_identical": true,
+  "meta_changed_keys": [
+   "adhesion_rule",
+   "registered",
+   "schema"
+  ],
+  "meta_schema": [
+   "mixer_deck_meta/1",
+   "mixer_deck_meta/2"
+  ],
+  "meta_registered_new": "D2 결합 규칙 덱 — 결과 전 등록 없음 (개발 · 등록 전 · 결과 0) · 규칙 = 1저자 10-14 D2 (가) docs/mixer_paper_pipeline_draft_20261013.md §4 · 벽 = 1저자 10-14 Q2 docs/mixer_d2_wall_gamma_derivation_20261014.md §5 · 밀도 세대 lab20261014 = 결과 전 등록 없음 (docs/density_generations_20261014.md · 1저자 10-14 밤 · 앞으로만)",
+  "adhesion_rule_changed": {
+   "layered": [
+    null,
+    true
+   ],
+   "surface": [
+    null,
+    {
+     "AM_P": "coated",
+     "AM_S": "coated"
+    }
+   ]
+  },
+  "meta_pairs_identical": true
+ },
+ "mixed_03_05_w0256_lab_ref20": {
+  "rc_old": 0,
+  "rc_new": 1,
+  "refused_new": "⛔ D2 결합 규칙 (1저자 10-14 Q2 — 벽 = 비코팅 NCM · docs/mixer_d2_wall_gamma_derivation_20261014.md §5): 명시 벽 (--gm-gamma-wall) 은 NCM 상 γ 가 전부 1 인 팔 (코팅 · 같은 γ 세계) 에서만 — {'AM_P': 0.3, 'AM_S': 0.5} · 비코팅 팔은 --gm-wall-ncm ρ (γ_W = 0.0256·ρ) 로 (MXD2-05)"
+ },
+ "coated_g1_gen1_soft": {
+  "rc_old": 0,
+  "rc_new": 0,
+  "refused_new": null,
+  "diff_lines": [
+   "-#   벽 γ_W/γ_SE = 명시 입력 (묶는 규칙 표기 없음)",
+   "+#   벽 γ_W/γ_SE = 명시 입력 0.0256 — NCM 상 γ 전부 1 (코팅 · 같은 γ 세계) 인 팔만 (1저자 10-14 Q2) · 이 벽의 비코팅 NCM 함의 ρ = γ_W/0.0256 = 1",
+   "+#   NCM 표면 (Q2 · 코팅 = γ 1 · 비코팅 = γ ρ): AM_P 코팅 · AM_S 코팅 · 삽입 = 층상 (AM → SE · D11 (가))",
+   "-# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = 입자값 ÷ 1.842).  옛 판은 type 2 = AM_S 를 빌려 썼다",
+   "+# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = D2 기하평균 W_iW = 2√(γ_iγ_W) · γ_W/γ_SE 0.0256 — 머리 블록).  옛 판은 type 2 = AM_S 를 빌려 썼다"
+  ],
+  "diff_non_comment": [],
+  "cmds_token_identical": true,
+  "meta_changed_keys": [
+   "adhesion_rule",
+   "registered",
+   "schema"
+  ],
+  "meta_schema": [
+   "mixer_deck_meta/1",
+   "mixer_deck_meta/2"
+  ],
+  "meta_registered_new": "D2 결합 규칙 덱 — 결과 전 등록 없음 (개발 · 등록 전 · 결과 0) · 규칙 = 1저자 10-14 D2 (가) docs/mixer_paper_pipeline_draft_20261013.md §4 · 벽 = 1저자 10-14 Q2 docs/mixer_d2_wall_gamma_derivation_20261014.md §5",
+  "adhesion_rule_changed": {
+   "layered": [
+    null,
+    true
+   ],
+   "rho_world": [
+    null,
+    1.0
+   ],
+   "surface": [
+    null,
+    {
+     "AM_P": "coated",
+     "AM_S": "coated"
+    }
+   ],
+   "wall_rule": [
+    null,
+    "explicit_coated"
+   ]
+  },
+  "meta_pairs_identical": true
+ },
+ "sticky_AM_r10_ncm_lab_soft": {
+  "rc_old": 0,
+  "rc_new": 0,
+  "refused_new": null,
+  "diff_lines": [
+   "+#   NCM 표면 (Q2 · 코팅 = γ 1 · 비코팅 = γ ρ): AM_P 비코팅 · AM_S 비코팅 · 삽입 = 층상 (AM → SE · D11 (가))",
+   "-# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = 입자값 ÷ 1.842).  옛 판은 type 2 = AM_S 를 빌려 썼다",
+   "+# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = D2 기하평균 W_iW = 2√(γ_iγ_W) · γ_W/γ_SE 0.256 — 머리 블록).  옛 판은 type 2 = AM_S 를 빌려 썼다"
+  ],
+  "diff_non_comment": [],
+  "cmds_token_identical": true,
+  "meta_changed_keys": [
+   "adhesion_rule",
+   "registered",
+   "schema"
+  ],
+  "meta_schema": [
+   "mixer_deck_meta/1",
+   "mixer_deck_meta/2"
+  ],
+  "meta_registered_new": "D2 결합 규칙 덱 — 결과 전 등록 없음 (개발 · 등록 전 · 결과 0) · 규칙 = 1저자 10-14 D2 (가) docs/mixer_paper_pipeline_draft_20261013.md §4 · 벽 = 1저자 10-14 Q2 docs/mixer_d2_wall_gamma_derivation_20261014.md §5 · 밀도 세대 lab20261014 = 결과 전 등록 없음 (docs/density_generations_20261014.md · 1저자 10-14 밤 · 앞으로만)",
+  "adhesion_rule_changed": {
+   "layered": [
+    null,
+    true
+   ],
+   "surface": [
+    null,
+    {
+     "AM_P": "uncoated",
+     "AM_S": "uncoated"
+    }
+   ]
+  },
+  "meta_pairs_identical": true
+ },
+ "coated_g1_bo637_lab_soft": {
+  "rc_old": 0,
+  "rc_new": 0,
+  "refused_new": null,
+  "diff_lines": [
+   "-#   벽 γ_W/γ_SE = 명시 입력 (묶는 규칙 표기 없음)",
+   "+#   벽 γ_W/γ_SE = 명시 입력 0.0256 — NCM 상 γ 전부 1 (코팅 · 같은 γ 세계) 인 팔만 (1저자 10-14 Q2) · 이 벽의 비코팅 NCM 함의 ρ = γ_W/0.0256 = 1",
+   "+#   NCM 표면 (Q2 · 코팅 = γ 1 · 비코팅 = γ ρ): AM_P 코팅 · AM_S 코팅 · 삽입 = 층상 (AM → SE · D11 (가))",
+   "-# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = 입자값 ÷ 1.842).  옛 판은 type 2 = AM_S 를 빌려 썼다",
+   "+# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = D2 기하평균 W_iW = 2√(γ_iγ_W) · γ_W/γ_SE 0.0256 — 머리 블록).  옛 판은 type 2 = AM_S 를 빌려 썼다"
+  ],
+  "diff_non_comment": [],
+  "cmds_token_identical": true,
+  "meta_changed_keys": [
+   "adhesion_rule",
+   "registered",
+   "schema"
+  ],
+  "meta_schema": [
+   "mixer_deck_meta/1",
+   "mixer_deck_meta/2"
+  ],
+  "meta_registered_new": "D2 결합 규칙 덱 — 결과 전 등록 없음 (개발 · 등록 전 · 결과 0) · 규칙 = 1저자 10-14 D2 (가) docs/mixer_paper_pipeline_draft_20261013.md §4 · 벽 = 1저자 10-14 Q2 docs/mixer_d2_wall_gamma_derivation_20261014.md §5 · 밀도 세대 lab20261014 = 결과 전 등록 없음 (docs/density_generations_20261014.md · 1저자 10-14 밤 · 앞으로만)",
+  "adhesion_rule_changed": {
+   "layered": [
+    null,
+    true
+   ],
+   "rho_world": [
+    null,
+    1.0
+   ],
+   "surface": [
+    null,
+    {
+     "AM_P": "coated",
+     "AM_S": "coated"
+    }
+   ],
+   "wall_rule": [
+    null,
+    "explicit_coated"
+   ]
+  },
+  "meta_pairs_identical": true
+ },
+ "coated_g1_bo637_gen1_soft": {
+  "rc_old": 0,
+  "rc_new": 0,
+  "refused_new": null,
+  "diff_lines": [
+   "-#   벽 γ_W/γ_SE = 명시 입력 (묶는 규칙 표기 없음)",
+   "+#   벽 γ_W/γ_SE = 명시 입력 0.0256 — NCM 상 γ 전부 1 (코팅 · 같은 γ 세계) 인 팔만 (1저자 10-14 Q2) · 이 벽의 비코팅 NCM 함의 ρ = γ_W/0.0256 = 1",
+   "+#   NCM 표면 (Q2 · 코팅 = γ 1 · 비코팅 = γ ρ): AM_P 코팅 · AM_S 코팅 · 삽입 = 층상 (AM → SE · D11 (가))",
+   "-# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = 입자값 ÷ 1.842).  옛 판은 type 2 = AM_S 를 빌려 썼다",
+   "+# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = D2 기하평균 W_iW = 2√(γ_iγ_W) · γ_W/γ_SE 0.0256 — 머리 블록).  옛 판은 type 2 = AM_S 를 빌려 썼다"
+  ],
+  "diff_non_comment": [],
+  "cmds_token_identical": true,
+  "meta_changed_keys": [
+   "adhesion_rule",
+   "registered",
+   "schema"
+  ],
+  "meta_schema": [
+   "mixer_deck_meta/1",
+   "mixer_deck_meta/2"
+  ],
+  "meta_registered_new": "D2 결합 규칙 덱 — 결과 전 등록 없음 (개발 · 등록 전 · 결과 0) · 규칙 = 1저자 10-14 D2 (가) docs/mixer_paper_pipeline_draft_20261013.md §4 · 벽 = 1저자 10-14 Q2 docs/mixer_d2_wall_gamma_derivation_20261014.md §5",
+  "adhesion_rule_changed": {
+   "layered": [
+    null,
+    true
+   ],
+   "rho_world": [
+    null,
+    1.0
+   ],
+   "surface": [
+    null,
+    {
+     "AM_P": "coated",
+     "AM_S": "coated"
+    }
+   ],
+   "wall_rule": [
+    null,
+    "explicit_coated"
+   ]
+  },
+  "meta_pairs_identical": true
+ },
+ "mixed_ref20_dthalf_fullprec": {
+  "rc_old": 0,
+  "rc_new": 1,
+  "refused_new": "⛔ D2 결합 규칙 (1저자 10-14 Q2 — 벽 = 비코팅 NCM · docs/mixer_d2_wall_gamma_derivation_20261014.md §5): ρ_비코팅 0.3 세계의 NCM 상 γ/γ_SE 는 1 (코팅) 또는 ρ (비코팅) 만 — {'AM_S': 0.5} (비코팅 NCM 의 ρ 는 하나다 · MXD2-05)"
+ }
+}

@@ -1,0 +1,7 @@
+runner_full rc=0 seconds=98 start=21:02:15
+disc_selftest rc=0 seconds=117 start=21:03:53
+disc_noargs rc=0 seconds=39 start=21:05:50
+verdict_full rc=0 seconds=42 start=21:06:29
+b6_full rc=0 seconds=44 start=21:07:11
+z1_full rc=0 seconds=43 start=21:07:55
+DONE

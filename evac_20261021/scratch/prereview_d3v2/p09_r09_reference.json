@@ -1,0 +1,7 @@
+{
+ "가_no_discrimination": {
+  "status": "통과",
+  "discriminating": false
+ },
+ "나_empty_inner": "StopIteration: "
+}

@@ -1,0 +1,33 @@
+Rint 2 S2 RCA-06 counterfactual hygiene tests (tests first)
+
+Pre-attack review of the optional SV counterfactual solve (certificate <-> result binding, global
+state, sign of numerically failed currents), four counterexamples moved into test_carbon_junction
+case RCA06-H before the fix:
+- (1) provenance: the counterfactual solve calls the production solver again and overwrites the
+  module globals LAST_BACKEND / LAST_CG that the manifest reads as 'backend_last_solve' -> with a
+  marking solver the globals after solve_sigma_z must still describe the main solve (cpu-main /
+  iters 111) and the counterfactual record must carry its own backend; conv_cert key present (None
+  when the certificate is off).
+- (2) certificate binding: with CONV_CERT on (rtol 1e-12, direct-solve fixture) the counterfactual
+  solve must go through the same step3_conv_cert.certify; a failing certificate for the
+  counterfactual only -> no ratio, no SV_DEPENDENT flag even with threshold 2.0, status
+  unconverged, main solve unchanged (certified, sigma = hand circuit 1e-12).
+- (3) inf only from topology: bed SVA (SVX without the VV junction, one AM cell sigma 1e-9 between
+  the fibres) keeps a through component after the SV cut (I_cut ~ 1e-9 << 1e-6 x plate coupling);
+  a solve that passes the CG predicate (resid 7.9e-12) with I_cut = -5.0e-10 was reported as
+  'no_through_without_sv', ratio inf, SV_DEPENDENT -> must give no ratio and no flag.  Positive
+  control on SVA (exact solve): sigma = hand circuit 1e-9, ratio = hand 1e-3, > 1e6.
+- (4) numerator: SVA with SDCP sigma 1e-9 too (main through current ~2e-9); a main solve that passes
+  the CG predicate with I_full = -1.5e-9 led to a counterfactual 'computed' with ratio -3.0 -> must
+  not solve the counterfactual and give no ratio (main sigma = max(0, .) = 0 is the old production
+  predicate, outside this batch).
+- (5) guard (passes before and after): A-B joined only through SDCP -> cut leaves no through
+  component (topology) -> one solve only, 'no_through_without_sv', ratio inf, SV_DEPENDENT, G_cut 0.
+
+Pre-fix (parent 355ff961d): test_carbon_junction --quick 213/219 (fails = 6 checks from 4
+counterexamples: global provenance overwritten 2, counterfactual uncertified 2 - ratio 10.29 and
+SV_DEPENDENT published although its certificate failed, non-positive solved I_cut -> inf 1,
+non-positive I_full -> ratio -3.0 1).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

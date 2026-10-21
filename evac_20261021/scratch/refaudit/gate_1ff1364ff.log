@@ -1,0 +1,151 @@
+gate start 2026-10-15T11:14:18+00:00 HEAD 1ff1364ff5a12c0fa1ad68f030a2c2186489ff62
+── selftest (검사기가 맞나) ──
+  ✓ run_contract          --selftest
+  ✓ check_review_findings   --selftest
+  ✓ check_method_discipline --selftest
+  ✓ sdcp_gain_verdict       --selftest
+  ✓ sdcp_phase_ledger_match --selftest
+  ✓ porosity_filter_axes    --selftest
+  ✓ sr01_stamp_compare     --selftest
+  ✓ mpm_webapp_payload     --selftest-temperature
+  ✓ step3_sigma            --selftest
+  ✓ step3_sigma            --selftest-rint
+  ✓ repair_focus_top       --selftest
+  ✓ webapp_env_audit       --selftest
+  ✓ type_map_resolve       --selftest
+  ✓ type_map_unknown_sweep --selftest
+  ✓ gen_plots  --selftest-descriptions
+  ✓ gen_plots  --selftest-fits
+  ✓ eis_drt_ica            --selftest
+  ✓ se_net_diagnostics     --selftest
+  ✓ grade_engine          --selftest
+  ✓ constriction_deleted  --selftest
+  ✓ gen_plots  --selftest-temp
+  ✓ reduce_arm_payloads     --selftest
+  ✓ bridge_grid_verdict    --selftest
+  ✓ ion_r_verdict          --selftest
+  ✓ plot_cbd_contacts       --selftest
+  ✓ plot_sigma_e_bars       --selftest
+  ✓ colorbar_fit (JS 문법)
+  ✓ colorbar_fit (라벨 폭)
+  ✓ lhs_perc_extract       --selftest
+  ✓ lhs_descriptor_harvest --selftest
+  ✓ lhs_perc_fit           --selftest
+  ✓ hetero_transcript      --selftest
+  ✓ make_heckel_manifest   --selftest
+  ✓ oat_sensitivity        --selftest
+  ✓ build_methods_docx     --selftest
+  ✓ check_cohort_packages  --selftest
+── 리포 실물 (리포가 맞나 — selftest 가 **대신해 주지 않는다**) ──
+  ✓ mutation_sweep (문법 — 배터리 자신이 도는가)
+  ✓ check_review_findings   (원장 + 철회값 스윕)
+  ✓ check_method_discipline (규칙 A~M + claims 원장)
+  ✓ webapp: pipeline_provenance
+  ✓ webapp: predictor_ui
+  ✓ webapp: security_phase_a
+  ✓ webapp: seminar_page
+  ✓ webapp: worklog_page
+  ✓ webapp: mixer_devlog_page
+  ✓ webapp: closed_param_labels
+  ✓ webapp: closed_param_values
+  ✓ webapp: closed_param_groupview
+  ✓ webapp: cf_full_labels
+  ✓ webapp: tortuosity_all
+  ✓ webapp: closed_param_exact_union
+  ✓ webapp: coverage_handover_scope
+  ✓ webapp: am_isolation_labels
+  ✓ webapp: percolation_labels
+  ✓ webapp: ionic_isolation_labels
+  ✓ webapp: mixer_bed_view
+  ✓ webapp: png_transparent_export
+  ✓ mixer launcher (완주 판정 · 덮어쓰기 가드)
+  ✓ webapp: launcher (포트 선점)
+  ✓ webapp: temp_pressure
+  ✓ webapp: ledger_view
+  ✓ webapp: meta_json_robust
+  ✓ webapp: atoms_only_viewer
+  ✓ webapp: atoms_only_porosity
+  ✓ webapp: dem_pore_path_view
+  ✓ webapp: tau_paths_view
+  ✓ webapp: force_chain_view
+  ✓ webapp: viewer_coordination
+  ✓ webapp: viewer_am_contacts
+  ✓ webapp: network_current_view
+  ✓ webapp: net_current_density
+  ✓ webapp: viewer_load_view
+  ✓ webapp: je_definition_label
+  ✓ webapp: rint_scope_labels
+  ✓ webapp: tau_labels
+  ✓ webapp: tau_handover_status
+  ✓ webapp: stress_lw_labels
+  ✓ webapp: constriction_power
+  ✓ webapp: s567_labels
+  ✓ webapp: tau_grade_unify
+  ✓ webapp: network_handover_chain
+  ✓ webapp: psi_generation_stamp
+  ✓ webapp: gen2_publication_handover
+  ✓ g2_network_reread --selftest
+  ✓ webapp: gen2_stamp_record
+  ✓ webapp: hetero_transcript
+  ✓ rint_receipts (요청 ↔ 적용 영수증 · AST 변이 4)
+  ✓ rint_g2_am_iface (①′ AM–AM 계약 v3.1 · 반례 먼저)
+  ✓ network boundary_rule (안 A · 동작 중립)
+  ✓ tau_flux (이온 인계 열 · 게이트 G1–G6)
+  ✓ reread_v12 (RGLR4-01 · 02 반례 · 원본 PASS)
+  ✓ lhs_release v1.3 (빈칸 뜻 · ML 표 · 재적합 · 세대 g2 · τ 다시 읽기 · 발사 봉인 대조 · DRY RUN)
+  ✓ lhs_pressure_record (DESC-06 완료 압력 · 생성기 관문)
+  ✓ compaction_curve (로그 잇기 · 설정 줄 · 판 재부양 반례)
+  ✓ psi default switch (L2-01 세대 2)
+  ✓ physics area g2 (C2 ①–⑤ · L1-01/02/03)
+  ✓ network dirichlet (L2-05 · D1–D7)
+  ✓ network generation 2 (CF 표지 · H12 · 세대 표기)
+  ✓ gen2 role contract (G2R-01 · 02 — 역할 · 닫힌 열거 · 옛 세대 추론)
+  ✓ network solve certificate (G2R-03 · GEN2-01)
+  ✓ union coverage ⑥ (C2-⑥ · LHS-25)
+  ✓ wall near tangent (LHSC-08)
+  ✓ coverage CLI no tracked write (LHS-27)
+  ✓ webapp: coverage_union_display
+  ✓ parse_case_paste ⑥ 라벨 (합집합 · legacy 줄)
+  ✓ love_weber_stress (④b · LHS-29)
+  ✓ constriction_power_share (④a · LHS-30)
+  ✓ audit_coverage      --selftest
+  ✓ claimed_sha_provenance --selftest
+  ✓ audit_adjudication  --selftest
+  ✓ audit_validation_flags --selftest
+  ✓ constriction_reference --selftest
+  ✓ transport_cap_equivalence --selftest
+  ✓ plastic_coverage    --selftest
+  ✓ review_before_after --selftest
+  ✓ seal_area_cohort   --selftest
+  ✓ measure_rho        --selftest
+  ✓ seal_s3_prerun     --selftest
+  ✓ run_s3_psi         --selftest
+  ✓ check_doc_refs          --selftest
+  ✓ check_cohort_packages  (커밋된 패키지 ↔ 원장)
+  ✓ audit_adjudication   (원시 감사 ↔ 판정 원장)
+  ✓ check_doc_refs         (문서가 가리키는 것이 실재하는가)
+  ✓ lhs_ext_materialize     --selftest
+  ✓ lhs_supp_design (보충 · 후막 설계 · 10-06)
+  ✓ lhs_supp_design (봉인 CSV ↔ 해시 · 재검증)
+  ✓ lhs_ext_submit_gate     --selftest
+  ✓ lhs_ext_design (봉인 CSV ↔ 상자 ↔ 해시)
+  ✓ selftest_inventory     (분류·레인·CI 의존)
+  ✗ fast 자기검사 전수     (등재 기반 드라이버)
+      [실패 줄] 1:  ✗ scripts/check_doc_refs.py --selftest  rc=1
+      [실패 줄] 12:     ✗ ★★ SELF-116 문서가 로컬 가지에만 있는 커밋을 인용 = 없는 커밋 {'missing': [], 'cross': [], 'bad_sha': [], 'unsure': []}
+        ✗ scripts/check_doc_refs.py --selftest  rc=1
+        · scripts/lhs_supp_design.py --selftest  21s (느려졌다 — 등재를 slow 로 옮길 것)
+        · scripts/mixer_smoke_blind.py --selftest  55s (느려졌다 — 등재를 slow 로 옮길 것)
+        · scripts/run_network_194_parallel.py --selftest  118s (느려졌다 — 등재를 slow 로 옮길 것)
+        · scripts/step6_surrogate.py --selftest  24s (느려졌다 — 등재를 slow 로 옮길 것)
+        · scripts/supp20_input_receipt.py --selftest  26s (느려졌다 — 등재를 slow 로 옮길 것)
+        · scripts/trace_deps.py --selftest  33s (느려졌다 — 등재를 slow 로 옮길 것)
+      fast 자기검사 189/190 통과  (160s)
+      
+      ── scripts/check_doc_refs.py --selftest  rc=1 ──────────────────────────────
+         check_doc_refs selftest: 48/49 PASS
+           ✗ ★★ SELF-116 문서가 로컬 가지에만 있는 커밋을 인용 = 없는 커밋 {'missing': [], 'cross': [], 'bad_sha': [], 'unsure': []}
+
+✗ 실패가 있다 — 고치고 다시.  ⚠ 이대로 푸시하면 러너의 fail-closed 게이트가
+  사용자의 GPU 런을 막는다 (규율 검사는 런 시작 전에 걸린다).
+gate rc 1 2026-10-15T11:40:58+00:00

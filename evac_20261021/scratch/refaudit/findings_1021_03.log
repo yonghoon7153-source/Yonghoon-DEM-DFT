@@ -1,0 +1,1159 @@
+══ finding 원장 — 792 건 ══
+   open           278
+   claimed_fixed  295
+   verified       210
+   wontfix        9
+
+── 열린 항목 573 건 (open · claimed_fixed) ──
+  [P1] RC6-01   claimed_fixed 11-key schema 가 NaN·잘못된 타입을 통과 + valid_null 계약 충돌
+        회귀: webapp/test_pipeline_provenance.py::43-51   opened_in: docs/reviews/codex_rc6_crosscheck_20260811.md
+  [P1] RC6-04b  claimed_fixed live pre-purge window — parent crash 시 purge 상태가 영구 
+        회귀: webapp/test_pipeline_provenance.py   opened_in: docs/reviews/codex_rc6_crosscheck_20260811.md
+  [P1] RC6-05   claimed_fixed fresh 가 부분 쓰기를 통과 + main/archive 배선 없음
+        회귀: webapp/test_pipeline_provenance.py::RC6-05a, webapp/test_pipeline_provenance.py::RC6-05b   opened_in: docs/reviews/codex_rc6_crosscheck_20260811.md
+  [P1] RC6-06   claimed_fixed STEP3 electronic/ionic/pore/PNM/전체 실패가 무상태
+        회귀: webapp/test_pipeline_provenance.py::55-58   opened_in: docs/reviews/codex_rc6_crosscheck_20260811.md
+  [P2] RC6-Q7   claimed_fixed projection clear 의 코퍼스 영향 미측정 (preflight scanner 없음)
+        회귀: scripts/network_projection_preflight.py   opened_in: docs/reviews/codex_rc6_crosscheck_20260811.md
+  [P2] RC6-Q8   claimed_fixed 리뷰 finding 이 큐에서 사라지는 프로세스 결함 (5회차 4일 누락)
+        회귀: scripts/check_review_findings.py --selftest   opened_in: docs/reviews/codex_rc6_crosscheck_20260811.md
+  [P1] RC7-01   claimed_fixed STEP3 manifest 가 실패·미실행 component 를 누락하고도 complete (
+        회귀: webapp/test_pipeline_provenance.py::RC7-01a-n   opened_in: docs/reviews/codex_rc6_verification_20260811.md
+  [P1] RC7-02   claimed_fixed network 게시 gate 가 thermal 만 검사 — ionic/electronic 실패
+        회귀: webapp/test_pipeline_provenance.py::RC7-02a-m   opened_in: docs/reviews/codex_rc6_verification_20260811.md
+  [P1] RC7-03   claimed_fixed contact fresh 가 metadata-only touch 를 성공으로 판정 (빈 can
+        회귀: webapp/test_pipeline_provenance.py::RC7-03a-l   opened_in: docs/reviews/codex_rc6_verification_20260811.md
+  [P2] RC7-04   claimed_fixed 원장 검사기가 CP949·identity case·가짜 SHA·유령 evidence 에서 강제
+        회귀: scripts/check_review_findings.py   opened_in: docs/reviews/codex_rc6_verification_20260811.md
+  [P2] RC7-05   claimed_fixed STEP3 backend 가 전역 LAST_BACKEND 라 마지막 solve 하나만 표현
+        회귀: webapp/test_pipeline_provenance.py::RC7-05a-c   opened_in: docs/reviews/codex_rc6_verification_20260811.md
+  [P2] RC7-06   claimed_fixed Stage E estimate provenance 가 is_stage_e_key 관리 대상이 
+        회귀: webapp/test_pipeline_provenance.py::RC7-06a-e   opened_in: docs/reviews/codex_rc6_verification_20260811.md
+  [P1] RC7-07   claimed_fixed main 두 경로만 contact 실패 후에도 network·Stage E 를 계속 돌렸다
+        회귀: webapp/test_pipeline_provenance.py::RC7-07   opened_in: docs/reviews/codex_rc6_verification_20260811.md
+  [P1] SR-01    claimed_fixed STEP3 탄소 채널이 조각난 섬유 위에서 돈다 (point-stamp × 6-face — 등
+        회귀: docs/reviews/codex_review_verdict_20260811.md, scripts/fibre_segment_raster.py::selftest, scripts/sr01_realbed_ab.py::selftest, scripts/step3_sigma.py::--selftest-segstamp   opened_in: docs/reviews/selfreview_synthesis_vgcf_ptfe_se_grad_20260811.md
+  [P2] SR-02    open          P3 실측 Δσ_e +22.3±23.1% (12시드) 의 raw·하네스가 커밋에 없어 독립 재
+        회귀: —   opened_in: docs/reviews/selfreview_synthesis_vgcf_ptfe_se_grad_20260811.md
+  [P2] BR-01    open          `resistor-network-solver-LDjW6` 의 Section 7 은 **커밋 안
+        회귀: docs/paper_brittle_caveat.md, scripts/section7_fracture_aware_analysis.py, docs/db/section7_10case_sweep.csv   opened_in: docs/session_20260915_progress.md
+  [P3] SR-03    open          STEP3 CG 전처리기가 Jacobi 뿐 — 2.7M dof 전자 솔브가 CPU 에서 58분
+        회귀: —   opened_in: docs/session_20260811_progress.md
+  [P1] DR3-01   claimed_fixed SDCP 구-스탬프 게이트가 fail-OPEN — 호출자의 blanket except 가 삼켜
+        회귀: scripts/step3_sigma.py::selftest-sdcp-gate-fail-closed   opened_in: docs/reviews/deep_review_20260818_voxsweep.md
+  [P1] DR3-02   claimed_fixed 통제 RVE 구 팔에 d/vox≥2 게이트 부재 — 거친 격자에서 SDCP 입자의 78/48/
+        회귀: scripts/sdcp_stamp_confound.py::selftest-5-sphere-gate   opened_in: docs/reviews/deep_review_20260818_rve.md
+  [P1] DR3-03   claimed_fixed 통제 RVE build() 가 sid.shape[0] 로 세 축 클립 — 비정수 L/vox ×
+        회귀: scripts/sdcp_stamp_confound.py::selftest-4-axis-clip   opened_in: docs/reviews/deep_review_20260818_rve.md
+  [P1] DR3-04   claimed_fixed 판정기의 bridge_um 고정-인자 게이트가 no-op (매니페스트에 키 부재) = 가짜 보
+        회귀: scripts/sdcp_gain_verdict.py::selftest-9-10-11-fixed-factors   opened_in: docs/reviews/deep_review_20260818_voxsweep.md
+  [P2] DR3-05   open          격자 스윕이 σ_VGCF 스윕과 섞인다 — 직경-보존 재척도가 vox 의 함수 (78.5→11
+        회귀: —   opened_in: docs/reviews/deep_review_20260818_voxsweep.md
+  [P2] DR3-06   open          VGCF 는 1-셀 굵기 관이라 기하가 격자 불변이 아니다 — 표현부피 13.83× → 1.9
+        회귀: docs/report_20261021/summary.json (G6 mean · max_origin_spread_pct), docs/data/phase_a_104arms_20260921/arms_primary_v015_20260921/arms/arm_w1_v0.15_o0.json (sigma_vgcf_S_cm 78.5398), docs/data/phase_a_104arms_20260921/arms_primary_v020_20260921/arms/arm_w1_v0.2_o0.json (sigma_vgcf_S_cm 44.1786), docs/data/phase_a_104arms_20260921/arms_primary_v025_20260921/arms/arm_w1_v0.25_o0.json (sigma_vgcf_S_cm 28.2743), docs/reviews/sr01_raster_review_verdict_20260812.md (선분 접촉 ×2.67 기하 추정 · vox 0.4)   opened_in: docs/reviews/deep_review_20260818_voxsweep.md
+  [P2] DR3-07   claimed_fixed SE 점 스탬프가 vox ≤ 0.125 에서 미충전 — 그 팔의 σ_ion·τ·BV 반응면·S
+        회귀: scripts/mpm_webapp_payload.py --no-ion / --no-pore (신설), scripts/check_method_discipline.py 규칙 H (argparse help)   opened_in: docs/reviews/deep_review_20260818_voxsweep.md
+  [P2] DR3-08   claimed_fixed 격자 스윕의 첫 병목은 VRAM 이 아니라 호스트 RAM (COO 조립 int64)
+        회귀: scripts/sdcp_next_1234.sh STEP 4 RAM 게이트 (dof 실측 기반), docs/data/prereg_v2/phase_ledger_grid.json §sphere_stamp_grid_convergence.dof_measured   opened_in: docs/reviews/deep_review_20260818_voxsweep.md
+  [P1] FA-01    claimed_fixed `--fibre` 없는 모든 payload 런에서 STEP3 가 통째로 조용히 죽어 있었다 (
+        회귀: scripts/check_method_discipline.py --selftest (J-1, J-2 음성 대조), scripts/check_method_discipline.py (규칙 J 상주)   opened_in: docs/reviews/fable_audit_code_20260820.md
+  [P1] FA-02    claimed_fixed prereg 판정기의 고정-인자 게이트에 "기록 없음" 구멍 6필드 (h0 오판 실측 재현)
+        회귀: scripts/sdcp_gain_verdict.py --selftest (㉒ 실제 JSON 6/6)   opened_in: docs/reviews/fable_audit_code_20260820.md
+  [P2] FA-03    claimed_fixed 상별 부피 원장 러너의 SKIP 캐시가 BRIDGE_UM·SDCP_D 를 키에 안 넣는다 (H
+        회귀: scripts/sdcp_phase_ledger.sh TAG 규칙 (기본값 = 옛 파일명 불변, 비기본 = _b###/_d###)   opened_in: docs/reviews/fable_audit_code_20260820.md
+  [P2] FA-04    claimed_fixed "사본 일치는 selftest 가 대조한다" 가 동어반복 — 오프라인 사본이 한 번도 검사된 
+        회귀: scripts/ml_design_structure.py --selftest (오프라인 사본 직접 대조 + 음성 대조)   opened_in: docs/reviews/fable_audit_code_20260820.md
+  [P1] FA-05    claimed_fixed 철회값이 살아 있는 UI·덱 생성기·교육 문서로 새고 있었다 (26곳) — 정본성이 바깥으로 
+        회귀: scripts/check_review_findings.py --ban-sweep, scripts/check_review_findings.py --selftest (16~21, 음성 대조 포함)   opened_in: docs/reviews/fable_audit_docs_20260820.md
+  [P1] CDXIJ-2  open          판정기가 causal-input 계약·정확한 8팔·origin pairing·prereg 명목
+        회귀: —   opened_in: docs/reviews/codex_crosscheck_IJ_20260820.md
+  [P1] CDXIJ-4  claimed_fixed ban-sweep 범위 밖 누수 — 웹앱이 서빙하는 덱 JSON 과 러너 셸이 철회값을 현행 
+        회귀: scripts/check_review_findings.py --ban-sweep, scripts/check_review_findings.py --selftest   opened_in: docs/reviews/codex_crosscheck_IJ_20260820.md
+  [P1] CDXIJ-5  claimed_fixed 규칙 J 가 계산 없는 자가보고를 통과시켰다 (status 문자열만 봄)
+        회귀: scripts/check_method_discipline.py --selftest (J-3a/b/c 음성 대조)   opened_in: docs/reviews/codex_crosscheck_IJ_20260820.md
+  [P2] CDXIJ-7  claimed_fixed 원장 캐시 키가 단사가 아니고 report 가 전역 직경을 써 비기본 직경을 3.375배 과대
+        회귀: scripts/sdcp_phase_ledger_match.py --selftest (8/8, 태그 충돌 쌍 판별 포함)   opened_in: docs/reviews/codex_crosscheck_IJ_20260820.md
+  [P1] CDXIJ-8  claimed_fixed 판정기가 backend 를 **component 정본이 아니라 마지막 solve** 에서 읽어
+        회귀: scripts/sdcp_gain_verdict.py --selftest (㉔ SBE electronic=gpu · DBE electronic=cpu → HOLD)   opened_in: docs/reviews/codex_crosscheck_IJ_20260820.md
+  [P1] CDXIJ-9  claimed_fixed seminar 덱의 철회 배너를 **UI 가 렌더하지 않는다** — 화면과 PPTX 는 여전히
+        회귀: scripts/check_review_findings.py --selftest  (22a~22d = pptx 음성 대조 4건), scripts/check_review_findings.py            (리포 실물 스윕 누수 0), webapp/app.py /api/seminar/slides · /api/seminar/deck (historical=1 없이는 거부)   opened_in: docs/reviews/codex_crosscheck_IJ_20260820.md
+  [P1] CDXIJ-10 claimed_fixed 도핑 런 전 최소 계약 4항목 (정확한 팔 계약 · pair identity · 실험 전용 c
+        회귀: scripts/sdcp_gain_verdict.py --selftest (㉕a~e 팔 계약·seal · ㉖a~f digest)   opened_in: docs/reviews/codex_crosscheck_IJ_20260820.md
+  [P1] CDXIJ-11 claimed_fixed 규칙 J 의 스모크가 **생산이 안 가는 길**(--se-proxy → matplotlib)로
+        회귀: scripts/check_method_discipline.py --selftest (J-1, J-3a~d)   opened_in: docs/reviews/codex_crosscheck_IJ_20260820.md
+  [P2] CDXIJ-12 claimed_fixed 규율 검사기 셋이 전부 **수동** — 잊으면 없는 것과 같다 (Codex ⑨)
+        회귀: .github/workflows/discipline.yml, scripts/check_review_findings.py --selftest, scripts/check_method_discipline.py --selftest, scripts/sdcp_gain_verdict.py --selftest   opened_in: docs/reviews/codex_crosscheck_IJ_20260820.md
+  [P1] FA-06    claimed_fixed 판정기가 **실험의 독립변수를 결함으로 신고**했다 — 침대 정체성 필드를 침대 사이에서 비교
+        회귀: scripts/sdcp_gain_verdict.py --selftest  (㉙a~d = FA-06 음성 대조), scripts/sdcp_gain_verdict.py --selftest  (㉖a·㉖b·㉖b2 = 고쳐 쓴 전제)   opened_in: docs/reviews/fable_audit_code_20260820.md
+  [P1] CDXR2-1  claimed_fixed `phase_current_share` 가 **플레이트 소산을 빠뜨려** 자기 docstrin
+        회귀: scripts/step3_sigma.py --selftest   opened_in: docs/reviews/crossreview_ptfe_8arm_20260824.md
+  [P1] CDXR2-2  open          `--fibre-dia` 가 **raster 에 배선돼 있지 않고** 로드가 solve **뒤
+        회귀: —   opened_in: docs/reviews/crossreview_ptfe_8arm_20260824.md
+  [P2] CDXR2-3  claimed_fixed 비의 표준오차가 **상대 %** 인데 상수·키·출력이 전부 `%p` 로 표기된다 (게이트는 자
+        회귀: scripts/sdcp_gain_verdict.py --selftest   opened_in: docs/reviews/crossreview_ptfe_8arm_20260824.md
+  [P1] CDXR2-4  claimed_fixed 이온축 **false-green** — payload 가 미수렴을 `complete` 로 적고
+        회귀: scripts/sdcp_gain_verdict.py --selftest   opened_in: docs/reviews/crossreview_ptfe_8arm_20260824.md
+  [P1] CDXR2-5  open          러너가 완전한 fail-fast 가 아니었다 — fresh 팔 미검사 · `status:fai
+        회귀: scripts/sr01_stamp_compare.py --selftest, scripts/sdcp_gain_verdict.py --selftest   opened_in: docs/reviews/crossreview_ptfe_8arm_20260824.md
+  [P1] CDXR3-1  claimed_fixed 봉인이 결과를 봉인하지 못했다 — 모드 조합 우회 · preamble 노출 · SE 역산 누설
+        회귀: scripts/sdcp_gain_verdict.py --selftest   opened_in: docs/reviews/crossreview_ptfe_8arm_20260824.md
+  [P1] CDXR3-4  claimed_fixed 이온 수렴 봉인이 **모순·반쪽** 상태를 통과시켰다 (CDXR2-4 fix 의 잔여 구멍)
+        회귀: scripts/sdcp_gain_verdict.py --selftest   opened_in: docs/reviews/crossreview_ptfe_8arm_20260824.md
+  [P1] CDXR3-7  claimed_fixed `ARMS` 가 사전등록 8팔 계약을 **런타임에 재정의**했다 (자기참조 봉인)
+        회귀: scripts/sdcp_gain_vox015_8arm.sh   opened_in: docs/reviews/crossreview_ptfe_8arm_20260824.md
+  [P1] CDXR3-2  claimed_fixed `check_arm` 은 producer nonzero exit 를 **대체하지 못한다** (
+        회귀: scripts/sr01_stamp_compare.py --selftest, scripts/check_method_discipline.py --selftest   opened_in: docs/reviews/codex_absorb_verdict_20260825.md
+  [P1] CDXR3-6  claimed_fixed ⚠⚠ 플레이트가 **절연 고체를 관통**해 더 깊은 도체에 붙었다 — σ_e 절대값이 바뀐다
+        회귀: scripts/step3_sigma.py --selftest   opened_in: docs/reviews/codex_absorb_verdict_20260825.md
+  [P1] CDXR3-8  claimed_fixed 규율 selftest 가 `check_all`·CI 에서 **안 돌고 있었다** — 규칙 K 
+        회귀: scripts/check_method_discipline.py --selftest   opened_in: docs/reviews/codex_absorb_verdict_20260825.md
+  [P1] CDXR3-3  claimed_fixed 러너가 요청한 규약과 payload 가 적용한 규약이 **대조되지 않았다** — physics
+        회귀: scripts/sdcp_gain_verdict.py --selftest, scripts/mpm_webapp_payload.py --selftest-temperature   opened_in: docs/reviews/codex_absorb_verdict_20260825.md
+  [P1] CDXR3-5  claimed_fixed `_FIXED_FIELDS` 통합은 **syntactic single source 일 뿐** 
+        회귀: scripts/sdcp_gain_verdict.py --selftest   opened_in: docs/reviews/codex_absorb_verdict_20260825.md
+  [P1] SELF-01  claimed_fixed `vox_um` 이 매니페스트에 없어 `physics_protocol_id` 가 모든 런에서 
+        회귀: scripts/check_method_discipline.py --selftest, scripts/sdcp_gain_verdict.py --selftest   opened_in: docs/reviews/codex_absorb_verdict_20260825.md
+  [P1] R3CX-01  claimed_fixed `check_arm` 의 `_STEP3_PATHS` 가 `metrics` 오타 — **모든 실
+        회귀: scripts/run_contract.py --selftest, scripts/sdcp_gain_verdict.py --selftest, scripts/check_method_discipline.py --selftest   opened_in: docs/reviews/codex_absorb_verdict_20260825.md
+  [P1] R3CX-02  claimed_fixed 봉인 전에 producer stdout 이 σ_e/σ_ion 을 그대로 노출
+        회귀: scripts/run_contract.py --selftest, scripts/sdcp_gain_verdict.py --selftest, scripts/check_method_discipline.py --selftest   opened_in: docs/reviews/codex_absorb_verdict_20260825.md
+  [P1] R3CX-03  claimed_fixed 규약 id 가 canonical identity 가 아니라 **신뢰된 문자열**
+        회귀: scripts/run_contract.py --selftest, scripts/sdcp_gain_verdict.py --selftest, scripts/check_method_discipline.py --selftest   opened_in: docs/reviews/codex_absorb_verdict_20260825.md
+  [P1] R3CX-04  claimed_fixed `component_plan`·`ptfe_cells_observed` 가 기록만 되고 소비되지
+        회귀: scripts/run_contract.py --selftest, scripts/sdcp_gain_verdict.py --selftest, scripts/check_method_discipline.py --selftest   opened_in: docs/reviews/codex_absorb_verdict_20260825.md
+  [P1] R3CX-05  claimed_fixed producer·`check_arm` 의 수치·backend validator 가 권위적이지 
+        회귀: scripts/run_contract.py --selftest, scripts/sdcp_gain_verdict.py --selftest, scripts/check_method_discipline.py --selftest   opened_in: docs/reviews/codex_absorb_verdict_20260825.md
+  [P1] R3CX-06  claimed_fixed `FIELD_CONTRACT` 가 single source 가 아니고 **양방향**으로 틀림
+        회귀: scripts/run_contract.py --selftest, scripts/sdcp_gain_verdict.py --selftest, scripts/check_method_discipline.py --selftest   opened_in: docs/reviews/codex_absorb_verdict_20260825.md
+  [P1] R3CX-07  claimed_fixed plate 회귀의 사각지대 4종
+        회귀: scripts/run_contract.py --selftest, scripts/sdcp_gain_verdict.py --selftest, scripts/check_method_discipline.py --selftest   opened_in: docs/reviews/codex_absorb_verdict_20260825.md
+  [P1] R3CX-08  claimed_fixed J/K/L 과 돌연변이 배터리가 '의도한 실패' 를 보증하지 않음
+        회귀: scripts/run_contract.py --selftest, scripts/sdcp_gain_verdict.py --selftest, scripts/check_method_discipline.py --selftest   opened_in: docs/reviews/codex_absorb_verdict_20260825.md
+  [P2] R3CX-09  claimed_fixed 진단 런이 생산 이름공간을 쓸 수 있었다
+        회귀: scripts/run_contract.py --selftest, scripts/sdcp_gain_verdict.py --selftest, scripts/check_method_discipline.py --selftest   opened_in: docs/reviews/codex_absorb_verdict_20260825.md
+  [P1] R4CX-01  claimed_fixed 봉인 producer 가 `ideal_R0` 라는 **다른 이름으로 σ_e 를 노출**
+        회귀: scripts/run_contract.py --selftest, scripts/sdcp_gain_verdict.py --selftest, scripts/step3_sigma.py --selftest   opened_in: docs/reviews/codex_absorb_verdict_20260825.md
+  [P1] R4CX-02  claimed_fixed plan·PTFE·PNM·비전자 수치 계약이 **fail-open** (실제-read 16팔이
+        회귀: scripts/run_contract.py --selftest, scripts/sdcp_gain_verdict.py --selftest, scripts/step3_sigma.py --selftest   opened_in: docs/reviews/codex_absorb_verdict_20260825.md
+  [P1] R4CX-03  claimed_fixed 러너의 resolved 물리 설정이 봉인되지 않는다 (argparse 축약·숨은 env)
+        회귀: scripts/run_contract.py --selftest, scripts/sdcp_gain_verdict.py --selftest, scripts/step3_sigma.py --selftest   opened_in: docs/reviews/codex_absorb_verdict_20260825.md
+  [P1] R4CX-04  claimed_fixed backend 가 `requested` 로 **실제 사용값을 위장**
+        회귀: scripts/run_contract.py --selftest, scripts/sdcp_gain_verdict.py --selftest, scripts/step3_sigma.py --selftest   opened_in: docs/reviews/codex_absorb_verdict_20260825.md
+  [P1] R4CX-05  claimed_fixed `FIELD_CONTRACT` 가 raw 축·타입·독립 불변량의 단일 출처가 아니다
+        회귀: scripts/run_contract.py --selftest, scripts/sdcp_gain_verdict.py --selftest, scripts/step3_sigma.py --selftest   opened_in: docs/reviews/codex_absorb_verdict_20260825.md
+  [P1] R4CX-06  claimed_fixed 규칙 K 와 배터리가 잘못된 적발을 성공으로 센다
+        회귀: scripts/run_contract.py --selftest, scripts/sdcp_gain_verdict.py --selftest, scripts/step3_sigma.py --selftest   opened_in: docs/reviews/codex_absorb_verdict_20260825.md
+  [P1] R4CX-07  claimed_fixed 반응 솔버 두 분기가 회귀 봉인 밖 (구현은 옳으나 증인이 없다)
+        회귀: scripts/run_contract.py --selftest, scripts/sdcp_gain_verdict.py --selftest, scripts/step3_sigma.py --selftest   opened_in: docs/reviews/codex_absorb_verdict_20260825.md
+  [P2] R4CX-08  claimed_fixed 진단 namespace 접미사가 **문자열**이라 junction/symlink 로 우회
+        회귀: scripts/run_contract.py --selftest, scripts/sdcp_gain_verdict.py --selftest, scripts/step3_sigma.py --selftest   opened_in: docs/reviews/codex_absorb_verdict_20260825.md
+  [P1] SELF-02  claimed_fixed CLI 회계 초판이 **두 겹의 부분집합 필터**로 가짜 초록을 냈다 (규칙 M)
+        회귀: scripts/check_method_discipline.py --selftest, scripts/run_contract.py --selftest   opened_in: docs/reviews/next_steps_20260825.md
+  [P1] SELF-03  claimed_fixed `--dilate-z`·SE proxy 가 **규약 축 없이** σ 침대를 바꾸고 있었다
+        회귀: scripts/run_contract.py --selftest, scripts/sdcp_gain_verdict.py --selftest, scripts/check_method_discipline.py --selftest   opened_in: docs/reviews/next_steps_20260825.md
+  [P1] SELF-04  claimed_fixed 규약 축 7개가 `FIELD_CONTRACT` 밖이라 **cross-dir 에서 자유롭게 달라
+        회귀: scripts/sdcp_gain_verdict.py --selftest   opened_in: docs/reviews/next_steps_20260825.md
+  [P1] SELF-05  claimed_fixed `--se` 를 빠뜨리기만 해도 SE 점구름이 **합성**되는데 기록이 없었다
+        회귀: scripts/sdcp_gain_verdict.py --selftest   opened_in: docs/reviews/next_steps_20260825.md
+  [P1] SELF-06  claimed_fixed 원장 SHA 검사가 **객체 존재**만 봐서 리베이스 잔재를 통과시켰다
+        회귀: scripts/check_review_findings.py --selftest, scripts/make_review_bundle.sh   opened_in: docs/reviews/next_steps_20260825.md
+  [P1] R5CX-01  claimed_fixed `P2_EXTRA` allowlist 가 **두 단계 shell 확장**으로 우회된다
+        회귀: scripts/run_contract.py --selftest, scripts/sdcp_gain_verdict.py --selftest, scripts/check_method_discipline.py --selftest   opened_in: docs/reviews/codex_r5_verdict_20260825.md
+  [P1] R5CX-02  claimed_fixed editable `schema_version` 한 줄이 p2 증거 계약을 끈다
+        회귀: scripts/run_contract.py --selftest, scripts/sdcp_gain_verdict.py --selftest, scripts/check_method_discipline.py --selftest   opened_in: docs/reviews/codex_r5_verdict_20260825.md
+  [P1] R5CX-03  claimed_fixed 현재 runner 의도(vox·구경·periodic·SHA·input)가 cache/fresh
+        회귀: scripts/run_contract.py --selftest, scripts/sdcp_gain_verdict.py --selftest, scripts/check_method_discipline.py --selftest   opened_in: docs/reviews/codex_r5_verdict_20260825.md
+  [P1] R5CX-04  claimed_fixed 정확한 `{0, vox/2}³` factorial 이 아니라 **임의의 8점**을 받는다
+        회귀: scripts/run_contract.py --selftest, scripts/sdcp_gain_verdict.py --selftest, scripts/check_method_discipline.py --selftest   opened_in: docs/reviews/codex_r5_verdict_20260825.md
+  [P1] R5CX-05  claimed_fixed 계획된 PNM·collector 가 **status-only** 증거로 통과한다
+        회귀: scripts/run_contract.py --selftest, scripts/sdcp_gain_verdict.py --selftest, scripts/check_method_discipline.py --selftest   opened_in: docs/reviews/codex_r5_verdict_20260825.md
+  [P1] R5CX-06  claimed_fixed ★ canonical NO-GO — 인용 금지 선언과 **정본 원장이 반대**다
+        회귀: scripts/run_contract.py --selftest, scripts/sdcp_gain_verdict.py --selftest, scripts/check_method_discipline.py --selftest   opened_in: docs/reviews/codex_r5_verdict_20260825.md
+  [P1] R5CX-07  claimed_fixed registry·mutation harness 가 여전히 pass-mutant 를 성공으로 센
+        회귀: scripts/run_contract.py --selftest, scripts/sdcp_gain_verdict.py --selftest, scripts/check_method_discipline.py --selftest   opened_in: docs/reviews/codex_r5_verdict_20260825.md
+  [P2] R5CX-08  claimed_fixed 기각 receipt 가 판정에 **소비되지 않는다**
+        회귀: scripts/run_contract.py --selftest, scripts/sdcp_gain_verdict.py --selftest, scripts/check_method_discipline.py --selftest   opened_in: docs/reviews/codex_r5_verdict_20260825.md
+  [P2] R5CX-09  open          SWCNT plate 회귀가 **생산 phase map 을 안 쓴다**
+        회귀: scripts/run_contract.py --selftest, scripts/sdcp_gain_verdict.py --selftest, scripts/check_method_discipline.py --selftest   opened_in: docs/reviews/codex_r5_verdict_20260825.md
+  [P2] R5CX-10  claimed_fixed blind log 가 σ_e **파생 regime bucket** 을 노출한다
+        회귀: scripts/run_contract.py --selftest, scripts/sdcp_gain_verdict.py --selftest, scripts/check_method_discipline.py --selftest   opened_in: docs/reviews/codex_r5_verdict_20260825.md
+  [P2] R5CX-11  claimed_fixed standalone bundle 전달이 이번 자료로 **확인되지 않았다**
+        회귀: scripts/run_contract.py --selftest, scripts/sdcp_gain_verdict.py --selftest, scripts/check_method_discipline.py --selftest   opened_in: docs/reviews/codex_r5_verdict_20260825.md
+  [P1] SELF-07  open          원고 Table S3 의 **유일한 값**이 `hold` 상태였다
+        회귀: scripts/check_review_findings.py --ban-sweep   opened_in: docs/reviews/codex_r5_verdict_20260825.md
+  [P1] SELF-08  claimed_fixed 철회값 스윕이 **생성기를 안 읽어** 원고 고침이 내구적이지 않았다 (SELF-07 의 나머
+        회귀: scripts/check_review_findings.py --selftest, scripts/check_review_findings.py --ban-sweep   opened_in: docs/reviews/codex_r5_verdict_20260825.md
+  [P1] SELF-09  claimed_fixed 배터리를 제대로 돌리자 **R5-CX-03 의 회귀가 없었다** + 배터리 기대집합 5행 오류
+        회귀: scripts/sr01_stamp_compare.py --selftest, scripts/mutation_sweep_20260825.py   opened_in: docs/reviews/codex_review_request_r6_20260825.md
+  [P1] SELF-10  open          CL-39 의 **수렴 판정에 판별력이 없다** — 배치평균은 미수렴 격자에서도 무편향이다
+        회귀: docs/reviews/qb2_sdcp_contact_quantization_20260825.md   opened_in: docs/reviews/qb2_sdcp_contact_quantization_20260825.md
+  [P1] SELF-11  open          Q-B2 후보 — SDCP 만 **접촉 양자화 보정을 안 받은 상**이고, 이득 전체가 그 상
+        회귀: scripts/step3_sigma.py --selftest, docs/reviews/sdcp_bridge_prereg_20260825.md   opened_in: docs/reviews/qb2_sdcp_contact_quantization_20260825.md
+  [P1] R19-01   claimed_fixed 세미나 재작성이 **긍정 계약을 잃었다** — `/api/seminar/deck` 은 검사가 
+        회귀: webapp/test_seminar_page.py   opened_in: docs/reviews/codex_r19_verdict_20260901.md
+  [P1] R19-02   claimed_fixed 근거를 슬라이드 → platen 문서로 옮긴 것은 **바꿔치기**였다
+        회귀: webapp/test_seminar_page.py   opened_in: docs/reviews/codex_r19_verdict_20260901.md
+  [P1] R19-03   claimed_fixed 화면 검사가 HTML 문자열만 훑어 `renderDeck()` 을 들어내도 초록이었다
+        회귀: webapp/test_seminar_dom.mjs   opened_in: docs/reviews/codex_r19_verdict_20260901.md
+  [P1] R19-04   claimed_fixed AST 검사도 **소스**를 읽는다 — GPU 대입 뒤에 `used = None` 을 끼워도 
+        회귀: webapp/test_pipeline_provenance.py   opened_in: docs/reviews/codex_r19_verdict_20260901.md
+  [P1] R19-05   claimed_fixed `check_doc_refs` 가 SHA **앞 7~8자만** 비교해 틀린 토큰을 통과시켰다
+        회귀: scripts/check_doc_refs.py --selftest, scripts/check_doc_refs.py   opened_in: docs/reviews/codex_r19_verdict_20260901.md
+  [P1] R19-06   claimed_fixed 자연어 면제가 **무관한 SHA 를 가려** 정말 없는 커밋을 통과시켰다
+        회귀: scripts/check_doc_refs.py --selftest   opened_in: docs/reviews/codex_r19_verdict_20260901.md
+  [P2] R19-07   claimed_fixed allowlist 22건의 **이유가 확인 불가능한 산문**이었고 여섯 건이 사실과 달랐다
+        회귀: scripts/check_doc_refs.py --selftest, scripts/check_doc_refs.py   opened_in: docs/reviews/codex_r19_verdict_20260901.md
+  [P1] R19-08   claimed_fixed `--selftest` 진입점 101개 중 **72개가 어디서도 안 돌았다** — 둘은 실제로
+        회귀: scripts/check_selftest_inventory.py --selftest, scripts/check_selftest_inventory.py, scripts/check_selftest_inventory.py --run-fast   opened_in: docs/reviews/codex_r19_verdict_20260901.md
+  [P2] R19-09   claimed_fixed CI 가 flask·requests 를 안 깔아 **웹앱 테스트 5개가 깨끗한 러너에서 imp
+        회귀: scripts/check_selftest_inventory.py   opened_in: docs/reviews/codex_r19_verdict_20260901.md
+  [P1] R19-10   claimed_fixed 세미나 화면이 **배너 없는 14장짜리 옛 덱**을 보여주고 있었다 (pptx 는 15장)
+        회귀: webapp/test_seminar_page.py   opened_in: docs/reviews/codex_r19_verdict_20260901.md
+  [P2] SELF-12  open          사전등록의 설계 근거 `0.30 %` 가 **인용한 코호트에서 나오지 않는다**
+        회귀: scripts/check_doc_refs.py, docs/data/w4_ptfe_centerline_20260827/cohort_manifest.json   opened_in: docs/reviews/ion_r_sensitivity_prereg_20260831.md
+  [P2] SELF-13  open          복셀 솔버의 **상별 σ 여섯 칸이 전부 자릿수 hook** 이다 — 측정에 묶인 것이 하나도
+        회귀: scripts/step3_sigma.py   opened_in: docs/reviews/codex_review_request_r20_phase_sigma_20260902.md
+  [P1] R20-01   claimed_fixed CL-48 을 **헤드라인 규약에 일반화**해 썼다 — 그 팔은 centerline 을 시험하
+        회귀: docs/reviews/sigma_closure_sweep_prereg_20260902.md, docs/reviews/claims.json   opened_in: docs/reviews/codex_review_request_r20_phase_sigma_20260902.md
+  [P1] R20-02   claimed_fixed CL-48 최종 수치가 **원자료로 재현되지 않는다** — 커밋된 파일은 옛 값·SBE 한 행
+        회귀: docs/data/cl48_sg7854_arm0_20260902/p2_SBE_sph_a0.json, docs/data/cl48_sg7854_arm0_20260902/p2_DBE_sph_a0.json, docs/data/cl48_sg7854_arm0_20260902/verdict_receipt.txt, scripts/sdcp_gain_verdict.py   opened_in: docs/reviews/codex_review_request_r20_phase_sigma_20260902.md
+  [P1] R20-03   open          Bazzoun digest 의 **100배 단위 오류**가 우리 논거 하나를 떠받치고 있었다
+        회귀: docs/lit_bazzoun2026_dem_fem_rnm.md   opened_in: docs/reviews/codex_review_request_r20_phase_sigma_20260902.md
+  [P1] R20-04   open          `83 → 100` 유도 서사가 거짓이고, **83 으로 바꾸자는 내 권고도 반증**됐다
+        회귀: scripts/step3_sigma.py   opened_in: docs/reviews/codex_review_request_r20_phase_sigma_20260902.md
+  [P1] R20-05   open          비가 공통 스케일로 보호된다는 논거가 **반증** — 불확실성은 두 독립 대비에 있다
+        회귀: scripts/step3_sigma.py   opened_in: docs/reviews/codex_review_request_r20_phase_sigma_20260902.md
+  [P2] R20-06   open          접촉망 솔버를 `physical ground truth` 라 부르는 것은 과장이다
+        회귀: scripts/network_conductivity.py   opened_in: docs/reviews/codex_review_request_r20_phase_sigma_20260902.md
+  [P2] SELF-14  claimed_fixed 규칙 L 의 대입/참조 추출이 **우연한 표기법**에 기대고 있었다 — 한쪽은 조용히 눈이 멀
+        회귀: scripts/check_method_discipline.py --selftest   opened_in: docs/reviews/sigma_closure_sweep_prereg_20260902.md
+  [P1] SELF-15  open          읽지 않는 축 env 가 조용히 무시돼 **옳은 숫자를 내며 아무것도 시험하지 않는 런**이 
+        회귀: scripts/check_method_discipline.py --selftest   opened_in: docs/reviews/sigma_closure_sweep_prereg_20260902.md
+  [P1] SELF-16  open          디렉터리 태그가 사전등록 격자의 두 점을 **같은 이름**으로 만든다 (`2.5` ↔ `25`
+        회귀: scripts/check_method_discipline.py --selftest, scripts/run_contract.py --selftest   opened_in: docs/reviews/sigma_closure_sweep_prereg_20260902.md
+  [P2] AUD-01   open          머리 배너의 **파일 전체 면제**가 300 파일 안에 표지 없는 철회값 125 건을 덮고 있
+        회귀: scripts/check_review_findings.py --selftest   opened_in: docs/reviews/claims.json
+  [P1] AUD-02   open          예측기 탄소 앵커가 **리포에 없는 논문**을 인용했다 — C65 σ_e 는 실측으로 갈아탔고
+        회귀: webapp/test_predictor_ui_and_sigma_grain.py   opened_in: docs/webapp_v3_design.md
+  [P1] AUD-03   open          예측기가 **매트릭스 실측값**을 복합전극 σ_e 하한으로 쓰고 AM 활성률을 100 % 로 
+        회귀: webapp/test_predictor_ui_and_sigma_grain.py   opened_in: docs/reviews/codex_request_v3_audit_20260909.md
+  [P1] AUD-04   open          dead-AM 매핑이 **인용한 논문 자신과도 안 맞는다** (문턱에서 95~100 % 활성)
+        회귀: webapp/test_predictor_ui_and_sigma_grain.py   opened_in: docs/reviews/codex_request_v3_audit_20260909.md
+  [P1] AUD-05   claimed_fixed 생성기의 ±2줄 표지 규칙이 **소스 주석과 화면 출력을 구분하지 않는다**
+        회귀: scripts/check_review_findings.py --selftest, webapp/test_ledger_view.py   opened_in: docs/reviews/codex_request_v3_audit_20260909.md
+  [P2] AUD-06   claimed_fixed `BAN_FROZEN_REPRODUCERS` 가 **경로만** 지정해 가드가 사라져도 면제가 
+        회귀: scripts/check_review_findings.py --selftest   opened_in: docs/reviews/codex_request_v3_audit_20260909.md
+  [P2] AUD-07   claimed_fixed 감사 finding 에 **기계 판독 가능한 검증 상태가 없다**
+        회귀: scripts/check_audit_adjudication.py --selftest, scripts/check_audit_adjudication.py   opened_in: docs/reviews/codex_request_v3_audit_20260909.md
+  [P2] SELF-17  open          런 receipt 의 `code_sha` 부재를 **예외 등재로 정상화**했다 — 한 줄 pu
+        회귀: scripts/check_cohort_packages.py   opened_in: docs/session_20260910_progress.md
+  [P1] SELF-18  open          `quotation_ban` 스윕이 **정본 litdb 브랜치를 원리적으로 못 본다** — 철
+        회귀: scripts/check_review_findings.py   opened_in: docs/session_20260911_progress.md
+  [P2] SELF-19  open          런 receipt 에 **봉인 축 `plate_rule` 칸이 없다** — 원자료를 지웠으면 
+        회귀: scripts/phase_a_arms_from_payload.py   opened_in: docs/session_20260911_progress.md
+  [P1] PA12-01  claimed_fixed 수렴 계약이 fail-open 이다 — 실제 잔차 키 `cg_resid` 를 **버리고**, 
+        회귀: scripts/phase_a_arms_from_payload.py   opened_in: docs/reviews/codex_verdict_phase_a_adapter_20260912.md
+  [P1] PA12-02  claimed_fixed receipt 만 보고 payload 와 **대조하지 않는다** — receipt 정상 + p
+        회귀: scripts/phase_a_arms_from_payload.py   opened_in: docs/reviews/codex_verdict_phase_a_adapter_20260912.md
+  [P1] PA12-03  claimed_fixed origin 이 **등록 집합인지 검사하지 않는다** — 잘못된 h 의 반-복셀을 승인하고, 
+        회귀: scripts/phase_a_arms_from_payload.py   opened_in: docs/reviews/codex_verdict_phase_a_adapter_20260912.md
+  [P1] PA12-04  open          조성 교차확인이 **독립이 아니다** — 같은 producer 가 쓴 라벨 두 개를 맞춰본다
+        회귀: scripts/phase_a_arms_from_payload.py   opened_in: docs/reviews/codex_verdict_phase_a_adapter_20260912.md
+  [P1] PA12-05  claimed_fixed 어댑터가 **QC 를 전달할 수 없다** — `role` 이 항상 `primary` 이고 같은
+        회귀: scripts/phase_a_arms_from_payload.py   opened_in: docs/reviews/codex_verdict_phase_a_adapter_20260912.md
+  [P1] PA12-06  claimed_fixed 같은 out 을 재사용하면 **옛 팔이 결손을 메운다** — 현재 입력 목록이 판정 대상과 일
+        회귀: scripts/phase_a_arms_from_payload.py   opened_in: docs/reviews/codex_verdict_phase_a_adapter_20260912.md
+  [P1] PA12-07  claimed_fixed 판정기가 QC **전수**를 요구하지 않고 primary **중복**을 파일명 순서로 고른다
+        회귀: scripts/phase_a_order_verdict.py::--selftest (23/23), scripts/phase_a_order_verdict.py::replay_gate, scripts/phase_a_order_verdict.py::verdict   opened_in: docs/reviews/codex_verdict_phase_a_adapter_20260912.md
+  [P1] PA12-08  claimed_fixed `add_rng_per_phase` 봉인이 **판정 경로까지 연결되지 않는다**
+        회귀: scripts/phase_a_arms_from_payload.py   opened_in: docs/reviews/codex_verdict_phase_a_adapter_20260912.md
+  [P2] PA12-09  open          음성대조 ⑨ 가 **장식이었다** — origin guard 를 퇴행시켜도 selftest 1
+        회귀: scripts/phase_a_arms_from_payload.py   opened_in: docs/reviews/codex_verdict_phase_a_adapter_20260912.md
+  [P2] DESC-02W open          웹앱 calc_tortuosity (dem_analysis_core.py:598–615) 가 
+        회귀: —   opened_in: docs/reviews/codex_verdict_lhs_descriptors_20260913.md
+  [P2] DESC-04  claimed_fixed `tortuosity_dijkstra_SE` 라는 **이름만으로 통계량·경계·절단이 정해지지 
+        회귀: scripts/lhs_design_dataset.py::selftest ㉓   opened_in: docs/reviews/codex_verdict_lhs_descriptors_20260913.md
+  [P3] DESC-04W open          웹앱 τ 이름 (tortuosity_dijkstra_SE 등 3 키) 이 통계량 · 경계 · 
+        회귀: —   opened_in: docs/reviews/codex_verdict_lhs_descriptors_20260913.md
+  [P2] DESC-06  open          덤프를 읽었다고 **같은 최종 프레임**인 것은 아니다
+        회귀: scripts/parse_liggghts.py, scripts/dem_analysis_core.py   opened_in: docs/reviews/codex_verdict_lhs_descriptors_20260913.md
+  [P2] DESC-07  claimed_fixed 일곱 열을 **일곱 독립 회귀**로 세면 안 된다 — 두 개는 정의 종속
+        회귀: scripts/lhs_design_dataset.py::selftest, scripts/lhs_design_dataset.py   opened_in: docs/reviews/codex_verdict_lhs_descriptors_20260913.md
+  [P2] DESC-08  open          291 코퍼스와 **그대로 합치면 안 된다** — `d_am` 과 MPM/DEM 혼합이 현행에
+        회귀: scripts/ml_design_structure.py, docs/data/design_performance_corpus.csv   opened_in: docs/reviews/codex_verdict_lhs_descriptors_20260913.md
+  [P2] SELF-21  open          내가 **같은 문서 뒷부분의 저자 정정을 건너뛰고** 철회된 권고를 인용했다
+        회귀: docs/reviews/lhs_local_gap_verdict_20260903.md   opened_in: docs/reviews/codex_verdict_lhs_descriptors_20260913.md
+  [P2] SELF-22  claimed_fixed 세팅 스크립트에 `pyflakes` 가 빠져 **게이트가 오탐 114건으로 런을 세웠다**
+        회귀: scripts/setup_gpu_server.sh, scripts/check_undefined_names.py   opened_in: docs/session_20260911_progress.md
+  [P2] L1-04    claimed_fixed `contact_area` 는 **기하 교차면적**인데 `hertz` 채널로 읽힌다 (1.98
+        회귀: scripts/lhs_descriptor_harvest.py   opened_in: docs/reviews/codex_verdict_dem_stack_L1_20260913.md
+  [P2] L1-05    open          `eps_union` 은 정확한 union 이 아니라 **pair-only 차감** — 100
+        회귀: scripts/dem_analysis_core.py   opened_in: docs/reviews/codex_verdict_dem_stack_L1_20260913.md
+  [P2] L1-06    open          B3 는 **실제 변형 형상을 측정하지 않는다** — 상수로 분모를 바꾼다
+        회귀: scripts/dem_analysis_core.py, scripts/coverage_physics_vs_hertzian.py   opened_in: docs/reviews/codex_verdict_dem_stack_L1_20260913.md
+  [P1] L1-07    open          **Hertz feature 면 안전**이 아니다 — 타깃 y 가 Physics 우선이라 이온
+        회귀: scripts/generate_comparison_plots.py   opened_in: docs/reviews/codex_verdict_dem_stack_L1_20260913.md
+  [P2] L1-08    open          `H_FILM_MIN = 5 nm` 의 앵커로 지목된 Sakuda 2013 은 그 상수를 제시
+        회귀: scripts/plastic_coverage.py   opened_in: docs/reviews/codex_verdict_dem_stack_L1_20260913.md
+  [P2] SELF-23  open          내 `DESC-03` 반례가 **A_LIGG = A_Hertz 를 가정한 입력**이었다 — 결
+        회귀: docs/reviews/codex_request_dem_webapp_stack_20260913.md   opened_in: docs/reviews/codex_verdict_dem_stack_L1_20260913.md
+  [P1] L2-02    open          **정상 미퍼콜(valid_null)을 양의 fallback 으로 복원**한다 — 초록 게이트
+        회귀: scripts/run_network_full_corrections.py   opened_in: docs/reviews/codex_verdict_dem_stack_L2_20260913.md
+  [P1] L2-03    open          grain factor = 1 이면 **파괴로 망이 끊겨도 계산을 생략**한다
+        회귀: scripts/run_network_full_corrections.py   opened_in: docs/reviews/codex_verdict_dem_stack_L2_20260913.md
+  [P1] L2-04    open          **벽에 닿지 않는 입자 사슬을 관통으로 판정**한다 (전극을 내부 15/85 % 로 옮김)
+        회귀: scripts/network_conductivity.py   opened_in: docs/reviews/codex_verdict_dem_stack_L2_20260913.md
+  [P1] L2-06    open          **수치 사고를 정상 미퍼콜로**, **thermal NaN 을 computed 로** 분류한
+        회귀: scripts/network_conductivity.py   opened_in: docs/reviews/codex_verdict_dem_stack_L2_20260913.md
+  [P2] L2-07    claimed_fixed `CONTACT_FREE/FULL` 을 **Bruggeman 대 실측**으로 설명한다 (다른 
+        회귀: scripts/network_conductivity.py, scripts/grade_engine.py   opened_in: docs/reviews/codex_verdict_dem_stack_L2_20260913.md
+  [P2] L2-08    claimed_fixed **"협착이 전체 저항의 45 %"** 는 전력 기여도가 아니다 (실제 8.1818 %)
+        회귀: scripts/network_conductivity.py   opened_in: docs/reviews/codex_verdict_dem_stack_L2_20260913.md
+  [P2] L2-09    open          fallback factor 가 **채널 밖 접촉**을 평균에 넣는다 (+26.9231 %)
+        회귀: scripts/run_network_full_corrections.py   opened_in: docs/reviews/codex_verdict_dem_stack_L2_20260913.md
+  [P2] L2-10    open          **0 저항 단락을 간선 삭제**로 처리한다 (NaN·음수도 조용히 삭제)
+        회귀: scripts/network_conductivity.py   opened_in: docs/reviews/codex_verdict_dem_stack_L2_20260913.md
+  [P2] SELF-24  open          `CL-81` 의 **문헌 삼각측량 문장**이 지지되지 않는다 (구조적 결론은 유지)
+        회귀: docs/voxel_contact_free_gap.md   opened_in: docs/reviews/codex_verdict_dem_stack_L2_20260913.md
+  [P1] L3-01    open          **정상 Stage-E 0 을 raw 양수로 대체**한다 — 세 채널 전부
+        회귀: scripts/generate_comparison_plots.py   opened_in: docs/reviews/codex_verdict_dem_stack_L3_20260913.md
+  [P1] L3-02    open          이온 T1 의 **AM power gate 가 주 생산 호출에 전달되지 않는다** (요인분해만
+        회귀: scripts/generate_comparison_plots.py   opened_in: docs/reviews/codex_verdict_dem_stack_L3_20260913.md
+  [P1] L3-03    open          **cov_Hertz 가 없거나 0 이면 Physics 로 대체**된다 — "Hertz 전용"
+        회귀: scripts/generate_comparison_plots.py   opened_in: docs/reviews/codex_verdict_dem_stack_L3_20260913.md
+  [P2] L3-04    open          보조 검증 스크립트의 **점수가 현행 생산식을 식별하지 않는다**
+        회귀: scripts/nested_cv_sat.py, scripts/electronic_nested_cv.py   opened_in: docs/reviews/codex_verdict_dem_stack_L3_20260913.md
+  [P2] L3-05    open          SAT nested 의 **결측 반경 대체가 보류점을 읽는다** (fold 밖 imputati
+        회귀: scripts/nested_cv_sat.py   opened_in: docs/reviews/codex_verdict_dem_stack_L3_20260913.md
+  [P2] L3-06    claimed_fixed **EXCL 이 23 이 아니라 25개**다 (문서·report 가 낡음)
+        회귀: scripts/generate_comparison_plots.py   opened_in: docs/reviews/codex_verdict_dem_stack_L3_20260913.md
+  [P2] L3-07    open          반환 CV 가 **배포 blend 의 CV 가 아니다** (max-of-two 보고)
+        회귀: webapp/predictor_engine.py   opened_in: docs/reviews/codex_verdict_dem_stack_L3_20260913.md
+  [P2] L3-08    claimed_fixed EXCL 후 **n_fit = 0 인데 유한 예측·R² = LOO = 0** 을 반환한다
+        회귀: scripts/generate_comparison_plots.py   opened_in: docs/reviews/codex_verdict_dem_stack_L3_20260913.md
+  [P2] L3-09    open          `frac_intact_force_pct = 0` 을 **1.0 으로** 바꿔 전파괴와 전건전
+        회귀: scripts/generate_comparison_plots.py   opened_in: docs/reviews/codex_verdict_dem_stack_L3_20260913.md
+  [P2] L3-10    claimed_fixed 열 plot CLI 가 **PNG 를 만든 뒤 KeyError 로 rc=1** (desc ↔ 
+        회귀: scripts/generate_comparison_plots.py   opened_in: docs/reviews/codex_verdict_dem_stack_L3_20260913.md
+  [P2] L3-11    claimed_fixed **설명 세대가 셋**이다 — 그림·CSV·report 를 전사하면 다른 모델을 보고하게 된다
+        회귀: scripts/generate_comparison_plots.py, scripts/generate_fitting_report.py   opened_in: docs/reviews/codex_verdict_dem_stack_L3_20260913.md
+  [P2] L3-12    claimed_fixed 이온 bootstrap **캐시 키가 중간 y 를 안 본다** (동일 프로세스 한정)
+        회귀: scripts/generate_comparison_plots.py   opened_in: docs/reviews/codex_verdict_dem_stack_L3_20260913.md
+  [P2] SELF-25  open          **엉성한 정규식으로 판정문을 반박할 뻔했다**
+        회귀: scripts/generate_comparison_plots.py   opened_in: docs/reviews/codex_verdict_dem_stack_L3_20260913.md
+  [P1] L4-01    open          **정상 미전도·결측이 총 저항에서 0 Ω 처럼** 취급된다
+        회귀: scripts/grade_engine.py   opened_in: docs/reviews/codex_verdict_dem_stack_L45_20260913.md
+  [P1] L4-02    open          **source·실패 flag 가 등급을 막지 않고** 상세화면 정리도 한 조합에서 샌다
+        회귀: scripts/grade_engine.py, webapp/app.py   opened_in: docs/reviews/codex_verdict_dem_stack_L45_20260913.md
+  [P1] L4-03    claimed_fixed audit 가 **자기신고의 모순을 통과**시킨다 (3/3 trustworthy)
+        회귀: scripts/audit_validation_flags.py   opened_in: docs/reviews/codex_verdict_dem_stack_L45_20260913.md
+  [P2] L4-04    claimed_fixed τ 의 **분모·온도·라벨이 소비자마다 다르다** (grade 가 σ_grain 3.0 고정)
+        회귀: scripts/grade_engine.py, webapp/test_tau_grade_unify.py G2   opened_in: docs/reviews/codex_verdict_dem_stack_L45_20260913.md
+  [P2] L4-05    open          **0면적 edge 가 bottleneck 집계에서 사라진다**
+        회귀: scripts/viewer3d_data.py, scripts/grade_engine.py   opened_in: docs/reviews/codex_verdict_dem_stack_L45_20260913.md
+  [P2] L4-06    claimed_fixed 진단 코퍼스 **중복제거가 바이트 수만 본다**
+        회귀: scripts/extract_se_network_diagnostics.py   opened_in: docs/reviews/codex_verdict_dem_stack_L45_20260913.md
+  [P2] L4-07    claimed_fixed `input_params` 가 있으면 **meta 의 명시적 상 지도를 무시**한다
+        회귀: scripts/extract_se_network_diagnostics.py   opened_in: docs/reviews/codex_verdict_dem_stack_L45_20260913.md
+  [P2] L4-08    open          `cycle_stable` 이 **교집합이 아니라 marginal 곱**이다
+        회귀: scripts/grade_engine.py   opened_in: docs/reviews/codex_verdict_dem_stack_L45_20260913.md
+  [P3] L4-09    claimed_fixed `Q_gravimetric` 의 **표시식이 실제 175 를 190 으로** 설명한다
+        회귀: scripts/grade_engine.py   opened_in: docs/reviews/codex_verdict_dem_stack_L45_20260913.md
+  [P2] L4-10    open          EIS 의 **HF/DC 표지가 자기 스펙트럼 극한과 불일치**한다
+        회귀: scripts/eis_drt_ica.py, scripts/eis_fit.py   opened_in: docs/reviews/codex_verdict_dem_stack_L45_20260913.md
+  [P2] L4-11    claimed_fixed `porosity` 를 **값 크기로 %/fraction 추측**해 1 에서 불연속
+        회귀: scripts/eis_drt_ica.py   opened_in: docs/reviews/codex_verdict_dem_stack_L45_20260913.md
+  [P1] L5-01    open          **σ 를 y 에서 빼도 σ 로 구조 코호트를 선별**한다
+        회귀: scripts/design_performance_dataset.py, webapp/predictor_engine.py   opened_in: docs/reviews/codex_verdict_dem_stack_L45_20260913.md
+  [P1] L5-02    open          구조 target 의 **0 과 결측을 양수/관측 0 으로 변조**한다 (coverage 0.
+        회귀: webapp/predictor_engine.py   opened_in: docs/reviews/codex_verdict_dem_stack_L45_20260913.md
+  [P1] L5-03    claimed_fixed **금지 target `use_porosity_pct` 를 학습하고 추천에 쓴다**
+        회귀: scripts/ml_design_structure.py, webapp/structure_predictor.py   opened_in: docs/reviews/codex_verdict_dem_stack_L45_20260913.md
+  [P2] L5-04    open          닫힘 ε 의 **"폴드 밖 오차띠" 가 누출**되고 다른 학습기를 채점한다
+        회귀: scripts/ml_design_structure.py   opened_in: docs/reviews/codex_verdict_dem_stack_L45_20260913.md
+  [P2] L5-05    claimed_fixed **대조 전용 `--derived-products` 산물이 일반 배포 모델로** 들어간다
+        회귀: scripts/ml_design_structure.py, webapp/structure_predictor.py   opened_in: docs/reviews/codex_verdict_dem_stack_L45_20260913.md
+  [P2] L5-06    open          모델은 같은데 **UI 가 다른 `d_am` 을 보낸다**
+        회귀: webapp/predictor_engine.py, webapp/templates/predictor.html   opened_in: docs/reviews/codex_verdict_dem_stack_L45_20260913.md
+  [P2] L5-07    claimed_fixed **비유한 입력이 정상 배포 표지**로 반환된다 (NaN 이 가드를 통과)
+        회귀: scripts/ml_design_structure.py, webapp/structure_predictor.py   opened_in: docs/reviews/codex_verdict_dem_stack_L45_20260913.md
+  [P1] HARV-01  claimed_fixed **내 수확기의 τ 가 주기·비주기를 섞어 좌표 원점에 의존**했다
+        회귀: scripts/lhs_descriptor_harvest.py   opened_in: docs/reviews/codex_verdict_dem_stack_L45_20260913.md
+  [P2] Q7-01    open          Phase A `Q7` — batch 잔차는 **수치가 아니라 대응(bijection)이 막는
+        회귀: docs/data/phase_a_h015_arms/resid_from_runner_log_20260912.tsv   opened_in: docs/reviews/codex_verdict_dem_stack_L45_20260913.md
+  [P2] SELF-26  claimed_fixed 전자 σ 캐시 둘은 **키가 아예 없었다** (L3-12 의 더 강한 형태)
+        회귀: scripts/generate_comparison_plots.py   opened_in: docs/reviews/codex_verdict_dem_stack_L3_20260913.md
+  [P2] SELF-27  claimed_fixed `porosity or 0.15` — **porosity 0 이 결측과 같은 값**을 냈다
+        회귀: scripts/eis_drt_ica.py   opened_in: docs/reviews/codex_verdict_dem_stack_L45_20260913.md
+  [P1] SELF-28  open          `geom` cap 이 결속하면 **ψ = 0 이 되어 협착저항이 삭제**된다 (AM–SE 접
+        회귀: scripts/network_conductivity.py, scripts/plastic_coverage.py, docs/data/case_master.csv, scripts/audit_constriction_deleted.py, docs/data/constriction_deleted_lhs_20260913.csv, docs/reviews/codex_verdict_area_round2_20260913.md   opened_in: docs/reviews/codex_verdict_dem_stack_L2_20260913.md
+  [P1] AREA-01  claimed_fixed S0 가 **δ 부재/0 의 native 면적 fallback** 을 누락했다 (0 % ↔ 솔
+        회귀: scripts/audit_constriction_deleted.py   opened_in: docs/reviews/codex_verdict_area_contract_20260913.md
+  [P1] AREA-02  claimed_fixed S0 는 **raw 행**, 솔버는 **채택된 unique pair** 를 센다 (90 % ↔
+        회귀: scripts/audit_constriction_deleted.py   opened_in: docs/reviews/codex_verdict_area_contract_20260913.md
+  [P1] AREA-03  claimed_fixed 계약의 **새 하한**과 *"A_surface 완전 불변"* 이 정상 탄성 접촉에서 충돌한다 
+        회귀: docs/area_contract_20260913.md, scripts/audit_transport_cap_equivalence.py   opened_in: docs/reviews/codex_verdict_area_contract_20260913.md
+  [P1] AREA-04  claimed_fixed 영향 표가 **이온 T1 타깃을 Hertz 우선으로 잘못 분류**했다 (실제는 Physics 
+        회귀: docs/area_contract_20260913.md, scripts/generate_comparison_plots.py   opened_in: docs/reviews/codex_verdict_area_contract_20260913.md
+  [P2] AREA-05  claimed_fixed S0 **selftest 에 판별력이 0** 이었다 — 솔버의 `Rc=0` 분기를 바꿔도 13
+        회귀: scripts/audit_constriction_deleted.py   opened_in: docs/reviews/codex_verdict_area_contract_20260913.md
+  [P2] AREA-06  claimed_fixed 계약의 **ψ=0 등가식이 두 문턱을 섞었다**
+        회귀: docs/area_contract_20260913.md, scripts/audit_constriction_deleted.py   opened_in: docs/reviews/codex_verdict_area_contract_20260913.md
+  [P2] AREA-07  claimed_fixed SELF-28 의 **정수 접촉수는 확정할 수 없다** (저장이 소수 첫째 자리 반올림)
+        회귀: docs/reviews/findings.json, docs/session_20260913_progress.md   opened_in: docs/reviews/codex_verdict_area_contract_20260913.md
+  [P2] AREA-08  claimed_fixed *"16/49 % 가 hemisphere cap 을 검증했다"* 는 성립하지 않는다
+        회귀: docs/area_contract_20260913.md   opened_in: docs/reviews/codex_verdict_area_contract_20260913.md
+  [P2] AREA-09  claimed_fixed 계약이 L2 §1 의 **2–4 단계에 답하지 않았다** · 원판 상한만으로 삭제가 안 닫힌다
+        회귀: docs/area_contract_20260913.md, scripts/constriction_reference.py, docs/data/constriction_reference_20260913_nr600.txt, docs/reviews/codex_verdict_area_round2_20260913.md   opened_in: docs/reviews/codex_verdict_area_contract_20260913.md
+  [P2] AREA-10  claimed_fixed 사전등록 §5 의 **판정 단위(통계량·모집단·미정 상태)가 열려 있다**
+        회귀: docs/area_contract_20260913.md, docs/reviews/codex_verdict_area_round2_20260913.md, docs/data/area_s2_cohort.tsv, scripts/seal_area_cohort.py   opened_in: docs/reviews/codex_verdict_area_contract_20260913.md
+  [P2] AREA-11  open          이종 재료쌍 협착에 `min(σ₁,σ₂)` 를 쓴다 — 참값은 두 반공간의 **직렬** (최대
+        회귀: scripts/constriction_reference.py, docs/area_contract_20260913.md, docs/reviews/codex_verdict_area_round2_20260913.md   opened_in: docs/area_contract_20260913.md
+  [P1] AREA-12  open          **S2 (면적 cap 전환) 는 솔버에 대해 항등 변환이다** — clamp 가 이미 하고 
+        회귀: scripts/audit_transport_cap_equivalence.py, docs/area_contract_20260913.md, docs/reviews/codex_verdict_area_round2_20260913.md   opened_in: docs/area_contract_20260913.md
+  [P1] R2-01    open          사전등록 v2 의 **h0 규칙이 표와 산문에서 반대 판정**을 낸다 (ρ 문턱)
+        회귀: docs/area_contract_20260913.md, docs/data/rho_lhs_20260913_rtol.csv   opened_in: docs/reviews/codex_verdict_area_round2_20260913.md
+  [P2] R2-02    open          상태 분류 완료 ≠ 전체 중앙값 식별 — REFUSED 가 섞이면 판정이 미정이다
+        회귀: docs/area_contract_20260913.md   opened_in: docs/reviews/codex_verdict_area_round2_20260913.md
+  [P2] R2-03    open          기준해 구간 통계: `s=0.3` 이 부동소수 반올림으로 **범위 밖**에 분류됐다
+        회귀: scripts/constriction_reference.py, docs/data/constriction_reference_20260913_nr600.txt   opened_in: docs/reviews/codex_verdict_area_round2_20260913.md
+  [P2] R2-04    open          기준해 selftest ③ 은 **20 % 국소 오류를 통과**시킨다 — 정량 보증이 아니다
+        회귀: scripts/constriction_reference.py   opened_in: docs/reviews/codex_verdict_area_round2_20260913.md
+  [P2] R2-05    claimed_fixed L1 계측 핀에 **geom 결속 핀이 없어** 2π→π 변이가 전체 selftest 를 통과
+        회귀: scripts/plastic_coverage.py   opened_in: docs/reviews/codex_verdict_area_round2_20260913.md
+  [P2] R2-06    claimed_fixed cap 감사가 clamp/ψ 를 **다시 구현**해 솔버 호출부의 변이를 못 봤다
+        회귀: scripts/audit_transport_cap_equivalence.py   opened_in: docs/reviews/codex_verdict_area_round2_20260913.md
+  [P2] R2-07    open          AREA-11 의 **16/9 는 수치해가 소거되는 계수비**다 — 독립 실측 증거가 아니다
+        회귀: scripts/constriction_reference.py, scripts/network_conductivity.py   opened_in: docs/reviews/codex_verdict_area_round2_20260913.md
+  [P2] R2-08    open          SELF-28 의 tabor 삭제 구간 대부분은 **이미 clamp 로 s=1** — floo
+        회귀: scripts/audit_constriction_deleted.py, docs/data/constriction_deleted_lhs_20260913_r2.csv   opened_in: docs/reviews/codex_verdict_area_round2_20260913.md
+  [P1] SELF-29  open          **빨간 게이트를 두 번 연속 밀었다** — `check_all | tail` 이 종료코드를 
+        회귀: scripts/check_all.sh, docs/session_20260913_progress.md   opened_in: docs/session_20260913_progress.md
+  [P2] SELF-30  open          LHS 원자료: 생산이 읽는 atom 덤프(2,425,000)와 contact 덤프(2,420
+        회귀: scripts/plastic_coverage.py, docs/data/area_s2_cohort.tsv, docs/data/constriction_deleted_lhs_20260913_matched.csv   opened_in: docs/session_20260913_progress.md
+  [P2] SELF-31  open          생산 CG 솔버가 scipy ≥1.12 에서 **rtol 1e-5(기본)** 로 돈다 — `t
+        회귀: scripts/measure_rho.py, docs/data/rho_lhs_20260913.csv, docs/data/rho_lhs_20260913_rtol.csv, docs/data/rho_lhs_20260913_rtol.json, docs/data/rho_lhs_20260913_rtol1e-7.csv, docs/data/rho_lhs_20260913_rtol1e-8.csv   opened_in: docs/session_20260913_progress.md
+  [P1] R3-01    claimed_fixed 미정값을 "전부 0 / 전부 10 %" 로 채우는 규칙이 **완성 결과가 달라도 같은 라벨**
+        회귀: docs/reviews/codex_verdict_area_round3_20260914.md, docs/area_contract_20260913.md   opened_in: docs/reviews/codex_verdict_area_round3_20260914.md
+  [P2] R3-02    claimed_fixed floor 를 동결한 S3 에서 cutoff 는 **0→0** 이다 — "0→양수 복원이 σ 
+        회귀: docs/reviews/codex_verdict_area_round3_20260914.md, docs/area_contract_20260913.md, scripts/network_conductivity.py   opened_in: docs/reviews/codex_verdict_area_round3_20260914.md
+  [P2] R3-03    claimed_fixed `measure_rho` 의 키 우선순위 `tol→atol→rtol` — rtol 처방을 넣으
+        회귀: docs/reviews/codex_verdict_area_round3_20260914.md, scripts/measure_rho.py   opened_in: docs/reviews/codex_verdict_area_round3_20260914.md
+  [P2] R3-04    claimed_fixed ρ 산출의 `OK` 가 **최종 채택 해**를 보증하지 않는다 — fallback 뒤에도 첫 
+        회귀: docs/reviews/codex_verdict_area_round3_20260914.md, scripts/measure_rho.py   opened_in: docs/reviews/codex_verdict_area_round3_20260914.md
+  [P2] R3-05    claimed_fixed AREA-11 — ψ₁≠ψ₂ 이면 min/직렬 계수비 `[1,2)` 가 **성립하지 않는다**
+        회귀: docs/reviews/codex_verdict_area_round3_20260914.md, docs/area_contract_20260913.md, scripts/network_conductivity.py, scripts/constriction_reference.py   opened_in: docs/reviews/codex_verdict_area_round3_20260914.md
+  [P2] R3-06    claimed_fixed `lhs00_029` 의 atom/contact 파일명 step 차가 **−150,000** 
+        회귀: docs/reviews/codex_verdict_area_round3_20260914.md, docs/data/area_s2_cohort.tsv, scripts/seal_area_cohort.py   opened_in: docs/reviews/codex_verdict_area_round3_20260914.md
+  [P2] SELF-32  claimed_fixed CI 의존 폐포가 **드라이버가 펴는 116개**를 안 봤다 — 검사기는 초록인데 CI 는 p
+        회귀: scripts/check_selftest_inventory.py, .github/workflows/discipline.yml   opened_in: docs/reviews/findings.json
+  [P2] R3-07    claimed_fixed 봉인 도구가 보증하지 않는 것 셋 (판정문 §6.4) — atom 지문 소실 · 행 소실 · 
+        회귀: docs/reviews/codex_verdict_area_round3_20260914.md, scripts/seal_area_cohort.py, docs/area_contract_20260913.md   opened_in: docs/reviews/codex_verdict_area_round3_20260914.md
+  [P1] R4-01    claimed_fixed 정상 raw 가 세 채널 모두 `NO_NETWORK` 로 바뀌고 **빈 B_ch 로 봉인 rc
+        회귀: docs/reviews/codex_verdict_area_round4_20260914.md, scripts/seal_s3_prerun.py, scripts/audit_constriction_deleted.py, scripts/network_conductivity.py   opened_in: docs/reviews/codex_verdict_area_round4_20260914.md
+  [P1] R4-02    claimed_fixed 봉인이 인용한 지문과 **실제로 읽는 파일·ID 집합**이 다를 수 있다
+        회귀: docs/reviews/codex_verdict_area_round4_20260914.md, scripts/seal_s3_prerun.py, docs/data/area_s2_cohort.tsv   opened_in: docs/reviews/codex_verdict_area_round4_20260914.md
+  [P2] R4-03    open          solver 기록이 **최종 채택 해**의 기록이 아니다 (봉인기·ρ 양쪽)
+        회귀: docs/reviews/codex_verdict_area_round4_20260914.md, scripts/seal_s3_prerun.py, scripts/measure_rho.py   opened_in: docs/reviews/codex_verdict_area_round4_20260914.md
+  [P2] R4-04    open          **같은 정지 기준**이 `TIGHTEN_NOOP` 를 통과한다 (등호 허용 · legacy 
+        회귀: docs/reviews/codex_verdict_area_round4_20260914.md, scripts/measure_rho.py   opened_in: docs/reviews/codex_verdict_area_round4_20260914.md
+  [P2] R4-05    open          ρ CSV 가 **새 필드 8개를 조용히 버린다** (`extrasaction=ignore` 
+        회귀: docs/reviews/codex_verdict_area_round4_20260914.md, scripts/measure_rho.py   opened_in: docs/reviews/codex_verdict_area_round4_20260914.md
+  [P2] R4-06    open          본문 step **파싱 실패**와 **pair 선택 규칙**이 아직 fail-closed 가 
+        회귀: docs/reviews/codex_verdict_area_round4_20260914.md, scripts/seal_area_cohort.py   opened_in: docs/reviews/codex_verdict_area_round4_20260914.md
+  [P2] R4-07    claimed_fixed **"09-17 전에는 안 함" 은 고정 마감이 아니다** — 봉인 시점 선택 여지가 남는다
+        회귀: docs/reviews/codex_verdict_area_round4_20260914.md, docs/area_contract_20260913.md, scripts/seal_s3_prerun.py   opened_in: docs/reviews/codex_verdict_area_round4_20260914.md
+  [P2] R4-08    claimed_fixed 양성 대조가 **ψ 정의**와 **floor-only 영역**을 고정하지 못한다 (두 변이가 
+        회귀: docs/reviews/codex_verdict_area_round4_20260914.md, scripts/audit_transport_cap_equivalence.py, scripts/network_conductivity.py, scripts/run_s3_psi.py   opened_in: docs/reviews/codex_verdict_area_round4_20260914.md
+  [P2] R4-09    claimed_fixed ★ **우리가 오늘 넣은 폐포 확장이 기존 검사를 약화시켰다** (LIFO + 파일 단위 `s
+        회귀: docs/reviews/codex_verdict_area_round4_20260914.md, scripts/check_selftest_inventory.py   opened_in: docs/reviews/codex_verdict_area_round4_20260914.md
+  [P2] R4-10    claimed_fixed ★ 날짜 selftest 가 **오늘만 초록**이다 — 허용일(09-17)을 주입하면 ③b 가
+        회귀: docs/reviews/codex_verdict_area_round4_20260914.md, scripts/seal_s3_prerun.py   opened_in: docs/reviews/codex_verdict_area_round4_20260914.md
+  [P1] PS-01    claimed_fixed P:S 스윕 덱이 입자를 0개 삽입하고 죽는다 — 원인 **둘**: `maxattempt`(삽
+        회귀: dem_scripts/ps_sweep_6mah_20260914/README.md, scripts/make_ps_sweep_decks.py, docs/data/phase_a_6mah/precompute.json   opened_in: dem_scripts/ps_sweep_6mah_20260914/README.md
+  [P1] SELF-33  claimed_fixed ★★ 페이지 신선도가 **결함 원장을 아예 안 봤다** — 원장이 claims 축으로만 화면에
+        회귀: webapp/ledger_view.py, webapp/test_ledger_view.py, webapp/app.py   opened_in: docs/reviews/section6_audit_20260914.md
+  [P1] SELF-34  claimed_fixed 같은 세미나 산출물 셋 중 **문서 창구에만 철회 게이트가 없었다** (75 KB 원문이 등록
+        회귀: webapp/app.py, webapp/test_ledger_view.py   opened_in: docs/reviews/section6_audit_20260914.md
+  [P2] SELF-35  claimed_fixed 클레임의 **`status` 필드와 본문이 반대**다 — 화면은 필드만 읽어 `hold` 를 
+        회귀: scripts/check_review_findings.py, docs/reviews/claims.json   opened_in: docs/reviews/section6_audit_20260914.md
+  [P2] SELF-36  claimed_fixed `claimed_fixed_sha` 가 **수정이 없는 자리**를 가리킬 수 있다 — 수정과 
+        회귀: scripts/audit_claimed_sha_provenance.py, docs/reviews/section6_audit_20260914.md   opened_in: docs/reviews/section6_audit_20260914.md
+  [P1] SELF-37  claimed_fixed ★★ 철회 스윕이 **`scripts/*.py` 470개를 아예 안 봤다** — 리포의 계산 
+        회귀: scripts/check_review_findings.py, docs/data/audit_20260914_gap_r2/wave1_summary.json   opened_in: docs/data/audit_20260914_gap_r2/wave1_summary.json
+  [P1] SELF-38  open          철회된 SDCP 쌍이 **맨 숫자 두 개**로 살아 있어 리터럴 스윕이 **원리적으로** 못 
+        회귀: scripts/perf_reduced_order.py, docs/data/audit_20260914_gap_r2/wave1_summary.json   opened_in: docs/data/audit_20260914_gap_r2/wave1_summary.json
+  [P1] SELF-39  open          FFT 균질화가 **생산과 다른 고유 σ** 로 푼 값을 생산 솔버 값과 나란히 **비로** 
+        회귀: scripts/fft_homogenize.py, scripts/network_conductivity.py   opened_in: docs/data/audit_20260914_gap_r2/wave1_summary.json
+  [P1] AREA5-01 claimed_fixed **새 솔브 실패행을 빼고 `h1` 을 발행**한다 — A-4 경계가 생산 판정에 없다
+        회귀: docs/reviews/codex_verdict_area_round5_20260915.md, scripts/run_s3_psi.py   opened_in: docs/reviews/codex_verdict_area_round5_20260915.md
+  [P1] AREA5-02 claimed_fixed `--limit` 가 진단 옵션이 아니라 **판정 집합 선택기**가 됐다
+        회귀: docs/reviews/codex_verdict_area_round5_20260915.md, scripts/run_s3_psi.py   opened_in: docs/reviews/codex_verdict_area_round5_20260915.md
+  [P1] AREA5-03 claimed_fixed 봉인기가 확인한 파일을 **러너가 다시 확인하지 않는다** — 봉인 뒤 바뀐 원자료로도 정상 
+        회귀: docs/reviews/codex_verdict_area_round5_20260915.md, scripts/audit_transport_cap_equivalence.py, scripts/run_s3_psi.py, scripts/seal_s3_prerun.py   opened_in: docs/reviews/codex_verdict_area_round5_20260915.md
+  [P1] AREA5-04 claimed_fixed *"ρ 필수"* 가 **"봉인된 ρ"** 를 강제하지 않는다 — CLI 수치로 판정이 바뀐다
+        회귀: docs/data/rho_lhs_20260913_rtol1e-8.csv, docs/reviews/codex_verdict_area_round5_20260915.md, scripts/run_s3_psi.py   opened_in: docs/reviews/codex_verdict_area_round5_20260915.md
+  [P2] AREA5-05 claimed_fixed 기본값 회귀의 기준이 **도입 전이 아니라 움직이는 HEAD** 다 (⑦f)
+        회귀: scripts/audit_transport_cap_equivalence.py, docs/reviews/codex_verdict_area_round5_20260915.md, scripts/run_s3_psi.py, scripts/seal_s3_prerun.py, docs/data/s3_preflag_baseline.json   opened_in: docs/reviews/codex_verdict_area_round5_20260915.md
+  [P2] AREA5-06 claimed_fixed oracle 픽스처가 **반지름 순서와 전자 접촉계수**를 고정하지 못한다 (유해 변이 2건 
+        회귀: docs/data/real14_am_scaffold.csv, docs/data/real14_se_scaffold.csv, docs/reviews/codex_verdict_area_round5_20260915.md, scripts/audit_transport_cap_equivalence.py, scripts/run_s3_psi.py, scripts/seal_s3_prerun.py   opened_in: docs/reviews/codex_verdict_area_round5_20260915.md
+  [P2] AREA5-07 claimed_fixed 곱셈판도 **finite floor 에서는 불연속**이다 — 내 "연속의 끝점" 은 과장이었다
+        회귀: scripts/audit_transport_cap_equivalence.py, scripts/network_conductivity.py, docs/reviews/codex_verdict_area_round5_20260915.md, scripts/run_s3_psi.py, scripts/seal_s3_prerun.py   opened_in: docs/reviews/codex_verdict_area_round5_20260915.md
+  [P2] AREA5-08 claimed_fixed 활성 개수 불일치는 **허용**하고, 유효한 전체 무변화는 **버린다** (양방향으로 틀렸다)
+        회귀: docs/area_contract_20260913.md, docs/reviews/codex_verdict_area_round5_20260915.md, scripts/run_s3_psi.py, scripts/seal_s3_prerun.py, scripts/audit_transport_cap_equivalence.py   opened_in: docs/reviews/codex_verdict_area_round5_20260915.md
+  [P2] AREA5-09 claimed_fixed **시험용 시각(`--now`)으로 생산 허가 봉인을 쓸 수 있고**, 고정 cutoff 가 
+        회귀: docs/area_contract_20260913.md, docs/reviews/codex_verdict_area_round5_20260915.md, scripts/audit_transport_cap_equivalence.py, scripts/run_s3_psi.py, scripts/seal_s3_prerun.py   opened_in: docs/reviews/codex_verdict_area_round5_20260915.md
+  [P1] GAP2-01  open          논문 그림 생성기 넷이 **그리지 않는 코퍼스 크기**를 제목에 박는다 (82 vs 실제 80
+        회귀: scripts/plot_porosity_4panel.py, scripts/plot_porosity_v4_paper.py, docs/data/audit_20260914_gap_r2/wave2_summary.json   opened_in: docs/data/audit_20260914_gap_r2/wave2_summary.json
+  [P1] GAP2-02  open          `plot_porosity_v4_journal.py` 의 **"5-fold CV" 가 판별력이
+        회귀: scripts/plot_porosity_v4_journal.py, docs/data/audit_20260914_gap_r2/wave2_summary.json   opened_in: docs/data/audit_20260914_gap_r2/wave2_summary.json
+  [P2] GAP2-03  open          철회된 헤드라인(**Furnas dip 공존 · force-chain**)이 그림 제목에 **
+        회귀: scripts/plot_mpm_dem_match.py, docs/data/audit_20260914_gap_r2/wave2_summary.json   opened_in: docs/data/audit_20260914_gap_r2/wave2_summary.json
+  [P2] GAP2-04  open          같은 패널 안에서 **두 다른 모델**로 곡선과 산점을 그려 하나의 적합처럼 읽힌다
+        회귀: scripts/plot_porosity_binned_mean.py, scripts/plot_porosity_4panel.py, docs/data/audit_20260914_gap_r2/wave2_summary.json   opened_in: docs/data/audit_20260914_gap_r2/wave2_summary.json
+  [P2] GAP2-05  open          결측을 **0 또는 문헌 앵커로 채워** 양의 주장으로 렌더한다 (세 곳)
+        회귀: scripts/plot_cycle_rint_decomp.py, scripts/plot_se_z_profile.py, docs/data/audit_20260914_gap_r2/wave2_summary.json   opened_in: docs/data/audit_20260914_gap_r2/wave2_summary.json
+  [P2] GAP2-06  open          갭 감사 2판 2차가 **부분 완료** — 78/116 에이전트가 세션 한도로 실패했다
+        회귀: docs/data/audit_20260914_gap_r2/wave2_summary.json, docs/data/audit_20260914_gap_r2/wave2_inventory.json   opened_in: docs/data/audit_20260914_gap_r2/wave2_summary.json
+  [P2] LHS-01   claimed_fixed 설계 CSV 의 **`se_percolation` 라벨이 실제 퍼콜레이션과 45 % 어긋난다*
+        회귀: docs/data/lhs_design_20260818.csv, docs/data/lhs_percolation_measured_20260915.csv, docs/data/rho_s3_trial_20260915.csv, docs/lhs_corpus_readout_20260915.md, scripts/lhs_design_dataset.py   opened_in: docs/lhs_corpus_readout_20260915.md
+  [P2] LHS-02   claimed_fixed 설계 CSV 의 **"측정" 열 셋이 130/130 전부 비어 있다** (`_est` 만 있다
+        회귀: scripts/lhs_design_dataset.py::_selftest ⑮ ~ ⑮e (병합 거부 음성대조 7건), scripts/lhs_design_dataset.py::_selftest ⑭d (채움 상태 등록값 고정), docs/data/lhs_design_20260818_descriptor_manifest.json   opened_in: docs/lhs_corpus_readout_20260915.md
+  [P1] LHS-04   open          `lhs00_009` — 망은 **하나로 이어져 있는데** 상단 전극이 4개뿐이라 미퍼콜로 판
+        회귀: docs/lhs_corpus_readout_20260915.md, docs/data/rho_s3_trial_20260915.csv, docs/data/lhs_design_20260818.csv, scripts/network_conductivity.py   opened_in: docs/lhs_corpus_readout_20260915.md
+  [P2] LHS-06   open          단절 침대의 SE 입자 **최대 49.3 % 가 접촉이 하나도 없다** — 물리인지 접촉검출 
+        회귀: docs/lhs_corpus_readout_20260915.md, docs/data/lhs_percolation_measured_20260915.csv, docs/data/rho_s3_trial_20260915.csv   opened_in: docs/lhs_corpus_readout_20260915.md
+  [P1] GAP3-18  claimed_fixed `porosity_close.py` 가 **보고 지표(LOOCV)가 오를 때만** 케이스를 지
+        회귀: scripts/porosity_close.py::--selftest (8/8), scripts/porosity_close.py::close_corpus, docs/reviews/selftest_inventory.tsv::porosity_close   opened_in: docs/reviews/gap_audit_r3_verdicts_20260917.md
+  [P1] GAP3-19  claimed_fixed `exclude_particulate` 플래그 **하나가 세 필터**를 제어한다 (레짐 둘 +
+        회귀: scripts/porosity_filter_axes_check.py::1,120, scripts/porosity_plastic_vs_rigid.py::36,55   opened_in: docs/reviews/gap_audit_r3_verdicts_20260917.md
+  [P1] GAP3-20  claimed_fixed `porosity_unified.py:42` 의 `FULL corpus` 에 **무효 9건**
+        회귀: scripts/porosity_filter_axes_check.py::1,120, scripts/porosity_unified.py::42,45   opened_in: docs/reviews/gap_audit_r3_verdicts_20260917.md
+  [P2] GAP3-34  open          `predict_porosity_physics.py` — `heckel_compaction()
+        회귀: scripts/predict_porosity_physics.py::169-178,201,256-258   opened_in: docs/reviews/gap_audit_r3_verdicts_20260917.md
+  [P2] GAP3-30  open          `rho_lhs_20260913.*` 의 `0.0` — 이온·열은 **철회된 거짓 0**, 전
+        회귀: scripts/measure_rho.py::340,357, docs/data/rho_lhs_20260913.json, docs/data/rho_lhs_20260913_rtol.csv   opened_in: docs/reviews/gap_audit_r3_verdicts_20260917.md
+  [P1] GAP3-01  claimed_fixed 커밋된 heckel 덱 4개가 **실행 불가**이고, `P_y=138` 사슬의 입력이 리포에 
+        회귀: heckel/input_SE_heckel_100.liggghts::18, scripts/make_heckel_inputs.py::164-169, scripts/gen_dem_oat_sweep.py::137-141, docs/data/heckel_pure_se_dem.csv   opened_in: docs/reviews/gap_audit_r3_verdicts_20260917.md
+  [P2] GAP3-15  open          `check_colorbar_fit.mjs` — *"600자 절단"* 은 **반증**, 그러나
+        회귀: scripts/check_colorbar_fit.mjs::99-101,85-90, .github/workflows/discipline.yml::255   opened_in: docs/reviews/gap_audit_r3_verdicts_20260917.md
+  [P1] GAP3-21  open          같은 결합 판정이 한 파일에 **세 벌** — 꼬리에서 bonded/free 가 통째로 반전한
+        회귀: tools/comp1_v3/b2o3_all_bond_lengths.py::67-69,309-317,366-367, tools/ionic/msd_diffusive_check.py::1076,2399   opened_in: docs/reviews/gap_audit_r3_verdicts_20260917.md
+  [P1] GAP3-22  open          `mto_from_traj` 의 세 실패 경로가 **전부 무음** — 오진단이 "틀린 처방"으
+        회귀: tools/ionic/msd_diffusive_check.py::725-738,930-931,2088-2090,785-787   opened_in: docs/reviews/gap_audit_r3_verdicts_20260917.md
+  [P1] GAP3-FIG claimed_fixed 논문 그림 생성기 4개가 **철회된 헤드라인·틀린 n·하드코딩 지표**를 그림에 박는다
+        회귀: scripts/plot_mpm_dem_match.py::96, scripts/plot_tau_regime_si.py::120-121, scripts/plot_porosity_4panel.py::252-254, scripts/plot_porosity_v4_paper.py::150   opened_in: docs/reviews/gap_audit_r3_verdicts_20260917.md
+  [P2] GAP3-17  open          `plot_porosity_v4_journal.py` 의 5-fold CV 가 **전체 최적점
+        회귀: scripts/plot_porosity_v4_journal.py::206,585   opened_in: docs/reviews/gap_audit_r3_verdicts_20260917.md
+  [P2] GAP3-32  open          `plot_porosity_binned_mean.py` 가 한 패널에 **두 독립 코드 경로*
+        회귀: scripts/plot_porosity_binned_mean.py::30-33,47-71,106-107,113-114,188,198   opened_in: docs/reviews/gap_audit_r3_verdicts_20260917.md
+  [P1] GAP3-DOC claimed_fixed 문서·웹앱 7건 — 철회된 서술·거짓 안전 약속·전거 없는 문턱
+        회귀: docs/session_20260913_progress.md::104, webapp/templates/worklog.html::23, webapp/templates/worklog_view.html::70, 이종기술/README.md::38-42, docs/data/audit_20260909/audit1_ground_truth.md::88, pipeline/PIPELINE.md::34,126, docs/archive/skills_20260424/dem-analysis-standard.md::93,101   opened_in: docs/reviews/gap_audit_r3_verdicts_20260917.md
+  [P1] GAP3-35  claimed_fixed 그림 생성기 **둘이 같은 파일에 쓴다** — 나중에 돈 쪽이 상대를 조용히 지운다
+        회귀: scripts/plot_porosity_v4_paper.py::292, scripts/plot_porosity_v4_journal.py::502   opened_in: docs/reviews/gap_audit_r3_repair_20260917.md
+  [P1] GAP3-36  claimed_fixed journal 생성기와 **커밋된 caption** 도 `82` 를 리터럴로 적는다 (실제 8
+        회귀: scripts/plot_porosity_v4_journal.py::291,502, docs/figures/porosity_v4_paper_figure_caption.md::3   opened_in: docs/reviews/gap_audit_r3_repair_20260917.md
+  [P2] GAP3-37  claimed_fixed τ SI 그림의 두 참조선이 **서로 다른 규약**을 함축한다 — α=2.36 은 출처가 없다
+        회귀: scripts/plot_tau_regime_si.py::120,121   opened_in: docs/reviews/gap_audit_r3_repair_20260917.md
+  [P2] GAP3-38  claimed_fixed `compare_hertzian_vs_physics.py` 가 데이터 없을 때 **뜻 없는 `
+        회귀: scripts/compare_hertzian_vs_physics.py::111,117, .gitignore::5,7   opened_in: docs/reviews/gap_audit_r3_repair_20260917.md
+  [P1] GAP3-39  claimed_fixed `plot_tau_regime_si.py` 가 입력이 없어도 **rc=0 을 낸다** (fai
+        회귀: scripts/plot_tau_regime_si.py::1   opened_in: docs/reviews/gap_audit_r3_repair_20260917.md
+  [P1] GAP3-40  open          `analyze_contacts.py` 가 **전거 없는 문턱**으로 사용자에게 `critic
+        회귀: scripts/analyze_contacts.py::483,487,505, docs/data/case_master.csv   opened_in: docs/reviews/gap_audit_r3_repair_20260917.md
+  [P2] GAP3-41  claimed_fixed `check_review_findings --selftest` 이 **깜빡인다** (게이트 5
+        회귀: scripts/check_review_findings.py::851,862, scripts/check_all.sh::52   opened_in: docs/reviews/gap_audit_r3_repair_20260917.md
+  [P1] GAP3-42  open          ρ 산출물 **네 개 전부**에 계약이 요구하는 **증서 값이 없다** (`rho_pct_ch
+        회귀: docs/data/rho_lhs_20260913.json, docs/data/rho_lhs_20260913_rtol.json, scripts/measure_rho.py::366,370   opened_in: docs/reviews/gap_audit_r3_repair_20260917.md
+  [P1] PASL-01  open          Phase A 96팔이 `ptfe_stamp=off` 로 돌았다 — 사전등록 §5 봉인은 `c
+        회귀: scripts/phase_a_arms_from_payload.py, docs/reviews/phase_a_6mah_order_prereg_20260907.md   opened_in: docs/reviews/phase_a_seal_breach_20260918.md
+  [P2] PASL-02  open          Phase A 96팔에 LEAN=2 (σ_e 전용)가 적용되지 않았다 — 여섯 성분을 다 풀었
+        회귀: scripts/sdcp_gain_vox015_8arm.sh, docs/reviews/phase_a_6mah_order_prereg_20260907.md   opened_in: docs/reviews/phase_a_seal_breach_20260918.md
+  [P1] PASL-03  claimed_fixed `code_sha = null` 인데 어댑터가 **이중 fail-open** 으로 통과시킨다
+        회귀: scripts/phase_a_arms_from_payload.py::--selftest (㉝~㊳), scripts/phase_a_arms_from_payload.py::build   opened_in: docs/reviews/phase_a_seal_breach_20260918.md
+  [P1] PASL-04  claimed_fixed ★ 근본 원인 — 러너의 `--expect-physics` 선언에 봉인 축이 없으면 계약 검사
+        회귀: scripts/mpm_webapp_payload.py::--selftest-contract (11/11), scripts/mpm_webapp_payload.py::assert_contract_seal, scripts/sdcp_gain_vox015_8arm.sh::688, scripts/check_method_discipline.py::_xp_need   opened_in: docs/reviews/phase_a_seal_breach_20260918.md
+  [P1] PASL-05  claimed_fixed `_code_sha` 가 **dirty 탐침이 느리면 SHA 까지 버렸다** — `PASL-0
+        회귀: scripts/mpm_webapp_payload.py   opened_in: docs/reviews/phase_a_seal_breach_20260918.md
+  [P3] PASL-06  claimed_fixed 사전등록 §8-1 이 **폐기된 계획 생성기의 실행 절차**를 적고 있었다 (그 파일의 봉인 
+        회귀: docs/reviews/phase_a_6mah_order_prereg_20260907.md::653,660,678, scripts/phase_a_plan.py::71   opened_in: docs/reviews/phase_a_seal_breach_20260918.md
+  [P1] LHS-07   claimed_fixed 봉인기와 수확기가 **같은 축에서 반대 계약** — `RAW_OK` 129 중 **62 행이 
+        회귀: scripts/seal_area_cohort.py::--selftest (⑨b · ⑨g), scripts/seal_area_cohort.py::_paired_case_files, scripts/lhs_descriptor_harvest.py::404   opened_in: docs/session_20260919_resume.md
+  [P1] LHS-08   open          τ 가 **130 중 14** 에서만 나오고, `NOT_PERCOLATING` 이 **두 원인
+        회귀: scripts/lhs_descriptor_harvest.py::tortuosity_se, docs/data/lhs_descriptors_20260919/   opened_in: docs/session_20260919_resume.md
+  [P2] HET-01   open          회의 판정이 리포의 **살아 있는 계획과 충돌**한다 — `--se-grad` 는 GO 인데 
+        회귀: docs/plan_se_grad_20260811.md, docs/data/hetero_transcript_20260918.json::발화 17·18, scripts/extract_2d_microstructure.py::--poro-grad 경고 문자열 (L1288)   opened_in: docs/data/hetero_transcript_20260918.json
+  [P2] SELF-40  open          `pair_style` 한 줄로 **점착이 없다**고 단정했다 — 덱 28개 전부에 3x3 `
+        회귀: dem_scripts/ps_sweep_6mah_20260914/in.ps_7_3_r45.liggghts::fix m7, heckel/input_SE_heckel_300.liggghts::fix m6-m8, docs/reviews/prereg_m7_aggregation_20260919.md   opened_in: docs/reviews/prereg_m7_aggregation_20260919.md
+  [P1] SELF-41  open          `m7 coefficientAdhesionStiffness` 가 튜토리얼에서는 **k_N 대비
+        회귀: dem_scripts/ps_sweep_6mah_20260914/in.ps_7_3_r45.liggghts::fix m6-m8, heckel/input_SE_heckel_300.liggghts::fix m6-m8, docs/reviews/prereg_m7_aggregation_20260919.md   opened_in: docs/reviews/prereg_m7_aggregation_20260919.md
+  [P2] SELF-42  open          중복 검사 `grep -E` 에 `\|`(BRE 문법)를 써서 **여덟 축이 전부 조용히 0*
+        회귀: docs/reviews/findings.json::SELF-42, docs/reviews/prereg_m7_aggregation_20260919.md   opened_in: docs/reviews/prereg_m7_aggregation_20260919.md
+  [P3] DESC-11  open          면적 변환이 두 벌 — `scale²` 대 `1e12/scale²` 가 `scale=1000`
+        회귀: scripts/coverage_physics_vs_hertzian.py, scripts/dem_analysis_core.py   opened_in: docs/param_audit_report_20260919.md
+  [P3] SELF-43  open          대시보드가 같은 칸을 1자리·4자리로 섞어 찍어 **건강한 값을 고장난 것처럼** 보이게 했다
+        회귀: docs/data/case_master.csv   opened_in: docs/param_audit_report_20260919.md
+  [P1] SELF-45  claimed_fixed 전류 집중계수 `focus_top` 이 **장(field)이 아니라 그림용 점군**의 99.8
+        회귀: scripts/step3_sigma.py, scripts/repair_focus_top.py, scripts/mpm_webapp_payload.py   opened_in: docs/session_20260922_progress.md
+  [P1] SELF-46  claimed_fixed 게이트가 부르는 `litdb_promote.py --selftest` 가 공유 워크트리 `..
+        회귀: scripts/litdb_promote.py   opened_in: docs/session_20260923_progress.md
+  [P1] SELF-47  open          웹앱 파서가 올라온 메시 중 **번호가 가장 큰 것**을 플래튼으로 쓰고 원자 덤프 step 
+        회귀: scripts/parse_liggghts.py, scripts/dem_analysis_core.py   opened_in: docs/reviews/lhs_handover_judgments_20260924.md
+  [P2] SELF-48  open          `recompute_porosity_dual.get_plate_z` 의 점검이 한쪽만 본다 —
+        회귀: scripts/recompute_porosity_dual.py   opened_in: docs/reviews/lhs_handover_judgments_20260924.md
+  [P3] SELF-49  open          웹앱 porosity 입력 가정 묶음 — 메시 없을 때 플래튼 = 최고 입자 **중심** · 
+        회귀: scripts/dem_analysis_core.py, scripts/analyze_contacts.py   opened_in: docs/reviews/lhs_handover_judgments_20260924.md
+  [P2] LHS-09   open          **실측 두께를 못 낸다** — `plate_z` 는 있는데 바닥 기준이 수확 산출물에 없다
+        회귀: scripts/lhs_descriptor_harvest.py, docs/data/lhs_handover_20260919.csv   opened_in: docs/param_audit_report_20260919.md
+  [P1] LHS-10   claimed_fixed φ_SE · φ_AM · porosity 의 분모가 **바닥 벽(z = 0)이 아니라 덤프 상
+        회귀: scripts/lhs_descriptor_harvest.py, scripts/lhs_phi_crosscheck.py, docs/data/lhs_descriptors_20260924/_phi_crosscheck.tsv   opened_in: docs/reviews/lhs_handover_judgments_20260924.md
+  [P1] LHS-11   claimed_fixed 130 중 **97** 건의 플래튼 위치가 원자 덤프보다 **평균 150만 step 이른** 
+        회귀: scripts/lhs_harvest_batch.py, docs/data/lhs_descriptors_20260924/_batch_summary.json, docs/data/lhs_descriptors_20260924/_phi_crosscheck.tsv   opened_in: docs/reviews/lhs_handover_judgments_20260924.md
+  [P1] LHS-12   claimed_fixed J13 수확기 가드 (입자 바닥이 벽 아래 ½·r_max 를 넘으면 거부) 가 실제 130 중
+        회귀: scripts/lhs_descriptor_harvest.py, scripts/lhs_harvest_batch.py, docs/data/lhs_descriptors_20260924/_batch_summary.json   opened_in: docs/reviews/lhs_handover_judgments_20260924.md
+  [P2] LHS-13   open          4 건 (lhs00_056 · 079 · 107 · 110) 의 가장 깊은 입자 바닥이 **정
+        회귀: scripts/lhs_phi_crosscheck.py   opened_in: docs/reviews/lhs_handover_judgments_20260924.md
+  [P1] LHS-15   open          ε_sphere porosity 가 **음수**인 케이스 18/130 (−2.43 … −0.0
+        회귀: docs/data/lhs_descriptors_20260924/_phi_crosscheck.tsv   opened_in: docs/reviews/lhs_handover_judgments_20260924.md
+  [P1] HND-03   open          겹침/반지름 1.98 자리 9 건 = **양면 평면 아래쪽의 점착–중력 평형** (hooke/
+        회귀: docs/data/lhs_descriptors_20260924/README.md, scripts/lhs_descriptor_harvest.py   opened_in: docs/reviews/codex_verdict_lhs_porosity_thickness_20260924.md
+  [P2] LREL-01  claimed_fixed D1–D5 이온 분할 관문이 음수 개수를 수용한다 — 정수 · 합 검사만 있어 무접촉 −1 개
+        회귀: scripts/lhs_design_dataset.py   opened_in: docs/reviews/codex_lhs_release_final_verdict_20261001.md
+  [P2] LREL-02  claimed_fixed 적격성 표지 누락을 생성기와 배포 부분집합 검사기가 막지 않는다 — 수확의 status/rea
+        회귀: scripts/lhs_design_dataset.py, scripts/lhs_release_build.py   opened_in: docs/reviews/codex_lhs_release_final_verdict_20261001.md
+  [P2] LREL-03  claimed_fixed "130 행" 이 "130 개 고유 설계" 를 보증하지 않는다 — 설계 행 중복 (lhs00_
+        회귀: scripts/lhs_design_dataset.py, scripts/lhs_release_build.py   opened_in: docs/reviews/codex_lhs_release_final_verdict_20261001.md
+  [P2] LREL-04  claimed_fixed union 행의 SE 고체 몫이 φ 장부와 독립적으로 바뀌어도 통과 — se_of_solid_
+        회귀: scripts/lhs_design_dataset.py   opened_in: docs/reviews/codex_lhs_release_final_verdict_20261001.md
+  [P2] LREL-05  claimed_fixed README 의 τ 분모 ("길 / 두께") 와 "실제 이온 도달" 문구가 계산량을 바꿔 적었
+        회귀: scripts/lhs_design_dataset.py, webapp/test_ionic_isolation_labels.py   opened_in: docs/reviews/codex_lhs_release_final_verdict_20261001.md
+  [P3] LREL-06  claimed_fixed 열 사전 · 상수 · 학습 안내의 축약 — am_pct (AM 질량 %) · ps_frac (
+        회귀: scripts/lhs_design_dataset.py   opened_in: docs/reviews/codex_lhs_release_final_verdict_20261001.md
+  [P1] MIX-01   claimed_fixed **`fix multisphere` 는 평범한 구를 적분하지 않는다** — 믹서 1차 런의 4
+        회귀: scripts/make_mixer_deck.py::--selftest (⑪b · ⑪c), scripts/make_mixer_deck.py::deck   opened_in: docs/reviews/mixing_model_design_20260919.md
+  [P1] MIX-02   claimed_fixed `measure_bed_aspect` 가 통축을 **z 로 박아** 뒀다 — 가로 드럼에서 드
+        회귀: scripts/measure_bed_aspect.py::--selftest (⑦ · ⑦b), scripts/measure_bed_aspect.py::measure   opened_in: docs/reviews/mixing_model_design_20260919.md
+  [P2] MIX-03   claimed_fixed 정착 스텝이 **상수 20000** 이었다 — 정착 길이는 기하에 딸린 양이다
+        회귀: scripts/make_mixer_deck.py::--selftest (⑪d · ⑪e), scripts/make_mixer_deck.py::settle_time   opened_in: docs/reviews/mixing_model_design_20260919.md
+  [P1] MIX-04   claimed_fixed 점착 사다리 `CED0 × {1,10,100}` 은 **5 팔 중 4 팔이 접촉모델 밖**이었
+        회귀: scripts/make_mixer_deck.py::--selftest (㉔ ㉕ ㉖ ㉗ ㉘ ㉙ ㉙b ㉚), scripts/check_contact_validity.py::--selftest, scripts/make_mixer_deck.py::_solve_bond0   opened_in: docs/reviews/mixing_model_design_20260919.md
+  [P2] MIX-05   claimed_fixed 접촉 유효성 검사가 **강체 내부 쌍**을 접촉으로 셌다 — 최대 겹침이 40 % 에 상주해 
+        회귀: scripts/check_contact_validity.py::--selftest (⑦ · ⑦b), scripts/check_contact_validity.py::contacts   opened_in: docs/reviews/mixing_model_design_20260919.md
+  [P3] MIX-06   open          주지표 `H/R` 이 강한 점착에서 **절단(censored)** 된다 — `E2`(Bo 2.
+        회귀: docs/reviews/mixing_model_design_20260919.md, scripts/measure_bed_aspect.py::measure_many   opened_in: docs/reviews/mixing_model_design_20260919.md
+  [P2] MIX-07   open          점착 사다리가 **문헌 앵커(`Bo ≈ 3`) 를 안 찍고 보간**하고 있다 — 그리고 우리는
+        회귀: docs/reviews/mixing_model_design_20260919.md, scripts/make_mixer_deck.py::overlap_for_ced   opened_in: docs/reviews/mixing_model_design_20260919.md
+  [P1] MIX-08   claimed_fixed ⛔ **믹싱을 잰 적이 없다** — 침대가 처음부터 섞인 채 시작한다 (잰 것은 유동성/응집성
+        회귀: docs/reviews/mixing_model_design_20260919.md, scripts/make_mixer_deck.py::deck   opened_in: docs/reviews/mixing_model_design_20260919.md
+  [P2] MIX-09   open          주지표 `H/R` 이 `Bo ≳ 1` 에서 **천장에 닿는다** — `Bo` 21 배 구간이 
+        회귀: docs/reviews/mixing_model_design_20260919.md, scripts/measure_bed_aspect.py::measure_many   opened_in: docs/reviews/mixing_model_design_20260919.md
+  [P3] MIX-10   open          경계 `Bo ≈ 0.5` 는 **충전율 9.8 % · Fr 0.083 한 점**에서 잰 값이다
+        회귀: docs/reviews/mixing_model_design_20260919.md, scripts/measure_bed_aspect.py::measure_many   opened_in: docs/reviews/mixing_model_design_20260919.md
+  [P3] SELF-50  claimed_fixed `mpm_metrics.json` 의 `dt` 가 요청값 (args.dt) 이다 — CFL 가
+        회귀: scripts/mpm3d_compaction.py   opened_in: docs/reviews/vgcf_e_sensitivity_prereg_20260925.md
+  [P1] SELF-51  open          원고 SI Table S2 의 `Ref.` 두 행 — S4 (NCM811 E 140 GPa) 
+        회귀: docs/manuscript_draft/build.js, docs/reviews/claims.json, docs/reviews/si_table_response_20260925.md, docs/voxel_contact_free_gap.md, scripts/analyze_tabor_regime.py, scripts/build_literature_reference.py, scripts/fracture_model.py, scripts/se_material.py, scripts/voxel_conductivity.py, webapp/templates/group.html, webapp/templates/single.html, docs/reviews/citation_root_audit_20260925.md, docs/paper/main.tex, scripts/plot_sigma_closure_3x3.py   opened_in: docs/reviews/si_table_response_20260925.md
+  [P2] SELF-52  open          CLAUDE.md frame[1] 의 'pure-SE porosity ≈ 10 % @ 300 
+        회귀: docs/reviews/pure_se_union_prereg_20260927.md, CLAUDE.md, docs/data/densification_porosity_db.csv   opened_in: docs/reviews/pure_se_union_prereg_20260927.md
+  [P2] SELF-53  claimed_fixed 순수 SE 덱 생성기 (`lhs_ext_materialize.py --pure-se`) 가 A
+        회귀: scripts/lhs_ext_materialize.py   opened_in: docs/reviews/pure_se_ibb_failures_20260927.md
+  [P2] HB-01    claimed_fixed J0 정정이 소스에서 완결되지 않았다 — 그림 생성기의 8×8×2 "decision cell"
+        회귀: scripts/make_mixer_deck.py, docs/data/mixer_interim_20260927/plot_interim.py   opened_in: docs/reviews/codex_mixer_highbo_verdict_20260927.md
+  [P1] HB-03    open          "AM–AM 만 바뀐다" 가 실제 CED 행렬과 다르다 — 벽 CED = 대각 ÷ 6.25^(
+        회귀: scripts/mixer_deck_diff.py, dem_scripts/mixer_20260921/test_launcher.sh, scripts/make_mixer_deck.py   opened_in: docs/reviews/codex_mixer_highbo_verdict_20260927.md
+  [P2] HB-04    claimed_fixed n = 3 · 판정 해석 — Δ ≥ 2·SE 는 공학적 판정선 (짝 t 양측 95 % 임계값 
+        회귀: docs/reviews/mixer_layered_prereg_20260921.md, docs/reviews/mixer_highbo_prereg_20260927.md   opened_in: docs/reviews/codex_mixer_highbo_verdict_20260927.md
+  [P1] HB-05    claimed_fixed 실행·판독 계약 — check_contact_validity 는 등록 문구 "최대 겹침 실측 
+        회귀: scripts/check_contact_validity.py, scripts/measure_mixing_index.py   opened_in: docs/reviews/codex_mixer_highbo_verdict_20260927.md
+  [P1] SELF-54  open          순수 SE r050_a · r075_a 를 체크포인트에서 잇지 않고 INSERTING 부터 재
+        회귀: CLAUDE.md, docs/reviews/pure_se_union_prereg_20260927.md   opened_in: docs/reviews/pure_se_union_prereg_20260927.md
+  [P1] HBR2-01  claimed_fixed check_contact_validity 벽 위상 "되읽기" 는 독립 검증이 아니다 — 입자 
+        회귀: scripts/check_contact_validity.py, scripts/mixer_restart_phase_test.py   opened_in: docs/reviews/codex_mixer_highbo_rereview_verdict_20260927.md
+  [P1] HBR2-04  claimed_fixed measure_mixing_index 의 bin 완전성 = "나중 bin 이 존재하는가" 이고
+        회귀: scripts/measure_mixing_index.py   opened_in: docs/reviews/codex_mixer_highbo_rereview_verdict_20260927.md
+  [P2] HBR2-05  claimed_fixed mixer_deck_diff PASS 의 뜻이 등록 계약보다 좁다 — 새 LH 의 P–S 한 
+        회귀: scripts/mixer_deck_diff.py   opened_in: docs/reviews/codex_mixer_highbo_rereview_verdict_20260927.md
+  [P2] HBR2-08  claimed_fixed check_contact_validity 의 상별 수 · 전체 ID 집합 보존 ≠ 입자 속성 
+        회귀: scripts/check_contact_validity.py   opened_in: docs/reviews/codex_mixer_highbo_rereview_verdict_20260927.md
+  [P1] HBR3-01  claimed_fixed 재개-위상 영수증 생산자가 필수 대조 · 재개 뒤 표본 없이 PASS — A 대조 덤프 0 개
+        회귀: scripts/mixer_restart_phase_test.py, docs/reviews/codex_mixer_highbo_rereview2_evidence_20260927/README.md   opened_in: docs/reviews/codex_mixer_highbo_rereview2_verdict_20260927.md
+  [P1] HBR3-02  claimed_fixed "시험한 바이너리" 와 "판정할 런" 의 연결이 없다 — 생산자는 --binary 없이도 PA
+        회귀: scripts/mixer_restart_phase_test.py, scripts/check_contact_validity.py, docs/reviews/codex_mixer_highbo_rereview2_evidence_20260927/README.md   opened_in: docs/reviews/codex_mixer_highbo_rereview2_verdict_20260927.md
+  [P1] HBR3-03  claimed_fixed ±ε 양 끝과 중앙 세 점은 구간 최댓값이 아니다 — 실제 39 면 Drum · SE 반경 7
+        회귀: scripts/check_contact_validity.py, docs/reviews/codex_mixer_highbo_rereview2_evidence_20260927/README.md   opened_in: docs/reviews/codex_mixer_highbo_rereview2_verdict_20260927.md
+  [P1] HBR3-04  claimed_fixed mesh 파일의 존재 · 볼록성은 전체 용기 존재를 보증하지 않는다 — 매 프레임 mesh 덤
+        회귀: scripts/check_contact_validity.py, docs/reviews/codex_mixer_highbo_rereview2_evidence_20260927/README.md   opened_in: docs/reviews/codex_mixer_highbo_rereview2_verdict_20260927.md
+  [P2] HBR3-08  claimed_fixed "첫 시드 스모크 뒤 나머지" 결정 (§8) 과 남아 있는 발사 명령 (§2-5 MAXJ=3 
+        회귀: dem_scripts/mixer_20260921/run_all.sh, dem_scripts/mixer_20260921/test_launcher.sh, docs/reviews/mixer_highbo_prereg_20260927.md   opened_in: docs/reviews/codex_mixer_highbo_rereview2_verdict_20260927.md
+  [P2] SELF-55  claimed_fixed 지시 명령의 경로 · 인터프리터 미확인 재발 (SELF-54 의 교훈 "확인 안 한 추정을 지
+        회귀: docs/reviews/ps45_dh_transfer_prereg_20260926.md, scripts/mixer_restart_phase_test.py   opened_in: docs/reviews/ps45_dh_transfer_prereg_20260926.md
+  [P2] SELF-57  open          SELF-55 재발 — 재현 2 런 명령에서 `--data ~/rep288` 로 바꾸며 배치의
+        회귀: scripts/run_se_curve_batch.sh   opened_in: docs/se_curve_transfer_verdict_20260806.md
+  [P2] SELF-58  open          재개가 여러 번인 케이스의 완주 판정을 `grep -h … log* | tail` 로 했다 —
+        회귀: docs/reviews/pure_se_union_prereg_20260927.md   opened_in: docs/reviews/pure_se_union_prereg_20260927.md
+  [P2] SELF-59  open          요청서 **파일이 있다**는 사실에서 **보냈다**를 추론해 정본에 단정으로 적었다 — ㉗ 에
+        회귀: docs/reviews/codex_mixer_highbo_rereview3_request_20260928.md   opened_in: docs/session_20260923_progress.md
+  [P1] HBR4-01  claimed_fixed 영수증 생산자·소비자가 **B 의 비유한 좌표**와 **빈 봉인 목록**을 통과시킨다 — A 
+        회귀: scripts/check_contact_validity.py, scripts/mixer_restart_phase_test.py   opened_in: docs/reviews/codex_review_mixer_highbo_round4_20260928.md
+  [P1] HBR4-05  claimed_fixed **다른 런 · 다른 칸 규약의 실제 판독 결과가 rest 증서로 통과** — 증서의 런을 `
+        회귀: dem_scripts/mixer_20260921/launch_highbo.sh, dem_scripts/mixer_20260921/test_launcher.sh, scripts/measure_mixing_index.py   opened_in: docs/reviews/codex_review_mixer_highbo_round4_20260928.md
+  [P1] SELF-60  open          살아 있는 런을 **"무성 종료"** 로 진단하고 그 위에 ⛔ 발사 금지를 세웠다 — 셸 작업
+        회귀: scripts/run_se_curve_batch.sh   opened_in: docs/session_20260923_progress.md
+  [P2] SELF-61  open          d_h 판정의 σ 를 **STEP3 전도도**로 오인했다 — ㉗-1 에 *"이 JSON 에 σ
+        회귀: scripts/fit_dh_collapse.py, docs/se_curve_transfer_verdict_20260806.md   opened_in: docs/session_20260923_progress.md
+  [P1] SELF-62  open          믹서 설계 검증 (09-21) 이 **평균 응력 한 값**을 **최대 겹침 천장**과 비교했다
+        회귀: scripts/check_contact_validity.py, docs/data/mixer_e0_contract_20260928/README.md, docs/session_20260921_mixer_decisions.md, docs/reviews/mixer_highbo_prereg_20260927.md   opened_in: docs/session_20260923_progress.md
+  [P1] HBR5-03  open          LC (WSL · 직렬 · 08-25 빌드 · 체크포인트 재개) 와 LH (ibb · MPI 
+        회귀: —   opened_in: docs/reviews/codex_review_mixer_highbo_round5_v2_20260928.md
+  [P2] HBR5-04  open          np 1 재개-위상 영수증을 MPI 20 런의 위상 · 위치 오차 경계로 승격 — 합성 np2
+        회귀: —   opened_in: docs/reviews/codex_review_mixer_highbo_round5_v2_20260928.md
+  [P1] HBR6-01  claimed_fixed 측정한 A/B 와 **다른 메시의 위상 증서가 생산된다** — 생산자가 `gen.json.mo
+        회귀: scripts/mixer_restart_phase_test.py   opened_in: docs/reviews/codex_review_mixer_highbo_round6_20260928.md
+  [P1] HBR6-02  open          (제안된 검증 설계) **SE 영률 ×14 는 순수 강성 검증이 아니다** — 생성기의 동일상
+        회귀: —   opened_in: docs/reviews/codex_review_mixer_highbo_round6_20260928.md
+  [P2] HBR6-03  claimed_fixed **완료 배너가 봉인 끝 step 과의 모순을 덮는다** — `Total wall time` 
+        회귀: scripts/mixer_restart_phase_test.py   opened_in: docs/reviews/codex_review_mixer_highbo_round6_20260928.md
+  [P3] LHS-16   claimed_fixed `c_cpl[9]` 를 `parse_liggghts` 가 `periodic_flag` 라 부르
+        회귀: scripts/lhs_contact_audit.py, scripts/parse_liggghts.py   opened_in: docs/reviews/lhs_handover_judgments_20260924.md
+  [P2] LHS-17   open          웹앱 퍼콜레이션 경계 밴드가 **조용히 바뀐다** — 한쪽 밴드에 입자 < 3 이면 L1 (p
+        회귀: scripts/lhs_perc_audit.py   opened_in: docs/reviews/lhs_handover_judgments_20260924.md
+  [P3] LHS-18   open          bottom∩top 겹침 (두께 < 4·r) 은 겹친 입자의 성분을 **통째로 관통**으로 센
+        회귀: scripts/lhs_perc_audit.py   opened_in: docs/reviews/lhs_handover_judgments_20260924.md
+  [P3] LHS-19   claimed_fixed ② 열의 뜻이 이름과 다르다 (열 사전 대상): `n_components` 는 **외톨이 SE
+        회귀: scripts/lhs_perc_audit.py, scripts/lhs_design_dataset.py --selftest, webapp/test_percolation_labels.py   opened_in: docs/reviews/lhs_handover_judgments_20260924.md
+  [P3] LHS-20   claimed_fixed 09-19 census (`docs/data/case_master_column_census_2
+        회귀: scripts/lhs_perc_audit.py, scripts/lhs_design_dataset.py --selftest, webapp/test_percolation_labels.py   opened_in: docs/reviews/lhs_handover_judgments_20260924.md
+  [P3] SELF-64  claimed_fixed J20-b 초판 (`66129a9fc`) 이 코드로 확인하지 않은 서술 둘을 적었다 — ① *
+        회귀: scripts/lhs_perc_audit.py   opened_in: docs/reviews/lhs_handover_judgments_20260924.md
+  [P1] HBR7-01  open          E0 정적 검사 (§4-b 경화 안정성 · §4-c dt/2) 만으로 bin 7 의 refer
+        회귀: docs/reviews/codex_mixer_highbo_round7_evidence_20260929/audit_prereg.py   opened_in: docs/reviews/codex_review_mixer_highbo_round7_prereg_20260929.md
+  [P1] HBR7-02  open          soft 를 관측하는 것과 soft 가 1 % 계약을 통과하는 것을 혼동한다 — v1 §6 은
+        회귀: docs/reviews/codex_mixer_highbo_round7_evidence_20260929/audit_prereg.py   opened_in: docs/reviews/codex_review_mixer_highbo_round7_prereg_20260929.md
+  [P1] HBR7-03  open          q 의 95 % CI ⊂ ±0.02 를 "soft 에서도 같은 결론" · "soft 전체 유효
+        회귀: docs/reviews/codex_mixer_highbo_round7_evidence_20260929/audit_prereg.py   opened_in: docs/reviews/codex_review_mixer_highbo_round7_prereg_20260929.md
+  [P1] HBR7-04  open          주 판정 보호선 `Δ−u ≥ .10 ∧ Δ−u ≥ 2SE` 에서 u 가 정의되지 않았고 SE 
+        회귀: docs/reviews/codex_mixer_highbo_round7_evidence_20260929/audit_prereg.py   opened_in: docs/reviews/codex_review_mixer_highbo_round7_prereg_20260929.md
+  [P2] HBR7-05  open          실패 seed 처리와 unblind 종료 상태가 모순된다 — 한 seed 의 팔이 두 번째 T
+        회귀: docs/reviews/codex_mixer_highbo_round7_evidence_20260929/audit_prereg.py   opened_in: docs/reviews/codex_review_mixer_highbo_round7_prereg_20260929.md
+  [P2] HBR7-06  open          "60 CPU 상한이면 NP · hold 에 관계없이 처리량/벽시계가 같다" (v1 §8-3)
+        회귀: docs/reviews/codex_mixer_highbo_round7_evidence_20260929/audit_prereg.py   opened_in: docs/reviews/codex_review_mixer_highbo_round7_prereg_20260929.md
+  [P3] SELF-65  claimed_fixed `lhs_perc_audit._summary` 의 `box_default_cases` 가 어느
+        회귀: scripts/lhs_perc_audit.py   opened_in: docs/reviews/lhs_handover_judgments_20260924.md
+  [P3] SELF-66  claimed_fixed LHS 웹앱 배치의 type_map 관문이 mono (2-type) 130 의 30 + 64 
+        회귀: scripts/lhs_webapp_batch.py   opened_in: docs/reviews/lhs_handover_judgments_20260924.md
+  [P3] SELF-67  claimed_fixed 재검증 요청서 (`ac484ba5c`) 와 그 커밋 메시지가 "0001–0007 은 앞 제출본
+        회귀: docs/reviews/codex_lhs_coverage_reverify_evidence_20260930/source_manifest.json   opened_in: docs/reviews/codex_lhs_coverage_reverify_verdict_20260930.md
+  [P3] SELF-68  claimed_fixed Phase A 재현 런 뒤 스크립트 첫 판이 러너 영수증과 `.sh` 영수증의 `receipt
+        회귀: docs/reviews/phase_a_rep100_postrun_20260930.sh, docs/data/phase_a_rep100_20260930/pa100/postrun_20260930.log   opened_in: docs/reviews/phase_a_replication_vgcf100_prereg_20260926.md
+  [P3] SELF-69  open          짝 비교기 `phase_a_pair_e_arms.py` 의 화면 표시 단위가 줄마다 달랐다 —
+        회귀: scripts/phase_a_pair_e_arms.py   opened_in: docs/reviews/phase_a_replication_vgcf100_prereg_20260926.md
+  [P3] LHS-21   claimed_fixed mono 케이스 (130 중 30 · 64 중 16) 의 **실측 AM 개수가 인계표에 없다*
+        회귀: scripts/lhs_design_dataset.py   opened_in: docs/lhs_handover_checklist_20260929.md
+  [P3] LHS-22   claimed_fixed F1 근접쌍 CN (`se_se_cn_aug*`) 의 격자 탐색 (`scripts/dem_an
+        회귀: scripts/analyze_contacts.py::selftest ⑲a–g   opened_in: docs/reviews/lhs_handover_judgments_20260924.md
+  [P3] LHS-23   claimed_fixed 09-19 census 가 `am_vulnerable_pct` · `AM_P_vulnerabl
+        회귀: scripts/dem_analysis_core.py, scripts/lhs_design_dataset.py --selftest, webapp/test_am_isolation_labels.py   opened_in: docs/reviews/lhs_handover_judgments_20260924.md
+  [P1] HBR8-01  open          v2.2 한 파일에 상반된 실행 정책이 동시에 활성 — "후행 진단" (§4-d 시점 · B:
+        회귀: docs/reviews/codex_mixer_highbo_round8_evidence_20260929/audit_round8.py   opened_in: docs/reviews/codex_review_mixer_highbo_round8_prereg_20260929.md
+  [P1] HBR8-02  open          헤드라인 "LC = 코팅 대리 = AM–AM 점착 제거" (§9 B:302–303 · §4-d
+        회귀: docs/reviews/codex_mixer_highbo_round8_evidence_20260929/audit_round8.py   opened_in: docs/reviews/codex_review_mixer_highbo_round8_prereg_20260929.md
+  [P2] HBR8-03  open          "8 바퀴 긴 런의 앞부분을 2 바퀴 스모크로 재사용" (요청서 Q4 · v2.2 B:148–
+        회귀: docs/reviews/codex_mixer_highbo_round8_evidence_20260929/audit_round8.py   opened_in: docs/reviews/codex_review_mixer_highbo_round8_prereg_20260929.md
+  [P2] HBR8-04  open          ETA 계산 범위에서 확인 E0 6 · 개발 7 · NP 프로브 · hold 유휴 · I/O 
+        회귀: docs/reviews/codex_mixer_highbo_round8_evidence_20260929/audit_round8.py   opened_in: docs/reviews/codex_review_mixer_highbo_round8_prereg_20260929.md
+  [P3] LHSC-07  open          [coverage CLI · 이번 패치가 만든 것 아님] `coverage_physics_vs
+        회귀: docs/reviews/codex_lhs_coverage_evidence_20260930/audit_cli.py, docs/reviews/codex_lhs_coverage_evidence_20260930/_reproduction_cli_results_cand_64ae3cba8.json   opened_in: docs/reviews/codex_lhs_coverage_verdict_20260930.md
+  [P3] LHSC-08  claimed_fixed [패치 0001 · item 4 벽 규칙] 규칙 = **저장 좌표에서 양의 cap 깊이** (
+        회귀: scripts/test_wall_near_tangent.py   opened_in: docs/reviews/codex_lhs_coverage_verdict_20260930.md
+  [P3] LHSC-09  open          [패치 0004 · item 3 접촉 문] 중복 ID 쌍 거부 · 고아 기록은 정식 `harv
+        회귀: docs/reviews/codex_lhs_coverage_evidence_20260930/README.md   opened_in: docs/reviews/codex_lhs_coverage_verdict_20260930.md
+  [P3] LHSC-10  open          [패치 0005 · 0006 · v2 라벨 계약] `film_area_physics_v2` 는
+        회귀: docs/reviews/codex_lhs_coverage_evidence_20260930/audit.py, docs/reviews/codex_lhs_coverage_evidence_20260930/_reproduction_audit_results_cand_64ae3cba8.json   opened_in: docs/reviews/codex_lhs_coverage_verdict_20260930.md
+  [P3] LHSC-11  open          [수확기 item 2 면적 대조 · 수치영역] r1 = r2 = 1e160 sim · δ = 
+        회귀: docs/reviews/codex_lhs_coverage_reverify5_evidence_20260930/audit_r5.py, docs/reviews/codex_lhs_coverage_reverify5_evidence_20260930/numeric_domain_results.json   opened_in: docs/reviews/codex_lhs_coverage_reverify5_verdict_20260930.md
+  [P2] SELF-71  claimed_fixed 강성 축 사전등록 §4 b (ref2 최대 겹침 ≤ ref + 1e-9 %) · c (dt/2
+        회귀: scripts/mixer_smoke_blind.py, scripts/mixer_stage_gate.py, docs/reviews/mixer_highbo_stiffness_prereg_20260929.md   opened_in: docs/reviews/mixer_highbo_stiffness_prereg_20260929.md
+  [P2] HBR10-01 claimed_fixed b · c 보고 전용 전환이 **측정 유효성**까지 관문에서 뺐다 — 기준 S_R² NaN ·
+        회귀: scripts/mixer_smoke_blind.py, scripts/mixer_stage_gate.py   opened_in: docs/reviews/codex_review_mixer_highbo_round10_20260930.md
+  [P2] HBR10-02 claimed_fixed soft 진단 범위 7.37 % 가 타입쌍을 보지 않고 **전체 최대 하나**에 적용된다 — 
+        회귀: scripts/check_contact_validity.py   opened_in: docs/reviews/codex_review_mixer_highbo_round10_20260930.md
+  [P2] HBR10-03 claimed_fixed "b · c 실패 = 순수 잡음 · 기존 문턱은 어떤 후보도 못 넘는다" 는 결론이 입증되지 
+        회귀: docs/reviews/mixer_highbo_stiffness_prereg_20260929.md   opened_in: docs/reviews/codex_review_mixer_highbo_round10_20260930.md
+  [P3] SELF-72  claimed_fixed 웹앱 쌍 렌즈 union (`porosity_union` · calc_porosity_dual
+        회귀: webapp/test_closed_param_labels.py   opened_in: docs/reviews/lhs_handover_judgments_20260924.md
+  [P3] SELF-73  claimed_fixed 웹앱 표시가 닫힌 파라미터의 코드 정의와 어긋났다 — ① c_cpl[22] 기하 교차 원판 면
+        회귀: webapp/test_closed_param_labels.py   opened_in: docs/reviews/lhs_handover_judgments_20260924.md
+  [P3] LHS-24   claimed_fixed 웹앱 ② 값 · 경로 결함 묶음 — (a) am_am_n_contacts 가 full_metr
+        회귀: webapp/test_closed_param_values.py, webapp/test_closed_param_groupview.py   opened_in: docs/reviews/lhs_handover_judgments_20260924.md
+  [P2] PRED-01  open          예측기 자동 타깃 (predictor_engine · full_metrics 숫자 키 전부) 
+        회귀: webapp/test_closed_param_exact_union.py   opened_in: docs/reviews/lhs_handover_judgments_20260924.md
+  [P2] LHS-25   claimed_fixed physics 피복률 (v1 · v2) 은 접촉마다 추정한 소성 면적 (Tabor F/H · 
+        회귀: scripts/test_union_coverage.py, webapp/test_coverage_union_display.py   opened_in: docs/reviews/lhs_handover_judgments_20260924.md
+  [P3] LHS-26   open          rough 피복률 (B3 · coverage_*_physics_rough) 의 모양 인자가 설
+        회귀: —   opened_in: docs/reviews/lhs_coverage_reasonableness_20261001.md
+  [P3] SELF-74  claimed_fixed v2 분모 무효 (LHSC-01) 를 원자료 확인 없이 '이웃 AM 과 아주 깊이 겹친 입자'
+        회귀: webapp/test_coverage_handover_scope.py   opened_in: docs/reviews/lhs_handover_judgments_20260924.md
+  [P3] LHS-27   claimed_fixed 피복 단계 scripts/coverage_physics_vs_hertzian.py 가 요약 C
+        회귀: scripts/test_coverage_cli_no_tracked_write.py   opened_in: docs/reviews/lhs_coverage_batch5_comparison_20261001.md
+  [P3] SELF-75  claimed_fixed 퍼콜 감사기 `scripts/lhs_perc_audit.py` 의 lhsx 실행 rc=3 을 
+        회귀: scripts/lhs_perc_audit.py::selftest ⑭   opened_in: docs/reviews/lhs_handover_judgments_20260924.md
+  [P2] MIX-11   open          scripts/mixer_smoke_blind.py --selftest 가 게이트의 'fast
+        회귀: —   opened_in: docs/reviews/lhs_handover_judgments_20260924.md
+  [P2] LHS-28   claimed_fixed 웹앱 배치 관문 `resolve_mode` 가 3-type 덱의 0 입자 상 (ps_sweep
+        회귀: scripts/lhs_webapp_batch.py::selftest ⑰ ⑰b (양성 — 옛 코드 실패 확인) · ⑰c–⑰h (음성 6)   opened_in: scripts/lhs_webapp_batch.py
+  [P3] SELF-77  open          ps45 DEM ↔ 실험 공극률 비교에서 SC 많은 조성의 차이를 근거 없이 'SE 소성 유동
+        회귀: —   opened_in: docs/reviews/codex_ps45_porosity_vs_exp_request_20261001.md
+  [P1] PS45-01  open          요청서 §2-1 · §2-2 의 두 비약 — (a) 고정 구 형상 한계의 존재 → 이번 DEM
+        회귀: —   opened_in: docs/reviews/codex_ps45_porosity_verdict_20261001.md
+  [P1] PS45-02  open          "PC-rich 는 실험과 1 %p 이내" · "평균 전에는 PC DEM 값을 COMSOL 대
+        회귀: —   opened_in: docs/reviews/codex_ps45_porosity_verdict_20261001.md
+  [P1] PS45-03  open          밀도 · 측정 상태 · 변수 뜻이 불명인 채 같은 porosity 로 이식 — SE 밀도 2.
+        회귀: —   opened_in: docs/reviews/codex_ps45_porosity_verdict_20261001.md
+  [P2] PS45-04  open          정정표의 "5:5 차이는 PC 의 4.2 %p 편차 안" — 서로 다른 묶음 · 시료의 두 값
+        회귀: —   opened_in: docs/reviews/codex_ps45_porosity_verdict_20261001.md
+  [P2] PS45-05  open          "정확 union" 의 MC 적분 정밀도 (±0.02 %p) 를 물리 정확도 · 혼합 이득으로
+        회귀: —   opened_in: docs/reviews/codex_ps45_porosity_verdict_20261001.md
+  [P2] WEB-01   claimed_fixed atom 파일만 올린 케이스 (atoms-only 모드 · 04-24 부터) 의 결과 페이지 
+        회귀: webapp/test_atoms_only_viewer.py ② ③ ③b ⑥b (옛 템플릿에서 실패 확인 · 10/14 → 14/14)   opened_in: webapp/templates/single.html
+  [P3] WEB-02   open          atom 파일만 올린 케이스의 3D 가 상 구분 없이 전부 연회색 (atoms-only = '
+        회귀: webapp/test_atoms_only_viewer.py ⑦ ⑦b ⑦c (옛 뷰어에서 실패 확인 · 14/17 → 17/17)   opened_in: webapp/static/js/viewer3d.js
+  [P2] SELF-78  open          FAM §12-5 봉인 argv 의 `f = 0` 팔 (real_14 ② · corner ⑥)
+        회귀: —   opened_in: docs/reviews/fam_platen_prereg_20260812.md
+  [P2] SELF-79  open          FAM §12-5 봉인 프레임 예산이 서보 정착을 보장하지 못했다 — f 팔 `--frames
+        회귀: —   opened_in: docs/reviews/fam_platen_prereg_20260812.md
+  [P2] SELF-80  open          FAM ⑤ f_(b) 정지 런의 부분 결과를 열었다 — 1저자는 10-01 정지 때 "부분 결
+        회귀: —   opened_in: docs/reviews/fam_platen_prereg_20260812.md
+  [P1] TAU-01   claimed_fixed **√T 에 "COMSOL/EIS input"**.  COMSOL 종 수송 τ_F = T (§
+        회귀: webapp/test_tau_labels.py A1 · A2 · A3 · B1–B4 · C1 · C3 · C5 · D1 · E1 · E2 · F1–F3 · G1 · G2 · H1 · H2 · I1–I4 (옛 코드 5 PASS / 34 FAIL → 39/39), scripts/lhs_design_dataset.py::--selftest ㉓b (새 단언 — tau2 있음 · "COMSOL/EIS 입력 τ 는 τ_Laplace" 없음 — 를 먼저 바꿔 206/207 실패 확인 → 207/207)   opened_in: docs/reviews/tau_conventions_judgment_v2_20261003.md
+  [P1] TAU-02   claimed_fixed **"Minnmann 2.07 vs 우리 2.10 — 1.4 % 일치 · parameter-f
+        회귀: webapp/test_tau_labels.py C2 (옛 툴팁 "1.4% 오차" · "parameter-free external validation" · "2.07 (42 vol% CAM)" 없음 — 옛 코드 FAIL)   opened_in: docs/reviews/tau_conventions_judgment_v2_20261003.md
+  [P1] TAU-03   claimed_fixed **"τ_Laplace,eff" 한 이름에 최소 다섯 변형**: 웹앱 H · 웹앱 P (raw
+        회귀: webapp/test_tau_grade_unify.py, scripts/grade_engine.py --selftest (②a · ②b · ②e), webapp/test_tau_labels.py F1 · F2 · J2 · J3   opened_in: docs/reviews/tau_conventions_judgment_v2_20261003.md
+  [P2] TAU-04   open          기공 τ 가 ML `tau_se` 로
+        회귀: —   opened_in: docs/reviews/tau_conventions_judgment_v2_20261003.md
+  [P2] TAU-05   open          비관통 침대에 유한 τ_Dij (`DESC-02W`).  **파급 확정** (코드 #34): 
+        회귀: —   opened_in: docs/reviews/tau_conventions_judgment_v2_20261003.md
+  [P2] TAU-06   open          유령 `tortuosity_electronic_*` · `tau_lap_eff` (σ_e 의 
+        회귀: —   opened_in: docs/reviews/tau_conventions_judgment_v2_20261003.md
+  [P2] TAU-07   open          τ_Lap,geom ('geom' 오명 · T < 1 가능) + **CF 의 지위**: "CO
+        회귀: —   opened_in: docs/reviews/tau_conventions_judgment_v2_20261003.md
+  [P2] TAU-08   open          "Constriction overhead" 섞인 비 · 같은 망 FULL/CF 도 원기둥 bu
+        회귀: webapp/test_tau_grade_unify.py G4 · G5c   opened_in: docs/reviews/tau_conventions_judgment_v2_20261003.md
+  [P3] TAU-09   open          망 `active_fraction` (바닥 = 집전체 기준) ↔ `ionic_active_pc
+        회귀: —   opened_in: docs/reviews/tau_conventions_judgment_v2_20261003.md
+  [P1] TAU-10   open          **프레임 [1] "pure-SE porosity ≈ 10 % @ 300 MPa (Minnma
+        회귀: —   opened_in: docs/reviews/tau_conventions_judgment_v2_20261003.md
+  [P3] TAU-11   open          카드가 Minnmann Eq 4 를 보고값 꼴로만 적음 (인쇄 역수 오식 미표기) · Arzt
+        회귀: —   opened_in: docs/reviews/tau_conventions_judgment_v2_20261003.md
+  [P2] TAU-12   open          Minnmann 앵커 CSV 낡은 행
+        회귀: —   opened_in: docs/reviews/tau_conventions_judgment_v2_20261003.md
+  [P1] TAU-13   open          **두 면적 모드 모두 1세대 협착식** — 게이트 없이 인계하면 "더 정교한 면적" 이나 물
+        회귀: —   opened_in: docs/reviews/tau_conventions_judgment_v2_20261003.md
+  [P2] TAU-14   claimed_fixed 띠 폴백 L1 이 σ · T 값을 바꾼다 (`LHS-17` 증거 추가)
+        회귀: scripts/test_network_boundary_rule.py ①–⑧ (옛 코드 1/8 → 8/8 — ① 동작 중립 = 추출 전 HEAD eedada5d3 기준값과 비트 동일), scripts/test_tau_flux.py B1 · B2 · B3 · K1 · K2 (띠 L1/L2 → BAND_FALLBACK 빈칸 · 기록 없음 → NOT_COMPUTED (missing_input) · 실제 솔버 결과 계약), webapp/test_tau_handover_status.py T2 · T3 · T7 (케이스 τ 블록 띠 규칙 행 · 옛 산출물 "기록 없음")   opened_in: docs/reviews/tau_conventions_judgment_v2_20261003.md
+  [P3] TAU-15   open          PyBaMM 휴면 코드: τ → Bruggeman 지수 자리 · porosity = 공극 · 
+        회귀: —   opened_in: docs/reviews/tau_conventions_judgment_v2_20261003.md
+  [P3] TAU-16   claimed_fixed 등급 문턱 출처 "Tippens 2019, Famprikis 2019" — **Fampriki
+        회귀: webapp/test_tau_grade_unify.py G5a · G7   opened_in: docs/reviews/tau_conventions_judgment_v2_20261003.md
+  [P3] TAU-17   open          "formation factor" = f (Archie 와 역수)
+        회귀: —   opened_in: docs/reviews/tau_conventions_judgment_v2_20261003.md
+  [P3] TAU-18   open          덱 τ_wall 분모 "두께" (`LREL-05` 열림)
+        회귀: —   opened_in: docs/reviews/tau_conventions_judgment_v2_20261003.md
+  [P3] TAU-19   open          "τ_Dij,all ≤ τ_Dij" 보장 문구 (`I-17`)
+        회귀: —   opened_in: docs/reviews/tau_conventions_judgment_v2_20261003.md
+  [P3] TAU-20   open          σ₀ 출처 라벨 제각각 (`I-15`)
+        회귀: —   opened_in: docs/reviews/tau_conventions_judgment_v2_20261003.md
+  [P2] TAU-21   claimed_fixed **웹앱 physics τ 칸이 physics σ 가 없으면 조용히 Hertz 값을 쓴다** 
+        회귀: webapp/test_tau_labels.py A4 (physics σ 없음 → tau2 · √ · 비율 행의 physics 칸 "—" — 두 경로 Step 4 · 4b · 옛 코드 FAIL)   opened_in: docs/reviews/tau_conventions_judgment_v2_20261003.md
+  [P2] TAU-22   claimed_fixed **비관통이면 `sigma_full_status` 가 'valid_zero' 가 아니라 'no
+        회귀: scripts/test_tau_flux.py C3 (sigma_full_status 무관) · D1 (비관통 → NOT_PERCOLATING · f = 0) · K3 (위 띠에만 닿는 합성을 실제 솔버 + calc_percolation 에 — 솔버 상태 not_computed (valid_zero 아님) · 0 % · L0 → NOT_PERCOLATING)   opened_in: docs/reviews/tau_conventions_judgment_v2_20261003.md
+  [P3] TAU-23   open          **`constriction_dominant` 경고도 죽어 있다** — `constrictio
+        회귀: —   opened_in: docs/reviews/tau_conventions_judgment_v2_20261003.md
+  [P2] TAU-24   claimed_fixed **L0 띠도 띠 노드를 등전위로 묶고 정규화는 판 간격** — 실효 길이가 L 보다 짧아 T
+        회귀: scripts/lhs_design_dataset.py, webapp/test_tau_handover_status.py   opened_in: docs/reviews/tau_conventions_judgment_v2_20261003.md
+  [P3] TAU-25   claimed_fixed `sigma_full_mScm` 은 소수 6 자리 반올림 — φσ₀/σ_full_mScm 와 
+        회귀: scripts/test_tau_flux.py A1 · A2 · E1 · K1 (f_gap = 솔버 무차원 sigma_full 그대로 · σ_grain 두 값에서 tau2 · f 비트 동일 · tau2 = φ_망/σ_ratio)   opened_in: docs/reviews/tau_conventions_judgment_v2_20261003.md
+  [P2] RINT-06  open          설계 반증: 접촉 총면적 정규화 (Σg_film = 1/R_c) 는 계면 위치를 고치지 못한다
+        회귀: —   opened_in: docs/reviews/codex_review_rint_stage1_20261003.md
+  [P2] RINT-07  open          설계 단위 누락: R_j [Ω] → 면 ASR 환산에서 vox 는 µm — r_face [Ω·
+        회귀: —   opened_in: docs/reviews/codex_review_rint_stage1_20261003.md
+  [P2] RINT-08  open          설계 미폐쇄: 초안 D4 (미등록 면 L1 fallback) — 간극 · 미등록 접점엔 물리 
+        회귀: —   opened_in: docs/reviews/codex_review_rint_stage1_20261003.md
+  [P2] RINT-09  open          설계 반증: FULL ≤ voxel ≤ CF 와 같은 Δlnσ 는 불변식이 아니다 — 같은 막
+        회귀: —   opened_in: docs/reviews/codex_review_rint_stage1_20261003.md
+  [P3] RINT-15  open          NODIGEST 캐시: 러너 OUTDIR 태그가 r ON/OFF 를 못 가름 — digest 
+        회귀: —   opened_in: docs/reviews/codex_review_rint_stage1_20261003.md
+  [P3] RINT-16  open          interface 소산 버킷 = 쌍 합산 — 개별 쌍의 −∂lnσ/∂ln r 민감도로 읽으면 
+        회귀: —   opened_in: docs/reviews/codex_review_rint_stage1_20261003.md
+  [P3] RINT-21  open          r1 면 규칙의 `AM_S|AM_P` 상 경계도 RINT-06 과 같은 위치 결함 — 혼합 쌍
+        회귀: —   opened_in: docs/reviews/contact_resistance_pipeline_draft_v2_20261006.md
+  [P1] LHS-29   open          σ_VM 열 (`stress_cv` · `stress_ratio_<상>` · `stress_z
+        회귀: scripts/lhs_stress_constriction_audit.py, scripts/test_love_weber_stress.py, webapp/test_stress_lw_labels.py   opened_in: docs/reviews/lhs_handover_judgments_20260924.md
+  [P3] LHS-30   open          `bulk_resistance_fraction` 인계 전 정의 — 간선별 R_bulk/R_to
+        회귀: scripts/lhs_stress_constriction_audit.py, scripts/test_constriction_power_share.py, webapp/test_constriction_power_labels.py   opened_in: docs/reviews/lhs_handover_judgments_20260924.md
+  [P2] LHS-31   claimed_fixed Auerbach 힘 기반 파쇄 열 (`fracture_index_force` · `frac_<
+        회귀: scripts/fracture_model.py (판독), scripts/lhs_design_dataset.py --selftest (㉕), webapp/test_s567_labels.py   opened_in: docs/reviews/lhs_handover_judgments_20260924.md
+  [P3] LHS-32   claimed_fixed `path_hop_area_mean` · `path_hop_area_min_mean` 은 덩어
+        회귀: scripts/analyze_contacts.py (판독 · 경로 선택 :700–753), scripts/lhs_design_dataset.py --selftest (㉕b · ㉕c), webapp/test_s567_labels.py   opened_in: docs/reviews/lhs_handover_judgments_20260924.md
+  [P3] SELF-82  claimed_fixed ④b 웹앱 시험 `webapp/test_stress_lw_labels.py` E1 (등급 축 
+        회귀: webapp/test_stress_lw_labels.py, webapp/test_constriction_power_labels.py   opened_in: docs/reviews/lhs_handover_judgments_20260924.md
+  [P1] SELF-83  claimed_fixed 웹앱 호스트 사고 — 믹서 DEV 런을 보이게 하려고 내가 준 두 번째 인스턴스 명령 (다른 
+        회귀: scripts/test_webapp_launcher.py   opened_in: docs/session_20260923_progress.md
+  [P3] SELF-84  claimed_fixed grade_engine selftest ②e "대조: 코드가 실제로 3.0 을 쓴다" 가 공허
+        회귀: scripts/grade_engine.py --selftest (②b · ②e)   opened_in: docs/session_20260923_progress.md
+  [P2] SELF-86  claimed_fixed stop_after="network" 정지 계약을 손으로 만든 fixture · mock 으로
+        회귀: webapp/test_pipeline_provenance.py (T12 망 레코드 · T13–T16 = 실 생산자 출력 · 손 fixture 는 T16a Codex 수치 재현뿐), webapp/test_network_handover_chain.py (실 생산자 → 정지 helper → τ → 배치 기록 → build_handover · 옛 코드 5/8 = RGL-02 · 03 · 04)   opened_in: docs/reviews/codex_review_rint_g1_lhs_network_20261005.md
+  [P3] SELF-87  claimed_fixed 시험이 주는 것보다 강하게 적었다 — "GOLD 8 침대 · σ 비트 동일" (= 단언 8 ·
+        회귀: scripts/test_network_boundary_rule.py (⑨), scripts/test_constriction_power_share.py (C1c · C1d), scripts/rint03_je_compare.py --selftest (T7–T11)   opened_in: docs/reviews/codex_review_rint_g1_lhs_network_20261005.md
+  [P3] SELF-88  open          3차 재검증 요청서 §9 표가 RGLR-02 성질 시험을 "생산자 형식 표본 20,000 … 
+        회귀: —   opened_in: docs/reviews/codex_review_rglr_reverify_20261005.md
+  [P3] SELF-89  claimed_fixed 194 실행기 봉인 코드 목록 (CODE_FILES) 두 경로가 webapp/ 로 잘못 적혀 
+        회귀: scripts/run_network_194_parallel.py --selftest (29 · 봉인 대상 누락 = preflight stop), docs/reviews/codex_review_rglr2_reverify_20261005.md (등록 19 지문 = 핀 19/19)   opened_in: docs/reviews/lhs_network_batch_registration_20261005.md
+  [P3] SELF-90  open          5차 요청서 §6-6 초안 · §6-2 표 · 인계 README C7 의 문장 여섯이 과장 ·
+        회귀: —   opened_in: docs/reviews/codex_review_rglr3_reverify_20261006.md
+  [P2] LHS-34   open          `LHS-25` 잔여 — Physics 피복의 소비자 ①② (σ_ionic T1 면적 선택 ·
+        회귀: —   opened_in: docs/reviews/lhs_handover_judgments_20260924.md
+  [P3] GEN2-02  open          합집합 피복 — 완전 포함 쌍 (c_cpl[22] < 0 · 작은 SE 가 큰 AM 안에 통째
+        회귀: —   opened_in: docs/reviews/gen2_network_design_20261006.md
+  [P3] PARSE-01 open          `parse_liggghts.parse_input_script` 가 **마지막** `regio
+        회귀: —   opened_in: docs/reviews/gen2_network_design_20261006.md
+  [P2] TAU-26   open          `TAU-24` 잔여 — 전극 띠로 낮아진 수송 tortuosity 의 **보정 T** (띠 
+        회귀: —   opened_in: docs/reviews/tau_conventions_judgment_v2_20261003.md
+  [P2] G2R-02   open          알 수 없는 세대 · 부분 결손을 옛 세대로 수용 — ψ 오타 · 전극 오타 · area_ru
+        회귀: scripts/test_gen2_role_contract.py, webapp/test_gen2_publication_handover.py   opened_in: docs/reviews/codex_review_gen2_network_20261006.md
+  [P2] G2R-03   open          CG 종료 코드 0 + G ≤ 1.1·Σg 는 전류 정확성 증서가 아니다 — 고대비 막다른 간
+        회귀: scripts/test_network_solve_certificate.py, scripts/test_gen2_role_contract.py   opened_in: docs/reviews/codex_review_gen2_network_20261006.md
+  [P2] RINTG-01 open          (Codex 표기 RINTG2-01) 순열 불변 σ 와 legacy OFF 비트 동일의 충돌 
+        회귀: —   opened_in: docs/reviews/codex_review_rint_g2_design_20261006.md
+  [P3] RINTG-11 open          legacy OFF σ 의 입자 행 순서 (raster 덮어쓰기) 의존 크기 — 실침대 미측정
+        회귀: docs/reviews/rint_t43_order_dependence_registration_20261013.md, scripts/test_rint_t43_order.py, docs/data/rint_t43_order_20261013/README.md   opened_in: docs/reviews/contact_resistance_pipeline_draft_v3_20261006.md
+  [P3] RINTV-03 open          (Codex 표기 RINTV3-03) T2-2b 의 "β 또는 정규화 응답을 3β/(1 − β
+        회귀: —   opened_in: docs/reviews/codex_review_rint_g2_v3_20261007.md
+  [P3] SELF-91  open          세대 2 재검증 요청서 §4 결정 8 의 "real14 · case15 physics g2 협
+        회귀: docs/reviews/codex_gen2_network_reverify_evidence_20261006/evidence/real_beds.json (real14 · case15 arms.g2: clamp · floor · solve_info.constriction_only.n_zero_resistance)   opened_in: docs/reviews/codex_review_gen2_network_reverify_20261006.md
+  [P3] WEB-04   open          force_chains.json 의 fn 이 "µN" 이라 적히지만 환산이 fn × 1e6/s
+        회귀: —   opened_in: docs/data/ps45_force_stress_20261007/README.md
+  [P3] SELF-92  open          194 등록 §1 기대에 case15 망 정지 = done 이라 적었다 — 실제는 WEB-03
+        회귀: docs/reviews/codex_gen2_network_reverify4_precheck_20261007/case15_solver_direct_4950b2e79.log (채널별 전체 로그 · 같은 원자료 · 같은 인자), docs/reviews/codex_gen2_network_reverify4_precheck_20261007/g2pre_c3117438a_1007_1415.tar.gz (1저자 WSL 스모크 보고 · 다시 읽기 · 시범 감사)   opened_in: docs/reviews/codex_gen2_network_reverify4_precheck_20261007/README.md
+  [P3] GEN2-04  open          접촉 면적 ≤ 0 간선의 처리가 모드마다 다르다 — Hertz 경로는 a = 0 → R_Max
+        회귀: docs/reviews/codex_gen2_network_reverify4_precheck_20261007/case15_solver_direct_4950b2e79.log (Thermal physics: ligg_area < 0 거부 · Hertz 열은 띠 겹침 먼저)   opened_in: docs/reviews/codex_gen2_network_reverify4_precheck_20261007/README.md
+  [P3] WEB-05   open          망 시도 기록 (network_attempt.json reason · 단계 err) 이 사유를
+        회귀: docs/reviews/codex_gen2_network_reverify4_precheck_20261007/g2pre_c3117438a_1007_1415.tar.gz (g2pre_smoke_*/smoke_report.json reports.case15_network.attempt.reason — 300 자 · 앞이 잘림)   opened_in: docs/reviews/codex_gen2_network_reverify4_precheck_20261007/README.md
+  [P3] SELF-93  claimed_fixed ps45 힘 기록 README · 1저자 보고에 "AM–AM 접촉 = 전체 접촉의 0.39 %
+        회귀: docs/data/ps45_force_stress_20261007/raw/ps45_force_metrics.tgz (full_metrics area_<쌍>_n · A_binding_total_n_contacts — 다섯 케이스 개수 합 = 전체 접촉 수 확인)   opened_in: docs/data/ps45_force_stress_20261007/README.md
+  [P2] WEB-06   open          웹앱 3D 'Stress Concentration' · 응력 z 분포 그림 · CSV 의 양 
+        회귀: docs/data/contact_pressure_check_20261007/contact_pressure_check.py → docs/data/contact_pressure_check_20261007/real14_contact_pressure.txt (real14 커밋 덤프 · 결정적), docs/data/contact_pressure_check_20261007/stress_z_260925_000559_082983.csv (1저자 웹앱 Z-profile CSV · ps45 7:3), webapp/test_viewer_load_view.py (10-07 · 2/12 → 73/73 · 압축만 · 당김 표지 · 발사 뒤 패치 [P] 절)   opened_in: docs/data/contact_pressure_check_20261007/README.md
+  [P2] G2RR4-01 claimed_fixed v1.3 배포 관문이 다시 읽기 기록의 상세 (meta · cases · checks) 를 읽
+        회귀: scripts/test_lhs_release_v13.py (V18 — 옛 코드 137/167 → 167/167 · Codex 변이 넷 [C] (M2 ok=false · cases=[] · meta=[] · 감사 관측 {problems · outside} · Codex 탐침 정상 대조 꼴 = 검사 ID 결손) + 같은 부류 18 = build 거부 · 산출 없음 · check_v13 재판정 6 · V18a 상세 정상 대조 생성 · 생산자 계약 · 관측 필수 표), scripts/g2_network_reread.py --selftest (17/19 → 19/19 · 실 생산자 JSON pilot3 · 합성 production194 가 상세 계약 통과 · 변이 넷 = 문제), docs/reviews/codex_g2rr4_fix_probe_rerun_20261007/release_gate_detailed.py (파생 탐침 — 고친 트리 상세 픽스처 위 Codex 변이 · control 생성 · check [] · 나머지 8 거부 · 결과 fixed_release_gate_detailed.json), docs/reviews/codex_gen2_network_reverify4_evidence_20261007/probes/release_gate.py (무변경 재실행 = 8 변이 전부 거부 · 결과 docs/reviews/codex_g2rr4_fix_probe_rerun_20261007/fixed_release_gate.json), scripts/test_lhs_release_v13.py (V20 · V20f · V20g)   opened_in: docs/reviews/codex_review_gen2_network_reverify4_20261007.md
+  [P3] G2RR4-03 claimed_fixed 재검증 4 요청서 Q3 의 "194 본 실행도 관측을 켠다" 가 실행 등록에 반영되지 않았다 
+        회귀: scripts/run_network_194_parallel.py --selftest (㉟h — 옛 코드 114/117 → 117/117 · 생산 194 dry-run 관측 없음 = ⛔ · 관측을 끈 생산 manifest 감사 rc 1 · 역사 형식 면제), scripts/wsl_network_smoke.py --selftest (11/14 → 14/14 · case15 [음성 대조] 넷 · 커밋된 case15 원자료 직접 6 조합), scripts/g2_network_reread.py --selftest (19/20 → 20/20 · 스모크 음성 대조 S0b), docs/reviews/lhs_network_batch_registration_20261007_g2.md (§3b · §4 · §9-2 · §9-4 — 제안 표지 · ⬜ 1저자 비준), docs/reviews/lhs_network_batch_registration_20261007_g2.md (§4 덧붙임 · §9-6 비준 · 비준 뒤 활성 명령 표)   opened_in: docs/reviews/codex_review_gen2_network_reverify4_20261007.md
+  [P2] SELF-95  open          ps45 힘 기록 README · 1저자 보고의 해석 *"PC 가 많을수록 활물질 접촉이 줄어
+        회귀: docs/data/ps45_plane_load_20261007/real14_validation/plane_load.json (scripts/plane_load_share.py · real14 커밋 덤프 · 가운데 단면 263.17 MPa · AM–AM 74.0 % · 크기 합 ÷ 하중 12.19), scripts/plane_load_share.py --selftest (T2 평행 기둥: 단면 몫 75/25 ↔ 크기 합 몫 12/21)   opened_in: docs/data/ps45_plane_load_20261007/README.md
+  [P1] DEMP-01  open          DEM 압축 단계의 전역 감쇠 (fix damp all viscous 0.5 · 이완 단계는 
+        회귀: docs/data/ps45_plane_load_20261007/ibb_damping_drag_20261007.txt (1저자 ibb 화면 그대로 · N 160420 · 감쇠 저항 434.3 N · 57.9 %), dem_scripts/ps_sweep_6mah_20260914/in.ps_7_3_r45.liggghts (PHASE 2 viscous 0.5 · PHASE 4 1e-5 · target_press 0.30), docs/data/ps73_damping_branch_20261007/README.md (가지 실험 준비 · 미실행 · 등록 예측 §4)   opened_in: docs/data/ps45_plane_load_20261007/README.md
+  [P3] SELF-96  claimed_fixed 발표 5 쪽 힘 그래프 축 이름으로 "Load-bearing fraction (%)" 을 필드
+        회귀: docs/session_20260923_progress.md (10-07 발표 5 쪽 줄 · 10-07 밤 정정 줄)   opened_in: docs/session_20260923_progress.md
+  [P3] SELF-97  open          가지 실험 러너 run_branch.sh 가 늘 mpirun 으로 띄운다 — 1저자 WSL 에
+        회귀: dem_scripts/mixer_20260921/run_all.sh (머리 주석 — WSL MPI 경로 멈춤 · lmp_serial · stdbuf · PID 정지 규약), docs/data/ps73_damping_branch_20261007/README.md (§6 1′ · 2′ — WSL 대리 스크립트 실행), docs/data/ps73_damping_branch_20261007/run_branch.sh (check_t0 — MPI 프로세스 수 = NP · 10-08)   opened_in: docs/data/ps73_damping_branch_20261007/README.md
+  [P3] SELF-98  claimed_fixed ps73 가지 실험 t0 덱이 run 사이에 살아 있는 equal 변수를 읽었다 — 가드 정지
+        회귀: docs/data/ps73_damping_branch_20261007/make_branch_decks.py --selftest (⑭a · ⑭b · ⑭0 · ⑭c · ⑭d · ⑮), docs/data/ps73_damping_branch_20261007/t0_run1_20261007/in.branch_t0_syntax.liggghts (10-07 t0 1 회 덱 그대로 · sha256 c0130fd0…), docs/data/ps73_damping_branch_20261007/README.md (§12 실행 기록 · §8 run 사이 읽기)   opened_in: docs/data/ps73_damping_branch_20261007/README.md
+  [P3] WEB-07   open          Brittle Hotspots (surface gradient) 의 cap 페이드 (t²) 가
+        회귀: webapp/static/js/viewer3d.js (mode === 'brittle_surface' cap 페이드)   opened_in: webapp/static/js/viewer3d.js
+  [P2] SELF-99  claimed_fixed AM 만 보기 '접촉마다' AM–SE 의 색 범위를 그린 접촉이 아니라 압축 AM–SE 전체 
+        회귀: webapp/test_viewer_load_view.py (141/141 · 고치기 전 128 PASS · 13 FAIL)   opened_in: webapp/static/js/viewer3d.js
+  [P1] MV-01    open          B 서보 덱의 종료 규칙 (CONVERGED) 이 정적 평형을 보증하지 않는다 — 수렴 카운터
+        회귀: —   opened_in: docs/reviews/codex_review_model_validation_20261008.md
+  [P1] MV-02    open          B 덱이 판 · 벽 fix 를 지우고 새로 만들어 법선 소성 이력 (deltaMax) 도 초기
+        회귀: —   opened_in: docs/reviews/codex_review_model_validation_20261008.md
+  [P1] MV-03    open          ε_union 을 고르는 것으로 순수 SE DEM ↔ 실험 질량 공극률 (랩 표준 ≈10 %)
+        회귀: —   opened_in: docs/reviews/codex_review_model_validation_20261008.md
+  [P1] MV-04    open          V4 의 '기하 고정' 은 기하 고정 실험이 아니다 — 같은 체크포인트에서 서보 아래 시간 적
+        회귀: —   opened_in: docs/reviews/codex_review_model_validation_20261008.md
+  [P1] MV-05    open          V2 보정 뒤 V5 중력을 바꾸는 순서는 준비 이력 교란을 E 에 흡수한다 — 165 MPa 
+        회귀: —   opened_in: docs/reviews/codex_review_model_validation_20261008.md
+  [P2] MV-06    open          t0 (문법 · 부호 시험) 는 dt 자격화가 아니고 24 GPa 도 '실제 LPSCl 정답'
+        회귀: —   opened_in: docs/reviews/codex_review_model_validation_20261008.md
+  [P1] MV-07    open          '같은 모델 안 상대값이므로 안전' 은 LW 입자 응력 검증의 대체물이 아니다 — 실제 cal
+        회귀: —   opened_in: docs/reviews/codex_review_model_validation_20261008.md
+  [P2] MV-08    open          B 의 입자 수 가드 (원자 손실 50 개 + 별도 누설 수 허용) 만으로는 공극률 비교의 보
+        회귀: —   opened_in: docs/reviews/codex_review_model_validation_20261008.md
+  [P2] MV-09    open          스냅숏 README 의 '몫 · α (비) 는 ±3 %p · ±0.03 안' 이 저장값과 맞지
+        회귀: —   opened_in: docs/reviews/codex_review_model_validation_20261008.md
+  [P3] WEB-08   open          웹앱 분석의 선택 단계 스크립트 7 개가 리포에 없다 — 단일 AM (generate_figu
+        회귀: docs/session_20260923_progress.md (10-08 밤 ps45 다섯 케이스 줄 · 7:3 줄)   opened_in: docs/session_20260923_progress.md
+  [P3] DEMP-02  open          ps73 압축 중 입자가 판 메시를 뚫고 나간다 — 1,825,000 step 부터 맨 위 입
+        회귀: docs/data/ps73_compaction_curve_20261006/raw/ps73_atom_top_20261008.csv (원 덤프 스캔 · 맨 위 입자 id · 원자 수), docs/data/ps73_compaction_curve_20261006/README.md §7-1 (판 위 입자 수 · 원자 수 감소), docs/data/ps73_compaction_curve_20261006/key_numbers_ms.json (scan · atom_count_changes · first_step_top_center_above_plate)   opened_in: docs/data/ps73_compaction_curve_20261006/README.md
+  [P1] RB-01    open          실험 − DEM 공극 차를 회복률 s = Δε/(1−ε) 로 환산하고 골격 강성을 역산했지만 
+        회귀: docs/reviews/codex_review_springback_loadshare_20261009.md (Q1 C 표 · 조건부 1.86 환산 7.67–8.31 % · Q3 역산 1.797–3.270 GPa · 단면 평균 응력이면 0.95–1.82 GPa)   opened_in: docs/reviews/codex_review_springback_loadshare_20261009.md
+  [P1] RB-02    open          AM–AM 접촉의 수직응력 기여율 (Contribution to σ_zz) 을 "AM 골격 (
+        회귀: docs/reviews/codex_review_springback_loadshare_20261009.md (Q2 표 — 기여율 · 절대 기여 MPa · LW AM 상 몫), docs/data/ps45_plane_load_20261007/README.md (21 단면 기여율 · 정의)   opened_in: docs/reviews/codex_review_springback_loadshare_20261009.md
+  [P1] UL-01    open          G4 가 S0 이력 복원을 증명하지 못한다 — wall/gran/local 은 mesh 벽만 
+        회귀: —   opened_in: docs/reviews/codex_review_dem_unloading_prereg_20261011.md
+  [P1] UL-02    open          S3 의 실제 함수 (plane_load_share.balance_residual) 가 총힘 
+        회귀: —   opened_in: docs/reviews/codex_review_dem_unloading_prereg_20261011.md
+  [P1] UL-03    open          교차 분해능을 최대 4 배 과소평가 — 최초 교차가 A 단 (0.20 µm) 이면 B 두 단이
+        회귀: —   opened_in: docs/reviews/codex_review_dem_unloading_prereg_20261011.md
+  [P1] UL-04    open          UT (고압 첫 5 단) 로 저압 ρ 의 dt 차를 인증하지 못하고 · UV · UT 동시 실
+        회귀: —   opened_in: docs/reviews/codex_review_dem_unloading_prereg_20261011.md
+  [P1] UL-05    open          7:3 설정 차를 다른 네 침대의 오차 상한으로 이식할 수 없다 — 현 b 로 다섯 침대 순위
+        회귀: —   opened_in: docs/reviews/codex_review_dem_unloading_prereg_20261011.md
+  [P1] UL-06    open          순힘 0 을 분리로 오인 — 포화 가지에서 +0.25 · −0.25 (kn·δ_lim 단위) 
+        회귀: —   opened_in: docs/reviews/codex_review_dem_unloading_prereg_20261011.md
+  [P1] UL-07    open          1 MPa 아래에서 시작하는 중력 팔 (R_M = 첫 교차 뒤 두 단) 에는 새 1 MPa 위
+        회귀: —   opened_in: docs/reviews/codex_review_dem_unloading_prereg_20261011.md
+  [P2] UL-08    open          창 · 덤프 계약 부족 — R 2,000 < W 5,000 · k = 0 두 창은 연속 차 둘
+        회귀: —   opened_in: docs/reviews/codex_review_dem_unloading_prereg_20261011.md
+  [P2] UL-09    open          가변 제외 집합이면 C 보존 불가 (C_sphere 는 고정 ID 집합의 항등식) · 정착 P
+        회귀: —   opened_in: docs/reviews/codex_review_dem_unloading_prereg_20261011.md
+  [P2] UL-10    open          δ_lim 산술에서 "대부분 포화 · SE 가 거시 회복 지배 · 비포화 AM S0 회복 ≥ 
+        회귀: —   opened_in: docs/reviews/codex_review_dem_unloading_prereg_20261011.md
+  [P2] SELF-101 open          되튐 가설을 대화 · 요청서에 쓰며 네 가지를 틀렸다 — ① AM–AM 접촉 기여율을 "AM 
+        회귀: docs/reviews/codex_review_springback_loadshare_20261009.md   opened_in: docs/reviews/codex_review_springback_loadshare_20261009.md
+  [P3] SELF-102 open          재검증 6 요청서 §5 제목 "시험 약화 없음" 이 범위를 넘었다 — chk(…) 20 개의 
+        회귀: —   opened_in: docs/reviews/codex_review_gen2_network_reverify6_20261011.md
+  [P3] SELF-103 open          G2RR6-01 · 보충 20 계획 §2 가 194 행 망 밖 열의 원천을 "접촉 d1ec42
+        회귀: —   opened_in: docs/reviews/g2rr6_fix_plan_20261011.md
+  [P3] SELF-104 open          같은 부류 탐침 결과를 "22 중 20 통과" 로 적었다 — 원자료 (probe_same_cl
+        회귀: —   opened_in: docs/reviews/codex_gen2_network_reverify6_evidence_20261011/_README_import.md
+  [P1] ULR1-01  open          유효한 끝점이 없을 때 설정 선택이 정의되지 않는다 — δ_dt · δ_v 가 결손 (UT 교
+        회귀: —   opened_in: docs/reviews/codex_review_dem_unloading_prereg_rereview_20261012.md
+  [P2] ULR1-03  open          TENSION 표지는 생겼지만 주 값 자격 · 분리 시간 규칙이 미완 — 양압 상쇄 (+1.6
+        회귀: —   opened_in: docs/reviews/codex_review_dem_unloading_prereg_rereview_20261012.md
+  [P2] ULR1-05  open          개정 규칙과 기존 실행 · 보고 연결 잔존 — ① 비단조 판정 (REG:320) · 보고 예문
+        회귀: —   opened_in: docs/reviews/codex_review_dem_unloading_prereg_rereview_20261012.md
+  [P3] SELF-105 claimed_fixed 언로딩 개정 1 문안 (§12) · 재검토 요청서에 범위 없는 완결성 단정 둘 — ① §12-
+        회귀: docs/reviews/dem_unloading_ps45_prereg_20261009.md (§13-1 "유효한 δ 두 개면 팔 셋으로 끝난다" · 결손 · 무효 끝점 = SELECTION_UNRESOLVED · §12-4 ③ 정정 표지 · §13-4 물리 창 표 W(dt) = T_W / dt — UT · dt₀/2 UV = 10,000 step · 결과 0 건)   opened_in: docs/reviews/codex_review_dem_unloading_prereg_rereview_20261012.md
+  [P3] G2RR7-01 claimed_fixed 재검증 7 요청서 §2 시험표가 같은 부류 변이 25 (Codex 넷 + 같은 부류 21) 를
+        회귀: docs/reviews/codex_gen2_network_reverify7_request_20261011.md (§2 시험표 "Codex 넷 + 같은 부류 21" 행의 고치기 전 칸 — 원문 보존 + 정정 표지: 24 rc 0 (오수용) + 중복 행 na_dup_row 1 은 옛 판정식도 rc 1 (ID 쌍 목록 불일치) = 기존 오수용 24 새로 차단 + 중복 행 1 계속 거부 = 현행 25 거부 · probe_same_class 23 (옛 21 통과 · 2 거부 · SELF-104) 과 섞지 않음), docs/reviews/codex_gen2_network_reverify7_evidence_20261012/evidence/r7_parent_cli.json (Codex 실제 --smoke-root CLI — 변이 25 중 부모 판정식 수용 24 · 현행 수용 0 · na_dup_row 전후 모두 rc 1 · n_fail 1 · S0 True · S0b False · all_expected True), docs/reviews/codex_gen2_network_reverify7_evidence_20261012/_repro_ours_20261012/compare_probe_outputs.json (우리 트리 재현 — Codex 출력 113 과 판정값 차이 0)   opened_in: docs/reviews/codex_review_gen2_network_reverify7_20261012.md
+  [P3] SELF-106 claimed_fixed v1.3 계획 §2-4 의 "컨테이너 `--v13-check` rc 0 = 통과" 문장은 10
+        회귀: docs/reviews/lhs_release_v13_plan_20261007.md (§2-4 정정 표지 — 컨테이너 --v13-check rc 0 은 G2RR3-01 뒤 거짓 · 실제 묶음 대조 = 빌드 manifest 의 배치 뿌리에서 v13_batch_gate_recheck 재판정 → 대조는 WSL · §2b 두 배치 명령도 WSL 대조), scripts/test_lhs_release_v13.py (V21 — check_v13 이 두 뿌리 관문을 다시 판정 · 뿌리 없는 대조 = 문제 · 234/234 at b429c3c1d)   opened_in: docs/reviews/lhs_release_v13_plan_20261007.md
+  [P3] SELF-107 open          원장 SUP20-02 노트가 "옛 인계 열 사전 (lhsx_handover_2026092*_c
+        회귀: docs/data/lhsx_handover_20261001_columns.tsv (lhsx_w_AM_P 행 = LREL-06 이전 일반 문구 — 결함 식 없음), docs/data/lhs_network194_11fcf91e8/handover_v12_20261006/lhsx_handover_v12_20261006_columns.tsv (v1.2 인계 — 같음), docs/reviews/sup20_fix_plan_20261012.md (§2 정정 표지 · 구현 기록)   opened_in: docs/reviews/sup20_fix_plan_20261012.md
+  [P2] PS45E-01 open          실제 ps45 침대를 "NCM 고체 기준 60 vol%" 로 부르고 Minnmann 61 vo
+        회귀: docs/reviews/codex_review_ps45_sigmae_reporting_20261013.md (§5-1 표 · §5-2 비교표 · §7), docs/reviews/codex_ps45_sigmae_reporting_evidence_20261013/evidence/composition_basis.json (Codex — 덱 · AM scaffold · 덤프 개수 · 구 체적 고체 분율), docs/reviews/codex_ps45_sigmae_reporting_evidence_20261013/_repro_ours_20261013/solid_fraction_check.json (우리 독립 재계산 — SE scaffold 행 · 64.7077–64.9201 %)   opened_in: docs/reviews/codex_review_ps45_sigmae_reporting_20261013.md
+  [P2] PS45E-02 open          전자 Physics g2 를 "Tabor 면적" 으로 부르는 표지 — 전자 망 간선은 전부 A
+        회귀: docs/reviews/codex_review_ps45_sigmae_reporting_20261013.md (§4 — 전자 Physics g2 = native 원판 + ψ · 권고 명칭), docs/reviews/codex_ps45_sigmae_reporting_evidence_20261013/evidence/report_arithmetic.json (Codex — electronic_area_binding_counts_physics = native_unsupported_pair 전수 · 10 레코드), docs/reviews/codex_ps45_sigmae_reporting_evidence_20261013/_repro_ours_20261013/report_arithmetic.json (우리 재현 — 키 261/261 같음)   opened_in: docs/reviews/codex_review_ps45_sigmae_reporting_20261013.md
+  [P2] PS45E-03 open          파일을 바꾸지 않는 monkeypatch (SIGMA_AM_ELECTRONIC 0.0041 ·
+        회귀: docs/reviews/codex_review_ps45_sigmae_reporting_20261013.md (§3-3 · §7 PS45E-03), docs/reviews/codex_ps45_sigmae_reporting_evidence_20261013/evidence/code_scaling.json (Codex — top_level_checks: 패치 중 sigma_binding_problems 0 · 복원 뒤 3), docs/reviews/codex_ps45_sigmae_reporting_evidence_20261013/_repro_ours_20261013/code_scaling.json (우리 재현 — 같음)   opened_in: docs/reviews/codex_review_ps45_sigmae_reporting_20261013.md
+  [P3] SELF-108 open          요청서 §1 · ps45 g2 README §σ_e 가 이 침대를 "NCM 고체 기준 60 v
+        회귀: docs/reviews/codex_review_ps45_sigmae_reporting_20261013.md (§5-1 — 4.85/1.64 이면 59.9935 % · 덱 4.8/2.0 이면 64.8855 %), docs/reviews/codex_ps45_sigmae_reporting_evidence_20261013/_repro_ours_20261013/solid_fraction_check.json (우리 독립 재계산)   opened_in: docs/reviews/codex_review_ps45_sigmae_reporting_20261013.md
+  [P3] SELF-109 open          전자 망 Physics 결과를 "Tabor" 로 적었다 — ps45 g2 README 값 표 
+        회귀: docs/reviews/codex_review_ps45_sigmae_reporting_20261013.md (§4 — native_unsupported_pair 전수 · "Electronic conductivity (Tabor)" 는 이 전자 가지를 잘못 설명), docs/data/ps45_r45_network_g2_20261007/make_sigma_tabor_figs.py (고친 표지 — 값 · 파일 이름 무변경)   opened_in: docs/reviews/codex_review_ps45_sigmae_reporting_20261013.md
+  [P3] SEMV3-11 open          생성기 머리말 `docs/seminar_20261013/build_seminar_v3.py:1
+        회귀: docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md   opened_in: docs/reviews/codex_review_seminar_deck_v3_1_closure_20261013.md
+  [P3] SELF-112 claimed_fixed 수정 계획 머리 범위 줄에 "실행기 파일 지문은 바뀌므로 발사 manifest 에 기록된다" 
+        회귀: docs/reviews/supr_fix_plan_20261014.md (머리 정정 표지 · §4 ④), scripts/run_network_194_parallel.py (완료 영수증 runner.sha256 — 8af6cbae3)   opened_in: docs/reviews/supr_fix_plan_20261014.md
+  [P1] ULKR-04  claimed_fixed 파싱 실패 (NaN) 원자 행을 파서가 버린 뒤 남은 행으로 S3 PASS (R 0.0 · n
+        회귀: docs/data/ps45_unload_20261009/ (ul_reader R22 — 시험 먼저 · 고치기 전 실패 확인), docs/reviews/dem_unloading_kit_fix_plan_20261014.md §5 (실행 기록), docs/reviews/dem_unloading_ps45_prereg_20261009.md §14 (등록 개정 3 · 결과 0 건)   opened_in: docs/reviews/codex_review_dem_unloading_kit_20261014.md
+  [P1] ULKR-05  claimed_fixed 불완전하거나 실패한 소거 관측으로 RESTORED 를 발행해 UB 관문을 연다 — PRE · 
+        회귀: docs/data/ps45_unload_20261009/ (ul_reader R17 · R18 · ul_gates F2 — 시험 먼저 · 고치기 전 실패 확인), docs/reviews/dem_unloading_kit_fix_plan_20261014.md §5 (실행 기록), docs/reviews/dem_unloading_ps45_prereg_20261009.md §14 (등록 개정 3 · 결과 0 건)   opened_in: docs/reviews/codex_review_dem_unloading_kit_20261014.md
+  [P1] ULKR-06  claimed_fixed RESUME 가 UTc · G_* · RJ · EXT 에서 횟수 제한 · 기록 보존 없이 반복
+        회귀: docs/data/ps45_unload_20261009/ (ul_runner_test M7 · M7a · M11–M14 — 시험 먼저 · 고치기 전 실패 확인), docs/reviews/dem_unloading_kit_fix_plan_20261014.md §5 (실행 기록), docs/reviews/dem_unloading_ps45_prereg_20261009.md §14 (등록 개정 3 · 결과 0 건)   opened_in: docs/reviews/codex_review_dem_unloading_kit_20261014.md
+  [P2] ULKR-11  claimed_fixed 판독기 기술 실패가 영수증 reader_rc=0 으로 남는다 · G0 결과를 출력만 · 7:3
+        회귀: docs/data/ps45_unload_20261009/ (ul_runner_test M4 · M15–M17 — 시험 먼저 · 고치기 전 실패 확인), docs/reviews/dem_unloading_kit_fix_plan_20261014.md §5 (실행 기록), docs/reviews/dem_unloading_ps45_prereg_20261009.md §14 (등록 개정 3 · 결과 0 건)   opened_in: docs/reviews/codex_review_dem_unloading_kit_20261014.md
+  [P2] RIMP-02  open          Rint 조인 관문 (rint_iface_join) 이 손상 · 미인증 입력을 PASS 로 승
+        회귀: scripts/test_rint_g2_join.py (30 실패 → 73/73), docs/reviews/rint_g2_impl_fix_evidence_20261015/ (시험 먼저 · 최종 로그 · rc · HASHES = 본 가지 blob), docs/reviews/codex_review_rint_g2_impl_fix_recheck_20261015.md (§2 · §3 · 부분)   opened_in: docs/reviews/codex_review_rint_g2_impl_20261014.md
+  [P2] L214-01  claimed_fixed FULL q > 1.5 가드의 사유 이름 (over_conduction_guard → 상위 s
+        회귀: scripts/test_lhs214_model_limit.py --selftest (신설 · 13/54 → 55/55), scripts/test_network_solve_certificate.py (27/28 → 28/28), docs/reviews/lhs214_fix_evidence_20261015/ (시험 먼저 · 최종 로그 · A4 · code_fp 보고), docs/reviews/codex_review_lhs214_fix_reverify_20261015.md (§1 · §2 · 부분), scripts/test_l214r01_certificate.py (L214R-01 · 48/112 → 112/112)   opened_in: docs/reviews/codex_review_lhs214_failures_20261014.md
+  [P2] L214-02  claimed_fixed 새 "모형 한계" 범주가 게시되지 않는 실패 레코드의 검사 면제를 상속하면 증서 · 세대 보장
+        회귀: webapp/test_network_handover_chain.py (21/34 → 34/34), scripts/test_lhs_release_v13.py (255/256 → 256/256), webapp/test_pipeline_provenance.py (284/284), docs/reviews/lhs214_fix_evidence_20261015/ (시험 먼저 · 최종 로그 · A4 · code_fp 보고), docs/reviews/codex_review_lhs214_fix_reverify_20261015.md (§1 · §3 · 부분), scripts/test_l214r02_model_limit_flag.py (L214R-02 · 17/47 → 47/47)   opened_in: docs/reviews/codex_review_lhs214_failures_20261014.md
+  [P2] L214-03  claimed_fixed 웹앱 케이스 표 _dual_row 가 Physics σ 가 없으면 Hertz σ 를 Physi
+        회귀: webapp/test_network_handover_chain.py (L214-03 화면 회귀), docs/reviews/lhs214_fix_evidence_20261015/ (시험 먼저 · 최종 로그 · A4 · code_fp 보고), docs/reviews/codex_review_lhs214_fix_reverify_20261015.md (§1 · §4 · 부분), webapp/test_l214r03_display.py (L214R-03 · 5/14 → 14/14)   opened_in: docs/reviews/codex_review_lhs214_failures_20261014.md
+  [P3] L214K-01 open          등급 τ getter (tau_flux.tau2_from_metrics · tau2_value
+        회귀: docs/reviews/codex_lhs214r_fix_recheck_request_20261016.md §6, docs/reviews/codex_review_lhs214r_fix_recheck_20261017.md §6   opened_in: docs/reviews/lhs214r_fix_plan_20261016.md
+  [P3] L214K-02 open          se_material.sigma_grain_context 의 float(10**400) — f
+        회귀: docs/reviews/codex_lhs214r_fix_recheck_request_20261016.md §6, docs/reviews/codex_review_lhs214r_fix_recheck_20261017.md §6   opened_in: docs/reviews/lhs214r_fix_plan_20261016.md
+  [P3] L214K-03 open          σ₀ 메타 ion_sigma0_mScm = round(σ₀·1000, 10) 유한성 검사 없음
+        회귀: docs/reviews/codex_lhs214r_fix_recheck_request_20261016.md §6, docs/reviews/codex_review_lhs214r_fix_recheck_20261017.md §6   opened_in: docs/reviews/lhs214r_fix_plan_20261016.md
+  [P3] L214K-04 open          pipeline_service.stage_e_missing_keys 의 math.isfinit
+        회귀: docs/reviews/codex_lhs214r_fix_recheck_request_20261016.md §6, docs/reviews/codex_review_lhs214r_fix_recheck_20261017.md §6   opened_in: docs/reviews/lhs214r_fix_plan_20261016.md
+  [P3] L214K-05 open          g2_network_reread.reread_case 가 tf.case_row (다시 읽기 검
+        회귀: docs/reviews/codex_lhs214r_fix_recheck_request_20261016.md §6, docs/reviews/codex_review_lhs214r_fix_recheck_20261017.md §6   opened_in: docs/reviews/lhs214r_fix_plan_20261016.md
+  [P3] L214K-06 open          터무니없지만 유한한 입력은 게시된다 (범위 정책 없음) — L_gap 1e308 만 → MBC
+        회귀: docs/reviews/codex_lhs214r_fix_recheck_request_20261016.md §6, docs/reviews/codex_review_lhs214r_fix_recheck_20261017.md §6   opened_in: docs/reviews/lhs214r_fix_plan_20261016.md
+  [P3] L214K-07 open          열 사전 (lhs_design_dataset _TAU_REASON) 의 invalid_inpu
+        회귀: docs/reviews/codex_lhs214r_fix_recheck_request_20261016.md §6, docs/reviews/codex_review_lhs214r_fix_recheck_20261017.md §6   opened_in: docs/reviews/lhs214r_fix_plan_20261016.md
+  [P3] L214K-08 open          배포 빌더는 f 만 유한성 검사 (tau2 · tau 아님) — tau_flux 가 셋 다 보
+        회귀: docs/reviews/codex_lhs214r_fix_recheck_request_20261016.md §6, docs/reviews/codex_review_lhs214r_fix_recheck_20261017.md §6   opened_in: docs/reviews/lhs214r_fix_plan_20261016.md
+  [P3] SELF-113 open          LHS214 실패 요청서 §1 · §2 의 네 서술이 증거보다 강하거나 틀렸다 — "망 솔버 
+        회귀: —   opened_in: docs/reviews/codex_lhs_run214_failures_request_20261014.md
+  [P3] MIX-12   open          옛 벽 점착 규약 (벽 CED = 대각 ÷ 6.25^(1/3)) 은 Hare 2026 의 입자
+        회귀: —   opened_in: docs/mixer_d2_wall_gamma_derivation_20261014.md
+  [P3] SELF-114 open          진행 기록 10-14 저녁 2 의 "정본 카드 1.64 (Bazzoun · cho2024 · 
+        회귀: —   opened_in: docs/session_20260923_progress.md
+  [P2] SELF-115 claimed_fixed 언로딩 문법 fixture (ULKR 수정 묶음 Q8) 의 관측 블록이 본 키트와 다른 꼴 —
+        회귀: docs/data/ps45_unload_20261009/history_test/make_history_decks.py --selftest ⑰ (고치기 전 1 실패 = grammar · 고친 뒤 0) · --check (⑰ 포함), docs/data/ps45_unload_20261009/history_test/read_history.py --selftest PASS   opened_in: docs/data/ps45_unload_20261009/README.md
+  [P1] ULKRR-01 claimed_fixed 새 문법 fixture 가 단일값 ave/time (전역 스칼라) 를 벡터 f_gr_av[1]
+        회귀: docs/data/ps45_unload_20261009/history_test/make_history_decks.py --selftest ⑰ (고치기 전 grammar 1 실패 · 고친 뒤 0) · --check, docs/reviews/dem_unloading_grammar_fixture_runs_20261015/README.md (런 넷 · 원래 자리 재판독), docs/reviews/dem_unloading_grammar_fixture_runs_20261015/runs_summary.json   opened_in: docs/reviews/codex_review_dem_unloading_kit_reverify_20261014.md
+  [P1] ULKRR-02 claimed_fixed RESUME 사건이 없어도 _supersede 가 같은 step 중복 행을 지운다 — 정상 U
+        회귀: docs/data/ps45_unload_20261009/ul_reader.py --selftest R28 · R10 (고치기 전 반례 6 실패 → 0 · 정상 재개 양성 유지), docs/data/ps45_unload_20261009/ul_runner_test.py M23 (러너 수준 정상 재개), docs/reviews/dem_unloading_kit_reverify_fix_evidence_20261014/ (Linux 전체 로그 · rc 0)   opened_in: docs/reviews/codex_review_dem_unloading_kit_reverify_20261014.md
+  [P2] ULKRR-04 claimed_fixed 소수 ID 가 int() 로 잘려 정상 입자로 쓰인다 (UN 첫 ID 1→1.5 = RESTO
+        회귀: docs/data/ps45_unload_20261009/ul_reader.py --selftest R30 (7 → 0 · KeyError → 사유 있는 미식별), docs/data/ps45_unload_20261009/ul_lib.py --selftest L13 · F12 · C3, docs/reviews/dem_unloading_kit_reverify_fix_evidence_20261014/   opened_in: docs/reviews/codex_review_dem_unloading_kit_reverify_20261014.md
+  [P3] SELF-116 claimed_fixed 에이전트 작업 트리에서 쓴 언로딩 문서가 그 작업 트리의 커밋 번호를 cherry-pick 뒤
+        회귀: scripts/check_doc_refs.py --selftest (SELF-116 블록 · 47/49 → 49/49), scripts/check_doc_refs.py (리포 전체 · 없는 커밋 0)   opened_in: docs/reviews/codex_dem_unloading_kit_reverify_fix_recheck_request_20261014.md
+  [P2] ULKRF-01 claimed_fixed 같은 재개 사건이 승인을 복제 — _resume_auth 가 같은 (k, step) 을 사건마
+        회귀: docs/reviews/codex_review_dem_unloading_kit_fix_recheck_20261015.md (§4 ULKRF-01), docs/data/ps45_unload_20261009/ul_reader.py --selftest R33 (one_auth_two_rollbacks · duplicate_event_only · 같은 step 다른 k = 3 실패 → 거부 + 사유), docs/data/ps45_unload_20261009/ul_reader.py --selftest (시험 먼저 164/182 → 182/182) · ul_gates 37/41 → 41/41 · ul_lib 22/24 → 24/24 · ul_runner_test 37/38 → 38/38, docs/reviews/dem_unloading_kit_fix_recheck_fix_evidence_20261015/ (Linux 13 명령 · 시험 먼저 = 넷 rc 1 · 최종 = 전부 rc 0 · summary.json kit_git_tree = 본 가지 1c0b9fd65 · fcc0d6a75 의 키트 폴더 tree)   opened_in: docs/reviews/codex_review_dem_unloading_kit_fix_recheck_20261015.md
+  [P2] ULKRF-02 claimed_fixed 승인된 재시도의 단 끝 시간이 이전 시도보다 길면 옛 단 끝 행이 남아 정상 새 기록을 거부 
+        회귀: docs/reviews/codex_review_dem_unloading_kit_fix_recheck_20261015.md (§4 ULKRF-02), docs/data/ps45_unload_20261009/ul_reader.py --selftest R34 (4 → 5 창 1 실패 → 통과 · 4 → 4 · 5 → 4 · 단독 · 무승인 그대로 거부), docs/data/ps45_unload_20261009/ul_reader.py --selftest (시험 먼저 164/182 → 182/182) · ul_gates 37/41 → 41/41 · ul_lib 22/24 → 24/24 · ul_runner_test 37/38 → 38/38, docs/reviews/dem_unloading_kit_fix_recheck_fix_evidence_20261015/ (Linux 13 명령 · 시험 먼저 = 넷 rc 1 · 최종 = 전부 rc 0 · summary.json kit_git_tree = 본 가지 1c0b9fd65 · fcc0d6a75 의 키트 폴더 tree)   opened_in: docs/reviews/codex_review_dem_unloading_kit_fix_recheck_20261015.md
+  [P2] ULKRF-03 claimed_fixed G2c 접촉 덤프 필수 열 결손 (c_cpl[7] · [8]) 이 구조화된 실패 대신 KeyE
+        회귀: docs/reviews/codex_review_dem_unloading_kit_fix_recheck_20261015.md (§4 ULKRF-03), docs/data/ps45_unload_20261009/ul_gates.py --selftest C4 (c_cpl[7] · [8] × 시험 · 원 = 4 KeyError → FAIL + 사유), docs/data/ps45_unload_20261009/ul_reader.py --selftest R35 (복원 판정 · 다음 제출 UB 거부 · 실제 restore CLI = 9 실패 → 통과), docs/data/ps45_unload_20261009/ul_reader.py --selftest (시험 먼저 164/182 → 182/182) · ul_gates 37/41 → 41/41 · ul_lib 22/24 → 24/24 · ul_runner_test 37/38 → 38/38, docs/reviews/dem_unloading_kit_fix_recheck_fix_evidence_20261015/ (Linux 13 명령 · 시험 먼저 = 넷 rc 1 · 최종 = 전부 rc 0 · summary.json kit_git_tree = 본 가지 1c0b9fd65 · fcc0d6a75 의 키트 폴더 tree)   opened_in: docs/reviews/codex_review_dem_unloading_kit_fix_recheck_20261015.md
+  [P3] L214R-S03 open          L214RR2-03 · 이온 채널 요약 표지 (`ionic_status` · `ionic_st
+        회귀: —   opened_in: docs/reviews/codex_review_lhs214rr_fix_recheck_20261019.md
+  [P3] L214R-S05 open          `/single` 머리 배지 (Percolation 등) 가 `is defined` 만 보고 
+        회귀: —   opened_in: docs/reviews/lhs214s_fix_evidence_20261019/README.md
+  [P3] SELF-119 claimed_fixed 재확인 요청서 · 증거 README 의 내 문장 셋이 틀리거나 넘쳤다 — (a) 요청서 §6 
+        회귀: docs/reviews/codex_lhs214r_fix_recheck_request_20261016.md §6 (K1 · K5 칸 정정 표지), docs/reviews/codex_lhs214r_fix_recheck_evidence_20261017/_README_import.md (정정 기록 — 10-16 증거 폴더 README 는 SHA256SUMS 70 에 들어 있어 원문 그대로), docs/reviews/codex_lhs214r_fix_recheck_evidence_20261017/notes/consumers.md (K5 절), docs/reviews/codex_lhs214r_fix_recheck_evidence_20261017/supplement/notes/consumer_supplement.md §2   opened_in: docs/reviews/codex_review_lhs214r_fix_recheck_20261017.md
+  [P3] SELF-120 claimed_fixed SDCP 앵커 v2 사슬이 LEAN=2 (σ_e 만 · --no-ion) 런에 이온 축 SIG
+        회귀: scripts/sdcp_anchor_v2_chain.py --selftest (5/16 → 16/16)   opened_in: docs/reviews/sdcp_sigma_e_dcp_anchor_registration_v2_20261019.md
+  [P3] SELF-121 claimed_fixed R04 뒤 대기 지문 설명이 낡음 — 요청서 머리 · 10-18 증거 README 가 `755
+        회귀: docs/reviews/codex_lhs214rr_fix_recheck_request_20261018.md (머리 7 줄 정정 표지 — 실제 대기 지문 2149f8738bb20b6a…), docs/reviews/codex_lhs214rr_fix_recheck_evidence_20261019/_README_import.md (정정 기록 — 10-18 증거 README 는 SHA256SUMS 봉인이라 원문 그대로)   opened_in: docs/reviews/codex_review_lhs214rr_fix_recheck_20261019.md
+  [P3] SELF-122 claimed_fixed SDCP 앵커 v2 사슬 (scripts/sdcp_anchor_v2_chain.py) 이 pr
+        회귀: scripts/sdcp_anchor_v2_chain.py --selftest T13 (16/17 → 17/17)   opened_in: docs/reviews/sdcp_sigma_e_dcp_anchor_registration_v2_20261019.md
+  [P3] SELF-123 open          R1 새 킷 복사 명령의 rsync `--exclude 'run_*'` 가 런 폴더뿐 아니라 
+        회귀: —   opened_in: docs/reviews/sdcp_sigma_e_dcp_anchor_registration_v2_20261019.md
+  [P3] RIMPR-04 open          아주 큰 유한 입력이 조인 관문 산술 안에서 넘친다 — 좌표 ~1e160 이면 delta_bo
+        회귀: scripts/test_rint_g2_join.py J13 (부분 수정 `a2cfd0365` · 수정 전 코드 = 2/8 → 8/8), docs/reviews/codex_review_rint_join_rimpr_q7_recheck_20261020.md §4 (1e150 대조 REJECT ↔ 1e160 PASS / ACCEPT · 연기 조건 넷), docs/reviews/codex_rint_join_rimpr_q7_recheck_evidence_20261020/evidence/numeric_overflow_replay_current.json · numeric_overflow_replay_baseline.json (두 핀 같음), scripts/test_rint_g2_join.py J13 ⑤ (시험 먼저 `af8d1d501` · v4 · v5 모두 2/2 — 변이 시험 틈 메움)   opened_in: docs/reviews/codex_rint_join_rimpr_fix_recheck_request_20261020.md
+  [P3] SELF-100 claimed_fixed 채팅에서 복합 전극 공극 13.5 % (real_9 · 06-06 E 1.35 보정 기록의 표
+        회귀: docs/session_20260923_progress.md, docs/reviews/codex_model_validation_request_20261008.md   opened_in: docs/session_20260923_progress.md
+  [P3] SELF-127 open          설계 K7 · §6 표 · N15 행 · 요청서 숫자 표에 사전 리뷰 탐침의 수렴 오차 (−1
+        회귀: —   opened_in: docs/reviews/rint_carbon_additive_design_v1_20261020.md
+  [P3] RINT-22  open          `scripts/mpm_webapp_payload.py` 가 STEP3 try 블록 안에서만 
+        회귀: scripts/mpm_webapp_payload.py   opened_in: docs/reviews/rint_carbon_additive_design_v1_20261020.md
+  [P3] SELF-128 open          PB1 기록 문장의 과장 · 단위 섞임 — 커밋 af8d1d501 메시지 "fails = th
+        회귀: —   opened_in: docs/reviews/codex_rint_carbon_additive_design_request_20261020.md
+  [P3] RINT-23  claimed_fixed `scripts/carbon_junction.py` 의 지문 함수 `_fp` 가 객체 배열 (
+        회귀: scripts/carbon_junction.py, scripts/test_carbon_junction.py   opened_in: docs/reviews/rint_carbon_additive_design_v1_20261020.md
+  [P1] RCA-01   open          등록 R §3-2 · §3-2b: 국소 할선 탄성 e ≥ e_min 이 ±2 % 보정 역상 (
+        회귀: docs/reviews/codex_rint2_carbon_design_review_evidence_20261021/registration/probe_registration.py   opened_in: docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md
+  [P1] RCA-02   open          등록 R §4-2: R_j,0 에서 origin 이 같아도 허용폭 양끝에서는 다를 수 있다 —
+        회귀: docs/reviews/codex_rint2_carbon_design_review_evidence_20261021/registration/probe_registration.py   opened_in: docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md
+  [P1] RCA-03   open          설계 S2: `(cell, fid)` 멤버십이 같은 섬유의 비연속 재방문 (다른 호 길이 위치
+        회귀: docs/reviews/codex_rint2_carbon_design_review_evidence_20261021/geometry/geometry_probes.py, scripts/carbon_junction.py   opened_in: docs/reviews/rint_carbon_additive_design_v1_20261020.md
+  [P1] RCA-04   open          설계 S2 포트 규칙: "경로 열 번호가 작은 포트" 동률 규칙은 경로 반전에 불변이 아니다 
+        회귀: docs/reviews/codex_rint2_carbon_design_review_evidence_20261021/geometry/geometry_probes.py, scripts/carbon_junction.py   opened_in: docs/reviews/rint_carbon_additive_design_v1_20261020.md
+  [P1] RCA-05   open          설계 S2 길이 법칙 v0 (Q17): 긴 접촉의 총 G 를 보존해도 한 포트 집중 (lump
+        회귀: docs/reviews/codex_rint2_carbon_design_review_evidence_20261021/geometry/geometry_probes.py, scripts/carbon_junction.py   opened_in: docs/reviews/rint_carbon_additive_design_v1_20261020.md
+  [P1] RCA-06   open          설계 S3 `SV_DOMINANT` 소산 비교 가드는 지배적인 낮은 저항 우회를 놓친다 — 소
+        회귀: docs/reviews/codex_rint2_carbon_design_review_evidence_20261021/geometry/geometry_probes.py, scripts/carbon_junction.py   opened_in: docs/reviews/rint_carbon_additive_design_v1_20261020.md
+  [P2] RCA-07   open          수렴 증서 (설계 §6 · ⓐ ⓑ ⓒ) 통과가 일반적으로 단자 전도도 상대 오차 ≤ 1e-4 
+        회귀: docs/reviews/codex_rint2_carbon_design_review_evidence_20261021/geometry/convergence_probes.py, scripts/step3_conv_cert.py, scripts/test_step3_conv_cert.py   opened_in: docs/reviews/rint_carbon_additive_design_v1_20261020.md
+  [P2] RCA-08   open          등록 R §5: 서로 다른 P 법칙 허용집합 사이의 빈틈 (gap) 을 전체 min–max e
+        회귀: docs/reviews/codex_rint2_carbon_design_review_evidence_20261021/registration/probe_registration.py   opened_in: docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md
+  [P2] RCA-09   open          등록 R §5 · §9: 주 판정 (4 모서리 × 3 R + origin) 과 필수 감도 (재
+        회귀: docs/reviews/codex_rint2_carbon_design_review_evidence_20261021/registration/probe_registration.py   opened_in: docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md
+  [P2] RCA-10   open          등록 R §5-6 · §7-1: 항상 붙는 DIA_UNCHECKED 와 "UNCHECKED 표
+        회귀: docs/reviews/codex_rint2_carbon_design_review_evidence_20261021/registration/probe_registration.py   opened_in: docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md
+  [P2] RCA-11   open          S0 의 "수식 고정" 에 표본화 의존 (u = 점 간격 중앙값 / 2) 과 s_min 의 자
+        회귀: docs/reviews/codex_rint2_carbon_design_review_evidence_20261021/geometry/geometry_probes.py, scripts/ca_s0_census.py   opened_in: docs/reviews/rint_carbon_additive_design_v1_20261020.md
+  [P2] RCA-12   open          등록 R §6: 국소 ±2 % 할선 s 로 유한 접촉저항 Rc 보정의 부호까지 확정할 수 없다
+        회귀: docs/reviews/codex_rint2_carbon_design_review_evidence_20261021/registration/probe_registration.py   opened_in: docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md
+  [P2] RCA-13   open          등록 R 판정표: τ_mono 단위 (ln σ 차 ↔ σ 에서 빼는 수) · 영 전도도 · 영
+        회귀: docs/reviews/codex_rint2_carbon_design_review_evidence_20261021/registration/probe_registration.py   opened_in: docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md
+  [P3] RINT2-B01 open          (Codex 표기 RINT2-B-01) `scripts/test_rint_g2_join.py`
+        회귀: scripts/test_rint_g2_join.py   opened_in: docs/reviews/codex_review_rint2_carbon_additive_design_20261021.md
+
+원장 자기일관 ✓  (⚠ "정말 고쳐졌는가" 는 회귀와 독립 검증자의 몫이다)
+
+real	0m22.492s
+user	0m15.314s
+sys	0m7.016s

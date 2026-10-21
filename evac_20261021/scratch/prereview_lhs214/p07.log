@@ -1,0 +1,26 @@
+new_head_ratified 0 123/123 [] 40.8 s
+new_pending_docs 0 123/123 [] 39.4 s
+new_ratify_commit_docs 0 123/123 [] 40.9 s
+new_supp_only_ratified 1 122/123 ['S0b'] 39.8 s
+new_194_only_ratified 1 122/123 ['S0b'] 40.8 s
+old_pending_docs 0 122/122 [] 39.6 s
+old_ratified_docs 1 121/122 ['S0b'] 40.9 s
+old_194_only_ratified 0 122/122 [] 36.4 s
+oldexpr_pending_docs 1 122/123 ['S11g'] 41.9 s
+oldexpr_ratified_docs 1 121/123 ['S0b', 'S11g'] 39.9 s
+T08_supp_two_pendings 1 110/123 ['S0', 'S7', 'S7a', 'S7a2', 'S7j', 'S7k1', 'S7k2', 'S8', 'S8g2', 'S8k', 'S12f', 'S12h', 'S12j2'] 38.7 s
+T10_supp_pending_eq_reg 1 110/123 ['S0', 'S7', 'S7a', 'S7a2', 'S7j', 'S7k1', 'S7k2', 'S8', 'S8g2', 'S8k', 'S12f', 'S12h', 'S12j2'] 38.9 s
+T07_194_leftover_pending 1 122/123 ['S0b'] 37.2 s
+mut_m1_leftover_off 1 122/123 ['S11g'] 40.3 s
+mut_m2_crossdoc_off 1 122/123 ['S11g'] 37.9 s
+mut_m3_baseprobs_off 1 122/123 ['S11g'] 40.8 s
+mut_m4_undeclared_ok 1 122/123 ['S11g'] 38.6 s
+mut_m5_crossdoc_R_only 0 123/123 [] 39.0 s
+mut_m6_crossdoc_prefix12 0 123/123 [] 38.8 s
+mut_m7_state_prefix12 0 123/123 [] 39.7 s
+mut_m9_reg194_is_supp 0 123/123 [] 36.7 s
+mut_m10_no_p194_passed 0 123/123 [] 37.5 s
+mut_m11_S0b_ignores_fp0 0 123/123 [] 38.5 s
+mut_m1_pending_docs 1 122/123 ['S11g'] 40.5 s
+mut_m2_pending_docs 1 122/123 ['S11g'] 41.5 s
+final clean True

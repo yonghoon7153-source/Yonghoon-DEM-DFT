@@ -1,0 +1,130 @@
+[t] Student t 0.975 분위: ν 1 12.706 · ν 2 4.303 · ν 3 3.182 · ν 4 2.776 · ν 5 2.571 · ν 6 2.447 · ν 8 2.306
+[N] 숫자 — lab20261014 (v2 문서) · gen1 (이력 칸) · CGF 151.4 · N 100000 · 생성기 함수 그대로
+    drum_D_mm                lab 25.1665   gen1 26.2754
+    drum_L_mm                lab 5.03329   gen1 5.25507
+    rpm                      lab 76.6765   gen1 75.0411
+    wR_mm_s                  lab 101.038   gen1 103.24
+    n_per_fill               lab 826727   gen1 940896
+    n_f011                   lab 90939.9   gen1 103499
+    n_f030                   lab 248018   gen1 282269
+    n_slice                  lab 98550.9   gen1 107427
+    dt_x20                   lab 2.3729e-07   gen1 2.62043e-07
+    ceiling_soft             lab 1015.44   gen1 832.662
+    ov_637_soft              lab 0.733052   gen1 0.836744
+    ov_850_soft              lab 0.88803   gen1 1.01364
+    ov_637_x20               lab 0.0994905   gen1 0.113564
+    bo_1pct_x20              lab 20308.8   gen1 16653.2
+    vstick_0212_x20          lab 0.0552434   gen1 0.0590214
+    vstick_212_x20           lab 17.4695   gen1 18.6642
+    vstick_637_x20           lab 43.6397   gen1 46.6241
+    vstick_ceil_x20          lab 64.3373   gen1 58.2599
+    vstick_ceil_over_wR      lab 0.636765   gen1 0.564317
+    se_vol_pct               lab 39.9542   gen1 35.0649
+    se_num_pct               lab 99.158   gen1 98.965
+    d_over_amp               lab 18.4694   gen1 19.2833
+    d_over_se                lab 166.225   gen1 173.549
+    vstick_0212_soft         lab 0.149954   gen1 0.160209
+    vstick_21_x20            lab 2.56417   gen1 2.73953
+    vstick_21_g              lab 0.0242941   gen1 0.0259555
+    vstick_212_g             lab 0.165514   gen1 0.176833
+    vstick_637_g             lab 0.413462   gen1 0.441738
+    vstick_637_g_over_wR     lab 0.00409216   gen1 0.00427876
+    ext_level                lab 964.67   gen1 791.029
+    ov_ext_soft              lab 0.966383   gen1 0.966383
+    ext_ratio                lab 1.51363   gen1 1.24118
+    ceil_ratio               lab 1.5933   gen1 1.30651
+    ov_1010_soft             lab 0.996424   gen1 1.13737
+    ov_1020_soft             lab 1.00299   gen1 1.14486
+    ceiling_cgf200           lab 768.689   gen1 630.325
+    ov_637_cgf200            lab 0.882547   gen1 1.00738
+    bo_aa_ratio_amp          lab 239.543   gen1 194.4
+    bo_aa_ratio_ams          lab 47.3171   gen1 38.4
+    boaa_amp_21_031          lab 0.0274926   gen1 0.0338767
+    boaa_ams_21_031          lab 0.139181   gen1 0.171501
+    boaa_amp_21_1            lab 0.0886857   gen1 0.10928
+    boaa_ams_21_1            lab 0.448971   gen1 0.553229
+    boaa_amp_637_031         lab 0.824777   gen1 1.0163
+    boaa_ams_637_031         lab 4.17543   gen1 5.14503
+    boaa_amp_ceil_031        lab 1.31412   gen1 1.3278
+    boaa_ams_ceil_031        lab 6.65271   gen1 6.72201
+    steps_1s_x20             lab 4.21426e+06   gen1 3.81617e+06
+    h_1s_lo                  lab 16.7232   gen1 15.1435
+    h_1s_hi                  lab 18.5814   gen1 16.8262
+    t2_run_d_lo              lab 1.11488   gen1 1.00957
+    t2_run_d_hi              lab 1.23876   gen1 1.12174
+    t5_pa                    lab 179.754   gen1 200.864
+    rho_mix                  lab 3.56747   gen1 3.81818
+    depth_over_R             lab 0.680308   gen1 0.680308
+    t2_cell_cm3              lab 2.50373   gen1 2.84949
+    t2_mass_lo_g             lab 0.137705   gen1 0.156722
+    t2_mass_hi_g             lab 0.676006   gen1 0.769361
+    rpm_r13                  lab 75.4374   gen1 75.4374
+    T1 · C2 런 시간 [추정] 배율 = lab ×20 step/s ÷ gen1 ×20 = 1.1043 (v1 의 [추정] 값에 곱한다)
+    T2 런 1.11–1.24 일 · T1 짧은 탭 0.22–1.10 · 붓기 0.11–0.77 · 탭 0.55–4.42 · C2 런 0.55–1.66 일
+    C0 (T2 9 · T1 6 · 3 슬롯) 3.8–5.9 일 · C1 기본 (T2 12 · T1 탭 8 + 붓기 4) 6.1–17.8 일 · C2 (4–6 런) 0.7–3.3 일 · 합 10.6–27.0 일
+    F_SW/F_SS = 2√(0.0256·ρ): ρ 0 0.000 · ρ 0.01 0.032 · ρ 0.1 0.101 · ρ 0.31 0.178 · ρ 1 0.320
+    격자 Bo_code: 0.2124 · 0.6718 · 2.124 · 6.718 · 21.24 · 67.18 · 212.4 · 637.3 · Bo_po: 0.0315 · 0.0995 · 0.315 · 0.995 · 3.15 · 9.95 · 31.5 · 94.4
+
+
+[C] 규칙 검사 — 반례: v1 = 잘못 받아들임 (재현) · v2 = 잡음 · 대조: v2 가 옳은 경우를 받아들임
+  C01 (MXD3-01) 교집합 검사 B 의 검출력 ([가정 예시] 선형화 I_k = a_k·x + b_k·μ_r).
+      v1: 반례 통과 (잘못 받아들임) · 대조 통과 — 반례 (b/a 같음 · Δμ_r 0.2): 통과 · 마찰 확인 주장 True · 앵커 오차 1.60 decade | 대조 (b/a 40 ↔ 0): Δμ_r 0 → 통과 · Δμ_r 0.075 → F5
+      v2: 잡음 · 대조 통과 — 반례 (b/a 같음 · Δμ_r 0.2): 일치 미검사 · 마찰 확인 주장 False · 앵커 오차 1.60 decade | 대조 (b/a 40 ↔ 0): Δμ_r 0 → 통과 · 검출 한계 0.030 · Δμ_r 0.075 → F5
+      ⇒ PASS (v1 반례 재현 True · v2 잡음 True · v2 대조 True)
+  C02 (MXD3-02) 반 decade 칸 안의 가파른 전이 ([가정 예시] jarray2019 꼴 35.0 → 48.9° · 폭 0.1 decade · u 1.5°).
+      v1: 반례 통과 (잘못 받아들임) · 대조 통과 — 반례: 가파른 부분 2200 건 중 참값이 구간 밖 982 (44.6 %) · 폭 중앙 0.217 decade | 대조 (완만 직선 5 °/decade): 포괄 101/101 · 폭 중앙 1.200 decade (격자 폭 3.00)
+      v2: 잡음 · 대조 통과 — 반례: 가파른 부분 2200 건 중 참값이 구간 밖 0 (0.0 %) · 폭 중앙 0.500 decade | 세분 (봉인 전) 2200 건 중 0 · 폭 중앙 0.241 decade | 대조 (완만 직선 5 °/decade): 포괄 101/101 · 폭 중앙 2.100 decade (격자 폭 3.00)
+      ⇒ PASS (v1 반례 재현 True · v2 잡음 True · v2 대조 True)
+  C03 (MXD3-03) 끊긴 받아들일 집합 · 한 시험이 빈 집합.
+      v1: 반례 통과 (잘못 받아들임) · 대조 통과 — 끊긴 집합 → anchor Bo 11.95 (집합 안? False) | T1 빈 집합 (측정이 낮은 Bo 끝 너머) → F5 | 대조 [1, 30] ∩ [5, 100] → anchor Bo 12.25
+      v2: 잡음 · 대조 통과 — 끊긴 집합 → F9 | T1 빈 집합 (측정이 낮은 Bo 끝 너머) → F10 (T1 low_bo) | 대조 [1, 30] ∩ [5, 100] → anchor Bo 12.25
+      ⇒ PASS (v1 반례 재현 True · v2 잡음 True · v2 대조 True)
+  C04 (MXD3-04) u_DEM (시드 수 · 자유도) · T2 정상 상태 · NP.
+      v1: 반례 통과 (잘못 받아들임) · 대조 통과 — (a) 최소안 T1 u_DEM = 없음 (per-level) · (b) 포괄 0.907 (목표 ≥ 0.95) · (c) NP 10 재시도 받음? True · (d) 정상 상태 (3° 표류 / 표류 0) = None / None
+      v2: 잡음 · 대조 통과 — (a) 최소안 T1 u_DEM = 없음 (판정 밖 (보조)) · (b) 포괄 0.998 (통계 띠만 0.977) (목표 ≥ 0.95) · (c) NP 10 재시도 받음? False · (d) 정상 상태 (3° 표류 / 표류 0) = False / True
+      ⇒ PASS (v1 반례 재현 True · v2 잡음 True · v2 대조 True)
+  C05 (MXD3-05) 벽 감도가 ρ 구간 · 벽이 닿는 시험을 덮는가 (F_SW/F_SS = 2√(γ_W/γ_SE)).
+      v1: 반례 통과 (잘못 받아들임) · 대조 통과 — 감도 비 범위 [0.178, 0.320] · 덮지 못하는 ρ = [0.0, 0.01, 0.03, 0.1] · 감도가 빠진 시험 = ['T1', 'T3']
+      v2: 잡음 · 대조 통과 — 감도 비 범위 [0.000, 0.320] · 덮지 못하는 ρ = 없음 · 감도가 빠진 시험 = 없음
+      ⇒ PASS (v1 반례 재현 True · v2 잡음 True · v2 대조 True)
+  C06 (MXD3-06) T2 자유표면 각의 정의 가능성 (합성 표면 · 단위 = 드럼 R · d = SE parcel / R (lab)).
+      v1: 반례 통과 (잘못 받아들임) · 대조 통과 — 벽 두름 표면 → 각 0.1° (맞춤 잔차 2.28 d · 두름 분율 0.30) | 대조 정상 침대 → 각 40.07° (잔차 0.30 d)
+      v2: 잡음 · 대조 통과 — 벽 두름 표면 → 관측 불가 (맞춤 잔차 2.28 d · 두름 분율 0.30) | 대조 정상 침대 → 각 40.07° (잔차 0.30 d)
+      ⇒ PASS (v1 반례 재현 True · v2 잡음 True · v2 대조 True)
+  C07 (MXD3-07) 확인 블록 이전 명세 (G · 규약 · 구간).
+      v1: 반례 통과 (잘못 받아들임) · 대조 통과 — 이전 명세 = {'value': 'center', 'interval': False, 'G': None, 'convention': None}
+      v2: 잡음 · 대조 통과 — 이전 명세 = {'value': 'interval', 'interval': True, 'G': 'MXD3-19 (자료 대기)', 'convention': 'S6 등록: Bo* (1 g 그대로) 또는 Bo*/G (D10)'}
+      ⇒ PASS (v1 반례 재현 True · v2 잡음 True · v2 대조 True)
+  C08 (MXD3-08) 등록 · 측정 · 봉인 · 열람 순서 (사건 순서 모형).
+      v1: 반례 통과 (잘못 받아들임) · 대조 통과 — 측정이 SOP 커밋보다 먼저 (X1) → 받음? True · 원자료 평문 push 가 곡선 봉인보다 먼저 (X2) → 받음? True | 대조 (S3a → 측정 → 암호화 push → S3b · 봉인 → 열쇠 → 열람) → 받음? True
+      v2: 잡음 · 대조 통과 — 측정이 SOP 커밋보다 먼저 (X1) → 받음? False · 원자료 평문 push 가 곡선 봉인보다 먼저 (X2) → 받음? False | 대조 (S3a → 측정 → 암호화 push → S3b · 봉인 → 열쇠 → 열람) → 받음? True
+      ⇒ PASS (v1 반례 재현 True · v2 잡음 True · v2 대조 True)
+  C09 (MXD3-09) T3 검증의 판별력 (이진 예측 · 8 수준).
+      v1: 반례 통과 (잘못 받아들임) · 대조 실패 — 판별력 없는 경우 (모든 이웃 = 멈춤) → 통과 · 판별력 None | 대조 (위 이웃 = 멈춤) → 통과 · 판별력 None
+      v2: 잡음 · 대조 통과 — 판별력 없는 경우 (모든 이웃 = 멈춤) → 통과 · 판별력 False | 대조 (위 이웃 = 멈춤) → 통과 · 판별력 True
+      ⇒ PASS (v1 반례 재현 True · v2 잡음 True · v2 대조 True)
+  C10 (MXD3-10) 계약 검사기 (실제 container_at) 가 지원하지 않는 기하의 런.
+      v1: 반례 통과 (잘못 받아들임) · 대조 통과 — 검사기 지원 = {'T2': True, 'T1': False, 'T3': False} · 앵커에 넣음 = {'T2': True, 'T1': True, 'T3': True} | 대조 T2 겹침 1.3 % → 넣음? False
+      v2: 잡음 · 대조 통과 — 검사기 지원 = {'T2': True, 'T1': False, 'T3': False} · 앵커에 넣음 = {'T2': True, 'T1': False, 'T3': False} | 대조 T2 겹침 1.3 % → 넣음? False
+      ⇒ PASS (v1 반례 재현 True · v2 잡음 True · v2 대조 True)
+  C11 (MXD3-11) 시험 덱 물성 블록 · 드럼 치수의 출처 (실제 생성기).
+      v1: 반례 통과 (잘못 받아들임) · 대조 통과 — 상 집합 ('SE',) → AssertionError: AM 과 SE 는 있어야 한다 · 드럼 = plan (plan() R: N 10 만 12.583 · 5 만 10.011 mm)
+      v2: 잡음 · 대조 통과 — 상 집합 ('AM_P', 'AM_S', 'SE') → 통과 · 드럼 = registered (plan() R: N 10 만 12.583 · 5 만 10.011 mm)
+      ⇒ PASS (v1 반례 재현 True · v2 잡음 True · v2 대조 True)
+  C12 (MXD3-12) 설계 문서 숫자 ↔ lab20261014 계산값 (표기 자릿수 안).
+      v1: 반례 통과 (잘못 받아들임) · 대조 통과 — lab 과 다른 문서 숫자 20/22 (예 drum_D_mm, drum_L_mm, rpm, wR_mm_s, n_per_fill, n_f011) | 대조: v1 숫자 ↔ gen1 계산값 어긋남 0/22
+      v2: 반례 통과 (잘못 받아들임) · 대조 통과 — lab 과 다른 문서 숫자 22/0 (예 bo_1pct_x20 (없음), ceiling_soft (없음), d_over_amp (없음), drum_D_mm (없음), drum_L_mm (없음), dt_x20 (없음)) | 대조: v1 숫자 ↔ gen1 계산값 어긋남 0/22
+      ⇒ FAIL (v1 반례 재현 True · v2 잡음 False · v2 대조 True)
+  C13 (MXD3-13) F3 확장 (위 = 천장 · 아래 = 마찰 바닥).
+      v1: 반례 통과 (잘못 받아들임) · 대조 통과 — 위 확장 수준 2015.4 (천장 1015.4) → 가능? False · 바닥 평평 + 측정이 아래 → 표현 범위 밖 | 대조 (바닥이 기울어짐) → 확장
+Traceback (most recent call last):
+  File "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-ae7bc48de1c46b1d4/docs/reviews/mixer_d3_design_v2_evidence_20261021/d3_v2_rule_checks.py", line 982, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-ae7bc48de1c46b1d4/docs/reviews/mixer_d3_design_v2_evidence_20261021/d3_v2_rule_checks.py", line 965, in main
+    caught, ok, det = fn(R)
+                      ^^^^^
+  File "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-ae7bc48de1c46b1d4/docs/reviews/mixer_d3_design_v2_evidence_20261021/d3_v2_rule_checks.py", line 692, in c13
+    return caught, ok, (f'위 확장 수준 {up.get("level", float("nan")):.1f} (천장 {ceil:.1f}) → 가능? {up_ok} · '
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported format string passed to NoneType.__format__

@@ -1,0 +1,69 @@
+{
+ "remote_head": "eabeda83cbe2da166a0216087f25afd98bf97097",
+ "local_branch_ref": "a6996396774064fa159d360da0e1d26877b66c33",
+ "shas": {
+  "a45a980e9": {
+   "exists": true,
+   "type": "commit",
+   "full": "a45a980e9450308c90a44a3d2c1a127a1beab12f",
+   "on_remote_head": false,
+   "on_local_branch_ref": false
+  },
+  "e9267000b": {
+   "exists": true,
+   "type": "commit",
+   "full": "e9267000b4e01ea3a4447be70fc9e11a398f8841",
+   "on_remote_head": false,
+   "on_local_branch_ref": false
+  },
+  "a76f59d0d16c58b2f7816d67a3432f94367e46f0": {
+   "exists": true,
+   "type": "commit",
+   "full": "a76f59d0d16c58b2f7816d67a3432f94367e46f0",
+   "on_remote_head": true,
+   "on_local_branch_ref": true
+  },
+  "34713ac9650ece7c8d59b7c4d9a2aefccee693ea": {
+   "exists": true,
+   "type": "commit",
+   "full": "34713ac9650ece7c8d59b7c4d9a2aefccee693ea",
+   "on_remote_head": true,
+   "on_local_branch_ref": true
+  },
+  "a6996396774064fa159d360da0e1d26877b66c33": {
+   "exists": true,
+   "type": "commit",
+   "full": "a6996396774064fa159d360da0e1d26877b66c33",
+   "on_remote_head": false,
+   "on_local_branch_ref": true
+  },
+  "fe23f2b839f0a49adb077348fec6d4c85443b62a": {
+   "exists": true,
+   "type": "commit",
+   "full": "fe23f2b839f0a49adb077348fec6d4c85443b62a",
+   "on_remote_head": false,
+   "on_local_branch_ref": false
+  },
+  "f82929b0644be39b44e9fba9ea04cf9d60de9146": {
+   "exists": true,
+   "type": "commit",
+   "full": "f82929b0644be39b44e9fba9ea04cf9d60de9146",
+   "on_remote_head": false,
+   "on_local_branch_ref": false
+  },
+  "02393562f": {
+   "exists": true,
+   "type": "commit",
+   "full": "02393562f00bca19365bbe02f28a12e72f70c1c0",
+   "on_remote_head": false,
+   "on_local_branch_ref": false
+  },
+  "7f99be67c": {
+   "exists": true,
+   "type": "commit",
+   "full": "7f99be67c7bd66416e2b125e62cba50ca6f8a03a",
+   "on_remote_head": false,
+   "on_local_branch_ref": false
+  }
+ }
+}

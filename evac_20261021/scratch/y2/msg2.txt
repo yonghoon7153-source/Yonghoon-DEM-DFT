@@ -1,0 +1,39 @@
+Rint 2 B6 runner: next-generation knobs for sdcp_gain_vox015_8arm.sh (PTFE_STAMP=face_alpha, CJUNC*, SDCP_MOD_C, STEP3_RTOL)
+
+scripts/run_contract.py
+- RUNNER_CA_EXT_ENV: the runner knob table (env name, sub-block, declared field) - CJUNC (switch), CJUNC_RJ,
+  CJUNC_LEN_LAW, CJUNC_UNREG_LAW, CJUNC_S_MIN_UM, CJUNC_TOL_FF_UM, CJUNC_PTFE_JLAW, SDCP_MOD_C, STEP3_RTOL.
+- runner_ca_ext(env, runner axes): pre-launch contract check before any directory is made. Strict ASCII decimals
+  (no sign, blank, underscore, unicode digits, nan/inf words, overflow), word tokens for laws, c in {'0','1'} (the payload
+  choices), no defaults (MISSING), value env without CJUNC=1 and SDCP_MOD_C without CJUNC refused, declared fields =
+  manifest protocol canon (ca_ext_request_problem), runner-axis combinations (LEAN 2/3 only, segment stamp, no periodic,
+  no SDCP bridge, SIGMA_VGCF_OVERRIDE > 0, face_alpha + CJUNC, face_alpha + SIGMA_PTFE > 0 / PTFE block), rtol in
+  (0, step3_conv_cert.CERT_RTOL_MAX] (above it certificate (a) always fails). Output = receipt optional fields
+  ca_ext_request / step3_rtol only (digest unchanged when absent).
+- runner_ca_ext_view(receipt): payload flags, --expect-physics ca_ext.* declarations and name tags built from the
+  receipt alone; flag names inverted from CLI_ACCOUNTING protocol_ext (the rule-M canon); values in canonical repr;
+  tag = _cj<R_j>_<request sha8> + _c<0|1> + _rt<rtol> (lossless: 2.5 vs 25 differ; 1e6 = 1000000 = 1E6 same);
+  arm tag adds _fa for face_alpha; refuses tampered requests and characters outside the generated-script set.
+
+scripts/sdcp_gain_vox015_8arm.sh
+- PTFE_STAMP accepts face_alpha (own banner; combinations checked by runner_ca_ext).
+- Receipt heredoc passes the nine knobs as NAME=value (read as ${NAME:-}, so the env guard sees them) and stops with
+  RUNNER_CA_EXT|<code>| reasons; NG_TAG / NG_ATAG / NG_FLAG / NG_DECL come from runner_ca_ext_view and are checked
+  for the generated-script character set; OUTDIR and the diagnostic production path gain ${NG_TAG}; arm names gain
+  ${NG_ATAG}; --expect-physics gains the declarations; extra flags gain $NG_FLAG with an injection check.
+- Env guard name pattern covers CJUNC* (STEP3_RTOL stays outside: STEP3_VOX is a subprocess env of this runner).
+- --step3-rtol leaves the P2_EXTRA allowlist (design 7 listed it there, but the receipt now binds rtol: through
+  P2_EXTRA every arm would fail check_arm after the solve with RCPT|step3_rtol|unrequested|), with a pointer message.
+- Off path: all knobs empty -> NG_* empty -> receipt, OUTDIR, arm names, payload argv, generated scripts and arm
+  manifests (code_sha, exec_env aside) equal the pre-change runner (NB vs aff73c4d5: off LEAN 2, centerline LEAN 3).
+
+scripts/check_method_discipline.py
+- _RUNNER_AXES gains the nine knobs (otherwise a parent-shell CJUNC=1 leaks into the LEAN-less rule-L probe, the
+  pre-launch check stops it and rule L blocks production); L-K6 now derives the knob names from RUNNER_CA_EXT_ENV.
+
+scripts/test_ca_ext_runner.py: pre-fix 23/114 -> 114/114 (92 s); with --old-runner (aff73c4d5 runner) 116/116.
+Regressions: run_contract --selftest 124/124, check_method_discipline --selftest 128/128 and no-arg 0 errors
+(15 warnings as before; rule L ok; rule M 98 CLI, protocol_ext 10), test_ca_ext_b6 160/160.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

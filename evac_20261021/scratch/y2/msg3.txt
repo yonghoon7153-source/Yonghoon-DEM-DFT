@@ -1,0 +1,23 @@
+Rint 2 B6 verdict: next-generation consumer checks in sdcp_gain_verdict.py: tests first
+
+New scripts/test_ca_ext_verdict.py (design v1 6, 7). Cohorts are real payload output (test_ca_ext_b6.make_fixture plus
+one straight bottom-to-top VGCF fibre so every origin of the {0, 0.5}^3 factorial conducts at vox 1.0: a half-cell
+shift otherwise leaves the junction port outside r_port and the payload refuses sigma_e = 0); tampering is applied to
+the rows the verdict reads (manifest, step3).
+- V0 positive: cjunc + rtol 8 origins x SBE/DBE -> validate_contract(require_arms 8) passes and the verdict reaches its
+  statistics; face_alpha + rtol and cjunc LEAN 3 + rtol (require_ionic) pass.
+- V1 eight evidence tampers that keep the protocol id (main receipt missing, label, count identity, diagnostics table,
+  short, ionic applied_without_request, rejections, ledger fingerprint) -> HOLD CAEXT.
+- V2 p2 arms in a p3ca cohort, and SBE p2 vs DBE p3ca -> HOLD GENERATION_MIX; p2-only pair is not a mix.
+- V3 certificate absent / ok False / sigma binding broken / ok vs pass inconsistent, real cjunc and face_alpha arms run
+  without --step3-rtol, LEAN 3 ionic certificate removed -> HOLD NEXTGEN_UNPUBLISHED (counted as unpublished arms).
+- V4 committed p2 cohorts (w4, w4b) are not held for the new reasons; with --old-verdict the verdict JSON of every
+  committed arm directory is compared byte for byte with the pre-change verdict.
+- V5 CLI --seal-only: the broken-seal reason names the new code (tamper, no certificate, mix); clean dir shows no
+  contract code and no ratio.
+
+pre-fix 11/31 (fails = 20 checks from 20 counterexamples: 8 tampered arms, 2 mixed cohorts, 7 certificate cases,
+3 CLI dirs); the 11 passes are the positive controls (V0 6), V2a, V2d, V4a x2 and V5a.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

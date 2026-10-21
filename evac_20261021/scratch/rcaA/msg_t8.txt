@@ -1,0 +1,21 @@
+Rint 2 S2 RCA-04/05 tests: contact point independent of candidate-pair order and traversal direction
+
+Source-line mutant M16 (instance contact = 'argmin first pair' instead of the eps-band lexicographic
+minimum midpoint) survived the suite: cKDTree.query_pairs output order (implementation defined)
+happened to list the lexicographic-minimum pair first in every fixture.  Tests written after the
+implementation (deviation recorded):
+- CP-ORD: candidate pairs reversed / permuted (seed 7) through a cKDTree wrapper -> contact points,
+  division points, sub-edge port cells, system and sigma bit-identical on PCP, PCP-FAR, LP (long
+  contact) and the CX 5-node bed.  Kills M16 (8 checks).
+- PCP-FAR: PCP with a short tail at A's bottom end (same cell, far from B) flips A's canonical
+  direction (downward through the overlap) -> contact z 4.0, ports (1,1,3)-(2,1,4), system and sigma
+  bits equal to PCP, sigma = hand circuit (1e-12).  Base 47d23baba: fails (port (1,1,4), old
+  path-index tie follows the traversal direction).
+- PCP-EPS (guard): PCP shifted by non-dyadic origins -> contact z 4.0 + o_z, same ports, sigma =
+  hand circuit.  Passes on base too.
+
+Base 47d23baba code: 2/12 (PCP-EPS 2 pass; PCP-FAR 2 fail; CP-ORD 8 fail - structurally, no
+'subedges' in the old registry); current: 12/12.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

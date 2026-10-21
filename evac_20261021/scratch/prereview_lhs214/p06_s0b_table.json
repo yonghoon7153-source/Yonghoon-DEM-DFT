@@ -1,0 +1,921 @@
+{
+ "fp_now": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+ "extracted": [
+  "fp_state",
+  "s0b_fp"
+ ],
+ "n": 41,
+ "mismatches": [
+  "T08 보충 registered + 대기 둘 (X1 · X2 · 상충) · 194 깨끗",
+  "T10 보충 registered + 대기 = 등록 (모순) · 194 깨끗"
+ ],
+ "rows": [
+  {
+   "case": "T01 둘 다 registered (HEAD 실물)",
+   "expect": true,
+   "got": true,
+   "match": true,
+   "why": "상태 registered",
+   "note": "",
+   "state_supp": "registered",
+   "state_194": "registered",
+   "supp": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "supp_fp_problems": [],
+   "b194": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "b194_fp_problems": [],
+   "old_s0b": false
+  },
+  {
+   "case": "T02 둘 다 pending (비준 전 실물 fe23f2b83)",
+   "expect": true,
+   "got": true,
+   "match": true,
+   "why": "상태 pending",
+   "note": "",
+   "state_supp": "pending",
+   "state_194": "pending",
+   "supp": [
+    "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71",
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+   ],
+   "supp_fp_problems": [],
+   "b194": [
+    "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71",
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+   ],
+   "b194_fp_problems": [],
+   "old_s0b": true
+  },
+  {
+   "case": "T03 보충 registered · 194 pending",
+   "expect": false,
+   "got": false,
+   "match": true,
+   "why": "보충 등록 (§3 2149f8738bb2… · 대기 None) ≠ 194 등록 (§3 e8b2496b9c2e… · 대기 2149f8738bb2…) — 두 등록은 한 봉인 (보충 §3 \"= 194 와 같다\")",
+   "note": "한 문서만 비준",
+   "state_supp": "registered",
+   "state_194": "pending",
+   "supp": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "supp_fp_problems": [],
+   "b194": [
+    "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71",
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+   ],
+   "b194_fp_problems": [],
+   "old_s0b": false
+  },
+  {
+   "case": "T04 보충 pending · 194 registered",
+   "expect": false,
+   "got": false,
+   "match": true,
+   "why": "보충 등록 (§3 e8b2496b9c2e… · 대기 2149f8738bb2…) ≠ 194 등록 (§3 2149f8738bb2… · 대기 None) — 두 등록은 한 봉인 (보충 §3 \"= 194 와 같다\")",
+   "note": "한 문서만 비준 (S11g 에 없는 꼴)",
+   "state_supp": "pending",
+   "state_194": "registered",
+   "supp": [
+    "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71",
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+   ],
+   "supp_fp_problems": [],
+   "b194": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "b194_fp_problems": [],
+   "old_s0b": true
+  },
+  {
+   "case": "T05 둘 다 registered + 남은 대기 X1 (둘 다)",
+   "expect": false,
+   "got": false,
+   "match": true,
+   "why": "상태 registered 인데 대기 선언이 남았다 (f2b67b2c8e10… — 비준 · 재등록은 대기 선언을 지운다)",
+   "note": "둘 다 (등록 + 대기)",
+   "state_supp": "registered",
+   "state_194": "registered",
+   "supp": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    "f2b67b2c8e107d8afb3e2b06af02729559a6a98fe2e70fa26dd051173b3111c7"
+   ],
+   "supp_fp_problems": [],
+   "b194": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    "f2b67b2c8e107d8afb3e2b06af02729559a6a98fe2e70fa26dd051173b3111c7"
+   ],
+   "b194_fp_problems": [],
+   "old_s0b": false
+  },
+  {
+   "case": "T06 보충 registered + 남은 대기 X1 · 194 깨끗",
+   "expect": false,
+   "got": false,
+   "match": true,
+   "why": "상태 registered 인데 대기 선언이 남았다 (f2b67b2c8e10… — 비준 · 재등록은 대기 선언을 지운다)",
+   "note": "",
+   "state_supp": "registered",
+   "state_194": "registered",
+   "supp": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    "f2b67b2c8e107d8afb3e2b06af02729559a6a98fe2e70fa26dd051173b3111c7"
+   ],
+   "supp_fp_problems": [],
+   "b194": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "b194_fp_problems": [],
+   "old_s0b": false
+  },
+  {
+   "case": "T07 보충 깨끗 · 194 registered + 남은 대기 X1",
+   "expect": false,
+   "got": false,
+   "match": true,
+   "why": "보충 등록 (§3 2149f8738bb2… · 대기 None) ≠ 194 등록 (§3 2149f8738bb2… · 대기 f2b67b2c8e10…) — 두 등록은 한 봉인 (보충 §3 \"= 194 와 같다\")",
+   "note": "",
+   "state_supp": "registered",
+   "state_194": "registered",
+   "supp": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "supp_fp_problems": [],
+   "b194": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    "f2b67b2c8e107d8afb3e2b06af02729559a6a98fe2e70fa26dd051173b3111c7"
+   ],
+   "b194_fp_problems": [],
+   "old_s0b": false
+  },
+  {
+   "case": "T08 보충 registered + 대기 둘 (X1 · X2 · 상충) · 194 깨끗",
+   "expect": false,
+   "got": true,
+   "match": false,
+   "why": "상태 registered",
+   "note": "보충 쪽 상충 대기 (S11g 는 194 쪽만)",
+   "state_supp": "registered",
+   "state_194": "registered",
+   "supp": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "supp_fp_problems": [
+    "등록 문서 code_fp_pending — 값이 둘 이상 ['5a6649edd7885498a16a8f213fd3f68ab51c3abf1d8d478f4a04f595da359195', 'f2b67b2c8e107d8afb3e2b06af02729559a6a98fe2e70fa26dd051173b3111c7']"
+   ],
+   "b194": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "b194_fp_problems": [],
+   "old_s0b": false
+  },
+  {
+   "case": "T09 보충 깨끗 · 194 registered + 대기 둘 (상충)",
+   "expect": false,
+   "got": false,
+   "match": true,
+   "why": "194 등록의 봉인 지문 문제 [\"등록 문서 code_fp_pending — 값이 둘 이상 ['5a6649edd7885498a16a8f213fd3f68ab51c3abf1d8d478f4a04f595da359195', 'f2b67b2c8e107d8afb3e2b06af02729559a6a98fe2e70fa26dd051173b3111c7']\"]",
+   "note": "= S11g base_pending_conflict",
+   "state_supp": "registered",
+   "state_194": "registered",
+   "supp": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "supp_fp_problems": [],
+   "b194": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "b194_fp_problems": [
+    "등록 문서 code_fp_pending — 값이 둘 이상 ['5a6649edd7885498a16a8f213fd3f68ab51c3abf1d8d478f4a04f595da359195', 'f2b67b2c8e107d8afb3e2b06af02729559a6a98fe2e70fa26dd051173b3111c7']"
+   ],
+   "old_s0b": false
+  },
+  {
+   "case": "T10 보충 registered + 대기 = 등록 (모순) · 194 깨끗",
+   "expect": false,
+   "got": true,
+   "match": false,
+   "why": "상태 registered",
+   "note": "보충 쪽 모순 대기",
+   "state_supp": "registered",
+   "state_194": "registered",
+   "supp": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "supp_fp_problems": [
+    "등록 문서 code_fp_pending — 등록 §3 code_fp 와 같다 (모순 선언 · 대기 지문은 등록 값과 달라야 한다)"
+   ],
+   "b194": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "b194_fp_problems": [],
+   "old_s0b": false
+  },
+  {
+   "case": "T11 보충 깨끗 · 194 registered + 대기 = 등록 (모순)",
+   "expect": false,
+   "got": false,
+   "match": true,
+   "why": "194 등록의 봉인 지문 문제 ['등록 문서 code_fp_pending — 등록 §3 code_fp 와 같다 (모순 선언 · 대기 지문은 등록 값과 달라야 한다)']",
+   "note": "",
+   "state_supp": "registered",
+   "state_194": "registered",
+   "supp": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "supp_fp_problems": [],
+   "b194": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "b194_fp_problems": [
+    "등록 문서 code_fp_pending — 등록 §3 code_fp 와 같다 (모순 선언 · 대기 지문은 등록 값과 달라야 한다)"
+   ],
+   "old_s0b": false
+  },
+  {
+   "case": "T12 둘 다 아님 — 둘 다 §3 = X1 · 대기 없음",
+   "expect": false,
+   "got": false,
+   "match": true,
+   "why": "상태 undeclared — 체크아웃 지문 2149f8738bb2… ≠ 등록 §3 f2b67b2c8e10… · 대기 선언 없음 (읽은 값 None)",
+   "note": "undeclared",
+   "state_supp": "undeclared",
+   "state_194": "undeclared",
+   "supp": [
+    "f2b67b2c8e107d8afb3e2b06af02729559a6a98fe2e70fa26dd051173b3111c7",
+    null
+   ],
+   "supp_fp_problems": [],
+   "b194": [
+    "f2b67b2c8e107d8afb3e2b06af02729559a6a98fe2e70fa26dd051173b3111c7",
+    null
+   ],
+   "b194_fp_problems": [],
+   "old_s0b": false
+  },
+  {
+   "case": "T13 둘 다 아님 — 둘 다 §3 = X1 · 대기 X2 (≠ 체크아웃)",
+   "expect": false,
+   "got": false,
+   "match": true,
+   "why": "상태 undeclared — 체크아웃 지문 2149f8738bb2… ≠ 등록 §3 f2b67b2c8e10… · 대기 선언 5a6649edd788… ≠ 체크아웃 (다른 코드)",
+   "note": "undeclared",
+   "state_supp": "undeclared",
+   "state_194": "undeclared",
+   "supp": [
+    "f2b67b2c8e107d8afb3e2b06af02729559a6a98fe2e70fa26dd051173b3111c7",
+    "5a6649edd7885498a16a8f213fd3f68ab51c3abf1d8d478f4a04f595da359195"
+   ],
+   "supp_fp_problems": [],
+   "b194": [
+    "f2b67b2c8e107d8afb3e2b06af02729559a6a98fe2e70fa26dd051173b3111c7",
+    "5a6649edd7885498a16a8f213fd3f68ab51c3abf1d8d478f4a04f595da359195"
+   ],
+   "b194_fp_problems": [],
+   "old_s0b": false
+  },
+  {
+   "case": "T14 pending · 194 §3 다름 (보충 §3 e8b · 194 §3 X1 · 대기 둘 다 체크아웃)",
+   "expect": false,
+   "got": false,
+   "match": true,
+   "why": "보충 등록 (§3 e8b2496b9c2e… · 대기 2149f8738bb2…) ≠ 194 등록 (§3 f2b67b2c8e10… · 대기 2149f8738bb2…) — 두 등록은 한 봉인 (보충 §3 \"= 194 와 같다\")",
+   "note": "",
+   "state_supp": "pending",
+   "state_194": "pending",
+   "supp": [
+    "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71",
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+   ],
+   "supp_fp_problems": [],
+   "b194": [
+    "f2b67b2c8e107d8afb3e2b06af02729559a6a98fe2e70fa26dd051173b3111c7",
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+   ],
+   "b194_fp_problems": [],
+   "old_s0b": true
+  },
+  {
+   "case": "T15 pending · 같은 엉뚱한 §3 X1 (둘 다) · 대기 = 체크아웃",
+   "expect": true,
+   "got": true,
+   "match": true,
+   "why": "상태 pending",
+   "note": "요청서 §6 이 적은 한정 (pending 은 발사 대조가 막음)",
+   "state_supp": "pending",
+   "state_194": "pending",
+   "supp": [
+    "f2b67b2c8e107d8afb3e2b06af02729559a6a98fe2e70fa26dd051173b3111c7",
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+   ],
+   "supp_fp_problems": [],
+   "b194": [
+    "f2b67b2c8e107d8afb3e2b06af02729559a6a98fe2e70fa26dd051173b3111c7",
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb"
+   ],
+   "b194_fp_problems": [],
+   "old_s0b": false
+  },
+  {
+   "case": "T16 194 문서 없음",
+   "expect": false,
+   "got": false,
+   "match": true,
+   "why": "194 등록의 봉인 지문 문제 ['등록 문서 code_fp — §3 제목 (## 3.) 없음']",
+   "note": "194 를 못 읽음 → 값 None (문제 사유 = 다른 접두)",
+   "state_supp": "registered",
+   "state_194": "undeclared",
+   "supp": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "supp_fp_problems": [],
+   "b194": [
+    null,
+    null
+   ],
+   "b194_fp_problems": [
+    "등록 문서 code_fp — §3 제목 (## 3.) 없음"
+   ],
+   "old_s0b": false
+  },
+  {
+   "case": "T17 194 §3 제목 없음",
+   "expect": false,
+   "got": false,
+   "match": true,
+   "why": "194 등록의 봉인 지문 문제 ['등록 문서 code_fp — §3 제목 (## 3.) 없음']",
+   "note": "",
+   "state_supp": "registered",
+   "state_194": "undeclared",
+   "supp": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "supp_fp_problems": [],
+   "b194": [
+    null,
+    null
+   ],
+   "b194_fp_problems": [
+    "등록 문서 code_fp — §3 제목 (## 3.) 없음"
+   ],
+   "old_s0b": false
+  },
+  {
+   "case": "T18 194 §3 제목 둘",
+   "expect": false,
+   "got": false,
+   "match": true,
+   "why": "194 등록의 봉인 지문 문제 ['등록 문서 code_fp — §3 제목 (## 3.) 둘 이상 (줄 [113, 411])']",
+   "note": "",
+   "state_supp": "registered",
+   "state_194": "undeclared",
+   "supp": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "supp_fp_problems": [],
+   "b194": [
+    null,
+    null
+   ],
+   "b194_fp_problems": [
+    "등록 문서 code_fp — §3 제목 (## 3.) 둘 이상 (줄 [113, 411])"
+   ],
+   "old_s0b": false
+  },
+  {
+   "case": "T19 보충 문서 없음 (빈 글)",
+   "expect": false,
+   "got": false,
+   "match": true,
+   "why": "상태 undeclared — 등록 §3 code_fp 를 못 읽었다 (None — 값이 둘이면 이렇게 된다 · 새 지문을 `code_fp <hex>` 둘째 값으로 적은 옛 초안 꼴 = 대기 선언 `code_fp_pending <hex>` 이 아니다)",
+   "note": "",
+   "state_supp": "undeclared",
+   "state_194": "registered",
+   "supp": [
+    null,
+    null
+   ],
+   "supp_fp_problems": [
+    "등록 문서 code_fp — §3 제목 (## 3.) 없음"
+   ],
+   "b194": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "b194_fp_problems": [],
+   "old_s0b": false
+  },
+  {
+   "case": "L01 63 자리 (보충 §3 토큰만 · 194 정상)",
+   "expect": false,
+   "got": false,
+   "match": true,
+   "why": "상태 undeclared — 등록 §3 code_fp 를 못 읽었다 (None — 값이 둘이면 이렇게 된다 · 새 지문을 `code_fp <hex>` 둘째 값으로 적은 옛 초안 꼴 = 대기 선언 `code_fp_pending <hex>` 이 아니다)",
+   "note": "보충 §3 값 없음 → undeclared 이어야",
+   "state_supp": "undeclared",
+   "state_194": "registered",
+   "supp": [
+    null,
+    null
+   ],
+   "supp_fp_problems": [
+    "등록 문서 code_fp — §3 안 자리 없음"
+   ],
+   "b194": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "b194_fp_problems": [],
+   "old_s0b": false
+  },
+  {
+   "case": "L02 65 자리 (보충 §3 토큰만 · 194 정상)",
+   "expect": false,
+   "got": false,
+   "match": true,
+   "why": "상태 undeclared — 등록 §3 code_fp 를 못 읽었다 (None — 값이 둘이면 이렇게 된다 · 새 지문을 `code_fp <hex>` 둘째 값으로 적은 옛 초안 꼴 = 대기 선언 `code_fp_pending <hex>` 이 아니다)",
+   "note": "보충 §3 값 없음 → undeclared 이어야",
+   "state_supp": "undeclared",
+   "state_194": "registered",
+   "supp": [
+    null,
+    null
+   ],
+   "supp_fp_problems": [
+    "등록 문서 code_fp — §3 안 자리 없음"
+   ],
+   "b194": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "b194_fp_problems": [],
+   "old_s0b": false
+  },
+  {
+   "case": "L03 대문자 hex (보충 §3 토큰만 · 194 정상)",
+   "expect": false,
+   "got": false,
+   "match": true,
+   "why": "상태 undeclared — 등록 §3 code_fp 를 못 읽었다 (None — 값이 둘이면 이렇게 된다 · 새 지문을 `code_fp <hex>` 둘째 값으로 적은 옛 초안 꼴 = 대기 선언 `code_fp_pending <hex>` 이 아니다)",
+   "note": "보충 §3 값 없음 → undeclared 이어야",
+   "state_supp": "undeclared",
+   "state_194": "registered",
+   "supp": [
+    null,
+    null
+   ],
+   "supp_fp_problems": [
+    "등록 문서 code_fp — §3 안 자리 없음"
+   ],
+   "b194": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "b194_fp_problems": [],
+   "old_s0b": false
+  },
+  {
+   "case": "L04 백틱 안 앞 공백 (보충 §3 토큰만 · 194 정상)",
+   "expect": false,
+   "got": false,
+   "match": true,
+   "why": "상태 undeclared — 등록 §3 code_fp 를 못 읽었다 (None — 값이 둘이면 이렇게 된다 · 새 지문을 `code_fp <hex>` 둘째 값으로 적은 옛 초안 꼴 = 대기 선언 `code_fp_pending <hex>` 이 아니다)",
+   "note": "보충 §3 값 없음 → undeclared 이어야",
+   "state_supp": "undeclared",
+   "state_194": "registered",
+   "supp": [
+    null,
+    null
+   ],
+   "supp_fp_problems": [
+    "등록 문서 code_fp — §3 안 자리 없음"
+   ],
+   "b194": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "b194_fp_problems": [],
+   "old_s0b": false
+  },
+  {
+   "case": "L05 백틱 안 뒤 공백 (보충 §3 토큰만 · 194 정상)",
+   "expect": false,
+   "got": false,
+   "match": true,
+   "why": "상태 undeclared — 등록 §3 code_fp 를 못 읽었다 (None — 값이 둘이면 이렇게 된다 · 새 지문을 `code_fp <hex>` 둘째 값으로 적은 옛 초안 꼴 = 대기 선언 `code_fp_pending <hex>` 이 아니다)",
+   "note": "보충 §3 값 없음 → undeclared 이어야",
+   "state_supp": "undeclared",
+   "state_194": "registered",
+   "supp": [
+    null,
+    null
+   ],
+   "supp_fp_problems": [
+    "등록 문서 code_fp — §3 안 자리 없음"
+   ],
+   "b194": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "b194_fp_problems": [],
+   "old_s0b": false
+  },
+  {
+   "case": "L06 code_fp 뒤 공백 둘 (보충 §3 토큰만 · 194 정상)",
+   "expect": false,
+   "got": false,
+   "match": true,
+   "why": "상태 undeclared — 등록 §3 code_fp 를 못 읽었다 (None — 값이 둘이면 이렇게 된다 · 새 지문을 `code_fp <hex>` 둘째 값으로 적은 옛 초안 꼴 = 대기 선언 `code_fp_pending <hex>` 이 아니다)",
+   "note": "보충 §3 값 없음 → undeclared 이어야",
+   "state_supp": "undeclared",
+   "state_194": "registered",
+   "supp": [
+    null,
+    null
+   ],
+   "supp_fp_problems": [
+    "등록 문서 code_fp — §3 안 자리 없음"
+   ],
+   "b194": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "b194_fp_problems": [],
+   "old_s0b": false
+  },
+  {
+   "case": "L07 NBSP 구분 (보충 §3 토큰만 · 194 정상)",
+   "expect": false,
+   "got": false,
+   "match": true,
+   "why": "상태 undeclared — 등록 §3 code_fp 를 못 읽었다 (None — 값이 둘이면 이렇게 된다 · 새 지문을 `code_fp <hex>` 둘째 값으로 적은 옛 초안 꼴 = 대기 선언 `code_fp_pending <hex>` 이 아니다)",
+   "note": "보충 §3 값 없음 → undeclared 이어야",
+   "state_supp": "undeclared",
+   "state_194": "registered",
+   "supp": [
+    null,
+    null
+   ],
+   "supp_fp_problems": [
+    "등록 문서 code_fp — §3 안 자리 없음"
+   ],
+   "b194": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "b194_fp_problems": [],
+   "old_s0b": false
+  },
+  {
+   "case": "L08 전각 숫자 (보충 §3 토큰만 · 194 정상)",
+   "expect": false,
+   "got": false,
+   "match": true,
+   "why": "상태 undeclared — 등록 §3 code_fp 를 못 읽었다 (None — 값이 둘이면 이렇게 된다 · 새 지문을 `code_fp <hex>` 둘째 값으로 적은 옛 초안 꼴 = 대기 선언 `code_fp_pending <hex>` 이 아니다)",
+   "note": "보충 §3 값 없음 → undeclared 이어야",
+   "state_supp": "undeclared",
+   "state_194": "registered",
+   "supp": [
+    null,
+    null
+   ],
+   "supp_fp_problems": [
+    "등록 문서 code_fp — §3 안 자리 없음"
+   ],
+   "b194": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "b194_fp_problems": [],
+   "old_s0b": false
+  },
+  {
+   "case": "L09 탭 구분 (보충 §3 토큰만 · 194 정상)",
+   "expect": false,
+   "got": false,
+   "match": true,
+   "why": "상태 undeclared — 등록 §3 code_fp 를 못 읽었다 (None — 값이 둘이면 이렇게 된다 · 새 지문을 `code_fp <hex>` 둘째 값으로 적은 옛 초안 꼴 = 대기 선언 `code_fp_pending <hex>` 이 아니다)",
+   "note": "보충 §3 값 없음 → undeclared 이어야",
+   "state_supp": "undeclared",
+   "state_194": "registered",
+   "supp": [
+    null,
+    null
+   ],
+   "supp_fp_problems": [
+    "등록 문서 code_fp — §3 안 자리 없음"
+   ],
+   "b194": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "b194_fp_problems": [],
+   "old_s0b": false
+  },
+  {
+   "case": "L10 백틱 없음 (보충 §3 토큰만 · 194 정상)",
+   "expect": false,
+   "got": false,
+   "match": true,
+   "why": "상태 undeclared — 등록 §3 code_fp 를 못 읽었다 (None — 값이 둘이면 이렇게 된다 · 새 지문을 `code_fp <hex>` 둘째 값으로 적은 옛 초안 꼴 = 대기 선언 `code_fp_pending <hex>` 이 아니다)",
+   "note": "보충 §3 값 없음 → undeclared 이어야",
+   "state_supp": "undeclared",
+   "state_194": "registered",
+   "supp": [
+    null,
+    null
+   ],
+   "supp_fp_problems": [
+    "등록 문서 code_fp — §3 안 자리 없음"
+   ],
+   "b194": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "b194_fp_problems": [],
+   "old_s0b": false
+  },
+  {
+   "case": "L11 같은 칸 두 줄 같은 값 (보충 §3 끝에 같은 토큰 한 줄 더)",
+   "expect": true,
+   "got": true,
+   "match": true,
+   "why": "상태 registered",
+   "note": "값 하나 (같음)",
+   "state_supp": "registered",
+   "state_194": "registered",
+   "supp": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "supp_fp_problems": [],
+   "b194": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "b194_fp_problems": [],
+   "old_s0b": false
+  },
+  {
+   "case": "L12 §3 안 둘째 값 = 역사 e8b (기계 구문)",
+   "expect": false,
+   "got": false,
+   "match": true,
+   "why": "상태 undeclared — 등록 §3 code_fp 를 못 읽었다 (None — 값이 둘이면 이렇게 된다 · 새 지문을 `code_fp <hex>` 둘째 값으로 적은 옛 초안 꼴 = 대기 선언 `code_fp_pending <hex>` 이 아니다)",
+   "note": "값 둘 → None",
+   "state_supp": "undeclared",
+   "state_194": "registered",
+   "supp": [
+    null,
+    null
+   ],
+   "supp_fp_problems": [
+    "등록 문서 code_fp — §3 안 값이 둘 이상 ['2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb', 'e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71']"
+   ],
+   "b194": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "b194_fp_problems": [],
+   "old_s0b": false
+  },
+  {
+   "case": "L13 §3 안 코드 블록 속 다른 값 + 정상 토큰",
+   "expect": true,
+   "got": true,
+   "match": true,
+   "why": "상태 registered",
+   "note": "코드 블록 값 = 읽지 않음",
+   "state_supp": "registered",
+   "state_194": "registered",
+   "supp": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "supp_fp_problems": [],
+   "b194": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "b194_fp_problems": [],
+   "old_s0b": false
+  },
+  {
+   "case": "L14 §3 정상 토큰을 코드 블록 안으로만",
+   "expect": false,
+   "got": false,
+   "match": true,
+   "why": "상태 undeclared — 등록 §3 code_fp 를 못 읽었다 (None — 값이 둘이면 이렇게 된다 · 새 지문을 `code_fp <hex>` 둘째 값으로 적은 옛 초안 꼴 = 대기 선언 `code_fp_pending <hex>` 이 아니다)",
+   "note": "활성 값 없음",
+   "state_supp": "undeclared",
+   "state_194": "registered",
+   "supp": [
+    null,
+    null
+   ],
+   "supp_fp_problems": [
+    "등록 문서 code_fp — §3 안 자리 없음"
+   ],
+   "b194": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "b194_fp_problems": [],
+   "old_s0b": false
+  },
+  {
+   "case": "L15 다른 절 (§9) 의 `code_fp <체크아웃>` + §3 = X1",
+   "expect": false,
+   "got": false,
+   "match": true,
+   "why": "상태 undeclared — 체크아웃 지문 2149f8738bb2… ≠ 등록 §3 f2b67b2c8e10… · 대기 선언 없음 (읽은 값 None)",
+   "note": "§3 밖은 읽지 않음",
+   "state_supp": "undeclared",
+   "state_194": "registered",
+   "supp": [
+    "f2b67b2c8e107d8afb3e2b06af02729559a6a98fe2e70fa26dd051173b3111c7",
+    null
+   ],
+   "supp_fp_problems": [],
+   "b194": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "b194_fp_problems": [],
+   "old_s0b": false
+  },
+  {
+   "case": "L16 다른 절 (§9) 의 `code_fp X1` + §3 정상",
+   "expect": true,
+   "got": true,
+   "match": true,
+   "why": "상태 registered",
+   "note": "§3 밖은 읽지 않음",
+   "state_supp": "registered",
+   "state_194": "registered",
+   "supp": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "supp_fp_problems": [],
+   "b194": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "b194_fp_problems": [],
+   "old_s0b": false
+  },
+  {
+   "case": "L17 대기 선언 닮은꼴 (대문자 hex) — registered",
+   "expect": true,
+   "got": true,
+   "match": true,
+   "why": "상태 registered",
+   "note": "도구 문법 밖 = 선언 아님 (사람 눈엔 남은 대기)",
+   "state_supp": "registered",
+   "state_194": "registered",
+   "supp": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "supp_fp_problems": [],
+   "b194": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "b194_fp_problems": [],
+   "old_s0b": false
+  },
+  {
+   "case": "L18 대기 선언 닮은꼴 (63 자리) — registered",
+   "expect": true,
+   "got": true,
+   "match": true,
+   "why": "상태 registered",
+   "note": "같음",
+   "state_supp": "registered",
+   "state_194": "registered",
+   "supp": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "supp_fp_problems": [],
+   "b194": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "b194_fp_problems": [],
+   "old_s0b": false
+  },
+  {
+   "case": "L19 대기 선언이 코드 블록 안 — registered",
+   "expect": false,
+   "got": false,
+   "match": true,
+   "why": "상태 registered 인데 대기 선언이 남았다 (f2b67b2c8e10… — 비준 · 재등록은 대기 선언을 지운다)",
+   "note": "대기는 문서 전체 (코드 블록 포함) 를 읽는다 → 남은 대기 (도구 receipt 는 rc 0)",
+   "state_supp": "registered",
+   "state_194": "registered",
+   "supp": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    "f2b67b2c8e107d8afb3e2b06af02729559a6a98fe2e70fa26dd051173b3111c7"
+   ],
+   "supp_fp_problems": [],
+   "b194": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "b194_fp_problems": [],
+   "old_s0b": false
+  },
+  {
+   "case": "L20 194 §3 토큰 63 자리 (보충 정상)",
+   "expect": false,
+   "got": false,
+   "match": true,
+   "why": "194 등록의 봉인 지문 문제 ['등록 문서 code_fp — §3 안 자리 없음']",
+   "note": "194 §3 값 없음 → 문제 → 거짓",
+   "state_supp": "registered",
+   "state_194": "undeclared",
+   "supp": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "supp_fp_problems": [],
+   "b194": [
+    null,
+    null
+   ],
+   "b194_fp_problems": [
+    "등록 문서 code_fp — §3 안 자리 없음"
+   ],
+   "old_s0b": false
+  },
+  {
+   "case": "L21 194 §3 대문자 (보충 정상)",
+   "expect": false,
+   "got": false,
+   "match": true,
+   "why": "194 등록의 봉인 지문 문제 ['등록 문서 code_fp — §3 안 자리 없음']",
+   "note": "",
+   "state_supp": "registered",
+   "state_194": "undeclared",
+   "supp": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "supp_fp_problems": [],
+   "b194": [
+    null,
+    null
+   ],
+   "b194_fp_problems": [
+    "등록 문서 code_fp — §3 안 자리 없음"
+   ],
+   "old_s0b": false
+  },
+  {
+   "case": "L22 194 §3 안 둘째 값 역사 e8b",
+   "expect": false,
+   "got": false,
+   "match": true,
+   "why": "194 등록의 봉인 지문 문제 [\"등록 문서 code_fp — §3 안 값이 둘 이상 ['2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb', 'e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71']\"]",
+   "note": "",
+   "state_supp": "registered",
+   "state_194": "undeclared",
+   "supp": [
+    "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+    null
+   ],
+   "supp_fp_problems": [],
+   "b194": [
+    null,
+    null
+   ],
+   "b194_fp_problems": [
+    "등록 문서 code_fp — §3 안 값이 둘 이상 ['2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb', 'e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71']"
+   ],
+   "old_s0b": false
+  }
+ ]
+}

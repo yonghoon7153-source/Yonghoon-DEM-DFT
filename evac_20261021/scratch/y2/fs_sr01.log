@@ -1,0 +1,91 @@
+  PASS  1) Δ% 산술 (0.010→0.012 = +20 %)
+  PASS  2) 비 1.200
+  PASS  3) 정상 쌍은 경고 없음
+  PASS  4) 판정 문장이 부호를 말한다
+  PASS  5) B 가 point 면 경고
+  PASS  6) ★ applied=False 를 잡는다 (Δ≈0 오독 방지)
+  PASS  6b) ★ manifest 밑 도장을 읽는다
+  PASS  6c) 도장 없으면 None (거짓 확신 금지)
+  PASS  6d) 도장 없는 쌍은 "인용하지 말라" 경고
+  PASS  7) vox 불일치 경고 (공통모드 상쇄 깨짐)
+  PASS  7b) backend 도장을 읽는다
+  PASS  7c) ★ backend 불일치 경고 (cpu vs gpu)
+  PASS  7p1) 전처리 도장을 읽는다
+  PASS  7p2) ★ 전처리 불일치 경고 (jacobi vs amg)
+  PASS  7p3) 같은 전처리면 조용
+  PASS  7p4) 옛 payload(전처리 키 없음)는 조용히 통과
+  PASS  7d) ★ CG 미수렴이면 Δ 인용 금지 경고
+  PASS  8) 감소 판정
+  PASS  9) |Δ|<1 % 판정
+  PASS  10) step3 없으면 중단
+  PASS  11) 소산 분담 %p 표기
+  PASS  12) σ_A=0 → Δ% 는 None (0 나눗셈 금지)
+  PASS  12b) σ_A=0 여도 렌더가 죽지 않고 0 을 보여준다
+  PASS  13) σ_A=0 여도 B 값은 보존
+  PASS  14) 추출은 python3 로 시작
+  PASS  15) 스탬프·--out 치환
+  PASS  16) ★ 꼬리 미포함: 'ln -sfn'
+  PASS  16) ★ 꼬리 미포함: 'mpm_done.marker'
+  PASS  16) ★ 꼬리 미포함: 'STEP 2 (payload) FAILED'
+  PASS  16) ★ 꼬리 미포함: 'DONE $(date)'
+  PASS  17) 호출부는 정확히 1개
+  PASS  18) 끝의 줄이음 제거 (EOF 매달림 방지)
+  PASS  19) 원본 --out 이 남지 않음 (arm A 산출물 보호)
+  PASS  20) ★ step4 격자도 팔별로 갈라짐 (production step4_grid.npz 보호)
+  PASS  21) extra_flags 가 명령에 들어간다
+  PASS  22) --out 이 바뀐다
+  PASS  23) 스탬프는 생산 규약(segment) 유지
+  PASS  24) 원본 --out 이 남지 않는다
+  PASS  25) 중복 주입 없음
+  PASS  26) 주입 외 부작용 0
+  PASS  21) ★ 두 팔의 차이는 스탬프/출력파일명뿐 (규칙위반 [])
+  PASS  8a) 완전한 팔은 통과
+  PASS  8a2) 강등 런은 segment 팔로 거부
+  PASS  8a3) ★ 강등 런은 **point 팔로도** 거부 (요청≠적용 — 그 런은 실패를 겪었다)
+  PASS  8a4) 요청=적용이면 통과 (대조군)
+  PASS  8b) ★ 스탬프가 다르면 거부 (A 를 B 로 착각하지 않는다)
+  PASS  8c) 없는 파일
+  PASS  8d) ★ 잘린 JSON (중단된 런)
+  PASS  8e) step3 블록 없음
+  PASS  8f) ★ 미수렴은 재개 대상이 아니라 재실행 대상 (코드 `CONV|unconv|`)
+  PASS  8g) σ_e 가 0 이면 거부 (코드 `SIGMA_E|`)
+  PASS  8h) ★ 선분 요청이 적용 안 된 팔은 거부 (조용한 점-되돌아감)
+완전 (point)
+  PASS  8i) CLI: 완전하면 exit 0
+스탬프가 point — 원한 것은 segment
+  PASS  8j) CLI: 불완전하면 exit 1
+  PASS  8k) backend 가 같으면 재개 허용 (cpu ≡ cpu)
+  PASS  8l) ★★ cupy 를 깔면 다음 팔이 자동 GPU — CPU 로 끝난 팔을 SKIP 하지 않는다
+backend 가 cpu 인데 지금 돌면 gpu — 두 팔이 갈린다. 재개 대신 다시 돌아야 한다
+  PASS  8m) CLI: backend 불일치는 exit 1 (러너가 다시 돈다)
+  PASS  8n) ★ σ_e 는 멀쩡한데 status=failed 인 팔은 거부 (정상 완주한 뒤 죽은 런)
+  PASS  8o) ★ manifest component 가 unconverged 면 거부 (부분 실패한 런)
+  PASS  8p) 음성 대조 — `disabled`(LEAN=2 로 끈 것)는 실패가 아니다.  통과해야 한다
+  PASS  8q) 음성 대조 — status=complete 는 통과 (과잉차단 아님)
+  PASS  8r) ★★ `missing=[electronic]` 을 거부 (Codex mutant ①)
+  PASS  8r2) ★★ 음성 대조 — `disabled`(LEAN=2) 로 인한 aggregate partial 은 통과해야 한다 (초판은 생산 스윕 팔 전부를 거부할 뻔했다)
+  PASS  8s) ★★ required component `electronic` 부재를 거부
+  PASS  8t) ★★ 전자망 backend 부재를 거부 — ionic·last-solve 의 gpu 를 **빌려오지 않는다** (Codex R3-CX-05 mutant 3종)
+  PASS  8u) ★★ electronic=cpu·last-solve=gpu 위장을 거부 (component 가 정본, mutant ④)
+  PASS  8v) ★ σ_e 가 inf 면 거부 (코드 `SIGMA_E|`; 옛 판은 `> 0` 만 봤다)
+  PASS  8w) ★★ cg_resid=None 을 `CONV|blind|` 로 거부 — 옛 판은 status 만 봐서 통과시켰다
+  PASS  8w) ★★ cg_resid=NaN 을 `CONV|resid|` 로 거부 — 옛 판은 status 만 봐서 통과시켰다
+  PASS  8w) ★★ sigma_e=None 을 `SIGMA_E|` 로 거부 — 옛 판은 status 만 봐서 통과시켰다
+  PASS  8w) ★★ cg_info=99 을 `CONV|unconv|` 로 거부 — 옛 판은 status 만 봐서 통과시켰다
+  PASS  8w) ★★ cg_info=0.5 (float 절삭) 을 `CONV|type|` 로 거부 — 옛 판은 status 만 봐서 통과시켰다
+  PASS  8w) ★★ n_dof=0 을 `N_DOF|` 로 거부 — 옛 판은 status 만 봐서 통과시켰다
+  PASS  8w) 음성 대조 — status=complete + electronic complete 는 통과
+  PASS  8y1) 정상 증인 — 러너 영수증과 팔이 같으면 재개를 허용한다
+  PASS  8y2) ★★ 영수증의 vox 가 다르면 거부 — 다른 런의 팔을 재활용하지 않는다
+  PASS  8y3) ★ 재료계수(σ_VGCF)가 다른 팔도 거부
+  PASS  8y4) 음성 대조 — 영수증이 없으면 예전처럼 통과 (과잉차단 아님)
+  PASS  8x[None] 전자 residual — 거부 기대, 실제 거부
+  PASS  8x[NaN] 전자 residual — 거부 기대, 실제 거부
+  PASS  8x[1e100] 전자 residual — 거부 기대, 실제 거부
+  PASS  8x[음수] 전자 residual — 거부 기대, 실제 거부
+  PASS  8x[2e-6(문턱초과)] 전자 residual — 거부 기대, 실제 거부
+  PASS  8x[1e-9] 전자 residual — 통과 기대, 실제 통과
+  PASS  8x[1e-6(문턱)] 전자 residual — 통과 기대, 실제 통과
+
+sr01_stamp_compare selftest: 85/85 PASS
+ELAPSED_S=0.1 RC=0

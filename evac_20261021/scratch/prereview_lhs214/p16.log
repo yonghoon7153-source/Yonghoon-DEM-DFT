@@ -1,0 +1,18 @@
+== p07b 09:04:49
+T09_194_two_pendings 1 122/123 ['S0b'] {'S0': ['PASS'], 'S0b': ['FAIL'], 'S11g': ['PASS']}
+combo_m10_T09 0 123/123 [] {'S0': ['PASS'], 'S0b': ['PASS'], 'S11g': ['PASS']}
+combo_m5_T07 0 123/123 [] {'S0': ['PASS'], 'S0b': ['PASS'], 'S11g': ['PASS']}
+combo_m9_T07 0 123/123 [] {'S0': ['PASS'], 'S0b': ['PASS'], 'S11g': ['PASS']}
+combo_m11_T07 0 123/123 [] {'S0': ['PASS'], 'S0b': ['PASS'], 'S11g': ['PASS']}
+twin_unmutated 1 112/123 ['S0', 'S0b', 'S7', 'S7a', 'S7a2', 'S7j', 'S7k1', 'S7k2', 'S8', 'S8g2', 'S8k'] {'S0': ['FAIL'], 'S0b': ['FAIL'], 'S11g': ['PASS']}
+combo_m7_twin 1 113/123 ['S0', 'S7', 'S7a', 'S7a2', 'S7j', 'S7k1', 'S7k2', 'S8', 'S8g2', 'S8k'] {'S0': ['FAIL'], 'S0b': ['PASS'], 'S11g': ['PASS']}
+mut_m1_leftover_off_full 1 122/123 ['S11g'] {'S0': ['PASS'], 'S0b': ['PASS'], 'S11g': ['FAIL']}
+mut_m2_crossdoc_off_full 1 122/123 ['S11g'] {'S0': ['PASS'], 'S0b': ['PASS'], 'S11g': ['FAIL']}
+mut_m3_baseprobs_off_full 1 122/123 ['S11g'] {'S0': ['PASS'], 'S0b': ['PASS'], 'S11g': ['FAIL']}
+mut_m4_undeclared_ok_full 1 122/123 ['S11g'] {'S0': ['PASS'], 'S0b': ['PASS'], 'S11g': ['FAIL']}
+final clean True
+== p13 09:12:13 dirty=0
+p13 rc=0
+== p14 09:12:25 dirty=0
+p14 rc=0
+== end 09:21:43 dirty=0

@@ -1,0 +1,20 @@
+Rint 2 S2 RCA-06 counterfactual hygiene: provenance restore, same certificate, inf only from topology
+
+Optional SV counterfactual solve (knob cjunc_plan(sv_counterfactual=...), default off -> no change):
+- step3_sigma junction hook: snapshot LAST_BACKEND / LAST_CG before the counterfactual solve and
+  restore them after (the manifest's 'backend_last_solve' keeps describing the main solve, as with
+  the knob off); the counterfactual record carries its own backend_last_solve.
+- With CONV_CERT on, the counterfactual solve is certified by the same step3_conv_cert.certify as the
+  main solve (same rtol, plate edges, scale, resolve through _solve_cg); certificate failure ->
+  status unconverged, no ratio, no SV_DEPENDENT.  Record field conv_cert (None when off).
+- carbon_junction.CjuncAssembler.sv_counterfactual(..., certify=None): ratio inf
+  ('no_through_without_sv') only when the cut graph has no through component (pruning reason); a
+  solved through component with I_cut <= 0 or non-finite -> 'nonpositive_cut_current' (no ratio);
+  main terminal current <= 0 or non-finite -> 'nonpositive_full_current' without solving.
+  main_unconverged record gains conv_cert / backend_last_solve = None.
+
+Pre-fix (parent = tests-first commit): test_carbon_junction --quick 213/219 (fails = 6 checks from
+4 counterexamples).  After: 219/219.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

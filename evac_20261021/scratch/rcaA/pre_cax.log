@@ -1,0 +1,17 @@
+── CAX-SUB
+  PASS  CAX-SUB 바탕 (k 1 · n_subedges 칸 없음 = instance 수) · k > 1 꼴 (instance 3 · 간선 5 · 배율 최대 2.5) = 받는다 (지킴)
+  FAIL  CAX-SUB 거부 [간선 5 > instance 3 인데 배율 최대 1.0 (긴 접촉 없음 = 모든 k 1)]  ((True, None))
+  FAIL  CAX-SUB 거부 [배율 최대 2.5 (긴 접촉 있음 = k ≥ 2) 인데 간선 = instance]  ((True, None))
+  FAIL  CAX-SUB 거부 [배율 최대 NaN]  ((True, None))
+  FAIL  CAX-SUB 거부 [배율 최대 0.5 (< 1)]  ((True, None))
+  FAIL  CAX-SUB 거부 [배율 최대 True (bool == 1.0)]  ((True, None))
+  FAIL  CAX-SUB 거부 [배율 최대 문자열 '1.0']  ((True, None))
+  FAIL  CAX-SUB 거부 [배율 최대 빠짐 (instance > 0)]  ((True, None))
+  PASS  CAX-SUB 거부 (지킴) [n_subedges 칸 없음인데 모드 합 5 (instance 3)]
+  PASS  CAX-SUB 거부 (지킴) [n_subedges True]
+  PASS  CAX-SUB 거부 (지킴) [n_subedges 5.0 (실수)]
+  PASS  CAX-SUB 거부 (지킴) [n_subedges 2 < instance 3 (모드 합 2)]
+
+== test_carbon_junction: 5/12 PASS
+FAIL: CAX-SUB 거부 [간선 5 > instance 3 인데 배율 최대 1.0 (긴 접촉 없음 = 모든 k 1)] · CAX-SUB 거부 [배율 최대 2.5 (긴 접촉 있음 = k ≥ 2) 인데 간선 = instance] · CAX-SUB 거부 [배율 최대 NaN] · CAX-SUB 거부 [배율 최대 0.5 (< 1)] · CAX-SUB 거부 [배율 최대 True (bool == 1.0)] · CAX-SUB 거부 [배율 최대 문자열 '1.0'] · CAX-SUB 거부 [배율 최대 빠짐 (instance > 0)]
+[nrun] wall 0.8 s · exit 1

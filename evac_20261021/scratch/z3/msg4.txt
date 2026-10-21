@@ -1,0 +1,25 @@
+Rint 2 Z3 R run chain: real contract, ARM_LIST origin, limit markers, sid_off, EXPECT_BACKEND
+
+rint_r_chain.py aligned with the Z3 runner / payload API:
+- limit runs: env CJUNC_RJ=inf / 0 unchanged; expected receipt request and manifest protocol now carry the
+  canonical markers rj_limit 'inf' (R_j_ohm null) / 'zero' (R_j_ohm 0.0) via LIMIT_MARK (= ca_ext_cjunc.RJ_LIMITS).
+- origin check (registration R 3-3, 4-2) = one ARM_LIST=1,2 run (a0 = the confirm / corner value, not re-run);
+  the old ARMS=3 workaround and a0_replay_exact are gone; > threshold still runs ARMS=8.  Runner.run takes an
+  arm count or an arm tuple; OUTDIR suffix _arm<N>_arml<list> (= runner forced suffix); receipt arm_list checked;
+  replay compares the arm list; ARM_LIST scrubbed from the parent env.
+- sid fingerprint: off-grid sid_off required and equal to the junction registry sid; comparison groups are
+  kit + raster + origin (sid_group), so shifted origin arms no longer stop with SID_GRID.
+- EXPECT_BACKEND constant (gpu, the runner default) passed to the runner env, the receipt check and check_arm.
+- CG iteration counts (main, continuation) in the public arm record and the run line (number-probe field, not sigma).
+
+Tests: test_rint_r_chain uses the real contract (RealContract: ca_ext_record_ok, check_arm) instead of the fake
+contract; the fake runner writes real-form ca_ext blocks from canonical record templates (computed in the test
+process, passed through the world file).  New test_rint_r_chain_e2e.py drives the chain with the real runner and
+real payload on a production-unit fixture kit (vox 0.15, 1.5 um box, CPU).
+
+post-fix: test_rint_r_chain 89/89 (37 s), test_rint_r_chain_e2e 10/10 (69 s: floor, ceiling, five points, two confirms,
+ARM_LIST origin, 8-arm origin -> CALIBRATED on the fixture; E6 records that the production kit payload line
+(--joule-heat, --save-step4-grid) is refused at payload entry for next-generation runs -> chain RUNNER_RC).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

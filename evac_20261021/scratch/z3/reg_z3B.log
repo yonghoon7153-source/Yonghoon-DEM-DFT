@@ -1,0 +1,19 @@
+
+── B 극한 런 — 손계산 · 기록 꼴 · 러너 · payload · 검증기
+  PASS  B1 손계산 [바닥 (R_j = ∞ · 간선 없음 · 자리 면 절단)] — 해 전류 = 손으로 세운 회로 (1e-12 · 직접 풀이)
+  PASS  B1 손계산 [천장 (R_j = 0 · 접합 양 끝 = 한 노드)] — 해 전류 = 손으로 세운 회로 (1e-12 · 직접 풀이)
+  PASS  B1 손계산 [정량 R_j 1e6 (대조 · 같은 회로)] — 해 전류 = 손으로 세운 회로 (1e-12 · 직접 풀이)
+  PASS  B2 극한 protocol — 바닥 R_j_ohm null + rj_limit inf · 천장 0.0 + zero · quantitative False · allow_rj_limits True · CLI 의 float inf 도 같은 꼴 (null) · JSON (allow_nan=False) 직렬화 · 정량 protocol 에는 rj_limit 칸 없음
+  PASS  B3 극한 protocol 거부 — 표지 ↔ 값 모순 · 표지 없는 극한 · 모르는 표지 (대소문자 · 다른 낱말 · bool) · NaN · 음수
+  PASS  B4 러너 CJUNC_RJ=inf · 0 → 문제 없음 · 영수증 요청 R_j_ohm null + rj_limit inf · 0.0 + zero (한 꼴)
+  PASS  B5 러너 극한 표기는 둘만 (`inf` 낱말 · ASCII 10 진 0) — INF · Infinity · +inf · 1e999 · nan · -0 · 공백 · ∞ = 거부
+  PASS  B6 runner_ca_ext_view — 바닥 인자 `--step3-cjunc-rj inf --step3-cjunc-rj-limit inf` · 선언 R_j_ohm=None · rj_limit=inf · 태그 `_fa_cjinf_<h8>` · 천장 `0.0` · zero · `_fa_cj0_<h8>` · 둘의 태그 다름
+  PASS  B7 ca_ext_request_problem 거부 [요청 rj_limit inf + R_j 1e6]
+  PASS  B7 ca_ext_request_problem 거부 [요청 R_j null 표지 없음]
+  PASS  B7 ca_ext_request_problem 거부 [요청 모르는 표지]
+  PASS  B7 ca_ext_request_problem — 바닥 · 천장 요청 통과
+  PASS  B8 바닥 (R_j = ∞) + c = 1 — 근접 instance = 축약 (∞·0 = NaN 아님) · g 유한 · 비근접 = 극한 (none_inf)
+    (--skip-payload — B payload 끝-끝 건너뜀)
+
+test_ca_ext_z3: 13 PASS · 0 FAIL (0.1 s)
+rc=0 seconds=1

@@ -1,3 +1,0 @@
-registration_probe_results {"exact": 131, "rel_le_1e-12": 2, "path": 0, "diff": 0, "missing_in_ours": 0, "extra_in_ours": 0, "type_diff": 0}
-   {"key": "$.contact_bias.local_pm2pct_secant_s", "class": "rel_le_1e-12", "codex": 2.9702538506350544, "ours": 2.970253850635055, "rel": 1.495122074347666e-16}
-   {"key": "$.contact_bias.threshold", "class": "rel_le_1e-12", "codex": 3.996789150928035, "ours": 3.9967891509280347, "rel": 1.111114930210785e-16}

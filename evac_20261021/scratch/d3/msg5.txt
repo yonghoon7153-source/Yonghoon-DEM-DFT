@@ -1,0 +1,22 @@
+Mixer D3 Codex round-1 request: target design v2
+
+The request now asks Codex to judge design v2 instead of v1: whether rules
+R01-R17 close the ledger items MXD3-01..17 found by the pre-review, whether
+the ratified Q1-Q12 still hold (with the four places where v2 could clash
+listed), the recommended defaults Qv2-1..16 that await the author, and whether
+the rule checks C01-C17 are a sufficient executable specification.
+
+Section 2-3 now maps each counterexample to its ledger item, its v2 handling
+(fix the rule, narrow the guarantee, or author data wait) and the check result
+from v1 to v2; the sentence saying the design was left unchanged is removed.
+The four data waits (MXD3-18..21) and the D2 implementation fixes MXD2-01..06
+stay in the "not closed" column; MXD2-07 is recorded as closed by v2.  The
+ZIP manifest adds the v2 design and its evidence; hashes for both evidence
+sets are listed, and the v1 evidence output is identical on the new base.
+
+Also two wording fixes in design v2: the D11 row is now quoted verbatim, and
+the two-test coverage statement says the intersection cannot exceed either
+test's coverage (lower bound 1 - (alpha1 + alpha2)).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

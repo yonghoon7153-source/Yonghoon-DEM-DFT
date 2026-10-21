@@ -1,0 +1,12 @@
+밀도 세대 dens_gen = lab20261014  (AM 4.85 · SE 1.64 · VGCF 2 · PTFE 2.2 g/cm³ · gen1 값을 옮긴 상: VGCF · PTFE)
+조성 → 개수 (N=100,000)
+   AM_P  φ 0.4203 · d  1.363 mm · n      143
+   AM_S  φ 0.1801 · d  0.606 mm · n      699
+   SE    φ 0.3995 · d  0.151 mm · n   99,158
+
+드럼  R 12.583 mm (지름 25.2 mm) · L 5.033 mm · 부피 3 mL · STL scale 0.0252
+시간  dt 2.37e-07 s · 임계 267 rpm · 76.7 rpm 에서 Fr 0.0827  (밴드 (0.055, 0.086))
+비용  2 바퀴 = 6,595,382 step · 직렬 추정 61.3 h  (실측 처리율 2.99e6 p·step/s)
+강성  SE 영률 ×20 (1e+07 → 2e+08 Pa) · hold_bo_pairwise yes · dt_factor 1 → 덱 dt 2.373e-07 s (soft 7.092e-07 s · AM_S → 규칙 2.373e-07 s · SE) · 정착 560,606 ×2 · 회전 6,595,382 · 덤프 32,976 step  (위 비용 줄은 규칙 dt 기준)
+   → /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/decks/gm_uncoated_r03/in.mixer   [GM] D2 결합 규칙 (기하평균 W_ij = 2√(γ_iγ_j) · 혼합쌍 · 벽) · γ/γ_SE AM_P 0.3 · AM_S 0.3 · SE 1 · γ_W/γ_SE 0.00768 · SE–SE Bo_code 0.21244 — 개발 · 등록 전 (결과 0)
+⬜ STL 3개(Drum·Front·Back)를 각 디렉터리에 두어야 한다

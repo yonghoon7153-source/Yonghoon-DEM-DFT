@@ -1,0 +1,7 @@
+
+── NB 끔 경로 — 고치기 전 러너와 payload argv · 영수증 · OUTDIR · 팔 이름 · 매니페스트 대조 (--old-runner)
+  PASS  NB [off LEAN2] 두 러너 rc 0 · OUTDIR 이름 · 영수증 바이트 · 팔 이름 · payload argv (명령줄) · 생성 스크립트 · 매니페스트 (code_sha · exec_env 빼고) · step3 값 같음
+  PASS  NB [centerline LEAN3] 두 러너 rc 0 · OUTDIR 이름 · 영수증 바이트 · 팔 이름 · payload argv (명령줄) · 생성 스크립트 · 매니페스트 (code_sha · exec_env 빼고) · step3 값 같음
+
+2 PASS · 0 FAIL
+ELAPSED_S=30.3 RC=0

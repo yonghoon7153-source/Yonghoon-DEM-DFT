@@ -1,8 +1,0 @@
-negative_area PASS plan True
-nan_area PASS plan True
-nan_position PASS plan True
-nan_delta PASS plan True
-16sig_area_plus_1ppm PASS plan True
-different_tilt_boxes PASS plan True
-uncertified_near_concentric PASS 1
-C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\rint_g2_impl_review_20261014\evidence\join_synthetic.json

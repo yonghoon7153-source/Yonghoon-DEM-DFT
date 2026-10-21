@@ -1,0 +1,8 @@
+M10 자기 L_c = 두 쪽 선분 전부 짝 (접합 쌍 제한 끔) → CAUGHT | == test_carbon_junction: 31/32 PASS
+M12 쌍 무리 고리 둘레 잇기 끔 → CAUGHT | == test_carbon_junction: 6/7 PASS
+M19 자기 분산판 맞은편 = 짝 제한 끔 → NOT CAUGHT | == test_carbon_junction: 34/34 PASS
+M25 단계 2 --r-plan-path 필수 끔 → NOT CAUGHT | 22 PASS · 0 FAIL
+M26 같은 셀 재방문 = 별칭 짝도 셈 → NOT CAUGHT | == test_carbon_junction: 7/7 PASS
+M27 경로로만 = 경로 끊김 검사 끔 → CAUGHT | == test_carbon_junction: 29/30 PASS
+wrote /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rcaA2/logs/mutsweep2.json
+rc=0

@@ -1,0 +1,323 @@
+step3_sigma = /home/user/wt_rintweb/scripts/step3_sigma.py
+
+── F1 α=1 극한 (캡슐 없음 · 멀리) — off 와 σ · φ · n_dof 비트 같음
+  PASS  F1-a 먼 캡슐 → 계획 행 0
+  PASS  F1-b σ · φ · n_dof 비트 같음 (α ≡ 1)
+  PASS  F1-c 기록 = 행 0 · solved
+
+── F2 α=0 극한 — 손으로 절단한 면 (g=0) 과 σ · 성분 가지치기 같음
+  PASS  F2-a 가운데 z 면 α = 0
+  PASS  F2-b 기둥 절단 → 관통 없음 (σ 0 · reason) = 손 절단 참조 0
+  PASS  F2-c 옆 면 α = 0
+  PASS  F2-d σ = 독립 참조 (같은 α · 손 절단) 1e-12
+  PASS  F2-e 옆 셀 가지치기 (n_floating_dropped 1 · n_dof 6)
+  PASS  F2-f 기록 n_isolated_by_cut = 1
+
+── F3 상호성 — 행렬 대칭 · 판을 바꿔 풀어도 같은 단자 컨덕턴스 (1e-12)
+  PASS  F3-a 비대칭 픽스처에 α 행 있음
+  PASS  F3-b 조립 행렬 정확 대칭
+  PASS  F3-c 판 바꿈 (z 뒤집기) σ 같음 1e-12
+
+── F4 KCL — 노드 Σ 전류 0 (원장 g) · I_bot = I_top (직접 풀이)
+  PASS  F4-a 노드 KCL (원장 g · 판 간선) max|Σ| ≤ 1e-10·I
+  PASS  F4-b I_bot = I_top (1e-12)
+  PASS  F4-c 원장 행 = 계획 α × g0 (조립이 쓴 g 를 원장이 싣는다)
+
+── F5 회전 · 반사 — z 축 90° 회전 · x 반사에 σ_z 같음 (1e-12)
+  PASS  F5-a 90° 회전 σ 같음 1e-12
+  PASS  F5-b 회전 α 다중집합 정확 같음
+  PASS  F5-c x 반사 σ 같음 1e-12
+
+── F6 주기 seam — 정량 모드 거부 (seam 지원 = 나중)
+  PASS  F6-a periodic_xy + face_alpha → 거부
+  PASS  F6-b 거부는 CG 전 (호출 0)
+
+── F7 고정 기하 격자 조임 — h · K 사다리 (보고 · 합격선 미봉인 · K = 8 봉인)
+  PASS  F7-a K 는 F7 을 보기 전에 봉인 (K_SEALED = 8)
+    보고 F7 (기준 h 0.0375 · σ_ref 0.00280434943):
+      h 0.3    σ 0.00282  상대오차 5.581e-03
+      h 0.15   σ 0.0028339273  상대오차 1.055e-02
+      h 0.075  σ 0.00281463368  상대오차 3.667e-03
+      관측 차수 (0.15→0.075) 1.524
+      K 4   (h 0.15) σ 0.00285102852
+      K 8   (h 0.15) σ 0.0028339273
+      K 16  (h 0.15) σ 0.0028339273
+  PASS  F7-b 사다리 실행 · 유한 (보고 — 합격선은 실행 전 봉인)
+
+── F8 origin 8 위상 — σ 산포 보고 (face_alpha ↔ centerline 나란히 · 합격선 없음)
+    보고 F8 face_alpha σ 평균 0.0027844 · CV 5.386e-02 · max/min 1.115224
+    보고 F8 centerline σ 평균 0.002701 · CV 5.580e-02 · max/min 1.131146
+  PASS  F8-a 8 위상 실행 · 유한 (보고만)
+
+── F9 투여 단조 — 캡슐 집합 A ⊂ B 면 α_B ≤ α_A (면마다 정확) · σ(B) ≤ σ(A)
+  PASS  F9-a A 의 모든 면이 B 에 있고 α_B ≤ α_A
+  PASS  F9-b B 가 더 막는다 (행 수 ≥ · 어떤 면 α 감소)
+  PASS  F9-c σ(B) ≤ σ(A) (Rayleigh)
+
+── F10 PTFE 없음 no-op — 빈 캡슐 → off 와 셀 · σ 비트 같음
+  PASS  F10-a 빈 입력 → 선분 0 · 부피 0
+  PASS  F10-b σ · φ · n_dof 비트 같음
+
+── F11 부피 — 조각마다 Σ(선분 길이·πr²) + 구 하나 (4/3·πr³) · 겹침 미차감 · 밴드 [0.5, 2]
+  PASS  F11-a 직선 하나
+  PASS  F11-b 꺾인 선 (이음마다 구를 더하지 않는다)
+  PASS  F11-c gap 분할 = 조각 둘 (구 둘)
+  PASS  F11-d 점 하나 = 구 캡슐 (수 기록)
+  PASS  F11-e 밴드 판정 (닫힌 구간 · 참부피 없음 = unknown)
+
+── F12 같은 물체 면제 — AM 같은 입자 · VGCF 축방향 = g 그대로 · centerline 은 자른다 (판별) · AM–AM 목은 α
+  PASS  F12-a VGCF 축방향 면 (3|3) 면제 → 계획 행 0
+  PASS  F12-b σ · φ 비트 같음 (캡슐 없는 것과)
+  PASS  F12-c 대조: centerline 은 VGCF 셀을 sid 7 로 덮어 자른다 (σ 0)
+  PASS  F12-d 같은 AM 입자 (pid 같음) 안 면 면제 → 행 0
+  PASS  F12-e σ 비트 같음
+  PASS  F12-f AM–AM 목 (같은 sid · 다른 pid) 면에 α < 1
+  PASS  F12-g 목이 막혀 σ 감소
+
+── F13 채널 독립 — 전자 계획은 전자 면만 · 이온 계획은 이온 면만 · 다른 채널 계획 = 거부
+  PASS  F13-a 전자 계획 행 > 0 · 전부 전자 도체 면
+  PASS  F13-b 이온 계획 행 > 0 · 전부 이온 도체 면
+  PASS  F13-c 이온 계획이 이온 σ 를 바꾼다 (감소)
+  PASS  F13-d 이온 계획을 전자 솔브에 = 거부 (CG 전)
+  PASS  F13-e 전자 계획을 이온 솔브에 = 거부
+
+── F16 해석 개구율 (판별력) — 원 · 띠 ∩ 정사각형 해석 넓이 · 두 셀 직렬 g = α·g0
+  PASS  F16-α 수직·면중앙: K→∞ 극한 = 해석식 (K 1024 오차 3.20e-05 < 2e-3 · K 8 오차 5.72e-03 = 보고)
+  PASS  F16-α 수직·모서리걸침: K→∞ 극한 = 해석식 (K 1024 오차 8.92e-06 < 2e-3 · K 8 오차 1.14e-02 = 보고)
+  PASS  F16-α 수직·꼭짓점: K→∞ 극한 = 해석식 (K 1024 오차 8.66e-07 < 2e-3 · K 8 오차 9.20e-03 = 보고)
+  PASS  F16-α 수직·밖걸침: K→∞ 극한 = 해석식 (K 1024 오차 8.60e-06 < 2e-3 · K 8 오차 8.25e-03 = 보고)
+  PASS  F16-α 평행·t0.0·y0.25: K→∞ 극한 = 해석식 (K 1024 오차 9.38e-05 < 2e-3 · K 8 오차 4.00e-03 = 보고)
+  PASS  F16-α 평행·t0.0·y0.05: K→∞ 극한 = 해석식 (K 1024 오차 3.44e-04 < 2e-3 · K 8 오차 2.70e-02 = 보고)
+  PASS  F16-α 평행·t0.05·y0.25: K→∞ 극한 = 해석식 (K 1024 오차 7.65e-04 < 2e-3 · K 8 오차 4.61e-02 = 보고)
+  PASS  F16-α 평행·t0.05·y0.05: K→∞ 극한 = 해석식 (K 1024 오차 2.04e-04 < 2e-3 · K 8 오차 4.81e-02 = 보고)
+  PASS  F16-α 평행·t0.11·y0.25: K→∞ 극한 = 해석식 (K 1024 오차 4.30e-04 < 2e-3 · K 8 오차 2.11e-02 = 보고)
+  PASS  F16-α 평행·t0.11·y0.05: K→∞ 극한 = 해석식 (K 1024 오차 3.71e-04 < 2e-3 · K 8 오차 3.55e-02 = 보고)
+  PASS  F16-α 평행·사선: K→∞ 극한 = 해석식 (K 1024 오차 1.35e-04 < 2e-3 · K 8 오차 5.31e-02 = 보고)
+  PASS  F16-구적 수직·면중앙: 계획 α_K8 = 독립 K=8 중점 구적 (정확)
+  PASS  F16-직렬 수직·면중앙: σ = 2σα/(α+1) (독립 α_K8 0.812500) 1e-12
+  PASS  F16-구적 수직·모서리걸침: 계획 α_K8 = 독립 K=8 중점 구적 (정확)
+  PASS  F16-직렬 수직·모서리걸침: σ = 2σα/(α+1) (독립 α_K8 0.843750) 1e-12
+  PASS  F16-구적 수직·꼭짓점: 계획 α_K8 = 독립 K=8 중점 구적 (정확)
+  PASS  F16-직렬 수직·꼭짓점: σ = 2σα/(α+1) (독립 α_K8 0.921875) 1e-12
+  PASS  F16-구적 수직·밖걸침: 계획 α_K8 = 독립 K=8 중점 구적 (정확)
+  PASS  F16-직렬 수직·밖걸침: σ = 2σα/(α+1) (독립 α_K8 0.968750) 1e-12
+  PASS  F16-구적 평행·t0.0·y0.25: 계획 α_K8 = 독립 K=8 중점 구적 (정확)
+  PASS  F16-직렬 평행·t0.0·y0.25: σ = 2σα/(α+1) (독립 α_K8 0.500000) 1e-12
+  PASS  F16-구적 평행·t0.0·y0.05: 계획 α_K8 = 독립 K=8 중점 구적 (정확)
+  PASS  F16-직렬 평행·t0.0·y0.05: σ = 2σα/(α+1) (독립 α_K8 0.625000) 1e-12
+  PASS  F16-구적 평행·t0.05·y0.25: 계획 α_K8 = 독립 K=8 중점 구적 (정확)
+  PASS  F16-직렬 평행·t0.05·y0.25: σ = 2σα/(α+1) (독립 α_K8 0.500000) 1e-12
+  PASS  F16-구적 평행·t0.05·y0.05: 계획 α_K8 = 독립 K=8 중점 구적 (정확)
+  PASS  F16-직렬 평행·t0.05·y0.05: σ = 2σα/(α+1) (독립 α_K8 0.625000) 1e-12
+  PASS  F16-구적 평행·t0.11·y0.25: 계획 α_K8 = 독립 K=8 중점 구적 (정확)
+  PASS  F16-직렬 평행·t0.11·y0.25: σ = 2σα/(α+1) (독립 α_K8 0.750000) 1e-12
+  PASS  F16-구적 평행·t0.11·y0.05: 계획 α_K8 = 독립 K=8 중점 구적 (정확)
+  PASS  F16-직렬 평행·t0.11·y0.05: σ = 2σα/(α+1) (독립 α_K8 0.750000) 1e-12
+  PASS  F16-구적 평행·사선: 계획 α_K8 = 독립 K=8 중점 구적 (정확)
+  PASS  F16-직렬 평행·사선: σ = 2σα/(α+1) (독립 α_K8 0.500000) 1e-12
+
+── F17 판 근처 캡슐 — 판 결합 g = 캡슐 없는 것과 비트 같음 · 기둥 수 기록
+  PASS  F17-a 판 결합 g 비트 같음 (v0 = 판에 α 미적용)
+  PASS  F17-b 가로지름 기둥 수 기록 (바닥 2 · 위 0)
+
+── F18 K = 8 거짓 절단 (한계 기록 · Codex 10-21 §4-1) — 정사각형 ∩ 중앙 원 (r/h 0.65 · 정확 α 0.01345) · K4 · K8 = 0 · K16 0.015625 · 면적 오차 ↔ 연결성 · 단자 G 처분 분리 · 진단 칸 (α = 0 면 · 고운 구적에서 열리는 수)
+  PASS  F18-a 정확 열린 면적분율 = 0.0134549613712 (닫힌꼴 · 1e-12)
+  PASS  F18-b 한계 — K 4 · K 8 (봉인) 중점 구적 = 0 (열린 네 귀퉁이를 구적점이 못 본다 = 거짓 절단)
+  PASS  F18-c 고운 구적 — K 16 = 0.015625 (4/256) · K 32 = 0.01171875 (12/1024) · 정확값 둘레
+  PASS  F18-d 처분 분리 — 면적 오차 |α8 − α| ≤ 1/K² (구적 한 칸 · 작다) 인데 단자 G 는 위상이 바뀐다: K8 계획 = 유일 경로 절단 → σ 0 (관통 성분 없음) ↔ K16 계획 σ = 2σα/(α+1) > 0 (1e-12) · 정확 α 의 σ 와 같은 자릿수
+  PASS  F18-e 진단 칸 — 계획 false_cut_check (K 8 · 고운 K 16 · α = 0 면 1 · 그중 K16 에서 열림 1) · 증거 요약 alpha_zero_faces 1 · alpha_zero_open_at_refine 1 · alpha_refine_K 16
+  PASS  F18-f 대조 — 참 절단 (r/h 0.8 · 정확 α 0) 은 고운 구적에서도 막힘 → 열림 수 0 (진단이 참 절단을 거짓으로 세지 않는다)
+  PASS  F18-g K16 계획 — α = 0 면 없음 (고운 K 32 로 볼 것도 없다 · 칸은 그대로 기록)
+
+── F19 명목 체적 ↔ 합집합 체적 (이름 분리 · Codex 10-21 A4 · F11 한정) — 기록 칸 = 명목 (Σ πr²L + 조각마다 구 하나 · 겹침 미차감) · 합집합 = 미계산 칸 · 밴드 비의 기준 = 명목
+  PASS  F19-a volume_record — capsule_nominal_um3 = capsule_um3 (옛 칸 그대로) · capsule_union_um3 None · 미계산 표지 · 비의 기준 = 명목 · 체적 정의 이름
+  PASS  F19-b 한계 — 교차 두 캡슐: 기록 (명목) = 2(πr²L + 4/3πr³) · 참 합집합 = 명목 − 16r³/3 (9.0 % 작다) → 명목 ≠ 합집합 · 요약 칸에 체적 정의 이름
+
+── F20 같은 sid 면제 = 상 수준 융합 가정 (표지 · Codex 10-21 §4-1) — 같은 AM pid = 한 입자 안 · 같은 탄소 sid · SDCP|SDCP = 여러 물체를 한 연속체로 묶는 가정 · 증거 칸 · 계약이 producer 상수와 대조
+  PASS  F20-a 표지 상수 — AM 같은 pid = same_particle_interior · 탄소 같은 sid (VGCF · SuperP · SWCNT) · SDCP|SDCP = phase_level_fusion_assumed
+  PASS  F20-b 증거 칸 exempt_assumptions = 표지 상수 (evidence_record) · 정상 매니페스트 계약 통과
+  PASS  F20-c ca_ext_record_ok 거부 [표지 빠짐]
+  PASS  F20-c ca_ext_record_ok 거부 [융합 가정을 같은 물체로 바꿈]
+
+── F14 변이 — α² · α^p · (1−α) · 반 셀 어긋남 · 면제 무시 · 판에 α · 다른 채널 · 절단 미가지치기 = 실패해야
+  PASS  F14 변이 [α²] 적발
+  PASS  F14 변이 [α^0.5] 적발
+  PASS  F14 변이 [1−α] 적발
+  PASS  F14 변이 [반 셀 어긋남 (면 평면 = 셀 중심)] 적발
+  PASS  F14 변이 [면제 무시] 적발
+  PASS  F14 변이 [판에 α] 적발
+  PASS  F14 변이 [다른 채널 (이온 계획을 전자 도체로)] 적발
+/home/user/wt_rintweb/scripts/test_ptfe_face_alpha.py:104: MatrixRankWarning: Matrix is exactly singular
+  return spsolve(L.tocsc(), b), 0
+  PASS  F14 변이 [절단 면을 가지치기에 안 넘김] 적발
+
+── F15 입구 거부 — NaN · inf · 길이 불일치 · 떨어진 같은 fid · 정확 중복 · fid 형 · kind · 지름 법칙 · K (조립 전 · CG 0)
+  PASS  F15-a NaN 좌표
+  PASS  F15-b inf 좌표
+  PASS  F15-c fid 길이 불일치
+  PASS  F15-d kind 길이 불일치
+  PASS  F15-e 같은 fid 가 떨어진 두 블록
+  PASS  F15-f 정확 중복 경로
+  PASS  F15-g 음수 fid
+  PASS  F15-h fid 실수형
+  PASS  F15-i fid 전각 숫자 문자열
+  PASS  F15-j kind = 그룹 (경로 아님)
+  PASS  F15-k 모르는 지름 법칙
+  PASS  F15-l K = 0 · 2.5 · True 거부
+  PASS  F15-m 모르는 채널
+  PASS  F15-n 전자 채널인데 pid 없음
+  PASS  F15-o 정수 좌표 배열 (float 아님) 은 받는다 · 객체 배열은 거부
+
+── F-DIA 지름 법칙 — (가) rope Ø0.248 단일 · (다) 두 집단 = 경로 정준 키 해시 (순열 불변 · 보고만)
+  PASS  DIA-a rope = 모든 경로 r 0.124
+  PASS  DIA-b 두 집단 개수비 ≈ 0.13 (실측 0.128)
+  PASS  DIA-c 순열 불변 (경로 순서 · fid 번호와 무관)
+
+── C 계약 — 계획 무결성 (지문 · 격자 · 불변량 · 행 자격) · 동시 사용 거부 · CG 0
+  PASS  C1 모양 다름 → 거부 · CG 0
+  PASS  C2 솔버 vox ≠ 계획 vox (RIMP-05) → 거부 · CG 0
+  PASS  C3 sid 바뀜 (지문) → 거부 · CG 0
+  PASS  C4 σ 표 다름 (다른 채널 · 지문) → 거부 · CG 0
+  PASS  C5 α 격자 밖 (0.3 · 지문 다시) → 거부 · CG 0
+  PASS  C6a α NaN → 거부 · CG 0
+  PASS  C6b α = 1 행 (계획에 없어야) → 거부 · CG 0
+  PASS  C6c α > 1 → 거부 · CG 0
+  PASS  C6d α < 0 → 거부 · CG 0
+  PASS  C7 중복 행 → 거부 · CG 0
+  PASS  C7b 행 범위 밖 (축 끝 셀) → 거부 · CG 0
+  PASS  C8 지문 그대로 · 행만 바꿈 (E5) → 거부 · CG 0
+  PASS  C10a + rint 표 → 거부 · CG 0
+  PASS  C10b + ①′ iface → 거부 · CG 0
+  PASS  C11 모르는 계획 판 → 거부 · CG 0
+  PASS  C11b 모르는 계획 종류 → 거부 · CG 0
+  PASS  C9a 면제 면 (VGCF|VGCF) 에 행 → 거부
+  PASS  C9b 비도체 셀이 낀 면에 행 → 거부
+  PASS  C12 전자 계획 + pid 없음 → 거부
+  PASS  C13 전자 계획 + 다른 pid → 거부
+  PASS  C14 기록 필드 (판 · 채널 · K · 행 · 절단 · 판 규칙 · 지문 · solved)
+  PASS  C15 조기 반환 해에도 기록 (solved False)
+  PASS  C16 원장 (E1 · E5) — 지문 · 축 원장
+  PASS  C17 원장 읽기 = 지문 대조 (정상 통과)
+  PASS  C18 원장 변조 → 읽기 거부 (E5)
+  PASS  C19 다른 sid 로 원장 읽기 → 거부
+  PASS  C20 끈 해 = 기록 · 원장 키 없음 (옛 반환 키 그대로)
+  PASS  C21 면 묶음 크기 불변 (묶음 3 ↔ 기본) — 행 · α 바이트 같음
+  PASS  C22 캡슐 기하 변조 (끝점 이동 · 지문 그대로) → 계획 입구 거부
+  PASS  C23 isolated_by_cut (절단 면 주변만) = 격자 전체 무차별 계산 (무작위 20)
+
+── C-D 진단 거부 (E2) — je · 소산 분담 · |J| 점군 · Joule 은 face_alpha 해를 거부 (v0)
+  PASS  D per_particle_current: face_alpha 해 거부 · 끈 해 정상
+  PASS  D phase_current_share: face_alpha 해 거부 · 끈 해 정상
+  PASS  D field_point_cloud: face_alpha 해 거부 · 끈 해 정상
+  PASS  D joule_hotspot: face_alpha 해 거부 · 끈 해 정상
+
+── C-R 영수증 — not_requested · disabled · applied · absent_geometry · failed · missing (다른 계획)
+  PASS  R-a 요청 없음
+  PASS  R-b 요청 · 끔
+  PASS  R-c applied (행 > 0)
+  PASS  R-d absent_geometry (행 0)
+  PASS  R-e failed (조기 반환 · 사유)
+  PASS  R-f missing (다른 계획의 해)
+  PASS  R-g missing (계획을 안 넘긴 해)
+  PASS  R-h 요청 없는데 face_alpha 기록 = 위반 표지
+
+── R run_contract — p3ca id · unknown:ca_ext · 세대 · PTFE 기록 · ca_ext_record_ok · 봉인 p2 코호트 · CLI 회계
+  PASS  R1 봉인 p2 코호트 32 팔 — 새 함수 재계산 = 저장값 32/32
+  PASS  R2 face_alpha + 블록 = p3ca- + 16 hex
+  PASS  R3 protocol_ok (저장 = 재계산)
+  PASS  R4 기능 켬 · 블록 없음 → unknown:ca_ext
+  PASS  R5 블록 있는데 ptfe_stamp off → unknown:ca_ext
+  PASS  R6 블록 모양 틀림 [모르는 하위 블록] → unknown:ca_ext
+  PASS  R6 블록 모양 틀림 [schema 다름] → unknown:ca_ext
+  PASS  R6 블록 모양 틀림 [빈 블록] → unknown:ca_ext
+  PASS  R6 블록 모양 틀림 [protocol 없음] → unknown:ca_ext
+  PASS  R6 블록 모양 틀림 [None] → unknown:ca_ext
+  PASS  R7 증거만 바뀜 → id 같음
+  PASS  R8 물리 칸 바뀜 (두 집단 지름) → id 다름
+  PASS  R8b 채널 바뀜 → id 다름
+  PASS  R9 p2 축 결손이 먼저 (unknown:vox_um 그대로)
+  PASS  R10 관찰 세대 (p3ca = 현행) · 낮춘 신고 거부
+  PASS  R11 ptfe_record_ok — face_alpha · 관측 0 = 통과
+  PASS  R12 ptfe_record_ok — face_alpha · 관측 3 = 거부 (도장 ≠ 실물)
+  PASS  R13 ca_ext_record_ok 정상 · 끈 매니페스트 (블록 없음) 통과
+  PASS  R14 ca_ext_record_ok 거부 [블록 없음 (기능 켬)]
+  PASS  R14 ca_ext_record_ok 거부 [영수증 키 빠짐]
+  PASS  R14 ca_ext_record_ok 거부 [applied 인데 행 0]
+  PASS  R14 ca_ext_record_ok 거부 [모르는 상태]
+  PASS  R14 ca_ext_record_ok 거부 [missing 상태]
+  PASS  R14 ca_ext_record_ok 거부 [이온 요청인데 not_requested]
+  PASS  R14 ca_ext_record_ok 거부 [주 전자 솔브 disabled]
+  PASS  R14 ca_ext_record_ok 거부 [집전체 계획 켬 (v0 = LEAN 2·3 만)]
+  PASS  R14 ca_ext_record_ok 거부 [필드 요청 (LEAN 4 거부)]
+  PASS  R14 ca_ext_record_ok 거부 [K 다름]
+  PASS  R14 ca_ext_record_ok 거부 [판 이름 다름]
+  PASS  R14 ca_ext_record_ok 거부 [지름 법칙 · 값 불일치]
+  PASS  R14 ca_ext_record_ok 거부 [모르는 채널]
+  PASS  R14 ca_ext_record_ok 거부 [부피 상태 거짓]
+  PASS  R14 ca_ext_record_ok 거부 [관측 PTFE 셀 > 0]
+  PASS  R14 ca_ext_record_ok 거부 [진단 상태 빠짐]
+  PASS  R14 ca_ext_record_ok 거부 [계획 지문 ↔ 영수증 불일치]
+  PASS  R14 ca_ext_record_ok 거부 [off 격자 sid 지문 없음 (★ Z3)]
+  PASS  R14 ca_ext_record_ok 거부 [off 격자 sid 지문 모양 (대문자 · ★ Z3)]
+  PASS  R14 ca_ext_record_ok 거부 [ptfe_stamp off 인데 블록]
+  PASS  R14 ca_ext_record_ok 거부 [σ_PTFE > 0]
+  PASS  R14 ca_ext_record_ok 거부 [PTFE 차단 두께 > 0]
+  PASS  R14 ca_ext_record_ok 거부 [PTFE 차단 범위 ion (두께 0)]
+  PASS  R14 ca_ext_record_ok 거부 [주기 xy]
+  PASS  R14 ca_ext_record_ok 거부 [계면 표 (r1) 동시]
+  PASS  R14b ca_ext_record_ok 거부 [이온만 요청 + 이온 솔브 끔 = 어디에도 안 걸림 (조용한 no-op)]
+  PASS  R14c 전자만 요청 + 이온 솔브 끔 = 정상 (전자 주 솔브가 적용)
+  PASS  R15 CLI 회계 — 새 플래그 = protocol_ext (ca_ext 칸 이름)
+  PASS  R16 규칙 M (실물 파서 전수) 문제 0
+
+── P payload 끝-끝 — face_alpha 세 분기 · 거부 조합 · 매니페스트 · sid = off 격자 · 채널 독립
+  PASS  P-거부 [SEGMENT (점 스탬프)] → rc ≠ 0 · 표지 S1_FACE_ALPHA_REFUSED
+  PASS  P-거부 [SIGMA_PTFE] → rc ≠ 0 · 표지 S1_FACE_ALPHA_REFUSED
+  PASS  P-거부 [PTFE_BLOCK] → rc ≠ 0 · 표지 S1_FACE_ALPHA_REFUSED
+  PASS  P-거부 [PTFE_BLOCK (범위 ion · 두께 0)] → rc ≠ 0 · 표지 S1_FACE_ALPHA_REFUSED
+  PASS  P-거부 [PERIODIC] → rc ≠ 0 · 표지 S1_FACE_ALPHA_REFUSED
+  PASS  P-거부 [FIELD (LEAN 4)] → rc ≠ 0 · 표지 S1_FACE_ALPHA_REFUSED
+  PASS  P-거부 [COLLECTOR] → rc ≠ 0 · 표지 S1_FACE_ALPHA_REFUSED
+  PASS  P-거부 [THERMAL] → rc ≠ 0 · 표지 S1_FACE_ALPHA_REFUSED
+  PASS  P-거부 [PORE] → rc ≠ 0 · 표지 S1_FACE_ALPHA_REFUSED
+  PASS  P-거부 [STEP4] → rc ≠ 0 · 표지 S1_FACE_ALPHA_REFUSED
+  PASS  P-거부 [TRACKB] → rc ≠ 0 · 표지 S1_FACE_ALPHA_REFUSED
+  PASS  P-거부 [JOULE] → rc ≠ 0 · 표지 S1_FACE_ALPHA_REFUSED
+  PASS  P-거부 [STEP4_GRID] → rc ≠ 0 · 표지 S1_FACE_ALPHA_REFUSED
+  PASS  P-거부 [RINT] → rc ≠ 0 · 표지 S1_FACE_ALPHA_REFUSED
+  PASS  P-거부 [NO_STEP3] → rc ≠ 0 · 표지 S1_FACE_ALPHA_REFUSED
+  PASS  P-거부 [NOOP_CHANNEL (이온만 + --no-ion)] → rc ≠ 0 · 표지 S1_FACE_ALPHA_REFUSED
+  PASS  P-거부 [채널 플래그만 (face_alpha 아님)] → rc ≠ 0 · 표지 S1_FACE_ALPHA_REFUSED
+  PASS  P-거부 [지름 법칙 플래그만 (face_alpha 아님)] → rc ≠ 0 · 표지 S1_FACE_ALPHA_REFUSED
+  PASS  P-거부 [NO_PHASE (--phase 없음)] → rc ≠ 0 · 표지 S1_FACE_ALPHA_REFUSED|NO_PHASE
+  PASS  P1 off LEAN 2 — rc 0 · 블록 없음 · p2 id · PTFE 셀 0
+  PASS  P2 centerline — PTFE 셀 > 0 · exact-zero DOF · p2 id
+  PASS  P3 face_alpha LEAN 2 — rc 0
+  PASS  P4 매니페스트 — 도장 face_alpha · PTFE 셀 0 · zero_dof False · 블록 · p3ca id · protocol_ok · ca_ext_record_ok
+  PASS  P5 영수증 (LEAN 2) — 주 applied · wetted/bare disabled · 이온 disabled
+  PASS  P6 σ_e(face_alpha) < σ_e(off) — 목 면이 막힌다
+  PASS  P7 진단 미계산 (E2 · v0) — 소산 분담 None · je 없음 · 상태 기록
+  PASS  P8 캡슐 증거 — 경로 2 · 참부피 없음 = unknown · 표지 문자열
+  PASS  P9 check_arm (sr01) 이 실제 산출물을 받는다
+  PASS  P10 face_alpha 의 sid 격자 = off 격자 (셀 수 상별 같음 · sid 7 없음)
+  PASS  P11 PTFE 없음 — σ_e 비트 같음 · 주 영수증 absent_geometry
+  PASS  P12 전자만 — σ_ion = off 비트 같음 · σ_e 감소 · 이온 영수증 not_requested
+  PASS  P13 이온만 — σ_e = off 비트 같음 · σ_ion 감소
+  PASS  P14 둘 다 (LEAN 3) — 이온 영수증 applied · 이온 소산 분담 None · ca_ext_record_ok
+    보고 P (픽스처 · vox 1.0) σ_e off 0.0003055651578484191 → face_alpha 0.0003050038831682681 · LEAN 3 σ_ion off 0.000587048389515795 → 이온만 0.0005868199332560642 · 전자 행 32 · 캡슐 {'n_paths': 2, 'n_pieces': 2, 'n_point_pieces': 0, 'n_segments': 240, 'volume_um3': 2.3346190706674608, 'dia_classes': {'rope': 2, 'fibre': 0}, 'volume_basis': 'nominal_tube_v1'} · off 격자 PTFE 점 셀 {'1': 20, '6': 32}
+  PASS  P15 payload --selftest-temperature (PTFE 규약 문자열 검사 포함) rc 0
+
+── B 끔 비트 동일 — 고치기 전 step3_sigma · payload 와 대조 (--old-scripts)
+  PASS  B1 솔버 끔 [ion rand · 직접] — σ · n_dof · φ 비트 같음 (옛 ↔ 새)
+  PASS  B1 솔버 끔 [ion rand · CG] — σ · n_dof · φ 비트 같음 (옛 ↔ 새)
+  PASS  B1 솔버 끔 [ion rand2 · 직접] — σ · n_dof · φ 비트 같음 (옛 ↔ 새)
+  PASS  B1 솔버 끔 [ion rand2 · CG] — σ · n_dof · φ 비트 같음 (옛 ↔ 새)
+  PASS  B1 솔버 끔 [mixed e · 직접] — σ · n_dof · φ 비트 같음 (옛 ↔ 새)
+  PASS  B1 솔버 끔 [mixed e · CG] — σ · n_dof · φ 비트 같음 (옛 ↔ 새)
+  PASS  B1 솔버 끔 [AM block · 직접] — σ · n_dof · φ 비트 같음 (옛 ↔ 새)
+  PASS  B1 솔버 끔 [AM block · CG] — σ · n_dof · φ 비트 같음 (옛 ↔ 새)
+  PASS  B2 payload [off] — 매니페스트 (code_sha · exec_env 빼고) 바이트 같음 · id 같음 · step3 값 같음
+  PASS  B2 payload [centerline] — 매니페스트 (code_sha · exec_env 빼고) 바이트 같음 · id 같음 · step3 값 같음
+  PASS  B2 payload [off LEAN3] — 매니페스트 (code_sha · exec_env 빼고) 바이트 같음 · id 같음 · step3 값 같음
+
+253 PASS · 0 FAIL

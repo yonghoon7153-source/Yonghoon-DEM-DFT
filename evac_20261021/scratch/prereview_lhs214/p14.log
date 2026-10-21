@@ -1,0 +1,10 @@
+HEAD=7f99be67c7bd66416e2b125e62cba50ca6f8a03a dirty=0 porcelain_all=0
+reread_selftest rc=0 secs=15 :: ✓ 전부 통과
+receipt_selftest rc=0 secs=38 :: supp20_input_receipt selftest: 123/123 PASS
+fast16 rc=0 secs=22 :: ✓ 전부 통과 (16/16)
+real4 rc=0 secs=216 :: ✓ 전부 통과 (4/4)
+runner_selftest rc=0 secs=193 :: ✓ 전부 통과 (139/139)
+check_doc_refs rc=0 secs=1 :: ✓ 깨진 참조 없음
+check_review_findings rc=0 secs=31 :: 원장 자기일관 ✓  (⚠ "정말 고쳐졌는가" 는 회귀와 독립 검증자의 몫이다)
+check_method_discipline rc=0 secs=42 :: ✓ 방법론 규율: 0 오류 (15 경고)
+dirty after=0 porcelain_all=0

@@ -1,0 +1,19 @@
+Rint 2 S2 RCA-05 evidence validator: sub-edge count bound to the length multiplier (tests first)
+
+Pre-attack review of ca_ext_cjunc.cjunc_block_problem after the distributed v0 (counts are per
+sub-edge, n_subedges absent = n_instances): the validator did not bind the sub-edge count to the
+length law.  Exact invariant (same predicate r = Lc/Lpar > 1 + 1e-9 in _n_sub and
+junction_len_mult): len_mult_max == 1 <=> every instance has k = 1 <=> n_subedges == n_instances
+(n_long uses the product form and can differ by one ulp at the boundary, so it is not used).
+New case CAX-SUB on test_ca_ext_b6.cj_manifest (sealed cohort base, module record functions):
+- guards (pass before and after): base manifest and a k > 1 variant (3 instances, 5 sub-edges,
+  len_mult_max 2.5) accepted; n_subedges absent with mode sum 5, n_subedges True / 5.0, n_subedges
+  2 < 3 rejected.
+- counterexamples (accepted before): 5 sub-edges with len_mult_max 1.0, len_mult_max 2.5 with
+  sub-edges = instances, len_mult_max NaN / 0.5 / True / '1.0' / missing.
+
+Pre-fix (parent b2cff9230): test_carbon_junction --quick 224/231 (fails = 7 checks from 2
+counterexample families: count <-> multiplier unbound 2, multiplier record shape unchecked 5).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

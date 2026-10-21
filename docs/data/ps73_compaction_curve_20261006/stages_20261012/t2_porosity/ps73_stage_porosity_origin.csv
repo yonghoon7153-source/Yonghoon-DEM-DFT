@@ -1,7 +1,0 @@
-﻿Simulation time,Porosity (sphere-sum),Porosity (exact union),Union MC std,Plate height,Step,Stage,Centers above plate,Particles touching plate
-ms,%,%,%,µm,,,,
-step × 1e-3,1 − ΣV_sphere/(A·H),MC 4e6 points · seed crc32(ps_7_3_r45),binomial 1σ (yErr of C),H = plate.csv = mesh STL,,,z > H,z + r > H
-405.000,31.6854,31.7833,0.0233,138.252,405000,Initial compression,0,0
-1665.000,24.8350,24.9817,0.0216,125.652,1665000,50 MPa,0,832
-3125.000,14.9531,16.5312,0.0186,111.052,3125000,300 MPa (end of compression),11,1981
-3225.000,14.9536,16.4945,0.0186,111.052,3225000,After relaxation,11,1881

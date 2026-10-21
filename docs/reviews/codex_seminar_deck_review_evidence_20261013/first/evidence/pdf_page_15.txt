@@ -1,8 +1,0 @@
-15Battery Materials Lab.
- A 194-bed design-of-experiments dataset for machine learning
-• 130 + 64 Latin-hypercube beds (composition, particle sizes, loading) → structure and 
-transport descriptors, released as v1.2.
-• SE percolation 106/130; geometric tortuosity 1.3–4.2 (shortest path, not transport); 
-porosity OOF R² 0.99 (collaborator) vs 0.98 from the five design knobs.
-Progress
-< geometric tortuosity > < ionically isolated AM > < porosity vs SE fraction >

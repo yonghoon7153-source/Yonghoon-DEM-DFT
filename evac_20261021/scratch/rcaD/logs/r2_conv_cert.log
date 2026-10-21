@@ -1,0 +1,39 @@
+── t_k1_default_bitid
+  PASS  K1 `_solve_cg` 기본 호출 = 옛 경로 비트 동일 (해 · info)
+  PASS  K1 LAST_BACKEND 기본 = 옛 키 그대로 (rtol 키 없음)
+── t_k2_defaults
+  PASS  K2 기본값 — CG_RTOL 1e-8 · CONV_CERT 끔
+  PASS  K2 증서 끔 → 결과에 conv_cert 키 없음 · 판 전류 기록 키 없음
+── t_k3_knob
+  PASS  K3 CG_RTOL 노브 → CG 에 그 rtol 이 간다 (numeric 노브)
+  PASS  K3 노브를 켜면 LAST_BACKEND 에 rtol 기록 · 끄면 키가 사라진다 (매니페스트 바이트 동일)
+── t_k4_x0
+  PASS  K4 `_solve_cg(x0=…, rtol=…)` — 초기값 · 조임 rtol 을 받는다 (이어 풀기 ⓒ 의 바탕)
+── t_k5_certify_unit
+  PASS  K5 정확한 해 · rtol 1e-12 → ⓐ ⓑ ⓒ 통과 · ok
+  PASS  K5 판 전류 I_bot = I_top = 0.5 (KCL)
+  PASS  K5 ⓐ rtol 1e-8 > 봉인 상한 → 실패 (지금 생산 술어를 다음 세대에 그대로 쓰지 않는다)
+  PASS  K5 ⓐ info ≠ 0 · 잔차 NaN → 실패
+  PASS  K5 ⓑ 판 전류 불균형 > ε_I → 실패
+  PASS  K5 ⓒ 이어 풀기 |Δσ|/σ > 1e-4 → 실패
+  PASS  K5 ⓒ 재풀이 자체가 미수렴 (info ≠ 0) → 실패
+  PASS  K5 증서 판 이름 · 봉인값 기록
+  PASS  K5 ⓒ 이어 풀기 rtol 바닥 1e-14 (정지 rtol 1e-14 → 1e-16 으로 내려가 maxiter 까지 돌지 않는다)
+── t_k6_solve_cert
+  PASS  K6 증서 켬 · rtol 1e-12 · 정확한 해 → conv_cert.ok · unconverged False
+  PASS  K6 증서 켬 · rtol 1e-8 → ⓐ 실패 → unconverged True (미게시)
+── t_k7_probe
+  PASS  K7 합성 탐침 — rtol 1e-8 에서 생산 술어 (info 0 · 잔차 ≤ 1e-6) 는 통과인데 σ 오차 > 1e-4 인 해가 있다 (거짓 수렴 재현)
+  PASS  K7 증서가 σ 오차 > 1e-4 인 해를 전부 거부한다 (거짓 수렴을 시험이 잡는다)
+  PASS  K7 봉인 정지 rtol 의 해는 전부 σ 오차 ≤ 1e-4 · 증서 통과
+  PASS  K7 탐침 = 시드 셋 이상 × 꼴 둘 (접합 간선 꼴 포함)
+── t_k8_seal
+  PASS  K8a 봉인값이 이 환경에서도 유효 — 봉인 rtol 의 해 전부 σ 오차 ≤ 1e-4 · 봉인 ε_I ∈ [좋은 해 불균형 최대, 나쁜 해 최소)
+  PASS  K8b 봉인 규칙 (설계 §6 절차 3) 의 결과 = 코드 상수 (정지 rtol) — 다르면 봉인이 환경에 걸린다는 정보 (R 개정으로 다시 봉인)
+  PASS  K8b 봉인 규칙의 결과 = 코드 상수 (ε_I · 구간 비지 않음)
+── t_k9_cli
+  PASS  K9 `--step3-rtol` = numeric (규약 · 물리 해시 밖 · CLI 회계)
+  PASS  K9 payload 에 `--step3-rtol` 인자 · CG_RTOL · CONV_CERT 배선
+
+== test_step3_conv_cert: 27/27 PASS
+rc=0 seconds=129

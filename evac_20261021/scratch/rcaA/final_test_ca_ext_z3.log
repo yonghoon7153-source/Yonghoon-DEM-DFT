@@ -1,0 +1,102 @@
+
+── A face_alpha (S1) + 탄소 접합 (S2) 한 솔브 (+ P1) — 솔브 수준
+  PASS  A1 (i) PTFE 0 → face_alpha + 접합 = 접합만 (σ · n_dof · 접합 기록 비트 같음 · α 행 0)
+  PASS  A2 (iii) 조립기가 받는 면 = 이 채널의 도체 면 전부 − α = 0 면 (α 0 면은 행렬에서 빠진다 · 다른 면은 안 빠진다)
+  PASS  A3 (iii) 면별 배열 압축 일관 — a2 · b2 · g 길이 같음 · g = α·g0 (계획 행) · g = g0 (그 밖) · 정확히 (같은 연산)
+  PASS  A4 (iii) 접합이 끊은 면 (자리 · 자기 · 미등록) 에 α 가 남지 않는다 — face_alpha 가 쓴 행 ∩ 접합 tombstone = ∅ (VV 면 = 같은 탄소 면제)
+  PASS  A5 (iii) 조합 해의 기록 — face_alpha (n_rows_used = 계획 행 중 행렬에 든 것 · 절단 수) · 접합 (풀림 · 간선 1)
+  PASS  A6 (iv) cap2 가 접합 끝을 덮는다 (최근접점 ↔ PTFE 중심선 0.20 µm ≤ r_P + r_f + tol_P) · α 행은 0 (어떤 자격 면도 안 가린다)
+  PASS  A7 (iv) P0 — 덮인 접합 간선 그대로 · g = 1e4·m/R_j (계획 값 정확히 · α 곱 없음) = 접합만 해의 간선
+  PASS  A8 (iv) P1 — 덮인 접합 = 절단 (간선 없음 · 절단 1) · σ(P1) < σ(P0) (SDCP 우회로 유한)
+  PASS  A9 (v) Rayleigh — 캡슐 집합 ∅ ⊂ {1} ⊂ {1,3} ⊂ {1,3,2} 마다 σ 비증가 (P0 · P1) · σ(P1) ≤ σ(P0) · α 와 P1 이 실제로 깎는다
+  PASS  A10 (vi) 섬유 순서 · fid · PTFE 경로 순서 바꿈 · 원점 이동 (0.37, −0.21, 0.5 µm) → sid · σ (1e-12) · 수 같음
+  PASS  A11 (vii) 조합 해 — Σ P (면 + 접합 + 판) = I·ΔV (1e-10) · 소산 몫 합 = 1 (1e-12) · I_bot 기록 = I
+  PASS  A12 cjunc_protocol_record — face_alpha + 접합 (P0 · P1) 받음 · off · centerline + P1 = 거부 · off · centerline + P0 받음
+  PASS  A13 ca_ext_request_problem — P1 요청 = face_alpha 에서 통과 · 기본 (off) 은 거부 그대로
+  PASS  A14 runner_ca_ext — PTFE_STAMP=face_alpha + CJUNC=1 (P0 · P1) = 문제 없음 · off + P1 = REQUEST 거부
+  PASS  A15 runner_ca_ext_view — 조합 영수증 → 팔 태그 `_fa_cj…` · payload 인자 P1 · 선언 칸 P1
+
+── A-P payload 끝-끝 — face_alpha + 접합 (+ P1) · 두 하위 블록 · p3ca · ca_ext_record_ok · 원장 항등식
+  PASS  AP1 payload face_alpha + 접합 (P0) + rtol = rc 0 · ca_ext 하위 블록 = ptfe_face + cjunc · 요청 칸 [cjunc] · p3ca · protocol_ok · ca_ext_record_ok · 게시 조건 (증서)
+  PASS  AP2 원장 · 소산 항등식 (조합 런) — P_total = I_bot (ΔV = 1 · CG 1e-12 · 1e-8) · 몫 합 = 1 · 접합 간선 1
+  PASS  AP3 payload P1 (face_alpha) = rc 0 · 덮인 접합 절단 1 · σ(P1) ≤ σ(P0) · ca_ext_record_ok · id ≠ P0 (protocol 이 다르다)
+  PASS  AP4 payload [off + P1] = 거부 그대로 (S2_CJUNC_REFUSED|P1_NEEDS_FACE_ALPHA|)
+  PASS  AP4 payload [centerline + P1] = 거부 그대로 (S2_CJUNC_REFUSED|P1_NEEDS_FACE_ALPHA|)
+  PASS  AP5 ca_ext_record_ok 거부 [ptfe_face 블록 지움 (face_alpha 도장 그대로)]
+  PASS  AP5 ca_ext_record_ok 거부 [접합 protocol 의 ptfe_stamp = off (매니페스트 face_alpha)]
+  PASS  AP5 ca_ext_record_ok 거부 [P0 인데 절단 수 > 0]
+
+── B 극한 런 — 손계산 · 기록 꼴 · 러너 · payload · 검증기
+  PASS  B1 손계산 [바닥 (R_j = ∞ · 간선 없음 · 자리 면 절단)] — 해 전류 = 손으로 세운 회로 (1e-12 · 직접 풀이)
+  PASS  B1 손계산 [천장 (R_j = 0 · 접합 양 끝 = 한 노드)] — 해 전류 = 손으로 세운 회로 (1e-12 · 직접 풀이)
+  PASS  B1 손계산 [정량 R_j 1e6 (대조 · 같은 회로)] — 해 전류 = 손으로 세운 회로 (1e-12 · 직접 풀이)
+  PASS  B2 극한 protocol — 바닥 R_j_ohm null + rj_limit inf · 천장 0.0 + zero · quantitative False · allow_rj_limits True · CLI 의 float inf 도 같은 꼴 (null) · JSON (allow_nan=False) 직렬화 · 정량 protocol 에는 rj_limit 칸 없음
+  PASS  B3 극한 protocol 거부 — 표지 ↔ 값 모순 · 표지 없는 극한 · 모르는 표지 (대소문자 · 다른 낱말 · bool) · NaN · 음수
+  PASS  B4 러너 CJUNC_RJ=inf · 0 → 문제 없음 · 영수증 요청 R_j_ohm null + rj_limit inf · 0.0 + zero (한 꼴)
+  PASS  B5 러너 극한 표기는 둘만 (`inf` 낱말 · ASCII 10 진 0) — INF · Infinity · +inf · 1e999 · nan · -0 · 공백 · ∞ = 거부
+  PASS  B5b 러너 천장 = 글자 그대로 0 (0.0 · 00 · 0e0 · 0.000 → 0 과 같은 영수증) · 언더플로로 0 이 되는 0 아닌 글자 (1e-400 · 0.1e-330) = 거부
+  PASS  B6 runner_ca_ext_view — 바닥 인자 `--step3-cjunc-rj inf --step3-cjunc-rj-limit inf` · 선언 R_j_ohm=None · rj_limit=inf · 태그 `_fa_cjinf_<h8>` · 천장 `0.0` · zero · `_fa_cj0_<h8>` · 둘의 태그 다름
+  PASS  B7 ca_ext_request_problem 거부 [요청 rj_limit inf + R_j 1e6]
+  PASS  B7 ca_ext_request_problem 거부 [요청 R_j null 표지 없음]
+  PASS  B7 ca_ext_request_problem 거부 [요청 모르는 표지]
+  PASS  B7 ca_ext_request_problem — 바닥 · 천장 요청 통과
+  PASS  B8 바닥 (R_j = ∞) + c = 1 — 근접 instance = 축약 (∞·0 = NaN 아님) · g 유한 · 비근접 = 극한 (none_inf)
+  PASS  B9 payload 바닥 · 천장 + rtol = rc 0 · 표지 (null + inf · 0.0 + zero · quantitative False · allow_rj_limits True) · p3ca · ca_ext_record_ok · 게시 조건 (증서)
+  PASS  B10 payload 극한 원장 — 바닥 = 간선 0 · none_inf = instance · 천장 = 간선 0 · 축약 = instance (S3 없이)
+  PASS  B11 σ 순서 바닥 ≤ 정량 (1e6) ≤ 천장 (같은 침대 · Rayleigh) · id 셋 다 다르다
+  PASS  B12 payload 극한 거부 [R_j inf 표지 없이] → S2_CJUNC_REFUSED|VALUE|
+  PASS  B12 payload 극한 거부 [R_j 0 표지 없이] → S2_CJUNC_REFUSED|VALUE|
+  PASS  B12 payload 극한 거부 [표지 inf + R_j 1e6] → S2_CJUNC_REFUSED|VALUE|
+  PASS  B12 payload 극한 거부 [표지 zero + R_j inf] → S2_CJUNC_REFUSED|VALUE|
+  PASS  B12 payload 극한 표지만 (접합 끔) → S2_CJUNC_REFUSED|FLAG_WITHOUT_CJUNC|
+  PASS  B13 ca_ext_record_ok 거부 [바닥인데 간선 > 0]
+  PASS  B13 ca_ext_record_ok 거부 [바닥 표지 지움 (R_j null 남음)]
+  PASS  B13 ca_ext_record_ok 거부 [바닥 quantitative True 로]
+  PASS  B13 ca_ext_record_ok 거부 [천장인데 극한 instance]
+  PASS  B13 ca_ext_record_ok 거부 [천장 표지 inf 로 (R_j 0.0 남음)]
+  PASS  B13 ca_ext_record_ok 거부 [천장 R_j 1e6 으로 (표지 zero 남음)]
+  PASS  B14 receipt_match — 정량 요청 영수증 ↔ 바닥 팔 = 거부 (요청 ↔ 결과)
+
+── C 러너 ARM_LIST — 팔 고르기 · 이름 · OUTDIR · 영수증 · 거부
+  PASS  C1 설정부 — ARM_LIST=1,2 → 중단 없음 · ARMS = 2 (팔 수) · OUTDIR 에 `_arm2` + 목록 태그 `_arml1-2` · ARMS=2 와 다른 OUTDIR · 2,1 = 같은 정규 목록 (같은 OUTDIR)
+  PASS  C2 끔 (ARM_LIST 없음) — ARMS 기본 8 · OUTDIR 에 목록 태그 없음
+  PASS  C3 ARM_LIST 거부 [중복 1,1] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)
+  PASS  C3 ARM_LIST 거부 [범위 밖 8] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)
+  PASS  C3 ARM_LIST 거부 [음수] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)
+  PASS  C3 ARM_LIST 거부 [빈 칸 1,,2] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)
+  PASS  C3 ARM_LIST 거부 [글자] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)
+  PASS  C3 ARM_LIST 거부 [공백] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)
+  PASS  C3 ARM_LIST 거부 [빈 문자열] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)
+  PASS  C3 ARM_LIST 거부 [ARMS 와 동시] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)
+  PASS  C3 ARM_LIST 거부 [0..N−1 접두 = ARMS 로 (이름 하나)] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)
+  PASS  C3 ARM_LIST 거부 [전부 = ARMS=8 로] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)
+  PASS  C3 ARM_LIST 거부 [유니코드 숫자] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)
+  PASS  C3 ARM_LIST 거부 [앞 0 (01)] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)
+  PASS  C4 러너 끝-끝 ARM_LIST=1,2 → rc 0 · 팔 = a1 · a2 만 (a0 없음) · 킷 둘 · 영수증 arms 2 · arm_list [1, 2] · origin 일정 8
+  PASS  C5 팔 i 의 origin = 영수증 origin 일정의 i 번째 (러너 SHIFTS 순서) — a1 · a2
+  PASS  C6 check_arm (영수증 대조) — 고른 팔 통과
+  PASS  C7 receipt_match — 목록 밖 팔 (a0 의 origin) = 거부 (같은 OUTDIR 에 섞이지 않게)
+  PASS  C8 진단 런 = 생산 봉인 없음 (ARMS ≠ 8 와 같은 길)
+  PASS  C9 receipt_digest — arm_list 는 선택 칸 (있을 때만 · 목록이 다르면 digest 다름 · 없으면 옛 본문)
+
+── D off 격자 sid 지문 ca_ext.ptfe_face.evidence.fp.sid_off
+  PASS  D1 payload_block — evidence.fp.sid_off = step3_sigma._grid_fp(sid) (off 격자 = face_alpha 의 sid 격자)
+  PASS  D2 같은 킷 · 같은 래스터 두 런 = 같은 sid_off · 접합을 켜도 같다 (래스터 불변) · 조합 런 = 접합 원장 sid 지문 · vox 다르면 다르다
+  PASS  D3 ca_ext_record_ok 거부 [sid_off 지움]
+  PASS  D3 ca_ext_record_ok 거부 [sid_off 모양 (대문자)]
+  PASS  D3 ca_ext_record_ok 거부 [sid_off ≠ 접합 원장 sid]
+
+── E CG 반복 수 — 증서 켤 때 주 · 이어 풀기 · 보조 솔브 · 끔 = 옛 키
+  PASS  E1 증서 끔 (옛 꼴) — 결과에 cg_iters 칸 없음 · CG 호출에 callback 없음 (옛 호출 그대로)
+  PASS  E2 증서 켬 — 주 솔브 반복 수 (int ≥ 1) · 증서에 iters = 주 · resolve_iters (int ≥ 0) · 수렴 (info 0)
+  PASS  E3 반복 수 = 독립 셈 (같은 행렬 · scipy cg callback)
+  PASS  E4 payload rtol — step3.cg_iters · conv_cert.iters = 같은 값 · resolve_iters (수렴했어도 남긴다)
+  PASS  E5 payload rtol LEAN 3 — 이온 솔브 반복 수 (ion_cg_iters · ion_conv_cert.iters)
+  PASS  E6 payload rtol + 집전체 — 보조 솔브 반복 수 (collector_geometric.wetted_cg_iters · bare_cg_iters · 수렴 칸 옆)
+  PASS  E7 payload rtol 없음 (옛 꼴) — 반복 수 칸 없음 (매니페스트 · step3 옛 키 그대로)
+
+── O 끈 경로 비트 대조 (--old-scripts = 기반 커밋 scripts/)
+    (--old-scripts 없음 — 건너뜀 · 커밋 증거는 그 인자로 돌린 기록)
+
+test_ca_ext_z3: 84 PASS · 0 FAIL (33.2 s)
+[nrun] wall 33.7 s · exit 0

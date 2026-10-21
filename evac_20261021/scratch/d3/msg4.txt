@@ -1,0 +1,9 @@
+Mixer D3 design v1: history banner pointing to v2
+
+One line above the title: v2 is canonical, the v1 numbers are the gen1
+density generation (Q11 is lab20261014; MXD2-07, MXD3-12), and the broken
+guarantees, definitions and data waits are ledger items MXD3-01..21.  The v1
+body is unchanged.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

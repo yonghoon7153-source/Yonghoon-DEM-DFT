@@ -1,0 +1,27 @@
+Rint 2 D: SV evidence in a D-owned module, centerline + junction refused at entry
+
+Coordinator 10-21: junction files (carbon_junction, ca_ext_cjunc, step3
+junction hook, ca_s0_census) belong to agent A; the SV counterfactual cut
+definition changes there (PRE-impl-04, Q-D); centerline + junction is
+refused at the payload and runner entry as well (PRE-impl-03 1, Q-C).
+
+- New scripts/ca_ext_svcf.py: JSON projection of the counterfactual record
+  (inf ratio = null + ratio_limit 'inf'), request check, evidence attach and
+  the validator, reading only ratio / status / flag; kind may be any
+  'counterfactual...' definition, definition-specific n_* counts are copied
+  by name, a status that carries no ratio is accepted (the chain counts it
+  as SV_UNCHECKED); chain_view() is the chain's reader.
+- ca_ext_cjunc.py back to the base except payload_prepare forwarding the
+  knob to cjunc_plan (one hunk; off = the old call, byte for byte).
+- payload: attaches the request + projection after payload_blocks (knob on
+  only); _cjunc_entry_contract refuses --ptfe-stamp centerline with
+  S2_CJUNC_REFUSED|PTFE_CENTERLINE| (P0 and P1).
+- run_contract: ca_ext_record_ok runs the SV validator after the junction
+  block validator; runner_ca_ext refuses CJUNC=1 + PTFE_STAMP=centerline
+  with RUNNER_CA_EXT|PTFE_CENTERLINE|.
+
+Tests: b6 R,P,S 256/256 (pre-fix S,P 145/151), runner N0,N2,N6,N7,N9,N10
+97/97 (pre-fix N6 56/59).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

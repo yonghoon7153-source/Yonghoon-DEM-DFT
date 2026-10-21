@@ -1,0 +1,133 @@
+
+── A face_alpha (S1) + 탄소 접합 (S2) 한 솔브 (+ P1) — 솔브 수준
+  FAIL  A1 (i) PTFE 0 → face_alpha + 접합 = 접합만  (ValueError: solve_sigma_z: face_alpha (S1 PTFE 면 개구율) 와 cjunc (S2/S3 탄소 접합) 동시 사용 거부 — 설계가 조합을 아직 정의하지 않았다 (α 를 받은 면의 접합 재배선 · P-junc 법칙과의 관계 미정 · 1저자 · Codex 결정 전))
+  FAIL  A2 (iii) 조합 솔브가 돈다 (α 계획 + 접합 계획)  (ValueError: solve_sigma_z: face_alpha (S1 PTFE 면 개구율) 와 cjunc (S2/S3 탄소 접합) 동시 사용 거부 — 설계가 조합을 아직 정의하지 않았다 (α 를 받은 면의 접합 재배선 · P-junc 법칙과의 관계 미정 · 1저자 · Codex 결정 전))
+  FAIL  A6–A8 (iv) P0 / P1 조합 솔브  (ValueError: solve_sigma_z: face_alpha (S1 PTFE 면 개구율) 와 cjunc (S2/S3 탄소 접합) 동시 사용 거부 — 설계가 조합을 아직 정의하지 않았다 (α 를 받은 면의 접합 재배선 · P-junc 법칙과의 관계 미정 · 1저자 · Codex 결정 전))
+  FAIL  A9 (v) Rayleigh  (ValueError: solve_sigma_z: face_alpha (S1 PTFE 면 개구율) 와 cjunc (S2/S3 탄소 접합) 동시 사용 거부 — 설계가 조합을 아직 정의하지 않았다 (α 를 받은 면의 접합 재배선 · P-junc 법칙과의 관계 미정 · 1저자 · Codex 결정 전))
+  FAIL  A10 (vi) 순열 · 원점 이동 불변  (ValueError: solve_sigma_z: face_alpha (S1 PTFE 면 개구율) 와 cjunc (S2/S3 탄소 접합) 동시 사용 거부 — 설계가 조합을 아직 정의하지 않았다 (α 를 받은 면의 접합 재배선 · P-junc 법칙과의 관계 미정 · 1저자 · Codex 결정 전))
+  FAIL  A11 (vii) 원장 · 소산 항등식  (ValueError: solve_sigma_z: face_alpha (S1 PTFE 면 개구율) 와 cjunc (S2/S3 탄소 접합) 동시 사용 거부 — 설계가 조합을 아직 정의하지 않았다 (α 를 받은 면의 접합 재배선 · P-junc 법칙과의 관계 미정 · 1저자 · Codex 결정 전))
+  FAIL  A12 cjunc_protocol_record — face_alpha + 접합 (P0 · P1) 받음 · off · centerline + P1 = 거부 · off · centerline + P0 받음  ([('face_alpha', 'P0', False), ('face_alpha', 'P1', False), ('off', 'P1', True), ('centerline', 'P1', True), ('off', 'P0', True), ('centerline', 'P0', True)])
+  FAIL  A13 ca_ext_request_problem — P1 요청 = face_alpha 에서 통과 · 기본 (off) 은 거부 그대로  (TypeError: ca_ext_request_problem() got an unexpected keyword argument 'ptfe_stamp')
+  FAIL  A14 runner_ca_ext — PTFE_STAMP=face_alpha + CJUNC=1 (P0 · P1) = 문제 없음 · off + P1 = REQUEST 거부  ((['RUNNER_CA_EXT|FACE_ALPHA_COMBO| PTFE_STAMP=face_alpha + CJUNC=1 — 설계가 조합을 아직 정의하지 않았다 (payload · solve_sigma_z 도 거부)'], ['RUNNER_CA_EXT|REQUEST| 값| PTFE–접합 법칙 P1 (덮인 접합 절단) 은 face_alpha 에서만 — face_alpha + 접합 조합이 아직 정의되지 않아 지금은 닿지 않는다 (centerline 은 이미 VGCF 셀을 sid 7 로 자른다 · 설계 §4-1)', 'RUNNER_CA_EXT|FACE_ALPHA_COMBO| PTFE_STAMP=face_alpha + CJUNC=1 — 설계가 조합을 아직 정의하지 않았다 (payload · solve_sigma_z 도 거부)'], ['RUNNER_CA_EXT|REQUEST| 값| PTFE–접합 법칙 P1 (덮인 접합 절단) 은 face_alpha 에서만 — face_alpha + 접합 조합이 아직 정의되지 않아 지금은 닿지 않는다 (centerline 은 이미 VGCF 셀을 sid 7 로 자른다 · 설계 §4-1)']))
+  FAIL  A15 runner_ca_ext_view — 조합 영수증 → 팔 태그 `_fa_cj…` · payload 인자 P1 · 선언 칸 P1  ({'flags': '', 'expect': '', 'tag': '', 'arm_tag': '_fa', 'vgcf_bulk': ''})
+
+── A-P payload 끝-끝 — face_alpha + 접합 (+ P1) · 두 하위 블록 · p3ca · ca_ext_record_ok · 원장 항등식
+  FAIL  AP1 payload face_alpha + 접합 (P0) + rtol = rc 0 · ca_ext 하위 블록 = ptfe_face + cjunc · 요청 칸 [cjunc] · p3ca · protocol_ok · ca_ext_record_ok · 게시 조건 (증서)  ((1, 'S2_CJUNC_REFUSED|FACE_ALPHA_COMBO| --ptfe-stamp face_alpha 와 --step3-cjunc 를 한 런에 — 설계가 조합을 아직 정의하지 않았다 (α 를 받은 면의 접합 재배선 · P-junc 법칙 관계 미정 · solve_sigma_z 도 거부 · 1저자 · Codex 결정 전)', [], None))
+  FAIL  AP2 원장 · 소산 항등식 (조합 런) — P_total = I_bot (ΔV = 1 · CG 1e-12 · 1e-8) · 몫 합 = 1 · 접합 간선 1  ({})
+  FAIL  AP3 payload P1 (face_alpha) = rc 0 · 덮인 접합 절단 1 · σ(P1) ≤ σ(P0) · ca_ext_record_ok · id ≠ P0 (protocol 이 다르다)  ((1, 'O| --ptfe-stamp face_alpha 와 --step3-cjunc 를 한 런에 — 설계가 조합을 아직 정의하지 않았다 (α 를 받은 면의 접합 재배선 · P-junc 법칙 관계 미정 · solve_sigma_z 도 거부 · 1저자 · Codex 결정 전)\nS2_CJUNC_REFUSED|P1_NEEDS_FACE_ALPHA| P1 (덮인 접합 절단) 은 face_alpha 에서만 — face_alpha + 접합이 미정의라 지금은 닿지 않는다 (centerline 은 이미 VGCF 셀을 sid 7 로 자른다 · 설계 §4-1)', {}, 0.0, 0.0))
+  PASS  AP4 payload [off + P1] = 거부 그대로 (S2_CJUNC_REFUSED|P1_NEEDS_FACE_ALPHA|)
+  PASS  AP4 payload [centerline + P1] = 거부 그대로 (S2_CJUNC_REFUSED|P1_NEEDS_FACE_ALPHA|)
+
+── B 극한 런 — 손계산 · 기록 꼴 · 러너 · payload · 검증기
+  FAIL  B1 손계산 [바닥 (R_j = ∞ · 간선 없음 · 자리 면 절단)]  (ValueError: R_j_ohm 가 없다 — 기본값 없음 (정량 런은 결과 전 선언 · 등록 R §2-1))
+  FAIL  B1 손계산 [천장 (R_j = 0 · 접합 양 끝 = 한 노드)]  (ValueError: R_j_ohm = 0.0 — 0 보다 커야 한다 (정량 · 극한 0 · ∞ = 사다리 진단 전용 · 이 배선 밖))
+  PASS  B1 손계산 [정량 R_j 1e6 (대조 · 같은 회로)] — 해 전류 = 손으로 세운 회로 (1e-12 · 직접 풀이)
+  FAIL  B2 극한 protocol 기록 꼴  (TypeError: cjunc_protocol_record() got an unexpected keyword argument 'rj_limit')
+  PASS  B3 극한 protocol 거부 — 표지 ↔ 값 모순 · 표지 없는 극한 · 모르는 표지 (대소문자 · 다른 낱말 · bool) · NaN · 음수
+  FAIL  B4 러너 CJUNC_RJ=inf · 0 → 문제 없음 · 영수증 요청 R_j_ohm null + rj_limit inf · 0.0 + zero (한 꼴)  ((["RUNNER_CA_EXT|VALUE| CJUNC_RJ='inf' (ASCII 10 진 · 유한 · 부호 없음)", 'RUNNER_CA_EXT|FACE_ALPHA_COMBO| PTFE_STAMP=face_alpha + CJUNC=1 — 설계가 조합을 아직 정의하지 않았다 (payload · solve_sigma_z 도 거부)'], ['RUNNER_CA_EXT|REQUEST| 값| R_j_ohm = 0.0 — 0 보다 커야 한다 (정량 · 극한 0 · ∞ = 사다리 진단 전용 · 이 배선 밖)', 'RUNNER_CA_EXT|FACE_ALPHA_COMBO| PTFE_STAMP=face_alpha + CJUNC=1 — 설계가 조합을 아직 정의하지 않았다 (payload · solve_sigma_z 도 거부)'], {}, {}))
+  PASS  B5 러너 극한 표기는 둘만 (`inf` 낱말 · ASCII 10 진 0) — INF · Infinity · +inf · 1e999 · nan · -0 · 공백 · ∞ = 거부
+  FAIL  B6 runner_ca_ext_view (극한)  (ValueError: '--step3-cjunc-rj' is not in list)
+  PASS  B7 ca_ext_request_problem 거부 [요청 rj_limit inf + R_j 1e6]
+  PASS  B7 ca_ext_request_problem 거부 [요청 R_j null 표지 없음]
+  PASS  B7 ca_ext_request_problem 거부 [요청 모르는 표지]
+  FAIL  B7 ca_ext_request_problem — 바닥 · 천장 요청 통과
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/z3/base/scripts/carbon_junction.py:98: RuntimeWarning: invalid value encountered in scalar multiply
+  return R0 * (1.0 - c * a)
+  FAIL  B8 바닥 (R_j = ∞) + c = 1 — 근접 instance = 축약 (∞·0 = NaN 아님) · g 유한 · 비근접 = 극한 (none_inf)  ((array([ True]), array([1]), array([nan])))
+  FAIL  B9 payload 바닥 · 천장 + rtol = rc 0 · 표지 (null + inf · 0.0 + zero · quantitative False · allow_rj_limits True) · p3ca · ca_ext_record_ok · 게시 조건 (증서)  ((2, ' SAVE_STEP4_GRID]\n                             [--temp-c TEMP_C] [--ea-ion-ev EA_ION_EV]\n                             [--allow-mixed-t-ionic] [--selftest-provenance]\n                             [--selftest-temperature]\nmpm_webapp_payload.py: error: unrecognized arguments: --step3-cjunc-rj-limit inf', 2, 'SAVE_STEP4_GRID]\n                             [--temp-c TEMP_C] [--ea-ion-ev EA_ION_EV]\n                             [--allow-mixed-t-ionic] [--selftest-provenance]\n                             [--selftest-temperature]\nmpm_webapp_payload.py: error: unrecognized arguments: --step3)
+  FAIL  B10 payload 극한 원장 — 바닥 = 간선 0 · none_inf = instance · 천장 = 간선 0 · 축약 = instance (S3 없이)  (({}, {}))
+  FAIL  B11 σ 순서 바닥 ≤ 정량 (1e6) ≤ 천장 (같은 침대 · Rayleigh) · id 셋 다 다르다  ((0.0, 0.00039942576038070005, 0.0, {None, 'p3ca-b76b9e9f0f6ffe49'}))
+  PASS  B12 payload 극한 거부 [R_j inf 표지 없이] → S2_CJUNC_REFUSED|VALUE|
+  PASS  B12 payload 극한 거부 [R_j 0 표지 없이] → S2_CJUNC_REFUSED|VALUE|
+  FAIL  B12 payload 극한 거부 [표지 inf + R_j 1e6] → S2_CJUNC_REFUSED|VALUE|  ((2, '                  [--allow-mixed-t-ionic] [--selftest-provenance]\n                             [--selftest-temperature]\nmpm_webapp_payload.py: error: unrecognized arguments: --step3-cjunc-rj-limit inf'))
+  FAIL  B12 payload 극한 거부 [표지 zero + R_j inf] → S2_CJUNC_REFUSED|VALUE|  ((2, '                 [--allow-mixed-t-ionic] [--selftest-provenance]\n                             [--selftest-temperature]\nmpm_webapp_payload.py: error: unrecognized arguments: --step3-cjunc-rj-limit zero'))
+  FAIL  B12 payload 극한 표지만 (접합 끔) → S2_CJUNC_REFUSED|FLAG_WITHOUT_CJUNC|  ((2, '                  [--allow-mixed-t-ionic] [--selftest-provenance]\n                             [--selftest-temperature]\nmpm_webapp_payload.py: error: unrecognized arguments: --step3-cjunc-rj-limit inf'))
+
+── C 러너 ARM_LIST — 팔 고르기 · 이름 · OUTDIR · 영수증 · 거부
+  FAIL  C1 설정부 — ARM_LIST=1,2 → 중단 없음 · ARMS = 2 (팔 수) · OUTDIR 에 `_arm2` + 목록 태그 `_arml1-2` · ARMS=2 와 다른 OUTDIR · 2,1 = 같은 정규 목록 (같은 OUTDIR)  (({'_rc': 0, '_log': '[p2] ★ PTFE 스탬프 규약 = off (명시)\n[p2] ★ LEAN=2 (σ_e 전용) — 이온·pore-τ·집전체기하 를 전부 끈다 (팔당 솔브 3회 → 1회)\nOUTDIR=/tmp/ca_ext_z3_6calql61/tr/_probe/prereg_v2_vox10_b048_ptsoff_lean2_rde4c56be33e8\nARMS=8\nARM_LIST=1,2\nAR_TAG=\nNG_TAG=\n', 'OUTDIR': '/tmp/ca_ext_z3_6calql61/tr/_probe/prereg_v2_vox10_b048_ptsoff_lean2_rde4c56be33e8', 'ARMS': '8', 'ARM_LIST': '1,2', 'AR_TAG': '', 'NG_TAG': ''}, '/tmp/ca_ext_z3_6calql61/tr/_probe/prereg_v2_vox10_b048_ptsoff_arm2_lean2_ra29b18da9308', '/tmp/ca_ext_z3_6calql61/tr/_probe/prereg_v2_vox10_b048_ptsoff_lean2_rde4c56be33e8'))
+  PASS  C2 끔 (ARM_LIST 없음) — ARMS 기본 8 · OUTDIR 에 목록 태그 없음
+  FAIL  C3 ARM_LIST 거부 [중복 1,1] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)  ((0, ' off (명시)\n[p2] ★ LEAN=2 (σ_e 전용) — 이온·pore-τ·집전체기하 를 전부 끈다 (팔당 솔브 3회 → 1회)\nOUTDIR=/tmp/ca_ext_z3_6calql61/tr/_probe/prereg_v2_vox10_b048_ptsoff_lean2_rde4c56be33e8\nARMS=8\nARM_LIST=1,1\nAR_TAG=\nNG_TAG=\n'))
+  FAIL  C3 ARM_LIST 거부 [범위 밖 8] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)  ((0, ' off (명시)\n[p2] ★ LEAN=2 (σ_e 전용) — 이온·pore-τ·집전체기하 를 전부 끈다 (팔당 솔브 3회 → 1회)\nOUTDIR=/tmp/ca_ext_z3_6calql61/tr/_probe/prereg_v2_vox10_b048_ptsoff_lean2_rde4c56be33e8\nARMS=8\nARM_LIST=1,8\nAR_TAG=\nNG_TAG=\n'))
+  FAIL  C3 ARM_LIST 거부 [음수] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)  ((0, 'off (명시)\n[p2] ★ LEAN=2 (σ_e 전용) — 이온·pore-τ·집전체기하 를 전부 끈다 (팔당 솔브 3회 → 1회)\nOUTDIR=/tmp/ca_ext_z3_6calql61/tr/_probe/prereg_v2_vox10_b048_ptsoff_lean2_rde4c56be33e8\nARMS=8\nARM_LIST=-1,2\nAR_TAG=\nNG_TAG=\n'))
+  FAIL  C3 ARM_LIST 거부 [빈 칸 1,,2] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)  ((0, 'off (명시)\n[p2] ★ LEAN=2 (σ_e 전용) — 이온·pore-τ·집전체기하 를 전부 끈다 (팔당 솔브 3회 → 1회)\nOUTDIR=/tmp/ca_ext_z3_6calql61/tr/_probe/prereg_v2_vox10_b048_ptsoff_lean2_rde4c56be33e8\nARMS=8\nARM_LIST=1,,2\nAR_TAG=\nNG_TAG=\n'))
+  FAIL  C3 ARM_LIST 거부 [글자] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)  ((0, ' = off (명시)\n[p2] ★ LEAN=2 (σ_e 전용) — 이온·pore-τ·집전체기하 를 전부 끈다 (팔당 솔브 3회 → 1회)\nOUTDIR=/tmp/ca_ext_z3_6calql61/tr/_probe/prereg_v2_vox10_b048_ptsoff_lean2_rde4c56be33e8\nARMS=8\nARM_LIST=a\nAR_TAG=\nNG_TAG=\n'))
+  FAIL  C3 ARM_LIST 거부 [공백] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)  ((0, 'off (명시)\n[p2] ★ LEAN=2 (σ_e 전용) — 이온·pore-τ·집전체기하 를 전부 끈다 (팔당 솔브 3회 → 1회)\nOUTDIR=/tmp/ca_ext_z3_6calql61/tr/_probe/prereg_v2_vox10_b048_ptsoff_lean2_rde4c56be33e8\nARMS=8\nARM_LIST=1, 2\nAR_TAG=\nNG_TAG=\n'))
+  FAIL  C3 ARM_LIST 거부 [빈 문자열] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)  ((0, '약 = off (명시)\n[p2] ★ LEAN=2 (σ_e 전용) — 이온·pore-τ·집전체기하 를 전부 끈다 (팔당 솔브 3회 → 1회)\nOUTDIR=/tmp/ca_ext_z3_6calql61/tr/_probe/prereg_v2_vox10_b048_ptsoff_lean2_rde4c56be33e8\nARMS=8\nARM_LIST=\nAR_TAG=\nNG_TAG=\n'))
+  FAIL  C3 ARM_LIST 거부 [ARMS 와 동시] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)  ((0, '[p2] ★ LEAN=2 (σ_e 전용) — 이온·pore-τ·집전체기하 를 전부 끈다 (팔당 솔브 3회 → 1회)\nOUTDIR=/tmp/ca_ext_z3_6calql61/tr/_probe/prereg_v2_vox10_b048_ptsoff_arm3_lean2_rc031167dfa8b\nARMS=3\nARM_LIST=1,2\nAR_TAG=_arm3\nNG_TAG=\n'))
+  FAIL  C3 ARM_LIST 거부 [0..N−1 접두 = ARMS 로 (이름 하나)] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)  ((0, ' off (명시)\n[p2] ★ LEAN=2 (σ_e 전용) — 이온·pore-τ·집전체기하 를 전부 끈다 (팔당 솔브 3회 → 1회)\nOUTDIR=/tmp/ca_ext_z3_6calql61/tr/_probe/prereg_v2_vox10_b048_ptsoff_lean2_rde4c56be33e8\nARMS=8\nARM_LIST=0,1\nAR_TAG=\nNG_TAG=\n'))
+  FAIL  C3 ARM_LIST 거부 [전부 = ARMS=8 로] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)  ((0, '2] ★ LEAN=2 (σ_e 전용) — 이온·pore-τ·집전체기하 를 전부 끈다 (팔당 솔브 3회 → 1회)\nOUTDIR=/tmp/ca_ext_z3_6calql61/tr/_probe/prereg_v2_vox10_b048_ptsoff_lean2_rde4c56be33e8\nARMS=8\nARM_LIST=0,1,2,3,4,5,6,7\nAR_TAG=\nNG_TAG=\n'))
+  FAIL  C3 ARM_LIST 거부 [유니코드 숫자] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)  ((0, ' = off (명시)\n[p2] ★ LEAN=2 (σ_e 전용) — 이온·pore-τ·집전체기하 를 전부 끈다 (팔당 솔브 3회 → 1회)\nOUTDIR=/tmp/ca_ext_z3_6calql61/tr/_probe/prereg_v2_vox10_b048_ptsoff_lean2_rde4c56be33e8\nARMS=8\nARM_LIST=١\nAR_TAG=\nNG_TAG=\n'))
+  FAIL  C3 ARM_LIST 거부 [앞 0 (01)] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)  ((0, 'off (명시)\n[p2] ★ LEAN=2 (σ_e 전용) — 이온·pore-τ·집전체기하 를 전부 끈다 (팔당 솔브 3회 → 1회)\nOUTDIR=/tmp/ca_ext_z3_6calql61/tr/_probe/prereg_v2_vox10_b048_ptsoff_lean2_rde4c56be33e8\nARMS=8\nARM_LIST=01,2\nAR_TAG=\nNG_TAG=\n'))
+  FAIL  C4 러너 끝-끝 ARM_LIST=1,2 → rc 0 · 팔 = a1 · a2 만 (a0 없음) · 킷 둘 · 영수증 arms 2 · arm_list [1, 2] · origin 일정 8  ((2, [], 8, None, '[p2] ★ PTFE 스탬프 규약 = off (명시)\n[p2] ★ LEAN=2 (σ_e 전용) — 이온·pore-τ·집전체기하 를 전부 끈다 (팔당 솔브 3회 → 1회)\n[p2] 런 영수증 → /tmp/ca_ext_z3_6calql61/tr/c_al/prereg_v2_vox10_b048_ptsoff_lean2_rde4c56be33e8/run_receipt.json\nABORT — 사전등록 파일이 없다: /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/z3/base/scripts/../docs/reviews/sdcp_gain_prereg_v2_20260816.md\n'))
+  FAIL  C5 팔 i 의 origin = 영수증 origin 일정의 i 번째 (러너 SHIFTS 순서) — a1 · a2  ([])
+  FAIL  C6 check_arm (영수증 대조) — 고른 팔 통과  (파일 없음)
+  FAIL  C: 실행  (FileNotFoundError: [Errno 2] No such file or directory: '/tmp/ca_ext_z3_6calql61/tr/c_al/prereg_v2_vox10_b048_ptsoff_lean2_rde4c56be33e8/p2_SBE_a1.json' @ d = json.load(open(path, encoding='utf-8')))
+
+── D off 격자 sid 지문 ca_ext.ptfe_face.evidence.fp.sid_off
+  FAIL  D1 payload_block — evidence.fp.sid_off = step3_sigma._grid_fp(sid) (off 격자 = face_alpha 의 sid 격자)  (None)
+  FAIL  D2 같은 킷 · 같은 래스터 두 런 = 같은 sid_off · 접합을 켜도 같다 (래스터 불변) · 조합 런 = 접합 원장 sid 지문 · vox 다르면 다르다  ((None, None, None, None, None, '.9 MB)  porosity 78.6% · SE/solid 16.6% · thickness 23.5µm · coverage(@0.13/0.26µm) AM_P plastic 0/0% · 12 AM · 0 SE tris (n_vox=24)  [voxel-preview por/SE/cov 79/17/0% vary with n_vox — not reported]'))
+
+── E CG 반복 수 — 증서 켤 때 주 · 이어 풀기 · 보조 솔브 · 끔 = 옛 키
+  PASS  E1 증서 끔 (옛 꼴) — 결과에 cg_iters 칸 없음 · CG 호출에 callback 없음 (옛 호출 그대로)
+  FAIL  E2 증서 켬 — 주 솔브 반복 수 (int ≥ 1) · 증서에 iters = 주 · resolve_iters (int ≥ 0) · 수렴 (info 0)  ((None, {'iters': None, 'resolve_iters': None}))
+  FAIL  E3 반복 수 = 독립 셈 (같은 행렬 · scipy cg callback)  ((None, 32))
+  FAIL  E4 payload rtol — step3.cg_iters · conv_cert.iters = 같은 값 · resolve_iters (수렴했어도 남긴다)  ((0, None, {'version': 'conv-cert-v1', 'rtol_used': 1e-12, 'rtol_max': 1e-12, 'eps_I': 0.0001, 'resolve_rtol': 1e-14, 'resolve_rtol_floor': 1e-14, 'resolve_tol': 0.0001, 'info': 0, 'resid': 6.569125251391981e-13, 'I_bot': 4.199104240269875, 'I_top': 4.199104240327946, 'imbalance': 1.3829349812259337e-11, 'sigma': 0.03954460775836761, 'sigma_resolve': 0.03954460775836827, 'dsigma_rel': 1.6845123836994957e-14, 'resolve_info': 0, 'resolve_I_bot': 4.199104240269946, 'resolve_I_top': 4.199104240270067, 'pass_a': True, 'pass_b': True, 'pass_c': True, 'ok': True}))
+  FAIL  E5 payload rtol LEAN 3 — 이온 솔브 반복 수 (ion_cg_iters · ion_conv_cert.iters)  ((0, None))
+  FAIL  E6 payload rtol + 집전체 — 보조 솔브 반복 수 (collector_geometric.wetted_cg_iters · bare_cg_iters · 수렴 칸 옆)  ((0, {'wetted_cg_iters': None, 'bare_cg_iters': None}, 'PTFE D=7.73 nn_med=11.938µm(×2.62)  conductive_all D=6.69 nn_med=9.862µm(×2.01)\nsaved e_rtc.json  (0.9 MB)  porosity 78.6% · SE/solid 16.6% · thickness 23.5µm · coverage(@0.13/0.26µm) AM_P plastic 0/0% · 12 AM · 0 SE tris (n_vox=24)  [voxel-preview por/SE/cov 79/17/0% vary with n_vox — not reported]'))
+  PASS  E7 payload rtol 없음 (옛 꼴) — 반복 수 칸 없음 (매니페스트 · step3 옛 키 그대로)
+
+── O 끈 경로 비트 대조 (--old-scripts = 기반 커밋 scripts/)
+    (--old-scripts 없음 — 건너뜀 · 커밋 증거는 그 인자로 돌린 기록)
+
+test_ca_ext_z3: 13 PASS · 50 FAIL (20.5 s)
+  - A1 (i) PTFE 0 → face_alpha + 접합 = 접합만
+  - A2 (iii) 조합 솔브가 돈다 (α 계획 + 접합 계획)
+  - A6–A8 (iv) P0 / P1 조합 솔브
+  - A9 (v) Rayleigh
+  - A10 (vi) 순열 · 원점 이동 불변
+  - A11 (vii) 원장 · 소산 항등식
+  - A12 cjunc_protocol_record — face_alpha + 접합 (P0 · P1) 받음 · off · centerline + P1 = 거부 · off · centerline + P0 받음
+  - A13 ca_ext_request_problem — P1 요청 = face_alpha 에서 통과 · 기본 (off) 은 거부 그대로
+  - A14 runner_ca_ext — PTFE_STAMP=face_alpha + CJUNC=1 (P0 · P1) = 문제 없음 · off + P1 = REQUEST 거부
+  - A15 runner_ca_ext_view — 조합 영수증 → 팔 태그 `_fa_cj…` · payload 인자 P1 · 선언 칸 P1
+  - AP1 payload face_alpha + 접합 (P0) + rtol = rc 0 · ca_ext 하위 블록 = ptfe_face + cjunc · 요청 칸 [cjunc] · p3ca · protocol_ok · ca_ext_record_ok · 게시 조건 (증서)
+  - AP2 원장 · 소산 항등식 (조합 런) — P_total = I_bot (ΔV = 1 · CG 1e-12 · 1e-8) · 몫 합 = 1 · 접합 간선 1
+  - AP3 payload P1 (face_alpha) = rc 0 · 덮인 접합 절단 1 · σ(P1) ≤ σ(P0) · ca_ext_record_ok · id ≠ P0 (protocol 이 다르다)
+  - B1 손계산 [바닥 (R_j = ∞ · 간선 없음 · 자리 면 절단)]
+  - B1 손계산 [천장 (R_j = 0 · 접합 양 끝 = 한 노드)]
+  - B2 극한 protocol 기록 꼴
+  - B4 러너 CJUNC_RJ=inf · 0 → 문제 없음 · 영수증 요청 R_j_ohm null + rj_limit inf · 0.0 + zero (한 꼴)
+  - B6 runner_ca_ext_view (극한)
+  - B7 ca_ext_request_problem — 바닥 · 천장 요청 통과
+  - B8 바닥 (R_j = ∞) + c = 1 — 근접 instance = 축약 (∞·0 = NaN 아님) · g 유한 · 비근접 = 극한 (none_inf)
+  - B9 payload 바닥 · 천장 + rtol = rc 0 · 표지 (null + inf · 0.0 + zero · quantitative False · allow_rj_limits True) · p3ca · ca_ext_record_ok · 게시 조건 (증서)
+  - B10 payload 극한 원장 — 바닥 = 간선 0 · none_inf = instance · 천장 = 간선 0 · 축약 = instance (S3 없이)
+  - B11 σ 순서 바닥 ≤ 정량 (1e6) ≤ 천장 (같은 침대 · Rayleigh) · id 셋 다 다르다
+  - B12 payload 극한 거부 [표지 inf + R_j 1e6] → S2_CJUNC_REFUSED|VALUE|
+  - B12 payload 극한 거부 [표지 zero + R_j inf] → S2_CJUNC_REFUSED|VALUE|
+  - B12 payload 극한 표지만 (접합 끔) → S2_CJUNC_REFUSED|FLAG_WITHOUT_CJUNC|
+  - C1 설정부 — ARM_LIST=1,2 → 중단 없음 · ARMS = 2 (팔 수) · OUTDIR 에 `_arm2` + 목록 태그 `_arml1-2` · ARMS=2 와 다른 OUTDIR · 2,1 = 같은 정규 목록 (같은 OUTDIR)
+  - C3 ARM_LIST 거부 [중복 1,1] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)
+  - C3 ARM_LIST 거부 [범위 밖 8] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)
+  - C3 ARM_LIST 거부 [음수] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)
+  - C3 ARM_LIST 거부 [빈 칸 1,,2] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)
+  - C3 ARM_LIST 거부 [글자] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)
+  - C3 ARM_LIST 거부 [공백] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)
+  - C3 ARM_LIST 거부 [빈 문자열] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)
+  - C3 ARM_LIST 거부 [ARMS 와 동시] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)
+  - C3 ARM_LIST 거부 [0..N−1 접두 = ARMS 로 (이름 하나)] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)
+  - C3 ARM_LIST 거부 [전부 = ARMS=8 로] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)
+  - C3 ARM_LIST 거부 [유니코드 숫자] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)
+  - C3 ARM_LIST 거부 [앞 0 (01)] → 설정부 중단 (rc ≠ 0 · 디렉터리 만들기 전)
+  - C4 러너 끝-끝 ARM_LIST=1,2 → rc 0 · 팔 = a1 · a2 만 (a0 없음) · 킷 둘 · 영수증 arms 2 · arm_list [1, 2] · origin 일정 8
+  - C5 팔 i 의 origin = 영수증 origin 일정의 i 번째 (러너 SHIFTS 순서) — a1 · a2
+  - C6 check_arm (영수증 대조) — 고른 팔 통과
+  - C: 실행
+  - D1 payload_block — evidence.fp.sid_off = step3_sigma._grid_fp(sid) (off 격자 = face_alpha 의 sid 격자)
+  - D2 같은 킷 · 같은 래스터 두 런 = 같은 sid_off · 접합을 켜도 같다 (래스터 불변) · 조합 런 = 접합 원장 sid 지문 · vox 다르면 다르다
+  - E2 증서 켬 — 주 솔브 반복 수 (int ≥ 1) · 증서에 iters = 주 · resolve_iters (int ≥ 0) · 수렴 (info 0)
+  - E3 반복 수 = 독립 셈 (같은 행렬 · scipy cg callback)
+  - E4 payload rtol — step3.cg_iters · conv_cert.iters = 같은 값 · resolve_iters (수렴했어도 남긴다)
+  - E5 payload rtol LEAN 3 — 이온 솔브 반복 수 (ion_cg_iters · ion_conv_cert.iters)
+  - E6 payload rtol + 집전체 — 보조 솔브 반복 수 (collector_geometric.wetted_cg_iters · bare_cg_iters · 수렴 칸 옆)
+rc=1 seconds=21

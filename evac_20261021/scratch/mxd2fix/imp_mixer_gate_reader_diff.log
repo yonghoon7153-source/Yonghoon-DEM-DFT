@@ -1,0 +1,19 @@
+  ✓ smoke_normal: 진짜 증서 → 관문 0 · 판독기 25/25 — got {"rc": 0, "complete": true, "tech_smoke": [], "expected": 25, "present": 25}
+  ✓ smoke_after_duplicate: ★ bin 0 안 같은 step (400) 복제 → 관문 1 · 판독기 24/25 complete=false — got {"rc": 1, "complete": false, "present": 24}
+  ✓ smoke_after_offgrid: ★ bin 0 안 격자 밖 step 410 → 관문 1 · 판독기 25/25 인데 tech_smoke 있음 — got {"rc": 1, "complete": true, "present": 25, "has_tech": true}
+  ✓ smoke_after_e0_duplicate: ★ E0 t₀ 덤프 둘 → 관문 1 · 판독기 거부 (t₀ 유일하지 않음) — got {"rc": 1, "refused": true}
+  ✓ smoke_after_bin1_duplicate: bin 1 복제 → 스모크 밖 · 관문 0 · 판독기 complete — got {"rc": 0, "complete": true, "tech_smoke": [], "present": 25}
+  ✓ smoke_with_later_bin_additions: 증서가 bin 0 까지만 본 뒤 bin 1+ 프레임이 생겨도 관문 0 — got {"rc": 0}
+  ✓ opaque_allowlisted_certificate: (기록) Q5 허용목록 (run · provenance · plan · t0_step · smoke.complete/tech_smoke/qc_repr.pass) 만으로 관문 0 — got {"rc": 0}
+  ✓ tampered_certificate_narrows_bin0: (기록 · 신뢰 경계) 증서 plan.steps_per_rev 를 1.0 으로 손대면 복제가 창 밖 → 관문 0 — 맹검 투영기는 이 필드를 손대면 안 된다 — got {"rc": 0}
+  ✓ fractional_smoke_normal: 1000.25 step/rev → bin 0 = 26 장 · 관문 0 — got {"rc": 0, "expected": 26}
+  ✓ fractional_duplicate_1200: ★ step 1200 복제 (bin 0 마지막) → 관문 1 · 판독기 complete=False — got {"rc": 1, "complete": false}
+  ✓ fractional_duplicate_1240: ★ step 1240 복제 (첫 bin 1) → 관문 0 · 판독기 complete=True — got {"rc": 0, "complete": true}
+  ✓ mutation_bin_epsilon_detected: ★ 관문 bin 식을 epsilon 0.5 로 변이 → 같은 복제 (1200) 가 rc 0 (등록 1 과 다름) = 이 시험이 갈라짐을 잡는다 — got {"rc_mutated": 0}
+  ✓ interim_bin3_normal: 1000.25 step/rev · bin 3 = 3240 … 4200 — 사전조건 통과 · bin 3 판독 완전 · 전체 판독기 bin 3 25/25 · 같은 M — got {"pre_ok": true, "stats_complete": true, "reader_complete": true, "same_M": true}
+  ✓ interim_duplicate_4200: ★ step 4200 복제 (bin 3 마지막) → 사전조건 · bin 3 판독 · 전체 판독기 모두 불완전 — got {"pre_ok": false, "stats_complete": false, "reader_complete": false}
+  ✓ interim_duplicate_4240: ★ step 4240 복제 (첫 bin 4) → 사전조건 · bin 3 판독 · 전체 판독기 모두 통과 — got {"pre_ok": true, "stats_complete": true, "reader_complete": true, "same_M": true}
+  ✓ interim_missing_4200: ★ bin 3 마지막 계획 덤프 없음 (= 아직 4 바퀴 전) → 셋 다 불완전 — got {"pre_ok": false, "stats_complete": false, "reader_complete": false}
+  ✓ mutation_interim_bin_epsilon_detected: ★ bin_of 를 epsilon 0.5 로 변이 → 사전조건은 여전히 통과하지만 bin 3 판독이 전체 판독기의 bin 3 (따로 쓴 식) 과 갈라진다 = 이 시험이 잡는다 — got {"same_M": false, "pre_ok": true}
+
+✓ 전부 통과 — 관문 rc ↔ 판독기 결과가 등록된 표 (Codex 6 차 §3) 대로 짝을 이룬다.  ⚠ 합성 폴더의 시험이다 — 실제 런의 스모크는 사람이 §8 ①–④ 를 확인한다

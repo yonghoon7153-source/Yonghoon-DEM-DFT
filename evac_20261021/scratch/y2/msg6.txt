@@ -1,0 +1,16 @@
+Rint 2 B6 webapp: cjunc and sdcp_mod labels on the MPM lab list
+
+webapp/templates/mpm_lab.html (outside the sealed files; both rows, after the face_alpha chip, values read from the
+payload manifest only):
+- S2 chip: ca_ext.cjunc.evidence.label (producer constant, no copy) . R_j (protocol) Ohm . P0/P1 . generation prefix
+  of physics_protocol_id; warning when a cjunc block sits under a non-p3ca id.
+- S3 chip: ca_ext.sdcp_mod.evidence.label . c (protocol); "SDCP proximity 0 (no-op by construction)" when
+  s3_discriminating is False.
+- Warning when ca_ext_requested lists cjunc but the block is missing (unknown:ca_ext, refused at publish).
+- Deferred (sealed): the build_meta convention chip in webapp/mpm_lab_register.py; the group/compare generation-mix
+  warning (compare popup lives in static/js/viewer3d.js, outside this change).
+
+webapp/test_ca_ext_labels.py: pre-fix 13/25 -> 25/25 (Jinja parse W5, Jinja W9 and node W10 renders).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

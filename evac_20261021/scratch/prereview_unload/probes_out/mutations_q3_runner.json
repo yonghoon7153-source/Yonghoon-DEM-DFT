@@ -1,0 +1,45 @@
+{
+ "Q3_reread_disabled": {
+  "file": "ul_reader.py",
+  "occurrences": 1,
+  "tests": {
+   "ul_reader": {
+    "rc": 1,
+    "n_ok": 175,
+    "n_fail": 7,
+    "fails": [
+     "R36 Q3 판정 JSON (PASS · 검사 19 참) 그대로 · GA 화면 끝에 ERROR 덧붙임 (Codex raw_ga_error_cached_pass) → 승인된 판독기로 다시 읽으면 FAIL · 검사 ≠ JSON → 사전 점검 거부 (사유 ",
+     "R36 Q3 판정 JSON (PASS · 검사 19 참) 그대로 · GB 첫 판 mesh z → 99 (raw_gb_mesh_wrong_cached_pass) → 승인된 판독기로 다시 읽으면 FAIL · 검사 ≠ JSON → 사전 점검 거부 (사유 ·",
+     "R36 Q3 판정 JSON (PASS · 검사 19 참) 그대로 · GB 화면 screen.out 지움 (raw_gb_screen_missing_cached_pass) → 승인된 판독기로 다시 읽으면 FAIL · 검사 ≠ JSON → 사전 점검 거부 ",
+     "R36 Q3 판정 JSON (PASS · 검사 19 참) 그대로 · GB 마지막 상태 파일 값 0 (raw_gb_state_wrong_cached_pass) → 승인된 판독기로 다시 읽으면 FAIL · 검사 ≠ JSON → 사전 점검 거부 (사유 · ",
+     "R36 Q3 그 런 kit 사본 판독기 고침 + kit SHA256SUMS · run_manifest sums_sha256 를 맞춤 (Codex different_reader_runner_seal — 옛 판 = 허용) → 승인된 판독기가 아니다 = 재",
+     "R36 Q3 그 런 kit 사본 표 (history_params.json) 고침 + 봉인 맞춤 → 승인된 판독기가 아니다 = 재판독하지 않고 사전 점검 거부 (사유)  —",
+     "R36 Q3 그 런 kit 사본에 판독기 없음 → 승인된 판독기가 아니다 = 재판독하지 않고 사전 점검 거부 (사유)  —"
+    ],
+    "last": [
+     "selftest: FAIL (7 실패)"
+    ]
+   },
+   "ul_runner_test": {
+    "rc": 1,
+    "n_ok": 37,
+    "n_fail": 1,
+    "fails": [
+     "M25 Q3 문법 판정 JSON (PASS) 그대로 · 그 런 GA 화면 끝에 ERROR 덧붙임 (Codex raw_ga_error_cached_pass) → 사전 점검이 원자료 재판독에서 거부 · LIGGGHTS · mpirun 호출 0 · RJ 폴"
+    ],
+    "last": [
+     "selftest: FAIL (1 실패)"
+    ]
+   }
+  },
+  "must_fail_hit": {
+   "R36 Q3 판정 JSON": true,
+   "R36 Q3 그 런 kit": true,
+   "M25": true
+  },
+  "must_pass_ok": {
+   "R32": true
+  },
+  "killed": true
+ }
+}

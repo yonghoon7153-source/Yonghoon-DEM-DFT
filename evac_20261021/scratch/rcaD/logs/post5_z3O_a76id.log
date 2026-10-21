@@ -1,0 +1,16 @@
+
+── O 끈 경로 비트 대조 (--old-scripts = 기반 커밋 scripts/)
+  PASS  O1 (ii) face_alpha 만 (접합 끔) — 기반 코드 ↔ 새 코드 σ · n_dof · cg_info · resid · face_alpha 기록 비트 같음
+  PASS  O2 [off LEAN2] 새 기록 칸 없음 (반복 수 · sid_off 는 켠 노브에서만)
+  PASS  O2 payload [off LEAN2] — 기반 ↔ 새: 차이가 허용 목록 (경우 표지 끔) 안 · --expect-identical = 차이 0
+  PASS  O2 [centerline LEAN2] 새 기록 칸 없음 (반복 수 · sid_off 는 켠 노브에서만)
+  PASS  O2 payload [centerline LEAN2] — 기반 ↔ 새: 차이가 허용 목록 (경우 표지 끔) 안 · --expect-identical = 차이 0
+  PASS  O2 [off LEAN3] 새 기록 칸 없음 (반복 수 · sid_off 는 켠 노브에서만)
+  PASS  O2 payload [off LEAN3] — 기반 ↔ 새: 차이가 허용 목록 (경우 표지 끔) 안 · --expect-identical = 차이 0
+  PASS  O2 [off LEAN2 + 접합 (정량)] 새 기록 칸 없음 (반복 수 · sid_off 는 켠 노브에서만)
+  PASS  O2 payload [off LEAN2 + 접합 (정량)] — 기반 ↔ 새: 차이가 허용 목록 (경우 표지 ['cjunc']) 안 · --expect-identical = 차이 0
+  PASS  O2 payload [off LEAN2 + rtol] — 기반 ↔ 새: 차이가 허용 목록 (경우 표지 ['rtol']) 안 · --expect-identical = 차이 0
+  PASS  O2 payload [face_alpha LEAN2 + rtol] — 기반 ↔ 새: 차이가 허용 목록 (경우 표지 ['face_alpha', 'rtol']) 안 · --expect-identical = 차이 0
+
+test_ca_ext_z3: 11 PASS · 0 FAIL (17.1 s)
+rc=0 seconds=17

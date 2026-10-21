@@ -1,0 +1,31 @@
+══ 사전 점검 — ROOT /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_lhs214/p13_out/netsupp20_x
+  CPU 4 (쓸 수 있는 4) · 레인 20 · 스레드/레인 1 (OMP_NUM_THREADS=1, MKL_NUM_THREADS=1, OPENBLAS_NUM_THREADS=1, NUMEXPR_NUM_THREADS=1, VECLIB_MAXIMUM_THREADS=1)
+  메모리 MemTotal 15.72 GB · MemAvailable 13.98 GB · Swap 0.0/0.0 GB
+  메모리 예산 12.0 GB · 실측 바닥 --min-free-gb 1.0 · 큐 앞 20 건 추정 합 21.69 GB · 가장 큰 침대 추정 2.90 GB  (⚠ 케이스 최대 메모리는 아직 모른다 — real_14 549 MB @ 106,563 접촉에서 잡은 추정 · 시범 · 본 실행의 worker.json 실측으로 고칠 것)
+  디스크 여유 4.27 GB · 결과 추정 2.78 GB
+  시간 추정 (컨테이너 real_14 기준 · 거칠다): 직렬 0.83 h · 이 레인 수 0.21 h — 케이스별 실측 초는 progress.tsv
+  코드 7f99be67c (worktree-agent-a47d0294c3c4038d6) dirty=False · 봉인 지문 code_fp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb (CODE_FILES 32)
+  network lock = per-case  (per-case = 케이스마다 TMPDIR — 망 단계도 동시에 · shared = 웹앱처럼 하나씩)
+  코호트 lhss: 수확 20 건 (선택 20) · /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a47d0294c3c4038d6/docs/data/lhss_descriptors_cov_1e09f661d · 코호트 /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a47d0294c3c4038d6/docs/data/lhss_descriptors_cov_1e09f661d/_cohort.tsv
+  원자료 · 메시 문제 60 건
+  기대 망 세대 (expected_network_generation — 이 체크아웃의 봉인 코드에서 유도): 'g2' · 세대 계약 문제 0 · 모드 ['hertz', 'physics', 'hertz_h12']
+  전이 의존 닫힘 30 모듈 ⊆ 봉인 CODE_FILES 32 — ✓
+  지연 import 분류 — 봉인 파일의 함수 안 리포 import 92 · 분류 밖 0 — ✓
+  fork · 프로세스 풀 API (봉인 경로 — 관측 영수증 밖 · G2RR4-02) 0 줄 — ✓
+  입력 지문 (ID · 코호트 · 원자료 sha256 = 수확 JSON raw) — 케이스 20 · ids_sha256 991cf1150b183f64bc69926a8b3e7c05453ec47e13b89ba3a6ad2fd2c981c694 · raw_sha256_table_sha256 a7aaa3c8c7683f1835a096acb83ecdb055eaf5f129221f7067c5f34462807d0e · 원자료 sha 결손 0
+  INPUT_DIGEST_JSON {"cohort_tsv_sha256":{"lhss":"69d3f913072288b1d6b8ca8a14e43b0bc8f80e8836a8f79a9b26b2d8ed6dcaf7"},"ids_sha256":"991cf1150b183f64bc69926a8b3e7c05453ec47e13b89ba3a6ad2fd2c981c694","missing_raw_sha":[],"n":20,"raw_sha256_table_sha256":"a7aaa3c8c7683f1835a096acb83ecdb055eaf5f129221f7067c5f34462807d0e"}
+  ⚠ Codex 세대 2 재검증 2 (10-07) = HOLD — 새 194 생산 · v1.3 인계는 Codex GO · 1저자 발사 승인 뒤 (등록 docs/reviews/lhs_network_batch_registration_20261007_g2.md).  이 실행기는 그 판정을 대신하지 않는다 — 어느 코드 · 세대로 돌았는지는 manifest.json 이 증명한다.
+  ⚠ 레인 20 > 쓸 수 있는 CPU 4 — 레인당 1 코어가 아니다 (과다 구독)
+  ⚠ 처음 20 건 (큐 앞 = 가장 큰 침대) 의 메모리 추정 합 21.7 GB > MemAvailable 13.98 GB — 예산 관문이 동시 수를 줄인다 (추정은 real_14 기준 · WSL 시범으로 고칠 것)
+  ⛔ 원자료 · 메시 문제 60 건 (예: [('lhss_002', 'atom 파일 없음: /home/yonghoon71/lhss_local/lhss_002/post_lhss_002/atom_2790000.liggghts'), ('lhss_002', 'contact 파일 없음: /home/yonghoon71/lhss_local/lhss_002/post_lhss_002/contact_2790000.liggghts'), ('lhss_002', 'deck 파일 없음: /home/yonghoon71/lhss_local/lhss_002/input_lhss_002.liggghts')]) — 경로 치환 (--root-from/--root-to) 확인 · 그래도 돌리려면 --allow-missing-raw (그 케이스는 배치가 REFUSED 로 남긴다)
+══ 계획 — 20 건 · 순서 cost (접촉 수 큰 순 · 같으면 이름) · 레인 20
+    lhss_002 (lhss) 접촉  625837 · 추정 2966 MB · 438 s
+    lhss_004 (lhss) 접촉  616291 · 추정 2923 MB · 431 s
+    lhss_010 (lhss) 접촉  562568 · 추정 2682 MB · 394 s
+    lhss_020 (lhss) 접촉  474851 · 추정 2287 MB · 332 s
+    lhss_014 (lhss) 접촉  406231 · 추정 1978 MB · 284 s
+    lhss_018 (lhss) 접촉   33007 · 추정 298 MB · 23 s
+    lhss_015 (lhss) 접촉   15027 · 추정 218 MB · 10 s
+  케이스 명령 예: /usr/local/bin/python3 /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a47d0294c3c4038d6/scripts/lhs_webapp_batch.py --stop-after network --case lhss_002 --harvest-dir /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a47d0294c3c4038d6/docs/data/lhss_descriptors_cov_1e09f661d --cohort /home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a47d0294c3c4038d6/docs/data/lhss_descriptors_cov_1e09f661d/_cohort.tsv --work /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_lhs214/p13_out/netsupp20_x/cases/lhss_002/work --out-dir /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_lhs214/p13_out/netsupp20_x/cases/lhss_002/out
+  cwd = 케이스 폴더 · env + {'OMP_NUM_THREADS': '1', 'MKL_NUM_THREADS': '1', 'OPENBLAS_NUM_THREADS': '1', 'NUMEXPR_NUM_THREADS': '1', 'VECLIB_MAXIMUM_THREADS': '1'} · PYTHONDONTWRITEBYTECODE=1 · TMPDIR = <케이스>/tmp
+⛔ 사전 점검 중단 — 위 ⛔ 를 해결할 것 (아무것도 띄우지 않았다)

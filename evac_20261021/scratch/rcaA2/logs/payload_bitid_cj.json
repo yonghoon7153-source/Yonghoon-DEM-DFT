@@ -1,0 +1,47 @@
+[
+ {
+  "arm": "off LEAN2 + junction (quantitative) [ON — expected to differ]",
+  "rc": [
+   0,
+   0
+  ],
+  "manifest_same": false,
+  "step3_same": true,
+  "n_manifest_keys": 66,
+  "n_step3_keys": 15,
+  "sigma_e": [
+   0.000436958437355709,
+   0.000436958437355709
+  ],
+  "diff_manifest": [
+   "manifest.ca_ext.cjunc.evidence.census.n_bridging_components (new only)",
+   "manifest.ca_ext.cjunc.evidence.census.n_closed_paths_joined (new only)",
+   "manifest.ca_ext.cjunc.evidence.census.n_instances_same_fid_pieces (new only)",
+   "manifest.ca_ext.cjunc.evidence.census.n_piece_cell_meets (new only)",
+   "manifest.ca_ext.cjunc.evidence.census.n_ring_pieces (new only)",
+   "manifest.ca_ext.cjunc.evidence.census.n_sdcp_components_touching (new only)",
+   "manifest.ca_ext.cjunc.evidence.census.n_seam_alias (new only)",
+   "manifest.ca_ext.cjunc.evidence.census.n_self_revisits_path_broken (new only)",
+   "manifest.ca_ext.cjunc.evidence.census.n_sv_faces_cut_rows (new only)",
+   "manifest.ca_ext.cjunc.evidence.census.n_sv_faces_kept_self (new only)",
+   "manifest.ca_ext.cjunc.evidence.census.n_unsplit_bridging_components (new only)",
+   "manifest.ca_ext.cjunc.evidence.census.piece_rule (new only)",
+   "manifest.ca_ext.cjunc.evidence.census.sv_cf_rule (new only)",
+   "manifest.ca_ext.cjunc.evidence.fp.centreline: \"f41d880ef8f2dcc4fe8f35be8b86cce8\" -> \"088872acb8aaa363569bc971c7d45673\"",
+   "manifest.ca_ext.cjunc.evidence.fp.membership: \"a7b78c00070533e5bfcc939d0d5b9cdd\" -> \"f51e28afa0d1a278f4193fb9046cd8e8\"",
+   "manifest.ca_ext.cjunc.evidence.fp.plan_rows: \"90f32893d2189408c17f30d76497da1b\" -> \"69777bb5ac5d8ad6bada40fdfe505402\"",
+   "manifest.ca_ext.cjunc.evidence.fp.registry: \"3fcea39d2242b52933ddedffdadc0a8b\" -> \"5589b3f53c3c2ef8585f079103071555\"",
+   "manifest.ca_ext.cjunc.evidence.qualifiers: [\"R_j = \\ubaa8\\ud615 \\ub0b4\\ubd80 \\ubcf4\\uc815\\uac12 (\\uc7ac\\ub8cc\\uac12 \\uc544\\ub2d8 \\u00 -> [\"R_j = \\ubaa8\\ud615 \\ub0b4\\ubd80 \\ubcf4\\uc815\\uac12 (\\uc7ac\\ub8cc\\uac12 \\uc544\\ub2d8 \\u00",
+   "manifest.ca_ext.cjunc.evidence.receipts.electronic_main.fp_registry: \"3fcea39d2242b52933ddedffdadc0a8b\" -> \"5589b3f53c3c2ef8585f079103071555\"",
+   "manifest.ca_ext.cjunc.protocol.model: \"r3-carbon-junction-port-v2\" -> \"r3-carbon-junction-port-v3\"",
+   "manifest.ca_ext.cjunc.protocol.rules.piece (new only)",
+   "manifest.ca_ext.cjunc.protocol.rules.port: \"nearest_cell_centre_within_rport_eps_band_tie_lex_ijk_branch_dist_v2\" -> \"nearest_cell_centre_any_liveness_within_rport_no_relocation_eps_band_tie_lex_ijk_branch_d",
+   "manifest.ca_ext.cjunc.protocol.rules.self: \"nonconsecutive_face_or_revisit_branch_no_merge_v2\" -> \"same_piece_centreline_pairs_d_le_D_floor_s_gt_D_and_halfpi_d_s_ge_s_min_v3\"",
+   "manifest.ca_ext.cjunc.protocol.rules.self_lc: \"touch_len_max_cellclip_v1\" -> \"touch_len_max_junction_pairs_v2\"",
+   "manifest.ca_ext.cjunc.protocol.rules.self_s: \"arc_between_nearest_points_cellclip_v1\" -> \"arc_at_closest_points_piece_cyclic_v2\"",
+   "manifest.ca_ext.cjunc.protocol.rules.sv_cf (new only)",
+   "manifest.physics_protocol_id: \"p3ca-00969f5b8d04a15c\" -> \"p3ca-232185d1b5c19d22\""
+  ],
+  "diff_step3": []
+ }
+]

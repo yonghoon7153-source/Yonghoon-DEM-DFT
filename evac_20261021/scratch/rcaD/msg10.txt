@@ -1,0 +1,37 @@
+Rint 2 D: one allow list for the --old-scripts comparisons (b6 B1, z3 O)
+
+scripts/test_ca_ext_b6.py: OLD_DIFF_ALLOW (one table, rows = generation,
+operation, full-path regex, case tag, reason), old_tree_diff,
+case_tags, old_diff_problems, payload_tree; OLD_DIFF_HINTS for the base
+copy without docs/ (collector anchor fallback = failure with a hint).
+Generations: Z3 (sid_off, CG iterations; for bases before ff9d72afe)
+and RCA1 (47d23baba -> a76f59d0d: B certificate v2 status / pass_d /
+scale / target_* / version, S1 capsule volume / alpha-zero faces /
+exempt assumptions, A junction v2 census / counts / fingerprints /
+qualifiers / SV diagnostic rename / protocol rules / p3ca id).  A field
+is allowed only with its operation, for a case whose knob is on, on a
+full-path match; all-off cases must show no difference.
+B1 now judges every path difference with the table (the old B1 popped
+the Z3 fields from the new side only and was valid against pre-Z3 bases
+only), adds the junction case and face_alpha + rtol, and takes
+--expect-identical (no table, zero differences; base = the commit just
+before).  z3 O2 uses the same table and functions and takes the same
+flag; O1 is unchanged.  Also drops an unused import in b6 t_states.
+
+Results (one at a time, nice 19, one BLAS thread; base copies verified
+byte-identical to their commits' scripts/, 632 and 633 tracked files):
+- b6 --only B0u: pre-fix 0/1 -> 21/21.
+- b6 --only B vs 47d23baba: old B1 5 PASS 3 FAIL -> 30/30 (allowed
+  fields per case: off 0, face_alpha 10, rtol 29, junction 31,
+  face_alpha + rtol 39; all RCA1).
+- b6 --only B vs a76f59d0d --expect-identical: 30/30 (zero differences
+  in all seven cases, off and knob-on = the D commits change no payload
+  output).
+- negative control b6 --only B vs 47d23baba --expect-identical: 26 PASS
+  4 FAIL (exactly the four knob-on cases).
+- z3 --only O vs 47d23baba: 11/11; vs a76f59d0d --expect-identical:
+  11/11.
+- b6 --only S 93/93 after the import cleanup.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

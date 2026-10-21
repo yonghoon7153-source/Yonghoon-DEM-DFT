@@ -1,0 +1,4 @@
+fix	ca_runner	rc=1	2774s	  - N8 선행 (N1 끔 팔 둘)
+fix	ca_verdict	rc=0	1457s	31 PASS · 0 FAIL
+fix	ca_z3	rc=0	1122s	test_ca_ext_z3: 84 PASS · 0 FAIL (36.8 s)
+fix	rint_chain_e2e	rc=0	72s	test_rint_r_chain_e2e: 10 PASS · 0 FAIL (71.3 s)

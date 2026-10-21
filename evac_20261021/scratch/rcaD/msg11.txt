@@ -1,0 +1,31 @@
+Rint 2 D: certificate binding (PRE-impl-07) merged into the chain and the state contract: tests first
+
+On top of the two cherry-picked B commits (certificate to run binding):
+
+- B fixture patch (rcaB/fixtures_bind_b7.patch): the test_ca_ext_b6
+  part applied as is (CJ_FP, good_cert binding fields, three-argument
+  conv_cert_problem calls); the test_rint_r_chain part merged by hand
+  into the 3rd-edition fake runner (cert(si, man) + _bind(man), world
+  cert bind_version) and extended to the early-return certificates
+  (early_cert(i, man) carries the same binding fields as the solver's
+  _cert_bind_kw).
+- b6 state fixtures: state_manifest uses CJ_FP and its early certificate
+  carries the binding fields of that manifest.
+- New b6 checks: zero certificate from another bed / without binding
+  version / other junction plan rows refused (B's binding, already
+  passing); the same three for the short certificate (S3); a short arm
+  with an ionic plan: the ionic certificate is checked with the run
+  manifest and channel 'ionic' (S3i).
+
+pre-fix: test_ca_ext_b6 280/284 (fails = 4 checks: the short branch of
+run_contract.next_gen_state checks only the hex32 shape of the grid
+fingerprints, so a short certificate from another bed, without binding
+version or with other junction fingerprints is accepted (3), and its
+ionic branch calls conv_cert_problem with two arguments = TypeError
+after B's change (1)); test_rint_r_chain 138/139 (S07: an
+unknown:ca_ext arm stops at NOT_COMPUTED "CERT|bind| no grid
+fingerprint field" because the certificate check now runs before the
+generation / ca_ext record checks; GENERATION expected).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

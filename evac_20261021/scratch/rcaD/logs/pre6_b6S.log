@@ -1,0 +1,111 @@
+
+── S 해 상태 (영값 · 단락) · SV 반사실 노브 — 계약 · 러너 · payload (시험 먼저 · 10-21 D)
+  PASS  S0 run_contract.next_gen_state 가 있다 (다음 세대 해 상태 → positive · zero · short · legacy)
+  PASS  S1a 양의 해 → positive
+  PASS  S1b 바닥 영값 위상 (조기 반환 · 증서 VALID_ZERO_TOPOLOGY · σ 0) → zero
+  PASS  S1c 천장 단락 (J11 · 증서 ELECTRODE_SHORT · σ None) → short
+  PASS  S1d 옛 세대 (ca_ext 없음 · 요청 없음) → legacy (이 규칙 밖)
+  PASS  S2 영값 상태 거부 [σ 1e-9 (영값 사유인데 0 아님)] → (None, 사유)
+  PASS  S2 영값 상태 거부 [σ None (영값을 비워 둠)] → (None, 사유)
+  PASS  S2 영값 상태 거부 [결과 사유 없음 (증서만 조기 반환)] → (None, 사유)
+  PASS  S2 영값 상태 거부 [결과 사유 ≠ 증서 사유] → (None, 사유)
+  PASS  S2 영값 상태 거부 [전자 component complete (조기 반환인데 솔브 완료로 적음)] → (None, 사유)
+  PASS  S2 영값 상태 거부 [증서 ok False] → (None, 사유)
+  PASS  S2 영값 상태 거부 [증서 판본 다름] → (None, 사유)
+  PASS  S2 영값 상태 거부 [증서 출처 모름] → (None, 사유)
+  PASS  S2 영값 상태 거부 [증서 지문 hex 아님] → (None, 사유)
+  PASS  S2 영값 상태 거부 [증서 없음] → (None, 사유)
+  PASS  S2 영값 상태 거부 [증서 상태 NOT_CERTIFIABLE] → (None, 사유)
+  PASS  S2 영값 상태 거부 [증서 상태 모름] → (None, 사유)
+  PASS  S2 영값 상태 거부 [증서 격자 지문 ≠ 매니페스트 sid (다른 침대의 영값 증서)] → (None, 사유)
+  PASS  S2 영값 상태 거부 [증서 결합 판 없음 (옛 증서)] → (None, 사유)
+  PASS  S2 영값 상태 거부 [증서 접합 계획 행 지문 ≠ 매니페스트] → (None, 사유)
+  PASS  S3 단락 상태 거부 [σ 0.0 (단락을 유한 σ 로 위장)] → (None, 사유)
+  PASS  S3 단락 상태 거부 [σ 1e3 (단락을 유한 σ 로 위장)] → (None, 사유)
+  PASS  S3 단락 상태 거부 [증서 ok True] → (None, 사유)
+  PASS  S3 단락 상태 거부 [증서 사유가 영값 사유 (상태와 모순)] → (None, 사유)
+  PASS  S3 단락 상태 거부 [결과 사유 ≠ 증서 사유] → (None, 사유)
+  PASS  S3 단락 상태 거부 [접합 기록 short False] → (None, 사유)
+  PASS  S3 단락 상태 거부 [접합 기록 solved True] → (None, 사유)
+  PASS  S3 단락 상태 거부 [축약 0 (단락이 생길 수 없다)] → (None, 사유)
+  PASS  S3 단락 상태 거부 [접합 블록 없음] → (None, 사유)
+  PASS  S3 단락 상태 거부 [전자 component complete] → (None, 사유)
+  PASS  S3 단락 상태 거부 [증서 판본 다름] → (None, 사유)
+  PASS  S3 단락 상태 거부 [봉인 상수 손으로 (rtol_max)] → (None, 사유)
+  FAIL  S3 단락 상태 거부 [증서 격자 지문 ≠ 매니페스트 sid (다른 침대의 단락 증서)] → (None, 사유)  (('short', None))
+  FAIL  S3 단락 상태 거부 [증서 결합 판 없음 (옛 증서)] → (None, 사유)  (('short', None))
+  FAIL  S3 단락 상태 거부 [증서 접합 원장 지문 ≠ 매니페스트] → (None, 사유)  (('short', None))
+  FAIL  S3i 단락 팔 + 이온 계획 — 이온 증서 정상 = short · 이온 증서 격자 지문 ≠ 매니페스트 = 거부 (채널 ionic 결합)  (((None, "TypeError: conv_cert_problem() missing 1 required positional argument: 'man'"), (None, "TypeError: conv_cert_problem() missing 1 required positional argument: 'man'")))
+  PASS  S4 양의 해 거부 [증서 실패 (ok False)] → (None, 사유)
+  PASS  S4 양의 해 거부 [증서 없음] → (None, 사유)
+  PASS  S4 양의 해 거부 [σ ≠ 증서 σ] → (None, 사유)
+  PASS  S5a check_arm — 영값 상태 팔 (σ 0 · 증서 VALID_ZERO_TOPOLOGY) 를 받는다 (솔브 없음 = backend 기록 없음 · 정상)
+  PASS  S5b check_arm — 단락 상태 팔 (σ None · 증서 ELECTRODE_SHORT) 를 받는다
+  PASS  S5c check_arm 거부 [영값인데 σ 1e-9]
+  PASS  S5c check_arm 거부 [영값 증서 없음]
+  PASS  S5c check_arm 거부 [영값인데 component complete]
+  PASS  S5d check_arm 거부 [단락인데 σ 0.0 — 유한 σ 로 위장]
+  PASS  S5e check_arm — 증서 없는 영값 팔 (옛 꼴 · 증서 끔) 은 그대로 거부 (σ 0 을 증서 없이 받지 않는다)
+  PASS  S5f check_arm — 옛 세대 (p2) σ 0 팔은 그대로 거부 (이 규칙 밖 · 옛 거동)
+  PASS  S6a 조기 반환 팔 (솔브 0 · backend.rtol 없음) + 러너 rtol 선언 → receipt_match 통과 (결합할 솔브가 없다)
+  PASS  S6b 솔브가 돈 팔 (component complete) 인데 backend.rtol 없음 → 그대로 거부 (옛 결합)
+  PASS  S7a 러너 손잡이 표에 CJUNC_SV_CF (선언 칸 아님 = 하위 블록 None · 영수증 선택 칸 sv_counterfactual)
+  PASS  S7b CJUNC_SV_CF=1 → 문제 없음 · 영수증 sv_counterfactual True · 요청 칸 (cjunc) = 끈 것과 같다 (반사실은 protocol 밖)
+  PASS  S7c 끔 (비움 · 0) → 영수증에 칸 없음 (옛 영수증 바이트 · 옛 OUTDIR)
+  PASS  S7d 발사 전 거부 [CJUNC 없이] → RUNNER_CA_EXT|FLAG_WITHOUT_CJUNC|
+  PASS  S7d 발사 전 거부 [값 yes] → RUNNER_CA_EXT|VALUE|
+  PASS  S7d 발사 전 거부 [값 2] → RUNNER_CA_EXT|VALUE|
+  PASS  S7d 발사 전 거부 [값 " 1"] → RUNNER_CA_EXT|VALUE|
+  PASS  S7e payload 인자 · 이름 태그 — 켬 = " --step3-cjunc-sv-cf" 한 번 · 태그 끝 "_svcf" · 선언 (--expect-physics) 은 끈 것과 같다
+  PASS  S7f 영수증 digest — 켬 ≠ 끔 (OUTDIR 이 갈린다) · 끔 = 칸 없음의 옛 digest
+  PASS  S7g CLI 회계 — --step3-cjunc-sv-cf = solve (σ_e 해를 바꾸지 않는 추가 솔브 · 규약 id 밖)
+  PASS  S8a ca_ext_svcf.sv_cf_record (증거 투영 · D 모듈) 가 있다
+  PASS  S8b 투영 — computed = 비 그대로 (유한) · 표지 없음 · no_through_without_sv = 비 null + ratio_limit "inf" · JSON 유한 (allow_nan False)
+  PASS  S8c 요청 + computed 기록 → ca_ext_record_ok 통과 · id = 노브 끈 것과 같다 (반사실은 protocol 밖)
+  PASS  S8d 정상 기록 받음 [no_through_without_sv]
+  PASS  S8d 정상 기록 받음 [unconverged]
+  PASS  S8d 정상 기록 받음 [문턱 2 · 비 3 · SV_DEPENDENT]
+  PASS  S8e 반사실 기록 거부 [요청 있는데 기록 없음 (주 솔브 풀림)]
+  PASS  S8e 반사실 기록 거부 [기록 있는데 요청 없음]
+  PASS  S8e 반사실 기록 거부 [요청 문턱 0.5 (< 1 · 뜻 없음)]
+  PASS  S8e 반사실 기록 거부 [요청 모르는 칸]
+  PASS  S8e 반사실 기록 거부 [요청 ↔ 기록 문턱 다름]
+  PASS  S8e 반사실 기록 거부 [computed 인데 비 None]
+  PASS  S8e 반사실 기록 거부 [computed 인데 비 음수]
+  PASS  S8e 반사실 기록 거부 [computed 인데 비 문자열]
+  PASS  S8e 반사실 기록 거부 [computed 인데 inf 표지]
+  PASS  S8e 반사실 기록 거부 [모르는 상태인데 비가 있다]
+  PASS  S8e 반사실 기록 거부 [종류가 반사실이 아님 (cut_vv)]
+  PASS  S8e 반사실 기록 거부 [종류 없음]
+  PASS  S8e 반사실 기록 거부 [requested False]
+  PASS  S8e 반사실 기록 거부 [문턱 없는데 SV_DEPENDENT 표지]
+  PASS  S8e 반사실 기록 거부 [모르는 표지]
+  PASS  S8e 반사실 기록 거부 [no_through 인데 표지 없음]
+  PASS  S8f 문턱 2 · 비 3 인데 표지 없음 (문턱 판정과 기록이 갈림) → 거부
+  PASS  S8h 정의 무관 받음 [다른 정의의 반사실 (kind counterfactual_cut_bridging_sv_faces)]
+  PASS  S8h 정의 무관 받음 [정의별 수 칸 이름이 바뀜 (n_sv_faces_cut 없음 · n_bridging_faces_cut 3)]
+  PASS  S8h 정의 무관 받음 [모르는 상태 · 비 없음 (사슬 = SV_UNCHECKED · 받는다)]
+  PASS  S8i 투영 — 정의별 수 칸 (n_*) 은 이름 그대로 옮긴다 · 사슬이 읽는 칸 (비 · 상태 · 표지 · 종류) 은 그대로
+  PASS  S8g 조기 반환 (바닥 · 영값) + 요청 · 기록 없음 → 통과 (주 솔브가 없으면 반사실도 없다)
+  PASS  S9a 영수증 sv_counterfactual True ↔ 증거 요청 있음 → 통과 · 영수증 칸 없음 ↔ 요청 있음 → 거부 · 영수증 True ↔ 요청 없음 → 거부
+  PASS  S10a payload._step3_early (조기 반환 해의 step3 조립 · 한 곳) 가 있다
+  PASS  S10b 단락 → σ None (유한 σ 로 위장 안 함) · 증서 복사 · 사유
+  PASS  S10c 영값 → σ 0.0 · 증서 복사
+  PASS  S10d 증서 끔 (칸 없음) → 옛 dict 그대로 (키 · 값 · 순서 = σ 0.0 · 사유 · vox)
+
+── SP 해 상태 · SV 반사실 — payload 끝-끝 (시험 먼저 · 10-21 D)
+  PASS  SP1 바닥 (R_j → ∞) 영값 침대 + rtol — rc 0 · σ 0.0 · 사유 no_through_component · 증서 복사 (VALID_ZERO_TOPOLOGY · early_return)
+  PASS  SP2 next_gen_state = zero · ca_ext_record_ok 통과
+  PASS  SP3 check_arm (러너가 쓰는 함수) 이 실제 영값 팔을 받는다
+  PASS  SP4 증서 끔 (rtol 없음) — 게시 거부 (rc 4 · 최종 파일 없음 · 옛 거동: 증서 없는 σ 0 = 수치 증거 실패) · 진단본 step3 = 옛 꼴 (증서 칸 없음 · σ 0.0) · next_gen_state 거부
+  PASS  SP5 노브 켬 — rc 0 · 증거 요청 {threshold: None} · 기록 (종류 · 요청 · 상태 · 문턱 None · 표지 None) · ca_ext_record_ok
+  PASS  SP6 노브 켬 = 주 결과 그대로 — σ 비트 같음 · 증서 같음 · p3ca id 같음 · protocol 같음 · 끈 런에는 요청 · 기록 칸 없음
+  PASS  SP7 computed — 비 유한 ≥ 1 (Rayleigh · SV 면을 끊으면 G 가 줄거나 같다) · 끊은 면 수 int ≥ 0 · backend 기록
+  PASS  SP8 노브만 (접합 없이) → 입구 거부 S2_CJUNC_REFUSED|FLAG_WITHOUT_CJUNC|
+
+96 PASS · 4 FAIL
+  - S3 단락 상태 거부 [증서 격자 지문 ≠ 매니페스트 sid (다른 침대의 단락 증서)] → (None, 사유)
+  - S3 단락 상태 거부 [증서 결합 판 없음 (옛 증서)] → (None, 사유)
+  - S3 단락 상태 거부 [증서 접합 원장 지문 ≠ 매니페스트] → (None, 사유)
+  - S3i 단락 팔 + 이온 계획 — 이온 증서 정상 = short · 이온 증서 격자 지문 ≠ 매니페스트 = 거부 (채널 ionic 결합)
+rc=1 seconds=11

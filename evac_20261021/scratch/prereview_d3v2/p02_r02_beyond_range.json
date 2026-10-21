@@ -1,0 +1,198 @@
+{
+ "curve_levels_Bo": [
+  0.2124,
+  0.6718,
+  2.1244,
+  6.7179,
+  21.244,
+  67.1794,
+  212.44,
+  637.32
+ ],
+ "curve_I": [
+  35.0,
+  35.0,
+  35.0002,
+  48.8998,
+  48.9,
+  48.9,
+  48.9,
+  48.9
+ ],
+ "band_stat": 3.0,
+ "rows": [
+  {
+   "m": 60.0,
+   "curve_min": 35.0,
+   "curve_max": 48.9,
+   "v2_comps": [
+    [
+     0.6186,
+     0.8272
+    ]
+   ],
+   "v2_comps_Bo": [
+    [
+     4.155,
+     6.718
+    ]
+   ],
+   "v2_status": "비지 않음 (앵커 후보)",
+   "monotone_envelope": [],
+   "correct_status": "F10 (곡선 값 범위 밖)",
+   "ref_f3_direct": "위 포화"
+  },
+  {
+   "m": 55.0,
+   "curve_min": 35.0,
+   "curve_max": 48.9,
+   "v2_comps": [
+    [
+     0.4388,
+     0.8272
+    ]
+   ],
+   "v2_comps_Bo": [
+    [
+     2.746,
+     6.718
+    ]
+   ],
+   "v2_status": "비지 않음 (앵커 후보)",
+   "monotone_envelope": [],
+   "correct_status": "F10 (곡선 값 범위 밖)",
+   "ref_f3_direct": "위 포화"
+  },
+  {
+   "m": 51.0,
+   "curve_min": 35.0,
+   "curve_max": 48.9,
+   "v2_comps": [
+    [
+     0.3272,
+     2.8044
+    ]
+   ],
+   "v2_comps_Bo": [
+    [
+     2.124,
+     637.32
+    ]
+   ],
+   "v2_status": "비지 않음 (앵커 후보)",
+   "monotone_envelope": [
+    [
+     0.3272,
+     2.8044
+    ]
+   ],
+   "correct_status": "비지 않음",
+   "ref_f3_direct": "안"
+  },
+  {
+   "m": 20.0,
+   "curve_min": 35.0,
+   "curve_max": 48.9,
+   "v2_comps": [
+    [
+     0.3272,
+     0.3956
+    ]
+   ],
+   "v2_comps_Bo": [
+    [
+     2.124,
+     2.486
+    ]
+   ],
+   "v2_status": "비지 않음 (앵커 후보)",
+   "monotone_envelope": [],
+   "correct_status": "F10 (곡선 값 범위 밖)",
+   "ref_f3_direct": "마찰 바닥"
+  },
+  {
+   "m": 25.0,
+   "curve_min": 35.0,
+   "curve_max": 48.9,
+   "v2_comps": [
+    [
+     0.3272,
+     0.5754
+    ]
+   ],
+   "v2_comps_Bo": [
+    [
+     2.124,
+     3.762
+    ]
+   ],
+   "v2_status": "비지 않음 (앵커 후보)",
+   "monotone_envelope": [],
+   "correct_status": "F10 (곡선 값 범위 밖)",
+   "ref_f3_direct": "마찰 바닥"
+  },
+  {
+   "m": 31.0,
+   "curve_min": 35.0,
+   "curve_max": 48.9,
+   "v2_comps": [
+    [
+     0.3272,
+     0.7913
+    ]
+   ],
+   "v2_comps_Bo": [
+    [
+     2.124,
+     6.184
+    ]
+   ],
+   "v2_status": "비지 않음 (앵커 후보)",
+   "monotone_envelope": [],
+   "correct_status": "F10 (곡선 값 범위 밖)",
+   "ref_f3_direct": "마찰 바닥"
+  },
+  {
+   "m": 42.0,
+   "curve_min": 35.0,
+   "curve_max": 48.9,
+   "v2_comps": [
+    [
+     0.3272,
+     0.8272
+    ]
+   ],
+   "v2_comps_Bo": [
+    [
+     2.124,
+     6.718
+    ]
+   ],
+   "v2_status": "비지 않음 (앵커 후보)",
+   "monotone_envelope": [
+    [
+     0.3272,
+     0.8272
+    ]
+   ],
+   "correct_status": "비지 않음",
+   "ref_f3_direct": "안"
+  }
+ ],
+ "accepted_m_range_v2": [
+  18.11,
+  65.78999999999999
+ ],
+ "accepted_m_range_correct": [
+  32.0,
+  51.9
+ ],
+ "hand_v2": [
+  18.1,
+  65.8
+ ],
+ "two_test_v2_anchor": {
+  "status": "anchor",
+  "Bo": 5.283587623954588
+ }
+}

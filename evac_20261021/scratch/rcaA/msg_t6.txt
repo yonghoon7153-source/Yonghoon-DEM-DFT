@@ -1,0 +1,17 @@
+Rint 2 S2 RCA-04 test: shared start point (V shape) path order under collinear subdivision (tests first)
+
+Pre-attack review of the geometric path order (CJUNC_ORDER_RULE): the key was the canonical point
+sequence, so two fibres starting at the same point were ordered by their second points; a
+collinear subdivision of one fibre moves its second point and flipped the order (piece numbering,
+pair orientation, system u/v, sigma 8.55011429066427 vs ...29).  New case RCA04-V (long contact,
+k 2): B subdivided 0.25 -> 0.125, fid renaming, both, B reversed -> same sid, same sub-edge port
+cells, system structure (u, v, category, plates) bit-identical, G and sigma within 1e-13 relative
+(the length-law multiplier uses the floating-point sum of touch lengths over segments, so a
+non-exact subdivision moves G by a few ulp; bit identity for k = 1 / exact subdivision stays in
+RCA04 / PCP).
+
+Pre-fix (parent 1974051ff): test_carbon_junction --quick 237/239 (fails = 2 checks from 1
+counterexample: subdivision and subdivision + renaming; renaming / reversal alone pass).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

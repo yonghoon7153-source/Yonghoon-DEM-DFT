@@ -1,9 +1,0 @@
-Traceback (most recent call last):
-  File "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/repro_r04/ws/probes/consumer_h0_resurrection.py", line 89, in <module>
-    C.release_probe(report, target_name='ml_hertz', source_mutator=mutate, minimal=True)
-  File "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/repro_r04/ws/probes/consumer_adversarial.py", line 95, in release_probe
-    tau_now = DD.load_tau_results(source_root / 'results', wb, expected_generation='g2')
-              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/repro_r04/ws/source/scripts/lhs_design_dataset.py", line 2082, in load_tau_results
-    raise FillRefusal(f'{case}: τ P4 — 세대 계약 위반 (G2R-01 · 02 · tau_flux.network_generation_contract): '
-lhs_design_dataset.FillRefusal: lhs00_002: τ P4 — 세대 계약 위반 (G2R-01 · 02 · tau_flux.network_generation_contract): hertz: 수치 증서 · 결합 (G2R-03 · G2RR-02 — 가지 · 역할 · 발행값) — solve_certificate_full: FULL 게시 값 (σ_ratio 1.62317474 · 상태 'computed') 인데 증서 재구성 q (반올림 전) = I_bottom/ΔV × T/A = 1.6231747351909949 > 생산자 출력 문턱 1.5 (정책 full_single_phase_q_gt_1p5/v1 · 엄격 >) — 생산자는 이 FULL 값을 보류한다 (not_computed · full_over_conduction) · 보류 값을 게시 상태로 되돌린 레코드는 받지 않는다 (L214R-R01) — 역할 · 표기가 확정되지 않은 망의 τ 를 싣지 않는다 (주 Hertz = H0 · H12 · physics 표)

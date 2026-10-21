@@ -1,0 +1,228 @@
+
+── N0 정적 — bash -n · 손잡이 표 · 러너가 표의 이름을 읽는다 · P2_EXTRA 의 rtol = 러너 축
+  PASS  N0a 러너 bash -n
+  FAIL  N0b run_contract.RUNNER_CA_EXT_ENV = 러너 손잡이 표 (아홉 이름)
+  FAIL  N0c 표의 선언 칸 = ca_ext_cjunc 의 REQUEST_KEYS (사본 없이 같은 집합)  (([], []))
+  FAIL  N0d 러너가 손잡이 아홉을 `${NAME:-}` 로 읽는다 (env 게이트가 "읽지 않는 축" 으로 죽이지 않게)  (['CJUNC', 'CJUNC_RJ', 'CJUNC_LEN_LAW', 'CJUNC_UNREG_LAW', 'CJUNC_S_MIN_UM', 'CJUNC_TOL_FF_UM', 'CJUNC_PTFE_JLAW', 'SDCP_MOD_C', 'STEP3_RTOL'])
+  FAIL  N0e P2_EXTRA 허용목록에 --step3-rtol 이 없다 (영수증 · OUTDIR · 증서 대조 = 러너 축 STEP3_RTOL)  (--step3-maxiter --step3-rtol --gpu-mem --n-vox --void-max)
+  FAIL  N0f PTFE_STAMP 가 face_alpha 를 받는다 (거부 목록이 아니다)
+  FAIL  N0g env 게이트가 CJUNC 이름꼴도 본다 (오타 축 = 죽음)
+
+── N1 끔 (기본) — 옛 팔 이름 · 영수증 · payload 인자 그대로
+  PASS  N1a 러너 rc 0 · 팔 둘 (p2_SBE_a0 · p2_DBE_a0)
+  PASS  N1b 영수증에 다음 세대 칸 없음 (ca_ext_request · step3_rtol)
+  PASS  N1c payload 인자에 새 플래그 없음 · --ptfe-stamp off · 선언에 ca_ext 칸 없음
+  PASS  N1d OUTDIR 이름에 새 태그 없음 (_cj · _rt · _c0 · _c1)
+  PASS  N1e 팔 매니페스트 = p2 세대 (ca_ext 없음 · 요청 칸 없음)
+
+── N2 탄소 접합 + rtol — 인자 · 선언 · 영수증 · 팔 이름 · p3ca · check_arm · 증서
+  FAIL  N2a 러너 rc 0 · 팔 둘 · 이름 = p2_<침대>_cj1000000_<h8>_rt1em12_a0 (옛 p2_SBE_a0 와 다르다)  ((0, ['p2_DBE_a0.json', 'p2_SBE_a0.json'], 'med=11.938µm(×2.62)  conductive_all D=6.83 nn_med=9.824µm(×2.01)\nsaved p2_DBE_a0.json  (0.9 MB)  porosity 78.6% · SE/solid 16.6% · thickness 23.5µm · coverage(@0.13/0.26µm) AM_P plastic 0/0% · 12 AM · 0 SE tris (n_vox=24)  [voxel-preview por/SE/cov 79/17/0% vary with n_vox — not reported]\n\n파일                                    σ_e        σ_ion          dof           origin shift   cg\np2_DBE_a0.json               0.000999027483831778         None         3337        [0.0, 0.0, 0.0]    0\np2_SBE_a0.json               0.0009988916170637506         None         3336        [0.0, 0.0, 0.0]    0\n\n  수집: SBE 1 팔 · DBE 1 팔\n  (--collect-only — 판정하지 않는다)\n[p2] ⚠ **진단 런 (1 팔) — 생산 봉인 아님.**  이 산출물로 판정하지 말 것.\n     사전등록은 8 팔이다 (prereg §4).  OUTDIR: /tmp/ca_ext_runner_czu25b4f/N2/prereg_v2_vox10_b048_ptsoff_arm1_lean2_r8e9f73ff2841\n  [p2] vox 1.0: σ_VGCF 100 → 1.76715\n  [p2] vox 1.0: σ_VGCF 100 → 1.76715\n'))
+  FAIL  N2b 영수증 — ca_ext_request = 선언 값 (형 맞춤 · float · str) · step3_rtol 1e-12 · 러너 요청 검사 통과  (({}, None))
+  FAIL  N2c [SBE] payload 인자 (명령줄 대조) — 접합 일곱 · rtol · 수정자 c  ({'--step3-cjunc-rj': None, '--step3-cjunc-len-law': None, '--step3-cjunc-unreg-law': None, '--step3-cjunc-s-min-um': None, '--step3-cjunc-tol-ff-um': None, '--step3-cjunc-ptfe-jlaw': None, '--step3-rtol': None, '--step3-sdcp-mod-c': None})
+  FAIL  N2d [SBE] --expect-physics 선언 = 켠 블록의 칸 전부 · 값 = 영수증 (선언한 축 = 매니페스트 축)  (['ca_ext.cjunc.R_j_ohm', 'ca_ext.cjunc.len_law', 'ca_ext.cjunc.ptfe_jlaw', 'ca_ext.cjunc.s_min_um', 'ca_ext.cjunc.tol_ff_um', 'ca_ext.cjunc.unreg_law'])
+  FAIL  N2e [SBE] 팔 = p3ca · ca_ext_record_ok · receipt_match · 수렴 증서 (다음 세대 게시 조건) · protocol R_j 1e6  (('p2-c84b5b7cd0d0130a', (True, None), (True, None), (True, None)))
+  FAIL  N2c [DBE] payload 인자 (명령줄 대조) — 접합 일곱 · rtol · 수정자 c  ({'--step3-cjunc-rj': None, '--step3-cjunc-len-law': None, '--step3-cjunc-unreg-law': None, '--step3-cjunc-s-min-um': None, '--step3-cjunc-tol-ff-um': None, '--step3-cjunc-ptfe-jlaw': None, '--step3-rtol': None, '--step3-sdcp-mod-c': None})
+  FAIL  N2d [DBE] --expect-physics 선언 = 켠 블록의 칸 전부 · 값 = 영수증 (선언한 축 = 매니페스트 축)  (['ca_ext.cjunc.R_j_ohm', 'ca_ext.cjunc.len_law', 'ca_ext.cjunc.ptfe_jlaw', 'ca_ext.cjunc.s_min_um', 'ca_ext.cjunc.tol_ff_um', 'ca_ext.cjunc.unreg_law'])
+  FAIL  N2e [DBE] 팔 = p3ca · ca_ext_record_ok · receipt_match · 수렴 증서 (다음 세대 게시 조건) · protocol R_j 1e6  (('p2-c84b5b7cd0d0130a', (True, None), (True, None), (True, None)))
+  FAIL  N2g OUTDIR 이름에 새 태그 (_cj1000000_<h8>_rt1em12) · 끔 런과 다른 디렉터리  (prereg_v2_vox10_b048_ptsoff_arm1_lean2_r8e9f73ff2841)
+
+── N3 탄소 접합 + SDCP 수정자 c = 1 + rtol
+  FAIL  N3a 러너 rc 0 · 팔 둘 · 이름 = p2_<침대>_cj1000000_<h8>_c1_rt1em12_a0 (옛 p2_SBE_a0 와 다르다)  ((2, [], '[p2] ⚠ ARMS=1 ≠ 사전등록 8 — **진단 런**이다.\n     OUTDIR 에 _arm1 를 붙여 생산 산출물과 갈라 놓는다.  생산 봉인은 걸지 않는다.\n[p2] ABORT — 이 러너가 **읽지 않는** 축 env 를 받았다: SDCP_MOD_C\n     그대로 돌면 그 축이 조용히 무시된 채 런이 통과한다 — 값이 우연히 기본값과\n     같으면 **옳은 숫자를 내면서 아무것도 시험하지 않는다** (2026-09-02 실측).\n     원인 대개: 러너 코드가 배선 이전 커밋이다.  고치는 법:\n       git -C "$(dirname "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/y2/pre_runner/scripts")" fetch origin claude/stoic-knuth-NObVQ\n       git -C "$(dirname "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/y2/pre_runner/scripts")" merge --ff-only origin/claude/stoic-knuth-NObVQ\n     오타라면 이름을 고칠 것.  러너: /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/y2/pre_runner/scripts/sdcp_gain_vox015_8arm.sh\n'))
+  FAIL  N3b 영수증 — ca_ext_request = 선언 값 (형 맞춤 · float · str) · step3_rtol 1e-12 · 러너 요청 검사 통과  (({}, None))
+  FAIL  N3c [SBE] payload 인자 (명령줄 대조) — 접합 일곱 · rtol · 수정자 c  ({'--step3-cjunc-rj': None, '--step3-cjunc-len-law': None, '--step3-cjunc-unreg-law': None, '--step3-cjunc-s-min-um': None, '--step3-cjunc-tol-ff-um': None, '--step3-cjunc-ptfe-jlaw': None, '--step3-rtol': None, '--step3-sdcp-mod-c': None})
+  FAIL  N3d [SBE] --expect-physics 선언 = 켠 블록의 칸 전부 · 값 = 영수증 (선언한 축 = 매니페스트 축)  (['ca_ext.cjunc.R_j_ohm', 'ca_ext.cjunc.len_law', 'ca_ext.cjunc.ptfe_jlaw', 'ca_ext.cjunc.s_min_um', 'ca_ext.cjunc.tol_ff_um', 'ca_ext.cjunc.unreg_law', 'ca_ext.sdcp_mod.c'])
+  FAIL  N3c [DBE] payload 인자 (명령줄 대조) — 접합 일곱 · rtol · 수정자 c  ({'--step3-cjunc-rj': None, '--step3-cjunc-len-law': None, '--step3-cjunc-unreg-law': None, '--step3-cjunc-s-min-um': None, '--step3-cjunc-tol-ff-um': None, '--step3-cjunc-ptfe-jlaw': None, '--step3-rtol': None, '--step3-sdcp-mod-c': None})
+  FAIL  N3d [DBE] --expect-physics 선언 = 켠 블록의 칸 전부 · 값 = 영수증 (선언한 축 = 매니페스트 축)  (['ca_ext.cjunc.R_j_ohm', 'ca_ext.cjunc.len_law', 'ca_ext.cjunc.ptfe_jlaw', 'ca_ext.cjunc.s_min_um', 'ca_ext.cjunc.tol_ff_um', 'ca_ext.cjunc.unreg_law', 'ca_ext.sdcp_mod.c'])
+  FAIL  N3g OUTDIR 이름에 새 태그 (_cj1000000_<h8>_c1_rt1em12) · 끔 런과 다른 디렉터리
+
+── N4 face_alpha + rtol (LEAN 2)
+  FAIL  N4a 러너 rc 0 · 팔 둘 · 이름 = p2_<침대>_fa_rt1em12_a0  ((2, [], '[p2] ⚠ ARMS=1 ≠ 사전등록 8 — **진단 런**이다.\n     OUTDIR 에 _arm1 를 붙여 생산 산출물과 갈라 놓는다.  생산 봉인은 걸지 않는다.\n[p2] ABORT — PTFE_STAMP 는 off 또는 centerline (받은 값: face_alpha)\n'))
+  FAIL  N4b 영수증 — ptfe_stamp face_alpha · step3_rtol 1e-12 · 접합 요청 없음
+
+── N5 face_alpha + rtol (LEAN 3 · 이온 증서)
+  FAIL  N5a 러너 rc 0 · 팔 둘 · 이름 = p2_<침대>_fa_rt1em12_a0  ((2, [], '[p2] ⚠ ARMS=1 ≠ 사전등록 8 — **진단 런**이다.\n     OUTDIR 에 _arm1 를 붙여 생산 산출물과 갈라 놓는다.  생산 봉인은 걸지 않는다.\n[p2] ABORT — PTFE_STAMP 는 off 또는 centerline (받은 값: face_alpha)\n'))
+  FAIL  N5b 영수증 — ptfe_stamp face_alpha · step3_rtol 1e-12 · 접합 요청 없음
+
+── N6 발사 전 거부 — 구조화 사유 · rc 2 · 디렉터리를 만들지 않는다
+  FAIL  N6 [스위치 값 (CJUNC=yes)] → rc 2 · `RUNNER_CA_EXT|SWITCH|` · 새 디렉터리 없음 · payload 미호출  ((0, ['/tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_b048_ptsoff_arm1_lean2_r8e9f73ff2841'], '— 판정하지 않는다)\n[p2] ⚠ **진단 런 (1 팔) — 생산 봉인 아님.**  이 산출물로 판정하지 말 것.\n     사전등록은 8 팔이다 (prereg §4).  OUTDIR: /tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_b048_ptsoff_arm1_lean2_r8e9f73ff2841\n  [p2] vox 1.0: σ_VGCF 100 → 1.76715\n  [p2] vox 1.0: σ_VGCF 100 → 1.76715'))
+  FAIL  N6 [접합 켬 · s_min 없음] → rc 2 · `RUNNER_CA_EXT|MISSING|` · 새 디렉터리 없음 · payload 미호출  ((0, [], '36        [0.0, 0.0, 0.0]    0\n\n  수집: SBE 1 팔 · DBE 1 팔\n  (--collect-only — 판정하지 않는다)\n[p2] ⚠ **진단 런 (1 팔) — 생산 봉인 아님.**  이 산출물로 판정하지 말 것.\n     사전등록은 8 팔이다 (prereg §4).  OUTDIR: /tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_b048_ptsoff_arm1_lean2_r8e9f73ff2841'))
+  FAIL  N6 [접합 켬 · 값 여섯 다 없음] → rc 2 · `RUNNER_CA_EXT|MISSING|` · 새 디렉터리 없음 · payload 미호출  ((0, [], '36        [0.0, 0.0, 0.0]    0\n\n  수집: SBE 1 팔 · DBE 1 팔\n  (--collect-only — 판정하지 않는다)\n[p2] ⚠ **진단 런 (1 팔) — 생산 봉인 아님.**  이 산출물로 판정하지 말 것.\n     사전등록은 8 팔이다 (prereg §4).  OUTDIR: /tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_b048_ptsoff_arm1_lean2_r8e9f73ff2841'))
+  FAIL  N6 [R_j 만 (접합 안 켬)] → rc 2 · `RUNNER_CA_EXT|FLAG_WITHOUT_CJUNC|` · 새 디렉터리 없음 · payload 미호출  ((0, [], '36        [0.0, 0.0, 0.0]    0\n\n  수집: SBE 1 팔 · DBE 1 팔\n  (--collect-only — 판정하지 않는다)\n[p2] ⚠ **진단 런 (1 팔) — 생산 봉인 아님.**  이 산출물로 판정하지 말 것.\n     사전등록은 8 팔이다 (prereg §4).  OUTDIR: /tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_b048_ptsoff_arm1_lean2_r8e9f73ff2841'))
+  FAIL  N6 [SDCP 수정자만 (S2 없이)] → rc 2 · `RUNNER_CA_EXT|NO_CJUNC|` · 새 디렉터리 없음 · payload 미호출  ((2, [], '7-2f6a678a4b5b/scratchpad/y2/pre_runner/scripts")" merge --ff-only origin/claude/stoic-knuth-NObVQ\n     오타라면 이름을 고칠 것.  러너: /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/y2/pre_runner/scripts/sdcp_gain_vox015_8arm.sh'))
+  FAIL  N6 [수정자 c = 0.5] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출  ((2, [], '7-2f6a678a4b5b/scratchpad/y2/pre_runner/scripts")" merge --ff-only origin/claude/stoic-knuth-NObVQ\n     오타라면 이름을 고칠 것.  러너: /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/y2/pre_runner/scripts/sdcp_gain_vox015_8arm.sh'))
+  FAIL  N6 [수정자 c = 1.0 (payload 선택지 0 · 1 밖)] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출  ((2, [], '7-2f6a678a4b5b/scratchpad/y2/pre_runner/scripts")" merge --ff-only origin/claude/stoic-knuth-NObVQ\n     오타라면 이름을 고칠 것.  러너: /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/y2/pre_runner/scripts/sdcp_gain_vox015_8arm.sh'))
+  FAIL  N6 [R_j nan] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출  ((0, [], '36        [0.0, 0.0, 0.0]    0\n\n  수집: SBE 1 팔 · DBE 1 팔\n  (--collect-only — 판정하지 않는다)\n[p2] ⚠ **진단 런 (1 팔) — 생산 봉인 아님.**  이 산출물로 판정하지 말 것.\n     사전등록은 8 팔이다 (prereg §4).  OUTDIR: /tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_b048_ptsoff_arm1_lean2_r8e9f73ff2841'))
+  FAIL  N6 [R_j inf] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출  ((0, [], '36        [0.0, 0.0, 0.0]    0\n\n  수집: SBE 1 팔 · DBE 1 팔\n  (--collect-only — 판정하지 않는다)\n[p2] ⚠ **진단 런 (1 팔) — 생산 봉인 아님.**  이 산출물로 판정하지 말 것.\n     사전등록은 8 팔이다 (prereg §4).  OUTDIR: /tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_b048_ptsoff_arm1_lean2_r8e9f73ff2841'))
+  FAIL  N6 [R_j 1e999 (넘침 → inf)] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출  ((0, [], '36        [0.0, 0.0, 0.0]    0\n\n  수집: SBE 1 팔 · DBE 1 팔\n  (--collect-only — 판정하지 않는다)\n[p2] ⚠ **진단 런 (1 팔) — 생산 봉인 아님.**  이 산출물로 판정하지 말 것.\n     사전등록은 8 팔이다 (prereg §4).  OUTDIR: /tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_b048_ptsoff_arm1_lean2_r8e9f73ff2841'))
+  FAIL  N6 [R_j 음수] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출  ((0, [], '36        [0.0, 0.0, 0.0]    0\n\n  수집: SBE 1 팔 · DBE 1 팔\n  (--collect-only — 판정하지 않는다)\n[p2] ⚠ **진단 런 (1 팔) — 생산 봉인 아님.**  이 산출물로 판정하지 말 것.\n     사전등록은 8 팔이다 (prereg §4).  OUTDIR: /tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_b048_ptsoff_arm1_lean2_r8e9f73ff2841'))
+  FAIL  N6 [R_j 0 (정량 아님)] → rc 2 · `RUNNER_CA_EXT|REQUEST|` · 새 디렉터리 없음 · payload 미호출  ((0, [], '36        [0.0, 0.0, 0.0]    0\n\n  수집: SBE 1 팔 · DBE 1 팔\n  (--collect-only — 판정하지 않는다)\n[p2] ⚠ **진단 런 (1 팔) — 생산 봉인 아님.**  이 산출물로 판정하지 말 것.\n     사전등록은 8 팔이다 (prereg §4).  OUTDIR: /tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_b048_ptsoff_arm1_lean2_r8e9f73ff2841'))
+  FAIL  N6 [R_j 끝 공백] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출  ((0, [], '36        [0.0, 0.0, 0.0]    0\n\n  수집: SBE 1 팔 · DBE 1 팔\n  (--collect-only — 판정하지 않는다)\n[p2] ⚠ **진단 런 (1 팔) — 생산 봉인 아님.**  이 산출물로 판정하지 말 것.\n     사전등록은 8 팔이다 (prereg §4).  OUTDIR: /tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_b048_ptsoff_arm1_lean2_r8e9f73ff2841'))
+  FAIL  N6 [R_j 유니코드 숫자 (١٠)] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출  ((0, [], '36        [0.0, 0.0, 0.0]    0\n\n  수집: SBE 1 팔 · DBE 1 팔\n  (--collect-only — 판정하지 않는다)\n[p2] ⚠ **진단 런 (1 팔) — 생산 봉인 아님.**  이 산출물로 판정하지 말 것.\n     사전등록은 8 팔이다 (prereg §4).  OUTDIR: /tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_b048_ptsoff_arm1_lean2_r8e9f73ff2841'))
+  FAIL  N6 [R_j 밑줄 (1_000)] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출  ((0, [], '36        [0.0, 0.0, 0.0]    0\n\n  수집: SBE 1 팔 · DBE 1 팔\n  (--collect-only — 판정하지 않는다)\n[p2] ⚠ **진단 런 (1 팔) — 생산 봉인 아님.**  이 산출물로 판정하지 말 것.\n     사전등록은 8 팔이다 (prereg §4).  OUTDIR: /tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_b048_ptsoff_arm1_lean2_r8e9f73ff2841'))
+  FAIL  N6 [R_j 변수 참조 ($HOME)] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출  ((0, [], '36        [0.0, 0.0, 0.0]    0\n\n  수집: SBE 1 팔 · DBE 1 팔\n  (--collect-only — 판정하지 않는다)\n[p2] ⚠ **진단 런 (1 팔) — 생산 봉인 아님.**  이 산출물로 판정하지 말 것.\n     사전등록은 8 팔이다 (prereg §4).  OUTDIR: /tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_b048_ptsoff_arm1_lean2_r8e9f73ff2841'))
+  FAIL  N6 [미등록 면 법칙 auto] → rc 2 · `RUNNER_CA_EXT|REQUEST|` · 새 디렉터리 없음 · payload 미호출  ((0, [], '36        [0.0, 0.0, 0.0]    0\n\n  수집: SBE 1 팔 · DBE 1 팔\n  (--collect-only — 판정하지 않는다)\n[p2] ⚠ **진단 런 (1 팔) — 생산 봉인 아님.**  이 산출물로 판정하지 말 것.\n     사전등록은 8 팔이다 (prereg §4).  OUTDIR: /tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_b048_ptsoff_arm1_lean2_r8e9f73ff2841'))
+  FAIL  N6 [미등록 면 법칙 구분자 (cut;x)] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출  ((0, [], '36        [0.0, 0.0, 0.0]    0\n\n  수집: SBE 1 팔 · DBE 1 팔\n  (--collect-only — 판정하지 않는다)\n[p2] ⚠ **진단 런 (1 팔) — 생산 봉인 아님.**  이 산출물로 판정하지 말 것.\n     사전등록은 8 팔이다 (prereg §4).  OUTDIR: /tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_b048_ptsoff_arm1_lean2_r8e9f73ff2841'))
+  FAIL  N6 [길이 법칙 다른 판] → rc 2 · `RUNNER_CA_EXT|REQUEST|` · 새 디렉터리 없음 · payload 미호출  ((0, [], '36        [0.0, 0.0, 0.0]    0\n\n  수집: SBE 1 팔 · DBE 1 팔\n  (--collect-only — 판정하지 않는다)\n[p2] ⚠ **진단 런 (1 팔) — 생산 봉인 아님.**  이 산출물로 판정하지 말 것.\n     사전등록은 8 팔이다 (prereg §4).  OUTDIR: /tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_b048_ptsoff_arm1_lean2_r8e9f73ff2841'))
+  FAIL  N6 [PTFE–접합 P1 (face_alpha 에서만)] → rc 2 · `RUNNER_CA_EXT|REQUEST|` · 새 디렉터리 없음 · payload 미호출  ((0, [], '36        [0.0, 0.0, 0.0]    0\n\n  수집: SBE 1 팔 · DBE 1 팔\n  (--collect-only — 판정하지 않는다)\n[p2] ⚠ **진단 런 (1 팔) — 생산 봉인 아님.**  이 산출물로 판정하지 말 것.\n     사전등록은 8 팔이다 (prereg §4).  OUTDIR: /tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_b048_ptsoff_arm1_lean2_r8e9f73ff2841'))
+  FAIL  N6 [접합 + LEAN 미지정] → rc 2 · `RUNNER_CA_EXT|LEAN|` · 새 디렉터리 없음 · payload 미호출  ((0, ['/tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_b048_ptsoff_arm1_r8e9f73ff2841'], '-only — 판정하지 않는다)\n[p2] ⚠ **진단 런 (1 팔) — 생산 봉인 아님.**  이 산출물로 판정하지 말 것.\n     사전등록은 8 팔이다 (prereg §4).  OUTDIR: /tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_b048_ptsoff_arm1_r8e9f73ff2841\n  [p2] vox 1.0: σ_VGCF 100 → 1.76715\n  [p2] vox 1.0: σ_VGCF 100 → 1.76715'))
+  FAIL  N6 [접합 + LEAN 1] → rc 2 · `RUNNER_CA_EXT|LEAN|` · 새 디렉터리 없음 · payload 미호출  ((0, ['/tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_b048_ptsoff_arm1_lean_r8e9f73ff2841'], ' — 판정하지 않는다)\n[p2] ⚠ **진단 런 (1 팔) — 생산 봉인 아님.**  이 산출물로 판정하지 말 것.\n     사전등록은 8 팔이다 (prereg §4).  OUTDIR: /tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_b048_ptsoff_arm1_lean_r8e9f73ff2841\n  [p2] vox 1.0: σ_VGCF 100 → 1.76715\n  [p2] vox 1.0: σ_VGCF 100 → 1.76715'))
+  FAIL  N6 [접합 + LEAN 4 (필드)] → rc 2 · `RUNNER_CA_EXT|LEAN|` · 새 디렉터리 없음 · payload 미호출  ((0, ['/tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_b048_ptsoff_arm1_lean4_r8e9f73ff2841'], '— 판정하지 않는다)\n[p2] ⚠ **진단 런 (1 팔) — 생산 봉인 아님.**  이 산출물로 판정하지 말 것.\n     사전등록은 8 팔이다 (prereg §4).  OUTDIR: /tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_b048_ptsoff_arm1_lean4_r8e9f73ff2841\n  [p2] vox 1.0: σ_VGCF 100 → 1.76715\n  [p2] vox 1.0: σ_VGCF 100 → 1.76715'))
+  FAIL  N6 [접합 + 점 스탬프] → rc 2 · `RUNNER_CA_EXT|SEGMENT|` · 새 디렉터리 없음 · payload 미호출  ((0, ['/tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_b048_ptsoff_fspt_arm1_lean2_r5db3e0f41363'], '지 않는다)\n[p2] ⚠ **진단 런 (1 팔) — 생산 봉인 아님.**  이 산출물로 판정하지 말 것.\n     사전등록은 8 팔이다 (prereg §4).  OUTDIR: /tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_b048_ptsoff_fspt_arm1_lean2_r5db3e0f41363\n  [p2] vox 1.0: σ_VGCF 100 → 1.76715\n  [p2] vox 1.0: σ_VGCF 100 → 1.76715'))
+  FAIL  N6 [접합 + 주기] → rc 2 · `RUNNER_CA_EXT|PERIODIC|` · 새 디렉터리 없음 · payload 미호출  ((0, ['/tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_b048_ptsoff_arm1_lean2_rbe86b8715b95'], '— 판정하지 않는다)\n[p2] ⚠ **진단 런 (1 팔) — 생산 봉인 아님.**  이 산출물로 판정하지 말 것.\n     사전등록은 8 팔이다 (prereg §4).  OUTDIR: /tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_b048_ptsoff_arm1_lean2_rbe86b8715b95\n  [p2] vox 1.0: σ_VGCF 100 → 1.76715\n  [p2] vox 1.0: σ_VGCF 100 → 1.76715'))
+  FAIL  N6 [접합 + SDCP 브리지 진단 팔] → rc 2 · `RUNNER_CA_EXT|SDCP_BRIDGE|` · 새 디렉터리 없음 · payload 미호출  ((1, ['/tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_sph_b048_ptsoff_sbrg03_arm1_lean2_r9d5893be31f8'], '00 → 1.76715\n  [p2] vox 1.0: σ_VGCF 100 → 1.76715\n부피-보존 구 스탬프: d/vox = 0.30 < 2 거부.  ⚠ 근거 정정(리뷰 ②): 전소실 절벽은 √3 ≈ 1.732 (실측: 1.5 에서 소실 1.24 %, 1.74~2.0 에서 0 %) — 2.0 을 유지하는 진짜 이유는 per-입자 부피 산포가 [0.48, 1.91]× 로 커서다 (배치-평균은 무편향).  vox ≤ 0.150 µm 를 쓰거나 점 스탬프로 남길 것'))
+  FAIL  N6 [접합 + σ_VGCF 고정 0] → rc 2 · `RUNNER_CA_EXT|VGCF_INSULATING|` · 새 디렉터리 없음 · payload 미호출  ((0, ['/tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_b048_sg0_ptsoff_arm1_lean2_r36c602b23674'], '      [0.0, 0.0, 0.0]    0\n\n  수집: SBE 1 팔 · DBE 1 팔\n  (--collect-only — 판정하지 않는다)\n[p2] ⚠ **진단 런 (1 팔) — 생산 봉인 아님.**  이 산출물로 판정하지 말 것.\n     사전등록은 8 팔이다 (prereg §4).  OUTDIR: /tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_b048_sg0_ptsoff_arm1_lean2_r36c602b23674'))
+  FAIL  N6 [접합 + face_alpha (조합 미정의)] → rc 2 · `RUNNER_CA_EXT|FACE_ALPHA_COMBO|` · 새 디렉터리 없음 · payload 미호출  ((2, [], '[p2] ⚠ ARMS=1 ≠ 사전등록 8 — **진단 런**이다.\n     OUTDIR 에 _arm1 를 붙여 생산 산출물과 갈라 놓는다.  생산 봉인은 걸지 않는다.\n[p2] ABORT — PTFE_STAMP 는 off 또는 centerline (받은 값: face_alpha)'))
+  FAIL  N6 [face_alpha + LEAN 미지정] → rc 2 · `RUNNER_CA_EXT|LEAN|` · 새 디렉터리 없음 · payload 미호출  ((2, [], '[p2] ⚠ ARMS=1 ≠ 사전등록 8 — **진단 런**이다.\n     OUTDIR 에 _arm1 를 붙여 생산 산출물과 갈라 놓는다.  생산 봉인은 걸지 않는다.\n[p2] ABORT — PTFE_STAMP 는 off 또는 centerline (받은 값: face_alpha)'))
+  FAIL  N6 [face_alpha + LEAN 1] → rc 2 · `RUNNER_CA_EXT|LEAN|` · 새 디렉터리 없음 · payload 미호출  ((2, [], '[p2] ⚠ ARMS=1 ≠ 사전등록 8 — **진단 런**이다.\n     OUTDIR 에 _arm1 를 붙여 생산 산출물과 갈라 놓는다.  생산 봉인은 걸지 않는다.\n[p2] ABORT — PTFE_STAMP 는 off 또는 centerline (받은 값: face_alpha)'))
+  FAIL  N6 [face_alpha + LEAN 4] → rc 2 · `RUNNER_CA_EXT|LEAN|` · 새 디렉터리 없음 · payload 미호출  ((2, [], '[p2] ⚠ ARMS=1 ≠ 사전등록 8 — **진단 런**이다.\n     OUTDIR 에 _arm1 를 붙여 생산 산출물과 갈라 놓는다.  생산 봉인은 걸지 않는다.\n[p2] ABORT — PTFE_STAMP 는 off 또는 centerline (받은 값: face_alpha)'))
+  FAIL  N6 [face_alpha + σ_PTFE > 0] → rc 2 · `RUNNER_CA_EXT|SIGMA_PTFE|` · 새 디렉터리 없음 · payload 미호출  ((2, [], '[p2] ⚠ ARMS=1 ≠ 사전등록 8 — **진단 런**이다.\n     OUTDIR 에 _arm1 를 붙여 생산 산출물과 갈라 놓는다.  생산 봉인은 걸지 않는다.\n[p2] ★ **진단 팔** — PTFE 를 격자에 스탬프 (σ_PTFE=1e-16).  생산 규약 아님 (CL-49)\n[p2] ABORT — PTFE_STAMP 는 off 또는 centerline (받은 값: face_alpha)'))
+  FAIL  N6 [face_alpha + PTFE 차단 (LEAN 3)] → rc 2 · `RUNNER_CA_EXT|PTFE_BLOCK|` · 새 디렉터리 없음 · payload 미호출  ((2, [], '[p2] ⚠ ARMS=1 ≠ 사전등록 8 — **진단 런**이다.\n     OUTDIR 에 _arm1 를 붙여 생산 산출물과 갈라 놓는다.  생산 봉인은 걸지 않는다.\n[p2] ABORT — PTFE_STAMP 는 off 또는 centerline (받은 값: face_alpha)'))
+  FAIL  N6 [face_alpha + 주기] → rc 2 · `RUNNER_CA_EXT|PERIODIC|` · 새 디렉터리 없음 · payload 미호출  ((2, [], '[p2] ⚠ ARMS=1 ≠ 사전등록 8 — **진단 런**이다.\n     OUTDIR 에 _arm1 를 붙여 생산 산출물과 갈라 놓는다.  생산 봉인은 걸지 않는다.\n[p2] ABORT — PTFE_STAMP 는 off 또는 centerline (받은 값: face_alpha)'))
+  FAIL  N6 [face_alpha + 점 스탬프] → rc 2 · `RUNNER_CA_EXT|SEGMENT|` · 새 디렉터리 없음 · payload 미호출  ((2, [], '[p2] ⚠ ARMS=1 ≠ 사전등록 8 — **진단 런**이다.\n     OUTDIR 에 _arm1 를 붙여 생산 산출물과 갈라 놓는다.  생산 봉인은 걸지 않는다.\n[p2] ABORT — PTFE_STAMP 는 off 또는 centerline (받은 값: face_alpha)'))
+  FAIL  N6 [rtol 1e-10 (봉인 상한 1e-12 밖 · 증서 ⓐ 실패 확정)] → rc 2 · `RUNNER_CA_EXT|RTOL|` · 새 디렉터리 없음 · payload 미호출  ((0, [], '36        [0.0, 0.0, 0.0]    0\n\n  수집: SBE 1 팔 · DBE 1 팔\n  (--collect-only — 판정하지 않는다)\n[p2] ⚠ **진단 런 (1 팔) — 생산 봉인 아님.**  이 산출물로 판정하지 말 것.\n     사전등록은 8 팔이다 (prereg §4).  OUTDIR: /tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_b048_ptsoff_arm1_lean2_r8e9f73ff2841'))
+  FAIL  N6 [rtol 0] → rc 2 · `RUNNER_CA_EXT|RTOL|` · 새 디렉터리 없음 · payload 미호출  ((0, [], '36        [0.0, 0.0, 0.0]    0\n\n  수집: SBE 1 팔 · DBE 1 팔\n  (--collect-only — 판정하지 않는다)\n[p2] ⚠ **진단 런 (1 팔) — 생산 봉인 아님.**  이 산출물로 판정하지 말 것.\n     사전등록은 8 팔이다 (prereg §4).  OUTDIR: /tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_b048_ptsoff_arm1_lean2_r8e9f73ff2841'))
+  FAIL  N6 [rtol 글자] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출  ((0, [], '36        [0.0, 0.0, 0.0]    0\n\n  수집: SBE 1 팔 · DBE 1 팔\n  (--collect-only — 판정하지 않는다)\n[p2] ⚠ **진단 런 (1 팔) — 생산 봉인 아님.**  이 산출물로 판정하지 말 것.\n     사전등록은 8 팔이다 (prereg §4).  OUTDIR: /tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_b048_ptsoff_arm1_lean2_r8e9f73ff2841'))
+  FAIL  N6 [P2_EXTRA 로 rtol (러너 축으로 옮김)] → rc 2 · `STEP3_RTOL` · 새 디렉터리 없음 · payload 미호출  ((0, [], '36        [0.0, 0.0, 0.0]    0\n\n  수집: SBE 1 팔 · DBE 1 팔\n  (--collect-only — 판정하지 않는다)\n[p2] ⚠ **진단 런 (1 팔) — 생산 봉인 아님.**  이 산출물로 판정하지 말 것.\n     사전등록은 8 팔이다 (prereg §4).  OUTDIR: /tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_b048_ptsoff_arm1_lean2_r8e9f73ff2841'))
+  FAIL  N6 [오타 축 (CJUNC_BOGUS)] → rc 2 · `CJUNC_BOGUS` · 새 디렉터리 없음 · payload 미호출  ((0, [], '36        [0.0, 0.0, 0.0]    0\n\n  수집: SBE 1 팔 · DBE 1 팔\n  (--collect-only — 판정하지 않는다)\n[p2] ⚠ **진단 런 (1 팔) — 생산 봉인 아님.**  이 산출물로 판정하지 말 것.\n     사전등록은 8 팔이다 (prereg §4).  OUTDIR: /tmp/ca_ext_runner_czu25b4f/n6/prereg_v2_vox10_b048_ptsoff_arm1_lean2_r8e9f73ff2841'))
+
+── N6b 러너 거부 ⊆ payload 거부 — 같은 조합을 payload 에 직접 주면 거부 (과잉차단 없음)
+  PASS  N6b [접합 + LEAN 1] payload 도 거부 — `S2_CJUNC_REFUSED|COLLECTOR|`
+  PASS  N6b [접합 + LEAN 4] payload 도 거부 — `S2_CJUNC_REFUSED|FIELD|`
+  PASS  N6b [접합 + LEAN 미지정] payload 도 거부 — `S2_CJUNC_REFUSED|FIELD|`
+  PASS  N6b [접합 + 점 스탬프] payload 도 거부 — `S2_CJUNC_REFUSED|SEGMENT|`
+  PASS  N6b [접합 + 주기] payload 도 거부 — `S2_CJUNC_REFUSED|PERIODIC|`
+  PASS  N6b [접합 + SDCP 브리지] payload 도 거부 — `S2_CJUNC_REFUSED|SDCP_BRIDGE|`
+  PASS  N6b [접합 + σ_VGCF 0] payload 도 거부 — `S2_CJUNC_REFUSED|VGCF_INSULATING|`
+  PASS  N6b [접합 + face_alpha] payload 도 거부 — `S2_CJUNC_REFUSED|FACE_ALPHA_COMBO|`
+  PASS  N6b [face_alpha + LEAN 1] payload 도 거부 — `S1_FACE_ALPHA_REFUSED|COLLECTOR|`
+  PASS  N6b [face_alpha + LEAN 4] payload 도 거부 — `S1_FACE_ALPHA_REFUSED|FIELD|`
+  PASS  N6b [face_alpha + σ_PTFE] payload 도 거부 — `S1_FACE_ALPHA_REFUSED|SIGMA_PTFE|`
+  PASS  N6b [face_alpha + PTFE 차단] payload 도 거부 — `S1_FACE_ALPHA_REFUSED|PTFE_BLOCK|`
+  PASS  N6b [face_alpha + 주기] payload 도 거부 — `S1_FACE_ALPHA_REFUSED|PERIODIC|`
+  PASS  N6b [face_alpha + 점 스탬프] payload 도 거부 — `S1_FACE_ALPHA_REFUSED|SEGMENT|`
+  PASS  N6b [rtol 1e-10] payload 는 받지만 그 팔은 게시할 수 없다 (증서 ⓐ 실패 · 미수렴) — 러너 거부는 계산 낭비만 막는다
+
+── N7 OUTDIR · 팔 태그 · 인자 · 선언 — 다른 요청 = 다른 이름 · 같은 물리 = 같은 이름
+  FAIL  N7a 설정부 실행 (접합) — 중단 없음 · 다섯 값이 조립된다  (R 에 _arm1 를 붙여 생산 산출물과 갈라 놓는다.  생산 봉인은 걸지 않는다.
+[p2] ★ PTFE 스탬프 규약 = off (명시)
+[p2] ★ LEAN=2 (σ_e 전용) — 이온·pore-τ·집전체기하 를 전부 끈다 (팔당 솔브 3회 → 1회)
+OUTDIR=/tmp/ca_ext_runner_czu25b4f/_probe/prereg_v2_vox10_b048_ptsoff_arm1_lean2_r8e9f73ff2841
+NG_TAG=<UNSET>
+NG_ATAG=<UNSET>
+NG_FLAG=<UNSET>
+NG_DECL=<UNSET>
+)
+  FAIL  N7b 인자 꼴 — 켜기 + 값 플래그 여섯 (값 = 정규 표기) · 선행 공백  (['<UNSET>'])
+  FAIL  N7c 선언 꼴 — `,ca_ext.cjunc.<칸>=<값>` 여섯 (앞 쉼표 · 러너 선언 뒤에 붙는다)
+  FAIL  N7d 끔 — 넷 다 빈 문자열 (옛 조립 그대로)  ({'_rc': 0, '_log': '[p2] ⚠ ARMS=1 ≠ 사전등록 8 — **진단 런**이다.\n     OUTDIR 에 _arm1 를 붙여 생산 산출물과 갈라 놓는다.  생산 봉인은 걸지 않는다.\n[p2] ★ PTFE 스탬프 규약 = off (명시)\n[p2] ★ LEAN=2 (σ_e 전용) — 이온·pore-τ·집전체기하 를 전부 끈다 (팔당 솔브 3회 → 1회)\nOUTDIR=/tmp/ca_ext_runner_czu25b4f/_probe/prereg_v2_vox10_b048_ptsoff_arm1_lean2_r8e9f73ff2841\nNG_TAG=<UNSET>\nNG_ATAG=<UNSET>\nNG_FLAG=<UNSET>\nNG_DECL=<UNSET>\n', 'OUTDIR': '/tmp/ca_ext_runner_czu25b4f/_probe/prereg_v2_vox10_b048_ptsoff_arm1_lean2_r8e9f73ff2841', 'NG_TAG': '<UNSET>', 'NG_ATAG': '<UNSET>', 'NG_FLAG': '<UNSET>', 'NG_DECL': '<UNSET>'})
+  FAIL  N7e 같은 R_j 다른 표기 (1000000 · 1.0e6 · 1e+6 · 1E6) = 같은 OUTDIR · 같은 팔 태그 `_cj1000000_…` (정규 · 같은 물리 = 같은 이름)  (['<UNSET>', '<UNSET>', '<UNSET>', '<UNSET>', '<UNSET>'])
+  FAIL  N7f 요청 12 가지 = OUTDIR 2 개 · 팔 태그 2 개 (전부 다르다 · 2.5 ↔ 25 무손실 · R_j 가 같아도 s_min · tol_ff · 법칙이 다르면 다르다)  ({'base': '<UNSET>', 'R_j 1e2': '<UNSET>', 'R_j 1e8': '<UNSET>', 'R_j 2.5': '<UNSET>', 'R_j 25': '<UNSET>', 's_min 0.05': '<UNSET>', 'tol_ff 0.05': '<UNSET>', 'fused': '<UNSET>', 'c 0': None, 'c 1': None, 'rtol 1e-12': '<UNSET>', 'rtol 1e-13': '<UNSET>'})
+  FAIL  N7g 읽을 수 있는 태그 — R_j 1e2 → `_cj100_` · 2.5 → `_cj2p5_` · c 1 → `_c1` · rtol 1e-13 → `_rt1em13`  ({'R_j 1e2': '<UNSET>', 'R_j 2.5': '<UNSET>', 'c 1': None, 'rtol 1e-13': '<UNSET>'})
+  FAIL  N7h face_alpha + rtol — 팔 태그 `_fa_rt1em12` (OUTDIR 은 `_ptsface_alpha` 가 이미 가른다) · 끔 + rtol = `_rt1em12`  ((None, '<UNSET>'))
+  FAIL  N7i face_alpha + σ_PTFE 0 은 거부하지 않는다 (payload 도 > 0 만 거부 · 과잉차단 없음)  ( 8 — **진단 런**이다.
+     OUTDIR 에 _arm1 를 붙여 생산 산출물과 갈라 놓는다.  생산 봉인은 걸지 않는다.
+[p2] ★ **진단 팔** — PTFE 를 격자에 스탬프 (σ_PTFE=0).  생산 규약 아님 (CL-49)
+[p2] ABORT — PTFE_STAMP 는 off 또는 centerline (받은 값: face_alpha)
+)
+
+── N8 SKIP 캐시 함정 — 옛 팔이 있는 OUTDIR 을 명시해도 재사용 · 삭제하지 않는다
+  FAIL  N8a 옛 팔을 SKIP (재사용) 하지 않는다  (_DBE_a0.json               0.000999027483831778         None         3337        [0.0, 0.0, 0.0]    0
+p2_SBE_a0.json               0.0009988916170637506         None         3336        [0.0, 0.0, 0.0]    0
+
+  수집: SBE 1 팔 · DBE 1 팔
+  (--collect-only — 판정하지 않는다)
+[p2] ⚠ **진단 런 (1 팔) — 생산 봉인 아님.**  이 산출물로 판정하지 말 것.
+     사전등록은 8 팔이다 (prereg §4).  OUTDIR: /tmp/ca_ext_runner_czu25b4f/n8/old_outdir_arm1
+)
+  PASS  N8b 옛 팔 두 파일이 그대로 (삭제 · 덮어쓰기 없음)
+  FAIL  N8c 새 팔은 새 이름으로만 돈다 (payload --out = p2_<침대>_cj…_rt1em12_a0)
+
+── N9 규율 검사기 격리 — 부모 셸의 새 축 env 가 규칙 L 탐침을 오염시키지 않는다
+  FAIL  N9a 새 손잡이 아홉이 규율 검사기의 격리 목록 (_RUNNER_AXES) 에 있다  (['CJUNC', 'CJUNC_LEN_LAW', 'CJUNC_PTFE_JLAW', 'CJUNC_RJ', 'CJUNC_S_MIN_UM', 'CJUNC_TOL_FF_UM', 'CJUNC_UNREG_LAW', 'SDCP_MOD_C', 'STEP3_RTOL'])
+  FAIL  N9b 오염된 부모 셸 (CJUNC=1 … SDCP_MOD_C=1 · STEP3_RTOL) 에서도 기본 탐침 = 끔 조립 (중단 없음 · LEAN_FLAGS 빈)  ({'_aborted': '2', '_msg': "[p2] ABORT — 축 env 가 설정됐는데 러너가 자기 소스(bash)를 못 읽어 배선을 확인할 수 없다.\n      를 주거나 파일로 직접 실행할 것.\nbash: command substitution: line 101: syntax error near unexpected token `newline'\nbash: command substitution: line 101: `P2_SELF=<러너 경로>'\n"})
+  PASS  N9c (판별력) 격리 목록에서 새 이름을 빼면 같은 탐침이 오염된다 (중단) — 위 통과가 우연이 아니다
+
+── NB 끔 경로 — 고치기 전 러너와 payload argv · 영수증 · OUTDIR · 팔 이름 · 매니페스트 대조 (--old-runner)
+    (--old-runner 없음 — 건너뜀 · 커밋 증거는 그 인자로 돌린 기록)
+
+23 PASS · 79 FAIL
+  - N0b run_contract.RUNNER_CA_EXT_ENV = 러너 손잡이 표 (아홉 이름)
+  - N0c 표의 선언 칸 = ca_ext_cjunc 의 REQUEST_KEYS (사본 없이 같은 집합)
+  - N0d 러너가 손잡이 아홉을 `${NAME:-}` 로 읽는다 (env 게이트가 "읽지 않는 축" 으로 죽이지 않게)
+  - N0e P2_EXTRA 허용목록에 --step3-rtol 이 없다 (영수증 · OUTDIR · 증서 대조 = 러너 축 STEP3_RTOL)
+  - N0f PTFE_STAMP 가 face_alpha 를 받는다 (거부 목록이 아니다)
+  - N0g env 게이트가 CJUNC 이름꼴도 본다 (오타 축 = 죽음)
+  - N2a 러너 rc 0 · 팔 둘 · 이름 = p2_<침대>_cj1000000_<h8>_rt1em12_a0 (옛 p2_SBE_a0 와 다르다)
+  - N2b 영수증 — ca_ext_request = 선언 값 (형 맞춤 · float · str) · step3_rtol 1e-12 · 러너 요청 검사 통과
+  - N2c [SBE] payload 인자 (명령줄 대조) — 접합 일곱 · rtol · 수정자 c
+  - N2d [SBE] --expect-physics 선언 = 켠 블록의 칸 전부 · 값 = 영수증 (선언한 축 = 매니페스트 축)
+  - N2e [SBE] 팔 = p3ca · ca_ext_record_ok · receipt_match · 수렴 증서 (다음 세대 게시 조건) · protocol R_j 1e6
+  - N2c [DBE] payload 인자 (명령줄 대조) — 접합 일곱 · rtol · 수정자 c
+  - N2d [DBE] --expect-physics 선언 = 켠 블록의 칸 전부 · 값 = 영수증 (선언한 축 = 매니페스트 축)
+  - N2e [DBE] 팔 = p3ca · ca_ext_record_ok · receipt_match · 수렴 증서 (다음 세대 게시 조건) · protocol R_j 1e6
+  - N2g OUTDIR 이름에 새 태그 (_cj1000000_<h8>_rt1em12) · 끔 런과 다른 디렉터리
+  - N3a 러너 rc 0 · 팔 둘 · 이름 = p2_<침대>_cj1000000_<h8>_c1_rt1em12_a0 (옛 p2_SBE_a0 와 다르다)
+  - N3b 영수증 — ca_ext_request = 선언 값 (형 맞춤 · float · str) · step3_rtol 1e-12 · 러너 요청 검사 통과
+  - N3c [SBE] payload 인자 (명령줄 대조) — 접합 일곱 · rtol · 수정자 c
+  - N3d [SBE] --expect-physics 선언 = 켠 블록의 칸 전부 · 값 = 영수증 (선언한 축 = 매니페스트 축)
+  - N3c [DBE] payload 인자 (명령줄 대조) — 접합 일곱 · rtol · 수정자 c
+  - N3d [DBE] --expect-physics 선언 = 켠 블록의 칸 전부 · 값 = 영수증 (선언한 축 = 매니페스트 축)
+  - N3g OUTDIR 이름에 새 태그 (_cj1000000_<h8>_c1_rt1em12) · 끔 런과 다른 디렉터리
+  - N4a 러너 rc 0 · 팔 둘 · 이름 = p2_<침대>_fa_rt1em12_a0
+  - N4b 영수증 — ptfe_stamp face_alpha · step3_rtol 1e-12 · 접합 요청 없음
+  - N5a 러너 rc 0 · 팔 둘 · 이름 = p2_<침대>_fa_rt1em12_a0
+  - N5b 영수증 — ptfe_stamp face_alpha · step3_rtol 1e-12 · 접합 요청 없음
+  - N6 [스위치 값 (CJUNC=yes)] → rc 2 · `RUNNER_CA_EXT|SWITCH|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [접합 켬 · s_min 없음] → rc 2 · `RUNNER_CA_EXT|MISSING|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [접합 켬 · 값 여섯 다 없음] → rc 2 · `RUNNER_CA_EXT|MISSING|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [R_j 만 (접합 안 켬)] → rc 2 · `RUNNER_CA_EXT|FLAG_WITHOUT_CJUNC|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [SDCP 수정자만 (S2 없이)] → rc 2 · `RUNNER_CA_EXT|NO_CJUNC|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [수정자 c = 0.5] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [수정자 c = 1.0 (payload 선택지 0 · 1 밖)] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [R_j nan] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [R_j inf] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [R_j 1e999 (넘침 → inf)] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [R_j 음수] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [R_j 0 (정량 아님)] → rc 2 · `RUNNER_CA_EXT|REQUEST|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [R_j 끝 공백] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [R_j 유니코드 숫자 (١٠)] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [R_j 밑줄 (1_000)] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [R_j 변수 참조 ($HOME)] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [미등록 면 법칙 auto] → rc 2 · `RUNNER_CA_EXT|REQUEST|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [미등록 면 법칙 구분자 (cut;x)] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [길이 법칙 다른 판] → rc 2 · `RUNNER_CA_EXT|REQUEST|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [PTFE–접합 P1 (face_alpha 에서만)] → rc 2 · `RUNNER_CA_EXT|REQUEST|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [접합 + LEAN 미지정] → rc 2 · `RUNNER_CA_EXT|LEAN|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [접합 + LEAN 1] → rc 2 · `RUNNER_CA_EXT|LEAN|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [접합 + LEAN 4 (필드)] → rc 2 · `RUNNER_CA_EXT|LEAN|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [접합 + 점 스탬프] → rc 2 · `RUNNER_CA_EXT|SEGMENT|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [접합 + 주기] → rc 2 · `RUNNER_CA_EXT|PERIODIC|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [접합 + SDCP 브리지 진단 팔] → rc 2 · `RUNNER_CA_EXT|SDCP_BRIDGE|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [접합 + σ_VGCF 고정 0] → rc 2 · `RUNNER_CA_EXT|VGCF_INSULATING|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [접합 + face_alpha (조합 미정의)] → rc 2 · `RUNNER_CA_EXT|FACE_ALPHA_COMBO|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [face_alpha + LEAN 미지정] → rc 2 · `RUNNER_CA_EXT|LEAN|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [face_alpha + LEAN 1] → rc 2 · `RUNNER_CA_EXT|LEAN|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [face_alpha + LEAN 4] → rc 2 · `RUNNER_CA_EXT|LEAN|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [face_alpha + σ_PTFE > 0] → rc 2 · `RUNNER_CA_EXT|SIGMA_PTFE|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [face_alpha + PTFE 차단 (LEAN 3)] → rc 2 · `RUNNER_CA_EXT|PTFE_BLOCK|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [face_alpha + 주기] → rc 2 · `RUNNER_CA_EXT|PERIODIC|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [face_alpha + 점 스탬프] → rc 2 · `RUNNER_CA_EXT|SEGMENT|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [rtol 1e-10 (봉인 상한 1e-12 밖 · 증서 ⓐ 실패 확정)] → rc 2 · `RUNNER_CA_EXT|RTOL|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [rtol 0] → rc 2 · `RUNNER_CA_EXT|RTOL|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [rtol 글자] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [P2_EXTRA 로 rtol (러너 축으로 옮김)] → rc 2 · `STEP3_RTOL` · 새 디렉터리 없음 · payload 미호출
+  - N6 [오타 축 (CJUNC_BOGUS)] → rc 2 · `CJUNC_BOGUS` · 새 디렉터리 없음 · payload 미호출
+  - N7a 설정부 실행 (접합) — 중단 없음 · 다섯 값이 조립된다
+  - N7b 인자 꼴 — 켜기 + 값 플래그 여섯 (값 = 정규 표기) · 선행 공백
+  - N7c 선언 꼴 — `,ca_ext.cjunc.<칸>=<값>` 여섯 (앞 쉼표 · 러너 선언 뒤에 붙는다)
+  - N7d 끔 — 넷 다 빈 문자열 (옛 조립 그대로)
+  - N7e 같은 R_j 다른 표기 (1000000 · 1.0e6 · 1e+6 · 1E6) = 같은 OUTDIR · 같은 팔 태그 `_cj1000000_…` (정규 · 같은 물리 = 같은 이름)
+  - N7f 요청 12 가지 = OUTDIR 2 개 · 팔 태그 2 개 (전부 다르다 · 2.5 ↔ 25 무손실 · R_j 가 같아도 s_min · tol_ff · 법칙이 다르면 다르다)
+  - N7g 읽을 수 있는 태그 — R_j 1e2 → `_cj100_` · 2.5 → `_cj2p5_` · c 1 → `_c1` · rtol 1e-13 → `_rt1em13`
+  - N7h face_alpha + rtol — 팔 태그 `_fa_rt1em12` (OUTDIR 은 `_ptsface_alpha` 가 이미 가른다) · 끔 + rtol = `_rt1em12`
+  - N7i face_alpha + σ_PTFE 0 은 거부하지 않는다 (payload 도 > 0 만 거부 · 과잉차단 없음)
+  - N8a 옛 팔을 SKIP (재사용) 하지 않는다
+  - N8c 새 팔은 새 이름으로만 돈다 (payload --out = p2_<침대>_cj…_rt1em12_a0)
+  - N9a 새 손잡이 아홉이 규율 검사기의 격리 목록 (_RUNNER_AXES) 에 있다
+  - N9b 오염된 부모 셸 (CJUNC=1 … SDCP_MOD_C=1 · STEP3_RTOL) 에서도 기본 탐침 = 끔 조립 (중단 없음 · LEAN_FLAGS 빈)
+ELAPSED_S=131.6 RC=1

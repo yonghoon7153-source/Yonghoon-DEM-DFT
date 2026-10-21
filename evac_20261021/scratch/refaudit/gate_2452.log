@@ -1,0 +1,4 @@
+gate start 2026-10-21T00:47:03+00:00 HEAD 2452f1756c399a034e0217a0a20980dc33694512
+── selftest (검사기가 맞나) ──
+  ✓ run_contract          --selftest
+  ✓ check_review_findings   --selftest

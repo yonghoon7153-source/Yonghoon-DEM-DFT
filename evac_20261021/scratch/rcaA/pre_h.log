@@ -1,0 +1,9 @@
+── RCA06-H
+  FAIL  RCA06-H ① 반사실 솔브 뒤 모듈 전역 출처 = 주 해 그대로 (LAST_BACKEND used cpu-main · LAST_CG iters 111) · 반사실 기록에 자기 backend (cpu-counterfactual) · 솔브 2 번 · 비 = 손 회로 (1e-10)  (calls 2 · 전역 cpu-counterfactual / 777 · 기록 None · computed)
+  FAIL  RCA06-H ① 증서 끔 = 반사실 기록 conv_cert None (칸 있음 · 증서 없이 CG 술어만)  (['G_cut_code', 'G_full_code', 'cg_info', 'flag', 'kind', 'n_sv_faces_cut', 'requested', 'resid', 'status', 'sv_counterfactual_ratio', 'threshold'])
+  FAIL  RCA06-H ② 증서 켬 (rtol 1e-12 · 직접 풀이) — 주 해 증서 ok · 반사실 솔브도 같은 증서 함수 (판본 conv-cert · ok · ⓐⓑⓒ) · 비 = 손 회로 (1e-10)  (주 True · 반사실 computed None)
+  FAIL  RCA06-H ② 반사실 솔브 증서 실패 → 비 없음 · 표지 없음 (문턱 2.0 이어도) · status unconverged · 주 해는 그대로 (증서 ok · σ = 손 회로)  (증서 호출 1 · computed · 비 10.291253935345084 · 표지 SV_DEPENDENT)
+
+== test_carbon_junction: 0/4 PASS
+FAIL: RCA06-H ① 반사실 솔브 뒤 모듈 전역 출처 = 주 해 그대로 (LAST_BACKEND used cpu-main · LAST_CG iters 111) · 반사실 기록에 자기 backend (cpu-counterfactual) · 솔브 2 번 · 비 = 손 회로 (1e-10) · RCA06-H ① 증서 끔 = 반사실 기록 conv_cert None (칸 있음 · 증서 없이 CG 술어만) · RCA06-H ② 증서 켬 (rtol 1e-12 · 직접 풀이) — 주 해 증서 ok · 반사실 솔브도 같은 증서 함수 (판본 conv-cert · ok · ⓐⓑⓒ) · 비 = 손 회로 (1e-10) · RCA06-H ② 반사실 솔브 증서 실패 → 비 없음 · 표지 없음 (문턱 2.0 이어도) · status unconverged · 주 해는 그대로 (증서 ok · σ = 손 회로)
+[nrun] wall 1.2 s · exit 1

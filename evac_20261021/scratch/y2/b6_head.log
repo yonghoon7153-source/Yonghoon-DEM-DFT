@@ -1,0 +1,171 @@
+
+── R run_contract — cjunc · sdcp_mod 하위 블록 · 요청 칸 · p3ca · unknown:ca_ext · 영수증 · 요청 검사 · 증서 · CLI 회계
+  PASS  R1 하위 블록 등록 — cjunc · sdcp_mod 가 ptfe_face 와 같은 꼴 (모듈 · 검증기 · protocol 정본 키)
+  PASS  R2 protocol_ext 칸 정본에 접합 · 수정자 칸 (R_j · 법칙 둘 · s_min · tol_ff · P · c)
+  PASS  R3 접합 + 블록 = p3ca- + 16 hex · protocol_ok · ca_ext_record_ok
+  PASS  R4a 요청 칸 있고 블록 없음 → unknown:ca_ext · ca_ext_record_ok 거부
+  PASS  R4b 블록 있고 요청 칸 없음 → unknown:ca_ext
+  PASS  R4c 둘 다 없음 = 옛 p2 함수 그대로 (코호트 id 와 같은 식)
+  PASS  R5 요청 칸 모양 틀림 [문자열] (블록 없음) → unknown:ca_ext (조용히 p2 로 내려가지 않는다)
+  PASS  R5 요청 칸 모양 틀림 [빈 목록] (블록 없음) → unknown:ca_ext (조용히 p2 로 내려가지 않는다)
+  PASS  R5 요청 칸 모양 틀림 [모르는 이름] (블록 없음) → unknown:ca_ext (조용히 p2 로 내려가지 않는다)
+  PASS  R5 요청 칸 모양 틀림 [정렬 안 됨] (블록 없음) → unknown:ca_ext (조용히 p2 로 내려가지 않는다)
+  PASS  R5 요청 칸 모양 틀림 [중복] (블록 없음) → unknown:ca_ext (조용히 p2 로 내려가지 않는다)
+  PASS  R5 요청 칸 모양 틀림 [ptfe_face (요청 = ptfe_stamp)] (블록 없음) → unknown:ca_ext (조용히 p2 로 내려가지 않는다)
+  PASS  R5 요청 칸 모양 틀림 [None] (블록 없음) → unknown:ca_ext (조용히 p2 로 내려가지 않는다)
+  PASS  R6a 증거만 바뀜 → id 같음
+  PASS  R6b R_j 바뀜 → id 다름
+  PASS  R6c 미등록 면 법칙 바뀜 (cut → fused) → id 다름
+  PASS  R6d SDCP c = 0 · 1 → id 서로 다름 · 둘 다 정상
+  PASS  R6e 관찰 세대 (p3ca = 현행) · 낮춘 신고 거부
+  PASS  R7 ca_ext_record_ok 거부 [모델 판 다름]
+  PASS  R7 ca_ext_record_ok 거부 [길이 법칙 다름]
+  PASS  R7 ca_ext_record_ok 거부 [규칙 판 다름 (port)]
+  PASS  R7 ca_ext_record_ok 거부 [L_par 손으로 바꿈]
+  PASS  R7 ca_ext_record_ok 거부 [r_port 손으로 바꿈]
+  PASS  R7 ca_ext_record_ok 거부 [tol_P ≠ tol_ff]
+  PASS  R7 ca_ext_record_ok 거부 [R_j = 0 (정량 아님)]
+  PASS  R7 ca_ext_record_ok 거부 [R_j = inf]
+  PASS  R7 ca_ext_record_ok 거부 [R_j 문자열]
+  PASS  R7 ca_ext_record_ok 거부 [s_min = None (미등록 · 정량 거부)]
+  PASS  R7 ca_ext_record_ok 거부 [s_min 음수]
+  PASS  R7 ca_ext_record_ok 거부 [P1 (face_alpha 아님)]
+  PASS  R7 ca_ext_record_ok 거부 [protocol 의 ptfe_stamp ≠ 매니페스트]
+  PASS  R7 ca_ext_record_ok 거부 [face_alpha + 접합 (조합 미정의)]
+  PASS  R7 ca_ext_record_ok 거부 [점 스탬프]
+  PASS  R7 ca_ext_record_ok 거부 [주기 xy]
+  PASS  R7 ca_ext_record_ok 거부 [필드 요청 (LEAN 4)]
+  PASS  R7 ca_ext_record_ok 거부 [집전체 계획 켬]
+  PASS  R7 ca_ext_record_ok 거부 [계면 표 (r1) 동시]
+  PASS  R7 ca_ext_record_ok 거부 [SDCP 브리지 진단 팔]
+  PASS  R7 ca_ext_record_ok 거부 [VGCF 절연 (σ 0)]
+  PASS  R7 ca_ext_record_ok 거부 [영수증 키 빠짐]
+  PASS  R7 ca_ext_record_ok 거부 [주 영수증 missing]
+  PASS  R7 ca_ext_record_ok 거부 [주 영수증 모르는 상태]
+  PASS  R7 ca_ext_record_ok 거부 [주 영수증 applied 인데 instance 0]
+  PASS  R7 ca_ext_record_ok 거부 [주 영수증 solved False]
+  PASS  R7 ca_ext_record_ok 거부 [주 영수증 원장 지문 ≠ 증거]
+  PASS  R7 ca_ext_record_ok 거부 [wetted 가 applied (v0 = 집전체 끔)]
+  PASS  R7 ca_ext_record_ok 거부 [이온 영수증 applied_without_request]
+  PASS  R7 ca_ext_record_ok 거부 [이온 계획 끔인데 이온 not_requested]
+  PASS  R7 ca_ext_record_ok 거부 [disabled 인데 사유 없음]
+  PASS  R7 ca_ext_record_ok 거부 [수 합 깨짐 (n_edge +1)]
+  PASS  R7 ca_ext_record_ok 거부 [P0 인데 절단 수 > 0]
+  PASS  R7 ca_ext_record_ok 거부 [극한 none_inf > 0 (R_j 유한)]
+  PASS  R7 ca_ext_record_ok 거부 [접합 간선 수 ≠ 영수증]
+  PASS  R7 ca_ext_record_ok 거부 [축약 수 ≠ 원장]
+  PASS  R7 ca_ext_record_ok 거부 [단락 상태]
+  PASS  R7 ca_ext_record_ok 거부 [거부 사유 남음]
+  PASS  R7 ca_ext_record_ok 거부 [진단 표 빠짐]
+  PASS  R7 ca_ext_record_ok 거부 [표지 다름]
+  PASS  R7 ca_ext_record_ok 거부 [한정어 빠짐]
+  PASS  R7 ca_ext_record_ok 거부 [수정자 c 기록 ↔ 블록 없음 불일치]
+  PASS  R7 ca_ext_record_ok 거부 [요청 칸에 sdcp_mod 만 더함 (블록 없음)]
+  PASS  R8 sdcp_mod 거부 [S2 블록 없음 (수정자만)]
+  PASS  R8 sdcp_mod 거부 [c = 0.5 (정량은 0 · 1 만)]
+  PASS  R8 sdcp_mod 거부 [tol_sj ≠ 접합 tol_ff]
+  PASS  R8 sdcp_mod 거부 [근접 수 ≠ 접합 원장]
+  PASS  R8 sdcp_mod 거부 [c = 1 인데 축약 0]
+  PASS  R8 sdcp_mod 거부 [판별 표지 거짓]
+  PASS  R8 sdcp_mod 거부 [접합 증거의 c ≠ 수정자 c]
+  PASS  R8 sdcp_mod 거부 [수정자 표지 다름]
+  PASS  R9 face_alpha + 접합 블록 한 매니페스트 = 거부 (조합 미정의 · 소비자 쪽 짝)
+  PASS  R10 커밋된 영수증 44 개 전부 — 새 함수 digest = 고치기 전 본문 digest (선택 칸 없음 = 옛 OUTDIR 이름 보존)
+  PASS  R10b 요청을 실은 영수증은 digest 가 다르다 (OUTDIR 이 갈린다)
+  PASS  R11a 요청 ↔ 블록 같음 → receipt_match 통과
+  PASS  R11b 요청 R_j ≠ 블록 R_j → 거부
+  PASS  R11c 요청 있는데 블록 없음 → 거부
+  PASS  R11d 요청 없는 영수증 + 접합 블록 팔 → 거부 (러너가 요청 안 한 실험)
+  PASS  R11e 수정자 요청 ↔ 블록 c 대조
+  PASS  R11f rtol — 선언 ↔ 매니페스트 backend.rtol 같음 통과 · 다르면 거부 · 선언 없는데 팔에 rtol = 거부 · 선언했는데 팔에 없음 = 거부
+  PASS  R11g 옛 영수증 + 옛 매니페스트 = 통과 (기존 거동 그대로)
+  PASS  R12a 요청 정상 → 문제 없음
+  PASS  R12b 요청 검사 거부 [모르는 하위 블록]
+  PASS  R12b 요청 검사 거부 [수정자만]
+  PASS  R12b 요청 검사 거부 [칸 빠짐]
+  PASS  R12b 요청 검사 거부 [모르는 칸]
+  PASS  R12b 요청 검사 거부 [R_j 음수]
+  PASS  R12b 요청 검사 거부 [P1]
+  PASS  R12b 요청 검사 거부 [c = 0.5]
+  PASS  R12b 요청 검사 거부 [dict 아님]
+  PASS  R13a 증서 정상 → 문제 없음
+  PASS  R13b 증서 거부 [없음]
+  PASS  R13b 증서 거부 [ok False]
+  PASS  R13b 증서 거부 [ok ↔ pass 모순]
+  PASS  R13b 증서 거부 [판 rtol 1e-8 (봉인 상한 밖) 인데 pass_a]
+  PASS  R13b 증서 거부 [불균형 문턱 밖 인데 pass_b]
+  PASS  R13b 증서 거부 [이어 풀기 Δσ 문턱 밖 인데 pass_c]
+  PASS  R13b 증서 거부 [다른 판본]
+  PASS  R13b 증서 거부 [봉인 상한 손으로]
+  PASS  R13b 증서 거부 [σ ≠ 결과 σ (증서 ↔ 결과 결합)]
+  PASS  R13b 증서 거부 [NaN 불균형]
+  PASS  R13b 증서 거부 [pass 가 문자열]
+  PASS  R13c 다음 세대 게시 조건 — p3ca + 증서 정상 = 통과 · 증서 없음 = 미게시 · p2 (옛 세대) = 해당 없음 (통과)
+  PASS  R13d 이온을 푼 다음 세대 팔은 이온 증서도 요구 (없으면 미게시 · 있으면 통과)
+  PASS  R14 새 플래그 여덟 = protocol_ext (ca_ext 칸 이름 · 정본 안)
+  PASS  R15 규칙 M (실물 파서 전수) 문제 0
+
+── P payload 끝-끝 — 접합 · 수정자 · 입구 거부 · 매니페스트 · 영수증 · 조합 정책 · --expect-physics ca_ext 칸
+  PASS  P-거부 [MISSING (R_j 없음)] → rc ≠ 0 · S2_CJUNC_REFUSED|MISSING|
+  PASS  P-거부 [MISSING (길이 법칙 없음)] → rc ≠ 0 · S2_CJUNC_REFUSED|MISSING|
+  PASS  P-거부 [MISSING (미등록 면 법칙 없음)] → rc ≠ 0 · S2_CJUNC_REFUSED|MISSING|
+  PASS  P-거부 [MISSING (s_min 없음 · 정량이면 거부)] → rc ≠ 0 · S2_CJUNC_REFUSED|MISSING|
+  PASS  P-거부 [MISSING (tol_ff 없음 · 기본값 없음)] → rc ≠ 0 · S2_CJUNC_REFUSED|MISSING|
+  PASS  P-거부 [MISSING (PTFE–접합 법칙 없음)] → rc ≠ 0 · S2_CJUNC_REFUSED|MISSING|
+  PASS  P-거부 [FLAG_WITHOUT_CJUNC (R_j 만)] → rc ≠ 0 · S2_CJUNC_REFUSED|FLAG_WITHOUT_CJUNC|
+  PASS  P-거부 [FACE_ALPHA_COMBO (face_alpha + 접합)] → rc ≠ 0 · S2_CJUNC_REFUSED|FACE_ALPHA_COMBO|
+  PASS  P-거부 [P1_NEEDS_FACE_ALPHA] → rc ≠ 0 · S2_CJUNC_REFUSED|P1_NEEDS_FACE_ALPHA|
+  PASS  P-거부 [PERIODIC] → rc ≠ 0 · S2_CJUNC_REFUSED|PERIODIC|
+  PASS  P-거부 [JOULE] → rc ≠ 0 · S2_CJUNC_REFUSED|JOULE|
+  PASS  P-거부 [STEP4_GRID] → rc ≠ 0 · S2_CJUNC_REFUSED|STEP4_GRID|
+  PASS  P-거부 [RINT] → rc ≠ 0 · S2_CJUNC_REFUSED|RINT|
+  PASS  P-거부 [NO_STEP3] → rc ≠ 0 · S2_CJUNC_REFUSED|NO_STEP3|
+  PASS  P-거부 [SDCP_BRIDGE (진단 팔)] → rc ≠ 0 · S2_CJUNC_REFUSED|SDCP_BRIDGE|
+  PASS  P-거부 [VGCF_INSULATING (σ 0)] → rc ≠ 0 · S2_CJUNC_REFUSED|VGCF_INSULATING|
+  PASS  P-거부 [FIELD (LEAN 4)] → rc ≠ 0 · S2_CJUNC_REFUSED|FIELD|
+  PASS  P-거부 [COLLECTOR] → rc ≠ 0 · S2_CJUNC_REFUSED|COLLECTOR|
+  PASS  P-거부 [THERMAL] → rc ≠ 0 · S2_CJUNC_REFUSED|THERMAL|
+  PASS  P-거부 [PORE] → rc ≠ 0 · S2_CJUNC_REFUSED|PORE|
+  PASS  P-거부 [STEP4] → rc ≠ 0 · S2_CJUNC_REFUSED|STEP4|
+  PASS  P-거부 [TRACKB] → rc ≠ 0 · S2_CJUNC_REFUSED|TRACKB|
+  PASS  P-거부 [VALUE (R_j 0)] → rc ≠ 0 · S2_CJUNC_REFUSED|VALUE|
+  PASS  P-거부 [VALUE (R_j nan)] → rc ≠ 0 · S2_CJUNC_REFUSED|VALUE|
+  PASS  P-거부 [VALUE (R_j inf)] → rc ≠ 0 · S2_CJUNC_REFUSED|VALUE|
+  PASS  P-거부 [VALUE (s_min 음수)] → rc ≠ 0 · S2_CJUNC_REFUSED|VALUE|
+  PASS  P-거부 [VALUE (tol_ff 음수)] → rc ≠ 0 · S2_CJUNC_REFUSED|VALUE|
+  PASS  P-거부 [NO_PHASE] → S2_CJUNC_REFUSED|NO_PHASE|
+  PASS  P-거부 [NO_FIBRE] → S2_CJUNC_REFUSED|NO_FIBRE|
+  PASS  P-거부 [SEGMENT (점 스탬프)] → S2_CJUNC_REFUSED|SEGMENT|
+  PASS  P-거부 [S3 수정자만 (S2 없이)] → S3_SDCP_MOD_REFUSED|NO_CJUNC|
+  PASS  P-거부 [c = 0.5 (정량은 0 · 1)] → rc ≠ 0
+  PASS  P1 접합 LEAN 2 — rc 0
+  PASS  P2 매니페스트 — 요청 칸 [cjunc] · 블록 · p3ca id · protocol_ok · ca_ext_record_ok
+  PASS  P3 protocol = CLI 값 (R_j 1e6 · len_scaled_v0 · cut · s_min 0.5 · tol_ff 0.5 · P0 · ptfe off)
+  PASS  P4 영수증 (LEAN 2 표) — 주 applied · wetted/bare disabled · 이온 disabled
+  PASS  P5 원장 — instance 1 · 간선 1 · 축약 0 · 풀림 · 접합 간선 1
+  PASS  P6 진단 미계산 (E2 · v0) — 소산 분담 None · je 없음 · 진단 표
+  PASS  P7 check_arm (sr01) 이 실제 산출물을 받는다
+  PASS  P8 σ_e 순서 — off (융합 = R_j → 0 극한) ≥ R_j 1e2 > 1e6 > 1e8 > 0 (직렬 사슬 · 같은 그래프)
+  PASS  P9 R_j 가 다르면 p3ca id 가 다르다 · 같은 R_j 의 두 침대 (SDCP 유무) 는 같은 id
+  PASS  P9b 같은 R_j · 같은 설정의 두 침대 (SDCP 유무) = 같은 p3ca id
+  PASS  P10 c = 1 — 요청 칸 [cjunc, sdcp_mod] · 블록 둘 · ca_ext_record_ok · 근접 1 · 축약 1
+  PASS  P11 c = 0 = 수정자 없는 접합과 σ 비트 같음 · c = 1 ≥ c = 0 (Rayleigh · 같은 그래프)
+  PASS  P12 SBE (SDCP 없음) + c = 1 = 근접 0 · σ 가 수정자 없는 접합과 비트 같음 · 판별 표지 False
+  PASS  P13 LEAN 3 — 이온 영수증 not_requested · σ_ion = off 비트 같음 · ca_ext_record_ok
+  PASS  P14 face_alpha + --step3-rtol 1e-12 = 허용 — rc 0 · ptfe_face 블록 · p3ca · 증서 ok · backend.rtol 기록 · ca_ext_record_ok
+  PASS  P14b face_alpha + rtol 팔 = 다음 세대 게시 조건 통과 · rtol 없는 face_alpha 팔 = 미게시 (증서 칸 없음)
+  PASS  P15 접합 + --step3-rtol 1e-12 = 허용 — rc 0 · cjunc 블록 · p3ca · 증서 ok (σ 결합) · backend.rtol · 게시 조건 통과
+  PASS  P15b rtol 은 규약 id 밖 (numeric) — 접합 + rtol 의 p3ca id = 접합만의 id
+  PASS  P16 선언 = 적용 (ca_ext 칸 포함) → rc 0
+  PASS  P17 선언 R_j ≠ 적용 → exit 4 · PROTOCOL_MISMATCH (ca_ext.cjunc.R_j_ohm)
+  PASS  P18 접합을 켰는데 선언에 s_min 칸이 없다 → 거부 (선언 안 한 축은 검사도 안 된다 · PASL-04 꼴)
+  PASS  P19 접합을 안 켰는데 ca_ext.cjunc 칸을 선언 → 거부 (요청 없는 선언)
+  PASS  P20 모르는 ca_ext 칸 선언 → 거부 (정본 밖)
+  PASS  P21 payload --selftest-temperature rc 0
+    보고 P (픽스처 · vox 1.0) σ_e off 0.03954460775870077 · 접합 R_j 1e2 0.03797504254157001 · 1e6 0.00039942576038441284 · 1e8 0.0003064190402482066 · DBE c0 0.000436958437355709 · c1 0.03954475178476161
+
+── B 끔 비트 동일 — 고치기 전 payload 와 대조 (--old-scripts)
+    (--old-scripts 없음 — 건너뜀 · 커밋 증거는 그 인자로 돌린 기록)
+
+160 PASS · 0 FAIL
+ELAPSED_S=50.3 RC=0

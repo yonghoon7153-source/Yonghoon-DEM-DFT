@@ -1,0 +1,127 @@
+{
+ "Y (대조)": {
+  "seq": [
+   "S3a_commit",
+   "C0_start",
+   "measure_start",
+   "measure_end",
+   "raw_push_enc",
+   "C0_end",
+   "S3_commit",
+   "S3b_commit",
+   "curve_seal",
+   "key_commit",
+   "raw_open"
+  ],
+  "order_ok": true,
+  "design_should_accept": true,
+  "mismatch": false
+ },
+ "열쇠 커밋 없이 열람 (key_commit 삭제)": {
+  "seq": [
+   "S3a_commit",
+   "C0_start",
+   "measure_start",
+   "measure_end",
+   "raw_push_enc",
+   "C0_end",
+   "S3_commit",
+   "S3b_commit",
+   "curve_seal",
+   "raw_open"
+  ],
+  "order_ok": true,
+  "design_should_accept": false,
+  "mismatch": true
+ },
+ "C0 없이 S3b (C0_start · C0_end 삭제 — S3b = \"C0 로 정하는 값\")": {
+  "seq": [
+   "S3a_commit",
+   "measure_start",
+   "measure_end",
+   "raw_push_enc",
+   "S3_commit",
+   "S3b_commit",
+   "curve_seal",
+   "key_commit",
+   "raw_open"
+  ],
+  "order_ok": true,
+  "design_should_accept": false,
+  "mismatch": true
+ },
+ "암호화 push 를 곡선 봉인 뒤로 (\"측정 직후\" 위반)": {
+  "seq": [
+   "S3a_commit",
+   "C0_start",
+   "measure_start",
+   "measure_end",
+   "C0_end",
+   "S3_commit",
+   "S3b_commit",
+   "curve_seal",
+   "raw_push_enc",
+   "key_commit",
+   "raw_open"
+  ],
+  "order_ok": true,
+  "design_should_accept": false,
+  "mismatch": true
+ },
+ "C1 시작이 S3b 보다 먼저 (C1 런 목록 = S3b)": {
+  "seq": [
+   "S3a_commit",
+   "C0_start",
+   "measure_start",
+   "measure_end",
+   "C1_start",
+   "raw_push_enc",
+   "C0_end",
+   "S3_commit",
+   "S3b_commit",
+   "curve_seal",
+   "key_commit",
+   "raw_open"
+  ],
+  "order_ok": true,
+  "design_should_accept": false,
+  "mismatch": true
+ },
+ "f_cal · 속도 셋 확정이 측정 뒤 (MXD3-08 제목의 두 항목 · v2 설계 = S3b · 설계도 받음)": {
+  "seq": [
+   "S3a_commit",
+   "C0_start",
+   "measure_start",
+   "measure_end",
+   "raw_push_enc",
+   "C0_end",
+   "S3_commit",
+   "protocol_fcal_speeds_fixed",
+   "S3b_commit",
+   "curve_seal",
+   "key_commit",
+   "raw_open"
+  ],
+  "order_ok": true,
+  "design_should_accept": false,
+  "mismatch": true
+ },
+ "평문 원자료 반입이 열람 직후 · 열쇠 커밋 전 (key 없이)": {
+  "seq": [
+   "S3a_commit",
+   "C0_start",
+   "measure_start",
+   "measure_end",
+   "raw_push_enc",
+   "C0_end",
+   "S3_commit",
+   "S3b_commit",
+   "curve_seal",
+   "raw_open",
+   "raw_push_plain"
+  ],
+  "order_ok": true,
+  "design_should_accept": false,
+  "mismatch": true
+ }
+}

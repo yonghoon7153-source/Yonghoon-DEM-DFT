@@ -1,0 +1,29 @@
+Rint 2 B6 runner: next-generation knobs for sdcp_gain_vox015_8arm.sh: tests first
+
+New scripts/test_ca_ext_runner.py (design v1 7 runner, 4-3, 5-2, 6). The runner has no selftest or dry mode, so the
+test calls the real shell: a fake python3 first on PATH skips the two discipline gates (check_method_discipline 90 s,
+check_undefined_names; both run elsewhere), records the payload argv (NUL separated) and execs the real python. Two
+kits (kit_SBE, kit_DBE) are built from test_ca_ext_b6.make_fixture (vox 1.0, series VGCF chain, one SDCP point in DBE)
+and the payload really runs (CPU, about 1 s per arm), so arm JSON, fresh check_arm (receipt_match) and the convergence
+certificate are real.
+- N0 static: bash -n; knob table run_contract.RUNNER_CA_EXT_ENV = ca_ext_cjunc REQUEST_KEYS; the runner reads each knob
+  as ${NAME:-}; --step3-rtol out of the P2_EXTRA allowlist; PTFE_STAMP accepts face_alpha; env guard covers CJUNC*.
+- N1 off (default) guard: old arm names, receipt and payload argv.
+- N2 cjunc + rtol, N3 + SDCP c = 1, N4 face_alpha + rtol (LEAN 2), N5 face_alpha + rtol (LEAN 3, ionic certificate):
+  payload argv (command line), --expect-physics ca_ext.* declarations, receipt ca_ext_request / step3_rtol, arm name tag,
+  p3ca id, ca_ext_record_ok, receipt_match, next_gen_cert_ok.
+- N6 40 pre-launch refusals (structured RUNNER_CA_EXT|<code>|, rc 2, no directory, payload not called); N6b gives the
+  same runner-axis combinations to the payload directly and checks it refuses them too (runner refusals = subset).
+- N7 OUTDIR and arm tag: different requests -> different names (2.5 vs 25 lossless), same physics in other spellings ->
+  same name; flag and declaration shape.
+- N8 SKIP-cache trap: an explicit OUTDIR holding old arms is neither reused nor deleted.
+- N9 discipline isolation: new knobs in check_method_discipline._RUNNER_AXES; a polluted parent env does not abort the
+  default rule-L probe (and does abort it once the names are removed from the list: discriminating).
+- NB (--old-runner) off path vs the pre-change runner.
+
+pre-fix 23/114 (fails = 91 checks: 85 from 65 counterexamples = 40 refusal envs, 4 next-gen e2e configs, 19 naming
+probe envs, 1 SKIP-trap OUTDIR, 1 polluted parent env; plus 6 static checks). The 23 passes are the off-path guards
+(N1 5, bash -n), the payload mirror N6b 15, N8b (old files intact) and N9c (harness discrimination).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

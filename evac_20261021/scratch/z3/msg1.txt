@@ -1,0 +1,24 @@
+Rint 2 Z3 (face_alpha + junction, limit runs, ARM_LIST, sid_off, CG iterations): tests first
+
+New scripts/test_ca_ext_z3.py: A composition rule at solve level (direct solve, production units: PTFE 0 = junction
+only bit-identical, junction off = face_alpha only, alpha on fused faces first with _keep, no alpha on junction-cut
+faces, PTFE capsule covering a junction end: P0 keeps the edge, P1 cuts it, alpha never on the junction edge,
+Rayleigh, permutation and origin shift, ledger and dissipation identities) and at payload level; B limit runs with
+hand-calculated circuits (floor = circuit without the junction, ceiling = junction ends merged) and the record /
+receipt / runner / payload forms; C runner ARM_LIST; D off-grid sid fingerprint; E CG iteration counts; O off-path
+bit comparison against the base commit (--old-scripts).
+Existing tests moved to the new semantics: the temporary face_alpha + cjunc refusal becomes a positive check
+(test_carbon_junction FA+CJ, test_ca_ext_b6 P15c, test_ca_ext_runner N10 real runner run for P0 and P1); R_j inf / 0
+leave the runner refusal list (other inf spellings, -0 and centerline + P1 stay refused); the S1 contract fixture
+carries sid_off (+2 mutants); b6 B1 strips exactly the documented new record fields.
+
+pre-fix (base c7bbd8474 code, these tests): test_ca_ext_z3 15/66 (fails = 51 checks from 5 counterexamples:
+combination refused, limit runs refused, ARM_LIST unknown, sid_off absent, CG iterations absent; two more were caught
+by B against intermediate implementation states: floor + c=1 gave NaN R_j', and a non-zero literal underflowing to 0
+(1e-400) became a ceiling run), test_carbon_junction 158/161 (fails = 1 FA+CJ; the other 2 are
+git-show base-module checks that need a repo checkout), test_ca_ext_b6 160/161 (fails = 1, P15c),
+test_ca_ext_runner 115/119 (fails = 4 checks from 1 counterexample, N10 combination run), test_ptfe_face_alpha
+227/229 (fails = 2 sid_off mutants).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

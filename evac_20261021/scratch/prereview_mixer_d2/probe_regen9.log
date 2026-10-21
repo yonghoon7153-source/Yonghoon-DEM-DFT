@@ -1,0 +1,18 @@
+coated_g1_w0256_lab_soft           old rc 0 · new rc 0 []  tok_same=True pairs_same=True meta={'only_old': [], 'only_new': [], 'changed': ['adhesion_rule.{layered,rho_world,surface,wall_rule}', 'registered', 'schema']}
+uncoated_r03_ncm_lab_soft          old rc 0 · new rc 0 []  tok_same=True pairs_same=True meta={'only_old': [], 'only_new': [], 'changed': ['adhesion_rule.{layered,surface}', 'registered', 'schema']}
+coated_world_r03_ncm_lab_soft      old rc 0 · new rc 0 []  tok_same=True pairs_same=True meta={'only_old': [], 'only_new': [], 'changed': ['adhesion_rule.{layered,surface}', 'registered', 'schema']}
+mixed_03_05_w0256_lab_ref20        old rc 0 · new rc 1 ["⛔ D2 결합 규칙 (1저자 10-14 Q2 — 벽 = 비코팅 NCM · docs/mixer_d2_wall_gamma_derivation_20261014.md §5): 명시 벽 (--gm-gamma-wall) 은 NCM 상 γ 가 전부 1 인 팔 (코팅 · 같은 γ 세계) 에서만 — {'AM_P': 0.3, 'AM_S': 0.5} · 비코팅 팔은 --gm-wall-ncm ρ (γ_W = 0.0256·ρ) 로 (MXD2-05)"]  tok_same=None pairs_same=None meta=None
+coated_g1_gen1_soft                old rc 0 · new rc 0 []  tok_same=True pairs_same=True meta={'only_old': [], 'only_new': [], 'changed': ['adhesion_rule.{layered,rho_world,surface,wall_rule}', 'registered', 'schema']}
+sticky_AM_r10_ncm_lab_soft         old rc 0 · new rc 0 []  tok_same=True pairs_same=True meta={'only_old': [], 'only_new': [], 'changed': ['adhesion_rule.{layered,surface}', 'registered', 'schema']}
+coated_g1_bo637_lab_soft           old rc 0 · new rc 0 []  tok_same=True pairs_same=True meta={'only_old': [], 'only_new': [], 'changed': ['adhesion_rule.{layered,rho_world,surface,wall_rule}', 'registered', 'schema']}
+coated_g1_bo637_gen1_soft          old rc 0 · new rc 0 []  tok_same=True pairs_same=True meta={'only_old': [], 'only_new': [], 'changed': ['adhesion_rule.{layered,rho_world,surface,wall_rule}', 'registered', 'schema']}
+mixed_ref20_dthalf_fullprec        old rc 0 · new rc 1 ["⛔ D2 결합 규칙 (1저자 10-14 Q2 — 벽 = 비코팅 NCM · docs/mixer_d2_wall_gamma_derivation_20261014.md §5): ρ_비코팅 0.3 세계의 NCM 상 γ/γ_SE 는 1 (코팅) 또는 ρ (비코팅) 만 — {'AM_S': 0.5} (비코팅 NCM 의 ρ 는 하나다 · MXD2-05)"]  tok_same=None pairs_same=None meta=None
+cu_r03_ncm_lab_soft                new rc 0 [] maxrelF0=6.315031506720636e-06 BoRel=1.3322429806006397e-06 d0max=6.235582806758921e-05 hdr=9:6.3150713864867924e-06
+uc_r03_ncm_lab_ref20               new rc 0 [] maxrelF0=6.619721134359935e-06 BoRel=9.732233003933999e-07 d0max=8.462985884617795e-06 hdr=9:6.619764955528851e-06
+uu_r03_ncm_gen1_ref40_dthalf       new rc 0 [] maxrelF0=9.100677540896385e-06 BoRel=-4.241342315913776e-06 d0max=6.08545246951261e-06 hdr=9:9.205583352600577e-06
+cc_explicit_w00768_lab_soft        new rc 0 [] maxrelF0=6.315031506720636e-06 BoRel=1.3322429806006397e-06 d0max=6.235582806758921e-05 hdr=9:6.3150713864867924e-06
+uu_r10_ncm_lab_bo300               new rc 0 [] maxrelF0=2.5000841499478454e-05 BoRel=-1.2979424299897069e-05 d0max=0.0073718855825743316 hdr=9:2.3865040419512873e-05
+uu_r1e-6_ncm_lab                   new rc 1 ['⛔ D2 결합 규칙: γ_W/γ_SE = 2.56e-08 — 지원 범위 [1e-06, 1e+06] 밖 (0 · 음수 · 언더플로 · 넘침 거부 · MXD2-04)'] maxrelF0=None BoRel=None d0max=None hdr=None:None
+uu_r1e6_ncm_lab_bo1e-6             new rc 0 [] maxrelF0=7.692328240604951e-06 BoRel=2.3529630643892574e-07 d0max=2.023325799948363e-06 hdr=9:7.692387413049673e-06
+cc_r1_ncm_lab_bo1e4                new rc 1 ['⛔ 팔 D2 결합 규칙 (기하평균 W_ij = 2√(γ_iγ_j) · 혼합쌍 · 벽) · γ/γ_SE AM_P 1 · AM_S 1 · SE 1 · γ_W/γ_SE 0.0256 · SE–SE Bo_code 10000 — 개발 · 등록 전 (결과 0): AM_P–SE 겹침 3.544 % > 천장 1.0 % (D2 쌍별) — Bo_SE 를 낮추거나 천장을 논의할 것'] maxrelF0=None BoRel=None d0max=None hdr=None:None
+uu_r03_ncm_lab_bo1010              new rc 0 [] maxrelF0=7.255646307102737e-06 BoRel=-3.220967274009112e-07 d0max=0.0099642393597186 hdr=9:7.2555936631024665e-06

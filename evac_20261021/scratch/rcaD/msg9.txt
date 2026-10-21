@@ -1,0 +1,25 @@
+Rint 2 D: one allow list for the --old-scripts comparisons (b6 B1, z3 O): tests first
+
+scripts/test_ca_ext_b6.py B0u (no base copy needed): path diff of two
+payload trees (descend only where both sides are dicts, lists and
+values compared as JSON bytes, 1 vs 1.0 differs, NaN equals NaN),
+case tags from the payload arguments (face_alpha, rtol, cjunc), and
+classification against one table: an allowed field passes only with
+its own operation (+ new, - removed, ~ changed), only for a case whose
+knob is on, and only on a full-path match; a sigma change and any
+field in an all-off case always fail; --expect-identical ignores the
+table; a base copy without docs/ (collector anchor fallback) fails with
+a hint instead of passing.
+
+Why: the present B1 / O2 pop the Z3 fields (sid_off, cg_iters, iters)
+from the new side only, so they are valid against a pre-Z3 base only.
+Against 47d23baba (pre RCA round 1) the old B1 gives 5 PASS 3 FAIL
+(face_alpha and rtol cases: sid_off popped on one side plus the RCA
+round 1 fields of B and A), against a76f59d0d it cannot be used as is.
+
+pre-fix 0/1 (fails = the B0u-0 gate: helpers old_tree_diff,
+old_diff_problems, case_tags and the table OLD_DIFF_ALLOW do not exist;
+the 20 checks behind it are not reached).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

@@ -1,0 +1,38 @@
+Mixer D3 design v2: fix the broken guarantees (MXD3-01..21), lab numbers
+
+New canonical design docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261021.md.
+It keeps the v1 frame and the ratified Q1-Q12, and handles every ledger item
+MXD3-01..21 in one table: fix the rule, narrow the guarantee, or leave it to an
+author data wait.  Rules R01-R17 carry the ledger numbers:
+
+- R01 intersection check B gets a registered detection limit; above the
+  tolerance the anchor is labelled "friction not checked".
+- R02 each interpolation cell adds its monotone error bound |dI| to the band,
+  with pre-seal refinement of steep cells; R03 anchors only on a single
+  connected component (F9 ambiguous, F10 one test empty).
+- R04 pooled seed SD with Student t, auxiliary status without two-seed
+  levels, same NP, steady state from within-run blocks; R14 day means with
+  t(n_days - 1).
+- R05 zero wall adhesion at the centre and both ends as the systematic, on
+  every test with walls; R06 T2 definability (fit residual, wall wrapping).
+- R07 the interval goes to the confirmation-block registration, where Bo* or
+  Bo*/G is chosen after the experimental mixer is known.
+- R08 rules and SOP are committed before any measurement, raw data are pushed
+  encrypted right after measuring, keys after the curve seal.
+- R09 validation counts only when it discriminates; R10 runs the contract
+  checker cannot read are excluded; R11 test decks keep the three phase types
+  with zero AM and registered geometry; R13 one extension to 0.95 x the
+  generation ceiling, "friction floor" on a flat bottom; R15 optional powders
+  give an upper bound only; R16 wording; R17 pre-result definitions.
+
+Every number is from the lab20261014 generation; gen1 values appear only in the
+history table (this closes the D3 part of MXD2-07).  New choices are marked as
+awaiting author ratification (Qv2-1..16).
+
+The rule-check script now holds the v2 rules and the numbers section.  The
+recorded output shows all 16 checks passing (v1 counterexample reproduced, v2
+catches it, positive control accepted) and the 86 numbers typed in the design
+matching the generator values; a second run is byte-identical.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

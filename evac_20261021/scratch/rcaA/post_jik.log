@@ -1,0 +1,6 @@
+── JI-KNOB
+  PASS  JI-KNOB ① CX — instance 접합 전류 = 분산 간선 5 전류 합 = 단자 전류 (1e-10)
+  PASS  JI-KNOB ② 노브 = 계획 지문 — 정상 계획은 풀린다 · 만든 뒤 문턱만 바꿈 (2.0 → 1.0) = 입구 거부 · 노브 뺌 = 입구 거부
+
+== test_carbon_junction: 2/2 PASS
+[nrun] wall 0.7 s · exit 0

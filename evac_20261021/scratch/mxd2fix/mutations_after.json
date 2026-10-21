@@ -1,0 +1,555 @@
+[
+ {
+  "mutation": "CONTROL",
+  "rc": 0,
+  "n_fail": 0,
+  "fails": [],
+  "summary": "make_mixer_deck selftest: 154/154 PASS"
+ },
+ {
+  "mutation": "M01_arith_mean",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 7,
+  "fails": [
+   "GM② 모든 쌍 (벽 포함) 의 명목 점착 힘 F₀_ij = F₀_SS · √(γ_iγ_j)/γ_SE · R*_ij/R*_SS (상대 1e-12) · F₀_SS = Bo_SE × SE 무게 · 벽–",
+   "GM③ 기하평균 항등식 — 입자 쌍마다 (F₀_ij/R*_ij)² = (F₀_ii/R*_ii)(F₀_jj/R*_jj) (= W_ij² = W_ii·W_jj · 상대 1e-11)",
+   "GM④ 논지 §2-1 — ΔW = W_AA + W_SS − 2W_AS = W_SS·(√(γ_A/γ_S) − 1)² ≥ 0 · 비 1 에서 0 (비 1 · 0.3 · 2 · 상대 1e-11)",
+   "GM⑤ 논지 §2 산술 — 비 1 에서 SE 하나의 AM_P–SE / SE–SE 당김힘 = 2r_A/(r_A+r_S) (1.8 · AM_S 1.6) · SE–SE 가 이기는 비 < 0.3086 (A",
+   "GM⑥ 벽 = 같은 기하평균 (W_iW = 2√(γ_iγ_W) · R* = r_입자) · Hare 2026 Table 3 의 γ_pw/γ_pp 0.16 → γ_W/γ_SE = 0.16² = 0.02",
+   "MX③ ★ 혼합쌍 천장 (MXD2-03 · 변이 M06 · M07) — lab · ρ 10 세계 (비코팅 AM γ 10) · Bo 800 soft 는 AM_P–SE 로 거부 (SE–SE 0.853 ",
+   "MX⑦ 사후 단언 (MXD2-04 · 방어 깊이) — 지원 범위를 넓혀 γ 1e-200 을 넣으면 γ 곱 언더플로로 CED 0 이 생긴다 → 행렬 단계가 \"벽–벽 밖 CED = 유한 · 정규 양수\""
+  ],
+  "new_fails": [
+   "GM② 모든 쌍 (벽 포함) 의 명목 점착 힘 F₀_ij = F₀_SS · √(γ_iγ_j)/γ_SE · R*_ij/R*_SS (상대 1e-12) · F₀_SS = Bo_SE × SE 무게 · 벽–",
+   "GM③ 기하평균 항등식 — 입자 쌍마다 (F₀_ij/R*_ij)² = (F₀_ii/R*_ii)(F₀_jj/R*_jj) (= W_ij² = W_ii·W_jj · 상대 1e-11)",
+   "GM④ 논지 §2-1 — ΔW = W_AA + W_SS − 2W_AS = W_SS·(√(γ_A/γ_S) − 1)² ≥ 0 · 비 1 에서 0 (비 1 · 0.3 · 2 · 상대 1e-11)",
+   "GM⑤ 논지 §2 산술 — 비 1 에서 SE 하나의 AM_P–SE / SE–SE 당김힘 = 2r_A/(r_A+r_S) (1.8 · AM_S 1.6) · SE–SE 가 이기는 비 < 0.3086 (A",
+   "GM⑥ 벽 = 같은 기하평균 (W_iW = 2√(γ_iγ_W) · R* = r_입자) · Hare 2026 Table 3 의 γ_pw/γ_pp 0.16 → γ_W/γ_SE = 0.16² = 0.02",
+   "MX③ ★ 혼합쌍 천장 (MXD2-03 · 변이 M06 · M07) — lab · ρ 10 세계 (비코팅 AM γ 10) · Bo 800 soft 는 AM_P–SE 로 거부 (SE–SE 0.853 ",
+   "MX⑦ 사후 단언 (MXD2-04 · 방어 깊이) — 지원 범위를 넓혀 γ 1e-200 을 넣으면 γ 곱 언더플로로 CED 0 이 생긴다 → 행렬 단계가 \"벽–벽 밖 CED = 유한 · 정규 양수\""
+  ],
+  "summary": "make_mixer_deck selftest: 147/154 PASS   FAILED: ['GM② 모든 쌍 (벽 포함) 의 명목 점착 힘 F₀_ij = F₀_SS · √(γ_iγ_j)/γ_SE · R*_ij/R*_SS (상대 1e-12) · F₀_SS = Bo_SE × SE 무게 · 벽–벽 0', 'GM③ 기하평균 항등식 — 입자 쌍마다 (F₀_ij/R*_ij)² = (F₀_ii/R*_ii)(F₀_jj/R*_jj) (= W_ij² = W_ii·W_jj · 상대 1e-11)', 'GM④ 논지 §2-1 — ΔW = W_AA + W_SS − 2W_AS = W_SS·(√(γ_A/γ_S) − 1)² ≥ 0 · 비 1 에서 0 (비 1 · 0.3 · 2 · 상대 1e-11)', 'GM⑤ 논지 §2 산술 — 비 1 에서 SE 하나의 AM_P–SE / SE–SE 당김힘 = 2r_A/(r_A+r_S) (1.8 · AM_S 1.6) · SE–SE 가 이기는 비 < 0.3086 (AM_P) · 0.3906 (AM_S) — 그 양쪽 1 % 에서 대소가 뒤집힌다', 'GM⑥ 벽 = 같은 기하평균 (W_iW = 2√(γ_iγ_W) · R* = r_입자) · Hare 2026 Table 3 의 γ_pw/γ_pp 0.16 → γ_W/γ_SE = 0.16² = 0.0256 → SE–벽 / SE–SE 당김힘 = 0.16 × 2 = 0.32 (Hare 단분산과 같음 · ρ 0.3 세계면 0.32·√0.3) · AM–벽 / SE–벽 = √(γ_A/γ_S)·r_A/r_S', 'MX③ ★ 혼합쌍 천장 (MXD2-03 · 변이 M06 · M07) — lab · ρ 10 세계 (비코팅 AM γ 10) · Bo 800 soft 는 AM_P–SE 로 거부 (SE–SE 0.853 % = 천장 안 · 독립 산술) · Bo 300 soft 는 수용 · 같은 팔을 SE ×0.5 (F < 1) 로 무르게 하면 F₀ 보존 행렬에서 AM_P–SE 로 거부 (SE–SE 0.704 % 는 안)', 'MX⑦ 사후 단언 (MXD2-04 · 방어 깊이) — 지원 범위를 넓혀 γ 1e-200 을 넣으면 γ 곱 언더플로로 CED 0 이 생긴다 → 행렬 단계가 \"벽–벽 밖 CED = 유한 · 정규 양수\" 로 거부 (옛 판: AM_P–AM_P 0 · 나머지 양수 덱을 썼다)']",
+  "status": "KILLED"
+ },
+ {
+  "mutation": "M02_drop_Rstar",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 7,
+  "fails": [
+   "GM① γ 비 1 (코팅 세계 · 전 상 같은 γ) 의 같은 상 대각 CED = LC 대각 (JKR 기하 환산 Bo_t = Bo_SE·r_S²ρ_S/(r_t²ρ_t) 과 같은 식 · 상대 1e-12",
+   "GM② 모든 쌍 (벽 포함) 의 명목 점착 힘 F₀_ij = F₀_SS · √(γ_iγ_j)/γ_SE · R*_ij/R*_SS (상대 1e-12) · F₀_SS = Bo_SE × SE 무게 · 벽–",
+   "GM③ 기하평균 항등식 — 입자 쌍마다 (F₀_ij/R*_ij)² = (F₀_ii/R*_ii)(F₀_jj/R*_jj) (= W_ij² = W_ii·W_jj · 상대 1e-11)",
+   "GM④ 논지 §2-1 — ΔW = W_AA + W_SS − 2W_AS = W_SS·(√(γ_A/γ_S) − 1)² ≥ 0 · 비 1 에서 0 (비 1 · 0.3 · 2 · 상대 1e-11)",
+   "GM⑤ 논지 §2 산술 — 비 1 에서 SE 하나의 AM_P–SE / SE–SE 당김힘 = 2r_A/(r_A+r_S) (1.8 · AM_S 1.6) · SE–SE 가 이기는 비 < 0.3086 (A",
+   "GM⑥ 벽 = 같은 기하평균 (W_iW = 2√(γ_iγ_W) · R* = r_입자) · Hare 2026 Table 3 의 γ_pw/γ_pp 0.16 → γ_W/γ_SE = 0.16² = 0.02",
+   "MX③ ★ 혼합쌍 천장 (MXD2-03 · 변이 M06 · M07) — lab · ρ 10 세계 (비코팅 AM γ 10) · Bo 800 soft 는 AM_P–SE 로 거부 (SE–SE 0.853 "
+  ],
+  "new_fails": [
+   "GM① γ 비 1 (코팅 세계 · 전 상 같은 γ) 의 같은 상 대각 CED = LC 대각 (JKR 기하 환산 Bo_t = Bo_SE·r_S²ρ_S/(r_t²ρ_t) 과 같은 식 · 상대 1e-12",
+   "GM② 모든 쌍 (벽 포함) 의 명목 점착 힘 F₀_ij = F₀_SS · √(γ_iγ_j)/γ_SE · R*_ij/R*_SS (상대 1e-12) · F₀_SS = Bo_SE × SE 무게 · 벽–",
+   "GM③ 기하평균 항등식 — 입자 쌍마다 (F₀_ij/R*_ij)² = (F₀_ii/R*_ii)(F₀_jj/R*_jj) (= W_ij² = W_ii·W_jj · 상대 1e-11)",
+   "GM④ 논지 §2-1 — ΔW = W_AA + W_SS − 2W_AS = W_SS·(√(γ_A/γ_S) − 1)² ≥ 0 · 비 1 에서 0 (비 1 · 0.3 · 2 · 상대 1e-11)",
+   "GM⑤ 논지 §2 산술 — 비 1 에서 SE 하나의 AM_P–SE / SE–SE 당김힘 = 2r_A/(r_A+r_S) (1.8 · AM_S 1.6) · SE–SE 가 이기는 비 < 0.3086 (A",
+   "GM⑥ 벽 = 같은 기하평균 (W_iW = 2√(γ_iγ_W) · R* = r_입자) · Hare 2026 Table 3 의 γ_pw/γ_pp 0.16 → γ_W/γ_SE = 0.16² = 0.02",
+   "MX③ ★ 혼합쌍 천장 (MXD2-03 · 변이 M06 · M07) — lab · ρ 10 세계 (비코팅 AM γ 10) · Bo 800 soft 는 AM_P–SE 로 거부 (SE–SE 0.853 "
+  ],
+  "summary": "make_mixer_deck selftest: 147/154 PASS   FAILED: ['GM① γ 비 1 (코팅 세계 · 전 상 같은 γ) 의 같은 상 대각 CED = LC 대각 (JKR 기하 환산 Bo_t = Bo_SE·r_S²ρ_S/(r_t²ρ_t) 과 같은 식 · 상대 1e-12) — 바뀌는 것은 혼합쌍 · 벽뿐', 'GM② 모든 쌍 (벽 포함) 의 명목 점착 힘 F₀_ij = F₀_SS · √(γ_iγ_j)/γ_SE · R*_ij/R*_SS (상대 1e-12) · F₀_SS = Bo_SE × SE 무게 · 벽–벽 0', 'GM③ 기하평균 항등식 — 입자 쌍마다 (F₀_ij/R*_ij)² = (F₀_ii/R*_ii)(F₀_jj/R*_jj) (= W_ij² = W_ii·W_jj · 상대 1e-11)', 'GM④ 논지 §2-1 — ΔW = W_AA + W_SS − 2W_AS = W_SS·(√(γ_A/γ_S) − 1)² ≥ 0 · 비 1 에서 0 (비 1 · 0.3 · 2 · 상대 1e-11)', 'GM⑤ 논지 §2 산술 — 비 1 에서 SE 하나의 AM_P–SE / SE–SE 당김힘 = 2r_A/(r_A+r_S) (1.8 · AM_S 1.6) · SE–SE 가 이기는 비 < 0.3086 (AM_P) · 0.3906 (AM_S) — 그 양쪽 1 % 에서 대소가 뒤집힌다', 'GM⑥ 벽 = 같은 기하평균 (W_iW = 2√(γ_iγ_W) · R* = r_입자) · Hare 2026 Table 3 의 γ_pw/γ_pp 0.16 → γ_W/γ_SE = 0.16² = 0.0256 → SE–벽 / SE–SE 당김힘 = 0.16 × 2 = 0.32 (Hare 단분산과 같음 · ρ 0.3 세계면 0.32·√0.3) · AM–벽 / SE–벽 = √(γ_A/γ_S)·r_A/r_S', 'MX③ ★ 혼합쌍 천장 (MXD2-03 · 변이 M06 · M07) — lab · ρ 10 세계 (비코팅 AM γ 10) · Bo 800 soft 는 AM_P–SE 로 거부 (SE–SE 0.853 % = 천장 안 · 독립 산술) · Bo 300 soft 는 수용 · 같은 팔을 SE ×0.5 (F < 1) 로 무르게 하면 F₀ 보존 행렬에서 AM_P–SE 로 거부 (SE–SE 0.704 % 는 안)']",
+  "status": "KILLED"
+ },
+ {
+  "mutation": "M03_wall_Rstar_half",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 4,
+  "fails": [
+   "DP① ★ 기본 끔 (플래그 없음 · dump_full_precision=False) = 커밋 · 실행 덱과 바이트 동일 — v26 LC_ref_r2 · LH_ref_r2 · E0_ref · dev",
+   "DP⑤ CLI --dump-full-precision → in.mixer = deck(…, True) · deck_meta.json 에 dump_modify_format · 덱 sha256 · ar",
+   "GM⑥ 벽 = 같은 기하평균 (W_iW = 2√(γ_iγ_W) · R* = r_입자) · Hare 2026 Table 3 의 γ_pw/γ_pp 0.16 → γ_W/γ_SE = 0.16² = 0.02",
+   "MX⑥b ★ D2 덱 머리 표 = 덱 값 (MXD2-06 · 변이 M15) — 9 쌍 행의 CED 칸 = 덱 CED · F0/F0_SS 칸 = 덱 값으로 다시 낸 F₀ 비 (상대 5e-5) · δ0"
+  ],
+  "new_fails": [
+   "DP① ★ 기본 끔 (플래그 없음 · dump_full_precision=False) = 커밋 · 실행 덱과 바이트 동일 — v26 LC_ref_r2 · LH_ref_r2 · E0_ref · dev",
+   "DP⑤ CLI --dump-full-precision → in.mixer = deck(…, True) · deck_meta.json 에 dump_modify_format · 덱 sha256 · ar",
+   "GM⑥ 벽 = 같은 기하평균 (W_iW = 2√(γ_iγ_W) · R* = r_입자) · Hare 2026 Table 3 의 γ_pw/γ_pp 0.16 → γ_W/γ_SE = 0.16² = 0.02",
+   "MX⑥b ★ D2 덱 머리 표 = 덱 값 (MXD2-06 · 변이 M15) — 9 쌍 행의 CED 칸 = 덱 CED · F0/F0_SS 칸 = 덱 값으로 다시 낸 F₀ 비 (상대 5e-5) · δ0"
+  ],
+  "summary": "make_mixer_deck selftest: 150/154 PASS   FAILED: ['DP① ★ 기본 끔 (플래그 없음 · dump_full_precision=False) = 커밋 · 실행 덱과 바이트 동일 — v26 LC_ref_r2 · LH_ref_r2 · E0_ref · dev-u LU212 · LU637 (sha256 다섯) · dump_modify 줄 없음', 'DP⑤ CLI --dump-full-precision → in.mixer = deck(…, True) · deck_meta.json 에 dump_modify_format · 덱 sha256 · argv — 플래그 없으면 실행 덱 sha256 그대로 · meta 에 그 키 없음 · --help rc 0 (argparse % 이스케이프)', 'GM⑥ 벽 = 같은 기하평균 (W_iW = 2√(γ_iγ_W) · R* = r_입자) · Hare 2026 Table 3 의 γ_pw/γ_pp 0.16 → γ_W/γ_SE = 0.16² = 0.0256 → SE–벽 / SE–SE 당김힘 = 0.16 × 2 = 0.32 (Hare 단분산과 같음 · ρ 0.3 세계면 0.32·√0.3) · AM–벽 / SE–벽 = √(γ_A/γ_S)·r_A/r_S', 'MX⑥b ★ D2 덱 머리 표 = 덱 값 (MXD2-06 · 변이 M15) — 9 쌍 행의 CED 칸 = 덱 CED · F0/F0_SS 칸 = 덱 값으로 다시 낸 F₀ 비 (상대 5e-5) · δ0/min r 칸 = 다시 낸 겹침 (±2e-4 %p)']",
+  "status": "KILLED"
+ },
+ {
+  "mutation": "M04_F0SS_gen1_density",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 2,
+  "fails": [
+   "MX① ★ 절대 수준 · 기록 고정 (MXD2-02 · 변이 M04 · M05 · M16) — lab soft · lab ×20 · gen1 D2 덱 (CLI · ρ 0.3 세계 · Bo 0.5) ",
+   "MX② ★ 절대 수준 = 덱 세대의 ρ_SE (MXD2-02 · 변이 M04 · M05) — 옛 팔 LC 의 lab 덱도 SE–SE Bo_code 0.21244 (덱 텍스트 되읽기 · 상대 3e-5"
+  ],
+  "new_fails": [
+   "MX① ★ 절대 수준 · 기록 고정 (MXD2-02 · 변이 M04 · M05 · M16) — lab soft · lab ×20 · gen1 D2 덱 (CLI · ρ 0.3 세계 · Bo 0.5) ",
+   "MX② ★ 절대 수준 = 덱 세대의 ρ_SE (MXD2-02 · 변이 M04 · M05) — 옛 팔 LC 의 lab 덱도 SE–SE Bo_code 0.21244 (덱 텍스트 되읽기 · 상대 3e-5"
+  ],
+  "summary": "make_mixer_deck selftest: 152/154 PASS   FAILED: ['MX① ★ 절대 수준 · 기록 고정 (MXD2-02 · 변이 M04 · M05 · M16) — lab soft · lab ×20 · gen1 D2 덱 (CLI · ρ 0.3 세계 · Bo 0.5) 의 SE–SE Bo_code 를 **덱 텍스트에서** (SE 템플릿 r · 그 세대 ρ_SE · 중력) 되읽은 값 = 0.5 (상대 3e-5) = 덱 머리 선언 = deck_meta.adhesion_rule.bo_se', 'MX② ★ 절대 수준 = 덱 세대의 ρ_SE (MXD2-02 · 변이 M04 · M05) — 옛 팔 LC 의 lab 덱도 SE–SE Bo_code 0.21244 (덱 텍스트 되읽기 · 상대 3e-5) · ced_matrix_geomean(dens = gen1 · lab) 의 F₀_SS = Bo_SE × 그 세대 SE 무게 (상대 1e-12)']",
+  "status": "KILLED"
+ },
+ {
+  "mutation": "M05_deck_ignores_dens",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 2,
+  "fails": [
+   "MX① ★ 절대 수준 · 기록 고정 (MXD2-02 · 변이 M04 · M05 · M16) — lab soft · lab ×20 · gen1 D2 덱 (CLI · ρ 0.3 세계 · Bo 0.5) ",
+   "MX② ★ 절대 수준 = 덱 세대의 ρ_SE (MXD2-02 · 변이 M04 · M05) — 옛 팔 LC 의 lab 덱도 SE–SE Bo_code 0.21244 (덱 텍스트 되읽기 · 상대 3e-5"
+  ],
+  "new_fails": [
+   "MX① ★ 절대 수준 · 기록 고정 (MXD2-02 · 변이 M04 · M05 · M16) — lab soft · lab ×20 · gen1 D2 덱 (CLI · ρ 0.3 세계 · Bo 0.5) ",
+   "MX② ★ 절대 수준 = 덱 세대의 ρ_SE (MXD2-02 · 변이 M04 · M05) — 옛 팔 LC 의 lab 덱도 SE–SE Bo_code 0.21244 (덱 텍스트 되읽기 · 상대 3e-5"
+  ],
+  "summary": "make_mixer_deck selftest: 152/154 PASS   FAILED: ['MX① ★ 절대 수준 · 기록 고정 (MXD2-02 · 변이 M04 · M05 · M16) — lab soft · lab ×20 · gen1 D2 덱 (CLI · ρ 0.3 세계 · Bo 0.5) 의 SE–SE Bo_code 를 **덱 텍스트에서** (SE 템플릿 r · 그 세대 ρ_SE · 중력) 되읽은 값 = 0.5 (상대 3e-5) = 덱 머리 선언 = deck_meta.adhesion_rule.bo_se', 'MX② ★ 절대 수준 = 덱 세대의 ρ_SE (MXD2-02 · 변이 M04 · M05) — 옛 팔 LC 의 lab 덱도 SE–SE Bo_code 0.21244 (덱 텍스트 되읽기 · 상대 3e-5) · ced_matrix_geomean(dens = gen1 · lab) 의 F₀_SS = Bo_SE × 그 세대 SE 무게 (상대 1e-12)']",
+  "status": "KILLED"
+ },
+ {
+  "mutation": "M06_ceiling_skip_mixed",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "MX③ ★ 혼합쌍 천장 (MXD2-03 · 변이 M06 · M07) — lab · ρ 10 세계 (비코팅 AM γ 10) · Bo 800 soft 는 AM_P–SE 로 거부 (SE–SE 0.853 "
+  ],
+  "new_fails": [
+   "MX③ ★ 혼합쌍 천장 (MXD2-03 · 변이 M06 · M07) — lab · ρ 10 세계 (비코팅 AM γ 10) · Bo 800 soft 는 AM_P–SE 로 거부 (SE–SE 0.853 "
+  ],
+  "summary": "make_mixer_deck selftest: 153/154 PASS   FAILED: ['MX③ ★ 혼합쌍 천장 (MXD2-03 · 변이 M06 · M07) — lab · ρ 10 세계 (비코팅 AM γ 10) · Bo 800 soft 는 AM_P–SE 로 거부 (SE–SE 0.853 % = 천장 안 · 독립 산술) · Bo 300 soft 는 수용 · 같은 팔을 SE ×0.5 (F < 1) 로 무르게 하면 F₀ 보존 행렬에서 AM_P–SE 로 거부 (SE–SE 0.704 % 는 안)']",
+  "status": "KILLED"
+ },
+ {
+  "mutation": "M07_stiff_D2_old_ceiling",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "MX③ ★ 혼합쌍 천장 (MXD2-03 · 변이 M06 · M07) — lab · ρ 10 세계 (비코팅 AM γ 10) · Bo 800 soft 는 AM_P–SE 로 거부 (SE–SE 0.853 "
+  ],
+  "new_fails": [
+   "MX③ ★ 혼합쌍 천장 (MXD2-03 · 변이 M06 · M07) — lab · ρ 10 세계 (비코팅 AM γ 10) · Bo 800 soft 는 AM_P–SE 로 거부 (SE–SE 0.853 "
+  ],
+  "summary": "make_mixer_deck selftest: 153/154 PASS   FAILED: ['MX③ ★ 혼합쌍 천장 (MXD2-03 · 변이 M06 · M07) — lab · ρ 10 세계 (비코팅 AM γ 10) · Bo 800 soft 는 AM_P–SE 로 거부 (SE–SE 0.853 % = 천장 안 · 독립 산술) · Bo 300 soft 는 수용 · 같은 팔을 SE ×0.5 (F < 1) 로 무르게 하면 F₀ 보존 행렬에서 AM_P–SE 로 거부 (SE–SE 0.704 % 는 안)']",
+  "status": "KILLED"
+ },
+ {
+  "mutation": "M08_wall_gamma_ignored",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 2,
+  "fails": [
+   "GM② 모든 쌍 (벽 포함) 의 명목 점착 힘 F₀_ij = F₀_SS · √(γ_iγ_j)/γ_SE · R*_ij/R*_SS (상대 1e-12) · F₀_SS = Bo_SE × SE 무게 · 벽–",
+   "GM⑥ 벽 = 같은 기하평균 (W_iW = 2√(γ_iγ_W) · R* = r_입자) · Hare 2026 Table 3 의 γ_pw/γ_pp 0.16 → γ_W/γ_SE = 0.16² = 0.02"
+  ],
+  "new_fails": [
+   "GM② 모든 쌍 (벽 포함) 의 명목 점착 힘 F₀_ij = F₀_SS · √(γ_iγ_j)/γ_SE · R*_ij/R*_SS (상대 1e-12) · F₀_SS = Bo_SE × SE 무게 · 벽–",
+   "GM⑥ 벽 = 같은 기하평균 (W_iW = 2√(γ_iγ_W) · R* = r_입자) · Hare 2026 Table 3 의 γ_pw/γ_pp 0.16 → γ_W/γ_SE = 0.16² = 0.02"
+  ],
+  "summary": "make_mixer_deck selftest: 152/154 PASS   FAILED: ['GM② 모든 쌍 (벽 포함) 의 명목 점착 힘 F₀_ij = F₀_SS · √(γ_iγ_j)/γ_SE · R*_ij/R*_SS (상대 1e-12) · F₀_SS = Bo_SE × SE 무게 · 벽–벽 0', 'GM⑥ 벽 = 같은 기하평균 (W_iW = 2√(γ_iγ_W) · R* = r_입자) · Hare 2026 Table 3 의 γ_pw/γ_pp 0.16 → γ_W/γ_SE = 0.16² = 0.0256 → SE–벽 / SE–SE 당김힘 = 0.16 × 2 = 0.32 (Hare 단분산과 같음 · ρ 0.3 세계면 0.32·√0.3) · AM–벽 / SE–벽 = √(γ_A/γ_S)·r_A/r_S']",
+  "status": "KILLED"
+ },
+ {
+  "mutation": "M09_no_ceiling_soft",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 2,
+  "fails": [
+   "GM⑨ 겹침 천장 = 모든 쌍 δ₀/min(r) (같은 상 = overlap_for_ced · 혼합쌍 = 작은 반경 · 벽 = 입자 반경 · R* · E* 는 그 쌍) · Bo_SE 5000 = 천",
+   "MX③ ★ 혼합쌍 천장 (MXD2-03 · 변이 M06 · M07) — lab · ρ 10 세계 (비코팅 AM γ 10) · Bo 800 soft 는 AM_P–SE 로 거부 (SE–SE 0.853 "
+  ],
+  "new_fails": [
+   "GM⑨ 겹침 천장 = 모든 쌍 δ₀/min(r) (같은 상 = overlap_for_ced · 혼합쌍 = 작은 반경 · 벽 = 입자 반경 · R* · E* 는 그 쌍) · Bo_SE 5000 = 천",
+   "MX③ ★ 혼합쌍 천장 (MXD2-03 · 변이 M06 · M07) — lab · ρ 10 세계 (비코팅 AM γ 10) · Bo 800 soft 는 AM_P–SE 로 거부 (SE–SE 0.853 "
+  ],
+  "summary": "make_mixer_deck selftest: 152/154 PASS   FAILED: ['GM⑨ 겹침 천장 = 모든 쌍 δ₀/min(r) (같은 상 = overlap_for_ced · 혼합쌍 = 작은 반경 · 벽 = 입자 반경 · R* · E* 는 그 쌍) · Bo_SE 5000 = 천장 거부 (10-21 — 옛 1e6 은 지원 범위 밖이라 범위 검사가 먼저 거부한다)', 'MX③ ★ 혼합쌍 천장 (MXD2-03 · 변이 M06 · M07) — lab · ρ 10 세계 (비코팅 AM γ 10) · Bo 800 soft 는 AM_P–SE 로 거부 (SE–SE 0.853 % = 천장 안 · 독립 산술) · Bo 300 soft 는 수용 · 같은 팔을 SE ×0.5 (F < 1) 로 무르게 하면 F₀ 보존 행렬에서 AM_P–SE 로 거부 (SE–SE 0.704 % 는 안)']",
+  "status": "KILLED"
+ },
+ {
+  "mutation": "M10_wallncm_ignores_rho",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 4,
+  "fails": [
+   "GM⑥ 벽 = 같은 기하평균 (W_iW = 2√(γ_iγ_W) · R* = r_입자) · Hare 2026 Table 3 의 γ_pw/γ_pp 0.16 → γ_W/γ_SE = 0.16² = 0.02",
+   "GM⑬ 벽 = 비코팅 NCM 에 묶기 — gm_wall_from_ncm(ρ) = 0.0256·ρ (입력 거부 7) · 같은 ρ 세계의 비코팅 · 코팅 팔이 같은 SE–벽 · SE–SE CED · C",
+   "MX⑤ ★ 벽 = 비코팅 NCM (1저자 10-14 Q2 · MXD2-05 · 변이 M13) 을 라이브러리가 강제 — --gm-wall-ncm ρ 이면 AM γ 마다 1 (코팅) 또는 ρ (비코팅)",
+   "MX⑦ 사후 단언 (MXD2-04 · 방어 깊이) — 지원 범위를 넓혀 γ 1e-200 을 넣으면 γ 곱 언더플로로 CED 0 이 생긴다 → 행렬 단계가 \"벽–벽 밖 CED = 유한 · 정규 양수\""
+  ],
+  "new_fails": [
+   "GM⑥ 벽 = 같은 기하평균 (W_iW = 2√(γ_iγ_W) · R* = r_입자) · Hare 2026 Table 3 의 γ_pw/γ_pp 0.16 → γ_W/γ_SE = 0.16² = 0.02",
+   "GM⑬ 벽 = 비코팅 NCM 에 묶기 — gm_wall_from_ncm(ρ) = 0.0256·ρ (입력 거부 7) · 같은 ρ 세계의 비코팅 · 코팅 팔이 같은 SE–벽 · SE–SE CED · C",
+   "MX⑤ ★ 벽 = 비코팅 NCM (1저자 10-14 Q2 · MXD2-05 · 변이 M13) 을 라이브러리가 강제 — --gm-wall-ncm ρ 이면 AM γ 마다 1 (코팅) 또는 ρ (비코팅)",
+   "MX⑦ 사후 단언 (MXD2-04 · 방어 깊이) — 지원 범위를 넓혀 γ 1e-200 을 넣으면 γ 곱 언더플로로 CED 0 이 생긴다 → 행렬 단계가 \"벽–벽 밖 CED = 유한 · 정규 양수\""
+  ],
+  "summary": "make_mixer_deck selftest: 150/154 PASS   FAILED: ['GM⑥ 벽 = 같은 기하평균 (W_iW = 2√(γ_iγ_W) · R* = r_입자) · Hare 2026 Table 3 의 γ_pw/γ_pp 0.16 → γ_W/γ_SE = 0.16² = 0.0256 → SE–벽 / SE–SE 당김힘 = 0.16 × 2 = 0.32 (Hare 단분산과 같음 · ρ 0.3 세계면 0.32·√0.3) · AM–벽 / SE–벽 = √(γ_A/γ_S)·r_A/r_S', 'GM⑬ 벽 = 비코팅 NCM 에 묶기 — gm_wall_from_ncm(ρ) = 0.0256·ρ (입력 거부 7) · 같은 ρ 세계의 비코팅 · 코팅 팔이 같은 SE–벽 · SE–SE CED · CLI --gm-wall-ncm → deck_meta wall_rule · rho_uncoated_ncm · 덱 머리 표기 · --gm-gamma-wall 과 함께면 거부', 'MX⑤ ★ 벽 = 비코팅 NCM (1저자 10-14 Q2 · MXD2-05 · 변이 M13) 을 라이브러리가 강제 — --gm-wall-ncm ρ 이면 AM γ 마다 1 (코팅) 또는 ρ (비코팅) 만 · 명시 벽 (--gm-gamma-wall) 은 AM γ 전부 1 인 팔만 · γ_W ≠ 0.0256·ρ 거부 — 리뷰 F4 셋 (AM 0.3 · ρ 3 / 0.3 · 0.6 · ρ 0.3 / 0.5 · ρ 0.3) 포함 · 사유 \"Q2\"', 'MX⑦ 사후 단언 (MXD2-04 · 방어 깊이) — 지원 범위를 넓혀 γ 1e-200 을 넣으면 γ 곱 언더플로로 CED 0 이 생긴다 → 행렬 단계가 \"벽–벽 밖 CED = 유한 · 정규 양수\" 로 거부 (옛 판: AM_P–AM_P 0 · 나머지 양수 덱을 썼다)']",
+  "status": "KILLED"
+ },
+ {
+  "mutation": "M11_gmnum_allow_zero",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 3,
+  "fails": [
+   "GM⑧ 입력 거부 (fail-closed) 19 가지 — 상 누락 · 0 · 음수 · NaN · ∞ · bool · 문자열 · 기준 SE ≠ 1 · 안 도는 상 · γ_W 없음 · 0 · Bo_SE",
+   "GM⑬ 벽 = 비코팅 NCM 에 묶기 — gm_wall_from_ncm(ρ) = 0.0256·ρ (입력 거부 7) · 같은 ρ 세계의 비코팅 · 코팅 팔이 같은 SE–벽 · SE–SE CED · C",
+   "MX④ ★ 극단 입력 거부 (MXD2-04) — γ 1e-200 · 2e6 · ρ 1e-7 · Bo 1e-310 · 2e4 (지원 범위 γ · ρ · γ_W ∈ [1e-6, 1e6] · Bo ∈ ["
+  ],
+  "new_fails": [
+   "GM⑧ 입력 거부 (fail-closed) 19 가지 — 상 누락 · 0 · 음수 · NaN · ∞ · bool · 문자열 · 기준 SE ≠ 1 · 안 도는 상 · γ_W 없음 · 0 · Bo_SE",
+   "GM⑬ 벽 = 비코팅 NCM 에 묶기 — gm_wall_from_ncm(ρ) = 0.0256·ρ (입력 거부 7) · 같은 ρ 세계의 비코팅 · 코팅 팔이 같은 SE–벽 · SE–SE CED · C",
+   "MX④ ★ 극단 입력 거부 (MXD2-04) — γ 1e-200 · 2e6 · ρ 1e-7 · Bo 1e-310 · 2e4 (지원 범위 γ · ρ · γ_W ∈ [1e-6, 1e6] · Bo ∈ ["
+  ],
+  "summary": "make_mixer_deck selftest: 151/154 PASS   FAILED: [\"GM⑧ 입력 거부 (fail-closed) 19 가지 — 상 누락 · 0 · 음수 · NaN · ∞ · bool · 문자열 · 기준 SE ≠ 1 · 안 도는 상 · γ_W 없음 · 0 · Bo_SE 없음 · 0 · NaN · ρ NaN · ∞ · 옛 팔 이름 덮어쓰기 · 이름 형식 · 검증 안 된 사전 (gm_arm 우회) — 사유 낱말 대조 (어긋남 ['γ_W 0', 'Bo 0'])\", 'GM⑬ 벽 = 비코팅 NCM 에 묶기 — gm_wall_from_ncm(ρ) = 0.0256·ρ (입력 거부 7) · 같은 ρ 세계의 비코팅 · 코팅 팔이 같은 SE–벽 · SE–SE CED · CLI --gm-wall-ncm → deck_meta wall_rule · rho_uncoated_ncm · 덱 머리 표기 · --gm-gamma-wall 과 함께면 거부', 'MX④ ★ 극단 입력 거부 (MXD2-04) — γ 1e-200 · 2e6 · ρ 1e-7 · Bo 1e-310 · 2e4 (지원 범위 γ · ρ · γ_W ∈ [1e-6, 1e6] · Bo ∈ [1e-6, 1e4] 밖) · 팔 이름 끝 줄바꿈 · CR · 탭 · NUL · 공백 (fullmatch) · 설명의 제어 문자 (덱 주석 줄을 깨뜨린다) — 사유 낱말 대조']",
+  "status": "KILLED"
+ },
+ {
+  "mutation": "M12_gmnum_allow_nan_inf",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 2,
+  "fails": [
+   "GM⑧ 입력 거부 (fail-closed) 19 가지 — 상 누락 · 0 · 음수 · NaN · ∞ · bool · 문자열 · 기준 SE ≠ 1 · 안 도는 상 · γ_W 없음 · 0 · Bo_SE",
+   "GM⑬ 벽 = 비코팅 NCM 에 묶기 — gm_wall_from_ncm(ρ) = 0.0256·ρ (입력 거부 7) · 같은 ρ 세계의 비코팅 · 코팅 팔이 같은 SE–벽 · SE–SE CED · C"
+  ],
+  "new_fails": [
+   "GM⑧ 입력 거부 (fail-closed) 19 가지 — 상 누락 · 0 · 음수 · NaN · ∞ · bool · 문자열 · 기준 SE ≠ 1 · 안 도는 상 · γ_W 없음 · 0 · Bo_SE",
+   "GM⑬ 벽 = 비코팅 NCM 에 묶기 — gm_wall_from_ncm(ρ) = 0.0256·ρ (입력 거부 7) · 같은 ρ 세계의 비코팅 · 코팅 팔이 같은 SE–벽 · SE–SE CED · C"
+  ],
+  "summary": "make_mixer_deck selftest: 152/154 PASS   FAILED: [\"GM⑧ 입력 거부 (fail-closed) 19 가지 — 상 누락 · 0 · 음수 · NaN · ∞ · bool · 문자열 · 기준 SE ≠ 1 · 안 도는 상 · γ_W 없음 · 0 · Bo_SE 없음 · 0 · NaN · ρ NaN · ∞ · 옛 팔 이름 덮어쓰기 · 이름 형식 · 검증 안 된 사전 (gm_arm 우회) — 사유 낱말 대조 (어긋남 ['Bo NaN', 'ρ NaN', 'ρ ∞'])\", 'GM⑬ 벽 = 비코팅 NCM 에 묶기 — gm_wall_from_ncm(ρ) = 0.0256·ρ (입력 거부 7) · 같은 ρ 세계의 비코팅 · 코팅 팔이 같은 SE–벽 · SE–SE CED · CLI --gm-wall-ncm → deck_meta wall_rule · rho_uncoated_ncm · 덱 머리 표기 · --gm-gamma-wall 과 함께면 거부']",
+  "status": "KILLED"
+ },
+ {
+  "mutation": "M13_rho_check_removed",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "MX⑤ ★ 벽 = 비코팅 NCM (1저자 10-14 Q2 · MXD2-05 · 변이 M13) 을 라이브러리가 강제 — --gm-wall-ncm ρ 이면 AM γ 마다 1 (코팅) 또는 ρ (비코팅)"
+  ],
+  "new_fails": [
+   "MX⑤ ★ 벽 = 비코팅 NCM (1저자 10-14 Q2 · MXD2-05 · 변이 M13) 을 라이브러리가 강제 — --gm-wall-ncm ρ 이면 AM γ 마다 1 (코팅) 또는 ρ (비코팅)"
+  ],
+  "summary": "make_mixer_deck selftest: 153/154 PASS   FAILED: ['MX⑤ ★ 벽 = 비코팅 NCM (1저자 10-14 Q2 · MXD2-05 · 변이 M13) 을 라이브러리가 강제 — --gm-wall-ncm ρ 이면 AM γ 마다 1 (코팅) 또는 ρ (비코팅) 만 · 명시 벽 (--gm-gamma-wall) 은 AM γ 전부 1 인 팔만 · γ_W ≠ 0.0256·ρ 거부 — 리뷰 F4 셋 (AM 0.3 · ρ 3 / 0.3 · 0.6 · ρ 0.3 / 0.5 · ρ 0.3) 포함 · 사유 \"Q2\"']",
+  "status": "KILLED"
+ },
+ {
+  "mutation": "M14_cli_both_wall_allowed",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "GM⑬ 벽 = 비코팅 NCM 에 묶기 — gm_wall_from_ncm(ρ) = 0.0256·ρ (입력 거부 7) · 같은 ρ 세계의 비코팅 · 코팅 팔이 같은 SE–벽 · SE–SE CED · C"
+  ],
+  "new_fails": [
+   "GM⑬ 벽 = 비코팅 NCM 에 묶기 — gm_wall_from_ncm(ρ) = 0.0256·ρ (입력 거부 7) · 같은 ρ 세계의 비코팅 · 코팅 팔이 같은 SE–벽 · SE–SE CED · C"
+  ],
+  "summary": "make_mixer_deck selftest: 153/154 PASS   FAILED: ['GM⑬ 벽 = 비코팅 NCM 에 묶기 — gm_wall_from_ncm(ρ) = 0.0256·ρ (입력 거부 7) · 같은 ρ 세계의 비코팅 · 코팅 팔이 같은 SE–벽 · SE–SE CED · CLI --gm-wall-ncm → deck_meta wall_rule · rho_uncoated_ncm · 덱 머리 표기 · --gm-gamma-wall 과 함께면 거부']",
+  "status": "KILLED"
+ },
+ {
+  "mutation": "M15_header_F0_not_ratio",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "MX⑥b ★ D2 덱 머리 표 = 덱 값 (MXD2-06 · 변이 M15) — 9 쌍 행의 CED 칸 = 덱 CED · F0/F0_SS 칸 = 덱 값으로 다시 낸 F₀ 비 (상대 5e-5) · δ0"
+  ],
+  "new_fails": [
+   "MX⑥b ★ D2 덱 머리 표 = 덱 값 (MXD2-06 · 변이 M15) — 9 쌍 행의 CED 칸 = 덱 CED · F0/F0_SS 칸 = 덱 값으로 다시 낸 F₀ 비 (상대 5e-5) · δ0"
+  ],
+  "summary": "make_mixer_deck selftest: 153/154 PASS   FAILED: ['MX⑥b ★ D2 덱 머리 표 = 덱 값 (MXD2-06 · 변이 M15) — 9 쌍 행의 CED 칸 = 덱 CED · F0/F0_SS 칸 = 덱 값으로 다시 낸 F₀ 비 (상대 5e-5) · δ0/min r 칸 = 다시 낸 겹침 (±2e-4 %p)']",
+  "status": "KILLED"
+ },
+ {
+  "mutation": "M16_meta_bo_const",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 2,
+  "fails": [
+   "GM⑫ CLI --gm-gamma · --gm-wall-ncm · --gm-bo-se (Bo 0.5) → in.mixer = deck(같은 팔) · 머리에 규칙 · γ 표 · deck_meta.js",
+   "MX① ★ 절대 수준 · 기록 고정 (MXD2-02 · 변이 M04 · M05 · M16) — lab soft · lab ×20 · gen1 D2 덱 (CLI · ρ 0.3 세계 · Bo 0.5) "
+  ],
+  "new_fails": [
+   "GM⑫ CLI --gm-gamma · --gm-wall-ncm · --gm-bo-se (Bo 0.5) → in.mixer = deck(같은 팔) · 머리에 규칙 · γ 표 · deck_meta.js",
+   "MX① ★ 절대 수준 · 기록 고정 (MXD2-02 · 변이 M04 · M05 · M16) — lab soft · lab ×20 · gen1 D2 덱 (CLI · ρ 0.3 세계 · Bo 0.5) "
+  ],
+  "summary": "make_mixer_deck selftest: 152/154 PASS   FAILED: ['GM⑫ CLI --gm-gamma · --gm-wall-ncm · --gm-bo-se (Bo 0.5) → in.mixer = deck(같은 팔) · 머리에 규칙 · γ 표 · deck_meta.json adhesion_rule (γ · γ_W · Bo = 입력 그대로) · Bo_SE 빠지면 거부 · --arm 과 함께면 거부 · --help rc 0', 'MX① ★ 절대 수준 · 기록 고정 (MXD2-02 · 변이 M04 · M05 · M16) — lab soft · lab ×20 · gen1 D2 덱 (CLI · ρ 0.3 세계 · Bo 0.5) 의 SE–SE Bo_code 를 **덱 텍스트에서** (SE 템플릿 r · 그 세대 ρ_SE · 중력) 되읽은 값 = 0.5 (상대 3e-5) = 덱 머리 선언 = deck_meta.adhesion_rule.bo_se']",
+  "status": "KILLED"
+ },
+ {
+  "mutation": "M17_meta_gamma_wall_const",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 2,
+  "fails": [
+   "GM⑫ CLI --gm-gamma · --gm-wall-ncm · --gm-bo-se (Bo 0.5) → in.mixer = deck(같은 팔) · 머리에 규칙 · γ 표 · deck_meta.js",
+   "GM⑬ 벽 = 비코팅 NCM 에 묶기 — gm_wall_from_ncm(ρ) = 0.0256·ρ (입력 거부 7) · 같은 ρ 세계의 비코팅 · 코팅 팔이 같은 SE–벽 · SE–SE CED · C"
+  ],
+  "new_fails": [
+   "GM⑫ CLI --gm-gamma · --gm-wall-ncm · --gm-bo-se (Bo 0.5) → in.mixer = deck(같은 팔) · 머리에 규칙 · γ 표 · deck_meta.js",
+   "GM⑬ 벽 = 비코팅 NCM 에 묶기 — gm_wall_from_ncm(ρ) = 0.0256·ρ (입력 거부 7) · 같은 ρ 세계의 비코팅 · 코팅 팔이 같은 SE–벽 · SE–SE CED · C"
+  ],
+  "summary": "make_mixer_deck selftest: 152/154 PASS   FAILED: ['GM⑫ CLI --gm-gamma · --gm-wall-ncm · --gm-bo-se (Bo 0.5) → in.mixer = deck(같은 팔) · 머리에 규칙 · γ 표 · deck_meta.json adhesion_rule (γ · γ_W · Bo = 입력 그대로) · Bo_SE 빠지면 거부 · --arm 과 함께면 거부 · --help rc 0', 'GM⑬ 벽 = 비코팅 NCM 에 묶기 — gm_wall_from_ncm(ρ) = 0.0256·ρ (입력 거부 7) · 같은 ρ 세계의 비코팅 · 코팅 팔이 같은 SE–벽 · SE–SE CED · CLI --gm-wall-ncm → deck_meta wall_rule · rho_uncoated_ncm · 덱 머리 표기 · --gm-gamma-wall 과 함께면 거부']",
+  "status": "KILLED"
+ },
+ {
+  "mutation": "M18_gm_uniform_insertion",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 2,
+  "fails": [
+   "MX⑥a ★ D2 덱의 기록 (MXD2-06) — 벽 주석 = D2 기하평균 (옛 \"점착 = 입자값 ÷ 1.842\" 는 옛 팔에만) · deck_meta schema mixer_deck_meta/2",
+   "MX⑥c ★ D2 팔 = 층상 삽입 (D11 (가) · MXD2-06 · 변이 M18) — CLI D2 덱은 insert/pack 둘 (insA AM → insB SE) · gm_arm 기본 lay"
+  ],
+  "new_fails": [
+   "MX⑥a ★ D2 덱의 기록 (MXD2-06) — 벽 주석 = D2 기하평균 (옛 \"점착 = 입자값 ÷ 1.842\" 는 옛 팔에만) · deck_meta schema mixer_deck_meta/2",
+   "MX⑥c ★ D2 팔 = 층상 삽입 (D11 (가) · MXD2-06 · 변이 M18) — CLI D2 덱은 insert/pack 둘 (insA AM → insB SE) · gm_arm 기본 lay"
+  ],
+  "summary": "make_mixer_deck selftest: 152/154 PASS   FAILED: ['MX⑥a ★ D2 덱의 기록 (MXD2-06) — 벽 주석 = D2 기하평균 (옛 \"점착 = 입자값 ÷ 1.842\" 는 옛 팔에만) · deck_meta schema mixer_deck_meta/2 · registered = D2 결합 규칙 (등록 전) · 경화 덱이면 강성 경로를 더함 · adhesion_rule 에 층상 · 표면 상태 · 벽 규칙 (비코팅 NCM ρ · 명시 = 함의 ρ)', 'MX⑥c ★ D2 팔 = 층상 삽입 (D11 (가) · MXD2-06 · 변이 M18) — CLI D2 덱은 insert/pack 둘 (insA AM → insB SE) · gm_arm 기본 layered True']",
+  "status": "KILLED"
+ },
+ {
+  "mutation": "M19_overlap_max_radius",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 3,
+  "fails": [
+   "GM⑨ 겹침 천장 = 모든 쌍 δ₀/min(r) (같은 상 = overlap_for_ced · 혼합쌍 = 작은 반경 · 벽 = 입자 반경 · R* · E* 는 그 쌍) · Bo_SE 5000 = 천",
+   "MX③ ★ 혼합쌍 천장 (MXD2-03 · 변이 M06 · M07) — lab · ρ 10 세계 (비코팅 AM γ 10) · Bo 800 soft 는 AM_P–SE 로 거부 (SE–SE 0.853 ",
+   "MX⑥b ★ D2 덱 머리 표 = 덱 값 (MXD2-06 · 변이 M15) — 9 쌍 행의 CED 칸 = 덱 CED · F0/F0_SS 칸 = 덱 값으로 다시 낸 F₀ 비 (상대 5e-5) · δ0"
+  ],
+  "new_fails": [
+   "GM⑨ 겹침 천장 = 모든 쌍 δ₀/min(r) (같은 상 = overlap_for_ced · 혼합쌍 = 작은 반경 · 벽 = 입자 반경 · R* · E* 는 그 쌍) · Bo_SE 5000 = 천",
+   "MX③ ★ 혼합쌍 천장 (MXD2-03 · 변이 M06 · M07) — lab · ρ 10 세계 (비코팅 AM γ 10) · Bo 800 soft 는 AM_P–SE 로 거부 (SE–SE 0.853 ",
+   "MX⑥b ★ D2 덱 머리 표 = 덱 값 (MXD2-06 · 변이 M15) — 9 쌍 행의 CED 칸 = 덱 CED · F0/F0_SS 칸 = 덱 값으로 다시 낸 F₀ 비 (상대 5e-5) · δ0"
+  ],
+  "summary": "make_mixer_deck selftest: 151/154 PASS   FAILED: ['GM⑨ 겹침 천장 = 모든 쌍 δ₀/min(r) (같은 상 = overlap_for_ced · 혼합쌍 = 작은 반경 · 벽 = 입자 반경 · R* · E* 는 그 쌍) · Bo_SE 5000 = 천장 거부 (10-21 — 옛 1e6 은 지원 범위 밖이라 범위 검사가 먼저 거부한다)', 'MX③ ★ 혼합쌍 천장 (MXD2-03 · 변이 M06 · M07) — lab · ρ 10 세계 (비코팅 AM γ 10) · Bo 800 soft 는 AM_P–SE 로 거부 (SE–SE 0.853 % = 천장 안 · 독립 산술) · Bo 300 soft 는 수용 · 같은 팔을 SE ×0.5 (F < 1) 로 무르게 하면 F₀ 보존 행렬에서 AM_P–SE 로 거부 (SE–SE 0.704 % 는 안)', 'MX⑥b ★ D2 덱 머리 표 = 덱 값 (MXD2-06 · 변이 M15) — 9 쌍 행의 CED 칸 = 덱 CED · F0/F0_SS 칸 = 덱 값으로 다시 낸 F₀ 비 (상대 5e-5) · δ0/min r 칸 = 다시 낸 겹침 (±2e-4 %p)']",
+  "status": "KILLED"
+ },
+ {
+  "mutation": "M20_require_dens_off",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "DG⑥ ★ D2 결합 규칙 (--gm-*) 덱 = 새 세대 덱 — --dens-gen 없으면 거부 (CLI rc ≠ 0 · 덱 안 씀 · deck() · deck_meta() 도 거부) · 주면 덱"
+  ],
+  "new_fails": [
+   "DG⑥ ★ D2 결합 규칙 (--gm-*) 덱 = 새 세대 덱 — --dens-gen 없으면 거부 (CLI rc ≠ 0 · 덱 안 씀 · deck() · deck_meta() 도 거부) · 주면 덱"
+  ],
+  "summary": "make_mixer_deck selftest: 153/154 PASS   FAILED: ['DG⑥ ★ D2 결합 규칙 (--gm-*) 덱 = 새 세대 덱 — --dens-gen 없으면 거부 (CLI rc ≠ 0 · 덱 안 씀 · deck() · deck_meta() 도 거부) · 주면 덱 머리 · deck_meta 에 dens_gen · 실제 값 · 옮긴 상 (VGCF · PTFE) 기록']",
+  "status": "KILLED"
+ },
+ {
+  "mutation": "M21_ced_exponent",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 10,
+  "fails": [
+   "GM① γ 비 1 (코팅 세계 · 전 상 같은 γ) 의 같은 상 대각 CED = LC 대각 (JKR 기하 환산 Bo_t = Bo_SE·r_S²ρ_S/(r_t²ρ_t) 과 같은 식 · 상대 1e-12",
+   "GM② 모든 쌍 (벽 포함) 의 명목 점착 힘 F₀_ij = F₀_SS · √(γ_iγ_j)/γ_SE · R*_ij/R*_SS (상대 1e-12) · F₀_SS = Bo_SE × SE 무게 · 벽–",
+   "GM③ 기하평균 항등식 — 입자 쌍마다 (F₀_ij/R*_ij)² = (F₀_ii/R*_ii)(F₀_jj/R*_jj) (= W_ij² = W_ii·W_jj · 상대 1e-11)",
+   "GM④ 논지 §2-1 — ΔW = W_AA + W_SS − 2W_AS = W_SS·(√(γ_A/γ_S) − 1)² ≥ 0 · 비 1 에서 0 (비 1 · 0.3 · 2 · 상대 1e-11)",
+   "GM⑤ 논지 §2 산술 — 비 1 에서 SE 하나의 AM_P–SE / SE–SE 당김힘 = 2r_A/(r_A+r_S) (1.8 · AM_S 1.6) · SE–SE 가 이기는 비 < 0.3086 (A",
+   "GM⑥ 벽 = 같은 기하평균 (W_iW = 2√(γ_iγ_W) · R* = r_입자) · Hare 2026 Table 3 의 γ_pw/γ_pp 0.16 → γ_W/γ_SE = 0.16² = 0.02",
+   "GM⑪ 경화 ×20 + hold_bo_pairwise — 쌍별 F₀ 보존 행렬 = 새 E 로 직접 계산한 기하평균 행렬 (F₀ 목표가 E 와 무관 · 상대 1e-12) · hold 없으면 거부",
+   "MX① ★ 절대 수준 · 기록 고정 (MXD2-02 · 변이 M04 · M05 · M16) — lab soft · lab ×20 · gen1 D2 덱 (CLI · ρ 0.3 세계 · Bo 0.5) ",
+   "MX② ★ 절대 수준 = 덱 세대의 ρ_SE (MXD2-02 · 변이 M04 · M05) — 옛 팔 LC 의 lab 덱도 SE–SE Bo_code 0.21244 (덱 텍스트 되읽기 · 상대 3e-5",
+   "MX③ ★ 혼합쌍 천장 (MXD2-03 · 변이 M06 · M07) — lab · ρ 10 세계 (비코팅 AM γ 10) · Bo 800 soft 는 AM_P–SE 로 거부 (SE–SE 0.853 "
+  ],
+  "new_fails": [
+   "GM① γ 비 1 (코팅 세계 · 전 상 같은 γ) 의 같은 상 대각 CED = LC 대각 (JKR 기하 환산 Bo_t = Bo_SE·r_S²ρ_S/(r_t²ρ_t) 과 같은 식 · 상대 1e-12",
+   "GM② 모든 쌍 (벽 포함) 의 명목 점착 힘 F₀_ij = F₀_SS · √(γ_iγ_j)/γ_SE · R*_ij/R*_SS (상대 1e-12) · F₀_SS = Bo_SE × SE 무게 · 벽–",
+   "GM③ 기하평균 항등식 — 입자 쌍마다 (F₀_ij/R*_ij)² = (F₀_ii/R*_ii)(F₀_jj/R*_jj) (= W_ij² = W_ii·W_jj · 상대 1e-11)",
+   "GM④ 논지 §2-1 — ΔW = W_AA + W_SS − 2W_AS = W_SS·(√(γ_A/γ_S) − 1)² ≥ 0 · 비 1 에서 0 (비 1 · 0.3 · 2 · 상대 1e-11)",
+   "GM⑤ 논지 §2 산술 — 비 1 에서 SE 하나의 AM_P–SE / SE–SE 당김힘 = 2r_A/(r_A+r_S) (1.8 · AM_S 1.6) · SE–SE 가 이기는 비 < 0.3086 (A",
+   "GM⑥ 벽 = 같은 기하평균 (W_iW = 2√(γ_iγ_W) · R* = r_입자) · Hare 2026 Table 3 의 γ_pw/γ_pp 0.16 → γ_W/γ_SE = 0.16² = 0.02",
+   "GM⑪ 경화 ×20 + hold_bo_pairwise — 쌍별 F₀ 보존 행렬 = 새 E 로 직접 계산한 기하평균 행렬 (F₀ 목표가 E 와 무관 · 상대 1e-12) · hold 없으면 거부",
+   "MX① ★ 절대 수준 · 기록 고정 (MXD2-02 · 변이 M04 · M05 · M16) — lab soft · lab ×20 · gen1 D2 덱 (CLI · ρ 0.3 세계 · Bo 0.5) ",
+   "MX② ★ 절대 수준 = 덱 세대의 ρ_SE (MXD2-02 · 변이 M04 · M05) — 옛 팔 LC 의 lab 덱도 SE–SE Bo_code 0.21244 (덱 텍스트 되읽기 · 상대 3e-5",
+   "MX③ ★ 혼합쌍 천장 (MXD2-03 · 변이 M06 · M07) — lab · ρ 10 세계 (비코팅 AM γ 10) · Bo 800 soft 는 AM_P–SE 로 거부 (SE–SE 0.853 "
+  ],
+  "summary": "make_mixer_deck selftest: 144/154 PASS   FAILED: ['GM① γ 비 1 (코팅 세계 · 전 상 같은 γ) 의 같은 상 대각 CED = LC 대각 (JKR 기하 환산 Bo_t = Bo_SE·r_S²ρ_S/(r_t²ρ_t) 과 같은 식 · 상대 1e-12) — 바뀌는 것은 혼합쌍 · 벽뿐', 'GM② 모든 쌍 (벽 포함) 의 명목 점착 힘 F₀_ij = F₀_SS · √(γ_iγ_j)/γ_SE · R*_ij/R*_SS (상대 1e-12) · F₀_SS = Bo_SE × SE 무게 · 벽–벽 0', 'GM③ 기하평균 항등식 — 입자 쌍마다 (F₀_ij/R*_ij)² = (F₀_ii/R*_ii)(F₀_jj/R*_jj) (= W_ij² = W_ii·W_jj · 상대 1e-11)', 'GM④ 논지 §2-1 — ΔW = W_AA + W_SS − 2W_AS = W_SS·(√(γ_A/γ_S) − 1)² ≥ 0 · 비 1 에서 0 (비 1 · 0.3 · 2 · 상대 1e-11)', 'GM⑤ 논지 §2 산술 — 비 1 에서 SE 하나의 AM_P–SE / SE–SE 당김힘 = 2r_A/(r_A+r_S) (1.8 · AM_S 1.6) · SE–SE 가 이기는 비 < 0.3086 (AM_P) · 0.3906 (AM_S) — 그 양쪽 1 % 에서 대소가 뒤집힌다', 'GM⑥ 벽 = 같은 기하평균 (W_iW = 2√(γ_iγ_W) · R* = r_입자) · Hare 2026 Table 3 의 γ_pw/γ_pp 0.16 → γ_W/γ_SE = 0.16² = 0.0256 → SE–벽 / SE–SE 당김힘 = 0.16 × 2 = 0.32 (Hare 단분산과 같음 · ρ 0.3 세계면 0.32·√0.3) · AM–벽 / SE–벽 = √(γ_A/γ_S)·r_A/r_S', 'GM⑪ 경화 ×20 + hold_bo_pairwise — 쌍별 F₀ 보존 행렬 = 새 E 로 직접 계산한 기하평균 행렬 (F₀ 목표가 E 와 무관 · 상대 1e-12) · hold 없으면 거부', 'MX① ★ 절대 수준 · 기록 고정 (MXD2-02 · 변이 M04 · M05 · M16) — lab soft · lab ×20 · gen1 D2 덱 (CLI · ρ 0.3 세계 · Bo 0.5) 의 SE–SE Bo_code 를 **덱 텍스트에서** (SE 템플릿 r · 그 세대 ρ_SE · 중력) 되읽은 값 = 0.5 (상대 3e-5) = 덱 머리 선언 = deck_meta.adhesion_rule.bo_se', 'MX② ★ 절대 수준 = 덱 세대의 ρ_SE (MXD2-02 · 변이 M04 · M05) — 옛 팔 LC 의 lab 덱도 SE–SE Bo_code 0.21244 (덱 텍스트 되읽기 · 상대 3e-5) · ced_matrix_geomean(dens = gen1 · lab) 의 F₀_SS = Bo_SE × 그 세대 SE 무게 (상대 1e-12)', 'MX③ ★ 혼합쌍 천장 (MXD2-03 · 변이 M06 · M07) — lab · ρ 10 세계 (비코팅 AM γ 10) · Bo 800 soft 는 AM_P–SE 로 거부 (SE–SE 0.853 % = 천장 안 · 독립 산술) · Bo 300 soft 는 수용 · 같은 팔을 SE ×0.5 (F < 1) 로 무르게 하면 F₀ 보존 행렬에서 AM_P–SE 로 거부 (SE–SE 0.704 % 는 안)']",
+  "status": "KILLED"
+ },
+ {
+  "mutation": "M22_F0SS_radius_diam",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 5,
+  "fails": [
+   "GM① γ 비 1 (코팅 세계 · 전 상 같은 γ) 의 같은 상 대각 CED = LC 대각 (JKR 기하 환산 Bo_t = Bo_SE·r_S²ρ_S/(r_t²ρ_t) 과 같은 식 · 상대 1e-12",
+   "GM② 모든 쌍 (벽 포함) 의 명목 점착 힘 F₀_ij = F₀_SS · √(γ_iγ_j)/γ_SE · R*_ij/R*_SS (상대 1e-12) · F₀_SS = Bo_SE × SE 무게 · 벽–",
+   "MX① ★ 절대 수준 · 기록 고정 (MXD2-02 · 변이 M04 · M05 · M16) — lab soft · lab ×20 · gen1 D2 덱 (CLI · ρ 0.3 세계 · Bo 0.5) ",
+   "MX② ★ 절대 수준 = 덱 세대의 ρ_SE (MXD2-02 · 변이 M04 · M05) — 옛 팔 LC 의 lab 덱도 SE–SE Bo_code 0.21244 (덱 텍스트 되읽기 · 상대 3e-5",
+   "MX③ ★ 혼합쌍 천장 (MXD2-03 · 변이 M06 · M07) — lab · ρ 10 세계 (비코팅 AM γ 10) · Bo 800 soft 는 AM_P–SE 로 거부 (SE–SE 0.853 "
+  ],
+  "new_fails": [
+   "GM① γ 비 1 (코팅 세계 · 전 상 같은 γ) 의 같은 상 대각 CED = LC 대각 (JKR 기하 환산 Bo_t = Bo_SE·r_S²ρ_S/(r_t²ρ_t) 과 같은 식 · 상대 1e-12",
+   "GM② 모든 쌍 (벽 포함) 의 명목 점착 힘 F₀_ij = F₀_SS · √(γ_iγ_j)/γ_SE · R*_ij/R*_SS (상대 1e-12) · F₀_SS = Bo_SE × SE 무게 · 벽–",
+   "MX① ★ 절대 수준 · 기록 고정 (MXD2-02 · 변이 M04 · M05 · M16) — lab soft · lab ×20 · gen1 D2 덱 (CLI · ρ 0.3 세계 · Bo 0.5) ",
+   "MX② ★ 절대 수준 = 덱 세대의 ρ_SE (MXD2-02 · 변이 M04 · M05) — 옛 팔 LC 의 lab 덱도 SE–SE Bo_code 0.21244 (덱 텍스트 되읽기 · 상대 3e-5",
+   "MX③ ★ 혼합쌍 천장 (MXD2-03 · 변이 M06 · M07) — lab · ρ 10 세계 (비코팅 AM γ 10) · Bo 800 soft 는 AM_P–SE 로 거부 (SE–SE 0.853 "
+  ],
+  "summary": "make_mixer_deck selftest: 149/154 PASS   FAILED: ['GM① γ 비 1 (코팅 세계 · 전 상 같은 γ) 의 같은 상 대각 CED = LC 대각 (JKR 기하 환산 Bo_t = Bo_SE·r_S²ρ_S/(r_t²ρ_t) 과 같은 식 · 상대 1e-12) — 바뀌는 것은 혼합쌍 · 벽뿐', 'GM② 모든 쌍 (벽 포함) 의 명목 점착 힘 F₀_ij = F₀_SS · √(γ_iγ_j)/γ_SE · R*_ij/R*_SS (상대 1e-12) · F₀_SS = Bo_SE × SE 무게 · 벽–벽 0', 'MX① ★ 절대 수준 · 기록 고정 (MXD2-02 · 변이 M04 · M05 · M16) — lab soft · lab ×20 · gen1 D2 덱 (CLI · ρ 0.3 세계 · Bo 0.5) 의 SE–SE Bo_code 를 **덱 텍스트에서** (SE 템플릿 r · 그 세대 ρ_SE · 중력) 되읽은 값 = 0.5 (상대 3e-5) = 덱 머리 선언 = deck_meta.adhesion_rule.bo_se', 'MX② ★ 절대 수준 = 덱 세대의 ρ_SE (MXD2-02 · 변이 M04 · M05) — 옛 팔 LC 의 lab 덱도 SE–SE Bo_code 0.21244 (덱 텍스트 되읽기 · 상대 3e-5) · ced_matrix_geomean(dens = gen1 · lab) 의 F₀_SS = Bo_SE × 그 세대 SE 무게 (상대 1e-12)', 'MX③ ★ 혼합쌍 천장 (MXD2-03 · 변이 M06 · M07) — lab · ρ 10 세계 (비코팅 AM γ 10) · Bo 800 soft 는 AM_P–SE 로 거부 (SE–SE 0.853 % = 천장 안 · 독립 산술) · Bo 300 soft 는 수용 · 같은 팔을 SE ×0.5 (F < 1) 로 무르게 하면 F₀ 보존 행렬에서 AM_P–SE 로 거부 (SE–SE 0.704 % 는 안)']",
+  "status": "KILLED"
+ },
+ {
+  "mutation": "M23_gm_lab_header_off",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 3,
+  "fails": [
+   "DG② 세대 미지정 = gen1 그 객체 (plan · CED 같은 수) · gen1 명시 덱 = 미지정 덱 + 머리 주석 묶음 하나 (끼운 줄을 빼면 글자 그대로)",
+   "DG⑥ ★ D2 결합 규칙 (--gm-*) 덱 = 새 세대 덱 — --dens-gen 없으면 거부 (CLI rc ≠ 0 · 덱 안 씀 · deck() · deck_meta() 도 거부) · 주면 덱",
+   "DG⑦ 기록은 **요청했을 때만** — 강성 덱 (--dens-gen 없음) deck_meta 에 세대 키 없음 (schema /1) · gen1 명시 = 같은 메타 + 세대 키 (schema /2"
+  ],
+  "new_fails": [
+   "DG② 세대 미지정 = gen1 그 객체 (plan · CED 같은 수) · gen1 명시 덱 = 미지정 덱 + 머리 주석 묶음 하나 (끼운 줄을 빼면 글자 그대로)",
+   "DG⑥ ★ D2 결합 규칙 (--gm-*) 덱 = 새 세대 덱 — --dens-gen 없으면 거부 (CLI rc ≠ 0 · 덱 안 씀 · deck() · deck_meta() 도 거부) · 주면 덱",
+   "DG⑦ 기록은 **요청했을 때만** — 강성 덱 (--dens-gen 없음) deck_meta 에 세대 키 없음 (schema /1) · gen1 명시 = 같은 메타 + 세대 키 (schema /2"
+  ],
+  "summary": "make_mixer_deck selftest: 151/154 PASS   FAILED: ['DG② 세대 미지정 = gen1 그 객체 (plan · CED 같은 수) · gen1 명시 덱 = 미지정 덱 + 머리 주석 묶음 하나 (끼운 줄을 빼면 글자 그대로)', 'DG⑥ ★ D2 결합 규칙 (--gm-*) 덱 = 새 세대 덱 — --dens-gen 없으면 거부 (CLI rc ≠ 0 · 덱 안 씀 · deck() · deck_meta() 도 거부) · 주면 덱 머리 · deck_meta 에 dens_gen · 실제 값 · 옮긴 상 (VGCF · PTFE) 기록', 'DG⑦ 기록은 **요청했을 때만** — 강성 덱 (--dens-gen 없음) deck_meta 에 세대 키 없음 (schema /1) · gen1 명시 = 같은 메타 + 세대 키 (schema /2) · 덱 = 머리 주석만 더함 · 기본 덱 (강성 아님) 은 deck_meta 를 안 쓰고 (파일 목록 그대로) gen1 명시면 deck_meta 를 쓴다']",
+  "status": "KILLED"
+ },
+ {
+  "mutation": "M24_meta_wall_rule_dropped",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 2,
+  "fails": [
+   "GM⑬ 벽 = 비코팅 NCM 에 묶기 — gm_wall_from_ncm(ρ) = 0.0256·ρ (입력 거부 7) · 같은 ρ 세계의 비코팅 · 코팅 팔이 같은 SE–벽 · SE–SE CED · C",
+   "MX⑥a ★ D2 덱의 기록 (MXD2-06) — 벽 주석 = D2 기하평균 (옛 \"점착 = 입자값 ÷ 1.842\" 는 옛 팔에만) · deck_meta schema mixer_deck_meta/2"
+  ],
+  "new_fails": [
+   "GM⑬ 벽 = 비코팅 NCM 에 묶기 — gm_wall_from_ncm(ρ) = 0.0256·ρ (입력 거부 7) · 같은 ρ 세계의 비코팅 · 코팅 팔이 같은 SE–벽 · SE–SE CED · C",
+   "MX⑥a ★ D2 덱의 기록 (MXD2-06) — 벽 주석 = D2 기하평균 (옛 \"점착 = 입자값 ÷ 1.842\" 는 옛 팔에만) · deck_meta schema mixer_deck_meta/2"
+  ],
+  "summary": "make_mixer_deck selftest: 152/154 PASS   FAILED: ['GM⑬ 벽 = 비코팅 NCM 에 묶기 — gm_wall_from_ncm(ρ) = 0.0256·ρ (입력 거부 7) · 같은 ρ 세계의 비코팅 · 코팅 팔이 같은 SE–벽 · SE–SE CED · CLI --gm-wall-ncm → deck_meta wall_rule · rho_uncoated_ncm · 덱 머리 표기 · --gm-gamma-wall 과 함께면 거부', 'MX⑥a ★ D2 덱의 기록 (MXD2-06) — 벽 주석 = D2 기하평균 (옛 \"점착 = 입자값 ÷ 1.842\" 는 옛 팔에만) · deck_meta schema mixer_deck_meta/2 · registered = D2 결합 규칙 (등록 전) · 경화 덱이면 강성 경로를 더함 · adhesion_rule 에 층상 · 표면 상태 · 벽 규칙 (비코팅 NCM ρ · 명시 = 함의 ρ)']",
+  "status": "KILLED"
+ },
+ {
+  "mutation": "M25_q2_ncm_membership_off",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 2,
+  "fails": [
+   "MX⑤ ★ 벽 = 비코팅 NCM (1저자 10-14 Q2 · MXD2-05 · 변이 M13) 을 라이브러리가 강제 — --gm-wall-ncm ρ 이면 AM γ 마다 1 (코팅) 또는 ρ (비코팅)",
+   "MX⑤b 팔 사전 · CLI · 도움말이 Q2 를 따른다 (MXD2-05) — 표면 상태 (coated · uncoated) · 벽 규칙 (비코팅 NCM · 명시 = 코팅 팔만 · 함의 ρ = γ_"
+  ],
+  "new_fails": [
+   "MX⑤ ★ 벽 = 비코팅 NCM (1저자 10-14 Q2 · MXD2-05 · 변이 M13) 을 라이브러리가 강제 — --gm-wall-ncm ρ 이면 AM γ 마다 1 (코팅) 또는 ρ (비코팅)",
+   "MX⑤b 팔 사전 · CLI · 도움말이 Q2 를 따른다 (MXD2-05) — 표면 상태 (coated · uncoated) · 벽 규칙 (비코팅 NCM · 명시 = 코팅 팔만 · 함의 ρ = γ_"
+  ],
+  "summary": "make_mixer_deck selftest: 152/154 PASS   FAILED: ['MX⑤ ★ 벽 = 비코팅 NCM (1저자 10-14 Q2 · MXD2-05 · 변이 M13) 을 라이브러리가 강제 — --gm-wall-ncm ρ 이면 AM γ 마다 1 (코팅) 또는 ρ (비코팅) 만 · 명시 벽 (--gm-gamma-wall) 은 AM γ 전부 1 인 팔만 · γ_W ≠ 0.0256·ρ 거부 — 리뷰 F4 셋 (AM 0.3 · ρ 3 / 0.3 · 0.6 · ρ 0.3 / 0.5 · ρ 0.3) 포함 · 사유 \"Q2\"', 'MX⑤b 팔 사전 · CLI · 도움말이 Q2 를 따른다 (MXD2-05) — 표면 상태 (coated · uncoated) · 벽 규칙 (비코팅 NCM · 명시 = 코팅 팔만 · 함의 ρ = γ_W/0.0256) 기록 · CLI 리뷰 F4 셋 + 명시 벽 AM 0.3/0.5 → rc ≠ 0 · 덱 안 씀 · 도움말 · 주석이 열린 질문으로 읽히지 않는다']",
+  "status": "KILLED"
+ },
+ {
+  "mutation": "M26_explicit_coated_only_off",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 2,
+  "fails": [
+   "MX⑤ ★ 벽 = 비코팅 NCM (1저자 10-14 Q2 · MXD2-05 · 변이 M13) 을 라이브러리가 강제 — --gm-wall-ncm ρ 이면 AM γ 마다 1 (코팅) 또는 ρ (비코팅)",
+   "MX⑤b 팔 사전 · CLI · 도움말이 Q2 를 따른다 (MXD2-05) — 표면 상태 (coated · uncoated) · 벽 규칙 (비코팅 NCM · 명시 = 코팅 팔만 · 함의 ρ = γ_"
+  ],
+  "new_fails": [
+   "MX⑤ ★ 벽 = 비코팅 NCM (1저자 10-14 Q2 · MXD2-05 · 변이 M13) 을 라이브러리가 강제 — --gm-wall-ncm ρ 이면 AM γ 마다 1 (코팅) 또는 ρ (비코팅)",
+   "MX⑤b 팔 사전 · CLI · 도움말이 Q2 를 따른다 (MXD2-05) — 표면 상태 (coated · uncoated) · 벽 규칙 (비코팅 NCM · 명시 = 코팅 팔만 · 함의 ρ = γ_"
+  ],
+  "summary": "make_mixer_deck selftest: 152/154 PASS   FAILED: ['MX⑤ ★ 벽 = 비코팅 NCM (1저자 10-14 Q2 · MXD2-05 · 변이 M13) 을 라이브러리가 강제 — --gm-wall-ncm ρ 이면 AM γ 마다 1 (코팅) 또는 ρ (비코팅) 만 · 명시 벽 (--gm-gamma-wall) 은 AM γ 전부 1 인 팔만 · γ_W ≠ 0.0256·ρ 거부 — 리뷰 F4 셋 (AM 0.3 · ρ 3 / 0.3 · 0.6 · ρ 0.3 / 0.5 · ρ 0.3) 포함 · 사유 \"Q2\"', 'MX⑤b 팔 사전 · CLI · 도움말이 Q2 를 따른다 (MXD2-05) — 표면 상태 (coated · uncoated) · 벽 규칙 (비코팅 NCM · 명시 = 코팅 팔만 · 함의 ρ = γ_W/0.0256) 기록 · CLI 리뷰 F4 셋 + 명시 벽 AM 0.3/0.5 → rc ≠ 0 · 덱 안 씀 · 도움말 · 주석이 열린 질문으로 읽히지 않는다']",
+  "status": "KILLED"
+ },
+ {
+  "mutation": "M27_arm_name_match_not_fullmatch",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "MX④ ★ 극단 입력 거부 (MXD2-04) — γ 1e-200 · 2e6 · ρ 1e-7 · Bo 1e-310 · 2e4 (지원 범위 γ · ρ · γ_W ∈ [1e-6, 1e6] · Bo ∈ ["
+  ],
+  "new_fails": [
+   "MX④ ★ 극단 입력 거부 (MXD2-04) — γ 1e-200 · 2e6 · ρ 1e-7 · Bo 1e-310 · 2e4 (지원 범위 γ · ρ · γ_W ∈ [1e-6, 1e6] · Bo ∈ ["
+  ],
+  "summary": "make_mixer_deck selftest: 153/154 PASS   FAILED: ['MX④ ★ 극단 입력 거부 (MXD2-04) — γ 1e-200 · 2e6 · ρ 1e-7 · Bo 1e-310 · 2e4 (지원 범위 γ · ρ · γ_W ∈ [1e-6, 1e6] · Bo ∈ [1e-6, 1e4] 밖) · 팔 이름 끝 줄바꿈 · CR · 탭 · NUL · 공백 (fullmatch) · 설명의 제어 문자 (덱 주석 줄을 깨뜨린다) — 사유 낱말 대조']",
+  "status": "KILLED"
+ },
+ {
+  "mutation": "M28_desc_control_chars_allowed",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "MX④ ★ 극단 입력 거부 (MXD2-04) — γ 1e-200 · 2e6 · ρ 1e-7 · Bo 1e-310 · 2e4 (지원 범위 γ · ρ · γ_W ∈ [1e-6, 1e6] · Bo ∈ ["
+  ],
+  "new_fails": [
+   "MX④ ★ 극단 입력 거부 (MXD2-04) — γ 1e-200 · 2e6 · ρ 1e-7 · Bo 1e-310 · 2e4 (지원 범위 γ · ρ · γ_W ∈ [1e-6, 1e6] · Bo ∈ ["
+  ],
+  "summary": "make_mixer_deck selftest: 153/154 PASS   FAILED: ['MX④ ★ 극단 입력 거부 (MXD2-04) — γ 1e-200 · 2e6 · ρ 1e-7 · Bo 1e-310 · 2e4 (지원 범위 γ · ρ · γ_W ∈ [1e-6, 1e6] · Bo ∈ [1e-6, 1e4] 밖) · 팔 이름 끝 줄바꿈 · CR · 탭 · NUL · 공백 (fullmatch) · 설명의 제어 문자 (덱 주석 줄을 깨뜨린다) — 사유 낱말 대조']",
+  "status": "KILLED"
+ },
+ {
+  "mutation": "M29_ascii_decimal_is_float",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "MX④b ★ CLI 수 토큰 = ASCII 십진수만 (MXD2-04) — --gm-gamma 의 0_3 (옛 판: 3.0) · 전각 ０.３ · nan · --gm-bo-se 0_5 · --gm-wa"
+  ],
+  "new_fails": [
+   "MX④b ★ CLI 수 토큰 = ASCII 십진수만 (MXD2-04) — --gm-gamma 의 0_3 (옛 판: 3.0) · 전각 ０.３ · nan · --gm-bo-se 0_5 · --gm-wa"
+  ],
+  "summary": "make_mixer_deck selftest: 153/154 PASS   FAILED: ['MX④b ★ CLI 수 토큰 = ASCII 십진수만 (MXD2-04) — --gm-gamma 의 0_3 (옛 판: 3.0) · 전각 ０.３ · nan · --gm-bo-se 0_5 · --gm-wall-ncm ０.３ · --gm-gamma-wall 0.02_56 → rc ≠ 0 · 덱 안 씀 · 사유 \"ASCII 십진\" · 앞뒤 공백만은 허용']",
+  "status": "KILLED"
+ },
+ {
+  "mutation": "M30_meta_schema_stays_v1",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 2,
+  "fails": [
+   "DG⑦ 기록은 **요청했을 때만** — 강성 덱 (--dens-gen 없음) deck_meta 에 세대 키 없음 (schema /1) · gen1 명시 = 같은 메타 + 세대 키 (schema /2",
+   "MX⑥a ★ D2 덱의 기록 (MXD2-06) — 벽 주석 = D2 기하평균 (옛 \"점착 = 입자값 ÷ 1.842\" 는 옛 팔에만) · deck_meta schema mixer_deck_meta/2"
+  ],
+  "new_fails": [
+   "DG⑦ 기록은 **요청했을 때만** — 강성 덱 (--dens-gen 없음) deck_meta 에 세대 키 없음 (schema /1) · gen1 명시 = 같은 메타 + 세대 키 (schema /2",
+   "MX⑥a ★ D2 덱의 기록 (MXD2-06) — 벽 주석 = D2 기하평균 (옛 \"점착 = 입자값 ÷ 1.842\" 는 옛 팔에만) · deck_meta schema mixer_deck_meta/2"
+  ],
+  "summary": "make_mixer_deck selftest: 152/154 PASS   FAILED: ['DG⑦ 기록은 **요청했을 때만** — 강성 덱 (--dens-gen 없음) deck_meta 에 세대 키 없음 (schema /1) · gen1 명시 = 같은 메타 + 세대 키 (schema /2) · 덱 = 머리 주석만 더함 · 기본 덱 (강성 아님) 은 deck_meta 를 안 쓰고 (파일 목록 그대로) gen1 명시면 deck_meta 를 쓴다', 'MX⑥a ★ D2 덱의 기록 (MXD2-06) — 벽 주석 = D2 기하평균 (옛 \"점착 = 입자값 ÷ 1.842\" 는 옛 팔에만) · deck_meta schema mixer_deck_meta/2 · registered = D2 결합 규칙 (등록 전) · 경화 덱이면 강성 경로를 더함 · adhesion_rule 에 층상 · 표면 상태 · 벽 규칙 (비코팅 NCM ρ · 명시 = 함의 ρ)']",
+  "status": "KILLED"
+ },
+ {
+  "mutation": "M31_registered_old_text",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "MX⑥a ★ D2 덱의 기록 (MXD2-06) — 벽 주석 = D2 기하평균 (옛 \"점착 = 입자값 ÷ 1.842\" 는 옛 팔에만) · deck_meta schema mixer_deck_meta/2"
+  ],
+  "new_fails": [
+   "MX⑥a ★ D2 덱의 기록 (MXD2-06) — 벽 주석 = D2 기하평균 (옛 \"점착 = 입자값 ÷ 1.842\" 는 옛 팔에만) · deck_meta schema mixer_deck_meta/2"
+  ],
+  "summary": "make_mixer_deck selftest: 153/154 PASS   FAILED: ['MX⑥a ★ D2 덱의 기록 (MXD2-06) — 벽 주석 = D2 기하평균 (옛 \"점착 = 입자값 ÷ 1.842\" 는 옛 팔에만) · deck_meta schema mixer_deck_meta/2 · registered = D2 결합 규칙 (등록 전) · 경화 덱이면 강성 경로를 더함 · adhesion_rule 에 층상 · 표면 상태 · 벽 규칙 (비코팅 NCM ρ · 명시 = 함의 ρ)']",
+  "status": "KILLED"
+ },
+ {
+  "mutation": "M32_ced_post_assert_off",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "MX⑦ 사후 단언 (MXD2-04 · 방어 깊이) — 지원 범위를 넓혀 γ 1e-200 을 넣으면 γ 곱 언더플로로 CED 0 이 생긴다 → 행렬 단계가 \"벽–벽 밖 CED = 유한 · 정규 양수\""
+  ],
+  "new_fails": [
+   "MX⑦ 사후 단언 (MXD2-04 · 방어 깊이) — 지원 범위를 넓혀 γ 1e-200 을 넣으면 γ 곱 언더플로로 CED 0 이 생긴다 → 행렬 단계가 \"벽–벽 밖 CED = 유한 · 정규 양수\""
+  ],
+  "summary": "make_mixer_deck selftest: 153/154 PASS   FAILED: ['MX⑦ 사후 단언 (MXD2-04 · 방어 깊이) — 지원 범위를 넓혀 γ 1e-200 을 넣으면 γ 곱 언더플로로 CED 0 이 생긴다 → 행렬 단계가 \"벽–벽 밖 CED = 유한 · 정규 양수\" 로 거부 (옛 판: AM_P–AM_P 0 · 나머지 양수 덱을 썼다)']",
+  "status": "KILLED"
+ }
+]

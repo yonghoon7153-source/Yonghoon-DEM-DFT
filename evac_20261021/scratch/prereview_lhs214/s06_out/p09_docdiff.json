@@ -1,0 +1,12 @@
+{
+ "new_cases": {
+  "n": 12,
+  "same_as_bundle_with_head_base": 0,
+  "same_as_bundle_with_pre_base": 12
+ },
+ "newline_cases": {
+  "n": 18,
+  "same_as_bundle_with_pre_base": 18
+ },
+ "F_codex_record_equals_pre_doc_section": true
+}

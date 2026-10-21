@@ -1,0 +1,401 @@
+{
+ "impl": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rcaA2/impl",
+ "base": {
+  "cj:CEN,KINK-R,RCA03,QD,QC": "== test_carbon_junction: 29/29 PASS",
+  "cj:FLOOR,KINK": "== test_carbon_junction: 12/12 PASS",
+  "cj:GAP": "== test_carbon_junction: 10/10 PASS",
+  "cj:KINK,KINK-R": "== test_carbon_junction: 12/12 PASS",
+  "cj:KINK,RCA03,SELFD,REC,CEN": "== test_carbon_junction: 30/30 PASS",
+  "cj:QC": "== test_carbon_junction: 7/7 PASS",
+  "cj:QD": "== test_carbon_junction: 5/5 PASS",
+  "cj:RCA03,CEN,KINK-R,SELFD,KINK": "== test_carbon_junction: 29/29 PASS",
+  "cj:RCA06": "== test_carbon_junction: 8/8 PASS",
+  "cj:RING": "== test_carbon_junction: 6/6 PASS",
+  "cj:SELFD,RCA03,KINK,RING,CEN": "== test_carbon_junction: 31/31 PASS",
+  "s0:t_plan_commit": "22 PASS · 0 FAIL"
+ },
+ "rows": [
+  {
+   "mutant": "M01 조각 = fid 규칙 (서로 다른 섬유 = fid 다름만)",
+   "file": "carbon_junction.py",
+   "tests": "GAP",
+   "base_rc": 0,
+   "base_summary": "== test_carbon_junction: 10/10 PASS",
+   "rc": 1,
+   "summary": "== test_carbon_junction: 2/10 PASS",
+   "caught": true,
+   "fails": [
+    "FAIL  GAP 같은 셀 (끝 z 3.15 · 3.85 · 셀 (1,1,3)) — 조각 2 · instance 1 (조각 쌍 · 같은 fid · 자기 아님 · 실현) · 포트 = (1,1,3) · (1,1,3) (s_min 3 · 0.5)  ([(3.0, 0, 0.0, 'no_through_component', {'n_pieces': 2, 'n_instances_same_fid_pieces': 0, 'n_self_revisits_path_only': 0, 'n_revisit_pairs': 0, 'n_piece_cell_meets': 1}), (0.5, 0, 0.0, 'no_through_component', {'n_pieces': 2, 'n_instances_same_fid_pieces': 0, 'n_self_revisits_path_only': 0, 'n_revisit_pairs': 0, 'n_piece_cell_meets': 1})])",
+    "FAIL  GAP 같은 셀 (끝 z 3.15 · 3.85 · 셀 (1,1,3)) — σ = 손 회로 (조각 사슬 + R_j 간선 하나 · 1e-12) · s_min 무관  ([(3.0, 0, 0.0, 'no_through_component', {'n_pieces': 2, 'n_instances_same_fid_pieces': 0, 'n_self_revisits_path_only': 0, 'n_revisit_pairs': 0, 'n_piece_cell_meets': 1}), (0.5, 0, 0.0, 'no_through_component', {'n_pieces': 2, 'n_instances_same_fid_pieces': 0, 'n_self_revisits_path_only': 0, 'n_revisit_pairs': 0, 'n_piece_cell_meets': 1})])",
+    "FAIL  GAP 같은 셀 (끝 z 3.15 · 3.85 · 셀 (1,1,3)) — census: 같은 fid 조각 쌍 instance 1 · 같은 셀 조각 만남 1 · 같은 조각 재방문 0 · '경로로만' 0 (옛 = 거짓 1)  ([(3.0, 0, 0.0, 'no_through_component', {'n_pieces': 2, 'n_instances_same_fid_pieces': 0, 'n_self_revisits_path_only': 0, 'n_revisit_pairs': 0, 'n_piece_cell_meets': 1}), (0.5, 0, 0.0, 'no_through_component', {'n_pieces': 2, 'n_instances_same_fid_pieces': 0, 'n_self_revisits_path_only': 0, 'n_revisit_pairs': 0, 'n_piece_cell_meets': 1})])",
+    "FAIL  GAP 면 인접 (끝 z 2.85 · 3.5 · 셀 (1,1,2)|(1,1,3)) — 조각 2 · instance 1 (조각 쌍 · 같은 fid · 자기 아님 · 실현) · 포트 = (1,1,2) · (1,1,3) (s_min 3 · 0.5)  ([(3.0, 0, 0.0, 'no_through_component', {'n_pieces': 2, 'n_instances_same_fid_pieces': 0, 'n_self_revisits_path_only': 0, 'n_revisit_pairs': 0, 'n_piece_cell_meets': 0}), (0.5, 0, 0.0, 'no_through_component', {'n_pieces': 2, 'n_instances_same_fid_pieces': 0, 'n_self_revisits_path_only': 0, 'n_revisit_pairs': 0, 'n_piece_cell_meets': 0})])",
+    "FAIL  GAP 면 인접 (끝 z 2.85 · 3.5 · 셀 (1,1,2)|(1,1,3)) — σ = 손 회로 (조각 사슬 + R_j 간선 하나 · 1e-12) · s_min 무관  ([(3.0, 0, 0.0, 'no_through_component', {'n_pieces': 2, 'n_instances_same_fid_pieces': 0, 'n_self_revisits_path_only': 0, 'n_revisit_pairs': 0, 'n_piece_cell_meets': 0}), (0.5, 0, 0.0, 'no_through_component', {'n_pieces': 2, 'n_instances_same_fid_pieces': 0, 'n_self_revisits_path_only': 0, 'n_revisit_pairs': 0, 'n_piece_cell_meets': 0})])",
+    "FAIL  GAP 면 인접 (끝 z 2.85 · 3.5 · 셀 (1,1,2)|(1,1,3)) — census: 같은 fid 조각 쌍 instance 1 · 같은 셀 조각 만남 0 · 같은 조각 재방문 0 · '경로로만' 0 (옛 = 거짓 1)  ([(3.0, 0, 0.0, 'no_through_component', {'n_pieces': 2, 'n_instances_same_fid_pieces': 0, 'n_self_revisits_path_only': 0, 'n_revisit_pairs': 0, 'n_piece_cell_meets': 0}), (0.5, 0, 0.0, 'no_through_component', {'n_pieces': 2, 'n_instances_same_fid_pieces': 0, 'n_self_revisits_path_only': 0, 'n_revisit_pairs': 0, 'n_piece_cell_meets': 0})])"
+   ]
+  },
+  {
+   "mutant": "M02 바닥 = s > D 만",
+   "file": "carbon_junction.py",
+   "tests": "FLOOR,KINK",
+   "base_rc": 0,
+   "base_summary": "== test_carbon_junction: 12/12 PASS",
+   "rc": 1,
+   "summary": "== test_carbon_junction: 8/12 PASS",
+   "caught": true,
+   "fails": [
+    "FAIL  KINK s_min 없음 + 시험 모드 = 진행 · 거르기 안 함 표지 (self_filter = off_s_min_missing) · 교차 접합 (s 10.8) 이 그 안에 · 바닥 = 모든 자기 접합 s > D · s > (π/2)·d0 (곧은 이웃 · 꺾임 모서리 아님)  ([(10.8, 0.7999999999999998), (1.25, 0.9013878188659973), (1.1000000000000005, 0.7810249675906653), (1.25, 0.9013878188659973), (1.25, 0.9013878188659973)])",
+    "FAIL  KINK KW (다리 중심선 1.2 > D 1.1) — 자기 접합 후보 아님 (instance 0) · 다리 사이 면 셋 = 미등록 법칙 (중심선 탐지 · fid 무관)  (4 면 [[4], [4], [4]])",
+    "FAIL  FLOOR L 자 · s_min 없음 — 자기 후보 0 · instance 0 (90° 모서리 = 바닥 안)  ([(1.25, 0.9013878188659973)] · 후보 1)",
+    "FAIL  FLOOR L 자 · s_min 0 — 자기 후보 0 · instance 0 (90° 모서리 = 바닥 안)  ([(1.25, 0.9013878188659973)] · 후보 1)",
+    "FAIL: KINK s_min 없음 + 시험 모드 = 진행 · 거르기 안 함 표지 (self_filter = off_s_min_missing) · 교차 접합 (s 10.8) 이 그 안에 · 바닥 = 모든 자기 접합 s > D · s > (π/2)·d0 (곧은 이웃 · 꺾임 모서리 아님) · KINK KW (다리 중심선 1.2 > D 1.1) — 자기 접합 후보 아님 (instance 0) · 다리 사이 면 셋 = 미등록 법칙 (중심선 탐지 · fid 무관) · FLOOR L 자 · s_min 없음 — 자기 후보 0 · instance 0 (90° 모서리 = 바닥 안) · FLOOR L 자 · s_min 0 — 자기 후보 0 · instance 0 (90° 모서리 = 바닥 안)"
+   ]
+  },
+  {
+   "mutant": "M03 고리 이음매 별칭 끔",
+   "file": "carbon_junction.py",
+   "tests": "RING",
+   "base_rc": 0,
+   "base_summary": "== test_carbon_junction: 6/6 PASS",
+   "rc": 1,
+   "summary": "== test_carbon_junction: 2/6 PASS",
+   "caught": true,
+   "fails": [
+    "FAIL  RING s_min 3 — 이음매 = 연속: 자기 접합 0 · σ = 손 연속 고리 회로 (= 옛 경로 · 1e-12) · R_j = ∞ 도 같음  (0 · 12.93103448275863 · 12.93103448275863 ↔ 25.64102564102568 (옛 경로 25.641025641025685))",
+    "FAIL  RING s_min 3 — census: 고리 조각 1 · 이음매 별칭 1 · 같은 조각 재방문 0 (첫 · 끝 위치 = 한 가지)  ({'n_ring_pieces': 1, 'n_seam_alias': 0, 'n_revisit_pairs': 0, 'n_pieces': 1})",
+    "FAIL  RING s_min 100 — 이음매 = 연속: 자기 접합 0 · σ = 손 연속 고리 회로 (= 옛 경로 · 1e-12) · R_j = ∞ 도 같음  (0 · 12.93103448275863 · 12.93103448275863 ↔ 25.64102564102568 (옛 경로 25.641025641025685))",
+    "FAIL  RING s_min 100 — census: 고리 조각 1 · 이음매 별칭 1 · 같은 조각 재방문 0 (첫 · 끝 위치 = 한 가지)  ({'n_ring_pieces': 1, 'n_seam_alias': 0, 'n_revisit_pairs': 0, 'n_pieces': 1})",
+    "FAIL: RING s_min 3 — 이음매 = 연속: 자기 접합 0 · σ = 손 연속 고리 회로 (= 옛 경로 · 1e-12) · R_j = ∞ 도 같음 · RING s_min 3 — census: 고리 조각 1 · 이음매 별칭 1 · 같은 조각 재방문 0 (첫 · 끝 위치 = 한 가지) · RING s_min 100 — 이음매 = 연속: 자기 접합 0 · σ = 손 연속 고리 회로 (= 옛 경로 · 1e-12) · R_j = ∞ 도 같음 · RING s_min 100 — census: 고리 조각 1 · 이음매 별칭 1 · 같은 조각 재방문 0 (첫 · 끝 위치 = 한 가지)"
+   ]
+  },
+  {
+   "mutant": "M04 포트 후보 = 살아있는 위치만 (옛 옮김)",
+   "file": "carbon_junction.py",
+   "tests": "QC",
+   "base_rc": 0,
+   "base_summary": "== test_carbon_junction: 7/7 PASS",
+   "rc": 1,
+   "summary": "== test_carbon_junction: 5/7 PASS",
+   "caught": true,
+   "fails": [
+    "FAIL  QC ① SDCP 가 접점 셀 (A 위끝 (1,1,3)) 을 덮음 — sid 5 · instance 1 · 미실현 (사유 covered_SDCP · instance · 간선) · 옮긴 포트 없음  ((1, [np.True_], [''], ['']))",
+    "FAIL  QC ① σ = SV 융합만 손 회로 (1e-12) = R_j ∞ (같은 접촉 한 번 · 옛 판 = 옮긴 접합 + SV 병렬 = +2.09 %)  (12.15351812366736 · 11.904761904761884 ↔ 11.904761904761884 (옛 12.15351812366736))",
+    "FAIL: QC ① SDCP 가 접점 셀 (A 위끝 (1,1,3)) 을 덮음 — sid 5 · instance 1 · 미실현 (사유 covered_SDCP · instance · 간선) · 옮긴 포트 없음 · QC ① σ = SV 융합만 손 회로 (1e-12) = R_j ∞ (같은 접촉 한 번 · 옛 판 = 옮긴 접합 + SV 병렬 = +2.09 %)"
+   ]
+  },
+  {
+   "mutant": "M05 SV 반사실 = 성분 SV 면 전부 끊음",
+   "file": "carbon_junction.py",
+   "tests": "QD",
+   "base_rc": 0,
+   "base_summary": "== test_carbon_junction: 5/5 PASS",
+   "rc": 1,
+   "summary": "== test_carbon_junction: 4/5 PASS",
+   "caught": true,
+   "fails": [
+    "FAIL  QD ③ SVY 반사실 = B 의 SV 면만 끊음 (A 자기 연속 남김) — 비 = 손 I_full/I_cut (1e-10 · 옛 = A 도 끊음) · 끊은 SV 면 1 · 다리 놓는 SDCP 성분 1 · 못 가른 성분 0 · 문턱 2 → SV_DEPENDENT 여부 = 비 ≥ 2  ({'kind': 'counterfactual_cut_sv_bridges_keep_self_v1', 'rule': 'sdcp_component_owner_groups_same_piece_continuity_or_covered_through_cut_nonpassing_v1', 'requested': True, 'threshold': 2.0, 'n_sv_faces_cut': 3, 'n_sdcp_components_touching': 1, 'n_bridging_components': 1, 'n_sv_faces_kept_self': 0, 'n_unsplit_bridging_components': 0, 'G_full_code': 16.729627630868848, 'G_cut_code': 0.0, 'sv_counterfactual_ratio': inf, 'flag': 'SV_DEPENDENT', 'cg_info': None, 'resid': None, 'conv_cert': None, 'status': 'no_through_without_sv', 'backend_last_solve': None} ↔ 손 비 1.2379924446842951)",
+    "FAIL: QD ③ SVY 반사실 = B 의 SV 면만 끊음 (A 자기 연속 남김) — 비 = 손 I_full/I_cut (1e-10 · 옛 = A 도 끊음) · 끊은 SV 면 1 · 다리 놓는 SDCP 성분 1 · 못 가른 성분 0 · 문턱 2 → SV_DEPENDENT 여부 = 비 ≥ 2"
+   ]
+  },
+  {
+   "mutant": "M06 닫힌 경로 이음매 잇기 끔",
+   "file": "carbon_junction.py",
+   "tests": "RING",
+   "base_rc": 0,
+   "base_summary": "== test_carbon_junction: 6/6 PASS",
+   "rc": 1,
+   "summary": "== test_carbon_junction: 4/6 PASS",
+   "caught": true,
+   "fails": [
+    "FAIL  RING 틈 하나 (오른 다리 z 4.25 · 4.0 · 3.75 점 지움 · 틈 1.0) — 같은 sid · 이음매를 지나 한 조각 (조각 1 · 이음매 이음 1) · 틈 두 끝 사이 자기 접합 하나 (포트 (3,1,3) · (3,1,4))  ({'n_pieces': 2, 'n_closed_paths_joined': 0, 'n_ring_pieces': 0} · 자기 [])",
+    "FAIL  RING 틈 하나 — σ = 손 회로 (연속 이음매 + 틈 R_j 간선 · 1e-12) · R_j = ∞ = 틈에서 열린 가닥 (1e-12)  (11.570433610424601 ↔ 18.804739824832595 · 0.0 ↔ 12.931034482758676)",
+    "FAIL: RING 틈 하나 (오른 다리 z 4.25 · 4.0 · 3.75 점 지움 · 틈 1.0) — 같은 sid · 이음매를 지나 한 조각 (조각 1 · 이음매 이음 1) · 틈 두 끝 사이 자기 접합 하나 (포트 (3,1,3) · (3,1,4)) · RING 틈 하나 — σ = 손 회로 (연속 이음매 + 틈 R_j 간선 · 1e-12) · R_j = ∞ = 틈에서 열린 가닥 (1e-12)"
+   ]
+  },
+  {
+   "mutant": "M07 덮인 포트 = 그대로 실현 (미실현 안 함)",
+   "file": "carbon_junction.py",
+   "tests": "QC",
+   "base_rc": 0,
+   "base_summary": "== test_carbon_junction: 7/7 PASS",
+   "rc": 1,
+   "summary": "== test_carbon_junction: 5/7 PASS",
+   "caught": true,
+   "fails": [
+    "FAIL  QC ① SDCP 가 접점 셀 (A 위끝 (1,1,3)) 을 덮음 — sid 5 · instance 1 · 미실현 (사유 covered_SDCP · instance · 간선) · 옮긴 포트 없음  ((1, [np.True_], [''], ['']))",
+    "FAIL  QC ① σ = SV 융합만 손 회로 (1e-12) = R_j ∞ (같은 접촉 한 번 · 옛 판 = 옮긴 접합 + SV 병렬 = +2.09 %)  (13.779527559055115 · 11.904761904761884 ↔ 11.904761904761884 (옛 12.15351812366736))",
+    "FAIL: QC ① SDCP 가 접점 셀 (A 위끝 (1,1,3)) 을 덮음 — sid 5 · instance 1 · 미실현 (사유 covered_SDCP · instance · 간선) · 옮긴 포트 없음 · QC ① σ = SV 융합만 손 회로 (1e-12) = R_j ∞ (같은 접촉 한 번 · 옛 판 = 옮긴 접합 + SV 병렬 = +2.09 %)"
+   ]
+  },
+  {
+   "mutant": "M08 같은 조각 면 연속 판정 끔 (늘 접촉)",
+   "file": "carbon_junction.py",
+   "tests": "KINK,KINK-R",
+   "base_rc": 0,
+   "base_summary": "== test_carbon_junction: 12/12 PASS",
+   "rc": 1,
+   "summary": "== test_carbon_junction: 7/12 PASS",
+   "caught": true,
+   "fails": [
+    "FAIL  KINK XC s < s_min (15) — 자기 접합 0 · 거른 후보 = 후보 전부 (교차 하나 이상) · 면 (1,1,2)|(2,1,2) = 연속 융합  ((0, {'n_self_candidates': 2, 'n_self_kept': 0, 'n_self_filtered': 2}, [5]))",
+    "FAIL  KINK XC s < s_min — 접합 · 절단 없음 = 옛 복셀 융합 그대로 (σ = 옛 경로 = 손 사슬 + 융합 면 1e-12)  (4.999999999999982 ↔ 옛 10.084033613445342 · 손 10.084033613445364)",
+    "FAIL  KINK KU (U 자 · 쌍 s 전부 < 20) s_min 20 — 자기 접합 0 · σ = 옛 경로 (면 셋 융합 · 1e-12)  (5.88235294117645)",
+    "FAIL  KINK-R s < s_min — 후보 ≥ 1 · 거른 수 = 후보 수 · 경로로만 이은 재방문 1 (합친 수 칸 없음 · 0) · 융합 자기 면 1 · 접합 0  ({'n_vgcf_fibres': 1, 'n_pieces': 1, 'n_segments': 50, 'n_positions': 13, 'n_live_positions': 13, 'n_cross_cells': 1, 'n_kway_cells_ge3': 0, 'n_instances': 0, 'n_instances_distinct': 0, 'n_instances_self': 0, 'n_realized': 0, 'n_unrealized_by_reason': {}, 'n_port_ties': 0, 'n_port_displaced': 0, 'port_relation': {'same_cell': 0, 'face': 0, 'edge': 0, 'corner': 0, 'apart': 0}, 'n_cut_site_faces': 0, 'n_unreg_faces': 1, 'n_cut_self_faces': 0, 'n_vx_faces_by_sid': {'void': 39}, 'owner_tie_noncanonical': 0, 'n_faces_multi_site': 0, 'surface_gap_um': None, 'Lc_um': None, 'len_mult': None, 'n_long_distinct': 0, 'n_long_self': 0, 'self_dk_min': None, 'n_sdcp_bridging_components': 0, 'n_sdcp_bridged_fid_pairs': 0, 'self_filter': 'applied', 'n_self_candidates': 2, 'n_self_kept': 0, 'n_self_filtered': 2, 'n_self_s_undefined': 0, 'n_self_fused_faces': 0, 'n_self_revisits_path_only': 1, 'n_self_revisits_path_broken': 0, 'self_s_um': {'min': 1.2875000000000005, 'median': 2.843750000000001, 'max': 4.400000000000001}, 'n_revisit_pairs': 1, 'n_revisit_cells': 1, 'n_revisit_fibres': 1, 'revisit_s_um': {'n': 1, 'min': 3.500000000000001, 'median': 3.500000000000001, 'max': 3.500000000000001}, 'n_subedges': 0, 'n_subedges_long': 0, 'n_subedges_ptfe_cov': 0, 'n_instances_ptfe_partial': 0, 'n_subedges_sdcp_near': 0, 'n_subedges_unrealized': 0, 'subedge_rule': 'ceil_Lc_over_Lpar_equal_split_midpoints_nearest_port_v0', 'n_sdcp_components_touching': 0, 'n_bridging_components': 0, 'n_sv_faces_cut_rows': 0, 'n_sv_faces_kept_self': 0, 'n_unsplit_bridging_components': 0, 'sv_cf_rule': 'sdcp_component_owner_groups_same_piece_continuity_or_covered_through_cut_nonpassing_v1', 'n_instances_same_fid_pieces': 0, 'n_piece_cell_meets': 0, 'n_ring_pieces': 0, 'n_closed_paths_joined': 0, 'n_seam_alias': 0, 'piece_rule': 'piece_is_fibre_closed_path_seam_continuous_v1'})",
+    "FAIL  KINK-R s < s_min — σ = 손 회로 (재방문 두 가지 따로 · 면 융합 · 1e-12) · 옛 합침 회로와 다르다  (7.692307692307642 ↔ 9.302325581395321 (옛 12.6050420168067))",
+    "FAIL: KINK XC s < s_min (15) — 자기 접합 0 · 거른 후보 = 후보 전부 (교차 하나 이상) · 면 (1,1,2)|(2,1,2) = 연속 융합 · KINK XC s < s_min — 접합 · 절단 없음 = 옛 복셀 융합 그대로 (σ = 옛 경로 = 손 사슬 + 융합 면 1e-12) · KINK KU (U 자 · 쌍 s 전부 < 20) s_min 20 — 자기 접합 0 · σ = 옛 경로 (면 셋 융합 · 1e-12) · KINK-R s < s_min — 후보 ≥ 1 · 거른 수 = 후보 수 · 경로로만 이은 재방문 1 (합친 수 칸 없음 · 0) · 융합 자기 면 1 · 접합 0 · KINK-R s < s_min — σ = 손 회로 (재방문 두 가지 따로 · 면 융합 · 1e-12) · 옛 합침 회로와 다르다"
+   ]
+  },
+  {
+   "mutant": "M09 SV 무리 '지남' = 사이 위치 살아있음 (뒤집음)",
+   "file": "carbon_junction.py",
+   "tests": "QD",
+   "base_rc": 0,
+   "base_summary": "== test_carbon_junction: 5/5 PASS",
+   "rc": 1,
+   "summary": "== test_carbon_junction: 4/5 PASS",
+   "caught": true,
+   "fails": [
+    "FAIL  QD ③ SVY 반사실 = B 의 SV 면만 끊음 (A 자기 연속 남김) — 비 = 손 I_full/I_cut (1e-10 · 옛 = A 도 끊음) · 끊은 SV 면 1 · 다리 놓는 SDCP 성분 1 · 못 가른 성분 0 · 문턱 2 → SV_DEPENDENT 여부 = 비 ≥ 2  ({'kind': 'counterfactual_cut_sv_bridges_keep_self_v1', 'rule': 'sdcp_component_owner_groups_same_piece_continuity_or_covered_through_cut_nonpassing_v1', 'requested': True, 'threshold': 2.0, 'n_sv_faces_cut': 3, 'n_sdcp_components_touching': 1, 'n_bridging_components': 1, 'n_sv_faces_kept_self': 0, 'n_unsplit_bridging_components': 0, 'G_full_code': 16.729627630868848, 'G_cut_code': 0.0, 'sv_counterfactual_ratio': inf, 'flag': 'SV_DEPENDENT', 'cg_info': None, 'resid': None, 'conv_cert': None, 'status': 'no_through_without_sv', 'backend_last_solve': None} ↔ 손 비 1.2379924446842951)",
+    "FAIL: QD ③ SVY 반사실 = B 의 SV 면만 끊음 (A 자기 연속 남김) — 비 = 손 I_full/I_cut (1e-10 · 옛 = A 도 끊음) · 끊은 SV 면 1 · 다리 놓는 SDCP 성분 1 · 못 가른 성분 0 · 문턱 2 → SV_DEPENDENT 여부 = 비 ≥ 2"
+   ]
+  },
+  {
+   "mutant": "M10 자기 L_c = 두 쪽 선분 전부 짝 (접합 쌍 제한 끔)",
+   "file": "carbon_junction.py",
+   "tests": "KINK,RCA03,SELFD,REC,CEN",
+   "base_rc": 0,
+   "base_summary": "== test_carbon_junction: 30/30 PASS",
+   "rc": 0,
+   "summary": "== test_carbon_junction: 30/30 PASS",
+   "caught": false,
+   "fails": []
+  },
+  {
+   "mutant": "M11 고리 s 둘레 짧은 쪽 끔",
+   "file": "carbon_junction.py",
+   "tests": "RING",
+   "base_rc": 0,
+   "base_summary": "== test_carbon_junction: 6/6 PASS",
+   "rc": 1,
+   "summary": "== test_carbon_junction: 5/6 PASS",
+   "caught": true,
+   "fails": [
+    "FAIL  RING s_min 3 — 이음매 = 연속: 자기 접합 0 · σ = 손 연속 고리 회로 (= 옛 경로 · 1e-12) · R_j = ∞ 도 같음  (1 · 25.641025641025685 · 25.641025641025685 ↔ 25.64102564102568 (옛 경로 25.641025641025685))",
+    "FAIL: RING s_min 3 — 이음매 = 연속: 자기 접합 0 · σ = 손 연속 고리 회로 (= 옛 경로 · 1e-12) · R_j = ∞ 도 같음"
+   ]
+  },
+  {
+   "mutant": "M12 쌍 무리 고리 둘레 잇기 끔",
+   "file": "carbon_junction.py",
+   "tests": "RING",
+   "base_rc": 0,
+   "base_summary": "== test_carbon_junction: 6/6 PASS",
+   "rc": 0,
+   "summary": "== test_carbon_junction: 6/6 PASS",
+   "caught": false,
+   "fails": []
+  },
+  {
+   "mutant": "M13 조립기 이음매 별칭 dof 끔",
+   "file": "carbon_junction.py",
+   "tests": "RING",
+   "base_rc": 0,
+   "base_summary": "== test_carbon_junction: 6/6 PASS",
+   "rc": 1,
+   "summary": "== test_carbon_junction: 4/6 PASS",
+   "caught": true,
+   "fails": [
+    "FAIL  RING s_min 3 — 이음매 = 연속: 자기 접합 0 · σ = 손 연속 고리 회로 (= 옛 경로 · 1e-12) · R_j = ∞ 도 같음  (0 · 12.981904012588497 · 12.981904012588497 ↔ 25.64102564102568 (옛 경로 25.641025641025685))",
+    "FAIL  RING s_min 100 — 이음매 = 연속: 자기 접합 0 · σ = 손 연속 고리 회로 (= 옛 경로 · 1e-12) · R_j = ∞ 도 같음  (0 · 12.981904012588497 · 12.981904012588497 ↔ 25.64102564102568 (옛 경로 25.641025641025685))",
+    "FAIL: RING s_min 3 — 이음매 = 연속: 자기 접합 0 · σ = 손 연속 고리 회로 (= 옛 경로 · 1e-12) · R_j = ∞ 도 같음 · RING s_min 100 — 이음매 = 연속: 자기 접합 0 · σ = 손 연속 고리 회로 (= 옛 경로 · 1e-12) · R_j = ∞ 도 같음"
+   ]
+  },
+  {
+   "mutant": "M14 SV 다리 표지 0 (끊을 것 없음)",
+   "file": "carbon_junction.py",
+   "tests": "QD",
+   "base_rc": 0,
+   "base_summary": "== test_carbon_junction: 5/5 PASS",
+   "rc": 1,
+   "summary": "== test_carbon_junction: 4/5 PASS",
+   "caught": true,
+   "fails": [
+    "FAIL  QD ③ SVY 반사실 = B 의 SV 면만 끊음 (A 자기 연속 남김) — 비 = 손 I_full/I_cut (1e-10 · 옛 = A 도 끊음) · 끊은 SV 면 1 · 다리 놓는 SDCP 성분 1 · 못 가른 성분 0 · 문턱 2 → SV_DEPENDENT 여부 = 비 ≥ 2  ({'kind': 'counterfactual_cut_sv_bridges_keep_self_v1', 'rule': 'sdcp_component_owner_groups_same_piece_continuity_or_covered_through_cut_nonpassing_v1', 'requested': True, 'threshold': 2.0, 'n_sv_faces_cut': 0, 'n_sdcp_components_touching': 1, 'n_bridging_components': 1, 'n_sv_faces_kept_self': 2, 'n_unsplit_bridging_components': 0, 'G_full_code': 16.729627630868848, 'G_cut_code': 16.729627630868848, 'sv_counterfactual_ratio': 1.0, 'flag': None, 'cg_info': 0, 'resid': 1.0376873978355337e-16, 'conv_cert': None, 'status': 'computed', 'backend_last_solve': {'requested': None, 'used': None, 'fallback_reason': None, 'precond': None}} ↔ 손 비 1.2379924446842951)",
+    "FAIL: QD ③ SVY 반사실 = B 의 SV 면만 끊음 (A 자기 연속 남김) — 비 = 손 I_full/I_cut (1e-10 · 옛 = A 도 끊음) · 끊은 SV 면 1 · 다리 놓는 SDCP 성분 1 · 못 가른 성분 0 · 문턱 2 → SV_DEPENDENT 여부 = 비 ≥ 2"
+   ]
+  },
+  {
+   "mutant": "M15 계획 centerline 거부 끔",
+   "file": "carbon_junction.py",
+   "tests": "QC",
+   "base_rc": 0,
+   "base_summary": "== test_carbon_junction: 7/7 PASS",
+   "rc": 1,
+   "summary": "== test_carbon_junction: 5/7 PASS",
+   "caught": true,
+   "fails": [
+    "FAIL  QC ② 접합 + centerline = 거부 — 계획 centerline P0 (정량)",
+    "FAIL  QC ② 접합 + centerline = 거부 — 계획 centerline P0 (시험 모드 · quantitative False)",
+    "FAIL: QC ② 접합 + centerline = 거부 — 계획 centerline P0 (정량) · QC ② 접합 + centerline = 거부 — 계획 centerline P0 (시험 모드 · quantitative False)"
+   ]
+  },
+  {
+   "mutant": "M16 솔브 입구 centerline 거부 끔",
+   "file": "carbon_junction.py",
+   "tests": "QC",
+   "base_rc": 0,
+   "base_summary": "== test_carbon_junction: 7/7 PASS",
+   "rc": 1,
+   "summary": "== test_carbon_junction: 5/7 PASS",
+   "caught": true,
+   "fails": [
+    "FAIL  QC ② 접합 + centerline = 거부 — 솔브 입구 — 계획 ptfe_stamp 만 centerline 으로 · 행 지문 다시 만듦",
+    "FAIL  QC ② 거부 경로 CG 0 · 양성 대조 (off 계획 풀림 · face_alpha protocol 받음)  (CG 1 · off True · face_alpha True)",
+    "FAIL: QC ② 접합 + centerline = 거부 — 솔브 입구 — 계획 ptfe_stamp 만 centerline 으로 · 행 지문 다시 만듦 · QC ② 거부 경로 CG 0 · 양성 대조 (off 계획 풀림 · face_alpha protocol 받음)"
+   ]
+  },
+  {
+   "mutant": "M17 protocol centerline 받음",
+   "file": "ca_ext_cjunc.py",
+   "tests": "QC",
+   "base_rc": 0,
+   "base_summary": "== test_carbon_junction: 7/7 PASS",
+   "rc": 1,
+   "summary": "== test_carbon_junction: 6/7 PASS",
+   "caught": true,
+   "fails": [
+    "FAIL  QC ② 접합 + centerline = 거부 — protocol 기록 (ca_ext_cjunc.cjunc_protocol_record) centerline P0",
+    "FAIL: QC ② 접합 + centerline = 거부 — protocol 기록 (ca_ext_cjunc.cjunc_protocol_record) centerline P0"
+   ]
+  },
+  {
+   "mutant": "M18 자기 포트 후보 = 조각 전부 (쪽 제한 끔)",
+   "file": "carbon_junction.py",
+   "tests": "RCA03,CEN,KINK-R,SELFD,KINK",
+   "base_rc": 0,
+   "base_summary": "== test_carbon_junction: 29/29 PASS",
+   "rc": 1,
+   "summary": "== test_carbon_junction: 28/29 PASS",
+   "caught": true,
+   "fails": [
+    "FAIL  CEN 포트 동률 수 (간선 단위) — 고리 (동률 없음) = 0 · T1-11 꼴 (A 접점이 두 셀 중심에서 등거리 · ε 띠) = 1  (2 1)",
+    "FAIL: CEN 포트 동률 수 (간선 단위) — 고리 (동률 없음) = 0 · T1-11 꼴 (A 접점이 두 셀 중심에서 등거리 · ε 띠) = 1"
+   ]
+  },
+  {
+   "mutant": "M19 자기 분산판 맞은편 = 짝 제한 끔",
+   "file": "carbon_junction.py",
+   "tests": "SELFD,RCA03,KINK,RING,CEN",
+   "base_rc": 0,
+   "base_summary": "== test_carbon_junction: 31/31 PASS",
+   "rc": 0,
+   "summary": "== test_carbon_junction: 31/31 PASS",
+   "caught": false,
+   "fails": []
+  },
+  {
+   "mutant": "M20 미수렴 반사실 종류 = 옛 문자열",
+   "file": "step3_sigma.py",
+   "tests": "RCA06",
+   "base_rc": 0,
+   "base_summary": "== test_carbon_junction: 8/8 PASS",
+   "rc": 1,
+   "summary": "== test_carbon_junction: 7/8 PASS",
+   "caught": true,
+   "fails": [
+    "FAIL  RCA06 주 해 미수렴 → 반사실 비 없음 (status main_unconverged · 비 None · 표지 None · 해 unconverged True · 종류 = CJUNC_SV_CF_KIND)  (True {'kind': 'counterfactual_cut_sv_faces', 'rule': 'sdcp_component_owner_groups_same_piece_continuity_or_covered_through_cut_nonpassing_v1', 'requested': True, 'threshold': 2.0, 'status': 'main_unconverged', 'sv_counterfactual_ratio': None, 'flag': None, 'conv_cert': None, 'backend_last_solve': None})",
+    "FAIL: RCA06 주 해 미수렴 → 반사실 비 없음 (status main_unconverged · 비 None · 표지 None · 해 unconverged True · 종류 = CJUNC_SV_CF_KIND)"
+   ]
+  },
+  {
+   "mutant": "M21 S0 해시 = 문서 어디에든 (옛)",
+   "file": "ca_s0_census.py",
+   "tests": "t_plan_commit",
+   "base_rc": 0,
+   "base_summary": "22 PASS · 0 FAIL",
+   "rc": 1,
+   "summary": "20 PASS · 2 FAIL",
+   "caught": true,
+   "fails": [
+    "FAIL  L3h S0 해시가 `| S0 계획 해시 |` 줄 밖 (산문 줄) · 그 줄 = ⬜ → 거부",
+    "FAIL  L3r `| S0 계획 해시 |` 줄 둘 → 거부",
+    "FAIL: L3h S0 해시가 `| S0 계획 해시 |` 줄 밖 (산문 줄) · 그 줄 = ⬜ → 거부",
+    "FAIL: L3r `| S0 계획 해시 |` 줄 둘 → 거부"
+   ]
+  },
+  {
+   "mutant": "M22 두 계획 tol_ff 대조 끔",
+   "file": "ca_s0_census.py",
+   "tests": "t_plan_commit",
+   "base_rc": 0,
+   "base_summary": "22 PASS · 0 FAIL",
+   "rc": 1,
+   "summary": "21 PASS · 1 FAIL",
+   "caught": true,
+   "fails": [
+    "FAIL  L3m R 런 계획 tol_ff_um ≠ S0 values_um.tol_ff (두 계획 대조) → 거부",
+    "FAIL: L3m R 런 계획 tol_ff_um ≠ S0 values_um.tol_ff (두 계획 대조) → 거부"
+   ]
+  },
+  {
+   "mutant": "M23 두 계획 len_law 대조 끔",
+   "file": "ca_s0_census.py",
+   "tests": "t_plan_commit",
+   "base_rc": 0,
+   "base_summary": "22 PASS · 0 FAIL",
+   "rc": 1,
+   "summary": "21 PASS · 1 FAIL",
+   "caught": true,
+   "fails": [
+    "FAIL  L3o R 런 계획 len_law ≠ 이 코드의 길이 법칙 → 거부",
+    "FAIL: L3o R 런 계획 len_law ≠ 이 코드의 길이 법칙 → 거부"
+   ]
+  },
+  {
+   "mutant": "M24 R 런 계획 파일 sha 대조 끔",
+   "file": "ca_s0_census.py",
+   "tests": "t_plan_commit",
+   "base_rc": 0,
+   "base_summary": "22 PASS · 0 FAIL",
+   "rc": 1,
+   "summary": "21 PASS · 1 FAIL",
+   "caught": true,
+   "fails": [
+    "FAIL  L3k R 런 계획 줄 = 64 hex 인데 파일 sha256 와 다름 → 거부",
+    "FAIL: L3k R 런 계획 줄 = 64 hex 인데 파일 sha256 와 다름 → 거부"
+   ]
+  },
+  {
+   "mutant": "M25 단계 2 --r-plan-path 필수 끔",
+   "file": "ca_s0_census.py",
+   "tests": "t_plan_commit",
+   "base_rc": 0,
+   "base_summary": "22 PASS · 0 FAIL",
+   "rc": 0,
+   "summary": "22 PASS · 0 FAIL",
+   "caught": false,
+   "fails": []
+  },
+  {
+   "mutant": "M26 같은 셀 재방문 = 별칭 짝도 셈",
+   "file": "carbon_junction.py",
+   "tests": "RING",
+   "base_rc": 0,
+   "base_summary": "== test_carbon_junction: 6/6 PASS",
+   "rc": 0,
+   "summary": "== test_carbon_junction: 6/6 PASS",
+   "caught": false,
+   "fails": []
+  },
+  {
+   "mutant": "M27 경로로만 = 경로 끊김 검사 끔",
+   "file": "carbon_junction.py",
+   "tests": "CEN,KINK-R,RCA03,QD,QC",
+   "base_rc": 0,
+   "base_summary": "== test_carbon_junction: 29/29 PASS",
+   "rc": 0,
+   "summary": "== test_carbon_junction: 29/29 PASS",
+   "caught": false,
+   "fails": []
+  }
+ ]
+}

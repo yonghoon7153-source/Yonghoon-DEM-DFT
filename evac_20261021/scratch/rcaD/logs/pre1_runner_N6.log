@@ -1,0 +1,69 @@
+
+── N6 발사 전 거부 — 구조화 사유 · rc 2 · 디렉터리를 만들지 않는다
+  PASS  N6 [스위치 값 (CJUNC=yes)] → rc 2 · `RUNNER_CA_EXT|SWITCH|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [접합 켬 · s_min 없음] → rc 2 · `RUNNER_CA_EXT|MISSING|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [접합 켬 · 값 여섯 다 없음] → rc 2 · `RUNNER_CA_EXT|MISSING|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [R_j 만 (접합 안 켬)] → rc 2 · `RUNNER_CA_EXT|FLAG_WITHOUT_CJUNC|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [SDCP 수정자만 (S2 없이)] → rc 2 · `RUNNER_CA_EXT|NO_CJUNC|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [수정자 c = 0.5] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [수정자 c = 1.0 (payload 선택지 0 · 1 밖)] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [R_j nan] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [R_j INF (극한 낱말은 inf 하나)] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [R_j +inf] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [R_j 1e999 (넘침 → inf)] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [R_j 음수] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [R_j −0 (부호)] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [R_j 끝 공백] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [R_j 유니코드 숫자 (١٠)] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [R_j 밑줄 (1_000)] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [R_j 변수 참조 ($HOME)] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [미등록 면 법칙 auto] → rc 2 · `RUNNER_CA_EXT|REQUEST|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [미등록 면 법칙 구분자 (cut;x)] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [길이 법칙 다른 판] → rc 2 · `RUNNER_CA_EXT|REQUEST|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [PTFE–접합 P1 (face_alpha 에서만)] → rc 2 · `RUNNER_CA_EXT|REQUEST|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [접합 + LEAN 미지정] → rc 2 · `RUNNER_CA_EXT|LEAN|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [접합 + LEAN 1] → rc 2 · `RUNNER_CA_EXT|LEAN|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [접합 + LEAN 4 (필드)] → rc 2 · `RUNNER_CA_EXT|LEAN|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [접합 + 점 스탬프] → rc 2 · `RUNNER_CA_EXT|SEGMENT|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [접합 + 주기] → rc 2 · `RUNNER_CA_EXT|PERIODIC|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [접합 + SDCP 브리지 진단 팔] → rc 2 · `RUNNER_CA_EXT|SDCP_BRIDGE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [접합 + σ_VGCF 고정 0] → rc 2 · `RUNNER_CA_EXT|VGCF_INSULATING|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [접합 + P1 + centerline (P1 = face_alpha 에서만)] → rc 2 · `RUNNER_CA_EXT|REQUEST|` · 새 디렉터리 없음 · payload 미호출
+  FAIL  N6 [접합 + centerline (P0 · Rayleigh)] → rc 2 · `RUNNER_CA_EXT|PTFE_CENTERLINE|` · 새 디렉터리 없음 · payload 미호출  ((2, [], '— 이온·pore-τ·집전체기하 를 전부 끈다 (팔당 솔브 3회 → 1회)\n[p2] ABORT — 런 영수증을 못 만들었다\n[p2] ABORT — RUNNER_CA_EXT|RTOL_REQUIRED| CJUNC=1 인데 STEP3_RTOL 이 없다 — 다음 세대 팔은 수렴 증서 (설계 §6 · N15) 없이 게시되지 않아 계산을 다 한 뒤 봉인에서 HOLD 된다 (GPU 시간 낭비) · 기본값 없음 — 값을 명시할 것 (봉인 상한 1e-12 · 등록 R §3-5)'))
+  FAIL  N6 [접합 + P1 + centerline (코드 PTFE_CENTERLINE)] → rc 2 · `RUNNER_CA_EXT|PTFE_CENTERLINE|` · 새 디렉터리 없음 · payload 미호출  ((2, [], '— centerline 은 이미 VGCF 셀을 sid 7 로 자른다 · off 는 PTFE 표현이 없다 · 설계 §4-1)\n[p2] ABORT — RUNNER_CA_EXT|RTOL_REQUIRED| CJUNC=1 인데 STEP3_RTOL 이 없다 — 다음 세대 팔은 수렴 증서 (설계 §6 · N15) 없이 게시되지 않아 계산을 다 한 뒤 봉인에서 HOLD 된다 (GPU 시간 낭비) · 기본값 없음 — 값을 명시할 것 (봉인 상한 1e-12 · 등록 R §3-5)'))
+  PASS  N6 [face_alpha + LEAN 미지정] → rc 2 · `RUNNER_CA_EXT|LEAN|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [face_alpha + LEAN 1] → rc 2 · `RUNNER_CA_EXT|LEAN|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [face_alpha + LEAN 4] → rc 2 · `RUNNER_CA_EXT|LEAN|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [face_alpha + σ_PTFE > 0] → rc 2 · `RUNNER_CA_EXT|SIGMA_PTFE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [face_alpha + PTFE 차단 (LEAN 3)] → rc 2 · `RUNNER_CA_EXT|PTFE_BLOCK|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [face_alpha + 주기] → rc 2 · `RUNNER_CA_EXT|PERIODIC|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [face_alpha + 점 스탬프] → rc 2 · `RUNNER_CA_EXT|SEGMENT|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [rtol 1e-10 (봉인 상한 1e-12 밖 · 증서 ⓐ 실패 확정)] → rc 2 · `RUNNER_CA_EXT|RTOL|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [rtol 0] → rc 2 · `RUNNER_CA_EXT|RTOL|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [rtol 글자] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [P2_EXTRA 로 rtol (러너 축으로 옮김)] → rc 2 · `STEP3_RTOL` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [오타 축 (CJUNC_BOGUS)] → rc 2 · `CJUNC_BOGUS` · 새 디렉터리 없음 · payload 미호출
+
+── N6b 러너 거부 ⊆ payload 거부 — 같은 조합을 payload 에 직접 주면 거부 (과잉차단 없음)
+  PASS  N6b [접합 + LEAN 1] payload 도 거부 — `S2_CJUNC_REFUSED|COLLECTOR|`
+  PASS  N6b [접합 + LEAN 4] payload 도 거부 — `S2_CJUNC_REFUSED|FIELD|`
+  PASS  N6b [접합 + LEAN 미지정] payload 도 거부 — `S2_CJUNC_REFUSED|FIELD|`
+  PASS  N6b [접합 + 점 스탬프] payload 도 거부 — `S2_CJUNC_REFUSED|SEGMENT|`
+  PASS  N6b [접합 + 주기] payload 도 거부 — `S2_CJUNC_REFUSED|PERIODIC|`
+  PASS  N6b [접합 + SDCP 브리지] payload 도 거부 — `S2_CJUNC_REFUSED|SDCP_BRIDGE|`
+  PASS  N6b [접합 + σ_VGCF 0] payload 도 거부 — `S2_CJUNC_REFUSED|VGCF_INSULATING|`
+  PASS  N6b [접합 + P1 + centerline] payload 도 거부 — `S2_CJUNC_REFUSED|P1_NEEDS_FACE_ALPHA|`
+  FAIL  N6b [접합 + centerline (P0 · Rayleigh · Q-C)] payload 도 거부 — `S2_CJUNC_REFUSED|PTFE_CENTERLINE|`  ((0, 'ed mirror_8.json  (0.9 MB)  porosity 78.6% · SE/solid 16.6% · thickness 23.5µm · coverage(@0.13/0.26µm) AM_P plastic 0/0% · 12 AM · 0 SE tris (n_vox=24)  [voxel-preview por/SE/cov 79/17/0% vary with n_vox — not reported]'))
+  PASS  N6b [face_alpha + LEAN 1] payload 도 거부 — `S1_FACE_ALPHA_REFUSED|COLLECTOR|`
+  PASS  N6b [face_alpha + LEAN 4] payload 도 거부 — `S1_FACE_ALPHA_REFUSED|FIELD|`
+  PASS  N6b [face_alpha + σ_PTFE] payload 도 거부 — `S1_FACE_ALPHA_REFUSED|SIGMA_PTFE|`
+  PASS  N6b [face_alpha + PTFE 차단] payload 도 거부 — `S1_FACE_ALPHA_REFUSED|PTFE_BLOCK|`
+  PASS  N6b [face_alpha + 주기] payload 도 거부 — `S1_FACE_ALPHA_REFUSED|PERIODIC|`
+  PASS  N6b [face_alpha + 점 스탬프] payload 도 거부 — `S1_FACE_ALPHA_REFUSED|SEGMENT|`
+  PASS  N6b [rtol 1e-10] payload 는 받지만 그 팔은 게시할 수 없다 (증서 ⓐ 실패 · 미수렴) — 러너 거부는 계산 낭비만 막는다
+
+56 PASS · 3 FAIL
+  - N6 [접합 + centerline (P0 · Rayleigh)] → rc 2 · `RUNNER_CA_EXT|PTFE_CENTERLINE|` · 새 디렉터리 없음 · payload 미호출
+  - N6 [접합 + P1 + centerline (코드 PTFE_CENTERLINE)] → rc 2 · `RUNNER_CA_EXT|PTFE_CENTERLINE|` · 새 디렉터리 없음 · payload 미호출
+  - N6b [접합 + centerline (P0 · Rayleigh · Q-C)] payload 도 거부 — `S2_CJUNC_REFUSED|PTFE_CENTERLINE|`
+rc=1 seconds=24

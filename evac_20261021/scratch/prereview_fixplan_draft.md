@@ -1,0 +1,11 @@
+# Pre-review fix plan draft (10-21 ~05:30 UTC) — awaiting 1저자
+Reviews: scratchpad/prereview_impl/REVIEW.md (P1 1 · P2 3 · P3 5) · scratchpad/prereview_design/REVIEW.md (P1 1 · P2 6 · P3 11)
+Q-A impl-01/06 (P1): broken same-fiber pieces in same cell → σ 0: 권고 = path-unconnected same-fiber pieces use the other-fiber contact rule (centerline d ≤ D → R_j junction) · closed-loop seam = continuous.
+Q-B impl-02 (P2): one contact criterion: all contacts by centerline d ≤ D; same-fiber pairs additionally by arc-length s rule.
+Q-C impl-03 (P2): no port relocation; covered contact handled only by its law (PTFE = P0/P1 · SDCP = S3 c) · never count a contact twice · cjunc + centerline = refuse (registered runs = face_alpha). Details by fix agent with tests.
+Q-D impl-04 (P2): SV counterfactual cuts only SV bypass between different fibres (or junction-separated branches); keep each fibre's own continuity through SDCP-covered cells.
+Q-E design-01 (P1): SBE origin × R: at bracket-end candidates run arms 1·2 too; if any origin's σ is inside the target band, move outward (outside neighbour) → bracket = union over 3 origins, W from union (cheaper than 3 full ladders).
+Q-F design-06 (P2): 310 arms ≈ 260 GPU-h (43 min/arm) / 441–519 h with overhead ≫ window 120–168 h → register order: main verdict first (SBE calib incl. origin ends + DBE 4 corners + origin, ~50–100 h) → 10-31 verdict = main only; sensitivity after (qualifier "감도 미완료"); extra GPU (gabia A6000?) = 1저자.
+Q-G design-03 (P2): three numbers (point cap · inverse-width cap · SV counterfactual threshold) set by 1저자 after Codex reply and BEFORE S0 stage 2 (DBE) opens; fix §5-6 ↔ §11 ⑥.
+No-decision fixes: design-02 (doc = implemented guaranteed-error form) · design-04 (S0 stage-2 gate checks R plan hash + s_min) · design-05 (§3-2b ⑧ expectation 599.0 + test) · design-07 (integration plan §3 withdrawn headline strike · Q9 term · explainer glossary holdout note + test) · design P3 ×11 docs · impl-05 limitation note (k boundary −0.98 % at 1e2 Ω, ≤2.1e-4 at ≥1e4) · impl-07 zero-cert grid fingerprint bind · impl-08 webapp 3 markers (D) · impl-09 mutation test signature.
+Dispatch after ratification: resume A (impl-01..06, 09, design-04) · resume B (impl-07) · resume C (docs: design-01/02/03/05/06/07 + P3s) · message D (impl-04 semantics, impl-08, design-01 chain, design-05 expectation).

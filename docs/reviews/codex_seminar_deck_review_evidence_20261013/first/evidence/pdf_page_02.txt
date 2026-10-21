@@ -1,9 +1,0 @@
-2Battery Materials Lab.
- Heterogeneous-technology pipeline for a sulfide composite 
-cathode
-• Three particle-level stages, each calibrated to its own experiment — never to one 
-another.
-• Agreement between stages is treated as cross-validation; disagreement as a quantified 
-model limit.
-Introduction
-< DEM → MPM → voxel transport → electrode response >

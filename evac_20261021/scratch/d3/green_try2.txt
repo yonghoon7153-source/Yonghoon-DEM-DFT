@@ -1,0 +1,105 @@
+[t] Student t 0.975 분위: ν 1 12.706 · ν 2 4.303 · ν 3 3.182 · ν 4 2.776 · ν 5 2.571 · ν 6 2.447 · ν 8 2.306
+[N] 숫자 — lab20261014 (v2 문서) · gen1 (이력 칸) · CGF 151.4 · N 100000 · 생성기 함수 그대로
+    drum_D_mm                lab 25.1665   gen1 26.2754
+    drum_L_mm                lab 5.03329   gen1 5.25507
+    rpm                      lab 76.6765   gen1 75.0411
+    wR_mm_s                  lab 101.038   gen1 103.24
+    n_per_fill               lab 826727   gen1 940896
+    n_f011                   lab 90939.9   gen1 103499
+    n_f030                   lab 248018   gen1 282269
+    n_slice                  lab 98550.9   gen1 107427
+    dt_x20                   lab 2.3729e-07   gen1 2.62043e-07
+    ceiling_soft             lab 1015.44   gen1 832.662
+    ov_637_soft              lab 0.733052   gen1 0.836744
+    ov_850_soft              lab 0.88803   gen1 1.01364
+    ov_637_x20               lab 0.0994905   gen1 0.113564
+    bo_1pct_x20              lab 20308.8   gen1 16653.2
+    vstick_0212_x20          lab 0.0552434   gen1 0.0590214
+    vstick_212_x20           lab 17.4695   gen1 18.6642
+    vstick_637_x20           lab 43.6397   gen1 46.6241
+    vstick_ceil_x20          lab 64.3373   gen1 58.2599
+    vstick_ceil_over_wR      lab 0.636765   gen1 0.564317
+    se_vol_pct               lab 39.9542   gen1 35.0649
+    se_num_pct               lab 99.158   gen1 98.965
+    d_over_amp               lab 18.4694   gen1 19.2833
+    d_over_se                lab 166.225   gen1 173.549
+    vstick_0212_soft         lab 0.149954   gen1 0.160209
+    vstick_21_x20            lab 2.56417   gen1 2.73953
+    vstick_21_g              lab 0.0242941   gen1 0.0259555
+    vstick_212_g             lab 0.165514   gen1 0.176833
+    vstick_637_g             lab 0.413462   gen1 0.441738
+    vstick_637_g_over_wR     lab 0.00409216   gen1 0.00427876
+    ext_level                lab 964.67   gen1 791.029
+    ov_ext_soft              lab 0.966383   gen1 0.966383
+    ext_ratio                lab 1.51363   gen1 1.24118
+    ceil_ratio               lab 1.5933   gen1 1.30651
+    ov_1010_soft             lab 0.996424   gen1 1.13737
+    ov_1020_soft             lab 1.00299   gen1 1.14486
+    ceiling_cgf200           lab 768.689   gen1 630.325
+    ov_637_cgf200            lab 0.882547   gen1 1.00738
+    bo_aa_ratio_amp          lab 239.543   gen1 194.4
+    bo_aa_ratio_ams          lab 47.3171   gen1 38.4
+    boaa_amp_21_031          lab 0.0274926   gen1 0.0338767
+    boaa_ams_21_031          lab 0.139181   gen1 0.171501
+    boaa_amp_21_1            lab 0.0886857   gen1 0.10928
+    boaa_ams_21_1            lab 0.448971   gen1 0.553229
+    boaa_amp_637_031         lab 0.824777   gen1 1.0163
+    boaa_ams_637_031         lab 4.17543   gen1 5.14503
+    boaa_amp_ceil_031        lab 1.31412   gen1 1.3278
+    boaa_ams_ceil_031        lab 6.65271   gen1 6.72201
+    steps_1s_x20             lab 4.21426e+06   gen1 3.81617e+06
+    h_1s_lo                  lab 16.7232   gen1 15.1435
+    h_1s_hi                  lab 18.5814   gen1 16.8262
+    t2_run_d_lo              lab 1.11488   gen1 1.00957
+    t2_run_d_hi              lab 1.23876   gen1 1.12174
+    t5_pa                    lab 179.754   gen1 200.864
+    rho_mix                  lab 3.56747   gen1 3.81818
+    depth_over_R             lab 0.680308   gen1 0.680308
+    t2_cell_cm3              lab 2.50373   gen1 2.84949
+    t2_mass_lo_g             lab 0.137705   gen1 0.156722
+    t2_mass_hi_g             lab 0.676006   gen1 0.769361
+    rpm_r13                  lab 75.4374   gen1 75.4374
+    t975_2                   lab 4.30265   gen1 4.30265
+    t975_4                   lab 2.77645   gen1 2.77645
+    t975_8                   lab 2.306   gen1 2.306
+    dt_scale                 lab 1.10432   gen1 1
+    t1_short_lo              lab 0.220863   gen1 0.2
+    t1_short_hi              lab 1.10432   gen1 1
+    t1_pour_lo               lab 0.110432   gen1 0.1
+    t1_pour_hi               lab 0.773021   gen1 0.7
+    t1_tap_lo                lab 0.552158   gen1 0.5
+    t1_tap_hi                lab 4.41726   gen1 4
+    c2_run_lo                lab 0.552158   gen1 0.5
+    c2_run_hi                lab 1.65647   gen1 1.5
+    c0_lo                    lab 3.78638   gen1 3.42871
+    c0_hi                    lab 5.92491   gen1 5.36523
+    c1_lo                    lab 6.07919   gen1 5.50495
+    c1_hi                    lab 17.7651   gen1 16.087
+    c2_lo                    lab 0.73621   gen1 0.666667
+    c2_hi                    lab 3.31295   gen1 3
+    sum_lo                   lab 10.6018   gen1 9.60032
+    sum_hi                   lab 27.0029   gen1 24.4522
+    (예산 [추정] — T2 런 = 1.6 s 모사 × ×20 step/s ÷ 처리량 70–63 step/s · T1 · C2 런 = v1 §3-6 [추정] × dt_scale · C0 = T2 9 + T1 짧은 탭 6 · C1 기본 = T2 12 + T1 탭 8 + 붓기 4 · C2 = 4–6 런 · 3 슬롯)
+    F_SW/F_SS = 2√(0.0256·ρ): ρ 0 0.000 · ρ 0.01 0.032 · ρ 0.1 0.101 · ρ 0.31 0.178 · ρ 1 0.320
+    격자 Bo_code: 0.2124 · 0.6718 · 2.124 · 6.718 · 21.24 · 67.18 · 212.4 · 637.3 · Bo_po: 0.0315 · 0.0995 · 0.315 · 0.995 · 3.15 · 9.95 · 31.5 · 94.4
+
+
+[C] 규칙 검사 — 반례: v1 = 잘못 받아들임 (재현) · v2 = 잡음 · 대조: v2 가 옳은 경우를 받아들임
+  C01 (MXD3-01) 교집합 검사 B 의 검출력 ([가정 예시] 선형화 I_k = a_k·x + b_k·μ_r).
+      v1: 반례 통과 (잘못 받아들임) · 대조 통과 — 반례 (b/a 같음 · Δμ_r 0.2): 통과 · 마찰 확인 주장 True · 앵커 오차 1.60 decade | 대조 (b/a 40 ↔ 0): Δμ_r 0 → 통과 · Δμ_r 0.075 → F5
+      v2: 잡음 · 대조 통과 — 반례 (b/a 같음 · Δμ_r 0.2): 일치 미검사 · 마찰 확인 주장 False · 앵커 오차 1.60 decade | 대조 (b/a 40 ↔ 0): Δμ_r 0 → 통과 · 검출 한계 0.030 · Δμ_r 0.075 → F5
+      ⇒ PASS (v1 반례 재현 True · v2 잡음 True · v2 대조 True)
+  C02 (MXD3-02) 반 decade 칸 안의 가파른 전이 ([가정 예시] jarray2019 꼴 35.0 → 48.9° · 폭 0.1 decade · u 1.5°).
+      v1: 반례 통과 (잘못 받아들임) · 대조 통과 — 반례: 가파른 부분 2200 건 중 참값이 구간 밖 982 (44.6 %) · 폭 중앙 0.217 decade | 대조 (완만 직선 5 °/decade): 포괄 101/101 · 폭 중앙 1.200 decade (격자 폭 3.00)
+      v2: 잡음 · 대조 통과 — 반례: 가파른 부분 2200 건 중 참값이 구간 밖 0 (0.0 %) · 폭 중앙 0.500 decade | 세분 (봉인 전) 2200 건 중 0 · 폭 중앙 0.241 decade | 대조 (완만 직선 5 °/decade): 포괄 101/101 · 폭 중앙 2.100 decade (격자 폭 3.00)
+      ⇒ PASS (v1 반례 재현 True · v2 잡음 True · v2 대조 True)
+  C03 (MXD3-03) 끊긴 받아들일 집합 · 한 시험이 빈 집합.
+      v1: 반례 통과 (잘못 받아들임) · 대조 통과 — 끊긴 집합 → anchor Bo 11.95 (집합 안? False) | T1 빈 집합 (측정이 낮은 Bo 끝 너머) → F5 | 대조 [1, 30] ∩ [5, 100] → anchor Bo 12.25
+      v2: 잡음 · 대조 통과 — 끊긴 집합 → F9 | T1 빈 집합 (측정이 낮은 Bo 끝 너머) → F10 (T1 low_bo) | 대조 [1, 30] ∩ [5, 100] → anchor Bo 12.25
+      ⇒ PASS (v1 반례 재현 True · v2 잡음 True · v2 대조 True)
+  C04 (MXD3-04) u_DEM (시드 수 · 자유도) · T2 정상 상태 · NP.
+      v1: 반례 통과 (잘못 받아들임) · 대조 통과 — (a) 최소안 T1 u_DEM = 없음 (per-level) · (b) 포괄 0.907 (목표 ≥ 0.95) · (c) NP 10 재시도 받음? True · (d) 정상 상태 (3° 표류 / 표류 0) = None / None
+      v2: 잡음 · 대조 통과 — (a) 최소안 T1 u_DEM = 없음 (판정 밖 (보조)) · (b) 포괄 0.998 (통계 띠만 0.977) (목표 ≥ 0.95) · (c) NP 10 재시도 받음? False · (d) 정상 상태 (3° 표류 / 표류 0) = False / True
+      ⇒ PASS (v1 반례 재현 True · v2 잡음 True · v2 대조 True)
+  C05 (MXD3-05) 벽 감도가 ρ 구간 · 벽이 닿는 시험을 덮는가 (F_SW/F_SS = 2√(γ_W/γ_SE)).
+      v1: 반례 통과 (잘못 받아들임) · 대조 통과 — 감도 비 범위 [0.178, 0.320] · 덮지 못하는 ρ = [0.0, 0.01, 0.03, 0.1] · 감도가 빠진 시험 = ['T1', 'T3']

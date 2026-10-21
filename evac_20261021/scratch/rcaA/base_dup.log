@@ -1,0 +1,8 @@
+── RCA04-DUP
+  PASS  RCA04-DUP 정확 중복 → 원장 사유 duplicate_path · 정량 계획 = 입구 거부 · 시험 모드 계획 = 사유 없음
+  FAIL  RCA04-DUP 역순 중복 → 원장 사유 duplicate_path_reversed · 정량 계획 = 입구 거부 · 시험 모드 계획 = 사유 없음  ([])
+  PASS  RCA04-DUP 한 점만 다른 두 경로 → 중복 거부 사유 없음
+
+== test_carbon_junction: 2/3 PASS
+FAIL: RCA04-DUP 역순 중복 → 원장 사유 duplicate_path_reversed · 정량 계획 = 입구 거부 · 시험 모드 계획 = 사유 없음
+[nrun] wall 1.4 s · exit 1

@@ -1,9 +1,0 @@
-3Battery Materials Lab.
- Soft-sphere DEM reproduces the composition dependence of 
-porosity
-• Rigid spheres with a linear hysteretic contact law, pressed to 300 MPa; one bed per 
-composition.
-• Porosity 31.8 → 25.1 → 16.7 → 16.5 % through one run; 7:3 (large : small NCM) is the 
-densest of five.
-DEM
-< four stages of one 7:3 bed (0 · 47 · 296 · 165 MPa) > < porosity vs large : small NCM >

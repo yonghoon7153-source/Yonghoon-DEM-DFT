@@ -1,0 +1,11 @@
+{
+ "s0_rows_filled": 1,
+ "commit": "0db113b571c073c65d9ad0fc1bf671c9c942b6e9",
+ "stage2_gate": "REFUSED: 단계 2 관문 — --r-plan-path (같은 개정 커밋의 R 런 사슬 계획 · s_min 봉인) 가 없다 (★ 10-21 PRE-design-04)",
+ "stage2_gate_with_r_plan_path": "REFUSED: 등록 R 문서 (docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md @ 0db113b571c0) 의 R 런 계획 줄 — PLAN_HASH_UNREGISTERED: §2-1 계획 해시 칸 = '⬜' — 개정 커밋 (숫자 + 계획 해시 · 결과 0 건) 전에는 σ 런 없음 (s_min 봉인 전 DBE 단계 2 금지)",
+ "chain_R_plan_hash": "Stop PLAN_HASH_UNREGISTERED",
+ "registration_s_min_still_blank_rows": [
+  "| 긴 접촉 | ~~법칙 없음 = J8 — S0 (단계 1 · 2) 에서 L_c > L_par 인 instance 수가 0 이면 해당 없음 · 1 이상이면 **정량 거부**~~ → ✅ 1저자 10-20 밤 Q17 = **길이 비례 접합** (배율 max(1, L_c/L_par) · L_",
+  "- ⬜ S0 단계 1 의 s_min (꺾임 자기 접합 거르기 · Q17) · ⬜ S0 단계 2 (긴 접촉 수 · L_c 분포 · SV 관련 수)"
+ ]
+}

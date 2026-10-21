@@ -1,0 +1,12 @@
+Rint 2 S2 RCA-05 validator: accept old-form counts without len_mult_max only when sub-edges = instances
+
+ca_ext_cjunc.cjunc_block_problem: a counts record without the len_mult_max field is the old form
+(point junctions only) and must have n_subedges (or its n_instances fallback) == n_instances; with
+the field present the 98e837630 checks apply unchanged (None only for 0 instances, finite float
+>= 1, len_mult_max == 1 <=> sub-edges == instances).
+
+Pre-fix (parent = tests-first commit): CAX-SUB 13/14; test_rint_r_chain 32/89 (base 89/89).
+After: test_carbon_junction --quick 260/260; test_rint_r_chain 89/89.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

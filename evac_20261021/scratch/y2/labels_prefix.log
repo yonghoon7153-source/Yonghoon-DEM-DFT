@@ -1,0 +1,40 @@
+  PASS  W1 표지 문자열 한정어 (PTFE 면 개구율 · α · Ø0.248 rope · 규약 선택 · 불투과 가정 · 전자/이온)
+  PASS  W2a Jinja 행이 매니페스트 ca_ext.ptfe_face 표지를 읽는다
+  PASS  W2b JS 행이 매니페스트 ca_ext.ptfe_face 표지를 읽는다
+  PASS  W2c 표지 문자열 사본을 템플릿에 두지 않는다 (producer 상수 하나)
+  PASS  W3 face_alpha + 관측 PTFE 셀 > 0 = 불일치 경고 (두 행)
+  PASS  W5 템플릿 전체가 Jinja 문법으로 파싱된다
+  PASS  W6 Jinja 행 렌더 — face_alpha = 표지 · 셀 > 0 = 경고 · 옛 meta (매니페스트 없음) = 둘 다 없음
+  PASS  W7 JS 행 (node 실행) — face_alpha = 표지 · 셀 > 0 = 경고 · 옛 meta = 둘 다 없음
+  PASS  W4 봉인 build_meta → 규약 칩 "PTFE face_alpha" · 불일치 없음
+  FAIL  W8a Jinja 행이 매니페스트 ca_ext.cjunc · ca_ext.sdcp_mod 를 읽는다  (1)
+  FAIL  W8b JS 행이 매니페스트 ca_ext.cjunc · ca_ext.sdcp_mod 를 읽는다  (1)
+  PASS  W8c S2 · S3 표지 문자열 사본을 템플릿에 두지 않는다 (producer 상수 하나)
+  FAIL  W9 Jinja [접합] — 있어야 할 조각 6 · 없어야 할 조각 3  ((['{CJ}', 'R_j', '1000000', 'Ω', 'P0', 'p3ca'], [], '        <td style="padding:6px 10px"><span style="color:#fbbf24">⚡ VGCF 3</span><br><span style="color:#c4b5fd;font-size:0.85em" title="스탬프·σ 표·origin 위상 — 이게 다르면 같은 침대라도 비교 불가">🧪 PTFE off</span></td>'))
+  FAIL  W9 Jinja [접합 + 수정자 c 1 (판별)] — 있어야 할 조각 3 · 없어야 할 조각 2  ((['{CJ}', '{SD}', 'c = 1'], [], '        <td style="padding:6px 10px"><span style="color:#fbbf24">⚡ VGCF 3</span><br><span style="color:#c4b5fd;font-size:0.85em" title="스탬프·σ 표·origin 위상 — 이게 다르면 같은 침대라도 비교 불가">🧪 PTFE off</span></td>'))
+  FAIL  W9 Jinja [접합 + 수정자 (SDCP 0 침대)] — 있어야 할 조각 4 · 없어야 할 조각 1  ((['{CJ}', '{SD}', 'c = 0', '구성상 no-op'], [], '        <td style="padding:6px 10px"><span style="color:#fbbf24">⚡ VGCF 3</span><br><span style="color:#c4b5fd;font-size:0.85em" title="스탬프·σ 표·origin 위상 — 이게 다르면 같은 침대라도 비교 불가">🧪 PTFE off</span></td>'))
+  FAIL  W9 Jinja [요청 · 블록 없음] — 있어야 할 조각 2 · 없어야 할 조각 2  ((['블록 없음', 'unknown:ca_ext'], [], '        <td style="padding:6px 10px"><span style="color:#fbbf24">⚡ VGCF 3</span><br><span style="color:#c4b5fd;font-size:0.85em" title="스탬프·σ 표·origin 위상 — 이게 다르면 같은 침대라도 비교 불가">🧪 PTFE off</span></td>'))
+  FAIL  W9 Jinja [블록인데 id 가 p2] — 있어야 할 조각 2 · 없어야 할 조각 0  ((['{CJ}', '기록 불일치'], [], '        <td style="padding:6px 10px"><span style="color:#fbbf24">⚡ VGCF 3</span><br><span style="color:#c4b5fd;font-size:0.85em" title="스탬프·σ 표·origin 위상 — 이게 다르면 같은 침대라도 비교 불가">🧪 PTFE off</span></td>'))
+  PASS  W9 Jinja [옛 meta (매니페스트 없음)] — 접합 · 수정자 표지 · 경고 없음
+  FAIL  W10 JS [접합] — 있어야 할 조각 6 · 없어야 할 조각 3  ((['{CJ}', 'R_j', '1000000', 'Ω', 'P0', 'p3ca'], [], ' 물리-EIS/DRT" style="text-decoration:none">🔌 EIS</a> <button class="btn btn-secondary btn-sm" onclick="labSummary(\'x\', this)" title="물성 요약을 클립보드에 복사 (AI에 먹이기용)">요약</button> <button class="btn btn-secondary btn-sm" onclick="labDelete(\'x\', this)">삭제</button></td>'))
+  FAIL  W10 JS [접합 + 수정자 c 1 (판별)] — 있어야 할 조각 3 · 없어야 할 조각 2  ((['{CJ}', '{SD}', 'c = 1'], [], ' 물리-EIS/DRT" style="text-decoration:none">🔌 EIS</a> <button class="btn btn-secondary btn-sm" onclick="labSummary(\'x\', this)" title="물성 요약을 클립보드에 복사 (AI에 먹이기용)">요약</button> <button class="btn btn-secondary btn-sm" onclick="labDelete(\'x\', this)">삭제</button></td>'))
+  FAIL  W10 JS [접합 + 수정자 (SDCP 0 침대)] — 있어야 할 조각 4 · 없어야 할 조각 1  ((['{CJ}', '{SD}', 'c = 0', '구성상 no-op'], [], ' 물리-EIS/DRT" style="text-decoration:none">🔌 EIS</a> <button class="btn btn-secondary btn-sm" onclick="labSummary(\'x\', this)" title="물성 요약을 클립보드에 복사 (AI에 먹이기용)">요약</button> <button class="btn btn-secondary btn-sm" onclick="labDelete(\'x\', this)">삭제</button></td>'))
+  FAIL  W10 JS [요청 · 블록 없음] — 있어야 할 조각 2 · 없어야 할 조각 2  ((['블록 없음', 'unknown:ca_ext'], [], ' 물리-EIS/DRT" style="text-decoration:none">🔌 EIS</a> <button class="btn btn-secondary btn-sm" onclick="labSummary(\'x\', this)" title="물성 요약을 클립보드에 복사 (AI에 먹이기용)">요약</button> <button class="btn btn-secondary btn-sm" onclick="labDelete(\'x\', this)">삭제</button></td>'))
+  FAIL  W10 JS [블록인데 id 가 p2] — 있어야 할 조각 2 · 없어야 할 조각 0  ((['{CJ}', '기록 불일치'], [], ' 물리-EIS/DRT" style="text-decoration:none">🔌 EIS</a> <button class="btn btn-secondary btn-sm" onclick="labSummary(\'x\', this)" title="물성 요약을 클립보드에 복사 (AI에 먹이기용)">요약</button> <button class="btn btn-secondary btn-sm" onclick="labDelete(\'x\', this)">삭제</button></td>'))
+  PASS  W10 JS [옛 meta] — 접합 · 수정자 표지 · 경고 없음
+  PASS  W11 봉인 build_meta (읽기만) 가 매니페스트를 그대로 싣는다 — 템플릿이 읽는 ca_ext.cjunc · sdcp_mod 자리가 meta 에 있다
+
+13 PASS · 12 FAIL
+  - W8a Jinja 행이 매니페스트 ca_ext.cjunc · ca_ext.sdcp_mod 를 읽는다
+  - W8b JS 행이 매니페스트 ca_ext.cjunc · ca_ext.sdcp_mod 를 읽는다
+  - W9 Jinja [접합] — 있어야 할 조각 6 · 없어야 할 조각 3
+  - W9 Jinja [접합 + 수정자 c 1 (판별)] — 있어야 할 조각 3 · 없어야 할 조각 2
+  - W9 Jinja [접합 + 수정자 (SDCP 0 침대)] — 있어야 할 조각 4 · 없어야 할 조각 1
+  - W9 Jinja [요청 · 블록 없음] — 있어야 할 조각 2 · 없어야 할 조각 2
+  - W9 Jinja [블록인데 id 가 p2] — 있어야 할 조각 2 · 없어야 할 조각 0
+  - W10 JS [접합] — 있어야 할 조각 6 · 없어야 할 조각 3
+  - W10 JS [접합 + 수정자 c 1 (판별)] — 있어야 할 조각 3 · 없어야 할 조각 2
+  - W10 JS [접합 + 수정자 (SDCP 0 침대)] — 있어야 할 조각 4 · 없어야 할 조각 1
+  - W10 JS [요청 · 블록 없음] — 있어야 할 조각 2 · 없어야 할 조각 2
+  - W10 JS [블록인데 id 가 p2] — 있어야 할 조각 2 · 없어야 할 조각 0
+ELAPSED_S=1.0 RC=1

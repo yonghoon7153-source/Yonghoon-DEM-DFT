@@ -1,0 +1,401 @@
+{
+ "_fp_now": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+ "_twin": "2149f8738bb27d8afb3e2b06af02729559a6a98fe2e70fa26dd051173b3111c7",
+ "T09_194_two_pendings": {
+  "desc": "고친 판 · 194 에 상충 대기 둘 (보충 깨끗) — S0b 거짓 기대",
+  "rc": 1,
+  "secs": 41.0,
+  "n_pass": 122,
+  "n_fail": 1,
+  "fails": [
+   "S0b"
+  ],
+  "key": {
+   "S0": [
+    "PASS"
+   ],
+   "S0b": [
+    "FAIL"
+   ],
+   "S11g": [
+    "PASS"
+   ]
+  },
+  "state": [
+   "(나′) 봉인 지문 상태 = registered — 체크아웃 2149f8738bb2… · 등록 §3 2149f8738bb2… · 대기 선언 없음"
+  ],
+  "s0b_line": [
+   "  FAIL  S0b 다시 계산 = 등록 §2 (케이스 20 · ids 991cf115… · raw a7aaa3c8… · 코호트 TSV 69d3f913… — 등록 입력 집합 · L214 개정이 바꾸지 않는 값) · ★ 10-21 봉인 지문 [상태 registered] = 상태가 정한 지문 (registered = 등록 §3 · 대기 선언 없음 / pending = 대기 선언) = 체크아웃 code_fp 64 자리 전체 · 보충 등록의 활성 §3 · 대기 선언 = 194 등록의 값 (같은 함수로 읽음) — 옛 판의 지문 앞자리 상수 대신 (비준판 121/122 · 1저자 10-21 Q1) · 값은 문서 · 반입 파일에서 (도구에 사본 없음 · 값 None 안전)  (('194 등록의 봉인 지문 문제 [\"등록 "
+  ],
+  "fail_lines": [
+   "  FAIL  S0b 다시 계산 = 등록 §2 (케이스 20 · ids 991cf115… · raw a7aaa3c8… · 코호트 TSV 69d3f913… — 등록 입력 집합 · L214 개정이 바꾸지 않는 값) · ★ 10-21 봉인 지문 [상태 registered] = 상태가 정한 지문 (registered = 등록 §3 · 대기 선언 없음 / pending = 대기 선언) = 체크아웃 code_fp 64 자리 전체 · 보충 등록의 활성 §3 · 대기 선언 = 194 등록의 값 (같은 함수로 읽음) — 옛 판의 지문 앞자리 상수 대신 (비준판 121/122 · 1저자 10-21 Q1) · 값은 문서 · 반입 파일에서 (도구에 사본 없음 · 값 None 안전)  (('194 등록의 봉인 지문 문제 [\"등록 문서 code_fp_pending — 값이 둘 이상 [\\'5a6649edd7885498a16a8f213fd3f68ab51c3abf1d8d478f4a04f595da359195\\', \\'f2b67b2c8e107d8afb3e2b06af02729559a6a98fe2e70fa26dd051173b3111c7\\']\"]', '2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb', None, {'code_fp': '2149f8738bb20b6)"
+  ],
+  "last": [
+   "supp20_input_receipt selftest: 122/123 PASS   FAILED: ['S0b 다시 계산 = 등록 §2 (케이스 20 · ids 991cf115… · raw a7aaa3c8… · 코호트 TSV 69d3f913… — 등록 입력 집합 · L214 개정이 바꾸지 않는 값) · ★ 10-21 봉인 지문 [상태 registered] = 상태가 정한 지문 (registered = 등록 §3 · 대기 선언 없음 / pending = 대기 선언) = 체크아웃 code_fp 64 자리 전체 · 보충 등록의 활성 §3 · 대기 선언 = 194 등록의 값 (같은 함수로 읽음) — 옛 판의 지문 앞자리 상수 대신 (비준판 121/122 · 1저자 10-21 Q1) · 값은 문서 · 반입 파일에서 (도구에 사본 없음 · 값 None 안전)']"
+  ],
+  "tool_sha256": "3d6110be24d24bf91ad1e71232a2e5dad580cf95178d6135b13aa6ca6de6f950"
+ },
+ "combo_m10_T09": {
+  "desc": "변이 m10 (p194 전달 끔) · 같은 문서 — 변이가 살면 S0b 참",
+  "rc": 0,
+  "secs": 39.9,
+  "n_pass": 123,
+  "n_fail": 0,
+  "fails": [],
+  "key": {
+   "S0": [
+    "PASS"
+   ],
+   "S0b": [
+    "PASS"
+   ],
+   "S11g": [
+    "PASS"
+   ]
+  },
+  "state": [
+   "(나′) 봉인 지문 상태 = registered — 체크아웃 2149f8738bb2… · 등록 §3 2149f8738bb2… · 대기 선언 없음"
+  ],
+  "s0b_line": [
+   "  PASS  S0b 다시 계산 = 등록 §2 (케이스 20 · ids 991cf115… · raw a7aaa3c8… · 코호트 TSV 69d3f913… — 등록 입력 집합 · L214 개정이 바꾸지 않는 값) · ★ 10-21 봉인 지문 [상태 registered] = 상태가 정한 지문 (registered = 등록 §3 · 대기 선언 없음 / pending = 대기 선언) = 체크아웃 code_fp 64 자리 전체 · 보충 등록의 활성 §3 · 대기 선언 = 194 등록의 값 (같은 함수로 읽음) — 옛 판의 지문 앞자리 상수 대신 (비준판 121/122 · 1저자 10-21 Q1) · 값은 문서 · 반입 파일에서 (도구에 사본 없음 · 값 None 안전)"
+  ],
+  "fail_lines": [],
+  "last": [
+   "supp20_input_receipt selftest: 123/123 PASS"
+  ],
+  "tool_sha256": "1baa695cc1d11f116e883194808aa671a4a23d05ad912b18fbfa00bb00fb7bd5"
+ },
+ "combo_m5_T07": {
+  "desc": "변이 m5 (교차 대조 §3 만) · 194 에만 남은 대기 — 변이가 살면 S0b 참",
+  "rc": 0,
+  "secs": 40.8,
+  "n_pass": 123,
+  "n_fail": 0,
+  "fails": [],
+  "key": {
+   "S0": [
+    "PASS"
+   ],
+   "S0b": [
+    "PASS"
+   ],
+   "S11g": [
+    "PASS"
+   ]
+  },
+  "state": [
+   "(나′) 봉인 지문 상태 = registered — 체크아웃 2149f8738bb2… · 등록 §3 2149f8738bb2… · 대기 선언 없음"
+  ],
+  "s0b_line": [
+   "  PASS  S0b 다시 계산 = 등록 §2 (케이스 20 · ids 991cf115… · raw a7aaa3c8… · 코호트 TSV 69d3f913… — 등록 입력 집합 · L214 개정이 바꾸지 않는 값) · ★ 10-21 봉인 지문 [상태 registered] = 상태가 정한 지문 (registered = 등록 §3 · 대기 선언 없음 / pending = 대기 선언) = 체크아웃 code_fp 64 자리 전체 · 보충 등록의 활성 §3 · 대기 선언 = 194 등록의 값 (같은 함수로 읽음) — 옛 판의 지문 앞자리 상수 대신 (비준판 121/122 · 1저자 10-21 Q1) · 값은 문서 · 반입 파일에서 (도구에 사본 없음 · 값 None 안전)"
+  ],
+  "fail_lines": [],
+  "last": [
+   "supp20_input_receipt selftest: 123/123 PASS"
+  ],
+  "tool_sha256": "70142abc1a1de7889c25c14609643c9c71423891f28cfd82a3febd6595b3a07d"
+ },
+ "combo_m9_T07": {
+  "desc": "변이 m9 (REG194 = 보충) · 194 에만 남은 대기 — 변이가 살면 S0b 참",
+  "rc": 0,
+  "secs": 42.2,
+  "n_pass": 123,
+  "n_fail": 0,
+  "fails": [],
+  "key": {
+   "S0": [
+    "PASS"
+   ],
+   "S0b": [
+    "PASS"
+   ],
+   "S11g": [
+    "PASS"
+   ]
+  },
+  "state": [
+   "(나′) 봉인 지문 상태 = registered — 체크아웃 2149f8738bb2… · 등록 §3 2149f8738bb2… · 대기 선언 없음"
+  ],
+  "s0b_line": [
+   "  PASS  S0b 다시 계산 = 등록 §2 (케이스 20 · ids 991cf115… · raw a7aaa3c8… · 코호트 TSV 69d3f913… — 등록 입력 집합 · L214 개정이 바꾸지 않는 값) · ★ 10-21 봉인 지문 [상태 registered] = 상태가 정한 지문 (registered = 등록 §3 · 대기 선언 없음 / pending = 대기 선언) = 체크아웃 code_fp 64 자리 전체 · 보충 등록의 활성 §3 · 대기 선언 = 194 등록의 값 (같은 함수로 읽음) — 옛 판의 지문 앞자리 상수 대신 (비준판 121/122 · 1저자 10-21 Q1) · 값은 문서 · 반입 파일에서 (도구에 사본 없음 · 값 None 안전)"
+  ],
+  "fail_lines": [],
+  "last": [
+   "supp20_input_receipt selftest: 123/123 PASS"
+  ],
+  "tool_sha256": "c5016072271e6351bf2f31aa3ff2efa6c1f422815d064c822419e21350f21270"
+ },
+ "combo_m11_T07": {
+  "desc": "변이 m11 (S0b 가 fp0_ok 안 씀) · 194 에만 남은 대기",
+  "rc": 0,
+  "secs": 40.4,
+  "n_pass": 123,
+  "n_fail": 0,
+  "fails": [],
+  "key": {
+   "S0": [
+    "PASS"
+   ],
+   "S0b": [
+    "PASS"
+   ],
+   "S11g": [
+    "PASS"
+   ]
+  },
+  "state": [
+   "(나′) 봉인 지문 상태 = registered — 체크아웃 2149f8738bb2… · 등록 §3 2149f8738bb2… · 대기 선언 없음"
+  ],
+  "s0b_line": [
+   "  PASS  S0b 다시 계산 = 등록 §2 (케이스 20 · ids 991cf115… · raw a7aaa3c8… · 코호트 TSV 69d3f913… — 등록 입력 집합 · L214 개정이 바꾸지 않는 값) · ★ 10-21 봉인 지문 [상태 registered] = 상태가 정한 지문 (registered = 등록 §3 · 대기 선언 없음 / pending = 대기 선언) = 체크아웃 code_fp 64 자리 전체 · 보충 등록의 활성 §3 · 대기 선언 = 194 등록의 값 (같은 함수로 읽음) — 옛 판의 지문 앞자리 상수 대신 (비준판 121/122 · 1저자 10-21 Q1) · 값은 문서 · 반입 파일에서 (도구에 사본 없음 · 값 None 안전)"
+  ],
+  "fail_lines": [],
+  "last": [
+   "supp20_input_receipt selftest: 123/123 PASS"
+  ],
+  "tool_sha256": "7a2c0b319062b20e136892948521b3256847332a0904fadb9b628e9f25ea0b2f"
+ },
+ "twin_unmutated": {
+  "desc": "고친 판 · 두 등록 §3 = 앞 12 자리 쌍둥이",
+  "rc": 1,
+  "secs": 41.3,
+  "n_pass": 112,
+  "n_fail": 11,
+  "fails": [
+   "S0",
+   "S0b",
+   "S7",
+   "S7a",
+   "S7a2",
+   "S7j",
+   "S7k1",
+   "S7k2",
+   "S8",
+   "S8g2",
+   "S8k"
+  ],
+  "key": {
+   "S0": [
+    "FAIL"
+   ],
+   "S0b": [
+    "FAIL"
+   ],
+   "S11g": [
+    "PASS"
+   ]
+  },
+  "state": [
+   "(나′) 봉인 지문 상태 = undeclared — 체크아웃 2149f8738bb2… · 등록 §3 2149f8738bb2… · 대기 선언 없음 — 체크아웃 지문 2149f8738bb2… ≠ 등록 §3 2149f8738bb2… · 대기 선언 없음 (읽은 값 None)"
+  ],
+  "s0b_line": [
+   "  FAIL  S0b 다시 계산 = 등록 §2 (케이스 20 · ids 991cf115… · raw a7aaa3c8… · 코호트 TSV 69d3f913… — 등록 입력 집합 · L214 개정이 바꾸지 않는 값) · ★ 10-21 봉인 지문 [상태 undeclared] = 상태가 정한 지문 (registered = 등록 §3 · 대기 선언 없음 / pending = 대기 선언) = 체크아웃 code_fp 64 자리 전체 · 보충 등록의 활성 §3 · 대기 선언 = 194 등록의 값 (같은 함수로 읽음) — 옛 판의 지문 앞자리 상수 대신 (비준판 121/122 · 1저자 10-21 Q1) · 값은 문서 · 반입 파일에서 (도구에 사본 없음 · 값 None 안전)  (('상태 undeclared — 체크아웃 지"
+  ],
+  "fail_lines": [
+   "  FAIL  S0 ★ 10-15 (나′) 정상 (커밋된 실물 · 컨테이너 범위) [상태 undeclared] — registered (체크아웃 = 등록 §3) = rc 0 · 대조 칸 R0 · A1 · A2 · B1–B3 · C1–C4 · D1 전부 같음 / pending (대기 선언 하나 · 체크아웃 = 대기 ≠ 등록) = rc 1 · 실패 칸 정확히 {D1} · D1 상세 now = 대기 · registered = 등록 · pending = 대기 / undeclared = FAIL · 범위 container · 수동 칸 셋  ({'state': 'undeclared', 'why': '체크아웃 지문 2149f8738bb2… ≠ 등록 §3 2149f8738bb2… · 대기 선언 없음 (읽은 값 None)', 'bad': ['D1'], 'D1': {'now': '2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb', 'registered': '2149f8738bb27d8afb3e2b06af02729559a6a98fe2e70fa26dd051173b3111c7', 'pending': None}})",
+   "  FAIL  S0b 다시 계산 = 등록 §2 (케이스 20 · ids 991cf115… · raw a7aaa3c8… · 코호트 TSV 69d3f913… — 등록 입력 집합 · L214 개정이 바꾸지 않는 값) · ★ 10-21 봉인 지문 [상태 undeclared] = 상태가 정한 지문 (registered = 등록 §3 · 대기 선언 없음 / pending = 대기 선언) = 체크아웃 code_fp 64 자리 전체 · 보충 등록의 활성 §3 · 대기 선언 = 194 등록의 값 (같은 함수로 읽음) — 옛 판의 지문 앞자리 상수 대신 (비준판 121/122 · 1저자 10-21 Q1) · 값은 문서 · 반입 파일에서 (도구에 사본 없음 · 값 None 안전)  (('상태 undeclared — 체크아웃 지문 2149f8738bb2… ≠ 등록 §3 2149f8738bb2… · 대기 선언 없음 (읽은 값 None)', '2149f8738bb27d8afb3e2b06af02729559a6a98fe2e70fa26dd051173b3111c7', None, {'code_fp': '2149f8738bb27d8afb3e2b06af02729559a6a98fe2e70fa26dd051173b3111c7', 'code_fp_pending': None}, {'n': 20, 'ids_sha256': '991cf115)",
+   "  FAIL  S7 ★ (i) 정상 — 진짜 실행기 dry-run (등록 명령 run --cohorts lhss --dry-run --observe-imports --preflight-receipt) rc 0 → 영수증 JSON + 전체 로그 → rc 0 · 범위 preflight · P0–P9 (실행기 대조) · E1 (로그 INPUT_DIGEST_JSON = 등록 §2 = 반입 재계산) · E2 (봉인 지문 = 등록 §3) 같음 · 승인 SHA 없음 = 경고 기록 (실패 아님) · ★ 10-15 (나′) [상태 undeclared] pending = rc 1 · 실패 칸 정확히 {D1 · E2} (영수증 = 체크아웃 지문 · 상세 = 등록 §3 ≠ 체크아웃)  ((0, ['D1', 'E2'], None, {'registered': '2149f8738bb27d8afb3e2b06af02729559a6a98fe2e70fa26dd051173b3111c7', 'receipt': '2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb'}))",
+   "  FAIL  S7a ★ (a) SUPR-01 — 같은 20 ID · raw 표 · 코호트 TSV 첫 행 deck_sha256 한 글자만 바꾼 파일로 돈 진짜 dry-run (실행기 rc 0 · 새 꼴 로그가 그 TSV sha 를 싣는다) → 값으로 거부: 실패 칸 = E1 (로그 = 등록 §2 = 반입 재계산) · P9 (영수증 지문 = 이 체크아웃 재계산) 둘뿐 · 부재가 아니라 값 · ★ (나′) [상태 undeclared] pending 이면 + D1 · E2 (정확히)  ((0, ['D1', 'E1', 'E2', 'P9'], {'lhss': '393d127c59482b6ba5923779981e4e69ae4243052b5bbc738af53a1f10c36990'}, None))",
+   "  FAIL  S7a2 (a) Codex 반례 TSV 그대로 (evidence/receipt_extra/alternate_cohort.tsv · sha256 8d5dcbd2… = 판정문 §4 변이값) → 값으로 거부 (실패 칸 = E1 · P9 둘뿐 · ★ (나′) [상태 undeclared] pending 이면 + D1 · E2 · 정확히)  ((0, ['D1', 'E1', 'E2', 'P9'], None))",
+   "  FAIL  S7j ★ Q3 승인 SHA (접두 7) = 사전 점검 git 기록 · 로그 코드 줄 짧은 sha → rc 0 · P10 같음 · 경고 없음 · ★ (나′) [상태 undeclared] pending = rc 1 · 실패 칸 정확히 {D1 · E2} (P10 은 같음)  ((['D1', 'E2'], None))",
+   "  FAIL  S7k1 등록 명령 밖 인자 --allow-missing-raw (dry-run 은 끝까지 rc 0) → 실패 칸 = P6 (argv) 하나 (★ (나′) [상태 undeclared] pending 이면 + D1 · E2 · 정확히)  ((0, ['D1', 'E2', 'P6'], None))",
+   "  FAIL  S7k2 --lhss-cohort 로 같은 경로를 덮어씀 (지문 같음) → 실패 칸 = P6 하나 (경로 덮어쓰기는 등록 명령이 아니다 — 지문 대조와 따로 · ★ (나′) [상태 undeclared] pending 이면 + D1 · E2 · 정확히)  ((0, ['D1', 'E2', 'P6'], None))",
+   "  FAIL  S8 실제 발사 manifest 둘 (보충 · 194 · 다른 ROOT · 같은 발사 커밋 · 관측 ON) → rc 0 · 범위 launch · F0–F6 · G0–G2 · G4 · G5 · H1 같음 · ★ (나′) [상태 undeclared] pending = rc 1 · 실패 칸 정확히 {D1 · F5 · G5} (합성 manifest 둘의 봉인 = 이 체크아웃 지문 · H1 = 두 봉인이 같아 같음)  (['D1', 'F5', 'G5'])",
+   "  FAIL  S8g2 같은 반례 — 실패 칸은 H1 하나 (보충 · 194 manifest 각자는 정상 · ★ (나′) [상태 undeclared] pending 이면 + D1 · F5 · G5 · 정확히)  (['D1', 'F5', 'G5', 'H1'])",
+   "  FAIL  S8k Q3 승인 SHA (접두 7) = 두 manifest git.sha → rc 0 · F7 · G7 같음 · ★ (나′) [상태 undeclared] pending = rc 1 · 실패 칸 정확히 {D1 · F5 · G5} (F7 · G7 은 같음)  ((['D1', 'F5', 'G5'], None))"
+  ],
+  "last": [
+   "supp20_input_receipt selftest: 112/123 PASS   FAILED: ['S0 ★ 10-15 (나′) 정상 (커밋된 실물 · 컨테이너 범위) [상태 undeclared] — registered (체크아웃 = 등록 §3) = rc 0 · 대조 칸 R0 · A1 · A2 · B1–B3 · C1–C4 · D1 전부 같음 / pending (대기 선언 하나 · 체크아웃 = 대기 ≠ 등록) = rc 1 · 실패 칸 정확히 {D1} · D1 상세 now = 대기 · registered = 등록 · pending = 대기 / undeclared = FAIL · 범위 container · 수동 칸 셋', 'S0b 다시 계산 = 등록 §2 (케이스 20 · ids 991cf115… · raw a7aaa3c8… · 코호트 TSV 69d3f913… — 등록 입력 집합 · L214 개정이 바꾸지 않는 값) · ★ 10-21 봉인 지문 [상태 undeclared] = 상태가 정한 지문 (registered = 등록 §3 · 대기 선언 없음 / pending = 대기 선언) = 체크아웃 code_fp 64 자리 전체 · 보충 등록의 활성 §3 · 대기 선언 = 194 등록의 값 (같은 함수로 읽음) — 옛 판의 지문 앞자리 상수 대신 (비준판 121/122 · 1저자 10-21 Q1) · 값은 문서 · 반입 파일에서 (도구에 사본 없음 · 값 None 안전)', 'S7 ★ (i) 정상 — 진짜 실행기 dry-run (등록 명령 run --cohorts lhss --dry-run --observe-imports --preflight-receipt) rc 0 → 영수증 JSON + 전체 로그 → rc 0 · 범위 preflight · P0–P9 (실행기 대조) · E1 (로그 INPUT_DIGEST_JSON = 등록 §2 = 반입 재계산) · E2 (봉인 지문 = 등록 §3) 같음 · 승인 SHA 없음 = 경고 기록 (실패 아님) · ★ 10-15 (나′) [상태 undeclared] pending = rc 1 · 실패 칸 정확히 {D1 · E2} (영수증 = 체크아웃 지문 · 상세 = 등록 §3 ≠ 체크아웃)', 'S7a ★ (a) SUPR-01 — 같은 20 ID · raw 표 · 코호트 TSV 첫 행 deck_sha256 한 글자만 바꾼 파일로 돈 진짜 dry-run (실행기 rc 0 · 새 꼴 로그가 그 TSV sha 를 싣는다) → 값으로 거부: 실패 칸 = E1 (로그 = 등록 §2 = 반입 재계산) · P9 (영수증 지문 = 이 체크아웃 재계산) 둘뿐 · 부재가 아니라 값 · ★ (나′) [상태 undeclared] pending 이면 + D1 · E2 (정확히)', 'S7a2 (a) Codex 반례 TSV 그대로 (evidence/receipt_extra/alternate_cohort.tsv · sha256 8d5dcbd2… = 판정문 §4 변이값) → 값으로 거부 (실패 칸 = E1 · P9 둘뿐 · ★ (나′) [상태 undeclared] pending 이면 + D1 · E2 · 정확히)', 'S7j ★ Q3 승인 SHA (접두 7) = 사전 점검 git 기록 · 로그 코드 줄 짧은 sha → rc 0 · P10 같음 · 경고 없음 · ★ (나′) [상태 undeclared] pending = rc 1 · 실패 칸 정확히 {D1 · E2} (P10 은 같음)', 'S7k1 등록 명령 밖 인자 --allow-missing-raw (dry-run 은 끝까지 rc 0) → 실패 칸 = P6 (argv) 하나 (★ (나′) [상태 undeclared] pending 이면 + D1 · E2 · 정확히)', 'S7k2 --lhss-cohort 로 같은 경로를 덮어씀 (지문 같음) → 실패 칸 = P6 하나 (경로 덮어쓰기는 등록 명령이 아니다 — 지문 대조와 따로 · ★ (나′) [상태 undeclared] pending 이면 + D1 · E2 · 정확히)', 'S8 실제 발사 manifest 둘 (보충 · 194 · 다른 ROOT · 같은 발사 커밋 · 관측 ON) → rc 0 · 범위 launch · F0–F6 · G0–G2 · G4 · G5 · H1 같음 · ★ (나′) [상태 undeclared] pending = rc 1 · 실패 칸 정확히 {D1 · F5 · G5} (합성 manifest 둘의 봉인 = 이 체크아웃 지문 · H1 = 두 봉인이 같아 같음)', 'S8g2 같은 반례 — 실패 칸은 H1 하나 (보충 · 194 manifest 각자는 정상 · ★ (나′) [상태 undeclared] pending 이면 + D1 · F5 · G5 · 정확히)', 'S8k Q3 승인 SHA (접두 7) = 두 manifest git.sha → rc 0 · F7 · G7 같음 · ★ (나′) [상태 undeclared] pending = rc 1 · 실패 칸 정확히 {D1 · F5 · G5} (F7 · G7 은 같음)']"
+  ],
+  "tool_sha256": "3d6110be24d24bf91ad1e71232a2e5dad580cf95178d6135b13aa6ca6de6f950"
+ },
+ "combo_m7_twin": {
+  "desc": "변이 m7 (상태 접두 12) · 쌍둥이 — S0 (D1 전체 비교) 가 잡나",
+  "rc": 1,
+  "secs": 36.7,
+  "n_pass": 113,
+  "n_fail": 10,
+  "fails": [
+   "S0",
+   "S7",
+   "S7a",
+   "S7a2",
+   "S7j",
+   "S7k1",
+   "S7k2",
+   "S8",
+   "S8g2",
+   "S8k"
+  ],
+  "key": {
+   "S0": [
+    "FAIL"
+   ],
+   "S0b": [
+    "PASS"
+   ],
+   "S11g": [
+    "PASS"
+   ]
+  },
+  "state": [
+   "(나′) 봉인 지문 상태 = registered — 체크아웃 2149f8738bb2… · 등록 §3 2149f8738bb2… · 대기 선언 없음"
+  ],
+  "s0b_line": [
+   "  PASS  S0b 다시 계산 = 등록 §2 (케이스 20 · ids 991cf115… · raw a7aaa3c8… · 코호트 TSV 69d3f913… — 등록 입력 집합 · L214 개정이 바꾸지 않는 값) · ★ 10-21 봉인 지문 [상태 registered] = 상태가 정한 지문 (registered = 등록 §3 · 대기 선언 없음 / pending = 대기 선언) = 체크아웃 code_fp 64 자리 전체 · 보충 등록의 활성 §3 · 대기 선언 = 194 등록의 값 (같은 함수로 읽음) — 옛 판의 지문 앞자리 상수 대신 (비준판 121/122 · 1저자 10-21 Q1) · 값은 문서 · 반입 파일에서 (도구에 사본 없음 · 값 None 안전)"
+  ],
+  "fail_lines": [
+   "  FAIL  S0 ★ 10-15 (나′) 정상 (커밋된 실물 · 컨테이너 범위) [상태 registered] — registered (체크아웃 = 등록 §3) = rc 0 · 대조 칸 R0 · A1 · A2 · B1–B3 · C1–C4 · D1 전부 같음 / pending (대기 선언 하나 · 체크아웃 = 대기 ≠ 등록) = rc 1 · 실패 칸 정확히 {D1} · D1 상세 now = 대기 · registered = 등록 · pending = 대기 / undeclared = FAIL · 범위 container · 수동 칸 셋  ({'state': 'registered', 'why': '', 'bad': ['D1'], 'D1': {'now': '2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb', 'registered': '2149f8738bb27d8afb3e2b06af02729559a6a98fe2e70fa26dd051173b3111c7', 'pending': None}})",
+   "  FAIL  S7 ★ (i) 정상 — 진짜 실행기 dry-run (등록 명령 run --cohorts lhss --dry-run --observe-imports --preflight-receipt) rc 0 → 영수증 JSON + 전체 로그 → rc 0 · 범위 preflight · P0–P9 (실행기 대조) · E1 (로그 INPUT_DIGEST_JSON = 등록 §2 = 반입 재계산) · E2 (봉인 지문 = 등록 §3) 같음 · 승인 SHA 없음 = 경고 기록 (실패 아님) · ★ 10-15 (나′) [상태 registered] pending = rc 1 · 실패 칸 정확히 {D1 · E2} (영수증 = 체크아웃 지문 · 상세 = 등록 §3 ≠ 체크아웃)  ((0, ['D1', 'E2'], None, {'registered': '2149f8738bb27d8afb3e2b06af02729559a6a98fe2e70fa26dd051173b3111c7', 'receipt': '2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb'}))",
+   "  FAIL  S7a ★ (a) SUPR-01 — 같은 20 ID · raw 표 · 코호트 TSV 첫 행 deck_sha256 한 글자만 바꾼 파일로 돈 진짜 dry-run (실행기 rc 0 · 새 꼴 로그가 그 TSV sha 를 싣는다) → 값으로 거부: 실패 칸 = E1 (로그 = 등록 §2 = 반입 재계산) · P9 (영수증 지문 = 이 체크아웃 재계산) 둘뿐 · 부재가 아니라 값 · ★ (나′) [상태 registered] pending 이면 + D1 · E2 (정확히)  ((0, ['D1', 'E1', 'E2', 'P9'], {'lhss': '393d127c59482b6ba5923779981e4e69ae4243052b5bbc738af53a1f10c36990'}, None))",
+   "  FAIL  S7a2 (a) Codex 반례 TSV 그대로 (evidence/receipt_extra/alternate_cohort.tsv · sha256 8d5dcbd2… = 판정문 §4 변이값) → 값으로 거부 (실패 칸 = E1 · P9 둘뿐 · ★ (나′) [상태 registered] pending 이면 + D1 · E2 · 정확히)  ((0, ['D1', 'E1', 'E2', 'P9'], None))",
+   "  FAIL  S7j ★ Q3 승인 SHA (접두 7) = 사전 점검 git 기록 · 로그 코드 줄 짧은 sha → rc 0 · P10 같음 · 경고 없음 · ★ (나′) [상태 registered] pending = rc 1 · 실패 칸 정확히 {D1 · E2} (P10 은 같음)  ((['D1', 'E2'], None))",
+   "  FAIL  S7k1 등록 명령 밖 인자 --allow-missing-raw (dry-run 은 끝까지 rc 0) → 실패 칸 = P6 (argv) 하나 (★ (나′) [상태 registered] pending 이면 + D1 · E2 · 정확히)  ((0, ['D1', 'E2', 'P6'], None))",
+   "  FAIL  S7k2 --lhss-cohort 로 같은 경로를 덮어씀 (지문 같음) → 실패 칸 = P6 하나 (경로 덮어쓰기는 등록 명령이 아니다 — 지문 대조와 따로 · ★ (나′) [상태 registered] pending 이면 + D1 · E2 · 정확히)  ((0, ['D1', 'E2', 'P6'], None))",
+   "  FAIL  S8 실제 발사 manifest 둘 (보충 · 194 · 다른 ROOT · 같은 발사 커밋 · 관측 ON) → rc 0 · 범위 launch · F0–F6 · G0–G2 · G4 · G5 · H1 같음 · ★ (나′) [상태 registered] pending = rc 1 · 실패 칸 정확히 {D1 · F5 · G5} (합성 manifest 둘의 봉인 = 이 체크아웃 지문 · H1 = 두 봉인이 같아 같음)  (['D1', 'F5', 'G5'])",
+   "  FAIL  S8g2 같은 반례 — 실패 칸은 H1 하나 (보충 · 194 manifest 각자는 정상 · ★ (나′) [상태 registered] pending 이면 + D1 · F5 · G5 · 정확히)  (['D1', 'F5', 'G5', 'H1'])",
+   "  FAIL  S8k Q3 승인 SHA (접두 7) = 두 manifest git.sha → rc 0 · F7 · G7 같음 · ★ (나′) [상태 registered] pending = rc 1 · 실패 칸 정확히 {D1 · F5 · G5} (F7 · G7 은 같음)  ((['D1', 'F5', 'G5'], None))"
+  ],
+  "last": [
+   "supp20_input_receipt selftest: 113/123 PASS   FAILED: ['S0 ★ 10-15 (나′) 정상 (커밋된 실물 · 컨테이너 범위) [상태 registered] — registered (체크아웃 = 등록 §3) = rc 0 · 대조 칸 R0 · A1 · A2 · B1–B3 · C1–C4 · D1 전부 같음 / pending (대기 선언 하나 · 체크아웃 = 대기 ≠ 등록) = rc 1 · 실패 칸 정확히 {D1} · D1 상세 now = 대기 · registered = 등록 · pending = 대기 / undeclared = FAIL · 범위 container · 수동 칸 셋', 'S7 ★ (i) 정상 — 진짜 실행기 dry-run (등록 명령 run --cohorts lhss --dry-run --observe-imports --preflight-receipt) rc 0 → 영수증 JSON + 전체 로그 → rc 0 · 범위 preflight · P0–P9 (실행기 대조) · E1 (로그 INPUT_DIGEST_JSON = 등록 §2 = 반입 재계산) · E2 (봉인 지문 = 등록 §3) 같음 · 승인 SHA 없음 = 경고 기록 (실패 아님) · ★ 10-15 (나′) [상태 registered] pending = rc 1 · 실패 칸 정확히 {D1 · E2} (영수증 = 체크아웃 지문 · 상세 = 등록 §3 ≠ 체크아웃)', 'S7a ★ (a) SUPR-01 — 같은 20 ID · raw 표 · 코호트 TSV 첫 행 deck_sha256 한 글자만 바꾼 파일로 돈 진짜 dry-run (실행기 rc 0 · 새 꼴 로그가 그 TSV sha 를 싣는다) → 값으로 거부: 실패 칸 = E1 (로그 = 등록 §2 = 반입 재계산) · P9 (영수증 지문 = 이 체크아웃 재계산) 둘뿐 · 부재가 아니라 값 · ★ (나′) [상태 registered] pending 이면 + D1 · E2 (정확히)', 'S7a2 (a) Codex 반례 TSV 그대로 (evidence/receipt_extra/alternate_cohort.tsv · sha256 8d5dcbd2… = 판정문 §4 변이값) → 값으로 거부 (실패 칸 = E1 · P9 둘뿐 · ★ (나′) [상태 registered] pending 이면 + D1 · E2 · 정확히)', 'S7j ★ Q3 승인 SHA (접두 7) = 사전 점검 git 기록 · 로그 코드 줄 짧은 sha → rc 0 · P10 같음 · 경고 없음 · ★ (나′) [상태 registered] pending = rc 1 · 실패 칸 정확히 {D1 · E2} (P10 은 같음)', 'S7k1 등록 명령 밖 인자 --allow-missing-raw (dry-run 은 끝까지 rc 0) → 실패 칸 = P6 (argv) 하나 (★ (나′) [상태 registered] pending 이면 + D1 · E2 · 정확히)', 'S7k2 --lhss-cohort 로 같은 경로를 덮어씀 (지문 같음) → 실패 칸 = P6 하나 (경로 덮어쓰기는 등록 명령이 아니다 — 지문 대조와 따로 · ★ (나′) [상태 registered] pending 이면 + D1 · E2 · 정확히)', 'S8 실제 발사 manifest 둘 (보충 · 194 · 다른 ROOT · 같은 발사 커밋 · 관측 ON) → rc 0 · 범위 launch · F0–F6 · G0–G2 · G4 · G5 · H1 같음 · ★ (나′) [상태 registered] pending = rc 1 · 실패 칸 정확히 {D1 · F5 · G5} (합성 manifest 둘의 봉인 = 이 체크아웃 지문 · H1 = 두 봉인이 같아 같음)', 'S8g2 같은 반례 — 실패 칸은 H1 하나 (보충 · 194 manifest 각자는 정상 · ★ (나′) [상태 registered] pending 이면 + D1 · F5 · G5 · 정확히)', 'S8k Q3 승인 SHA (접두 7) = 두 manifest git.sha → rc 0 · F7 · G7 같음 · ★ (나′) [상태 registered] pending = rc 1 · 실패 칸 정확히 {D1 · F5 · G5} (F7 · G7 은 같음)']"
+  ],
+  "tool_sha256": "4d8950956e7563c417652a9568a2e37c9dc0e3e91cdd78ab2ac10b23a40f56b9"
+ },
+ "mut_m1_leftover_off_full": {
+  "desc": "변이 m1_leftover_off · HEAD 문서 (S11g 상세 전체)",
+  "rc": 1,
+  "secs": 40.6,
+  "n_pass": 122,
+  "n_fail": 1,
+  "fails": [
+   "S11g"
+  ],
+  "key": {
+   "S0": [
+    "PASS"
+   ],
+   "S0b": [
+    "PASS"
+   ],
+   "S11g": [
+    "FAIL"
+   ]
+  },
+  "state": [
+   "(나′) 봉인 지문 상태 = registered — 체크아웃 2149f8738bb2… · 등록 §3 2149f8738bb2… · 대기 선언 없음"
+  ],
+  "s0b_line": [
+   "  PASS  S0b 다시 계산 = 등록 §2 (케이스 20 · ids 991cf115… · raw a7aaa3c8… · 코호트 TSV 69d3f913… — 등록 입력 집합 · L214 개정이 바꾸지 않는 값) · ★ 10-21 봉인 지문 [상태 registered] = 상태가 정한 지문 (registered = 등록 §3 · 대기 선언 없음 / pending = 대기 선언) = 체크아웃 code_fp 64 자리 전체 · 보충 등록의 활성 §3 · 대기 선언 = 194 등록의 값 (같은 함수로 읽음) — 옛 판의 지문 앞자리 상수 대신 (비준판 121/122 · 1저자 10-21 Q1) · 값은 문서 · 반입 파일에서 (도구에 사본 없음 · 값 None 안전)"
+  ],
+  "fail_lines": [
+   "  FAIL  S11g ★ 10-21 S0b 지문 기대 (상수 없음) — 실물 상태와 무관한 일곱 꼴 (보충 · 194 등록 사본 쌍 · 지문 토큰만 바꿈 · 도구 registration_values 로 읽음): registered (등록 §3 = 체크아웃 · 대기 없음) · pending (대기 = 체크아웃 · 두 등록 같음) = 참 / 보충만 비준 (194 = 대기) · pending 인데 194 등록 §3 다름 · 비준 + 남은 대기 · 194 대기 값 둘 (문제) · 선언 없음 = 거짓 (고치기 전: 옛 앞자리 상수라 registered · pending 이 거짓)  ({'ratified_pending_left': (True, False, '상태 registered')})"
+  ],
+  "last": [
+   "supp20_input_receipt selftest: 122/123 PASS   FAILED: ['S11g ★ 10-21 S0b 지문 기대 (상수 없음) — 실물 상태와 무관한 일곱 꼴 (보충 · 194 등록 사본 쌍 · 지문 토큰만 바꿈 · 도구 registration_values 로 읽음): registered (등록 §3 = 체크아웃 · 대기 없음) · pending (대기 = 체크아웃 · 두 등록 같음) = 참 / 보충만 비준 (194 = 대기) · pending 인데 194 등록 §3 다름 · 비준 + 남은 대기 · 194 대기 값 둘 (문제) · 선언 없음 = 거짓 (고치기 전: 옛 앞자리 상수라 registered · pending 이 거짓)']"
+  ],
+  "tool_sha256": "cd93e865e0821fe72506faef38d3a5204c06e25a5ac292a754454fcec751376a"
+ },
+ "mut_m2_crossdoc_off_full": {
+  "desc": "변이 m2_crossdoc_off · HEAD 문서 (S11g 상세 전체)",
+  "rc": 1,
+  "secs": 39.0,
+  "n_pass": 122,
+  "n_fail": 1,
+  "fails": [
+   "S11g"
+  ],
+  "key": {
+   "S0": [
+    "PASS"
+   ],
+   "S0b": [
+    "PASS"
+   ],
+   "S11g": [
+    "FAIL"
+   ]
+  },
+  "state": [
+   "(나′) 봉인 지문 상태 = registered — 체크아웃 2149f8738bb2… · 등록 §3 2149f8738bb2… · 대기 선언 없음"
+  ],
+  "s0b_line": [
+   "  PASS  S0b 다시 계산 = 등록 §2 (케이스 20 · ids 991cf115… · raw a7aaa3c8… · 코호트 TSV 69d3f913… — 등록 입력 집합 · L214 개정이 바꾸지 않는 값) · ★ 10-21 봉인 지문 [상태 registered] = 상태가 정한 지문 (registered = 등록 §3 · 대기 선언 없음 / pending = 대기 선언) = 체크아웃 code_fp 64 자리 전체 · 보충 등록의 활성 §3 · 대기 선언 = 194 등록의 값 (같은 함수로 읽음) — 옛 판의 지문 앞자리 상수 대신 (비준판 121/122 · 1저자 10-21 Q1) · 값은 문서 · 반입 파일에서 (도구에 사본 없음 · 값 None 안전)"
+  ],
+  "fail_lines": [
+   "  FAIL  S11g ★ 10-21 S0b 지문 기대 (상수 없음) — 실물 상태와 무관한 일곱 꼴 (보충 · 194 등록 사본 쌍 · 지문 토큰만 바꿈 · 도구 registration_values 로 읽음): registered (등록 §3 = 체크아웃 · 대기 없음) · pending (대기 = 체크아웃 · 두 등록 같음) = 참 / 보충만 비준 (194 = 대기) · pending 인데 194 등록 §3 다름 · 비준 + 남은 대기 · 194 대기 값 둘 (문제) · 선언 없음 = 거짓 (고치기 전: 옛 앞자리 상수라 registered · pending 이 거짓)  ({'supp_only_ratified': (True, False, '상태 registered'), 'pending_base_differs': (True, False, '상태 pending')})"
+  ],
+  "last": [
+   "supp20_input_receipt selftest: 122/123 PASS   FAILED: ['S11g ★ 10-21 S0b 지문 기대 (상수 없음) — 실물 상태와 무관한 일곱 꼴 (보충 · 194 등록 사본 쌍 · 지문 토큰만 바꿈 · 도구 registration_values 로 읽음): registered (등록 §3 = 체크아웃 · 대기 없음) · pending (대기 = 체크아웃 · 두 등록 같음) = 참 / 보충만 비준 (194 = 대기) · pending 인데 194 등록 §3 다름 · 비준 + 남은 대기 · 194 대기 값 둘 (문제) · 선언 없음 = 거짓 (고치기 전: 옛 앞자리 상수라 registered · pending 이 거짓)']"
+  ],
+  "tool_sha256": "a66957d3d28a6a8192334934f57ddaad78cfa3f73188737b667f3a65a862a223"
+ },
+ "mut_m3_baseprobs_off_full": {
+  "desc": "변이 m3_baseprobs_off · HEAD 문서 (S11g 상세 전체)",
+  "rc": 1,
+  "secs": 41.4,
+  "n_pass": 122,
+  "n_fail": 1,
+  "fails": [
+   "S11g"
+  ],
+  "key": {
+   "S0": [
+    "PASS"
+   ],
+   "S0b": [
+    "PASS"
+   ],
+   "S11g": [
+    "FAIL"
+   ]
+  },
+  "state": [
+   "(나′) 봉인 지문 상태 = registered — 체크아웃 2149f8738bb2… · 등록 §3 2149f8738bb2… · 대기 선언 없음"
+  ],
+  "s0b_line": [
+   "  PASS  S0b 다시 계산 = 등록 §2 (케이스 20 · ids 991cf115… · raw a7aaa3c8… · 코호트 TSV 69d3f913… — 등록 입력 집합 · L214 개정이 바꾸지 않는 값) · ★ 10-21 봉인 지문 [상태 registered] = 상태가 정한 지문 (registered = 등록 §3 · 대기 선언 없음 / pending = 대기 선언) = 체크아웃 code_fp 64 자리 전체 · 보충 등록의 활성 §3 · 대기 선언 = 194 등록의 값 (같은 함수로 읽음) — 옛 판의 지문 앞자리 상수 대신 (비준판 121/122 · 1저자 10-21 Q1) · 값은 문서 · 반입 파일에서 (도구에 사본 없음 · 값 None 안전)"
+  ],
+  "fail_lines": [
+   "  FAIL  S11g ★ 10-21 S0b 지문 기대 (상수 없음) — 실물 상태와 무관한 일곱 꼴 (보충 · 194 등록 사본 쌍 · 지문 토큰만 바꿈 · 도구 registration_values 로 읽음): registered (등록 §3 = 체크아웃 · 대기 없음) · pending (대기 = 체크아웃 · 두 등록 같음) = 참 / 보충만 비준 (194 = 대기) · pending 인데 194 등록 §3 다름 · 비준 + 남은 대기 · 194 대기 값 둘 (문제) · 선언 없음 = 거짓 (고치기 전: 옛 앞자리 상수라 registered · pending 이 거짓)  ({'base_pending_conflict': (True, False, '상태 registered')})"
+  ],
+  "last": [
+   "supp20_input_receipt selftest: 122/123 PASS   FAILED: ['S11g ★ 10-21 S0b 지문 기대 (상수 없음) — 실물 상태와 무관한 일곱 꼴 (보충 · 194 등록 사본 쌍 · 지문 토큰만 바꿈 · 도구 registration_values 로 읽음): registered (등록 §3 = 체크아웃 · 대기 없음) · pending (대기 = 체크아웃 · 두 등록 같음) = 참 / 보충만 비준 (194 = 대기) · pending 인데 194 등록 §3 다름 · 비준 + 남은 대기 · 194 대기 값 둘 (문제) · 선언 없음 = 거짓 (고치기 전: 옛 앞자리 상수라 registered · pending 이 거짓)']"
+  ],
+  "tool_sha256": "69ff9d580128e19fb8833ec146a237ebc0b0b6288c28c561c050829c0a40ad1e"
+ },
+ "mut_m4_undeclared_ok_full": {
+  "desc": "변이 m4_undeclared_ok · HEAD 문서 (S11g 상세 전체)",
+  "rc": 1,
+  "secs": 39.0,
+  "n_pass": 122,
+  "n_fail": 1,
+  "fails": [
+   "S11g"
+  ],
+  "key": {
+   "S0": [
+    "PASS"
+   ],
+   "S0b": [
+    "PASS"
+   ],
+   "S11g": [
+    "FAIL"
+   ]
+  },
+  "state": [
+   "(나′) 봉인 지문 상태 = registered — 체크아웃 2149f8738bb2… · 등록 §3 2149f8738bb2… · 대기 선언 없음"
+  ],
+  "s0b_line": [
+   "  PASS  S0b 다시 계산 = 등록 §2 (케이스 20 · ids 991cf115… · raw a7aaa3c8… · 코호트 TSV 69d3f913… — 등록 입력 집합 · L214 개정이 바꾸지 않는 값) · ★ 10-21 봉인 지문 [상태 registered] = 상태가 정한 지문 (registered = 등록 §3 · 대기 선언 없음 / pending = 대기 선언) = 체크아웃 code_fp 64 자리 전체 · 보충 등록의 활성 §3 · 대기 선언 = 194 등록의 값 (같은 함수로 읽음) — 옛 판의 지문 앞자리 상수 대신 (비준판 121/122 · 1저자 10-21 Q1) · 값은 문서 · 반입 파일에서 (도구에 사본 없음 · 값 None 안전)"
+  ],
+  "fail_lines": [
+   "  FAIL  S11g ★ 10-21 S0b 지문 기대 (상수 없음) — 실물 상태와 무관한 일곱 꼴 (보충 · 194 등록 사본 쌍 · 지문 토큰만 바꿈 · 도구 registration_values 로 읽음): registered (등록 §3 = 체크아웃 · 대기 없음) · pending (대기 = 체크아웃 · 두 등록 같음) = 참 / 보충만 비준 (194 = 대기) · pending 인데 194 등록 §3 다름 · 비준 + 남은 대기 · 194 대기 값 둘 (문제) · 선언 없음 = 거짓 (고치기 전: 옛 앞자리 상수라 registered · pending 이 거짓)  ({'undeclared': (True, False, '상태 undeclared')})"
+  ],
+  "last": [
+   "supp20_input_receipt selftest: 122/123 PASS   FAILED: ['S11g ★ 10-21 S0b 지문 기대 (상수 없음) — 실물 상태와 무관한 일곱 꼴 (보충 · 194 등록 사본 쌍 · 지문 토큰만 바꿈 · 도구 registration_values 로 읽음): registered (등록 §3 = 체크아웃 · 대기 없음) · pending (대기 = 체크아웃 · 두 등록 같음) = 참 / 보충만 비준 (194 = 대기) · pending 인데 194 등록 §3 다름 · 비준 + 남은 대기 · 194 대기 값 둘 (문제) · 선언 없음 = 거짓 (고치기 전: 옛 앞자리 상수라 registered · pending 이 거짓)']"
+  ],
+  "tool_sha256": "740c3381f8e7a11ac4accc2fe097057149d73a7234b3d66213169c1eb977dc8d"
+ },
+ "_final_clean": true
+}

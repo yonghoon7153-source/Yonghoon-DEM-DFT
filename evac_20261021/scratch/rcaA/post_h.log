@@ -1,0 +1,21 @@
+── RCA06
+    RCA06 손 회로: I 4.61491208 · SV 끊은 판 0.448430493 · 비 10.291254 · SV 전류 몫 0.9151 · P_SV 0.2497 < P_VV 0.3067
+  PASS  RCA06 반례 꼴 (손 회로) — SV 경로 전류 몫 > 0.9 · 옛 가드 (P_SV ≥ P_VV) = false · SV 면 끊은 판 대비 비 > 5
+  PASS  RCA06 기본 (노브 끔) — σ = 손 회로 (1e-12) · 기록에 sv_dominant 없음 (지배성 표지 철회) · SV_local_dissipation 진단 있음 · 반사실 = 요청 없음 (칸 없음)
+  PASS  RCA06 SV_local_dissipation = 국소 소산 몫 (SV 면 + SDCP 셀 · 원장) · 이 반례에서 VV 접합 몫보다 작다 (옛 가드라면 false)
+  PASS  RCA06 반사실 대조 (노브 켬 · 문턱 없음) — sv_counterfactual_ratio = 손 회로 I / SV 면 끊은 I (1e-10) · SV 면 2 끊음 · 표지 없음 (문턱 없음 = 판정 문장 없음)
+  PASS  RCA06 문턱이 주어질 때만 비교 표지 — 문턱 2.0 (시험 값 · 기본값 아님) · 비 ≈ 10 → SV_DEPENDENT
+  PASS  RCA06 문턱 = 유한 ≥ 1 실수만 (0.5 · NaN · inf · bool · 문자 · 음수 = 거부) · 모르는 칸 거부
+  PASS  RCA06 SDCP 없음 (SBE 꼴) — SV 면 0 · 비 = 1 정확 (같은 계를 다시 푼다)
+  PASS  RCA06 주 해 미수렴 → 반사실 비 없음 (status main_unconverged · 비 None · 표지 None · 해 unconverged True)
+── RCA06-H
+  PASS  RCA06-H ① 반사실 솔브 뒤 모듈 전역 출처 = 주 해 그대로 (LAST_BACKEND used cpu-main · LAST_CG iters 111) · 반사실 기록에 자기 backend (cpu-counterfactual) · 솔브 2 번 · 비 = 손 회로 (1e-10)
+  PASS  RCA06-H ① 증서 끔 = 반사실 기록 conv_cert None (칸 있음 · 증서 없이 CG 술어만)
+  PASS  RCA06-H ② 증서 켬 (rtol 1e-12 · 직접 풀이) — 주 해 증서 ok · 반사실 솔브도 같은 증서 함수 (판본 conv-cert · ok · ⓐⓑⓒ) · 비 = 손 회로 (1e-10)
+  PASS  RCA06-H ② 반사실 솔브 증서 실패 → 비 없음 · 표지 없음 (문턱 2.0 이어도) · status unconverged · 주 해는 그대로 (증서 ok · σ = 손 회로)
+  PASS  RCA06-H ③ SVA 양성 대조 — AM 셀 sid 2 · 주 σ = 손 회로 (1e-9) · 반사실 computed · 비 = 손 회로 (1e-3 · I_cut ≈ 1e-9 의 판 전류 상쇄) · 비 > 1e6 → SV_DEPENDENT
+  PASS  RCA06-H ③ 관통 성분이 있는데 푼 I_cut ≤ 0 (CG 술어는 통과 · 잔차 ≤ 1e-6) → 비 inf 아님 · 비 None · 표지 None · status ≠ 'no_through_without_sv' (위상 서술 금지)
+  PASS  RCA06-H ④ 주 해 단자 전류 ≤ 0 (CG 술어 통과) → 반사실을 풀지 않는다 · 비 None · 표지 None · status nonpositive_full_current
+
+== test_carbon_junction: 15/15 PASS
+[nrun] wall 1.6 s · exit 0

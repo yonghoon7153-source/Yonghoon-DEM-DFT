@@ -1,0 +1,28 @@
+Add Codex round-1 design review request for the mixer D3 SE flowability anchor
+
+Request docs/reviews/codex_mixer_d3_design_request_20261021.md is the first of
+the two Codex rounds on the D3 design (SE-SE Bo_code anchor from powder
+flowability tests) and the author decisions Q1-Q12.  It states what this round
+closes and what it leaves open, records where the Q1-Q12 ratification lives
+(design header, progress log 10-15; not in hetero_thesis section 4), links the
+10-20 pipeline decisions (D10 intensity = Bo/G, D12, D13, D7, D11), separates
+what can be judged without the equipment list, and gives the ZIP manifest
+(the ZIP itself is not made here).
+
+Pre-review, steps 1-4 of the pre-Codex attack rule:
+- 26 design numbers and universal claims checked against base a76f59d0d with
+  the generator's own functions.  Most agree, but many are density generation
+  gen1 values while Q11 fixes lab20261014.  Ceiling numbers are listed for both
+  generations side by side (gen1 832.7, lab 1015.4; at lab density 637.32 gives
+  0.733 % and 850 is accepted), an independent recomputation that agrees with
+  the D2 pre-review item PRE-MIXD2-07.
+- 14 claimed guarantees attacked with small analytic counterexamples: 8 broken,
+  5 conditional, 1 precedent risk.  Recorded as known limits D3K-01..17 with
+  narrowed guarantee wording; the design document is not changed.
+
+Evidence folder: a read-only script that imports the generator and the contact
+checker and prints every cited number ([1]-[14]), plus its output (byte-identical
+across runs).  No simulation, no ledger, design, progress-log or CLAUDE.md edits.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

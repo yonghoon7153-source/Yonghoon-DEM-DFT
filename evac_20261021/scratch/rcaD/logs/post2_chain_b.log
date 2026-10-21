@@ -1,0 +1,30 @@
+  PASS  L12 CALIB_UNCONFIRMED — 확인 두 번 다 2 % 넘음 (확인 런 정확히 둘)
+  PASS  L13 확인 한 번 실패 → 그 점을 넣고 다시 보간 → 둘째 확인 통과 (CALIBRATED · 확인 2) — ★ 3판: 곡률로 (매끈한 로지스틱 β 1.5 · Rc 1e4) · 옛 잡음 범프 (×1.03) 는 끝 런 사이에서 비단조 (τ_mono) 로 잡힌다 = 세계가 단조가 아니다
+  PASS  M01 변이: 보간을 선형 R (ln 아님) 로 → L02 손계산이 떨어진다
+  PASS  M02 변이: ±2 % → ±3 % → L03 (허용폭 양끝) 손계산이 떨어진다
+  PASS  M03 변이: origin 규칙 끔 → L19 (8 팔 · 표지) 이 떨어진다
+  PASS  M04 변이: 2판 e_min 빠른 멈춤을 되살림 (국소 e < e_min → CALIB_UNIDENTIFIED) → L11 (3판 = 진단 · CALIBRATED) 이 떨어진다
+  PASS  M05 변이: τ_mono 끔 (∞) → L14 가 CALIB_NONMONOTONE 을 못 낸다
+  PASS  M06 변이: 판정 입력 sha256 대조 끔 → S22 가 INPUT_SHA_MISMATCH 를 못 낸다
+  PASS  M07 변이: 점 수 상한을 계획 칸 + 1 로 (사슬이 숫자를 고른다) → L16 (계획 12 · 런 정확히 12) 이 떨어진다
+  PASS  M08 변이: 정본 ca_ext_record_ok 끔 → S09 (원장 수 변조) 가 CA_EXT_RECORD 를 못 낸다 (정본 계약이 실제로 일한다)
+  PASS  M09 변이: 정본 check_arm 끔 → S24 (매니페스트만 σ_AM_S) 가 ARM_CONTRACT 를 못 낸다
+  PASS  M10 변이: sid 무리에서 origin 을 뺌 (옛 키) → L18 (origin 팔 1 · 2 의 다른 지문) 이 떨어진다
+  PASS  M11 변이 M1 (끝 = 확인 실패한 후보 26,758) → U01 이 떨어진다 (W 0.4536 PASS 로 줄어든다)
+  PASS  M12 변이 M2 (끝 = 안쪽 이웃 31,622.8 · 비 189.4 · FAIL) → U01 이 떨어진다 (PRE-design-05 — "약 200 · PASS 면 실패" 시험은 통과시켰다)
+  PASS  M13 변이 M3 (hi 끝만 2판 보간 · 비 18.7 · WEAK) → U01 이 떨어진다 (판정 이름만 보면 놓친다 · 끝 값으로 잡는다)
+  PASS  M14 변이 M4 (양끝 2판 보간 · 비 8.34 · PASS) → U01 이 떨어진다
+  PASS  M15 변이: DBE origin 을 R_j,0 에서만 (2판) → U02 (RCA-02) 가 떨어진다
+  PASS  M16 변이: 4.68 ∈ U 를 envelope (hull) 로 → U03 (RCA-08 GAP) 이 떨어진다
+  PASS  M17 변이: 판정 함수가 중앙 (R_j,0) 네 점만 (2판 감도 비교) → U04b (양끝만 넓은 변이의 SENSITIVE) 가 떨어진다
+  PASS  M18 변이: 차단 표지를 와일드카드 (*_SENSITIVE · *_UNCHECKED 꼬리) 로 → U05 (닫힌 집합) 가 떨어진다
+  PASS  M19 변이: ln 차 대신 절대차 → U06 (단위 불변 · τ_mono) 이 떨어진다
+  PASS  M20 변이: SV 문턱 비교를 ≥ 로 (비 = 문턱 도 의존) → U08 이 떨어진다 (등록 문장 "넘으면")
+  PASS  M21 변이: 끝 origin 밀기 끔 (Q-E 없음) → U10 (PRE-design-01 합집합 바깥 감쌈) 이 떨어진다
+  PASS  M22 변이: 조기 반환 해 상태를 받지 않음 (2판 — 양수 σ 만) → Z01 (바닥 영값) 이 떨어진다
+  PASS  M23 변이: 두 계획 대조 끔 → C05 (tol_ff 다름) 가 PLAN_CROSS_MISMATCH 를 못 낸다
+  PASS  M24 변이: 결과 전 등록 숫자 검사 끔 → N01 (SV 문턱 null) 이 PLAN_NUMBER_UNREGISTERED 를 못 낸다 (Q-G)
+  PASS  M25 변이: 감도 단계의 주 판정 묶음 검사 끔 → F01 (--after-main 없음) 이 MAIN_NOT_DONE 을 못 낸다 (Q-F)
+
+test_rint_r_chain: 27/27 PASS (17.2 s)
+rc=0 seconds=17

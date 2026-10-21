@@ -1,0 +1,14 @@
+Rint 2 S2 RCA-05/06 tests: instance junction current = sum of sub-edges; knob inside the plan fingerprint
+
+Written after the implementation (deviation recorded) to make two record guarantees observable:
+- JI-KNOB (1): CX bed (A -> B only through junctions, 5 sub-edges) - the instance junction current
+  equals the sum of its 5 sub-edge currents and the terminal current (1e-10).  Kills mutant M34
+  (assignment instead of np.add.at = last sub-edge only).
+- JI-KNOB (2): the counterfactual knob is part of plan_rows_fp - a plan whose threshold is changed
+  after creation (2.0 -> 1.0) or whose knob is removed is refused at the solve gate; the untouched
+  plan solves and records threshold 2.0.  Kills mutant M31 (knob removed from the fingerprint).
+
+Current: 2/2.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

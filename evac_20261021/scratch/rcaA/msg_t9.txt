@@ -1,0 +1,18 @@
+Rint 2 S2 RCA-04/05 tests: same-cell branch tie (rule 3) and defining side (hand analysis)
+
+Two more source-line mutants survived the suite; tests written after the implementation (deviation
+recorded) to make each guarantee observable:
+- BR3: B is a hairpin through cell column (2,1,.) - the non-touching leg (x 2.8) first in
+  canonical order, the touching leg (x 2.3) second.  Every A-B sub-edge whose B port cell holds two
+  B branches must attach to the branch through the contact point X_j (centreline distance <= 1e-9 and
+  equal to the minimum over that cell's branches).  Kills M22 (rule 3 removed -> (piece, k) picks
+  the non-touching leg).
+- SIDE (hand analysis): A (x 1.5, z 3-6) inside B (x 2.1, z 0.5-7.7), distance 0.6, touch T = 1.0,
+  end cap 0.8 -> A side 3.0, B side [2.2, 6.8] = 4.6 -> Lc 4.6, k 3, defining side B (side 1),
+  X_j z = 2.9667 / 4.5 / 6.0333, X_i = (1.5, 1.5, clamp(z, 3, 6)), B port cells (2,1,2) (2,1,4)
+  (2,1,6) (1e-9).  Kills M23 (defining side always i -> points 3.5 / 4.5 / 5.5 on A).
+
+Current: 3/3.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

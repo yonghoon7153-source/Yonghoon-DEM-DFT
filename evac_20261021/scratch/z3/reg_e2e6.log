@@ -1,0 +1,7 @@
+
+── E6
+    보고 E6 — 사슬 rc 3 · 상태 STOPPED · 멈춤 RUNNER_RC · 런 1 · payload 거부 사유 ['JOULE', 'STEP4_GRID']
+  PASS  E6 (현재 꼴 기록) 생산 킷 꼴 payload 줄 (--joule-heat · --save-step4-grid) = 첫 런 (바닥) 에서 payload 입구 거부 (JOULE · STEP4_GRID) → 러너 rc ≠ 0 → 사슬 RUNNER_RC (fail-closed · 팔 없음) — 실제 런을 막는 것
+
+test_rint_r_chain_e2e: 1 PASS · 0 FAIL (3.0 s)
+rc=0 seconds=3

@@ -1,0 +1,38 @@
+
+── T7 원장 ↔ 행렬 fail-closed — 접지 항 · b 불일치 · 비대칭 · 양의 비대각 · NaN φ · g ≤ 0 · 번호 밖 · 비정방 → NOT_CERTIFIABLE
+  PASS  T7 [접지 항 (원장 밖 대각)] → NOT_CERTIFIABLE · ok False · 원장 문제 기록
+  PASS  T7 [b ≠ 아래 판 결합] → NOT_CERTIFIABLE · ok False · 원장 문제 기록
+  PASS  T7 [비대칭] → NOT_CERTIFIABLE · ok False · 원장 문제 기록
+  PASS  T7 [양의 비대각 (음 컨덕턴스)] → NOT_CERTIFIABLE · ok False · 원장 문제 기록
+  PASS  T7 [NaN φ] → NOT_CERTIFIABLE · ok False · 원장 문제 기록
+  PASS  T7 [gb ≤ 0] → NOT_CERTIFIABLE · ok False · 원장 문제 기록
+  PASS  T7 [Ab 번호 밖] → NOT_CERTIFIABLE · ok False · 원장 문제 기록
+  PASS  T7 [비정방 L] → NOT_CERTIFIABLE · ok False · 원장 문제 기록
+  PASS  T7 대조 — 같은 계 정상 원장 → POSITIVE_SOLVED · 원장 문제 없음
+  FAIL  T7h [φ 숫자 글자 ('0.75')] → NOT_CERTIFIABLE · ok False (조용히 바꿔 계산하지 않는다 · 예외 아님)  ({'status': 'POSITIVE_SOLVED', 'ok': True, 'target_ledger_problem': None})
+  FAIL  T7h [φ bool] → NOT_CERTIFIABLE · ok False (조용히 바꿔 계산하지 않는다 · 예외 아님)  ({'status': 'POSITIVE_SOLVED', 'ok': False, 'target_ledger_problem': None})
+  FAIL  T7h [gb 숫자 글자] → NOT_CERTIFIABLE · ok False (조용히 바꿔 계산하지 않는다 · 예외 아님)  ({'status': 'POSITIVE_SOLVED', 'ok': True, 'target_ledger_problem': None})
+  FAIL  T7h [b 숫자 글자] → NOT_CERTIFIABLE · ok False (조용히 바꿔 계산하지 않는다 · 예외 아님)  ({'status': 'POSITIVE_SOLVED', 'ok': True, 'target_ledger_problem': None})
+/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a9a78b0be0713b231/scripts/step3_conv_cert.py:101: RuntimeWarning: overflow encountered in multiply
+  Ib = float(np.sum(np.asarray(gb, np.float64) * (1.0 - phi[np.asarray(Ab)]))) if Ab is not None and len(Ab) else 0.0
+/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a9a78b0be0713b231/scripts/step3_conv_cert.py:102: RuntimeWarning: overflow encountered in multiply
+  It = float(np.sum(np.asarray(gt, np.float64) * phi[np.asarray(At)])) if At is not None and len(At) else 0.0
+/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a9a78b0be0713b231/scripts/step3_conv_cert.py:399: RuntimeWarning: overflow encountered in subtract
+  dphi = p[eu] - p[ev]
+/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a9a78b0be0713b231/scripts/step3_conv_cert.py:401: RuntimeWarning: overflow encountered in multiply
+  cb = gb * (1.0 - p[Ab])
+/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a9a78b0be0713b231/scripts/step3_conv_cert.py:402: RuntimeWarning: overflow encountered in multiply
+  ct = gt * p[At]
+/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a9a78b0be0713b231/scripts/step3_conv_cert.py:436: RuntimeWarning: invalid value encountered in subtract
+  cb[pedge[lv[m1]]] -= a[m1]                 # 아래 판 → 노드 흐름을 줄여 노드 남는 몫을 판이 받는다
+/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a9a78b0be0713b231/scripts/step3_conv_cert.py:439: RuntimeWarning: invalid value encountered in add
+  ct[pedge[lv[m2]]] += a[m2]
+  FAIL  T7h [φ 넘침 (±1.7e308 → 흐름 ±inf)] → NOT_CERTIFIABLE · ok False (조용히 바꿔 계산하지 않는다 · 예외 아님)  ({'status': 'POSITIVE_SOLVED', 'ok': False, 'target_ledger_problem': None})
+
+── T15 원장 허용 = 반올림 수준만 — 중복 합 순서가 다른 비대칭 (1e16 + 1 × 40) · 큰 차수 행 합 반올림 (1e16 + 1 × 200 이 대각에서 사라짐) = 받는다 (거짓 거부 없음) · 참 비대칭 · 참 접지는 그대로 거부
+  FAIL  T15a 합 순서만 다른 (0,1) ↔ (1,0) (상대 차 4.0e-15 = 36u · 반올림) → 원장 받음 · POSITIVE_SOLVED · 구간 ∋ 원장 G*  ((np.float64(4e-15), 'L 비대칭 (값)', 'NOT_CERTIFIABLE', None, None))
+  FAIL  T15b 차수 201 행 — 대각 반올림으로 200 이 사라진 행 합 (반올림 · 64u 고정 허용 밖) → 원장 받음 · POSITIVE_SOLVED · 구간 ∋ 원장 G* (이 φ 는 반올림된 행렬의 해라 원장 망의 해가 아니다 — 판정은 ⓓ 가 한다 · 건전성만 본다)  ((200.0, '행 합 ≠ 판 결합 합 (원장 밖 대각 항 — 접지 · 다른 경계)', 'NOT_CERTIFIABLE', None, 0.9901960784313726, None))
+  PASS  T15c 대조 — 참 비대칭 (상대 1e-9) · 참 접지 (대각 +1e-6 상대) 는 그대로 NOT_CERTIFIABLE
+
+== test_step3_target_cert: 10/17 PASS (0.0 s)
+FAIL: T7h [φ 숫자 글자 ('0.75')] → NOT_CERTIFIABLE · ok False (조용히 바꿔 계산하지 않는다 · 예외 아님) · T7h [φ bool] → NOT_CERTIFIABLE · ok False (조용히 바꿔 계산하지 않는다 · 예외 아님) · T7h [gb 숫자 글자] → NOT_CERTIFIABLE · ok False (조용히 바꿔 계산하지 않는다 · 예외 아님) · T7h [b 숫자 글자] → NOT_CERTIFIABLE · ok False (조용히 바꿔 계산하지 않는다 · 예외 아님) · T7h [φ 넘침 (±1.7e308 → 흐름 ±inf)] → NOT_CERTIFIABLE · ok False (조용히 바꿔 계산하지 않는다 · 예외 아님) · T15a 합 순서만 다른 (0,1) ↔ (1,0) (상대 차 4.0e-15 = 36u · 반올림) → 원장 받음 · POSITIVE_SOLVED · 구간 ∋ 원장 G* · T15b 차수 201 행 — 대각 반올림으로 200 이 사라진 행 합 (반올림 · 64u 고정 허용 밖) → 원장 받음 · POSITIVE_SOLVED · 구간 ∋ 원장 G* (이 φ 는 반올림된 행렬의 해라 원장 망의 해가 아니다 — 판정은 ⓓ 가 한다 · 건전성만 본다)

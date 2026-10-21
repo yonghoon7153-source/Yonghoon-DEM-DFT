@@ -1,0 +1,766 @@
+
+규칙 I — 본체 ↔ 폴백 사본 패리티
+  ✓ KNOWN_ADDITIVES ↔ _KNOWN 일치 (5개)
+  ✓ _RECIPE_NON_ADDITIVE ↔ _NONADD 일치 (6개)
+
+규칙 A — 규약·격자·주기 패리티 (D4)
+  verify  step3_sigma.solve_sigma_z: 6-face — AST 대조로 확인 (1 규약 일치)
+  verify  mpm_webapp_payload.electronic_connectivity: 26-conn — AST 대조로 확인 (1 규약 일치)
+  verify  sr01_carbon_network.carbon_network_stats: 6-face — 거동 프로브로 확인
+  waiver  mpm_webapp_payload.electronic_connectivity: 26-conn @0.3 µm
+  OK      sr01_carbon_network.carbon_network_stats: 6-face @0.4 µm
+
+규칙 B — 판별력 있는 rung (D2)
+  OK      raster (oblique, discriminating): 대각 도체: 점↔선분을 가른다 (거동으로 확인)
+  OK      raster (staggered oblique = BLIND control): 스태거 대각: k=3 인데 점 스탬프도 1 성분 → **비축정렬은 판별력의 보증이 아니다**
+  OK      raster (axis-aligned but step/vox≥1.25 = breaks): 축정렬 step/vox=1.25: 점 5 성분 → 축정렬도 깨질 수 있다
+
+규칙 C·D·E — 판별력 / 개수≠귀결 / 량 패리티 (D1)
+  거부됨  CL-01: **가능도비 1** — h0 와 h1 이 똑같이 "분담 ≈ 4 %" 를 예측한다 (D1)
+  거부됨  CL-02: **가능도비 1** — h0 와 h1 이 똑같이 "0.50" 를 예측한다 (D1)
+  거부됨  CL-03: **가능도비 1** — h0 와 h1 이 똑같이 "성분 수가 크다" 를 예측한다 (D1)
+  OK      CL-04: 얼린-AM scaffold MPM 은 준정적 극한에서 실험 대비 과압축한다
+  OK      CL-05: SR-01 의 기전은 전기적 단절이 아니라 경로 강제다
+  OK      CL-08: 점 스탬프의 손상 크기는 침대 조성의 함수다 (알고리즘-조건부일 뿐 아니라 침대-조건부)
+  OK      CL-06: econn 은 STEP3 스탬프 규약에 구조적으로 눈멀었다
+  OK      CL-07: DEM↔MPM porosity 일치는 정당성 증거가 아니다 (순환)
+  OK      CLP-01: σ_e EXCL 목록의 일부가 Stage-E 간선 가지치기와 상관한다
+  OK      CL-10: SDCP 파이프라인은 재현되고, SBE/DBE 비는 코드 드리프트에 강건하다
+  OK      CL-11: SDCP 의 σ_e 기여는 σ_SDCP 에 **열등선형(포화)** 이다 — 순수 병렬 σφ 혼합이 아니다
+  OK      CL-12: σ_thermal 의 AM:SE 열전도 가중(5.7×)은 프로덕션에서 한 번도 적용된 적이 없다
+  거부됨  CDX-09: **가능도비 1** — h0 와 h1 이 똑같이 "LOOCV R2 = 0.9531 on the same selected cas
+  거부됨  CDX-10: **가능도비 1** — h0 와 h1 이 똑같이 "LOOCV R2 = 0.9028 on the same selected cas
+  거부됨  CDX-11: **가능도비 1** — h0 와 h1 이 똑같이 "LOOCV R2 = 0.9752 on the post-exclusion n=
+  거부됨  CDX-12: **가능도비 1** — h0 와 h1 이 똑같이 "the documented single-seed 1.35 values lie
+  거부됨  CDX-13: **가능도비 1** — h0 와 h1 이 똑같이 "R2=0.9653, P_y=137.8 MPa and P_y/3 approxi
+  거부됨  CDX-14: **가능도비 1** — h0 와 h1 이 똑같이 "R2=0.926 at phi=0.75 on the same five beds
+  거부됨  CDX-15: **가능도비 1** — h0 와 h1 이 똑같이 "legacy point-stamp result sigma_e=3.002 S/
+  거부됨  CDX-16: **가능도비 1** — h0 와 h1 이 똑같이 "the documented 49.6/48.2 versus 48.3/51.8 
+  거부됨  CDX-17: **가능도비 1** — h0 와 h1 이 똑같이 "the documented DEM 1.35 GPa and MPM 1.53 G
+  거부됨  CDX-18: **가능도비 1** — h0 와 h1 이 똑같이 "the same qualitative composition dip in bo
+  OK      CDX-19: The DEM AM-AM load fraction is pressure-sensitive on the audited fou
+  거부됨  CDX-20: **가능도비 1** — h0 와 h1 이 똑같이 "any f_am_cut in [0.60,0.95], including 0.8
+  거부됨  CDX-21: **가능도비 1** — h0 와 h1 이 똑같이 "all three documented estimates fall at 9.4
+  거부됨  CDX-22: **가능도비 1** — h0 와 h1 이 똑같이 "the documented estimates are 0.847, 0.809 
+  거부됨  CDX-23: **가능도비 1** — h0 와 h1 이 똑같이 "voxel extrapolation 11.76 mS/cm and DEM 11
+  거부됨  CDX-24: **가능도비 1** — h0 와 h1 이 똑같이 "the documented ratios are 5.7 and 5.8" 를 예
+  거부됨  CDX-25: **가능도비 1** — h0 와 h1 이 똑같이 "coverage_2d approaches the supplied covera
+  OK      CL-13: SDCP 의 σ_e 이득은 부피로 불가능한 것이 아니라 **위상 실현율 43 %** 이고, 그 실현율이 σ_SDCP 와 함
+  OK      CL-14: 2C 풀셀 ΔV 이득은 σ_e 가 아니라 σ_ion + 반응면에서 온다
+  OK      CL-15: ×35.79 는 **규약 차이**이지 참값으로 가는 보정계수가 아니다 — 점 스탬프가 브래킷 안에 있다
+  거부됨  CL-16: **가능도비 1** — h0 와 h1 이 똑같이 "조화/산술 σ_eff 비 = 42.3 (혼합 모집단)" 를 예측한다 (D1)
+  OK      CL-21: 0.4 µm 격자는 **두 채널 모두 미수렴**이다 — SI 의 'resolution validated' 는 성립하지 않는
+  OK      CL-22: **비(헤드라인)도 격자에 강건하지 않다** — +42.15 %(0.4 µm) → +16.21 %(0.3 µm), 미수렴
+  HOLD    CL-23: 
+  OK      CL-24: 격자를 조이면 **전자 이득이 +42 → +8.5 % 로 줄고 이온 이득은 부호가 뒤집힌다** (+7.4 → −0.9 %)
+  OK      CL-25: SDCP 는 **점당 한 셀**로 찍혀 참부피의 4.53배(vox 0.4)를 차지한다 — DBE 전용 · 격자 의존 교란
+  OK      CL-26: Bazzoun 실험 대비 "3.6배" 는 **intrinsic σ 를 안 맞춘 비교**였다 — 맞추면 1.235배
+  OK      CL-27: `fibre_1d_network` 의 접촉·플레이트 결합은 **노드 샘플링에 의존**하고 2-노드 섬유는 0 을 반환한다
+  OK      CL-28: 검사기 v3 는 **철회된 클레임을 live 로 통과**시키고 규칙 F 는 중첩 스코프에서 과잉차단한다
+  OK      CL-29: 실침대 k 의 격자 산포(0.046)는 **estimator 의 짧은-구간 편향**으로 설명된다 — "k 가 격자에 의존한
+  HOLD    CL-30: 
+  HOLD    CL-31: 
+  OK      CL-32: 사전등록 v2 판별 런 — **vox 0.15 µm 첫 팔(origin 0,0,0)** 원자료.  **판정 아님.**
+  HOLD    CL-33: ★★ 2026-08-25 (R5-CX-06, Codex 5차 canonical NO-GO) — 이 값들은 전부 **p1
+  HOLD    CL-34: 
+  OK      CL-35: origin 이동 팔의 σ_eff 는 **빈 반셀 열이 낀 면적**으로 나눠져 계통 편향된다 — 단 SBE/DBE 비에서는
+  OK      CL-36: SDCP 구 스탬프는 **배치-평균 무편향**이다 — 내가 보고한 "+11 % 계통 과대" 는 검증 픽스처의 격자-정렬 인
+  OK      CL-37: 실침대 상별 부피 원장 (vox 0.15) — 구 스탬프가 SDCP 를 **참부피의 0.986배**로 그린다 (점 스탬프는
+  HOLD    CL-38: 
+  OK      CL-39: σ_e 비 R 이 **σ_VGCF 에 불변인지**를 격자 고정 상태에서 직접 잰다 — 격자 스윕 해석의 전제
+  OK      CL-40: **SDCP 이득이 VGCF 채널을 통하는가** — 실침대에서 VGCF 를 전기적으로만 죽여 직접 가른다
+  HOLD    CL-41: ★★ 2026-08-25 (R5-CX-06, Codex 5차 canonical NO-GO) — 이 값들은 전부 **p1
+  OK      CL-42: **ADD_E_SET 2026-08-18** — 첨가제 탄성계수 정본이 **PTFE 1.80 · SDCP 9.00 GPa*
+  OK      CL-43: 격자 스윕의 DBE 이득 붕괴(+42.15 → +1.63 %)와 **같은 크기로** 움직이는 채널이 하나 있다 — **SD
+  OK      CL-44: **사전등록 v3 STEP 5 (런 전 등록, 미측정)** — SDCP 이득이 '새 도체 부피' 인지 '기존 도체(VGCF
+  OK      CL-45: **런 전 등록 (미측정)** — vox 0.4 에서도 σ-치환이 이득의 소수 지분인가.  CL-44 는 강도가 **가장 
+  OK      CL-46: 모델 SBE 절대 σ_e (73 mS/cm) 는 **같은 재료계 문헌 펠릿 DC-분극 값과 같은 자릿수**다 — 500배 
+  OK      CL-47: σ_VGCF = 100 S/cm 의 **라벨된 근거가 틀렸다** — 직경-보존 식은 **단섬유** 컨덕턴스를 보존하는데, 
+  OK      CL-48: **런 전 등록 (미측정)** — σ_VGCF 를 단섬유 자릿수로 올리면 SDCP 이득이 살아남는가.  CL-39 의 '비
+  OK      CL-49: **런 전 등록 (미측정)** — PTFE 를 전자 격자에 스탬프하면 절대 σ_e 가 문헌 밴드로 내려오고 비는 **올라가
+  OK      CL-50: **σ_AM 은 물성이 아니라 코퍼스 적합 endpoint 다** — 문헌 두 출처가 우리 값의 1/200 을 준다 (CL
+  OK      CL-51: **정정 2건 — 우리 문서의 귀속·범위 오류** (Alabdali digest 중 발견)
+  OK      CL-52: 코팅 코어-쉘을 **단일구(R+t)** 로 그렸을 때 코어가 닿는(δ ≥ 2t) AM–AM 접촉 비율 — 코드 리뷰 A1 
+  OK      CL-53: **AFM 복합막 E 1.3–3.1 GPa 는 우리 E_eff 의 "검증" 이 아니라 *방어선* 이다** — 사용 한계를 
+  OK      CL-54: **in-situ 스택압 −1.95 MPa 는 무차원 3개로만 등록한다** — 스택 강성을 모르므로 Δ부피 환산 금지
+  OK      CL-55: **열화가 사이클 구동이 아니라 시간(캘린더) 구동일 수 있다** — 저율이 더 빨리 죽는 실측 1건
+  OK      CL-56: **격자 스윕 전체가 옛 SDCP E 앵커(23.6 GPa) 침대 위에 있다** — ADD_E_SET(9.0 GPa) 이전
+  OK      CL-57: σ_ion_eff 는 **한 상만** 올리면 그 배수로 안 움직인다 — DBE 혼합 이온망에서 응답이 topology 에 
+  HOLD    CL-58: ★★ 2026-08-25 (R5-CX-06, Codex 5차 canonical NO-GO) — 이 값들은 전부 **p1
+  OK      CL-59: σ_ion 비가 **미식별 파라미터 `r = σ_ion(SDCP)/σ_ion(SE)` 에 얼마나 의존하는가** — Fig 
+  OK      CL-60: **centerline 규약은 단섬유 극한에서 순서를 뒤집지 않는다** (R = 1.0575) ⇒ CL-48 의 부호 반전
+  OK      CL-61: **원고 참고문헌 [35] (Patil 1987, Synth. Met. 20, 151) 은 σ_SDCP = 250 S/cm
+  OK      CL-62: **D13 펠릿 보정의 3.57 / 0.97 / 2.86 mS cm⁻¹ 는 원고 참고문헌 [36] (Jung 2026) 의
+  OK      CL-63: **A14 SWCNT sheath 는 우리가 돌릴 수 있는 어느 격자에서도 미해상이다** (10–47 nm vs vox 1
+  OK      CL-64: **길이척도 없는 탄성 모델은 입경 효과를 낼 수 없다** — Cronk 2026 의 COMSOL FEM 이 두 입경에서 
+  OK      CL-65: **Duquesnoy 2020 의 ML 타깃 하나(`active_surface`)는 porosity 의 대수 항등식이다**
+  OK      CL-66: **`PTFE_D = 0.25 µm` 는 앵커됐다 (Lee 2025 rope Ø 0.248, N=100).  `PTFE_L
+  OK      CL-67: **씨더가 실제로 만드는 섬유 기하를 처음으로 쟀다.**  PTFE 피브릴의 **끝점 간 거리는 중앙 4.13 µm** (
+  OK      CL-68: **`∂ε/∂μ_pp` 는 0 이 아니다 — 시드 잡음의 36배다.**  그러나 **마찰은 모듈러스 연화의 대체재가 아니다
+  OK      CL-69: **로컬 LHS 30건은 φ_c 를 추정할 수 없다 — 설계가 전부 문턱 위다.**  28/28 이 percolate 하고
+  OK      CL-70: **closure 공동 스윕 = DIRECTION-ROBUST.**  centerline 규약에서 두 closure 대비를
+  OK      CL-71: **6 mAh Phase A 사전등록 초안은 자기가 등록한 판정을 관측하지 못한다 — RUN HOLD.**  ① 판정은 *
+  OK      CL-72: **"세 격자에서 단조 증가하니 보고값은 하한" 은 성립하지 않는다 — 하한 주장 철회.**  coarse 쪽 세 점의 단
+  OK      CL-73: **STEP4 의 각도분해 결손은 조성 간에 상쇄되지 않는다 (CONFIRMED) — 그러나 VGCF 이득 오차의 부호는 
+  OK      CL-74: **격자수렴 판정기가 끝에서 새고 있었다 — 증분이 마지막 격자에서 딱 한 번 tol 안에 들면 "그 격자부터 수렴" 을 
+  OK      CL-75: **exact replay = 바이트 동일 (3/3) ⇒ `δ_num` 의 재실행 성분은 0 이다.**  그리고 문제였던 
+  OK      CL-76: **각도 위험 선별 결과: 최소 파일럿 `K = 12` 면 충분하고, 최악 실패 모드(미접촉 입자)는 두 침대 모두 0 이
+  OK      CL-77: **첨가제 상별 RNG 스트림 `--add-rng-per-phase` 신설 — 조성 축을 morphology 교란에서 분리
+  OK      CL-78: **Phase A 침대가 확보됐고 사전계산 3건이 전부 끝났다.**  ⚠ 옛 침대는 2026-08-25 윈도우 재설치로 소
+  OK      CL-79: **Codex R9 = Phase A RUN HOLD.**  P0 두 건이 내 도구의 결함이고, Q1~Q4 중 셋이 내 서
+  OK      CL-80: **Phase A W1 두 재하율 실측 — 두 런 다 목표 압력에 도달하지 못했고, 재하율이 도달 압력을 9.6배 바꾼다.
+  OK      CL-81: **복셀 STEP3 σ 는 이 리포가 이미 이름 붙여 둔 `CONTACT_FREE` 가지 위에 있다 — 그리고 그 가지의 
+  OK      CL-82: **도달 압력과 침대 상태가 서로 분리돼 있다 — 같은 침대에서 압력을 9.6배 올렸는데 침대가 오히려 0.2 µm 두꺼워
+  OK      CL-83: **고정 Mach 0.03 에서 도달 압력은 조성에 사실상 무관하다 — VGCF 를 4배 바꿔도 `settled_over_
+  OK      CL-84: **STEP3 배선 정상 확인 — 그리고 조성 순서 신호가 사전등록 판정선보다 자릿수급으로 크다.**  VGCF 1 → 4
+  OK      CL-85: **Phase A 네 침대(VGCF 1·2·3·4 wt%, PTFE 1) 가 고정 Mach 0.03 으로 전부 완주했다.*
+  OK      CL-86: **Codex Methods 리뷰 = SUBMISSION HOLD.  P1 다섯 중 셋이 내가 이 세션에서 쓴 문장이고, 
+  OK      CL-87: **사전등록 §5 의 `bridge = 0` 은 실행하면 브리지를 격자에 묶어 CL-22 를 재현한다 — `0` 은 CLI
+  OK      CL-88: **브리지 감도 4팔 = 통과, 그리고 예상보다 두 자릿수 둔감하다.**  브리지를 0.24 → 0.30 µm (+25 %
+  OK      CL-89: **전수 감사가 제 커버리지를 스스로 못 재고 있었다 — 그리고 그것을 실측으로 고쳤다.**  1차 감사가 보고한 `55.
+  OK      CL-90: **'Wang 2020, J. Power Sources 470 (article 228413)' 은 실재가 확인되지 않는 인
+  OK      CL-91: **σ_grain = 3.0 mS/cm 의 측정 근거는 Cronau 2021 (ACS Energy Lett. 6, 3072
+  OK      CL-92: **DEM 접촉망의 전자 σ 입력 σ_AM = 50 mS/cm (`network_conductivity.SIGMA_AM_E
+  OK      CL-93: **MPM VGCF 재료점 탄성계수 E_VGCF = 10 GPa 는 모델 선택값이다 — 문헌 측정 출처가 없다.**  20
+  HOLD    CL-94: 출처 [미확인] — 원문 확인된 순수 LPSCl 기공 @ 300 MPa 실측이 생기기 전까지 이 앵커 문장을 실험 앵커
+  OK      CL-95: **복합 전극 공극 13.5 % (real_9) · 15.6 % (real_14) 는 실험값이 아니라 DEM 자기값이다.*
+  ── claims 112건 (채점 79 · 면제 33)
+
+규칙 H — argparse help 가 살아 있는가
+  OK      argparse help 1419건 — `% params` 통과 (0 오류)
+
+규칙 K — 규율 selftest 가 check_all·CI 에서 실제로 도는가
+  ✓ 규칙 K — 규율 selftest 11개가 check_all·CI 양쪽에 배선돼 있다
+
+규칙 L — 러너 배선을 **실행으로** 확인 (LEAN·규약·팔 수)
+  ✓ 규칙 L — 러너 배선을 실행으로 확인 (LEAN=2 7플래그 · EXPECT_PROTOCOL 통과 · PREREG_ARMS 상수 8 · 진단 런 분리 · 봉인이 원값보다 먼저)
+
+규칙 M — CLI 회계 (실물 파서 전 옵션이 등재됐는가)
+  ✓ 규칙 M — 실물 파서 CLI 100개가 전부 회계에 있다 (protocol 25 · derived 1 · plan 5 · numeric 5 · solve 5 · input 9 · report 8 · mode 25 · record 6 · protocol_ext 11 · 규약 축 26 전수 도달)
+
+규칙 J — 생산 엔트리포인트 스모크 (기본 경로가 정말 도는가)
+      · J 스모크 [plain  (--fibre 없음 = 첨가제 없는 킷)] 실행 중 … (상한 900s — 느린 기계에서는 수 분 걸린다)
+        완료 11s
+  ✓ plain  (--fibre 없음 = 첨가제 없는 킷) — electronic=complete, collector_geom=complete, ionic=disabled, thermal=complete, pore=disabled, pnm=disabled
+      · J 스모크 [fibre  (--phase/--fibre 있음 = 첨가제 킷)] 실행 중 … (상한 900s — 느린 기계에서는 수 분 걸린다)
+        완료 11s
+  ✓ fibre  (--phase/--fibre 있음 = 첨가제 킷) — electronic=complete, collector_geom=complete, ionic=disabled, thermal=complete, pore=disabled, pnm=disabled
+      · J 스모크 [lean2  (러너 LEAN=2 = σ_e 전용 생산 경로)] 실행 중 … (상한 900s — 느린 기계에서는 수 분 걸린다)
+        완료 4s
+  ✓ lean2  (러너 LEAN=2 = σ_e 전용 생산 경로) — electronic=complete, collector_geom=disabled, ionic=disabled, thermal=disabled, pore=disabled, pnm=disabled
+  ✓ producer → check_arm — 실제 산출물을 그대로 받아들인다
+  ✓ producer 봉인 — 기본은 값을 가리고 `--show-results` 로 열린다
+  ✓ exit3  (required electronic 미완 — 도체 σ=0) — exit 3 · out 없음 · .failed 있음
+  ✓ exit4  (물리 규약 불일치) — exit 4 · out 없음 · .failed 있음
+
+규칙 F — 지역 import 그림자 (조용한 기능 꺼짐)
+  OK      a3_binder_sweep.py: 지역 import 그림자 없음
+  OK      active_learning_suggest.py: 지역 import 그림자 없음
+  OK      additives.py: 지역 import 그림자 없음
+  OK      am_load_balance_jam.py: 지역 import 그림자 없음
+  OK      analyze_contacts.py: 지역 import 그림자 없음
+  OK      analyze_contacts_bimodal.py: 지역 import 그림자 없음
+  OK      analyze_master_interactions.py: 지역 import 그림자 없음
+  OK      analyze_mpm_dem_match.py: 지역 import 그림자 없음
+  OK      analyze_network_results.py: 지역 import 그림자 없음
+  OK      analyze_se_curve_transfer.py: 지역 import 그림자 없음
+  OK      analyze_tabor_regime.py: 지역 import 그림자 없음
+  OK      atoms_only_porosity.py: 지역 import 그림자 없음
+  OK      audit_claimed_sha_provenance.py: 지역 import 그림자 없음
+  OK      audit_constriction_deleted.py: 지역 import 그림자 없음
+  OK      audit_corpus_completeness.py: 지역 import 그림자 없음
+  OK      audit_coverage.py: 지역 import 그림자 없음
+  OK      audit_outliers_factors.py: 지역 import 그림자 없음
+  OK      audit_plate_z_overshoot.py: 지역 import 그림자 없음
+  OK      audit_ps_label_convention.py: 지역 import 그림자 없음
+  OK      audit_transport_cap_equivalence.py: 지역 import 그림자 없음
+  OK      audit_type_map_unknown.py: 지역 import 그림자 없음
+  OK      audit_ui_layout.py: 지역 import 그림자 없음
+  OK      audit_validation_flags.py: 지역 import 그림자 없음
+  OK      b1_chem_fade.py: 지역 import 그림자 없음
+  OK      b2_b4_diagnostic.py: 지역 import 그림자 없음
+  OK      backfill_am_metrics.py: 지역 import 그림자 없음
+  OK      backfill_e_se.py: 지역 import 그림자 없음
+  OK      backfill_fracture_keys.py: 지역 import 그림자 없음
+  OK      backfill_phys_badge.py: 지역 import 그림자 없음
+  OK      backfill_ps_ratio.py: 지역 import 그림자 없음
+  OK      backfill_stage_e_physics.py: 지역 import 그림자 없음
+  OK      backfill_validation_flags.py: 지역 import 그림자 없음
+  OK      bayesian_laplace.py: 지역 import 그림자 없음
+  OK      bidir_62_38_test.py: 지역 import 그림자 없음
+  OK      bridge_grid_verdict.py: 지역 import 그림자 없음
+  OK      build_comsol_mph.py: 지역 import 그림자 없음
+  OK      build_literature_reference.py: 지역 import 그림자 없음
+  OK      build_load_balance_manifest.py: 지역 import 그림자 없음
+  OK      build_methods_docx.py: 지역 import 그림자 없음
+  OK      build_metrics_db.py: 지역 import 그림자 없음
+  OK      build_ps45_kits.py: 지역 import 그림자 없음
+  OK      build_review_before_after.py: 지역 import 그림자 없음
+  OK      build_tau_regime_db.py: 지역 import 그림자 없음
+  OK      ca_ext_cjunc.py: 지역 import 그림자 없음
+  OK      ca_s0_census.py: 지역 import 그림자 없음
+  OK      calibrate_ledger_reflow.py: 지역 import 그림자 없음
+  OK      cam_kinetics.py: 지역 import 그림자 없음
+  OK      cap_compaction_heckel.py: 지역 import 그림자 없음
+  OK      carbon_junction.py: 지역 import 그림자 없음
+  OK      cbd_contacts_per_am.py: 지역 import 그림자 없음
+  OK      check_audit_adjudication.py: 지역 import 그림자 없음
+  OK      check_cohort_packages.py: 지역 import 그림자 없음
+  OK      check_contact_validity.py: 지역 import 그림자 없음
+  OK      check_doc_refs.py: 지역 import 그림자 없음
+  OK      check_method_discipline.py: 지역 import 그림자 없음
+  OK      check_review_findings.py: 지역 import 그림자 없음
+  OK      check_selftest_inventory.py: 지역 import 그림자 없음
+  OK      check_undefined_names.py: 지역 import 그림자 없음
+  OK      coating_presets.py: 지역 import 그림자 없음
+  OK      collect_porosity_cases.py: 지역 import 그림자 없음
+  OK      compaction_curve.py: 지역 import 그림자 없음
+  OK      compare_champions.py: 지역 import 그림자 없음
+  OK      compare_hertzian_vs_physics.py: 지역 import 그림자 없음
+  OK      compare_laplace_dijkstra.py: 지역 import 그림자 없음
+  OK      comsol_export.py: 지역 import 그림자 없음
+  OK      comsol_ps_series_6mah.py: 지역 import 그림자 없음
+  OK      constriction_reference.py: 지역 import 그림자 없음
+  OK      context_budget.py: 지역 import 그림자 없음
+  OK      context_meter.py: 지역 import 그림자 없음
+  OK      coverage_physics_vs_hertzian.py: 지역 import 그림자 없음
+  OK      coverage_test.py: 지역 import 그림자 없음
+  OK      cycle_contact_ledger.py: 지역 import 그림자 없음
+  OK      cycle_degradation_law.py: 지역 import 그림자 없음
+  OK      cycle_geom_debond.py: 지역 import 그림자 없음
+  OK      cycle_retention.py: 지역 import 그림자 없음
+  OK      cycle_rint_synthesis.py: 지역 import 그림자 없음
+  OK      cycling_data_ingest.py: 지역 import 그림자 없음
+  OK      debug_solver_gate.py: 지역 import 그림자 없음
+  OK      debug_trevisanello_check.py: 지역 import 그림자 없음
+  OK      decimate_scaffold.py: 지역 import 그림자 없음
+  OK      deep_outlier_investigation.py: 지역 import 그림자 없음
+  OK      delarrard_3d.py: 지역 import 그림자 없음
+  OK      delarrard_band.py: 지역 import 그림자 없음
+  OK      delarrard_deepdive.py: 지역 import 그림자 없음
+  OK      delarrard_heckel.py: 지역 import 그림자 없음
+  OK      delarrard_vs_dem.py: 지역 import 그림자 없음
+  OK      dem3d_plastic.py: 지역 import 그림자 없음
+  OK      dem_am_load_fraction.py: 지역 import 그림자 없음
+  OK      dem_analysis_core.py: 지역 import 그림자 없음
+  OK      dem_design_points.py: 지역 import 그림자 없음
+  OK      dem_fracture_scaffold.py: 지역 import 그림자 없음
+  OK      dem_input_values.py: 지역 import 그림자 없음
+  OK      dem_perturbation.py: 지역 import 그림자 없음
+  OK      design_performance_dataset.py: 지역 import 그림자 없음
+  OK      diag_brittle_per_type.py: 지역 import 그림자 없음
+  OK      diag_compare_siblings.py: 지역 import 그림자 없음
+  OK      diag_corpus_count.py: 지역 import 그림자 없음
+  OK      diag_form_dropped.py: 지역 import 그림자 없음
+  OK      diag_form_missing.py: 지역 import 그림자 없음
+  OK      diag_kappa.py: 지역 import 그림자 없음
+  OK      diag_network_internals.py: 지역 import 그림자 없음
+  OK      diag_plate_z_anomaly.py: 지역 import 그림자 없음
+  OK      diag_se_percolation_threshold.py: 지역 import 그림자 없음
+  OK      diag_section7_anomalies.py: 지역 import 그림자 없음
+  OK      diag_stage_e_internal.py: 지역 import 그림자 없음
+  OK      diag_stage_e_sigma_ionic.py: 지역 import 그림자 없음
+  OK      diag_step4_nearnull.py: 지역 import 그림자 없음
+  OK      diagnose_webapp_data.py: 지역 import 그림자 없음
+  OK      eis_archive.py: 지역 import 그림자 없음
+  OK      eis_drt_ica.py: 지역 import 그림자 없음
+  OK      eis_fit.py: 지역 import 그림자 없음
+  OK      electronic_1mAh_shape_fix.py: 지역 import 그림자 없음
+  OK      electronic_ablation_full.py: 지역 import 그림자 없음
+  OK      electronic_audit.py: 지역 import 그림자 없음
+  OK      electronic_bayesian_laplace.py: 지역 import 그림자 없음
+  OK      electronic_fallback_audit.py: 지역 import 그림자 없음
+  OK      electronic_lock4_explore.py: 지역 import 그림자 없음
+  OK      electronic_locked_exponent_screen.py: 지역 import 그림자 없음
+  OK      electronic_locked_sigma_test.py: 지역 import 그림자 없음
+  OK      electronic_nested_cv.py: 지역 import 그림자 없음
+  OK      electronic_outlier_impact.py: 지역 import 그림자 없음
+  OK      electronic_param_test.py: 지역 import 그림자 없음
+  OK      electronic_push_to_ionic_grade.py: 지역 import 그림자 없음
+  OK      electronic_raw_vs_stagee_audit.py: 지역 import 그림자 없음
+  OK      electronic_resid_scan.py: 지역 import 그림자 없음
+  OK      electronic_scaling_law.py: 지역 import 그림자 없음
+  OK      electronic_shape_audit.py: 지역 import 그림자 없음
+  OK      electronic_shape_mismatch_diag.py: 지역 import 그림자 없음
+  OK      electronic_small_beta_ablation.py: 지역 import 그림자 없음
+  OK      electronic_structural_test.py: 지역 import 그림자 없음
+  OK      electronic_thin_thick_diagnostic.py: 지역 import 그림자 없음
+  OK      env_db.py: 지역 import 그림자 없음
+  OK      export_comsol_2d.py: 지역 import 그림자 없음
+  OK      export_master_csv.py: 지역 import 그림자 없음
+  OK      extend_t1.py: 지역 import 그림자 없음
+  OK      extract_2d_microstructure.py: 지역 import 그림자 없음
+  OK      extract_pore_mesh.py: 지역 import 그림자 없음
+  OK      extract_se_network_diagnostics.py: 지역 import 그림자 없음
+  OK      extract_xy_fracture_heatmap.py: 지역 import 그림자 없음
+  OK      family_outlier_audit.py: 지역 import 그림자 없음
+  OK      fft_homogenize.py: 지역 import 그림자 없음
+  OK      fibre_1d_network.py: 지역 import 그림자 없음
+  OK      fibre_rod_reference.py: 지역 import 그림자 없음
+  OK      fibre_segment_raster.py: 지역 import 그림자 없음
+  OK      fig4b_sigma_conventions.py: 지역 import 그림자 없음
+  OK      figure1_panels.py: 지역 import 그림자 없음
+  OK      final_form_status.py: 지역 import 그림자 없음
+  OK      final_pushes.py: 지역 import 그림자 없음
+  OK      find_and_rerun_stage_e.py: 지역 import 그림자 없음
+  OK      find_scaling_law.py: 지역 import 그림자 없음
+  OK      fit_constrained.py: 지역 import 그림자 없음
+  OK      fit_dh_collapse.py: 지역 import 그림자 없음
+  OK      fit_free_exponents.py: 지역 import 그림자 없음
+  OK      fit_percolation_2d.py: 지역 import 그림자 없음
+  OK      fit_percolation_2d_v2.py: 지역 import 그림자 없음
+  OK      fit_porosity_2d_full_corpus.py: 지역 import 그림자 없음
+  OK      fit_porosity_2d_surface.py: 지역 import 그림자 없음
+  OK      fit_porosity_physics_decomposition.py: 지역 import 그림자 없음
+  OK      fit_porosity_v3_extended.py: 지역 import 그림자 없음
+  OK      fit_porosity_v4_global.py: 지역 import 그림자 없음
+  OK      fit_porosity_v5_ml.py: 지역 import 그림자 없음
+  OK      fit_rint_curve.py: 지역 import 그림자 없음
+  OK      fit_v29_physics.py: 지역 import 그림자 없음
+  OK      form_vs_solver_decomp.py: 지역 import 그림자 없음
+  OK      formx_sensitivity.py: 지역 import 그림자 없음
+  OK      fracture_model.py: 지역 import 그림자 없음
+  OK      g2_network_reread.py: 지역 import 그림자 없음
+  OK      gen_dem_oat_sweep.py: 지역 import 그림자 없음
+  OK      generate_comparison_plots.py: 지역 import 그림자 없음
+  OK      generate_fitting_report.py: 지역 import 그림자 없음
+  OK      generate_scaling_report.py: 지역 import 그림자 없음
+  OK      grade_engine.py: 지역 import 그림자 없음  (⚠ 이름 충돌 1건)
+  OK      heckel_analysis.py: 지역 import 그림자 없음
+  OK      hetero_transcript.py: 지역 import 그림자 없음
+  OK      holm_exponent_from_field.py: 지역 import 그림자 없음
+  OK      hybrid_predictor.py: 지역 import 그림자 없음
+  OK      integrate_betacov.py: 지역 import 그림자 없음
+  OK      interaction_matrix.py: 지역 import 그림자 없음
+  OK      ion_r_verdict.py: 지역 import 그림자 없음
+  OK      joule_redistribute.py: 지역 import 그림자 없음
+  OK      lens_geometry.py: 지역 import 그림자 없음
+  OK      lhs_contact_audit.py: 지역 import 그림자 없음
+  OK      lhs_descriptor_harvest.py: 지역 import 그림자 없음
+  OK      lhs_design_dataset.py: 지역 import 그림자 없음  (⚠ 이름 충돌 4건)
+  OK      lhs_ext_design.py: 지역 import 그림자 없음
+  OK      lhs_ext_materialize.py: 지역 import 그림자 없음
+  OK      lhs_ext_submit_gate.py: 지역 import 그림자 없음
+  OK      lhs_harvest_batch.py: 지역 import 그림자 없음
+  OK      lhs_perc_audit.py: 지역 import 그림자 없음
+  OK      lhs_perc_extract.py: 지역 import 그림자 없음
+  OK      lhs_perc_fit.py: 지역 import 그림자 없음
+  OK      lhs_phi_crosscheck.py: 지역 import 그림자 없음
+  OK      lhs_pressure_record.py: 지역 import 그림자 없음
+  OK      lhs_release_build.py: 지역 import 그림자 없음
+  OK      lhs_stress_constriction_audit.py: 지역 import 그림자 없음
+  OK      lhs_supp_design.py: 지역 import 그림자 없음
+  OK      lhs_union_webapp.py: 지역 import 그림자 없음
+  OK      lhs_webapp_batch.py: 지역 import 그림자 없음
+  OK      lhss_design_adapter.py: 지역 import 그림자 없음
+  OK      lhsx_design_adapter.py: 지역 import 그림자 없음
+  OK      litdb_promote.py: 지역 import 그림자 없음
+  OK      litdb_sync.py: 지역 import 그림자 없음
+  OK      make_heckel_inputs.py: 지역 import 그림자 없음
+  OK      make_heckel_manifest.py: 지역 import 그림자 없음
+  OK      make_lhs_porosity_fig.py: 지역 import 그림자 없음
+  OK      make_mixer_baffles.py: 지역 import 그림자 없음
+  OK      make_mixer_campaign_fig.py: 지역 import 그림자 없음
+  OK      make_mixer_deck.py: 지역 import 그림자 없음
+  OK      make_mixer_resume.py: 지역 import 그림자 없음
+  OK      make_network_pptx.py: 지역 import 그림자 없음
+  OK      make_network_schematic.py: 지역 import 그림자 없음
+  OK      make_pressure_sweep_decks.py: 지역 import 그림자 없음
+  OK      make_ps_sweep_decks.py: 지역 import 그림자 없음
+  OK      measure_bed_aspect.py: 지역 import 그림자 없음
+  OK      measure_mixing_index.py: 지역 import 그림자 없음
+  OK      measure_provenance.py: 지역 import 그림자 없음
+  OK      measure_rho.py: 지역 import 그림자 없음
+  OK      mech_reaction_correlation.py: 지역 import 그림자 없음
+  OK      merge_network_to_metrics.py: 지역 import 그림자 없음
+  OK      metric_split_check.py: 지역 import 그림자 없음
+  OK      metrics_json.py: 지역 import 그림자 없음
+  OK      mixer_contact_reader.py: 지역 import 그림자 없음
+  OK      mixer_deck_diff.py: 지역 import 그림자 없음
+  OK      mixer_deck_readback.py: 지역 import 그림자 없음
+  OK      mixer_exact_frames.py: 지역 import 그림자 없음
+  OK      mixer_gate_reader_diff.py: 지역 import 그림자 없음
+  OK      mixer_restart_phase_test.py: 지역 import 그림자 없음
+  OK      mixer_smoke_blind.py: 지역 import 그림자 없음
+  OK      mixer_stage_gate.py: 지역 import 그림자 없음
+  OK      ml_cycle_surrogate.py: 지역 import 그림자 없음
+  OK      ml_design_loop.py: 지역 import 그림자 없음
+  OK      ml_design_structure.py: 지역 import 그림자 없음
+  OK      ml_predictor.py: 지역 import 그림자 없음
+  OK      ml_shap_pareto.py: 지역 import 그림자 없음
+  OK      mpm2d_PS_pressure.py: 지역 import 그림자 없음
+  OK      mpm2d_composition.py: 지역 import 그림자 없음
+  OK      mpm2d_jamming.py: 지역 import 그림자 없음
+  OK      mpm2d_morphology.py: 지역 import 그림자 없음
+  OK      mpm2d_plastic.py: 지역 import 그림자 없음
+  OK      mpm2d_ps_am_sweep.py: 지역 import 그림자 없음
+  OK      mpm2d_real4.py: 지역 import 그림자 없음
+  OK      mpm2d_real9.py: 지역 import 그림자 없음
+  OK      mpm3d_compaction.py: 지역 import 그림자 없음  (⚠ 이름 충돌 2건)
+  OK      mpm_dem_composition_compare.py: 지역 import 그림자 없음
+  OK      mpm_dem_match.py: 지역 import 그림자 없음
+  OK      mpm_dem_percase_outliers.py: 지역 import 그림자 없음
+  OK      mpm_input_from_case.py: 지역 import 그림자 없음
+  OK      mpm_webapp_payload.py: 지역 import 그림자 없음  (⚠ 이름 충돌 1건)
+  OK      mutation_sweep_20260825.py: 지역 import 그림자 없음
+  OK      nested_cv_sat.py: 지역 import 그림자 없음
+  OK      network_conductivity.py: 지역 import 그림자 없음
+  OK      network_current.py: 지역 import 그림자 없음
+  OK      network_mode_io.py: 지역 import 그림자 없음
+  OK      network_projection_preflight.py: 지역 import 그림자 없음
+  OK      network_schematic_data.py: 지역 import 그림자 없음
+  OK      oat_sensitivity.py: 지역 import 그림자 없음
+  OK      outlier_feed_report.py: 지역 import 그림자 없음
+  OK      packing_dip_model.py: 지역 import 그림자 없음
+  OK      parse_case_paste.py: 지역 import 그림자 없음
+  OK      parse_liggghts.py: 지역 import 그림자 없음
+  OK      patch_force_scaling.py: 지역 import 그림자 없음
+  OK      patch_kit_quasistatic.py: 지역 import 그림자 없음
+  OK      pca_ensemble_variance.py: 지역 import 그림자 없음
+  OK      pellet_rve_sigma.py: 지역 import 그림자 없음
+  OK      perf_reduced_order.py: 지역 import 그림자 없음
+  OK      phase_a_arms_from_payload.py: 지역 import 그림자 없음
+  OK      phase_a_order_verdict.py: 지역 import 그림자 없음
+  OK      phase_a_pair_e_arms.py: 지역 import 그림자 없음
+  OK      phase_a_plan.py: 지역 import 그림자 없음
+  OK      phase_a_precompute.py: 지역 import 그림자 없음
+  OK      phase_a_preflight.py: 지역 import 그림자 없음
+  OK      phase_a_receipt_from_sh.py: 지역 import 그림자 없음
+  OK      phase_a_rerun_from_sh.py: 지역 import 그림자 없음
+  OK      physics_fit_final.py: 지역 import 그림자 없음
+  OK      physics_fit_v33_binding.py: 지역 import 그림자 없음
+  OK      physics_fit_v34_regime.py: 지역 import 그림자 없음
+  OK      physics_fit_v35_multi.py: 지역 import 그림자 없음
+  OK      physics_fit_v36_cluster.py: 지역 import 그림자 없음
+  OK      physics_fit_v37_3way.py: 지역 import 그림자 없음
+  OK      physics_fit_v38_ml.py: 지역 import 그림자 없음
+  OK      physics_fit_v39_tier1.py: 지역 import 그림자 없음
+  OK      physics_fit_v40_verify.py: 지역 import 그림자 없음
+  OK      physics_fit_v41_outlier.py: 지역 import 그림자 없음
+  OK      physics_fit_v42_mixture.py: 지역 import 그림자 없음
+  OK      physics_fit_v43_real_tau.py: 지역 import 그림자 없음
+  OK      physics_fit_v44_final.py: 지역 import 그림자 없음
+  OK      physics_fit_v45_joint.py: 지역 import 그림자 없음
+  OK      physics_fit_v46_plastic_C.py: 지역 import 그림자 없음
+  OK      physics_fit_v47_min_plastic.py: 지역 import 그림자 없음
+  OK      physics_fit_v48_full_v29_betaT.py: 지역 import 그림자 없음
+  OK      physics_fit_v49_50_51.py: 지역 import 그림자 없음
+  OK      physics_fit_v52_redirect.py: 지역 import 그림자 없음
+  OK      physics_fit_v53_lasso.py: 지역 import 그림자 없음
+  OK      physics_fit_v54_disentangle.py: 지역 import 그림자 없음
+  OK      physics_fit_v55_comprehensive.py: 지역 import 그림자 없음
+  OK      physics_fit_v56_4findings_deep.py: 지역 import 그림자 없음
+  OK      physics_fit_v57_close_open.py: 지역 import 그림자 없음
+  OK      physics_fit_v58_publication.py: 지역 import 그림자 없음
+  OK      physics_fit_v59_tau_3way.py: 지역 import 그림자 없음
+  OK      physics_fit_v60_tau_R_real.py: 지역 import 그림자 없음
+  OK      physics_regime_histogram.py: 지역 import 그림자 없음
+  OK      physics_surface_contact_fit.py: 지역 import 그림자 없음
+  OK      plan_se_curve_targets.py: 지역 import 그림자 없음
+  OK      plane_load_share.py: 지역 import 그림자 없음
+  OK      plastic_coverage.py: 지역 import 그림자 없음
+  OK      plastic_impact_on_params.py: 지역 import 그림자 없음
+  OK      plot_2d_3d_porosity.py: 지역 import 그림자 없음
+  OK      plot_brittle_z_distribution.py: 지역 import 그림자 없음
+  OK      plot_cbd_contacts.py: 지역 import 그림자 없음
+  OK      plot_combined_z_distribution.py: 지역 import 그림자 없음
+  OK      plot_coverage_z_distribution.py: 지역 import 그림자 없음
+  OK      plot_cycle_retention.py: 지역 import 그림자 없음
+  OK      plot_cycle_rint_decomp.py: 지역 import 그림자 없음
+  OK      plot_dem3d_dip.py: 지역 import 그림자 없음
+  OK      plot_fade_trajectory.py: 지역 import 그림자 없음
+  OK      plot_focusing_colorbar.py: 지역 import 그림자 없음
+  OK      plot_lhs_cohort_overview.py: 지역 import 그림자 없음
+  OK      plot_mpm_compaction_summary.py: 지역 import 그림자 없음
+  OK      plot_mpm_dem_match.py: 지역 import 그림자 없음
+  OK      plot_porosity_4panel.py: 지역 import 그림자 없음
+  OK      plot_porosity_binned_mean.py: 지역 import 그림자 없음
+  OK      plot_porosity_confident_fit.py: 지역 import 그림자 없음
+  OK      plot_porosity_main_figure.py: 지역 import 그림자 없음
+  OK      plot_porosity_overlay.py: 지역 import 그림자 없음
+  OK      plot_porosity_per_campaign.py: 지역 import 그림자 없음
+  OK      plot_porosity_v4_journal.py: 지역 import 그림자 없음
+  OK      plot_porosity_v4_paper.py: 지역 import 그림자 없음
+  OK      plot_se_z_profile.py: 지역 import 그림자 없음
+  OK      plot_section7_design_rules.py: 지역 import 그림자 없음
+  OK      plot_sigma_closure_3x3.py: 지역 import 그림자 없음
+  OK      plot_sigma_e_bars.py: 지역 import 그림자 없음
+  OK      plot_stress_z_distribution.py: 지역 import 그림자 없음
+  OK      plot_tau_regime_si.py: 지역 import 그림자 없음
+  OK      porosity_close.py: 지역 import 그림자 없음
+  OK      porosity_decompose.py: 지역 import 그림자 없음
+  OK      porosity_filter_axes_check.py: 지역 import 그림자 없음
+  OK      porosity_final_production.py: 지역 import 그림자 없음
+  OK      porosity_final_verify.py: 지역 import 그림자 없음
+  OK      porosity_physics_regression.py: 지역 import 그림자 없음
+  OK      porosity_plastic_vs_rigid.py: 지역 import 그림자 없음
+  OK      porosity_regression_explore.py: 지역 import 그림자 없음
+  OK      porosity_unified.py: 지역 import 그림자 없음
+  OK      predict_porosity_curve.py: 지역 import 그림자 없음
+  OK      predict_porosity_final.py: 지역 import 그림자 없음
+  OK      predict_porosity_honest.py: 지역 import 그림자 없음
+  OK      predict_porosity_physics.py: 지역 import 그림자 없음
+  OK      predict_porosity_real_physics.py: 지역 import 그림자 없음
+  OK      predict_porosity_strict_physics.py: 지역 import 그림자 없음
+  OK      predict_porosity_trimodal.py: 지역 import 그림자 없음
+  OK      predict_porosity_yu_standish.py: 지역 import 그림자 없음
+  OK      press_units.py: 지역 import 그림자 없음
+  OK      preview_sdcp_mixing.py: 지역 import 그림자 없음
+  OK      prototype_holm_film.py: 지역 import 그림자 없음
+  OK      ps45_sigmae_factor_off_variant.py: 지역 import 그림자 없음
+  OK      ptfe_face_alpha.py: 지역 import 그림자 없음
+  OK      rank_all_cases.py: 지역 import 그림자 없음
+  OK      rebuild_cases_from_csv.py: 지역 import 그림자 없음
+  OK      rebuild_tables_from_metrics.py: 지역 import 그림자 없음
+  OK      recompute_missing_metrics.py: 지역 import 그림자 없음
+  OK      recompute_porosity_dual.py: 지역 import 그림자 없음
+  OK      reduce_arm_payloads.py: 지역 import 그림자 없음
+  OK      refresh_input_params.py: 지역 import 그림자 없음
+  OK      refresh_warnings.py: 지역 import 그림자 없음
+  OK      render_figure1_3d.py: 지역 import 그림자 없음
+  OK      render_network_2d.py: 지역 import 그림자 없음
+  OK      repair_focus_top.py: 지역 import 그림자 없음
+  OK      rerun_network_for_missing.py: 지역 import 그림자 없음
+  OK      resid_diag_62_38.py: 지역 import 그림자 없음
+  OK      residual_diagnostic.py: 지역 import 그림자 없음
+  OK      restore_webapp_data.py: 지역 import 그림자 없음
+  OK      rint03_je_compare.py: 지역 import 그림자 없음
+  OK      rint_cycle_traj.py: 지역 import 그림자 없음
+  OK      rint_iface_join.py: 지역 import 그림자 없음
+  OK      rint_r_chain.py: 지역 import 그림자 없음
+  OK      rint_rrm_reference.py: 지역 import 그림자 없음
+  OK      rint_t2_dev.py: 지역 import 그림자 없음
+  OK      rint_t41_census.py: 지역 import 그림자 없음
+  OK      rint_t43_order_diag.py: 지역 import 그림자 없음
+  OK      run_all_network.py: 지역 import 그림자 없음
+  OK      run_analyze_all.py: 지역 import 그림자 없음
+  OK      run_contract.py: 지역 import 그림자 없음  (⚠ 이름 충돌 1건)
+  OK      run_network_194_parallel.py: 지역 import 그림자 없음
+  OK      run_network_all.py: 지역 import 그림자 없음
+  OK      run_network_fracture_aware.py: 지역 import 그림자 없음
+  OK      run_network_fracture_stagewise.py: 지역 import 그림자 없음
+  OK      run_network_full_corrections.py: 지역 import 그림자 없음
+  OK      run_s3_psi.py: 지역 import 그림자 없음  (⚠ 이름 충돌 1건)
+  OK      sat_exp_62_38_search.py: 지역 import 그림자 없음
+  OK      scan_smooth_f_small.py: 지역 import 그림자 없음
+  OK      score_dh_transfer.py: 지역 import 그림자 없음
+  OK      screen_dataset.py: 지역 import 그림자 없음
+  OK      screen_form_simplifications.py: 지역 import 그림자 없음
+  OK      screening_electronic.py: 지역 import 그림자 없음
+  OK      screening_electronic_2regime.py: 지역 import 그림자 없음
+  OK      screening_electronic_breakthrough.py: 지역 import 그림자 없음
+  OK      screening_electronic_clean.py: 지역 import 그림자 없음
+  OK      screening_electronic_d2a.py: 지역 import 그림자 없음
+  OK      screening_electronic_decision.py: 지역 import 그림자 없음
+  OK      screening_electronic_deep.py: 지역 import 그림자 없음
+  OK      screening_electronic_deeper.py: 지역 import 그림자 없음
+  OK      screening_electronic_exp.py: 지역 import 그림자 없음
+  OK      screening_electronic_final.py: 지역 import 그림자 없음
+  OK      screening_electronic_hertz.py: 지역 import 그림자 없음
+  OK      screening_electronic_mix.py: 지역 import 그림자 없음
+  OK      screening_electronic_noexp.py: 지역 import 그림자 없음
+  OK      screening_electronic_nonlinear.py: 지역 import 그림자 없음
+  OK      screening_electronic_perc.py: 지역 import 그림자 없음
+  OK      screening_electronic_perfect.py: 지역 import 그림자 없음
+  OK      screening_electronic_physics.py: 지역 import 그림자 없음
+  OK      screening_electronic_pretty.py: 지역 import 그림자 없음
+  OK      screening_electronic_radical.py: 지역 import 그림자 없음
+  OK      screening_electronic_split.py: 지역 import 그림자 없음
+  OK      screening_electronic_sweep.py: 지역 import 그림자 없음
+  OK      screening_electronic_tau.py: 지역 import 그림자 없음
+  OK      screening_electronic_thin_advanced.py: 지역 import 그림자 없음
+  OK      screening_electronic_thin_bruteforce.py: 지역 import 그림자 없음
+  OK      screening_electronic_thin_clean.py: 지역 import 그림자 없음
+  OK      screening_electronic_thin_cnstd.py: 지역 import 그림자 없음
+  OK      screening_electronic_thin_elperc.py: 지역 import 그림자 없음
+  OK      screening_electronic_thin_fix.py: 지역 import 그림자 없음
+  OK      screening_electronic_thin_perc.py: 지역 import 그림자 없음
+  OK      screening_electronic_thin_porcov.py: 지역 import 그림자 없음
+  OK      screening_electronic_thin_shape.py: 지역 import 그림자 없음
+  OK      screening_electronic_thin_trend.py: 지역 import 그림자 없음
+  OK      screening_electronic_thin_v2.py: 지역 import 그림자 없음
+  OK      screening_electronic_thin_v3.py: 지역 import 그림자 없음
+  OK      screening_electronic_thinmax.py: 지역 import 그림자 없음
+  OK      screening_electronic_unified.py: 지역 import 그림자 없음
+  OK      screening_electronic_universal.py: 지역 import 그림자 없음
+  OK      screening_ionic_perfect.py: 지역 import 그림자 없음
+  OK      screening_ionic_thin_focus.py: 지역 import 그림자 없음
+  OK      screening_v2.py: 지역 import 그림자 없음
+  OK      screening_v2b.py: 지역 import 그림자 없음
+  OK      screening_v2c.py: 지역 import 그림자 없음
+  OK      screening_v2d.py: 지역 import 그림자 없음
+  OK      screening_v2e.py: 지역 import 그림자 없음
+  OK      screening_v2f.py: 지역 import 그림자 없음
+  OK      screening_v2g.py: 지역 import 그림자 없음
+  OK      screening_v2h.py: 지역 import 그림자 없음
+  OK      screening_v2i.py: 지역 import 그림자 없음
+  OK      screening_v2j.py: 지역 import 그림자 없음
+  OK      screening_v2k.py: 지역 import 그림자 없음
+  OK      screening_v2l.py: 지역 import 그림자 없음
+  OK      screening_v2m.py: 지역 import 그림자 없음
+  OK      screening_v2n.py: 지역 import 그림자 없음
+  OK      sdcp_anchor_v2_chain.py: 지역 import 그림자 없음
+  OK      sdcp_bed_meta.py: 지역 import 그림자 없음
+  OK      sdcp_gain_verdict.py: 지역 import 그림자 없음  (⚠ 이름 충돌 1건)
+  OK      sdcp_phase_ledger_match.py: 지역 import 그림자 없음
+  OK      sdcp_phase_ledger_report.py: 지역 import 그림자 없음
+  OK      sdcp_stamp_confound.py: 지역 import 그림자 없음
+  OK      se_material.py: 지역 import 그림자 없음
+  OK      seal_area_cohort.py: 지역 import 그림자 없음
+  OK      seal_s3_prerun.py: 지역 import 그림자 없음
+  OK      section5_validity_filter.py: 지역 import 그림자 없음
+  OK      section7_fracture_aware_analysis.py: 지역 import 그림자 없음
+  OK      seminar_deck_extract.py: 지역 import 그림자 없음
+  OK      sigma_fracture_correlation.py: 지역 import 그림자 없음
+  OK      sr01_carbon_network.py: 지역 import 그림자 없음
+  OK      sr01_k_grid_sweep.py: 지역 import 그림자 없음
+  OK      sr01_raster_fix_impact.py: 지역 import 그림자 없음
+  OK      sr01_realbed_ab.py: 지역 import 그림자 없음
+  OK      sr01_staircase_factor.py: 지역 import 그림자 없음
+  OK      sr01_stamp_compare.py: 지역 import 그림자 없음
+  OK      sr01_watch.py: 지역 import 그림자 없음
+  OK      sr03_precond_bench.py: 지역 import 그림자 없음
+  OK      step3_conv_cert.py: 지역 import 그림자 없음
+  OK      step3_phi_profile_plot.py: 지역 import 그림자 없음
+  OK      step3_sigma.py: 지역 import 그림자 없음
+  OK      step3_transport_resolution.py: 지역 import 그림자 없음
+  OK      step4_angular_risk.py: 지역 import 그림자 없음
+  OK      step4_curve_from_log.py: 지역 import 그림자 없음
+  OK      step4_dyn.py: 지역 import 그림자 없음
+  OK      step4_pybamm_anchor.py: 지역 import 그림자 없음
+  OK      step4_rint_ladder.py: 지역 import 그림자 없음
+  OK      step4_viz_from_npz.py: 지역 import 그림자 없음
+  OK      step6_surrogate.py: 지역 import 그림자 없음
+  OK      stress_test_62_38_term.py: 지역 import 그림자 없음
+  OK      stress_test_el_th.py: 지역 import 그림자 없음
+  OK      summarize_jam_sweep.py: 지역 import 그림자 없음
+  OK      supp20_input_receipt.py: 지역 import 그림자 없음
+  OK      symbolic_regression.py: 지역 import 그림자 없음
+  OK      sync_csv_to_metrics.py: 지역 import 그림자 없음
+  OK      tau_all_backfill.py: 지역 import 그림자 없음
+  OK      tau_flux.py: 지역 import 그림자 없음
+  OK      test_am_label_invariant.py: 지역 import 그림자 없음
+  OK      test_ca_ext_b6.py: 지역 import 그림자 없음
+  OK      test_ca_ext_runner.py: 지역 import 그림자 없음
+  OK      test_ca_ext_verdict.py: 지역 import 그림자 없음
+  OK      test_ca_ext_z1.py: 지역 import 그림자 없음
+  OK      test_ca_ext_z3.py: 지역 import 그림자 없음
+  OK      test_ca_s0_census.py: 지역 import 그림자 없음
+  OK      test_carbon_junction.py: 지역 import 그림자 없음
+  OK      test_clean_form.py: 지역 import 그림자 없음
+  OK      test_cli_help.py: 지역 import 그림자 없음
+  OK      test_combo_p3_cronau.py: 지역 import 그림자 없음
+  OK      test_compaction_curve.py: 지역 import 그림자 없음
+  OK      test_constriction_power_share.py: 지역 import 그림자 없음
+  OK      test_coverage_cli_no_tracked_write.py: 지역 import 그림자 없음
+  OK      test_gen2_role_contract.py: 지역 import 그림자 없음
+  OK      test_l214r01_certificate.py: 지역 import 그림자 없음
+  OK      test_l214r02_model_limit_flag.py: 지역 import 그림자 없음
+  OK      test_l214r05_published_certificate.py: 지역 import 그림자 없음
+  OK      test_l214r06_same_class.py: 지역 import 그림자 없음
+  OK      test_l214r09_same_class.py: 지역 import 그림자 없음
+  OK      test_l214r_r01_restored_full.py: 지역 import 그림자 없음
+  OK      test_l214r_r04_cf_label.py: 지역 import 그림자 없음
+  OK      test_lhs214_model_limit.py: 지역 import 그림자 없음
+  OK      test_lhs_pressure_record.py: 지역 import 그림자 없음
+  OK      test_lhs_release_v13.py: 지역 import 그림자 없음
+  OK      test_love_weber_stress.py: 지역 import 그림자 없음
+  OK      test_network_boundary_rule.py: 지역 import 그림자 없음
+  OK      test_network_dirichlet.py: 지역 import 그림자 없음
+  OK      test_network_generation2.py: 지역 import 그림자 없음
+  OK      test_network_solve_certificate.py: 지역 import 그림자 없음
+  OK      test_p3_linear_pivot.py: 지역 import 그림자 없음
+  OK      test_parse_case_paste_union.py: 지역 import 그림자 없음
+  OK      test_physics_area_g2.py: 지역 import 그림자 없음
+  OK      test_psi_default_switch.py: 지역 import 그림자 없음
+  OK      test_ptfe_face_alpha.py: 지역 import 그림자 없음
+  OK      test_reread_v12.py: 지역 import 그림자 없음
+  OK      test_rint_g2_am_iface.py: 지역 import 그림자 없음
+  OK      test_rint_g2_join.py: 지역 import 그림자 없음
+  OK      test_rint_g2_rrm.py: 지역 import 그림자 없음
+  OK      test_rint_r_chain.py: 지역 import 그림자 없음
+  OK      test_rint_r_chain_e2e.py: 지역 import 그림자 없음
+  OK      test_rint_receipts.py: 지역 import 그림자 없음
+  OK      test_rint_t2_dev.py: 지역 import 그림자 없음  (⚠ 이름 충돌 2건)
+  OK      test_rint_t43_order.py: 지역 import 그림자 없음  (⚠ 이름 충돌 1건)
+  OK      test_rint_t4_census.py: 지역 import 그림자 없음  (⚠ 이름 충돌 1건)
+  OK      test_sched_loop.py: 지역 import 그림자 없음
+  OK      test_step3_conv_cert.py: 지역 import 그림자 없음
+  OK      test_step3_target_cert.py: 지역 import 그림자 없음
+  OK      test_step4_nearnull_integration.py: 지역 import 그림자 없음
+  OK      test_tau_flux.py: 지역 import 그림자 없음
+  OK      test_threshold_form.py: 지역 import 그림자 없음
+  OK      test_union_coverage.py: 지역 import 그림자 없음
+  OK      test_v29_physics_mode.py: 지역 import 그림자 없음
+  OK      test_wall_near_tangent.py: 지역 import 그림자 없음
+  OK      test_webapp_launcher.py: 지역 import 그림자 없음
+  OK      test_whatif_additives.py: 지역 import 그림자 없음
+  OK      thermal_alpha_tune.py: 지역 import 그림자 없음
+  OK      thermal_corpus_audit.py: 지역 import 그림자 없음
+  OK      thermal_final_decision.py: 지역 import 그림자 없음
+  OK      thermal_form_kitchen_sink.py: 지역 import 그림자 없음
+  OK      thermal_form_push_09.py: 지역 import 그림자 없음
+  OK      thermal_form_screen.py: 지역 import 그림자 없음
+  OK      thermal_physics_target.py: 지역 import 그림자 없음
+  OK      thermal_powerlaw_redesign.py: 지역 import 그림자 없음
+  OK      thermal_push_higher.py: 지역 import 그림자 없음
+  OK      thermal_push_to_09.py: 지역 import 그림자 없음
+  OK      thermal_refine_finalized.py: 지역 import 그림자 없음
+  OK      thermal_regression.py: 지역 import 그림자 없음
+  OK      thermal_stage_e_audit.py: 지역 import 그림자 없음
+  OK      thermal_structural_only.py: 지역 import 그림자 없음
+  OK      thermal_with_excl.py: 지역 import 그림자 없음
+  OK      trace_deps.py: 지역 import 그림자 없음
+  OK      track_1mAh_80_20.py: 지역 import 그림자 없음
+  OK      track_7_3_all.py: 지역 import 그림자 없음
+  OK      train_cycle_surrogate.py: 지역 import 그림자 없음
+  OK      triage_cases.py: 지역 import 그림자 없음
+  OK      type_map_resolve.py: 지역 import 그림자 없음
+  OK      unpack_kit_scaffolds.py: 지역 import 그림자 없음
+  OK      v29_outlier_vs_geom.py: 지역 import 그림자 없음
+  OK      v29_outlier_vs_geom_old.py: 지역 import 그림자 없음
+  OK      v32_apply_and_plot.py: 지역 import 그림자 없음
+  OK      v32_exhaustive_refit.py: 지역 import 그림자 없음
+  OK      v32p1_tau_extension.py: 지역 import 그림자 없음
+  OK      v33_structure_d.py: 지역 import 그림자 없음
+  OK      validate_additive_seeding.py: 지역 import 그림자 없음
+  OK      validate_porosity_all_cases.py: 지역 import 그림자 없음
+  OK      verify_case.py: 지역 import 그림자 없음
+  OK      verify_cases.py: 지역 import 그림자 없음
+  OK      verify_mpm_coverage.py: 지역 import 그림자 없음
+  OK      viewer3d_data.py: 지역 import 그림자 없음
+  OK      viz_additives.py: 지역 import 그림자 없음
+  OK      viz_mixer_bed.py: 지역 import 그림자 없음
+  OK      viz_mpm_continuum.py: 지역 import 그림자 없음
+  OK      viz_mpm_morphology.py: 지역 import 그림자 없음
+  OK      viz_mpm_morphology_3d.py: 지역 import 그림자 없음
+  OK      viz_se_voxel_2d.py: 지역 import 그림자 없음
+  OK      voxel_conductivity.py: 지역 import 그림자 없음
+  OK      voxelize_microstructure.py: 지역 import 그림자 없음
+  OK      webapp_env_audit.py: 지역 import 그림자 없음
+  OK      webapp_network_batch.py: 지역 import 그림자 없음
+  OK      wsl_network_smoke.py: 지역 import 그림자 없음
+  OK      xy_heatmap_ensemble.py: 지역 import 그림자 없음
+
+규칙 N — 킷 러너의 재하율 라벨이 실물인가
+  ✓ 킷 러너가 재하율을 QS 실물로 보고한다 (하드코딩 라벨 없음)
+
+규칙 O — 원고 산문은 미국식 철자
+  ✓ 원고 산문·빌더 Methods 문자열에 영국식 철자 없음
+
+  ⚠ grade_engine.py: `additive_regime` 이 함수 `whatif_additives` 에서 대입(:1863)과 import(:1861) 양쪽에 묶인다 — 그 import 가 실행되면 앞의 값이 덮인다 (오류는 아니지만 이름을 갈라 놓을 것)
+  ⚠ lhs_design_dataset.py: `_NC29` 이 함수 `_selftest` 에서 대입(:5401)과 import(:5397) 양쪽에 묶인다 — 그 import 가 실행되면 앞의 값이 덮인다 (오류는 아니지만 이름을 갈라 놓을 것)
+  ⚠ lhs_design_dataset.py: `_NPP29` 이 함수 `_selftest` 에서 대입(:5401)과 import(:5398) 양쪽에 묶인다 — 그 import 가 실행되면 앞의 값이 덮인다 (오류는 아니지만 이름을 갈라 놓을 것)
+  ⚠ lhs_design_dataset.py: `_PS29` 이 함수 `_selftest` 에서 대입(:5401)과 import(:5395) 양쪽에 묶인다 — 그 import 가 실행되면 앞의 값이 덮인다 (오류는 아니지만 이름을 갈라 놓을 것)
+  ⚠ lhs_design_dataset.py: `_TF29` 이 함수 `_selftest` 에서 대입(:5401)과 import(:5396) 양쪽에 묶인다 — 그 import 가 실행되면 앞의 값이 덮인다 (오류는 아니지만 이름을 갈라 놓을 것)
+  ⚠ mpm3d_compaction.py: `_ndi` 이 함수 `main` 에서 대입(:3747)과 import(:2865) 양쪽에 묶인다 — 그 import 가 실행되면 앞의 값이 덮인다 (오류는 아니지만 이름을 갈라 놓을 것)
+  ⚠ mpm3d_compaction.py: `_sp` 이 함수 `main` 에서 대입(:3583)과 import(:1882) 양쪽에 묶인다 — 그 import 가 실행되면 앞의 값이 덮인다 (오류는 아니지만 이름을 갈라 놓을 것)
+  ⚠ mpm_webapp_payload.py: `_tb` 이 함수 `main` 에서 대입(:2952)과 import(:3298) 양쪽에 묶인다 — 그 import 가 실행되면 앞의 값이 덮인다 (오류는 아니지만 이름을 갈라 놓을 것)
+  ⚠ run_contract.py: `_MVif` 이 함수 `_selftest` 에서 대입(:2049)과 import(:2047) 양쪽에 묶인다 — 그 import 가 실행되면 앞의 값이 덮인다 (오류는 아니지만 이름을 갈라 놓을 것)
+  ⚠ run_s3_psi.py: `_cb` 이 함수 `_selftest` 에서 대입(:885)과 import(:912) 양쪽에 묶인다 — 그 import 가 실행되면 앞의 값이 덮인다 (오류는 아니지만 이름을 갈라 놓을 것)
+  ⚠ sdcp_gain_verdict.py: `_sub` 이 함수 `_selftest` 에서 대입(:2304)과 import(:2693) 양쪽에 묶인다 — 그 import 가 실행되면 앞의 값이 덮인다 (오류는 아니지만 이름을 갈라 놓을 것)
+  ⚠ test_rint_t2_dev.py: `S3` 이 함수 `main` 에서 대입(:48)과 import(:45) 양쪽에 묶인다 — 그 import 가 실행되면 앞의 값이 덮인다 (오류는 아니지만 이름을 갈라 놓을 것)
+  ⚠ test_rint_t2_dev.py: `T2` 이 함수 `main` 에서 대입(:48)과 import(:44) 양쪽에 묶인다 — 그 import 가 실행되면 앞의 값이 덮인다 (오류는 아니지만 이름을 갈라 놓을 것)
+  ⚠ test_rint_t43_order.py: `D` 이 함수 `main` 에서 대입(:44)과 import(:41) 양쪽에 묶인다 — 그 import 가 실행되면 앞의 값이 덮인다 (오류는 아니지만 이름을 갈라 놓을 것)
+  ⚠ test_rint_t4_census.py: `T` 이 함수 `main` 에서 대입(:53)과 import(:50) 양쪽에 묶인다 — 그 import 가 실행되면 앞의 값이 덮인다 (오류는 아니지만 이름을 갈라 놓을 것)
+✓ 방법론 규율: 0 오류 (15 경고)

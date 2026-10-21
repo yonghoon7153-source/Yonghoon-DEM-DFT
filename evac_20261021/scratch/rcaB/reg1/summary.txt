@@ -1,0 +1,17 @@
+rc_selftest	rc=0	1s	run_contract selftest: 124/124 PASS
+s3_selftest_rint	rc=0	1s	STEP3 RINT SELFTEST PASS
+s3_selftest	rc=0	1s	SELFTEST PASS
+join	rc=0	200s	326 PASS · 0 FAIL
+face_alpha	rc=0	85s	253 PASS · 0 FAIL
+carbon_junction	rc=0	8s	== test_carbon_junction: 163/163 PASS
+ca_b6	rc=1	40s	  - R13d 이온을 푼 다음 세대 팔은 이온 증서도 요구 (없으면 미게시 · 있으면 통과)
+ca_b6_old	rc=1	52s	  - B1 payload [off LEAN2 + rtol 1e-12] — 매니페스트 (code_sha · exec_env 빼고) 바이트 같음 · id 같음 · step3 값 같음 (새 기록 칸 ['cg_iters', 'conv_cert.iters'] 만 빼고)
+ca_runner	rc=0	89s	123 PASS · 0 FAIL
+ca_verdict	rc=0	39s	31 PASS · 0 FAIL
+ca_z1	rc=0	38s	95 PASS · 0 FAIL  (37.2 s)
+rint_chain	rc=1	8s	test_rint_r_chain: 27/89 PASS (7.7 s)   FAILED: ['L01', 'L02', 'L03', 'L04', 'L05', 'L06', 'L07', 'L08', 'L09', 'L10', 'L11', 'L12', 'L13', 'L14', 'L15', 'L16', 'L17', 'L18', 'L19', 'L20', 'S02', 'S03', 'S05', 'S06', 'S0
+ca_z3	rc=0	33s	test_ca_ext_z3: 84 PASS · 0 FAIL (32.8 s)
+ca_z3_old	rc=1	49s	  - O2 payload [face_alpha LEAN2 + rtol] — 기반 ↔ 새: 매니페스트 (code_sha · exec_env 빼고 · 새 칸 ('iters', 'sid_off')) 바이트 같음 · id 같음 · step3 값 같음
+rint_chain_e2e	rc=0	63s	test_rint_r_chain_e2e: 10 PASS · 0 FAIL (63.0 s)
+cmd_selftest	rc=0	97s	check_method_discipline v3 selftest: 128/128 PASS
+cmd_noarg	rc=0	36s	✓ 방법론 규율: 0 오류 (15 경고)

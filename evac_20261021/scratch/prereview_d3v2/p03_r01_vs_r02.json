@@ -1,0 +1,293 @@
+{
+ "T1_8levels": {
+  "dmin_formula": 0.03,
+  "actual_detection_limit": 0.055,
+  "n_contradictions": 49,
+  "first_contradiction": {
+   "dmu": 0.0305,
+   "intersection": [
+    [
+     -0.1,
+     0.88
+    ]
+   ],
+   "b_check": "F5",
+   "dmin": 0.03,
+   "certifies": false,
+   "anchor": "anchor",
+   "anchor_Bo": 2.455,
+   "truth_in_intersection": false
+  },
+  "last_contradiction": {
+   "dmu": 0.0545,
+   "intersection": [
+    [
+     -0.1,
+     -0.08
+    ]
+   ],
+   "b_check": "F5",
+   "dmin": 0.03,
+   "certifies": false,
+   "anchor": "anchor",
+   "anchor_Bo": 0.813,
+   "truth_in_intersection": false
+  },
+  "rows_beyond_tol_certified_by_formula": 0,
+  "sample": [
+   {
+    "dmu": 0.03,
+    "intersection": [
+     [
+      -0.1,
+      0.9
+     ]
+    ],
+    "b_check": "통과",
+    "dmin": 0.03,
+    "certifies": true,
+    "anchor": "anchor",
+    "anchor_Bo": 2.512,
+    "truth_in_intersection": false
+   },
+   {
+    "dmu": 0.035,
+    "intersection": [
+     [
+      -0.1,
+      0.7
+     ]
+    ],
+    "b_check": "F5",
+    "dmin": 0.03,
+    "certifies": false,
+    "anchor": "anchor",
+    "anchor_Bo": 1.995,
+    "truth_in_intersection": false
+   },
+   {
+    "dmu": 0.04,
+    "intersection": [
+     [
+      -0.1,
+      0.5
+     ]
+    ],
+    "b_check": "F5",
+    "dmin": 0.03,
+    "certifies": false,
+    "anchor": "anchor",
+    "anchor_Bo": 1.585,
+    "truth_in_intersection": false
+   },
+   {
+    "dmu": 0.045,
+    "intersection": [
+     [
+      -0.1,
+      0.3
+     ]
+    ],
+    "b_check": "F5",
+    "dmin": 0.03,
+    "certifies": false,
+    "anchor": "anchor",
+    "anchor_Bo": 1.259,
+    "truth_in_intersection": false
+   },
+   {
+    "dmu": 0.05,
+    "intersection": [
+     [
+      -0.1,
+      0.1
+     ]
+    ],
+    "b_check": "F5",
+    "dmin": 0.03,
+    "certifies": false,
+    "anchor": "anchor",
+    "anchor_Bo": 1.0,
+    "truth_in_intersection": false
+   },
+   {
+    "dmu": 0.055,
+    "intersection": [],
+    "b_check": "F5",
+    "dmin": 0.03,
+    "certifies": false,
+    "anchor": "F5",
+    "anchor_Bo": null,
+    "truth_in_intersection": false
+   },
+   {
+    "dmu": 0.06,
+    "intersection": [],
+    "b_check": "F5",
+    "dmin": 0.03,
+    "certifies": false,
+    "anchor": "F5",
+    "anchor_Bo": null,
+    "truth_in_intersection": false
+   },
+   {
+    "dmu": 0.07,
+    "intersection": [],
+    "b_check": "F5",
+    "dmin": 0.03,
+    "certifies": false,
+    "anchor": "F10",
+    "anchor_Bo": null,
+    "truth_in_intersection": false
+   }
+  ]
+ },
+ "T1_tap4levels": {
+  "dmin_formula": 0.03,
+  "actual_detection_limit": 0.057,
+  "n_contradictions": 53,
+  "first_contradiction": {
+   "dmu": 0.0305,
+   "intersection": [
+    [
+     -0.173,
+     0.88
+    ]
+   ],
+   "b_check": "F5",
+   "dmin": 0.03,
+   "certifies": false,
+   "anchor": "anchor",
+   "anchor_Bo": 2.257,
+   "truth_in_intersection": false
+  },
+  "last_contradiction": {
+   "dmu": 0.0565,
+   "intersection": [
+    [
+     -0.173,
+     -0.16
+    ]
+   ],
+   "b_check": "F5",
+   "dmin": 0.03,
+   "certifies": false,
+   "anchor": "anchor",
+   "anchor_Bo": 0.682,
+   "truth_in_intersection": false
+  },
+  "rows_beyond_tol_certified_by_formula": 0,
+  "sample": [
+   {
+    "dmu": 0.03,
+    "intersection": [
+     [
+      -0.173,
+      0.9
+     ]
+    ],
+    "b_check": "통과",
+    "dmin": 0.03,
+    "certifies": true,
+    "anchor": "anchor",
+    "anchor_Bo": 2.31,
+    "truth_in_intersection": false
+   },
+   {
+    "dmu": 0.035,
+    "intersection": [
+     [
+      -0.173,
+      0.7
+     ]
+    ],
+    "b_check": "F5",
+    "dmin": 0.03,
+    "certifies": false,
+    "anchor": "anchor",
+    "anchor_Bo": 1.835,
+    "truth_in_intersection": false
+   },
+   {
+    "dmu": 0.04,
+    "intersection": [
+     [
+      -0.173,
+      0.5
+     ]
+    ],
+    "b_check": "F5",
+    "dmin": 0.03,
+    "certifies": false,
+    "anchor": "anchor",
+    "anchor_Bo": 1.458,
+    "truth_in_intersection": false
+   },
+   {
+    "dmu": 0.045,
+    "intersection": [
+     [
+      -0.173,
+      0.3
+     ]
+    ],
+    "b_check": "F5",
+    "dmin": 0.03,
+    "certifies": false,
+    "anchor": "anchor",
+    "anchor_Bo": 1.158,
+    "truth_in_intersection": false
+   },
+   {
+    "dmu": 0.05,
+    "intersection": [
+     [
+      -0.173,
+      0.1
+     ]
+    ],
+    "b_check": "F5",
+    "dmin": 0.03,
+    "certifies": false,
+    "anchor": "anchor",
+    "anchor_Bo": 0.92,
+    "truth_in_intersection": false
+   },
+   {
+    "dmu": 0.055,
+    "intersection": [
+     [
+      -0.173,
+      -0.1
+     ]
+    ],
+    "b_check": "F5",
+    "dmin": 0.03,
+    "certifies": false,
+    "anchor": "anchor",
+    "anchor_Bo": 0.73,
+    "truth_in_intersection": false
+   },
+   {
+    "dmu": 0.06,
+    "intersection": [],
+    "b_check": "F5",
+    "dmin": 0.03,
+    "certifies": false,
+    "anchor": "F5",
+    "anchor_Bo": null,
+    "truth_in_intersection": false
+   },
+   {
+    "dmu": 0.07,
+    "intersection": [],
+    "b_check": "F5",
+    "dmin": 0.03,
+    "certifies": false,
+    "anchor": "F10",
+    "anchor_Bo": null,
+    "truth_in_intersection": false
+   }
+  ]
+ }
+}

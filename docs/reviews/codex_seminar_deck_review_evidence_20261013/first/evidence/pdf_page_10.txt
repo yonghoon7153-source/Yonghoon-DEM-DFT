@@ -1,8 +1,0 @@
-10Battery Materials Lab.
- Additives enter at the voxel stage
-• Carbon fibres (VGCF) as diameter-preserving segments, PTFE as a centre-line insulator, 
-a conductive polymer as true-diameter spheres.
-• A 104-arm pre-registered run: the electronic-conductivity order across 1–4 wt% VGCF is 
-robust to voxel size and origin shift (72/72).
-Transport
-< fibre + binder seeds > < additive stamps > < σ(e⁻) vs VGCF wt%, three voxel sizes >

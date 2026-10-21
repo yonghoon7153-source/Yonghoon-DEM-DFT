@@ -1,0 +1,35 @@
+Rint 2 Z3: face_alpha + carbon junction in one run, limit runs, ARM_LIST, sid_off, CG iterations
+
+1. face_alpha (S1) + cjunc (S2) in one solve, P1 allowed with face_alpha only.  The temporary B6 refusals are
+   removed from step3_sigma.solve_sigma_z, ca_ext_cjunc (protocol record and block checker), the payload entry
+   and run_contract.runner_ca_ext.  Composition rule = design order already in couple(): alpha first on the fused
+   faces (alpha = 0 faces dropped by _keep, a2/b2/g compressed together), then the junction hook cuts footprint
+   faces and adds junction edges; junction edges are not faces, so alpha never multiplies them; PTFE covering a
+   junction end acts only through the P0/P1 law (cjunc_plan coverage).  Junction-cut faces are same-carbon VV
+   faces, which are alpha-exempt, so the two operators never touch the same face.  centerline/off + P1 stay refused.
+2. Limit runs (registration R 3-1): CJUNC_RJ=inf (floor, no junction edges, footprint faces stay cut) and a
+   literal decimal 0 (ceiling, exact contraction; J11 short still refused).  One JSON form in receipt and
+   manifest: R_j_ohm null + rj_limit 'inf', R_j_ohm 0.0 + rj_limit 'zero', quantitative False, allow_rj_limits
+   True.  Payload flag --step3-cjunc-rj-limit {inf,zero} (bare inf/0 still VALUE); limit runs keep the registry
+   rejections of the quantitative ladder (same graph); cjunc_block_problem accepts the floor n_none_inf and the
+   ceiling contraction without S3; a non-zero literal that underflows to 0 (1e-400) is refused, not a ceiling.
+   cjunc_plan: floor + c=1 near = contraction (no inf*0 NaN), finite R_j path unchanged.
+3. Runner ARM_LIST (canonical 0-7 list, sorted, no duplicates, not a 0..N-1 prefix, not with ARMS): arms named
+   by origin index, OUTDIR _arm<N>_arml<list>, receipt arm_list (optional digest field), receipt_match ties each
+   arm origin to the selected arms.  Off = old ARMS behaviour, names, receipt bytes.
+4. ca_ext.ptfe_face.evidence.fp.sid_off = step3_sigma._grid_fp of the off grid (required, 32 lower hex);
+   combination runs require it to equal the junction registry fp.sid.
+5. CG iteration counts when the convergence certificate is on (main, wetted/bare auxiliary, ionic, and the
+   continuation solve): step3.cg_iters, conv_cert.iters / resolve_iters.  Certificate off = no callback, old keys.
+   Convergence code changed (callback only with CONV_CERT); test_step3_conv_cert.py was not run.
+
+post-fix: test_ca_ext_z3 95/95 (62 s; with --old-scripts base: off-path manifests, step3 values and the
+face_alpha-only solve are byte-identical except the documented new fields), test_carbon_junction 163/163 (S3-8 still
+catches all four sdcp_rj_eff mutants: the c=1 special case is limited to R_j,0 = inf), test_ca_ext_b6 168/168
+(--old-scripts), test_ca_ext_runner 125/125 (--old-runner: OUTDIR, receipt bytes, arm names, payload argv, generated
+scripts, manifests identical for the off path), test_ca_ext_verdict 31/31, webapp/test_ca_ext_labels 25/25,
+test_ptfe_face_alpha 240/240 (--old-scripts), test_ca_ext_z1 95/95, step3_sigma --selftest and --selftest-rint
+PASS, run_contract --selftest 124/124, check_method_discipline --selftest 128/128 and no-arg 0 errors.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

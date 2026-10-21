@@ -1,0 +1,147 @@
+{
+ "F1": {
+  "declared": 0.5,
+  "head_rc": 0,
+  "mutant_rc": 0,
+  "head_bo_read": 0.5000006661214903,
+  "mutant_bo_read": 0.6097616224238043,
+  "mutant_over_declared": 1.2195232448476085,
+  "expected_ratio_2p00_over_1p64": 1.2195121951219512
+ },
+ "F2": {
+  "gamma_AM": 10.0,
+  "bo_se": 800,
+  "head_rc": 1,
+  "head_msg": "⛔ 팔 D2 결합 규칙 (기하평균 W_ij = 2√(γ_iγ_j) · 혼합쌍 · 벽) · γ/γ_SE AM_P 10 · AM_S 10 · SE 1 · γ_W/γ_SE 0.256 · SE–SE Bo_code 800 — 개발 · 등록 전 (결과 0): AM_P–SE 겹침 1.418 % > 천장 1.0 % (D2 쌍별) — Bo_SE 를 낮추거나 천장을 논의할 ",
+  "mutant_rc": 0,
+  "mutant_deck_overlaps_pct": {
+   "AM_P-AM_P": 0.0423,
+   "AM_P-AM_S": 0.0809,
+   "AM_S-AM_S": 0.0726,
+   "AM_P-SE": 1.4176,
+   "AM_S-SE": 1.363,
+   "SE-SE": 0.853,
+   "AM_P-WALL": 0.014,
+   "AM_S-WALL": 0.024,
+   "SE-WALL": 0.4318
+  }
+ },
+ "F3": {
+  "gamma_1e_200": {
+   "rc": 0,
+   "ced_AMP_AMP": 0.0,
+   "ced_AMP_SE": 5.8902e-30,
+   "ced_AMP_WALL": 2.28755e-29,
+   "deck_line": [
+    "#   AM_P–AM_P   0.00034065 5.53067e+08           0           0           0   0.0000%"
+   ]
+  },
+  "bo_1e_310": {
+   "rc": 0,
+   "err_tail": [],
+   "deck_written": true
+  },
+  "gamma_1e_30": {
+   "rc": 0,
+   "ced_AMP_AMP": 1.01831e-05
+  }
+ },
+ "F4": {
+  "AM0.3_rho3": {
+   "rc": 0,
+   "meta_gamma": {
+    "AM_P": 0.3,
+    "AM_S": 0.3,
+    "SE": 1.0
+   },
+   "meta_rho": 3.0,
+   "meta_gamma_wall": 0.07680000000000001
+  },
+  "AMP0.3_AMS0.6_rho0.3": {
+   "rc": 0,
+   "meta_gamma": {
+    "AM_P": 0.3,
+    "AM_S": 0.6,
+    "SE": 1.0
+   },
+   "meta_rho": 0.3,
+   "meta_gamma_wall": 0.00768
+  },
+  "AM0.5_rho0.3": {
+   "rc": 0,
+   "meta_gamma": {
+    "AM_P": 0.5,
+    "AM_S": 0.5,
+    "SE": 1.0
+   },
+   "meta_rho": 0.3,
+   "meta_gamma_wall": 0.00768
+  }
+ },
+ "F5": {
+  "deck_identical": true,
+  "meta_identical_minus_argv": true
+ },
+ "F6": {
+  "underscore_0_3": {
+   "rc": 0,
+   "meta_gamma": {
+    "AM_P": 3.0,
+    "AM_S": 0.3,
+    "SE": 1.0
+   }
+  },
+  "fullwidth": {
+   "rc": 0,
+   "meta_gamma": {
+    "AM_P": 0.3,
+    "AM_S": 0.3,
+    "SE": 1.0
+   }
+  },
+  "trailing_comma": {
+   "rc": 1,
+   "err": "⛔ --gm-gamma 'AM_P=0.3,AM_S=0.3,' — \"상=값\" 을 쉼표로 (상 중복 금지)"
+  },
+  "SE_given_1.0": {
+   "rc": 0,
+   "meta_gamma": {
+    "AM_P": 0.3,
+    "AM_S": 0.3,
+    "SE": 1.0
+   }
+  },
+  "SE_given_1e0": {
+   "rc": 0,
+   "meta_gamma": {
+    "AM_P": 0.3,
+    "AM_S": 0.3,
+    "SE": 1.0
+   }
+  },
+  "lowercase": {
+   "rc": 1,
+   "err": "⛔ D2 결합 규칙: gamma 의 상 ['AM_S', 'SE', 'am_p'] ≠ 도는 상 ['AM_P', 'AM_S', 'SE'] — 빠지거나 남는 상은 거부"
+  },
+  "dup": {
+   "rc": 1,
+   "err": "⛔ --gm-gamma 'AM_P=0.3,AM_P=0.4,AM_S=0.3' — \"상=값\" 을 쉼표로 (상 중복 금지)"
+  },
+  "nan": {
+   "rc": 1,
+   "err": "⛔ D2 결합 규칙: γ_AM_P/γ_SE = nan — 유한한 양수여야 한다"
+  },
+  "space": {
+   "rc": 0,
+   "meta_gamma": {
+    "AM_P": 0.3,
+    "AM_S": 0.3,
+    "SE": 1.0
+   }
+  }
+ },
+ "F7": {
+  "deck_ok": true,
+  "has_gm_header": true
+ }
+}

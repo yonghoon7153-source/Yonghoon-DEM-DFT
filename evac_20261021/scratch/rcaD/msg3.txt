@@ -1,0 +1,21 @@
+Rint 2 D: SV evidence in a D-owned module, centerline + junction refused at entry: tests first
+
+Coordinator 10-21 (pre-review PRE-impl-04 Q-D, PRE-impl-03 / Q-C; junction
+files belong to agent A).
+
+- b6 S8: the SV counterfactual projection / validator is read from the
+  D module ca_ext_svcf (not ca_ext_cjunc); definition-agnostic acceptance
+  (kind 'counterfactual...' of any definition, renamed count fields kept
+  as is, unknown status without a ratio accepted -> chain SV_UNCHECKED);
+  kind that is not a counterfactual / missing is refused.
+- b6 P: --ptfe-stamp centerline + --step3-cjunc refused at the payload
+  entry with S2_CJUNC_REFUSED|PTFE_CENTERLINE| (P0 and P1).
+- runner N6 / N6b: CJUNC=1 + PTFE_STAMP=centerline refused before launch
+  (RUNNER_CA_EXT|PTFE_CENTERLINE|) and the same combination refused by
+  the payload.
+
+pre-fix: b6 S,P 145/151 (fails = 6 checks from 5 counterexamples),
+runner N6 56/59 (fails = 3 checks from 2 counterexamples).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

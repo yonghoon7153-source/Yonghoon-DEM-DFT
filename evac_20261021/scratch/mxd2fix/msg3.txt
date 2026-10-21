@@ -1,0 +1,47 @@
+Mixer D2 tools: readback, deck diff, smoke and launchers know the lab generation and the D2 rule (MXD2-01, MXD2-02)
+
+- mixer_deck_readback: template densities are matched per density
+  generation (gen1 4800/2000, lab20261014 4850/1640 -- copies checked
+  against the generator table) and the header generation tag must match
+  them. D2 decks are re-checked from the deck text in every table:
+  pairwise F0_ij/F0_SS = sqrt(gamma_i gamma_j) R*_ij/R*_SS (declared
+  gamma), absolute level Bo_SE = F0_SS / SE weight from the deck's
+  radius, density and gravity (catches the M04 pattern), Q2 wall,
+  overlap ceiling for all pairs, header table (R*, E*, CED, F0,
+  F0/F0_SS, delta0) = deck values (catches M15), insertion line = the
+  deck's insert/pack count; deck_meta.json next to the deck is bound
+  (sha256, schema /2, generation, adhesion_rule gamma / gamma_W / Bo /
+  wall rule / rho / surface / layered -- the M16 / M17 patterns are in
+  the selftest). E/E0/DT pairs of D2 decks must share the D2 declaration. New
+  table GM: same-rho-world coated <-> uncoated, exactly the
+  rule-implied CED cells change by [sqrt(g'g')/sqrt(gg)]^(1/3), all others
+  token-identical. Tolerances derived from the print formats before
+  comparing (480 generated D2 decks across both generations, stiffness
+  x1/x20/x40, dt/2 and five CGFs: 0 false problems; worst law / Bo /
+  header deviations 61 / 58 / 50 % of their bounds). 24/31 -> 31/31.
+- mixer_deck_diff: --allow GM (same contract, CED target via
+  --expect-deck); D2 per-deck rule check in every mode (the M04-like
+  pair now fails --allow E, old-arm decks never reach the readback);
+  E/EB pairs: no D2 <-> old-arm pairing, same D2 declaration; D2 cell
+  names GM<P><S>_rho<r>_bo<b>_<gen>_<soft|ref|ref2>[_dthalf]_r<N>_s<seed>
+  (canonical decimals, generator ranges, rho 1 = cc only), d2_cli_args
+  and cell_expected_deck (CLI byte identity), cell deck_meta /2 checks
+  against the generator meta for that name. 55/61 -> 61/61.
+- mixer_smoke_blind: planned per-phase counts use the cell's density
+  generation (lab cell 143/699/99,158 instead of gen1 176/859/98,965).
+  30/31 -> 31/31.
+- mixer_contact_reader: deck_meta schema /1 and /2 accepted, any other
+  schema refused. 30/31 -> 31/31.
+- run_all.sh / resume_all.sh: D2 cells (by name, or any deck with a D2
+  header) are never launched or resumed until a result-before
+  registration, cohort and launch policy v5 exist. test_launcher.sh
+  136/138 -> 138/138.
+
+No D2 cohort or launch-policy entry is added (needs the registration).
+Importers unchanged and passing: check_contact_validity 89/89,
+make_mixer_resume, measure_mixing_index 40/40, mixer_exact_frames 31/31,
+mixer_gate_reader_diff, mixer_restart_phase_test 35/35, mixer_stage_gate
+14/14.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

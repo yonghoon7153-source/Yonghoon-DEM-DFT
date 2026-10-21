@@ -1,0 +1,64 @@
+
+── V0 정상 코호트 양성 — 접합 + rtol (8 origin × 두 침대) · face_alpha + rtol · 접합 LEAN 3
+  PASS  V0a 코호트 16 팔을 만들었다 (payload rc 0)
+  PASS  V0b 팔 = p3ca · ca_ext_record_ok · 증서 (다음 세대 게시 조건)
+  FAIL  V0c 계약 통과 (validate_contract · require_arms 8) — 새 게이트가 정상 다음 세대 코호트를 막지 않는다  ((None, "고정 인자 `code_sha` 가 팔마다 다르다 (['3d3190632+dirty', 'c7bbd8474+dirty']) — prereg §5 는 그 외 모든 인자 고정을 요구한다"))
+  FAIL  V0d 판정까지 간다 (계약 사유 HOLD 없음 · 통계 게이트 SE 만 허용 · 값은 보지 않는다)  (('HOLD', None))
+  PASS  V0e face_alpha + rtol 두 팔 → 계약 통과 (ptfe_face 블록 · 증서)
+  PASS  V0f 접합 LEAN 3 + rtol 두 팔 → 계약 통과 (require_ionic · 이온 증서)
+
+── V1 변조 팔 — 증거 칸 하나 → HOLD (ca_ext_record_ok · 규약 id 그대로)
+  FAIL  V1 [주 영수증 missing] → HOLD CAEXT (규약 id · protocol_ok 그대로 = 이 판정기의 소비자 검사가 잡는다)  (((True, None), None, "고정 인자 `code_sha` 가 팔마다 다르다 (['3d3190632+dirty', 'c7bbd8474+dirty']) — prereg §5 는 그 외 모든 인자 고정을 요구한다"))
+  FAIL  V1 [표지 다름] → HOLD CAEXT (규약 id · protocol_ok 그대로 = 이 판정기의 소비자 검사가 잡는다)  (((True, None), None, "고정 인자 `code_sha` 가 팔마다 다르다 (['3d3190632+dirty', 'c7bbd8474+dirty']) — prereg §5 는 그 외 모든 인자 고정을 요구한다"))
+  FAIL  V1 [원장 수 합 깨짐 (n_edge + 1)] → HOLD CAEXT (규약 id · protocol_ok 그대로 = 이 판정기의 소비자 검사가 잡는다)  (((True, None), None, "고정 인자 `code_sha` 가 팔마다 다르다 (['3d3190632+dirty', 'c7bbd8474+dirty']) — prereg §5 는 그 외 모든 인자 고정을 요구한다"))
+  FAIL  V1 [진단 표 빠짐] → HOLD CAEXT (규약 id · protocol_ok 그대로 = 이 판정기의 소비자 검사가 잡는다)  (((True, None), None, "고정 인자 `code_sha` 가 팔마다 다르다 (['3d3190632+dirty', 'c7bbd8474+dirty']) — prereg §5 는 그 외 모든 인자 고정을 요구한다"))
+  FAIL  V1 [단락 상태] → HOLD CAEXT (규약 id · protocol_ok 그대로 = 이 판정기의 소비자 검사가 잡는다)  (((True, None), None, "고정 인자 `code_sha` 가 팔마다 다르다 (['3d3190632+dirty', 'c7bbd8474+dirty']) — prereg §5 는 그 외 모든 인자 고정을 요구한다"))
+  FAIL  V1 [이온 영수증 applied_without_request] → HOLD CAEXT (규약 id · protocol_ok 그대로 = 이 판정기의 소비자 검사가 잡는다)  (((True, None), None, "고정 인자 `code_sha` 가 팔마다 다르다 (['3d3190632+dirty', 'c7bbd8474+dirty']) — prereg §5 는 그 외 모든 인자 고정을 요구한다"))
+  FAIL  V1 [거부 사유 남음] → HOLD CAEXT (규약 id · protocol_ok 그대로 = 이 판정기의 소비자 검사가 잡는다)  (((True, None), None, "고정 인자 `code_sha` 가 팔마다 다르다 (['3d3190632+dirty', 'c7bbd8474+dirty']) — prereg §5 는 그 외 모든 인자 고정을 요구한다"))
+  FAIL  V1 [원장 지문 ≠ 솔브 영수증] → HOLD CAEXT (규약 id · protocol_ok 그대로 = 이 판정기의 소비자 검사가 잡는다)  (((True, None), None, "고정 인자 `code_sha` 가 팔마다 다르다 (['3d3190632+dirty', 'c7bbd8474+dirty']) — prereg §5 는 그 외 모든 인자 고정을 요구한다"))
+
+── V2 섞인 코호트 — 현 세대 p2 ↔ 다음 세대 p3ca → HOLD GENERATION_MIX
+  PASS  V2a 끔 팔 = p2 세대 (같은 침대 · 같은 origin 0)
+  PASS  V2b p3ca 코호트의 a0 두 팔을 같은 origin 의 p2 팔로 → HOLD GENERATION_MIX (사유에 두 세대 이름)
+  PASS  V2c 두 침대가 서로 다른 세대 (SBE p2 · DBE p3ca · 같은 origin) → HOLD GENERATION_MIX
+  PASS  V2d 끔 팔 둘 (p2 만) = 세대 섞임 아님 (새 게이트가 옛 세대를 막지 않는다)
+
+── V3 증서 없음 / 실패 = 미게시 팔 → HOLD NEXTGEN_UNPUBLISHED
+  FAIL  V3 [증서 칸 없음] → HOLD NEXTGEN_UNPUBLISHED (미게시 팔 1 · 사유에 그 팔)  ((None, "고정 인자 `code_sha` 가 팔마다 다르다 (['3d3190632+dirty', 'c7bbd8474+dirty']) — prereg §5 는 그 외 모든 인자 고정을 요구한다"))
+  FAIL  V3 [증서 ok False (ⓑ 실패)] → HOLD NEXTGEN_UNPUBLISHED (미게시 팔 1 · 사유에 그 팔)  ((None, "고정 인자 `code_sha` 가 팔마다 다르다 (['3d3190632+dirty', 'c7bbd8474+dirty']) — prereg §5 는 그 외 모든 인자 고정을 요구한다"))
+  FAIL  V3 [증서 σ ≠ 결과 σ (결합 깨짐)] → HOLD NEXTGEN_UNPUBLISHED (미게시 팔 1 · 사유에 그 팔)  ((None, "고정 인자 `code_sha` 가 팔마다 다르다 (['3d3190632+dirty', 'c7bbd8474+dirty']) — prereg §5 는 그 외 모든 인자 고정을 요구한다"))
+  FAIL  V3 [증서 ok ↔ pass 모순] → HOLD NEXTGEN_UNPUBLISHED (미게시 팔 1 · 사유에 그 팔)  ((None, "고정 인자 `code_sha` 가 팔마다 다르다 (['3d3190632+dirty', 'c7bbd8474+dirty']) — prereg §5 는 그 외 모든 인자 고정을 요구한다"))
+  FAIL  V3e rtol 없이 돈 접합 팔 (실물 · 증서 칸 없음) 이 섞이면 → HOLD NEXTGEN_UNPUBLISHED  ((None, "고정 인자 `code_sha` 가 팔마다 다르다 (['3d3190632+dirty', 'c7bbd8474+dirty']) — prereg §5 는 그 외 모든 인자 고정을 요구한다"))
+  PASS  V3f rtol 없이 돈 face_alpha 팔 (실물) → HOLD NEXTGEN_UNPUBLISHED
+  PASS  V3g 이온을 푼 다음 세대 팔 (LEAN 3) 의 이온 증서 없음 → HOLD NEXTGEN_UNPUBLISHED (ionic)
+
+── V4 옛 세대 (p2) 코호트 — 새 사유로 HOLD 되지 않는다 (--old-verdict 면 판정 JSON 바이트 대조)
+  PASS  V4a [w4_ptfe_centerline_20260827] 봉인 코호트 판정이 새 사유 (GENERATION_MIX·NEXTGEN_UNPUBLISHED·CAEXT) 가 아니다 · 모든 팔 p2
+  PASS  V4a [w4b_ptfe_off_20260827] 봉인 코호트 판정이 새 사유 (GENERATION_MIX·NEXTGEN_UNPUBLISHED·CAEXT) 가 아니다 · 모든 팔 p2
+    (--old-verdict 없음 — 바이트 대조 건너뜀)
+
+── V5 CLI --seal-only — 변조 · 섞임 · 증서 없음의 봉인 사유 (원값 누설 없음)
+  PASS  V5a 정상 디렉터리 — 봉인 사유가 계약 (새 코드) 이 아니다 · 비 · h0/h1 을 안 찍는다
+  FAIL  V5 [변조 (표지)] → 봉인 깨짐 (rc 1) · 근거에 `CAEXT` 사유  ((1, "\n  수집: SBE 8 팔 · DBE 8 팔\n\n══ 계약 봉인 (판정 아님) ══\n  봉인: **깨짐**\n  근거: 고정 인자 `code_sha` 가 팔마다 다르다 (['3d3190632+dirty', 'c7bbd8474+dirty']) — prereg §5 는 그 외 모든 인자 고정을 요구한다\n  ⚠ h0/h1 과 비는 출력하지 않는다 — 판정은 prereg §5 순서로 따로 돈다\n"))
+  FAIL  V5 [증서 없음] → 봉인 깨짐 (rc 1) · 근거에 `NEXTGEN_UNPUBLISHED` 사유  ((1, "\n  수집: SBE 8 팔 · DBE 8 팔\n\n══ 계약 봉인 (판정 아님) ══\n  봉인: **깨짐**\n  근거: 고정 인자 `code_sha` 가 팔마다 다르다 (['3d3190632+dirty', 'c7bbd8474+dirty']) — prereg §5 는 그 외 모든 인자 고정을 요구한다\n  ⚠ h0/h1 과 비는 출력하지 않는다 — 판정은 prereg §5 순서로 따로 돈다\n"))
+  PASS  V5 [세대 섞임] → 봉인 깨짐 (rc 1) · 근거에 `GENERATION_MIX` 사유
+
+14 PASS · 17 FAIL
+  - V0c 계약 통과 (validate_contract · require_arms 8) — 새 게이트가 정상 다음 세대 코호트를 막지 않는다
+  - V0d 판정까지 간다 (계약 사유 HOLD 없음 · 통계 게이트 SE 만 허용 · 값은 보지 않는다)
+  - V1 [주 영수증 missing] → HOLD CAEXT (규약 id · protocol_ok 그대로 = 이 판정기의 소비자 검사가 잡는다)
+  - V1 [표지 다름] → HOLD CAEXT (규약 id · protocol_ok 그대로 = 이 판정기의 소비자 검사가 잡는다)
+  - V1 [원장 수 합 깨짐 (n_edge + 1)] → HOLD CAEXT (규약 id · protocol_ok 그대로 = 이 판정기의 소비자 검사가 잡는다)
+  - V1 [진단 표 빠짐] → HOLD CAEXT (규약 id · protocol_ok 그대로 = 이 판정기의 소비자 검사가 잡는다)
+  - V1 [단락 상태] → HOLD CAEXT (규약 id · protocol_ok 그대로 = 이 판정기의 소비자 검사가 잡는다)
+  - V1 [이온 영수증 applied_without_request] → HOLD CAEXT (규약 id · protocol_ok 그대로 = 이 판정기의 소비자 검사가 잡는다)
+  - V1 [거부 사유 남음] → HOLD CAEXT (규약 id · protocol_ok 그대로 = 이 판정기의 소비자 검사가 잡는다)
+  - V1 [원장 지문 ≠ 솔브 영수증] → HOLD CAEXT (규약 id · protocol_ok 그대로 = 이 판정기의 소비자 검사가 잡는다)
+  - V3 [증서 칸 없음] → HOLD NEXTGEN_UNPUBLISHED (미게시 팔 1 · 사유에 그 팔)
+  - V3 [증서 ok False (ⓑ 실패)] → HOLD NEXTGEN_UNPUBLISHED (미게시 팔 1 · 사유에 그 팔)
+  - V3 [증서 σ ≠ 결과 σ (결합 깨짐)] → HOLD NEXTGEN_UNPUBLISHED (미게시 팔 1 · 사유에 그 팔)
+  - V3 [증서 ok ↔ pass 모순] → HOLD NEXTGEN_UNPUBLISHED (미게시 팔 1 · 사유에 그 팔)
+  - V3e rtol 없이 돈 접합 팔 (실물 · 증서 칸 없음) 이 섞이면 → HOLD NEXTGEN_UNPUBLISHED
+  - V5 [변조 (표지)] → 봉인 깨짐 (rc 1) · 근거에 `CAEXT` 사유
+  - V5 [증서 없음] → 봉인 깨짐 (rc 1) · 근거에 `NEXTGEN_UNPUBLISHED` 사유
+rc=1 seconds=39

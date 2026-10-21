@@ -1,7 +1,0 @@
-리뷰 핀 (review pin) = a4a1e52c0bc01731f4c1d00924099b56c05a055f
-브랜치 = claude/sdcp-dem-manuscript-si-pqwtv8 (원격 머리 = 이 커밋 · 2026-10-16)
-코드 = 60ba39e224aff48a030dccfe750342f3bf9db61f 와 같다 (이 커밋은 문서 · 증거만 더한다 — scripts/ · webapp/ 차이 0)
-기준 = 6cb2569569ec74b7f5a96e0ef19494e872da5272 (수정 직전)
-이 ZIP = git archive a4a1e52c0bc01731f4c1d00924099b56c05a055f 의 두 경로 그대로 (요청서 1 + 증거 폴더 71) — 내용은 그 커밋의 blob 과 바이트 같다
-⚠ claude/stoic-knuth-NObVQ (원격 머리 724c4ef08) 에는 60ba39e22 · 이 핀이 없다 — pqwtv8 가지를 받을 것
-  git fetch origin claude/sdcp-dem-manuscript-si-pqwtv8 && git checkout a4a1e52c0bc01731f4c1d00924099b56c05a055f

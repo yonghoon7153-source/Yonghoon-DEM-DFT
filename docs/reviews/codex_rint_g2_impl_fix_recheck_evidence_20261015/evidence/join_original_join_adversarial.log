@@ -1,8 +1,0 @@
-baseline PASS
-negative_area REJECT ['area_negative']
-nan_area REJECT ['nonfinite_value']
-nan_pos1_x REJECT ['nonfinite_value']
-nan_delta REJECT ['nonfinite_value']
-different_tilt_boxes REJECT
-fractional_step REJECT {'atom': 2060000, 'contact': None}
-evidence C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\rint_g2_impl_reverify_20261015\evidence\join_adversarial.json

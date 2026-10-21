@@ -1,0 +1,6 @@
+  ok  [off LEAN2] rc 0/0 · manifest same True · step3 (certificates aside) same True · certificate old keys same True · added []
+  ok  [centerline LEAN2] rc 0/0 · manifest same True · step3 (certificates aside) same True · certificate old keys same True · added []
+  ok  [off LEAN3] rc 0/0 · manifest same True · step3 (certificates aside) same True · certificate old keys same True · added []
+  ok  [face_alpha LEAN2] rc 0/0 · manifest same True · step3 (certificates aside) same True · certificate old keys same True · added []
+  ok  [off LEAN2 + rtol 1e-12] rc 0/0 · manifest same True · step3 (certificates aside) same True · certificate old keys same True · added ['conv_cert.bind_version', 'conv_cert.fp_cjunc_registry', 'conv_cert.fp_cjunc_rows', 'conv_cert.fp_face_plan', 'conv_cert.fp_sid', 'conv_cert.fp_sig']
+== probe_payload_bitid: 5/5

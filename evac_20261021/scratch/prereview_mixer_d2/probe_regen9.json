@@ -1,0 +1,1150 @@
+{
+ "regen": [
+  {
+   "case": "coated_g1_w0256_lab_soft",
+   "rc_old": 0,
+   "rc_new": 0,
+   "refuse_new": [],
+   "noncomment_tokens_identical": true,
+   "comment_removed": [
+    "#   벽 γ_W/γ_SE = 명시 입력 (묶는 규칙 표기 없음)",
+    "# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = 입자값 ÷ 1.842).  옛 판은 type 2 = AM_S 를 빌려 썼다"
+   ],
+   "comment_added": [
+    "#   벽 γ_W/γ_SE = 명시 입력 0.0256 — NCM 상 γ 전부 1 (코팅 · 같은 γ 세계) 인 팔만 (1저자 10-14 Q2) · 이 벽의 비코팅 NCM 함의 ρ = γ_W/0.0256 = 1",
+    "#   NCM 표면 (Q2 · 코팅 = γ 1 · 비코팅 = γ ρ): AM_P 코팅 · AM_S 코팅 · 삽입 = 층상 (AM → SE · D11 (가))",
+    "# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = D2 기하평균 W_iW = 2√(γ_iγ_W) · γ_W/γ_SE 0.0256 — 머리 블록).  옛 판은 type 2 = AM_S 를 빌려 썼다"
+   ],
+   "meta_diff": {
+    "only_old": [],
+    "only_new": [],
+    "changed": [
+     "adhesion_rule.{layered,rho_world,surface,wall_rule}",
+     "registered",
+     "schema"
+    ]
+   },
+   "pairs_table_identical": true,
+   "readback_new": {
+    "max_rel_F0": 1.0289732145341013e-05,
+    "max_rel_pulloff": 1.876992773985897e-05,
+    "worst_delta0_over_rmin": 3.524146504272415e-05,
+    "bo_se_read": 0.21243982656133936,
+    "bo_se_rel": -8.164124488674318e-07,
+    "all_sym": true,
+    "wall_wall_zero": true,
+    "meta_rule": "geomean",
+    "meta_gamma": {
+     "AM_P": 1.0,
+     "AM_S": 1.0,
+     "SE": 1.0
+    },
+    "meta_gamma_wall": 0.0256,
+    "meta_bo": 0.21244,
+    "meta_wall_rule": "explicit_coated",
+    "meta_rho": null,
+    "meta_dens_gen": "lab20261014",
+    "rho_se_deck": 1640.0,
+    "header_rows": 9,
+    "header_vs_mine_max_rel": 1.0289838024979403e-05
+   }
+  },
+  {
+   "case": "uncoated_r03_ncm_lab_soft",
+   "rc_old": 0,
+   "rc_new": 0,
+   "refuse_new": [],
+   "noncomment_tokens_identical": true,
+   "comment_removed": [
+    "# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = 입자값 ÷ 1.842).  옛 판은 type 2 = AM_S 를 빌려 썼다"
+   ],
+   "comment_added": [
+    "#   NCM 표면 (Q2 · 코팅 = γ 1 · 비코팅 = γ ρ): AM_P 비코팅 · AM_S 비코팅 · 삽입 = 층상 (AM → SE · D11 (가))",
+    "# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = D2 기하평균 W_iW = 2√(γ_iγ_W) · γ_W/γ_SE 0.00768 — 머리 블록).  옛 판은 type 2 = AM_S 를 빌려 썼다"
+   ],
+   "meta_diff": {
+    "only_old": [],
+    "only_new": [],
+    "changed": [
+     "adhesion_rule.{layered,surface}",
+     "registered",
+     "schema"
+    ]
+   },
+   "pairs_table_identical": true,
+   "readback_new": {
+    "max_rel_F0": 1.393373746427784e-05,
+    "max_rel_pulloff": 1.584060805015497e-05,
+    "worst_delta0_over_rmin": 3.524146504272415e-05,
+    "bo_se_read": 0.21243982656133936,
+    "bo_se_rel": -8.164124488674318e-07,
+    "all_sym": true,
+    "wall_wall_zero": true,
+    "meta_rule": "geomean",
+    "meta_gamma": {
+     "AM_P": 0.3,
+     "AM_S": 0.3,
+     "SE": 1.0
+    },
+    "meta_gamma_wall": 0.00768,
+    "meta_bo": 0.21244,
+    "meta_wall_rule": "hare2026_x_rho_uncoated_ncm",
+    "meta_rho": 0.3,
+    "meta_dens_gen": "lab20261014",
+    "rho_se_deck": 1640.0,
+    "header_rows": 9,
+    "header_vs_mine_max_rel": 1.353138799409237e-05
+   }
+  },
+  {
+   "case": "coated_world_r03_ncm_lab_soft",
+   "rc_old": 0,
+   "rc_new": 0,
+   "refuse_new": [],
+   "noncomment_tokens_identical": true,
+   "comment_removed": [
+    "# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = 입자값 ÷ 1.842).  옛 판은 type 2 = AM_S 를 빌려 썼다"
+   ],
+   "comment_added": [
+    "#   NCM 표면 (Q2 · 코팅 = γ 1 · 비코팅 = γ ρ): AM_P 코팅 · AM_S 코팅 · 삽입 = 층상 (AM → SE · D11 (가))",
+    "# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = D2 기하평균 W_iW = 2√(γ_iγ_W) · γ_W/γ_SE 0.00768 — 머리 블록).  옛 판은 type 2 = AM_S 를 빌려 썼다"
+   ],
+   "meta_diff": {
+    "only_old": [],
+    "only_new": [],
+    "changed": [
+     "adhesion_rule.{layered,surface}",
+     "registered",
+     "schema"
+    ]
+   },
+   "pairs_table_identical": true,
+   "readback_new": {
+    "max_rel_F0": 1.0289732145341013e-05,
+    "max_rel_pulloff": 1.876992773985897e-05,
+    "worst_delta0_over_rmin": 3.524146504272415e-05,
+    "bo_se_read": 0.21243982656133936,
+    "bo_se_rel": -8.164124488674318e-07,
+    "all_sym": true,
+    "wall_wall_zero": true,
+    "meta_rule": "geomean",
+    "meta_gamma": {
+     "AM_P": 1.0,
+     "AM_S": 1.0,
+     "SE": 1.0
+    },
+    "meta_gamma_wall": 0.00768,
+    "meta_bo": 0.21244,
+    "meta_wall_rule": "hare2026_x_rho_uncoated_ncm",
+    "meta_rho": 0.3,
+    "meta_dens_gen": "lab20261014",
+    "rho_se_deck": 1640.0,
+    "header_rows": 9,
+    "header_vs_mine_max_rel": 1.0289838024979403e-05
+   }
+  },
+  {
+   "case": "mixed_03_05_w0256_lab_ref20",
+   "rc_old": 0,
+   "rc_new": 1,
+   "refuse_new": [
+    "⛔ D2 결합 규칙 (1저자 10-14 Q2 — 벽 = 비코팅 NCM · docs/mixer_d2_wall_gamma_derivation_20261014.md §5): 명시 벽 (--gm-gamma-wall) 은 NCM 상 γ 가 전부 1 인 팔 (코팅 · 같은 γ 세계) 에서만 — {'AM_P': 0.3, 'AM_S': 0.5} · 비코팅 팔은 --gm-wall-ncm ρ (γ_W = 0.0256·ρ) 로 (MXD2-05)"
+   ]
+  },
+  {
+   "case": "coated_g1_gen1_soft",
+   "rc_old": 0,
+   "rc_new": 0,
+   "refuse_new": [],
+   "noncomment_tokens_identical": true,
+   "comment_removed": [
+    "#   벽 γ_W/γ_SE = 명시 입력 (묶는 규칙 표기 없음)",
+    "# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = 입자값 ÷ 1.842).  옛 판은 type 2 = AM_S 를 빌려 썼다"
+   ],
+   "comment_added": [
+    "#   벽 γ_W/γ_SE = 명시 입력 0.0256 — NCM 상 γ 전부 1 (코팅 · 같은 γ 세계) 인 팔만 (1저자 10-14 Q2) · 이 벽의 비코팅 NCM 함의 ρ = γ_W/0.0256 = 1",
+    "#   NCM 표면 (Q2 · 코팅 = γ 1 · 비코팅 = γ ρ): AM_P 코팅 · AM_S 코팅 · 삽입 = 층상 (AM → SE · D11 (가))",
+    "# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = D2 기하평균 W_iW = 2√(γ_iγ_W) · γ_W/γ_SE 0.0256 — 머리 블록).  옛 판은 type 2 = AM_S 를 빌려 썼다"
+   ],
+   "meta_diff": {
+    "only_old": [],
+    "only_new": [],
+    "changed": [
+     "adhesion_rule.{layered,rho_world,surface,wall_rule}",
+     "registered",
+     "schema"
+    ]
+   },
+   "pairs_table_identical": true,
+   "readback_new": {
+    "max_rel_F0": 1.597542461184709e-05,
+    "max_rel_pulloff": 2.464588225503661e-05,
+    "worst_delta0_over_rmin": 4.022619269147477e-05,
+    "bo_se_read": 0.21243802411235277,
+    "bo_se_rel": -9.300920952859393e-06,
+    "all_sym": true,
+    "wall_wall_zero": true,
+    "meta_rule": "geomean",
+    "meta_gamma": {
+     "AM_P": 1.0,
+     "AM_S": 1.0,
+     "SE": 1.0
+    },
+    "meta_gamma_wall": 0.0256,
+    "meta_bo": 0.21244,
+    "meta_wall_rule": "explicit_coated",
+    "meta_rho": null,
+    "meta_dens_gen": "gen1",
+    "rho_se_deck": 2000.0,
+    "header_rows": 9,
+    "header_vs_mine_max_rel": 1.597516940154975e-05
+   }
+  },
+  {
+   "case": "sticky_AM_r10_ncm_lab_soft",
+   "rc_old": 0,
+   "rc_new": 0,
+   "refuse_new": [],
+   "noncomment_tokens_identical": true,
+   "comment_removed": [
+    "# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = 입자값 ÷ 1.842).  옛 판은 type 2 = AM_S 를 빌려 썼다"
+   ],
+   "comment_added": [
+    "#   NCM 표면 (Q2 · 코팅 = γ 1 · 비코팅 = γ ρ): AM_P 비코팅 · AM_S 비코팅 · 삽입 = 층상 (AM → SE · D11 (가))",
+    "# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = D2 기하평균 W_iW = 2√(γ_iγ_W) · γ_W/γ_SE 0.256 — 머리 블록).  옛 판은 type 2 = AM_S 를 빌려 썼다"
+   ],
+   "meta_diff": {
+    "only_old": [],
+    "only_new": [],
+    "changed": [
+     "adhesion_rule.{layered,surface}",
+     "registered",
+     "schema"
+    ]
+   },
+   "pairs_table_identical": true,
+   "readback_new": {
+    "max_rel_F0": 6.656317958597668e-06,
+    "max_rel_pulloff": 0.0001669377924875537,
+    "worst_delta0_over_rmin": 0.00048099778627716506,
+    "bo_se_read": 5.000018074354154,
+    "bo_se_rel": 3.614870830670469e-06,
+    "all_sym": true,
+    "wall_wall_zero": true,
+    "meta_rule": "geomean",
+    "meta_gamma": {
+     "AM_P": 10.0,
+     "AM_S": 10.0,
+     "SE": 1.0
+    },
+    "meta_gamma_wall": 0.256,
+    "meta_bo": 5.0,
+    "meta_wall_rule": "hare2026_x_rho_uncoated_ncm",
+    "meta_rho": 10.0,
+    "meta_dens_gen": "lab20261014",
+    "rho_se_deck": 1640.0,
+    "header_rows": 9,
+    "header_vs_mine_max_rel": 6.656362265378135e-06
+   }
+  },
+  {
+   "case": "coated_g1_bo637_lab_soft",
+   "rc_old": 0,
+   "rc_new": 0,
+   "refuse_new": [],
+   "noncomment_tokens_identical": true,
+   "comment_removed": [
+    "#   벽 γ_W/γ_SE = 명시 입력 (묶는 규칙 표기 없음)",
+    "# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = 입자값 ÷ 1.842).  옛 판은 type 2 = AM_S 를 빌려 썼다"
+   ],
+   "comment_added": [
+    "#   벽 γ_W/γ_SE = 명시 입력 0.0256 — NCM 상 γ 전부 1 (코팅 · 같은 γ 세계) 인 팔만 (1저자 10-14 Q2) · 이 벽의 비코팅 NCM 함의 ρ = γ_W/0.0256 = 1",
+    "#   NCM 표면 (Q2 · 코팅 = γ 1 · 비코팅 = γ ρ): AM_P 코팅 · AM_S 코팅 · 삽입 = 층상 (AM → SE · D11 (가))",
+    "# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = D2 기하평균 W_iW = 2√(γ_iγ_W) · γ_W/γ_SE 0.0256 — 머리 블록).  옛 판은 type 2 = AM_S 를 빌려 썼다"
+   ],
+   "meta_diff": {
+    "only_old": [],
+    "only_new": [],
+    "changed": [
+     "adhesion_rule.{layered,rho_world,surface,wall_rule}",
+     "registered",
+     "schema"
+    ]
+   },
+   "pairs_table_identical": true,
+   "readback_new": {
+    "max_rel_F0": 4.0045596318982746e-06,
+    "max_rel_pulloff": 0.002423031872651027,
+    "worst_delta0_over_rmin": 0.007330527824711341,
+    "bo_se_read": 637.320482688243,
+    "bo_se_rel": 7.573718743270064e-07,
+    "all_sym": true,
+    "wall_wall_zero": true,
+    "meta_rule": "geomean",
+    "meta_gamma": {
+     "AM_P": 1.0,
+     "AM_S": 1.0,
+     "SE": 1.0
+    },
+    "meta_gamma_wall": 0.0256,
+    "meta_bo": 637.32,
+    "meta_wall_rule": "explicit_coated",
+    "meta_rho": null,
+    "meta_dens_gen": "lab20261014",
+    "rho_se_deck": 1640.0,
+    "header_rows": 9,
+    "header_vs_mine_max_rel": 4.0045756684037315e-06
+   }
+  },
+  {
+   "case": "coated_g1_bo637_gen1_soft",
+   "rc_old": 0,
+   "rc_new": 0,
+   "refuse_new": [],
+   "noncomment_tokens_identical": true,
+   "comment_removed": [
+    "#   벽 γ_W/γ_SE = 명시 입력 (묶는 규칙 표기 없음)",
+    "# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = 입자값 ÷ 1.842).  옛 판은 type 2 = AM_S 를 빌려 썼다"
+   ],
+   "comment_added": [
+    "#   벽 γ_W/γ_SE = 명시 입력 0.0256 — NCM 상 γ 전부 1 (코팅 · 같은 γ 세계) 인 팔만 (1저자 10-14 Q2) · 이 벽의 비코팅 NCM 함의 ρ = γ_W/0.0256 = 1",
+    "#   NCM 표면 (Q2 · 코팅 = γ 1 · 비코팅 = γ ρ): AM_P 코팅 · AM_S 코팅 · 삽입 = 층상 (AM → SE · D11 (가))",
+    "# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = D2 기하평균 W_iW = 2√(γ_iγ_W) · γ_W/γ_SE 0.0256 — 머리 블록).  옛 판은 type 2 = AM_S 를 빌려 썼다"
+   ],
+   "meta_diff": {
+    "only_old": [],
+    "only_new": [],
+    "changed": [
+     "adhesion_rule.{layered,rho_world,surface,wall_rule}",
+     "registered",
+     "schema"
+    ]
+   },
+   "pairs_table_identical": true,
+   "readback_new": {
+    "max_rel_F0": 7.791410130408849e-06,
+    "max_rel_pulloff": 0.0027612520926791895,
+    "worst_delta0_over_rmin": 0.008367457988245435,
+    "bo_se_read": 637.322380614273,
+    "bo_se_rel": 3.7353515862648123e-06,
+    "all_sym": true,
+    "wall_wall_zero": true,
+    "meta_rule": "geomean",
+    "meta_gamma": {
+     "AM_P": 1.0,
+     "AM_S": 1.0,
+     "SE": 1.0
+    },
+    "meta_gamma_wall": 0.0256,
+    "meta_bo": 637.32,
+    "meta_wall_rule": "explicit_coated",
+    "meta_rho": null,
+    "meta_dens_gen": "gen1",
+    "rho_se_deck": 2000.0,
+    "header_rows": 9,
+    "header_vs_mine_max_rel": 7.791470837181791e-06
+   }
+  },
+  {
+   "case": "mixed_ref20_dthalf_fullprec",
+   "rc_old": 0,
+   "rc_new": 1,
+   "refuse_new": [
+    "⛔ D2 결합 규칙 (1저자 10-14 Q2 — 벽 = 비코팅 NCM · docs/mixer_d2_wall_gamma_derivation_20261014.md §5): ρ_비코팅 0.3 세계의 NCM 상 γ/γ_SE 는 1 (코팅) 또는 ρ (비코팅) 만 — {'AM_S': 0.5} (비코팅 NCM 의 ρ 는 하나다 · MXD2-05)"
+   ]
+  }
+ ],
+ "extra": [
+  {
+   "case": "cu_r03_ncm_lab_soft",
+   "rc_new": 0,
+   "refuse_new": [],
+   "readback_new": {
+    "max_rel_F0": 6.315031506720636e-06,
+    "max_rel_pulloff": 2.2820401643253163e-05,
+    "worst_delta0_over_rmin": 6.235582806758921e-05,
+    "bo_se_read": 0.5000006661214903,
+    "bo_se_rel": 1.3322429806006397e-06,
+    "all_sym": true,
+    "wall_wall_zero": true,
+    "meta_rule": "geomean",
+    "meta_gamma": {
+     "AM_P": 1.0,
+     "AM_S": 0.3,
+     "SE": 1.0
+    },
+    "meta_gamma_wall": 0.00768,
+    "meta_bo": 0.5,
+    "meta_wall_rule": "hare2026_x_rho_uncoated_ncm",
+    "meta_rho": 0.3,
+    "meta_dens_gen": "lab20261014",
+    "rho_se_deck": 1640.0,
+    "header_rows": 9,
+    "header_vs_mine_max_rel": 6.3150713864867924e-06
+   },
+   "rows": [
+    [
+     "AM_P-AM_P",
+     -6.315031506720636e-06,
+     6.660103342406072e-07
+    ],
+    [
+     "AM_P-AM_S",
+     2.3292841453415036e-06,
+     8.532742086784841e-07
+    ],
+    [
+     "AM_P-SE",
+     2.4534788052310574e-06,
+     4.8099892402051474e-05
+    ],
+    [
+     "AM_P-WALL",
+     -3.1349467796149e-06,
+     1.4739619281046335e-07
+    ],
+    [
+     "AM_S-AM_S",
+     -5.547837375052822e-06,
+     5.124880054253101e-07
+    ],
+    [
+     "AM_S-SE",
+     -4.305404979532135e-06,
+     3.0959817506919974e-05
+    ],
+    [
+     "AM_S-WALL",
+     -3.562079854746436e-06,
+     1.6942659102903295e-07
+    ],
+    [
+     "SE-SE",
+     0.0,
+     6.235582806758921e-05
+    ],
+    [
+     "SE-WALL",
+     5.272824030733148e-07,
+     9.808531256498335e-06
+    ],
+    [
+     "WALL-WALL",
+     null,
+     null
+    ]
+   ],
+   "meta_adhesion_rule": {
+    "rule": "geomean",
+    "gamma": {
+     "AM_P": 1.0,
+     "AM_S": 0.3,
+     "SE": 1.0
+    },
+    "gamma_wall": 0.00768,
+    "bo_se": 0.5,
+    "ratified": "1저자 10-14 D2 (가) — docs/mixer_paper_pipeline_draft_20261013.md §4",
+    "law": "W_ij = 2√(γ_iγ_j) · F0_ij = F0_SS·√(γ_iγ_j)/γ_SE·R*_ij/R*_SS · F0_SS = Bo_SE × SE 무게",
+    "ceiling": "모든 쌍 δ0/min(r) ≤ 0.01",
+    "status": "개발 · 등록 전 (결과 0)",
+    "wall_rule": "hare2026_x_rho_uncoated_ncm",
+    "surface": {
+     "AM_P": "coated",
+     "AM_S": "uncoated"
+    },
+    "layered": true,
+    "rho_uncoated_ncm": 0.3
+   },
+   "meta_schema": "mixer_deck_meta/2",
+   "meta_registered": "D2 결합 규칙 덱 — 결과 전 등록 없음 (개발 · 등록 전 · 결과 0) · 규칙 = 1저자 10-14 D2 (가) docs/mixer_paper_pipeline_draft_20261013.md §4 · 벽 = 1저자 10-14 Q2 docs/mixer_d2_wall_gamma_derivation_20261014.md §5 · 밀도 세대 lab20261014 = 결과 전 등록 없음 (docs/density_generations_20261014.md · 1저자 10-14 밤 · 앞으로만)",
+   "header_wall_lines": [
+    "#   W_ij = 2√(γ_iγ_j) (혼합쌍 · 벽까지 · 같은 상 = 2γ_i) · 힘 = JKR 스케일 F ∝ W·R* → F0_ij = F0_SS · √(γ_iγ_j)/γ_SE · R*_ij/R*_SS",
+    "#   CED_ij = [F0_ij·E*_ij²/((9/2)π³R*_ij²)]^(1/3) (쌍별 E* · R* · 벽 R* = r_입자) · 겹침 천장 = 모든 쌍 δ0/min(r)",
+    "#   벽 = 비코팅 NCM 에 묶음 (1저자 10-14 Q2): γ_W/γ_SE = 0.0256 (Hare 2026 Table 3) × ρ_비코팅 0.3 = 0.00768 — 같은 ρ 세계의 코팅 팔도 같은 벽",
+    "#   우리 AM 1.037e9 · 벽 1.48e9 가 그 위다 — 2026-09-21 스모크 런이 실제로 여기서 멈췄다.",
+    "# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = D2 기하평균 W_iW = 2√(γ_iγ_W) · γ_W/γ_SE 0.00768 — 머리 블록).  옛 판은 type 2 = AM_S 를 빌려 썼다",
+    "# ⚠ 영률은 ÷135 균일 연화값이다 (AM 1.037e9 · SE 1.0e7 · 벽 1.48e9).  물성으로 인용 금지."
+   ]
+  },
+  {
+   "case": "uc_r03_ncm_lab_ref20",
+   "rc_new": 0,
+   "refuse_new": [],
+   "readback_new": {
+    "max_rel_F0": 6.619721134359935e-06,
+    "max_rel_pulloff": 6.847586687785956e-06,
+    "worst_delta0_over_rmin": 8.462985884617795e-06,
+    "bo_se_read": 0.5000004866116502,
+    "bo_se_rel": 9.732233003933999e-07,
+    "all_sym": true,
+    "wall_wall_zero": true,
+    "meta_rule": "geomean",
+    "meta_gamma": {
+     "AM_P": 0.3,
+     "AM_S": 1.0,
+     "SE": 1.0
+    },
+    "meta_gamma_wall": 0.00768,
+    "meta_bo": 0.5,
+    "meta_wall_rule": "hare2026_x_rho_uncoated_ncm",
+    "meta_rho": 0.3,
+    "meta_dens_gen": "lab20261014",
+    "rho_se_deck": 1640.0,
+    "header_rows": 9,
+    "header_vs_mine_max_rel": 6.619764955528851e-06
+   },
+   "rows": [
+    [
+     "AM_P-AM_P",
+     -1.6822143780181875e-06,
+     2.984670377065313e-07
+    ],
+    [
+     "AM_P-AM_S",
+     2.6883043122705175e-06,
+     8.532742086784841e-07
+    ],
+    [
+     "AM_P-SE",
+     -2.1622385567576785e-06,
+     4.898984513356147e-06
+    ],
+    [
+     "AM_P-WALL",
+     -2.9805735078936024e-06,
+     9.86718547221523e-08
+    ],
+    [
+     "AM_S-AM_S",
+     -5.151583511109337e-06,
+     1.1435878862342805e-06
+    ],
+    [
+     "AM_S-SE",
+     -6.619721134359935e-06,
+     7.036340544635822e-06
+    ],
+    [
+     "AM_S-WALL",
+     1.1395831758242991e-06,
+     2.5309044246449075e-07
+    ],
+    [
+     "SE-SE",
+     0.0,
+     8.462985884617795e-06
+    ],
+    [
+     "SE-WALL",
+     -2.034599603462084e-06,
+     1.4421103035116364e-06
+    ],
+    [
+     "WALL-WALL",
+     null,
+     null
+    ]
+   ],
+   "meta_adhesion_rule": {
+    "rule": "geomean",
+    "gamma": {
+     "AM_P": 0.3,
+     "AM_S": 1.0,
+     "SE": 1.0
+    },
+    "gamma_wall": 0.00768,
+    "bo_se": 0.5,
+    "ratified": "1저자 10-14 D2 (가) — docs/mixer_paper_pipeline_draft_20261013.md §4",
+    "law": "W_ij = 2√(γ_iγ_j) · F0_ij = F0_SS·√(γ_iγ_j)/γ_SE·R*_ij/R*_SS · F0_SS = Bo_SE × SE 무게",
+    "ceiling": "모든 쌍 δ0/min(r) ≤ 0.01",
+    "status": "개발 · 등록 전 (결과 0)",
+    "wall_rule": "hare2026_x_rho_uncoated_ncm",
+    "surface": {
+     "AM_P": "uncoated",
+     "AM_S": "coated"
+    },
+    "layered": true,
+    "rho_uncoated_ncm": 0.3
+   },
+   "meta_schema": "mixer_deck_meta/2",
+   "meta_registered": "D2 결합 규칙 덱 — 결과 전 등록 없음 (개발 · 등록 전 · 결과 0) · 규칙 = 1저자 10-14 D2 (가) docs/mixer_paper_pipeline_draft_20261013.md §4 · 벽 = 1저자 10-14 Q2 docs/mixer_d2_wall_gamma_derivation_20261014.md §5 · 강성 경로 (쌍별 F₀ 보존 · dt 인자) = docs/reviews/mixer_highbo_stiffness_prereg_20260929.md §3 · 밀도 세대 lab20261014 = 결과 전 등록 없음 (docs/density_generations_20261014.md · 1저자 10-14 밤 · 앞으로만)",
+   "header_wall_lines": [
+    "#   SE 영률만 ×20: 1e+07 → 2e+08 Pa (AM_P · AM_S · 벽 영률 · 전 상 ν 불변 · AM/SE 영률비 103.7 → 5.185)",
+    "#     soft = 현 생성기 행렬 (원소마다 역산 · min 재조립 없음) · E*_ij = [(1−ν_i²)/E_i + (1−ν_j²)/E_j]⁻¹ · 벽 R* = r_입자 · 선언된 벽 E · ν · 0 은 정확히 0",
+    "#   W_ij = 2√(γ_iγ_j) (혼합쌍 · 벽까지 · 같은 상 = 2γ_i) · 힘 = JKR 스케일 F ∝ W·R* → F0_ij = F0_SS · √(γ_iγ_j)/γ_SE · R*_ij/R*_SS",
+    "#   CED_ij = [F0_ij·E*_ij²/((9/2)π³R*_ij²)]^(1/3) (쌍별 E* · R* · 벽 R* = r_입자) · 겹침 천장 = 모든 쌍 δ0/min(r)",
+    "#   벽 = 비코팅 NCM 에 묶음 (1저자 10-14 Q2): γ_W/γ_SE = 0.0256 (Hare 2026 Table 3) × ρ_비코팅 0.3 = 0.00768 — 같은 ρ 세계의 코팅 팔도 같은 벽",
+    "#   우리 AM 1.037e9 · 벽 1.48e9 가 그 위다 — 2026-09-21 스모크 런이 실제로 여기서 멈췄다."
+   ]
+  },
+  {
+   "case": "uu_r03_ncm_gen1_ref40_dthalf",
+   "rc_new": 0,
+   "refuse_new": [],
+   "readback_new": {
+    "max_rel_F0": 9.100677540896385e-06,
+    "max_rel_pulloff": 9.504201792687184e-06,
+    "worst_delta0_over_rmin": 6.08545246951261e-06,
+    "bo_se_read": 0.49999787932884204,
+    "bo_se_rel": -4.241342315913776e-06,
+    "all_sym": true,
+    "wall_wall_zero": true,
+    "meta_rule": "geomean",
+    "meta_gamma": {
+     "AM_P": 0.3,
+     "AM_S": 0.3,
+     "SE": 1.0
+    },
+    "meta_gamma_wall": 0.00768,
+    "meta_bo": 0.5,
+    "meta_wall_rule": "hare2026_x_rho_uncoated_ncm",
+    "meta_rho": 0.3,
+    "meta_dens_gen": "gen1",
+    "rho_se_deck": 2000.0,
+    "header_rows": 9,
+    "header_vs_mine_max_rel": 9.205583352600577e-06
+   },
+   "rows": [
+    [
+     "AM_P-AM_P",
+     3.867766997123212e-06,
+     3.406856994316649e-07
+    ],
+    [
+     "AM_P-AM_S",
+     6.041378552978927e-07,
+     6.520051440759915e-07
+    ],
+    [
+     "AM_P-SE",
+     -3.657689165215139e-06,
+     3.901938230864464e-06
+    ],
+    [
+     "AM_P-WALL",
+     1.1089616926973633e-06,
+     1.126290439611859e-07
+    ],
+    [
+     "AM_S-AM_S",
+     3.639633793905972e-06,
+     5.849815695916868e-07
+    ],
+    [
+     "AM_S-SE",
+     9.100677540896385e-06,
+     3.7517444017515702e-06
+    ],
+    [
+     "AM_S-WALL",
+     6.538696893487739e-06,
+     1.933928061651765e-07
+    ],
+    [
+     "SE-SE",
+     0.0,
+     6.08545246951261e-06
+    ],
+    [
+     "SE-WALL",
+     5.6188863304384995e-06,
+     1.1177268034457825e-06
+    ],
+    [
+     "WALL-WALL",
+     null,
+     null
+    ]
+   ],
+   "meta_adhesion_rule": {
+    "rule": "geomean",
+    "gamma": {
+     "AM_P": 0.3,
+     "AM_S": 0.3,
+     "SE": 1.0
+    },
+    "gamma_wall": 0.00768,
+    "bo_se": 0.5,
+    "ratified": "1저자 10-14 D2 (가) — docs/mixer_paper_pipeline_draft_20261013.md §4",
+    "law": "W_ij = 2√(γ_iγ_j) · F0_ij = F0_SS·√(γ_iγ_j)/γ_SE·R*_ij/R*_SS · F0_SS = Bo_SE × SE 무게",
+    "ceiling": "모든 쌍 δ0/min(r) ≤ 0.01",
+    "status": "개발 · 등록 전 (결과 0)",
+    "wall_rule": "hare2026_x_rho_uncoated_ncm",
+    "surface": {
+     "AM_P": "uncoated",
+     "AM_S": "uncoated"
+    },
+    "layered": true,
+    "rho_uncoated_ncm": 0.3
+   },
+   "meta_schema": "mixer_deck_meta/2",
+   "meta_registered": "D2 결합 규칙 덱 — 결과 전 등록 없음 (개발 · 등록 전 · 결과 0) · 규칙 = 1저자 10-14 D2 (가) docs/mixer_paper_pipeline_draft_20261013.md §4 · 벽 = 1저자 10-14 Q2 docs/mixer_d2_wall_gamma_derivation_20261014.md §5 · 강성 경로 (쌍별 F₀ 보존 · dt 인자) = docs/reviews/mixer_highbo_stiffness_prereg_20260929.md §3",
+   "header_wall_lines": [
+    "#   SE 영률만 ×40: 1e+07 → 4e+08 Pa (AM_P · AM_S · 벽 영률 · 전 상 ν 불변 · AM/SE 영률비 103.7 → 2.592)",
+    "#     soft = 현 생성기 행렬 (원소마다 역산 · min 재조립 없음) · E*_ij = [(1−ν_i²)/E_i + (1−ν_j²)/E_j]⁻¹ · 벽 R* = r_입자 · 선언된 벽 E · ν · 0 은 정확히 0",
+    "#   W_ij = 2√(γ_iγ_j) (혼합쌍 · 벽까지 · 같은 상 = 2γ_i) · 힘 = JKR 스케일 F ∝ W·R* → F0_ij = F0_SS · √(γ_iγ_j)/γ_SE · R*_ij/R*_SS",
+    "#   CED_ij = [F0_ij·E*_ij²/((9/2)π³R*_ij²)]^(1/3) (쌍별 E* · R* · 벽 R* = r_입자) · 겹침 천장 = 모든 쌍 δ0/min(r)",
+    "#   벽 = 비코팅 NCM 에 묶음 (1저자 10-14 Q2): γ_W/γ_SE = 0.0256 (Hare 2026 Table 3) × ρ_비코팅 0.3 = 0.00768 — 같은 ρ 세계의 코팅 팔도 같은 벽",
+    "#   우리 AM 1.037e9 · 벽 1.48e9 가 그 위다 — 2026-09-21 스모크 런이 실제로 여기서 멈췄다."
+   ]
+  },
+  {
+   "case": "cc_explicit_w00768_lab_soft",
+   "rc_new": 0,
+   "refuse_new": [],
+   "readback_new": {
+    "max_rel_F0": 6.315031506720636e-06,
+    "max_rel_pulloff": 2.1396965785402955e-05,
+    "worst_delta0_over_rmin": 6.235582806758921e-05,
+    "bo_se_read": 0.5000006661214903,
+    "bo_se_rel": 1.3322429806006397e-06,
+    "all_sym": true,
+    "wall_wall_zero": true,
+    "meta_rule": "geomean",
+    "meta_gamma": {
+     "AM_P": 1.0,
+     "AM_S": 1.0,
+     "SE": 1.0
+    },
+    "meta_gamma_wall": 0.00768,
+    "meta_bo": 0.5,
+    "meta_wall_rule": "explicit_coated",
+    "meta_rho": null,
+    "meta_dens_gen": "lab20261014",
+    "rho_se_deck": 1640.0,
+    "header_rows": 9,
+    "header_vs_mine_max_rel": 6.3150713864867924e-06
+   },
+   "rows": [
+    [
+     "AM_P-AM_P",
+     -6.315031506720636e-06,
+     6.660103342406072e-07
+    ],
+    [
+     "AM_P-AM_S",
+     -3.383696471237485e-06,
+     1.2746175083736385e-06
+    ],
+    [
+     "AM_P-SE",
+     2.4534788052310574e-06,
+     4.8099892402051474e-05
+    ],
+    [
+     "AM_P-WALL",
+     -3.1349467796149e-06,
+     1.4739619281046335e-07
+    ],
+    [
+     "AM_S-AM_S",
+     -5.510600863511961e-06,
+     1.1435878862342805e-06
+    ],
+    [
+     "AM_S-SE",
+     4.933348587421449e-07,
+     4.624797233072177e-05
+    ],
+    [
+     "AM_S-WALL",
+     7.805635646729314e-07,
+     2.5309044246449075e-07
+    ],
+    [
+     "SE-SE",
+     0.0,
+     6.235582806758921e-05
+    ],
+    [
+     "SE-WALL",
+     5.272824030733148e-07,
+     9.808531256498335e-06
+    ],
+    [
+     "WALL-WALL",
+     null,
+     null
+    ]
+   ],
+   "meta_adhesion_rule": {
+    "rule": "geomean",
+    "gamma": {
+     "AM_P": 1.0,
+     "AM_S": 1.0,
+     "SE": 1.0
+    },
+    "gamma_wall": 0.00768,
+    "bo_se": 0.5,
+    "ratified": "1저자 10-14 D2 (가) — docs/mixer_paper_pipeline_draft_20261013.md §4",
+    "law": "W_ij = 2√(γ_iγ_j) · F0_ij = F0_SS·√(γ_iγ_j)/γ_SE·R*_ij/R*_SS · F0_SS = Bo_SE × SE 무게",
+    "ceiling": "모든 쌍 δ0/min(r) ≤ 0.01",
+    "status": "개발 · 등록 전 (결과 0)",
+    "wall_rule": "explicit_coated",
+    "surface": {
+     "AM_P": "coated",
+     "AM_S": "coated"
+    },
+    "layered": true,
+    "rho_world": 0.3
+   },
+   "meta_schema": "mixer_deck_meta/2",
+   "meta_registered": "D2 결합 규칙 덱 — 결과 전 등록 없음 (개발 · 등록 전 · 결과 0) · 규칙 = 1저자 10-14 D2 (가) docs/mixer_paper_pipeline_draft_20261013.md §4 · 벽 = 1저자 10-14 Q2 docs/mixer_d2_wall_gamma_derivation_20261014.md §5 · 밀도 세대 lab20261014 = 결과 전 등록 없음 (docs/density_generations_20261014.md · 1저자 10-14 밤 · 앞으로만)",
+   "header_wall_lines": [
+    "#   W_ij = 2√(γ_iγ_j) (혼합쌍 · 벽까지 · 같은 상 = 2γ_i) · 힘 = JKR 스케일 F ∝ W·R* → F0_ij = F0_SS · √(γ_iγ_j)/γ_SE · R*_ij/R*_SS",
+    "#   CED_ij = [F0_ij·E*_ij²/((9/2)π³R*_ij²)]^(1/3) (쌍별 E* · R* · 벽 R* = r_입자) · 겹침 천장 = 모든 쌍 δ0/min(r)",
+    "#   벽 γ_W/γ_SE = 명시 입력 0.00768 — NCM 상 γ 전부 1 (코팅 · 같은 γ 세계) 인 팔만 (1저자 10-14 Q2) · 이 벽의 비코팅 NCM 함의 ρ = γ_W/0.0256 = 0.3",
+    "#   우리 AM 1.037e9 · 벽 1.48e9 가 그 위다 — 2026-09-21 스모크 런이 실제로 여기서 멈췄다.",
+    "# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = D2 기하평균 W_iW = 2√(γ_iγ_W) · γ_W/γ_SE 0.00768 — 머리 블록).  옛 판은 type 2 = AM_S 를 빌려 썼다",
+    "# ⚠ 영률은 ÷135 균일 연화값이다 (AM 1.037e9 · SE 1.0e7 · 벽 1.48e9).  물성으로 인용 금지."
+   ]
+  },
+  {
+   "case": "uu_r10_ncm_lab_bo300",
+   "rc_new": 0,
+   "refuse_new": [],
+   "readback_new": {
+    "max_rel_F0": 2.5000841499478454e-05,
+    "max_rel_pulloff": 0.0024765266186189683,
+    "worst_delta0_over_rmin": 0.0073718855825743316,
+    "bo_se_read": 299.99610617271003,
+    "bo_se_rel": -1.2979424299897069e-05,
+    "all_sym": true,
+    "wall_wall_zero": true,
+    "meta_rule": "geomean",
+    "meta_gamma": {
+     "AM_P": 10.0,
+     "AM_S": 10.0,
+     "SE": 1.0
+    },
+    "meta_gamma_wall": 0.256,
+    "meta_bo": 300.0,
+    "meta_wall_rule": "hare2026_x_rho_uncoated_ncm",
+    "meta_rho": 10.0,
+    "meta_dens_gen": "lab20261014",
+    "rho_se_deck": 1640.0,
+    "header_rows": 9,
+    "header_vs_mine_max_rel": 2.3865040419512873e-05
+   },
+   "rows": [
+    [
+     "AM_P-AM_P",
+     1.7104208219098638e-05,
+     0.00021991310228232727
+    ],
+    [
+     "AM_P-AM_S",
+     1.4688456626998914e-05,
+     0.0004208704833466628
+    ],
+    [
+     "AM_P-SE",
+     1.7850647062500613e-05,
+     0.0073718855825743316
+    ],
+    [
+     "AM_P-WALL",
+     1.4856752096781278e-05,
+     7.270223243887374e-05
+    ],
+    [
+     "AM_S-AM_S",
+     1.04789432719965e-05,
+     0.0003776048226579895
+    ],
+    [
+     "AM_S-SE",
+     7.93405563648264e-06,
+     0.0070880190170056236
+    ],
+    [
+     "AM_S-WALL",
+     2.256515423493255e-05,
+     0.00012483556291546433
+    ],
+    [
+     "SE-SE",
+     0.0,
+     0.004435818223906096
+    ],
+    [
+     "SE-WALL",
+     2.5000841499478454e-05,
+     0.002245608298010404
+    ],
+    [
+     "WALL-WALL",
+     null,
+     null
+    ]
+   ],
+   "meta_adhesion_rule": {
+    "rule": "geomean",
+    "gamma": {
+     "AM_P": 10.0,
+     "AM_S": 10.0,
+     "SE": 1.0
+    },
+    "gamma_wall": 0.256,
+    "bo_se": 300.0,
+    "ratified": "1저자 10-14 D2 (가) — docs/mixer_paper_pipeline_draft_20261013.md §4",
+    "law": "W_ij = 2√(γ_iγ_j) · F0_ij = F0_SS·√(γ_iγ_j)/γ_SE·R*_ij/R*_SS · F0_SS = Bo_SE × SE 무게",
+    "ceiling": "모든 쌍 δ0/min(r) ≤ 0.01",
+    "status": "개발 · 등록 전 (결과 0)",
+    "wall_rule": "hare2026_x_rho_uncoated_ncm",
+    "surface": {
+     "AM_P": "uncoated",
+     "AM_S": "uncoated"
+    },
+    "layered": true,
+    "rho_uncoated_ncm": 10.0
+   },
+   "meta_schema": "mixer_deck_meta/2",
+   "meta_registered": "D2 결합 규칙 덱 — 결과 전 등록 없음 (개발 · 등록 전 · 결과 0) · 규칙 = 1저자 10-14 D2 (가) docs/mixer_paper_pipeline_draft_20261013.md §4 · 벽 = 1저자 10-14 Q2 docs/mixer_d2_wall_gamma_derivation_20261014.md §5 · 밀도 세대 lab20261014 = 결과 전 등록 없음 (docs/density_generations_20261014.md · 1저자 10-14 밤 · 앞으로만)",
+   "header_wall_lines": [
+    "#   W_ij = 2√(γ_iγ_j) (혼합쌍 · 벽까지 · 같은 상 = 2γ_i) · 힘 = JKR 스케일 F ∝ W·R* → F0_ij = F0_SS · √(γ_iγ_j)/γ_SE · R*_ij/R*_SS",
+    "#   CED_ij = [F0_ij·E*_ij²/((9/2)π³R*_ij²)]^(1/3) (쌍별 E* · R* · 벽 R* = r_입자) · 겹침 천장 = 모든 쌍 δ0/min(r)",
+    "#   벽 = 비코팅 NCM 에 묶음 (1저자 10-14 Q2): γ_W/γ_SE = 0.0256 (Hare 2026 Table 3) × ρ_비코팅 10 = 0.256 — 같은 ρ 세계의 코팅 팔도 같은 벽",
+    "#   우리 AM 1.037e9 · 벽 1.48e9 가 그 위다 — 2026-09-21 스모크 런이 실제로 여기서 멈췄다.",
+    "# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = D2 기하평균 W_iW = 2√(γ_iγ_W) · γ_W/γ_SE 0.256 — 머리 블록).  옛 판은 type 2 = AM_S 를 빌려 썼다",
+    "# ⚠ 영률은 ÷135 균일 연화값이다 (AM 1.037e9 · SE 1.0e7 · 벽 1.48e9).  물성으로 인용 금지."
+   ]
+  },
+  {
+   "case": "uu_r1e-6_ncm_lab",
+   "rc_new": 1,
+   "refuse_new": [
+    "⛔ D2 결합 규칙: γ_W/γ_SE = 2.56e-08 — 지원 범위 [1e-06, 1e+06] 밖 (0 · 음수 · 언더플로 · 넘침 거부 · MXD2-04)"
+   ]
+  },
+  {
+   "case": "uu_r1e6_ncm_lab_bo1e-6",
+   "rc_new": 0,
+   "refuse_new": [],
+   "readback_new": {
+    "max_rel_F0": 7.692328240604951e-06,
+    "max_rel_pulloff": 8.20994709860301e-06,
+    "worst_delta0_over_rmin": 2.023325799948363e-06,
+    "bo_se_read": 1.0000002352963064e-06,
+    "bo_se_rel": 2.3529630643892574e-07,
+    "all_sym": true,
+    "wall_wall_zero": true,
+    "meta_rule": "geomean",
+    "meta_gamma": {
+     "AM_P": 1000000.0,
+     "AM_S": 1000000.0,
+     "SE": 1.0
+    },
+    "meta_gamma_wall": 25600.0,
+    "meta_bo": 1e-06,
+    "meta_wall_rule": "hare2026_x_rho_uncoated_ncm",
+    "meta_rho": 1000000.0,
+    "meta_dens_gen": "lab20261014",
+    "rho_se_deck": 1640.0,
+    "header_rows": 9,
+    "header_vs_mine_max_rel": 7.692387413049673e-06
+   },
+   "rows": [
+    [
+     "AM_P-AM_P",
+     6.280234628786019e-06,
+     1.0572336094381224e-06
+    ],
+    [
+     "AM_P-AM_S",
+     -4.787848466691891e-06,
+     2.023325799948363e-06
+    ],
+    [
+     "AM_P-SE",
+     4.493509994540901e-06,
+     7.635386780367532e-07
+    ],
+    [
+     "AM_P-WALL",
+     -8.442080311477085e-07,
+     3.495152990434563e-07
+    ],
+    [
+     "AM_S-AM_S",
+     -2.1142817374641965e-07,
+     1.8153376992781892e-06
+    ],
+    [
+     "AM_S-SE",
+     5.123160271791605e-06,
+     7.341425283748802e-07
+    ],
+    [
+     "AM_S-WALL",
+     -7.692328240604951e-06,
+     6.001399713029372e-07
+    ],
+    [
+     "SE-SE",
+     0.0,
+     9.898363468435695e-09
+    ],
+    [
+     "SE-WALL",
+     -1.3197234947082137e-06,
+     2.3258553787317975e-07
+    ],
+    [
+     "WALL-WALL",
+     null,
+     null
+    ]
+   ],
+   "meta_adhesion_rule": {
+    "rule": "geomean",
+    "gamma": {
+     "AM_P": 1000000.0,
+     "AM_S": 1000000.0,
+     "SE": 1.0
+    },
+    "gamma_wall": 25600.0,
+    "bo_se": 1e-06,
+    "ratified": "1저자 10-14 D2 (가) — docs/mixer_paper_pipeline_draft_20261013.md §4",
+    "law": "W_ij = 2√(γ_iγ_j) · F0_ij = F0_SS·√(γ_iγ_j)/γ_SE·R*_ij/R*_SS · F0_SS = Bo_SE × SE 무게",
+    "ceiling": "모든 쌍 δ0/min(r) ≤ 0.01",
+    "status": "개발 · 등록 전 (결과 0)",
+    "wall_rule": "hare2026_x_rho_uncoated_ncm",
+    "surface": {
+     "AM_P": "uncoated",
+     "AM_S": "uncoated"
+    },
+    "layered": true,
+    "rho_uncoated_ncm": 1000000.0
+   },
+   "meta_schema": "mixer_deck_meta/2",
+   "meta_registered": "D2 결합 규칙 덱 — 결과 전 등록 없음 (개발 · 등록 전 · 결과 0) · 규칙 = 1저자 10-14 D2 (가) docs/mixer_paper_pipeline_draft_20261013.md §4 · 벽 = 1저자 10-14 Q2 docs/mixer_d2_wall_gamma_derivation_20261014.md §5 · 밀도 세대 lab20261014 = 결과 전 등록 없음 (docs/density_generations_20261014.md · 1저자 10-14 밤 · 앞으로만)",
+   "header_wall_lines": [
+    "#   W_ij = 2√(γ_iγ_j) (혼합쌍 · 벽까지 · 같은 상 = 2γ_i) · 힘 = JKR 스케일 F ∝ W·R* → F0_ij = F0_SS · √(γ_iγ_j)/γ_SE · R*_ij/R*_SS",
+    "#   CED_ij = [F0_ij·E*_ij²/((9/2)π³R*_ij²)]^(1/3) (쌍별 E* · R* · 벽 R* = r_입자) · 겹침 천장 = 모든 쌍 δ0/min(r)",
+    "#   벽 = 비코팅 NCM 에 묶음 (1저자 10-14 Q2): γ_W/γ_SE = 0.0256 (Hare 2026 Table 3) × ρ_비코팅 1e+06 = 25600 — 같은 ρ 세계의 코팅 팔도 같은 벽",
+    "#   우리 AM 1.037e9 · 벽 1.48e9 가 그 위다 — 2026-09-21 스모크 런이 실제로 여기서 멈췄다.",
+    "# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = D2 기하평균 W_iW = 2√(γ_iγ_W) · γ_W/γ_SE 25600 — 머리 블록).  옛 판은 type 2 = AM_S 를 빌려 썼다",
+    "# ⚠ 영률은 ÷135 균일 연화값이다 (AM 1.037e9 · SE 1.0e7 · 벽 1.48e9).  물성으로 인용 금지."
+   ]
+  },
+  {
+   "case": "cc_r1_ncm_lab_bo1e4",
+   "rc_new": 1,
+   "refuse_new": [
+    "⛔ 팔 D2 결합 규칙 (기하평균 W_ij = 2√(γ_iγ_j) · 혼합쌍 · 벽) · γ/γ_SE AM_P 1 · AM_S 1 · SE 1 · γ_W/γ_SE 0.0256 · SE–SE Bo_code 10000 — 개발 · 등록 전 (결과 0): AM_P–SE 겹침 3.544 % > 천장 1.0 % (D2 쌍별) — Bo_SE 를 낮추거나 천장을 논의할 것"
+   ]
+  },
+  {
+   "case": "uu_r03_ncm_lab_bo1010",
+   "rc_new": 0,
+   "refuse_new": [],
+   "readback_new": {
+    "max_rel_F0": 7.255646307102737e-06,
+    "max_rel_pulloff": 0.0033061521968991148,
+    "worst_delta0_over_rmin": 0.0099642393597186,
+    "bo_se_read": 1009.9996746823053,
+    "bo_se_rel": -3.220967274009112e-07,
+    "all_sym": true,
+    "wall_wall_zero": true,
+    "meta_rule": "geomean",
+    "meta_gamma": {
+     "AM_P": 0.3,
+     "AM_S": 0.3,
+     "SE": 1.0
+    },
+    "meta_gamma_wall": 0.00768,
+    "meta_bo": 1010.0,
+    "meta_wall_rule": "hare2026_x_rho_uncoated_ncm",
+    "meta_rho": 0.3,
+    "meta_dens_gen": "lab20261014",
+    "rho_se_deck": 1640.0,
+    "header_rows": 9,
+    "header_vs_mine_max_rel": 7.2555936631024665e-06
+   },
+   "rows": [
+    [
+     "AM_P-AM_P",
+     -1.701743766679975e-06,
+     4.7693980979051915e-05
+    ],
+    [
+     "AM_P-AM_S",
+     -2.7025577929995492e-06,
+     9.127699783780807e-05
+    ],
+    [
+     "AM_P-SE",
+     1.033823259000144e-06,
+     0.005145385038960941
+    ],
+    [
+     "AM_P-WALL",
+     -1.0486940644760523e-06,
+     1.576743522753527e-05
+    ],
+    [
+     "AM_S-AM_S",
+     7.255646307102737e-06,
+     8.189445800376793e-05
+    ],
+    [
+     "AM_S-SE",
+     4.3843351256178664e-06,
+     0.004947297291614964
+    ],
+    [
+     "AM_S-WALL",
+     7.741601868449521e-07,
+     2.7073844411344578e-05
+    ],
+    [
+     "SE-SE",
+     0.0,
+     0.0099642393597186
+    ],
+    [
+     "SE-WALL",
+     -3.6643036394057305e-07,
+     0.001567367445911184
+    ],
+    [
+     "WALL-WALL",
+     null,
+     null
+    ]
+   ],
+   "meta_adhesion_rule": {
+    "rule": "geomean",
+    "gamma": {
+     "AM_P": 0.3,
+     "AM_S": 0.3,
+     "SE": 1.0
+    },
+    "gamma_wall": 0.00768,
+    "bo_se": 1010.0,
+    "ratified": "1저자 10-14 D2 (가) — docs/mixer_paper_pipeline_draft_20261013.md §4",
+    "law": "W_ij = 2√(γ_iγ_j) · F0_ij = F0_SS·√(γ_iγ_j)/γ_SE·R*_ij/R*_SS · F0_SS = Bo_SE × SE 무게",
+    "ceiling": "모든 쌍 δ0/min(r) ≤ 0.01",
+    "status": "개발 · 등록 전 (결과 0)",
+    "wall_rule": "hare2026_x_rho_uncoated_ncm",
+    "surface": {
+     "AM_P": "uncoated",
+     "AM_S": "uncoated"
+    },
+    "layered": true,
+    "rho_uncoated_ncm": 0.3
+   },
+   "meta_schema": "mixer_deck_meta/2",
+   "meta_registered": "D2 결합 규칙 덱 — 결과 전 등록 없음 (개발 · 등록 전 · 결과 0) · 규칙 = 1저자 10-14 D2 (가) docs/mixer_paper_pipeline_draft_20261013.md §4 · 벽 = 1저자 10-14 Q2 docs/mixer_d2_wall_gamma_derivation_20261014.md §5 · 밀도 세대 lab20261014 = 결과 전 등록 없음 (docs/density_generations_20261014.md · 1저자 10-14 밤 · 앞으로만)",
+   "header_wall_lines": [
+    "#   W_ij = 2√(γ_iγ_j) (혼합쌍 · 벽까지 · 같은 상 = 2γ_i) · 힘 = JKR 스케일 F ∝ W·R* → F0_ij = F0_SS · √(γ_iγ_j)/γ_SE · R*_ij/R*_SS",
+    "#   CED_ij = [F0_ij·E*_ij²/((9/2)π³R*_ij²)]^(1/3) (쌍별 E* · R* · 벽 R* = r_입자) · 겹침 천장 = 모든 쌍 δ0/min(r)",
+    "#   벽 = 비코팅 NCM 에 묶음 (1저자 10-14 Q2): γ_W/γ_SE = 0.0256 (Hare 2026 Table 3) × ρ_비코팅 0.3 = 0.00768 — 같은 ρ 세계의 코팅 팔도 같은 벽",
+    "#   우리 AM 1.037e9 · 벽 1.48e9 가 그 위다 — 2026-09-21 스모크 런이 실제로 여기서 멈췄다.",
+    "# ★ 메시 `type 4` = 벽 전용 타입 (강철 ÷135, 점착 = D2 기하평균 W_iW = 2√(γ_iγ_W) · γ_W/γ_SE 0.00768 — 머리 블록).  옛 판은 type 2 = AM_S 를 빌려 썼다",
+    "# ⚠ 영률은 ÷135 균일 연화값이다 (AM 1.037e9 · SE 1.0e7 · 벽 1.48e9).  물성으로 인용 금지."
+   ]
+  }
+ ]
+}

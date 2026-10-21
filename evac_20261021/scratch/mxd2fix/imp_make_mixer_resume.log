@@ -1,0 +1,39 @@
+── LA (층상 삽입 둘) ──
+  ✓ read_restart 이 정확히 1 개 · create_box 0 개
+  ✓ run 이 정확히 1 개이고 `run <원 run 합> upto`
+  ✓ 삽입 · 템플릿 · 분포 fix 가 하나도 없다
+  ✓ unfix · write_restart · shell mkdir 이 없다
+  ✓ 삽입 region 과 상자 region 이 없다
+  ✓ read_restart 이 units 뒤 · 첫 fix 앞
+  ✓ RESUME_STEP 을 찍는다 (read_restart 바로 뒤)
+  ✓ 나머지 명령은 순서 · 글자 그대로 (재료 · 접촉 · 메시 · 벽 · 적분 · 덤프 · restart · 회전)
+  ✓ 회전 move/mesh 가 run 앞에 있다
+  ✓ `restart N a b` 와 dump 가 남아 있다
+  ✓ 스모크: `run <ckpt + 5000> upto`
+  ✓ & 이어진 줄이 반쯤 남지 않았다 (삭제 명령의 연속줄까지 같이 빠짐)
+── E1 (삽입 하나) ──
+  ✓ read_restart 이 정확히 1 개 · create_box 0 개
+  ✓ run 이 정확히 1 개이고 `run <원 run 합> upto`
+  ✓ 삽입 · 템플릿 · 분포 fix 가 하나도 없다
+  ✓ unfix · write_restart · shell mkdir 이 없다
+  ✓ 삽입 region 과 상자 region 이 없다
+  ✓ read_restart 이 units 뒤 · 첫 fix 앞
+  ✓ RESUME_STEP 을 찍는다 (read_restart 바로 뒤)
+  ✓ 나머지 명령은 순서 · 글자 그대로 (재료 · 접촉 · 메시 · 벽 · 적분 · 덤프 · restart · 회전)
+  ✓ 회전 move/mesh 가 run 앞에 있다
+  ✓ `restart N a b` 와 dump 가 남아 있다
+  ✓ 스모크: `run <ckpt + 5000> upto`
+  ✓ & 이어진 줄이 반쯤 남지 않았다 (삭제 명령의 연속줄까지 같이 빠짐)
+── 체크포인트 선택 ──
+  ✓ L 5,805,000 · N 200,000 · T 5,000 → 5,800,000 (최신)
+  ✓ L 5,800,000 (체크포인트 step 에서 죽음) → 5,600,000 (하나 앞)
+  ✓ 회전 시작 전 체크포인트는 거부
+── 폴더 (보존 · 영수증) ──
+  ✓ 최신 파일 (a) 을 고른다
+  ✓ 사용 체크포인트를 복사 보존
+  ✓ ckpt 보다 뒤 덤프만 post_pre_resume_<ckpt>/ 로 옮긴다 (지우지 않는다)
+  ✓ in.resume · resume_receipt.json 이 생긴다
+  ✓ 두 번째 재개는 새 폴더 (…_2) — 먼저 옮긴 덤프를 안 덮는다
+  ✓ 변이: 크기가 크게 다른 a/b 는 거부
+
+✓ 전부 통과

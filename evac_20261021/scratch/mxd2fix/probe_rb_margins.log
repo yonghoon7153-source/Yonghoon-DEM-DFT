@@ -1,0 +1,4 @@
+decks checked 480 with problems 0
+worst observed: {'law': '2.75e-05', 'bo': '1.46e-05', 'hdr': '2.75e-05', 'ovl': '5.19e-05'}
+tolerances    : {'law': '4.5e-05', 'bo': '2.5e-05', 'hdr': '5.5e-05', 'ovl': '5e-05'}
+rc=0 elapsed=2.5s

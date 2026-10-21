@@ -1,0 +1,23 @@
+Mixer D3: test first - rule checks that reproduce the v1 counterexamples
+
+docs/reviews/mixer_d3_design_v2_evidence_20261021/d3_v2_rule_checks.py is a
+small executable model of the D3 design rules (no simulation, no deck, no file
+writes; it calls generator and contact-checker functions only).  For each
+ledger item MXD3-01..17 except the wording item 16 there is one check C01..C17:
+a counterexample that the v1 rules wrongly accept, and a positive control that
+the v2 rules must still accept, so that rejecting everything cannot pass.
+
+This commit holds the v1 rules only.  The recorded run
+(d3_v2_rule_checks_red.txt) shows all 16 counterexamples reproduced under v1
+and every check failing because the v2 rules are not written yet (exit 1).
+Examples: the steep-transition interval misses the true value in 982 of 2,200
+cases; minimal-plan T1 has no u_DEM; two-seed per-level SD gives 0.907 coverage
+against a 0.95 target; the upper F3 extension asks for Bo 2015.4 above the
+lab ceiling 1015.4; the contract checker refuses funnel and tap-floor meshes
+yet v1 keeps those runs; 20 of 22 design numbers differ from the lab20261014
+values while all 22 match gen1.
+
+The ledger entries MXD3-01..17 (not 16) now list the check as evidence.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

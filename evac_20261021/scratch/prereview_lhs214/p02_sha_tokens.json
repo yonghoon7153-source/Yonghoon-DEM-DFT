@@ -1,0 +1,245 @@
+{
+ "commit-ancestor-of-HEAD": {
+  "count": 59
+ },
+ "not-an-object": {
+  "0b85e858": [
+   "docs/reviews/lhs214_relaunch_package_20261020.md",
+   "docs/reviews/lhs_network_batch_registration_20261007_g2.md"
+  ],
+  "0d9dfe83b875451d": [
+   "docs/reviews/lhs_network_batch_registration_20261007_g2.md"
+  ],
+  "0e2ec7ef37571268": [
+   "added-lines a69963967..HEAD",
+   "docs/reviews/lhs214_relaunch_package_20261020.md",
+   "docs/reviews/lhs_network_batch_registration_20261007_g2.md"
+  ],
+  "1487ea01": [
+   "docs/reviews/lhs214_relaunch_package_20261020.md"
+  ],
+  "2149f873": [
+   "added-lines a69963967..HEAD",
+   "commit-msg f82929b06",
+   "commit-msg fe23f2b83",
+   "docs/reviews/codex_lhs214_relaunch_check_request_20261020.md",
+   "docs/reviews/lhs214_relaunch_package_20261020.md",
+   "docs/reviews/lhs214_relaunch_s0b_evidence_20261021/README.md",
+   "docs/reviews/lhs_network_batch_registration_20261007_g2.md",
+   "docs/reviews/lhs_network_batch_registration_20261012_supp20.md"
+  ],
+  "2149f8738bb2": [
+   "added-lines a69963967..HEAD",
+   "commit-msg fe23f2b83",
+   "docs/reviews/lhs214_relaunch_package_20261020.md"
+  ],
+  "2149f8738bb20b6a311b3c5b344b974": [
+   "added-lines a69963967..HEAD"
+  ],
+  "23a949df": [
+   "docs/reviews/lhs214_relaunch_package_20261020.md"
+  ],
+  "2414fb21": [
+   "added-lines a69963967..HEAD",
+   "docs/reviews/lhs214_relaunch_package_20261020.md",
+   "docs/reviews/lhs_network_batch_registration_20261007_g2.md"
+  ],
+  "248ee5c0": [
+   "docs/reviews/lhs214_relaunch_package_20261020.md",
+   "docs/reviews/lhs_network_batch_registration_20261012_supp20.md"
+  ],
+  "27c9c1a8": [
+   "docs/reviews/lhs214_relaunch_package_20261020.md"
+  ],
+  "2c3ed36f": [
+   "added-lines a69963967..HEAD",
+   "docs/reviews/codex_lhs214_relaunch_check_request_20261020.md"
+  ],
+  "2c7e0b81": [
+   "added-lines a69963967..HEAD",
+   "docs/reviews/codex_lhs214_relaunch_check_request_20261020.md"
+  ],
+  "2c7e0b81dbe81d05": [
+   "added-lines a69963967..HEAD",
+   "docs/reviews/lhs214_relaunch_s0b_evidence_20261021/README.md"
+  ],
+  "3096e33fd0f19533": [
+   "added-lines a69963967..HEAD",
+   "docs/reviews/lhs214_relaunch_package_20261020.md",
+   "docs/reviews/lhs_network_batch_registration_20261007_g2.md"
+  ],
+  "32f00daa": [
+   "docs/reviews/lhs214_relaunch_package_20261020.md",
+   "docs/reviews/lhs_network_batch_registration_20261007_g2.md"
+  ],
+  "3bc0a116": [
+   "docs/reviews/lhs_network_batch_registration_20261007_g2.md"
+  ],
+  "3d6110be": [
+   "added-lines a69963967..HEAD",
+   "docs/reviews/codex_lhs214_relaunch_check_request_20261020.md"
+  ],
+  "3d6110be24d24bf9": [
+   "added-lines a69963967..HEAD",
+   "docs/reviews/lhs214_relaunch_s0b_evidence_20261021/README.md"
+  ],
+  "3e82140f47c7e87b": [
+   "added-lines a69963967..HEAD",
+   "docs/reviews/lhs214_relaunch_package_20261020.md",
+   "docs/reviews/lhs_network_batch_registration_20261007_g2.md"
+  ],
+  "61f00fef": [
+   "added-lines a69963967..HEAD",
+   "docs/reviews/lhs214_relaunch_package_20261020.md",
+   "docs/reviews/lhs_network_batch_registration_20261007_g2.md"
+  ],
+  "69d3f913": [
+   "added-lines a69963967..HEAD",
+   "docs/reviews/lhs214_relaunch_package_20261020.md",
+   "docs/reviews/lhs214_relaunch_s0b_evidence_20261021/README.md",
+   "docs/reviews/lhs_network_batch_registration_20261012_supp20.md"
+  ],
+  "6bc4037c": [
+   "added-lines a69963967..HEAD",
+   "docs/reviews/lhs214_relaunch_package_20261020.md",
+   "docs/reviews/lhs_network_batch_registration_20261007_g2.md"
+  ],
+  "729db1fa": [
+   "docs/reviews/lhs214_relaunch_package_20261020.md"
+  ],
+  "73d9a47f": [
+   "docs/reviews/lhs214_relaunch_package_20261020.md"
+  ],
+  "755325e1": [
+   "added-lines a69963967..HEAD",
+   "docs/reviews/lhs214_relaunch_package_20261020.md",
+   "docs/reviews/lhs_network_batch_registration_20261007_g2.md"
+  ],
+  "7cad47d1": [
+   "added-lines a69963967..HEAD",
+   "docs/reviews/codex_lhs214_relaunch_check_request_20261020.md"
+  ],
+  "7fd158cb": [
+   "added-lines a69963967..HEAD",
+   "docs/reviews/codex_lhs214_relaunch_check_request_20261020.md"
+  ],
+  "8026169f61e8bddc": [
+   "added-lines a69963967..HEAD",
+   "docs/reviews/lhs214_relaunch_package_20261020.md",
+   "docs/reviews/lhs_network_batch_registration_20261007_g2.md"
+  ],
+  "8d5dcbd2": [
+   "added-lines a69963967..HEAD"
+  ],
+  "991cf115": [
+   "added-lines a69963967..HEAD",
+   "docs/reviews/lhs214_relaunch_package_20261020.md",
+   "docs/reviews/lhs214_relaunch_s0b_evidence_20261021/README.md",
+   "docs/reviews/lhs_network_batch_registration_20261007_g2.md",
+   "docs/reviews/lhs_network_batch_registration_20261012_supp20.md"
+  ],
+  "a04282d7": [
+   "docs/reviews/lhs214_relaunch_package_20261020.md",
+   "docs/reviews/lhs_network_batch_registration_20261007_g2.md"
+  ],
+  "a06d4298726090f0": [
+   "added-lines a69963967..HEAD",
+   "docs/reviews/lhs214_relaunch_s0b_evidence_20261021/README.md"
+  ],
+  "a525e2db98fd044f": [
+   "added-lines a69963967..HEAD",
+   "docs/reviews/lhs214_relaunch_package_20261020.md",
+   "docs/reviews/lhs_network_batch_registration_20261007_g2.md"
+  ],
+  "a7aaa3c8": [
+   "added-lines a69963967..HEAD",
+   "docs/reviews/lhs214_relaunch_package_20261020.md",
+   "docs/reviews/lhs214_relaunch_s0b_evidence_20261021/README.md",
+   "docs/reviews/lhs_network_batch_registration_20261012_supp20.md"
+  ],
+  "a8dba071bc00aadd": [
+   "docs/reviews/lhs214_relaunch_package_20261020.md",
+   "docs/reviews/lhs_network_batch_registration_20261012_supp20.md"
+  ],
+  "b2389709": [
+   "added-lines a69963967..HEAD",
+   "docs/reviews/codex_lhs214_relaunch_check_request_20261020.md"
+  ],
+  "b313e61a": [
+   "added-lines a69963967..HEAD",
+   "docs/reviews/lhs214_relaunch_package_20261020.md",
+   "docs/reviews/lhs_network_batch_registration_20261007_g2.md"
+  ],
+  "b313e61ab551": [
+   "docs/reviews/lhs214_relaunch_package_20261020.md",
+   "docs/reviews/lhs_network_batch_registration_20261007_g2.md"
+  ],
+  "c0a7da6e1b73bea9": [
+   "added-lines a69963967..HEAD",
+   "docs/reviews/lhs214_relaunch_package_20261020.md",
+   "docs/reviews/lhs_network_batch_registration_20261007_g2.md"
+  ],
+  "c75d5a71": [
+   "docs/reviews/lhs_network_batch_registration_20261007_g2.md"
+  ],
+  "d1815155142e9092": [
+   "added-lines a69963967..HEAD",
+   "docs/reviews/lhs214_relaunch_package_20261020.md",
+   "docs/reviews/lhs_network_batch_registration_20261007_g2.md"
+  ],
+  "da7c93f9": [
+   "docs/reviews/lhs214_relaunch_package_20261020.md",
+   "docs/reviews/lhs_network_batch_registration_20261007_g2.md"
+  ],
+  "da9ecfef": [
+   "added-lines a69963967..HEAD",
+   "docs/reviews/lhs214_relaunch_package_20261020.md",
+   "docs/reviews/lhs_network_batch_registration_20261007_g2.md"
+  ],
+  "df505b79": [
+   "docs/reviews/lhs214_relaunch_package_20261020.md",
+   "docs/reviews/lhs_network_batch_registration_20261012_supp20.md"
+  ],
+  "e76dbe08": [
+   "added-lines a69963967..HEAD",
+   "docs/reviews/lhs214_relaunch_package_20261020.md",
+   "docs/reviews/lhs_network_batch_registration_20261007_g2.md"
+  ],
+  "e8b2496b": [
+   "added-lines a69963967..HEAD",
+   "commit-msg f82929b06",
+   "commit-msg fe23f2b83",
+   "docs/reviews/codex_lhs214_relaunch_check_request_20261020.md",
+   "docs/reviews/lhs214_relaunch_package_20261020.md",
+   "docs/reviews/lhs214_relaunch_s0b_evidence_20261021/README.md",
+   "docs/reviews/lhs_network_batch_registration_20261007_g2.md",
+   "docs/reviews/lhs_network_batch_registration_20261012_supp20.md"
+  ],
+  "e8b2496b9c2e": [
+   "added-lines a69963967..HEAD"
+  ],
+  "ea92cee6": [
+   "docs/reviews/lhs_network_batch_registration_20261012_supp20.md"
+  ],
+  "ed8944dc": [
+   "docs/reviews/lhs214_relaunch_package_20261020.md"
+  ],
+  "f3f54951": [
+   "docs/reviews/lhs214_relaunch_package_20261020.md",
+   "docs/reviews/lhs_network_batch_registration_20261007_g2.md"
+  ],
+  "fca3af77": [
+   "added-lines a69963967..HEAD",
+   "docs/reviews/lhs214_relaunch_package_20261020.md",
+   "docs/reviews/lhs_network_batch_registration_20261007_g2.md"
+  ]
+ },
+ "commit-NOT-ancestor-of-HEAD": {
+  "a45a980e9": [
+   "commit-msg 02393562f"
+  ],
+  "e9267000b": [
+   "commit-msg 02393562f"
+  ]
+ }
+}

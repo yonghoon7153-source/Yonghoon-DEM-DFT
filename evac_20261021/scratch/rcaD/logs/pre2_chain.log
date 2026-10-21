@@ -1,0 +1,142 @@
+  FAIL  L01 정상 사다리 (거듭제곱) — CALIBRATED · 바닥 · 천장 · 1e4 · 1e6 · 1e8 · 반씩 둘 (1e7 · 10^6.5) · 확인 하나 · 끝 확인 둘 (lo · hi 후보)   (2, None, None, None)
+  FAIL  L02 R_j,0 손계산 = R_ref·(s_ref/1.63)^(1/e) 의 유효숫자 3 자리 (2.27e6 · ln–ln 보간이 거듭제곱에서 정확)   R_j,0 nan ↔ 손계산 2270000.0
+  FAIL  L03 §3-2b 끝 규칙 (3판 · RCA-01) — 후보 = 참 역상 · 끝 확인 런 → 후보 (바깥) 또는 바깥 실측 이웃 · 참 허용집합을 바깥에서 감싼다 · 역상 R 비 기록   ['lo 후보 None ↔ 참 2093962.3948869482', 'hi 후보 None ↔ 참 2457340.069128419', 'R_ratio None ↔ nan']
+  FAIL  L04 끼는 이웃 비 ≤ 10^0.5 · 확인 1 회 통과 · 국소 e ≥ e_min (진단) · 점 수 ≤ 계획 상한 · 상한 없음 (none) = width_ok None   (None, None, None, None)
+  FAIL  L05 ×100 아래 확장 — 세 점 모두 표적 아래 → 1e2 → 반씩 → R_j,0 = 1e4·(1.2/1.63)^4 의 3 자리 (2.94e3)   TypeError: 'NoneType' object is not subscriptable @ return (r['sum']['status'] == 'CALIBRATED' and L.get('n_ext') == 1 and '100.0' in L.get('order', [])
+  FAIL  L06 ×100 위 확장 — R_j,0 = 1e8·(2.5/1.63)^4 의 3 자리 (5.53e8) · 1e10 점   TypeError: 'NoneType' object is not subscriptable @ return (r['sum']['status'] == 'CALIBRATED' and L.get('n_ext') == 1 and '10000000000.0' in L.get('order', [])
+  FAIL  L07 로지스틱 — R_j,0 = 사슬이 고른 끼는 쌍에서 손으로 ln–ln 보간한 값의 3 자리 (독립 계산) · 쌍이 참 근을 낀다   TypeError: 'NoneType' object is not subscriptable @ return (r['sum']['status'] == 'CALIBRATED' and float(L.get('R_j0') or 'nan') == want and float(ra) < root < float(rb),
+  FAIL  L08 CALIB_IMPOSSIBLE — 천장 1.5 < 1.63 · 런 둘 (바닥 · 천장) 뒤 멈춤 · rc 3   (2, None, [])
+  FAIL  L09 CALIB_IMPOSSIBLE — 바닥 2.0 > 1.63   TypeError: 'NoneType' object is not subscriptable @ return r['sum']['status'] == 'CALIB_IMPOSSIBLE', (r['sum']['status'], stop_code(r))
+  FAIL  L10 CALIB_EDGE — 바닥 1.60 (1.63 의 2 % 안) · 사다리 점 없음   TypeError: 'NoneType' object is not subscriptable @ return r['sum']['status'] == 'CALIB_EDGE' and roles(r) == ['floor', 'ceiling'], (r['sum']['status'], roles(r))
+  FAIL  L11 3판 e_min = 국소 진단 (RCA-01 · R3-Q3) — 탄성 e = 0.01 < e_min 이어도 멈추지 않는다 · 확인 · 끝 규칙 → CALIBRATED (상한 none) · 역상 R 비 ≥ 참 54.6 · local_e_ge_emin False 기록   TypeError: 'NoneType' object is not subscriptable @ return (r['sum']['status'] == 'CALIBRATED' and L.get('local_e_ge_emin') is False and 'confirm' in roles(r)
+  FAIL  L11b 역상 R 비 상한이 등록되면 (계획 calib_rj_ratio_max 50) — 실제 역상 폭 54.6 이상 > 50 → CALIB_UNIDENTIFIED (§3-2b ④ · 3판 뜻)   TypeError: 'NoneType' object is not subscriptable @ return (r['sum']['status'] == 'CALIB_UNIDENTIFIED' and L.get('width_ok') is False and L.get('R_ratio', 0) > 50.0,
+  FAIL  L12 CALIB_UNCONFIRMED — 확인 두 번 다 2 % 넘음 (확인 런 정확히 둘)   TypeError: 'NoneType' object is not subscriptable @ return (r['sum']['status'] == 'CALIB_UNCONFIRMED' and roles(r).count('confirm') == 2
+  FAIL  L13 확인 한 번 실패 → 그 점을 넣고 다시 보간 → 둘째 확인 통과 (CALIBRATED · 확인 2)   TypeError: 'NoneType' object is not subscriptable @ return (r['sum']['status'] == 'CALIBRATED' and [c['ok'] for c in L.get('confirms', [])] == [False, True]
+  FAIL  L14 CALIB_NONMONOTONE — 1e8 이 1e6 보다 높다 (ln 차 > τ_mono)   TypeError: 'NoneType' object is not subscriptable @ return r['sum']['status'] == 'CALIB_NONMONOTONE', (r['sum']['status'], stop_code(r))
+  FAIL  L15 평탄 (τ_mono 안에서 오름) = 기록만 · 비단조로 멈추지 않음   TypeError: 'NoneType' object is not subscriptable @ return (r['sum']['status'] != 'CALIB_NONMONOTONE' and ['1000000.0', '100000000.0'] in lad(r).get('flat_pairs', []),
+  FAIL  L16 CALIB_LADDER_EXHAUSTED — 계획 점 수 상한 12 (시험 값) · 런 12 개 (바닥 · 천장 · 셋 · ×100 일곱) 뒤 13 째 요청에서 · 상한 = 계획 칸 (사슬 기본값 없음)   TypeError: 'NoneType' object is not subscriptable @ return (r['sum']['status'] == 'CALIB_LADDER_EXHAUSTED' and len(roles(r)) == 12 and n_calls(r['world']) == 12
+  FAIL  L17 NOT_COMPUTED — 1e6 점 수렴 증서 실패 → 그 점 NOT_COMPUTED · 사다리 멈춤 (뒤 런 없음)   TypeError: 'NoneType' object is not subscriptable @ (r['sum']['status'], roles(r), stop_code(r)))
+  FAIL  L18 origin §3-3 통과 — R_j,0 에서 arm 1 · 2 만 (ARM_LIST=1,2 한 런 · ARMS 없음 · a0 다시 안 돎) · 팔 sid 지문 = origin 마다 (arm 1 ≠ arm 2 인데 SID_GRID 아님) · ln(max/min) ≤ 0.02 · 8 팔 없음 · 표지 없음   AttributeError: 'NoneType' object has no attribute 'get' @ runs = [x for x in r['sum'].get('runs', []) if x['role'] == 'origin']
+  FAIL  L19 origin §3-3 넘음 (arm 1 +2 % · arm 2 −1 %) → 8 팔 런 · CALIB_ORIGIN_SENSITIVE · R_j,0 는 arm 0 값 그대로   TypeError: 'NoneType' object is not subscriptable @ return (r['sum']['status'] == 'CALIBRATED' and o.get('status') == 'sensitive' and 'origin8' in roles(r)
+  FAIL  L20 P1 법칙 사다리 — 같은 SBE · 법칙 배수 0.95 → R_j,0 = 1.85e6 (법칙 끝마다 따로 보정)   TypeError: 'NoneType' object is not subscriptable @ return (r['sum']['status'] == 'CALIBRATED' and float(lad(r).get('R_j0') or 'nan') == want
+  FAIL  S01 출력 폴더가 있고 비어 있지 않음 → OUTDIR_NOT_EMPTY · 러너 0 회 · 그 폴더에 아무것도 안 씀   (2, ['old.txt'], '                           [--runs RUNS [RUNS ...]] [--reverify REVERIFY]\n                            [--out OUT] [--max-hours MAX_HOURS] [--dry-run]\n                            [--show-results]\ntest_rint_r_chain.py: error: unrecognized arguments: --s0-plan /tmp/rint_r_chain_t_sbyi3sz5/s0_plan.json\n')
+  FAIL  S02 러너 rc 2 → RUNNER_RC   (2, None, None)
+  FAIL  S03 .rejected_* 기록 → REJECTED_MARKER   (2, None, None)
+  FAIL  S04 팔 JSON 이 같은 번호로 둘 → ARM_JSON_COUNT   (2, None, None)
+  FAIL  S05 러너가 다른 σ_AM_S (0.01 · 영수증 = 매니페스트 → 정본 계약은 지난다) → 사슬 MAN_FIXED 대조 → MANIFEST_MISMATCH   (2, None, None)
+  FAIL  S06 섞인 세대 — p2 팔 (ca_ext 없음 · centerline) → GENERATION   (2, None, None)
+  FAIL  S07 unknown:ca_ext (요청 칸 있음 · 블록 없음) → GENERATION   (2, None, None)
+  FAIL  S08 저장 id ≠ 다시 계산한 id → GENERATION   (2, None, None)
+  FAIL  S09 ca_ext 블록 변조 (쓴 뒤 원장 수) → CA_EXT_RECORD (계약 자리)   (2, None, None)
+  FAIL  S10 솔브 영수증 ≠ LEAN 2 표 (접합 주 솔브 failed — 정본 계약 허용 · LEAN 2 표 = applied | absent_geometry) → RECEIPT_LEAN   (2, None, None)
+  FAIL  S11 face_alpha 런의 ptfe_cells_observed > 0 → 정본 계약 (ptfe_face 검증기) 이 먼저 잡는다 → CA_EXT_RECORD   (2, None, None)
+  FAIL  S12 sid 격자 지문이 같은 킷 · 같은 래스터 · 같은 origin 런 사이에서 다르다 (두 블록 다 · 정본 계약은 지난다) → SID_GRID   (2, None, None)
+  FAIL  S13 env 에 SIGMA_VGCF_OVERRIDE → ENV_SIGMA_VGCF_OVERRIDE · 러너 0 회   (2, None)
+  FAIL  S14 부모 env 오염 (SIGMA_ION_SE · P2_SCR · SIGMA_PTFE · MPM_PERIODIC_SIGMA · EXPECT_PROTOCOL · CJUNC_RJ · ★ ARM_LIST · EXPECT_BACKEND) → 지우고 돈다 · 요약에 이름   AttributeError: 'NoneType' object has no attribute 'get' @ (leak, r['sum'].get('env_scrubbed'), [e.get('CJUNC_RJ') for e in ev]))
+  FAIL  S15 계획 해시 ≠ 등록 §2-1 개정값 → PLAN_HASH_MISMATCH · 러너 0 회   (2, None)
+  FAIL  S16 등록 §2-1 계획 해시 칸이 아직 ⬜ → PLAN_HASH_UNREGISTERED · 러너 0 회   (2, None)
+  FAIL  S17 시간 상한 — 첫 런이 상한 안에 안 끝남 → TIME_LIMIT   (2, None)
+  FAIL  S18 러너가 다른 rtol (1e-13 · 영수증 = 매니페스트 = 증서 → 정본 계약 · 증서는 지난다) ≠ 계획 → MANIFEST_MISMATCH   (2, None, None)
+  FAIL  S19 표적 ≠ 등록 (1.64) → NOT_REGISTERED · 러너 0 회 (판정선을 옮기지 않는다)   (2, '  [--out OUT] [--max-hours MAX_HOURS] [--dry-run]\n                            [--show-results]\ntest_rint_r_chain.py: error: unrecognized arguments: --s0-plan /tmp/rint_r_chain_t_sbyi3sz5/s0_plan.json\n')
+  FAIL  S20 같은 킷 · 같은 계획 두 번 — 예측에 P0 사다리 둘 → DUPLICATE_RUN · 런 0   FileNotFoundError: [Errno 2] No such file or directory: '/tmp/rint_r_chain_t_sbyi3sz5/runs/main_P0' @ with os.scandir(src) as itr:
+  FAIL  S21 판정 입력에 같은 폴더 두 번 → DUPLICATE_RUN · 판정 NOT_COMPUTED   (3, {'cause': '/tmp/rint_r_chain_t_sbyi3sz5/runs/main_P0: 단계 요약 0 개 (1 이어야)', 'code': 'INPUT_NOT_STAGE', 'run': None, 'what': '판정 입력 폴더에 단계 요약이 없다'})
+  FAIL  S22 판정 입력 sha256 ≠ 런 산출 (사다리 확인 팔 변조) → INPUT_SHA_MISMATCH · 판정 NOT_COMPUTED   FileNotFoundError: [Errno 2] No such file or directory: '/tmp/rint_r_chain_t_sbyi3sz5/runs/main_P0' @ with os.scandir(src) as itr:
+  FAIL  S23 멈춤 = 구조화 사유 (code · cause · run) · 화면에 코드 · rc 3   TypeError: 'NoneType' object is not subscriptable @ st = r['sum']['stop']
+  FAIL  S24 매니페스트만 σ_AM_S 0.01 (영수증 0.0041) → 정본 check_arm (receipt_match) → ARM_CONTRACT   (2, None, None)
+  FAIL  S25 집전체 솔브에 접합 적용 (LEAN 2 표 밖) → 정본 계약 (접합 검증기) → CA_EXT_RECORD   (2, None, None)
+  FAIL  S26 off 격자 sid 지문 ≠ 접합 원장 sid (같은 솔브) → 정본 계약 → CA_EXT_RECORD   (2, None, None)
+  FAIL  S27 off 격자 sid 지문 칸 없음 → 정본 계약 (ptfe_face 검증기) → CA_EXT_RECORD   (2, None, None)
+  FAIL  P01 예측 — SBE c no-op 런 둘 · 모서리 12 런 (arm 0) · origin = 네 모서리 × 세 R = 12 (ARM_LIST=1,2 · §4-2 3판 · RCA-02) · 상태 PREDICTED   (3, 'STOPPED', [], 'LADDER_SET')
+  FAIL  P01b SV 반사실 (§5-6 SV 행 · 계획 범위 R_j0) — CJUNC_SV_CF=1 은 DBE 모서리 × R_j,0 런 넷에만 (다른 R · origin · SBE no-op 없음) · 팔 증거 요청 {threshold: null} · 영수증 sv_counterfactual True · 팔 기록 sv_cf_status = computed   KeyError: 'R_j0' @ want = sorted((law, L[law]['R_j0']) for law in ('P0', 'P1') for _c in ('0', '1'))
+  FAIL  P02 R_j 는 사다리 요약에서 — 모서리 런의 CJUNC_RJ = 사다리 R_j,lo · R_j,0 · R_j,hi 문자열 그대로 (사람 옮김 없음)   KeyError: 'R_j_lo' @ want |= {(law, L['R_j_lo']), (law, L['R_j0']), (law, L['R_j_hi'])}
+  FAIL  P03 SBE c no-op 위반 (c1 비트 다름) → SAME_P_CONSISTENCY · 모서리 런 없음   (3, 'LADDER_SET', [])
+  FAIL  P04 DBE c1 < c0 − τ_mono → SAME_P_CONSISTENCY   (3, 'LADDER_SET')
+  FAIL  P05 origin §4-2 3판 — 넘는 모서리 넷 → 모서리마다 세 R 전부 8 팔 (런 12) · 값 = 그 R 의 8 팔 평균 (판정 결과 손계산)   KeyError: 'R_j_lo' @ vals.append(sig_main(W, DBE_KIT, L[k], law, c) * mean8)
+  FAIL  P06 사다리가 CALIB_* 면 예측 안 함 → LADDER_NOT_CALIBRATED · 런 0   (3, 'LADDER_SET')
+  FAIL  V01 판정 손계산 — 구간 · W · p · S (가짜 함수에서 직접) · PASS_INFORMATIVE (4.68 ∈ I · W ≤ G0/2)   KeyError: 'R_j_lo' @ vals.append(sig_main(W, DBE_KIT, L[k], law, c))
+  FAIL  V02 감도 넷 안 돌림 → FIBRE · UNREG · GRID · SVORDER _UNCHECKED · §7-1 문장 금지 (판정 이름은 그대로)   ([], False)
+  FAIL  V03 감도 넷 다 돌림 · 둔감 · SV 반사실 비 1.2 < 문턱 2 → 차단 표지 없음 → §7-1 문장 (판정문 §5-3 문안) 허용 · 보고 범주 ASSUMED_UNVALIDATED (DIA_UNCHECKED 포함) 는 늘 · 한정어 ①–⑯ · 계산기 상태 주석   ('NOT_COMPUTED', [], False, {'cause': '/tmp/rint_r_chain_t_sbyi3sz5/runs/main_P0: 단계 요약 0 개 (1 이어야)', 'code': 'INPUT_NOT_STAGE', 'run': None, 'what': '판정 입력 폴더에 단계 요약이 없다'})
+  FAIL  V04 GRID 변이에서 DBE ×1.6 → 등급 바뀜 → GRID_SENSITIVE · 문장 금지   ([], {'cause': '/tmp/rint_r_chain_t_sbyi3sz5/runs/main_P0: 단계 요약 0 개 (1 이어야)', 'code': 'INPUT_NOT_STAGE', 'run': None, 'what': '판정 입력 폴더에 단계 요약이 없다'})
+  FAIL  V05 SV_DEPENDENT (3판 · RCA-06) — 한 모서리의 반사실 비 3.0 > 계획 문턱 2.0 → 차단 표지 · §7-1 문장 금지 (판정 이름은 그대로) · 옛 SV_DOMINANT 없음   KeyError: 'R_j0' @ m = {'kit_has': 'DBE', 'rj': lad(s_main('P1'))['R_j0'], 'c': '1'}
+  FAIL  V06 SV_UNCHECKED — 한 모서리의 반사실 기록이 비를 싣지 않는 상태 (unconverged) → 못 읽음 = 차단 (§5-6 · 모르는 것을 의존 없음으로 읽지 않는다)   KeyError: 'R_j0' @ m = {'kit_has': 'DBE', 'rj': lad(s_main('P1'))['R_j0'], 'c': '1'}
+  FAIL  V06b SV 반사실 비 = 문턱 2.0 (같음) → SV_DEPENDENT 아님 (등록 문장 "넘으면") · no_through_without_sv (비 +∞) → SV_DEPENDENT   KeyError: 'R_j0' @ m = {'kit_has': 'DBE', 'rj': lad(s_main('P1'))['R_j0'], 'c': '1'}
+  FAIL  V07 CALIB_ORIGIN_SENSITIVE (P0 사다리 origin 넘음) → 판정 표지 · 문장 금지   []
+  FAIL  V08 사다리 CALIB_EDGE → 판정 = CALIB_EDGE (예측 폴더 없이 · rc 0 · 등록 결과)   (3, 'NOT_COMPUTED', {'cause': '/tmp/rint_r_chain_t_sbyi3sz5/runs/L10: 단계 요약 0 개 (1 이어야)', 'code': 'INPUT_NOT_STAGE', 'run': None, 'what': '판정 입력 폴더에 단계 요약이 없다'})
+  PASS  V09 등급 표 단위 — W 경계 (G0/2 · G0) · FAIL 거리 · 방향 · CONSISTENT_WEAK · UNINFORMATIVE · S (손계산)
+  PASS  V10 다시 판정 (--reverify) = 같은 답 (판정 JSON · 결과 JSON 바이트 같음) · 읽기 전용
+  FAIL  V11 다시 판정이 판정 뒤 변조를 잡는다 (팔 하나 σ 바꿈 → REVERIFY_DIFF · rc 1)   FileNotFoundError: [Errno 2] No such file or directory: '/tmp/rint_r_chain_t_sbyi3sz5/runs/main_P0' @ with os.scandir(src) as itr:
+  FAIL  V12 --show-results 는 판정 단계에서만 (사다리에 주면 인자 오류) · 판정에서 열람 기록 (views.jsonl)   (2, 3, False)
+  FAIL  V13 사다리 NOT_COMPUTED (증서 실패) → 판정 = NOT_COMPUTED (등록 결과 · rc 0 · 멈춤 아님 — 실패 팔 sha256 도 기록돼 다시 계산된다)   (3, 'NOT_COMPUTED', {'cause': '/tmp/rint_r_chain_t_sbyi3sz5/runs/L17: 단계 요약 0 개 (1 이어야)', 'code': 'INPUT_NOT_STAGE', 'run': None, 'what': '판정 입력 폴더에 단계 요약이 없다'}, {})
+  FAIL  V14 3판 — 감도 변이 = 주 판정과 같은 판정 함수 (§5-6 · RCA-09): 변이 사다리도 SBE origin (§3-3) · 끝 origin · 변이 예측도 네 모서리 × 세 R + DBE origin 세 R (§10 런 수 표 3판) · 변이 예측에는 SV 반사실 없음   TypeError: 'NoneType' object is not subscriptable @ bad = [(o['sum']['law'], roles(o)) for o in lads if 'origin' not in roles(o) or (lad(o).get('origin') or {}).get('status') != 'pass']
+  FAIL  V15 판정 코드 ≠ 단계 코드 (지금 사슬 HEAD 가 다르다) → CODE_PIN_MISMATCH · 판정 NOT_COMPUTED   (3, 'INPUT_NOT_STAGE')
+  FAIL  V16 판정 결과에 수렴 증서 ⓒ 값 (런마다 Δσ/σ · §8) · 공개 판정에 §9 격자 문장 = not_computed (이 사슬 밖 · 현 세대 대조)   ValueError: not enough values to unpack (expected 1, got 0) @ s, = [json.loads(p.read_text(encoding='utf-8')) for p in Path(d).glob('*_summary.json')]
+  FAIL  X01 값 봉인 — 사다리 · 예측 · 판정 (show 없이) 의 화면 · 로그 · 공개 JSON 에 σ 숫자 없음 (가짜 러너 장부 대조)   (0, [])
+  FAIL  X02 --show-results 는 봉인했던 σ 를 실제로 보여준다 (봉인이 무엇을 숨겼는지의 대조)   ('다 — /tmp/rint_r_chain_t_sbyi3sz5/runs/main_P0: 단계 요약 0 개 (1 이어야)\n판정 = NOT_COMPUTED · 표지 없음 · §7-1 문장 금지\n--show-results — 판정이 없어 열지 않는다 (멈춤)\n판정 → /tmp/rint_r_chain_t_sbyi3sz5/runs/V12_ver/verdict.json\n',)
+  PASS  X03 기본 계약 = 정본 함수 위임 (run_contract.ca_ext_record_ok · sr01_stamp_compare.check_arm)
+  FAIL  X04 dry-run — 러너 안 부름 · 출력 폴더 없음 · 첫 다섯 런의 env 꼴 (CJUNC_RJ=inf · 0 · 10000.0 · …) · SIGMA_VGCF_OVERRIDE 없음   (2, [], [])
+  FAIL  X05 등록 문서에 이 도구의 숫자 · 이름 · 문장이 있다 (상수 대조 · 사본 금지의 짝)   AttributeError: module 'rint_r_chain' has no attribute 'SENTENCE_GAP' @ 'VALID_ZERO_TOPOLOGY', 'GAP_ENVELOPE_ONLY', 'ASSUMED_UNVALIDATED', 'SV_DEPENDENT', 'SV_UNCHECKED', RR.SENTENCE_GAP,
+  FAIL  X06 바닥 · 천장 극한 = 러너 env CJUNC_RJ=inf · 0 (런 순서 첫 둘) · 팔 protocol 표지 rj_limit inf · zero (R_j_ohm null · 0.0 · quantitative False · allow_rj_limits True) · 영수증 요청 같은 꼴 — 사슬이 받아 다음 런으로 간다   ([], [], None)
+  PASS  X07 극한 표지 = 정본 낱말 (ca_ext_cjunc.RJ_LIMITS) · 사슬이 기대하는 요청 (expected_request) 에 rj_limit · R_j null · 0.0 · 정량 런엔 칸 없음
+  FAIL  X08 러너 backend = 사슬 상수 EXPECT_BACKEND (gpu) — env 로 넘긴다 (부모 셸 값은 지운다) · 정본 check_arm 에도 같은 값   (2, [])
+  FAIL  X09 사슬 자신의 off 격자 대조 — 정본 계약을 비켜도 (통과 계약) sid_off 없음 · ≠ 접합 sid = SID_GRID (계약 뒤 둘째 겹)   [(2, None), (2, None)]
+  FAIL  X10 CG 반복 수 (주 솔브 · ⓒ 이어 풀기) = 공개 기록 · 화면 (등록 R §11 숫자 탐침 칸 · σ 아님)   ([], '                           [--runs RUNS [RUNS ...]] [--reverify REVERIFY]\n                            [--out OUT] [--max-hours MAX_HOURS] [--dry-run]\n                            [--show-results]\ntest_rint_r_chain.py: error: unrecognized arguments: --s0-plan /tmp/rint_r_chain_t_sbyi3sz5/s0_plan.json\n')
+  FAIL  U01 RCA-01 (§3-2b ⑧ · PRE-design-05) — Codex 양의 저항망: 끝 = 실제 역상 · R_lo 10,000 (후보 26,758 확인 실패 → 바깥 실측 이웃) · R_hi 5,990,349.75 (후보 확인) · R 비 599.03 · 12 점 · 참 [25,494 · 5,097,624] 바깥 감쌈 · DBE W 0.785238 CONSISTENT_WEAK (2판 보간 = PASS W 0.419)   TypeError: Ladder.__init__() got an unexpected keyword argument 'max_points' @ lad_ = RR.Ladder(ladder_fetch(rca01_S), max_points=12, ratio_max='none')
+  FAIL  U02 RCA-02 (§4-2 3판) — 중앙 (R_j,0) 산포 0 인데 양끝 origin 산포 0.304 · 0.318 > 0.1 W → 모서리마다 세 R 전부 8 팔 평균 → [2.6629, 6.1450] W 0.8362 CONSISTENT_WEAK (2판 = R_j,0 만 점검 · arm 0 [3.4962, 4.6867] PASS)   TypeError: Predict.__init__() got an unexpected keyword argument 'sv_scope' @ pr = RR.Predict(rca02_fetch, lads, None, sv_scope=None)
+  FAIL  U03 RCA-08 (§5-1 · §5-5 3판) — I_P0 [3.8, 4.0] · I_P1 [5.2, 5.4] · 4.68 = E ∖ U → GAP_ENVELOPE_ONLY (2판 hull W 0.351 = PASS) · 문장 = 판정문 §5-3 GAP 문안 · 법칙 집합까지 ln 거리 기록   AttributeError: module 'rint_r_chain' has no attribute 'judge' @ J = RR.judge(rca08_vals())
+  FAIL  U04 RCA-09 (§5-6 3판) — 같은 판정 함수: 주 판정 (허용폭 포함 [4.30, 4.80] W 0.110 PASS) ↔ 엄밀한 no-op 변이 = PASS 그대로 (중앙 네 점만 판정하면 W 0.0335 FAIL = 거짓 SENSITIVE) · 표지 없음 · §7-1 문장   AttributeError: module 'rint_r_chain' has no attribute 'assemble' @ pub, res = RR.assemble(main, {'FIBRE': var, 'UNREG': dict(main), 'GRID': dict(main), 'SVORDER': dict(main)}, ([], {}))
+  FAIL  U04b RCA-09 같은 부류 — 변이가 중앙 네 점은 같고 양끝만 넓다 ([3.0, 7.0]) → 같은 판정 함수 = CONSISTENT_WEAK ≠ PASS → FIBRE_SENSITIVE (2판 = 중앙 네 점끼리 비교 → 둘 다 FAIL → 놓침)   AttributeError: module 'rint_r_chain' has no attribute 'assemble' @ pub, res = RR.assemble(main, {'FIBRE': var, 'UNREG': dict(main), 'GRID': dict(main), 'SVORDER': dict(main)}, ([], {}))
+  FAIL  U05 RCA-10 (§5-6a) — 차단 표지 = 닫힌 집합 11 · DIA_UNCHECKED · 모르는 *_UNCHECKED · *_SENSITIVE · 옛 SV_DOMINANT = 차단 아님 · 닫힌 집합 이름 하나하나 = 차단 · DIA 만 있으면 PASS 문장 허용   AttributeError: module 'rint_r_chain' has no attribute 'blocking_of' @ nb = RR.blocking_of(['DIA_UNCHECKED', 'XYZ_UNCHECKED', 'FOO_SENSITIVE', 'SV_DOMINANT', 'Q9_ptfe_diameter_convention'])
+  FAIL  U06 RCA-13 (§5-0 · §3-2) — 단위 불변 (S/cm ↔ mS/cm · 판정 · W · p · d · S) · τ_mono = ln 차 (999.5 → 1000 평탄 · 999 → 1000 비단조 · 두 단위 같음) · 0/0 · 점 구간 (W 0 · p null) · zero · short 끝 (W +∞ · p · S null · d +∞ 방향) · gap · 확장 실수 도구   AttributeError: module 'rint_r_chain' has no attribute 'judge' @ a = RR.judge(vals)
+  FAIL  U07 결정표 (§5-7 · PRE-design-09) 전수 — (상태 4 × 판정 12 × 차단 2) · 허용 짝 34 = 문장 하나 (PASS = 차단 없을 때만 · WEAK · GAP 문장 = 차단과 무관 · 나머지 문장 없음) · 짝이 안 맞는 상태 · 이름 62 = 구현 결함 (ValueError)   AttributeError: module 'rint_r_chain' has no attribute 'SENTENCE_WEAK' @ want = {('positive', 'PASS_INFORMATIVE'): (RR.SENTENCE_PASS, None), ('positive', 'CONSISTENT_WEAK'): (RR.SENTENCE_WEAK,) * 2,
+  FAIL  U08 SV 반사실 판정 (§5-6 SV 행 · RCA-06) — 비 > 문턱 = SV_DEPENDENT (= 문턱 은 아님 · "넘으면") · 비 +∞ = 의존 · 비 없는 상태 · 기록 없음 · 문턱 null = SV_UNCHECKED · 범위 R_j0 (모서리 넷) ↔ all3 (열둘)   AttributeError: module 'rint_r_chain' has no attribute 'sv_assess' @ f, d = RR.sv_assess(r, thr, scope)
+  FAIL  U10 PRE-design-01 (Q-E · P1) — 중앙 (R_j,0) 산포 2.2e-16 · CALIB_ORIGIN_SENSITIVE 안 걸리는데 arm 1 · 2 의 허용집합이 arm 0 보다 넓다 → 끝에서 arm 1 · 2 도 돌려 하나라도 띠 안이면 바깥 실측 이웃으로 → 끝의 세 origin 이 모두 띠 밖 (합집합을 바깥에서 감쌈)   TypeError: Ladder.__init__() got an unexpected keyword argument 'max_points' @ lad_ = RR.Ladder(ladder_fetch(predes01_S), max_points=24, ratio_max='none')
+  FAIL  Z01 바닥 VALID_ZERO_TOPOLOGY (조기 반환 · σ 0 · 증서 영값) — 정본 계약 (ca_ext_record_ok · check_arm) 통과 · 사슬이 받아 사다리 계속 · CALIBRATED · 상태 기록 zero (등록 R §5-0 ② — 2판 = ARM_UNREADABLE · NOT_COMPUTED 멈춤)   (2, None, None, None)
+  FAIL  Z02 천장 ELECTRODE_SHORT (J11 · σ = +∞ · 결과 σ null) — 받아서 사다리 계속 · CALIBRATED · 상태 short (2판 = CA_EXT_RECORD · NOT_COMPUTED)   (2, None, None, None)
+  FAIL  Z03 DBE 모서리 하나 VALID_ZERO_TOPOLOGY (P0 c0 R_j,hi) — 확장 실수 0 그대로 구간에 · W +∞ · 4.68 ∈ U → UNINFORMATIVE · p · S null · 상태 extended · 그 모서리 origin 팔도 0 (산포 0)   KeyError: 'R_j_hi' @ sc = z_pred('Z03', [{'match': {'kit_has': 'DBE', 'law': 'P0', 'c': '0', 'rj': lad(s_main('P0'))['R_j_hi']}, 'state': 'zero'}])
+  FAIL  Z04 DBE 모서리 하나 ELECTRODE_SHORT (P1 c1 R_j,0 · c 1 축약) — σ +∞ · 같은 P 일관 (c1 ≥ c0) 통과 · 구간 위 끝 = +∞ (JSON null) · UNINFORMATIVE · SV 범위 모서리인데 반사실 기록 없음 (주 해 없음) → SV_UNCHECKED   KeyError: 'R_j0' @ sc = z_pred('Z04', [{'match': {'kit_has': 'DBE', 'law': 'P1', 'c': '1', 'rj': lad(s_main('P1'))['R_j0']}, 'state': 'short'}])
+  FAIL  C01 두 계획 대조 — S0 계획이 정준 바이트가 아님 (같은 내용 · 들여쓰기) → S0_PLAN_INVALID · 러너 0 회   (2, None, None)
+  FAIL  C02 S0 계획 식 위반 (tol_ff ≠ min(u, r_f) · 정준 바이트로 다시 써도) → S0_PLAN_INVALID (정본 ca_s0_census.check_plan)   (2, None, None)
+  FAIL  C03 등록 §2-1 | S0 계획 해시 | 칸 ⬜ → S0_PLAN_HASH_UNREGISTERED · 러너 0 회   (2, None, None)
+  FAIL  C04 S0 계획 sha256 ≠ 등록 칸 → S0_PLAN_HASH_MISMATCH   (2, None, None)
+  FAIL  C05 R 계획 tol_ff_um 0.04 ≠ S0 values_um.tol_ff 0.05 (같은 float 이어야) → PLAN_CROSS_MISMATCH (§2-1 · §10-2 ⑪)   (2, None, None)
+  FAIL  C06 R 계획 step3_rtol 1e-13 ≠ §3-5 봉인 CERT_RTOL_MAX 1e-12 → PLAN_CROSS_MISMATCH   (2, None, None)
+  FAIL  C07 R 계획 len_law len_scaled_v1 ≠ 등록 v0 길이 법칙 (carbon_junction.CJUNC_LEN_LAW) → PLAN_CROSS_MISMATCH   (2, None, None)
+  FAIL  C08 --s0-plan 없음 → 인자 오류 (rc 2) · 러너 0 회 (두 계획 대조 없이 σ 런 없음)   (3, 0)
+  FAIL  C09 S0 계획 schema 다름 (ca-cjunc-plan-v0) → S0_PLAN_INVALID   (2, None, None)
+  FAIL  N01 결과 전 등록 숫자 넷 (점 수 상한 · 역상 R 비 상한 · SV 문턱 · 범위) 중 하나라도 null (⬜) → PLAN_NUMBER_UNREGISTERED · 러너 0 회 (★ Q-G: SV 문턱이 ⬜ 인 채로 DBE 단계에 못 간다)   [(2, None, None), (2, None, None), (2, None, None), (2, None, None)]
+  FAIL  N02 옛 계획 rint-r-plan-v1 (칸 일곱) → PLAN_INVALID (3판 사슬은 결과 전 등록 숫자 칸 없이 돌지 않는다)   (2, None, None)
+  FAIL  N03 계획 숫자 꼴 — 점 수 0 · True · 역상 비 상한 1.0 · "None" · SV 문턱 0.5 · 범위 R_j_lo → PLAN_INVALID (값을 고치지 않는다)   [(2, None, None), (2, None, None), (2, None, None), (2, None, None), (2, None, None), (2, None, None)]
+  FAIL  F01 Q-F — 감도 변이 사다리 · 예측에 --after-main 이 없다 → MAIN_NOT_DONE · 러너 0 회 (주 판정 단계 뒤에만)   ((2, None, None), None)
+  FAIL  F02 Q-F — --after-main 이 주 예측이 아님 (사다리 폴더 · 멈춘 예측 P03) → MAIN_NOT_DONE · 러너 0 회   ((2, None, None), (2, None, None))
+  FAIL  F03 Q-F — 판정: 감도 단계가 묶인 주 예측 (after_main sha256) ≠ 판정 입력의 주 예측 → MAIN_BINDING · 판정 NOT_COMPUTED   FileNotFoundError: [Errno 2] No such file or directory: '/tmp/rint_r_chain_t_sbyi3sz5/runs/var_FIBRE_pred' @ with os.scandir(src) as itr:
+  PASS  F04 --after-main 은 --variant 와만 (주 단계에 주면 인자 오류 rc 2)
+  FAIL  L21 Q-E 배선 (가짜 러너) — SBE origin 팔 1 · 2 가 arm 0 과 조금 다르면 (×1.0004 · ×0.9997) 끝 후보에서 띠 안 → 끝을 바깥 실측 이웃으로 · end_origin 런 (ARM_LIST=1,2 · 끝 R) · 밀기 기록 · 세 origin 이 끝에서 모두 띠 밖 (모형 손계산)   TypeError: float() argument must be a string or a real number, not 'NoneType' @ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  FAIL  V17 SV 범위 all3 (계획) — 모서리 열둘 전부 CJUNC_SV_CF=1 · R_j,hi 모서리의 큰 비 (9.0) → SV_DEPENDENT (R_j0 범위면 못 본다 — U08)   KeyError: 'R_j_hi' @ m = {'kit_has': 'DBE', 'law': 'P1', 'c': '1', 'rj': lad(l1)['R_j_hi']}
+  PASS  M01 변이: 보간을 선형 R (ln 아님) 로 → L02 손계산이 떨어진다
+  PASS  M02 변이: ±2 % → ±3 % → L03 (허용폭 양끝) 손계산이 떨어진다
+  PASS  M03 변이: origin 규칙 끔 → L19 (8 팔 · 표지) 이 떨어진다
+  PASS  M04 변이: 2판 e_min 빠른 멈춤을 되살림 (국소 e < e_min → CALIB_UNIDENTIFIED) → L11 (3판 = 진단 · CALIBRATED) 이 떨어진다
+  PASS  M05 변이: τ_mono 끔 (∞) → L14 가 CALIB_NONMONOTONE 을 못 낸다
+  PASS  M06 변이: 판정 입력 sha256 대조 끔 → S22 가 INPUT_SHA_MISMATCH 를 못 낸다
+  FAIL  M07 변이: 점 수 상한을 계획 칸 + 1 로 (사슬이 숫자를 고른다) → L16 (계획 12 · 런 정확히 12) 이 떨어진다   AttributeError: module 'rint_r_chain' has no attribute 'ladder_cap' @ old = {k: getattr(RR, k) for k in patch}
+  PASS  M08 변이: 정본 ca_ext_record_ok 끔 → S09 (원장 수 변조) 가 CA_EXT_RECORD 를 못 낸다 (정본 계약이 실제로 일한다)
+  PASS  M09 변이: 정본 check_arm 끔 → S24 (매니페스트만 σ_AM_S) 가 ARM_CONTRACT 를 못 낸다
+  PASS  M10 변이: sid 무리에서 origin 을 뺌 (옛 키) → L18 (origin 팔 1 · 2 의 다른 지문) 이 떨어진다
+  FAIL  M11 변이 M1 (끝 = 확인 실패한 후보 26,758) → U01 이 떨어진다 (W 0.4536 PASS 로 줄어든다)   AttributeError: module 'rint_r_chain' has no attribute 'end_pick' @ RR_ORIG['end_pick'] = RR.end_pick
+  FAIL  M12 변이 M2 (끝 = 안쪽 이웃 31,622.8 · 비 189.4 · FAIL) → U01 이 떨어진다 (PRE-design-05 — "약 200 · PASS 면 실패" 시험은 통과시켰다)   AttributeError: module 'rint_r_chain' has no attribute 'end_pick' @ RR_ORIG['end_pick'] = RR.end_pick
+  FAIL  M13 변이 M3 (hi 끝만 2판 보간 · 비 18.7 · WEAK) → U01 이 떨어진다 (판정 이름만 보면 놓친다 · 끝 값으로 잡는다)   AttributeError: module 'rint_r_chain' has no attribute 'end_pick' @ RR_ORIG['end_pick'] = RR.end_pick
+  FAIL  M14 변이 M4 (양끝 2판 보간 · 비 8.34 · PASS) → U01 이 떨어진다   AttributeError: module 'rint_r_chain' has no attribute 'end_pick' @ RR_ORIG['end_pick'] = RR.end_pick
+  FAIL  M15 변이: DBE origin 을 R_j,0 에서만 (2판) → U02 (RCA-02) 가 떨어진다   AttributeError: module 'rint_r_chain' has no attribute 'ORIGIN_CHECK_ROLES' @ old = {k: getattr(RR, k) for k in patch}
+  FAIL  M16 변이: 4.68 ∈ U 를 envelope (hull) 로 → U03 (RCA-08 GAP) 이 떨어진다   AttributeError: module 'rint_r_chain' has no attribute 'in_law_sets' @ old = {k: getattr(RR, k) for k in patch}
+  FAIL  M17 변이: 판정 함수가 중앙 (R_j,0) 네 점만 (2판 감도 비교) → U04b (양끝만 넓은 변이의 SENSITIVE) 가 떨어진다   AttributeError: module 'rint_r_chain' has no attribute 'judge_set' @ orig = RR.judge_set
+  FAIL  M18 변이: 차단 표지를 와일드카드 (*_SENSITIVE · *_UNCHECKED 꼬리) 로 → U05 (닫힌 집합) 가 떨어진다   AttributeError: module 'rint_r_chain' has no attribute 'blocking_of' @ old = {k: getattr(RR, k) for k in patch}
+  FAIL  M19 변이: ln 차 대신 절대차 → U06 (단위 불변 · τ_mono) 이 떨어진다   AttributeError: module 'rint_r_chain' has no attribute 'ln_diff' @ old = {k: getattr(RR, k) for k in patch}
+  FAIL  M20 변이: SV 문턱 비교를 ≥ 로 (비 = 문턱 도 의존) → U08 이 떨어진다 (등록 문장 "넘으면")   AttributeError: module 'rint_r_chain' has no attribute 'sv_assess' @ orig = RR.sv_assess
+  FAIL  M21 변이: 끝 origin 밀기 끔 (Q-E 없음) → U10 (PRE-design-01 합집합 바깥 감쌈) 이 떨어진다   AttributeError: module 'rint_r_chain' has no attribute 'end_origin_push' @ old = {k: getattr(RR, k) for k in patch}
+  PASS  M22 변이: 조기 반환 해 상태를 받지 않음 (2판 — 양수 σ 만) → Z01 (바닥 영값) 이 떨어진다
+  FAIL  M23 변이: 두 계획 대조 끔 → C05 (tol_ff 다름) 가 PLAN_CROSS_MISMATCH 를 못 낸다   AttributeError: module 'rint_r_chain' has no attribute 'plans_cross_problems' @ old = {k: getattr(RR, k) for k in patch}
+  FAIL  M24 변이: 결과 전 등록 숫자 검사 끔 → N01 (SV 문턱 null) 이 PLAN_NUMBER_UNREGISTERED 를 못 낸다 (Q-G)   AttributeError: module 'rint_r_chain' has no attribute 'require_plan_numbers' @ old = {k: getattr(RR, k) for k in patch}
+  FAIL  M25 변이: 감도 단계의 주 판정 묶음 검사 끔 → F01 (--after-main 없음) 이 MAIN_NOT_DONE 을 못 낸다 (Q-F)   AttributeError: module 'rint_r_chain' has no attribute 'check_after_main' @ old = {k: getattr(RR, k) for k in patch}
+
+test_rint_r_chain: 15/139 PASS (1.5 s)   FAILED: ['L01', 'L02', 'L03', 'L04', 'L05', 'L06', 'L07', 'L08', 'L09', 'L10', 'L11', 'L11b', 'L12', 'L13', 'L14', 'L15', 'L16', 'L17', 'L18', 'L19', 'L20', 'S01', 'S02', 'S03', 'S04', 'S05', 'S06', 'S07', 'S08', 'S09', 'S10', 'S11', 'S12', 'S13', 'S14', 'S15', 'S16', 'S17', 'S18', 'S19', 'S20', 'S21', 'S22', 'S23', 'S24', 'S25', 'S26', 'S27', 'P01', 'P01b', 'P02', 'P03', 'P04', 'P05', 'P06', 'V01', 'V02', 'V03', 'V04', 'V05', 'V06', 'V06b', 'V07', 'V08', 'V11', 'V12', 'V13', 'V14', 'V15', 'V16', 'X01', 'X02', 'X04', 'X05', 'X06', 'X08', 'X09', 'X10', 'U01', 'U02', 'U03', 'U04', 'U04b', 'U05', 'U06', 'U07', 'U08', 'U10', 'Z01', 'Z02', 'Z03', 'Z04', 'C01', 'C02', 'C03', 'C04', 'C05', 'C06', 'C07', 'C08', 'C09', 'N01', 'N02', 'N03', 'F01', 'F02', 'F03', 'L21', 'V17', 'M07', 'M11', 'M12', 'M13', 'M14', 'M15', 'M16', 'M17', 'M18', 'M19', 'M20', 'M21', 'M23', 'M24', 'M25']
+rc=1 seconds=2

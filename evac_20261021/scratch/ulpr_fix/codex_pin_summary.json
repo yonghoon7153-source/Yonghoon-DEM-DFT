@@ -1,0 +1,1058 @@
+{
+ "resume_recheck": {
+  "keys": [
+   "source_pin",
+   "fixture_root",
+   "source_sha256",
+   "cases",
+   "summary"
+  ],
+  "n_cases": 37,
+  "mismatch": {},
+  "summary": {
+   "cases": 37,
+   "passed": 35,
+   "failed_expectations": [
+    "fractional_resume_event_k",
+    "fractional_confirmation_k"
+   ]
+  }
+ },
+ "receipt_ids_recheck": {
+  "n_cases": 97,
+  "summary": {
+   "checked": 92,
+   "failed_expectations": [
+    "g2c_missing_column_actual_cli"
+   ],
+   "observations": [
+    "arm_failure_reader_stdout",
+    "arm_failure_stage_error",
+    "arm_failure_running_no_end",
+    "uv_failure_final_gravity",
+    "lexical_precision_boundary"
+   ]
+  },
+  "mismatch": {
+   "g2c_missing_column_actual_cli": {
+    "expected": "Defect scope: unhandled KeyError, not a false RESTORED certificate",
+    "actual": {
+     "rc": 2,
+     "stderr": "",
+     "certificate_exists": true,
+     "next_UB": [
+      false,
+      "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (UNCONFIRMED) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)"
+     ]
+    }
+   }
+  },
+  "selected": {
+   "g2c_c_cpl7_missing": {
+    "matches": true,
+    "actual": {
+     "restore": {
+      "returned": {
+       "bed": "ps_7_3_r45",
+       "job": "RJ",
+       "s0": 3200000,
+       "checks": {
+        "syntax": {
+         "ok": true,
+         "stages": {
+          "R": [],
+          "UN": [],
+          "Ut0": []
+         },
+         "loops": [
+          6,
+          6
+         ],
+         "errors": []
+        },
+        "reset_log": {
+         "ok": true,
+         "missing": []
+        },
+        "g0": {
+         "ok": true,
+         "violations": []
+        },
+        "G1": {
+         "status": "PASS",
+         "why": [],
+         "step": 3200000,
+         "atoms": 160417,
+         "ke": 1.3419507e-06,
+         "rel": 0.0
+        },
+        "G2": {
+         "status": "PASS",
+         "why": [],
+         "n_atoms": 3,
+         "n_mismatch": 0,
+         "missing": [],
+         "extra": [],
+         "example": [],
+         "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+        },
+        "G2c": {
+         "status": "NOT_COMPUTED",
+         "why": [
+          "시험 열 이름 ['c_cpl[1]', 'c_cpl[2]', 'c_cpl[3]', 'c_cpl[4]', 'c_cpl[5]', 'c_cpl[6]', 'not_c_cpl[7]', 'c_cpl[8]', 'c_cpl[9]', 'c_cpl[10]', 'c_cpl[11]', 'c_cpl[12]', 'c_cpl[13]', 'c_cpl[14]', 'c_cpl[15]', 'c_cpl[16]', 'c_cpl[17]', 'c_cpl[18]', 'c_cpl[19]', 'c_cpl[20]', 'c_cpl[21]', 'c_cpl[22]', 'c_cpl[23]', 'c_cpl[24]', 'c_cpl[25]', 'c_cpl[26]'] ≠ 기대 ['c_cpl[1]', 'c_cpl[2]', 'c_cpl[3]', 'c_cpl[4]', 'c_cpl[5]', 'c_cpl[6]', 'c_cpl[7]', 'c_cpl[8]', 'c_cpl[9]', 'c_cpl[10]', 'c_cpl[11]', 'c_cpl[12]', 'c_cpl[13]', 'c_cpl[14]', 'c_cpl[15]', 'c_cpl[16]', 'c_cpl[17]', 'c_cpl[18]', 'c_cpl[19]', 'c_cpl[20]', 'c_cpl[21]', 'c_cpl[22]', 'c_cpl[23]', 'c_cpl[24]', 'c_cpl[25]', 'c_cpl[26]']"
+         ],
+         "note": "관측 결손 — 비교 미계산 (등록 §14-10 = 복원 UNCONFIRMED · 수치 불일치 FAIL 과 따로 · ULPR-03 · 04)"
+        },
+        "mesh_md5": {
+         "status": "PASS"
+        },
+        "G3": {
+         "status": "PASS",
+         "why": [],
+         "step": 3201000,
+         "atoms": [
+          160417.0,
+          160417.0
+         ],
+         "press": [
+          0.16542994,
+          0.16542994
+         ],
+         "rel": 0.0
+        },
+        "pre_post": {
+         "ok": true,
+         "equal": true,
+         "problems": []
+        },
+        "un_erasure": {
+         "seen": true,
+         "problems": []
+        },
+        "history_test": {
+         "pass": true,
+         "why": [],
+         "source": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/receipt_ids_cases_20261021T083832_912814Z/g2c_c_cpl7_missing/history.json",
+         "source_sha256": "3689dde558e6e727aec7c92e840b464574a00dd7877bde1f11ad9e542afa9df9",
+         "plate_fn_sign": -1,
+         "table_sign": -1
+        }
+       },
+       "status": "UNCONFIRMED"
+      },
+      "next_UB": [
+       false,
+       "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (UNCONFIRMED) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)"
+      ]
+     },
+     "G2c": {
+      "returned": {
+       "status": "NOT_COMPUTED",
+       "why": [
+        "시험 열 이름 ['c_cpl[1]', 'c_cpl[2]', 'c_cpl[3]', 'c_cpl[4]', 'c_cpl[5]', 'c_cpl[6]', 'not_c_cpl[7]', 'c_cpl[8]', 'c_cpl[9]', 'c_cpl[10]', 'c_cpl[11]', 'c_cpl[12]', 'c_cpl[13]', 'c_cpl[14]', 'c_cpl[15]', 'c_cpl[16]', 'c_cpl[17]', 'c_cpl[18]', 'c_cpl[19]', 'c_cpl[20]', 'c_cpl[21]', 'c_cpl[22]', 'c_cpl[23]', 'c_cpl[24]', 'c_cpl[25]', 'c_cpl[26]'] ≠ 기대 ['c_cpl[1]', 'c_cpl[2]', 'c_cpl[3]', 'c_cpl[4]', 'c_cpl[5]', 'c_cpl[6]', 'c_cpl[7]', 'c_cpl[8]', 'c_cpl[9]', 'c_cpl[10]', 'c_cpl[11]', 'c_cpl[12]', 'c_cpl[13]', 'c_cpl[14]', 'c_cpl[15]', 'c_cpl[16]', 'c_cpl[17]', 'c_cpl[18]', 'c_cpl[19]', 'c_cpl[20]', 'c_cpl[21]', 'c_cpl[22]', 'c_cpl[23]', 'c_cpl[24]', 'c_cpl[25]', 'c_cpl[26]']"
+       ],
+       "note": "관측 결손 — 비교 미계산 (등록 §14-10 = 복원 UNCONFIRMED · 수치 불일치 FAIL 과 따로 · ULPR-03 · 04)"
+      }
+     }
+    }
+   },
+   "g2c_c_cpl8_missing": {
+    "matches": true,
+    "actual": {
+     "restore": {
+      "returned": {
+       "bed": "ps_7_3_r45",
+       "job": "RJ",
+       "s0": 3200000,
+       "checks": {
+        "syntax": {
+         "ok": true,
+         "stages": {
+          "R": [],
+          "UN": [],
+          "Ut0": []
+         },
+         "loops": [
+          6,
+          6
+         ],
+         "errors": []
+        },
+        "reset_log": {
+         "ok": true,
+         "missing": []
+        },
+        "g0": {
+         "ok": true,
+         "violations": []
+        },
+        "G1": {
+         "status": "PASS",
+         "why": [],
+         "step": 3200000,
+         "atoms": 160417,
+         "ke": 1.3419507e-06,
+         "rel": 0.0
+        },
+        "G2": {
+         "status": "PASS",
+         "why": [],
+         "n_atoms": 3,
+         "n_mismatch": 0,
+         "missing": [],
+         "extra": [],
+         "example": [],
+         "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+        },
+        "G2c": {
+         "status": "NOT_COMPUTED",
+         "why": [
+          "시험 열 이름 ['c_cpl[1]', 'c_cpl[2]', 'c_cpl[3]', 'c_cpl[4]', 'c_cpl[5]', 'c_cpl[6]', 'c_cpl[7]', 'not_c_cpl[8]', 'c_cpl[9]', 'c_cpl[10]', 'c_cpl[11]', 'c_cpl[12]', 'c_cpl[13]', 'c_cpl[14]', 'c_cpl[15]', 'c_cpl[16]', 'c_cpl[17]', 'c_cpl[18]', 'c_cpl[19]', 'c_cpl[20]', 'c_cpl[21]', 'c_cpl[22]', 'c_cpl[23]', 'c_cpl[24]', 'c_cpl[25]', 'c_cpl[26]'] ≠ 기대 ['c_cpl[1]', 'c_cpl[2]', 'c_cpl[3]', 'c_cpl[4]', 'c_cpl[5]', 'c_cpl[6]', 'c_cpl[7]', 'c_cpl[8]', 'c_cpl[9]', 'c_cpl[10]', 'c_cpl[11]', 'c_cpl[12]', 'c_cpl[13]', 'c_cpl[14]', 'c_cpl[15]', 'c_cpl[16]', 'c_cpl[17]', 'c_cpl[18]', 'c_cpl[19]', 'c_cpl[20]', 'c_cpl[21]', 'c_cpl[22]', 'c_cpl[23]', 'c_cpl[24]', 'c_cpl[25]', 'c_cpl[26]']"
+         ],
+         "note": "관측 결손 — 비교 미계산 (등록 §14-10 = 복원 UNCONFIRMED · 수치 불일치 FAIL 과 따로 · ULPR-03 · 04)"
+        },
+        "mesh_md5": {
+         "status": "PASS"
+        },
+        "G3": {
+         "status": "PASS",
+         "why": [],
+         "step": 3201000,
+         "atoms": [
+          160417.0,
+          160417.0
+         ],
+         "press": [
+          0.16542994,
+          0.16542994
+         ],
+         "rel": 0.0
+        },
+        "pre_post": {
+         "ok": true,
+         "equal": true,
+         "problems": []
+        },
+        "un_erasure": {
+         "seen": true,
+         "problems": []
+        },
+        "history_test": {
+         "pass": true,
+         "why": [],
+         "source": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/receipt_ids_cases_20261021T083832_912814Z/g2c_c_cpl8_missing/history.json",
+         "source_sha256": "3689dde558e6e727aec7c92e840b464574a00dd7877bde1f11ad9e542afa9df9",
+         "plate_fn_sign": -1,
+         "table_sign": -1
+        }
+       },
+       "status": "UNCONFIRMED"
+      },
+      "next_UB": [
+       false,
+       "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (UNCONFIRMED) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)"
+      ]
+     },
+     "G2c": {
+      "returned": {
+       "status": "NOT_COMPUTED",
+       "why": [
+        "시험 열 이름 ['c_cpl[1]', 'c_cpl[2]', 'c_cpl[3]', 'c_cpl[4]', 'c_cpl[5]', 'c_cpl[6]', 'c_cpl[7]', 'not_c_cpl[8]', 'c_cpl[9]', 'c_cpl[10]', 'c_cpl[11]', 'c_cpl[12]', 'c_cpl[13]', 'c_cpl[14]', 'c_cpl[15]', 'c_cpl[16]', 'c_cpl[17]', 'c_cpl[18]', 'c_cpl[19]', 'c_cpl[20]', 'c_cpl[21]', 'c_cpl[22]', 'c_cpl[23]', 'c_cpl[24]', 'c_cpl[25]', 'c_cpl[26]'] ≠ 기대 ['c_cpl[1]', 'c_cpl[2]', 'c_cpl[3]', 'c_cpl[4]', 'c_cpl[5]', 'c_cpl[6]', 'c_cpl[7]', 'c_cpl[8]', 'c_cpl[9]', 'c_cpl[10]', 'c_cpl[11]', 'c_cpl[12]', 'c_cpl[13]', 'c_cpl[14]', 'c_cpl[15]', 'c_cpl[16]', 'c_cpl[17]', 'c_cpl[18]', 'c_cpl[19]', 'c_cpl[20]', 'c_cpl[21]', 'c_cpl[22]', 'c_cpl[23]', 'c_cpl[24]', 'c_cpl[25]', 'c_cpl[26]']"
+       ],
+       "note": "관측 결손 — 비교 미계산 (등록 §14-10 = 복원 UNCONFIRMED · 수치 불일치 FAIL 과 따로 · ULPR-03 · 04)"
+      }
+     }
+    }
+   },
+   "g2c_missing_column_actual_cli": {
+    "matches": false,
+    "actual": {
+     "rc": 2,
+     "stderr": "",
+     "certificate_exists": true,
+     "next_UB": [
+      false,
+      "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (UNCONFIRMED) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)"
+     ]
+    }
+   },
+   "lexical_precision_boundary": {
+    "matches": null,
+    "actual": [
+     {
+      "token": "1",
+      "parsed": 1,
+      "accepted_id": 1,
+      "parser_ok": true,
+      "parser_problems": []
+     },
+     {
+      "token": "1.5",
+      "parsed": 1.5,
+      "accepted_id": null,
+      "parser_ok": true,
+      "parser_problems": []
+     },
+     {
+      "token": "1.0000000000000001",
+      "parsed": null,
+      "accepted_id": null,
+      "parser_ok": false,
+      "parser_problems": [
+       "ID 정확한 정수 아님: ID 토큰 '1.0000000000000001' 의 정확한 값이 정수 1 가 아니다 (float 변환이 정수로 가린다 · Q4) — 1.0000000000000001"
+      ]
+     },
+     {
+      "token": "9007199254740991",
+      "parsed": 9007199254740991,
+      "accepted_id": 9007199254740991,
+      "parser_ok": true,
+      "parser_problems": []
+     },
+     {
+      "token": "9007199254740992",
+      "parsed": 9007199254740992,
+      "accepted_id": 9007199254740992,
+      "parser_ok": true,
+      "parser_problems": []
+     },
+     {
+      "token": "9007199254740993",
+      "parsed": 9007199254740993,
+      "accepted_id": null,
+      "parser_ok": true,
+      "parser_problems": []
+     },
+     {
+      "token": "9007199254740994",
+      "parsed": 9007199254740994,
+      "accepted_id": null,
+      "parser_ok": true,
+      "parser_problems": []
+     }
+    ]
+   }
+  }
+ },
+ "grammar_provenance.json": {
+  "case_count": 17,
+  "all_expectations_satisfied": false,
+  "unsatisfied": {
+   "raw_ga_error_cached_pass": {
+    "expected_gate": true,
+    "gate": false,
+    "raw_status": "FAIL",
+    "problems_head": [
+     "원자료 재판독 = status 'FAIL' · exit_code 2 · rc 2 ≠ PASS · 0 — 그 런 폴더 원자료가 판정 JSON 과 다르다 (GA 기술: rc 0 · 배너 True · ERROR ['ERROR: independent inje",
+     "원자료 재판독 검사 ≠ 판정 JSON (JSON · 재판독) {'GA_tech': [True, False]} (Q3)"
+    ]
+   },
+   "raw_gb_mesh_wrong_cached_pass": {
+    "expected_gate": true,
+    "gate": false,
+    "raw_status": "FAIL",
+    "problems_head": [
+     "원자료 재판독 = status 'FAIL' · exit_code 2 · rc 2 ≠ PASS · 0 — 그 런 폴더 원자료가 판정 JSON 과 다르다 (GB 판 z (step · 기대 · 실제) [(4300, 0.030019999999999998, 9",
+     "원자료 재판독 검사 ≠ 판정 JSON (JSON · 재판독) {'GB_mesh_z': [True, False]} (Q3)"
+    ]
+   },
+   "raw_gb_screen_missing_cached_pass": {
+    "expected_gate": true,
+    "gate": false,
+    "raw_status": "FAIL",
+    "problems_head": [
+     "원자료 재판독 = status 'FAIL' · exit_code 2 · rc 2 ≠ PASS · 0 — 그 런 폴더 원자료가 판정 JSON 과 다르다 (GB 기술: rc 0 · 배너 False · ERROR [] · Loop procs [] (기대 r",
+     "원자료 재판독 검사 ≠ 판정 JSON (JSON · 재판독) {'GB_tech': [True, False], 'GB_markers': [True, False]} (Q3)"
+    ]
+   },
+   "raw_gb_state_wrong_cached_pass": {
+    "expected_gate": true,
+    "gate": false,
+    "raw_status": "FAIL",
+    "problems_head": [
+     "원자료 재판독 = status 'FAIL' · exit_code 2 · rc 2 ≠ PASS · 0 — 그 런 폴더 원자료가 판정 JSON 과 다르다 (GB 상태 파일 state_g_5400.in = 'variable gr_rstep equal 0\\n",
+     "원자료 재판독 검사 ≠ 판정 JSON (JSON · 재판독) {'GB_restart_state': [True, False]} (Q3)"
+    ]
+   },
+   "different_reader_runner_seal": {
+    "expected_gate": true,
+    "gate": false,
+    "raw_status": "PASS",
+    "problems_head": [
+     "원자료 재판독: 그 런 kit SHA256SUMS 의 read_history.py (0000000000000000000000000000000000000000000000000000000000000000) ≠ 승인된 판독기 봉인 값 70f741a9b830"
+    ]
+   }
+  },
+  "satisfied": [
+   "bad_ga_rc",
+   "boolean_exit_code",
+   "check_false",
+   "check_integer_one",
+   "missing_check",
+   "missing_manifest_end",
+   "other_binary",
+   "positive_actual_reader",
+   "wrong_deck_name",
+   "wrong_grammar_deck",
+   "wrong_plate",
+   "wrong_run_dir"
+  ]
+ },
+ "grammar_windows_r32": {
+  "initial": {
+   "allowed": true,
+   "problems": []
+  },
+  "crlf": {
+   "P/in.hist_producer.liggghts": 0,
+   "P/plate_hist.stl": 0,
+   "GA/in.hist_grammar.liggghts": 0,
+   "GA/plate_hist.stl": 0,
+   "GB/in.hist_grammar.liggghts": 0,
+   "GB/plate_hist.stl": 0
+  },
+  "after": {
+   "allowed": true,
+   "problems": []
+  }
+ },
+ "grammar_types": {
+  "synthetic_only": true,
+  "ran_real_binary": false,
+  "cases": {
+   "current_three_value_vector": {
+    "problems": [],
+    "expected_problem": false,
+    "expectation_satisfied": true
+   },
+   "original_single_value_vector_error": {
+    "problems": [
+     "f_gr_av[1]: ave/time 출력 = 전역 scalar 인데 vector 로 읽는다 (LIGGGHTS: Mismatched fix in variable formula) · variable gr_P equal f_gr_av[1]"
+    ],
+    "expected_problem": true,
+    "expectation_satisfied": true
+   },
+   "single_value_scalar_valid": {
+    "problems": [],
+    "expected_problem": false,
+    "expectation_satisfied": true
+   },
+   "three_value_scalar_error": {
+    "problems": [
+     "f_gr_av: ave/time 출력 = 전역 vector 인데 scalar 로 읽는다 (LIGGGHTS: Mismatched fix in variable formula) · variable gr_P equal f_gr_av"
+    ],
+    "expected_problem": true,
+    "expectation_satisfied": true
+   },
+   "three_value_index_four_error": {
+    "problems": [
+     "f_gr_av[4]: ave/time 벡터 크기 3 밖 · variable gr_P equal f_gr_av[4]"
+    ],
+    "expected_problem": true,
+    "expectation_satisfied": true
+   },
+   "three_value_index_999_error": {
+    "problems": [
+     "f_gr_av[999]: ave/time 벡터 크기 3 밖 · variable gr_P equal f_gr_av[999]"
+    ],
+    "expected_problem": true,
+    "expectation_satisfied": true
+   }
+  },
+  "grammar_input_hashes_match": {
+   "in.hist_producer.liggghts": true,
+   "in.hist_grammar.liggghts": true,
+   "plate_hist.stl": true
+  },
+  "git_bash_smoke": {
+   "exception": "FileNotFoundError(2, 'No such file or directory')"
+  },
+  "all_expectations_satisfied": true
+ },
+ "kit_byte_checks": {
+  "rendered_decks": [
+   {
+    "bed": "ps_0_10_r45",
+    "deck": "R",
+    "bytes_equal": true,
+    "sha256": "e1b150ab8f074d5721e43fcffef9c3ed75cdc84c7770c76f873ce97c4a1a65c7"
+   },
+   {
+    "bed": "ps_0_10_r45",
+    "deck": "UNread",
+    "bytes_equal": true,
+    "sha256": "a46c7e828a6a60c64c6a1c03335bab2ede24d1bb90be76b6e5430fb1e5151eeb"
+   },
+   {
+    "bed": "ps_0_10_r45",
+    "deck": "UK",
+    "bytes_equal": true,
+    "sha256": "fe22adde15983dadebfd9167c8caa46c5825aad78eec29e152a9ca85c3de5479"
+   },
+   {
+    "bed": "ps_0_10_r45",
+    "deck": "UC",
+    "bytes_equal": true,
+    "sha256": "0c8ee39c4d9fa6d1a62137fbd009dc0bcaf5c76d3491b9dda3d7bc39315ac0f9"
+   },
+   {
+    "bed": "ps_0_10_r45",
+    "deck": "U_UB",
+    "bytes_equal": true,
+    "sha256": "fe87c8f592fe90f6f6591b5c2156431f9b65b5a3978647a8bc2e12ee4a3c4616"
+   },
+   {
+    "bed": "ps_0_10_r45",
+    "deck": "U_UVa",
+    "bytes_equal": true,
+    "sha256": "1cf790ba76684ed7d3029a9d29a36fb25eabe941081076ddfaf14c470b91cfa8"
+   },
+   {
+    "bed": "ps_0_10_r45",
+    "deck": "U_UVb",
+    "bytes_equal": true,
+    "sha256": "1ec43ce706a2b5784c9f4ce60f12c4724cdb9c842d14cd816047edeba438d4d2"
+   },
+   {
+    "bed": "ps_0_10_r45",
+    "deck": "U_UT3",
+    "bytes_equal": true,
+    "sha256": "1c2f3c669dcd4bca7948c0515a9f963dbe16e7806ec0536928ab32d4b8125ad2"
+   },
+   {
+    "bed": "ps_0_10_r45",
+    "deck": "G_UB",
+    "bytes_equal": true,
+    "sha256": "087876325d44d263b5b9cded6b5826cdc396b01a3a367be5072335a95a878b1a"
+   },
+   {
+    "bed": "ps_0_10_r45",
+    "deck": "G_UVa",
+    "bytes_equal": true,
+    "sha256": "a031f1f8155f42378b411977c7cf9336220d1532394d2b0a1e491f2de4938ad2"
+   },
+   {
+    "bed": "ps_0_10_r45",
+    "deck": "G_UVb",
+    "bytes_equal": true,
+    "sha256": "1c71e1d338555a0c6f3f8d810c624053345edf24c0d42b612fec34db549f4ab9"
+   },
+   {
+    "bed": "ps_0_10_r45",
+    "deck": "G_UT3",
+    "bytes_equal": true,
+    "sha256": "7e179899690d6abffafc613987e6fb597819088ce68a6fbbc0877e7f63b5f71e"
+   },
+   {
+    "bed": "ps_3_7_r45",
+    "deck": "R",
+    "bytes_equal": true,
+    "sha256": "ac2bdf9b480b665462513f5fee31bb5fdda99d799adf08c44957ae90c6f0875a"
+   },
+   {
+    "bed": "ps_3_7_r45",
+    "deck": "UNread",
+    "bytes_equal": true,
+    "sha256": "7efc4149b2e87a2843b264090f7421c967d3263bfbf6a3326773597872e5cd9a"
+   },
+   {
+    "bed": "ps_3_7_r45",
+    "deck": "UK",
+    "bytes_equal": true,
+    "sha256": "fd6ae667414e914d805d856efa78e6dc1eaca29b82c4cd5bfa2762bbc1dfae57"
+   },
+   {
+    "bed": "ps_3_7_r45",
+    "deck": "UC",
+    "bytes_equal": true,
+    "sha256": "fe7b20b2eadb380274d3ba9dcba0d698fcfdce1bd94dbea6d34e818b1ebb97fd"
+   },
+   {
+    "bed": "ps_3_7_r45",
+    "deck": "U_UB",
+    "bytes_equal": true,
+    "sha256": "0f6432d59119eab9fd1667b44ba5059b0eb9d26ff5da7f2de55757fb13ef64e6"
+   },
+   {
+    "bed": "ps_3_7_r45",
+    "deck": "U_UVa",
+    "bytes_equal": true,
+    "sha256": "2e766838bc45c690282c5ba5fac2c793b8d36ce7bc1e625a045682d33b8bbd1b"
+   },
+   {
+    "bed": "ps_3_7_r45",
+    "deck": "U_UVb",
+    "bytes_equal": true,
+    "sha256": "98c385f31546ffee04498e9bfe79c3567da74fb8cece4ba999d09290b6beece9"
+   },
+   {
+    "bed": "ps_3_7_r45",
+    "deck": "U_UT3",
+    "bytes_equal": true,
+    "sha256": "03d47a9d5cde2810bb79a55f8c66b039cc027be190f85ad5d73bb596bb176c42"
+   },
+   {
+    "bed": "ps_3_7_r45",
+    "deck": "G_UB",
+    "bytes_equal": true,
+    "sha256": "bf50189c06bac3274cfebe02a038a24dab145772e1a7c652c851c9257bb02426"
+   },
+   {
+    "bed": "ps_3_7_r45",
+    "deck": "G_UVa",
+    "bytes_equal": true,
+    "sha256": "843026bd8f862e74e0624fbb7016aed90f15e05fc4ceda8337e81b9cbba5f849"
+   },
+   {
+    "bed": "ps_3_7_r45",
+    "deck": "G_UVb",
+    "bytes_equal": true,
+    "sha256": "7c3b9ba157ea19d61840a3bd7714e59c708ff291d07e32f60e1c5ce0fc62f3b4"
+   },
+   {
+    "bed": "ps_3_7_r45",
+    "deck": "G_UT3",
+    "bytes_equal": true,
+    "sha256": "e73b154bfd0d371ff4d6708e8a698a822cde4089f1c9159854dab0d65f6620e9"
+   },
+   {
+    "bed": "ps_5_5_r45",
+    "deck": "R",
+    "bytes_equal": true,
+    "sha256": "3cddc5c47b831562a8c8a9d107c99575e127102b2c8d0a32fd805cd2d421b9b2"
+   },
+   {
+    "bed": "ps_5_5_r45",
+    "deck": "UNread",
+    "bytes_equal": true,
+    "sha256": "e54cf72d8528e089519dc8089e879f0c87950133af9b1797741e67f2b5c7fc62"
+   },
+   {
+    "bed": "ps_5_5_r45",
+    "deck": "UK",
+    "bytes_equal": true,
+    "sha256": "b14d29fc7e38ce01b4b1f28fd4f15a2af6e0bac11b547d3e6f7e742417844f17"
+   },
+   {
+    "bed": "ps_5_5_r45",
+    "deck": "UC",
+    "bytes_equal": true,
+    "sha256": "222d29cc9bdc0717520b7b3a9fe70f9b6599d1a563847f2d074f9ee65f93fa29"
+   },
+   {
+    "bed": "ps_5_5_r45",
+    "deck": "U_UB",
+    "bytes_equal": true,
+    "sha256": "53e13f1f06b3c0beac9d1edc0ab8f649f3e56f63dc1b774a3e8ad26d19af2547"
+   },
+   {
+    "bed": "ps_5_5_r45",
+    "deck": "U_UVa",
+    "bytes_equal": true,
+    "sha256": "969faa396033662d725d90232660ac204ae08a0c88174e8c89751c156947757f"
+   },
+   {
+    "bed": "ps_5_5_r45",
+    "deck": "U_UVb",
+    "bytes_equal": true,
+    "sha256": "98263674da3a7d86481e6fa32f7647848699d30da4e24e98577625aa5a4b50c8"
+   },
+   {
+    "bed": "ps_5_5_r45",
+    "deck": "U_UT3",
+    "bytes_equal": true,
+    "sha256": "bf8ad84fb2335d2cde9d47bb0a984b0348d0b90e5eac1bdee11e54010ae3e0f5"
+   },
+   {
+    "bed": "ps_5_5_r45",
+    "deck": "G_UB",
+    "bytes_equal": true,
+    "sha256": "72bf43a782cb3c92fba107711c8d8f5a9ffc7a02107c4b687a40cbc2d43a134d"
+   },
+   {
+    "bed": "ps_5_5_r45",
+    "deck": "G_UVa",
+    "bytes_equal": true,
+    "sha256": "d590baa6f9ea7e67e7044441b6703cf2ac1cbc458eef5416b20ed0b9bbf729f9"
+   },
+   {
+    "bed": "ps_5_5_r45",
+    "deck": "G_UVb",
+    "bytes_equal": true,
+    "sha256": "02c79b1fe21273bfad316c8c82384a0bc5cb5cf5496ef75f1e9aad6bd02daf74"
+   },
+   {
+    "bed": "ps_5_5_r45",
+    "deck": "G_UT3",
+    "bytes_equal": true,
+    "sha256": "4d5b1ed66280c6810f518c584575f94a349674b0941f673e774fef31297d05ab"
+   },
+   {
+    "bed": "ps_7_3_r45",
+    "deck": "R",
+    "bytes_equal": true,
+    "sha256": "26bc84172fccf6f470122a74c53b08cbd6e2611703aa39abfb3cff5405c4b583"
+   },
+   {
+    "bed": "ps_7_3_r45",
+    "deck": "UNread",
+    "bytes_equal": true,
+    "sha256": "a1ad3dbbfae9e17828380c56a3fb4c54aaf7b268e9308fa4ff2b77c4f9d6e587"
+   },
+   {
+    "bed": "ps_7_3_r45",
+    "deck": "UK",
+    "bytes_equal": true,
+    "sha256": "9b3b2b625e7bc66ad3c5d60c2e7b0449712500ebd66d1a2d92f597ad5dcfbf5b"
+   },
+   {
+    "bed": "ps_7_3_r45",
+    "deck": "UC",
+    "bytes_equal": true,
+    "sha256": "08288de618f50a5824d9db7a6736a3f68038f33b6bdfba9876934bd658046db7"
+   },
+   {
+    "bed": "ps_7_3_r45",
+    "deck": "U_UB",
+    "bytes_equal": true,
+    "sha256": "01e11b2d305eb8db6987b613753e5f3a5993b71d1c5c86a09fb473d95885d814"
+   },
+   {
+    "bed": "ps_7_3_r45",
+    "deck": "U_UVa",
+    "bytes_equal": true,
+    "sha256": "2663be5f4008f187faa18f449791e73f746bcaa57aa4ef9f35687e078e167f24"
+   },
+   {
+    "bed": "ps_7_3_r45",
+    "deck": "U_UVb",
+    "bytes_equal": true,
+    "sha256": "b7acb2d6146ba1f3b4acc1c87a25a0c23da4b2904bb5f8b166aef37acce314a1"
+   },
+   {
+    "bed": "ps_7_3_r45",
+    "deck": "U_UT3",
+    "bytes_equal": true,
+    "sha256": "8e12fb6ee4ff33067109b6ccef3373b479e1f1d3f39e41e61c921bda3b2f8e34"
+   },
+   {
+    "bed": "ps_7_3_r45",
+    "deck": "G_UB",
+    "bytes_equal": true,
+    "sha256": "2f27ac3960e52999495e6ac5f32620ccb4993ac233106a768a628191c502e36f"
+   },
+   {
+    "bed": "ps_7_3_r45",
+    "deck": "G_UVa",
+    "bytes_equal": true,
+    "sha256": "50cac9264f0d8d74620ffd9fc7fd5cfdb66bb61af4c760320b6123d4cfc15a65"
+   },
+   {
+    "bed": "ps_7_3_r45",
+    "deck": "G_UVb",
+    "bytes_equal": true,
+    "sha256": "650e8aeb1408fc3ed20394ca48c7ef4f71960b7035050c5f8f84f9cce224097e"
+   },
+   {
+    "bed": "ps_7_3_r45",
+    "deck": "G_UT3",
+    "bytes_equal": true,
+    "sha256": "b96f91976f738d075cdd1223be31f30b78ea545a62f11c923eb3cffd424f8571"
+   },
+   {
+    "bed": "ps_7_3_r45",
+    "deck": "UT",
+    "bytes_equal": true,
+    "sha256": "4db06da206061f8380eed8e15733eeb572e20af60663e69fa7f9463069365213"
+   },
+   {
+    "bed": "ps_7_3_r45",
+    "deck": "Ut0",
+    "bytes_equal": true,
+    "sha256": "ea17c27e5cc637524b79609dafab8f9b9694a0bf7e33654a989467522ef46417"
+   },
+   {
+    "bed": "ps_10_0_r45",
+    "deck": "R",
+    "bytes_equal": true,
+    "sha256": "e21f2e5edc80d1be7147d53c109605f62278b3ebeff064a89a8d79d282e21897"
+   },
+   {
+    "bed": "ps_10_0_r45",
+    "deck": "UNread",
+    "bytes_equal": true,
+    "sha256": "35ab54b7e39da36e9692526eaf594aa2f17c2d1433f1d432eb26441664d77add"
+   },
+   {
+    "bed": "ps_10_0_r45",
+    "deck": "UK",
+    "bytes_equal": true,
+    "sha256": "1968f1e8d5ad0e231827f50eb663928b70a4611544225887ddb7bba3567b17c1"
+   },
+   {
+    "bed": "ps_10_0_r45",
+    "deck": "UC",
+    "bytes_equal": true,
+    "sha256": "3df486b7fd48af05c715c01633ee5ea74dcdc7162462bfa0c34192b583b22fa1"
+   },
+   {
+    "bed": "ps_10_0_r45",
+    "deck": "U_UB",
+    "bytes_equal": true,
+    "sha256": "39c7e992599f5c06b4d9165fc366f870fa55c387ee73a14153ee0c81d29b1b43"
+   },
+   {
+    "bed": "ps_10_0_r45",
+    "deck": "U_UVa",
+    "bytes_equal": true,
+    "sha256": "5347907061b870349c5fba919ae476e22ff7cc014d38cc89f2a6213449a44ad7"
+   },
+   {
+    "bed": "ps_10_0_r45",
+    "deck": "U_UVb",
+    "bytes_equal": true,
+    "sha256": "20833aaef1066c361b42ff3e03b9c7a0d1d4f1562e987373f89a7e04ba5f23ce"
+   },
+   {
+    "bed": "ps_10_0_r45",
+    "deck": "U_UT3",
+    "bytes_equal": true,
+    "sha256": "538089f03f5589cb7d4d57f9b5631a3fc0200114b8649cd5e4acf5fe795efd18"
+   },
+   {
+    "bed": "ps_10_0_r45",
+    "deck": "G_UB",
+    "bytes_equal": true,
+    "sha256": "22e394ec090c3fb502631a2685b6089d2e4087131e217d7ff43f55661f8ca62e"
+   },
+   {
+    "bed": "ps_10_0_r45",
+    "deck": "G_UVa",
+    "bytes_equal": true,
+    "sha256": "b2f8d6caf56a4cd35270eab280f8a9b1f94b5323244f9f3af491dbde3589d1f0"
+   },
+   {
+    "bed": "ps_10_0_r45",
+    "deck": "G_UVb",
+    "bytes_equal": true,
+    "sha256": "05c899678083dd8bceca8559c487a8e6352b8b42d5d899c2303c59c8b1f2e58d"
+   },
+   {
+    "bed": "ps_10_0_r45",
+    "deck": "G_UT3",
+    "bytes_equal": true,
+    "sha256": "e2b6b37d76726b54ca875dd752b433236cdb6543597a5c2dc95abf35f81bd6f9"
+   },
+   {
+    "bed": "ps_10_0_r45",
+    "deck": "EXT",
+    "bytes_equal": true,
+    "sha256": "2b214c0d807bbd0b67b702873d131395d934fc37b98616a069ee6ce42be9ebb0"
+   },
+   {
+    "bed": "ps_10_0_r45",
+    "deck": "EXT2",
+    "bytes_equal": true,
+    "sha256": "2c00dc6b277541a727e1ec568c9722f47093770b089f6e95dd42c4522e013450"
+   }
+  ],
+  "all_equal": true,
+  "physical": {
+   "U_UB": {
+    "dt": 1e-06,
+    "ul_W": 5000.0,
+    "ul_nA": 20000.0,
+    "ul_nB": 5000.0,
+    "ul_v": 0.01,
+    "ul_k0min": 3.0,
+    "ul_k0max": 12.0,
+    "ul_wmin0": 4.0,
+    "ul_wmax0": 12.0,
+    "ul_postn": 4.0,
+    "ul_sepreq": 2.0,
+    "ul_ave_ne": 100.0,
+    "ul_thermo": 500.0,
+    "ul_uc_steps": null,
+    "T_W": 0.005,
+    "dz_A": 0.0002,
+    "dz_B": 5e-05,
+    "hold": [
+     0.02,
+     0.06
+    ],
+    "ave_dt": 9.999999999999999e-05,
+    "thermo_dt": 0.0005
+   },
+   "UT": {
+    "dt": 5e-07,
+    "ul_W": 10000.0,
+    "ul_nA": 40000.0,
+    "ul_nB": 10000.0,
+    "ul_v": 0.01,
+    "ul_k0min": 3.0,
+    "ul_k0max": 12.0,
+    "ul_wmin0": 4.0,
+    "ul_wmax0": 12.0,
+    "ul_postn": 4.0,
+    "ul_sepreq": 2.0,
+    "ul_ave_ne": 200.0,
+    "ul_thermo": 1000.0,
+    "ul_uc_steps": null,
+    "T_W": 0.005,
+    "dz_A": 0.0002,
+    "dz_B": 5e-05,
+    "hold": [
+     0.02,
+     0.06
+    ],
+    "ave_dt": 9.999999999999999e-05,
+    "thermo_dt": 0.0005
+   },
+   "U_UVa": {
+    "dt": 1e-06,
+    "ul_W": 5000.0,
+    "ul_nA": 40000.0,
+    "ul_nB": 10000.0,
+    "ul_v": 0.005,
+    "ul_k0min": 3.0,
+    "ul_k0max": 24.0,
+    "ul_wmin0": 8.0,
+    "ul_wmax0": 24.0,
+    "ul_postn": 4.0,
+    "ul_sepreq": 2.0,
+    "ul_ave_ne": 100.0,
+    "ul_thermo": 500.0,
+    "ul_uc_steps": null,
+    "T_W": 0.005,
+    "dz_A": 0.0002,
+    "dz_B": 5e-05,
+    "hold": [
+     0.04,
+     0.12
+    ],
+    "ave_dt": 9.999999999999999e-05,
+    "thermo_dt": 0.0005
+   },
+   "U_UVb": {
+    "dt": 5e-07,
+    "ul_W": 10000.0,
+    "ul_nA": 80000.0,
+    "ul_nB": 20000.0,
+    "ul_v": 0.005,
+    "ul_k0min": 3.0,
+    "ul_k0max": 24.0,
+    "ul_wmin0": 8.0,
+    "ul_wmax0": 24.0,
+    "ul_postn": 4.0,
+    "ul_sepreq": 2.0,
+    "ul_ave_ne": 200.0,
+    "ul_thermo": 1000.0,
+    "ul_uc_steps": null,
+    "T_W": 0.005,
+    "dz_A": 0.0002,
+    "dz_B": 5e-05,
+    "hold": [
+     0.04,
+     0.12
+    ],
+    "ave_dt": 9.999999999999999e-05,
+    "thermo_dt": 0.0005
+   },
+   "U_UT3": {
+    "dt": 5e-07,
+    "ul_W": 10000.0,
+    "ul_nA": 40000.0,
+    "ul_nB": 10000.0,
+    "ul_v": 0.01,
+    "ul_k0min": 3.0,
+    "ul_k0max": 12.0,
+    "ul_wmin0": 4.0,
+    "ul_wmax0": 12.0,
+    "ul_postn": 4.0,
+    "ul_sepreq": 2.0,
+    "ul_ave_ne": 200.0,
+    "ul_thermo": 1000.0,
+    "ul_uc_steps": null,
+    "T_W": 0.005,
+    "dz_A": 0.0002,
+    "dz_B": 5e-05,
+    "hold": [
+     0.02,
+     0.06
+    ],
+    "ave_dt": 9.999999999999999e-05,
+    "thermo_dt": 0.0005
+   },
+   "G_UVa": {
+    "dt": 1e-06,
+    "ul_W": 5000.0,
+    "ul_nA": 40000.0,
+    "ul_nB": 10000.0,
+    "ul_v": 0.005,
+    "ul_k0min": 3.0,
+    "ul_k0max": 24.0,
+    "ul_wmin0": 8.0,
+    "ul_wmax0": 24.0,
+    "ul_postn": 4.0,
+    "ul_sepreq": 2.0,
+    "ul_ave_ne": 100.0,
+    "ul_thermo": 500.0,
+    "ul_uc_steps": null,
+    "T_W": 0.005,
+    "dz_A": 0.0002,
+    "dz_B": 5e-05,
+    "hold": [
+     0.04,
+     0.12
+    ],
+    "ave_dt": 9.999999999999999e-05,
+    "thermo_dt": 0.0005
+   },
+   "G_UVb": {
+    "dt": 5e-07,
+    "ul_W": 10000.0,
+    "ul_nA": 80000.0,
+    "ul_nB": 20000.0,
+    "ul_v": 0.005,
+    "ul_k0min": 3.0,
+    "ul_k0max": 24.0,
+    "ul_wmin0": 8.0,
+    "ul_wmax0": 24.0,
+    "ul_postn": 4.0,
+    "ul_sepreq": 2.0,
+    "ul_ave_ne": 200.0,
+    "ul_thermo": 1000.0,
+    "ul_uc_steps": null,
+    "T_W": 0.005,
+    "dz_A": 0.0002,
+    "dz_B": 5e-05,
+    "hold": [
+     0.04,
+     0.12
+    ],
+    "ave_dt": 9.999999999999999e-05,
+    "thermo_dt": 0.0005
+   }
+  }
+ },
+ "history_actual": {
+  "reader_rc": 0,
+  "equal_except_run_dir": true,
+  "rows": {
+   "H0": "PASS",
+   "H1": "PASS",
+   "H2": "PASS",
+   "H3": "PASS",
+   "H4": "PASS",
+   "H5": "PASS"
+  },
+  "unsafe_members": [],
+  "sealed_manifest_matches": [
+   {
+    "path": "kit_20261014_094731/SHA256SUMS",
+    "sha256": "241277b20aaccb8d1ab73c79fb9e0758138a3bed64751add98f7849b44697bf6",
+    "equals_pinned": false
+   }
+  ]
+ }
+}

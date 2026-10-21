@@ -1,0 +1,17 @@
+Rint 2 B6 webapp: cjunc and sdcp_mod labels on the MPM lab list: tests first
+
+webapp/test_ca_ext_labels.py gains W8-W11 (design v1 4-6, 5-6; template outside the sealed files, manifest values read
+only, same two rows as the face_alpha label):
+- W8 both rows (Jinja server row, JS labAddRow) read ca_ext.cjunc and ca_ext.sdcp_mod; no copy of the label strings
+  (producer constants ca_ext_cjunc.LABEL_CJUNC / LABEL_SDCP).
+- W9 Jinja render and W10 JS render (node): junction = label, R_j, P0/P1, generation prefix; modifier = label, c,
+  "SDCP proximity 0 = no-op by construction" when s3_discriminating is False; request without block warning
+  (unknown:ca_ext); block with a non-p3ca id warning; old meta shows none of them.
+- W11 the sealed build_meta (read only) passes the manifest through, so the template has the ca_ext blocks to read;
+  the convention chip itself stays in the sealed file (deferred).
+
+pre-fix 13/25 (fails = 12 checks from 5 render cases x 2 renderers + 2 row-source checks); the 13 passes are W1-W7
+and W4 (face_alpha), W8c (no copies), the two old-meta renders and W11.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

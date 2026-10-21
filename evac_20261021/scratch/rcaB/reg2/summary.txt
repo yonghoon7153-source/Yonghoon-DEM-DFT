@@ -1,0 +1,2 @@
+ca_b6_old	rc=1	58s	  - B1 payload [off LEAN2 + rtol 1e-12] — 매니페스트 (code_sha · exec_env 빼고) 바이트 같음 · id 같음 · step3 값 같음 (새 기록 칸 ['cg_iters', 'conv_cert.iters'] 만 빼고)
+ca_z3_old	rc=1	51s	  - O2 payload [face_alpha LEAN2 + rtol] — 기반 ↔ 새: 매니페스트 (code_sha · exec_env 빼고 · 새 칸 ('iters', 'sid_off')) 바이트 같음 · id 같음 · step3 값 같음
