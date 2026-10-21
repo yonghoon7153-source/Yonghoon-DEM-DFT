@@ -2171,9 +2171,10 @@ def t_rca06_sv():
     ct = ((r_th or {}).get('cjunc') or {}).get('sv_counterfactual') or {}
     chk('RCA06 문턱이 주어질 때만 비교 표지 — 문턱 2.0 (시험 값 · 기본값 아님) · 비 ≈ 10 → SV_DEPENDENT',
         ct.get('flag') == 'SV_DEPENDENT' and ct.get('threshold') == 2.0, f'{ct}')
-    bad = [v for v in (0.5, float('nan'), math.inf, True, 'x', -1.0)
+    bad = [v for v in (0.5, float('nan'), math.inf, True, 'x', -1.0, 10 ** 400, np.bool_(True))
            if not raises(lambda v=v: plan(reg, SVX_RJ, sv_counterfactual={'threshold': v}))]
-    chk('RCA06 문턱 = 유한 ≥ 1 실수만 (0.5 · NaN · inf · bool · 문자 · 음수 = 거부) · 모르는 칸 거부',
+    chk('RCA06 문턱 = 유한 ≥ 1 실수만 (0.5 · NaN · inf · bool · 문자 · 음수 · float 넘침 정수 10^400 · np.bool_ = 거부 · ValueError/TypeError '
+        '로만) · 모르는 칸 거부',
         not bad and raises(lambda: plan(reg, SVX_RJ, sv_counterfactual={'threshold': None, 'x': 1})), f'통과 {bad}')
     P2 = rows(F1)
     sid2, _ = bed(P2, F1_N)
