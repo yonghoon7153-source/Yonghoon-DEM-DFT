@@ -2324,9 +2324,10 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
         out['_cjunc'] = {'kind': 'cjunc_edges', 'version': _cjm.CJUNC_MODEL_VERSION, 'phi_dof': phi, 'sys': _cjs.sys,
                          'junction_inst': _cjs.junction_edge_inst, 'junction_sub': getattr(_cjs, 'junction_edge_sub', None),
                          'junction_current_code': _cjr['junction_current_code'], 'fp_sid': _grid_fp(sid)}
-        if _cjp.get('sv_counterfactual') is not None:      # ★ 10-21 (Codex RCA-06 · Q4 (가)) — 선택 노브: SV 면 끊은 판의 단자 G 비 (진단)
+        if _cjp.get('sv_counterfactual') is not None:      # ★ 10-21 (Codex RCA-06 · Q4 (가)) — 선택 노브: SV 다리 끊은 판의 단자 G 비 (진단)
             if unconv:                                     #   주 해가 미수렴 · 증서 실패 = 비를 내지 않는다 (분자 G 를 믿을 수 없다)
-                out['cjunc']['sv_counterfactual'] = {'kind': 'counterfactual_cut_sv_faces', 'requested': True,
+                #  ★ 10-21 (사전 리뷰 PRE-impl-04 · Q-D) — 기록 종류 = 원장 정본 상수 (반사실 = SV 다리만 끊음 · 옛 'SV 면 전부' 와 다른 양)
+                out['cjunc']['sv_counterfactual'] = {'kind': _cjm.CJUNC_SV_CF_KIND, 'rule': _cjm.CJUNC_SV_CF_RULE, 'requested': True,
                                                      'threshold': _cjp['sv_counterfactual'].get('threshold'),
                                                      'status': 'main_unconverged', 'sv_counterfactual_ratio': None,
                                                      'flag': None, 'conv_cert': None, 'backend_last_solve': None}
