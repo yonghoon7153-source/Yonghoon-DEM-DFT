@@ -243,8 +243,10 @@ def _run_total(run_dir):
 
 
 def _expected_counts(c):
-    """생성기 계획의 상별 입자 수 → {타입: 수} (check_window expect_counts — 모체 §2-4 "상별 수 = 계획")."""
-    p = dd._gen.plan(dd.GEN_ARGS['n_total'], cgf=dd.GEN_ARGS['cgf'], stiffen_se=c['stiffen_se'])
+    """생성기 계획의 상별 입자 수 → {타입: 수} (check_window expect_counts — 모체 §2-4 "상별 수 = 계획").
+    ★ 2026-10-21 (원장 MXD2-01) — 계획은 **셀의 밀도 세대**로 (`c['dens_gen']` · D2 셀 이름 · 없으면 None = gen1 = 옛 셀 그대로).
+      옛 판은 세대 없는 plan() 으로 lab 셀 (AM_P 143 · AM_S 699 · SE 99,158) 을 gen1 수 (176 · 859 · 98,965) 로 대조했다."""
+    p = dd._gen.plan(dd.GEN_ARGS['n_total'], cgf=dd.GEN_ARGS['cgf'], stiffen_se=c['stiffen_se'], dens_gen=c.get('dens_gen'))
     return {i + 1: int(p['n'][t]) for i, t in enumerate(dd._gen.TYPES)}
 
 

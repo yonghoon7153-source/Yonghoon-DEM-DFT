@@ -83,6 +83,9 @@ SIGFIG_FLOOR = 6
 #: 부동소수로 가릴 수 있는 자릿수 상한 — 이 위면 13 으로 둔다 (참 정밀도 ≥ 13 이면 폭이 커지는 쪽 = 보수)
 SIGFIG_MAX_TEST = 12
 DECK_META_SCHEMA = 'mixer_deck_meta/1'
+#: ★ 2026-10-21 (원장 MXD2-06) — 생성기가 선택 키 (밀도 세대 · D2 결합 규칙) 를 담은 메타를 /2 로 올렸다 (/1 의 키는 그대로 · 이 판독기가
+#   읽는 types · radius_m · deck_sha256 은 두 판에 같다).  받는 판 = 이 둘만 — 모르는 판 (/3 …) 은 TECH (fail-closed).
+DECK_META_SCHEMAS = (DECK_META_SCHEMA, 'mixer_deck_meta/2')
 S1_KEYS = ('se_frac_in_clusters', 'largest_frac', 'mean_size_number')
 S2_KEYS = ('se_attached_any_frac', 'se_attached_frac_AM_P', 'se_attached_frac_AM_S', 'se_per_am_AM_P', 'se_per_am_AM_S')
 #: 판독기 (measure_mixing_index) 에서 가져와도 되는 이름 = 프레임 선택뿐 (셀프테스트 ⑰)
@@ -196,8 +199,8 @@ def phase_map(run_dir):
             meta = json.load(f)
     except (OSError, ValueError) as e:
         raise Tech(f'deck_meta.json 을 읽을 수 없다: {e}')
-    if not isinstance(meta, dict) or meta.get('schema') != DECK_META_SCHEMA:
-        raise Tech(f'deck_meta.json schema ≠ {DECK_META_SCHEMA}')
+    if not isinstance(meta, dict) or meta.get('schema') not in DECK_META_SCHEMAS:
+        raise Tech(f'deck_meta.json schema {meta.get("schema") if isinstance(meta, dict) else None!r} ∉ {list(DECK_META_SCHEMAS)}')
     deck_sha = _sha_file(deck)
     if meta.get('deck_sha256') != deck_sha:
         raise Tech(f'deck_meta.deck_sha256 ≠ in.mixer sha256 ({deck_sha[:16]}…) — 이 런의 메타가 아니다')

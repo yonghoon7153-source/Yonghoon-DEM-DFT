@@ -70,6 +70,12 @@ for d in "$OUT"/*_s*/; do
   if [[ "$nm" =~ ^(npprobe[1-9][0-9]*_)?(E0|LC|LH|LHx10|LHx30|LU212|LU637)_(soft|ref|ref2)(_dthalf)?(_r[1-9][0-9]*)?_s[1-9][0-9]*$ ]]; then
     echo "· 강성 축 셀 건너뜀 (SLURM 새 단계 launch_highbo.sh dev-e0 · dev-rot · dev-bo · dev-u · confirm-* 로만 — 봉인 · 관문 · fresh): $d"; continue
   fi
+  #  ★ 2026-10-21 (원장 MXD2-01) — D2 결합 규칙 셀 (`GM<P><S>_rho…_bo…_<세대>_<수준>[_dthalf]_r<N>_s<seed>` · 표면 목록 = mixer_deck_diff.D2_STATES ·
+  #    test_launcher.sh D2② 가 대조) 과 머리에 D2 선언이 있는 덱은 **어느 런처도 띄우지 않는다** — 결과 전 등록 · 코호트 · 정책 v5 가 아직 없다.
+  #    옛 판은 이 이름을 몰라 로컬 lmp_serial 로 띄웠다 (DB⑦ · DU⑦ 와 같은 구멍 · test_launcher.sh D2①).
+  if [[ "$nm" =~ ^(npprobe[1-9][0-9]*_)?GM(cc|cu|uc|uu)_ ]] || grep -qF '★ D2 결합 규칙 (기하평균' "$d/in.mixer"; then
+    echo "· D2 결합 규칙 셀 건너뜀 (결과 전 등록 · 코호트 · 정책 v5 전 — 어느 런처도 띄우지 않는다): $d"; continue
+  fi
   #  ONLY — 목록 밖 런은 조용히 건너뛴다 (launch_highbo.sh 가 LH 를 한 개씩 부를 때 다른 런을 건드리지 않게)
   if [ -n "$ONLY" ]; then case " $ONLY " in *" $nm "*) ;; *) continue;; esac; fi
   if [ -f "$d/pid" ] && kill -0 "$(cat "$d/pid")" 2>/dev/null; then echo "· 이미 실행 중: $d"; continue; fi

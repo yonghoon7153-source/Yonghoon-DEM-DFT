@@ -39,6 +39,15 @@
      (0 은 정확히 0 · 퍼짐 max/min − 1 ≤ U_SPREAD_REL = 두 덱 %g 인쇄 반올림) 바뀌고 CED 밖 명령은 토큰까지 같다.  쌍 집합이 아니라 **배율 하나**를
      허용하므로 SE–SE 한 원소만 바뀐 덱 · 배율이 둘인 덱 · 줄어든 덱 · 빈 비교는 FAIL — LC → LU212 · LU637 에서 B · A 는 FAIL (SE 낀 쌍이 목록 밖)
      이고 U 만 PASS 한다 (셀프테스트 U③ · U④).
+  ⑦ (--allow GM, 2026-10-21 — 원장 MXD2-01 · D2 결합 규칙 · 1저자 10-14 D2 (가) · Q2) GM = **같은 ρ 세계의 NCM 표면 대비** (비코팅 ↔ 코팅):
+     두 덱 모두 D2 덱 · 같은 세대 · 벽 규칙 · ρ · γ_W · Bo_SE · 삽입 · NCM 표면만 바뀜 · CED 밖 명령 토큰 동일 · 바뀌는 CED = 규칙이 정하는 원소
+     **정확히** (배수 [√(γ'_iγ'_j)/√(γ_iγ_j)]^(1/3) · uu → cc 일곱 = AM–AM 셋 · AM–SE 둘 · AM–벽 둘 · uu → cu 넷) · 나머지는 그대로.
+     ★ D2 덱은 **어느 모드에서나** 덱마다 결합 규칙을 덱 텍스트에서 다시 검산한다 (`scripts/mixer_deck_readback.py` 의 d2_check — 한 벌 ·
+       쌍별 기하평균 F₀ · 절대 수준 Bo = F₀_SS / SE 무게 · Q2 벽 · 겹침 천장 · 머리 표) → 위반 = `d2_rule` (변이 M04 꼴: CED 를 다른 세대 밀도로
+       정한 짝은 E 규칙 · 명령을 다 맞춰도 Bo 선언 ≠ 값으로 FAIL).  E · EB 의 두 D2 덱은 선언 (γ · 벽 · Bo · 표면 · 세대) 이 같아야 한다 (같은 팔).
+     D2 셀 이름 `GM<P><S>_rho<ρ>_bo<Bo>_<세대>_<soft|ref|ref2>[_dthalf]_r<N>_s<seed>` (P · S = AM_P · AM_S 표면: c = 코팅 γ 1 · u = 비코팅 γ ρ ·
+     ρ · Bo = 정규 십진 · 소수점 = p) — parse_cell · cell_expected_deck · d2_cli_args (이름 → 생성기 CLI 인자) · cell_deck_problems (deck_meta /2 ·
+     세대 · adhesion_rule = 이름).  ⚠ D2 등록 코호트 · 런처 정책은 아직 없다 (결과 전 등록 대기 — COHORTS 에 넣지 않았다).
   ⚠ 이 도구는 덱만 본다 — 실행 바이너리 · 재개 이력 · 판독 규약은 사전등록의 발사 기록이 맡는다.
 
 usage
@@ -49,6 +58,9 @@ usage
   python3 scripts/mixer_deck_diff.py --runs <runs> --ref-arm LC_soft_r8 --arm LC_ref_r8 --allow E --expect-seeds 15485863,86028121,104395301
   python3 scripts/mixer_deck_diff.py <LC_ref_r2/in.mixer> <LU212_ref_r2/in.mixer> --allow U [--expect-deck <재생성 LU212 덱>]
   python3 scripts/mixer_deck_diff.py --runs <runs> --cohort dev-e0 [--json out.json]           # dev-e0 · dev-rot · dev-bo · dev-u · confirm
+  python3 scripts/mixer_deck_diff.py <GMuu…/in.mixer> <GMcc…/in.mixer> --allow GM [--expect-deck <재생성 GMcc 덱>]   # 같은 ρ 세계 D2 대비
+  python3 scripts/mixer_deck_diff.py --runs <runs> --ref-arm GMuu_rho0p3_bo0p5_lab20261014_ref_r2 --arm GMcc_rho0p3_bo0p5_lab20261014_ref_r2 \\
+                                     --allow GM --expect-seeds 32452843
   python3 scripts/mixer_deck_diff.py --selftest
 """
 import argparse
@@ -64,11 +76,19 @@ sys.path.insert(0, _HERE)
 from make_mixer_resume import logical_commands, _tokens      # noqa: E402  덱 논리 명령 파서 — 한 벌만 둔다
 from make_mixer_deck import TPL_SEED                          # noqa: E402  템플릿 시드 → 상 이름 (정본)
 import make_mixer_deck as _gen                                # noqa: E402  기대 시드 서명의 출처 = 생성기 자신 (HBR3-07)
+import mixer_deck_readback as _rb                             # noqa: E402  D2 결합 규칙 되읽기 (덱 텍스트) — 한 벌만 둔다 (2026-10-21 · MXD2-01)
 
 ALLOW = {
     'B': {('AM_P', 'AM_P'), ('AM_P', 'AM_S'), ('AM_S', 'AM_S'), ('AM_P', 'WALL'), ('AM_S', 'WALL')},
     'A': {('AM_P', 'AM_P'), ('AM_P', 'AM_S'), ('AM_S', 'AM_S')},
 }
+#: --allow 선택지 (2026-10-21 · GM 추가) — A · B = 쌍 집합 · E · EB = 강성 규칙 · U = 균일 배율 · GM = 같은 ρ 세계 D2 표면 대비
+ALLOW_KINDS = tuple(sorted(ALLOW)) + ('E', 'EB', 'U', 'GM')
+#: ── D2 결합 규칙 (2026-10-21 · MXD2-01) — 단일 출처: 팔 이름 = 생성기 CLI 의 GM · 세대 = 생성기 DENS_GENERATIONS · 허용오차 = 되읽기 TOL ──
+D2_ARM = 'GM'
+D2_STATES = ('cc', 'cu', 'uc', 'uu')                     # (AM_P, AM_S) 표면: c = 코팅 (γ 1) · u = 비코팅 (γ ρ)
+D2_GENS = tuple(sorted(_gen.DENS_GENERATIONS))
+GM_MULT_REL = _rb.TOL['gm_mult_rel']
 REL_TOL = 1e-6          # 덱은 CED 를 유효숫자 몇 자리로 찍는다 — 같은 값의 재생성 잡음보다 크고 개입보다 훨씬 작게
 #: E · EB 규칙 허용오차 (2026-09-30) — 인쇄 형식에서 비교 **전에** 정한다 (결과를 보고 넓히지 않는다)
 E_RULE = dict(
@@ -175,11 +195,157 @@ def diff_decks(text_ref, text_new, allow='B', expect=None, expect_text=None):
     2026-09-27 저녁 (Codex HBR2-05) 넓힌 것: CED 명령 머리 (fix id · group · style · n) 동일 · **양쪽** 행렬 유한 · 비음수 ·
     대칭 · 허용 쌍은 **증가** 방향 (고-Bo 확장) · `expect` = (n, 값) 을 주면 새 행렬이 그 목표와 1e-5 안에서 같아야 한다.
     ⚠ PASS 는 **덱 텍스트의 계약**이다 — 실제 STL 내용 · 바이너리 · 실행 환경은 발사 기록 (§2-5) 이 따로 묶는다.
+    ★ 2026-10-21 (원장 MXD2-01 · 02) — allow GM (같은 ρ 세계 D2 표면 대비 · _diff_decks_GM) · **모든 모드**에서 D2 덱은 덱마다 결합 규칙을
+      덱 텍스트에서 다시 검산해 `d2_rule` 에 적는다 (되읽기 d2_check · 한 벌).  D2 머리가 없는 덱 (옛 팔) 은 되읽기를 부르지 않는다 = 옛 판정 그대로.
     """
+    RA, RB = _d2_read(text_ref, '기준'), _d2_read(text_new, '새')
+    if allow == 'GM':
+        out = _diff_decks_GM(text_ref, text_new, RA, RB, expect=expect)
+    elif allow in ('E', 'EB'):
+        out = _diff_decks_E(text_ref, text_new, allow, expect_text=expect_text)
+    elif allow == 'U':
+        out = _diff_decks_U(text_ref, text_new, expect=expect)
+    else:
+        out = _diff_decks_AB(text_ref, text_new, allow, expect=expect)
+    return _d2_attach(out, allow, RA, RB)
+
+
+def _d2_read(text, label):
+    """D2 덱이면 되읽기 `d2_check` 결과 · 아니면 None.  ★ D2 머리 ("★ D2 결합 규칙 (기하평균") 가 없는 덱은 되읽기를 **부르지 않는다**
+    (옛 팔 덱의 판정 · 예외 경로 그대로).  되읽기가 예외를 내면 문제 하나로 (fail-closed)."""
+    if not isinstance(text, str) or _rb.D2_HEAD not in text:
+        return None
+    try:
+        return _rb.d2_check(_rb.read_deck(text, label))
+    except Exception as e:                                   # noqa: BLE001 — 되읽기 결함도 FAIL 로 (조용히 넘기지 않는다)
+        return dict(is_d2=True, decl=None, rows=[], bo_read=None, problems=[f'D2 되읽기 실패 ({type(e).__name__}: {e})'])
+
+
+def _d2_key(dc):
+    """같은 팔의 D2 선언 (E · EB 짝은 같아야 한다) — 선언 토큰 · 벽 규칙 · 표면 · 삽입 · 세대."""
+    return (tuple(sorted(dc['tokens'].items())), dc['wall_rule'], tuple(sorted(dc['surface'].items())), dc['layered'], dc.get('dens_gen'))
+
+
+def _d2_summary(R):
+    if R is None:
+        return None
+    dc = R.get('decl') or {}
+    return dict(wall_rule=dc.get('wall_rule'), gamma=dc.get('gamma'), gamma_wall=dc.get('gamma_wall'), bo_se=dc.get('bo_se'),
+                bo_read=R.get('bo_read'), rho=dc.get('rho'), surface=dc.get('surface'), dens_gen=dc.get('dens_gen'),
+                n_problems=len(R.get('problems') or []))
+
+
+def _d2_attach(out, allow, RA, RB):
+    """모드 결과에 D2 덱별 검산 (`d2_rule`) 을 붙인다 — 위반이 있으면 FAIL.  E · EB: D2 ↔ 옛 팔 짝 금지 · 두 D2 덱의 선언 같다 (같은 팔)."""
+    dr = out.setdefault('d2_rule', [])
+    for lab, R in (('기준', RA), ('새', RB)):
+        if R is not None:
+            dr += [f'{lab} 덱 D2 — {p_}' for p_ in R['problems']]
     if allow in ('E', 'EB'):
-        return _diff_decks_E(text_ref, text_new, allow, expect_text=expect_text)
-    if allow == 'U':
-        return _diff_decks_U(text_ref, text_new, expect=expect)
+        if (RA is None) != (RB is None):
+            dr.append(f'{allow} 는 같은 팔 · 다른 강성 — D2 결합 규칙 덱과 옛 팔 덱을 짝짓지 않는다')
+        elif RA is not None and RA.get('decl') and RB.get('decl') and _d2_key(RA['decl']) != _d2_key(RB['decl']):
+            dr.append(f"{allow} 의 두 D2 덱은 같은 팔이어야 한다 — 선언이 다르다 (γ · γ_W · Bo · ρ · 벽 규칙 · 표면 · 세대: "
+                      f"{RA['decl']['tokens']} · {RA['decl']['surface']} ⇄ {RB['decl']['tokens']} · {RB['decl']['surface']})")
+    out['d2'] = dict(ref=_d2_summary(RA), new=_d2_summary(RB))
+    if dr:
+        out['verdict'] = 'FAIL'
+    return out
+
+
+def _diff_decks_GM(text_ref, text_new, RA, RB, expect=None):
+    """GM 판정 (2026-10-21 · 원장 MXD2-01) — 같은 ρ 세계의 NCM 표면 대비 (비코팅 ↔ 코팅) · 모듈 설명 ⑦.
+    ① CED 밖 명령 토큰 동일 (같은 강성 · 세대 · 시드 · 삽입) ② 두 덱 D2 · 같은 세대 · 벽 규칙 · ρ · γ_W · SE γ · Bo · 삽입 ③ NCM 표면이 바뀌었다
+    ④ 바뀐 CED = 규칙이 바꾸는 원소 (배수 [√(γ'_iγ'_j)/√(γ_iγ_j)]^(1/3) ≠ 1) **정확히** · 그 배수대로 (GM_MULT_REL) · 나머지 그대로 · 벽–벽 0
+    ⑤ `expect` (재생성 덱의 CED) 를 주면 1e-5 안에서 같다.  덱마다의 결합 규칙 검산은 diff_decks 가 따로 붙인다 (_d2_attach)."""
+    a, b = parse_deck(text_ref), parse_deck(text_new)
+    out = dict(allow='GM', non_ced_diffs=[], changed=[], outside=[], missing=[], wrong_direction=[], target_mismatch=[], table=[],
+               d2_rule=[], gm_expect_change=[])
+    dr = out['d2_rule']
+    if len(a['cmds']) != len(b['cmds']):
+        out['non_ced_diffs'].append(f'CED 밖 명령 수 {len(a["cmds"])} ≠ {len(b["cmds"])}')
+    for i, (x, y) in enumerate(zip(a['cmds'], b['cmds'])):
+        if x != y:
+            out['non_ced_diffs'].append(f'CED 밖 명령 #{i}: {" ".join(x)[:120]}  ⇄  {" ".join(y)[:120]}')
+    if a['names'] != b['names']:
+        out['non_ced_diffs'].append(f'CED 밖 — 타입 이름 {a["names"]} ≠ {b["names"]}')
+    if a['ced_head'] != b['ced_head']:
+        out['non_ced_diffs'].append(f'CED 명령 머리가 다르다: {" ".join(a["ced_head"])}  ⇄  {" ".join(b["ced_head"])}')
+    (na, va), (nb, vb) = a['ced'], b['ced']
+    if na != nb:
+        out['non_ced_diffs'].append(f'CED 행렬 크기 {na} ≠ {nb}')
+        out['verdict'] = 'FAIL'
+        return out
+    nm = [a['names'].get(k + 1, f't{k + 1}') for k in range(na)]
+    for lab, v_ in (('기준', va), ('새', vb)):
+        if any(not math.isfinite(x) for x in v_):
+            out['non_ced_diffs'].append(f'{lab} 덱 CED 에 비유한 값')
+        if any(math.isfinite(x) and x < 0 for x in v_):
+            out['non_ced_diffs'].append(f'{lab} 덱 CED 에 음수')
+        for i in range(na):
+            for j in range(i + 1, na):
+                if v_[i * na + j] != v_[j * na + i]:
+                    out['non_ced_diffs'].append(f'{lab} 덱 CED 비대칭 ({nm[i]},{nm[j]})')
+    if RA is None or RB is None or not RA.get('decl') or not RB.get('decl'):
+        dr.append('GM 은 두 덱 모두 D2 결합 규칙 덱이어야 한다 (머리 "★ D2 결합 규칙 (기하평균" · 선언을 읽을 수 있어야) — '
+                  f"기준 {'D2' if RA is not None else '옛 팔'} · 새 {'D2' if RB is not None else '옛 팔'}")
+        out['verdict'] = 'FAIL'
+        return out
+    A_, B_ = RA['decl'], RB['decl']
+    dif = [k for k, va_, vb_ in (('밀도 세대', A_.get('dens_gen'), B_.get('dens_gen')), ('벽 규칙', A_['wall_rule'], B_['wall_rule']),
+                                 ('ρ_비코팅', A_['tokens']['rho'], B_['tokens']['rho']), ('γ_W', A_['tokens']['gw'], B_['tokens']['gw']),
+                                 ('SE γ', A_['tokens']['SE'], B_['tokens']['SE']), ('Bo_SE', A_['tokens']['bo'], B_['tokens']['bo']),
+                                 ('삽입', A_['layered'], B_['layered'])) if va_ != vb_]
+    if dif:
+        dr.append(f"GM 은 같은 ρ 세계 비교다 — 다른 칸 {dif} (ρ {A_['tokens']['rho']} → {B_['tokens']['rho']} · γ_W {A_['tokens']['gw']} → "
+                  f"{B_['tokens']['gw']} · Bo {A_['tokens']['bo']} → {B_['tokens']['bo']} · 세대 {A_.get('dens_gen')} → {B_.get('dens_gen')})")
+    if A_['surface'] == B_['surface']:
+        out['missing'].append(f"NCM 표면이 그대로다 ({A_['surface']}) — 비코팅 ↔ 코팅 대비가 아니다 (빈 비교)")
+    ga, gb = dict(A_['gamma'], WALL=A_['gamma_wall']), dict(B_['gamma'], WALL=B_['gamma_wall'])
+    if any(n_ not in ga for n_ in nm):
+        out['non_ced_diffs'].append(f'타입 이름 {nm} — D2 상 (AM_P · AM_S · SE · WALL) 밖')
+        out['verdict'] = 'FAIL'
+        return out
+    changed, expected = set(), set()
+    for i in range(na):
+        for j in range(i, na):
+            x, y = va[i * na + j], vb[i * na + j]
+            pair, lab = tuple(sorted((nm[i], nm[j]))), f'{nm[i]}–{nm[j]}'
+            if (math.isfinite(x) and math.isfinite(y) and abs(y - x) > REL_TOL * max(abs(x), abs(y), 1e-30)) or (math.isfinite(x) != math.isfinite(y)):
+                changed.add(pair)
+            e_ = None
+            if nm[i] == nm[j] == 'WALL':
+                if x != 0.0 or y != 0.0:
+                    dr.append(f'{lab}: 벽–벽 CED {x:g} → {y:g} ≠ 0')
+            else:
+                e_ = (math.sqrt(gb[nm[i]] * gb[nm[j]]) / math.sqrt(ga[nm[i]] * ga[nm[j]])) ** (1.0 / 3.0)
+                if e_ != 1.0:
+                    expected.add(pair)
+                    if not (x > 0.0 and math.isfinite(y) and abs((y / x) / e_ - 1.0) <= GM_MULT_REL):
+                        dr.append(f"{lab}: 배수 ×{(y / x) if x else float('nan'):.7g} ≠ 규칙 ×{e_:.7g} (γ {ga[nm[i]]:g}·{ga[nm[j]]:g} → "
+                                  f"{gb[nm[i]]:g}·{gb[nm[j]]:g} · 허용 ±{GM_MULT_REL:.1e})")
+            out['table'].append(dict(pair=lab, ref=x, new=y, ratio=(y / x) if x else None, rule=e_))
+    out['changed'] = sorted(changed)
+    out['gm_expect_change'] = sorted(expected)
+    out['outside'] = sorted(changed - expected)
+    out['missing'] += sorted(expected - changed)
+    if expect is not None:
+        ne, ve = expect
+        if ne != nb:
+            out['target_mismatch'].append(f'목표 행렬 크기 {ne} ≠ {nb}')
+        else:
+            for i in range(na):
+                for j in range(i, na):
+                    x, y = ve[i * na + j], vb[i * na + j]
+                    if not (math.isfinite(x) and math.isfinite(y)) or abs(y - x) > 1e-5 * max(abs(x), abs(y), 1e-30):
+                        out['target_mismatch'].append(f'{nm[i]}–{nm[j]}: 목표 {x:.6g} vs 새 {y:.6g}')
+    out['verdict'] = 'PASS' if not (out['non_ced_diffs'] or dr or out['outside'] or out['missing'] or out['wrong_direction']
+                                    or out['target_mismatch']) else 'FAIL'
+    return out
+
+
+def _diff_decks_AB(text_ref, text_new, allow, expect=None):
+    """A · B 판정 (옛 diff_decks 본문 그대로 — 2026-10-21 에 D2 디스패치를 앞에 두며 분리)."""
     a, b = parse_deck(text_ref), parse_deck(text_new)
     out = dict(allow=allow, non_ced_diffs=[], changed=[], outside=[], missing=[], wrong_direction=[], target_mismatch=[], table=[])
     if len(a['cmds']) != len(b['cmds']):
@@ -508,17 +674,46 @@ def _sig_json(sig):
 
 
 def expected_deck(arm, seed, n_total=GEN_ARGS['n_total'], cgf=GEN_ARGS['cgf'], revolutions=GEN_ARGS['revolutions'],
-                  stiffen_se=1.0, hold_bo_pairwise=False, dt_factor=1.0):
+                  stiffen_se=1.0, hold_bo_pairwise=False, dt_factor=1.0, dens_gen=None, d2=None):
     """생성기 CLI `make_mixer_deck.py --n-total … --cgf … --arm <arm> --seed <seed> --revolutions … [--stiffen-se F]
     [--hold-bo-pairwise] [--dt-factor X]` 가 쓰는 in.mixer 와 **같은 텍스트**를 메모리에서 만든다.  호출은 그 CLI 의 main 그대로다:
     --fr 기본 FR_ANCHOR · --rpm 없음 · --allow-off-band 없음 · --settle-s 없음 · --baffles 0 · --baffle-h 0.10
     (셀프테스트 ㉒ = CLI 출력과 바이트 동일 · ㉟ = 커밋된 DEV 강성 덱 14 와 바이트 동일).
     ★ 2026-09-30 (piece 2) — 강성 인자 (stiffen_se · hold_bo_pairwise · dt_factor) 를 CLI 와 같은 자리로 넘긴다.  기본값 = 옛 호출 그대로
-      (중립 옵션이면 생성기가 바이트 동일 덱을 낸다 — 생성기 ST①)."""
-    p = _gen.plan(n_total, cgf=cgf, stiffen_se=stiffen_se)
+      (중립 옵션이면 생성기가 바이트 동일 덱을 낸다 — 생성기 ST①).
+    ★ 2026-10-21 (MXD2-01) — `dens_gen` (CLI --dens-gen · None = 옛 호출) · `d2` (parse_tag 의 d2 사전) = D2 결합 규칙 팔: CLI `--gm-gamma
+      AM_P=…,AM_S=… --gm-wall-ncm ρ --gm-bo-se Bo` 가 등록하는 팔 'GM' 을 같은 gm_arm 호출로 잠깐 등록해 덱을 만든다 (이미 'GM' 이 있으면 거부)."""
+    p = _gen.plan(n_total, cgf=cgf, stiffen_se=stiffen_se, dens_gen=dens_gen)
     rpm = _gen.resolve_rpm(p['R'], _gen.FR_ANCHOR, None, False)
-    return _gen.deck(p, rpm, revolutions, arm=arm, settle_s=None, seed=seed, n_baffles=0, baffle_h=0.10,
-                     hold_bo_pairwise=hold_bo_pairwise, dt_factor=dt_factor)
+    if d2 is None:
+        return _gen.deck(p, rpm, revolutions, arm=arm, settle_s=None, seed=seed, n_baffles=0, baffle_h=0.10,
+                         hold_bo_pairwise=hold_bo_pairwise, dt_factor=dt_factor)
+    if arm != D2_ARM:
+        raise ValueError(f'D2 덱의 팔 이름은 {D2_ARM} (생성기 CLI) 이다 — {arm!r}')
+    rho = float(d2['rho_txt'])
+    nm_ = _gen.register_arm(D2_ARM, _gen.gm_arm({'AM_P': float(d2['gamma_txt']['AM_P']), 'AM_S': float(d2['gamma_txt']['AM_S']), 'SE': 1.0},
+                                                gamma_wall=_gen.gm_wall_from_ncm(rho), bo_se=float(d2['bo_txt']), rho_uncoated_ncm=rho))
+    try:
+        return _gen.deck(p, rpm, revolutions, arm=nm_, settle_s=None, seed=seed, n_baffles=0, baffle_h=0.10,
+                         hold_bo_pairwise=hold_bo_pairwise, dt_factor=dt_factor)
+    finally:
+        _gen.ARMS.pop(nm_, None)
+
+
+def expected_deck_meta(arm, seed, text, n_total=GEN_ARGS['n_total'], cgf=GEN_ARGS['cgf'], revolutions=GEN_ARGS['revolutions'],
+                       stiffen_se=1.0, hold_bo_pairwise=False, dt_factor=1.0, dens_gen=None, d2=None):
+    """`expected_deck` 와 같은 호출로 생성기 `deck_meta` (argv 칸 = 비교에서 뺀다) — D2 셀 덱 계약의 기대 메타 (2026-10-21)."""
+    p = _gen.plan(n_total, cgf=cgf, stiffen_se=stiffen_se, dens_gen=dens_gen)
+    rpm = _gen.resolve_rpm(p['R'], _gen.FR_ANCHOR, None, False)
+    if d2 is None:
+        return _gen.deck_meta(p, rpm, revolutions, seed, arm, text, hold_bo_pairwise=hold_bo_pairwise, dt_factor=dt_factor)
+    rho = float(d2['rho_txt'])
+    nm_ = _gen.register_arm(D2_ARM, _gen.gm_arm({'AM_P': float(d2['gamma_txt']['AM_P']), 'AM_S': float(d2['gamma_txt']['AM_S']), 'SE': 1.0},
+                                                gamma_wall=_gen.gm_wall_from_ncm(rho), bo_se=float(d2['bo_txt']), rho_uncoated_ncm=rho))
+    try:
+        return _gen.deck_meta(p, rpm, revolutions, seed, nm_, text, hold_bo_pairwise=hold_bo_pairwise, dt_factor=dt_factor)
+    finally:
+        _gen.ARMS.pop(nm_, None)
 
 
 # ══ 강성 축 셀 이름 · 등록 코호트 (2026-09-30 · 코드 선행조건 2 단계 piece 1 · 2) ══════════════════════════════════════════
@@ -541,12 +736,49 @@ _TAG_PAT = r'(' + '|'.join(sorted(STIFF_ARMS, key=len, reverse=True)) + r')_(sof
 _TAG_RE = re.compile(_TAG_PAT)
 _CELL_RE = re.compile(_TAG_PAT + r'_s([1-9][0-9]*)')
 _PROBE_RE = re.compile(r'npprobe([1-9][0-9]*)_(.+)')
+#: ★ D2 셀 꼬리표 (2026-10-21 · 원장 MXD2-01 · 파이프라인 S1 "셀 이름") — `GM<P><S>_rho<ρ>_bo<Bo>_<세대>_<soft|ref|ref2>[_dthalf]_r<N>`
+#:   P · S = AM_P · AM_S 의 NCM 표면 (c = 코팅 γ 1 · u = 비코팅 γ ρ) · 벽 = 비코팅 NCM 에 묶음 (Q2 · γ_W = 0.0256·ρ) · ρ · Bo = 정규 십진
+#:   (정수부 0 또는 앞 0 없는 수 · 소수점 = p · 끝 0 금지 · 점 · 지수 금지 — 한 값에 한 이름) · 세대 = 생성기 DENS_GENERATIONS · 회전 팔 (_r 필수).
+_D2_DEC = r'(?:0|[1-9][0-9]*)(?:p[0-9]*[1-9])?'
+_D2_TAG_PAT = (r'GM([cu])([cu])_rho(' + _D2_DEC + r')_bo(' + _D2_DEC + r')_(' + '|'.join(re.escape(g_) for g_ in D2_GENS)
+               + r')_(soft|ref|ref2)(_dthalf)?(?:_r([1-9][0-9]*))?')
+_D2_TAG_RE = re.compile(_D2_TAG_PAT)
+_D2_CELL_RE = re.compile(_D2_TAG_PAT + r'_s([1-9][0-9]*)')
+
+
+def _parse_d2_tag(tag):
+    """D2 셀 꼬리표 → parse_tag 꼴 dict + dens_gen · d2 (상태 · γ · ρ · Bo · 벽 규칙 · 인쇄 문자열).  문법 · 범위 밖이면 ValueError."""
+    m_ = _D2_TAG_RE.fullmatch(tag) if isinstance(tag, str) else None
+    if not m_:
+        raise ValueError(f'D2 셀 꼬리표가 아니다: {tag!r} — `GM<c|u><c|u>_rho<ρ>_bo<Bo>_<{"|".join(D2_GENS)}>_<soft|ref|ref2>[_dthalf]_r<N>` '
+                         '(ρ · Bo 정규 십진 · 소수점 p)')
+    sp, ss, rho_t, bo_t, gen, level, dth, rev = m_.groups()
+    if rev is None:
+        raise ValueError(f'{tag}: D2 팔은 회전 팔이다 — `_r<N>` (바퀴 수) 가 있어야 한다')
+    rho_txt, bo_txt = rho_t.replace('p', '.'), bo_t.replace('p', '.')
+    rho, bo = float(rho_txt), float(bo_txt)
+    (glo, ghi), (blo, bhi) = _gen.GM_GAMMA_RANGE, _gen.GM_BO_RANGE
+    if not (glo <= rho <= ghi) or not (blo <= bo <= bhi):
+        raise ValueError(f'{tag}: ρ {rho_txt} · Bo {bo_txt} — 생성기 지원 범위 ρ [{glo:g}, {ghi:g}] · Bo [{blo:g}, {bhi:g}] 밖 (0 금지)')
+    if rho == 1.0 and (sp, ss) != ('c', 'c'):
+        raise ValueError(f'{tag}: ρ 1 세계는 코팅 · 비코팅 γ 가 같다 — cc 만 (이름 하나에 덱 하나)')
+    F = STIFF_LEVELS[level]
+    gamma_txt = {'AM_P': '1' if sp == 'c' else rho_txt, 'AM_S': '1' if ss == 'c' else rho_txt}
+    d2 = dict(states=sp + ss, gamma={'AM_P': float(gamma_txt['AM_P']), 'AM_S': float(gamma_txt['AM_S']), 'SE': 1.0}, rho=rho, bo_se=bo,
+              wall_rule=_gen.GM_WALL_RULE_NCM, gamma_wall=_gen.gm_wall_from_ncm(rho),
+              surface={'AM_P': 'coated' if sp == 'c' else 'uncoated', 'AM_S': 'coated' if ss == 'c' else 'uncoated'},
+              rho_txt=rho_txt, bo_txt=bo_txt, gamma_txt=gamma_txt)
+    return dict(tag=tag, arm=D2_ARM, level=level, stiffen_se=F, hold_bo_pairwise=(F != 1.0), dt_factor=0.5 if dth else 1.0,
+                revolutions=int(rev), dens_gen=gen, d2=d2)
 DEV_SEEDS = tuple(_gen.CAMPAIGN_SEEDS)                            # §7 — "개발 시드 = 기존 (32452843 · 49979687 · 67867967)"
 HOLDOUT_SEEDS = (15485863, 86028121, 104395301)                   # §7 — "확인 (holdout) 시드 = 15485863 · 86028121 · 104395301 … 결과 전 고정"
 
 
 def parse_tag(tag):
-    """셀 꼬리표 (seed 앞까지) → dict(tag, arm, level, stiffen_se, hold_bo_pairwise, dt_factor, revolutions).  문법 밖이면 ValueError."""
+    """셀 꼬리표 (seed 앞까지) → dict(tag, arm, level, stiffen_se, hold_bo_pairwise, dt_factor, revolutions).  문법 밖이면 ValueError.
+    ★ 2026-10-21 (MXD2-01) — D2 꼬리표 (`GM…`) 는 _parse_d2_tag (+ dens_gen · d2).  옛 꼬리표의 반환 키는 그대로 (세대 키 없음)."""
+    if isinstance(tag, str) and tag.startswith(D2_ARM):
+        return _parse_d2_tag(tag)
     m_ = _TAG_RE.fullmatch(tag) if isinstance(tag, str) else None
     if not m_:
         raise ValueError(f'강성 축 셀 꼬리표가 아니다: {tag!r} — `<{"|".join(STIFF_ARMS)}>_<soft|ref|ref2>[_dthalf][_r<N>]`')
@@ -561,7 +793,13 @@ def parse_tag(tag):
 
 
 def parse_cell(name):
-    """셀 폴더 이름 → parse_tag + name · seed.  NP 프로브 · 옛 생성기 팔 이름 (LC_s…) · 문법 밖은 ValueError."""
+    """셀 폴더 이름 → parse_tag + name · seed.  NP 프로브 · 옛 생성기 팔 이름 (LC_s…) · 문법 밖은 ValueError.
+    ★ 2026-10-21 (MXD2-01) — D2 셀 이름 `GM<P><S>_rho…_bo…_<세대>_<수준>[_dthalf]_r<N>_s<seed>` 도 받는다 (D2 문법 · 범위 · ρ 1 = cc 만)."""
+    if isinstance(name, str) and name.startswith(D2_ARM):
+        m_ = _D2_CELL_RE.fullmatch(name)
+        if not m_:
+            raise ValueError(f'D2 셀 이름이 아니다: {name!r} — `GM<c|u><c|u>_rho<ρ>_bo<Bo>_<{"|".join(D2_GENS)}>_<soft|ref|ref2>[_dthalf]_r<N>_s<seed>`')
+        return dict(_parse_d2_tag(name[:name.rindex('_s')]), name=name, seed=int(m_.group(9)))
     m_ = _CELL_RE.fullmatch(name) if isinstance(name, str) else None
     if not m_:
         raise ValueError(f'강성 축 셀 이름이 아니다: {name!r} — `<{"|".join(STIFF_ARMS)}>_<soft|ref|ref2>[_dthalf][_r<N>]_s<seed>`')
@@ -578,10 +816,29 @@ def parse_run(name):
 
 
 def cell_expected_deck(name):
-    """셀 (또는 NP 프로브) 이름 → 그 이름이 뜻하는 등록 덱 텍스트 (생성기 CLI 와 바이트 동일)."""
+    """셀 (또는 NP 프로브) 이름 → 그 이름이 뜻하는 등록 덱 텍스트 (생성기 CLI 와 바이트 동일 · D2 셀 = d2_cli_args 의 CLI 와 바이트 동일)."""
     c_ = parse_run(name)
     return expected_deck(c_['arm'], c_['seed'], revolutions=c_['revolutions'], stiffen_se=c_['stiffen_se'],
-                         hold_bo_pairwise=c_['hold_bo_pairwise'], dt_factor=c_['dt_factor'])
+                         hold_bo_pairwise=c_['hold_bo_pairwise'], dt_factor=c_['dt_factor'],
+                         dens_gen=c_.get('dens_gen'), d2=c_.get('d2'))
+
+
+def d2_cli_args(name):
+    """D2 셀 이름 → 생성기 CLI 인자 (`--out` 제외) — 그 CLI 의 in.mixer = cell_expected_deck(name) (바이트 동일 · 셀프테스트 MX⑤).
+    수는 이름의 십진 문자열 그대로 넘긴다 (다시 서식하지 않는다 — 값이 바뀌지 않게)."""
+    c_ = parse_cell(name)
+    if c_.get('d2') is None:
+        raise ValueError(f'{name}: D2 셀 이름이 아니다 (옛 셀 = gen_all.sh · launch_highbo.sh 의 인자)')
+    d2 = c_['d2']
+    args = ['--n-total', str(GEN_ARGS['n_total']), '--cgf', repr(GEN_ARGS['cgf']), '--revolutions', str(c_['revolutions']),
+            '--seed', str(c_['seed']), '--dens-gen', c_['dens_gen'],
+            '--gm-gamma', f"AM_P={d2['gamma_txt']['AM_P']},AM_S={d2['gamma_txt']['AM_S']}",
+            '--gm-wall-ncm', d2['rho_txt'], '--gm-bo-se', d2['bo_txt']]
+    if c_['stiffen_se'] != 1.0:
+        args += ['--stiffen-se', repr(c_['stiffen_se']), '--hold-bo-pairwise']
+    if c_['dt_factor'] != 1.0:
+        args += ['--dt-factor', repr(c_['dt_factor'])]
+    return args
 
 
 #: ★ 등록 코호트 (단일 출처 — 런처 `launch_highbo.sh` · `scripts/mixer_stage_gate.py` 가 여기서 읽는다).
@@ -692,6 +949,7 @@ def cohort_guard():
 
 
 DECK_META_SCHEMA = 'mixer_deck_meta/1'
+DECK_META_SCHEMA_D2 = _gen.MIXER_DECK_META_SCHEMA_V2         # /2 = /1 + 선택 키 (dens_gen · adhesion_rule) — D2 셀 (2026-10-21 · MXD2-06)
 
 
 def _sha_text(t):
@@ -725,7 +983,8 @@ def cell_deck_problems(d, name, expected=None):
         except ValueError as e_:
             first = f'덱 파싱 불가 ({e_})'
         pr.append(f'{name}: in.mixer ≠ 재생성 등록 덱 (이름 → 생성 인자 · 바이트 비교) — 첫 차이 {first}')
-    need_meta = c_['stiffen_se'] != 1.0 or c_['dt_factor'] != 1.0
+    is_d2 = c_.get('d2') is not None
+    need_meta = c_['stiffen_se'] != 1.0 or c_['dt_factor'] != 1.0 or is_d2      # ★ D2 셀 = 생성기가 늘 deck_meta.json 을 쓴다 (10-21)
     mp = os.path.join(d, 'deck_meta.json')
     if os.path.isfile(mp):
         try:
@@ -735,14 +994,27 @@ def cell_deck_problems(d, name, expected=None):
             pr.append(f'{name}: deck_meta.json 을 읽을 수 없다 ({type(e_).__name__})')
         if mj is not None:
             info['deck_meta_sha256'] = _sha_text(open(mp, 'rb').read())
-            want_m = dict(schema=DECK_META_SCHEMA, deck_sha256=info['deck_sha256'], arm=c_['arm'], seed=c_['seed'],
-                          revolutions=c_['revolutions'], stiffen_se=c_['stiffen_se'], hold_bo_pairwise=c_['hold_bo_pairwise'],
+            want_m = dict(schema=DECK_META_SCHEMA_D2 if is_d2 else DECK_META_SCHEMA, deck_sha256=info['deck_sha256'], arm=c_['arm'],
+                          seed=c_['seed'], revolutions=c_['revolutions'], stiffen_se=c_['stiffen_se'], hold_bo_pairwise=c_['hold_bo_pairwise'],
                           dt_factor=c_['dt_factor'])
+            if is_d2:
+                #  ★ 2026-10-21 (MXD2-01 · 02) — D2 셀: 세대 · 결합 규칙 기록 = 이름이 뜻하는 생성기 메타 (같은 gm_arm 호출) · 등록 문구 · schema /2
+                em = expected_deck_meta(c_['arm'], c_['seed'], want, revolutions=c_['revolutions'], stiffen_se=c_['stiffen_se'],
+                                        hold_bo_pairwise=c_['hold_bo_pairwise'], dt_factor=c_['dt_factor'], dens_gen=c_['dens_gen'], d2=c_['d2'])
+                want_m.update(dens_gen=c_['dens_gen'], dens_g_cm3=em.get('dens_g_cm3'), adhesion_rule=em.get('adhesion_rule'),
+                              registered=em.get('registered'))
             off = [k_ for k_, v_ in want_m.items() if not isinstance(mj, dict) or mj.get(k_) != v_]
             if off:
                 pr.append(f'{name}: deck_meta.json 이 덱 · 이름과 맞지 않는다 {off}')
+            if is_d2 and isinstance(mj, dict):
+                try:
+                    R_ = _rb.d2_check(_rb.read_deck(raw.decode('utf-8', errors='replace'), name, meta=mj))
+                    pr += [f'{name}: D2 되읽기 — {p_}' for p_ in R_['problems']]
+                except Exception as e_:                          # noqa: BLE001
+                    pr.append(f'{name}: D2 되읽기 실패 ({type(e_).__name__}: {e_})')
     elif need_meta:
-        pr.append(f'{name}: 경화 · dt 셀인데 deck_meta.json 이 없다 (생성기가 쓰는 봉인 가능한 메타 — README §6 "봉인은 deck_meta.json 의 deck_sha256 과 대조")')
+        pr.append(f'{name}: 경화 · dt · D2 셀인데 deck_meta.json 이 없다 (생성기가 쓰는 봉인 가능한 메타 — README §6 "봉인은 deck_meta.json 의 '
+                  f'deck_sha256 과 대조")')
     return pr, info
 
 
@@ -775,8 +1047,8 @@ def check_cohort(runs, cohort):
                 r_ = diff_decks(texts[a_], texts[b_], allow, expect=parse_deck(exp[b_])['ced'])
         except ValueError as e_:
             r_ = dict(verdict='FAIL', non_ced_diffs=[str(e_)])
-        probs = [f'{k_}: {r_[k_][:4]}' for k_ in ('non_ced_diffs', 'outside', 'missing', 'wrong_direction', 'target_mismatch', 'e_rule', 'u_rule')
-                 if r_.get(k_)]
+        probs = [f'{k_}: {r_[k_][:4]}' for k_ in ('non_ced_diffs', 'outside', 'missing', 'wrong_direction', 'target_mismatch', 'e_rule', 'u_rule',
+                                                   'd2_rule') if r_.get(k_)]
         out['pairs'].append(dict(allow=allow, ref=a_, new=b_, verdict=r_['verdict'], e_case=r_.get('e_case'), problems=probs,
                                  **({'u_ratio': r_.get('u_ratio')} if allow == 'U' else {})))
     ok_ = all(not v_['problems'] for v_ in out['dirs'].values()) and all(p_['verdict'] == 'PASS' for p_ in out['pairs'])
@@ -818,7 +1090,8 @@ def expected_for_tag(tag, seed):
     if is_stiff_tag(tag):
         c_ = parse_tag(tag)
         return expected_deck(c_['arm'], seed, revolutions=c_['revolutions'], stiffen_se=c_['stiffen_se'],
-                             hold_bo_pairwise=c_['hold_bo_pairwise'], dt_factor=c_['dt_factor'])
+                             hold_bo_pairwise=c_['hold_bo_pairwise'], dt_factor=c_['dt_factor'],
+                             dens_gen=c_.get('dens_gen'), d2=c_.get('d2'))          # (2026-10-21 · D2 꼬리표 = 세대 · 결합 규칙 팔)
     return expected_deck(tag, seed)
 
 
@@ -928,6 +1201,10 @@ def report(label, r):
             print(f'   {mark} {row["pair"]:12s} {row["ref"]:14.6g} → {row["new"]:14.6g}   비 N/A (0 기준 · 차 {row["new"] - row["ref"]:+.6g})')
             continue
         mark = '≠' if abs(row['ratio'] - 1.0) > REL_TOL else ' '
+        if r.get('allow') == 'GM':                           # GM (2026-10-21): rule = 규칙 배수 (CED 값이 아니다)
+            print(f'   {mark} {row["pair"]:12s} {row["ref"]:14.6g} → {row["new"]:14.6g}   ×{row["ratio"]:.6g}'
+                  + (f'   (규칙 ×{row["rule"]:.6g})' if row.get('rule') is not None else ''))
+            continue
         print(f'   {mark} {row["pair"]:12s} {row["ref"]:14.6g} → {row["new"]:14.6g}   ×{row["ratio"]:.4g}'
               + (f'   (규칙 {row["rule"]:.6g})' if row.get('rule') is not None and row['rule'] != row['ref'] else ''))
     if r.get('e_case'):
@@ -936,7 +1213,8 @@ def report(label, r):
         print(f'   공통 배율 ×{r["u_ratio"]:.7g} (기하평균 · 퍼짐 {r["u_spread"]:.2e} · 허용 {U_SPREAD_REL:.0e})')
     for k, msg in (('non_ced_diffs', 'CED 밖 차이'), ('outside', '허용목록 밖 CED 변화'), ('missing', '개입 누락 (허용 쌍인데 안 바뀜)'),
                    ('wrong_direction', '개입 방향 반대 (증가여야 한다)'), ('target_mismatch', '목표 행렬과 불일치'),
-                   ('e_rule', 'E 규칙 위반'), ('u_rule', 'U 규칙 위반 (배율 하나 · 0 은 0)')):
+                   ('e_rule', 'E 규칙 위반'), ('u_rule', 'U 규칙 위반 (배율 하나 · 0 은 0)'),
+                   ('d2_rule', 'D2 결합 규칙 위반 (덱 텍스트 검산 · 같은 ρ 세계 · 규칙 배수)')):
         if r.get(k):
             print(f'   ⛔ {msg}: {r[k][:8]}')
     for p_ in r.get('seed_problems') or ():                 # --runs 만 (2026-09-28, Codex 3차 HBR3-07)
@@ -1857,10 +2135,11 @@ def _selftest():
 def main():
     ap = argparse.ArgumentParser(description='믹서 실행 덱 두 벌의 CED 차이 = 허용목록인가 (Codex HB-03)')
     ap.add_argument('decks', nargs='*', help='<기준 덱> <새 덱>')
-    ap.add_argument('--allow', choices=sorted(ALLOW) + ['E', 'EB', 'U'], default='B',
+    ap.add_argument('--allow', choices=list(ALLOW_KINDS), default='B',
                     help='B = 같은 강성 LC→LH (다섯 쌍) · A = AM–AM 셋 · E = 같은 팔 · 다른 강성 (또는 dt 만 1/k) · '
-                         'EB = LC→LH 이면서 다른 강성 (E 와 B 동시) · U = 같은 강성 · CED 비영 원소 전부 한 공통 배율 > 1 (균일 γ 배율 · dev-u).  '
-                         'E · EB 는 두 덱 모드 전용')
+                         'EB = LC→LH 이면서 다른 강성 (E 와 B 동시) · U = 같은 강성 · CED 비영 원소 전부 한 공통 배율 > 1 (균일 γ 배율 · dev-u) · '
+                         'GM = 같은 ρ 세계 D2 덱의 NCM 표면 대비 (비코팅 ↔ 코팅 · 규칙이 정하는 CED 만 · 2026-10-21).  '
+                         'D2 덱은 어느 모드에서나 결합 규칙을 덱 텍스트에서 다시 검산한다')
     ap.add_argument('--runs', help='runs 디렉터리 — <ref-arm>_s<시드>/in.mixer 와 <arm>_s<시드>/in.mixer 를 같은 시드끼리 '
                                    '+ 디렉터리마다 실제 시드 서명 = 생성기 기대 서명 · 시드 간 고유 (HBR3-07).  ★ --ref-arm · --arm 에 강성 축 '
                                    '꼬리표 (예 LC_soft_r2 · LH_ref_r2 · E0_ref) 를 주면 E · EB 도 받고 폴더마다 덱 전체를 재생성 덱과 바이트 대조한다')

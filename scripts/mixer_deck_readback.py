@@ -15,6 +15,13 @@
   B    같은 강성 · LC ↔ LH (OLD = LC · NEW = LH): 다섯 쌍 (AM–AM 셋 · AM–벽 둘) 만 증가 · 나머지 전부 **정확히** 같다 · 0 기준 비 N/A
   U    (2026-10-05 · 개발 탐색 dev-u · 강성 축 사전등록 §12) 같은 강성 · LC → LU (OLD = LC · NEW = LU): **9 비영 항 전부 한 공통 배율**
        (퍼짐 max/min − 1 ≤ u_spread_rel) · 배율 > 1 · 벽–벽 0 — 균일 γ 배율 (쌍 집합이 아니라 배율 하나를 허용)
+  GM   (2026-10-21 · 원장 MXD2-01 · D2 결합 규칙) 같은 ρ 세계의 NCM 표면 대비 (비코팅 ↔ 코팅): 두 덱 모두 D2 덱 · 같은 강성 · 세대 · γ_W · Bo_SE ·
+       NCM 상 γ 만 1 ↔ ρ 로 바뀜 · 바뀌는 CED = 규칙이 정하는 원소 **정확히** — 배수 [√(γ'_iγ'_j)/√(γ_iγ_j)]^(1/3) (AM–AM (1/ρ)^(1/3) · AM–SE · AM–벽
+       (1/ρ)^(1/6)) · 나머지 (SE–SE · SE–벽 · 벽–벽) 토큰까지 같다
+  D2 덱 (머리에 "D2 결합 규칙 (기하평균" · 2026-10-21 MXD2-01 · 02) 은 표 종류와 무관하게 덱마다 **덱 텍스트에서** 결합 규칙을 다시 검산한다:
+       쌍마다 F₀_ij/F₀_SS = √(γ_iγ_j)·R*_ij/R*_SS (머리 선언 γ) · 절대 수준 Bo_SE = F₀_SS / SE 무게 (덱 r · ρ · 중력) = 머리 선언 · Q2 벽 (γ_W = 0.0256·ρ ·
+       NCM γ ∈ {1, ρ}) · 겹침 천장 모든 쌍 · 머리 표 (CED · F0/F0_SS · δ0) = 덱 값 · 세대 표기 = 템플릿 밀도 · 덱 옆 deck_meta.json 이 있으면 기록 결합
+       (deck_sha256 · schema /2 · 세대 · adhesion_rule γ · γ_W · Bo · 벽 규칙 · ρ · 표면 · 층상 = 덱)
   공통: 파싱 (필수 명령 · run 구조 [1, F, F, N]) · 타입 사전 (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) = 등록 · 대칭 · 벽–벽 0 ·
         dt = Rayleigh 규칙을 **이 덱의** E · ν · 반지름 · 밀도로 다시 낸 값 (E · E0 · DT 옛 덱: 그대로 · B · U: 정확히 1/k) ·
         허용 밖 명령은 토큰까지 같다 (주석은 **메타**로 따로 센다 — 판정 밖)
@@ -30,6 +37,7 @@ usage
   python3 scripts/mixer_deck_readback.py --table E  <LC_soft/in.mixer> <LC_ref/in.mixer> \\
                                          --table B  <LC_ref/in.mixer>  <LH_ref/in.mixer> --json out.json --md out.md
   python3 scripts/mixer_deck_readback.py --table U  <LC_ref_r2/in.mixer> <LU212_ref_r2/in.mixer> --json out.json --md out.md
+  python3 scripts/mixer_deck_readback.py --table GM <GMuu…/in.mixer> <GMcc…/in.mixer> --json out.json   # 같은 ρ 세계 비코팅 → 코팅 (D2)
   python3 scripts/mixer_deck_readback.py --selftest
 """
 import argparse
@@ -38,18 +46,38 @@ import hashlib
 import json
 import math
 import os
+import re
 import sys
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 TOOL = 'scripts/mixer_deck_readback.py'
-TOOL_VERSION = 'mixer_deck_readback/2 (2026-10-05 · 표 U)'
-KINDS = ('E', 'E0', 'DT', 'B', 'U')
+TOOL_VERSION = 'mixer_deck_readback/3 (2026-10-21 · 밀도 세대 · D2 결합 규칙 · 표 GM)'
+KINDS = ('E', 'E0', 'DT', 'B', 'U', 'GM')
 
 #: ── 등록 상수 (사본 — 생성기를 import 하지 않는다) ─────────────────────────────────────────────────────────────
 #: 사전등록 docs/reviews/mixer_highbo_stiffness_prereg_20260929.md §3 · 모체 §2-2 · 생성기 TPL_SEED · D_REAL_UM · E_PHASE · PHASE_MECH
 REG_TYPES = {1: 'AM_P', 2: 'AM_S', 3: 'SE', 4: 'WALL'}
 REG_TPL_SEED = {10487: 'AM_P', 11887: 'AM_S', 13901: 'SE'}
-REG_DENSITY = {'AM': 4800.0, 'SE': 2000.0}
+#: ★ 밀도 세대 (2026-10-21 · 원장 MXD2-01) — 생성기 DENS_GENERATIONS 의 AM · SE (kg/m³ · 덱의 `density constant`).  옛 판은 gen1 하나만 등록해
+#   lab 세대 덱 (4850 · 1640) 을 타입 사전에서 거부했다.  덱의 세대 = 템플릿 밀도가 맞는 **하나의** 세대 (셀프테스트 MX⑦ 이 생성기 표와 대조).
+REG_DENSITY_GEN = {'gen1': {'AM': 4800.0, 'SE': 2000.0}, 'lab20261014': {'AM': 4850.0, 'SE': 1640.0}}
+REG_DENSITY = REG_DENSITY_GEN['gen1']                                 # 옛 이름 (gen1 · 보고 호환)
+REG_G = 9.81                                                          # 덱 `fix gravi … gravity` (D2 절대 수준 Bo = F₀_SS / SE 무게)
+#: ── D2 결합 규칙 (2026-10-21 · MXD2-01 · 02) — 생성기 머리 주석의 꼴 사본 · 벽 Hare 2026 0.0256 사본 ───────────────────────────────────
+GM_WALL = (0.04 / 0.25) ** 2
+D2_MARK = 'D2 결합 규칙 (기하평균'
+D2_HEAD = '★ ' + D2_MARK                                              # D2 덱 머리 블록의 첫 줄 (생성기 _gm_header)
+D2_WALL_NCM, D2_WALL_EXPLICIT = 'hare2026_x_rho_uncoated_ncm', 'explicit_coated'
+D2_META_SCHEMA = 'mixer_deck_meta/2'
+D2_NCM = ('AM_P', 'AM_S')                                             # Q2 (벽 = 비코팅 NCM) 가 다루는 상
+OVL_CEILING = 0.01
+_RE_D2_DECL = re.compile(r'γ/γ_SE: AM_P (\S+) · AM_S (\S+) · SE (\S+) · γ_W/γ_SE (\S+) · SE–SE Bo_code (\S+) \(')
+_RE_D2_NCM = re.compile(r'벽 = 비코팅 NCM 에 묶음 .*× ρ_비코팅 (\S+) = (\S+) —')
+_RE_D2_EXP = re.compile(r'벽 γ_W/γ_SE = 명시 입력 (\S+) — .*함의 ρ = γ_W/0\.0256 = (\S+)$')
+_RE_D2_SURF = re.compile(r'NCM 표면 [^:]*: AM_P (코팅|비코팅) · AM_S (코팅|비코팅) · 삽입 = (층상|균일)')
+_RE_D2_ROW = re.compile(r'^(AM_P|AM_S|SE|WALL)–(AM_P|AM_S|SE|WALL)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)%$')
+_RE_DENS_HDR = re.compile(r'★ 밀도 세대 dens_gen = (\S+) ')
+_RE_DEC = re.compile(r'(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?')  # 머리 주석의 수 토큰 (`:g` · `.6g` · `.4f` 인쇄 · 양수)
 REG_D_UM = {'AM_P': 9.0, 'AM_S': 4.0, 'SE': 1.0}                      # 소재 지름 — 반지름 **비**만 대조한다 (CGF 무관)
 REG_E_FIXED = {'AM_P': 1.037e9, 'AM_S': 1.037e9, 'WALL': 1.48e9}      # 강성 축에서 불변이어야 할 영률 (SE 만 경화)
 REG_E_SE = {1.0e7: 'soft (×1)', 2.0e8: 'ref (×20 · v2.6)', 4.0e8: 'ref2 (×40 · v2.6)',
@@ -74,6 +102,7 @@ CODEX = {14.0: {**_UNITY, ('AM_P', 'SE'): (12.412672571, 5.360971926), ('AM_S', 
 
 #: ── 허용오차 — 인쇄 형식에서 비교 **전에** (결과를 보고 넓히지 않는다) ─────────────────────────────────────────
 CED_SIG, DT_SIG, RADIUS_SIG = 6, 4, 6
+_U6 = 0.5 * 10.0 ** (1 - 6)                                  # 5e-6 — 6 유효숫자로 찍힌 값 하나의 반올림 상한 (CED %g · 머리 :g / .6g · 반지름 .6g)
 TOL = dict(
     ced_value_rel=0.5 * 10.0 ** (1 - CED_SIG),                # 5e-6  — CED 한 값 (`%g` 6 유효숫자)
     ced_mult_rel=2 * 0.5 * 10.0 ** (1 - CED_SIG),             # 1e-5  — 두 CED 의 배수
@@ -84,6 +113,14 @@ TOL = dict(
     dt_print_rel=0.5 * 10.0 ** (1 - DT_SIG),                  # 5e-4  — dt `.4g` (생성기는 반올림 전 dt 로 step 을 센다)
     exact_rel=1e-12,                                          # DT 표 · 정수배 · 같은 인쇄 토큰
     u_spread_rel=2 * 2 * 0.5 * 10.0 ** (1 - CED_SIG),         # 2e-5  — 표 U: 같은 참 배율인 두 원소의 배율 퍼짐 (배율 하나 = 두 반올림 · 두 원소)
+    #  ── D2 결합 규칙 (2026-10-21 · MXD2-01 · 02) — 인쇄 형식에서 비교 **전에** (u = 6 유효숫자 하나 = 5e-6) ───────────────────────────
+    gm_law_rel=9 * _U6,      # 4.5e-5 — F₀_ij/F₀_SS ↔ √(γ_iγ_j)·R*_ij/R*_SS: CED³ 두 쌍 6u · R* 한 제곱 남음 두 쌍 2u · 선언 γ 의 √ u
+    gm_bo_rel=5 * _U6,       # 2.5e-5 — Bo_SE = F₀_SS / SE 무게: CED³ 3u · r (F₀ ∝ R*² · 무게 ∝ r³ ⇒ r⁻¹) u · 선언 Bo u (ρ · g 는 덱 토큰 그대로)
+    gm_hdr_rel=11 * _U6,     # 5.5e-5 — 머리 표 칸 (R* · E* · F0 · F0/F0_SS) ↔ 덱 값: 비 칸이 가장 넓다 (CED³ 6u · R*² 4u · 머리 인쇄 u)
+    gm_q2_rel=2 * _U6,       # 1e-5  — Q2 (γ_W = 0.0256·ρ · NCM γ ∈ {1, ρ} · 명시 벽 함의 ρ): 찍힌 두 값
+    gm_mult_rel=2 * _U6 + (2.0 / 3.0) * _U6,   # 1.33e-5 — 표 GM: CED 배수 (두 반올림) · 기대 배수 [√(γ'γ')/√(γγ)]^(1/3) 의 선언 γ 넷
+    gm_ovl_rel=4 * _U6,      # 2e-5  — δ0/min r (∝ CED² · R* / E*² / r): 덱 값에서 다시 낸 겹침
+    gm_ovl_abs=0.5e-4,       # 머리 표 δ0 칸은 `.4f` % — 퍼센트 점 0.5e-4
 )
 TOL_WHY = dict(
     ced_value_rel='CED 는 %g (6 유효숫자) 로 찍힌다 — 한 값의 반올림 상한 0.5×10^(1−6)',
@@ -95,6 +132,13 @@ TOL_WHY = dict(
     dt_print_rel='timestep 은 .4g — 생성기가 반올림 전 dt 로 step 을 세므로 두 덱의 물리 시간이 이만큼 어긋날 수 있다',
     exact_rel='DT 표 (dt 정확히 1/k · step 정확히 k 배) · 부동소수 비교 여유',
     u_spread_rel='표 U — 원소 하나의 배율 오차 ≤ 두 반올림 (1e-5) ⇒ 같은 참 배율인 두 원소 배율의 max/min − 1 ≤ 2 × 1e-5',
+    gm_law_rel='D2 법칙 — 덱 CED (6 자리) 로 다시 낸 F₀ 비 (∝ CED³ · 두 쌍) · 템플릿 반지름 (6 자리 · R* 는 가중 평균이라 u) · 머리 선언 γ (√) ⇒ 9u',
+    gm_bo_rel='D2 절대 수준 — F₀_SS ∝ R*²·CED³ · SE 무게 ∝ r³ (같은 r 이라 r⁻¹ 만 남음) · 선언 Bo 6 자리 ⇒ 5u (밀도 · 중력 = 덱 토큰 그대로)',
+    gm_hdr_rel='머리 표 칸 = 생성기의 참값을 6 자리로 · 되읽기는 찍힌 CED · 반지름에서 ⇒ 비 칸 11u (다른 칸은 그 안)',
+    gm_q2_rel='Q2 — 머리에 찍힌 두 값 (γ_W ↔ ρ · γ ↔ ρ) 의 반올림',
+    gm_mult_rel='표 GM — 두 덱 CED 의 배수 (2u) + 머리 선언 γ 넷이 기대 배수에 주는 (2/3)u',
+    gm_ovl_rel='겹침 δ0 = (3π·CED·√R*/(2E*))² / min r — CED² 2u · R* u · r u',
+    gm_ovl_abs='머리 표 δ0/min r 칸 `.4f` % 인쇄 (퍼센트 점)',
 )
 DUMP_RULE = 'dump 간격 = max(1000, 회전 step // 200)'
 RAYLEIGH_RULE = 'dt = min_t 0.2·π·r_t·√(ρ_t/G_t)/(0.1631ν_t + 0.8766) · G = E/(2(1+ν)) (생성기 plan() 의 식 사본)'
@@ -146,16 +190,21 @@ def _logical(text):
     return out
 
 
-def read_deck(text, label=None, path=None):
-    """덱 텍스트 → dict (E · ν · CED (토큰 · 값) · 템플릿 · 메시 타입 · dt · run · 덤프 · 체크포인트 · Drum 주기 · 타입 사전 · 문제)."""
+def read_deck(text, label=None, path=None, meta=None):
+    """덱 텍스트 → dict (E · ν · CED (토큰 · 값) · 템플릿 · 메시 타입 · dt · run · 덤프 · 체크포인트 · Drum 주기 · 중력 · 밀도 세대 · 타입 사전 · 문제).
+    ★ `meta` (2026-10-21 · MXD2-02) = 덱 옆 `deck_meta.json` 의 내용 (없으면 None) — `d2_check` 가 덱과 결합해 본다 (덱 sha256 · 세대 · D2 선언)."""
     raw = text.encode('utf-8')
     D = dict(label=label, path=path, sha256=hashlib.sha256(raw).hexdigest(), bytes=len(raw), problems=[], type_problems=[],
              n_types=None, E=None, nu=None, ced=None, ced_tok=None, ced_n=None, templates={}, mesh_types=[], dt_txt=None, dt=None,
-             runs=[], dump_every=None, restart_every=None, period=None, cmds=[], comments=[], names={})
+             runs=[], dump_every=None, restart_every=None, period=None, cmds=[], comments=[], names={},
+             gravity=None, dens_gen=None, dens_decl=[], meta=meta)
     seen = collections.Counter()
     for ln, t, com in _logical(text):
         if com:
             D['comments'].append(com)
+            md_ = _RE_DENS_HDR.match(com)
+            if md_:
+                D['dens_decl'].append(md_.group(1))
         if not t:
             continue
         D['cmds'].append((ln, t))
@@ -202,6 +251,9 @@ def read_deck(text, label=None, path=None):
                 elif st == 'move/mesh' and len(t) > 5 and t[5] == 'Drum' and 'period' in t:
                     key = 'Drum 주기'
                     D['period'] = float(t[t.index('period') + 1])
+                elif st == 'gravity' and len(t) >= 5:          # (2026-10-21 · D2 절대 수준 Bo = F₀_SS / SE 무게 — 덱의 중력)
+                    key = 'gravity'
+                    D['gravity'] = float(t[4])
             if key:
                 seen[key] += 1
         except (ValueError, IndexError) as e:
@@ -224,12 +276,22 @@ def read_deck(text, label=None, path=None):
         if D['ced_n'] is not None and D['ced_n'] != N:
             D['problems'].append(f'CED 행렬 {D["ced_n"]}×{D["ced_n"]} ≠ create_box {N}')
     if not D['problems']:
+        D['dens_gen'] = _dens_gen_of(D['templates'])
         D['names'], D['type_problems'] = _type_dict(D)
     return D
 
 
+def _dens_gen_of(tpl):
+    """템플릿 밀도 → 등록 세대 이름 — 입자 템플릿 밀도의 **집합**이 그 세대의 {AM, SE} 와 정확히 같을 때만 (못 정하면 None)."""
+    dens = {v['density'] for v in tpl.values()}
+    hits = [g for g, d in REG_DENSITY_GEN.items() if dens == {d['AM'], d['SE']}]
+    return hits[0] if len(hits) == 1 else None
+
+
 def _type_dict(D):
-    """타입 번호 → 상 이름 — **밀도 · 반지름 · 메시**로 판정하고 템플릿 시드 (등록 사본) 로 교차 대조한다.  → (이름 사전, 문제)."""
+    """타입 번호 → 상 이름 — **밀도 · 반지름 · 메시**로 판정하고 템플릿 시드 (등록 사본) 로 교차 대조한다.  → (이름 사전, 문제).
+    ★ 2026-10-21 (MXD2-01) — 밀도는 **세대별** 등록값 (REG_DENSITY_GEN) 으로 가른다 · 머리의 세대 표기 (`★ 밀도 세대 dens_gen = …`) 는
+      템플릿 밀도로 판정한 세대와 같아야 한다 (표기 없음 = gen1 만 · 옛 덱 그대로)."""
     probs, names = [], {}
     N, tpl = D['n_types'], D['templates']
     walls = sorted(set(D['mesh_types']))
@@ -240,12 +302,25 @@ def _type_dict(D):
     names[N] = 'WALL'
     if any(v['style'] != 'particletemplate/sphere' for v in tpl.values()):
         probs.append('구가 아닌 템플릿 (섬유 multisphere) — 등록 3 상 밖')
-    am = sorted((k for k, v in tpl.items() if v['density'] == REG_DENSITY['AM']), key=lambda k: -(tpl[k]['radius'] or 0.0))
-    se = [k for k, v in tpl.items() if v['density'] == REG_DENSITY['SE']]
+    gen = D.get('dens_gen')
+    reg = REG_DENSITY_GEN.get(gen)
+    if reg is None:
+        probs.append(f'입자 템플릿 밀도 {sorted({v["density"] for v in tpl.values()})} 가 등록 밀도 세대 어느 것과도 맞지 않는다 ('
+                     + ' · '.join(f'{g_} AM {d_["AM"]:g} · SE {d_["SE"]:g}' for g_, d_ in REG_DENSITY_GEN.items()) + ')')
+        return names, probs
+    am = sorted((k for k, v in tpl.items() if v['density'] == reg['AM']), key=lambda k: -(tpl[k]['radius'] or 0.0))
+    se = [k for k, v in tpl.items() if v['density'] == reg['SE']]
     if len(am) != 2 or len(se) != 1 or len(tpl) != 3 or sorted(tpl) != list(range(1, N)):
-        probs.append(f'입자 템플릿이 등록 3 상 (밀도 4800 둘 · 2000 하나 · 타입 1..{N - 1}) 이 아니다: '
+        probs.append(f'입자 템플릿이 등록 3 상 (세대 {gen}: 밀도 {reg["AM"]:g} 둘 · {reg["SE"]:g} 하나 · 타입 1..{N - 1}) 이 아니다: '
                      f'{ {k: (v["density"], v["radius"]) for k, v in sorted(tpl.items())} }')
         return names, probs
+    dd = D.get('dens_decl') or []
+    if len(dd) > 1:
+        probs.append(f'밀도 세대 머리 표기가 {len(dd)} 개 ({dd}) — 하나여야 한다')
+    elif not dd and gen != 'gen1':
+        probs.append(f'밀도 세대 머리 표기가 없다 — 템플릿 밀도는 세대 {gen} (표기 없는 덱 = gen1 만 · 생성기 _dens_header)')
+    elif dd and dd[0] != gen:
+        probs.append(f'밀도 세대 머리 표기 {dd[0]} ≠ 템플릿 밀도로 판정한 세대 {gen}')
     if tpl[am[0]]['radius'] == tpl[am[1]]['radius']:
         probs.append('AM 두 상의 반지름이 같다 — AM_P / AM_S 를 가를 수 없다')
     names[am[0]], names[am[1]], names[se[0]] = 'AM_P', 'AM_S', 'SE'
@@ -289,6 +364,261 @@ def f0(ced, rs, es):
     return 4.5 * math.pi ** 3 * rs ** 2 * ced ** 3 / es ** 2
 
 
+def overlap(ced, rs, es, rmin):
+    """점착 지배 평형 겹침 δ0 = (B/A)² = (3π·CED·√R*/(2E*))² 를 작은 반경으로 나눈 값 (생성기 pair_overlap 의 식 **사본** · 벽 = 입자 반경)."""
+    return (3.0 * math.pi * ced * math.sqrt(rs) / (2.0 * es)) ** 2 / rmin
+
+
+# ══ D2 결합 규칙 (2026-10-21 · 원장 MXD2-01 · 02) — 덱 텍스트에서 다시 검산 ═══════════════════════════════════════════════
+#  왜 — 옛 되읽기는 gen1 밀도만 등록해 lab 세대 덱을 타입 사전에서 거부했고, D2 덱의 결합 규칙 (쌍마다 기하평균 · 절대 수준 Bo · Q2 벽 ·
+#    머리 표 · 기록) 을 덱 텍스트에서 볼 경로가 없었다 (사전 공격 리뷰 PRE-01 · 02 · 변이 M04 · M15 · M16 이 살아남은 자리).
+#  ★ 선언 (머리 주석) 은 **주장**이고 검산 대상이다 — 값은 덱의 CED · E · ν · 템플릿 반지름 · 밀도 · 중력 토큰에서 다시 낸다.
+def _dec(tok):
+    """머리 주석의 수 토큰 → float — ASCII 십진수 (지수 허용) · 유한만 (아니면 None · nan · inf · 밑줄 · 전각 거부)."""
+    if not isinstance(tok, str) or not _RE_DEC.fullmatch(tok):
+        return None
+    v = float(tok)
+    return v if math.isfinite(v) else None
+
+
+def _near(x, y, tol):
+    return x is not None and y is not None and y != 0.0 and math.isfinite(x) and abs(x / y - 1.0) <= tol
+
+
+def _d2_decl(D, P):
+    """D2 머리 선언 (γ/γ_SE 줄 · 벽 규칙 줄 · NCM 표면 · 삽입 줄 · 쌍 표) → dict 또는 None (읽을 수 없으면 사유를 P 에)."""
+    com = D['comments']
+
+    def one(rx, what):
+        hits = [m for m in (rx.search(c) for c in com) if m]
+        if len(hits) != 1:
+            P.append(f'D2 머리: {what} 줄 {len(hits)} 개 — 정확히 하나여야 한다')
+            return None
+        return hits[0]
+    md, ms = one(_RE_D2_DECL, 'γ/γ_SE 선언 (γ · γ_W · Bo_SE)'), one(_RE_D2_SURF, 'NCM 표면 · 삽입')
+    mn = [m for m in (_RE_D2_NCM.search(c) for c in com) if m]
+    me = [m for m in (_RE_D2_EXP.search(c) for c in com) if m]
+    if len(mn) + len(me) != 1:
+        P.append(f'D2 머리: 벽 규칙 줄 (비코팅 NCM 묶음 {len(mn)} · 명시 벽 {len(me)}) — 정확히 하나여야 한다')
+        return None
+    if md is None or ms is None:
+        return None
+    tok = dict(AM_P=md.group(1), AM_S=md.group(2), SE=md.group(3), gw=md.group(4), bo=md.group(5))
+    if mn:
+        rule, rho_tok, gw2 = D2_WALL_NCM, mn[0].group(1), mn[0].group(2)
+    else:
+        rule, gw2, rho_tok = D2_WALL_EXPLICIT, me[0].group(1), me[0].group(2)
+    tok['rho'] = rho_tok
+    num = {k: _dec(v) for k, v in tok.items()}
+    bad = {k: tok[k] for k, v in num.items() if v is None or not v > 0.0}
+    if bad:
+        P.append(f'D2 머리: 선언 수 {bad} — ASCII 십진수 · 유한 양수가 아니다')
+        return None
+    if gw2 != tok['gw']:
+        P.append(f"D2 머리: 벽 규칙 줄의 γ_W/γ_SE {gw2} ≠ 선언 줄 {tok['gw']}")
+    table, dup = {}, []
+    for c in com:
+        m = _RE_D2_ROW.match(c)
+        if m:
+            k = f'{m.group(1)}–{m.group(2)}'
+            if k in table:
+                dup.append(k)
+            table[k] = dict(R_star=m.group(3), E_star=m.group(4), CED=m.group(5), F0=m.group(6), ratio=m.group(7), ovl=m.group(8))
+    want = [f'{a}–{b}' for a, b in PAIRS if not (a == b == 'WALL')]
+    if dup or sorted(table) != sorted(want):
+        P.append(f'D2 머리 표: 쌍 {sorted(table)} (중복 {dup}) ≠ 등록 9 쌍 (벽–벽 제외)')
+    return dict(gamma={t: num[t] for t in ('AM_P', 'AM_S', 'SE')}, gamma_wall=num['gw'], bo_se=num['bo'], wall_rule=rule, rho=num['rho'],
+                surface={'AM_P': 'coated' if ms.group(1) == '코팅' else 'uncoated', 'AM_S': 'coated' if ms.group(2) == '코팅' else 'uncoated'},
+                layered=ms.group(3) == '층상', tokens=tok, table=table, dens_gen=D.get('dens_gen'))
+
+
+def _tokg(v):
+    """메타 수 값 → 머리와 같은 `:g` 토큰 (수가 아니면 repr — 결코 머리 토큰과 같지 않다)."""
+    if isinstance(v, bool) or not isinstance(v, (int, float)):
+        return f'<{v!r}>'
+    return f'{v:g}'
+
+
+def _meta_problems(D, R):
+    """덱 옆 deck_meta.json ↔ 덱 결합.  모든 덱: 세대 (메타 dens_gen 없음 = gen1).  D2 덱: schema /2 · deck_sha256 · 세대 명시 ·
+    adhesion_rule (rule · γ · γ_W · Bo · 벽 규칙 · ρ · 표면 · 층상) = 덱 머리 선언 (같은 `:g` 토큰)."""
+    m = D.get('meta')
+    if m is None:
+        return []
+    d2 = R['is_d2']
+    pre = 'D2 기록 (deck_meta.json)' if d2 else '기록 (deck_meta.json)'
+    if not isinstance(m, dict):
+        return [f'{pre}: JSON 사전이 아니다 ({type(m).__name__})']
+    if '__unreadable__' in m:
+        return [f"{pre}: 읽을 수 없다 ({m['__unreadable__']})"]
+    P = []
+    gen = D.get('dens_gen')
+    mg = m.get('dens_gen', None if d2 else 'gen1')
+    if gen is not None and mg != gen:
+        P.append(f"{pre}: dens_gen {m.get('dens_gen')!r} ≠ 덱 템플릿 밀도의 세대 {gen}")
+    if not d2:
+        return P
+    if m.get('schema') != D2_META_SCHEMA:
+        P.append(f"{pre}: schema {m.get('schema')!r} ≠ {D2_META_SCHEMA} (D2 키를 담은 메타)")
+    if m.get('deck_sha256') != D['sha256']:
+        P.append(f"{pre}: deck_sha256 {str(m.get('deck_sha256'))[:16]}… ≠ 이 덱 {D['sha256'][:16]}…")
+    ar = m.get('adhesion_rule')
+    if not isinstance(ar, dict):
+        P.append(f'{pre}: adhesion_rule 이 없다 — D2 덱의 메타는 결합 규칙을 기록한다')
+        return P
+    if ar.get('rule') != 'geomean':
+        P.append(f"{pre}: adhesion_rule.rule {ar.get('rule')!r} ≠ 'geomean'")
+    dc = R.get('decl')
+    if dc is None:
+        return P
+    tk = dc['tokens']
+    gm = ar.get('gamma')
+    if not isinstance(gm, dict) or sorted(gm) != ['AM_P', 'AM_S', 'SE'] or any(_tokg(gm[t]) != tk[t] for t in ('AM_P', 'AM_S', 'SE')):
+        P.append(f"{pre}: adhesion_rule.gamma {gm!r} ≠ 덱 머리 선언 γ (AM_P {tk['AM_P']} · AM_S {tk['AM_S']} · SE {tk['SE']})")
+    for key, t_, what in (('gamma_wall', 'gw', 'γ_W/γ_SE'), ('bo_se', 'bo', 'SE–SE Bo_code (절대 수준)')):
+        if _tokg(ar.get(key)) != tk[t_]:
+            P.append(f'{pre}: adhesion_rule.{key} {ar.get(key)!r} ≠ 덱 머리 {what} {tk[t_]}')
+    if ar.get('wall_rule') != dc['wall_rule']:
+        P.append(f"{pre}: adhesion_rule.wall_rule {ar.get('wall_rule')!r} ≠ 덱 머리 벽 규칙 {dc['wall_rule']}")
+    rk = 'rho_uncoated_ncm' if dc['wall_rule'] == D2_WALL_NCM else 'rho_world'
+    if _tokg(ar.get(rk)) != tk['rho']:
+        P.append(f"{pre}: adhesion_rule.{rk} {ar.get(rk)!r} ≠ 덱 머리 ρ {tk['rho']}")
+    if ar.get('surface') != dc['surface']:
+        P.append(f"{pre}: adhesion_rule.surface {ar.get('surface')!r} ≠ 덱 머리 NCM 표면 {dc['surface']}")
+    if not isinstance(ar.get('layered'), bool) or ar.get('layered') != dc['layered']:
+        P.append(f"{pre}: adhesion_rule.layered {ar.get('layered')!r} ≠ 덱 머리 삽입 ({'층상' if dc['layered'] else '균일'})")
+    return P
+
+
+def d2_check(D):
+    """D2 결합 규칙 덱 검산 — 덱 텍스트 (CED · E · ν · 템플릿 반지름 · 밀도 · 중력) 에서 다시 낸 값 ↔ 머리 선언 · 머리 표 · (있으면) deck_meta.
+
+    → dict(is_d2, decl, rows, bo_read, problems).  옛 팔 덱 (D2 머리 없음 · 메타도 D2 아님) = is_d2 False (메타 세대 대조만).
+      · 쌍마다 F₀_ij/F₀_SS = √(γ_iγ_j)·R*_ij/R*_SS (γ_WALL = γ_W · 허용 gm_law_rel) · 겹침 δ0/min r ≤ 1 % (모든 쌍)
+      · 절대 수준 Bo_SE = F₀_SS / ((4/3)π r_SE³ ρ_SE g) = 머리 선언 (gm_bo_rel) — M04 꼴 (다른 세대 밀도로 정한 CED) 을 잡는다
+      · Q2 (1저자 10-14): 벽 = 비코팅 NCM ⇒ γ_W = 0.0256·ρ · NCM γ ∈ {1, ρ} · 명시 벽 = NCM γ 전부 1 · 함의 ρ = γ_W/0.0256 · 표면 줄 = γ
+      · 머리 표 (R* · E* · CED · F0 · F0/F0_SS · δ0) = 덱 값 — M15 꼴 · 세대 표기 = 템플릿 밀도 · 삽입 줄 = 덱의 insert/pack 수
+    결과는 D['_d2'] 에 담아 둔다 (같은 덱을 여러 표가 쓴다)."""
+    if '_d2' in D:
+        return D['_d2']
+    R = dict(is_d2=False, decl=None, rows=[], bo_read=None, problems=[])
+    D['_d2'] = R
+    P = R['problems']
+    heads = sum(1 for c in D['comments'] if c.startswith(D2_HEAD))
+    meta = D.get('meta')
+    R['is_d2'] = heads > 0 or (isinstance(meta, dict) and 'adhesion_rule' in meta)
+    if not R['is_d2']:
+        P += _meta_problems(D, R)
+        return R
+    names_ok = sorted(D['names'].values()) == sorted(REG_TYPES.values())
+    if D['problems'] or not names_ok:
+        P.append('덱 파싱 · 타입 사전 문제 — D2 검산 불가: ' + '; '.join((D['problems'] + D['type_problems'])[:4]))
+        P += _meta_problems(D, R)
+        return R
+    P += [f'타입 사전: {x}' for x in D['type_problems']]       # (세대 표기 ↔ 템플릿 밀도 등 — 이름은 정해졌다)
+    if heads == 0:
+        P.append(f'D2 기록 (deck_meta.json): 메타는 D2 결합 규칙 (adhesion_rule) 인데 덱 머리에 "{D2_HEAD}" 선언이 없다')
+        P += _meta_problems(D, R)
+        return R
+    if heads > 1:
+        P.append(f'D2 머리 줄 "{D2_HEAD}" 이 {heads} 개 — 하나여야 한다')
+    dc = _d2_decl(D, P)
+    R['decl'] = dc
+    if dc is None:
+        P += _meta_problems(D, R)
+        return R
+    g, q = dc['gamma'], TOL['gm_q2_rel']
+    tk = dc['tokens']
+    if g['SE'] != 1.0:
+        P.append(f"D2 머리: 기준 γ_SE/γ_SE = {tk['SE']} — 정확히 1 이어야 한다")
+    q2 = '1저자 10-14 Q2 — 벽 = 비코팅 NCM'
+    if dc['wall_rule'] == D2_WALL_NCM:
+        if not _near(dc['gamma_wall'], GM_WALL * dc['rho'], q):
+            P.append(f"Q2 — γ_W/γ_SE {tk['gw']} ≠ 0.0256 × ρ_비코팅 {tk['rho']} = {GM_WALL * dc['rho']:.6g} ({q2})")
+        off = {t: tk[t] for t in D2_NCM if not (_near(g[t], 1.0, q) or _near(g[t], dc['rho'], q))}
+        if off:
+            P.append(f"Q2 — ρ_비코팅 {tk['rho']} 세계의 NCM 상 γ/γ_SE 는 1 (코팅) 또는 ρ (비코팅) 만: {off} ({q2})")
+        allowed = {t: ({'coated'} if _near(g[t], 1.0, q) else set()) | ({'uncoated'} if _near(g[t], dc['rho'], q) else set()) for t in D2_NCM}
+    else:
+        off = {t: tk[t] for t in D2_NCM if not _near(g[t], 1.0, q)}
+        if off:
+            P.append(f'Q2 — 명시 벽 (explicit_coated) 은 NCM 상 γ 전부 1 (코팅) 인 팔만: {off} ({q2})')
+        if not _near(dc['rho'], dc['gamma_wall'] / GM_WALL, q):
+            P.append(f"Q2 — 명시 벽의 함의 ρ {tk['rho']} ≠ γ_W/0.0256 = {dc['gamma_wall'] / GM_WALL:.6g} ({q2})")
+        allowed = {t: ({'coated'} if _near(g[t], 1.0, q) else set()) for t in D2_NCM}
+    for t in D2_NCM:
+        if dc['surface'][t] not in allowed[t]:
+            P.append(f"D2 머리: NCM 표면 {t} {'코팅' if dc['surface'][t] == 'coated' else '비코팅'} ≠ γ {tk[t]} "
+                     f"(코팅 = γ 1 · 비코팅 = γ ρ {tk['rho']} · {q2})")
+    n_ins = sum(1 for _, t in D['cmds'] if t[0] == 'fix' and len(t) > 3 and t[3] == 'insert/pack')
+    if dc['layered'] != (n_ins == 2):
+        P.append(f"D2 머리: 삽입 = {'층상' if dc['layered'] else '균일'} ≠ 덱의 insert/pack {n_ins} 개 (층상 = insA · insB 둘)")
+    V = _phases(D)
+    gam = dict(g, WALL=dc['gamma_wall'])
+    sk = (V['SE']['type'], V['SE']['type'])
+    rss, ess = rstar(V['SE'], V['SE']), estar(V['SE'], V['SE'])
+    fss = f0(D['ced'][sk], rss, ess)
+    if not (math.isfinite(fss) and fss > 0.0):
+        P.append(f'SE–SE CED {D["ced_tok"][sk]} — F₀_SS 가 유한한 양수가 아니다 (D2 절대 수준 없음)')
+        P += _meta_problems(D, R)
+        return R
+    rho_se, r_se, grav = D['templates'][V['SE']['type']]['density'], V['SE']['r'], D.get('gravity')
+    if grav is None or not (math.isfinite(grav) and grav > 0.0):
+        P.append(f'중력 (fix … gravity) {grav!r} — 절대 수준 Bo 를 다시 낼 수 없다')
+    else:
+        R['bo_read'] = fss / ((4.0 / 3.0) * math.pi * r_se ** 3 * rho_se * grav)
+        if not _near(R['bo_read'], dc['bo_se'], TOL['gm_bo_rel']):
+            P.append(f"절대 수준 Bo_SE = F₀_SS / SE 무게 (덱 r {r_se:g} · ρ {rho_se:g} · g {grav:g}) = {R['bo_read']:.7g} ≠ 머리 선언 "
+                     f"SE–SE Bo_code {tk['bo']} (허용 ±{TOL['gm_bo_rel']:.1e} · MXD2-02)")
+    tab = dc['table']
+    for ti, tj in PAIRS:
+        a, b = V[ti], V[tj]
+        key = (a['type'], b['type'])
+        c = D['ced'][key]
+        nm = f'{ti}–{tj}'
+        r_ = dict(pair=nm, types=f'{key[0]}-{key[1]}', CED=c, reason='')
+        if ti == tj == 'WALL':
+            r_['ok'] = c == 0.0
+            r_['reason'] = '' if r_['ok'] else f'벽–벽 CED {D["ced_tok"][key]} ≠ 0'
+            R['rows'].append(r_)
+            continue
+        rs, es = rstar(a, b), estar(a, b)
+        f = f0(c, rs, es)
+        rmin = min(x['r'] for x in (a, b) if x['r'] is not None)
+        ov = overlap(c, rs, es, rmin)
+        ratio = f / fss
+        expect = math.sqrt(gam[ti] * gam[tj]) * rs / rss
+        r_.update(R_star=rs, E_star=es, F0=f, F0_ratio=ratio, expect=expect, overlap=ov, tol=TOL['gm_law_rel'])
+        why = []
+        if not (c > 0.0 and math.isfinite(c)):
+            why.append(f'CED {D["ced_tok"][key]} — 벽–벽 밖 CED 는 유한한 양수여야 한다')
+        elif not _near(ratio, expect, TOL['gm_law_rel']):
+            why.append(f"F₀_ij/F₀_SS {ratio:.7g} ≠ 규칙 √(γ_iγ_j)·R*_ij/R*_SS {expect:.7g} (머리 선언 γ · 허용 ±{TOL['gm_law_rel']:.1e})")
+        if not ov <= OVL_CEILING * (1.0 + TOL['gm_ovl_rel']):
+            why.append(f'겹침 δ0/min r {ov * 100:.4f} % > 천장 {OVL_CEILING * 100:g} % (D2 = 모든 쌍)')
+        h = tab.get(nm)
+        if h is None:
+            why.append('머리 표에 이 쌍이 없다')
+        else:
+            if h['CED'] != D['ced_tok'][key]:
+                why.append(f"머리 표 CED {h['CED']} ≠ 덱 토큰 {D['ced_tok'][key]}")
+            for col, val, tol_ in (('R_star', rs, TOL['gm_hdr_rel']), ('E_star', es, TOL['gm_hdr_rel']), ('F0', f, TOL['gm_hdr_rel']),
+                                   ('ratio', ratio, TOL['gm_hdr_rel'])):
+                hv = _dec(h[col])
+                if not _near(hv, val, tol_):
+                    why.append(f"머리 표 {'F0/F0_SS' if col == 'ratio' else col} {h[col]} ≠ 덱 값 {val:.7g} (허용 ±{tol_:.1e})")
+            hv = _dec(h['ovl'])
+            if hv is None or abs(hv - ov * 100.0) > TOL['gm_ovl_abs'] + TOL['gm_ovl_rel'] * ov * 100.0:
+                why.append(f"머리 표 δ0/min r {h['ovl']}% ≠ 덱 값 {ov * 100:.6f}%")
+        r_['ok'] = not why
+        r_['reason'] = ' · '.join(why)
+        if why:
+            P.append(f'{nm}: ' + ' · '.join(why))
+        R['rows'].append(r_)
+    P += _meta_problems(D, R)
+    return R
+
+
 # ══ 표 ═══════════════════════════════════════════════════════════════════════════════════════════════════════
 def _var_positions(t, kind):
     """이 표 종류에서 **달라도 되는** 토큰 위치 (값은 따로 검사한다).  나머지 토큰은 전부 같아야 한다."""
@@ -301,7 +631,7 @@ def _var_positions(t, kind):
     if t[0] == 'fix' and len(t) > 5 and t[3] == 'property/global':
         if kind in ('E', 'E0') and t[4] == 'youngsModulus':
             return set(range(6, len(t)))
-        if kind in ('E', 'E0', 'B', 'U') and t[4] == 'cohesionEnergyDensity':
+        if kind in ('E', 'E0', 'B', 'U', 'GM') and t[4] == 'cohesionEnergyDensity':
             return set(range(7, len(t)))
     return set()
 
@@ -330,7 +660,8 @@ def _final(T):
 
 
 def compare(kind, A, B):
-    """두 되읽은 덱 → 표 dict (kind · rows · checks · meta · failures · verdict).  kind ∈ E · E0 · DT · B."""
+    """두 되읽은 덱 → 표 dict (kind · rows · checks · meta · failures · verdict).  kind ∈ E · E0 · DT · B · U · GM.
+    ★ D2 덱 (또는 메타가 있는 덱) 은 표 종류와 무관하게 `d2_check` 검사가 덱마다 붙는다 (2026-10-21 · MXD2-01 · 02)."""
     T = dict(kind=kind, old=A['label'], new=B['label'], old_sha256=A['sha256'], new_sha256=B['sha256'],
              rows=[], checks=[], meta={}, k=None, level=None, verdict=None, failures=[])
 
@@ -350,6 +681,21 @@ def compare(kind, A, B):
     if A['type_problems'] or B['type_problems']:
         return _final(T)
     check('두 덱의 템플릿 (시드 · 밀도 · 반지름) · 타입 사전 동일', A['templates'] == B['templates'] and A['names'] == B['names'])
+    for X in (A, B):
+        R2 = d2_check(X)
+        if R2['is_d2']:
+            check(f'D2 결합 규칙 — 덱 텍스트 검산 (쌍별 기하평균 F₀ · 절대 수준 Bo · Q2 벽 · 겹침 천장 · 머리 표 · 세대 · 기록) — {X["label"]}',
+                  not R2['problems'], '; '.join(R2['problems'][:12]) + (f' … 외 {len(R2["problems"]) - 12}' if len(R2['problems']) > 12 else ''))
+        elif X.get('meta') is not None:
+            check(f'기록 (deck_meta.json) = 덱 (밀도 세대 · 결합 규칙) — {X["label"]}', not R2['problems'], '; '.join(R2['problems']))
+    if kind in ('E', 'E0', 'DT'):
+        #  ★ 같은 팔 (2026-10-21 · MXD2-02) — D2 덱과 옛 팔 덱을 짝짓지 않는다 · 두 D2 덱의 선언 (γ · γ_W · Bo · ρ · 벽 규칙 · 표면 · 삽입) 이 같다
+        RA_, RB_ = d2_check(A), d2_check(B)
+        if RA_['is_d2'] or RB_['is_d2']:
+            ka, kb = ((tuple(sorted(R_['decl']['tokens'].items())), R_['decl']['wall_rule'], tuple(sorted(R_['decl']['surface'].items())),
+                       R_['decl']['layered']) if R_['decl'] else None for R_ in (RA_, RB_))
+            check(f'{kind} 는 같은 팔 — 두 덱 모두 D2 이고 D2 선언 (γ · γ_W · Bo · ρ · 벽 규칙 · 표면 · 삽입) 이 같다',
+                  RA_['is_d2'] and RB_['is_d2'] and ka is not None and ka == kb, f'{ka} ⇄ {kb}')
     N = A['n_types']
     VA, VB = _phases(A), _phases(B)
     for X, V in ((A, VA), (B, VB)):
@@ -370,11 +716,11 @@ def compare(kind, A, B):
             check(f'dt = Rayleigh 규칙 (이 덱의 E · ν · 반지름 · 밀도 · 상별 최소) — {X["label"]}',
                   abs(X['dt'] / rule - 1.0) <= TOL['rayleigh_rel'],
                   f"덱 {X['dt_txt']} vs 규칙 {rule:.6g} s ({by} 가 정함 · 비 {X['dt'] / rule:.6f} · 허용 ±{TOL['rayleigh_rel']:.2e})")
-        elif kind in ('B', 'U'):
+        elif kind in ('B', 'U', 'GM'):
             check(f'dt = Rayleigh 규칙의 정확히 1/k (k 정수 ≥ 1 · k = 1 이면 규칙 그대로) — {X["label"]}',
                   abs(X['dt'] * k_ / rule - 1.0) <= TOL['rayleigh_rel'],
                   f"덱 {X['dt_txt']} × {k_} vs 규칙 {rule:.6g} s ({by})")
-    if kind in ('B', 'U'):
+    if kind in ('B', 'U', 'GM'):
         T['k'] = rule_k[A['label']] if rule_k[A['label']] == rule_k[B['label']] else None
     ca, cb = collections.Counter(A['comments']), collections.Counter(B['comments'])
     only_a, only_b = ca - cb, cb - ca
@@ -384,7 +730,7 @@ def compare(kind, A, B):
     diffs = _cmd_diff(A, B, kind)
     allowed = {'E': 'SE 영률 · CED 값 · timestep · run · dump 간격 · restart 간격',
                'E0': 'SE 영률 · CED 값 · timestep · run · dump 간격 · restart 간격',
-               'DT': 'timestep · run · dump 간격 · restart 간격', 'B': 'CED 값', 'U': 'CED 값'}[kind]
+               'DT': 'timestep · run · dump 간격 · restart 간격', 'B': 'CED 값', 'U': 'CED 값', 'GM': 'CED 값'}[kind]
     check(f'허용 밖 명령은 토큰까지 같다 (허용: {allowed})', not diffs, '; '.join(diffs[:4]) + (f' … 외 {len(diffs) - 4}' if len(diffs) > 4 else ''))
     FA, FB, NA, NB = A['runs'][1], B['runs'][1], A['runs'][3], B['runs'][3]
     DA, DB, dtA, dtB = A['dump_every'], B['dump_every'], A['dt'], B['dt']
@@ -471,6 +817,46 @@ def compare(kind, A, B):
             same = A['ced_tok'][key] == B['ced_tok'][key]
             T['rows'].append(dict(pair=f'{ti}–{tj}', types=f'{key[0]}-{key[1]}', CED_old=A['ced'][key], CED_new=B['ced'][key],
                                   ok=same, reason='' if same else '같아야 할 CED 가 다르다'))
+    elif kind == 'GM':
+        #  ★ 2026-10-21 (원장 MXD2-01 · D2 결합 규칙) — 같은 ρ 세계의 NCM 표면 대비 (비코팅 ↔ 코팅).  바뀌는 CED = 규칙이 정하는 원소 **정확히**:
+        #    배수 [√(γ'_iγ'_j)/√(γ_iγ_j)]^(1/3) (F₀_SS · R* · E* 같다 ⇒ CED ∝ (√(γ_iγ_j))^(1/3)) · 배수 1 인 원소는 토큰까지 같다.
+        check('같은 강성 — E · ν 정확히 같다', A['E'] == B['E'] and A['nu'] == B['nu'])
+        RA, RB = d2_check(A), d2_check(B)
+        both = bool(RA['is_d2'] and RB['is_d2'] and RA['decl'] is not None and RB['decl'] is not None)
+        check(f'두 덱 모두 D2 결합 규칙 덱 (머리 "{D2_HEAD}" · γ 선언 · 벽 규칙 · NCM 표면 · 쌍 표를 읽었다)', both,
+              f"{A['label']} {'D2' if RA['is_d2'] else '옛 팔'} · {B['label']} {'D2' if RB['is_d2'] else '옛 팔'}")
+        if both:
+            a_, b_ = RA['decl'], RB['decl']
+            dif = [k for k, va, vb in (('밀도 세대', A.get('dens_gen'), B.get('dens_gen')), ('벽 규칙', a_['wall_rule'], b_['wall_rule']),
+                                       ('ρ_비코팅', a_['tokens']['rho'], b_['tokens']['rho']), ('γ_W', a_['tokens']['gw'], b_['tokens']['gw']),
+                                       ('SE γ', a_['tokens']['SE'], b_['tokens']['SE']), ('Bo_SE', a_['tokens']['bo'], b_['tokens']['bo']),
+                                       ('삽입', a_['layered'], b_['layered'])) if va != vb]
+            check('같은 ρ 세계 — 밀도 세대 · 벽 규칙 · ρ_비코팅 · γ_W · SE γ · Bo_SE · 삽입이 같다 (NCM 표면만 바뀐다)', not dif,
+                  f"다른 칸 {dif} · ρ {a_['tokens']['rho']} → {b_['tokens']['rho']} · γ_W {a_['tokens']['gw']} → {b_['tokens']['gw']} · "
+                  f"Bo {a_['tokens']['bo']} → {b_['tokens']['bo']}")
+            check('NCM 표면이 바뀌었다 (비코팅 ↔ 코팅 — 같은 표면 둘은 대비가 아니다 · 빈 비교를 PASS 로 내지 않는다)',
+                  a_['surface'] != b_['surface'], f"{a_['surface']} → {b_['surface']}")
+            ga, gb = dict(a_['gamma'], WALL=a_['gamma_wall']), dict(b_['gamma'], WALL=b_['gamma_wall'])
+            for ti, tj in PAIRS:
+                key = (VA[ti]['type'], VA[tj]['type'])
+                o_, n_ = A['ced'][key], B['ced'][key]
+                r_ = dict(pair=f'{ti}–{tj}', types=f'{key[0]}-{key[1]}', CED_old=o_, CED_new=n_, ratio=(n_ / o_) if o_ else None,
+                          expect=None, expect_change=False, reason='')
+                if ti == tj == 'WALL':
+                    r_['ok'] = o_ == 0.0 and n_ == 0.0
+                    r_['reason'] = '' if r_['ok'] else f'벽–벽 ≠ 0 ({o_:g} → {n_:g})'
+                else:
+                    e_ = (math.sqrt(gb[ti] * gb[tj]) / math.sqrt(ga[ti] * ga[tj])) ** (1.0 / 3.0)
+                    r_.update(expect=e_, expect_change=(e_ != 1.0))
+                    if e_ != 1.0:
+                        r_['ok'] = bool(o_ > 0.0 and n_ > 0.0 and math.isfinite(n_) and abs((n_ / o_) / e_ - 1.0) <= TOL['gm_mult_rel'])
+                        r_['reason'] = '' if r_['ok'] else (f"배수 ×{(n_ / o_) if o_ else float('nan'):.7g} ≠ 규칙 ×{e_:.7g} "
+                                                            f"(γ {ga[ti]:g}·{ga[tj]:g} → {gb[ti]:g}·{gb[tj]:g} · 허용 ±{TOL['gm_mult_rel']:.1e})")
+                    else:
+                        r_['ok'] = A['ced_tok'][key] == B['ced_tok'][key]
+                        r_['reason'] = '' if r_['ok'] else (f'규칙이 안 바꾸는 원소가 바뀌었다 ({A["ced_tok"][key]} → {B["ced_tok"][key]} · '
+                                                            f'γ {ga[ti]:g}·{ga[tj]:g} 그대로)')
+                T['rows'].append(r_)
     elif kind == 'U':
         #  ★ 2026-10-05 (dev-u · 강성 축 사전등록 §12) — 균일 γ 배율: 9 비영 항 전부 한 공통 배율 · > 1 · 벽–벽 0.  쌍마다의 판정 기준 = 배율의 **중앙값**
         #    (한 원소만 바뀐 덱이면 그 원소만 짚는다) · 표 판정 = 퍼짐 (max/min − 1) + 방향.  배율 표시는 기하평균.
@@ -540,11 +926,26 @@ def _gen_cmd(path):
     return None
 
 
+def _load_meta(path):
+    """덱 옆 `deck_meta.json` (2026-10-21 · MXD2-02) — 그 메타의 deck_file (기본 in.mixer) 이 이 덱 파일 이름일 때만 결합한다.
+    없으면 None · 읽을 수 없으면 {'__unreadable__': 사유} (결합 검사가 실패로 적는다 — 조용히 넘기지 않는다)."""
+    mp = os.path.join(os.path.dirname(os.path.abspath(path)), 'deck_meta.json')
+    if not os.path.exists(mp):
+        return None
+    try:
+        m = json.load(open(mp, encoding='utf-8'))
+    except (OSError, ValueError) as e:
+        return {'__unreadable__': f'{type(e).__name__}: {e}'[:200]} if os.path.basename(path) == 'in.mixer' else None
+    if isinstance(m, dict) and m.get('deck_file', 'in.mixer') != os.path.basename(path):
+        return None
+    return m
+
+
 def load(path):
     text = open(path, encoding='utf-8').read()
     base = os.path.basename(path)
     label = os.path.basename(os.path.dirname(os.path.abspath(path))) if base == 'in.mixer' else base
-    D = read_deck(text, label=label, path=path)
+    D = read_deck(text, label=label, path=path, meta=_load_meta(path))
     D['gen_cmd'] = _gen_cmd(path)
     return D
 
@@ -556,7 +957,17 @@ def deck_summary(D):
              restart_every=D['restart_every'], period_s=D['period'],
              templates={str(k): v for k, v in sorted(D['templates'].items())},
              ced={f'{i}-{j}': D['ced_tok'][(i, j)] for (i, j) in sorted(D['ced_tok'] or {}) if i <= j} if D['ced_tok'] else None,
-             comment_lines=len(D['comments']))
+             comment_lines=len(D['comments']), dens_gen=D.get('dens_gen'), gravity=D.get('gravity'),
+             meta_bound=D.get('meta') is not None, d2=None)
+    if not D['problems']:
+        R2 = d2_check(D)
+        if R2['is_d2']:
+            dc = R2['decl'] or {}
+            s['d2'] = dict(wall_rule=dc.get('wall_rule'), gamma=dc.get('gamma'), gamma_wall=dc.get('gamma_wall'), bo_se=dc.get('bo_se'),
+                           bo_read=R2['bo_read'], rho=dc.get('rho'), surface=dc.get('surface'), layered=dc.get('layered'),
+                           problems=R2['problems'])
+        elif R2['problems']:
+            s['meta_problems'] = R2['problems']
     if not D['problems'] and D['dt']:
         t0 = planned_t0(D['runs'][1], D['dump_every'])
         s.update(t0_planned=t0, t0_planned_s=t0 * D['dt'], steps_per_rev=D['period'] / D['dt'],
@@ -575,6 +986,13 @@ def make_report(decks, tables, argv=None):
                                 B_pairs=sorted(f'{a}–{b}' for a, b in B_PAIRS),
                                 U_rule='9 비영 항 (AM–AM 셋 · AM–SE 둘 · SE–SE · AM–벽 둘 · SE–벽) 전부 한 공통 배율 (퍼짐 ≤ u_spread_rel) · '
                                        '배율 > 1 · 벽–벽 0 · 같은 E · ν (2026-10-05 · dev-u · 강성 축 사전등록 §12)',
+                                density_generations=REG_DENSITY_GEN, gravity=REG_G,
+                                D2_rule=('F₀_ij/F₀_SS = √(γ_iγ_j)·R*_ij/R*_SS (γ_WALL = γ_W · 머리 선언) · Bo_SE = F₀_SS / ((4/3)π r_SE³ ρ_SE g) = 선언 · '
+                                         'Q2 (1저자 10-14): 벽 = 비코팅 NCM ⇒ γ_W = 0.0256·ρ · NCM γ ∈ {1, ρ} · 명시 벽 = NCM γ 전부 1 · '
+                                         f'모든 쌍 δ0/min r ≤ {OVL_CEILING:g} · 머리 표 = 덱 값 · deck_meta (있으면) = 덱 (2026-10-21 · MXD2-01 · 02)'),
+                                D2_wall_hare2026=GM_WALL,
+                                GM_rule=('같은 ρ 세계 (세대 · 벽 규칙 · ρ · γ_W · SE γ · Bo · 삽입 같다) · NCM 표면만 바뀜 · 바뀌는 CED = '
+                                         '[√(γ\'_iγ\'_j)/√(γ_iγ_j)]^(1/3) ≠ 1 인 원소 정확히 (배수 · 허용 gm_mult_rel) · 나머지 토큰까지 같다'),
                                 dt_k=REG_DT_K, dump_rule=DUMP_RULE,
                                 restart_rule=RESTART_RULE, rayleigh_rule=RAYLEIGH_RULE,
                                 codex_section5={f'{F:g}': {f'{a}–{b}': list(v) for (a, b), v in c.items()} for F, c in CODEX.items()}),
@@ -605,6 +1023,15 @@ def to_markdown(rep):
         L.append(f"| `{d['label']}` | {d['sha256'][:16]} | {d['bytes']:,} | {_g(se, '.4g')} | {d['dt_txt']} | "
                  f"{' · '.join(f'{x:,}' for x in d['runs'])} | {_g(d['dump_every'], ',')} | {_g(d['restart_every'], ',')} | "
                  f"{('`' + d['gen_cmd'] + '`') if d['gen_cmd'] else '미기록'} |")
+    d2s = [(d['label'], d.get('dens_gen'), d['d2']) for d in rep['decks'].values() if d.get('d2')]
+    if d2s:
+        L += ['', '## D2 덱 (덱 텍스트에서 다시 낸 결합 규칙)', '',
+              '| 라벨 | 세대 | 벽 규칙 | ρ | γ (AM_P · AM_S) | γ_W | Bo 선언 → 다시 낸 값 | NCM 표면 | 문제 |', '|---|---|---|---:|---|---:|---|---|---:|']
+        for lb, gen_, x in d2s:
+            gmm = x.get('gamma') or {}
+            L.append(f"| `{lb}` | {gen_} | {x.get('wall_rule')} | {_g(x.get('rho'), 'g')} | {_g(gmm.get('AM_P'), 'g')} · {_g(gmm.get('AM_S'), 'g')} | "
+                     f"{_g(x.get('gamma_wall'), 'g')} | {_g(x.get('bo_se'), 'g')} → {_g(x.get('bo_read'), '.7g')} | {x.get('surface')} | "
+                     f"{len(x.get('problems') or [])} |")
     for T in rep['tables']:
         L += ['', f"## 표 {T['kind']} — `{T['old']}` → `{T['new']}` — **{T['verdict']}**", '']
         if T['kind'] in ('E', 'E0'):
@@ -627,6 +1054,15 @@ def to_markdown(rep):
                 L.append(f"| {r_['pair']} | {r_['types']} | {_g(r_['CED_old'])} | {_g(r_['CED_new'])} | "
                          f"{('×' + format(r_['ratio'], '.7g')) if r_.get('ratio') is not None else 'N/A (0)'} | "
                          f"{'PASS' if r_['ok'] else 'FAIL · ' + r_['reason']} |")
+        elif T['kind'] == 'GM':
+            L += ['같은 ρ 세계 NCM 표면 대비 (D2) — 바뀌는 CED = 규칙이 정하는 원소 정확히 · 배수 [√(γ\'_iγ\'_j)/√(γ_iγ_j)]^(1/3) · '
+                  f"나머지 토큰까지 같다 · k = {T.get('k')}", '',
+                  '| 쌍 | 타입 | 옛 CED (J/m³) | 새 CED (J/m³) | 배수 | 규칙 배수 | 바뀌어야 | 판정 |', '|---|---|---:|---:|---:|---:|---|---|']
+            for r_ in T['rows']:
+                L.append(f"| {r_['pair']} | {r_['types']} | {_g(r_['CED_old'])} | {_g(r_['CED_new'])} | "
+                         f"{('×' + format(r_['ratio'], '.7g')) if r_.get('ratio') is not None else 'N/A (0)'} | "
+                         f"{('×' + format(r_['expect'], '.7g')) if r_.get('expect') is not None else '—'} | "
+                         f"{'예' if r_.get('expect_change') else '아니오'} | {'PASS' if r_['ok'] else 'FAIL · ' + r_['reason']} |")
         elif T['kind'] == 'DT':
             L += [f"k = {T.get('k')} (등록 {REG_DT_K})", '', '| 쌍 | 타입 | CED (ref) | CED (dt/2) | 판정 |', '|---|---|---:|---:|---|']
             for r_ in T['rows']:
@@ -1095,9 +1531,11 @@ def _selftest():
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description='믹서 실행 덱 되읽기 — 덱 텍스트에서 E · ν · CED · dt · step 을 읽어 표 E · E0 · DT · B · U 를 독립 검산')
+    ap = argparse.ArgumentParser(description='믹서 실행 덱 되읽기 — 덱 텍스트에서 E · ν · CED · dt · step 을 읽어 표 E · E0 · DT · B · U · GM 을 '
+                                             '독립 검산 (D2 덱은 결합 규칙 · 덱 옆 deck_meta.json 결합까지)')
     ap.add_argument('--table', nargs=3, action='append', metavar=('KIND', 'OLD', 'NEW'),
-                    help='KIND ∈ E · E0 · DT · B · U — OLD · NEW = in.mixer 경로 (B 는 LC 다음 LH · U 는 LC 다음 LU).  여러 번 줄 수 있다')
+                    help='KIND ∈ E · E0 · DT · B · U · GM — OLD · NEW = in.mixer 경로 (B 는 LC 다음 LH · U 는 LC 다음 LU · '
+                         'GM 은 같은 ρ 세계 D2 덱 둘 (예: 비코팅 다음 코팅)).  여러 번 줄 수 있다')
     ap.add_argument('--json', help='JSON 보고 (도구 sha256 · 허용오차 · 등록 상수 · 덱 sha256 · 생성 명령 · 표 · 실패 항)')
     ap.add_argument('--md', help='사람이 읽는 표 (markdown)')
     ap.add_argument('--selftest', action='store_true')

@@ -90,6 +90,9 @@ for d in "$OUT"/*_s*/; do
   [ -f "$d/in.mixer" ] || continue
   case "$nm" in *_old_*) continue;; esac
   if [[ "$nm" =~ ^(npprobe[1-9][0-9]*_)?(E0|LC|LH|LHx10|LHx30|LU212|LU637)_(soft|ref|ref2)(_dthalf)?(_r[1-9][0-9]*)?_s[1-9][0-9]*$ ]]; then echo "· 강성 축 셀 — 재개 없음 (fresh 전용 · §8-1) — 건너뜀: $nm"; continue; fi
+  #  ★ 2026-10-21 (원장 MXD2-01) — D2 결합 규칙 셀 (표면 목록 = mixer_deck_diff.D2_STATES · test_launcher.sh D2②) · 머리에 D2 선언이 있는 덱은 잇지 않는다
+  #    (등록 · 정책 v5 전 — 옛 판은 이 이름을 몰라 이어 붙였다 · test_launcher.sh D2①)
+  if [[ "$nm" =~ ^(npprobe[1-9][0-9]*_)?GM(cc|cu|uc|uu)_ ]] || grep -qF '★ D2 결합 규칙 (기하평균' "$d/in.mixer"; then echo "· D2 결합 규칙 셀 — 재개 없음 (등록 · 정책 v5 전) — 건너뜀: $nm"; continue; fi
   [ -n "${ONLY:-}" ] && [ "$nm" != "$ONLY" ] && continue
   if [ -f "$d/pid" ] && kill -0 "$(cat "$d/pid")" 2>/dev/null; then echo "· 실행 중 — 건너뜀: $nm"; continue; fi
   [ -f "$d/log.lmp" ] || { echo "· 로그 없음 (아직 안 돈 런 — run_all.sh 소관): $nm"; continue; }
