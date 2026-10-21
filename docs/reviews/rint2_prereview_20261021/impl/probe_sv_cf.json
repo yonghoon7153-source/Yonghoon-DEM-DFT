@@ -1,0 +1,53 @@
+{
+ "single_fibre_sdcp_on_path": {
+  "n_sdcp_cells": 1,
+  "n_instances": 0,
+  "n_junction_edges": 0,
+  "I": 13.513513513513487,
+  "reason": null,
+  "cf_status": "no_through_without_sv",
+  "cf_ratio": Infinity,
+  "cf_flag": "SV_DEPENDENT",
+  "n_sv_faces_cut": 2,
+  "sv_local_dissipation": {
+   "kind": "diagnostic_local_dissipation",
+   "sv_share": 0.1891891891891893,
+   "vv_junction_share": 0.0,
+   "meaning": "SV 면 + SDCP 셀 소산 몫 = 국소 저항 민감도 — 경로 지배 · 우회 크기 보증 아님 (RCA-06 · 반사실 대조 = 선택 노브)"
+  }
+ },
+ "F1_junction_sdcp_on_A_far": {
+  "n_sdcp_cells": 1,
+  "n_instances": 1,
+  "n_junction_edges": 1,
+  "I": 4.9019607843137525,
+  "reason": null,
+  "cf_status": "no_through_without_sv",
+  "cf_ratio": Infinity,
+  "cf_flag": "SV_DEPENDENT",
+  "n_sv_faces_cut": 2,
+  "sv_local_dissipation": {
+   "kind": "diagnostic_local_dissipation",
+   "sv_share": 0.06862745098039191,
+   "vv_junction_share": 0.49019607843137253,
+   "meaning": "SV 면 + SDCP 셀 소산 몫 = 국소 저항 민감도 — 경로 지배 · 우회 크기 보증 아님 (RCA-06 · 반사실 대조 = 선택 노브)"
+  }
+ },
+ "F1_junction_no_sdcp": {
+  "n_sdcp_cells": 0,
+  "n_instances": 1,
+  "n_junction_edges": 1,
+  "I": 4.761904761904723,
+  "reason": null,
+  "cf_status": "computed",
+  "cf_ratio": 1.0,
+  "cf_flag": null,
+  "n_sv_faces_cut": 0,
+  "sv_local_dissipation": {
+   "kind": "diagnostic_local_dissipation",
+   "sv_share": 0.0,
+   "vv_junction_share": 0.4761904761904756,
+   "meaning": "SV 면 + SDCP 셀 소산 몫 = 국소 저항 민감도 — 경로 지배 · 우회 크기 보증 아님 (RCA-06 · 반사실 대조 = 선택 노브)"
+  }
+ }
+}

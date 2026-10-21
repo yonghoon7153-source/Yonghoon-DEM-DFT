@@ -1,0 +1,32 @@
+{
+ "same_cell (ends z 0.47 · 0.59)": {
+  "gap_um": 0.12,
+  "n_pieces": 2,
+  "n_self_candidates": 1,
+  "n_self_revisits_path_only": 1,
+  "n_self_fused_faces": 0,
+  "self_s_um": {
+   "min": 0.11999999999999994,
+   "median": 0.11999999999999994,
+   "max": 0.11999999999999994
+  },
+  "sigma_cjunc": 0.0,
+  "reason": "no_through_component",
+  "sigma_legacy_off": 872.664444444446
+ },
+ "face_adjacent (ends z 0.40 · 0.52)": {
+  "gap_um": 0.12,
+  "n_pieces": 2,
+  "n_self_candidates": 1,
+  "n_self_revisits_path_only": 0,
+  "n_self_fused_faces": 1,
+  "self_s_um": {
+   "min": 0.12,
+   "median": 0.12,
+   "max": 0.12
+  },
+  "sigma_cjunc": 872.664444444446,
+  "reason": null,
+  "sigma_legacy_off": 872.664444444446
+ }
+}

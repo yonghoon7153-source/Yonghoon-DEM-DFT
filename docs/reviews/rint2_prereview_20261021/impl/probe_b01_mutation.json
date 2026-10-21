@@ -1,0 +1,21 @@
+{
+ "original": {
+  "ok": 2,
+  "fail": [],
+  "out": [
+   "PASS  J0w-a write_copy = LF 바이트 (글자 모드 변환이 있는 플랫폼에서도 · newline 고정)",
+   "  PASS  J0w-b 시험의 저장 꼴 변환 — CRLF 꼴은 LF 마다 CR 하나 (CRCRLF 없음) · CR 만 꼴에 LF · CR 겹침 없음"
+  ]
+ },
+ "mutant_no_newline": {
+  "ok": 0,
+  "fail": [
+   "J0w-a write_copy = LF 바이트 (글자 모드 변환이 있는 플랫폼에서도 · newline 고정)",
+   "J0w-b 시험의 저장 꼴 변환 — CRLF 꼴은 LF 마다 CR 하나 (CRCRLF 없음) · CR 만 꼴에 LF · CR 겹침 없음"
+  ],
+  "out": [
+   "FAIL  J0w-a write_copy = LF 바이트 (글자 모드 변환이 있는 플랫폼에서도 · newline 고정)  (b'ITEM: TIMESTEP\\r\\n100\\r\\nITEM: NUMBER OF ATOMS\\r\\n0')",
+   "  FAIL  J0w-b 시험의 저장 꼴 변환 — CRLF 꼴은 LF 마다 CR 하나 (CRCRLF 없음) · CR 만 꼴에 LF · CR 겹침 없음  ((b'ITEM: TIMESTEP\\r\\r\\n100\\r\\r\\nITEM: NUMBER OF A', b'ITEM: TIMESTEP\\r\\r100\\r\\rITEM: NUMBER OF ATO'))"
+  ]
+ }
+}

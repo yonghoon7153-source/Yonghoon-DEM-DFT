@@ -1,0 +1,96 @@
+{
+ "env_OPENBLAS_CORETYPE": "Haswell",
+ "threadpool": [
+  {
+   "internal_api": "openblas",
+   "architecture": "Haswell",
+   "num_threads": 1
+  },
+  {
+   "internal_api": "openblas",
+   "architecture": "Haswell",
+   "num_threads": 1
+  }
+ ],
+ "numpy": "2.4.6",
+ "main": {
+  "kind": "main",
+  "true_G": 1.1408229154867153e-05,
+  "posted_G": 1.1414071163555076e-05,
+  "rel_err": 0.000512087249354698,
+  "pass_a": true,
+  "pass_b": true,
+  "pass_c": true,
+  "pass_d": false,
+  "ok": false,
+  "status": "POSITIVE_SOLVED",
+  "imbalance": 3.435033510550895e-05,
+  "lo": 1.1408229154865718e-05,
+  "hi": 1.140823335915742e-05,
+  "true_in_bracket": true,
+  "err_bound_rel": 0.0005118251503469789,
+  "width_rel": 3.6834286744746347e-07,
+  "why": "posted G error bound 5.118e-04 > 0.0001 (exact comparison)"
+ },
+ "small": {
+  "kind": "small",
+  "true_G": 1.6475350536519416e-09,
+  "posted_G": 1.6472243400696e-09,
+  "rel_err": -0.000188593002408588,
+  "pass_a": true,
+  "pass_b": true,
+  "pass_c": true,
+  "pass_d": false,
+  "ok": false,
+  "status": "POSITIVE_SOLVED",
+  "imbalance": 9.147795533580172e-05,
+  "lo": 1.647535053651848e-09,
+  "hi": 1.647535053652371e-09,
+  "true_in_bracket": true,
+  "err_bound_rel": 0.00018862857669891693,
+  "width_rel": 3.1749466636982435e-13,
+  "why": "posted G error bound 1.886e-04 > 0.0001 (exact comparison)"
+ },
+ "connected": {
+  "kind": "connected",
+  "true_G": 2.1086237251427582e-12,
+  "posted_G": 2.0895679108469276e-12,
+  "rel_err": -0.009037086166020725,
+  "pass_a": true,
+  "pass_b": true,
+  "pass_c": true,
+  "pass_d": false,
+  "ok": false,
+  "status": "POSITIVE_SOLVED",
+  "imbalance": 1.1563649005319417e-05,
+  "lo": 2.1086237229088536e-12,
+  "hi": 2.1086262578656147e-12,
+  "true_in_bracket": true,
+  "err_bound_rel": 0.009120711951861179,
+  "width_rel": 1.2131487797086493e-06,
+  "why": "posted G error bound 9.121e-03 > 0.0001 (exact comparison)"
+ },
+ "warm_candidate": {
+  "true_G": 0.3333333333333333,
+  "posted_G": 0.25,
+  "pass_a": true,
+  "pass_b": true,
+  "pass_c": true,
+  "pass_d": false,
+  "ok": false,
+  "status": "POSITIVE_SOLVED",
+  "lo": 0.3333333333333286,
+  "hi": 0.3750000000000007,
+  "why": "bracket width 1.667e-01 > 0.0001 (bound too loose to certify · exact comparison)"
+ },
+ "valid_zero": {
+  "status": "VALID_ZERO_TOPOLOGY",
+  "ok": true,
+  "pass_a": true,
+  "pass_b": false,
+  "pass_c": false,
+  "pass_d": null,
+  "zero_exact": true,
+  "why": null
+ }
+}

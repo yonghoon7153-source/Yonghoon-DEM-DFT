@@ -1,0 +1,908 @@
+{
+ "docs/reviews/rint_carbon_additive_design_v1_20261020.md": [
+  {
+   "line": 3,
+   "tok": "20261020",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 3,
+   "tok": "20261020",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 4,
+   "tok": "20261020",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 4,
+   "tok": "20261020",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 4,
+   "tok": "20261020",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 5,
+   "tok": "20260831",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 5,
+   "tok": "20260829",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 5,
+   "tok": "20261006",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 5,
+   "tok": "20261007",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 5,
+   "tok": "20261014",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 5,
+   "tok": "20261015",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 5,
+   "tok": "20261020",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 6,
+   "tok": "20261006",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 6,
+   "tok": "20261006",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 6,
+   "tok": "20261007",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 9,
+   "tok": "20261021",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 9,
+   "tok": "20261021",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 9,
+   "tok": "20261021",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 49,
+   "tok": "20261012",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 50,
+   "tok": "20261012",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 59,
+   "tok": "20261020",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 62,
+   "tok": "20260825",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 72,
+   "tok": "5.68520562919",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 72,
+   "tok": "1.34217283332",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 97,
+   "tok": "20260825",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 105,
+   "tok": "20261020",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 105,
+   "tok": "20260818",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 105,
+   "tok": "20260926",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 108,
+   "tok": "20260825",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 109,
+   "tok": "2.9722242377",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 109,
+   "tok": "1.3108617603",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 109,
+   "tok": "1.5257138934",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 109,
+   "tok": "0.4145364648",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 109,
+   "tok": "1.9403261040",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 109,
+   "tok": "2.9603824947",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 110,
+   "tok": "0.7865170562",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 110,
+   "tok": "0.2097378816",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 151,
+   "tok": "0.1838477631",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 180,
+   "tok": "20260829",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 219,
+   "tok": "20260829",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 224,
+   "tok": "0.0134549613712",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 224,
+   "tok": "0.01171875",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 254,
+   "tok": "0.1838477631",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 256,
+   "tok": "1.366013071895",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 256,
+   "tok": "266.028708",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 256,
+   "tok": "0.238095238095",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 256,
+   "tok": "82.570062",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 256,
+   "tok": "56.58842421",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 256,
+   "tok": "514.8513",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 307,
+   "tok": "1.366013071895",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 307,
+   "tok": "0.238095238095",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 308,
+   "tok": "10.52380952",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 308,
+   "tok": "90.49773756",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 323,
+   "tok": "0.00105238095238",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 323,
+   "tok": "90.49773756",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 323,
+   "tok": "10.52380952",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 323,
+   "tok": "4.5351473923",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 370,
+   "tok": "20260825",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 398,
+   "tok": "2.76138147391",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 398,
+   "tok": "9.14779553358",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 398,
+   "tok": "1.6472243400696000",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 398,
+   "tok": "1.6475350536519418",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 398,
+   "tok": "1.88593002409",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 398,
+   "tok": "0.9037086166",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 398,
+   "tok": "1.647535053652368",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 398,
+   "tok": "1.6475350536519418",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 399,
+   "tok": "20261021",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 399,
+   "tok": "20261021",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 399,
+   "tok": "20261021",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 401,
+   "tok": "5.68520562919",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 401,
+   "tok": "1.34217283332",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 401,
+   "tok": "20261021",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 401,
+   "tok": "20261021",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 433,
+   "tok": "20260825",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 436,
+   "tok": "20260827",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 436,
+   "tok": "20260827",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 481,
+   "tok": "20261020",
+   "exact": true,
+   "prefix_or_round": true
+  }
+ ],
+ "docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md": [
+  {
+   "line": 4,
+   "tok": "20261020",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 4,
+   "tok": "20261020",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 4,
+   "tok": "20261019",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 4,
+   "tok": "20261020",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 7,
+   "tok": "20261020",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 8,
+   "tok": "20261021",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 8,
+   "tok": "20261021",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 80,
+   "tok": "0.01885983293",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 80,
+   "tok": "0.01737177928",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 80,
+   "tok": "0.2258193",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 80,
+   "tok": "199.9542703",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 80,
+   "tok": "0.419353749",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 80,
+   "tok": "0.467828346",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 89,
+   "tok": "0.467828346",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 93,
+   "tok": "199.9542703",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 93,
+   "tok": "20261021",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 98,
+   "tok": "1.88593002409",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 98,
+   "tok": "5.68520562919",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 98,
+   "tok": "1.34217283332",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 105,
+   "tok": "3.9290909091",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 105,
+   "tok": "3.4961904762",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 105,
+   "tok": "4.6866666667",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 105,
+   "tok": "0.2930476574",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 105,
+   "tok": "2.6628571429",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 105,
+   "tok": "0.8362390828",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 105,
+   "tok": "2.6628571429",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 105,
+   "tok": "20261021",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 106,
+   "tok": "20260923",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 119,
+   "tok": "0.3513978868",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 136,
+   "tok": "20260825",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 140,
+   "tok": "0.1100008952",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 140,
+   "tok": "0.0335226920",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 140,
+   "tok": "20261021",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 147,
+   "tok": "90.49773756",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 147,
+   "tok": "10.52380952",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 147,
+   "tok": "4.5351473923",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 162,
+   "tok": "2.9702538506",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 162,
+   "tok": "1.1709917265",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 162,
+   "tok": "0.4932649517",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 162,
+   "tok": "8.5926514778",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 162,
+   "tok": "3.9967891509",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 369,
+   "tok": "20261021",
+   "exact": true,
+   "prefix_or_round": true
+  }
+ ],
+ "docs/reviews/rint2_kgy_commands_20261020.md": [
+  {
+   "line": 6,
+   "tok": "20261019",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 6,
+   "tok": "20260827",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 7,
+   "tok": "20261020",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 7,
+   "tok": "20261020",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 14,
+   "tok": "20261021",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 14,
+   "tok": "20261021",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 32,
+   "tok": "20260827",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 32,
+   "tok": "3672586",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 32,
+   "tok": "20260818",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 34,
+   "tok": "20260926",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 37,
+   "tok": "20260926",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 37,
+   "tok": "20260926",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 148,
+   "tok": "20260926",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 156,
+   "tok": "20260831",
+   "exact": false,
+   "prefix_or_round": false
+  },
+  {
+   "line": 270,
+   "tok": "134.61538462",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 271,
+   "tok": "1.3108617603",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 271,
+   "tok": "2.9722242377",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 273,
+   "tok": "0.7865170562",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 273,
+   "tok": "0.2097378816",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 288,
+   "tok": "26.18456376",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 288,
+   "tok": "134.61538462",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 288,
+   "tok": "2.9722242377",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 288,
+   "tok": "1.3108617603",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 288,
+   "tok": "0.000131086176026",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 288,
+   "tok": "1.5257138934",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 288,
+   "tok": "0.4145364648",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 288,
+   "tok": "1.9403261040",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 288,
+   "tok": "2.9603824947",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 288,
+   "tok": "0.7865170562",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 288,
+   "tok": "0.2097378816",
+   "exact": true,
+   "prefix_or_round": true
+  },
+  {
+   "line": 442,
+   "tok": "20261021",
+   "exact": true,
+   "prefix_or_round": true
+  }
+ ]
+}

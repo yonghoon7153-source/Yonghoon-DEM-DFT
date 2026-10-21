@@ -1,0 +1,11 @@
+{
+ "own_cert_problem": null,
+ "foreign_cert_problem": null,
+ "next_gen_cert_ok_with_foreign": [
+  true,
+  null
+ ],
+ "cert_fp_sid": "c83492d61491858df7a8483835884449",
+ "registry_fp_sid": "c83492d61491858df7a8483835884449",
+ "same_function": true
+}

@@ -1,0 +1,342 @@
+{
+ "a_rca01": {
+  "case": "RCA-01 kink near floor",
+  "note": "Codex RCA-01 circuit; 2nd-ed interpolation gave PASS W 0.4194",
+  "ladder": {
+   "e_local": 0.01885983292807937,
+   "e_min": 0.01737177927613007,
+   "R0": 64000.0,
+   "delta_R0": -0.0022607462681370864,
+   "R_lo": 10000.0,
+   "R_lo_candidate": 26758.370822762055,
+   "R_lo_candidate_confirmed": false,
+   "R_hi": 5990349.747386915,
+   "R_hi_candidate": 5990349.747386915,
+   "R_hi_candidate_confirmed": true,
+   "nonmonotone": null,
+   "n_points": 12,
+   "name": "CALIBRATED"
+  },
+  "true_R_lo": 25493.94971213578,
+  "true_R_hi": 5097624.112852485,
+  "outer_wrap_holds": true,
+  "procedure_ratio": 599.0349747386915,
+  "true_ratio": 199.95427034304862,
+  "DBE_procedure": [
+   3.009378649805871,
+   6.599350001971149,
+   0.7852375308170946,
+   "CONSISTENT_WEAK"
+  ],
+  "DBE_true_set": [
+   3.011019283746552,
+   4.807162534435253,
+   0.46782834645998866,
+   "CONSISTENT_WEAK"
+  ],
+  "code_2nd_ed_rule_e_lt_emin_would_stop": false
+ },
+ "b_flat": {
+  "case": "flat (e < e_min)",
+  "note": "positive 7-branch network, elasticity ~0.011 < e_min over decades",
+  "ladder": {
+   "e_local": 0.010586022985512854,
+   "e_min": 0.01737177927613007,
+   "R0": 100000.0,
+   "delta_R0": 0.0,
+   "R_lo": 10000.0,
+   "R_lo_candidate": 15257.74622563995,
+   "R_lo_candidate_confirmed": false,
+   "R_hi": 1000000.0,
+   "R_hi_candidate": 653256.6498359239,
+   "R_hi_candidate_confirmed": false,
+   "nonmonotone": null,
+   "n_points": 10,
+   "name": "CALIBRATED"
+  },
+  "true_R_lo": 15252.652318474704,
+  "true_R_hi": 655623.6771940205,
+  "outer_wrap_holds": true,
+  "procedure_ratio": 100.0,
+  "true_ratio": 42.98424060973968,
+  "DBE_procedure": [
+   4.450329697300001,
+   5.0496703027,
+   0.12634477184737397,
+   "PASS_INFORMATIVE"
+  ],
+  "DBE_true_set": [
+   4.505499999999999,
+   4.994499999999998,
+   0.10303843429711226,
+   "PASS_INFORMATIVE"
+  ],
+  "code_2nd_ed_rule_e_lt_emin_would_stop": true
+ },
+ "b2_flat_sensitive_DBE": {
+  "case": "flat SBE, sensitive DBE",
+  "note": "R_j unidentified AND prediction sensitive -> should not be PASS",
+  "ladder": {
+   "e_local": 0.010586022985512854,
+   "e_min": 0.01737177927613007,
+   "R0": 100000.0,
+   "delta_R0": 0.0,
+   "R_lo": 10000.0,
+   "R_lo_candidate": 15257.74622563995,
+   "R_lo_candidate_confirmed": false,
+   "R_hi": 1000000.0,
+   "R_hi_candidate": 653256.6498359239,
+   "R_hi_candidate_confirmed": false,
+   "nonmonotone": null,
+   "n_points": 10,
+   "name": "CALIBRATED"
+  },
+  "true_R_lo": 15252.652318474704,
+  "true_R_hi": 655623.6771940205,
+  "outer_wrap_holds": true,
+  "procedure_ratio": 100.0,
+  "true_ratio": 42.98424060973968,
+  "DBE_procedure": [
+   6.002197982000002,
+   9.997802017999998,
+   0.5102395381560665,
+   "FAIL"
+  ],
+  "DBE_true_set": [
+   6.369999999999989,
+   9.629999999999985,
+   0.41328375622596236,
+   "FAIL"
+  ],
+  "code_2nd_ed_rule_e_lt_emin_would_stop": true
+ },
+ "c_ceiling_kink": {
+  "case": "kink near ceiling",
+  "note": "T+ end close to the ceiling plateau; counts points against the 2nd-ed cap 12",
+  "ladder": {
+   "e_local": 0.0212886551517382,
+   "e_min": 0.01737177927613007,
+   "R0": 14100.0,
+   "delta_R0": 0.002025015261895157,
+   "R_lo": 1222.2594528344664,
+   "R_lo_candidate": 1222.2594528344664,
+   "R_lo_candidate_confirmed": true,
+   "R_hi": 100000.0,
+   "R_hi_candidate": 34223.39120178128,
+   "R_hi_candidate_confirmed": false,
+   "nonmonotone": null,
+   "n_points": 13,
+   "name": "CALIBRATED"
+  },
+  "true_R_lo": 1370.906321401432,
+  "true_R_hi": 34853.09017223922,
+  "outer_wrap_holds": true,
+  "procedure_ratio": 81.8156895969151,
+  "true_ratio": 25.423392997860034,
+  "DBE_procedure": [
+   4.0,
+   4.975849986762961,
+   0.2183018465078367,
+   "PASS_INFORMATIVE"
+  ],
+  "DBE_true_set": [
+   4.4830954169797135,
+   4.972952667167542,
+   0.10370001259684089,
+   "PASS_INFORMATIVE"
+  ],
+  "code_2nd_ed_rule_e_lt_emin_would_stop": false
+ },
+ "d_sbe_origin": {
+  "centre_SBE_arm0_arm1_arm2": [
+   1.63,
+   1.6300000000000001,
+   1.6300000000000001
+  ],
+  "centre_ln_spread": 2.2204460492503128e-16,
+  "CALIB_ORIGIN_SENSITIVE_fires (>0.02)": false,
+  "arm0_admissible_r": [
+   0.8598452278589862,
+   1.1947431302270022
+  ],
+  "mean8_admissible_r": [
+   0.7753273604410766,
+   1.408010012515649
+  ],
+  "DBE_from_arm0_set": [
+   0.26229349556331794,
+   "PASS_INFORMATIVE",
+   4.347999999999997,
+   5.651999999999996
+  ],
+  "DBE_from_mean8_set": [
+   0.47222864569544876,
+   "CONSISTENT_WEAK",
+   3.84088888888888,
+   6.159111111111101
+  ],
+  "SBE_end_spread_at_arm0_lo_hi": [
+   -0.009852296443011483,
+   -0.010152371464017962
+  ]
+ },
+ "e_near_edge": {
+  "floor_rel_to_Tminus": -4.999999999999449e-05,
+  "CALIB_EDGE_fires": false,
+  "true_R_hi": 62591727.80778866,
+  "earliest_R_hi_reachable_with_low_reading": 20855851.406701032,
+  "ratio_true_over_reachable": 3.0011590793976315,
+  "high_readings_never_reach_Tminus": true,
+  "D_at_true_R_hi": 0.8240030260832485,
+  "D_at_reachable_R_hi": 1.0899026202528002,
+  "ln_D_shift_at_lower_end": 0.27966942968073405,
+  "certified_nonmonotone_max": 0.0002,
+  "tau_mono_registered": 0.001
+ },
+ "f_origin_zero_corner": {
+  "W_first": "inf",
+  "switched": {
+   "c0P0": false,
+   "c1P0": false,
+   "c0P1": false,
+   "c1P1": false
+  },
+  "verdict_with_rule": "FAIL (4.68 > max 4, model low)",
+  "if_switched_c0P0_to_mean8": [
+   3.0,
+   5.25,
+   [
+    0.5596157879354227,
+    "CONSISTENT_WEAK"
+   ]
+  ]
+ },
+ "g_origin_threshold_boundary": {
+  "arm0": [
+   4.2,
+   6.5213703177476114,
+   [
+    0.43999999999999995,
+    "PASS_INFORMATIVE"
+   ]
+  ],
+  "arm_spread_ln_each_end": 0.04356,
+  "threshold_0.1W": 0.044000000000000004,
+  "switch_fires": false,
+  "mean8_if_switched": [
+   4.0433535287394164,
+   6.775425498601367,
+   [
+    0.5162277399980728,
+    "CONSISTENT_WEAK"
+   ]
+  ]
+ },
+ "h_name_precedence": {
+  "laws": {
+   "P0": "NOT_COMPUTED",
+   "P1": "CALIB_EDGE"
+  },
+  "by_3_2c_list_order": "CALIB_EDGE",
+  "by_5_0_step1_any_NOT_COMPUTED": "NOT_COMPUTED"
+ },
+ "i_P_discrete_vs_continuous": {
+  "discrete_union_contains_4.68": false,
+  "beta_where_lower_end_is_4.68": 0.6640906214968051,
+  "interval_at_beta_star": [
+   4.68,
+   4.882175923420503
+  ],
+  "continuous_union_contains_4.68": true,
+  "note": "toy continuity only - shows the GAP state depends on declaring P discrete (c is declared continuous)"
+ },
+ "j_cert_literal_delta_1e-06": {
+  "I_bot": 0.499999,
+  "L": 0.5,
+  "U": 0.500000000002,
+  "G_true": 0.5,
+  "rel_error_of_published_G": -1.999999999946489e-06,
+  "width_rel": 3.99991951295854e-12,
+  "literal_rule_G_in_[L,U]": false,
+  "guarantee_rule_max_dist_rel": 2.000007999874002e-06
+ },
+ "j_cert_literal_delta_1e-09": {
+  "I_bot": 0.499999999,
+  "L": 0.5,
+  "U": 0.5,
+  "G_true": 0.5,
+  "rel_error_of_published_G": -2.0000000544584395e-09,
+  "width_rel": 0.0,
+  "literal_rule_G_in_[L,U]": false,
+  "guarantee_rule_max_dist_rel": 2.0000000584584397e-09
+ },
+ "k_rca02_3rd_ed_rule": {
+  "W_first_arm0": 0.29304765736914384,
+  "spreads_lo_0_hi": [
+   0.30425801184353723,
+   0.0,
+   0.31801117038687354
+  ],
+  "threshold_0.1W": 0.029304765736914387,
+  "corner_switched": true,
+  "final_interval": [
+   2.662857142857143,
+   6.1450000000000005
+  ],
+  "grade": [
+   0.8362390828158665,
+   "CONSISTENT_WEAK"
+  ],
+  "second_ed_rule_interval (shift by centre log-diff = 0)": [
+   3.4961904761904763,
+   4.6866666666666665
+  ]
+ },
+ "l_end_rule_mutants": {
+  "correct_doc_rule": {
+   "R_lo": 10000.0,
+   "R_hi": 5990349.747386915,
+   "ratio": 599.0349747386915,
+   "W": 0.7852375308170946,
+   "grade": "CONSISTENT_WEAK",
+   "caught_by_not_PASS_check": false,
+   "caught_by_ratio_ge_199.95_check": false
+  },
+  "M1_no_fallback_use_failed_candidate": {
+   "R_lo": 26758.370822762055,
+   "R_hi": 5990349.747386915,
+   "ratio": 223.8682536790025,
+   "W": 0.4535854693907371,
+   "grade": "PASS_INFORMATIVE",
+   "caught_by_not_PASS_check": true,
+   "caught_by_ratio_ge_199.95_check": false
+  },
+  "M2_inner_bracket_neighbour_lo": {
+   "R_lo": 31622.776601683792,
+   "R_hi": 5990349.747386915,
+   "ratio": 189.43149182756935,
+   "W": 0.4045181959806393,
+   "grade": "FAIL",
+   "caught_by_not_PASS_check": false,
+   "caught_by_ratio_ge_199.95_check": true
+  },
+  "M3_old_interp_hi_only": {
+   "R_lo": 10000.0,
+   "R_hi": 186808.86123670774,
+   "ratio": 18.680886123670774,
+   "W": 0.6954065670396474,
+   "grade": "CONSISTENT_WEAK",
+   "caught_by_not_PASS_check": false,
+   "caught_by_ratio_ge_199.95_check": true
+  },
+  "M4_old_interp_both": {
+   "R_lo": 22396.250211951727,
+   "R_hi": 186808.86123670774,
+   "ratio": 8.341077612046746,
+   "W": 0.41926284601572855,
+   "grade": "PASS_INFORMATIVE",
+   "caught_by_not_PASS_check": true,
+   "caught_by_ratio_ge_199.95_check": true
+  }
+ }
+}

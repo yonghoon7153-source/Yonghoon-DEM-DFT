@@ -1,0 +1,96 @@
+CJUNC_RJ | prod: scripts/check_method_discipline.py scripts/rint_r_chain.py scripts/run_contract.py scripts/sdcp_anchor_v2_chain.py scripts/sdcp_gain_vox015_8arm.sh | tests: 5
+CJUNC_LEN_LAW | prod: scripts/ca_ext_cjunc.py scripts/ca_s0_census.py scripts/carbon_junction.py scripts/check_method_discipline.py scripts/rint_r_chain.py scripts/run_contract.py scripts/sdcp_gain_vox015_8arm.sh | tests: 4
+CJUNC_UNREG_LAW | prod: scripts/check_method_discipline.py scripts/rint_r_chain.py scripts/run_contract.py scripts/sdcp_gain_vox015_8arm.sh | tests: 4
+CJUNC_S_MIN_UM | prod: scripts/check_method_discipline.py scripts/rint_r_chain.py scripts/run_contract.py scripts/sdcp_gain_vox015_8arm.sh | tests: 4
+CJUNC_TOL_FF_UM | prod: scripts/check_method_discipline.py scripts/rint_r_chain.py scripts/run_contract.py scripts/sdcp_gain_vox015_8arm.sh | tests: 4
+CJUNC_PTFE_JLAW | prod: scripts/check_method_discipline.py scripts/rint_r_chain.py scripts/run_contract.py scripts/sdcp_gain_vox015_8arm.sh | tests: 4
+SDCP_MOD_C | prod: scripts/check_method_discipline.py scripts/rint_r_chain.py scripts/run_contract.py scripts/sdcp_anchor_v2_chain.py scripts/sdcp_gain_vox015_8arm.sh | tests: 3
+STEP3_RTOL | prod: scripts/check_all.sh scripts/check_method_discipline.py scripts/rint_r_chain.py scripts/run_contract.py scripts/sdcp_anchor_v2_chain.py scripts/sdcp_gain_verdict.py scripts/sdcp_gain_vox015_8arm.sh | tests: 4
+ARM_LIST | prod: scripts/check_all.sh scripts/check_method_discipline.py scripts/rint_r_chain.py scripts/run_contract.py scripts/sdcp_gain_vox015_8arm.sh | tests: 4
+SDCP_YIELD_VGCF | prod: scripts/check_method_discipline.py scripts/rint_r_chain.py scripts/sdcp_gain_vox015_8arm.sh scripts/sdcp_next_1234.sh | tests: 1
+EXPECT_BACKEND | prod: scripts/check_method_discipline.py scripts/mpm_webapp_payload.py scripts/rint_r_chain.py scripts/sdcp_gain_vox015_8arm.sh scripts/step3_sigma.py | tests: 3
+SIGMA_FIBRE_BULK | prod: scripts/check_all.sh scripts/check_method_discipline.py scripts/mpm_webapp_payload.py scripts/rint_r_chain.py scripts/run_contract.py scripts/sdcp_anchor_v2_chain.py scripts/sdcp_gain_verdict.py scripts/sdcp_gain_vox015_8arm.sh scripts/step3_sigma.py | tests: 3
+NG_VGCF_BULK | prod: scripts/sdcp_gain_vox015_8arm.sh | tests: 0
+face_alpha | prod: scripts/ca_ext_cjunc.py scripts/ca_s0_census.py scripts/carbon_junction.py scripts/check_all.sh scripts/mpm_webapp_payload.py scripts/ptfe_face_alpha.py scripts/rint_r_chain.py scripts/run_contract.py scripts/sdcp_gain_verdict.py scripts/sdcp_gain_vox015_8arm.sh scripts/sr01_stamp_compare.py scripts/step3_sigma.py webapp/templates/mpm_lab.html | tests: 11
+rint-r-plan-v1 | prod: scripts/rint_r_chain.py | tests: 1
+ca-cjunc-plan-v1 | prod: scripts/ca_s0_census.py | tests: 0
+ca-s0-census-v2 | prod: scripts/ca_s0_census.py | tests: 0
+inputs_sha256 | prod: scripts/ca_s0_census.py scripts/plane_load_share.py scripts/ps45_sigmae_factor_off_variant.py | tests: 0
+values_um | prod: scripts/ca_s0_census.py | tests: 1
+PLAN_HASH_MISMATCH | prod: scripts/rint_r_chain.py | tests: 1
+PLAN_HASH_UNREGISTERED | prod: scripts/rint_r_chain.py | tests: 1
+CODE_PIN_MISMATCH | prod: scripts/rint_r_chain.py | tests: 1
+PREDICT_LADDER_MISMATCH | prod: scripts/rint_r_chain.py | tests: 0
+REPLAY_MISMATCH | prod: scripts/rint_r_chain.py | tests: 0
+PLAN_INVALID | prod: scripts/rint_r_chain.py | tests: 0
+CA_EXT_RECORD | prod: scripts/rint_r_chain.py | tests: 2
+RUNNER_RC | prod: scripts/rint_r_chain.py | tests: 2
+VALID_ZERO_TOPOLOGY | prod: scripts/run_contract.py scripts/step3_conv_cert.py scripts/step3_sigma.py | tests: 1
+POSITIVE_SOLVED | prod: scripts/run_contract.py scripts/step3_conv_cert.py | tests: 1
+NOT_COMPUTED | prod: scripts/analyze_contacts.py scripts/check_all.sh scripts/dem_analysis_core.py scripts/g2_network_reread.py scripts/lhs_design_dataset.py scripts/lhs_release_build.py scripts/network_conductivity.py scripts/plane_load_share.py scripts/ptfe_face_alpha.py scripts/rint_r_chain.py scripts/run_network_194_parallel.py scripts/tau_flux.py scripts/viewer3d_data.py scripts/wsl_network_smoke.py webapp/app.py webapp/pipeline_service.py webapp/templates/single.html | tests: 24
+CALIB_IMPOSSIBLE | prod: scripts/rint_r_chain.py | tests: 1
+CALIB_EDGE | prod: scripts/rint_r_chain.py | tests: 1
+CALIB_UNIDENTIFIED | prod: scripts/rint_r_chain.py | tests: 1
+CALIB_UNCONFIRMED | prod: scripts/rint_r_chain.py | tests: 1
+CALIB_NONMONOTONE | prod: scripts/rint_r_chain.py | tests: 1
+CALIB_LADDER_EXHAUSTED | prod: scripts/rint_r_chain.py | tests: 1
+CALIB_ORIGIN_SENSITIVE | prod: scripts/rint_r_chain.py | tests: 1
+CALIB_ORDER | prod: scripts/rint_r_chain.py | tests: 0
+QUALIFIERS | prod: scripts/ca_ext_cjunc.py scripts/carbon_junction.py scripts/rint_r_chain.py scripts/step3_sigma.py | tests: 1
+main_R0_only | prod: scripts/rint_r_chain.py | tests: 0
+GRID_SENTENCE | prod: scripts/rint_r_chain.py | tests: 0
+SENTENCE_PASS | prod: scripts/rint_r_chain.py | tests: 1
+SV_DOMINANT | prod: scripts/carbon_junction.py scripts/rint_r_chain.py | tests: 2
+sv_dominant | prod: scripts/ca_ext_cjunc.py scripts/carbon_junction.py scripts/rint_r_chain.py | tests: 2
+SV_local_dissipation | prod: scripts/carbon_junction.py | tests: 1
+sv_local_dissipation | prod: scripts/ca_ext_cjunc.py scripts/carbon_junction.py | tests: 1
+sv_counterfactual_ratio | prod: scripts/carbon_junction.py scripts/step3_sigma.py | tests: 1
+SV_DEPENDENT | prod: scripts/carbon_junction.py | tests: 1
+SV_UNCHECKED | prod: NONE | tests: 0
+GAP_ENVELOPE_ONLY | prod: NONE | tests: 0
+ASSUMED_UNVALIDATED | prod: NONE | tests: 0
+DIA_UNCHECKED | prod: scripts/ca_s0_census.py scripts/mpm_webapp_payload.py scripts/ptfe_face_alpha.py scripts/rint_r_chain.py webapp/templates/mpm_lab.html | tests: 2
+CERT_RTOL_MAX | prod: scripts/run_contract.py scripts/step3_conv_cert.py | tests: 3
+CERT_EPS_I | prod: scripts/run_contract.py scripts/step3_conv_cert.py | tests: 3
+conv_cert_problem | prod: scripts/run_contract.py scripts/step3_conv_cert.py scripts/step3_sigma.py | tests: 2
+plate_currents | prod: scripts/step3_conv_cert.py | tests: 1
+diameter_preserving_sigma | prod: scripts/check_method_discipline.py scripts/sdcp_phase_ledger.sh scripts/sdcp_phase_ledger_report.py scripts/sr01_dia_preserve.sh scripts/sr01_gate5_2x2.sh scripts/sr01_grid_converge_e.sh scripts/step3_sigma.py | tests: 0
+cjunc_registry | prod: scripts/ca_ext_cjunc.py scripts/ca_s0_census.py scripts/carbon_junction.py | tests: 3
+cjunc_plan | prod: scripts/ca_ext_cjunc.py scripts/ca_s0_census.py scripts/carbon_junction.py scripts/step3_sigma.py | tests: 3
+junction_census | prod: scripts/ca_s0_census.py | tests: 1
+alpha_census | prod: scripts/ca_s0_census.py | tests: 0
+census_preview | prod: scripts/ca_s0_census.py | tests: 1
+b0_preview | prod: scripts/ca_s0_census.py | tests: 1
+LABEL_CJUNC | prod: scripts/ca_ext_cjunc.py | tests: 2
+ca_ext_record_ok | prod: scripts/ca_ext_cjunc.py scripts/check_all.sh scripts/mpm_webapp_payload.py scripts/ptfe_face_alpha.py scripts/rint_r_chain.py scripts/run_contract.py scripts/sdcp_gain_verdict.py scripts/sr01_stamp_compare.py | tests: 8
+len_scaled_v0 | prod: scripts/carbon_junction.py scripts/mpm_webapp_payload.py scripts/sdcp_gain_vox015_8arm.sh | tests: 7
+INTERFACE_OK_STATUSES | prod: scripts/ca_ext_cjunc.py scripts/ptfe_face_alpha.py scripts/run_contract.py | tests: 0
+extract_payload_cmd | prod: scripts/ca_s0_census.py scripts/sr01_stamp_ab.sh scripts/sr01_stamp_compare.py | tests: 0
+rj_reference_plane | prod: scripts/ca_ext_cjunc.py scripts/carbon_junction.py | tests: 1
+half_cell_in_edge | prod: scripts/ca_ext_cjunc.py scripts/carbon_junction.py | tests: 1
+model_internal_port_centre | prod: scripts/carbon_junction.py | tests: 1
+s0_junctions_ | prod: scripts/ca_s0_census.py | tests: 1
+STEP3_REQUIRED_INCOMPLETE | prod: scripts/check_method_discipline.py scripts/mpm_webapp_payload.py | tests: 1
+absent_geometry | prod: scripts/ca_ext_cjunc.py scripts/ptfe_face_alpha.py scripts/rint_r_chain.py scripts/run_contract.py scripts/step3_sigma.py | tests: 3
+unrealized_overwritten | prod: NONE | tests: 0
+r3-carbon-junction-port | prod: scripts/carbon_junction.py | tests: 1
+s1-face-alpha-v1 | prod: scripts/ptfe_face_alpha.py | tests: 0
+ca-ext-v1 | prod: scripts/run_contract.py | tests: 1
+p3ca- | prod: scripts/mpm_webapp_payload.py scripts/rint_r_chain.py scripts/run_contract.py scripts/sdcp_gain_verdict.py webapp/templates/mpm_lab.html | tests: 7
+unknown:ca_ext | prod: scripts/mpm_webapp_payload.py scripts/run_contract.py webapp/templates/mpm_lab.html | tests: 4
+protocol_ext | prod: scripts/ca_ext_cjunc.py scripts/check_method_discipline.py scripts/run_contract.py scripts/sdcp_gain_verdict.py | tests: 2
+--threshold-commit | prod: scripts/ca_s0_census.py | tests: 0
+--plan-path | prod: scripts/ca_s0_census.py | tests: 0
+--max-hours | prod: scripts/rint_r_chain.py scripts/sdcp_anchor_v2_chain.py | tests: 2
+--show-results | prod: scripts/check_method_discipline.py scripts/mpm_webapp_payload.py scripts/rint_r_chain.py scripts/run_contract.py scripts/sdcp_gain_vox015_8arm.sh | tests: 3
+--reverify | prod: scripts/rint_r_chain.py | tests: 1
+--variant | prod: scripts/rint_r_chain.py | tests: 1
+--ladders | prod: scripts/rint_r_chain.py | tests: 1
+--dry-run | prod: scripts/backfill_stage_e_physics.py scripts/context_budget.py scripts/find_and_rerun_stage_e.py scripts/lhs_harvest_batch.py scripts/lhs_release_build.py scripts/litdb_promote.py scripts/patch_kit_quasistatic.py scripts/recompute_missing_metrics.py scripts/recompute_porosity_dual.py scripts/rerun_network_for_missing.py scripts/rint_r_chain.py scripts/run_network_194_parallel.py scripts/sdcp_anchor_v2_chain.py scripts/seal_s3_prerun.py scripts/setup_webapp_env.sh scripts/supp20_input_receipt.py scripts/sync_csv_to_metrics.py webapp/mpm_lab_register.py | tests: 2
+--step3-rtol | prod: scripts/mpm_webapp_payload.py scripts/run_contract.py scripts/sdcp_gain_verdict.py scripts/sdcp_gain_vox015_8arm.sh scripts/step3_sigma.py | tests: 6
+--step3-maxiter | prod: scripts/check_method_discipline.py scripts/mpm_webapp_payload.py scripts/run_contract.py scripts/sdcp_gain_vox015_8arm.sh scripts/step3_sigma.py | tests: 2
+--step3-sdcp-yield-to-vgcf | prod: scripts/mpm_webapp_payload.py scripts/run_contract.py scripts/sdcp_gain_vox015_8arm.sh | tests: 0
+--joule-heat | prod: scripts/mpm_input_from_case.py scripts/mpm_webapp_payload.py scripts/phase_a_rerun_from_sh.py scripts/run_contract.py webapp/static/js/viewer3d.js | tests: 4
+--save-step4-grid | prod: scripts/ca_s0_census.py scripts/mpm_input_from_case.py scripts/mpm_webapp_payload.py scripts/phase_a_rerun_from_sh.py scripts/rint03_je_compare.py scripts/run_contract.py scripts/sr01_stamp_compare.py scripts/step4_dyn.py | tests: 5
+STEP4_GRID | prod: scripts/mpm_webapp_payload.py | tests: 3
+JOULE | prod: scripts/mpm_webapp_payload.py | tests: 3

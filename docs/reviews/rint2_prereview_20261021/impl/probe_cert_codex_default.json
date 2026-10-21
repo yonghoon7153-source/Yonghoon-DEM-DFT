@@ -1,0 +1,96 @@
+{
+ "env_OPENBLAS_CORETYPE": "default",
+ "threadpool": [
+  {
+   "internal_api": "openblas",
+   "architecture": "SkylakeX",
+   "num_threads": 1
+  },
+  {
+   "internal_api": "openblas",
+   "architecture": "SkylakeX",
+   "num_threads": 1
+  }
+ ],
+ "numpy": "2.4.6",
+ "main": {
+  "kind": "main",
+  "true_G": 1.1408229154867153e-05,
+  "posted_G": 1.1414570222425897e-05,
+  "rel_err": 0.0005558327653365502,
+  "pass_a": true,
+  "pass_b": true,
+  "pass_c": true,
+  "pass_d": false,
+  "ok": false,
+  "status": "POSITIVE_SOLVED",
+  "imbalance": 7.76143817375435e-05,
+  "lo": 1.1408229154865718e-05,
+  "hi": 1.1408233875041403e-05,
+  "true_in_bracket": true,
+  "err_bound_rel": 0.000555523987028491,
+  "width_rel": 4.1352198050393224e-07,
+  "why": "posted G error bound 5.555e-04 > 0.0001 (exact comparison)"
+ },
+ "small": {
+  "kind": "small",
+  "true_G": 1.6475350536519416e-09,
+  "posted_G": 1.6472236865187125e-09,
+  "rel_err": -0.00018898968646452463,
+  "pass_a": true,
+  "pass_b": false,
+  "pass_c": true,
+  "pass_d": false,
+  "ok": false,
+  "status": "POSITIVE_SOLVED",
+  "imbalance": 0.0001471990826096003,
+  "lo": 1.6475350536518483e-09,
+  "hi": 1.6475350536523458e-09,
+  "true_in_bracket": true,
+  "err_bound_rel": 0.00018902541056302883,
+  "width_rel": 3.020531713590035e-13,
+  "why": "posted G error bound 1.890e-04 > 0.0001 (exact comparison)"
+ },
+ "connected": {
+  "kind": "connected",
+  "true_G": 2.1086237251427582e-12,
+  "posted_G": 2.0895679101282785e-12,
+  "rel_err": -0.00903708650683499,
+  "pass_a": true,
+  "pass_b": true,
+  "pass_c": true,
+  "pass_d": false,
+  "ok": false,
+  "status": "POSITIVE_SOLVED",
+  "imbalance": 1.1563992136055461e-05,
+  "lo": 2.1086237229088548e-12,
+  "hi": 2.108626257865615e-12,
+  "true_in_bracket": true,
+  "err_bound_rel": 0.009120712298920537,
+  "width_rel": 1.213148779739294e-06,
+  "why": "posted G error bound 9.121e-03 > 0.0001 (exact comparison)"
+ },
+ "warm_candidate": {
+  "true_G": 0.3333333333333333,
+  "posted_G": 0.25,
+  "pass_a": true,
+  "pass_b": true,
+  "pass_c": true,
+  "pass_d": false,
+  "ok": false,
+  "status": "POSITIVE_SOLVED",
+  "lo": 0.3333333333333286,
+  "hi": 0.3750000000000007,
+  "why": "bracket width 1.667e-01 > 0.0001 (bound too loose to certify · exact comparison)"
+ },
+ "valid_zero": {
+  "status": "VALID_ZERO_TOPOLOGY",
+  "ok": true,
+  "pass_a": true,
+  "pass_b": false,
+  "pass_c": false,
+  "pass_d": null,
+  "zero_exact": true,
+  "why": null
+ }
+}

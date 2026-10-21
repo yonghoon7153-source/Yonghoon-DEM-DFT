@@ -1,0 +1,50 @@
+{
+ "per_arm_min_LEAN2_measured": 42.96666666666667,
+ "per_arm_min_LEAN4_measured": 48.375,
+ "L_points_per_ladder": 12,
+ "configs": {
+  "main": {
+   "x1.0_h": 50.1,
+   "x1.7_h": 85.2,
+   "x2.0_h": 100.3
+  },
+  "FIBRE": {
+   "x1.0_h": 47.3,
+   "x1.7_h": 80.3,
+   "x2.0_h": 94.5
+  },
+  "UNREG": {
+   "x1.0_h": 47.3,
+   "x1.7_h": 80.3,
+   "x2.0_h": 94.5
+  },
+  "GRID": {
+   "x1.0_h": 81.7,
+   "x1.7_h": 138.8,
+   "x2.0_h": 163.3
+  },
+  "SVORDER": {
+   "x1.0_h": 25.8,
+   "x1.7_h": 43.8,
+   "x2.0_h": 51.6
+  },
+  "GRID_current_gen_control": {
+   "x1.0_h": 7.4,
+   "x1.7_h": 12.6,
+   "x2.0_h": 14.8
+  }
+ },
+ "total_h_x1.0": 259.5,
+ "main_only_h_x1.0": 50.1,
+ "total_h_x1.7": 441.2,
+ "main_only_h_x1.7": 85.2,
+ "total_h_x2.0": 519.1,
+ "main_only_h_x2.0": 100.3,
+ "window_runs_h_10_25_to_29": 120,
+ "window_h_10_25_to_31": 168,
+ "arms_total_no_overflow": 310,
+ "overflow_worst_extra_arms": {
+  "SBE_origin_8arm": 64,
+  "DBE_origin_8arm_per_corner_all": 480
+ }
+}

@@ -1,0 +1,11 @@
+{
+ "base_ratio": 10.291253935345084,
+ "mutant_fixed_signature": {
+  "ratio": 1.0,
+  "exception": null
+ },
+ "mutant_test_as_written": {
+  "ratio": null,
+  "exception": "TypeError: cf_nodrop_old() got an unexpected keyword argument 'certify'"
+ }
+}
