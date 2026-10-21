@@ -339,7 +339,7 @@ def manifest(i, si):
     return man
 
 
-def cert(si):
+def cert(si, man):
     ok = not hit('certfail')
     return {'version': CERT['version'], 'rtol_used': rtol, 'rtol_max': CERT['rtol_max'], 'eps_I': CERT['eps_I'],
             'resolve_rtol': max(rtol * 1e-2, 1e-14), 'resolve_rtol_floor': 1e-14, 'resolve_tol': CERT['resolve_tol'],
@@ -349,25 +349,39 @@ def cert(si):
             #  ★ 10-21 증서 v2 — 상태 · ⓓ (구간 [1, 1] ∋ 게시 판 전류 1 · scale = σ)
             'status': CERT['status'], 'pass_d': True, 'target_tol': CERT['target_tol'], 'target_version': CERT['target_version'],
             'target_fp': CERT['target_fp'], 'target_ledger_ok': True, 'target_topology': 'through', 'target_lo': 1.0,
-            'target_hi': 1.0, 'scale': si}
+            'target_hi': 1.0, 'scale': si,
+            #  ★ 10-21 (사전 리뷰 PRE-impl-07 · B 픽스처 패치) — 증서 ↔ 런 결합 칸 = 그 팔 매니페스트의 정본 지문 (접합 원장 sid · registry ·
+            #    plan_rows · face_alpha 전자 계획) · σ 표 지문 = 킷마다 (가짜)
+            **_bind(man)}
 
 
-def early_cert(i):
-    """조기 반환 해의 상태 증서 (정본 `step3_conv_cert.early_record` 로 만든 틀 · 격자 지문만 채운다)."""
+def _bind(man):
+    ca = man.get('ca_ext') or {}
+    cjf = ((ca.get('cjunc') or {}).get('evidence') or {}).get('fp') or {}
+    faf = ((ca.get('ptfe_face') or {}).get('evidence') or {}).get('fp') or {}
+    return {'bind_version': CERT['bind_version'], 'fp_sid': cjf.get('sid', faf.get('sid_off')), 'fp_sig': hx('sig|' + kit),
+            'fp_face_plan': faf.get('plan_electronic'), 'fp_cjunc_registry': cjf.get('registry'),
+            'fp_cjunc_rows': cjf.get('plan_rows')}
+
+
+def early_cert(i, man):
+    """조기 반환 해의 상태 증서 (정본 `step3_conv_cert.early_record` 로 만든 틀) — ★ 10-21 (PRE-impl-07 병합) 결합 칸 = 그 팔 매니페스트의
+    정본 지문 (솔버 `_cert_bind_kw` 꼴 · 양의 해 증서와 같은 칸)."""
     ce = cp_(T['early_' + ST])
-    ce.update(fp_sid=hx('esid|%s|%r|%d' % (kit, vox, i)), fp_sig=hx('esig|%s|%r|%d|%s' % (kit, vox, i, rj)))
+    ce.update(_bind(man))
     return ce
 
 
 tag = rj.replace('.', 'p').replace('+', '').replace('-', 'm')
 for i in idx:
     si = s0 * af[i]
+    man_i = manifest(i, si)
     if REASON:
-        st = {'sigma_e_eff_S_cm': (0.0 if ST == 'zero' else None), 'reason': REASON, 'vox_um': vox, 'manifest': manifest(i, si),
-              'conv_cert': early_cert(i)}
+        st = {'sigma_e_eff_S_cm': (0.0 if ST == 'zero' else None), 'reason': REASON, 'vox_um': vox, 'manifest': man_i,
+              'conv_cert': early_cert(i, man_i)}
     else:
         st = {'sigma_e_eff_S_cm': si, 'cg_info': 0, 'unconverged': False, 'cg_resid': 3e-13, 'n_dof': 1234, 'vox_um': vox,
-              'status': 'complete', 'manifest': manifest(i, si), 'conv_cert': cert(si), 'cg_iters': 321}
+              'status': 'complete', 'manifest': man_i, 'conv_cert': cert(si, man_i), 'cg_iters': 321}
     json.dump({'mpm_metrics': {'step3': st}}, open(os.path.join(out, 'p2_%s_sph_fa_cj%s_c%s_a%d.json' % (kit[4:], tag, c, i)), 'w'))
     jl('ledger.jsonl', {'sigma': (si if not REASON else 0.0)})
 cj_req = {'R_j_ohm': Rv, 'len_law': E['CJUNC_LEN_LAW'], 'unreg_law': unreg, 's_min_um': s_min, 'tol_ff_um': tol_ff, 'ptfe_jlaw': law}
@@ -448,7 +462,8 @@ def world(name, base=None, **kw):
     W.update({'dir': str(d), 'scripts': str(SCRIPTS), 'model_src': MODEL_SRC, 'tpl': record_templates(),
               'cert': {'version': CC.CERT_VERSION, 'rtol_max': CC.CERT_RTOL_MAX, 'eps_I': CC.CERT_EPS_I,
                        'resolve_tol': CC.CERT_RESOLVE_TOL, 'target_tol': CC.CERT_TARGET_TOL,
-                       'target_version': CC.TARGET_VERSION, 'target_fp': CC.TARGET_FP_RULE, 'status': CC.STATUS_POSITIVE}})
+                       'target_version': CC.TARGET_VERSION, 'target_fp': CC.TARGET_FP_RULE, 'status': CC.STATUS_POSITIVE,
+                       'bind_version': CC.BIND_VERSION}})
     (d / 'world.json').write_text(json.dumps(W), encoding='utf-8')
     return str(d / 'world.json')
 

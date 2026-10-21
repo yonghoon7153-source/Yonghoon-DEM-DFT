@@ -83,6 +83,9 @@ def cohort_manifests(name='w4b_ptfe_off_20260827'):
 
 
 CJ_REQ = dict(R_j_ohm=1.0e6, len_law='len_scaled_v0', unreg_law='cut', s_min_um=0.5, tol_ff_um=0.5, ptfe_jlaw='P0')
+#: ★ 10-21 (사전 리뷰 PRE-impl-07) — 합성 접합 매니페스트의 지문 칸 (소문자 hex 32 · 증서 결합 `run_contract.cert_binding_problem` 이
+#:   이 칸과 대조한다 — `good_cert` 가 같은 값을 싣는다)
+CJ_FP = {'registry': 'a' * 32, 'sid': 'b' * 32, 'plan_rows': 'c' * 32}
 
 
 def cj_manifest(sdcp_c=None, ionic_plan=False, n_inst=3, **over):
@@ -98,7 +101,7 @@ def cj_manifest(sdcp_c=None, ionic_plan=False, n_inst=3, **over):
     counts = {'n_instances': n_inst, 'n_edge': n_inst - nc, 'n_contract': nc, 'n_cut_p1': 0, 'n_unrealized': 0,
               'n_none_inf': 0, 'n_long': 0, 'n_sdcp_near': ns, 'n_contracted_by_c': nc, 'n_ptfe_cov': 0,
               'len_mult_sum_edge': float(n_inst - nc), 'len_mult_max': 1.0}
-    fp = {'registry': 'r' * 32, 'sid': 's' * 32, 'plan_rows': 'p' * 32}
+    fp = dict(CJ_FP)
     solve = {'solved': True, 'n_junction_edges': n_inst - nc, 'n_contracted': nc, 'short': False, 'n_extra_dofs': 2}
     rc = {'electronic_main': {'status': 'applied', 'n_instances': n_inst, 'n_junction_edges': n_inst - nc, 'solved': True,
                               'fp_registry': fp['registry']},
@@ -119,7 +122,7 @@ def cj_manifest(sdcp_c=None, ionic_plan=False, n_inst=3, **over):
     return m
 
 
-def good_cert(sigma, rtol=1.0e-12):
+def good_cert(sigma, rtol=1.0e-12, channel='electronic'):
     import step3_conv_cert as CC
     return {'version': CC.CERT_VERSION, 'rtol_used': rtol, 'rtol_max': CC.CERT_RTOL_MAX, 'eps_I': CC.CERT_EPS_I,
             'resolve_rtol': max(rtol * CC.CERT_RESOLVE_FACTOR, CC.CERT_RESOLVE_RTOL_FLOOR),
@@ -130,7 +133,11 @@ def good_cert(sigma, rtol=1.0e-12):
             #  ★ 10-21 증서 v2 (Codex RCA-07 · RCA-13) — 상태 · ⓓ 목표량 증서 (구간 [1, 1] ∋ 게시 판 전류 1 · scale = σ)
             'status': CC.STATUS_POSITIVE, 'pass_d': True, 'target_tol': CC.CERT_TARGET_TOL, 'target_version': CC.TARGET_VERSION,
             'target_fp': CC.TARGET_FP_RULE, 'target_ledger_ok': True, 'target_topology': 'through', 'target_lo': 1.0,
-            'target_hi': 1.0, 'scale': float(sigma)}
+            'target_hi': 1.0, 'scale': float(sigma),
+            #  ★ 10-21 (PRE-impl-07) — 증서 ↔ 런 결합 칸 = `cj_manifest` 의 지문 (접합 = 주 전자 솔브만 · face_alpha 없음)
+            'bind_version': CC.BIND_VERSION, 'fp_sid': CJ_FP['sid'], 'fp_sig': 'd' * 32, 'fp_face_plan': None,
+            'fp_cjunc_registry': (CJ_FP['registry'] if channel == 'electronic' else None),
+            'fp_cjunc_rows': (CJ_FP['plan_rows'] if channel == 'electronic' else None)}
 
 
 # ═════════════════════════ R 묶음 — run_contract ═════════════════════════
@@ -297,7 +304,8 @@ def t_rc():
                   ('dict 아님', ['cjunc'])):
         chk(f'R12b 요청 검사 거부 [{nm}]', RC.ca_ext_request_problem(r) is not None)
     #  ── 수렴 증서 (다음 세대 판정 해의 게시 조건 · 설계 §6) ──
-    chk('R13a 증서 정상 → 문제 없음', RC.conv_cert_problem(good_cert(0.05), 0.05) is None, RC.conv_cert_problem(good_cert(0.05), 0.05))
+    chk('R13a 증서 정상 → 문제 없음', RC.conv_cert_problem(good_cert(0.05), 0.05, m) is None,
+        RC.conv_cert_problem(good_cert(0.05), 0.05, m))
     for nm, fn in (('없음', lambda c: None), ('ok False', lambda c: dict(c, ok=False)),
                    ('ok ↔ pass 모순', lambda c: dict(c, pass_b=False)),
                    ('판 rtol 1e-8 (봉인 상한 밖) 인데 pass_a', lambda c: dict(c, rtol_used=1e-8)),
@@ -306,7 +314,7 @@ def t_rc():
                    ('다른 판본', lambda c: dict(c, version='conv-cert-v0')), ('봉인 상한 손으로', lambda c: dict(c, rtol_max=1e-8)),
                    ('σ ≠ 결과 σ (증서 ↔ 결과 결합)', lambda c: dict(c, sigma=0.06)), ('NaN 불균형', lambda c: dict(c, imbalance=float('nan'))),
                    ('pass 가 문자열', lambda c: dict(c, pass_a='True'))):
-        chk(f'R13b 증서 거부 [{nm}]', RC.conv_cert_problem(fn(good_cert(0.05)), 0.05) is not None)
+        chk(f'R13b 증서 거부 [{nm}]', RC.conv_cert_problem(fn(good_cert(0.05)), 0.05, m) is not None)
     s3 = {'sigma_e_eff_S_cm': 0.05, 'manifest': m, 'conv_cert': good_cert(0.05)}
     chk('R13c 다음 세대 게시 조건 — p3ca + 증서 정상 = 통과 · 증서 없음 = 미게시 · p2 (옛 세대) = 해당 없음 (통과)',
         RC.next_gen_cert_ok(s3)[0] and not RC.next_gen_cert_ok({k: v for k, v in s3.items() if k != 'conv_cert'})[0]
@@ -314,7 +322,7 @@ def t_rc():
     s3i = dict(s3, manifest=cj_manifest(ionic_plan=True), sigma_ion_eff_S_cm=0.001)
     s3i['manifest']['components'] = dict(s3i['manifest'].get('components') or {}, ionic={'status': 'complete'})
     chk('R13d 이온을 푼 다음 세대 팔은 이온 증서도 요구 (없으면 미게시 · 있으면 통과)',
-        not RC.next_gen_cert_ok(s3i)[0] and RC.next_gen_cert_ok(dict(s3i, ion_conv_cert=good_cert(0.001)))[0])
+        not RC.next_gen_cert_ok(s3i)[0] and RC.next_gen_cert_ok(dict(s3i, ion_conv_cert=good_cert(0.001, channel='ionic')))[0])
     #  ── CLI 회계 (규칙 M) ──
     acct = RC.CLI_ACCOUNTING
     _new = ('--step3-cjunc', '--step3-cjunc-rj', '--step3-cjunc-len-law', '--step3-cjunc-unreg-law',
@@ -574,7 +582,7 @@ def t_payload():
         chk('P14 face_alpha + --step3-rtol 1e-12 = 허용 — rc 0 · ptfe_face 블록 · p3ca · 증서 ok · backend.rtol 기록 · ca_ext_record_ok',
             rc_fr == 0 and 'ptfe_face' in (mfr.get('ca_ext') or {}) and str(mfr.get('physics_protocol_id', '')).startswith('p3ca-')
             and cert.get('ok') is True and (mfr.get('backend') or {}).get('rtol') == 1e-12
-            and RC.ca_ext_record_ok(mfr) == (True, None) and RC.conv_cert_problem(cert, s3_of(p_fr).get('sigma_e_eff_S_cm')) is None,
+            and RC.ca_ext_record_ok(mfr) == (True, None) and RC.conv_cert_problem(cert, s3_of(p_fr).get('sigma_e_eff_S_cm'), mfr) is None,
             (rc_fr, log_fr.strip()[-300:], cert.get('ok')))
         chk('P14b face_alpha + rtol 팔 = 다음 세대 게시 조건 통과 · rtol 없는 face_alpha 팔 = 미게시 (증서 칸 없음)',
             RC.next_gen_cert_ok(s3_of(p_fr))[0]
@@ -585,7 +593,7 @@ def t_payload():
         chk('P15 접합 + --step3-rtol 1e-12 = 허용 — rc 0 · cjunc 블록 · p3ca · 증서 ok (σ 결합) · backend.rtol · 게시 조건 통과',
             rc_cr == 0 and 'cjunc' in (mcr.get('ca_ext') or {}) and str(mcr.get('physics_protocol_id', '')).startswith('p3ca-')
             and cert2.get('ok') is True and (mcr.get('backend') or {}).get('rtol') == 1e-12
-            and RC.conv_cert_problem(cert2, s3_of(p_cr).get('sigma_e_eff_S_cm')) is None and RC.next_gen_cert_ok(s3_of(p_cr))[0],
+            and RC.conv_cert_problem(cert2, s3_of(p_cr).get('sigma_e_eff_S_cm'), mcr) is None and RC.next_gen_cert_ok(s3_of(p_cr))[0],
             (rc_cr, log_cr.strip()[-300:], cert2.get('ok')))
         chk('P15b rtol 은 규약 id 밖 (numeric) — 접합 + rtol 의 p3ca id = 접합만의 id',
             mcr.get('physics_protocol_id') == m.get('physics_protocol_id'), (mcr.get('physics_protocol_id'), m.get('physics_protocol_id')))
@@ -629,9 +637,13 @@ def t_payload():
 # ═════════════════════════ S 묶음 — 해 상태 (영값 · 단락) · SV 반사실 노브 배선 (★ 10-21 D · 시험 먼저) ═════════════════════════
 #  정본 = 등록 R §5-0 (상태 먼저 · zero · short = 확장 실수 끝 · 유한 σ 로 위장하지 않는다) · §5-6 SV 행 (반사실 대조 · 같은 침대 · 같은 R_j ·
 #  단자 G 비) · 설계 §4-5 · §6 (상태 분리) · Codex RCA-06 · RCA-13 · 1저자 Q4 · Q7 권고대로.
-def _early_cert(reason, zero_graph='cjunc_assembled'):
+def _early_cert(reason, zero_graph='cjunc_assembled', fp=None):
+    """조기 반환 해의 상태 증서 (정본 `step3_conv_cert.early_record`) — ★ 10-21 (PRE-impl-07 병합) 결합 칸 = 그 런 매니페스트의 접합 지문
+    (`fp` · 기본 `CJ_FP` · 솔버 `_cert_bind_kw` 꼴: 격자 = 접합 원장 sid · 접합 원장 · 계획 행 · face_alpha 없음)."""
     import step3_conv_cert as CC
-    return CC.early_record({'sigma_eff': 0.0, 'n_dof': 4, 'reason': reason}, zero_graph=zero_graph, fp_sid='a' * 32, fp_sig='b' * 32)
+    fp = CJ_FP if fp is None else fp
+    return CC.early_record({'sigma_eff': 0.0, 'n_dof': 4, 'reason': reason}, zero_graph=zero_graph, fp_sid=fp['sid'], fp_sig='d' * 32,
+                           fp_cjunc_registry=fp['registry'], fp_cjunc_rows=fp['plan_rows'])
 
 
 def state_manifest(kind, n_inst=3):
@@ -647,7 +659,7 @@ def state_manifest(kind, n_inst=3):
     counts = {'n_instances': n_inst, 'n_edge': 0, 'n_contract': (n_inst if short else 0), 'n_cut_p1': 0, 'n_unrealized': 0,
               'n_none_inf': (0 if short else n_inst), 'n_long': 0, 'n_sdcp_near': 0, 'n_contracted_by_c': 0, 'n_ptfe_cov': 0,
               'len_mult_sum_edge': 0.0, 'len_mult_max': 1.0}
-    fp = {'registry': 'r' * 32, 'sid': 's' * 32, 'plan_rows': 'p' * 32}
+    fp = dict(CJ_FP)                                          # ★ 10-21 (PRE-impl-07 병합) — 증서 결합 칸과 같은 지문
     solve = {'solved': False, 'reason': reason, 'short': short, 'n_contracted': counts['n_contract'], 'n_junction_edges': 0}
     rc = {'electronic_main': {'status': 'failed', 'why': reason, 'n_instances': n_inst, 'n_junction_edges': 0, 'solved': False,
                               'fp_registry': fp['registry']},
@@ -662,7 +674,7 @@ def state_manifest(kind, n_inst=3):
     m['backend_last_solve'] = {}
     m['physics_protocol_id'] = RC.physics_protocol_id(m)
     s3 = {'sigma_e_eff_S_cm': (None if short else 0.0), 'reason': reason, 'vox_um': m.get('vox_um'), 'manifest': m,
-          'conv_cert': _early_cert(reason)}
+          'conv_cert': _early_cert(reason, fp=fp)}
     return s3
 
 
@@ -711,6 +723,10 @@ def t_states():
         '증서 없음': lambda x: x.pop('conv_cert'),
         '증서 상태 NOT_CERTIFIABLE': lambda x: x.update(conv_cert=_early_cert('degenerate_thin_bed')),
         '증서 상태 모름': lambda x: x['conv_cert'].update(status='MYSTERY'),
+        #  ★ 10-21 (PRE-impl-07 병합 · B 결합) — 영값 증서 ↔ 그 런: 다른 침대 격자 · 결합 판 없음 · 접합 지문 다름
+        '증서 격자 지문 ≠ 매니페스트 sid (다른 침대의 영값 증서)': lambda x: x['conv_cert'].update(fp_sid='e' * 32),
+        '증서 결합 판 없음 (옛 증서)': lambda x: x['conv_cert'].pop('bind_version'),
+        '증서 접합 계획 행 지문 ≠ 매니페스트': lambda x: x['conv_cert'].update(fp_cjunc_rows='e' * 32),
     }
     for nm, fn in bad_zero.items():
         st, why = ngs(zmut(fn))
@@ -728,10 +744,27 @@ def t_states():
         '전자 component complete': lambda x: M(x)['components'].update(electronic={'status': 'complete'}),
         '증서 판본 다름': lambda x: x['conv_cert'].update(version='conv-cert-v1'),
         '봉인 상수 손으로 (rtol_max)': lambda x: x['conv_cert'].update(rtol_max=1e-8),
+        #  ★ 10-21 (PRE-impl-07 병합 · B 결합을 단락 가지에도) — 단락 증서도 조기 반환 증서 (결합 칸을 싣는다 · `early_record`) — 옛 가지는
+        #    격자 지문의 hex32 꼴만 봐 다른 침대의 단락 증서를 받았다 (B 가 영값 · 양의 해에서 막은 것과 같은 부류)
+        '증서 격자 지문 ≠ 매니페스트 sid (다른 침대의 단락 증서)': lambda x: x['conv_cert'].update(fp_sid='e' * 32),
+        '증서 결합 판 없음 (옛 증서)': lambda x: x['conv_cert'].pop('bind_version'),
+        '증서 접합 원장 지문 ≠ 매니페스트': lambda x: x['conv_cert'].update(fp_cjunc_registry='e' * 32),
     }
     for nm, fn in bad_short.items():
         st, why = ngs(zmut(fn, sh))
         chk(f'S3 단락 상태 거부 [{nm}] → (None, 사유)', st is None and isinstance(why, str) and why, (st, why))
+    #  ★ 10-21 (PRE-impl-07 병합) — 이온을 계획해 푼 단락 팔: 이온 증서 (채널 ionic · 접합 지문 None) 를 결합까지 본다 (두 인자 호출 = TypeError 였다)
+    shi = deep(sh)
+    shi['manifest']['component_plan'] = dict(shi['manifest']['component_plan'], ionic=True)
+    shi['manifest']['components'] = dict(shi['manifest']['components'], ionic={'status': 'complete'})
+    shi['sigma_ion_eff_S_cm'] = 0.001
+    shi['ion_conv_cert'] = good_cert(0.001, channel='ionic')
+    try:
+        r_ok, r_bad = ngs(shi), ngs(dict(shi, ion_conv_cert=dict(good_cert(0.001, channel='ionic'), fp_sid='e' * 32)))
+    except Exception as e:                                  # noqa: BLE001 — 고치기 전 (두 인자 호출) 도 시험 단위로
+        r_ok = r_bad = (None, f'{type(e).__name__}: {e}')
+    chk('S3i 단락 팔 + 이온 계획 — 이온 증서 정상 = short · 이온 증서 격자 지문 ≠ 매니페스트 = 거부 (채널 ionic 결합)',
+        r_ok == ('short', None) and r_bad[0] is None and 'CERT|bind|' in str(r_bad[1]), (r_ok, r_bad))
     bad_pos = {'증서 실패 (ok False)': lambda x: x['conv_cert'].update(ok=False, pass_b=False),
                '증서 없음': lambda x: x.pop('conv_cert'),
                'σ ≠ 증서 σ': lambda x: x.update(sigma_e_eff_S_cm=0.06)}
