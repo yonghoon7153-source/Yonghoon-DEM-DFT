@@ -959,6 +959,10 @@ def verify_plan_commit(repo, sha, plan_path, r_doc=R_DOC_DEFAULT, *, r_plan_path
             f.write(rpb)
         try:
             robj, _rsha = _rrc.load_plan(rp)
+            #  ★ 4판 (10-21 · 1저자 Q-G 비준 · 등록 R 4판 §11 ④) — 결과 전 등록 숫자 넷 (점 수 상한 · 역상 폭 상한 · SV 반사실 문턱 · 범위) =
+            #    Codex 회신 뒤 · 단계 2 (DBE) 열람 전 → 인자 커밋의 R 런 계획에 null (⬜) 이 있으면 단계 2 를 열지 않는다 (사슬과 같은 함수 ·
+            #    옛 관문 = load_plan 꼴 검사만 · null 을 받았다)
+            _rrc.require_plan_numbers(robj)
         except _rrc.Stop as e:
             raise S0Error(f'R 런 계획 파일 {r_plan_path} — {e.code}: {e.cause}') from None
     if robj['tol_ff_um'] != plan['values_um']['tol_ff']:
