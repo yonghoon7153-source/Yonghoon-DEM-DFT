@@ -2597,6 +2597,71 @@ def t_cp_order():
                 None if (base is None or o is None) else [k for k, (x, y) in enumerate(zip(o, base)) if x != y])
 
 
+#  BR3 — 포트 규칙 ③ (같은 셀에 후보 가지 여럿 = 접점까지 그 가지 중심선 거리): B 가 머리핀으로 셀 기둥 (2,1,·) 을 두 번 지난다 —
+#  다리 2 (x 2.8 · A 에서 1.3 = 안 닿음) 를 정준 순서로 먼저 · 다리 1 (x 2.3 · A 에서 0.8 = 닿음) 을 나중에.  A–B 접촉의 B 쪽 점 (X_j) 이
+#  다리 1 위 셀 (2,1,2) · (2,1,3) 에 있으면 그 셀의 후보 = 두 다리 → ③ = X_j 를 지나는 다리 1.  ③ 을 빼면 (조각, 번호) 최소 = 안 닿는
+#  다리 2 (10-21 변이 M22 생존 → 보탬 · 시험은 구현 뒤).  B 아래 끝 z 1.5 (판에 안 닿음) · A 아래 판 · B 위 판.
+BR3_N = (7, 3, 8)
+BR3 = [[(1.5, 1.5, 0.5), (1.5, 1.5, 6.5)],
+       [(2.8, 1.5, 1.5), (2.8, 1.5, 4.0), (2.3, 1.5, 4.0), (2.3, 1.5, 2.0), (2.3, 2.5, 2.0), (5.5, 2.5, 2.0), (5.5, 2.5, 7.5)]]
+
+
+@case('BR3')
+def t_branch_tie():
+    P = rows(BR3)
+    sid, _ = bed(P, BR3_N)
+    reg = _try(lambda: registry(sid, P), None)
+    if reg is None:
+        chk('BR3 원장', False, 'registry 실패')
+        return
+    I, S, pos, segs = reg['instances'], reg['subedges'], reg['positions'], reg['segments']
+    dis = [q for q in range(len(I['fi'])) if not I['self'][q]]
+    rows_ = [e for e in range(len(S['inst'])) if int(S['inst'][e]) in dis and bool(S['realized'][e])]
+
+    def d_branch(p, X):
+        sg = np.arange(pos['s0'][p], pos['s1'][p] + 1)
+        d2, _, _ = CJ.pt_seg_d2(np.repeat(np.asarray(X, np.float64)[None], len(sg), 0), segs['P0'][sg], segs['P1'][sg])
+        return float(np.sqrt(d2.min()))
+    two = []
+    for e in rows_:
+        p = int(S['port_j'][e])
+        c = tuple(int(v) for v in pos['ijk'][p])
+        same = np.flatnonzero(np.all(pos['ijk'] == pos['ijk'][p], axis=1) & (pos['fid'] == pos['fid'][p]))
+        if len(same) > 1:
+            two.append((e, c, len(same), d_branch(p, S['X_j'][e]), min(d_branch(int(x), S['X_j'][e]) for x in same)))
+    chk('BR3 A–B 접촉 (서로 다른 섬유) 의 B 쪽 포트 중 같은 셀 두 가지 후보가 있는 간선 ≥ 1 (픽스처가 ③ 을 실제로 건드린다)',
+        len(two) >= 1, f'{two} · 간선 {len(rows_)}')
+    chk('BR3 그 간선마다 B 포트 가지 = 접점 (X_j) 을 지나는 가지 (중심선 거리 ≤ 1e-9 · 같은 셀 다른 가지의 최소와 같다)',
+        len(two) >= 1 and all(dp <= 1e-9 and dp == dm for _, _, _, dp, dm in two), f'{two}')
+
+
+#  SIDE — 분산판 v0 의 정의 쪽 = 닿음 길이가 긴 가닥 (손 해석): A (i · x 1.5 · z 3–6) 가 B (j · x 2.1 · z 0.5–7.7) 안에 든다 (거리 0.6 ·
+#  닿음 T = r_i + r_j = 1.0 → 끝 덮개 c = √(1 − 0.36) = 0.8).  A 쪽 닿음 = A 전체 3.0 · B 쪽 = [2.2, 6.8] = 4.6 → L_c 4.6 · k 3 · 정의 쪽 = B
+#  (side 1) · 등분점 X_j z = 2.2 + (j + ½)·4.6/3 = 2.9667 · 4.5 · 6.0333 · 맞은편 A 최근접 = (1.5, 1.5, clamp(z, 3, 6)) · B 포트 셀 (2,1,2) ·
+#  (2,1,4) · (2,1,6).  정의 쪽을 늘 i 로 두면 A 위 3.5 · 4.5 · 5.5 (10-21 변이 M23 생존 → 보탬 · 시험은 구현 뒤).
+SIDE_N = (5, 3, 9)
+SIDE = [[(1.5, 1.5, 3.0), (1.5, 1.5, 6.0)], [(2.1, 1.5, 0.5), (2.1, 1.5, 7.7)]]
+
+
+@case('SIDE')
+def t_side():
+    P = rows(SIDE)
+    sid, _ = bed(P, SIDE_N)
+    reg = _try(lambda: registry(sid, P), None)
+    I = (reg or {}).get('instances') or {}
+    S = (reg or {}).get('subedges') or {}
+    ok_ = reg is not None and len(I.get('fi', [])) == 1 and not bool(I['self'][0])
+    zj = [2.2 + (j + 0.5) * 4.6 / 3.0 for j in range(3)]
+    chk('SIDE 손 해석 — L_c 4.6 · k 3 · 정의 쪽 = B (side 1) · 등분점 X_j = (2.1, 1.5, 2.9667 · 4.5 · 6.0333) · 맞은편 X_i = (1.5, 1.5, 3 · 4.5 · 6) '
+        '(1e-9) · B 포트 셀 (2,1,2) · (2,1,4) · (2,1,6)',
+        ok_ and abs(float(I['Lc'][0]) - 4.6) < 1e-9 and int(I['nsub'][0]) == 3 and len(S['inst']) == 3
+        and all(int(x) == 1 for x in S['side'])
+        and np.allclose(np.asarray(S['X_j']), [[2.1, 1.5, z] for z in zj], rtol=0, atol=1e-9)
+        and np.allclose(np.asarray(S['X_i']), [[1.5, 1.5, min(max(z, 3.0), 6.0)] for z in zj], rtol=0, atol=1e-9)
+        and [c[1] for c in _sub_cells(reg)] == [(2, 1, 2), (2, 1, 4), (2, 1, 6)],
+        f"{None if not ok_ else (float(I['Lc'][0]), int(I['nsub'][0]), list(S['side']), np.asarray(S['X_j']).round(6).tolist(), _sub_cells(reg))}")
+
+
 @case('OFF-IND')
 def t_off_independent():
     """보장 — 접합 끔 (cjunc=None) 솔브는 carbon_junction 을 부르지도 읽지도 않는다 (구조 증거 · C0 의 옛 기준 비트 대조와 별개):
