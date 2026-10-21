@@ -248,14 +248,14 @@
 ### 1-6. 비준 커밋 절차 (메인 · 권고)
 
 1. 두 diff 의 `⬜(날짜)` → 비준 날짜 · §9-9 · §9-4 의 *대화 원문 ⬜* → 1저자 원문.
-2. (Q3 = (가) 이면) 영수증 도구 `S0b` 기대 변경 = **따로 먼저** (시험 먼저 꼴 — 비준 사본에서 실패 재현 → 기대를 상태별로 → 지금 문서 122/122 · 비준 사본 122/122).
+2. (Q3 = (가) 이면) 영수증 도구 `S0b` 기대 변경 = **따로 먼저** (시험 먼저 꼴 — 비준 사본에서 실패 재현 → 기대를 상태별로 → 지금 문서 122/122 · 비준 사본 122/122).  ⚠ 정정 10-21 (메인 · 수정 커밋 `fe23f2b83`): 수정이 새 검사 S11g 하나를 더해 실제 = **지금 문서 123/123 · 비준 사본 123/123** (고치기 전 비준 사본 121/122 · 증거 `docs/reviews/lhs214_relaunch_s0b_evidence_20261021/`).
 3. `git apply` 두 diff → 아래 넷 → 커밋 → push → 그 SHA = B7 승인 핀 후보 (§3 · Q4).
 
 ```bash
 python3 -c "import sys; sys.path.insert(0, 'scripts'); import run_network_194_parallel as N; print(N.code_fp(N.code_hashes()))"     # 2149f8738bb2…c3eb
 python3 -c "import sys; sys.path.insert(0, 'scripts'); import supp20_input_receipt as S; v, p = S.registration_values(); print(v['code_fp'], v['code_fp_pending'], p)"   # 2149f873… None []
 python3 scripts/supp20_input_receipt.py | tail -1               # rc 0 — 대조 11 칸 · 다름 0
-python3 scripts/supp20_input_receipt.py --selftest | tail -1    # Q3 처리 뒤 122/122 PASS
+python3 scripts/supp20_input_receipt.py --selftest | tail -1    # Q3 처리 뒤 123/123 PASS (정정 10-21 — S11g 하나 더함 · 옛 기대 122/122)
 ```
 
 ## 2. ② 재결합 표 (발사 핀에 묶을 지문 — 등록 값 ↔ 계산 트리)
@@ -360,7 +360,7 @@ cd ~ && tar czf "lhs_preflight_${S}_${T}.tgz" "$(basename "$LOGD")" && sha256sum
 |---|---|---|
 | 0 | 핀 일치 · dirty 0 · 이미 있는 이름 없음 | — |
 | 1 | 보통 = 격리 (같은 numpy · scipy · networkx 판 · 같은 실행 파일) | 10-14 = Python 3.12.3 · NumPy 2.5.2 · SciPy 1.18.1 · networkx 3.7 (194 §9-7) · 격리 자식이 scipy 를 못 찾으면 세대 탐침이 실패 → 사전 점검 P3 · P8 실패 (Codex 10-20 §3-3) |
-| 2 | 다섯 rc 0 · 수 = 화면 그대로 — fast16 16/16 · real4 4/4 · 실행기 139/139 (마지막 기록 = 10-15 LHS214 수정 요청서 `docs/reviews/codex_lhs214_fix_review_request_20261015.md` §2 · 실행기 · 스모크 도구는 10-14 핀 뒤 무변경 · 봉인 4 파일은 그 뒤에도 바뀜 → 이 핀 첫 실측) · reread 전부 통과 (`check_all.sh` 상주) · 영수증 122/122 (**Q3 처리 뒤** — 처리 없이 비준만이면 121/122 · `S0b`) · dirty 0 | §1-3 · 부록 A-13 |
+| 2 | 다섯 rc 0 · 수 = 화면 그대로 — fast16 16/16 · real4 4/4 · 실행기 139/139 (마지막 기록 = 10-15 LHS214 수정 요청서 `docs/reviews/codex_lhs214_fix_review_request_20261015.md` §2 · 실행기 · 스모크 도구는 10-14 핀 뒤 무변경 · 봉인 4 파일은 그 뒤에도 바뀜 → 이 핀 첫 실측) · reread 전부 통과 (`check_all.sh` 상주) · 영수증 123/123 (**Q3 처리 뒤** — 정정 10-21: 수정이 S11g 하나를 더함 · 옛 기대 122/122 · 처리 없이 비준만이면 121/122 · `S0b`) · dirty 0 | §1-3 · 부록 A-13 |
 | 3 | dry-run rc 0 · 화면: 코드 줄 `dirty=False · 봉인 지문 code_fp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb (CODE_FILES 32)` · 기대 망 세대 `'g2'` · 계약 문제 0 · 모드 `['hertz', 'physics', 'hertz_h12']` · 전이 의존 닫힘 30 모듈 ⊆ 32 ✓ · 지연 import 92 · 분류 밖 0 ✓ · fork 0 줄 ✓ · `INPUT_DIGEST_JSON` = 아래 줄 그대로 · 원자료 · 메시 문제 0 건 · ⛔ 없음 / verify rc 0 · 11 칸 (P0–P10) · 다름 0 | §2 #1–#8 |
 | 4 | dry-run rc 0 · 영수증 도구 rc 0 · 24 칸 (R0 · A1–A2 · B1–B3 · C1–C4 · D1 · P0–P10 · E1 · E2) · 다름 0 | §2 #9–#12 · 10-14 = 24 칸 (보충 §9-1) |
 | 5 | 194 줄 둘 = §5 손 대조 표의 등록 값 | §2 #1 · #8 |
