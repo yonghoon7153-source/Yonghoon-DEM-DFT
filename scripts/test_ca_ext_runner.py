@@ -452,6 +452,10 @@ REFUSE = [
     #  ★ Z3 (10-20) — '접합 + face_alpha (조합 미정의)' 거부는 뺐다 (설계 조합 규칙 · 양성 = N10)
     ('접합 + P1 + centerline (P1 = face_alpha 에서만)', dict(CJ_ENV, CJUNC_PTFE_JLAW='P1', PTFE_STAMP='centerline'),
      'RUNNER_CA_EXT|REQUEST|'),
+    #  ★ 10-21 (D · 사전 리뷰 PRE-impl-03 ① · 코디네이터 Q-C) — centerline + 접합 = 발사 전 거부 (P0 도 · Rayleigh)
+    ('접합 + centerline (P0 · Rayleigh)', dict(CJ_ENV, PTFE_STAMP='centerline'), 'RUNNER_CA_EXT|PTFE_CENTERLINE|'),
+    ('접합 + P1 + centerline (코드 PTFE_CENTERLINE)', dict(CJ_ENV, CJUNC_PTFE_JLAW='P1', PTFE_STAMP='centerline'),
+     'RUNNER_CA_EXT|PTFE_CENTERLINE|'),
     ('face_alpha + LEAN 미지정', {'PTFE_STAMP': 'face_alpha', 'LEAN': None}, 'RUNNER_CA_EXT|LEAN|'),
     ('face_alpha + LEAN 1', {'PTFE_STAMP': 'face_alpha', 'LEAN': '1'}, 'RUNNER_CA_EXT|LEAN|'),
     ('face_alpha + LEAN 4', {'PTFE_STAMP': 'face_alpha', 'LEAN': '4'}, 'RUNNER_CA_EXT|LEAN|'),
@@ -490,6 +494,7 @@ MIRROR = [
     ('접합 + σ_VGCF 0', B6.OFF + B6.LEAN2 + B6.CJ + ['--sigma-vgcf', '0'], 'S2_CJUNC_REFUSED|VGCF_INSULATING|'),
     ('접합 + P1 + centerline', ['--ptfe-stamp', 'centerline'] + B6.LEAN2 + B6.cj_with(ptfe_jlaw='P1'),
      'S2_CJUNC_REFUSED|P1_NEEDS_FACE_ALPHA|'),
+    ('접합 + centerline (P0 · Rayleigh · Q-C)', ['--ptfe-stamp', 'centerline'] + B6.LEAN2 + B6.CJ, 'S2_CJUNC_REFUSED|PTFE_CENTERLINE|'),
     ('face_alpha + LEAN 1', ['--ptfe-stamp', 'face_alpha'] + _L1, 'S1_FACE_ALPHA_REFUSED|COLLECTOR|'),
     ('face_alpha + LEAN 4', ['--ptfe-stamp', 'face_alpha'] + _L4, 'S1_FACE_ALPHA_REFUSED|FIELD|'),
     ('face_alpha + σ_PTFE', ['--ptfe-stamp', 'face_alpha', '--sigma-ptfe', '1e-16'] + B6.LEAN2, 'S1_FACE_ALPHA_REFUSED|SIGMA_PTFE|'),

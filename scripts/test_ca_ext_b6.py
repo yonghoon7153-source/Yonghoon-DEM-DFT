@@ -454,6 +454,10 @@ def t_payload():
             #  ★ Z3 (10-20) — 'FACE_ALPHA_COMBO (face_alpha + 접합)' 거부는 뺐다 (설계 조합 규칙 · 양성 = 아래 P15c)
             'P1_NEEDS_FACE_ALPHA': (OFF + LEAN2 + cj_with(ptfe_jlaw='P1'), 'P1_NEEDS_FACE_ALPHA'),
             'P1_NEEDS_FACE_ALPHA (centerline)': (['--ptfe-stamp', 'centerline'] + LEAN2 + cj_with(ptfe_jlaw='P1'), 'P1_NEEDS_FACE_ALPHA'),
+            #  ★ 10-21 (D · 사전 리뷰 PRE-impl-03 ① · 코디네이터 Q-C) — centerline + 접합 = 거부 (P0 도 · 덮인 접점 셀의 포트 옮김이
+            #    Rayleigh 를 깬다 · 접합 모듈 쪽 거부 = A · 입구 거부 = 여기 · 러너 = test_ca_ext_runner N6 · MIRROR)
+            'PTFE_CENTERLINE (P0)': (['--ptfe-stamp', 'centerline'] + LEAN2 + CJ, 'PTFE_CENTERLINE'),
+            'PTFE_CENTERLINE (P1)': (['--ptfe-stamp', 'centerline'] + LEAN2 + cj_with(ptfe_jlaw='P1'), 'PTFE_CENTERLINE'),
             'PERIODIC': (OFF + LEAN2 + CJ + ['--periodic'], 'PERIODIC'),
             'JOULE': (OFF + LEAN2 + CJ + ['--joule-heat'], 'JOULE'),
             'STEP4_GRID': (OFF + LEAN2 + CJ + ['--save-step4-grid', 'g.npz'], 'STEP4_GRID'),
@@ -802,8 +806,15 @@ def t_states():
     chk('S7g CLI 회계 — --step3-cjunc-sv-cf = solve (σ_e 해를 바꾸지 않는 추가 솔브 · 규약 id 밖)',
         RC.CLI_ACCOUNTING.get('--step3-cjunc-sv-cf') == ('solve', None), RC.CLI_ACCOUNTING.get('--step3-cjunc-sv-cf'))
     #  ── 반사실 기록 (증거) — 투영 꼴 (JSON 유한 · inf 비 = null + 표지 'inf') · 검증기 ──
-    proj = getattr(CW, 'sv_cf_record', None)
-    chk('S8a ca_ext_cjunc.sv_cf_record (증거 투영) 가 있다', callable(proj))
+    #  ★ 10-21 (코디네이터 — 접합 파일 = A 소관 · PRE-impl-04 Q-D) — 투영 · 검증 = D 모듈 `ca_ext_svcf` (끊는 면의 정의에 기대지 않는다:
+    #    비 · 상태 · 표지 칸만 · kind = 'counterfactual…' 아무 정의 · 수 칸 = 이름 그대로 옮김) · 계약 자리 = run_contract.ca_ext_record_ok
+    try:
+        import ca_ext_svcf as SVCF
+    except Exception as e:                                  # noqa: BLE001 — 고치기 전 (모듈 없음) 도 시험 단위로 기록
+        SVCF = None
+        print(f'  ⚠ ca_ext_svcf 를 못 불러온다 ({type(e).__name__}: {e})')
+    proj = getattr(SVCF, 'sv_cf_record', None)
+    chk('S8a ca_ext_svcf.sv_cf_record (증거 투영 · D 모듈) 가 있다', callable(proj))
     if callable(proj):
         pc, pn = proj(_sv_raw('computed', 1.25)), proj(_sv_raw('no_through_without_sv'))
         chk('S8b 투영 — computed = 비 그대로 (유한) · 표지 없음 · no_through_without_sv = 비 null + ratio_limit "inf" · JSON 유한 (allow_nan False)',
@@ -837,8 +848,9 @@ def t_states():
         'computed 인데 비 음수': lambda x: S_(x).update(sv_counterfactual_ratio=-1.0),
         'computed 인데 비 문자열': lambda x: S_(x).update(sv_counterfactual_ratio='1.25'),
         'computed 인데 inf 표지': lambda x: S_(x).update(ratio_limit='inf'),
-        '모르는 상태': lambda x: S_(x).update(status='mystery'),
-        '종류 다름': lambda x: S_(x).update(kind='counterfactual_cut_vv'),
+        '모르는 상태인데 비가 있다': lambda x: S_(x).update(status='mystery'),
+        '종류가 반사실이 아님 (cut_vv)': lambda x: S_(x).update(kind='cut_vv'),
+        '종류 없음': lambda x: S_(x).update(kind=None),
         'requested False': lambda x: S_(x).update(requested=False),
         '문턱 없는데 SV_DEPENDENT 표지': lambda x: S_(x).update(flag='SV_DEPENDENT'),
         '모르는 표지': lambda x: S_(x).update(flag='SV_DOMINANT'),
@@ -852,6 +864,26 @@ def t_states():
     Es(x)['sv_counterfactual_request'] = {'threshold': 2.0}
     Es(x)['solve']['sv_counterfactual'] = proj(_sv_raw('computed', 3.0, threshold=2.0, flag=None))
     chk('S8f 문턱 2 · 비 3 인데 표지 없음 (문턱 판정과 기록이 갈림) → 거부', not RC.ca_ext_record_ok(x)[0])
+    #  ── 정의 무관 (PRE-impl-04 · Q-D) — 끊는 면의 정의 (A 가 바꾼다) 와 그 이름 · 수 칸이 바뀌어도 비 · 상태 · 표지만으로 받는다 ──
+    agn = {'다른 정의의 반사실 (kind counterfactual_cut_bridging_sv_faces)':
+           lambda r: r.update(kind='counterfactual_cut_bridging_sv_faces'),
+           '정의별 수 칸 이름이 바뀜 (n_sv_faces_cut 없음 · n_bridging_faces_cut 3)':
+           lambda r: (r.pop('n_sv_faces_cut'), r.update(n_bridging_faces_cut=3)),
+           '모르는 상태 · 비 없음 (사슬 = SV_UNCHECKED · 받는다)':
+           lambda r: r.update(status='no_bridging_sv_faces', sv_counterfactual_ratio=None, G_cut_code=None)}
+    for nm, fn in agn.items():
+        raw = _sv_raw('computed', 1.25)
+        fn(raw)
+        x = deep(mm)
+        Es(x)['solve']['sv_counterfactual'] = proj(raw)
+        chk(f'S8h 정의 무관 받음 [{nm}]', RC.ca_ext_record_ok(x) == (True, None), RC.ca_ext_record_ok(x))
+    raw = _sv_raw('computed', 1.25)
+    raw.pop('n_sv_faces_cut')
+    raw['n_bridging_faces_cut'] = 3
+    pj = proj(raw)
+    chk('S8i 투영 — 정의별 수 칸 (n_*) 은 이름 그대로 옮긴다 · 사슬이 읽는 칸 (비 · 상태 · 표지 · 종류) 은 그대로',
+        isinstance(pj, dict) and pj.get('n_bridging_faces_cut') == 3 and 'n_sv_faces_cut' not in pj
+        and pj.get('sv_counterfactual_ratio') == 1.25 and pj.get('status') == 'computed' and pj.get('flag') is None, pj)
     #  ── 조기 반환 해 (주 솔브 안 풀림) — 반사실 기록 없음 = 정상 · 요청만 남는다 ──
     zz = deep(z['manifest'])
     zz['ca_ext']['cjunc']['evidence']['sv_counterfactual_request'] = {'threshold': None}
