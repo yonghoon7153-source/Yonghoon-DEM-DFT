@@ -628,7 +628,7 @@ def eos_sentences(sysres) -> list[str]:
                      f"[{pct(o['eps_d3_range'][0])}, {pct(o['eps_d3_range'][1])}] 바뀌었다 (UMA 경로 위 단일점 — D3 자체 이완은 안 봤다).")
         dm = o["decomp_median_pct"]
         s.append(f"[{sysn}] 분해 (ln-부피 % · 중앙): 열 {dm['d_열']:+.1f} · 모델 {dm['d_모델']:+.1f} · 분산 {dm['d_분산']:+.1f} · "
-                 f"나머지 {dm['d_나머지']:+.1f} = 합 {dm['합']:+.1f} — 나머지는 준비 경로 · 0 K 대 실온 · 실험 기준 (1.88 · 추정) · "
+                 f"나머지 {dm['d_나머지']:+.1f} = 합 {dm['합']:+.1f} — 나머지는 준비 경로 · 0 K 대 실온 · 실험 기준 (1.88 · 열간프레스 유리 펠릿) · "
                  f"토폴로지 중 어디서 오는지 가르지 않는다 (단서).")
     br = {k: v.get("branch") for k, v in sysres.items()}
     if br.get("A") == "p1" and br.get("B") == "p1":

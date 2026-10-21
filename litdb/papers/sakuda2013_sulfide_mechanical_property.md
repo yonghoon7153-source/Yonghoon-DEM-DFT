@@ -10,6 +10,10 @@
 > PDF `48827b6a-05._Sulfide_Solid_Electrolyte_with_Favorable_Mechanical_Property_for_AllSolidState_Lithium_Battery.pdf` ·
 > digested `2026-06-26` · status ✅ (본문 5쪽 전체; SI = Supplementary Fig S1–S3은 PDF에 미첨부 — 본문 인용만 존재)
 >
+> 🔎 **원문 대조 2026-10-21** — 사용자가 PDF 를 다시 올렸다 (`1852c758-05._Sulfide_…_All-Solid-State_Lithium_Battery.pdf` · 5 pp ·
+> sha256 `cc61f8c0…68dd3182`). 본문 전체를 이 digest 와 대조했다 — **ρ = 1.88 g/cm³ 는 75Li₂S·25P₂S₅ 를 약 200 ℃ 로 열간프레스한
+> 투명 *유리* 펠릿의 밀도다 (결정 아님 · p.2 · p.5)** · digest 오기 정정 · 원문 오식 2 건 → **§13**.
+>
 > ★ **이 논문은 우리의 두 가지 토대 앵커의 원전(原典)이다:**
 > (1) "황화물 SE는 **상온 냉간가압만으로 치밀화**(room-temperature pressure sintering)" — 우리 cold-press @300 MPa +
 >     MPM 소성 void-fill 의 물리적 근거.
@@ -25,7 +29,7 @@
 
 
 > elements: Co Li O P S Zr
-> methods: dft, elastic
+> methods: elastic
 
 ---
 
@@ -39,7 +43,7 @@ pressure sintering"(Li⁺·PS₄³⁻ 이온이 입계로 확산·회전)으로 
 | 저자 | 저널/년 | DOI | 소재 (SE/CAM) | 연구유형 |
 |---|---|---|---|---|
 | **A. Sakuda, A. Hayashi, M. Tatsumisago** (Osaka Prefecture University, Dept. Applied Chemistry; 제1저자 현 AIST) | **Sci. Rep. 3, 2261 (2013)**, OPEN (CC BY-NC-ND 3.0) | 10.1038/srep02261 | **Li₂S–P₂S₅ glass SE** (xLi₂S·(100−x)P₂S₅, x=50–80; 대표 **75Li₂S·25P₂S₅** = Li₃PS₄ 조성 *유리*) + 비교용 산화물 **Li₇La₃Zr₂O₁₂ (LLZO)**; 셀 CAM = **LiCoO₂**, 음극 graphite | **실험**: 압축시험(밀도-압력) + 초음파 펄스 E + EIS(σ-압력) + 단면 SEM + ASSB 셀. 시뮬레이션 없음 |
-| 접수/게재 | 2013-03-27 접수 / 2013-07-23 게재 | | ⚠ **NOT LPSCl, NOT NMC** | |
+| 접수/수리/게재 | 2013-03-27 접수 / 2013-07-03 수리 / 2013-07-23 게재 | | ⚠ **NOT LPSCl, NOT NMC** | |
 
 ## 3. 핵심 물성 (수치) — 전부 추출
 | 물성 | 값 | 조건 (P, 소재) | stated/digitized | 비고 |
@@ -47,20 +51,20 @@ pressure sintering"(Li⁺·PS₄³⁻ 이온이 입계로 확산·회전)으로 
 | ★ 상대밀도 vs 압력 (본문 stated) | **"exceeds 90 % at over 350 MPa"** | 75Li₂S·25P₂S₅ glass, 상온 단축압축, 10 mm 몰드, 500 mg | **stated (본문)** | **유일한 stated 밀도 앵커**; "thus … remarkably high relative density … without heat treatment" |
 | ★ 상대밀도 @ 300 MPa | **≈ 85–88 % (≈87 %)** → porosity **≈ 12–15 %** | 동상 (Fig 2a 곡선 읽음) | **digitized (Fig 2a)** ⚠ **추세만** | **본문에 300 MPa 정밀값 없음**; 곡선이 ~80 %대 plateau에서 350+서 90 % 교차 |
 | 상대밀도 vs 압력 (Fig 2a 곡선 전체) | ~0 MPa near 0 → ~30 %(저압) → ~50 %(~30 MPa) → ~60–65 %(~75 MPa) → ~75 %(~150) → ~80 %(~200) → ~85–88 %(~300) → ~90 %(~350) → ~93–95 %(~450) | 동상 | **digitized** | 전형적 가압 치밀화 곡선(저압 급상승→고압 수확체감), Heckel류 |
-| 상대밀도 기준 밀도(분모) | **ρ_glass = 1.88 g/cm³** | 75Li₂S·25P₂S₅ 투명유리(~200 ℃ 열간프레스, Ref 9) | **stated** | rel.density = ρ_coldpress / ρ_glass(완전치밀 유리 근사) |
+| 상대밀도 기준 밀도(분모) | **ρ_glass = 1.88 g/cm³** | **75Li₂S·25P₂S₅ 투명 유리 펠릿** — 약 200 ℃ (Tg 근처) 열간프레스 (방법 = Fig 3b · Ref 9) | **stated (p.2 · 원문 확인 2026-10-21)** | rel.density = ρ_coldpress / ρ_hotpress (완전치밀 유리 근사). ⛔ **결정 밀도가 아니다** — Methods p.5: bulk 유리를 만들 수 없어 열간프레스 펠릿으로 대신 · "결정 밀도로 추정한 값과 거의 같다" (결정상·값 미기재) · 측정법 미기재 → §13 |
 | ★ Young's modulus (범위) | **18–25 GPa** | xLi₂S·(100−x)P₂S₅ glass, x=50–80 mol% | **stated** | Li₂S 함량↑ → E↑; **산화물(~50 GPa)과 유기폴리머 사이 "중간값"** |
 | ★ E (75Li₂S·25P₂S₅) | **24 GPa** | Li 티오포스페이트 유리(우리 LPSCl과 같은 sulfide계) | **stated (본문)** | ★ **우리 real-bulk E_SE 24 의 원전** |
-| E (50Li₂S·50P₂S₅) | **18 GPa** | sulfide glass | **stated** | cf. 50Li₂O·50P₂O₅ 산화물 = **50 GPa** (≈1/3) |
+| E (50Li₂S·50P₂S₅) | **18 GPa** | sulfide glass | **stated** (⚠ 원문 p.3 인쇄는 **'18 Pa'** — 오식 · §13-5) | cf. 50Li₂O·50P₂O₅ 산화물 = **50 GPa** (≈1/3) |
 | E (75Na₂S·25P₂S₅) | **18 GPa** | Na 티오포스페이트 유리 | **stated** | Na(큰 이온반경) < Li(24) — 큰 이온 → E↓ |
 | Young's modulus (Fig 5 점들) | **~17.5 / ~22 / ~23.5 / ~25 GPa** @ Li₂S **50 / 70 / 72 / 80 mol%** | hot-press 고밀도 펠릿, 각 Tg서 | **digitized (Fig 5)** | 4점 단조증가; 25 GPa(x=80)이 최고 |
-| E 측정법 | **초음파 펄스(ultrasonic pulse) 법** | Tg서 열간프레스한 *고밀도 펠릿*(공극영향 배제) | **stated (Methods, Ref 15 McSkimin)** | 시료 10 mm φ × 수 mm, dry Ar |
+| E 측정법 | **초음파 펄스(ultrasonic pulse) 법** | Tg서 열간프레스한 *고밀도 펠릿*(공극영향 배제) | **stated (Methods, Ref 15 McSkimin — 원문 참고문헌엔 'McSram' 으로 인쇄 · §13-5)** | 시료 10 mm φ × 수 mm, **비닐 봉투 안**에서 측정 (공기 차단 · 원문 "plastic bags") |
 | ★ 이온전도도 (75Li₂S·25P₂S₅, 냉간프레스) | **3.1 × 10⁻⁴ S/cm = 0.31 mS/cm** @ **360 MPa**, 상온 | 냉간프레스 펠릿 | **stated (본문)** | bulk(열간프레스) **3.4 × 10⁻⁴ = 0.34 mS/cm**에 근접 |
 | σ vs 압력 (Fig 4) | ~10⁻⁵서 시작 → **70 MPa서 ~10⁻⁴로 급상승** → 360 MPa서 3.1 × 10⁻⁴로 점진 | 75Li₂S·25P₂S₅, 상온 EIS | **digitized + stated** | "increases dramatically to 10⁻⁴ at 70 MPa then gradually" — σ-vs-P가 밀도-vs-P와 같은 형태 |
 | bulk σ (열간프레스, 점선) | **3.4 × 10⁻⁴ S/cm** | hot-pressed 투명 펠릿 | **stated** | Fig 4 점선 기준 |
 | LLZO(산화물) σ (냉간프레스) | "측정 어려울 만큼 낮음(GB저항 매우 큼)" | Li₇La₃Zr₂O₁₂, 상온 가압 | **stated (정성)** | 황화물과 대비 — 산화물은 1000 ℃+ 소결 필요 |
-| ASSB 셀 용량 | **133 mAh g⁻¹** | LiCoO₂(SE-코팅) / graphite / Li₂S–P₂S₅, 11 mA g⁻¹, 360 MPa 셀 | **stated** | "relatively good cycle performance"(SI Fig S3) |
+| ASSB 셀 용량 | **133 mAh g⁻¹** | LiCoO₂(SE-코팅) / graphite / Li₂S–P₂S₅, 11 mA g⁻¹, 360 MPa 셀 | **stated** | "relatively good cycle performance"(SI Fig S3) · 용량 분모 = **양극 복합체 질량(전해질 포함)** (p.4) |
 | 셀 시험 조건 | 0.13 mA cm⁻² (≈11 mA g⁻¹), 2.8–4.6 V, 상온, Ar | 셀 = 360 MPa 가압 3층 펠릿 | **stated (Methods)** | 양극=PLD로 80Li₂S·20P₂S₅ 코팅한 LiCoO₂ |
-| PSD (입자크기) | 유리 분말 **수~수십 µm** ("several to ten micrometers") | 75Li₂S·25P₂S₅ glass powder | **stated (정성)** | D10/D50/D90 수치 **없음** — 정성만 |
+| PSD (입자크기) | 유리 분말 **수 µm–10 µm** ("several to ten micrometers" · 이전 판 '수~수십 µm' 정정) | 75Li₂S·25P₂S₅ glass powder | **stated (정성)** | D10/D50/D90 수치 **없음** — 정성만 |
 | porosity / coverage / Z / Heckel P_y | **n/a** | — | — | 이 논문은 porosity·coordination·coverage·Heckel **수치 안 줌**(밀도 곡선만) |
 
 ## 4. 시뮬레이션 방법 ★
@@ -68,13 +72,16 @@ pressure sintering"(Li⁺·PS₄³⁻ 이온이 입계로 확산·회전)으로 
 - **분말 제조**: Li₂S–P₂S₅, Na₂S–P₂S₅ 유리를 **유성볼밀**(Fritsch P7, ZrO₂ 45 mL 용기 + 500개 4 mmφ ZrO₂ 볼, 510 rpm, 10 h)
   = mechanochemical milling. 75Na₂S·25P₂S₅는 Na₂S(Nagao)로 별도 제조. 전 과정 dry Ar.
 - **압밀(밀도-압력 곡선)**: 상온 **단축 냉간프레스** 또는 ~200 ℃ 열간프레스, **10 mm φ 몰드**, 75Li₂S·25P₂S₅ **500 mg**.
-  bulk(분모) 밀도 = 측정 어려워 *유리 결정 추정밀도 ≈ 열간프레스 펠릿 밀도*로 잡고, rel.density = ρ_coldpress / ρ_hotpress.
-- **E 측정**: **초음파 펄스법**(McSkimin Ref 15), Tg서 열간프레스한 **고밀도 펠릿**(공극 영향 제거) 10 mmφ × 수 mm, dry Ar.
+  bulk(분모) 밀도 = 각 조성의 **열간프레스 투명 유리 펠릿** 밀도 — "Li₂S–P₂S₅ bulk 유리는 만들기 매우 어렵고 보고된 적이 없어서" ·
+  그 값은 "결정 밀도로 추정한 값과 거의 같았다" (결정상·값 미기재) · 75Li₂S·25P₂S₅ = **1.88 g/cm³** (p.2). rel.density = ρ_coldpress / ρ_hotpress (p.5).
+  (⚠ 이전 판 "측정 어려워 *유리 결정 추정밀도*" 는 원문을 뭉갠 표현이라 2026-10-21 정정 — '결정 1.88' 오기와 같은 혼동을 부른다)
+- **E 측정**: **초음파 펄스법**(McSkimin Ref 15), Tg서 열간프레스한 **고밀도 펠릿**(공극 영향 제거) 10 mmφ × 수 mm, 비닐 봉투 안 (공기 차단).
   (Japan Fine Ceramics Center 기술지원.)
 - **σ 측정**: 임피던스 분석기(Solartron 147055BEC), 10 Hz–1 MHz, ~10 mV, dry Ar.
-- **셀**: LiCoO₂(D10, Toda Kogyo) + 80Li₂S·20P₂S₅ + graphite(Timrex SLP50). 양극 = **PLD로 80Li₂S·20P₂S₅ 박막을 LiCoO₂에 코팅**
-  (Ref 14). 무탄소 양극(80:20), 음극 90:10. 3층을 **360 MPa**로 가압한 펠릿, dry Ar 글러브박스.
-- **단면 SEM**: Ar 이온밀링(E-3500, Hitachi)으로 매끈 단면 또는 파단면; 시료는 inert로 봉인 후 노출.
+- **셀**: LiCoO₂(D-10, Toda Kogyo) + 80Li₂S·20P₂S₅ + graphite(Timrex SLP50, Timcal). LiCoO₂·graphite 둘 다 **PLD로 80Li₂S·20P₂S₅ 박막 코팅**
+  (Ref 14). **무탄소** · 양극 LiCoO₂ : SE 막 ≈ **90 : 10** · 음극 graphite : SE ≈ **90 : 10** (wt · 이전 판 '양극 80:20' 오기 정정 2026-10-21).
+  전극 10 mg + SE 80 mg 을 10 mm 폴리카보네이트 관에서 **360 MPa** 상온 가압한 3층 펠릿 · 스테인리스 봉 집전체 · dry Ar 글러브박스.
+- **단면 SEM**: JEOL JSM-6610A · Ar 이온밀링(E-3500, Hitachi — dry Ar 안에서, 공기 노출 차단)으로 매끈 단면 또는 파단면.
 - **입자 처리** ★ (우리 DEM판 "무질서 처리"에 해당하는 항목): **해당 없음(실험).** 단, *물리적 결론*이 우리 모델의
   입자 처리와 직결 — Sakuda는 입자가 가압 시 **"서로 자라나 입자크기 증가, 입계·공극 감소"**(Fig 2c→2d, Fig 3)를 SEM으로
   관찰. 이는 **rigid-sphere가 아니라 진짜 SHAPE 소성/유합(coalescence)** 임을 보여줌 → 우리 **MPM 소성 void-fill / SEM
@@ -86,7 +93,7 @@ pressure sintering"(Li⁺·PS₄³⁻ 이온이 입계로 확산·회전)으로 
 | **1** | 상온 펠릿화한 **산화물 LLZO**(a) vs **황화물 80Li₂S·20P₂S₅ glass**(b) 파단면 SEM 대비 | 둘 다 20 µm scale; LLZO는 입자 간 공극·각진 입계 뚜렷, 황화물은 상대적으로 치밀 | **산화물=가압만으로 안 치밀(소결 필요) / 황화물=가압만으로 치밀** — 우리 cold-press 가정의 시각적 근거 |
 | **2a** | ★ **75Li₂S·25P₂S₅ glass 상대밀도 vs 몰딩 압력** (핵심 앵커 그림) | x축 0–500 MPa, y축 0–100 %; ~30 %(저압)→~50 %(~30)→~65 %(~75)→~80 %(~200)→**~87 %(~300, 읽음)**→**>90 %(>350, stated)**→~95 %(~450) | ★ **우리 "87 %@300 / >90 %@350" 앵커의 원천 곡선** — 단 300값은 digitized(추세), 350+ 90 %만 stated |
 | **2b/c/d** | 75Li₂S·25P₂S₅ glass 분말 SEM: **가압 전(b)** / **74 MPa(c)** / **360 MPa(d)** 파단면 | 입자 수~수십 µm; **압력↑ → 입자크기 증가**(유합) | **가압이 입자를 *물리적으로 합친다*(SHAPE 변화)** = 우리 MPM void-fill / 강체 구 한계의 시각 증거 |
-| **3a/b** | **80Li₂S·20P₂S₅ glass, 360 MPa 냉간프레스** 매끈 단면(이온밀링) @ **25 ℃(a)** vs **200 ℃(b)** | "**입계 거의 안 보임**(grain boundaries hardly visible), 입자 유합, 공극 매우 적음"; inset = 펠릿 사진(투명) | **상온 가압만으로 입계가 사라질 만큼 치밀** — "room-temperature pressure sintering" 직접 증거; 200 ℃(≈Tg)는 더 치밀(투명) |
+| **3a/b** | **80Li₂S·20P₂S₅ glass, 360 MPa 가압** 매끈 단면(이온밀링) @ **25 ℃(a, 냉간)** vs **200 ℃(b, 열간 · Tg 근처)** | "**입계 거의 안 보임**(grain boundaries hardly visible), 입자 유합, 공극 매우 적음"; inset = 펠릿 사진 — (a) 불투명 노란 원판 · (b) 갈색 반투명 원판 (crop figure-read 2026-10-21 · 본문 "transparent") | **상온 가압만으로 입계가 사라질 만큼 치밀** — "room-temperature pressure sintering" 직접 증거; 200 ℃(≈Tg)는 더 치밀(투명). ⚠ p.2 의 1.88 문장 "see Fig. 3b" 는 이 (b) — **열간프레스 방법의 예시**이고 조성이 80:20 이라 1.88 펠릿 자체가 아니다 |
 | **4** | ★ **75Li₂S·25P₂S₅ σ vs 몰딩 압력** | ~10⁻⁵서 시작 → **70 MPa서 ~10⁻⁴로 급상승** → 360 MPa서 **3.1 × 10⁻⁴**; 점선 = 열간프레스 bulk **3.4 × 10⁻⁴** | ★ **σ-vs-P가 밀도-vs-P와 같은 무릎 형태**(저압 급상승→고압 포화) = 우리 Heckel knee / Bazzoun σ-포화@400 / Doux 접촉포화@~25 MPa 와 같은 계열 |
 | **5** | ★ **Li₂S–P₂S₅ glass Young's modulus vs Li₂S 함량** | x축 30–100 mol% Li₂S, y축 0–30 GPa; **4점 ~17.5/~22/~23.5/~25 GPa @ x=50/70/72/80**; 본문: 50→18, 75→**24**, Na 75→18 | ★ **우리 real-bulk E_SE 24 의 원천** + "Li₂S↑→E↑" 추세 + 산화물(50) 대비 ~½ |
 | **6a** | 복합 양극 모식: SE-코팅 전극입자 | 회색=전극입자, 노랑=SE 코팅; 부피변화 시 SE가 *버퍼*로 균열억제 | 우리 CBD/계면 morphology 개념(SE가 AM을 감싸 응력완화) |
@@ -94,7 +101,7 @@ pressure sintering"(Li⁺·PS₄³⁻ 이온이 입계로 확산·회전)으로 
 | **6c** | 셀 충방전 곡선(LiCoO₂/graphite/Li₂S–P₂S₅, 11 mA g⁻¹) | **133 mAh g⁻¹**, 1–5 V 영역 | 황화물 SE 셀이 상온 가압 제작만으로 동작 — 우리 소재계 동작성 |
 
 ## 6. Post-processing ★
-- **무엇**: (1) **상대밀도** = ρ_coldpress / ρ_glass(완전치밀 근사, ρ_glass=1.88 g/cm³) vs 압력 — *Heckel·porosity convention*의
+- **무엇**: (1) **상대밀도** = ρ_coldpress / ρ_glass(완전치밀 근사 = 열간프레스 투명 유리 펠릿 1.88 g/cm³ · 결정 아님) vs 압력 — *Heckel·porosity convention*의
   실험판(공극 = 1 − rel.density). (2) **초음파 펄스 E** (McSkimin). (3) **EIS σ** (Nyquist → bulk σ). (4) **Raman**(SI S1: 가압
   전후 국소환경 거의 불변) + **XRD**(SI S2: 가압 후 비정질 유지 = 저온 소결, Tg보다 훨씬 낮은 온도서 치밀화). (5) **단면 SEM**(이온밀링).
 - **도구**: Fritsch P7 볼밀, Solartron 147055BEC, 초음파 장비(JFCC), Hitachi E-3500 이온밀, PLD(양극 코팅).
@@ -121,7 +128,7 @@ pressure sintering"(Li⁺·PS₄³⁻ 이온이 입계로 확산·회전)으로 
 ## 8. 기술 미니용어집
 - **Room-temperature pressure sintering(상온 가압소결)**: 가열 없이 가압만으로 입자가 유합·치밀화하는 현상(이 논문 명명). 이온
   확산/회전이 입계서 일어나 입계·공극 감소. = 우리 cold-press @300 MPa 의 물리 명칭.
-- **Relative density(상대밀도)**: ρ_실측 / ρ_완전치밀. = 1 − porosity. 이 논문은 ρ_glass=1.88로 정규화.
+- **Relative density(상대밀도)**: ρ_실측 / ρ_완전치밀. = 1 − porosity. 이 논문은 열간프레스 유리 펠릿 ρ_glass=1.88 로 정규화 (결정 밀도 아님 · §13).
 - **초음파 펄스법(ultrasonic pulse method)**: 종/횡파 음속 → 탄성계수. 공극이 음속을 왜곡하므로 **고밀도(열간프레스) 시료**서 측정.
 - **Small-scale plasticity(소규모 소성)**: 약한 결합·공유성 덕에 응력 하에 이온이 국소적으로 재배열 → 황화물의 "무름". = 우리
   σ_y 0.05–0.30 GPa(soft sulfide) / E_eff 연화의 물리 근원.
@@ -193,6 +200,62 @@ pressure sintering"(Li⁺·PS₄³⁻ 이온이 입계로 확산·회전)으로 
 - ⚠ **porosity·coordination·coverage·tortuosity·Heckel-fit 수치 없음** — 우리가 가져올 직접 수치는 밀도-vs-P 곡선 + E + σ 뿐.
 - ⚠ **2013년 초기 황화물 논문** — PSD(D10/50/90) 수치 없음(정성 "수~수십 µm"), SI(S1–S3) PDF 미첨부(본문 인용만).
 - ⚠ **시뮬레이션 없음** — frame[4] **외부 실험/물리 앵커**로만(우리 Kirchhoff/Holm·삼중항·MPM 변형장 우위 유지).
+- ⚠ **ρ_glass 1.88 은 열간프레스 *유리 펠릿* 밀도** — "결정 Li₃PS₄ 밀도" 로 인용 금지 (§13).
+
+## 13. 🔎 원문 대조 (2026-10-21 · 사용자 PDF) — ρ = 1.88 g/cm³ 의 정체 + digest 정정
+**왜**: li2s 소셀 유리 트랙(외부 1저자 회신 CX Q-CX-3d ②)이 밀도 이탈 기준 *"결정 Li₃PS₄ 1.88 g/cm³"* 의 상 이름·출처를 요구했다.
+저장소에서 이 값이 stated 로 있는 곳은 이 digest §3 하나였고, 10-19 에 *"유리 밀도를 결정으로 잘못 적은 것 — 추정"* 으로 적어 뒀다
+(`db/properties/lpscl_glass_control_li3ps4_runlog_2026_10_05.json` `✅_밀도_기준_1.88_상과_출처_2026_10_19`). 이번에 원문으로 확인했다.
+
+- **PDF**: `1852c758-05._Sulfide_Solid_Electrolyte_with_Favorable_Mechanical_Property_for_All-Solid-State_Lithium_Battery.pdf`
+  (5 pp · sha256 `cc61f8c0a3693f52266810b7f5351e66f15bc75a6950dae4be5faffa68dd3182` · repo 에 안 넣음 — `litdb/inbox/` .gitignore 관례).
+  처음 digest 때의 파일은 `48827b6a-05._…AllSolidState…pdf` — 같은 논문 (제목·5 pp).
+- **대조 범위**: 본문 텍스트 전체 (pdftotext) + `figures/<slug>/fig_3.png` (Fig 3 과 같은 쪽 본문). **Fig 2a · Fig 5 의 digitized 값은 다시 안 읽었다.**
+
+### 13-1. 1.88 이 나오는 원문 두 곳 (verbatim)
+- **p.2 (Results · Fig 2a 단락)**: *"The total relative density was determined using 75Li₂S·25P₂S₅ transparent glass prepared by hot
+  pressing at about 200 °C (see Fig. 3b and Ref. 9); the density of the glass was 1.88 g cm⁻³."*
+- **p.5 (Methods)**: *"The bulk density of the sulfide solid electrolytes was determined from the density of the respective transparent
+  glasses prepared by hot pressing because preparing Li₂S–P₂S₅ bulk glass is quite difficult and has not been reported. The density of
+  hot press glass was almost the same as that estimated from the density of the crystal. The relative density was calculated by dividing
+  the density of the cold-pressed pellet by the density of the hot-pressed pellet."*
+
+### 13-2. 읽는 법
+| 질문 | 원문이 주는 답 | 원문에 없는 것 |
+|---|---|---|
+| 무슨 상인가 | **75Li₂S·25P₂S₅ (= Li₃PS₄ 조성) 유리** — 유성볼밀 10 h 분말을 약 200 ℃ (Tg 근처) 로 열간프레스한 **투명 펠릿** | — |
+| 결정과의 관계 | "결정 밀도로 추정한 값과 **거의 같다**" 한 줄 (p.5) | **어느 결정상인지 · 그 값** (β/γ 구분 없음) |
+| 어떻게 쟀나 | — | 밀도 측정법 (아르키메데스 · 치수 · 기체 치환 중 무엇인지) |
+| 참 bulk 유리 밀도인가 | 아니다 — bulk 유리를 못 만들어 **펠릿**으로 대신 (투명 = 공극 적음) | 남은 공극 몫 |
+| "see Fig. 3b and Ref. 9" | **열간프레스 방법**을 가리킨다 — Fig 3b 시료는 **80Li₂S·20P₂S₅** · Ref 9 = Kitaura 외, *J. Mater. Chem.*, 21, 118 (2011) (유리 전해질의 과냉각 액체 상태로 계면 형성) | — (1.88 이라는 **수는 이 논문 p.2 의 것**이다 · Ref 9 의 값이 아니다) |
+
+⇒ **"결정 Li₃PS₄ 1.88 g/cm³" 는 오기다.** 정확한 라벨: *75Li₂S·25P₂S₅ 유리 · 약 200 ℃ 열간프레스 투명 펠릿 · 1.88 g cm⁻³
+(Sakuda 외, Sci. Rep., 3, 2261 (2013), p.2)*.
+- ⚠ 남은 공극만 따지면 참 유리 밀도 ≥ 1.88 — 이 기준으로 잰 이탈의 절대 크기는 줄어드는 쪽이 아니다 (몫의 크기는 원문에 없다).
+- ⚠ 같은 조성이어도 **준비 경로가 다르다** — 실험 = 기계화학 밀링 분말의 열간프레스 / 우리 = UMA 용융–담금질. 비교는 *"같은 조성의 실험 유리"* 까지다.
+- ⚠ β/γ 결정 밀도는 이 논문에 없다 — 결정값이 필요하면 결정 구조 원전 PDF 로만 넣는다 (기억값 금지 · 10-19 runlog ⚠ 그대로).
+
+### 13-3. 우리 기록에 미친 것 (li2s 소셀 유리 · 외부 1저자 트랙)
+- B (a-Li₃PS₄) 밀도 이탈 기준 = **같은 조성의 실험 유리** → 이탈 숫자는 그대로 (B 중앙 −17.67 % · A −16.73 %), 바뀌는 것은 기준의 이름.
+- A (a-Li₄PS₄Cl) 기준 1.91347 = Li₃PS₄ **유리** 1.88 + LiCl **결정** 2.07 의 1:1 부피가법 → 상이 섞인 기준.
+- 고친 곳: runlog `✅_밀도_기준_1.88_원문_확인_2026_10_21` · 편지 DA 초안 1.88 문단 · 모델 검증 카드 '나머지' 문장 · `comparison_vs_ours.md` §I 행.
+
+### 13-4. 이 digest 의 오기 정정 (원문 대조로 걸린 것)
+| 자리 | 이전 판 | 원문 | 조치 |
+|---|---|---|---|
+| §4 압밀 · 분모 | "측정 어려워 *유리 결정 추정밀도 ≈ 열간프레스 펠릿 밀도*" | 열간프레스 투명 유리 펠릿 밀도를 bulk 로 · 그 값이 결정 추정값과 거의 같다 (p.5) | 문장 교체 |
+| §3 ρ_glass 행 | "투명유리(~200 ℃ 열간프레스, Ref 9)" | 수는 p.2 · Ref 9 는 방법 | 라벨 · 출처 쪽 명시 |
+| §4 셀 | "무탄소 양극(80:20)" | 양극 LiCoO₂ : SE 막 ≈ **90/10** (p.5) | 정정 |
+| §3 PSD | "수~수십 µm" | "several to ten micrometers" (p.2) | "수 µm–10 µm" |
+| §3·§4 E 측정 | "dry Ar" | 초음파 측정은 **plastic bags** 안 (p.5) | 정정 |
+| §5 Fig 3 | "360 MPa 냉간프레스 … 200 ℃(b)" | (b) = 200 ℃ 가압 = 열간 (캡션) | 정정 |
+| 메타 `methods:` | `dft, elastic` | 계산 없음 (실험 논문) | `elastic` (`dft` 는 머리말 "DFT webapp" 단어에서 백필된 오탐) |
+| 메타 날짜 | 접수 · 게재 | Accepted 2013-07-03 (p.1) | 보탬 |
+
+### 13-5. 원문 자체의 오식 (인용할 때 고쳐 읽는다)
+- p.3: *"the Young's modulus of 50Li₂S·50P₂S₅ sulfide glass (**18 Pa**)"* → **18 GPa** (범위 18–25 GPa · Fig 5 와 맞춤).
+- 참고문헌 15: *"**McSram**, H. J. Pulse Superposition Method for Measuring Ultrasonic Wave Velocities in Solids. J. Acoust. Soc. Am. 33, 12–16 (1961)"*
+  → 저자는 **McSkimin** (같은 제목 · 권 · 쪽).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

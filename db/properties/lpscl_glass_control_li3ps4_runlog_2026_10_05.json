@@ -811,6 +811,30 @@
     "넘길_곳": "트랙 마감 문서 (lpscl_smallcell_glass_track_closed_<날짜>.json) 의 담금질 발견 ① 에 이 기준 이름 정정과 민감도를 같이 싣는다 · 결과 편지에 알린다",
     "by": "agent · 2026-10-19"
   },
+  "✅_밀도_기준_1.88_원문_확인_2026_10_21": {
+    "왜": "10-19 항목 '확인_남은_것' (사용자 로컬 PDF 로 한 줄 확인 → 확인되면 '추정' 을 뗀다) — 사용자 10-21 PDF 업로드 · *'litdb에도 잘 적어놔'*",
+    "원문": "Sakuda · Hayashi · Tatsumisago, *Sci. Rep.*, 3, 2261 (2013) — PDF 1852c758-05._Sulfide_Solid_Electrolyte_with_Favorable_Mechanical_Property_for_All-Solid-State_Lithium_Battery.pdf · 5 pp · sha256 cc61f8c0a3693f52266810b7f5351e66f15bc75a6950dae4be5faffa68dd3182 (repo 에 안 넣음 — litdb/inbox .gitignore 관례)",
+    "p2_Results": "\"The total relative density was determined using 75Li2S·25P2S5 transparent glass prepared by hot pressing at about 200 °C (see Fig. 3b and Ref. 9); the density of the glass was 1.88 g cm−3.\"",
+    "p5_Methods": "\"The bulk density of the sulfide solid electrolytes was determined from the density of the respective transparent glasses prepared by hot pressing because preparing Li2S–P2S5 bulk glass is quite difficult and has not been reported. The density of hot press glass was almost the same as that estimated from the density of the crystal. The relative density was calculated by dividing the density of the cold-pressed pellet by the density of the hot-pressed pellet.\"",
+    "판정": "확인 — 1.88 g/cm³ 는 75Li₂S·25P₂S₅ (= Li₃PS₄ 조성) 유리를 약 200 ℃ (Tg 근처) 로 열간프레스한 투명 펠릿의 밀도다 · 결정상 값이 아니다 ⇒ 10-19 판단의 '추정' 을 뗀다 · 우리 기록의 '결정 Li₃PS₄ 1.88' 은 오기 (B 기준 = 같은 조성의 실험 유리 · A 기준 = 유리 Li₃PS₄ + 결정 LiCl 부피가법)",
+    "원문이_더_주는_단서": [
+      "결정과의 관계 — 저자들은 열간프레스 유리 밀도가 '결정 밀도로 추정한 값과 거의 같다' 고만 쓴다 · 어느 결정상인지 · 그 값은 없다 ⇒ 회신 CX 의 β/γ 질문에 이 논문은 답하지 않는다 (기준 자체가 결정이 아니라 질문이 비켜 간다)",
+      "펠릿이다 — bulk 유리를 못 만들어 열간프레스 펠릿 (투명 = 공극 적음) 으로 대신했다 · 남은 공극만 따지면 참 유리 밀도 ≥ 1.88 ⇒ 이탈의 절대 크기는 줄어드는 쪽이 아니다 (몫의 크기는 원문에 없다)",
+      "밀도 측정법 (아르키메데스 · 치수 · 기체 치환) 은 원문에 없다",
+      "준비 경로가 다르다 — 실험 = 유성볼밀 10 h 기계화학 분말의 열간프레스 · 우리 = UMA 용융–담금질 10¹² K/s (모델 검증 카드 '나머지' 단서에 이미 있다)",
+      "'see Fig. 3b and Ref. 9' 는 열간프레스 방법을 가리킨다 — Fig. 3b 시료는 80Li₂S·20P₂S₅ · Ref. 9 = Kitaura 외, J. Mater. Chem., 21, 118 (2011) · 1.88 이라는 수 자체는 이 논문 p.2 의 것이다"
+    ],
+    "숫자": "바뀌지 않는다 — A −16.73 · B −17.67 % · 10-19 민감도 표 (ρ_L 1.82–1.94) 그대로",
+    "고친_곳": [
+      "litdb/papers/sakuda2013_sulfide_mechanical_property.md (§3 ρ 행 · §4 분모 문장 · §13 원문 대조 신설 · digest 오기 정정)",
+      "litdb/comparison_vs_ours.md (§I 출처 재귀속 행 · [Sakuda] 참조키)",
+      "kb/projects/li2s_glass_bmeas_650k_letter_DA_send_2026_10_19.md · kb/reviews/li2s1a_DA_prompt_li2s_glass_bmeas_650k_readout_2026_10_19.md (1.88 문단 — '추정 · 원문 PDF 로 확인 중' 을 확인 문장으로 · 미발송 초안)",
+      "db/properties/lpscl_smallcell_glass_model_check_estimand_2026_10_19.json '나머지_늘_싣는다' + tools/ionic/glass_model_check.py 출력 문장 — '실험 기준 (1.88 · 추정)' → '(1.88 · 열간프레스 유리 펠릿)' (결과 전 · 문턱 · 설계 불변)"
+    ],
+    "안_고친_곳": "봉인·발송된 기록 (편지 CX 발송판 · 대조 계 마감 lpscl_smallcell_glass_control_li3ps4_closed_2026_10_19.json · 09-12/09-14 g2 기록 · 판독 체크리스트) 의 '결정 Li₃PS₄ 1.88' 은 그대로 둔다 — 정정은 이 항목과 트랙 마감 문서 (담금질 발견 ①) 로 넘긴다",
+    "⚠": "β · γ 결정 Li₃PS₄ 밀도는 여전히 저장소 원전 없음 — 10-19 '⚠' 그대로 (기억값 안 씀)",
+    "by": "agent · 2026-10-21 · 사용자 PDF"
+  },
   "✅_A_T50_다섯_시드_2026_10_19": {
     "왜": "회신 CX Q-CX-3d ① (개정 CX §6 ①) — '+24 K' 가 A 한 시드 대 B 다섯 시드 위에 서 있었다",
     "도구": "tools/ionic/quench_t50_scan.py (커밋 677eaca1 · B 기록과 같은 정의 · 저장 간격 가드) · 대조 잡: gabia B 다섯 재현 (control_B.json) · kgy A seed1 09-21 표 21 창 재현 (다른 창 0 · 383.824 K)",
