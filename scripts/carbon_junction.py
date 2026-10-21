@@ -44,9 +44,10 @@ v3 §5 J2a–J12 · v3.1 (겹치면 뒤가 이긴다) · 1저자 10-20 N1–N18 
   ★★ 포트 = 방향 무관 기하 정준 규칙 (`CJUNC_PORT_RULE` · 10-21 Codex RCA-04 · 1저자 Q2 (가)): 접점까지 후보 셀 중심 거리 (r_port 안) →
     ε 띠 (거리² 1e-9 µm²) 안 동률 = 셀 정수 좌표 사전식 최소 → 같은 셀의 여러 가지 = 접점까지 그 가지 중심선 거리 (ε 띠) → 그래도 같으면
     정준 (조각, 번호).  경로 열 번호 (옛 '정준 방향 경로 번호가 작은 위치') 를 쓰지 않는다 — 먼 끝이 바뀌어 정준 방향이 뒤집혀도 같다.
-  ★★ 경로 순서 = 기하 정준 (`CJUNC_ORDER_RULE` · fid 라벨 무관): 경로마다 정준 방향 (역순 점열이 사전식으로 작으면 뒤집음) 점열의 사전식
-    순 · 조각 = 그 방향 순서 · 주 위치 · 동률 · instance 방향 · 순서 = (조각, 번호) 와 기하만 — fid 재명명 · 경로 반전에 원장 · 간선 원장 ·
-    σ 비트 같음 (같은 기하 · 역순 포함 = 거부).
+  ★★ 경로 순서 = 기하 정준 (`CJUNC_ORDER_RULE` · fid 라벨 무관): 경로마다 정준 방향 (역순 점열이 사전식으로 작으면 뒤집음) 의 (첫 점,
+    끝 점, 점열) 사전식 순 · 조각 = 그 방향 순서 · 주 위치 · 동률 · instance 방향 · 순서 = (조각, 번호) 와 기하만 — fid 재명명 · 경로 반전 ·
+    (끝점이 다른 경로들의) 공선 세분에 원장 · 간선 원장 · σ 비트 같음 (같은 기하 · 역순 포함 = 거부 · 두 끝점이 다 같은 두 경로 · 닫힌
+    고리는 점열이 가른다 = 세분 의존 · 남은 한계).
   instance 접점 (`CJUNC_CP_RULE`) = 최근접 선분 쌍들 중 거리² ε 띠 안 · 중점 사전식 최소 (나란한 접촉의 비유일 최근접점 = 세분 · 순서 무관).
   교차 셀의 비탄소 면 · 판 결합 · 미등록 융합 면 = 기하 최근접 멤버십 (J9 · ε 띠 1e-9 µm² · 최근접점 → 방향 → (조각, 번호)).
   ★ SV (10-21 Codex RCA-06 · 1저자 Q4 (가)): 옛 `sv_dominant` (SV 면 + SDCP 셀 소산 ≥ VV 접합 소산 = '지배' 표지) **철회** — 소산 몫은
@@ -73,7 +74,7 @@ CJUNC_PORT_RULE = 'nearest_cell_centre_within_rport_eps_band_tie_lex_ijk_branch_
 CJUNC_FOOTPRINT_RULE = 'owner_cells_within_D_plus_half_diag_v1'   # 발자국 선분 = instance run 전체 (`_footprint_segs` · B 와 같은 동작)
 CJUNC_SELF_RULE = 'nonconsecutive_face_or_revisit_branch_no_merge_v2'          # 10-21 RCA-03 (Q1 (가)) — 재방문 합치지 않음
 CJUNC_BRANCH_RULE = 'membership_cell_fid_traversal_branch_v1'                 # 위치 = (셀, fid, 그 셀을 지나는 연속 구간)
-CJUNC_ORDER_RULE = 'canonical_oriented_point_sequence_lex_v1'                 # 경로 순서 = 기하 정준 (fid 라벨 무관)
+CJUNC_ORDER_RULE = 'canonical_first_last_then_point_sequence_lex_v2'           # 경로 순서 = 기하 정준 (fid 라벨 무관 · 끝점 먼저)
 CJUNC_CP_RULE = 'nearest_pairs_eps_band_lexmin_midpoint_v1'                  # instance 접점 (나란한 접촉 비유일 최근접점)
 CJUNC_OWNER_RULE = 'nearest_centreline_eps_band_point_dir_lex_v1'
 CJUNC_EPS_D2_UM2 = 1.0e-9                  # J9 집합 규칙 ε 띠 (거리² µm²) — 봉인 (①′ ε_p 와 같은 꼴) · 자기 접합 최근접점 띠도 같은 값
@@ -258,13 +259,16 @@ def _canon_flip(Q):
 
 
 def _canonical_paths(paths, P, rej, label):
-    """경로 순서 = 기하 정준 (`CJUNC_ORDER_RULE` · 10-21 RCA-04) — 경로마다 정준 방향 점열의 사전식 순 (fid 라벨 무관 · 재명명 · 반전에
-    같은 순서).  같은 기하 (역순 포함 · 점 배열은 다름) 둘 = 거부 (정확 중복은 `_paths_of` 의 'duplicate_path' 가 이미 막는다)."""
+    """경로 순서 = 기하 정준 (`CJUNC_ORDER_RULE` · 10-21 RCA-04) — 경로마다 정준 방향의 (첫 점, 끝 점, 점열) 사전식 순 (fid 라벨 무관 ·
+    재명명 · 반전에 같은 순서 · 끝점이 먼저라 공선 세분에도 같다 — 두 경로가 같은 점에서 시작하면 옛 '점열' 키는 둘째 점이 갈라 세분에
+    뒤집혔다 · 10-21 사전 공격 리뷰 RCA04-V).  ⚠ 두 끝점이 다 같은 두 경로 · 닫힌 고리 (끝점 같음) 는 점열이 가른다 (세분 의존 · 남은
+    한계).  같은 기하 (역순 포함 · 점 배열은 다름) 둘 = 거부 (정확 중복은 `_paths_of` 의 'duplicate_path' 가 이미 막는다)."""
     keyed = []
     for f, r, kp in paths:
         Q = P[r]
         Qc = Q[::-1] if (kp and _canon_flip(Q)) else Q
-        keyed.append((tuple(map(tuple, Qc.tolist())), int(f), r, kp))
+        seq = tuple(map(tuple, Qc.tolist()))
+        keyed.append(((seq[0], seq[-1], seq), int(f), r, kp))
     keyed.sort(key=lambda t: t[0])
     dup = [[keyed[x][1], keyed[x + 1][1]] for x in range(len(keyed) - 1)
            if keyed[x][0] == keyed[x + 1][0] and P[keyed[x][2]].tobytes() != P[keyed[x + 1][2]].tobytes()]
