@@ -14,6 +14,8 @@
 묶음 (설계 §3-4 표 · §3-3 계약 · §7):
   F1–F17  R18 종료조건 8 (α=1/0 극한 · 상호성 · KCL · 회전/반사 · 주기 seam · 고정 기하 격자 조임 · origin 불변 · 투여 단조)
           + PTFE 없음 no-op · 부피 · 같은 물체 면제 · 채널 독립 · 변이 · 입구 거부 · 해석 개구율 (판별력) · 판 근처 캡슐
+  F18–F20 (★ 10-21 · Codex RCA 판정문 §4-1 · A4 · 1저자 Q11) K = 8 거짓 절단 한계 기록 + 진단 칸 · 명목 ↔ 합집합 체적 이름 분리 ·
+          같은 sid 면제 = 상 수준 융합 가정 표지 (계약 대조)
   C       계약 — 계획 무결성 (지문 · 격자 · 불변량 · 행 자격) · 동시 사용 거부 · 진단 거부 (E2) · 영수증 · 기록
   R       run_contract — p3ca id · unknown:ca_ext · ptfe_record_ok · ca_ext_record_ok · 봉인 p2 코호트 32 팔 · CLI 회계
   P       payload 끝-끝 — `--ptfe-stamp face_alpha` (세 분기 · 거부 조합 · 매니페스트 · sid = off 격자 · 채널 독립)
@@ -753,6 +755,101 @@ def _f17_check():
 @case('F17 판 근처 캡슐 — 판 결합 g = 캡슐 없는 것과 비트 같음 · 기둥 수 기록')
 def t_f17():
     _f17_check()
+
+
+# ── F18 K = 8 거짓 절단 (한계 기록 · Codex 10-21 판정문 §4-1 · 1저자 Q11) ──────────────────────────────────
+FC_RATIO = 0.65                                  # 원 반지름 / 면 한 변 (판정문 예 · 정확 α 0.0134549613712)
+
+
+def _fc_setup(ratio=FC_RATIO):
+    """면 한 변 h = r/ratio (rope 반지름 그대로 · 비만 판정문과 같게) · 면 (z = h) 중앙을 수직으로 지나는 캡슐 → (h, r, 캡슐)."""
+    r = FA.ROPE_D_UM / 2.0
+    h = r / ratio
+    cap = caps_of(line((0.5 * h, 0.5 * h, 0.9 * h), (0.5 * h, 0.5 * h, 1.1 * h), 5))
+    return h, r, cap
+
+
+def _alpha_at(cap, h, K):
+    return float(FA.face_alpha_values(cap, 2, np.array([[0, 0, 0]]), (0, 0, 0), h, K=K)[0])
+
+
+@case('F18 K = 8 거짓 절단 (한계 기록 · Codex 10-21 §4-1) — 정사각형 ∩ 중앙 원 (r/h 0.65 · 정확 α 0.01345) · K4 · K8 = 0 · '
+      'K16 0.015625 · 면적 오차 ↔ 연결성 · 단자 G 처분 분리 · 진단 칸 (α = 0 면 · 고운 구적에서 열리는 수)')
+def t_f18():
+    h, r, cap = _fc_setup()
+    exact = 1.0 - disk_rect_area(0.5 * h, 0.5 * h, r, 0.0, h, 0.0, h) / (h * h)
+    chk('F18-a 정확 열린 면적분율 = 0.0134549613712 (닫힌꼴 · 1e-12)', abs(exact - 0.0134549613712) <= 1e-12, exact)
+    a4, a8, a16, a32 = (_alpha_at(cap, h, K) for K in (4, 8, 16, 32))
+    chk('F18-b 한계 — K 4 · K 8 (봉인) 중점 구적 = 0 (열린 네 귀퉁이를 구적점이 못 본다 = 거짓 절단)', a4 == 0.0 and a8 == 0.0, (a4, a8))
+    chk('F18-c 고운 구적 — K 16 = 0.015625 (4/256) · K 32 = 0.01171875 (12/1024) · 정확값 둘레', a16 == 0.015625 and a32 == 0.01171875,
+        (a16, a32))
+    sid = _ion_slab((1, 1, 2))
+    p8 = plan_of(sid, ti(), cap, h, 'ionic')
+    p16 = plan_of(sid, ti(), cap, h, 'ionic', K=16)
+    r8 = solve(sid, ti(), h, plan=p8)
+    r16 = solve(sid, ti(), h, plan=p16)
+    want16 = 2.0 * SIG_SE * a16 / (a16 + 1.0)
+    want_ex = 2.0 * SIG_SE * exact / (exact + 1.0)
+    chk('F18-d 처분 분리 — 면적 오차 |α8 − α| ≤ 1/K² (구적 한 칸 · 작다) 인데 단자 G 는 위상이 바뀐다: K8 계획 = 유일 경로 절단 → σ 0 '
+        '(관통 성분 없음) ↔ K16 계획 σ = 2σα/(α+1) > 0 (1e-12) · 정확 α 의 σ 와 같은 자릿수',
+        abs(a8 - exact) <= 1.0 / 64.0 and r8['sigma_eff'] == 0.0 and r8.get('reason') == 'no_through_component'
+        and abs(r16['sigma_eff'] - want16) <= 1e-12 * want16 and 0.5 * want_ex < r16['sigma_eff'] < 2.0 * want_ex,
+        (a8, exact, r8['sigma_eff'], r8.get('reason'), r16['sigma_eff'], want16, want_ex))
+    fc8 = p8.get('false_cut_check') or {}
+    sm8 = FA.plan_face_summary(p8) or {}
+    chk('F18-e 진단 칸 — 계획 false_cut_check (K 8 · 고운 K 16 · α = 0 면 1 · 그중 K16 에서 열림 1) · 증거 요약 alpha_zero_faces 1 · '
+        'alpha_zero_open_at_refine 1 · alpha_refine_K 16',
+        fc8 == {'K': 8, 'K_refine': 16, 'n_alpha_zero': 1, 'n_open_at_refine': 1}
+        and sm8.get('alpha_zero_faces') == 1 and sm8.get('alpha_zero_open_at_refine') == 1 and sm8.get('alpha_refine_K') == 16,
+        (fc8, {k: sm8.get(k) for k in ('alpha_zero_faces', 'alpha_zero_open_at_refine', 'alpha_refine_K')}))
+    h2, _r2, cap2 = _fc_setup(0.8)                 # 원이 정사각형을 다 덮는다 (r > h/√2) — 참 절단
+    p82 = plan_of(sid, ti(), cap2, h2, 'ionic')
+    chk('F18-f 대조 — 참 절단 (r/h 0.8 · 정확 α 0) 은 고운 구적에서도 막힘 → 열림 수 0 (진단이 참 절단을 거짓으로 세지 않는다)',
+        _alpha_at(cap2, h2, 8) == 0.0 and _alpha_at(cap2, h2, 16) == 0.0
+        and (p82.get('false_cut_check') or {}).get('n_alpha_zero') == 1 and (p82.get('false_cut_check') or {}).get('n_open_at_refine') == 0,
+        p82.get('false_cut_check'))
+    chk('F18-g K16 계획 — α = 0 면 없음 (고운 K 32 로 볼 것도 없다 · 칸은 그대로 기록)',
+        p16.get('false_cut_check') == {'K': 16, 'K_refine': 32, 'n_alpha_zero': 0, 'n_open_at_refine': 0}, p16.get('false_cut_check'))
+
+
+@case('F19 명목 체적 ↔ 합집합 체적 (이름 분리 · Codex 10-21 A4 · F11 한정) — 기록 칸 = 명목 (Σ πr²L + 조각마다 구 하나 · 겹침 미차감) · '
+      '합집합 = 미계산 칸 · 밴드 비의 기준 = 명목')
+def t_f19():
+    rec = FA.volume_record(1.5, 1.0)
+    chk('F19-a volume_record — capsule_nominal_um3 = capsule_um3 (옛 칸 그대로) · capsule_union_um3 None · 미계산 표지 · 비의 기준 = 명목 · '
+        '체적 정의 이름', rec.get('capsule_nominal_um3') == 1.5 == rec.get('capsule_um3') and 'capsule_union_um3' in rec
+        and rec.get('capsule_union_um3') is None and rec.get('capsule_union_status') == 'not_computed_v0'
+        and rec.get('ratio_basis') == 'capsule_nominal_um3' and rec.get('capsule_volume_basis') == getattr(FA, 'VOLUME_BASIS', '?')
+        and rec.get('ratio') == 1.5 and rec.get('status') == 'in_band', rec)
+    r = FA.ROPE_D_UM / 2.0
+    L = 1.0
+    cx = caps_of(line((0.0, 0.5, 0.5), (1.0, 0.5, 0.5), 2), line((0.5, 0.0, 0.5), (0.5, 1.0, 0.5), 2))
+    nominal = 2.0 * (math.pi * r * r * L + 4.0 / 3.0 * math.pi * r ** 3)
+    union = nominal - 16.0 * r ** 3 / 3.0                 # 가운데서 직교로 겹친 두 원기둥 = Steinmetz 16r³/3 (끝 구는 겹침 밖)
+    sm = FA.capsule_summary(cx)
+    chk(f'F19-b 한계 — 교차 두 캡슐: 기록 (명목) = 2(πr²L + 4/3πr³) · 참 합집합 = 명목 − 16r³/3 ({100 * (1 - union / nominal):.1f} % 작다) → '
+        '명목 ≠ 합집합 · 요약 칸에 체적 정의 이름', abs(cx['volume_um3'] - nominal) <= 1e-15 and union < nominal
+        and sm.get('volume_basis') == getattr(FA, 'VOLUME_BASIS', '?') and sm.get('volume_um3') == cx['volume_um3'],
+        (cx['volume_um3'], nominal, union, sm.get('volume_basis')))
+
+
+@case('F20 같은 sid 면제 = 상 수준 융합 가정 (표지 · Codex 10-21 §4-1) — 같은 AM pid = 한 입자 안 · 같은 탄소 sid · SDCP|SDCP = 여러 물체를 '
+      '한 연속체로 묶는 가정 · 증거 칸 · 계약이 producer 상수와 대조')
+def t_f20():
+    ex = getattr(FA, 'EXEMPT_ASSUMPTIONS', None)
+    chk('F20-a 표지 상수 — AM 같은 pid = same_particle_interior · 탄소 같은 sid (VGCF · SuperP · SWCNT) · SDCP|SDCP = '
+        'phase_level_fusion_assumed', ex == {'am_same_pid': 'same_particle_interior', 'carbon_same_sid': 'phase_level_fusion_assumed',
+                                             'sdcp_sdcp': 'phase_level_fusion_assumed'}, ex)
+    m = fa_manifest()
+    ev = m['ca_ext']['ptfe_face']['evidence']
+    chk('F20-b 증거 칸 exempt_assumptions = 표지 상수 (evidence_record) · 정상 매니페스트 계약 통과',
+        isinstance(ex, dict) and bool(ex) and ev.get('exempt_assumptions') == ex and RC.ca_ext_record_ok(m) == (True, None),
+        (ev.get('exempt_assumptions'), RC.ca_ext_record_ok(m)))
+    for nm, fn in (('표지 빠짐', lambda e: e.pop('exempt_assumptions', None)),
+                   ('융합 가정을 같은 물체로 바꿈', lambda e: e.__setitem__('exempt_assumptions', dict(ex or {}, carbon_same_sid='same_object')))):
+        x = json.loads(json.dumps(m))
+        fn(x['ca_ext']['ptfe_face']['evidence'])
+        chk(f'F20-c ca_ext_record_ok 거부 [{nm}]', not RC.ca_ext_record_ok(x)[0], RC.ca_ext_record_ok(x))
 
 
 @case('F14 변이 — α² · α^p · (1−α) · 반 셀 어긋남 · 면제 무시 · 판에 α · 다른 채널 · 절단 미가지치기 = 실패해야')
