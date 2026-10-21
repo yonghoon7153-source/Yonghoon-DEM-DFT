@@ -642,15 +642,34 @@ def _selftest() -> int:
         'pending (대기 선언 하나 · 체크아웃 = 대기 ≠ 등록) = rc 1 · 실패 칸 정확히 {D1} · D1 상세 now = 대기 · registered = 등록 · pending = 대기 / undeclared = FAIL · '
         '범위 container · 수동 칸 셋', ok0, dict(state=state, why=why_state, bad=sorted(bad_ids(base)), D1=cdet(base, 'D1')))
     dg0 = base['recomputed']['input_digest']
-    v194, p194 = registration_values(reg_doc=REG194)
-    fp0_ok, fp0_why = s0b_fp(reg, v194, p194)
+    #  ★ 10-21 SUPR-05 (사전 공격 리뷰 PRE-LHS-03 · 1저자 10-21 [LHS] Q1 "권고대로 해줘") — S0b 의 판정 (두 등록 문서 읽기 · 문제 전달 · 판정식) 을 경로 함수 하나로
+    #    (s0b_docs).  S0b = 실물 경로 (REG_DOC · REG194) 로 한 번 · S11h = 같은 함수를 섞인 경로 쌍으로.  옛 판은 그 배선을 S0b 한 번 (정상 실물) 으로만 돌려
+    #    REG194 = 보충 문서 · 194 문제를 안 넘김 · 판정식이 fp0_ok 를 안 씀 변이가 살았다 (123/123).  두 문서의 신원 = 실행기 등록 표 (supp20 · production194 의
+    #    §2 케이스 수 · ids_sha256 — 실행기 정본 · 사본 없음) — 194 자리에 보충 문서 (또는 다른 문서) 를 읽으면 거짓.
+    ID_TBL = {nm_: NP.REGISTERED_ID_SETS.get(nm_) or {} for nm_ in (SET, 'production194')}
+
+    def s0b_docs(supp_doc=REG_DOC, doc194=REG194):
+        """(참 거짓, 상세) — S0b 판정식: §2 네 값 (반입 파일 다시 계산 dg0) · 두 문서의 신원 · s0b_fp (두 문서를 도구 registration_values 로 읽은 값 · 문제)."""
+        reg, preg = registration_values(reg_doc=supp_doc)          # 이름 reg · v194 · p194 = S0b 옛 판의 부르는 줄 그대로
+        v194, p194 = registration_values(reg_doc=doc194)
+        fp0_ok, fp0_why = s0b_fp(reg, v194, p194)
+        who_ = [f'{lb_} 자리 문서 {d_} — §2 케이스 수 {v_.get("n")} · ids {str(v_.get("ids_sha256"))[:12]}… ≠ 실행기 등록 표 {nm_}'
+                for lb_, d_, v_, nm_ in (('보충', supp_doc, reg, SET), ('194', doc194, v194, 'production194'))
+                if not (ID_TBL[nm_].get('n') is not None and v_.get('n') == ID_TBL[nm_]['n'] and v_.get('ids_sha256') == ID_TBL[nm_].get('ids_sha256'))]
+        if who_:
+            fp0_ok, fp0_why = False, f'두 등록 문서의 신원 {who_}'
+        return (dg0.get('n') == 20 and str(dg0.get('ids_sha256')).startswith('991cf115') and str(dg0.get('raw_sha256_table_sha256')).startswith('a7aaa3c8')
+                and str((dg0.get('cohort_tsv_sha256') or {}).get(COHORT)).startswith('69d3f913') and fp0_ok,
+                dict(why=fp0_why, supp=dict(doc=str(supp_doc), code_fp=reg.get('code_fp'), pending=reg.get('code_fp_pending'),
+                                           probs=[x for x in preg if str(x).startswith('등록 문서 code_fp')]),
+                     base=dict(doc=str(doc194), code_fp=v194.get('code_fp'), pending=v194.get('code_fp_pending'),
+                               probs=[x for x in p194 if str(x).startswith('등록 문서 code_fp')]), dg0=dg0))
+    ok0b, det0b = s0b_docs()
     chk(f'S0b 다시 계산 = 등록 §2 (케이스 20 · ids 991cf115… · raw a7aaa3c8… · 코호트 TSV 69d3f913… — 등록 입력 집합 · L214 개정이 바꾸지 않는 값) · '
         f'★ 10-21 봉인 지문 [상태 {state}] = 상태가 정한 지문 (registered = 등록 §3 · 대기 선언 없음 / pending = 대기 선언) = 체크아웃 code_fp 64 자리 전체 · '
         '보충 등록의 활성 §3 · 대기 선언 = 194 등록의 값 (같은 함수로 읽음) — 옛 판의 지문 앞자리 상수 대신 (비준판 121/122 · 1저자 10-21 Q1) · '
-        '값은 문서 · 반입 파일에서 (도구에 사본 없음 · 값 None 안전)',
-        dg0.get('n') == 20 and str(dg0.get('ids_sha256')).startswith('991cf115') and str(dg0.get('raw_sha256_table_sha256')).startswith('a7aaa3c8')
-        and str((dg0.get('cohort_tsv_sha256') or {}).get(COHORT)).startswith('69d3f913') and fp0_ok,
-        (fp0_why, R_reg, P_reg, {k: v194.get(k) for k in ('code_fp', 'code_fp_pending')}, dg0))
+        '★ 10-21 SUPR-05 판정 = s0b_docs (실물 경로 REG_DOC · REG194 — S11h 가 같은 함수를 섞인 경로 쌍으로) · 두 문서의 신원 = 실행기 등록 표 (supp20 · production194) · '
+        '값은 문서 · 반입 파일에서 (도구에 사본 없음 · 값 None 안전)', ok0b, det0b)
     with tempfile.TemporaryDirectory(prefix='supp20_receipt_') as td:
         td = Path(td)
         rtxt = _rp(REG_DOC).read_text(encoding='utf-8')
@@ -1202,28 +1221,60 @@ def _selftest() -> int:
         chk('S11f3 ★ (나′) ⓕ 같은 쌍둥이 · 정상 발사 manifest 둘 (S8) → rc 0 (pending 의 F5 · G5 실패 = 지문 하나뿐 · S8e · S8f 판별의 기준)', rf3['rc'] == 0,
             sorted(bad_ids(rf3)))
         #  ⓖ ★ 10-21 S0b 지문 기대 (s0b_fp) 를 실물 상태와 무관하게 — 두 등록 (보충 · 194) 을 같은 지문 토큰 변환 (reg_variant · 다른 칸은 실물) 으로 만든 사본 쌍
-        #     일곱 꼴 · 도구 registration_values 로 읽음.  참 = registered (등록 §3 = 체크아웃 · 대기 없음) · pending (대기 = 체크아웃 · 등록 = 모의 값 · 두 문서 같음) /
+        #     열두 꼴 · 도구 registration_values 로 읽음.  참 = registered (등록 §3 = 체크아웃 · 대기 없음) · pending (대기 = 체크아웃 · 등록 = 모의 값 · 두 문서 같음) /
         #     거짓 = 보충만 비준 (194 = 대기) · pending 인데 194 의 등록 §3 이 다름 · 비준 + 남은 대기 · 194 대기 값 둘 (문제 → 값 None) · 선언 없음.
         #     옛 판 (앞자리 상수) 은 registered · pending 을 거짓으로.
+        #     ★ 10-21 SUPR-04 · SUPR-05 (사전 공격 리뷰 PRE-LHS-02 · 03) 다섯 꼴 더 (거짓): 보충 대기 값 둘 · 보충 대기 = 등록 (보충 쪽 문제 → 값 None — 고치기 전 참) ·
+        #     194 에만 남은 대기 (§3 같고 대기 다름 — 교차 대조를 §3 만 보는 변이가 참) · pending 194 §3 = 모의 등록 값의 앞 12 자리 쌍둥이 (교차 대조를 앞자리로 보는
+        #     변이가 참) · registered 두 §3 = 체크아웃의 앞 12 자리 쌍둥이 (상태 판정을 앞자리로 보는 변이가 참).
         t194 = _rp(REG194).read_text(encoding='utf-8')
 
-        def fp_pair(tag, registered, pending=(), base=None):
-            """(보충 등록 값, 194 등록 값, 194 문제 목록) — base = 194 쪽만 다른 (registered, pending) 일 때."""
+        def fp_paths(tag, registered, pending=(), base=None):
+            """(보충 사본 경로, 194 사본 경로) — 두 등록 실물에 같은 지문 토큰 변환 (reg_variant) · base = 194 쪽만 다른 (registered, pending) 일 때."""
             rb_, pb_ = base if base is not None else (registered, pending)
-            return (registration_values(reg_doc=reg_variant(f's0b_{tag}', registered, pending))[0],
-                    *registration_values(reg_doc=reg_variant(f's0b194_{tag}', rb_, pb_, src=t194)))
+            return reg_variant(f's0b_{tag}', registered, pending), reg_variant(f's0b194_{tag}', rb_, pb_, src=t194)
+
+        def fp_pair(tag, registered, pending=(), base=None):
+            """(보충 등록 값, 194 등록 값, 194 문제 목록) — fp_paths 의 사본 쌍을 도구 registration_values 로 읽음 (s0b_fp 에 값으로)."""
+            ps_, p194_ = fp_paths(tag, registered, pending, base)
+            return (registration_values(reg_doc=ps_)[0], *registration_values(reg_doc=p194_))
+        TW_FP = fp_now[:12] + P_SIM[12:]          # 체크아웃 지문과 앞 12 자리만 같은 값 (상태 판정이 앞자리만 보면 registered 로 읽는다)
+        TW_R = R_SIM[:12] + P_SIM2[12:]           # 모의 등록 값과 앞 12 자리만 같은 값 (교차 대조가 앞자리만 보면 같다고 읽는다)
         g_cases = dict(registered=(fp_pair('reg', fp_now), True), pending=(fp_pair('pend', R_SIM, (fp_now,)), True),
                        supp_only_ratified=(fp_pair('mixed', fp_now, base=(R_SIM, (fp_now,))), False),
                        pending_base_differs=(fp_pair('pdiff', R_SIM, (fp_now,), base=(P_SIM2, (fp_now,))), False),
                        ratified_pending_left=(fp_pair('left', fp_now, (P_SIM,)), False),
                        base_pending_conflict=(fp_pair('bconf', fp_now, base=(fp_now, (P_SIM, P_SIM2))), False),
-                       undeclared=(fp_pair('undecl', R_SIM), False))
+                       undeclared=(fp_pair('undecl', R_SIM), False),
+                       supp_pending_conflict=(fp_pair('sconf', fp_now, (P_SIM, P_SIM2), base=(fp_now, ())), False),
+                       supp_pending_eq_registered=(fp_pair('seq', fp_now, (fp_now,), base=(fp_now, ())), False),
+                       base_pending_left=(fp_pair('bleft', fp_now, base=(fp_now, (P_SIM,))), False),
+                       pending_base_twin12=(fp_pair('ptwin', R_SIM, (fp_now,), base=(TW_R, (fp_now,))), False),
+                       registered_twin12=(fp_pair('rtwin', TW_FP), False))
         g_got = {k: s0b_fp(*pr_) for k, (pr_, _w) in g_cases.items()}
         g_bad = {k: (bool(g_got[k][0]), w_, g_got[k][1]) for k, (_pr, w_) in g_cases.items() if bool(g_got[k][0]) != w_}
-        chk('S11g ★ 10-21 S0b 지문 기대 (상수 없음) — 실물 상태와 무관한 일곱 꼴 (보충 · 194 등록 사본 쌍 · 지문 토큰만 바꿈 · 도구 registration_values 로 읽음): '
-            'registered (등록 §3 = 체크아웃 · 대기 없음) · pending (대기 = 체크아웃 · 두 등록 같음) = 참 / 보충만 비준 (194 = 대기) · pending 인데 194 등록 §3 다름 · '
-            '비준 + 남은 대기 · 194 대기 값 둘 (문제) · 선언 없음 = 거짓 (고치기 전: 옛 앞자리 상수라 registered · pending 이 거짓)',
-            len(g_cases) == 7 and not g_bad, g_bad)
+        chk('S11g ★ 10-21 S0b 지문 기대 (상수 없음) — 실물 상태와 무관한 열두 꼴 (보충 · 194 등록 사본 쌍 · 지문 토큰만 바꿈 · 도구 registration_values 로 읽음 · '
+            's0b_fp 에 값으로): registered (등록 §3 = 체크아웃 · 대기 없음) · pending (대기 = 체크아웃 · 두 등록 같음) = 참 / 보충만 비준 (194 = 대기) · pending 인데 '
+            '194 등록 §3 다름 · 비준 + 남은 대기 · 194 대기 값 둘 (문제) · 선언 없음 · ★ 10-21 보충 대기 값 둘 · 보충 대기 = 등록 (보충 쪽 문제 · SUPR-04) · 194 에만 '
+            '남은 대기 · pending 194 §3 = 앞 12 자리 쌍둥이 · registered 두 §3 = 체크아웃 앞 12 자리 쌍둥이 (SUPR-05) = 거짓 (고치기 전: 옛 앞자리 상수라 registered · '
+            'pending 이 거짓 · ★ 10-21 보충 쪽 두 꼴이 참 — SUPR-04)',
+            len(g_cases) == 12 and TW_FP != fp_now and TW_R != R_SIM and not g_bad, g_bad)
+        #  ⓗ ★ 10-21 SUPR-05 (사전 공격 리뷰 PRE-LHS-03) — S0b 를 실제 경로로: s0b_docs (S0b 가 부른 같은 함수 — 두 문서를 경로로 읽음 · 문제 전달 · 두 문서의 신원 ·
+        #     S0b 판정식) 를 섞인 경로 쌍 여섯에.  S11g 은 s0b_fp 를 값으로 불러 S0b 배선의 변이 (REG194 = 보충 문서 · 194 문제를 안 넘김 · 판정식이 fp0_ok 를 안 씀) 를
+        #     못 잡았다.  사본 = 두 등록 실물 + 같은 지문 토큰 변환 (fp_paths · 194 사본의 바탕 = REG194 가 가리키는 글) · 194 자리에 보충 실물 하나.
+        h_cases = dict(clean=(fp_paths('h_clean', fp_now), True),
+                       base_pending_conflict=(fp_paths('h_bconf', fp_now, base=(fp_now, (P_SIM, P_SIM2))), False),
+                       base_pending_left=(fp_paths('h_bleft', fp_now, base=(fp_now, (P_SIM,))), False),
+                       supp_pending_conflict=(fp_paths('h_sconf', fp_now, (P_SIM, P_SIM2), base=(fp_now, ())), False),
+                       supp_pending_eq_registered=(fp_paths('h_seq', fp_now, (fp_now,), base=(fp_now, ())), False),
+                       supp_doc_as_194=((REG_DOC, REG_DOC), False))
+        h_got = {k: s0b_docs(*pp_) for k, (pp_, _w) in h_cases.items()}
+        h_bad = {k: (bool(h_got[k][0]), w_, str(h_got[k][1].get('why'))[:160]) for k, (_pp, w_) in h_cases.items() if bool(h_got[k][0]) != w_}
+        chk('S11h ★ 10-21 S0b 실제 경로 (SUPR-05 · 사전 리뷰 PRE-LHS-03) — S0b 가 부른 같은 함수 s0b_docs (두 등록을 경로로 읽음 · 문제 전달 · 두 문서의 신원 = '
+            '실행기 등록 표 supp20 · production194 · S0b 판정식) 를 섞인 경로 쌍 여섯에: 두 등록 = 체크아웃 지문 · 대기 없음 = 참 / 194 에 상충 대기 둘 · 194 에만 남은 '
+            '대기 · 보충에 상충 대기 둘 · 보충 대기 = 등록 · 194 자리에 보충 문서 = 거짓 (고치기 전: 보충 쪽 두 꼴이 참 — SUPR-04 · REG194 = 보충 문서 · 194 문제 안 넘김 · '
+            '판정식이 fp0_ok 안 씀 변이가 여기서 실패)',
+            len(h_cases) == 6 and not h_bad, h_bad)
         #  ⑫ ★ 10-16 L214R-04 (Codex LHS214 재검증 판정문 §5 · 수정 계획 lhs214r_fix_plan_20261016 Q4 = 1저자 비준) — 파서가 **활성 §3 의 code_fp 만** 읽는다
         #    (역사 표 · 초안 표의 같은 기계 구문 `code_fp <hex>` = 읽지 않음 · 등록 문서 · 역사 표는 고치지 않는다).  반례 먼저 — 고치기 전 판은 문서 전체의 토큰을 읽어
         #    안내된 비준 단계 (§3 갱신 + 대기 선언 삭제 + 역사 표 보존) 가 R0 · D1 (registered None) 였다 (ⓕ 쌍둥이는 전역 치환이라 이 구멍을 놓쳤다).
