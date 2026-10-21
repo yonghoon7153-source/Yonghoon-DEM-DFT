@@ -15,6 +15,8 @@ docs/data/case15_corner_20261001/ (atom · contact 1,710,000 + case15_am_scaffol
   python3 scripts/test_rint_g2_join.py --s3 PATH
 
 묶음:
+  J0w 시험 작성기 이식성 (RINT2-B-01 · Codex 10-21 §6-3) — `write_copy` = LF 바이트 (newline 고정 · Windows 글자 모드 변환을 흉내 낸 open 으로
+      확인) · 그 바이트에서 만든 CRLF · CR 만 저장 꼴에 CR 겹침 없음.  생산 판독기는 그대로 (CRCRLF 수용으로 느슨하게 하지 않는다).
   J0  읽기 동등 — 우리 덤프 읽기 = lhs_descriptor_harvest.read_contact_dump · lhs_perc_extract.read_atom_dump · 반폭 = _half_ulp
   J1  real_14 통과 (G-geo 457 ↔ 457 · G-frame 같은 step · pos1/pos2 = 원자 위치 (주기 영상 포함) · δ · A · 접촉 집합)
   J2  case15 통과 (형 지도 1 = AM_P · 2 = SE)
@@ -213,6 +215,49 @@ def join_r14():
     if _JR14 is None:
         _JR14 = J.am_iface_join(R14_SCAF, R14_ATOM, R14_CONT, type_map=R14_TMAP)
     return _JR14
+
+
+# ═════════════════════════ J0w ═════════════════════════
+@case('J0w 시험 작성기 이식성 (RINT2-B-01 · Codex 10-21 판정문 §6-3) — Windows 글자 모드 줄 끝 변환을 흉내 내도 write_copy = LF 바이트 · '
+      '저장 꼴 변환 (CRLF · CR 만) 에 CR 겹침 없음')
+def t_writer_portable():
+    """Windows 의 기본 글자 모드 쓰기 (newline 미지정) = LF → CRLF 변환.  시험이 그 파일을 다시 LF → CRLF 로 바꾸면 CRCRLF 가 된다
+    (Codex Windows 원 시험 320/324 의 네 실패).  여기서는 그 변환을 흉내 내는 open 으로 작성기를 돌린다 (생산 판독기 · 저장 꼴 무관)."""
+    import builtins
+    real_open = builtins.open
+
+    class _WinText:
+        def __init__(self, fh):
+            self.fh = fh
+
+        def write(self, s):
+            return self.fh.write(s.replace('\n', '\r\n'))
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *exc):
+            self.fh.close()
+            return False
+
+    def win_open(file, mode='r', buffering=-1, encoding=None, errors=None, newline=None, closefd=True, opener=None):
+        if 'b' not in mode and any(c in mode for c in 'wax') and newline is None:
+            return _WinText(real_open(file, mode, buffering, encoding, errors, '', closefd, opener))
+        return real_open(file, mode, buffering, encoding, errors, newline, closefd, opener)
+    g = globals()
+    g['open'] = win_open
+    try:
+        p = write_copy(['ITEM: TIMESTEP', '100', 'ITEM: NUMBER OF ATOMS', '0'], 'writer_probe.liggghts')
+    finally:
+        g.pop('open', None)
+    with real_open(p, 'rb') as fh:
+        raw = fh.read()
+    chk('J0w-a write_copy = LF 바이트 (글자 모드 변환이 있는 플랫폼에서도 · newline 고정)',
+        raw == b'ITEM: TIMESTEP\n100\nITEM: NUMBER OF ATOMS\n0', raw)
+    crlf, cr = raw.replace(b'\n', b'\r\n'), raw.replace(b'\n', b'\r')
+    chk('J0w-b 시험의 저장 꼴 변환 — CRLF 꼴은 LF 마다 CR 하나 (CRCRLF 없음) · CR 만 꼴에 LF · CR 겹침 없음',
+        b'\r\r' not in crlf and crlf.count(b'\r\n') == raw.count(b'\n') and b'\n' not in cr and b'\r\r' not in cr,
+        (crlf[:40], cr[:40]))
 
 
 # ═════════════════════════ J0 ═════════════════════════
