@@ -14,7 +14,10 @@
     판정기에서 같이 부른다 (사본 없음 · `run_contract.CA_EXT_SUBBLOCKS` 등록)
 ⛔ 지위 = 기구 · 배선만 — R_j 는 모형 내부 보정값 (재료값 아님) · 정량 판정 = 등록 R 비준 · Codex GO · S0 문턱 개정 뒤.
 ★ Z3 (10-20) — face_alpha (S1) + cjunc (S2) 한 런 = 받는다 (설계 §3 · §4 조합 규칙 · 등록 R §10 꼴 · B6 통합 때의 임시 거부를 뺐다) ·
-  P1 (덮인 접합 절단) = face_alpha 에서만 · centerline + P1 · off + P1 = 거부 그대로.
+  P1 (덮인 접합 절단) = face_alpha 에서만 · off + P1 = 거부 그대로.
+★ 10-21 (사전 리뷰 PRE-impl-03 · 1저자 Q-C) — 접합 + ptfe_stamp centerline = 거부 (P0 도 · protocol 정본 · 검증기 `cjunc_block_problem` 이 같은
+  함수로 다시 만든다): centerline 은 VGCF 셀을 sid 7 로 덮어 옛 판은 덮인 접점의 포트를 옆 셀로 옮겨 절연체를 더해 σ 가 올랐다 (Rayleigh
+  위반) · 원장은 이제 덮인 접점을 옮기지 않지만 PTFE 법칙 (P0 · P1) 은 face_alpha 표현에서만 정의된다 · payload · 러너의 거부 코드 = 그 쪽 몫.
 ★ Z3 (10-20) — 극한 런 (등록 R §3-1 · 사다리 진단 · 판정 값 아님): 바닥 R_j → ∞ (`rj_limit` 'inf' · `R_j_ohm` null · 접합 간선 없음 ·
   발자국 면은 끊긴 채) · 천장 R_j → 0 (`rj_limit` 'zero' · `R_j_ohm` 0.0 · 접합 양 끝 정확한 축약 · J11 단락 = 유한 σ 로 위장 안 함) —
   protocol `quantitative` False · `allow_rj_limits` True (한 꼴 — JSON 은 inf 를 못 쓴다 → 수 칸 null + 문자열 표지 · 영수증 요청도 같은 꼴).
@@ -143,8 +146,8 @@ def rj_limit_value(R_j_ohm, rj_limit):
 
 def cjunc_protocol_record(*, R_j_ohm, len_law, unreg_law, s_min_um, tol_ff_um, ptfe_jlaw, ptfe_stamp, rj_limit=None):
     """`ca_ext.cjunc.protocol` — 물리 칸 (p3ca id 에 들어간다).  선언 값 여섯 + 이 코드의 상수 (모델 판 · 규칙 판 · 고정 문턱).
-    정량 (R_j 유한 > 0 · s_min 등록 · tol_ff 유한 ≥ 0) 또는 ★ Z3 극한 런 (`rj_limit` — `rj_limit_value`) · ptfe_stamp = off · centerline ·
-    face_alpha (Z3 — 조합 받음) · P1 = face_alpha 에서만 (centerline 은 이미 VGCF 셀을 sid 7 로 자른다 · off 는 PTFE 표현이 없다)."""
+    정량 (R_j 유한 > 0 · s_min 등록 · tol_ff 유한 ≥ 0) 또는 ★ Z3 극한 런 (`rj_limit` — `rj_limit_value`) · ptfe_stamp = off · face_alpha
+    (Z3 — 조합 받음 · ★ 10-21 Q-C centerline = 거부) · P1 = face_alpha 에서만 (off 는 PTFE 표현이 없다)."""
     R, lim = rj_limit_value(R_j_ohm, rj_limit)
     if len_law != CJ.CJUNC_LEN_LAW:
         raise ValueError(f'접합 길이 법칙 {len_law!r} ≠ 이 코드의 {CJ.CJUNC_LEN_LAW!r} (선언 필수 · 옛 판 · 다른 판 섞임 거부)')
@@ -154,11 +157,12 @@ def cjunc_protocol_record(*, R_j_ohm, len_law, unreg_law, s_min_um, tol_ff_um, p
     t = _num(tol_ff_um, 'tol_ff_um')
     if ptfe_jlaw not in CJ.PTFE_JLAWS:
         raise ValueError(f'PTFE–접합 법칙 {ptfe_jlaw!r} ∉ {CJ.PTFE_JLAWS}')
-    if ptfe_stamp not in ('off', 'centerline', 'face_alpha'):
-        raise ValueError(f'ptfe_stamp = {ptfe_stamp!r} — 접합 (S2) 은 off · centerline · face_alpha 에서만 (capsule = 예약값)')
+    if ptfe_stamp not in ('off', 'face_alpha'):
+        raise ValueError(f'ptfe_stamp = {ptfe_stamp!r} — 접합 (S2) 은 off · face_alpha 에서만 (★ 10-21 사전 리뷰 PRE-impl-03 · 1저자 Q-C: '
+                         f'centerline = 거부 — VGCF 셀을 sid 7 로 덮어 옛 판은 덮인 접점의 포트를 옆 셀로 옮겨 절연체를 더해 σ 가 올랐다 · '
+                         f'capsule = 예약값)')
     if ptfe_jlaw == 'P1' and ptfe_stamp != 'face_alpha':
-        raise ValueError(f'PTFE–접합 법칙 P1 (덮인 접합 절단) 은 face_alpha 에서만 ({ptfe_stamp} — centerline 은 이미 VGCF 셀을 sid 7 로 '
-                         f'자른다 · off 는 PTFE 표현이 없다 · 설계 §4-1)')
+        raise ValueError(f'PTFE–접합 법칙 P1 (덮인 접합 절단) 은 face_alpha 에서만 ({ptfe_stamp} — off 는 PTFE 표현이 없다 · 설계 §4-1)')
     out = {'wiring': WIRING_VERSION, 'model': CJ.CJUNC_MODEL_VERSION, 'schema': CJ.CJUNC_SCHEMA, 'len_law': CJ.CJUNC_LEN_LAW,
            'rules': canonical_rules(), 'R_j_ohm': R, 'unreg_law': str(unreg_law), 'ptfe_jlaw': str(ptfe_jlaw),
            'ptfe_stamp': str(ptfe_stamp), 'r_f_um': float(R_F_UM), 'tol_ff_um': t, 'L_par_um': float(L_PAR_UM),
