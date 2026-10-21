@@ -1954,6 +1954,31 @@ def t_rca04_vshape():
             f"{None if b0 is None else (repr(b0[2]['sigma_eff']), _sub_cells(b0[1]))}")
 
 
+#  RCA04-EPS — T1-11 꼴을 비이진 원점 (0.6, 0.6, 0.6) · (0.123, 0.456, 0.789) 으로 통째로 옮긴 침대: 접점 (A 위 z 3 + o_z) 이 두 셀
+#  (1,1,2) · (1,1,3) 중심에서 수학적으로 등거리인데 반올림으로 (1,1,3) 쪽이 4.4e-16 µm² 가깝게 계산된다 (10-21 변이 M3 생존 → 보탬 ·
+#  시험은 구현 뒤).  ε 띠 (1e-9 µm²) 동률 → 셀 정수 좌표 사전식 최소 (1,1,2) · 동률 표지 · σ = 옮기기 전 침대 · 손 회로 (1e-12).
+#  ε 띠를 빼면 (정확 최소만) 반올림이 포트를 (1,1,3) 으로 정한다 (원점 이동에 포트가 바뀐다).
+@case('RCA04-EPS')
+def t_rca04_eps():
+    rj = 1e3
+    want = chain_I([G_PL] + [G_AX] * 2 + [1e4 / rj] + [G_AX] * 6 + [G_PL])       # 포트 (1,1,2) 회로 (T1-11)
+    b0 = _try(lambda: _solve_full(rows([T4_A, T4_B]), T4_N), None)
+    for o in ((0.6, 0.6, 0.6), (0.123, 0.456, 0.789)):
+        for nm, A in (('A', T4_A), ('A 먼 끝 바꿈', T4_A_FAR)):
+            sh = lambda poly: [tuple(np.asarray(p, np.float64) + np.asarray(o)) for p in poly]   # noqa: E731
+            P = rows([sh(A), sh(T4_B)])
+            sid = _try(lambda: bed(P, T4_N, lo=o)[0], None)
+            reg = _try(lambda: registry(sid, P, lo=o), None)
+            r = _try(lambda: solve(sid, sig_e(), T4_N, plan(reg, rj)), None) if reg is not None else None
+            I = (reg or {}).get('instances') or {}
+            chk(f'RCA04-EPS 원점 {o} · {nm} — 같은 sid · ε 띠 동률 → 포트 (1,1,2) · 동률 표지 · σ = 옮기기 전 · 손 회로 (1e-12)',
+                b0 is not None and sid is not None and r is not None and sid.tobytes() == b0[0].tobytes() and len(I.get('fi', [])) == 1
+                and _pcells(reg, 0, 'i') == (1, 1, 2) and bool(I['tie_i'][0]) and rel(I_of(r, T4_N), want) < 1e-12
+                and rel(r['sigma_eff'], b0[2]['sigma_eff']) < 1e-12,
+                f"{None if reg is None else (_pcells(reg, 0, 'i'), bool(I['tie_i'][0]) if len(I.get('fi', [])) else None)} · "
+                f"{None if r is None else I_of(r, T4_N)} ↔ {want}")
+
+
 @case('RCA04-DUP')
 def t_rca04_duplicate():
     """같은 기하 경로 둘 (fid 둘) — 기하 정준 순서 (`CJUNC_ORDER_RULE`) 로 갈리지 않는 짝 (★ 10-21 RCA-04 · 시험은 구현 뒤에 보탬 — 고치기 전
