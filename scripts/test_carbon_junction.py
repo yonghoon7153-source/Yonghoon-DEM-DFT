@@ -1913,6 +1913,32 @@ def _cx_ref(rj, contract=(), cut=(), ptfe_extra=()):
     return ref_I(nA + len(seqB), E, [(0, G_PL)], [(rep[nA + len(seqB) - 1], G_PL)])
 
 
+@case('RCA04-DUP')
+def t_rca04_duplicate():
+    """같은 기하 경로 둘 (fid 둘) — 기하 정준 순서 (`CJUNC_ORDER_RULE`) 로 갈리지 않는 짝 (★ 10-21 RCA-04 · 시험은 구현 뒤에 보탬 — 고치기 전
+    판 47d23baba 에서 역순 꼴이 실패하는 것은 따로 확인): 정확 중복 (점 배열 비트 같음) = 옛 'duplicate_path' · 점 역순 중복 (정준 점열 같음 ·
+    점 배열 다름) = 'duplicate_path_reversed' → 정량 계획 = 거부 (입구 관문 ValueError) · 시험 모드 (quantitative=False) 는 받는다 ·
+    한 점만 다른 (공선 아님) 두 경로 = 거부 없음 (중복 아님)."""
+    A = [(1.5, 1.5, 0.5), (1.5, 1.5, 5.5)]
+    A2 = [(1.5, 1.5, 0.5), (1.5, 1.5, 3.0), (1.6, 1.5, 5.5)]
+    N = (3, 3, 7)
+    for nm, polys, want in (('정확 중복', [A, A], 'duplicate_path'), ('역순 중복', [A, A[::-1]], 'duplicate_path_reversed'),
+                            ('한 점만 다른 두 경로', [A, A2], None)):
+        P = rows(polys)
+        sid, _ = bed(P, N)
+        reg = _try(lambda: registry(sid, P), None)
+        codes = [x.get('code') for x in (reg or {}).get('rejections', [])]
+        pq = _try(lambda: plan(reg, 1e3), None)
+        pt = _try(lambda: plan(reg, 1e3, quantitative=False), None)
+        if want is None:
+            chk(f'RCA04-DUP {nm} → 중복 거부 사유 없음', reg is not None and not any(str(c).startswith('duplicate') for c in codes), codes)
+            continue
+        chk(f'RCA04-DUP {nm} → 원장 사유 {want} · 정량 계획 = 입구 거부 · 시험 모드 계획 = 사유 없음',
+            reg is not None and want in codes and pq is not None and any(x.get('code') == want for x in pq['rejections'])
+            and raises(lambda: CJ.cjunc_require_quantitative(pq, sid, H)) and pt is not None and pt['rejections'] == [],
+            f'{codes}')
+
+
 @case('RCA05')
 def t_rca05_distributed():
     gd = _rails(5, 1.0, 1.0, 0, 5)
