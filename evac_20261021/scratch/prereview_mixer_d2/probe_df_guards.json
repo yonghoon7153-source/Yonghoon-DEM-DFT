@@ -1,0 +1,75 @@
+{
+ "control uu->cc": {
+  "verdict": "PASS",
+  "outside": [],
+  "missing": [],
+  "d2_rule": [],
+  "non_ced": []
+ },
+ "SE-SE (rule-unchanged) x1.01 in cc": {
+  "verdict": "FAIL",
+  "outside": [
+   [
+    "SE",
+    "SE"
+   ]
+  ],
+  "missing": [],
+  "d2_rule": [
+   "새 덱 D2 — 절대 수준 Bo_SE = F₀_SS / SE 무게 (덱 r 7.57e-05 · ρ 1640 · g 9.81) = 0.5151512 ≠ 머리 선언 SE–SE Bo_code 0.5 (허용 ±2.5e-05 · MXD2-02)",
+   "새 덱 D2 — AM_P–AM_P: F₀_ij/F₀_SS 8.735256 ≠ 규칙 √(γ_iγ_j)·R*_ij/R*_SS 9 (머리 선언 γ · 허용 ±4.5e-05) · 머리 표 F0/F0_SS 9 ≠ 덱 값 8.735256 (허용 ±5.5e-05)",
+   "새 덱 D2 — AM_P–AM_S: F₀_ij/F₀_SS 5.375558 ≠ 규칙 √(γ_iγ_j)·R*_ij/R*_SS 5.538462 (머리 선언 γ · 허용 ±4.5e-05) · 머리 표 F0/F0_SS 5.53846 ≠ 덱 값 5.375558 "
+  ],
+  "non_ced": []
+ },
+ "SE-WALL (rule-unchanged) x1.001 in cc": {
+  "verdict": "FAIL",
+  "outside": [
+   [
+    "SE",
+    "WALL"
+   ]
+  ],
+  "missing": [],
+  "d2_rule": [
+   "새 덱 D2 — SE–WALL: F₀_ij/F₀_SS 0.1757968 ≠ 규칙 √(γ_iγ_j)·R*_ij/R*_SS 0.1752712 (머리 선언 γ · 허용 ±4.5e-05) · 머리 표 CED 49340 ≠ 덱 토큰 49389.3 · 머리 표 "
+  ],
+  "non_ced": []
+ },
+ "AM_S-SE (changed) x1.0001 extra in cc": {
+  "verdict": "FAIL",
+  "outside": [],
+  "missing": [],
+  "d2_rule": [
+   "AM_S–SE: 배수 ×1.222336 ≠ 규칙 ×1.222212 (γ 0.3·1 → 1·1 · 허용 ±1.3e-05)",
+   "새 덱 D2 — AM_S–SE: F₀_ij/F₀_SS 1.600489 ≠ 규칙 √(γ_iγ_j)·R*_ij/R*_SS 1.6 (머리 선언 γ · 허용 ±4.5e-05) · 머리 표 CED 115390 ≠ 덱 토큰 115402 · 머리 표 F0 2.33"
+  ],
+  "non_ced": []
+ },
+ "WALL-WALL nonzero in cc": {
+  "verdict": "FAIL",
+  "outside": [
+   [
+    "WALL",
+    "WALL"
+   ]
+  ],
+  "missing": [],
+  "d2_rule": [
+   "WALL–WALL: 벽–벽 CED 0 → 1 ≠ 0"
+  ],
+  "non_ced": []
+ },
+ "asymmetric AM_P-AM_S in cc": {
+  "verdict": "FAIL",
+  "outside": [],
+  "missing": [],
+  "d2_rule": [
+   "AM_P–AM_S: 배수 ×1.508728 ≠ 규칙 ×1.493802 (γ 0.3·0.3 → 1·1 · 허용 ±1.3e-05)",
+   "새 덱 D2 — AM_P–AM_S: F₀_ij/F₀_SS 5.706213 ≠ 규칙 √(γ_iγ_j)·R*_ij/R*_SS 5.538462 (머리 선언 γ · 허용 ±4.5e-05) · 머리 표 CED 159249 ≠ 덱 토큰 160841 · 머리 표 "
+  ],
+  "non_ced": [
+   "새 덱 CED 비대칭 (AM_P,AM_S)"
+  ]
+ }
+}

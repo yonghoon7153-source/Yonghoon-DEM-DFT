@@ -1,0 +1,22 @@
+Tests: mutation hardening for the carbon-junction pre-review fixes (M10, M12, M19, M27)
+
+Five hand-derived checks, each killing one mutant that survived the 10-21 sweep:
+- KINK KU, s_min none: the self L_c counts only the junction pairs' touch
+  (hand 3.543966411; pairing every segment of both sides gives 3.6) - kills M10.
+- RING closed hairpin with the seam mid-leg: one self instance (pair groups
+  wrap around the ring) - kills M12.
+- CEN KR + an SDCP point covering the in-between position: path_broken 1,
+  path_only 0 - kills M27.
+- KINK straight U (s_min 6, L_par 0.25), side 0 and side 1: the lowest
+  sub-edge's opposite point lies on a junction partner of its own segment
+  ((2.3, 1.5, 3.25) and (1.5, 1.5, 3.25); without the restriction it is the
+  perpendicular foot) - kills M19 on both branches.
+
+Fixed tree: test_carbon_junction 312/312.  Base a76f59d0d, groups
+KINK,RING,CEN: 8/23 (all five new checks fail there).  Mutants on their
+tag groups with this file: M10 31/34 (the KU check and both U checks -
+the U L_c changes too), M12 6/7, M27 29/30, M19 side 0 35/36, M19 side 1
+35/36 (each M19 branch fails only its own U check).  Test file only.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01H191Ni4xzj9H5ftstAm7Ft

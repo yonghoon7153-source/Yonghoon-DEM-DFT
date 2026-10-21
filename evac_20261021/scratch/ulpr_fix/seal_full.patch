@@ -1,0 +1,45 @@
+--- a/docs/data/ps45_unload_20261009/seal_kit.py
++++ b/docs/data/ps45_unload_20261009/seal_kit.py
+@@ -49,15 +49,19 @@
+      'ul_reader.py', 'arm_verdict', ('ul_reader R20',)),
+     ('parse_complete', '모든 관측 덤프 = 전부 읽힘 · 머리 step = 요청 step · 고유 ID · S0 에 없는 ID 없음 · CSV 결손 · 단 k 불연속 = 주 값 미식별 · 버린 행 재사용 없음 '
+      '· 필수 열 · 파서 문제를 먼저 (열 결손 = 사유 있는 미식별 · 예외 없음) · ID = 유한 · 양의 정확한 정수 (S0 · 원자 · 복원 관측 · 쌍 참조 — 소수를 정수로 자르지 않는다 · '
+-     'ID 열 정수 토큰 = float 없이 정확한 int — 2^53 + 1 거부 · Q4) · G2c 필수 열 결손 = 파서 문제 먼저 (예외 없이 FAIL + 사유 · ULKRF-03) '
+-     '(개정 3 §14-10 · ULKR-04 · ULKRR-04 · 등록 §14-11)',
+-     'ul_reader.py', '_atom_frame', ('ul_reader R22', 'ul_reader R30', 'ul_reader R35', 'ul_lib L13', 'ul_lib L14', 'ul_s3 F12', 'ul_gates C3',
+-                                     'ul_gates C4')),
++     'ID 열 정수 토큰 = float 없이 정확한 int — 2^53 + 1 거부 · Q4) · G2c 필수 열 결손 = 파서 문제 먼저 (예외 없이 사유 · ULKRF-03) · G2 원자 비교도 전부 읽힘 · '
++     '머리 step = 요청 step (S0 · R_M) · ID 고유 (ULPR-03) · G2 · G2c 파서 · 관측 문제 = 관측 결손 NOT_COMPUTED → 복원 UNCONFIRMED · 값 차이 = FAIL → VALUE_MISMATCH '
++     '(ULPR-04) (개정 3 §14-10 · ULKR-04 · ULKRR-04 · 등록 §14-11 · §14-12)',
++     'ul_reader.py', '_atom_frame', ('ul_reader R22', 'ul_reader R30', 'ul_reader R35', 'ul_reader R16', 'ul_lib L13', 'ul_lib L14', 'ul_s3 F12', 'ul_gates C3',
++                                     'ul_gates C4', 'ul_gates C5')),
+     ('resume_boundary', '기록 줄 교체 (끊긴 시도가 남긴 줄 버림) = 승인된 이어 돌림 경계에서만 — RESUME 사건 (k · step) + 러너 시도 기록 resume_from=step + 덱 상태 파일 '
+      '(ul_rstep · ul_k) 이 맞고 · 버릴 줄 = 그 step 뒤 · 버린 뒤 앞 줄 = (k · step) · 새 시도 첫 줄 = k + 1 · 그 밖 중복 · 역행 step · k · w = 버리지 않고 주 값 미식별 · '
+      '경계 하나에 승인 한 번 (같은 경계 RESUME 중복 · 상충 · 사건 ↔ 상태 파일 불일치 = 승인 없음 + 사유 · 사건 되감기도 같은 규칙 · ULKRF-01) · 새 시도 시작 = 승인 경계 뒤 '
+-     'step 역행 또는 (단 CSV) k 가 경계 k + 1 로 되돌아옴 — 먼저 오는 쪽 (새 시도가 옛 시도보다 늦게 끝나도 · ULKRF-02) (개정 3 §14-4 · §14-10 · ULKRR-02 · 등록 §14-11)',
+-     'ul_reader.py', '_supersede', ('ul_reader R28', 'ul_reader R10', 'ul_reader R33', 'ul_reader R34', 'ul_runner_test M23')),
++     'step 역행 또는 (단 CSV) k 가 경계 k + 1 로 되돌아옴 — 먼저 오는 쪽 (새 시도가 옛 시도보다 늦게 끝나도 · ULKRF-02) · 경계 뒤 줄 = 어느 시도가 썼는지 기록으로 증명될 '
++     '때만 정상 관측 — 새 시도 증거 (창 · 단 역행 · 경계 뒤 k ≥ k + 2 · RESUME 뒤 사건 · 요약 · 경계 뒤 단 끝 상태 파일) 없으면 경계 뒤 줄 (옛 시도 · 시도 미확정) 을 쓰지 '
++     '않는다 · 증거가 있어도 경계 뒤 단 줄 (k + 1) 은 새 시도 증명 (그 단 끝 상태 파일 · RESUME 뒤 단 끝 사건 · 남은 창과만 맞음) 일 때만 · 모순 = 미식별 · 경계 뒤 단 줄 ↔ '
++     '그 단 창 기록 (n_windows · w 1 … n · 마지막 step) (ULPR-01) (개정 3 §14-4 · §14-10 · ULKRR-02 · 등록 §14-11 · §14-12)',
++     'ul_reader.py', '_supersede', ('ul_reader R28', 'ul_reader R10', 'ul_reader R33', 'ul_reader R34', 'ul_reader R37', 'ul_runner_test M23')),
+     ('separation', '창 접촉 상태 CONTACT · TENSION · ZERO · OBS_MISSING (≠ 0) · 분리 = 같은 단 (k) 안 연속 두 0 창의 둘째 창 끝 (SEPARATE 단계 창 · 이동 = 연속 '
+      '초기화 · 덱과 같은 규칙) · 재접촉 = 계수 · 분리 뒤 창 초기화 · 창 기록 = 같은 k 안 고유 · 연속 w + 그 팔 창 간격 W (빈 구간 = 연속 끊김 · 예산 끝 선언 → '
+      '분리 뒤 4 창은 그대로) (§13-3 · 개정 3 §14-7 · Q4 가)',
+@@ -104,11 +108,13 @@
+     ('restore_complete', '복원 판정 = Ut0 (7:3) · R · UN 단계 기술 성공 · PRE · POST · R_END · UN 전부 읽힘 · 머리 step · 고유 ID · S0 ID 집합 · '
+      'R_END ↔ UN 같은 대상 · 이력 시험 H0–H5 + SYN PASS · 부호 = 표 · 총힘 시점 · 관문 = RESTORED + RJ 잡 완료 영수증 fails=0 · reader_rc=0 (둘 다 있고 · 정수 · 0) '
+      '+ 문법 fixture 사전 점검 PASS 기록 · RJ2 = S0′ 결정 PASS + EXT 잡 완료 영수증 · 범위: 복원 / EXT 증서는 성공 완료 영수증이 필수이며 일반 팔의 주 관측은 원 폴더에서 '
+-     '재판독한다 (재판독 가능성 ≠ 잡의 기술 성공 · Q2 (가)) (개정 3 §14-10 · ULKR-05 · 08 · ULKRR-03 · 등록 §14-11)',
+-     'ul_reader.py', 'restore_verdict', ('ul_reader R17', 'ul_reader R18', 'ul_reader R29', 'ul_gates F2', 'ul_runner_test M20')),
++     '재판독한다 (재판독 가능성 ≠ 잡의 기술 성공 · Q2 (가)) · 관측 결손 (G2 · G2c 파서 · 관측 문제 포함) = UNCONFIRMED · 수치 불일치 = VALUE_MISMATCH · 기술 실패 = '
++     'SYNTAX_FAIL (ULPR-04) (개정 3 §14-10 · ULKR-05 · 08 · ULKRR-03 · 등록 §14-11 · §14-12)',
++     'ul_reader.py', 'restore_verdict', ('ul_reader R17', 'ul_reader R18', 'ul_reader R29', 'ul_reader R35', 'ul_gates F2', 'ul_runner_test M20')),
+     ('grammar_prereq', '본 R (RJ · RJ2) · 10:0 연장 (EXT) 의 LIGGGHTS 전 = 문법 fixture PASS — 판정 JSON (schema · status PASS · exit_code 정수 0 · 검사 19 전부 참) · '
+      '그 런 폴더 (run_dir · mode gram · end) · 같은 바이너리 (lmp_sha256) · 덱 둘 + 판 STL sha256 = 봉인 값 (단계 사본 · 그 런의 kit SHA256SUMS) · 그 런 폴더 원자료를 '
+-     '승인된 판독기 (그 런 kit 사본 read_history.py · history_params.json = 봉인 값 GRAMMAR_READER) 로 다시 읽어 검사 19 = 판정 JSON (Q3 · 1저자 10-15) — 아니면 '
++     '승인된 판독기 (그 런 kit 사본 read_history.py · history_params.json = 봉인 값 GRAMMAR_READER · 그 런 kit SHA256SUMS 에도 같은 값) 로 다시 읽어 재판독 PASS · '
++     'exit_code 0 · 프로세스 rc 0 · 검사 19 = 판정 JSON (Q3 · 1저자 10-15 · 조건마다 시험 ULPR-02) — 아니면 '
+      '사전 점검 거부 (런 없음) · 잡 기록 grammar_prereq=PASS · 러너 스크립트 sha256 은 대조하지 않는다 (개정 3 §14-9 · Q5 — 1저자 10-14 강제 · 등록 §14-11)',
+      'ul_reader.py', 'grammar_prereq', ('ul_reader R32', 'ul_reader R36', 'ul_runner_test M22', 'ul_runner_test M25')),
+ )

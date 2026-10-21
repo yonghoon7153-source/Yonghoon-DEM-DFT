@@ -1,0 +1,33 @@
+  PASS  ① 표 E LC soft → ×14: PASS · 9 비영 항 F₀ 비 = 1 (허용 3e-05) · 벽–벽 0 · Codex ×14 배수 대조 PASS (실패 [])
+  PASS  ② 표 E LH soft → ×14 · LC/LH soft → ×28 (Codex ×28 대조) · LC ×14 → ×28 (배수 2 — Codex 대조 N/A) 모두 PASS
+  PASS  ③ 표 E0 soft → ×14 · ×14 → ×28 · soft → ×28: 두 덱 모두 전 점착 0 (정확히 · 행 10 개 · 명시 검사) · 물리 시간 · 덤프/체크포인트 규칙 PASS
+  PASS  ④ 표 DT E0 ×14 → dt/2 · LC ×14 → dt/2: E · ν · CED 동일 · dt 정확히 ½ · step · 덤프 ×2 · 계획 t₀ 물리 시각 동일 → PASS
+  PASS  ⑤ 표 B soft · ×14 · ×28: LC↔LH 다섯 쌍 (AM–AM 셋 · AM–벽 둘) 만 증가 · 나머지 전부 정확히 같다 · 벽–벽 0 → PASS
+  PASS  ⑥ 반례 혼합쌍 하나 (AM_P–SE 를 옛 규칙 ×14^(2/3)) → FAIL · 그 쌍만 짚는다 ['AM_P–SE'] · F₀ 비 1.2721 (Codex 1.272)
+  PASS  ⑦ 반례 SE–벽만 (새 SE 대각 ÷ 1.842 로 다시) → FAIL · SE–WALL 만 ['SE–WALL'] · F₀ 비 1.1821 (Codex 1.182)
+  PASS  ⑧ 반례 타입 순서 — 템플릿 atom_type 1↔2 (표 E · 표 B) · 영률 줄의 AM_S ↔ SE 자리 바꿈 → 셋 다 FAIL (타입 사전 · 영률 대조)
+  PASS  ⑨ 반례 0 행렬 변조 — E0 ×14 의 SE–SE = 1000 (새 쪽 · 옛 쪽) · LC ×14 의 벽–벽 = 1 → 셋 다 FAIL
+  PASS  ⑩ 반례 덤프 간격 변조 — LC ×14 +1 step (규칙 밖) · E0 dt/2 가 2 배가 아님 · E0 ×14 를 2 배로 → 셋 다 FAIL
+  PASS  ⑪ 반례 비대칭 (AM_P–SE 한쪽 칸만 ×1.001) → FAIL (대칭 검사)
+  PASS  ⑫ 반례 표 B — LH SE–SE +0.1 (몰래 변경) · AM_P–AM_P = LC (개입 누락) · AM_S–벽 ÷2 (방향 반대) · 중력 9.80 (명령) → 넷 다 FAIL [['SE–SE'], ['AM_P–AM_P'], ['AM_S–WALL'], []]
+  PASS  ⑬ 반례 표 E — AM_P 영률 변경 · SE ν 변경 · neighbor 변경 (허용 밖 명령) · step 을 새 dt 로 다시 안 셈 (soft step 그대로) → 넷 다 FAIL
+  PASS  ⑭ 반례 표 DT — 정착 step +1 (정수배 아님) · dt 1.567e-07 (정확히 ½ 아님) · soft → ×14 를 DT 로 (k 비정수 · 영률 다름) → 셋 다 FAIL
+  PASS  ⑮ 같은 덱 둘을 표 E 로 → FAIL (SE 영률이 같다 = E 비교가 아니다 — 빈 비교를 PASS 로 내지 않는다)
+  PASS  ⑱ ★ 반례 — SE ×14 인데 dt · step · 덤프 · 체크포인트를 soft 그대로 (LC · E0): 물리 시간 · 규칙 · 쌍별 CED 는 다 맞아도 **Rayleigh dt 대조 하나로** FAIL (적분 불안정 덱) [1, 1]
+  PASS  ⑲ 표 B 는 dt/2 짝 (LC ×14 dt/2 ↔ LH ×14 dt/2) 도 PASS — dt = Rayleigh 규칙의 정확히 1/k (k 정수) 는 허용 · k 를 적는다
+  PASS  ⑳ Rayleigh 사본 = 생성기 plan() 의 dt (F 1 · 14 · 28 × CGF 151.4 · 200 — 덱에 찍힌 반지름 · 밀도 · E · ν 에서 다시 낸 값 · 허용 rayleigh_rel) — 식이 갈리면 여기서 드러난다
+  PASS  ⑯ 되읽기 = 덱 텍스트: sha256 · 타입 사전 (1 AM_P · 2 AM_S · 3 SE · 4 WALL — 밀도 · 반지름 · 템플릿 시드 · 메시 타입) · E · ν · dt · run · 덤프 · 체크포인트
+  PASS  ⑰ CLI: PASS 면 rc 0 · JSON (도구 sha256 · 버전 · 허용오차 · 덱 sha256 · 생성 명령 (gen_cmd.txt) · 타입 사전 · 표) · markdown 표 · FAIL 이 섞이면 rc 1 이고 실패 항 목록이 남는다
+  PASS  ㉑ markdown 에 백틱 안 순수 hex (check_doc_refs 의 커밋 SHA 패턴) 가 없다 — sha256 앞자리는 백틱 없이 · 발견 0
+  PASS  U① ★ 표 U (×20 · LC → LU212 · LU637 · LU212 → LU637 · soft LC → LU212) → PASS · 행 10 · 9 비영 항 전부 한 배율 (퍼짐 ≤ 2e-05) · 공통 배율 ×10 · ×14.422496 · ×3^(1/3) · 벽–벽 0 · 같은 E · ν · dt
+  PASS  U② ★ 반례 표 U → 전부 FAIL · 짚는 곳: SE–SE 한 원소만 ×10 (그 쌍만 ['SE–SE']) · 균일 ×10 + SE 영률 (영률) · AM_P–AM_S 만 ×11 (['AM_P–AM_S']) · 벽–벽 1 · 줄어든 덱 (증가) · 같은 덱 (빈 비교) · LH → LU212 (배율 하나 아님) · U 덱을 표 B 로 (SE 낀 쌍이 바뀌면 안 된다)
+  PASS  U③ CLI --table U: rc 0 · JSON 표 (kind U · 공통 배율 · 퍼짐 · 등록 규칙 사본) · markdown 의 표 U (쌍마다 배율 · 판정)
+  FAIL  MX① ★ lab 세대 덱 (MXD2-01) — 옛 팔 LC lab soft → ×20 · D2 덱 (ρ 0.3 세계 · Bo 0.5) soft → ×20 의 표 E = PASS · 세대 = 템플릿 밀도로 판정 (lab 4850 · 1640 / gen1 4800 · 2000) · D2 덱은 표마다 D2 규칙 검산이 붙는다
+  FAIL  MX② ★ D2 덱 되읽기 (덱 텍스트만) — 쌍 10 행 (벽 포함) 의 F₀_ij/F₀_SS = √(γ_iγ_j)·R*_ij/R*_SS (선언 γ · 허용 gm_law_rel) · Bo_SE = F₀_SS / SE 무게 (그 덱의 r · ρ · 중력) = 선언 0.5 · 선언 = γ · ρ · 벽 규칙 · 옛 팔 덱은 D2 아님
+  FAIL  MX③ ★ 반례 → D2 검산이 잡는다 (MXD2-02) — 머리 Bo 선언 ≠ 덱 값 (M04 꼴) · 머리 표 F0/F0_SS 칸 변조 (M15 꼴) · AM_P–SE 를 산술평균 값으로 · 선언 γ 를 Q2 밖으로 · 세대 표기 ≠ 템플릿 밀도 · SE–SE 천장 넘김 · 메타 Bo 상수 (M16 꼴) · 메타 세대 · 메타 sha · 메타 γ_W · 메타 schema /1 — 정상 덱은 문제 0
+  FAIL  MX④ ★ 표 GM (같은 ρ 세계 비코팅 ↔ 코팅 · MXD2-01) — ×20 lab ρ 0.3 · Bo 0.5: uu → cc 바뀌는 CED = 규칙이 정하는 일곱 (AM–AM 셋 × (1/ρ)^(1/3) · AM–SE 둘 · AM–벽 둘 × (1/ρ)^(1/6)) · SE–SE · SE–벽 · 벽–벽 그대로 · uu → cu (AM_P 만 코팅) = 넷 → PASS
+  FAIL  MX⑤ ★ 반례 표 GM → FAIL (사유를 짚는다) — 다른 ρ 세계 (γ_W 다름) · 다른 Bo · 다른 강성 · 같은 덱 (표면 안 바뀜) · 규칙이 안 정하는 원소 (AM_P–AM_P ×1.01) · 옛 팔 LC → LH (D2 덱 아님)
+  FAIL  MX⑥ CLI --table GM — 덱 옆 deck_meta.json 을 읽어 결합까지 본다: 정상 rc 0 (JSON 표 GM · 덱 세대 · D2 선언) · 메타 Bo 를 상수 0.21244 로 바꾸면 rc 1 ("D2 기록")
+  FAIL  MX⑦ 등록 사본 = 생성기 — 세대별 밀도 (AM · SE × 1000 kg/m³) · 벽 γ_W/γ = 0.0256 · 중력 9.81 (사본이 어긋나면 여기서 드러난다)
+
+mixer_deck_readback selftest: 24/31 PASS   FAILED: ['MX① ★ lab 세대 덱 (MXD2-01) — 옛 팔 LC lab soft → ×20 · D2 덱 (ρ 0.3 세계 · Bo 0.5) soft → ×20 의 표 E = PASS · 세대 = 템플릿 밀도로 판정 (lab 4850 · 1640 / gen1 4800 · 2000) · D2 덱은 표마다 D2 규칙 검산이 붙는다', 'MX② ★ D2 덱 되읽기 (덱 텍스트만) — 쌍 10 행 (벽 포함) 의 F₀_ij/F₀_SS = √(γ_iγ_j)·R*_ij/R*_SS (선언 γ · 허용 gm_law_rel) · Bo_SE = F₀_SS / SE 무게 (그 덱의 r · ρ · 중력) = 선언 0.5 · 선언 = γ · ρ · 벽 규칙 · 옛 팔 덱은 D2 아님', 'MX③ ★ 반례 → D2 검산이 잡는다 (MXD2-02) — 머리 Bo 선언 ≠ 덱 값 (M04 꼴) · 머리 표 F0/F0_SS 칸 변조 (M15 꼴) · AM_P–SE 를 산술평균 값으로 · 선언 γ 를 Q2 밖으로 · 세대 표기 ≠ 템플릿 밀도 · SE–SE 천장 넘김 · 메타 Bo 상수 (M16 꼴) · 메타 세대 · 메타 sha · 메타 γ_W · 메타 schema /1 — 정상 덱은 문제 0', 'MX④ ★ 표 GM (같은 ρ 세계 비코팅 ↔ 코팅 · MXD2-01) — ×20 lab ρ 0.3 · Bo 0.5: uu → cc 바뀌는 CED = 규칙이 정하는 일곱 (AM–AM 셋 × (1/ρ)^(1/3) · AM–SE 둘 · AM–벽 둘 × (1/ρ)^(1/6)) · SE–SE · SE–벽 · 벽–벽 그대로 · uu → cu (AM_P 만 코팅) = 넷 → PASS', 'MX⑤ ★ 반례 표 GM → FAIL (사유를 짚는다) — 다른 ρ 세계 (γ_W 다름) · 다른 Bo · 다른 강성 · 같은 덱 (표면 안 바뀜) · 규칙이 안 정하는 원소 (AM_P–AM_P ×1.01) · 옛 팔 LC → LH (D2 덱 아님)', 'MX⑥ CLI --table GM — 덱 옆 deck_meta.json 을 읽어 결합까지 본다: 정상 rc 0 (JSON 표 GM · 덱 세대 · D2 선언) · 메타 Bo 를 상수 0.21244 로 바꾸면 rc 1 ("D2 기록")', 'MX⑦ 등록 사본 = 생성기 — 세대별 밀도 (AM · SE × 1000 kg/m³) · 벽 γ_W/γ = 0.0256 · 중력 9.81 (사본이 어긋나면 여기서 드러난다)']

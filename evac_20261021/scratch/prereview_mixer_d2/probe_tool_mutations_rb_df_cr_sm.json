@@ -1,0 +1,569 @@
+[
+ {
+  "rc": 0,
+  "n_fail": 0,
+  "fails": [],
+  "summary": "mixer_deck_readback selftest: 31/31 PASS",
+  "tool": "rb",
+  "mutation": "CONTROL",
+  "status": "CLEAN"
+ },
+ {
+  "tool": "rb",
+  "mutation": "R01_bo_check_off",
+  "occurrences": 1,
+  "rc": 0,
+  "n_fail": 0,
+  "fails": [],
+  "summary": "mixer_deck_readback selftest: 31/31 PASS",
+  "status": "SURVIVED"
+ },
+ {
+  "tool": "rb",
+  "mutation": "R02_law_check_off",
+  "occurrences": 1,
+  "rc": 0,
+  "n_fail": 0,
+  "fails": [],
+  "summary": "mixer_deck_readback selftest: 31/31 PASS",
+  "status": "SURVIVED"
+ },
+ {
+  "tool": "rb",
+  "mutation": "R03_q2_gw_rho_off",
+  "occurrences": 1,
+  "rc": 0,
+  "n_fail": 0,
+  "fails": [],
+  "summary": "mixer_deck_readback selftest: 31/31 PASS",
+  "status": "SURVIVED"
+ },
+ {
+  "tool": "rb",
+  "mutation": "R04_q2_ncm_off",
+  "occurrences": 1,
+  "rc": 0,
+  "n_fail": 0,
+  "fails": [],
+  "summary": "mixer_deck_readback selftest: 31/31 PASS",
+  "status": "SURVIVED"
+ },
+ {
+  "tool": "rb",
+  "mutation": "R05_overlap_off",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "FAIL  MX③ ★ 반례 → D2 검산이 잡는다 (MXD2-02) — 머리 Bo 선언 ≠ 덱 값 (M04 꼴) · 머리 표 F0/F0_SS 칸 변조 (M15 꼴) · AM_P–SE 를 산술평균 값으로 · 선언 γ "
+  ],
+  "summary": "mixer_deck_readback selftest: 30/31 PASS   FAILED: ['MX③ ★ 반례 → D2 검산이 잡는다 (MXD2-02) — 머리 Bo 선언 ≠ 덱 값 (M04 꼴) · 머리 표 F0/F0_SS 칸 변조 (M15 꼴) · AM_P–SE 를 산술평균 값으로 · 선언 γ 를 Q2 밖으로 · 세대 표기 ≠ 템플릿 밀도 · SE–SE",
+  "status": "KILLED"
+ },
+ {
+  "tool": "rb",
+  "mutation": "R06_hdr_ratio_col_off",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "FAIL  MX③ ★ 반례 → D2 검산이 잡는다 (MXD2-02) — 머리 Bo 선언 ≠ 덱 값 (M04 꼴) · 머리 표 F0/F0_SS 칸 변조 (M15 꼴) · AM_P–SE 를 산술평균 값으로 · 선언 γ "
+  ],
+  "summary": "mixer_deck_readback selftest: 30/31 PASS   FAILED: ['MX③ ★ 반례 → D2 검산이 잡는다 (MXD2-02) — 머리 Bo 선언 ≠ 덱 값 (M04 꼴) · 머리 표 F0/F0_SS 칸 변조 (M15 꼴) · AM_P–SE 를 산술평균 값으로 · 선언 γ 를 Q2 밖으로 · 세대 표기 ≠ 템플릿 밀도 · SE–SE",
+  "status": "KILLED"
+ },
+ {
+  "tool": "rb",
+  "mutation": "R07_meta_binding_off",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 2,
+  "fails": [
+   "FAIL  MX③ ★ 반례 → D2 검산이 잡는다 (MXD2-02) — 머리 Bo 선언 ≠ 덱 값 (M04 꼴) · 머리 표 F0/F0_SS 칸 변조 (M15 꼴) · AM_P–SE 를 산술평균 값으로 · 선언 γ ",
+   "FAIL  MX⑥ CLI --table GM — 덱 옆 deck_meta.json 을 읽어 결합까지 본다: 정상 rc 0 (JSON 표 GM · 덱 세대 · D2 선언) · 메타 Bo 를 상수 0.21244 로 바꾸"
+  ],
+  "summary": "mixer_deck_readback selftest: 29/31 PASS   FAILED: ['MX③ ★ 반례 → D2 검산이 잡는다 (MXD2-02) — 머리 Bo 선언 ≠ 덱 값 (M04 꼴) · 머리 표 F0/F0_SS 칸 변조 (M15 꼴) · AM_P–SE 를 산술평균 값으로 · 선언 γ 를 Q2 밖으로 · 세대 표기 ≠ 템플릿 밀도 · SE–SE",
+  "status": "KILLED"
+ },
+ {
+  "tool": "rb",
+  "mutation": "R08_meta_bo_binding_off",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 2,
+  "fails": [
+   "FAIL  MX③ ★ 반례 → D2 검산이 잡는다 (MXD2-02) — 머리 Bo 선언 ≠ 덱 값 (M04 꼴) · 머리 표 F0/F0_SS 칸 변조 (M15 꼴) · AM_P–SE 를 산술평균 값으로 · 선언 γ ",
+   "FAIL  MX⑥ CLI --table GM — 덱 옆 deck_meta.json 을 읽어 결합까지 본다: 정상 rc 0 (JSON 표 GM · 덱 세대 · D2 선언) · 메타 Bo 를 상수 0.21244 로 바꾸"
+  ],
+  "summary": "mixer_deck_readback selftest: 29/31 PASS   FAILED: ['MX③ ★ 반례 → D2 검산이 잡는다 (MXD2-02) — 머리 Bo 선언 ≠ 덱 값 (M04 꼴) · 머리 표 F0/F0_SS 칸 변조 (M15 꼴) · AM_P–SE 를 산술평균 값으로 · 선언 γ 를 Q2 밖으로 · 세대 표기 ≠ 템플릿 밀도 · SE–SE",
+  "status": "KILLED"
+ },
+ {
+  "tool": "rb",
+  "mutation": "R09_lab_generation_dropped",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 7,
+  "fails": [
+   "FAIL  MX① ★ lab 세대 덱 (MXD2-01) — 옛 팔 LC lab soft → ×20 · D2 덱 (ρ 0.3 세계 · Bo 0.5) soft → ×20 의 표 E = PASS · 세대 = 템플릿 밀도로",
+   "FAIL  MX② ★ D2 덱 되읽기 (덱 텍스트만) — 쌍 10 행 (벽 포함) 의 F₀_ij/F₀_SS = √(γ_iγ_j)·R*_ij/R*_SS (선언 γ · 허용 gm_law_rel) · Bo_SE = F₀_",
+   "FAIL  MX③ ★ 반례 → D2 검산이 잡는다 (MXD2-02) — 머리 Bo 선언 ≠ 덱 값 (M04 꼴) · 머리 표 F0/F0_SS 칸 변조 (M15 꼴) · AM_P–SE 를 산술평균 값으로 · 선언 γ ",
+   "FAIL  MX④ ★ 표 GM (같은 ρ 세계 비코팅 ↔ 코팅 · MXD2-01) — ×20 lab ρ 0.3 · Bo 0.5: uu → cc 바뀌는 CED = 규칙이 정하는 일곱 (AM–AM 셋 × (1/ρ)^(1",
+   "FAIL  MX⑤ ★ 반례 표 GM → FAIL (사유를 짚는다) — 다른 ρ 세계 (γ_W 다름) · 다른 Bo · 다른 강성 · 같은 덱 (표면 안 바뀜) · 규칙이 안 정하는 원소 (AM_P–AM_P ×1.01",
+   "FAIL  MX⑥ CLI --table GM — 덱 옆 deck_meta.json 을 읽어 결합까지 본다: 정상 rc 0 (JSON 표 GM · 덱 세대 · D2 선언) · 메타 Bo 를 상수 0.21244 로 바꾸"
+  ],
+  "summary": "mixer_deck_readback selftest: 24/31 PASS   FAILED: ['MX① ★ lab 세대 덱 (MXD2-01) — 옛 팔 LC lab soft → ×20 · D2 덱 (ρ 0.3 세계 · Bo 0.5) soft → ×20 의 표 E = PASS · 세대 = 템플릿 밀도로 판정 (lab 4850 · 1640 / gen1 4800 ",
+  "status": "KILLED"
+ },
+ {
+  "tool": "rb",
+  "mutation": "R10_dens_tag_check_off",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "FAIL  MX③ ★ 반례 → D2 검산이 잡는다 (MXD2-02) — 머리 Bo 선언 ≠ 덱 값 (M04 꼴) · 머리 표 F0/F0_SS 칸 변조 (M15 꼴) · AM_P–SE 를 산술평균 값으로 · 선언 γ "
+  ],
+  "summary": "mixer_deck_readback selftest: 30/31 PASS   FAILED: ['MX③ ★ 반례 → D2 검산이 잡는다 (MXD2-02) — 머리 Bo 선언 ≠ 덱 값 (M04 꼴) · 머리 표 F0/F0_SS 칸 변조 (M15 꼴) · AM_P–SE 를 산술평균 값으로 · 선언 γ 를 Q2 밖으로 · 세대 표기 ≠ 템플릿 밀도 · SE–SE",
+  "status": "KILLED"
+ },
+ {
+  "tool": "rb",
+  "mutation": "R11_gm_same_world_off",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "FAIL  MX⑤ ★ 반례 표 GM → FAIL (사유를 짚는다) — 다른 ρ 세계 (γ_W 다름) · 다른 Bo · 다른 강성 · 같은 덱 (표면 안 바뀜) · 규칙이 안 정하는 원소 (AM_P–AM_P ×1.01"
+  ],
+  "summary": "mixer_deck_readback selftest: 30/31 PASS   FAILED: ['MX⑤ ★ 반례 표 GM → FAIL (사유를 짚는다) — 다른 ρ 세계 (γ_W 다름) · 다른 Bo · 다른 강성 · 같은 덱 (표면 안 바뀜) · 규칙이 안 정하는 원소 (AM_P–AM_P ×1.01) · 옛 팔 LC → LH (D2 덱 아님)']",
+  "status": "KILLED"
+ },
+ {
+  "tool": "rb",
+  "mutation": "R12_gm_surface_change_off",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "FAIL  MX⑤ ★ 반례 표 GM → FAIL (사유를 짚는다) — 다른 ρ 세계 (γ_W 다름) · 다른 Bo · 다른 강성 · 같은 덱 (표면 안 바뀜) · 규칙이 안 정하는 원소 (AM_P–AM_P ×1.01"
+  ],
+  "summary": "mixer_deck_readback selftest: 30/31 PASS   FAILED: ['MX⑤ ★ 반례 표 GM → FAIL (사유를 짚는다) — 다른 ρ 세계 (γ_W 다름) · 다른 Bo · 다른 강성 · 같은 덱 (표면 안 바뀜) · 규칙이 안 정하는 원소 (AM_P–AM_P ×1.01) · 옛 팔 LC → LH (D2 덱 아님)']",
+  "status": "KILLED"
+ },
+ {
+  "tool": "rb",
+  "mutation": "R13_gm_mult_tol_wide",
+  "occurrences": 1,
+  "rc": 0,
+  "n_fail": 0,
+  "fails": [],
+  "summary": "mixer_deck_readback selftest: 31/31 PASS",
+  "status": "SURVIVED"
+ },
+ {
+  "tool": "rb",
+  "mutation": "R14_gm_unchanged_token_off",
+  "occurrences": 1,
+  "rc": 0,
+  "n_fail": 0,
+  "fails": [],
+  "summary": "mixer_deck_readback selftest: 31/31 PASS",
+  "status": "SURVIVED"
+ },
+ {
+  "tool": "rb",
+  "mutation": "R15_E_same_arm_off",
+  "occurrences": 1,
+  "rc": 0,
+  "n_fail": 0,
+  "fails": [],
+  "summary": "mixer_deck_readback selftest: 31/31 PASS",
+  "status": "SURVIVED"
+ },
+ {
+  "tool": "rb",
+  "mutation": "R16_is_d2_by_meta_off",
+  "occurrences": 1,
+  "rc": 0,
+  "n_fail": 0,
+  "fails": [],
+  "summary": "mixer_deck_readback selftest: 31/31 PASS",
+  "status": "SURVIVED"
+ },
+ {
+  "tool": "rb",
+  "mutation": "R17_insertion_line_off",
+  "occurrences": 1,
+  "rc": 0,
+  "n_fail": 0,
+  "fails": [],
+  "summary": "mixer_deck_readback selftest: 31/31 PASS",
+  "status": "SURVIVED"
+ },
+ {
+  "tool": "rb",
+  "mutation": "R18_surface_vs_gamma_off",
+  "occurrences": 1,
+  "rc": 0,
+  "n_fail": 0,
+  "fails": [],
+  "summary": "mixer_deck_readback selftest: 31/31 PASS",
+  "status": "SURVIVED"
+ },
+ {
+  "tool": "rb",
+  "mutation": "R19_explicit_coated_only_off",
+  "occurrences": 1,
+  "rc": 0,
+  "n_fail": 0,
+  "fails": [],
+  "summary": "mixer_deck_readback selftest: 31/31 PASS",
+  "status": "SURVIVED"
+ },
+ {
+  "tool": "rb",
+  "mutation": "R20_dec_any_float",
+  "occurrences": 1,
+  "rc": 0,
+  "n_fail": 0,
+  "fails": [],
+  "summary": "mixer_deck_readback selftest: 31/31 PASS",
+  "status": "SURVIVED"
+ },
+ {
+  "tool": "rb",
+  "mutation": "R21_two_heads_ok",
+  "occurrences": 1,
+  "rc": 0,
+  "n_fail": 0,
+  "fails": [],
+  "summary": "mixer_deck_readback selftest: 31/31 PASS",
+  "status": "SURVIVED"
+ },
+ {
+  "tool": "rb",
+  "mutation": "R22_bo_uses_reg_g",
+  "occurrences": 1,
+  "rc": 0,
+  "n_fail": 0,
+  "fails": [],
+  "summary": "mixer_deck_readback selftest: 31/31 PASS",
+  "status": "SURVIVED"
+ },
+ {
+  "tool": "rb",
+  "mutation": "R23_load_meta_never",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "FAIL  MX⑥ CLI --table GM — 덱 옆 deck_meta.json 을 읽어 결합까지 본다: 정상 rc 0 (JSON 표 GM · 덱 세대 · D2 선언) · 메타 Bo 를 상수 0.21244 로 바꾸"
+  ],
+  "summary": "mixer_deck_readback selftest: 30/31 PASS   FAILED: ['MX⑥ CLI --table GM — 덱 옆 deck_meta.json 을 읽어 결합까지 본다: 정상 rc 0 (JSON 표 GM · 덱 세대 · D2 선언) · 메타 Bo 를 상수 0.21244 로 바꾸면 rc 1 (\"D2 기록\")']",
+  "status": "KILLED"
+ },
+ {
+  "tool": "rb",
+  "mutation": "R24_meta_schema_off",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "FAIL  MX③ ★ 반례 → D2 검산이 잡는다 (MXD2-02) — 머리 Bo 선언 ≠ 덱 값 (M04 꼴) · 머리 표 F0/F0_SS 칸 변조 (M15 꼴) · AM_P–SE 를 산술평균 값으로 · 선언 γ "
+  ],
+  "summary": "mixer_deck_readback selftest: 30/31 PASS   FAILED: ['MX③ ★ 반례 → D2 검산이 잡는다 (MXD2-02) — 머리 Bo 선언 ≠ 덱 값 (M04 꼴) · 머리 표 F0/F0_SS 칸 변조 (M15 꼴) · AM_P–SE 를 산술평균 값으로 · 선언 γ 를 Q2 밖으로 · 세대 표기 ≠ 템플릿 밀도 · SE–SE",
+  "status": "KILLED"
+ },
+ {
+  "tool": "rb",
+  "mutation": "R25_meta_sha_off",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "FAIL  MX③ ★ 반례 → D2 검산이 잡는다 (MXD2-02) — 머리 Bo 선언 ≠ 덱 값 (M04 꼴) · 머리 표 F0/F0_SS 칸 변조 (M15 꼴) · AM_P–SE 를 산술평균 값으로 · 선언 γ "
+  ],
+  "summary": "mixer_deck_readback selftest: 30/31 PASS   FAILED: ['MX③ ★ 반례 → D2 검산이 잡는다 (MXD2-02) — 머리 Bo 선언 ≠ 덱 값 (M04 꼴) · 머리 표 F0/F0_SS 칸 변조 (M15 꼴) · AM_P–SE 를 산술평균 값으로 · 선언 γ 를 Q2 밖으로 · 세대 표기 ≠ 템플릿 밀도 · SE–SE",
+  "status": "KILLED"
+ },
+ {
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "FAIL  ㉟ ★ expected_deck(팔, seed, revolutions, stiffen_se, hold_bo_pairwise, dt_factor) · cell_expected_deck(이름) = 커밋된 DE"
+  ],
+  "summary": [
+   "StopIteration"
+  ],
+  "tool": "df",
+  "mutation": "CONTROL",
+  "status": "DIRTY"
+ },
+ {
+  "tool": "df",
+  "mutation": "D01_d2_attach_off",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "FAIL  ㉟ ★ expected_deck(팔, seed, revolutions, stiffen_se, hold_bo_pairwise, dt_factor) · cell_expected_deck(이름) = 커밋된 DE"
+  ],
+  "summary": [
+   "StopIteration"
+  ],
+  "status": "KILLED"
+ },
+ {
+  "tool": "df",
+  "mutation": "D02_d2_read_none",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "FAIL  ㉟ ★ expected_deck(팔, seed, revolutions, stiffen_se, hold_bo_pairwise, dt_factor) · cell_expected_deck(이름) = 커밋된 DE"
+  ],
+  "summary": [
+   "StopIteration"
+  ],
+  "status": "KILLED"
+ },
+ {
+  "tool": "df",
+  "mutation": "D03_E_pairing_off",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "FAIL  ㉟ ★ expected_deck(팔, seed, revolutions, stiffen_se, hold_bo_pairwise, dt_factor) · cell_expected_deck(이름) = 커밋된 DE"
+  ],
+  "summary": [
+   "StopIteration"
+  ],
+  "status": "KILLED"
+ },
+ {
+  "tool": "df",
+  "mutation": "D04_E_same_decl_off",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "FAIL  ㉟ ★ expected_deck(팔, seed, revolutions, stiffen_se, hold_bo_pairwise, dt_factor) · cell_expected_deck(이름) = 커밋된 DE"
+  ],
+  "summary": [
+   "StopIteration"
+  ],
+  "status": "KILLED"
+ },
+ {
+  "tool": "df",
+  "mutation": "D05_gm_same_world_off",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "FAIL  ㉟ ★ expected_deck(팔, seed, revolutions, stiffen_se, hold_bo_pairwise, dt_factor) · cell_expected_deck(이름) = 커밋된 DE"
+  ],
+  "summary": [
+   "StopIteration"
+  ],
+  "status": "KILLED"
+ },
+ {
+  "tool": "df",
+  "mutation": "D06_gm_same_surface_ok",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "FAIL  ㉟ ★ expected_deck(팔, seed, revolutions, stiffen_se, hold_bo_pairwise, dt_factor) · cell_expected_deck(이름) = 커밋된 DE"
+  ],
+  "summary": [
+   "StopIteration"
+  ],
+  "status": "KILLED"
+ },
+ {
+  "tool": "df",
+  "mutation": "D07_gm_mult_tol_wide",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "FAIL  ㉟ ★ expected_deck(팔, seed, revolutions, stiffen_se, hold_bo_pairwise, dt_factor) · cell_expected_deck(이름) = 커밋된 DE"
+  ],
+  "summary": [
+   "StopIteration"
+  ],
+  "status": "KILLED"
+ },
+ {
+  "tool": "df",
+  "mutation": "D08_gm_outside_ignored",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "FAIL  ㉟ ★ expected_deck(팔, seed, revolutions, stiffen_se, hold_bo_pairwise, dt_factor) · cell_expected_deck(이름) = 커밋된 DE"
+  ],
+  "summary": [
+   "StopIteration"
+  ],
+  "status": "KILLED"
+ },
+ {
+  "tool": "df",
+  "mutation": "D09_d2_cell_meta_not_required",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "FAIL  ㉟ ★ expected_deck(팔, seed, revolutions, stiffen_se, hold_bo_pairwise, dt_factor) · cell_expected_deck(이름) = 커밋된 DE"
+  ],
+  "summary": [
+   "StopIteration"
+  ],
+  "status": "KILLED"
+ },
+ {
+  "tool": "df",
+  "mutation": "D10_d2_cell_meta_fields_off",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "FAIL  ㉟ ★ expected_deck(팔, seed, revolutions, stiffen_se, hold_bo_pairwise, dt_factor) · cell_expected_deck(이름) = 커밋된 DE"
+  ],
+  "summary": [
+   "StopIteration"
+  ],
+  "status": "KILLED"
+ },
+ {
+  "tool": "df",
+  "mutation": "D11_d2_cell_readback_off",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "FAIL  ㉟ ★ expected_deck(팔, seed, revolutions, stiffen_se, hold_bo_pairwise, dt_factor) · cell_expected_deck(이름) = 커밋된 DE"
+  ],
+  "summary": [
+   "StopIteration"
+  ],
+  "status": "KILLED"
+ },
+ {
+  "tool": "df",
+  "mutation": "D12_grammar_rho1_any_state",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "FAIL  ㉟ ★ expected_deck(팔, seed, revolutions, stiffen_se, hold_bo_pairwise, dt_factor) · cell_expected_deck(이름) = 커밋된 DE"
+  ],
+  "summary": [
+   "StopIteration"
+  ],
+  "status": "KILLED"
+ },
+ {
+  "tool": "df",
+  "mutation": "D13_grammar_noncanonical",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "FAIL  ㉟ ★ expected_deck(팔, seed, revolutions, stiffen_se, hold_bo_pairwise, dt_factor) · cell_expected_deck(이름) = 커밋된 DE"
+  ],
+  "summary": [
+   "StopIteration"
+  ],
+  "status": "KILLED"
+ },
+ {
+  "tool": "df",
+  "mutation": "D14_cli_args_no_densgen",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "FAIL  ㉟ ★ expected_deck(팔, seed, revolutions, stiffen_se, hold_bo_pairwise, dt_factor) · cell_expected_deck(이름) = 커밋된 DE"
+  ],
+  "summary": [
+   "StopIteration"
+  ],
+  "status": "KILLED"
+ },
+ {
+  "rc": 0,
+  "n_fail": 0,
+  "fails": [],
+  "summary": "mixer_contact_reader selftest: 31/31 PASS",
+  "tool": "cr",
+  "mutation": "CONTROL",
+  "status": "CLEAN"
+ },
+ {
+  "tool": "cr",
+  "mutation": "C01_schema_v2_rejected",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "FAIL  ⑨e deck_meta schema /2 (선택 키 · 밀도 세대 · D2) 는 /1 과 같이 읽는다 (값 = C0) · 모르는 /3 은 TECH"
+  ],
+  "summary": "mixer_contact_reader selftest: 30/31 PASS   FAILED: ['⑨e deck_meta schema /2 (선택 키 · 밀도 세대 · D2) 는 /1 과 같이 읽는다 (값 = C0) · 모르는 /3 은 TECH']",
+  "status": "KILLED"
+ },
+ {
+  "tool": "cr",
+  "mutation": "C02_any_schema",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 1,
+  "fails": [
+   "FAIL  ⑨e deck_meta schema /2 (선택 키 · 밀도 세대 · D2) 는 /1 과 같이 읽는다 (값 = C0) · 모르는 /3 은 TECH"
+  ],
+  "summary": "mixer_contact_reader selftest: 30/31 PASS   FAILED: ['⑨e deck_meta schema /2 (선택 키 · 밀도 세대 · D2) 는 /1 과 같이 읽는다 (값 = C0) · 모르는 /3 은 TECH']",
+  "status": "KILLED"
+ },
+ {
+  "rc": 1,
+  "n_fail": 12,
+  "fails": [
+   "✗ ⑨ ★ --contract 회전 증서 = bin 0 스모크 허용목록 + contact (bins [0] · 상태 · 출처 sha256 · 본 프레임 묶음 — 다시 해시 일치) · soft 는 5.8 % 로 · r",
+   "✗ ⑮ ★ 중간 판정 (정상 · MET) — rc 0 · 기록 = 허용목록 정확히 (§5-a: 세 d_s 부호 · Δ3 · SE3 · u 항 · 충족 + d_soft · q 요약) · 값 = 독립 산술 · 화면 · ",
+   "✗ ⑯ ★ 두 번째 중간 판정 거부 (§5-a \"두 번째 중간 판정은 없다\") — 같은 OUT 재실행 rc 4 · 새 봉인 없음 · 기록 불변 · 화면에 값 없음 / 런 폴더를 새 OUT 으로 복사해도 · OUT 의",
+   "✗ ⑰ ★ 판독기가 연 파일 = 12 런의 계획 t₀ + bin 3 격자 + 같은 강성 · seed E0 계획 t₀ **정확히** (bin 0–2 · 4 는 쓰레기인데 결과 MET — 열었다면 값이 없다)",
+   "✗ ⑱ 12 런 중 하나가 아직 4 바퀴 전 (bin 3 결손) → rc 3 · M 미계산 · 소진 아님 (claim · 표지 · 기록 없음) — 다 지난 뒤에는 볼 수 있다",
+   "✗ ⑲ ★ ε 등록 fail-closed (§5 \"ε_s 의 항목과 값은 결과 전 … 배정\" · ⬜ §10) — 없음 · bin 7 만 (옮겨 쓰지 않는다) · seed 빠짐 · 음수 · NaN · 스키마 · 항목 "
+  ],
+  "summary": [
+   "✗ 11 건 실패"
+  ],
+  "tool": "sm",
+  "mutation": "CONTROL",
+  "status": "DIRTY"
+ },
+ {
+  "tool": "sm",
+  "mutation": "S01_counts_gen1",
+  "occurrences": 1,
+  "rc": 1,
+  "n_fail": 13,
+  "fails": [
+   "✗ ⑨ ★ --contract 회전 증서 = bin 0 스모크 허용목록 + contact (bins [0] · 상태 · 출처 sha256 · 본 프레임 묶음 — 다시 해시 일치) · soft 는 5.8 % 로 · r",
+   "✗ ⑨c ★ 계획 상별 수 = 셀의 밀도 세대 (MXD2-01) — lab D2 셀 GMuu_…_lab20261014_ref_r2 → AM_P 143 · AM_S 699 · SE 99,158 (검사기 인자 · 기대 ",
+   "✗ ⑮ ★ 중간 판정 (정상 · MET) — rc 0 · 기록 = 허용목록 정확히 (§5-a: 세 d_s 부호 · Δ3 · SE3 · u 항 · 충족 + d_soft · q 요약) · 값 = 독립 산술 · 화면 · ",
+   "✗ ⑯ ★ 두 번째 중간 판정 거부 (§5-a \"두 번째 중간 판정은 없다\") — 같은 OUT 재실행 rc 4 · 새 봉인 없음 · 기록 불변 · 화면에 값 없음 / 런 폴더를 새 OUT 으로 복사해도 · OUT 의",
+   "✗ ⑰ ★ 판독기가 연 파일 = 12 런의 계획 t₀ + bin 3 격자 + 같은 강성 · seed E0 계획 t₀ **정확히** (bin 0–2 · 4 는 쓰레기인데 결과 MET — 열었다면 값이 없다)",
+   "✗ ⑱ 12 런 중 하나가 아직 4 바퀴 전 (bin 3 결손) → rc 3 · M 미계산 · 소진 아님 (claim · 표지 · 기록 없음) — 다 지난 뒤에는 볼 수 있다"
+  ],
+  "summary": [
+   "✗ 12 건 실패"
+  ],
+  "status": "KILLED"
+ }
+]

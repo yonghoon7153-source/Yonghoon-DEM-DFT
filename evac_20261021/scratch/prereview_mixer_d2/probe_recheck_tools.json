@@ -1,0 +1,1479 @@
+{
+ "decks": {
+  "GMuu_soft_lab": {
+   "rc": 0,
+   "tail": []
+  },
+  "GMuu_ref20_lab": {
+   "rc": 0,
+   "tail": []
+  },
+  "GMcc_ref20_lab": {
+   "rc": 0,
+   "tail": []
+  },
+  "GMcu_ref20_lab": {
+   "rc": 0,
+   "tail": []
+  },
+  "GMuc_ref20_lab": {
+   "rc": 0,
+   "tail": []
+  },
+  "GMcc_exp_ref20_lab": {
+   "rc": 0,
+   "tail": []
+  },
+  "GMuu_ref20_gen1": {
+   "rc": 0,
+   "tail": []
+  },
+  "GMcc_ref20_gen1": {
+   "rc": 0,
+   "tail": []
+  },
+  "GMuu_ref20_lab_bo04": {
+   "rc": 0,
+   "tail": []
+  },
+  "GMcc_ref20_lab_rho05": {
+   "rc": 0,
+   "tail": []
+  },
+  "GMuu_ref20_lab_dthalf": {
+   "rc": 0,
+   "tail": []
+  },
+  "GMuu_ref40_lab": {
+   "rc": 0,
+   "tail": []
+  },
+  "GMuu_ref20_lab_bo5": {
+   "rc": 0,
+   "tail": []
+  },
+  "GMuu_ref20_lab_rho1p00001": {
+   "rc": 0,
+   "tail": []
+  },
+  "GMcc_ref20_lab_rho1p00001": {
+   "rc": 0,
+   "tail": []
+  },
+  "GMuu_ref20_lab_rho1p0001": {
+   "rc": 0,
+   "tail": []
+  },
+  "GMcc_ref20_lab_rho1p0001": {
+   "rc": 0,
+   "tail": []
+  },
+  "GMuu_ref20_lab_odd": {
+   "rc": 0,
+   "tail": []
+  },
+  "GMcc_ref20_lab_odd": {
+   "rc": 0,
+   "tail": []
+  },
+  "LC_soft_lab": {
+   "rc": 0,
+   "tail": []
+  },
+  "LC_ref20_lab": {
+   "rc": 0,
+   "tail": []
+  },
+  "LH_ref20_lab": {
+   "rc": 0,
+   "tail": []
+  },
+  "LC_soft_gen1": {
+   "rc": 0,
+   "tail": []
+  },
+  "LC_ref20_gen1": {
+   "rc": 0,
+   "tail": []
+  }
+ },
+ "rb": [
+  {
+   "kind": "E",
+   "old": "GMuu_soft_lab",
+   "new": "GMuu_ref20_lab",
+   "rc": 0,
+   "n_fail": 0,
+   "fails": []
+  },
+  {
+   "kind": "E",
+   "old": "LC_soft_lab",
+   "new": "LC_ref20_lab",
+   "rc": 0,
+   "n_fail": 0,
+   "fails": []
+  },
+  {
+   "kind": "E",
+   "old": "LC_soft_gen1",
+   "new": "LC_ref20_gen1",
+   "rc": 0,
+   "n_fail": 0,
+   "fails": []
+  },
+  {
+   "kind": "GM",
+   "old": "GMuu_ref20_lab",
+   "new": "GMcc_ref20_lab",
+   "rc": 0,
+   "n_fail": 0,
+   "fails": []
+  },
+  {
+   "kind": "GM",
+   "old": "GMuu_ref20_lab",
+   "new": "GMcu_ref20_lab",
+   "rc": 0,
+   "n_fail": 0,
+   "fails": []
+  },
+  {
+   "kind": "GM",
+   "old": "GMuu_ref20_lab",
+   "new": "GMuc_ref20_lab",
+   "rc": 0,
+   "n_fail": 0,
+   "fails": []
+  },
+  {
+   "kind": "GM",
+   "old": "GMcu_ref20_lab",
+   "new": "GMcc_ref20_lab",
+   "rc": 0,
+   "n_fail": 0,
+   "fails": []
+  },
+  {
+   "kind": "GM",
+   "old": "GMcc_ref20_lab",
+   "new": "GMuu_ref20_lab",
+   "rc": 0,
+   "n_fail": 0,
+   "fails": []
+  },
+  {
+   "kind": "GM",
+   "old": "GMuu_ref20_gen1",
+   "new": "GMcc_ref20_gen1",
+   "rc": 0,
+   "n_fail": 0,
+   "fails": []
+  },
+  {
+   "kind": "GM",
+   "old": "GMuu_ref20_lab",
+   "new": "GMcc_exp_ref20_lab",
+   "rc": 1,
+   "n_fail": 1,
+   "fails": [
+    "GM GMuu_ref20_lab → GMcc_exp_ref20_lab: 같은 ρ 세계 — 밀도 세대 · 벽 규칙 · ρ_비코팅 · γ_W · SE γ · Bo_SE · 삽입이 같다 (NCM 표면만 바뀐다) (다른 칸 ['벽 규칙'] · ρ 0.3 → 0.3 · γ_W 0.00768 → 0.00768 · Bo 0.5 → 0.5)"
+   ]
+  },
+  {
+   "kind": "GM",
+   "old": "GMuu_ref20_lab",
+   "new": "GMcc_ref20_lab_rho05",
+   "rc": 1,
+   "n_fail": 1,
+   "fails": [
+    "GM GMuu_ref20_lab → GMcc_ref20_lab_rho05: 같은 ρ 세계 — 밀도 세대 · 벽 규칙 · ρ_비코팅 · γ_W · SE γ · Bo_SE · 삽입이 같다 (NCM 표면만 바뀐다) (다른 칸 ['ρ_비코팅', 'γ_W'] · ρ 0.3 → 0.5 · γ_W 0.00768 → 0.0128 · Bo 0.5 → 0.5)"
+   ]
+  },
+  {
+   "kind": "GM",
+   "old": "GMuu_ref20_lab",
+   "new": "GMuu_ref20_lab_bo04",
+   "rc": 1,
+   "n_fail": 11,
+   "fails": [
+    "GM GMuu_ref20_lab → GMuu_ref20_lab_bo04: 같은 ρ 세계 — 밀도 세대 · 벽 규칙 · ρ_비코팅 · γ_W · SE γ · Bo_SE · 삽입이 같다 (NCM 표면만 바뀐다) (다른 칸 ['Bo_SE'] · ρ 0.3 → 0.3 · γ_W 0.00768 → 0.00768 · Bo 0.5 → 0.4)",
+    "GM GMuu_ref20_lab → GMuu_ref20_lab_bo04: NCM 표면이 바뀌었다 (비코팅 ↔ 코팅 — 같은 표면 둘은 대비가 아니다 · 빈 비교를 PASS 로 내지 않는다) ({'AM_P': 'uncoated', 'AM_S': 'uncoated'} → {'AM_P': 'uncoated', 'AM_S': 'uncoated'})",
+    "GM GMuu_ref20_lab → GMuu_ref20_lab_bo04: 쌍 AM_P–AM_P — 규칙이 안 바꾸는 원소가 바뀌었다 (90677.5 → 84177.6 · γ 0.3·0.3 그대로)",
+    "GM GMuu_ref20_lab → GMuu_ref20_lab_bo04: 쌍 AM_P–AM_S — 규칙이 안 바꾸는 원소가 바뀌었다 (106607 → 98964.8 · γ 0.3·0.3 그대로)",
+    "GM GMuu_ref20_lab → GMuu_ref20_lab_bo04: 쌍 AM_S–AM_S — 규칙이 안 바꾸는 원소가 바뀌었다 (118821 → 110304 · γ 0.3·0.3 그대로)",
+    "GM GMuu_ref20_lab → GMuu_ref20_lab_bo04: 쌍 AM_P–SE — 규칙이 안 바꾸는 원소가 바뀌었다 (90776.1 → 84269.1 · γ 0.3·1 그대로)"
+   ]
+  },
+  {
+   "kind": "GM",
+   "old": "GMuu_ref20_lab",
+   "new": "GMcc_ref20_gen1",
+   "rc": 1,
+   "n_fail": 12,
+   "fails": [
+    "GM GMuu_ref20_lab → GMcc_ref20_gen1: 두 덱의 템플릿 (시드 · 밀도 · 반지름) · 타입 사전 동일",
+    "GM GMuu_ref20_lab → GMcc_ref20_gen1: 허용 밖 명령은 토큰까지 같다 (허용: CED 값) (줄 61/61: `region reg block -0.0144707 0.0144707 -0.0144707 0.0144707 -0.0144707 0.0144707 ` ⇄ `region reg block -0.0151083 0.0151083 -0.0151083 0.0151083 -0.015108",
+    "GM GMuu_ref20_lab → GMcc_ref20_gen1: 같은 ρ 세계 — 밀도 세대 · 벽 규칙 · ρ_비코팅 · γ_W · SE γ · Bo_SE · 삽입이 같다 (NCM 표면만 바뀐다) (다른 칸 ['밀도 세대'] · ρ 0.3 → 0.3 · γ_W 0.00768 → 0.00768 · Bo 0.5 → 0.5)",
+    "GM GMuu_ref20_lab → GMcc_ref20_gen1: 쌍 AM_P–AM_P — 배수 ×1.595964 ≠ 규칙 ×1.493802 (γ 0.3·0.3 → 1·1 · 허용 ±1.3e-05)",
+    "GM GMuu_ref20_lab → GMcc_ref20_gen1: 쌍 AM_P–AM_S — 배수 ×1.595955 ≠ 규칙 ×1.493802 (γ 0.3·0.3 → 1·1 · 허용 ±1.3e-05)",
+    "GM GMuu_ref20_lab → GMcc_ref20_gen1: 쌍 AM_S–AM_S — 배수 ×1.595964 ≠ 규칙 ×1.493802 (γ 0.3·0.3 → 1·1 · 허용 ±1.3e-05)"
+   ]
+  },
+  {
+   "kind": "GM",
+   "old": "GMuu_ref20_lab",
+   "new": "GMuu_ref20_lab",
+   "rc": 1,
+   "n_fail": 1,
+   "fails": [
+    "GM GMuu_ref20_lab → GMuu_ref20_lab: NCM 표면이 바뀌었다 (비코팅 ↔ 코팅 — 같은 표면 둘은 대비가 아니다 · 빈 비교를 PASS 로 내지 않는다) ({'AM_P': 'uncoated', 'AM_S': 'uncoated'} → {'AM_P': 'uncoated', 'AM_S': 'uncoated'})"
+   ]
+  },
+  {
+   "kind": "GM",
+   "old": "GMuu_soft_lab",
+   "new": "GMcc_ref20_lab",
+   "rc": 1,
+   "n_fail": 6,
+   "fails": [
+    "GM GMuu_soft_lab → GMcc_ref20_lab: 허용 밖 명령은 토큰까지 같다 (허용: CED 값) (줄 53/71: `fix m1 all property/global youngsModulus peratomtype 1.037e+09 1.037e+09 1e+07 1` ⇄ `fix m1 all property/global youngsModulus peratomtype 1.037e+09 1.037e+",
+    "GM GMuu_soft_lab → GMcc_ref20_lab: 같은 강성 — E · ν 정확히 같다",
+    "GM GMuu_soft_lab → GMcc_ref20_lab: 쌍 AM_P–SE — 배수 ×8.033249 ≠ 규칙 ×1.222212 (γ 0.3·1 → 1·1 · 허용 ±1.3e-05)",
+    "GM GMuu_soft_lab → GMcc_ref20_lab: 쌍 AM_S–SE — 배수 ×8.033222 ≠ 규칙 ×1.222212 (γ 0.3·1 → 1·1 · 허용 ±1.3e-05)",
+    "GM GMuu_soft_lab → GMcc_ref20_lab: 쌍 SE–SE — 규칙이 안 바꾸는 원소가 바뀌었다 (13020.9 → 95938.8 · γ 1·1 그대로)",
+    "GM GMuu_soft_lab → GMcc_ref20_lab: 쌍 SE–WALL — 규칙이 안 바꾸는 원소가 바뀌었다 (7254.29 → 49340 · γ 1·0.00768 그대로)"
+   ]
+  },
+  {
+   "kind": "GM",
+   "old": "GMuu_ref20_lab_rho1p00001",
+   "new": "GMcc_ref20_lab_rho1p00001",
+   "rc": 0,
+   "n_fail": 0,
+   "fails": []
+  },
+  {
+   "kind": "GM",
+   "old": "GMuu_ref20_lab_rho1p0001",
+   "new": "GMcc_ref20_lab_rho1p0001",
+   "rc": 0,
+   "n_fail": 0,
+   "fails": []
+  },
+  {
+   "kind": "GM",
+   "old": "GMuu_ref20_lab_odd",
+   "new": "GMcc_ref20_lab_odd",
+   "rc": 0,
+   "n_fail": 0,
+   "fails": []
+  },
+  {
+   "kind": "DT",
+   "old": "GMuu_ref20_lab",
+   "new": "GMuu_ref20_lab_dthalf",
+   "rc": 0,
+   "n_fail": 0,
+   "fails": []
+  },
+  {
+   "kind": "E",
+   "old": "GMuu_ref20_lab",
+   "new": "GMuu_ref40_lab",
+   "rc": 0,
+   "n_fail": 0,
+   "fails": []
+  },
+  {
+   "kind": "E",
+   "old": "GMuu_soft_lab",
+   "new": "GMcc_ref20_lab",
+   "rc": 1,
+   "n_fail": 8,
+   "fails": [
+    "E GMuu_soft_lab → GMcc_ref20_lab: E 는 같은 팔 — 두 덱 모두 D2 이고 D2 선언 (γ · γ_W · Bo · ρ · 벽 규칙 · 표면 · 삽입) 이 같다 (((('AM_P', '0.3'), ('AM_S', '0.3'), ('SE', '1'), ('bo', '0.5'), ('gw', '0.00768'), ('rho', '0.3')), 'hare2026_x_rho_uncoated",
+    "E GMuu_soft_lab → GMcc_ref20_lab: 쌍 AM_P–AM_P — F₀ 비 3.333319 (허용 ±3e-05) · Codex 배수 불일치 (E* ×1.000000000 vs 1.0 · CED ×1.493799 vs 1.0)",
+    "E GMuu_soft_lab → GMcc_ref20_lab: 쌍 AM_P–AM_S — F₀ 비 3.333289 (허용 ±3e-05) · Codex 배수 불일치 (E* ×1.000000000 vs 1.0 · CED ×1.493795 vs 1.0)",
+    "E GMuu_soft_lab → GMcc_ref20_lab: 쌍 AM_S–AM_S — F₀ 비 3.333333 (허용 ±3e-05) · Codex 배수 불일치 (E* ×1.000000000 vs 1.0 · CED ×1.493802 vs 1.0)",
+    "E GMuu_soft_lab → GMcc_ref20_lab: 쌍 AM_P–SE — F₀ 비 1.825755 (허용 ±3e-05) · Codex 배수 불일치 (E* ×16.850606010 vs 16.85060601 · CED ×8.033249 vs 6.572698075)",
+    "E GMuu_soft_lab → GMcc_ref20_lab: 쌍 AM_S–SE — F₀ 비 1.825737 (허용 ±3e-05) · Codex 배수 불일치 (E* ×16.850606010 vs 16.85060601 · CED ×8.033222 vs 6.572698075)"
+   ]
+  },
+  {
+   "kind": "E",
+   "old": "LC_soft_lab",
+   "new": "GMuu_ref20_lab",
+   "rc": 1,
+   "n_fail": 10,
+   "fails": [
+    "E LC_soft_lab → GMuu_ref20_lab: E 는 같은 팔 — 두 덱 모두 D2 이고 D2 선언 (γ · γ_W · Bo · ρ · 벽 규칙 · 표면 · 삽입) 이 같다 (None ⇄ ((('AM_P', '0.3'), ('AM_S', '0.3'), ('SE', '1'), ('bo', '0.5'), ('gw', '0.00768'), ('rho', '0.3')), 'hare2026_x_rho_unc",
+    "E LC_soft_lab → GMuu_ref20_lab: 쌍 AM_P–AM_P — F₀ 비 0.706088 (허용 ±3e-05) · Codex 배수 불일치 (E* ×1.000000000 vs 1.0 · CED ×0.890470 vs 1.0)",
+    "E LC_soft_lab → GMuu_ref20_lab: 쌍 AM_P–AM_S — F₀ 비 1.147406 (허용 ±3e-05) · Codex 배수 불일치 (E* ×1.000000000 vs 1.0 · CED ×1.046901 vs 1.0)",
+    "E LC_soft_lab → GMuu_ref20_lab: 쌍 AM_S–AM_S — F₀ 비 0.706075 (허용 ±3e-05) · Codex 배수 불일치 (E* ×1.000000000 vs 1.0 · CED ×0.890465 vs 1.0)",
+    "E LC_soft_lab → GMuu_ref20_lab: 쌍 AM_P–SE — F₀ 비 2.808634 (허용 ±3e-05) · Codex 배수 불일치 (E* ×16.850606010 vs 16.85060601 · CED ×9.273466 vs 6.572698075)",
+    "E LC_soft_lab → GMuu_ref20_lab: 쌍 AM_S–SE — F₀ 비 3.159718 (허용 ±3e-05) · Codex 배수 불일치 (E* ×16.850606010 vs 16.85060601 · CED ×9.644798 vs 6.572698075)"
+   ]
+  },
+  {
+   "kind": "B",
+   "old": "LC_ref20_lab",
+   "new": "LH_ref20_lab",
+   "rc": 0,
+   "n_fail": 0,
+   "fails": []
+  },
+  {
+   "kind": "U",
+   "old": "GMuu_ref20_lab",
+   "new": "GMuu_ref20_lab_bo5",
+   "rc": 0,
+   "n_fail": 0,
+   "fails": []
+  },
+  {
+   "kind": "B",
+   "old": "GMuu_ref20_lab",
+   "new": "GMcc_ref20_lab",
+   "rc": 1,
+   "n_fail": 2,
+   "fails": [
+    "B GMuu_ref20_lab → GMcc_ref20_lab: 쌍 AM_P–SE — 바뀌면 안 되는 항이 바뀌었다 (90776.1 → 110948)",
+    "B GMuu_ref20_lab → GMcc_ref20_lab: 쌍 AM_S–SE — 바뀌면 안 되는 항이 바뀌었다 (94411 → 115390)"
+   ]
+  },
+  {
+   "kind": "U",
+   "old": "GMuu_ref20_lab",
+   "new": "GMcc_ref20_lab",
+   "rc": 1,
+   "n_fail": 6,
+   "fails": [
+    "U GMuu_ref20_lab → GMcc_ref20_lab: 배율 하나 — 퍼짐 max/min − 1 ≤ 2e-05 (두 덱 CED %g 인쇄 반올림) (퍼짐 0.494 · ×1 … ×1.493802)",
+    "U GMuu_ref20_lab → GMcc_ref20_lab: 쌍 AM_P–AM_P — 배율 ×1.493799 ≠ 공통 (중앙값) ×1.222214 (허용 ±2e-05)",
+    "U GMuu_ref20_lab → GMcc_ref20_lab: 쌍 AM_P–AM_S — 배율 ×1.493795 ≠ 공통 (중앙값) ×1.222214 (허용 ±2e-05)",
+    "U GMuu_ref20_lab → GMcc_ref20_lab: 쌍 AM_S–AM_S — 배율 ×1.493802 ≠ 공통 (중앙값) ×1.222214 (허용 ±2e-05)",
+    "U GMuu_ref20_lab → GMcc_ref20_lab: 쌍 SE–SE — 배율 ×1 ≠ 공통 (중앙값) ×1.222214 (허용 ±2e-05)",
+    "U GMuu_ref20_lab → GMcc_ref20_lab: 쌍 SE–WALL — 배율 ×1 ≠ 공통 (중앙값) ×1.222214 (허용 ±2e-05)"
+   ]
+  }
+ ],
+ "df": [
+  {
+   "allow": "GM",
+   "old": "GMuu_ref20_lab",
+   "new": "GMcc_ref20_lab",
+   "extra": [],
+   "rc": 0,
+   "lines": [
+    "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/decks/recheck/GMuu_ref20_lab/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b",
+    "1/1 PASS"
+   ]
+  },
+  {
+   "allow": "GM",
+   "old": "GMuu_ref20_lab",
+   "new": "GMcu_ref20_lab",
+   "extra": [],
+   "rc": 0,
+   "lines": [
+    "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/decks/recheck/GMuu_ref20_lab/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b",
+    "1/1 PASS"
+   ]
+  },
+  {
+   "allow": "GM",
+   "old": "GMuu_ref20_lab",
+   "new": "GMuc_ref20_lab",
+   "extra": [],
+   "rc": 0,
+   "lines": [
+    "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/decks/recheck/GMuu_ref20_lab/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b",
+    "1/1 PASS"
+   ]
+  },
+  {
+   "allow": "GM",
+   "old": "GMcc_ref20_lab",
+   "new": "GMuu_ref20_lab",
+   "extra": [],
+   "rc": 0,
+   "lines": [
+    "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/decks/recheck/GMcc_ref20_lab/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b",
+    "1/1 PASS"
+   ]
+  },
+  {
+   "allow": "GM",
+   "old": "GMuu_ref20_gen1",
+   "new": "GMcc_ref20_gen1",
+   "extra": [],
+   "rc": 0,
+   "lines": [
+    "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/decks/recheck/GMuu_ref20_gen1/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4",
+    "1/1 PASS"
+   ]
+  },
+  {
+   "allow": "A",
+   "old": "GMuu_ref20_lab",
+   "new": "GMcc_ref20_lab",
+   "extra": [],
+   "rc": 1,
+   "lines": [
+    "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/decks/recheck/GMuu_ref20_lab/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b",
+    "   ⛔ 허용목록 밖 CED 변화: [('AM_P', 'SE'), ('AM_P', 'WALL'), ('AM_S', 'SE'), ('AM_S', 'WALL')]",
+    "0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지"
+   ]
+  },
+  {
+   "allow": "B",
+   "old": "GMuu_ref20_lab",
+   "new": "GMcc_ref20_lab",
+   "extra": [],
+   "rc": 1,
+   "lines": [
+    "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/decks/recheck/GMuu_ref20_lab/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b",
+    "   ⛔ 허용목록 밖 CED 변화: [('AM_P', 'SE'), ('AM_S', 'SE')]",
+    "0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지"
+   ]
+  },
+  {
+   "allow": "U",
+   "old": "GMuu_ref20_lab",
+   "new": "GMcc_ref20_lab",
+   "extra": [],
+   "rc": 1,
+   "lines": [
+    "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/decks/recheck/GMuu_ref20_lab/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b",
+    "   ⛔ U 규칙 위반 (배율 하나 · 0 은 0): ['배율이 하나가 아니다 — 퍼짐 0.494 > 허용 2e-05 (×1 … ×1.493802 · 중앙값 ×1.222214 에서 먼 쌍 SE–SE ×1, SE–WALL ×1, AM_S–AM_S ×1.493802, AM_P–AM_P ×1.493799)']",
+    "0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지"
+   ]
+  },
+  {
+   "allow": "E",
+   "old": "GMuu_ref20_lab",
+   "new": "GMcc_ref20_lab",
+   "extra": [],
+   "rc": 1,
+   "lines": [
+    "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/decks/recheck/GMuu_ref20_lab/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b",
+    "   ⛔ E 규칙 위반: ['E 비교인데 SE 영률도 dt 도 같다 — 강성 · dt 변화가 없다 (같은 강성의 LC↔LH 는 --allow B)', 'AM_P–AM_P: 90677.5 → 135454 (쌍별 규칙 90677.5 · E* ×1 → CED ×1)', 'AM_P–AM_S: 106607 → 159249 (쌍별 규칙 106607 · E* ×1 → CED ×1)', 'AM_P–SE: 90776.1 → ",
+    "   ⛔ D2 결합 규칙 위반 (덱 텍스트 검산 · 같은 ρ 세계 · 규칙 배수): [\"E 의 두 D2 덱은 같은 팔이어야 한다 — 선언이 다르다 (γ · γ_W · Bo · ρ · 벽 규칙 · 표면 · 세대: {'AM_P': '0.3', 'AM_S': '0.3', 'SE': '1', 'gw': '0.00768', 'bo': '0.5', 'rho': '0.3'} · {'AM_P': 'uncoated', 'AM",
+    "0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지"
+   ]
+  },
+  {
+   "allow": "EB",
+   "old": "GMuu_ref20_lab",
+   "new": "GMcc_ref20_lab",
+   "extra": [],
+   "rc": 1,
+   "lines": [
+    "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/decks/recheck/GMuu_ref20_lab/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b",
+    "   ⛔ E 규칙 위반: ['E 비교인데 SE 영률도 dt 도 같다 — 강성 · dt 변화가 없다 (같은 강성의 LC↔LH 는 --allow B)', 'AM_P–SE: 90776.1 → 110948 (쌍별 규칙 90776.1 · E* ×1 → CED ×1)', 'AM_S–SE: 94411 → 115390 (쌍별 규칙 94411 · E* ×1 → CED ×1)']",
+    "   ⛔ D2 결합 규칙 위반 (덱 텍스트 검산 · 같은 ρ 세계 · 규칙 배수): [\"EB 의 두 D2 덱은 같은 팔이어야 한다 — 선언이 다르다 (γ · γ_W · Bo · ρ · 벽 규칙 · 표면 · 세대: {'AM_P': '0.3', 'AM_S': '0.3', 'SE': '1', 'gw': '0.00768', 'bo': '0.5', 'rho': '0.3'} · {'AM_P': 'uncoated', 'A",
+    "0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지"
+   ]
+  },
+  {
+   "allow": "E",
+   "old": "GMuu_soft_lab",
+   "new": "GMuu_ref20_lab",
+   "extra": [],
+   "rc": 0,
+   "lines": [
+    "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/decks/recheck/GMuu_soft_lab/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5",
+    "1/1 PASS"
+   ]
+  },
+  {
+   "allow": "E",
+   "old": "LC_soft_lab",
+   "new": "LC_ref20_lab",
+   "extra": [],
+   "rc": 0,
+   "lines": [
+    "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/decks/recheck/LC_soft_lab/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/",
+    "1/1 PASS"
+   ]
+  },
+  {
+   "allow": "E",
+   "old": "LC_soft_lab",
+   "new": "GMuu_ref20_lab",
+   "extra": [],
+   "rc": 1,
+   "lines": [
+    "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/decks/recheck/LC_soft_lab/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/",
+    "   ⛔ E 규칙 위반: ['AM_P–AM_P: 101831 → 90677.5 (쌍별 규칙 101831 · E* ×1 → CED ×1)', 'AM_P–AM_S: 101831 → 106607 (쌍별 규칙 101831 · E* ×1 → CED ×1)', 'AM_P–SE: 9788.8 → 90776.1 (쌍별 규칙 64338.8 · E* ×16.8506 → CED ×6.5727)', 'AM_P–WALL: 55282",
+    "   ⛔ D2 결합 규칙 위반 (덱 텍스트 검산 · 같은 ρ 세계 · 규칙 배수): ['E 는 같은 팔 · 다른 강성 — D2 결합 규칙 덱과 옛 팔 덱을 짝짓지 않는다']",
+    "0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지"
+   ]
+  },
+  {
+   "allow": "GM",
+   "old": "GMuu_ref20_lab",
+   "new": "GMcc_exp_ref20_lab",
+   "extra": [],
+   "rc": 1,
+   "lines": [
+    "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/decks/recheck/GMuu_ref20_lab/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b",
+    "   ⛔ D2 결합 규칙 위반 (덱 텍스트 검산 · 같은 ρ 세계 · 규칙 배수): [\"GM 은 같은 ρ 세계 비교다 — 다른 칸 ['벽 규칙'] (ρ 0.3 → 0.3 · γ_W 0.00768 → 0.00768 · Bo 0.5 → 0.5 · 세대 lab20261014 → lab20261014)\"]",
+    "0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지"
+   ]
+  },
+  {
+   "allow": "GM",
+   "old": "GMuu_ref20_lab",
+   "new": "GMcc_ref20_lab_rho05",
+   "extra": [],
+   "rc": 1,
+   "lines": [
+    "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/decks/recheck/GMuu_ref20_lab/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b",
+    "   ⛔ D2 결합 규칙 위반 (덱 텍스트 검산 · 같은 ρ 세계 · 규칙 배수): [\"GM 은 같은 ρ 세계 비교다 — 다른 칸 ['ρ_비코팅', 'γ_W'] (ρ 0.3 → 0.5 · γ_W 0.00768 → 0.0128 · Bo 0.5 → 0.5 · 세대 lab20261014 → lab20261014)\"]",
+    "0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지"
+   ]
+  },
+  {
+   "allow": "GM",
+   "old": "GMuu_ref20_lab",
+   "new": "GMuu_ref20_lab_bo04",
+   "extra": [],
+   "rc": 1,
+   "lines": [
+    "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/decks/recheck/GMuu_ref20_lab/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b",
+    "   ⛔ 허용목록 밖 CED 변화: [('AM_P', 'AM_P'), ('AM_P', 'AM_S'), ('AM_P', 'SE'), ('AM_P', 'WALL'), ('AM_S', 'AM_S'), ('AM_S', 'SE'), ('AM_S', 'WALL'), ('SE', 'SE')]",
+    "   ⛔ 개입 누락 (허용 쌍인데 안 바뀜): [\"NCM 표면이 그대로다 ({'AM_P': 'uncoated', 'AM_S': 'uncoated'}) — 비코팅 ↔ 코팅 대비가 아니다 (빈 비교)\"]",
+    "   ⛔ D2 결합 규칙 위반 (덱 텍스트 검산 · 같은 ρ 세계 · 규칙 배수): [\"GM 은 같은 ρ 세계 비교다 — 다른 칸 ['Bo_SE'] (ρ 0.3 → 0.3 · γ_W 0.00768 → 0.00768 · Bo 0.5 → 0.4 · 세대 lab20261014 → lab20261014)\"]",
+    "0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지"
+   ]
+  },
+  {
+   "allow": "GM",
+   "old": "LC_ref20_lab",
+   "new": "LH_ref20_lab",
+   "extra": [],
+   "rc": 1,
+   "lines": [
+    "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/decks/recheck/LC_ref20_lab/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b",
+    "   ⛔ D2 결합 규칙 위반 (덱 텍스트 검산 · 같은 ρ 세계 · 규칙 배수): ['GM 은 두 덱 모두 D2 결합 규칙 덱이어야 한다 (머리 \"★ D2 결합 규칙 (기하평균\" · 선언을 읽을 수 있어야) — 기준 옛 팔 · 새 옛 팔']",
+    "0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지"
+   ]
+  },
+  {
+   "allow": "B",
+   "old": "LC_ref20_lab",
+   "new": "LH_ref20_lab",
+   "extra": [],
+   "rc": 0,
+   "lines": [
+    "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/decks/recheck/LC_ref20_lab/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b",
+    "1/1 PASS"
+   ]
+  },
+  {
+   "allow": "GM",
+   "old": "GMuu_ref20_lab_rho1p00001",
+   "new": "GMcc_ref20_lab_rho1p00001",
+   "extra": [],
+   "rc": 1,
+   "lines": [
+    "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/decks/recheck/GMuu_ref20_lab_rho1p00001/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7",
+    "   ⛔ 개입 누락 (허용 쌍인데 안 바뀜): [('AM_P', 'SE'), ('AM_S', 'SE')]",
+    "0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지"
+   ]
+  },
+  {
+   "allow": "GM",
+   "old": "GMuu_ref20_lab_rho1p0001",
+   "new": "GMcc_ref20_lab_rho1p0001",
+   "extra": [],
+   "rc": 0,
+   "lines": [
+    "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/decks/recheck/GMuu_ref20_lab_rho1p0001/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-",
+    "1/1 PASS"
+   ]
+  },
+  {
+   "allow": "GM",
+   "old": "GMuu_ref20_lab_odd",
+   "new": "GMcc_ref20_lab_odd",
+   "extra": [],
+   "rc": 0,
+   "lines": [
+    "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/decks/recheck/GMuu_ref20_lab_odd/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a67",
+    "1/1 PASS"
+   ]
+  },
+  {
+   "allow": "U",
+   "old": "GMuu_ref20_lab",
+   "new": "GMuu_ref20_lab_bo5",
+   "extra": [],
+   "rc": 0,
+   "lines": [
+    "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/decks/recheck/GMuu_ref20_lab/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b",
+    "1/1 PASS"
+   ]
+  },
+  {
+   "allow": "E",
+   "old": "GMuu_ref20_lab",
+   "new": "GMuu_ref40_lab",
+   "extra": [],
+   "rc": 0,
+   "lines": [
+    "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/decks/recheck/GMuu_ref20_lab/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b",
+    "1/1 PASS"
+   ]
+  },
+  {
+   "allow": "GM",
+   "old": "GMuu_ref20_lab",
+   "new": "GMcc_ref20_lab",
+   "extra": [
+    "--expect-deck",
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/decks/recheck/GMcc_ref20_lab/in.mixer"
+   ],
+   "rc": 0,
+   "lines": [
+    "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/decks/recheck/GMuu_ref20_lab/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b",
+    "1/1 PASS"
+   ]
+  },
+  {
+   "allow": "GM",
+   "old": "GMuu_ref20_lab",
+   "new": "GMcc_ref20_lab",
+   "extra": [
+    "--expect-deck",
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/decks/recheck/GMcu_ref20_lab/in.mixer"
+   ],
+   "rc": 1,
+   "lines": [
+    "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/decks/recheck/GMuu_ref20_lab/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b",
+    "   ⛔ 목표 행렬과 불일치: ['AM_P–AM_S: 목표 130296 vs 새 159249', 'AM_S–AM_S: 목표 118821 vs 새 177495', 'AM_S–SE: 목표 94411 vs 새 115390', 'AM_S–WALL: 목표 57506.4 vs 새 70285.1']",
+    "0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지"
+   ]
+  }
+ ],
+ "mut": {
+  "M04": {
+   "soft_rc": 0,
+   "soft_tail": [],
+   "ref20_rc": 0,
+   "ref20_tail": [],
+   "rb_E": {
+    "kind": "E",
+    "old": "M04_soft",
+    "new": "M04_ref20",
+    "rc": 1,
+    "n_fail": 2,
+    "fails": [
+     "E soft → ref20: D2 결합 규칙 — 덱 텍스트 검산 (쌍별 기하평균 F₀ · 절대 수준 Bo · Q2 벽 · 겹침 천장 · 머리 표 · 세대 · 기록) — soft (절대 수준 Bo_SE = F₀_SS / SE 무게 (덱 r 7.57e-05 · ρ 1640 · g 9.81) = 0.6097616 ≠ 머리 선언 SE–SE Bo_code 0.5 (허용 ±2.5e-05 · MXD2-02))",
+     "E soft → ref20: D2 결합 규칙 — 덱 텍스트 검산 (쌍별 기하평균 F₀ · 절대 수준 Bo · Q2 벽 · 겹침 천장 · 머리 표 · 세대 · 기록) — ref20 (절대 수준 Bo_SE = F₀_SS / SE 무게 (덱 r 7.57e-05 · ρ 1640 · g 9.81) = 0.6097603 ≠ 머리 선언 SE–SE Bo_code 0.5 (허용 ±2.5e-05 · MXD2-02))"
+    ]
+   },
+   "df_E": {
+    "allow": "E",
+    "old": "M04_soft",
+    "new": "M04_ref20",
+    "extra": [],
+    "rc": 1,
+    "lines": [
+     "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/mutx/M04_decks/soft/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratc",
+     "   ⛔ D2 결합 규칙 위반 (덱 텍스트 검산 · 같은 ρ 세계 · 규칙 배수): ['기준 덱 D2 — 절대 수준 Bo_SE = F₀_SS / SE 무게 (덱 r 7.57e-05 · ρ 1640 · g 9.81) = 0.6097616 ≠ 머리 선언 SE–SE Bo_code 0.5 (허용 ±2.5e-05 · MXD2-02)', '새 덱 D2 — 절대 수준 Bo_SE = F₀_SS / SE 무게 (덱 r 7.5",
+     "0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지"
+    ]
+   },
+   "rb_GM_vs_fixed_cc": {
+    "kind": "GM",
+    "old": "M04_ref20",
+    "new": "GMcc_ref20_lab",
+    "rc": 1,
+    "n_fail": 10,
+    "fails": [
+     "GM ref20 → GMcc_ref20_lab: D2 결합 규칙 — 덱 텍스트 검산 (쌍별 기하평균 F₀ · 절대 수준 Bo · Q2 벽 · 겹침 천장 · 머리 표 · 세대 · 기록) — ref20 (절대 수준 Bo_SE = F₀_SS / SE 무게 (덱 r 7.57e-05 · ρ 1640 · g 9.81) = 0.6097603 ≠ 머리 선언 SE–SE Bo_code 0.5 (허용 ±2.5e-05 · MXD2",
+     "GM ref20 → GMcc_ref20_lab: 쌍 AM_P–AM_P — 배수 ×1.398181 ≠ 규칙 ×1.493802 (γ 0.3·0.3 → 1·1 · 허용 ±1.3e-05)",
+     "GM ref20 → GMcc_ref20_lab: 쌍 AM_P–AM_S — 배수 ×1.398184 ≠ 규칙 ×1.493802 (γ 0.3·0.3 → 1·1 · 허용 ±1.3e-05)",
+     "GM ref20 → GMcc_ref20_lab: 쌍 AM_S–AM_S — 배수 ×1.398182 ≠ 규칙 ×1.493802 (γ 0.3·0.3 → 1·1 · 허용 ±1.3e-05)",
+     "GM ref20 → GMcc_ref20_lab: 쌍 AM_P–SE — 배수 ×1.143981 ≠ 규칙 ×1.222212 (γ 0.3·1 → 1·1 · 허용 ±1.3e-05)",
+     "GM ref20 → GMcc_ref20_lab: 쌍 AM_S–SE — 배수 ×1.143982 ≠ 규칙 ×1.222212 (γ 0.3·1 → 1·1 · 허용 ±1.3e-05)"
+    ]
+   },
+   "df_GM_vs_fixed_cc": {
+    "allow": "GM",
+    "old": "M04_ref20",
+    "new": "GMcc_ref20_lab",
+    "extra": [],
+    "rc": 1,
+    "lines": [
+     "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/mutx/M04_decks/ref20/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scrat",
+     "   ⛔ 허용목록 밖 CED 변화: [('SE', 'SE'), ('SE', 'WALL')]",
+     "   ⛔ D2 결합 규칙 위반 (덱 텍스트 검산 · 같은 ρ 세계 · 규칙 배수): ['AM_P–AM_P: 배수 ×1.398181 ≠ 규칙 ×1.493802 (γ 0.3·0.3 → 1·1 · 허용 ±1.3e-05)', 'AM_P–AM_S: 배수 ×1.398184 ≠ 규칙 ×1.493802 (γ 0.3·0.3 → 1·1 · 허용 ±1.3e-05)', 'AM_P–SE: 배수 ×1.143981 ≠ 규칙 ×1.222",
+     "0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지"
+    ]
+   }
+  },
+  "M05": {
+   "soft_rc": 0,
+   "soft_tail": [],
+   "ref20_rc": 0,
+   "ref20_tail": [],
+   "rb_E": {
+    "kind": "E",
+    "old": "M05_soft",
+    "new": "M05_ref20",
+    "rc": 1,
+    "n_fail": 2,
+    "fails": [
+     "E soft → ref20: D2 결합 규칙 — 덱 텍스트 검산 (쌍별 기하평균 F₀ · 절대 수준 Bo · Q2 벽 · 겹침 천장 · 머리 표 · 세대 · 기록) — soft (절대 수준 Bo_SE = F₀_SS / SE 무게 (덱 r 7.57e-05 · ρ 1640 · g 9.81) = 0.6097616 ≠ 머리 선언 SE–SE Bo_code 0.5 (허용 ±2.5e-05 · MXD2-02))",
+     "E soft → ref20: D2 결합 규칙 — 덱 텍스트 검산 (쌍별 기하평균 F₀ · 절대 수준 Bo · Q2 벽 · 겹침 천장 · 머리 표 · 세대 · 기록) — ref20 (절대 수준 Bo_SE = F₀_SS / SE 무게 (덱 r 7.57e-05 · ρ 1640 · g 9.81) = 0.6097603 ≠ 머리 선언 SE–SE Bo_code 0.5 (허용 ±2.5e-05 · MXD2-02))"
+    ]
+   },
+   "df_E": {
+    "allow": "E",
+    "old": "M05_soft",
+    "new": "M05_ref20",
+    "extra": [],
+    "rc": 1,
+    "lines": [
+     "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/mutx/M05_decks/soft/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratc",
+     "   ⛔ D2 결합 규칙 위반 (덱 텍스트 검산 · 같은 ρ 세계 · 규칙 배수): ['기준 덱 D2 — 절대 수준 Bo_SE = F₀_SS / SE 무게 (덱 r 7.57e-05 · ρ 1640 · g 9.81) = 0.6097616 ≠ 머리 선언 SE–SE Bo_code 0.5 (허용 ±2.5e-05 · MXD2-02)', '새 덱 D2 — 절대 수준 Bo_SE = F₀_SS / SE 무게 (덱 r 7.5",
+     "0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지"
+    ]
+   },
+   "rb_GM_vs_fixed_cc": {
+    "kind": "GM",
+    "old": "M05_ref20",
+    "new": "GMcc_ref20_lab",
+    "rc": 1,
+    "n_fail": 10,
+    "fails": [
+     "GM ref20 → GMcc_ref20_lab: D2 결합 규칙 — 덱 텍스트 검산 (쌍별 기하평균 F₀ · 절대 수준 Bo · Q2 벽 · 겹침 천장 · 머리 표 · 세대 · 기록) — ref20 (절대 수준 Bo_SE = F₀_SS / SE 무게 (덱 r 7.57e-05 · ρ 1640 · g 9.81) = 0.6097603 ≠ 머리 선언 SE–SE Bo_code 0.5 (허용 ±2.5e-05 · MXD2",
+     "GM ref20 → GMcc_ref20_lab: 쌍 AM_P–AM_P — 배수 ×1.398181 ≠ 규칙 ×1.493802 (γ 0.3·0.3 → 1·1 · 허용 ±1.3e-05)",
+     "GM ref20 → GMcc_ref20_lab: 쌍 AM_P–AM_S — 배수 ×1.398184 ≠ 규칙 ×1.493802 (γ 0.3·0.3 → 1·1 · 허용 ±1.3e-05)",
+     "GM ref20 → GMcc_ref20_lab: 쌍 AM_S–AM_S — 배수 ×1.398182 ≠ 규칙 ×1.493802 (γ 0.3·0.3 → 1·1 · 허용 ±1.3e-05)",
+     "GM ref20 → GMcc_ref20_lab: 쌍 AM_P–SE — 배수 ×1.143981 ≠ 규칙 ×1.222212 (γ 0.3·1 → 1·1 · 허용 ±1.3e-05)",
+     "GM ref20 → GMcc_ref20_lab: 쌍 AM_S–SE — 배수 ×1.143982 ≠ 규칙 ×1.222212 (γ 0.3·1 → 1·1 · 허용 ±1.3e-05)"
+    ]
+   },
+   "df_GM_vs_fixed_cc": {
+    "allow": "GM",
+    "old": "M05_ref20",
+    "new": "GMcc_ref20_lab",
+    "extra": [],
+    "rc": 1,
+    "lines": [
+     "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/mutx/M05_decks/ref20/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scrat",
+     "   ⛔ 허용목록 밖 CED 변화: [('SE', 'SE'), ('SE', 'WALL')]",
+     "   ⛔ D2 결합 규칙 위반 (덱 텍스트 검산 · 같은 ρ 세계 · 규칙 배수): ['AM_P–AM_P: 배수 ×1.398181 ≠ 규칙 ×1.493802 (γ 0.3·0.3 → 1·1 · 허용 ±1.3e-05)', 'AM_P–AM_S: 배수 ×1.398184 ≠ 규칙 ×1.493802 (γ 0.3·0.3 → 1·1 · 허용 ±1.3e-05)', 'AM_P–SE: 배수 ×1.143981 ≠ 규칙 ×1.222",
+     "0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지"
+    ]
+   }
+  },
+  "M16": {
+   "soft_rc": 0,
+   "soft_tail": [],
+   "ref20_rc": 0,
+   "ref20_tail": [],
+   "rb_E": {
+    "kind": "E",
+    "old": "M16_soft",
+    "new": "M16_ref20",
+    "rc": 1,
+    "n_fail": 2,
+    "fails": [
+     "E soft → ref20: D2 결합 규칙 — 덱 텍스트 검산 (쌍별 기하평균 F₀ · 절대 수준 Bo · Q2 벽 · 겹침 천장 · 머리 표 · 세대 · 기록) — soft (D2 기록 (deck_meta.json): adhesion_rule.bo_se 0.21244 ≠ 덱 머리 SE–SE Bo_code (절대 수준) 0.5)",
+     "E soft → ref20: D2 결합 규칙 — 덱 텍스트 검산 (쌍별 기하평균 F₀ · 절대 수준 Bo · Q2 벽 · 겹침 천장 · 머리 표 · 세대 · 기록) — ref20 (D2 기록 (deck_meta.json): adhesion_rule.bo_se 0.21244 ≠ 덱 머리 SE–SE Bo_code (절대 수준) 0.5)"
+    ]
+   },
+   "df_E": {
+    "allow": "E",
+    "old": "M16_soft",
+    "new": "M16_ref20",
+    "extra": [],
+    "rc": 0,
+    "lines": [
+     "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/mutx/M16_decks/soft/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratc",
+     "1/1 PASS"
+    ]
+   },
+   "rb_GM_vs_fixed_cc": {
+    "kind": "GM",
+    "old": "M16_ref20",
+    "new": "GMcc_ref20_lab",
+    "rc": 1,
+    "n_fail": 1,
+    "fails": [
+     "GM ref20 → GMcc_ref20_lab: D2 결합 규칙 — 덱 텍스트 검산 (쌍별 기하평균 F₀ · 절대 수준 Bo · Q2 벽 · 겹침 천장 · 머리 표 · 세대 · 기록) — ref20 (D2 기록 (deck_meta.json): adhesion_rule.bo_se 0.21244 ≠ 덱 머리 SE–SE Bo_code (절대 수준) 0.5)"
+    ]
+   },
+   "df_GM_vs_fixed_cc": {
+    "allow": "GM",
+    "old": "M16_ref20",
+    "new": "GMcc_ref20_lab",
+    "extra": [],
+    "rc": 0,
+    "lines": [
+     "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/mutx/M16_decks/ref20/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scrat",
+     "1/1 PASS"
+    ]
+   }
+  },
+  "M06": {
+   "soft_rc": 0,
+   "soft_tail": [],
+   "ref20_rc": 0,
+   "ref20_tail": [],
+   "rb_E": {
+    "kind": "E",
+    "old": "M06_soft",
+    "new": "M06_ref20",
+    "rc": 1,
+    "n_fail": 1,
+    "fails": [
+     "E soft → ref20: D2 결합 규칙 — 덱 텍스트 검산 (쌍별 기하평균 F₀ · 절대 수준 Bo · Q2 벽 · 겹침 천장 · 머리 표 · 세대 · 기록) — soft (AM_P–SE: 겹침 δ0/min r 1.4176 % > 천장 1 % (D2 = 모든 쌍); AM_S–SE: 겹침 δ0/min r 1.3630 % > 천장 1 % (D2 = 모든 쌍))"
+    ]
+   },
+   "df_E": {
+    "allow": "E",
+    "old": "M06_soft",
+    "new": "M06_ref20",
+    "extra": [],
+    "rc": 1,
+    "lines": [
+     "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/mutx/M06_decks/soft/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratc",
+     "   ⛔ D2 결합 규칙 위반 (덱 텍스트 검산 · 같은 ρ 세계 · 규칙 배수): ['기준 덱 D2 — AM_P–SE: 겹침 δ0/min r 1.4176 % > 천장 1 % (D2 = 모든 쌍)', '기준 덱 D2 — AM_S–SE: 겹침 δ0/min r 1.3630 % > 천장 1 % (D2 = 모든 쌍)']",
+     "0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지"
+    ]
+   }
+  },
+  "N15": {
+   "soft_rc": 0,
+   "soft_tail": [],
+   "ref20_rc": 0,
+   "ref20_tail": [],
+   "rb_E": {
+    "kind": "E",
+    "old": "N15_soft",
+    "new": "N15_ref20",
+    "rc": 1,
+    "n_fail": 2,
+    "fails": [
+     "E soft → ref20: D2 결합 규칙 — 덱 텍스트 검산 (쌍별 기하평균 F₀ · 절대 수준 Bo · Q2 벽 · 겹침 천장 · 머리 표 · 세대 · 기록) — soft (Q2 — γ_W/γ_SE 0.00768 ≠ 0.0256 × ρ_비코팅 1 = 0.0256 (1저자 10-14 Q2 — 벽 = 비코팅 NCM); Q2 — ρ_비코팅 1 세계의 NCM 상 γ/γ_SE 는 1 (코팅) 또는 ρ (비코팅) ",
+     "E soft → ref20: D2 결합 규칙 — 덱 텍스트 검산 (쌍별 기하평균 F₀ · 절대 수준 Bo · Q2 벽 · 겹침 천장 · 머리 표 · 세대 · 기록) — ref20 (Q2 — γ_W/γ_SE 0.00768 ≠ 0.0256 × ρ_비코팅 1 = 0.0256 (1저자 10-14 Q2 — 벽 = 비코팅 NCM); Q2 — ρ_비코팅 1 세계의 NCM 상 γ/γ_SE 는 1 (코팅) 또는 ρ (비코팅)"
+    ]
+   },
+   "df_E": {
+    "allow": "E",
+    "old": "N15_soft",
+    "new": "N15_ref20",
+    "extra": [],
+    "rc": 1,
+    "lines": [
+     "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/mutx/N15_decks/soft/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratc",
+     "   ⛔ D2 결합 규칙 위반 (덱 텍스트 검산 · 같은 ρ 세계 · 규칙 배수): ['기준 덱 D2 — Q2 — γ_W/γ_SE 0.00768 ≠ 0.0256 × ρ_비코팅 1 = 0.0256 (1저자 10-14 Q2 — 벽 = 비코팅 NCM)', \"기준 덱 D2 — Q2 — ρ_비코팅 1 세계의 NCM 상 γ/γ_SE 는 1 (코팅) 또는 ρ (비코팅) 만: {'AM_P': '0.3', 'AM_S': '0",
+     "0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지"
+    ]
+   },
+   "rb_GM_vs_fixed_cc": {
+    "kind": "GM",
+    "old": "N15_ref20",
+    "new": "GMcc_ref20_lab",
+    "rc": 1,
+    "n_fail": 2,
+    "fails": [
+     "GM ref20 → GMcc_ref20_lab: D2 결합 규칙 — 덱 텍스트 검산 (쌍별 기하평균 F₀ · 절대 수준 Bo · Q2 벽 · 겹침 천장 · 머리 표 · 세대 · 기록) — ref20 (Q2 — γ_W/γ_SE 0.00768 ≠ 0.0256 × ρ_비코팅 1 = 0.0256 (1저자 10-14 Q2 — 벽 = 비코팅 NCM); Q2 — ρ_비코팅 1 세계의 NCM 상 γ/γ_SE 는 1 (코팅)",
+     "GM ref20 → GMcc_ref20_lab: 같은 ρ 세계 — 밀도 세대 · 벽 규칙 · ρ_비코팅 · γ_W · SE γ · Bo_SE · 삽입이 같다 (NCM 표면만 바뀐다) (다른 칸 ['ρ_비코팅'] · ρ 1 → 0.3 · γ_W 0.00768 → 0.00768 · Bo 0.5 → 0.5)"
+    ]
+   },
+   "df_GM_vs_fixed_cc": {
+    "allow": "GM",
+    "old": "N15_ref20",
+    "new": "GMcc_ref20_lab",
+    "extra": [],
+    "rc": 1,
+    "lines": [
+     "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/mutx/N15_decks/ref20/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scrat",
+     "   ⛔ D2 결합 규칙 위반 (덱 텍스트 검산 · 같은 ρ 세계 · 규칙 배수): [\"GM 은 같은 ρ 세계 비교다 — 다른 칸 ['ρ_비코팅'] (ρ 1 → 0.3 · γ_W 0.00768 → 0.00768 · Bo 0.5 → 0.5 · 세대 lab20261014 → lab20261014)\", '기준 덱 D2 — Q2 — γ_W/γ_SE 0.00768 ≠ 0.0256 × ρ_비코팅 1 = 0.0256 (1",
+     "0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지"
+    ]
+   }
+  },
+  "M15": {
+   "soft_rc": 0,
+   "soft_tail": [],
+   "ref20_rc": 0,
+   "ref20_tail": [],
+   "rb_E": {
+    "kind": "E",
+    "old": "M15_soft",
+    "new": "M15_ref20",
+    "rc": 1,
+    "n_fail": 2,
+    "fails": [
+     "E soft → ref20: D2 결합 규칙 — 덱 텍스트 검산 (쌍별 기하평균 F₀ · 절대 수준 Bo · Q2 벽 · 겹침 천장 · 머리 표 · 세대 · 기록) — soft (AM_P–AM_P: 머리 표 F0/F0_SS 3.9466e-08 ≠ 덱 값 2.699994 (허용 ±5.5e-05); AM_P–AM_S: 머리 표 F0/F0_SS 2.42868e-08 ≠ 덱 값 1.661555 (허용 ±5.5e-05",
+     "E soft → ref20: D2 결합 규칙 — 덱 텍스트 검산 (쌍별 기하평균 F₀ · 절대 수준 Bo · Q2 벽 · 겹침 천장 · 머리 표 · 세대 · 기록) — ref20 (AM_P–AM_P: 머리 표 F0/F0_SS 3.9466e-08 ≠ 덱 값 2.699995 (허용 ±5.5e-05); AM_P–AM_S: 머리 표 F0/F0_SS 2.42868e-08 ≠ 덱 값 1.661556 (허용 ±5.5e-0"
+    ]
+   },
+   "df_E": {
+    "allow": "E",
+    "old": "M15_soft",
+    "new": "M15_ref20",
+    "extra": [],
+    "rc": 1,
+    "lines": [
+     "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/mutx/M15_decks/soft/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratc",
+     "   ⛔ D2 결합 규칙 위반 (덱 텍스트 검산 · 같은 ρ 세계 · 규칙 배수): ['기준 덱 D2 — AM_P–AM_P: 머리 표 F0/F0_SS 3.9466e-08 ≠ 덱 값 2.699994 (허용 ±5.5e-05)', '기준 덱 D2 — AM_P–AM_S: 머리 표 F0/F0_SS 2.42868e-08 ≠ 덱 값 1.661555 (허용 ±5.5e-05)', '기준 덱 D2 — AM_S–AM_S: 머리 ",
+     "0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지"
+    ]
+   },
+   "rb_GM_vs_fixed_cc": {
+    "kind": "GM",
+    "old": "M15_ref20",
+    "new": "GMcc_ref20_lab",
+    "rc": 1,
+    "n_fail": 1,
+    "fails": [
+     "GM ref20 → GMcc_ref20_lab: D2 결합 규칙 — 덱 텍스트 검산 (쌍별 기하평균 F₀ · 절대 수준 Bo · Q2 벽 · 겹침 천장 · 머리 표 · 세대 · 기록) — ref20 (AM_P–AM_P: 머리 표 F0/F0_SS 3.9466e-08 ≠ 덱 값 2.699995 (허용 ±5.5e-05); AM_P–AM_S: 머리 표 F0/F0_SS 2.42868e-08 ≠ 덱 값 1.661556 "
+    ]
+   },
+   "df_GM_vs_fixed_cc": {
+    "allow": "GM",
+    "old": "M15_ref20",
+    "new": "GMcc_ref20_lab",
+    "extra": [],
+    "rc": 1,
+    "lines": [
+     "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/mutx/M15_decks/ref20/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scrat",
+     "   ⛔ D2 결합 규칙 위반 (덱 텍스트 검산 · 같은 ρ 세계 · 규칙 배수): ['기준 덱 D2 — AM_P–AM_P: 머리 표 F0/F0_SS 3.9466e-08 ≠ 덱 값 2.699995 (허용 ±5.5e-05)', '기준 덱 D2 — AM_P–AM_S: 머리 표 F0/F0_SS 2.42868e-08 ≠ 덱 값 1.661556 (허용 ±5.5e-05)', '기준 덱 D2 — AM_S–AM_S: 머리 ",
+     "0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지"
+    ]
+   }
+  },
+  "M18": {
+   "soft_rc": 0,
+   "soft_tail": [],
+   "ref20_rc": 0,
+   "ref20_tail": [],
+   "rb_E": {
+    "kind": "E",
+    "old": "M18_soft",
+    "new": "M18_ref20",
+    "rc": 0,
+    "n_fail": 0,
+    "fails": []
+   },
+   "df_E": {
+    "allow": "E",
+    "old": "M18_soft",
+    "new": "M18_ref20",
+    "extra": [],
+    "rc": 0,
+    "lines": [
+     "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/mutx/M18_decks/soft/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratc",
+     "1/1 PASS"
+    ]
+   },
+   "rb_GM_vs_fixed_cc": {
+    "kind": "GM",
+    "old": "M18_ref20",
+    "new": "GMcc_ref20_lab",
+    "rc": 1,
+    "n_fail": 2,
+    "fails": [
+     "GM ref20 → GMcc_ref20_lab: 허용 밖 명령은 토큰까지 같다 (허용: CED 값) (명령 수 50 ≠ 54; 줄 117/117: `fix pdd all particledistribution/discrete 32452867 3 pt1 0.571429 pt2 0.244898 p` ⇄ `fix pddA all particledistribution/discrete 32452867 2 pt1 0.70",
+     "GM ref20 → GMcc_ref20_lab: 같은 ρ 세계 — 밀도 세대 · 벽 규칙 · ρ_비코팅 · γ_W · SE γ · Bo_SE · 삽입이 같다 (NCM 표면만 바뀐다) (다른 칸 ['삽입'] · ρ 0.3 → 0.3 · γ_W 0.00768 → 0.00768 · Bo 0.5 → 0.5)"
+    ]
+   },
+   "df_GM_vs_fixed_cc": {
+    "allow": "GM",
+    "old": "M18_ref20",
+    "new": "GMcc_ref20_lab",
+    "extra": [],
+    "rc": 1,
+    "lines": [
+     "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/mutx/M18_decks/ref20/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scrat",
+     "   ⛔ CED 밖 차이: ['CED 밖 명령 수 49 ≠ 53', 'CED 밖 명령 #28: fix pdd all particledistribution/discrete 32452867 3 pt1 0.571429 pt2 0.244898 pt3 0.183673  ⇄  fix pddA all particledistribution/discrete 32452867 2 pt1 0.700000 pt2 0.300000',",
+     "   ⛔ D2 결합 규칙 위반 (덱 텍스트 검산 · 같은 ρ 세계 · 규칙 배수): [\"GM 은 같은 ρ 세계 비교다 — 다른 칸 ['삽입'] (ρ 0.3 → 0.3 · γ_W 0.00768 → 0.00768 · Bo 0.5 → 0.5 · 세대 lab20261014 → lab20261014)\"]",
+     "0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지"
+    ]
+   }
+  },
+  "M13": {
+   "soft_rc": 0,
+   "soft_tail": [],
+   "ref20_rc": 0,
+   "ref20_tail": [],
+   "rb_E": {
+    "kind": "E",
+    "old": "M13_soft",
+    "new": "M13_ref20",
+    "rc": 0,
+    "n_fail": 0,
+    "fails": []
+   },
+   "df_E": {
+    "allow": "E",
+    "old": "M13_soft",
+    "new": "M13_ref20",
+    "extra": [],
+    "rc": 0,
+    "lines": [
+     "── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/mutx/M13_decks/soft/in.mixer  →  /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratc",
+     "1/1 PASS"
+    ]
+   }
+  }
+ },
+ "runs": {
+  "gen_uu": {
+   "rc": 0,
+   "args": [
+    "--n-total",
+    "100000",
+    "--cgf",
+    "151.4",
+    "--revolutions",
+    "2",
+    "--seed",
+    "32452843",
+    "--dens-gen",
+    "lab20261014",
+    "--gm-gamma",
+    "AM_P=0.3,AM_S=0.3",
+    "--gm-wall-ncm",
+    "0.3",
+    "--gm-bo-se",
+    "0.5",
+    "--stiffen-se",
+    "20.0",
+    "--hold-bo-pairwise"
+   ]
+  },
+  "gen_cc": {
+   "rc": 0,
+   "args": [
+    "--n-total",
+    "100000",
+    "--cgf",
+    "151.4",
+    "--revolutions",
+    "2",
+    "--seed",
+    "32452843",
+    "--dens-gen",
+    "lab20261014",
+    "--gm-gamma",
+    "AM_P=1,AM_S=1",
+    "--gm-wall-ncm",
+    "0.3",
+    "--gm-bo-se",
+    "0.5",
+    "--stiffen-se",
+    "20.0",
+    "--hold-bo-pairwise"
+   ]
+  },
+  "gen_uu_nometa": {
+   "rc": 0,
+   "args": [
+    "--n-total",
+    "100000",
+    "--cgf",
+    "151.4",
+    "--revolutions",
+    "2",
+    "--seed",
+    "32452843",
+    "--dens-gen",
+    "lab20261014",
+    "--gm-gamma",
+    "AM_P=0.3,AM_S=0.3",
+    "--gm-wall-ncm",
+    "0.3",
+    "--gm-bo-se",
+    "0.5"
+   ]
+  },
+  "cell_problems_uu": [],
+  "cell_problems_nometa": [
+   "GMuu_rho0p3_bo0p5_lab20261014_soft_r2_s32452843: 경화 · dt · D2 셀인데 deck_meta.json 이 없다 (생성기가 쓰는 봉인 가능한 메타 — README §6 \"봉인은 deck_meta.json 의 deck_sha256 과 대조\")"
+  ],
+  "runs_GM": {
+   "rc": 0,
+   "tail": [
+    "     SE–WALL               49340 →          49340   ×1   (규칙 ×1)",
+    "     WALL–WALL                 0 →              0   비 N/A (0 기준 · 차 +0)",
+    "",
+    "1/1 PASS"
+   ]
+  },
+  "cell_problems_cc_deckfile_tamper": [],
+  "rb_GM_cc_deckfile_tamper": {
+   "rc": 0,
+   "tail": [
+    "── 표 GM GMuu_rho0p3_bo0p5_lab20261014_ref_r2_s32452843 → GMcc_rho0p3_bo0p5_lab20261014_ref_r2_s32452843  PASS",
+    "",
+    "1/1 표 PASS"
+   ]
+  },
+  "rb_GM_cc_deckfile_and_bo_tamper": {
+   "rc": 0,
+   "tail": [
+    "── 표 GM GMuu_rho0p3_bo0p5_lab20261014_ref_r2_s32452843 → GMcc_rho0p3_bo0p5_lab20261014_ref_r2_s32452843  PASS",
+    "",
+    "1/1 표 PASS"
+   ]
+  },
+  "cell_problems_cc_deckfile_and_bo_tamper": [
+   "GMcc_rho0p3_bo0p5_lab20261014_ref_r2_s32452843: deck_meta.json 이 덱 · 이름과 맞지 않는다 ['adhesion_rule']",
+   "GMcc_rho0p3_bo0p5_lab20261014_ref_r2_s32452843: D2 되읽기 — D2 기록 (deck_meta.json): adhesion_rule.bo_se 0.21244 ≠ 덱 머리 SE–SE Bo_code (절대 수준) 0.5"
+  ],
+  "rb_GM_cc_bo_tamper": {
+   "rc": 1,
+   "tail": [
+    "     ⛔ GM GMuu_rho0p3_bo0p5_lab20261014_ref_r2_s32452843 → GMcc_rho0p3_bo0p5_lab20261014_ref_r2_s32452843: D2 결합 규칙 — 덱 텍스트 검산 (쌍별 기하평균 F₀ · 절대 수준 Bo · Q2 벽 · 겹침 천장 · 머리 표 · 세대 · 기록) — GMcc_rho0p3_bo0",
+    "",
+    "0/1 표 PASS  ⛔ 되읽기 실패 — 봉인 · 발사 근거 없음"
+   ]
+  },
+  "df2deck_GM_cc_bo_tamper": {
+   "rc": 0,
+   "tail": [
+    "     WALL–WALL                 0 →              0   비 N/A (0 기준 · 차 +0)",
+    "",
+    "1/1 PASS"
+   ]
+  },
+  "rb_GM_cc_meta_removed": {
+   "rc": 0,
+   "tail": [
+    "── 표 GM GMuu_rho0p3_bo0p5_lab20261014_ref_r2_s32452843 → GMcc_rho0p3_bo0p5_lab20261014_ref_r2_s32452843  PASS",
+    "",
+    "1/1 표 PASS"
+   ]
+  }
+ },
+ "edge": {
+  "stiffen_2_0": {
+   "rc": 0,
+   "tail": [
+    "⬜ STL 3개(Drum·Front·Back)를 각 디렉터리에 두어야 한다"
+   ],
+   "stiffen": 20.0,
+   "dt_factor": 1.0,
+   "cgf": 151.4,
+   "gamma": null,
+   "rho": null,
+   "bo": null
+  },
+  "stiffen_fullwidth20": {
+   "rc": 0,
+   "tail": [
+    "⬜ STL 3개(Drum·Front·Back)를 각 디렉터리에 두어야 한다"
+   ],
+   "stiffen": 20.0,
+   "dt_factor": 1.0,
+   "cgf": 151.4,
+   "gamma": null,
+   "rho": null,
+   "bo": null
+  },
+  "stiffen_nan": {
+   "rc": 1,
+   "tail": [
+    "⛔ --stiffen-se nan — 유한한 양수여야 한다"
+   ]
+  },
+  "stiffen_inf": {
+   "rc": 1,
+   "tail": [
+    "⛔ --stiffen-se inf — 유한한 양수여야 한다"
+   ]
+  },
+  "dt_0_5": {
+   "rc": 1,
+   "tail": [
+    "⛔ --dt-factor 5.0 — (0, 1] 이어야 한다 (dt 를 늘리지 않는다)"
+   ]
+  },
+  "dt_nan": {
+   "rc": 1,
+   "tail": [
+    "⛔ --dt-factor nan — (0, 1] 이어야 한다 (dt 를 늘리지 않는다)"
+   ]
+  },
+  "cgf_15_1.4": {
+   "rc": 0,
+   "tail": [
+    "⬜ STL 3개(Drum·Front·Back)를 각 디렉터리에 두어야 한다"
+   ],
+   "note": "no deck_meta (default/old-arm deck)"
+  },
+  "gm_stiffen_2_0": {
+   "rc": 0,
+   "tail": [
+    "⬜ STL 3개(Drum·Front·Back)를 각 디렉터리에 두어야 한다"
+   ],
+   "stiffen": 20.0,
+   "dt_factor": 1.0,
+   "cgf": 151.4,
+   "gamma": {
+    "AM_P": 0.3,
+    "AM_S": 0.3,
+    "SE": 1.0
+   },
+   "rho": 0.3,
+   "bo": 0.5
+  },
+  "gm_stiffen_nan": {
+   "rc": 1,
+   "tail": [
+    "⛔ --stiffen-se nan — 유한한 양수여야 한다"
+   ]
+  },
+  "gm_dt_fullwidth": {
+   "rc": 0,
+   "tail": [
+    "⬜ STL 3개(Drum·Front·Back)를 각 디렉터리에 두어야 한다"
+   ],
+   "stiffen": 1.0,
+   "dt_factor": 0.5,
+   "cgf": 151.4,
+   "gamma": {
+    "AM_P": 0.3,
+    "AM_S": 0.3,
+    "SE": 1.0
+   },
+   "rho": 0.3,
+   "bo": 0.5
+  },
+  "gm_nbsp_value": {
+   "rc": 0,
+   "tail": [
+    "⬜ STL 3개(Drum·Front·Back)를 각 디렉터리에 두어야 한다"
+   ],
+   "stiffen": 1.0,
+   "dt_factor": 1.0,
+   "cgf": 151.4,
+   "gamma": {
+    "AM_P": 0.3,
+    "AM_S": 0.3,
+    "SE": 1.0
+   },
+   "rho": 0.3,
+   "bo": 0.5
+  },
+  "gm_emsp_value": {
+   "rc": 0,
+   "tail": [
+    "⬜ STL 3개(Drum·Front·Back)를 각 디렉터리에 두어야 한다"
+   ],
+   "stiffen": 1.0,
+   "dt_factor": 1.0,
+   "cgf": 151.4,
+   "gamma": {
+    "AM_P": 0.3,
+    "AM_S": 0.3,
+    "SE": 1.0
+   },
+   "rho": 0.3,
+   "bo": 0.5
+  },
+  "gm_se_explicit_1e0": {
+   "rc": 0,
+   "tail": [
+    "⬜ STL 3개(Drum·Front·Back)를 각 디렉터리에 두어야 한다"
+   ],
+   "stiffen": 1.0,
+   "dt_factor": 1.0,
+   "cgf": 151.4,
+   "gamma": {
+    "AM_P": 0.3,
+    "AM_S": 0.3,
+    "SE": 1.0
+   },
+   "rho": 0.3,
+   "bo": 0.5
+  },
+  "gm_se_1p0000001": {
+   "rc": 1,
+   "tail": [
+    "⛔ D2 결합 규칙: 기준 γ_SE/γ_SE 는 정확히 1 이어야 한다 (1.0000001)"
+   ]
+  },
+  "gm_rho_4e-5": {
+   "rc": 0,
+   "tail": [
+    "⬜ STL 3개(Drum·Front·Back)를 각 디렉터리에 두어야 한다"
+   ],
+   "stiffen": 1.0,
+   "dt_factor": 1.0,
+   "cgf": 151.4,
+   "gamma": {
+    "AM_P": 4e-05,
+    "AM_S": 4e-05,
+    "SE": 1.0
+   },
+   "rho": 4e-05,
+   "bo": 0.5
+  },
+  "gm_rho_3e-5": {
+   "rc": 1,
+   "tail": [
+    "⛔ D2 결합 규칙: γ_W/γ_SE = 7.680000000000001e-07 — 지원 범위 [1e-06, 1e+06] 밖 (0 · 음수 · 언더플로 · 넘침 거부 · MXD2-04)"
+   ]
+  },
+  "gm_rho_1e-6_coated": {
+   "rc": 1,
+   "tail": [
+    "⛔ D2 결합 규칙: γ_W/γ_SE = 2.56e-08 — 지원 범위 [1e-06, 1e+06] 밖 (0 · 음수 · 언더플로 · 넘침 거부 · MXD2-04)"
+   ]
+  },
+  "gm_bo_1e-6": {
+   "rc": 0,
+   "tail": [
+    "⬜ STL 3개(Drum·Front·Back)를 각 디렉터리에 두어야 한다"
+   ],
+   "stiffen": 1.0,
+   "dt_factor": 1.0,
+   "cgf": 151.4,
+   "gamma": {
+    "AM_P": 1.0,
+    "AM_S": 1.0,
+    "SE": 1.0
+   },
+   "rho": 1.0,
+   "bo": 1e-06
+  },
+  "gm_bo_1.00001e4": {
+   "rc": 1,
+   "tail": [
+    "⛔ D2 결합 규칙: SE–SE Bo_code = 10000.1 — 지원 범위 [1e-06, 10000] 밖 (0 · 음수 · 언더플로 · 넘침 거부 · MXD2-04)"
+   ]
+  },
+  "gm_gamma_1e6_bo_small": {
+   "rc": 0,
+   "tail": [
+    "⬜ STL 3개(Drum·Front·Back)를 각 디렉터리에 두어야 한다"
+   ],
+   "stiffen": 1.0,
+   "dt_factor": 1.0,
+   "cgf": 151.4,
+   "gamma": {
+    "AM_P": 1000000.0,
+    "AM_S": 1000000.0,
+    "SE": 1.0
+   },
+   "rho": 1000000.0,
+   "bo": 1e-06
+  },
+  "gm_gamma_1.000001e6": {
+   "rc": 1,
+   "tail": [
+    "⛔ D2 결합 규칙: ρ_비코팅 NCM = γ_NCM/γ_SE = 1000001.0 — 지원 범위 [1e-06, 1e+06] 밖 (0 · 음수 · 언더플로 · 넘침 거부 · MXD2-04)"
+   ]
+  },
+  "gm_bo_dot5": {
+   "rc": 0,
+   "tail": [
+    "⬜ STL 3개(Drum·Front·Back)를 각 디렉터리에 두어야 한다"
+   ],
+   "stiffen": 1.0,
+   "dt_factor": 1.0,
+   "cgf": 151.4,
+   "gamma": {
+    "AM_P": 0.3,
+    "AM_S": 0.3,
+    "SE": 1.0
+   },
+   "rho": 0.3,
+   "bo": 0.5
+  },
+  "gm_bo_5dot": {
+   "rc": 0,
+   "tail": [
+    "⬜ STL 3개(Drum·Front·Back)를 각 디렉터리에 두어야 한다"
+   ],
+   "stiffen": 1.0,
+   "dt_factor": 1.0,
+   "cgf": 151.4,
+   "gamma": {
+    "AM_P": 0.3,
+    "AM_S": 0.3,
+    "SE": 1.0
+   },
+   "rho": 0.3,
+   "bo": 5.0
+  },
+  "gm_rho_upperE": {
+   "rc": 0,
+   "tail": [
+    "⬜ STL 3개(Drum·Front·Back)를 각 디렉터리에 두어야 한다"
+   ],
+   "stiffen": 1.0,
+   "dt_factor": 1.0,
+   "cgf": 151.4,
+   "gamma": {
+    "AM_P": 0.3,
+    "AM_S": 0.3,
+    "SE": 1.0
+   },
+   "rho": 0.3,
+   "bo": 0.5
+  },
+  "gm_rho_plus_sign": {
+   "rc": 2,
+   "tail": [
+    "mmd_FIX.py: error: argument --gm-wall-ncm: ⛔ 값 = '+0.3' — ASCII 십진수가 아니다 (밑줄 · 전각 숫자 · nan · inf · 부호 금지 · MXD2-04)"
+   ]
+  },
+  "gm_key_lower": {
+   "rc": 1,
+   "tail": [
+    "⛔ D2 결합 규칙: gamma 의 상 ['AM_S', 'SE', 'am_p'] ≠ 도는 상 ['AM_P', 'AM_S', 'SE'] — 빠지거나 남는 상은 거부"
+   ]
+  },
+  "gm_key_dup": {
+   "rc": 1,
+   "tail": [
+    "⛔ --gm-gamma 'AM_P=0.3,AM_P=0.3,AM_S=0.3' — \"상=값\" 을 쉼표로 (상 중복 금지)"
+   ]
+  },
+  "gm_trailing_comma": {
+   "rc": 1,
+   "tail": [
+    "⛔ --gm-gamma 'AM_P=0.3,AM_S=0.3,' — \"상=값\" 을 쉼표로 (상 중복 금지)"
+   ]
+  },
+  "grammar": {
+   "GMuu_rho0p00001_bo0p5_lab20261014_ref_r2_s32452843": {
+    "parse": "ok",
+    "expected_deck": "SystemExit ⛔ D2 결합 규칙: γ_W/γ_SE = 2.56e-07 — 지원 범위 [1e-06, 1e+06] 밖 (0 · 음수 · 언더플로 · 넘침 거부 · MXD2-04)"
+   },
+   "GMuu_rho0p00004_bo0p5_lab20261014_ref_r2_s32452843": {
+    "parse": "ok",
+    "expected_deck": "ok"
+   },
+   "GMcc_rho1000000_bo0p000001_lab20261014_ref_r2_s32452843": {
+    "parse": "ok",
+    "expected_deck": "ok"
+   },
+   "GMuu_rho0p3_bo10000_lab20261014_ref_r2_s32452843": {
+    "parse": "ok",
+    "expected_deck": "SystemExit ⛔ 팔 D2 결합 규칙 (기하평균 W_ij = 2√(γ_iγ_j) · 혼합쌍 · 벽) · γ/γ_SE AM_P 0.3 · AM_S 0.3 · SE 1 · γ_W/γ_SE 0.00768 · SE–SE Bo_code 10000 — 개발 · 등록 전 (결과 0): AM_P–"
+   },
+   "GMuu_rho1p00001_bo0p5_lab20261014_ref_r2_s32452843": {
+    "parse": "ok",
+    "expected_deck": "ok"
+   },
+   "GMuu_rho0p3_bo0p5_gen1_ref2_dthalf_r8_s15485863": {
+    "parse": "ok",
+    "expected_deck": "ok"
+   }
+  }
+ }
+}

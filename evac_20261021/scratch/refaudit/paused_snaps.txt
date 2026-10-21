@@ -1,0 +1,13 @@
+U2 head=bbc2adefe dirty=0 snap=3857aebd3ce2da47a3ca574d582ea885d62d4acc
+LF head=7555e45b5 dirty=4 snap=db4d67b1ff1ba2657550e59716a41454754f7e21
+    7555e45b5 supp20 receipt selftest: s0b_fp takes the supp20 side's seal fingerprint problems (SUPR-04)
+    59b752072 supp20 receipt selftest: tests first for SUPR-04 / SUPR-05 (S11g twelve cases, S11h S0b real path)
+    0ea2b6c1c Ledger: open SUPR-04, SUPR-05, SELF-129 from the LHS214 relaunch pre-attack review
+F head=9412f384a dirty=0 snap=9146644320ce1492d476049d88b962c2aa52241d
+D3F head=5735e20c6 dirty=0 snap=0ae6589e0446afc900e795ed284dfedc735965ea
+    5735e20c6 Ledger: MXD3-22..40 (mixer D3 design v2 re-attack findings; fix in design v3)
+    9a4408f51 Mixer D3 Codex round-1 request: target design v2
+    194ca4f02 Mixer D3 design v1: history banner pointing to v2
+    7425f405b Mixer D3 design v2: fix the broken guarantees (MXD3-01..21), lab numbers
+    61a51f5e5 Mixer D3: test first - rule checks that reproduce the v1 counterexamples
+    a96aebeb9 Ledger: MXD3-01..21 (mixer D3 design pre-review findings; fix in design v2)

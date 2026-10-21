@@ -1,0 +1,61 @@
+diff --git a/docs/data/ps45_unload_20261009/ul_reader.py b/docs/data/ps45_unload_20261009/ul_reader.py
+index 792264da2..d5753dc30 100644
+--- a/docs/data/ps45_unload_20261009/ul_reader.py
++++ b/docs/data/ps45_unload_20261009/ul_reader.py
+@@ -2300,14 +2300,14 @@ def _hold_resume(d, P, old_nw, auth=True, kr=1):
+ 
+ 
+ def _resume_mix(d, P, kr, old_nw=0, old_line=False, old_ev=False, old_events=(), new_nw=0, new_line=False, new_ev=False, new_state=False,
+-                rest=False, end='TIMEOUT', resumed=True):
++                rest=False, end='TIMEOUT', resumed=True, next_nw=0):
+     """ULPR-01 시험 꼴 (사전 리뷰 10-21 PRE-UL-01 · 탐침 probe_resume_unfinished 의 일반화) — d = 한 시도가 처음부터 끝까지 쓴 팔 폴더 (_mk_arm = 기준 궤적).
+     덱이 쓰는 순서 (in.UT · in.U_* 의 ul_win → ul_hold_end → 단 끝 사건 → ul_step_done): 창 줄 → 단 줄 → 단 끝 사건 (CROSS · MODE_B · RM …) →
+     단 끝 restart_unload + 상태 파일 (UT 의 R_M 단은 restart_RM · 상태만 · 멈춤).  단 kr 끝 (s_r) 까지 = 기준 그대로 · 단 kr + 1 = 옛 시도 (창 old_nw 개 ·
+     old_line = 그 단 줄 · old_ev = 기준의 그 단 사건 · old_events = [(사건 이름, 창 번호)] 합성 창 사건) → (resumed) RESUME (kr · s_r) · 러너 resume_from=s_r ·
+     restart_unload_<s_r> + 상태 파일 → 새 시도 (창 new_nw 개 · new_line · new_ev · new_state = 그 단 끝 restart_unload + 상태 파일 · rest = 단 kr + 2 부터
+-    기준 끝까지 + 기준 요약) · end = TIMEOUT (요약 없음) · GUARD (새 시도 마지막 창에 GUARD 사건 + 요약 GUARD).  resumed 거짓 = 새 시도 줄만 (같은 꼴 fresh —
+-    옛 줄 · RESUME · resume_from 없음).  덤프 = 기준 그대로 (판독기는 남은 기록 step 의 덤프만 읽는다) → s_r."""
++    기준 끝까지 + 기준 요약 · next_nw = rest 없이 단 kr + 2 의 창만 그 개수) · end = TIMEOUT (요약 없음) · GUARD (새 시도 마지막 창에 GUARD 사건 + 요약 GUARD).
++    resumed 거짓 = 새 시도 줄만 (같은 꼴 fresh — 옛 줄 · RESUME · resume_from 없음).  덤프 = 기준 그대로 (판독기는 남은 기록 step 의 덤프만 읽는다) → s_r."""
+     R = P['records']
+     wc, sc, ec = R['windows_cols'], R['steps_cols'], R['events_cols']
+     rd = {n: [ln.split(',') for ln in open(os.path.join(d, f'ul_{n}.csv')).read().splitlines()[1:] if ln.strip()] for n in ('windows', 'steps', 'events')}
+@@ -2323,7 +2323,7 @@ def _resume_mix(d, P, kr, old_nw=0, old_line=False, old_ev=False, old_events=(),
+     old_w = [list(r) for r in W1[:old_nw]]
+     old_s = [list(r) for r in S1] if old_line else []
+     old_e = ([list(r) for r in E1] if old_ev else []) + [[n, str(k1), W1[w - 1][ws], W1[w - 1][pz], W1[w - 1][lf], f'w{w}'] for n, w in old_events]
+-    new_w = [list(r) for r in W1[:new_nw]] + ([list(r) for r in Wr] if rest else [])
++    new_w = [list(r) for r in W1[:new_nw]] + ([list(r) for r in Wr] if rest else [list(r) for r in Wr if int(r[wk]) == k1 + 1][:next_nw])
+     new_s = ([list(r) for r in S1] if new_line else []) + ([list(r) for r in Sr] if rest else [])
+     new_e = ([list(r) for r in E1] if new_ev else []) + ([list(r) for r in Er] if rest else [])
+     if end == 'GUARD':
+@@ -3425,6 +3425,17 @@ def selftest() -> int:
+             lambda: holds(pe, lambda u, s, g, rr: holds(pe_f, lambda u2, s2, g2, rr2: u['primary_status'] == u2['primary_status'] == 'LOWER_BOUND'
+                                                         and u['lower_bound_pct'] == u2['lower_bound_pct'] and ks(rr) == ks(rr2) == [0, 1])
+                           and rr['n_superseded_rows'] == 5), f'{show(pe)} | {show(pe_f)}')
++        cor = ut_mix(kr=3, old_nw=2, old_line=True, old_ev=True, new_nw=4)
++        chk('R37 ULPR-01 옛 단 줄 (n_windows 4) 이 옛 창 둘만 남긴 손상 기록 · RM 사건 → 새 시도 창 넷 뒤 TIMEOUT (단 줄이 새 창과 맞고 옛 창과는 다르다) → 버린 옛 단 끝 사건 '
++            '(같은 k · step) = 옛 시도 단 줄 → 쓰지 않는다 = fresh 판정 (UNIDENTIFIED · 남긴 줄 3)',
++            lambda: holds(cor, lambda u, s, g, rr: unid2(u, s, g, rr) and rr['n_superseded_rows'] == 3), show(cor))
++        pl, pl_f = (ut_mix(NOC, kr=1, new_nw=4, new_line=True, next_nw=2),
++                    ut_mix(NOC, kr=1, new_nw=4, new_line=True, next_nw=2, resumed=False))
++        chk('R37 양성 대조: 새 시도 증거 = 경계 뒤 단 k 3 창 (k ≥ k_r + 2 — 옛 시도는 단 k_r + 1 줄만 남길 수 있다) · 단 끝 상태 파일 · 사건 없음 (지워진 restart 폴더 꼴) '
++            '→ 단 k 2 단 줄 그대로 = fresh 와 같은 하한 (k 2) · 남긴 줄 0',
++            lambda: holds(pl, lambda u, s, g, rr: holds(pl_f, lambda u2, s2, g2, rr2: u['primary_status'] == u2['primary_status'] == 'LOWER_BOUND'
++                                                        and u['lower_bound_pct'] == u2['lower_bound_pct'] and ks(rr) == ks(rr2) == [0, 1, 2])
++                          and rr['n_superseded_rows'] == 0), f'{show(pl)} | {show(pl_f)}')
+         bad = ut_mix(kr=3, old_ev=True, new_nw=4, new_line=True, new_ev=True, rest=True)
+         chk('R37 ULPR-01 모순: RESUME 앞에 경계 뒤 옛 사건 (RM) 이 있는데 옛 시도 창이 없다 (창 역행 없음) · 새 시도 기록은 있다 → 버리지 · 고르지 않고 주 값 미식별 '
+             '(사유 ULPR-01) · UVa 거부',
+@@ -3649,6 +3660,11 @@ def selftest() -> int:
+             'NOT_COMPUTED (ID 중복) → 복원 PASS 아님 = TECH (C12)',
+             lambda: (lambda g: g['g_restore'].get('G2') == 'NOT_COMPUTED' and g['g_restore']['status'] == 'FAIL' and g['primary_status'] == 'TECH')(
+                 arm_verdict(gd, B73, 'G_UB', P, root=root)))
++        for p_ in (os.path.join(gd, 'dump', f'atom_{rm}.dump'), os.path.join(src, 'dump', f'atom_{rm}.dump')):   # 두 원자 덤프 = 같은 글자 · 머리 step 둘 다 R_M − 1
++            ul_lib.write_custom(p_, rm - 1, A0['cols'], A0['rows'])
++        chk('R16 ULPR-03 중력 팔 R_M 원자 덤프 두 개의 머리 step 이 서로 같지만 R_M − 1 (요청 step = R_M · START 사건) → G2 관측 결손 NOT_COMPUTED (머리 step) → TECH '
++            '(요청 step 결합 · 서로 같다는 것만으로 PASS 하지 않는다)',
++            lambda: (lambda g: g['g_restore'].get('G2') == 'NOT_COMPUTED' and g['primary_status'] == 'TECH')(arm_verdict(gd, B73, 'G_UB', P, root=root)))
+     cc = None
+     try:
+         cc = {b: copy_commands(b, P) for b in BEDS}

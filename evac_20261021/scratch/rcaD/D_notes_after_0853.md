@@ -1,0 +1,1 @@
+2026-10-21T09:13:12.581Z Now the fix: run_contract (short-branch binding, ionic call, duplicate helper) and the read_run order.

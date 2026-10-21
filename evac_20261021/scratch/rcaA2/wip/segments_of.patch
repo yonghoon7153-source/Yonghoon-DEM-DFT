@@ -1,0 +1,77 @@
+diff --git a/scripts/carbon_junction.py b/scripts/carbon_junction.py
+index df4826794..88b615c31 100644
+--- a/scripts/carbon_junction.py
++++ b/scripts/carbon_junction.py
+@@ -420,43 +420,59 @@ def _paths_of(P, PH, F, K, phase, rej, label):
+     return out
+ 
+ 
++def _closed_path(Q, kind_path):
++    """닫힌 경로 (`CJUNC_RING_RULE`) — 경로 (kind 1) · 점 셋 이상 · 첫 점 = 끝 점 (좌표 비트 같음).  반올림으로 조금 떨어진 두 끝은 닫힌 것이
++    아니다 (열린 경로 두 끝이 만나는 접촉 = 접합 규칙)."""
++    return bool(kind_path and len(Q) >= 3 and np.array_equal(Q[0], Q[-1]))
++
++
+ def _segments_of(paths, P, gap_tol):
+     """경로 → 조각 (정준 방향) → 선분 표.  → dict(arrays) · 조각마다 (fid, 점 배열).
+-    arc_a · arc_b = 선분 두 끝의 **경로 호 좌표** (꺾임 자기 접합 s) — fid 경로 전체를 정준 방향 (사전순 작은 끝에서) 으로 놓고 연속 점
+-    거리를 누적 (조각 사이 간격 현 포함) · 점 역순 입력에서도 같은 비트.  선분 위 호 좌표 = arc_a + t·(arc_b − arc_a)."""
+-    sP0, sP1, sfid, spiece, sk, sa0, sa1 = [], [], [], [], [], [], []
++    arc_a · arc_b = 선분 두 끝의 **조각 호 좌표** (꺾임 자기 접합 s) — 조각마다 그 조각의 저장 방향 (정준) 으로 연속 점 거리를 누적 ·
++    점 역순 입력에서도 같은 비트 (정준 방향).  선분 위 호 좌표 = arc_a + t·(arc_b − arc_a).
++    ★ 10-21 (사전 리뷰 PRE-impl-01 · 1저자 Q-A) — 다른 조각 = 다른 섬유 (경로로 이어지지 않는다) → 호 좌표는 조각 안에서만 뜻이 있다
++    (옛: fid 경로 전체 누적 · 조각 사이 간격 현 포함 = 끊긴 두 조각을 '같은 가닥의 연속' 으로 읽었다).
++    ★ 닫힌 경로 (PRE-impl-06 · Q-A — 이음매 = 연속): 끊김이 있으면 마지막 조각 + 첫 조각을 이음매를 지나 한 조각으로 잇는다 (열린 조각 ·
++    이음매는 조각 안) · 끊김이 없으면 고리 조각 하나 (`ring_L` = 고리 길이 > 0 · s = 고리 위 짧은 쪽 호 · 위치 첫 · 끝 = 이음매 =
++    `_positions` 가 한 dof (별칭) 또는 축방향 이웃으로 잇는다).  끊김 판정은 원래 점열 그대로 (`fibre_pieces` — 생산 스탬프와 같은 끊김)."""
++    sP0, sP1, sfid, spiece, sk, sa0, sa1, sring = [], [], [], [], [], [], [], []
+     pieces = []
+     for f, r, kind_path in paths:
+         Q = P[r]
+         flip = bool(kind_path and _canon_flip(Q))
+         Qc = Q[::-1] if flip else Q
+-        cum = (np.r_[0.0, np.cumsum(np.linalg.norm(np.diff(Qc, axis=0), axis=1))] if (kind_path and len(Q) > 1)
+-               else np.zeros(len(Q)))
+-        arc_of = cum                                         # 정준 방향 점 번호 → 호 좌표
+         #  ★ 10-21 (RCA-04) — 조각 = 정준 방향 경로 (Qc) 의 순서 (옛: 입력 방향 순서 → 점 역순이 조각 번호 · 위치 순서를 바꿨다)
+-        for ix in (fibre_pieces(Qc, gap_tol) if kind_path else [np.arange(len(Q))]):
++        ixs = fibre_pieces(Qc, gap_tol) if kind_path else [np.arange(len(Q))]
++        closed = _closed_path(Qc, kind_path)
++        ring_whole = closed and len(ixs) == 1
++        if closed and len(ixs) >= 2:                          # 이음매를 지나 마지막 + 첫 조각을 잇는다 (Qc[−1] = Qc[0] — 점 하나 빼고)
++            ixs = list(ixs[1:-1]) + [np.r_[ixs[-1], ixs[0][1:]].astype(np.int64)]
++        for ix in ixs:
+             R = Qc[ix]
+-            ixo = ix
+             if kind_path and len(R) > 1 and _canon_flip(R):
+                 R = R[::-1]
+-                ixo = ix[::-1]
+             gp = len(pieces)
+             pieces.append((f, R, kind_path))
+             if len(R) == 1 or not kind_path:
+                 A = R; B = R                                  # 점 = 퇴화 선분 (경로 아닌 fid 도 점마다)
+-                a0 = arc_of[ixo]; a1 = arc_of[ixo]
++                a0 = np.zeros(len(R)); a1 = np.zeros(len(R))
++                L_ring = 0.0
+             else:
+                 A = R[:-1]; B = R[1:]
+-                a0 = arc_of[ixo[:-1]]; a1 = arc_of[ixo[1:]]
++                cum = np.r_[0.0, np.cumsum(np.linalg.norm(np.diff(R, axis=0), axis=1))]
++                a0 = cum[:-1]; a1 = cum[1:]
++                L_ring = float(cum[-1]) if ring_whole else 0.0
+             sP0.append(A); sP1.append(B); sa0.append(a0); sa1.append(a1)
+             sfid.append(np.full(len(A), f)); spiece.append(np.full(len(A), gp)); sk.append(np.arange(len(A)))
++            sring.append(np.full(len(A), L_ring))
+     if not pieces:
+         z = np.zeros((0, 3))
+         return {'P0': z, 'P1': z.copy(), 'fid': np.zeros(0, np.int64), 'piece': np.zeros(0, np.int64),
+-                'k': np.zeros(0, np.int64), 'arc_a': np.zeros(0), 'arc_b': np.zeros(0)}, pieces
++                'k': np.zeros(0, np.int64), 'arc_a': np.zeros(0), 'arc_b': np.zeros(0), 'ring_L': np.zeros(0)}, pieces
+     return {'P0': np.vstack(sP0), 'P1': np.vstack(sP1), 'fid': np.concatenate(sfid).astype(np.int64),
+             'piece': np.concatenate(spiece).astype(np.int64), 'k': np.concatenate(sk).astype(np.int64),
+-            'arc_a': np.concatenate(sa0).astype(np.float64), 'arc_b': np.concatenate(sa1).astype(np.float64)}, pieces
++            'arc_a': np.concatenate(sa0).astype(np.float64), 'arc_b': np.concatenate(sa1).astype(np.float64),
++            'ring_L': np.concatenate(sring).astype(np.float64)}, pieces
+ 
+ 
+ def _positions(pieces, segs, lo, vox, n, sid):

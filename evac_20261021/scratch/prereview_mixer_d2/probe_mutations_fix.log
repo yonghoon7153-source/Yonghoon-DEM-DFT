@@ -1,0 +1,52 @@
+CONTROL rc=0 nfail=0 make_mixer_deck selftest: 154/154 PASS
+M01_arith_mean                     KILLED    rc=1 nfail=7 make_mixer_deck selftest: 147/154 PASS   FAILED: [ | GM② 모든 쌍 (벽 포함) 의 명목 점착 힘 F₀_ij = F₀_SS · √(; GM③ 기하평균 항등식 — 입자 쌍마다 (F₀_ij/R*_ij)² = (F₀_i; GM④ 논지 §2-1 — ΔW = W_AA + W_SS − 2W_AS = W_S
+M02_drop_Rstar                     KILLED    rc=1 nfail=7 make_mixer_deck selftest: 147/154 PASS   FAILED: [ | GM① γ 비 1 (코팅 세계 · 전 상 같은 γ) 의 같은 상 대각 CED =; GM② 모든 쌍 (벽 포함) 의 명목 점착 힘 F₀_ij = F₀_SS · √(; GM③ 기하평균 항등식 — 입자 쌍마다 (F₀_ij/R*_ij)² = (F₀_i
+M03_wall_Rstar_half                KILLED    rc=1 nfail=4 make_mixer_deck selftest: 150/154 PASS   FAILED: [ | DP① ★ 기본 끔 (플래그 없음 · dump_full_precision=Fal; DP⑤ CLI --dump-full-precision → in.mixer = d; GM⑥ 벽 = 같은 기하평균 (W_iW = 2√(γ_iγ_W) · R* = r_
+M04_F0SS_gen1_density              KILLED    rc=1 nfail=2 make_mixer_deck selftest: 152/154 PASS   FAILED: [ | MX① ★ 절대 수준 · 기록 고정 (MXD2-02 · 변이 M04 · M05 ; MX② ★ 절대 수준 = 덱 세대의 ρ_SE (MXD2-02 · 변이 M04 ·
+M05_deck_ignores_dens              KILLED    rc=1 nfail=2 make_mixer_deck selftest: 152/154 PASS   FAILED: [ | MX① ★ 절대 수준 · 기록 고정 (MXD2-02 · 변이 M04 · M05 ; MX② ★ 절대 수준 = 덱 세대의 ρ_SE (MXD2-02 · 변이 M04 ·
+M06_ceiling_skip_mixed             KILLED    rc=1 nfail=1 make_mixer_deck selftest: 153/154 PASS   FAILED: [ | MX③ ★ 혼합쌍 천장 (MXD2-03 · 변이 M06 · M07) — lab 
+M07_stiff_D2_old_ceiling           KILLED    rc=1 nfail=1 make_mixer_deck selftest: 153/154 PASS   FAILED: [ | MX③ ★ 혼합쌍 천장 (MXD2-03 · 변이 M06 · M07) — lab 
+M08_wall_gamma_ignored             KILLED    rc=1 nfail=2 make_mixer_deck selftest: 152/154 PASS   FAILED: [ | GM② 모든 쌍 (벽 포함) 의 명목 점착 힘 F₀_ij = F₀_SS · √(; GM⑥ 벽 = 같은 기하평균 (W_iW = 2√(γ_iγ_W) · R* = r_
+M09_no_ceiling_soft                KILLED    rc=1 nfail=2 make_mixer_deck selftest: 152/154 PASS   FAILED: [ | GM⑨ 겹침 천장 = 모든 쌍 δ₀/min(r) (같은 상 = overlap_f; MX③ ★ 혼합쌍 천장 (MXD2-03 · 변이 M06 · M07) — lab 
+M10_wallncm_ignores_rho            KILLED    rc=1 nfail=4 make_mixer_deck selftest: 150/154 PASS   FAILED: [ | GM⑥ 벽 = 같은 기하평균 (W_iW = 2√(γ_iγ_W) · R* = r_; GM⑬ 벽 = 비코팅 NCM 에 묶기 — gm_wall_from_ncm(ρ) =; MX⑤ ★ 벽 = 비코팅 NCM (1저자 10-14 Q2 · MXD2-05 · 
+M11_gmnum_allow_zero_neg           KILLED    rc=1 nfail=3 make_mixer_deck selftest: 151/154 PASS   FAILED: [ | GM⑧ 입력 거부 (fail-closed) 19 가지 — 상 누락 · 0 · 음; GM⑬ 벽 = 비코팅 NCM 에 묶기 — gm_wall_from_ncm(ρ) =; MX④ ★ 극단 입력 거부 (MXD2-04) — γ 1e-200 · 2e6 · 
+M12_gmnum_finite_check_off         KILLED    rc=1 nfail=1 make_mixer_deck selftest: 153/154 PASS   FAILED: [ | GM⑧ 입력 거부 (fail-closed) 19 가지 — 상 누락 · 0 · 음
+M13_rho_check_removed              KILLED    rc=1 nfail=1 make_mixer_deck selftest: 153/154 PASS   FAILED: [ | MX⑤ ★ 벽 = 비코팅 NCM (1저자 10-14 Q2 · MXD2-05 · 
+M14_cli_both_wall_allowed          KILLED    rc=1 nfail=1 make_mixer_deck selftest: 153/154 PASS   FAILED: [ | GM⑬ 벽 = 비코팅 NCM 에 묶기 — gm_wall_from_ncm(ρ) =
+M15_header_F0_not_ratio            KILLED    rc=1 nfail=1 make_mixer_deck selftest: 153/154 PASS   FAILED: [ | MX⑥b ★ D2 덱 머리 표 = 덱 값 (MXD2-06 · 변이 M15) — 
+M16_meta_bo_const                  KILLED    rc=1 nfail=2 make_mixer_deck selftest: 152/154 PASS   FAILED: [ | GM⑫ CLI --gm-gamma · --gm-wall-ncm · --gm-bo; MX① ★ 절대 수준 · 기록 고정 (MXD2-02 · 변이 M04 · M05 
+M17_meta_gamma_wall_const          KILLED    rc=1 nfail=2 make_mixer_deck selftest: 152/154 PASS   FAILED: [ | GM⑫ CLI --gm-gamma · --gm-wall-ncm · --gm-bo; GM⑬ 벽 = 비코팅 NCM 에 묶기 — gm_wall_from_ncm(ρ) =
+M18_gm_uniform_insertion           KILLED    rc=1 nfail=2 make_mixer_deck selftest: 152/154 PASS   FAILED: [ | MX⑥a ★ D2 덱의 기록 (MXD2-06) — 벽 주석 = D2 기하평균 (; MX⑥c ★ D2 팔 = 층상 삽입 (D11 (가) · MXD2-06 · 변이 
+M19_overlap_max_radius             KILLED    rc=1 nfail=3 make_mixer_deck selftest: 151/154 PASS   FAILED: [ | GM⑨ 겹침 천장 = 모든 쌍 δ₀/min(r) (같은 상 = overlap_f; MX③ ★ 혼합쌍 천장 (MXD2-03 · 변이 M06 · M07) — lab ; MX⑥b ★ D2 덱 머리 표 = 덱 값 (MXD2-06 · 변이 M15) — 
+M20_require_dens_off               KILLED    rc=1 nfail=1 make_mixer_deck selftest: 153/154 PASS   FAILED: [ | DG⑥ ★ D2 결합 규칙 (--gm-*) 덱 = 새 세대 덱 — --dens-
+M21_ced_exponent                   KILLED    rc=1 nfail=10 make_mixer_deck selftest: 144/154 PASS   FAILED: [ | GM① γ 비 1 (코팅 세계 · 전 상 같은 γ) 의 같은 상 대각 CED =; GM② 모든 쌍 (벽 포함) 의 명목 점착 힘 F₀_ij = F₀_SS · √(; GM③ 기하평균 항등식 — 입자 쌍마다 (F₀_ij/R*_ij)² = (F₀_i
+M22_F0SS_radius_diam               KILLED    rc=1 nfail=5 make_mixer_deck selftest: 149/154 PASS   FAILED: [ | GM① γ 비 1 (코팅 세계 · 전 상 같은 γ) 의 같은 상 대각 CED =; GM② 모든 쌍 (벽 포함) 의 명목 점착 힘 F₀_ij = F₀_SS · √(; MX① ★ 절대 수준 · 기록 고정 (MXD2-02 · 변이 M04 · M05 
+M23_gm_lab_header_off              KILLED    rc=1 nfail=3 make_mixer_deck selftest: 151/154 PASS   FAILED: [ | DG② 세대 미지정 = gen1 그 객체 (plan · CED 같은 수) · g; DG⑥ ★ D2 결합 규칙 (--gm-*) 덱 = 새 세대 덱 — --dens-; DG⑦ 기록은 **요청했을 때만** — 강성 덱 (--dens-gen 없음) d
+M24_meta_wall_rule_dropped         KILLED    rc=1 nfail=2 make_mixer_deck selftest: 152/154 PASS   FAILED: [ | GM⑬ 벽 = 비코팅 NCM 에 묶기 — gm_wall_from_ncm(ρ) =; MX⑥a ★ D2 덱의 기록 (MXD2-06) — 벽 주석 = D2 기하평균 (
+N01_q2_ncm_off_removed             KILLED    rc=1 nfail=2 make_mixer_deck selftest: 152/154 PASS   FAILED: [ | MX⑤ ★ 벽 = 비코팅 NCM (1저자 10-14 Q2 · MXD2-05 · ; MX⑤b 팔 사전 · CLI · 도움말이 Q2 를 따른다 (MXD2-05) — 
+N02_explicit_coated_only_removed   KILLED    rc=1 nfail=2 make_mixer_deck selftest: 152/154 PASS   FAILED: [ | MX⑤ ★ 벽 = 비코팅 NCM (1저자 10-14 Q2 · MXD2-05 · ; MX⑤b 팔 사전 · CLI · 도움말이 Q2 를 따른다 (MXD2-05) — 
+N03_rho_world_unscaled             KILLED    rc=1 nfail=2 make_mixer_deck selftest: 152/154 PASS   FAILED: [ | MX⑤b 팔 사전 · CLI · 도움말이 Q2 를 따른다 (MXD2-05) — ; MX⑥a ★ D2 덱의 기록 (MXD2-06) — 벽 주석 = D2 기하평균 (
+N04_surface_inverted               KILLED    rc=1 nfail=2 make_mixer_deck selftest: 152/154 PASS   FAILED: [ | MX⑤b 팔 사전 · CLI · 도움말이 Q2 를 따른다 (MXD2-05) — ; MX⑥a ★ D2 덱의 기록 (MXD2-06) — 벽 주석 = D2 기하평균 (
+N05_arm_name_match                 KILLED    rc=1 nfail=2 make_mixer_deck selftest: 152/154 PASS   FAILED: [ | GM⑧ 입력 거부 (fail-closed) 19 가지 — 상 누락 · 0 · 음; MX④ ★ 극단 입력 거부 (MXD2-04) — γ 1e-200 · 2e6 · 
+N06_desc_control_chars_ok          KILLED    rc=1 nfail=1 make_mixer_deck selftest: 153/154 PASS   FAILED: [ | MX④ ★ 극단 입력 거부 (MXD2-04) — γ 1e-200 · 2e6 · 
+N07_ascii_regex_bypass             KILLED    rc=1 nfail=1 make_mixer_deck selftest: 153/154 PASS   FAILED: [ | MX④b ★ CLI 수 토큰 = ASCII 십진수만 (MXD2-04) — --g
+N08_ced_postcond_off               KILLED    rc=1 nfail=1 make_mixer_deck selftest: 153/154 PASS   FAILED: [ | MX⑦ 사후 단언 (MXD2-04 · 방어 깊이) — 지원 범위를 넓혀 γ 1e
+N09_fss_postcond_off               SURVIVED  rc=0 nfail=0 make_mixer_deck selftest: 154/154 PASS | 
+N10_gamma_range_wide               KILLED    rc=1 nfail=1 make_mixer_deck selftest: 153/154 PASS   FAILED: [ | MX④ ★ 극단 입력 거부 (MXD2-04) — γ 1e-200 · 2e6 · 
+N11_bo_range_wide                  KILLED    rc=1 nfail=1 make_mixer_deck selftest: 153/154 PASS   FAILED: [ | MX④ ★ 극단 입력 거부 (MXD2-04) — γ 1e-200 · 2e6 · 
+N12_schema_v1                      KILLED    rc=1 nfail=2 make_mixer_deck selftest: 152/154 PASS   FAILED: [ | DG⑦ 기록은 **요청했을 때만** — 강성 덱 (--dens-gen 없음) d; MX⑥a ★ D2 덱의 기록 (MXD2-06) — 벽 주석 = D2 기하평균 (
+N13_registered_old_text            KILLED    rc=1 nfail=1 make_mixer_deck selftest: 153/154 PASS   FAILED: [ | MX⑥a ★ D2 덱의 기록 (MXD2-06) — 벽 주석 = D2 기하평균 (
+N14_meta_rho_const                 KILLED    rc=1 nfail=2 make_mixer_deck selftest: 152/154 PASS   FAILED: [ | GM⑬ 벽 = 비코팅 NCM 에 묶기 — gm_wall_from_ncm(ρ) =; MX⑥a ★ D2 덱의 기록 (MXD2-06) — 벽 주석 = D2 기하평균 (
+N15_header_rho_const               SURVIVED  rc=0 nfail=0 make_mixer_deck selftest: 154/154 PASS | 
+N16_header_surface_inverted        SURVIVED  rc=0 nfail=0 make_mixer_deck selftest: 154/154 PASS | 
+N17_cli_rho_not_passed             KILLED    rc=1 nfail=8 make_mixer_deck selftest: 146/154 PASS   FAILED: [ | GM⑫ CLI --gm-gamma · --gm-wall-ncm · --gm-bo; GM⑬ 벽 = 비코팅 NCM 에 묶기 — gm_wall_from_ncm(ρ) =; DG⑥ ★ D2 결합 규칙 (--gm-*) 덱 = 새 세대 덱 — --dens-
+N18_cli_gamma_float                KILLED    rc=1 nfail=1 make_mixer_deck selftest: 153/154 PASS   FAILED: [ | MX④b ★ CLI 수 토큰 = ASCII 십진수만 (MXD2-04) — --g
+N19_cli_bo_float                   KILLED    rc=1 nfail=1 make_mixer_deck selftest: 153/154 PASS   FAILED: [ | MX④b ★ CLI 수 토큰 = ASCII 십진수만 (MXD2-04) — --g
+N20_cli_wallncm_float              KILLED    rc=1 nfail=1 make_mixer_deck selftest: 153/154 PASS   FAILED: [ | MX④b ★ CLI 수 토큰 = ASCII 십진수만 (MXD2-04) — --g
+N21_cli_gammawall_float            KILLED    rc=1 nfail=1 make_mixer_deck selftest: 153/154 PASS   FAILED: [ | MX④b ★ CLI 수 토큰 = ASCII 십진수만 (MXD2-04) — --g
+N22_ceiling_loosened               KILLED    rc=1 nfail=1 make_mixer_deck selftest: 153/154 PASS   FAILED: [ | MX③ ★ 혼합쌍 천장 (MXD2-03 · 변이 M06 · M07) — lab 
+N23_wall_comment_old_for_d2        KILLED    rc=1 nfail=1 make_mixer_deck selftest: 153/154 PASS   FAILED: [ | MX⑥a ★ D2 덱의 기록 (MXD2-06) — 벽 주석 = D2 기하평균 (
+N24_registered_no_stiff_text       KILLED    rc=1 nfail=1 make_mixer_deck selftest: 153/154 PASS   FAILED: [ | MX⑥a ★ D2 덱의 기록 (MXD2-06) — 벽 주석 = D2 기하평균 (
+N25_header_layered_from_arm        SURVIVED  rc=0 nfail=0 make_mixer_deck selftest: 154/154 PASS | 
+N26_meta_layered_true              SURVIVED  rc=0 nfail=0 make_mixer_deck selftest: 154/154 PASS | 
+SUMMARY {'CLEAN': 1, 'KILLED': 45, 'SURVIVED': 5}

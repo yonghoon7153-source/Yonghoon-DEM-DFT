@@ -1,0 +1,53 @@
+{
+ "n_decks": 120,
+ "n_refused": 0,
+ "refused": [],
+ "false_problems": [],
+ "worst": {
+  "law": [
+   0.49,
+   "lab20261014 F40 dt0.5 rho 0.123457 bo 0.21244 cc AM_S–SE"
+  ],
+  "hdr_ratio": [
+   0.4009,
+   "lab20261014 F40 dt0.5 rho 0.123457 bo 0.21244 cc AM_S–SE"
+  ],
+  "hdr_F0": [
+   0.2547,
+   "gen1 F20 dt1 rho 0.3 bo 0.5 uu AM_S–SE"
+  ],
+  "hdr_E_star": [
+   0.0679,
+   "gen1 F1 dt1 rho 0.123457 bo 0.21244 uu SE–WALL"
+  ],
+  "hdr_ovl": [
+   0.9943,
+   "lab20261014 F1 dt1 rho 0.3 bo 0.21244 uu AM_S–SE"
+  ],
+  "ovl_vs_ceiling": [
+   0.0071,
+   "gen1 F1 dt1 rho 0.123457 bo 0.5 uu SE–SE"
+  ],
+  "hdr_R_star": [
+   0.02,
+   "gen1 F1 dt1 rho 0.123457 bo 0.21244 uu AM_P–AM_S"
+  ],
+  "bo": [
+   0.4921,
+   "lab20261014 F40 dt0.5 rho 0.123457 bo 0.21244 uu"
+  ],
+  "q2_gw": [
+   0.2911,
+   "gen1 F1 dt1 rho 0.123457 bo 0.21244 uu"
+  ],
+  "q2_rho_world": [
+   0.2911,
+   "gen1 F1 dt1 rho 0.123457 bo 0.21244 xx"
+  ]
+ },
+ "gm_pairs": 96,
+ "gm_false": [],
+ "e_pairs": 18,
+ "e_false": [],
+ "worst_gm": 0.6055880817812387
+}

@@ -19,19 +19,26 @@ rows = []
 for name, lv in (('8 수준 (C01 가정)', list(range(8))), ('탭 4 수준 (v2 기본 배치)', [1, 3, 5, 7])):
     X1 = [X[k] for k in lv]
     for a1, h1 in ((0.05, 0.03), (0.05, 0.01), (0.10, 0.03), (0.20, 0.03), (0.05, 0.0)):
-        widths, f2 = [], 0
+        widths, f2, f3p = [], 0, 0
         for j in range(101):
             xt = X1[0] + (X1[-1] - X1[0]) * (0.15 + 0.7 * j / 100.0)     # 격자 안쪽 70 %
             I1 = [1.2 + a1 * x for x in X1]
             A = R2.accept(X1, I1, [h1 / 2.0] * len(X1), 1.2 + a1 * xt, 0.0, nu=None)
             comps = A['comps']
             w = sum(q - p for p, q in comps)
-            touch = bool(comps) and (abs(comps[0][0] - X1[0]) < 1e-12 or abs(comps[-1][1] - X1[-1]) < 1e-12)
+            lo_t = bool(comps) and abs(comps[0][0] - X1[0]) < 1e-12
+            hi_t = bool(comps) and abs(comps[-1][1] - X1[-1]) < 1e-12
             widths.append(w)
-            f2 += int(touch or w > 2.5)
+            # v2 §3-7 원문: F2 = '격자 두 끝에 닿거나 폭 > 2.5 decade' · F3′ = '격자 끝에 닿거나 그 끝 너머' (한 끝)
+            if (lo_t and hi_t) or w > 2.5:
+                f2 += 1
+            elif lo_t or hi_t:
+                f3p += 1
         widths.sort()
         rows.append(dict(grid=name, a=a1, h=h1, two_h_over_a=(2 * h1 / a1 if a1 else None),
-                         width_median=round(widths[50], 3), width_min=round(widths[0], 3), F2_fraction=f2 / 101))
+                         width_median=round(widths[50], 3), width_min=round(widths[0], 3),
+                         F2_fraction=f2 / 101, F3prime_one_end_fraction=f3p / 101, identified_fraction=(101 - f2 - f3p) / 101))
 pcommon.dump('p04_t1_resolution.json', rows)
 for r in rows:
-    print(f"{r['grid']:22s} a {r['a']:.2f}/decade · 띠 {r['h']:.2f} (2h/a {r['two_h_over_a']}) → R02 폭 중앙 {r['width_median']} · 최소 {r['width_min']} decade · F2 식별 불가 비율 {r['F2_fraction']:.2f}")
+    print(f"{r['grid']:22s} a {r['a']:.2f}/decade · 띠 {r['h']:.2f} (2h/a {r['two_h_over_a']}) → R02 폭 중앙 {r['width_median']} · 최소 {r['width_min']} decade · "
+          f"F2 (두 끝 · 폭 > 2.5) {r['F2_fraction']:.2f} · F3′ (한 끝) {r['F3prime_one_end_fraction']:.2f} · 식별 {r['identified_fraction']:.2f}")

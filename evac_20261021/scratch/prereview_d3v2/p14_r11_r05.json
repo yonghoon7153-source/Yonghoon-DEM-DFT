@@ -1,0 +1,23 @@
+{
+ "gm_arm_wall0": "SystemExit: ⛔ D2 결합 규칙: γ_W/γ_SE = 0.0 — 유한한 양수여야 한다",
+ "mC_rho_uncoated_0.3": [
+  "fix mC all property/global cohesionEnergyDensity peratomtypepair 4 &",
+  "    316414 371997 48192.9 153136 &",
+  "    371997 414619 50122.7 200665 &",
+  "    48192.9 50122.7 45435.6 25313.4 &",
+  "    153136 200665 25313.4 0"
+ ],
+ "mC_rho_uncoated_1.0": [
+  "fix mC all property/global cohesionEnergyDensity peratomtypepair 4 &",
+  "    472659 555690 58902 228755 &",
+  "    555690 619359 61260.5 299754 &",
+  "    58902 61260.5 45435.6 30938.3 &",
+  "    228755 299754 30938.3 0"
+ ],
+ "rows_differ": [
+  1,
+  2,
+  3,
+  4
+ ]
+}

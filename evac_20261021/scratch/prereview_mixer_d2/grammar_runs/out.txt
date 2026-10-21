@@ -1,0 +1,5 @@
+── /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/grammar_runs/runs: GMcc_rho0p00001_bo0p5_lab20261014_ref_r2_s* 1/1 짝 (찾음 [32452843] · 빠짐 [])
+── 실제 시드 서명 (덱이 쓰는 RNG 시드 명령 전부 · 기대 = 생성기 CLI 가 그 시드 · 팔로 쓰는 덱, --n-total 100000 --cgf 151.4 --revolutions 8)
+   GMcc_rho0p00001_bo0p5_lab20261014_ref_r2_s32452843 particletemplate/sphere pt1=10487 pt2=11887 pt3=13901 · particledistribution/discrete pddA=32452867 pddB=32452883 · insert/pack insA=32452843 insB=32452867   ⛔ 기대와 다름
+   GMuu_rho0p00001_bo0p5_lab20261014_ref_r2_s32452843 particletemplate/sphere pt1=10487 pt2=11887 pt3=13901 · particledistribution/discrete pddA=32452867 pddB=32452883 · insert/pack insA=32452843 insB=32452867   ⛔ 기대와 다름
+⛔ D2 결합 규칙: γ_W/γ_SE = 2.56e-07 — 지원 범위 [1e-06, 1e+06] 밖 (0 · 음수 · 언더플로 · 넘침 거부 · MXD2-04)

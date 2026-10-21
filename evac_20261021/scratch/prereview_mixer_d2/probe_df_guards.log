@@ -1,0 +1,6 @@
+control uu->cc -> PASS | outside [] | d2  | nonced 
+SE-SE (rule-unchanged) x1.01 in cc -> FAIL | outside [('SE', 'SE')] | d2 새 덱 D2 — 절대 수준 Bo_SE = F₀_SS / SE 무게 (덱 r 7.57e-05 · ρ 1640 · g 9.81) = 0.5151512 ≠ 머리 선언 SE–SE Bo_code 0.5 (허 | nonced 
+SE-WALL (rule-unchanged) x1.001 in cc -> FAIL | outside [('SE', 'WALL')] | d2 새 덱 D2 — SE–WALL: F₀_ij/F₀_SS 0.1757968 ≠ 규칙 √(γ_iγ_j)·R*_ij/R*_SS 0.1752712 (머리 선언 γ · 허용 ±4.5e-05) · 머리 표 CE | nonced 
+AM_S-SE (changed) x1.0001 extra in cc -> FAIL | outside [] | d2 AM_S–SE: 배수 ×1.222336 ≠ 규칙 ×1.222212 (γ 0.3·1 → 1·1 · 허용 ±1.3e-05) | nonced 
+WALL-WALL nonzero in cc -> FAIL | outside [('WALL', 'WALL')] | d2 WALL–WALL: 벽–벽 CED 0 → 1 ≠ 0 | nonced 
+asymmetric AM_P-AM_S in cc -> FAIL | outside [] | d2 AM_P–AM_S: 배수 ×1.508728 ≠ 규칙 ×1.493802 (γ 0.3·0.3 → 1·1 · 허용 ±1.3e-05) | nonced 새 덱 CED 비대칭 (AM_P,AM_S)

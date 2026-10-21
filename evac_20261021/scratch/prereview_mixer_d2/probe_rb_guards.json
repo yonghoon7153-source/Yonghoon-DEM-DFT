@@ -1,0 +1,102 @@
+{
+ "control (as generated)": {
+  "is_d2": true,
+  "n": 0,
+  "hit": false,
+  "first": []
+ },
+ "R03 header gamma_W != 0.0256*rho (wall line gamma_W 0.00768 -> 0.00769 in both lines)": {
+  "is_d2": true,
+  "n": 4,
+  "hit": true,
+  "first": [
+   "Q2 — γ_W/γ_SE 0.00769 ≠ 0.0256 × ρ_비코팅 0.3 = 0.00768 (1저자 10-14 Q2 — 벽 = 비코팅 NCM)",
+   "AM_P–WALL: F₀_ij/F₀_SS 0.8639974 ≠ 규칙 √(γ_iγ_j)·R*_ij/R*_SS 0.8645623 (머리 선언 γ · 허용 ±4.5e-05)",
+   "AM_S–WALL: F₀_ij/F₀_SS 0.3839988 ≠ 규칙 √(γ_iγ_j)·R*_ij/R*_SS 0.3842499 (머리 선언 γ · 허용 ±4.5e-05)"
+  ]
+ },
+ "R17 insertion line says uniform (deck has 2 insert/pack)": {
+  "is_d2": true,
+  "n": 1,
+  "hit": true,
+  "first": [
+   "D2 머리: 삽입 = 균일 ≠ 덱의 insert/pack 2 개 (층상 = insA · insB 둘)"
+  ]
+ },
+ "R19 explicit wall line with uncoated NCM (header only)": {
+  "is_d2": true,
+  "n": 3,
+  "hit": true,
+  "first": [
+   "Q2 — 명시 벽 (explicit_coated) 은 NCM 상 γ 전부 1 (코팅) 인 팔만: {'AM_P': '0.3', 'AM_S': '0.3'} (1저자 10-14 Q2 — 벽 = 비코팅 NCM)",
+   "D2 머리: NCM 표면 AM_P 비코팅 ≠ γ 0.3 (코팅 = γ 1 · 비코팅 = γ ρ 0.3 · 1저자 10-14 Q2 — 벽 = 비코팅 NCM)",
+   "D2 머리: NCM 표면 AM_S 비코팅 ≠ γ 0.3 (코팅 = γ 1 · 비코팅 = γ ρ 0.3 · 1저자 10-14 Q2 — 벽 = 비코팅 NCM)"
+  ]
+ },
+ "R20 full-width Bo token in header": {
+  "is_d2": true,
+  "n": 1,
+  "hit": true,
+  "first": [
+   "D2 머리: 선언 수 {'bo': '０.５'} — ASCII 십진수 · 유한 양수가 아니다"
+  ]
+ },
+ "R20b underscore gamma token in header": {
+  "is_d2": true,
+  "n": 1,
+  "hit": true,
+  "first": [
+   "D2 머리: 선언 수 {'AM_P': '0_3'} — ASCII 십진수 · 유한 양수가 아니다"
+  ]
+ },
+ "R21 head line twice": {
+  "is_d2": true,
+  "n": 1,
+  "hit": true,
+  "first": [
+   "D2 머리 줄 \"★ D2 결합 규칙 (기하평균\" 이 2 개 — 하나여야 한다"
+  ]
+ },
+ "R16 head line removed but meta has adhesion_rule": {
+  "is_d2": true,
+  "n": 1,
+  "hit": true,
+  "first": [
+   "D2 기록 (deck_meta.json): 메타는 D2 결합 규칙 (adhesion_rule) 인데 덱 머리에 \"★ D2 결합 규칙 (기하평균\" 선언이 없다"
+  ]
+ },
+ "R18 surface line says coated for gamma 0.3": {
+  "is_d2": true,
+  "n": 1,
+  "hit": true,
+  "first": [
+   "D2 머리: NCM 표면 AM_P 코팅 ≠ γ 0.3 (코팅 = γ 1 · 비코팅 = γ ρ 0.3 · 1저자 10-14 Q2 — 벽 = 비코팅 NCM)"
+  ]
+ },
+ "R04 NCM gamma neither 1 nor rho (AM_S 0.5 in header, CED as generated)": {
+  "is_d2": true,
+  "n": 6,
+  "hit": true,
+  "first": [
+   "Q2 — ρ_비코팅 0.3 세계의 NCM 상 γ/γ_SE 는 1 (코팅) 또는 ρ (비코팅) 만: {'AM_S': '0.5'} (1저자 10-14 Q2 — 벽 = 비코팅 NCM)",
+   "D2 머리: NCM 표면 AM_S 비코팅 ≠ γ 0.5 (코팅 = γ 1 · 비코팅 = γ ρ 0.3 · 1저자 10-14 Q2 — 벽 = 비코팅 NCM)",
+   "AM_P–AM_S: F₀_ij/F₀_SS 1.661556 ≠ 규칙 √(γ_iγ_j)·R*_ij/R*_SS 2.145037 (머리 선언 γ · 허용 ±4.5e-05)"
+  ]
+ },
+ "G gravity changed in deck (9.81 -> 9.80)": {
+  "is_d2": true,
+  "n": 1,
+  "hit": true,
+  "first": [
+   "절대 수준 Bo_SE = F₀_SS / SE 무게 (덱 r 7.57e-05 · ρ 1640 · g 9.8) = 0.5005107 ≠ 머리 선언 SE–SE Bo_code 0.5 (허용 ±2.5e-05 · MXD2-02)"
+  ]
+ },
+ "X explicit-coated deck: implied rho token wrong (0.3 -> 0.31)": {
+  "is_d2": true,
+  "n": 1,
+  "hit": true,
+  "first": [
+   "Q2 — 명시 벽의 함의 ρ 0.31 ≠ γ_W/0.0256 = 0.3 (1저자 10-14 Q2 — 벽 = 비코팅 NCM)"
+  ]
+ }
+}

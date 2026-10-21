@@ -1,0 +1,47 @@
+[rb] CONTROL rc=0 nfail=0 mixer_deck_readback selftest: 31/31 PASS
+[rb] R01_bo_check_off                   SURVIVED  rc=0 nfail=0 | 
+[rb] R02_law_check_off                  SURVIVED  rc=0 nfail=0 | 
+[rb] R03_q2_gw_rho_off                  SURVIVED  rc=0 nfail=0 | 
+[rb] R04_q2_ncm_off                     SURVIVED  rc=0 nfail=0 | 
+[rb] R05_overlap_off                    KILLED    rc=1 nfail=1 | FAIL  MX③ ★ 반례 → D2 검산이 잡는다 (MXD2-02) — 머리 Bo 선언 ≠
+[rb] R06_hdr_ratio_col_off              KILLED    rc=1 nfail=1 | FAIL  MX③ ★ 반례 → D2 검산이 잡는다 (MXD2-02) — 머리 Bo 선언 ≠
+[rb] R07_meta_binding_off               KILLED    rc=1 nfail=2 | FAIL  MX③ ★ 반례 → D2 검산이 잡는다 (MXD2-02) — 머리 Bo 선언 ≠; FAIL  MX⑥ CLI --table GM — 덱 옆 deck_meta.json 을 읽어
+[rb] R08_meta_bo_binding_off            KILLED    rc=1 nfail=2 | FAIL  MX③ ★ 반례 → D2 검산이 잡는다 (MXD2-02) — 머리 Bo 선언 ≠; FAIL  MX⑥ CLI --table GM — 덱 옆 deck_meta.json 을 읽어
+[rb] R09_lab_generation_dropped         KILLED    rc=1 nfail=7 | FAIL  MX① ★ lab 세대 덱 (MXD2-01) — 옛 팔 LC lab soft →; FAIL  MX② ★ D2 덱 되읽기 (덱 텍스트만) — 쌍 10 행 (벽 포함) 의 F₀; FAIL  MX③ ★ 반례 → D2 검산이 잡는다 (MXD2-02) — 머리 Bo 선언 ≠
+[rb] R10_dens_tag_check_off             KILLED    rc=1 nfail=1 | FAIL  MX③ ★ 반례 → D2 검산이 잡는다 (MXD2-02) — 머리 Bo 선언 ≠
+[rb] R11_gm_same_world_off              KILLED    rc=1 nfail=1 | FAIL  MX⑤ ★ 반례 표 GM → FAIL (사유를 짚는다) — 다른 ρ 세계 (γ_
+[rb] R12_gm_surface_change_off          KILLED    rc=1 nfail=1 | FAIL  MX⑤ ★ 반례 표 GM → FAIL (사유를 짚는다) — 다른 ρ 세계 (γ_
+[rb] R13_gm_mult_tol_wide               SURVIVED  rc=0 nfail=0 | 
+[rb] R14_gm_unchanged_token_off         SURVIVED  rc=0 nfail=0 | 
+[rb] R15_E_same_arm_off                 SURVIVED  rc=0 nfail=0 | 
+[rb] R16_is_d2_by_meta_off              SURVIVED  rc=0 nfail=0 | 
+[rb] R17_insertion_line_off             SURVIVED  rc=0 nfail=0 | 
+[rb] R18_surface_vs_gamma_off           SURVIVED  rc=0 nfail=0 | 
+[rb] R19_explicit_coated_only_off       SURVIVED  rc=0 nfail=0 | 
+[rb] R20_dec_any_float                  SURVIVED  rc=0 nfail=0 | 
+[rb] R21_two_heads_ok                   SURVIVED  rc=0 nfail=0 | 
+[rb] R22_bo_uses_reg_g                  SURVIVED  rc=0 nfail=0 | 
+[rb] R23_load_meta_never                KILLED    rc=1 nfail=1 | FAIL  MX⑥ CLI --table GM — 덱 옆 deck_meta.json 을 읽어
+[rb] R24_meta_schema_off                KILLED    rc=1 nfail=1 | FAIL  MX③ ★ 반례 → D2 검산이 잡는다 (MXD2-02) — 머리 Bo 선언 ≠
+[rb] R25_meta_sha_off                   KILLED    rc=1 nfail=1 | FAIL  MX③ ★ 반례 → D2 검산이 잡는다 (MXD2-02) — 머리 Bo 선언 ≠
+[df] CONTROL rc=1 nfail=1 ['StopIteration']
+[df] D01_d2_attach_off                  KILLED    rc=1 nfail=1 | FAIL  ㉟ ★ expected_deck(팔, seed, revolutions, stif
+[df] D02_d2_read_none                   KILLED    rc=1 nfail=1 | FAIL  ㉟ ★ expected_deck(팔, seed, revolutions, stif
+[df] D03_E_pairing_off                  KILLED    rc=1 nfail=1 | FAIL  ㉟ ★ expected_deck(팔, seed, revolutions, stif
+[df] D04_E_same_decl_off                KILLED    rc=1 nfail=1 | FAIL  ㉟ ★ expected_deck(팔, seed, revolutions, stif
+[df] D05_gm_same_world_off              KILLED    rc=1 nfail=1 | FAIL  ㉟ ★ expected_deck(팔, seed, revolutions, stif
+[df] D06_gm_same_surface_ok             KILLED    rc=1 nfail=1 | FAIL  ㉟ ★ expected_deck(팔, seed, revolutions, stif
+[df] D07_gm_mult_tol_wide               KILLED    rc=1 nfail=1 | FAIL  ㉟ ★ expected_deck(팔, seed, revolutions, stif
+[df] D08_gm_outside_ignored             KILLED    rc=1 nfail=1 | FAIL  ㉟ ★ expected_deck(팔, seed, revolutions, stif
+[df] D09_d2_cell_meta_not_required      KILLED    rc=1 nfail=1 | FAIL  ㉟ ★ expected_deck(팔, seed, revolutions, stif
+[df] D10_d2_cell_meta_fields_off        KILLED    rc=1 nfail=1 | FAIL  ㉟ ★ expected_deck(팔, seed, revolutions, stif
+[df] D11_d2_cell_readback_off           KILLED    rc=1 nfail=1 | FAIL  ㉟ ★ expected_deck(팔, seed, revolutions, stif
+[df] D12_grammar_rho1_any_state         KILLED    rc=1 nfail=1 | FAIL  ㉟ ★ expected_deck(팔, seed, revolutions, stif
+[df] D13_grammar_noncanonical           KILLED    rc=1 nfail=1 | FAIL  ㉟ ★ expected_deck(팔, seed, revolutions, stif
+[df] D14_cli_args_no_densgen            KILLED    rc=1 nfail=1 | FAIL  ㉟ ★ expected_deck(팔, seed, revolutions, stif
+[cr] CONTROL rc=0 nfail=0 mixer_contact_reader selftest: 31/31 PASS
+[cr] C01_schema_v2_rejected             KILLED    rc=1 nfail=1 | FAIL  ⑨e deck_meta schema /2 (선택 키 · 밀도 세대 · D2) 는
+[cr] C02_any_schema                     KILLED    rc=1 nfail=1 | FAIL  ⑨e deck_meta schema /2 (선택 키 · 밀도 세대 · D2) 는
+[sm] CONTROL rc=1 nfail=12 ['✗ 11 건 실패']
+[sm] S01_counts_gen1                    KILLED    rc=1 nfail=13 | ✗ ⑨ ★ --contract 회전 증서 = bin 0 스모크 허용목록 + contact ; ✗ ⑨c ★ 계획 상별 수 = 셀의 밀도 세대 (MXD2-01) — lab D2 셀 GMu; ✗ ⑮ ★ 중간 판정 (정상 · MET) — rc 0 · 기록 = 허용목록 정확히 (§5-
+SUMMARY {'CLEAN': 2, 'SURVIVED': 14, 'KILLED': 28, 'DIRTY': 2}

@@ -1,0 +1,718 @@
+{
+ "tool": "scripts/mixer_deck_readback.py",
+ "tool_version": "mixer_deck_readback/3 (2026-10-21 · 밀도 세대 · D2 결합 규칙 · 표 GM)",
+ "tool_sha256": "2296b2168ec5d5640261d37ec86b146c3cfd2e7f3a1b7c0a85e38a0054be87fd",
+ "argv": [
+  "--table",
+  "GM",
+  "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/meta_rename/uu/in.mixer",
+  "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/meta_rename/cc/in.mixer",
+  "--json",
+  "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/meta_rename/a.json"
+ ],
+ "tolerances": {
+  "ced_value_rel": 5e-06,
+  "ced_mult_rel": 1e-05,
+  "f0_ratio": 3.0000000000000004e-05,
+  "radius_ratio_rel": 1e-05,
+  "rayleigh_rel": 0.000505,
+  "codex_estar_rel": 1e-09,
+  "dt_print_rel": 0.0005,
+  "exact_rel": 1e-12,
+  "u_spread_rel": 2e-05,
+  "gm_law_rel": 4.5e-05,
+  "gm_bo_rel": 2.5e-05,
+  "gm_hdr_rel": 5.5e-05,
+  "gm_q2_rel": 1e-05,
+  "gm_mult_rel": 1.3333333333333333e-05,
+  "gm_ovl_rel": 2e-05,
+  "gm_ovl_abs": 5e-05
+ },
+ "tolerances_why": {
+  "ced_value_rel": "CED 는 %g (6 유효숫자) 로 찍힌다 — 한 값의 반올림 상한 0.5×10^(1−6)",
+  "ced_mult_rel": "두 CED 의 배수 = 두 반올림",
+  "f0_ratio": "F₀ ∝ CED³ ⇒ 비의 상한 = 3 × 두 반올림.  E · ν 는 덱 값 = 시뮬레이션 값 (생성기가 인쇄 밖 배수를 거부) 이라 넣지 않는다",
+  "radius_ratio_rel": "템플릿 반지름 :.6g 두 값",
+  "rayleigh_rel": "덱 dt 는 .4g · 다시 낸 규칙 dt 는 반지름 :.6g 에서 — 둘의 인쇄 반올림 (dt 가 규칙과 2 배 넘게 어긋나는 것을 잡는 검사다)",
+  "codex_estar_rel": "Codex 7 차 §5 표는 9–10 자리로 적혀 있다",
+  "dt_print_rel": "timestep 은 .4g — 생성기가 반올림 전 dt 로 step 을 세므로 두 덱의 물리 시간이 이만큼 어긋날 수 있다",
+  "exact_rel": "DT 표 (dt 정확히 1/k · step 정확히 k 배) · 부동소수 비교 여유",
+  "u_spread_rel": "표 U — 원소 하나의 배율 오차 ≤ 두 반올림 (1e-5) ⇒ 같은 참 배율인 두 원소 배율의 max/min − 1 ≤ 2 × 1e-5",
+  "gm_law_rel": "D2 법칙 — 덱 CED (6 자리) 로 다시 낸 F₀ 비 (∝ CED³ · 두 쌍) · 템플릿 반지름 (6 자리 · R* 는 가중 평균이라 u) · 머리 선언 γ (√) ⇒ 9u",
+  "gm_bo_rel": "D2 절대 수준 — F₀_SS ∝ R*²·CED³ · SE 무게 ∝ r³ (같은 r 이라 r⁻¹ 만 남음) · 선언 Bo 6 자리 ⇒ 5u (밀도 · 중력 = 덱 토큰 그대로)",
+  "gm_hdr_rel": "머리 표 칸 = 생성기의 참값을 6 자리로 · 되읽기는 찍힌 CED · 반지름에서 ⇒ 비 칸 11u (다른 칸은 그 안)",
+  "gm_q2_rel": "Q2 — 머리에 찍힌 두 값 (γ_W ↔ ρ · γ ↔ ρ) 의 반올림",
+  "gm_mult_rel": "표 GM — 두 덱 CED 의 배수 (2u) + 머리 선언 γ 넷이 기대 배수에 주는 (2/3)u",
+  "gm_ovl_rel": "겹침 δ0 = (3π·CED·√R*/(2E*))² / min r — CED² 2u · R* u · r u",
+  "gm_ovl_abs": "머리 표 δ0/min r 칸 `.4f` % 인쇄 (퍼센트 점)"
+ },
+ "registered": {
+  "types": {
+   "1": "AM_P",
+   "2": "AM_S",
+   "3": "SE",
+   "4": "WALL"
+  },
+  "template_seeds": {
+   "10487": "AM_P",
+   "11887": "AM_S",
+   "13901": "SE"
+  },
+  "density": {
+   "AM": 4800.0,
+   "SE": 2000.0
+  },
+  "d_um": {
+   "AM_P": 9.0,
+   "AM_S": 4.0,
+   "SE": 1.0
+  },
+  "E_fixed": {
+   "AM_P": 1037000000.0,
+   "AM_S": 1037000000.0,
+   "WALL": 1480000000.0
+  },
+  "E_SE_levels": {
+   "1e+07": "soft (×1)",
+   "2e+08": "ref (×20 · v2.6)",
+   "4e+08": "ref2 (×40 · v2.6)",
+   "1.4e+08": "v2.5 ref (×14 · DEV7 실측 뒤 개정)",
+   "2.8e+08": "v2.5 ref2 (×28)"
+  },
+  "nu": {
+   "AM_P": 0.25,
+   "AM_S": 0.25,
+   "SE": 0.3,
+   "WALL": 0.3
+  },
+  "B_pairs": [
+   "AM_P–AM_P",
+   "AM_P–AM_S",
+   "AM_P–WALL",
+   "AM_S–AM_S",
+   "AM_S–WALL"
+  ],
+  "U_rule": "9 비영 항 (AM–AM 셋 · AM–SE 둘 · SE–SE · AM–벽 둘 · SE–벽) 전부 한 공통 배율 (퍼짐 ≤ u_spread_rel) · 배율 > 1 · 벽–벽 0 · 같은 E · ν (2026-10-05 · dev-u · 강성 축 사전등록 §12)",
+  "density_generations": {
+   "gen1": {
+    "AM": 4800.0,
+    "SE": 2000.0
+   },
+   "lab20261014": {
+    "AM": 4850.0,
+    "SE": 1640.0
+   }
+  },
+  "gravity": 9.81,
+  "D2_rule": "F₀_ij/F₀_SS = √(γ_iγ_j)·R*_ij/R*_SS (γ_WALL = γ_W · 머리 선언) · Bo_SE = F₀_SS / ((4/3)π r_SE³ ρ_SE g) = 선언 · Q2 (1저자 10-14): 벽 = 비코팅 NCM ⇒ γ_W = 0.0256·ρ · NCM γ ∈ {1, ρ} · 명시 벽 = NCM γ 전부 1 · 모든 쌍 δ0/min r ≤ 0.01 · 머리 표 = 덱 값 · deck_meta (있으면) = 덱 (2026-10-21 · MXD2-01 · 02)",
+  "D2_wall_hare2026": 0.0256,
+  "GM_rule": "같은 ρ 세계 (세대 · 벽 규칙 · ρ · γ_W · SE γ · Bo · 삽입 같다) · NCM 표면만 바뀜 · 바뀌는 CED = [√(γ'_iγ'_j)/√(γ_iγ_j)]^(1/3) ≠ 1 인 원소 정확히 (배수 · 허용 gm_mult_rel) · 나머지 토큰까지 같다",
+  "dt_k": 2,
+  "dump_rule": "dump 간격 = max(1000, 회전 step // 200)",
+  "restart_rule": "restart 간격 = max(50000, min(200000, (회전 step 또는 2·정착 step) // 20))",
+  "rayleigh_rule": "dt = min_t 0.2·π·r_t·√(ρ_t/G_t)/(0.1631ν_t + 0.8766) · G = E/(2(1+ν)) (생성기 plan() 의 식 사본)",
+  "codex_section5": {
+   "14": {
+    "AM_P–AM_P": [
+     1.0,
+     1.0
+    ],
+    "AM_P–AM_S": [
+     1.0,
+     1.0
+    ],
+    "AM_S–AM_S": [
+     1.0,
+     1.0
+    ],
+    "AM_P–WALL": [
+     1.0,
+     1.0
+    ],
+    "AM_S–WALL": [
+     1.0,
+     1.0
+    ],
+    "AM_P–SE": [
+     12.412672571,
+     5.360971926
+    ],
+    "AM_S–SE": [
+     12.412672571,
+     5.360971926
+    ],
+    "SE–SE": [
+     14.0,
+     5.808785734
+    ],
+    "SE–WALL": [
+     12.87654321,
+     5.493715853
+    ]
+   },
+   "28": {
+    "AM_P–AM_P": [
+     1.0,
+     1.0
+    ],
+    "AM_P–AM_S": [
+     1.0,
+     1.0
+    ],
+    "AM_S–AM_S": [
+     1.0,
+     1.0
+    ],
+    "AM_P–WALL": [
+     1.0,
+     1.0
+    ],
+    "AM_S–WALL": [
+     1.0,
+     1.0
+    ],
+    "AM_P–SE": [
+     22.123962626,
+     7.880890212
+    ],
+    "AM_S–SE": [
+     22.123962626,
+     7.880890212
+    ],
+    "SE–SE": [
+     28.0,
+     9.220872584
+    ],
+    "SE–WALL": [
+     23.704545455,
+     8.251908834
+    ]
+   },
+   "20": {
+    "AM_P–AM_P": [
+     1.0,
+     1.0
+    ],
+    "AM_P–AM_S": [
+     1.0,
+     1.0
+    ],
+    "AM_S–AM_S": [
+     1.0,
+     1.0
+    ],
+    "AM_P–WALL": [
+     1.0,
+     1.0
+    ],
+    "AM_S–WALL": [
+     1.0,
+     1.0
+    ],
+    "AM_P–SE": [
+     16.85060601,
+     6.572698075
+    ],
+    "AM_S–SE": [
+     16.85060601,
+     6.572698075
+    ],
+    "SE–SE": [
+     20.0,
+     7.368062997
+    ],
+    "SE–WALL": [
+     17.738095238,
+     6.801499256
+    ]
+   },
+   "40": {
+    "AM_P–AM_P": [
+     1.0,
+     1.0
+    ],
+    "AM_P–AM_S": [
+     1.0,
+     1.0
+    ],
+    "AM_S–AM_S": [
+     1.0,
+     1.0
+    ],
+    "AM_P–WALL": [
+     1.0,
+     1.0
+    ],
+    "AM_S–WALL": [
+     1.0,
+     1.0
+    ],
+    "AM_P–SE": [
+     28.909279805,
+     9.419434887
+    ],
+    "AM_S–SE": [
+     28.909279805,
+     9.419434887
+    ],
+    "SE–SE": [
+     40.0,
+     11.696070953
+    ],
+    "SE–WALL": [
+     31.70212766,
+     10.016721683
+    ]
+   }
+  }
+ },
+ "decks": {
+  "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/meta_rename/uu/in.mixer": {
+   "label": "uu",
+   "path": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/meta_rename/uu/in.mixer",
+   "sha256": "99666cc5c4ff64aff3a39927f0291768376199d7884e599b7eac5ee08fb44926",
+   "bytes": 13817,
+   "gen_cmd": "python3 scripts/make_mixer_deck.py --out /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/decks/recheck/GMuu_ref20_lab --n-total 100000 --cgf 151.4 --seed 32452843 --revolutions 2 --gm-gamma AM_P=0.3,AM_S=0.3 --gm-wall-ncm 0.3 --gm-bo-se 0.5 --dens-gen lab20261014 --stiffen-se 20 --hold-bo-pairwise",
+   "problems": [],
+   "type_problems": [],
+   "types": {
+    "1": "AM_P",
+    "2": "AM_S",
+    "3": "SE",
+    "4": "WALL"
+   },
+   "E": [
+    1037000000.0,
+    1037000000.0,
+    200000000.0,
+    1480000000.0
+   ],
+   "nu": [
+    0.25,
+    0.25,
+    0.3,
+    0.3
+   ],
+   "dt_txt": "2.373e-07",
+   "runs": [
+    1,
+    560606,
+    560606,
+    6595382
+   ],
+   "dump_every": 32976,
+   "restart_every": 200000,
+   "period_s": 0.782508,
+   "templates": {
+    "1": {
+     "style": "particletemplate/sphere",
+     "seed": 10487,
+     "density": 4850.0,
+     "radius": 0.0006813
+    },
+    "2": {
+     "style": "particletemplate/sphere",
+     "seed": 11887,
+     "density": 4850.0,
+     "radius": 0.0003028
+    },
+    "3": {
+     "style": "particletemplate/sphere",
+     "seed": 13901,
+     "density": 1640.0,
+     "radius": 7.57e-05
+    }
+   },
+   "ced": {
+    "1-1": "90677.5",
+    "1-2": "106607",
+    "1-3": "90776.1",
+    "1-4": "43885.6",
+    "2-2": "118821",
+    "2-3": "94411",
+    "2-4": "57506.4",
+    "3-3": "95938.8",
+    "3-4": "49340",
+    "4-4": "0"
+   },
+   "comment_lines": 91,
+   "dens_gen": "lab20261014",
+   "gravity": 9.81,
+   "meta_bound": true,
+   "d2": {
+    "wall_rule": "hare2026_x_rho_uncoated_ncm",
+    "gamma": {
+     "AM_P": 0.3,
+     "AM_S": 0.3,
+     "SE": 1.0
+    },
+    "gamma_wall": 0.00768,
+    "bo_se": 0.5,
+    "bo_read": 0.5000004866116502,
+    "rho": 0.3,
+    "surface": {
+     "AM_P": "uncoated",
+     "AM_S": "uncoated"
+    },
+    "layered": true,
+    "problems": []
+   },
+   "t0_planned": 1121184,
+   "t0_planned_s": 0.2660569632,
+   "steps_per_rev": 3297547.408343869,
+   "settle_s": 0.2660636076,
+   "rotation_s": 1.5650841486
+  },
+  "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/meta_rename/cc/in.mixer": {
+   "label": "cc",
+   "path": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/meta_rename/cc/in.mixer",
+   "sha256": "643b7e0b8cf883f97c16d46f6f3e4e8a6a21542023b0406c8b37a0765a9d951a",
+   "bytes": 13802,
+   "gen_cmd": "python3 scripts/make_mixer_deck.py --out /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/decks/recheck/GMcc_ref20_lab --n-total 100000 --cgf 151.4 --seed 32452843 --revolutions 2 --gm-gamma AM_P=1,AM_S=1 --gm-wall-ncm 0.3 --gm-bo-se 0.5 --dens-gen lab20261014 --stiffen-se 20 --hold-bo-pairwise",
+   "problems": [],
+   "type_problems": [],
+   "types": {
+    "1": "AM_P",
+    "2": "AM_S",
+    "3": "SE",
+    "4": "WALL"
+   },
+   "E": [
+    1037000000.0,
+    1037000000.0,
+    200000000.0,
+    1480000000.0
+   ],
+   "nu": [
+    0.25,
+    0.25,
+    0.3,
+    0.3
+   ],
+   "dt_txt": "2.373e-07",
+   "runs": [
+    1,
+    560606,
+    560606,
+    6595382
+   ],
+   "dump_every": 32976,
+   "restart_every": 200000,
+   "period_s": 0.782508,
+   "templates": {
+    "1": {
+     "style": "particletemplate/sphere",
+     "seed": 10487,
+     "density": 4850.0,
+     "radius": 0.0006813
+    },
+    "2": {
+     "style": "particletemplate/sphere",
+     "seed": 11887,
+     "density": 4850.0,
+     "radius": 0.0003028
+    },
+    "3": {
+     "style": "particletemplate/sphere",
+     "seed": 13901,
+     "density": 1640.0,
+     "radius": 7.57e-05
+    }
+   },
+   "ced": {
+    "1-1": "135454",
+    "1-2": "159249",
+    "1-3": "110948",
+    "1-4": "53637.5",
+    "2-2": "177495",
+    "2-3": "115390",
+    "2-4": "70285.1",
+    "3-3": "95938.8",
+    "3-4": "49340",
+    "4-4": "0"
+   },
+   "comment_lines": 91,
+   "dens_gen": "lab20261014",
+   "gravity": 9.81,
+   "meta_bound": true,
+   "d2": {
+    "wall_rule": "hare2026_x_rho_uncoated_ncm",
+    "gamma": {
+     "AM_P": 1.0,
+     "AM_S": 1.0,
+     "SE": 1.0
+    },
+    "gamma_wall": 0.00768,
+    "bo_se": 0.5,
+    "bo_read": 0.5000004866116502,
+    "rho": 0.3,
+    "surface": {
+     "AM_P": "coated",
+     "AM_S": "coated"
+    },
+    "layered": true,
+    "problems": [
+     "D2 기록 (deck_meta.json): adhesion_rule.bo_se 0.21244 ≠ 덱 머리 SE–SE Bo_code (절대 수준) 0.5"
+    ]
+   },
+   "t0_planned": 1121184,
+   "t0_planned_s": 0.2660569632,
+   "steps_per_rev": 3297547.408343869,
+   "settle_s": 0.2660636076,
+   "rotation_s": 1.5650841486
+  }
+ },
+ "tables": [
+  {
+   "kind": "GM",
+   "old": "uu",
+   "new": "cc",
+   "old_sha256": "99666cc5c4ff64aff3a39927f0291768376199d7884e599b7eac5ee08fb44926",
+   "new_sha256": "643b7e0b8cf883f97c16d46f6f3e4e8a6a21542023b0406c8b37a0765a9d951a",
+   "rows": [
+    {
+     "pair": "AM_P–AM_P",
+     "types": "1-1",
+     "CED_old": 90677.5,
+     "CED_new": 135454.0,
+     "ratio": 1.4937994541093436,
+     "expect": 1.4938015821857216,
+     "expect_change": true,
+     "reason": "",
+     "ok": true
+    },
+    {
+     "pair": "AM_P–AM_S",
+     "types": "1-2",
+     "CED_old": 106607.0,
+     "CED_new": 159249.0,
+     "ratio": 1.4937949665594192,
+     "expect": 1.4938015821857216,
+     "expect_change": true,
+     "reason": "",
+     "ok": true
+    },
+    {
+     "pair": "AM_S–AM_S",
+     "types": "2-2",
+     "CED_old": 118821.0,
+     "CED_new": 177495.0,
+     "ratio": 1.4938016007271442,
+     "expect": 1.4938015821857216,
+     "expect_change": true,
+     "reason": "",
+     "ok": true
+    },
+    {
+     "pair": "AM_P–SE",
+     "types": "1-3",
+     "CED_old": 90776.1,
+     "CED_new": 110948.0,
+     "ratio": 1.2222159797567862,
+     "expect": 1.2222117583241137,
+     "expect_change": true,
+     "reason": "",
+     "ok": true
+    },
+    {
+     "pair": "AM_S–SE",
+     "types": "2-3",
+     "CED_old": 94411.0,
+     "CED_new": 115390.0,
+     "ratio": 1.2222092764614292,
+     "expect": 1.2222117583241137,
+     "expect_change": true,
+     "reason": "",
+     "ok": true
+    },
+    {
+     "pair": "SE–SE",
+     "types": "3-3",
+     "CED_old": 95938.8,
+     "CED_new": 95938.8,
+     "ratio": 1.0,
+     "expect": 1.0,
+     "expect_change": false,
+     "reason": "",
+     "ok": true
+    },
+    {
+     "pair": "AM_P–WALL",
+     "types": "1-4",
+     "CED_old": 43885.6,
+     "CED_new": 53637.5,
+     "ratio": 1.2222118416975045,
+     "expect": 1.2222117583241137,
+     "expect_change": true,
+     "reason": "",
+     "ok": true
+    },
+    {
+     "pair": "AM_S–WALL",
+     "types": "2-4",
+     "CED_old": 57506.4,
+     "CED_new": 70285.1,
+     "ratio": 1.2222135275378045,
+     "expect": 1.2222117583241137,
+     "expect_change": true,
+     "reason": "",
+     "ok": true
+    },
+    {
+     "pair": "SE–WALL",
+     "types": "3-4",
+     "CED_old": 49340.0,
+     "CED_new": 49340.0,
+     "ratio": 1.0,
+     "expect": 1.0,
+     "expect_change": false,
+     "reason": "",
+     "ok": true
+    },
+    {
+     "pair": "WALL–WALL",
+     "types": "4-4",
+     "CED_old": 0.0,
+     "CED_new": 0.0,
+     "ratio": null,
+     "expect": null,
+     "expect_change": false,
+     "reason": "",
+     "ok": true
+    }
+   ],
+   "checks": [
+    {
+     "check": "덱 파싱 — uu (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "덱 파싱 — cc (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — uu",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — cc",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "두 덱의 템플릿 (시드 · 밀도 · 반지름) · 타입 사전 동일",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "D2 결합 규칙 — 덱 텍스트 검산 (쌍별 기하평균 F₀ · 절대 수준 Bo · Q2 벽 · 겹침 천장 · 머리 표 · 세대 · 기록) — uu",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "D2 결합 규칙 — 덱 텍스트 검산 (쌍별 기하평균 F₀ · 절대 수준 Bo · Q2 벽 · 겹침 천장 · 머리 표 · 세대 · 기록) — cc",
+     "ok": false,
+     "detail": "D2 기록 (deck_meta.json): adhesion_rule.bo_se 0.21244 ≠ 덱 머리 SE–SE Bo_code (절대 수준) 0.5"
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — uu",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — uu",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — uu",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — uu",
+     "ok": true,
+     "detail": "SE 2e+08 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — cc",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — cc",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — cc",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — cc",
+     "ok": true,
+     "detail": "SE 2e+08 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "dt = Rayleigh 규칙의 정확히 1/k (k 정수 ≥ 1 · k = 1 이면 규칙 그대로) — uu",
+     "ok": true,
+     "detail": "덱 2.373e-07 × 1 vs 규칙 2.3729e-07 s (SE)"
+    },
+    {
+     "check": "dt = Rayleigh 규칙의 정확히 1/k (k 정수 ≥ 1 · k = 1 이면 규칙 그대로) — cc",
+     "ok": true,
+     "detail": "덱 2.373e-07 × 1 vs 규칙 2.3729e-07 s (SE)"
+    },
+    {
+     "check": "허용 밖 명령은 토큰까지 같다 (허용: CED 값)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "같은 강성 — E · ν 정확히 같다",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "두 덱 모두 D2 결합 규칙 덱 (머리 \"★ D2 결합 규칙 (기하평균\" · γ 선언 · 벽 규칙 · NCM 표면 · 쌍 표를 읽었다)",
+     "ok": true,
+     "detail": "uu D2 · cc D2"
+    },
+    {
+     "check": "같은 ρ 세계 — 밀도 세대 · 벽 규칙 · ρ_비코팅 · γ_W · SE γ · Bo_SE · 삽입이 같다 (NCM 표면만 바뀐다)",
+     "ok": true,
+     "detail": "다른 칸 [] · ρ 0.3 → 0.3 · γ_W 0.00768 → 0.00768 · Bo 0.5 → 0.5"
+    },
+    {
+     "check": "NCM 표면이 바뀌었다 (비코팅 ↔ 코팅 — 같은 표면 둘은 대비가 아니다 · 빈 비교를 PASS 로 내지 않는다)",
+     "ok": true,
+     "detail": "{'AM_P': 'uncoated', 'AM_S': 'uncoated'} → {'AM_P': 'coated', 'AM_S': 'coated'}"
+    }
+   ],
+   "meta": {
+    "comment_only_old": 17,
+    "comment_only_new": 17,
+    "examples_new": [
+     "AM_P–AM_P   0.00034065 5.53067e+08 5.53067e+08      135454      135454 1.31553e-07 1.31553e-07 1.000",
+     "AM_P–AM_S  0.000209631 5.53067e+08 5.53067e+08      159249      159249 8.09559e-08 8.09559e-08 1.000",
+     "AM_P–SE      6.813e-05 1.08809e+07  1.8335e+08     16880.1      110948 2.63107e-08 2.63107e-08 1.000"
+    ],
+    "note": "주석 (팔 설명 · 강성 머리 블록 · 출처) — 허용 메타 (판정 밖)"
+   },
+   "k": 1,
+   "level": null,
+   "verdict": "FAIL",
+   "failures": [
+    "GM uu → cc: D2 결합 규칙 — 덱 텍스트 검산 (쌍별 기하평균 F₀ · 절대 수준 Bo · Q2 벽 · 겹침 천장 · 머리 표 · 세대 · 기록) — cc (D2 기록 (deck_meta.json): adhesion_rule.bo_se 0.21244 ≠ 덱 머리 SE–SE Bo_code (절대 수준) 0.5)"
+   ]
+  }
+ ],
+ "verdict": "FAIL",
+ "failures": [
+  "GM uu → cc: D2 결합 규칙 — 덱 텍스트 검산 (쌍별 기하평균 F₀ · 절대 수준 Bo · Q2 벽 · 겹침 천장 · 머리 표 · 세대 · 기록) — cc (D2 기록 (deck_meta.json): adhesion_rule.bo_se 0.21244 ≠ 덱 머리 SE–SE Bo_code (절대 수준) 0.5)"
+ ]
+}

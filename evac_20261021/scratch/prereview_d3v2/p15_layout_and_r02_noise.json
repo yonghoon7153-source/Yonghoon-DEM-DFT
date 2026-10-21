@@ -1,0 +1,48 @@
+{
+ "C04_as_checked_8x2": {
+  "coverage": 0.9975,
+  "coverage_stat_only": 0.97625,
+  "nu": [
+   8
+  ]
+ },
+ "v2_default_T2_8A_plus_4B": {
+  "coverage": 0.998,
+  "coverage_stat_only": 0.98525,
+  "nu": [
+   4
+  ]
+ },
+ "v2_default_T1_tap_4x2": {
+  "coverage": 1.0,
+  "coverage_stat_only": 0.97525,
+  "nu": [
+   4
+  ]
+ },
+ "R02_noise_counterexample": {
+  "cell": [
+   0.3272362927470996,
+   0.8272362927470995
+  ],
+  "x_star": 0.3292362927470996,
+  "measured": 49.39000000000001,
+  "I_est_cell": [
+   35.0,
+   46.199999999999996
+  ],
+  "stat_error_at_xstar": 0.54,
+  "band_stat": 3.059411708155671,
+  "premise_holds": true,
+  "L_at_xstar": 35.0448,
+  "abs_L_minus_m": 14.345200000000006,
+  "band_total": 14.259411708155667,
+  "accepted_comps": [
+   [
+    0.3330661272044362,
+    2.804357547466762
+   ]
+  ],
+  "x_star_covered": false
+ }
+}

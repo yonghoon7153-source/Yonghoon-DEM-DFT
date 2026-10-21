@@ -1,0 +1,34 @@
+stiffen_2_0 {"rc": 0, "tail": ["⬜ STL 3개(Drum·Front·Back)를 각 디렉터리에 두어야 한다"], "stiffen": 20.0, "dt_factor": 1.0, "cgf": 151.4, "gamma": null, "rho": null, "bo": null}
+stiffen_fullwidth20 {"rc": 0, "tail": ["⬜ STL 3개(Drum·Front·Back)를 각 디렉터리에 두어야 한다"], "stiffen": 20.0, "dt_factor": 1.0, "cgf": 151.4, "gamma": null, "rho": null, "bo": null}
+stiffen_nan {"rc": 1, "tail": ["⛔ --stiffen-se nan — 유한한 양수여야 한다"]}
+stiffen_inf {"rc": 1, "tail": ["⛔ --stiffen-se inf — 유한한 양수여야 한다"]}
+dt_0_5 {"rc": 1, "tail": ["⛔ --dt-factor 5.0 — (0, 1] 이어야 한다 (dt 를 늘리지 않는다)"]}
+dt_nan {"rc": 1, "tail": ["⛔ --dt-factor nan — (0, 1] 이어야 한다 (dt 를 늘리지 않는다)"]}
+cgf_15_1.4 {"rc": 0, "tail": ["⬜ STL 3개(Drum·Front·Back)를 각 디렉터리에 두어야 한다"], "note": "no deck_meta (default/old-arm deck)"}
+gm_stiffen_2_0 {"rc": 0, "tail": ["⬜ STL 3개(Drum·Front·Back)를 각 디렉터리에 두어야 한다"], "stiffen": 20.0, "dt_factor": 1.0, "cgf": 151.4, "gamma": {"AM_P": 0.3, "AM_S": 0.3, "SE": 1.0}, "rho": 0.3, "bo": 0.5}
+gm_stiffen_nan {"rc": 1, "tail": ["⛔ --stiffen-se nan — 유한한 양수여야 한다"]}
+gm_dt_fullwidth {"rc": 0, "tail": ["⬜ STL 3개(Drum·Front·Back)를 각 디렉터리에 두어야 한다"], "stiffen": 1.0, "dt_factor": 0.5, "cgf": 151.4, "gamma": {"AM_P": 0.3, "AM_S": 0.3, "SE": 1.0}, "rho": 0.3, "bo": 0.5}
+gm_nbsp_value {"rc": 0, "tail": ["⬜ STL 3개(Drum·Front·Back)를 각 디렉터리에 두어야 한다"], "stiffen": 1.0, "dt_factor": 1.0, "cgf": 151.4, "gamma": {"AM_P": 0.3, "AM_S": 0.3, "SE": 1.0}, "rho": 0.3, "bo": 0.5}
+gm_emsp_value {"rc": 0, "tail": ["⬜ STL 3개(Drum·Front·Back)를 각 디렉터리에 두어야 한다"], "stiffen": 1.0, "dt_factor": 1.0, "cgf": 151.4, "gamma": {"AM_P": 0.3, "AM_S": 0.3, "SE": 1.0}, "rho": 0.3, "bo": 0.5}
+gm_se_explicit_1e0 {"rc": 0, "tail": ["⬜ STL 3개(Drum·Front·Back)를 각 디렉터리에 두어야 한다"], "stiffen": 1.0, "dt_factor": 1.0, "cgf": 151.4, "gamma": {"AM_P": 0.3, "AM_S": 0.3, "SE": 1.0}, "rho": 0.3, "bo": 0.5}
+gm_se_1p0000001 {"rc": 1, "tail": ["⛔ D2 결합 규칙: 기준 γ_SE/γ_SE 는 정확히 1 이어야 한다 (1.0000001)"]}
+gm_rho_4e-5 {"rc": 0, "tail": ["⬜ STL 3개(Drum·Front·Back)를 각 디렉터리에 두어야 한다"], "stiffen": 1.0, "dt_factor": 1.0, "cgf": 151.4, "gamma": {"AM_P": 4e-05, "AM_S": 4e-05, "SE": 1.0}, "rho": 4e-05, "bo": 0.5}
+gm_rho_3e-5 {"rc": 1, "tail": ["⛔ D2 결합 규칙: γ_W/γ_SE = 7.680000000000001e-07 — 지원 범위 [1e-06, 1e+06] 밖 (0 · 음수 · 언더플로 · 넘침 거부 · MXD2-04)"]}
+gm_rho_1e-6_coated {"rc": 1, "tail": ["⛔ D2 결합 규칙: γ_W/γ_SE = 2.56e-08 — 지원 범위 [1e-06, 1e+06] 밖 (0 · 음수 · 언더플로 · 넘침 거부 · MXD2-04)"]}
+gm_bo_1e-6 {"rc": 0, "tail": ["⬜ STL 3개(Drum·Front·Back)를 각 디렉터리에 두어야 한다"], "stiffen": 1.0, "dt_factor": 1.0, "cgf": 151.4, "gamma": {"AM_P": 1.0, "AM_S": 1.0, "SE": 1.0}, "rho": 1.0, "bo": 1e-06}
+gm_bo_1.00001e4 {"rc": 1, "tail": ["⛔ D2 결합 규칙: SE–SE Bo_code = 10000.1 — 지원 범위 [1e-06, 10000] 밖 (0 · 음수 · 언더플로 · 넘침 거부 · MXD2-04)"]}
+gm_gamma_1e6_bo_small {"rc": 0, "tail": ["⬜ STL 3개(Drum·Front·Back)를 각 디렉터리에 두어야 한다"], "stiffen": 1.0, "dt_factor": 1.0, "cgf": 151.4, "gamma": {"AM_P": 1000000.0, "AM_S": 1000000.0, "SE": 1.0}, "rho": 1000000.0, "bo": 1e-06}
+gm_gamma_1.000001e6 {"rc": 1, "tail": ["⛔ D2 결합 규칙: ρ_비코팅 NCM = γ_NCM/γ_SE = 1000001.0 — 지원 범위 [1e-06, 1e+06] 밖 (0 · 음수 · 언더플로 · 넘침 거부 · MXD2-04)"]}
+gm_bo_dot5 {"rc": 0, "tail": ["⬜ STL 3개(Drum·Front·Back)를 각 디렉터리에 두어야 한다"], "stiffen": 1.0, "dt_factor": 1.0, "cgf": 151.4, "gamma": {"AM_P": 0.3, "AM_S": 0.3, "SE": 1.0}, "rho": 0.3, "bo": 0.5}
+gm_bo_5dot {"rc": 0, "tail": ["⬜ STL 3개(Drum·Front·Back)를 각 디렉터리에 두어야 한다"], "stiffen": 1.0, "dt_factor": 1.0, "cgf": 151.4, "gamma": {"AM_P": 0.3, "AM_S": 0.3, "SE": 1.0}, "rho": 0.3, "bo": 5.0}
+gm_rho_upperE {"rc": 0, "tail": ["⬜ STL 3개(Drum·Front·Back)를 각 디렉터리에 두어야 한다"], "stiffen": 1.0, "dt_factor": 1.0, "cgf": 151.4, "gamma": {"AM_P": 0.3, "AM_S": 0.3, "SE": 1.0}, "rho": 0.3, "bo": 0.5}
+gm_rho_plus_sign {"rc": 2, "tail": ["mmd_FIX.py: error: argument --gm-wall-ncm: ⛔ 값 = '+0.3' — ASCII 십진수가 아니다 (밑줄 · 전각 숫자 · nan · inf · 부호 금지 · MXD2-04)"]}
+gm_key_lower {"rc": 1, "tail": ["⛔ D2 결합 규칙: gamma 의 상 ['AM_S', 'SE', 'am_p'] ≠ 도는 상 ['AM_P', 'AM_S', 'SE'] — 빠지거나 남는 상은 거부"]}
+gm_key_dup {"rc": 1, "tail": ["⛔ --gm-gamma 'AM_P=0.3,AM_P=0.3,AM_S=0.3' — \"상=값\" 을 쉼표로 (상 중복 금지)"]}
+gm_trailing_comma {"rc": 1, "tail": ["⛔ --gm-gamma 'AM_P=0.3,AM_S=0.3,' — \"상=값\" 을 쉼표로 (상 중복 금지)"]}
+GMuu_rho0p00001_bo0p5_lab20261014_ref_r2_s32452843 {'parse': 'ok', 'expected_deck': 'SystemExit ⛔ D2 결합 규칙: γ_W/γ_SE = 2.56e-07 — 지원 범위 [1e-06, 1e+06] 밖 (0 · 음수 · 언더플로 · 넘침 거부 · MXD2-04)'}
+GMuu_rho0p00004_bo0p5_lab20261014_ref_r2_s32452843 {'parse': 'ok', 'expected_deck': 'ok'}
+GMcc_rho1000000_bo0p000001_lab20261014_ref_r2_s32452843 {'parse': 'ok', 'expected_deck': 'ok'}
+GMuu_rho0p3_bo10000_lab20261014_ref_r2_s32452843 {'parse': 'ok', 'expected_deck': 'SystemExit ⛔ 팔 D2 결합 규칙 (기하평균 W_ij = 2√(γ_iγ_j) · 혼합쌍 · 벽) · γ/γ_SE AM_P 0.3 · AM_S 0.3 · SE 1 · γ_W/γ_SE 0.00768 · SE–SE Bo_code 10000 — 개발 · 등록 전 (결과 0): AM_P–'}
+GMuu_rho1p00001_bo0p5_lab20261014_ref_r2_s32452843 {'parse': 'ok', 'expected_deck': 'ok'}
+GMuu_rho0p3_bo0p5_gen1_ref2_dthalf_r8_s15485863 {'parse': 'ok', 'expected_deck': 'ok'}

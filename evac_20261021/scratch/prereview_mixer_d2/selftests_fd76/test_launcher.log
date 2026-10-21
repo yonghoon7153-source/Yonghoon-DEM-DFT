@@ -1,0 +1,161 @@
+── run_all.sh: 완주 판정 · 죽은 런 비재발사 ──
+  ✓ ① 배너 있는 완주 런은 안 띄운다
+  ✓ ② ★ 배너 없는 완주 런도 안 띄운다 (옛 판은 재발사했다)
+  ✓ ③ ★ 죽은 미완주 런은 FORCE 없이 안 띄운다 — 목록만
+  ✓ ④ 아직 안 돈 런은 띄운다 (pid 파일 = 실제 PID)
+  ✓ ⑤ 미완주 목록을 끝에 찍는다
+  ✓ ⑥ FORCE=1 이면 죽은 런을 띄운다
+  ✓ ⑦ FORCE=1 이어도 완주 런(배너 유무 무관)은 안 띄운다
+── watch.sh: 같은 판정 ──
+  ✓ ⑧ watch: 배너 없는 완주는 완료* (옛 판은 ⛔죽음 100%)
+  ✓ ⑧b watch: 배너 있는 완주는 완료
+  ✓ ⑧c watch: 죽은 런은 ⛔죽음
+── gen_all.sh: 살아 있는 런 건너뜀 · 로그 있는 런 건너뜀 · rename 교체 ──
+  ✓ ⑨ 캠페인 목록 13 개
+  ✓ ⑩ 살아 있는 런 12 개는 전부 건너뛴다
+  ✓ ⑩b 로그 있는 죽은 런은 FORCE 없이 건너뛴다
+  ✓ ⑩c 살아 있는 런의 덱은 한 바이트도 안 바뀐다
+  ✓ ⑪ ★ FORCE=1 재생성은 rename 교체 — 열린 fd 는 옛 내용(OLD)을 읽고 새 파일은 새 덱이다
+  ✓ ⑪b 새 덱 옆에 n_expected · r_container 가 생긴다
+  ✓ ⑪c 임시 디렉터리 .new 가 남지 않는다
+── gen_all.sh SET=highbo → 실행 덱 비교 (2026-09-27 고-Bo 확장 · Codex HB-03) ──
+  ✓ H① SET=highbo 는 LH × 캠페인 시드 3 만 만든다 (L0 · E0 없음)
+  ✓ H①b LH 덱 옆에 n_expected · r_container (판독 계약)
+  ✓ H② ★ 실행 덱 LC_s* → LH_s* 세 시드: 허용 다섯 쌍 (AM–AM 셋 · AM–벽 둘) 만 다르다
+  ✓ H②b 같은 덱을 A (AM–AM 단독) 로 보면 거부 (AM–벽 이 허용목록 밖)
+  ✓ H③ 모르는 SET 은 거부한다
+── resume_all.sh: 체크포인트 재개 (2026-09-26 — WSL 재시작으로 L 10 런이 53–61 % 에서 끊김) ──
+  ✓ R① DRY: 죽은 런만 in.resume — 체크포인트 = 최신 a · step ckpt
+  ✓ R①b DRY: 완주(배너) · 실행 중 · 아직 안 돈 · _old_ 런은 건드리지 않는다
+  ✓ R①c DRY: 띄우지 않는다 (pid 없음) · ckpt 뒤 덤프는 post_pre_resume_<ckpt>/ 로 (지우지 않음)
+  ✓ R② 발사: pid = 실제 PID · -in in.resume 로 떴다
+  ✓ R②b ★ 로그는 이어 붙인다 — 옛 첫 줄 · 옛 thermo 가 그대로 · RESUME 표지
+  ✓ R②c 사용 체크포인트를 복사 보존 (resume_from_<ckpt>.bin)
+  ✓ R③ 스모크: RESUME_STEP · 재개 직후 thermo 가 원 로그와 같으면 통과
+  ✓ R③b 변이: 재개 직후 thermo 가 다르면 실패 (발사 금지)
+  ✓ R③c 스모크는 원 폴더를 안 건드린다 (in.smoke · 영수증 · pid 없음)
+── LH 발사 순서 — run_all.sh 관문 · launch_highbo.sh first / rest (2026-09-28, Codex 3차 HBR3-08) ──
+  ✓ HL① ★ run_all.sh 기본: LH 덱 셋은 안 띄운다 (옆의 다른 런 둘은 띄운다) · 건너뜀을 찍고 새 런처를 가리킨다
+  ✓ HL①b ONLY 만 · ALLOW_LH=1 만으로는 LH 를 안 띄운다 (둘 다 + 이름 목록 — launch_highbo.sh 만 그렇게 부른다)
+  ✓ HL①c ALLOW_LH=1 ONLY=<LH> 여도 봉인 (launch_record.json) 이 없으면 거부 — LH 는 봉인 뒤에만 뜬다
+  ✓ HL①d FORCE=1 이어도 죽은 LH 를 처음부터 다시 띄우지 않는다
+  ✓ HL①e ALLOW_LH=1 ONLY=<LH> FORCE=1 · 봉인이 있어도 로그 있는 LH 는 처음부터 다시 안 띄운다 (재개는 resume_all.sh)
+  ✓ HL② first: 덱 비교 관문 (mixer_deck_diff --allow B) 실패 → 거부 · 발사 0 · 봉인 0
+  ✓ HL②b first: 첫 시드에 로그가 이미 있으면 거부 (발사 0 · 봉인 0)
+  ✓ HL②c first: 나머지 시드가 이미 떠 있으면 거부 (§8 순서 위반 — 사람이 판단)
+Traceback (most recent call last):
+  File "<stdin>", line 8, in <module>
+  File "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/snap_fd76/scripts/measure_mixing_index.py", line 257, in provenance_block
+    ref=dict(name=os.path.basename(os.path.normpath(ref_dir)), deck_sha256=_sha_file(os.path.join(ref_dir, 'in.mixer')),
+                                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/snap_fd76/scripts/measure_mixing_index.py", line 218, in _sha_file
+    with open(path, 'rb') as f:
+         ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview_mixer_d2/tmp_launcher/tmp.ndGWVZVRf7/hbf/E0_s32452843/in.mixer'
+  ✓ HL②d rest 를 first 보다 먼저 부르면 거부 (첫 시드 봉인 · 로그 없음)
+  ✓ HL②e ★ HBR4-06 재현→수정 (진짜 비교기): LH 허용 다섯 CED 를 두 배로 한 덱 — 약한 호출은 rc 0 인데 런처 first 는 거부 · 발사 0 · 봉인 0
+  ✓ HL②f (대조 · 진짜 비교기) 참 LH 덱이면 덱 관문을 통과해 첫 시드 하나만 뜬다
+  ✓ HL③ ★ first: 정확히 하나 — LH_s32452843 만 뜬다 (나머지 LH 둘 · 같은 runs/ 의 LC · E0 는 안 뜬다)
+  ✓ HL③b ★ first: 덱 비교 관문을 --runs <OUT> --allow B **--expect-deck <기대 LH 덱>** 으로 불렀다 (HBR4-06)
+  ✓ HL③c first: 발사 전 봉인 launch_record.json — 바이너리 · in.mixer · Drum/Front/Back.stl sha256 · git HEAD · 시각 (지역 · UTC) · 호스트 · nproc · LMP 경로 · 덱 비교 관문의 기대 덱 sha256 (= expected_deck LH · HBR4-06)
+  ✓ HL③d first: 발사 안 된 옛 봉인은 지우지 않고 launch_record.unlaunched.*.json 으로 옆에 둔다
+  ✓ HL④ rest: 증서 파일이 없으면 거부 · 나머지 둘 발사 0
+  ✓ HL④b rest: smoke.complete = false → 거부 · 발사 0
+  ✓ HL④c rest: smoke.tech_smoke 가 비어 있지 않으면 거부 · 발사 0
+  ✓ HL④d rest: 증서의 run 이 첫 시드가 아니면 거부 · 발사 0
+  ✓ HL④e rest: smoke.qc_repr.pass = false → 거부 · 발사 0
+  ✓ HL④f rest: 깨진 JSON · true 가 아닌 참값 (complete: 1) 도 거부 · 발사 0
+  ✓ HL④g ★ rest: 다른 (옛) 발사 봉인을 본 증서는 거부 · 발사 0 — mtime 이 아니라 봉인 sha256 으로 (HBR4-05)
+  ✓ HL④h ★ HBR4-05 재현→수정: 등록과 다른 칸 규약의 증서는 거부 · 발사 0 (foreign_wrong_grid_smoke_gate 의 칸 쪽)
+  ✓ HL④i ★ HBR4-05 재현→수정: 다른 폴더의 **실제** 판독 증서 (같은 run 이름 · 같은 봉인 사본) 는 첫 시드 프레임을 다시 해시하면 어긋나 거부 · 발사 0
+  ✓ HL④j rest: 판독기 sha256 이 지금 리포의 판독기와 다르면 거부 · 발사 0
+  ✓ HL④k rest: 출처 블록이 없는 (옛 판독기) 증서는 거부 · 발사 0
+  ✓ HL④l ★ HBR5-02 재현→수정: 증서 뒤 bin 0 에 같은 step 의 복제 (copy_100 · 바이트 동일) 를 넣으면 거부 · 발사 0
+  ✓ HL④m ★ HBR5-02: 증서 뒤 bin 0 창 안에 격자 밖 프레임 (step 150) 이 생기면 거부 · 발사 0
+  ✓ HL④n ★ HBR5-02: E0 기준 t₀ step 의 덤프가 둘이면 거부 · 발사 0
+  ✓ HL④o HBR5-02: rest 관문의 파일 규칙 = 판독기의 규칙 (measure_bed_aspect.STEP_RE — 한쪽만 바뀌면 여기서 걸린다)
+  ✓ HL⑤ ★ rest: 증서 합격 → 나머지 둘만 정확히 뜬다 (LH 합계 3 · LC · E0 는 여전히 0) · 증서 뒤 bin 1 프레임 추가는 통과 (HBR5-02 대조)
+  ✓ HL⑤b rest: 둘 다 발사 전 봉인 (stage rest · 증서 sha256) · 덱 비교를 --expect-deck 과 함께 다시 불렀다
+  ✓ HL⑤c rest 를 다시 불러도 이미 뜬 둘은 다시 안 띄우고 봉인 · pid 를 안 덮는다 (발사 0)
+  ✓ HL⑥ rest: 첫 발사 뒤 나머지 덱이 바뀌었으면 거부 (첫 시드 봉인의 코호트 대조) · 발사 0
+  ✓ HL⑥b rest: 첫 시드와 다른 바이너리 (sha256) 면 거부 · 발사 0
+  ✓ HL⑦ ★ 전역 상한: 다른 런 하나가 살아 MAXJ=1 이 차 있으면 first 는 기다린다 (발사 0 · 봉인은 슬롯이 난 뒤)
+  ✓ HL⑦b ★ 전역 상한: rest 도 첫 시드 · 다른 런을 함께 센다 — MAXJ=3 에 둘이 살아 있으면 하나만 띄우고 기다린다
+── LH 발사 · SLURM 판 (2026-09-28 · 1저자 결정: ibb 20 코어 × 3) — 관문은 그대로 · 발사만 sbatch (HS①–⑦) ──
+  ✓ HS① ★ SLURM first: sbatch 정확히 한 번 — LH_s32452843 만 (그 런 폴더에서 제출 · jobid 기록 · pid 없음 · logs/ · 나머지 LH · LC · E0 제출 0)
+  ✓ HS①b 러너 = ibb 실물 형식 (docs/data/pure_se_*_20260927/run_pse_*.sh) — #SBATCH -n 20 ↔ mpirun --oversubscribe --bind-to none -np 20 짝 · qos cpu-60 · partition cpu · 5 일 · conda myenv · logs/ · 절대경로 바이너리 · 시작 대조가 mpirun 앞
+  ✓ HS①c SLURM 봉인 — backend slurm · np 20 · mpirun 플래그 · 러너 · 시작 대조기 sha256 · 바이너리 · 덱 · STL · 코호트 · 제출 전 (봉인 mtime ≤ jobid)
+  ✓ HS② ★ 대기열에만 있는 첫 시드 (jobid 있음 · log.lmp 아직 없음) 는 "안 뜬 런" 이 아니다 — first 를 다시 불러도 거부 · 두 번째 sbatch 0
+  ✓ HS③ ★ 시작 대조 통과 → LIGGGHTS (가짜) 가 돈다 · log.lmp · job_start.json (ok · job id · ntasks 20 · 바이너리 · 러너 · 봉인 sha256)
+  ✓ HS③b 제출 뒤 덱이 바뀌면 시작 대조가 막는다 (exit 3 · LIGGGHTS 0 · job_start.refused.*.json)
+  ✓ HS③c 제출 뒤 STL 이 바뀌면 막는다
+  ✓ HS③d SLURM_NTASKS ≠ 봉인 np (19 ≠ 20) 면 막는다
+  ✓ HS③e SLURM 밖 (SLURM_NTASKS 없음) 에서 러너를 돌리면 막는다
+  ✓ HS③f log.lmp 가 이미 있으면 (두 번째 시작) 막고 그 로그를 안 덮는다
+  ✓ HS③g 실행 중인 러너가 봉인한 러너와 다르면 (제출 뒤 러너 수정) 막는다
+  ✓ HS③h 제출 뒤 바이너리가 바뀌면 (sha256) 막는다
+  ✓ HS③i ★ HBR5-01 봉인이 빈 객체 {} 면 막는다 (rc 3 · mpirun 0 · 거부 영수증만)
+  ✓ HS③j ★ HBR5-01 봉인이 null 이면 막는다
+  ✓ HS③k ★ HBR5-01 봉인이 빈 목록 [] 이면 막는다
+  ✓ HS③l ★ HBR5-01 봉인이 문자열 "invalid" 면 막는다
+  ✓ HS④ ★ SLURM rest: 증서 합격 → 나머지 둘만 sbatch (합계 3 · 첫 시드 jobid 그대로) · 둘 다 stage rest 봉인 · 러너 · live_at_seal = 대기열의 첫 시드
+  ✓ HS⑤ sbatch 실패 → 발사 0 (jobid 없음) · 봉인은 launch_record.unlaunched.*.json 으로 · 0 이 아닌 종료
+  ✓ HS⑥ sbatch 가 없는 기계에서 BACKEND=slurm → 관문 전에 거부 (봉인 0)
+  ✓ HS⑦ NP=19 → #SBATCH -n 19 ↔ -np 19 짝 · 봉인 np 19
+  ✓ HS⑦b NP 가 양의 정수가 아니면 거부 (봉인 0)
+── LH all · 저자 편차 (09-28 밤: 세 시드 × 20 코어 동시 · bin 0 스모크 관문 생략 — §8 D-4 이탈) (HA①–⑦) ──
+  ✓ HA① DEVIATION 없이 all → 거부 · sbatch 0 · 봉인 0
+  ✓ HA② ★ all (DEVIATION): sbatch 정확히 세 번 — LH 세 시드만, 순서대로 (각 런 폴더에서 · jobid 901 · 902 · 903 · LC · E0 제출 0)
+  ✓ HA③ 세 봉인 모두 stage all · deviation (저자 결정 문구 · 생략한 관문 bin 0 · 등록 순서 §8 D-4) · 코호트 세 시드 · 증서 없음 · np 20 · 러너 · 덱/STL sha256 · ★ 정책 (id · sha256 · all 허용)
+  ✓ HA⑧ ★ 기본 정책 (리포 launch_policy.json = first · rest) 에서는 DEVIATION 이 있어도 all 거부 · sbatch 0 · 봉인 0 (Codex 6 차 §7-2 — 옛 DEVIATION 만으로 안 열린다)
+  ✓ HA⑧b 정책 파일 모양 아님 → all 거부 / 정책 파일 없음 → first 도 거부 (fail-closed · sbatch 0)
+  ✓ HA④ all 로 봉인한 런의 러너도 시작 대조를 통과 → LIGGGHTS (가짜) · job_start.json ok
+  ✓ HA⑤ all 뒤의 rest → 발사 0 (첫 봉인 stage 가 first 가 아니다 · sbatch 합계 3 그대로)
+  ✓ HA⑥ 한 시드라도 이미 떴으면 (jobid) all 거부 · sbatch 0 · 봉인 0
+  ✓ HA⑦ 덱 비교 관문 실패 → sbatch 0 · 봉인 0 / BACKEND=local 의 all → 거부 (SLURM 판 전용)
+── watch.sh · SLURM 런 (pid 없음 · jobid) — 09-28 밤 (HW①–②) ──
+  ✓ HW① SLURM 런 — jobid 가 대기열 (squeue) 에 있으면 실행 (pid 가 없다고 ⛔죽음 으로 찍지 않는다)
+  ✓ HW② jobid 가 대기열에 없고 완주도 아니면 ⛔죽음 (SLURM 판도 죽은 런은 죽었다고 찍는다)
+── 강성 축 새 단계 (2026-09-30 · 사전등록 mixer_highbo_stiffness_prereg_20260929 §8-2 · 코드 2 단계 piece 1 · 5) — DV · CF · CR ──
+  ✓ DV① ★ dev-e0: sbatch 정확히 8 — NP 프로브 셋 (npprobe5/10/20 · 같은 덱 · -n 5/10/20 · 1 h) 먼저 + E0 다섯 (-n 20 · 정책 시간) · --hold 없음 · 회전 2 런 · 확인 셀 제출 0
+  ✓ DV①b dev-e0 봉인 — stage dev-e0 · block (dev / probe) · cell · 덱 관문 = --cohort dev-e0 · 기대 덱 sha256 (이름에서 재생성) · preflight sha · 새 정책 id · np (프로브 = 5/10/20) · 디스크 추정 (E0_ref 867 · ×28 1,227 프레임) · probe 표지
+  ✓ DV② ★ DEV 폴더에 holdout seed 덱 (E0_ref_s49979687 ← E0_ref_s15485863 덱) → 덱 코호트 관문 거부 · sbatch 0 · 봉인 0
+  ✓ DV③ ★ 정책의 dev-e0 목록에 holdout seed 셀 → 거부 (정책 인자 불합격) · 디스크 5 GB (필요 ≈ 100 GB × 1.10) → 거부 · SB_TIME 을 주면 거부 · BACKEND=local → 거부 — 넷 다 sbatch 0
+  ✓ DV④ dev-rot: E0 진단 기록 인자 없음 → usage · 없는 기록 → preflight 거부 — sbatch 합계 8 그대로 (회전 0)
+  ✓ DV⑤ ★ E0 진단 PASS (진짜 생산자) 여도 NP 가 다르면 (10 ≠ 기록 20) dev-rot 거부 — 블록 NP 통일 · sbatch 합계 8
+  ✓ DV⑥ ★ dev-rot (기록 PASS · 같은 NP) → 회전 두 런만 제출 (합계 10) · 봉인 requires = E0 진단 기록 (절대경로 · sha256)
+  ✓ DV⑦ ★ 시작 직전 관문 — 기록 그대로면 회전 런 시작 (LIGGGHTS 가짜) · 봉인 뒤 기록이 바뀌면 시작 대조가 막는다 (exit 3 · LIGGGHTS 0 · 거부 영수증)
+  ✓ DV⑧ ★ run_all.sh 는 강성 축 셀을 띄우지 않는다 (SLURM 새 단계로만 · 봉인 · 관문) — 옛 판: LH_* 만 막아 E0_ref_s* 를 로컬로 띄웠다
+  ✓ CF① 리포 정책 (확인 단계 미허용 — Codex GO 전) → confirm-first 거부 · sbatch 0
+  ✓ CF② ★ soft 진단 범위 null → 확인 soft 발사 거부 (§6) · sbatch 0
+  ✓ CF③ ★ 확인 셀 폴더에 DEV 덱 (LC_ref_r2_s32452843) → 덱 코호트 관문 거부 · sbatch 0
+  ✓ CF④ ★ confirm-first (§8-2 ④ first-seed-block 6 → rest 12): sbatch 18 = 첫 seed 6 즉시 + 나머지 12 처음부터 --hold (순서 = 등록) · manifest 18 칸 (job ID · 봉인 · held 조회 ok) · held 봉인만 approval 요구 · soft 범위 5.8 봉인
+  ✓ CR① ★ 관문 전에 held 런이 풀려 시작하면 (사람의 scontrol release — 수동 편차) 시작 대조가 막는다 (승인 증서 없음 · exit 3 · LIGGGHTS 0)
+  ✓ CR①b 그 뒤 confirm-rest 는 거부 (승인 없이 시작된 held 런 = 수동 편차 · 사람이 판단) · scontrol 0
+  ✓ CR② ★ soft TECH_FAIL 증서 → 관문표가 거부 (release 0 · 승인 0 · 전체 HOLD)
+  ✓ CR③ ★ release 재시도 ① — 관문 통과 (승인 12) 인데 scontrol 실패 → rc≠0 · 기록 (confirm_release.jsonl · still_held 12)
+  ✓ CR④ ★ release 재시도 ② — 같은 증서로 다시 → 승인 그대로 · scontrol release 12 (합계 2 호출) · 풀린 held 런은 시작 직전 승인 대조를 통과해 돈다
+  ✓ CR⑤ ★ 제출 일부 실패 (8 번째 sbatch) → confirm-first rc≠0 · 7 제출 · manifest 불완전 (failed_at) → confirm-rest 거부 · scontrol 0
+  ✓ DV⑨ resume_all.sh 는 강성 축 셀을 잇지 않는다 (fresh 전용 · §8-1 — 실패는 §8-4 새 폴더 재실행) · in.resume 없음
+── 개발 탐색 dev-bo (2026-10-02 · 강성 축 사전등록 §11 v2.8 — LHx10_ref_r2 · LHx30_ref_r2 · dev-rot 과 같은 관문) — DB ──
+  ✓ DB① dev-bo: (dev-e0 8 제출 · E0 진단 PASS 뒤) 기록 인자 없음 → usage · 없는 기록 → preflight 거부 — sbatch 합계 8 그대로
+  ✓ DB② ★ 옛 정책 v2 (dev-bo 없음) → dev-bo 거부 · v2 스키마에 dev-bo 를 끼운 정책 → 모양 아님 (v2 의 뜻을 넓히지 않는다 · dev-bo = v3 전용) — 둘 다 sbatch 0
+  ✓ DB③ E0 진단 PASS 여도 NP 가 다르면 (10 ≠ 기록 20) dev-bo 거부 — 블록 NP 통일 · sbatch 합계 8
+  ✓ DB④ ★ LHx10 폴더에 LH_ref_r2 덱 (Bo 38.4 — 다른 수준) → 덱 코호트 관문 거부 · sbatch 0 · 봉인 0
+  ✓ DB⑤ ★ dev-bo (기록 PASS · 같은 NP) → 두 런만 제출 (합계 10 · LHx10 → LHx30 순 · --hold 없음) · 봉인 stage dev-bo · requires = E0 진단 기록 (절대경로 · sha256) · 셀 = 이름 · 덱 관문 --cohort dev-bo · 기대 덱 sha256 · 리포 정책 (v3 · sha256 · id) · -n 20 · 3 일
+  ✓ DB⑥ ★ 시작 직전 관문 — 기록 그대로면 LHx10 시작 (LIGGGHTS 가짜) · 봉인 뒤 기록이 바뀌면 LHx30 시작 대조가 막는다 (exit 3 · LIGGGHTS 0 · 거부 영수증)
+  ✓ DB⑦ ★ run_all.sh 는 dev-bo 셀 (LHx10 · LHx30) 을 로컬로 띄우지 않는다 · resume_all.sh 는 잇지 않는다 (옛 판: 정규식이 E0 · LC · LH 만 알아 둘 다 했다)
+  ✓ DB⑧ 단일 출처 — run_all.sh · resume_all.sh 의 강성 축 셀 정규식 팔 목록 = mixer_deck_diff.STIFF_ARMS (E0 · LC · LH · LHx10 · LHx30 · 한쪽만 바뀌면 여기서 걸린다)
+── 개발 탐색 dev-u (2026-10-05 · 강성 축 사전등록 §12 v2.9 — LU212_ref_r2 · LU637_ref_r2 · 균일 γ 배율 · dev-bo 와 같은 관문) — DU ──
+  ✓ DU① dev-u: (dev-e0 8 제출 · E0 진단 PASS 뒤) 기록 인자 없음 → usage · 없는 기록 → preflight 거부 — sbatch 합계 8 그대로
+  ✓ DU② ★ 옛 정책 v3 (dev-u 없음) → dev-u 거부 · v3 스키마에 dev-u 를 끼운 정책 → 모양 아님 (v3 의 뜻을 넓히지 않는다 · dev-u = v4 전용) — 둘 다 sbatch 0
+  ✓ DU③ E0 진단 PASS 여도 NP 가 다르면 (10 ≠ 기록 20) dev-u 거부 — 블록 NP 통일 (preflight 사유) · sbatch 합계 8
+  ✓ DU④ ★ LU212 폴더에 LC_ref_r2 덱 (비교 상대 — 배율 ×1) → 덱 코호트 관문 거부 · sbatch 0 · 봉인 0
+  ✓ DU⑤ ★ dev-u (기록 PASS · 같은 NP) → 두 런만 제출 (합계 10 · LU212 → LU637 순 · --hold 없음) · 봉인 stage dev-u · requires = E0 진단 기록 (절대경로 · sha256) · 셀 = 이름 · 덱 관문 --cohort dev-u · 기대 덱 sha256 · 리포 정책 (v4 · sha256 · id) · -n 20 · 3 일
+  ✓ DU⑥ ★ 시작 직전 관문 — 기록 그대로면 LU212 시작 (LIGGGHTS 가짜) · 봉인 뒤 기록이 바뀌면 LU637 시작 대조가 막는다 (exit 3 · LIGGGHTS 0 · 거부 영수증)
+  ✓ DU⑦ ★ run_all.sh 는 dev-u 셀 (LU212 · LU637) 을 로컬로 띄우지 않는다 · resume_all.sh 는 잇지 않는다 (옛 판: 정규식이 LU 를 몰라 둘 다 했다)
+  ✓ DU⑧ 단일 출처 — run_all.sh · resume_all.sh 의 강성 축 셀 정규식 팔 목록 = mixer_deck_diff.STIFF_ARMS 이고 dev-u 팔 (LU212 · LU637) 을 담는다 (한쪽만 바뀌면 여기서 걸린다)
+── D2 결합 규칙 셀 (2026-10-21 · 원장 MXD2-01 — 셀 이름 GM<P><S>_rho…_bo…_<세대>_<수준>[_dthalf]_r<N>_s<seed> · 코호트 · 정책 v5 전) — D2 ──
+  ✗ D2① ★ run_all.sh 는 D2 셀 (GMuu · GMcc) 을 로컬로 띄우지 않는다 · resume_all.sh 는 잇지 않는다 (옛 판: 가드가 D2 이름을 몰라 둘 다 했다)
+  ✗ D2② 단일 출처 — run_all.sh · resume_all.sh 의 D2 셀 가드 표면 목록 = mixer_deck_diff.D2_STATES (cc · cu · uc · uu) · 가드가 막는 이름을 셀 문법이 읽는다
+test_launcher: 136 PASS / 2 FAIL
