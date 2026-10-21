@@ -158,8 +158,9 @@ def _supersede(rows, auth, name, steps_csv=False):
     """이어 돌림 경계 (ULKRR-02 · ULKRF-01 · 02): 실패한 시도가 남긴 줄을 버리는 것 = 승인된 경계 (k_r, s_r) (_resume_auth · 고유) 에서만, 경계마다 한 번 —
     새 시도 시작 = 승인 경계 뒤 **먼저 오는 쪽**: step 역행 (step ≤ 앞 줄 · 창 CSV · 단 CSV) 또는 (단 CSV · steps_csv) k 가 되돌아옴 (k ≤ 앞 줄 k — 한 단 한 줄이라
     새 시도가 옛 시도보다 늦게 끝나도 (유지 창 수가 늘어도) 보인다 · ULKRF-02) · 그 줄 = 그 경계 새 시도의 첫 줄 (k = k_r + 1 · step > s_r) · 버릴 줄 = 끝의 step > s_r
-    줄 전부 (k > k_r) · 버린 뒤 앞 줄 = 정확히 (k_r, s_r).  그 밖 중복 · 역행 · 되돌아옴 = 버리지 않고 문제 (→ 주 값 미식별) → (줄 · 버린 수 · 문제)."""
-    kept, dropped, pr, used = [], 0, [], set()
+    줄 전부 (k > k_r) · 버린 뒤 앞 줄 = 정확히 (k_r, s_r).  그 밖 중복 · 역행 · 되돌아옴 = 버리지 않고 문제 (→ 주 값 미식별) →
+    (줄 · 버린 수 · 문제 · {경계: 그 경계에서 버린 옛 시도 줄} — 새 시도 시작이 식별된 경계만 · ULPR-01 _resume_tails 가 읽는다)."""
+    kept, dropped, pr, used, by = [], 0, [], set(), {}
     for n, r in enumerate(rows, 1):
         s, k = r.get('step'), r.get('k')
         prev = kept[-1] if kept else None
@@ -176,6 +177,7 @@ def _supersede(rows, auth, name, steps_csv=False):
                 stale = kept[j:]
                 if stale and j > 0 and all(x.get('k') is not None and x['k'] > kr for x in stale) \
                         and (kept[j - 1].get('k'), kept[j - 1].get('step')) == (kr, sr):
+                    by[(kr, sr)] = list(stale)
                     del kept[j:]
                     dropped += len(stale)
                     used.add((kr, sr))
@@ -187,7 +189,116 @@ def _supersede(rows, auth, name, steps_csv=False):
                 pr.append(f'{name} {n} 째 줄 (k {k} · step {s}) {what} — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) '
                           '가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)')
         kept.append(r)
-    return kept, dropped, pr
+    return kept, dropped, pr, by
+
+
+#: 단 끝 사건 (ULPR-01) — 덱이 단 줄 바로 뒤 · 같은 hold 끝에 같은 (k, step) 으로 쓰는 사건 (in.UT · in.U_* · in.G_* 의 ul_hold_end → ul_end_hold0 · ul_end_search ·
+#: ul_end_confirm · ul_rm · ul_rmstop · ul_tech · ul_nobracket · ul_next 의 LIFT_CAP).  창 사건 (SEPARATED · RECONTACT · POST_DONE · SEP_INCOMPLETE · GUARD) 은 그 창 끝
+#: step 이라 넣지 않는다 (단 줄과 같은 step 이어도 그 단 줄을 쓴 시도의 증거가 아니다).
+HOLD_END_EVENTS = frozenset({'HOLD0_DONE', 'MODE_B', 'CROSS', 'RM', 'RM_STOP', 'CONFIRMED', 'GRAVITY_HOLD_DONE', 'NO_BRACKET', 'TECH', 'LIFT_CAP'})
+
+
+def _windows_match(line, wins):
+    """단 줄 ↔ 그 단 창 기록 (덱 ul_hold_end — n_windows = 그 단 창 수 ul_w · step = 마지막 창 step · 단 줄 뒤 그 k 의 창 없음): 창 w = 1 … n_windows 정확히 ·
+    마지막 창 step = 단 step (정수 대조 · 허용폭 없음)."""
+    n = line.get('n_windows')
+    return (bool(wins) and isinstance(n, int) and n >= 1 and [x.get('w') for x in wins] == list(range(1, n + 1))
+            and wins[-1].get('step') is not None and wins[-1]['step'] == line.get('step'))
+
+
+def _state_steps_after(d, sr):
+    """restart/state_unload_<s>.in (s > s_r · ul_rstep = s) 의 s 집합 — 단 끝 restart · 상태 파일은 그 단을 끝낸 (ul_step_done 까지 간) 시도만 쓴다 ·
+    러너는 마지막 restart_unload 에서 이어 돌리므로 s > s_r 의 상태 파일 = 이어 돌린 새 시도 (run_unload.sh RESUME · ULPR-01)."""
+    rd = os.path.join(d, 'restart')
+    out = set()
+    for nm in sorted(os.listdir(rd)) if os.path.isdir(rd) else []:
+        m = re.fullmatch(r'state_unload_([1-9][0-9]*)\.in', nm)   # 덱이 쓰는 꼴 그대로 (ASCII 숫자 · 앞 0 없음 — 다른 이름은 증거로 세지 않는다)
+        if m and int(m.group(1)) > sr and _state_vars(os.path.join(rd, nm)).get('ul_rstep') == int(m.group(1)):
+            out.add(int(m.group(1)))
+    return out
+
+
+def _resume_tails(d, auth, events, ev_old, windows, steps, w_old, s_old):
+    """ULPR-01 (사전 공격 리뷰 10-21 PRE-UL-01 · 등록 §14-12): 승인된 경계 (k_r, s_r) 뒤 기록 줄은 **어느 시도가 썼는지 기록으로 증명될 때만** 정상 관측으로 쓴다
+    (등록 §14-10 · §14-11 ① "끊긴 시도가 남긴 줄 = 승인 경계에서 버림 · 버린 행을 정상 관측으로 쓰지 않는다" — 행 교체 (_supersede) 는 새 시도가 그 CSV 에 줄을 다시
+    써야만 옛 줄을 알아본다).  덱 쓰는 순서 (창 줄 → 단 줄 → 단 끝 사건 → 단 끝 restart_unload + 상태 파일) · 러너 = 마지막 restart_unload 에서 이어 돌림 ⇒
+    옛 시도의 경계 뒤 줄 = 단 k_r + 1 줄뿐 · 새 시도 첫 창 step = 옛 시도 첫 창 step (같은 덱 · 같은 상태).
+      새 시도 증거 = 창 · 단 기록 역행 (그 경계 행 교체) · 경계 뒤 k ≥ k_r + 2 줄 · RESUME 줄 뒤 사건 (step > s_r) · 요약 · 경계 뒤 단 끝 상태 파일 (state_unload_<s> · s > s_r).
+      ② 새 시도 증거 없음 → 경계 뒤 줄 (k_r + 1 만) = 옛 시도 (경계 뒤 옛 사건을 버렸으면) 또는 시도 미확정 → 쓰지 않는다 (버린 줄 · 기록).
+      ① 새 시도 증거 있음 · 단 기록 역행 없음 · k ≥ k_r + 2 없음 → 경계 뒤 단 줄 (k_r + 1) 은 새 시도 것으로 증명될 때만 쓴다 — 새 시도 증명 = 그 단 끝 상태 파일 ·
+         RESUME 뒤 단 끝 사건 (같은 k · step) · (사건 증거가 없으면) 남은 창 (w 1 … n · 마지막 step) 과 맞고 버린 옛 창과는 다름 · 옛 시도 증명 = 버린 옛 단 끝 사건 ·
+         버린 옛 창과만 맞음 → 버림 · 둘 다와 맞음 = 시도 미확정 → 버림 (보수) · 둘 다 증명 = 모순 → 문제.
+      모순 = 경계 뒤 옛 사건이 있는데 창 기록 역행 (옛 시도 창) 이 없고 새 시도 증거는 있다 → 문제 (버리지 · 고르지 않는다) · 경계 뒤 k ≠ k_r + 1 줄을 증거 없이 → 문제.
+      ③ 남은 경계 뒤 단 줄마다 = 그 단 창 기록과 맞아야 (_windows_match) — 아니면 문제 (시도 섞임 · 결손).
+    → (창, 단, 버린 수, 문제, 경계마다 기록)."""
+    pr, recs, ndrop = [], [], 0
+    summ = os.path.exists(os.path.join(d, 'ul_summary.txt'))
+
+    def drop(rows, gone):
+        ids = {id(x) for x in gone}
+        return [x for x in rows if id(x) not in ids]
+    for kr, sr in sorted(auth, key=lambda b: b[1]):
+        b, k1 = (kr, sr), kr + 1
+        ri = next((i for i, e in enumerate(events) if e['event'] == 'RESUME' and (e['k'], e['step']) == b), None)
+        new_ev = [e for e in (events[ri + 1:] if ri is not None else []) if e['step'] is not None and e['step'] > sr]
+        old_ev = ev_old.get(b, [])
+        tw = [x for x in windows if x.get('step') is not None and x['step'] > sr]
+        ts = [x for x in steps if x.get('step') is not None and x['step'] > sr]
+        states = _state_steps_after(d, sr)
+        later = any(x.get('k') is not None and x['k'] > k1 for x in tw + ts)
+        ev = {'windows_rollback': bool(w_old.get(b)), 'steps_rollback': bool(s_old.get(b)), 'later_stage': later, 'events_after_resume': bool(new_ev),
+              'summary': summ, 'stage_state_files': bool(states)}
+        rec = {'boundary': [kr, sr], 'new_attempt_evidence': sorted(k for k, v in ev.items() if v), 'old_events': [(e['event'], e['k'], e['step']) for e in old_ev],
+               'dropped_windows': 0, 'dropped_steps': 0, 'why': []}
+        tag = f'승인 경계 (k {kr} · step {sr}) 뒤'
+        if not any(ev.values()):
+            other = [(x.get('k'), x.get('step')) for x in tw + ts if x.get('k') != k1]
+            if other:
+                pr.append(f'{tag} 줄 {other[:3]} 이 단 k {k1} 가 아닌데 새 시도 증거가 없다 — 기록 결손 · 모순 · 버리지 않는다 (ULPR-01)')
+            elif tw or ts:
+                windows, steps = drop(windows, tw), drop(steps, ts)
+                rec.update(dropped_windows=len(tw), dropped_steps=len(ts))
+                rec['why'].append(('옛 시도 줄 (경계 뒤 옛 사건을 버렸다)' if old_ev else '시도 미확정 (옛 · 새 어느 시도 줄인지 기록으로 가를 수 없다)')
+                                  + ' · 새 시도 증거 없음 → 정상 관측으로 쓰지 않는다 (ULPR-01 ②)')
+        else:
+            if old_ev and not w_old.get(b):
+                pr.append(f'{tag} 옛 사건 {rec["old_events"][:3]} 이 있는데 창 기록 역행 (옛 시도 창 ↔ 새 시도 첫 창) 이 없다 · 새 시도 증거 {rec["new_attempt_evidence"]} '
+                          '— 모순 · 버리지 · 고르지 않는다 (ULPR-01)')
+            if not s_old.get(b) and not later and ts:
+                L = ts[0]
+                key = (L.get('k'), L.get('step'))
+                if len(ts) == 1 and L.get('k') == k1:
+                    new_pf = L.get('step') in states or any(e['event'] in HOLD_END_EVENTS and (e['k'], e['step']) == key for e in new_ev)
+                    old_pf = any(e['event'] in HOLD_END_EVENTS and (e['k'], e['step']) == key for e in old_ev)
+                    m_new = _windows_match(L, [x for x in windows if x.get('k') == k1])
+                    m_old = _windows_match(L, [x for x in w_old.get(b, []) if x.get('k') == k1])
+                    why = None
+                    if new_pf and old_pf:
+                        pr.append(f'{tag} 단 줄 (k {key[0]} · step {key[1]}) 을 옛 시도 (버린 단 끝 사건) 와 새 시도 (단 끝 사건 · 상태 파일) 가 둘 다 썼다 — 모순 (ULPR-01)')
+                    elif not new_pf and old_pf:
+                        why = '옛 시도 단 줄 (버린 옛 단 끝 사건과 같은 k · step)'
+                    elif not new_pf and m_old and not m_new:
+                        why = '옛 시도 단 줄 (버린 옛 창과만 맞는다)'
+                    elif not new_pf and m_old and m_new:
+                        why = '시도 미확정 단 줄 (옛 · 새 창 둘 다와 맞는다 · 사건 · 상태 파일 증거 없음)'
+                    if why:
+                        steps = drop(steps, [L])
+                        rec['dropped_steps'] += 1
+                        rec['why'].append(f'{why} (k {key[0]} · step {key[1]}) → 정상 관측으로 쓰지 않는다 (ULPR-01 ①)')
+        ndrop += rec['dropped_windows'] + rec['dropped_steps']
+        recs.append(rec)
+    seen = set()
+    for kr, sr in sorted(auth, key=lambda b: b[1]):
+        for L in [x for x in steps if x.get('step') is not None and x['step'] > sr]:
+            if id(L) in seen:
+                continue
+            seen.add(id(L))
+            wins = [x for x in windows if x.get('k') == L.get('k')]
+            if not _windows_match(L, wins):
+                pr.append(f'ul_steps.csv: 승인 경계 (k {kr} · step {sr}) 뒤 단 줄 (k {L.get("k")} · step {L.get("step")} · n_windows {L.get("n_windows")}) ≠ '
+                          f'그 단 창 기록 (w {[x.get("w") for x in wins][:14]} · 마지막 step {wins[-1].get("step") if wins else None}) — 시도 섞임 · 결손 · '
+                          '정상 관측으로 쓰지 않는다 (ULPR-01 ③)')
+    return windows, steps, ndrop, pr, recs
 
 
 def _order_problems(rows, name, windows):
@@ -212,7 +323,7 @@ def read_run(d, P=None):
     P = P or ul_lib.load_params()
     R = P['records']
     out = {'dir': d, 'windows': [], 'steps': [], 'events': [], 'summary': None, 'problems': [], 'n_superseded_rows': 0, 'resume_steps': [],
-           'resume_auth': []}
+           'resume_auth': [], 'resume_tails': []}
     ev, pr = _csv(os.path.join(d, 'ul_events.csv'), R['events_cols'])
     out['problems'] += pr
     events = [{'event': r['event'], 'k': _i(r['k']), 'step': _i(r['step']), 'plate_z': _f(r['plate_z']), 'lift': _f(r['lift']),
@@ -221,7 +332,7 @@ def read_run(d, P=None):
     auth, apr = _resume_auth(d, events)
     out['resume_auth'] = auth
     out['problems'] += apr
-    kept, used = [], set()
+    kept, used, ev_old = [], set(), {}
     for e in events:   # 승인된 RESUME 앞에 실패한 시도가 남긴 그 step 뒤 사건 (k > k_r) 만 버린다 · 경계마다 한 번 (ULKRR-02 · ULKRF-01 — 아니면 버리지 않고 문제)
         if e['event'] == 'RESUME' and e['step'] is not None:
             stale = [x for x in kept if x['step'] is not None and x['step'] > e['step']]
@@ -229,14 +340,15 @@ def read_run(d, P=None):
             if stale and b in auth and b not in used and all(x['k'] is not None and x['k'] > e['k'] for x in stale):
                 kept = [x for x in kept if x['step'] is None or x['step'] <= e['step']]
                 used.add(b)
+                ev_old[b] = stale   # ULPR-01 — 그 경계에서 버린 옛 시도 사건 (옛 시도가 경계 뒤에 썼다는 증거 · 옛 단 끝 사건 = 옛 단 줄)
             elif stale:
                 out['problems'].append(f'ul_events.csv: RESUME (k {e["k"]} · step {e["step"]}) 앞 사건 {len(stale)} 개가 그 step 뒤 — 승인된 이어 돌림 경계 '
                                        '(러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)')
         kept.append(e)
     out['events'] = kept
+    csv_pr, sup_pr, sup_by = {}, {}, {}
     for name, key, cols in (('ul_windows.csv', 'windows', R['windows_cols']), ('ul_steps.csv', 'steps', R['steps_cols'])):
-        rows, pr = _csv(os.path.join(d, name), cols)
-        out['problems'] += pr
+        rows, csv_pr[key] = _csv(os.path.join(d, name), cols)
         conv = []
         for r in rows or []:
             c = {}
@@ -246,10 +358,17 @@ def read_run(d, P=None):
                 if k in c and c[k] is not None:
                     c[k] = int(round(c[k]))
             conv.append(c)
-        conv, dropped, spr = _supersede(conv, auth, name, steps_csv=(key == 'steps'))
-        out['problems'] += spr + ([] if spr else _order_problems(conv, name, key == 'windows'))
+        conv, dropped, sup_pr[key], sup_by[key] = _supersede(conv, auth, name, steps_csv=(key == 'steps'))
         out[key] = conv
         out['n_superseded_rows'] += dropped
+    tpr = []
+    if auth:   # ULPR-01 — 승인 경계 뒤 줄 = 어느 시도가 썼는지 기록으로 증명될 때만 (새 시도가 그 CSV 를 다시 쓰기 전에 끝난 경우 · 시도 미확정)
+        out['windows'], out['steps'], nd, tpr, out['resume_tails'] = _resume_tails(d, auth, kept, ev_old, out['windows'], out['steps'], sup_by['windows'],
+                                                                                   sup_by['steps'])
+        out['n_superseded_rows'] += nd
+    for name, key in (('ul_windows.csv', 'windows'), ('ul_steps.csv', 'steps')):   # 문제 순서 = 옛 판 그대로 (CSV 마다 파서 → 행 교체 · 순서) · 그 뒤 경계 뒤 줄 (ULPR-01)
+        out['problems'] += csv_pr[key] + sup_pr[key] + ([] if sup_pr[key] else _order_problems(out[key], name, key == 'windows'))
+    out['problems'] += tpr
     sp = os.path.join(d, 'ul_summary.txt')
     out['summary'] = ul_lib.read_kv(sp) if os.path.exists(sp) else None
     return out
@@ -349,7 +468,8 @@ def _read_run_cont(d, cont, P):
         cont['status'] = 'FAIL'
     return {'dir': d, 'windows': par['windows'] + own['windows'], 'steps': par['steps'] + own['steps'], 'events': par['events'] + own['events'],
             'summary': own['summary'], 'problems': [f'부모 {x}' for x in par['problems']] + own['problems'],
-            'n_superseded_rows': par['n_superseded_rows'] + own['n_superseded_rows'], 'resume_steps': own['resume_steps']}
+            'n_superseded_rows': par['n_superseded_rows'] + own['n_superseded_rows'], 'resume_steps': own['resume_steps'],
+            'resume_tails': [dict(x, part='parent_UT') for x in par.get('resume_tails', [])] + own.get('resume_tails', [])}
 
 
 def window_states(windows, wall_by_step, P=None):
@@ -675,7 +795,7 @@ def arm_verdict(d, bed, job, P=None, root=None):
     s0d, _s0 = _s0_dump(root, bed, P)
     s0_ids, s0_atoms = ({int(r['id']) for r in s0d['rows']}, s0d['rows']) if s0d else (None, None)
     v = {'job': job, 'bed': bed, 'dir': d, 'problems': list(run['problems']), 'n_superseded_rows': run['n_superseded_rows'],
-         'primary_status': None, 'rho_pct': None, 'bracket_um': None, 'bracket_pct': None, 'union_bracket_um': None, 'union_bracket_pct': None,
+         'resume_tails': run.get('resume_tails', []), 'primary_status': None, 'rho_pct': None, 'bracket_um': None, 'bracket_pct': None, 'union_bracket_um': None, 'union_bracket_pct': None,
          'lower_bound_pct': None, 'nonmonotone': False, 'cancellation': None, 'disposition': None, 'rank_eligible': False,
          'endpoint_states': [], 'sigma_P': None, 'trajectory_status': None, 'separation': None, 's4_status': 'NOT_COMPUTED', 'why': []}
     gravity = job.startswith('G_')

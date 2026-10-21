@@ -56,8 +56,11 @@ RULES = (
     ('resume_boundary', '기록 줄 교체 (끊긴 시도가 남긴 줄 버림) = 승인된 이어 돌림 경계에서만 — RESUME 사건 (k · step) + 러너 시도 기록 resume_from=step + 덱 상태 파일 '
      '(ul_rstep · ul_k) 이 맞고 · 버릴 줄 = 그 step 뒤 · 버린 뒤 앞 줄 = (k · step) · 새 시도 첫 줄 = k + 1 · 그 밖 중복 · 역행 step · k · w = 버리지 않고 주 값 미식별 · '
      '경계 하나에 승인 한 번 (같은 경계 RESUME 중복 · 상충 · 사건 ↔ 상태 파일 불일치 = 승인 없음 + 사유 · 사건 되감기도 같은 규칙 · ULKRF-01) · 새 시도 시작 = 승인 경계 뒤 '
-     'step 역행 또는 (단 CSV) k 가 경계 k + 1 로 되돌아옴 — 먼저 오는 쪽 (새 시도가 옛 시도보다 늦게 끝나도 · ULKRF-02) (개정 3 §14-4 · §14-10 · ULKRR-02 · 등록 §14-11)',
-     'ul_reader.py', '_supersede', ('ul_reader R28', 'ul_reader R10', 'ul_reader R33', 'ul_reader R34', 'ul_runner_test M23')),
+     'step 역행 또는 (단 CSV) k 가 경계 k + 1 로 되돌아옴 — 먼저 오는 쪽 (새 시도가 옛 시도보다 늦게 끝나도 · ULKRF-02) · 경계 뒤 줄 = 어느 시도가 썼는지 기록으로 증명될 '
+     '때만 정상 관측 — 새 시도 증거 (창 · 단 역행 · 경계 뒤 k ≥ k + 2 · RESUME 뒤 사건 · 요약 · 경계 뒤 단 끝 상태 파일) 없으면 경계 뒤 줄 (옛 시도 · 시도 미확정) 을 쓰지 '
+     '않는다 · 증거가 있어도 경계 뒤 단 줄 (k + 1) 은 새 시도 증명 (그 단 끝 상태 파일 · RESUME 뒤 단 끝 사건 · 남은 창과만 맞음) 일 때만 · 모순 = 미식별 · 경계 뒤 단 줄 ↔ '
+     '그 단 창 기록 (n_windows · w 1 … n · 마지막 step) (ULPR-01) (개정 3 §14-4 · §14-10 · ULKRR-02 · 등록 §14-11 · §14-12)',
+     'ul_reader.py', '_supersede', ('ul_reader R28', 'ul_reader R10', 'ul_reader R33', 'ul_reader R34', 'ul_reader R37', 'ul_runner_test M23')),
     ('separation', '창 접촉 상태 CONTACT · TENSION · ZERO · OBS_MISSING (≠ 0) · 분리 = 같은 단 (k) 안 연속 두 0 창의 둘째 창 끝 (SEPARATE 단계 창 · 이동 = 연속 '
      '초기화 · 덱과 같은 규칙) · 재접촉 = 계수 · 분리 뒤 창 초기화 · 창 기록 = 같은 k 안 고유 · 연속 w + 그 팔 창 간격 W (빈 구간 = 연속 끊김 · 예산 끝 선언 → '
      '분리 뒤 4 창은 그대로) (§13-3 · 개정 3 §14-7 · Q4 가)',
