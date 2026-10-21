@@ -116,6 +116,8 @@ Brillouin 영역 격자는 **Monkhorst–Pack 원 논문 (8)** 을 같이 인용
    · BO-LPSC1.6 3×3×1 · 0.02 · 1e-3 — **이유 기록 없음**. 생성기 `tools/doping/b2o3_dft_eos.py` 머리말은 *'Apples-to-apples with modelC … modelC's protocol (ecut 60/480, MV 0.01, conv_thr 1e-8)'* 이고 자동 k 는 k·L ≈ 30 Å (`--ktarget 30`, 이 셀 7.0/7.0/70.4 Å → 4×4×1) 인데 실행 입력은 3×3×1 · degauss 0.02 · forc 1e-3 — 생성 뒤 어디서 바뀌었는지 기록이 없다. KISTI 4 시간 사슬 (`tools/doping/b2o3_eos_kisti_short.sh`) 로 돌렸다는 것만 있다.
    · 같은 잣대 (k×L, 격자 길이) — LPSC1.6 42 · BO-LPSC1.6 21 · O-LPSC1.6 14 Å → 1 번 논문 기준 (≥ 40) 을 넘는 건 LPSC1.6 뿐. 힘 문턱 1e-3 은 QE 기본값과 같다. k 수렴 시험 기록은 세 계 다 없다 (`eos.json` 의 *'B0 is k-robust'* 는 comp1 근거).
    ⇒ Methods 는 이유 없이 '한 대로' 만 적는다 (지금 문장). 원고가 B₀ (21.7 대 24.5 GPa) 를 비교하므로 이 차이는 밝혀 둔다 (본문 또는 SI 표).
+   · **더 찾은 k 기록 (사용자 *'db 좀더 뒤져봐'*)** — ① 규칙: 6 월 comp1 k 사고 (2×2×1 → gap 1.50 오판 · 4×4×4 로 1.76 · 구조 RMS 0.003 Å) 뒤 *'k×L ≥ 40 Å · 새 조성은 EOS 전에 `tools/comp1_v3/kconv_scan.py` 1 회'* 를 넣었다 (`kb/methodology/argyrodite_mechanical_pipeline.md` · `kb/results/session_timelog_2026_06_04.md`). ② 1 번 논문 k 점검 슬라이드 (발표에서 뺌 · `kb/papers/lpscl_vs_lpscl16_seminar_v1.md` §1N): property 별 k 민감도 — B₀ · ICOHP 둔감, gap · 탄성 · DOS 민감. ③ 측정 하나: Nd 넣은 modelc 120 원자 셀 (a = b ≈ 7.0 · c ≈ 70 Å — BO-LPSC1.6 과 같은 꼴) k441 대 k661 ΔE = 0.013 meV/atom (KISTI 06-16 · `db/compositions/modelc_nd_doped.json` `dft_validation_2026_06_16`). O-LPSC1.6 · BO-LPSC1.6 자체의 k 계산은 없다 (BO 3×3×1 은 ③ 보다 한 단계 아래).
+   · ✅ **사용자 결정 (10-21)**: *'없으면 그냥 이렇게 표시하지 뭐'* — 새 k 계산 없이 3 번 문장 (계별 격자 · smearing) 을 그대로 밝힌다.
 
 ## 원고 숫자의 출처 — Methods 와 맞추려면 볼 곳 (판단 없이 위치만)
 
