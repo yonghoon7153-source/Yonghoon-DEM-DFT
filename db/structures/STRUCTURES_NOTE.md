@@ -16,6 +16,13 @@
   rhombohedral 초격자, Cl-rich + Li 공공 (disordered). figure는 rhombohedral 그대로.
   ⚠ EOS 구조와 LOBSTER(k663) property 구조가 Cl 4a/4d 배치가 다를 수 있음 — per-site ICOHP는
   property 구조(bonds_modelc_k663.json) 기준.
+  ✅ **2026-10-21 확인 — '다를 수 있음' 은 이 cif 에만 해당한다.** 실제 B₀ 21.71 GPa 를 낸 EOS 입력
+  (백업 B `runs/lpscl16_verify_20260520/modelC_v2_eos_v100.in` · `v101.in`) 은 `modelC_v3/V0_relax.in`
+  (= `modelc_V0_k663.xyz`) 과 **같은 음이온 배치**다 (자유 S 두 자리 0.01 Å 안 · 사용자 WSL 실행).
+  반면 이 cif (`modelC_DFT_EOS_V0.cif`, V = 1204.22) 는 V₀ 구조와 **자유 음이온 한 자리에서 S↔Cl 가 바뀌어 있다**
+  ⇒ v2 EOS 의 점이 아니라 다른 (옛) 판의 구조다. 이 cif 를 'modelC 기준 구조' 로 쓰는 도구
+  (`tools/doping/tier_cascade.sh` NCM_BASELINE_MODELC · `tools/cascade/uma_relax_check.py` · `tools/neb_diffusion/argyrodite_cage_neb.py`)
+  는 논문 V₀ 구조와 배치가 하나 다른 구조를 쓰고 있다 — 논문 값과 맞대려면 `modelc_V0_k663.xyz` 를 쓴다.
 
 ## sdcp_wave1/ (2026-08-28 추가)
 
@@ -29,4 +36,4 @@ wave1 VASP 회수 드롭의 `static/OUTCAR.gz` 에서 **계산에 실제로 들�
 - 에너지 표는 `db/properties/sdcp_wave1_job_energies_2026_08_28.csv` (+ `.json`).
 - 생성: `python3 tools/sdcp/scfin_to_struct.py --outcar … --out db/structures/sdcp_wave1`
 
-마지막 갱신: 2026-08-28
+마지막 갱신: 2026-10-21
