@@ -20,6 +20,15 @@
   W10 JS 행 (node 실행) — 같은 경우들
   W11 봉인 `build_meta` (읽기만) 가 매니페스트를 그대로 싣는다 (템플릿이 읽는 자리) — 규약 칩의 접합 표시는 봉인이라 미룸
 
+  ★ 2026-10-21 (D · 등록 R 3판 §5-0 · §5-6 SV 행 · 사전 리뷰 PRE-impl-08 · 시험 먼저) — 같은 두 행 (매니페스트 · step3 값을 읽기만):
+  W12 해 상태 — `step3.conv_cert` · `step3.ion_conv_cert` 의 상태 (`step3_conv_cert.STATUS_*` 와 같은 낱말) — VALID_ZERO_TOPOLOGY =
+      "σ = 0 · 두 판을 잇는 성분 없음 (정상 결과)" · ELECTRODE_SHORT = "σ = +∞ (J11 단락 · 유한 σ 로 게시하지 않음)" · NOT_CERTIFIABLE =
+      경고 · POSITIVE_SOLVED · 증서 없음 = 표지 없음 (Jinja · JS)
+  W13 SV 반사실 — 증거 `solve.sv_counterfactual` 의 비 (유한 · +∞ = ratio_limit 'inf') · 상태 · producer 표지 (SV_DEPENDENT) ·
+      문턱 = 사슬 계획 (화면은 비만 · 판정은 사슬) · 기록 없음 = 줄 없음
+  W14 접합 한정어 (PRE-impl-08) — 증거 `qualifiers` (producer `carbon_junction.CJUNC_QUALIFIERS`) 가 화면에 그대로 · 설계 v1 §4-6 의
+      세 표지 (분산판 · 같은 셀 재방문 · SV 진단 = 반사실 대조 따로) 를 실제 렌더에서 본다 · 템플릿에 한정어 사본 없음
+
   python3 webapp/test_ca_ext_labels.py
 """
 import os
@@ -133,6 +142,110 @@ def _b6_labels(tpl, jinja, js, jinja2, REG):
         and ((_mm.get('ca_ext') or {}).get('sdcp_mod') or {}).get('protocol', {}).get('c') == 1.0, sorted(_mm))
 
 
+def _d_meta(*, cert=None, ion_cert=None, sv=None, quals=None, lab_cj='L'):
+    """★ D — 해 상태 · SV 반사실 · 접합 한정어 꼴 (템플릿이 읽는 칸만 · 키 = payload 가 쓰는 자리)."""
+    m = {'ptfe_stamp': 'face_alpha', 'ptfe_cells_observed': 0, 'physics_protocol_id': 'p3ca-0123456789abcdef',
+         'ca_ext_requested': ['cjunc'],
+         'ca_ext': {'schema': 'ca-ext-v1', 'cjunc': {'protocol': {'R_j_ohm': 1000000.0, 'ptfe_jlaw': 'P0'},
+                                                       'evidence': {'label': lab_cj, 'solve': {}}}}}
+    if quals is not None:
+        m['ca_ext']['cjunc']['evidence']['qualifiers'] = list(quals)
+    if sv is not None:
+        m['ca_ext']['cjunc']['evidence']['solve']['sv_counterfactual'] = sv
+    st = {'manifest': m}
+    if cert is not None:
+        st['conv_cert'] = {'status': cert}
+    if ion_cert is not None:
+        st['ion_conv_cert'] = {'status': ion_cert}
+    return {'id': 'd', 'has_additives': True, 'recipe': 'VGCF 3', 'convention_label': 'PTFE face_alpha', 'mpm_metrics': {'step3': st}}
+
+
+def _d_states(tpl, jinja, js, jinja2):
+    """★ D — W12 해 상태 · W13 SV 반사실 · W14 접합 한정어 (Jinja · JS 두 행)."""
+    try:
+        import step3_conv_cert as CC
+        ZERO, SHORT, NOTC, POS = CC.STATUS_ZERO, CC.STATUS_SHORT, CC.STATUS_NOT_CERTIFIABLE, CC.STATUS_POSITIVE
+    except Exception as e:                                  # noqa: BLE001
+        ZERO, SHORT, NOTC, POS = 'VALID_ZERO_TOPOLOGY', 'ELECTRODE_SHORT', 'NOT_CERTIFIABLE', 'POSITIVE_SOLVED'
+        print(f'  ⚠ step3_conv_cert 를 못 불러온다 ({type(e).__name__}: {e})')
+    try:
+        import carbon_junction as CJ
+        quals = list(CJ.CJUNC_QUALIFIERS)
+    except Exception as e:                                  # noqa: BLE001
+        quals = []
+        print(f'  ⚠ carbon_junction 을 못 불러온다 ({type(e).__name__}: {e})')
+    chk('W12a 두 행이 증서 상태 낱말을 producer 상수와 같은 철자로 쓴다 (VALID_ZERO_TOPOLOGY · ELECTRODE_SHORT · NOT_CERTIFIABLE)',
+        len(jinja) == 1 and len(js) == 1 and all(s in ln for s in (ZERO, SHORT, NOTC) for ln in (jinja[0], js[0]))
+        and all(k in ln for k in ('conv_cert', 'ion_conv_cert') for ln in (jinja[0], js[0])))
+    chk('W14a 템플릿에 접합 한정어 사본이 없다 (producer 상수 CJUNC_QUALIFIERS 하나 · 매니페스트에서 읽는다) · 두 행이 qualifiers 를 읽는다',
+        bool(quals) and not [q for q in quals if q[:24] in tpl] and len(jinja) == 1 and len(js) == 1
+        and all('qualifiers' in ln for ln in (jinja[0], js[0])), [q[:24] for q in quals if q[:24] in tpl])
+    _three = ('분산판', '재방문', '반사실')
+    chk('W14b producer 한정어가 설계 v1 §4-6 의 세 표지를 담는다 (긴 접촉 = 분산판 · 같은 셀 재방문 = 가지 따로 · SV 진단 = 반사실 대조 따로)',
+        all(any(t in q for q in quals) for t in _three), [t for t in _three if not any(t in q for q in quals)])
+    sv_fin = {'kind': 'counterfactual_cut_sv_faces', 'status': 'computed', 'sv_counterfactual_ratio': 1.25, 'ratio_limit': None,
+              'flag': None}
+    sv_inf = {'kind': 'counterfactual_cut_sv_faces', 'status': 'no_through_without_sv', 'sv_counterfactual_ratio': None,
+              'ratio_limit': 'inf', 'flag': None}
+    sv_dep = dict(sv_fin, sv_counterfactual_ratio=3.5, flag='SV_DEPENDENT')
+    sv_unc = {'kind': 'counterfactual_cut_sv_faces', 'status': 'unconverged', 'sv_counterfactual_ratio': None, 'ratio_limit': None,
+              'flag': None}
+    cases = (
+        ('σ_e 영값 위상', _d_meta(cert=ZERO), (ZERO, 'σ_e', 'σ = 0', '두 판을 잇는 성분'), (SHORT, NOTC, 'SV 반사실')),
+        ('σ_e 단락', _d_meta(cert=SHORT), (SHORT, 'σ_e', 'σ = +∞', 'J11'), (ZERO, NOTC)),
+        ('σ_e 증서 못 정함', _d_meta(cert=NOTC), (NOTC, 'σ_e'), (ZERO, SHORT)),
+        ('σ_ion 영값 위상', _d_meta(cert=POS, ion_cert=ZERO), (ZERO, 'σ_ion', 'σ = 0'), (SHORT, NOTC)),
+        ('양의 해', _d_meta(cert=POS), (), (ZERO, SHORT, NOTC, 'σ = +∞')),
+        ('증서 없음', _d_meta(), (), (ZERO, SHORT, NOTC)),
+        ('SV 비 유한', _d_meta(sv=sv_fin), ('SV 반사실', '1.25', 'computed', '사슬 계획'), ('SV_DEPENDENT', '∞')),
+        ('SV 비 +∞', _d_meta(sv=sv_inf), ('SV 반사실', '∞', 'no_through_without_sv'), ('SV_DEPENDENT',)),
+        ('SV producer 표지', _d_meta(sv=sv_dep), ('SV 반사실', '3.5', 'SV_DEPENDENT'), ()),
+        ('SV 비 없는 상태', _d_meta(sv=sv_unc), ('SV 반사실', 'unconverged', '—'), ('SV_DEPENDENT', '∞')),
+        ('SV 기록 없음', _d_meta(), (), ('SV 반사실',)),
+        ('접합 한정어', _d_meta(quals=quals), ('{Q}',) + _three + ('접합 한정어',), ()),
+        ('한정어 없는 옛 기록', _d_meta(), (), ('접합 한정어',) + _three),    # 세 표지는 템플릿 글이 아니라 producer 한정어에서만
+    )
+
+    def _check(lbl, outs, esc):
+        for (nm, _m, want, avoid), out in zip(cases, outs):
+            miss = []
+            for t in want:
+                if t == '{Q}':
+                    miss += [q[:30] for q in quals if esc(q) not in (out or '')] or ([] if quals else ['(한정어 없음)'])
+                elif t not in (out or ''):
+                    miss.append(t)
+            bad = [t for t in avoid if t in (out or '')]
+            chk(f'{lbl} [{nm}] — 있어야 할 조각 {len(want)} · 없어야 할 조각 {len(avoid)}', out is not None and not miss and not bad,
+                (miss, bad, (out or '')[-300:]))
+    from markupsafe import escape as _escape
+    _esc = lambda s: str(_escape(s))                        # noqa: E731 — 두 렌더러 같은 이스케이프 (JS 행은 같은 꼴 도우미)
+    if jinja2 is not None and len(jinja) == 1:
+        env = jinja2.Environment(autoescape=True)
+        row = env.from_string(jinja[0])
+        _check('W12-14 Jinja', [row.render(it=m) for _nm, m, _w, _a in cases], _esc)
+    else:
+        print('  SKIP  W12-14 Jinja (jinja2 없음)')
+    if shutil.which('node') is None:
+        print('  SKIP  W12-14 JS (node 없음)')
+        return
+    import json as _json
+    from test_closed_param_labels import js_fn, run_node
+    script = ('const made = [];\n'
+              'const document = {getElementById: (id) => ({style: {}, textContent: "", insertBefore: () => {}, '
+              'firstChild: null, querySelectorAll: () => []}), createElement: (t) => { const o = {dataset: {}, style: {}}; '
+              'made.push(o); return o; }};\n' + js_fn(tpl, 'labAddRow') + '\n'
+              f'const cases = {_json.dumps([m for _nm, m, _w, _a in cases], ensure_ascii=False)};\n'
+              'const out = cases.map(c => { labAddRow(c); return made[made.length - 1].innerHTML; });\n'
+              'console.log(JSON.stringify(out));\n')
+    try:
+        outs = run_node(script)
+        if outs is None:
+            raise RuntimeError('node 실행 실패')
+        _check('W12-14 JS', outs, _esc)
+    except Exception as e:                                  # noqa: BLE001
+        chk('W12-14 JS 행 (node 실행)', False, f'{type(e).__name__}: {e}')
+
+
 def main():
     try:
         import ptfe_face_alpha as FA
@@ -215,6 +328,7 @@ def main():
         'PTFE face_alpha' in meta.get('convention_label', '') and meta.get('convention_mismatch') == [],
         (meta.get('convention_label'), meta.get('convention_mismatch')))
     _b6_labels(tpl, jinja, js, jinja2, REG)
+    _d_states(tpl, jinja, js, jinja2)
     print(f'\n{_ok} PASS · {len(_fail)} FAIL')
     if _fail:
         for n in _fail:
