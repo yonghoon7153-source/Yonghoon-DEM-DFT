@@ -69,8 +69,8 @@
 |---|---|---|
 | 보충 `registration_values` — §3 code_fp · 대기 · 문제 | `e8b2496b…` · `2149f873…` · 없음 | `2149f873…` · None · 없음 |
 | 보충 `receipt()` 컨테이너 범위 (11 칸) | rc 1 · 실패 [D1] (D1 now = `2149f873…` · registered = `e8b2496b…` — Codex 10-20 실측과 같음) | **rc 0 · 실패 없음** |
-| selftest 상태 (`_selftest` 의 `fp_state` 규칙 · 줄 565–576) | pending | registered |
-| 보충 `--selftest` (같은 프로세스 · 등록 문서 경로만 사본으로 · 이 컨테이너) | 122/122 rc 0 | **121/122 rc 1 — 실패 `S0b` 하나** (줄 619–623 이 등록 §3 접두 `e8b2496b…` 를 상수로 기대) |
+| selftest 상태 (`_selftest` 의 `fp_state` 규칙 · 줄 565–576 — 계산 트리 `a69963967` 판 · 그 뒤 판도 같은 줄) | pending | registered |
+| 보충 `--selftest` (같은 프로세스 · 등록 문서 경로만 사본으로 · 이 컨테이너) | 122/122 rc 0 | **121/122 rc 1 — 실패 `S0b` 하나** (줄 619–623 이 등록 §3 접두 `e8b2496b…` 를 상수로 기대 — ⚠ 정정 10-21 (사전 리뷰 PRE-LHS-07): 계산 트리 `a69963967` 판의 줄 · 코드 커밋 `fe23f2b83` 뒤 그 자리 = `s0b_fp` 몸 · 상수 없음) |
 | 194 사본 §3 (같은 파서 `_md_section` · `_one`) | 기계 값 `e8b2496b…` 하나 · 대기 선언 1 | 기계 값 `2149f873…` 하나 · 대기 선언 0 · 표 28 행 + ✅ 줄 4 행 = 계산 트리 해시 32/32 · `code_fp(…)` = `2149f873…` · ✅ 줄 인계 도구 · 배포 빌더 3/3 = 계산 트리 |
 | `git apply --check` (계산 트리) | — | 194 rc 0 · 보충 rc 0 |
 
@@ -248,14 +248,14 @@
 ### 1-6. 비준 커밋 절차 (메인 · 권고)
 
 1. 두 diff 의 `⬜(날짜)` → 비준 날짜 · §9-9 · §9-4 의 *대화 원문 ⬜* → 1저자 원문.
-2. (Q3 = (가) 이면) 영수증 도구 `S0b` 기대 변경 = **따로 먼저** (시험 먼저 꼴 — 비준 사본에서 실패 재현 → 기대를 상태별로 → 지금 문서 122/122 · 비준 사본 122/122).  ⚠ 정정 10-21 (메인 · 수정 커밋 `fe23f2b83`): 수정이 새 검사 S11g 하나를 더해 실제 = **지금 문서 123/123 · 비준 사본 123/123** (고치기 전 비준 사본 121/122 · 증거 `docs/reviews/lhs214_relaunch_s0b_evidence_20261021/`).
-3. `git apply` 두 diff → 아래 넷 → 커밋 → push → 그 SHA = B7 승인 핀 후보 (§3 · Q4).
+2. (Q3 = (가) 이면) 영수증 도구 `S0b` 기대 변경 = **따로 먼저** (시험 먼저 꼴 — 비준 사본에서 실패 재현 → 기대를 상태별로 → 지금 문서 122/122 · 비준 사본 122/122).  ⚠ 정정 10-21 (메인 · 수정 커밋 `fe23f2b83`): 수정이 새 검사 S11g 하나를 더해 실제 = **지금 문서 123/123 · 비준 사본 123/123** (고치기 전 비준 사본 121/122 · 증거 `docs/reviews/lhs214_relaunch_s0b_evidence_20261021/`).  ⚠ 정정 10-21 둘째 (S0b 시험 보강 `SUPR-04` · `SUPR-05` · 사전 리뷰 PRE-LHS-02 · 03 · `<수정 커밋 · 메인 반영 뒤 채움>`): 보강이 검사 S11h 하나를 더해 = **124/124** (증거 같은 폴더 §7 · 그 전 기대 123/123).
+3. `git apply` 두 diff → 아래 넷 → 커밋 → push → 그 SHA = B7 승인 핀 후보 (§3 · Q4).  ⚠ 정정 10-21 (사전 리뷰 PRE-LHS-10): 후보 = S0b 시험 보강 커밋들 **뒤**의 push 된 커밋 (비준 커밋 `f82929b06` 은 두 등록 §9-9 · §9-4 = *대화 원문 ⬜* · 영수증 도구 = 보강 전 판 → 후보 아님 · 확인 요청서 §0 ③).
 
 ```bash
 python3 -c "import sys; sys.path.insert(0, 'scripts'); import run_network_194_parallel as N; print(N.code_fp(N.code_hashes()))"     # 2149f8738bb2…c3eb
 python3 -c "import sys; sys.path.insert(0, 'scripts'); import supp20_input_receipt as S; v, p = S.registration_values(); print(v['code_fp'], v['code_fp_pending'], p)"   # 2149f873… None []
 python3 scripts/supp20_input_receipt.py | tail -1               # rc 0 — 대조 11 칸 · 다름 0
-python3 scripts/supp20_input_receipt.py --selftest | tail -1    # Q3 처리 뒤 123/123 PASS (정정 10-21 — S11g 하나 더함 · 옛 기대 122/122)
+python3 scripts/supp20_input_receipt.py --selftest | tail -1    # Q3 처리 + 보강 뒤 124/124 PASS (정정 10-21 둘째 — S11h 하나 더함 · 그 전 123/123 = S11g 하나 더함 · 옛 기대 122/122)
 ```
 
 ## 2. ② 재결합 표 (발사 핀에 묶을 지문 — 등록 값 ↔ 계산 트리)
@@ -292,11 +292,11 @@ python3 scripts/supp20_input_receipt.py --selftest | tail -1    # Q3 처리 뒤 
 - 핀을 고르기 전 확인 (메인) = 그 핀에서 부록 A 재현 명령 (A-1 · A-2 · A-11) 을 다시 — 봉인 32 · 인계 도구 · 배포 빌더 바이트가 계산 트리와 다르면 (비준 커밋에 다른 코드가 섞이면) 이 묶음 ② · ③ 을 다시 쓴다.
 - 두 manifest 끼리 같다 (H1) 는 것만으로는 승인 증거가 아니다 — 승인 SHA 를 명시해 P10 · F7 · G7 로 대조한다 (판정문 §5 ③).  실제 `run` (본 실행) 은 `--approved-sha` 를 받지 않는다 — 승인 대조 자리 = 사전 점검 영수증 · 발사 뒤 manifest.
 
-| 무엇 | 실리는 자리 (file:line · 계산 트리) | 대조 |
+| 무엇 | 실리는 자리 (file:line · 계산 트리 `a69963967` 판 — ⚠ 정정 10-21 (사전 리뷰 PRE-LHS-07): 영수증 도구의 `_selftest` 뒤 줄 (`--approved-sha`) 은 `_selftest` 가 바뀌면 움직인다 · 그 앞 줄 (`:320` · `:332–362` · `:455–456` · `:468` · `:484–489`) 과 실행기 줄은 코드 커밋 · 보강 뒤에도 같다) | 대조 |
 |---|---|---|
 | 사전 점검 git 기록 | `scripts/run_network_194_parallel.py:1767` (preflight `git_info()`) → 영수증 `git` `:2758` · 화면 코드 줄 `:1849–1851` | P7 `:2042–2051` — dirty False · 40 자리 · 로그 짧은 sha 접두 · code_fp 로그 = 영수증 = 이 체크아웃 · CODE_FILES 32 |
 | 194 승인 SHA | `preflight-verify --approved-sha` `:3196` → `cmd_preflight_verify` `:2820–2822` → P10 `:2077–2085` | 영수증 git.sha (접두) · 로그 짧은 sha — 빼면 경고만 (실패 아님 · 1저자 10-14 Q3) → ④ 명령에는 늘 넣는다 |
-| 보충 승인 SHA (사전 점검) | `scripts/supp20_input_receipt.py:1413` → `receipt()` `:468` (`NP.preflight_receipt_checks(…, approved_sha=…)`) | 같은 P10 + E2 `:320` (code_fp = 등록 §3) · D1 `:455–456` |
+| 보충 승인 SHA (사전 점검) | `scripts/supp20_input_receipt.py:1413` (`a69963967` 판 · `fe23f2b83` · `7f99be67c` 판 = `:1467` · 보강 판 `<수정 커밋 · 메인 반영 뒤 채움>` = `:1525` — `main()` 의 `--approved-sha` 인자 줄) → `receipt()` `:468` (`NP.preflight_receipt_checks(…, approved_sha=…)`) | 같은 P10 + E2 `:320` (code_fp = 등록 §3) · D1 `:455–456` |
 | 발사 manifest | `run_network_194_parallel.py:2684` (`git=pf['git']`) · `:2686` (`handover_code_hashes`) · `:2687–2688` (`seal.code_fp`) | 영수증 도구 `--manifest` (F) · `--primary-manifest` (G) `:332–362`: F5 · G5 `:351` (봉인 = 등록 §3 · dirty false) · F6 `:355` (인계 도구 = 이 체크아웃) · F7 · G7 `:357–361` (git.sha = 승인 SHA) · H1 `:484–489` (두 ROOT 다름 · 같은 git.sha · 같은 봉인) |
 | `runner.sha256` | `run_network_194_parallel.py:2753` | 대조 없음 = 기록 전용 (SUPR 판정 §2 한정 2) |
 | 194 등록 §2 값 | 실행기는 등록 값을 모른다 | 손 대조 (SUPR §3 · 1저자 10-14 · 자동 대조 = v1.3 뒤) — §4 단계 5 · §5 표 |
@@ -360,7 +360,7 @@ cd ~ && tar czf "lhs_preflight_${S}_${T}.tgz" "$(basename "$LOGD")" && sha256sum
 |---|---|---|
 | 0 | 핀 일치 · dirty 0 · 이미 있는 이름 없음 | — |
 | 1 | 보통 = 격리 (같은 numpy · scipy · networkx 판 · 같은 실행 파일) | 10-14 = Python 3.12.3 · NumPy 2.5.2 · SciPy 1.18.1 · networkx 3.7 (194 §9-7) · 격리 자식이 scipy 를 못 찾으면 세대 탐침이 실패 → 사전 점검 P3 · P8 실패 (Codex 10-20 §3-3) |
-| 2 | 다섯 rc 0 · 수 = 화면 그대로 — fast16 16/16 · real4 4/4 · 실행기 139/139 (마지막 기록 = 10-15 LHS214 수정 요청서 `docs/reviews/codex_lhs214_fix_review_request_20261015.md` §2 · 실행기 · 스모크 도구는 10-14 핀 뒤 무변경 · 봉인 4 파일은 그 뒤에도 바뀜 → 이 핀 첫 실측) · reread 전부 통과 (`check_all.sh` 상주) · 영수증 123/123 (**Q3 처리 뒤** — 정정 10-21: 수정이 S11g 하나를 더함 · 옛 기대 122/122 · 처리 없이 비준만이면 121/122 · `S0b`) · dirty 0 | §1-3 · 부록 A-13 |
+| 2 | 다섯 rc 0 · 수 = 화면 그대로 — fast16 16/16 · real4 4/4 · 실행기 139/139 (마지막 기록 = 10-15 LHS214 수정 요청서 `docs/reviews/codex_lhs214_fix_review_request_20261015.md` §2 · 실행기 · 스모크 도구는 10-14 핀 뒤 무변경 · 봉인 4 파일은 그 뒤에도 바뀜 → 이 핀 첫 실측) · reread 전부 통과 (`check_all.sh` 상주) · 영수증 123/123 (**Q3 처리 뒤** — 정정 10-21: 수정이 S11g 하나를 더함 · 옛 기대 122/122 · 처리 없이 비준만이면 121/122 · `S0b`) → ⚠ 정정 10-21 둘째: **124/124** (S0b 시험 보강 `SUPR-04` · `SUPR-05` 이 S11h 하나를 더함 · 증거 같은 폴더 §7) · dirty 0 | §1-3 · 부록 A-13 |
 | 3 | dry-run rc 0 · 화면: 코드 줄 `dirty=False · 봉인 지문 code_fp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb (CODE_FILES 32)` · 기대 망 세대 `'g2'` · 계약 문제 0 · 모드 `['hertz', 'physics', 'hertz_h12']` · 전이 의존 닫힘 30 모듈 ⊆ 32 ✓ · 지연 import 92 · 분류 밖 0 ✓ · fork 0 줄 ✓ · `INPUT_DIGEST_JSON` = 아래 줄 그대로 · 원자료 · 메시 문제 0 건 · ⛔ 없음 / verify rc 0 · 11 칸 (P0–P10) · 다름 0 | §2 #1–#8 |
 | 4 | dry-run rc 0 · 영수증 도구 rc 0 · 24 칸 (R0 · A1–A2 · B1–B3 · C1–C4 · D1 · P0–P10 · E1 · E2) · 다름 0 | §2 #9–#12 · 10-14 = 24 칸 (보충 §9-1) |
 | 5 | 194 줄 둘 = §5 손 대조 표의 등록 값 | §2 #1 · #8 |
@@ -425,7 +425,7 @@ $PY scripts/supp20_input_receipt.py --manifest "$RS/manifest.json" --primary-man
 |---|---|---|
 | Q1 | 194 §9-8 · 보충 §9-3 개정 + 두 §3 활성 지문 `2149f873…` 비준 (문안 = §1-4 · §1-5 diff · 날짜 · 대화 원문만 채움) | 비준 — 비준 사본은 저장소 파서 · 영수증 (rc 0) 으로 확인했다 (§1-3) |
 | Q2 | σ₀ 1.5 솔버 상수 (`scripts/se_material.py` = 봉인 32) 를 이번 재봉인에 넣나 | **넣지 않음** — 넣으면 code_fp 가 바뀌어 이 묶음 ① ② ③ · A4 무영향 대조 · Codex 재검토가 다시 (10-12 권고 = 194 · 보충 20 배치 뒤 그대로 · f · 수송 tortuosity 는 σ₀ 에서 약분) |
-| Q3 | ⚠ 새 발견 — 비준 문안을 넣으면 영수증 도구 selftest `S0b` 가 실패 (121/122 · 줄 619–623 의 `e8b2496b…` 상수) | **(가)** 비준 커밋 **앞에** 시험 기대만 상태별로 (pending = 등록 `e8b2496b…` + 대기 `2149f873…` · registered = 등록 `2149f873…` + 대기 없음) 바꾸는 작은 코드 커밋 — 봉인 밖 (CODE_FILES · HANDOVER 아님 · 영수증 `TOOL_PINS` 기록 칸만 바뀜) · 시험 먼저 꼴 · Codex 확인에 넣는다.  (나) 문서만 비준 → 사전 점검에 *기대 실패* 로 등록 = 비권고.  이 문서는 코드를 고치지 않았다 |
+| Q3 | ⚠ 새 발견 — 비준 문안을 넣으면 영수증 도구 selftest `S0b` 가 실패 (121/122 · 줄 619–623 의 `e8b2496b…` 상수 — 계산 트리 `a69963967` 판 · 사전 리뷰 PRE-LHS-07) | **(가)** 비준 커밋 **앞에** 시험 기대만 상태별로 (pending = 등록 `e8b2496b…` + 대기 `2149f873…` · registered = 등록 `2149f873…` + 대기 없음) 바꾸는 작은 코드 커밋 — 봉인 밖 (CODE_FILES · HANDOVER 아님 · 영수증 `TOOL_PINS` 기록 칸만 바뀜) · 시험 먼저 꼴 · Codex 확인에 넣는다.  (나) 문서만 비준 → 사전 점검에 *기대 실패* 로 등록 = 비권고.  이 문서는 코드를 고치지 않았다.  ⚠ 10-21 기록 (사전 리뷰 PRE-LHS-04): 1저자 10-21 Q1 뒤 구현 (`fe23f2b83`) 은 이 (가) 의 상태별 **상수** 대신 상수 없는 상태 유도 (체크아웃 지문 64 자리 · 두 등록 대조) — 이유 · 잃는 것 · 막는 자리 = 확인 요청서 §6 |
 | Q4 | B7 승인 핀 고르기 | 비준 문안 (+ Q3) 이 들어간 push 된 본 가지 커밋 하나 · 그 SHA 를 §4 `PIN` 에 · 사전 점검 · 발사 = 그 SHA detached |
 | Q5 | 다섯 단계 묶음을 Codex 에 한 번 보이나 | **예** — ④ 반입 뒤 짧은 확인 (`docs/reviews/codex_lhs214_relaunch_check_request_20261020.md` · 리뷰 핀 = 사전 점검 반입 커밋 · 코드 = 승인 핀과 같음 · 메인) |
 
