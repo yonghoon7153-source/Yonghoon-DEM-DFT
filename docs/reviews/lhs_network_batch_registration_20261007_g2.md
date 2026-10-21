@@ -17,6 +17,7 @@
   (발사 전에 적용하면 봉인 지문이 바뀌어 이 등록의 배치가 아니다 · 10-07 이 커밋 트리에서 `git apply --check` 통과).
   ⚠ 웹앱 3D 자료 패치 (`docs/reviews/webapp_load_view_deferred_20261007.patch` — #11 AM 만 칠하기 · WEB-06 압축 접촉만 범위 · 같은 봉인 파일 `webapp/app.py`) 도 **발사 뒤** ·
   v1.3 화면 패치와 같은 때 넣는다 (1저자 10-07 Q3 *"권고대로"*) · 두 패치는 순서 무관 (10-07 HEAD `afda0d7ab` 에서 `git apply --check` 양쪽 순서 통과) · 넣은 뒤 `bash scripts/check_all.sh`.
+> ★★ **✅ 10-21 · 1저자 비준 — L214 개정 (§9-8 · 결과 열람 뒤 정책 개정 = 10-14 실행 결과를 본 뒤) · 변경 이력 = §9-9** — §3 활성 봉인 지문 = `2149f873…` (§9-8 의 대기 선언을 §3 으로 옮기고 선언은 지웠다 · 10-07 재등록 `e8b2496b…` = 역사) · §5 활성 개정 = §9-8 ①–⑦ · 원문은 각 자리에 그대로.  ⛔ 이 비준은 발사 승인이 아니다 (§9-8 ⑦ B7 — 새 승인 핀 사전 점검 · 1저자 별도 발사 승인) · S3 = 별개 HOLD.
 
 ## 0. 순서
 
@@ -115,13 +116,13 @@ cd ~ && tar czf ~/g2pre_${S}_$T.tar.gz "$(basename "$SM")/smoke_report.json" "$(
   Codex dependency_gap: 그 사본의 K_IC 0.3 → 30 이면 multicrack 100 → 0 인데 옛 29 파일 봉인은 통과) · + `scripts/lhs_union_webapp.py` (`dem_analysis_core` 지연 import —
   τ 의 L_mc · φ_mc 를 내는 정확 union · 우리가 같은 부류로 찾음) · + `scripts/ml_design_structure.py` (`structure_predictor` 모듈 수준 `_restricted()` 안의 import —
   app 을 읽을 때마다 돈다 · 실제 import 관측이 찾음).  바뀐 봉인 파일 둘 = `scripts/tau_flux.py` · `webapp/pipeline_service.py` (G2RR2-04 · 05 `5dde71dcc`).
-  ⇒ **`code_fp e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71`** (런처 `code_fp(code_hashes())` · 이 컨테이너 194 dry-run 이 같은 값).
+  ⇒ **`e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71`** (10-07 재등록 지문 — ✅ 10-21 · 비준 뒤 역사 · 활성 = 이 절 끝 ✅ 줄 · 기계 구문 `code_fp` 를 떼었다 · §9-9) (런처 `code_fp(code_hashes())` · 이 컨테이너 194 dry-run 이 같은 값).
   정적 닫힘 30 ⊆ 32 (닫힘 밖 둘 = S3 수치 모듈 그대로) · 지연 import 분류 (`lazy_import_census`) 90 · 분류 밖 0 (경로 밖 사유 `DEP_LAZY_OFFPATH` 21) ·
   실제 import 관측 (selftest ㉟d — 합성 se_am 을 실제 `run_pipeline(stop_after='network')` 로 · 단계 하위 프로세스 포함) 리포 모듈 22 ⊆ 32.
   ⚠ 관측 22 는 합성 침대의 표준 경로다 — 실침대 경로는 §1 시범의 `--observe-imports` 가 본다 · 리터럴이 아닌 동적 import 는 정적 분류가 못 본다 (관측이 메운다).
 - ⚠ **10-07 05:2x 갱신** — 요청서 핀 `2802c649e` 뒤 `webapp/app.py` 가 한 번 더 바뀌었다 (atom + 판 메시만 올린 케이스의 porosity — atoms-only 경로만 · 망 정지 경로 · 생산 · 게시 · 인계 코드 무변경 · 시험 `webapp/test_atoms_only_porosity.py` 41/41 · `test_pipeline_provenance` 284/284) ⇒ 봉인 지문 `f3f54951…` → `b313e61ab551…` (아래 값 갱신 · 런처 `code_fp(code_hashes())` 로 다시 계산 · 29 파일 중 `webapp/app.py` 한 줄만 바뀜).  발사는 이 지문의 커밋으로.
 
-- 발사 커밋 = 아래 **32 파일** sha256 (= 봉인 지문 `code_fp e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71` · 10-07 재등록 — 앞 판의 29 파일 `b313e61a…` 는 역사) 과 같은 코드를 담은 커밋 — 이 문서를 담은 커밋 또는
+- 발사 커밋 = 아래 **32 파일** sha256 (= 봉인 지문 `e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71` · 10-07 재등록 — 앞 판의 29 파일 `b313e61a…` 는 역사 · ⚠ ✅ 10-21 · 비준 뒤 = 이 절 끝 ✅ 줄의 32 파일 · 지문) 과 같은 코드를 담은 커밋 — 이 문서를 담은 커밋 또는
   그 뒤 **문서 · 원장만** 바뀐 커밋.  1저자가 발사 직후 §9 에 `git rev-parse HEAD` · manifest `seal.code_fp` · `expected_network_generation` 을 적는다 (지문이 이 값과 다르면 이 봉인의 배치가 아니다 ·
   추적 파일이 바뀐 트리는 실행기가 거부한다).
 - ★ 전이 의존 (판정 §7-3): 10-05 판 19 파일에 **워커의 망 정지 경로가 실제로 import 하는 리포 모듈 10** 을 더해 29 (`CODE_FILES`).  정적 닫힘 (`code_dependency_closure` — 시작점 =
@@ -133,7 +134,7 @@ cd ~ && tar czf ~/g2pre_${S}_$T.tar.gz "$(basename "$SM")/smoke_report.json" "$(
 
 | 파일 | sha256 | 10-05 봉인 대비 |
 |---|---|---|
-| `scripts/network_conductivity.py` | `da9ecfefd8dc4b84e222140e347e4a718381169f27c88bf56c71ec4a7c2749be` | 바뀜 (`f3f720985` 포함 — sha256 `61f00fef…` → `da9ecfef…` 는 그 커밋 메시지) |
+| `scripts/network_conductivity.py` | `da9ecfefd8dc4b84e222140e347e4a718381169f27c88bf56c71ec4a7c2749be` | 바뀜 (`f3f720985` 포함 — sha256 `61f00fef…` → `da9ecfef…` 는 그 커밋 메시지) · **비준 뒤 = §3 끝 ✅ 줄** |
 | `scripts/plastic_coverage.py` | `cce27a34c0bf2e4f5c122e43d983aa3414a825ab461a00abd408dba02e151348` | 바뀜 |
 | `scripts/audit_constriction_deleted.py` | `180287be199ea60e6a50ba6cd0baf854c18a18568c476f7e0200c2caca3faf9d` | 바뀜 |
 | `scripts/extract_se_network_diagnostics.py` | `db7151b51252e60c42c2bc2a2b3173ae6f4b97a94226b51a97b1e357e028ea9a` | 같음 |
@@ -144,12 +145,12 @@ cd ~ && tar czf ~/g2pre_${S}_$T.tar.gz "$(basename "$SM")/smoke_report.json" "$(
 | `scripts/parse_liggghts.py` | `4fe3f1f32ebc4168978c7278b7a1d37b072d64fbf00e97d0933351337d223425` | 같음 |
 | `scripts/se_material.py` | `767a6a383d4581274b07ee79146a53fbe118f1f6eb0acb9ec0a5af21c9c9930c` | 같음 |
 | `scripts/metrics_json.py` | `baa671f895dd6103cf95c25647ee45877d98306f00ab15cd3968fbe4354a7702` | 같음 |
-| `scripts/tau_flux.py` | `eb9388ec8bd2d40b1c63365ae72b6850e9fc51fd9ce0780df4e557424a1440fb` | 바뀜 (10-07 재등록: + G2RR2-04 · 05 `5dde71dcc` — 앞 판 `6bc4037c…` 대비도 바뀜) |
+| `scripts/tau_flux.py` | `eb9388ec8bd2d40b1c63365ae72b6850e9fc51fd9ce0780df4e557424a1440fb` | 바뀜 (10-07 재등록: + G2RR2-04 · 05 `5dde71dcc` — 앞 판 `6bc4037c…` 대비도 바뀜) · **비준 뒤 = §3 끝 ✅ 줄** |
 | `scripts/lhs_webapp_batch.py` | `b9d0199cc1bd23cd1ed5405a283081c2c3a31bc6ce256670c8a9b63d177b5668` | 같음 |
 | `scripts/lhs_harvest_batch.py` | `4d798c631ac893ca32018fde58145bc5c8a2e3e2a6423da61cb87bd13599148e` | 같음 |
 | `scripts/lhs_descriptor_harvest.py` | `96fa643e309aab46b2a5cbd59e2276ee16b99107a9a7514e5d9fdcaf5c2d8d9e` | 바뀜 (`cc4210080` — LHSC-08 · 분류 불변) |
-| `webapp/app.py` | `bd4c25e507e3c7a2b8e35f9b4602f22ab17d8e56fb6f8980021d33323994826b` | 바뀜 (G2RR-01 `e1dab4265` · G2RR-02 `f3f720985` · 3D 뷰어 라우트 `761e32645` · `92839aeb7` 포함) |
-| `webapp/pipeline_service.py` | `33a700300e8c650ca953e96b7faaea3010245b63e6d2035d4b73b4a61e1c7843` | 바뀜 (G2RR-01 `e1dab4265` · G2RR-02 `f3f720985` 포함 · 10-07 재등록: + G2RR2-04 `5dde71dcc` — 앞 판 `2414fb21…` 대비도 바뀜) |
+| `webapp/app.py` | `bd4c25e507e3c7a2b8e35f9b4602f22ab17d8e56fb6f8980021d33323994826b` | 바뀜 (G2RR-01 `e1dab4265` · G2RR-02 `f3f720985` · 3D 뷰어 라우트 `761e32645` · `92839aeb7` 포함) · **비준 뒤 = §3 끝 ✅ 줄** |
+| `webapp/pipeline_service.py` | `33a700300e8c650ca953e96b7faaea3010245b63e6d2035d4b73b4a61e1c7843` | 바뀜 (G2RR-01 `e1dab4265` · G2RR-02 `f3f720985` 포함 · 10-07 재등록: + G2RR2-04 `5dde71dcc` — 앞 판 `2414fb21…` 대비도 바뀜) · **비준 뒤 = §3 끝 ✅ 줄** |
 | `scripts/export_master_csv.py` | `2899dc2410ad8840dadf41993511c225d60f29f77edfdb2fac6703b25ccf767b` | 같음 |
 | `scripts/type_map_resolve.py` | `4a289c6412e4b8e1bc0fba573cb287966dfa00a053399097b587f1e14726bfe5` | 같음 |
 | `scripts/lens_geometry.py` | `891ac67f8b6c1b4c7978b5e806800ae74f5c8791928d6ece19a29e5f3b212b77` | 새로 봉인 (σ — 위 ⚠) |
@@ -178,6 +179,13 @@ cd ~ && tar czf ~/g2pre_${S}_$T.tar.gz "$(basename "$SM")/smoke_report.json" "$(
   10-07 재등록: `scripts/lhs_design_dataset.py` `27c9c1a8a680945c5ba60e6717e1d77438a489549a62eb24bddb65223c0a8b29` (`5dde71dcc` — selftest 기대 표지 한 줄 · 값 경로 무변경) ·
   `scripts/g2_network_reread.py` `23a949dfe6aa09d277e0626c2c3a6db3e199de8a42872b375b4e75ae828c467b` (`5dde71dcc` K7 · `17ba65f4e` 등록 집합).
   ⚠ v1.3 의 새 열 · 표 (CLAUDE.md 10-06 밤 목록 — ML 표 · f 타깃 안내 · 재적합 · τ 표시 이름 · `se_isolated_pct`) 가 생성기를 바꾸면 이 지문이 바뀐다 → 그 커밋을 §9 에 적는다.
+- ✅ **활성 봉인 (10-21 · 1저자 비준 · §9-8 L214 개정 · 결과 열람 뒤 정책 개정 = 10-14 실행 결과를 본 뒤 · 변경 이력 §9-9)** — 봉인 32 (목록 그대로) · **`code_fp 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb`** (실행기 `code_fp(code_hashes())`) = 위 표 28 행 그대로 + 바뀐 4 행:
+  `scripts/network_conductivity.py` `a525e2db98fd044f0aa9353b028a3d5c7164c006a8e870dda24e7a0991d9751e` · `scripts/tau_flux.py` `c0a7da6e1b73bea97136f06803810dbe159bf5c4395d8d218a90217a58ef0f78` ·
+  `webapp/app.py` `3e82140f47c7e87b138f8a6f24b8f8575bc7476e91b8369b20cdf698b69b4bc1` · `webapp/pipeline_service.py` `8026169f61e8bddcceea3dfb42758bb6a4e599a28271d8159c387dfc2a79d4ef`.
+  인계 도구 (HANDOVER_FILES · 봉인 판정 밖 · 발사 manifest `handover_code_hashes` 에 기록) `scripts/lhs_design_dataset.py` `d1815155142e909200053c2d8e9de8c0a88c2dc6d3d9462ad18614a42845e1f0` · `scripts/g2_network_reread.py` `0e2ec7ef37571268b85b0d17b71f7a2858aa2a7e6bcfadf4be1c6b5416dd5cd8` ·
+  배포 빌더 `scripts/lhs_release_build.py` `3096e33fd0f1953363bcde251a77368366a0568c923447111a48a873ad4a1383` (빌드 manifest `code` 칸).
+  발사 커밋 = B7 승인 핀 (이 비준 문안이 들어간 push 된 본 가지 커밋 · 1저자가 고른 한 SHA · §9-8 ⑦) — 그 체크아웃의 194 dry-run 이 같은 code_fp 를 찍어야.  10-07 재등록 지문 `e8b2496b…` · 위 표 4 행의 옛 값 = 역사 (§9-9).
+  사전 점검 화면 기대 (이 지문의 코드 · 결과 전): 기대 망 세대 `g2` · 계약 문제 0 · 모드 hertz · physics · hertz_h12 · 전이 닫힘 30 ⊆ 32 ✓ · 지연 import 분류 92 · 분류 밖 0 ✓ (10-07 의 90 + `webapp/pipeline_service.py` 의 `channel_verdict` · `_stop_num` 안 `tau_flux` import 둘 — 대상 = 봉인 파일) · fork 0 줄 ✓ · 입력 지문 = §2 표 그대로.
 
 ## 3b. 실행 형식 v3 (10-07 재등록 · G2RR2-01 · 02 · 판정문 §2 · §3)
 
@@ -269,6 +277,8 @@ $PY scripts/run_network_194_parallel.py run --root "$R" 2>&1 | tee ~/net194_run_
 > v1.3 배포 관문은 같은 내용을 시도마다 실행기 계약 함수로 다시 판정한다 (`G2RR5-01` · `scripts/lhs_release_build.py` `v13_audit_observation_problems`).
 
 ## 5. 판정 · 관문 (결과 전 등록)
+
+> ✅ **10-21 · 1저자 비준 (§9-9)** — 이 절의 활성 개정 = §9-8 ①–⑦ (§5-1 모형 한계 = 레코드 게시 가능 · 결과 자격 ①–③ · 공란 의미 ④ · Hertz 주 타깃 ⑤ · 결과 보고 ⑥ · 발사 ⑦ · §5-7 허용 다름 더함) · 아래 원문 1–7 은 그대로 둔다 · 결과 열람 뒤 정책 개정 (10-14 실행 결과를 본 뒤).
 
 1. 케이스마다 `done` / `failed` (+ `failure_kind`) — failed 는 빈칸 + 사유로 싣고 고르지 않는다 (재실행은 봉인 코드 그대로 `retry` 만).
 2. `audit` rc 0 = 실행 형식 자격 current · 기록 전부 SEALED · 레코드 세대 전부 `g2` · 입력 지문 = 발사 기록.  rc 1 · 2 이면 인계하지 않는다.
@@ -362,7 +372,7 @@ $PY scripts/run_network_194_parallel.py run --root "$R" 2>&1 | tee ~/net194_run_
   **등록 §2 · §3 손 대조** (Codex 재확인 `docs/reviews/codex_review_supr_fix_reverify_20261014.md` §3 최소 기록 · 1저자 화면의 로그 `INPUT_DIGEST_JSON` 줄 · 코드 줄 ↔ 이 문서 §2 표 · §3 · 확인 = 조정자) — 여섯 칸 전부 등록 = 실측 (글자 그대로):
   n 194 · `missing_raw_sha` [] ✓ · `ids_sha256` `a04282d7275bd8f92b0afb4ac8b045f72f3867ccebbb7813b530b3901fd7b3bf` ✓ · `raw_sha256_table_sha256` `da7c93f9a0887145ff171e381c8608cb79779d96aea5a595a25677dc361ef784` ✓ · 코호트 TSV lhs `32f00daa8394188d1e72531fd7fda1a8b47a9c279be76311ae7f2afa024b2809` ✓ · lhsx `0b85e8589917c9a3936ce29e9f36326993985ddd113ef32353a4ff96d981cb45` ✓ · code_fp `e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71` (CODE_FILES 32) ✓.
   ✅ **1저자 발사 승인 10-14** (*"나머지는 다 권고대로"* · *"이거했어"* = 실행) — 핀 `1087a9b2f4a93aa6a3b0debc698a14fffa13488d` · 194 먼저 → 보충 20 · 결과 = 9-3 칸 (완료 뒤 · ⬜).
-- 9-8 **개정 초안 — FULL 모형 한계 범주 (10-15 · L214 · ⬜ 1저자 비준 대기 · 결과 열람 뒤 정책 개정)** — 근거 = Codex LHS214 실패 검토 `docs/reviews/codex_review_lhs214_failures_20261014.md` §3 Q1–Q3 · §4 B6 ·
+- 9-8 **개정 초안 — FULL 모형 한계 범주 (10-15 · L214 · ✅ 10-21 · 1저자 비준 = §9-9 (비준 전 표지: ⬜ 1저자 비준 대기) · 결과 열람 뒤 정책 개정)** — 근거 = Codex LHS214 실패 검토 `docs/reviews/codex_review_lhs214_failures_20261014.md` §3 Q1–Q3 · §4 B6 ·
   수정 계획 `docs/reviews/lhs214_fix_plan_20261014.md` (✅ 1저자 10-14 Q1–Q5 권고대로) · 수정 재확인 요청서 `docs/reviews/codex_lhs214_fix_review_request_20261015.md` · 증거 `docs/reviews/lhs214_fix_evidence_20261015/README.md`.
   ⚠ **이력 (결과 열람 뒤)** — 이 개정은 10-14 실행 결과 (194 = done 186 · 실패 8 `lhsx_051` · `053` · `054` · `060`–`064` · 보충 20 = done 14 · 실패 6 · 14 건 모두 상위 사유 `physics.ionic=fail / solve_failed` ·
   `lhsx_054` 단독 진단 q 1.5370331988867802 > 1.5 — 나머지 13 건 원인 미확정) 를 **본 뒤** 쓴 허용 정책 변경이다 (Codex §3 Q1 — 이름만 바꾸는 수정이 아니다 · 과거에 막혔던 레코드의 게시 · 인계가 가능해진다).
@@ -371,9 +381,9 @@ $PY scripts/run_network_194_parallel.py run --root "$R" 2>&1 | tee ~/net194_run_
   **바꾸지 않는 것** (결과에 맞춰 바꾸지 않는다 · Q5 (가)): 문턱 1.5 (원 정밀도 엄격 > · q = 1.5 는 computed) · 수치 허용치 1e−6 (전류 보존 · 내부 잔차) · 풀이 사다리 · G > 0 · 병렬 상한 0 < G ≤ 1.1·Σg ·
   ID 집합 (§2 production194 `ids_sha256` `a04282d7…` · 보충 supp20 `991cf115…`) · 원 입력 (§2 원자료 표 · 코호트 TSV) · 실행 형식 v3 · 관측 필수 · §5-1–6 의 기존 차단 정책 (진짜 수치 실패 · 기하 · 세대 무효 · 잘못된 증서).
 
-  | 자리 | 원문 (보존) | 개정 초안 (⬜ 비준 대기) |
+  | 자리 | 원문 (보존) | 개정 (✅ 10-21 · 비준 · §9-9 — 비준 전 칸 이름: 개정 초안 (⬜ 비준 대기)) |
   |---|---|---|
-  | §3 코드 신원 | 봉인 32 · `code_fp e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71` | 봉인 32 (목록 그대로) · 바뀐 봉인 파일 4 = `scripts/network_conductivity.py` (sha256 `a525e2db98fd044f…`) · `scripts/tau_flux.py` (sha256 `c0a7da6e1b73bea9…`) · `webapp/app.py` (sha256 `3e82140f47c7e87b…`) · `webapp/pipeline_service.py` (sha256 `8026169f61e8bddc…`) ⇒ **`code_fp_pending 2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb`** (대기 지문 — 비준 · 재등록 때 §3 이 이 값으로 바뀌고 이 선언은 지운다 · 그 전 발사 대조 D1 · E2 = 등록 값 그대로 — 194 쪽 = §3 손 대조 · 보충 20 영수증 도구와 같은 규칙 · 실행기 `code_fp(code_hashes())` · ★ 10-19 L214R-R04 반영 값 (10-18 R02 `755325e1…` · R01 `fca3af77…` · 10-16 L214R-09–11 `e76dbe08…` 대체) — L214R 수정 커밋마다 갱신 · 진행 기록 10-19) · 인계 도구 (HANDOVER_FILES · 봉인 판정 밖) `scripts/lhs_design_dataset.py` sha256 `d1815155142e9092…` · `scripts/g2_network_reread.py` `0e2ec7ef37571268…` · 배포 빌더 `scripts/lhs_release_build.py` `3096e33fd0f19533…` (빌드 manifest `code` 칸) · 발사 커밋 = 이 개정과 수정을 담은 본 가지 커밋 (메인 세션이 적는다) — 그 체크아웃의 194 dry-run 이 같은 code_fp 를 찍어야 |
+  | §3 코드 신원 | 봉인 32 · `code_fp e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71` | 봉인 32 (목록 그대로) · 바뀐 봉인 파일 4 = `scripts/network_conductivity.py` (sha256 `a525e2db98fd044f…`) · `scripts/tau_flux.py` (sha256 `c0a7da6e1b73bea9…`) · `webapp/app.py` (sha256 `3e82140f47c7e87b…`) · `webapp/pipeline_service.py` (sha256 `8026169f61e8bddc…`) ⇒ **`2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb`** (✅ 비준 = §3 활성 지문 (§3 끝 ✅ 줄) · 대기 선언 꼴 (`code_fp_pending`) 은 지웠다 — 비준 전 원문: 대기 지문 — 비준 · 재등록 때 §3 이 이 값으로 바뀌고 이 선언은 지운다 · 그 전 발사 대조 D1 · E2 = 등록 값 그대로 — 194 쪽 = §3 손 대조 · 보충 20 영수증 도구와 같은 규칙 · 실행기 `code_fp(code_hashes())` · ★ 10-19 L214R-R04 반영 값 (10-18 R02 `755325e1…` · R01 `fca3af77…` · 10-16 L214R-09–11 `e76dbe08…` 대체) — L214R 수정 커밋마다 갱신 · 진행 기록 10-19) · 인계 도구 (HANDOVER_FILES · 봉인 판정 밖) `scripts/lhs_design_dataset.py` sha256 `d1815155142e9092…` · `scripts/g2_network_reread.py` `0e2ec7ef37571268…` · 배포 빌더 `scripts/lhs_release_build.py` `3096e33fd0f19533…` (빌드 manifest `code` 칸) · 발사 커밋 = 이 개정과 수정을 담은 본 가지 커밋 (메인 세션이 적는다) — 그 체크아웃의 194 dry-run 이 같은 code_fp 를 찍어야 |
   | §5-1 케이스 판정 | done / failed (+ failure_kind) | 그대로 + 아래 ① 범주의 모형 한계는 진짜 실패가 아니므로 레코드 게시 (done) 가능 — 같은 실행의 다른 채널 · 가지에 진짜 실패가 있으면 failed 그대로 |
   | §5 결과 자격 (신설 ①–③) | — | 범주 · 공용 판정 · 예외 범위 · 우선순위 |
   | §5 공란 의미 (신설 ④) | — | τ NOT_COMPUTED + 사유 정확히 `full_over_conduction` · 배포 빈칸 코드 `NA_MODEL_LIMIT` |
@@ -393,3 +403,7 @@ $PY scripts/run_network_194_parallel.py run --root "$R" 2>&1 | tee ~/net194_run_
      Physics · H12 · 0 · 1.5 대체 금지 · 행 삭제 금지 · 주 타깃 결측을 허용하는 마스크 부분 배포 = 별도 등록 · 1저자 결정 · 집계 · 학습 규약.  Physics · H12 만 모형 한계 = 레코드 게시 · 부록 공란.
   ⑥ **결과 보고 (C9)** — Hertz 주 타깃 가용 수와 Physics 모형 한계 수를 따로 (배포 README 상태 집계 = 모형 한계 별도 줄 · 재적합 제외 사유 `NOT_COMPUTED:full_over_conduction`) · 입력 영수증 ≠ 결과 완료 증서.
   ⑦ **발사 (B7)** — 새 code_fp 하나로 두 새 ROOT (194 · 보충 20) · fast16 · real4 · 전체 사전 점검 로그 + 완료 영수증 · §2 손 대조 · 1저자 발사 승인 · 10-14 ROOT 는 지우지 않는다.  ⚠ 이 초안은 등록 기대의 개정안이다 — 비준 · 발사 승인을 대신하지 않는다 · S3 = 별개 (봉인 수치 모듈 둘이 바뀜 → S3 재봉인 의무 · S3 HOLD 그대로).
+- 9-9 **비준 · 변경 이력 (✅ 10-21 · 1저자 비준 · L214 개정 §9-8 · 결과 열람 뒤 정책 개정 — 10-14 실행 결과 (194 done 186 · 실패 8 · 보충 20 done 14 · 실패 6) 를 본 뒤)** — 대화 원문 ⬜ · 비준 커밋 = 이 줄을 담은 커밋 (메인 세션).
+  바뀐 자리 (원문 보존 · 비준 표지 · 기계 구문만 고침): ① §3 활성 봉인 지문 — 10-07 재등록 `e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71` → `2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb` (§3 끝 ✅ 줄 · 옛 두 줄의 `code_fp` 기계 구문을 떼고 값은 그대로) · ② §3 표의 4 행 = 역사 (옛 값 = 표에 전체 그대로 · 새 값 = §3 끝 ✅ 줄) · ③ §9-8 대기 선언 (`code_fp_pending` 꼴) 삭제 · 머리 · 표 머리 비준 표지 · ④ §5 = §9-8 ①–⑦ 활성 (§5 머리 표지).
+  바꾸지 않은 것 = §9-8 '바꾸지 않는 것' 그대로 (문턱 1.5 · 허용치 1e−6 · 사다리 · G > 0 · 병렬 상한 · ID 집합 · 원 입력 · 실행 형식 v3 · 관측 필수 · §5-1–6 기존 차단) · §2 표 · 10-14 ROOT · 실패 기록 (보존 · 사후 성공 전환 없음).
+  ⛔ 비준은 등록 기대의 비준이다 — 발사 승인 아님 (§9-8 ⑦ B7 · 새 승인 핀 · 새 ROOT 둘 · 사전 점검 · 1저자 별도 승인) · S3 = 별개 HOLD (S3 수치 모듈 `scripts/network_conductivity.py` 가 바뀜 → S3 재봉인 의무) · v1.3 주 타깃 = H0 모형 한계 HOLD 그대로.
