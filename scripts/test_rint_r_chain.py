@@ -248,7 +248,8 @@ def manifest(i, si):
                                      'volume': cp_(T['fa_volume']),
                                      'faces': {'electronic': {'n_rows': 5, 'n_cut_rows': 1, 'by_class': {}}, 'ionic': None},
                                      'receipts': rc_fa, 'off_grid_ptfe_point_cells': {'0': 3}, 'fp': fa_fp,
-                                     'diagnostics': cp_(T['fa_diag']), 'label': T['fa_label']}},
+                                     'diagnostics': cp_(T['fa_diag']), 'label': T['fa_label'],
+                                     'exempt_assumptions': cp_(T['fa_exempt'])}},
           'cjunc': {'protocol': cjp,
                     'evidence': {'counts': cp_(COUNTS), 'census': {'n_fibres': 4}, 'solve': solve, 'receipts': rc_cj,
                                  'fp': {'registry': regfp, 'sid': sid, 'plan_rows': hx('rows|' + regfp), 'centreline': hx('cl|' + kit),
@@ -299,7 +300,11 @@ def cert(si):
             'resolve_rtol': max(rtol * 1e-2, 1e-14), 'resolve_rtol_floor': 1e-14, 'resolve_tol': CERT['resolve_tol'],
             'info': 0, 'resid': 3e-13, 'I_bot': 1.0, 'I_top': 1.0, 'imbalance': (2e-7 if ok else 3e-4), 'sigma': si,
             'sigma_resolve': si, 'dsigma_rel': 1e-9, 'resolve_info': 0, 'pass_a': True, 'pass_b': ok, 'pass_c': True, 'ok': ok,
-            'iters': 321, 'resolve_iters': 17}
+            'iters': 321, 'resolve_iters': 17,
+            #  ★ 10-21 증서 v2 — 상태 · ⓓ (구간 [1, 1] ∋ 게시 판 전류 1 · scale = σ)
+            'status': CERT['status'], 'pass_d': True, 'target_tol': CERT['target_tol'], 'target_version': CERT['target_version'],
+            'target_fp': CERT['target_fp'], 'target_ledger_ok': True, 'target_topology': 'through', 'target_lo': 1.0,
+            'target_hi': 1.0, 'scale': si}
 
 
 tag = rj.replace('.', 'p').replace('+', '').replace('-', 'm')
@@ -362,7 +367,8 @@ def record_templates():
                      'cj_status': CJ.CJUNC_STATUS, 'cj_qual': list(CJ.CJUNC_QUALIFIERS), 'cj_diag': dict(CW.DIAGNOSTICS_V0),
                      'cj_label': CW.LABEL_CJUNC, 'sd_label': CW.LABEL_SDCP,
                      'fa': FA.protocol_record(('electronic', 'ionic'), 'rope'), 'fa_diag': dict(FA.DIAGNOSTICS_V0), 'fa_label': FA.LABEL,
-                     'fa_volume': FA.volume_record(0.05, 0.06), 'vgcf_rule': S3.VGCF_SIGMA_RULE}
+                     'fa_volume': FA.volume_record(0.05, 0.06), 'vgcf_rule': S3.VGCF_SIGMA_RULE,
+                     'fa_exempt': dict(FA.EXEMPT_ASSUMPTIONS)}
     return FX['tpl']
 
 
@@ -376,7 +382,8 @@ def world(name, base=None, **kw):
     W.update(copy.deepcopy(kw))
     W.update({'dir': str(d), 'scripts': str(SCRIPTS), 'model_src': MODEL_SRC, 'tpl': record_templates(),
               'cert': {'version': CC.CERT_VERSION, 'rtol_max': CC.CERT_RTOL_MAX, 'eps_I': CC.CERT_EPS_I,
-                       'resolve_tol': CC.CERT_RESOLVE_TOL}})
+                       'resolve_tol': CC.CERT_RESOLVE_TOL, 'target_tol': CC.CERT_TARGET_TOL,
+                       'target_version': CC.TARGET_VERSION, 'target_fp': CC.TARGET_FP_RULE, 'status': CC.STATUS_POSITIVE}})
     (d / 'world.json').write_text(json.dumps(W), encoding='utf-8')
     return str(d / 'world.json')
 

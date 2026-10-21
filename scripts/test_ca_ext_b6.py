@@ -124,7 +124,11 @@ def good_cert(sigma, rtol=1.0e-12):
             'resolve_rtol_floor': CC.CERT_RESOLVE_RTOL_FLOOR, 'resolve_tol': CC.CERT_RESOLVE_TOL, 'info': 0, 'resid': 1e-13,
             'I_bot': 1.0, 'I_top': 1.0, 'imbalance': 1e-9, 'sigma': float(sigma), 'sigma_resolve': float(sigma) * (1 + 1e-12),
             'dsigma_rel': 1e-12, 'resolve_info': 0, 'resolve_I_bot': 1.0, 'resolve_I_top': 1.0,
-            'pass_a': True, 'pass_b': True, 'pass_c': True, 'ok': True}
+            'pass_a': True, 'pass_b': True, 'pass_c': True, 'ok': True,
+            #  ★ 10-21 증서 v2 (Codex RCA-07 · RCA-13) — 상태 · ⓓ 목표량 증서 (구간 [1, 1] ∋ 게시 판 전류 1 · scale = σ)
+            'status': CC.STATUS_POSITIVE, 'pass_d': True, 'target_tol': CC.CERT_TARGET_TOL, 'target_version': CC.TARGET_VERSION,
+            'target_fp': CC.TARGET_FP_RULE, 'target_ledger_ok': True, 'target_topology': 'through', 'target_lo': 1.0,
+            'target_hi': 1.0, 'scale': float(sigma)}
 
 
 # ═════════════════════════ R 묶음 — run_contract ═════════════════════════
