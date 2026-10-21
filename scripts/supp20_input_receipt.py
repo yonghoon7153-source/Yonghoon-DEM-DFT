@@ -601,6 +601,32 @@ def _selftest() -> int:
             if g_ in ids_:
                 ok_ = ok_ and cdet(rec, g_) == dict(code_fp=fp_now, dirty=False)
         return ok_
+    #  ★ 10-21 S0b 의 봉인 지문 기대 (1저자 10-21 Q1) — 옛 판은 등록 §3 · 대기 선언의 지문 앞자리를 상수로 두어, 비준판 문안 (194 등록 §9-8 · 보충 §9-3 개정 ·
+    #    활성 §3 지문 — `docs/reviews/lhs214_relaunch_package_20261020.md` §1) 을 넣은 정상 비준 상태에서 S0b 만 실패했다 (121/122).  상수 대신:
+    #    상태 (fp_state) 가 정한 지문 = 체크아웃 code_fp (64 자리 전체 — registered = 등록 §3 · pending = 대기 선언) · registered 면 대기 선언 없음 (비준 · 재등록이
+    #    지운다) · 보충 등록의 (활성 §3 · 대기 선언) = 194 등록의 값 (같은 함수 registration_values 로 읽음 — 보충 §3 "= 194 와 같다" · 한 봉인 ·
+    #    194 쪽 봉인 지문 문제 (§3 값 둘 · 대기 값 둘 · 대기 = 등록) 가 있으면 거짓 — 문제면 값이 None 이라 None = None 으로 통과시키지 않는다).
+    #    시험의 기대만 바뀐다 — 도구 판정 (receipt · R0 · D1 · E2 · F5 · G5) 은 그대로.
+    REG194 = 'docs/reviews/lhs_network_batch_registration_20261007_g2.md'
+
+    def s0b_fp(reg_, base_, base_probs=()):
+        """(참 거짓, 사유) — reg_ = 보충 등록 값 · base_ · base_probs = 194 등록의 값 · 문제 목록 (셋 다 registration_values 의 반환)."""
+        def h12(x):
+            return f'{x[:12]}…' if x else str(x)
+        r_, p_ = reg_.get('code_fp'), reg_.get('code_fp_pending')
+        st_, why_ = fp_state(reg_, fp_now)
+        if st_ == 'undeclared':
+            return False, f'상태 undeclared — {why_}'
+        if st_ == 'registered' and p_ is not None:
+            return False, f'상태 registered 인데 대기 선언이 남았다 ({h12(p_)} — 비준 · 재등록은 대기 선언을 지운다)'
+        bp_ = [x for x in base_probs if str(x).startswith('등록 문서 code_fp')]
+        if bp_:
+            return False, f'194 등록의 봉인 지문 문제 {bp_}'
+        b_ = (base_.get('code_fp'), base_.get('code_fp_pending'))
+        if (r_, p_) != b_:
+            return False, (f'보충 등록 (§3 {h12(r_)} · 대기 {h12(p_)}) ≠ 194 등록 (§3 {h12(b_[0])} · 대기 {h12(b_[1])}) '
+                           '— 두 등록은 한 봉인 (보충 §3 "= 194 와 같다")')
+        return True, f'상태 {st_}'
     print(f'  (나′) 봉인 지문 상태 = {state} — 체크아웃 {str(fp_now)[:12]}… · 등록 §3 {str(R_reg)[:12]}… · 대기 선언 '
           + (f'{P_reg[:12]}…' if P_reg else '없음') + (f' — {why_state}' if why_state else ''))
     ids0 = {c['id'] for c in base['checks']}
@@ -616,11 +642,15 @@ def _selftest() -> int:
         'pending (대기 선언 하나 · 체크아웃 = 대기 ≠ 등록) = rc 1 · 실패 칸 정확히 {D1} · D1 상세 now = 대기 · registered = 등록 · pending = 대기 / undeclared = FAIL · '
         '범위 container · 수동 칸 셋', ok0, dict(state=state, why=why_state, bad=sorted(bad_ids(base)), D1=cdet(base, 'D1')))
     dg0 = base['recomputed']['input_digest']
-    chk('S0b 다시 계산 = 등록 §2 (케이스 20 · ids 991cf115… · raw a7aaa3c8… · 코호트 TSV 69d3f913…) · 등록 §3 code_fp e8b2496b… · ★ 10-15 (나′) 대기 선언이 있으면 = 2149f873… '
-        '(★ 10-19 L214R-R04 수정 반영 지문 — 커밋마다 갱신 · 진행 기록 10-19) — 값은 문서 · 반입 파일에서 (도구에 사본 없음 · 값 None 안전)',
+    v194, p194 = registration_values(reg_doc=REG194)
+    fp0_ok, fp0_why = s0b_fp(reg, v194, p194)
+    chk(f'S0b 다시 계산 = 등록 §2 (케이스 20 · ids 991cf115… · raw a7aaa3c8… · 코호트 TSV 69d3f913… — 등록 입력 집합 · L214 개정이 바꾸지 않는 값) · '
+        f'★ 10-21 봉인 지문 [상태 {state}] = 상태가 정한 지문 (registered = 등록 §3 · 대기 선언 없음 / pending = 대기 선언) = 체크아웃 code_fp 64 자리 전체 · '
+        '보충 등록의 활성 §3 · 대기 선언 = 194 등록의 값 (같은 함수로 읽음) — 옛 판의 지문 앞자리 상수 대신 (비준판 121/122 · 1저자 10-21 Q1) · '
+        '값은 문서 · 반입 파일에서 (도구에 사본 없음 · 값 None 안전)',
         dg0.get('n') == 20 and str(dg0.get('ids_sha256')).startswith('991cf115') and str(dg0.get('raw_sha256_table_sha256')).startswith('a7aaa3c8')
-        and str((dg0.get('cohort_tsv_sha256') or {}).get(COHORT)).startswith('69d3f913') and str(R_reg or '').startswith('e8b2496b')
-        and (P_reg is None or str(P_reg).startswith('2149f873')), (dg0, R_reg, P_reg))
+        and str((dg0.get('cohort_tsv_sha256') or {}).get(COHORT)).startswith('69d3f913') and fp0_ok,
+        (fp0_why, R_reg, P_reg, {k: v194.get(k) for k in ('code_fp', 'code_fp_pending')}, dg0))
     with tempfile.TemporaryDirectory(prefix='supp20_receipt_') as td:
         td = Path(td)
         rtxt = _rp(REG_DOC).read_text(encoding='utf-8')
@@ -633,11 +663,12 @@ def _selftest() -> int:
             i4_ = t_.find('\n## ', i3_ + 1)
             return i3_, (i4_ if i4_ >= 0 else len(t_))
 
-        def reg_variant(name, registered, pending=(), old_second=None, old_second_at='s3'):
+        def reg_variant(name, registered, pending=(), old_second=None, old_second_at='s3', src=None):
             """★ 10-15 (나′) 등록 문서 사본 — 지문 토큰만 바꾼다 (다른 칸은 실물 그대로 · 실물이 옛 초안 꼴이든 대기 선언 꼴이든 같은 결과):
             모든 `code_fp <hex>` → `code_fp <registered>` · 있던 대기 선언 `code_fp_pending <hex>` → 맨 hex (선언 아님) · pending 값마다 대기 선언 한 줄 ·
-            old_second = 옛 초안 꼴 둘째 값 (`code_fp <hex>`) 한 줄 — ★ 10-16 L214R-04: 파서가 활성 §3 만 읽으므로 자리를 고른다 ('s3' = §3 끝 · 'end' = 문서 끝 = §3 밖)."""
-            t_ = re.sub(r'`code_fp ([0-9a-f]{64})`', f'`code_fp {registered}`', rtxt)
+            old_second = 옛 초안 꼴 둘째 값 (`code_fp <hex>`) 한 줄 — ★ 10-16 L214R-04: 파서가 활성 §3 만 읽으므로 자리를 고른다 ('s3' = §3 끝 · 'end' = 문서 끝 = §3 밖).
+            ★ 10-21 src = 바탕 글 (기본 = 보충 등록 실물 · S11g 는 194 등록 글에 같은 변환)."""
+            t_ = re.sub(r'`code_fp ([0-9a-f]{64})`', f'`code_fp {registered}`', rtxt if src is None else src)
             t_ = re.sub(r'`code_fp_pending ([0-9a-f]{64})`', r'`\1`', t_)
             for v_ in pending:
                 t_ += f'\n| 대기 지문 (selftest 사본) | `code_fp_pending {v_}` |\n'
@@ -1170,6 +1201,29 @@ def _selftest() -> int:
         rf3 = receipt(manifest=ms0, primary_manifest=mp194, reg_doc=TWIN)
         chk('S11f3 ★ (나′) ⓕ 같은 쌍둥이 · 정상 발사 manifest 둘 (S8) → rc 0 (pending 의 F5 · G5 실패 = 지문 하나뿐 · S8e · S8f 판별의 기준)', rf3['rc'] == 0,
             sorted(bad_ids(rf3)))
+        #  ⓖ ★ 10-21 S0b 지문 기대 (s0b_fp) 를 실물 상태와 무관하게 — 두 등록 (보충 · 194) 을 같은 지문 토큰 변환 (reg_variant · 다른 칸은 실물) 으로 만든 사본 쌍
+        #     일곱 꼴 · 도구 registration_values 로 읽음.  참 = registered (등록 §3 = 체크아웃 · 대기 없음) · pending (대기 = 체크아웃 · 등록 = 모의 값 · 두 문서 같음) /
+        #     거짓 = 보충만 비준 (194 = 대기) · pending 인데 194 의 등록 §3 이 다름 · 비준 + 남은 대기 · 194 대기 값 둘 (문제 → 값 None) · 선언 없음.
+        #     옛 판 (앞자리 상수) 은 registered · pending 을 거짓으로.
+        t194 = _rp(REG194).read_text(encoding='utf-8')
+
+        def fp_pair(tag, registered, pending=(), base=None):
+            """(보충 등록 값, 194 등록 값, 194 문제 목록) — base = 194 쪽만 다른 (registered, pending) 일 때."""
+            rb_, pb_ = base if base is not None else (registered, pending)
+            return (registration_values(reg_doc=reg_variant(f's0b_{tag}', registered, pending))[0],
+                    *registration_values(reg_doc=reg_variant(f's0b194_{tag}', rb_, pb_, src=t194)))
+        g_cases = dict(registered=(fp_pair('reg', fp_now), True), pending=(fp_pair('pend', R_SIM, (fp_now,)), True),
+                       supp_only_ratified=(fp_pair('mixed', fp_now, base=(R_SIM, (fp_now,))), False),
+                       pending_base_differs=(fp_pair('pdiff', R_SIM, (fp_now,), base=(P_SIM2, (fp_now,))), False),
+                       ratified_pending_left=(fp_pair('left', fp_now, (P_SIM,)), False),
+                       base_pending_conflict=(fp_pair('bconf', fp_now, base=(fp_now, (P_SIM, P_SIM2))), False),
+                       undeclared=(fp_pair('undecl', R_SIM), False))
+        g_got = {k: s0b_fp(*pr_) for k, (pr_, _w) in g_cases.items()}
+        g_bad = {k: (bool(g_got[k][0]), w_, g_got[k][1]) for k, (_pr, w_) in g_cases.items() if bool(g_got[k][0]) != w_}
+        chk('S11g ★ 10-21 S0b 지문 기대 (상수 없음) — 실물 상태와 무관한 일곱 꼴 (보충 · 194 등록 사본 쌍 · 지문 토큰만 바꿈 · 도구 registration_values 로 읽음): '
+            'registered (등록 §3 = 체크아웃 · 대기 없음) · pending (대기 = 체크아웃 · 두 등록 같음) = 참 / 보충만 비준 (194 = 대기) · pending 인데 194 등록 §3 다름 · '
+            '비준 + 남은 대기 · 194 대기 값 둘 (문제) · 선언 없음 = 거짓 (고치기 전: 옛 앞자리 상수라 registered · pending 이 거짓)',
+            len(g_cases) == 7 and not g_bad, g_bad)
         #  ⑫ ★ 10-16 L214R-04 (Codex LHS214 재검증 판정문 §5 · 수정 계획 lhs214r_fix_plan_20261016 Q4 = 1저자 비준) — 파서가 **활성 §3 의 code_fp 만** 읽는다
         #    (역사 표 · 초안 표의 같은 기계 구문 `code_fp <hex>` = 읽지 않음 · 등록 문서 · 역사 표는 고치지 않는다).  반례 먼저 — 고치기 전 판은 문서 전체의 토큰을 읽어
         #    안내된 비준 단계 (§3 갱신 + 대기 선언 삭제 + 역사 표 보존) 가 R0 · D1 (registered None) 였다 (ⓕ 쌍둥이는 전역 치환이라 이 구멍을 놓쳤다).
