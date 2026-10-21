@@ -1511,6 +1511,8 @@ def t21():
     }
     for nm, mm in man_muts.items():
         chk(f'T21j 매니페스트 칸 [{nm}] → 거부', *_rej(p, man=mm))
+    chk('T21j 접합 런 매니페스트 registry None + 증서도 None (둘이 같아도) → 거부 (접합 런의 주 전자 솔브는 계획이 있다 · 사전 공격 리뷰)',
+        *_rej(p, dict(pe, fp_cjunc_registry=None), man=_m(cj=dict(cjfp, registry=None))))
     #  ── 정본 격자 칸 — 조합 런 = 접합 원장 sid (솔버 입구가 실제 격자와 대조) · off 격자 sid_off 와의 일치 = ca_ext 계약 (cjunc_block_problem) 몫 ──
     ok, why = _rej(p, man=_m(fa=dict(fafp, sid_off='b' * 32)))
     chk('T21k 정본 칸 — 조합 런에서 sid_off 만 틀림 (접합 원장 sid 맞음) → 증서 결합은 받는다 (매니페스트 자기 일관 = ca_ext 계약 · 사슬 멈춤 '
