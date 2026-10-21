@@ -780,6 +780,18 @@ def _selftest():                                            # noqa: C901
         chk('⑨d deck_meta.deck_sha256 ≠ in.mixer → TECH (이 런의 메타가 아니다)',
             lambda: tech_case('meta_sha', 'deck_sha256', meta_patch=_bad_sha))
 
+        #  ★ 10-21 (원장 MXD2-06) — 생성기가 선택 키 (밀도 세대 · D2 결합 규칙) 를 담은 메타를 schema mixer_deck_meta/2 로 올렸다 (/1 의 키는 그대로).
+        #    옛 판독기는 /1 만 받아 lab · D2 런을 TECH (schema ≠) 로 막았을 것이다 — 시험 먼저 (옛 판: ⑨e 의 /2 가 TECH).
+        def _v2(m):
+            m['schema'] = 'mixer_deck_meta/2'
+            m['dens_gen'] = 'lab20261014'
+
+        def _v3(m):
+            m['schema'] = 'mixer_deck_meta/3'
+        chk('⑨e deck_meta schema /2 (선택 키 · 밀도 세대 · D2) 는 /1 과 같이 읽는다 (값 = C0) · 모르는 /3 은 TECH',
+            lambda: (lambda r_: r_['status'] == 'OK' and vals_ok(r_['t0'], EXP0))(analyse_run(mk('meta_v2', meta_patch=_v2)))
+            and tech_case('meta_v3', 'schema', meta_patch=_v3))
+
         fc = std_frames()
         fc[500] = [a[:5] + [7.6e-05 if a[1] == 3 else a[5]] for a in c1_atoms()]
         chk('⑩ 반경 불일치 — bin 프레임 하나의 SE 반경 7.6e-05 ≠ 계획 7.57e-05 → TECH',

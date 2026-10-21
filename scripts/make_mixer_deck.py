@@ -2400,9 +2400,13 @@ def _selftest():
     _pg = plan(100000, cgf=151.4)
     _dg = _pg['d']
 
-    def _gm(g_p, g_s=None, gw=None, bo=BO_BASE):
+    def _gm(g_p, g_s=None, rho=None, bo=BO_BASE):
+        """★ 10-21 (MXD2-05) — 벽 = 비코팅 NCM (1저자 10-14 Q2) 규칙 안의 팔만 만든다: AM γ ∈ {1 (코팅), ρ (비코팅)} · γ_W = 0.0256·ρ.
+        ρ 를 안 주면 AM γ 중 1 이 아닌 값 (없으면 1 = 같은 γ 세계).  옛 판은 γ_W 0.0256 고정에 AM 0.3/0.5 처럼 Q2 밖 조합을 썼다."""
         g_s = g_p if g_s is None else g_s
-        return gm_arm({'AM_P': g_p, 'AM_S': g_s, 'SE': 1.0}, gamma_wall=GM_WALL_HARE2026 if gw is None else gw, bo_se=bo)
+        if rho is None:
+            rho = next((x for x in (g_p, g_s) if x != 1.0), 1.0)
+        return gm_arm({'AM_P': g_p, 'AM_S': g_s, 'SE': 1.0}, gamma_wall=gm_wall_from_ncm(rho), bo_se=bo, rho_uncoated_ncm=rho)
 
     def _F(M, ti, tj, d=None, E=None):
         d = _dg if d is None else d
@@ -2418,7 +2422,7 @@ def _selftest():
         '상대 1e-12) — 바뀌는 것은 혼합쌍 · 벽뿐', _ok(_gm1))
 
     def _gm2():
-        a_ = _gm(0.3, 0.5)
+        a_ = _gm(0.3, 1.0)                                   # ρ 0.3 세계 · AM_P 비코팅 · AM_S 코팅 (10-21 Q2 안 조합 — 옛 0.3/0.5 는 Q2 밖)
         M = ced_matrix_geomean(a_, _dg)
         g = dict(a_['gamma'])
         g[WALL] = a_['gamma_wall']
@@ -2439,7 +2443,7 @@ def _selftest():
         _ok(_gm2))
 
     def _gm3():
-        M = ced_matrix_geomean(_gm(0.2, 0.7), _dg)
+        M = ced_matrix_geomean(_gm(0.2, 1.0), _dg)          # ρ 0.2 세계 (10-21 Q2 안 — 옛 0.2/0.7)
         P = list(TYPES)
         return all(abs((_F(M, a1, b1) ** 2 * rstar_pair(a1, a1, _dg) * rstar_pair(b1, b1, _dg))
                        / (_F(M, a1, a1) * _F(M, b1, b1) * rstar_pair(a1, b1, _dg) ** 2) - 1.0) < 1e-11
@@ -2463,53 +2467,70 @@ def _selftest():
         c1 = (abs(_F(M1, 'AM_P', 'SE') / _F(M1, 'SE', 'SE') - 2.0 * rP / (rP + rS_)) < 1e-12
               and abs(_F(M1, 'AM_S', 'SE') / _F(M1, 'SE', 'SE') - 2.0 * rA / (rA + rS_)) < 1e-12)
         rho_P, rho_S = ((rP + rS_) / (2.0 * rP)) ** 2, ((rA + rS_) / (2.0 * rA)) ** 2
-        lo = ced_matrix_geomean(_gm(rho_P * 0.99, rho_S * 0.99), _dg)
-        hi = ced_matrix_geomean(_gm(rho_P * 1.01, rho_S * 1.01), _dg)
-        c2 = _F(lo, 'AM_P', 'SE') < _F(lo, 'SE', 'SE') < _F(hi, 'AM_P', 'SE')
-        c3 = _F(lo, 'AM_S', 'SE') < _F(lo, 'SE', 'SE') < _F(hi, 'AM_S', 'SE')
+        #  ★ 10-21 (MXD2-05) — 문턱마다 그 ρ 세계 하나 (두 AM 비코팅 · AM γ = ρ) — 옛 판은 한 덱에 AM_P ρ_P · AM_S ρ_S (Q2 밖)
+        loP, hiP = (ced_matrix_geomean(_gm(rho_P * k_), _dg) for k_ in (0.99, 1.01))
+        loS, hiS = (ced_matrix_geomean(_gm(rho_S * k_), _dg) for k_ in (0.99, 1.01))
+        c2 = _F(loP, 'AM_P', 'SE') < _F(loP, 'SE', 'SE') < _F(hiP, 'AM_P', 'SE')
+        c3 = _F(loS, 'AM_S', 'SE') < _F(loS, 'SE', 'SE') < _F(hiS, 'AM_S', 'SE')
         return c1 and c2 and c3 and abs(rho_P - 0.308642) < 1e-6 and abs(rho_S - 0.390625) < 1e-12
     chk('GM⑤ 논지 §2 산술 — 비 1 에서 SE 하나의 AM_P–SE / SE–SE 당김힘 = 2r_A/(r_A+r_S) (1.8 · AM_S 1.6) · SE–SE 가 이기는 비 < 0.3086 (AM_P) · '
         '0.3906 (AM_S) — 그 양쪽 1 % 에서 대소가 뒤집힌다', _ok(_gm5))
 
     def _gm6():
-        M = ced_matrix_geomean(_gm(0.3, 0.5), _dg)
+        #  ★ 10-21 (MXD2-05) — ρ 1 세계 (γ_W 0.0256 · Hare 단분산 0.32 그대로) + ρ 0.3 세계 (AM_P 비코팅 0.3 · AM_S 코팅 1 · γ_W 0.0256·0.3)
+        M = ced_matrix_geomean(_gm(1.0), _dg)
+        M3 = ced_matrix_geomean(_gm(0.3, 1.0), _dg)
         c1 = abs(_F(M, 'SE', WALL) / _F(M, 'SE', 'SE') - 2.0 * 0.16) < 1e-12
-        c2 = abs(_F(M, 'AM_P', WALL) / _F(M, 'SE', WALL) - math.sqrt(0.3) * _dg['AM_P'] / _dg['SE']) < 1e-12
-        c3 = abs(_F(M, 'AM_S', WALL) / _F(M, 'SE', WALL) - math.sqrt(0.5) * _dg['AM_S'] / _dg['SE']) < 1e-12
-        return c1 and c2 and c3 and GM_WALL_HARE2026 == (0.04 / 0.25) ** 2
+        c1b = abs(_F(M3, 'SE', WALL) / _F(M3, 'SE', 'SE') - 2.0 * 0.16 * math.sqrt(0.3)) < 1e-12
+        c2 = abs(_F(M3, 'AM_P', WALL) / _F(M3, 'SE', WALL) - math.sqrt(0.3) * _dg['AM_P'] / _dg['SE']) < 1e-12
+        c3 = abs(_F(M3, 'AM_S', WALL) / _F(M3, 'SE', WALL) - math.sqrt(1.0) * _dg['AM_S'] / _dg['SE']) < 1e-12
+        return c1 and c1b and c2 and c3 and GM_WALL_HARE2026 == (0.04 / 0.25) ** 2
     chk('GM⑥ 벽 = 같은 기하평균 (W_iW = 2√(γ_iγ_W) · R* = r_입자) · Hare 2026 Table 3 의 γ_pw/γ_pp 0.16 → γ_W/γ_SE = 0.16² = 0.0256 → '
-        'SE–벽 / SE–SE 당김힘 = 0.16 × 2 = 0.32 (Hare 단분산과 같음) · AM–벽 / SE–벽 = √(γ_A/γ_S)·r_A/r_S', _ok(_gm6))
+        'SE–벽 / SE–SE 당김힘 = 0.16 × 2 = 0.32 (Hare 단분산과 같음 · ρ 0.3 세계면 0.32·√0.3) · AM–벽 / SE–벽 = √(γ_A/γ_S)·r_A/r_S', _ok(_gm6))
 
     def _gm7():
-        M = ced_matrix_geomean(_gm(0.3, 0.5), _dg)
+        M = ced_matrix_geomean(_gm(0.3, 1.0), _dg)          # 10-21 Q2 안 조합 (옛 0.3/0.5)
         n = len(_NM)
         return (all(M[i][j] == M[j][i] and math.isfinite(M[i][j]) for i in range(n) for j in range(n))
                 and all(M[i][j] > 0.0 for i in range(n) for j in range(n) if not (i == n - 1 and j == n - 1))
                 and M[n - 1][n - 1] == 0.0)
     chk('GM⑦ 행렬 대칭 · 유한 · 벽–벽 0 · 나머지 양수', _ok(_gm7))
 
-    _gbad = [lambda: gm_arm({'AM_P': 0.3, 'SE': 1.0}, gamma_wall=GM_WALL_HARE2026, bo_se=BO_BASE),
-             lambda: gm_arm({'AM_P': 0.0, 'AM_S': 0.3, 'SE': 1.0}, gamma_wall=GM_WALL_HARE2026, bo_se=BO_BASE),
-             lambda: gm_arm({'AM_P': -0.3, 'AM_S': 0.3, 'SE': 1.0}, gamma_wall=GM_WALL_HARE2026, bo_se=BO_BASE),
-             lambda: gm_arm({'AM_P': float('nan'), 'AM_S': 0.3, 'SE': 1.0}, gamma_wall=GM_WALL_HARE2026, bo_se=BO_BASE),
-             lambda: gm_arm({'AM_P': float('inf'), 'AM_S': 0.3, 'SE': 1.0}, gamma_wall=GM_WALL_HARE2026, bo_se=BO_BASE),
-             lambda: gm_arm({'AM_P': True, 'AM_S': 0.3, 'SE': 1.0}, gamma_wall=GM_WALL_HARE2026, bo_se=BO_BASE),
-             lambda: gm_arm({'AM_P': '0.3', 'AM_S': 0.3, 'SE': 1.0}, gamma_wall=GM_WALL_HARE2026, bo_se=BO_BASE),
-             lambda: gm_arm({'AM_P': 0.3, 'AM_S': 0.3, 'SE': 2.0}, gamma_wall=GM_WALL_HARE2026, bo_se=BO_BASE),
-             lambda: gm_arm({'AM_P': 0.3, 'AM_S': 0.3, 'SE': 1.0, 'VGCF': 1.0}, gamma_wall=GM_WALL_HARE2026, bo_se=BO_BASE),
-             lambda: gm_arm({'AM_P': 0.3, 'AM_S': 0.3, 'SE': 1.0}, gamma_wall=None, bo_se=BO_BASE),
-             lambda: gm_arm({'AM_P': 0.3, 'AM_S': 0.3, 'SE': 1.0}, gamma_wall=0.0, bo_se=BO_BASE),
-             lambda: gm_arm({'AM_P': 0.3, 'AM_S': 0.3, 'SE': 1.0}, gamma_wall=GM_WALL_HARE2026, bo_se=None),
-             lambda: gm_arm({'AM_P': 0.3, 'AM_S': 0.3, 'SE': 1.0}, gamma_wall=GM_WALL_HARE2026, bo_se=0.0),
-             lambda: gm_arm({'AM_P': 0.3, 'AM_S': 0.3, 'SE': 1.0}, gamma_wall=GM_WALL_HARE2026, bo_se=float('nan')),
-             lambda: register_arm('LC', _gm(0.3)),
-             lambda: register_arm('bad name', _gm(0.3)),
-             lambda: ced_matrix_geomean({'rule': 'geomean', 'gamma': {'AM_P': 0.3, 'AM_S': 0.3, 'SE': 1.0}, 'gamma_wall': 0.0064}, _dg)]
+    #  ★ 10-21 (MXD2-04 · 05) — 거부 사례는 **겨냥한 결함 하나만** 빼고 Q2 규칙 안 (ρ 0.3 세계 · 또는 코팅 팔 + 명시 벽) 으로 둔다 —
+    #    옛 판은 AM 0.3 에 명시 벽 0.0256 을 써서, 벽 규칙 검사가 생기면 다른 결함 (0 · NaN) 의 거부를 대신 내 그 결함 검사의 변이를 가린다.
+    #    거부 **사유** 를 낱말로 대조한다 (거부됐는지만 보면 다른 검사가 대신 거부해도 통과한다).
+    _gw3, _c1 = gm_wall_from_ncm(0.3), {'AM_P': 1.0, 'AM_S': 1.0, 'SE': 1.0}
+
+    def _u3(**kw):
+        return dict(dict(gamma_wall=_gw3, bo_se=BO_BASE, rho_uncoated_ncm=0.3), **kw)
+    _gbad = [('상 누락', lambda: gm_arm({'AM_P': 0.3, 'SE': 1.0}, **_u3()), '빠지거나 남는 상'),
+             ('γ 0', lambda: gm_arm({'AM_P': 0.0, 'AM_S': 0.3, 'SE': 1.0}, **_u3()), ''),
+             ('γ 음수', lambda: gm_arm({'AM_P': -0.3, 'AM_S': 0.3, 'SE': 1.0}, **_u3()), ''),
+             ('γ NaN', lambda: gm_arm({'AM_P': float('nan'), 'AM_S': 0.3, 'SE': 1.0}, **_u3()), ''),
+             ('γ ∞', lambda: gm_arm({'AM_P': float('inf'), 'AM_S': 0.3, 'SE': 1.0}, **_u3()), ''),
+             ('γ bool', lambda: gm_arm({'AM_P': True, 'AM_S': 0.3, 'SE': 1.0}, **_u3()), '수가 아니다'),
+             ('γ 문자열', lambda: gm_arm({'AM_P': '0.3', 'AM_S': 0.3, 'SE': 1.0}, **_u3()), '수가 아니다'),
+             ('SE ≠ 1', lambda: gm_arm({'AM_P': 0.3, 'AM_S': 0.3, 'SE': 2.0}, **_u3()), '정확히 1'),
+             ('안 도는 상', lambda: gm_arm({'AM_P': 0.3, 'AM_S': 0.3, 'SE': 1.0, 'VGCF': 1.0}, **_u3()), '빠지거나 남는 상'),
+             ('γ_W 없음', lambda: gm_arm(_c1, gamma_wall=None, bo_se=BO_BASE), '명시해야'),
+             ('γ_W 0', lambda: gm_arm(_c1, gamma_wall=0.0, bo_se=BO_BASE), 'γ_W'),
+             ('Bo 없음', lambda: gm_arm(_c1, gamma_wall=GM_WALL_HARE2026, bo_se=None), '명시해야'),
+             ('Bo 0', lambda: gm_arm(_c1, gamma_wall=GM_WALL_HARE2026, bo_se=0.0), 'Bo_code'),
+             ('Bo NaN', lambda: gm_arm(_c1, gamma_wall=GM_WALL_HARE2026, bo_se=float('nan')), '유한'),
+             ('ρ NaN', lambda: gm_wall_from_ncm(float('nan')), '유한'),
+             ('ρ ∞', lambda: gm_wall_from_ncm(float('inf')), '유한'),
+             ('옛 팔 이름', lambda: register_arm('LC', _gm(0.3)), '이미 있다'),
+             ('이름 형식', lambda: register_arm('bad name', _gm(0.3)), '영문자'),
+             ('검증 우회', lambda: ced_matrix_geomean({'rule': 'geomean', 'gamma': {'AM_P': 0.3, 'AM_S': 0.3, 'SE': 1.0}, 'gamma_wall': 0.0064}, _dg),
+              '검증 우회')]
+    _gbad_got = {nm_: _exit_msg(f_) for nm_, f_, _w in _gbad}
+    _gbad_bad = [nm_ for nm_, _f, w_ in _gbad if _gbad_got[nm_] is None or w_ not in _gbad_got[nm_]]
     chk(f'GM⑧ 입력 거부 (fail-closed) {len(_gbad)} 가지 — 상 누락 · 0 · 음수 · NaN · ∞ · bool · 문자열 · 기준 SE ≠ 1 · 안 도는 상 · γ_W 없음 · 0 · '
-        'Bo_SE 없음 · 0 · NaN · 옛 팔 이름 덮어쓰기 · 이름 형식 · 검증 안 된 사전 (gm_arm 우회)', _ok(lambda: all(_raises(f) for f in _gbad)))
+        f'Bo_SE 없음 · 0 · NaN · ρ NaN · ∞ · 옛 팔 이름 덮어쓰기 · 이름 형식 · 검증 안 된 사전 (gm_arm 우회) — 사유 낱말 대조 (어긋남 {_gbad_bad})',
+        not _gbad_bad)
 
     def _gm9():
-        c1 = _raises(lambda: ced_matrix_geomean(_gm(1.0, bo=1.0e6), _dg))
+        c1 = (_exit_msg(lambda: ced_matrix_geomean(_gm(1.0, bo=5000.0), _dg)) or '').find('천장') >= 0   # 10-21: Bo 1e6 → 5000 (지원 범위 안 · 천장 밖)
         ced = 2.0e5
         c2 = abs(pair_overlap(ced, 'SE', 'SE', _dg, E_PHASE)
                  / overlap_for_ced(ced, _dg['SE'] / 2.0, PHASE_MECH['SE'][0], E=E_PHASE['SE']) - 1.0) < 1e-12
@@ -2520,14 +2541,14 @@ def _selftest():
         c4 = abs(pair_overlap(ced, 'SE', WALL, _dg, E_PHASE)
                  / ((3.0 * math.pi * ced * math.sqrt(rw_) / (2.0 * ew_)) ** 2 / (_dg['SE'] / 2.0)) - 1.0) < 1e-12
         return c1 and c2 and c3 and c4 and pair_overlap(0.0, 'SE', 'SE', _dg, E_PHASE) == 0.0
-    chk('GM⑨ 겹침 천장 = 모든 쌍 δ₀/min(r) (같은 상 = overlap_for_ced · 혼합쌍 = 작은 반경 · 벽 = 입자 반경 · R* · E* 는 그 쌍) · Bo_SE 1e6 = 거부',
-        _ok(_gm9))
+    chk('GM⑨ 겹침 천장 = 모든 쌍 δ₀/min(r) (같은 상 = overlap_for_ced · 혼합쌍 = 작은 반경 · 벽 = 입자 반경 · R* · E* 는 그 쌍) · Bo_SE 5000 = 천장 거부 '
+        '(10-21 — 옛 1e6 은 지원 범위 밖이라 범위 검사가 먼저 거부한다)', _ok(_gm9))
     chk('GM⑩ 옛 팔 전부 — ced_matrix = min 규칙 그대로 (_ced_matrix_min · 디스패치만 추가 · 비트 동일)',
         _ok(lambda: all(ced_matrix(a_, _dg) == _ced_matrix_min(a_, _dg) for a_ in sorted(ARMS)
                         if ARMS[a_].get('rule') != 'geomean')))
 
     def _gm11():
-        nm = register_arm('GMSELFTEST', _gm(0.3, 0.5))
+        nm = register_arm('GMSELFTEST', _gm(0.3, 1.0))               # 10-21 Q2 안 조합 (옛 0.3/0.5)
         try:
             p20 = plan(100000, cgf=151.4, stiffen_se=20.0)
             Ms, Mn, nz = ced_for_deck(p20, nm, hold_bo_pairwise=True)
@@ -2547,9 +2568,11 @@ def _selftest():
         with _tf.TemporaryDirectory() as td:
             me = os.path.abspath(__file__)
             #  ★ 10-14 밤 — D2 덱 = 새 세대 덱 → --dens-gen 필수 (DG⑥).  같은 세대로 메모리 덱도 만든다.
+            #  ★ 10-21 (MXD2-02 · 05) — Q2 안 팔 (ρ 0.3 세계 비코팅 · --gm-wall-ncm) + 기본값이 아닌 Bo 0.5 — 옛 판은 AM 0.3/0.5 + 명시 벽 0.0256
+            #    (Q2 밖) · Bo = BO_BASE 라 메타에 상수 BO_BASE 를 적는 변이 (M16) 가 통과했다.
             base = ['--n-total', '100000', '--cgf', '151.4', '--seed', '32452843', '--revolutions', '2',
                     '--stiffen-se', '20', '--hold-bo-pairwise', '--dens-gen', 'lab20261014']
-            gmo = ['--gm-gamma', 'AM_P=0.3,AM_S=0.5', '--gm-gamma-wall', '0.0256', '--gm-bo-se', '0.21244']
+            gmo = ['--gm-gamma', 'AM_P=0.3,AM_S=0.3', '--gm-wall-ncm', '0.3', '--gm-bo-se', '0.5']
             a = _sp.run([sys.executable, me, '--out', os.path.join(td, 'a')] + base + gmo, capture_output=True, text=True)
             b = _sp.run([sys.executable, me, '--out', os.path.join(td, 'b')] + base + gmo[:4], capture_output=True, text=True)
             c = _sp.run([sys.executable, me, '--out', os.path.join(td, 'c'), '--arm', 'LC'] + base + gmo, capture_output=True, text=True)
@@ -2558,7 +2581,8 @@ def _selftest():
                 return False
             dk = open(os.path.join(td, 'a', 'in.mixer'), encoding='utf-8').read()
             meta = _js.load(open(os.path.join(td, 'a', 'deck_meta.json'), encoding='utf-8'))
-            nm = register_arm('GM', gm_arm({'AM_P': 0.3, 'AM_S': 0.5, 'SE': 1.0}, gamma_wall=0.0256, bo_se=0.21244))
+            nm = register_arm('GM', gm_arm({'AM_P': 0.3, 'AM_S': 0.3, 'SE': 1.0}, gamma_wall=gm_wall_from_ncm(0.3), bo_se=0.5,
+                                           rho_uncoated_ncm=0.3))
             try:
                 p20 = plan(100000, cgf=151.4, stiffen_se=20.0, dens_gen='lab20261014')
                 want = deck(p20, resolve_rpm(p20['R'], FR_ANCHOR, None, False), 2, arm=nm, seed=32452843, hold_bo_pairwise=True)
@@ -2566,19 +2590,19 @@ def _selftest():
                 ARMS.pop(nm, None)
             ar = meta.get('adhesion_rule') or {}
             return (dk == want and 'D2 결합 규칙' in dk and 'γ_W/γ_SE' in dk and ar.get('rule') == 'geomean'
-                    and ar.get('gamma') == {'AM_P': 0.3, 'AM_S': 0.5, 'SE': 1.0} and ar.get('gamma_wall') == 0.0256
-                    and ar.get('bo_se') == 0.21244 and b.returncode != 0 and c.returncode != 0
+                    and ar.get('gamma') == {'AM_P': 0.3, 'AM_S': 0.3, 'SE': 1.0} and ar.get('gamma_wall') == gm_wall_from_ncm(0.3)
+                    and ar.get('bo_se') == 0.5 and b.returncode != 0 and c.returncode != 0
                     and h.returncode == 0 and '--gm-gamma' in h.stdout)
-    chk('GM⑫ CLI --gm-gamma · --gm-gamma-wall · --gm-bo-se → in.mixer = deck(같은 팔) · 머리에 규칙 · γ 표 · deck_meta.json adhesion_rule · '
-        'Bo_SE 빠지면 거부 · --arm 과 함께면 거부 · --help rc 0', _ok(_gm12))
+    chk('GM⑫ CLI --gm-gamma · --gm-wall-ncm · --gm-bo-se (Bo 0.5) → in.mixer = deck(같은 팔) · 머리에 규칙 · γ 표 · deck_meta.json adhesion_rule '
+        '(γ · γ_W · Bo = 입력 그대로) · Bo_SE 빠지면 거부 · --arm 과 함께면 거부 · --help rc 0', _ok(_gm12))
     #  ★ GM⑬ — 벽 = 비코팅 NCM 에 묶기 (1저자 10-14 Q2 *"이렇게 진행해"* · docs/mixer_d2_wall_gamma_derivation_20261014.md §5) — 시험 먼저
     def _gm13():
         if not (gm_wall_from_ncm(0.3) == GM_WALL_HARE2026 * 0.3 and gm_wall_from_ncm(1.0) == GM_WALL_HARE2026):
             return False
         if not all(_raises(lambda v=v: gm_wall_from_ncm(v)) for v in (0.0, -1.0, float('nan'), float('inf'), True, '0.3', None)):
             return False
-        Mu = ced_matrix_geomean(_gm(0.3, 0.3, gw=gm_wall_from_ncm(0.3)), _dg)       # 비코팅 팔 (ρ 0.3 세계)
-        Mc = ced_matrix_geomean(_gm(1.0, 1.0, gw=gm_wall_from_ncm(0.3)), _dg)       # 같은 세계의 코팅 팔 (NCM 표면 = SE)
+        Mu = ced_matrix_geomean(_gm(0.3, 0.3), _dg)                                  # 비코팅 팔 (ρ 0.3 세계)
+        Mc = ced_matrix_geomean(_gm(1.0, 1.0, rho=0.3), _dg)                         # 같은 세계의 코팅 팔 (NCM 표면 = SE)
         iS, iW = _NM.index('SE'), _NM.index(WALL)
         same_wall = Mu[iS][iW] == Mc[iS][iW] and Mu[iS][iS] == Mc[iS][iS]
         with _tf.TemporaryDirectory() as td:
@@ -2703,7 +2727,7 @@ def _selftest():
         with _tf.TemporaryDirectory() as td:
             me = os.path.abspath(__file__)
             base = ['--n-total', '100000', '--cgf', '151.4', '--seed', '32452843', '--revolutions', '2']
-            gmo = ['--gm-gamma', 'AM_P=0.3,AM_S=0.5', '--gm-wall-ncm', '0.3', '--gm-bo-se', '0.21244']
+            gmo = ['--gm-gamma', 'AM_P=0.3,AM_S=0.3', '--gm-wall-ncm', '0.3', '--gm-bo-se', '0.21244']   # 10-21 Q2 안 (옛 AM_S 0.5)
             no = _sp.run([sys.executable, me, '--out', os.path.join(td, 'a')] + base + gmo, capture_output=True, text=True)
             yes = _sp.run([sys.executable, me, '--out', os.path.join(td, 'b')] + base + gmo + ['--dens-gen', _LAB],
                           capture_output=True, text=True)
@@ -2712,7 +2736,7 @@ def _selftest():
             no_made = os.path.exists(os.path.join(td, 'a', 'in.mixer'))
             meta = _js.load(open(os.path.join(td, 'b', 'deck_meta.json'), encoding='utf-8'))
             dk = open(os.path.join(td, 'b', 'in.mixer'), encoding='utf-8').read()
-        nm = register_arm('GMDGTEST', gm_arm({'AM_P': 0.3, 'AM_S': 0.5, 'SE': 1.0}, gamma_wall=gm_wall_from_ncm(0.3), bo_se=BO_BASE,
+        nm = register_arm('GMDGTEST', gm_arm({'AM_P': 0.3, 'AM_S': 0.3, 'SE': 1.0}, gamma_wall=gm_wall_from_ncm(0.3), bo_se=BO_BASE,
                                              rho_uncoated_ncm=0.3))
         try:
             p0 = plan(100000, cgf=151.4)
@@ -2744,13 +2768,306 @@ def _selftest():
             same_cd = _hdr_only(rd('c', 'in.mixer'), rd('d', 'in.mixer'))[0]
             no_c = not has('c') and 'dens_gen' not in rd('c', 'in.mixer')
         keys = ('dens_gen', 'dens_g_cm3', 'dens_carried_from_gen1')
-        vol = ('argv', 'deck_sha256', 'deck_bytes')
+        vol = ('argv', 'deck_sha256', 'deck_bytes', 'schema')
+        #  ★ 10-21 (MXD2-06) — 선택 키 (세대 · D2) 를 담은 메타는 schema mixer_deck_meta/2 (옛 판은 키를 더하고도 /1 그대로) · 키 없는 메타는 /1 그대로
         return (not any(k in ma for k in keys) and all(mb.get(k) is not None for k in keys) and mb['dens_gen'] == 'gen1'
                 and mb['dens_g_cm3'] == DENS and mb['dens_carried_from_gen1'] == []
+                and ma.get('schema') == 'mixer_deck_meta/1' and mb.get('schema') == md.get('schema') == 'mixer_deck_meta/2'
                 and {k: v for k, v in ma.items() if k not in vol} == {k: v for k, v in mb.items() if k not in vol + keys}
                 and same_ab and same_cd and no_c and md.get('dens_gen') == 'gen1')
-    chk('DG⑦ 기록은 **요청했을 때만** — 강성 덱 (--dens-gen 없음) deck_meta 에 세대 키 없음 · gen1 명시 = 같은 메타 + 세대 키 · 덱 = 머리 주석만 더함 · '
-        '기본 덱 (강성 아님) 은 deck_meta 를 안 쓰고 (파일 목록 그대로) gen1 명시면 deck_meta 를 쓴다', _ok(_dg7))
+    chk('DG⑦ 기록은 **요청했을 때만** — 강성 덱 (--dens-gen 없음) deck_meta 에 세대 키 없음 (schema /1) · gen1 명시 = 같은 메타 + 세대 키 (schema /2) · '
+        '덱 = 머리 주석만 더함 · 기본 덱 (강성 아님) 은 deck_meta 를 안 쓰고 (파일 목록 그대로) gen1 명시면 deck_meta 를 쓴다', _ok(_dg7))
+
+    #  ══ MX — D2 사전 공격 리뷰 반영 (2026-10-21 · 원장 MXD2-01 – 06 · 1저자 10-21 [믹서] Q1 "권고대로 해줘") ═══════════════════════════════
+    #  ★ 시험 먼저 — 고치기 전 생성기는 극단 입력 (γ 1e-200 · Bo 1e-310 · '0_3' · 이름 'GM\n') 을 받고 · 벽 = 비코팅 NCM (Q2) 규칙 (AM γ ∈ {1, ρ}) 을
+    #    강제하지 않고 · D2 덱의 벽 주석 · registered · schema 가 옛 값이다 ⇒ MX④ · ⑤ · ⑥a · ⑦ FAIL.  MX① – ③ · ⑥b · ⑥c 는 지금 코드가 **옳게** 내는 값을
+    #    고정한다 — 사전 리뷰 변이 M04 · M05 · M06 · M07 · M15 · M16 · M18 이 셀프테스트를 그대로 통과하던 구멍 (변이 판에서 FAIL 이어야 한다).
+    #    덱 수치는 **덱 텍스트에서** 다시 읽는다 (생성기 표 · 쌍 함수를 부르지 않는 독립 산술).
+    import re as _re_mx
+    _SEED2PH = {10487: 'AM_P', 11887: 'AM_S', 13901: 'SE'}          # 독립 사본 (TPL_SEED 를 부르지 않는다)
+
+    def _dk(text):
+        """★ 독립 되읽기 — 덱 텍스트 → 상별 type · 반지름 · 밀도 · E · ν · CED 행렬 · 중력."""
+        lines, out, i = text.split('\n'), dict(tpl={}, g=None), 0
+        while i < len(lines):
+            buf = [lines[i]]
+            while buf[-1].rstrip().endswith('&') and i + 1 < len(lines):
+                i += 1
+                buf.append(lines[i])
+            t = ' '.join(b.rstrip().rstrip('&') for b in buf).split('#', 1)[0].split()
+            i += 1
+            if not t:
+                continue
+            if t[0] == 'create_box':
+                out['n'] = int(t[1])
+            elif t[0] == 'fix' and len(t) > 5 and t[3] == 'property/global' and t[4] in ('youngsModulus', 'poissonsRatio'):
+                out['E' if t[4] == 'youngsModulus' else 'nu'] = [float(x) for x in t[6:]]
+            elif t[0] == 'fix' and len(t) > 6 and t[3] == 'property/global' and t[4] == 'cohesionEnergyDensity':
+                n_ = int(t[6])
+                v_ = [float(x) for x in t[7:]]
+                out['ced'] = [v_[k * n_:(k + 1) * n_] for k in range(n_)]
+            elif t[0] == 'fix' and len(t) > 4 and t[3] == 'particletemplate/sphere':
+                out['tpl'][_SEED2PH[int(t[4])]] = dict(at=int(t[t.index('atom_type') + 1]), rho=float(t[t.index('density') + 2]),
+                                                       r=float(t[t.index('radius') + 2]))
+            elif t[0] == 'fix' and len(t) > 4 and t[3] == 'gravity':
+                out['g'] = float(t[4])
+        return out
+
+    def _dkF(D, a, b):
+        """독립 산술 — 덱 값에서 쌍 (a, b) 의 (F₀, R*, E*, CED, δ₀/min r) · 벽 = 마지막 타입 · 벽 R* = r_입자."""
+        at = {k: v['at'] for k, v in D['tpl'].items()}
+        at[WALL] = D['n']
+        ia, ib = at[a] - 1, at[b] - 1
+        es = 1.0 / ((1.0 - D['nu'][ia] ** 2) / D['E'][ia] + (1.0 - D['nu'][ib] ** 2) / D['E'][ib])
+        pa, pb = (a, b) if a != WALL else (b, a)
+        ra = D['tpl'][pa]['r']
+        rs = ra if pb == WALL else ra * D['tpl'][pb]['r'] / (ra + D['tpl'][pb]['r'])
+        rmin = min(D['tpl'][x]['r'] for x in (a, b) if x != WALL)
+        c = D['ced'][ia][ib]
+        return (4.5 * math.pi ** 3 * rs ** 2 * c ** 3 / es ** 2, rs, es, c, (3.0 * math.pi * c * math.sqrt(rs) / (2.0 * es)) ** 2 / rmin)
+
+    def _dkBo(D):
+        s_ = D['tpl']['SE']
+        return _dkF(D, 'SE', 'SE')[0] / ((4.0 / 3.0) * math.pi * s_['r'] ** 3 * s_['rho'] * D['g'])
+
+    _MX_GM = ['--n-total', '100000', '--cgf', '151.4', '--seed', '32452843', '--revolutions', '2',
+              '--gm-gamma', 'AM_P=0.3,AM_S=0.3', '--gm-wall-ncm', '0.3', '--gm-bo-se', '0.5']
+
+    def _cli_deck(td, tag, args):
+        """생성기 CLI → (rc, 덱 텍스트 | None, deck_meta | None, 화면)."""
+        out_ = os.path.join(td, tag)
+        r_ = _sp.run([sys.executable, os.path.abspath(__file__), '--out', out_] + list(args), capture_output=True, text=True)
+        pd_, pm_ = os.path.join(out_, 'in.mixer'), os.path.join(out_, 'deck_meta.json')
+        return (r_.returncode, open(pd_, encoding='utf-8').read() if os.path.exists(pd_) else None,
+                _js.load(open(pm_, encoding='utf-8')) if os.path.exists(pm_) else None, r_.stdout + r_.stderr)
+
+    def _mx1():
+        got = {}
+        with _tf.TemporaryDirectory() as td:
+            for tag, extra in (('lab_soft', ['--dens-gen', _LAB]), ('lab_ref20', ['--dens-gen', _LAB, '--stiffen-se', '20', '--hold-bo-pairwise']),
+                               ('gen1_soft', ['--dens-gen', 'gen1'])):
+                rc_, t_, m_, _s = _cli_deck(td, tag, _MX_GM + extra)
+                if rc_ != 0 or t_ is None or m_ is None:
+                    print(f'        {tag}: rc {rc_}')
+                    return False
+                D = _dk(t_)
+                dec = _re_mx.search(r'SE–SE Bo_code (\S+) \(', t_)
+                got[tag] = (_dkBo(D), float(dec.group(1)) if dec else None, (m_.get('adhesion_rule') or {}).get('bo_se'), D['tpl']['SE']['rho'])
+        ok_ = (all(abs(b_ / 0.5 - 1.0) <= 3e-5 and d_ == 0.5 and mb_ == 0.5 for b_, d_, mb_, _r in got.values())
+               and got['lab_soft'][3] == got['lab_ref20'][3] == 1640.0 and got['gen1_soft'][3] == 2000.0)
+        if not ok_:
+            print('        Bo_SE 되읽기 / 선언 / 메타 / ρ_SE: ' + ' · '.join(f'{k} {v[0]:.7g} / {v[1]} / {v[2]} / {v[3]:g}' for k, v in got.items()))
+        return ok_
+    chk('MX① ★ 절대 수준 · 기록 고정 (MXD2-02 · 변이 M04 · M05 · M16) — lab soft · lab ×20 · gen1 D2 덱 (CLI · ρ 0.3 세계 · Bo 0.5) 의 SE–SE Bo_code 를 '
+        '**덱 텍스트에서** (SE 템플릿 r · 그 세대 ρ_SE · 중력) 되읽은 값 = 0.5 (상대 3e-5) = 덱 머리 선언 = deck_meta.adhesion_rule.bo_se', _ok(_mx1))
+
+    def _mx2():
+        pl = plan(100000, cgf=151.4, dens_gen=_LAB)
+        ok_ = abs(_dkBo(_dk(deck(pl, resolve_rpm(pl['R']), 2, arm='LC'))) / BO_BASE - 1.0) <= 3e-5
+        a_ = _gm(0.3, 1.0, bo=0.5)
+        for g_ in ('gen1', _LAB):
+            dn = DENS_GENERATIONS[g_]
+            M = ced_matrix_geomean(a_, _dg, dens=dn)
+            w_se = (4.0 / 3.0) * math.pi * (_dg['SE'] / 2.0) ** 3 * dn['SE'] * 1000.0 * 9.81
+            ok_ = ok_ and abs(_F(M, 'SE', 'SE') / (0.5 * w_se) - 1.0) < 1e-12
+        return ok_
+    chk('MX② ★ 절대 수준 = 덱 세대의 ρ_SE (MXD2-02 · 변이 M04 · M05) — 옛 팔 LC 의 lab 덱도 SE–SE Bo_code 0.21244 (덱 텍스트 되읽기 · 상대 3e-5) · '
+        'ced_matrix_geomean(dens = gen1 · lab) 의 F₀_SS = Bo_SE × 그 세대 SE 무게 (상대 1e-12)', _ok(_mx2))
+
+    def _mx3():
+        pl = plan(100000, cgf=151.4, dens_gen=_LAB)
+        rpm_ = resolve_rpm(pl['R'])
+
+        def _se_ov(bo, F=1.0):
+            """독립 산술 — SE–SE 정적 겹침 δ₀/r (F₀_SS = Bo × lab SE 무게 · SE 영률 1e7 × F · F₀ 보존)."""
+            r_ = pl['d']['SE'] / 2.0
+            rs_ = r_ / 2.0
+            es_ = 1.0 / (2.0 * (1.0 - 0.30 ** 2) / (1.0e7 * F))
+            c_ = (bo * (4.0 / 3.0) * math.pi * r_ ** 3 * 1640.0 * 9.81 * es_ ** 2 / (4.5 * math.pi ** 3 * rs_ ** 2)) ** (1.0 / 3.0)
+            return (3.0 * math.pi * c_ * math.sqrt(rs_) / (2.0 * es_)) ** 2 / r_
+        res = {}
+        for tag, bo, F in (('soft800', 800.0, 1.0), ('soft300', 300.0, 1.0), ('half300', 300.0, 0.5)):
+            nm = register_arm('GMMX3', gm_arm({'AM_P': 10.0, 'AM_S': 10.0, 'SE': 1.0}, gamma_wall=gm_wall_from_ncm(10.0), bo_se=bo,
+                                              rho_uncoated_ncm=10.0))
+            try:
+                p_ = pl if F == 1.0 else plan(100000, cgf=151.4, stiffen_se=F, dens_gen=_LAB)
+                res[tag] = (_exit_msg(lambda: deck(p_, rpm_, 2, arm=nm, hold_bo_pairwise=(F != 1.0))), _se_ov(bo, F))
+            finally:
+                ARMS.pop(nm, None)
+        ok_ = (res['soft800'][0] is not None and 'AM_P–SE' in res['soft800'][0] and res['soft800'][1] < OVL_CEILING
+               and res['soft300'][0] is None
+               and res['half300'][0] is not None and 'AM_P–SE' in res['half300'][0] and res['half300'][1] < OVL_CEILING)
+        if not ok_:
+            print('        ' + ' · '.join(f'{k}: {(v[0] or "수용")[-90:]} (SE–SE {v[1] * 100:.3f} %)' for k, v in res.items()))
+        return ok_
+    chk('MX③ ★ 혼합쌍 천장 (MXD2-03 · 변이 M06 · M07) — lab · ρ 10 세계 (비코팅 AM γ 10) · Bo 800 soft 는 AM_P–SE 로 거부 (SE–SE 0.853 % = 천장 안 · '
+        '독립 산술) · Bo 300 soft 는 수용 · 같은 팔을 SE ×0.5 (F < 1) 로 무르게 하면 F₀ 보존 행렬에서 AM_P–SE 로 거부 (SE–SE 0.704 % 는 안)', _ok(_mx3))
+
+    def _mx4():
+        made = []
+
+        def _reg(name):
+            def f_():
+                made.append(name)
+                return register_arm(name, _gm(1.0))
+            return f_
+        cases = [('γ 1e-200', lambda: gm_arm({'AM_P': 1e-200, 'AM_S': 1e-200, 'SE': 1.0}, gamma_wall=GM_WALL_HARE2026 * 1e-200, bo_se=BO_BASE,
+                                              rho_uncoated_ncm=1e-200), '범위'),
+                 ('γ 2e6', lambda: gm_arm({'AM_P': 2e6, 'AM_S': 2e6, 'SE': 1.0}, gamma_wall=GM_WALL_HARE2026 * 2e6, bo_se=BO_BASE,
+                                           rho_uncoated_ncm=2e6), '범위'),
+                 ('ρ 1e-7', lambda: gm_wall_from_ncm(1e-7), '범위'),
+                 ('Bo 1e-310', lambda: gm_arm(_c1, gamma_wall=GM_WALL_HARE2026, bo_se=1e-310), '범위'),
+                 ('Bo 2e4', lambda: gm_arm(_c1, gamma_wall=GM_WALL_HARE2026, bo_se=2.0e4), '범위'),
+                 ('이름 GM\\n', _reg('GM\n'), '영문자'), ('이름 GM\\r', _reg('GM\r'), '영문자'), ('이름 탭', _reg('GM\t'), '영문자'),
+                 ('이름 NUL', _reg('G\x00M'), '영문자'), ('이름 끝 공백', _reg('GM '), '영문자'),
+                 ('설명 줄바꿈', lambda: gm_arm(_c1, gamma_wall=GM_WALL_HARE2026, bo_se=BO_BASE, desc='한 줄\n둘째 줄'), '제어 문자'),
+                 ('설명 CR', lambda: gm_arm(_c1, gamma_wall=GM_WALL_HARE2026, bo_se=BO_BASE, desc='a\rb'), '제어 문자'),
+                 ('설명 DEL', lambda: gm_arm(_c1, gamma_wall=GM_WALL_HARE2026, bo_se=BO_BASE, desc='a\x7fb'), '제어 문자')]
+        try:
+            got = {nm_: _exit_msg(f_) for nm_, f_, _w in cases}
+        finally:
+            for n_ in made:
+                ARMS.pop(n_, None)
+        bad = [nm_ for nm_, _f, w_ in cases if got[nm_] is None or w_ not in got[nm_]]
+        if bad:
+            print(f'        어긋남 {bad}')
+        return not bad
+    chk('MX④ ★ 극단 입력 거부 (MXD2-04) — γ 1e-200 · 2e6 · ρ 1e-7 · Bo 1e-310 · 2e4 (지원 범위 γ · ρ · γ_W ∈ [1e-6, 1e6] · Bo ∈ [1e-6, 1e4] 밖) · '
+        '팔 이름 끝 줄바꿈 · CR · 탭 · NUL · 공백 (fullmatch) · 설명의 제어 문자 (덱 주석 줄을 깨뜨린다) — 사유 낱말 대조', _ok(_mx4))
+
+    def _mx4b():
+        base = ['--n-total', '100000', '--cgf', '151.4', '--seed', '32452843', '--revolutions', '2', '--dens-gen', _LAB]
+        bad = {'밑줄 γ': ['--gm-gamma', 'AM_P=0_3,AM_S=0.3', '--gm-wall-ncm', '0.3', '--gm-bo-se', '0.21244'],
+               '전각 γ': ['--gm-gamma', 'AM_P=０.３,AM_S=0.3', '--gm-wall-ncm', '0.3', '--gm-bo-se', '0.21244'],
+               'nan γ': ['--gm-gamma', 'AM_P=nan,AM_S=0.3', '--gm-wall-ncm', '0.3', '--gm-bo-se', '0.21244'],
+               '밑줄 Bo': ['--gm-gamma', 'AM_P=0.3,AM_S=0.3', '--gm-wall-ncm', '0.3', '--gm-bo-se', '0_5'],
+               '전각 ρ': ['--gm-gamma', 'AM_P=0.3,AM_S=0.3', '--gm-wall-ncm', '０.３', '--gm-bo-se', '0.21244'],
+               '밑줄 γ_W': ['--gm-gamma', 'AM_P=1,AM_S=1', '--gm-gamma-wall', '0.02_56', '--gm-bo-se', '0.21244']}
+        with _tf.TemporaryDirectory() as td:
+            res = {k: _cli_deck(td, f'b{i}', base + v) for i, (k, v) in enumerate(bad.items())}
+            good = _cli_deck(td, 'ok', base + ['--gm-gamma', ' AM_P = 0.3 , AM_S = 0.3 ', '--gm-wall-ncm', '0.3', '--gm-bo-se', '0.21244'])
+        miss = [k for k, r_ in res.items() if not (r_[0] != 0 and r_[1] is None and 'ASCII 십진' in r_[3])]
+        if miss:
+            print(f'        수용 · 사유 어긋남 {miss}')
+        return not miss and good[0] == 0 and (good[2] or {}).get('adhesion_rule', {}).get('gamma') == {'AM_P': 0.3, 'AM_S': 0.3, 'SE': 1.0}
+    chk('MX④b ★ CLI 수 토큰 = ASCII 십진수만 (MXD2-04) — --gm-gamma 의 0_3 (옛 판: 3.0) · 전각 ０.３ · nan · --gm-bo-se 0_5 · --gm-wall-ncm ０.３ · '
+        '--gm-gamma-wall 0.02_56 → rc ≠ 0 · 덱 안 씀 · 사유 "ASCII 십진" · 앞뒤 공백만은 허용', _ok(_mx4b))
+
+    def _mx5():
+        bad = {'AM 0.3 · ρ 3': lambda: gm_arm({'AM_P': 0.3, 'AM_S': 0.3, 'SE': 1.0}, gamma_wall=gm_wall_from_ncm(3.0), bo_se=BO_BASE,
+                                              rho_uncoated_ncm=3.0),
+               'AM_P 0.3 · AM_S 0.6 · ρ 0.3': lambda: gm_arm({'AM_P': 0.3, 'AM_S': 0.6, 'SE': 1.0}, gamma_wall=_gw3, bo_se=BO_BASE,
+                                                              rho_uncoated_ncm=0.3),
+               'AM 0.5 · ρ 0.3': lambda: gm_arm({'AM_P': 0.5, 'AM_S': 0.5, 'SE': 1.0}, gamma_wall=_gw3, bo_se=BO_BASE, rho_uncoated_ncm=0.3),
+               '명시 벽 · AM 0.3': lambda: gm_arm({'AM_P': 0.3, 'AM_S': 0.3, 'SE': 1.0}, gamma_wall=GM_WALL_HARE2026, bo_se=BO_BASE),
+               '명시 벽 · AM_P 1 · AM_S 0.3': lambda: gm_arm({'AM_P': 1.0, 'AM_S': 0.3, 'SE': 1.0}, gamma_wall=_gw3, bo_se=BO_BASE),
+               'ρ ↔ γ_W 어긋남': lambda: gm_arm(_c1, gamma_wall=GM_WALL_HARE2026, bo_se=BO_BASE, rho_uncoated_ncm=0.3)}
+        msgs = {k: _exit_msg(f_) for k, f_ in bad.items()}
+        miss = [k for k, m_ in msgs.items() if m_ is None or 'Q2' not in m_]
+        if miss:
+            print(f'        수용 · 사유 어긋남 {miss}')
+        return not miss
+    chk('MX⑤ ★ 벽 = 비코팅 NCM (1저자 10-14 Q2 · MXD2-05 · 변이 M13) 을 라이브러리가 강제 — --gm-wall-ncm ρ 이면 AM γ 마다 1 (코팅) 또는 ρ (비코팅) 만 · '
+        '명시 벽 (--gm-gamma-wall) 은 AM γ 전부 1 인 팔만 · γ_W ≠ 0.0256·ρ 거부 — 리뷰 F4 셋 (AM 0.3 · ρ 3 / 0.3 · 0.6 · ρ 0.3 / 0.5 · ρ 0.3) 포함 · 사유 "Q2"',
+        _ok(_mx5))
+
+    def _mx5b():
+        arms = {'uu': _gm(0.3, 0.3), 'cc': _gm(1.0, 1.0, rho=0.3), 'cu': _gm(1.0, 0.3), 'one': _gm(1.0),
+                'exp': gm_arm(_c1, gamma_wall=GM_WALL_HARE2026 * 0.3, bo_se=BO_BASE)}
+        base = ['--n-total', '100000', '--cgf', '151.4', '--seed', '32452843', '--revolutions', '2', '--dens-gen', _LAB, '--gm-bo-se', '0.21244']
+        cli = {'AM 0.3 · ρ 3': ['--gm-gamma', 'AM_P=0.3,AM_S=0.3', '--gm-wall-ncm', '3'],
+               'AM_P 0.3 · AM_S 0.6 · ρ 0.3': ['--gm-gamma', 'AM_P=0.3,AM_S=0.6', '--gm-wall-ncm', '0.3'],
+               'AM 0.5 · ρ 0.3': ['--gm-gamma', 'AM_P=0.5,AM_S=0.5', '--gm-wall-ncm', '0.3'],
+               '명시 벽 · AM 0.3/0.5': ['--gm-gamma', 'AM_P=0.3,AM_S=0.5', '--gm-gamma-wall', '0.0256']}
+        with _tf.TemporaryDirectory() as td:
+            rr = {k: _cli_deck(td, f'q{i}', base + v) for i, (k, v) in enumerate(cli.items())}
+        h = _sp.run([sys.executable, os.path.abspath(__file__), '--help'], capture_output=True, text=True)
+        hs = ' '.join(h.stdout.split())
+        src = open(os.path.abspath(__file__), encoding='utf-8').read().split('\n')
+        open_q = [l_ for l_ in src if l_.lstrip().startswith('#') and '어느 상에 묶을지' in l_ and '✅' not in l_]
+        cli_miss = [k for k, r_ in rr.items() if not (r_[0] != 0 and r_[1] is None and 'Q2' in r_[3])]
+        if cli_miss or open_q:
+            print(f'        CLI 수용 · 사유 어긋남 {cli_miss} · 열린 질문처럼 읽히는 주석 {len(open_q)} 줄')
+        return (arms['uu']['surface'] == {'AM_P': 'uncoated', 'AM_S': 'uncoated'} and arms['cc']['surface'] == {'AM_P': 'coated', 'AM_S': 'coated'}
+                and arms['cu']['surface'] == {'AM_P': 'coated', 'AM_S': 'uncoated'} and arms['one']['rho_uncoated_ncm'] == 1.0
+                and all(arms[k]['wall_rule'] == GM_WALL_RULE_NCM for k in ('uu', 'cc', 'cu', 'one'))
+                and arms['exp']['wall_rule'] == GM_WALL_RULE_EXPLICIT and abs(arms['exp']['rho_world'] - 0.3) < 1e-12
+                and arms['exp']['surface'] == {'AM_P': 'coated', 'AM_S': 'coated'}
+                and not cli_miss and h.returncode == 0 and '0.0256·ρ 여부' not in hs and 'Q2' in hs and not open_q)
+    chk('MX⑤b 팔 사전 · CLI · 도움말이 Q2 를 따른다 (MXD2-05) — 표면 상태 (coated · uncoated) · 벽 규칙 (비코팅 NCM · 명시 = 코팅 팔만 · 함의 ρ = γ_W/0.0256) 기록 · '
+        'CLI 리뷰 F4 셋 + 명시 벽 AM 0.3/0.5 → rc ≠ 0 · 덱 안 씀 · 도움말 · 주석이 열린 질문으로 읽히지 않는다', _ok(_mx5b))
+
+    def _mx6a():
+        with _tf.TemporaryDirectory() as td:
+            rc_s, t_s, m_s, _x = _cli_deck(td, 'soft', _MX_GM + ['--dens-gen', _LAB])
+            rc_r, t_r, m_r, _y = _cli_deck(td, 'ref', _MX_GM + ['--dens-gen', _LAB, '--stiffen-se', '20', '--hold-bo-pairwise'])
+            rc_e, t_e, m_e, _z = _cli_deck(td, 'exp', ['--n-total', '100000', '--cgf', '151.4', '--seed', '32452843', '--revolutions', '2',
+                                                       '--dens-gen', _LAB, '--gm-gamma', 'AM_P=1,AM_S=1', '--gm-gamma-wall', '0.0256',
+                                                       '--gm-bo-se', '0.21244'])
+        if not (rc_s == rc_r == rc_e == 0 and t_s and t_r and t_e and m_s and m_r and m_e):
+            return False
+        p0 = plan(100000, cgf=151.4)
+        lc = deck(p0, resolve_rpm(p0['R']), 2, arm='LC')
+
+        def wall_line(t):
+            return next(l_ for l_ in t.split('\n') if l_.startswith('# ★ 메시 `type'))
+        ar_s, ar_e = m_s.get('adhesion_rule') or {}, m_e.get('adhesion_rule') or {}
+        return ('기하평균' in wall_line(t_s) and '입자값 ÷' not in wall_line(t_s) and '입자값 ÷ 1.842' in wall_line(lc)
+                and m_s.get('schema') == m_r.get('schema') == m_e.get('schema') == 'mixer_deck_meta/2'
+                and 'D2 결합 규칙' in m_s.get('registered', '') and '등록 전' in m_s.get('registered', '')
+                and '강성' not in m_s.get('registered', '') and '강성' in m_r.get('registered', '')
+                and ar_s.get('layered') is True and ar_s.get('surface') == {'AM_P': 'uncoated', 'AM_S': 'uncoated'}
+                and ar_s.get('wall_rule') == 'hare2026_x_rho_uncoated_ncm' and ar_s.get('rho_uncoated_ncm') == 0.3
+                and ar_e.get('wall_rule') == 'explicit_coated' and abs(ar_e.get('rho_world', 0.0) - 1.0) < 1e-12
+                and '함의 ρ' in t_e and 'NCM 표면' in t_s)
+    chk('MX⑥a ★ D2 덱의 기록 (MXD2-06) — 벽 주석 = D2 기하평균 (옛 "점착 = 입자값 ÷ 1.842" 는 옛 팔에만) · deck_meta schema mixer_deck_meta/2 · '
+        'registered = D2 결합 규칙 (등록 전) · 경화 덱이면 강성 경로를 더함 · adhesion_rule 에 층상 · 표면 상태 · 벽 규칙 (비코팅 NCM ρ · 명시 = 함의 ρ)',
+        _ok(_mx6a))
+
+    def _mx6b():
+        with _tf.TemporaryDirectory() as td:
+            rc_s, t_s, _m, _x = _cli_deck(td, 'soft', _MX_GM + ['--dens-gen', _LAB])
+        if rc_s != 0 or not t_s:
+            return False
+        D = _dk(t_s)
+        rows = {}
+        for l_ in t_s.split('\n'):
+            tk = l_[1:].split() if l_.startswith('#') else []
+            if len(tk) == 7 and '–' in tk[0] and tk[6].endswith('%') and tk[0].split('–')[0] in ('AM_P', 'AM_S', 'SE', 'WALL'):
+                rows[tuple(tk[0].split('–'))] = (float(tk[3]), float(tk[5]), float(tk[6][:-1]))
+        fss = _dkF(D, 'SE', 'SE')[0]
+        bad = [k for k, (cc_, rr_, ov_) in rows.items()
+               if not (abs(cc_ / _dkF(D, k[0], k[1])[3] - 1.0) < 1e-12 and abs(rr_ / (_dkF(D, k[0], k[1])[0] / fss) - 1.0) <= 5e-5
+                       and abs(ov_ - 100.0 * _dkF(D, k[0], k[1])[4]) <= 2e-4)]
+        if bad or len(rows) != 9:
+            print(f'        머리 표 행 {len(rows)} · 어긋남 {bad}')
+        return len(rows) == 9 and not bad
+    chk('MX⑥b ★ D2 덱 머리 표 = 덱 값 (MXD2-06 · 변이 M15) — 9 쌍 행의 CED 칸 = 덱 CED · F0/F0_SS 칸 = 덱 값으로 다시 낸 F₀ 비 (상대 5e-5) · '
+        'δ0/min r 칸 = 다시 낸 겹침 (±2e-4 %p)', _ok(_mx6b))
+
+    def _mx6c():
+        with _tf.TemporaryDirectory() as td:
+            rc_s, t_s, m_s, _x = _cli_deck(td, 'soft', _MX_GM + ['--dens-gen', _LAB])
+        return (rc_s == 0 and bool(t_s) and t_s.count('insert/pack') == 2 and 'fix insA ' in t_s and 'fix insB ' in t_s
+                and gm_arm(_c1, gamma_wall=GM_WALL_HARE2026, bo_se=BO_BASE)['layered'] is True)
+    chk('MX⑥c ★ D2 팔 = 층상 삽입 (D11 (가) · MXD2-06 · 변이 M18) — CLI D2 덱은 insert/pack 둘 (insA AM → insB SE) · gm_arm 기본 layered True',
+        _ok(_mx6c))
+
+    def _mx7():
+        g_ = globals()
+        saved = g_.get('GM_GAMMA_RANGE')
+        try:
+            g_['GM_GAMMA_RANGE'] = (1e-300, 1e300)                            # 범위 검사를 일부러 넓혀 사후 단언만 남긴다 (방어 깊이 시험)
+            a_ = gm_arm({'AM_P': 1e-200, 'AM_S': 1e-200, 'SE': 1.0}, gamma_wall=GM_WALL_HARE2026 * 1e-200, bo_se=BO_BASE, rho_uncoated_ncm=1e-200)
+            msg = _exit_msg(lambda: ced_matrix_geomean(a_, _dg))
+        finally:
+            if saved is None:
+                g_.pop('GM_GAMMA_RANGE', None)
+            else:
+                g_['GM_GAMMA_RANGE'] = saved
+        return msg is not None and '정규' in msg
+    chk('MX⑦ 사후 단언 (MXD2-04 · 방어 깊이) — 지원 범위를 넓혀 γ 1e-200 을 넣으면 γ 곱 언더플로로 CED 0 이 생긴다 → 행렬 단계가 "벽–벽 밖 CED = 유한 · '
+        '정규 양수" 로 거부 (옛 판: AM_P–AM_P 0 · 나머지 양수 덱을 썼다)', _ok(_mx7))
     print(f'\nmake_mixer_deck selftest: {ok}/{ok+len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0

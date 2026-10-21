@@ -1055,5 +1055,38 @@ PY
 )
 chk 'DU⑧ 단일 출처 — run_all.sh · resume_all.sh 의 강성 축 셀 정규식 팔 목록 = mixer_deck_diff.STIFF_ARMS 이고 dev-u 팔 (LU212 · LU637) 을 담는다 (한쪽만 바뀌면 여기서 걸린다)' \
     "[ \"\$rxu\" = OK ]"
+
+echo "── D2 결합 규칙 셀 (2026-10-21 · 원장 MXD2-01 — 셀 이름 GM<P><S>_rho…_bo…_<세대>_<수준>[_dthalf]_r<N>_s<seed> · 코호트 · 정책 v5 전) — D2 ──"
+#  ★ 반례를 먼저 옮겼다 — 옛 런처: run_all.sh · resume_all.sh 의 가드가 강성 축 셀만 알아 D2 셀 (GMuu_… · GMcc_…) 을 **로컬로 띄우고 · 잇는다**
+#    (DB⑦ · DU⑦ 와 같은 구멍 — 새 셀 이름마다 다시 생긴다).  D2 셀은 등록 (코호트 · 정책 v5) 전이라 어느 런처도 띄우지 않는다.
+D23="$T/d23"
+D2A=GMuu_rho0p3_bo0p5_lab20261014_ref_r2_s32452843; D2B=GMcc_rho0p3_bo0p5_lab20261014_ref_r2_s32452843
+for n in $D2A $D2B; do mkdir -p "$D23/$n"; cp "$R/proto.in" "$D23/$n/in.mixer"; done
+rd2=$(OUT="$D23" LMP="$FAKE" MAXJ=4 bash "$HERE/run_all.sh" 2>&1)
+mkres $D2A $((CK + THERMO)) 0
+rsd2=$(OUT="$R" DRY=1 ONLY=$D2A bash "$HERE/resume_all.sh" 2>&1)
+chk 'D2① ★ run_all.sh 는 D2 셀 (GMuu · GMcc) 을 로컬로 띄우지 않는다 · resume_all.sh 는 잇지 않는다 (옛 판: 가드가 D2 이름을 몰라 둘 다 했다)' \
+    "! ls '$D23'/*/pid >/dev/null 2>&1 && [ \$(grep -c 'D2 결합 규칙 셀 건너뜀' <<<\"\$rd2\") -eq 2 ] && ! [ -f '$R/$D2A/in.resume' ] && grep -q '재개 없음.*건너뜀: $D2A' <<<\"\$rsd2\""
+rx2=$(python3 - "$HERE" "$ROOT" <<'PY' 2>&1
+import os, re, sys
+here, root = sys.argv[1:]
+sys.path.insert(0, os.path.join(root, 'scripts'))
+import mixer_deck_diff as dd
+bad = []
+for f in ('run_all.sh', 'resume_all.sh'):
+    m = re.search(r'\^\(npprobe\[1-9\]\[0-9\]\*_\)\?GM\(([a-z|]+)\)_', open(os.path.join(here, f), encoding='utf-8').read())
+    st = tuple(sorted(m.group(1).split('|'))) if m else None
+    if st != tuple(dd.D2_STATES):
+        bad.append(f'{f}:{st}')
+for n in ('GMuu_rho0p3_bo0p5_lab20261014_ref_r2_s32452843', 'GMcu_rho0p3_bo0p5_gen1_soft_dthalf_r8_s15485863'):
+    try:
+        dd.parse_cell(n)
+    except ValueError as e:
+        bad.append(f'{n}: {e}')
+print('OK' if not bad else 'NG ' + ' '.join(bad))
+PY
+)
+chk 'D2② 단일 출처 — run_all.sh · resume_all.sh 의 D2 셀 가드 표면 목록 = mixer_deck_diff.D2_STATES (cc · cu · uc · uu) · 가드가 막는 이름을 셀 문법이 읽는다' \
+    "[ \"\$rx2\" = OK ]"
 echo "test_launcher: $pass PASS / $fail FAIL"
 [ "$fail" -eq 0 ]

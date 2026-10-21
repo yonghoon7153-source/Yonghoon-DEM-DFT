@@ -933,6 +933,163 @@ def _selftest():
         _ok(lambda: cu.returncode == 0 and repu['verdict'] == 'PASS' and repu['tables'][0]['kind'] == 'U'
             and abs(repu['tables'][0]['u_ratio'] / 10.0 - 1.0) <= TOL['u_spread_rel'] and 'U_rule' in repu['registered']
             and '## 표 U' in mdu and '| SE–SE |' in mdu and '공통 배율' in mdu))
+
+    # ── MX (2026-10-21 · 원장 MXD2-01 · 02 · D2 사전 공격 리뷰) — 밀도 세대 · D2 결합 규칙 되읽기 · 표 GM (같은 ρ 세계 코팅 ↔ 비코팅) ──────────────
+    #  ★ 반례를 먼저 옮겼다 — 옛 되읽기: 등록 밀도가 gen1 (4800 · 2000) 뿐이라 lab 덱 (4850 · 1640) 을 타입 사전에서 거부 · D2 규칙 (쌍마다 기하평균 ·
+    #    절대 수준 Bo · Q2 벽 · 머리 표 · 기록) 을 덱 텍스트에서 볼 경로 없음 · 표 GM 없음 · deck_meta 결합 없음 ⇒ MX① – ⑦ FAIL.
+    LAB = 'lab20261014'
+    PL = {(g_, F_): gen.plan(100000, cgf=151.4, stiffen_se=F_, dens_gen=g_) for g_ in (LAB, 'gen1') for F_ in (1.0, 20.0)}
+
+    def mkgm(gp, gs, rho, bo, F, g_=LAB, wall=None):
+        """D2 덱 + deck_meta (생성기 라이브러리 = CLI 와 같은 호출 · 팔 이름 GMRB) — 고정물 전용."""
+        p_ = PL[(g_, F)]
+        rpm_ = gen.resolve_rpm(p_['R'])
+        if wall is None:
+            a_ = gen.gm_arm({'AM_P': gp, 'AM_S': gs, 'SE': 1.0}, gamma_wall=gen.gm_wall_from_ncm(rho), bo_se=bo, rho_uncoated_ncm=rho)
+        else:
+            a_ = gen.gm_arm({'AM_P': gp, 'AM_S': gs, 'SE': 1.0}, gamma_wall=wall, bo_se=bo)
+        nm_ = gen.register_arm('GMRB', a_)
+        try:
+            t_ = gen.deck(p_, rpm_, 2, seed=32452843, arm=nm_, hold_bo_pairwise=(F != 1.0))
+            m_ = gen.deck_meta(p_, rpm_, 2, 32452843, nm_, t_, argv=['(selftest)'], hold_bo_pairwise=(F != 1.0))
+        finally:
+            gen.ARMS.pop(nm_, None)
+        return t_, m_
+
+    def rdm(tm, label, meta=True):
+        return read_deck(tm[0], label, meta=tm[1] if meta else None)
+    GX = {}
+
+    def _gx(key, *a, **kw):
+        if key not in GX:
+            GX[key] = mkgm(*a, **kw)
+        return GX[key]
+
+    def _mx1():
+        lc = {F_: gen.deck(PL[(LAB, F_)], gen.resolve_rpm(PL[(LAB, F_)]['R']), 2, seed=32452843, arm='LC', hold_bo_pairwise=(F_ != 1.0))
+              for F_ in (1.0, 20.0)}
+        t1 = compare('E', read_deck(lc[1.0], 'LC_lab_soft'), read_deck(lc[20.0], 'LC_lab_ref'))
+        t2 = compare('E', rdm(_gx('uu_soft', 0.3, 0.3, 0.3, 0.5, 1.0), 'GMuu_lab_soft'), rdm(_gx('uu_ref', 0.3, 0.3, 0.3, 0.5, 20.0), 'GMuu_lab_ref'))
+        Dl = read_deck(lc[1.0], 'x')
+        ok_ = (t1['verdict'] == 'PASS' and t2['verdict'] == 'PASS' and Dl['dens_gen'] == LAB and not Dl['type_problems']
+               and read_deck(D['LC_soft'], 'y')['dens_gen'] == 'gen1'
+               and any('D2 결합 규칙' in c_['check'] and c_['ok'] for c_ in t2['checks']))
+        if not ok_:
+            print(f"        {t1['failures'][:2]} · {t2['failures'][:2]}")
+        return ok_
+    chk('MX① ★ lab 세대 덱 (MXD2-01) — 옛 팔 LC lab soft → ×20 · D2 덱 (ρ 0.3 세계 · Bo 0.5) soft → ×20 의 표 E = PASS · 세대 = 템플릿 밀도로 판정 '
+        '(lab 4850 · 1640 / gen1 4800 · 2000) · D2 덱은 표마다 D2 규칙 검산이 붙는다', _ok(_mx1))
+
+    def _mx2():
+        uu = rdm(_gx('uu_soft', 0.3, 0.3, 0.3, 0.5, 1.0), 'GMuu')
+        r_ = d2_check(uu)
+        rows = {x['pair']: x for x in r_['rows']}
+        return (r_['is_d2'] and not r_['problems'] and len(rows) == 10 and all(x['ok'] for x in r_['rows'])
+                and abs(r_['bo_read'] / 0.5 - 1.0) <= TOL['gm_bo_rel'] and r_['decl']['gamma'] == {'AM_P': 0.3, 'AM_S': 0.3, 'SE': 1.0}
+                and abs(r_['decl']['rho'] - 0.3) < 1e-15 and r_['decl']['wall_rule'] == D2_WALL_NCM
+                and abs(rows['AM_P–SE']['F0_ratio'] / (math.sqrt(0.3) * rows['AM_P–SE']['R_star'] / rows['SE–SE']['R_star']) - 1.0) <= TOL['gm_law_rel']
+                and not d2_check(read_deck(D['LC_soft'], 'LC'))['is_d2'])
+    chk('MX② ★ D2 덱 되읽기 (덱 텍스트만) — 쌍 10 행 (벽 포함) 의 F₀_ij/F₀_SS = √(γ_iγ_j)·R*_ij/R*_SS (선언 γ · 허용 gm_law_rel) · Bo_SE = F₀_SS / '
+        'SE 무게 (그 덱의 r · ρ · 중력) = 선언 0.5 · 선언 = γ · ρ · 벽 규칙 · 옛 팔 덱은 D2 아님', _ok(_mx2))
+
+    def _mx3():
+        t_, m_ = _gx('uu_soft', 0.3, 0.3, 0.3, 0.5, 1.0)
+        th, mh = _gx('cc_soft_bo600', 1.0, 1.0, 1.0, 600.0, 1.0)                                   # SE–SE 0.70 % (천장 가까이)
+        tmp = {}                                                                                    # 이름 → (덱, 메타 | None, 사유 낱말)
+        tmp['Bo 선언'] = (re.sub(r'SE–SE Bo_code 0\.5 \(', 'SE–SE Bo_code 0.4 (', t_, count=1), None, 'Bo')    # 선언 ≠ 값 (M04 꼴)
+        tmp['머리 표 비'] = (re.sub(r'^(#\s+AM_P–SE(?:\s+\S+){4}\s+)(\S+)', lambda mm: mm.group(1) + '9.99999', t_, count=1, flags=re.M),
+                          None, '머리 표')                                                          # M15 꼴
+        c13 = get_ced(t_, 1, 3)
+        tmp['법칙 (산술평균)'] = (set_ced(t_, 1, 3, f'{c13 * ((0.5 * (0.3 + 1.0)) / math.sqrt(0.3)) ** (1.0 / 3.0):g}'), None, 'AM_P–SE')
+        tmp['Q2 (선언 γ 0.5 ≠ ρ)'] = (re.sub(r'γ/γ_SE: AM_P 0\.3 ', 'γ/γ_SE: AM_P 0.5 ', t_, count=1), None, 'Q2')
+        tmp['세대 표기'] = (re.sub(r'dens_gen = lab20261014', 'dens_gen = gen1', t_, count=1), None, '세대')
+        tmp['천장'] = (set_ced(th, 3, 3, f'{get_ced(th, 3, 3) * 1.3:g}'), 'h', '천장')
+        tmp['메타 Bo (M16 꼴)'] = (t_, dict(m_, adhesion_rule=dict(m_['adhesion_rule'], bo_se=0.21244)), '기록')
+        tmp['메타 세대'] = (t_, dict(m_, dens_gen='gen1'), '기록')
+        tmp['메타 sha'] = (t_, dict(m_, deck_sha256='0' * 64), '기록')
+        tmp['메타 γ_W'] = (t_, dict(m_, adhesion_rule=dict(m_['adhesion_rule'], gamma_wall=0.0256)), '기록')
+        tmp['메타 schema'] = (t_, dict(m_, schema='mixer_deck_meta/1'), '기록')
+        got = {}
+        for k_, (tt, mm, w_) in tmp.items():
+            base_m = mh if mm == 'h' else m_
+            mm2 = (dict(base_m, deck_sha256=hashlib.sha256(tt.encode('utf-8')).hexdigest()) if mm in (None, 'h') else mm)
+            got[k_] = (d2_check(read_deck(tt, k_, meta=mm2))['problems'], w_)
+        clean = d2_check(read_deck(t_, 'ok', meta=m_))['problems'] + d2_check(read_deck(th, 'ok2', meta=mh))['problems']
+        miss = [k_ for k_, (v_, w_) in got.items() if not any(w_ in p_ for p_ in v_)]
+        if miss or clean:
+            print(f'        못 잡음 · 사유 어긋남 {miss} · 정상 덱 문제 {clean[:2]}')
+        return not miss and not clean
+    chk('MX③ ★ 반례 → D2 검산이 잡는다 (MXD2-02) — 머리 Bo 선언 ≠ 덱 값 (M04 꼴) · 머리 표 F0/F0_SS 칸 변조 (M15 꼴) · AM_P–SE 를 산술평균 값으로 · '
+        '선언 γ 를 Q2 밖으로 · 세대 표기 ≠ 템플릿 밀도 · SE–SE 천장 넘김 · 메타 Bo 상수 (M16 꼴) · 메타 세대 · 메타 sha · 메타 γ_W · 메타 schema /1 — 정상 덱은 문제 0',
+        _ok(_mx3))
+
+    def _mx4():
+        uu, cc, cu = (rdm(_gx(k_, gp, gs, 0.3, 0.5, 20.0), k_) for k_, gp, gs in (('uu_ref', 0.3, 0.3), ('cc_ref', 1.0, 1.0), ('cu_ref', 1.0, 0.3)))
+        T1, T2 = compare('GM', uu, cc), compare('GM', uu, cu)
+        ch1 = sorted(r_['pair'] for r_ in T1['rows'] if r_.get('expect_change'))
+        ch2 = sorted(r_['pair'] for r_ in T2['rows'] if r_.get('expect_change'))
+        m3, m6 = (1.0 / 0.3) ** (1.0 / 3.0), (1.0 / 0.3) ** (1.0 / 6.0)
+        r1 = {r_['pair']: r_ for r_ in T1['rows']}
+        ok_ = (T1['verdict'] == 'PASS' and T2['verdict'] == 'PASS'
+               and ch1 == sorted(['AM_P–AM_P', 'AM_P–AM_S', 'AM_S–AM_S', 'AM_P–SE', 'AM_S–SE', 'AM_P–WALL', 'AM_S–WALL'])
+               and ch2 == sorted(['AM_P–AM_P', 'AM_P–AM_S', 'AM_P–SE', 'AM_P–WALL'])
+               and abs(r1['AM_P–AM_P']['expect'] / m3 - 1.0) < 1e-12 and abs(r1['AM_S–SE']['expect'] / m6 - 1.0) < 1e-12
+               and r1['SE–SE']['expect'] == 1.0 and r1['SE–WALL']['expect'] == 1.0)
+        if not ok_:
+            print(f"        {T1['failures'][:3]} · {T2['failures'][:3]} · {ch1} · {ch2}")
+        return ok_
+    chk('MX④ ★ 표 GM (같은 ρ 세계 비코팅 ↔ 코팅 · MXD2-01) — ×20 lab ρ 0.3 · Bo 0.5: uu → cc 바뀌는 CED = 규칙이 정하는 일곱 (AM–AM 셋 × (1/ρ)^(1/3) · '
+        'AM–SE 둘 · AM–벽 둘 × (1/ρ)^(1/6)) · SE–SE · SE–벽 · 벽–벽 그대로 · uu → cu (AM_P 만 코팅) = 넷 → PASS', _ok(_mx4))
+
+    def _mx5():
+        uu = _gx('uu_ref', 0.3, 0.3, 0.3, 0.5, 20.0)
+        cc = _gx('cc_ref', 1.0, 1.0, 0.3, 0.5, 20.0)
+        cc5 = _gx('cc_ref_rho05', 1.0, 1.0, 0.5, 0.5, 20.0)
+        ccb = _gx('cc_ref_bo04', 1.0, 1.0, 0.3, 0.4, 20.0)
+        ccs = _gx('cc_soft', 1.0, 1.0, 0.3, 0.5, 1.0)
+        c11 = get_ced(cc[0], 1, 1)
+        extra = (set_ced(cc[0], 1, 1, f'{c11 * 1.01:g}'), None)
+        cases = {'다른 ρ 세계': (uu, cc5, '같은 ρ 세계'), '다른 Bo': (uu, ccb, '같은 ρ 세계'), '다른 강성': (uu, ccs, '명령'),
+                 '같은 덱': (uu, uu, '표면'), '규칙 밖 원소': (uu, extra, 'AM_P–AM_P'),
+                 '옛 팔 덱': ((D['LC_ref'], None), (D['LH_ref'], None), 'D2 결합 규칙 덱')}
+        got = {}
+        for k_, (a_, b_, w_) in cases.items():
+            mb = b_[1] if b_[1] is not None else None
+            T = compare('GM', read_deck(a_[0], 'A', meta=a_[1]), read_deck(b_[0], 'B', meta=mb))
+            got[k_] = T['verdict'] == 'FAIL' and (any(w_ in f_ for f_ in T['failures']))
+        miss = [k_ for k_, v_ in got.items() if not v_]
+        if miss:
+            print(f'        못 잡음 · 사유 어긋남 {miss}')
+        return not miss
+    chk('MX⑤ ★ 반례 표 GM → FAIL (사유를 짚는다) — 다른 ρ 세계 (γ_W 다름) · 다른 Bo · 다른 강성 · 같은 덱 (표면 안 바뀜) · 규칙이 안 정하는 원소 '
+        '(AM_P–AM_P ×1.01) · 옛 팔 LC → LH (D2 덱 아님)', _ok(_mx5))
+
+    def _mx6():
+        uu, cc = _gx('uu_ref', 0.3, 0.3, 0.3, 0.5, 20.0), _gx('cc_ref', 1.0, 1.0, 0.3, 0.5, 20.0)
+        with tempfile.TemporaryDirectory() as td:
+            paths = {}
+            for k_, (tt, mm) in (('uu', uu), ('cc', cc)):
+                os.makedirs(os.path.join(td, k_))
+                paths[k_] = os.path.join(td, k_, 'in.mixer')
+                open(paths[k_], 'w', encoding='utf-8').write(tt)
+                json.dump(mm, open(os.path.join(td, k_, 'deck_meta.json'), 'w', encoding='utf-8'), ensure_ascii=False)
+            js = os.path.join(td, 'g.json')
+            me = os.path.abspath(__file__)
+            g1 = subprocess.run([sys.executable, me, '--table', 'GM', paths['uu'], paths['cc'], '--json', js], capture_output=True, text=True)
+            rep = json.load(open(js, encoding='utf-8')) if os.path.exists(js) else {}
+            json.dump(dict(cc[1], adhesion_rule=dict(cc[1]['adhesion_rule'], bo_se=0.21244)),
+                      open(os.path.join(td, 'cc', 'deck_meta.json'), 'w', encoding='utf-8'), ensure_ascii=False)
+            g2 = subprocess.run([sys.executable, me, '--table', 'GM', paths['uu'], paths['cc']], capture_output=True, text=True)
+        return (g1.returncode == 0 and rep.get('verdict') == 'PASS' and rep['tables'][0]['kind'] == 'GM'
+                and rep['decks'][paths['cc']].get('dens_gen') == LAB and rep['decks'][paths['cc']].get('d2', {}).get('wall_rule') == D2_WALL_NCM
+                and g2.returncode == 1 and 'D2 기록' in g2.stdout)
+    chk('MX⑥ CLI --table GM — 덱 옆 deck_meta.json 을 읽어 결합까지 본다: 정상 rc 0 (JSON 표 GM · 덱 세대 · D2 선언) · 메타 Bo 를 상수 0.21244 로 바꾸면 '
+        'rc 1 ("D2 기록")', _ok(_mx6))
+
+    def _mx7():
+        want = {g_: {'AM': gen.DENS_GENERATIONS[g_]['AM'] * 1000.0, 'SE': gen.DENS_GENERATIONS[g_]['SE'] * 1000.0} for g_ in gen.DENS_GENERATIONS}
+        return REG_DENSITY_GEN == want and GM_WALL == gen.GM_WALL_HARE2026 and REG_G == 9.81
+    chk('MX⑦ 등록 사본 = 생성기 — 세대별 밀도 (AM · SE × 1000 kg/m³) · 벽 γ_W/γ = 0.0256 · 중력 9.81 (사본이 어긋나면 여기서 드러난다)', _ok(_mx7))
     print(f'\nmixer_deck_readback selftest: {ok}/{ok + len(fail)} PASS' + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
 

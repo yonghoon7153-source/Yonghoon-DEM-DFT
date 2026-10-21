@@ -1719,6 +1719,137 @@ def _selftest():
         _ok(lambda: sorted(G['COHORTS']) == ['confirm', 'dev-bo', 'dev-e0', 'dev-rot', 'dev-u']
             and G['COHORTS']['dev-u'] == U_CELLS == tuple(G['DEV_U']) and G['cohort_pairs']('dev-u') == [('U',) + U_CELLS]
             and G['cohort_pairs']('dev-bo') == [('B',) + tuple(G['DEV_BO'])]))
+
+    # ══ MX (2026-10-21 · 원장 MXD2-01 · 02 · D2 사전 공격 리뷰) — 허용목록 GM (같은 ρ 세계 비코팅 ↔ 코팅) · D2 덱 선언 ↔ 값 · D2 셀 이름
+    #    ★ 반례를 먼저 옮겼다 — 옛 판: --allow GM 없음 (A · B · U · E · EB 전부 rc 1 = D2 대비를 인증할 목록 없음) · D2 덱의 머리 선언 (Bo) 과 값이 어긋나도
+    #      --allow E PASS (변이 M04 · 리뷰 I) · 셀 이름 문법이 D2 를 모른다 ⇒ MX① – ⑥ FAIL.
+    LABG = 'lab20261014'
+    D2N = {'uu': 'GMuu_rho0p3_bo0p5_lab20261014_ref_r2_s32452843', 'cc': 'GMcc_rho0p3_bo0p5_lab20261014_ref_r2_s32452843',
+           'cu': 'GMcu_rho0p3_bo0p5_lab20261014_ref_r2_s32452843', 'uu_soft': 'GMuu_rho0p3_bo0p5_lab20261014_soft_r2_s32452843',
+           'cc5': 'GMcc_rho0p5_bo0p5_lab20261014_ref_r2_s32452843', 'ccb': 'GMcc_rho0p3_bo0p4_lab20261014_ref_r2_s32452843',
+           'uu_gen1': 'GMuu_rho0p3_bo0p5_gen1_ref_r2_s32452843'}
+    _d2t = {}
+
+    def _d2(key):
+        if key not in _d2t:
+            _d2t[key] = G['cell_expected_deck'](D2N[key])
+        return _d2t[key]
+
+    def _t_mx1():
+        r1, r2 = diff_decks(_d2('uu'), _d2('cc'), 'GM'), diff_decks(_d2('uu'), _d2('cu'), 'GM')
+        want1 = sorted([('AM_P', 'AM_P'), ('AM_P', 'AM_S'), ('AM_S', 'AM_S'), ('AM_P', 'SE'), ('AM_S', 'SE'), ('AM_P', 'WALL'), ('AM_S', 'WALL')])
+        want2 = sorted([('AM_P', 'AM_P'), ('AM_P', 'AM_S'), ('AM_P', 'SE'), ('AM_P', 'WALL')])
+        ok_ = (r1['verdict'] == 'PASS' and sorted(r1['changed']) == want1 and r2['verdict'] == 'PASS' and sorted(r2['changed']) == want2
+               and not r1.get('d2_rule') and not r1['outside'] and not r1['missing'])
+        if not ok_:
+            print(f"        {r1['verdict']} {r1.get('d2_rule', [])[:2]} {r1.get('outside')} · {r2['verdict']} {sorted(r2['changed'])}")
+        return ok_
+    chk('MX① ★ --allow GM (같은 ρ 세계 비코팅 → 코팅 · MXD2-01) — ×20 lab ρ 0.3 · Bo 0.5: uu → cc = 바뀐 CED 일곱 (규칙이 정하는 것 정확히) · uu → cu (AM_P 만 코팅) '
+        '= 넷 · CED 밖 명령 토큰 동일 · 두 덱 D2 선언 ↔ 값 일치 → PASS', _ok(_t_mx1))
+
+    def _t_mx2():
+        c11 = _ced(_d2('cc'), 0, 0)
+        cases = {'다른 ρ 세계': (_d2('uu'), _d2('cc5'), '같은 ρ 세계'), '다른 Bo': (_d2('uu'), _d2('ccb'), '같은 ρ 세계'),
+                 '같은 덱': (_d2('uu'), _d2('uu'), '표면'), '규칙 밖 원소': (_d2('uu'), _mutrow(_d2('cc'), 0, 0, lambda v: f'{c11 * 1.01:.6g}'), 'AM_P–AM_P'),
+                 '다른 강성': (_d2('uu_soft'), _d2('cc'), 'CED 밖'), '다른 세대': (_d2('uu_gen1'), _d2('cc'), 'CED 밖'),
+                 '옛 팔': (lc, lh, 'D2 결합 규칙 덱')}
+        res = {k_: diff_decks(a_, b_, 'GM') for k_, (a_, b_, _w) in cases.items()}
+
+        def says(r_, w_):
+            return any(w_ in str(x_) for k_ in ('non_ced_diffs', 'd2_rule', 'outside', 'missing', 'wrong_direction', 'target_mismatch')
+                       for x_ in (r_.get(k_) or []))
+        miss = [k_ for k_, (_a, _b, w_) in cases.items() if not (res[k_]['verdict'] == 'FAIL' and says(res[k_], w_))]
+        if miss:
+            print(f'        못 잡음 · 사유 어긋남 {miss}')
+        return not miss
+    chk('MX② ★ 반례 --allow GM → FAIL (사유를 짚는다) — 다른 ρ 세계 (γ_W) · 다른 Bo · 같은 덱 (표면 안 바뀜) · 규칙 밖 원소 (AM_P–AM_P ×1.01) · 다른 강성 · '
+        '다른 밀도 세대 · 옛 팔 LC → LH (D2 덱 아님)', _ok(_t_mx2))
+
+    def _t_mx3():
+        soft, ref = _d2('uu_soft'), _d2('uu')
+        ok0 = diff_decks(soft, ref, 'E')
+        k_ = (2.00 / 1.64) ** (1.0 / 3.0)                                    # 변이 M04 꼴: F₀_SS 를 gen1 ρ_SE 로 → 모든 F₀ ×2.00/1.64 → CED ×k
+        sc = lambda t_: re.sub(r'(?m)^(fix mC .*\n)((?:    .*\n){4})',          # noqa: E731
+                               lambda mm: mm.group(1) + ''.join('    ' + ' '.join(f'{float(x) * k_:g}' if float(x) else x
+                                                                             for x in ln.rstrip().rstrip('&').split())
+                                                                + (' &' if ln.rstrip().endswith('&') else '') + '\n'
+                                                                for ln in mm.group(2).split('\n')[:4]), t_, count=1)
+        bad = diff_decks(sc(soft), sc(ref), 'E')
+        lc_ok = diff_decks(DE['LC_soft'], DE['LC_ref'], 'E')
+        ok_ = (ok0['verdict'] == 'PASS' and bad['verdict'] == 'FAIL' and any('Bo' in x_ for x_ in bad.get('d2_rule') or [])
+               and not any(bad.get(k2) for k2 in ('e_rule', 'non_ced_diffs')) and lc_ok['verdict'] == 'PASS' and not lc_ok.get('d2_rule'))
+        if not ok_:
+            print(f"        {ok0['verdict']} {ok0.get('d2_rule', [])[:1]} · {bad['verdict']} {bad.get('d2_rule', [])[:1]} {bad.get('e_rule', [])[:1]}")
+        return ok_
+    chk('MX③ ★ --allow E 는 D2 덱의 선언 ↔ 값을 본다 (MXD2-02) — lab D2 soft → ×20 PASS · 두 덱 CED 를 같은 배수 (2.00/1.64)^(1/3) 로 키운 짝 (변이 M04 꼴: '
+        'E 규칙 · 명령은 다 맞는다) → FAIL (Bo 선언 ≠ 값) · 옛 팔 LC soft → ×14 는 그대로 PASS (D2 검산 없음)', _ok(_t_mx3))
+
+    def _t_mx4():
+        pc_, pr_ = G['parse_cell'], G['parse_run']
+        c_ = pc_(D2N['uu'])
+        good = (c_['arm'] == 'GM' and c_['dens_gen'] == LABG and c_['level'] == 'ref' and c_['stiffen_se'] == 20.0 and c_['revolutions'] == 2
+                and c_['seed'] == 32452843 and c_['d2']['gamma'] == {'AM_P': 0.3, 'AM_S': 0.3, 'SE': 1.0} and c_['d2']['rho'] == 0.3
+                and c_['d2']['bo_se'] == 0.5 and pc_(D2N['cu'])['d2']['gamma'] == {'AM_P': 1.0, 'AM_S': 0.3, 'SE': 1.0}
+                and pc_('GMcc_rho1_bo637p32_gen1_soft_dthalf_r8_s15485863')['dt_factor'] == 0.5
+                and pr_(D2N['cc'])['probe_np'] is None and 'dens_gen' not in pc_('LC_ref_r2_s32452843'))
+        bad = ('GMuu_rho1_bo0p5_lab20261014_ref_r2_s32452843',      # ρ 1 세계 = 코팅 · 비코팅 같음 → cc 만
+               'GMuu_rho0p30_bo0p5_lab20261014_ref_r2_s32452843',   # 끝 0
+               'GMuu_rho00p3_bo0p5_lab20261014_ref_r2_s32452843',   # 앞 0
+               'GMuu_rho0p3_bo0p5_ref_r2_s32452843',                # 세대 없음
+               'GMuu_rho0p3_bo0p5_lab2026_ref_r2_s32452843',        # 모르는 세대
+               'GMxx_rho0p3_bo0p5_lab20261014_ref_r2_s32452843',    # 모르는 표면
+               'GMuu_rho0p3_bo0p5_lab20261014_ref_s32452843',       # 회전 팔인데 _r 없음
+               'GMuu_rho0p3_bo0p5_lab20261014_hard_r2_s32452843',   # 모르는 강성
+               'GMuu_rho0.3_bo0p5_lab20261014_ref_r2_s32452843',    # 점 표기
+               'GMuu_rho0p3_bo0_lab20261014_ref_r2_s32452843',      # Bo 0
+               'GMuu_rho0p3_bo0p5_lab20261014_ref_r2_s032452843',   # seed 앞 0
+               'GM_rho0p3_bo0p5_lab20261014_ref_r2_s32452843')
+
+        def rej(x_):
+            try:
+                pc_(x_)
+            except ValueError:
+                return True
+            return False
+        bads = [x_ for x_ in bad if not rej(x_)]
+        if bads:
+            print(f'        받아들인 잘못된 이름 {bads}')
+        return good and not bads and tuple(G['D2_STATES']) == ('cc', 'cu', 'uc', 'uu')
+    chk('MX④ ★ D2 셀 이름 문법 (MXD2-01 · 파이프라인 S1 "셀 이름") `GM<P><S>_rho<ρ>_bo<Bo>_<세대>_<soft|ref|ref2>[_dthalf]_r<N>_s<seed>` — P · S = c (코팅 γ 1) · '
+        'u (비코팅 γ ρ) · 정규 십진 (p = 소수점 · 앞 0 · 끝 0 · 점 금지) · 세대 필수 · ρ 1 = cc 만 · 옛 셀 파싱 그대로 (세대 키 없음)', _ok(_t_mx4))
+
+    def _t_mx5():
+        me_g = os.path.join(_HERE, 'make_mixer_deck.py')
+        with _tf.TemporaryDirectory() as td_:
+            out = {}
+            for k_ in ('uu', 'cc'):
+                d_ = os.path.join(td_, 'runs', D2N[k_])
+                p_ = subprocess.run([sys.executable, me_g, '--out', d_] + G['d2_cli_args'](D2N[k_]), capture_output=True, text=True)
+                out[k_] = (p_.returncode, open(os.path.join(d_, 'in.mixer'), encoding='utf-8').read() if p_.returncode == 0 else None)
+            byte_ok = all(rc_ == 0 and t_ == _d2(k_) for k_, (rc_, t_) in out.items())
+            pr_ok = all(not G['cell_deck_problems'](os.path.join(td_, 'runs', D2N[k_]), D2N[k_])[0] for k_ in ('uu', 'cc'))
+            tag_u, tag_c = D2N['uu'][:D2N['uu'].rindex('_s')], D2N['cc'][:D2N['cc'].rindex('_s')]
+            c_ok = _cli(['--runs', os.path.join(td_, 'runs'), '--ref-arm', tag_u, '--arm', tag_c, '--allow', 'GM', '--expect-seeds', '32452843'])
+            mp_ = os.path.join(td_, 'runs', D2N['cc'], 'deck_meta.json')
+            mj_ = json.load(open(mp_, encoding='utf-8'))
+            json.dump(dict(mj_, adhesion_rule=dict(mj_['adhesion_rule'], bo_se=0.21244)), open(mp_, 'w', encoding='utf-8'), ensure_ascii=False)
+            meta_bad = G['cell_deck_problems'](os.path.join(td_, 'runs', D2N['cc']), D2N['cc'])[0]
+            dk_ = os.path.join(td_, 'runs', D2N['cc'], 'in.mixer')
+            open(dk_, 'w', encoding='utf-8').write(_mutrow(out['cc'][1], 0, 0, lambda v: f'{v * 1.01:.6g}'))
+            c_bad = _cli(['--runs', os.path.join(td_, 'runs'), '--ref-arm', tag_u, '--arm', tag_c, '--allow', 'GM', '--expect-seeds', '32452843'])
+        ok_ = byte_ok and pr_ok and c_ok[0] == 0 and '1/1 PASS' in c_ok[1] and meta_bad and c_bad[0] == 1
+        if not ok_:
+            print(f'        바이트 {byte_ok} · 셀 계약 {pr_ok} · --runs {c_ok[0]} · 메타 변조 {meta_bad[:1]} · 덱 변조 rc {c_bad[0]}')
+        return ok_
+    chk('MX⑤ ★ D2 셀 이름 → 생성기 CLI 인자 (d2_cli_args) → in.mixer = cell_expected_deck (바이트 동일) · 셀 덱 계약 (deck_meta schema /2 · 세대 · '
+        'adhesion_rule = 이름) · --runs <uu 꼬리표> → <cc 꼬리표> --allow GM 1/1 PASS · 메타 Bo 변조 · 덱 변조 → 거부', _ok(_t_mx5))
+
+    def _t_mx6():
+        rb = G['_rb']
+        return (G['D2_ARM'] == 'GM' and set(G['_gen'].DENS_GENERATIONS) <= set(G['D2_GENS']) and rb.read_deck(_d2('uu'), 'x')['dens_gen'] == LABG
+                and 'GM' in G['ALLOW_KINDS'])
+    chk('MX⑥ D2 단일 출처 — 팔 이름 GM (생성기 CLI) · 세대 목록 = 생성기 DENS_GENERATIONS · 덱 되읽기 = scripts/mixer_deck_readback.py (한 벌) · '
+        '--allow 선택지에 GM', _ok(_t_mx6))
     print(f'\nmixer_deck_diff selftest: {ok}/{ok + len(fail)} PASS' + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
 

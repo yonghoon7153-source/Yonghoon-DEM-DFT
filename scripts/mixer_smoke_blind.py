@@ -1254,6 +1254,30 @@ def selftest():
     chk('⑨b ★ SELF-70: 래퍼가 검사기에 상별 허용폭을 넘긴다 — 이름에서 재생성한 덱의 삽입 묶음 × 발사 봉인 NP (LC 층상 NP 20 → AM ±20 · SE 정확 · '
         'E0 균일 → ±40) · 봉인 없음 · 로컬 = NP 1 (±2) · NP 형식 깨짐 = 허용폭 없음 (정확 일치 · fail-closed)', okx(_t9b))
 
+    def _t9c():
+        """★ 10-21 (원장 MXD2-01) — 반례 먼저: 계획 상별 수를 세대 없는 plan() (gen1) 으로 내 lab 덱 (AM_P 143 · AM_S 699 · SE 99,158) 을 gen1 수
+        (176 · 859 · 98,965) 로 대조했고 D2 셀 이름도 못 읽었다.  계약: 계획 수 = 셀의 밀도 세대 · 기대 덱 = 그 셀 이름에서 재생성한 D2 덱."""
+        lab_cell = 'GMuu_rho0p3_bo0p5_lab20261014_ref_r2_s32452843'
+        lab_n, gen1_n = {1: 143, 2: 699, 3: 99158}, {1: 176, 2: 859, 3: 98965}
+        with tempfile.TemporaryDirectory(prefix='sb_d2_') as tmp_:
+            td_ = Path(tmp_)
+            tgt, _o = _cells(td_)
+            d2d = td_ / lab_cell
+            shutil.copytree(tgt['ref'][0], d2d)
+            G['cv'].check_window = _fake_cw('CONTRACT_MET', pp=0.004)
+            try:
+                calls.clear()
+                contact_eval(str(d2d), lab_cell)
+                k_ = calls[-1]
+            finally:
+                G['cv'].check_window = real_cw
+        return (G['_expected_counts'](dd.parse_cell(lab_cell)) == lab_n
+                and G['_expected_counts'](dict(stiffen_se=20.0, dens_gen='lab20261014')) == lab_n
+                and G['_expected_counts'](dd.parse_cell('LC_ref_r8_s15485863')) == gen1_n
+                and k_['expect_counts'] == lab_n and k_['expect_text'] == dd.cell_expected_deck(lab_cell))
+    chk('⑨c ★ 계획 상별 수 = 셀의 밀도 세대 (MXD2-01) — lab D2 셀 GMuu_…_lab20261014_ref_r2 → AM_P 143 · AM_S 699 · SE 99,158 (검사기 인자 · 기대 덱 = '
+        '이름에서 재생성한 D2 덱) · 옛 셀 = gen1 176 · 859 · 98,965', okx(_t9c))
+
     def _t10():
         with tempfile.TemporaryDirectory(prefix='sb_e_') as tmp_:
             td_ = Path(tmp_)
