@@ -1937,3 +1937,43 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
   (`correction_implementation_approved` false) §74 와 같이 **정정 범위안 → 사용자 채택 → 초안** 순서로 간다.
 - **다음:** 정정 범위안 v3 `docs/REIL_C4E_E1_REVISION_SCOPE_v3_20261021.md` → 사용자 범위 채택 → 비활성 초안 v3 · 승인 요청 v3 · 사전 검토 발송문 v3. 그
   전에는 초안 작성 · 실행 0.
+
+## §77 C4-E · E1 정정 범위 v3 채택 (사용자 결정) — 비활성 초안 다섯 · 승인 요청 v3 (E1-0 한정) · 사전 검토 발송문 v3 (2026-10-21 KST · 정적 검사만 · 실행 0 · 덧붙임 — 위 §0–§76 은 그대로)
+
+- **사용자 (2026-10-21):** "권고대로" — 범위안 v3 (`4c4620b7`) 의 권장 셋을 그대로 채택: (1) 범위대로 비활성 초안 · 승인 요청 · 사전 검토 발송문까지 쓰고 멈춤 ·
+  (2) V2-03 = A (정리 공통 절대 기한 15 s · 예산 변경 없음) · (3) FUTURE-01 = E1-1–3 요청으로 (그 승인의 첫 단계 E1-0b 에서 시험). 이 채택은 launcher ·
+  실행기 복사 · 시험 · driver · 탐침 · 읽기 경로 · fetch · run 승인이 아니다.
+- **고정한 초안 다섯 (docs · `.py.txt`):**
+
+  | 초안 | sha256 | bytes | 복사할 곳 (E1-0 승인 뒤) |
+  |---|---|---:|---|
+  | `REIL_C4E1_LAUNCHER_DRAFT_v3_20261021.py.txt` — launcher v3 | `124a154dfbd662aaa49fcf21327bf48a08e190da5bd9d02ae28cf86072b71503` | 49,873 | `scripts/reil_c4e1_launch.py` (GREEN 직전) |
+  | `REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v3_20261021.py.txt` — RED 골격 (함수 34) | `b77c6aa87cb7468063c258665a6b85765eab9f04e2607eb856444362b7374030` | 13,501 | 같은 곳 (RED 둘) |
+  | `REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v3_20261021.py.txt` — launcher 대조 26 | `f00ba0fb9e333fe77cae275507203e8ced086d6e80d6c08a7aec5d98860ce002` | 46,977 | `tests/test_reil_c4e1_launch.py` |
+  | `REIL_C4E1_RUNNER_CONTROLS_DRAFT_20261021.py.txt` — 외곽 실행기 대조 8 (새) | `555263464f2eddad1df1b1f9d201c947e990d026bb29bc4c95a74256c2a0ddfc` | 25,328 | `tests/test_reil_c4e1_runner.py` |
+  | `REIL_C4E1_STEP_RUNNER_DRAFT_v3_20261021.py.txt` — E1-0 외곽 실행기 v3 (봉인 표 포함) | `7454a0de4e221945958e1a99ab4a3f44a5eb7808f2b8c5997f7a82d5f097fbf3` | 29,995 | `<E0>/00_step_runner.py` |
+
+- **정정 대응 (요청서 v3 §2):** V2-01 — 실행기의 /proc 관측은 `proc_table` 하나 · 반복마다 관측 1 회 · 관측 · 회수 · kill 오류를 단계 하나의 ledger 에 쌓고
+  하나라도 있으면 unknown · V2-02 — 실행기 `base_env` (launcher 규칙) 를 준비의 첫 동작으로 · 실행기 `git` · launcher `git_out` 은 env 필수 · 대조 둘의
+  fixture git 은 독립 정제 + 설정 격리 · V2-03 — 정리 공통 절대 기한 15 s (7 + 3 + 5 · 0.1 s 하한 없음) · 시간 경계 넷 · V2-04 — launcher · 실행기의 준비를
+  기록 단계 `prepare` 안으로 · 의도된 거부와 분리 · 끝 관측 실패도 오류 · meta 불가 반환 4 · V2-05 — 실행기가 고정 목록 14 를 자식 전 · 끝에 해시해 봉인 표
+  `EXPECT[단계]` 와 대조 (다르면 자식 0 · 반환 3 / runner_ok false) · S2 — launcher `wait_s` / `cleanup_s` · S3 — fixture git 설정 격리 · S4 — 시작 Git 기록
+  실패면 자식 0.
+- **새 총수:** launcher 대조 26 (v2 24 + l25 · l26) · 외곽 실행기 대조 8 · RED-L 26 실패 (모두 NotImplementedError) · RED-R 8 실패 (v2 실행기 바이트 — r1
+  AssertionError 로 V2-01 반례 재현 + r2–r8 AttributeError) · GREEN 61 (E0 21 + N1 6 + 26 + 8 · 건너뜀 0).
+- **읽기 전용 확인 (작성 중 · 값은 읽지 않음):** `git config --list --show-origin --name-only` 의 키 이름 — 시스템 `filter.lfs.*` · 사용자 `user.*` · `gpg.*` ·
+  `commit.gpgsign` · `user.signingkey` · `http.proxyauthmethod` · `core.checkstat` · `core.trustctime` · `push.negotiate` · 환경 변수로 주어진 command-line
+  설정 `url.<…>.insteadof` 둘 · `credential.interactive` (`GIT_CONFIG_*` 이므로 launcher · 실행기 정제 env 에서 빠진다). 서명 키 이름이 있어 v2 fixture 의 빈
+  commit 은 그 설정에 따라 서명 프로그램을 부를 수 있었다 → S3 의 근거. `core.fsmonitor` · `core.hooksPath` · `includeIf` 키 없음 · 저장소에 `filter=lfs`
+  속성 없음 · git 2.43.0 · pytest helper 9.1.1 (dist-info 이름) · 고정 대상 열하나의 HEAD 바이트 sha256 (§1-2 · 봉인 표와 일치).
+- **정적 검사 (실행 0):** AST 파싱 다섯 · 이름 검사 (`__file__` 외 미해결 0) · 골격의 import · 상수 61 문 = 고정 구현 (AST 동일) · 함수 34 의 이름 · 서명 동일 ·
+  골격 본문 모두 `NotImplementedError("E1-0 RED 골격 …")` · launcher 대조의 `L.*` 이 모두 고정 구현에 정의됨 · 실행기 대조의 `R.*` 이 모두 v3 에 정의됨
+  (r2–r8 첫 줄의 이름은 v2 에 없음) · 봉인 표 = 초안 넷 · HEAD 의 기존 열하나 (불일치 0) · 비밀 검사 0 건. 골격은 `make_skeleton_v3.py`, 봉인 표는
+  `fill_runner_v3.py` (정적 치환) 로 만들었다.
+- **작성 중 고친 것:** 실행기 대조가 env 없이 수집되면 처음엔 수집 오류였다 — `tests/` 전체를 돌리는 다른 작업을 막지 않도록 "값이 없으면 파일 전체 건너뜀 ·
+  두 형태 밖이면 수집 오류" 로 바꾸고 E1-0 기준에 건너뜀 0 을 넣었다. 그에 따라 실행기 대조 sha `dfe4f25b…` → `55526346…`, 실행기 sha `73b30d8c…` →
+  `7454a0de…` (봉인 표 다시 채움). 앞의 두 sha 는 커밋 전에 버렸다.
+- **문서:** 승인 요청 v3 `docs/REIL_C4E_E1_APPROVAL_REQUEST_v3_20261021.md` (`3d623399…` · 28,167 B · E1-0 한정 · 단계 셋 · 원천 해시 · E1-1–3 계획에
+  FUTURE-01 선행 · 밝힐 것 17) · 사전 검토 발송문 v3 `docs/REIL_C4E_E1_PREREVIEW_SEND_v3_20261021.md` (`3e844993…` · 질문 5).
+- **다음:** 사전 검토 발송 (사용자 결정) → 수용 → 사용자의 E1-0 한정 승인 → E1-0 → 결과 검토 → E1-1–3 승인 요청 (FUTURE-01 정정 · E1-0b 포함). 이 기록은
+  어느 단계의 실행 승인도 아니다.
