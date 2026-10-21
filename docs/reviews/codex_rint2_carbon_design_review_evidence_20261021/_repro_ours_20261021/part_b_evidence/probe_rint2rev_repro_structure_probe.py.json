@@ -1,0 +1,33 @@
+{
+  "command": [
+    "/usr/local/bin/python3",
+    "-X",
+    "utf8",
+    "-B",
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/run_review.py",
+    "probe",
+    "structure_probe.py",
+    "--child"
+  ],
+  "rc": 0,
+  "seconds": 17.139796249997744,
+  "source": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/source",
+  "test_source": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/source",
+  "lf_test_writer_adapter": false,
+  "log": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/evidence/probe_rint2rev_repro_structure_probe.py.log",
+  "log_sha256": "65b77a8449a63f454a7c1695929c05a3ad4b1de4c15f965f8fe67312a2ab952c",
+  "tail": [
+    "crlf_baseline PASS [] ACCEPT ",
+    "integer_valid_+100 PASS [] ACCEPT ",
+    "integer_valid_000100 PASS [] ACCEPT ",
+    "integer_valid_-0 PASS [] ACCEPT ",
+    "d19_reject_137 REJECT ['timestep_mismatch'] ValueError ",
+    "d19_pass_138 PASS [] ACCEPT ",
+    "d19_reject_139 REJECT ['geom_reuse_mismatch'] ValueError ",
+    "unconsumed_optional_atom_column PASS [] ACCEPT ",
+    "unconsumed_optional_contact_column PASS [] ACCEPT ",
+    "real14 PASS {'n_scaffold': 457, 'n_dump_am': 457, 'n_matched': 457, 'n_unmatched': 0, 'n_ambiguous': 0, 'max_pos_ratio': 0.9900990081545088, 'max_radius_ratio': 0.0, 'scaffold_half_box': 5e-07, 'scaffold_dec_exp': [-6], 'dump_sigfig': 6, 'delta_bound_um': 0.002915255888325765, 'delta_bound_rule': 'µm · √Σ(2·(h_s + max h_d))² + 2·(h_s + max h_r) — scaffold δ 의 참값 대비 상한 (원장 delta_bound_um 후보)', 'derived_nonfinite': [], 'n_dem_am_am': 660, 'n_dem_am_am_seam': 70, 'n_delta_scaffold_mismatch': 0, 'max_delta_scaffold_ratio': 0.3937349384448685, 'n_area_tested': 660, 'n_area_beyond': 0, 'n_area_uncertified': 0, 'n_area_negative': 0, 'area_all_certified': True, 'n_area_negative_not_am_am': 0, 'area_sigfig_assumed': 6, 'area_scope': '조인이 인증하는 면적 = AM–AM 행 (두 원자 모두 scaffold 와 1:1) 뿐 — AM–SE · SE–SE 행의 c_cpl[22] 는 인증하지 않는다 (음수 수만 기록 · n_area_negative_not_am_am)', 'n_scaffold_certain_pairs': 563, 'n_dem_contact_missing': 0, 'rule': 'g1 1:1 (축마다 |Δ| ≤ h_s + h_d · 주기 축 최소 영상 · 형 · 반경) · g2 δ_dump ↔ δ_scaffold · g3 c_cpl[22] ↔ lens_geometry 포괄 (lhs_descriptor_harvest._contact_area_rows) · 음수 · 미인증 = 거부 (전 행 인증) · g4 scaffold 확실한 접촉 ⊆ 덤프'}",
+    "case15 PASS {'n_scaffold': 104, 'n_dump_am': 104, 'n_matched': 104, 'n_unmatched': 0, 'n_ambiguous': 0, 'max_pos_ratio': 0.9504950478150144, 'max_radius_ratio': 0.0, 'scaffold_half_box': 5e-07, 'scaffold_dec_exp': [-6], 'dump_sigfig': 6, 'delta_bound_um': 0.002915255888325765, 'delta_bound_rule': 'µm · √Σ(2·(h_s + max h_d))² + 2·(h_s + max h_r) — scaffold δ 의 참값 대비 상한 (원장 delta_bound_um 후보)', 'derived_nonfinite': [], 'n_dem_am_am': 119, 'n_dem_am_am_seam': 10, 'n_delta_scaffold_mismatch': 0, 'max_delta_scaffold_ratio': 0.33948760522688354, 'n_area_tested': 119, 'n_area_beyond': 0, 'n_area_uncertified': 0, 'n_area_negative': 0, 'area_all_certified': True, 'n_area_negative_not_am_am': 2, 'area_sigfig_assumed': 6, 'area_scope': '조인이 인증하는 면적 = AM–AM 행 (두 원자 모두 scaffold 와 1:1) 뿐 — AM–SE · SE–SE 행의 c_cpl[22] 는 인증하지 않는다 (음수 수만 기록 · n_area_negative_not_am_am)', 'n_scaffold_certain_pairs': 106, 'n_dem_contact_missing': 0, 'rule': 'g1 1:1 (축마다 |Δ| ≤ h_s + h_d · 주기 축 최소 영상 · 형 · 반경) · g2 δ_dump ↔ δ_scaffold · g3 c_cpl[22] ↔ lens_geometry 포괄 (lhs_descriptor_harvest._contact_area_rows) · 음수 · 미인증 = 거부 (전 행 인증) · g4 scaffold 확실한 접촉 ⊆ 덤프'}",
+    "{\"n_cases\": 144, \"unexpected_pass\": [], \"unexpected_reject\": []}"
+  ]
+}

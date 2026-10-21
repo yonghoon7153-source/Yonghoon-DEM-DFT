@@ -1,0 +1,2410 @@
+{
+ "label": "structure_fixture_manifest",
+ "codex": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_rint2rev/x/part_b/evidence/structure_fixture_manifest.json",
+ "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/evidence/structure_fixture_manifest.json",
+ "stats": {
+  "exact": 393,
+  "rel_le_1e-12": 0,
+  "path": 396,
+  "diff": 3,
+  "missing_in_ours": 0,
+  "extra_in_ours": 0,
+  "type_diff": 0
+ },
+ "rows": [
+  {
+   "key": "$.baseline[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\baseline_sc.csv",
+   "ours": "tmp/structure_fixtures/baseline_sc.csv"
+  },
+  {
+   "key": "$.baseline[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\baseline_atom.dump",
+   "ours": "tmp/structure_fixtures/baseline_atom.dump"
+  },
+  {
+   "key": "$.baseline[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\baseline_contact.dump",
+   "ours": "tmp/structure_fixtures/baseline_contact.dump"
+  },
+  {
+   "key": "$.zero_contacts[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\zero_contacts_sc.csv",
+   "ours": "tmp/structure_fixtures/zero_contacts_sc.csv"
+  },
+  {
+   "key": "$.zero_contacts[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\zero_contacts_atom.dump",
+   "ours": "tmp/structure_fixtures/zero_contacts_atom.dump"
+  },
+  {
+   "key": "$.zero_contacts[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\zero_contacts_contact.dump",
+   "ours": "tmp/structure_fixtures/zero_contacts_contact.dump"
+  },
+  {
+   "key": "$.atom_duplicate_id[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_duplicate_id_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_duplicate_id_sc.csv"
+  },
+  {
+   "key": "$.atom_duplicate_id[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_duplicate_id_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_duplicate_id_atom.dump"
+  },
+  {
+   "key": "$.atom_duplicate_id[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_duplicate_id_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_duplicate_id_contact.dump"
+  },
+  {
+   "key": "$.atom_duplicate_type[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_duplicate_type_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_duplicate_type_sc.csv"
+  },
+  {
+   "key": "$.atom_duplicate_type[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_duplicate_type_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_duplicate_type_atom.dump"
+  },
+  {
+   "key": "$.atom_duplicate_type[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_duplicate_type_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_duplicate_type_contact.dump"
+  },
+  {
+   "key": "$.atom_duplicate_x[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_duplicate_x_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_duplicate_x_sc.csv"
+  },
+  {
+   "key": "$.atom_duplicate_x[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_duplicate_x_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_duplicate_x_atom.dump"
+  },
+  {
+   "key": "$.atom_duplicate_x[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_duplicate_x_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_duplicate_x_contact.dump"
+  },
+  {
+   "key": "$.atom_duplicate_y[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_duplicate_y_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_duplicate_y_sc.csv"
+  },
+  {
+   "key": "$.atom_duplicate_y[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_duplicate_y_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_duplicate_y_atom.dump"
+  },
+  {
+   "key": "$.atom_duplicate_y[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_duplicate_y_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_duplicate_y_contact.dump"
+  },
+  {
+   "key": "$.atom_duplicate_z[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_duplicate_z_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_duplicate_z_sc.csv"
+  },
+  {
+   "key": "$.atom_duplicate_z[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_duplicate_z_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_duplicate_z_atom.dump"
+  },
+  {
+   "key": "$.atom_duplicate_z[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_duplicate_z_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_duplicate_z_contact.dump"
+  },
+  {
+   "key": "$.atom_duplicate_radius[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_duplicate_radius_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_duplicate_radius_sc.csv"
+  },
+  {
+   "key": "$.atom_duplicate_radius[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_duplicate_radius_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_duplicate_radius_atom.dump"
+  },
+  {
+   "key": "$.atom_duplicate_radius[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_duplicate_radius_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_duplicate_radius_contact.dump"
+  },
+  {
+   "key": "$.atom_duplicate_section_count[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_duplicate_section_count_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_duplicate_section_count_sc.csv"
+  },
+  {
+   "key": "$.atom_duplicate_section_count[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_duplicate_section_count_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_duplicate_section_count_atom.dump"
+  },
+  {
+   "key": "$.atom_duplicate_section_count[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_duplicate_section_count_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_duplicate_section_count_contact.dump"
+  },
+  {
+   "key": "$.atom_duplicate_section_box[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_duplicate_section_box_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_duplicate_section_box_sc.csv"
+  },
+  {
+   "key": "$.atom_duplicate_section_box[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_duplicate_section_box_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_duplicate_section_box_atom.dump"
+  },
+  {
+   "key": "$.atom_duplicate_section_box[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_duplicate_section_box_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_duplicate_section_box_contact.dump"
+  },
+  {
+   "key": "$.atom_duplicate_section_rows[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_duplicate_section_rows_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_duplicate_section_rows_sc.csv"
+  },
+  {
+   "key": "$.atom_duplicate_section_rows[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_duplicate_section_rows_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_duplicate_section_rows_atom.dump"
+  },
+  {
+   "key": "$.atom_duplicate_section_rows[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_duplicate_section_rows_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_duplicate_section_rows_contact.dump"
+  },
+  {
+   "key": "$.atom_unknown_at_0[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_unknown_at_0_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_unknown_at_0_sc.csv"
+  },
+  {
+   "key": "$.atom_unknown_at_0[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_unknown_at_0_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_unknown_at_0_atom.dump"
+  },
+  {
+   "key": "$.atom_unknown_at_0[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_unknown_at_0_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_unknown_at_0_contact.dump"
+  },
+  {
+   "key": "$.atom_unknown_at_2[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_unknown_at_2_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_unknown_at_2_sc.csv"
+  },
+  {
+   "key": "$.atom_unknown_at_2[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_unknown_at_2_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_unknown_at_2_atom.dump"
+  },
+  {
+   "key": "$.atom_unknown_at_2[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_unknown_at_2_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_unknown_at_2_contact.dump"
+  },
+  {
+   "key": "$.atom_unknown_at_4[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_unknown_at_4_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_unknown_at_4_sc.csv"
+  },
+  {
+   "key": "$.atom_unknown_at_4[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_unknown_at_4_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_unknown_at_4_atom.dump"
+  },
+  {
+   "key": "$.atom_unknown_at_4[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_unknown_at_4_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_unknown_at_4_contact.dump"
+  },
+  {
+   "key": "$.atom_unknown_at_8[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_unknown_at_8_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_unknown_at_8_sc.csv"
+  },
+  {
+   "key": "$.atom_unknown_at_8[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_unknown_at_8_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_unknown_at_8_atom.dump"
+  },
+  {
+   "key": "$.atom_unknown_at_8[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_unknown_at_8_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_unknown_at_8_contact.dump"
+  },
+  {
+   "key": "$.atom_unknown_at_11[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_unknown_at_11_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_unknown_at_11_sc.csv"
+  },
+  {
+   "key": "$.atom_unknown_at_11[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_unknown_at_11_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_unknown_at_11_atom.dump"
+  },
+  {
+   "key": "$.atom_unknown_at_11[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_unknown_at_11_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_unknown_at_11_contact.dump"
+  },
+  {
+   "key": "$.atom_count_0[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_0_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_count_0_sc.csv"
+  },
+  {
+   "key": "$.atom_count_0[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_0_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_count_0_atom.dump"
+  },
+  {
+   "key": "$.atom_count_0[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_0_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_count_0_contact.dump"
+  },
+  {
+   "key": "$.atom_count_-1[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_-1_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_count_-1_sc.csv"
+  },
+  {
+   "key": "$.atom_count_-1[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_-1_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_count_-1_atom.dump"
+  },
+  {
+   "key": "$.atom_count_-1[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_-1_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_count_-1_contact.dump"
+  },
+  {
+   "key": "$.atom_count_3[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_3_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_count_3_sc.csv"
+  },
+  {
+   "key": "$.atom_count_3[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_3_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_count_3_atom.dump"
+  },
+  {
+   "key": "$.atom_count_3[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_3_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_count_3_contact.dump"
+  },
+  {
+   "key": "$.atom_count_empty[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_empty_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_count_empty_sc.csv"
+  },
+  {
+   "key": "$.atom_count_empty[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_empty_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_count_empty_atom.dump"
+  },
+  {
+   "key": "$.atom_count_empty[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_empty_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_count_empty_contact.dump"
+  },
+  {
+   "key": "$.atom_count_1.0[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_1.0_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_count_1.0_sc.csv"
+  },
+  {
+   "key": "$.atom_count_1.0[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_1.0_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_count_1.0_atom.dump"
+  },
+  {
+   "key": "$.atom_count_1.0[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_1.0_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_count_1.0_contact.dump"
+  },
+  {
+   "key": "$.atom_count_1e0[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_1e0_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_count_1e0_sc.csv"
+  },
+  {
+   "key": "$.atom_count_1e0[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_1e0_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_count_1e0_atom.dump"
+  },
+  {
+   "key": "$.atom_count_1e0[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_1e0_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_count_1e0_contact.dump"
+  },
+  {
+   "key": "$.atom_count_1_0[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_1_0_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_count_1_0_sc.csv"
+  },
+  {
+   "key": "$.atom_count_1_0[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_1_0_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_count_1_0_atom.dump"
+  },
+  {
+   "key": "$.atom_count_1_0[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_1_0_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_count_1_0_contact.dump"
+  },
+  {
+   "key": "$.atom_count_1 garbage[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_1 garbage_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_count_1 garbage_sc.csv"
+  },
+  {
+   "key": "$.atom_count_1 garbage[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_1 garbage_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_count_1 garbage_atom.dump"
+  },
+  {
+   "key": "$.atom_count_1 garbage[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_1 garbage_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_count_1 garbage_contact.dump"
+  },
+  {
+   "key": "$.atom_count_9223372036854775808[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_9223372036854775808_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_count_9223372036854775808_sc.csv"
+  },
+  {
+   "key": "$.atom_count_9223372036854775808[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_9223372036854775808_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_count_9223372036854775808_atom.dump"
+  },
+  {
+   "key": "$.atom_count_9223372036854775808[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_9223372036854775808_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_count_9223372036854775808_contact.dump"
+  },
+  {
+   "key": "$.atom_count_999999999999999999999999[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_999999999999999999999999_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_count_999999999999999999999999_sc.csv"
+  },
+  {
+   "key": "$.atom_count_999999999999999999999999[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_999999999999999999999999_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_count_999999999999999999999999_atom.dump"
+  },
+  {
+   "key": "$.atom_count_999999999999999999999999[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_999999999999999999999999_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_count_999999999999999999999999_contact.dump"
+  },
+  {
+   "key": "$.atom_step_case_36[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_36_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_step_case_36_sc.csv"
+  },
+  {
+   "key": "$.atom_step_case_36[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_36_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_step_case_36_atom.dump"
+  },
+  {
+   "key": "$.atom_step_case_36[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_36_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_step_case_36_contact.dump"
+  },
+  {
+   "key": "$.atom_step_case_37[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_37_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_step_case_37_sc.csv"
+  },
+  {
+   "key": "$.atom_step_case_37[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_37_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_step_case_37_atom.dump"
+  },
+  {
+   "key": "$.atom_step_case_37[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_37_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_step_case_37_contact.dump"
+  },
+  {
+   "key": "$.atom_step_case_38[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_38_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_step_case_38_sc.csv"
+  },
+  {
+   "key": "$.atom_step_case_38[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_38_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_step_case_38_atom.dump"
+  },
+  {
+   "key": "$.atom_step_case_38[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_38_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_step_case_38_contact.dump"
+  },
+  {
+   "key": "$.atom_step_case_39[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_39_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_step_case_39_sc.csv"
+  },
+  {
+   "key": "$.atom_step_case_39[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_39_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_step_case_39_atom.dump"
+  },
+  {
+   "key": "$.atom_step_case_39[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_39_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_step_case_39_contact.dump"
+  },
+  {
+   "key": "$.atom_step_case_40[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_40_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_step_case_40_sc.csv"
+  },
+  {
+   "key": "$.atom_step_case_40[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_40_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_step_case_40_atom.dump"
+  },
+  {
+   "key": "$.atom_step_case_40[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_40_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_step_case_40_contact.dump"
+  },
+  {
+   "key": "$.atom_step_case_41[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_41_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_step_case_41_sc.csv"
+  },
+  {
+   "key": "$.atom_step_case_41[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_41_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_step_case_41_atom.dump"
+  },
+  {
+   "key": "$.atom_step_case_41[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_41_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_step_case_41_contact.dump"
+  },
+  {
+   "key": "$.atom_step_case_42[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_42_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_step_case_42_sc.csv"
+  },
+  {
+   "key": "$.atom_step_case_42[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_42_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_step_case_42_atom.dump"
+  },
+  {
+   "key": "$.atom_step_case_42[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_42_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_step_case_42_contact.dump"
+  },
+  {
+   "key": "$.atom_step_case_43[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_43_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_step_case_43_sc.csv"
+  },
+  {
+   "key": "$.atom_step_case_43[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_43_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_step_case_43_atom.dump"
+  },
+  {
+   "key": "$.atom_step_case_43[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_43_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_step_case_43_contact.dump"
+  },
+  {
+   "key": "$.atom_step_case_44[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_44_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_step_case_44_sc.csv"
+  },
+  {
+   "key": "$.atom_step_case_44[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_44_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_step_case_44_atom.dump"
+  },
+  {
+   "key": "$.atom_step_case_44[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_44_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_step_case_44_contact.dump"
+  },
+  {
+   "key": "$.atom_step_case_45[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_45_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_step_case_45_sc.csv"
+  },
+  {
+   "key": "$.atom_step_case_45[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_45_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_step_case_45_atom.dump"
+  },
+  {
+   "key": "$.atom_step_case_45[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_45_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_step_case_45_contact.dump"
+  },
+  {
+   "key": "$.atom_step_case_46[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_46_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_step_case_46_sc.csv"
+  },
+  {
+   "key": "$.atom_step_case_46[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_46_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_step_case_46_atom.dump"
+  },
+  {
+   "key": "$.atom_step_case_46[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_46_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_step_case_46_contact.dump"
+  },
+  {
+   "key": "$.atom_step_case_47[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_47_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_step_case_47_sc.csv"
+  },
+  {
+   "key": "$.atom_step_case_47[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_47_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_step_case_47_atom.dump"
+  },
+  {
+   "key": "$.atom_step_case_47[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_case_47_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_step_case_47_contact.dump"
+  },
+  {
+   "key": "$.atom_missing_count[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_missing_count_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_missing_count_sc.csv"
+  },
+  {
+   "key": "$.atom_missing_count[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_missing_count_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_missing_count_atom.dump"
+  },
+  {
+   "key": "$.atom_missing_count[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_missing_count_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_missing_count_contact.dump"
+  },
+  {
+   "key": "$.atom_missing_box[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_missing_box_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_missing_box_sc.csv"
+  },
+  {
+   "key": "$.atom_missing_box[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_missing_box_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_missing_box_atom.dump"
+  },
+  {
+   "key": "$.atom_missing_box[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_missing_box_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_missing_box_contact.dump"
+  },
+  {
+   "key": "$.atom_missing_rows[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_missing_rows_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_missing_rows_sc.csv"
+  },
+  {
+   "key": "$.atom_missing_rows[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_missing_rows_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_missing_rows_atom.dump"
+  },
+  {
+   "key": "$.atom_missing_rows[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_missing_rows_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_missing_rows_contact.dump"
+  },
+  {
+   "key": "$.atom_preamble[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_preamble_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_preamble_sc.csv"
+  },
+  {
+   "key": "$.atom_preamble[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_preamble_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_preamble_atom.dump"
+  },
+  {
+   "key": "$.atom_preamble[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_preamble_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_preamble_contact.dump"
+  },
+  {
+   "key": "$.atom_trailing_junk[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_trailing_junk_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_trailing_junk_sc.csv"
+  },
+  {
+   "key": "$.atom_trailing_junk[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_trailing_junk_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_trailing_junk_atom.dump"
+  },
+  {
+   "key": "$.atom_trailing_junk[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_trailing_junk_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_trailing_junk_contact.dump"
+  },
+  {
+   "key": "$.atom_fourth_box_line[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_fourth_box_line_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_fourth_box_line_sc.csv"
+  },
+  {
+   "key": "$.atom_fourth_box_line[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_fourth_box_line_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_fourth_box_line_atom.dump"
+  },
+  {
+   "key": "$.atom_fourth_box_line[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_fourth_box_line_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_fourth_box_line_contact.dump"
+  },
+  {
+   "key": "$.atom_leading_scalar_blank[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_leading_scalar_blank_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_leading_scalar_blank_sc.csv"
+  },
+  {
+   "key": "$.atom_leading_scalar_blank[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_leading_scalar_blank_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_leading_scalar_blank_atom.dump"
+  },
+  {
+   "key": "$.atom_leading_scalar_blank[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_leading_scalar_blank_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_leading_scalar_blank_contact.dump"
+  },
+  {
+   "key": "$.atom_interior_box_blank[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_interior_box_blank_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_interior_box_blank_sc.csv"
+  },
+  {
+   "key": "$.atom_interior_box_blank[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_interior_box_blank_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_interior_box_blank_atom.dump"
+  },
+  {
+   "key": "$.atom_interior_box_blank[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_interior_box_blank_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_interior_box_blank_contact.dump"
+  },
+  {
+   "key": "$.atom_last_frame_empty[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_last_frame_empty_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_last_frame_empty_sc.csv"
+  },
+  {
+   "key": "$.atom_last_frame_empty[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_last_frame_empty_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_last_frame_empty_atom.dump"
+  },
+  {
+   "key": "$.atom_last_frame_empty[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_last_frame_empty_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_last_frame_empty_contact.dump"
+  },
+  {
+   "key": "$.atom_last_frame_partial[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_last_frame_partial_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_last_frame_partial_sc.csv"
+  },
+  {
+   "key": "$.atom_last_frame_partial[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_last_frame_partial_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_last_frame_partial_atom.dump"
+  },
+  {
+   "key": "$.atom_last_frame_partial[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_last_frame_partial_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_last_frame_partial_contact.dump"
+  },
+  {
+   "key": "$.atom_last_frame_valid[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_last_frame_valid_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_last_frame_valid_sc.csv"
+  },
+  {
+   "key": "$.atom_last_frame_valid[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_last_frame_valid_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_last_frame_valid_atom.dump"
+  },
+  {
+   "key": "$.atom_last_frame_valid[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_last_frame_valid_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_last_frame_valid_contact.dump"
+  },
+  {
+   "key": "$.atom_earlier_frame_malformed[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_earlier_frame_malformed_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_earlier_frame_malformed_sc.csv"
+  },
+  {
+   "key": "$.atom_earlier_frame_malformed[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_earlier_frame_malformed_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_earlier_frame_malformed_atom.dump"
+  },
+  {
+   "key": "$.atom_earlier_frame_malformed[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_earlier_frame_malformed_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_earlier_frame_malformed_contact.dump"
+  },
+  {
+   "key": "$.atom_step_header_suffix[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_header_suffix_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_step_header_suffix_sc.csv"
+  },
+  {
+   "key": "$.atom_step_header_suffix[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_header_suffix_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_step_header_suffix_atom.dump"
+  },
+  {
+   "key": "$.atom_step_header_suffix[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_header_suffix_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_step_header_suffix_contact.dump"
+  },
+  {
+   "key": "$.atom_count_header_suffix[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_header_suffix_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_count_header_suffix_sc.csv"
+  },
+  {
+   "key": "$.atom_count_header_suffix[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_header_suffix_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_count_header_suffix_atom.dump"
+  },
+  {
+   "key": "$.atom_count_header_suffix[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_header_suffix_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_count_header_suffix_contact.dump"
+  },
+  {
+   "key": "$.atom_step_header__0.9[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_header__0.9_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_step_header__0.9_sc.csv"
+  },
+  {
+   "key": "$.atom_step_header__0.9[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_header__0.9_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_step_header__0.9_atom.dump"
+  },
+  {
+   "key": "$.atom_step_header__0.9[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_step_header__0.9_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_step_header__0.9_contact.dump"
+  },
+  {
+   "key": "$.atom_count_header__0.9[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_header__0.9_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_count_header__0.9_sc.csv"
+  },
+  {
+   "key": "$.atom_count_header__0.9[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_header__0.9_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_count_header__0.9_atom.dump"
+  },
+  {
+   "key": "$.atom_count_header__0.9[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_count_header__0.9_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_count_header__0.9_contact.dump"
+  },
+  {
+   "key": "$.contact_duplicate_c_cpl_1[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_1_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_duplicate_c_cpl_1_sc.csv"
+  },
+  {
+   "key": "$.contact_duplicate_c_cpl_1[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_1_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_duplicate_c_cpl_1_atom.dump"
+  },
+  {
+   "key": "$.contact_duplicate_c_cpl_1[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_1_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_duplicate_c_cpl_1_contact.dump"
+  },
+  {
+   "key": "$.contact_duplicate_c_cpl_2[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_2_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_duplicate_c_cpl_2_sc.csv"
+  },
+  {
+   "key": "$.contact_duplicate_c_cpl_2[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_2_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_duplicate_c_cpl_2_atom.dump"
+  },
+  {
+   "key": "$.contact_duplicate_c_cpl_2[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_2_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_duplicate_c_cpl_2_contact.dump"
+  },
+  {
+   "key": "$.contact_duplicate_c_cpl_3[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_3_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_duplicate_c_cpl_3_sc.csv"
+  },
+  {
+   "key": "$.contact_duplicate_c_cpl_3[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_3_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_duplicate_c_cpl_3_atom.dump"
+  },
+  {
+   "key": "$.contact_duplicate_c_cpl_3[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_3_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_duplicate_c_cpl_3_contact.dump"
+  },
+  {
+   "key": "$.contact_duplicate_c_cpl_4[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_4_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_duplicate_c_cpl_4_sc.csv"
+  },
+  {
+   "key": "$.contact_duplicate_c_cpl_4[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_4_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_duplicate_c_cpl_4_atom.dump"
+  },
+  {
+   "key": "$.contact_duplicate_c_cpl_4[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_4_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_duplicate_c_cpl_4_contact.dump"
+  },
+  {
+   "key": "$.contact_duplicate_c_cpl_5[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_5_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_duplicate_c_cpl_5_sc.csv"
+  },
+  {
+   "key": "$.contact_duplicate_c_cpl_5[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_5_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_duplicate_c_cpl_5_atom.dump"
+  },
+  {
+   "key": "$.contact_duplicate_c_cpl_5[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_5_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_duplicate_c_cpl_5_contact.dump"
+  },
+  {
+   "key": "$.contact_duplicate_c_cpl_6[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_6_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_duplicate_c_cpl_6_sc.csv"
+  },
+  {
+   "key": "$.contact_duplicate_c_cpl_6[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_6_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_duplicate_c_cpl_6_atom.dump"
+  },
+  {
+   "key": "$.contact_duplicate_c_cpl_6[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_6_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_duplicate_c_cpl_6_contact.dump"
+  },
+  {
+   "key": "$.contact_duplicate_c_cpl_7[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_7_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_duplicate_c_cpl_7_sc.csv"
+  },
+  {
+   "key": "$.contact_duplicate_c_cpl_7[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_7_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_duplicate_c_cpl_7_atom.dump"
+  },
+  {
+   "key": "$.contact_duplicate_c_cpl_7[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_7_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_duplicate_c_cpl_7_contact.dump"
+  },
+  {
+   "key": "$.contact_duplicate_c_cpl_8[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_8_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_duplicate_c_cpl_8_sc.csv"
+  },
+  {
+   "key": "$.contact_duplicate_c_cpl_8[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_8_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_duplicate_c_cpl_8_atom.dump"
+  },
+  {
+   "key": "$.contact_duplicate_c_cpl_8[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_8_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_duplicate_c_cpl_8_contact.dump"
+  },
+  {
+   "key": "$.contact_duplicate_c_cpl_9[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_9_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_duplicate_c_cpl_9_sc.csv"
+  },
+  {
+   "key": "$.contact_duplicate_c_cpl_9[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_9_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_duplicate_c_cpl_9_atom.dump"
+  },
+  {
+   "key": "$.contact_duplicate_c_cpl_9[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_9_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_duplicate_c_cpl_9_contact.dump"
+  },
+  {
+   "key": "$.contact_duplicate_c_cpl_22[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_22_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_duplicate_c_cpl_22_sc.csv"
+  },
+  {
+   "key": "$.contact_duplicate_c_cpl_22[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_22_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_duplicate_c_cpl_22_atom.dump"
+  },
+  {
+   "key": "$.contact_duplicate_c_cpl_22[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_22_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_duplicate_c_cpl_22_contact.dump"
+  },
+  {
+   "key": "$.contact_duplicate_c_cpl_23[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_23_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_duplicate_c_cpl_23_sc.csv"
+  },
+  {
+   "key": "$.contact_duplicate_c_cpl_23[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_23_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_duplicate_c_cpl_23_atom.dump"
+  },
+  {
+   "key": "$.contact_duplicate_c_cpl_23[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_c_cpl_23_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_duplicate_c_cpl_23_contact.dump"
+  },
+  {
+   "key": "$.contact_duplicate_section_count[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_section_count_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_duplicate_section_count_sc.csv"
+  },
+  {
+   "key": "$.contact_duplicate_section_count[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_section_count_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_duplicate_section_count_atom.dump"
+  },
+  {
+   "key": "$.contact_duplicate_section_count[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_section_count_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_duplicate_section_count_contact.dump"
+  },
+  {
+   "key": "$.contact_duplicate_section_box[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_section_box_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_duplicate_section_box_sc.csv"
+  },
+  {
+   "key": "$.contact_duplicate_section_box[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_section_box_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_duplicate_section_box_atom.dump"
+  },
+  {
+   "key": "$.contact_duplicate_section_box[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_section_box_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_duplicate_section_box_contact.dump"
+  },
+  {
+   "key": "$.contact_duplicate_section_rows[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_section_rows_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_duplicate_section_rows_sc.csv"
+  },
+  {
+   "key": "$.contact_duplicate_section_rows[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_section_rows_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_duplicate_section_rows_atom.dump"
+  },
+  {
+   "key": "$.contact_duplicate_section_rows[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_duplicate_section_rows_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_duplicate_section_rows_contact.dump"
+  },
+  {
+   "key": "$.contact_unknown_at_0[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_unknown_at_0_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_unknown_at_0_sc.csv"
+  },
+  {
+   "key": "$.contact_unknown_at_0[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_unknown_at_0_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_unknown_at_0_atom.dump"
+  },
+  {
+   "key": "$.contact_unknown_at_0[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_unknown_at_0_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_unknown_at_0_contact.dump"
+  },
+  {
+   "key": "$.contact_unknown_at_2[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_unknown_at_2_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_unknown_at_2_sc.csv"
+  },
+  {
+   "key": "$.contact_unknown_at_2[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_unknown_at_2_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_unknown_at_2_atom.dump"
+  },
+  {
+   "key": "$.contact_unknown_at_2[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_unknown_at_2_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_unknown_at_2_contact.dump"
+  },
+  {
+   "key": "$.contact_unknown_at_4[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_unknown_at_4_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_unknown_at_4_sc.csv"
+  },
+  {
+   "key": "$.contact_unknown_at_4[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_unknown_at_4_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_unknown_at_4_atom.dump"
+  },
+  {
+   "key": "$.contact_unknown_at_4[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_unknown_at_4_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_unknown_at_4_contact.dump"
+  },
+  {
+   "key": "$.contact_unknown_at_8[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_unknown_at_8_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_unknown_at_8_sc.csv"
+  },
+  {
+   "key": "$.contact_unknown_at_8[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_unknown_at_8_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_unknown_at_8_atom.dump"
+  },
+  {
+   "key": "$.contact_unknown_at_8[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_unknown_at_8_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_unknown_at_8_contact.dump"
+  },
+  {
+   "key": "$.contact_unknown_at_10[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_unknown_at_10_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_unknown_at_10_sc.csv"
+  },
+  {
+   "key": "$.contact_unknown_at_10[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_unknown_at_10_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_unknown_at_10_atom.dump"
+  },
+  {
+   "key": "$.contact_unknown_at_10[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_unknown_at_10_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_unknown_at_10_contact.dump"
+  },
+  {
+   "key": "$.contact_count_0[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_0_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_count_0_sc.csv"
+  },
+  {
+   "key": "$.contact_count_0[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_0_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_count_0_atom.dump"
+  },
+  {
+   "key": "$.contact_count_0[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_0_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_count_0_contact.dump"
+  },
+  {
+   "key": "$.contact_count_-1[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_-1_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_count_-1_sc.csv"
+  },
+  {
+   "key": "$.contact_count_-1[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_-1_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_count_-1_atom.dump"
+  },
+  {
+   "key": "$.contact_count_-1[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_-1_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_count_-1_contact.dump"
+  },
+  {
+   "key": "$.contact_count_3[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_3_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_count_3_sc.csv"
+  },
+  {
+   "key": "$.contact_count_3[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_3_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_count_3_atom.dump"
+  },
+  {
+   "key": "$.contact_count_3[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_3_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_count_3_contact.dump"
+  },
+  {
+   "key": "$.contact_count_empty[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_empty_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_count_empty_sc.csv"
+  },
+  {
+   "key": "$.contact_count_empty[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_empty_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_count_empty_atom.dump"
+  },
+  {
+   "key": "$.contact_count_empty[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_empty_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_count_empty_contact.dump"
+  },
+  {
+   "key": "$.contact_count_1.0[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_1.0_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_count_1.0_sc.csv"
+  },
+  {
+   "key": "$.contact_count_1.0[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_1.0_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_count_1.0_atom.dump"
+  },
+  {
+   "key": "$.contact_count_1.0[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_1.0_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_count_1.0_contact.dump"
+  },
+  {
+   "key": "$.contact_count_1e0[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_1e0_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_count_1e0_sc.csv"
+  },
+  {
+   "key": "$.contact_count_1e0[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_1e0_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_count_1e0_atom.dump"
+  },
+  {
+   "key": "$.contact_count_1e0[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_1e0_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_count_1e0_contact.dump"
+  },
+  {
+   "key": "$.contact_count_1_0[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_1_0_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_count_1_0_sc.csv"
+  },
+  {
+   "key": "$.contact_count_1_0[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_1_0_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_count_1_0_atom.dump"
+  },
+  {
+   "key": "$.contact_count_1_0[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_1_0_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_count_1_0_contact.dump"
+  },
+  {
+   "key": "$.contact_count_1 garbage[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_1 garbage_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_count_1 garbage_sc.csv"
+  },
+  {
+   "key": "$.contact_count_1 garbage[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_1 garbage_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_count_1 garbage_atom.dump"
+  },
+  {
+   "key": "$.contact_count_1 garbage[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_1 garbage_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_count_1 garbage_contact.dump"
+  },
+  {
+   "key": "$.contact_count_9223372036854775808[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_9223372036854775808_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_count_9223372036854775808_sc.csv"
+  },
+  {
+   "key": "$.contact_count_9223372036854775808[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_9223372036854775808_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_count_9223372036854775808_atom.dump"
+  },
+  {
+   "key": "$.contact_count_9223372036854775808[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_9223372036854775808_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_count_9223372036854775808_contact.dump"
+  },
+  {
+   "key": "$.contact_count_999999999999999999999999[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_999999999999999999999999_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_count_999999999999999999999999_sc.csv"
+  },
+  {
+   "key": "$.contact_count_999999999999999999999999[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_999999999999999999999999_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_count_999999999999999999999999_atom.dump"
+  },
+  {
+   "key": "$.contact_count_999999999999999999999999[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_999999999999999999999999_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_count_999999999999999999999999_contact.dump"
+  },
+  {
+   "key": "$.contact_step_case_93[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_93_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_step_case_93_sc.csv"
+  },
+  {
+   "key": "$.contact_step_case_93[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_93_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_step_case_93_atom.dump"
+  },
+  {
+   "key": "$.contact_step_case_93[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_93_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_step_case_93_contact.dump"
+  },
+  {
+   "key": "$.contact_step_case_94[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_94_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_step_case_94_sc.csv"
+  },
+  {
+   "key": "$.contact_step_case_94[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_94_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_step_case_94_atom.dump"
+  },
+  {
+   "key": "$.contact_step_case_94[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_94_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_step_case_94_contact.dump"
+  },
+  {
+   "key": "$.contact_step_case_95[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_95_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_step_case_95_sc.csv"
+  },
+  {
+   "key": "$.contact_step_case_95[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_95_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_step_case_95_atom.dump"
+  },
+  {
+   "key": "$.contact_step_case_95[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_95_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_step_case_95_contact.dump"
+  },
+  {
+   "key": "$.contact_step_case_96[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_96_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_step_case_96_sc.csv"
+  },
+  {
+   "key": "$.contact_step_case_96[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_96_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_step_case_96_atom.dump"
+  },
+  {
+   "key": "$.contact_step_case_96[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_96_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_step_case_96_contact.dump"
+  },
+  {
+   "key": "$.contact_step_case_97[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_97_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_step_case_97_sc.csv"
+  },
+  {
+   "key": "$.contact_step_case_97[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_97_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_step_case_97_atom.dump"
+  },
+  {
+   "key": "$.contact_step_case_97[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_97_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_step_case_97_contact.dump"
+  },
+  {
+   "key": "$.contact_step_case_98[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_98_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_step_case_98_sc.csv"
+  },
+  {
+   "key": "$.contact_step_case_98[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_98_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_step_case_98_atom.dump"
+  },
+  {
+   "key": "$.contact_step_case_98[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_98_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_step_case_98_contact.dump"
+  },
+  {
+   "key": "$.contact_step_case_99[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_99_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_step_case_99_sc.csv"
+  },
+  {
+   "key": "$.contact_step_case_99[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_99_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_step_case_99_atom.dump"
+  },
+  {
+   "key": "$.contact_step_case_99[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_99_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_step_case_99_contact.dump"
+  },
+  {
+   "key": "$.contact_step_case_100[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_100_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_step_case_100_sc.csv"
+  },
+  {
+   "key": "$.contact_step_case_100[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_100_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_step_case_100_atom.dump"
+  },
+  {
+   "key": "$.contact_step_case_100[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_100_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_step_case_100_contact.dump"
+  },
+  {
+   "key": "$.contact_step_case_101[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_101_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_step_case_101_sc.csv"
+  },
+  {
+   "key": "$.contact_step_case_101[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_101_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_step_case_101_atom.dump"
+  },
+  {
+   "key": "$.contact_step_case_101[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_101_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_step_case_101_contact.dump"
+  },
+  {
+   "key": "$.contact_step_case_102[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_102_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_step_case_102_sc.csv"
+  },
+  {
+   "key": "$.contact_step_case_102[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_102_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_step_case_102_atom.dump"
+  },
+  {
+   "key": "$.contact_step_case_102[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_102_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_step_case_102_contact.dump"
+  },
+  {
+   "key": "$.contact_step_case_103[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_103_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_step_case_103_sc.csv"
+  },
+  {
+   "key": "$.contact_step_case_103[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_103_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_step_case_103_atom.dump"
+  },
+  {
+   "key": "$.contact_step_case_103[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_103_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_step_case_103_contact.dump"
+  },
+  {
+   "key": "$.contact_step_case_104[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_104_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_step_case_104_sc.csv"
+  },
+  {
+   "key": "$.contact_step_case_104[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_104_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_step_case_104_atom.dump"
+  },
+  {
+   "key": "$.contact_step_case_104[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_case_104_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_step_case_104_contact.dump"
+  },
+  {
+   "key": "$.contact_missing_count[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_missing_count_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_missing_count_sc.csv"
+  },
+  {
+   "key": "$.contact_missing_count[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_missing_count_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_missing_count_atom.dump"
+  },
+  {
+   "key": "$.contact_missing_count[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_missing_count_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_missing_count_contact.dump"
+  },
+  {
+   "key": "$.contact_missing_box[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_missing_box_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_missing_box_sc.csv"
+  },
+  {
+   "key": "$.contact_missing_box[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_missing_box_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_missing_box_atom.dump"
+  },
+  {
+   "key": "$.contact_missing_box[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_missing_box_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_missing_box_contact.dump"
+  },
+  {
+   "key": "$.contact_missing_rows[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_missing_rows_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_missing_rows_sc.csv"
+  },
+  {
+   "key": "$.contact_missing_rows[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_missing_rows_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_missing_rows_atom.dump"
+  },
+  {
+   "key": "$.contact_missing_rows[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_missing_rows_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_missing_rows_contact.dump"
+  },
+  {
+   "key": "$.contact_preamble[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_preamble_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_preamble_sc.csv"
+  },
+  {
+   "key": "$.contact_preamble[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_preamble_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_preamble_atom.dump"
+  },
+  {
+   "key": "$.contact_preamble[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_preamble_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_preamble_contact.dump"
+  },
+  {
+   "key": "$.contact_trailing_junk[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_trailing_junk_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_trailing_junk_sc.csv"
+  },
+  {
+   "key": "$.contact_trailing_junk[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_trailing_junk_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_trailing_junk_atom.dump"
+  },
+  {
+   "key": "$.contact_trailing_junk[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_trailing_junk_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_trailing_junk_contact.dump"
+  },
+  {
+   "key": "$.contact_fourth_box_line[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_fourth_box_line_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_fourth_box_line_sc.csv"
+  },
+  {
+   "key": "$.contact_fourth_box_line[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_fourth_box_line_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_fourth_box_line_atom.dump"
+  },
+  {
+   "key": "$.contact_fourth_box_line[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_fourth_box_line_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_fourth_box_line_contact.dump"
+  },
+  {
+   "key": "$.contact_leading_scalar_blank[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_leading_scalar_blank_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_leading_scalar_blank_sc.csv"
+  },
+  {
+   "key": "$.contact_leading_scalar_blank[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_leading_scalar_blank_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_leading_scalar_blank_atom.dump"
+  },
+  {
+   "key": "$.contact_leading_scalar_blank[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_leading_scalar_blank_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_leading_scalar_blank_contact.dump"
+  },
+  {
+   "key": "$.contact_interior_box_blank[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_interior_box_blank_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_interior_box_blank_sc.csv"
+  },
+  {
+   "key": "$.contact_interior_box_blank[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_interior_box_blank_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_interior_box_blank_atom.dump"
+  },
+  {
+   "key": "$.contact_interior_box_blank[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_interior_box_blank_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_interior_box_blank_contact.dump"
+  },
+  {
+   "key": "$.contact_last_frame_empty[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_last_frame_empty_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_last_frame_empty_sc.csv"
+  },
+  {
+   "key": "$.contact_last_frame_empty[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_last_frame_empty_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_last_frame_empty_atom.dump"
+  },
+  {
+   "key": "$.contact_last_frame_empty[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_last_frame_empty_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_last_frame_empty_contact.dump"
+  },
+  {
+   "key": "$.contact_last_frame_partial[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_last_frame_partial_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_last_frame_partial_sc.csv"
+  },
+  {
+   "key": "$.contact_last_frame_partial[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_last_frame_partial_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_last_frame_partial_atom.dump"
+  },
+  {
+   "key": "$.contact_last_frame_partial[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_last_frame_partial_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_last_frame_partial_contact.dump"
+  },
+  {
+   "key": "$.contact_last_frame_valid[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_last_frame_valid_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_last_frame_valid_sc.csv"
+  },
+  {
+   "key": "$.contact_last_frame_valid[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_last_frame_valid_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_last_frame_valid_atom.dump"
+  },
+  {
+   "key": "$.contact_last_frame_valid[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_last_frame_valid_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_last_frame_valid_contact.dump"
+  },
+  {
+   "key": "$.contact_earlier_frame_malformed[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_earlier_frame_malformed_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_earlier_frame_malformed_sc.csv"
+  },
+  {
+   "key": "$.contact_earlier_frame_malformed[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_earlier_frame_malformed_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_earlier_frame_malformed_atom.dump"
+  },
+  {
+   "key": "$.contact_earlier_frame_malformed[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_earlier_frame_malformed_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_earlier_frame_malformed_contact.dump"
+  },
+  {
+   "key": "$.contact_step_header_suffix[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_header_suffix_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_step_header_suffix_sc.csv"
+  },
+  {
+   "key": "$.contact_step_header_suffix[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_header_suffix_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_step_header_suffix_atom.dump"
+  },
+  {
+   "key": "$.contact_step_header_suffix[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_header_suffix_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_step_header_suffix_contact.dump"
+  },
+  {
+   "key": "$.contact_count_header_suffix[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_header_suffix_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_count_header_suffix_sc.csv"
+  },
+  {
+   "key": "$.contact_count_header_suffix[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_header_suffix_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_count_header_suffix_atom.dump"
+  },
+  {
+   "key": "$.contact_count_header_suffix[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_header_suffix_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_count_header_suffix_contact.dump"
+  },
+  {
+   "key": "$.contact_step_header__0.9[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_header__0.9_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_step_header__0.9_sc.csv"
+  },
+  {
+   "key": "$.contact_step_header__0.9[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_header__0.9_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_step_header__0.9_atom.dump"
+  },
+  {
+   "key": "$.contact_step_header__0.9[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_step_header__0.9_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_step_header__0.9_contact.dump"
+  },
+  {
+   "key": "$.contact_count_header__0.9[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_header__0.9_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_count_header__0.9_sc.csv"
+  },
+  {
+   "key": "$.contact_count_header__0.9[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_header__0.9_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_count_header__0.9_atom.dump"
+  },
+  {
+   "key": "$.contact_count_header__0.9[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_count_header__0.9_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_count_header__0.9_contact.dump"
+  },
+  {
+   "key": "$.atom_rows_no_boundary[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_rows_no_boundary_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_rows_no_boundary_sc.csv"
+  },
+  {
+   "key": "$.atom_rows_no_boundary[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_rows_no_boundary_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_rows_no_boundary_atom.dump"
+  },
+  {
+   "key": "$.atom_rows_no_boundary[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_rows_no_boundary_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_rows_no_boundary_contact.dump"
+  },
+  {
+   "key": "$.atom_box_no_boundary[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_box_no_boundary_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_box_no_boundary_sc.csv"
+  },
+  {
+   "key": "$.atom_box_no_boundary[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_box_no_boundary_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_box_no_boundary_atom.dump"
+  },
+  {
+   "key": "$.atom_box_no_boundary[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_box_no_boundary_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_box_no_boundary_contact.dump"
+  },
+  {
+   "key": "$.atom_rows_repeated_marker[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_rows_repeated_marker_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_rows_repeated_marker_sc.csv"
+  },
+  {
+   "key": "$.atom_rows_repeated_marker[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_rows_repeated_marker_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_rows_repeated_marker_atom.dump"
+  },
+  {
+   "key": "$.atom_rows_repeated_marker[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_rows_repeated_marker_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_rows_repeated_marker_contact.dump"
+  },
+  {
+   "key": "$.atom_box_repeated_marker[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_box_repeated_marker_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_box_repeated_marker_sc.csv"
+  },
+  {
+   "key": "$.atom_box_repeated_marker[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_box_repeated_marker_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_box_repeated_marker_atom.dump"
+  },
+  {
+   "key": "$.atom_box_repeated_marker[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_box_repeated_marker_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_box_repeated_marker_contact.dump"
+  },
+  {
+   "key": "$.atom_rows_marker_at_end[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_rows_marker_at_end_sc.csv",
+   "ours": "tmp/structure_fixtures/atom_rows_marker_at_end_sc.csv"
+  },
+  {
+   "key": "$.atom_rows_marker_at_end[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_rows_marker_at_end_atom.dump",
+   "ours": "tmp/structure_fixtures/atom_rows_marker_at_end_atom.dump"
+  },
+  {
+   "key": "$.atom_rows_marker_at_end[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\atom_rows_marker_at_end_contact.dump",
+   "ours": "tmp/structure_fixtures/atom_rows_marker_at_end_contact.dump"
+  },
+  {
+   "key": "$.contact_rows_no_boundary[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_rows_no_boundary_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_rows_no_boundary_sc.csv"
+  },
+  {
+   "key": "$.contact_rows_no_boundary[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_rows_no_boundary_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_rows_no_boundary_atom.dump"
+  },
+  {
+   "key": "$.contact_rows_no_boundary[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_rows_no_boundary_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_rows_no_boundary_contact.dump"
+  },
+  {
+   "key": "$.contact_box_no_boundary[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_box_no_boundary_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_box_no_boundary_sc.csv"
+  },
+  {
+   "key": "$.contact_box_no_boundary[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_box_no_boundary_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_box_no_boundary_atom.dump"
+  },
+  {
+   "key": "$.contact_box_no_boundary[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_box_no_boundary_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_box_no_boundary_contact.dump"
+  },
+  {
+   "key": "$.contact_rows_repeated_marker[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_rows_repeated_marker_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_rows_repeated_marker_sc.csv"
+  },
+  {
+   "key": "$.contact_rows_repeated_marker[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_rows_repeated_marker_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_rows_repeated_marker_atom.dump"
+  },
+  {
+   "key": "$.contact_rows_repeated_marker[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_rows_repeated_marker_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_rows_repeated_marker_contact.dump"
+  },
+  {
+   "key": "$.contact_box_repeated_marker[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_box_repeated_marker_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_box_repeated_marker_sc.csv"
+  },
+  {
+   "key": "$.contact_box_repeated_marker[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_box_repeated_marker_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_box_repeated_marker_atom.dump"
+  },
+  {
+   "key": "$.contact_box_repeated_marker[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_box_repeated_marker_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_box_repeated_marker_contact.dump"
+  },
+  {
+   "key": "$.contact_rows_marker_at_end[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_rows_marker_at_end_sc.csv",
+   "ours": "tmp/structure_fixtures/contact_rows_marker_at_end_sc.csv"
+  },
+  {
+   "key": "$.contact_rows_marker_at_end[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_rows_marker_at_end_atom.dump",
+   "ours": "tmp/structure_fixtures/contact_rows_marker_at_end_atom.dump"
+  },
+  {
+   "key": "$.contact_rows_marker_at_end[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\contact_rows_marker_at_end_contact.dump",
+   "ours": "tmp/structure_fixtures/contact_rows_marker_at_end_contact.dump"
+  },
+  {
+   "key": "$.blank_whitespace_only[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\blank_whitespace_only_sc.csv",
+   "ours": "tmp/structure_fixtures/blank_whitespace_only_sc.csv"
+  },
+  {
+   "key": "$.blank_whitespace_only[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\blank_whitespace_only_atom.dump",
+   "ours": "tmp/structure_fixtures/blank_whitespace_only_atom.dump"
+  },
+  {
+   "key": "$.blank_whitespace_only[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\blank_whitespace_only_contact.dump",
+   "ours": "tmp/structure_fixtures/blank_whitespace_only_contact.dump"
+  },
+  {
+   "key": "$.gzip_baseline[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\gzip_baseline_sc.csv.gz",
+   "ours": "tmp/structure_fixtures/gzip_baseline_sc.csv.gz"
+  },
+  {
+   "key": "$.gzip_baseline[0].sha256",
+   "class": "DIFF",
+   "codex": "\"bec9220e1722b7597d4ef103859eb26a394ec376cd6578785a4668c0e65fdfe3\"",
+   "ours": "\"2a5b079411cf5bd0d2a537c5ce9fd27cbd13269bd80efee569a780d538d24222\""
+  },
+  {
+   "key": "$.gzip_baseline[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\gzip_baseline_atom.dump.gz",
+   "ours": "tmp/structure_fixtures/gzip_baseline_atom.dump.gz"
+  },
+  {
+   "key": "$.gzip_baseline[1].sha256",
+   "class": "DIFF",
+   "codex": "\"249b9723c85606d528b611c7e6b20992bea26e0b186b61b5148c06aaee0ec304\"",
+   "ours": "\"4c2b7e3df514f79074bd26c8b75010eb55e353499382c414b580905a86ca8ff1\""
+  },
+  {
+   "key": "$.gzip_baseline[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\gzip_baseline_contact.dump.gz",
+   "ours": "tmp/structure_fixtures/gzip_baseline_contact.dump.gz"
+  },
+  {
+   "key": "$.gzip_baseline[2].sha256",
+   "class": "DIFF",
+   "codex": "\"d69afa104cd1a01642f107328fb49eaa7dd432c65820f656435d0f12d360c1fb\"",
+   "ours": "\"8ae9c6465d93cb37468be0cfcd9e2f2d7a3d3f5d371d99c84379eba95a6cc78d\""
+  },
+  {
+   "key": "$.crlf_baseline[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\crlf_baseline_sc.csv",
+   "ours": "tmp/structure_fixtures/crlf_baseline_sc.csv"
+  },
+  {
+   "key": "$.crlf_baseline[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\crlf_baseline_atom.dump",
+   "ours": "tmp/structure_fixtures/crlf_baseline_atom.dump"
+  },
+  {
+   "key": "$.crlf_baseline[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\crlf_baseline_contact.dump",
+   "ours": "tmp/structure_fixtures/crlf_baseline_contact.dump"
+  },
+  {
+   "key": "$.integer_valid_+100[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\integer_valid_+100_sc.csv",
+   "ours": "tmp/structure_fixtures/integer_valid_+100_sc.csv"
+  },
+  {
+   "key": "$.integer_valid_+100[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\integer_valid_+100_atom.dump",
+   "ours": "tmp/structure_fixtures/integer_valid_+100_atom.dump"
+  },
+  {
+   "key": "$.integer_valid_+100[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\integer_valid_+100_contact.dump",
+   "ours": "tmp/structure_fixtures/integer_valid_+100_contact.dump"
+  },
+  {
+   "key": "$.integer_valid_000100[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\integer_valid_000100_sc.csv",
+   "ours": "tmp/structure_fixtures/integer_valid_000100_sc.csv"
+  },
+  {
+   "key": "$.integer_valid_000100[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\integer_valid_000100_atom.dump",
+   "ours": "tmp/structure_fixtures/integer_valid_000100_atom.dump"
+  },
+  {
+   "key": "$.integer_valid_000100[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\integer_valid_000100_contact.dump",
+   "ours": "tmp/structure_fixtures/integer_valid_000100_contact.dump"
+  },
+  {
+   "key": "$.integer_valid_-0[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\integer_valid_-0_sc.csv",
+   "ours": "tmp/structure_fixtures/integer_valid_-0_sc.csv"
+  },
+  {
+   "key": "$.integer_valid_-0[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\integer_valid_-0_atom.dump",
+   "ours": "tmp/structure_fixtures/integer_valid_-0_atom.dump"
+  },
+  {
+   "key": "$.integer_valid_-0[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\integer_valid_-0_contact.dump",
+   "ours": "tmp/structure_fixtures/integer_valid_-0_contact.dump"
+  },
+  {
+   "key": "$.d19_reject_137[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\d19_reject_137_sc.csv",
+   "ours": "tmp/structure_fixtures/d19_reject_137_sc.csv"
+  },
+  {
+   "key": "$.d19_reject_137[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\d19_reject_137_atom.dump",
+   "ours": "tmp/structure_fixtures/d19_reject_137_atom.dump"
+  },
+  {
+   "key": "$.d19_reject_137[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\d19_reject_137_contact.dump",
+   "ours": "tmp/structure_fixtures/d19_reject_137_contact.dump"
+  },
+  {
+   "key": "$.d19_pass_138[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\d19_pass_138_sc.csv",
+   "ours": "tmp/structure_fixtures/d19_pass_138_sc.csv"
+  },
+  {
+   "key": "$.d19_pass_138[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\d19_pass_138_atom.dump",
+   "ours": "tmp/structure_fixtures/d19_pass_138_atom.dump"
+  },
+  {
+   "key": "$.d19_pass_138[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\d19_pass_138_contact.dump",
+   "ours": "tmp/structure_fixtures/d19_pass_138_contact.dump"
+  },
+  {
+   "key": "$.d19_reject_139[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\d19_reject_139_sc.csv",
+   "ours": "tmp/structure_fixtures/d19_reject_139_sc.csv"
+  },
+  {
+   "key": "$.d19_reject_139[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\d19_reject_139_atom.dump",
+   "ours": "tmp/structure_fixtures/d19_reject_139_atom.dump"
+  },
+  {
+   "key": "$.d19_reject_139[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\d19_reject_139_contact.dump",
+   "ours": "tmp/structure_fixtures/d19_reject_139_contact.dump"
+  },
+  {
+   "key": "$.unconsumed_optional_atom_column[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\unconsumed_optional_atom_column_sc.csv",
+   "ours": "tmp/structure_fixtures/unconsumed_optional_atom_column_sc.csv"
+  },
+  {
+   "key": "$.unconsumed_optional_atom_column[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\unconsumed_optional_atom_column_atom.dump",
+   "ours": "tmp/structure_fixtures/unconsumed_optional_atom_column_atom.dump"
+  },
+  {
+   "key": "$.unconsumed_optional_atom_column[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\unconsumed_optional_atom_column_contact.dump",
+   "ours": "tmp/structure_fixtures/unconsumed_optional_atom_column_contact.dump"
+  },
+  {
+   "key": "$.unconsumed_optional_contact_column[0].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\unconsumed_optional_contact_column_sc.csv",
+   "ours": "tmp/structure_fixtures/unconsumed_optional_contact_column_sc.csv"
+  },
+  {
+   "key": "$.unconsumed_optional_contact_column[1].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\unconsumed_optional_contact_column_atom.dump",
+   "ours": "tmp/structure_fixtures/unconsumed_optional_contact_column_atom.dump"
+  },
+  {
+   "key": "$.unconsumed_optional_contact_column[2].path",
+   "class": "path",
+   "codex": "tmp\\structure_fixtures\\unconsumed_optional_contact_column_contact.dump",
+   "ours": "tmp/structure_fixtures/unconsumed_optional_contact_column_contact.dump"
+  }
+ ]
+}

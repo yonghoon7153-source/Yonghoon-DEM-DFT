@@ -1,0 +1,364 @@
+{
+ "steps": [
+  "renamed part_b/evidence -> part_b/evidence_codex_copy"
+ ],
+ "baseline_manifest": {
+  "n": 36,
+  "ok": 36,
+  "rows": [
+   {
+    "path": "old_join/scripts/rint_iface_join.py",
+    "want": "035284005bcb12c8c7ef216627378d6e2fc07fe9d0dffd5fd9a04614073d7fe3",
+    "got": "035284005bcb12c8c7ef216627378d6e2fc07fe9d0dffd5fd9a04614073d7fe3",
+    "ok": true,
+    "from": "codex bundle (already present) ; git 2b9efa253 sha=035284005bcb12c8c7ef216627378d6e2fc07fe9d0dffd5fd9a04614073d7fe3 (same)"
+   },
+   {
+    "path": "early/source/scripts/rint_iface_join.py",
+    "want": "ee72b0d149b65522dc1ddc3698b149b687cccde87285167f9fe6c21c8b6b4f83",
+    "got": "ee72b0d149b65522dc1ddc3698b149b687cccde87285167f9fe6c21c8b6b4f83",
+    "ok": true,
+    "from": "git dcb97f1ed:scripts/rint_iface_join.py"
+   },
+   {
+    "path": "probes/structure_probe.py",
+    "want": "26ae5c05c59dfc8a8817b370c237f4e56f9a1ade05282ed53acbf7bbf2a99092",
+    "got": "26ae5c05c59dfc8a8817b370c237f4e56f9a1ade05282ed53acbf7bbf2a99092",
+    "ok": true,
+    "from": "codex bundle (already present)"
+   },
+   {
+    "path": "probes/structure_minimal_replay.py",
+    "want": "8c046e0b1379a657fd2be8b18068950f064a4aef5b09be65784cc6cebfa4ba5e",
+    "got": "8c046e0b1379a657fd2be8b18068950f064a4aef5b09be65784cc6cebfa4ba5e",
+    "ok": true,
+    "from": "codex bundle (already present)"
+   },
+   {
+    "path": "probes/numeric_review.py",
+    "want": "134d02dca2932f3fe0e6a26bc84d4eff103dd2c2218e3a792289a539162a7a7f",
+    "got": "134d02dca2932f3fe0e6a26bc84d4eff103dd2c2218e3a792289a539162a7a7f",
+    "ok": true,
+    "from": "codex bundle (already present)"
+   },
+   {
+    "path": "probes/numeric_overflow_replay.py",
+    "want": "6b2ddce87bee1f875bf1b4753bc4aed27f1b32e8b48b11494c5a1172b62a23b7",
+    "got": "6b2ddce87bee1f875bf1b4753bc4aed27f1b32e8b48b11494c5a1172b62a23b7",
+    "ok": true,
+    "from": "codex bundle (already present)"
+   },
+   {
+    "path": "early/tmp/join_independent/baseline_sc.csv",
+    "want": "342da1d23e1956f26bd2ad8170b37dc4f142d71e3be28ffb71db5dfdeaef6ff2",
+    "got": "342da1d23e1956f26bd2ad8170b37dc4f142d71e3be28ffb71db5dfdeaef6ff2",
+    "ok": true,
+    "from": "pin source join_fixtures/baseline_sc.csv"
+   },
+   {
+    "path": "early/tmp/join_independent/baseline_atom.dump",
+    "want": "c7564d817e47a442f6cbc6f57f51896d852977c322d5aea6e615681ffaac44e2",
+    "got": "c7564d817e47a442f6cbc6f57f51896d852977c322d5aea6e615681ffaac44e2",
+    "ok": true,
+    "from": "pin source join_fixtures/baseline_atom.dump"
+   },
+   {
+    "path": "early/tmp/join_independent/baseline_contact.dump",
+    "want": "b3228d743df5891099800c57bec7b1dec2e0cb8df485b13e8074562cf08d381c",
+    "got": "b3228d743df5891099800c57bec7b1dec2e0cb8df485b13e8074562cf08d381c",
+    "ok": true,
+    "from": "pin source join_fixtures/baseline_contact.dump"
+   },
+   {
+    "path": "early/tmp/join_independent/malformed_numeric_contact_row_inside_block_sc.csv",
+    "want": "342da1d23e1956f26bd2ad8170b37dc4f142d71e3be28ffb71db5dfdeaef6ff2",
+    "got": "342da1d23e1956f26bd2ad8170b37dc4f142d71e3be28ffb71db5dfdeaef6ff2",
+    "ok": true,
+    "from": "pin source join_fixtures/malformed_numeric_contact_row_inside_block_sc.csv"
+   },
+   {
+    "path": "early/tmp/join_independent/malformed_numeric_contact_row_inside_block_atom.dump",
+    "want": "c7564d817e47a442f6cbc6f57f51896d852977c322d5aea6e615681ffaac44e2",
+    "got": "c7564d817e47a442f6cbc6f57f51896d852977c322d5aea6e615681ffaac44e2",
+    "ok": true,
+    "from": "pin source join_fixtures/malformed_numeric_contact_row_inside_block_atom.dump"
+   },
+   {
+    "path": "early/tmp/join_independent/malformed_numeric_contact_row_inside_block_contact.dump",
+    "want": "5d43477c67404ed4a26b43b6d541a4e0f38788cc7f6012a04be58e0bd4656253",
+    "got": "5d43477c67404ed4a26b43b6d541a4e0f38788cc7f6012a04be58e0bd4656253",
+    "ok": true,
+    "from": "pin source join_fixtures/malformed_numeric_contact_row_inside_block_contact.dump"
+   },
+   {
+    "path": "early/tmp/join_independent/malformed_numeric_atom_row_inside_block_sc.csv",
+    "want": "342da1d23e1956f26bd2ad8170b37dc4f142d71e3be28ffb71db5dfdeaef6ff2",
+    "got": "342da1d23e1956f26bd2ad8170b37dc4f142d71e3be28ffb71db5dfdeaef6ff2",
+    "ok": true,
+    "from": "pin source join_fixtures/malformed_numeric_atom_row_inside_block_sc.csv"
+   },
+   {
+    "path": "early/tmp/join_independent/malformed_numeric_atom_row_inside_block_atom.dump",
+    "want": "77372d7aa1deb411f0aca9e4a60b97ac75d6db9a709358d0e4905dfadb74d206",
+    "got": "77372d7aa1deb411f0aca9e4a60b97ac75d6db9a709358d0e4905dfadb74d206",
+    "ok": true,
+    "from": "pin source join_fixtures/malformed_numeric_atom_row_inside_block_atom.dump"
+   },
+   {
+    "path": "early/tmp/join_independent/malformed_numeric_atom_row_inside_block_contact.dump",
+    "want": "b3228d743df5891099800c57bec7b1dec2e0cb8df485b13e8074562cf08d381c",
+    "got": "b3228d743df5891099800c57bec7b1dec2e0cb8df485b13e8074562cf08d381c",
+    "ok": true,
+    "from": "pin source join_fixtures/malformed_numeric_atom_row_inside_block_contact.dump"
+   },
+   {
+    "path": "early/tmp/join_independent/malformed_extra_contact_row_sc.csv",
+    "want": "342da1d23e1956f26bd2ad8170b37dc4f142d71e3be28ffb71db5dfdeaef6ff2",
+    "got": "342da1d23e1956f26bd2ad8170b37dc4f142d71e3be28ffb71db5dfdeaef6ff2",
+    "ok": true,
+    "from": "pin source join_fixtures/malformed_extra_contact_row_sc.csv"
+   },
+   {
+    "path": "early/tmp/join_independent/malformed_extra_contact_row_atom.dump",
+    "want": "c7564d817e47a442f6cbc6f57f51896d852977c322d5aea6e615681ffaac44e2",
+    "got": "c7564d817e47a442f6cbc6f57f51896d852977c322d5aea6e615681ffaac44e2",
+    "ok": true,
+    "from": "pin source join_fixtures/malformed_extra_contact_row_atom.dump"
+   },
+   {
+    "path": "early/tmp/join_independent/malformed_extra_contact_row_contact.dump",
+    "want": "c466ec8217be79c14540b19ab70dc0697f9543ff055aab015a5da8ff7e94aa56",
+    "got": "c466ec8217be79c14540b19ab70dc0697f9543ff055aab015a5da8ff7e94aa56",
+    "ok": true,
+    "from": "pin source join_fixtures/malformed_extra_contact_row_contact.dump"
+   },
+   {
+    "path": "early/tmp/join_independent/malformed_extra_atom_row_sc.csv",
+    "want": "342da1d23e1956f26bd2ad8170b37dc4f142d71e3be28ffb71db5dfdeaef6ff2",
+    "got": "342da1d23e1956f26bd2ad8170b37dc4f142d71e3be28ffb71db5dfdeaef6ff2",
+    "ok": true,
+    "from": "pin source join_fixtures/malformed_extra_atom_row_sc.csv"
+   },
+   {
+    "path": "early/tmp/join_independent/malformed_extra_atom_row_atom.dump",
+    "want": "ee8a7acd03cc7d4422157606658daabdcf84d46d7ec4f1dfcb1a2c464e13b1b4",
+    "got": "ee8a7acd03cc7d4422157606658daabdcf84d46d7ec4f1dfcb1a2c464e13b1b4",
+    "ok": true,
+    "from": "pin source join_fixtures/malformed_extra_atom_row_atom.dump"
+   },
+   {
+    "path": "early/tmp/join_independent/malformed_extra_atom_row_contact.dump",
+    "want": "b3228d743df5891099800c57bec7b1dec2e0cb8df485b13e8074562cf08d381c",
+    "got": "b3228d743df5891099800c57bec7b1dec2e0cb8df485b13e8074562cf08d381c",
+    "ok": true,
+    "from": "pin source join_fixtures/malformed_extra_atom_row_contact.dump"
+   },
+   {
+    "path": "early/tmp/join_independent/duplicate_radius_column_sc.csv",
+    "want": "342da1d23e1956f26bd2ad8170b37dc4f142d71e3be28ffb71db5dfdeaef6ff2",
+    "got": "342da1d23e1956f26bd2ad8170b37dc4f142d71e3be28ffb71db5dfdeaef6ff2",
+    "ok": true,
+    "from": "pin source join_fixtures/duplicate_radius_column_sc.csv"
+   },
+   {
+    "path": "early/tmp/join_independent/duplicate_radius_column_atom.dump",
+    "want": "92363715cb8f9a33fdd0191e77c4e94d05d98509c7ce210ee8399e062c8c6b26",
+    "got": "92363715cb8f9a33fdd0191e77c4e94d05d98509c7ce210ee8399e062c8c6b26",
+    "ok": true,
+    "from": "pin source join_fixtures/duplicate_radius_column_atom.dump"
+   },
+   {
+    "path": "early/tmp/join_independent/duplicate_radius_column_contact.dump",
+    "want": "b3228d743df5891099800c57bec7b1dec2e0cb8df485b13e8074562cf08d381c",
+    "got": "b3228d743df5891099800c57bec7b1dec2e0cb8df485b13e8074562cf08d381c",
+    "ok": true,
+    "from": "pin source join_fixtures/duplicate_radius_column_contact.dump"
+   },
+   {
+    "path": "early/tmp/join_independent/step_extra_token_sc.csv",
+    "want": "342da1d23e1956f26bd2ad8170b37dc4f142d71e3be28ffb71db5dfdeaef6ff2",
+    "got": "342da1d23e1956f26bd2ad8170b37dc4f142d71e3be28ffb71db5dfdeaef6ff2",
+    "ok": true,
+    "from": "pin source join_fixtures/step_extra_token_sc.csv"
+   },
+   {
+    "path": "early/tmp/join_independent/step_extra_token_atom.dump",
+    "want": "c7564d817e47a442f6cbc6f57f51896d852977c322d5aea6e615681ffaac44e2",
+    "got": "c7564d817e47a442f6cbc6f57f51896d852977c322d5aea6e615681ffaac44e2",
+    "ok": true,
+    "from": "pin source join_fixtures/step_extra_token_atom.dump"
+   },
+   {
+    "path": "early/tmp/join_independent/step_extra_token_contact.dump",
+    "want": "eb8219dd5bcdd67230b44661d060a734e17e3849cb196cefd27a834367b6be2b",
+    "got": "eb8219dd5bcdd67230b44661d060a734e17e3849cb196cefd27a834367b6be2b",
+    "ok": true,
+    "from": "pin source join_fixtures/step_extra_token_contact.dump"
+   },
+   {
+    "path": "early/tmp/join_independent/count_extra_token_sc.csv",
+    "want": "342da1d23e1956f26bd2ad8170b37dc4f142d71e3be28ffb71db5dfdeaef6ff2",
+    "got": "342da1d23e1956f26bd2ad8170b37dc4f142d71e3be28ffb71db5dfdeaef6ff2",
+    "ok": true,
+    "from": "pin source join_fixtures/count_extra_token_sc.csv"
+   },
+   {
+    "path": "early/tmp/join_independent/count_extra_token_atom.dump",
+    "want": "c7564d817e47a442f6cbc6f57f51896d852977c322d5aea6e615681ffaac44e2",
+    "got": "c7564d817e47a442f6cbc6f57f51896d852977c322d5aea6e615681ffaac44e2",
+    "ok": true,
+    "from": "pin source join_fixtures/count_extra_token_atom.dump"
+   },
+   {
+    "path": "early/tmp/join_independent/count_extra_token_contact.dump",
+    "want": "6a9f374e41266b71a918b7e2af9f82e1b4834a6afb4eb96d6b02dfd6ae471a8c",
+    "got": "6a9f374e41266b71a918b7e2af9f82e1b4834a6afb4eb96d6b02dfd6ae471a8c",
+    "ok": true,
+    "from": "pin source join_fixtures/count_extra_token_contact.dump"
+   },
+   {
+    "path": "early/tmp/join_independent/wellshaped_duplicate_contact_control_sc.csv",
+    "want": "342da1d23e1956f26bd2ad8170b37dc4f142d71e3be28ffb71db5dfdeaef6ff2",
+    "got": "342da1d23e1956f26bd2ad8170b37dc4f142d71e3be28ffb71db5dfdeaef6ff2",
+    "ok": true,
+    "from": "pin source join_fixtures/wellshaped_duplicate_contact_control_sc.csv"
+   },
+   {
+    "path": "early/tmp/join_independent/wellshaped_duplicate_contact_control_atom.dump",
+    "want": "c7564d817e47a442f6cbc6f57f51896d852977c322d5aea6e615681ffaac44e2",
+    "got": "c7564d817e47a442f6cbc6f57f51896d852977c322d5aea6e615681ffaac44e2",
+    "ok": true,
+    "from": "pin source join_fixtures/wellshaped_duplicate_contact_control_atom.dump"
+   },
+   {
+    "path": "early/tmp/join_independent/wellshaped_duplicate_contact_control_contact.dump",
+    "want": "37402066e39eae62e94efc137448af26cf8dbdfba699119b92f9080db4e2b935",
+    "got": "37402066e39eae62e94efc137448af26cf8dbdfba699119b92f9080db4e2b935",
+    "ok": true,
+    "from": "pin source join_fixtures/wellshaped_duplicate_contact_control_contact.dump"
+   },
+   {
+    "path": "early/tmp/join_independent/wellshaped_duplicate_atom_control_sc.csv",
+    "want": "342da1d23e1956f26bd2ad8170b37dc4f142d71e3be28ffb71db5dfdeaef6ff2",
+    "got": "342da1d23e1956f26bd2ad8170b37dc4f142d71e3be28ffb71db5dfdeaef6ff2",
+    "ok": true,
+    "from": "pin source join_fixtures/wellshaped_duplicate_atom_control_sc.csv"
+   },
+   {
+    "path": "early/tmp/join_independent/wellshaped_duplicate_atom_control_atom.dump",
+    "want": "7cfdd61ccc26b55d8d23175cf8520326b80cd83332ebe7ddff6690b6a9dbc2a9",
+    "got": "7cfdd61ccc26b55d8d23175cf8520326b80cd83332ebe7ddff6690b6a9dbc2a9",
+    "ok": true,
+    "from": "pin source join_fixtures/wellshaped_duplicate_atom_control_atom.dump"
+   },
+   {
+    "path": "early/tmp/join_independent/wellshaped_duplicate_atom_control_contact.dump",
+    "want": "b3228d743df5891099800c57bec7b1dec2e0cb8df485b13e8074562cf08d381c",
+    "got": "b3228d743df5891099800c57bec7b1dec2e0cb8df485b13e8074562cf08d381c",
+    "ok": true,
+    "from": "pin source join_fixtures/wellshaped_duplicate_atom_control_contact.dump"
+   }
+  ]
+ },
+ "oldsrc_2b9efa253": {
+  "n": 15,
+  "ok": 15,
+  "rows": [
+   {
+    "path": "scripts/lens_geometry.py",
+    "want_codex_import_sha": "891ac67f8b6c1b4c7978b5e806800ae74f5c8791928d6ece19a29e5f3b212b77",
+    "got": "891ac67f8b6c1b4c7978b5e806800ae74f5c8791928d6ece19a29e5f3b212b77",
+    "ok": true
+   },
+   {
+    "path": "scripts/lhs_contact_audit.py",
+    "want_codex_import_sha": "bcce52d689552bcdb5556596d0a50c4fd785f2aeb52d849a501be4770aec8635",
+    "got": "bcce52d689552bcdb5556596d0a50c4fd785f2aeb52d849a501be4770aec8635",
+    "ok": true
+   },
+   {
+    "path": "scripts/lhs_descriptor_harvest.py",
+    "want_codex_import_sha": "96fa643e309aab46b2a5cbd59e2276ee16b99107a9a7514e5d9fdcaf5c2d8d9e",
+    "got": "96fa643e309aab46b2a5cbd59e2276ee16b99107a9a7514e5d9fdcaf5c2d8d9e",
+    "ok": true
+   },
+   {
+    "path": "scripts/lhs_harvest_batch.py",
+    "want_codex_import_sha": "4d798c631ac893ca32018fde58145bc5c8a2e3e2a6423da61cb87bd13599148e",
+    "got": "4d798c631ac893ca32018fde58145bc5c8a2e3e2a6423da61cb87bd13599148e",
+    "ok": true
+   },
+   {
+    "path": "scripts/lhs_perc_extract.py",
+    "want_codex_import_sha": "0750d0964d006e64934e42e83b98fe0786115440f024fc5215d5d2aaf6396a16",
+    "got": "0750d0964d006e64934e42e83b98fe0786115440f024fc5215d5d2aaf6396a16",
+    "ok": true
+   },
+   {
+    "path": "scripts/rint_iface_join.py",
+    "want_codex_import_sha": "035284005bcb12c8c7ef216627378d6e2fc07fe9d0dffd5fd9a04614073d7fe3",
+    "got": "035284005bcb12c8c7ef216627378d6e2fc07fe9d0dffd5fd9a04614073d7fe3",
+    "ok": true
+   },
+   {
+    "path": "scripts/se_material.py",
+    "want_codex_import_sha": "767a6a383d4581274b07ee79146a53fbe118f1f6eb0acb9ec0a5af21c9c9930c",
+    "got": "767a6a383d4581274b07ee79146a53fbe118f1f6eb0acb9ec0a5af21c9c9930c",
+    "ok": true
+   },
+   {
+    "path": "scripts/step3_sigma.py",
+    "want_codex_import_sha": "026f8ba49c7421d6cb7b18c7d7b8d3b2e05d4d364c53e4f556823bfb632925aa",
+    "got": "026f8ba49c7421d6cb7b18c7d7b8d3b2e05d4d364c53e4f556823bfb632925aa",
+    "ok": true
+   },
+   {
+    "path": "docs/data/heckel_sweep_scaffolds/LOOSE_am_scaffold.csv",
+    "got": "7ded87d867bb77bb776dff1df8ec1f21ece0204e24d43c460eef6f3ccad3f007",
+    "same_as_pin_source": true,
+    "ok": true
+   },
+   {
+    "path": "docs/data/real14_am_scaffold.csv",
+    "got": "281ad86e0465a13b6ed96dbcf30c76acf4f372ff9d7c4a7e36fe55ecd44413fd",
+    "same_as_pin_source": true,
+    "ok": true
+   },
+   {
+    "path": "docs/data/real14_reference_20260928/atom_2060000.liggghts.gz",
+    "got": "5f6dcc80e12615fa7705567788a3633bdd386076e42112a04b602eb84f9437f6",
+    "same_as_pin_source": true,
+    "ok": true
+   },
+   {
+    "path": "docs/data/real14_reference_20260928/contact_2060000.liggghts.gz",
+    "got": "47d1985ff8cea9580d4f7b5f9c8014d96b99e03171cdc23bbd45e05b161a0bb7",
+    "same_as_pin_source": true,
+    "ok": true
+   },
+   {
+    "path": "docs/data/case15_corner_20261001/case15_am_scaffold.csv",
+    "got": "275c56e12fe11294fe6bf2cb304ce4187ee3fb3cb2f7ccdd8a5fc92d770383ba",
+    "same_as_pin_source": true,
+    "ok": true
+   },
+   {
+    "path": "docs/data/case15_corner_20261001/atom_v4_1710000.liggghts.gz",
+    "got": "30da8899c5dfd14fcb70a590938695a6c153bc11e6b12d0e7ae3e68d72c9228d",
+    "same_as_pin_source": true,
+    "ok": true
+   },
+   {
+    "path": "docs/data/case15_corner_20261001/contact_v4_1710000.liggghts.gz",
+    "got": "d2546c9498e8b6c99c2d88b72d21304535ae990623f926ff7e83e573c085b112",
+    "same_as_pin_source": true,
+    "ok": true
+   }
+  ]
+ },
+ "oldtest_2b9efa253": {
+  "path": "scripts/test_rint_g2_join.py",
+  "sha256": "8db7f5a9ec5d967b1d00fff7b05818cf18f459c0d4f101b61cf130183f0b2278",
+  "bytes": 56279
+ }
+}

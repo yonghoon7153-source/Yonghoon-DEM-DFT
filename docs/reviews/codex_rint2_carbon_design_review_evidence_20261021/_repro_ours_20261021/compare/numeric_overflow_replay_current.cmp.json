@@ -1,0 +1,22 @@
+{
+ "label": "numeric_overflow_replay_current",
+ "codex": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_rint2rev/x/part_b/evidence/numeric_overflow_replay_current.json",
+ "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/evidence/numeric_overflow_replay_current.json",
+ "stats": {
+  "exact": 48,
+  "rel_le_1e-12": 0,
+  "path": 1,
+  "diff": 0,
+  "missing_in_ours": 0,
+  "extra_in_ours": 0,
+  "type_diff": 0
+ },
+ "rows": [
+  {
+   "key": "$.source",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\source",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/source"
+  }
+ ]
+}

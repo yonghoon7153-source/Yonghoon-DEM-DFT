@@ -1,0 +1,58 @@
+{
+ "label": "independent_join_checks",
+ "codex": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_rint2rev/x/part_b/evidence/independent_join_checks.json",
+ "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/evidence/independent_join_checks.json",
+ "stats": {
+  "exact": 1251,
+  "rel_le_1e-12": 0,
+  "path": 1,
+  "diff": 6,
+  "missing_in_ours": 0,
+  "extra_in_ours": 0,
+  "type_diff": 0
+ },
+ "rows": [
+  {
+   "key": "$.source",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\source",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/source"
+  },
+  {
+   "key": "$.cases[3].input_sha256[0]",
+   "class": "DIFF",
+   "codex": "\"bec9220e1722b7597d4ef103859eb26a394ec376cd6578785a4668c0e65fdfe3\"",
+   "ours": "\"2a5b079411cf5bd0d2a537c5ce9fd27cbd13269bd80efee569a780d538d24222\""
+  },
+  {
+   "key": "$.cases[3].input_sha256[1]",
+   "class": "DIFF",
+   "codex": "\"249b9723c85606d528b611c7e6b20992bea26e0b186b61b5148c06aaee0ec304\"",
+   "ours": "\"4c2b7e3df514f79074bd26c8b75010eb55e353499382c414b580905a86ca8ff1\""
+  },
+  {
+   "key": "$.cases[3].input_sha256[2]",
+   "class": "DIFF",
+   "codex": "\"d69afa104cd1a01642f107328fb49eaa7dd432c65820f656435d0f12d360c1fb\"",
+   "ours": "\"8ae9c6465d93cb37468be0cfcd9e2f2d7a3d3f5d371d99c84379eba95a6cc78d\""
+  },
+  {
+   "key": "$.cases[4].input_sha256[0]",
+   "class": "DIFF",
+   "codex": "\"be9218e4830c359d7f302b512025cc3d1e588a826d59b842bcc76e9f07e36b4a\"",
+   "ours": "\"fe7120f9fb2517afe120931b5753155b65aa75b9e149a80377a337ad44317c6f\""
+  },
+  {
+   "key": "$.cases[4].input_sha256[1]",
+   "class": "DIFF",
+   "codex": "\"9cf70b8d26bd3a8ad148951601bceeffc61d8164ef9519611493e3bb53021336\"",
+   "ours": "\"1de78e69c7ca749e164cc75eb1810149cdbeaf2055ddf3d440d53187da6414ed\""
+  },
+  {
+   "key": "$.cases[4].input_sha256[2]",
+   "class": "DIFF",
+   "codex": "\"48a110dc870c3b05d10a34a71a4beab5db54b005bb67498f1aafb5a65de2ab17\"",
+   "ours": "\"66bbc3473e70f4ace900e4aa25e4cf083a829d19d1f1e48d13aff6b656dabcee\""
+  }
+ ]
+}

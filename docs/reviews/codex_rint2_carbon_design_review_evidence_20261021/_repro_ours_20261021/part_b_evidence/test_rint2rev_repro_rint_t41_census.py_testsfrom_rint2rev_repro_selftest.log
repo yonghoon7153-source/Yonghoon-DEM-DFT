@@ -1,0 +1,5 @@
+  ✓ ① 부류 합 = 등록 쌍 (contact 1 · gap_bridged 1)   {'contact': 1, 'ambiguous': 0, 'gap_bridged': 1}
+  ✓ ② support/true 표본 = contact 중 면 있는 것 · 미실현 0 · 탄소 = 0 (정의상)   {'n': 1, 'p0': 10.237101867217376, 'p10': 10.237101867217376, 'p50': 10.237101867217376, 'p90': 10.237101867217376, 'p100': 10.237101867217376}
+  ✓ ③ 옆면 주기로만 닿는 쌍 = seam 1 (닿음 · 브리지 규칙 둘 다)   {'n_touch': 1, 'n_bridge_rule': 1, 'meaning': '옆면 주기 영상으로만 닿는 AM 쌍 (scaffold 기하) — 비주기 raster 가 표현 못 함 (seam_unrepresented · v2 §3-6)'}
+  ✓ ④ 거부 없음 · N8 · N8b 0 · a_lt_h 정의 (contact_of = 1)   []
+SELFTEST PASS

@@ -1,0 +1,35 @@
+{
+  "command": [
+    "/usr/local/bin/python3",
+    "-X",
+    "utf8",
+    "-B",
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/run_review.py",
+    "test",
+    "test_rint_g2_join.py",
+    "--test-source",
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/oldtest_2b9efa253/source",
+    "--child"
+  ],
+  "rc": 0,
+  "seconds": 185.8946339660033,
+  "source": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/source",
+  "test_source": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/oldtest_2b9efa253/source",
+  "lf_test_writer_adapter": false,
+  "log": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/evidence/test_rint2rev_repro_test_rint_g2_join.py_testsfrom_oldtest_2b9efa253.log",
+  "log_sha256": "04a2abbf39496c3e2b138028cbb5a101b234d1ff729013af032dad51c5ba2358",
+  "tail": [
+    "  PASS  J11 µm 변환 넘침 — 한 구 x 10^306 sim (float64 유한 · ×1000 = inf · 고치기 전 = PASS · c_um inf) → 계획 join_gate_failed · 정량 관문 거부",
+    "  PASS  J11 원자 id int64 넘침 `9223372036854775808` (Codex · 고치기 전 = OverflowError) → 입구 REJECT (int_token · atom_id ≥ 1) · 관문 계산 안 함",
+    "  PASS  J11 원자 id int64 넘침 `9223372036854775808` (Codex · 고치기 전 = OverflowError) → 계획 join_gate_failed · 정량 관문 거부",
+    "  PASS  J11 접촉 id1 int64 넘침 → 입구 REJECT (int_token · contact_id1 ≥ 1) · 관문 계산 안 함",
+    "  PASS  J11 접촉 id1 int64 넘침 → 계획 join_gate_failed · 정량 관문 거부",
+    "  PASS  J11 scaffold type int64 넘침 → 입구 REJECT (int_token · scaffold_type ≥ 1) · 관문 계산 안 함",
+    "  PASS  J11 scaffold type int64 넘침 → 계획 join_gate_failed · 정량 관문 거부",
+    "  PASS  J11 두 덤프 step int64 넘침 (e3 = int64 정수 · 같은 규칙) → 입구 REJECT (int_token · atom_step ≥ 1) · 관문 계산 안 함",
+    "  PASS  J11 두 덤프 step int64 넘침 (e3 = int64 정수 · 같은 규칙) → 계획 join_gate_failed · 정량 관문 거부",
+    "  PASS  J11 경계 양성: 원자 · 접촉 id = int64 최댓값 9223372036854775807 → PASS (거부 없음)",
+    "",
+    "138 PASS · 0 FAIL"
+  ]
+}

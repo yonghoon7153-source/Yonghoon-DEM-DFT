@@ -1,0 +1,22 @@
+{
+  "command": [
+    "/usr/local/bin/python3",
+    "-X",
+    "utf8",
+    "-B",
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/run_review.py",
+    "probe",
+    "numeric_review.py",
+    "--child"
+  ],
+  "rc": 0,
+  "seconds": 16.61085402900062,
+  "source": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/source",
+  "test_source": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/source",
+  "lf_test_writer_adapter": false,
+  "log": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/evidence/probe_rint2rev_repro_numeric_review.py.log",
+  "log_sha256": "b33e65254d3f81a0844f3dc1befc17635832bca65e1475d3d3e86d385d86dbf2",
+  "tail": [
+    "{\"file\": \"/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/evidence/numeric_current.json\", \"n_cases\": 113, \"counts\": {\"PASS\": 8, \"REJECT\": 105, \"EXCEPTION\": 0}}"
+  ]
+}

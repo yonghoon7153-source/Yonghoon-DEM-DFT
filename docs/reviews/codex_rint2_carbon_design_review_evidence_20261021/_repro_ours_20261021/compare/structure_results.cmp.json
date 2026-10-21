@@ -1,0 +1,2620 @@
+{
+ "label": "structure_results",
+ "codex": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/import_rint2rev/x/part_b/evidence/structure_results.json",
+ "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/evidence/structure_results.json",
+ "stats": {
+  "exact": 12465,
+  "rel_le_1e-12": 0,
+  "path": 434,
+  "diff": 0,
+  "missing_in_ours": 0,
+  "extra_in_ours": 0,
+  "type_diff": 0
+ },
+ "rows": [
+  {
+   "key": "$.results[0].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\baseline_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/baseline_sc.csv"
+  },
+  {
+   "key": "$.results[0].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\baseline_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/baseline_atom.dump"
+  },
+  {
+   "key": "$.results[0].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\baseline_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/baseline_contact.dump"
+  },
+  {
+   "key": "$.results[1].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\zero_contacts_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/zero_contacts_sc.csv"
+  },
+  {
+   "key": "$.results[1].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\zero_contacts_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/zero_contacts_atom.dump"
+  },
+  {
+   "key": "$.results[1].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\zero_contacts_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/zero_contacts_contact.dump"
+  },
+  {
+   "key": "$.results[2].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\baseline\\early\\tmp\\join_independent\\baseline_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/baseline/early/tmp/join_independent/baseline_sc.csv"
+  },
+  {
+   "key": "$.results[2].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\baseline\\early\\tmp\\join_independent\\baseline_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/baseline/early/tmp/join_independent/baseline_atom.dump"
+  },
+  {
+   "key": "$.results[2].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\baseline\\early\\tmp\\join_independent\\baseline_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/baseline/early/tmp/join_independent/baseline_contact.dump"
+  },
+  {
+   "key": "$.results[3].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\baseline\\early\\tmp\\join_independent\\malformed_numeric_contact_row_inside_block_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/baseline/early/tmp/join_independent/malformed_numeric_contact_row_inside_block_sc.csv"
+  },
+  {
+   "key": "$.results[3].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\baseline\\early\\tmp\\join_independent\\malformed_numeric_contact_row_inside_block_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/baseline/early/tmp/join_independent/malformed_numeric_contact_row_inside_block_atom.dump"
+  },
+  {
+   "key": "$.results[3].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\baseline\\early\\tmp\\join_independent\\malformed_numeric_contact_row_inside_block_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/baseline/early/tmp/join_independent/malformed_numeric_contact_row_inside_block_contact.dump"
+  },
+  {
+   "key": "$.results[4].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\baseline\\early\\tmp\\join_independent\\malformed_numeric_atom_row_inside_block_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/baseline/early/tmp/join_independent/malformed_numeric_atom_row_inside_block_sc.csv"
+  },
+  {
+   "key": "$.results[4].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\baseline\\early\\tmp\\join_independent\\malformed_numeric_atom_row_inside_block_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/baseline/early/tmp/join_independent/malformed_numeric_atom_row_inside_block_atom.dump"
+  },
+  {
+   "key": "$.results[4].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\baseline\\early\\tmp\\join_independent\\malformed_numeric_atom_row_inside_block_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/baseline/early/tmp/join_independent/malformed_numeric_atom_row_inside_block_contact.dump"
+  },
+  {
+   "key": "$.results[5].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\baseline\\early\\tmp\\join_independent\\malformed_extra_contact_row_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/baseline/early/tmp/join_independent/malformed_extra_contact_row_sc.csv"
+  },
+  {
+   "key": "$.results[5].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\baseline\\early\\tmp\\join_independent\\malformed_extra_contact_row_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/baseline/early/tmp/join_independent/malformed_extra_contact_row_atom.dump"
+  },
+  {
+   "key": "$.results[5].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\baseline\\early\\tmp\\join_independent\\malformed_extra_contact_row_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/baseline/early/tmp/join_independent/malformed_extra_contact_row_contact.dump"
+  },
+  {
+   "key": "$.results[6].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\baseline\\early\\tmp\\join_independent\\malformed_extra_atom_row_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/baseline/early/tmp/join_independent/malformed_extra_atom_row_sc.csv"
+  },
+  {
+   "key": "$.results[6].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\baseline\\early\\tmp\\join_independent\\malformed_extra_atom_row_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/baseline/early/tmp/join_independent/malformed_extra_atom_row_atom.dump"
+  },
+  {
+   "key": "$.results[6].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\baseline\\early\\tmp\\join_independent\\malformed_extra_atom_row_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/baseline/early/tmp/join_independent/malformed_extra_atom_row_contact.dump"
+  },
+  {
+   "key": "$.results[7].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\baseline\\early\\tmp\\join_independent\\duplicate_radius_column_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/baseline/early/tmp/join_independent/duplicate_radius_column_sc.csv"
+  },
+  {
+   "key": "$.results[7].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\baseline\\early\\tmp\\join_independent\\duplicate_radius_column_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/baseline/early/tmp/join_independent/duplicate_radius_column_atom.dump"
+  },
+  {
+   "key": "$.results[7].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\baseline\\early\\tmp\\join_independent\\duplicate_radius_column_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/baseline/early/tmp/join_independent/duplicate_radius_column_contact.dump"
+  },
+  {
+   "key": "$.results[8].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\baseline\\early\\tmp\\join_independent\\step_extra_token_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/baseline/early/tmp/join_independent/step_extra_token_sc.csv"
+  },
+  {
+   "key": "$.results[8].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\baseline\\early\\tmp\\join_independent\\step_extra_token_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/baseline/early/tmp/join_independent/step_extra_token_atom.dump"
+  },
+  {
+   "key": "$.results[8].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\baseline\\early\\tmp\\join_independent\\step_extra_token_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/baseline/early/tmp/join_independent/step_extra_token_contact.dump"
+  },
+  {
+   "key": "$.results[9].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\baseline\\early\\tmp\\join_independent\\count_extra_token_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/baseline/early/tmp/join_independent/count_extra_token_sc.csv"
+  },
+  {
+   "key": "$.results[9].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\baseline\\early\\tmp\\join_independent\\count_extra_token_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/baseline/early/tmp/join_independent/count_extra_token_atom.dump"
+  },
+  {
+   "key": "$.results[9].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\baseline\\early\\tmp\\join_independent\\count_extra_token_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/baseline/early/tmp/join_independent/count_extra_token_contact.dump"
+  },
+  {
+   "key": "$.results[10].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\baseline\\early\\tmp\\join_independent\\wellshaped_duplicate_contact_control_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/baseline/early/tmp/join_independent/wellshaped_duplicate_contact_control_sc.csv"
+  },
+  {
+   "key": "$.results[10].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\baseline\\early\\tmp\\join_independent\\wellshaped_duplicate_contact_control_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/baseline/early/tmp/join_independent/wellshaped_duplicate_contact_control_atom.dump"
+  },
+  {
+   "key": "$.results[10].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\baseline\\early\\tmp\\join_independent\\wellshaped_duplicate_contact_control_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/baseline/early/tmp/join_independent/wellshaped_duplicate_contact_control_contact.dump"
+  },
+  {
+   "key": "$.results[11].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\baseline\\early\\tmp\\join_independent\\wellshaped_duplicate_atom_control_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/baseline/early/tmp/join_independent/wellshaped_duplicate_atom_control_sc.csv"
+  },
+  {
+   "key": "$.results[11].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\baseline\\early\\tmp\\join_independent\\wellshaped_duplicate_atom_control_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/baseline/early/tmp/join_independent/wellshaped_duplicate_atom_control_atom.dump"
+  },
+  {
+   "key": "$.results[11].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\baseline\\early\\tmp\\join_independent\\wellshaped_duplicate_atom_control_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/baseline/early/tmp/join_independent/wellshaped_duplicate_atom_control_contact.dump"
+  },
+  {
+   "key": "$.results[12].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_duplicate_id_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_duplicate_id_sc.csv"
+  },
+  {
+   "key": "$.results[12].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_duplicate_id_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_duplicate_id_atom.dump"
+  },
+  {
+   "key": "$.results[12].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_duplicate_id_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_duplicate_id_contact.dump"
+  },
+  {
+   "key": "$.results[13].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_duplicate_type_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_duplicate_type_sc.csv"
+  },
+  {
+   "key": "$.results[13].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_duplicate_type_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_duplicate_type_atom.dump"
+  },
+  {
+   "key": "$.results[13].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_duplicate_type_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_duplicate_type_contact.dump"
+  },
+  {
+   "key": "$.results[14].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_duplicate_x_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_duplicate_x_sc.csv"
+  },
+  {
+   "key": "$.results[14].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_duplicate_x_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_duplicate_x_atom.dump"
+  },
+  {
+   "key": "$.results[14].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_duplicate_x_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_duplicate_x_contact.dump"
+  },
+  {
+   "key": "$.results[15].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_duplicate_y_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_duplicate_y_sc.csv"
+  },
+  {
+   "key": "$.results[15].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_duplicate_y_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_duplicate_y_atom.dump"
+  },
+  {
+   "key": "$.results[15].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_duplicate_y_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_duplicate_y_contact.dump"
+  },
+  {
+   "key": "$.results[16].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_duplicate_z_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_duplicate_z_sc.csv"
+  },
+  {
+   "key": "$.results[16].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_duplicate_z_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_duplicate_z_atom.dump"
+  },
+  {
+   "key": "$.results[16].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_duplicate_z_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_duplicate_z_contact.dump"
+  },
+  {
+   "key": "$.results[17].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_duplicate_radius_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_duplicate_radius_sc.csv"
+  },
+  {
+   "key": "$.results[17].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_duplicate_radius_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_duplicate_radius_atom.dump"
+  },
+  {
+   "key": "$.results[17].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_duplicate_radius_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_duplicate_radius_contact.dump"
+  },
+  {
+   "key": "$.results[18].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_duplicate_section_count_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_duplicate_section_count_sc.csv"
+  },
+  {
+   "key": "$.results[18].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_duplicate_section_count_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_duplicate_section_count_atom.dump"
+  },
+  {
+   "key": "$.results[18].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_duplicate_section_count_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_duplicate_section_count_contact.dump"
+  },
+  {
+   "key": "$.results[19].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_duplicate_section_box_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_duplicate_section_box_sc.csv"
+  },
+  {
+   "key": "$.results[19].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_duplicate_section_box_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_duplicate_section_box_atom.dump"
+  },
+  {
+   "key": "$.results[19].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_duplicate_section_box_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_duplicate_section_box_contact.dump"
+  },
+  {
+   "key": "$.results[20].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_duplicate_section_rows_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_duplicate_section_rows_sc.csv"
+  },
+  {
+   "key": "$.results[20].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_duplicate_section_rows_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_duplicate_section_rows_atom.dump"
+  },
+  {
+   "key": "$.results[20].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_duplicate_section_rows_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_duplicate_section_rows_contact.dump"
+  },
+  {
+   "key": "$.results[21].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_unknown_at_0_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_unknown_at_0_sc.csv"
+  },
+  {
+   "key": "$.results[21].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_unknown_at_0_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_unknown_at_0_atom.dump"
+  },
+  {
+   "key": "$.results[21].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_unknown_at_0_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_unknown_at_0_contact.dump"
+  },
+  {
+   "key": "$.results[22].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_unknown_at_2_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_unknown_at_2_sc.csv"
+  },
+  {
+   "key": "$.results[22].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_unknown_at_2_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_unknown_at_2_atom.dump"
+  },
+  {
+   "key": "$.results[22].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_unknown_at_2_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_unknown_at_2_contact.dump"
+  },
+  {
+   "key": "$.results[23].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_unknown_at_4_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_unknown_at_4_sc.csv"
+  },
+  {
+   "key": "$.results[23].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_unknown_at_4_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_unknown_at_4_atom.dump"
+  },
+  {
+   "key": "$.results[23].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_unknown_at_4_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_unknown_at_4_contact.dump"
+  },
+  {
+   "key": "$.results[24].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_unknown_at_8_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_unknown_at_8_sc.csv"
+  },
+  {
+   "key": "$.results[24].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_unknown_at_8_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_unknown_at_8_atom.dump"
+  },
+  {
+   "key": "$.results[24].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_unknown_at_8_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_unknown_at_8_contact.dump"
+  },
+  {
+   "key": "$.results[25].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_unknown_at_11_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_unknown_at_11_sc.csv"
+  },
+  {
+   "key": "$.results[25].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_unknown_at_11_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_unknown_at_11_atom.dump"
+  },
+  {
+   "key": "$.results[25].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_unknown_at_11_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_unknown_at_11_contact.dump"
+  },
+  {
+   "key": "$.results[26].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_0_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_0_sc.csv"
+  },
+  {
+   "key": "$.results[26].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_0_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_0_atom.dump"
+  },
+  {
+   "key": "$.results[26].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_0_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_0_contact.dump"
+  },
+  {
+   "key": "$.results[27].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_-1_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_-1_sc.csv"
+  },
+  {
+   "key": "$.results[27].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_-1_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_-1_atom.dump"
+  },
+  {
+   "key": "$.results[27].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_-1_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_-1_contact.dump"
+  },
+  {
+   "key": "$.results[28].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_3_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_3_sc.csv"
+  },
+  {
+   "key": "$.results[28].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_3_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_3_atom.dump"
+  },
+  {
+   "key": "$.results[28].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_3_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_3_contact.dump"
+  },
+  {
+   "key": "$.results[29].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_empty_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_empty_sc.csv"
+  },
+  {
+   "key": "$.results[29].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_empty_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_empty_atom.dump"
+  },
+  {
+   "key": "$.results[29].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_empty_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_empty_contact.dump"
+  },
+  {
+   "key": "$.results[30].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_1.0_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_1.0_sc.csv"
+  },
+  {
+   "key": "$.results[30].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_1.0_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_1.0_atom.dump"
+  },
+  {
+   "key": "$.results[30].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_1.0_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_1.0_contact.dump"
+  },
+  {
+   "key": "$.results[31].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_1e0_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_1e0_sc.csv"
+  },
+  {
+   "key": "$.results[31].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_1e0_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_1e0_atom.dump"
+  },
+  {
+   "key": "$.results[31].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_1e0_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_1e0_contact.dump"
+  },
+  {
+   "key": "$.results[32].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_1_0_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_1_0_sc.csv"
+  },
+  {
+   "key": "$.results[32].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_1_0_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_1_0_atom.dump"
+  },
+  {
+   "key": "$.results[32].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_1_0_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_1_0_contact.dump"
+  },
+  {
+   "key": "$.results[33].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_1 garbage_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_1 garbage_sc.csv"
+  },
+  {
+   "key": "$.results[33].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_1 garbage_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_1 garbage_atom.dump"
+  },
+  {
+   "key": "$.results[33].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_1 garbage_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_1 garbage_contact.dump"
+  },
+  {
+   "key": "$.results[34].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_9223372036854775808_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_9223372036854775808_sc.csv"
+  },
+  {
+   "key": "$.results[34].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_9223372036854775808_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_9223372036854775808_atom.dump"
+  },
+  {
+   "key": "$.results[34].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_9223372036854775808_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_9223372036854775808_contact.dump"
+  },
+  {
+   "key": "$.results[35].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_999999999999999999999999_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_999999999999999999999999_sc.csv"
+  },
+  {
+   "key": "$.results[35].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_999999999999999999999999_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_999999999999999999999999_atom.dump"
+  },
+  {
+   "key": "$.results[35].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_999999999999999999999999_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_999999999999999999999999_contact.dump"
+  },
+  {
+   "key": "$.results[36].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_36_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_36_sc.csv"
+  },
+  {
+   "key": "$.results[36].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_36_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_36_atom.dump"
+  },
+  {
+   "key": "$.results[36].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_36_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_36_contact.dump"
+  },
+  {
+   "key": "$.results[37].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_37_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_37_sc.csv"
+  },
+  {
+   "key": "$.results[37].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_37_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_37_atom.dump"
+  },
+  {
+   "key": "$.results[37].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_37_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_37_contact.dump"
+  },
+  {
+   "key": "$.results[38].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_38_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_38_sc.csv"
+  },
+  {
+   "key": "$.results[38].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_38_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_38_atom.dump"
+  },
+  {
+   "key": "$.results[38].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_38_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_38_contact.dump"
+  },
+  {
+   "key": "$.results[39].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_39_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_39_sc.csv"
+  },
+  {
+   "key": "$.results[39].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_39_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_39_atom.dump"
+  },
+  {
+   "key": "$.results[39].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_39_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_39_contact.dump"
+  },
+  {
+   "key": "$.results[40].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_40_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_40_sc.csv"
+  },
+  {
+   "key": "$.results[40].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_40_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_40_atom.dump"
+  },
+  {
+   "key": "$.results[40].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_40_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_40_contact.dump"
+  },
+  {
+   "key": "$.results[41].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_41_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_41_sc.csv"
+  },
+  {
+   "key": "$.results[41].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_41_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_41_atom.dump"
+  },
+  {
+   "key": "$.results[41].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_41_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_41_contact.dump"
+  },
+  {
+   "key": "$.results[42].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_42_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_42_sc.csv"
+  },
+  {
+   "key": "$.results[42].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_42_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_42_atom.dump"
+  },
+  {
+   "key": "$.results[42].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_42_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_42_contact.dump"
+  },
+  {
+   "key": "$.results[43].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_43_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_43_sc.csv"
+  },
+  {
+   "key": "$.results[43].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_43_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_43_atom.dump"
+  },
+  {
+   "key": "$.results[43].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_43_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_43_contact.dump"
+  },
+  {
+   "key": "$.results[44].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_44_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_44_sc.csv"
+  },
+  {
+   "key": "$.results[44].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_44_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_44_atom.dump"
+  },
+  {
+   "key": "$.results[44].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_44_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_44_contact.dump"
+  },
+  {
+   "key": "$.results[45].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_45_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_45_sc.csv"
+  },
+  {
+   "key": "$.results[45].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_45_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_45_atom.dump"
+  },
+  {
+   "key": "$.results[45].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_45_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_45_contact.dump"
+  },
+  {
+   "key": "$.results[46].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_46_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_46_sc.csv"
+  },
+  {
+   "key": "$.results[46].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_46_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_46_atom.dump"
+  },
+  {
+   "key": "$.results[46].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_46_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_46_contact.dump"
+  },
+  {
+   "key": "$.results[47].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_47_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_47_sc.csv"
+  },
+  {
+   "key": "$.results[47].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_47_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_47_atom.dump"
+  },
+  {
+   "key": "$.results[47].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_case_47_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_case_47_contact.dump"
+  },
+  {
+   "key": "$.results[48].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_missing_count_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_missing_count_sc.csv"
+  },
+  {
+   "key": "$.results[48].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_missing_count_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_missing_count_atom.dump"
+  },
+  {
+   "key": "$.results[48].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_missing_count_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_missing_count_contact.dump"
+  },
+  {
+   "key": "$.results[49].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_missing_box_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_missing_box_sc.csv"
+  },
+  {
+   "key": "$.results[49].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_missing_box_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_missing_box_atom.dump"
+  },
+  {
+   "key": "$.results[49].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_missing_box_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_missing_box_contact.dump"
+  },
+  {
+   "key": "$.results[49].message",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_missing_box_atom.dump: `ITEM: ATOMS` 또는 `ITEM: BOX BOUNDS` 가 마지막 프레임에 없다",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_missing_box_atom.dump: `ITEM: ATOMS` 또는 `ITEM: BOX BOUNDS` 가 마지막 프레임에 없다"
+  },
+  {
+   "key": "$.results[50].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_missing_rows_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_missing_rows_sc.csv"
+  },
+  {
+   "key": "$.results[50].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_missing_rows_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_missing_rows_atom.dump"
+  },
+  {
+   "key": "$.results[50].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_missing_rows_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_missing_rows_contact.dump"
+  },
+  {
+   "key": "$.results[50].message",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_missing_rows_atom.dump: `ITEM: ATOMS` 또는 `ITEM: BOX BOUNDS` 가 마지막 프레임에 없다",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_missing_rows_atom.dump: `ITEM: ATOMS` 또는 `ITEM: BOX BOUNDS` 가 마지막 프레임에 없다"
+  },
+  {
+   "key": "$.results[51].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_preamble_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_preamble_sc.csv"
+  },
+  {
+   "key": "$.results[51].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_preamble_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_preamble_atom.dump"
+  },
+  {
+   "key": "$.results[51].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_preamble_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_preamble_contact.dump"
+  },
+  {
+   "key": "$.results[52].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_trailing_junk_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_trailing_junk_sc.csv"
+  },
+  {
+   "key": "$.results[52].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_trailing_junk_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_trailing_junk_atom.dump"
+  },
+  {
+   "key": "$.results[52].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_trailing_junk_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_trailing_junk_contact.dump"
+  },
+  {
+   "key": "$.results[53].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_fourth_box_line_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_fourth_box_line_sc.csv"
+  },
+  {
+   "key": "$.results[53].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_fourth_box_line_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_fourth_box_line_atom.dump"
+  },
+  {
+   "key": "$.results[53].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_fourth_box_line_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_fourth_box_line_contact.dump"
+  },
+  {
+   "key": "$.results[54].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_leading_scalar_blank_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_leading_scalar_blank_sc.csv"
+  },
+  {
+   "key": "$.results[54].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_leading_scalar_blank_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_leading_scalar_blank_atom.dump"
+  },
+  {
+   "key": "$.results[54].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_leading_scalar_blank_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_leading_scalar_blank_contact.dump"
+  },
+  {
+   "key": "$.results[55].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_interior_box_blank_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_interior_box_blank_sc.csv"
+  },
+  {
+   "key": "$.results[55].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_interior_box_blank_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_interior_box_blank_atom.dump"
+  },
+  {
+   "key": "$.results[55].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_interior_box_blank_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_interior_box_blank_contact.dump"
+  },
+  {
+   "key": "$.results[56].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_last_frame_empty_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_last_frame_empty_sc.csv"
+  },
+  {
+   "key": "$.results[56].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_last_frame_empty_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_last_frame_empty_atom.dump"
+  },
+  {
+   "key": "$.results[56].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_last_frame_empty_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_last_frame_empty_contact.dump"
+  },
+  {
+   "key": "$.results[56].message",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_last_frame_empty_atom.dump: `ITEM: ATOMS` 또는 `ITEM: BOX BOUNDS` 가 마지막 프레임에 없다",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_last_frame_empty_atom.dump: `ITEM: ATOMS` 또는 `ITEM: BOX BOUNDS` 가 마지막 프레임에 없다"
+  },
+  {
+   "key": "$.results[57].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_last_frame_partial_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_last_frame_partial_sc.csv"
+  },
+  {
+   "key": "$.results[57].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_last_frame_partial_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_last_frame_partial_atom.dump"
+  },
+  {
+   "key": "$.results[57].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_last_frame_partial_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_last_frame_partial_contact.dump"
+  },
+  {
+   "key": "$.results[57].message",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_last_frame_partial_atom.dump: `ITEM: ATOMS` 또는 `ITEM: BOX BOUNDS` 가 마지막 프레임에 없다",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_last_frame_partial_atom.dump: `ITEM: ATOMS` 또는 `ITEM: BOX BOUNDS` 가 마지막 프레임에 없다"
+  },
+  {
+   "key": "$.results[58].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_last_frame_valid_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_last_frame_valid_sc.csv"
+  },
+  {
+   "key": "$.results[58].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_last_frame_valid_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_last_frame_valid_atom.dump"
+  },
+  {
+   "key": "$.results[58].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_last_frame_valid_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_last_frame_valid_contact.dump"
+  },
+  {
+   "key": "$.results[59].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_earlier_frame_malformed_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_earlier_frame_malformed_sc.csv"
+  },
+  {
+   "key": "$.results[59].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_earlier_frame_malformed_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_earlier_frame_malformed_atom.dump"
+  },
+  {
+   "key": "$.results[59].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_earlier_frame_malformed_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_earlier_frame_malformed_contact.dump"
+  },
+  {
+   "key": "$.results[60].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_header_suffix_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_header_suffix_sc.csv"
+  },
+  {
+   "key": "$.results[60].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_header_suffix_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_header_suffix_atom.dump"
+  },
+  {
+   "key": "$.results[60].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_header_suffix_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_header_suffix_contact.dump"
+  },
+  {
+   "key": "$.results[61].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_header_suffix_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_header_suffix_sc.csv"
+  },
+  {
+   "key": "$.results[61].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_header_suffix_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_header_suffix_atom.dump"
+  },
+  {
+   "key": "$.results[61].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_header_suffix_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_header_suffix_contact.dump"
+  },
+  {
+   "key": "$.results[62].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_header__0.9_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_header__0.9_sc.csv"
+  },
+  {
+   "key": "$.results[62].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_header__0.9_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_header__0.9_atom.dump"
+  },
+  {
+   "key": "$.results[62].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_step_header__0.9_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_step_header__0.9_contact.dump"
+  },
+  {
+   "key": "$.results[63].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_header__0.9_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_header__0.9_sc.csv"
+  },
+  {
+   "key": "$.results[63].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_header__0.9_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_header__0.9_atom.dump"
+  },
+  {
+   "key": "$.results[63].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_count_header__0.9_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_count_header__0.9_contact.dump"
+  },
+  {
+   "key": "$.results[64].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_c_cpl_1_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_c_cpl_1_sc.csv"
+  },
+  {
+   "key": "$.results[64].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_c_cpl_1_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_c_cpl_1_atom.dump"
+  },
+  {
+   "key": "$.results[64].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_c_cpl_1_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_c_cpl_1_contact.dump"
+  },
+  {
+   "key": "$.results[65].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_c_cpl_2_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_c_cpl_2_sc.csv"
+  },
+  {
+   "key": "$.results[65].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_c_cpl_2_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_c_cpl_2_atom.dump"
+  },
+  {
+   "key": "$.results[65].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_c_cpl_2_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_c_cpl_2_contact.dump"
+  },
+  {
+   "key": "$.results[66].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_c_cpl_3_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_c_cpl_3_sc.csv"
+  },
+  {
+   "key": "$.results[66].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_c_cpl_3_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_c_cpl_3_atom.dump"
+  },
+  {
+   "key": "$.results[66].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_c_cpl_3_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_c_cpl_3_contact.dump"
+  },
+  {
+   "key": "$.results[67].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_c_cpl_4_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_c_cpl_4_sc.csv"
+  },
+  {
+   "key": "$.results[67].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_c_cpl_4_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_c_cpl_4_atom.dump"
+  },
+  {
+   "key": "$.results[67].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_c_cpl_4_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_c_cpl_4_contact.dump"
+  },
+  {
+   "key": "$.results[68].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_c_cpl_5_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_c_cpl_5_sc.csv"
+  },
+  {
+   "key": "$.results[68].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_c_cpl_5_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_c_cpl_5_atom.dump"
+  },
+  {
+   "key": "$.results[68].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_c_cpl_5_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_c_cpl_5_contact.dump"
+  },
+  {
+   "key": "$.results[69].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_c_cpl_6_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_c_cpl_6_sc.csv"
+  },
+  {
+   "key": "$.results[69].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_c_cpl_6_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_c_cpl_6_atom.dump"
+  },
+  {
+   "key": "$.results[69].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_c_cpl_6_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_c_cpl_6_contact.dump"
+  },
+  {
+   "key": "$.results[70].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_c_cpl_7_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_c_cpl_7_sc.csv"
+  },
+  {
+   "key": "$.results[70].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_c_cpl_7_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_c_cpl_7_atom.dump"
+  },
+  {
+   "key": "$.results[70].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_c_cpl_7_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_c_cpl_7_contact.dump"
+  },
+  {
+   "key": "$.results[71].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_c_cpl_8_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_c_cpl_8_sc.csv"
+  },
+  {
+   "key": "$.results[71].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_c_cpl_8_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_c_cpl_8_atom.dump"
+  },
+  {
+   "key": "$.results[71].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_c_cpl_8_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_c_cpl_8_contact.dump"
+  },
+  {
+   "key": "$.results[72].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_c_cpl_9_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_c_cpl_9_sc.csv"
+  },
+  {
+   "key": "$.results[72].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_c_cpl_9_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_c_cpl_9_atom.dump"
+  },
+  {
+   "key": "$.results[72].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_c_cpl_9_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_c_cpl_9_contact.dump"
+  },
+  {
+   "key": "$.results[73].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_c_cpl_22_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_c_cpl_22_sc.csv"
+  },
+  {
+   "key": "$.results[73].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_c_cpl_22_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_c_cpl_22_atom.dump"
+  },
+  {
+   "key": "$.results[73].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_c_cpl_22_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_c_cpl_22_contact.dump"
+  },
+  {
+   "key": "$.results[74].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_c_cpl_23_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_c_cpl_23_sc.csv"
+  },
+  {
+   "key": "$.results[74].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_c_cpl_23_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_c_cpl_23_atom.dump"
+  },
+  {
+   "key": "$.results[74].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_c_cpl_23_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_c_cpl_23_contact.dump"
+  },
+  {
+   "key": "$.results[75].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_section_count_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_section_count_sc.csv"
+  },
+  {
+   "key": "$.results[75].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_section_count_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_section_count_atom.dump"
+  },
+  {
+   "key": "$.results[75].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_section_count_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_section_count_contact.dump"
+  },
+  {
+   "key": "$.results[76].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_section_box_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_section_box_sc.csv"
+  },
+  {
+   "key": "$.results[76].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_section_box_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_section_box_atom.dump"
+  },
+  {
+   "key": "$.results[76].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_section_box_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_section_box_contact.dump"
+  },
+  {
+   "key": "$.results[77].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_section_rows_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_section_rows_sc.csv"
+  },
+  {
+   "key": "$.results[77].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_section_rows_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_section_rows_atom.dump"
+  },
+  {
+   "key": "$.results[77].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_duplicate_section_rows_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_duplicate_section_rows_contact.dump"
+  },
+  {
+   "key": "$.results[78].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_unknown_at_0_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_unknown_at_0_sc.csv"
+  },
+  {
+   "key": "$.results[78].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_unknown_at_0_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_unknown_at_0_atom.dump"
+  },
+  {
+   "key": "$.results[78].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_unknown_at_0_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_unknown_at_0_contact.dump"
+  },
+  {
+   "key": "$.results[79].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_unknown_at_2_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_unknown_at_2_sc.csv"
+  },
+  {
+   "key": "$.results[79].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_unknown_at_2_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_unknown_at_2_atom.dump"
+  },
+  {
+   "key": "$.results[79].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_unknown_at_2_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_unknown_at_2_contact.dump"
+  },
+  {
+   "key": "$.results[80].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_unknown_at_4_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_unknown_at_4_sc.csv"
+  },
+  {
+   "key": "$.results[80].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_unknown_at_4_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_unknown_at_4_atom.dump"
+  },
+  {
+   "key": "$.results[80].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_unknown_at_4_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_unknown_at_4_contact.dump"
+  },
+  {
+   "key": "$.results[81].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_unknown_at_8_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_unknown_at_8_sc.csv"
+  },
+  {
+   "key": "$.results[81].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_unknown_at_8_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_unknown_at_8_atom.dump"
+  },
+  {
+   "key": "$.results[81].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_unknown_at_8_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_unknown_at_8_contact.dump"
+  },
+  {
+   "key": "$.results[82].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_unknown_at_10_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_unknown_at_10_sc.csv"
+  },
+  {
+   "key": "$.results[82].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_unknown_at_10_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_unknown_at_10_atom.dump"
+  },
+  {
+   "key": "$.results[82].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_unknown_at_10_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_unknown_at_10_contact.dump"
+  },
+  {
+   "key": "$.results[83].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_0_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_0_sc.csv"
+  },
+  {
+   "key": "$.results[83].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_0_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_0_atom.dump"
+  },
+  {
+   "key": "$.results[83].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_0_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_0_contact.dump"
+  },
+  {
+   "key": "$.results[84].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_-1_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_-1_sc.csv"
+  },
+  {
+   "key": "$.results[84].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_-1_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_-1_atom.dump"
+  },
+  {
+   "key": "$.results[84].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_-1_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_-1_contact.dump"
+  },
+  {
+   "key": "$.results[85].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_3_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_3_sc.csv"
+  },
+  {
+   "key": "$.results[85].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_3_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_3_atom.dump"
+  },
+  {
+   "key": "$.results[85].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_3_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_3_contact.dump"
+  },
+  {
+   "key": "$.results[86].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_empty_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_empty_sc.csv"
+  },
+  {
+   "key": "$.results[86].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_empty_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_empty_atom.dump"
+  },
+  {
+   "key": "$.results[86].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_empty_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_empty_contact.dump"
+  },
+  {
+   "key": "$.results[87].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_1.0_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_1.0_sc.csv"
+  },
+  {
+   "key": "$.results[87].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_1.0_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_1.0_atom.dump"
+  },
+  {
+   "key": "$.results[87].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_1.0_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_1.0_contact.dump"
+  },
+  {
+   "key": "$.results[88].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_1e0_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_1e0_sc.csv"
+  },
+  {
+   "key": "$.results[88].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_1e0_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_1e0_atom.dump"
+  },
+  {
+   "key": "$.results[88].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_1e0_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_1e0_contact.dump"
+  },
+  {
+   "key": "$.results[89].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_1_0_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_1_0_sc.csv"
+  },
+  {
+   "key": "$.results[89].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_1_0_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_1_0_atom.dump"
+  },
+  {
+   "key": "$.results[89].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_1_0_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_1_0_contact.dump"
+  },
+  {
+   "key": "$.results[90].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_1 garbage_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_1 garbage_sc.csv"
+  },
+  {
+   "key": "$.results[90].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_1 garbage_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_1 garbage_atom.dump"
+  },
+  {
+   "key": "$.results[90].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_1 garbage_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_1 garbage_contact.dump"
+  },
+  {
+   "key": "$.results[91].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_9223372036854775808_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_9223372036854775808_sc.csv"
+  },
+  {
+   "key": "$.results[91].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_9223372036854775808_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_9223372036854775808_atom.dump"
+  },
+  {
+   "key": "$.results[91].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_9223372036854775808_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_9223372036854775808_contact.dump"
+  },
+  {
+   "key": "$.results[92].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_999999999999999999999999_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_999999999999999999999999_sc.csv"
+  },
+  {
+   "key": "$.results[92].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_999999999999999999999999_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_999999999999999999999999_atom.dump"
+  },
+  {
+   "key": "$.results[92].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_999999999999999999999999_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_999999999999999999999999_contact.dump"
+  },
+  {
+   "key": "$.results[93].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_93_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_93_sc.csv"
+  },
+  {
+   "key": "$.results[93].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_93_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_93_atom.dump"
+  },
+  {
+   "key": "$.results[93].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_93_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_93_contact.dump"
+  },
+  {
+   "key": "$.results[94].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_94_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_94_sc.csv"
+  },
+  {
+   "key": "$.results[94].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_94_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_94_atom.dump"
+  },
+  {
+   "key": "$.results[94].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_94_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_94_contact.dump"
+  },
+  {
+   "key": "$.results[95].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_95_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_95_sc.csv"
+  },
+  {
+   "key": "$.results[95].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_95_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_95_atom.dump"
+  },
+  {
+   "key": "$.results[95].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_95_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_95_contact.dump"
+  },
+  {
+   "key": "$.results[96].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_96_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_96_sc.csv"
+  },
+  {
+   "key": "$.results[96].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_96_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_96_atom.dump"
+  },
+  {
+   "key": "$.results[96].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_96_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_96_contact.dump"
+  },
+  {
+   "key": "$.results[97].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_97_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_97_sc.csv"
+  },
+  {
+   "key": "$.results[97].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_97_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_97_atom.dump"
+  },
+  {
+   "key": "$.results[97].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_97_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_97_contact.dump"
+  },
+  {
+   "key": "$.results[98].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_98_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_98_sc.csv"
+  },
+  {
+   "key": "$.results[98].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_98_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_98_atom.dump"
+  },
+  {
+   "key": "$.results[98].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_98_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_98_contact.dump"
+  },
+  {
+   "key": "$.results[99].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_99_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_99_sc.csv"
+  },
+  {
+   "key": "$.results[99].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_99_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_99_atom.dump"
+  },
+  {
+   "key": "$.results[99].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_99_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_99_contact.dump"
+  },
+  {
+   "key": "$.results[100].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_100_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_100_sc.csv"
+  },
+  {
+   "key": "$.results[100].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_100_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_100_atom.dump"
+  },
+  {
+   "key": "$.results[100].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_100_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_100_contact.dump"
+  },
+  {
+   "key": "$.results[101].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_101_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_101_sc.csv"
+  },
+  {
+   "key": "$.results[101].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_101_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_101_atom.dump"
+  },
+  {
+   "key": "$.results[101].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_101_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_101_contact.dump"
+  },
+  {
+   "key": "$.results[102].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_102_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_102_sc.csv"
+  },
+  {
+   "key": "$.results[102].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_102_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_102_atom.dump"
+  },
+  {
+   "key": "$.results[102].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_102_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_102_contact.dump"
+  },
+  {
+   "key": "$.results[103].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_103_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_103_sc.csv"
+  },
+  {
+   "key": "$.results[103].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_103_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_103_atom.dump"
+  },
+  {
+   "key": "$.results[103].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_103_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_103_contact.dump"
+  },
+  {
+   "key": "$.results[104].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_104_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_104_sc.csv"
+  },
+  {
+   "key": "$.results[104].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_104_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_104_atom.dump"
+  },
+  {
+   "key": "$.results[104].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_case_104_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_case_104_contact.dump"
+  },
+  {
+   "key": "$.results[105].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_missing_count_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_missing_count_sc.csv"
+  },
+  {
+   "key": "$.results[105].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_missing_count_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_missing_count_atom.dump"
+  },
+  {
+   "key": "$.results[105].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_missing_count_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_missing_count_contact.dump"
+  },
+  {
+   "key": "$.results[106].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_missing_box_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_missing_box_sc.csv"
+  },
+  {
+   "key": "$.results[106].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_missing_box_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_missing_box_atom.dump"
+  },
+  {
+   "key": "$.results[106].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_missing_box_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_missing_box_contact.dump"
+  },
+  {
+   "key": "$.results[106].message",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_missing_box_contact.dump: `ITEM: ENTRIES` 또는 `ITEM: BOX BOUNDS` 가 마지막 프레임에 없다",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_missing_box_contact.dump: `ITEM: ENTRIES` 또는 `ITEM: BOX BOUNDS` 가 마지막 프레임에 없다"
+  },
+  {
+   "key": "$.results[107].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_missing_rows_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_missing_rows_sc.csv"
+  },
+  {
+   "key": "$.results[107].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_missing_rows_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_missing_rows_atom.dump"
+  },
+  {
+   "key": "$.results[107].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_missing_rows_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_missing_rows_contact.dump"
+  },
+  {
+   "key": "$.results[107].message",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_missing_rows_contact.dump: `ITEM: ENTRIES` 또는 `ITEM: BOX BOUNDS` 가 마지막 프레임에 없다",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_missing_rows_contact.dump: `ITEM: ENTRIES` 또는 `ITEM: BOX BOUNDS` 가 마지막 프레임에 없다"
+  },
+  {
+   "key": "$.results[108].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_preamble_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_preamble_sc.csv"
+  },
+  {
+   "key": "$.results[108].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_preamble_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_preamble_atom.dump"
+  },
+  {
+   "key": "$.results[108].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_preamble_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_preamble_contact.dump"
+  },
+  {
+   "key": "$.results[109].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_trailing_junk_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_trailing_junk_sc.csv"
+  },
+  {
+   "key": "$.results[109].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_trailing_junk_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_trailing_junk_atom.dump"
+  },
+  {
+   "key": "$.results[109].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_trailing_junk_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_trailing_junk_contact.dump"
+  },
+  {
+   "key": "$.results[110].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_fourth_box_line_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_fourth_box_line_sc.csv"
+  },
+  {
+   "key": "$.results[110].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_fourth_box_line_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_fourth_box_line_atom.dump"
+  },
+  {
+   "key": "$.results[110].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_fourth_box_line_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_fourth_box_line_contact.dump"
+  },
+  {
+   "key": "$.results[111].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_leading_scalar_blank_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_leading_scalar_blank_sc.csv"
+  },
+  {
+   "key": "$.results[111].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_leading_scalar_blank_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_leading_scalar_blank_atom.dump"
+  },
+  {
+   "key": "$.results[111].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_leading_scalar_blank_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_leading_scalar_blank_contact.dump"
+  },
+  {
+   "key": "$.results[112].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_interior_box_blank_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_interior_box_blank_sc.csv"
+  },
+  {
+   "key": "$.results[112].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_interior_box_blank_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_interior_box_blank_atom.dump"
+  },
+  {
+   "key": "$.results[112].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_interior_box_blank_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_interior_box_blank_contact.dump"
+  },
+  {
+   "key": "$.results[113].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_last_frame_empty_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_last_frame_empty_sc.csv"
+  },
+  {
+   "key": "$.results[113].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_last_frame_empty_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_last_frame_empty_atom.dump"
+  },
+  {
+   "key": "$.results[113].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_last_frame_empty_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_last_frame_empty_contact.dump"
+  },
+  {
+   "key": "$.results[113].message",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_last_frame_empty_contact.dump: `ITEM: ENTRIES` 또는 `ITEM: BOX BOUNDS` 가 마지막 프레임에 없다",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_last_frame_empty_contact.dump: `ITEM: ENTRIES` 또는 `ITEM: BOX BOUNDS` 가 마지막 프레임에 없다"
+  },
+  {
+   "key": "$.results[114].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_last_frame_partial_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_last_frame_partial_sc.csv"
+  },
+  {
+   "key": "$.results[114].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_last_frame_partial_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_last_frame_partial_atom.dump"
+  },
+  {
+   "key": "$.results[114].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_last_frame_partial_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_last_frame_partial_contact.dump"
+  },
+  {
+   "key": "$.results[114].message",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_last_frame_partial_contact.dump: `ITEM: ENTRIES` 또는 `ITEM: BOX BOUNDS` 가 마지막 프레임에 없다",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_last_frame_partial_contact.dump: `ITEM: ENTRIES` 또는 `ITEM: BOX BOUNDS` 가 마지막 프레임에 없다"
+  },
+  {
+   "key": "$.results[115].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_last_frame_valid_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_last_frame_valid_sc.csv"
+  },
+  {
+   "key": "$.results[115].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_last_frame_valid_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_last_frame_valid_atom.dump"
+  },
+  {
+   "key": "$.results[115].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_last_frame_valid_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_last_frame_valid_contact.dump"
+  },
+  {
+   "key": "$.results[116].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_earlier_frame_malformed_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_earlier_frame_malformed_sc.csv"
+  },
+  {
+   "key": "$.results[116].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_earlier_frame_malformed_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_earlier_frame_malformed_atom.dump"
+  },
+  {
+   "key": "$.results[116].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_earlier_frame_malformed_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_earlier_frame_malformed_contact.dump"
+  },
+  {
+   "key": "$.results[117].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_header_suffix_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_header_suffix_sc.csv"
+  },
+  {
+   "key": "$.results[117].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_header_suffix_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_header_suffix_atom.dump"
+  },
+  {
+   "key": "$.results[117].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_header_suffix_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_header_suffix_contact.dump"
+  },
+  {
+   "key": "$.results[118].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_header_suffix_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_header_suffix_sc.csv"
+  },
+  {
+   "key": "$.results[118].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_header_suffix_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_header_suffix_atom.dump"
+  },
+  {
+   "key": "$.results[118].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_header_suffix_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_header_suffix_contact.dump"
+  },
+  {
+   "key": "$.results[119].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_header__0.9_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_header__0.9_sc.csv"
+  },
+  {
+   "key": "$.results[119].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_header__0.9_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_header__0.9_atom.dump"
+  },
+  {
+   "key": "$.results[119].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_step_header__0.9_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_step_header__0.9_contact.dump"
+  },
+  {
+   "key": "$.results[120].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_header__0.9_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_header__0.9_sc.csv"
+  },
+  {
+   "key": "$.results[120].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_header__0.9_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_header__0.9_atom.dump"
+  },
+  {
+   "key": "$.results[120].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_count_header__0.9_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_count_header__0.9_contact.dump"
+  },
+  {
+   "key": "$.results[121].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_rows_no_boundary_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_rows_no_boundary_sc.csv"
+  },
+  {
+   "key": "$.results[121].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_rows_no_boundary_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_rows_no_boundary_atom.dump"
+  },
+  {
+   "key": "$.results[121].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_rows_no_boundary_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_rows_no_boundary_contact.dump"
+  },
+  {
+   "key": "$.results[122].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_box_no_boundary_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_box_no_boundary_sc.csv"
+  },
+  {
+   "key": "$.results[122].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_box_no_boundary_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_box_no_boundary_atom.dump"
+  },
+  {
+   "key": "$.results[122].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_box_no_boundary_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_box_no_boundary_contact.dump"
+  },
+  {
+   "key": "$.results[123].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_rows_repeated_marker_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_rows_repeated_marker_sc.csv"
+  },
+  {
+   "key": "$.results[123].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_rows_repeated_marker_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_rows_repeated_marker_atom.dump"
+  },
+  {
+   "key": "$.results[123].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_rows_repeated_marker_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_rows_repeated_marker_contact.dump"
+  },
+  {
+   "key": "$.results[124].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_box_repeated_marker_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_box_repeated_marker_sc.csv"
+  },
+  {
+   "key": "$.results[124].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_box_repeated_marker_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_box_repeated_marker_atom.dump"
+  },
+  {
+   "key": "$.results[124].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_box_repeated_marker_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_box_repeated_marker_contact.dump"
+  },
+  {
+   "key": "$.results[125].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_rows_marker_at_end_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_rows_marker_at_end_sc.csv"
+  },
+  {
+   "key": "$.results[125].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_rows_marker_at_end_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_rows_marker_at_end_atom.dump"
+  },
+  {
+   "key": "$.results[125].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\atom_rows_marker_at_end_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/atom_rows_marker_at_end_contact.dump"
+  },
+  {
+   "key": "$.results[126].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_rows_no_boundary_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_rows_no_boundary_sc.csv"
+  },
+  {
+   "key": "$.results[126].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_rows_no_boundary_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_rows_no_boundary_atom.dump"
+  },
+  {
+   "key": "$.results[126].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_rows_no_boundary_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_rows_no_boundary_contact.dump"
+  },
+  {
+   "key": "$.results[127].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_box_no_boundary_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_box_no_boundary_sc.csv"
+  },
+  {
+   "key": "$.results[127].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_box_no_boundary_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_box_no_boundary_atom.dump"
+  },
+  {
+   "key": "$.results[127].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_box_no_boundary_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_box_no_boundary_contact.dump"
+  },
+  {
+   "key": "$.results[128].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_rows_repeated_marker_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_rows_repeated_marker_sc.csv"
+  },
+  {
+   "key": "$.results[128].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_rows_repeated_marker_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_rows_repeated_marker_atom.dump"
+  },
+  {
+   "key": "$.results[128].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_rows_repeated_marker_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_rows_repeated_marker_contact.dump"
+  },
+  {
+   "key": "$.results[129].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_box_repeated_marker_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_box_repeated_marker_sc.csv"
+  },
+  {
+   "key": "$.results[129].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_box_repeated_marker_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_box_repeated_marker_atom.dump"
+  },
+  {
+   "key": "$.results[129].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_box_repeated_marker_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_box_repeated_marker_contact.dump"
+  },
+  {
+   "key": "$.results[130].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_rows_marker_at_end_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_rows_marker_at_end_sc.csv"
+  },
+  {
+   "key": "$.results[130].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_rows_marker_at_end_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_rows_marker_at_end_atom.dump"
+  },
+  {
+   "key": "$.results[130].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\contact_rows_marker_at_end_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/contact_rows_marker_at_end_contact.dump"
+  },
+  {
+   "key": "$.results[131].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\blank_whitespace_only_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/blank_whitespace_only_sc.csv"
+  },
+  {
+   "key": "$.results[131].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\blank_whitespace_only_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/blank_whitespace_only_atom.dump"
+  },
+  {
+   "key": "$.results[131].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\blank_whitespace_only_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/blank_whitespace_only_contact.dump"
+  },
+  {
+   "key": "$.results[132].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\gzip_baseline_sc.csv.gz",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/gzip_baseline_sc.csv.gz"
+  },
+  {
+   "key": "$.results[132].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\gzip_baseline_atom.dump.gz",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/gzip_baseline_atom.dump.gz"
+  },
+  {
+   "key": "$.results[132].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\gzip_baseline_contact.dump.gz",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/gzip_baseline_contact.dump.gz"
+  },
+  {
+   "key": "$.results[133].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\crlf_baseline_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/crlf_baseline_sc.csv"
+  },
+  {
+   "key": "$.results[133].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\crlf_baseline_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/crlf_baseline_atom.dump"
+  },
+  {
+   "key": "$.results[133].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\crlf_baseline_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/crlf_baseline_contact.dump"
+  },
+  {
+   "key": "$.results[134].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\integer_valid_+100_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/integer_valid_+100_sc.csv"
+  },
+  {
+   "key": "$.results[134].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\integer_valid_+100_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/integer_valid_+100_atom.dump"
+  },
+  {
+   "key": "$.results[134].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\integer_valid_+100_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/integer_valid_+100_contact.dump"
+  },
+  {
+   "key": "$.results[135].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\integer_valid_000100_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/integer_valid_000100_sc.csv"
+  },
+  {
+   "key": "$.results[135].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\integer_valid_000100_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/integer_valid_000100_atom.dump"
+  },
+  {
+   "key": "$.results[135].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\integer_valid_000100_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/integer_valid_000100_contact.dump"
+  },
+  {
+   "key": "$.results[136].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\integer_valid_-0_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/integer_valid_-0_sc.csv"
+  },
+  {
+   "key": "$.results[136].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\integer_valid_-0_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/integer_valid_-0_atom.dump"
+  },
+  {
+   "key": "$.results[136].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\integer_valid_-0_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/integer_valid_-0_contact.dump"
+  },
+  {
+   "key": "$.results[137].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\d19_reject_137_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/d19_reject_137_sc.csv"
+  },
+  {
+   "key": "$.results[137].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\d19_reject_137_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/d19_reject_137_atom.dump"
+  },
+  {
+   "key": "$.results[137].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\d19_reject_137_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/d19_reject_137_contact.dump"
+  },
+  {
+   "key": "$.results[138].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\d19_pass_138_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/d19_pass_138_sc.csv"
+  },
+  {
+   "key": "$.results[138].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\d19_pass_138_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/d19_pass_138_atom.dump"
+  },
+  {
+   "key": "$.results[138].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\d19_pass_138_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/d19_pass_138_contact.dump"
+  },
+  {
+   "key": "$.results[139].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\d19_reject_139_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/d19_reject_139_sc.csv"
+  },
+  {
+   "key": "$.results[139].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\d19_reject_139_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/d19_reject_139_atom.dump"
+  },
+  {
+   "key": "$.results[139].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\d19_reject_139_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/d19_reject_139_contact.dump"
+  },
+  {
+   "key": "$.results[140].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\unconsumed_optional_atom_column_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/unconsumed_optional_atom_column_sc.csv"
+  },
+  {
+   "key": "$.results[140].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\unconsumed_optional_atom_column_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/unconsumed_optional_atom_column_atom.dump"
+  },
+  {
+   "key": "$.results[140].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\unconsumed_optional_atom_column_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/unconsumed_optional_atom_column_contact.dump"
+  },
+  {
+   "key": "$.results[141].paths[0]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\unconsumed_optional_contact_column_sc.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/unconsumed_optional_contact_column_sc.csv"
+  },
+  {
+   "key": "$.results[141].paths[1]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\unconsumed_optional_contact_column_atom.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/unconsumed_optional_contact_column_atom.dump"
+  },
+  {
+   "key": "$.results[141].paths[2]",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_carbon_design_review_20261021\\part_b\\tmp\\structure_fixtures\\unconsumed_optional_contact_column_contact.dump",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/tmp/structure_fixtures/unconsumed_optional_contact_column_contact.dump"
+  }
+ ]
+}

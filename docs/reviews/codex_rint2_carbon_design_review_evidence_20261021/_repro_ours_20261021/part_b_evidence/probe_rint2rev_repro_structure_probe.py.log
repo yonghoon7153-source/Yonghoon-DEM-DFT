@@ -1,0 +1,145 @@
+independent_baseline PASS [] ACCEPT 
+independent_zero_contacts PASS [] ACCEPT 
+original_baseline PASS [] ACCEPT 
+original_malformed_numeric_contact_row_inside_block REJECT ['row_width'] ValueError 
+original_malformed_numeric_atom_row_inside_block REJECT ['row_width'] ValueError 
+original_malformed_extra_contact_row REJECT ['row_width'] ValueError 
+original_malformed_extra_atom_row REJECT ['row_width'] ValueError 
+original_duplicate_radius_column REJECT ['header_duplicate'] ValueError 
+original_step_extra_token REJECT ['int_token'] ValueError 
+original_count_extra_token REJECT ['int_token'] ValueError 
+original_wellshaped_duplicate_contact_control REJECT ['count_mismatch', 'dem_duplicate_pair'] ValueError 
+original_wellshaped_duplicate_atom_control REJECT ['count_mismatch', 'atom_id_duplicate', 'scaffold_row_ambiguous', 'dump_am_unmatched'] ValueError 
+atom_duplicate_id REJECT ['header_duplicate'] ValueError 
+atom_duplicate_type REJECT ['header_duplicate'] ValueError 
+atom_duplicate_x REJECT ['header_duplicate'] ValueError 
+atom_duplicate_y REJECT ['header_duplicate'] ValueError 
+atom_duplicate_z REJECT ['header_duplicate'] ValueError 
+atom_duplicate_radius REJECT ['header_duplicate'] ValueError 
+atom_duplicate_section_count REJECT ['frame_layout'] ValueError 
+atom_duplicate_section_box REJECT ['frame_layout'] ValueError 
+atom_duplicate_section_rows REJECT ['frame_layout'] ValueError 
+atom_unknown_at_0 REJECT ['frame_layout'] ValueError 
+atom_unknown_at_2 REJECT ['frame_layout'] ValueError 
+atom_unknown_at_4 REJECT ['frame_layout'] ValueError 
+atom_unknown_at_8 REJECT ['frame_layout'] ValueError 
+atom_unknown_at_11 REJECT ['frame_layout'] ValueError 
+atom_count_0 REJECT ['count_mismatch'] ValueError 
+atom_count_-1 REJECT ['count_mismatch'] ValueError 
+atom_count_3 REJECT ['count_mismatch'] ValueError 
+atom_count_empty REJECT ['int_token'] ValueError 
+atom_count_1.0 REJECT ['int_token'] ValueError 
+atom_count_1e0 REJECT ['int_token'] ValueError 
+atom_count_1_0 REJECT ['int_token'] ValueError 
+atom_count_1 garbage REJECT ['int_token'] ValueError 
+atom_count_9223372036854775808 REJECT ['int_token'] ValueError 
+atom_count_999999999999999999999999 REJECT ['int_token'] ValueError 
+atom_step_case_36 REJECT ['int_token'] ValueError 
+atom_step_case_37 REJECT ['int_token'] ValueError 
+atom_step_case_38 REJECT ['int_token', 'frame_layout'] ValueError 
+atom_step_case_39 REJECT ['int_token', 'frame_layout'] ValueError 
+atom_step_case_40 REJECT ['int_token'] ValueError 
+atom_step_case_41 REJECT ['int_token'] ValueError 
+atom_step_case_42 REJECT ['int_token'] ValueError 
+atom_step_case_43 REJECT ['int_token'] ValueError 
+atom_step_case_44 REJECT ['int_token'] ValueError 
+atom_step_case_45 REJECT ['int_token'] ValueError 
+atom_step_case_46 REJECT ['int_token'] ValueError 
+atom_step_case_47 REJECT ['int_token'] ValueError 
+atom_missing_count REJECT ['count_mismatch'] ValueError 
+atom_missing_box EXCEPTION None None 
+atom_missing_rows EXCEPTION None None 
+atom_preamble REJECT ['frame_layout'] ValueError 
+atom_trailing_junk REJECT ['row_width'] ValueError 
+atom_fourth_box_line REJECT ['box_format'] ValueError 
+atom_leading_scalar_blank REJECT ['int_token'] ValueError 
+atom_interior_box_blank REJECT ['nonfinite_value', 'box_format'] ValueError 
+atom_last_frame_empty EXCEPTION None None 
+atom_last_frame_partial EXCEPTION None None 
+atom_last_frame_valid REJECT ['multi_frame'] ValueError 
+atom_earlier_frame_malformed REJECT ['multi_frame'] ValueError 
+atom_step_header_suffix REJECT ['frame_layout'] ValueError 
+atom_count_header_suffix REJECT ['frame_layout'] ValueError 
+atom_step_header__0.9 REJECT ['frame_layout'] ValueError 
+atom_count_header__0.9 REJECT ['frame_layout'] ValueError 
+contact_duplicate_c_cpl_1 REJECT ['header_duplicate'] ValueError 
+contact_duplicate_c_cpl_2 REJECT ['header_duplicate'] ValueError 
+contact_duplicate_c_cpl_3 REJECT ['header_duplicate'] ValueError 
+contact_duplicate_c_cpl_4 REJECT ['header_duplicate'] ValueError 
+contact_duplicate_c_cpl_5 REJECT ['header_duplicate'] ValueError 
+contact_duplicate_c_cpl_6 REJECT ['header_duplicate'] ValueError 
+contact_duplicate_c_cpl_7 REJECT ['header_duplicate'] ValueError 
+contact_duplicate_c_cpl_8 REJECT ['header_duplicate'] ValueError 
+contact_duplicate_c_cpl_9 REJECT ['header_duplicate'] ValueError 
+contact_duplicate_c_cpl_22 REJECT ['header_duplicate'] ValueError 
+contact_duplicate_c_cpl_23 REJECT ['header_duplicate'] ValueError 
+contact_duplicate_section_count REJECT ['frame_layout'] ValueError 
+contact_duplicate_section_box REJECT ['frame_layout'] ValueError 
+contact_duplicate_section_rows REJECT ['frame_layout'] ValueError 
+contact_unknown_at_0 REJECT ['frame_layout'] ValueError 
+contact_unknown_at_2 REJECT ['frame_layout'] ValueError 
+contact_unknown_at_4 REJECT ['frame_layout'] ValueError 
+contact_unknown_at_8 REJECT ['frame_layout'] ValueError 
+contact_unknown_at_10 REJECT ['frame_layout'] ValueError 
+contact_count_0 REJECT ['count_mismatch'] ValueError 
+contact_count_-1 REJECT ['count_mismatch'] ValueError 
+contact_count_3 REJECT ['count_mismatch'] ValueError 
+contact_count_empty REJECT ['int_token'] ValueError 
+contact_count_1.0 REJECT ['int_token'] ValueError 
+contact_count_1e0 REJECT ['int_token'] ValueError 
+contact_count_1_0 REJECT ['int_token'] ValueError 
+contact_count_1 garbage REJECT ['int_token'] ValueError 
+contact_count_9223372036854775808 REJECT ['int_token'] ValueError 
+contact_count_999999999999999999999999 REJECT ['int_token'] ValueError 
+contact_step_case_93 REJECT ['int_token'] ValueError 
+contact_step_case_94 REJECT ['int_token'] ValueError 
+contact_step_case_95 REJECT ['int_token', 'frame_layout'] ValueError 
+contact_step_case_96 REJECT ['int_token', 'frame_layout'] ValueError 
+contact_step_case_97 REJECT ['int_token'] ValueError 
+contact_step_case_98 REJECT ['int_token'] ValueError 
+contact_step_case_99 REJECT ['int_token'] ValueError 
+contact_step_case_100 REJECT ['int_token'] ValueError 
+contact_step_case_101 REJECT ['int_token'] ValueError 
+contact_step_case_102 REJECT ['int_token'] ValueError 
+contact_step_case_103 REJECT ['int_token'] ValueError 
+contact_step_case_104 REJECT ['int_token'] ValueError 
+contact_missing_count REJECT ['count_mismatch'] ValueError 
+contact_missing_box EXCEPTION None None 
+contact_missing_rows EXCEPTION None None 
+contact_preamble REJECT ['frame_layout'] ValueError 
+contact_trailing_junk REJECT ['row_width'] ValueError 
+contact_fourth_box_line REJECT ['box_format'] ValueError 
+contact_leading_scalar_blank REJECT ['int_token'] ValueError 
+contact_interior_box_blank REJECT ['nonfinite_value', 'box_format'] ValueError 
+contact_last_frame_empty EXCEPTION None None 
+contact_last_frame_partial EXCEPTION None None 
+contact_last_frame_valid REJECT ['multi_frame'] ValueError 
+contact_earlier_frame_malformed REJECT ['multi_frame'] ValueError 
+contact_step_header_suffix REJECT ['frame_layout'] ValueError 
+contact_count_header_suffix REJECT ['frame_layout'] ValueError 
+contact_step_header__0.9 REJECT ['frame_layout'] ValueError 
+contact_count_header__0.9 REJECT ['frame_layout'] ValueError 
+atom_rows_no_boundary REJECT ['frame_layout'] ValueError 
+atom_box_no_boundary REJECT ['frame_layout'] ValueError 
+atom_rows_repeated_marker REJECT ['row_width', 'frame_layout'] ValueError 
+atom_box_repeated_marker REJECT ['box_format', 'frame_layout'] ValueError 
+atom_rows_marker_at_end REJECT ['row_width'] ValueError 
+contact_rows_no_boundary REJECT ['frame_layout'] ValueError 
+contact_box_no_boundary REJECT ['frame_layout'] ValueError 
+contact_rows_repeated_marker REJECT ['row_width', 'frame_layout'] ValueError 
+contact_box_repeated_marker REJECT ['box_format', 'frame_layout'] ValueError 
+contact_rows_marker_at_end REJECT ['row_width'] ValueError 
+blank_whitespace_only PASS [] ACCEPT 
+gzip_baseline PASS [] ACCEPT 
+crlf_baseline PASS [] ACCEPT 
+integer_valid_+100 PASS [] ACCEPT 
+integer_valid_000100 PASS [] ACCEPT 
+integer_valid_-0 PASS [] ACCEPT 
+d19_reject_137 REJECT ['timestep_mismatch'] ValueError 
+d19_pass_138 PASS [] ACCEPT 
+d19_reject_139 REJECT ['geom_reuse_mismatch'] ValueError 
+unconsumed_optional_atom_column PASS [] ACCEPT 
+unconsumed_optional_contact_column PASS [] ACCEPT 
+real14 PASS {'n_scaffold': 457, 'n_dump_am': 457, 'n_matched': 457, 'n_unmatched': 0, 'n_ambiguous': 0, 'max_pos_ratio': 0.9900990081545088, 'max_radius_ratio': 0.0, 'scaffold_half_box': 5e-07, 'scaffold_dec_exp': [-6], 'dump_sigfig': 6, 'delta_bound_um': 0.002915255888325765, 'delta_bound_rule': 'µm · √Σ(2·(h_s + max h_d))² + 2·(h_s + max h_r) — scaffold δ 의 참값 대비 상한 (원장 delta_bound_um 후보)', 'derived_nonfinite': [], 'n_dem_am_am': 660, 'n_dem_am_am_seam': 70, 'n_delta_scaffold_mismatch': 0, 'max_delta_scaffold_ratio': 0.3937349384448685, 'n_area_tested': 660, 'n_area_beyond': 0, 'n_area_uncertified': 0, 'n_area_negative': 0, 'area_all_certified': True, 'n_area_negative_not_am_am': 0, 'area_sigfig_assumed': 6, 'area_scope': '조인이 인증하는 면적 = AM–AM 행 (두 원자 모두 scaffold 와 1:1) 뿐 — AM–SE · SE–SE 행의 c_cpl[22] 는 인증하지 않는다 (음수 수만 기록 · n_area_negative_not_am_am)', 'n_scaffold_certain_pairs': 563, 'n_dem_contact_missing': 0, 'rule': 'g1 1:1 (축마다 |Δ| ≤ h_s + h_d · 주기 축 최소 영상 · 형 · 반경) · g2 δ_dump ↔ δ_scaffold · g3 c_cpl[22] ↔ lens_geometry 포괄 (lhs_descriptor_harvest._contact_area_rows) · 음수 · 미인증 = 거부 (전 행 인증) · g4 scaffold 확실한 접촉 ⊆ 덤프'}
+case15 PASS {'n_scaffold': 104, 'n_dump_am': 104, 'n_matched': 104, 'n_unmatched': 0, 'n_ambiguous': 0, 'max_pos_ratio': 0.9504950478150144, 'max_radius_ratio': 0.0, 'scaffold_half_box': 5e-07, 'scaffold_dec_exp': [-6], 'dump_sigfig': 6, 'delta_bound_um': 0.002915255888325765, 'delta_bound_rule': 'µm · √Σ(2·(h_s + max h_d))² + 2·(h_s + max h_r) — scaffold δ 의 참값 대비 상한 (원장 delta_bound_um 후보)', 'derived_nonfinite': [], 'n_dem_am_am': 119, 'n_dem_am_am_seam': 10, 'n_delta_scaffold_mismatch': 0, 'max_delta_scaffold_ratio': 0.33948760522688354, 'n_area_tested': 119, 'n_area_beyond': 0, 'n_area_uncertified': 0, 'n_area_negative': 0, 'area_all_certified': True, 'n_area_negative_not_am_am': 2, 'area_sigfig_assumed': 6, 'area_scope': '조인이 인증하는 면적 = AM–AM 행 (두 원자 모두 scaffold 와 1:1) 뿐 — AM–SE · SE–SE 행의 c_cpl[22] 는 인증하지 않는다 (음수 수만 기록 · n_area_negative_not_am_am)', 'n_scaffold_certain_pairs': 106, 'n_dem_contact_missing': 0, 'rule': 'g1 1:1 (축마다 |Δ| ≤ h_s + h_d · 주기 축 최소 영상 · 형 · 반경) · g2 δ_dump ↔ δ_scaffold · g3 c_cpl[22] ↔ lens_geometry 포괄 (lhs_descriptor_harvest._contact_area_rows) · 음수 · 미인증 = 거부 (전 행 인증) · g4 scaffold 확실한 접촉 ⊆ 덤프'}
+{"n_cases": 144, "unexpected_pass": [], "unexpected_reject": []}

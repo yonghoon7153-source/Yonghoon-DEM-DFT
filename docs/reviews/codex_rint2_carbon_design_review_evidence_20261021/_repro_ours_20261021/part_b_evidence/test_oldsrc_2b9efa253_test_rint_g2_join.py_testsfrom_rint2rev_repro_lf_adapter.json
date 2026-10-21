@@ -1,0 +1,40 @@
+{
+  "command": [
+    "/usr/local/bin/python3",
+    "-X",
+    "utf8",
+    "-B",
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/run_review.py",
+    "test",
+    "test_rint_g2_join.py",
+    "--source",
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/oldsrc_2b9efa253/source",
+    "--test-source",
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/source",
+    "--lf-test-writer",
+    "--loose-fixture",
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/source/docs/data/heckel_sweep_scaffolds/LOOSE_am_scaffold.csv",
+    "--child"
+  ],
+  "rc": 1,
+  "seconds": 187.68399103800766,
+  "source": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/oldsrc_2b9efa253/source",
+  "test_source": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/source",
+  "lf_test_writer_adapter": true,
+  "log": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/evidence/test_oldsrc_2b9efa253_test_rint_g2_join.py_testsfrom_rint2rev_repro_lf_adapter.log",
+  "log_sha256": "269702d78b03115f8ec37262e390a6eb624a7e93d525e244bfee08186693d774",
+  "tail": [
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/oldsrc_2b9efa253/source/scripts/rint_iface_join.py:641: RuntimeWarning: overflow encountered in multiply",
+    "  dist = np.sqrt((dv * dv).sum(axis=1))",
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/oldsrc_2b9efa253/source/scripts/rint_iface_join.py:642: RuntimeWarning: overflow encountered in square",
+    "  wd = (np.sqrt(((Cd['h_pos1'] + Cd['h_pos2']) ** 2).sum(axis=1)) + hr1 + hr2 + Cd['h_delta']",
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/oldsrc_2b9efa253/source/scripts/rint_iface_join.py:655: RuntimeWarning: invalid value encountered in divide",
+    "  'n_delta_pos_mismatch': int(dbad.sum()), 'max_delta_pos_ratio': float((dd[ok] / wd[ok]).max()) if ok.any() else None,",
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/oldsrc_2b9efa253/source/scripts/rint_iface_join.py:767: RuntimeWarning: overflow encountered in square",
+    "  dbound = um * float(np.sqrt(((2.0 * e_max) ** 2).sum()) + 2.0 * (hs + (float(hrd.max()) if nd else 0.0)))",
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/oldsrc_2b9efa253/source/scripts/rint_iface_join.py:799: RuntimeWarning: overflow encountered in multiply",
+    "  'area_um2': Cd['area'][q] * um * um, 'seam': seam.astype(bool), 'pflag': Cd['pflag'][q]},",
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/oldsrc_2b9efa253/source/scripts/rint_iface_join.py:633: RuntimeWarning: invalid value encountered in divide",
+    "  max_pos_ratio = max(max_pos_ratio, float((np.abs(res) / tol).max()))"
+  ]
+}

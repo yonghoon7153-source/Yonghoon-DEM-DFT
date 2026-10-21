@@ -1,0 +1,24 @@
+{
+  "command": [
+    "/usr/local/bin/python3",
+    "-X",
+    "utf8",
+    "-B",
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b_old2b9/run_review.py",
+    "probe",
+    "numeric_review.py",
+    "--source",
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/oldsrc_2b9efa253/source",
+    "--child"
+  ],
+  "rc": 0,
+  "seconds": 15.592637605004711,
+  "source": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/oldsrc_2b9efa253/source",
+  "test_source": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/source",
+  "lf_test_writer_adapter": false,
+  "log": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b_old2b9/evidence/probe_oldsrc_2b9efa253_numeric_review.py.log",
+  "log_sha256": "1c309115427b5971bceaf1c39a0de18e7244feb81f5e1db294da39db12b46849",
+  "tail": [
+    "{\"file\": \"/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b_old2b9/evidence/numeric_current.json\", \"n_cases\": 113, \"counts\": {\"PASS\": 15, \"REJECT\": 98, \"EXCEPTION\": 0}}"
+  ]
+}

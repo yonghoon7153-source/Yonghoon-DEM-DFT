@@ -1,0 +1,4 @@
+structure_fixture_manifest {"exact": 393, "rel_le_1e-12": 0, "path": 396, "diff": 3, "missing_in_ours": 0, "extra_in_ours": 0, "type_diff": 0}
+   {"key": "$.gzip_baseline[0].sha256", "class": "DIFF", "codex": "\"bec9220e1722b7597d4ef103859eb26a394ec376cd6578785a4668c0e65fdfe3\"", "ours": "\"2a5b079411cf5bd0d2a537c5ce9fd27cbd13269bd80efee569a780d538d24222\""}
+   {"key": "$.gzip_baseline[1].sha256", "class": "DIFF", "codex": "\"249b9723c85606d528b611c7e6b20992bea26e0b186b61b5148c06aaee0ec304\"", "ours": "\"4c2b7e3df514f79074bd26c8b75010eb55e353499382c414b580905a86ca8ff1\""}
+   {"key": "$.gzip_baseline[2].sha256", "class": "DIFF", "codex": "\"d69afa104cd1a01642f107328fb49eaa7dd432c65820f656435d0f12d360c1fb\"", "ours": "\"8ae9c6465d93cb37468be0cfcd9e2f2d7a3d3f5d371d99c84379eba95a6cc78d\""}

@@ -1,0 +1,34 @@
+{
+  "command": [
+    "/usr/local/bin/python3",
+    "-X",
+    "utf8",
+    "-B",
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/run_review.py",
+    "test",
+    "test_rint_g2_join.py",
+    "--lf-test-writer",
+    "--child"
+  ],
+  "rc": 0,
+  "seconds": 195.19317843799945,
+  "source": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/source",
+  "test_source": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/source",
+  "lf_test_writer_adapter": true,
+  "log": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/evidence/test_rint2rev_repro_test_rint_g2_join.py_testsfrom_rint2rev_repro_lf_adapter.log",
+  "log_sha256": "6974a179ad467d19a6e3eb2cebfeca019da5ae5be1b9d82961547da09a4a116c",
+  "tail": [
+    "  PASS  J15P 상자 플래그 fs fs fs (두 덤프) → 계획 거부 없음 · 정량 관문 통과",
+    "  PASS  J15P 상자 플래그 sm ms fm (두 덤프) → PASS (거부 없음)",
+    "  PASS  J15P 상자 플래그 sm ms fm (두 덤프) → 계획 거부 없음 · 정량 관문 통과",
+    "  PASS  J15P CR 만 줄 끝 (세 파일) → PASS (거부 없음)",
+    "  PASS  J15P CRLF / LF 섞임 (원자 덤프 앞 다섯 줄 CRLF) → PASS (거부 없음)",
+    "  PASS  J15P gzip 두 멤버 (원자 덤프 반씩) → PASS (거부 없음)",
+    "",
+    "324 PASS · 0 FAIL",
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/source/scripts/rint_iface_join.py:773: RuntimeWarning: invalid value encountered in divide",
+    "  'n_delta_pos_mismatch': int(dbad.sum()), 'max_delta_pos_ratio': float((dd[ok] / wd[ok]).max()) if ok.any() else None,",
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/source/scripts/rint_iface_join.py:744: RuntimeWarning: invalid value encountered in divide",
+    "  max_pos_ratio = max(max_pos_ratio, float((np.abs(res) / tol).max()))"
+  ]
+}

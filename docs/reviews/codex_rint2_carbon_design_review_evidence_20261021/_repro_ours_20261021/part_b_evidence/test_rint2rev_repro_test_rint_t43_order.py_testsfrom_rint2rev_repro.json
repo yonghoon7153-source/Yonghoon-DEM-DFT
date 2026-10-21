@@ -1,0 +1,33 @@
+{
+  "command": [
+    "/usr/local/bin/python3",
+    "-X",
+    "utf8",
+    "-B",
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/run_review.py",
+    "test",
+    "test_rint_t43_order.py",
+    "--child"
+  ],
+  "rc": 0,
+  "seconds": 0.6450991739984602,
+  "source": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/source",
+  "test_source": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/source",
+  "lf_test_writer_adapter": false,
+  "log": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint2rev_repro/part_b/evidence/test_rint2rev_repro_test_rint_t43_order.py_testsfrom_rint2rev_repro.log",
+  "log_sha256": "8a7fcfb5be26fa68f6cb760e811fc5d77f0efedf8c92841f97a466041c818222",
+  "tail": [
+    "  PASS  O2 sid 다른 셀 1 = 마스크 전이 1 (AM ↔ 비어 있음) · 자리 bridge · 셀 (15,15,15)",
+    "  PASS  O2 n_M 3170 (기준 [0,1]) ↔ 3171",
+    "",
+    "── o3",
+    "O3 — 같은 종류 두 구 (AM_S 둘) 겹침 · sid 는 같고 pid 만 바뀐다",
+    "  PASS  O3 sid 다른 셀 0 · pid 다른 셀 > 0 (렌즈 덮어쓰기 + 브리지 soft = j) · 렌즈 · 브리지 밖 pid 변화 0",
+    "",
+    "── o4",
+    "O4 — 등록된 순서 (K 7 · seed 20261013 … 20261018)",
+    "  PASS  O4 π₀ = 파일 순서 · π₁ = 역순 · π₂ … π₇ = default_rng(seed).permutation(N) (등록 seed 그대로)",
+    "",
+    "6 PASS · 0 FAIL"
+  ]
+}

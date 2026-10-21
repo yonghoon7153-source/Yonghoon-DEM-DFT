@@ -1,0 +1,10 @@
+{
+ "label": "step3_selftest_rint",
+ "codex_n": 91,
+ "ours_n": 91,
+ "same_in_order": 91,
+ "n_diff": 0,
+ "diffs": [],
+ "codex_only_tail": [],
+ "ours_only_tail": []
+}
