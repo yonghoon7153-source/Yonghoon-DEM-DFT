@@ -1900,3 +1900,40 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
 - **문서:** 승인 요청 v2 `docs/REIL_C4E_E1_APPROVAL_REQUEST_v2_20261020.md` (`c2a204dd…` · E1-0 한정 · E1-1–3 고정 계획 · 밝힐 것 12) · 사전 검토 발송문 v2
   `docs/REIL_C4E_E1_PREREVIEW_SEND_v2_20261020.md` (`8f6c3aac…` · 질문 5).
 - **다음:** 사전 검토 발송 (사용자 결정) → 수용 → 사용자의 E1-0 한정 승인 → E1-0 → 결과 검토 → E1-1–3 승인 요청. 이 기록은 어느 단계의 실행 승인도 아니다.
+
+## §76 C4-E · E1 승인 요청 v2 사전 검토 회신 접수 — 정정 필요 5 · N1 · S1 · 범위 분리 수용 · 미래 E1-2 항목 1 · 실행 · 정정 구현 승인 없음 (2026-10-21 KST · 덧붙임 — 위 §0–§75 는 그대로)
+
+- **발송 (사용자 결정):** 사용자가 v2 발송문 `docs/REIL_C4E_E1_PREREVIEW_SEND_v2_20261020.md` (`8f6c3aac…`) 를 Codex 에 보냈다. 따로 "보냈어" 는 없었고 회신이 바로
+  왔다 — 회신이 검토 커밋 `0e4fbbde88d6b1bcfd47be65718c4ff0efe2191c` 와 제출 문서 둘의 바이트 일치를 적어 발송을 확인한다. 이 줄이 §73 에 해당하는 발송 기록이다.
+- **보존:** `reviews/review_reil_c4e_e1_v2_prereview_20261021/REIL_C4E_E1_V2_PREREVIEW_20261021.zip` (189,278 B · sha256
+  `7271fee2bf15236d0427a8ae08760219f69931810f6aa1e8b88c5629c786ec38`) · `originals/` 32 멤버 안전 추출 (심볼릭 링크 · 경로 이탈 0). 보존 규칙 `99c358d0` →
+  보존 `742bd648`. PACKAGE_MANIFEST 31/31 (목록 밖은 자신뿐) · `source/` 19 = 검토 HEAD `0e4fbbde` 원문 · `basis/` 2 = §74 회신 (CLAUDE_REPLY_KO · DECISION)
+  보존본과 바이트 동일 · `tools/review_data.py` = 검토자 자료 도구 사본 (실행하지 않음) · 하위 `.gitattributes` · 실행 비트 · CR 없음 · blob 검사 33/33 · 비밀
+  검사 33 파일 0 건.
+- **판정 (`DECISION.json`):** `CHANGES_REQUIRED_NO_EXECUTION` · `execution_approved` · `correction_implementation_approved` · `live_E1_approved` 모두 false ·
+  검토자 실행 (대상 import · 시험 · 탐침 · Git fixture · fetch · 개봉 · COMSOL · commit / push) 0. 지적은 고정 소스의 정적 경로 추론이지 관측한 실패가 아니다.
+  검토자 자체 자료 도구의 AST 상수 해석 오류 1 건은 검토자 도구 정정이지 대상 재시도가 아니다 (`REVIEWER_DATA_TOOL_NOTE.json`).
+- **정정 사항 (`REVIEW_KO.md` §2 · 행 = 동봉 고정 소스 · S 외곽 실행기 · L launcher · C 대조 · A 요청서 v2 · R 정정 범위안):**
+
+  | ID | 우선 | 무엇 | 위치 |
+  |---|---|---|---|
+  | V2-01 | P1 | 외곽 실행기의 관측 오류 유실 — `reap()` 가 proc_table 오류를 버리고, settle 의 watch 는 따로 한 두 번째 관측이 정상 · alive 0 이면 empty → 첫 관측의 권한 / 목록 / 파싱 오류가 사라지고 runner_ok true 가 될 수 있다. timeout 루프도 descendants 오류를 버린다 | S `:118` · `:138–151` · `:208` · `:229` |
+  | V2-02 | P1 | 첫 Git 호출 전 환경 격리 누락 — 외곽 실행기는 비밀 형태 이름만 빼서 `GIT_OBJECT_DIRECTORY` · `GIT_DIR` · `GIT_INDEX_FILE` · `GIT_TRACE` 등이 pytest 에 남는다. 새 대조의 `_tree()` 는 env 없이 git init · 빈 commit (L.child_env 이전) · 외곽 Git 기록 · launcher `git_out` 도 원래 환경을 상속 | S `:36` · `:54–56` · `:171–173` · C `:135–150` · L `:350–355` · `:666–668` |
+  | V2-03 | P2 | 정리 15 s (요청서 표) 와 명목 배정 10 + 5 + 5 = 20 s 불일치 · 남은 기한이 없어도 p.wait 에 0.1 s · 공통 절대 기한 없음 · `elapsed_s` 가 settle 전 값 — 자동 예산 확대는 승인하지 않음 | A `:77–78` · S `:129–155` · `:206–221` |
+  | V2-04 | P2 | launcher 준비 (pycache · mpl · tmp 생성 · argv · 자기 읽기 · 해시 · 첫 disk 조회) 가 오류 기록 try 밖 — errors / first_error / launched / meta 실패 rc 4 경로에 들어가지 않는다 · 의도된 SystemExit 와 예상 밖 준비 I/O 오류를 구분할 것 | R `:45–46` · L `:688–703` · `:738–751` |
+  | V2-05 | P2 | 필수 산출물 `01_red` / `02_green.source_sha256.txt` 의 생성 주체 · 대상 · 시점 · 실패 기준 없음 (실행기는 만들지 않음) — 사전 봉인을 끝 diff 로 대신하지 않는 원칙은 유지 | A `:115–117` · S `:165` |
+
+- **미래 E1-2 한정 FUTURE-01 (P2 · E1-0 범위 확대 아님):** fetch 전 config · URL 검사는 WORK 문맥이고 실제 fetch 는 새 `data/git` 문맥이다 — `includeIf`
+  gitdir 조건부 설정 (예: data/git 에만 걸리는 `http.sslVerify=false` · URL rewrite) 이 사전 검사에 보이지 않고 사후 검사 (URL · shallow · alternates) 도 놓칠
+  수 있다. 조건부 rewrite 라면 사후 차단은 다른 출처에 접근한 뒤다. "실제 TLS 연결 호스트 미관측" 공개와 다른 금지 설정 차단 누락 — v2 고정본으로 E1-2 를
+  실행 가능하다고 종결하지 말 것 (L `:384–417` · `:477–481` · run `:665–706`).
+- **이전 지적의 종결 범위 (`prior_closure`):** N1 정적 수용 (기능 NOT_RUN) · N2 launcher 개선 · 외곽 V2-01 로 미종결 · N3 부분 (준비 V2-04) · N4 부분 (외곽 env
+  V2-02 · 미래 FUTURE-01) · N5 부분 (V2-01 · V2-03) · N6 범위 수용 · 기록 책임 V2-05 · S1 정적 결속 수용 (실행 확인 아님).
+- **그 밖의 기록:** 계획 수 (새 24 · E0 21 · N1 6 · GREEN 51 · 함수 34) 는 AST 로 확인한 계획이지 관측이 아니다. 시작 Git 기록 실패 뒤 자식을 띄우는 경로는
+  R `:47` · l21 이 사후 false 를 명시하므로 새 위반으로 세지 않았다. `/proc` PID · ppid 스캔은 비원자적이고 번호 기반 kill 은 생성 신원을 보장하지 않는다 —
+  모든 자손의 연속 소유 · 종료 증명으로 넓히지 말 것. 외곽 timeout 무시험은 공개 범위라 그 자체로 결함을 더하지 않았지만, 정상 RED / GREEN 의 끝 잔존 0 만으로
+  V2-01 / V2-03 을 검증할 수 없다 — 대조를 더하면 새 수 · SHA · argv / cwd · 예산을 다시 제시한다 (24 / 51 에 숨기지 않음).
+- **권고 흐름:** 비활성 정정안 → 갱신 식별 · 계획 재검토 → 명시적 E1-0 승인 → 결과 검토 → 별도 E1-1–3 승인. 회신이 정정 구현을 승인하지 않으므로
+  (`correction_implementation_approved` false) §74 와 같이 **정정 범위안 → 사용자 채택 → 초안** 순서로 간다.
+- **다음:** 정정 범위안 v3 `docs/REIL_C4E_E1_REVISION_SCOPE_v3_20261021.md` → 사용자 범위 채택 → 비활성 초안 v3 · 승인 요청 v3 · 사전 검토 발송문 v3. 그
+  전에는 초안 작성 · 실행 0.
