@@ -1,0 +1,56 @@
+WARNING:root:If 'dataset_list' is provided in the config, the code assumes that each dataset maps to itself. Please use 'dataset_mapping' as 'dataset_list' is deprecated and will be removed in the future.
+{
+ "model_dir": "/home/kgy/wt_wadp2s_1021/db/inputs/wad_p2small_geometries_2026_10_17/P2S_s_outer/A",
+ "model": "P2S",
+ "registry": "A",
+ "term": "s_outer",
+ "init_sha256": "d6ceddfd90b9db732cedd2d3daa91a16de869bc97ad7056d313869aafed6e9eb",
+ "n_atoms": 398,
+ "fixed_n": 90,
+ "lateral_n": 0,
+ "preflight": {
+  "flags": [],
+  "mask_matches_policy": true
+ },
+ "ase": "3.29.0",
+ "fmax_target_eV_A": 0.02,
+ "max_steps": 3000,
+ "optimizer": "fire",
+ "cell_fixed": true,
+ "gpu_guard": {
+  "vram_cap_MiB": 4000.0,
+  "gpu_kill_total_MiB": 23500,
+  "gpu_start_max_MiB": 16000,
+  "start_gate": {
+   "ok": true,
+   "last_MiB": 15023,
+   "waited_s": 0.0,
+   "reason": "합계 15023 ≤ 16000"
+  },
+  "watchdog": "on (합계 > 23500 MiB 면 이 프로세스만 종료 3)"
+ },
+ "peak_mem": {
+  "max_reserved_MiB": 3824,
+  "max_allocated_MiB": 2207
+ },
+ "calculator_pbc": [
+  true,
+  true,
+  true
+ ],
+ "calculator_pbc_why": "UMA 는 균일 pbc 만 받는다 · z 영상 간격 ≥ 8 Å > UMA 컷오프 6 Å · QE 와 같은 3축 관례",
+ "steps_taken": 894,
+ "converged_fmax": true,
+ "fmax_free_final_eV_A": 0.01643,
+ "wall_s": 716.8,
+ "relaxed_sha256": "82f7a470b9f8d8f32713e931eee59efc4042ecfbdccc49bbe1748c2641713310",
+ "disp_max_A": 1.955,
+ "disp_rms_A": 0.513,
+ "interface_check_flags": [],
+ "energies_raw_log_only": {
+  "E_init_eV": -2814.357531828839,
+  "E_final_eV": -2822.133480477402,
+  "⛔": "원출력 기록용 — 결과표·W·후보 선택·게이트 조정에 쓰지 않는다 (카드 v5 S3 전 예외 규칙)"
+ }
+}
+계산기: {"calc": "uma", "device": "cuda", "vram_cap": {"cap_MiB": 4000.0, "device_total_MiB": 24154, "fraction": 0.1656, "⚠": "CUDA 컨텍스트(수백 MiB)는 이 상한 밖이다"}, "fairchem.core": "2.21.0", "torch": "2.8.0+cu128", "cuda": "12.8", "model": "uma-s-1p1", "task": "omat", "inference_settings": "default", "checkpoint": [{"path": "/home/kgy/.cache/fairchem/models--facebook--UMA/snapshots/be2896459a03fcde05e20d2fcefd11f450601fce/checkpoints/uma-s-1p1.pt", "sha256": "07068e9c76702ca173d13155095f2117c1b327ec228557e64cd2709c777b824a", "MB": 1119}], "d3": {"impl": "simple-dftd3 (python)", "version": "1.6.0", "method":

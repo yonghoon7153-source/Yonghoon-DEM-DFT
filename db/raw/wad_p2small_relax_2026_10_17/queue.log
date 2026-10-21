@@ -1,0 +1,30 @@
+[2026-10-21 21:20:57] ════ P2′ 부모 둘 UMA+D3 이완 · kgy · HEAD c293704b · OUT /home/kgy/work/runs/wad_p2small_relax_2026_10_17 ════
+  ✓ P2S_s_outer/A/bound.extxyz d6ceddfd90b9db73
+  ✓ P2S_s_outer/A/far.extxyz 04f00ac7f07546ba
+  ✓ P2S_li_outer/A/bound.extxyz 706b94a794b85451
+  ✓ P2S_li_outer/A/far.extxyz b4b2a167f04d6f1d
+  ✗ ModuleNotFoundError: No module named 'dftd3'
+[2026-10-21 21:21:02] ⛔ /home/kgy/apps/miniforge3/envs/uma/bin/python 에 fairchem · simple-dftd3 (dftd3) 가 없다 — 시작 안 함 (D3 구현을 바꾸지 않는다)
+[2026-10-21 21:24:14] ════ P2′ 부모 둘 UMA+D3 이완 · kgy · HEAD c293704b · OUT /home/kgy/work/runs/wad_p2small_relax_2026_10_17 ════
+  ✓ P2S_s_outer/A/bound.extxyz d6ceddfd90b9db73
+  ✓ P2S_s_outer/A/far.extxyz 04f00ac7f07546ba
+  ✓ P2S_li_outer/A/bound.extxyz 706b94a794b85451
+  ✓ P2S_li_outer/A/far.extxyz b4b2a167f04d6f1d
+  판: fairchem.core 2.21.0 · torch 2.8.0+cu128 · cuda 12.8 · ase 3.29.0 · simple-dftd3 1.6.0 · GPU True
+[2026-10-21 21:24:19] GPU 합계 15022 MiB · 문턱 16000 · 감시 23500 · 상한 4000
+[2026-10-21 21:24:19] DRY_RUN — 여기서 끝 (계산 0)
+[2026-10-21 21:24:19] ════ P2′ 부모 둘 UMA+D3 이완 · kgy · HEAD c293704b · OUT /home/kgy/work/runs/wad_p2small_relax_2026_10_17 ════
+  ✓ P2S_s_outer/A/bound.extxyz d6ceddfd90b9db73
+  ✓ P2S_s_outer/A/far.extxyz 04f00ac7f07546ba
+  ✓ P2S_li_outer/A/bound.extxyz 706b94a794b85451
+  ✓ P2S_li_outer/A/far.extxyz b4b2a167f04d6f1d
+  판: fairchem.core 2.21.0 · torch 2.8.0+cu128 · cuda 12.8 · ase 3.29.0 · simple-dftd3 1.6.0 · GPU True
+[2026-10-21 21:24:24] GPU 합계 15023 MiB · 문턱 16000 · 감시 23500 · 상한 4000
+[2026-10-21 21:24:24] ▶ 프로브 P2S_s_outer/A (힘 한 번)
+[2026-10-21 21:24:34] 프로브 rc=0 · "max_reserved_MiB": 2666
+[2026-10-21 21:24:34] 체크포인트 결박 ✓ 07068e9c76702ca1
+[2026-10-21 21:24:34] ▶ P2S_s_outer/A
+[2026-10-21 21:36:40] P2S_s_outer/A rc=0 · "steps_taken": 894 "converged_fmax": true "wall_s": 716.8 
+[2026-10-21 21:36:40] ▶ P2S_li_outer/A
+[2026-10-21 21:42:18] P2S_li_outer/A rc=0 · "steps_taken": 430 "converged_fmax": true "wall_s": 328.0 
+[2026-10-21 21:42:18] ■ 큐 끝 · 끝 코드 0
