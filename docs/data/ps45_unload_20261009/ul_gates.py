@@ -15,6 +15,8 @@ G0  원 덱이 S0 (마지막 run 안) 에 켜 둔 정의 ↔ 언로딩 덱 머�
 G1  재개 첫 setup 줄 (step = S0 · 원자 수 = 원 로그 · KE 상대 1e-6) — 표의 G1 줄 (재개 절차 그대로).
 G2  시험이 다시 쓴 atom_S0 (id 정렬 · id type x y z radius vx vy vz) = 원 atom_S0 글자 그대로 · mesh_S0 md5 = 원.
     omega 는 원 덤프에 없다 → "과거 직접 비교 미확보" 로 적고 새 덤프에는 출력한다 (CX2 §6).
+    관측 (ULPR-03 · 10-21): 두 덤프 전부 읽힘 (머리 · 열 · 행 수 = 선언 · 유한 · 한 프레임) · 머리 step 서로 같음 · (주면) = 요청 step · ID 고유 · 정확한 정수.
+G2 · G2c 분류 (ULPR-04 · 등록 §14-10): 파서 · 관측 문제 = NOT_COMPUTED (관측 결손 → 복원 UNCONFIRMED) · 값 차이 = FAIL (수치 불일치 → VALUE_MISMATCH).
 G2c 쌍 접촉 (원 덤프 꼴 26 열) — 무순서 키 (작은 id, 큰 id) · 방향 바뀐 행은 힘 부호 · 두 위치를 바꿔서 · 주기 플래그 c_cpl[9] · 토크 제외 ·
     위치는 상자 길이로 감아 대조 (주기 image) · 중복 키 (같은 값 = 수 · 다른 값 = 위반) · 허용폭 |차| ≤ 1e-5 × max(|원 값|, 그 열 |값| 중앙값) ·
     판별력 = 원 덤프의 접선 힘 0 아닌 접촉 몫 (함께 적는다).  = 초기 접촉 힘 재현 검사 (숨은 이력 동일성의 단독 증명 아님 · §12-1).
@@ -25,6 +27,7 @@ S0′  10:0 연장 — S0′ ± 5,000 정규 줄 각각 ↔ 그 런 마지막 25
 """
 from __future__ import annotations
 
+import collections
 import hashlib
 import math
 import os
@@ -212,26 +215,58 @@ def g3_check(screen_text, orig_log_text, s0, tol=0.05):
     return out
 
 
-def _dump_tokens(path, cols):
+#: ULPR-04 (사전 리뷰 10-21 · 1저자 Q2 권고대로 · 등록 §14-10 "관측 결손 = UNCONFIRMED · 수치 불일치 = VALUE_MISMATCH") — G2 · G2c 의 파서 · 관측 문제
+#: (덤프가 전부 읽히지 않음 · 열 결손 · 머리 step · ID 중복 · 소수 ID) = 비교 미계산 = NOT_COMPUTED (restore_verdict 가 prepost None → UNCONFIRMED) ·
+#: 값 차이 (집합 · 글자 · 허용폭 · 다른 값 중복 키) 만 FAIL (→ VALUE_MISMATCH).
+OBS_NOTE = '관측 결손 — 비교 미계산 (등록 §14-10 = 복원 UNCONFIRMED · 수치 불일치 FAIL 과 따로 · ULPR-03 · 04)'
+
+
+def _dump_tokens(path, cols, step=None):
+    """G2 원자 비교의 관측 (ULPR-03 · README §4 관측 파싱 "모든 경로에서 덤프 전부 읽힘 · 머리 step = 요청 step · ID 고유") — ul_lib.read_dump (머리 · 열 · 행 수 =
+    선언 · 유한 · 한 프레임 · ID 열 정수 토큰 정확한 int) · 비교 열 있음 · step 을 주면 머리 step = 그 step · ID = 유한 · 양의 정확한 정수 · 고유 →
+    ({id: 비교 열 글자}, 머리 step, 문제 목록) · 문제가 있으면 글자 표 없음 (None — 같은 ID 를 뒤 줄로 덮거나 · 열 수 다른 줄을 건너뛰지 않는다)."""
+    d = ul_lib.read_dump(path, 'custom')
+    pr = list(d['problems'])
+    if d['cols'] is not None and [c for c in cols if c not in d['cols']]:
+        pr.append(f'비교 열 없음 {[c for c in cols if c not in d["cols"]]} (열 이름 {d["cols"]})')
+    if step is not None and d['step'] != step:
+        pr.append(f'머리 step {d["step"]} ≠ 요청 {step}')
+    ids = None
+    if d['ok'] and not pr:
+        ids, ipr = ul_lib.ids_of(d['rows'])
+        pr += ipr
+        if ids is not None and len(set(ids)) != len(ids):
+            dup = sorted(i for i, c in collections.Counter(ids).items() if c > 1)
+            pr.append(f'ID 중복 {len(ids) - len(set(ids))} 줄 ({dup[:5]})')
+    if pr:
+        return None, d['step'], pr
     lines = open(path, encoding='utf-8', errors='replace').read().splitlines()
     k = next(i for i, x in enumerate(lines) if x.startswith('ITEM: ATOMS'))
     head = lines[k].split()[2:]
     idx = [head.index(c) for c in cols]
-    out = {}
-    for ln in lines[k + 1:]:
-        t = ln.split()
-        if len(t) == len(head):
-            out[int(t[head.index('id')])] = tuple(t[i] for i in idx)
-    return out
+    data = [ln.split() for ln in lines[k + 1:] if ln.strip()]   # read_dump 이 전부 받은 줄 (같은 순서 · 버린 줄 없음 — ok)
+    return {i: tuple(t[j] for j in idx) for i, t in zip(ids, data)}, d['step'], []
 
 
-def g2_compare(test_atom_path, orig_atom_path, cols=('id', 'type', 'x', 'y', 'z', 'radius', 'vx', 'vy', 'vz')):
-    out = {'status': 'FAIL', 'why': []}
+def g2_compare(test_atom_path, orig_atom_path, cols=('id', 'type', 'x', 'y', 'z', 'radius', 'vx', 'vy', 'vz'), step=None):
+    """G2 — 시험이 다시 쓴 원자 덤프 ↔ 원 (id 정렬 · 비교 열 글자 그대로).  관측 (두 덤프 전부 읽힘 · 머리 step 서로 같음 · step 을 주면 = 요청 step (복원 S0 ·
+    중력 팔 R_M) · ID 고유) 이 아니면 NOT_COMPUTED + 사유 (관측 결손 · ULPR-03 · 04) · 원자 집합 · 글자 차이 = FAIL."""
+    out = {'status': 'NOT_COMPUTED', 'why': []}
     try:
-        a, b = _dump_tokens(test_atom_path, cols), _dump_tokens(orig_atom_path, cols)
+        a, sa, pa = _dump_tokens(test_atom_path, cols, step)
+        b, sb, pb = _dump_tokens(orig_atom_path, cols, step)
     except (OSError, StopIteration, ValueError) as e:
-        out['why'].append(f'덤프 읽기 실패: {type(e).__name__}: {e}')
+        out.update(why=[f'덤프 읽기 실패: {type(e).__name__}: {e}'], note=OBS_NOTE)
         return out
+    out['why'] = [f'시험 {x}' for x in pa] + [f'원 {x}' for x in pb]
+    if not out['why'] and sa != sb:
+        out['why'].append(f'머리 step 시험 {sa} ≠ 원 {sb}')
+    if not out['why'] and not a and not b:
+        out['why'].append('시험 · 원 원자 0 — 비교 대상 없음 (판별력 없음 · 빈 덤프 둘을 같다고 하지 않는다)')
+    if out['why']:
+        out['note'] = OBS_NOTE
+        return out
+    out['status'] = 'FAIL'
     miss, extra = sorted(set(b) - set(a)), sorted(set(a) - set(b))
     bad = [i for i in set(a) & set(b) if a[i] != b[i]]
     out.update(n_atoms=len(b), n_mismatch=len(bad), missing=miss[:10], extra=extra[:10], example=sorted(bad)[:5],
@@ -284,13 +319,23 @@ def _cmpvals(v, box):
     return pos + list(v[9:18]) + [v[21], v[22], _wrap(v[23], lx), _wrap(v[24], ly), v[25]]
 
 
-def g2c_compare(test_contact_path, orig_contact_path, box=(0.05, 0.05), rel=1e-5):
-    out = {'status': 'FAIL', 'why': []}
+def g2c_compare(test_contact_path, orig_contact_path, box=(0.05, 0.05), rel=1e-5, step=None):
+    """G2c — 쌍 접촉 (무순서 키 · 방향 · 주기 정규화 · 허용폭).  파서 · 관측 문제 (필수 열 결손 · 소수 쌍 참조 · 행 수 · 비유한 — ULKRF-03 · ULKRR-04 · 머리 step 서로
+    다름 · step 을 주면 ≠ 요청 step — ULPR-03 같은 부류) = NOT_COMPUTED + 사유 (관측 결손 · ULPR-04 · 등록 §14-10) · 집합 · 값 차이 · 다른 값 중복 키 = FAIL."""
+    out = {'status': 'NOT_COMPUTED', 'why': []}
     dt, T, dupt, ct = _contacts(test_contact_path, box)
     do, O, dupo, co = _contacts(orig_contact_path, box)
     if not (dt['ok'] and do['ok']):
-        out['why'] += dt['problems'][:3] + do['problems'][:3]
+        out.update(why=[f'시험 {x}' for x in dt['problems'][:3]] + [f'원 {x}' for x in do['problems'][:3]], note=OBS_NOTE)
         return out
+    hs = [f'머리 step 시험 {dt["step"]} ≠ 원 {do["step"]}'] if dt['step'] != do['step'] else []
+    hs += [f'머리 step {n} {s} ≠ 요청 {step}' for n, s in (('시험', dt['step']), ('원', do['step'])) if step is not None and s != step]
+    if not hs and not O and not T:
+        hs.append('시험 · 원 쌍 접촉 0 — 비교 대상 없음 (판별력 없음 · 빈 덤프 둘을 같다고 하지 않는다)')
+    if hs:
+        out.update(why=hs, note=OBS_NOTE)
+        return out
+    out['status'] = 'FAIL'
     miss, extra = sorted(set(O) - set(T)), sorted(set(T) - set(O))
     ov = {k: _cmpvals(v, box) for k, v in O.items()}
     tv = {k: _cmpvals(v, box) for k, v in T.items()}

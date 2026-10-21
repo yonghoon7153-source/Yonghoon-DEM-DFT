@@ -1067,8 +1067,8 @@ def _g_restore(d, run, root, bed, job):
         return out
     ref = f'{rm} {int(row["Atoms"])} {row["KinEng"]!r} 0 0'
     g1 = ul_gates.g1_check(open(scrp, encoding='utf-8', errors='replace').read(), ref, rm)
-    g2 = ul_gates.g2_compare(os.path.join(d, 'dump', f'atom_{rm}.dump'), os.path.join(src, 'dump', f'atom_{rm}.dump'))
-    g2c = ul_gates.g2c_compare(os.path.join(d, 'dump', f'contact_{rm}.dump'), os.path.join(src, 'dump', f'contact_{rm}.dump'))
+    g2 = ul_gates.g2_compare(os.path.join(d, 'dump', f'atom_{rm}.dump'), os.path.join(src, 'dump', f'atom_{rm}.dump'), step=rm)   # 관측 결손 · 값 차이 = PASS 아님 → TECH (C12)
+    g2c = ul_gates.g2c_compare(os.path.join(d, 'dump', f'contact_{rm}.dump'), os.path.join(src, 'dump', f'contact_{rm}.dump'), step=rm)
     out.update(rm_step=rm, source=src, G1=g1['status'], G2=g2['status'], G2c=g2c['status'], G3='해당 없음 (중력 교체)')
     out['status'] = 'PASS' if (g1['status'], g2['status'], g2c['status']) == ('PASS', 'PASS', 'PASS') else 'FAIL'
     return out
@@ -1542,8 +1542,9 @@ def restore_verdict(root, bed, job='RJ', hist=None, P=None):
     g2a = os.path.join(R, 'g2', f'atom_{s0}.liggghts')
     g2c = os.path.join(R, 'g2', f'contact_{s0}.liggghts')
     g2m = os.path.join(R, 'g2', f'mesh_{s0}.stl')
-    out['checks']['G2'] = ul_gates.g2_compare(g2a, orig_atom) if orig_atom and os.path.exists(g2a) else {'status': 'NOT_COMPUTED'}
-    out['checks']['G2c'] = ul_gates.g2c_compare(g2c, orig_con) if orig_con and os.path.exists(g2c) else {'status': 'NOT_COMPUTED'}
+    # G2 · G2c — 관측 (전부 읽힘 · 머리 step = S0 · ID 고유) 결손 = NOT_COMPUTED → 아래 prepost None → UNCONFIRMED · 값 차이 = FAIL → VALUE_MISMATCH (ULPR-03 · 04 · §14-10)
+    out['checks']['G2'] = ul_gates.g2_compare(g2a, orig_atom, step=s0) if orig_atom and os.path.exists(g2a) else {'status': 'NOT_COMPUTED'}
+    out['checks']['G2c'] = ul_gates.g2c_compare(g2c, orig_con, step=s0) if orig_con and os.path.exists(g2c) else {'status': 'NOT_COMPUTED'}
     out['checks']['mesh_md5'] = {'status': ('NOT_COMPUTED' if not (orig_mesh and os.path.exists(g2m))
                                             else ('PASS' if ul_gates.mesh_md5_equal(g2m, orig_mesh) else 'FAIL'))}
     log = _orig_log_text(root, bed, job, P)
