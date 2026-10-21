@@ -110,6 +110,8 @@ def main():
     chk('"처음 보는 분께" 상자', '처음 보는 분께' in text)
     chk('CONTACT_FREE (지금 복셀 σ 의 빈틈) 설명', 'CONTACT_FREE' in text)
     chk('DBE 비교는 "독립 holdout 검증 아님" 표지', 'holdout' in text and '아님' in text)
+    chk('용어 칸 holdout 풀이 = DBE 4.68 은 현 세대 보정에 쓰였으므로 여기서 holdout 이 아니다 (사전 리뷰 10-21 PRE-design-07)',
+        bool(re.search(r'<td>holdout</td><td>[^<]*DBE 4\.68[^<]*현 세대 보정[^<]*holdout 이 아니다', src)))
 
     print('── ③ α = 열린 면적 비율 (개구율)')
     chk('거꾸로 쓴 문장 ("가리는 비율 α") 없음', exists and '가리는 비율 α' not in text)
