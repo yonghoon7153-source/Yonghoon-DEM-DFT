@@ -39,23 +39,26 @@
 | 고친 판 | 보충만 비준 | registered | 122/123 | S0b (보충 ≠ 194) | `tests/after_supp_only.log` |
 | 고친 판 | 194 만 비준 | pending | 122/123 | S0b (보충 ≠ 194 — 새 엄격 · §5) | `tests/after_194_only.log` |
 
-변이 — 고친 판의 `s0b_fp` 가드를 하나씩 끈 판 (`if False and …`) · 커밋된 문서 (pending):
+변이 — 고친 판의 `s0b_fp` 가드를 하나씩 끈 판 (`if False and …` · 그 밖 바이트 같음):
 
-| 변이 | 결과 | S11g 이 잡은 꼴 (참으로 뒤집힘) | 기록 |
-|---|---|---|---|
-| m1 남은 대기 검사 끔 | 122/123 | ratified_pending_left | `tests/mut_m1_no_leftover_pending.log` |
-| m2 두 등록 대조 끔 | 122/123 | supp_only_ratified · pending_base_differs | `tests/mut_m2_no_cross_doc.log` |
-| m3 194 문제 검사 끔 | (이 커밋 뒤 — 기계 잠금 대기 중 · 결과는 같은 폴더에 덧붙인다) | 기대 base_pending_conflict | — |
-| m4 undeclared 거짓 끔 | (이 커밋 뒤 — 같음) | 기대 undeclared | — |
+| 변이 | 등록 문서 (상태) | 결과 | S11g 이 잡은 꼴 (참으로 뒤집힘) | 기록 |
+|---|---|---|---|---|
+| m1 남은 대기 검사 끔 | 커밋된 문서 (pending) | 122/123 | ratified_pending_left | `tests/mut_m1_no_leftover_pending.log` |
+| m2 두 등록 대조 끔 | 커밋된 문서 (pending) | 122/123 | supp_only_ratified · pending_base_differs | `tests/mut_m2_no_cross_doc.log` |
+| m3 194 문제 검사 끔 | 비준 커밋 트리 (registered) | 122/123 | base_pending_conflict | `tests/mut_m3_no_base_problems.log` |
+| m4 undeclared 거짓 끔 | 비준 커밋 트리 (registered) | 122/123 | undeclared | `tests/mut_m4_undeclared_ok.log` |
+
+m3 · m4 는 이 폴더를 만든 코드 커밋 **뒤** 비준 커밋 트리에서 돌렸다 (S11g 은 등록 사본 쌍을 스스로 만들어 실물 상태와 무관 — 위 표의 고친 판 pending · registered 둘 다 S11g 통과).
+비준 커밋 트리의 고친 판 그대로 = 123/123 (`tests/final_ratified_commit.log` · 상태 registered).
 
 - "비준 사본" = 묶음 §1-4 · §1-5 diff (`⬜(날짜)` → `10-21 ·`) 를 작업 트리에 `git apply` 한 문서 — 다음 비준 커밋과 같은 diff · 돌린 뒤 `git checkout` 으로 되돌림.
   "보충만 · 194 만 비준" = 그 diff 하나만.
 - "새 시험 + 옛 S0b 식" = 고친 판에서 `s0b_fp` 본문만 옛 S0b 식 (앞자리 상수 둘) 으로 바꾼 판 (그 밖 바이트 같음 · 시험 먼저의 "고치기 전") — 작업 트리에 잠시 넣고 돌린 뒤 되돌림.
-- 시간 = 33–52 s (잠금 대기 제외 · 같은 기계 부하에 따라).
+- 시간 = 32–52 s (잠금 대기 제외 · 같은 기계 부하에 따라).
 
 ## 4. 봉인 · 범위 대조 (이 커밋 · 이 컨테이너)
 
-- 이 커밋이 바꾼 파일 (`a76f59d0d` 대비) = 이 도구 · 재고 대장 (`docs/reviews/selftest_inventory.tsv` 의 이 도구 행) · 이 폴더 (README + 로그 11).
+- 코드 커밋이 바꾼 파일 (`a76f59d0d` 대비) = 이 도구 · 재고 대장 (`docs/reviews/selftest_inventory.tsv` 의 이 도구 행) · 이 폴더 (README + 로그 11 — m3 · m4 · 비준 커밋 트리 로그 셋과 이 README 의 그 행들은 뒤 문서 커밋).
 - 대조 핀 `34713ac96` (Codex 10-20 검토 핀) → 이 커밋: `CODE_FILES` 32 · 인계 도구 2 · 배포 빌더 · 실행기 · 스모크 · 두 등록 문서 = `git diff --quiet` rc 0 (바이트 같음).
 - 고친 판으로 잰 컨테이너 범위 영수증: 커밋된 등록 문서 (pending) = rc 1 · 실패 칸 [D1] · 비준 사본 = rc 0 · 실패 칸 없음 — 고치기 전 판과 같다 (도구 판정 무변경).
 
@@ -66,7 +69,7 @@
 - 두 문서가 **같은 엉뚱한 값으로 함께** 바뀌면 고친 S0b 의 두 등록 대조는 그것을 못 잡는다 (옛 판의 앞자리 상수는 잡았지만 정상 비준을 막았다).
   registered 상태 (발사 대조가 통과할 수 있는 유일한 상태) 에서는 기준이 체크아웃 지문 64 자리 전체라 엉뚱한 값 = undeclared = 실패 · pending 상태는 발사 대조 (D1 · E2 · F5 · G5) 가 이미 막는다.
 - §2 네 값의 앞자리 상수는 그대로다 (등록 입력 집합 — §9-3 *바꾸지 않는 것*).
-- WSL 실측 아님 — 사전 점검 2 단계에서 다시 잰다.  기대 = 비준 커밋 뒤 **123/123** (묶음 §1-3 · §4 단계 2 · §6 Q3 의 *"122/122 (Q3 처리 뒤)"* 는 이 커밋 전 예상 — 새 검사 S11g 하나만큼 다르다).
+- WSL 실측 아님 — 사전 점검 2 단계에서 다시 잰다.  기대 = 비준 커밋 뒤 **123/123** (묶음 §1-6 2 단계 · 명령 주석과 §4 결과 전 기대 단계 2 의 *"122/122"* 는 이 커밋 전 예상 — 새 검사 S11g 하나만큼 다르다).
 
 ## 6. 다시 돌리기 (리포 뿌리)
 
