@@ -1977,3 +1977,36 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
   FUTURE-01 선행 · 밝힐 것 17) · 사전 검토 발송문 v3 `docs/REIL_C4E_E1_PREREVIEW_SEND_v3_20261021.md` (`3e844993…` · 질문 5).
 - **다음:** 사전 검토 발송 (사용자 결정) → 수용 → 사용자의 E1-0 한정 승인 → E1-0 → 결과 검토 → E1-1–3 승인 요청 (FUTURE-01 정정 · E1-0b 포함). 이 기록은
   어느 단계의 실행 승인도 아니다.
+
+## §78 C4-E · E1 승인 요청 v3 ultra 사전 검토 회신 접수 — 정정 필요 4 (P2) + 문구 1 (P3) · 실행 · 구현 승인 없음 (2026-10-21 KST · 덧붙임 — 위 §0–§77 은 그대로)
+
+- **발송 (사용자 결정):** 사용자가 v3 발송문 (`3e844993…`) 을 Codex 에 보냈고 ("ultra 심도" 요청) 회신이 바로 왔다 — 회신이 검토 커밋
+  `0c9c48e8c5b55bd7b9355fdba5a6833c01fabfb8` 과 제출 문서 둘의 바이트 일치를 적어 발송을 확인한다. 이 줄이 발송 기록이다.
+- **보존:** `reviews/review_reil_c4e_e1_v3_prereview_20261021/REIL_C4E_E1_V3_ULTRA_REVIEW_20261021.zip` (228,113 B · sha256
+  `22e61fda8cfd1ff8b81483a8dbf7a4153a0728023b906bd0f60224e43f455582`) · `originals/` 35 멤버 안전 추출 (심볼릭 링크 · 경로 이탈 0). 보존 규칙 `e4b36925` →
+  보존 `5a92d4b3`. PACKAGE_MANIFEST 34/34 (목록 밖은 자신뿐) · `source/` 21 = 검토 HEAD `0c9c48e8` 원문 · `tools/` 2 = 검토자 자료 · 포장 도구 사본 (실행하지
+  않음) · 하위 `.gitattributes` · 실행 비트 · CR 없음 · blob 검사 36/36 · 비밀 검사 36 파일 0 건.
+- **판정 (`REVIEW_DECISION.json`):** `CHANGES_REQUIRED_NO_EXECUTION` · 현재 실행 차단 4 · 문구 정렬 1 · `implementation_approval` · `execution_approval` false ·
+  검토자 실행 (대상 import · 호출 · 시험 · fixture · 탐침 · 실제 /proc · process 실험 · COMSOL) 0 — 지적은 고정 소스의 정적 도달 경로이지 관측한 실패가 아니다.
+  검토 방식: 종료 / 시간 · 봉인 / Git 경계 · RED / GREEN 대조를 ultra 심도로 각각 독립 검토한 뒤 교차 확인. 검토자 자체 diff 출력의 cp949 인코딩 오류 1 회
+  (rc 1 → UTF-8 출력으로 rc 0) 는 검토자 도구 문제이지 대상 재시험이 아니다 (`ACTIVITY_NOTES.json`).
+- **정정 사항 (`REVIEW_KO.md` §2–§3 · 행 = 고정 커밋의 초안):**
+
+  | ID | 우선 | 무엇 | 위치 |
+  |---|---|---|---|
+  | V3-01 | P2 | 정리 공통 기한이 끝까지 전달되지 않음 — watch · timeout 루프가 관측을 먼저 시작하고 시간을 나중에 본다 (기한이 지난 settle 에서도 첫 관측 · kill 뒤 관측이 시작됨 · 정상 루프도 sleep 으로 기한에 닿은 뒤 새 관측) · 정적 반례: 6.9 s 에 시작한 timeout 관측이 15.9 s 에 끝나며 자손 생존 → 그 뒤 새 관측들. cleanup 이 늦게 예외를 내면 run_step 이 cleanup 을 다시 불러 새 15 s 를 주고 `cleanup_s` 는 첫 시도를 빼먹는다 → 단계 정리 원점 · 절대 기한을 한 번 만들어 복구까지 전달 · 새 관측 / 대기 전에 남은 기한 검사 · 초과 후 허용 동작과 미완 기록 명시 · 관측 비용이 0 이 아닌 가짜 시계와 늦은 예외를 대조에 (r3 의 시계는 sleep / wait 만 진행) | 실행기 `:290–306` · `:319–346` · `:431–437` |
+  | V3-02 | P2 | 기존 meta 가 끊어진 심볼릭 링크면 `exists()` 가 false — 거부해야 할 입력에서 자식 · 앞선 기록이 진행된 뒤 마지막 meta 의 배타 생성이 실패해 rc 4 (덮어쓰기 성공 주장 아님) → lstat 기반 항목 확인으로 작업 전 거부 · l12 · r7 (d) 에 dangling-meta | launcher `:701–705` · `:769–773` · 실행기 `:377–379` · `:453–459` |
+  | V3-03 | P2 | `/proc/<pid>/stat` 의 UnicodeDecodeError (예: UTF-8 이 아닌 comm) 가 OSError catch 를 빠져나감 — 같은 스캔의 앞선 PID 오류가 ledger 에 들어가기 전에 사라지고, 지속되면 남은 자손 정리가 중단 · launcher `proc_members` 도 같음 (runner_ok 거짓 성공 주장 아님) → PID 별 읽기 / 디코딩 경계에서 오류 보존 · 바이트 파싱이면 파싱 불가와 소멸 구별 · 앞선 오류 + 뒤의 디코딩 실패 + 후속 정상 관측을 대조에 | 실행기 `:203–231` · launcher `:580–603` |
+  | V3-04 | P2 | 요청서 §4-5 의 수동 시작 · 끝 Git 기록 (`00_start` · `00_porcelain_start` · `04_porcelain_end` · `04_end`) 은 raw `git -C` 로 base_env 밖 — 상속 GIT_DIR / WORK_TREE / TRACE 의 영향 (`-C` 는 무효화하지 않음) → 같은 정제 책임자 · 정확한 argv / cwd, 또는 그 상속 상태에서 첫 수동 Git 전에 중지 | 요청서 v3 `:152–155` |
+  | V3-N1 | P3 | 요청서는 S4 에서 실행기도 `first_error` = record / GitRecordFailed 라고 하지만 실행기는 problems 에만 넣는다 (자식 차단은 작동) → 문구 또는 기록 · 기대값 일치 | 요청서 v3 `:61` · 실행기 `:401–404` · `:449` |
+
+- **수용된 것 (정적):** 코드 경로의 Git 환경 연결 (runner · launcher · fixture) · TARGETS 14 · 단계별 EXPECT · 사전 · 사후 생성자 · 지정 준비 예외 포착 ·
+  S1 바이트 · 해시 · lock 결속 · N1 가림 검사 · 함수 수 21 + 6 + 26 + 8 = 61 (parametrize 없음 · r6–r8 driver 계획 7 회) · RED-L / RED-R 의 예상 실패 경로 ·
+  미래 E1-0b / E1-1–3 경계. 기능 PASS 는 아니다. FUTURE-01 은 지금의 차단 수에 넣지 않았다 (`DEFERRED_SEPARATE_APPROVAL`).
+- **회신의 주의:** 지금 대조가 네 반례를 막지 못하므로 61 이 나중에 통과해도 그 수만으로 결함을 종결할 수 없다 — 보완 뒤 사례 수 · 실제 입력 · 기대 이유 ·
+  호출 경로 · 해시를 다시 고정하고, 새 개수는 작성 전에 임의로 정하지 않는다. 이 회신은 수정 실행 · E1-0 시험 · 커밋 · push · E1-1–3 을 승인하지 않는다.
+- **읽기 전용 확인 (접수 중 · 값은 읽지 않음):** 지금 셸 env 의 `GIT*` 이름 — `GITHUB_TOKEN` · `GIT_ASKPASS` · `GIT_CONFIG_COUNT` · `GIT_CONFIG_KEY_0–2` ·
+  `GIT_CONFIG_VALUE_0–2` · `GIT_EDITOR` · `GIT_SSL_CAINFO` · `GIT_TERMINAL_PROMPT`. 위치 · 추적 계열 (`GIT_DIR` · `GIT_WORK_TREE` · `GIT_INDEX_FILE` ·
+  `GIT_OBJECT_DIRECTORY` · `GIT_TRACE*` 등) 은 없다 — 정정은 이 관측에 기대지 않고 규칙으로 고정한다 (V3-04).
+- **다음:** 정정 범위안 v4 `docs/REIL_C4E_E1_REVISION_SCOPE_v4_20261021.md` → 사용자 범위 채택 → 비활성 초안 v4 · 승인 요청 v4 · 사전 검토 발송문 v4.
+  그 전에는 초안 작성 · 실행 0.
