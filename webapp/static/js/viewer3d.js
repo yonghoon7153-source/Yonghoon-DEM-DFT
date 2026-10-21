@@ -8866,6 +8866,45 @@ function showVProfilePopup(store, nameA, nameB) {
     const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([out.join('\n')], { type: 'text/csv' })); a.download = 'step4_vprofile.csv'; document.body.appendChild(a); a.click(); a.remove(); };
   draw();
 }
+/* ⚖ 비교표 — **없는 AM 상** (그 침대에 그 상 입자 0 개) 의 칸 (2026-10-21 · 1저자 10-20 화면 · 수정표 F11).
+ *   payload 의 coverage_AM_{P,S}_* 는 그 상 입자가 0 개여도 0.0 을 싣는다 — 분모 0 의 자리채움이지 측정이 아니다
+ *   (scripts/mpm_webapp_payload.py deformed_coverage `max(len(idx), 1)` · scripts/mpm3d_compaction.py
+ *    coverage_fraction `tot == 0 → 0.0` · 같은 경우 강체 짝 geometric_coverage 는 None).
+ *   SDCP 침대 (NCM811 단일 크기) = AM_S 한 상인데 AM_P 행이 0.0000 으로 보였다 — 07-18 규칙 (929c26543) 은
+ *   AM_S 가 없을 때만 행을 숨겼다 (그때 SDCP 침대는 AM_P 한 상).
+ *   규칙 (상 판정 = payload `particles[].type` — 07-18 규칙과 같은 술어):
+ *     · 두 침대 모두 그 상이 없으면 행 생략 + 알림 (조용히 숨기지 않는다)
+ *     · 한쪽만 없으면 그 칸 = null → '—' (Δ 도 '—') + 알림 — 옛 표시 = 0.0000 · Δ −100.0 %
+ *     · 있는 상의 0 은 그대로 (무접촉 0 ≠ 없는 상 N/A · DESC-05 부류)
+ *   rows = [라벨, A 값, B 값, 설명 …] — 라벨에 'AM_P' / 'AM_S' 가 든 행이 그 상의 행.
+ *   돌려주는 것 = { rows, notes } (notes = 표 밖에 붙일 평문 줄 · 고정 글 + 상 이름뿐 = payload 문자열 없음). */
+function labCmpAbsentPhase(rows, A, B) {
+  const has = (P, ph) => ((P || {}).particles || []).some(p => p.type === ph);
+  const PH = ['AM_P', 'AM_S'];
+  const pres = {};
+  PH.forEach(ph => { pres[ph] = { A: has(A, ph), B: has(B, ph) }; });
+  const out = [];
+  for (const r of rows) {
+    const ph = PH.find(x => String(r[0]).includes(x));
+    if (!ph) { out.push(r); continue; }
+    const p = pres[ph];
+    if (!p.A && !p.B) continue;                                    // 두 침대 모두 없는 상 → 행 생략 (아래 알림)
+    out.push([r[0], p.A ? r[1] : null, p.B ? r[2] : null, ...r.slice(3)]);
+  }
+  const notes = [];
+  PH.forEach(ph => {
+    const p = pres[ph];
+    if (!rows.some(r => String(r[0]).includes(ph))) return;       // 그 상의 행이 애초에 없으면 알림도 없다
+    if (!p.A && !p.B) {
+      notes.push(ph + ' 행 생략 — 두 침대 모두 ' + ph + ' 입자 0 개 (없는 상 = N/A · payload 의 coverage_'
+        + ph + '_* 0.0 은 측정값이 아니라 분모 0 의 자리채움)');
+    } else if (!p.A || !p.B) {
+      const s = p.A ? 'B' : 'A';
+      notes.push(ph + ' 행의 ' + s + ' 칸 "—" = ' + s + ' 침대에 ' + ph + ' 입자 0 개 (없는 상 = N/A · 측정 0 % 아님 · Δ 없음)');
+    }
+  });
+  return { rows: out, notes };
+}
 export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
   injectCSS();
   const overlay = document.createElement('div');
@@ -9153,9 +9192,10 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
     ['도전재덮임 AM_S (%)', mmA.coverage_AM_S_add_mpm_pct, mmB.coverage_AM_S_add_mpm_pct,
      'AM_S 표면의 도전재 덮임 비율 (전자-접촉).'],
   ];
-  // mono-AM 침대(AM_S 없음)면 AM_S coverage 행 숨김 (0.0000 혼란 방지)
-  const _hasAMS = ((A.particles || []).some(p => p.type === 'AM_S')) || ((B.particles || []).some(p => p.type === 'AM_S'));
-  const rowsQ2 = _hasAMS ? rowsQ : rowsQ.filter(r => !String(r[0]).includes('AM_S'));
+  // 없는 AM 상 (그 침대에 그 상 입자 0 개) — 두 침대 모두 없으면 행 생략 · 한쪽만 없으면 그 칸 '—' · 표 밖 알림
+  //   (07-18 의 "mono-AM 침대 AM_S 행 숨김 · 0.0000 혼란 방지" 를 AM_P 와 한쪽 경우로 넓힘 — labCmpAbsentPhase)
+  const _absent = labCmpAbsentPhase(rowsQ, A, B);
+  const rowsQ2 = _absent.rows;
   const fmtQ = (v) => (v == null || !isFinite(+v)) ? '—'
     : (Math.abs(+v) >= 1e4 || (Math.abs(+v) < 1e-2 && v != 0)) ? (+v).toExponential(2)
     : (+v).toFixed(Math.abs(+v) >= 100 ? 0 : Math.abs(+v) >= 1 ? 2 : 4);
@@ -9175,7 +9215,9 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       }).join('') + '</table>';
   const half = Math.ceil(rowsQ2.length / 2);
   $('cmp-table').innerHTML = '<div style="display:flex;gap:26px;align-items:flex-start">'
-    + oneTable(rowsQ2.slice(0, half)) + oneTable(rowsQ2.slice(half)) + '</div>';
+    + oneTable(rowsQ2.slice(0, half)) + oneTable(rowsQ2.slice(half)) + '</div>'
+    + (_absent.notes.length
+      ? '<div style="color:#9ca3af;font-size:11px;margin-top:3px">' + _absent.notes.join('<br>') + '</div>' : '');
   // ── 축 설명 카드: 커스텀 hover (native title은 ~1s 지연 + 스타일 없음 → 즉시 뜨는 카드) ──
   let tipCard = document.getElementById('cmp-tipcard');
   if (!tipCard) {
