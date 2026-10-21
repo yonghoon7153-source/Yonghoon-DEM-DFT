@@ -12549,6 +12549,252 @@
       "evidence_tests": [
         "scripts/make_mixer_deck.py (--selftest)"
       ]
+    },
+    {
+      "id": "MXD3-01",
+      "severity": "P1",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 세션 10-21 D3 사전 공격 리뷰 (기반 a76f59d0d · 요청서 §2-3)",
+      "opened_in": "docs/reviews/codex_mixer_d3_design_request_20261021.md",
+      "title": "D3 설계 v1 §3-4 B · Q3 — T1 · T2 구간 교집합 검사의 검출력이 정의되지 않는다: 선형화에서 b₁/a₁ = b₂/a₂ 이면 어떤 덱 μ_r 오차도 못 잡는다 (최소 검출 |Δμ_r| = ∞) · [가정 예시] b 40 · 10 °/단위 μ_r (a 5 °/decade · u 1.5°) 이면 0.2 = 덱 μ_r 0.075 의 2.7 배 — 교집합이 비지 않음이 마찰 세트가 맞다는 증거로 읽힌다 · C0 는 μ_r 감도를 T2 에서만 잰다",
+      "note": "= 요청서 §2-3 D3K-01 · 처리 계획 = v2 (가) 검출 한계 Δμ_r,min 을 등록 · 허용보다 크면 '일치 미검사' 표지 + (나) 비지 않은 교집합을 마찰 세트의 증거로 쓰지 않는다 · C0 μ_r 감도를 T1 · T2 둘 다.  ✅ 1저자 10-21 [믹서] Q1 *\"ㅇㅇ 고친뒤 보내자\"* = 깨진 보장을 설계에서 고친 뒤 Codex ① 회차를 보낸다 (메인 지시) — 처리 = 설계 v2 (`docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261021.md` §0-2 처리표) · claimed_fixed = 메인이 통합할 때 메인 SHA 로.  등급 규칙 (메인 10-21): 앵커 · 구간 · 맹검을 무효로 만드는 깨진 보장 = P1 · 조건부 · 분류 · 결과 전 정의 = P2 · 문안 · 숫자 세대 = P3 · 자료 대기 = 막는 단계로 (S3a 등록 · S6 이전을 막으면 P2).  대응표: 요청서 §2-3 D3K-01 – D3K-17 = MXD3-01 – MXD3-17 (번호 같음) · 자료 대기 (보장 아님) = MXD3-18 장비 목록 · MXD3-19 실험 혼합기 · MXD3-20 측정 담당 · MXD3-21 로트 · 입도 · SE 진밀도.",
+      "evidence_tests": [
+        "docs/reviews/codex_mixer_d3_design_request_evidence_20261021/d3_precheck_numbers.py ([7])"
+      ]
+    },
+    {
+      "id": "MXD3-02",
+      "severity": "P1",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 세션 10-21 D3 사전 공격 리뷰 (기반 a76f59d0d · 요청서 §2-3)",
+      "opened_in": "docs/reviews/codex_mixer_d3_design_request_20261021.md",
+      "title": "D3 설계 v1 §3-7 — log10 Bo 구간 선형 보간 + |I − m| ≤ 2√(u_exp² + u_DEM²) 구간이 반 decade 칸 안의 가파른 전이에서 참값을 놓친다: [가정 예시] jarray2019 꼴 35.0 → 48.9° · 10–90 % 폭 0.1 decade · u 1.5° 에서 전이 위 측정 2,200 건 중 44.6 % (전부 8,200 건 중 56.8 %) 가 보고 구간 밖 · 식별 검사 (이웃 |ΔI| > 2u) 는 통과 · 보간 오차가 u 에 없다",
+      "note": "= 요청서 §2-3 D3K-02 · 처리 계획 = v2 (가) 칸마다 보간 오차 한계 |ΔI| 를 띠에 더한다 (칸 안 단조면 포괄) + 봉인 전 가파른 칸 세분 (결과 무관).  ✅ 1저자 10-21 [믹서] Q1 *\"ㅇㅇ 고친뒤 보내자\"* = 깨진 보장을 설계에서 고친 뒤 Codex ① 회차를 보낸다 (메인 지시) — 처리 = 설계 v2 (`docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261021.md` §0-2 처리표) · claimed_fixed = 메인이 통합할 때 메인 SHA 로.",
+      "evidence_tests": [
+        "docs/reviews/codex_mixer_d3_design_request_evidence_20261021/d3_precheck_numbers.py ([8])"
+      ]
+    },
+    {
+      "id": "MXD3-03",
+      "severity": "P1",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 세션 10-21 D3 사전 공격 리뷰 (기반 a76f59d0d · 요청서 §2-3)",
+      "opened_in": "docs/reviews/codex_mixer_d3_design_request_20261021.md",
+      "title": "D3 설계 v1 §3-7 — \"Bo_SE* = (T1 구간 ∩ T2 구간) 의 기하 중심\" 이 끊긴 받아들일 집합에서 집합 밖에 떨어진다 (S = [0.672, 2.124] ∪ [67.18, 212.44] → 중심 11.95 ∉ S · 비단조 곡선 = grey1969 꼴) · 한 시험의 집합이 빈 경우 (측정이 곡선 범위 밖) 의 분류가 F1–F8 에 없다",
+      "note": "= 요청서 §2-3 D3K-03 · 처리 계획 = v2 (가) 연결 성분 하나일 때만 앵커 · 여럿 = F9 '모호' · 한 시험이 빔 = F10 '그 시험 표현 밖 (위 · 아래)'.  ✅ 1저자 10-21 [믹서] Q1 *\"ㅇㅇ 고친뒤 보내자\"* = 깨진 보장을 설계에서 고친 뒤 Codex ① 회차를 보낸다 (메인 지시) — 처리 = 설계 v2 (`docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261021.md` §0-2 처리표) · claimed_fixed = 메인이 통합할 때 메인 SHA 로.",
+      "evidence_tests": [
+        "docs/reviews/codex_mixer_d3_design_request_evidence_20261021/d3_precheck_numbers.py ([6])"
+      ]
+    },
+    {
+      "id": "MXD3-04",
+      "severity": "P1",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 세션 10-21 D3 사전 공격 리뷰 (기반 a76f59d0d · 요청서 §2-3)",
+      "opened_in": "docs/reviews/codex_mixer_d3_design_request_20261021.md",
+      "title": "D3 설계 v1 §3-3 · §3-7 — u_DEM (시드 SD) 이 최소안 T1 (붓기 8 + 탭 3 모두 시드 1 개) 에서 정의되지 않고, 시드 2 개 SD (자유도 1) 는 P(s < 0.5σ) = 0.383 · P(s < 0.3σ) = 0.236 로 좁게 나와 구간 · 식별 문턱이 좁아진다 · T2 정상 상태 판정이 u_DEM 을 쓴다 · u_DEM 을 잰 NP ↔ 판정 · 재시도 NP 결합 없음",
+      "note": "= 요청서 §2-3 D3K-04 · 처리 계획 = v2 (가) 같은 시험의 2 시드 수준 합동 SD + 자유도 t 배수 · 판정 곡선 수준마다 u_DEM 정의 (없으면 그 시험 = 보조) · T2 정상 상태 = 런 안 블록 표준오차 · 같은 NP (어긋나면 제외) · 시드 배치 = ⬜ Qv2.  ✅ 1저자 10-21 [믹서] Q1 *\"ㅇㅇ 고친뒤 보내자\"* = 깨진 보장을 설계에서 고친 뒤 Codex ① 회차를 보낸다 (메인 지시) — 처리 = 설계 v2 (`docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261021.md` §0-2 처리표) · claimed_fixed = 메인이 통합할 때 메인 SHA 로.",
+      "evidence_tests": [
+        "docs/reviews/codex_mixer_d3_design_request_evidence_20261021/d3_precheck_numbers.py ([5])"
+      ]
+    },
+    {
+      "id": "MXD3-05",
+      "severity": "P1",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 세션 10-21 D3 사전 공격 리뷰 (기반 a76f59d0d · 요청서 §2-3)",
+      "opened_in": "docs/reviews/codex_mixer_d3_design_request_20261021.md",
+      "title": "D3 설계 v1 §1-1 \"SE 단독 시험은 규칙에 무관 (벽 접촉 빼고)\" · §3-2 벽 감도 0.0256 × {0.31, 1} — 감도 두 값이 SE–벽 / SE–SE 당김힘 비 [0.178, 0.320] (ρ ∈ [0.31, 1]) 만 덮어 논지가 서는 ρ < 0.31 (비 0 – 0.178) 이 감도 범위 밖 · 감도는 T2 에서만인데 T1 · T2 · T3 모두 벽 접촉 · 실험 벽 재료 (유리 · 아크릴) ≠ 덱 벽 규칙 (스테인리스 Hare 비)",
+      "note": "= 요청서 §2-3 D3K-05 · 처리 계획 = v2 (가) 중심 곡선 벽 점착 0 · 감도 = 두 끝 (γ_W/γ_SE 0 ↔ 0.0256) · 벽이 닿는 시험 전부 + (나) 앵커 = 벽 표현 조건부 + (다) 실험 벽 재료 = MXD3-18.  ✅ 1저자 10-21 [믹서] Q1 *\"ㅇㅇ 고친뒤 보내자\"* = 깨진 보장을 설계에서 고친 뒤 Codex ① 회차를 보낸다 (메인 지시) — 처리 = 설계 v2 (`docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261021.md` §0-2 처리표) · claimed_fixed = 메인이 통합할 때 메인 SHA 로.",
+      "evidence_tests": [
+        "docs/reviews/codex_mixer_d3_design_request_evidence_20261021/d3_precheck_numbers.py ([3])"
+      ]
+    },
+    {
+      "id": "MXD3-06",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 세션 10-21 D3 사전 공격 리뷰 (기반 a76f59d0d · 요청서 §2-3)",
+      "opened_in": "docs/reviews/codex_mixer_d3_design_request_20261021.md",
+      "title": "D3 설계 v1 §2-1 T2 · §3-2 · §3-6 — 같은 생성기 계열 옛 드럼에서 Bo ≳ 1 이면 침대가 뭉치고 벽을 둘러 자유표면 각이 정의되지 않은 선례 (원장 MIX-06 · 07 · 09 · 10 · H/R 2.006 · 2.020 · 2.016 = 천장) 가 설계 격자 8 수준 중 6 수준 (2.12 – 637) 을 덮는데 '정의 불가' 분류가 없고 (F2 = 평평만) C0 T2 는 0.2 – 2 전이 구간을 건너뛴다 — 이 덱 (×20 · SE 단독 · 충진 0.11) 에서 재현 여부는 미확인",
+      "note": "= 요청서 §2-3 D3K-06 · 처리 계획 = v2 (가) 결과 전 정의 가능성 기준 (맞춤 잔차 · 벽 두름 분율) · '관측 불가' F2b · C0 T2 에 0.672 · 2.12 추가 + (나) T2 가 Bo ≳ 1 에서 정의된다는 보장 없음 (C0 가 정한다).  ✅ 1저자 10-21 [믹서] Q1 *\"ㅇㅇ 고친뒤 보내자\"* = 깨진 보장을 설계에서 고친 뒤 Codex ① 회차를 보낸다 (메인 지시) — 처리 = 설계 v2 (`docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261021.md` §0-2 처리표) · claimed_fixed = 메인이 통합할 때 메인 SHA 로."
+    },
+    {
+      "id": "MXD3-07",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 세션 10-21 D3 사전 공격 리뷰 (기반 a76f59d0d · 요청서 §2-3)",
+      "opened_in": "docs/reviews/codex_mixer_d3_design_request_20261021.md",
+      "title": "D3 설계 v1 §3-8 · Q10 — Bo_SE* 를 새 확인 블록에 값으로 넣는 이전이 1저자 10-20 D10 (강도 = 실험 혼합기 확인 뒤 Bo/G 한 수준) 과 연결되지 않는다: 1 g 시험 앵커를 Bo*/268 (Thinky 표 · 실험 혼합기 미확인) 로 넣으면 ×20 lab SE–SE 붙는 속도 0.024 · 0.166 · 0.413 mm/s (Bo* 21.24 · 212.4 · 637.3) = ωR 의 0.0002–0.004 로 영역이 바뀐다 · 구간이 아니라 중심 한 점만 넘긴다",
+      "note": "= 요청서 §2-3 D3K-07 · 처리 계획 = v2 (나) Bo_SE* = 1 g 시험의 parcel 규모 유동성 등가 값 · Bo* ↔ Bo*/G 선택과 구간 처리 = S6 등록 + (다) 실험 혼합기 정체 · G = MXD3-19.  ✅ 1저자 10-21 [믹서] Q1 *\"ㅇㅇ 고친뒤 보내자\"* = 깨진 보장을 설계에서 고친 뒤 Codex ① 회차를 보낸다 (메인 지시) — 처리 = 설계 v2 (`docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261021.md` §0-2 처리표) · claimed_fixed = 메인이 통합할 때 메인 SHA 로.",
+      "evidence_tests": [
+        "docs/reviews/codex_mixer_d3_design_request_evidence_20261021/d3_precheck_numbers.py ([13])"
+      ]
+    },
+    {
+      "id": "MXD3-08",
+      "severity": "P1",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 세션 10-21 D3 사전 공격 리뷰 (기반 a76f59d0d · 요청서 §2-3)",
+      "opened_in": "docs/reviews/codex_mixer_d3_design_request_20261021.md",
+      "title": "D3 설계 v1 §3-7 \"실측 SOP — 측정 전 커밋\" ↔ §3-8 \"실측은 C0 · C1 과 동시에 해도 된다\" — 실측이 C0 중에 끝나면 S3 등록 (SOP · 받아들일 · 실패 규칙 · 읽는 법 · f_cal · 속도 셋) 이 측정 뒤에 커밋된다 · 봉인 = 파일 열람 기록뿐 (측정자 · 비준자가 값을 보면 막지 못함) · 컨테이너 재시작 규칙 ② (받은 원자료 먼저 push) ↔ \"반입 = sha 만\" 충돌",
+      "note": "= 요청서 §2-3 D3K-08 · 처리 계획 = v2 (가) S3a (규칙 · SOP) 를 측정 시작 전에 따로 커밋 · 원자료 = 암호화 묶음 push (열쇠는 곡선 봉인 뒤) + (나) 측정자 = 비준자면 맹검 문장 축소 + (다) 측정 담당 = MXD3-20.  ✅ 1저자 10-21 [믹서] Q1 *\"ㅇㅇ 고친뒤 보내자\"* = 깨진 보장을 설계에서 고친 뒤 Codex ① 회차를 보낸다 (메인 지시) — 처리 = 설계 v2 (`docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261021.md` §0-2 처리표) · claimed_fixed = 메인이 통합할 때 메인 SHA 로."
+    },
+    {
+      "id": "MXD3-09",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 세션 10-21 D3 사전 공격 리뷰 (기반 a76f59d0d · 요청서 §2-3)",
+      "opened_in": "docs/reviews/codex_mixer_d3_design_request_20261021.md",
+      "title": "D3 설계 v1 §3-1 ④ · §2-1 T3 · §3-7 통과선 2u — T3 검증의 판별력이 정의되지 않는다: 1 µm 점착 분말이 출구 사다리 전부에서 멈추면 DEM 이 Bo* 위 넓은 범위에서 같은 '멈춤' 을 예측해 '통과' 이지만 판별력 0 · 이진 · 중도절단 결과에 2u 가 정의되지 않음 · 예측을 중심 한 점에서만 낸다",
+      "note": "= 요청서 §2-3 D3K-09 · 처리 계획 = v2 (가) 구간 두 끝 + 중심 예측 · 이웃 밖 수준과 갈릴 때만 '판별력 있는 검증' · 이진 = 판정표 + (나) 판별력 없으면 검증 아님.  ✅ 1저자 10-21 [믹서] Q1 *\"ㅇㅇ 고친뒤 보내자\"* = 깨진 보장을 설계에서 고친 뒤 Codex ① 회차를 보낸다 (메인 지시) — 처리 = 설계 v2 (`docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261021.md` §0-2 처리표) · claimed_fixed = 메인이 통합할 때 메인 SHA 로."
+    },
+    {
+      "id": "MXD3-10",
+      "severity": "P1",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 세션 10-21 D3 사전 공격 리뷰 (기반 a76f59d0d · 요청서 §2-3)",
+      "opened_in": "docs/reviews/codex_mixer_d3_design_request_20261021.md",
+      "title": "D3 설계 v1 §3-3 \"각 런 check_contact_validity.py --contract\" · F7 — 검사기 container_at 이 Drum · Front · Back 볼록 용기만 받아 깔때기 · 탭 바닥 메시는 ValueError (440–442 행) · 메시 이동 = rotate 만 (231 행) ⇒ T1 · T3 · T4 · T2 대안 (주기 조각) 런은 계약을 검사할 수 없는데 v1 규칙은 그 런을 앵커 계산에 넣는다 (F7 은 측정된 '> 1 %' 만 뺀다)",
+      "note": "= 요청서 §2-3 D3K-10 · 처리 계획 = v2 (가) '계약 미검사' 런은 앵커 계산에서 뺀다 · 검사기 확장 = ② 회차 (시험 먼저) + (나) 그 전에는 T2 만 계약 검사.  ✅ 1저자 10-21 [믹서] Q1 *\"ㅇㅇ 고친뒤 보내자\"* = 깨진 보장을 설계에서 고친 뒤 Codex ① 회차를 보낸다 (메인 지시) — 처리 = 설계 v2 (`docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261021.md` §0-2 처리표) · claimed_fixed = 메인이 통합할 때 메인 SHA 로.",
+      "evidence_tests": [
+        "docs/reviews/codex_mixer_d3_design_request_evidence_20261021/d3_precheck_numbers.py ([11])"
+      ]
+    },
+    {
+      "id": "MXD3-11",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 세션 10-21 D3 사전 공격 리뷰 (기반 a76f59d0d · 요청서 §2-3)",
+      "opened_in": "docs/reviews/codex_mixer_d3_design_request_20261021.md",
+      "title": "D3 설계 v1 §3-1 ① \"시험 덱도 같은 생성기 함수가 물성 블록을 찍고 … 바이트 동일\" — set_phases(('SE',)) = AssertionError (\"AM 과 SE 는 있어야 한다\") · 드럼 R 은 plan() 이 AM_P 수 · 밀도 · 원자 예산에서 유도 (lab · N 10 만 12.583 mm · 5 만 10.011 mm) · 벽 · AM 행은 ρ 팔마다 다르다",
+      "note": "= 요청서 §2-3 D3K-11 · 처리 계획 = v2 (나) 물성 블록 = 등록 ρ 팔 블록과 바이트 같음 · AM 타입은 두되 개수 0 · 드럼 치수 = 실험 원통 치수 (등록) — 시험 기하 모드 = ② 회차.  ✅ 1저자 10-21 [믹서] Q1 *\"ㅇㅇ 고친뒤 보내자\"* = 깨진 보장을 설계에서 고친 뒤 Codex ① 회차를 보낸다 (메인 지시) — 처리 = 설계 v2 (`docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261021.md` §0-2 처리표) · claimed_fixed = 메인이 통합할 때 메인 SHA 로.",
+      "evidence_tests": [
+        "docs/reviews/codex_mixer_d3_design_request_evidence_20261021/d3_precheck_numbers.py ([10])"
+      ]
+    },
+    {
+      "id": "MXD3-12",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 세션 10-21 D3 사전 공격 리뷰 (기반 a76f59d0d · 요청서 §2-3)",
+      "opened_in": "docs/reviews/codex_mixer_d3_design_request_20261021.md",
+      "title": "D3 설계 v1 의 숫자 다수 = gen1 밀도 세대 값 (Q11 = lab20261014): 천장 832.7 ↔ lab 1015.4 (637.32 → 0.733 % · 849.76 수용 · CGF 200 의 637.32 수용) · 드럼 26.275 ↔ 25.166 mm · 75.04 ↔ 76.68 rpm · ωR 103.2 ↔ 101.0 mm/s · dt (×20) 2.6204e-7 ↔ 2.3729e-7 s · SE 고체 부피 35.06 ↔ 39.95 % · D/d_AMP 19.3 ↔ 18.5 · 붙는 속도 · N · \"1 s 모사 ≈ 14–17 h\" (gen1 에서도 15.1–16.8 h · lab 16.7–18.6 h)",
+      "note": "= 요청서 §2-3 D3K-12 · 처리 계획 = v2 (가) 숫자 전부 lab20261014 로 다시 (gen1 = 이력 칸만) · 천장 숫자 부분 = MXD2-07 과 같은 결함 (D2 수정 에이전트는 손대지 않고 D3 v2 가 고친다 — 메인 10-21).  ✅ 1저자 10-21 [믹서] Q1 *\"ㅇㅇ 고친뒤 보내자\"* = 깨진 보장을 설계에서 고친 뒤 Codex ① 회차를 보낸다 (메인 지시) — 처리 = 설계 v2 (`docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261021.md` §0-2 처리표) · claimed_fixed = 메인이 통합할 때 메인 SHA 로.",
+      "evidence_tests": [
+        "docs/reviews/codex_mixer_d3_design_request_evidence_20261021/d3_precheck_numbers.py ([2] · [14])"
+      ]
+    },
+    {
+      "id": "MXD3-13",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 세션 10-21 D3 사전 공격 리뷰 (기반 a76f59d0d · 요청서 §2-3)",
+      "opened_in": "docs/reviews/codex_mixer_d3_design_request_20261021.md",
+      "title": "D3 설계 v1 §3-7 F3 \"한 번 확장 (×√10 · 위로는 천장까지)\" — 위로는 637.32 에서 천장까지 ×1.307 (gen1 832.7) · ×1.593 (lab 1015.4) 만 열려 ×√10 확장이 성립하지 않는다 · 아래로는 Bo → 0 에서 곡선이 마찰 · 모양만의 값에 붙어 확장이 헛일이고 그 경우 (마찰 세트 불일치) 를 '표현 범위 밖' 으로 잘못 분류 · 확장 수준의 시드 규칙 없음",
+      "note": "= 요청서 §2-3 D3K-13 · 처리 계획 = v2 (가) 위 = 세대 천장의 0.95 배 한 단계 · 아래 = 바닥이 평평하면 확장 없이 '마찰 바닥' (Q3 경로) · 확장 시드 = C1 규칙.  ✅ 1저자 10-21 [믹서] Q1 *\"ㅇㅇ 고친뒤 보내자\"* = 깨진 보장을 설계에서 고친 뒤 Codex ① 회차를 보낸다 (메인 지시) — 처리 = 설계 v2 (`docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261021.md` §0-2 처리표) · claimed_fixed = 메인이 통합할 때 메인 SHA 로.",
+      "evidence_tests": [
+        "docs/reviews/codex_mixer_d3_design_request_evidence_20261021/d3_precheck_numbers.py ([9])"
+      ]
+    },
+    {
+      "id": "MXD3-14",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 세션 10-21 D3 사전 공격 리뷰 (기반 a76f59d0d · 요청서 §2-3)",
+      "opened_in": "docs/reviews/codex_mixer_d3_design_request_20261021.md",
+      "title": "D3 설계 v1 §2-0 \"≥ 5 회 · 다른 날 1 회 이상\" · §2-3 u_exp = √(SD²/n + u_판독²) — 날 사이 성분이 식에 없다: [가정 예시] 날 안 SD 1° · n 5 면 u_exp 0.45° 인데 날 차 3° 면 참 불확도는 날 성분이 지배 · 다른 날 1 회 = 자유도 1",
+      "note": "= 요청서 §2-3 D3K-14 · 처리 계획 = v2 (가) u_exp = 날 평균들의 표준오차 + 판독 · t(날 − 1) 배수 · 날 ≥ 3 × 반복 ≥ 3 (양 = ⬜ Q12 · MXD3-18).  ✅ 1저자 10-21 [믹서] Q1 *\"ㅇㅇ 고친뒤 보내자\"* = 깨진 보장을 설계에서 고친 뒤 Codex ① 회차를 보낸다 (메인 지시) — 처리 = 설계 v2 (`docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261021.md` §0-2 처리표) · claimed_fixed = 메인이 통합할 때 메인 SHA 로."
+    },
+    {
+      "id": "MXD3-15",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 세션 10-21 D3 사전 공격 리뷰 (기반 a76f59d0d · 요청서 §2-3)",
+      "opened_in": "docs/reviews/codex_mixer_d3_design_request_20261021.md",
+      "title": "D3 설계 v1 §2-4 · Q4 — 선택 분말 (비코팅 NCM 의 유동성 등가 ρ_flow · 코팅 NCM 무맞춤 예측) 의 판별력이 약하다: 결합 규칙 아래 Bo_AA/Bo_SS = ρ/239.5 (AM_P) · ρ/47.3 (AM_S) (lab) → ρ 0.31 · Bo_SE 21.24 에서 0.027 · 0.139 · 코팅 (ρ 1) 0.089 · 0.449 = parcel 규모에서 거의 비점착 → ρ_flow 는 ρ < 0.31 을 가르기 어렵고 코팅 NCM 예측 실패는 원인을 가르지 못한다",
+      "note": "= 요청서 §2-3 D3K-15 · 처리 계획 = v2 (나) 선택 분말 = 정성 대조 · ρ_flow = 위쪽 한계만 (식별 하한 = 격자 최소 Bo) · 실패 원인 귀속 문장 금지.  ✅ 1저자 10-21 [믹서] Q1 *\"ㅇㅇ 고친뒤 보내자\"* = 깨진 보장을 설계에서 고친 뒤 Codex ① 회차를 보낸다 (메인 지시) — 처리 = 설계 v2 (`docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261021.md` §0-2 처리표) · claimed_fixed = 메인이 통합할 때 메인 SHA 로.",
+      "evidence_tests": [
+        "docs/reviews/codex_mixer_d3_design_request_evidence_20261021/d3_precheck_numbers.py ([4])"
+      ]
+    },
+    {
+      "id": "MXD3-16",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 세션 10-21 D3 사전 공격 리뷰 (기반 a76f59d0d · 요청서 §2-3)",
+      "opened_in": "docs/reviews/codex_mixer_d3_design_request_20261021.md",
+      "title": "D3 설계 v1 문안 · 인용 정밀도 — (a) \"×√10 간격\" 의 마지막 간격 = ×3.000 (b) \"생성기 머리의 열린 D11\" ↔ mixing_model_design D11 행 \"✅ 닫힘\" (c) lee2026_lpscl \"Fig 2 · S5\" = 카드가 안 본 그림 (본문 서술) · S5 = 코팅 분말의 유리 LPSCl 응집 (d) Geldart 100 g = 더미 시험기 범위 ↔ T2 셀 시료 1 g 아래 (e) T5 어림 = gen1 R × lab 밀도 섞음",
+      "note": "= 요청서 §2-3 D3K-16 · 처리 계획 = v2 (가) 문안 정정.  ✅ 1저자 10-21 [믹서] Q1 *\"ㅇㅇ 고친뒤 보내자\"* = 깨진 보장을 설계에서 고친 뒤 Codex ① 회차를 보낸다 (메인 지시) — 처리 = 설계 v2 (`docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261021.md` §0-2 처리표) · claimed_fixed = 메인이 통합할 때 메인 SHA 로.",
+      "evidence_tests": [
+        "docs/reviews/codex_mixer_d3_design_request_evidence_20261021/d3_precheck_numbers.py ([1] · [12])"
+      ]
+    },
+    {
+      "id": "MXD3-17",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 세션 10-21 D3 사전 공격 리뷰 (기반 a76f59d0d · 요청서 §2-3)",
+      "opened_in": "docs/reviews/codex_mixer_d3_design_request_20261021.md",
+      "title": "D3 설계 v1 결과 전 정의가 빠진 자리 — T2 주 관측량 하나 (평균 각 · 사태 최대 · 최소 · 요동이 다 적힘) · F1 \"이웃 격자 수준 차\" 의 쌍 (측정 뒤 고르면 결과 의존) · 손 탭 Γ 미측정 때의 맞춤 · 확장 수준 시드 · 원자료 보관 · 발사 정책 단계 (launch_policy.json v4 에 D3 단계 없음) · F8 TECH ↔ D13 (빠진 원자 ≤ 10)",
+      "note": "= 요청서 §2-3 D3K-17 · 처리 계획 = v2 (가) 결과 전에 하나씩 정의 (권고 기본값 = ⬜ Qv2) · 정책 v5 = ② 회차.  ✅ 1저자 10-21 [믹서] Q1 *\"ㅇㅇ 고친뒤 보내자\"* = 깨진 보장을 설계에서 고친 뒤 Codex ① 회차를 보낸다 (메인 지시) — 처리 = 설계 v2 (`docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261021.md` §0-2 처리표) · claimed_fixed = 메인이 통합할 때 메인 SHA 로."
+    },
+    {
+      "id": "MXD3-18",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 세션 10-21 D3 사전 공격 리뷰 (기반 a76f59d0d · 요청서 §2-4 · §3)",
+      "opened_in": "docs/reviews/codex_mixer_d3_design_request_20261021.md",
+      "title": "D3 장비 목록 (Q1) — T1–T4 의 '있으면 / 없으면' 선택 · 원통 지름 · 길이 · 벽 재료 · 깔때기 치수 · 출구 사다리 · 탭 방식 (손 탭 Γ 측정 가능 여부) · 판독 분해능 · 시료량 (Q12) 이 없어 S3a 등록 (SOP) 을 쓸 수 없다",
+      "note": "자료 대기 (보장 아님) · 1저자 자료 (진행 기록 10-20 22 \"자료 대기 = Q8 D3 장비 목록\") · 오면 보충 요청서 · 설계 v2 '닫지 않는 것'.  ✅ 1저자 10-21 [믹서] Q1 *\"ㅇㅇ 고친뒤 보내자\"* = 깨진 보장을 설계에서 고친 뒤 Codex ① 회차를 보낸다 (메인 지시) — 처리 = 설계 v2 (`docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261021.md` §0-2 처리표) · claimed_fixed = 메인이 통합할 때 메인 SHA 로."
+    },
+    {
+      "id": "MXD3-19",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 세션 10-21 D3 사전 공격 리뷰 (기반 a76f59d0d · 요청서 §2-4 · §3)",
+      "opened_in": "docs/reviews/codex_mixer_d3_design_request_20261021.md",
+      "title": "실험 혼합기 정체 · G · 용기 재료 (1저자 10-20 D10 \"실험 혼합기 확인 뒤 Bo/G\" · Q5) 가 리포에 없어 D3 앵커를 새 확인 블록 강도로 옮기는 규칙 (Bo* ↔ Bo*/G · MXD3-07) 을 정할 수 없다 (Thinky 268 G = mixing_model_design §18-1 표 · 사전등록 · 결과 0)",
+      "note": "자료 대기 (보장 아님) · 1저자 자료 · 설계 v2 '닫지 않는 것'.  ✅ 1저자 10-21 [믹서] Q1 *\"ㅇㅇ 고친뒤 보내자\"* = 깨진 보장을 설계에서 고친 뒤 Codex ① 회차를 보낸다 (메인 지시) — 처리 = 설계 v2 (`docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261021.md` §0-2 처리표) · claimed_fixed = 메인이 통합할 때 메인 SHA 로."
+    },
+    {
+      "id": "MXD3-20",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 세션 10-21 D3 사전 공격 리뷰 (기반 a76f59d0d · 요청서 §2-4 · §3)",
+      "opened_in": "docs/reviews/codex_mixer_d3_design_request_20261021.md",
+      "title": "D3 측정 담당 — 측정자가 1저자 (= 등록 비준자) 인지에 따라 맹검 방식 (측정자 ↔ 분석자 분리 · 값 봉인 · 원자료 암호화 묶음의 열쇠 보관) 이 바뀐다 (MXD3-08)",
+      "note": "자료 대기 (보장 아님) · 1저자 자료 · 설계 v2 '닫지 않는 것'.  ✅ 1저자 10-21 [믹서] Q1 *\"ㅇㅇ 고친뒤 보내자\"* = 깨진 보장을 설계에서 고친 뒤 Codex ① 회차를 보낸다 (메인 지시) — 처리 = 설계 v2 (`docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261021.md` §0-2 처리표) · claimed_fixed = 메인이 통합할 때 메인 SHA 로."
+    },
+    {
+      "id": "MXD3-21",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 세션 10-21 D3 사전 공격 리뷰 (기반 a76f59d0d · 요청서 §2-4 · §3)",
+      "opened_in": "docs/reviews/codex_mixer_d3_design_request_20261021.md",
+      "title": "D3 SE 로트 · 입도 · 진밀도 — 혼합 실험 로트 · 분산 PSD (D10 · D50 · D90 · 방법) · SEM 응집체 (Q11: D50 이 1 µm 와 많이 다르면 덱 SE 지름 = 1저자) · SE 진밀도 1.64 ↔ 1.86 (docs/density_generations_20261014.md §7 결정 대기 — lab20261014 세대 숫자가 그에 묶임)",
+      "note": "자료 대기 (보장 아님) · 1저자 자료 · 결정 · 설계 v2 '닫지 않는 것'.  ✅ 1저자 10-21 [믹서] Q1 *\"ㅇㅇ 고친뒤 보내자\"* = 깨진 보장을 설계에서 고친 뒤 Codex ① 회차를 보낸다 (메인 지시) — 처리 = 설계 v2 (`docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261021.md` §0-2 처리표) · claimed_fixed = 메인이 통합할 때 메인 SHA 로."
     }
   ]
 }
