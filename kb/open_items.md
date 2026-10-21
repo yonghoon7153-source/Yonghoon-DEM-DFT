@@ -17,8 +17,8 @@
 ### ⏭-NOW-z20. 2026-10-21 — B₂O₃ Methods 본문판 · SI 판 1저자 송부 · BVSE 'softBV' 정정
 - ✅ **B₂O₃ 원고 Methods (트랙 B₂O₃ 원고 · 1저자 = 다른 사람 · 계산 쪽 결정은 '사용자')** — 문장별 같이 읽기 끝 → 본문 압축판 (2.5 절 · 약 450 단어 · 참고문헌 18) + SI 전체판 (Computational Details · 식 S1–S4 · 참고문헌 20) (feabcac9) → **사용자가 10-21 1저자에게 보냄** (사용자 *'오케이 1저자한테 보냈어'*). 파일 `kb/papers/b2o3_bo_lpsc16_methods_main_2026_10_21.docx` · `…_SI_2026_10_21.docx` · 기록 `kb/papers/b2o3_bo_lpsc16_methods_2026_10_20.md` 8–8n · Docs 문서 (본문 압축판 절 + SI 전체판).
   - 읽으면서 고친 우리 쪽 오기: BVSE 'softBV' 이름표 (CLAUDE.md · `kb/concepts/bvse.md` · ebd59696) · LPSC₁.₆ ELF 는 다른 SCF (SG15 ONCV 80/320 Ry) 라고 SI 에 밝힘 · DOS 7×7×1 · MSD 식 (S1) 은 실행 코드 그대로 (시간 원점 하나).
-  - ⏭ 1저자 회신 대기. **1저자에게 아직 안 간 것 = 원고 쪽 메모** (원고 MD 단락의 σ = 단일 시드 273 K 판 · 'room-temperature' ↔ 273 K · BO MD 값 = HZ-b2o3-md-ea BLOCKED · BO Eₐ 끝자리 출처 없음 · BVSE 두 값이 그림용 상자 값 (원래 셀이면 LPSC₁.₆ ↔ O-LPSC₁.₆ 순서 뒤집힘) · ELF Table S2 가 NC 와 USPP 를 섞음 · 'Hamiltonian' · '60 ps' · 'XX.XX' 빈칸 둘 · Schlipf–Gygi 권·쪽) — 보낼지 = 사용자 (위치 = md 8h–8l · '원고 숫자의 출처' 표).
-  - 열린 선택 (사용자): (가) LPSC₁.₆ ELF 를 USPP 60/480 으로 다시 계산 (하면 SI 문장을 빼고 Table S2 갱신) · BVSE R₀ (Li–S · Li–Cl) 출처 없음 → Brese–O'Keeffe 값 민감도 (CPU 수 분 · 모든 BVSE 숫자에 걸림 · 트랙 우리 DFT 기준선).
+  - ⏭ 1저자 회신 대기. **1저자에게 아직 안 간 것 = 원고 쪽 메모** (원고 MD 단락의 σ = 단일 시드 273 K 판 · 'room-temperature' ↔ 273 K · BO MD 값 = HZ-b2o3-md-ea BLOCKED · BO Eₐ 끝자리 출처 없음 · BVSE 두 값이 그림용 상자 값 (원래 셀이면 LPSC₁.₆ ↔ O-LPSC₁.₆ 순서 뒤집힘) · ELF Table S2 가 NC 와 USPP 를 섞음 · 'Hamiltonian' · '60 ps' · 'XX.XX' 빈칸 둘 · Schlipf–Gygi 권·쪽) — 보낼지 = 사용자 (위치 = md 8h–8l · '원고 숫자의 출처' 표). ✅ **결정 (사용자 10-21 *'이거는 굳이야'*): 안 보낸다** — 메모는 기록으로만 남는다.
+  - ✅ (가) LPSC₁.₆ ELF 를 USPP 60/480 으로 다시 계산 — **안 한다** (사용자 10-21 *'이거는 굳이야'* · SI 의 '별도 SCF' 문장 그대로). 남은 열린 선택 (사용자): BVSE R₀ (Li–S · Li–Cl) 출처 없음 → Brese–O'Keeffe 값 민감도 (CPU 수 분 · 모든 BVSE 숫자에 걸림 · 트랙 우리 DFT 기준선).
 - 원격 상태는 ⏭-NOW-z19 (10-20) 기록 그대로 — 10-21 은 B₂O₃ Methods 만 했고 원격 실측 없음.
 
 ### ⏭-NOW-z19. 2026-10-20 — 본 세션 복귀 · Nd S 빈자리 v2 판독 (CEI) · 사용자 확인 대기
