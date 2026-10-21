@@ -839,8 +839,9 @@ def arm_file_shas(outdir):
 
 def read_run(outdir, req, plan, contract, sid_reg, want_sha=None):
     """런 폴더 하나 → [팔 기록 …] (번호 순).  등록 R §10 멈춤 목록의 팔 쪽 전부 — 어긋나면 Stop (원인 칸 = σ 를 가린 문장).
-    ★ 3판 — 해 상태 먼저 (§5-0 · `run_contract.next_gen_state` · 정본): positive (증서 ⓐ–ⓓ · σ > 0) · zero (VALID_ZERO_TOPOLOGY · σ = 0) ·
-    short (ELECTRODE_SHORT · σ = +∞) · 그 밖 = NOT_COMPUTED.  팔 기록의 σ = 확장 실수 (0 · +∞ 그대로)."""
+    ★ 3판 — 해 상태 (§5-0 · `run_contract.next_gen_state` · 정본): positive (증서 ⓐ–ⓓ · σ > 0) · zero (VALID_ZERO_TOPOLOGY · σ = 0) ·
+    short (ELECTRODE_SHORT · σ = +∞) · 그 밖 = NOT_COMPUTED.  팔 기록의 σ = 확장 실수 (0 · +∞ 그대로).
+    ★ 10-21 (PRE-impl-07 병합) — 순서 = 세대 (GENERATION) · ca_ext 기록 (CA_EXT_RECORD) → 해 상태 (증서 · 증서 ↔ 런 결합) → 팔 계약 · 매니페스트."""
     outdir = Path(outdir)
     name = req.get('name')
     rej = sorted(os.path.basename(x) for x in glob.glob(str(outdir / '.rejected_*')))
@@ -887,13 +888,8 @@ def read_run(outdir, req, plan, contract, sid_reg, want_sha=None):
 
         def stop(code, why):
             raise Stop(code, mask_sigma(f'{os.path.basename(p)}: {why}', sv), name)
-        state, swhy = RC.next_gen_state(s3)
-        if state is None:
-            stop('NOT_COMPUTED', f'해 상태 (§5-0) {swhy}')
-        if state in ('positive', 'legacy'):
-            ok, why = RC.conv_ok(s3.get('cg_info'), s3.get('unconverged'), s3.get('cg_resid'))
-            if not ok:
-                stop('NOT_COMPUTED', f'수렴 계약 {why}')
+        #  ★ 10-21 (사전 리뷰 PRE-impl-07 병합 · B 권고) — 기록 (세대 · ca_ext) 먼저, 해 상태 (증서 · 증서 ↔ 런 결합) 는 그 뒤: 결합은 맞는 세대 ·
+        #    맞는 기록 위에서만 뜻이 있다 (옛 순서 = 상태 먼저 → unknown:ca_ext 팔이 GENERATION 대신 CERT|bind| NOT_COMPUTED 로 멈췄다)
         pid = RC.physics_protocol_id(man)
         if not str(pid).startswith(RC.CA_EXT_PREFIX + '-'):
             stop('GENERATION', f'다시 계산한 id = {pid!r} (p3ca- 이어야)')
@@ -902,6 +898,13 @@ def read_run(outdir, req, plan, contract, sid_reg, want_sha=None):
         ok, why = contract.ca_ext_record(man)
         if not ok:
             stop('CA_EXT_RECORD', why)
+        state, swhy = RC.next_gen_state(s3)
+        if state is None:
+            stop('NOT_COMPUTED', f'해 상태 (§5-0) {swhy}')
+        if state in ('positive', 'legacy'):
+            ok, why = RC.conv_ok(s3.get('cg_info'), s3.get('unconverged'), s3.get('cg_resid'))
+            if not ok:
+                stop('NOT_COMPUTED', f'수렴 계약 {why}')
         why = contract.arm_problem(p, rcpt)
         if why:
             stop('ARM_CONTRACT', why)

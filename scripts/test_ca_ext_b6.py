@@ -1032,7 +1032,8 @@ def t_states_payload():
 #:   경우 표지 = 그 칸이 나와도 되는 켠 노브 (face_alpha · rtol · cjunc) — 노브를 다 끈 경우 (off · centerline · LEAN 3) 에는
 #:   어떤 칸도 허용되지 않는다 (끈 경로 비트 같음).  σ · n_dof · CG 결과 칸은 표에 없다 = 언제나 실패.
 #:   세대: Z3 = 기반이 ff9d72afe (Z3) 이전일 때 · RCA1 = 기반 47d23baba ↔ a76f59d0d (Codex RCA 수정 1 회차 — B 증서 v2 · S1 부피 ·
-#:   A 접합 v2).  ⚠ 새 칸을 더하는 묶음은 같은 커밋에서 이 표에 한 줄 (세대 표지) 을 올린다 · 바로 앞 기반과는 `--expect-identical`.
+#:   A 접합 v2) · RCA2 = a76f59d0d 뒤 B 의 증서 ↔ 런 결합 (PRE-impl-07).  ⚠ 새 칸을 더하는 묶음은 같은 커밋에서 이 표에 한 줄 (세대 표지) 을
+#:   올린다 · 바로 앞 기반과는 `--expect-identical`.
 OLD_DIFF_ALLOW = (
     ('Z3', '+', r'manifest\.ca_ext\.ptfe_face\.evidence\.fp\.sid_off', 'face_alpha', 'off 격자 sid 지문 (Z3)'),
     ('Z3', '+', r'(ion_)?cg_iters', 'rtol', 'CG 반복 수 (Z3)'),
@@ -1060,6 +1061,9 @@ OLD_DIFF_ALLOW = (
     ('RCA1', '+', r'manifest\.ca_ext\.cjunc\.protocol\.rules\.(branch|cp|dist|order)', 'cjunc',
      'A 접합 규칙 v2 (가지 · 최근접점 · 분산판 · 순서)'),
     ('RCA1', '~', r'manifest\.physics_protocol_id', 'cjunc', 'A 접합 규약 판이 바뀌면 p3ca id 가 바뀐다 (같은 함수로 다시 계산)'),
+    #  RCA2 · B — 증서 ↔ 런 결합 (사전 리뷰 PRE-impl-07 · `step3_conv_cert.bind_record` · 판 cert-bind-v1) — 증서를 켠 경우만 · 새 칸만
+    ('RCA2', '+', r'(ion_)?conv_cert\.(bind_version|fp_sid|fp_sig|fp_face_plan|fp_cjunc_registry|fp_cjunc_rows)', 'rtol',
+     'B 증서 ↔ 런 결합 칸 (PRE-impl-07)'),
 )
 #: 허용이 아니라 이유만 붙이는 칸 (기반 사본의 환경 차이 — 고치는 길: 사본 옆에 docs/ 두기 · 링크)
 OLD_DIFF_HINTS = (
