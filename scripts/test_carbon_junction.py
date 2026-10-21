@@ -2261,9 +2261,7 @@ def t_rca06_hygiene():
         and cc2.get('pass_a') is True and cc2.get('pass_b') is True and cc2.get('pass_c') is True
         and c2.get('status') == 'computed' and rel(float(c2.get('sv_counterfactual_ratio') or math.nan), I_full / I_cut) < 1e-10,
         f"주 {(r2 or {}).get('conv_cert', {}).get('ok') if r2 else None} · 반사실 {c2.get('status')} {cc2.get('ok')}")
-    cc_mod = sys.modules.get('step3_conv_cert')
-    if cc_mod is None:
-        import step3_conv_cert as cc_mod                     # noqa: F811 — 반사실 증서 실패 변이를 끼울 모듈
+    cc_mod = sys.modules.get('step3_conv_cert') or importlib.import_module('step3_conv_cert')   # 반사실 증서 실패 변이를 끼울 모듈
     real_cert = cc_mod.certify
     n_cert = [0]
 
