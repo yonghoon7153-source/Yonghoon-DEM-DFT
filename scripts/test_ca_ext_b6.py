@@ -620,6 +620,345 @@ def t_payload():
         shutil.rmtree(td, ignore_errors=True)
 
 
+# ═════════════════════════ S 묶음 — 해 상태 (영값 · 단락) · SV 반사실 노브 배선 (★ 10-21 D · 시험 먼저) ═════════════════════════
+#  정본 = 등록 R §5-0 (상태 먼저 · zero · short = 확장 실수 끝 · 유한 σ 로 위장하지 않는다) · §5-6 SV 행 (반사실 대조 · 같은 침대 · 같은 R_j ·
+#  단자 G 비) · 설계 §4-5 · §6 (상태 분리) · Codex RCA-06 · RCA-13 · 1저자 Q4 · Q7 권고대로.
+def _early_cert(reason, zero_graph='cjunc_assembled'):
+    import step3_conv_cert as CC
+    return CC.early_record({'sigma_eff': 0.0, 'n_dof': 4, 'reason': reason}, zero_graph=zero_graph, fp_sid='a' * 32, fp_sig='b' * 32)
+
+
+def state_manifest(kind, n_inst=3):
+    """주 솔브가 조기 반환한 다음 세대 매니페스트 — kind 'zero' = 바닥 (R_j → ∞ · 관통 없음) · 'short' = 천장 (R_j → 0 · J11 단락).
+    블록은 모듈의 기록 함수로 만든다 (사본 없음) · 주 영수증 = failed (사유) · 전자 component = not_solvable (payload `_s3mark` 꼴)."""
+    m = deep(cohort_manifests()[0])
+    m.update(field_requested=False, ptfe_stamp='off', ptfe_stamp_requested='off', ptfe_zero_dof=False, ptfe_cells_observed=0,
+             component_plan={'electronic': True, 'ionic': False, 'thermal': False, 'pore': False, 'collector': False})
+    short = kind == 'short'
+    reason = 'cjunc_electrode_short' if short else 'no_through_component'
+    prot = CW.cjunc_protocol_record(ptfe_stamp='off', rj_limit=('zero' if short else 'inf'),
+                                    **dict(CJ_REQ, R_j_ohm=(0.0 if short else None)))
+    counts = {'n_instances': n_inst, 'n_edge': 0, 'n_contract': (n_inst if short else 0), 'n_cut_p1': 0, 'n_unrealized': 0,
+              'n_none_inf': (0 if short else n_inst), 'n_long': 0, 'n_sdcp_near': 0, 'n_contracted_by_c': 0, 'n_ptfe_cov': 0,
+              'len_mult_sum_edge': 0.0, 'len_mult_max': 1.0}
+    fp = {'registry': 'r' * 32, 'sid': 's' * 32, 'plan_rows': 'p' * 32}
+    solve = {'solved': False, 'reason': reason, 'short': short, 'n_contracted': counts['n_contract'], 'n_junction_edges': 0}
+    rc = {'electronic_main': {'status': 'failed', 'why': reason, 'n_instances': n_inst, 'n_junction_edges': 0, 'solved': False,
+                              'fp_registry': fp['registry']},
+          'electronic_wetted': {'status': 'disabled', 'why': '--no-collector'},
+          'electronic_bare': {'status': 'disabled', 'why': '--no-collector'},
+          'ionic': {'status': 'disabled', 'why': '--no-ion'}}
+    ev = CW.cjunc_evidence_record(counts=counts, census={'n_instances': n_inst}, solve=solve, receipts=rc, fp=fp, sdcp_mod_c=None)
+    m['ca_ext_requested'] = ['cjunc']
+    m['ca_ext'] = {'schema': RC.CA_EXT_SCHEMA, 'cjunc': {'protocol': prot, 'evidence': ev}}
+    m['components'] = dict(m.get('components') or {}, electronic={'status': 'not_solvable', 'reason': reason})
+    m['backend'] = {}
+    m['backend_last_solve'] = {}
+    m['physics_protocol_id'] = RC.physics_protocol_id(m)
+    s3 = {'sigma_e_eff_S_cm': (None if short else 0.0), 'reason': reason, 'vox_um': m.get('vox_um'), 'manifest': m,
+          'conv_cert': _early_cert(reason)}
+    return s3
+
+
+def _sv_raw(status='computed', ratio=1.25, threshold=None, flag=None):
+    """carbon_junction.CjuncSolver.sv_counterfactual 의 기록 꼴 (A · 10-21) — 투영 전 원 기록."""
+    r = {'kind': 'counterfactual_cut_sv_faces', 'requested': True, 'threshold': threshold, 'n_sv_faces_cut': 4, 'G_full_code': 2.5,
+         'G_cut_code': (2.5 / ratio if status == 'computed' else (0.0 if status == 'no_through_without_sv' else None)),
+         'sv_counterfactual_ratio': (ratio if status == 'computed' else (float('inf') if status == 'no_through_without_sv' else None)),
+         'flag': flag, 'cg_info': (0 if status in ('computed', 'unconverged') else None), 'resid': (1e-13 if status == 'computed' else None),
+         'conv_cert': None, 'status': status, 'backend_last_solve': ({'used': 'gpu', 'requested': 'gpu'} if status == 'computed' else None)}
+    return r
+
+
+@case('S 해 상태 (영값 · 단락) · SV 반사실 노브 — 계약 · 러너 · payload (시험 먼저 · 10-21 D)')
+def t_states():
+    import step3_conv_cert as CC
+    ngs = getattr(RC, 'next_gen_state', None)
+    chk('S0 run_contract.next_gen_state 가 있다 (다음 세대 해 상태 → positive · zero · short · legacy)', callable(ngs))
+    if not callable(ngs):
+        ngs = lambda s3: (None, 'absent')                    # noqa: E731 — 고치기 전: 아래 검사를 시험 단위로 실패시킨다
+    m = cj_manifest()
+    s3p = {'sigma_e_eff_S_cm': 0.05, 'n_dof': 100, 'cg_info': 0, 'unconverged': False, 'cg_resid': 1e-13, 'manifest': m,
+           'conv_cert': good_cert(0.05)}
+    z, sh = state_manifest('zero'), state_manifest('short')
+    chk('S1a 양의 해 → positive', ngs(s3p) == ('positive', None), ngs(s3p))
+    chk('S1b 바닥 영값 위상 (조기 반환 · 증서 VALID_ZERO_TOPOLOGY · σ 0) → zero', ngs(z) == ('zero', None), ngs(z))
+    chk('S1c 천장 단락 (J11 · 증서 ELECTRODE_SHORT · σ None) → short', ngs(sh) == ('short', None), ngs(sh))
+    chk('S1d 옛 세대 (ca_ext 없음 · 요청 없음) → legacy (이 규칙 밖)',
+        ngs({'sigma_e_eff_S_cm': 0.05, 'manifest': cohort_manifests()[0]}) == ('legacy', None))
+
+    def zmut(fn, base=None):
+        x = deep(base if base is not None else z)
+        fn(x)
+        return x
+    M = lambda x: x['manifest']                              # noqa: E731
+    Ev = lambda x: x['manifest']['ca_ext']['cjunc']['evidence']   # noqa: E731
+    bad_zero = {
+        'σ 1e-9 (영값 사유인데 0 아님)': lambda x: x.update(sigma_e_eff_S_cm=1e-9),
+        'σ None (영값을 비워 둠)': lambda x: x.update(sigma_e_eff_S_cm=None),
+        '결과 사유 없음 (증서만 조기 반환)': lambda x: x.pop('reason'),
+        '결과 사유 ≠ 증서 사유': lambda x: x.update(reason='all_floating_dropped'),
+        '전자 component complete (조기 반환인데 솔브 완료로 적음)': lambda x: M(x)['components'].update(electronic={'status': 'complete'}),
+        '증서 ok False': lambda x: x['conv_cert'].update(ok=False),
+        '증서 판본 다름': lambda x: x['conv_cert'].update(version='conv-cert-v1'),
+        '증서 출처 모름': lambda x: x['conv_cert'].update(zero_source='guess'),
+        '증서 지문 hex 아님': lambda x: x['conv_cert'].update(fp_sid='Z' * 32),
+        '증서 없음': lambda x: x.pop('conv_cert'),
+        '증서 상태 NOT_CERTIFIABLE': lambda x: x.update(conv_cert=_early_cert('degenerate_thin_bed')),
+        '증서 상태 모름': lambda x: x['conv_cert'].update(status='MYSTERY'),
+    }
+    for nm, fn in bad_zero.items():
+        st, why = ngs(zmut(fn))
+        chk(f'S2 영값 상태 거부 [{nm}] → (None, 사유)', st is None and isinstance(why, str) and why, (st, why))
+    bad_short = {
+        'σ 0.0 (단락을 유한 σ 로 위장)': lambda x: x.update(sigma_e_eff_S_cm=0.0),
+        'σ 1e3 (단락을 유한 σ 로 위장)': lambda x: x.update(sigma_e_eff_S_cm=1e3),
+        '증서 ok True': lambda x: x['conv_cert'].update(ok=True),
+        '증서 사유가 영값 사유 (상태와 모순)': lambda x: x['conv_cert'].update(reason='no_through_component'),
+        '결과 사유 ≠ 증서 사유': lambda x: x.update(reason='no_through_component'),
+        '접합 기록 short False': lambda x: Ev(x)['solve'].update(short=False),
+        '접합 기록 solved True': lambda x: Ev(x)['solve'].update(solved=True),
+        '축약 0 (단락이 생길 수 없다)': lambda x: (Ev(x)['counts'].update(n_contract=0, n_edge=3), M(x)['ca_ext']['cjunc']['protocol']),
+        '접합 블록 없음': lambda x: (M(x).pop('ca_ext'), M(x).pop('ca_ext_requested'), M(x).update(ptfe_stamp='face_alpha')),
+        '전자 component complete': lambda x: M(x)['components'].update(electronic={'status': 'complete'}),
+        '증서 판본 다름': lambda x: x['conv_cert'].update(version='conv-cert-v1'),
+        '봉인 상수 손으로 (rtol_max)': lambda x: x['conv_cert'].update(rtol_max=1e-8),
+    }
+    for nm, fn in bad_short.items():
+        st, why = ngs(zmut(fn, sh))
+        chk(f'S3 단락 상태 거부 [{nm}] → (None, 사유)', st is None and isinstance(why, str) and why, (st, why))
+    bad_pos = {'증서 실패 (ok False)': lambda x: x['conv_cert'].update(ok=False, pass_b=False),
+               '증서 없음': lambda x: x.pop('conv_cert'),
+               'σ ≠ 증서 σ': lambda x: x.update(sigma_e_eff_S_cm=0.06)}
+    for nm, fn in bad_pos.items():
+        st, why = ngs(zmut(fn, s3p))
+        chk(f'S4 양의 해 거부 [{nm}] → (None, 사유)', st is None and why, (st, why))
+    #  ── check_arm (러너가 팔을 OUTDIR 로 옮기기 전 · 캐시 SKIP) — 영값 · 단락 상태 팔을 받는다 · 옛 꼴 · 변조는 거부 ──
+    import sr01_stamp_compare as SC
+    td = tempfile.mkdtemp(prefix='b6_s_')
+    try:
+        def arm(s3, nm):
+            p = os.path.join(td, nm)
+            json.dump({'mpm_metrics': {'step3': s3}}, open(p, 'w', encoding='utf-8'))
+            return p
+        rz, rs = SC.check_arm(arm(z, 'z.json'), 'segment', expect_backend='gpu'), SC.check_arm(arm(sh, 's.json'), 'segment',
+                                                                                              expect_backend='gpu')
+        chk('S5a check_arm — 영값 상태 팔 (σ 0 · 증서 VALID_ZERO_TOPOLOGY) 를 받는다 (솔브 없음 = backend 기록 없음 · 정상)', rz is None, rz)
+        chk('S5b check_arm — 단락 상태 팔 (σ None · 증서 ELECTRODE_SHORT) 를 받는다', rs is None, rs)
+        for nm, fn in (('영값인데 σ 1e-9', bad_zero['σ 1e-9 (영값 사유인데 0 아님)']), ('영값 증서 없음', bad_zero['증서 없음']),
+                       ('영값인데 component complete', bad_zero['전자 component complete (조기 반환인데 솔브 완료로 적음)'])):
+            r_ = SC.check_arm(arm(zmut(fn), f'zb_{len(nm)}.json'), 'segment', expect_backend='gpu')
+            chk(f'S5c check_arm 거부 [{nm}]', isinstance(r_, str) and r_, r_)
+        r_ = SC.check_arm(arm(zmut(bad_short['σ 0.0 (단락을 유한 σ 로 위장)'], sh), 'sb.json'), 'segment', expect_backend='gpu')
+        chk('S5d check_arm 거부 [단락인데 σ 0.0 — 유한 σ 로 위장]', isinstance(r_, str) and r_, r_)
+        old = deep(z)
+        old.pop('conv_cert')
+        r_ = SC.check_arm(arm(old, 'old.json'), 'segment', expect_backend='gpu')
+        chk('S5e check_arm — 증서 없는 영값 팔 (옛 꼴 · 증서 끔) 은 그대로 거부 (σ 0 을 증서 없이 받지 않는다)', isinstance(r_, str) and r_, r_)
+        p2 = {'sigma_e_eff_S_cm': 0.0, 'reason': 'no_through_component', 'vox_um': 0.15, 'manifest': cohort_manifests()[0]}
+        r_ = SC.check_arm(arm(p2, 'p2.json'), 'segment')
+        chk('S5f check_arm — 옛 세대 (p2) σ 0 팔은 그대로 거부 (이 규칙 밖 · 옛 거동)', isinstance(r_, str) and r_, r_)
+    finally:
+        shutil.rmtree(td, ignore_errors=True)
+    #  ── receipt_match — 솔브가 하나도 안 돈 팔 (조기 반환) 의 rtol 결합 ──
+    base = {k: v for k, v in json.load(open(os.path.join(ROOT, 'docs/data/w4b_ptfe_off_20260827/run_receipt.json'),
+                                            encoding='utf-8')).items() if k != 'receipt_digest'}
+    rq_f = {'cjunc': dict(CJ_REQ, R_j_ohm=None, rj_limit='inf')}
+    chk('S6a 조기 반환 팔 (솔브 0 · backend.rtol 없음) + 러너 rtol 선언 → receipt_match 통과 (결합할 솔브가 없다)',
+        RC.receipt_match(dict(base, ca_ext_request=rq_f, step3_rtol=1e-12), z['manifest'])[0],
+        RC.receipt_match(dict(base, ca_ext_request=rq_f, step3_rtol=1e-12), z['manifest']))
+    zc = deep(z['manifest'])
+    zc['components']['electronic'] = {'status': 'complete', 'backend': {'used': 'gpu'}}
+    chk('S6b 솔브가 돈 팔 (component complete) 인데 backend.rtol 없음 → 그대로 거부 (옛 결합)',
+        not RC.receipt_match(dict(base, ca_ext_request=rq_f, step3_rtol=1e-12), zc)[0])
+    #  ── SV 반사실 노브 — 러너 손잡이 표 · 발사 전 검사 · 영수증 · payload 인자 · 이름 태그 · CLI 회계 ──
+    tab = {n: (s, k) for n, s, k in getattr(RC, 'RUNNER_CA_EXT_ENV', ())}
+    chk('S7a 러너 손잡이 표에 CJUNC_SV_CF (선언 칸 아님 = 하위 블록 None · 영수증 선택 칸 sv_counterfactual)',
+        tab.get('CJUNC_SV_CF') == (None, 'sv_counterfactual'), tab.get('CJUNC_SV_CF'))
+    env = {'CJUNC': '1', 'CJUNC_RJ': '1e6', 'CJUNC_LEN_LAW': 'len_scaled_v0', 'CJUNC_UNREG_LAW': 'cut', 'CJUNC_S_MIN_UM': '0.5',
+           'CJUNC_TOL_FF_UM': '0.5', 'CJUNC_PTFE_JLAW': 'P0', 'STEP3_RTOL': '1e-12'}
+    on = RC.runner_ca_ext(dict(env, CJUNC_SV_CF='1'), lean='2')
+    off = RC.runner_ca_ext(dict(env), lean='2')
+    chk('S7b CJUNC_SV_CF=1 → 문제 없음 · 영수증 sv_counterfactual True · 요청 칸 (cjunc) = 끈 것과 같다 (반사실은 protocol 밖)',
+        on['problems'] == [] and on['receipt'].get('sv_counterfactual') is True
+        and on['receipt'].get('ca_ext_request') == off['receipt'].get('ca_ext_request'), on)
+    chk('S7c 끔 (비움 · 0) → 영수증에 칸 없음 (옛 영수증 바이트 · 옛 OUTDIR)',
+        'sv_counterfactual' not in off['receipt'] and RC.runner_ca_ext(dict(env, CJUNC_SV_CF='0'), lean='2') == off, off['receipt'])
+    for nm, e_, code in (('CJUNC 없이', {'CJUNC_SV_CF': '1', 'STEP3_RTOL': '1e-12'}, 'RUNNER_CA_EXT|FLAG_WITHOUT_CJUNC|'),
+                         ('값 yes', dict(env, CJUNC_SV_CF='yes'), 'RUNNER_CA_EXT|VALUE|'),
+                         ('값 2', dict(env, CJUNC_SV_CF='2'), 'RUNNER_CA_EXT|VALUE|'),
+                         ('값 " 1"', dict(env, CJUNC_SV_CF=' 1'), 'RUNNER_CA_EXT|VALUE|')):
+        pr = RC.runner_ca_ext(e_, lean='2')['problems']
+        chk(f'S7d 발사 전 거부 [{nm}] → {code}', any(p.startswith(code) for p in pr), pr)
+    v_on = RC.runner_ca_ext_view(dict(base, **on['receipt'])) if on['problems'] == [] else {}
+    v_off = RC.runner_ca_ext_view(dict(base, **off['receipt']))
+    chk('S7e payload 인자 · 이름 태그 — 켬 = " --step3-cjunc-sv-cf" 한 번 · 태그 끝 "_svcf" · 선언 (--expect-physics) 은 끈 것과 같다',
+        (v_on.get('flags') or '').count(' --step3-cjunc-sv-cf') == 1 and (v_on.get('tag') or '').endswith('_svcf')
+        and v_on.get('expect') == v_off.get('expect') and '--step3-cjunc-sv-cf' not in v_off['flags'] and not v_off['tag'].endswith('_svcf'),
+        (v_on, v_off))
+    r_on, r_off = dict(base, **on['receipt']), dict(base, **off['receipt'])
+    chk('S7f 영수증 digest — 켬 ≠ 끔 (OUTDIR 이 갈린다) · 끔 = 칸 없음의 옛 digest', on['problems'] == []
+        and RC.receipt_digest(r_on) != RC.receipt_digest(r_off), (RC.receipt_digest(r_on), RC.receipt_digest(r_off)))
+    chk('S7g CLI 회계 — --step3-cjunc-sv-cf = solve (σ_e 해를 바꾸지 않는 추가 솔브 · 규약 id 밖)',
+        RC.CLI_ACCOUNTING.get('--step3-cjunc-sv-cf') == ('solve', None), RC.CLI_ACCOUNTING.get('--step3-cjunc-sv-cf'))
+    #  ── 반사실 기록 (증거) — 투영 꼴 (JSON 유한 · inf 비 = null + 표지 'inf') · 검증기 ──
+    proj = getattr(CW, 'sv_cf_record', None)
+    chk('S8a ca_ext_cjunc.sv_cf_record (증거 투영) 가 있다', callable(proj))
+    if callable(proj):
+        pc, pn = proj(_sv_raw('computed', 1.25)), proj(_sv_raw('no_through_without_sv'))
+        chk('S8b 투영 — computed = 비 그대로 (유한) · 표지 없음 · no_through_without_sv = 비 null + ratio_limit "inf" · JSON 유한 (allow_nan False)',
+            pc.get('sv_counterfactual_ratio') == 1.25 and pc.get('ratio_limit') is None and pn.get('sv_counterfactual_ratio') is None
+            and pn.get('ratio_limit') == 'inf' and json.dumps([pc, pn], allow_nan=False) is not None, (pc, pn))
+    else:
+        proj = lambda r: r                                   # noqa: E731
+    mm = cj_manifest()
+    Es = lambda x: x['ca_ext']['cjunc']['evidence']          # noqa: E731
+    Es(mm)['sv_counterfactual_request'] = {'threshold': None}
+    Es(mm)['solve']['sv_counterfactual'] = proj(_sv_raw('computed', 1.25))
+    chk('S8c 요청 + computed 기록 → ca_ext_record_ok 통과 · id = 노브 끈 것과 같다 (반사실은 protocol 밖)',
+        RC.ca_ext_record_ok(mm) == (True, None) and RC.physics_protocol_id(mm) == cj_manifest()['physics_protocol_id'],
+        RC.ca_ext_record_ok(mm))
+    good = {'no_through_without_sv': proj(_sv_raw('no_through_without_sv')), 'unconverged': proj(_sv_raw('unconverged')),
+            '문턱 2 · 비 3 · SV_DEPENDENT': proj(_sv_raw('computed', 3.0, threshold=2.0, flag='SV_DEPENDENT'))}
+    for nm, rec in good.items():
+        x = deep(mm)
+        if '문턱' in nm:
+            Es(x)['sv_counterfactual_request'] = {'threshold': 2.0}
+        Es(x)['solve']['sv_counterfactual'] = rec
+        chk(f'S8d 정상 기록 받음 [{nm}]', RC.ca_ext_record_ok(x) == (True, None), RC.ca_ext_record_ok(x))
+    S_ = lambda x: Es(x)['solve']['sv_counterfactual']      # noqa: E731
+    bad_sv = {
+        '요청 있는데 기록 없음 (주 솔브 풀림)': lambda x: Es(x)['solve'].pop('sv_counterfactual'),
+        '기록 있는데 요청 없음': lambda x: Es(x).pop('sv_counterfactual_request'),
+        '요청 문턱 0.5 (< 1 · 뜻 없음)': lambda x: Es(x).update(sv_counterfactual_request={'threshold': 0.5}),
+        '요청 모르는 칸': lambda x: Es(x).update(sv_counterfactual_request={'threshold': None, 'x': 1}),
+        '요청 ↔ 기록 문턱 다름': lambda x: S_(x).update(threshold=2.0),
+        'computed 인데 비 None': lambda x: S_(x).update(sv_counterfactual_ratio=None),
+        'computed 인데 비 음수': lambda x: S_(x).update(sv_counterfactual_ratio=-1.0),
+        'computed 인데 비 문자열': lambda x: S_(x).update(sv_counterfactual_ratio='1.25'),
+        'computed 인데 inf 표지': lambda x: S_(x).update(ratio_limit='inf'),
+        '모르는 상태': lambda x: S_(x).update(status='mystery'),
+        '종류 다름': lambda x: S_(x).update(kind='counterfactual_cut_vv'),
+        'requested False': lambda x: S_(x).update(requested=False),
+        '문턱 없는데 SV_DEPENDENT 표지': lambda x: S_(x).update(flag='SV_DEPENDENT'),
+        '모르는 표지': lambda x: S_(x).update(flag='SV_DOMINANT'),
+        'no_through 인데 표지 없음': lambda x: S_(x).update(status='no_through_without_sv', sv_counterfactual_ratio=None, ratio_limit=None),
+    }
+    for nm, fn in bad_sv.items():
+        x = deep(mm)
+        fn(x)
+        chk(f'S8e 반사실 기록 거부 [{nm}]', not RC.ca_ext_record_ok(x)[0], RC.ca_ext_record_ok(x))
+    x = deep(mm)
+    Es(x)['sv_counterfactual_request'] = {'threshold': 2.0}
+    Es(x)['solve']['sv_counterfactual'] = proj(_sv_raw('computed', 3.0, threshold=2.0, flag=None))
+    chk('S8f 문턱 2 · 비 3 인데 표지 없음 (문턱 판정과 기록이 갈림) → 거부', not RC.ca_ext_record_ok(x)[0])
+    #  ── 조기 반환 해 (주 솔브 안 풀림) — 반사실 기록 없음 = 정상 · 요청만 남는다 ──
+    zz = deep(z['manifest'])
+    zz['ca_ext']['cjunc']['evidence']['sv_counterfactual_request'] = {'threshold': None}
+    chk('S8g 조기 반환 (바닥 · 영값) + 요청 · 기록 없음 → 통과 (주 솔브가 없으면 반사실도 없다)', RC.ca_ext_record_ok(zz) == (True, None),
+        RC.ca_ext_record_ok(zz))
+    #  ── 영수증 ↔ 매니페스트 (반사실 요청) ──
+    rq = {'cjunc': dict(CJ_REQ)}
+    chk('S9a 영수증 sv_counterfactual True ↔ 증거 요청 있음 → 통과 · 영수증 칸 없음 ↔ 요청 있음 → 거부 · 영수증 True ↔ 요청 없음 → 거부',
+        RC.receipt_match(dict(base, ca_ext_request=rq, sv_counterfactual=True), mm)[0]
+        and not RC.receipt_match(dict(base, ca_ext_request=rq), mm)[0]
+        and not RC.receipt_match(dict(base, ca_ext_request=rq, sv_counterfactual=True), cj_manifest())[0],
+        (RC.receipt_match(dict(base, ca_ext_request=rq, sv_counterfactual=True), mm),
+         RC.receipt_match(dict(base, ca_ext_request=rq), mm)))
+    #  ── payload 조기 반환 step3 조립 (단락 = σ None · 증서 복사 · 끔 = 옛 dict 그대로) ──
+    try:
+        import mpm_webapp_payload as PAY
+    except Exception as e:                                  # noqa: BLE001
+        PAY = None
+        print(f'  ⚠ payload 를 못 불러온다 ({type(e).__name__}: {e})')
+    f_ = getattr(PAY, '_step3_early', None)
+    chk('S10a payload._step3_early (조기 반환 해의 step3 조립 · 한 곳) 가 있다', callable(f_))
+    if callable(f_):
+        sc_ = _early_cert('cjunc_electrode_short')
+        zc_ = _early_cert('no_through_component')
+        a1 = f_({'reason': 'cjunc_electrode_short', 'conv_cert': sc_, 'sigma_eff': 0.0}, 0.15)
+        a2 = f_({'reason': 'no_through_component', 'conv_cert': zc_, 'sigma_eff': 0.0}, 0.15)
+        a3 = f_({'reason': 'no_plate_contact(bot=0,top=1)', 'sigma_eff': 0.0}, 0.15)
+        chk('S10b 단락 → σ None (유한 σ 로 위장 안 함) · 증서 복사 · 사유', a1.get('sigma_e_eff_S_cm', 0) is None
+            and a1.get('conv_cert') == sc_ and a1.get('conv_cert') is not sc_ and a1.get('reason') == 'cjunc_electrode_short', a1)
+        chk('S10c 영값 → σ 0.0 · 증서 복사', a2.get('sigma_e_eff_S_cm') == 0.0 and type(a2.get('sigma_e_eff_S_cm')) is float
+            and a2.get('conv_cert') == zc_, a2)
+        chk('S10d 증서 끔 (칸 없음) → 옛 dict 그대로 (키 · 값 · 순서 = σ 0.0 · 사유 · vox)',
+            list(a3.items()) == [('sigma_e_eff_S_cm', 0.0), ('reason', 'no_plate_contact(bot=0,top=1)'), ('vox_um', 0.15)], a3)
+
+
+def make_fixture_nofloor(d):
+    """b6 픽스처에서 판에 닿는 AM 기둥을 뺀 침대 (가운데 AM 구 하나만 · 떠 있음) — 접합을 끊으면 (바닥 R_j → ∞) 두 판을 잇는 성분이 없다
+    = VALID_ZERO_TOPOLOGY (등록 R §5-0 · 바닥 극한)."""
+    make_fixture(d, sdcp=False, ptfe=False)
+    with open(os.path.join(d, 'am.csv'), 'w', encoding='utf-8') as f:     # 두 줄 (한 줄이면 loadtxt 가 1 차원 배열을 낸다)
+        f.write('# type,x,y,z,r  (D 영값 바닥 픽스처 · 떠 있는 AM 구 둘 · 판 · 섬유와 안 닿는다)\n'
+                '2,0.016000,0.016000,0.012000,0.002000\n2,0.016000,0.032000,0.012000,0.002000\n')
+    return d
+
+
+@case('SP 해 상태 · SV 반사실 — payload 끝-끝 (시험 먼저 · 10-21 D)')
+def t_states_payload():
+    if ARGS.skip_payload:
+        print('    (--skip-payload — 건너뜀)')
+        return
+    import step3_conv_cert as CC
+    import sr01_stamp_compare as SC
+    td = tempfile.mkdtemp(prefix='b6_sp_')
+    try:
+        os.makedirs(os.path.join(td, 'nf'))
+        os.makedirs(os.path.join(td, 'dbe'))
+        nf = make_fixture_nofloor(os.path.join(td, 'nf'))
+        dd = make_fixture(os.path.join(td, 'dbe'), sdcp=True)
+        FLOOR = OFF + LEAN2 + cj_with(rj='inf') + ['--step3-cjunc-rj-limit', 'inf']
+        rc_z, log_z, p_z = run_payload(nf, FLOOR + ['--step3-rtol', '1e-12'], out='floor.json')
+        s3z = s3_of(p_z)
+        cz = s3z.get('conv_cert') or {}
+        chk('SP1 바닥 (R_j → ∞) 영값 침대 + rtol — rc 0 · σ 0.0 · 사유 no_through_component · 증서 복사 (VALID_ZERO_TOPOLOGY · early_return)',
+            rc_z == 0 and s3z.get('sigma_e_eff_S_cm') == 0.0 and str(s3z.get('reason', '')).startswith('no_through_component')
+            and cz.get('status') == CC.STATUS_ZERO and cz.get('zero_source') == 'early_return' and cz.get('ok') is True,
+            (rc_z, s3z.get('reason'), cz.get('status'), log_z.strip()[-400:]))
+        st_z = getattr(RC, 'next_gen_state', lambda s: (None, 'absent'))(s3z)
+        chk('SP2 next_gen_state = zero · ca_ext_record_ok 통과', st_z == ('zero', None)
+            and RC.ca_ext_record_ok(man_of(p_z)) == (True, None), (st_z, RC.ca_ext_record_ok(man_of(p_z)) if p_z else None))
+        r_ca = SC.check_arm(os.path.join(nf, 'floor.json'), 'segment', expect_backend='cpu') if p_z else 'payload 없음'
+        chk('SP3 check_arm (러너가 쓰는 함수) 이 실제 영값 팔을 받는다', r_ca is None, r_ca)
+        rc_z0, _l0, p_z0 = run_payload(nf, FLOOR, out='floor_nocert.json')
+        _fz = os.path.join(nf, 'floor_nocert.json.failed')
+        p_z0f = json.load(open(_fz, encoding='utf-8')) if os.path.exists(_fz) else None
+        chk('SP4 증서 끔 (rtol 없음) — 게시 거부 (rc 4 · 최종 파일 없음 · 옛 거동: 증서 없는 σ 0 = 수치 증거 실패) · 진단본 step3 = 옛 꼴 '
+            '(증서 칸 없음 · σ 0.0) · next_gen_state 거부',
+            rc_z0 == 4 and p_z0 is None and p_z0f is not None and 'conv_cert' not in s3_of(p_z0f)
+            and s3_of(p_z0f).get('sigma_e_eff_S_cm') == 0.0
+            and getattr(RC, 'next_gen_state', lambda s: (None, 'absent'))(s3_of(p_z0f))[0] is None,
+            (rc_z0, sorted(s3_of(p_z0f)) if p_z0f else None, _l0.strip()[-200:]))
+        #  ── SV 반사실 노브 (DBE 꼴 — SDCP 점 하나가 섬유 옆) ──
+        rc_a, log_a, q_a = run_payload(dd, OFF + LEAN2 + CJ + ['--step3-rtol', '1e-12'], out='cf_off.json')
+        rc_b, log_b, q_b = run_payload(dd, OFF + LEAN2 + CJ + ['--step3-rtol', '1e-12', '--step3-cjunc-sv-cf'], out='cf_on.json')
+        ea, eb = (cj_block(q_a).get('evidence') or {}), (cj_block(q_b).get('evidence') or {})
+        svb = (eb.get('solve') or {}).get('sv_counterfactual') or {}
+        chk('SP5 노브 켬 — rc 0 · 증거 요청 {threshold: None} · 기록 (종류 · 요청 · 상태 · 문턱 None · 표지 None) · ca_ext_record_ok',
+            rc_b == 0 and eb.get('sv_counterfactual_request') == {'threshold': None}
+            and svb.get('kind') == 'counterfactual_cut_sv_faces' and svb.get('requested') is True
+            and svb.get('status') in ('computed', 'no_through_without_sv') and svb.get('threshold') is None and svb.get('flag') is None
+            and RC.ca_ext_record_ok(man_of(q_b)) == (True, None), (rc_b, svb, log_b.strip()[-400:]))
+        chk('SP6 노브 켬 = 주 결과 그대로 — σ 비트 같음 · 증서 같음 · p3ca id 같음 · protocol 같음 · 끈 런에는 요청 · 기록 칸 없음',
+            rc_a == 0 and s3_of(q_a).get('sigma_e_eff_S_cm') == s3_of(q_b).get('sigma_e_eff_S_cm')
+            and man_of(q_a).get('physics_protocol_id') == man_of(q_b).get('physics_protocol_id')
+            and cj_block(q_a).get('protocol') == cj_block(q_b).get('protocol')
+            and 'sv_counterfactual_request' not in ea and 'sv_counterfactual' not in (ea.get('solve') or {}),
+            (s3_of(q_a).get('sigma_e_eff_S_cm'), s3_of(q_b).get('sigma_e_eff_S_cm')))
+        if svb.get('status') == 'computed':
+            chk('SP7 computed — 비 유한 ≥ 1 (Rayleigh · SV 면을 끊으면 G 가 줄거나 같다) · 끊은 면 수 int ≥ 0 · backend 기록',
+                isinstance(svb.get('sv_counterfactual_ratio'), float) and svb['sv_counterfactual_ratio'] >= 1.0 - 1e-12
+                and type(svb.get('n_sv_faces_cut')) is int and (svb.get('backend_last_solve') or {}).get('used') in ('cpu', 'gpu'), svb)
+        rc_x, log_x, _p = run_payload(dd, OFF + LEAN2 + ['--step3-cjunc-sv-cf'], out='cf_noc.json')
+        chk('SP8 노브만 (접합 없이) → 입구 거부 S2_CJUNC_REFUSED|FLAG_WITHOUT_CJUNC|', rc_x != 0 and 'S2_CJUNC_REFUSED|FLAG_WITHOUT_CJUNC|' in log_x,
+            (rc_x, log_x.strip()[-200:]))
+    finally:
+        shutil.rmtree(td, ignore_errors=True)
+
+
 # ═════════════════════════ B 묶음 — 끔 비트 동일 (고치기 전 코드 대조) ═════════════════════════
 @case('B 끔 비트 동일 — 고치기 전 payload 와 대조 (--old-scripts)')
 def t_bitid():

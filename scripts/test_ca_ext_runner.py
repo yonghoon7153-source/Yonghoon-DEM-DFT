@@ -103,7 +103,9 @@ CJ_REQ = {'R_j_ohm': 1e6, 'len_law': 'len_scaled_v0', 'unreg_law': 'cut', 's_min
 NEW_ENV_NAMES = ('CJUNC', 'CJUNC_RJ', 'CJUNC_LEN_LAW', 'CJUNC_UNREG_LAW', 'CJUNC_S_MIN_UM', 'CJUNC_TOL_FF_UM', 'CJUNC_PTFE_JLAW',
                  'SDCP_MOD_C', 'STEP3_RTOL',
                  #  ★ Z1 (10-20) — VGCF bulk σ (직경 보존 · 설계 §1-2 #2 · `scripts/test_ca_ext_z1.py` Z1)
-                 'SIGMA_FIBRE_BULK')
+                 'SIGMA_FIBRE_BULK',
+                 #  ★ 10-21 (D · 등록 R §5-6 SV 행 · Codex RCA-06 · 1저자 Q4) — SV 반사실 대조 노브 (같은 런 안 추가 풀이 · 문턱 = 사슬)
+                 'CJUNC_SV_CF')
 #: ★ Z1 (10-20) — 다음 세대 노브는 `STEP3_RTOL` 필수 (설계 §6 · 팔 시작 전 거부) → 설정부 탐침도 rtol 을 준다
 CJ_RT_ENV = dict(CJ_ENV, STEP3_RTOL='1e-12')
 #: 러너 축 이름꼴 — 부모 셸에서 물려받지 않게 기본 env 에서 걷어낸다
@@ -568,6 +570,15 @@ def t_names():
     zero = probe({'PTFE_STAMP': 'face_alpha', 'SIGMA_PTFE': '0', 'STEP3_RTOL': '1e-12'})
     chk('N7i face_alpha + σ_PTFE 0 은 거부하지 않는다 (payload 도 > 0 만 거부 · 과잉차단 없음)', zero['_rc'] == 0
         and zero.get('NG_ATAG') == '_fa_rt1em12', zero['_log'][-200:])
+    #  ★ 10-21 (D · 등록 R §5-6 SV 행) — SV 반사실 노브: 같은 요청 · 다른 OUTDIR · 팔 태그 끝 `_svcf` · payload 인자 한 번 · 선언 (--expect-physics) 같음
+    svcf = probe(dict(CJ_RT_ENV, CJUNC_SV_CF='1'))
+    chk('N7j CJUNC_SV_CF=1 — rc 0 · 팔 태그 = 끈 태그 + `_svcf` · OUTDIR 다름 · NG_FLAG 에 `--step3-cjunc-sv-cf` 한 번 · NG_DECL 같음',
+        svcf['_rc'] == 0 and svcf.get('NG_ATAG') == str(base.get('NG_ATAG', '')) + '_svcf' and svcf.get('OUTDIR') != base.get('OUTDIR')
+        and str(svcf.get('NG_FLAG', '')).count('--step3-cjunc-sv-cf') == 1 and svcf.get('NG_DECL') == base.get('NG_DECL'),
+        (svcf.get('NG_ATAG'), base.get('NG_ATAG'), svcf['_log'][-300:]))
+    nocj = probe({'CJUNC_SV_CF': '1', 'STEP3_RTOL': '1e-12'})
+    chk('N7k CJUNC_SV_CF=1 인데 CJUNC 없음 → 발사 전 거부 (RUNNER_CA_EXT|FLAG_WITHOUT_CJUNC| · 조용한 no-op 금지)',
+        nocj['_rc'] != 0 and 'RUNNER_CA_EXT|FLAG_WITHOUT_CJUNC|' in nocj['_log'], nocj['_log'][-300:])
 
 
 # ═════════════════════════ N8 — SKIP 캐시 함정 ═════════════════════════
