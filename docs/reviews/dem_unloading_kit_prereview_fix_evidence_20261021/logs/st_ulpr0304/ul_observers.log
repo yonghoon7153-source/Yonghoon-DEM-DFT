@@ -1,0 +1,22 @@
+  ✓ O1 σ_P ddof 1 (기본) = 0.3385728562 → 3σ 1.0157 > 1 MPa → NOISE_FLOOR
+  ✓ O1 같은 표본 ddof 0 = 0.33 → 0.99 < 1 → 잡음 바닥 위 (ddof 가 판정을 가른다 — 고정이 필요한 까닭)
+  ✓ O2 표본 9 (< 최소 10) = OBS_MISSING (NOISE_FLOOR 아님)
+  ✓ O3 표본 0 = OBS_MISSING
+  ✓ O4 창 범위 (시작, 끝] — 시작 step 줄 (앞 창 · setup 자리) 은 넣지 않는다
+  ✓ O4b σ_P 기본 열 이름 = 덱 thermo 머리의 Ps 열 (표 thermo_cols · LIGGGHTS 는 v_ul_Ps 를 "ul_Ps" 로 찍는다 — "v_Ps" 면 실제 로그에서 표본 0)
+  ✓ O5 100 칸 모두 100 µm = 평균 100 µm
+  ✓ O5 빈 칸 하나 = NOT_COMPUTED (100 도 99 도 아님 · 0 을 넣지 않는다)
+  ✓ O6 p99.9 = nearest-rank: 99 개 100 · 1 개 200 → 200 (선형 보간이면 190.1)
+  ✓ O7 고정 ID: S0 판 (110) 위 입자 (120) 는 그 뒤 판이 130 이어도 집합 밖 — 지표 100 (프레임마다 자르면 106.67 · 거짓 회복)
+  ✓ O8 xy 감기 (x + L) = 같은 칸 · 같은 지표
+  ✓ O9 비유한 z = NOT_COMPUTED
+  ✓ O10 S4: 0.003 µm / 창 = FAIL (물리 창) · 같은 속도를 반 창으로 재면 0.0015 = PASS (창 정의가 판정을 바꾼다 — 덱은 W(dt) = T_W / dt)
+  ✓ O11 ε_sphere,all: 검증한 S0 부피 봉인 (C_all = 5 V ÷ A) → h 가 달라도 같은 C · inside 는 판 안 중심만 (별도 이름)
+  ✓ O11 ULKR-12 Codex fixed_volume — 비교 프레임에서 한 행이 빠짐 (5 → 4) = NOT_COMPUTED (옛 helper: C_all 20 % 감소 · 예외 없음) · 봉인 C 그대로
+  ✓ O11 ULKR-12 비교 프레임의 반경 ≠ S0 (한 입자 0.0006) · ID 중복 · S0 밖 ID = NOT_COMPUTED (프레임 결손 · 변조를 부피로 흘리지 않는다)
+  ✓ O11 보간 높이 M (프레임 없음) = ε_all 만 (1 − C_all / h) · inside 미계산 · S0 프레임 결손 (중복 · 비유한 반경) = 봉인 없음
+  ✓ O12 W_proxy (덱 A 0.0025 · Δh 1e-3 덱 m · P 0.01 → 0.001 덱 MPa) = 1.375e-8 J 보고
+  ✓ O12 W_proxy 비유한 점 · 점 하나 = 미계산 (None — 0 J 아님)
+  ✓ O13 KE 기준: 회전 = UK 창 평균 중앙값 · S2 문턱 = 10 × (병진 + 회전)
+  ✓ O13 UK 창 결손 (0 개 · 비유한) = 기준 없음 (None — S2 판정 불가로 넘긴다)
+selftest: PASS (0 실패)

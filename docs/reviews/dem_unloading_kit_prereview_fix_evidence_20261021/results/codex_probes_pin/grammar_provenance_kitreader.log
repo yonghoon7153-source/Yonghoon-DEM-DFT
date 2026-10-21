@@ -1,0 +1,263 @@
+{
+  "pin": "eaecfba2a2dfbff6f13222f6afeb01d8ebeb5a84",
+  "synthetic_only": true,
+  "lmp_sha_is_synthetic": true,
+  "target_calls": [
+    "read_history.grammar_info",
+    "ul_reader.grammar_prereq"
+  ],
+  "results": {
+    "positive_actual_reader": {
+      "expected_gate": true,
+      "gate": true,
+      "problems": [],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": "PASS",
+      "expectation_satisfied": true,
+      "verdict_sha256": "710f2f5aebbfeeda0060e5d6e1df4bbd755a07e8951a977906f66152515f5313",
+      "case_dir": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_kitreader/positive_actual_reader"
+    },
+    "other_binary": {
+      "expected_gate": false,
+      "gate": false,
+      "problems": [
+        "문법 런 LMP sha256 4f1bb8ea0f292a527d87b953e162b8dfea9fa1f2dde83853915de1a125c9c031 ≠ 지금 돌릴 바이너리 0000000000000000000000000000000000000000000000000000000000000000 (같은 바이너리의 문법 PASS 만)"
+      ],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": "PASS",
+      "expectation_satisfied": true,
+      "verdict_sha256": "c0325589838cfcbab06090c320c556eda306ac067c4394b7d95528dd3de594b9",
+      "case_dir": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_kitreader/other_binary"
+    },
+    "missing_check": {
+      "expected_gate": false,
+      "gate": false,
+      "problems": [
+        "판정 검사 없음 ['GB_restart_state']",
+        "원자료 재판독 검사 ≠ 판정 JSON (JSON · 재판독) {'GB_restart_state': [None, True]} (Q3)"
+      ],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": null,
+      "expectation_satisfied": true,
+      "verdict_sha256": "03d47c0fadc25ca05aa3a79b6d0ee48f9df9de20f59c5a303db8e8a38ac3bd4b",
+      "case_dir": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_kitreader/missing_check"
+    },
+    "boolean_exit_code": {
+      "expected_gate": false,
+      "gate": false,
+      "problems": [
+        "판정 exit_code False ≠ 정수 0"
+      ],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": null,
+      "expectation_satisfied": true,
+      "verdict_sha256": "9edee5469e7d4958424a46095fda670c95f03649e678522a5c75708232c6de80",
+      "case_dir": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_kitreader/boolean_exit_code"
+    },
+    "check_integer_one": {
+      "expected_gate": false,
+      "gate": false,
+      "problems": [
+        "판정 검사 참 아님 ['GA_tech']",
+        "원자료 재판독 검사 ≠ 판정 JSON (JSON · 재판독) {'GA_tech': [1, True]} (Q3)"
+      ],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": null,
+      "expectation_satisfied": true,
+      "verdict_sha256": "0be70a478a8d036698a355a721d97acc39b28c5449869320ff2ae55986b36691",
+      "case_dir": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_kitreader/check_integer_one"
+    },
+    "check_false": {
+      "expected_gate": false,
+      "gate": false,
+      "problems": [
+        "판정 검사 참 아님 ['GA_tech']",
+        "원자료 재판독 검사 ≠ 판정 JSON (JSON · 재판독) {'GA_tech': [False, True]} (Q3)"
+      ],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": null,
+      "expectation_satisfied": true,
+      "verdict_sha256": "8ebf7e1330ba27e3b2b7da5bc319760d2be251bce4f51349c2f86400167f0eb3",
+      "case_dir": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_kitreader/check_false"
+    },
+    "wrong_run_dir": {
+      "expected_gate": false,
+      "gate": false,
+      "problems": [
+        "판정 run_dir '/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_kitreader' ≠ 판정 파일 폴더 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_kitreader/wrong_run_dir (다른 런의 판정)"
+      ],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": null,
+      "expectation_satisfied": true,
+      "verdict_sha256": "73dd8f5fcfbe9967c5ed2d860d5435ca98a9ffd02edafaf16301add7b61f378d",
+      "case_dir": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_kitreader/wrong_run_dir"
+    },
+    "bad_ga_rc": {
+      "expected_gate": false,
+      "gate": false,
+      "problems": [
+        "문법 런 GA rc '1' ≠ 0",
+        "원자료 재판독 = status 'FAIL' · exit_code 2 · rc 2 ≠ PASS · 0 — 그 런 폴더 원자료가 판정 JSON 과 다르다 (GA 기술: rc 1 · 배너 True · ERROR [] · Loop procs [6, 6, 6, 6, 6] (기대 run 5 · NP 6)) (Q3)",
+        "원자료 재판독 검사 ≠ 판정 JSON (JSON · 재판독) {'GA_tech': [True, False]} (Q3)"
+      ],
+      "raw_status": "FAIL",
+      "raw_problems": [
+        "GA 기술: rc 1 · 배너 True · ERROR [] · Loop procs [6, 6, 6, 6, 6] (기대 run 5 · NP 6)"
+      ],
+      "expected_raw": "FAIL",
+      "expectation_satisfied": true,
+      "verdict_sha256": "7db2938eb9e06106a676ffd53ae055ec8626f57d3d4240908086c5c961456e18",
+      "case_dir": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_kitreader/bad_ga_rc"
+    },
+    "missing_manifest_end": {
+      "expected_gate": false,
+      "gate": false,
+      "problems": [
+        "문법 런 run_manifest end 없음 (끝나지 않은 런)"
+      ],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": null,
+      "expectation_satisfied": true,
+      "verdict_sha256": "38a63dac39c96f311c5500bae2b36e9ba3a4725e3b3c35f8583dd3adcca45eac",
+      "case_dir": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_kitreader/missing_manifest_end"
+    },
+    "wrong_grammar_deck": {
+      "expected_gate": false,
+      "gate": false,
+      "problems": [
+        "문법 런 GA/in.hist_grammar.liggghts sha256 eb98e61df18f538934ef3f862cb3c1c70058b3237d6260da2141b5230d55a4e5 ≠ 봉인 값 a1f0ee432b977d12a415b876ab3aa47225fec8f83c21cdd92948ff3abce8e6ed"
+      ],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": null,
+      "expectation_satisfied": true,
+      "verdict_sha256": "37d03253eb43914995279e31a24555af21582c7586cc032962628e0b7957989d",
+      "case_dir": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_kitreader/wrong_grammar_deck"
+    },
+    "wrong_plate": {
+      "expected_gate": false,
+      "gate": false,
+      "problems": [
+        "문법 런 GB/plate_hist.stl sha256 9a2157f1a5d1eabb29e9b6e64a4ac9e726f0c1df1c0d3daf257f02724c8b7e9d ≠ 봉인 값 5bc74ec7726723ec8e2bbc3dc10fafd639e6175f83a0e0047ca35a44ee7aa65d"
+      ],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": null,
+      "expectation_satisfied": true,
+      "verdict_sha256": "fc3f64e7ab2a1807b0303836f9a325a58516d18eb633c3a4fccc75ea558cec88",
+      "case_dir": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_kitreader/wrong_plate"
+    },
+    "wrong_deck_name": {
+      "expected_gate": false,
+      "gate": false,
+      "problems": [
+        "문법 런 GB deck.txt 'in.hist_syntax_probe.liggghts' ≠ in.hist_grammar.liggghts"
+      ],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": null,
+      "expectation_satisfied": true,
+      "verdict_sha256": "7c3deb21e5f6cfbde5700224f4ceadf452a3c1a27dd15dea4c09fc5dc42ce0e3",
+      "case_dir": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_kitreader/wrong_deck_name"
+    },
+    "raw_ga_error_cached_pass": {
+      "expected_gate": true,
+      "gate": false,
+      "problems": [
+        "원자료 재판독 = status 'FAIL' · exit_code 2 · rc 2 ≠ PASS · 0 — 그 런 폴더 원자료가 판정 JSON 과 다르다 (GA 기술: rc 0 · 배너 True · ERROR ['ERROR: independent injected raw error'] · Loop procs [6, 6, 6, 6, 6] (기대 run 5 · NP 6)) (Q3)",
+        "원자료 재판독 검사 ≠ 판정 JSON (JSON · 재판독) {'GA_tech': [True, False]} (Q3)"
+      ],
+      "raw_status": "FAIL",
+      "raw_problems": [
+        "GA 기술: rc 0 · 배너 True · ERROR ['ERROR: independent injected raw error'] · Loop procs [6, 6, 6, 6, 6] (기대 run 5 · NP 6)"
+      ],
+      "expected_raw": "FAIL",
+      "expectation_satisfied": false,
+      "verdict_sha256": "57d70b253aa04ec258437cdd25d75a278a1fd5c171dfb471e8162eba9f043957",
+      "case_dir": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_kitreader/raw_ga_error_cached_pass"
+    },
+    "raw_gb_mesh_wrong_cached_pass": {
+      "expected_gate": true,
+      "gate": false,
+      "problems": [
+        "원자료 재판독 = status 'FAIL' · exit_code 2 · rc 2 ≠ PASS · 0 — 그 런 폴더 원자료가 판정 JSON 과 다르다 (GB 판 z (step · 기대 · 실제) [(4300, 0.030019999999999998, 99.0)]) (Q3)",
+        "원자료 재판독 검사 ≠ 판정 JSON (JSON · 재판독) {'GB_mesh_z': [True, False]} (Q3)"
+      ],
+      "raw_status": "FAIL",
+      "raw_problems": [
+        "GB 판 z (step · 기대 · 실제) [(4300, 0.030019999999999998, 99.0)]"
+      ],
+      "expected_raw": "FAIL",
+      "expectation_satisfied": false,
+      "verdict_sha256": "07be7890a31121339072ab223ad3cbf001d3f19dc223531c438b0c5d6e9c2520",
+      "case_dir": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_kitreader/raw_gb_mesh_wrong_cached_pass"
+    },
+    "raw_gb_screen_missing_cached_pass": {
+      "expected_gate": true,
+      "gate": false,
+      "problems": [
+        "원자료 재판독 = status 'FAIL' · exit_code 2 · rc 2 ≠ PASS · 0 — 그 런 폴더 원자료가 판정 JSON 과 다르다 (GB 기술: rc 0 · 배너 False · ERROR [] · Loop procs [] (기대 run 2 · NP 6) · GB 표지: GRAM_RESUMED 0 개 (기대 1)) (Q3)",
+        "원자료 재판독 검사 ≠ 판정 JSON (JSON · 재판독) {'GB_tech': [True, False], 'GB_markers': [True, False]} (Q3)"
+      ],
+      "raw_status": "FAIL",
+      "raw_problems": [
+        "GB 기술: rc 0 · 배너 False · ERROR [] · Loop procs [] (기대 run 2 · NP 6)",
+        "GB 표지: GRAM_RESUMED 0 개 (기대 1)",
+        "GB 표지: GRAM_STEP (k · step) [] ≠ [(3, 5400)]",
+        "GB 표지: GRAM_STATE_WRITTEN []",
+        "GB 표지: GRAM_DONE [] ≠ step 5400 · k 3"
+      ],
+      "expected_raw": "FAIL",
+      "expectation_satisfied": false,
+      "verdict_sha256": "8075436204e7ffeb69e0eeb551d22b0d003acd4ffd33712df3b7d2301f29181c",
+      "case_dir": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_kitreader/raw_gb_screen_missing_cached_pass"
+    },
+    "raw_gb_state_wrong_cached_pass": {
+      "expected_gate": true,
+      "gate": false,
+      "problems": [
+        "원자료 재판독 = status 'FAIL' · exit_code 2 · rc 2 ≠ PASS · 0 — 그 런 폴더 원자료가 판정 JSON 과 다르다 (GB 상태 파일 state_g_5400.in = 'variable gr_rstep equal 0\\nvariable gr_k equal 0\\nvariable gr_pz equal 0' ≠ [('gr_rstep', 5400), ('gr_k', 3), ('gr_pz', 0.030029999999999998)]) (Q3)",
+        "원자료 재판독 검사 ≠ 판정 JSON (JSON · 재판독) {'GB_restart_state': [True, False]} (Q3)"
+      ],
+      "raw_status": "FAIL",
+      "raw_problems": [
+        "GB 상태 파일 state_g_5400.in = 'variable gr_rstep equal 0\\nvariable gr_k equal 0\\nvariable gr_pz equal 0' ≠ [('gr_rstep', 5400), ('gr_k', 3), ('gr_pz', 0.030029999999999998)]"
+      ],
+      "expected_raw": "FAIL",
+      "expectation_satisfied": false,
+      "verdict_sha256": "cc5862dd15f6dcef574c570e3faad88dc4b6d47f207a6f9a8cbad3aadcddf101",
+      "case_dir": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_kitreader/raw_gb_state_wrong_cached_pass"
+    },
+    "different_reader_runner_seal": {
+      "expected_gate": true,
+      "gate": false,
+      "problems": [
+        "원자료 재판독: 그 런 kit SHA256SUMS 의 read_history.py (0000000000000000000000000000000000000000000000000000000000000000) ≠ 승인된 판독기 봉인 값 70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c (Q3)"
+      ],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": "PASS",
+      "expectation_satisfied": false,
+      "verdict_sha256": "2c6cb8d47634bd2a2c34d2662753f2bb8e6e38e8f46597c3db94bd0342c9af2a",
+      "case_dir": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_kitreader/different_reader_runner_seal"
+    }
+  },
+  "shell_smoke": {
+    "path": "/usr/bin/bash",
+    "ran_simulator": false,
+    "rc": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "all_expectations_satisfied": false,
+  "case_count": 17,
+  "interpretation": "Cached PASS is trusted; raw-log drift and runner/reader hash changes are intentionally outside grammar_prereq validation. These cases do not establish an actual simulator PASS."
+}

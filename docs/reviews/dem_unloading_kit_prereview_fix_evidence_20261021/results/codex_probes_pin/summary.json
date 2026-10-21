@@ -1,0 +1,264 @@
+{
+ "kit_source": "리뷰 핀 28b66e116 git archive (키트 SHA256SUMS sha256 ecf406a6… · history_test/SHA256SUMS 8ff722d2…)",
+ "probes": "판정문 증거 docs/reviews/codex_dem_unloading_kit_fix_recheck_evidence_20261015/probes · support 바이트 그대로 + 사전 리뷰 변형 둘 (이 폴더 probes/)",
+ "run": "python3 -I -X utf8 -B probes/<탐침>.py (grammar_provenance = --run-id ulprfix_orig · kitreader = --run-id ulprfix_kitreader) · BLAS 1 스레드 · Linux",
+ "resume_recheck": {
+  "summary": {
+   "cases": 37,
+   "passed": 35,
+   "failed_expectations": [
+    "fractional_resume_event_k",
+    "fractional_confirmation_k"
+   ]
+  },
+  "failed": {
+   "fractional_resume_event_k": {
+    "expected": "Malformed/extra resume boundary must not silently normalize records",
+    "pass": false
+   },
+   "fractional_confirmation_k": {
+    "expected": "Malformed/extra resume boundary must not silently normalize records",
+    "pass": false
+   }
+  }
+ },
+ "receipt_ids_recheck_original": "rc 1 · IndexError 줄 296 (요약 JSON 없음 · 화면 = receipt_ids_recheck.log)",
+ "receipt_ids_recheck_q4tolerant": {
+  "summary": {
+   "checked": 92,
+   "failed_expectations": [
+    "g2c_missing_column_actual_cli"
+   ],
+   "observations": [
+    "arm_failure_reader_stdout",
+    "arm_failure_stage_error",
+    "arm_failure_running_no_end",
+    "uv_failure_final_gravity",
+    "lexical_precision_boundary"
+   ]
+  },
+  "g2c_missing_column_actual_cli": {
+   "actual": {
+    "rc": 2,
+    "stderr": "",
+    "certificate_exists": true,
+    "next_UB": [
+     false,
+     "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (UNCONFIRMED) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)"
+    ]
+   },
+   "expected": "Defect scope: unhandled KeyError, not a false RESTORED certificate",
+   "matches": false
+  },
+  "g2c_c_cpl7_missing": {
+   "matches": true,
+   "restore_status": "UNCONFIRMED",
+   "G2c": "NOT_COMPUTED",
+   "next_UB": [
+    false,
+    "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (UNCONFIRMED) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)"
+   ]
+  },
+  "g2c_c_cpl8_missing": {
+   "matches": true,
+   "restore_status": "UNCONFIRMED",
+   "G2c": "NOT_COMPUTED",
+   "next_UB": [
+    false,
+    "RJ 복원 관문 미통과 — RJ 복원 판정 RESTORED 아님 (UNCONFIRMED) (§12-1 ⑤ · 개정 3 §14-10 — 미확인 · 실패면 U 없음)"
+   ]
+  }
+ },
+ "grammar_provenance_original": {
+  "case_count": 17,
+  "all_expectations_satisfied": false,
+  "unsatisfied": {
+   "positive_actual_reader": {
+    "expected_gate": true,
+    "gate": false,
+    "raw_status": "PASS",
+    "problems_head": [
+     "원자료 재판독: kit 사본 history_params.json sha256 None ≠ 승인된 판독기 봉인 값 7a5279f0119cbbc37a9c212593e256a03e417dc9a6af4f18a4f01bdc72404ff4 — 승인 밖 판독기 · 실행하지 않는다 (Q3)",
+     "원자료 재판독: kit 사본 read_history.py sha256 None ≠ 승인된 판독기 봉인 값 70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c — 승인 밖 판독기 · 실행하지 않는다 (Q3)"
+    ]
+   },
+   "raw_ga_error_cached_pass": {
+    "expected_gate": true,
+    "gate": false,
+    "raw_status": "FAIL",
+    "problems_head": [
+     "원자료 재판독: kit 사본 history_params.json sha256 None ≠ 승인된 판독기 봉인 값 7a5279f0119cbbc37a9c212593e256a03e417dc9a6af4f18a4f01bdc72404ff4 — 승인 밖 판독기 · 실행하지 않는다 (Q3)",
+     "원자료 재판독: kit 사본 read_history.py sha256 None ≠ 승인된 판독기 봉인 값 70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c — 승인 밖 판독기 · 실행하지 않는다 (Q3)"
+    ]
+   },
+   "raw_gb_mesh_wrong_cached_pass": {
+    "expected_gate": true,
+    "gate": false,
+    "raw_status": "FAIL",
+    "problems_head": [
+     "원자료 재판독: kit 사본 history_params.json sha256 None ≠ 승인된 판독기 봉인 값 7a5279f0119cbbc37a9c212593e256a03e417dc9a6af4f18a4f01bdc72404ff4 — 승인 밖 판독기 · 실행하지 않는다 (Q3)",
+     "원자료 재판독: kit 사본 read_history.py sha256 None ≠ 승인된 판독기 봉인 값 70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c — 승인 밖 판독기 · 실행하지 않는다 (Q3)"
+    ]
+   },
+   "raw_gb_screen_missing_cached_pass": {
+    "expected_gate": true,
+    "gate": false,
+    "raw_status": "FAIL",
+    "problems_head": [
+     "원자료 재판독: kit 사본 history_params.json sha256 None ≠ 승인된 판독기 봉인 값 7a5279f0119cbbc37a9c212593e256a03e417dc9a6af4f18a4f01bdc72404ff4 — 승인 밖 판독기 · 실행하지 않는다 (Q3)",
+     "원자료 재판독: kit 사본 read_history.py sha256 None ≠ 승인된 판독기 봉인 값 70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c — 승인 밖 판독기 · 실행하지 않는다 (Q3)"
+    ]
+   },
+   "raw_gb_state_wrong_cached_pass": {
+    "expected_gate": true,
+    "gate": false,
+    "raw_status": "FAIL",
+    "problems_head": [
+     "원자료 재판독: kit 사본 history_params.json sha256 None ≠ 승인된 판독기 봉인 값 7a5279f0119cbbc37a9c212593e256a03e417dc9a6af4f18a4f01bdc72404ff4 — 승인 밖 판독기 · 실행하지 않는다 (Q3)",
+     "원자료 재판독: kit 사본 read_history.py sha256 None ≠ 승인된 판독기 봉인 값 70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c — 승인 밖 판독기 · 실행하지 않는다 (Q3)"
+    ]
+   },
+   "different_reader_runner_seal": {
+    "expected_gate": true,
+    "gate": false,
+    "raw_status": "PASS",
+    "problems_head": [
+     "원자료 재판독: kit 사본 history_params.json sha256 None ≠ 승인된 판독기 봉인 값 7a5279f0119cbbc37a9c212593e256a03e417dc9a6af4f18a4f01bdc72404ff4 — 승인 밖 판독기 · 실행하지 않는다 (Q3)",
+     "원자료 재판독: kit 사본 read_history.py sha256 None ≠ 승인된 판독기 봉인 값 70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c — 승인 밖 판독기 · 실행하지 않는다 (Q3)"
+    ]
+   }
+  },
+  "satisfied_gate_false": [
+   "bad_ga_rc",
+   "boolean_exit_code",
+   "check_false",
+   "check_integer_one",
+   "missing_check",
+   "missing_manifest_end",
+   "other_binary",
+   "wrong_deck_name",
+   "wrong_grammar_deck",
+   "wrong_plate",
+   "wrong_run_dir"
+  ],
+  "satisfied_gate_true": []
+ },
+ "grammar_provenance_kitreader": {
+  "case_count": 17,
+  "all_expectations_satisfied": false,
+  "unsatisfied": {
+   "raw_ga_error_cached_pass": {
+    "expected_gate": true,
+    "gate": false,
+    "raw_status": "FAIL",
+    "problems_head": [
+     "원자료 재판독 = status 'FAIL' · exit_code 2 · rc 2 ≠ PASS · 0 — 그 런 폴더 원자료가 판정 JSON 과 다르다 (GA 기술: rc 0 · 배너 True · ERROR ['ERROR: independent injected raw error'] · L",
+     "원자료 재판독 검사 ≠ 판정 JSON (JSON · 재판독) {'GA_tech': [True, False]} (Q3)"
+    ]
+   },
+   "raw_gb_mesh_wrong_cached_pass": {
+    "expected_gate": true,
+    "gate": false,
+    "raw_status": "FAIL",
+    "problems_head": [
+     "원자료 재판독 = status 'FAIL' · exit_code 2 · rc 2 ≠ PASS · 0 — 그 런 폴더 원자료가 판정 JSON 과 다르다 (GB 판 z (step · 기대 · 실제) [(4300, 0.030019999999999998, 99.0)]) (Q3)",
+     "원자료 재판독 검사 ≠ 판정 JSON (JSON · 재판독) {'GB_mesh_z': [True, False]} (Q3)"
+    ]
+   },
+   "raw_gb_screen_missing_cached_pass": {
+    "expected_gate": true,
+    "gate": false,
+    "raw_status": "FAIL",
+    "problems_head": [
+     "원자료 재판독 = status 'FAIL' · exit_code 2 · rc 2 ≠ PASS · 0 — 그 런 폴더 원자료가 판정 JSON 과 다르다 (GB 기술: rc 0 · 배너 False · ERROR [] · Loop procs [] (기대 run 2 · NP 6) · GB 표지",
+     "원자료 재판독 검사 ≠ 판정 JSON (JSON · 재판독) {'GB_tech': [True, False], 'GB_markers': [True, False]} (Q3)"
+    ]
+   },
+   "raw_gb_state_wrong_cached_pass": {
+    "expected_gate": true,
+    "gate": false,
+    "raw_status": "FAIL",
+    "problems_head": [
+     "원자료 재판독 = status 'FAIL' · exit_code 2 · rc 2 ≠ PASS · 0 — 그 런 폴더 원자료가 판정 JSON 과 다르다 (GB 상태 파일 state_g_5400.in = 'variable gr_rstep equal 0\\nvariable gr_k equal ",
+     "원자료 재판독 검사 ≠ 판정 JSON (JSON · 재판독) {'GB_restart_state': [True, False]} (Q3)"
+    ]
+   },
+   "different_reader_runner_seal": {
+    "expected_gate": true,
+    "gate": false,
+    "raw_status": "PASS",
+    "problems_head": [
+     "원자료 재판독: 그 런 kit SHA256SUMS 의 read_history.py (0000000000000000000000000000000000000000000000000000000000000000) ≠ 승인된 판독기 봉인 값 70f741a9b8308fe33683de0f22872e2c"
+    ]
+   }
+  },
+  "satisfied_gate_false": [
+   "bad_ga_rc",
+   "boolean_exit_code",
+   "check_false",
+   "check_integer_one",
+   "missing_check",
+   "missing_manifest_end",
+   "other_binary",
+   "wrong_deck_name",
+   "wrong_grammar_deck",
+   "wrong_plate",
+   "wrong_run_dir"
+  ],
+  "satisfied_gate_true": [
+   "positive_actual_reader"
+  ]
+ },
+ "grammar_types": {
+  "all_expectations_satisfied": true,
+  "cases": {
+   "current_three_value_vector": true,
+   "original_single_value_vector_error": true,
+   "single_value_scalar_valid": true,
+   "three_value_scalar_error": true,
+   "three_value_index_four_error": true,
+   "three_value_index_999_error": true
+  },
+  "git_bash_smoke": {
+   "exception": "FileNotFoundError(2, 'No such file or directory')"
+  }
+ },
+ "history_actual": {
+  "reader_rc": 0,
+  "equal_except_run_dir": true,
+  "rows": {
+   "H0": "PASS",
+   "H1": "PASS",
+   "H2": "PASS",
+   "H3": "PASS",
+   "H4": "PASS",
+   "H5": "PASS"
+  },
+  "unsafe_members": [],
+  "sealed_manifest_matches": [
+   {
+    "path": "kit_20261014_094731/SHA256SUMS",
+    "sha256": "241277b20aaccb8d1ab73c79fb9e0758138a3bed64751add98f7849b44697bf6",
+    "equals_pinned": false
+   }
+  ]
+ },
+ "kit_byte_checks": "64/64 generated deck bytes equal pinned; physical table recorded",
+ "grammar_windows_r32": {
+  "initial": {
+   "allowed": true,
+   "problems": []
+  },
+  "crlf_counts": {
+   "P/in.hist_producer.liggghts": 0,
+   "P/plate_hist.stl": 0,
+   "GA/in.hist_grammar.liggghts": 0,
+   "GA/plate_hist.stl": 0,
+   "GB/in.hist_grammar.liggghts": 0,
+   "GB/plate_hist.stl": 0
+  }
+ },
+ "not_run": {
+  "source_audit.py": "GitHub API · 앞 회차 폴더 · 그 핀 원천 목록 대조용"
+ }
+}

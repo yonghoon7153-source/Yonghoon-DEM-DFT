@@ -1,0 +1,10 @@
+A0_fresh_complete: primary=OK rho=0.2026077873428664 lb=None traj=RM_STOP steps_k=[0, 1, 2, 3, 4] sup=0 gate_UVa=True expect_met=True
+A1_fresh_timeout_in_k4: primary=UNIDENTIFIED rho=None lb=None traj=TIMEOUT steps_k=[0, 1, 2, 3] sup=0 gate_UVa=False expect_met=True
+A2_resumed_timeout_in_k4: primary=UNIDENTIFIED rho=None lb=None traj=TIMEOUT steps_k=[0, 1, 2, 3] sup=5 gate_UVa=False expect_met=True
+A3_fresh_guard_in_k4: primary=UNIDENTIFIED rho=None lb=None traj=GUARD steps_k=[0, 1, 2, 3] sup=0 gate_UVa=False expect_met=True
+A4_resumed_guard_in_k4: primary=UNIDENTIFIED rho=None lb=None traj=GUARD steps_k=[0, 1, 2, 3] sup=5 gate_UVa=False expect_met=True
+A5_resumed_timeout_in_k4_move_no_new_window: primary=UNIDENTIFIED rho=None lb=None traj=TIMEOUT steps_k=[0, 1, 2, 3] sup=5 gate_UVa=False expect_met=True
+A6_resume_from_but_no_RESUME_event_single_attempt_record: primary=OK rho=0.2026077873428664 lb=None traj=TIMEOUT steps_k=[0, 1, 2, 3, 4] sup=0 gate_UVa=True expect_met=True
+B1_fresh_timeout_in_k3_nocross: primary=LOWER_BOUND rho=None lb=0.225119763714296 traj=TIMEOUT steps_k=[0, 1, 2] sup=0 gate_UVa=False expect_met=True
+B2_resumed_timeout_in_k3_nocross: primary=LOWER_BOUND rho=None lb=0.225119763714296 traj=TIMEOUT steps_k=[0, 1, 2] sup=5 gate_UVa=False expect_met=True
+failed_expectations []

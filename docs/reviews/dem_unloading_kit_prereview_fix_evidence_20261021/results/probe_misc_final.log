@@ -1,0 +1,16 @@
+R1a_control_true_resume {"primary": "OK", "rho": 0.2026077873428664, "auth": [[1, 3270000]], "sup": 3, "problems": [], "gate_UVa": true}
+R1b_fullwidth_digits_in_resume_from {"primary": "OK", "rho": 0.2026077873428664, "auth": [[1, 3270000]], "sup": 3, "problems": [], "gate_UVa": true}
+R1c_extra_RESUME_at_step_not_in_resume_from {"primary": "UNIDENTIFIED", "rho": null, "auth": [[1, 3270000]], "sup": 3, "problems": ["ul_events.csv: RESUME (k 0 · step 3269999) 의 step ∉ 러너 resume_from [3270000] — 상충 · 승인 없음 (ULKRF-01)", "ul_events.csv: RESUME (k 0 · step 3269999) 앞 사건 3 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULK"], "gate_UVa": false}
+R1d_extra_RESUME_nonnumeric_k {"primary": "UNIDENTIFIED", "rho": null, "auth": [[1, 3270000]], "sup": 3, "problems": ["ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3270000) — 승인 없음 (ULKRF-01)", "ul_events.csv: RESUME (k None · step 3270000) 앞 사건 2 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 ("], "gate_UVa": false}
+R1e_RESUME_step_decimal_token_rounds {"primary": "OK", "rho": 0.2026077873428664, "auth": [[1, 3270000]], "sup": 3, "problems": [], "gate_UVa": true}
+R1f_RESUME_k_decimal_token_rounds {"primary": "OK", "rho": 0.2026077873428664, "auth": [[1, 3270000]], "sup": 3, "problems": [], "gate_UVa": true}
+R1g_two_resume_from_lines_same_step {"primary": "OK", "rho": 0.2026077873428664, "auth": [[1, 3270000]], "sup": 3, "problems": [], "gate_UVa": true}
+G2a_duplicate_conflicting_row_in_test {"status": "NOT_COMPUTED", "why": ["시험 ID 중복 1 줄 ([3])"], "note": "관측 결손 — 비교 미계산 (등록 §14-10 = 복원 UNCONFIRMED · 수치 불일치 FAIL 과 따로 · ULPR-03 · 04)"}
+G2b_header_timestep_differs {"status": "NOT_COMPUTED", "why": ["머리 step 시험 9999999 ≠ 원 3200000"], "note": "관측 결손 — 비교 미계산 (등록 §14-10 = 복원 UNCONFIRMED · 수치 불일치 FAIL 과 따로 · ULPR-03 · 04)"}
+G2c_truncated_extra_row {"status": "NOT_COMPUTED", "why": ["시험 열 수 3 ≠ 9"], "note": "관측 결손 — 비교 미계산 (등록 §14-10 = 복원 UNCONFIRMED · 수치 불일치 FAIL 과 따로 · ULPR-03 · 04)"}
+G2_reference_read_dump_on_dup {"ok": true, "problems": []}
+G2c_both_files_column_missing {"status": "NOT_COMPUTED", "why": ["시험 열 이름 ['c_cpl[1]', 'c_cpl[2]', 'c_cpl[3]', 'c_cpl[4]', 'c_cpl[5]', 'c_cpl[6]', 'not_c_cpl[7]', 'c_cpl[8]', 'c_cpl[9]', 'c_cpl[10]', 'c_cpl[11]', 'c_cpl[12]', 'c_cpl[13]', 'c_cpl[14]', 'c_cpl[15]', 'c_cpl[16]', 'c_cpl[17]', 'c_cpl[18]', 'c_cpl[19]', 'c_cpl[20]', 'c_cpl[21]', 'c_cpl[22]', 'c_cpl[23]', 'c_cpl[24]', 'c_cpl[25]', 'c_cpl[26]'] ≠ 기대 ['c_cpl[1]', 'c_c
+GRAV_source_contact_column_missing {"status": "FAIL", "G2c": "NOT_COMPUTED", "why": []}
+Q4_tokens {"'2'": {"value": "2", "problem": null, "exact_id": 2}, "'+2'": {"value": "2", "problem": null, "exact_id": 2}, "'0002'": {"value": "2", "problem": null, "exact_id": 2}, "'2.0'": {"value": "2.0", "problem": null, "exact_id": 2}, "'1e3'": {"value": "1000.0", "problem": null, "exact_id": 1000}, "'1_000'": {"value": "1000.0", "problem": null, "exact_id": 1000}, "'٣'": {"value": "3.0", "problem": null
+Q3a_kit_sums_lists_other_reader_hash_file_sealed {"ok": false, "problems": ["원자료 재판독: 그 런 kit SHA256SUMS 의 read_history.py (ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff) ≠ 승인된 판독기 봉인 값 70f741a9b8308fe33683de0f22872e2c"], "reread": null}
+Q3b_control_positive {"ok": true, "problems": [], "reread": "PASS"}

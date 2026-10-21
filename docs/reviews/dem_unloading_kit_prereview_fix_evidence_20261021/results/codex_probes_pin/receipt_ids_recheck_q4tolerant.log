@@ -1,0 +1,13 @@
+{
+  "checked": 92,
+  "failed_expectations": [
+    "g2c_missing_column_actual_cli"
+  ],
+  "observations": [
+    "arm_failure_reader_stdout",
+    "arm_failure_stage_error",
+    "arm_failure_running_no_end",
+    "uv_failure_final_gravity",
+    "lexical_precision_boundary"
+  ]
+}

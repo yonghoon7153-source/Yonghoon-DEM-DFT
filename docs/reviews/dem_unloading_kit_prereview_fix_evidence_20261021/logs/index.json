@@ -1,0 +1,317 @@
+{
+ "note": "키트 자체시험 · 검사 화면 (stdout + stderr) — 커밋마다 git archive 사본 (커밋 내용 그대로 · 키트 + 키트가 읽는 리포 파일) · 현재 폴더 = 사본 리포 뿌리 · 명령 = python3 -I -B <사본>/docs/data/ps45_unload_20261009/<cmd 의 스크립트> · BLAS 1 스레드 · Linux · Python 3.11.15 · prefix_guards = 시험 먼저 커밋 사본에 뒤 두 지킴 커밋의 ul_reader.py 시험 부분만 patch (고치기 전 코드로 지킴 시험을 돌린 판)",
+ "states": {
+  "base_286a8d562": {
+   "commit": "286a8d562",
+   "what": "기준 = 원장 ULPR 등재 커밋 (키트 = 10-15 판 그대로)",
+   "logs": {
+    "decks_check": {
+     "cmd": "python3 -I -B make_unload_decks.py --check",
+     "n_check_lines_ok": 1,
+     "n_check_lines_fail": 0,
+     "last_line": "✓ check — 덱 64 개 = 생성 결과 · ✓ seal — 파일 76 · SHA256SUMS 일치 · 폐기 규칙 0 건 · 활성 규칙 24 (증인 실재 True)"
+    },
+    "decks_selftest": {
+     "cmd": "python3 -I -B make_unload_decks.py --selftest",
+     "n_check_lines_ok": 291,
+     "n_check_lines_fail": 0,
+     "last_line": "selftest: PASS (0 실패)"
+    },
+    "hist_decks_check": {
+     "cmd": "python3 -I -B history_test/make_history_decks.py --check",
+     "n_check_lines_ok": 1,
+     "n_check_lines_fail": 0,
+     "last_line": "✓ check: 덱 9 · 판 STL = 생성 결과 · SHA256SUMS 일치 (15 파일 · 러너 · 래퍼 · 읽는 쪽 포함)"
+    },
+    "hist_decks_selftest": {
+     "cmd": "python3 -I -B history_test/make_history_decks.py --selftest",
+     "n_check_lines_ok": 172,
+     "n_check_lines_fail": 0,
+     "last_line": "selftest: PASS (0 실패)"
+    },
+    "hist_read_selftest": {
+     "cmd": "python3 -I -B history_test/read_history.py --selftest",
+     "n_check_lines_ok": 56,
+     "n_check_lines_fail": 0,
+     "last_line": "selftest: PASS (0 실패)"
+    },
+    "seal_check": {
+     "cmd": "python3 -I -B seal_kit.py --check",
+     "n_check_lines_ok": 1,
+     "n_check_lines_fail": 0,
+     "last_line": "✓ seal — 파일 76 · SHA256SUMS 일치 · 폐기 규칙 0 건 · 활성 규칙 24 (증인 실재 True)"
+    },
+    "seal_selftest": {
+     "cmd": "python3 -I -B seal_kit.py --selftest",
+     "n_check_lines_ok": 12,
+     "n_check_lines_fail": 0,
+     "last_line": "selftest: PASS (0 실패)"
+    },
+    "ul_gates": {
+     "cmd": "python3 -I -B ul_gates.py --selftest",
+     "n_check_lines_ok": 41,
+     "n_check_lines_fail": 0,
+     "last_line": "selftest: PASS (0 실패)"
+    },
+    "ul_lib": {
+     "cmd": "python3 -I -B ul_lib.py --selftest",
+     "n_check_lines_ok": 24,
+     "n_check_lines_fail": 0,
+     "last_line": "selftest: PASS (0 실패)"
+    },
+    "ul_observers": {
+     "cmd": "python3 -I -B ul_observers.py --selftest",
+     "n_check_lines_ok": 21,
+     "n_check_lines_fail": 0,
+     "last_line": "selftest: PASS (0 실패)"
+    },
+    "ul_reader": {
+     "cmd": "python3 -I -B ul_reader.py --selftest",
+     "n_check_lines_ok": 182,
+     "n_check_lines_fail": 0,
+     "last_line": "selftest: PASS (0 실패)"
+    },
+    "ul_runner_test": {
+     "cmd": "python3 -I -B ul_runner_test.py --selftest",
+     "n_check_lines_ok": 38,
+     "n_check_lines_fail": 0,
+     "last_line": "selftest: PASS (0 실패)"
+    },
+    "ul_s3": {
+     "cmd": "python3 -I -B ul_s3.py --selftest",
+     "n_check_lines_ok": 16,
+     "n_check_lines_fail": 0,
+     "last_line": "selftest: PASS (0 실패)"
+    }
+   }
+  },
+  "st_tests_first": {
+   "commit": "f1b911f76",
+   "what": "시험 먼저",
+   "logs": {
+    "decks_check": {
+     "cmd": "python3 -I -B make_unload_decks.py --check",
+     "n_check_lines_ok": 1,
+     "n_check_lines_fail": 0,
+     "last_line": "✓ check — 덱 64 개 = 생성 결과 · ✓ seal — 파일 76 · SHA256SUMS 일치 · 폐기 규칙 0 건 · 활성 규칙 24 (증인 실재 True)"
+    },
+    "hist_decks_check": {
+     "cmd": "python3 -I -B history_test/make_history_decks.py --check",
+     "n_check_lines_ok": 1,
+     "n_check_lines_fail": 0,
+     "last_line": "✓ check: 덱 9 · 판 STL = 생성 결과 · SHA256SUMS 일치 (15 파일 · 러너 · 래퍼 · 읽는 쪽 포함)"
+    },
+    "seal_check": {
+     "cmd": "python3 -I -B seal_kit.py --check",
+     "n_check_lines_ok": 1,
+     "n_check_lines_fail": 0,
+     "last_line": "✓ seal — 파일 76 · SHA256SUMS 일치 · 폐기 규칙 0 건 · 활성 규칙 24 (증인 실재 True)"
+    },
+    "ul_gates": {
+     "cmd": "python3 -I -B ul_gates.py --selftest",
+     "n_check_lines_ok": 37,
+     "n_check_lines_fail": 12,
+     "last_line": "selftest: FAIL (12 실패)"
+    },
+    "ul_lib": {
+     "cmd": "python3 -I -B ul_lib.py --selftest",
+     "n_check_lines_ok": 24,
+     "n_check_lines_fail": 0,
+     "last_line": "selftest: PASS (0 실패)"
+    },
+    "ul_observers": {
+     "cmd": "python3 -I -B ul_observers.py --selftest",
+     "n_check_lines_ok": 21,
+     "n_check_lines_fail": 0,
+     "last_line": "selftest: PASS (0 실패)"
+    },
+    "ul_reader": {
+     "cmd": "python3 -I -B ul_reader.py --selftest",
+     "n_check_lines_ok": 190,
+     "n_check_lines_fail": 17,
+     "last_line": "selftest: FAIL (17 실패)"
+    },
+    "ul_s3": {
+     "cmd": "python3 -I -B ul_s3.py --selftest",
+     "n_check_lines_ok": 16,
+     "n_check_lines_fail": 0,
+     "last_line": "selftest: PASS (0 실패)"
+    }
+   }
+  },
+  "st_ulpr01": {
+   "commit": "55fff3eb1",
+   "what": "ULPR-01 수정",
+   "logs": {
+    "decks_check": {
+     "cmd": "python3 -I -B make_unload_decks.py --check",
+     "n_check_lines_ok": 1,
+     "n_check_lines_fail": 0,
+     "last_line": "✓ check — 덱 64 개 = 생성 결과 · ✓ seal — 파일 76 · SHA256SUMS 일치 · 폐기 규칙 0 건 · 활성 규칙 24 (증인 실재 True)"
+    },
+    "hist_decks_check": {
+     "cmd": "python3 -I -B history_test/make_history_decks.py --check",
+     "n_check_lines_ok": 1,
+     "n_check_lines_fail": 0,
+     "last_line": "✓ check: 덱 9 · 판 STL = 생성 결과 · SHA256SUMS 일치 (15 파일 · 러너 · 래퍼 · 읽는 쪽 포함)"
+    },
+    "seal_check": {
+     "cmd": "python3 -I -B seal_kit.py --check",
+     "n_check_lines_ok": 1,
+     "n_check_lines_fail": 0,
+     "last_line": "✓ seal — 파일 76 · SHA256SUMS 일치 · 폐기 규칙 0 건 · 활성 규칙 24 (증인 실재 True)"
+    },
+    "ul_gates": {
+     "cmd": "python3 -I -B ul_gates.py --selftest",
+     "n_check_lines_ok": 37,
+     "n_check_lines_fail": 12,
+     "last_line": "selftest: FAIL (12 실패)"
+    },
+    "ul_lib": {
+     "cmd": "python3 -I -B ul_lib.py --selftest",
+     "n_check_lines_ok": 24,
+     "n_check_lines_fail": 0,
+     "last_line": "selftest: PASS (0 실패)"
+    },
+    "ul_observers": {
+     "cmd": "python3 -I -B ul_observers.py --selftest",
+     "n_check_lines_ok": 21,
+     "n_check_lines_fail": 0,
+     "last_line": "selftest: PASS (0 실패)"
+    },
+    "ul_reader": {
+     "cmd": "python3 -I -B ul_reader.py --selftest",
+     "n_check_lines_ok": 200,
+     "n_check_lines_fail": 7,
+     "last_line": "selftest: FAIL (7 실패)"
+    },
+    "ul_s3": {
+     "cmd": "python3 -I -B ul_s3.py --selftest",
+     "n_check_lines_ok": 16,
+     "n_check_lines_fail": 0,
+     "last_line": "selftest: PASS (0 실패)"
+    }
+   }
+  },
+  "st_ulpr0304": {
+   "commit": "2932b63bc",
+   "what": "ULPR-03 · 04 수정",
+   "logs": {
+    "decks_check": {
+     "cmd": "python3 -I -B make_unload_decks.py --check",
+     "n_check_lines_ok": 1,
+     "n_check_lines_fail": 0,
+     "last_line": "✓ check — 덱 64 개 = 생성 결과 · ✓ seal — 파일 76 · SHA256SUMS 일치 · 폐기 규칙 0 건 · 활성 규칙 24 (증인 실재 True)"
+    },
+    "hist_decks_check": {
+     "cmd": "python3 -I -B history_test/make_history_decks.py --check",
+     "n_check_lines_ok": 1,
+     "n_check_lines_fail": 0,
+     "last_line": "✓ check: 덱 9 · 판 STL = 생성 결과 · SHA256SUMS 일치 (15 파일 · 러너 · 래퍼 · 읽는 쪽 포함)"
+    },
+    "seal_check": {
+     "cmd": "python3 -I -B seal_kit.py --check",
+     "n_check_lines_ok": 1,
+     "n_check_lines_fail": 0,
+     "last_line": "✓ seal — 파일 76 · SHA256SUMS 일치 · 폐기 규칙 0 건 · 활성 규칙 24 (증인 실재 True)"
+    },
+    "ul_gates": {
+     "cmd": "python3 -I -B ul_gates.py --selftest",
+     "n_check_lines_ok": 49,
+     "n_check_lines_fail": 0,
+     "last_line": "selftest: PASS (0 실패)"
+    },
+    "ul_lib": {
+     "cmd": "python3 -I -B ul_lib.py --selftest",
+     "n_check_lines_ok": 24,
+     "n_check_lines_fail": 0,
+     "last_line": "selftest: PASS (0 실패)"
+    },
+    "ul_observers": {
+     "cmd": "python3 -I -B ul_observers.py --selftest",
+     "n_check_lines_ok": 21,
+     "n_check_lines_fail": 0,
+     "last_line": "selftest: PASS (0 실패)"
+    },
+    "ul_reader": {
+     "cmd": "python3 -I -B ul_reader.py --selftest",
+     "n_check_lines_ok": 207,
+     "n_check_lines_fail": 0,
+     "last_line": "selftest: PASS (0 실패)"
+    },
+    "ul_s3": {
+     "cmd": "python3 -I -B ul_s3.py --selftest",
+     "n_check_lines_ok": 16,
+     "n_check_lines_fail": 0,
+     "last_line": "selftest: PASS (0 실패)"
+    }
+   }
+  },
+  "st_guard1": {
+   "commit": "c21b1a051",
+   "what": "지킴 시험 첫째",
+   "logs": {
+    "decks_check": {
+     "cmd": "python3 -I -B make_unload_decks.py --check",
+     "n_check_lines_ok": 1,
+     "n_check_lines_fail": 0,
+     "last_line": "✓ check — 덱 64 개 = 생성 결과 · ✓ seal — 파일 76 · SHA256SUMS 일치 · 폐기 규칙 0 건 · 활성 규칙 24 (증인 실재 True)"
+    },
+    "hist_decks_check": {
+     "cmd": "python3 -I -B history_test/make_history_decks.py --check",
+     "n_check_lines_ok": 1,
+     "n_check_lines_fail": 0,
+     "last_line": "✓ check: 덱 9 · 판 STL = 생성 결과 · SHA256SUMS 일치 (15 파일 · 러너 · 래퍼 · 읽는 쪽 포함)"
+    },
+    "seal_check": {
+     "cmd": "python3 -I -B seal_kit.py --check",
+     "n_check_lines_ok": 1,
+     "n_check_lines_fail": 0,
+     "last_line": "✓ seal — 파일 76 · SHA256SUMS 일치 · 폐기 규칙 0 건 · 활성 규칙 24 (증인 실재 True)"
+    },
+    "ul_gates": {
+     "cmd": "python3 -I -B ul_gates.py --selftest",
+     "n_check_lines_ok": 49,
+     "n_check_lines_fail": 0,
+     "last_line": "selftest: PASS (0 실패)"
+    },
+    "ul_lib": {
+     "cmd": "python3 -I -B ul_lib.py --selftest",
+     "n_check_lines_ok": 24,
+     "n_check_lines_fail": 0,
+     "last_line": "selftest: PASS (0 실패)"
+    },
+    "ul_observers": {
+     "cmd": "python3 -I -B ul_observers.py --selftest",
+     "n_check_lines_ok": 21,
+     "n_check_lines_fail": 0,
+     "last_line": "selftest: PASS (0 실패)"
+    },
+    "ul_reader": {
+     "cmd": "python3 -I -B ul_reader.py --selftest",
+     "n_check_lines_ok": 210,
+     "n_check_lines_fail": 0,
+     "last_line": "selftest: PASS (0 실패)"
+    },
+    "ul_s3": {
+     "cmd": "python3 -I -B ul_s3.py --selftest",
+     "n_check_lines_ok": 16,
+     "n_check_lines_fail": 0,
+     "last_line": "selftest: PASS (0 실패)"
+    }
+   }
+  },
+  "prefix_guards": {
+   "commit": "f1b911f76 + 지킴 시험 (c21b1a051 · 28b66e116 의 ul_reader.py 시험 부분만 patch)",
+   "what": "고치기 전 판 (시험 먼저 코드) + 지킴 시험 다섯",
+   "logs": {
+    "ul_reader": {
+     "cmd": "python3 -I -B ul_reader.py --selftest",
+     "n_check_lines_ok": 191,
+     "n_check_lines_fail": 21,
+     "last_line": "selftest: FAIL (21 실패)"
+    }
+   }
+  }
+ }
+}

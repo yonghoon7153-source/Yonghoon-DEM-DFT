@@ -1,0 +1,62 @@
+$ python3 -I history_test/read_history.py --selftest
+# cwd = kit folder · rc = 0 · 26.6 s
+# ── stdout ──
+  ✓ S1 정상 = H0–H5 전부 PASS · rc 0
+  ✓ S1 정상: H5 안에서 잘못된 ID = TECH · 0 뿐 = INCONCLUSIVE 로 분류됐다
+  ✓ S1 정상: sentinel 종류마다 있다 (primitive 4 · mesh 4 · pair 5)
+  ✓ S1 정상: 정보 — 자동 run 끝 restart 없음 (1500 만) · 총힘 출력 시점 OK · SYN 문법 OK
+  ✓ S2 H1 deltaMax 하나 다름 (C6 PRE) = H1 FAIL
+  ✓ S3 H2 pair 방향 바뀜 + shear 부호 바뀜 = 정규화로 PASS
+  ✓ S4 H2 pair 방향 바뀜 · shear 부호 그대로 = FAIL (부호 정규화가 실제로 대조한다)
+  ✓ S5 H2 같은 값 중복 키 = PASS (중복 수 기록)
+  ✓ S6 H2 다른 값 중복 키 = TECH
+  ✓ S7 열 하나 빠짐 (C6 PRE) = H1 TECH (H0 도 TECH)
+  ✓ S8 비유한 값 (nan) = H1 TECH
+  ✓ S9 reset 로그 하나 빠짐 (C6 tracker) = H0 TECH
+  ✓ S10 Loop time NP ≠ 단계 NP (C6 on 1 procs) = H0 TECH
+  ✓ S11 바닥 소거가 안 보임 (Cbot = 생산자) = H3 FAIL
+  ✓ S12 바닥 소거 뒤 POST deltaMax = 현재 겹침 (다시 참) = H3 PASS — "setup 뒤 4 열 0" 을 기대하지 않는다
+  ✓ S13 바닥 소거 뒤 POST deltaMax 가 접촉 중인데 0 = H3 FAIL (현재 겹침 재평가와 모순)
+  ✓ S14 판 소거가 안 보임 (Ctop = 생산자) = H4 FAIL
+  ✓ S15 판 소거가 바닥 이력도 지움 = H4 FAIL (손대지 않은 벽 유지)
+  ✓ S16 잘못된 ID 가 통과 (BAD rc 0) = H5 FAIL
+  ✓ S17 생산자 write_dump 묶음 ≠ in-run 덤프 = H0 TECH
+  ✓ S18 총힘에 중력 없음 (접촉 없는 입자 fz = 0) = 정보 force_timing FAIL (H0–H5 와 따로)
+  ✓ S19 C4 단계 폴더 없음 = H2 TECH (나머지는 판정)
+  ✓ S20 행 순서 섞임 = PASS
+  ✓ S21 0 뿐 fixture 를 주 소비자 자리 (C6) 에 넣으면 H1 = INCONCLUSIVE (PASS 아님)
+  ✓ S22 run 끝 자동 restart (auto_2000) = 정보 auto_end_of_run_restart True
+  ✓ S23 SYN 판 접촉 개수 (영역) ≠ 벽 local 덤프 = 정보 SYN FAIL (판정 밖)
+  ✓ S30 SYN 판 접촉 법선력 (입자가 받는 힘) 이 모두 −z = 정보 plate_fn_sign −1 (압축 = 음수 약속)
+  ✓ S31 SYN 판 접촉 법선력이 모두 +z = 정보 plate_fn_sign +1 (약속을 거꾸로 — 본 키트 표를 고칠 근거 · SYN 은 PASS)
+  ✓ S32 SYN 판 접촉 법선력 부호가 섞임 = 정보 MIXED · SYN FAIL
+  ✓ S24 생산자 폴더 없음 = H0–H5 TECH · rc ≠ 0
+  ✓ S33 문법 fixture 정상 = PASS (맨 바깥 include 이어 돌림 · 변수 주기 덤프 = 창 끝만 · move/mesh 셋 판 z 누적 · 상태 파일 복귀 · 새 프로세스 판 z 복원)
+  ✓ S34 문법 fixture 반례 — GA 첫 run 시작 (2000) 에 원자 · 판 덤프 (setup 쓰기) = FAIL (rc 2)
+  ✓ S34 문법 fixture 반례 — GA 이동 중 (2600) 원자 덤프 = FAIL (rc 2)
+  ✓ S34 문법 fixture 반례 — 두 번째 이동이 원점에서 다시 (판 z 0.03001 에서 멈춤 · 되감김) = FAIL (rc 2)
+  ✓ S34 문법 fixture 반례 — GB 가 처음 경로 (GRAM_START · 이어 돌림 아님) = FAIL (rc 2)
+  ✓ S34 문법 fixture 반례 — GB 새 프로세스 판 z 복원 안 됨 (4300 = 0.03) = FAIL (rc 2)
+  ✓ S34 문법 fixture 반례 — GA 마지막 상태 파일 gr_pz 틀림 = FAIL (rc 2)
+  ✓ S34 문법 fixture 반례 — GB 가 GA 마지막이 아닌 restart (3200) 에서 = FAIL (rc 2)
+  ✓ S34 문법 fixture 반례 — GA run 수 ≠ 5 (Loop time 넷) = FAIL (rc 2)
+  ✓ S34 문법 fixture 반례 — GB rc 1 · ERROR = FAIL (rc 2)
+  ✓ S35 문법 fixture GB 폴더 없음 = FAIL (이어 돌림 경로 미시험 — PASS 아님)
+  ✓ S36 문법 fixture 런 폴더에 GA 없음 = NOT_RUN (rc 2)
+  ✓ S25 러너 모의: 전 단계 → 읽는 쪽 rc 0 · H0–H5 PASS · 보고 묶음 + sha256
+  ✓ S25 러너 모의: 단계 순서 = P · C6 · C4 · Ebot · Cbot · Etop · Ctop · Enone · Cnone · BAD · SYN · PZ · CZ
+  ✓ S25 러너 모의: 단계 NP = 6 (C4 만 4) · mpirun 인자 --oversubscribe --bind-to none
+  ✓ S25 러너 모의: run_manifest 에 이탈 (allow_other_lmp=1) 기록 · kit 사본
+  ✓ S26 러너 모의: 등록 빌드가 아닌 LMP (ALLOW_OTHER_LMP 없음) = 사전 점검에서 멈춤 · 런 폴더 없음
+  ✓ S27 러너 모의: 생산자 실패 = 뒤 소비 단계 없음 · 0 fixture 는 돈다 · 읽는 쪽 rc 2
+  ✓ S28 러너 모의: NP_ALT = NP 거부 (H2 가 시험되지 않는다)
+  ✓ S29 러너 모의: --preflight-only = 런 · kit 사본 없음
+  ✓ S37 러너 모의 --grammar-only: 단계 = P → GA → GB (H0–H5 단계 없음) · NP 6 · 판정 grammar_verdict PASS · rc 0 · 보고 묶음 gram_*.report.tgz
+  ✓ S37 러너 모의 --grammar-only: GA = 생산자 fixture.bin · 빈 상태 파일 · gr_resume 0 / GB = GA 마지막 단 끝 restart + 짝 상태 파일 · gr_resume 1
+  ✓ S37 러너 모의 --grammar-only: GA 실패 = GB 없음 · rc 2
+  ✓ S38 러너 모의 --grammar-only: GA 가 restart · 상태 파일을 다 쓴 뒤 rc 1 = GB 없음 (파일이 있어도) · 판정 PASS 아님 · rc 2
+  ✓ S39 러너 모의 --grammar-only: 생산자 P 가 fixture.bin 을 쓴 뒤 rc 1 = GA · GB 없음 · rc 2
+  ✓ S40 러너 모의 (H0–H5): 생산자 P 가 fixture.bin 을 쓴 뒤 rc 1 = 뒤 소비 단계 없음 (0 fixture PZ → CZ 만) · rc 2
+selftest: PASS (0 실패)
+# ── stderr ──
+# ── rc = 0 ──

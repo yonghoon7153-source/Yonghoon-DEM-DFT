@@ -1,0 +1,284 @@
+{
+  "pin": "eaecfba2a2dfbff6f13222f6afeb01d8ebeb5a84",
+  "synthetic_only": true,
+  "lmp_sha_is_synthetic": true,
+  "target_calls": [
+    "read_history.grammar_info",
+    "ul_reader.grammar_prereq"
+  ],
+  "results": {
+    "positive_actual_reader": {
+      "expected_gate": true,
+      "gate": false,
+      "problems": [
+        "원자료 재판독: kit 사본 history_params.json sha256 None ≠ 승인된 판독기 봉인 값 7a5279f0119cbbc37a9c212593e256a03e417dc9a6af4f18a4f01bdc72404ff4 — 승인 밖 판독기 · 실행하지 않는다 (Q3)",
+        "원자료 재판독: kit 사본 read_history.py sha256 None ≠ 승인된 판독기 봉인 값 70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c — 승인 밖 판독기 · 실행하지 않는다 (Q3)"
+      ],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": "PASS",
+      "expectation_satisfied": false,
+      "verdict_sha256": "209772672c71dd3912a18e2284f5b0c771701a0f8d73db23dcfc99e39f107267",
+      "case_dir": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_orig/positive_actual_reader"
+    },
+    "other_binary": {
+      "expected_gate": false,
+      "gate": false,
+      "problems": [
+        "문법 런 LMP sha256 4f1bb8ea0f292a527d87b953e162b8dfea9fa1f2dde83853915de1a125c9c031 ≠ 지금 돌릴 바이너리 0000000000000000000000000000000000000000000000000000000000000000 (같은 바이너리의 문법 PASS 만)",
+        "원자료 재판독: kit 사본 history_params.json sha256 None ≠ 승인된 판독기 봉인 값 7a5279f0119cbbc37a9c212593e256a03e417dc9a6af4f18a4f01bdc72404ff4 — 승인 밖 판독기 · 실행하지 않는다 (Q3)",
+        "원자료 재판독: kit 사본 read_history.py sha256 None ≠ 승인된 판독기 봉인 값 70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c — 승인 밖 판독기 · 실행하지 않는다 (Q3)"
+      ],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": "PASS",
+      "expectation_satisfied": true,
+      "verdict_sha256": "451c0be936e06d84e816ef4fbf812aab25efb49d30895e6746018ece1ac3f262",
+      "case_dir": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_orig/other_binary"
+    },
+    "missing_check": {
+      "expected_gate": false,
+      "gate": false,
+      "problems": [
+        "판정 검사 없음 ['GB_restart_state']",
+        "원자료 재판독: kit 사본 history_params.json sha256 None ≠ 승인된 판독기 봉인 값 7a5279f0119cbbc37a9c212593e256a03e417dc9a6af4f18a4f01bdc72404ff4 — 승인 밖 판독기 · 실행하지 않는다 (Q3)",
+        "원자료 재판독: kit 사본 read_history.py sha256 None ≠ 승인된 판독기 봉인 값 70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c — 승인 밖 판독기 · 실행하지 않는다 (Q3)"
+      ],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": null,
+      "expectation_satisfied": true,
+      "verdict_sha256": "a307287bae2b04b6a97ffd60307bf9e0f06446340cf68a7026da69c543b4df56",
+      "case_dir": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_orig/missing_check"
+    },
+    "boolean_exit_code": {
+      "expected_gate": false,
+      "gate": false,
+      "problems": [
+        "판정 exit_code False ≠ 정수 0",
+        "원자료 재판독: kit 사본 history_params.json sha256 None ≠ 승인된 판독기 봉인 값 7a5279f0119cbbc37a9c212593e256a03e417dc9a6af4f18a4f01bdc72404ff4 — 승인 밖 판독기 · 실행하지 않는다 (Q3)",
+        "원자료 재판독: kit 사본 read_history.py sha256 None ≠ 승인된 판독기 봉인 값 70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c — 승인 밖 판독기 · 실행하지 않는다 (Q3)"
+      ],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": null,
+      "expectation_satisfied": true,
+      "verdict_sha256": "2b2660161533cb6b049a600b5819041f1b6c6964f29eb8cf3594ccb5f624b96b",
+      "case_dir": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_orig/boolean_exit_code"
+    },
+    "check_integer_one": {
+      "expected_gate": false,
+      "gate": false,
+      "problems": [
+        "판정 검사 참 아님 ['GA_tech']",
+        "원자료 재판독: kit 사본 history_params.json sha256 None ≠ 승인된 판독기 봉인 값 7a5279f0119cbbc37a9c212593e256a03e417dc9a6af4f18a4f01bdc72404ff4 — 승인 밖 판독기 · 실행하지 않는다 (Q3)",
+        "원자료 재판독: kit 사본 read_history.py sha256 None ≠ 승인된 판독기 봉인 값 70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c — 승인 밖 판독기 · 실행하지 않는다 (Q3)"
+      ],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": null,
+      "expectation_satisfied": true,
+      "verdict_sha256": "2820670fc89d4d5672895a5db457fc2bd897df2a2e549e959ea590c77f11e35b",
+      "case_dir": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_orig/check_integer_one"
+    },
+    "check_false": {
+      "expected_gate": false,
+      "gate": false,
+      "problems": [
+        "판정 검사 참 아님 ['GA_tech']",
+        "원자료 재판독: kit 사본 history_params.json sha256 None ≠ 승인된 판독기 봉인 값 7a5279f0119cbbc37a9c212593e256a03e417dc9a6af4f18a4f01bdc72404ff4 — 승인 밖 판독기 · 실행하지 않는다 (Q3)",
+        "원자료 재판독: kit 사본 read_history.py sha256 None ≠ 승인된 판독기 봉인 값 70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c — 승인 밖 판독기 · 실행하지 않는다 (Q3)"
+      ],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": null,
+      "expectation_satisfied": true,
+      "verdict_sha256": "ce9ee71d8d7804316669fcf9ebd1f2e024a15a1cc937aa1d2424e629fc821aef",
+      "case_dir": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_orig/check_false"
+    },
+    "wrong_run_dir": {
+      "expected_gate": false,
+      "gate": false,
+      "problems": [
+        "판정 run_dir '/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_orig' ≠ 판정 파일 폴더 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_orig/wrong_run_dir (다른 런의 판정)",
+        "원자료 재판독: kit 사본 history_params.json sha256 None ≠ 승인된 판독기 봉인 값 7a5279f0119cbbc37a9c212593e256a03e417dc9a6af4f18a4f01bdc72404ff4 — 승인 밖 판독기 · 실행하지 않는다 (Q3)",
+        "원자료 재판독: kit 사본 read_history.py sha256 None ≠ 승인된 판독기 봉인 값 70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c — 승인 밖 판독기 · 실행하지 않는다 (Q3)"
+      ],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": null,
+      "expectation_satisfied": true,
+      "verdict_sha256": "a13c6110db9df9a15e3d83ec08c7e3f031cfb0e2c60e5057f7261c0fcd8336b3",
+      "case_dir": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_orig/wrong_run_dir"
+    },
+    "bad_ga_rc": {
+      "expected_gate": false,
+      "gate": false,
+      "problems": [
+        "문법 런 GA rc '1' ≠ 0",
+        "원자료 재판독: kit 사본 history_params.json sha256 None ≠ 승인된 판독기 봉인 값 7a5279f0119cbbc37a9c212593e256a03e417dc9a6af4f18a4f01bdc72404ff4 — 승인 밖 판독기 · 실행하지 않는다 (Q3)",
+        "원자료 재판독: kit 사본 read_history.py sha256 None ≠ 승인된 판독기 봉인 값 70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c — 승인 밖 판독기 · 실행하지 않는다 (Q3)"
+      ],
+      "raw_status": "FAIL",
+      "raw_problems": [
+        "GA 기술: rc 1 · 배너 True · ERROR [] · Loop procs [6, 6, 6, 6, 6] (기대 run 5 · NP 6)"
+      ],
+      "expected_raw": "FAIL",
+      "expectation_satisfied": true,
+      "verdict_sha256": "a34ce4fda03285628ba7e0c8bf1354d410fa4c1070f65cb4b5d5bb9edce26dc1",
+      "case_dir": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_orig/bad_ga_rc"
+    },
+    "missing_manifest_end": {
+      "expected_gate": false,
+      "gate": false,
+      "problems": [
+        "문법 런 run_manifest end 없음 (끝나지 않은 런)",
+        "원자료 재판독: kit 사본 history_params.json sha256 None ≠ 승인된 판독기 봉인 값 7a5279f0119cbbc37a9c212593e256a03e417dc9a6af4f18a4f01bdc72404ff4 — 승인 밖 판독기 · 실행하지 않는다 (Q3)",
+        "원자료 재판독: kit 사본 read_history.py sha256 None ≠ 승인된 판독기 봉인 값 70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c — 승인 밖 판독기 · 실행하지 않는다 (Q3)"
+      ],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": null,
+      "expectation_satisfied": true,
+      "verdict_sha256": "2b6f7e0a5f08cfc4f2ea78ff69c6e9f049a7e9b0f59b44483577b1ea45fc30c5",
+      "case_dir": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_orig/missing_manifest_end"
+    },
+    "wrong_grammar_deck": {
+      "expected_gate": false,
+      "gate": false,
+      "problems": [
+        "문법 런 GA/in.hist_grammar.liggghts sha256 eb98e61df18f538934ef3f862cb3c1c70058b3237d6260da2141b5230d55a4e5 ≠ 봉인 값 a1f0ee432b977d12a415b876ab3aa47225fec8f83c21cdd92948ff3abce8e6ed",
+        "원자료 재판독: kit 사본 history_params.json sha256 None ≠ 승인된 판독기 봉인 값 7a5279f0119cbbc37a9c212593e256a03e417dc9a6af4f18a4f01bdc72404ff4 — 승인 밖 판독기 · 실행하지 않는다 (Q3)",
+        "원자료 재판독: kit 사본 read_history.py sha256 None ≠ 승인된 판독기 봉인 값 70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c — 승인 밖 판독기 · 실행하지 않는다 (Q3)"
+      ],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": null,
+      "expectation_satisfied": true,
+      "verdict_sha256": "47ca39b4dcb8812d955df27e00706ea1b0da447de1a18ae06f490aaa9f38b591",
+      "case_dir": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_orig/wrong_grammar_deck"
+    },
+    "wrong_plate": {
+      "expected_gate": false,
+      "gate": false,
+      "problems": [
+        "문법 런 GB/plate_hist.stl sha256 9a2157f1a5d1eabb29e9b6e64a4ac9e726f0c1df1c0d3daf257f02724c8b7e9d ≠ 봉인 값 5bc74ec7726723ec8e2bbc3dc10fafd639e6175f83a0e0047ca35a44ee7aa65d",
+        "원자료 재판독: kit 사본 history_params.json sha256 None ≠ 승인된 판독기 봉인 값 7a5279f0119cbbc37a9c212593e256a03e417dc9a6af4f18a4f01bdc72404ff4 — 승인 밖 판독기 · 실행하지 않는다 (Q3)",
+        "원자료 재판독: kit 사본 read_history.py sha256 None ≠ 승인된 판독기 봉인 값 70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c — 승인 밖 판독기 · 실행하지 않는다 (Q3)"
+      ],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": null,
+      "expectation_satisfied": true,
+      "verdict_sha256": "c384f339d82b072516f979cb198c8a125b3d8a3dddc98f826428bad7a8e5e8b8",
+      "case_dir": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_orig/wrong_plate"
+    },
+    "wrong_deck_name": {
+      "expected_gate": false,
+      "gate": false,
+      "problems": [
+        "문법 런 GB deck.txt 'in.hist_syntax_probe.liggghts' ≠ in.hist_grammar.liggghts",
+        "원자료 재판독: kit 사본 history_params.json sha256 None ≠ 승인된 판독기 봉인 값 7a5279f0119cbbc37a9c212593e256a03e417dc9a6af4f18a4f01bdc72404ff4 — 승인 밖 판독기 · 실행하지 않는다 (Q3)",
+        "원자료 재판독: kit 사본 read_history.py sha256 None ≠ 승인된 판독기 봉인 값 70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c — 승인 밖 판독기 · 실행하지 않는다 (Q3)"
+      ],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": null,
+      "expectation_satisfied": true,
+      "verdict_sha256": "158605377a3467b35dd9ca6bcfa69ccb30abb3cdaecc26f000b9173a302f8606",
+      "case_dir": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_orig/wrong_deck_name"
+    },
+    "raw_ga_error_cached_pass": {
+      "expected_gate": true,
+      "gate": false,
+      "problems": [
+        "원자료 재판독: kit 사본 history_params.json sha256 None ≠ 승인된 판독기 봉인 값 7a5279f0119cbbc37a9c212593e256a03e417dc9a6af4f18a4f01bdc72404ff4 — 승인 밖 판독기 · 실행하지 않는다 (Q3)",
+        "원자료 재판독: kit 사본 read_history.py sha256 None ≠ 승인된 판독기 봉인 값 70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c — 승인 밖 판독기 · 실행하지 않는다 (Q3)"
+      ],
+      "raw_status": "FAIL",
+      "raw_problems": [
+        "GA 기술: rc 0 · 배너 True · ERROR ['ERROR: independent injected raw error'] · Loop procs [6, 6, 6, 6, 6] (기대 run 5 · NP 6)"
+      ],
+      "expected_raw": "FAIL",
+      "expectation_satisfied": false,
+      "verdict_sha256": "cd76e701839986f6e90a3e9886a1832fc37334acbde9d9ee2e6e438317a7ea90",
+      "case_dir": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_orig/raw_ga_error_cached_pass"
+    },
+    "raw_gb_mesh_wrong_cached_pass": {
+      "expected_gate": true,
+      "gate": false,
+      "problems": [
+        "원자료 재판독: kit 사본 history_params.json sha256 None ≠ 승인된 판독기 봉인 값 7a5279f0119cbbc37a9c212593e256a03e417dc9a6af4f18a4f01bdc72404ff4 — 승인 밖 판독기 · 실행하지 않는다 (Q3)",
+        "원자료 재판독: kit 사본 read_history.py sha256 None ≠ 승인된 판독기 봉인 값 70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c — 승인 밖 판독기 · 실행하지 않는다 (Q3)"
+      ],
+      "raw_status": "FAIL",
+      "raw_problems": [
+        "GB 판 z (step · 기대 · 실제) [(4300, 0.030019999999999998, 99.0)]"
+      ],
+      "expected_raw": "FAIL",
+      "expectation_satisfied": false,
+      "verdict_sha256": "c5592940884e768477a74970d8459c870ff0ae0691d4a886a8bd8be6770a6204",
+      "case_dir": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_orig/raw_gb_mesh_wrong_cached_pass"
+    },
+    "raw_gb_screen_missing_cached_pass": {
+      "expected_gate": true,
+      "gate": false,
+      "problems": [
+        "원자료 재판독: kit 사본 history_params.json sha256 None ≠ 승인된 판독기 봉인 값 7a5279f0119cbbc37a9c212593e256a03e417dc9a6af4f18a4f01bdc72404ff4 — 승인 밖 판독기 · 실행하지 않는다 (Q3)",
+        "원자료 재판독: kit 사본 read_history.py sha256 None ≠ 승인된 판독기 봉인 값 70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c — 승인 밖 판독기 · 실행하지 않는다 (Q3)"
+      ],
+      "raw_status": "FAIL",
+      "raw_problems": [
+        "GB 기술: rc 0 · 배너 False · ERROR [] · Loop procs [] (기대 run 2 · NP 6)",
+        "GB 표지: GRAM_RESUMED 0 개 (기대 1)",
+        "GB 표지: GRAM_STEP (k · step) [] ≠ [(3, 5400)]",
+        "GB 표지: GRAM_STATE_WRITTEN []",
+        "GB 표지: GRAM_DONE [] ≠ step 5400 · k 3"
+      ],
+      "expected_raw": "FAIL",
+      "expectation_satisfied": false,
+      "verdict_sha256": "0247b32d2b10cfd59cf7211af80a45ec49fa2a9e7b3a993f9fd14a893bc44471",
+      "case_dir": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_orig/raw_gb_screen_missing_cached_pass"
+    },
+    "raw_gb_state_wrong_cached_pass": {
+      "expected_gate": true,
+      "gate": false,
+      "problems": [
+        "원자료 재판독: kit 사본 history_params.json sha256 None ≠ 승인된 판독기 봉인 값 7a5279f0119cbbc37a9c212593e256a03e417dc9a6af4f18a4f01bdc72404ff4 — 승인 밖 판독기 · 실행하지 않는다 (Q3)",
+        "원자료 재판독: kit 사본 read_history.py sha256 None ≠ 승인된 판독기 봉인 값 70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c — 승인 밖 판독기 · 실행하지 않는다 (Q3)"
+      ],
+      "raw_status": "FAIL",
+      "raw_problems": [
+        "GB 상태 파일 state_g_5400.in = 'variable gr_rstep equal 0\\nvariable gr_k equal 0\\nvariable gr_pz equal 0' ≠ [('gr_rstep', 5400), ('gr_k', 3), ('gr_pz', 0.030029999999999998)]"
+      ],
+      "expected_raw": "FAIL",
+      "expectation_satisfied": false,
+      "verdict_sha256": "0ea83b03d0d694588d5e75699b7ccd4fd7fe9755205a0e13c0e482ead1787f0a",
+      "case_dir": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_orig/raw_gb_state_wrong_cached_pass"
+    },
+    "different_reader_runner_seal": {
+      "expected_gate": true,
+      "gate": false,
+      "problems": [
+        "원자료 재판독: kit 사본 history_params.json sha256 None ≠ 승인된 판독기 봉인 값 7a5279f0119cbbc37a9c212593e256a03e417dc9a6af4f18a4f01bdc72404ff4 — 승인 밖 판독기 · 실행하지 않는다 (Q3)",
+        "원자료 재판독: kit 사본 read_history.py sha256 None ≠ 승인된 판독기 봉인 값 70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c — 승인 밖 판독기 · 실행하지 않는다 (Q3)"
+      ],
+      "raw_status": "PASS",
+      "raw_problems": [],
+      "expected_raw": "PASS",
+      "expectation_satisfied": false,
+      "verdict_sha256": "971bb231234ffb34c5e030343590df536de19f3f41b8eaf80815e4e00734ea8f",
+      "case_dir": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ulpr_fix/codex_pin/evidence/grammar_ulprfix_orig/different_reader_runner_seal"
+    }
+  },
+  "shell_smoke": {
+    "path": "/usr/bin/bash",
+    "ran_simulator": false,
+    "rc": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "all_expectations_satisfied": false,
+  "case_count": 17,
+  "interpretation": "Cached PASS is trusted; raw-log drift and runner/reader hash changes are intentionally outside grammar_prereq validation. These cases do not establish an actual simulator PASS."
+}

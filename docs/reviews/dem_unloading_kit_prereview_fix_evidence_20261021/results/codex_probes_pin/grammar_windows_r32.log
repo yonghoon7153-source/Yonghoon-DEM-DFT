@@ -1,0 +1,56 @@
+{
+  "source_modified": false,
+  "initial": {
+    "allowed": true,
+    "problems": []
+  },
+  "file_bytes": {
+    "P/in.hist_producer.liggghts": {
+      "actual_sha256": "4bfc64b963aa059a063f4cd92a29646c7ebe711ee86add07ddb507aeeb1bedb3",
+      "expected_lf_sha256": "4bfc64b963aa059a063f4cd92a29646c7ebe711ee86add07ddb507aeeb1bedb3",
+      "crlf_count": 0,
+      "lf_count": 1,
+      "equals_lf_text_after_crlf_removal": true
+    },
+    "P/plate_hist.stl": {
+      "actual_sha256": "9403d89f24ab7db1a111b8bf7e2abbd5a247907226aa189d1153acde34f8ba70",
+      "expected_lf_sha256": "9403d89f24ab7db1a111b8bf7e2abbd5a247907226aa189d1153acde34f8ba70",
+      "crlf_count": 0,
+      "lf_count": 2,
+      "equals_lf_text_after_crlf_removal": true
+    },
+    "GA/in.hist_grammar.liggghts": {
+      "actual_sha256": "e7ef1e2c57a80a6bf882b79664a15847195123563ddcfad6b5cbc002602cf6ff",
+      "expected_lf_sha256": "e7ef1e2c57a80a6bf882b79664a15847195123563ddcfad6b5cbc002602cf6ff",
+      "crlf_count": 0,
+      "lf_count": 1,
+      "equals_lf_text_after_crlf_removal": true
+    },
+    "GA/plate_hist.stl": {
+      "actual_sha256": "9403d89f24ab7db1a111b8bf7e2abbd5a247907226aa189d1153acde34f8ba70",
+      "expected_lf_sha256": "9403d89f24ab7db1a111b8bf7e2abbd5a247907226aa189d1153acde34f8ba70",
+      "crlf_count": 0,
+      "lf_count": 2,
+      "equals_lf_text_after_crlf_removal": true
+    },
+    "GB/in.hist_grammar.liggghts": {
+      "actual_sha256": "e7ef1e2c57a80a6bf882b79664a15847195123563ddcfad6b5cbc002602cf6ff",
+      "expected_lf_sha256": "e7ef1e2c57a80a6bf882b79664a15847195123563ddcfad6b5cbc002602cf6ff",
+      "crlf_count": 0,
+      "lf_count": 1,
+      "equals_lf_text_after_crlf_removal": true
+    },
+    "GB/plate_hist.stl": {
+      "actual_sha256": "9403d89f24ab7db1a111b8bf7e2abbd5a247907226aa189d1153acde34f8ba70",
+      "expected_lf_sha256": "9403d89f24ab7db1a111b8bf7e2abbd5a247907226aa189d1153acde34f8ba70",
+      "crlf_count": 0,
+      "lf_count": 2,
+      "equals_lf_text_after_crlf_removal": true
+    }
+  },
+  "after_synthetic_fixture_lf_bytes_only": {
+    "allowed": true,
+    "problems": []
+  },
+  "diagnosis": "R32 expected SHA hashes LF UTF-8 strings, but _mk_gram/_w text writes translate LF to CRLF on Windows; changing only the review fixture deck/STL bytes back to expected LF makes the production prerequisite pass."
+}
