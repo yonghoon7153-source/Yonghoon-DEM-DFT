@@ -1,0 +1,11 @@
+{
+  "kind": "REVIEWER_UTILITY_CORRECTION_NOT_TARGET_RETRY",
+  "scope": "Reviewer-owned static data utility, not received target or E1 run",
+  "exit_code": 1,
+  "chunk": "fe3029",
+  "error": "KeyError: EXTRA_EXECUTED",
+  "cause": "ast.literal_eval cannot resolve named dictionary keys; no candidate execution occurred.",
+  "correction": "Resolve only already-known literal names and dict/list/tuple AST nodes as data; no eval, exec, compile execution or target import. Original SOURCE_INDEX preserved and equality checked.",
+  "other_read_only_diagnostics": "cwd git checks reported not a repository; one encoded GitHub branch URL was rejected and corrected; one PowerShell inventory pipe syntax was corrected. These are reviewer retrieval/data commands, not the proposed E1 stages.",
+  "target_runs": 0
+}

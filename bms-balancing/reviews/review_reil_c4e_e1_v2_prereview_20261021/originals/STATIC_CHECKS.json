@@ -1,0 +1,105 @@
+{
+  "kind": "READ_ONLY_STATIC_DATA_CHECKS_NOT_FUNCTIONAL_TESTS",
+  "upload_matches_pinned_sources": [
+    {
+      "name": "REIL_C4E_E1_APPROVAL_REQUEST_v2_20261020.md",
+      "match": true
+    },
+    {
+      "name": "REIL_C4E_E1_PREREVIEW_SEND_v2_20261020.md",
+      "match": true
+    }
+  ],
+  "source_captures": 19,
+  "all_git_blob_identities_match": true,
+  "prior_source_comparisons": [
+    {
+      "path": "scripts/reil_c4_e3a.py",
+      "byte_equal": true
+    },
+    {
+      "path": "scripts/reil_c4_monitor.py",
+      "byte_equal": true
+    },
+    {
+      "path": "scripts/reil_c4e_run.py",
+      "byte_equal": true
+    },
+    {
+      "path": "scripts/reil_c5_pilot.py",
+      "byte_equal": true
+    },
+    {
+      "path": "scripts/reil_p0.py",
+      "byte_equal": true
+    },
+    {
+      "path": "tests/test_reil_c4e.py",
+      "byte_equal": true
+    },
+    {
+      "path": "tests/test_reil_c4e_fix.py",
+      "byte_equal": true
+    },
+    {
+      "path": "evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json",
+      "byte_equal": true
+    }
+  ],
+  "five_source_manifest_matches": [
+    {
+      "path": "scripts/reil_c4_e3a.py",
+      "match": true
+    },
+    {
+      "path": "scripts/reil_c4_monitor.py",
+      "match": true
+    },
+    {
+      "path": "scripts/reil_c4e_run.py",
+      "match": true
+    },
+    {
+      "path": "scripts/reil_c5_pilot.py",
+      "match": true
+    },
+    {
+      "path": "scripts/reil_p0.py",
+      "match": true
+    }
+  ],
+  "AST_python_3_11_grammar_files": 13,
+  "launcher_top_level_functions": 34,
+  "skeleton_top_level_functions": 34,
+  "launcher_skeleton_signatures_equal": true,
+  "skeleton_functions_end_NotImplementedError": true,
+  "shared_literal_constants_equal": true,
+  "planned_test_function_counts": {
+    "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v2_20261020.py.txt": 24,
+    "bms-balancing/tests/test_reil_c4e.py": 21,
+    "bms-balancing/tests/test_reil_c4e_fix.py": 6
+  },
+  "planned_GREEN_total": 51,
+  "extra_executed_source_matches": [
+    {
+      "path": "bms-balancing/scripts/reil_c6_profile.py",
+      "match": true
+    },
+    {
+      "path": "degradation-degeneracy/tools/env_profile.py",
+      "match": true
+    }
+  ],
+  "seal_bindings": {
+    "manifest_sha": true,
+    "manifest_lock_entry": true,
+    "lock_sha": true,
+    "lock_header_env_profile_sha": true
+  },
+  "target_imports": 0,
+  "functional_tests": 0,
+  "probe_runs": 0,
+  "git_fixture_runs": 0,
+  "numeric_work_budget": null,
+  "scope": "Static source facts only, not acceptance of program behavior or Linux runtime."
+}

@@ -1,0 +1,104 @@
+{
+  "kind": "PINNED_SOURCE_CAPTURE_INPUTS",
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "branch_label": "claude/14-gate-code-review-9qkx05",
+  "commit": "0e4fbbde88d6b1bcfd47be65718c4ff0efe2191c",
+  "method": "GitHub connector UTF-8 file reads at fixed commit; local captures checked against Git blob identities",
+  "files": [
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v2_20261020.py.txt",
+      "git_blob_sha": "d97be084e4f19a78e233d1d6d0578a7812aa15a2",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/0e4fbbde88d6b1bcfd47be65718c4ff0efe2191c/bms-balancing/docs/REIL_C4E1_LAUNCHER_DRAFT_v2_20261020.py.txt"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v2_20261020.py.txt",
+      "git_blob_sha": "13a89891109c2576515de593bea2323dbc4454c3",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/0e4fbbde88d6b1bcfd47be65718c4ff0efe2191c/bms-balancing/docs/REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v2_20261020.py.txt"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v2_20261020.py.txt",
+      "git_blob_sha": "d0829db1464a8c209991ef866336dbafd3d892eb",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/0e4fbbde88d6b1bcfd47be65718c4ff0efe2191c/bms-balancing/docs/REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v2_20261020.py.txt"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E_E1_APPROVAL_REQUEST_v2_20261020.md",
+      "git_blob_sha": "b0e64cba3c91c434c41f6651801aa6a74dfaa43f",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/0e4fbbde88d6b1bcfd47be65718c4ff0efe2191c/bms-balancing/docs/REIL_C4E_E1_APPROVAL_REQUEST_v2_20261020.md"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E_E1_PREREVIEW_SEND_v2_20261020.md",
+      "git_blob_sha": "8cb3adfff503995339e9f3bfbb57995605761083",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/0e4fbbde88d6b1bcfd47be65718c4ff0efe2191c/bms-balancing/docs/REIL_C4E_E1_PREREVIEW_SEND_v2_20261020.md"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E_E1_REVISION_SCOPE_20261015.md",
+      "git_blob_sha": "c8791110f113f59d2bef8e2e8136daacb1a07547",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/0e4fbbde88d6b1bcfd47be65718c4ff0efe2191c/bms-balancing/docs/REIL_C4E_E1_REVISION_SCOPE_20261015.md"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt",
+      "git_blob_sha": "71505a081a5d204d99e4138ed57ae4cc95b28d81",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/0e4fbbde88d6b1bcfd47be65718c4ff0efe2191c/bms-balancing/docs/REIL_C4E1_STEP_RUNNER_DRAFT_20261020.py.txt"
+    },
+    {
+      "path": "bms-balancing/scripts/reil_c4e_run.py",
+      "git_blob_sha": "cbc3b56ac5567459a8b5ac24bcacc6a3b3c2c202",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/0e4fbbde88d6b1bcfd47be65718c4ff0efe2191c/bms-balancing/scripts/reil_c4e_run.py"
+    },
+    {
+      "path": "bms-balancing/scripts/reil_c4_e3a.py",
+      "git_blob_sha": "2c5e614eb5b565e9c9bab410ae741ffec1d2fca5",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/0e4fbbde88d6b1bcfd47be65718c4ff0efe2191c/bms-balancing/scripts/reil_c4_e3a.py"
+    },
+    {
+      "path": "bms-balancing/scripts/reil_c4_monitor.py",
+      "git_blob_sha": "d25a1a7a0d582af8f3e4c0a2ff1745daf7646052",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/0e4fbbde88d6b1bcfd47be65718c4ff0efe2191c/bms-balancing/scripts/reil_c4_monitor.py"
+    },
+    {
+      "path": "bms-balancing/scripts/reil_c5_pilot.py",
+      "git_blob_sha": "0e5a9f3a83ca419d311f27e0a63d9f0f7ade0d6b",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/0e4fbbde88d6b1bcfd47be65718c4ff0efe2191c/bms-balancing/scripts/reil_c5_pilot.py"
+    },
+    {
+      "path": "bms-balancing/scripts/reil_p0.py",
+      "git_blob_sha": "b7ef272f412e1b10f35ae841d961377ff4854d64",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/0e4fbbde88d6b1bcfd47be65718c4ff0efe2191c/bms-balancing/scripts/reil_p0.py"
+    },
+    {
+      "path": "bms-balancing/scripts/reil_c6_profile.py",
+      "git_blob_sha": "c32ecdc3c4cdb456514e3abc14975103f412f32d",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/0e4fbbde88d6b1bcfd47be65718c4ff0efe2191c/bms-balancing/scripts/reil_c6_profile.py"
+    },
+    {
+      "path": "degradation-degeneracy/tools/env_profile.py",
+      "git_blob_sha": "ea21b76f32050e07b9619ac6b8546a39d5c99b2a",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/0e4fbbde88d6b1bcfd47be65718c4ff0efe2191c/degradation-degeneracy/tools/env_profile.py"
+    },
+    {
+      "path": "bms-balancing/tests/test_reil_c4e.py",
+      "git_blob_sha": "0326b4df9217962c79195332df3b7b8adb9ca5a6",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/0e4fbbde88d6b1bcfd47be65718c4ff0efe2191c/bms-balancing/tests/test_reil_c4e.py"
+    },
+    {
+      "path": "bms-balancing/tests/test_reil_c4e_fix.py",
+      "git_blob_sha": "770a8c106f473c9e429776897b4acf6956258319",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/0e4fbbde88d6b1bcfd47be65718c4ff0efe2191c/bms-balancing/tests/test_reil_c4e_fix.py"
+    },
+    {
+      "path": "bms-balancing/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json",
+      "git_blob_sha": "37a868862d8f74a3e72a332424dfa8b94e82cc3b",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/0e4fbbde88d6b1bcfd47be65718c4ff0efe2191c/bms-balancing/evidence/reil_c4e0_fix_20261014/04_sources/SOURCES.json"
+    },
+    {
+      "path": "bms-balancing/reil_c6_rebuild_20261013/MANIFEST.json",
+      "git_blob_sha": "cd54ebec8949abbcf05c7cf7147178289a32196d",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/0e4fbbde88d6b1bcfd47be65718c4ff0efe2191c/bms-balancing/reil_c6_rebuild_20261013/MANIFEST.json"
+    },
+    {
+      "path": "bms-balancing/reil_c6_rebuild_20261013/REIL_C6.lock.txt",
+      "git_blob_sha": "21c2e71a7586d975e22123319dbdc486d9518e70",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/0e4fbbde88d6b1bcfd47be65718c4ff0efe2191c/bms-balancing/reil_c6_rebuild_20261013/REIL_C6.lock.txt"
+    }
+  ]
+}

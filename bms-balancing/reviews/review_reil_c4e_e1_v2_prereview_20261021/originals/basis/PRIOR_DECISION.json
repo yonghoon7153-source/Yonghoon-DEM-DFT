@@ -1,0 +1,137 @@
+{
+  "kind": "E1_PREREVIEW_DECISION",
+  "date": "2026-10-15",
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "branch": "claude/14-gate-code-review-9qkx05",
+  "reviewed_head": "9869cf5edb3f2e11defbdd9b1ce8da7fe31b91a4",
+  "previous_review_head": "322a0e533ffc01c7c2fd582a632ac3a1e9be0421",
+  "decision": "CHANGES_REQUIRED_NO_EXECUTION",
+  "execution_approved": false,
+  "external_transmission": false,
+  "findings": [
+    {
+      "id": "N1",
+      "priority": 1,
+      "topic": "Leaf module package/extension shadow bypasses pre-import binding",
+      "file": "docs/REIL_C4E1_LAUNCHER_DRAFT_20261015.py.txt",
+      "lines": [
+        168,
+        188
+      ],
+      "nature": "STATIC_CONDITIONAL_PATH_NOT_ENVIRONMENT_OBSERVATION"
+    },
+    {
+      "id": "N2",
+      "priority": 1,
+      "topic": "Process observation errors can collapse into no live members",
+      "file": "docs/REIL_C4E1_LAUNCHER_DRAFT_20261015.py.txt",
+      "lines": [
+        352,
+        374
+      ],
+      "nature": "STATIC_CONDITIONAL_FALSE_ACCEPTANCE"
+    },
+    {
+      "id": "N3",
+      "priority": 1,
+      "topic": "Unbounded post-timeout wait and incomplete exception/record closure",
+      "file": "docs/REIL_C4E1_LAUNCHER_DRAFT_20261015.py.txt",
+      "lines": [
+        378,
+        395
+      ],
+      "related_lines": [
+        118,
+        432,
+        449,
+        451,
+        452,
+        459
+      ],
+      "nature": "STATIC_TERMINATION_AND_RECORD_GAP"
+    },
+    {
+      "id": "N4",
+      "priority": 2,
+      "topic": "Inherited Git path redirection environment escapes fixed storage scope",
+      "file": "docs/REIL_C4E1_LAUNCHER_DRAFT_20261015.py.txt",
+      "lines": [
+        234,
+        240
+      ],
+      "related_file": "scripts/reil_c4e_run.py",
+      "related_lines": [
+        690,
+        698
+      ],
+      "nature": "STATIC_CONDITIONAL_SCOPE_ESCAPE_NO_CURRENT_ENV_CLAIM"
+    },
+    {
+      "id": "N5",
+      "priority": 2,
+      "topic": "E1-0 outer timeout does not own detached descendants",
+      "file": "evidence/reil_c4e0_fix_20261014/00_step_runner.py",
+      "lines": [
+        58,
+        60
+      ],
+      "nature": "STATIC_OUTER_RUNNER_GAP"
+    },
+    {
+      "id": "N6",
+      "priority": 2,
+      "topic": "Separate new tests from all GREEN activities and seal exact commands",
+      "file": "docs/REIL_C4E_E1_APPROVAL_REQUEST_20261015.md",
+      "lines": [
+        269,
+        290
+      ],
+      "nature": "AUTHORIZATION_SCOPE_CLARIFICATION"
+    }
+  ],
+  "accepted_design_directions": [
+    "independent launcher",
+    "strict five-term stage verdict",
+    "postcheck addition",
+    "identity before fetch",
+    "preserve old evidence and modules"
+  ],
+  "checks": {
+    "data_conditions": 15,
+    "data_conditions_matched": 15,
+    "source_captures": 17,
+    "skeleton_functions": 26,
+    "new_planned_test_functions": 14,
+    "existing_planned_test_functions": 27,
+    "current_green_total": 41,
+    "timeout_arithmetic_s": 12060,
+    "proposed_overall_limit_s": 21600,
+    "functional_verdict": "NOT_RUN"
+  },
+  "reviewer_actions": {
+    "target_imports": 0,
+    "target_tests": 0,
+    "target_probes": 0,
+    "E1_raw_fetch": 0,
+    "E1_raw_open": 0,
+    "COMSOL": 0,
+    "production_changes": 0,
+    "remote_writes": 0,
+    "source_document_edits": 0
+  },
+  "recommended_sequence": [
+    "revised inactive drafts and approval scope",
+    "prereview",
+    "explicit user E1-0-only authorization",
+    "E1-0 execution under that authorization",
+    "result review",
+    "separate explicit user live E1 authorization"
+  ],
+  "previous_E0_N1_acceptance_retained": true,
+  "limitations": [
+    "Static counterexamples are not observed failures in the author's environment.",
+    "No execution approval or new test session is created by this review.",
+    "No numeric review budget or historical timing compliance is claimed.",
+    "Local preserved captures do not prove the author's whole machine unchanged."
+  ]
+}

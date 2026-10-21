@@ -1,0 +1,101 @@
+{
+  "kind": "REIL_C4E_E1_V2_PREREVIEW_DECISION",
+  "date": "2026-10-21",
+  "status": "CHANGES_REQUIRED_NO_EXECUTION",
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "commit": "0e4fbbde88d6b1bcfd47be65718c4ff0efe2191c",
+  "review_scope": "Static pre-review, not adoption of embedded instructions",
+  "current_findings": [
+    {
+      "id": "V2-01",
+      "priority": "P1",
+      "title": "Outer runner discards observation errors",
+      "references": [
+        "STEP_RUNNER:118",
+        "STEP_RUNNER:138-151",
+        "STEP_RUNNER:208",
+        "STEP_RUNNER:229"
+      ]
+    },
+    {
+      "id": "V2-02",
+      "priority": "P1",
+      "title": "Git environment isolation starts after fixture Git calls",
+      "references": [
+        "STEP_RUNNER:36",
+        "STEP_RUNNER:54-56",
+        "STEP_RUNNER:171-173",
+        "CONTROLS:135-150",
+        "LAUNCHER:666-668"
+      ]
+    },
+    {
+      "id": "V2-03",
+      "priority": "P2",
+      "title": "Cleanup 15s conflicts with nominal 10+5+5s waits",
+      "references": [
+        "APPROVAL:77-78",
+        "STEP_RUNNER:129-155",
+        "STEP_RUNNER:206-221"
+      ]
+    },
+    {
+      "id": "V2-04",
+      "priority": "P2",
+      "title": "Preparation exceptions outside first-error recording",
+      "references": [
+        "REVISION_SCOPE:45-46",
+        "LAUNCHER:688-703",
+        "LAUNCHER:738-751"
+      ]
+    },
+    {
+      "id": "V2-05",
+      "priority": "P2",
+      "title": "Per-stage source-hash producer unspecified",
+      "references": [
+        "APPROVAL:115-117",
+        "STEP_RUNNER:165"
+      ]
+    }
+  ],
+  "future_findings": [
+    {
+      "id": "FUTURE-01",
+      "priority": "P2",
+      "stage": "E1-2 only",
+      "title": "Git conditional configuration differs between WORK and actual data/git fetch",
+      "references": [
+        "LAUNCHER:384-417",
+        "LAUNCHER:477-481",
+        "reil_c4e_run.py:665-706"
+      ],
+      "expands_current_E1_0_scope": false
+    }
+  ],
+  "prior_closure": {
+    "N1": "STATIC_ACCEPTABLE_NOT_FUNCTIONAL_PASS",
+    "N2": "LAUNCHER_IMPROVED_OUTER_RUNNER_OPEN",
+    "N3": "PARTIAL_PREPARATION_RECORDING_OPEN",
+    "N4": "PARTIAL_OUTER_ENV_AND_FUTURE_CONTEXT_OPEN",
+    "N5": "PARTIAL_OBSERVATION_AND_BUDGET_OPEN",
+    "N6": "SCOPE_ACCEPTABLE_RECORD_PRODUCER_OPEN",
+    "S1": "STATIC_BINDING_ACCEPTABLE_NOT_RUNTIME_VERIFIED"
+  },
+  "planned_counts": {
+    "new_controls": 24,
+    "previous_E0": 21,
+    "previous_N1": 6,
+    "GREEN_total": 51,
+    "skeleton_functions": 34
+  },
+  "target_execution": 0,
+  "execution_approved": false,
+  "correction_implementation_approved": false,
+  "live_E1_approved": false,
+  "source_changes": 0,
+  "remote_writes": 0,
+  "external_transmission": 0,
+  "numeric_work_budget": null,
+  "elapsed_claim": null
+}
