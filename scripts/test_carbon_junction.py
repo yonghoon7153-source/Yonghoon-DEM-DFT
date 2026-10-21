@@ -2107,6 +2107,205 @@ def t_rca06_sv():
         and cu.get('sv_counterfactual_ratio') is None and cu.get('flag') is None, f"{None if r_u is None else r_u.get('unconverged')} {cu}")
 
 
+@case('RCA06-H')
+def t_rca06_hygiene():
+    """반사실 대조의 위생 (10-21 사전 공격 리뷰 · 증서 ↔ 결과 결합 · 전역 상태) — 반사실 솔브는 진단이다:
+    ① 주 해의 출처 기록 (모듈 전역 `LAST_BACKEND` · `LAST_CG` — 매니페스트 'backend_last_solve' 가 읽는다) 을 바꾸지 않고, 자기 솔브의
+       backend 는 자기 기록에 싣는다 (노브 켬 = 주 결과 출처가 노브 끔과 같다)
+    ② 수렴 증서 (`CONV_CERT`) 를 켠 런에서는 반사실 솔브도 **같은 증서 함수** (`step3_conv_cert.certify`) 를 지나야 비를 낸다 —
+       증서 실패 = 비 없음 · 표지 없음 (주 해 증서만 보고 분모를 믿지 않는다)."""
+    P = cat_rows(rows(SVX), rows(SVX_SDCP, phase=5, kind=0, fid0=700))
+    sid, _ = bed(P, SVX_N)
+    reg = _try(lambda: registry(sid, P, tol_sj_um=0.1, r_sdcp_um=0.5), None)
+    I_full, _, _ = _svx_ref(SVX_RJ)
+    I_cut, _, _ = _svx_ref(SVX_RJ, with_sv=False)
+    from scipy.sparse.linalg import spsolve
+
+    def _run(fake, cert=False, th=None):
+        old_s, old_cc, old_rt = S3._solve_cg, S3.CONV_CERT, S3.CG_RTOL
+        S3._solve_cg = fake
+        S3.CONV_CERT = bool(cert)
+        if cert:
+            S3.CG_RTOL = 1.0e-12                            # 증서 ⓐ 봉인 (정지 rtol ≤ 1e-12) — 직접 풀이 픽스처
+        try:
+            return _try(lambda: quiet(S3.solve_sigma_z, sid, sig_e(), H, z_top_um=float(SVX_N[2]) * H, z_bot_um=0.0,
+                                      cjunc=plan(reg, SVX_RJ, sv_counterfactual={'threshold': th})), None)
+        finally:
+            S3._solve_cg, S3.CONV_CERT, S3.CG_RTOL = old_s, old_cc, old_rt
+
+    calls = [0]
+
+    def _marked(L, b, *a, **k):                             # 첫 호출 = 주 해 · 둘째 = 반사실 — backend 표지를 다르게 남긴다
+        calls[0] += 1
+        S3.LAST_BACKEND.update(requested='cpu', used=('cpu-main' if calls[0] == 1 else 'cpu-counterfactual'),
+                               fallback_reason=None, precond='jacobi')
+        S3.LAST_CG['iters'] = 111 if calls[0] == 1 else 777
+        return spsolve(L.tocsc(), b), 0
+    bk0, cg0 = dict(S3.LAST_BACKEND), dict(S3.LAST_CG)
+    try:
+        r1 = _run(_marked)
+        bk1, cg1 = dict(S3.LAST_BACKEND), dict(S3.LAST_CG)
+    finally:
+        S3.LAST_BACKEND.clear(); S3.LAST_BACKEND.update(bk0); S3.LAST_CG.clear(); S3.LAST_CG.update(cg0)
+    c1 = ((r1 or {}).get('cjunc') or {}).get('sv_counterfactual') or {}
+    chk('RCA06-H ① 반사실 솔브 뒤 모듈 전역 출처 = 주 해 그대로 (LAST_BACKEND used cpu-main · LAST_CG iters 111) · 반사실 기록에 자기 '
+        'backend (cpu-counterfactual) · 솔브 2 번 · 비 = 손 회로 (1e-10)',
+        r1 is not None and calls[0] == 2 and bk1.get('used') == 'cpu-main' and cg1.get('iters') == 111
+        and (c1.get('backend_last_solve') or {}).get('used') == 'cpu-counterfactual'
+        and c1.get('status') == 'computed' and rel(float(c1.get('sv_counterfactual_ratio') or math.nan), I_full / I_cut) < 1e-10,
+        f"calls {calls[0]} · 전역 {bk1.get('used')} / {cg1.get('iters')} · 기록 {c1.get('backend_last_solve')} · {c1.get('status')}")
+    chk('RCA06-H ① 증서 끔 = 반사실 기록 conv_cert None (칸 있음 · 증서 없이 CG 술어만)',
+        'conv_cert' in c1 and c1['conv_cert'] is None, f"{sorted(c1)}")
+
+    def _direct(L, b, *a, **k):
+        return spsolve(L.tocsc(), b), 0
+    r2 = _run(_direct, cert=True)
+    c2 = ((r2 or {}).get('cjunc') or {}).get('sv_counterfactual') or {}
+    cc2 = c2.get('conv_cert') if isinstance(c2.get('conv_cert'), dict) else {}
+    chk('RCA06-H ② 증서 켬 (rtol 1e-12 · 직접 풀이) — 주 해 증서 ok · 반사실 솔브도 같은 증서 함수 (판본 conv-cert · ok · ⓐⓑⓒ) · '
+        '비 = 손 회로 (1e-10)',
+        r2 is not None and (r2.get('conv_cert') or {}).get('ok') is True and r2.get('unconverged') is False
+        and cc2.get('ok') is True and cc2.get('version') == getattr(sys.modules.get('step3_conv_cert'), 'CERT_VERSION', '?')
+        and cc2.get('pass_a') is True and cc2.get('pass_b') is True and cc2.get('pass_c') is True
+        and c2.get('status') == 'computed' and rel(float(c2.get('sv_counterfactual_ratio') or math.nan), I_full / I_cut) < 1e-10,
+        f"주 {(r2 or {}).get('conv_cert', {}).get('ok') if r2 else None} · 반사실 {c2.get('status')} {cc2.get('ok')}")
+    cc_mod = sys.modules.get('step3_conv_cert')
+    if cc_mod is None:
+        import step3_conv_cert as cc_mod                     # noqa: F811 — 반사실 증서 실패 변이를 끼울 모듈
+    real_cert = cc_mod.certify
+    n_cert = [0]
+
+    def _cert_fail_second(*a, **k):                          # 둘째 증서 (= 반사실 솔브) 만 실패 — 주 해 증서는 그대로
+        n_cert[0] += 1
+        out = real_cert(*a, **k)
+        if n_cert[0] >= 2:
+            out = dict(out, pass_c=False, ok=False)
+        return out
+    cc_mod.certify = _cert_fail_second
+    try:
+        r3 = _run(_direct, cert=True, th=2.0)
+    finally:
+        cc_mod.certify = real_cert
+    c3 = ((r3 or {}).get('cjunc') or {}).get('sv_counterfactual') or {}
+    chk('RCA06-H ② 반사실 솔브 증서 실패 → 비 없음 · 표지 없음 (문턱 2.0 이어도) · status unconverged · 주 해는 그대로 (증서 ok · σ = 손 회로)',
+        r3 is not None and n_cert[0] == 2 and r3.get('unconverged') is False and rel(I_of(r3, SVX_N), I_full) < 1e-12
+        and c3.get('status') == 'unconverged' and c3.get('sv_counterfactual_ratio') is None and c3.get('flag') is None
+        and (c3.get('conv_cert') or {}).get('ok') is False,
+        f"증서 호출 {n_cert[0]} · {c3.get('status')} · 비 {c3.get('sv_counterfactual_ratio')} · 표지 {c3.get('flag')}")
+    #  ③ 비 inf ('SV 없이 관통 없음') 는 **위상** (조립 그래프에 관통 성분 없음) 에서만 — 관통 성분이 있는데 푼 I_cut ≤ 0 은 수치 실패다.
+    #    SVA = SVX 에서 VV 접합을 빼고 (B 곧은 기둥) A–B 사이 AM 셀 하나 (2,1,10 · σ 1e-9) 를 둔 꼴: SV 를 끊으면 관통 = AM 경로뿐 (I_cut ≈ 1e-9 ·
+    #    ‖b‖ = 판 결합 200 의 1e-6 보다 훨씬 작다) → 증서를 끈 CG 술어 (상대 잔차 ≤ 1e-6) 를 지나는 φ 로 I_cut 부호가 뒤집힐 수 있다
+    #    (판 전류 = Σ b (1 − φ) 를 −I 로 옮긴 φ · 잔차 ~1e-11).  옛 판 = 'no_through_without_sv' · 비 inf · 문턱 2 에서 SV_DEPENDENT.
+    SVA_B = [(3.5, 1.5, 1.5), (3.5, 1.5, 21.5)]
+    s_am = 1.0e-9
+    PA = cat_rows(rows([SVX[0], SVA_B]), rows(SVX_SDCP, phase=5, kind=0, fid0=700))
+    am = (np.array([[2.5, 1.5, 10.5]]), np.array([0.5]), np.array([1], np.int64))
+    sidA, _ = bed(PA, SVX_N, am=am)
+    regA = _try(lambda: registry(sidA, PA, tol_sj_um=0.1, r_sdcp_um=0.5), None)
+    tab = sig_e(s_am=s_am)
+    sA = float(tab[int(sidA[2, 1, 10])])
+    gva = 2.0 * SV * sA / (SV + sA) * H
+    gsv = 2.0 * SV * 250.0 / (SV + 250.0) * H
+    nA, nB = 21, 21                                          # A0..A20 = (1,1,0..20) · B1..B21 = (3,1,1..21) · S · M
+    Bn = lambda z: nA + z - 1                                # noqa: E731
+    S_, M_ = nA + nB, nA + nB + 1
+    E0 = [(i, i + 1, G_AX) for i in range(nA - 1)] + [(Bn(z), Bn(z + 1), G_AX) for z in range(1, 21)]
+    E_am = [(10, M_, gva), (M_, Bn(10), gva)]
+    E_sv = [(20, S_, gsv), (S_, Bn(20), gsv)]
+    IA_full = ref_I(M_ + 1, E0 + E_am + E_sv, [(0, G_PL)], [(Bn(21), G_PL)])
+    IA_cut = ref_I(M_ + 1, E0 + E_am, [(0, G_PL)], [(Bn(21), G_PL)])
+
+    def _runA(fake):
+        old_s = S3._solve_cg
+        S3._solve_cg = fake
+        try:
+            return _try(lambda: quiet(S3.solve_sigma_z, sidA, tab, H, z_top_um=float(SVX_N[2]) * H, z_bot_um=0.0,
+                                      cjunc=plan(regA, SVX_RJ, sv_counterfactual={'threshold': 2.0})), None)
+        finally:
+            S3._solve_cg = old_s
+    rA = _runA(_direct)
+    cA = ((rA or {}).get('cjunc') or {}).get('sv_counterfactual') or {}
+    chk('RCA06-H ③ SVA 양성 대조 — AM 셀 sid 2 · 주 σ = 손 회로 (1e-9) · 반사실 computed · 비 = 손 회로 (1e-3 · I_cut ≈ 1e-9 의 판 전류 상쇄) '
+        '· 비 > 1e6 → SV_DEPENDENT',
+        rA is not None and int(sidA[2, 1, 10]) == 2 and rel(I_of(rA, SVX_N), IA_full) < 1e-9 and cA.get('status') == 'computed'
+        and rel(float(cA.get('sv_counterfactual_ratio') or math.nan), IA_full / IA_cut) < 1e-3
+        and IA_full / IA_cut > 1e6 and cA.get('flag') == 'SV_DEPENDENT',
+        f"σ {None if rA is None else I_of(rA, SVX_N)} ↔ {IA_full} · {cA.get('status')} · 비 {cA.get('sv_counterfactual_ratio')} ↔ "
+        f'{IA_full / IA_cut:.6g}')
+    nA_calls = [0]
+
+    def _flip_second(L, b, *a, **k):                         # 둘째 풀이 (반사실) — 정확 해에서 판 전류를 −I 로 옮긴 φ (잔차 ~1e-11)
+        nA_calls[0] += 1
+        x = spsolve(L.tocsc(), b)
+        if nA_calls[0] >= 2:
+            nzb = np.flatnonzero(b)
+            Ic = float(np.sum(b[nzb] * (1.0 - x[nzb])))
+            x = x.copy()
+            x[nzb] += 2.0 * Ic / float(np.sum(b[nzb]))
+        return x, 0
+    rF = _runA(_flip_second)
+    cF = ((rF or {}).get('cjunc') or {}).get('sv_counterfactual') or {}
+    chk('RCA06-H ③ 관통 성분이 있는데 푼 I_cut ≤ 0 (CG 술어는 통과 · 잔차 ≤ 1e-6) → 비 inf 아님 · 비 None · 표지 None · status ≠ '
+        "'no_through_without_sv' (위상 서술 금지)",
+        rF is not None and nA_calls[0] == 2 and float(cF.get('G_cut_code') if cF.get('G_cut_code') is not None else 1.0) <= 0.0
+        and float(cF.get('resid') if cF.get('resid') is not None else 1.0) <= 1e-6
+        and cF.get('status') not in (None, 'computed', 'no_through_without_sv') and cF.get('sv_counterfactual_ratio') is None
+        and cF.get('flag') is None,
+        f"풀이 {nA_calls[0]} · G_cut {cF.get('G_cut_code')} · 잔차 {cF.get('resid')} · {cF.get('status')} · 비 "
+        f"{cF.get('sv_counterfactual_ratio')} · 표지 {cF.get('flag')}")
+    #  ④ 분자 (주 해 단자 전류) ≤ 0 이면 비를 내지 않는다 — SVA 에 SDCP σ 도 1e-9 (주 관통 ≈ 2e-9 ≪ 1e-6 × 판 결합) · 첫 풀이 (주 해) 의
+    #    판 전류를 −I 로 옮긴 φ (잔차 ~1e-11 · CG 술어 통과 · 주 σ = max(0, ·) = 0 은 옛 생산 술어 그대로 = 이 묶음 밖) → 옛 판 = 반사실을 풀어
+    #    'computed' · 비 ≈ −2 (음수 비 게시).
+    tab4 = sig_e(s_am=s_am, s_sdcp=1.0e-9)
+    n4 = [0]
+
+    def _flip_first(L, b, *a, **k):
+        n4[0] += 1
+        x = spsolve(L.tocsc(), b)
+        if n4[0] == 1:
+            nzb = np.flatnonzero(b)
+            Ic = float(np.sum(b[nzb] * (1.0 - x[nzb])))
+            x = x.copy()
+            x[nzb] += 2.0 * Ic / float(np.sum(b[nzb]))
+        return x, 0
+    old_s = S3._solve_cg
+    S3._solve_cg = _flip_first
+    try:
+        r4 = _try(lambda: quiet(S3.solve_sigma_z, sidA, tab4, H, z_top_um=float(SVX_N[2]) * H, z_bot_um=0.0,
+                                cjunc=plan(regA, SVX_RJ, sv_counterfactual={'threshold': 2.0})), None)
+    finally:
+        S3._solve_cg = old_s
+    c4 = ((r4 or {}).get('cjunc') or {}).get('sv_counterfactual') or {}
+    chk('RCA06-H ④ 주 해 단자 전류 ≤ 0 (CG 술어 통과) → 반사실을 풀지 않는다 · 비 None · 표지 None · status nonpositive_full_current',
+        r4 is not None and n4[0] == 1 and float(c4.get('G_full_code') if c4.get('G_full_code') is not None else 1.0) <= 0.0
+        and c4.get('status') == 'nonpositive_full_current' and c4.get('sv_counterfactual_ratio') is None and c4.get('flag') is None,
+        f"풀이 {n4[0]} · G_full {c4.get('G_full_code')} · {c4.get('status')} · 비 {c4.get('sv_counterfactual_ratio')}")
+    #  ⑤ (지킴) 위상 inf — SVA 에서 AM 셀도 뺀 꼴 (A–B 가 SDCP 로만 이어진다): SV 면을 끊으면 조립 그래프에 관통 성분이 없다 → 풀지 않고
+    #    'no_through_without_sv' · 비 inf · 문턱 2 → SV_DEPENDENT · G_cut 0 (주 σ = 손 회로).
+    sidN, _ = bed(PA, SVX_N)
+    regN = _try(lambda: registry(sidN, PA, tol_sj_um=0.1, r_sdcp_um=0.5), None)
+    nN = [0]
+
+    def _count_direct(L, b, *a, **k):
+        nN[0] += 1
+        return spsolve(L.tocsc(), b), 0
+    old_s = S3._solve_cg
+    S3._solve_cg = _count_direct
+    try:
+        rN = _try(lambda: quiet(S3.solve_sigma_z, sidN, sig_e(), H, z_top_um=float(SVX_N[2]) * H, z_bot_um=0.0,
+                                cjunc=plan(regN, SVX_RJ, sv_counterfactual={'threshold': 2.0})), None)
+    finally:
+        S3._solve_cg = old_s
+    cN = ((rN or {}).get('cjunc') or {}).get('sv_counterfactual') or {}
+    IN_full = ref_I(M_ + 1, E0 + E_sv, [(0, G_PL)], [(Bn(21), G_PL)])
+    chk("RCA06-H ⑤ (지킴) SV 만 잇는 침대 — 끊으면 관통 성분 없음 (위상) → 풀이 1 번 (주 해만) · 'no_through_without_sv' · 비 inf · "
+        'SV_DEPENDENT · G_cut 0 · 주 σ = 손 회로 (1e-12)',
+        rN is not None and int(sidN[2, 1, 10]) == 0 and nN[0] == 1 and rel(I_of(rN, SVX_N), IN_full) < 1e-12
+        and cN.get('status') == 'no_through_without_sv' and cN.get('sv_counterfactual_ratio') == math.inf
+        and cN.get('flag') == 'SV_DEPENDENT' and cN.get('G_cut_code') == 0.0,
+        f"풀이 {nN[0]} · {cN.get('status')} · 비 {cN.get('sv_counterfactual_ratio')} · 표지 {cN.get('flag')}")
+
+
 #  PCP — 나란한 짧은 접촉 (L_c 1.78 ≤ L_par 2 → 간선 1) 의 접점 (`CJUNC_CP_RULE`): 최근접 쌍이 겹침 [4.0, 5.0] 전체에 비유일 → ε 띠 안 중점
 #  사전식 최소 = 겹침 아래 끝 z 4.0 → A 접점이 (1,1,3) · (1,1,4) 중심에서 등거리 → 사전식 (1,1,3) · B = (2,1,4).  이진 정확 좌표 (간격 0.625 ·
 #  점 간격 0.25) → 점 역순 · 공선 세분 (0.125) 에 포트 · 간선 원장 · σ 비트 같음 (옛 'argmin 첫 쌍' = 쌍 목록 순서 의존).
