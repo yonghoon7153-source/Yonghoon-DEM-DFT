@@ -2352,6 +2352,57 @@ def t_pcp():
         f'{_cp_cells(f1)} ↔ {_cp_cells(f2)}')
 
 
+@case('CAX-SUB')
+def t_cax_subedges():
+    """증거 검증기 (`ca_ext_cjunc.cjunc_block_problem`) 의 분산 간선 수 (10-21 · RCA-05 v0 · 사전 공격 리뷰 — 증서 ↔ 결과 결합) — 합성
+    매니페스트 = test_ca_ext_b6.cj_manifest (봉인 코호트 바탕 · 모듈 기록 함수) 를 고친 꼴.  정확한 불변량: 배율 최대 (len_mult_max) = 1 ⟺
+    모든 instance k = 1 ⟺ n_subedges = n_instances (k = ceil(L_c/L_par) 문턱 `_n_sub` = 배율 법칙 `junction_len_mult` 와 같은 식 r > 1 + 1e-9 ·
+    긴 접촉 표지 n_long 은 곱 꼴 (L_c > L_par·(1 + 1e-9)) 이라 1 ulp 경계에서 다를 수 있어 쓰지 않는다)."""
+    import importlib
+    RCm = importlib.import_module('run_contract')
+    CWm = importlib.import_module('ca_ext_cjunc')
+    B6 = importlib.import_module('test_ca_ext_b6')
+    B6.RC, B6.CW = RCm, CWm
+    m = B6.cj_manifest(n_inst=3)
+
+    def var(extra=0, **upd):
+        x = B6.deep(m)
+        ev = x['ca_ext']['cjunc']['evidence']
+        ev['counts'].update(upd)
+        for k_, v_ in list(ev['counts'].items()):
+            if v_ == '__drop__':
+                ev['counts'].pop(k_)
+        if extra:
+            ev['solve']['n_junction_edges'] += extra
+            ev['receipts']['electronic_main']['n_junction_edges'] += extra
+        return x
+
+    def ok(x):
+        return RCm.ca_ext_record_ok(x)[0]
+    good_k = dict(extra=2, n_subedges=5, n_edge=5, len_mult_max=2.5, n_long=1)
+    chk('CAX-SUB 바탕 (k 1 · n_subedges 칸 없음 = instance 수) · k > 1 꼴 (instance 3 · 간선 5 · 배율 최대 2.5) = 받는다 (지킴)',
+        ok(m) and ok(var(**good_k)), (RCm.ca_ext_record_ok(m), RCm.ca_ext_record_ok(var(**good_k))))
+    bad_new = {
+        '간선 5 > instance 3 인데 배율 최대 1.0 (긴 접촉 없음 = 모든 k 1)': dict(good_k, len_mult_max=1.0),
+        '배율 최대 2.5 (긴 접촉 있음 = k ≥ 2) 인데 간선 = instance': dict(len_mult_max=2.5),
+        '배율 최대 NaN': dict(len_mult_max=float('nan')),
+        '배율 최대 0.5 (< 1)': dict(len_mult_max=0.5),
+        '배율 최대 True (bool == 1.0)': dict(len_mult_max=True),
+        "배율 최대 문자열 '1.0'": dict(len_mult_max='1.0'),
+        '배율 최대 빠짐 (instance > 0)': dict(len_mult_max='__drop__'),
+    }
+    for nm, upd in bad_new.items():
+        chk(f'CAX-SUB 거부 [{nm}]', not ok(var(**upd)), RCm.ca_ext_record_ok(var(**upd)))
+    bad_guard = {
+        'n_subedges 칸 없음인데 모드 합 5 (instance 3)': dict(extra=2, n_edge=5, len_mult_max=2.5, n_long=1),
+        'n_subedges True': dict(good_k, n_subedges=True),
+        'n_subedges 5.0 (실수)': dict(good_k, n_subedges=5.0),
+        'n_subedges 2 < instance 3 (모드 합 2)': dict(n_subedges=2, n_edge=2),
+    }
+    for nm, upd in bad_guard.items():
+        chk(f'CAX-SUB 거부 (지킴) [{nm}]', not ok(var(**upd)), RCm.ca_ext_record_ok(var(**upd)))
+
+
 @case('OFF-IND')
 def t_off_independent():
     """보장 — 접합 끔 (cjunc=None) 솔브는 carbon_junction 을 부르지도 읽지도 않는다 (구조 증거 · C0 의 옛 기준 비트 대조와 별개):
