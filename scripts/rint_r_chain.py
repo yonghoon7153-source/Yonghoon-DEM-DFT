@@ -47,6 +47,9 @@
     상태 다름 = 넘음 · W ∈ {+∞, 0} → W₊ (`dbe_origin_ok` · PRE-design-10) ④ §5-5b 결정표 (오른쪽 칸 · 점 구간 · ⑰ 감도 미완료 · ⑱ ·
     `decide_sentence` · 표지마다 사유 `blocking_reasons` · PRE-design-09) ⑤ §5-6 변이 표지 (NOT_COMPUTED · 변이 자신의 CALIB_ORIGIN_SENSITIVE
     → <V>_UNCHECKED · `variant_flag` · PRE-design-17) ⑥ §7-1 한정어 ⑰ ⑱ (`QUALIFIERS` 18)
+  · ★ RI (10-21 · §5-6 ③ "변이 판정 = NOT_COMPUTED (… 멈춤) → <V>_UNCHECKED" · 1저자 Q2 범위 = 코드를 등록에 맞춤) — 감도 변이 단계가 멈추면
+    (STOPPED) 그 변이 판정 = NOT_COMPUTED → <V>_UNCHECKED (차단 · 주 판정은 그대로 계산 · `variant_stage_stopped`) · 주 판정 단계의 멈춤 = 판정
+    전체 NOT_COMPUTED (INPUT_STAGE_STOPPED · `stopped_stage_rejects_verdict`) · 판정 입력 검사는 멈춘 변이 단계에도 그대로
 """
 import argparse
 import glob
@@ -198,6 +201,20 @@ REG_STATES = {'positive': ('POSITIVE_SOLVED', None), 'zero': ('VALID_ZERO_TOPOLO
 #: ★ 4판 (Q1) — 예측 단계의 등록 결과 (사다리의 REGISTERED_OUTCOMES 와 같은 뜻 · 판정이 원 팔에서 다시 계산한다) · 그 밖 멈춤 = STOPPED
 PREDICT_OUTCOMES = frozenset({'NOT_COMPUTED'})
 
+
+def stopped_stage_rejects_verdict(s):
+    """★ RI (10-21 · 등록 R 4판 §5-6 ③ · 1저자 Q2 범위 = 코드를 등록에 맞춤) — 멈춘 단계 (STOPPED · 등록 결과 이름이 아닌 멈춤) 가 판정 전체를
+    거부하나: **주 판정 단계만** (판정 전체 NOT_COMPUTED · INPUT_STAGE_STOPPED · §5-5 사슬 멈춤 행 그대로).  감도 변이 단계의 멈춤 = 그 변이 판정
+    NOT_COMPUTED → <V>_UNCHECKED (`variant_stage_stopped` · 4판 사슬 = 변이 단계도 판정 전체 거부)."""
+    return s.get('status') == 'STOPPED' and s.get('variant') is None
+
+
+def variant_stage_stopped(s):
+    """★ RI (§5-6 ③ "변이 판정 = NOT_COMPUTED (풀이 · 증서 실패 · 단락 · 멈춤) → <V>_UNCHECKED") — 멈춘 감도 변이 단계 (사다리 · 예측) = 결과 없음:
+    원 팔에서 다시 계산하지 않고 그 법칙 · 예측 = NOT_COMPUTED (`judge_set` → 변이 판정 NOT_COMPUTED → `variant_flag` ③).  판정 입력 검사 (계획 ·
+    S0 · 등록 숫자 · 코드 핀 · 주 예측 묶음 · 예측 ↔ 사다리) 는 멈춘 단계에도 그대로 (그 기록이 없으면 그 검사의 멈춤 = 판정 전체 NOT_COMPUTED)."""
+    return s.get('status') == 'STOPPED' and s.get('variant') is not None
+
 STOPS = {
     'OUTDIR_NOT_EMPTY': '출력 폴더가 이미 있고 비어 있지 않다 (러너 SKIP 캐시 · 옛 산출물)',
     'NOT_REGISTERED': '인자가 등록 R 과 다르다 (표적 · 법칙 · 킷 · 변이)',
@@ -230,7 +247,7 @@ STOPS = {
     'DUPLICATE_RUN': '같은 킷 · 같은 계획 두 번',
     'INPUT_SHA_MISMATCH': '판정 입력 sha256 ≠ 런 산출',
     'INPUT_MISSING': '판정 입력이 모자란다',
-    'INPUT_STAGE_STOPPED': '판정 입력 단계가 멈춘 채다',
+    'INPUT_STAGE_STOPPED': '주 판정 입력 단계가 멈춘 채다 (감도 변이 단계의 멈춤 = 그 변이 <V>_UNCHECKED · §5-6 ③)',
     'INPUT_NOT_STAGE': '판정 입력 폴더에 단계 요약이 없다',
     'LADDER_NOT_CALIBRATED': '사다리가 보정되지 않았다 (예측 안 함)',
     'LADDER_SET': '사다리 묶음이 법칙 끝 둘이 아니다',
@@ -1943,8 +1960,8 @@ def verdict_compute(dirs, reg_path, contract):
     for rd, s, h in stages:
         pub['inputs'].append({'dir': str(rd), 'stage': s.get('stage'), 'law': s.get('law'), 'variant': s.get('variant'),
                               'status': s.get('status'), 'summary_sha256': h})
-        if s.get('status') == 'STOPPED':
-            raise Stop('INPUT_STAGE_STOPPED', f'{rd.name}: {(s.get("stop") or {}).get("code")} — 멈춘 단계는 판정 입력이 아니다')
+        if stopped_stage_rejects_verdict(s):                 # ★ RI — 주 판정 단계만 (감도 변이 단계 = §5-6 ③ · 아래 입력 검사는 그대로)
+            raise Stop('INPUT_STAGE_STOPPED', f'{rd.name}: {(s.get("stop") or {}).get("code")} — 멈춘 주 판정 단계는 판정 입력이 아니다')
         if (s.get('plan') or {}).get('sha256') != plan_hash:
             raise Stop('PLAN_HASH_MISMATCH', f'{rd.name}: 계획 sha256 ≠ 등록 §2-1 개정값')
         plan = (s.get('plan') or {}).get('content')
@@ -1979,7 +1996,9 @@ def verdict_compute(dirs, reg_path, contract):
             if (variant, law) not in lad_in:
                 return None
             rd, s, h = lad_in[(variant, law)]
-            out[law] = (rd, s, h, _replay_ladder(rd, s, contract, sid_reg, cert_reg))
+            #  ★ RI (§5-6 ③) — 멈춘 감도 변이 사다리 = 그 법칙 NOT_COMPUTED (다시 계산 없음 · 표지 없음) → 변이 판정 NOT_COMPUTED → <V>_UNCHECKED
+            out[law] = (rd, s, h, ({'status': 'NOT_COMPUTED', 'stop': s.get('stop'), 'st': None, 'sealed': None, 'flags': [], 'pts': None}
+                                   if variant_stage_stopped(s) else _replay_ladder(rd, s, contract, sid_reg, cert_reg)))
         return out
     main_l = ladders_of(None)
     if main_l is None:
@@ -2010,6 +2029,8 @@ def verdict_compute(dirs, reg_path, contract):
             ref = (s.get('ladders') or {}).get(law) or {}
             if ref.get('summary_sha256') != lads[law][2]:
                 raise Stop('PREDICT_LADDER_MISMATCH', f'{rd.name}: {law} 사다리 요약 sha256 ≠ 판정 입력')
+        if variant_stage_stopped(s):
+            return None, 'STOPPED', s.get('stop')             # ★ RI (§5-6 ③) — 멈춘 감도 변이 예측 = 값 없음 → 그 변이 판정 NOT_COMPUTED
         lin = {law: {'R_j0': lads[law][3]['st']['R_j0'], 'R_j_lo': lads[law][3]['st']['R_j_lo'], 'R_j_hi': lads[law][3]['st']['R_j_hi'],
                      'r0_sigma': lads[law][3]['pts'][lads[law][3]['st']['R_j0']][1]} for law in LAWS}
         return _replay_predict(rd, s, lin, contract, sid_reg, cert_reg)
