@@ -326,10 +326,12 @@ clean(){ printf '%s' "$1" | tr -d '"\\\r\n\t' ; }
 incar_val(){ awk -v T="$2" 'BEGIN{T=toupper(T)} { sub(/[#!].*/, ""); n=split($0, st, ";"); for (i=1; i<=n; i++) { s=st[i]; p=index(s, "="); if (!p) continue;
   k=substr(s, 1, p-1); v=substr(s, p+1); gsub(/[ \t]/, "", k); gsub(/^[ \t]+|[ \t]+$/, "", v); if (toupper(k)==T) val=v } } END { if (val!="") print val }' "$1" 2>/dev/null; }
 
-# ── 판정 계약 (검사기 judge_attempt 와 같다 · 순서까지) → "상태 행수 dE deps 사유" ──
+# ── 판정 계약 (검사기 judge_text 와 같다 · 순서까지) → "상태 행수 dE deps 사유" ──
 #  ① 행 0 → SCF_UNVERIFIED  ② 스텝 번호 1,2,…,N 아님 · 이온 요약(F=) 뒤 행 → SCF_UNVERIFIED  ③ N > NELM(이 시도의 INCAR) → SCF_UNVERIFIED
-#  ④ rc ≠ 0 · 미종료 → RUN_FAILED  ⑤ OUTCAR 실행 머리줄 ≠ 1 → SCF_UNVERIFIED  ⑥ OUTCAR 마지막 전자 반복 번호 ≠ N → SCF_UNVERIFIED
-#  ⑦ 마지막 dE·d eps 가 유한수가 아님 → SCF_UNVERIFIED  ⑧ |dE| ≤ EDIFF 그리고 |d eps| ≤ EDIFF → OK · 아니면 SCF_NOT_CONVERGED
+#  ④ 확정 모순은 rc 보다 먼저 (CZ Q-CZ-1): OUTCAR 실행 머리줄 ≥ 2 → SCF_UNVERIFIED · OUTCAR 가 끝까지 쓰였는데 머리줄 ≠ 1 또는
+#     마지막 전자 반복 번호 k ≠ N → SCF_UNVERIFIED · 안 끝났는데 k > N + 1 (판정 근거 OSZICAR 가 두 스텝 이상 모자람) → SCF_UNVERIFIED
+#     (안 끝난 OUTCAR 의 k 없음 · k ≤ N + 1 은 잘림·스텝 도중 충돌 = 결측이라 ⑤ 로 간다)
+#  ⑤ rc ≠ 0 · 미종료 → RUN_FAILED  ⑥ 마지막 dE·d eps 가 유한수가 아님 → SCF_UNVERIFIED  ⑦ |dE| ≤ EDIFF 그리고 |d eps| ≤ EDIFF → OK · 아니면 SCF_NOT_CONVERGED
 judge(){
   local d=$1 rc term nrun nelm ediff oit
   rc=$(grep -o '"rc": *-\{0,1\}[0-9]*' "$d/attempt.json" 2>/dev/null | head -1 | grep -o -- '-\{0,1\}[0-9]*$'); rc=${rc:-${2:-NA}}
@@ -348,9 +350,12 @@ judge(){
       if (bad != "") { print "SCF_UNVERIFIED", o, "NA", "NA", bad; exit }
       if (nelm !~ /^[0-9]+$/) { print "SCF_UNVERIFIED", o, "NA", "NA", "nelm_unknown"; exit }
       if (o > nelm + 0) { print "SCF_UNVERIFIED", o, "NA", "NA", "n_gt_nelm"; exit }
+      if (nrun + 0 >= 2) { print "SCF_UNVERIFIED", o, "NA", "NA", "run_blocks"; exit }
+      if (term == 1) {
+        if (nrun + 0 != 1) { print "SCF_UNVERIFIED", o, "NA", "NA", "run_blocks"; exit }
+        if (oit != o) { print "SCF_UNVERIFIED", o, "NA", "NA", "outcar_oszicar_mismatch"; exit }
+      } else if (oit ~ /^[0-9]+$/ && oit + 0 > o + 1) { print "SCF_UNVERIFIED", o, "NA", "NA", "outcar_oszicar_mismatch"; exit }
       if (rc != "0" || term != 1) { print "RUN_FAILED", o, (de == "" ? "NA" : de), (dp == "" ? "NA" : dp), "rc_or_not_terminated"; exit }
-      if (nrun != 1) { print "SCF_UNVERIFIED", o, "NA", "NA", "run_blocks"; exit }
-      if (oit != o) { print "SCF_UNVERIFIED", o, "NA", "NA", "outcar_oszicar_mismatch"; exit }
       if (!finite(de) || !finite(dp)) { print "SCF_UNVERIFIED", o, (de == "" ? "NA" : de), (dp == "" ? "NA" : dp), "nonfinite"; exit }
       if (!finite(ediff)) { print "SCF_UNVERIFIED", o, de, dp, "ediff_unknown"; exit }
       a = de + 0; b = dp + 0; if (a < 0) a = -a; if (b < 0) b = -b
@@ -753,7 +758,11 @@ def incar_val(text, tag):
 
 
 def judge_text(osz, out, incar, rc):
-    """→ (상태, 행수, dE 토큰, d eps 토큰, 사유) — 러너 judge() 의 awk 와 같은 규칙·같은 순서 (selftest 가 같은 탐침 집합으로 대조)."""
+    """→ (상태, 행수, dE 토큰, d eps 토큰, 사유) — 러너 judge() 의 awk 와 같은 규칙·같은 순서 (selftest 가 같은 탐침 집합으로 대조).
+
+    확정 모순은 rc 보다 먼저 거부한다 (CZ Q-CZ-1 · 2026-10-22): 실행 머리줄 ≥ 2 · 끝까지 쓰인 OUTCAR 의 머리줄 ≠ 1 또는 마지막 반복 번호 ≠ N ·
+    안 끝난 OUTCAR 의 반복 번호 > N + 1. 안 끝난 OUTCAR 의 번호 없음 · ≤ N + 1 은 결측 (잘림 · 스텝 도중 충돌) 이라 RUN_FAILED 를 허용한다
+    (비준 정책 '전자 스텝 ≥ 1 뒤 충돌 = 실행 실패' 유지 · 판정 근거 파일 OSZICAR 쪽 결측은 봐주지 않는다)."""
     n, ion, bad, de, dp = 0, False, "", "", ""
     for ln in (osz or "").splitlines():
         if _ION.match(ln):
@@ -784,12 +793,17 @@ def judge_text(osz, out, incar, rc):
         return "SCF_UNVERIFIED", n, "NA", "NA", "nelm_unknown"
     if n > int(nelm):
         return "SCF_UNVERIFIED", n, "NA", "NA", "n_gt_nelm"
+    if nrun >= 2:
+        return "SCF_UNVERIFIED", n, "NA", "NA", "run_blocks"
+    if term:
+        if nrun != 1:
+            return "SCF_UNVERIFIED", n, "NA", "NA", "run_blocks"
+        if oit != n:
+            return "SCF_UNVERIFIED", n, "NA", "NA", "outcar_oszicar_mismatch"
+    elif oit is not None and oit > n + 1:
+        return "SCF_UNVERIFIED", n, "NA", "NA", "outcar_oszicar_mismatch"
     if rc != 0 or not term:
         return "RUN_FAILED", n, na(de), na(dp), "rc_or_not_terminated"
-    if nrun != 1:
-        return "SCF_UNVERIFIED", n, "NA", "NA", "run_blocks"
-    if oit != n:
-        return "SCF_UNVERIFIED", n, "NA", "NA", "outcar_oszicar_mismatch"
     a, b = _num(de), _num(dp)
     if a is None or b is None:
         return "SCF_UNVERIFIED", n, na(de), na(dp), "nonfinite"
@@ -1443,7 +1457,7 @@ elif beh in ("noconv", "badwav", "nowav"):
     rows = [(i, 2.2e-3, -3.2e-5) for i in range(1, nelm + 1)]
 elif beh == "conv_badwav":
     rows = [(i, 1e-3 / i, 1e-4 / i) for i in range(1, 25)] + [(25, -3.1e-8, -1.2e-8)]
-elif beh == "crash":
+elif beh in ("crash", "crash_tworuns"):
     rows, rc, term = [(i, 1e-2, 1e-3) for i in range(1, 8)], 1, False
 elif beh == "nan":
     rows = [(i, 1e-3, 1e-4) for i in range(1, 20)] + [(20, "NaN", "NaN")]
@@ -1466,6 +1480,8 @@ if term and rows:
     osz.write(f"   1 F= {Et:.8E} E0= {Et:.8E}  d E =0.1E+00\n")
 osz.close()
 out = [f" {version}", " ", " executed on             LinuxIFC date 2026.10.20  00:00:00", "", " INCAR:"] + [f"   {x}" for x in inc.splitlines()]
+if beh == "crash_tworuns":                       # CZ Q-CZ-1 재현 ①: 같은 버전의 실행 머리줄이 둘 (두 실행이 한 OUTCAR 에)
+    out = [f" {version}", " executed on             LinuxIFC date 2026.10.19  23:00:00"] + out
 out += [f" POTCAR:    {t}" for t in titel] + [f"   TITEL  = {t}" for t in titel]
 nb = 512
 out += [" Dimension of arrays:", f"   k-points           NKPTS =      4   k-points in BZ     NKDIM =      4   number of bands    NBANDS=    {nb}",
@@ -1606,6 +1622,7 @@ def _selftest():
         row = lambda i, de, dp: f"DAV: {i:4d}   -0.67E+03   {de}   {dp}  9016   0.341E-03\n"
         okrows = "".join(row(i, "-0.1E-02", "-0.1E-03") for i in range(1, 25)) + row(25, "-0.31E-07", "-0.12E-07")
         out_ok = lambda n, extra="": f" vasp.5.4.4 x\n{extra}" + "".join(f" Iteration      1( {i:3d})\n" for i in range(1, n + 1)) + " General timing and accounting\n"
+        noterm = lambda k: " vasp.5.4.4 x\n" + "".join(f" Iteration      1( {i:3d})\n" for i in range(1, k + 1))          # 안 끝난 OUTCAR (마지막 반복 번호 k)
         inc = "NELM = 30\nEDIFF = 1E-6\n"
         probes = {"ok": (okrows, out_ok(25), inc, 0), "noconv": (okrows.replace("-0.31E-07", "0.22E-02"), out_ok(25), inc, 0),
                   "deps_only": (okrows.replace("-0.12E-07", "0.2E-05"), out_ok(25), inc, 0),
@@ -1622,7 +1639,13 @@ def _selftest():
                   "it_mismatch": (okrows, out_ok(24), inc, 0), "no_ediff": (okrows, out_ok(25), "NELM = 30\n", 0), "no_nelm": (okrows, out_ok(25), "EDIFF = 1E-6\n", 0),
                   "nelm_semicolon": (okrows, out_ok(25), "NELM = 30; EDIFF = 1E-6 # c\n", 0), "dup_nelm_last": (okrows, out_ok(25), "NELM = 10\nNELM = 30\nEDIFF = 1E-6\n", 0),
                   "rc1_gt_nelm": (okrows, out_ok(25), "NELM = 20\nEDIFF = 1E-6\n", 1), "rc1_step0": (row(0, "1E-3", "1E-4") + okrows.split("\n", 1)[1], out_ok(25), inc, 1),
-                  "rc1_no_rows": ("", " vasp.5.4.4 x\n", inc, 1)}
+                  "rc1_no_rows": ("", " vasp.5.4.4 x\n", inc, 1),
+                  # R1 (CZ Q-CZ-1) — 확정 모순은 rc 보다 먼저 · 안 끝난 OUTCAR 의 결측은 실행 실패
+                  "rc1_two_runs": (okrows, out_ok(25, " vasp.5.4.4 y\n"), inc, 1), "rc1_it_mismatch_term": (okrows, out_ok(24), inc, 1),
+                  "crash_midstep": (okrows, noterm(26), inc, 1), "crash_outcar_short": (okrows, noterm(20), inc, 1),
+                  "crash_no_iter": (okrows, " vasp.5.4.4 x\n", inc, 1), "crash_no_header": (okrows, "", inc, 1),
+                  "crash_outcar_ahead": (okrows, noterm(28), inc, 1), "noterm_two_runs": (okrows, " vasp.5.4.4 y\n" + noterm(25), inc, 1),
+                  "term_no_header": (okrows, out_ok(25).replace(" vasp.5.4.4 x\n", ""), inc, 1), "rc0_noterm_midstep": (okrows, noterm(26), inc, 0)}
         agree, seen = True, {}
         for name, (osz, out, ic, rc) in probes.items():
             d = os.path.join(T, "probe", name); os.makedirs(d)
@@ -1637,7 +1660,10 @@ def _selftest():
                 "stars": "SCF_UNVERIFIED", "four_fields": "SCF_UNVERIFIED", "step0": "SCF_UNVERIFIED", "skip": "SCF_UNVERIFIED", "two_blocks": "SCF_UNVERIFIED",
                 "after_ion": "OK", "no_rows": "SCF_UNVERIFIED", "gt_nelm": "SCF_UNVERIFIED", "rc1": "RUN_FAILED", "not_term": "RUN_FAILED", "rc1_nan": "RUN_FAILED",
                 "two_runs": "SCF_UNVERIFIED", "it_mismatch": "SCF_UNVERIFIED", "no_ediff": "SCF_UNVERIFIED", "no_nelm": "SCF_UNVERIFIED", "nelm_semicolon": "OK", "dup_nelm_last": "OK",
-                "rc1_gt_nelm": "SCF_UNVERIFIED", "rc1_step0": "SCF_UNVERIFIED", "rc1_no_rows": "SCF_UNVERIFIED"}
+                "rc1_gt_nelm": "SCF_UNVERIFIED", "rc1_step0": "SCF_UNVERIFIED", "rc1_no_rows": "SCF_UNVERIFIED",
+                "rc1_two_runs": "SCF_UNVERIFIED", "rc1_it_mismatch_term": "SCF_UNVERIFIED", "crash_midstep": "RUN_FAILED", "crash_outcar_short": "RUN_FAILED",
+                "crash_no_iter": "RUN_FAILED", "crash_no_header": "RUN_FAILED", "crash_outcar_ahead": "SCF_UNVERIFIED", "noterm_two_runs": "SCF_UNVERIFIED",
+                "term_no_header": "SCF_UNVERIFIED", "rc0_noterm_midstep": "RUN_FAILED"}
         ck("판정 계약: 기대 상태 (NaN·Inf·별표·스텝 0·건너뜀·블록 둘·행 없음·NELM 초과 = 미확인 · rc 1/미종료 = 실행 실패 · 경계 = EDIFF 이하 수렴)",
            all(seen[k][1][0] == v for k, v in want.items()), {k: seen[k][1][0] for k, v in want.items() if seen[k][1][0] != v})
         v5same = all(((lambda r: ("SCF_UNVERIFIED" if r[3] else ("OK" if abs(r[1]) <= 1e-6 and abs(r[2]) <= 1e-6 else "SCF_NOT_CONVERGED")))(V.oszicar_last(probes[k][0]))) == want[k]
@@ -1768,6 +1794,21 @@ def _selftest():
                rc12b == 1 and "RESTART_NOT_HONOURED" in log12b and not os.path.isdir(os.path.join(p6b, "run", "P2S_S_A_bound_r2"))
                and resolve_job(J["P2S_S_A_bound"], p6b, os.path.join(p6b, "run"))["status"] == "RESTART_NOT_HONOURED", log12b[-300:])
         ck("조기 경보: 120 스텝 뒤 |dE| 정체 → warn.log · env.txt (중단 아님 — 끝까지 돈다)", "dE_stall" in wl and os.path.isfile(os.path.join(p6, "run", "P2S_S_A_bound", "attempt.json")), (wl, log12[-300:]))
+        # R1 끝에서 끝 (CZ Q-CZ-1 재현 ①) — 단 0 = 전자행 7 · rc 1 · 같은 버전 실행 머리줄 둘
+        pR = fresh("pk_tworuns")
+        rcR, logR = run_r(pR, {"P2S_S_A_bound/0": "crash_tworuns"}, (), JOBS="P2S_S_A_bound")
+        stR = {}
+        for ln in open(os.path.join(pR, "run", "status.tsv")).read().splitlines()[1:]:
+            t_ = ln.split("\t"); stR[(t_[0], t_[1])] = t_[4]
+        resR = resolve_job(J["P2S_S_A_bound"], pR, os.path.join(pR, "run"))
+        ck("⛔음성 R1 끝에서 끝 (CZ 재현 ①): 단 0 전자행 7 · rc 1 · 머리줄 둘 → 러너 SCF_UNVERIFIED · r1 안 띄움 · 검사기도 단 0 에서 멈춤",
+           rcR == 1 and stR.get(("P2S_S_A_bound", "0")) == "SCF_UNVERIFIED" and not os.path.isdir(os.path.join(pR, "run", "P2S_S_A_bound_r1"))
+           and resR["status"] == "SCF_UNVERIFIED" and resR["history"] == {"0": "SCF_UNVERIFIED"}, (rcR, stR, resR.get("history"), logR[-300:]))
+        if not os.path.isdir(os.path.join(pR, "run", "P2S_S_A_bound_r1")):                                                  # (러너가 r1 을 띄웠으면 위 시험이 이미 ✗)
+            shutil.copytree(os.path.join(PKG, "run", "P2S_S_A_bound_r1"), os.path.join(pR, "run", "P2S_S_A_bound_r1"))   # CZ 사슬: 정상 r1 반송을 붙인다
+        resR2 = resolve_job(J["P2S_S_A_bound"], pR, os.path.join(pR, "run"))
+        ck("⛔음성 R1 (CZ 사슬 '0: RUN_FAILED → r1A OK → r1B OK → 최종 OK'): 정상 r1 을 붙여도 검사기는 단 0 SCF_UNVERIFIED 에서 멈춘다",
+           resR2["status"] == "SCF_UNVERIFIED" and "r1B" not in resR2["history"], (resR2["status"], resR2.get("history")))
         # ── 6. 집계 (깨끗한 반송 · 가짜 UMA) ──
         p7 = fresh("pk_clean")
         rcc, logc = run_r(p7, {})
