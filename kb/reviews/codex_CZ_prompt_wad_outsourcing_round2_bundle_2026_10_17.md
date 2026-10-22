@@ -6,7 +6,7 @@ date: 2026-10-17
 track: wad
 channel: codex
 kind: prompt
-status: 발송 가능 — 봉인 · ④ UMA 단일점 · 실제 묶음 빌드 2026-10-22 (기준 커밋 8d41e4e0 · 묶음 MANIFEST 31e47474…) · 발송 전
+status: 발송 2026-10-22 (기준 커밋 8d41e4e0 · 묶음 MANIFEST 31e47474…) · ✅ 회신 수령 2026-10-22 → `codex_CZ_reply_wad_outsourcing_round2_bundle_2026_10_17.md` (NO-GO · 발송 보류 · 구조 봉인·집계 산식 유지 · 반송 검사 경로 P0 다섯 묶음 + P1 · 해제조건 일곱 · 고친 묶음 재봉인)
 confidence: medium
 verificationStatus: unverified
 explored: false
