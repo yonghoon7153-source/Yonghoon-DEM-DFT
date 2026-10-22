@@ -14,6 +14,7 @@
 > **★ 개정 (10-21 · Codex 판정문 `docs/reviews/codex_review_rint2_carbon_additive_design_20261021.md` · 수정 계획 `docs/reviews/rint2_design_fix_plan_20261021.md` · 1저자 10-21 Q1–Q12 권고대로 + Q13 (가) — Q13 = 진행 기록 10-21 02 의 막는 것 E6 결정 (가) · 수정 계획 문서에는 Q12 까지 (1저자 결정의 리포 기록 = 메인 몫))** — 판정문 §0: S0 단계 1 (새 SBE 기하 · 읽기 전용) = **조건부 GO** (원본 경로 · 표본화 · 침대 지문 보존 · `s_min` 은 자동 파생값이 아님을 명시) · S0 단계 2 (DBE 기하) = **조건부 GO** — 문턱 전부와 s_min 선택 절차를 DBE 열람 전에 개정 · 봉인 (등록 R §2-1 · §2-1b) + 재방문 셀 · 긴 접촉 · 덮임 census 를 보탠 뒤 · 재압밀 자체는 판정문 표에 따로 없다 (σ 를 보지 않는 침대 준비 · 수정 계획 §3 = 바로 가능) · σ 를 여는 런 (숫자 탐침 제외) = Codex 재검토 GO · 등록 비준 뒤.  바뀐 자리 = §1-0 · §1-1 (Q13 (가) — 새 킷 payload 줄에서 `--joule-heat` · `--save-step4-grid` 를 빼는 sed + 확인 grep) · §1-4b (판정문 §5-2 의 재압밀 추가 기록 칸 · 실행 코드 지문) · §1-5 · §2 (새 census 칸 · s_min 개발 단계 · 계획 해시 둘) · §3 (사슬 실제 명령) · §4 ⑥ · §5.  철회 문장은 `~~ ~~` · 결과 0 건.
 > **★ 개정 2 (10-21 · 사전 리뷰 (설계 · 등록 쪽 PRE-design · 구현 쪽 PRE-impl · 리포 밖 · 메인 세션 기록) · 1저자 10-21 *"권고대로 해"* Q-A–Q-G · 등록 R 4판 · 설계 4판과 짝)** — 바뀐 자리 = §0 (실행 순서 = 주 판정 먼저 · 감도 그 뒤 · Q-F) · §2-2 (단계 2 전 세 숫자 · Q-G) · §2-3 (단계 2 작업 트리 = §2-1 개정 커밋 자체 · census · registry 같은 판 확인 · R 런 계획 · s_min 손 확인 — PRE-design-04 · 14) · §3 (주 판정 먼저 · Q-F · 끝 origin · Q-E) · §5.  철회 문장은 `~~ ~~` · **새 숫자 없음** · 결과 0 건.
 > **★ 개정 3 (10-22 · 사전 리뷰 2 회차 PF2 · 1저자 10-22 Q1 (다) · Q2 · Q3 권고대로 · 등록 R §2-1 · §10-1 · §11 과 짝)** — 바뀐 자리 = §0 (②b ⑥ 숫자 탐침 = 단계 2 앞) · §2-2 (개정 커밋 하나 전에 ⑥) · §2-2b (⑥ 명령 · 옛 §3 (2) 에서 옮김) · §3 (사다리 `--s0-stage2-report` · (2) 철회 표지) · §5 (PRE2-design-01 · Q2) · §0 ④ · §3 시간 (PRE2-design-03 · Q3 — 등록 R §10-4 다시 어림 값 · 새 계산 아님) · (PF2 D · PRE2-design-02 · 08) §3 사다리 `--s0-stage1-report` · 깨끗한 트리 · `--machine` 주석 · §2-3 손 확인 주석 (S0 보고 지문 일곱) · §5.  철회 문장은 `~~ ~~` · 새 숫자 없음 · 결과 0 건.
+> **★ 개정 3 이어 (10-22 · PF2 F · 사전 리뷰 2 회차 PRE2-design-04 · 05 · 결정 없음 · 결과 0 건)** — 바뀐 자리 = §2-2 (단계 2 관문이 결과 전 등록 숫자 넷 · `tol_ff` 를 본다 = 지금 동작) · §2-3 (단계 2 명령 `--r-plan-path` · 관문이 보는 것 · 남은 손 확인 = `same-version` · `s_min` 값) · §3 (사다리 `--s0-plan` · 감도 단계 `--after-main` = 등록 R §10-1 블록과 같은 인자 · 지킴 = `scripts/test_rint_r_chain.py` K01 · 3판 · 4판 규칙은 사슬에 들어갔다 · `<V>_UNCHECKED` 자리 = `assemble` · 시험 V02).  철회 문장은 `~~ ~~` · 새 숫자 없음.
 
 ## 0. 순서 한눈에
 
@@ -374,8 +375,10 @@ git diff --quiet "$H1" "$REV" -- scripts/ca_s0_census.py scripts/carbon_junction
     scripts/mpm_webapp_payload.py scripts/fibre_segment_raster.py scripts/sr01_stamp_compare.py; echo "same-version rc=$?"
 # R 런 계획 줄 · 세 숫자 = 단계 2 관문이 본다 (10-22 PRE2-design-04 · 옛 주석 "도구가 아직 보지 않는다" 철회 · verify_plan_commit · L3i–L3w) · 손 확인 = s_min 값 (등록 R §2-1b) — 등록 줄을 그대로 화면에
 grep -n '^| 계획 해시 |\|^| S0 계획 해시 |' docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md
+# (10-22 · 사전 리뷰 2 회차 PRE2-design-05) --r-plan-path = 같은 개정 커밋의 R 런 계획 (리포 상대 · 없으면 관문 거부 · 등록 R §10-1 (1b) 와 같은 인자)
 python3 ~/dem-ca1/scripts/ca_s0_census.py --stage 2 --threshold-commit "$REV" \
     --plan-path docs/data/rint2_s0_sbe_<날짜>/cjunc_plan.json \
+    --r-plan-path <같은 개정 커밋의 R 런 계획 경로> \
     --kit ~/sdcp/kit_DBE_sdcp1um_vgcf100 --kit ~/sdcp/kit_DBE --out ~/sdcp/ca1_s0_dbe 2>&1 | tee ~/ca1_s0_dbe.log
 ```
 
@@ -432,16 +435,20 @@ sha256sum ~/sdcp/ca1_plan.json      # = 등록 R §2-1 '| 계획 해시 |' 줄 �
 #   [--machine <짧은 이름표>] = 사다리 · 예측 단계 요약에 기록만 (판정에 안 쓴다 · 등록 R §10-4 문장 3)
 
 # (3) 보정 사다리 — 법칙 끝마다 (먼저 같은 인자 + --dry-run = 첫 런 다섯 (바닥 · 천장 · 1e4 · 1e6 · 1e8) 의 env 만 찍는다 · 폴더를 만들지 않는다)
+#     (10-22 · 사전 리뷰 2 회차 PRE2-design-05) --s0-plan = S0 단계 1 계획 (개정 커밋에 든 파일 · 없으면 인자 오류 rc 2 · 두 계획 대조) — 인자 = 등록 R §10-1 블록과 같다
 python3 ~/dem-ca1/scripts/rint_r_chain.py --stage ladder --law P0 --target 1.63 --runner ~/dem-ca1/scripts/sdcp_gain_vox015_8arm.sh \
-    --root ~/sdcp --plan ~/sdcp/ca1_plan.json --s0-stage2-report ~/sdcp/ca1_s0_dbe/s0_stage2_kit_DBE_sdcp1um_vgcf100.json \
+    --root ~/sdcp --plan ~/sdcp/ca1_plan.json --s0-plan ~/dem-ca1/docs/data/rint2_s0_sbe_<날짜>/cjunc_plan.json \
+    --s0-stage2-report ~/sdcp/ca1_s0_dbe/s0_stage2_kit_DBE_sdcp1um_vgcf100.json \
     --s0-stage1-report ~/sdcp/ca1_s0_sbe/s0_stage1_kit_SBE_vgcf100.json \
     --max-hours <등록 R §10 시간 상한> --out ~/sdcp/ca1_ladder_P0 --dry-run
 python3 ~/dem-ca1/scripts/rint_r_chain.py --stage ladder --law P0 --target 1.63 --runner ~/dem-ca1/scripts/sdcp_gain_vox015_8arm.sh \
-    --root ~/sdcp --plan ~/sdcp/ca1_plan.json --s0-stage2-report ~/sdcp/ca1_s0_dbe/s0_stage2_kit_DBE_sdcp1um_vgcf100.json \
+    --root ~/sdcp --plan ~/sdcp/ca1_plan.json --s0-plan ~/dem-ca1/docs/data/rint2_s0_sbe_<날짜>/cjunc_plan.json \
+    --s0-stage2-report ~/sdcp/ca1_s0_dbe/s0_stage2_kit_DBE_sdcp1um_vgcf100.json \
     --s0-stage1-report ~/sdcp/ca1_s0_sbe/s0_stage1_kit_SBE_vgcf100.json \
     --max-hours <등록 R §10 시간 상한> --out ~/sdcp/ca1_ladder_P0
 python3 ~/dem-ca1/scripts/rint_r_chain.py --stage ladder --law P1 --target 1.63 --runner ~/dem-ca1/scripts/sdcp_gain_vox015_8arm.sh \
-    --root ~/sdcp --plan ~/sdcp/ca1_plan.json --s0-stage2-report ~/sdcp/ca1_s0_dbe/s0_stage2_kit_DBE_sdcp1um_vgcf100.json \
+    --root ~/sdcp --plan ~/sdcp/ca1_plan.json --s0-plan ~/dem-ca1/docs/data/rint2_s0_sbe_<날짜>/cjunc_plan.json \
+    --s0-stage2-report ~/sdcp/ca1_s0_dbe/s0_stage2_kit_DBE_sdcp1um_vgcf100.json \
     --s0-stage1-report ~/sdcp/ca1_s0_sbe/s0_stage1_kit_SBE_vgcf100.json \
     --max-hours <등록 R §10 시간 상한> --out ~/sdcp/ca1_ladder_P1
 # (4) 예측 — 네 모서리 × {R_j,lo · R_j,0 · R_j,hi} (DBE arm 0 · R_j · 계획 = 사다리 요약에서 사슬이 읽는다)
@@ -453,8 +460,11 @@ python3 ~/dem-ca1/scripts/rint_r_chain.py --stage verdict --runs ~/sdcp/ca1_ladd
 python3 ~/dem-ca1/scripts/rint_r_chain.py --stage verdict --reverify ~/sdcp/ca1_verdict_main
 # 감도 (필수 · 등록 R §5-6 · (10-21 · Q-F) 주 판정 뒤): FIBRE · UNREG · GRID = 사다리 둘 (--variant <이름> --law P0 · P1) + 예측 (--variant <이름> --ladders <그 변이 사다리 둘>) ·
 #   SVORDER = 예측만 (--variant SVORDER --ladders ~/sdcp/ca1_ladder_P0 ~/sdcp/ca1_ladder_P1) · 출력 폴더는 런마다 새로 (예 ~/sdcp/ca1_ladder_P0_FIBRE)
-python3 ~/dem-ca1/scripts/rint_r_chain.py --stage ladder --variant FIBRE --law P0 --target 1.63 --runner ~/dem-ca1/scripts/sdcp_gain_vox015_8arm.sh \
-    --root ~/sdcp --plan ~/sdcp/ca1_plan.json --s0-stage2-report ~/sdcp/ca1_s0_dbe/s0_stage2_kit_DBE_sdcp1um_vgcf100.json \
+#   (10-22 · 사전 리뷰 2 회차 PRE2-design-05) 감도 단계마다 (사다리 · 예측) --after-main ~/sdcp/ca1_predict (끝난 주 예측 · 없으면 MAIN_NOT_DONE · 등록 R §10-1)
+python3 ~/dem-ca1/scripts/rint_r_chain.py --stage ladder --variant FIBRE --after-main ~/sdcp/ca1_predict --law P0 --target 1.63 \
+    --runner ~/dem-ca1/scripts/sdcp_gain_vox015_8arm.sh \
+    --root ~/sdcp --plan ~/sdcp/ca1_plan.json --s0-plan ~/dem-ca1/docs/data/rint2_s0_sbe_<날짜>/cjunc_plan.json \
+    --s0-stage2-report ~/sdcp/ca1_s0_dbe/s0_stage2_kit_DBE_sdcp1um_vgcf100.json \
     --s0-stage1-report ~/sdcp/ca1_s0_sbe/s0_stage1_kit_SBE_vgcf100.json \
     --max-hours <등록 R §10 시간 상한> --out ~/sdcp/ca1_ladder_P0_FIBRE
 # (5) (전체) 판정 — 원 팔 JSON 전부에서 · 값은 --show-results 로 한 번 (판정에 쓰는 런이 다 끝난 뒤 · 열람 기록) · 다시 판정 = 읽기 전용 바이트 대조
