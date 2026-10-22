@@ -67,12 +67,13 @@
 - 절차: S0 단계 1 (SBE 만) → 도구가 위 식으로 숫자를 낸다 → 1저자 확인 (식 · 숫자를 고르지 않는다 — 바꾸려면 이 문서의 **식** 개정 · σ 전 · 이유 기록) → 이 절 개정 커밋 (숫자 + 계획 해시 · 결과 0 건) → S0 단계 2 (DBE) 는 그 커밋 sha 를 인자로 받아야 돈다 (커밋 순서만으로는 시점 증명이 안 된다 — v3 판정 · 사전 리뷰 ② #3).  (10-21 · Codex A1) 해시로 묶어도 **커밋 시점이 실제 미열람 자체를 증명하지는 않는다** — 이 관문은 순서 · 결합의 기록이고, 미열람은 이력 공개로만 주장한다 (판정 한정어 · §7-1 ①).
 - (10-21 · Codex RCA-11 · 1저자 Q8 권고대로) **s_min 은 예외** — *"1저자 확인 (고르지 않는다)"* 는 식이 고정된 숫자 (u · tol_ff · tol_P · tol_sj) 에만 · s_min = §2-1b 개발 단계.  개정 커밋에 함께 = 숫자 + S0 계획 해시 (`| S0 계획 해시 |`) + R 런 계획 해시 (`| 계획 해시 |`) + 두 계획 파일 (바이트 그대로) + s_min 개발 단계 기록 (§2-1b).
 - (10-21 · §10-2 ⑪) **두 계획 대조** — R 런 계획의 `tol_ff_um` = S0 계획 `values_um.tol_ff` (같은 float) · `s_min_um` = §2-1b 등록값 · `step3_rtol` = §3-5 봉인값 · `len_law` = 등록한 v0 길이 법칙 이름 (분산판 표현을 법칙 이름으로 가를지 · 표현 판으로 가를지 = 구현 · §10-3) · `unreg_law` = `cut`.  지금 이 대조를 하는 도구가 없다 (사슬은 R 런 계획만 · S0 단계 2 는 S0 계획만 본다) → ⬜ 대조 도구 (메인 통합 때 · 런 전 · Codex 에 물을 것 §13 R3-Q2).  (10-21 · 사전 리뷰 PRE-design-04) 실측: 버림 저장소에서 `| S0 계획 해시 |` 만 채운 커밋 (`| 계획 해시 |` ⬜ · s_min ⬜) 을 S0 단계 2 관문 (`scripts/ca_s0_census.py` `verify_plan_commit`) 이 **통과**시켰다 [탐침 · 리포 밖] → 단계 2 관문이 같은 커밋의 R 런 계획 줄 (64 자 sha) · 그 파일의 `s_min_um` · `tol_ff_um` = S0 `values_um.tol_ff` 를 확인하게 고친다 (⬜ 구현 = 에이전트 A · 시험 먼저 · 이름 = 구현) — 그 전까지 이 대조는 **사람 규율**이다 (kgy §2-3 의 확인 줄).
+- **(10-22 · 사전 리뷰 2 회차 PRE2-design-01 · 1저자 Q2 권고대로 · 결과 0 건) 계획 하나 · 단계 2 (DBE) 전에 봉인** — 순서 = S0 단계 1 (SBE) → ⑥ 숫자 탐침 (SBE · σ 봉인 · §11 ⑥) → Codex 요청 (기하 + 반복 수) → 회신 → 세 숫자 (§11 ④) → **이 절 개정 커밋 하나** = 숫자 + S0 계획 해시 + R 런 계획 해시 (maxiter 포함 · 하나 — R 런 계획 `p2_extra`) + s_min (§2-1b) → S0 단계 2 (DBE · 그 커밋 sha 인자) → R 런.  DBE 를 본 뒤 계획을 다시 등록하지 않는다 (옛 순서 = ⑥ 이 단계 2 **뒤**에 maxiter 를 정해 계획을 다시 등록해야 했고, 그때 s_min · SV 문턱 · 점 수를 바꿔도 사슬이 몰랐다 — 판정문 탐침 E).  R 런 사슬 (사다리 · 예측 · 판정) 이 S0 단계 2 보고 (`s0_stage2_<DBE 킷>.json`) 의 봉인 계획 해시 (`plan.r_plan.sha256` = R 런 계획 · `plan.sha256` = S0 계획) 를 지금 쓰는 두 계획의 sha256 과 **정확히** 대조한다 · 다르면 멈춘다 (`S0_REPORT_MISMATCH` · 사다리 인자 `--s0-stage2-report` · 바꾸려면 새 등록).  maxiter 는 넉넉하게 둔다 — DBE 팔은 같은 설정을 쓰고, 안 모이면 등록대로 그 팔이 멈춘다 (틀린 값을 내지 않음).
 
 ### 2-1b. s_min — SBE 개발 단계 (10-21 · Codex RCA-11 · 1저자 Q8 권고대로)
 
 - s_min (같은 가닥의 꺾임 · 비연속 재방문 접근을 접합으로 볼 최소 경로 호 길이) 은 §2-1 의 고정 식에서 나오지 않는다 — SBE S0 단계 1 의 같은 가닥 후보 s 분포 (σ 없음 · `s0_junctions_<킷>.npz` · 같은 셀 비연속 재방문 census — 칸 이름 = 구현) 를 **보고 고른다** = 이 등록의 **개발 단계** (자동 파생값이 아니다 · 판정문 §0 표 S0 단계 1 행 *"`s_min`은 아직 자동 파생값이 아님을 명시"*).
 - §2-1 개정 커밋에 함께 적는 것 (결과 0 건 · DBE 열람 전): ① 선택 규칙 (어느 분포 · 어느 통계 — 한 문장) ② 고려한 후보 값 전부와 고른 값 ③ 실패 처리 (어느 후보도 서지 않으면 = 정량 거부 · 2판 §2-1 그대로) ④ 고른 사람 · 시점 · 본 자료 (S0 단계 1 보고 JSON sha256).
-- 재봉인: s_min = R 런 계획 `s_min_um` → 계획 해시 (§2-1) 로 묶인다 → S0 단계 2 (DBE) 는 그 개정 커밋 sha 를 인자로 받아야 돈다 (§11 ④) · DBE 분포 (재방문 · 긴 접촉 · SV) 를 본 뒤 s_min 을 바꾸지 않는다 (바꾸려면 새 등록).
+- 재봉인: s_min = R 런 계획 `s_min_um` → 계획 해시 (§2-1) 로 묶인다 → S0 단계 2 (DBE) 는 그 개정 커밋 sha 를 인자로 받아야 돈다 (§11 ④) · DBE 분포 (재방문 · 긴 접촉 · SV) 를 본 뒤 s_min 을 바꾸지 않는다 (바꾸려면 새 등록).  (10-22 · PRE2-design-01 · 1저자 Q2) 이 금지는 이제 사슬이 확인한다 — R 런 사슬이 S0 단계 2 보고의 봉인 계획 해시를 지금 계획과 대조 · 다르면 멈춘다 (`S0_REPORT_MISMATCH` · §2-1 끝 줄).
 - (10-21 · 사전 리뷰 PRE-design-14) **같은 판** — 단계 1 · 단계 2 · R 런의 census · registry 가 같은 코드여야 s_min (단계 1 의 정의로 고른 값) 의 뜻이 그대로다: 단계 2 작업 트리 = §2-1 개정 커밋 그 자체 (가지 끝 `FETCH_HEAD` 가 아님) + census · registry 파일 (`scripts/ca_s0_census.py` · `scripts/carbon_junction.py` · `scripts/ptfe_face_alpha.py` · `scripts/step3_sigma.py` · `scripts/mpm_webapp_payload.py` · `scripts/fibre_segment_raster.py` · `scripts/sr01_stamp_compare.py`) 가 단계 1 보고의 `code.git_head` 와 같은지 `git diff --quiet` 로 확인 · 다르면 단계 2 를 돌리지 않는다 → 단계 1 을 그 판으로 다시 (σ 없음) · 개정 다시 (결과 0 건) (kgy §2-3).  ⚠ S0 보고의 `code.file_digests` 는 다섯 파일만 싣는다 (`carbon_junction.py` · `ptfe_face_alpha.py` 없음) → 보탬 = 구현 (에이전트 A) · 그 전까지 위 `git diff` 가 그 몫을 한다.
 - 문장 제한: s_min 에 *"1저자는 확인만"* 을 쓰지 않는다 (선택이 들어간다) · 같은 보고를 본 두 사람이 다른 값을 고를 수 있다 (판정문 RCA-11) → 판정 한정어 ⑪ (§7-1) · 후보 값들을 감도로 돌릴지 = ⬜ 1저자 (개정 때 · 필수 감도 아님).
 
@@ -299,7 +300,7 @@ python3 ~/dem-ca1/scripts/<사다리 사슬> --stage predict --ladders ~/sdcp/ca
 python3 ~/dem-ca1/scripts/<사다리 사슬> --stage verdict --runs ~/sdcp/ca1_ladder_P0 ~/sdcp/ca1_ladder_P1 ~/sdcp/ca1_predict <origin · 감도 · 격자 폴더> --out ~/sdcp/ca1_verdict
 ```
 
-- **멈춤** (사슬이 강제): 출력 폴더가 이미 있고 비어 있지 않음 · 러너 rc ≠ 0 · `.rejected_*` · 매니페스트 ≠ 요청 (σ · vox · 브리지 · PTFE 규약 · SDCP 구 · `ca_ext` 지문) · `physics_protocol_id` 가 `p3ca-` 아님 (`unknown:*` 포함) · `ca_ext_record_ok` 실패 · 영수증 ≠ LEAN 표 (설계 §7) · 수렴 증서 (ⓐ ⓑ ⓒ) 실패 · 계획 해시 ≠ §2-1 개정값 · S0 단계 2 에 개정 커밋 sha 없음 · env 에 `SIGMA_VGCF_OVERRIDE` · face_alpha 런의 `ptfe_cells_observed` > 0 · sid 격자 ≠ `off` 격자 · 같은 P 일관 검사 위반 · 사다리 비단조 (τ_mono 넘음) · 식별성 · 점 수 상한 · 시간 상한 (⬜ 숫자 탐침 뒤) · 같은 킷 · 같은 계획 두 번 · 판정 단계 입력 sha256 ≠ 런 산출.  (10-21) 실제 = 사슬 `STOPS` 31 코드 + 사다리를 멈추는 판정 이름 (`scripts/rint_r_chain.py` · 진행 기록 10-20 27) · 2판 목록에 없던 것 = 판정 단계 코드 핀 ≠ 단계를 만든 핀 (`CODE_PIN_MISMATCH`) · 예측이 쓴 사다리 ≠ 판정 입력 (`PREDICT_LADDER_MISMATCH`) · 원 팔에서 다시 계산한 결정 ≠ 기록 (`REPLAY_MISMATCH`) · 계획 파일 꼴 (`PLAN_INVALID`) · ⬜ 3판이 더할 것 = 두 계획 대조 (§2-1) · 끝 확인 · 상태 분기 (§5-0) — 구현 (§10-3) · (10-21 · 4판) + 끝 origin (§3-2b ③′) · 보호 띠 (③″) · 이름 우선순위 (§3-2c) · W₊ (§4-2) · 결정표 (§5-5b) · 변이 표지 (§5-6) — 구현 (§10-3) · 3판에서 위 목록의 *"식별성"* = 실제 역상 폭 상한 (§3-2b ④ · ⬜) 이고 e < e_min 은 진단이다 (§3-2 · 지금 사슬은 e < e_min 에서 `CALIB_UNIDENTIFIED` 로 멈춘다 — §10-3 · §13 R3-Q3).
+- **멈춤** (사슬이 강제): 출력 폴더가 이미 있고 비어 있지 않음 · 러너 rc ≠ 0 · `.rejected_*` · 매니페스트 ≠ 요청 (σ · vox · 브리지 · PTFE 규약 · SDCP 구 · `ca_ext` 지문) · `physics_protocol_id` 가 `p3ca-` 아님 (`unknown:*` 포함) · `ca_ext_record_ok` 실패 · 영수증 ≠ LEAN 표 (설계 §7) · 수렴 증서 (ⓐ ⓑ ⓒ) 실패 · 계획 해시 ≠ §2-1 개정값 · S0 단계 2 에 개정 커밋 sha 없음 · env 에 `SIGMA_VGCF_OVERRIDE` · face_alpha 런의 `ptfe_cells_observed` > 0 · sid 격자 ≠ `off` 격자 · 같은 P 일관 검사 위반 · 사다리 비단조 (τ_mono 넘음) · 식별성 · 점 수 상한 · 시간 상한 (⬜ 숫자 탐침 뒤) · 같은 킷 · 같은 계획 두 번 · 판정 단계 입력 sha256 ≠ 런 산출.  (10-21) 실제 = 사슬 `STOPS` 31 코드 + 사다리를 멈추는 판정 이름 (`scripts/rint_r_chain.py` · 진행 기록 10-20 27) · 2판 목록에 없던 것 = 판정 단계 코드 핀 ≠ 단계를 만든 핀 (`CODE_PIN_MISMATCH`) · 예측이 쓴 사다리 ≠ 판정 입력 (`PREDICT_LADDER_MISMATCH`) · 원 팔에서 다시 계산한 결정 ≠ 기록 (`REPLAY_MISMATCH`) · 계획 파일 꼴 (`PLAN_INVALID`) · (10-22 · 사전 리뷰 2 회차 PRE2-design-01 · 1저자 Q2) S0 단계 2 보고의 봉인 계획 해시 (R 런 계획 · S0 계획) ≠ 지금 계획 · 그 보고를 못 읽음 · 꼴이 틀림 (`S0_REPORT_MISMATCH` · 새 이름 하나 · §2-1 끝 줄 · §10-3) · ⬜ 3판이 더할 것 = 두 계획 대조 (§2-1) · 끝 확인 · 상태 분기 (§5-0) — 구현 (§10-3) · (10-21 · 4판) + 끝 origin (§3-2b ③′) · 보호 띠 (③″) · 이름 우선순위 (§3-2c) · W₊ (§4-2) · 결정표 (§5-5b) · 변이 표지 (§5-6) — 구현 (§10-3) · 3판에서 위 목록의 *"식별성"* = 실제 역상 폭 상한 (§3-2b ④ · ⬜) 이고 e < e_min 은 진단이다 (§3-2 · 지금 사슬은 e < e_min 에서 `CALIB_UNIDENTIFIED` 로 멈춘다 — §10-3 · §13 R3-Q3).
 - ~~**런 수 어림** (추정 · 시간은 숫자 탐침 뒤 · 정지 rtol 1e-12 와 ⓒ 이어 풀기로 런마다 ≈ 1.7–2 배 + ⓒ 추가분 [탐침 어림]): 사다리 ≤ 12 × 2 · SBE origin 2 × 2 (§3-3) · 모서리 4 · 허용폭 전파 8 (§3-2b) · DBE origin 4 × 2 (규칙이 걸린 모서리마다 + 5) · 감도 (필수) FIBRE · UNREG = 각 사다리 ≤ 12 × 2 + DBE 4 · SVORDER = DBE 4 · GRID = 사다리 ≤ 12 × 2 + DBE 4 + 현 세대 대조 (σ* 사다리 + DBE 1) · SBE 8 팔 전체 16 (선택).~~
 - **런 수 (10-21 · Codex RCA-01 · 02 · 09 · 1저자 Q6 ④ 권고대로 다시 · 추정 · 시간은 숫자 탐침 뒤 · 런마다 ≈ 1.7–2 배 + ⓒ · ⓓ 추가분 [탐침 어림])** — 런 = 러너 호출 하나 · 팔 = 풀이 하나 (GPU 시간은 팔 수를 따른다):
 
@@ -322,7 +323,7 @@ python3 ~/dem-ca1/scripts/<사다리 사슬> --stage verdict --runs ~/sdcp/ca1_l
 
 ### 10-1. 실제 명령 (10-21 · 3판 · 이름 = 기반 `47d23baba` 의 러너 · 사슬 · S0 도구 · ⛔ 발사 금지 — §11 관문 전부 뒤)
 
-- ⚠ 아래 CLI 는 지금 코드 그대로다 · ~~3판 규칙 (§3-2b 실제 역상 · §4-2 세 R origin · §5-0 상태 · §5-1 법칙별 구간 · §5-6 같은 판정 함수 · §5-6a 닫힌 집합 · §7-1 문장) 은 아직 사슬에 없다 → 메인 통합 (시험 먼저) 뒤 CLI 가 바뀌면 이 절을 다시 개정한다 (§10-3).~~ → (10-21 · 4판 정정 · 메인 통합) 3판 · 4판 규칙은 사슬에 들어갔다 (§10-3) · 바뀐 CLI = 사다리 `--s0-plan` 필수 (두 계획 대조 · §2-1 · 없으면 인자 오류 rc 2) · 감도 단계 (`--variant`) 의 `--after-main` 필수 (Q-F · 없으면 `MAIN_NOT_DONE`) — 아래 블록에 넣었다.
+- ⚠ 아래 CLI 는 지금 코드 그대로다 · ~~3판 규칙 (§3-2b 실제 역상 · §4-2 세 R origin · §5-0 상태 · §5-1 법칙별 구간 · §5-6 같은 판정 함수 · §5-6a 닫힌 집합 · §7-1 문장) 은 아직 사슬에 없다 → 메인 통합 (시험 먼저) 뒤 CLI 가 바뀌면 이 절을 다시 개정한다 (§10-3).~~ → (10-21 · 4판 정정 · 메인 통합) 3판 · 4판 규칙은 사슬에 들어갔다 (§10-3) · 바뀐 CLI = 사다리 `--s0-plan` 필수 (두 계획 대조 · §2-1 · 없으면 인자 오류 rc 2) · 감도 단계 (`--variant`) 의 `--after-main` 필수 (Q-F · 없으면 `MAIN_NOT_DONE`) — 아래 블록에 넣었다.  (10-22 · 사전 리뷰 2 회차 PRE2-design-01 · 1저자 Q2) + 사다리 `--s0-stage2-report` 필수 (S0 단계 2 보고 · 없으면 인자 오류 rc 2 · 봉인 계획 해시 ≠ 지금 계획 = `S0_REPORT_MISMATCH`) · 블록 순서 = ⑥ 숫자 탐침 (2) 을 S0 단계 2 (1b) **앞**으로 (§11 ④ · ⑥).
 
 ```bash
 # ⛔ 발사 금지 — 꼴만 (3판 · 10-21).  SIGMA_VGCF_OVERRIDE 는 env 에 없어야 한다 (사슬 · 러너가 멈춘다)
@@ -332,24 +333,32 @@ cd ~/dem-mt && git fetch -q origin claude/stoic-knuth-NObVQ && git worktree add 
 
 # (1a) S0 단계 1 — SBE 새 침대 (CPU · σ 없음) → 보고 + S0 계획 (cjunc_plan.json · ca-cjunc-plan-v1)
 python3 ~/dem-ca1/scripts/ca_s0_census.py --stage 1 --kit ~/sdcp/kit_SBE_vgcf100 --out ~/sdcp/ca1_s0_sbe
-#      → §2-1 개정 커밋 (결과 0 건) = 숫자 + S0 계획 해시 + s_min 개발 단계 (§2-1b) + R 런 계획 (rint-r-plan-v2 · 칸 11 · 10-21 4판 정정 — 옛 표기 v1) 파일 · 해시
-# (1b) S0 단계 2 — DBE (개정 커밋 sha + 리포 안 S0 계획 경로 · 도구가 그 커밋의 이 문서에 S0 계획 sha256 이 있는지 본다)
-python3 ~/dem-ca1/scripts/ca_s0_census.py --stage 2 --threshold-commit <§2-1 개정 커밋> --plan-path docs/data/rint2_s0_sbe_<날짜>/cjunc_plan.json \
-    --kit ~/sdcp/kit_DBE_sdcp1um_vgcf100 --kit ~/sdcp/kit_DBE --out ~/sdcp/ca1_s0_dbe
+#      ~~→ §2-1 개정 커밋 (결과 0 건) = 숫자 + S0 계획 해시 + s_min 개발 단계 (§2-1b) + R 런 계획 (rint-r-plan-v2 · 칸 11 · 10-21 4판 정정 — 옛 표기 v1) 파일 · 해시~~
+#      (10-22 · PRE2-design-01 · 1저자 Q2) → s_min 개발 단계 (§2-1b) → (2) 숫자 탐침 (아래 · 단계 2 **앞**) → Codex 요청 (기하 + 반복 수) → 회신 →
+#      세 숫자 (§11 ④) → §2-1 개정 커밋 **하나** (결과 0 건) = 숫자 + S0 계획 해시 + R 런 계획 (rint-r-plan-v2 · 칸 11 · maxiter 포함 · 하나) 파일 · 해시 + s_min
 
 # (2) 숫자 탐침 — SBE · 러너 직접 (사슬 밖) · 값 봉인 (반복 수 · 잔차 · 판 전류 불균형 · 시간만 · --show-results 없음)
-#     CJUNC_* · STEP3_RTOL = R 런 계획 파일의 값 그대로 (사슬은 같은 값을 계획에서 편다)
+#     (10-22 · Q2) 단계 2 (DBE) **앞** — 반복 수 · 시간을 재서 maxiter (넉넉하게 · R 런 계획 p2_extra) 를 정한 뒤 계획 하나를 봉인 (다시 등록 없음)
+#     ~~CJUNC_* · STEP3_RTOL = R 런 계획 파일의 값 그대로 (사슬은 같은 값을 계획에서 편다)~~ → (10-22) = 봉인할 R 런 계획의 값 (아직 커밋 전 · 같은 값)
 env VOX=0.15 SDCP_SPHERE_D=0.30 PTFE_STAMP=face_alpha BRIDGE_UM=0.48 SIGMA_AM_S_OVERRIDE=0.0041 SIGMA_SDCP_OVERRIDE=256.6 SIGMA_FIBRE_BULK=1e4 \
     CJUNC=1 CJUNC_RJ=1e6 CJUNC_LEN_LAW=<계획 len_law> CJUNC_UNREG_LAW=cut CJUNC_S_MIN_UM=<계획 s_min_um> CJUNC_TOL_FF_UM=<계획 tol_ff_um> \
-    CJUNC_PTFE_JLAW=P0 SDCP_MOD_C=0 STEP3_RTOL=<계획 step3_rtol> P2_EXTRA="--step3-maxiter <탐침 뒤>" EXPECT_BACKEND=gpu \
+    CJUNC_PTFE_JLAW=P0 SDCP_MOD_C=0 STEP3_RTOL=<계획 step3_rtol> P2_EXTRA="--step3-maxiter <넉넉한 값 · 탐침이 반복 수를 잰다>" EXPECT_BACKEND=gpu \
     KITS=kit_SBE_vgcf100 ARMS=1 LEAN=2 OUTDIR=~/sdcp/ca1_probe bash ~/dem-ca1/scripts/sdcp_gain_vox015_8arm.sh
 
+# (1b) S0 단계 2 — DBE (개정 커밋 sha + 리포 안 S0 계획 경로 + 같은 커밋의 R 런 계획 경로 · 도구가 그 커밋의 이 문서에 두 해시가 있는지 본다)
+#      (10-22 · Q2) ⑥ 숫자 탐침 · 세 숫자 · 개정 커밋 **뒤** · R 런 **앞** — 이 보고 (s0_stage2_kit_DBE_sdcp1um_vgcf100.json) 의 봉인 계획 해시를 R 런 사슬이 대조
+python3 ~/dem-ca1/scripts/ca_s0_census.py --stage 2 --threshold-commit <§2-1 개정 커밋> --plan-path docs/data/rint2_s0_sbe_<날짜>/cjunc_plan.json \
+    --r-plan-path <같은 개정 커밋의 R 런 계획 경로> --kit ~/sdcp/kit_DBE_sdcp1um_vgcf100 --kit ~/sdcp/kit_DBE --out ~/sdcp/ca1_s0_dbe
+
 # (3) 보정 사다리 — 법칙 끝마다 (사슬이 런마다 env 를 정하고 점을 고른다 · 값 봉인 · 먼저 같은 인자 + --dry-run 으로 런 env 를 본다)
+#     (10-22 · Q2) --s0-stage2-report = 위 (1b) 의 DBE 새 침대 보고 — 봉인 계획 해시 ≠ --plan · --s0-plan 이면 S0_REPORT_MISMATCH 로 멈춘다
 python3 ~/dem-ca1/scripts/rint_r_chain.py --stage ladder --law P0 --target 1.63 --runner ~/dem-ca1/scripts/sdcp_gain_vox015_8arm.sh \
     --root ~/sdcp --plan ~/sdcp/ca1_plan.json --s0-plan ~/dem-ca1/docs/data/rint2_s0_sbe_<날짜>/cjunc_plan.json \
+    --s0-stage2-report ~/sdcp/ca1_s0_dbe/s0_stage2_kit_DBE_sdcp1um_vgcf100.json \
     --max-hours <§10 시간 상한> --out ~/sdcp/ca1_ladder_P0
 python3 ~/dem-ca1/scripts/rint_r_chain.py --stage ladder --law P1 --target 1.63 --runner ~/dem-ca1/scripts/sdcp_gain_vox015_8arm.sh \
     --root ~/sdcp --plan ~/sdcp/ca1_plan.json --s0-plan ~/dem-ca1/docs/data/rint2_s0_sbe_<날짜>/cjunc_plan.json \
+    --s0-stage2-report ~/sdcp/ca1_s0_dbe/s0_stage2_kit_DBE_sdcp1um_vgcf100.json \
     --max-hours <§10 시간 상한> --out ~/sdcp/ca1_ladder_P1
 # (4) 예측 — 네 모서리 × {R_j,lo · R_j,0 · R_j,hi} (DBE arm 0 · R_j · 계획 = 사다리 요약에서 사슬이 읽는다 · 사람이 옮겨 적지 않는다)
 python3 ~/dem-ca1/scripts/rint_r_chain.py --stage predict --ladders ~/sdcp/ca1_ladder_P0 ~/sdcp/ca1_ladder_P1 --kit kit_DBE_sdcp1um_vgcf100 \
@@ -365,7 +374,7 @@ python3 ~/dem-ca1/scripts/rint_r_chain.py --stage verdict --runs ~/sdcp/ca1_ladd
 python3 ~/dem-ca1/scripts/rint_r_chain.py --stage verdict --reverify ~/sdcp/ca1_verdict
 ```
 
-- R 런 계획 파일 (`~/sdcp/ca1_plan.json`) = §2-1 개정 커밋에 든 파일을 바이트 그대로 kgy 로 (sha256 = §2-1 `| 계획 해시 |` 줄 · 사슬이 다르면 `PLAN_HASH_MISMATCH` · 칸이 ⬜ 이면 `PLAN_HASH_UNREGISTERED` 로 멈춘다).
+- R 런 계획 파일 (`~/sdcp/ca1_plan.json`) = §2-1 개정 커밋에 든 파일을 바이트 그대로 kgy 로 (sha256 = §2-1 `| 계획 해시 |` 줄 · 사슬이 다르면 `PLAN_HASH_MISMATCH` · 칸이 ⬜ 이면 `PLAN_HASH_UNREGISTERED` 로 멈춘다).  (10-22 · PRE2-design-01 · 1저자 Q2) 그 sha256 = S0 단계 2 보고의 `plan.r_plan.sha256` (단계 2 가 봉인한 계획) 이기도 해야 한다 — 다르면 `S0_REPORT_MISMATCH` (사다리 · 예측 · 판정).  (1b) 의 `--r-plan-path` = 판정문 PRE2-design-05 (없으면 관문 거부 · 리포 시험 L3t).
 
 ### 10-2. 사슬이 등록을 읽은 곳 (10-21 · 등록 문장이 정하지 않은 자리 · Codex 에 물을 것 표시)
 
@@ -420,6 +429,12 @@ python3 ~/dem-ca1/scripts/rint_r_chain.py --stage verdict --reverify ~/sdcp/ca1_
 | ㉟ | §5-6 SV 행 · §11 ④ 모서리 묶는 법 | **하나라도** — 범위 안 모서리 하나라도 아래 끝 > 문턱 → `SV_DEPENDENT` · 하나라도 걸침 · 못 읽음 (· 문턱 없음 · 범위 안 모서리 없음) → `SV_UNCHECKED` · 두 표지가 함께 붙을 수 있다 (지금 사슬 · 계획 칸 없음) | U08 · U08b (두 모서리 꼴) · V25–V27 | 물을 것 — Q-G 때 확정 (문턱 · 세 R 여부와 같은 때 · 1저자) |
 | ㊱ | §5-6 SV 행 괄호 | 참 비 (다리만 끊고 섬유 자기 길은 남긴 판) ∈ [아래 끝, 위 끝] 의 보장 = **지금 셀 그래프 안에서만** (같은 그래프에서 간선을 더 빼면 G 는 줄기만 한다 · Rayleigh) — (나) 처럼 섬유 길을 새로 따로 그리는 정의면 드물게 범위 밖일 수 있다 · 아래 끝을 못 읽은 모서리 = 위 끝 값과 무관하게 못 읽음 (지금 방식 · `SV_UNCHECKED`) | `scripts/test_carbon_junction.py` QD2 ③ (손 회로 아래 < 참 < 위) · U08b | 물을 것 — (나) 역할 분리 표현이 필요한가 · 아래 끝 못 읽음 + 위 끝 ≤ 문턱의 읽기 |
 
+- (10-22 · 사전 리뷰 2 회차 PF2 B · C · D · E · 1저자 Q1 (다) · Q2 · Q3 권고대로 · 결과 0 건) **사슬이 등록을 읽은 곳 (B · C · D · E)** — 등록 문장이 정하지 않은 자리를 코드가 읽은 방식 (고르지 않은 자리 = 지금 방식 · Codex 에 이 번호로):
+
+| # | 등록 자리 | 지금 동작 (`scripts/rint_r_chain.py` · B) | 근거 (시험) | Codex |
+|---|---|---|---|---|
+| ㊲ | §2-1 끝 줄 · §11 ④ 단계 2 봉인 대조 (Q2) | 사다리 인자 `--s0-stage2-report` (DBE 새 침대 보고 하나) · 대조 = `plan.r_plan.sha256` = R 런 계획 sha256 · `plan.sha256` = S0 계획 sha256 (둘 다 정확히) · 꼴 = schema `ca-s0-census-v2` · 단계 2 (정수) · 킷 = `kit_DBE_sdcp1um_vgcf100` · source `commit:` · 하나라도 아니면 `S0_REPORT_MISMATCH` (새 이름 하나 — 못 읽음 · 꼴 · 해시 다름 모두) · 예측 · 판정 = 사다리 요약의 기록 (보고 경로 · 파일 sha256 · 봉인 해시 · 킷 · source) 을 같은 함수로 다시 대조 (보고 파일을 다시 읽지 않는다) · 단계끼리 기록이 같아야 | `scripts/test_rint_r_chain.py` B01–B09 | 물을 것 — 옛 침대 `kit_DBE` 보고 (같은 커밋 · 같은 봉인) 를 받지 않는 것 · 예측 · 판정이 보고 파일을 다시 읽지 않는 것 |
+
 ### 10-3. 구현과 맞출 이름 (10-21 · 3판이 쓴 이름 — 코드가 정하면 그 이름으로 이 문서를 다시 고친다)
 
 | 이름 | 자리 | 정하는 쪽 |
@@ -431,6 +446,7 @@ python3 ~/dem-ca1/scripts/rint_r_chain.py --stage verdict --reverify ~/sdcp/ca1_
 | `SV_local_dissipation` · `sv_counterfactual_ratio` · `SV_DEPENDENT` | §5-6 | S2 접합 경로 (구현) |
 | (10-22 · Q1 (다) · 정해짐) 괄호 칸 — 못 가른 덩어리 수 `n_unsplit_bridging_components` · 규칙 `bracket_rule` (`lower_keep_unsplit_upper_remove_unsplit_sdcp_cells_v1`) · 위 끝 `status_hi` · `sv_counterfactual_ratio_hi` (증거 +∞ = null + `ratio_limit_hi` 'inf') · 위 끝 풀이 기록 `upper` (못 가른 덩어리 0 = null) · 위 끝 상태 `unsplit_census_mismatch` (census 수 ≠ 지문 묶인 원장에서 다시 가른 수 · 풀지 않음) · 사슬 세부 `straddle` (걸침 모서리) | §5-6 SV 행 | S2 접합 경로 (구현됨 · `carbon_junction`) · 증거 꼴 · 검증기 (`ca_ext_svcf`) · 사슬 (`sv_assess`) |
 | `SV_UNCHECKED` (차단 · 이름 후보) · `GAP_ENVELOPE_ONLY` · `ASSUMED_UNVALIDATED` · 판정 문장 상수 · 결정표 | §5-1 · §5-5 · §5-6a · §7-1 | 사슬 (메인) |
+| (10-22 · PF2 B · PRE2-design-01 · Q2 · 정해짐) 멈춤 `S0_REPORT_MISMATCH` (S0 단계 보고 못 읽음 · 꼴 · 봉인 계획 해시 ≠ 지금 계획 — 새 이름 하나) · 사다리 인자 `--s0-stage2-report` · 요약 칸 `s0_reports.stage2` (`r_plan_sha256` · `plan_sha256` · `kit` · `plan_source` · `path` · `sha256`) | §2-1 끝 줄 · §11 ④ · §10-2 ㊲ | 사슬 (구현됨 · `rint_r_chain.read_s0_stage2` · `s0_stage2_problem`) |
 | 분산판의 이름 — `CJUNC_LEN_LAW` 값을 바꿀지 · 총 G 법칙 `len_scaled_v0` 는 그대로 두고 표현 판 (접합 원장 · `cjunc` schema · 모델 판 이름) 으로 가를지 (어느 쪽이든 옛 lumped 와 분산판을 **같은 이름 · 같은 지문**으로 부르지 않는다) | §2 · 설계 §4-1 | S2 접합 경로 (구현) |
 | S0 census 새 칸 (같은 셀 비연속 재방문 · 포트 동률 · 긴 접촉 · 간선별 PTFE 덮임) | §2-1b · 명령 문서 §2 | S0 도구 (구현) |
 | 두 계획 대조 · 끝 규칙 (§3-2b) · origin 세 R · 변이 같은 판정 함수 · s 분모 · e_min 진단화 (지금 사슬 = e < e_min 에서 `CALIB_UNIDENTIFIED` 멈춤) · 변이 사다리 origin (지금 = 주 사다리만 · V14) | §2-1 · §3-2 · §3-2b · §4-2 · §5-6 | 사슬 (메인) |
@@ -459,13 +475,22 @@ python3 ~/dem-ca1/scripts/rint_r_chain.py --stage verdict --reverify ~/sdcp/ca1_
 4. S0 단계 1 (SBE) 보고 → §2-1 숫자 + 계획 해시를 이 문서 개정 (결과 0 건) 으로 커밋 → S0 단계 2 (DBE · 그 커밋 sha 인자) — ~~긴 접촉 (L_c > L_par) 이 1 이상이면 **여기서 멈춘다** (J8 · 정량 거부 · N10 의 개정 경로)~~ → Q17 (1저자 10-20 밤) 뒤 = 멈추지 않는다 · 단계 1 보고에 긴 접촉 수 · L_c 분포 · 같은 가닥 근접의 호 길이 s 분포를 넣고 s_min 을 §2-1 숫자로 함께 커밋한다.  (10-21 · Q8) 그 커밋 = 숫자 + S0 계획 해시 + R 런 계획 해시 + s_min 개발 단계 (§2-1b · 규칙 · 후보 · 실패 처리) · S0 단계 1 보고에 같은 셀 비연속 재방문 · 포트 동률 · 간선별 PTFE 덮임 census (칸 이름 = 구현) 를 함께.
    - **(10-21 · 사전 리뷰 PRE-design-03 · 1저자 Q-G 권고대로) 단계 2 전에 세 숫자** — 점 수 상한 (§3-2) · 역상 폭 상한 (§3-2b ④) · SV 반사실 문턱 (§5-6 · + 끊는 범위 · 세 R 여부 · 모서리 묶는 법) 을 1저자가 **Codex 재검토 회신 뒤 · S0 단계 2 (DBE) 열람 전**에 정해 이 문서 개정 (결과 0 건) 으로 커밋 — 단계 2 의 인자 커밋 (위 §2-1 개정) 에 함께 또는 그 앞 커밋 · 어느 쪽이든 단계 2 의 인자 커밋에 세 숫자가 있어야 한다 (단계 2 가 DBE 의 SDCP 경유 섬유 연결 수 = SV 우회 후보 · 재방문 · 긴 접촉 분포를 연다 → N17 의 원칙 그대로 · 관문 구현 = S0 도구 (에이전트 A) · 그 전까지 사람 규율 = kgy §2-2 · §2-3 의 확인 줄).
    - (10-21 · PRE-design-04 · 14) 단계 2 관문은 지금 S0 계획 해시 줄만 본다 (`verify_plan_commit` · 반례 = §2-1) · 단계 2 작업 트리 = 그 개정 커밋 자체 · census · registry 파일 = 단계 1 보고의 `code.git_head` 와 같음 (§2-1b) — 둘 다 고칠 때까지 kgy §2-3 의 손 확인.
+   - **(10-22 · 사전 리뷰 2 회차 PRE2-design-01 · 1저자 Q2 권고대로 · 결과 0 건) 순서 = 단계 1 → ⑥ → 개정 커밋 하나 → 단계 2** — ⑥ 숫자 탐침 (SBE · σ 봉인) 을 이 항목의 단계 2 **앞**으로 옮긴다: S0 단계 1 → s_min 개발 단계 (§2-1b) → ⑥ → Codex 요청 (기하 + ⑥ 의 실침대 반복 수) → 회신 → 세 숫자 → **이 항목의 개정 커밋 하나** = 숫자 + S0 계획 해시 + R 런 계획 해시 (maxiter 포함 · 하나 — R 런 계획 `p2_extra`) + s_min → S0 단계 2 (DBE · 그 커밋 sha 인자) → R 런.  maxiter 는 넉넉하게 둔다 — DBE 팔은 같은 설정을 쓰고, 안 모이면 등록대로 그 팔이 멈춘다 (틀린 값을 내지 않음).  R 런 사슬이 S0 단계 2 보고의 봉인 계획 해시를 지금 계획과 **정확히** 대조한다 · 다르면 멈춘다 (`S0_REPORT_MISMATCH` · §2-1 끝 줄 · 사다리 `--s0-stage2-report`) — 단계 2 뒤 계획을 다시 등록하는 길이 없다 (옛 순서 = ⑥ 뒤 계획 B 를 다시 등록해야 했고 사슬은 그것을 몰랐다 · 판정문 탐침 E).  쉽게 말하면 ② (이 절 끝).
 5. B1 합성 직접해 대조 (리포 시험 · 실침대 아님) → 정지 rtol · ε_I · ⓒ 숫자를 이 문서 개정 (결과 0 건) 으로 커밋 (설계 §6 절차).  (10-21 · Q5) + 목표량 증서 ⓓ 시험 (Codex 반례가 새 증서에서 실패 · 정상 수렴은 통과) · 환경별 ε_I 기록.
-6. 실침대 숫자 탐침 (값 봉인) → 전처리 · maxiter · 시간 상한을 §10 에 기록.  ~~(10-21) + 점 수 상한 · 역상 폭 상한 (§3-2 · §3-2b) · SV 반사실 문턱 · 범위 (§5-6) 를 같은 개정 (결과 0 건 · DBE σ 를 열기 전) 으로.~~ → (10-21 · PRE-design-03 · 1저자 Q-G) 세 숫자는 ④ (단계 2 전) 로 옮겼다 — 이 단계 = 전처리 · maxiter · 시간 상한만 · (Q-F) 실행 순서 · GPU 시간 = §10-4.
+6. 실침대 숫자 탐침 (값 봉인) → 전처리 · maxiter · 시간 상한을 §10 에 기록.  ~~(10-21) + 점 수 상한 · 역상 폭 상한 (§3-2 · §3-2b) · SV 반사실 문턱 · 범위 (§5-6) 를 같은 개정 (결과 0 건 · DBE σ 를 열기 전) 으로.~~ → (10-21 · PRE-design-03 · 1저자 Q-G) 세 숫자는 ④ (단계 2 전) 로 옮겼다 — 이 단계 = 전처리 · maxiter · 시간 상한만 · (Q-F) 실행 순서 · GPU 시간 = §10-4.  (10-22 · PRE2-design-01 · 1저자 Q2) **시점 = ④ 의 S0 단계 1 뒤 · 단계 2 앞** (SBE 만 · DBE 열람 전) — 전처리 · maxiter (넉넉하게) · 시간 상한을 ④ 의 개정 커밋 하나에 함께 (R 런 계획을 다시 등록하지 않는다) · 이 탐침의 실침대 반복 수 = Codex 요청 · 시간 결정점 (§10-4) 의 입력.
 7. 결과 전 어림 (§3-4) 기록.
 8. 1저자 비준 (이 문서 + 개정).
 9. (10-21 · 1저자 Q13 (가)) 새 킷 = payload 줄에서 `--joule-heat` · `--save-step4-grid` 를 뺀 판 (다음 세대 payload 가 둘을 거부 · 기반 `47d23baba` 의 `scripts/mpm_webapp_payload.py` 901–904 · 1729–1732 행 · 사슬 첫 런 RUNNER_RC = 진행 기록 10-21 02 E6 · 명령 문서 §1-1).
 
 - 예외 (σ 를 보지 않는 것): S0 census (단계 1 · 2) · 합성 직접해 대조 (실침대 아님) · 숫자 탐침 (σ 봉인 · 반복 수 · 잔차 · 판 전류 불균형 · 시간만).  그 밖의 σ 를 연 런 = development 로 분류하고 숨기지 않으며, 그 자료를 판정에 다시 쓰지 않는다 (v3.1 §6-2 실행 영수증 규칙).
+
+(10-22 · 수정 계획 `docs/reviews/rint2_design_fix_plan_20261021.md` §6 의 상자 원문 그대로 · 상자 안 "지금 순서" = 10-22 고치기 전 순서)
+
+> **★ 쉽게 말하면 ② — 계획 봉인 순서 (Q2)**
+>
+> - 지금 순서: 재압밀 → S0 단계 1 (SBE 기하) → 계획 봉인 → S0 단계 2 (DBE 기하 열람) → ⑥ 숫자 탐침 (maxiter) → 계획 **다시** 등록 → R 런.  DBE 를 본 뒤 계획을 다시 쓰니, 그때 s_min · SV 문턱 · 점 수를 바꿔도 사슬이 모른다 (사람 규율만 막는다).
+> - 바꾼 순서: 재압밀 → S0 단계 1 → **⑥ 숫자 탐침 (SBE · σ 봉인)** → Codex 요청 (기하 + 반복 수) → 회신 → 세 숫자 → **계획 하나 봉인** → S0 단계 2 (DBE) → R 런 (**사슬이 계획 해시를 대조 · 다르면 멈춤**).
+> - 얻는 것: DBE 를 보기 전에 계획이 한 번만 봉인되고, 기계가 확인한다.  ⑥ 의 실침대 반복 수를 Codex 요청과 시간 판단 (Q3) 에 바로 쓴다.
 
 ## 12. 실행 기록 (빈칸 — 결과 0 건)
 
