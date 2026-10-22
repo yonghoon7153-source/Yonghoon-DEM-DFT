@@ -1057,6 +1057,7 @@ def check(out, ret, manifest_sha256, pp_registry=None, a4_result=None):
     if a4_result is not None and A4_TARGET in att:
         res[A4_TARGET] = adopt_a4(*att[A4_TARGET], a4_result)
         every.append((A4_TARGET, a4_result))
+        every += [(A4_TARGET, x) for x in (a4_result.get("attempts") or {}).values() if isinstance(x, dict)]   # 외주 2차 CZ Q-CZ-3: a4 의 모든 시도 (ⓐ 포함)
     # 잡 사이 일관성 — 첫 시도·r1 **모든 시도**에서 모은다 (어긋나면 어느 쪽이 맞는지 모르므로 전부 막는다)
     by_sp, by_spec, vers = {}, {}, set()
     for n, r in every:
@@ -1596,6 +1597,13 @@ def _selftest():
         _, res = check(out, ret, msha)
         ck(all(v["status"] == "OK" for v in res.values()) and check_exit(res) == 0,
            f"정상 대조군: 18 잡 OK (성능 태그 3 개 허용 · DIPOL 은 min pos cut 으로) — {[(n, v['status'], v.get('why')) for n, v in res.items() if v['status'] != 'OK'][:3]}")
+        v0 = res[PILOT_JOBS[0]]
+        a4x = {"status": "OK", "version": v0.get("version"), "potcar_species_sha256": v0.get("potcar_species_sha256"),
+               "attempts": {"a4A": {"status": "OK", "version": "vasp.6.4.2 other build (stage A only)", "potcar_species_sha256": v0.get("potcar_species_sha256")},
+                            "a4B": {"status": "OK", "version": v0.get("version"), "potcar_species_sha256": v0.get("potcar_species_sha256")}}}
+        _, res_a4 = check(out, ret, msha, None, a4x)
+        ck(v0.get("version") and any(v["status"] == "VERSION_INCONSISTENT" for v in res_a4.values()),
+           "⛔음성 개정 4 + CZ Q-CZ-3: a4 결과의 ⓐ 시도만 다른 VASP 빌드여도 (최종 a4B 는 같은 빌드) 일관성 검사에서 잡힌다 — a4_result.attempts 를 every 에 넣는다")
         reg_ok = seal_pp(out, ret, msha)
         ck(not validate_pp_registry(reg_ok, msha, meta) and reg_ok["from_pilot"][PILOT_JOBS[0]].startswith("20260927T")
            and reg_ok["schema"] == "aprime_v5_pp_registry/v3" and all(HEX64.match(reg_ok["from_pilot_sha256"][p][k]) for p in PILOT_JOBS for k in ("attempt.json", "OUTCAR")),
