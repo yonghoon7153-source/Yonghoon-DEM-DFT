@@ -3565,6 +3565,17 @@ def t_B11():
     return (r['rc'] == 3 and stop_code(r) == 'S0_REPORT_MISMATCH' and (r['v'] or {}).get('verdict') == 'NOT_COMPUTED', (r['rc'], stop_code(r)))
 
 
+@check('B12', '판정 — 세 단계 요약의 단계 2 봉인 R 계획 sha256 을 같게 손댐 (단계끼리 기록은 같음) → S0_REPORT_MISMATCH (단계마다 같은 함수로 '
+              '다시 대조 · 같음 대조만으로는 못 잡는 꼴) · NOT_COMPUTED · rc 3')
+def t_B12():
+    def go():
+        lp = [b_tamper_copy(s_main(law)['out'], f'B12_{law}', 'ladder_summary.json', _b_set_r) for law in ('P0', 'P1')]
+        pp = b_tamper_copy(s_main_predict()['out'], 'B12_pred', 'predict_summary.json', _b_set_r)
+        return verdict('B12', lp + [pp])
+    r = scen('B12', go)
+    return (r['rc'] == 3 and stop_code(r) == 'S0_REPORT_MISMATCH' and (r['v'] or {}).get('verdict') == 'NOT_COMPUTED', (r['rc'], stop_code(r)))
+
+
 @check('N07', '★ PF2 E (PRE2-impl-03) S0 계획 중복 칸 ("gap_tol" 둘 · 등록 S0 줄 = 그 바이트의 sha256) → S0_PLAN_INVALID · 사유 = 중복 칸 '
               '(정준 바이트 검사 앞 · 러너 0 회)')
 def t_N07():
