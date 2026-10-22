@@ -200,7 +200,21 @@ def make_plan_and_reg():
     rp = os.path.join(TD, 'reg_ok.md')
     with open(rp, 'w', encoding='utf-8') as f:
         f.write('\n'.join(out) + '\n')
+    #  ★ PF2 B (10-22 · Q2) — S0 단계 2 보고 (가짜 · 꼴 = ca_s0_census 보고의 판정 칸) — 봉인 계획 해시 = 이 계획 둘
+    s2 = {'schema': S0.SCHEMA, 'stage': 2, 'tool': S0.TOOL_VERSION, 'kit': {'name': DBE_KIT},
+          'plan': {'sha256': s0sha, 'source': 'commit:' + 'a' * 40,
+                   'r_plan': {'path': 'docs/data/rint2_s0_sbe_x/rint_r_plan.json', 'sha256': sha, 's_min_um': 0.6, 'tol_ff_um': 0.05,
+                              'len_law': 'len_scaled_v0', 'unreg_law': 'cut', 'step3_rtol': 1e-12, 'checked': 'fixture'}},
+          'code': {'git_head': 'b' * 40, 'git_dirty': False, 'file_digests': []}}
+    with open(os.path.join(TD, 's0_stage2.json'), 'w', encoding='utf-8') as f:
+        json.dump(s2, f, ensure_ascii=False, indent=1)
     return pp, sp, rp
+
+
+def s0_args():
+    """★ PF2 B — 사다리 인자에 S0 단계 2 보고 (사슬이 그 인자를 알 때만 · 고치기 전 판 = 옛 꼴)."""
+    return (['--s0-stage2-report', os.path.join(TD, 's0_stage2.json')]
+            if '--s0-stage2-report' in RR.main.__code__.co_consts else [])
 
 
 @contextlib.contextmanager
@@ -223,7 +237,7 @@ def chain_env(ws):
 def run_ladder(ws, out, law='P0', max_hours='0.5'):
     pp, sp, rp = make_plan_and_reg()
     argv = ['--stage', 'ladder', '--law', law, '--target', str(RR.TARGET_SBE_MS), '--runner', RUNNER, '--root', ws, '--plan', pp,
-            '--s0-plan', sp, '--registration', rp, '--max-hours', max_hours, '--out', out]
+            '--s0-plan', sp, '--registration', rp, '--max-hours', max_hours, '--out', out] + s0_args()
     buf = io.StringIO()
     t0 = time.time()
     had = hasattr(RR, 'EXPECT_BACKEND')

@@ -9,7 +9,8 @@
 
   # (3) 보정 사다리 — 법칙 끝마다 (SBE arm 0 · LEAN 2 · 값 봉인)
   python3 scripts/rint_r_chain.py --stage ladder --law P0 --target 1.63 --runner ~/dem-ca1/scripts/sdcp_gain_vox015_8arm.sh \\
-      --root ~/sdcp --plan ~/sdcp/ca1_plan.json --s0-plan <리포 S0 계획> --max-hours H --out ~/sdcp/ca1_ladder_P0
+      --root ~/sdcp --plan ~/sdcp/ca1_plan.json --s0-plan <리포 S0 계획> --s0-stage2-report <S0 단계 2 보고 (DBE 새 침대)> \\
+      --max-hours H --out ~/sdcp/ca1_ladder_P0
   # (4) 예측 — 네 모서리 × {R_j,lo · R_j,0 · R_j,hi} (DBE arm 0 · R_j · 계획 · S0 계획은 사다리 요약에서 읽는다)
   python3 scripts/rint_r_chain.py --stage predict --ladders ~/sdcp/ca1_ladder_P0 ~/sdcp/ca1_ladder_P1 --kit kit_DBE_sdcp1um_vgcf100 \\
       --runner … --root ~/sdcp --max-hours H --out ~/sdcp/ca1_predict
@@ -52,6 +53,10 @@
   · ★ RI (10-21 · §5-6 ③ "변이 판정 = NOT_COMPUTED (… 멈춤) → <V>_UNCHECKED" · 1저자 Q2 범위 = 코드를 등록에 맞춤) — 감도 변이 단계가 멈추면
     (STOPPED) 그 변이 판정 = NOT_COMPUTED → <V>_UNCHECKED (차단 · 주 판정은 그대로 계산 · `variant_stage_stopped`) · 주 판정 단계의 멈춤 = 판정
     전체 NOT_COMPUTED (INPUT_STAGE_STOPPED · `stopped_stage_rejects_verdict`) · 판정 입력 검사는 멈춘 변이 단계에도 그대로
+★ PF2 (10-22 · 사전 리뷰 2 회차 · 1저자 10-22 Q1 (다) · Q2 · Q3 권고대로):
+  · B (PRE2-design-01 · Q2) — 순서 = S0 단계 1 → ⑥ 숫자 탐침 (SBE · σ 봉인) → 계획 하나 봉인 → S0 단계 2 (DBE) → R 런.  사다리가
+    `--s0-stage2-report` (단계 2 보고) 의 봉인 계획 해시 (`plan.r_plan.sha256` = R 계획 · `plan.sha256` = S0 계획) 를 지금 두 계획과 **정확히**
+    대조 · 다르면 멈춤 (`S0_REPORT_MISMATCH`) · 예측 · 판정은 요약 기록으로 같은 함수 (`s0_stage2_problem`) 로 다시 대조
 """
 import argparse
 import glob
@@ -135,6 +140,9 @@ PLAN_NO_CAP = 'none'                 # calib_rj_ratio_max = 'none' — "상한�
 SV_CF_SCOPES = ('R_j0', 'all3')      # §5-6 SV 행 — DBE 네 모서리 × R_j,0 · × 세 R (⬜ 1저자)
 PLAN_UNREG_MAIN = 'cut'              # 설계 §1-2 #12 — 주 cut · 감도 fused (UNREG)
 S0_PLAN_SCHEMA = 'ca-cjunc-plan-v1'  # §2-1 · §10-2 ⑪ — S0 단계 1 계획 (`scripts/ca_s0_census.py` · 정본 = 그 모듈)
+#: ★ PF2 B (10-22 · 사전 리뷰 2 회차 PRE2-design-01 · 1저자 Q2 권고대로) — S0 단계 보고 (`ca_s0_census` · `s0_stage<n>_<킷>.json`) 의 schema
+#   (= ca_s0_census.SCHEMA · 시험 B09 가 대조 · 이 모듈은 numpy 없이 뜬다)
+S0_REPORT_SCHEMA = 'ca-s0-census-v2'
 #: 러너가 읽는 env (부모 셸에서 물려받으면 지운다 — 사슬이 런마다 정확히 정한다 · 지운 이름은 요약에)
 ENV_SCRUB_RE = re.compile(r'^(SIGMA_|SDCP_|PTFE_|CJUNC|STEP3_)')
 ENV_SCRUB_NAMES = frozenset({'VOX', 'BRIDGE_UM', 'ARMS', 'ARM_LIST', 'KITS', 'OUTDIR', 'LEAN', 'FIBRE_STAMP', 'MPM_PERIODIC_SIGMA',
@@ -230,6 +238,8 @@ STOPS = {
     'S0_PLAN_HASH_UNREGISTERED': '등록 §2-1 S0 계획 해시가 아직 없다 (⬜)',
     'S0_PLAN_HASH_MISMATCH': 'S0 계획 해시 ≠ 등록 §2-1 개정값',
     'PLAN_CROSS_MISMATCH': '두 계획 대조 실패 (R 계획 ↔ S0 계획 ↔ 사슬 상수 · 등록 R §2-1 · §10-2 ⑪)',
+    'S0_REPORT_MISMATCH': 'S0 단계 보고를 못 읽거나 꼴이 틀렸다 · 단계 2 보고가 봉인한 계획 해시 (R 계획 · S0 계획) ≠ 지금 계획 (★ PF2 B · Q2 — '
+                          'DBE 열람 전 계획 하나 · 바꾸려면 새 등록 · 등록 R §2-1 · §2-1b · §11 ④)',
     'MAIN_NOT_DONE': '감도 단계인데 주 판정 단계 (사다리 둘 · 예측) 가 끝나지 않았다 · 묶음이 다르다 (--after-main · Q-F)',
     'MAIN_BINDING': '판정 입력의 감도 단계가 묶인 주 예측 ≠ 판정 입력의 주 예측 (Q-F)',
     'KIT_MISSING': '킷 폴더 · 러너가 없다',
@@ -802,6 +812,65 @@ def recheck_s0_record(rec, reg_path, plan):
     if not isinstance(rec, dict) or not isinstance(rec.get('content'), dict) or not isinstance(rec.get('sha256'), str):
         raise Stop('S0_PLAN_INVALID', '요약에 S0 계획 기록 (sha256 · content) 이 없다')
     return check_s0(rec['content'], rec['sha256'], None, reg_path, plan)
+
+
+# ═════════════════════════ ★ PF2 B (10-22) S0 단계 2 보고의 봉인 계획 해시 ═════════════════════════
+def _hex64(x):
+    return isinstance(x, str) and re.fullmatch(r'[0-9a-f]{64}', x) is not None
+
+
+def s0_stage2_record(rep, sha, path):
+    """S0 단계 2 보고 (dict) → 사슬 기록 (판정 칸만 · 보고 경로 · 파일 sha256) — 꼴이 틀려도 기록은 만들고 (값 그대로) 검사는
+    `s0_stage2_problem` 이 한다 (예측 · 판정은 이 기록을 다시 검사한다 · 보고 파일을 다시 읽지 않는다)."""
+    rp = rep if isinstance(rep, dict) else {}
+    pl = rp.get('plan') if isinstance(rp.get('plan'), dict) else {}
+    rr = pl.get('r_plan') if isinstance(pl.get('r_plan'), dict) else {}
+    kit = rp.get('kit') if isinstance(rp.get('kit'), dict) else {}
+    return {'path': path, 'sha256': sha, 'schema': rp.get('schema'), 'stage': rp.get('stage'), 'kit': kit.get('name'),
+            'plan_sha256': pl.get('sha256'), 'plan_source': pl.get('source'), 'r_plan_sha256': rr.get('sha256'), 'r_plan_path': rr.get('path')}
+
+
+def s0_stage2_problem(rec, plan_sha, s0_sha):
+    """★ PF2 B (10-22 · 사전 리뷰 2 회차 PRE2-design-01 · 탐침 E · 1저자 Q2 권고대로 · 등록 R §2-1 · §2-1b · §11 ④) — 단계 2 기록 → 문제 | None.
+    단계 2 (DBE 열람) 의 인자 커밋이 봉인한 계획 해시 = 지금 쓰는 두 계획의 sha256 (**정확히**): `r_plan_sha256` = R 계획 (`--plan`) ·
+    `plan_sha256` = S0 계획 (`--s0-plan`) · 꼴 = 이 도구의 S0 보고 (schema · 단계 2 · DBE 새 침대 · source commit:<sha>).  DBE 를 본 뒤 계획을
+    다시 등록하면 (s_min · 결과 전 숫자 · maxiter · 계획 B) 여기서 멈춘다 (옛 사슬 = 단계 2 보고를 읽지 않아 계획 B 로 CALIBRATED)."""
+    r = rec if isinstance(rec, dict) else {}
+    if r.get('schema') != S0_REPORT_SCHEMA or type(r.get('stage')) is not int or r.get('stage') != 2:   # noqa: E721 — bool 제외
+        return f'S0 단계 2 보고 꼴 — schema {r.get("schema")!r} · 단계 {r.get("stage")!r} (= {S0_REPORT_SCHEMA!r} · 2)'
+    if r.get('kit') != DBE_KIT:
+        return f'S0 단계 2 보고의 킷 {r.get("kit")!r} ≠ {DBE_KIT!r} (R 런 DBE 침대의 보고여야)'
+    if not (isinstance(r.get('plan_source'), str) and r['plan_source'].startswith('commit:')):
+        return f'S0 단계 2 보고의 계획 출처 {r.get("plan_source")!r} (commit:<개정 커밋> 이어야 — 단계 2 의 인자 커밋)'
+    if not (_hex64(r.get('r_plan_sha256')) and _hex64(r.get('plan_sha256'))):
+        return f'S0 단계 2 보고의 봉인 계획 해시 꼴 — R 계획 {r.get("r_plan_sha256")!r} · S0 계획 {r.get("plan_sha256")!r} (64 자 소문자 hex)'
+    if r['r_plan_sha256'] != plan_sha:
+        return (f'S0 단계 2 가 봉인한 R 계획 {r["r_plan_sha256"][:16]}… ≠ 지금 R 계획 {str(plan_sha)[:16]}… — DBE 를 본 뒤 계획을 다시 등록했다 '
+                f'(Q2: 계획 하나 · 바꾸려면 새 등록 · 등록 R §2-1b)')
+    if r['plan_sha256'] != s0_sha:
+        return f'S0 단계 2 가 봉인한 S0 계획 {r["plan_sha256"][:16]}… ≠ 지금 S0 계획 {str(s0_sha)[:16]}…'
+    return None
+
+
+def read_s0_stage2(path, plan_sha, s0_sha):
+    """사다리 — `--s0-stage2-report` 파일 → 단계 2 기록 · 대조 (`s0_stage2_problem`) · 실패 = Stop S0_REPORT_MISMATCH."""
+    try:
+        raw = Path(path).read_bytes()
+        rep = json.loads(raw.decode('utf-8'), parse_constant=_reject_constant)
+    except (OSError, UnicodeDecodeError, ValueError, TypeError) as e:
+        raise Stop('S0_REPORT_MISMATCH', f'S0 단계 2 보고 {path}: {type(e).__name__}: {e}')
+    rec = s0_stage2_record(rep, hashlib.sha256(raw).hexdigest(), str(Path(path).resolve()))
+    why = s0_stage2_problem(rec, plan_sha, s0_sha)
+    if why:
+        raise Stop('S0_REPORT_MISMATCH', why)
+    return rec
+
+
+def s0_reports_problem(recs, plan_sha, s0_sha):
+    """예측 · 판정 — 단계 요약에 기록된 S0 보고 기록 → 문제 | None (같은 함수로 다시 대조 · 기록 없음 = 옛 요약 = 대조 불가)."""
+    if not isinstance(recs, dict) or not isinstance(recs.get('stage2'), dict):
+        return 'S0 단계 2 보고 기록이 없다 (--s0-stage2-report 없이 돈 단계 · 옛 요약 — 봉인 계획 해시를 대조할 수 없다)'
+    return s0_stage2_problem(recs['stage2'], plan_sha, s0_sha)
 
 
 # ═════════════════════════ 팔 읽기 · 계약 (런 하나 = 폴더 하나) ═════════════════════════
@@ -1609,6 +1678,8 @@ def stage_ladder(a, contract):
         s['registration'] = check_plan_registered(plan_sha, a.registration)
         s['s0_plan'] = load_s0_plan(a.s0_plan, a.registration, plan)
         require_plan_numbers(plan)
+        #  ★ PF2 B (10-22 · Q2) — S0 단계 2 보고가 봉인한 계획 해시 = 지금 두 계획 (정확히 · DBE 열람 전 계획 하나)
+        s['s0_reports'] = {'stage2': read_s0_stage2(a.s0_stage2_report, plan_sha, s['s0_plan']['sha256'])}
         s['constants']['max_ladder_points'] = ladder_cap(plan)
         if a.variant is not None:
             s['after_main'] = check_after_main(a.after_main, plan_sha, s['s0_plan']['sha256'], s['code'])
@@ -1667,6 +1738,7 @@ def load_ladders(dirs, variant, reg_path, contract, sid_reg):
     R_j,0 확인 팔을 다시 읽는다."""
     want_var = None if variant == 'SVORDER' else variant
     out, plan, plan_sha, code, s0, after = {}, None, None, None, None, None
+    s0reps, first = None, True
     seen = set()
     for d in dirs:
         rd = Path(d).resolve()
@@ -1691,6 +1763,9 @@ def load_ladders(dirs, variant, reg_path, contract, sid_reg):
             raise Stop('CODE_PIN_MISMATCH', '두 사다리의 사슬 코드가 다르다')
         if after is not None and s.get('after_main') != after:
             raise Stop('MAIN_NOT_DONE', '두 변이 사다리의 주 예측 묶음이 다르다')
+        if not first and s.get('s0_reports') != s0reps:      # ★ PF2 B — 두 사다리가 같은 단계 2 봉인을 읽었나
+            raise Stop('S0_REPORT_MISMATCH', '두 사다리의 S0 단계 보고 기록이 다르다')
+        first, s0reps = False, s.get('s0_reports')
         plan, plan_sha, code, s0, after = s['plan']['content'], s['plan']['sha256'], s.get('code') or {}, s.get('s0_plan'), s.get('after_main')
         L = s['ladder']
         r0run = [r for r in s['runs'] if r.get('rj') == L['R_j0'] and r.get('arms') == 1 and r.get('arm_list') is None
@@ -1707,7 +1782,10 @@ def load_ladders(dirs, variant, reg_path, contract, sid_reg):
     check_plan_registered(plan_sha, reg_path)
     s0rec = recheck_s0_record(s0, reg_path, plan)
     require_plan_numbers(plan)
-    return out, plan, plan_sha, code, s0rec, after
+    why = s0_reports_problem(s0reps, plan_sha, s0rec['sha256'])   # ★ PF2 B — 사다리 기록의 단계 2 봉인 = 이 계획 (같은 함수로 다시)
+    if why:
+        raise Stop('S0_REPORT_MISMATCH', why)
+    return out, plan, plan_sha, code, s0rec, after, s0reps
 
 
 def stage_predict(a, contract):
@@ -1726,12 +1804,13 @@ def stage_predict(a, contract):
             raise Stop('NOT_REGISTERED', f'--kit {a.kit} (등록 {DBE_KIT})')
         env_forbidden_or_stop()
         sid_reg = {}
-        lads, plan, plan_sha, code, s0rec, lad_after = load_ladders(a.ladders, a.variant, a.registration, contract, sid_reg)
+        lads, plan, plan_sha, code, s0rec, lad_after, s0reps = load_ladders(a.ladders, a.variant, a.registration, contract, sid_reg)
         if not same_code(code.get('chain'), s['code']['chain']):
             raise Stop('CODE_PIN_MISMATCH', '사다리 사슬 코드 ≠ 지금 사슬 코드 (같은 핀 작업 트리에서 돌릴 것)')
         s['ladders'] = {k: {kk: v[kk] for kk in ('dir', 'summary_sha256', 'variant', 'R_j0', 'R_j_lo', 'R_j_hi')} for k, v in lads.items()}
         s['plan'] = {'sha256': plan_sha, 'content': plan}
         s['s0_plan'] = s0rec
+        s['s0_reports'] = s0reps                             # ★ PF2 B — 사다리가 읽은 단계 2 봉인 (판정이 다시 대조)
         s['registration'] = check_plan_registered(plan_sha, a.registration)
         if a.variant is not None:
             s['after_main'] = check_after_main(a.after_main, plan_sha, s0rec['sha256'], s['code'])
@@ -1980,6 +2059,7 @@ def verdict_compute(dirs, reg_path, contract):
     pub['registration'] = {'path': str(Path(reg_path).resolve()), 'sha256': reg_sha, 'plan_hash': plan_hash, 's0_plan_hash': s0_hash}
     code0 = None
     plan = None
+    s0r0, s0r_first = None, True
     for rd, s, h in stages:
         pub['inputs'].append({'dir': str(rd), 'stage': s.get('stage'), 'law': s.get('law'), 'variant': s.get('variant'),
                               'status': s.get('status'), 'summary_sha256': h})
@@ -1990,6 +2070,13 @@ def verdict_compute(dirs, reg_path, contract):
         plan = (s.get('plan') or {}).get('content')
         recheck_s0_record(s.get('s0_plan'), reg_path, plan)
         require_plan_numbers(plan)
+        #  ★ PF2 B (10-22 · Q2) — 단계마다 기록한 S0 단계 2 봉인 = 등록 계획 · S0 계획 (같은 함수) · 단계끼리 같은 기록
+        why = s0_reports_problem(s.get('s0_reports'), plan_hash, s0_hash)
+        if why:
+            raise Stop('S0_REPORT_MISMATCH', f'{rd.name}: {why}')
+        if not s0r_first and s.get('s0_reports') != s0r0:
+            raise Stop('S0_REPORT_MISMATCH', f'{rd.name}: S0 단계 보고 기록 ≠ 다른 판정 입력 단계의 기록')
+        s0r_first, s0r0 = False, s.get('s0_reports')
         c = (s.get('code') or {})
         key = ((c.get('chain') or {}).get('head'), (c.get('runner') or {}).get('head'), c.get('runner_path'))
         if code0 is None:
@@ -2245,6 +2332,8 @@ def main(argv=None, contract=None):
     ap.add_argument('--plan', help='ladder — R 런 계획 파일 (rint-r-plan-v2 · 등록 §2-1 개정 커밋의 대상 · sha256 = 그 칸)')
     ap.add_argument('--s0-plan', help='ladder — S0 단계 1 계획 (ca-cjunc-plan-v1 · 정준 바이트 · sha256 = 등록 §2-1 S0 계획 해시 칸) · '
                                       '두 계획 대조 (§2-1 · §10-2 ⑪)')
+    ap.add_argument('--s0-stage2-report', help='ladder — S0 단계 2 보고 (s0_stage2_<DBE 킷>.json · ca_s0_census) · 그 보고가 봉인한 계획 '
+                                               '해시 (R 계획 · S0 계획) = 지금 계획이어야 돈다 (★ PF2 B · Q2 · 등록 R §2-1b · §11 ④)')
     ap.add_argument('--registration', default=str(REGISTRATION_DEFAULT), help='등록 R 문서 (§2-1 계획 해시 · S0 계획 해시를 읽는다)')
     ap.add_argument('--ladders', nargs='+', help='predict — 사다리 폴더 둘 (P0 · P1)')
     ap.add_argument('--runs', nargs='+', help='verdict — 사다리 · 예측 · 감도 폴더 전부')
@@ -2260,8 +2349,8 @@ def main(argv=None, contract=None):
     if a.after_main and not a.variant:
         ap.error('--after-main 은 --variant (감도 단계) 와만')
     if a.stage == 'ladder':
-        if not (a.law and a.runner and a.root and a.plan and a.s0_plan and a.out and a.max_hours is not None):
-            ap.error('--stage ladder 는 --law · --runner · --root · --plan · --s0-plan · --max-hours · --out 이 필요하다')
+        if not (a.law and a.runner and a.root and a.plan and a.s0_plan and a.s0_stage2_report and a.out and a.max_hours is not None):
+            ap.error('--stage ladder 는 --law · --runner · --root · --plan · --s0-plan · --s0-stage2-report · --max-hours · --out 이 필요하다')
         return stage_ladder(a, contract)
     if a.stage == 'predict':
         if not (a.ladders and a.runner and a.root and a.out and a.max_hours is not None):
