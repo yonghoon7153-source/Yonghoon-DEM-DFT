@@ -335,6 +335,7 @@ up(){ awk '{ printf "%d", $1 }' /proc/uptime 2>/dev/null; }    # 부팅 뒤 초 
 mkdir -p run
 log(){ echo "$*"; echo "$(utc) $*" >> run/env.txt; }
 clean(){ printf '%s' "$1" | tr -d '"\\\r\n\t' ; }
+enc_eq(){ [[ "$1" =~ ^[0-9]+(\.[0-9]+)?$ && "$2" =~ ^[0-9]+(\.[0-9]+)?$ ]] && awk -v a="$1" -v b="$2" 'BEGIN { exit !((a - b < 0.05) && (b - a < 0.05)) }'; }   # ENCUT 같음 (±0.05) — 숫자 꼴만 (awk 는 '520abc' 를 520 으로 읽는다 · Codex DD 와 같은 종류)
 cap_num(){ [[ "$1" =~ ^[0-9]+(\.[0-9]+)?$ ]] && awk -v x="$1" 'BEGIN { exit !(x + 0 > 0) }'; }   # 상한 값 = 유한한 양수 (nan · inf · 음수 · 0 거부)
 secs_ok(){ [[ "$1" =~ ^(0|[1-9][0-9]{0,8})$ ]]; }    # 손으로 넣는 초 = 10진 정수 · 선행 0 없음 · 9 자리 이하 (bash 산술은 선행 0 을 8진수로 읽는다 — Codex DB P1-3)
 incar_val(){ awk -v T="$2" 'BEGIN{T=toupper(T)} { sub(/[#!].*/, ""); n=split($0, st, ";"); for (i=1; i<=n; i++) { s=st[i]; p=index(s, "="); if (!p) continue;
@@ -355,7 +356,8 @@ judge(){
   nrun=$(grep -acE '^[[:space:]]*vasp\.[0-9]' "$d/OUTCAR" 2>/dev/null); nrun=${nrun:-0}
   nelm=$(incar_val "$d/INCAR" NELM); ediff=$(incar_val "$d/INCAR" EDIFF)
   oit=$(grep -aoE 'Iteration +[0-9]+\( *[0-9]+\)' "$d/OUTCAR" 2>/dev/null | tail -1 | sed -E 's/.*\( *([0-9]+)\)/\1/')
-  cat "$d/OSZICAR" 2>/dev/null | awk -v rc="$rc" -v term="$term" -v nrun="$nrun" -v nelm="${nelm:-NA}" -v ediff="${ediff:-NA}" -v oit="${oit:-NA}" '
+  cat "$d/OSZICAR" 2>/dev/null | J_RC="$rc" J_TERM="$term" J_NRUN="$nrun" J_NELM="${nelm:-NA}" J_EDIFF="${ediff:-NA}" J_OIT="${oit:-NA}" awk '
+    BEGIN { rc = ENVIRON["J_RC"]; term = ENVIRON["J_TERM"]; nrun = ENVIRON["J_NRUN"]; nelm = ENVIRON["J_NELM"]; ediff = ENVIRON["J_EDIFF"]; oit = ENVIRON["J_OIT"] }   # 원문 그대로 — awk -v 는 \060 같은 이스케이프를 풀어 버린다 (Codex DD P1-2)
     function isnum(s) { return s ~ /^[-+]?([0-9]+\.?[0-9]*|\.[0-9]+)([eE][-+]?[0-9]+)?$/ }
     function finite(s,  t) { if (!isnum(s)) return 0; t = sprintf("%g", s + 0); return (t !~ /inf|nan/) }
     /^[ \t]*[0-9]+[ \t]+F=/ { ion = 1; next }
@@ -801,7 +803,7 @@ elig_A(){ # ⓐ 자격 (ⓑ 를 띄우기 전 — ① 정상 종료·유한 상�
   done
   r=$(awk '{ if (match($0, /"head": "[^"]*"/)) print substr($0, RSTART + 9, RLENGTH - 10) }' "$d/WAVECAR.info"); set -- $r
   [ $# -ge 6 ] && [ "$4" = "$(out_num "$d" NKPTS)" ] && [ "$5" = "$(out_num "$d" NBANDS)" ] && \
-    awk -v a="$6" -v b="$(out_num "$d" ENCUT)" 'BEGIN { exit !(b != "" && (a - b < 0.05) && (b - a < 0.05)) }' || { echo "ⓐ WAVECAR 머리 ($r) ≠ OUTCAR NKPTS/NBANDS/ENCUT"; return 1; }
+    enc_eq "$6" "$(out_num "$d" ENCUT)" || { echo "ⓐ WAVECAR 머리 ($r) ≠ OUTCAR NKPTS/NBANDS/ENCUT"; return 1; }
   [ "$(h "$d/WAVECAR")" = "$(wsha "$d/WAVECAR.info" sha256)" ] || { echo "ⓐ WAVECAR 가 기록 뒤 바뀌었다"; return 1; }
   return 0
 }
@@ -1379,6 +1381,7 @@ def a_eligible(ra):
         return False, f"WAVECAR.info 의 OUTCAR 사본 {oc} 이 실물 ⓐ OUTCAR {dims} 와 다르다"
     try:
         ok = (int(w.get("size", 0)) > 0 and len(hd) >= 6 and hd[3] == dims["NKPTS"] and hd[4] == dims["NBANDS"]
+              and all(re.fullmatch(r"[0-9]+(\.[0-9]+)?", str(x)) for x in (hd[5], dims["ENCUT"]))      # 숫자 꼴만 — 러너 enc_eq 와 같은 답 (Codex DD 와 같은 종류)
               and abs(float(hd[5]) - float(dims["ENCUT"])) < 0.05)
     except (TypeError, ValueError):
         ok = False
@@ -1489,7 +1492,9 @@ def unregistered_traces(J, ret):
     등록 = 잡마다 사다리 단의 폴더 (RUNG_DIR) · run_aborted/<잡>_<단>_<k> (aborted_attempts 가 감사하는 이름). 그 밖 폴더에 실행 흔적 (TRACE_NAMES) 이
     있으면 UNREGISTERED_ATTEMPT — 환경 불일치로 단정하지 않고 '감사되지 않음' 으로 전체 집계 · 인용 · 봉인을 보류한다.
     빈 폴더 · 설명 파일 · 입력 사본 (INCAR · KPOINTS · POSCAR) 만 있는 폴더는 흔적이 아니다. 폴더를 읽지 못하면 흔적이 있는지 모른다 → AUDIT_UNREADABLE.
-    ⚠ 못 하는 것: 반송 포장이 허용 이름만 담으므로 그 밖 이름의 파일은 여기서도 안 보인다 · 미등록 흔적의 내용 (빌드 · PP) 은 감사하지 않는다 (있다는 것만)."""
+    보장 범위 (Codex DD P2): **반송물에 포함되어 검사기에 도착한 실행 흔적에 대해** 미등록 경로를 차단한다 — 업체 작업 트리 전체의 실행 부재를 인증하지는 않는다.
+    ⚠ 못 하는 것: 반송 포장이 허용 이름 (RET_ALLOW) · 허용 경로 ((run|run_aborted)/<폴더>/(stageA/)?<이름> — stageA 말고 다른 하위 폴더 · run/ 바로 아래 파일은 안 담긴다) 만 담으므로
+    그 밖의 흔적은 여기 오지 않는다 · 미등록 흔적의 내용 (빌드 · PP) 은 감사하지 않는다 (있다는 것만)."""
     run = os.path.join(ret, "run") if os.path.isdir(os.path.join(ret, "run")) else ret
     base = ret if run != ret else os.path.dirname(os.path.abspath(ret))
     abd = os.path.normpath(os.path.join(base, "run_aborted"))
@@ -1908,7 +1913,7 @@ def seal_registry(out, ret, manifest_sha256, restart_read_regex="", v5_registry=
             if os.path.isfile(tp):
                 for spec, t in zip(J[n]["potcar_spec"], V.parse_titel(open(tp, encoding="utf-8", errors="replace").read())[0]):
                     titel[spec] = t
-    every += [x for x in aborted_attempts(J, out, ret) if x[0].split("/")[0] in PILOT_JOBS]
+    every += [x for x in aborted_attempts(J, out, ret) if x[0].split("/")[0] in PILOT_JOBS or x[0] == "run_aborted"]   # 루트를 못 읽은 기록은 잡 이름이 없다 — 파일럿 이름으로 거르면 감사 불가가 사라진다 (Codex DD P1-1)
     env = env_audit(every)
     if env:
         raise PkgError(f"파일럿 환경 감사 {[' '.join(e)[:160] for e in env[:3]]} — 봉인하지 않는다 (공통 환경 고장 · 1저자)")
@@ -2281,7 +2286,8 @@ def _selftest():
         out_ok = lambda n, extra="": f" vasp.5.4.4 x\n{extra}" + "".join(f" Iteration      1( {i:3d})\n" for i in range(1, n + 1)) + " General timing and accounting\n"
         noterm = lambda k: " vasp.5.4.4 x\n" + "".join(f" Iteration      1( {i:3d})\n" for i in range(1, k + 1))          # 안 끝난 OUTCAR (마지막 반복 번호 k)
         inc = "NELM = 30\nEDIFF = 1E-6\n"
-        probes = {"rc_na": (okrows, out_ok(25), inc, "NA"), "ok": (okrows, out_ok(25), inc, 0), "noconv": (okrows.replace("-0.31E-07", "0.22E-02"), out_ok(25), inc, 0),
+        probes = {"nelm_esc": (okrows, out_ok(25), "NELM = \\063\\060\nEDIFF = 1E-6\n", 0), "ediff_esc": (okrows, out_ok(25), "NELM = 30\nEDIFF = \\061E-6\n", 0),
+                  "rc_na": (okrows, out_ok(25), inc, "NA"), "ok": (okrows, out_ok(25), inc, 0), "noconv": (okrows.replace("-0.31E-07", "0.22E-02"), out_ok(25), inc, 0),
                   "deps_only": (okrows.replace("-0.12E-07", "0.2E-05"), out_ok(25), inc, 0),
                   "edge_eq": (okrows.replace("-0.31E-07", "0.1E-05").replace("-0.12E-07", "-1E-6"), out_ok(25), inc, 0),
                   "nan": (okrows.replace("-0.31E-07", "NaN"), out_ok(25), inc, 0), "inf": (okrows.replace("-0.31E-07", "1E+400"), out_ok(25), inc, 0),
@@ -2321,7 +2327,7 @@ def _selftest():
             if sh != py:
                 agree = False
         ck(f"판정 계약: 러너 awk = 파이썬 (탐침 {len(probes)} · 상태·행수·dE·d eps·사유 전부)", agree, {k: v for k, v in seen.items() if v[0] != v[1]})
-        want = {"rc_na": "SCF_UNVERIFIED", "ok": "OK", "noconv": "SCF_NOT_CONVERGED", "deps_only": "SCF_NOT_CONVERGED", "edge_eq": "OK", "nan": "SCF_UNVERIFIED", "inf": "SCF_UNVERIFIED",
+        want = {"nelm_esc": "SCF_UNVERIFIED", "ediff_esc": "SCF_UNVERIFIED", "rc_na": "SCF_UNVERIFIED", "ok": "OK", "noconv": "SCF_NOT_CONVERGED", "deps_only": "SCF_NOT_CONVERGED", "edge_eq": "OK", "nan": "SCF_UNVERIFIED", "inf": "SCF_UNVERIFIED",
                 "stars": "SCF_UNVERIFIED", "four_fields": "SCF_UNVERIFIED", "step0": "SCF_UNVERIFIED", "skip": "SCF_UNVERIFIED", "two_blocks": "SCF_UNVERIFIED",
                 "after_ion": "OK", "no_rows": "SCF_UNVERIFIED", "gt_nelm": "SCF_UNVERIFIED", "rc1": "RUN_FAILED", "not_term": "RUN_FAILED", "rc1_nan": "RUN_FAILED",
                 "two_runs": "SCF_UNVERIFIED", "it_mismatch": "SCF_UNVERIFIED", "no_ediff": "SCF_UNVERIFIED", "no_nelm": "SCF_UNVERIFIED", "nelm_semicolon": "OK", "dup_nelm_last": "OK",
@@ -3231,7 +3237,7 @@ def _selftest():
         import io
 
         @contextlib.contextmanager
-        def deny(paths):                              # 이 경로만 열거 · 열기에서 PermissionError (root 는 chmod 로 못 막아서 주입 — 운영체제 권한 실험이 아니다)
+        def deny(paths, ops=("scandir", "listdir", "open"), err=None):   # 이 경로만 열거 · 열기에서 PermissionError (root 는 chmod 로 못 막아서 주입 — 운영체제 권한 실험이 아니다) · ops 로 막을 연산만 · err 로 오류 종류
             P_ = {os.path.abspath(x) for x in paths}
             o_sc, o_ld, o_op = os.scandir, os.listdir, builtins.open
 
@@ -3241,7 +3247,7 @@ def _selftest():
                 except TypeError:
                     return
                 if a_ in P_:
-                    raise PermissionError(13, "Permission denied (시험 주입)", a_)
+                    raise err if err is not None else PermissionError(13, "Permission denied (시험 주입)", a_)
 
             def sc_(x=".", *a, **k):
                 bad_(x)
@@ -3255,7 +3261,7 @@ def _selftest():
                 if isinstance(f, (str, bytes, os.PathLike)):
                     bad_(f)
                 return o_op(f, *a, **k)
-            os.scandir, os.listdir, builtins.open = sc_, ld_, op_
+            os.scandir, os.listdir, builtins.open = (sc_ if "scandir" in ops else o_sc), (ld_ if "listdir" in ops else o_ld), (op_ if "open" in ops else o_op)
             try:
                 yield
             finally:
@@ -3407,7 +3413,7 @@ def _selftest():
            all(led[k][:3] == (5, False, True) for k in ("4.5e5", "1e12", "뒤 쓰레기 450000x", "숫자 중간에서 잘림"))
            and led["450000 (정상 · 상한 넘음)"][:2] == (5, False) and led["450000 (정상 · 상한 넘음)"][3] and led["7200 (정상)"][1] is True, led)
         rcj = {}
-        for lab_, rv_ in (("0.5", "0.5"), ("1e3", "1e3"), ("-0", "-0"), ("0", "0"), ("-1", "-1")):
+        for lab_, rv_ in (("0.5", "0.5"), ("1e3", "1e3"), ("-0", "-0"), ("0", "0"), ("-1", "-1"), ("\\060", "\\060"), ("\\061", "\\061")):
             d_ = os.path.join(T, "probe_rc", f"rc_{abs(hash(lab_))}"); os.makedirs(d_)
             for f_, t_ in (("OSZICAR", okrows), ("OUTCAR", out_ok(25)), ("INCAR", inc)):
                 open(os.path.join(d_, f_), "w", newline="").write(t_)
@@ -3415,7 +3421,10 @@ def _selftest():
             rcj[lab_] = (subprocess.run(["bash", jt, d_, ""], capture_output=True, text=True).stdout.split() or ["(없음)"])[0]
         ck("⛔음성 DC (같은 종류 · 러너 judge 의 rc): attempt.json 의 rc 를 전체 값으로 — 0.5 · 1e3 · -0 은 SCF_UNVERIFIED (rc_unknown · 승격 없음 · 검사기는 "
            "ATTEMPT_MISMATCH) · 0 은 OK · -1 은 RUN_FAILED (지금까지는 접두부 0 · 1 로 읽어 OK · RUN_FAILED → 다음 단)",
-           rcj == {"0.5": "SCF_UNVERIFIED", "1e3": "SCF_UNVERIFIED", "-0": "SCF_UNVERIFIED", "0": "OK", "-1": "RUN_FAILED"}, rcj)
+           rcj == {"0.5": "SCF_UNVERIFIED", "1e3": "SCF_UNVERIFIED", "-0": "SCF_UNVERIFIED", "0": "OK", "-1": "RUN_FAILED", "\\060": "SCF_UNVERIFIED", "\\061": "SCF_UNVERIFIED"}, rcj)
+        ck("⛔음성 DD P1-2 (Codex): attempt.json 의 rc 가 따옴표 없는 \\060 · \\061 (awk -v 는 0 · 1 로 풀어 OK · RUN_FAILED → 다음 단이었다) → 둘 다 SCF_UNVERIFIED (rc_unknown · 승격 없음) "
+           "— 이 시험은 PATH 의 awk 로 돈다 (gawk · mawk 둘 다 돌린다)",
+           rcj.get("\\060") == "SCF_UNVERIFIED" and rcj.get("\\061") == "SCF_UNVERIFIED", rcj)
         wfn = re.search(r"(?m)^wsha\(\)\{.*$", runner).group(0)
         wsh = os.path.join(T, "wsha.sh"); open(wsh, "w").write(wfn + '\nwsha "$1" "$2"\n')
         wif = os.path.join(T, "wsha_info.json"); h64 = "a" * 64
@@ -3423,6 +3432,64 @@ def _selftest():
         w65, w64 = (subprocess.run(["bash", wsh, wif, k_], capture_output=True, text=True).stdout.strip() for k_ in ("sha256", "src_sha256"))
         ck("⛔음성 DC (같은 종류 · 러너 wsha): WAVECAR.info 의 sha 가 65 자면 빈 값 (지금까지는 앞 64 자를 sha 로 읽어 앞부분이 같으면 재시작 이행) · 64 자는 그대로",
            w65 == "" and w64 == h64, (w65, w64))
+        # DD (Codex DD 회신 2026-10-22 · NO-GO 재승인 최소조건) ① run_aborted 루트 감사 불가가 봉인 필터 (파일럿 이름) 에서 사라지지 않는다
+        #   — listdir 만 실패시키고 뒤 순회 (scandir) 는 성공시킨다 (둘을 같이 막으면 순회 오류가 대신 봉인을 막아 이 누락을 가린다 · Codex)
+        st_dd = json.dumps({"job": "P2S_S_A_bound", "attempt": "0", "stage": "P", "run_id": "20261022T000000-1-1", "t_start": 0, "kernel_sha256": ""}) + "\n"
+        tdd1 = tree("tdd1", {"run_aborted/P2S_S_A_bound_0_1/OUTCAR": OTHER_HD + "\n", "run_aborted/P2S_S_A_bound_0_1/attempt.start": st_dd,
+                             "run_aborted/P2S_S_A_bound_0_1/infra_abort.json": json.dumps({"job": "P2S_S_A_bound", "rung": "0", "wall_s": "60"}) + "\n"})
+
+        def seal_msg(t_):
+            try:
+                seal_registry(t_, t_, msha, v5_registry=v5r, kernel_read_regex=KREG)
+                return "(봉인됨)"
+            except PkgError as e:
+                return str(e)
+
+        def cli_seal(t_, out_):                       # CLI --seal_registry 를 같은 프로세스에서 (주입이 닿게 · V5 등록부는 시험 것으로) → (종료 코드 · 메시지)
+            g_, o_argv = globals(), sys.argv
+            o_v5 = g_["V5_REGISTRY"]
+            g_["V5_REGISTRY"] = v5r
+            sys.argv = [os.path.abspath(__file__), "--seal_registry", out_, "--kernel_read_regex", KREG, "--out", t_, "--ret", t_, "--manifest_sha256", msha]
+            try:
+                with contextlib.redirect_stdout(io.StringIO()):
+                    return main(), ""
+            except PkgError as e:
+                return 2, str(e)
+            except Exception as e:  # noqa: BLE001
+                return f"예외 {type(e).__name__}", str(e)[:200]
+            finally:
+                g_["V5_REGISTRY"], sys.argv = o_v5, o_argv
+        s0dd = seal_msg(tdd1)
+        rg0 = os.path.join(T, "reg_dd1_clean.json"); k0dd = cli_seal(tree("tdd1c", {}), rg0)
+        sdd = {}
+        for lab_, err_ in (("EIO", OSError(5, "Input/output error (시험 주입)")), ("PermissionError", None)):
+            with deny([os.path.join(tdd1, "run_aborted")], ops=("listdir",), err=err_):
+                sdd[lab_] = seal_msg(tdd1)
+                rg_ = os.path.join(T, f"reg_dd1_{lab_}.json")
+                sdd[lab_ + " CLI"] = (cli_seal(tdd1, rg_), os.path.exists(rg_))
+        ck("⛔음성 DD P1-1 (Codex 재현): run_aborted/<잡>_0_1 에 다른 빌드 OUTCAR + 시작 표지 + 중단 기록 — 오류 없이 읽으면 봉인 거부 (대조 · 버전 갈림) · "
+           "run_aborted 의 listdir 만 실패 (EIO · PermissionError · 뒤 순회는 성공) 해도 봉인 거부 (AUDIT_UNREADABLE) · CLI --seal_registry 종료 2 · 등록부 안 만듦 "
+           "(지금까지는 루트 감사 불가 기록을 파일럿 이름 필터가 버려 종료 0 · 등록부 생성) · 깨끗한 반송은 CLI 로 봉인된다 (대조)",
+           "VERSION_INCONSISTENT" in s0dd and k0dd[0] == 0 and os.path.exists(rg0)
+           and all("AUDIT_UNREADABLE" in sdd[k] for k in ("EIO", "PermissionError"))
+           and all(sdd[k + " CLI"][0][0] == 2 and "AUDIT_UNREADABLE" in sdd[k + " CLI"][0][1] and sdd[k + " CLI"][1] is False for k in ("EIO", "PermissionError")),
+           (s0dd[:100], k0dd, {k: (v if isinstance(v, str) else (v[0][0], v[0][1][:80], v[1]))[:160] if isinstance(v, str) else (v[0][0], v[0][1][:80], v[1]) for k, v in sdd.items()}))
+        # 같은 종류 — ENCUT 은 숫자 꼴만 (awk 는 '520abc' 를 520 으로 읽는다): 러너 enc_eq · 검사기 a_eligible
+        eqm = re.search(r"(?m)^enc_eq\(\)\{.*$", runner)
+        enc = {}
+        if eqm:
+            eqs = os.path.join(T, "enc_eq.sh"); open(eqs, "w").write(eqm.group(0) + '\nenc_eq "$1" "$2"\n')
+            for a_, b_ in (("520", "520"), ("520.0000", "520.0"), ("520.04", "520"), ("520.06", "520"), ("520abc", "520"), ("5.2e2", "520"), ("\\0605", "5"), ("", "520"), ("520", "")):
+                enc[f"{a_}|{b_}"] = subprocess.run(["bash", eqs, a_, b_], capture_output=True).returncode
+        ck("⛔음성 DD (같은 종류 · 러너 enc_eq): ⓐ WAVECAR 머리의 ENCUT 비교는 숫자 꼴 (러너가 쓰는 %.0f · %.4f) 만 — '520abc' · '5.2e2' · 이스케이프 · 빈 값은 다름 (awk 는 520abc 를 520 으로 읽어 ⓑ 를 띄웠다) "
+           "· 520 = 520.0000 · ±0.05 안 · elig_A 가 enc_eq 를 쓴다",
+           enc == {"520|520": 0, "520.0000|520.0": 0, "520.04|520": 0, "520.06|520": 1, "520abc|520": 1, "5.2e2|520": 1, "\\0605|5": 1, "|520": 1, "520|": 1}
+           and re.search(r'(?s)\nelig_A\(\)\{.*?enc_eq "\$6" "\$\(out_num "\$d" ENCUT\)"', runner) is not None, (enc or "enc_eq 없음"))
+        dims_ = {"NKPTS": "4", "NBANDS": "64", "ENCUT": "520.0"}
+        ae = {h_: a_eligible({"status": "OK", "judge": {"status": "OK"}, "outcar_dims": dims_, "wavecar": {"size": 10, "head": f"1 2 3 4 64 {h_}", "outcar": dict(dims_)}})[0]
+              for h_ in ("520", "520.0000", "5.2e2", "520abc")}
+        ck("⛔음성 DD (같은 종류 · 검사기 a_eligible): 머리의 ENCUT 도 같은 숫자 꼴만 — 5.2e2 는 자격 미달 (러너 enc_eq 와 같은 답 · 지금까지는 파이썬 float 이 받아 러너와 갈렸다) · 520 · 520.0000 은 자격",
+           ae == {"520": True, "520.0000": True, "5.2e2": False, "520abc": False}, ae)
     finally:
         if os.environ.get("R2_SELFTEST_KEEP") == "1":
             print(f"  (시험 폴더 남김: {T})")
