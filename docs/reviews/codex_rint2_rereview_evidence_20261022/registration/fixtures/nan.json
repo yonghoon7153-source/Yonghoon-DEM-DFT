@@ -1,0 +1,1 @@
+{"schema": "rint-r-plan-v2", "len_law": "distributed_v0", "unreg_law": "cut", "s_min_um": 0.5, "tol_ff_um": 0.1, "step3_rtol": 1e-12, "p2_extra": "--maxiter 1000", "max_ladder_points": 24, "calib_rj_ratio_max": "none", "sv_cf_threshold": NaN, "sv_cf_scope": "all3"}

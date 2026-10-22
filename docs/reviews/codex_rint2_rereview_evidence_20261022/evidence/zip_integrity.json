@@ -1,0 +1,1031 @@
+{
+  "zip_sha256": "dcbdb9805fc211ec5592453d36c502892d579b88edc3187efe8d47396c97aac1",
+  "manifest_count": 205,
+  "files": [
+    {
+      "path": "docs/reviews/codex_review_rint2_carbon_additive_design_20261021.md",
+      "sha256": "5d31dfe9f42c92a562ff9495bd855d16714faecca9c57989b99d96cfa0eea977",
+      "bytes": 46019
+    },
+    {
+      "path": "docs/reviews/codex_rint2_rereview_request_20261022.md",
+      "sha256": "2562a654be0b2528ed6421f8fe426ec7efc60078601f21d4d605b4d1f23ffb9d",
+      "bytes": 18981
+    },
+    {
+      "path": "docs/reviews/findings.json",
+      "sha256": "79135e5ec49e8c5d65c44d107fb8c7a648074ffeda17c20e24f0ea08047da907",
+      "bytes": 2132999
+    },
+    {
+      "path": "docs/reviews/rint2_design_fix_plan_20261021.md",
+      "sha256": "f786cdcec08396efed77da1d6f7b1253817814efecb4859c64dcec1aa375aa02",
+      "bytes": 30089
+    },
+    {
+      "path": "docs/reviews/rint2_kgy_commands_20261020.md",
+      "sha256": "99705adc5171a58b4964c57c445e1148adeb9a0d481f8c16709a15c06401b2da",
+      "bytes": 66521
+    },
+    {
+      "path": "docs/reviews/rint2_pf2_fix_evidence_20261022/probe_deadend_margin.json",
+      "sha256": "dfae0af70ac3196ca0d4db233822ead27bea6603ff586a33b6c7265fc53d0564",
+      "bytes": 3197
+    },
+    {
+      "path": "docs/reviews/rint2_pf2_fix_evidence_20261022/probe_deadend_margin.py",
+      "sha256": "c9cceeed3a9599a527380a1658c1e27fe57dd05b6cdab692058bbc9191624495",
+      "bytes": 3998
+    },
+    {
+      "path": "docs/reviews/rint2_pf2_fix_evidence_20261022/stage2_report.md",
+      "sha256": "a2c14efdb757c2e00b39484e761386efedc3eef3e8ceb85d66e69618426b6179",
+      "bytes": 9183
+    },
+    {
+      "path": "docs/reviews/rint2_pf2_fix_evidence_20261022/stage3_prereview/README.md",
+      "sha256": "10b9f6515bc5c9f29c30e066f5f99f3df62fdf29cc68e7efffbf2a13203fcb09",
+      "bytes": 1026
+    },
+    {
+      "path": "docs/reviews/rint2_pf2_fix_evidence_20261022/stage3_prereview/REVIEW_S3.md",
+      "sha256": "60cbf8cb880a53de39bef989e0bd49ce8fac6717913f13ab977204b6ac6a88c3",
+      "bytes": 17877
+    },
+    {
+      "path": "docs/reviews/rint2_pf2_fix_evidence_20261022/stage3_prereview/mutate.py",
+      "sha256": "2106848fa06339fd96f942e2943846c89ce89b6201902f189b87fa5357da39dd",
+      "bytes": 5080
+    },
+    {
+      "path": "docs/reviews/rint2_pf2_fix_evidence_20261022/stage3_prereview/my_codepin_nogit.py",
+      "sha256": "0013f74c0ca4fd31a3d66080c69b09b55436bd39a1e79080ed4569628aaa95d4",
+      "bytes": 808
+    },
+    {
+      "path": "docs/reviews/rint2_pf2_fix_evidence_20261022/stage3_prereview/my_real_s0_report.py",
+      "sha256": "5469178aa34f440e328fb31c449a5a6320f9ea371c64813cc7f23908e21e5892",
+      "bytes": 1227
+    },
+    {
+      "path": "docs/reviews/rint2_pf2_fix_evidence_20261022/stage3_prereview/my_sv_producer.py",
+      "sha256": "ace4b021be65ce758df7c01c4f0e520387ae90a017ec0cb80a6eb638e75c7be7",
+      "bytes": 3752
+    },
+    {
+      "path": "docs/reviews/rint2_pf2_fix_evidence_20261022/stage3_prereview/my_sv_randbeds.json",
+      "sha256": "a5855fcba3286aa5b9e87c92ec6870f80e3d5e63e69870ccaea01e13633ea313",
+      "bytes": 2789
+    },
+    {
+      "path": "docs/reviews/rint2_pf2_fix_evidence_20261022/stage3_prereview/my_sv_randbeds.py",
+      "sha256": "20fda5556b6a8be3884b0e5aeddcef7120ea51474f23c95fa2ddec2f11a93a13",
+      "bytes": 3747
+    },
+    {
+      "path": "docs/reviews/rint2_pf2_fix_evidence_20261022/stage3_prereview/my_svcf_validator.py",
+      "sha256": "08587312398dac16979fdce71302f9da7f164c6aa00e0b01373dc90cee71f616",
+      "bytes": 5347
+    },
+    {
+      "path": "docs/reviews/rint2_pf2_fix_evidence_20261022/stage3_prereview/webapp_sv.py",
+      "sha256": "56ef4382fce5b5a34f64605fb3259f85e89fddce2594b6bac435b806fa5b0feb",
+      "bytes": 2533
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/README.md",
+      "sha256": "14b81b550373616d878dc5e22c9ca2e4efb3719653c76e2d595fc234c2633394",
+      "bytes": 2065
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/design/REVIEW.md",
+      "sha256": "2ed26f155cea645ad6b874c7214a8e9b8a65d09b80a689c92998e0395f14bb5f",
+      "bytes": 28746
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/design/count_tests.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/design/count_tests.sh",
+      "sha256": "facdc18ade6e3720d79b8458319b0ca248a9fd0c462c049b7471c4d85c035d03",
+      "bytes": 680
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/design/mutate_design.json",
+      "sha256": "e6f7a1bd56b848001c185df17467c52e2555d12c67d504ef6b38c641a7650c21",
+      "bytes": 8286
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/design/mutate_design.log",
+      "sha256": "8e9599fa216e9aed020de97b8aeb05ccf2ec48e4ce32978fffd0d4f278de6bba",
+      "bytes": 6827
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/design/mutate_design.py",
+      "sha256": "f94a4286286e35a24d706903109cc156e3465780968dbe4604196f2255610b9d",
+      "bytes": 6533
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/design/name_scan_out.txt",
+      "sha256": "bb125601f338c91f728d605baecb84fb0d2e645bf0e5bb405b4b8ea7e6a729c8",
+      "bytes": 11420
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/design/names2.txt",
+      "sha256": "8f126f8d171a66f5caa9b19be80646a43ef1d23ea4ca7bb014fa1a21cf6f96e0",
+      "bytes": 1854
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/design/probe_A_reg_numbers.json",
+      "sha256": "9e1d8c80f8b20858e60061856c91675aedfc00f97eaddf3c31af396591182209",
+      "bytes": 5607
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/design/probe_A_reg_numbers.py",
+      "sha256": "50576ed7ead1a42d6a3f3c462c19444d6daa95db67362901eaa846b674cb1e9d",
+      "bytes": 10741
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/design/probe_B_decision_table.json",
+      "sha256": "71b7abf930c3211ba0191ce9b36f0f0269f4dc3b7f025616218fdc5c8f1e6583",
+      "bytes": 1793
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/design/probe_B_decision_table.py",
+      "sha256": "4e99484530e7c7084897cf4b50a589cfae23ce22f775d03c15c3a8c623957ef5",
+      "bytes": 10322
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/design/probe_C_code_pin.json",
+      "sha256": "1ea0c90da4534d13d254abc877d560dea0fb718fb1f8d80715c1c6b6be8083fd",
+      "bytes": 697
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/design/probe_C_code_pin.py",
+      "sha256": "1f6cd31c9d4ca620a521c149def371d3b076ecf23cd4ac6b8fea2a3ad0fbc7b8",
+      "bytes": 2884
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/design/probe_D_origin_union.json",
+      "sha256": "84f6d756626ab44580beb659709bad19969bdd6f9329cc72f0107d271c106f6e",
+      "bytes": 624
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/design/probe_D_origin_union.py",
+      "sha256": "e524a4b389824edafd7a6feb9139dd04eb43387511c5bc06f7e48fa3a31b0bef",
+      "bytes": 4698
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/design/probe_E_plan_reseal.json",
+      "sha256": "1acf6ef0d86120fb0520bb7bfa6c040ae27257eec22259d00374f079dea7429d",
+      "bytes": 1190
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/design/probe_E_plan_reseal.py",
+      "sha256": "39c338abae83e387828c0153a6ba14d48635596c06222774d74b62912cd5bd1e",
+      "bytes": 2878
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/design/run_budget2.json",
+      "sha256": "df8935375148cb6179f5df90b96ff2782eb8bb7cabdb387a768b780f449287b1",
+      "bytes": 1216
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/design/run_budget2.py",
+      "sha256": "bbe575693686bf614730113cd04d344e64cfc63e3b85b49c3913d8fbc8672edd",
+      "bytes": 3208
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/design/tests_out/summary.txt",
+      "sha256": "54fc092c04265f3f8b2e4fea096a51cd63883aabeaad2e3e1e6c1225ebdb530b",
+      "bytes": 666
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/design/tests_out/test_ca_ext_b6.py.log",
+      "sha256": "7580a6917737c647330c9db2925baaccb49596ae7df3e82d2b4c088c32053f37",
+      "bytes": 26307
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/design/tests_out/test_ca_ext_runner.py.log",
+      "sha256": "47cb5754ebab30ce28dc4a2f28a4c25cf67167bd5e311d5a938b024b0316a807",
+      "bytes": 16292
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/design/tests_out/test_ca_s0_census.py.log",
+      "sha256": "f514c2f36a5e575e88ce20438cd6bccdcffbd7fcd0c461357ee8577bcd069dbd",
+      "bytes": 13484
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/design/tests_out/test_carbon_junction.py.log",
+      "sha256": "f83215968f72f01f9f0bdfe4a20953c6ae753b0b72d841bb559fb204c5497644",
+      "bytes": 42969
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/design/tests_out/test_rint_r_chain.py.log",
+      "sha256": "598516e57e2f3bdea9a48760afa5c747017353b3a9ecbd8b70df30aa9cd6fed5",
+      "bytes": 30719
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/design/tests_out/test_rint_r_chain_e2e.py.log",
+      "sha256": "8c4a3494943323dccc1a893714cca4d6a76cea9e73e5585280af1c8bdf7781fc",
+      "bytes": 4296
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/design/tests_out/test_step3_conv_cert.py.log",
+      "sha256": "6c3a7dcb467892e3c35b25cf5214e4b1f820b32c69aa95d22e7b14e342a6b5be",
+      "bytes": 2649
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/design/tests_out/test_step3_target_cert.py.log",
+      "sha256": "a09f56af016d4fe818b85ae539f2443c4b4fc48ee5f6af68662a3f7ff6ba1688",
+      "bytes": 38297
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/REVIEW.md",
+      "sha256": "6e2fb6f91b53fd85d79862b20e72938b0a396c1a0be6a231182d45c7724a5679",
+      "bytes": 30877
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/b6_B_vs_a76.log",
+      "sha256": "8d52b1acf4d15b21fb070ac2c3c59b9eb65f9f04c475f829ad1ead1a369648ec",
+      "bytes": 3497
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/baselines.json",
+      "sha256": "3c0d18d1ddc2f874e9d3620cdb8f0c27caff6bf487e6659e27d75e655d563792",
+      "bytes": 5045
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/baselines.log",
+      "sha256": "98656e8d91ce85a796180383d6729c7298bca19e50232c8a7480df260bbd25d8",
+      "bytes": 3108
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/baselines_result.json",
+      "sha256": "b540bb29294ff2082850b1882578c712660065661d4479bfb53c707e1a88752e",
+      "bytes": 3518
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/cert_default.err",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/cert_haswell.err",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/chain_baseline.log",
+      "sha256": "9b7135ab7fb7aeaf11345303e02dfd824d78e9ecab672334a0d47b8b33f39cce",
+      "bytes": 30719
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/mk_baselines.py",
+      "sha256": "f126dff20d75a2dbad5981aacf347465ef8659f3b7354ed36f916ae619ce954d",
+      "bytes": 623
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/mutate.py",
+      "sha256": "fa4097e57ac2f82fdb94c08d433aa2f38c610b3d8aee15a7432d1ab74d57f095",
+      "bytes": 2817
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/mutations.json",
+      "sha256": "3f5f4300174e8c7b5f2b3dce995275eed30151e82dff6107706db9610fcb8011",
+      "bytes": 11571
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/mutations.log",
+      "sha256": "39281930aef246b7a2947efb5c3296b10c13a8687bf7861223aca05708e46063",
+      "bytes": 10245
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/mutations_result.json",
+      "sha256": "03f8f96b24875f89aabd674e84fa1919eb4615780a1a656850217ae19d8cdd0b",
+      "bytes": 11875
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/mutations_v1b.json",
+      "sha256": "6c64e78b228b9a2f030caf99304ec29464a6dbde96a9c93bc150de88152620c3",
+      "bytes": 1425
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/mutations_v1b.log",
+      "sha256": "9e3460bf40713e040c6e5450a249413e63d329e964a323ae9b31a89439da527d",
+      "bytes": 1217
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/mutations_v1b_result.json",
+      "sha256": "e7ae546d4b573666f871bfe39ce73f25695d9ee34a5adf7ed9f9523c0d932ed6",
+      "bytes": 1365
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/pcommon.py",
+      "sha256": "891b32813d44e6c967d658a28b20db758c7a0ed4dfaaf428bebeaab86ffceac9",
+      "bytes": 5336
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_band_knife.json",
+      "sha256": "823926bf2e36256bea1b736efa22d455c127721ca08b0ffe4506f6417bec2578",
+      "bytes": 1237
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_band_knife.py",
+      "sha256": "e0bcc8d0bd0e199300e4f491152e377bffdbadd20e6fd867c9ed8c46b1cb8711",
+      "bytes": 2048
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_degenerate.json",
+      "sha256": "e42e5e4135a26e72066249cb3a01fd25455a50395cf7439730222e1f8259ef53",
+      "bytes": 947
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_degenerate.py",
+      "sha256": "33cf9cced170c67c254ed27f04f751af04e0b2ac44aea26cbaabee6e6e997a7d",
+      "bytes": 2379
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_item9_assemble.json",
+      "sha256": "5eaebab4bb81b1b198cf6eb35353f3490825a7835a86e11f5cbdc772d1980072",
+      "bytes": 4059
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_item9_assemble.py",
+      "sha256": "4f285a4201954f8ac8ad3f0c63466070b7253960acde6820cc7e2a5db26c6538",
+      "bytes": 3766
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_plan_gate.json",
+      "sha256": "baab540f36fbed4dd2e9f262911f0c2ecf32fd75c1545a0e5a5fb25133f87b4a",
+      "bytes": 1390
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_plan_gate.py",
+      "sha256": "4bff45588c879baeddcc73d57e50f0960ee9fcad0f6e4045b17ca6362ceb68f3",
+      "bytes": 3024
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_selfd_ii.json",
+      "sha256": "ea76bae56561d481fc4023ff24ad10d575a27b26807b2c737280183b2a7fd49f",
+      "bytes": 321
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_selfd_ii.py",
+      "sha256": "03da87812e103d40efd5242320dec521eed0a7879ef1d5cccba57ddfed3c4406",
+      "bytes": 1534
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_sv_unsplit.json",
+      "sha256": "162654dacf9788d7d4dbfc1d00a1df407356b3a43a70999e63743adc2f72132f",
+      "bytes": 982
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_sv_unsplit.py",
+      "sha256": "53d78ad06869dc3298780111eb58a60b317af06c4d4d5898c0b4fb1add12b2da",
+      "bytes": 3140
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_sv_unsplit_freq.json",
+      "sha256": "8b74cf3c54f33c6f935e0bfcfa03c7e47d95eee1a08e0c77179134a21debd42f",
+      "bytes": 2350
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_sv_unsplit_freq.py",
+      "sha256": "c8f87b179ed40fcb2f66079fb90406f93ce690617ddefdba7fdc9b688bfe550c",
+      "bytes": 4026
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_sv_unsplit_grid.json",
+      "sha256": "691440ca953c3353e1896fd7f83c683a01da6381fca7b6cecafb0a2fe26d9a18",
+      "bytes": 1796
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_sv_unsplit_grid.py",
+      "sha256": "9e63e9861a96aa349993cc343ff77c1c3e713ab7fef9e61bbfdbe86a2737800a",
+      "bytes": 3211
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_sv_unsplit_payload.json",
+      "sha256": "80bf9f5a46600a0a438b457e3c447ac19858251207c5025940a0e856167c6a03",
+      "bytes": 1198
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_sv_unsplit_payload.py",
+      "sha256": "cd268aded296072afb8c595856f002619bcce085eeaa314e01d5c76c070010a7",
+      "bytes": 6166
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_svcf_record.json",
+      "sha256": "368305fa5f569d8c0cc0c5970ee672ac48347ffe9cca375ce647740e8d28a6d8",
+      "bytes": 714
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_svcf_record.py",
+      "sha256": "e7a4ba82c7c3b329629db27de56ada76c18999f98d834ddbd321c23b17f81ad6",
+      "bytes": 2270
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_b01_mutation.json",
+      "sha256": "7e343e299ac607606d332a06a68a19d8a82d98e2bcce7df012e3c979b665c2f0",
+      "bytes": 1055
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_b01_mutation.py",
+      "sha256": "cb2461aff320d1e3287a4fa6834c4444d2688199f4cb6a7919936e49da5c4d46",
+      "bytes": 1728
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_cert_codex.py",
+      "sha256": "f4fef41eb1450f4de1ffe63ebd2af4b13c0604be882b869e12b32cd43670a206",
+      "bytes": 5915
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_cert_codex_Haswell.json",
+      "sha256": "a5add44834c5c51ba9a2ae1f6436ba2db88f9aec5b045227105d6287a0ceeada",
+      "bytes": 2415
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_cert_codex_default.json",
+      "sha256": "40be5a5925d044a7a80ff3ddbc0ea9852164ef787511cee71cbc700150b5fa3f",
+      "bytes": 2421
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_cert_liveness.json",
+      "sha256": "249fdb57518e2d9c1ff8504654440599ee6720c791f304db62eac09e3000ce14",
+      "bytes": 719
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_cert_liveness.py",
+      "sha256": "75241b177761d667007d45f8081a97cd692d758c31a280bc6404e0457aa1ee48",
+      "bytes": 2599
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_closed_loop.json",
+      "sha256": "d564dc51fdc05b5628a7fd1181636826fdc686ead7813a7cb979bad866419107",
+      "bytes": 415
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_closed_loop.py",
+      "sha256": "bb81e20e13ad3179af9ba8d1716aefaff72a04347fe04351d155f1c76d29a29b",
+      "bytes": 2460
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_gap_revisit.json",
+      "sha256": "8708b749629b24c626169cc97e93336f92c75526ffaa262d153785aafd3039c0",
+      "bytes": 1842
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_gap_revisit.py",
+      "sha256": "0fd8614bffee4ffef619089b789384d47c1ed59441974b80c2fae0099d70ae88",
+      "bytes": 2578
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_gap_revisit_prod.json",
+      "sha256": "40fbfe514af6aa55440b3ba9c1b6a55743ce31c6b7fc89a14748471925ec3793",
+      "bytes": 567
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_gap_revisit_prod.py",
+      "sha256": "43c482037cfce65e1c91fe6d87d8e608f14f82d09ca10f225afa5abba5cfb450",
+      "bytes": 1870
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_k_boundary.json",
+      "sha256": "82e079254c2f8f487c087ee062cf016f5b50621c1c468575717ac41b7ad98668",
+      "bytes": 7041
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_k_boundary.py",
+      "sha256": "22e1c14aa7bb81bc09c30c89f0c4e48260086cd073ff1551ae5a95754de6d1c6",
+      "bytes": 2342
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_k_boundary_prod.json",
+      "sha256": "e56f4ff54deacffa2b95d344cb5c35874620fd7bdfcdbe1688237057724e9804",
+      "bytes": 530
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_k_boundary_prod.py",
+      "sha256": "92e4013cca224d8a5e0c7e972cc9a98476487e7c0285280419f09c3e51b7c193",
+      "bytes": 1551
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_limits.py",
+      "sha256": "1f57e5b6d3b6d6cea753c214d5f77be57429bc7a7787916a6f67a3349d98b1de",
+      "bytes": 4353
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_limits_Haswell.json",
+      "sha256": "461d38d0505a8b1dd42c6cfc4a71328369abcf2d1a6df1e3d87118ffe34e3c55",
+      "bytes": 1240
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_limits_default.json",
+      "sha256": "922f68cf4fde507983caa87070e1bfcf0fec8e1c902c5c40bcc66f5d8ea6b7ac",
+      "bytes": 1222
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_mut_cf.json",
+      "sha256": "e983fc7a6cf6a7ecee50ca7af8c12aeeb55b84e7c772dc5ddc0de571e0202923",
+      "bytes": 327
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_mut_cf.py",
+      "sha256": "c7c133c91ff93d591c9e63e384baf298bb94f42c2dd58eea065d00d09cd448a2",
+      "bytes": 2130
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_off_bitid.py",
+      "sha256": "a0d2a8eb37745bbea340a3cd6f3f05c4efd16f23235790ae0be0b3ac84b223f5",
+      "bytes": 4284
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_ptfe_monotone.py",
+      "sha256": "c2fcdba201c660514d0b35e01488306d3284372b589ed1aa6cd6ba1835a1eb71",
+      "bytes": 2858
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_sdcp_relocate.json",
+      "sha256": "e9e24dff9ab22cd9a0bcb246db2ca6277301403079d03f512317b2f3db7d7ed5",
+      "bytes": 299
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_sdcp_relocate.py",
+      "sha256": "00fd4f2fe80381baa18f9ddc6980d7de100a4fab3504a6f900b74c2bc3317104",
+      "bytes": 2004
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_self_vs_distinct.json",
+      "sha256": "0bcad950df8f8dd01670fbd23e1c1ea1a6ffa2be422132de69e9c31cb2440bc6",
+      "bytes": 693
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_self_vs_distinct.py",
+      "sha256": "4c29a6b6e11b810124e70cab6ed684a9a99d09ead14ad4aad1facc065b4bd870",
+      "bytes": 4438
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_sv_cf.json",
+      "sha256": "300456416b8d5bfa456816f51792a0fc9d13b21ccfe229066acb71404e8a12bf",
+      "bytes": 1629
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_sv_cf.py",
+      "sha256": "1b156d675d6be30d96700c4cac4068760c89cd27ded46b2ffc9d2979204400b9",
+      "bytes": 2401
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_zero_binding.json",
+      "sha256": "d24d950bdb07d31137aef5e75969ab2fbe6e3723950829db35619dad3d8b62f9",
+      "bytes": 1186
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_zero_binding.py",
+      "sha256": "91c9a693c8887b9fa3ac94749060b8fdf534fd286f944e120fbf9af030287c57",
+      "bytes": 2660
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/rerun_cert.log",
+      "sha256": "cbb62b885fe2e96f81f88348b78074e0b6a45afca8b217a95a343a18129f5182",
+      "bytes": 5215
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/rerun_cert.sh",
+      "sha256": "fb9d066005f52bdd8bcf2c09c3121c908d37d12eaabdce7f1d56ae01b72da9e4",
+      "bytes": 1063
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/rerun_r1.log",
+      "sha256": "151303fee91131e8b6a496222a40bab22959e06d3cf4f294750f6370331a6c5a",
+      "bytes": 10433
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/rerun_r1.sh",
+      "sha256": "760de73b1b85b76d8c9c89c5ecb3a7090c3da374595c61769df3cb91be41f79e",
+      "bytes": 567
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/run_b6_B.sh",
+      "sha256": "05be156997b1f305c8ce42b1d0b918ee37c337b04309a02e51c7618b064e9f69",
+      "bytes": 416
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/run_chain_test.sh",
+      "sha256": "792358fd3155b353002d1db3b05b73625d2963c0b0de77bb7f6e8ca7bc95b925",
+      "bytes": 308
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/run_sv_payload.sh",
+      "sha256": "eb74fbcd20330d92fff7e314a235fcf9718b00eca698174e5cd6d3677db815d0",
+      "bytes": 860
+    },
+    {
+      "path": "docs/reviews/rint2_prereview2_20261022/impl/show_cert.py",
+      "sha256": "62cb34bb693f0360bbee503eaa6c9fd26b16fca224efa1a093109219b337bb5f",
+      "bytes": 633
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/README.md",
+      "sha256": "06a03d28d7b5fc1c5073fdaf32ce529f22e8aff961b0bc2e2d3794662619b220",
+      "bytes": 1034
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/design/REVIEW.md",
+      "sha256": "377df1e7c9be7eb7a1b38e7492fa441ba439e68b56530a8893f68ac76269cbd4",
+      "bytes": 20312
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/design/name_scan.py",
+      "sha256": "cf563145f519dc0771f505771c50d288f6f49c4a999a3cbe0d70733452e98e44",
+      "bytes": 1111
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/design/name_scan_out.txt",
+      "sha256": "b0732a57b9c30a2b5972aa93bf1aea12f26096c0a1009b098f4c26fc06eeaf75",
+      "bytes": 10845
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/design/names.txt",
+      "sha256": "c917064dbe7f2085afde87fe6f711196935cb7d7b778cfd5ade3de31bec8417d",
+      "bytes": 1489
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/design/number_xcheck.json",
+      "sha256": "2a37cc7afce37eec8b086627b862c929ef4bcf33739fd096c54ab0a9d9529de3",
+      "bytes": 14344
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/design/number_xcheck.py",
+      "sha256": "cad55e7bf39531198dd2015cf447f5ebc7ea30b3c25efb1e3f871fbddb5f91a2",
+      "bytes": 2503
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/design/probe_registration_v3.json",
+      "sha256": "19fb64c3becd6ab9fc7120bc8f386e7f4300c5be2641ab8a42033cb65c54cf58",
+      "bytes": 8681
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/design/probe_registration_v3.py",
+      "sha256": "ae7f2aa83732bffec75940c7483b614a44ce86bc175814a31f21e76a85624f65",
+      "bytes": 17369
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/design/probe_registration_v3.stdout",
+      "sha256": "21a8ae2616d9b87578e4054715482bf9aee374cdc690ef49622cec32b4ac7241",
+      "bytes": 7736
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/design/probe_stage2_gate.json",
+      "sha256": "1fe4904fc903faf5be0dac2b10af6e41d9ec7bf722d57db4efcc5d550c68d34a",
+      "bytes": 625
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/design/probe_stage2_gate.py",
+      "sha256": "2f6ff47168fe4241baf19b04b906ea56ee75aaf4aa8f458debcfff77c6c32dc3",
+      "bytes": 3152
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/design/run_budget.json",
+      "sha256": "21bd2809575f25579cca0a7d9c592fb5965c7cd7bb13cceaa459ce2c77d31add",
+      "bytes": 953
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/design/run_budget.py",
+      "sha256": "3eaf2c7d3cb100a7754f1866ca698d67640f492bc25a4e1e85a3a0a558377edf",
+      "bytes": 2449
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/design/show_mutants.py",
+      "sha256": "664b30cf1ddc4ef119a301bf46a5acf94ef1265fb96a2d88cf675deec5f90179",
+      "bytes": 279
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/REVIEW.md",
+      "sha256": "3edbf5d13a8b708804b3ddc5078636bc3e6d038fa231c605c25c0ea53db9b544",
+      "bytes": 21914
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/pcommon.py",
+      "sha256": "891b32813d44e6c967d658a28b20db758c7a0ed4dfaaf428bebeaab86ffceac9",
+      "bytes": 5336
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/probe_b01_mutation.json",
+      "sha256": "7e343e299ac607606d332a06a68a19d8a82d98e2bcce7df012e3c979b665c2f0",
+      "bytes": 1055
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/probe_b01_mutation.py",
+      "sha256": "984cbbebaf546b9f3908863e98adfe50f003365de3d3037ada33c6a6cfcdab16",
+      "bytes": 1700
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/probe_cert_codex.py",
+      "sha256": "f4fef41eb1450f4de1ffe63ebd2af4b13c0604be882b869e12b32cd43670a206",
+      "bytes": 5915
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/probe_cert_codex_Haswell.json",
+      "sha256": "a5add44834c5c51ba9a2ae1f6436ba2db88f9aec5b045227105d6287a0ceeada",
+      "bytes": 2415
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/probe_cert_codex_default.json",
+      "sha256": "40be5a5925d044a7a80ff3ddbc0ea9852164ef787511cee71cbc700150b5fa3f",
+      "bytes": 2421
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/probe_cert_liveness.json",
+      "sha256": "249fdb57518e2d9c1ff8504654440599ee6720c791f304db62eac09e3000ce14",
+      "bytes": 719
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/probe_cert_liveness.py",
+      "sha256": "75241b177761d667007d45f8081a97cd692d758c31a280bc6404e0457aa1ee48",
+      "bytes": 2599
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/probe_closed_loop.json",
+      "sha256": "bcbca463b2a4d06caa7433bfc0d9d12d65d3309b139eecf3b9ef152119d6d29e",
+      "bytes": 600
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/probe_closed_loop.py",
+      "sha256": "bb81e20e13ad3179af9ba8d1716aefaff72a04347fe04351d155f1c76d29a29b",
+      "bytes": 2460
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/probe_gap_revisit.json",
+      "sha256": "d7fab0221b04bebdee6b0279757c032d9cddcb89aa4eb417987f49be32269370",
+      "bytes": 2236
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/probe_gap_revisit.py",
+      "sha256": "0fd8614bffee4ffef619089b789384d47c1ed59441974b80c2fae0099d70ae88",
+      "bytes": 2578
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/probe_gap_revisit_prod.json",
+      "sha256": "4dc1b9ec7ff502dc747e68e7492c66cc6b726532261059b8b03562cba64dda5e",
+      "bytes": 712
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/probe_gap_revisit_prod.py",
+      "sha256": "43c482037cfce65e1c91fe6d87d8e608f14f82d09ca10f225afa5abba5cfb450",
+      "bytes": 1870
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/probe_k_boundary.json",
+      "sha256": "0c75f534c97857dd0ffe8c78ad7fa6ba54bf300eb72e47b71a225c31b63e4211",
+      "bytes": 7063
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/probe_k_boundary.py",
+      "sha256": "22e1c14aa7bb81bc09c30c89f0c4e48260086cd073ff1551ae5a95754de6d1c6",
+      "bytes": 2342
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/probe_k_boundary_prod.json",
+      "sha256": "e56f4ff54deacffa2b95d344cb5c35874620fd7bdfcdbe1688237057724e9804",
+      "bytes": 530
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/probe_k_boundary_prod.py",
+      "sha256": "92e4013cca224d8a5e0c7e972cc9a98476487e7c0285280419f09c3e51b7c193",
+      "bytes": 1551
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/probe_limits.py",
+      "sha256": "5c7c51e770d5fc4a7adec855b94276cd285c5bbfade45686a8e2e3b4069eebef",
+      "bytes": 3816
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/probe_limits_Haswell.json",
+      "sha256": "461d38d0505a8b1dd42c6cfc4a71328369abcf2d1a6df1e3d87118ffe34e3c55",
+      "bytes": 1240
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/probe_limits_default.json",
+      "sha256": "922f68cf4fde507983caa87070e1bfcf0fec8e1c902c5c40bcc66f5d8ea6b7ac",
+      "bytes": 1222
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/probe_mut_cf.json",
+      "sha256": "566d94fb5f97e818dc86432ec2e71b3bc5014e377fa7b208d55fd01f6df53e85",
+      "bytes": 245
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/probe_mut_cf.py",
+      "sha256": "c7c133c91ff93d591c9e63e384baf298bb94f42c2dd58eea065d00d09cd448a2",
+      "bytes": 2130
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/probe_off_bitid.json",
+      "sha256": "b76450d56489756172a4b446e79d600d9913e1b894281bb2cf0cbfe7584c34a0",
+      "bytes": 3768
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/probe_off_bitid.py",
+      "sha256": "a0d2a8eb37745bbea340a3cd6f3f05c4efd16f23235790ae0be0b3ac84b223f5",
+      "bytes": 4284
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/probe_ptfe_monotone.json",
+      "sha256": "11de7c4e412ecd78900925581ce6d8faebd9d6622fadd1fda2daca25592b68d4",
+      "bytes": 764
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/probe_ptfe_monotone.py",
+      "sha256": "c2fcdba201c660514d0b35e01488306d3284372b589ed1aa6cd6ba1835a1eb71",
+      "bytes": 2858
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/probe_sdcp_relocate.json",
+      "sha256": "5a88945e7fc49c5b98e2a3bfc95c201417dcc4453e64b99dff348bbb5ceb9366",
+      "bytes": 315
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/probe_sdcp_relocate.py",
+      "sha256": "00fd4f2fe80381baa18f9ddc6980d7de100a4fab3504a6f900b74c2bc3317104",
+      "bytes": 2004
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/probe_self_vs_distinct.json",
+      "sha256": "ce69002c967531c16be30ce163be2e109f629bb3b69f9ffe86ea662dd77b1054",
+      "bytes": 730
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/probe_self_vs_distinct.py",
+      "sha256": "4c29a6b6e11b810124e70cab6ed684a9a99d09ead14ad4aad1facc065b4bd870",
+      "bytes": 4438
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/probe_sv_cf.json",
+      "sha256": "cb989d52e16070f774b3ad1877716c06ee434521cdf07778b4db406cdc3e1185",
+      "bytes": 1685
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/probe_sv_cf.py",
+      "sha256": "1b156d675d6be30d96700c4cac4068760c89cd27ded46b2ffc9d2979204400b9",
+      "bytes": 2401
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/probe_zero_binding.json",
+      "sha256": "a847612c039a1e8e91a0c5540820c0e1c919eb30298720483182094738a38f20",
+      "bytes": 247
+    },
+    {
+      "path": "docs/reviews/rint2_prereview_20261021/impl/probe_zero_binding.py",
+      "sha256": "2647ac8aee77b7ca7cdd7bad73641799877938487f79a60ce9edaac17d9a7bb9",
+      "bytes": 1905
+    },
+    {
+      "path": "docs/reviews/rint_carbon_additive_design_v1_20261020.md",
+      "sha256": "acf12f7984f94414390850d8674ca86b34bdce24f6c7b283e009302e8d4235e9",
+      "bytes": 163895
+    },
+    {
+      "path": "docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md",
+      "sha256": "65f4985d7adea34893908079b0bd7cd11e1b5877cacfe148361a68ca557b8add",
+      "bytes": 182548
+    },
+    {
+      "path": "scripts/ca_ext_svcf.py",
+      "sha256": "e96dc4f22ed9212192ff5425fbcedcbb18e0c2c2d9a1c55caaf8e09b02e0e080",
+      "bytes": 20841
+    },
+    {
+      "path": "scripts/ca_s0_census.py",
+      "sha256": "4b53b1d81b6691e2add2c0a3ebce057bb89dc0c292595003e77c13c4e813d9a9",
+      "bytes": 103989
+    },
+    {
+      "path": "scripts/carbon_junction.py",
+      "sha256": "06f377a7ac29c48ac8e10f8986e84ffa9a1671f1ef7509768a00c628774ae526",
+      "bytes": 168270
+    },
+    {
+      "path": "scripts/mpm_webapp_payload.py",
+      "sha256": "efb7c052524705223b6095657a02dee25f90a1e2bd2af343b2b49a2b21efbc74",
+      "bytes": 313106
+    },
+    {
+      "path": "scripts/ptfe_face_alpha.py",
+      "sha256": "8bb73843f624da52f6775386e293b221a94e7c306797256f79a5b255cb148bc4",
+      "bytes": 56740
+    },
+    {
+      "path": "scripts/rint_r_chain.py",
+      "sha256": "4ad14bc0f4409d95ef91627c6d9a0d99154a177455b236973900feae90613eb6",
+      "bytes": 178686
+    },
+    {
+      "path": "scripts/run_contract.py",
+      "sha256": "59d645e3759f33cade058b3850d05429318e634175f4ad6b55cf7cb330421070",
+      "bytes": 170633
+    },
+    {
+      "path": "scripts/step3_conv_cert.py",
+      "sha256": "64894f4a908a24e35d08da967a6597d5cda3c9d8370c8d72c22a8b07c9ed23b9",
+      "bytes": 52454
+    },
+    {
+      "path": "scripts/step3_sigma.py",
+      "sha256": "828a55e5ce33909a862c1ac7c8104df26cad6740a50679166b73c7c979fcb5d2",
+      "bytes": 368153
+    },
+    {
+      "path": "scripts/test_ca_ext_b6.py",
+      "sha256": "f16c4a65bd4a74e9a4d73d1abdee3aa563958e0515a3a841e35c486d09589da5",
+      "bytes": 129887
+    },
+    {
+      "path": "scripts/test_ca_ext_runner.py",
+      "sha256": "9c17fb0397a9c0598868a30c31808f632158f04310a8aa31a7fe21f88d4ac16f",
+      "bytes": 47142
+    },
+    {
+      "path": "scripts/test_ca_ext_verdict.py",
+      "sha256": "e985b2e25ac84dce796684d702dbf7774c8be90c7cf116fa6e8848a2dbcb1ea5",
+      "bytes": 21927
+    },
+    {
+      "path": "scripts/test_ca_ext_z1.py",
+      "sha256": "e187e591e267a3f06f78feef0d99e784c2a190d02b904c98976d7136cf347239",
+      "bytes": 46106
+    },
+    {
+      "path": "scripts/test_ca_ext_z3.py",
+      "sha256": "b7072775d24fef0af8e4e0ea40a08b3619c5a2ce06fe2aa3427ccfd36a94fcbc",
+      "bytes": 64525
+    },
+    {
+      "path": "scripts/test_ca_s0_census.py",
+      "sha256": "0f0b8b6746449f6a8aa1f9e4c0455a11195b83c3c2d775aa2a1f9e237787c327",
+      "bytes": 83156
+    },
+    {
+      "path": "scripts/test_carbon_junction.py",
+      "sha256": "e07a810ae1d49eec61daa416b36dc84a63c2aeb6995f283c63298fd9be662920",
+      "bytes": 292873
+    },
+    {
+      "path": "scripts/test_ptfe_face_alpha.py",
+      "sha256": "bf7f26aee0436968d6eeb4644342bb3ea18ba2401e1ab1d4d3a6496477a64326",
+      "bytes": 86170
+    },
+    {
+      "path": "scripts/test_rint_r_chain.py",
+      "sha256": "0ee83d44cc7234c0b01ed1fa8a6ee736d5e5dbc11d2cd580d22557631d481701",
+      "bytes": 238081
+    },
+    {
+      "path": "scripts/test_rint_r_chain_e2e.py",
+      "sha256": "735ca5ed119490dda0b55bfae9dd070020017a9d3c064a73fc6cb3de1e23f6d3",
+      "bytes": 32632
+    },
+    {
+      "path": "scripts/test_rint_receipts.py",
+      "sha256": "8509b38ddba10288117cdb20a4d7c0aebfca02801c9e6c297a5c7774fcc52cac",
+      "bytes": 30487
+    },
+    {
+      "path": "scripts/test_step3_conv_cert.py",
+      "sha256": "1cbe00d136456c7edf717c397bebddffa90f9ad839a7ea2b539546093d1a3153",
+      "bytes": 13518
+    },
+    {
+      "path": "scripts/test_step3_target_cert.py",
+      "sha256": "52d840496d0ad104c7b8fa991144642cae64ff67794234905c154f96df15193a",
+      "bytes": 124413
+    },
+    {
+      "path": "webapp/static/explain/rint_overview_20261021.html",
+      "sha256": "04696a08f2da9440e69b148a9ace854b60dae6c7b86d84aef8be54018bbf69da",
+      "bytes": 93493
+    },
+    {
+      "path": "webapp/templates/mpm_lab.html",
+      "sha256": "f0dfd01bbf8e6e1a51a3292f82dde7a3dc8f8a838837ff92032812c9451ea74d",
+      "bytes": 36773
+    },
+    {
+      "path": "webapp/test_ca_ext_labels.py",
+      "sha256": "016363d95dc6d92b9445bc939caf2d55644b2381ecb7901c5d13ad18eb310afe",
+      "bytes": 29264
+    },
+    {
+      "path": "webapp/test_mpm_lab_cmp_absent_phase.py",
+      "sha256": "80a34bbe6a13e52d224aaecce47b007f6aca40070025222b462d57247290b932",
+      "bytes": 17289
+    },
+    {
+      "path": "webapp/test_rint_explainer_page.py",
+      "sha256": "a3a4cc228a62b4e3496adfadb15e59f82e78b48919e471edbd9ffae83cc54f9d",
+      "bytes": 15275
+    }
+  ]
+}

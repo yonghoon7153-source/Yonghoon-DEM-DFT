@@ -1,0 +1,58 @@
+{
+  "actual_stage1_stage2": {
+    "stage1_points": {
+      "points_by_phase": {
+        "1": 324,
+        "2": 14,
+        "4": 15
+      },
+      "fids_by_phase": {
+        "2": 1,
+        "4": 1
+      },
+      "vgcf_points_outside_box": 0
+    },
+    "stage2_points": {
+      "points_by_phase": {
+        "1": 324,
+        "2": 29,
+        "4": 15,
+        "5": 1
+      },
+      "fids_by_phase": {
+        "2": 2,
+        "4": 1
+      },
+      "vgcf_points_outside_box": 0
+    },
+    "plan_source": "commit:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "gate": null,
+    "transport_solve_calls": 0
+  },
+  "actual_bed_change": {
+    "changed_inputs": [
+      "se"
+    ],
+    "cells_before": {
+      "0": 295826,
+      "1": 8448,
+      "3": 87,
+      "5": 19,
+      "6": 324
+    },
+    "cells_after": {
+      "0": 295826,
+      "1": 8448,
+      "3": 87,
+      "5": 19,
+      "6": 324
+    },
+    "junctions_before": 1,
+    "junctions_after": 0,
+    "old_reports_gate_after_change": null,
+    "new_reports_gate": null,
+    "input_binding_preserved": false
+  },
+  "shell_argv_mode": "fixed_fixture_not_shell",
+  "stage2_scope": "actual census body with explicit fixture plan; Git pre-gate not tested"
+}

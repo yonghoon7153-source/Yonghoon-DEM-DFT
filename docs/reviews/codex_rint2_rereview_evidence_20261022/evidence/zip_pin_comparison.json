@@ -1,0 +1,1027 @@
+[
+  {
+    "path": "docs/reviews/codex_review_rint2_carbon_additive_design_20261021.md",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/codex_rint2_rereview_request_20261022.md",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/findings.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_design_fix_plan_20261021.md",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_kgy_commands_20261020.md",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_pf2_fix_evidence_20261022/probe_deadend_margin.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_pf2_fix_evidence_20261022/probe_deadend_margin.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_pf2_fix_evidence_20261022/stage2_report.md",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_pf2_fix_evidence_20261022/stage3_prereview/README.md",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_pf2_fix_evidence_20261022/stage3_prereview/REVIEW_S3.md",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_pf2_fix_evidence_20261022/stage3_prereview/mutate.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_pf2_fix_evidence_20261022/stage3_prereview/my_codepin_nogit.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_pf2_fix_evidence_20261022/stage3_prereview/my_real_s0_report.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_pf2_fix_evidence_20261022/stage3_prereview/my_sv_producer.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_pf2_fix_evidence_20261022/stage3_prereview/my_sv_randbeds.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_pf2_fix_evidence_20261022/stage3_prereview/my_sv_randbeds.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_pf2_fix_evidence_20261022/stage3_prereview/my_svcf_validator.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_pf2_fix_evidence_20261022/stage3_prereview/webapp_sv.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/README.md",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/design/REVIEW.md",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/design/count_tests.log",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/design/count_tests.sh",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/design/mutate_design.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/design/mutate_design.log",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/design/mutate_design.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/design/name_scan_out.txt",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/design/names2.txt",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/design/probe_A_reg_numbers.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/design/probe_A_reg_numbers.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/design/probe_B_decision_table.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/design/probe_B_decision_table.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/design/probe_C_code_pin.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/design/probe_C_code_pin.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/design/probe_D_origin_union.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/design/probe_D_origin_union.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/design/probe_E_plan_reseal.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/design/probe_E_plan_reseal.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/design/run_budget2.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/design/run_budget2.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/design/tests_out/summary.txt",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/design/tests_out/test_ca_ext_b6.py.log",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/design/tests_out/test_ca_ext_runner.py.log",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/design/tests_out/test_ca_s0_census.py.log",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/design/tests_out/test_carbon_junction.py.log",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/design/tests_out/test_rint_r_chain.py.log",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/design/tests_out/test_rint_r_chain_e2e.py.log",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/design/tests_out/test_step3_conv_cert.py.log",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/design/tests_out/test_step3_target_cert.py.log",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/REVIEW.md",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/b6_B_vs_a76.log",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/baselines.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/baselines.log",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/baselines_result.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/cert_default.err",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/cert_haswell.err",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/chain_baseline.log",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/mk_baselines.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/mutate.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/mutations.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/mutations.log",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/mutations_result.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/mutations_v1b.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/mutations_v1b.log",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/mutations_v1b_result.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/pcommon.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_band_knife.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_band_knife.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_degenerate.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_degenerate.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_item9_assemble.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_item9_assemble.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_plan_gate.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_plan_gate.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_selfd_ii.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_selfd_ii.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_sv_unsplit.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_sv_unsplit.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_sv_unsplit_freq.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_sv_unsplit_freq.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_sv_unsplit_grid.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_sv_unsplit_grid.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_sv_unsplit_payload.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_sv_unsplit_payload.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_svcf_record.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe2_svcf_record.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_b01_mutation.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_b01_mutation.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_cert_codex.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_cert_codex_Haswell.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_cert_codex_default.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_cert_liveness.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_cert_liveness.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_closed_loop.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_closed_loop.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_gap_revisit.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_gap_revisit.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_gap_revisit_prod.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_gap_revisit_prod.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_k_boundary.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_k_boundary.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_k_boundary_prod.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_k_boundary_prod.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_limits.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_limits_Haswell.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_limits_default.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_mut_cf.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_mut_cf.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_off_bitid.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_ptfe_monotone.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_sdcp_relocate.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_sdcp_relocate.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_self_vs_distinct.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_self_vs_distinct.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_sv_cf.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_sv_cf.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_zero_binding.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/probe_zero_binding.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/rerun_cert.log",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/rerun_cert.sh",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/rerun_r1.log",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/rerun_r1.sh",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/run_b6_B.sh",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/run_chain_test.sh",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/run_sv_payload.sh",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview2_20261022/impl/show_cert.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/README.md",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/design/REVIEW.md",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/design/name_scan.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/design/name_scan_out.txt",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/design/names.txt",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/design/number_xcheck.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/design/number_xcheck.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/design/probe_registration_v3.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/design/probe_registration_v3.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/design/probe_registration_v3.stdout",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/design/probe_stage2_gate.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/design/probe_stage2_gate.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/design/run_budget.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/design/run_budget.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/design/show_mutants.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/REVIEW.md",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/pcommon.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/probe_b01_mutation.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/probe_b01_mutation.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/probe_cert_codex.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/probe_cert_codex_Haswell.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/probe_cert_codex_default.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/probe_cert_liveness.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/probe_cert_liveness.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/probe_closed_loop.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/probe_closed_loop.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/probe_gap_revisit.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/probe_gap_revisit.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/probe_gap_revisit_prod.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/probe_gap_revisit_prod.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/probe_k_boundary.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/probe_k_boundary.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/probe_k_boundary_prod.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/probe_k_boundary_prod.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/probe_limits.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/probe_limits_Haswell.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/probe_limits_default.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/probe_mut_cf.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/probe_mut_cf.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/probe_off_bitid.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/probe_off_bitid.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/probe_ptfe_monotone.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/probe_ptfe_monotone.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/probe_sdcp_relocate.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/probe_sdcp_relocate.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/probe_self_vs_distinct.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/probe_self_vs_distinct.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/probe_sv_cf.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/probe_sv_cf.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/probe_zero_binding.json",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint2_prereview_20261021/impl/probe_zero_binding.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint_carbon_additive_design_v1_20261020.md",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "scripts/ca_ext_svcf.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "scripts/ca_s0_census.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "scripts/carbon_junction.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "scripts/mpm_webapp_payload.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "scripts/ptfe_face_alpha.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "scripts/rint_r_chain.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "scripts/run_contract.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "scripts/step3_conv_cert.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "scripts/step3_sigma.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "scripts/test_ca_ext_b6.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "scripts/test_ca_ext_runner.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "scripts/test_ca_ext_verdict.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "scripts/test_ca_ext_z1.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "scripts/test_ca_ext_z3.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "scripts/test_ca_s0_census.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "scripts/test_carbon_junction.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "scripts/test_ptfe_face_alpha.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "scripts/test_rint_r_chain.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "scripts/test_rint_r_chain_e2e.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "scripts/test_rint_receipts.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "scripts/test_step3_conv_cert.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "scripts/test_step3_target_cert.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "webapp/static/explain/rint_overview_20261021.html",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "webapp/templates/mpm_lab.html",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "webapp/test_ca_ext_labels.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "webapp/test_mpm_lab_cmp_absent_phase.py",
+    "in_pin": true,
+    "same": true
+  },
+  {
+    "path": "webapp/test_rint_explainer_page.py",
+    "in_pin": true,
+    "same": true
+  }
+]

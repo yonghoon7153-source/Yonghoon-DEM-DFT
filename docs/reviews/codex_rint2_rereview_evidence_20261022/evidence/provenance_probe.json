@@ -1,0 +1,67 @@
+{
+  "F1_actual_nongit": {
+    "chain": {
+      "head": null,
+      "dirty": null
+    },
+    "runner": {
+      "head": null,
+      "dirty": null
+    },
+    "dirty_problem": null,
+    "verdict_problem": null,
+    "omitted_imports": [
+      "ca_ext_cjunc.py",
+      "additives.py",
+      "se_material.py",
+      "lens_geometry.py",
+      "step4_dyn.py",
+      "rint_cycle_traj.py"
+    ]
+  },
+  "F1_status_failure": {
+    "identity": {
+      "head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "dirty": false
+    },
+    "dirty_problem": null
+  },
+  "F2_clean_mixed_code": {
+    "changed": [
+      "step3_conv_cert.py",
+      "ca_ext_svcf.py",
+      "run_contract.py"
+    ],
+    "dirty_problem": null,
+    "s0_problem": null,
+    "verdict_problem": null,
+    "same_code_self": true
+  },
+  "F8_input_loss": {
+    "different_raw_input": true,
+    "projection_keys": [
+      "file_digests",
+      "git_dirty",
+      "git_head",
+      "kit",
+      "path",
+      "plan_sha256",
+      "plan_source",
+      "r_plan_path",
+      "r_plan_sha256",
+      "schema",
+      "sha256",
+      "stage"
+    ],
+    "old_report_accepted": null,
+    "new_report_accepted": null,
+    "differences_projected": [
+      "path",
+      "sha256"
+    ],
+    "s0_stage2_has_input_argument": false
+  },
+  "F5_empty_commit": {
+    "problem": null
+  }
+}

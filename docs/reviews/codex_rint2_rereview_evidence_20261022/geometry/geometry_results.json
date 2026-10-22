@@ -1,0 +1,1179 @@
+{
+  "source_root": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source",
+  "source_sha256": {
+    "carbon_junction.py": "06f377a7ac29c48ac8e10f8986e84ffa9a1671f1ef7509768a00c628774ae526",
+    "ca_ext_svcf.py": "e96dc4f22ed9212192ff5425fbcedcbb18e0c2c2d9a1c55caaf8e09b02e0e080",
+    "ptfe_face_alpha.py": "8bb73843f624da52f6775386e293b221a94e7c306797256f79a5b255cb148bc4",
+    "rint_r_chain.py": "4ad14bc0f4409d95ef91627c6d9a0d99154a177455b236973900feae90613eb6"
+  },
+  "runtime": {
+    "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+    "numpy": "2.5.3"
+  },
+  "author_regression": {
+    "passed": 122,
+    "failed": [],
+    "tags": [
+      "CEN",
+      "FA+CJ",
+      "GAP",
+      "KBND",
+      "QC",
+      "QD",
+      "QD2",
+      "RCA03",
+      "RCA04",
+      "RCA04-DUP",
+      "RCA04-EPS",
+      "RCA04-V",
+      "RCA05",
+      "RCA06",
+      "RCA06-H",
+      "RING",
+      "S3",
+      "SELFD"
+    ]
+  },
+  "two_symmetric_components": {
+    "G": 47.61904761904763,
+    "sigma": 12.98701298701299,
+    "census": {
+      "n_vgcf_fibres": 4,
+      "n_pieces": 4,
+      "n_segments": 128,
+      "n_positions": 36,
+      "n_live_positions": 32,
+      "n_cross_cells": 0,
+      "n_kway_cells_ge3": 0,
+      "n_instances": 0,
+      "n_instances_distinct": 0,
+      "n_instances_self": 0,
+      "n_realized": 0,
+      "n_unrealized_by_reason": {},
+      "n_port_ties": 0,
+      "n_port_displaced": 0,
+      "port_relation": {
+        "same_cell": 0,
+        "face": 0,
+        "edge": 0,
+        "corner": 0,
+        "apart": 0
+      },
+      "n_cut_site_faces": 0,
+      "n_unreg_faces": 0,
+      "n_cut_self_faces": 0,
+      "n_vx_faces_by_sid": {
+        "void": 128,
+        "SDCP": 8
+      },
+      "owner_tie_noncanonical": 0,
+      "n_faces_multi_site": 0,
+      "surface_gap_um": null,
+      "Lc_um": null,
+      "len_mult": null,
+      "n_long_distinct": 0,
+      "n_long_self": 0,
+      "self_dk_min": null,
+      "n_sdcp_bridging_components": 2,
+      "n_sdcp_bridged_fid_pairs": 2,
+      "self_filter": "applied",
+      "n_self_candidates": 0,
+      "n_self_kept": 0,
+      "n_self_filtered": 0,
+      "n_self_s_undefined": 0,
+      "n_self_fused_faces": 0,
+      "n_self_revisits_path_only": 0,
+      "n_self_revisits_path_broken": 0,
+      "self_s_um": null,
+      "n_revisit_pairs": 0,
+      "n_revisit_cells": 0,
+      "n_revisit_fibres": 0,
+      "revisit_s_um": null,
+      "n_subedges": 0,
+      "n_subedges_long": 0,
+      "n_subedges_ptfe_cov": 0,
+      "n_instances_ptfe_partial": 0,
+      "n_subedges_sdcp_near": 0,
+      "n_subedges_unrealized": 0,
+      "subedge_rule": "ceil_Lc_over_Lpar_equal_split_midpoints_nearest_port_v0",
+      "n_sdcp_components_touching": 2,
+      "n_bridging_components": 2,
+      "n_sv_faces_cut_rows": 0,
+      "n_sv_faces_kept_self": 0,
+      "n_unsplit_bridging_components": 2,
+      "sv_cf_rule": "sdcp_component_owner_groups_same_piece_continuity_or_covered_through_cut_nonpassing_v1",
+      "n_instances_same_fid_pieces": 0,
+      "n_piece_cell_meets": 0,
+      "n_ring_pieces": 0,
+      "n_closed_paths_joined": 0,
+      "n_seam_alias": 0,
+      "piece_rule": "piece_is_fibre_closed_path_seam_continuous_v1"
+    },
+    "problem": null,
+    "flags": [
+      "SV_UNCHECKED"
+    ],
+    "detail": {
+      "threshold": 2.0,
+      "scope": "R_j0",
+      "corners": {
+        "c1_P0_R_j0": {
+          "status": "computed",
+          "ratio": 1.0,
+          "status_hi": "no_through_without_sv",
+          "ratio_hi": "inf",
+          "n_unsplit": 2
+        }
+      },
+      "unreadable": [],
+      "straddle": [
+        "c1_P0_R_j0"
+      ],
+      "dependent": []
+    },
+    "record": {
+      "kind": "counterfactual_cut_sv_bridges_keep_self_v1",
+      "requested": true,
+      "threshold": null,
+      "status": "computed",
+      "flag": null,
+      "cg_info": 0,
+      "sv_counterfactual_ratio": 1.0,
+      "ratio_limit": null,
+      "G_full_code": 47.61904761904763,
+      "G_cut_code": 47.61904761904763,
+      "resid": 3.4889277443974066e-16,
+      "n_sv_faces_cut": 0,
+      "n_sdcp_components_touching": 2,
+      "n_bridging_components": 2,
+      "n_sv_faces_kept_self": 0,
+      "n_unsplit_bridging_components": 2,
+      "conv_cert": null,
+      "backend_last_solve": {
+        "used": null,
+        "requested": null,
+        "precond": null,
+        "fallback_reason": null
+      },
+      "bracket_rule": "lower_keep_unsplit_upper_remove_unsplit_sdcp_cells_v1",
+      "status_hi": "no_through_without_sv",
+      "sv_counterfactual_ratio_hi": null,
+      "ratio_limit_hi": "inf",
+      "upper": {
+        "status": "no_through_without_sv",
+        "cg_info": null,
+        "why": null,
+        "sv_counterfactual_ratio": null,
+        "ratio_limit": "inf",
+        "G_cut_code": 0.0,
+        "resid": null,
+        "n_components_removed": 2,
+        "n_cells_removed": 6,
+        "n_edges_cut": 12,
+        "n_plate_couplings_cut": 0,
+        "n_sv_faces_cut": 0,
+        "conv_cert": null,
+        "backend_last_solve": null
+      }
+    },
+    "independent_expected_G": 47.61904761904761,
+    "true_bridge_removal_ratio": 1.0
+  },
+  "first_component_only_mutation": {
+    "G": 47.61904761904763,
+    "sigma": 12.98701298701299,
+    "census": {
+      "n_vgcf_fibres": 4,
+      "n_pieces": 4,
+      "n_segments": 128,
+      "n_positions": 36,
+      "n_live_positions": 32,
+      "n_cross_cells": 0,
+      "n_kway_cells_ge3": 0,
+      "n_instances": 0,
+      "n_instances_distinct": 0,
+      "n_instances_self": 0,
+      "n_realized": 0,
+      "n_unrealized_by_reason": {},
+      "n_port_ties": 0,
+      "n_port_displaced": 0,
+      "port_relation": {
+        "same_cell": 0,
+        "face": 0,
+        "edge": 0,
+        "corner": 0,
+        "apart": 0
+      },
+      "n_cut_site_faces": 0,
+      "n_unreg_faces": 0,
+      "n_cut_self_faces": 0,
+      "n_vx_faces_by_sid": {
+        "void": 128,
+        "SDCP": 8
+      },
+      "owner_tie_noncanonical": 0,
+      "n_faces_multi_site": 0,
+      "surface_gap_um": null,
+      "Lc_um": null,
+      "len_mult": null,
+      "n_long_distinct": 0,
+      "n_long_self": 0,
+      "self_dk_min": null,
+      "n_sdcp_bridging_components": 2,
+      "n_sdcp_bridged_fid_pairs": 2,
+      "self_filter": "applied",
+      "n_self_candidates": 0,
+      "n_self_kept": 0,
+      "n_self_filtered": 0,
+      "n_self_s_undefined": 0,
+      "n_self_fused_faces": 0,
+      "n_self_revisits_path_only": 0,
+      "n_self_revisits_path_broken": 0,
+      "self_s_um": null,
+      "n_revisit_pairs": 0,
+      "n_revisit_cells": 0,
+      "n_revisit_fibres": 0,
+      "revisit_s_um": null,
+      "n_subedges": 0,
+      "n_subedges_long": 0,
+      "n_subedges_ptfe_cov": 0,
+      "n_instances_ptfe_partial": 0,
+      "n_subedges_sdcp_near": 0,
+      "n_subedges_unrealized": 0,
+      "subedge_rule": "ceil_Lc_over_Lpar_equal_split_midpoints_nearest_port_v0",
+      "n_sdcp_components_touching": 2,
+      "n_bridging_components": 2,
+      "n_sv_faces_cut_rows": 0,
+      "n_sv_faces_kept_self": 0,
+      "n_unsplit_bridging_components": 2,
+      "sv_cf_rule": "sdcp_component_owner_groups_same_piece_continuity_or_covered_through_cut_nonpassing_v1",
+      "n_instances_same_fid_pieces": 0,
+      "n_piece_cell_meets": 0,
+      "n_ring_pieces": 0,
+      "n_closed_paths_joined": 0,
+      "n_seam_alias": 0,
+      "piece_rule": "piece_is_fibre_closed_path_seam_continuous_v1"
+    },
+    "problem": null,
+    "flags": [],
+    "detail": {
+      "threshold": 2.0,
+      "scope": "R_j0",
+      "corners": {
+        "c1_P0_R_j0": {
+          "status": "computed",
+          "ratio": 1.0,
+          "status_hi": "computed",
+          "ratio_hi": 2.0,
+          "n_unsplit": 2
+        }
+      },
+      "unreadable": [],
+      "straddle": [],
+      "dependent": []
+    },
+    "record": {
+      "kind": "counterfactual_cut_sv_bridges_keep_self_v1",
+      "requested": true,
+      "threshold": null,
+      "status": "computed",
+      "flag": null,
+      "cg_info": 0,
+      "sv_counterfactual_ratio": 1.0,
+      "ratio_limit": null,
+      "G_full_code": 47.61904761904763,
+      "G_cut_code": 47.61904761904763,
+      "resid": 3.4889277443974066e-16,
+      "n_sv_faces_cut": 0,
+      "n_sdcp_components_touching": 2,
+      "n_bridging_components": 2,
+      "n_sv_faces_kept_self": 0,
+      "n_unsplit_bridging_components": 2,
+      "conv_cert": null,
+      "backend_last_solve": {
+        "used": null,
+        "requested": null,
+        "precond": null,
+        "fallback_reason": null
+      },
+      "bracket_rule": "lower_keep_unsplit_upper_remove_unsplit_sdcp_cells_v1",
+      "status_hi": "computed",
+      "sv_counterfactual_ratio_hi": 2.0,
+      "ratio_limit_hi": null,
+      "upper": {
+        "status": "computed",
+        "cg_info": 0,
+        "why": null,
+        "sv_counterfactual_ratio": 2.0,
+        "ratio_limit": null,
+        "G_cut_code": 23.809523809523814,
+        "resid": 2.8794827924366204e-16,
+        "n_components_removed": 2,
+        "n_cells_removed": 3,
+        "n_edges_cut": 6,
+        "n_plate_couplings_cut": 0,
+        "n_sv_faces_cut": 0,
+        "conv_cert": null,
+        "backend_last_solve": {
+          "used": null,
+          "requested": null,
+          "precond": null,
+          "fallback_reason": null
+        }
+      }
+    }
+  },
+  "author_QD2_under_first_component_mutation": {
+    "passed": 13,
+    "failed": []
+  },
+  "census_mismatch": {
+    "G": 47.61904761904763,
+    "sigma": 12.98701298701299,
+    "census": {
+      "n_vgcf_fibres": 4,
+      "n_pieces": 4,
+      "n_segments": 128,
+      "n_positions": 36,
+      "n_live_positions": 32,
+      "n_cross_cells": 0,
+      "n_kway_cells_ge3": 0,
+      "n_instances": 0,
+      "n_instances_distinct": 0,
+      "n_instances_self": 0,
+      "n_realized": 0,
+      "n_unrealized_by_reason": {},
+      "n_port_ties": 0,
+      "n_port_displaced": 0,
+      "port_relation": {
+        "same_cell": 0,
+        "face": 0,
+        "edge": 0,
+        "corner": 0,
+        "apart": 0
+      },
+      "n_cut_site_faces": 0,
+      "n_unreg_faces": 0,
+      "n_cut_self_faces": 0,
+      "n_vx_faces_by_sid": {
+        "void": 128,
+        "SDCP": 8
+      },
+      "owner_tie_noncanonical": 0,
+      "n_faces_multi_site": 0,
+      "surface_gap_um": null,
+      "Lc_um": null,
+      "len_mult": null,
+      "n_long_distinct": 0,
+      "n_long_self": 0,
+      "self_dk_min": null,
+      "n_sdcp_bridging_components": 2,
+      "n_sdcp_bridged_fid_pairs": 2,
+      "self_filter": "applied",
+      "n_self_candidates": 0,
+      "n_self_kept": 0,
+      "n_self_filtered": 0,
+      "n_self_s_undefined": 0,
+      "n_self_fused_faces": 0,
+      "n_self_revisits_path_only": 0,
+      "n_self_revisits_path_broken": 0,
+      "self_s_um": null,
+      "n_revisit_pairs": 0,
+      "n_revisit_cells": 0,
+      "n_revisit_fibres": 0,
+      "revisit_s_um": null,
+      "n_subedges": 0,
+      "n_subedges_long": 0,
+      "n_subedges_ptfe_cov": 0,
+      "n_instances_ptfe_partial": 0,
+      "n_subedges_sdcp_near": 0,
+      "n_subedges_unrealized": 0,
+      "subedge_rule": "ceil_Lc_over_Lpar_equal_split_midpoints_nearest_port_v0",
+      "n_sdcp_components_touching": 2,
+      "n_bridging_components": 2,
+      "n_sv_faces_cut_rows": 0,
+      "n_sv_faces_kept_self": 0,
+      "n_unsplit_bridging_components": 0,
+      "sv_cf_rule": "sdcp_component_owner_groups_same_piece_continuity_or_covered_through_cut_nonpassing_v1",
+      "n_instances_same_fid_pieces": 0,
+      "n_piece_cell_meets": 0,
+      "n_ring_pieces": 0,
+      "n_closed_paths_joined": 0,
+      "n_seam_alias": 0,
+      "piece_rule": "piece_is_fibre_closed_path_seam_continuous_v1"
+    },
+    "problem": "sv_cf| 못 가른 덩어리 0 인데 위 끝 풀이 기록 dict (다시 풀지 않는다 · 위 = 아래)",
+    "flags": [
+      "SV_UNCHECKED"
+    ],
+    "detail": {
+      "threshold": 2.0,
+      "scope": "R_j0",
+      "corners": {
+        "c1_P0_R_j0": {
+          "status": "computed",
+          "ratio": 1.0,
+          "status_hi": "unsplit_census_mismatch",
+          "ratio_hi": null,
+          "n_unsplit": 0
+        }
+      },
+      "unreadable": [
+        "c1_P0_R_j0"
+      ],
+      "straddle": [],
+      "dependent": []
+    },
+    "record": {
+      "kind": "counterfactual_cut_sv_bridges_keep_self_v1",
+      "requested": true,
+      "threshold": null,
+      "status": "computed",
+      "flag": null,
+      "cg_info": 0,
+      "sv_counterfactual_ratio": 1.0,
+      "ratio_limit": null,
+      "G_full_code": 47.61904761904763,
+      "G_cut_code": 47.61904761904763,
+      "resid": 3.4889277443974066e-16,
+      "n_sv_faces_cut": 0,
+      "n_sdcp_components_touching": 2,
+      "n_bridging_components": 2,
+      "n_sv_faces_kept_self": 0,
+      "n_unsplit_bridging_components": 0,
+      "conv_cert": null,
+      "backend_last_solve": {
+        "used": null,
+        "requested": null,
+        "precond": null,
+        "fallback_reason": null
+      },
+      "bracket_rule": "lower_keep_unsplit_upper_remove_unsplit_sdcp_cells_v1",
+      "status_hi": "unsplit_census_mismatch",
+      "sv_counterfactual_ratio_hi": null,
+      "ratio_limit_hi": null,
+      "upper": {
+        "status": "unsplit_census_mismatch",
+        "cg_info": null,
+        "why": "못 가른 덩어리 수 census 0 ≠ 지문 묶인 원장에서 다시 가른 수 2 — 위 끝을 풀지 않는다 (원장 census 변조 · 결함 의심 · fail-closed)",
+        "sv_counterfactual_ratio": null,
+        "ratio_limit": null,
+        "G_cut_code": null,
+        "resid": null,
+        "n_components_removed": 2,
+        "conv_cert": null,
+        "backend_last_solve": null
+      }
+    }
+  },
+  "two_components_finite_upper": {
+    "G": 58.730158730158706,
+    "sigma": 11.74603174603174,
+    "census": {
+      "n_vgcf_fibres": 5,
+      "n_pieces": 5,
+      "n_segments": 160,
+      "n_positions": 45,
+      "n_live_positions": 41,
+      "n_cross_cells": 0,
+      "n_kway_cells_ge3": 0,
+      "n_instances": 0,
+      "n_instances_distinct": 0,
+      "n_instances_self": 0,
+      "n_realized": 0,
+      "n_unrealized_by_reason": {},
+      "n_port_ties": 0,
+      "n_port_displaced": 0,
+      "port_relation": {
+        "same_cell": 0,
+        "face": 0,
+        "edge": 0,
+        "corner": 0,
+        "apart": 0
+      },
+      "n_cut_site_faces": 0,
+      "n_unreg_faces": 0,
+      "n_cut_self_faces": 0,
+      "n_vx_faces_by_sid": {
+        "void": 164,
+        "SDCP": 8
+      },
+      "owner_tie_noncanonical": 0,
+      "n_faces_multi_site": 0,
+      "surface_gap_um": null,
+      "Lc_um": null,
+      "len_mult": null,
+      "n_long_distinct": 0,
+      "n_long_self": 0,
+      "self_dk_min": null,
+      "n_sdcp_bridging_components": 2,
+      "n_sdcp_bridged_fid_pairs": 2,
+      "self_filter": "applied",
+      "n_self_candidates": 0,
+      "n_self_kept": 0,
+      "n_self_filtered": 0,
+      "n_self_s_undefined": 0,
+      "n_self_fused_faces": 0,
+      "n_self_revisits_path_only": 0,
+      "n_self_revisits_path_broken": 0,
+      "self_s_um": null,
+      "n_revisit_pairs": 0,
+      "n_revisit_cells": 0,
+      "n_revisit_fibres": 0,
+      "revisit_s_um": null,
+      "n_subedges": 0,
+      "n_subedges_long": 0,
+      "n_subedges_ptfe_cov": 0,
+      "n_instances_ptfe_partial": 0,
+      "n_subedges_sdcp_near": 0,
+      "n_subedges_unrealized": 0,
+      "subedge_rule": "ceil_Lc_over_Lpar_equal_split_midpoints_nearest_port_v0",
+      "n_sdcp_components_touching": 2,
+      "n_bridging_components": 2,
+      "n_sv_faces_cut_rows": 0,
+      "n_sv_faces_kept_self": 0,
+      "n_unsplit_bridging_components": 2,
+      "sv_cf_rule": "sdcp_component_owner_groups_same_piece_continuity_or_covered_through_cut_nonpassing_v1",
+      "n_instances_same_fid_pieces": 0,
+      "n_piece_cell_meets": 0,
+      "n_ring_pieces": 0,
+      "n_closed_paths_joined": 0,
+      "n_seam_alias": 0,
+      "piece_rule": "piece_is_fibre_closed_path_seam_continuous_v1"
+    },
+    "problem": null,
+    "flags": [
+      "SV_UNCHECKED"
+    ],
+    "detail": {
+      "threshold": 2.0,
+      "scope": "R_j0",
+      "corners": {
+        "c1_P0_R_j0": {
+          "status": "computed",
+          "ratio": 1.0,
+          "status_hi": "computed",
+          "ratio_hi": 5.285714285714302,
+          "n_unsplit": 2
+        }
+      },
+      "unreadable": [],
+      "straddle": [
+        "c1_P0_R_j0"
+      ],
+      "dependent": []
+    },
+    "record": {
+      "kind": "counterfactual_cut_sv_bridges_keep_self_v1",
+      "requested": true,
+      "threshold": null,
+      "status": "computed",
+      "flag": null,
+      "cg_info": 0,
+      "sv_counterfactual_ratio": 1.0,
+      "ratio_limit": null,
+      "G_full_code": 58.7301587301587,
+      "G_cut_code": 58.7301587301587,
+      "resid": 3.2058812054834396e-16,
+      "n_sv_faces_cut": 0,
+      "n_sdcp_components_touching": 2,
+      "n_bridging_components": 2,
+      "n_sv_faces_kept_self": 0,
+      "n_unsplit_bridging_components": 2,
+      "conv_cert": null,
+      "backend_last_solve": {
+        "used": null,
+        "requested": null,
+        "precond": null,
+        "fallback_reason": null
+      },
+      "bracket_rule": "lower_keep_unsplit_upper_remove_unsplit_sdcp_cells_v1",
+      "status_hi": "computed",
+      "sv_counterfactual_ratio_hi": 5.285714285714302,
+      "ratio_limit_hi": null,
+      "upper": {
+        "status": "computed",
+        "cg_info": 0,
+        "why": null,
+        "sv_counterfactual_ratio": 5.285714285714302,
+        "ratio_limit": null,
+        "G_cut_code": 11.111111111111072,
+        "resid": 2.0168691722003555e-16,
+        "n_components_removed": 2,
+        "n_cells_removed": 6,
+        "n_edges_cut": 12,
+        "n_plate_couplings_cut": 0,
+        "n_sv_faces_cut": 0,
+        "conv_cert": null,
+        "backend_last_solve": {
+          "used": null,
+          "requested": null,
+          "precond": null,
+          "fallback_reason": null
+        }
+      }
+    }
+  },
+  "record_mutations": {
+    "lower_wrong_ratio": {
+      "problem": "sv_cf| 아래 끝 비 1.1 ≠ G_full/G_cut 1.0 (상대 1e-12 · 기록 안 수가 서로 맞지 않는다)",
+      "flags": [
+        "SV_UNCHECKED"
+      ],
+      "detail": {
+        "threshold": 2.0,
+        "scope": "R_j0",
+        "corners": {
+          "c1_P0_R_j0": {
+            "status": "computed",
+            "ratio": 1.1,
+            "status_hi": "computed",
+            "ratio_hi": 5.285714285714302,
+            "n_unsplit": 2
+          }
+        },
+        "unreadable": [],
+        "straddle": [
+          "c1_P0_R_j0"
+        ],
+        "dependent": []
+      }
+    },
+    "upper_wrong_ratio": {
+      "problem": "sv_cf| 위 끝 비 1.1 ≠ G_full/G_cut 5.285714285714302 (상대 1e-12 · 기록 안 수가 서로 맞지 않는다)",
+      "flags": [],
+      "detail": {
+        "threshold": 2.0,
+        "scope": "R_j0",
+        "corners": {
+          "c1_P0_R_j0": {
+            "status": "computed",
+            "ratio": 1.0,
+            "status_hi": "computed",
+            "ratio_hi": 1.1,
+            "n_unsplit": 2
+          }
+        },
+        "unreadable": [],
+        "straddle": [],
+        "dependent": []
+      }
+    },
+    "upper_removed_count_zero": {
+      "problem": null,
+      "flags": [
+        "SV_UNCHECKED"
+      ],
+      "detail": {
+        "threshold": 2.0,
+        "scope": "R_j0",
+        "corners": {
+          "c1_P0_R_j0": {
+            "status": "computed",
+            "ratio": 1.0,
+            "status_hi": "computed",
+            "ratio_hi": 5.285714285714302,
+            "n_unsplit": 2
+          }
+        },
+        "unreadable": [],
+        "straddle": [
+          "c1_P0_R_j0"
+        ],
+        "dependent": []
+      }
+    },
+    "computed_without_certificates": {
+      "problem": null,
+      "flags": [
+        "SV_UNCHECKED"
+      ],
+      "detail": {
+        "threshold": 2.0,
+        "scope": "R_j0",
+        "corners": {
+          "c1_P0_R_j0": {
+            "status": "computed",
+            "ratio": 1.0,
+            "status_hi": "computed",
+            "ratio_hi": 5.285714285714302,
+            "n_unsplit": 2
+          }
+        },
+        "unreadable": [],
+        "straddle": [
+          "c1_P0_R_j0"
+        ],
+        "dependent": []
+      }
+    },
+    "arbitrary_bracket_rule": {
+      "problem": null,
+      "flags": [
+        "SV_UNCHECKED"
+      ],
+      "detail": {
+        "threshold": 2.0,
+        "scope": "R_j0",
+        "corners": {
+          "c1_P0_R_j0": {
+            "status": "computed",
+            "ratio": 1.0,
+            "status_hi": "computed",
+            "ratio_hi": 5.285714285714302,
+            "n_unsplit": 2
+          }
+        },
+        "unreadable": [],
+        "straddle": [
+          "c1_P0_R_j0"
+        ],
+        "dependent": []
+      }
+    },
+    "huge_unsplit_count": {
+      "problem": null,
+      "flags": [
+        "SV_UNCHECKED"
+      ],
+      "detail": {
+        "threshold": 2.0,
+        "scope": "R_j0",
+        "corners": {
+          "c1_P0_R_j0": {
+            "status": "computed",
+            "ratio": 1.0,
+            "status_hi": "computed",
+            "ratio_hi": 5.285714285714302,
+            "n_unsplit": 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+          }
+        },
+        "unreadable": [],
+        "straddle": [
+          "c1_P0_R_j0"
+        ],
+        "dependent": []
+      }
+    },
+    "false_certificate": {
+      "problem": "sv_cf| 아래 끝 computed 인데 반사실 증서 상태 'POSITIVE_SOLVED' · 참이 아닌 칸 ['ok', 'pass_a', 'pass_b', 'pass_c', 'pass_d'] (ok · ⓐ–ⓓ 참 · POSITIVE_SOLVED 이어야 · 플래그를 믿지 않는다)",
+      "flags": [
+        "SV_UNCHECKED"
+      ],
+      "detail": {
+        "threshold": 2.0,
+        "scope": "R_j0",
+        "corners": {
+          "c1_P0_R_j0": {
+            "status": "computed",
+            "ratio": 1.0,
+            "status_hi": "computed",
+            "ratio_hi": 5.285714285714302,
+            "n_unsplit": 2
+          }
+        },
+        "unreadable": [],
+        "straddle": [
+          "c1_P0_R_j0"
+        ],
+        "dependent": []
+      }
+    }
+  },
+  "actual_certified_threshold_crossing": {
+    "problem": null,
+    "flags": [],
+    "detail": {
+      "threshold": 10.291251705345072,
+      "scope": "R_j0",
+      "corners": {
+        "c1_P0_R_j0": {
+          "status": "computed",
+          "ratio": 10.291249475344962,
+          "status_hi": "computed",
+          "ratio_hi": 10.291249475344962,
+          "n_unsplit": 0
+        }
+      },
+      "unreadable": [],
+      "straddle": [],
+      "dependent": []
+    },
+    "record": {
+      "kind": "counterfactual_cut_sv_bridges_keep_self_v1",
+      "requested": true,
+      "threshold": null,
+      "status": "computed",
+      "flag": null,
+      "cg_info": 0,
+      "sv_counterfactual_ratio": 10.291249475344962,
+      "ratio_limit": null,
+      "G_full_code": 4.614910078630041,
+      "G_cut_code": 0.4484304932735439,
+      "resid": 2.1908684765838685e-16,
+      "n_sv_faces_cut": 2,
+      "n_sdcp_components_touching": 1,
+      "n_bridging_components": 1,
+      "n_sv_faces_kept_self": 0,
+      "n_unsplit_bridging_components": 0,
+      "conv_cert": {
+        "version": "conv-cert-v2",
+        "status": "POSITIVE_SOLVED",
+        "ok": true,
+        "pass_a": true,
+        "pass_b": true,
+        "pass_c": true,
+        "pass_d": true
+      },
+      "backend_last_solve": {
+        "used": null,
+        "requested": null,
+        "precond": null,
+        "fallback_reason": null
+      },
+      "bracket_rule": "lower_keep_unsplit_upper_remove_unsplit_sdcp_cells_v1",
+      "status_hi": "computed",
+      "sv_counterfactual_ratio_hi": 10.291249475344962,
+      "ratio_limit_hi": null,
+      "upper": null
+    },
+    "reference_full_G": 4.61491207863014,
+    "reference_cut_G": 0.4484304932735439,
+    "reference_true_ratio": 10.291253935345182,
+    "threshold": 10.291251705345072,
+    "main_certificate": {
+      "version": "conv-cert-v2",
+      "rtol_used": 1e-12,
+      "rtol_max": 1e-12,
+      "eps_I": 0.0001,
+      "resolve_rtol": 1e-14,
+      "resolve_rtol_floor": 1e-14,
+      "resolve_tol": 0.0001,
+      "info": 0,
+      "resid": 1.4142135814118807e-08,
+      "I_bot": 4.614910078630041,
+      "I_top": 4.6149140786301155,
+      "imbalance": 8.667557993817596e-07,
+      "sigma": 6.768534781990726,
+      "sigma_resolve": 6.768537715324075,
+      "dsigma_rel": 4.333778939083784e-07,
+      "resolve_info": 0,
+      "resolve_I_bot": 4.614912078630051,
+      "resolve_I_top": 4.614912078630115,
+      "pass_a": true,
+      "pass_b": true,
+      "pass_c": true,
+      "ok": true,
+      "target_version": "target-cert-v1",
+      "target_fp": "fsum-bfs-defect-margin-v2",
+      "target_ledger_ok": true,
+      "target_ledger_problem": null,
+      "target_topology": "through",
+      "target_lo": 4.614912078629503,
+      "target_hi": 4.614912078630166,
+      "target_U": 4.614912078630156,
+      "target_W": 4.614912078630153,
+      "target_flow_bot": 4.614912078630134,
+      "target_flow_top": 4.614912078630135,
+      "target_kcl_raw": 4.000000218218336e-06,
+      "target_kcl_defect_bound": 5.984343362896994e-13,
+      "target_n_dof": 44,
+      "target_n_edges": 44,
+      "target_n_plate_bot": 1,
+      "target_n_plate_top": 1,
+      "target_n_through_components": 1,
+      "target_n_floating_nodes": 0,
+      "target_tree_levels": 12,
+      "pass_d": true,
+      "target_width_rel": 1.4357400031789653e-13,
+      "target_err_bound_rel": 4.333779186480367e-07,
+      "target_in_bracket": false,
+      "target_why": null,
+      "status": "POSITIVE_SOLVED",
+      "target_tol": 0.0001,
+      "scale": 1.4666666666666666,
+      "iters": null,
+      "resolve_iters": null,
+      "bind_version": "cert-bind-v1",
+      "fp_sid": "d2b8f029c61d0737d45af1e94c6fe5a3",
+      "fp_sig": "e1ef58546901bd7844d0b071a69f829a",
+      "fp_face_plan": null,
+      "fp_cjunc_registry": "5d55efff7b138dd6e708b64c0e7bfb30",
+      "fp_cjunc_rows": "3c013aed030bf78c8d7cd363cd15b006"
+    },
+    "raw_lower_certificate": {
+      "version": "conv-cert-v2",
+      "rtol_used": 1e-12,
+      "rtol_max": 1e-12,
+      "eps_I": 0.0001,
+      "resolve_rtol": 1e-14,
+      "resolve_rtol_floor": 1e-14,
+      "resolve_tol": 0.0001,
+      "info": 0,
+      "resid": 2.1908684765838685e-16,
+      "I_bot": 0.4484304932735439,
+      "I_top": 0.44843049327354356,
+      "imbalance": 7.427392034742276e-16,
+      "sigma": 0.6576980568011976,
+      "sigma_resolve": 0.6576980568011976,
+      "dsigma_rel": 0.0,
+      "resolve_info": 0,
+      "resolve_I_bot": 0.4484304932735439,
+      "resolve_I_top": 0.44843049327354356,
+      "pass_a": true,
+      "pass_b": true,
+      "pass_c": true,
+      "ok": true,
+      "target_version": "target-cert-v1",
+      "target_fp": "fsum-bfs-defect-margin-v2",
+      "target_ledger_ok": true,
+      "target_ledger_problem": null,
+      "target_topology": "through",
+      "target_lo": 0.4484304932734833,
+      "target_hi": 0.44843049327354356,
+      "target_U": 0.4484304932735427,
+      "target_W": 0.44843049327354245,
+      "target_flow_bot": 0.4484304932735425,
+      "target_flow_top": 0.4484304932735425,
+      "target_kcl_raw": 7.971401316808624e-14,
+      "target_kcl_defect_bound": 5.775151159485121e-14,
+      "target_n_dof": 43,
+      "target_n_edges": 42,
+      "target_n_plate_bot": 1,
+      "target_n_plate_top": 1,
+      "target_n_through_components": 1,
+      "target_n_floating_nodes": 0,
+      "target_tree_levels": 21,
+      "pass_d": true,
+      "target_width_rel": 1.344357958288352e-13,
+      "target_err_bound_rel": 1.3517853503230942e-13,
+      "target_in_bracket": false,
+      "target_why": null,
+      "status": "POSITIVE_SOLVED",
+      "target_tol": 0.0001,
+      "scale": 1.4666666666666666
+    },
+    "solver_calls": 4,
+    "perturbation": 1e-08,
+    "certified_ratio_interval": [
+      10.29125393534377,
+      10.291253935346631
+    ],
+    "computed_ratio": 10.291249475344962,
+    "certificate_ok": {
+      "main": true,
+      "lower": true
+    }
+  },
+  "certificate_removed_from_certified_run": {
+    "problem": null,
+    "flags": [],
+    "detail": {
+      "threshold": 10.291251705345072,
+      "scope": "R_j0",
+      "corners": {
+        "c1_P0_R_j0": {
+          "status": "computed",
+          "ratio": 10.291249475344962,
+          "status_hi": "computed",
+          "ratio_hi": 10.291249475344962,
+          "n_unsplit": 0
+        }
+      },
+      "unreadable": [],
+      "straddle": [],
+      "dependent": []
+    },
+    "record": {
+      "kind": "counterfactual_cut_sv_bridges_keep_self_v1",
+      "requested": true,
+      "threshold": null,
+      "status": "computed",
+      "flag": null,
+      "cg_info": 0,
+      "sv_counterfactual_ratio": 10.291249475344962,
+      "ratio_limit": null,
+      "G_full_code": 4.614910078630041,
+      "G_cut_code": 0.4484304932735439,
+      "resid": 2.1908684765838685e-16,
+      "n_sv_faces_cut": 2,
+      "n_sdcp_components_touching": 1,
+      "n_bridging_components": 1,
+      "n_sv_faces_kept_self": 0,
+      "n_unsplit_bridging_components": 0,
+      "conv_cert": null,
+      "backend_last_solve": {
+        "used": null,
+        "requested": null,
+        "precond": null,
+        "fallback_reason": null
+      },
+      "bracket_rule": "lower_keep_unsplit_upper_remove_unsplit_sdcp_cells_v1",
+      "status_hi": "computed",
+      "sv_counterfactual_ratio_hi": 10.291249475344962,
+      "ratio_limit_hi": null,
+      "upper": null
+    }
+  },
+  "foreign_certificate_accepted": {
+    "problem": null,
+    "flags": [],
+    "detail": {
+      "threshold": 6.0,
+      "scope": "R_j0",
+      "corners": {
+        "c1_P0_R_j0": {
+          "status": "computed",
+          "ratio": 1.0,
+          "status_hi": "computed",
+          "ratio_hi": 5.285714285714302,
+          "n_unsplit": 2
+        }
+      },
+      "unreadable": [],
+      "straddle": [],
+      "dependent": []
+    },
+    "record": {
+      "kind": "counterfactual_cut_sv_bridges_keep_self_v1",
+      "requested": true,
+      "threshold": null,
+      "status": "computed",
+      "flag": null,
+      "cg_info": 0,
+      "sv_counterfactual_ratio": 1.0,
+      "ratio_limit": null,
+      "G_full_code": 58.7301587301587,
+      "G_cut_code": 58.7301587301587,
+      "resid": 3.2058812054834396e-16,
+      "n_sv_faces_cut": 0,
+      "n_sdcp_components_touching": 2,
+      "n_bridging_components": 2,
+      "n_sv_faces_kept_self": 0,
+      "n_unsplit_bridging_components": 2,
+      "conv_cert": {
+        "version": "conv-cert-v2",
+        "status": "POSITIVE_SOLVED",
+        "ok": true,
+        "pass_a": true,
+        "pass_b": true,
+        "pass_c": true,
+        "pass_d": true
+      },
+      "backend_last_solve": {
+        "used": null,
+        "requested": null,
+        "precond": null,
+        "fallback_reason": null
+      },
+      "bracket_rule": "lower_keep_unsplit_upper_remove_unsplit_sdcp_cells_v1",
+      "status_hi": "computed",
+      "sv_counterfactual_ratio_hi": 5.285714285714302,
+      "ratio_limit_hi": null,
+      "upper": {
+        "status": "computed",
+        "cg_info": 0,
+        "why": null,
+        "sv_counterfactual_ratio": 5.285714285714302,
+        "ratio_limit": null,
+        "G_cut_code": 11.111111111111072,
+        "resid": 2.0168691722003555e-16,
+        "n_components_removed": 2,
+        "n_cells_removed": 6,
+        "n_edges_cut": 12,
+        "n_plate_couplings_cut": 0,
+        "n_sv_faces_cut": 0,
+        "conv_cert": {
+          "version": "conv-cert-v2",
+          "status": "POSITIVE_SOLVED",
+          "ok": true,
+          "pass_a": true,
+          "pass_b": true,
+          "pass_c": true,
+          "pass_d": true
+        },
+        "backend_last_solve": {
+          "used": null,
+          "requested": null,
+          "precond": null,
+          "fallback_reason": null
+        }
+      }
+    },
+    "raw_certificate_I_bot": 0.4484304932735439,
+    "raw_end_Gcuts": [
+      58.7301587301587,
+      11.111111111111072
+    ]
+  },
+  "s1_regression": {
+    "passed": 44,
+    "failed": []
+  },
+  "port_variants": [
+    {
+      "name": "base",
+      "G": 5.263157894736835,
+      "sigma": 2.339181286549705,
+      "i": [
+        1,
+        1,
+        2
+      ],
+      "j": [
+        2,
+        1,
+        3
+      ],
+      "system_digest": "4550f8c82aad6f94f5ff9b898cc6ee72e26c7b9f24dc55682e752b98b9074d4d"
+    },
+    {
+      "name": "reversed",
+      "G": 5.263157894736835,
+      "sigma": 2.339181286549705,
+      "i": [
+        1,
+        1,
+        2
+      ],
+      "j": [
+        2,
+        1,
+        3
+      ],
+      "system_digest": "4550f8c82aad6f94f5ff9b898cc6ee72e26c7b9f24dc55682e752b98b9074d4d"
+    },
+    {
+      "name": "subdivided",
+      "G": 5.263157894736835,
+      "sigma": 2.339181286549705,
+      "i": [
+        1,
+        1,
+        2
+      ],
+      "j": [
+        2,
+        1,
+        3
+      ],
+      "system_digest": "4550f8c82aad6f94f5ff9b898cc6ee72e26c7b9f24dc55682e752b98b9074d4d"
+    },
+    {
+      "name": "fid_renamed",
+      "G": 5.263157894736835,
+      "sigma": 2.339181286549705,
+      "i": [
+        1,
+        1,
+        2
+      ],
+      "j": [
+        2,
+        1,
+        3
+      ],
+      "system_digest": "4550f8c82aad6f94f5ff9b898cc6ee72e26c7b9f24dc55682e752b98b9074d4d"
+    }
+  ]
+}
