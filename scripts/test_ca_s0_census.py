@@ -447,6 +447,32 @@ def t_plan_commit():
             why = str(e)
         chk('L3w Q-G 거부 사유 = 사슬 require_plan_numbers 의 PLAN_NUMBER_UNREGISTERED (sv_cf_threshold · 단계 2 전 등록)',
             'PLAN_NUMBER_UNREGISTERED' in why and 'sv_cf_threshold' in why, why)
+    #  ★ PF2 E (10-22 · 사전 리뷰 2 회차 PRE2-impl-03 · 결정 없음) — 계획 넘침 (정수 10**400) = 구조화 거부 (S0Error) · 중복 칸 = 거부 (사슬 ·
+    #    S0 둘 다).  옛 관문 = 잡히지 않은 OverflowError (`_num` · `_num_ok` 의 float 바꿈) · R 계획 중복 칸 = 마지막 값으로 받음.
+    big = dict(p, values_um=dict(p['values_um'], u=10 ** 400))
+    bb = S0.plan_bytes_of(big)
+    for nm, pb, ph, kw in (
+            ('L3x S0 계획 values_um.u = 정수 10**400 → S0Error (구조화 · 옛 = 잡히지 않은 OverflowError)', bb, hashlib.sha256(bb).hexdigest(), {}),
+            ('L3y R 런 계획 sv_cf_threshold = 정수 10**400 → S0Error (사슬 load_plan PLAN_INVALID · 옛 = OverflowError)', b, h,
+             dict(r_plan=r_plan_bytes(tol, sv_cf_threshold=10 ** 400))),
+            ('L3y2 R 런 계획 max_ladder_points = 정수 10**400 → S0Error (넘침 = 유한 아님 · 옛 = 받음)', b, h,
+             dict(r_plan=r_plan_bytes(tol, max_ladder_points=10 ** 400))),
+            ('L3z R 런 계획 중복 칸 ("sv_cf_threshold": 2.0 … 50.0 · 사람 = 앞 · 옛 관문 = 뒤) → S0Error', b, h,
+             dict(r_plan=r_plan_bytes(tol).rstrip().rstrip(b'}') + b', "sv_cf_threshold": 50.0}\n'))):
+        with tempfile.TemporaryDirectory() as d:
+            repo, sha, prel, rrel = make_plan_repo(d, pb, ph, **kw)
+            chk(nm, raises(lambda: _vpc(repo, sha, prel, rrel), S0.S0Error))
+    with tempfile.TemporaryDirectory() as d:                 # S0 계획 중복 칸 — 옛 = 정준 바이트 검사로 막힘 · 이제 = 중복 칸 사유로 먼저
+        dup = b.replace(b'{', b'{"gap_tol":2.0,', 1)
+        repo, sha, prel, rrel = make_plan_repo(d, dup, hashlib.sha256(dup).hexdigest())
+        try:
+            _vpc(repo, sha, prel, rrel)
+            why = 'no error'
+        except S0.S0Error as e:
+            why = str(e)
+        except Exception as e:                               # noqa: BLE001
+            why = f'{type(e).__name__}: {e}'
+        chk('L3z2 S0 계획 중복 칸 ("gap_tol" 둘) → S0Error · 사유 = 중복 칸 (정준 바이트 검사 앞)', '중복' in why, why)
     with tempfile.TemporaryDirectory() as d:
         repo, sha, prel, rrel = make_plan_repo(d, b, h)
         chk('L3s R 런 계획 경로 = 리포 상대 ASCII (절대 · .. · 공백 = 거부)',

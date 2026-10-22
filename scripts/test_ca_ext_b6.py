@@ -706,6 +706,116 @@ def _sv_raw(status='computed', ratio=1.25, threshold=None, flag=None, n_unsplit=
     return r
 
 
+def _cc_ok(ok=True, status='POSITIVE_SOLVED', **over):
+    """반사실 풀이의 수렴 증서 투영 꼴 (`ca_ext_svcf._end_proj` 가 옮기는 칸)."""
+    c = {'version': 'conv-cert-v2', 'status': status, 'ok': ok, 'pass_a': True, 'pass_b': True, 'pass_c': True, 'pass_d': bool(ok)}
+    c.update(over)
+    return c
+
+
+def t_sv_values(mm, proj, Es):
+    """★ PF2 E (10-22 · 사전 리뷰 2 회차 PRE2-impl-02 · 결정 없음) — 검증기가 기록 안 수를 다시 대조한다: computed = G_full · G_cut 유한 양수 ·
+    비 = G_full/G_cut (상대 1e-12) · 비 ≥ (1 − τ)/(1 + τ) (증서 폭 꼴 · τ = 증서 ⓓ 보장 상대 오차) · 반사실 증서가 있으면 ok · ⓐ–ⓓ 참 ·
+    POSITIVE_SOLVED · no_through = G_cut 0 · G_full 유한 양수 · 위 끝 (A 의 괄호) 도 같은 규칙 · 괄호 아래 ≤ 위 (같은 여유 · 아래 +∞ ⟹ 위 +∞).
+    판정문 다섯 꼴 = 넷 (비 ≠ G 비 · 증서 ok False · G_cut None · 비 < 1) + 다섯째 (덩어리 1 · 괄호 칸 없음 = S8l · A 가 닫음)."""
+    import math
+    try:
+        import ca_ext_svcf as SVCF
+        import step3_conv_cert as CC
+    except Exception as e:                                  # noqa: BLE001
+        chk('S8n ca_ext_svcf · step3_conv_cert 를 불러온다', False, f'{type(e).__name__}: {e}')
+        return
+    tau = CC.CERT_TARGET_TOL
+    floor = (1.0 - tau) / (1.0 + tau)
+    chk('S8o 증서 폭 상수 — ca_ext_svcf.CERT_TARGET_TOL = step3_conv_cert.CERT_TARGET_TOL · RATIO_FLOOR = (1 − τ)/(1 + τ) · 다시 셈 허용 1e-12',
+        getattr(SVCF, 'CERT_TARGET_TOL', None) == tau and getattr(SVCF, 'RATIO_FLOOR', None) == floor
+        and getattr(SVCF, 'RATIO_REL_TOL', None) == 1e-12,
+        (getattr(SVCF, 'CERT_TARGET_TOL', None), getattr(SVCF, 'RATIO_FLOOR', None), getattr(SVCF, 'RATIO_REL_TOL', None)))
+    fl = getattr(SVCF, 'RATIO_FLOOR', floor)
+
+    def ok_of(rec):
+        x = deep(mm)
+        Es(x)['solve']['sv_counterfactual'] = rec
+        return RC.ca_ext_record_ok(x)
+
+    def lo_rec(r, **kw):                                     # 덩어리 0 · computed 비 r (G_full 2.5 · G_cut = 2.5/r · 위 = 아래) 의 투영 + 손댐
+        p = proj(_sv_raw('computed', r))
+        p.update(kw)
+        return p
+
+    def br_rec(lo, hi, st='computed', sh='computed', up=None, **kw):   # 덩어리 1 · 두 끝 (투영) + 손댐
+        p = proj(_sv_raw(st, lo, n_unsplit=1, status_hi=sh, ratio_hi=hi))
+        p.update(kw)
+        if up:
+            p['upper'].update(up)
+        return p
+    nt = dict(status='no_through_without_sv', sv_counterfactual_ratio=None, ratio_limit='inf', G_cut_code=0.0,
+              status_hi='no_through_without_sv', sv_counterfactual_ratio_hi=None, ratio_limit_hi='inf')
+    r_lo = math.nextafter(fl, 0.0)
+    knife = 1.5 * fl
+    good = {
+        '증서 ok (POSITIVE_SOLVED · ⓐ–ⓓ 참) · 비 1.25': lo_rec(1.25, conv_cert=_cc_ok()),
+        '비 1 − 1e-9 (참 비 1 · 막다른 덩어리의 풀이 잡음 · 증서 폭 안)': lo_rec(1.0 - 1e-9),
+        '비 = (1 − τ)/(1 + τ) 정확 (칼날 · 받음)': lo_rec(fl),
+        'no_through (G_cut 0 · G_full 2.5)': lo_rec(1.25, **nt),
+        '괄호 [1.5, 1.5 × (1 − 1e-9)] (막다른 덩어리 · 위 = 아래 참 · 증서 폭 안)': br_rec(1.5, 1.5 * (1 - 1e-9)),
+        '괄호 [1.5, 1.5 × RATIO_FLOOR] (칼날 · 받음)': br_rec(1.5, knife),
+        '괄호 [1.2, 3.4] · 위 끝 증서 ok': br_rec(1.2, 3.4, up={'conv_cert': _cc_ok()}),
+        '괄호 [+∞, +∞] (아래 · 위 관통 없음)': br_rec(1.0, None, st='no_through_without_sv', sh='no_through_without_sv'),
+    }
+    for nm, rec in good.items():
+        chk(f'S8n 수 대조 정상 받음 [{nm}]', ok_of(rec) == (True, None), ok_of(rec))
+    bad = {
+        #  판정문 PRE2-impl-02 넷 (다섯째 = S8l '판정문 PRE2-impl-02 다섯째 꼴' · A 가 닫음)
+        '판정문 ① 비 1.0 ≠ G_full/G_cut 1.25 (위 끝 칸도 1.0 · 덩어리 0 일관)': lo_rec(1.25, sv_counterfactual_ratio=1.0,
+                                                                                      sv_counterfactual_ratio_hi=1.0),
+        '판정문 ② computed 인데 반사실 증서 ok False (ⓓ 실패)': lo_rec(1.25, conv_cert=_cc_ok(ok=False)),
+        '판정문 ③ computed 인데 G_cut None': lo_rec(1.25, G_cut_code=None),
+        '판정문 ④ 비 0.5 < 1 (G_cut 5 = 2 G_full · 비 = G 비 일관)': lo_rec(0.5),
+        #  같은 부류 · 꼴
+        '비 = RATIO_FLOOR 바로 아래 (nextafter · 칼날 밖)': lo_rec(r_lo),
+        '증서 ok True 인데 pass_d False (플래그를 믿지 않는다)': lo_rec(1.25, conv_cert=_cc_ok(ok=True, pass_d=False)),
+        '증서 ok True 인데 상태 NOT_CERTIFIABLE': lo_rec(1.25, conv_cert=_cc_ok(ok=True, status='NOT_CERTIFIABLE')),
+        '증서 꼴 dict 아님': lo_rec(1.25, conv_cert='ok'),
+        'computed 인데 G_cut 0.0': lo_rec(1.25, G_cut_code=0.0),
+        'computed 인데 G_cut 음수': lo_rec(1.25, G_cut_code=-2.0),
+        'computed 인데 G_cut bool': lo_rec(1.25, G_cut_code=True),
+        'computed 인데 G_full None': lo_rec(1.25, G_full_code=None),
+        'computed 인데 G_full 0.0': lo_rec(1.25, G_full_code=0.0),
+        'computed 인데 G_full 음수 (G_cut 도 음수 · 비 = G 비 1.25)': lo_rec(1.25, G_full_code=-2.5, G_cut_code=-2.0),
+        'G_full 1e300 · G_cut 1e-300 (G 비 넘침 = +∞ · 비 1.25)': lo_rec(1.25, G_full_code=1e300, G_cut_code=1e-300),
+        'no_through 인데 G_cut 1.0 (관통 없음 = 0 이어야)': lo_rec(1.25, **dict(nt, G_cut_code=1.0)),
+        'no_through 인데 G_cut None': lo_rec(1.25, **dict(nt, G_cut_code=None)),
+        'no_through 인데 G_full None (비 +∞ 의 분자)': lo_rec(1.25, **dict(nt, G_full_code=None)),
+        #  위 끝 (A 의 괄호) 같은 규칙
+        '위 끝 비 4.0 ≠ G_full/G_cut_hi 3.4 (칸 · 풀이 기록 같이)': br_rec(1.2, 3.4, sv_counterfactual_ratio_hi=4.0,
+                                                                         up={'sv_counterfactual_ratio': 4.0}),
+        '위 끝 증서 ok False': br_rec(1.2, 3.4, up={'conv_cert': _cc_ok(ok=False)}),
+        '위 끝 computed 인데 G_cut None': br_rec(1.2, 3.4, up={'G_cut_code': None}),
+        '위 끝 비 0.5 (아래 1.0 · G_cut_hi 5 · 일관)': br_rec(1.0, 0.5),
+        '위 끝 no_through 인데 G_cut 1.0': br_rec(1.2, None, sh='no_through_without_sv', up={'G_cut_code': 1.0}),
+        #  괄호 아래 ≤ 위
+        '괄호 위 1.2 < 아래 3.0 (둘 다 일관 · Rayleigh 위반)': br_rec(3.0, 1.2),
+        '괄호 아래 +∞ 인데 위 유한 2.0': br_rec(1.0, 2.0, st='no_through_without_sv'),
+        '괄호 위 = 아래 × RATIO_FLOOR 바로 아래 (nextafter)': br_rec(1.5, math.nextafter(knife, 0.0)),
+    }
+    for nm, rec in bad.items():
+        got = ok_of(rec)
+        chk(f'S8n 수 대조 거부 [{nm}]', not got[0], got)
+    ev = getattr(SVCF, '_end_view', None)
+    cv = getattr(SVCF, 'chain_view', None)
+    if callable(ev) and callable(cv):
+        bad_v = [ev('computed', x, None) for x in (float('nan'), -1.0, 0.0, -math.inf, math.inf, True)]
+        bad_v += [ev('no_through_without_sv', 5.0, 'inf'), ev('no_through_without_sv', None, None)]
+        tam = {'status': 'computed', 'sv_counterfactual_ratio': float('nan'), 'ratio_limit': None, 'status_hi': 'computed',
+               'sv_counterfactual_ratio_hi': -2.0, 'ratio_limit_hi': None, 'n_unsplit_bridging_components': 1}
+        vt = cv(tam)
+        chk('S8p 사슬 꼴 — 한 끝의 비 = 유한 양수 · +∞ (null + "inf") 만 읽음 · NaN · 음수 · 0 · ±∞ (finite 꼴) · bool · inf 꼴의 수 = None '
+            '(못 읽음 · 사슬 SV_UNCHECKED) · 정상 1.25 · +∞ 그대로',
+            all(v is None for v in bad_v) and vt.get('ratio') is None and vt.get('ratio_hi') is None
+            and ev('computed', 1.25, None) == 1.25 and ev('no_through_without_sv', None, 'inf') == math.inf, (bad_v, vt))
+
+
 @case('S 해 상태 (영값 · 단락) · SV 반사실 노브 — 계약 · 러너 · payload (시험 먼저 · 10-21 D)')
 def t_states():
     ngs = getattr(RC, 'next_gen_state', None)
@@ -1012,6 +1122,7 @@ def t_states():
     chk('S8m 사슬 꼴 (chain_view) — 아래 끝 · 위 끝 (+∞) · 못 가른 덩어리 수 · 위 끝 칸이 없는 옛 꼴 = 위 끝 None (못 읽음 · fail-closed)',
         v_b.get('ratio') == 1.0 and v_b.get('ratio_hi') == float('inf') and v_b.get('status_hi') == 'no_through_without_sv'
         and v_b.get('n_unsplit') == 1 and v_o.get('ratio') == 1.25 and v_o.get('ratio_hi') is None and 'ratio_hi' in v_o, (v_b, v_o))
+    t_sv_values(mm, proj, Es)
     #  ── 조기 반환 해 (주 솔브 안 풀림) — 반사실 기록 없음 = 정상 · 요청만 남는다 ──
     zz = deep(z['manifest'])
     zz['ca_ext']['cjunc']['evidence']['sv_counterfactual_request'] = {'threshold': None}

@@ -2228,6 +2228,73 @@ def t_M41():
     return base_ok and caught, (base_ok, why if base_ok else base_why)
 
 
+@check('M42', '★ PF2 E (10-22 · 판정문 변이 Ml) 등급 경계 ≤ → < (정보 있음 칸 · 약함 칸 각각) → G01 이 떨어진다 (옛 시험 묶음에서는 살아남았다)')
+def t_M42():
+    def ml_a(W):
+        return 'PASS_INFORMATIVE' if W < RR.GRADE_INFORMATIVE_MAX else 'CONSISTENT_WEAK' if W <= RR.GRADE_WEAK_MAX else 'UNINFORMATIVE'
+
+    def ml_b(W):
+        return 'PASS_INFORMATIVE' if W <= RR.GRADE_INFORMATIVE_MAX else 'CONSISTENT_WEAK' if W < RR.GRADE_WEAK_MAX else 'UNINFORMATIVE'
+    base_ok, base_why = eval_G01()
+    ca, wa = mutant('M42a', {'grade_W': ml_a}, eval_G01)
+    cb, wb = mutant('M42b', {'grade_W': ml_b}, eval_G01)
+    return base_ok and ca and cb, (base_ok, wa, wb, base_why)
+
+
+def eval_U15():
+    """★ PF2 E (10-22 · 사전 리뷰 2 회차 PRE2-impl-02 옆 자리 · 결정 없음) — 사슬 SV 판정은 한 끝의 이상한 비 (NaN · −∞ · 0 · −0 · 음수 · 빈칸 ·
+    bool · 글자 · 목록) 를 '표지 없음' 으로 읽지 않는다 (아래 · 위 끝 어느 쪽이든 → 표지가 늘 붙는다).  읽는 비 = float (bool 아님) · 유한 양수
+    또는 +∞ (아래 +∞ = 의존 · 위 +∞ + 아래 ≤ 문턱 = 걸침 — 옛 그대로).  사슬 꼴 (`ca_ext_svcf.chain_view`) 을 거쳐도 같다.
+    옛 사슬 = NaN · −∞ · 0 · 음수가 float 라 '읽음' → 아래 NaN + 위 1.5 = 표지 없음 (위 ≤ 문턱)."""
+    import ca_ext_svcf as SVCF
+
+    def rec(lo, hi, nu=1):
+        return {'sv_cf': {'status': 'computed', 'ratio': lo, 'status_hi': 'computed', 'ratio_hi': hi, 'n_unsplit': nu}}
+    base = {(c, law, rr): rec(1.2, 1.2, 0) for c in ('0', '1') for law in ('P0', 'P1') for rr in ('R_j_lo', 'R_j0', 'R_j_hi')}
+    k1 = ('1', 'P1', 'R_j0')
+    weird = (float('nan'), -math.inf, 0.0, -0.0, -1.0, None, '', True, False, '1.2', [], {})
+    f0, _ = RR.sv_assess(base, 2.0, 'R_j0')
+    bad = []
+    for side in ('lo', 'hi'):
+        for w in weird:
+            f, _d = RR.sv_assess({**base, k1: (rec(w, 1.5) if side == 'lo' else rec(1.2, w))}, 2.0, 'R_j0')
+            if not f:
+                bad.append(f'{side}={w!r} → 표지 없음')
+    fi_lo, _ = RR.sv_assess({**base, k1: rec(math.inf, 1.5)}, 2.0, 'R_j0')
+    fi_hi, _ = RR.sv_assess({**base, k1: rec(1.2, math.inf)}, 2.0, 'R_j0')
+    tam = {'status': 'computed', 'sv_counterfactual_ratio': float('nan'), 'ratio_limit': None, 'status_hi': 'computed',
+           'sv_counterfactual_ratio_hi': 1.5, 'ratio_limit_hi': None, 'n_unsplit_bridging_components': 1}
+    fv, _ = RR.sv_assess({**base, k1: {'sv_cf': SVCF.chain_view(tam)}}, 2.0, 'R_j0')
+    return (f0 == [] and not bad and fi_lo == ['SV_DEPENDENT'] and fi_hi == ['SV_UNCHECKED'] and fv != [],
+            (f0, bad, fi_lo, fi_hi, fv))
+
+
+@check('U15', '★ PF2 E (10-22 · PRE2-impl-02) SV 판정 — 아래 · 위 끝 어느 쪽의 NaN · −∞ · 0 · −0 · 음수 · 빈칸 · bool · 글자 · 목록도 "표지 없음" 이 '
+               '아니다 (SV_UNCHECKED) · 아래 +∞ = SV_DEPENDENT · 위 +∞ = 걸침 · 정상 [1.2, 1.2] = 없음 · 사슬 꼴 (chain_view) 을 거친 NaN 도')
+def t_U15():
+    return eval_U15()
+
+
+def eval_G01():
+    """★ PF2 E (10-22 · 사전 리뷰 2 회차 PRE2-design-06 · 결정 없음) — 등급 문턱 = 정확값 G0/2 · G0 (G0 = ln(4.68/1.8877)) · 칼날 양쪽:
+    W = G0/2 → PASS · 바로 위 (nextafter) → WEAK · W = G0 → WEAK · 바로 위 → UNINFORMATIVE · 바로 아래 = 아래 등급 그대로 ·
+    표시 반올림 0.454 · 0.908 은 정확 문턱 위라 한 등급 아래 (WEAK · UNINFORMATIVE — 판정문 탐침 B)."""
+    G0 = math.log(RR.EXP_DBE_MS / RR.CUR_GEN_DBE_MS)
+    a, b = RR.GRADE_INFORMATIVE_MAX, RR.GRADE_WEAK_MAX
+    want = ((a, 'PASS_INFORMATIVE'), (math.nextafter(a, 0.0), 'PASS_INFORMATIVE'), (math.nextafter(a, math.inf), 'CONSISTENT_WEAK'),
+            (b, 'CONSISTENT_WEAK'), (math.nextafter(b, 0.0), 'CONSISTENT_WEAK'), (math.nextafter(b, math.inf), 'UNINFORMATIVE'),
+            (0.454, 'CONSISTENT_WEAK'), (0.908, 'UNINFORMATIVE'), (0.0, 'PASS_INFORMATIVE'))
+    got = [(w, RR.grade_W(w), v) for w, v in want]
+    return (all(g == v for _w, g, v in got) and a == G0 / 2.0 and b == G0 and RR.G0 == G0,
+            ([x for x in got if x[1] != x[2]], a, b, G0))
+
+
+@check('G01', '★ PF2 E (10-22 · PRE2-design-06) 등급 경계 — W = 정확 G0/2 → PASS · nextafter 위 → WEAK · W = 정확 G0 → WEAK · nextafter 위 → '
+              'UNINFORMATIVE · 바로 아래 그대로 · 표시 반올림 0.454 → WEAK · 0.908 → UNINFORMATIVE · 문턱 = ln(4.68/1.8877) 의 정확값')
+def t_G01():
+    return eval_G01()
+
+
 def predes01_S(R, i):
     """사전 리뷰 PRE-design-01 — arm 0 S = 1.43 + 0.2/r · arm 1–7 S = 1.53 + 0.1/r (r = R/1e6 · r = 1 에서 모두 1.63 · 중앙 산포 ≈ 0)."""
     if R == math.inf:
@@ -2919,6 +2986,60 @@ def t_N03():
         (('max_ladder_points', 0), ('max_ladder_points', True), ('calib_rj_ratio_max', 1.0), ('calib_rj_ratio_max', 'None'),
          ('sv_cf_threshold', 0.5), ('sv_cf_scope', 'R_j_lo')))]
     return all(x[0] for x in rs), [x[1] for x in rs]
+
+
+def _n_safe(tag, fn):
+    """한 꼴의 결과 (멈춤 이름 · 러너 호출) — 잡히지 않은 예외도 그 꼴의 실패로 기록 (한 꼴의 예외가 다른 꼴을 가리지 않게)."""
+    try:
+        return fn()
+    except Exception as e:                                  # noqa: BLE001
+        return False, f'{tag}: 잡히지 않은 {type(e).__name__}: {str(e)[:80]}'
+
+
+def _n_raw_plan(tag, text):
+    """계획 바이트 그대로 (중복 칸 꼴) → (경로, sha256, 그 해시를 채운 등록 사본)."""
+    p = Path(TD) / f'{tag}.json'
+    p.write_bytes(text.encode('utf-8'))
+    sha = hashlib.sha256(p.read_bytes()).hexdigest()
+    return p, sha, FX['reg_with'](f'`{sha}`', f'reg_{tag}.md')
+
+
+@check('N04', '★ PF2 E (10-22 · PRE2-impl-03) 계획 넘침 — 정수 10**400 (SV 문턱 · s_min · tol_ff · rtol · 역상 비 상한 · 점 수 상한) · -10**400 '
+              '(s_min) → PLAN_INVALID (구조화 멈춤 · rc 3 · 러너 0 회 · 옛 = 잡히지 않은 OverflowError · 점 수 상한 = 받음)')
+def t_N04():
+    cases = [(k, 10 ** 400) for k in ('sv_cf_threshold', 's_min_um', 'tol_ff_um', 'step3_rtol', 'calib_rj_ratio_max', 'max_ladder_points')]
+    cases.append(('s_min_um', -10 ** 400))
+    rs = [_n_safe(f'N04_{i}', lambda k=k, v=v, i=i: c_plan(f'N04_{i}', 'PLAN_INVALID', **{k: v})) for i, (k, v) in enumerate(cases)]
+    return all(x[0] for x in rs), [(cases[i][0], x[1]) for i, x in enumerate(rs) if not x[0]]
+
+
+@check('N05', '★ PF2 E (10-22 · PRE2-impl-03) 계획 중복 칸 — "sv_cf_threshold": 2.0 … "sv_cf_threshold": 50.0 (사람 = 앞 · 옛 사슬 = 뒤) · 앞에 '
+              '덧붙인 꼴 → PLAN_INVALID (rc 3 · 러너 0 회 · 옛 = 마지막 값으로 받음)')
+def t_N05():
+    base = json.dumps(FX['plan_obj'], indent=1, sort_keys=True)
+    tail = base.rstrip().rstrip('}').rstrip() + ',\n "sv_cf_threshold": 50.0\n}'
+    head = base.replace('{', '{\n "s_min_um": 0.9,', 1)
+    rs = []
+    for i, txt in enumerate((tail, head)):
+        p, _sha, reg = _n_raw_plan(f'N05_{i}', txt)
+        rs.append(_n_safe(f'N05_{i}', lambda p=p, reg=reg, i=i: c_case(f'N05_{i}', 'PLAN_INVALID', plan=p, reg=reg)))
+    return all(x[0] for x in rs), [x[1] for x in rs if not x[0]]
+
+
+@check('N06', '★ PF2 E (10-22 · PRE2-impl-03 같은 부류) S0 보고 중복 칸 — 단계 2 보고에 plan 이 둘 (앞 = 다른 계획 · 뒤 = 이 계획) · 단계 1 보고에 code 가 '
+              '둘 (앞 = 다른 지문) → S0_REPORT_MISMATCH (rc 3 · 러너 0 회 · 옛 = 마지막 값으로 받음)')
+def t_N06():
+    import ca_s0_census as S0m
+    good2 = json.loads(Path(s0_stage2_for(FX['plan'])).read_text(encoding='utf-8'))
+    bad_plan = dict(good2['plan'], r_plan=dict(good2['plan']['r_plan'], sha256='0' * 64))
+    txt2 = '{"plan": ' + json.dumps(bad_plan) + ', ' + json.dumps(good2)[1:]
+    good1 = json.loads(Path(FX['s1']).read_text(encoding='utf-8'))
+    bad_code = dict(good1['code'], file_digests=[{'file': nm, 'sha256': '0' * 64} for nm in S0_SAME7])
+    txt1 = '{"code": ' + json.dumps(bad_code) + ', ' + json.dumps(good1)[1:]
+    has1 = chain_has(S0_STAGE1_OPT)
+    a = _n_safe('N06a', lambda: c_case('N06a', 'S0_REPORT_MISMATCH', s2=s0_report(2, 'N06a', raw=txt2.encode('utf-8'))))
+    b = _n_safe('N06b', lambda: c_case('N06b', 'S0_REPORT_MISMATCH', s1=(s0_report(1, 'N06b', raw=txt1.encode('utf-8')) if has1 else None)))
+    return (a[0] and b[0] and has1 and good2.get('schema') == S0m.SCHEMA, (a[1], b[1], has1))
 
 
 @check('F01', 'Q-F — 감도 변이 사다리 · 예측에 --after-main 이 없다 → MAIN_NOT_DONE · 러너 0 회 (주 판정 단계 뒤에만)')
