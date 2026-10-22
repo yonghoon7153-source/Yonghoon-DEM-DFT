@@ -1,7 +1,7 @@
 ---
 title: "Li₃Nd pristine 3×3×3 이 0.65 eV 재구성한다 — NEB 기반 구조도 같은가?"
 date: 2026-09-02
-updated: 2026-09-02
+updated: 2026-10-22
 tags: [li3nd, sei, neb, relaxation, control, open-question]
 status: open
 kind: question
@@ -146,6 +146,10 @@ GPU 37.7 GB 를 계속 무는 값어치가 있다 — 우리가 몰랐던 더 �
 - **2026-09-02** 개설. control relax 감시 중 발견 (1저자 질문 "2일 9시간이나 도네" 가 출발점).
   같은 날 Evidence For 확정 — vc-relax 가 셀을 전혀 안 움직였고 좌표가 고대칭 자리다.
   결정 실험(끝점 relax 궤적 확인) **미실행**. control relax 진행중.
+- **2026-10-22** r2 아직 미수렴 — BFGS 223 · 출력 파일 11 개 (옛 .out 보관본 포함) 전 이력에서 거부 0 · 리셋 0 (수치 문제 아님) · 스텝당 에너지 하강이 줄어드는 중
+  (0–39 → 40–177 → 178–186 → 199–223 순으로 −5.2 → −1.8 → −0.45 → −0.30 mRy) · 최근 25 스텝 max|F| 성분이 문턱 (1e-3 Ry/bohr · QE 기본) 의 1.4–3.3 배라
+  힘 조건이 끝을 묶는다. 218 부터 Total force 가 오른 것은 더 가파른 비탈 (같은 때 스텝당 하강도 커짐). 최종 에너지는 아직 모른다 ·
+  기록 `db/properties/li3nd_p333_control_runlog_2026_10_11.json` `단계.r2_관측_2026_10_22_0915` · 이번 실행 한도 ≈ BFGS 386 (≈ 10-30).
 
 ## 되짚기
 

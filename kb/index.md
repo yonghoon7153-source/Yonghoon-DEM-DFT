@@ -8,6 +8,7 @@
 
 ## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 327건)
 - 2026-10-22 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
+- 2026-10-22 · `kb/questions/li3nd_pristine_reconstruction_2026_09_02.md` — Li₃Nd pristine 3×3×3 이 0.65 eV 재구성한다 — NEB 기반 구조도 같은가? · open [open]
 - 2026-10-20 · `kb/projects/handoff_2026_10_20_return_to_origin.md` — 본 세션 복귀 카드 — 서브 세션 (10-15 → 10-20) 134 커밋을 본 세션으로 (2026-10-20) · 발송 대기 — 사용자가 §0 프롬프트를 본 세션 (…CTzs) 에 붙…
 - 2026-10-20 · `kb/papers/b2o3_bo_lpsc16_methods_2026_10_20.md` — B₂O₃ 원고 (BO-LPSC1.6 · paper #2) Computational Methods — 기록대로 · compact 판 (BML 가이드 반영) · 진행
 - 2026-10-19 · `kb/reviews/li2s1a_CX_prompt_li2s_glass_control_readout_2026_10_14.md` — CX 프롬프트 — li2s 소셀 유리 대조 계 B 600 K 판독: 규칙 적용 갈래 c2 (N_B 1/5) · 결과 전 선택 셋 확인 · 트랙 끝 제안 · 발송됨 (사용자 · 발송일 기록 없음 · 발송판 `kb/project…
@@ -26,7 +27,6 @@
 - 2026-10-12 · `kb/seminars/cascade_db_reading_2026_10_12.md` — cascade 원장 정독 — 단계별 커버리지 · 9월 재건 · 세미나 덱 정정 (2026-10-12) · 진행
 - 2026-10-08 · `kb/reviews/codex_CT_reply_cascade_v7_main_runner_2026_10_08.md` — CT 회신 — cascade v7 본 라운드 러너: 조건부 GO · P0 없음 · P1 셋 (판독 입력 결박 · 미정산 시간 · 자식 생성 직후 정리) · P2 (이어받기 대조 · partial · watcher --log) · 수령 2026-10-08 (사용자 붙여넣기 · 원문 보존 · 마크다운…
 - 2026-10-08 · `kb/reviews/codex_CU_reply_wad_agc_graphite_k9_closure_2026_10_08.md` — CU 회신 — P1b Ag(111)|흑연 3층 k9 마감 사후 감사: 조건부 GO · 값 유지 · P1 '기판만' 정정 (셀 c·영상 간격도 다름) · P2 라벨 좁히기 · 집계기 신원 검사 공백 · 수령 2026-10-08 (사용자 붙여넣기 · 원문 보존 · 마크다운…
-- 2026-10-08 · `kb/reviews/codex_CV_reply_cei_easy_story_2026_10_08.md` — CV 회신 — CEI 쉬운 스토리: 조건부 GO · 숫자 재현 · P0 '먼저 잡는다'·'계면에 남는 층' 교체 · P1 그림 대조군·조성 라벨·황산염 분류 오류·정수 반올림 · 추천 한 장 = NMC811 금속별 표 · 수령 2026-10-08 (사용자 붙여넣기 · 원문 보존 · 마크다운…
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -489,7 +489,7 @@
 - `kb/questions/coating_lineage_sibling_conflicts_2026_09_13.md` — 코팅 계보 #6·#7·#8 digest 가 서로 다른 말을 하는 세 자리 — 우리 값이 문헌의 어느 양인가 [open]  (2026-09-13 · open)
 - `kb/questions/doped_declared_state_feasibility_2026_08_29.md` — doped E_ads 를 '상태 선언' 으로 살릴 수 있나 — NUPDOWN 은 홀 위치를 안 묶는다 [open]  (2026-08-29 · open)
 - `kb/questions/esw_reduction_limit_field_2026_08_28.md` — `reduction_limit_V` 는 환원한계가 아닌 것 같다 — breakpoint 하나 아래를 가리킨다 [open]  (2026-09-13 · open)
-- `kb/questions/li3nd_pristine_reconstruction_2026_09_02.md` — Li₃Nd pristine 3×3×3 이 0.65 eV 재구성한다 — NEB 기반 구조도 같은가? [open]  (2026-09-02 · open)
+- `kb/questions/li3nd_pristine_reconstruction_2026_09_02.md` — Li₃Nd pristine 3×3×3 이 0.65 eV 재구성한다 — NEB 기반 구조도 같은가? [open]  (2026-10-22 · open)
 - `kb/questions/lpsocl_low_beta_mechanism.md` — 저β 런의 정체 — 케이지 절편인가, 진짜 sub-diffusion인가, 느린 전이인가 ⚠disputed [active]  (2026-08-12 · active)
 - `kb/questions/polaron_seed_localized_basis_cannot_express_ring_pi.md` — 폴라론 seed 가 안 먹는 이유 — 국재 기저에 '고리 π' 궤도가 없다 [open]  (2026-09-06 · open)
 - `kb/questions/sdcp_backbone_polaron_estimand_2026_08_31.md` — H-제거 n=6 라디칼 상태지도 — estimand 카드 v2 (회신 S 반영) [open]  (2026-08-31 · open)
