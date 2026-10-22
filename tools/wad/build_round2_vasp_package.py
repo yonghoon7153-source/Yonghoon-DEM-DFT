@@ -280,7 +280,7 @@ def build(seal_dir, out, v5_pkg=None, wadcc_pkg=None, ledger=None):
     _write(os.path.join(out, "JOBS.txt"), "\n".join(j["dir"] for j in jobs) + "\n")
     _write(os.path.join(out, "run_all.sh"), run_all_text()); os.chmod(os.path.join(out, "run_all.sh"), 0o755)
     meta = {"schema": "wad_round2_vasp_package/v2", "card": CARD, "amendment_4": AMEND4, "decisions": list(DECISIONS),
-            "status": "준비본 v2 — Codex CZ 고침 + 발송 전 자체 검토 (S1–S8) 반영 · 발송 전",
+            "status": "준비본 v3 — Codex CZ · DB 고침 + 발송 전 자체 검토 (S1–S9) 반영 · 발송 전",
             "tool_sha256": _sha(os.path.abspath(__file__)), "v5_tool_sha256": _sha(os.path.abspath(V.__file__)),
             "sources": {"p2s_seal_manifest_sha256": _sha(smp), "wadcc_manifest_sha256": _sha(os.path.join(wadcc_pkg, "cc_stage2_manifest.json")),
                         "v5_manifest_sha256": V5_MANIFEST_SHA256},
@@ -1882,7 +1882,7 @@ def _readme(meta, pkg_sha):
     caps = " · ".join(f"{s} {meta['stages'][s]['cap_h']:g} h" for s in meta["stages"])
     return f"""# W_ad 외주 2차 — VASP 단일점 묶음 (LPSCl | 흑연 작은 모델 · C–C 대조 · 은 a4)
 
-> 상태: **준비본 v2 — Codex CZ 고침 + 발송 전 자체 검토 (S1–S8) 반영 · 발송 전** · 결정 `D-2026-10-15-wad-p2small-vasp-card` · `D-2026-10-15-wad-aprime-v5-e70-a4-rerun` (active)
+> 상태: **준비본 v3 — Codex CZ · DB 고침 + 발송 전 자체 검토 (S1–S9) 반영 · 발송 전** · 결정 `D-2026-10-15-wad-p2small-vasp-card` · `D-2026-10-15-wad-aprime-v5-e70-a4-rerun` (active)
 > 이 묶음 MANIFEST.sha256 의 sha256 = `{pkg_sha}` (보낼 때 메일 본문에 적는다 — 반송 검사가 이 값으로 승인본을 확인한다)
 
 ## 무엇을 하나
@@ -1903,6 +1903,7 @@ def _readme(meta, pkg_sha):
 4. **ⓐ 의 WAVECAR 는 지우지 마세요** — 러너가 그 잡이 끝날 때 지웁니다 (반송하지 않습니다 · sha·크기·머리만 기록).
 5. 0 스텝 인프라 중단 (스케줄러 취소 등으로 전자 반복 0 회) 이면: `WALL_S=<초> bash run_all.sh --infra-abort <잡> <단> <스케줄러 잡 id> <취소 UTC> <사유>` 로
    기록한 뒤 다시 돌려 주세요 (잡마다 2 회까지). `WALL_S=<초>` (스케줄러 장부의 그 시도 벽시계) 를 꼭 주세요 — 그 시간도 누적 상한 장부에 들어갑니다.
+   초는 0 이상의 10진 정수로 적어 주세요 (선행 0 없이 · 9 자리 이하 — `7200` 은 되고 `07200` · `7200s` 는 거부합니다 · 종료 2).
    모르면 UNKNOWN 으로 남고, 그 뒤 잡은 `bash run_all.sh --infra-wall <run_aborted 폴더 이름> <초>` 로 장부 값을 채울 때까지 뜨지 않습니다 (종료 5).
    OSZICAR · stdout.log · OUTCAR 어디에든 전자 반복 흔적이 있으면 이 기록은 거부합니다.
    **전자 스텝이 돈 뒤 러너째 끊긴 시도** (스케줄러 시간 제한 · 노드 고장 — 그 시도 폴더에 `attempt.json` 이 없다) 는 다시 돌리지 않습니다 (값 없음 · 1저자 결정).
@@ -1935,7 +1936,8 @@ optB88-vdW (GGA = BO, PARAM1/PARAM2, AGGAC 0, LUSE_VDW, Zab_vdW, IVDW 0; needs v
 The runner applies a pre-registered retry ladder automatically (rung 0 → r1 stage A without dipole potential correction, then stage B restarting from that
 WAVECAR with AMIN 0.01 → r2 stage B with AMIX 0.1/BMIX 0.01/AMIN 0.01); the silver a4 job is a single two-stage run. Convergence is judged from the last
 electronic row of OSZICAR (|dE| and |d eps| ≤ EDIFF), never from OUTCAR wording. Please do not edit INCAR/POSCAR/KPOINTS, do not delete stage-A WAVECARs,
-and do not rerun anything by hand; record zero-step infrastructure aborts with WALL_S=<scheduler wall seconds> and --infra-abort (an unknown wall time
+and do not rerun anything by hand; record zero-step infrastructure aborts with WALL_S=<scheduler wall seconds> and --infra-abort (seconds as a plain
+decimal integer without leading zeros; an unknown wall time
 is recorded as UNKNOWN and holds the next job until --infra-wall fills it from the scheduler log); a run killed after electronic steps (no attempt.json) is not
 retried and holds the next job until its scheduler wall time is recorded with WALL_S=<seconds> --killed. Cumulative wall-time caps stop the runner (exit 5);
 a VASP build, POTCAR or vdW-kernel change stops everything (exit 6). Return the round2_return.tgz pair after `sha256sum -c`.
@@ -2785,9 +2787,11 @@ def _selftest():
            and any(x.startswith("ⓐ") for x in c_fd["charge_transfer_signals"].get("not_evaluated", [])) and any("미평가" in l for l in c_fd["G5_C"]["labels"])
            and c7["charge_transfer_signals"].get("not_evaluated") == [] and (c7["far_diagnostics"]["P2S_S_A_far"] or {}).get("adopted") is True,
            (fdf, c_fd["charge_transfer_signals"], c_fd["G5_C"]["labels"], c7["charge_transfer_signals"]))
-        ck("R6 (CZ Q-CZ-10 ③): 영어 요약 = 24 jobs · 실패 없으면 VASP 실행 25 (은 a4 = 두 단계) · 등록 사다리로 최대 94 · 인프라 재시도 따로 · 상태 줄 v2",
+        ck("R6 (CZ Q-CZ-10 ③): 영어 요약 = 24 jobs · 실패 없으면 VASP 실행 25 (은 a4 = 두 단계) · 등록 사다리로 최대 94 · 인프라 재시도 따로 · 상태 줄 v3",
            "24 jobs; 25 VASP executions when nothing fails" in rdm and "up to 94 under the registered retry ladder" in rdm and "24 single-point SCF runs" not in rdm
-           and "준비본 v2" in rdm, rdm[rdm.find("## English summary"):][:300])
+           and "준비본 v3" in rdm, rdm[rdm.find("## English summary"):][:300])
+        ck("DB ③ README: WALL_S 초 형식 (10진 · 선행 0 없이) 을 5 번 항목과 영어 요약에 적는다 (러너가 거부하는 꼴을 미리 알린다)",
+           "선행 0 없이" in rdm[rdm.find("5. "):rdm.find("6. ")] and "`07200`" in rdm and "without leading zeros" in rdm, rdm[rdm.find("5. "):][:500])
         # R7 (사용자 결정 2026-10-22 · CZ 권고) — 파일럿 S_A far 의 LOCPOT xy 면평균 (LVHAR · 러너 추출 · 정보 · 판정 아님)
         lv = {n: [r_ for r_ in ("INCAR", "INCAR.r1A", "INCAR.r1B", "INCAR.r2B") if os.path.isfile(os.path.join(PKG, "jobs", n, r_))
                   and V.parse_incar_strict(rd(n, r_))[0].get("LVHAR") == ".TRUE."] for n in J}

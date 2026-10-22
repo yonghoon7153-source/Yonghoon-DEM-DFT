@@ -220,5 +220,38 @@
   },
   "⏭": "편지 DB 개정 (자체 검토 절 §2b · Q-DB-10 자체 검토 고침 · Q-DB-11 발송 승인 MANIFEST b9450f6f…) → 발송 (사용자) → 회신 원문 보존 → 업체 발송은 DB 회신 뒤",
   "by": "agent · 2026-10-22"
+ },
+ "⑤-4_DB_고침_2026_10_22": {
+  "출처": "Codex DB 회신 (kb/reviews/codex_DB_reply_wad_outsourcing_round2_v2_2026_10_22.md · c475bf304) — 묶음 v2 (b9450f6f…) NO-GO · P0 1 · P1 3 · 해제 최소조건 넷 + P2 (비차단) · 카드 문턱 · 구조 · 잡 행렬 · 물리 설계는 바꾸지 않는다 (회신)",
+  "해제조건과_고침": {
+   "① 시도 열거 (P0-1) — INCAR · attempt.json 둘이 없으면 실행 흔적 (attempt.start · 다른 빌드 OUTCAR · stdout · PP 기록 · OSZICAR) 이 남아도 그 시도가 감사에서 빠짐 (--check 0 · --a4_result OK)": "ea3bc0093 — _started = 시도 폴더에 파일이 하나라도 있으면 시작 · 메타 없는 시도는 INCOMPLETE_ATTEMPT 로 남고 환경 증거는 감사 · ⓑ 는 ⓐ 의 부모 폴더라 하위 폴더 (stageA/ · .b/) 만으로는 시작이 아니다",
+   "② 커널 부정 증거 (P1-1) — 끊긴 · 무결성 실패 optB88 시도의 'kernel differs, recalculating vdW kernel' 이 전역 감사에 안 닿음": "ea3bc0093 — env_evidence 가 optB88 시도 원문 (stdout · OUTCAR) 의 커널 상태를 무결성 검사 전에 읽고 env_audit 가 not_read · regenerated 면 KERNEL_NOT_READ 전역 정지 (등록부 · 완결성과 무관 · 긍정 문구로 불완전 시도를 올리지 않는다) · Q-DB-8 ② 좁은 부정문 'No kernel file found' 같이",
+   "③ 봉인 완결성 (P1-2) — KERNEL_UNVERIFIED 가 해석 GGA · PARAM1 · TITEL 결측을 가려 봉인 허용": "4e8d0ceba — 커널 확인 대기는 다른 완결성 검사 (POTCAR → SYSTEM → SETTINGS → ENERGY → D3) 뒤로 · Codex 세 제거 모두 등록부 전 SETTINGS_UNVERIFIED · POTCAR_UNVERIFIED 이고 봉인 거부 · ⓐ 의 결측 예외는 넓히지 않음",
+   "④ 시간 합산 (P1-3) — 손으로 넣는 초의 선행 0 = bash 8진수 (0007200 → 3,712 초) · 합산 실패 · 빈 값 무시": "576a6d644 — secs_ok (10진 · 선행 0 없이 · 9 자리 이하) 를 --infra-abort · --infra-wall · --killed 세 입력에 · 장부 항마다 10진 꼴만 더함 (선행 0 · 13 자리 이상 · 비숫자 → 미상 → 다음 잡 보류) · cap_ok 가 합산 실패 · 빈 값 · 비숫자를 막음 · 0 초는 받음",
+   "P2 (비차단 · 지금 함)": "881580040 — 재시작 regex 글자 검사 fullmatch (끝 줄바꿈 거부) · parse_zavg 머리 (격자 · c_z) 를 같은 try 안에서 · 유한 · 양수 · z = k·c_z/nz (2e-6) · collect 는 run_id 다른 면평균의 값을 내지 않음 (bad · run_id_matches false)",
+   "README (묶음 v3)": "이 커밋 — 5 번 항목과 영어 요약에 초 형식 (10진 · 선행 0 없이) · 상태 줄 v3"
+  },
+  "시험": {
+   "build_round2_vasp_package": "169/169 (v2 156 → ①② +3 = 159 · ③ +3 = 162 · ④ +3 = 165 · P2 +3 = 168 · README 초 형식 +1 = 169) · gawk 5.2.1 · mawk 1.3.4 둘 다 · bash 5.2.21",
+   "build_v5_vasp_package · build_aprime_interfaces · build_aprime_s3 · se_sym_slab": "237/237 · 79/79 · 41/41 · 122/122",
+   "validate_canonical · convention_check": "통과 · 0 위반",
+   "규칙": "Codex 재현 절차를 그대로 음성 시험으로 먼저 쓰고 고치기 전 판에서 빨간 것을 본 뒤 고침",
+   "기존 시험을 바꾼 곳 (이유)": "S7 stdout 재생성 위조 시험 — 이제 그 시도는 ATTEMPT_MISMATCH 이고 잡은 KERNEL_NOT_READ (②: 무결성 실패 시도의 커널 재생성 원문도 전역 정지) · 상태 줄 시험 v2 → v3"
+  },
+  "깨기": "고침 한 부분씩 되돌린 사본 20 (①② 6 · ③ 1 · ④ 6 · P2 6 · README 1) — 전부 자기 시험이 빨강",
+  "배포본_확인 (해제조건 끝줄 — '네 음성 사례를 배포본 검사기와 Linux 러너에서')": "selftest 를 배포된 v3 폴더 사본 위에서 다시 돌림 (첫 build 만 그 사본으로 바꾼 감싸개 · 러너 · jobs.json · MANIFEST · 잡 입력이 배포본 바이트) · gawk · mawk 둘 다 167/169 — 빨강 둘은 합성 봉인과 대조하는 시험 (DIPOL 구간 · 두 번째 빌드 sha) 이라 진짜 봉인으로 만든 배포본에서는 빨강이 맞다 · DB 음성 사례 (P0-1 · P1-1 · Q-DB-8 ② · P1-2 셋 · P1-3 장부 둘 + 손 입력 셋 · P2 셋) 는 전부 초록 · 검사기 = 도구 sha 67908ae5… (v3 jobs.json tool_sha256 과 같음)",
+  "범위_밖 (회신이 '알려진 시도 위치' 로 한정 · 다음 편지에 질문으로)": "러너가 만들지 않는 폴더 (예 run/<잡>_r3) 의 실행 흔적은 열거하지 않는다 — README 가 손 실행을 금지하고 알려진 시도는 각자 감사된다",
+  "묶음": "새 폴더 db/inputs/wad_round2_vasp_v3_2026_10_22/ (v2 폴더는 Codex DB 가 검토한 판이라 그대로 둔다) — v2 와 다른 파일 넷 (run_all.sh: secs_ok · 장부 항 10진 검사 · cap_ok 숫자 검사 / README.md: 상태 줄 · 초 형식 / jobs.json: 상태 줄 · 도구 sha / MANIFEST.sha256) · 잡 입력 (INCAR · POSCAR · KPOINTS · POTCAR.spec) 그대로 · schema wad_round2_vasp_package/v2 그대로",
+  "MANIFEST_sha256": "bf7b2ac921597f601fed3324159cf9812c1a1ff91ad4a0acf0a6ce590d9ac831",
+  "v2_MANIFEST": "b9450f6f7e188b9159030b6cc6a031a106682fbd2076c27dd66acfd6f4f7bc70 (Codex DB 검토 · NO-GO · 발송 안 함 · 폴더 그대로)",
+  "명령": "python3 -I tools/wad/build_round2_vasp_package.py --build --seal db/inputs/wad_p2small_seal_2026_10_17 --out db/inputs/wad_round2_vasp_v3_2026_10_22",
+  "확인": "scratch 에 두 번 빌드 → diff -r 바이트 동일 · 저장소 빌드 = scratch 빌드 · 묶음 안 sha256sum -c MANIFEST.sha256 OK · bash -n run_all.sh OK · run_all.sh = run_all_text() · jobs.json tool_sha256 = 도구",
+  "도구_sha16": {
+   "build_round2_vasp_package.py": "67908ae535f9c1c4",
+   "build_v5_vasp_package.py": "0d912331fe6003d2",
+   "build_aprime_interfaces.py": "de7c472a357f6b23"
+  },
+  "⏭": "사용자 결정 — Codex 에 diff 만 보는 짧은 확인 편지 (DC) 뒤 업체 발송 · 또는 회신의 해제 문구대로 바로 업체 발송",
+  "by": "agent · 2026-10-22"
  }
 }
