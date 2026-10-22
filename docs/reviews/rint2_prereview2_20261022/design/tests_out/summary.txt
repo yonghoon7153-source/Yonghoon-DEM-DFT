@@ -1,0 +1,9 @@
+test_rint_r_chain.py rc=0 seconds=90 tail:  test_rint_r_chain: 174/174 PASS (89.9 s) 
+test_ca_s0_census.py rc=0 seconds=27 tail:  147 PASS · 0 FAIL 
+test_step3_conv_cert.py rc=0 seconds=138 tail:  == test_step3_conv_cert: 27/27 PASS 
+test_step3_target_cert.py rc=0 seconds=24 tail:  == test_step3_target_cert [빠른 판]: 252/252 PASS (22.9 s) 
+test_carbon_junction.py rc=0 seconds=16 tail:  == test_carbon_junction: 312/312 PASS 
+test_ca_ext_runner.py rc=0 seconds=105 tail:  128 PASS · 0 FAIL 
+test_rint_r_chain_e2e.py rc=0 seconds=200 tail:  test_rint_r_chain_e2e: 16 PASS · 0 FAIL (200.2 s) 
+test_ca_ext_b6.py rc=0 seconds=58 tail:  290 PASS · 0 FAIL 
+DONE

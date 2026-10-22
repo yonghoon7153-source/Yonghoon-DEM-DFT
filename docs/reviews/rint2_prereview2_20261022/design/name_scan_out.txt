@@ -1,0 +1,120 @@
+rint-r-plan-v2 | prod: scripts/ca_s0_census.py scripts/rint_r_chain.py | tests: 3
+PLAN_KEYS | prod: scripts/rint_r_chain.py scripts/run_contract.py | tests: 0
+max_ladder_points | prod: scripts/rint_r_chain.py | tests: 3
+calib_rj_ratio_max | prod: scripts/rint_r_chain.py | tests: 3
+sv_cf_threshold | prod: scripts/rint_r_chain.py | tests: 3
+sv_cf_scope | prod: scripts/rint_r_chain.py | tests: 3
+require_plan_numbers | prod: scripts/ca_s0_census.py scripts/rint_r_chain.py | tests: 2
+PLAN_NUMBER_UNREGISTERED | prod: scripts/rint_r_chain.py | tests: 2
+outside_band | prod: scripts/rint_r_chain.py | tests: 1
+edge_hit | prod: scripts/rint_r_chain.py | tests: 1
+target_err_bound_rel | prod: scripts/rint_r_chain.py scripts/step3_conv_cert.py | tests: 2
+target_judge | prod: scripts/rint_r_chain.py scripts/run_contract.py scripts/step3_conv_cert.py | tests: 1
+judge_set | prod: scripts/rint_r_chain.py | tests: 1
+variant_flag | prod: scripts/rint_r_chain.py | tests: 1
+variant_stage_stopped | prod: scripts/rint_r_chain.py | tests: 1
+stopped_stage_rejects_verdict | prod: scripts/rint_r_chain.py | tests: 1
+decide_sentence | prod: scripts/rint_r_chain.py | tests: 1
+blocking_reasons | prod: scripts/rint_r_chain.py | tests: 1
+SENTENCE_JOIN | prod: scripts/rint_r_chain.py | tests: 0
+SENTENCE_UNINF | prod: scripts/rint_r_chain.py | tests: 0
+SENTENCE_Q18 | prod: scripts/rint_r_chain.py | tests: 0
+SENTENCE_PASS | prod: scripts/rint_r_chain.py | tests: 1
+QUALIFIERS | prod: scripts/ca_ext_cjunc.py scripts/carbon_junction.py scripts/rint_r_chain.py scripts/step3_sigma.py | tests: 2
+ASSUMED_UNVALIDATED | prod: scripts/rint_r_chain.py | tests: 1
+SV_UNCHECKED | prod: scripts/ca_ext_svcf.py scripts/rint_r_chain.py | tests: 2
+SV_DEPENDENT | prod: scripts/ca_ext_svcf.py scripts/carbon_junction.py scripts/rint_r_chain.py | tests: 4
+SV_local_dissipation | prod: scripts/carbon_junction.py | tests: 1
+sv_counterfactual_ratio | prod: scripts/ca_ext_svcf.py scripts/carbon_junction.py scripts/rint_r_chain.py scripts/step3_sigma.py webapp/templates/mpm_lab.html | tests: 4
+GAP_ENVELOPE_ONLY | prod: scripts/rint_r_chain.py | tests: 1
+MAIN_NOT_DONE | prod: scripts/rint_r_chain.py | tests: 1
+MAIN_BINDING | prod: scripts/rint_r_chain.py | tests: 1
+INPUT_STAGE_STOPPED | prod: scripts/rint_r_chain.py | tests: 1
+CODE_PIN_MISMATCH | prod: scripts/rint_r_chain.py | tests: 1
+PREDICT_LADDER_MISMATCH | prod: scripts/rint_r_chain.py | tests: 0
+REPLAY_MISMATCH | prod: scripts/rint_r_chain.py | tests: 0
+PLAN_INVALID | prod: scripts/rint_r_chain.py | tests: 2
+PLAN_CROSS_MISMATCH | prod: scripts/rint_r_chain.py | tests: 1
+S0_PLAN_HASH_MISMATCH | prod: scripts/rint_r_chain.py | tests: 1
+ELECTRODE_SHORT | prod: scripts/mpm_webapp_payload.py scripts/rint_r_chain.py scripts/run_contract.py scripts/sr01_stamp_compare.py scripts/step3_conv_cert.py webapp/templates/mpm_lab.html | tests: 5
+NOT_CERTIFIABLE | prod: scripts/mpm_webapp_payload.py scripts/step3_conv_cert.py webapp/templates/mpm_lab.html | tests: 3
+POSITIVE_SOLVED | prod: scripts/rint_r_chain.py scripts/run_contract.py scripts/step3_conv_cert.py | tests: 4
+VALID_ZERO_TOPOLOGY | prod: scripts/mpm_webapp_payload.py scripts/rint_r_chain.py scripts/run_contract.py scripts/sr01_stamp_compare.py scripts/step3_conv_cert.py scripts/step3_sigma.py webapp/templates/mpm_lab.html | tests: 5
+CERT_STATUSES | prod: scripts/step3_conv_cert.py | tests: 0
+target-cert-v1 | prod: scripts/step3_conv_cert.py | tests: 0
+fsum-bfs-defect-margin-v2 | prod: scripts/step3_conv_cert.py | tests: 0
+conv-cert-v2 | prod: scripts/step3_conv_cert.py | tests: 0
+CERT_TARGET_TOL | prod: scripts/run_contract.py scripts/step3_conv_cert.py | tests: 3
+pass_d | prod: scripts/ca_ext_svcf.py scripts/rint_r_chain.py scripts/run_contract.py scripts/step3_conv_cert.py scripts/step3_sigma.py | tests: 3
+target_lo | prod: scripts/rint_r_chain.py scripts/run_contract.py scripts/step3_conv_cert.py | tests: 3
+target_hi | prod: scripts/rint_r_chain.py scripts/run_contract.py scripts/step3_conv_cert.py | tests: 3
+target_width_rel | prod: scripts/step3_conv_cert.py | tests: 1
+target_in_bracket | prod: scripts/step3_conv_cert.py | tests: 1
+target_why | prod: scripts/rint_r_chain.py scripts/run_contract.py scripts/step3_conv_cert.py scripts/step3_sigma.py | tests: 1
+verify_plan_commit | prod: scripts/ca_s0_census.py | tests: 2
+registration_plan_hash | prod: scripts/ca_s0_census.py scripts/rint_r_chain.py | tests: 0
+cjunc_electrode_short | prod: scripts/ca_ext_svcf.py scripts/carbon_junction.py scripts/mpm_webapp_payload.py scripts/step3_conv_cert.py | tests: 5
+CJUNC_SV_CF | prod: scripts/carbon_junction.py scripts/check_method_discipline.py scripts/rint_r_chain.py scripts/run_contract.py scripts/sdcp_gain_vox015_8arm.sh scripts/step3_sigma.py | tests: 4
+CJUNC_PTFE_JLAW | prod: scripts/check_method_discipline.py scripts/rint_r_chain.py scripts/run_contract.py scripts/sdcp_gain_vox015_8arm.sh | tests: 5
+SDCP_MOD_C | prod: scripts/check_method_discipline.py scripts/rint_r_chain.py scripts/run_contract.py scripts/sdcp_anchor_v2_chain.py scripts/sdcp_gain_vox015_8arm.sh | tests: 3
+STEP3_RTOL | prod: scripts/check_all.sh scripts/check_method_discipline.py scripts/rint_r_chain.py scripts/run_contract.py scripts/sdcp_anchor_v2_chain.py scripts/sdcp_gain_verdict.py scripts/sdcp_gain_vox015_8arm.sh | tests: 5
+CJUNC_LEN_LAW | prod: scripts/ca_ext_cjunc.py scripts/ca_s0_census.py scripts/carbon_junction.py scripts/check_method_discipline.py scripts/rint_r_chain.py scripts/run_contract.py scripts/sdcp_gain_vox015_8arm.sh | tests: 7
+CJUNC_UNREG_LAW | prod: scripts/check_method_discipline.py scripts/rint_r_chain.py scripts/run_contract.py scripts/sdcp_gain_vox015_8arm.sh | tests: 5
+CJUNC_S_MIN_UM | prod: scripts/check_method_discipline.py scripts/rint_r_chain.py scripts/run_contract.py scripts/sdcp_gain_vox015_8arm.sh | tests: 5
+CJUNC_TOL_FF_UM | prod: scripts/check_method_discipline.py scripts/rint_r_chain.py scripts/run_contract.py scripts/sdcp_gain_vox015_8arm.sh | tests: 5
+ARM_LIST | prod: scripts/check_all.sh scripts/check_method_discipline.py scripts/rint_r_chain.py scripts/run_contract.py scripts/sdcp_gain_vox015_8arm.sh | tests: 4
+EXPECT_BACKEND | prod: scripts/check_method_discipline.py scripts/mpm_webapp_payload.py scripts/rint_r_chain.py scripts/sdcp_gain_vox015_8arm.sh scripts/step3_sigma.py | tests: 3
+SDCP_YIELD_VGCF | prod: scripts/check_method_discipline.py scripts/rint_r_chain.py scripts/sdcp_gain_vox015_8arm.sh scripts/sdcp_next_1234.sh | tests: 1
+SIGMA_FIBRE_BULK | prod: scripts/check_all.sh scripts/check_method_discipline.py scripts/mpm_webapp_payload.py scripts/rint_r_chain.py scripts/run_contract.py scripts/sdcp_anchor_v2_chain.py scripts/sdcp_gain_verdict.py scripts/sdcp_gain_vox015_8arm.sh scripts/step3_sigma.py | tests: 3
+CJUNC_RJ | prod: scripts/check_method_discipline.py scripts/rint_r_chain.py scripts/run_contract.py scripts/sdcp_anchor_v2_chain.py scripts/sdcp_gain_vox015_8arm.sh | tests: 6
+len_scaled_v0 | prod: scripts/carbon_junction.py scripts/mpm_webapp_payload.py scripts/sdcp_gain_vox015_8arm.sh | tests: 8
+face_alpha | prod: scripts/ca_ext_cjunc.py scripts/ca_s0_census.py scripts/carbon_junction.py scripts/check_all.sh scripts/mpm_webapp_payload.py scripts/ptfe_face_alpha.py scripts/rint_r_chain.py scripts/run_contract.py scripts/sdcp_gain_verdict.py scripts/sdcp_gain_vox015_8arm.sh scripts/sr01_stamp_compare.py scripts/step3_conv_cert.py scripts/step3_sigma.py webapp/templates/mpm_lab.html | tests: 12
+after-main | prod: scripts/rint_r_chain.py | tests: 1
+s0-plan | prod: scripts/rint_r_chain.py | tests: 2
+r-plan-path | prod: scripts/ca_s0_census.py | tests: 1
+threshold-commit | prod: scripts/ca_s0_census.py | tests: 1
+plan-path | prod: scripts/ca_s0_census.py | tests: 1
+show-results | prod: scripts/check_method_discipline.py scripts/mpm_webapp_payload.py scripts/rint_r_chain.py scripts/run_contract.py scripts/sdcp_gain_vox015_8arm.sh | tests: 3
+ca-cjunc-plan-v1 | prod: scripts/ca_s0_census.py scripts/rint_r_chain.py | tests: 1
+GRID_SENTENCE | prod: scripts/rint_r_chain.py | tests: 0
+no_live_port_in_rport | prod: NONE | tests: 1
+CERT_RTOL_MAX | prod: scripts/rint_r_chain.py scripts/run_contract.py scripts/step3_conv_cert.py | tests: 3
+CERT_EPS_I | prod: scripts/run_contract.py scripts/step3_conv_cert.py | tests: 3
+next_gen_state | prod: scripts/mpm_webapp_payload.py scripts/rint_r_chain.py scripts/run_contract.py scripts/sr01_stamp_compare.py | tests: 2
+conv_cert_problem | prod: scripts/mpm_webapp_payload.py scripts/rint_r_chain.py scripts/run_contract.py scripts/step3_conv_cert.py scripts/step3_sigma.py | tests: 2
+next_gen_cert_ok | prod: scripts/run_contract.py scripts/sdcp_gain_verdict.py scripts/sr01_stamp_compare.py | tests: 5
+chain_view | prod: scripts/ca_ext_svcf.py scripts/check_all.sh scripts/rint_r_chain.py webapp/static/js/viewer3d.js | tests: 2
+sv_assess | prod: scripts/rint_r_chain.py | tests: 1
+SAME_P_CONSISTENCY | prod: scripts/rint_r_chain.py | tests: 1
+CA_EXT_RECORD | prod: scripts/rint_r_chain.py scripts/run_contract.py | tests: 3
+RUNNER_RC | prod: scripts/mpm_webapp_payload.py scripts/rint_r_chain.py scripts/run_contract.py scripts/sr01_stamp_compare.py | tests: 3
+TIME_LIMIT | prod: scripts/rint_r_chain.py | tests: 2
+DUPLICATE_RUN | prod: scripts/rint_r_chain.py | tests: 1
+main_R0_only | prod: scripts/rint_r_chain.py | tests: 0
+views.jsonl | prod: scripts/rint_r_chain.py | tests: 1
+verdict_results.json | prod: scripts/rint_r_chain.py | tests: 1
+err_rel | prod: scripts/rint_r_chain.py | tests: 1
+Q17_sensitivity_incomplete | prod: scripts/rint_r_chain.py | tests: 1
+Q18_P_two_ends_only | prod: scripts/rint_r_chain.py | tests: 1
+kit_SBE_vgcf100 | prod: scripts/ca_s0_census.py scripts/rint_r_chain.py | tests: 1
+kit_DBE_sdcp1um_vgcf100 | prod: scripts/ca_s0_census.py scripts/rint_r_chain.py | tests: 1
+CALIB_ORIGIN_SENSITIVE | prod: scripts/rint_r_chain.py | tests: 1
+CALIB_LADDER_EXHAUSTED | prod: scripts/rint_r_chain.py | tests: 1
+CALIB_UNIDENTIFIED | prod: scripts/rint_r_chain.py | tests: 1
+CALIB_UNCONFIRMED | prod: scripts/rint_r_chain.py | tests: 1
+CALIB_NONMONOTONE | prod: scripts/rint_r_chain.py | tests: 1
+CALIB_EDGE | prod: scripts/rint_r_chain.py | tests: 1
+CALIB_IMPOSSIBLE | prod: scripts/rint_r_chain.py | tests: 1
+sv_cut | prod: scripts/carbon_junction.py | tests: 1
+n_bridging_components | prod: scripts/carbon_junction.py | tests: 2
+SV_DOMINANT | prod: scripts/carbon_junction.py scripts/rint_r_chain.py | tests: 3
+DIA_UNCHECKED | prod: scripts/ca_s0_census.py scripts/mpm_webapp_payload.py scripts/ptfe_face_alpha.py scripts/rint_r_chain.py webapp/templates/mpm_lab.html | tests: 2
+ratio_limit | prod: scripts/ca_ext_svcf.py webapp/templates/mpm_lab.html | tests: 3
+no_through_without_sv | prod: scripts/ca_ext_svcf.py scripts/carbon_junction.py | tests: 4
+W_pos | prod: scripts/rint_r_chain.py | tests: 1
+origin_pushes | prod: scripts/rint_r_chain.py | tests: 1
+outer_neighbor_origin | prod: scripts/rint_r_chain.py | tests: 0
+JOULE | prod: scripts/mpm_webapp_payload.py | tests: 3
+STEP4_GRID | prod: scripts/mpm_webapp_payload.py | tests: 3
+p3ca- | prod: scripts/mpm_webapp_payload.py scripts/rint_r_chain.py scripts/run_contract.py scripts/sdcp_gain_verdict.py webapp/templates/mpm_lab.html | tests: 7
+unknown:ca_ext | prod: scripts/mpm_webapp_payload.py scripts/rint_r_chain.py scripts/run_contract.py webapp/templates/mpm_lab.html | tests: 4

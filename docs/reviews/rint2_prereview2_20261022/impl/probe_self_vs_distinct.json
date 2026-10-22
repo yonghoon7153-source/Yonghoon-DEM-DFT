@@ -1,0 +1,48 @@
+{
+ "i_same_fid": {
+  "n_self_instances": 0,
+  "Lc": [],
+  "mult": [],
+  "centreline_gap_um": 1.2,
+  "D_um": 1.1,
+  "I_Rj_1e3": 5.88235294117645,
+  "I_Rj_inf": 5.88235294117645,
+  "junction_effect_rel": 0.0
+ },
+ "i_distinct_fids": {
+  "n_instances": 0,
+  "n_unreg_faces": 4,
+  "n_cut_site_faces": 0,
+  "d0": []
+ },
+ "ii_same_fid": {
+  "leg_centreline_min_um": 0.1414213562373093,
+  "2rf": 1.0,
+  "self_instances_between_legs": [],
+  "all_instances": [
+   [
+    true,
+    [
+     1,
+     2,
+     3
+    ],
+    [
+     2,
+     2,
+     3
+    ],
+    18.100000000000016
+   ]
+  ]
+ },
+ "ii_distinct_fids": {
+  "n_instances": 1,
+  "d0": [
+   0.1414213562373093
+  ],
+  "Lc": [
+   2.989949493661167
+  ]
+ }
+}

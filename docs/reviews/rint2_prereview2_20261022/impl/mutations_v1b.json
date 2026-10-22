@@ -1,0 +1,18 @@
+[
+ {"id": "V1-S", "file": "scripts/ca_ext_svcf.py", "what": "sv_cf_problem — 표지 ↔ 문턱 대조 끔 (b6 S 묶음)",
+  "old": "    if (fl == 'SV_DEPENDENT') != dep:",
+  "new": "    if False:",
+  "cmd": ["python3", "-I", "scripts/test_ca_ext_b6.py", "--only", "S"], "expect": []},
+ {"id": "V1-CHAIN", "file": "scripts/ca_ext_svcf.py", "what": "sv_cf_problem — 표지 ↔ 문턱 대조 끔 (사슬 전체)",
+  "old": "    if (fl == 'SV_DEPENDENT') != dep:",
+  "new": "    if False:",
+  "cmd": ["python3", "-I", "scripts/test_rint_r_chain.py"], "expect": []},
+ {"id": "J1-CJ", "file": "scripts/carbon_junction.py", "what": "_sv_cut_rows — 못 가른 다리 지킴 삭제 (접합 시험 전체)",
+  "old": "        if len(np.unique(grp[m & pas])) >= 2:\n            continue\n        cut |= m & ~pas",
+  "new": "        cut |= m & ~pas",
+  "cmd": ["python3", "-I", "scripts/test_carbon_junction.py"], "expect": []},
+ {"id": "J2-CJ", "file": "scripts/carbon_junction.py", "what": "_sv_split — '지남' 에 덮임 · 같은 성분 조건 뺌 (접합 시험 전체)",
+  "old": "                    if len(btw) and np.all(~pos['live'][btw]) and np.all(pos['lin'][btw] >= 0) \\\n                            and np.all(labf[np.maximum(pos['lin'][btw], 0)] == c):",
+  "new": "                    if len(btw) and np.all(pos['lin'][btw] >= 0):",
+  "cmd": ["python3", "-I", "scripts/test_carbon_junction.py"], "expect": []}
+]

@@ -1,0 +1,24 @@
+{
+ "same_fid": [
+  {
+   "self": true,
+   "d0": 0.1,
+   "Lc": 4.084937,
+   "mult": 2.042468,
+   "k": 3,
+   "s": 18.1,
+   "realized_sub": 3
+  }
+ ],
+ "distinct_fids (leg1 · leg2 only)": [
+  {
+   "self": false,
+   "d0": 0.141421,
+   "Lc": 2.989949,
+   "mult": 1.494975,
+   "k": 2,
+   "s": null,
+   "realized_sub": 2
+  }
+ ]
+}

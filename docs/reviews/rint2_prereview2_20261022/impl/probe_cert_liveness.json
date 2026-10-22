@@ -1,0 +1,38 @@
+{
+ "11": {
+  "n_dof": 14095,
+  "sigma": 0.0030458944987848562,
+  "sigma_direct": 0.0030458944962131794,
+  "rel_err_vs_direct": 8.443092891496917e-10,
+  "status": "POSITIVE_SOLVED",
+  "ok": true,
+  "pass": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "err_bound_rel": 1.3281333104005964e-09,
+  "width_rel": 9.086889193734293e-12,
+  "why": null,
+  "iters": 891
+ },
+ "12": {
+  "n_dof": 14407,
+  "sigma": 0.00383324353433079,
+  "sigma_direct": 0.003833243392370579,
+  "rel_err_vs_direct": 3.703396744825227e-08,
+  "status": "POSITIVE_SOLVED",
+  "ok": true,
+  "pass": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "err_bound_rel": 3.7849244149458324e-08,
+  "width_rel": 2.773973299832648e-11,
+  "why": null,
+  "iters": 832
+ }
+}

@@ -1,0 +1,60 @@
+{
+ "two_fibres_pass (truth ratio +inf)": {
+  "rc": 0,
+  "sigma_e": 0.039231639340228545,
+  "next_gen_state": [
+   "positive",
+   null
+  ],
+  "ca_ext_record_ok": [
+   true,
+   null
+  ],
+  "cf": {
+   "status": "computed",
+   "sv_counterfactual_ratio": 1.0,
+   "ratio_limit": null,
+   "n_sv_faces_cut": 0,
+   "n_bridging_components": 1,
+   "n_unsplit_bridging_components": 1,
+   "G_full_code": 4.165871213413004,
+   "G_cut_code": 4.165871213413004
+  },
+  "chain_view": {
+   "status": "computed",
+   "ratio": 1.0
+  },
+  "chain_sv_flags_threshold2": [],
+  "log_tail": null
+ },
+ "control_only_A_passes (truth ratio +inf)": {
+  "rc": 0,
+  "sigma_e": 0.03922245385285839,
+  "next_gen_state": [
+   "positive",
+   null
+  ],
+  "ca_ext_record_ok": [
+   true,
+   null
+  ],
+  "cf": {
+   "status": "computed",
+   "sv_counterfactual_ratio": 85.42189839181232,
+   "ratio_limit": null,
+   "n_sv_faces_cut": 1,
+   "n_bridging_components": 1,
+   "n_unsplit_bridging_components": 0,
+   "G_full_code": 4.164895838484502,
+   "G_cut_code": 0.04875676983179417
+  },
+  "chain_view": {
+   "status": "computed",
+   "ratio": 85.42189839181232
+  },
+  "chain_sv_flags_threshold2": [
+   "SV_DEPENDENT"
+  ],
+  "log_tail": null
+ }
+}

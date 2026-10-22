@@ -1,0 +1,77 @@
+{
+ "judge": {
+  "cases": 20000,
+  "mismatches": 0,
+  "first": [],
+  "outside_STATE_VERDICTS": [],
+  "boundary W=G0/2": [
+   "PASS_INFORMATIVE",
+   0.4539694765685021
+  ],
+  "boundary W=0.454 (rounded)": [
+   "CONSISTENT_WEAK",
+   0.454
+  ],
+  "boundary W=0.4540 just above G0/2": [
+   "CONSISTENT_WEAK",
+   0.4539694765695021
+  ],
+  "boundary W=G0": [
+   "CONSISTENT_WEAK",
+   0.9079389531370043
+  ],
+  "boundary W=0.908": [
+   "UNINFORMATIVE",
+   0.908
+  ],
+  "G0_exact": 0.9079389531370043,
+  "G0/2_exact": 0.4539694765685022
+ },
+ "sentence": {
+  "n_bad": 0,
+  "first_bad": [],
+  "out_of_table_not_raising": [],
+  "doc_PASS_quote_eq_chain": true,
+  "doc_cells_italics": {
+   "PASS_INFORMATIVE": [
+    "계산기 판정 이름 `PASS_INFORMATIVE` · 차단 표지 <목록> — 판정 문장 보류"
+   ],
+   "CONSISTENT_WEAK": [
+    "넓은 시나리오 구간 안에 들었다",
+    "(차단 표지 <목록>)"
+   ],
+   "UNINFORMATIVE": [
+    "예측 주장 없음 (구간이 현 세대 빗나감보다 넓다)",
+    "(차단 표지 <목록>)"
+   ],
+   "GAP_ENVELOPE_ONLY": [
+    "어느 법칙의 허용집합에도 포함되지 않았으나 전체 envelope 에는 포함",
+    "(차단 표지 <목록>)"
+   ],
+   "FAIL": [
+    "(차단 표지 <목록>)"
+   ],
+   "CALIB_*": [],
+   "NOT_COMPUTED": []
+  }
+ },
+ "assemble": {
+  "main_verdict": "PASS_INFORMATIVE",
+  "main_W": 0.0870113769896297,
+  "combos": 12288,
+  "bad": 0,
+  "first_bad": [],
+  "calib_with_origin_flag": {
+   "verdict": "CALIB_EDGE",
+   "flags": [
+    "CALIB_ORIGIN_SENSITIVE"
+   ],
+   "blocking_flags": [
+    "CALIB_ORIGIN_SENSITIVE"
+   ],
+   "sentence": "판정 없음 — 법칙별 이름 · 사유 · 바닥 · 천장 · e · 끝 후보 보고",
+   "sensitivity_incomplete": null
+  },
+  "nc_vs_edge": "NOT_COMPUTED"
+ }
+}

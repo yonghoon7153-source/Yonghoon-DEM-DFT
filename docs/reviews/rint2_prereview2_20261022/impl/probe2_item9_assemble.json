@@ -1,0 +1,171 @@
+{
+ "A 멈춤 FIBRE · 다른 이름 UNREG · 같은 GRID · 안 돌림 SVORDER": {
+  "verdict": "PASS_INFORMATIVE",
+  "state": "positive",
+  "flags": [
+   "FIBRE_UNCHECKED",
+   "SVORDER_UNCHECKED",
+   "UNREG_SENSITIVE"
+  ],
+  "blocking_flags": [
+   "FIBRE_UNCHECKED",
+   "SVORDER_UNCHECKED",
+   "UNREG_SENSITIVE"
+  ],
+  "sensitivity_incomplete": true,
+  "sentence_allowed": false,
+  "sentence": "계산기 판정 이름 `PASS_INFORMATIVE` · 차단 표지 FIBRE_UNCHECKED · SVORDER_UNCHECKED · UNREG_SENSITIVE — 판정 문장 보류 · 감도 미완료",
+  "variants": {
+   "FIBRE": [
+    "FIBRE_UNCHECKED",
+    "NOT_COMPUTED"
+   ],
+   "UNREG": [
+    "UNREG_SENSITIVE",
+    "FAIL"
+   ],
+   "GRID": [
+    null,
+    "PASS_INFORMATIVE"
+   ],
+   "SVORDER": [
+    "SVORDER_UNCHECKED",
+    null
+   ]
+  }
+ },
+ "B 넷 다 멈춤 (돌렸는데 결과 없음)": {
+  "verdict": "PASS_INFORMATIVE",
+  "state": "positive",
+  "flags": [
+   "FIBRE_UNCHECKED",
+   "GRID_UNCHECKED",
+   "SVORDER_UNCHECKED",
+   "UNREG_UNCHECKED"
+  ],
+  "blocking_flags": [
+   "FIBRE_UNCHECKED",
+   "GRID_UNCHECKED",
+   "SVORDER_UNCHECKED",
+   "UNREG_UNCHECKED"
+  ],
+  "sensitivity_incomplete": false,
+  "sentence_allowed": false,
+  "sentence": "계산기 판정 이름 `PASS_INFORMATIVE` · 차단 표지 FIBRE_UNCHECKED · GRID_UNCHECKED · SVORDER_UNCHECKED · UNREG_UNCHECKED — 판정 문장 보류",
+  "variants": {
+   "FIBRE": [
+    "FIBRE_UNCHECKED",
+    "NOT_COMPUTED"
+   ],
+   "UNREG": [
+    "UNREG_UNCHECKED",
+    "NOT_COMPUTED"
+   ],
+   "GRID": [
+    "GRID_UNCHECKED",
+    "NOT_COMPUTED"
+   ],
+   "SVORDER": [
+    "SVORDER_UNCHECKED",
+    "NOT_COMPUTED"
+   ]
+  }
+ },
+ "C 넷 다 같은 이름 · GRID 만 자기 CALIB_ORIGIN_SENSITIVE": {
+  "verdict": "PASS_INFORMATIVE",
+  "state": "positive",
+  "flags": [
+   "GRID_UNCHECKED"
+  ],
+  "blocking_flags": [
+   "GRID_UNCHECKED"
+  ],
+  "sensitivity_incomplete": false,
+  "sentence_allowed": false,
+  "sentence": "계산기 판정 이름 `PASS_INFORMATIVE` · 차단 표지 GRID_UNCHECKED — 판정 문장 보류",
+  "variants": {
+   "FIBRE": [
+    null,
+    "PASS_INFORMATIVE"
+   ],
+   "UNREG": [
+    null,
+    "PASS_INFORMATIVE"
+   ],
+   "GRID": [
+    "GRID_UNCHECKED",
+    "PASS_INFORMATIVE"
+   ],
+   "SVORDER": [
+    null,
+    "PASS_INFORMATIVE"
+   ]
+  }
+ },
+ "D 넷 다 같은 이름 · 표지 없음 (차단 0 이어야 · SV 없음)": {
+  "verdict": "PASS_INFORMATIVE",
+  "state": "positive",
+  "flags": [],
+  "blocking_flags": [],
+  "sensitivity_incomplete": false,
+  "sentence_allowed": true,
+  "sentence": "SBE 측정 한 점으로 각 법칙의 내부 접합 저항을 보정하였다. 사전에 고정한 시나리오와 보정 허용집합의 계산 결과를 이미 알려진 DBE 측정값과 비교하였다. 모형 종류와 시나리오 방향은 해당 DBE 값 및 기존 빗나감을 알고 선정했으므로, 이 비교는 독립 holdout 검증이나 접합 물성의 식별이 아니다.",
+  "variants": {
+   "FIBRE": [
+    null,
+    "PASS_INFORMATIVE"
+   ],
+   "UNREG": [
+    null,
+    "PASS_INFORMATIVE"
+   ],
+   "GRID": [
+    null,
+    "PASS_INFORMATIVE"
+   ],
+   "SVORDER": [
+    null,
+    "PASS_INFORMATIVE"
+   ]
+  }
+ },
+ "E 변이 CALIB_EDGE (보정 결과 이름) · 나머지 같음": {
+  "verdict": "PASS_INFORMATIVE",
+  "state": "positive",
+  "flags": [
+   "FIBRE_SENSITIVE"
+  ],
+  "blocking_flags": [
+   "FIBRE_SENSITIVE"
+  ],
+  "sensitivity_incomplete": false,
+  "sentence_allowed": false,
+  "sentence": "계산기 판정 이름 `PASS_INFORMATIVE` · 차단 표지 FIBRE_SENSITIVE — 판정 문장 보류",
+  "variants": {
+   "FIBRE": [
+    "FIBRE_SENSITIVE",
+    "CALIB_EDGE"
+   ],
+   "UNREG": [
+    null,
+    "PASS_INFORMATIVE"
+   ],
+   "GRID": [
+    null,
+    "PASS_INFORMATIVE"
+   ],
+   "SVORDER": [
+    null,
+    "PASS_INFORMATIVE"
+   ]
+  }
+ },
+ "main_stopped_rejects": true,
+ "variant_stopped_is_variant": true,
+ "main_stopped_pub": {
+  "verdict": "NOT_COMPUTED",
+  "state": "calib",
+  "sentence_allowed": false,
+  "sentence": "판정 없음 — 사유 (상태 · 멈춤 코드) 보고"
+ }
+}

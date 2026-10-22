@@ -1,0 +1,74 @@
+=== probe_gap_revisit
+same_cell_gap_s<s_min {'pieces': 2, 'gap_um': 0.7000000000000002, 's_min': 3.0, 'census': {'n_self_candidates': 0, 'n_self_kept': 0, 'n_self_filtered': 0, 'n_self_fused_faces': 0, 'n_self_revisits_path_only': 0, 'n_revisit_pairs': 0, 'self_s_um': None}, 'I_cjunc': 5.555555555555536, 'reason': None, 'I_legacy_cjunc_off': 12.499999999999979, 'I_hand_chain': 12.5, 'I_hand_chain_plus_Rj': 5.555555555555555}
+same_cell_gap_s>=s_min {'pieces': 2, 'gap_um': 0.7000000000000002, 's_min': 0.5, 'census': {'n_self_candidates': 0, 'n_self_kept': 0, 'n_self_filtered': 0, 'n_self_fused_faces': 0, 'n_self_revisits_path_only': 0, 'n_revisit_pairs': 0, 'self_s_um': None}, 'I_cjunc': 5.555555555555536, 'reason': None, 'I_legacy_cjunc_off': 12.499999999999979, 'I_hand_chain': 12.5, 'I_hand_chain_plus_Rj': 5.555555555555555}
+face_adjacent_gap_s<s_min {'pieces': 2, 'gap_um': 0.6499999999999999, 's_min': 3.0, 'census': {'n_self_candidates': 0, 'n_self_kept': 0, 'n_self_filtered': 0, 'n_self_fused_faces': 0, 'n_self_revisits_path_only': 0, 'n_revisit_pairs': 0, 'self_s_um': None}, 'I_cjunc': 5.88235294117645, 'reason': None, 'I_legacy_cjunc_off': 12.499999999999979, 'I_hand_chain': 12.5, 'I_hand_chain_plus_Rj': 5.555555555555555}
+face_adjacent_gap_s>=s_min {'pieces': 2, 'gap_um': 0.6499999999999999, 's_min': 0.5, 'census': {'n_self_candidates': 0, 'n_self_kept': 0, 'n_self_filtered': 0, 'n_self_fused_faces': 0, 'n_self_revisits_path_only': 0, 'n_revisit_pairs': 0, 'self_s_um': None}, 'I_cjunc': 5.88235294117645, 'reason': None, 'I_legacy_cjunc_off': 12.499999999999979, 'I_hand_chain': 12.5, 'I_hand_chain_plus_Rj': 5.555555555555555}
+rc=0 t=6s
+=== probe_gap_revisit_prod
+same_cell (ends z 0.47 · 0.59) {'gap_um': 0.12, 'n_pieces': 2, 'n_self_candidates': 0, 'n_self_revisits_path_only': 0, 'n_self_fused_faces': 0, 'self_s_um': None, 'sigma_cjunc': 0.05925523546710423, 'reason': None, 'sigma_legacy_off': 872.664444444446}
+face_adjacent (ends z 0.40 · 0.52) {'gap_um': 0.12, 'n_pieces': 2, 'n_self_candidates': 0, 'n_self_revisits_path_only': 0, 'n_self_fused_faces': 0, 'self_s_um': None, 'sigma_cjunc': 0.059255738412986515, 'reason': None, 'sigma_legacy_off': 872.664444444446}
+rc=0 t=1s
+=== probe_self_vs_distinct
+i_same_fid {'n_self_instances': 0, 'Lc': [], 'mult': [], 'centreline_gap_um': 1.2, 'D_um': 1.1, 'I_Rj_1e3': 5.88235294117645, 'I_Rj_inf': 5.88235294117645, 'junction_effect_rel': 0.0}
+i_distinct_fids {'n_instances': 0, 'n_unreg_faces': 4, 'n_cut_site_faces': 0, 'd0': []}
+ii_same_fid {'leg_centreline_min_um': 0.1414213562373093, '2rf': 1.0, 'self_instances_between_legs': [], 'all_instances': [(True, (1, 2, 3), (2, 2, 3), 18.100000000000016)]}
+ii_distinct_fids {'n_instances': 1, 'd0': [0.1414213562373093], 'Lc': [2.989949493661167]}
+rc=0 t=1s
+=== probe_ptfe_monotone
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview2_impl/probe_ptfe_monotone.py", line 25, in <module>
+    pl = plan(reg, rj, ptfe_stamp='centerline', ptfe_jlaw='P0')
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview2_impl/pcommon.py", line 100, in plan
+    return CJ.cjunc_plan(reg, rj, **k)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a388f740a6ce4524d/scripts/carbon_junction.py", line 1944, in cjunc_plan
+    raise ValueError('cjunc_plan: 접합 + ptfe_stamp centerline = 거부 (10-21 사전 리뷰 PRE-impl-03 · 1저자 Q-C — centerline 은 VGCF 셀을 '
+ValueError: cjunc_plan: 접합 + ptfe_stamp centerline = 거부 (10-21 사전 리뷰 PRE-impl-03 · 1저자 Q-C — centerline 은 VGCF 셀을 sid 7 로 덮는다: 옛 판은 덮인 접점의 포트를 옆 셀로 옮겨 절연체를 더해 σ 가 올랐다 (Rayleigh 위반) · 접합은 off · face_alpha 에서만)
+rc=1 t=1s
+=== probe_sdcp_relocate
+{'sid_A_top': 5, 'ports': [((2, 1, 7), (2, 1, 3))], 'I_Rj_1e3': 11.904761904761884, 'I_Rj_inf': 11.904761904761884, 'hand_sv_only': 11.904761904761884, 'hand_sv_plus_relocated_junction': 12.15351812366736, 'relocated_junction_adds_rel': 0.0}
+rc=0 t=1s
+=== probe_sv_cf
+single_fibre_sdcp_on_path {'n_sdcp_cells': 1, 'n_instances': 0, 'n_junction_edges': 0, 'I': 13.513513513513487, 'reason': None, 'cf_status': 'computed', 'cf_ratio': 1.0, 'cf_flag': None, 'n_sv_faces_cut': 0, 'sv_local_dissipation': {'kind': 'diagnostic_local_dissipation', 'sv_share': 0.1891891891891893, 'vv_junction_share': 0.0, 'meaning': 'SV 면 + SDCP 셀 소산 몫 = 국소 저항 민감도 — 경로 지배 · 우회 크기 보증 아님 (RCA-06 · 반사실 대조 = 선택 노브)'}}
+F1_junction_sdcp_on_A_far {'n_sdcp_cells': 1, 'n_instances': 1, 'n_junction_edges': 1, 'I': 4.9019607843137525, 'reason': None, 'cf_status': 'computed', 'cf_ratio': 1.0, 'cf_flag': None, 'n_sv_faces_cut': 0, 'sv_local_dissipation': {'kind': 'diagnostic_local_dissipation', 'sv_share': 0.06862745098039191, 'vv_junction_share': 0.49019607843137253, 'meaning': 'SV 면 + SDCP 셀 소산 몫 = 국소 저항 민감도 — 경로 지배 · 우회 크기 보증 아님 (RCA-06 · 반사실 대조 = 선택 노브)'}}
+F1_junction_no_sdcp {'n_sdcp_cells': 0, 'n_instances': 1, 'n_junction_edges': 1, 'I': 4.761904761904723, 'reason': None, 'cf_status': 'computed', 'cf_ratio': 1.0, 'cf_flag': None, 'n_sv_faces_cut': 0, 'sv_local_dissipation': {'kind': 'diagnostic_local_dissipation', 'sv_share': 0.0, 'vv_junction_share': 0.4761904761904756, 'meaning': 'SV 면 + SDCP 셀 소산 몫 = 국소 저항 민감도 — 경로 지배 · 우회 크기 보증 아님 (RCA-06 · 반사실 대조 = 선택 노브)'}}
+rc=0 t=0s
+=== probe_k_boundary
+3.5 {'theta': 90.0, 'k': 1, 'Lc_over_Lpar': 1.0000000000000002, 'ports': [((3, 1, 3), (3, 1, 3))], 'I': 4.347826086956497, 'I_rel_to_90deg': 0.0, 'same_sid_as_90deg': True}
+3.5 {'theta': 89.9999, 'k': 1, 'Lc_over_Lpar': 1.0000000000015234, 'ports': [((3, 1, 3), (3, 1, 3))], 'I': 4.347826086956497, 'I_rel_to_90deg': 0.0, 'same_sid_as_90deg': True}
+3.5 {'theta': 89.999, 'k': 1, 'Lc_over_Lpar': 1.0000000001523088, 'ports': [((3, 1, 3), (3, 1, 3))], 'I': 4.347826086956497, 'I_rel_to_90deg': 0.0, 'same_sid_as_90deg': True}
+3.5 {'theta': 89.99, 'k': 2, 'Lc_over_Lpar': 1.0000000152308715, 'ports': [((2, 1, 3), (3, 1, 3)), ((3, 1, 3), (3, 1, 3))], 'I': 4.302203595888487, 'I_rel_to_90deg': -0.010493172945642176, 'same_sid_as_90deg': True}
+3.5 {'theta': 89.9, 'k': 2, 'Lc_over_Lpar': 1.0000015230890327, 'ports': [((2, 1, 3), (3, 1, 3)), ((3, 1, 3), (3, 1, 3))], 'I': 4.302206388434282, 'I_rel_to_90deg': -0.010492530660109417, 'same_sid_as_90deg': True}
+3.0 {'theta': 90.0, 'k': 1, 'Lc_over_Lpar': 1.0000000000000002, 'ports': [((3, 1, 3), (3, 1, 2))], 'I': 4.545454545454519, 'I_rel_to_90deg': 0.0, 'same_sid_as_90deg': True}
+3.0 {'theta': 89.9999, 'k': 1, 'Lc_over_Lpar': 1.0000000000015234, 'ports': [((3, 1, 2), (3, 1, 2))], 'I': 4.347826086956497, 'I_rel_to_90deg': -0.043478260869565216, 'same_sid_as_90deg': False}
+3.0 {'theta': 89.999, 'k': 1, 'Lc_over_Lpar': 1.0000000001523088, 'ports': [((3, 1, 2), (3, 1, 2))], 'I': 4.347826086956497, 'I_rel_to_90deg': -0.043478260869565216, 'same_sid_as_90deg': False}
+3.0 {'theta': 89.99, 'k': 2, 'Lc_over_Lpar': 1.0000000152308715, 'ports': [((2, 1, 2), (3, 1, 2)), ((3, 1, 3), (3, 1, 3))], 'I': 4.396728045818898, 'I_rel_to_90deg': -0.03271982991983676, 'same_sid_as_90deg': False}
+3.0 {'theta': 89.9, 'k': 2, 'Lc_over_Lpar': 1.0000015230890327, 'ports': [((2, 1, 2), (3, 1, 2)), ((3, 1, 3), (3, 1, 3))], 'I': 4.3967309622662265, 'I_rel_to_90deg': -0.03271918830142458, 'same_sid_as_90deg': False}
+3.25 {'theta': 90.0, 'k': 1, 'Lc_over_Lpar': 1.0000000000000002, 'ports': [((3, 1, 3), (3, 1, 3))], 'I': 4.347826086956497, 'I_rel_to_90deg': 0.0, 'same_sid_as_90deg': True}
+3.25 {'theta': 89.9999, 'k': 1, 'Lc_over_Lpar': 1.0000000000015234, 'ports': [((3, 1, 3), (3, 1, 3))], 'I': 4.347826086956497, 'I_rel_to_90deg': 0.0, 'same_sid_as_90deg': True}
+3.25 {'theta': 89.999, 'k': 1, 'Lc_over_Lpar': 1.0000000001523088, 'ports': [((3, 1, 3), (3, 1, 3))], 'I': 4.347826086956497, 'I_rel_to_90deg': 0.0, 'same_sid_as_90deg': True}
+3.25 {'theta': 89.99, 'k': 2, 'Lc_over_Lpar': 1.0000000152308715, 'ports': [((2, 1, 3), (3, 1, 3)), ((3, 1, 3), (3, 1, 3))], 'I': 4.302203595888487, 'I_rel_to_90deg': -0.010493172945642176, 'same_sid_as_90deg': True}
+3.25 {'theta': 89.9, 'k': 2, 'Lc_over_Lpar': 1.0000015230890327, 'ports': [((2, 1, 3), (3, 1, 3)), ((3, 1, 3), (3, 1, 3))], 'I': 4.302206388434282, 'I_rel_to_90deg': -0.010492530660109417, 'same_sid_as_90deg': True}
+rc=0 t=2s
+=== probe_k_boundary_prod
+100.0 {'k_90': 1, 'k_89.99': 2, 'sigma_90': 117.38368116669824, 'sigma_89.99': 116.23542103118724, 'jump_rel': -0.009782110461166504, 'same_sid': True}
+10000.0 {'k_90': 1, 'k_89.99': 2, 'sigma_90': 2.4421868928245782, 'sigma_89.99': 2.441674553932236, 'jump_rel': -0.000209786930659428, 'same_sid': True}
+1000000.0 {'k_90': 1, 'k_89.99': 2, 'sigma_90': 0.024688633698190562, 'sigma_89.99': 0.024688581688268964, 'jump_rel': -2.1066342607012345e-06, 'same_sid': True}
+rc=0 t=0s
+=== probe_closed_loop
+s_min_3 (s ≥ s_min) {'n_self_instances': 0, 'self_s': None, 'n_revisit_pairs': 0, 'path_only': 0, 'I': 25.641025641025685, 'reason': None}
+s_min_100 (s < s_min) {'n_self_instances': 0, 'self_s': None, 'n_revisit_pairs': 0, 'path_only': 0, 'I': 25.641025641025685, 'reason': None}
+legacy_off {'I': 25.641025641025685}
+hand_continuous_ring 25.64102564102568
+rc=0 t=1s
+=== probe_zero_binding
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview2_impl/probe_zero_binding.py", line 28, in <module>
+    out = {'own_cert_problem': RC.conv_cert_problem(cert, 0.0), 'foreign_cert_problem': RC.conv_cert_problem(foreign, 0.0),
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: conv_cert_problem() missing 1 required positional argument: 'man'
+rc=1 t=1s
+=== probe_mut_cf
+{'base_ratio': 10.291253935345084, 'mutant_fixed_signature': {'ratio': None, 'exception': "TypeError: CjuncAssembler._assemble() got an unexpected keyword argument 'drop_cat'"}, 'mutant_test_as_written': {'ratio': None, 'exception': "TypeError: cf_nodrop_old() got an unexpected keyword argument 'certify'"}}
+rc=0 t=1s

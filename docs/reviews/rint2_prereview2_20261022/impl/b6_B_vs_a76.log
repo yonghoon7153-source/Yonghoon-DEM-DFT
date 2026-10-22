@@ -1,0 +1,36 @@
+
+── B0u --old-scripts 대조의 경로 차이 · 허용 목록 (합성 · 기반 사본 없이 · ★ 10-21 D 브리프 묶음 5)
+  PASS  B0u-0 도구 (old_tree_diff · old_diff_problems · case_tags · OLD_DIFF_ALLOW) 가 한 곳 (이 파일 · z3 O 묶음이 import)
+  PASS  B0u-1 경로 차이 — 양쪽 dict 일 때만 내려감 · 목록 통째 · 새 칸 + · 없어진 칸 − · 값 ~ (1 ↔ 1.0 도 다름 = 바이트 기준) · 경로 순
+  PASS  B0u-2 같은 값 = 차이 없음 (NaN 끼리 · 키 순서 무관)
+  PASS  B0u-3 경우 표지 — off = 없음 · face_alpha + rtol = 둘 · cjunc
+  PASS  B0u-4 [Z3 sid_off — face_alpha 경우] — 문제 0 · 허용 1
+  PASS  B0u-4 [Z3 sid_off — 끈 경우 (off) = 실패] — 문제 1 · 허용 0
+  PASS  B0u-4 [Z3 sid_off — rtol 경우 = 실패 (표지 밖)] — 문제 1 · 허용 0
+  PASS  B0u-4 [sid_off 꼬리 붙은 경로 = 실패 (전체 일치)] — 문제 1 · 허용 0
+  PASS  B0u-4 [sid_off 없어짐 (−) = 실패 (연산 다름)] — 문제 1 · 허용 0
+  PASS  B0u-4 [CG 반복 수 + 증서 반복 수 — rtol] — 문제 0 · 허용 3
+  PASS  B0u-4 [증서 v2 칸 · 판 — rtol] — 문제 0 · 허용 3
+  PASS  B0u-4 [증서 판 없어짐 (−) = 실패] — 문제 1 · 허용 0
+  PASS  B0u-4 [σ 값 바뀜 = 언제나 실패] — 문제 1 · 허용 0
+  PASS  B0u-4 [S1 부피 · 면 α 진단 — face_alpha] — 문제 0 · 허용 2
+  PASS  B0u-4 [S1 부피 칸 — cjunc 만 켠 경우 = 실패] — 문제 1 · 허용 0
+  PASS  B0u-4 [접합 SV 이름 바뀜 — cjunc] — 문제 0 · 허용 2
+  PASS  B0u-4 [p3ca id 바뀜 — cjunc 만 · face_alpha 는 실패] — 문제 1 · 허용 0
+  PASS  B0u-4 [접합 칸 — 끈 경우 = 실패] — 문제 1 · 허용 0
+  PASS  B0u-5 --expect-identical = 허용 목록을 안 쓴다 (허용 칸도 실패)
+  PASS  B0u-6 기반 사본 환경 차이 (docs/ 없음 → 집전체 앵커 대체) = 실패 + 이유 표시 (허용 아님)
+  PASS  B0u-7 표 꼴 — (세대, 연산 ∈ {+,−,~}, 정규식, 경우 표지 ∈ {face_alpha, rtol, cjunc}, 사유) · 정규식 컴파일
+
+── B 끔 비트 동일 — 고치기 전 payload 와 대조 (--old-scripts)
+  PASS  B0 커밋된 영수증 44 개 — 새 receipt_digest = 고치기 전 함수 (OUTDIR 이름 · 코호트 디렉터리 보존)
+  PASS  B0b 커밋된 영수증 ↔ 같은 디렉터리 팔 34 짝 — receipt_match 판정이 고치기 전과 같다
+  PASS  B1 payload [off LEAN2] — 기반 ↔ 새: 차이가 허용 목록 (경우 표지 끔) 안 · 허용된 칸 0 (세대 -)
+  PASS  B1 payload [centerline LEAN2] — 기반 ↔ 새: 차이가 허용 목록 (경우 표지 끔) 안 · 허용된 칸 0 (세대 -)
+  PASS  B1 payload [off LEAN3] — 기반 ↔ 새: 차이가 허용 목록 (경우 표지 끔) 안 · 허용된 칸 0 (세대 -)
+  PASS  B1 payload [face_alpha LEAN2] — 기반 ↔ 새: 차이가 허용 목록 (경우 표지 ['face_alpha']) 안 · 허용된 칸 0 (세대 -)
+  PASS  B1 payload [off LEAN2 + rtol 1e-12] — 기반 ↔ 새: 차이가 허용 목록 (경우 표지 ['rtol']) 안 · 허용된 칸 6 (세대 ['RCA2'])
+  PASS  B1 payload [off LEAN2 + 접합] — 기반 ↔ 새: 차이가 허용 목록 (경우 표지 ['cjunc']) 안 · 허용된 칸 27 (세대 ['RCA1', 'RCA2'])
+  PASS  B1 payload [face_alpha LEAN2 + rtol] — 기반 ↔ 새: 차이가 허용 목록 (경우 표지 ['face_alpha', 'rtol']) 안 · 허용된 칸 6 (세대 ['RCA2'])
+
+30 PASS · 0 FAIL

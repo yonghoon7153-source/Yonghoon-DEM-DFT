@@ -1,0 +1,180 @@
+[
+ {
+  "id": "BASE_J1",
+  "file": "scripts/carbon_junction.py",
+  "what": "기준선 (변이 없음)",
+  "old": "        if len(np.unique(grp[m & pas])) >= 2:\n            continue\n        cut |= m & ~pas",
+  "new": "        if len(np.unique(grp[m & pas])) >= 2:\n            continue\n        cut |= m & ~pas",
+  "cmd": [
+   "python3",
+   "-I",
+   "scripts/test_carbon_junction.py",
+   "--only",
+   "QD,SV,RCA06,RCA06-H,MUT-RCA,MUT-RCA2,CEN"
+  ],
+  "expect": []
+ },
+ {
+  "id": "BASE_J3",
+  "file": "scripts/carbon_junction.py",
+  "what": "기준선 (변이 없음)",
+  "old": "    return ~fl | ~np.asarray(_self_is_junction(s_um, s_min_um), bool)",
+  "new": "    return ~fl | ~np.asarray(_self_is_junction(s_um, s_min_um), bool)",
+  "cmd": [
+   "python3",
+   "-I",
+   "scripts/test_carbon_junction.py",
+   "--only",
+   "GAP,RING,SELFD,QC,QD,KBND,FLOOR,FP,PIECE4,CEN,KINK,KINK-R,SMIN,REC,RCA03"
+  ],
+  "expect": []
+ },
+ {
+  "id": "BASE_J4",
+  "file": "scripts/carbon_junction.py",
+  "what": "기준선 (변이 없음)",
+  "old": "    if not pos['live'][p]:\n        lin = int(pos['lin'][p])",
+  "new": "    if not pos['live'][p]:\n        lin = int(pos['lin'][p])",
+  "cmd": [
+   "python3",
+   "-I",
+   "scripts/test_carbon_junction.py",
+   "--only",
+   "QC,QD,SV,P-junc,S3,MUT-RCA2"
+  ],
+  "expect": []
+ },
+ {
+  "id": "BASE_J5",
+  "file": "scripts/carbon_junction.py",
+  "what": "기준선 (변이 없음)",
+  "old": "        joined = bool(closed and len(ixs) >= 2)",
+  "new": "        joined = bool(closed and len(ixs) >= 2)",
+  "cmd": [
+   "python3",
+   "-I",
+   "scripts/test_carbon_junction.py",
+   "--only",
+   "RING,GAP,PIECE,PIECE4,MUT-RCA2"
+  ],
+  "expect": []
+ },
+ {
+  "id": "BASE_J6",
+  "file": "scripts/carbon_junction.py",
+  "what": "기준선 (변이 없음)",
+  "old": "    s = np.where(L > 0.0, np.minimum(s, L - s), s)\n    fl = np.asarray(_self_floor(s, d, D), bool).reshape(len(s))",
+  "new": "    s = np.where(L > 0.0, np.minimum(s, L - s), s)\n    fl = np.asarray(_self_floor(s, d, D), bool).reshape(len(s))",
+  "cmd": [
+   "python3",
+   "-I",
+   "scripts/test_carbon_junction.py",
+   "--only",
+   "RING,SELFD,FLOOR,CEN,MUT-RCA2"
+  ],
+  "expect": []
+ },
+ {
+  "id": "BASE_J7",
+  "file": "scripts/carbon_junction.py",
+  "what": "기준선 (변이 없음)",
+  "old": "    close = d <= D\n    i, j, d, sp_, tp_, C1, C2 = i[close], j[close], d[close], sp_[close], tp_[close], C1[close], C2[close]",
+  "new": "    close = d <= D\n    i, j, d, sp_, tp_, C1, C2 = i[close], j[close], d[close], sp_[close], tp_[close], C1[close], C2[close]",
+  "cmd": [
+   "python3",
+   "-I",
+   "scripts/test_carbon_junction.py",
+   "--only",
+   "SELFD,FLOOR,KINK,KINK-R,CEN,MUT-RCA2"
+  ],
+  "expect": []
+ },
+ {
+  "id": "BASE_J8",
+  "file": "scripts/carbon_junction.py",
+  "what": "기준선 (변이 없음)",
+  "old": "            if bool(np.asarray(_continuity(s_f, d_f, D, thr['s_min_um']))):",
+  "new": "            if bool(np.asarray(_continuity(s_f, d_f, D, thr['s_min_um']))):",
+  "cmd": [
+   "python3",
+   "-I",
+   "scripts/test_carbon_junction.py",
+   "--only",
+   "SELFD,KINK,KINK-R,SMIN,REC,FOOT,RCA03,CEN"
+  ],
+  "expect": []
+ },
+ {
+  "id": "BASE_J10",
+  "file": "scripts/carbon_junction.py",
+  "what": "기준선 (변이 없음)",
+  "old": "                    uf.union((c, p), (c, q))\n                    passing_root.add((c, p))\n                    continue",
+  "new": "                    uf.union((c, p), (c, q))\n                    passing_root.add((c, p))\n                    continue",
+  "cmd": [
+   "python3",
+   "-I",
+   "scripts/test_carbon_junction.py",
+   "--only",
+   "QD,SV,MUT-RCA2,CEN"
+  ],
+  "expect": []
+ },
+ {
+  "id": "BASE_R1",
+  "file": "scripts/run_contract.py",
+  "what": "기준선 (변이 없음)",
+  "old": "    if (cert.get('fp_cjunc_registry'), cert.get('fp_cjunc_rows')) != want_cj:",
+  "new": "    if (cert.get('fp_cjunc_registry'), cert.get('fp_cjunc_rows')) != want_cj:",
+  "cmd": [
+   "python3",
+   "-I",
+   "scripts/test_step3_target_cert.py",
+   "--only",
+   "T21,T13"
+  ],
+  "expect": []
+ },
+ {
+  "id": "BASE_R2",
+  "file": "scripts/run_contract.py",
+  "what": "기준선 (변이 없음)",
+  "old": "        if type(nc) is not int or nc <= 0:                       # noqa: E721",
+  "new": "        if type(nc) is not int or nc <= 0:                       # noqa: E721",
+  "cmd": [
+   "python3",
+   "-I",
+   "scripts/test_ca_ext_b6.py",
+   "--only",
+   "S,SP"
+  ],
+  "expect": []
+ },
+ {
+  "id": "BASE_S1",
+  "file": "scripts/ca_s0_census.py",
+  "what": "기준선 (변이 없음)",
+  "old": "            _rrc.require_plan_numbers(robj)",
+  "new": "            _rrc.require_plan_numbers(robj)",
+  "cmd": [
+   "python3",
+   "-I",
+   "scripts/test_ca_s0_census.py"
+  ],
+  "expect": []
+ },
+ {
+  "id": "BASE_V1",
+  "file": "scripts/ca_ext_svcf.py",
+  "what": "기준선 (변이 없음)",
+  "old": "    if (fl == 'SV_DEPENDENT') != dep:",
+  "new": "    if (fl == 'SV_DEPENDENT') != dep:",
+  "cmd": [
+   "python3",
+   "-I",
+   "scripts/test_ca_ext_b6.py",
+   "--only",
+   "SP,R"
+  ],
+  "expect": []
+ }
+]

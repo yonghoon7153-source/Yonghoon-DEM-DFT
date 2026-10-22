@@ -1,0 +1,10 @@
+{
+ "1_own_zero_cert": null,
+ "2_foreign_bed_zero_cert": "CERT|bind| 증서 격자 지문 0123456789abcdef0123456789abcdef ≠ 매니페스트 ca_ext.cjunc.evidence.fp.sid c83492d61491858df7a8483835884449 — 다른 침대 · 다른 격자의 증서",
+ "3a_own_positive_cert": null,
+ "3b_same_sigma_other_plan_rows": "CERT|bind| 증서 접합 지문 ('02b0133a4fe65cc5daecfccfda6594e1', '6b838d1175c74ded3e997664f4cd728f') ≠ 매니페스트 ('02b0133a4fe65cc5daecfccfda6594e1', '415d9f08b92ec2db329d45bedafb59fb') (접합 = 주 전자 솔브만) — 다른 계획 · 다른 채널의 증서",
+ "4_missing_bind_field": "CERT|bind| 증서 결합 칸 ['fp_cjunc_rows'] 이 없다",
+ "5_other_bind_version": "CERT|bind| 결합 판 'cert-bind-v0' ≠ 이 코드의 'cert-bind-v1' (결합 칸 없는 옛 증서 · 다른 판)",
+ "6_manifest_missing_registry_fp": "CERT|bind| 매니페스트 ca_ext.cjunc.evidence.fp 의 registry None · plan_rows '6b838d1175c74ded3e997664f4cd728f' (둘 다 소문자 hex 32 — 접합 런의 주 전자 솔브는 계획이 있다)",
+ "7_no_manifest": "CERT|bind| 매니페스트가 dict 가 아니다 (NoneType) — 증서를 이 런에 묶을 수 없다"
+}

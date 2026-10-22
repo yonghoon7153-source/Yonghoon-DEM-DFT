@@ -1,0 +1,69 @@
+{
+ "finite_200": {
+  "I": 5.1376597836774165,
+  "I_hand": 5.137659783677506,
+  "rel": 1.7460482820351646e-14,
+  "reason": null,
+  "status": "POSITIVE_SOLVED",
+  "ok": true,
+  "pass": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "err_bound_rel": 1.0182400377413165e-13,
+  "conv_cert_problem": null,
+  "record_R_j": 200.0,
+  "n_contract": 0,
+  "n_none_inf": 0,
+  "quantitative": true
+ },
+ "floor_inf": {
+  "I": 0.0,
+  "I_hand": 0.0,
+  "rel": 0.0,
+  "reason": "no_through_component",
+  "status": "VALID_ZERO_TOPOLOGY",
+  "ok": true,
+  "pass": [
+   null,
+   null,
+   null,
+   null
+  ],
+  "err_bound_rel": null,
+  "conv_cert_problem": null,
+  "record_R_j": "inf",
+  "n_contract": 0,
+  "n_none_inf": 5,
+  "quantitative": true
+ },
+ "ceiling_0": {
+  "I": 5.555555555555514,
+  "I_hand": 5.555555555555514,
+  "rel": 0.0,
+  "reason": null,
+  "status": "POSITIVE_SOLVED",
+  "ok": true,
+  "pass": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "err_bound_rel": 9.384493182551594e-14,
+  "conv_cert_problem": null,
+  "record_R_j": 0.0,
+  "n_contract": 5,
+  "n_none_inf": 0,
+  "quantitative": true
+ },
+ "ceiling_F1S": {
+  "I": 15.841584158415834,
+  "reason": null,
+  "status": "POSITIVE_SOLVED",
+  "ok": true,
+  "conv_cert_problem": null
+ }
+}

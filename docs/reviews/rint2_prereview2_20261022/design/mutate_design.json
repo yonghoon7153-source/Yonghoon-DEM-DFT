@@ -1,0 +1,380 @@
+{
+ "Ma_judge_set_NC_priority_off": {
+  "file": "scripts/rint_r_chain.py",
+  "test": "scripts/test_rint_r_chain.py",
+  "rc": 1,
+  "caught": true,
+  "n_fail": 2,
+  "fail_ids": [
+   "U11",
+   "U11b"
+  ],
+  "tail": [
+   "test_rint_r_chain: 172/174 PASS (91.0 s)   FAILED: ['U11', 'U11b']"
+  ],
+  "seconds": 91.3
+ },
+ "Mb_outside_band_ignores_e": {
+  "file": "scripts/rint_r_chain.py",
+  "test": "scripts/test_rint_r_chain.py",
+  "rc": 1,
+  "caught": true,
+  "n_fail": 3,
+  "fail_ids": [
+   "U01e",
+   "U12b",
+   "U12c"
+  ],
+  "tail": [
+   "test_rint_r_chain: 171/174 PASS (91.0 s)   FAILED: ['U01e', 'U12b', 'U12c']"
+  ],
+  "seconds": 91.3
+ },
+ "Mc_edge_hit_ignores_e": {
+  "file": "scripts/rint_r_chain.py",
+  "test": "scripts/test_rint_r_chain.py",
+  "rc": 1,
+  "caught": true,
+  "n_fail": 2,
+  "fail_ids": [
+   "U12",
+   "L22"
+  ],
+  "tail": [
+   "test_rint_r_chain: 172/174 PASS (94.8 s)   FAILED: ['U12', 'L22']"
+  ],
+  "seconds": 95.2
+ },
+ "Md_end_origin_push_off": {
+  "file": "scripts/rint_r_chain.py",
+  "test": "scripts/test_rint_r_chain.py",
+  "rc": 1,
+  "caught": true,
+  "n_fail": 3,
+  "fail_ids": [
+   "L18",
+   "U10",
+   "L21"
+  ],
+  "tail": [
+   "test_rint_r_chain: 171/174 PASS (87.0 s)   FAILED: ['L18', 'U10', 'L21']"
+  ],
+  "seconds": 87.3
+ },
+ "Me_states_differ_rule_off": {
+  "file": "scripts/rint_r_chain.py",
+  "test": "scripts/test_rint_r_chain.py",
+  "rc": 1,
+  "caught": true,
+  "n_fail": 1,
+  "fail_ids": [
+   "U06"
+  ],
+  "tail": [
+   "test_rint_r_chain: 173/174 PASS (95.2 s)   FAILED: ['U06']"
+  ],
+  "seconds": 95.6
+ },
+ "Mf_W_pos_off": {
+  "file": "scripts/rint_r_chain.py",
+  "test": "scripts/test_rint_r_chain.py",
+  "rc": 1,
+  "caught": true,
+  "n_fail": 2,
+  "fail_ids": [
+   "U06",
+   "U13b"
+  ],
+  "tail": [
+   "test_rint_r_chain: 172/174 PASS (91.1 s)   FAILED: ['U06', 'U13b']"
+  ],
+  "seconds": 91.5
+ },
+ "Mg_variant_NC_after_name": {
+  "file": "scripts/rint_r_chain.py",
+  "test": "scripts/test_rint_r_chain.py",
+  "rc": 1,
+  "caught": true,
+  "n_fail": 4,
+  "fail_ids": [
+   "U14",
+   "V18",
+   "V21",
+   "V22"
+  ],
+  "tail": [
+   "test_rint_r_chain: 170/174 PASS (93.6 s)   FAILED: ['U14', 'V18', 'V21', 'V22']"
+  ],
+  "seconds": 93.9
+ },
+ "Mh_variant_own_origin_flag_off": {
+  "file": "scripts/rint_r_chain.py",
+  "test": "scripts/test_rint_r_chain.py",
+  "rc": 1,
+  "caught": true,
+  "n_fail": 1,
+  "fail_ids": [
+   "U14"
+  ],
+  "tail": [
+   "test_rint_r_chain: 173/174 PASS (94.1 s)   FAILED: ['U14']"
+  ],
+  "seconds": 94.4
+ },
+ "Mi_sentence_no_sens_suffix": {
+  "file": "scripts/rint_r_chain.py",
+  "test": "scripts/test_rint_r_chain.py",
+  "rc": 1,
+  "caught": true,
+  "n_fail": 4,
+  "fail_ids": [
+   "V02",
+   "U07",
+   "V21",
+   "V22"
+  ],
+  "tail": [
+   "test_rint_r_chain: 170/174 PASS (90.3 s)   FAILED: ['V02', 'U07', 'V21', 'V22']"
+  ],
+  "seconds": 90.6
+ },
+ "Mj_sentence_no_point_suffix": {
+  "file": "scripts/rint_r_chain.py",
+  "test": "scripts/test_rint_r_chain.py",
+  "rc": 1,
+  "caught": true,
+  "n_fail": 1,
+  "fail_ids": [
+   "U07"
+  ],
+  "tail": [
+   "test_rint_r_chain: 173/174 PASS (93.1 s)   FAILED: ['U07']"
+  ],
+  "seconds": 93.4
+ },
+ "Mk_sens_incomplete_never": {
+  "file": "scripts/rint_r_chain.py",
+  "test": "scripts/test_rint_r_chain.py",
+  "rc": 1,
+  "caught": true,
+  "n_fail": 3,
+  "fail_ids": [
+   "V02",
+   "V21",
+   "V22"
+  ],
+  "tail": [
+   "test_rint_r_chain: 171/174 PASS (89.9 s)   FAILED: ['V02', 'V21', 'V22']"
+  ],
+  "seconds": 90.2
+ },
+ "Ml_grade_boundary_strict": {
+  "file": "scripts/rint_r_chain.py",
+  "test": "scripts/test_rint_r_chain.py",
+  "rc": 0,
+  "caught": false,
+  "n_fail": 0,
+  "fail_ids": [],
+  "tail": [
+   "test_rint_r_chain: 174/174 PASS (89.0 s)"
+  ],
+  "seconds": 89.3
+ },
+ "Mm_U_equals_E": {
+  "file": "scripts/rint_r_chain.py",
+  "test": "scripts/test_rint_r_chain.py",
+  "rc": 1,
+  "caught": true,
+  "n_fail": 2,
+  "fail_ids": [
+   "U03",
+   "U06"
+  ],
+  "tail": [
+   "test_rint_r_chain: 172/174 PASS (89.0 s)   FAILED: ['U03', 'U06']"
+  ],
+  "seconds": 89.2
+ },
+ "Mn_require_numbers_drop_scope": {
+  "file": "scripts/rint_r_chain.py",
+  "test": "scripts/test_rint_r_chain.py",
+  "rc": 1,
+  "caught": true,
+  "n_fail": 1,
+  "fail_ids": [
+   "N01"
+  ],
+  "tail": [
+   "test_rint_r_chain: 173/174 PASS (92.2 s)   FAILED: ['N01']"
+  ],
+  "seconds": 92.5
+ },
+ "Mn2_require_numbers_drop_scope_S0": {
+  "file": "scripts/rint_r_chain.py",
+  "test": "scripts/test_ca_s0_census.py",
+  "rc": 1,
+  "caught": true,
+  "n_fail": 1,
+  "fail_ids": [
+   "L3v"
+  ],
+  "tail": [
+   "FAIL: L3v R 런 계획 결과 전 등록 숫자 sv_cf_scope = null (⬜ · Q-G — 단계 2 전에 등록) → 거부"
+  ],
+  "seconds": 23.4
+ },
+ "Mo_stage2_gate_no_numbers": {
+  "file": "scripts/ca_s0_census.py",
+  "test": "scripts/test_ca_s0_census.py",
+  "rc": 1,
+  "caught": true,
+  "n_fail": 5,
+  "fail_ids": [
+   "L3v",
+   "L3v",
+   "L3v",
+   "L3v",
+   "L3w"
+  ],
+  "tail": [
+   "FAIL: L3v R 런 계획 결과 전 등록 숫자 max_ladder_points = null (⬜ · Q-G — 단계 2 전에 등록) → 거부 | L3v R 런 계획 결과 전 등록 숫자 calib_rj_ratio_max = null (⬜ · Q-G — 단계 2 전에 등록) → 거부 | L3v R 런 계획 결과 전 등록 숫자 sv_cf_threshold = null (⬜ · Q-G — 단계 2 전에 등록) → 거부 | L3v R 런 계획 결과 전 등록 숫자 sv_cf_scope = null (⬜ · Q-G — 단계 2 전에 등록) → 거부 | L3w Q-G 거부 사유 = 사슬 require_plan_numbers 의 PLAN_NUMBER_UNREGISTERED (sv_cf_threshold · 단계 2 전 등록)"
+  ],
+  "seconds": 21.3
+ },
+ "Mp_sv_on_in_variants": {
+  "file": "scripts/rint_r_chain.py",
+  "test": "scripts/test_rint_r_chain.py",
+  "rc": 0,
+  "caught": false,
+  "n_fail": 0,
+  "fail_ids": [],
+  "tail": [
+   "test_rint_r_chain: 174/174 PASS (89.9 s)"
+  ],
+  "seconds": 90.2
+ },
+ "Mq_stop_at_e_lt_emin": {
+  "file": "scripts/rint_r_chain.py",
+  "test": "scripts/test_rint_r_chain.py",
+  "rc": 1,
+  "caught": true,
+  "n_fail": 3,
+  "fail_ids": [
+   "L11",
+   "L11b",
+   "U12b"
+  ],
+  "tail": [
+   "test_rint_r_chain: 171/174 PASS (87.0 s)   FAILED: ['L11', 'L11b', 'U12b']"
+  ],
+  "seconds": 87.3
+ },
+ "Mr_sv_threshold_ge": {
+  "file": "scripts/rint_r_chain.py",
+  "test": "scripts/test_rint_r_chain.py",
+  "rc": 1,
+  "caught": true,
+  "n_fail": 2,
+  "fail_ids": [
+   "V06b",
+   "U08"
+  ],
+  "tail": [
+   "test_rint_r_chain: 172/174 PASS (89.0 s)   FAILED: ['V06b', 'U08']"
+  ],
+  "seconds": 89.3
+ },
+ "Ms_variant_stop_rejects_all": {
+  "file": "scripts/rint_r_chain.py",
+  "test": "scripts/test_rint_r_chain.py",
+  "rc": 1,
+  "caught": true,
+  "n_fail": 3,
+  "fail_ids": [
+   "V21",
+   "V22",
+   "V24"
+  ],
+  "tail": [
+   "test_rint_r_chain: 171/174 PASS (90.7 s)   FAILED: ['V21', 'V22', 'V24']"
+  ],
+  "seconds": 91.0
+ },
+ "Mt_end_candidate_unconfirmed": {
+  "file": "scripts/rint_r_chain.py",
+  "test": "scripts/test_rint_r_chain.py",
+  "rc": 1,
+  "caught": true,
+  "n_fail": 3,
+  "fail_ids": [
+   "U01",
+   "U01e",
+   "U12c"
+  ],
+  "tail": [
+   "test_rint_r_chain: 171/174 PASS (89.3 s)   FAILED: ['U01', 'U01e', 'U12c']"
+  ],
+  "seconds": 89.7
+ },
+ "Mu_stage2_gate_no_tolff_cross": {
+  "file": "scripts/ca_s0_census.py",
+  "test": "scripts/test_ca_s0_census.py",
+  "rc": 1,
+  "caught": true,
+  "n_fail": 1,
+  "fail_ids": [
+   "L3m"
+  ],
+  "tail": [
+   "FAIL: L3m R 런 계획 tol_ff_um ≠ S0 values_um.tol_ff (두 계획 대조) → 거부"
+  ],
+  "seconds": 25.0
+ },
+ "Mv_dbe_origin_threshold_0p2W": {
+  "file": "scripts/rint_r_chain.py",
+  "test": "scripts/test_rint_r_chain.py",
+  "rc": 1,
+  "caught": true,
+  "n_fail": 3,
+  "fail_ids": [
+   "P05",
+   "X05",
+   "U13b"
+  ],
+  "tail": [
+   "test_rint_r_chain: 171/174 PASS (86.5 s)   FAILED: ['P05', 'X05', 'U13b']"
+  ],
+  "seconds": 86.9
+ },
+ "Mw_sbe_origin_0p04": {
+  "file": "scripts/rint_r_chain.py",
+  "test": "scripts/test_rint_r_chain.py",
+  "rc": 1,
+  "caught": true,
+  "n_fail": 4,
+  "fail_ids": [
+   "L19",
+   "V07",
+   "X05",
+   "V20"
+  ],
+  "tail": [
+   "test_rint_r_chain: 170/174 PASS (88.7 s)   FAILED: ['L19', 'V07', 'X05', 'V20']"
+  ],
+  "seconds": 89.1
+ },
+ "Mx_plans_cross_rtol_off": {
+  "file": "scripts/rint_r_chain.py",
+  "test": "scripts/test_rint_r_chain.py",
+  "rc": 1,
+  "caught": true,
+  "n_fail": 1,
+  "fail_ids": [
+   "C06"
+  ],
+  "tail": [
+   "test_rint_r_chain: 173/174 PASS (91.7 s)   FAILED: ['C06']"
+  ],
+  "seconds": 92.1
+ }
+}

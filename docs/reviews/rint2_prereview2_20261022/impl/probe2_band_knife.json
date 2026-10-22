@@ -1,0 +1,58 @@
+{
+ "e0": {
+  "R_j0": "64000.0",
+  "R_j_lo": "10000.0",
+  "R_j_hi": "5990349.747387542",
+  "ratio": 599.0349747387543,
+  "n_runs": 12,
+  "hi_source": "candidate",
+  "lo_source": "outer_neighbor"
+ },
+ "d": 3.7282466537336134e-05,
+ "knife": 3.7283856571471144e-05,
+ "knife*(1-1e-6)": {
+  "R_j0": "64000.0",
+  "R_j_lo": "10000.0",
+  "R_j_hi": "5990349.747387542",
+  "ratio": 599.0349747387543,
+  "n_runs": 12,
+  "hi_source": "candidate",
+  "lo_source": "outer_neighbor"
+ },
+ "knife*(1+1e-6)": {
+  "R_j0": "64000.0",
+  "R_j_lo": "10000.0",
+  "R_j_hi": "10000000.0",
+  "ratio": 1000.0,
+  "n_runs": 12,
+  "hi_source": "outer_neighbor",
+  "lo_source": "outer_neighbor"
+ },
+ "3.7e-5": {
+  "R_j0": "64000.0",
+  "R_j_lo": "10000.0",
+  "R_j_hi": "5990349.747387542",
+  "ratio": 599.0349747387543,
+  "n_runs": 12,
+  "hi_source": "candidate",
+  "lo_source": "outer_neighbor"
+ },
+ "3.8e-5": {
+  "R_j0": "64000.0",
+  "R_j_lo": "10000.0",
+  "R_j_hi": "10000000.0",
+  "ratio": 1000.0,
+  "n_runs": 12,
+  "hi_source": "outer_neighbor",
+  "lo_source": "outer_neighbor"
+ },
+ "1e-4": {
+  "R_j0": "64000.0",
+  "R_j_lo": "10000.0",
+  "R_j_hi": "10000000.0",
+  "ratio": 1000.0,
+  "n_runs": 12,
+  "hi_source": "outer_neighbor",
+  "lo_source": "outer_neighbor"
+ }
+}

@@ -1,0 +1,79 @@
+{
+ "fib30_sdcp3_s0": {
+  "vgcf_cell_frac": 0.033275462962962965,
+  "sdcp_cell_frac": 0.03125,
+  "n_sdcp_components_touching": 2,
+  "n_bridging_components": 2,
+  "n_unsplit_bridging_components": 1,
+  "n_sv_faces_cut_rows": 4,
+  "n_sdcp_bridging_components (fid 기준)": 2
+ },
+ "fib30_sdcp3_s1": {
+  "vgcf_cell_frac": 0.03443287037037037,
+  "sdcp_cell_frac": 0.033998842592592594,
+  "n_sdcp_components_touching": 2,
+  "n_bridging_components": 1,
+  "n_unsplit_bridging_components": 1,
+  "n_sv_faces_cut_rows": 0,
+  "n_sdcp_bridging_components (fid 기준)": 1
+ },
+ "fib30_sdcp3_s2": {
+  "vgcf_cell_frac": 0.03002025462962963,
+  "sdcp_cell_frac": 0.032407407407407406,
+  "n_sdcp_components_touching": 2,
+  "n_bridging_components": 1,
+  "n_unsplit_bridging_components": 0,
+  "n_sv_faces_cut_rows": 6,
+  "n_sdcp_bridging_components (fid 기준)": 1
+ },
+ "fib30_sdcp3_s3": {
+  "vgcf_cell_frac": 0.02459490740740741,
+  "sdcp_cell_frac": 0.033130787037037035,
+  "n_sdcp_components_touching": 2,
+  "n_bridging_components": 2,
+  "n_unsplit_bridging_components": 1,
+  "n_sv_faces_cut_rows": 4,
+  "n_sdcp_bridging_components (fid 기준)": 2
+ },
+ "fib30_sdcp6_s0": {
+  "vgcf_cell_frac": 0.03146701388888889,
+  "sdcp_cell_frac": 0.06517650462962964,
+  "n_sdcp_components_touching": 4,
+  "n_bridging_components": 4,
+  "n_unsplit_bridging_components": 3,
+  "n_sv_faces_cut_rows": 9,
+  "n_sdcp_bridging_components (fid 기준)": 4
+ },
+ "fib30_sdcp6_s1": {
+  "vgcf_cell_frac": 0.033998842592592594,
+  "sdcp_cell_frac": 0.0630787037037037,
+  "n_sdcp_components_touching": 2,
+  "n_bridging_components": 2,
+  "n_unsplit_bridging_components": 1,
+  "n_sv_faces_cut_rows": 4,
+  "n_sdcp_bridging_components (fid 기준)": 2
+ },
+ "fib30_sdcp6_s2": {
+  "vgcf_cell_frac": 0.02922453703703704,
+  "sdcp_cell_frac": 0.06315104166666667,
+  "n_sdcp_components_touching": 4,
+  "n_bridging_components": 3,
+  "n_unsplit_bridging_components": 1,
+  "n_sv_faces_cut_rows": 17,
+  "n_sdcp_bridging_components (fid 기준)": 3
+ },
+ "fib30_sdcp6_s3": {
+  "vgcf_cell_frac": 0.024522569444444444,
+  "sdcp_cell_frac": 0.059751157407407406,
+  "n_sdcp_components_touching": 4,
+  "n_bridging_components": 3,
+  "n_unsplit_bridging_components": 1,
+  "n_sv_faces_cut_rows": 7,
+  "n_sdcp_bridging_components (fid 기준)": 3
+ },
+ "total": {
+  "bridging": 18,
+  "unsplit": 9,
+  "unsplit_share": 0.5
+ }
+}

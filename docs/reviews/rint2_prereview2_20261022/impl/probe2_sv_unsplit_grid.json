@@ -1,0 +1,102 @@
+{
+ "two_fibres · SE · bridge 기본": {
+  "cells": {
+   "A z10": 3,
+   "A z11": 3,
+   "A z12": 5,
+   "A z13": 3,
+   "A z14": 3,
+   "mid z11": 6,
+   "mid z12": 5,
+   "mid z13": 6,
+   "B z10": 3,
+   "B z11": 3,
+   "B z12": 5,
+   "B z13": 3,
+   "B z14": 3
+  },
+  "n_sdcp_cells": 3,
+  "census": {
+   "n_sdcp_components_touching": 1,
+   "n_bridging_components": 1,
+   "n_unsplit_bridging_components": 1,
+   "n_sv_faces_cut_rows": 0,
+   "n_pieces": 2
+  }
+ },
+ "control · SE · bridge 기본": {
+  "cells": {
+   "A z10": 3,
+   "A z11": 3,
+   "A z12": 5,
+   "A z13": 3,
+   "A z14": 3,
+   "mid z11": 6,
+   "mid z12": 5,
+   "mid z13": 6,
+   "B z10": 6,
+   "B z11": 6,
+   "B z12": 5,
+   "B z13": 3,
+   "B z14": 3
+  },
+  "n_sdcp_cells": 3,
+  "census": {
+   "n_sdcp_components_touching": 1,
+   "n_bridging_components": 1,
+   "n_unsplit_bridging_components": 0,
+   "n_sv_faces_cut_rows": 1,
+   "n_pieces": 2
+  }
+ },
+ "two_fibres · SE 없음": {
+  "cells": {
+   "A z10": 3,
+   "A z11": 3,
+   "A z12": 5,
+   "A z13": 3,
+   "A z14": 3,
+   "mid z11": 0,
+   "mid z12": 5,
+   "mid z13": 0,
+   "B z10": 3,
+   "B z11": 3,
+   "B z12": 5,
+   "B z13": 3,
+   "B z14": 3
+  },
+  "n_sdcp_cells": 3,
+  "census": {
+   "n_sdcp_components_touching": 1,
+   "n_bridging_components": 1,
+   "n_unsplit_bridging_components": 1,
+   "n_sv_faces_cut_rows": 0,
+   "n_pieces": 2
+  }
+ },
+ "two_fibres · SE · bridge 0": {
+  "cells": {
+   "A z10": 3,
+   "A z11": 3,
+   "A z12": 5,
+   "A z13": 3,
+   "A z14": 3,
+   "mid z11": 6,
+   "mid z12": 5,
+   "mid z13": 6,
+   "B z10": 3,
+   "B z11": 3,
+   "B z12": 5,
+   "B z13": 3,
+   "B z14": 3
+  },
+  "n_sdcp_cells": 3,
+  "census": {
+   "n_sdcp_components_touching": 1,
+   "n_bridging_components": 1,
+   "n_unsplit_bridging_components": 1,
+   "n_sv_faces_cut_rows": 0,
+   "n_pieces": 2
+  }
+ }
+}

@@ -1,0 +1,35 @@
+{
+ "V1_clean": {
+  "rc": 0,
+  "verdict": "PASS_INFORMATIVE",
+  "flags": [
+   "FIBRE_UNCHECKED",
+   "GRID_UNCHECKED",
+   "SVORDER_UNCHECKED",
+   "UNREG_UNCHECKED"
+  ],
+  "W": 0.33381922874642306
+ },
+ "ladder_code_record": {
+  "dirty": false,
+  "head": "93d93bc02f5a68d6551137ab420dbc0eea40b455"
+ },
+ "git_identity_now": {
+  "head": "93d93bc02f5a68d6551137ab420dbc0eea40b455",
+  "dirty": true
+ },
+ "V2_dirty_same_HEAD": {
+  "rc": 0,
+  "verdict": "CONSISTENT_WEAK",
+  "stop": null,
+  "W": 0.33381922874642306,
+  "flags": [
+   "FIBRE_UNCHECKED",
+   "GRID_UNCHECKED",
+   "SVORDER_UNCHECKED",
+   "UNREG_UNCHECKED"
+  ]
+ },
+ "same_code(head equal, dirty differs)": true,
+ "restored_byte_identical": true
+}

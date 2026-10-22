@@ -1,0 +1,45 @@
+{
+ "plan_A_sealed_at_stage2 (fixture)": {
+  "s_min_um": 0.6,
+  "sv_cf_threshold": 2.0,
+  "max_ladder_points": 16,
+  "p2_extra": "--step3-maxiter 60000"
+ },
+ "plan_B_registered_later": {
+  "s_min_um": 0.9,
+  "sv_cf_threshold": 3.0,
+  "max_ladder_points": 20,
+  "p2_extra": "--step3-maxiter 90000"
+ },
+ "ladder_with_plan_B": {
+  "rc": 0,
+  "status": "CALIBRATED",
+  "stop": null
+ },
+ "chain_cli_options": [
+  "--after-main",
+  "--after-main 은 --variant (감도 단계) 와만",
+  "--dry-run",
+  "--kit",
+  "--ladders",
+  "--law",
+  "--max-hours",
+  "--out",
+  "--plan",
+  "--registration",
+  "--reverify",
+  "--root",
+  "--runner",
+  "--runs",
+  "--s0-plan",
+  "--show-results",
+  "--show-results 는 --stage verdict 에서만 (등록 R §4-1 — 판정에 쓰는 런이 다 끝난 뒤 한 번)",
+  "--stage",
+  "--stage ladder 는 --law · --runner · --root · --plan · --s0-plan · --max-hours · --out 이 필요하다",
+  "--stage predict 는 --ladders · --runner · --root · --max-hours · --out 이 필요하다",
+  "--stage verdict 는 --runs · --out 이 필요하다 (또는 --reverify <판정 폴더>)",
+  "--target",
+  "--variant"
+ ],
+ "chain_reads_s0_stage2_report": false
+}

@@ -1,0 +1,42 @@
+{
+ "two_fibres_pass_same_sdcp (truth ratio = +inf)": {
+  "sid_at_A_z4": 5,
+  "sid_at_B_z4": 5,
+  "n_sdcp_cells": 3,
+  "n_instances": 0,
+  "I_full": 10.869565217391308,
+  "reason": null,
+  "cf_status": "computed",
+  "cf_ratio": 1.0,
+  "n_sv_faces_cut": 0,
+  "n_bridging_components": 1,
+  "n_unsplit_bridging_components": 1,
+  "census_n_sdcp_bridging_components": 1,
+  "chain_view": {
+   "status": "computed",
+   "ratio": 1.0
+  },
+  "chain_flags_threshold_2": []
+ },
+ "control1_only_A_passes (truth ratio = +inf)": {
+  "sid_at_A_z4": 5,
+  "sid_at_B_z4": 5,
+  "n_sdcp_cells": 3,
+  "n_instances": 0,
+  "I_full": 10.869565217391308,
+  "reason": null,
+  "cf_status": "no_through_without_sv",
+  "cf_ratio": Infinity,
+  "n_sv_faces_cut": 1,
+  "n_bridging_components": 1,
+  "n_unsplit_bridging_components": 0,
+  "census_n_sdcp_bridging_components": 1,
+  "chain_view": {
+   "status": "no_through_without_sv",
+   "ratio": Infinity
+  },
+  "chain_flags_threshold_2": [
+   "SV_DEPENDENT"
+  ]
+ }
+}

@@ -1,0 +1,40 @@
+=== probe_cert_codex (default)
+rc=0
+=== probe_cert_codex (Haswell)
+rc=0
+=== probe_limits (default)
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview2_impl/probe_limits.py", line 52, in <module>
+    prob = RC.conv_cert_problem(c, r['sigma_eff'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: conv_cert_problem() missing 1 required positional argument: 'man'
+mv: cannot stat 'probe_limits.json': No such file or directory
+=== probe_limits (Haswell)
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview2_impl/probe_limits.py", line 52, in <module>
+    prob = RC.conv_cert_problem(c, r['sigma_eff'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: conv_cert_problem() missing 1 required positional argument: 'man'
+mv: cannot stat 'probe_limits.json': No such file or directory
+=== probe_cert_liveness
+11 {'n_dof': 14095, 'sigma': 0.0030458944987848562, 'sigma_direct': 0.0030458944962131794, 'rel_err_vs_direct': 8.443092891496917e-10, 'status': 'POSITIVE_SOLVED', 'ok': True, 'pass': [True, True, True, True], 'err_bound_rel': 1.3281333104005964e-09, 'width_rel': 9.086889193734293e-12, 'why': None, 'iters': 891}
+12 {'n_dof': 14407, 'sigma': 0.00383324353433079, 'sigma_direct': 0.003833243392370579, 'rel_err_vs_direct': 3.703396744825227e-08, 'status': 'POSITIVE_SOLVED', 'ok': True, 'pass': [True, True, True, True], 'err_bound_rel': 3.7849244149458324e-08, 'width_rel': 2.773973299832648e-11, 'why': None, 'iters': 832}
+=== probe_b01_mutation
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/prereview2_impl/probe_b01_mutation.py", line 13, in <module>
+    src = open(os.path.join(REPO, 'scripts', 'test_rint_g2_join.py'), encoding='utf-8').read()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/user/Yonghoon-DEM-DFT/.claude/worktrees/agent-a55035d4ca989cec4/scripts/test_rint_g2_join.py'
+=== show_cert
+default [{'internal_api': 'openblas', 'architecture': 'SkylakeX', 'num_threads': 1}, {'internal_api': 'openblas', 'architecture': 'SkylakeX', 'num_threads': 1}]
+  main {'rel_err': 0.0005558327653365502, 'pass_a': True, 'pass_b': True, 'pass_c': True, 'pass_d': False, 'ok': False, 'status': 'POSITIVE_SOLVED', 'true_in_bracket': True, 'err_bound_rel': 0.000555523987028491, 'imbalance': 7.76143817375435e-05, 'why': 'posted G error bound 5.555e-04 > 0.0001 (exact comparison)'}
+  small {'rel_err': -0.00018898968646452463, 'pass_a': True, 'pass_b': False, 'pass_c': True, 'pass_d': False, 'ok': False, 'status': 'POSITIVE_SOLVED', 'true_in_bracket': True, 'err_bound_rel': 0.00018902541056302883, 'imbalance': 0.0001471990826096003, 'why': 'posted G error bound 1.890e-04 > 0.0001 (exact comparison)'}
+  connected {'rel_err': -0.00903708650683499, 'pass_a': True, 'pass_b': True, 'pass_c': True, 'pass_d': False, 'ok': False, 'status': 'POSITIVE_SOLVED', 'true_in_bracket': True, 'err_bound_rel': 0.009120712298920537, 'imbalance': 1.1563992136055461e-05, 'why': 'posted G error bound 9.121e-03 > 0.0001 (exact comparison)'}
+  warm {'posted_G': 0.25, 'pass_d': False, 'ok': False, 'status': 'POSITIVE_SOLVED', 'lo': 0.3333333333333286, 'hi': 0.3750000000000007, 'why': 'bracket width 1.667e-01 > 0.0001 (bound too loose to certify · exact comparison)'}
+  zero {'status': 'VALID_ZERO_TOPOLOGY', 'ok': True, 'pass_a': True, 'pass_b': False, 'pass_c': False, 'pass_d': None, 'zero_exact': True, 'why': None}
+Haswell [{'internal_api': 'openblas', 'architecture': 'Haswell', 'num_threads': 1}, {'internal_api': 'openblas', 'architecture': 'Haswell', 'num_threads': 1}]
+  main {'rel_err': 0.000512087249354698, 'pass_a': True, 'pass_b': True, 'pass_c': True, 'pass_d': False, 'ok': False, 'status': 'POSITIVE_SOLVED', 'true_in_bracket': True, 'err_bound_rel': 0.0005118251503469789, 'imbalance': 3.435033510550895e-05, 'why': 'posted G error bound 5.118e-04 > 0.0001 (exact comparison)'}
+  small {'rel_err': -0.000188593002408588, 'pass_a': True, 'pass_b': True, 'pass_c': True, 'pass_d': False, 'ok': False, 'status': 'POSITIVE_SOLVED', 'true_in_bracket': True, 'err_bound_rel': 0.00018862857669891693, 'imbalance': 9.147795533580172e-05, 'why': 'posted G error bound 1.886e-04 > 0.0001 (exact comparison)'}
+  connected {'rel_err': -0.009037086166020725, 'pass_a': True, 'pass_b': True, 'pass_c': True, 'pass_d': False, 'ok': False, 'status': 'POSITIVE_SOLVED', 'true_in_bracket': True, 'err_bound_rel': 0.009120711951861179, 'imbalance': 1.1563649005319417e-05, 'why': 'posted G error bound 9.121e-03 > 0.0001 (exact comparison)'}
+  warm {'posted_G': 0.25, 'pass_d': False, 'ok': False, 'status': 'POSITIVE_SOLVED', 'lo': 0.3333333333333286, 'hi': 0.3750000000000007, 'why': 'bracket width 1.667e-01 > 0.0001 (bound too loose to certify · exact comparison)'}
+  zero {'status': 'VALID_ZERO_TOPOLOGY', 'ok': True, 'pass_a': True, 'pass_b': False, 'pass_c': False, 'pass_d': None, 'zero_exact': True, 'why': None}

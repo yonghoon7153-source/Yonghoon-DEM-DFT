@@ -1,0 +1,44 @@
+{
+ "normal": {
+  "problem": null,
+  "chain_view": {
+   "status": "computed",
+   "ratio": 2.0
+  }
+ },
+ "ratio_not_Gfull_over_Gcut (2.0 → 1.0)": {
+  "problem": null,
+  "chain_view": {
+   "status": "computed",
+   "ratio": 1.0
+  }
+ },
+ "computed_but_cf_cert_not_ok": {
+  "problem": null,
+  "chain_view": {
+   "status": "computed",
+   "ratio": 2.0
+  }
+ },
+ "computed_but_G_cut_None": {
+  "problem": null,
+  "chain_view": {
+   "status": "computed",
+   "ratio": 2.0
+  }
+ },
+ "computed_with_unsplit_bridges=1": {
+  "problem": null,
+  "chain_view": {
+   "status": "computed",
+   "ratio": 2.0
+  }
+ },
+ "computed_ratio_below_1 (0.5)": {
+  "problem": null,
+  "chain_view": {
+   "status": "computed",
+   "ratio": 0.5
+  }
+ }
+}

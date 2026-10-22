@@ -1,0 +1,41 @@
+{
+ "D1_lattice": {
+  "status": "CALIBRATED",
+  "union_ends": [
+   316227.7660168379,
+   3162277.6601683795
+  ],
+  "arm0_ends": [
+   "316227.7660168379",
+   "1303993.2928045949"
+  ],
+  "pushes": [
+   0,
+   1
+  ],
+  "grade_union": [
+   "CONSISTENT_WEAK",
+   0.5064462208668055
+  ],
+  "grade_arm0_only": [
+   "FAIL",
+   0.40713706231369207
+  ]
+ },
+ "D1b_lattice_D=3.9+1/r": {
+  "grade_union": [
+   "CONSISTENT_WEAK",
+   0.5158267802535799
+  ],
+  "grade_arm0_only": [
+   "PASS_INFORMATIVE",
+   0.4142779078295189
+  ]
+ },
+ "D2_three_origins_vs_mean8": {
+  "n_valid": 56,
+  "n_3origin_PASS": 21,
+  "n_found": 0,
+  "cases": []
+ }
+}

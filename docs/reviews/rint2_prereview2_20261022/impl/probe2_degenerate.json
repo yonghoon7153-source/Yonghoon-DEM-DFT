@@ -1,0 +1,46 @@
+{
+ "zero_length_segment": {
+  "I": 12.499999999999979,
+  "I_hand": 12.5,
+  "rel": 1.7053025658242404e-15,
+  "reason": null,
+  "n_pieces": 1,
+  "n_instances": 0,
+  "n_self_candidates": 0,
+  "n_revisit_pairs": 0,
+  "rejections": []
+ },
+ "zero_length_x3": {
+  "I": 12.499999999999979,
+  "I_hand": 12.5,
+  "rel": 1.7053025658242404e-15,
+  "reason": null,
+  "n_pieces": 1,
+  "n_instances": 0,
+  "n_self_candidates": 0,
+  "n_revisit_pairs": 0,
+  "rejections": []
+ },
+ "vertex_on_cell_faces": {
+  "I": 12.499999999999979,
+  "I_hand": 12.5,
+  "rel": 1.7053025658242404e-15,
+  "reason": null,
+  "n_pieces": 1,
+  "n_instances": 0,
+  "n_self_candidates": 0,
+  "n_revisit_pairs": 0,
+  "rejections": []
+ },
+ "vertex_on_cell_edge (bent · hand = n/a)": {
+  "I": 12.499999999999979,
+  "I_hand": 12.5,
+  "rel": 1.7053025658242404e-15,
+  "reason": null,
+  "n_pieces": 1,
+  "n_instances": 0,
+  "n_self_candidates": 0,
+  "n_revisit_pairs": 0,
+  "rejections": []
+ }
+}

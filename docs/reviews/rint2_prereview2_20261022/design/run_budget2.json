@@ -1,0 +1,47 @@
+{
+ "mean_iters": {
+  "plain": {
+   "1e-08": 704.6666666666666,
+   "1e-12": 1106.3333333333333,
+   "1e-14": 1298.3333333333333
+  },
+  "junction": {
+   "1e-08": 2327.0,
+   "1e-12": 4264.333333333333,
+   "1e-14": 5193.666666666667
+  }
+ },
+ "ratios": {
+  "rtol_only_plain_1e-8_to_1e-12": 1.5700094607379376,
+  "rtol_only_junction_1e-8_to_1e-12": 1.8325454805901733,
+  "form_at_1e-12_junction_over_plain": 3.8544742392286833,
+  "junction_1e-12_over_plain_1e-8": 6.051561021759698,
+  "junction_1e-14_cold_over_plain_1e-8 (upper for +resolve)": 7.370387890255441
+ },
+ "main_arms": {
+  "sbe": 38,
+  "dbe_incl_sv": 40,
+  "total": 78
+ },
+ "registration_main_hours": {
+  "x1": 55.85666666666667,
+  "x1.7": 94.95633333333333,
+  "x2": 111.71333333333334
+ },
+ "split_base_hours_x1": 37.922777777777775,
+ "main_hours_by_factor_on_solve": {
+  "rtol_only_1.7": 59.18369346479585,
+  "rtol_only_2": 68.29551447351788,
+  "junction_1e-12/plain_1e-8": 191.35251059414892,
+  "junction_1e-14cold/plain_1e-8": 231.4088918182376
+ },
+ "window_hours": {
+  "10-25..29": 120,
+  "to 10-31": 168
+ },
+ "overflow_one_DBE_corner_over (24 arms) hours": {
+  "x1": 17.186666666666667,
+  "x1.7": 29.217333333333332,
+  "x6.05_solve": 86.72127961413679
+ }
+}
