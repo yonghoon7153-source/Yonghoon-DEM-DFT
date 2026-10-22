@@ -7,7 +7,7 @@ letter: DC
 track: wad
 channel: codex
 kind: prompt
-status: 초안 — 발송 전 (기준 커밋 3e70329cb · 묶음 v3 MANIFEST bf7b2ac9…)
+status: 발송 2026-10-22 (사용자 · 기준 커밋 3e70329cb · 묶음 v3 MANIFEST bf7b2ac9…) → 회신 수령 NO-GO (P1 2 — codex_DC_reply_wad_outsourcing_round2_v3_2026_10_22.md)
 confidence: medium
 verificationStatus: unverified
 explored: false
