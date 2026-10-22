@@ -12,6 +12,10 @@
 · 비 +∞ (위상 — 끊은 그래프에 관통 성분 없음) = JSON 비 null + `ratio_limit` 'inf' (극한 R_j 의 `R_j_ohm` null + `rj_limit` 'inf' 와 한 꼴)
 · 비를 싣는 상태 = `RATIO_STATUSES` 둘뿐 — 그 밖의 상태 (미수렴 · 수치 실패 · 주 해 미수렴 · 앞으로 producer 가 더할 이름) = 비 없음 →
   사슬은 그 모서리를 `SV_UNCHECKED` 로 센다 (fail-closed · 모르는 상태를 '의존 없음' 으로 읽지 않는다)
+★ 10-22 (사전 리뷰 2 회차 PRE2-impl-01 · 1저자 Q1 (다) · 등록 R §5-6 SV 행 개정) 괄호 칸 — 못 가른 덩어리 수 (`n_unsplit_bridging_components`) ·
+  규칙 (`bracket_rule`) · 위 끝 상태 · 비 (`status_hi` · `sv_counterfactual_ratio_hi` · +∞ = null + `ratio_limit_hi` 'inf') · 위 끝 풀이 기록
+  (`upper` · 아래 끝과 같은 꼴 · 덩어리 0 = None) → 검증기 (꼴 · 덩어리 수 ↔ 위 끝 기록 · 덩어리 0 = 위 = 아래 · 위 끝 칸 = 위 끝 풀이 기록) ·
+  사슬 꼴 (아래 끝 · 위 끝 · 덩어리 수 — 위 끝 칸이 없는 옛 기록 = 위 끝 못 읽음 · fail-closed).  비 값의 대조 (G 비 · 아래 ≤ 위) = 다른 묶음.
 numpy 없이 뜬다 (`numbers` · 원 기록의 numpy 수도 받는다)."""
 import math
 import numbers
@@ -39,19 +43,21 @@ def _fin_or_none(x):
     return v if math.isfinite(v) else None
 
 
-def sv_cf_record(rec):
-    """반사실 원 기록 → 증거 투영 (JSON 유한 · 판정 칸 · 사본 아님 — 원 기록의 값을 그대로 옮긴다)."""
-    if not isinstance(rec, dict):
-        return None
-    r_ = rec.get('sv_counterfactual_ratio')
-    lim = None
+def _ratio_proj(r_):
+    """비 → (투영 비, 표지) — +∞ = (None, 'inf') · 유한 = (float, None) · NaN · -inf · bool = (None, None) (그 상태의 꼴 검사가 거부한다) ·
+    문자열 = 그대로 (검증기가 거부)."""
     if isinstance(r_, numbers.Real) and not _is_bool(r_) and math.isinf(float(r_)) and float(r_) > 0:
-        r_, lim = None, 'inf'
-    elif r_ is not None and not isinstance(r_, str):
-        r_ = _fin_or_none(r_)                      # NaN · -inf · bool = None (그 상태의 꼴 검사가 거부한다) · 문자열 = 그대로 (검증기가 거부)
-    out = {k: rec.get(k) for k in _COPY}
-    out.update({'sv_counterfactual_ratio': r_, 'ratio_limit': lim, 'G_full_code': _fin_or_none(rec.get('G_full_code')),
-                'G_cut_code': _fin_or_none(rec.get('G_cut_code')), 'resid': _fin_or_none(rec.get('resid'))})
+        return None, 'inf'
+    if r_ is not None and not isinstance(r_, str):
+        return _fin_or_none(r_), None
+    return r_, None
+
+
+def _end_proj(rec):
+    """반사실 한 끝의 풀이 칸 → 투영 (비 · 표지 · G_cut · 잔차 · 증서 · backend · 정의별 수 칸) — 아래 끝 (기록 자신) · 위 끝 (`upper`) 같은 꼴."""
+    r_, lim = _ratio_proj(rec.get('sv_counterfactual_ratio'))
+    out = {'sv_counterfactual_ratio': r_, 'ratio_limit': lim, 'G_cut_code': _fin_or_none(rec.get('G_cut_code')),
+           'resid': _fin_or_none(rec.get('resid'))}
     for k, v in rec.items():                       # 정의별 수 칸 (끊은 면 수 · 다리 놓는 SDCP 수 …) — 이름 그대로 · int 만
         if isinstance(k, str) and k.startswith('n_') and isinstance(v, numbers.Integral) and not _is_bool(v):
             out[k] = int(v)
@@ -61,6 +67,30 @@ def sv_cf_record(rec):
     bk = rec.get('backend_last_solve')
     out['backend_last_solve'] = ({k: bk.get(k) for k in ('used', 'requested', 'precond', 'fallback_reason')}
                                  if isinstance(bk, dict) else None)
+    return out
+
+
+def sv_cf_record(rec):
+    """반사실 원 기록 → 증거 투영 (JSON 유한 · 판정 칸 · 사본 아님 — 원 기록의 값을 그대로 옮긴다).  ★ 10-22 괄호 칸 (규칙 · 위 끝 상태 · 비 ·
+    위 끝 풀이 기록) 도 같은 꼴로 옮긴다 (원 기록에 없으면 None — 검증기가 거부 · 사슬 = 위 끝 못 읽음)."""
+    if not isinstance(rec, dict):
+        return None
+    e = _end_proj(rec)
+    out = {k: rec.get(k) for k in _COPY}
+    out.update({'sv_counterfactual_ratio': e['sv_counterfactual_ratio'], 'ratio_limit': e['ratio_limit'],
+                'G_full_code': _fin_or_none(rec.get('G_full_code')), 'G_cut_code': e['G_cut_code'], 'resid': e['resid']})
+    out.update({k: v for k, v in e.items() if k.startswith('n_')})
+    out['conv_cert'], out['backend_last_solve'] = e['conv_cert'], e['backend_last_solve']
+    rh, lh = _ratio_proj(rec.get('sv_counterfactual_ratio_hi'))
+    up = rec.get('upper')
+    upp = None
+    if isinstance(up, dict):
+        upp = {'status': up.get('status'), 'cg_info': up.get('cg_info'), 'why': up.get('why')}
+        upp.update(_end_proj(up))
+    elif up is not None:
+        upp = up                                   # dict 아닌 값 = 그대로 (검증기가 거부)
+    out.update({'bracket_rule': rec.get('bracket_rule'), 'status_hi': rec.get('status_hi'), 'sv_counterfactual_ratio_hi': rh,
+                'ratio_limit_hi': lh, 'upper': upp})
     return out
 
 
@@ -128,17 +158,78 @@ def sv_cf_problem(ev, solved):
     dep = thr is not None and (lim == 'inf' or (form == 'finite' and r_ >= float(thr)))
     if (fl == 'SV_DEPENDENT') != dep:
         return f'sv_cf| 표지 {fl!r} ↔ 문턱 {thr!r} · 비 {r_!r} · 표지 {lim!r} (문턱 판정과 기록이 갈렸다)'
+    return _bracket_problem(rec)
+
+
+def _form_problem(st, r_, lim, what):
+    """상태 ↔ 비 ↔ 표지 꼴 (아래 끝 · 위 끝 같은 규칙) → 문제 | None."""
+    form = RATIO_STATUSES.get(st)
+    if form == 'finite':
+        if _is_bool(r_) or not isinstance(r_, float) or not math.isfinite(r_) or not r_ > 0.0 or lim is not None:
+            return f'sv_cf| {what} {st} 인데 비 {r_!r} · 표지 {lim!r} (유한 양수 · 표지 없음)'
+    elif form == 'inf':
+        if r_ is not None or lim != 'inf':
+            return f'sv_cf| {what} {st} 인데 비 {r_!r} · 표지 {lim!r} (null · inf — 위상의 +∞)'
+    elif r_ is not None or lim is not None:
+        return f'sv_cf| {what} {st} 인데 비 {r_!r} · 표지 {lim!r} (이 상태는 비를 싣지 않는다)'
+    return None
+
+
+def _bracket_problem(rec):
+    """★ 10-22 (PRE2-impl-01 · 02 · 1저자 Q1 (다)) 괄호 칸의 꼴 → 문제 | None — 못 가른 덩어리 수 = 0 이상 정수 · 규칙 = 비지 않은 낱말 ·
+    위 끝 상태 ↔ 비 ↔ 표지 (아래 끝과 같은 규칙) · 덩어리 0 ⟹ 위 끝 풀이 기록 없음 · 위 = 아래 (상태 · 비 · 표지) · 덩어리 > 0 ⟹ 위 끝 풀이
+    기록 (dict · 꼴) = 위 끝 칸.  비 값의 대조 (G 비 다시 셈 · 아래 ≤ 위) 는 이 함수 밖 (다른 묶음)."""
+    nu = rec.get('n_unsplit_bridging_components')
+    if _is_bool(nu) or not isinstance(nu, numbers.Integral) or int(nu) < 0:
+        return f'sv_cf| 못 가른 덩어리 수 {nu!r} (0 이상 정수 · 괄호 판정 · 10-22)'
+    br = rec.get('bracket_rule')
+    if not (isinstance(br, str) and br):
+        return f'sv_cf| 괄호 규칙 {br!r} (비지 않은 낱말 · 위 끝 칸 없는 옛 기록 = 거부)'
+    sh, rh, lh = rec.get('status_hi'), rec.get('sv_counterfactual_ratio_hi'), rec.get('ratio_limit_hi')
+    if not (isinstance(sh, str) and sh):
+        return f'sv_cf| 위 끝 상태 {sh!r} (비지 않은 낱말)'
+    why = _form_problem(sh, rh, lh, '위 끝')
+    if why:
+        return why
+    up = rec.get('upper')
+    if int(nu) == 0:
+        if up is not None:
+            return f'sv_cf| 못 가른 덩어리 0 인데 위 끝 풀이 기록 {type(up).__name__} (다시 풀지 않는다 · 위 = 아래)'
+        if (sh, rh, lh) != (rec.get('status'), rec.get('sv_counterfactual_ratio'), rec.get('ratio_limit')):
+            return (f'sv_cf| 못 가른 덩어리 0 인데 위 끝 ({sh!r}, {rh!r}, {lh!r}) ≠ 아래 끝 ({rec.get("status")!r}, '
+                    f'{rec.get("sv_counterfactual_ratio")!r}, {rec.get("ratio_limit")!r}) (위 = 아래)')
+        return None
+    if not isinstance(up, dict):
+        return f'sv_cf| 못 가른 덩어리 {nu} 인데 위 끝 풀이 기록 {up!r} (덩어리가 있으면 늘 두 번 푼다 · 값 봉인)'
+    ust, ur, ul = up.get('status'), up.get('sv_counterfactual_ratio'), up.get('ratio_limit')
+    if not (isinstance(ust, str) and ust):
+        return f'sv_cf| 위 끝 풀이 기록 상태 {ust!r} (비지 않은 낱말)'
+    why = _form_problem(ust, ur, ul, '위 끝 풀이 기록')
+    if why:
+        return why
+    if (ust, ur, ul) != (sh, rh, lh):
+        return f'sv_cf| 위 끝 칸 ({sh!r}, {rh!r}, {lh!r}) ≠ 위 끝 풀이 기록 ({ust!r}, {ur!r}, {ul!r})'
+    return None
+
+
+def _end_view(st, r_, lim):
+    """한 끝의 (상태, 비, 표지) → 사슬이 읽는 비 (float · +∞ · None = 못 읽음)."""
+    form = RATIO_STATUSES.get(st)
+    if form == 'finite' and isinstance(r_, float) and not _is_bool(r_):
+        return r_
+    if form == 'inf' and lim == 'inf':
+        return math.inf
     return None
 
 
 def chain_view(rec):
-    """사슬 (판정) 이 읽는 꼴 → {'status', 'ratio' (float · +∞ · None)} — 비 · 상태만 (정의 무관)."""
+    """사슬 (판정) 이 읽는 꼴 → {'status', 'ratio', 'status_hi', 'ratio_hi' (float · +∞ · None), 'n_unsplit'} — 비 · 상태 · 덩어리 수만
+    (정의 무관).  ★ 10-22 (Q1 (다)) ratio = 아래 끝 · ratio_hi = 위 끝 (못 가른 덩어리를 통째로 뺀 판 · 덩어리 0 = 아래 끝과 같다) — 위 끝
+    칸이 없는 옛 기록 = 위 끝 None (못 읽음 · 사슬 = SV_UNCHECKED · fail-closed)."""
     if not isinstance(rec, dict):
-        return {'status': None, 'ratio': None}
-    st = rec.get('status')
-    form = RATIO_STATUSES.get(st)
-    if form == 'finite' and isinstance(rec.get('sv_counterfactual_ratio'), float):
-        return {'status': st, 'ratio': rec['sv_counterfactual_ratio']}
-    if form == 'inf' and rec.get('ratio_limit') == 'inf':
-        return {'status': st, 'ratio': math.inf}
-    return {'status': st, 'ratio': None}
+        return {'status': None, 'ratio': None, 'status_hi': None, 'ratio_hi': None, 'n_unsplit': None}
+    st, sh = rec.get('status'), rec.get('status_hi')
+    nu = rec.get('n_unsplit_bridging_components')
+    return {'status': st, 'ratio': _end_view(st, rec.get('sv_counterfactual_ratio'), rec.get('ratio_limit')),
+            'status_hi': sh, 'ratio_hi': _end_view(sh, rec.get('sv_counterfactual_ratio_hi'), rec.get('ratio_limit_hi')),
+            'n_unsplit': (int(nu) if isinstance(nu, numbers.Integral) and not _is_bool(nu) else None)}

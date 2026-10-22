@@ -66,6 +66,10 @@ v3 §5 J2a–J12 · v3.1 (겹치면 뒤가 이긴다) · 1저자 10-20 N1–N18 
     면 · SDCP 를 지나는 섬유의 자기 연속은 남긴다 · 끊기만 = 비 ≥ 1) 의 단자 G 와의 비 `sv_counterfactual_ratio` (기록 종류
     `CJUNC_SV_CF_KIND` · 옛 'SV 면 전부' = SDCP 를 지나는 섬유 하나도 비 ∞) · 문턱 = 기본값 없음 (등록이 채운다) · 표지 `SV_DEPENDENT` 는
     문턱이 주어질 때만).
+  ★★ SV 반사실 괄호 (10-22 · 사전 리뷰 2 회차 PRE2-impl-01 · 1저자 Q1 (다) · `CJUNC_SV_CF_BRACKET_RULE`): 섬유 둘 이상이 함께 지나는 SDCP
+    성분 (못 가른 덩어리 — 셀 단위로 섬유 자기 길과 다리를 못 가른다) 은 아래 판이 그대로 둔다 → 위 끝 = 그 덩어리 SDCP 셀의 면 · 판 결합을
+    전부 끊은 판을 한 번 더 푼다 (`upper` · `status_hi` · `sv_counterfactual_ratio_hi`) · 참 비 ∈ [아래, 위] (지금 셀 그래프 안에서만) ·
+    덩어리 0 = 한 번 (위 = 아래) · 값 봉인 (아래 끝을 보고 건너뛰지 않음) · 판정 = 사슬 (`rint_r_chain.sv_assess`).
 """
 import hashlib
 import math
@@ -87,6 +91,10 @@ CJUNC_SELF_RULE = 'same_piece_centreline_pairs_d_le_D_floor_s_gt_D_and_halfpi_d_
 CJUNC_PIECE_RULE = 'piece_is_fibre_closed_path_seam_continuous_v1'           # 10-21 Q-A — 조각 = 섬유 · 닫힌 경로 이음매 = 연속
 CJUNC_SV_CF_KIND = 'counterfactual_cut_sv_bridges_keep_self_v1'              # 10-21 Q-D — 반사실 대조 기록 종류 (옛 counterfactual_cut_sv_faces)
 CJUNC_SV_CF_RULE = 'sdcp_component_owner_groups_same_piece_continuity_or_covered_through_cut_nonpassing_v1'
+#: ★ 10-22 (사전 리뷰 2 회차 PRE2-impl-01 · 1저자 Q1 (다)) 반사실 괄호 — 아래 끝 = 지금 판 (못 가른 덩어리 그대로) · 위 끝 = 그 덩어리 SDCP
+#:   셀의 면 · 판 결합을 전부 끊은 판 (덩어리 0 = 위 = 아래 · 다시 풀지 않음 · 판정 = 사슬 · 등록 R §5-6 SV 행)
+CJUNC_SV_CF_BRACKET_RULE = 'lower_keep_unsplit_upper_remove_unsplit_sdcp_cells_v1'
+SV_CF_UNSPLIT_MISMATCH = 'unsplit_census_mismatch'    # 위 끝 상태 — census 의 못 가른 덩어리 수 ≠ 지문 묶인 원장에서 다시 가른 수 (풀지 않음)
 CJUNC_BRANCH_RULE = 'membership_cell_fid_traversal_branch_v1'                 # 위치 = (셀, fid, 그 셀을 지나는 연속 구간)
 CJUNC_ORDER_RULE = 'canonical_first_last_then_point_sequence_lex_v2'           # 경로 순서 = 기하 정준 (fid 라벨 무관 · 끝점 먼저)
 CJUNC_CP_RULE = 'nearest_pairs_eps_band_lexmin_midpoint_v1'                  # instance 접점 (나란한 접촉 비유일 최근접점)
@@ -130,6 +138,11 @@ CJUNC_QUALIFIERS = (
     'SV_local_dissipation = SV 면 + SDCP 셀 소산 몫 (국소 저항 민감도 진단) — 경로 지배 · 우회 크기 보증 아님 (RCA-06 · 옛 '
     'SV_DOMINANT 표지 철회) · 반사실 대조 (서로 다른 섬유 · 접합으로 갈린 가지를 잇는 SV 다리만 끊고 SDCP 를 지나는 섬유의 자기 '
     '연속은 남긴 판의 단자 G 비) = 선택 노브 · 문턱 = 등록',
+    'SV 반사실 괄호 (10-22 · 1저자 Q1 (다)) — 못 가른 덩어리 (섬유 둘 이상이 함께 지나는 SDCP 성분 · 셀 단위로 섬유 자기 길과 다리를 못 '
+    '가른다) 가 있으면 반사실을 두 번 푼다: 아래 끝 = 덩어리를 그대로 둔 판 · 위 끝 = 그 덩어리 SDCP 셀의 면을 전부 끊은 판 (관통 없음 = '
+    '+∞) → 비 = 괄호 [아래 끝, 위 끝] · 참 비 (다리만 끊은 판) 는 그 사이 = 지금 셀 그래프 안에서만 보장 (섬유 길을 새로 그리는 정의면 밖일 '
+    '수 있다) · 판정 = 사슬 (아래 끝 > 문턱 = SV_DEPENDENT · 위 끝 ≤ 문턱 = 표지 없음 · 걸침 · 못 읽음 = SV_UNCHECKED) · 못 가른 덩어리 0 = '
+    '한 번 (위 = 아래)',
 )
 
 _TINY = 1.0e-24                            # 퇴화 선분 (길이² µm² · 1e-12 µm 미만)
@@ -1799,18 +1812,22 @@ def _sdcp_bridging(sid, ft, pos, n):
     return {'n_sdcp_bridging_components': int(nb), 'n_sdcp_bridged_fid_pairs': int(len(pairs))}
 
 
-def _sv_split(sid, ft, pos, piece_pos, segs, n, lo, vox, D, s_min):
-    """★ 10-21 (사전 리뷰 PRE-impl-04 · 1저자 Q-D · `CJUNC_SV_CF_RULE`) — SV 반사실 대조가 끊을 SV 면 (면 행마다 'sv_cut') · census.
-    SDCP 6-면 성분마다 SV 면 (VGCF 셀 ↔ 그 성분 SDCP 셀) 의 VGCF 주인 위치를 무리 짓는다: 같은 조각이고 (그 사이 위치가 전부 덮인 채
-    그 성분 셀이다 — 섬유가 성분을 지난다 · 또는 두 위치가 같은 가닥의 연속 (`_continuity`)).  무리마다 '지남' = 덮인 채 지나는 이음이
-    하나라도 있다.  끊을 행 = `_sv_cut_rows` (무리 둘 이상 = 다리 · 지나는 무리 하나 이하 → 지나지 않는 무리의 행).  → (행 마스크, census)."""
+def _sv_passes(btw, pos, labf, c):
+    """'지남' (★ 10-21 Q-D · ★ 10-22 훅 — 2 회차 변이 J2 상주 시험) — 같은 조각 두 주인 위치 사이 위치 (btw · 고리 별칭 뺌) 가 하나 이상이고
+    전부 덮인 채 (살아 있지 않음) 상자 안에서 그 성분 c 의 SDCP 셀이다 = 섬유가 그 성분을 지난다 (자기 연속).  덮이지 않은 사이 위치로 두 번
+    닿는 섬유 · 다른 성분 셀을 지나는 섬유 = 지나지 않는다."""
+    return bool(len(btw) and np.all(~pos['live'][btw]) and np.all(pos['lin'][btw] >= 0)
+                and np.all(labf[np.maximum(pos['lin'][btw], 0)] == c))
+
+
+def _sv_groups(sid, ft, pos, piece_pos, segs, n, lo, vox, D, s_min):
+    """SV 면 행 (VGCF 주인 위치 ↔ SDCP 셀) → 성분마다 주인 무리 · '지남' 표지 (`_sv_split` · ★ 10-22 반사실 위 끝이 같은 함수로 다시 가른다).
+    → None (SDCP 없음 · SV 면 행 없음) 또는 {'rows': 면 행 번호, 'comp': 성분 번호, 'grp': 무리 번호, 'pas': 지나는 무리, 'labf': 성분 번호
+    격자 (선형)}."""
     nr = len(ft['lin'])
-    cut = np.zeros(nr, bool)
-    cen = {'n_sdcp_components_touching': 0, 'n_bridging_components': 0, 'n_sv_faces_cut_rows': 0,
-           'n_sv_faces_kept_self': 0, 'n_unsplit_bridging_components': 0, 'sv_cf_rule': CJUNC_SV_CF_RULE}
     s5 = np.asarray(sid) == 5
     if not s5.any() or nr == 0:
-        return cut, cen
+        return None
     lab, _ = ndimage.label(s5)
     labf = lab.reshape(-1)
     flat = np.asarray(sid).reshape(-1)
@@ -1823,7 +1840,7 @@ def _sv_split(sid, ft, pos, piece_pos, segs, n, lo, vox, D, s_min):
     m = (flat[lin5] == 5) & (own >= 0)
     rows = vx[m]
     if len(rows) == 0:
-        return cut, cen
+        return None
     comp = labf[lin5[m]].astype(np.int64)
     own = own[m].astype(np.int64)
     #  무리 — 같은 성분 · 같은 조각 주인 쌍마다 (사이 위치가 전부 덮인 채 그 성분 셀 = 지남 · 또는 연속)
@@ -1850,8 +1867,7 @@ def _sv_split(sid, ft, pos, piece_pos, segs, n, lo, vox, D, s_min):
                 through = False
                 for btw in runs:
                     btw = btw[pos['alias'][btw] < 0] if len(btw) else btw
-                    if len(btw) and np.all(~pos['live'][btw]) and np.all(pos['lin'][btw] >= 0) \
-                            and np.all(labf[np.maximum(pos['lin'][btw], 0)] == c):
+                    if _sv_passes(btw, pos, labf, c):
                         through = True
                 if through:
                     uf.union((c, p), (c, q))
@@ -1865,6 +1881,44 @@ def _sv_split(sid, ft, pos, piece_pos, segs, n, lo, vox, D, s_min):
     gid = {}
     grp = np.asarray([gid.setdefault(r, len(gid)) for r in roots], np.int64)
     pas = np.asarray([r in pas_root for r in roots], bool)
+    return {'rows': rows, 'comp': comp, 'grp': grp, 'pas': pas, 'labf': labf}
+
+
+def _sv_unsplit_labels(comp, grp, pas):
+    """못 가른 덩어리 (★ 10-22 · 1저자 Q1 (다)) = 지나는 무리가 둘 이상인 SDCP 성분 — 셀 단위로 섬유 자기 길과 다른 섬유로 넘어가는 다리를 못
+    가른다 (`_sv_cut_rows` 가 그대로 둔다) → 성분 번호 (오름차순)."""
+    return [int(c) for c in np.unique(comp) if len(np.unique(grp[(comp == c) & pas])) >= 2]
+
+
+def _piece_pos_of(pos):
+    """위치 표 → {조각: (첫 위치, 끝 위치 + 1)} — `_positions` 의 piece_pos 를 **지문 묶인** 위치 표에서 다시 만든다 (조각마다 위치가 붙어
+    있다 · ★ 10-22 반사실 위 끝의 다시 가름 · 붙어 있지 않으면 = 원장 꼴 이상 → 거부)."""
+    pc = np.asarray(pos['piece'], np.int64)
+    out = {}
+    if len(pc) == 0:
+        return out
+    u, first, cnt = np.unique(pc, return_index=True, return_counts=True)
+    for x, f, c in zip(u, first, cnt):
+        if not np.all(pc[f:f + c] == x):
+            raise ValueError('cjunc: 위치 표의 조각이 붙어 있지 않다 (원장 꼴 이상 · 반사실 위 끝을 다시 가를 수 없다)')
+        out[int(x)] = (int(f), int(f + c))
+    return out
+
+
+def _sv_split(sid, ft, pos, piece_pos, segs, n, lo, vox, D, s_min):
+    """★ 10-21 (사전 리뷰 PRE-impl-04 · 1저자 Q-D · `CJUNC_SV_CF_RULE`) — SV 반사실 대조가 끊을 SV 면 (면 행마다 'sv_cut') · census.
+    SDCP 6-면 성분마다 SV 면 (VGCF 셀 ↔ 그 성분 SDCP 셀) 의 VGCF 주인 위치를 무리 짓는다: 같은 조각이고 (그 사이 위치가 전부 덮인 채
+    그 성분 셀이다 — 섬유가 성분을 지난다 · 또는 두 위치가 같은 가닥의 연속 (`_continuity`)).  무리마다 '지남' = 덮인 채 지나는 이음이
+    하나라도 있다.  끊을 행 = `_sv_cut_rows` (무리 둘 이상 = 다리 · 지나는 무리 하나 이하 → 지나지 않는 무리의 행).  → (행 마스크, census).
+    ★ 10-22 — 무리 짓기 = `_sv_groups` (반사실 위 끝이 같은 함수로 못 가른 덩어리를 다시 가른다 · 끊을 행 · census 는 옛 판과 같다)."""
+    nr = len(ft['lin'])
+    cut = np.zeros(nr, bool)
+    cen = {'n_sdcp_components_touching': 0, 'n_bridging_components': 0, 'n_sv_faces_cut_rows': 0,
+           'n_sv_faces_kept_self': 0, 'n_unsplit_bridging_components': 0, 'sv_cf_rule': CJUNC_SV_CF_RULE}
+    g = _sv_groups(sid, ft, pos, piece_pos, segs, n, lo, vox, D, s_min)
+    if g is None:
+        return cut, cen
+    rows, comp, grp, pas = g['rows'], g['comp'], g['grp'], g['pas']
     mask = np.asarray(_sv_cut_rows({'comp': comp, 'group': grp, 'passing': pas}), bool).reshape(len(rows))
     cut[rows[mask]] = True
     ncomp_touch = len(np.unique(comp))
@@ -2110,6 +2164,7 @@ class CjuncAssembler:
         self.sigf = np.asarray(sig, np.float64).reshape(-1)
         self.vox = float(vox)
         self.cells_lin = np.flatnonzero(np.asarray(cond).reshape(-1))
+        self.idx_flat = np.asarray(idx).reshape(-1)          # 셀 선형 번호 → dof (-1 = 이 채널 비도체) · ★ 10-22 반사실 위 끝이 쓴다
         self.n_cells = int(n_cells)
         pos = reg['positions']
         live = pos['live'].copy()
@@ -2229,9 +2284,10 @@ class CjuncAssembler:
             self._jsub = st['jsub']
         return out
 
-    def _assemble(self, Ab, gb, At, gt, cb=None, ct=None, counterfactual=False):
+    def _assemble(self, Ab, gb, At, gt, cb=None, ct=None, counterfactual=False, remove_dofs=None):
         """계 조립 (부작용 없음) — counterfactual = 반사실 대조 판 (원장이 'sv_cut' 로 표지한 SV 다리 면 간선을 뺀다 · ★ 10-21 Q-D ·
-        옛 = SV 면 부류 전부).  → (솔버 입력 | 사유, 상태)."""
+        옛 = SV 면 부류 전부).  ★ 10-22 (1저자 Q1 (다)) remove_dofs = 반사실 위 끝 — 그 dof (못 가른 덩어리 SDCP 셀) 에 닿는 간선 · 판 결합을
+        전부 뺀다 (덩어리를 통째로 뺀 판 · 빼기만 = 부분 그래프 · None = 옛 판 그대로).  → (솔버 입력 | 사유, 상태)."""
         plan, reg = self.plan, self.reg
         sub = reg['subedges']
         #  분산 접합 간선 (간선마다 한 행 · 10-21 RCA-05) · 축약 — 주 계의 간선 목록 (self.E) 은 바꾸지 않는다 (지역 사본)
@@ -2244,6 +2300,19 @@ class CjuncAssembler:
             Elist.append((pu[e], pv[e], gj, np.full(len(e), _CAT['vv_junction']), np.full(len(e), np.nan),
                           np.full(len(e), np.nan), np.full(len(e), 3), np.full(len(e), 3), e.astype(np.int64),
                           np.zeros(len(e), bool)))
+        rm = None if remove_dofs is None else np.unique(np.asarray(remove_dofs, np.int64).reshape(-1))
+        n_rm_plate = 0
+        if rm is not None and len(rm):                       # ★ 10-22 위 끝 — 그 셀의 판 결합 (셀 dof · 주인 고르기 전) 을 뺀다
+            def _drop(A, g, c):
+                if A is None:
+                    return A, g, c, 0
+                A_ = np.asarray(A, np.int64)
+                k_ = ~np.isin(A_, rm)
+                return (A_[k_], (None if g is None else np.asarray(g, np.float64)[k_]),
+                        (None if c is None else tuple(np.asarray(x)[k_] for x in c)), int((~k_).sum()))
+            Ab, gb, cb, kb_ = _drop(Ab, gb, cb)
+            At, gt, ct, kt_ = _drop(At, gt, ct)
+            n_rm_plate = kb_ + kt_
         rep = np.arange(self.n_total)
         #  ★ 10-21 (RCA-03) — 재방문 가지는 합치지 않는다 (옛: s < s_min 재방문 = 두 위치 한 노드 · 비연속 가닥 단락).
         #  접합 축약 (R_j′ = 0 · J6) — 단락 판정 (J11) 대상은 이 무리뿐
@@ -2273,12 +2342,17 @@ class CjuncAssembler:
         IB = np.concatenate([x[7] for x in Elist]) if Elist else np.zeros(0, np.int64)
         TG = np.concatenate([x[8] for x in Elist]) if Elist else np.zeros(0, np.int64)
         CF = np.concatenate([x[9] for x in Elist]) if Elist else np.zeros(0, bool)
+        rm_e = (np.isin(U, rm) | np.isin(V, rm)) if (rm is not None and len(rm)) else None   # ★ 10-22 위 끝 — 그 셀에 닿는 간선 (축약 전 dof)
         U = rep[U]; V = rep[V]
         keep = (U != V) & (G > 0.0)
         n_sv_edges = int(np.sum(keep & (CAT == _CAT['sv_face'])))
         n_cf_edges = int(np.sum(keep & CF))
         if counterfactual:
             keep &= ~CF
+        n_rm_edges = 0
+        if rm_e is not None:
+            n_rm_edges = int(np.sum(keep & rm_e))
+            keep &= ~rm_e
         U, V, G, CAT, SA, SB, IA, IB, TG = (U[keep], V[keep], G[keep], CAT[keep], SA[keep], SB[keep], IA[keep], IB[keep],
                                             TG[keep])
         # 단락 (J11) — 축약 무리가 두 판에 다 닿음
@@ -2306,7 +2380,8 @@ class CjuncAssembler:
                  'n_plate_reachable_dof': n_kept, 'short': bool(short), 'tombstones': dict(self.tomb),
                  'n_unreg_fused': int(self.n_unreg_fused), 'n_junction_edges': int(np.sum(TG >= 0)),
                  'n_self_fused_faces': int(self.n_self_fused), 'n_self_revisits_path_only': n_path_only}
-        st = {'e': e, 'n_contracted': n_contracted, 'stats': stats, 'n_sv_edges': n_sv_edges, 'n_cf_edges': n_cf_edges}
+        st = {'e': e, 'n_contracted': n_contracted, 'stats': stats, 'n_sv_edges': n_sv_edges, 'n_cf_edges': n_cf_edges,
+              'n_rm_edges': n_rm_edges, 'n_rm_plate': n_rm_plate}
         if short:
             return {'reason': 'cjunc_electrode_short'}, st
         if n_kept == 0:
@@ -2385,54 +2460,138 @@ class CjuncAssembler:
                 'sv_local_dissipation': sld,
                 'sv_face_abs_current_over_I': sv_I, 'junction_current_code': jI, 'I_bot_code': I_bot}
 
-    def sv_counterfactual(self, solve, I_full, request, certify=None):
+    def _sv_cf_end(self, solve, I_full, out, certify=None, backend=None):
+        """반사실 한 끝 (조립 결과 out) → {상태 · G_cut · 비 · cg_info · 잔차 · 증서 · backend} (★ 10-22 — 아래 끝 · 위 끝이 **같은 함수**:
+        상태 · 증서 · 비 규칙 그대로).  비 inf (`no_through_without_sv`) = 위상 (끊은 그래프에 관통 성분 없음 · 가지치기 사유) 에서만 ·
+        관통 성분이 있는데 I_cut ≤ 0 · 비유한 = 수치 실패 (`nonpositive_cut_current`) · 증서 실패 = 미수렴 (비 없음)."""
+        end = {'G_cut_code': None, 'sv_counterfactual_ratio': None, 'cg_info': None, 'resid': None, 'conv_cert': None}
+        if out.get('reason'):
+            if out['reason'] in ('no_through_component', 'all_floating_dropped'):
+                end.update(status='no_through_without_sv', G_cut_code=0.0, sv_counterfactual_ratio=math.inf)
+            else:
+                end.update(status=str(out['reason']))
+        else:
+            phi_c, info = solve(out['L'], out['b'])
+            resid = float(np.linalg.norm(out['L'] @ phi_c - out['b']) / max(np.linalg.norm(out['b']), 1e-30))
+            I_c = float(np.sum(out['gb'] * (1.0 - phi_c[out['Ab']])))
+            end.update(cg_info=int(info) if info else 0, resid=resid, G_cut_code=I_c)
+            cert = None
+            if certify is not None:
+                cert = certify(out['L'], out['b'], phi_c, info, resid, out['Ab'], out['gb'], out['At'], out['gt'])
+                end['conv_cert'] = cert
+            if bool(info) or not np.isfinite(resid) or resid > 1e-6 or (cert is not None and not cert.get('ok')):
+                end.update(status='unconverged')
+            elif math.isfinite(I_c) and I_c > 0.0:
+                end.update(status='computed', sv_counterfactual_ratio=float(I_full / I_c))
+            else:
+                end.update(status='nonpositive_cut_current')       # 관통 성분이 있는데 I_cut ≤ 0 — 수치 실패 (위상 서술 아님)
+        end['backend_last_solve'] = backend() if (backend is not None and end['cg_info'] is not None) else None
+        return end
+
+    def _sv_unsplit_cells(self):
+        """★ 10-22 (1저자 Q1 (다)) — 못 가른 덩어리 (지나는 무리 ≥ 2 인 SDCP 성분) 를 **지문 묶인** 원장 (면 표 · 위치 · 선분 · 문턱 · 이 솔브의
+        sid = 입구에서 지문 대조) 에서 `_sv_groups` 로 다시 가른다 (census 는 지문 밖 · 그 수로 풀지 말지를 정하지 않는다) → (성분 번호, 그 성분
+        SDCP 셀 선형 번호)."""
+        reg = self.reg
+        thr = reg['thresholds']
+        D = 2.0 * float(thr['r_f_um']) + float(thr['tol_ff_um'])
+        g = _sv_groups(self.sid, reg['faces'], reg['positions'], _piece_pos_of(reg['positions']), reg['segments'],
+                       np.array(reg['shape'], np.int64), reg['lo'], reg['vox'], D, thr['s_min_um'])
+        if g is None:
+            return [], np.zeros(0, np.int64)
+        labels = _sv_unsplit_labels(g['comp'], g['grp'], g['pas'])
+        lins = np.flatnonzero(np.isin(g['labf'], labels)) if labels else np.zeros(0, np.int64)
+        return labels, lins
+
+    def sv_counterfactual(self, solve, I_full, request, certify=None, backend=None):
         """반사실 대조 (10-21 Codex RCA-06 · 1저자 Q4 (가) · 선택 노브) — 같은 침대 · 같은 R_j · 같은 판 입력에서 ★ 10-21 (사전 리뷰
         PRE-impl-04 · 1저자 Q-D) **SV 다리만** 끊은 계의 단자 전류 I_cut → `sv_counterfactual_ratio` = I_full / I_cut (≥ 1 · Rayleigh —
         끊기만 = 부분 그래프).  다리 = 서로 다른 섬유 · 접합으로 갈린 가지를 잇는 SDCP 성분의 SV 면 (원장 'sv_cut' · `_sv_split`) ·
         SDCP 를 지나는 섬유의 자기 연속은 남긴다 (옛: SV 면 전부 → SDCP 를 지나는 섬유 하나도 비 ∞ · 정보 없음).  문턱 (request) 이 있을
-        때만 비교 표지 `SV_DEPENDENT` (비 ≥ 문턱) — 문턱 기본값 없음 (등록이 채운다).
+        때만 비교 표지 `SV_DEPENDENT` (아래 끝 비 ≥ 문턱 · 이 배선의 문턱 = 늘 None) — 문턱 기본값 없음 (등록이 채운다).
         비 inf (`no_through_without_sv`) = **위상** 에서만 — 다리 SV 면을 끊은 조립 그래프에 관통 성분이 없을 때 (가지치기 사유).  관통 성분이
         있는데 푼 I_cut ≤ 0 · 비유한 = 수치 실패 (`nonpositive_cut_current` · 비 없음 — 양의 컨덕턴스 그래프의 관통 전류는 해석적으로 > 0).
         certify = 수렴 증서 (주 해와 같은 함수 · `step3_sigma` 가 CONV_CERT 일 때 넘긴다) — (L, b, φ, info, 잔차, Ab, gb, At, gt) → dict ·
-        증서 실패 = 미수렴 (비 · 표지 없음 · 주 해 증서만 보고 분모를 믿지 않는다 · 10-21 사전 공격 리뷰)."""
+        증서 실패 = 미수렴 (비 · 표지 없음 · 주 해 증서만 보고 분모를 믿지 않는다 · 10-21 사전 공격 리뷰).
+        ★★ 10-22 (사전 리뷰 2 회차 PRE2-impl-01 · 1저자 Q1 (다) · `CJUNC_SV_CF_BRACKET_RULE`) **괄호** — 못 가른 덩어리 (섬유 둘 이상이 함께
+        지나는 SDCP 성분 · `_sv_cut_rows` 가 셀 단위로 다리와 섬유 자기 길을 못 갈라 그대로 둔다) 가 있으면 한 번 더 푼다: 아래 끝 = 지금 판
+        (덩어리 그대로 · 옛 칸 그대로) · 위 끝 (`upper` · `status_hi` · `sv_counterfactual_ratio_hi`) = 아래 판에 더해 그 덩어리 SDCP 셀의 면 ·
+        판 결합을 전부 끊은 판 (통째로 뺌 · 관통 없음 = +∞).  같은 셀 그래프에서 간선을 더 빼면 G 는 줄기만 한다 (Rayleigh) → 다리만 끊고
+        섬유 자기 길은 남기는 참 비 = 두 끝 사이 (**지금 셀 그래프 안에서만** 보장).  덩어리 0 = 다시 풀지 않는다 (위 = 아래 · `upper` None).
+        값 봉인 = 아래 끝 값을 보고 건너뛰지 않는다 (덩어리가 있으면 늘 두 번).  덩어리 = 지문 묶인 원장에서 다시 가른다 — census 수와 다르면
+        위 끝을 풀지 않는다 (`unsplit_census_mismatch` · 사유 · fail-closed).  backend = 이 솔브의 출처 읽개 (`step3_sigma` 가 넘긴다) — 끝마다
+        `backend_last_solve` (풀이가 없으면 None)."""
         thr = request.get('threshold') if isinstance(request, dict) else None
         Ab, gb, At, gt, cb, ct = self._plate_in
         out, st = self._assemble(Ab, gb, At, gt, cb, ct, counterfactual=True)
         cen = self.reg.get('census') or {}
+        n_cen = int(cen.get('n_unsplit_bridging_components', 0))
         rec = {'kind': CJUNC_SV_CF_KIND, 'rule': CJUNC_SV_CF_RULE, 'requested': True, 'threshold': thr,
                'n_sv_faces_cut': int(st['n_cf_edges']),
                'n_sdcp_components_touching': int(cen.get('n_sdcp_components_touching', 0)),
                'n_bridging_components': int(cen.get('n_bridging_components', 0)),
                'n_sv_faces_kept_self': int(cen.get('n_sv_faces_kept_self', 0)),
-               'n_unsplit_bridging_components': int(cen.get('n_unsplit_bridging_components', 0)),
+               'n_unsplit_bridging_components': n_cen,
                'G_full_code': float(I_full), 'G_cut_code': None,
                'sv_counterfactual_ratio': None, 'flag': None, 'cg_info': None, 'resid': None, 'conv_cert': None}
-        if not (math.isfinite(float(I_full)) and float(I_full) > 0.0):
-            rec.update(status='nonpositive_full_current')       # 주 해 단자 전류 ≤ 0 · 비유한 — 비의 분자를 믿을 수 없다 (풀지 않는다)
-        elif out.get('reason'):
-            if out['reason'] in ('no_through_component', 'all_floating_dropped'):
-                rec.update(status='no_through_without_sv', G_cut_code=0.0, sv_counterfactual_ratio=math.inf)
-            else:
-                rec.update(status=str(out['reason']))
+        full_ok = math.isfinite(float(I_full)) and float(I_full) > 0.0
+        if not full_ok:
+            rec.update(status='nonpositive_full_current', backend_last_solve=None)   # 주 해 단자 전류 ≤ 0 · 비유한 — 비의 분자를 믿을 수 없다
         else:
-            phi_c, info = solve(out['L'], out['b'])
-            resid = float(np.linalg.norm(out['L'] @ phi_c - out['b']) / max(np.linalg.norm(out['b']), 1e-30))
-            I_c = float(np.sum(out['gb'] * (1.0 - phi_c[out['Ab']])))
-            rec.update(cg_info=int(info) if info else 0, resid=resid, G_cut_code=I_c)
-            cert = None
-            if certify is not None:
-                cert = certify(out['L'], out['b'], phi_c, info, resid, out['Ab'], out['gb'], out['At'], out['gt'])
-                rec['conv_cert'] = cert
-            if bool(info) or not np.isfinite(resid) or resid > 1e-6 or (cert is not None and not cert.get('ok')):
-                rec.update(status='unconverged')
-            elif math.isfinite(I_c) and I_c > 0.0:
-                rec.update(status='computed', sv_counterfactual_ratio=float(I_full / I_c))
-            else:
-                rec.update(status='nonpositive_cut_current')       # 관통 성분이 있는데 I_cut ≤ 0 — 수치 실패 (위상 서술 아님)
+            rec.update(self._sv_cf_end(solve, I_full, out, certify, backend))
         r_ = rec['sv_counterfactual_ratio']
         if thr is not None and r_ is not None and r_ >= thr:
             rec['flag'] = 'SV_DEPENDENT'
-        return rec
+        #  ── ★ 10-22 괄호 위 끝 (Q1 (다)) ──
+        labels, lins = self._sv_unsplit_cells()
+        if len(labels) != n_cen:
+            up = _sv_cf_upper_unsolved(SV_CF_UNSPLIT_MISMATCH, n_components=len(labels),
+                                       why=(f'못 가른 덩어리 수 census {n_cen} ≠ 지문 묶인 원장에서 다시 가른 수 {len(labels)} — 위 끝을 풀지 '
+                                            f'않는다 (원장 census 변조 · 결함 의심 · fail-closed)'))
+        elif not labels:
+            up = None
+        elif not full_ok:
+            up = _sv_cf_upper_unsolved('nonpositive_full_current', n_components=len(labels), n_cells=len(lins))
+        else:
+            dofs = self.idx_flat[lins]
+            dofs = dofs[dofs >= 0]
+            out_h, st_h = self._assemble(Ab, gb, At, gt, cb, ct, counterfactual=True, remove_dofs=dofs)
+            up = {'n_components_removed': int(len(labels)), 'n_cells_removed': int(len(lins)), 'n_edges_cut': int(st_h['n_rm_edges']),
+                  'n_plate_couplings_cut': int(st_h['n_rm_plate']), 'n_sv_faces_cut': int(st_h['n_cf_edges']), 'why': None}
+            up.update(self._sv_cf_end(solve, I_full, out_h, certify, backend))
+        return _sv_cf_bracket(rec, up)
+
+
+def _sv_cf_upper_unsolved(status, n_components=None, n_cells=None, why=None):
+    """★ 10-22 — 위 끝을 풀지 않은 기록 (주 해 미수렴 · 주 전류 ≤ 0 · census 불일치) — 비 · 증서 · backend 없음 · 사유."""
+    up = {'status': str(status), 'G_cut_code': None, 'sv_counterfactual_ratio': None, 'cg_info': None, 'resid': None, 'conv_cert': None,
+          'backend_last_solve': None, 'why': why}
+    if n_components is not None:
+        up['n_components_removed'] = int(n_components)
+    if n_cells is not None:
+        up['n_cells_removed'] = int(n_cells)
+    return up
+
+
+def _sv_cf_bracket(rec, up):
+    """★ 10-22 — 반사실 원 기록에 괄호 칸을 붙인다: 규칙 · 위 끝 풀이 기록 (`upper` · 덩어리 0 = None) · 위 끝 상태 · 비 (덩어리 0 = 아래 끝
+    그대로 · 위 = 아래)."""
+    rec['bracket_rule'] = CJUNC_SV_CF_BRACKET_RULE
+    rec['upper'] = up
+    rec['status_hi'] = up['status'] if up is not None else rec['status']
+    rec['sv_counterfactual_ratio_hi'] = up['sv_counterfactual_ratio'] if up is not None else rec['sv_counterfactual_ratio']
+    return rec
+
+
+def sv_cf_unsolved_record(plan, status):
+    """★ 10-22 — 반사실을 풀지 않고 끝난 기록 (`step3_sigma` — 주 해 미수렴 = 'main_unconverged') — 옛 칸 (종류 · 규칙 · 요청 · 문턱 · 상태 ·
+    비 None · 표지 None · 증서 None · backend None) + 못 가른 덩어리 수 (census) + 괄호 칸 (위 끝 = 같은 상태 · 풀이 없음)."""
+    req = plan.get('sv_counterfactual') or {}
+    n = int(((plan.get('registry') or {}).get('census') or {}).get('n_unsplit_bridging_components', 0))
+    rec = {'kind': CJUNC_SV_CF_KIND, 'rule': CJUNC_SV_CF_RULE, 'requested': True, 'threshold': req.get('threshold'),
+           'status': str(status), 'sv_counterfactual_ratio': None, 'flag': None, 'conv_cert': None, 'backend_last_solve': None,
+           'n_unsplit_bridging_components': n}
+    return _sv_cf_bracket(rec, (_sv_cf_upper_unsolved(status, n_components=n) if n else None))
 
 
 def early_record(plan, reason=None):

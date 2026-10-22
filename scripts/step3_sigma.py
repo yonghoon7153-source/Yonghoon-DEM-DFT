@@ -2327,10 +2327,8 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
         if _cjp.get('sv_counterfactual') is not None:      # ★ 10-21 (Codex RCA-06 · Q4 (가)) — 선택 노브: SV 다리 끊은 판의 단자 G 비 (진단)
             if unconv:                                     #   주 해가 미수렴 · 증서 실패 = 비를 내지 않는다 (분자 G 를 믿을 수 없다)
                 #  ★ 10-21 (사전 리뷰 PRE-impl-04 · Q-D) — 기록 종류 = 원장 정본 상수 (반사실 = SV 다리만 끊음 · 옛 'SV 면 전부' 와 다른 양)
-                out['cjunc']['sv_counterfactual'] = {'kind': _cjm.CJUNC_SV_CF_KIND, 'rule': _cjm.CJUNC_SV_CF_RULE, 'requested': True,
-                                                     'threshold': _cjp['sv_counterfactual'].get('threshold'),
-                                                     'status': 'main_unconverged', 'sv_counterfactual_ratio': None,
-                                                     'flag': None, 'conv_cert': None, 'backend_last_solve': None}
+                #  ★ 10-22 (PRE2-impl-01 · Q1 (다)) — 옛 칸 그대로 + 못 가른 덩어리 수 · 괄호 칸 (위 끝 = 같은 상태 · 풀이 없음) = 생산자 함수 하나
+                out['cjunc']['sv_counterfactual'] = _cjm.sv_cf_unsolved_record(_cjp, 'main_unconverged')
             else:
                 #  ★ 10-21 (사전 공격 리뷰) — 반사실 솔브는 진단이다: ① 모듈 전역 출처 (`LAST_BACKEND` · `LAST_CG` — 매니페스트
                 #    'backend_last_solve' 가 읽는다) 를 주 해 쪽 그대로 되돌리고 반사실 솔브의 backend 는 자기 기록에 싣는다 (노브 켬 = 주 결과
@@ -2345,8 +2343,10 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
                                            lambda L2, b2, x02, rt2: _solve_cg(L2, b2, x0=x02, rtol=rt2))
                 _bk0, _cg0 = dict(LAST_BACKEND), dict(LAST_CG)
                 try:
-                    _svc = _cjs.sv_counterfactual(_solve_cg, I, _cjp['sv_counterfactual'], certify=_cf_cert)
-                    _svc['backend_last_solve'] = dict(LAST_BACKEND) if _svc.get('cg_info') is not None else None
+                    #  ★ 10-22 (Q1 (다)) — 못 가른 덩어리가 있으면 생산자가 위 끝을 한 번 더 푼다 → backend 는 끝마다 (풀이 직후 읽개 ·
+                    #    옛 = 호출 뒤 한 번 · 덩어리 0 이면 같은 값)
+                    _svc = _cjs.sv_counterfactual(_solve_cg, I, _cjp['sv_counterfactual'], certify=_cf_cert,
+                                                  backend=lambda: dict(LAST_BACKEND))
                 finally:
                     LAST_BACKEND.clear(); LAST_BACKEND.update(_bk0)
                     LAST_CG.clear(); LAST_CG.update(_cg0)

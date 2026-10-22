@@ -35,7 +35,9 @@
   · 감도 = 주 판정과 같은 판정 함수 (§5-6 · RCA-09) · 법칙별 I_P · U · E · `GAP_ENVELOPE_ONLY` (§5-1 · RCA-08) · 결정표 (§5-7)
   · 차단 표지 = 닫힌 집합 (§5-6a · RCA-10) · 보고 범주 `ASSUMED_UNVALIDATED` · §7-1 문장 = 판정문 §5-3 문안
   · SV 반사실 (CJUNC_SV_CF · 계획 범위 · 비 > 문턱 = `SV_DEPENDENT` · 못 읽음 = `SV_UNCHECKED` · 옛 `SV_DOMINANT` 철회 · RCA-06) —
-    사슬은 비 · 상태만 읽는다 (끊는 면의 정의 무관 · PRE-impl-04 · `ca_ext_svcf.chain_view`)
+    사슬은 비 · 상태만 읽는다 (끊는 면의 정의 무관 · PRE-impl-04 · `ca_ext_svcf.chain_view`) · ★ 10-22 (사전 리뷰 2 회차 PRE2-impl-01 ·
+    1저자 Q1 (다)) 괄호 판정 — 모서리마다 아래 끝 (못 가른 덩어리 그대로) > 문턱 = `SV_DEPENDENT` · 두 끝을 읽고 위 끝 (덩어리를 통째로 뺀 판)
+    ≤ 문턱 = 표지 없음 · 걸침 · 못 읽음 = `SV_UNCHECKED` (`sv_assess`)
   · 감도 단계 = 주 판정 단계 (사다리 둘 · 예측) 가 끝난 뒤에만 (`--after-main` · 판정이 묶음을 대조 · Q-F)
 ★ 4판 (10-21 · DQ · 등록 R 4판 · 1저자 10-21 Q1 · Q2 "권고대로"):
   · Q1 (§5-0 ①–③ · §4-2 ③ · R4-Q5) 단락 (ELECTRODE_SHORT · J11) = 생산자 미게시 → 그 런 = NOT_COMPUTED (사유 = 상태 이름 ELECTRODE_SHORT) —
@@ -520,26 +522,44 @@ def sv_assess(recs, threshold, scope):
     """§5-6 SV 행 (RCA-06 · Q4) — 모서리 런 (arm 0) 의 반사실 기록 → (표지, 모서리별 기록).
     비 > 문턱 (등록 문장 '넘으면') = `SV_DEPENDENT` · 기록을 못 읽음 (없음 · 비를 싣지 않는 상태 · 주 해가 0) · 문턱 없음 = `SV_UNCHECKED` ·
     읽는 칸 = 비 · 상태 (`ca_ext_svcf.chain_view` · 끊는 면의 정의 무관 · PRE-impl-04).  ⚠ producer 의 자기 표지 비교는 ≥ (그 배선의 문턱
-    = 늘 None · 이 사슬은 쓰지 않는다)."""
+    = 늘 None · 이 사슬은 쓰지 않는다).
+    ★ 10-22 (사전 리뷰 2 회차 PRE2-impl-01 · 1저자 Q1 (다) · 등록 R §5-6 SV 행 개정) 괄호 판정 — 모서리마다 아래 끝 (`ratio` · 못 가른 덩어리
+    그대로) · 위 끝 (`ratio_hi` · 그 덩어리를 통째로 뺀 판 · 덩어리 0 = 아래 끝과 같다): 아래 끝 > 문턱 = 의존 (위 끝과 무관) · 두 끝을 읽고
+    위 끝 ≤ 문턱 = 표지 없음 · 두 끝을 읽었는데 아래 ≤ 문턱 < 위 = 걸침 · 그 밖 = 못 읽음 (위 끝 칸 없는 옛 기록 포함 · 아래 끝을 못 읽은
+    모서리 = 위 끝 값과 무관하게 못 읽음 = 지금 방식) → 걸침 · 못 읽음 = `SV_UNCHECKED`.  비교 = 지금 SV 비교 그대로 (증서 여유 없음 · 두 끝
+    같게) · 모서리 묶기 = 지금 규칙 그대로 (하나라도 의존 → `SV_DEPENDENT` · 하나라도 걸침 · 못 읽음 · 문턱 없음 · 모서리 없음 →
+    `SV_UNCHECKED` · 둘 다 붙을 수 있다)."""
     rr_scope = ('R_j_lo', 'R_j0', 'R_j_hi') if scope == 'all3' else ('R_j0',)
-    out, unread, dep = {}, [], []
+    out, unread, straddle, dep = {}, [], [], []
     for (c, law, rr), a in sorted(recs.items()):
         if rr not in rr_scope:
             continue
         v = a.get('sv_cf') if isinstance(a, dict) else None
-        st, r_ = (v or {}).get('status'), (v or {}).get('ratio')
+        v = v if isinstance(v, dict) else {}
+        st, r_, rh = v.get('status'), v.get('ratio'), v.get('ratio_hi')
         key = f'c{c}_{law}_{rr}'
-        out[key] = {'status': st, 'ratio': r_}
-        if not isinstance(r_, float):
-            unread.append(key)
-        elif threshold is not None and r_ > float(threshold):
+        out[key] = {'status': st, 'ratio': r_, 'status_hi': v.get('status_hi'), 'ratio_hi': rh, 'n_unsplit': v.get('n_unsplit')}
+        lo_ok, hi_ok = isinstance(r_, float), isinstance(rh, float)
+        if threshold is None:
+            if not (lo_ok and hi_ok):
+                unread.append(key)
+            continue
+        t = float(threshold)
+        if lo_ok and r_ > t:
             dep.append(key)
+        elif lo_ok and hi_ok and rh <= t:
+            pass
+        elif lo_ok and hi_ok:
+            straddle.append(key)
+        else:
+            unread.append(key)
     flags = []
-    if threshold is None or unread or not out:
+    if threshold is None or unread or straddle or not out:
         flags.append('SV_UNCHECKED')
     if dep:
         flags.append('SV_DEPENDENT')
-    return flags, {'threshold': threshold, 'scope': scope, 'corners': out, 'unreadable': unread, 'dependent': dep}
+    return flags, {'threshold': threshold, 'scope': scope, 'corners': out, 'unreadable': unread, 'straddle': straddle,
+                   'dependent': dep}
 
 
 def mask_sigma(text, vals):
@@ -1870,6 +1890,9 @@ def sv_reasons(flags, det):
             parts.append('문턱 없음 (계획 sv_cf_threshold null)')
         if det.get('unreadable'):
             parts.append(f'대조 비를 못 읽음 — 모서리 {SENTENCE_JOIN.join(det["unreadable"])}')
+        if det.get('straddle'):                         # ★ 10-22 (Q1 (다)) — 괄호가 문턱에 걸침 (비 값 = 판정 결과에만)
+            parts.append(f'대조 비 괄호가 문턱에 걸침 (아래 끝 ≤ 문턱 < 위 끝 · 못 가른 덩어리) — 모서리 '
+                         f'{SENTENCE_JOIN.join(det["straddle"])}')
         if not det.get('corners'):
             parts.append(f'범위 {det.get("scope")} 안 모서리 기록 없음')
         out['SV_UNCHECKED'] = SENTENCE_JOIN.join(parts) + ' (§5-6 SV 행)'
