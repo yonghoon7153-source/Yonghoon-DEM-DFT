@@ -1,0 +1,156 @@
+{
+ "fib60_sdcp6_s0": {
+  "reason": null,
+  "sigma": 0.017659934119712076,
+  "nu": 3,
+  "nb": 3,
+  "st": "computed",
+  "lo": 1.0,
+  "st_hi": "computed",
+  "hi": 18.57582184218182,
+  "up_cells": 863,
+  "up_why": "",
+  "problem": null,
+  "flags": [
+   "SV_UNCHECKED"
+  ]
+ },
+ "fib60_sdcp6_s1": {
+  "reason": null,
+  "sigma": 0.022246609970613902,
+  "nu": 4,
+  "nb": 4,
+  "st": "computed",
+  "lo": 1.0,
+  "st_hi": "computed",
+  "hi": 26.5373866530559,
+  "up_cells": 885,
+  "up_why": "",
+  "problem": null,
+  "flags": [
+   "SV_UNCHECKED"
+  ]
+ },
+ "fib60_sdcp6_s2": {
+  "reason": "no_through_component",
+  "sigma": 0.0,
+  "nu": null,
+  "nb": null,
+  "st": null,
+  "lo": null,
+  "st_hi": null,
+  "hi": null,
+  "up_cells": null,
+  "up_why": "",
+  "problem": "sv_cf| 기록 종류 None · requested None (반사실 기록이어야 · 정의는 producer 이름 그대로)",
+  "flags": [
+   "SV_UNCHECKED"
+  ]
+ },
+ "fib60_sdcp6_s3": {
+  "reason": null,
+  "sigma": 15.52741527896436,
+  "nu": 2,
+  "nb": 2,
+  "st": "computed",
+  "lo": 1.0,
+  "st_hi": "computed",
+  "hi": 1.4234488757106378,
+  "up_cells": 720,
+  "up_why": "",
+  "problem": null,
+  "flags": []
+ },
+ "fib60_sdcp6_s4": {
+  "reason": null,
+  "sigma": 0.0034999684486880425,
+  "nu": 2,
+  "nb": 4,
+  "st": "computed",
+  "lo": 1.0000000000952447,
+  "st_hi": "computed",
+  "hi": 1.0000000135812632,
+  "up_cells": 304,
+  "up_why": "",
+  "problem": null,
+  "flags": []
+ },
+ "fib60_sdcp6_s5": {
+  "reason": null,
+  "sigma": 0.0040070889649764085,
+  "nu": 2,
+  "nb": 5,
+  "st": "computed",
+  "lo": 3.25146954072319,
+  "st_hi": "computed",
+  "hi": 3.491878359034246,
+  "up_cells": 420,
+  "up_why": "",
+  "problem": null,
+  "flags": [
+   "SV_DEPENDENT"
+  ]
+ },
+ "fib90_sdcp10_s0": {
+  "reason": null,
+  "sigma": 15.22469411514008,
+  "nu": 3,
+  "nb": 3,
+  "st": "computed",
+  "lo": 1.0,
+  "st_hi": "computed",
+  "hi": 16167.399531080517,
+  "up_cells": 1293,
+  "up_why": "",
+  "problem": null,
+  "flags": [
+   "SV_UNCHECKED"
+  ]
+ },
+ "fib90_sdcp10_s1": {
+  "reason": null,
+  "sigma": 18.80724966170511,
+  "nu": 5,
+  "nb": 6,
+  "st": "computed",
+  "lo": 1.4020300931381489,
+  "st_hi": "computed",
+  "hi": 11935.74951145865,
+  "up_cells": 1351,
+  "up_why": "",
+  "problem": null,
+  "flags": [
+   "SV_UNCHECKED"
+  ]
+ },
+ "fib90_sdcp10_s2": {
+  "reason": null,
+  "sigma": 16.585516181529798,
+  "nu": 1,
+  "nb": 2,
+  "st": "computed",
+  "lo": 1.0246827833685037,
+  "st_hi": "computed",
+  "hi": 11943.41364821698,
+  "up_cells": 1151,
+  "up_why": "",
+  "problem": null,
+  "flags": [
+   "SV_UNCHECKED"
+  ]
+ },
+ "fib90_sdcp10_s3": {
+  "reason": null,
+  "sigma": 19.387522798148513,
+  "nu": 1,
+  "nb": 1,
+  "st": "computed",
+  "lo": 1.0,
+  "st_hi": "computed",
+  "hi": 1.7760347350677392,
+  "up_cells": 1353,
+  "up_why": "",
+  "problem": null,
+  "flags": []
+ }
+}
