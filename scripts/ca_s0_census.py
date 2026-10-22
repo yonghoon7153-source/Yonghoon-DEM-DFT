@@ -834,7 +834,24 @@ def plan_bytes_of(plan):
 
 
 def _num_ok(x):
-    return isinstance(x, (int, float)) and not isinstance(x, bool) and math.isfinite(float(x)) and float(x) > 0
+    """유한 양수 — ★ PF2 E (10-22 · 사전 리뷰 2 회차 PRE2-impl-03) float 로 못 바꾸는 큰 정수 (10**400 · OverflowError) = 아님 (옛 = 잡히지 않은
+    예외가 단계 2 관문 밖으로 샜다)."""
+    if not isinstance(x, (int, float)) or isinstance(x, bool):
+        return False
+    try:
+        return math.isfinite(float(x)) and float(x) > 0
+    except OverflowError:
+        return False
+
+
+def _reject_dup(pairs):
+    """★ PF2 E (PRE2-impl-03) — JSON 중복 칸 거부 (사람 = 앞 값 · 해석기 = 뒤 값으로 같은 바이트를 달리 읽지 않게 · 정준 바이트 검사 앞)."""
+    out = {}
+    for k, v in pairs:
+        if k in out:
+            raise S0Error(f'JSON 중복 칸 {k!r} — 거부 (같은 바이트를 달리 읽지 않게)')
+        out[k] = v
+    return out
 
 
 def check_plan(plan):
@@ -931,7 +948,9 @@ def verify_plan_commit(repo, sha, plan_path, r_doc=R_DOC_DEFAULT, *, r_plan_path
         raise S0Error(f'등록 R 문서 ({r_doc} @ {full[:12]}) 의 "| S0 계획 해시 |" 끝 칸 ≠ 계획 sha256 {h[:16]}… — §2-1 개정 커밋이 아니다 '
                       f'(★ 10-21 — 줄 밖 · 다른 칸에 적힌 해시는 세지 않는다)')
     try:
-        plan = json.loads(pb.decode('ascii'))
+        plan = json.loads(pb.decode('ascii'), object_pairs_hook=_reject_dup)   # ★ PF2 E — 중복 칸 거부 (정준 바이트 검사 앞)
+    except S0Error:
+        raise
     except Exception as e:                                  # noqa: BLE001
         raise S0Error(f'계획 파일이 ASCII JSON 이 아니다 ({type(e).__name__})')
     check_plan(plan)

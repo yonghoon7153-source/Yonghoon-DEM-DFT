@@ -15,7 +15,9 @@
 ★ 10-22 (사전 리뷰 2 회차 PRE2-impl-01 · 1저자 Q1 (다) · 등록 R §5-6 SV 행 개정) 괄호 칸 — 못 가른 덩어리 수 (`n_unsplit_bridging_components`) ·
   규칙 (`bracket_rule`) · 위 끝 상태 · 비 (`status_hi` · `sv_counterfactual_ratio_hi` · +∞ = null + `ratio_limit_hi` 'inf') · 위 끝 풀이 기록
   (`upper` · 아래 끝과 같은 꼴 · 덩어리 0 = None) → 검증기 (꼴 · 덩어리 수 ↔ 위 끝 기록 · 덩어리 0 = 위 = 아래 · 위 끝 칸 = 위 끝 풀이 기록) ·
-  사슬 꼴 (아래 끝 · 위 끝 · 덩어리 수 — 위 끝 칸이 없는 옛 기록 = 위 끝 못 읽음 · fail-closed).  비 값의 대조 (G 비 · 아래 ≤ 위) = 다른 묶음.
+  사슬 꼴 (아래 끝 · 위 끝 · 덩어리 수 — 위 끝 칸이 없는 옛 기록 = 위 끝 못 읽음 · fail-closed).  비 값의 대조 (G 비 · 아래 ≤ 위) = 다른 묶음
+  → ★ PF2 E (10-22 · PRE2-impl-02) `_values_problem` — 비 = G_full/G_cut · 비 ≥ (1 − τ)/(1 + τ) · 증서 ok · computed ↔ G_cut 유한 양수 ·
+  no_through ↔ G_cut 0 · 위 끝도 같은 규칙 · 괄호 아래 ≤ 위 (같은 증서 폭 여유) · 사슬 꼴은 유한 양수 · +∞ 만 읽는다.
 numpy 없이 뜬다 (`numbers` · 원 기록의 numpy 수도 받는다)."""
 import math
 import numbers
@@ -27,6 +29,15 @@ KNOWN_STATUSES = ('computed', 'no_through_without_sv', 'unconverged', 'nonpositi
                   'main_unconverged', 'cjunc_electrode_short', 'all_floating_dropped', 'no_through_component')
 KIND_PREFIX = 'counterfactual'
 FLAGS = (None, 'SV_DEPENDENT')
+#: ★ PF2 E (10-22 · 사전 리뷰 2 회차 PRE2-impl-02 · 결정 없음) — 기록 안 수의 다시 대조.  τ = 수렴 증서 ⓓ 의 보장 상대 오차
+#   (= `step3_conv_cert.CERT_TARGET_TOL` · |G − G*| ≤ τ·G · 시험 S8o 가 대조 · 이 모듈은 numpy 없이 뜬다)
+CERT_TARGET_TOL = 1.0e-4
+#: 비 = G_full/G_cut 다시 셈 허용 (상대 · float 나눗셈 반올림 수준)
+RATIO_REL_TOL = 1e-12
+#: 증서 폭 꼴 여유 (새 숫자 없음) — 두 풀이가 각각 |G − G*| ≤ τ·G 면 참 비 ≥ 1 (Rayleigh) ⟹ 기록 비 ≥ (1 − τ)/(1 + τ) · 같은 G_full 의 두 끝
+#   (괄호 위 = 덩어리를 더 뺀 판 · 참 G_cut,hi ≤ G_cut,lo) ⟹ 기록 위 ≥ 아래 × (1 − τ)/(1 + τ)
+RATIO_FLOOR = (1.0 - CERT_TARGET_TOL) / (1.0 + CERT_TARGET_TOL)
+CERT_OK_STATUS = 'POSITIVE_SOLVED'    # = `step3_conv_cert.STATUS_POSITIVE` (비를 낸 풀이 = 관통 성분이 있는 양의 해)
 #: 투영이 옮기는 칸 (판정 · 기록) — 정의별 수 칸 (`n_*` · int) 은 이 목록 밖이어도 이름 그대로 옮긴다
 _COPY = ('kind', 'requested', 'threshold', 'status', 'flag', 'cg_info')
 
@@ -158,7 +169,10 @@ def sv_cf_problem(ev, solved):
     dep = thr is not None and (lim == 'inf' or (form == 'finite' and r_ >= float(thr)))
     if (fl == 'SV_DEPENDENT') != dep:
         return f'sv_cf| 표지 {fl!r} ↔ 문턱 {thr!r} · 비 {r_!r} · 표지 {lim!r} (문턱 판정과 기록이 갈렸다)'
-    return _bracket_problem(rec)
+    why = _bracket_problem(rec)
+    if why:
+        return why
+    return _values_problem(rec)
 
 
 def _form_problem(st, r_, lim, what):
@@ -178,7 +192,7 @@ def _form_problem(st, r_, lim, what):
 def _bracket_problem(rec):
     """★ 10-22 (PRE2-impl-01 · 02 · 1저자 Q1 (다)) 괄호 칸의 꼴 → 문제 | None — 못 가른 덩어리 수 = 0 이상 정수 · 규칙 = 비지 않은 낱말 ·
     위 끝 상태 ↔ 비 ↔ 표지 (아래 끝과 같은 규칙) · 덩어리 0 ⟹ 위 끝 풀이 기록 없음 · 위 = 아래 (상태 · 비 · 표지) · 덩어리 > 0 ⟹ 위 끝 풀이
-    기록 (dict · 꼴) = 위 끝 칸.  비 값의 대조 (G 비 다시 셈 · 아래 ≤ 위) 는 이 함수 밖 (다른 묶음)."""
+    기록 (dict · 꼴) = 위 끝 칸.  비 값의 대조 (G 비 다시 셈 · 아래 ≤ 위) 는 이 함수 밖 (★ PF2 E `_values_problem`)."""
     nu = rec.get('n_unsplit_bridging_components')
     if _is_bool(nu) or not isinstance(nu, numbers.Integral) or int(nu) < 0:
         return f'sv_cf| 못 가른 덩어리 수 {nu!r} (0 이상 정수 · 괄호 판정 · 10-22)'
@@ -212,12 +226,78 @@ def _bracket_problem(rec):
     return None
 
 
-def _end_view(st, r_, lim):
-    """한 끝의 (상태, 비, 표지) → 사슬이 읽는 비 (float · +∞ · None = 못 읽음)."""
+def _pos_float(x):
+    """유한 양의 float (bool · 정수 · 글자 · NaN · ±∞ · 0 · 음수 아님)."""
+    return isinstance(x, float) and not _is_bool(x) and math.isfinite(x) and x > 0.0
+
+
+def _end_values_problem(end, G_full, what):
+    """★ PF2 E (10-22 · 사전 리뷰 2 회차 PRE2-impl-02 · 결정 없음) — 한 끝 (아래 = 기록 자신 · 위 = `upper`) 의 수 대조 → 문제 | None.
+    computed = G_full · G_cut 유한 양수 · 비 = G_full/G_cut (상대 `RATIO_REL_TOL` · 그 값이 유한) · 비 ≥ `RATIO_FLOOR` (증서 폭 꼴) · 반사실 증서가
+    있으면 ok · ⓐ–ⓓ 참 · POSITIVE_SOLVED (플래그를 믿지 않는다) · no_through_without_sv = G_cut 정확히 0 · G_full 유한 양수 (+∞ 의 분자) · 비를
+    싣지 않는 상태 = 수 대조 없음 (사슬 = 못 읽음)."""
+    st = end.get('status')
     form = RATIO_STATUSES.get(st)
-    if form == 'finite' and isinstance(r_, float) and not _is_bool(r_):
+    if form is None:
+        return None
+    if not _pos_float(G_full):
+        return f'sv_cf| {what} {st} 인데 G_full {G_full!r} (유한 양수 — 비의 분자 · 주 해 단자 G)'
+    gc = end.get('G_cut_code')
+    if form == 'inf':
+        if not (isinstance(gc, float) and not _is_bool(gc) and gc == 0.0):
+            return f'sv_cf| {what} {st} 인데 G_cut {gc!r} (관통 없음 = 0.0)'
+        return None
+    if not _pos_float(gc):
+        return f'sv_cf| {what} {st} 인데 G_cut {gc!r} (유한 양수 — 비의 분모)'
+    r_ = end.get('sv_counterfactual_ratio')
+    want = G_full / gc
+    if not (math.isfinite(want) and abs(r_ - want) <= RATIO_REL_TOL * want):
+        return f'sv_cf| {what} 비 {r_!r} ≠ G_full/G_cut {want!r} (상대 {RATIO_REL_TOL:g} · 기록 안 수가 서로 맞지 않는다)'
+    if not r_ >= RATIO_FLOOR:
+        return (f'sv_cf| {what} 비 {r_!r} < (1 − τ)/(1 + τ) = {RATIO_FLOOR!r} (τ = 증서 ⓓ 보장 상대 오차 {CERT_TARGET_TOL:g} · 끊기만 한 그래프의 '
+                f'비 ≥ 1 = Rayleigh)')
+    cc = end.get('conv_cert')
+    if cc is not None:
+        if not isinstance(cc, dict):
+            return f'sv_cf| {what} 반사실 증서 꼴 {type(cc).__name__} (dict 이어야)'
+        bad = [k for k in ('ok', 'pass_a', 'pass_b', 'pass_c', 'pass_d') if cc.get(k) is not True]
+        if bad or cc.get('status') != CERT_OK_STATUS:
+            return (f'sv_cf| {what} {st} 인데 반사실 증서 상태 {cc.get("status")!r} · 참이 아닌 칸 {bad} (ok · ⓐ–ⓓ 참 · {CERT_OK_STATUS} 이어야 · '
+                    f'플래그를 믿지 않는다)')
+    return None
+
+
+def _values_problem(rec):
+    """★ PF2 E — 아래 끝 · 위 끝 (못 가른 덩어리 > 0 이면 `upper`) 의 수 대조 + 괄호 아래 ≤ 위 (같은 증서 폭 여유 · 아래 +∞ ⟹ 위 +∞) → 문제 | None.
+    꼴 검사 (`sv_cf_problem` · `_bracket_problem`) 를 지난 기록에만 (상태 ↔ 비 꼴 · 덩어리 0 ⟹ 위 = 아래 · 위 끝 칸 = 위 끝 풀이 기록)."""
+    gf = rec.get('G_full_code')
+    why = _end_values_problem(rec, gf, '아래 끝')
+    if why:
+        return why
+    up = rec.get('upper')
+    if isinstance(up, dict):
+        why = _end_values_problem(up, gf, '위 끝')
+        if why:
+            return why
+    lo = _end_view(rec.get('status'), rec.get('sv_counterfactual_ratio'), rec.get('ratio_limit'))
+    hi = _end_view(rec.get('status_hi'), rec.get('sv_counterfactual_ratio_hi'), rec.get('ratio_limit_hi'))
+    if lo is None or hi is None:
+        return None
+    if lo == math.inf and hi != math.inf:
+        return f'sv_cf| 괄호 아래 +∞ 인데 위 {hi!r} (위 = 덩어리를 더 뺀 판 · 관통 없음이 되살아날 수 없다 · Rayleigh)'
+    if hi != math.inf and not hi >= lo * RATIO_FLOOR:
+        return (f'sv_cf| 괄호 위 {hi!r} < 아래 {lo!r} × (1 − τ)/(1 + τ) (위 = 덩어리를 더 뺀 판 · 참 G_cut,hi ≤ G_cut,lo · 증서 폭 여유 '
+                f'τ {CERT_TARGET_TOL:g})')
+    return None
+
+
+def _end_view(st, r_, lim):
+    """한 끝의 (상태, 비, 표지) → 사슬이 읽는 비 (float · +∞ · None = 못 읽음).  ★ PF2 E (10-22) — finite 꼴 = 유한 양의 float 만 ·
+    inf 꼴 = 비 null + 표지 'inf' 만 (NaN · 음수 · 0 · ±∞ · bool · 수가 실린 inf 꼴 = 못 읽음 → 사슬 SV_UNCHECKED)."""
+    form = RATIO_STATUSES.get(st)
+    if form == 'finite' and _pos_float(r_):
         return r_
-    if form == 'inf' and lim == 'inf':
+    if form == 'inf' and lim == 'inf' and r_ is None:
         return math.inf
     return None
 

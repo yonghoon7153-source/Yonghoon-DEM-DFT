@@ -546,6 +546,11 @@ def blocking_of(flags):
     return sorted(f for f in set(flags) if f in BLOCKING_FLAGS)
 
 
+def _sv_readable(x):
+    """SV 반사실 한 끝의 비를 읽을 수 있나 — float (bool 아님) · 유한 양수 또는 +∞ (★ PF2 E · `ca_ext_svcf._end_view` 와 같은 정의역)."""
+    return isinstance(x, float) and not isinstance(x, bool) and (x == math.inf or (math.isfinite(x) and x > 0.0))
+
+
 def sv_assess(recs, threshold, scope):
     """§5-6 SV 행 (RCA-06 · Q4) — 모서리 런 (arm 0) 의 반사실 기록 → (표지, 모서리별 기록).
     비 > 문턱 (등록 문장 '넘으면') = `SV_DEPENDENT` · 기록을 못 읽음 (없음 · 비를 싣지 않는 상태 · 주 해가 0) · 문턱 없음 = `SV_UNCHECKED` ·
@@ -567,7 +572,9 @@ def sv_assess(recs, threshold, scope):
         st, r_, rh = v.get('status'), v.get('ratio'), v.get('ratio_hi')
         key = f'c{c}_{law}_{rr}'
         out[key] = {'status': st, 'ratio': r_, 'status_hi': v.get('status_hi'), 'ratio_hi': rh, 'n_unsplit': v.get('n_unsplit')}
-        lo_ok, hi_ok = isinstance(r_, float), isinstance(rh, float)
+        #  ★ PF2 E (10-22 · PRE2-impl-02 옆 자리) — 읽는 비 = float (bool 아님) · 유한 양수 또는 +∞ (옛 = float 이기만 하면 읽음 → 아래 NaN ·
+        #    −∞ · 0 · 음수 + 위 ≤ 문턱 = 표지 없음) · 그 밖 = 못 읽음 (SV_UNCHECKED)
+        lo_ok, hi_ok = _sv_readable(r_), _sv_readable(rh)
         if threshold is None:
             if not (lo_ok and hi_ok):
                 unread.append(key)
@@ -685,8 +692,37 @@ def _reject_constant(tok):
     raise ValueError(f'JSON 상수 {tok} 거부')
 
 
+def _reject_dup(pairs):
+    """★ PF2 E (10-22 · 사전 리뷰 2 회차 PRE2-impl-03) — JSON 중복 칸 거부 (같은 바이트를 사람 = 앞 값 · 해석기 = 뒤 값으로 다르게 읽지 않게 ·
+    등록 sha 로 묶인 계획 · S0 보고)."""
+    out = {}
+    for k, v in pairs:
+        if k in out:
+            raise ValueError(f'JSON 중복 칸 {k!r} 거부')
+        out[k] = v
+    return out
+
+
+def _json_strict(raw, enc='utf-8'):
+    """계획 · S0 보고 읽기 — NaN · Infinity 상수 거부 · 중복 칸 거부 (ValueError)."""
+    return json.loads(raw.decode(enc), parse_constant=_reject_constant, object_pairs_hook=_reject_dup)
+
+
 def _num(v):
-    return not isinstance(v, bool) and isinstance(v, (int, float)) and math.isfinite(v)
+    """유한 실수 (bool 아님) — ★ PF2 E (PRE2-impl-03) float 로 못 바꾸는 큰 정수 (10**400 · OverflowError) = 유한 아님 (옛 = 잡히지 않은 예외)."""
+    if isinstance(v, bool) or not isinstance(v, (int, float)):
+        return False
+    try:
+        return math.isfinite(v)
+    except OverflowError:
+        return False
+
+
+def _show(v):
+    """멈춤 사유의 값 표시 — float 로 못 바꾸는 큰 정수 (★ PF2 E · 10**400) 는 자리 수만 (수백 자리를 화면에 쏟지 않는다)."""
+    if isinstance(v, int) and not isinstance(v, bool) and not _num(v):
+        return f'<정수 {len(str(abs(v)))} 자리 · float 넘침>'
+    return repr(v)
 
 
 def load_plan(path):
@@ -694,7 +730,7 @@ def load_plan(path):
     결과 전 등록 숫자 넷은 null 이어도 꼴 검사는 지난다 (null = ⬜ · `require_plan_numbers` 가 멈춘다)."""
     try:
         raw = Path(path).read_bytes()
-        obj = json.loads(raw.decode('utf-8'), parse_constant=_reject_constant)
+        obj = _json_strict(raw)                               # ★ PF2 E — 중복 칸 거부 (옛 = 마지막 값)
     except (OSError, UnicodeDecodeError, ValueError) as e:
         raise Stop('PLAN_INVALID', f'{path}: {type(e).__name__}: {e}')
     bad = []
@@ -709,18 +745,18 @@ def load_plan(path):
     for k, pos in (('s_min_um', False), ('tol_ff_um', False), ('step3_rtol', True)):
         v = obj[k]
         if not _num(v) or v < 0 or (pos and v == 0):
-            bad.append(f'{k} {v!r}')
+            bad.append(f'{k} {_show(v)}')
     if not (isinstance(obj['p2_extra'], str) and re.fullmatch(r'[A-Za-z0-9._=/ -]*', obj['p2_extra'])):
         bad.append(f'p2_extra {obj["p2_extra"]!r}')
     mp = obj['max_ladder_points']
-    if mp is not None and not (type(mp) is int and mp >= 1):    # noqa: E721 — bool 제외
-        bad.append(f'max_ladder_points {mp!r} (정수 ≥ 1 · null = ⬜)')
+    if mp is not None and not (type(mp) is int and _num(mp) and mp >= 1):    # noqa: E721 — bool 제외 · ★ PF2 E 넘침 (10**400) = 유한 아님
+        bad.append(f'max_ladder_points {_show(mp)} (정수 ≥ 1 · 유한 · null = ⬜)')
     cr = obj['calib_rj_ratio_max']
     if cr is not None and cr != PLAN_NO_CAP and not (_num(cr) and cr > 1.0):
-        bad.append(f'calib_rj_ratio_max {cr!r} (유한 > 1 · {PLAN_NO_CAP!r} = 상한 없음으로 등록 · null = ⬜)')
+        bad.append(f'calib_rj_ratio_max {_show(cr)} (유한 > 1 · {PLAN_NO_CAP!r} = 상한 없음으로 등록 · null = ⬜)')
     th = obj['sv_cf_threshold']
     if th is not None and not (_num(th) and th >= 1.0):
-        bad.append(f'sv_cf_threshold {th!r} (유한 ≥ 1 · 비 G_full/G_cut ≥ 1 · null = ⬜)')
+        bad.append(f'sv_cf_threshold {_show(th)} (유한 ≥ 1 · 비 G_full/G_cut ≥ 1 · null = ⬜)')
     if obj['sv_cf_scope'] is not None and obj['sv_cf_scope'] not in SV_CF_SCOPES:
         bad.append(f'sv_cf_scope {obj["sv_cf_scope"]!r} ∉ {SV_CF_SCOPES} (null = ⬜)')
     if bad:
@@ -818,7 +854,7 @@ def load_s0_plan(path, reg_path, plan):
     """--s0-plan 파일 → 기록 (path · sha256 · content) · 꼴 · 등록 · 대조 (`check_s0`)."""
     try:
         raw = Path(path).read_bytes()
-        obj = json.loads(raw.decode('ascii'), parse_constant=_reject_constant)
+        obj = _json_strict(raw, 'ascii')                      # ★ PF2 E — 중복 칸 거부 (정준 바이트 검사 앞)
     except (OSError, UnicodeDecodeError, ValueError) as e:
         raise Stop('S0_PLAN_INVALID', f'{path}: {type(e).__name__}: {e}')
     rec = check_s0(obj, hashlib.sha256(raw).hexdigest(), raw, reg_path, plan)
@@ -936,7 +972,7 @@ def read_s0_report(path, stage):
     """사다리 — `--s0-stage<n>-report` 파일 → 기록 (`s0_report_record` · 검사는 `s0_reports_problem`) · 못 읽음 = Stop S0_REPORT_MISMATCH."""
     try:
         raw = Path(path).read_bytes()
-        rep = json.loads(raw.decode('utf-8'), parse_constant=_reject_constant)
+        rep = _json_strict(raw)                               # ★ PF2 E — 중복 칸 거부 (사람 = 앞 · 해석기 = 뒤 로 달리 읽지 않게)
     except (OSError, UnicodeDecodeError, ValueError, TypeError) as e:
         raise Stop('S0_REPORT_MISMATCH', f'S0 단계 {stage} 보고 {path}: {type(e).__name__}: {e}')
     return s0_report_record(rep, hashlib.sha256(raw).hexdigest(), str(Path(path).resolve()))
