@@ -485,6 +485,8 @@ def check_rigid_shift(parent, probe, is_ads, dz=P05_DZ_A, tol=RIGID_TOL_A):
     봉인 단계가 파일에서 다시 읽은 구조로도 쓴다 (extxyz 는 1e-8 Å 자리까지 쓴다). 반환 dict (ok · violations · 최대 오차)."""
     if len(parent) != len(probe) or len(is_ads) != len(parent):
         return {"ok": False, "violations": [f"원자 수 부모 {len(parent)} · 탐침 {len(probe)} · 마스크 {len(is_ads)}"]}
+    if not all(np.isfinite(a).all() for a in (parent.get_positions(), probe.get_positions(), parent.cell.array, probe.cell.array)):
+        return {"ok": False, "violations": ["비유한 좌표·셀 (NaN · Inf) — 오차 비교가 거짓이 되어 통과할 수 있다 (CZ Q-CZ-9)"]}
     is_ads = np.asarray(is_ads, bool)
     bad = []
     if parent.get_chemical_symbols() != probe.get_chemical_symbols():
@@ -896,6 +898,17 @@ def _selftest():
         r = broken(f)
         ck(f"⛔음성 G1p ①: {name} → 잡는다", not r["ok"], r)
     ck("⛔음성 G1p ①: 탐침 = 부모 그대로 (dz 0) → 잡는다", not check_rigid_shift(pb, pb, isC)["ok"])
+    nonfin = lambda r: not r["ok"] and any("비유한" in v for v in r.get("violations", []))
+    for name, f in (("흡착층 원자 하나 x NaN", lambda y: y.positions.__setitem__((iC, 0), np.nan)),
+                    ("기판 원자 하나 z inf", lambda y: y.positions.__setitem__((iS, 2), np.inf)),
+                    ("셀 c NaN", lambda y: y.set_cell(y.cell.array + np.diag([0.0, 0.0, np.nan])))):
+        r = broken(f)
+        ck(f"⛔음성 G1p ① (CZ Q-CZ-9): {name} → 비유한으로 잡는다 (오차 비교가 거짓이 되어 통과하던 자리)", nonfin(r), r)
+    with tempfile.TemporaryDirectory() as td:
+        yq = pr.copy(); yq.positions[iC, 0] = np.nan
+        _write(os.path.join(td, "p.extxyz"), pb); _write(os.path.join(td, "q.extxyz"), yq)
+        rq = check_rigid_shift(_read(os.path.join(td, "p.extxyz")), _read(os.path.join(td, "q.extxyz")), isC)
+    ck("⛔음성 G1p ① (CZ Q-CZ-9): NaN 좌표를 쓴 extxyz 를 다시 읽어도 비유한으로 잡는다 (파일 왕복)", nonfin(rq), rq)
     for name, kw, key in (("dz −0.5 (계면을 누름)", {"dz": -0.5}, "강체 인장만"), ("dz 40 (셀 위끝 넘음)", {"dz": 40.0}, "셀 위끝")):
         try:
             p05_probe(pb, pf, **kw); bad = False

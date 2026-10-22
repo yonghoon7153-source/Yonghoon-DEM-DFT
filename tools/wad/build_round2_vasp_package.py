@@ -276,7 +276,7 @@ def build(seal_dir, out, v5_pkg=None, wadcc_pkg=None, ledger=None):
     _write(os.path.join(out, "JOBS.txt"), "\n".join(j["dir"] for j in jobs) + "\n")
     _write(os.path.join(out, "run_all.sh"), run_all_text()); os.chmod(os.path.join(out, "run_all.sh"), 0o755)
     meta = {"schema": "wad_round2_vasp_package/v1", "card": CARD, "amendment_4": AMEND4, "decisions": list(DECISIONS),
-            "status": "준비본 v1 — Codex CZ 묶음 리뷰 전 · 발송 전",
+            "status": "준비본 v2 — Codex CZ 고침 반영 · 발송 전",
             "tool_sha256": _sha(os.path.abspath(__file__)), "v5_tool_sha256": _sha(os.path.abspath(V.__file__)),
             "sources": {"p2s_seal_manifest_sha256": _sha(smp), "wadcc_manifest_sha256": _sha(os.path.join(wadcc_pkg, "cc_stage2_manifest.json")),
                         "v5_manifest_sha256": V5_MANIFEST_SHA256},
@@ -398,11 +398,11 @@ watch_scf(){
 # ── 포장 (허용 목록 · 단계마다 성공 확인 · V5 v6 절차) ──
 pack_fail(){ echo "⛔ 포장: $1"; rm -f round2_return.tgz.part round2_return.tgz.sha256.part; return 1; }
 pack(){
-  local T=round2_return.tmp g hh n_mg n_so n_li f
+  local T=round2_return.tmp g hh n_mg n_so n_li f dirs=run
   rm -rf "$T" round2_return.tgz.part round2_return.tgz.sha256.part round2_return.list; mkdir "$T" || return 1
-  find run run_aborted -mindepth 2 -maxdepth 3 -type f > "$T/found" 2> /dev/null; g=$?
-  [ -d run_aborted ] || g=0
-  [ "$g" = 0 ] || { pack_fail "run/ 열거 실패"; return 1; }
+  [ -d run_aborted ] && dirs="run run_aborted"                   # 있는 폴더만 열거한다 — 없는 폴더의 오류를 덮으려다 run/ 열거 실패까지 덮지 않게 (CZ Q-CZ-10 ①)
+  find $dirs -mindepth 2 -maxdepth 3 -type f > "$T/found" 2> "$T/find.err"; g=$?
+  [ "$g" = 0 ] || { pack_fail "반송 폴더 열거 실패 (find $g: $(head -c 200 "$T/find.err" | tr '\n' ' '))"; return 1; }
   grep -E "^(run|run_aborted)/[^/]+/(stageA/)?($RET_ALLOW)$" "$T/found" > "$T/allowed"; g=$?
   [ "$g" -le 1 ] || { pack_fail "허용 목록 필터 오류 ($g)"; return 1; }
   LC_ALL=C sort "$T/allowed" > "$T/sorted" || { pack_fail "정렬 실패"; return 1; }
@@ -1488,21 +1488,31 @@ def collect(out, ret, manifest_sha256, uma=None, registry=None):
         hist = res[n].get("history") or {}
         rung = "a4B" if j["ladder"] == "a4" else next((k for k in ("r2B", "r1B", "0") if hist.get(k) == "OK"), "0")   # 채택 시도 (없으면 단 0)
         t = _read(os.path.join(run, RUNG_DIR[rung].format(job=n), "OUTCAR"))
-        fd[n] = far_diag(t, j["area_A2"]) if t else None
+        # 진단은 남기되 어느 시도에서 읽었는지 · 채택 시도인지 붙인다 — 채택 안 된 시도의 진단이 채택 자료처럼 안 읽히게 (CZ Q-CZ-7)
+        fd[n] = {**((far_diag(t, j["area_A2"]) or {}) if t else {"missing": "OUTCAR 없음"}), "source_rung": rung,
+                 "source_status": hist.get(rung, res[n]["status"]), "adopted": res[n]["status"] == "OK" and (j["ladder"] == "a4" or hist.get(rung) == "OK")}
     rec["far_diagnostics"] = fd
-    sig = []
-    pa, pb = (fd.get("P2S_S_A_far") or {}).get("p_z_eA"), (fd.get("P2S_S_A_G3_c2_far_ii") or {}).get("p_z_eA")
-    if None not in (pa, pb) and abs(pb - pa) >= SIG_PZ:
+    sig, nev = [], []                     # 신호 · 미평가 (자료 결측) — "검사했고 신호 없음" 과 가른다 (CZ Q-CZ-7)
+    pz_ = lambda n: (fd.get(n) or {}).get("p_z_eA") if (fd.get(n) or {}).get("adopted") else None
+    pa, pb = pz_("P2S_S_A_far"), pz_("P2S_S_A_G3_c2_far_ii")
+    if None in (pa, pb):
+        nev.append("ⓐ |Δp_z| — 채택된 far 의 p_z 가 없다 (잡 미완 · 쌍극자 자료 결측)")
+    elif abs(pb - pa) >= SIG_PZ:
         sig.append(f"ⓐ |Δp_z| {abs(pb - pa):.3f} e·Å ≥ {SIG_PZ} (S_A far ↔ G3 far_ii)")
-    if None not in (g3.get("dW_ii"), g3.get("dD3_ii")) and abs(g3["dW_ii"] - g3["dD3_ii"]) >= SIG_PBE:
+    if None in (g3.get("dW_ii"), g3.get("dD3_ii")):
+        nev.append("ⓑ G3 (ii) PBE 몫 — ΔW · ΔD3 결측")
+    elif abs(g3["dW_ii"] - g3["dD3_ii"]) >= SIG_PBE:
         sig.append(f"ⓑ G3 (ii) PBE 몫 |ΔW − ΔD3| {abs(g3['dW_ii'] - g3['dD3_ii']):.4f} ≥ {SIG_PBE} J/m²")
-    rec["charge_transfer_signals"] = {"signals": sig, "label": "분리 끝점의 전자 상태 미확인" if sig else None,
-                                      "rule": "신호가 있으면 라벨 제한 · 계속할지는 1저자 (판정 상태는 바꾸지 않는다) · ⓒ 파일럿 S_A far 진단은 1저자가 본다"}
+    rec["charge_transfer_signals"] = {"signals": sig, "not_evaluated": nev, "label": "분리 끝점의 전자 상태 미확인" if sig else None,
+                                      "rule": "신호가 있으면 라벨 제한 · 계속할지는 1저자 (판정 상태는 바꾸지 않는다) · ⓒ 파일럿 S_A far 진단은 1저자가 본다 · "
+                                              "신호 없음 ≠ 중성 입증 · 미평가 = 자료 결측 (신호 없음과 다르다)"}
     if sig:
         g5["labels"].append("분리 끝점의 전자 상태 미확인")
+    if nev:
+        g5["labels"].append(f"전하이동 신호 {'·'.join(x[0] for x in nev)} 미평가 (자료 결측)")
     # 질문별 실패 전파 (§4d)
     q = {"G5_C": [n for n in set(sum(SAMPLES.values(), ()) + sum(G3_PAIRS.values(), ()) + sum(G4_PAIRS.values(), ())) if not ok(n)],
-         "delta_XC_vdW": [n for n in sum(DELTA_PAIRS.values(), ()) if not ok(n)],
+         "delta_XC_vdW": [n for k in DELTA_PAIRS for n in DELTA_PAIRS[k] + SAMPLES[k] if not ok(n)],      # δ = W_optB88 − W_PBE+D3 — 두 쌍 다 (CZ Q-CZ-6)
          "CC_control": [n for n in sum(CC_PAIRS.values(), ()) if not ok(n)], "silver_a4": [A4_JOB] if not ok(A4_JOB) else []}
     rec["failure_propagation"] = {k: sorted(v) for k, v in q.items()}
     rec["failure_propagation"]["rule"] = "물리적 수렴 실패는 그 질문에만 · 공통 환경 고장 (VASP 빌드 · PP · vdW 커널) 만 전체 정지 · 은 a4 실패는 은 G4 에만"
@@ -1675,7 +1685,7 @@ def _readme(meta, pkg_sha):
     caps = " · ".join(f"{s} {meta['stages'][s]['cap_h']:g} h" for s in meta["stages"])
     return f"""# W_ad 외주 2차 — VASP 단일점 묶음 (LPSCl | 흑연 작은 모델 · C–C 대조 · 은 a4)
 
-> 상태: **준비본 v1 — Codex CZ 묶음 리뷰 전 · 발송 전** · 결정 `D-2026-10-15-wad-p2small-vasp-card` · `D-2026-10-15-wad-aprime-v5-e70-a4-rerun` (active)
+> 상태: **준비본 v2 — Codex CZ 고침 반영 · 발송 전** · 결정 `D-2026-10-15-wad-p2small-vasp-card` · `D-2026-10-15-wad-aprime-v5-e70-a4-rerun` (active)
 > 이 묶음 MANIFEST.sha256 의 sha256 = `{pkg_sha}` (보낼 때 메일 본문에 적는다 — 반송 검사가 이 값으로 승인본을 확인한다)
 
 ## 무엇을 하나
@@ -1717,7 +1727,9 @@ def _readme(meta, pkg_sha):
 VASP 빌드 · 노드/코어 · **잡별 peak RSS · 벽시계** 를 `run/env.txt` 에 한 줄씩 덧붙여 주세요.
 
 ## English summary
-24 single-point SCF runs (no relaxation) on fixed geometries, in stages: P (pilot: 5 jobs) first, then 1–4 only after we send a release file.
+24 jobs; 25 VASP executions when nothing fails (the silver a4 job is a two-stage run), up to 94 under the registered retry ladder, excluding separately
+recorded infrastructure retries. All are single-point SCF runs (no relaxation) on fixed geometries, in stages: P (pilot: 5 jobs) first, then 1–4 only after
+we send a release file.
 Carbon jobs: Gaussian ISMEAR 0, SIGMA 0.05 eV (0.025 eV for one check), ENCUT 520 eV (650 eV for one check), PBE+D3(BJ) with explicit parameters, or
 optB88-vdW (GGA = BO, PARAM1/PARAM2, AGGAC 0, LUSE_VDW, Zab_vdW, IVDW 0; needs vdw_kernel.bindat via VDW_KERNEL). Dipole correction along z.
 The runner applies a pre-registered retry ladder automatically (rung 0 → r1 stage A without dipole potential correction, then stage B restarting from that
@@ -2521,6 +2533,29 @@ def _selftest():
         rdm = open(os.path.join(PKG, "README.md"), encoding="utf-8").read()
         ck("R5 README: 0 스텝 중단은 WALL_S (스케줄러 장부 값) 를 꼭 · 모르면 UNKNOWN 으로 남고 --infra-wall 로 채울 때까지 다음 잡이 안 뜬다 (한·영)",
            "WALL_S=<초>" in rdm and "UNKNOWN" in rdm and "--infra-wall" in rdm and "시간을 알면" not in rdm and "WALL_S=<scheduler wall seconds>" in rdm, rdm[rdm.find("5. "):][:400])
+        # R6 (CZ Q-CZ-10 ① · Q-CZ-6 · Q-CZ-7 · Q-CZ-10 ③) — 반송 열거 오류 · δ 의존성 · far 진단 출처 · 신호 미평가 · 영어 요약
+        stub = os.path.join(T, "stubbin"); os.makedirs(stub, exist_ok=True)
+        open(os.path.join(stub, "find"), "w").write("#!/bin/sh\necho 'find: run/x: Input/output error' >&2\nexit 1\n"); os.chmod(os.path.join(stub, "find"), 0o755)
+        pe = fresh("pk_enum"); shutil.copytree(os.path.join(p7, "run"), os.path.join(pe, "run"))          # run_aborted 없음 (첫 반송의 보통 꼴)
+        rce, loge = run_r(pe, {}, (), PACK_ONLY="1", PATH=f"{stub}:{os.environ['PATH']}")
+        rce2, _ = run_r(pe, {}, (), PACK_ONLY="1")
+        ck("⛔음성 R6 (CZ Q-CZ-10 ①): run_aborted 가 없는 반송에서 run/ 열거 (find) 가 실패하면 포장 실패 · 종료 4 (지금까지는 관리 파일만 담고 성공) · 고친 뒤 정상 열거는 종료 0",
+           rce == 4 and "열거" in loge and rce2 == 0, (rce, loge[-200:], rce2))
+        c_tam = collect(tam, tam, msha, uma, reg7)
+        ck("⛔음성 R6 (CZ Q-CZ-6): δ (XC+vdW) 는 PBE+D3 쌍에도 기댄다 — S_A PBE bound 가 OK 가 아니면 δ 실패 전파 목록에 든다 (지금까지는 optB88 쌍만)",
+           "P2S_S_A_bound" in c_tam["failure_propagation"]["delta_XC_vdW"], c_tam["failure_propagation"])
+        tfd = os.path.join(T, "tfd"); shutil.copytree(p7, tfd); open(os.path.join(tfd, "run", "P2S_S_A_far", "INCAR"), "a").write("ALGO = Fast\n")
+        c_fd = collect(tfd, tfd, msha, uma, reg7)
+        fdf = c_fd["far_diagnostics"].get("P2S_S_A_far") or {}
+        c7 = collect(p7, p7, msha, uma, reg7)
+        ck("⛔음성 R6 (CZ Q-CZ-7): far 가 채택 시도가 아니면 진단은 남기되 adopted false · source_rung · source_status 를 붙이고 신호 ⓐ 는 미평가 (G5 라벨) — 깨끗한 반송은 미평가 없음",
+           fdf.get("adopted") is False and fdf.get("source_rung") == "0" and fdf.get("source_status") == "ATTEMPT_MISMATCH"
+           and any(x.startswith("ⓐ") for x in c_fd["charge_transfer_signals"].get("not_evaluated", [])) and any("미평가" in l for l in c_fd["G5_C"]["labels"])
+           and c7["charge_transfer_signals"].get("not_evaluated") == [] and (c7["far_diagnostics"]["P2S_S_A_far"] or {}).get("adopted") is True,
+           (fdf, c_fd["charge_transfer_signals"], c_fd["G5_C"]["labels"], c7["charge_transfer_signals"]))
+        ck("R6 (CZ Q-CZ-10 ③): 영어 요약 = 24 jobs · 실패 없으면 VASP 실행 25 (은 a4 = 두 단계) · 등록 사다리로 최대 94 · 인프라 재시도 따로 · 상태 줄 v2",
+           "24 jobs; 25 VASP executions when nothing fails" in rdm and "up to 94 under the registered retry ladder" in rdm and "24 single-point SCF runs" not in rdm
+           and "준비본 v2" in rdm, rdm[rdm.find("## English summary"):][:300])
     finally:
         if os.environ.get("R2_SELFTEST_KEEP") == "1":
             print(f"  (시험 폴더 남김: {T})")
