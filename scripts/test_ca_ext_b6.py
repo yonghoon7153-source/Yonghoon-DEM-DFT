@@ -780,6 +780,8 @@ def t_sv_values(mm, proj, Es):
         'computed 인데 G_cut 0.0': lo_rec(1.25, G_cut_code=0.0),
         'computed 인데 G_cut 음수': lo_rec(1.25, G_cut_code=-2.0),
         'computed 인데 G_cut bool': lo_rec(1.25, G_cut_code=True),
+        'computed 인데 G_cut bool True (G_full 1.25 · 비 1.25 = G 비 일관 · 셈 대조로는 안 걸린다)': lo_rec(1.25, G_full_code=1.25,
+                                                                                               G_cut_code=True),
         'computed 인데 G_full None': lo_rec(1.25, G_full_code=None),
         'computed 인데 G_full 0.0': lo_rec(1.25, G_full_code=0.0),
         'computed 인데 G_full 음수 (G_cut 도 음수 · 비 = G 비 1.25)': lo_rec(1.25, G_full_code=-2.5, G_cut_code=-2.0),
@@ -799,9 +801,15 @@ def t_sv_values(mm, proj, Es):
         '괄호 아래 +∞ 인데 위 유한 2.0': br_rec(1.0, 2.0, st='no_through_without_sv'),
         '괄호 위 = 아래 × RATIO_FLOOR 바로 아래 (nextafter)': br_rec(1.5, math.nextafter(knife, 0.0)),
     }
+    reasons = {}
     for nm, rec in bad.items():
         got = ok_of(rec)
         chk(f'S8n 수 대조 거부 [{nm}]', not got[0], got)
+        reasons[nm] = got[1]
+    #  ★ 같은 부류 (10-22 · 변이 ME8 · ME9) — 증서 꼴 · G_cut 꼴 검사를 끄면 뒤의 셈이 예외로 무너지고 계약의 감싸기 (`unverifiable`) 가
+    #    대신 거부했다 (받음 · 거부는 같고 사유만 다르다) → 거부 사유 = 검증기 자신의 문장 (`sv_cf|`) 이어야 한다
+    odd = {nm: why for nm, why in reasons.items() if not (isinstance(why, str) and why.startswith('CAEXT|cjunc| sv_cf|'))}
+    chk('S8n 거부 사유 = 검증기 자신의 문장 (CAEXT|cjunc| sv_cf| …) — 예외 감싸기 (unverifiable) · 다른 검사로 거부된 꼴 없음', not odd, odd)
     ev = getattr(SVCF, '_end_view', None)
     cv = getattr(SVCF, 'chain_view', None)
     if callable(ev) and callable(cv):
