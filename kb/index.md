@@ -9,7 +9,7 @@
 ## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 330건)
 - 2026-10-22 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-10-22 · `kb/reviews/codex_CZ_reply_wad_outsourcing_round2_bundle_2026_10_17.md` — CZ 회신 — W_ad 외주 2차 묶음 리뷰: NO-GO · 발송 보류 · 구조 봉인·집계 산식은 유지 · 반송 검사 경로의 결함 (판정 순서 · A→B 결박 · 시도별 환경 감사 · optB88 판독 · 인프라 중단 비용) 을 고친 뒤 재봉인 · 수령 2026-10-22 (사용자 붙여넣기 · 원문 보존 · 마크다운…
-- 2026-10-22 · `kb/reviews/codex_DB_prompt_wad_outsourcing_round2_v2_2026_10_22.md` — DB 프롬프트 — W_ad 외주 2차 묶음 v2 재리뷰: CZ 해제조건 일곱이 닫혔는지 (고친 곳 diff 만) · 발송 승인 여부 · 초안 — 발송 전 (사용자가 보낸다 · 기준 커밋 b3c13f0aa …
+- 2026-10-22 · `kb/reviews/codex_DB_prompt_wad_outsourcing_round2_v2_2026_10_22.md` — DB 프롬프트 — W_ad 외주 2차 묶음 v2 재리뷰: CZ 해제조건 일곱 + 발송 전 자체 검토 고침 (S1–S9) 이 닫혔는지 (고친 곳 diff 만) · 발송 승인 여부 · 초안 — 발송 전 (사용자가 보낸다 · 기준 커밋 3d684e502 …
 - 2026-10-22 · `kb/projects/handoff_2026_10_22_evacuation.md` — 대피 인계 — 2026-10-22 (friendly 세션 토큰 소진 → 서브 대시보드 세션 · 머지 때 충돌 0 설계 · W_ad 외주 2차 CZ 고침 설계 포함) · 진행
 - 2026-10-22 · `kb/questions/li3nd_pristine_reconstruction_2026_09_02.md` — Li₃Nd pristine 3×3×3 이 0.65 eV 재구성한다 — NEB 기반 구조도 같은가? · open [open]
 - 2026-10-20 · `kb/projects/handoff_2026_10_20_return_to_origin.md` — 본 세션 복귀 카드 — 서브 세션 (10-15 → 10-20) 134 커밋을 본 세션으로 (2026-10-20) · 발송 대기 — 사용자가 §0 프롬프트를 본 세션 (…CTzs) 에 붙…
@@ -333,7 +333,7 @@
 - `kb/reviews/codex_CZ_prompt_wad_outsourcing_round2_bundle_2026_10_17.md` — CZ 프롬프트 — W_ad 외주 2차 묶음 리뷰: 탄소 P2′ · C–C · 은 a4 VASP 묶음 (코드 · 러너 사다리 · 판정 계약 · 검사기·집계기 · 봉인) · 발송 승인 여부  (2026-10-17 · 발송 2026-10-22 (기준 커밋 8d41e4e0 · 묶음 MAN…)
 - `kb/reviews/codex_CZ_reply_wad_outsourcing_round2_bundle_2026_10_17.md` — CZ 회신 — W_ad 외주 2차 묶음 리뷰: NO-GO · 발송 보류 · 구조 봉인·집계 산식은 유지 · 반송 검사 경로의 결함 (판정 순서 · A→B 결박 · 시도별 환경 감사 · optB88 판독 · 인프라 중단 비용) 을 고친 뒤 재봉인  (2026-10-22 · 수령 2026-10-22 (사용자 붙여넣기 · 원문 보존 · 마크다운…)
 - `kb/reviews/codex_C_funnel_2026_08_20.md` — 교차리뷰 C v2.1 — cascade 깔때기는 잘 작동했나 (codex 2라운드 종료)  (2026-08-20 · v2.1 — codex 2라운드 종료 (manifest 지적 철회 ·…)
-- `kb/reviews/codex_DB_prompt_wad_outsourcing_round2_v2_2026_10_22.md` — DB 프롬프트 — W_ad 외주 2차 묶음 v2 재리뷰: CZ 해제조건 일곱이 닫혔는지 (고친 곳 diff 만) · 발송 승인 여부  (2026-10-22 · 초안 — 발송 전 (사용자가 보낸다 · 기준 커밋 b3c13f0aa …)
+- `kb/reviews/codex_DB_prompt_wad_outsourcing_round2_v2_2026_10_22.md` — DB 프롬프트 — W_ad 외주 2차 묶음 v2 재리뷰: CZ 해제조건 일곱 + 발송 전 자체 검토 고침 (S1–S9) 이 닫혔는지 (고친 곳 diff 만) · 발송 승인 여부  (2026-10-22 · 초안 — 발송 전 (사용자가 보낸다 · 기준 커밋 3d684e502 …)
 - `kb/reviews/codex_D_symposium_talk_standard_2026_08_25.md` — 교차리뷰 D — 심포지엄 세션(덱+녹취) 표준 (codex 작업지시서)  (2026-08-25 · 리뷰완료-HOLD)
 - `kb/reviews/codex_E_sdcp_wave1_gate_2026_08_25.md` — 교차리뷰 E — SDCP wave1 게이트 수정·물리 결론 (판정 수령 + 반영)  (2026-08-25 · 종결-실행승인(내부 max 리뷰))
 - `kb/reviews/codex_F_beta_null_model_2026_08_27.md` — 교차리뷰 F — β 귀무모형이 뒤집혔다 (08-11 Q1 재개 + 신규 3건)  (2026-08-27 · 회신수령-반영완료 (→ codex_G_reply_to_F_2026_0…)
