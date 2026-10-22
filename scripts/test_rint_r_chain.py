@@ -561,6 +561,66 @@ def plan_set(name, reg_name=None, **over):
     return p, sha, FX['reg_with'](f'`{sha}`', reg_name or f'reg_{name}.md')
 
 
+# ═════════════════════════ ★ PF2 B (10-22 · 사전 리뷰 2 회차 PRE2-design-01 · 1저자 Q2 권고대로) S0 단계 2 보고 ═════════════════════════
+#   순서 (등록 R §11 · Q2): S0 단계 1 → ⑥ 숫자 탐침 (SBE · σ 봉인) → 세 숫자 → 계획 하나 봉인 (개정 커밋) → S0 단계 2 (DBE) → R 런.
+#   단계 2 보고 (`ca_s0_census` · `s0_stage2_<DBE 킷>.json`) 의 `plan.r_plan.sha256` = 그 인자 커밋이 봉인한 R 계획 · `plan.sha256` = S0 계획.
+#   사슬 (사다리 · 예측 · 판정) 이 지금 계획과 **정확히** 대조한다 — 다르면 멈춘다 (탐침 E: 단계 2 뒤 계획 B 를 다시 등록해도 옛 사슬은 CALIBRATED).
+S0_STAGE2_OPT = '--s0-stage2-report'
+
+
+def chain_has(opt):
+    """사슬 CLI 에 그 인자가 있나 (고치기 전 판 = 없음 → 시험이 그 인자를 빼고 부른다: 반례가 그 판에서 **돈다** = 옳은 이유의 실패)."""
+    main = getattr(RR, 'main', None)
+    return callable(main) and opt in getattr(getattr(main, '__code__', None), 'co_consts', ())
+
+
+def s0_report(stage, name, plan_sha=None, s0_sha=None, kit=None, mutate=None, raw=None):
+    """S0 단계 보고 (가짜) → 경로 — 꼴 = `ca_s0_census.census_kit` 보고의 판정 칸 (schema · stage · kit · plan · code).  단계 2 의 plan =
+    {sha256 (S0 계획) · source 'commit:<sha>' · r_plan {path · sha256 (R 계획) · s_min · tol_ff · 법칙 · rtol}} (`verify_plan_commit` 의 결합 기록 꼴).
+    mutate = 손댄 dict · raw = 그대로 쓸 바이트 (깨진 JSON 반례)."""
+    import ca_s0_census as S0m
+    p = Path(TD) / f's0rep_{name}.json'
+    if raw is not None:
+        p.write_bytes(raw)
+        return p
+    pl = {'sha256': s0_sha or FX['s0_sha'], 'source': 'stage1_computed'}
+    if stage == 2:
+        pl = {'sha256': s0_sha or FX['s0_sha'], 'source': 'commit:' + 'a' * 40,
+              'r_plan': {'path': 'docs/data/rint2_s0_sbe_x/rint_r_plan.json', 'sha256': plan_sha or FX['plan_sha'],
+                         's_min_um': 0.6, 'tol_ff_um': 0.05, 'len_law': 'len_scaled_v0', 'unreg_law': 'cut', 'step3_rtol': 1e-12,
+                         'checked': 'fixture'}}
+    rep = {'schema': S0m.SCHEMA, 'stage': stage, 'tool': S0m.TOOL_VERSION,
+           'kit': {'name': kit or (SBE_KIT if stage == 1 else DBE_KIT)}, 'plan': pl,
+           'code': {'git_head': 'b' * 40, 'git_dirty': False,
+                    'file_digests': [{'file': nm, 'sha256': hashlib.sha256((SCRIPTS / nm).read_bytes()).hexdigest()}
+                                     for nm in S0_SAME7]}}
+    if mutate is not None:
+        mutate(rep)
+    p.write_text(json.dumps(rep, ensure_ascii=False, indent=1), encoding='utf-8')
+    return p
+
+
+#: 등록 R §2-1b — S0 단계 1 · 2 · R 런의 census · registry 일곱 파일 (시험 쪽 목록 · 사슬 · S0 상수와 시험 D 가 대조)
+S0_SAME7 = ('ca_s0_census.py', 'carbon_junction.py', 'ptfe_face_alpha.py', 'step3_sigma.py', 'mpm_webapp_payload.py',
+            'fibre_segment_raster.py', 'sr01_stamp_compare.py')
+
+
+def s0_stage2_for(plan_path):
+    """그 계획을 봉인한 단계 2 보고 (계획마다 하나 · 캐시) → 경로."""
+    sha = hashlib.sha256(Path(plan_path).read_bytes()).hexdigest()
+    key = ('s0_stage2', sha)
+    if key not in FX:
+        FX[key] = s0_report(2, f's2_{sha[:16]}', plan_sha=sha)
+    return FX[key]
+
+
+def s0_args(plan_path=None, s2=None):
+    """사다리 인자에 S0 단계 2 보고 (사슬이 그 인자를 알 때만)."""
+    if not chain_has(S0_STAGE2_OPT):
+        return []
+    return [S0_STAGE2_OPT, s2 or s0_stage2_for(plan_path or FX['plan'])]
+
+
 @contextlib.contextmanager
 def envset(**kv):
     old = {k: os.environ.get(k) for k in kv}
@@ -605,14 +665,14 @@ def pass_contract():
 
 
 def ladder(tag, wpath, law='P0', variant=None, extra=(), reg=None, max_hours='2', env=None, prefill=False, contract=None,
-           plan=None, s0=None, after=None):
+           plan=None, s0=None, after=None, s2=None):
     out = Path(TD) / 'runs' / tag
     if prefill:
         out.mkdir(parents=True)
         (out / 'old.txt').write_text('x')
     argv = ['--stage', 'ladder', '--law', law, '--target', '1.63', '--runner', FX['runner'], '--root', FX['root'],
             '--plan', plan or FX['plan'], '--s0-plan', s0 or FX['s0'], '--registration', reg or FX['reg_ok'], '--max-hours', max_hours,
-            '--out', out]
+            '--out', out] + s0_args(plan or FX['plan'], s2)
     if variant:
         argv += ['--variant', variant]
         argv += ['--after-main', after if after is not None else s_main_predict()['out']]   # ★ Q-F — 감도 = 주 판정 단계 뒤
@@ -1110,7 +1170,8 @@ def t_S19():
         w = world('S19')
         out = Path(TD) / 'runs' / 'S19'
         rc, so = call(['--stage', 'ladder', '--law', 'P0', '--target', '1.64', '--runner', FX['runner'], '--root', FX['root'],
-                       '--plan', FX['plan'], '--s0-plan', FX['s0'], '--registration', FX['reg_ok'], '--max-hours', '1', '--out', out], w)
+                       '--plan', FX['plan'], '--s0-plan', FX['s0'], '--registration', FX['reg_ok'], '--max-hours', '1', '--out', out]
+                      + s0_args(), w)
         sp = out / 'ladder_summary.json'
         return {'rc': rc, 'so': so, 'world': w, 'sum': json.loads(sp.read_text()) if sp.exists() else None}
     r = scen('S19', go)
@@ -1493,7 +1554,8 @@ def t_V12():
     w = world('V12')
     out = Path(TD) / 'runs' / 'V12_lad'
     rc1, _so = call(['--stage', 'ladder', '--law', 'P0', '--target', '1.63', '--runner', FX['runner'], '--root', FX['root'],
-                     '--plan', FX['plan'], '--registration', FX['reg_ok'], '--max-hours', '1', '--out', out, '--show-results'], w)
+                     '--plan', FX['plan'], '--registration', FX['reg_ok'], '--max-hours', '1', '--out', out, '--show-results']
+                    + s0_args(), w)
     v = s_show()
     views = Path(v['out']) / 'views.jsonl'
     return (rc1 == 2 and n_calls(w) == 0 and v['rc'] == 0 and views.exists() and len(views.read_text().splitlines()) == 1,
@@ -1618,7 +1680,7 @@ def t_X04():
     out = Path(TD) / 'runs' / 'X04'
     rc, so = call(['--stage', 'ladder', '--law', 'P0', '--target', '1.63', '--runner', FX['runner'], '--root', FX['root'],
                    '--plan', FX['plan'], '--s0-plan', FX['s0'], '--registration', FX['reg_ok'], '--max-hours', '1', '--out', out,
-                   '--dry-run'], w)
+                   '--dry-run'] + s0_args(), w)
     lines = [x for x in so.splitlines() if 'bash ' in x]
     rjs = [re.search(r'CJUNC_RJ=(\S+)', x).group(1) for x in lines if 'CJUNC_RJ=' in x]
     return (rc == 0 and not out.exists() and n_calls(w) == 0 and rjs == ['inf', '0', '10000.0', '1000000.0', '100000000.0']
@@ -1700,7 +1762,7 @@ def t_X08():
     out = Path(TD) / 'runs' / 'X08'
     rc, so = call(['--stage', 'ladder', '--law', 'P0', '--target', '1.63', '--runner', FX['runner'], '--root', FX['root'],
                    '--plan', FX['plan'], '--s0-plan', FX['s0'], '--registration', FX['reg_ok'], '--max-hours', '1', '--out', out,
-                   '--dry-run'], w, env={'EXPECT_BACKEND': 'cpu'})
+                   '--dry-run'] + s0_args(), w, env={'EXPECT_BACKEND': 'cpu'})
     lines = [x for x in so.splitlines() if 'bash ' in x]
     return (rc == 0 and getattr(RR, 'EXPECT_BACKEND', None) == 'gpu' and len(lines) == 5
             and all('EXPECT_BACKEND=gpu' in x and 'EXPECT_BACKEND=cpu' not in x for x in lines), (rc, lines[:1]))
@@ -2811,7 +2873,7 @@ def t_C08():
     w = world('C08')
     out = Path(TD) / 'runs' / 'C08'
     rc, _so = call(['--stage', 'ladder', '--law', 'P0', '--runner', FX['runner'], '--root', FX['root'], '--plan', FX['plan'],
-                    '--registration', FX['reg_ok'], '--max-hours', '1', '--out', out], w)
+                    '--registration', FX['reg_ok'], '--max-hours', '1', '--out', out] + s0_args(), w)
     return rc == 2 and n_calls(w) == 0 and not out.exists(), (rc, n_calls(w))
 
 
@@ -2882,8 +2944,129 @@ def t_F04():
     w = world('F04')
     rc, _so = call(['--stage', 'ladder', '--law', 'P0', '--runner', FX['runner'], '--root', FX['root'], '--plan', FX['plan'],
                     '--s0-plan', FX['s0'], '--registration', FX['reg_ok'], '--max-hours', '1', '--out', Path(TD) / 'runs' / 'F04',
-                    '--after-main', str(s_main_predict()['out'])], w)
+                    '--after-main', str(s_main_predict()['out'])] + s0_args(), w)
     return rc == 2 and n_calls(w) == 0, rc
+
+
+# ── ★ PF2 B (10-22 · 사전 리뷰 2 회차 PRE2-design-01 · 탐침 E · 1저자 Q2 권고대로) 단계 2 보고의 봉인 계획 해시 ↔ 지금 계획 ──
+def b_plan_B():
+    """탐침 E 의 계획 B (s_min 0.6 → 0.9 · SV 문턱 2.0 → 3.0 · 점 수 16 → 20 · maxiter 60000 → 90000) — 단계 2 뒤 다시 등록 (등록 줄 = B)."""
+    return scen('b_planB', lambda: plan_set('planB', s_min_um=0.9, sv_cf_threshold=3.0, max_ladder_points=20,
+                                            p2_extra='--step3-maxiter 90000'))
+
+
+@check('B01', '탐침 E 꼴 — 단계 2 보고가 계획 A 를 봉인했는데 계획 B 를 다시 등록 (등록 줄 · 계획 파일 = B) → S0_REPORT_MISMATCH · 러너 0 회 '
+              '(옛 사슬 = CALIBRATED · DBE 를 본 뒤 s_min · SV 문턱 · 점 수를 바꾼 계획도 돌았다)')
+def t_B01():
+    pB, _shaB, regB = b_plan_B()
+    r = scen('B01', lambda: ladder('B01', world('B01'), plan=pB, reg=regB, s2=(s0_stage2_for(FX['plan']) if chain_has(S0_STAGE2_OPT)
+                                                                             else None)))
+    return (r['rc'] == 3 and stop_code(r) == 'S0_REPORT_MISMATCH' and n_calls(r['world']) == 0
+            and (r['sum'] or {}).get('status') == 'STOPPED', (r['rc'], stop_code(r), n_calls(r['world']), (r['sum'] or {}).get('stop')))
+
+
+@check('B02', '정상 — 같은 계획을 봉인한 단계 2 보고 → 사다리 CALIBRATED · 요약에 단계 2 기록 (보고 경로 · sha256 · 봉인 R 계획 sha256 = 계획 · '
+              'S0 계획 sha256 · DBE 킷 · source commit:)')
+def t_B02():
+    s = s_main('P0')['sum'] or {}
+    rec = ((s.get('s0_reports') or {}).get('stage2')) or {}
+    p2 = s0_stage2_for(FX['plan'])
+    return (s.get('status') == 'CALIBRATED' and rec.get('r_plan_sha256') == FX['plan_sha'] and rec.get('plan_sha256') == FX['s0_sha']
+            and rec.get('kit') == DBE_KIT and rec.get('stage') == 2 and str(rec.get('plan_source', '')).startswith('commit:')
+            and rec.get('sha256') == hashlib.sha256(Path(p2).read_bytes()).hexdigest() and rec.get('path') == str(Path(p2).resolve()),
+            (s.get('status'), rec))
+
+
+@check('B03', '단계 2 보고의 S0 계획 sha256 ≠ 지금 S0 계획 (R 계획은 같음) → S0_REPORT_MISMATCH · 러너 0 회')
+def t_B03():
+    p = s0_report(2, 'B03', plan_sha=FX['plan_sha'], s0_sha='1' * 64) if chain_has(S0_STAGE2_OPT) else None
+    return c_case('B03', 'S0_REPORT_MISMATCH', s2=p)
+
+
+@check('B04', '단계 2 보고 꼴 — 파일 없음 · JSON 아님 · NaN · 단계 1 보고 · 다른 schema · 다른 킷 (옛 kit_DBE) · r_plan 없음 · r_plan sha256 '
+              '64 hex 아님 · source 가 commit: 아님 · 단계 bool → S0_REPORT_MISMATCH · 러너 0 회 (fail-closed)')
+def t_B04():
+    has = chain_has(S0_STAGE2_OPT)
+    cases = (
+        ('없음', lambda: Path(TD) / 'no_such_report.json'),
+        ('JSON 아님', lambda: s0_report(2, 'B04b', raw=b'{not json')),
+        ('NaN', lambda: s0_report(2, 'B04c', raw=json.dumps({'schema': 'x', 'stage': float('nan')}).encode())),
+        ('단계 1', lambda: s0_report(1, 'B04d')),
+        ('schema', lambda: s0_report(2, 'B04e', mutate=lambda r: r.update(schema='ca-s0-census-v1'))),
+        ('킷', lambda: s0_report(2, 'B04f', kit='kit_DBE')),
+        ('r_plan 없음', lambda: s0_report(2, 'B04g', mutate=lambda r: r['plan'].pop('r_plan'))),
+        ('r_plan sha256', lambda: s0_report(2, 'B04h', mutate=lambda r: r['plan']['r_plan'].update(sha256=FX['plan_sha'].upper()))),
+        ('source', lambda: s0_report(2, 'B04i', mutate=lambda r: r['plan'].update(source='stage1_computed'))),
+        ('단계 bool', lambda: s0_report(2, 'B04j', mutate=lambda r: r.update(stage=True))),
+    )
+    rs = [(nm, c_case(f'B04_{i}', 'S0_REPORT_MISMATCH', s2=(fn() if has else None))) for i, (nm, fn) in enumerate(cases)]
+    return all(x[1][0] for x in rs), [(nm, x[1]) for nm, x in rs if not x[0]]
+
+
+def b_tamper_copy(src, tag, name, fn):
+    """단계 폴더 사본 (요약만 손댐 · 팔 JSON 은 그대로) → 경로."""
+    dst = Path(TD) / 'runs' / tag
+    shutil.copytree(src, dst)
+    sp = dst / name
+    s = json.loads(sp.read_text(encoding='utf-8'))
+    fn(s)
+    sp.write_text(json.dumps(s, ensure_ascii=False, indent=1, sort_keys=True) + '\n', encoding='utf-8')
+    return dst
+
+
+def _b_set_r(s, v='0' * 64):
+    s['s0_reports']['stage2']['r_plan_sha256'] = v
+
+
+@check('B05', '예측 — 사다리 요약 둘의 단계 2 봉인 R 계획 sha256 이 계획과 다르다 (요약 손댐) → S0_REPORT_MISMATCH · 러너 0 회 · 한 사다리만 '
+              '다르면 (두 사다리 기록 다름) → S0_REPORT_MISMATCH')
+def t_B05():
+    def go():
+        a = [b_tamper_copy(s_main(law)['out'], f'B05_{law}', 'ladder_summary.json', _b_set_r) for law in ('P0', 'P1')]
+        b = b_tamper_copy(s_main('P1')['out'], 'B05_P1b', 'ladder_summary.json', _b_set_r)
+        return (predict('B05', world('B05'), a), predict('B05x', world('B05x'), [s_main('P0')['out'], b]))
+    r, rx = scen('B05', go)
+    return (r['rc'] == 3 and stop_code(r) == 'S0_REPORT_MISMATCH' and n_calls(r['world']) == 0
+            and rx['rc'] == 3 and stop_code(rx) == 'S0_REPORT_MISMATCH' and n_calls(rx['world']) == 0,
+            (r['rc'], stop_code(r), rx['rc'], stop_code(rx)))
+
+
+@check('B06', '판정 — 예측 요약의 단계 2 봉인 R 계획 sha256 손댐 → 판정 NOT_COMPUTED (S0_REPORT_MISMATCH · rc 3) · 손대지 않은 같은 묶음 = '
+              '판정 (B 대조가 정상 묶음을 막지 않는다)')
+def t_B06():
+    def go():
+        d = b_tamper_copy(s_main_predict()['out'], 'B06_pred', 'predict_summary.json', _b_set_r)
+        return verdict('B06', [s_main('P0')['out'], s_main('P1')['out'], d])
+    r = scen('B06', go)
+    v0 = s_verdict_main()
+    return (r['rc'] == 3 and stop_code(r) == 'S0_REPORT_MISMATCH' and (r['v'] or {}).get('verdict') == 'NOT_COMPUTED'
+            and v0['rc'] == 0 and (v0['v'] or {}).get('verdict') == 'PASS_INFORMATIVE', (r['rc'], stop_code(r), v0['rc']))
+
+
+@check('B07', '사다리 — --s0-stage2-report 없음 → 인자 오류 (rc 2) · 러너 0 회 · 출력 폴더 없음 (단계 2 봉인 대조 없이 σ 런 없음)')
+def t_B07():
+    w = world('B07')
+    out = Path(TD) / 'runs' / 'B07'
+    rc, _so = call(['--stage', 'ladder', '--law', 'P0', '--target', '1.63', '--runner', FX['runner'], '--root', FX['root'],
+                    '--plan', FX['plan'], '--s0-plan', FX['s0'], '--registration', FX['reg_ok'], '--max-hours', '1', '--out', out], w)
+    return rc == 2 and n_calls(w) == 0 and not out.exists() and chain_has(S0_STAGE2_OPT), (rc, n_calls(w), chain_has(S0_STAGE2_OPT))
+
+
+@check('B08', 'dry-run 도 대조 — 계획 B (단계 2 = 계획 A) + --dry-run → S0_REPORT_MISMATCH (rc 3 · env 를 찍지 않는다)')
+def t_B08():
+    pB, _shaB, regB = b_plan_B()
+    w = world('B08')
+    out = Path(TD) / 'runs' / 'B08'
+    rc, so = call(['--stage', 'ladder', '--law', 'P0', '--target', '1.63', '--runner', FX['runner'], '--root', FX['root'],
+                   '--plan', pB, '--s0-plan', FX['s0'], '--registration', regB, '--max-hours', '1', '--out', out, '--dry-run']
+                  + s0_args(FX['plan']), w)
+    return (rc == 3 and 'S0_REPORT_MISMATCH' in so and 'CJUNC_RJ=' not in so and n_calls(w) == 0, (rc, so[-300:]))
+
+
+@check('B09', '사슬 상수 = S0 보고 schema (ca_s0_census.SCHEMA · 사슬은 numpy 없이 뜬다)')
+def t_B09():
+    import ca_s0_census as S0m
+    return getattr(RR, 'S0_REPORT_SCHEMA', None) == S0m.SCHEMA, (getattr(RR, 'S0_REPORT_SCHEMA', None), S0m.SCHEMA)
 
 
 @check('L21', 'Q-E 배선 (가짜 러너) — SBE origin 팔 1 · 2 가 arm 0 과 조금 다르면 (×1.0004 · ×0.9997) 끝 후보에서 띠 안 → 끝을 바깥 실측 이웃으로 · '
