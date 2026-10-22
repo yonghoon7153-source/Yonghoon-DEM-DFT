@@ -16,7 +16,9 @@
 
 ⛔ 이 도구가 못 하는 것: VASP 를 돌리지 않는다 · 구조를 만들지 않는다 (P2′ 봉인 · WAD-CC 봉인 · V5 묶음의 sha 로 결박만) ·
    러너의 SCF 판정은 OSZICAR·OUTCAR 기록만 본다 (전자밀도 · 해의 유일성은 모른다) · WAVECAR 읽기 확인 문구는 파일럿 원문으로 확정한다
-   (그 전에는 ISTART·ICHARG 되울림 + 'WAVECAR not read' 부재 + WAVECAR sha 불변으로만 본다) · optB88 설정 되울림 줄 형식도 파일럿으로 확정한다.
+   (그 전에는 ISTART·ICHARG 되울림 + 'WAVECAR not read' 부재 + ⓑ 원본·복사본·끝 sha = 그 ⓐ 의 기록 WAVECAR sha 로만 본다 ·
+   문구 regex 는 파일럿에서 읽은 ⓑ 전부에 맞고 새로 시작한 시도에 안 맞고 grep -E 와 python 이 시도마다 같은 답일 때만 봉인한다 —
+   파일럿에 없던 출력 꼴 (다른 노드 · 다른 실패 경로 · 로캘) 에서도 두 엔진이 같은 답이라는 보증은 없다) · optB88 설정 되울림 줄 형식도 파일럿으로 확정한다.
 """
 import argparse
 import hashlib
@@ -24,6 +26,7 @@ import json
 import math
 import os
 import re
+import subprocess
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -646,21 +649,35 @@ run_one(){ # $1 잡 · $2 단 · $3 시도 폴더 · $4 INCAR 이름 · $5 WAVEC
   if [ "$need_rel" = 1 ] && [ -n "$ver" ] && [ "$ver" != "$REL_VER" ]; then log "⛔ $job/$rung VASP 빌드 '$ver' ≠ 봉인 — 공통 환경 고장 · 전체 정지"; return 6; fi
   return 0
 }
+wsha(){ grep -o "\"$2\": \"[0-9a-f]*\"" "$1" 2>/dev/null | head -1 | grep -o '[0-9a-f]\{64\}'; }   # WAVECAR.info 의 sha 필드 하나 ($1 파일 · $2 키)
 stat_of(){ # 시도 폴더 · 단 → 상태 (B 단은 재시작 확인을 먼저 · 기록 없으면 INCOMPLETE_ATTEMPT)
-  local d=$1 j
+  #   재시작 확인 = 검사기와 같다: 기록 honoured · ⓑ src = copied = end = 그 ⓐ 의 기록 sha (r1B·a4B ← 같은 폴더 stageA · r2B ← r1 의 stageA)
+  #   · 해제 파일에 재시작 regex 가 있으면 원문 (stdout.log · OUTCAR) 을 다시 본다 — 이어 돌리기 · 손댄 기록에서도 검사기와 같은 답
+  local d=$1 j a s
   [ -f "$d/attempt.json" ] || { echo INCOMPLETE_ATTEMPT; return; }
-  case "$2" in r1B|r2B|a4B) grep -q '"honoured": 1' "$d/WAVECAR.info" 2>/dev/null || { echo RESTART_NOT_HONOURED; return; };; esac
+  case "$2" in r1B|r2B|a4B)
+    case "$2" in r2B) a=${d%_r2}_r1/stageA;; *) a=$d/stageA;; esac
+    s=$(wsha "$a/WAVECAR.info" sha256)
+    { grep -q '"honoured": 1' "$d/WAVECAR.info" 2>/dev/null && [ -n "$s" ] && [ "$(wsha "$d/WAVECAR.info" src_sha256)" = "$s" ] \
+      && [ "$(wsha "$d/WAVECAR.info" copied_sha256)" = "$s" ] && [ "$(wsha "$d/WAVECAR.info" end_sha256)" = "$s" ] \
+      && { [ -z "$RESTART_RE" ] || grep -aqE "$RESTART_RE" "$d/stdout.log" "$d/OUTCAR" 2>/dev/null; }; } || { echo RESTART_NOT_HONOURED; return; };;
+  esac
   j=$(judge "$d"); echo "${j%% *}"
 }
-elig_A(){ # ⓐ 자격 (ⓑ 를 띄우기 전 셋 — ① 정상 종료·유한 상태 ② 유효 WAVECAR (머리 = ⓐ OUTCAR) ③ 복사본 sha 는 run_one 이 ⓑ 기록에 남기고 재시작 확인이 본다)
-  local d=$1 s r
+elig_A(){ # ⓐ 자격 (ⓑ 를 띄우기 전 — ① 정상 종료·유한 상태 ② 유효 WAVECAR: 머리 = ⓐ OUTCAR 원문 NKPTS·NBANDS·ENCUT · WAVECAR.info 의 OUTCAR 사본 = 원문
+  #         (검사기 a_eligible 과 같다) ③ 기록 sha = 지금 WAVECAR · 복사본 sha 는 run_one 이 ⓑ 기록에 남기고 재시작 확인이 본다)
+  local d=$1 s r c k
   s=$(stat_of "$d" A)
   case "$s" in OK|SCF_NOT_CONVERGED) ;; *) echo "ⓐ 상태 $s (정상 종료·유한 상태 아님)"; return 1;; esac
   [ -s "$d/WAVECAR" ] || { echo "ⓐ WAVECAR 없음·빈 파일"; return 1; }
+  for k in NKPTS NBANDS ENCUT; do
+    c=$(grep -o "\"$k\": \"[^\"]*\"" "$d/WAVECAR.info" 2>/dev/null | head -1 | sed 's/.*: "//; s/"$//')
+    [ -n "$c" ] && [ "$c" = "$(out_num "$d" "$k")" ] || { echo "ⓐ WAVECAR.info 의 OUTCAR 사본 $k '$c' ≠ ⓐ OUTCAR 원문 '$(out_num "$d" "$k")'"; return 1; }
+  done
   r=$(awk '{ if (match($0, /"head": "[^"]*"/)) print substr($0, RSTART + 9, RLENGTH - 10) }' "$d/WAVECAR.info"); set -- $r
   [ $# -ge 6 ] && [ "$4" = "$(out_num "$d" NKPTS)" ] && [ "$5" = "$(out_num "$d" NBANDS)" ] && \
     awk -v a="$6" -v b="$(out_num "$d" ENCUT)" 'BEGIN { exit !(b != "" && (a - b < 0.05) && (b - a < 0.05)) }' || { echo "ⓐ WAVECAR 머리 ($r) ≠ OUTCAR NKPTS/NBANDS/ENCUT"; return 1; }
-  [ "$(h "$d/WAVECAR")" = "$(grep -o '"sha256": "[0-9a-f]*"' "$d/WAVECAR.info" | head -1 | grep -o '[0-9a-f]\{64\}')" ] || { echo "ⓐ WAVECAR 가 기록 뒤 바뀌었다"; return 1; }
+  [ "$(h "$d/WAVECAR")" = "$(wsha "$d/WAVECAR.info" sha256)" ] || { echo "ⓐ WAVECAR 가 기록 뒤 바뀌었다"; return 1; }
   return 0
 }
 two_stage(){ # $1 잡 · $2 시도 폴더 · $3 ⓐ 단 · $4 ⓑ 단 → FINAL · 반환 0 OK · 1 값 없음/다음 단 후보 · 6 공통 환경 고장
@@ -838,6 +855,49 @@ KERNEL_READ_RE = r"vdW kernel|vdw_kernel\.bindat"             # ⚠ 문구 형�
 
 # ───────────────────────── 반송 검사 (시도 하나) ─────────────────────────
 RUNG_DIR = {"0": "{job}", "r1A": "{job}_r1/stageA", "r1B": "{job}_r1", "r2B": "{job}_r2", "a4A": "{job}_a4/stageA", "a4B": "{job}_a4"}
+OUTCAR_DIMS = (("NKPTS", r"NKPTS *= *([0-9.]+)"), ("NBANDS", r"NBANDS *= *([0-9.]+)"), ("ENCUT", r"ENCUT *= *([0-9.]+) eV"))   # 러너 out_num() 과 같은 패턴 · 마지막 값
+RESTART_RX_CHARS = re.compile(r"^[A-Za-z0-9 _:.,=()|*+?^$/-]+$")   # 재시작 긍정 문구 regex — grep -E (러너) 와 python re (검사기) 에서 뜻이 같은 글자만
+
+
+def outcar_dims(text):
+    """ⓐ OUTCAR 원문 → NKPTS · NBANDS · ENCUT (문자열 · 없으면 None). WAVECAR.info 안의 `outcar` 사본은 러너가 같은 파일에서 베낀 것이라 근거가 아니다 (CZ Q-CZ-2 ③)."""
+    return {k: (re.findall(p, text) or [None])[-1] for k, p in OUTCAR_DIMS}
+
+
+def _read_raw(p):
+    """줄바꿈을 바꾸지 않고 읽는다 — \\r 를 줄 끝으로 보지 않아 grep 과 줄 나눔이 같다 (_read 는 \\r · \\r\\n 을 \\n 으로 바꾼다)."""
+    try:
+        return open(p, encoding="utf-8", errors="replace", newline="").read()
+    except OSError:
+        return None
+
+
+def restart_evidence(attdir, out_text=None):
+    """시도 하나의 재시작 원문 증거 — OUTCAR Startparameter 줄 (입력 되울림 제외 · 마지막 줄) 의 ISTART · ICHARG · 'WAVECAR not read' ·
+    regex 를 찾을 원문 (stdout.log + OUTCAR · 줄바꿈 그대로 — 러너 grep 과 같은 줄)."""
+    if out_text is None:
+        out_text = _read(os.path.join(attdir, "OUTCAR")) or ""
+    ro, rs = (_read_raw(os.path.join(attdir, f)) or "" for f in ("OUTCAR", "stdout.log"))
+    body = V._strip_incar_echo(out_text)[0] if out_text else ""
+    return {"istart": V._last(r"^\s*ISTART\s*=\s*(\d+)\s+job", body), "icharg": V._last(r"^\s*ICHARG\s*=\s*(\d+)\s+charge", body),
+            "not_read_phrase": "WAVECAR not read" in ro or "WAVECAR not read" in rs, "text": rs + "\n" + ro}
+
+
+def restart_regex_problems(rx):
+    """재시작 긍정 문구 regex 가 러너 (grep -E · 줄 단위) 와 검사기 (python re.M) 에서 같은 뜻인지 — 문제 목록 (비면 통과).
+    ⚠ 카드 §2.2 는 [ ] \\ 도 허용했는데 괄호 안 역슬래시 ([\\]]) · \\d · [[:space:]] 는 두 엔진에서 뜻이 갈려 뺐다 (구절 하나를 찾는 데는 필요 없다).
+    빈 문자열에 맞는 regex (a* · |x · ^) 는 무엇에나 맞아서 구별을 못 한다."""
+    if not RESTART_RX_CHARS.match(rx or ""):
+        return ["허용 밖 글자 (괄호 표현 [ ] · 역슬래시 · 중괄호 · 탭 등)"]
+    bad = []
+    if "(?" in rx:
+        bad.append("'(?' — 파이썬 확장 (ERE 에 없다)")
+    try:
+        if re.search(rx, "") is not None:
+            bad.append("빈 문자열에 맞는다 (무엇에나 맞는다)")
+    except re.error as e:
+        bad.append(f"파이썬 컴파일 실패 ({e})")
+    return bad
 
 
 def audit_r2(o, job, rung):
@@ -906,8 +966,10 @@ def audit_r2(o, job, rung):
     return missing, bad, {"DIPOL": got}
 
 
-def check_attempt(job, pkgdir, attdir, rung, registry=None):
-    """한 시도 폴더 → 상태 dict (V5 check_job 순서: 실행 기록 결박 → 입력 무결성 → 있는 증거의 모순 → 판정 계약 → 재시작 → 완결성)."""
+def check_attempt(job, pkgdir, attdir, rung, registry=None, a_ref=None):
+    """한 시도 폴더 → 상태 dict (V5 check_job 순서: 실행 기록 결박 → 입력 무결성 → 있는 증거의 모순 → 판정 계약 → 재시작 → 완결성).
+    ⓑ 단 (r1B · r2B · a4B) 은 a_ref (그 ⓑ 가 읽은 ⓐ 의 검사 기록) 를 꼭 받는다 — ⓑ 원본 sha 가 그 ⓐ 의 기록된 WAVECAR sha 여야 한다 (없으면 재시작 미이행).
+    등록부에 restart_read_regex 가 있으면 ⓑ 원문 (OUTCAR + stdout.log) 에서 다시 찾는다 (러너의 honoured 를 믿지 않는다)."""
     r = {"dir": os.path.relpath(attdir, os.path.dirname(os.path.dirname(attdir))) if attdir else None, "rung": rung}
 
     def done(status, why=None, **kw):
@@ -997,21 +1059,32 @@ def check_attempt(job, pkgdir, attdir, rung, registry=None):
         except ValueError:
             w = None
         r["wavecar"] = w
+        r["outcar_dims"] = outcar_dims(out_text)
     if rung in ("r1B", "r2B", "a4B"):
         wi = _read(os.path.join(attdir, "WAVECAR.info"))
         try:
             w = json.loads(wi) if wi else None
         except ValueError:
             w = None
-        body = o["_body"] if o else ""
-        ist, ich = V._last(r"^\s*ISTART\s*=\s*(\d+)\s+job", body), V._last(r"^\s*ICHARG\s*=\s*(\d+)\s+charge", body)
-        notread = "WAVECAR not read" in (out_text + (_read(os.path.join(attdir, "stdout.log")) or ""))
-        r["restart"] = {"record": w, "outcar_istart": ist, "outcar_icharg": ich, "not_read_phrase": notread}
+        ev = restart_evidence(attdir, out_text)
+        ist, ich, notread = ev["istart"], ev["icharg"], ev["not_read_phrase"]
+        a_sha = str(((a_ref or {}).get("wavecar") or {}).get("sha256") or "")
+        rx = (registry or {}).get("restart_read_regex") or ""
+        rxbad = restart_regex_problems(rx) if rx else []
+        pos = (not rxbad and re.search(rx, ev["text"], re.M) is not None) if rx else None
+        r["restart"] = {"record": w, "outcar_istart": ist, "outcar_icharg": ich, "not_read_phrase": notread, "a_wavecar_sha256": a_sha or None,
+                        "positive_regex": rx or None, "positive_regex_match": pos}
         if not (isinstance(w, dict) and w.get("honoured") == 1 and w.get("istart") == "1" and w.get("icharg") == "0" and w.get("not_read_phrase") == 0
                 and ist == "1" and ich == "0" and not notread
                 and V.HEX64.match(str(w.get("src_sha256", ""))) and w.get("src_sha256") == w.get("copied_sha256") == w.get("end_sha256")):
             return done("RESTART_NOT_HONOURED", f"ⓑ 가 ⓐ WAVECAR 를 읽었다고 확인할 수 없다 (OUTCAR ISTART {ist} · ICHARG {ich} · 'WAVECAR not read' {notread} · sha 셋) — "
                         "자동 채택·승격 없음 · 1저자 검토")
+        if not (V.HEX64.match(a_sha) and w.get("src_sha256") == a_sha):
+            return done("RESTART_NOT_HONOURED", f"ⓑ 원본이 이 ⓐ 의 WAVECAR 가 아니다 (ⓐ 기록 sha {a_sha or '없음'} · ⓑ src/copied/end {w.get('src_sha256')}) — "
+                        "자동 채택·승격 없음 · 1저자 검토")
+        if rx and not pos:
+            return done("RESTART_NOT_HONOURED", (f"등록부 재시작 regex 형식 {rxbad}" if rxbad else f"등록부의 재시작 긍정 문구 /{rx}/ 가 ⓑ OUTCAR·stdout.log 원문에 없다")
+                        + " — 자동 채택·승격 없음 · 1저자 검토")
     if st != "OK":
         return done(st, f"판정 계약 {why} (행 {n} · dE {de} · d eps {dp})")
     # ── ③ 완결성 (OK 만) ──
@@ -1032,7 +1105,8 @@ def check_attempt(job, pkgdir, attdir, rung, registry=None):
 
 
 def a_eligible(ra):
-    """ⓐ 자격 (ⓑ 를 띄우기 전 셋 중 기록으로 볼 수 있는 둘 — ① 정상 종료·유한 상태 ② WAVECAR 0 보다 크고 머리 = ⓐ OUTCAR NKPTS·NBANDS·ENCUT)."""
+    """ⓐ 자격 (ⓑ 를 띄우기 전 셋 중 기록으로 볼 수 있는 둘 — ① 정상 종료·유한 상태 ② WAVECAR 0 보다 크고 머리 = ⓐ OUTCAR NKPTS·NBANDS·ENCUT).
+    ② 의 OUTCAR 값은 check_attempt 가 반송된 ⓐ OUTCAR 원문에서 다시 읽은 `outcar_dims` 다 — WAVECAR.info 의 `outcar` 사본은 그것과 같아야 할 뿐 근거가 아니다 (러너 elig_A 와 같다)."""
     j = ra.get("judge") or {}
     if ra.get("status") not in ("OK", "SCF_NOT_CONVERGED") and j.get("status") not in ("OK", "SCF_NOT_CONVERGED"):
         return False, f"ⓐ 상태 {ra.get('status')} / 판정 {j.get('status')}"
@@ -1040,13 +1114,18 @@ def a_eligible(ra):
         return False, f"ⓐ 무결성·설정 {ra.get('status')}"
     w = ra.get("wavecar") or {}
     hd = str(w.get("head", "")).split()
-    oc = w.get("outcar") or {}
+    dims = ra.get("outcar_dims") or {}
+    if any(dims.get(k) is None for k, _ in OUTCAR_DIMS):
+        return False, f"ⓐ OUTCAR 원문에서 NKPTS·NBANDS·ENCUT 를 못 읽었다 {dims}"
+    oc = w.get("outcar") if isinstance(w.get("outcar"), dict) else {}
+    if any(oc.get(k) != dims[k] for k, _ in OUTCAR_DIMS):
+        return False, f"WAVECAR.info 의 OUTCAR 사본 {oc} 이 실물 ⓐ OUTCAR {dims} 와 다르다"
     try:
-        ok = (int(w.get("size", 0)) > 0 and len(hd) >= 6 and hd[3] == str(oc.get("NKPTS")) and hd[4] == str(oc.get("NBANDS"))
-              and abs(float(hd[5]) - float(oc.get("ENCUT"))) < 0.05)
+        ok = (int(w.get("size", 0)) > 0 and len(hd) >= 6 and hd[3] == dims["NKPTS"] and hd[4] == dims["NBANDS"]
+              and abs(float(hd[5]) - float(dims["ENCUT"])) < 0.05)
     except (TypeError, ValueError):
         ok = False
-    return (True, "-") if ok else (False, f"WAVECAR 기록 {w}")
+    return (True, "-") if ok else (False, f"WAVECAR 머리 {hd[3:6]} · 크기 {w.get('size')} ≠ ⓐ OUTCAR {dims}")
 
 
 def resolve_job(job, pkgdir, run, registry=None):
@@ -1060,12 +1139,12 @@ def resolve_job(job, pkgdir, run, registry=None):
         ok, why = a_eligible(ra)
         if not ok:
             return {"status": "STAGE_A_INELIGIBLE", "why": why, "history": hist, "stageA": ra}
-        rb = check_attempt(job, pkgdir, P("a4B"), "a4B", registry); hist["a4B"] = rb["status"]
+        rb = check_attempt(job, pkgdir, P("a4B"), "a4B", registry, a_ref=ra); hist["a4B"] = rb["status"]
         return {**rb, "history": hist, "stageA": ra}
     r0 = check_attempt(job, pkgdir, P("0"), "0", registry); hist["0"] = r0["status"]
     if r0["status"] == "OK" or r0["status"] not in STATUS_PROMOTE:
         return {**r0, "history": hist}
-    last = r0
+    last, ra = r0, None
     for ra_name, rb_name in (("r1A", "r1B"), (None, "r2B")):
         if ra_name:
             ra = check_attempt(job, pkgdir, P(ra_name), ra_name, registry); hist[ra_name] = ra["status"]
@@ -1074,7 +1153,7 @@ def resolve_job(job, pkgdir, run, registry=None):
             ok, why = a_eligible(ra)
             if not ok:
                 return {"status": "STAGE_A_INELIGIBLE", "why": why, "history": hist}
-        rb = check_attempt(job, pkgdir, P(rb_name), rb_name, registry); hist[rb_name] = rb["status"]
+        rb = check_attempt(job, pkgdir, P(rb_name), rb_name, registry, a_ref=ra); hist[rb_name] = rb["status"]     # r1B · r2B 둘 다 r1 ⓐ 에 결박 (r2 는 r1 의 ⓐ WAVECAR 를 쓴다)
         if rb["status"] == "MISSING":
             return {**last, "history": hist, "ladder_note": "다음 단 시도 없음"}
         if rb["status"] == "OK" or rb["status"] not in STATUS_PROMOTE:
@@ -1287,6 +1366,43 @@ PILOT_JOBS = ("P2S_S_A_bound", "P2S_S_A_far", "CC_S33_AB_optB88_bound", "CC_S33_
 V5_REGISTRY = "db/raw/wad_aprime_v5_vasp_2026_09_27/pp_registry_2026_10_05.json"
 
 
+def _restart_regex_check(rx, run, J):
+    """봉인 전 재시작 긍정 문구 regex 확인 (카드 §2.2 · CZ Q-CZ-2 ②) — 파일럿 시도 원문 (OUTCAR + stdout.log) 에서
+    ⓐ WAVECAR 를 읽은 ⓑ (Startparameter ISTART 1 · 'WAVECAR not read' 없음) 에는 전부 맞고, 새로 시작한 시도 (ISTART 0 — 단 0 · ⓐ 단 · 되돌아간 ⓑ)
+    에는 하나도 안 맞고, 러너 (grep -E) 와 검사기 (python re.M) 가 시도마다 같은 답이어야 한다. 아니면 PkgError (봉인 안 함).
+    ⚠ 못 하는 것: 파일럿에 없던 출력 꼴 (다른 노드 · 다른 실패 경로) 에서도 같은 답이라는 보증은 없다 — 그래서 문구는 고정 구절 하나로 좁힌다."""
+    bad = restart_regex_problems(rx)
+    if bad:
+        raise PkgError(f"재시작 regex {rx!r} 형식 — {bad} · 봉인하지 않는다")
+    read, not_read, unknown, split = [], [], [], []
+    for n in PILOT_JOBS:
+        for rung in (("a4A", "a4B") if J[n]["ladder"] == "a4" else ("0", "r1A", "r1B", "r2B")):
+            d = os.path.join(run, RUNG_DIR[rung].format(job=n))
+            if not os.path.isfile(os.path.join(d, "attempt.json")):
+                continue
+            ev = restart_evidence(d)
+            py = re.search(rx, ev["text"], re.M) is not None
+            files = [os.path.join(d, f) for f in ("stdout.log", "OUTCAR") if os.path.isfile(os.path.join(d, f))]
+            g = subprocess.run(["grep", "-aqE", "--", rx, *files], capture_output=True).returncode if files else 1
+            if g not in (0, 1):
+                raise PkgError(f"재시작 regex {rx!r}: grep -E 오류 (종료 {g}) — 봉인하지 않는다")
+            tag = f"{n}/{rung}"
+            if py != (g == 0):
+                split.append(tag)
+            if rung in ("r1B", "r2B", "a4B") and ev["istart"] == "1" and not ev["not_read_phrase"]:
+                read.append((tag, py))
+            elif ev["istart"] == "0" or ev["not_read_phrase"]:
+                not_read.append((tag, py))
+            else:
+                unknown.append(tag)
+    miss, hit = [t for t, m in read if not m], [t for t, m in not_read if m]
+    why = ([f"두 엔진 갈림 {split}"] if split else []) + ([] if read else ["파일럿에 ⓐ WAVECAR 를 읽은 ⓑ 가 없다"]) \
+        + ([f"읽은 ⓑ {len(read)} 중 안 맞음 {miss}"] if miss else []) + ([f"새로 시작한 시도에 맞음 {hit}"] if hit else [])
+    if why:
+        raise PkgError(f"재시작 regex {rx!r} 를 파일럿 원문으로 확인하지 못했다 — {' · '.join(why)} · 봉인하지 않는다 (regex 없이 봉인하거나 1저자)")
+    return {"regex": rx, "read": [t for t, _ in read], "not_read": [t for t, _ in not_read], "unknown": unknown}
+
+
 def seal_registry(out, ret, manifest_sha256, restart_read_regex="", v5_registry=None):
     """파일럿 반송 → 탄소 등록부 (C 추가 · vdW 커널 신원 · VASP 빌드 · 파일럿 run_id). 은 a4 와 같은 빌드·같은 PP 여야 한다 (V5 등록부 대조).
     ⛔ 파일럿에서 모순이 하나라도 있으면 봉인하지 않는다 (자동 교체 없음 · 1저자)."""
@@ -1321,9 +1437,10 @@ def seal_registry(out, ret, manifest_sha256, restart_read_regex="", v5_registry=
     if ver != v5["vasp_version"] or any(sps[k] != v5["species_sha256"][k] for k in v5["species_sha256"]):
         raise PkgError("VASP 빌드 또는 PP 가 V5 등록부와 다르다 — 은 a4 는 같은 빌드·같은 PP 여야 한다 (개정 4) · 봉인하지 않는다")
     kern = next(iter(ks))
+    rx_check = _restart_regex_check(restart_read_regex, run, J) if restart_read_regex else None
     return {"schema": REG_SCHEMA, "pp_set": V.PP_SET, "titel": titel, "species_sha256": sps, "vasp_version": ver,
             "kernel_sha256": kern, "package_manifest_sha256": manifest_sha256, "from_pilot": fp, "from_pilot_sha256": fps,
-            "restart_read_regex": restart_read_regex, "v5_registry_sha256": _sha(v5_registry or os.path.join(REPO, V5_REGISTRY)),
+            "restart_read_regex": restart_read_regex, "restart_read_check": rx_check, "v5_registry_sha256": _sha(v5_registry or os.path.join(REPO, V5_REGISTRY)),
             "⛔": "이 등록부를 봉인 (커밋·해시) 한 뒤 해제 파일을 보낸다 — 이후 모든 잡이 같아야 한다 (공통 환경 고장 = 전체 정지)"}
 
 
@@ -1516,6 +1633,8 @@ open("OUTCAR", "w").write("\n".join(out) + "\n")
 so = [" running on   64 total cores", f" {version}"]
 if ist == 0 and beh not in ("istart0_quiet", "istart0_only"):
     so.append(" WAVECAR not read")
+if ist == 1:
+    so.append(" reading WAVECAR")                # 재시작 긍정 문구 (시험용 — 업체 5.4.4 의 실제 문구는 파일럿 원문으로 확정)
 open("stdout.log", "w").write("\n".join(so) + "\n")
 if lwave and beh != "nowav" and rows:
     recl = 64
@@ -1741,6 +1860,39 @@ def _selftest():
         except PkgError as e:
             bad = "V5" in str(e)
         ck("⛔음성 등록부: VASP 빌드가 V5 와 다르면 봉인하지 않는다 (은 a4 = 같은 빌드·같은 PP)", bad)
+        # R2 (CZ Q-CZ-2 ②) — 재시작 긍정 문구 regex 는 파일럿 ⓑ 원문으로 확인한 것만 봉인한다
+        regp = seal_registry(PKG, PKG, msha, restart_read_regex="reading WAVECAR", v5_registry=v5r)
+        rcx = regp.get("restart_read_check") or {}
+        ck("등록부 regex: 파일럿에서 ⓐ WAVECAR 를 읽은 ⓑ 셋 (S_A bound r1B · far r1B · far r2B) 에 맞고 새로 시작한 시도 여덟 (단 0 넷 · ⓐ 셋 · 되돌아간 a4B) 에는 안 맞는다 → 봉인",
+           regp["restart_read_regex"] == "reading WAVECAR" and sorted(rcx.get("read", [])) == ["P2S_S_A_bound/r1B", "P2S_S_A_far/r1B", "P2S_S_A_far/r2B"]
+           and len(rcx.get("not_read", [])) == 8 and f"{A4_JOB}/a4B" in rcx["not_read"] and not rcx.get("unknown"), rcx)
+        for rx_, lab_, why_ in (("NO SUCH PHRASE", "읽은 ⓑ 원문에 없다", "안 맞음"), ("WAVECAR", "새로 시작한 시도에도 맞는다 — 구별 못 함", "새로 시작한 시도에 맞음"),
+                                ("(reading WAVECAR)?", "빈 문자열에도 맞는다", "빈 문자열"), ("(?i)READING wavecar", "(? 파이썬 확장", "(?"),
+                                (r"reading\sWAVECAR", "역슬래시 — \\s 는 ERE 와 뜻이 갈린다", "허용 밖 글자"), ("[[:alpha:]]eading WAVECAR", "괄호 표현 — POSIX 클래스", "허용 밖 글자"),
+                                ("reading WAVECAR{1}", "중괄호", "허용 밖 글자"), ("reading( WAVECAR", "파이썬 컴파일 실패", "컴파일")):
+            try:
+                seal_registry(PKG, PKG, msha, restart_read_regex=rx_, v5_registry=v5r); msg_ = "(봉인됨)"
+            except PkgError as e:
+                msg_ = str(e)
+            ck(f"⛔음성 등록부 regex ({lab_}): 봉인하지 않는다 · 사유 '{why_}'", "regex" in msg_ and why_ in msg_, msg_)
+        tcr = os.path.join(T, "tz_cr"); shutil.copytree(PKG, tcr, ignore=shutil.ignore_patterns("round2_return*"))
+        open(os.path.join(tcr, "run", "P2S_S_A_bound_r1", "stdout.log"), "w", newline="").write(" running on   64 total cores\r reading WAVECAR\n")
+        try:
+            seal_registry(tcr, tcr, msha, restart_read_regex="^ reading WAVECAR", v5_registry=v5r); msg_ = "(봉인됨)"
+        except PkgError as e:
+            msg_ = str(e)
+        ck("⛔음성 등록부 regex (stdout 에 \\r 로 붙은 줄): grep 처럼 한 줄로 읽어 '안 맞음' (두 엔진 갈림 아님 — 검사기는 줄바꿈을 바꾸지 않고 읽는다)",
+           "안 맞음" in msg_ and "갈림" not in msg_, msg_)
+        import types
+        real_sp = globals()["subprocess"]
+        globals()["subprocess"] = types.SimpleNamespace(run=lambda *a_, **k_: types.SimpleNamespace(returncode=1))      # grep 이 늘 '안 맞음' 이라고 답하는 가짜
+        try:
+            seal_registry(PKG, PKG, msha, restart_read_regex="reading WAVECAR", v5_registry=v5r); msg_ = "(봉인됨)"
+        except PkgError as e:
+            msg_ = str(e)
+        finally:
+            globals()["subprocess"] = real_sp
+        ck("⛔음성 등록부 regex (러너 grep 과 검사기 파이썬이 다른 답 — 가짜 grep): 봉인하지 않는다 · 사유 '두 엔진 갈림'", "두 엔진 갈림" in msg_, msg_)
         rf = os.path.join(T, "release.tsv")
         _write(rf, release_text(reg, ["1", "2", "3", "4"], {"1": 170, "2": 586, "3": 204, "4": 24}, 1080, "R2-REL-TEST"))
         rc3, log3 = run_r(PKG, {}, (), STAGES="1 2 3 4")
@@ -1884,6 +2036,66 @@ def _selftest():
         aj = os.path.join(tam3, "run", "P2S_S_A_bound_r1", "attempt.json"); a_ = json.load(open(aj)); a_["sha256"]["WAVECAR.info"] = _sha(wi); json.dump(a_, open(aj, "w"))
         ck("⛔음성 검사기: ⓑ 복사본 sha ≠ ⓐ sha → 재시작 미이행 (수렴했어도 자동 채택 안 함)",
            resolve_job(J["P2S_S_A_bound"], tam3, os.path.join(tam3, "run"))["status"] == "RESTART_NOT_HONOURED")
+        # R2 (CZ Q-CZ-2) — ⓐ→ⓑ 결박 · ⓐ 머리 = 실제 OUTCAR · 재시작 문구 (재현 셋 + 양성 · 러너 이어 돌리기도 같은 답)
+        def edit_info(att, fn):                       # WAVECAR.info 를 고치고 attempt.json 의 sha 를 맞춘다 (기록끼리는 일관된 위조)
+            wi_ = os.path.join(att, "WAVECAR.info"); w__ = json.load(open(wi_)); fn(w__); open(wi_, "w").write(json.dumps(w__) + "\n")
+            aj_ = os.path.join(att, "attempt.json"); a__ = json.load(open(aj_)); a__["sha256"]["WAVECAR.info"] = _sha(wi_); json.dump(a__, open(aj_, "w"))
+        other = lambda w: w.update(src_sha256="c" * 64, copied_sha256="c" * 64, end_sha256="c" * 64)
+        tz1 = os.path.join(T, "tz1"); shutil.copytree(PKG, tz1)
+        edit_info(os.path.join(tz1, "run", "P2S_S_A_bound_r1"), other)
+        rz1 = resolve_job(J["P2S_S_A_bound"], tz1, os.path.join(tz1, "run"))
+        rcz1, logz1 = run_r(tz1, {}, (), JOBS="P2S_S_A_bound")
+        ck("⛔음성 R2 (CZ 재현 ①): ⓑ src/copied/end 를 다른 같은 sha 로 (ⓐ 그대로 · 기록 sha 맞춤) → 검사기 재시작 미이행 · 러너 이어 돌리기도 같은 답 (r2 안 띄움)",
+           rz1["status"] == "RESTART_NOT_HONOURED" and "이 ⓐ 의 WAVECAR 가 아니다" in rz1.get("why", "") and rcz1 == 1 and "RESTART_NOT_HONOURED" in logz1
+           and not os.path.isdir(os.path.join(tz1, "run", "P2S_S_A_bound_r2")), (rz1["status"], rz1.get("why"), rcz1, logz1[-300:]))
+        tz2 = os.path.join(T, "tz2"); shutil.copytree(PKG, tz2)
+        edit_info(os.path.join(tz2, "run", "P2S_S_A_far_r2"), other)
+        rz2 = resolve_job(J["P2S_S_A_far"], tz2, os.path.join(tz2, "run"))
+        rcz2, logz2 = run_r(tz2, {}, (), JOBS="P2S_S_A_far")
+        ck("⛔음성 R2: r2 ⓑ 도 r1 ⓐ WAVECAR 에 결박 (r2 src/copied/end 를 다른 같은 sha 로) → 검사기·러너 재시작 미이행 (손 안 댄 r2 는 파일럿 시험에서 OK)",
+           rz2["status"] == "RESTART_NOT_HONOURED" and rz2["history"].get("r2B") == "RESTART_NOT_HONOURED" and rcz2 == 1 and "RESTART_NOT_HONOURED" in logz2,
+           (rz2["status"], rz2.get("history"), rcz2, logz2[-300:]))
+        rz8 = check_attempt(J["P2S_S_A_bound"], PKG, os.path.join(PKG, "run", "P2S_S_A_bound_r1"), "r1B")
+        ck("⛔음성 R2: ⓑ 를 ⓐ 검사 기록 없이 검사하면 재시작 미이행 (결박할 ⓐ 가 없다)", rz8["status"] == "RESTART_NOT_HONOURED", (rz8["status"], rz8.get("why")))
+        rz3 = resolve_job(J[A4_JOB], p7, os.path.join(p7, "run"), {**reg7, "restart_read_regex": "NO SUCH PHRASE"})
+        ck("⛔음성 R2 (CZ 재현 ②): 등록부 restart_read_regex 가 원문에 없는 문구 → 재시작 미이행 (러너 honoured 를 믿지 않고 원문을 다시 본다)",
+           rz3["status"] == "RESTART_NOT_HONOURED" and "NO SUCH PHRASE" in rz3.get("why", ""), (rz3["status"], rz3.get("why")))
+        pz = os.path.join(T, "pk_rx"); shutil.copytree(p7, pz)
+        for x_ in ("P2S_Li_A_far", "P2S_Li_A_far_r1", "P2S_Li_A_far_r2"):
+            shutil.rmtree(os.path.join(pz, "run", x_), ignore_errors=True)
+        regz = seal_registry(pz, pz, msha, restart_read_regex="reading WAVECAR", v5_registry=v5r)
+        rfz = os.path.join(T, "release_rx.tsv"); _write(rfz, release_text(regz, ["1"], {"1": 170}, 1080, "R2-RX"))
+        plan_z = {"P2S_Li_A_far/0": "noconv", "P2S_Li_A_far/r1A": "noconv", "P2S_Li_A_far/r1B": "conv"}
+        rcz4, logz4 = run_r(pz, plan_z, (), STAGES="1", RELEASE_FILE=rfz, RELEASE_SHA256=_sha(rfz), JOBS="P2S_Li_A_far")
+        rz4 = resolve_job(J["P2S_Li_A_far"], pz, os.path.join(pz, "run"), regz)
+        wz4 = json.load(open(os.path.join(pz, "run", "P2S_Li_A_far_r1", "WAVECAR.info")))
+        ck("R2 양성: 파일럿 원문으로 봉인한 regex ('reading WAVECAR') 해제 파일 → 러너 ⓑ 긍정 문구 맞음 · OK · 검사기도 OK@r1B",
+           rcz4 == 0 and wz4.get("positive_regex_match") == "1" and rz4["status"] == "OK" and rz4["history"].get("r1B") == "OK", (rcz4, wz4, rz4["status"], rz4.get("why"), logz4[-300:]))
+        rfz2 = os.path.join(T, "release_rx2.tsv"); _write(rfz2, release_text({**regz, "restart_read_regex": "NO SUCH PHRASE"}, ["1"], {"1": 170}, 1080, "R2-RX2"))
+        rcz5, logz5 = run_r(pz, plan_z, (), STAGES="1", RELEASE_FILE=rfz2, RELEASE_SHA256=_sha(rfz2), JOBS="P2S_Li_A_far")
+        rz5 = resolve_job(J["P2S_Li_A_far"], pz, os.path.join(pz, "run"), {**regz, "restart_read_regex": "NO SUCH PHRASE"})
+        ck("⛔음성 R2 (이어 돌리기 · 같은 ⓑ 기록을 원문에 없는 문구 regex 해제 파일로): 러너 stat_of 도 원문을 다시 봐서 재시작 미이행 · r2 안 띄움 · 검사기도",
+           rcz5 == 1 and "RESTART_NOT_HONOURED" in logz5 and not os.path.isdir(os.path.join(pz, "run", "P2S_Li_A_far_r2")) and rz5["status"] == "RESTART_NOT_HONOURED",
+           (rcz5, logz5[-300:], rz5["status"]))
+        tz6 = os.path.join(T, "tz6"); shutil.copytree(PKG, tz6)
+
+        def nb999(w):
+            hd_ = w["head"].split(); hd_[4] = "999"; w["head"] = " ".join(hd_); w["outcar"]["NBANDS"] = "999"
+        edit_info(os.path.join(tz6, "run", "P2S_S_A_bound_r1", "stageA"), nb999)
+        rz6 = resolve_job(J["P2S_S_A_bound"], tz6, os.path.join(tz6, "run"))
+        ck("⛔음성 R2 (CZ 재현 ③): ⓐ WAVECAR.info 머리·OUTCAR 사본 NBANDS 를 둘 다 999 로 (기록 sha 맞춤 · 실물 OUTCAR 512) → ⓐ 자격 미달",
+           rz6["status"] == "STAGE_A_INELIGIBLE", (rz6["status"], rz6.get("why")))
+        tz7 = os.path.join(T, "tz7"); shutil.copytree(PKG, tz7)
+        a4d = os.path.join(tz7, "run", f"{A4_JOB}_a4")
+        for x_ in os.listdir(a4d):                                     # ⓑ 를 띄우기 전에 끊긴 상태 (ⓐ 와 그 WAVECAR 만 남긴다)
+            if x_ != "stageA":
+                p_ = os.path.join(a4d, x_); shutil.rmtree(p_) if os.path.isdir(p_) else os.remove(p_)
+        edit_info(os.path.join(a4d, "stageA"), lambda w: w["outcar"].update(NBANDS="999"))
+        rz7 = resolve_job(J[A4_JOB], tz7, os.path.join(tz7, "run"))
+        rcz7, logz7 = run_r(tz7, {}, (), JOBS=A4_JOB)
+        ck("⛔음성 R2: ⓐ WAVECAR.info 의 OUTCAR 사본만 999 (머리 = 실물 512) → 검사기 ⓐ 자격 미달 · 러너 이어 돌리기도 ⓑ 를 안 띄운다",
+           rz7["status"] == "STAGE_A_INELIGIBLE" and "사본" in rz7.get("why", "") and rcz7 == 1 and not os.path.isdir(os.path.join(a4d, ".b")) and "자격 미달" in logz7,
+           (rz7["status"], rz7.get("why"), rcz7, logz7[-300:]))
     finally:
         if os.environ.get("R2_SELFTEST_KEEP") == "1":
             print(f"  (시험 폴더 남김: {T})")
