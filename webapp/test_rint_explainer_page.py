@@ -16,7 +16,8 @@
   ⑧ (10-22 · 사전 리뷰 2 회차 · 1저자 *"잘 하이라이트로 저장해두고"* · PF2 F) 쉽게 말하면 상자 ① ② ③ 이 눈에 띄는 상자로 있고
      (하이라이트 색 토큰 = 밝은 · 어두운 화면 둘 다) · 상자 글 = 수정 계획 `docs/reviews/rint2_design_fix_plan_20261021.md` §6 원문 그대로 ·
      핵심 문장 · 날짜 (10-22 · "10-25 판정 목표" 없음 · 10-31 = 주 판정만 · 감도 미완료) · 용어 풀이 "SV 반사실 비" ·
-     그림 6 의 남은 길 순서 = 상자 ② 의 바꾼 순서 (PRE2-design-09)
+     그림 6 의 남은 길 순서 = 상자 ② 의 바꾼 순서 (PRE2-design-09) · 6 절 목록 끝 항목 · 주석의 등록 R §10-4 문장이 그 자리에
+     (PF2 H 변이 MF12 · MF13)
 
   python3 webapp/test_rint_explainer_page.py
 """
@@ -236,6 +237,18 @@ def main():
     allt = text + ' ' + ' '.join(fig6)
     for sent in ('10-31', '진행 보고', '감도 미완료', '주 판정'):
         chk(f'남은 길에 등록 R §10-4 · 한정어 ⑰ 표지 — "{sent}"', sent in allt)
+    #  ★ 같은 부류 (PF2 H 변이 MF12 · MF13 생존 — 위 검사는 페이지 어디든 그 낱말이 있으면 통과했다) — 6 절의 그 자리에 있는가
+    s6 = re.search(r'<h2>6\. 남은 길[^<]*</h2>(.*?)<h2>7\.', src, re.S)
+    s6t = s6.group(1) if s6 else ''
+    ol6 = re.search(r'<ol>(.*?)</ol>', s6t, re.S)
+    items6 = [re.sub(r'<[^>]+>', '', x) for x in re.findall(r'<li>(.*?)</li>', ol6.group(1), re.S)] if ol6 else []
+    last6 = items6[-1] if items6 else ''
+    chk('6 절 목록 끝 항목 (주 판정 자리) = 등록 R §10-4 · 한정어 ⑰ — "10-31 판정 = 주 판정만" · "감도 미완료"',
+        '10-31 판정 = 주 판정만' in last6 and '감도 미완료' in last6)
+    note6 = re.search(r'<p class="note">(.*?)</p>', s6t, re.S)
+    nt6 = re.sub(r'<[^>]+>', '', note6.group(1)) if note6 else ''
+    chk('6 절 주석 = 등록 R §10-4 결과 전 문장 — "진행 보고만 한다" · "등록 팔은 줄이지 않는다"',
+        '진행 보고만 한다' in nt6 and '등록 팔은 줄이지 않는다' in nt6)
     order = ('S0 단계 1', '⑥ 숫자 탐침', 'Codex 요청', '계획 하나 봉인', 'S0 단계 2', '보정 사다리', '주 판정')
     pos_ok = len(fig6) == 2 and all(all(a in f for a in order) and [f.index(a) for a in order] == sorted(f.index(a) for a in order)
                                     for f in fig6)
