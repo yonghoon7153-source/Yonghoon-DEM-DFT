@@ -1,0 +1,154 @@
+{
+ "schema": "uma_energies/v1",
+ "what": "UMA 단일점 에너지 (D3 없음) — W_UMA 용 · D3 항은 QE 출력에서 (개정 1)",
+ "calculator": {
+  "calc": "uma",
+  "device": "cuda",
+  "vram_cap": {
+   "cap_MiB": 4000.0,
+   "device_total_MiB": 24154,
+   "fraction": 0.1656,
+   "⚠": "CUDA 컨텍스트(수백 MiB)는 이 상한 밖이다"
+  },
+  "fairchem.core": "2.21.0",
+  "torch": "2.8.0+cu128",
+  "cuda": "12.8",
+  "model": "uma-s-1p1",
+  "task": "omat",
+  "inference_settings": "default",
+  "checkpoint": [
+   {
+    "path": "/home/kgy/.cache/fairchem/models--facebook--UMA/snapshots/be2896459a03fcde05e20d2fcefd11f450601fce/checkpoints/uma-s-1p1.pt",
+    "sha256": "07068e9c76702ca173d13155095f2117c1b327ec228557e64cd2709c777b824a",
+    "MB": 1119
+   }
+  ]
+ },
+ "energies": {
+  "S_A_bound": {
+   "struct": "/home/kgy/wt_wadp2s_1021/db/inputs/wad_p2small_seal_2026_10_17/structures/S_A_bound.extxyz",
+   "sha256": "922c55304c03495b861f33eb4a7e68f94fb2203a319a6b240c95b11475672d2e",
+   "n_atoms": 398,
+   "formula": "C224Cl12Li84P12S66",
+   "E_UMA_eV": -2761.604118492888,
+   "pbc": [
+    true,
+    true,
+    true
+   ]
+  },
+  "S_A_far": {
+   "struct": "/home/kgy/wt_wadp2s_1021/db/inputs/wad_p2small_seal_2026_10_17/structures/S_A_far.extxyz",
+   "sha256": "89cee1cbaece8ce92be283de0f8a545ad326d0dd558515062eb4e5b7afd6e7a9",
+   "n_atoms": 398,
+   "formula": "C224Cl12Li84P12S66",
+   "E_UMA_eV": -2761.92383033136,
+   "pbc": [
+    true,
+    true,
+    true
+   ]
+  },
+  "S_A_p05_bound": {
+   "struct": "/home/kgy/wt_wadp2s_1021/db/inputs/wad_p2small_seal_2026_10_17/structures/S_A_p05_bound.extxyz",
+   "sha256": "36669da6b89ed8e1416162c13ba5cb64b5606b51dbaa64612a9afc958397ac33",
+   "n_atoms": 398,
+   "formula": "C224Cl12Li84P12S66",
+   "E_UMA_eV": -2761.9348003472332,
+   "pbc": [
+    true,
+    true,
+    true
+   ]
+  },
+  "Li_A_bound": {
+   "struct": "/home/kgy/wt_wadp2s_1021/db/inputs/wad_p2small_seal_2026_10_17/structures/Li_A_bound.extxyz",
+   "sha256": "8eaa8b9b69f46ad9a308373218571611c10fc016dc16e9692b96de02cb89dfc3",
+   "n_atoms": 362,
+   "formula": "C224Cl12Li60P12S54",
+   "E_UMA_eV": -2624.8205146363503,
+   "pbc": [
+    true,
+    true,
+    true
+   ]
+  },
+  "Li_A_far": {
+   "struct": "/home/kgy/wt_wadp2s_1021/db/inputs/wad_p2small_seal_2026_10_17/structures/Li_A_far.extxyz",
+   "sha256": "a0b58abadef9915a31382499d7bafb9c19adcb7fb56c49dc36561f3837171881",
+   "n_atoms": 362,
+   "formula": "C224Cl12Li60P12S54",
+   "E_UMA_eV": -2625.460956731825,
+   "pbc": [
+    true,
+    true,
+    true
+   ]
+  },
+  "Li_A_p05_bound": {
+   "struct": "/home/kgy/wt_wadp2s_1021/db/inputs/wad_p2small_seal_2026_10_17/structures/Li_A_p05_bound.extxyz",
+   "sha256": "5005372b59229acd592b6bf869c3a35884a54335f813d7cdf0a6d824881c2d7b",
+   "n_atoms": 362,
+   "formula": "C224Cl12Li60P12S54",
+   "E_UMA_eV": -2625.451705506272,
+   "pbc": [
+    true,
+    true,
+    true
+   ]
+  },
+  "S_A_G3_c2_bound": {
+   "struct": "/home/kgy/wt_wadp2s_1021/db/inputs/wad_p2small_seal_2026_10_17/structures/S_A_G3_c2_bound.extxyz",
+   "sha256": "a437c28d90b94d054de416d524f324603af005cf55ae3240706fa3782c60e8e9",
+   "n_atoms": 398,
+   "formula": "C224Cl12Li84P12S66",
+   "E_UMA_eV": -2761.6041974976506,
+   "pbc": [
+    true,
+    true,
+    true
+   ]
+  },
+  "S_A_G3_c2_far_i": {
+   "struct": "/home/kgy/wt_wadp2s_1021/db/inputs/wad_p2small_seal_2026_10_17/structures/S_A_G3_c2_far_i.extxyz",
+   "sha256": "e24130e5a3a1889d8e11c2f0235c781f41003b8a39098fb50f1c43af3d70683d",
+   "n_atoms": 398,
+   "formula": "C224Cl12Li84P12S66",
+   "E_UMA_eV": -2761.9238141259343,
+   "pbc": [
+    true,
+    true,
+    true
+   ]
+  },
+  "S_A_G3_c2_far_ii": {
+   "struct": "/home/kgy/wt_wadp2s_1021/db/inputs/wad_p2small_seal_2026_10_17/structures/S_A_G3_c2_far_ii.extxyz",
+   "sha256": "80d7f2830619c7d759f25f60c985985096aa5bb5b34313ef40088454e773d029",
+   "n_atoms": 398,
+   "formula": "C224Cl12Li84P12S66",
+   "E_UMA_eV": -2761.923855583093,
+   "pbc": [
+    true,
+    true,
+    true
+   ]
+  }
+ },
+ "gpu_guard": {
+  "vram_cap_MiB": 4000.0,
+  "gpu_kill_total_MiB": 23500,
+  "gpu_start_max_MiB": 16000,
+  "start_gate": {
+   "ok": true,
+   "last_MiB": 15022,
+   "waited_s": 0.0,
+   "reason": "합계 15022 ≤ 16000"
+  },
+  "watchdog": "on (합계 > 23500 MiB 면 이 프로세스만 종료 3)",
+  "peak": {
+   "max_reserved_MiB": 2736,
+   "max_allocated_MiB": 2208
+  },
+  "gpu_total_after_MiB": 18115
+ }
+}
