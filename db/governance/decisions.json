@@ -9444,6 +9444,84 @@
    "ratification": {
     "state": "proposed"
    }
+  },
+  {
+   "id": "D-2026-10-22-li3nd-r2-close-at-run-limit",
+   "schema_version": 2,
+   "kind": "closure",
+   "scope": "sei.li3nd_p0_2_control",
+   "slot": "li3nd_p0_2_control_r2_close_rule",
+   "applies_to": {
+    "systems": [
+     "li3nd_pristine_333_control"
+    ],
+    "tasks": [
+     "li3nd_p0_2_control_r2_relax"
+    ],
+    "methods": [
+     "qe_gpu_relax"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "Li₃Nd P0-2 control r2 — 이번 실행 한도 (restart nstep 200 · ≈ BFGS 386 · ≈ 10-30) 안에 QE 기본 수렴에 못 닿으면 거기서 '미수렴' 으로 닫는다 (트랙 SEI · 1저자 = 사용자)",
+   "statement": "gabia /data/work/runs/sei_control/li3nd_mp-976264_p333_r2 의 지금 실행 (10-20 12:34 KST 재개 · 00_control_relax.restart.in nstep 200 · BFGS 187 부터) 이 QE 기본 수렴 (연속 두 스텝 에너지 차 < 1e-4 Ry 와 힘 성분 최대 < 1e-3 Ry/bohr · 입력에 문턱 줄 없음) 에 닿지 못한 채 SCF 200 번을 다 쓰면 (≈ BFGS 386 · ≈ 10-30 저녁 어림) nstep 을 다시 늘리지 않고 r2 를 '미수렴' 으로 닫는다. 닫을 때 마지막 BFGS 번호 · 마지막 에너지 차 · 힘 성분 최대 · 거부 · 리셋 수를 런로그에 남기고, 마지막 기하·에너지는 수렴한 바닥 구조로 인용하지 않는다 (진행 중 이완 · 정량 인용 금지 그대로). 한도 안에 수렴하면 이 결정은 쓰이지 않고 끝난다. 다른 잡 때문에 세운 EXIT 정지 + BFGS 이력 승계는 실행 한도를 새로 주지 않는다 (같은 실행으로 센다). 닫힌 뒤 (또는 수렴 뒤) 탄성 modelc_2x 재개는 그대로 순서를 잇는다.",
+   "rationale": "10-22 09:15 관측 (BFGS 223 · 거부·리셋 0 · 최근 25 스텝 dE −0.11 ~ −0.70 mRy · 힘 성분 최대가 문턱의 1.4–3.3 배) — 수치 문제가 아니라 아주 평평한 바닥으로 천천히 내려가는 중이라 끝나는 시점을 못 박는다. 드라이버 원칙 '늘린 값도 소진하면 그건 보고할 사실이다' (tools/sei/restart_qe_relax.sh) · 마감 규율 '닫힘 조건을 먼저 박는다'. 사용자 10-22 인계 카드 §4 질문에 '권고대로하자'.",
+   "decision_state": "active",
+   "record_kind": "closure",
+   "results_seen": false,
+   "results_seen_note": "r2 는 아직 진행 중 — 이 규칙은 한도에 닿기 전에 박는다 (수렴·미수렴 결과 없음)",
+   "record": "db/properties/li3nd_p333_control_runlog_2026_10_11.json",
+   "depends_on": [
+    "D-2026-10-11-gabia-elastic-pause-li3nd-r2"
+   ],
+   "supersedes": [],
+   "amends": null,
+   "evidence": [
+    "db/properties/li3nd_p333_control_runlog_2026_10_11.json",
+    "tools/sei/restart_qe_relax.sh",
+    "kb/projects/handoff_2026_10_22_evacuation.md"
+   ],
+   "reopen_criteria": [
+    "r2 를 다시 여는 것은 새 카드 (다른 시작 기하 · 다른 셀 · 다른 이완 설정) — '조금만 더 돌리면 끝날 것 같다' 는 재개 사유가 아니다"
+   ],
+   "track": {
+    "name": "SEI",
+    "first_author": "사용자"
+   },
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-10-22"
+    }
+   ],
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-10-22",
+     "state": "proposed",
+     "by": "agent",
+     "note": "friendly 세션 인계 카드 §4 [SEI] 권고 (닫는다) — 대피 세션 claude/evac-2026-10-22"
+    },
+    {
+     "at": "2026-10-22",
+     "state": "active",
+     "by": "사용자 (SEI 트랙 · 1저자)",
+     "note": "'권고대로하자' (인계 카드 §4 세 질문에 한 번에 답)"
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-22T01:12:12Z",
+    "commit": "aaa275e2081ce43a6892c7dde40ea4d8f82576de",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-10-22 (이 세션): 인계 카드 §4 세 질문을 붙여 넣고 '권고대로하자' — [SEI] 'Li₃Nd r2 가 이번 실행 한도 (≈ BFGS 386 · ≈ 10-30) 에서도 안 끝나면 미수렴으로 닫을지. 권고: 닫아요.'",
+    "decision_digest": "sha256:3401ec8d3b1f90bed02cd5ee268b1fc3c18e0a403c69d550a7eff697488682ec"
+   }
   }
  ]
 }
