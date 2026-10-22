@@ -253,5 +253,61 @@
   },
   "⏭": "사용자 결정 — Codex 에 diff 만 보는 짧은 확인 편지 (DC) 뒤 업체 발송 · 또는 회신의 해제 문구대로 바로 업체 발송",
   "by": "agent · 2026-10-22"
+ },
+ "⑤-5_DC_고침_2026_10_22": {
+  "출처": "Codex DC 회신 (kb/reviews/codex_DC_reply_wad_outsourcing_round2_v3_2026_10_22.md · 4c1ae1e00) — 묶음 v3 (bf7b2ac9…) NO-GO · P1 2 (시도 폴더 읽기 실패 = '시도 없음' — 새 회귀 · 러너 장부 elapsed_s 숫자 접두부 — 잔존) · 재승인 최소조건 셋 · Q-DC-2 · 3 · 5 GO · Q-DC-6 조건부 수용 (④ 미등록 실행 흔적은 '감사되지 않음' 으로 구분) · 카드 · 잡 행렬 · 물리 조건은 그대로",
+  "재승인조건과_고침": {
+   "① 읽기 실패 ≠ 없음 (DC P1-1 — 'except OSError → False' 가 읽지 못한 r1A 를 감사에서 지움 → 잡 OK · --check 0 · a4 OK)": "d538279df — _started 는 FileNotFoundError 만 '시작 안 함' · 다른 OSError 는 올린다 → resolve_job 이 ATTEMPT_UNREADABLE (무결성 등급) + 환경 증거 'unreadable' → env_audit AUDIT_UNREADABLE 전체 정지 · 검사 도중 읽기 실패 (사다리 경로 chk) 도 같은 기록",
+   "② 장부 전체 값 (DC P1-2 — grep '\"elapsed_s\": [0-9]*' 가 4.5e5 → 4 · 1e12 → 1 · 잘린 4 → 4)": "d538279df — 러너 wall_s_of 가 '\"elapsed_s\": [^,}]*[,}]' (값 전체 + 끝 구분자) 를 잡아 기존 10진 검사에 넣는다 → 미상 → 다음 잡 보류",
+   "③ 결박 갱신": "묶음 v4 커밋 (이 기록과 같은 커밋) — 묶음 v4 · jobs.json tool_sha256 = 고친 도구 · run_all.sh = run_all_text() · MANIFEST 39522906…",
+   "같은 종류 훑기 (DC 가 짚지 않은 곳 · 우리가 찾음)": "d538279df — 검사기: 환경 증거 파일 (OUTCAR · POTCAR.species.sha256 · attempt.json · attempt.start · optB88 stdout.log) 도 ENOENT 만 '없음' (끊긴 시도는 이 길이 유일한 감사) · run_aborted 열거 · 폴더 하나 / 러너: judge 의 attempt.json rc 전체 값 (정수 꼴 검사는 awk 한 곳 · 0.5 · 1e3 · -0 → rc_unknown SCF_UNVERIFIED · 승격 없음 — 검사기 ATTEMPT_MISMATCH 와 같은 쪽 · 파이썬 judge_text 같은 가지 · 탐침 rc_na) · wsha 정확히 64 자",
+   "Q-DC-6 ④ 미등록 실행 흔적": "d538279df — unregistered_traces: 등록 = RUNG_DIR · run_aborted/<잡>_<단>_<k> · 흔적 = 반송 허용 이름 − 입력 사본 셋 → UNREGISTERED_ATTEMPT (전체 정지 목록 · collect · --check 6 · a4 공통 고장 · 봉인 거부) · 빈 폴더 · README · 입력 사본만은 아님 · 못 읽은 반송 폴더 = AUDIT_UNREADABLE"
+  },
+  "시험": {
+   "build_round2_vasp_package": "182/182 (v3 169 → DC 새 시험 13) · gawk 5.2.1 · mawk 1.3.4 · bash 5.2.21 · 판정 탐침 rc_na 하나 더 (기존 시험 '기대 상태' 표에 넣음)",
+   "build_v5_vasp_package · build_aprime_interfaces · build_aprime_s3 · se_sym_slab": "237/237 · 79/79 · 41/41 · 122/122",
+   "validate_canonical · convention_check": "통과 · 0 위반",
+   "규칙": "DC 재현 절차를 그대로 음성 시험으로 먼저 쓰고 고치기 전 판에서 빨간 것을 본 뒤 고침 (DC P1-1 재현 결과 = DC 표 그대로: VERSION_MISMATCH / 주입 뒤 OK · --check 0 · a4 OK · 공통 고장 없음) · 권한 실패는 주입 (os.scandir · os.listdir · open 을 그 경로에서만) — root 라 chmod 로 막히지 않는다",
+   "가려짐_때문에_더한_시험": "다른 경로가 같은 정지를 내서 고침 하나를 되돌려도 초록이 남던 셋 — 끊긴 시도의 증거 파일 넷 (env_evidence 만 읽는다) · aborted_attempts 직접 · 채택 시도 검사 도중 (사다리 경로 chk 감싸개 — 첫 깨기에서 F02 가 안 잡혀서 찾음)"
+  },
+  "깨기": "고침을 한 부분씩 되돌린 사본 21 (첫 판) — 빨강 19 · 안 잡힘 2: F02 (사다리 경로 chk 감싸개 — 시도 열거 쪽 try 가 같은 예외를 받아 가려졌다 → '채택 시도 검사 도중' 시험을 더한 뒤 G02 빨강) · F15 (러너 bash 쪽 rc 형식 검사 — awk rc_unknown 이 같은 검사를 해서 시험으로 구별 안 됨 → 뺐다 · 뺀 뒤 G14 · G16 다시 빨강). F12 (등록 집합 빔) 는 기대 시험 대신 파일럿 봉인에서 selftest 가 멈춰 빨강 (종료 2). 다른 빨강은 같은 고침에 기대는 시험만.",
+  "넣었다가_뺀_것 (시험으로 구별 안 됨)": [
+   "러너 judge 의 bash 쪽 rc 형식 검사 (`[[ $rc =~ ... ]] || rc=BAD`) — awk 의 rc_unknown 가지가 같은 값을 같은 결과로 거른다 (깨기 F15)"
+  ],
+  "배포본_확인 (재승인 조건 ① ② 끝 · ③)": {
+   "부록_A (배포본 위 selftest · 종료 코드가 판정)": "v4 사본 위 selftest 180/182 · 빨강 정확히 예상한 둘 (DIPOL 구간 · 두 번째 빌드 MANIFEST sha) · 그 밖 0 · 감싸개 종료 0 · gawk 5.2.1 · mawk 1.3.4 같음",
+   "부록_B (러너 v3 대 v4)": [
+    "장부 attempt.json elapsed_s 4.5e5: 종료 1 · 다음 잡 뜸 · - → 종료 5 · 안 뜸 · 미상",
+    "장부 attempt.json elapsed_s 1e12: 종료 1 · 다음 잡 뜸 · - → 종료 5 · 안 뜸 · 미상",
+    "장부 attempt.json elapsed_s 450000x (뒤 쓰레기): 종료 5 · 안 뜸 · 누적 → 종료 5 · 안 뜸 · 미상",
+    "장부 attempt.json elapsed_s …: 4 (숫자 중간에서 잘림): 종료 1 · 다음 잡 뜸 · - → 종료 5 · 안 뜸 · 미상",
+    "장부 attempt.json elapsed_s 450000 (정상 · 상한 넘음): 종료 5 · 안 뜸 · 누적 → 종료 5 · 안 뜸 · 누적",
+    "장부 attempt.json elapsed_s 7200 (정상): 종료 1 · 다음 잡 뜸 · - → 종료 1 · 다음 잡 뜸 · -",
+    "장부 infra_abort.json wall_s 0450000: 종료 5 · 안 뜸 · 미상 → 종료 5 · 안 뜸 · 미상",
+    "장부 infra_abort.json wall_s 0007200: 종료 5 · 안 뜸 · 미상 → 종료 5 · 안 뜸 · 미상",
+    "장부 infra_abort.json wall_s 08: 종료 5 · 안 뜸 · 미상 → 종료 5 · 안 뜸 · 미상",
+    "장부 infra_abort.json wall_s 18446744073709551616: 종료 5 · 안 뜸 · 미상 → 종료 5 · 안 뜸 · 미상",
+    "장부 infra_abort.json wall_s 7200: 종료 1 · 다음 잡 뜸 · - → 종료 1 · 다음 잡 뜸 · -",
+    "judge · attempt.json rc 0.5: OK - → SCF_UNVERIFIED rc_unknown",
+    "judge · attempt.json rc 1e3: RUN_FAILED rc_or_not_terminated → SCF_UNVERIFIED rc_unknown",
+    "judge · attempt.json rc -0: RUN_FAILED rc_or_not_terminated → SCF_UNVERIFIED rc_unknown",
+    "judge · attempt.json rc 0: OK - → OK -",
+    "judge · attempt.json rc -1: RUN_FAILED rc_or_not_terminated → RUN_FAILED rc_or_not_terminated",
+    "wsha · 65 자 sha: 64 자 → 빈 값",
+    "wsha · 64 자 sha: 64 자 → 64 자"
+   ]
+  },
+  "묶음": "새 폴더 db/inputs/wad_round2_vasp_v4_2026_10_22/ (v3 폴더는 Codex DC 가 검토한 판이라 그대로) — v3 와 다른 파일 넷 (run_all.sh · README.md 상태 줄 · jobs.json · MANIFEST.sha256) · 잡 입력 그대로 · schema wad_round2_vasp_package/v2 그대로",
+  "MANIFEST_sha256": "395229065660432afb5b9c96e518d891efd293a28f8d2e4279a5588a0ceaa321",
+  "v3_MANIFEST": "bf7b2ac921597f601fed3324159cf9812c1a1ff91ad4a0acf0a6ce590d9ac831 (Codex DC 검토 · NO-GO · 발송 안 함 · 폴더 그대로)",
+  "명령": "python3 -I tools/wad/build_round2_vasp_package.py --build --seal db/inputs/wad_p2small_seal_2026_10_17 --out db/inputs/wad_round2_vasp_v4_2026_10_22",
+  "확인": "scratch 에 두 번 빌드 → diff -r 바이트 동일 · 저장소 빌드 = scratch 빌드 · 묶음 안 sha256sum -c MANIFEST.sha256 OK · bash -n run_all.sh OK · run_all.sh = run_all_text() · jobs.json tool_sha256 = 도구",
+  "도구_sha16": {
+   "build_round2_vasp_package.py": "630ac4cb06f4cad1",
+   "build_v5_vasp_package.py": "0d912331fe6003d2",
+   "build_aprime_interfaces.py": "de7c472a357f6b23"
+  },
+  "⏭": "편지 DD (고친 곳 diff 만 · 배포본 확인 · 발송 승인) → 발송 (사용자) → 회신 원문 보존 → GO 면 업체 발송 zip · sha · 체크리스트",
+  "by": "agent · 2026-10-22"
  }
 }

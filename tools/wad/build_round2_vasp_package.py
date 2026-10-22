@@ -350,7 +350,7 @@ incar_val(){ awk -v T="$2" 'BEGIN{T=toupper(T)} { sub(/[#!].*/, ""); n=split($0,
 judge(){
   local d=$1 rc term nrun nelm ediff oit
   rc=$(grep -o '"rc": [^,}]*[,}]' "$d/attempt.json" 2>/dev/null | head -1 | sed 's/^"rc": //; s/[,}]$//')   # 전체 값 + 끝 구분자 (숫자 접두부가 아니다 · Codex DC P1-2 와 같은 종류)
-  [ -z "$rc" ] || [[ "$rc" =~ ^(0|-?[1-9][0-9]{0,9})$ ]] || rc=BAD; rc=${rc:-${2:-NA}}
+  rc=${rc:-${2:-NA}}                                    # 정수 꼴 검사는 아래 awk (rc_unknown) 한 곳에서
   term=0; grep -aq "General timing and accounting" "$d/OUTCAR" 2>/dev/null && term=1
   nrun=$(grep -acE '^[[:space:]]*vasp\.[0-9]' "$d/OUTCAR" 2>/dev/null); nrun=${nrun:-0}
   nelm=$(incar_val "$d/INCAR" NELM); ediff=$(incar_val "$d/INCAR" EDIFF)
