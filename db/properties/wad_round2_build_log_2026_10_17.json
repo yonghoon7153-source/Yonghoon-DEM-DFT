@@ -89,5 +89,30 @@
   "봉인": "db/inputs/wad_p2small_seal_2026_10_17/ — 구조 9 · 끝점 직접 간격 10.0 Å · D3 만 G3 예측 80 % 규칙 발동 안 함 · G1 S_A·Li_A 통과 · p05 깃발 0 (마스크 기준 = 부모 빌드 초기 구조) · manifest sha256 65a0ca0e376b3c67…",
   "⏭": "④ UMA 단일점 (kgy · run_uma_sp_kgy.sh · 봉인 커밋 판) → 회수 → ⑤ Codex CZ (프롬프트에 이 G1p ③ 기준 고침을 싣는다)",
   "by": "agent · 2026-10-21"
+ },
+ "④_회수_2026_10_22": {
+  "실행": "kgy 10-22 01:06:00 ▶ 단일점 9 구조 (D3 없음) → 01:06:16 rc 0 · 결박 ✓ · '■ 끝 · 끝 코드 0' (벽시계 16 초) — HEAD d640e8e7 (봉인 커밋) · 봉인 대조 9/9 ✓ · manifest 65a0ca0e376b3c67 · 시작 GPU 합계 15,022 MiB (Nd EOS pw.x) ≤ 문턱 16,000",
+  "결박": "fairchem.core 2.21.0 · uma-s-1p1 · omat · default · 체크포인트 07068e9c76702ca1 · 행 9 (= 봉인 구조 9)",
+  "회수": "사용자 커밋 eb48146b → db/raw/wad_p2small_uma_sp_2026_10_17/ (SOURCE_COMMIT · queue.log · uma.log · uma_energies_p2s_2026_10_17.json) · SHA256SUMS 4 줄 — 기계 · 레포 사본 · 클라우드 셋 다 일치",
+  "값": "에너지는 집계기에 넣지 않았다 — 카드대로 집계는 반송 뒤 한 번 (results_seen false 유지)",
+  "by": "agent · 2026-10-22"
+ },
+ "⑤_묶음_빌드_2026_10_22": {
+  "명령": "python3 tools/wad/build_round2_vasp_package.py --build --seal db/inputs/wad_p2small_seal_2026_10_17 --out db/inputs/wad_round2_vasp_2026_10_22 (selftest 53/53 먼저)",
+  "묶음": "db/inputs/wad_round2_vasp_2026_10_22/ — 잡 24 (P 5 · 1 4 · 2 9 · 3 4 · 4 2) · 단계 상한 117 · 170 · 586 · 204 · 24 h · 전체 1,080 h · README · run_all.sh · jobs.json · STAGES.tsv · JOBS.txt · jobs/*/{INCAR,INCAR.r1A,INCAR.r1B,INCAR.r2B (a4 = INCAR.a4A·a4B),POSCAR,KPOINTS,POTCAR.spec} · 1.3 MB",
+  "MANIFEST_sha256": "31e4747450d154085b070f8c03936a2c4eb0b5b60962841bb022a0846f9ca61a",
+  "출처_sha256": {
+   "p2s_seal_manifest": "65a0ca0e376b3c67737399128bee753f506f8ae32122a5308d97ca8436dac2fe",
+   "wadcc_stage2_manifest": "a17385cb2a1110522749978a1ff528741d3796f541438ec43b9378a91727edbc",
+   "v5_manifest": "8118bbc023d6699cd7cd1b6e6afd32872e0699af70b412e15b89365e556ee2f1"
+  },
+  "도구_sha16": {
+   "build_round2_vasp_package.py": "e4034d2331d9693e",
+   "build_v5_vasp_package.py": "e89b6af10f564111"
+  },
+  "확인": "레포 밖 폴더에 같은 명령으로 다시 빌드 → diff -r 바이트 동일 (결정성) · 묶음 안 sha256sum -c MANIFEST.sha256 OK · 쌍극자 구간 여유 = 위 원자·아래 영상 둘 다 5.0 Å (봉인 dipfield 설계값 그대로 · a4 는 V5 봉인 입력)",
+  "상태": "준비본 v1 — Codex CZ 묶음 리뷰 전 · 발송 전 (README 머리줄과 같다) · 묶음을 고치면 MANIFEST sha 가 바뀐다 → CZ 회신 뒤 다시 빌드하면 이 값을 갈아 적는다",
+  "⏭": "⑤ Codex CZ 묶음 리뷰 (kb/reviews/codex_CZ_prompt_wad_outsourcing_round2_bundle_2026_10_17.md) → 회신 반영 → 발송 (사용자) → 파일럿 반송 → 등록부 봉인 · 해제 파일",
+  "by": "agent · 2026-10-22"
  }
 }
