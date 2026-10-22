@@ -3481,6 +3481,104 @@ def t_D15():
     return rc == 2 and n_calls(w) == 0 and not out.exists() and chain_has(S0_STAGE1_OPT), (rc, n_calls(w), chain_has(S0_STAGE1_OPT))
 
 
+@check('D16', '러너 폴더의 census · registry 파일 (step3_sigma.py) ≠ S0 보고 지문 (사슬 폴더는 같음) → CODE_PIN_MISMATCH · 러너 0 회 · 사유 = 러너 폴더 '
+              '(러너가 돌리는 코드 = 러너 폴더 · 그 폴더에 있는 파일만 대조)')
+def t_D16():
+    def go():
+        d = Path(TD) / 'D16_runner'
+        d.mkdir()
+        r2 = d / 'runner.sh'
+        r2.write_text(Path(FX['runner']).read_text(encoding='utf-8'), encoding='utf-8')
+        r2.chmod(0o755)
+        (d / 'step3_sigma.py').write_text('# 다른 판 (시험 D16)\n', encoding='utf-8')
+        old = FX['runner']
+        FX['runner'] = r2
+        try:
+            return ladder('D16', world('D16'))
+        finally:
+            FX['runner'] = old
+    r = scen('D16', go)
+    why = str(((r['sum'] or {}).get('stop') or {}).get('cause'))
+    return (r['rc'] == 3 and stop_code(r) == 'CODE_PIN_MISMATCH' and n_calls(r['world']) == 0 and '러너 폴더' in why,
+            (r['rc'], stop_code(r), n_calls(r['world']), why[-160:]))
+
+
+@check('D17', '판정 — 예측 요약의 러너 폴더 지문 (runner_files) · 러너 sha256 손댐 → 판정 CODE_PIN_MISMATCH · NOT_COMPUTED · rc 3 (키 = 사슬 폴더만이 아니다)')
+def t_D17():
+    def set_rf(s):
+        rf = (s.get('code') or {}).get('runner_files')
+        if isinstance(rf, list) and rf:
+            rf[0]['sha256'] = '0' * 64
+        else:
+            s.setdefault('code', {})['runner_files'] = [{'file': 'x', 'sha256': '0' * 64}]
+
+    def go():
+        a = b_tamper_copy(s_main_predict()['out'], 'D17_rf', 'predict_summary.json', set_rf)
+        b = b_tamper_copy(s_main_predict()['out'], 'D17_rs', 'predict_summary.json',
+                          lambda s: s.setdefault('code', {}).update(runner_sha256='0' * 64))
+        return tuple(verdict(f'D17{t}', [s_main('P0')['out'], s_main('P1')['out'], d]) for t, d in (('a', a), ('b', b)))
+    rs = scen('D17', go)
+    return (all(r['rc'] == 3 and stop_code(r) == 'CODE_PIN_MISMATCH' and (r['v'] or {}).get('verdict') == 'NOT_COMPUTED' for r in rs),
+            [(r['rc'], stop_code(r)) for r in rs])
+
+
+@check('D18', '예측 — 사다리 요약 하나가 dirty True 를 기록 (고쳐진 트리에서 돈 사다리 · 지문은 같음) → CODE_PIN_MISMATCH · 러너 0 회 · 어느 순서로 넘겨도')
+def t_D18():
+    def go():
+        x = b_tamper_copy(s_main('P1')['out'], 'D18_P1', 'ladder_summary.json',
+                          lambda s: s.setdefault('code', {}).setdefault('chain', {}).update(dirty=True))
+        return predict('D18a', world('D18a'), [s_main('P0')['out'], x]), predict('D18b', world('D18b'), [x, s_main('P0')['out']])
+    rs = scen('D18', go)
+    return (all(r['rc'] == 3 and stop_code(r) == 'CODE_PIN_MISMATCH' and n_calls(r['world']) == 0 for r in rs),
+            [(r['rc'], stop_code(r), n_calls(r['world'])) for r in rs])
+
+
+@check('D19', '예측 — 손댄 사다리를 앞에 (뒤 = 깨끗한 사다리 = 지금 코드와 같음) → 두 사다리 코드 다름 = CODE_PIN_MISMATCH · 러너 0 회 '
+              '(마지막 사다리만 지금과 대조하면 놓치는 순서)')
+def t_D19():
+    def go():
+        x = b_tamper_copy(s_main('P1')['out'], 'D19_P1', 'ladder_summary.json', lambda s: _d_set_files(s, 'carbon_junction.py'))
+        return predict('D19', world('D19'), [x, s_main('P0')['out']])
+    r = scen('D19', go)
+    return (r['rc'] == 3 and stop_code(r) == 'CODE_PIN_MISMATCH' and n_calls(r['world']) == 0, (r['rc'], stop_code(r), n_calls(r['world'])))
+
+
+@check('B10', '예측 — 두 사다리의 단계 2 기록이 경로만 다르다 (각각은 봉인 해시 대조 통과) → S0_REPORT_MISMATCH (두 사다리 기록 다름) · 러너 0 회 · '
+              '어느 순서로 넘겨도')
+def t_B10():
+    def go():
+        x = b_tamper_copy(s_main('P1')['out'], 'B10_P1', 'ladder_summary.json',
+                          lambda s: s['s0_reports']['stage2'].update(path='/elsewhere/s0_stage2_kit_DBE_sdcp1um_vgcf100.json'))
+        return predict('B10a', world('B10a'), [s_main('P0')['out'], x]), predict('B10b', world('B10b'), [x, s_main('P0')['out']])
+    rs = scen('B10', go)
+    return (all(r['rc'] == 3 and stop_code(r) == 'S0_REPORT_MISMATCH' and n_calls(r['world']) == 0 for r in rs),
+            [(r['rc'], stop_code(r), n_calls(r['world'])) for r in rs])
+
+
+@check('B11', '판정 — 예측 요약의 단계 2 기록이 경로만 다르다 (봉인 해시 대조 통과) → S0_REPORT_MISMATCH (단계끼리 기록 다름) · NOT_COMPUTED · rc 3')
+def t_B11():
+    def go():
+        d = b_tamper_copy(s_main_predict()['out'], 'B11_pred', 'predict_summary.json',
+                          lambda s: s['s0_reports']['stage2'].update(path='/elsewhere/s0_stage2_kit_DBE_sdcp1um_vgcf100.json'))
+        return verdict('B11', [s_main('P0')['out'], s_main('P1')['out'], d])
+    r = scen('B11', go)
+    return (r['rc'] == 3 and stop_code(r) == 'S0_REPORT_MISMATCH' and (r['v'] or {}).get('verdict') == 'NOT_COMPUTED', (r['rc'], stop_code(r)))
+
+
+@check('N07', '★ PF2 E (PRE2-impl-03) S0 계획 중복 칸 ("gap_tol" 둘 · 등록 S0 줄 = 그 바이트의 sha256) → S0_PLAN_INVALID · 사유 = 중복 칸 '
+              '(정준 바이트 검사 앞 · 러너 0 회)')
+def t_N07():
+    raw = Path(FX['s0']).read_bytes().replace(b'{', b'{"gap_tol":2.0,', 1)
+    p = Path(TD) / 's0_plan_dup.json'
+    p.write_bytes(raw)
+    sha = hashlib.sha256(raw).hexdigest()
+    reg = FX['reg_with'](f'`{FX["plan_sha"]}`', 'reg_N07.md', s0cell=f'`{sha}`')
+    r = scen('N07', lambda: ladder('N07', world('N07'), s0=p, reg=reg))
+    why = str(((r['sum'] or {}).get('stop') or {}).get('cause'))
+    return (r['rc'] == 3 and stop_code(r) == 'S0_PLAN_INVALID' and n_calls(r['world']) == 0 and '중복' in why,
+            (r['rc'], stop_code(r), why[-160:]))
+
+
 @check('L21', 'Q-E 배선 (가짜 러너) — SBE origin 팔 1 · 2 가 arm 0 과 조금 다르면 (×1.0004 · ×0.9997) 끝 후보에서 띠 안 → 끝을 바깥 실측 이웃으로 · '
                'end_origin 런 (ARM_LIST=1,2 · 끝 R) · 밀기 기록 · 세 origin 이 끝에서 모두 띠 밖 (모형 손계산)')
 def t_L21():

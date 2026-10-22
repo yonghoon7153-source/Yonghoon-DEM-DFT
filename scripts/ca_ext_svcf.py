@@ -283,11 +283,9 @@ def _values_problem(rec):
     hi = _end_view(rec.get('status_hi'), rec.get('sv_counterfactual_ratio_hi'), rec.get('ratio_limit_hi'))
     if lo is None or hi is None:
         return None
-    if lo == math.inf and hi != math.inf:
-        return f'sv_cf| 괄호 아래 +∞ 인데 위 {hi!r} (위 = 덩어리를 더 뺀 판 · 관통 없음이 되살아날 수 없다 · Rayleigh)'
-    if hi != math.inf and not hi >= lo * RATIO_FLOOR:
-        return (f'sv_cf| 괄호 위 {hi!r} < 아래 {lo!r} × (1 − τ)/(1 + τ) (위 = 덩어리를 더 뺀 판 · 참 G_cut,hi ≤ G_cut,lo · 증서 폭 여유 '
-                f'τ {CERT_TARGET_TOL:g})')
+    if not (hi == math.inf or hi >= lo * RATIO_FLOOR):       # 아래 +∞ ⟹ lo × 여유 = +∞ ⟹ 위도 +∞ 이어야 (관통 없음이 되살아날 수 없다)
+        return (f'sv_cf| 괄호 위 {hi!r} < 아래 {lo!r} × (1 − τ)/(1 + τ) (위 = 덩어리를 더 뺀 판 · 참 G_cut,hi ≤ G_cut,lo · 아래 +∞ 면 위도 +∞ · '
+                f'증서 폭 여유 τ {CERT_TARGET_TOL:g} · Rayleigh)')
     return None
 
 
