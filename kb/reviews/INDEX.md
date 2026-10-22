@@ -129,7 +129,7 @@ evidenceScope: multi-source-primary
 | DA | 2026-10-19 | `li2s1a_DA_prompt_li2s_glass_bmeas_650k_readout_2026_10_19.md` | — | 초안 — 발송 전 (사용자가 보낸다 · 발송판 `kb/projects/li2s_glass_bmeas_650k_letter_DA_send_2026_10_19.md` = 보내는 글 그대로) | — |
 | DB | 2026-10-22 | `codex_DB_prompt_wad_outsourcing_round2_v2_2026_10_22.md` | `codex_DB_reply_wad_outsourcing_round2_v2_2026_10_22.md` | 발송 2026-10-22 (사용자 · 기준 커밋 3d684e502 · 묶음 v2 MANIFEST b9450f6f…) → 회신 수령 NO-GO (P0 1 · P1 3 — codex_DB_reply_wad_outsourcing_round2_v2_2026_10_22.md) | 같은 라벨 · 주제 토큰 일치 ['outsourcing', 'round2', 'v2', 'wad'] |
 | DC | 2026-10-22 | `codex_DC_prompt_wad_outsourcing_round2_v3_2026_10_22.md` | `codex_DC_reply_wad_outsourcing_round2_v3_2026_10_22.md` | 발송 2026-10-22 (사용자 · 기준 커밋 3e70329cb · 묶음 v3 MANIFEST bf7b2ac9…) → 회신 수령 NO-GO (P1 2 — codex_DC_reply_wad_outsourcing_round2_v3_2026_10_22.md) | 같은 라벨 · 주제 토큰 일치 ['outsourcing', 'round2', 'v3', 'wad'] |
-| DD | 2026-10-22 | `codex_DD_prompt_wad_outsourcing_round2_v4_2026_10_22.md` | — | 초안 — 발송 전 (기준 커밋 1e4d113d2 · 묶음 v4 MANIFEST 39522906…) | — |
+| DD | 2026-10-22 | `codex_DD_prompt_wad_outsourcing_round2_v4_2026_10_22.md` | `codex_DD_reply_wad_outsourcing_round2_v4_2026_10_22.md` | 발송 2026-10-22 (사용자 · 기준 커밋 1e4d113d2 · 묶음 v4 MANIFEST 39522906…) → 회신 수령 NO-GO (P1 2 — codex_DD_reply_wad_outsourcing_round2_v4_2026_10_22.md) | 같은 라벨 · 주제 토큰 일치 ['outsourcing', 'round2', 'v4', 'wad'] |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 

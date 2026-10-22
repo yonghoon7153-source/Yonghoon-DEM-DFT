@@ -7,7 +7,7 @@ letter: DD
 track: wad
 channel: codex
 kind: prompt
-status: 초안 — 발송 전 (기준 커밋 1e4d113d2 · 묶음 v4 MANIFEST 39522906…)
+status: 발송 2026-10-22 (사용자 · 기준 커밋 1e4d113d2 · 묶음 v4 MANIFEST 39522906…) → 회신 수령 NO-GO (P1 2 — codex_DD_reply_wad_outsourcing_round2_v4_2026_10_22.md)
 confidence: medium
 verificationStatus: unverified
 explored: false
