@@ -1,0 +1,147 @@
+CASE FA+CJ
+  PASS  FA+CJ 양성 대조 — face_alpha 홀로 = 받아들임 · 계획 행을 실제로 씀 (VGCF|SDCP 면 α 60/64)
+  PASS  FA+CJ 양성 대조 — cjunc 홀로 (ptfe_stamp face_alpha 선언) = 받아들임
+  PASS  FA+CJ 동시 (face_alpha + cjunc) = ★ Z3 받음 · 두 기록 다 · 계획 행 씀 · 조합 σ ≤ 접합만 σ (α ≤ 1 · Rayleigh) · 접합 기록 (간선 · 축약 · 추가 dof · 끊은 면) = 접합만과 같음 (α 가 접합 간선에 안 걸림)
+CASE S3
+  PASS  S3 근접 판정 (SDCP 1 차 입자 표면 ↔ 접점 ≤ tol_sj)
+  PASS  S3-1 c = 0 → 계획 행 · σ 가 S2 와 비트 같음
+  PASS  S3-2 SBE (SDCP 없음) — 모든 c 에서 계획 행 · σ 비트 같음 (셀 · 원장 단위 no-op)
+  PASS  S3-3 c 단조 — σ(c) 비감소 (c 격자 0 · 0.5 · 0.9 · 0.99 · 허용폭 1e-12 봉인)
+  PASS  S3-3 R_j′ = R_j,0·(1 − c·a_j) — 해석 사슬 (1e-12)
+  PASS  S3-4 c = 1 = 근접 instance 축약 (축약 경로 · 정량 허용 예외 · 축약 수 기록 · 옛 융합과 같음 1e-12)
+  PASS  S3 정량 모드 c ∈ {0, 1} 만 (0.5 = 거부)
+  PASS  S3 c 범위 밖 · NaN = 거부
+  PASS  S3-5 SDCP 점 순열 불변 (근접 · 계획 행 비트 같음)
+  PASS  S3-6 근접 문턱 경계 = 포함 (≤) · +1e-9 µm = 밖
+  PASS  S3-7 펠릿 9:1 (탄소 없음) — c 0 ↔ 1 σ_e 비트 같음 = 구성상 no-op (판별력 없음 기록)
+  PASS  S3-8 변이 넷 (비근접에 c · 뒤집힘 · G 곱 · c = 1 큰 g) 을 시험이 잡는다
+  PASS  S3-9 S2 없이 (원장 없이) = 거부
+  PASS  S3-10 sid 불변 — 모든 c 에서 원장의 sid 지문 = 솔브 sid
+CASE RCA03
+  PASS  RCA03 픽스처 — 같은 fid 비연속 재방문 셀 넷 (각 두 가지) · 실제 segment_cells (판정문 폴리라인)
+    RCA03 사슬 I 1.07142857 · 합친 꼴 (옛) 2.5 (×2.333) · 지금 1.07142857
+  PASS  RCA03 (가) s < s_min — 같은 셀 다른 가지를 합치지 않는다 → σ = 직렬 사슬 (손 회로 1e-12 · 판정문 5 → 2 Ω 단락 없음)
+  PASS  RCA03 (가) 기록 — 자기 후보 ≥ 1 · 남은 0 · 거른 수 = 후보 수 · 경로로만 이은 재방문 쌍 4 (합친 수 칸 없음 · 0)
+  PASS  RCA03 (나) s ≥ s_min · R_j = ∞ → σ = 직렬 사슬 (1e-12)
+  PASS  RCA03 (다) s ≥ s_min — 자기 접합 하나 · 포트 = 닿는 머리핀 다리 셀 ((2,0,2) · (2,1,2)) 한 셀의 두 가지 (닿지 않는 (0,0,2) · (1,0,2) 아님) · σ = 사슬 + 그 두 가지 사이 R_j 간선 (1e-12)
+  PASS  RCA03 (라) c = 1 · s < s_min — 재방문이 축약되지 않는다 (축약 0 · σ = 사슬 · SDCP 셀 = 매달린 셀)
+  PASS  RCA03 (마) c = 1 · s ≥ s_min — 근접 자기 접합 하나 축약 (설계 시나리오 끝) = (다) 의 그 셀 두 가지 한 노드 (1e-12)
+  PASS  RCA03 (바) 다른 셀 자기 접근 (교차) · c = 1 — 근접 자기 접합 축약 1 · 면 절단 (손 회로 1e-12)
+  PASS  RCA03 (바) 다른 셀 자기 접근 · R_j = ∞ → 면 절단 · 간선 없음 → 사슬 그대로 (1e-12)
+CASE RCA04
+  PASS  RCA04 (가) 동률 접점 → 셀 정수 좌표 사전식 최소 (1,1,2) · 먼 끝만 바꿔 정준 방향이 뒤집혀도 같은 포트 · σ = 손 회로 · 간선 원장 · σ 비트 같음 (옛 = 정준 경로 번호 → (1,1,3) 로 뒤집힘)
+  PASS  RCA04 (나) 경로 반전 (두 섬유 점 역순) → sid · 포트 · 간선 원장 · σ 비트 같음
+  PASS  RCA04 (나) 공선 세분 (간격 0.25 → 0.125 · 이진 정확 중간점) → sid · 포트 · 간선 원장 · σ 비트 같음
+  PASS  RCA04 (다) fid 재명명 (교차 셀 추가 dof 침대 LX · 10 ↔ 20) → 포트 셀 · 간선 원장 (u · v · G · 판) · σ 비트 같음
+  PASS  RCA04 (라) 판별력 — 무작위 점 섞기 (다른 기하) → σ 또는 간선 원장이 다르다 (반전 · 세분과 구별)
+  PASS  RCA04 (마) 원장 규칙 이름 — 포트 = ε 띠 · 사전식 셀 좌표 (경로 번호 아님) · 경로 순서 = 기하 정준 (fid 무관)
+CASE RCA04-V
+  PASS  RCA04-V 바탕 — 접촉 instance 1 (긴 접촉 · k 2) · 정준 경로 순서 = A (끝점 (3.25,…) < (5.25,…)) 먼저
+  PASS  RCA04-V B 공선 세분 0.125 → 같은 sid · 간선 포트 셀 · 계 구조 (u · v · 부류 · 판) 비트 같음 · G · σ 상대 ≤ 1e-13 (L_c 합 반올림)
+  PASS  RCA04-V fid 재명명 → 같은 sid · 간선 포트 셀 · 계 구조 (u · v · 부류 · 판) 비트 같음 · G · σ 상대 ≤ 1e-13 (L_c 합 반올림)
+  PASS  RCA04-V 세분 + 재명명 → 같은 sid · 간선 포트 셀 · 계 구조 (u · v · 부류 · 판) 비트 같음 · G · σ 상대 ≤ 1e-13 (L_c 합 반올림)
+  PASS  RCA04-V B 점 역순 → 같은 sid · 간선 포트 셀 · 계 구조 (u · v · 부류 · 판) 비트 같음 · G · σ 상대 ≤ 1e-13 (L_c 합 반올림)
+CASE RCA04-EPS
+  PASS  RCA04-EPS 원점 (0.6, 0.6, 0.6) · A — 같은 sid · ε 띠 동률 → 포트 (1,1,2) · 동률 표지 · σ = 옮기기 전 · 손 회로 (1e-12)
+  PASS  RCA04-EPS 원점 (0.6, 0.6, 0.6) · A 먼 끝 바꿈 — 같은 sid · ε 띠 동률 → 포트 (1,1,2) · 동률 표지 · σ = 옮기기 전 · 손 회로 (1e-12)
+  PASS  RCA04-EPS 원점 (0.123, 0.456, 0.789) · A — 같은 sid · ε 띠 동률 → 포트 (1,1,2) · 동률 표지 · σ = 옮기기 전 · 손 회로 (1e-12)
+  PASS  RCA04-EPS 원점 (0.123, 0.456, 0.789) · A 먼 끝 바꿈 — 같은 sid · ε 띠 동률 → 포트 (1,1,2) · 동률 표지 · σ = 옮기기 전 · 손 회로 (1e-12)
+CASE RCA04-DUP
+  PASS  RCA04-DUP 정확 중복 → 원장 사유 duplicate_path · 정량 계획 = 입구 거부 · 시험 모드 계획 = 사유 없음
+  PASS  RCA04-DUP 역순 중복 → 원장 사유 duplicate_path_reversed · 정량 계획 = 입구 거부 · 시험 모드 계획 = 사유 없음
+  PASS  RCA04-DUP 한 점만 다른 두 경로 → 중복 거부 사유 없음
+CASE RCA05
+  PASS  RCA05 Codex 5 노드 회로 재현 — 분산 1.366013071895 · 총 5 S 왼쪽 집중 5.0 · 중앙 집중 0.238095238095 S (1e-12)
+  PASS  RCA05 CX — instance 하나 · L_c = 10.0 = 5 L_par (손계산 닿음 길이 · 1e-12)
+  PASS  RCA05 CX — 분산 간선 k = ceil(L_c/L_par) = 5 · 등분점 최근접 포트 (1,1,z) ↔ (2,1,z) z = 1 · 3 · 5 · 7 · 9
+  PASS  RCA05 CX — 간선마다 G = (총 max(1, L_c/L_par)/R_j,0)/k = 1e4/R_j (5 간선 · 상대 1e-15 · 총 G 보존 5e4/R_j)
+  PASS  RCA05 CX — σ = 손 회로 (판 + A0→A1 + 두 레일 사다리 + B 리드 16 면 + 판 · 1e-12) · 두 레일 = Codex 분산 회로 × 50 (1e-12)
+  PASS  RCA05 CX — 분산 ≠ 한 포트 집중 (왼쪽 끝 집중 회로와 다르다 · 판별력)
+  PASS  RCA05 (나) 간선마다 PTFE 덮임 — LP 등분 간선 셋 중 z 2 간선만 덮임 · P1 = 그 간선만 절단 · σ = 손 회로 (1e-12 · 옛 = instance 대표점 하나로 전체 절단)
+  PASS  RCA05 (다) 간선마다 SDCP 근접 — z 6 간선만 근접 · c = 1 = 그 간선만 축약 · σ = 손 회로 (1e-12)
+  PASS  RCA05 (라) L_c ≤ L_par (F1) → 분산 간선 하나 = instance (포트 · 접점 같음 · g = 1e4/R_j 비트)
+CASE RCA06
+    RCA06 손 회로: I 4.61491208 · SV 끊은 판 0.448430493 · 비 10.291254 · SV 전류 몫 0.9151 · P_SV 0.2497 < P_VV 0.3067
+  PASS  RCA06 반례 꼴 (손 회로) — SV 경로 전류 몫 > 0.9 · 옛 가드 (P_SV ≥ P_VV) = false · SV 면 끊은 판 대비 비 > 5
+  PASS  RCA06 기본 (노브 끔) — σ = 손 회로 (1e-12) · 기록에 sv_dominant 없음 (지배성 표지 철회) · SV_local_dissipation 진단 있음 · 반사실 = 요청 없음 (칸 없음)
+  PASS  RCA06 SV_local_dissipation = 국소 소산 몫 (SV 면 + SDCP 셀 · 원장) · 이 반례에서 VV 접합 몫보다 작다 (옛 가드라면 false)
+  PASS  RCA06 반사실 대조 (노브 켬 · 문턱 없음) — sv_counterfactual_ratio = 손 회로 I / SV 면 끊은 I (1e-10) · SV 면 2 끊음 · 표지 없음 (문턱 없음 = 판정 문장 없음)
+  PASS  RCA06 문턱이 주어질 때만 비교 표지 — 문턱 2.0 (시험 값 · 기본값 아님) · 비 ≈ 10 → SV_DEPENDENT
+  PASS  RCA06 문턱 = 유한 ≥ 1 실수만 (0.5 · NaN · inf · bool · 문자 · 음수 · float 넘침 정수 10^400 · np.bool_ = 거부 · ValueError/TypeError 로만) · 모르는 칸 거부
+  PASS  RCA06 SDCP 없음 (SBE 꼴) — SV 면 0 · 비 = 1 정확 (같은 계를 다시 푼다)
+  PASS  RCA06 주 해 미수렴 → 반사실 비 없음 (status main_unconverged · 비 None · 표지 None · 해 unconverged True · 종류 = CJUNC_SV_CF_KIND)
+CASE RCA06-H
+  PASS  RCA06-H ① 반사실 솔브 뒤 모듈 전역 출처 = 주 해 그대로 (LAST_BACKEND used cpu-main · LAST_CG iters 111) · 반사실 기록에 자기 backend (cpu-counterfactual) · 솔브 2 번 · 비 = 손 회로 (1e-10)
+  PASS  RCA06-H ① 증서 끔 = 반사실 기록 conv_cert None (칸 있음 · 증서 없이 CG 술어만)
+  PASS  RCA06-H ② 증서 켬 (rtol 1e-12 · 직접 풀이) — 주 해 증서 ok · 반사실 솔브도 같은 증서 함수 (판본 conv-cert · ok · ⓐⓑⓒ) · 비 = 손 회로 (1e-10)
+  PASS  RCA06-H ② 반사실 솔브 증서 실패 → 비 없음 · 표지 없음 (문턱 2.0 이어도) · status unconverged · 주 해는 그대로 (증서 ok · σ = 손 회로)
+  PASS  RCA06-H ③ SVA 양성 대조 — AM 셀 sid 2 · 주 σ = 손 회로 (1e-9) · 반사실 computed · 비 = 손 회로 (1e-3 · I_cut ≈ 1e-9 의 판 전류 상쇄) · 비 > 1e6 → SV_DEPENDENT
+  PASS  RCA06-H ③ 관통 성분이 있는데 푼 I_cut ≤ 0 (CG 술어는 통과 · 잔차 ≤ 1e-6) → 비 inf 아님 · 비 None · 표지 None · status ≠ 'no_through_without_sv' (위상 서술 금지)
+  PASS  RCA06-H ④ 주 해 단자 전류 ≤ 0 (CG 술어 통과) → 반사실을 풀지 않는다 · 비 None · 표지 None · status nonpositive_full_current
+  PASS  RCA06-H ⑤ (지킴) SV 만 잇는 침대 — 끊으면 관통 성분 없음 (위상) → 풀이 1 번 (주 해만) · 'no_through_without_sv' · 비 inf · SV_DEPENDENT · G_cut 0 · 주 σ = 손 회로 (1e-12)
+CASE CEN
+  PASS  CEN 같은 셀 비연속 재방문 — 쌍 4 · 셀 4 · 섬유 1 · s 분포 (재방문 쌍마다 4 · 유한 · 양수)
+  PASS  CEN KR — 재방문 쌍 1 · 셀 1 ((1,1,3)) · 섬유 1 · 재방문 s 1 개 (면 항목은 세지 않는다 · 자기 후보 ≥ 1)
+  PASS  CEN KR + SDCP 가 두 가지 사이 위치 (2,1,4) 를 덮음 — 재방문 쌍 1 · 경로 끊김 1 · 경로로만 0 (덮인 위치 = 경로 아님)
+  PASS  CEN 포트 동률 수 (간선 단위) — 고리 (동률 없음) = 0 · T1-11 꼴 (A 접점이 두 셀 중심에서 등거리 · ε 띠) = 1
+  PASS  CEN 긴 접촉 · 간선별 PTFE 덮임 — 분산 간선 3 (긴 접촉 간선 3) · 덮인 간선 1 · 부분 덮임 instance 1 · σ 칸 없음
+CASE GAP
+    GAP 같은 셀 (끝 z 3.15 · 3.85 · 셀 (1,1,3)): 손 5.55555556 · 옛 경로 (접합 끔) 12.5 · [(3.0, 1, 5.555555555555536, 'no_through_component', {'n_pieces': 2, 'n_instances_same_fid_pieces': 1, 'n_self_revisits_path_only': 0, 'n_revisit_pairs': 0, 'n_piece_cell_meets': 1}), (0.5, 1, 5.555555555555536, 'no_through_component', {'n_pieces': 2, 'n_instances_same_fid_pieces': 1, 'n_self_revisits_path_only': 0, 'n_revisit_pairs': 0, 'n_piece_cell_meets': 1})]
+  PASS  GAP 같은 셀 (끝 z 3.15 · 3.85 · 셀 (1,1,3)) — 조각 2 · instance 1 (조각 쌍 · 같은 fid · 자기 아님 · 실현) · 포트 = (1,1,3) · (1,1,3) (s_min 3 · 0.5)
+  PASS  GAP 같은 셀 (끝 z 3.15 · 3.85 · 셀 (1,1,3)) — σ = 손 회로 (조각 사슬 + R_j 간선 하나 · 1e-12) · s_min 무관
+  PASS  GAP 같은 셀 (끝 z 3.15 · 3.85 · 셀 (1,1,3)) — R_j = ∞ → 조각 사이 전류 0 (no_through_component · 조각은 접합으로만 이어진다)
+  PASS  GAP 같은 셀 (끝 z 3.15 · 3.85 · 셀 (1,1,3)) — census: 같은 fid 조각 쌍 instance 1 · 같은 셀 조각 만남 1 · 같은 조각 재방문 0 · '경로로만' 0 (옛 = 거짓 1)
+    GAP 면 인접 (끝 z 2.85 · 3.5 · 셀 (1,1,2)|(1,1,3)): 손 5.88235294 · 옛 경로 (접합 끔) 12.5 · [(3.0, 1, 5.88235294117645, 'no_through_component', {'n_pieces': 2, 'n_instances_same_fid_pieces': 1, 'n_self_revisits_path_only': 0, 'n_revisit_pairs': 0, 'n_piece_cell_meets': 0}), (0.5, 1, 5.88235294117645, 'no_through_component', {'n_pieces': 2, 'n_instances_same_fid_pieces': 1, 'n_self_revisits_path_only': 0, 'n_revisit_pairs': 0, 'n_piece_cell_meets': 0})]
+  PASS  GAP 면 인접 (끝 z 2.85 · 3.5 · 셀 (1,1,2)|(1,1,3)) — 조각 2 · instance 1 (조각 쌍 · 같은 fid · 자기 아님 · 실현) · 포트 = (1,1,2) · (1,1,3) (s_min 3 · 0.5)
+  PASS  GAP 면 인접 (끝 z 2.85 · 3.5 · 셀 (1,1,2)|(1,1,3)) — σ = 손 회로 (조각 사슬 + R_j 간선 하나 · 1e-12) · s_min 무관
+  PASS  GAP 면 인접 (끝 z 2.85 · 3.5 · 셀 (1,1,2)|(1,1,3)) — R_j = ∞ → 조각 사이 전류 0 (no_through_component · 조각은 접합으로만 이어진다)
+  PASS  GAP 면 인접 (끝 z 2.85 · 3.5 · 셀 (1,1,2)|(1,1,3)) — census: 같은 fid 조각 쌍 instance 1 · 같은 셀 조각 만남 0 · 같은 조각 재방문 0 · '경로로만' 0 (옛 = 거짓 1)
+    GAP 생산 단위 같은 셀 (끝 z 0.47 · 0.59): σ 0.05925523546710423 S/cm · 옛 경로 (접합 끔) 872.664444444446 · 손 I 0.00999932098
+  PASS  GAP 생산 단위 같은 셀 (끝 z 0.47 · 0.59) (h 0.15 · r_f 0.075 · tol_ff 0.03 · 틈 0.12 · s_min 0.3 · R_j 1e6) — instance 1 (조각 쌍) · σ = 손 회로 (1e-9 · 대비 1e5)
+    GAP 생산 단위 면 인접 (끝 z 0.40 · 0.52): σ 0.059255738412986515 S/cm · 옛 경로 (접합 끔) 872.664444444446 · 손 I 0.00999940586
+  PASS  GAP 생산 단위 면 인접 (끝 z 0.40 · 0.52) (h 0.15 · r_f 0.075 · tol_ff 0.03 · 틈 0.12 · s_min 0.3 · R_j 1e6) — instance 1 (조각 쌍) · σ = 손 회로 (1e-9 · 대비 1e5)
+CASE RING
+  PASS  RING s_min 3 — 이음매 = 연속: 자기 접합 0 · σ = 손 연속 고리 회로 (= 옛 경로 · 1e-12) · R_j = ∞ 도 같음
+  PASS  RING s_min 3 — census: 고리 조각 1 · 이음매 별칭 1 · 같은 조각 재방문 0 (첫 · 끝 위치 = 한 가지)
+  PASS  RING s_min 100 — 이음매 = 연속: 자기 접합 0 · σ = 손 연속 고리 회로 (= 옛 경로 · 1e-12) · R_j = ∞ 도 같음
+  PASS  RING s_min 100 — census: 고리 조각 1 · 이음매 별칭 1 · 같은 조각 재방문 0 (첫 · 끝 위치 = 한 가지)
+  PASS  RING 틈 하나 (오른 다리 z 4.25 · 4.0 · 3.75 점 지움 · 틈 1.0) — 같은 sid · 이음매를 지나 한 조각 (조각 1 · 이음매 이음 1) · 틈 두 끝 사이 자기 접합 하나 (포트 (3,1,3) · (3,1,4))
+  PASS  RING 틈 하나 — σ = 손 회로 (연속 이음매 + 틈 R_j 간선 · 1e-12) · R_j = ∞ = 틈에서 열린 가닥 (1e-12)
+  PASS  RING 닫힌 머리핀 (이음매 = 다리 가운데) — 고리 조각 1 · 다리 사이 자기 접합 = 하나 (이음매를 지나는 쌍 무리 · 고리 둘레 이웃)
+CASE SELFD
+  PASS  SELFD (i) KW 같은 fid — instance 0 · σ(R_j 1e3) = σ(R_j ∞) (비트 · 접합 효과 0 · 옛 판 +4.25 %) = 손 사슬 (cut · 1e-12) · fused 법칙 = 옛 경로 (1e-12)
+  PASS  SELFD (i) KW 같은 fid ↔ 둘로 나눈 서로 다른 섬유 — 둘 다 instance 0 · 다리 사이 면 셋 (z 1 · 2 · 3) = 미등록 (분류 fid 무관)
+  PASS  SELFD (ii) SFR 같은 fid (모서리 인접 다리 · 중심선 0.1414 < 2 r_f · 다리 셀 면 공유 없음) — 자기 접합 하나 (옛 판 = 면 항목 셀 조각의 다른 기록) · 기록 (L_c · 배율 · k · 분산 간선 포트 셀 · d0) = 둘로 나눈 서로 다른 섬유 instance (하나) 와 같음 (1e-12)
+  PASS  SELFD (iii) XC 교차 같은 fid ↔ 둘로 나눔 — 기록 같음 (L_c 1.2 · 배율 1 · k 1 · 포트 (1,1,2)–(2,1,2) · d0 0.8)
+CASE QC
+  PASS  QC ① SDCP 가 접점 셀 (A 위끝 (1,1,3)) 을 덮음 — sid 5 · instance 1 · 미실현 (사유 covered_SDCP · instance · 간선) · 옮긴 포트 없음
+    QC ① σ 접합 11.904761904761884 · R_j ∞ 11.904761904761884 · 손 SV 만 11.904761904761884 · 옛 (옮긴 접합 + SV) 12.15351812366736
+  PASS  QC ① σ = SV 융합만 손 회로 (1e-12) = R_j ∞ (같은 접촉 한 번 · 옛 판 = 옮긴 접합 + SV 병렬 = +2.09 %)
+  PASS  QC ② 접합 + centerline = 거부 — 계획 centerline P0 (정량)
+  PASS  QC ② 접합 + centerline = 거부 — 계획 centerline P0 (시험 모드 · quantitative False)
+  PASS  QC ② 접합 + centerline = 거부 — 솔브 입구 — 계획 ptfe_stamp 만 centerline 으로 · 행 지문 다시 만듦
+  PASS  QC ② 접합 + centerline = 거부 — protocol 기록 (ca_ext_cjunc.cjunc_protocol_record) centerline P0
+  PASS  QC ② 거부 경로 CG 0 · 양성 대조 (off 계획 풀림 · face_alpha protocol 받음)
+CASE QD
+  PASS  QD ① 섬유 하나가 SDCP 셀 (1,1,3) 을 지남 (접합 0) — σ = 손 사슬 (SV 두 면 · 1e-12) · 반사실 비 = 1 정확 (자기 연속 남김 · 옛 = ∞ · SV_DEPENDENT) · 끊은 SV 면 0 · 표지 없음
+  PASS  QD ② F1 (접합 하나) + 접합에서 먼 SDCP (A 셀 (1,1,1) 덮음) — σ = 손 사슬 (1e-12) · 접합 실현 · 반사실 비 1 정확 · 표지 없음
+  PASS  QD ③ SVY (A 가 SDCP 셀 (1,1,3) 을 지남 · B 가 그 셀에 닿음) — A–B 접점 = SDCP 덮임 (미실현 covered_SDCP) · σ = 손 회로 (1e-12)
+  PASS  QD ③ SVY 반사실 = B 의 SV 면만 끊음 (A 자기 연속 남김) — 비 = 손 I_full/I_cut (1e-10 · 옛 = A 도 끊음) · 끊은 SV 면 1 · 다리 놓는 SDCP 성분 1 · 못 가른 성분 0 · 문턱 2 → SV_DEPENDENT 여부 = 비 ≥ 2
+  PASS  QD ④ 기록 꼴 — 종류 counterfactual… (옛 counterfactual_cut_sv_faces 아님 · 정의가 바뀌었다) · 수 칸 다섯 = 정수
+CASE QD2
+  PASS  QD2 ① 리뷰어 회로 (A · B 가 같은 덩어리 (1..3,1,4) 를 지남) — σ = 손 사슬 (1e-12) · 못 가른 덩어리 1 · 아래 끝 = 덩어리 그대로 (끊은 면 0 · 비 1 정확 · computed) · 위 끝 = 덩어리 셀 셋을 뺀 판 (관통 없음 → +∞ · no_through_without_sv · 위 끝 풀이 기록 · 뺀 셀 3 · 판 결합 0)
+  PASS  QD2 ① 사슬 판정 — 괄호 [1, ∞] 가 문턱에 걸침 → SV_UNCHECKED (문턱 2 · 1e9 — 위 끝 ∞ · 옛 = 표지 없음 = PRE2-impl-01)
+  PASS  QD2 ② 대조 (B 가 덩어리 안에서 시작 · A 만 지남) — σ = ① 과 같은 손 사슬 · 못 가른 덩어리 0 · B 의 SV 면을 끊음 (끊은 면 1 · 지금처럼) · 비 +∞ (no_through_without_sv) · 다시 풀지 않음 (위 끝 풀이 기록 None · 위 = 아래) · 사슬 = SV_DEPENDENT
+  PASS  QD2 ③ 괄호 성질 — σ = 손 회로 (1e-12) · 못 가른 덩어리 1 · 아래 끝 = 1 정확 (덩어리 그대로) · 위 끝 = 손 I_full/I_C (덩어리 셋을 뺀 판 · 1e-12 · computed) · 손 참 비 (다리 셀 면만 끊음) 가 아래 < 참 < 위 (넓은 괄호 · Rayleigh)
+  PASS  QD2 ③ 사슬 판정 — 문턱 1 (아래 1 = 문턱 · 넘지 않음) · 참과 위 사이 = 걸침 → SV_UNCHECKED · 문턱 = 위 끝 (그 값) · 위 끝 2 배 = 표지 없음 (위 끝 ≤ 문턱)
+  PASS  QD2 ④ 변이 J1 회로 (A · B 가 덩어리 (1..5,1,3) 를 지남 · C 는 닿기만) — σ = 손 회로 (1e-12) · 못 가른 덩어리 1 · 아래 끝 = 덩어리 그대로 (C 의 SV 면도 남김 · 끊은 면 0 · 비 1 정확 — J1 이면 C 를 끊어 손 비 I_full/I_C끊음 > 1) · 위 끝 = +∞ (뺀 셀 5) · 사슬 = SV_UNCHECKED
+  PASS  QD2 ⑤ 변이 J2 회로 (A 는 덩어리를 지남 · B 는 덮이지 않은 사이 셀 (4,1,4) 을 두고 두 번 닿음 = 지나지 않음) — σ = 손 회로 (1e-12) · 못 가른 덩어리 0 · B 의 SV 면 둘을 끊음 · 비 = 손 I_full/I_cut (1e-10 · > 1) · 다시 풀지 않음 (위 = 아래 · 위 끝 기록 None) · J2 (사이 셀이 덮였는지 · 같은 성분인지 안 봄) 이면 B 도 지남 → 못 가른 덩어리 1 · 끊은 면 0
+  PASS  QD2 ⑥ 못 가른 덩어리 0 (QD ③ SVY) — 솔브 두 번 (주 + 아래 끝 · 위 끝을 따로 풀지 않음) · 위 끝 풀이 기록 None · 위 끝 상태 · 비 = 아래 끝 · 괄호 규칙 칸
+  PASS  QD2 ⑦ 값 봉인 — 못 가른 덩어리가 있으면 아래 끝 값 (1 = 문턱 아래) 과 무관하게 위 끝도 푼다 (③ 꼴: 주 + 아래 끝 + 위 끝 = 솔브 3 · ① 의 위 끝은 관통 없음 = 위상으로 끝 = 풀이 없이 +∞)
+  PASS  QD2 ⑧ 원장 census 의 못 가른 덩어리 수를 0 으로 변조 (지문 밖) — 위 끝 = 다시 가른 원장과 다름 → 풀지 않음 (위 끝 상태 = 비 없는 이름 · 사유) · 검증기 거부 (덩어리 0 인데 위 끝 기록) · 사슬 = SV_UNCHECKED
+  PASS  QD2 ⑨ 주 해 미수렴 (조기 기록 main_unconverged) — 옛 칸 그대로 (비 · 표지 · 증서 · backend None) + 못 가른 덩어리 1 · 위 끝 = 같은 상태 (풀이 없음) · 검증기 받음 · 사슬 = SV_UNCHECKED
+  PASS  QD2 ⑩ 주 단자 전류 ≤ 0 (nonpositive_full_current — 풀지 않음) · 못 가른 덩어리 1 — 위 끝도 같은 상태 (풀이 없음) · 위 끝 비 None
+  PASS  QD2 ⑪ 못 가른 덩어리가 아래 판에 닿음 (A · B 판–판 · 덩어리 (1..3,1,1) + (2,1,0)) — 못 가른 덩어리 1 · 아래 끝 = 덩어리 그대로 (끊은 면 0 · 비 1 정확) · 위 끝 = 셀 넷 · 면 9 · 판 결합 1 을 뺀 판 (A · B 둘 다 끊김 → 관통 없음 = +∞) · 사슬 = SV_UNCHECKED
+CASE KBND
+  PASS  KBND k 경계 σ 뜀 (90° → 89.99° · k 1 → 2 · 같은 sid) = 사전 리뷰 값 ± 10 % (R_j 1e2 · 1e4 · 1e6 Ω · 생산 단위)
+  PASS  KBND 크기 ∝ 1/R_j (큰 R_j 에서) — 뜀(1e6)/뜀(1e4) ∈ [0.009, 0.011] · 뜀(1e4)/뜀(1e2) ∈ [0.015, 0.03]

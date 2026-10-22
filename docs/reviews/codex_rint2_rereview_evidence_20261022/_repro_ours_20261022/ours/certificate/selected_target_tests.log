@@ -1,0 +1,247 @@
+
+── T1 Codex 반례 셋 (주 · 연결 보조 · 23 반복) — 실제 생산 CG 해 · ⓓ 실패 · 증서 실패 · 구간이 정확 G* 를 담는다
+    [main] 게시 G 상대 오차 -1.889897e-04 · A True B False (불균형 1.472e-04) C True · 경험 검사만이면 실패
+  PASS  T1a [main] ⓓ 실패 (pass_d False) · 증서 실패 (ok False) · 상태 POSITIVE_SOLVED
+  PASS  T1b [main] 구간 [하한, 상한] 이 정확 직렬 G* 를 담는다 (Dirichlet · Thomson)
+  PASS  T1c [main] 게시 G 의 보장 오차 상한 > 1e-4 · ≥ 실제 오차 1.890e-04 · 구간 폭은 그보다 훨씬 작다
+    [connected] 게시 G 상대 오차 -9.037087e-03 · A True B True (불균형 1.156e-05) C True · 경험 검사만이면 통과
+  PASS  T1a [connected] ⓓ 실패 (pass_d False) · 증서 실패 (ok False) · 상태 POSITIVE_SOLVED
+  PASS  T1b [connected] 구간 [하한, 상한] 이 정확 직렬 G* 를 담는다 (Dirichlet · Thomson)
+  PASS  T1c [connected] 게시 G 의 보장 오차 상한 > 1e-4 · ≥ 실제 오차 9.120e-03 · 구간 폭은 그보다 훨씬 작다
+    [iter23] 게시 G 상대 오차 +5.558328e-04 · A True B True (불균형 7.761e-05) C True · 경험 검사만이면 통과
+  PASS  T1a [iter23] ⓓ 실패 (pass_d False) · 증서 실패 (ok False) · 상태 POSITIVE_SOLVED
+  PASS  T1b [iter23] 구간 [하한, 상한] 이 정확 직렬 G* 를 담는다 (Dirichlet · Thomson)
+  PASS  T1c [iter23] 게시 G 의 보장 오차 상한 > 1e-4 · ≥ 실제 오차 5.555e-04 · 구간 폭은 그보다 훨씬 작다
+    (T1 0.0 s)
+
+── T2 Codex 설명용 후보 φ (A/B/C 통과 · G 0.25 ↔ G* 1/3) — ⓓ 실패 · 하한 = 1/3 (KCL 보정 흐름) · 상한 = 0.375
+  PASS  T2a A/B/C 통과 (경험 검사가 이 후보를 못 잡는다 — 판정문 그대로)
+  PASS  T2b ⓓ 실패 · 증서 실패
+  PASS  T2c 하한 = 1/3 (1e-14) · 상한 = 0.375 (1e-14) — 후보 φ 의 에너지 · 보정 흐름의 Thomson 값
+    (T2 0.0 s)
+
+── T3 Codex 영값 반례 (두 판에 각각 붙은 두 노드 · 정확 KCL · σ 0) — VALID_ZERO_TOPOLOGY · 증서 실패 아님
+  PASS  T3a 상태 VALID_ZERO_TOPOLOGY · ok True · σ 0 · 출처 = 행렬 그래프
+  PASS  T3b 관통 성분 0 · ⓓ 판정 칸 = 해당 없음 (None)
+  PASS  T3c 영값 위상인데 게시 G ≠ 0 (근사 φ) → ok False (CG 오차를 0 으로 둔갑시키지 않는다)
+    (T3 0.0 s)
+
+── T6 q 보존성 · 결손 항 · 트리 보정 — 보정 뒤 KCL 결손 ≪ 원 결손 · F_bot = F_top · 결손 항 없는 순진한 하한은 G* 를 넘는다
+  PASS  T6a [main] 트리 보정 뒤 남은 결손 상한 ≤ 1e-6 × 원 결손 + 1e-12 × F (부동소수 수준)
+  PASS  T6b [main] 보정 흐름의 F_bot = F_top (1e-12 상대)
+  PASS  T6c [main] 트리 보정 없이도 하한은 유효 (결손 항 · ≤ G*) 이지만 보정이 구간을 100 배 이상 좁힌다
+  PASS  T6a [connected] 트리 보정 뒤 남은 결손 상한 ≤ 1e-6 × 원 결손 + 1e-12 × F (부동소수 수준)
+  PASS  T6b [connected] 보정 흐름의 F_bot = F_top (1e-12 상대)
+  PASS  T6c [connected] 트리 보정 없이도 하한은 유효 (결손 항 · ≤ G*) 이지만 보정이 구간을 100 배 이상 좁힌다
+  PASS  T6a [iter23] 트리 보정 뒤 남은 결손 상한 ≤ 1e-6 × 원 결손 + 1e-12 × F (부동소수 수준)
+  PASS  T6b [iter23] 보정 흐름의 F_bot = F_top (1e-12 상대)
+  PASS  T6c [iter23] 트리 보정 없이도 하한은 유효 (결손 항 · ≤ G*) 이지만 보정이 구간을 100 배 이상 좁힌다
+  PASS  T6d [iter23] 결손 항 · 보정 둘 다 빼면 하한이 G* 를 넘는다 (변이 적발 — 결손 항이 하한의 유효성 조건)
+  PASS  T6e 손 계산 (G* 0.5 · φ 0): 순진한 F²/W = 1 > G* · 결손 항 있는 하한 ≤ 0.5 (트리 · 트리 없음 둘 다)
+    (T6 0.0 s)
+
+── T7 원장 ↔ 행렬 fail-closed — 접지 항 · b 불일치 · 비대칭 · 양의 비대각 · NaN φ · g ≤ 0 · 번호 밖 · 비정방 → NOT_CERTIFIABLE
+  PASS  T7 [접지 항 (원장 밖 대각)] → NOT_CERTIFIABLE · ok False · 원장 문제 기록
+  PASS  T7 [b ≠ 아래 판 결합] → NOT_CERTIFIABLE · ok False · 원장 문제 기록
+  PASS  T7 [비대칭] → NOT_CERTIFIABLE · ok False · 원장 문제 기록
+  PASS  T7 [양의 비대각 (음 컨덕턴스)] → NOT_CERTIFIABLE · ok False · 원장 문제 기록
+  PASS  T7 [NaN φ] → NOT_CERTIFIABLE · ok False · 원장 문제 기록
+  PASS  T7 [gb ≤ 0] → NOT_CERTIFIABLE · ok False · 원장 문제 기록
+  PASS  T7 [Ab 번호 밖] → NOT_CERTIFIABLE · ok False · 원장 문제 기록
+  PASS  T7 [비정방 L] → NOT_CERTIFIABLE · ok False · 원장 문제 기록
+  PASS  T7 대조 — 같은 계 정상 원장 → POSITIVE_SOLVED · 원장 문제 없음
+  PASS  T7h [φ 숫자 글자 ('0.75')] → NOT_CERTIFIABLE · ok False (조용히 바꿔 계산하지 않는다 · 예외 아님)
+  PASS  T7h [φ bool] → NOT_CERTIFIABLE · ok False (조용히 바꿔 계산하지 않는다 · 예외 아님)
+  PASS  T7h [gb 숫자 글자] → NOT_CERTIFIABLE · ok False (조용히 바꿔 계산하지 않는다 · 예외 아님)
+  PASS  T7h [b 숫자 글자] → NOT_CERTIFIABLE · ok False (조용히 바꿔 계산하지 않는다 · 예외 아님)
+  PASS  T7h [φ 넘침 (±1.7e308 → 흐름 ±inf)] → NOT_CERTIFIABLE · ok False (조용히 바꿔 계산하지 않는다 · 예외 아님)
+  PASS  T7u [부정규 g (1e-310 직렬 · 정확 해)] → NOT_CERTIFIABLE (상대 반올림 모형 밖 · 예외 아님)
+  PASS  T7u [곱 완전 밑넘침 (g 1e-200 · Δφ 1e-150 → 0)] → NOT_CERTIFIABLE (상대 반올림 모형 밖 · 예외 아님)
+  PASS  T7u 대조 — 작지만 정상 범위 (g 1e-290 · 항 ~1e-291) 정확 해 → POSITIVE_SOLVED · ⓓ 통과 · 구간 ∋ G* (분수) (거짓 거부 없음)
+    (T7 0.4 s)
+
+── T15 원장 허용 = 반올림 수준만 — 중복 합 순서가 다른 비대칭 (1e16 + 1 × 40) · 큰 차수 행 합 반올림 (1e16 + 1 × 200 이 대각에서 사라짐) · b 합 순서 (판 간선 301 개) = 받는다 (거짓 거부 없음) · 참 비대칭 · 참 접지 · 참 b 불일치는 그대로 거부
+  PASS  T15a 합 순서만 다른 (0,1) ↔ (1,0) (상대 차 4.0e-15 = 36u · 반올림) → 원장 받음 · POSITIVE_SOLVED · 구간 ∋ 원장 G* (분수)
+  PASS  T15b 차수 201 행 — 대각 반올림으로 200 이 사라진 행 합 (반올림 · 64u 고정 허용 밖) → 원장 받음 · POSITIVE_SOLVED · 구간 ∋ 원장 G* (분수 · 이 φ 는 반올림된 행렬의 해라 원장 망의 해가 아니다 — 판정은 ⓓ 가 한다 · 건전성만 본다)
+  PASS  T15c 대조 — 참 비대칭 (상대 1e-9) · 참 접지 (대각 +1e-6 상대) 는 그대로 NOT_CERTIFIABLE
+  PASS  T15f 행 합을 맞춘 참 비대칭 (상대 1e-9) → NOT_CERTIFIABLE · 사유 = 비대칭 (대칭 검사만 잡는 꼴)
+  PASS  T15d 한 노드 아래 판 간선 301 개 — b 합 순서만 다름 (b − 원장 = 300) → 원장 받음 · POSITIVE_SOLVED · 구간 ∋ G* (분수)
+  PASS  T15e 대조 — b 참 불일치 (상대 1e-6) 는 그대로 NOT_CERTIFIABLE
+    (T15 0.0 s)
+
+── T8 떠 있는 성분 · 병렬 판 간선 · 한 노드 두 판 — 구간 유효 · 정확 해면 통과
+  PASS  T8a 판에 안 닿는 성분 둘 (상수 φ) → 떠 있는 노드 2 기록 · ⓓ 통과 · 구간 ∋ 0.5
+  PASS  T8b 같은 노드 아래 판 간선 둘 (병렬) → 구간 ∋ G* 0.5 · 통과
+  PASS  T8c 한 노드가 두 판에 다 붙음 (판–노드–판) → G* 0.5 · 구간 [0.5, 0.5] · 통과
+    (T8 0.0 s)
+
+── T10 조기 반환 해의 상태 분류 — 영값 위상 (넷) · 단락 · 얇은 침대 · 모르는 사유 · 모순 (영값 사유인데 관통 dof · σ ≠ 0)
+  PASS  T10a [no_through_component] → VALID_ZERO_TOPOLOGY · ok = (영값 위상일 때만) · σ 0 · 판 이름 · 출처 early_return
+  PASS  T10a [all_floating_dropped] → VALID_ZERO_TOPOLOGY · ok = (영값 위상일 때만) · σ 0 · 판 이름 · 출처 early_return
+  PASS  T10a [no_conductive_voxels] → VALID_ZERO_TOPOLOGY · ok = (영값 위상일 때만) · σ 0 · 판 이름 · 출처 early_return
+  PASS  T10a [no_plate_contact(bot=0,top=3,z_b=0.00,z_plate=1.50,band=0.25)] → VALID_ZERO_TOPOLOGY · ok = (영값 위상일 때만) · σ 0 · 판 이름 · 출처 early_return
+  PASS  T10a [cjunc_electrode_short] → ELECTRODE_SHORT · ok = (영값 위상일 때만) · σ 0 · 판 이름 · 출처 early_return
+  PASS  T10a [degenerate_thin_bed] → NOT_CERTIFIABLE · ok = (영값 위상일 때만) · σ 0 · 판 이름 · 출처 early_return
+  PASS  T10a [mystery_reason] → NOT_CERTIFIABLE · ok = (영값 위상일 때만) · σ 0 · 판 이름 · 출처 early_return
+  PASS  T10a [None] → NOT_CERTIFIABLE · ok = (영값 위상일 때만) · σ 0 · 판 이름 · 출처 early_return
+  PASS  T10b 모순 (영값 사유인데 관통 dof 3 · σ ≠ 0) → NOT_CERTIFIABLE · ok False
+    (T10 0.0 s)
+
+── T11 solve_sigma_z 통합 — 증서 켬: 조기 반환 해에 상태 증서 (영값 위상 · 얇은 침대) · 양의 해에 ⓓ · 증서 끔 = 칸 없음
+  PASS  T11a [no_through_component] 사유 그대로 · 증서 상태 VALID_ZERO_TOPOLOGY · ok = (영값일 때만) · σ 0 · 지문 hex32 · 증서 끔이면 칸 없음
+  PASS  T11a [no_plate_contact] 사유 그대로 · 증서 상태 VALID_ZERO_TOPOLOGY · ok = (영값일 때만) · σ 0 · 지문 hex32 · 증서 끔이면 칸 없음
+  PASS  T11a [no_conductive_voxels] 사유 그대로 · 증서 상태 VALID_ZERO_TOPOLOGY · ok = (영값일 때만) · σ 0 · 지문 hex32 · 증서 끔이면 칸 없음
+  PASS  T11a [degenerate_thin_bed] 사유 그대로 · 증서 상태 NOT_CERTIFIABLE · ok = (영값일 때만) · σ 0 · 지문 hex32 · 증서 끔이면 칸 없음
+  PASS  T11b 양의 해 → POSITIVE_SOLVED · ⓓ 칸 (하한 · 상한 · 보장 오차) · 증서 σ = 결과 σ · scale 기록
+    (T11 0.0 s)
+
+── T13 run_contract.conv_cert_problem — ⓓ 를 기록된 수로 다시 판정 · 상태 먼저 분기 · 영값 위상 σ 0 수용 · 나머지 거부
+  PASS  T13a 실제 양의 증서 → 문제 없음
+  PASS  T13b 거부 [판 v1 (ⓓ 없는 옛 증서)]
+  PASS  T13b 거부 [ⓓ 칸 빠짐 (판 이름은 새것)]
+  PASS  T13b 거부 [pass_d 빠짐]
+  PASS  T13b 거부 [pass_d 문자열]
+  PASS  T13b 거부 [상태 빠짐]
+  PASS  T13b 거부 [모르는 상태]
+  PASS  T13b 거부 [단락 상태]
+  PASS  T13b 거부 [증서 못 세움 상태]
+  PASS  T13b 거부 [ok ↔ pass_d 모순 (pass_d False)]
+  PASS  T13b 거부 [구간이 G 에서 멀다 (pass_d 는 True 인 채)]
+  PASS  T13b 거부 [구간 폭 > 1e-4 (G 는 가운데)]
+  PASS  T13b 거부 [하한 > 상한]
+  PASS  T13b 거부 [하한 0]
+  PASS  T13b 거부 [NaN 하한]
+  PASS  T13b 거부 [inf 상한]
+  PASS  T13b 거부 [I_bot · scale ≠ σ (구간 ↔ 게시값 결합)]
+  PASS  T13b 거부 [목표 허용 손으로 (1e-2)]
+  PASS  T13b 거부 [부동소수 보수 규칙 판본 다름 (옛 v1 여유)]
+  PASS  T13b 거부 [부동소수 보수 규칙 칸 빠짐]
+  PASS  T13b 거부 [원장 실패인데 통과 표지]
+  PASS  T13b 거부 [위상 영인데 POSITIVE]
+  PASS  T13c 영값 위상 증서 + 결과 σ 0 → 문제 없음 (바닥 극한 σ 0 = 정상 결과 · NOT_COMPUTED 로 멈추지 않는다)
+  PASS  T13d 영값 증서 거부 [결과 σ ≠ 0]
+  PASS  T13d 영값 증서 거부 [증서 σ ≠ 0]
+  PASS  T13d 영값 증서 거부 [관통 dof > 0]
+  PASS  T13d 영값 증서 거부 [영값 아닌 사유]
+  PASS  T13d 영값 증서 거부 [ok False]
+  PASS  T13d 영값 증서 거부 [모르는 출처]
+  PASS  T13d 영값 증서 거부 [판 v1]
+  PASS  T13d 영값 증서 거부 [결과 σ bool]
+  PASS  T13e 단락 증서 → 거부 (게시 가능 상태 아님)
+  PASS  T13f 다음 세대 게시 조건 — 영값 위상 팔 (σ 0) 통과 · 증서 없는 팔 거부
+    (T13 0.0 s)
+
+── T16 손계산 회로 (정확 분수 G*) — 직렬 · 병렬 · 고리 · 막다른 노드 · 대비 1e12 · 1e15 · 다리 (전 자유도 관통) · 정확 영값: 상한 ≥ G* ≥ 하한 (분수 비교) · 망가뜨린 φ 는 거부 · 영값은 VALID_ZERO_TOPOLOGY
+  PASS  T16-0 [직렬 (2 · 3 · 5)] 분수 풀이 = 닫힌꼴 G* 30/31
+  PASS  T16a [직렬 (2 · 3 · 5)] 정확 해 → POSITIVE_SOLVED · ⓓ 통과 · 상한 ≥ G* ≥ 하한 (분수) · 구간 상대 폭 ≤ 1e-12
+  PASS  T16b [직렬 (2 · 3 · 5)] Dirichlet — 정확 에너지 (분수) ≥ G* · 기록 상한 ≥ 정확 에너지 (부동소수 여유가 덮는다)
+  PASS  T16c [직렬 (2 · 3 · 5)] φ 를 망가뜨림 (노드 0 + 1e-3) → ⓓ 거부 · 구간은 여전히 G* 를 담는다 (건전)
+  PASS  T16d [직렬 (2 · 3 · 5)] 아주 작게 (+1e-13) → 건전 · 통과면 게시 G 의 실제 오차 ≤ 1e-4 (분수)
+  PASS  T16-0 [병렬 (두 가지 · 판–노드–판 1·1 ‖ 2·6)] 분수 풀이 = 닫힌꼴 G* 2
+  PASS  T16a [병렬 (두 가지 · 판–노드–판 1·1 ‖ 2·6)] 정확 해 → POSITIVE_SOLVED · ⓓ 통과 · 상한 ≥ G* ≥ 하한 (분수) · 구간 상대 폭 ≤ 1e-12
+  PASS  T16b [병렬 (두 가지 · 판–노드–판 1·1 ‖ 2·6)] Dirichlet — 정확 에너지 (분수) ≥ G* · 기록 상한 ≥ 정확 에너지 (부동소수 여유가 덮는다)
+  PASS  T16c [병렬 (두 가지 · 판–노드–판 1·1 ‖ 2·6)] φ 를 망가뜨림 (노드 0 + 1e-3) → ⓓ 거부 · 구간은 여전히 G* 를 담는다 (건전)
+  PASS  T16d [병렬 (두 가지 · 판–노드–판 1·1 ‖ 2·6)] 아주 작게 (+1e-13) → 건전 · 통과면 게시 G 의 실제 오차 ≤ 1e-4 (분수)
+  PASS  T16-0 [병렬 안 고리 (직접 1 ‖ 2·2 우회)] 분수 풀이 = 닫힌꼴 G* 2/5
+  PASS  T16a [병렬 안 고리 (직접 1 ‖ 2·2 우회)] 정확 해 → POSITIVE_SOLVED · ⓓ 통과 · 상한 ≥ G* ≥ 하한 (분수) · 구간 상대 폭 ≤ 1e-12
+  PASS  T16b [병렬 안 고리 (직접 1 ‖ 2·2 우회)] Dirichlet — 정확 에너지 (분수) ≥ G* · 기록 상한 ≥ 정확 에너지 (부동소수 여유가 덮는다)
+  PASS  T16c [병렬 안 고리 (직접 1 ‖ 2·2 우회)] φ 를 망가뜨림 (노드 0 + 1e-3) → ⓓ 거부 · 구간은 여전히 G* 를 담는다 (건전)
+  PASS  T16d [병렬 안 고리 (직접 1 ‖ 2·2 우회)] 아주 작게 (+1e-13) → 건전 · 통과면 게시 G 의 실제 오차 ≤ 1e-4 (분수)
+  PASS  T16-0 [막다른 노드 (판 하나 · 경로 곁가지)] 분수 풀이 = 닫힌꼴 G* 30/31
+  PASS  T16a [막다른 노드 (판 하나 · 경로 곁가지)] 정확 해 → POSITIVE_SOLVED · ⓓ 통과 · 상한 ≥ G* ≥ 하한 (분수) · 구간 상대 폭 ≤ 1e-12
+  PASS  T16b [막다른 노드 (판 하나 · 경로 곁가지)] Dirichlet — 정확 에너지 (분수) ≥ G* · 기록 상한 ≥ 정확 에너지 (부동소수 여유가 덮는다)
+  PASS  T16c [막다른 노드 (판 하나 · 경로 곁가지)] φ 를 망가뜨림 (노드 0 + 1e-3) → ⓓ 거부 · 구간은 여전히 G* 를 담는다 (건전)
+  PASS  T16d [막다른 노드 (판 하나 · 경로 곁가지)] 아주 작게 (+1e-13) → 건전 · 통과면 게시 G 의 실제 오차 ≤ 1e-4 (분수)
+  PASS  T16a [대비 1e12 직렬 (1 · 1e12 · 1)] 정확 해 → POSITIVE_SOLVED · ⓓ 통과 · 상한 ≥ G* ≥ 하한 (분수) · 구간 상대 폭 ≤ 1e-12
+  PASS  T16b [대비 1e12 직렬 (1 · 1e12 · 1)] Dirichlet — 정확 에너지 (분수) ≥ G* · 기록 상한 ≥ 정확 에너지 (부동소수 여유가 덮는다)
+  PASS  T16c [대비 1e12 직렬 (1 · 1e12 · 1)] φ 를 망가뜨림 (노드 0 + 1e-3) → ⓓ 거부 · 구간은 여전히 G* 를 담는다 (건전)
+  PASS  T16d [대비 1e12 직렬 (1 · 1e12 · 1)] 아주 작게 (+1e-13) → 건전 · 통과면 게시 G 의 실제 오차 ≤ 1e-4 (분수)
+  PASS  T16-0 [대비 1e15 막다른 판 노드 (Codex 꼴)] 분수 풀이 = 닫힌꼴 G* 1/3
+  PASS  T16a [대비 1e15 막다른 판 노드 (Codex 꼴)] 정확 해 → POSITIVE_SOLVED · ⓓ 통과 · 상한 ≥ G* ≥ 하한 (분수) · 구간 상대 폭 ≤ 1e-12
+  PASS  T16b [대비 1e15 막다른 판 노드 (Codex 꼴)] Dirichlet — 정확 에너지 (분수) ≥ G* · 기록 상한 ≥ 정확 에너지 (부동소수 여유가 덮는다)
+  PASS  T16c [대비 1e15 막다른 판 노드 (Codex 꼴)] φ 를 망가뜨림 (노드 0 + 1e-3) → ⓓ 거부 · 구간은 여전히 G* 를 담는다 (건전)
+  PASS  T16d [대비 1e15 막다른 판 노드 (Codex 꼴)] 아주 작게 (+1e-13) → 건전 · 통과면 게시 G 의 실제 오차 ≤ 1e-4 (분수)
+  PASS  T16a [대비 1e-12 병렬 가지] 정확 해 → POSITIVE_SOLVED · ⓓ 통과 · 상한 ≥ G* ≥ 하한 (분수) · 구간 상대 폭 ≤ 1e-12
+  PASS  T16b [대비 1e-12 병렬 가지] Dirichlet — 정확 에너지 (분수) ≥ G* · 기록 상한 ≥ 정확 에너지 (부동소수 여유가 덮는다)
+  PASS  T16c [대비 1e-12 병렬 가지] φ 를 망가뜨림 (노드 0 + 1e-3) → ⓓ 거부 · 구간은 여전히 G* 를 담는다 (건전)
+  PASS  T16d [대비 1e-12 병렬 가지] 아주 작게 (+1e-13) → 건전 · 통과면 게시 G 의 실제 오차 ≤ 1e-4 (분수)
+  PASS  T16a [다리 (Wheatstone · 전 자유도 한 관통 성분 · 고리)] 정확 해 → POSITIVE_SOLVED · ⓓ 통과 · 상한 ≥ G* ≥ 하한 (분수) · 구간 상대 폭 ≤ 1e-12
+  PASS  T16b [다리 (Wheatstone · 전 자유도 한 관통 성분 · 고리)] Dirichlet — 정확 에너지 (분수) ≥ G* · 기록 상한 ≥ 정확 에너지 (부동소수 여유가 덮는다)
+  PASS  T16c [다리 (Wheatstone · 전 자유도 한 관통 성분 · 고리)] φ 를 망가뜨림 (노드 0 + 1e-3) → ⓓ 거부 · 구간은 여전히 G* 를 담는다 (건전)
+  PASS  T16d [다리 (Wheatstone · 전 자유도 한 관통 성분 · 고리)] 아주 작게 (+1e-13) → 건전 · 통과면 게시 G 의 실제 오차 ≤ 1e-4 (분수)
+  PASS  T16a [연결 막다른 (1e12 판 노드를 1e-6 다리로 경로에)] 정확 해 → POSITIVE_SOLVED · ⓓ 통과 · 상한 ≥ G* ≥ 하한 (분수) · 구간 상대 폭 ≤ 1e-12
+  PASS  T16b [연결 막다른 (1e12 판 노드를 1e-6 다리로 경로에)] Dirichlet — 정확 에너지 (분수) ≥ G* · 기록 상한 ≥ 정확 에너지 (부동소수 여유가 덮는다)
+  PASS  T16c [연결 막다른 (1e12 판 노드를 1e-6 다리로 경로에)] φ 를 망가뜨림 (노드 0 + 1e-3) → ⓓ 거부 · 구간은 여전히 G* 를 담는다 (건전)
+  PASS  T16d [연결 막다른 (1e12 판 노드를 1e-6 다리로 경로에)] 아주 작게 (+1e-13) → 건전 · 통과면 게시 G 의 실제 오차 ≤ 1e-4 (분수)
+  PASS  T16e [정확 영값 (두 판 각각 한 노드)] G* = 0 (분수) · 정확 해 → VALID_ZERO_TOPOLOGY · ok True · 게시 0 · 상한 ≥ 0 = 하한
+  PASS  T16f [정확 영값 (두 판 각각 한 노드)] 영값 위상인데 φ 를 망가뜨려 게시 전류 ≠ 0 → ok False (영값 위상 그대로 · CG 오차를 0 으로 바꾸지 않는다)
+  PASS  T16e [바닥 극한 R_j = ∞ (사슬 가운데 접합 없음)] G* = 0 (분수) · 정확 해 → VALID_ZERO_TOPOLOGY · ok True · 게시 0 · 상한 ≥ 0 = 하한
+  PASS  T16f [바닥 극한 R_j = ∞ (사슬 가운데 접합 없음)] 영값 위상인데 φ 를 망가뜨려 게시 전류 ≠ 0 → ok False (영값 위상 그대로 · CG 오차를 0 으로 바꾸지 않는다)
+    무작위 손 회로 80 해 (망가뜨림 40) · ⓓ 통과 59 · 구간 빗나감 0 · 거짓 통과 0
+  PASS  T16g 무작위 손 회로 40 개 (노드 2–6 · g 1e-6–1e6 · 정확 해 + 망가뜨린 해) — 구간이 정확 분수 G* 를 다 담는다
+  PASS  T16h 같은 표본 — ⓓ 통과한 해의 게시 G 는 정확 분수 G* 와 상대 1e-4 안 (거짓 통과 0) · 통과 ≥ 1 (보수만이 아니다)
+  PASS  T16i 같은 표본 — 기록 상한 ≥ 그 φ 의 정확 에너지 (분수 · Dirichlet 좌변 그 자체 · 부동소수 여유가 항 · 합 반올림을 덮는다)
+    (T16 0.3 s)
+
+── T19 칼날 — 보장 오차 상한이 τ = 1e-4 를 1.1e-20 넘는 (lo, hi, G) 는 거부 (정확 분수 비교 · float 나눗셈이면 통과) · 한 ulp 안쪽은 통과 · 증서 전체 칼날 훑기 (단조 · 통과 점은 정확 오차 ≤ 1e-4)
+  PASS  T19a 칼날 0 — 정확 오차 상한이 τ 를 1.1e-20 넘는다 (float 나눗셈 비교면 통과 = True) → ⓓ 거부 (보수 · 정확 비교)
+  PASS  T19b 칼날 0 한 ulp 안쪽 (정확 오차 상한 ≤ τ) → 통과 (보수가 지나치지 않다)
+  PASS  T19a 칼날 1 — 정확 오차 상한이 τ 를 1.1e-20 넘는다 (float 나눗셈 비교면 통과 = True) → ⓓ 거부 (보수 · 정확 비교)
+  PASS  T19b 칼날 1 한 ulp 안쪽 (정확 오차 상한 ≤ τ) → 통과 (보수가 지나치지 않다)
+  PASS  T19a 칼날 2 — 정확 오차 상한이 τ 를 1.1e-20 넘는다 (float 나눗셈 비교면 통과 = True) → ⓓ 거부 (보수 · 정확 비교)
+  PASS  T19b 칼날 2 한 ulp 안쪽 (정확 오차 상한 ≤ τ) → 통과 (보수가 지나치지 않다)
+  PASS  T19c 칼날 대조 — 안쪽 (9.5e-7 ≪ τ) 은 통과
+  PASS  T19d 증서 전체 칼날 훑기 (두 셀 직렬 · 게시 오차 ≈ 1e-4 둘레 41 점) — 통과는 앞쪽 연속 구간 (단조) · 통과한 점은 전부 정확 오차 ≤ 1e-4 · 통과 · 거부 둘 다 있다
+    (T19 0.1 s)
+
+── T21 증서 ↔ 런 결합 (사전 리뷰 PRE-impl-07) — 증서의 격자 · 계획 지문 = 매니페스트의 정본 지문 칸 (접합 원장 sid · registry · plan_rows · face_alpha sid_off · plan_<채널>) · 다른 침대 · 다른 계획 · 다른 채널 · 지문 칸 없는 매니페스트 = 거부 (영값 · 양의 해 둘 다)
+  PASS  T21 고정물 — 바닥 극한 (Z · Z2 · Zc) 전자 = VALID_ZERO (조기 반환 · 관통 없음) · P 꼴 = POSITIVE · SE 기둥 이온 = POSITIVE · SE 없음 (Zn) 이온 = VALID_ZERO
+  PASS  T21a 정당한 짝 [Z cjfa · 영값 + 이온 양] — 자기 증서 + 자기 매니페스트 = 전자 · 이온 둘 다 문제 없음 · next_gen_cert_ok (True, None)
+  PASS  T21a 정당한 짝 [Z2 cjfa] — 자기 증서 + 자기 매니페스트 = 전자 · 이온 둘 다 문제 없음 · next_gen_cert_ok (True, None)
+  PASS  T21a 정당한 짝 [P cjfa · 양 + 이온 양] — 자기 증서 + 자기 매니페스트 = 전자 · 이온 둘 다 문제 없음 · next_gen_cert_ok (True, None)
+  PASS  T21a 정당한 짝 [P cj] — 자기 증서 + 자기 매니페스트 = 전자 · 이온 둘 다 문제 없음 · next_gen_cert_ok (True, None)
+  PASS  T21a 정당한 짝 [P cj 거울] — 자기 증서 + 자기 매니페스트 = 전자 · 이온 둘 다 문제 없음 · next_gen_cert_ok (True, None)
+  PASS  T21a 정당한 짝 [P cj fused] — 자기 증서 + 자기 매니페스트 = 전자 · 이온 둘 다 문제 없음 · next_gen_cert_ok (True, None)
+  PASS  T21a 정당한 짝 [P fa PT1] — 자기 증서 + 자기 매니페스트 = 전자 · 이온 둘 다 문제 없음 · next_gen_cert_ok (True, None)
+  PASS  T21a 정당한 짝 [P fa PT2] — 자기 증서 + 자기 매니페스트 = 전자 · 이온 둘 다 문제 없음 · next_gen_cert_ok (True, None)
+  PASS  T21a 정당한 짝 [Z cjfa SE 없음 · 영값 + 영값] — 자기 증서 + 자기 매니페스트 = 전자 · 이온 둘 다 문제 없음 · next_gen_cert_ok (True, None)
+  PASS  T21a 정당한 짝 [Z cj] — 자기 증서 + 자기 매니페스트 = 전자 · 이온 둘 다 문제 없음 · next_gen_cert_ok (True, None)
+  PASS  T21b PRE-impl-07 반례 — 바닥 극한 실제 영값 증서의 지문만 바꾼 사본 → conv_cert_problem · next_gen_cert_ok 거부
+  PASS  T21c 다른 침대 (Z2 — 맞닿는 층만 다름 · 둘 다 정당한 영값) 의 실제 영값 증서를 Z 런에 붙임 → 거부 (σ 0 = 0 은 아무것도 안 묶는다)
+  PASS  T21d Z 의 자기 영값 증서 + 다른 침대 (Z2) 의 매니페스트 → 거부
+  PASS  T21e 전제 — 거울 침대 (같은 회로 · 다른 격자) σ 같음 (상대 1e-12 · 옛 σ 결합 1e-9 안) · 격자 다름
+  PASS  T21e 거울 침대의 양의 증서 (σ 같음) 를 P 런에 붙임 → 거부 (격자 지문 · 접합 계획 지문)
+  PASS  T21f 전제 — 같은 침대 · 미등록 면 법칙만 다름 (cut ↔ fused · 미등록 VV 면 0) = 같은 격자 · 같은 σ (바이트) · 다른 접합 계획 지문
+  PASS  T21f 접합 계획 지문 — fused 런의 증서를 cut 런에 붙임 → 거부 (σ · 격자 같음 · 계획 행 지문 다름)
+  PASS  T21g 전제 — 같은 침대 · PTFE 캡슐 자리만 다름 (도체 면 밖 · α 행 0) = 같은 격자 · 같은 σ (바이트) · 다른 face_alpha 계획 지문
+  PASS  T21g face_alpha 계획 지문 — PT2 런의 전자 증서를 PT1 런에 붙임 → 거부
+  PASS  T21g face_alpha 계획 지문 — PT2 런의 이온 증서를 PT1 런의 이온 자리에 → 거부
+  PASS  T21h 채널 — 영값 · 영값 런에서 이온 증서를 전자 자리에 · 전자 증서를 이온 자리에 → 둘 다 거부 (face_alpha 채널 계획 · 접합 = 전자 주 솔브만)
+  PASS  T21i 지문 칸 없는 매니페스트 [ca_ext 비었다] → conv_cert_problem 거부 · next_gen_cert_ok 거부
+  PASS  T21i 지문 칸 없는 매니페스트 [하위 블록에 evidence 없음] → conv_cert_problem 거부 · next_gen_cert_ok 거부
+  PASS  T21i 지문 칸 없는 매니페스트 [매니페스트 None] → conv_cert_problem 거부
+  PASS  T21i 지문 칸 없는 매니페스트 [매니페스트 dict 아님] → conv_cert_problem 거부
+  PASS  T21j 증서 칸 [결합 판 칸 빠짐] → 거부
+  PASS  T21j 증서 칸 [결합 판 다름] → 거부
+  PASS  T21j 증서 칸 [격자 지문 대문자 (같은 수)] → 거부
+  PASS  T21j 증서 칸 [σ 표 지문 hex 아님] → 거부
+  PASS  T21j 증서 칸 [σ 표 지문 빠짐] → 거부
+  PASS  T21j 증서 칸 [face_alpha 계획 지문 None (face_alpha 런인데)] → 거부
+  PASS  T21j 증서 칸 [접합 계획 행 지문 다름] → 거부
+  PASS  T21j 증서 칸 [접합 원장 지문 None] → 거부
+  PASS  T21j 이온 증서가 접합 지문을 싣는다 (접합 = 전자 주 솔브만) → 거부
+  PASS  T21j 매니페스트 칸 [face_alpha fp 에 plan_electronic 칸 없음] → 거부
+  PASS  T21j 매니페스트 칸 [접합 fp 에 plan_rows 칸 없음] → 거부
+  PASS  T21j 매니페스트 칸 [접합 fp 에 registry 칸 없음] → 거부
+  PASS  T21j 매니페스트 칸 [접합 fp sid hex 아님] → 거부
+  PASS  T21j 매니페스트 칸 [접합 fp sid 다른 hex] → 거부
+  PASS  T21j 접합 런 매니페스트 registry None + 증서도 None (둘이 같아도) → 거부 (접합 런의 주 전자 솔브는 계획이 있다 · 사전 공격 리뷰)
+  PASS  T21k 정본 칸 — 조합 런에서 sid_off 만 틀림 (접합 원장 sid 맞음) → 증서 결합은 받는다 (매니페스트 자기 일관 = ca_ext 계약 · 사슬 멈춤 코드 CA_EXT_RECORD 그대로)
+  PASS  T21k 정본 칸 — face_alpha 만 런 (접합 없음) 은 sid_off 가 정본 · 다른 hex → 거부
+  PASS  T21l API — conv_cert_problem(증서, σ) (매니페스트 없이) = TypeError (조용히 결합을 건너뛰는 기본값 없음)
+  PASS  T21m 양의 증서 결합 칸 = 솔브 입력 지문 (step3_sigma._grid_fp(sid) · σ 표 · face_alpha 계획 fp_plan · 접합 원장 · 계획 행)
+  PASS  T21m 조기 반환 영값 증서 결합 칸 = 같은 지문 (계획 지문까지)
+  PASS  T21m 이온 영값 증서 결합 칸 = 이온 σ 표 · 이온 face_alpha 계획 · 접합 칸 None
+    (T21 0.6 s)
+
+== test_step3_target_cert [빠른 판]: 202/202 PASS (1.5 s)

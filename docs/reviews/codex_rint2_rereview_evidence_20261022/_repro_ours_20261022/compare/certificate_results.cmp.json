@@ -1,0 +1,521 @@
+{
+ "label": "certificate",
+ "codex": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/x_rr1022/certificate/results.json",
+ "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/rr_repro/rint2_rereview_20261022/certificate/results.json",
+ "stats": {
+  "exact": 617,
+  "rel_le_1e-12": 9,
+  "path": 1,
+  "diff": 63,
+  "missing_in_ours": 0,
+  "extra_in_ours": 0,
+  "type_diff": 0
+ },
+ "rows": [
+  {
+   "key": "$.python",
+   "class": "DIFF",
+   "codex": "\"3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]\"",
+   "ours": "\"3.11.17 (main, Oct  1 2026, 15:41:07) [GCC 13.3.0]\""
+  },
+  {
+   "key": "$.numpy",
+   "class": "DIFF",
+   "codex": "\"2.5.3\"",
+   "ours": "\"2.4.6\""
+  },
+  {
+   "key": "$.source",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source\\scripts\\step3_conv_cert.py",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/rr_repro/rint2_rereview_20261022/source/scripts/step3_conv_cert.py"
+  },
+  {
+   "key": "$.prior.main.reported_G",
+   "class": "DIFF",
+   "codex": 1.6472243400696e-09,
+   "ours": 1.6472236865187125e-09,
+   "rel": 3.967588819174106e-07
+  },
+  {
+   "key": "$.prior.main.relative_error",
+   "class": "DIFF",
+   "codex": -0.00018859300240869903,
+   "ours": -0.00018898968646463565,
+   "rel": 0.0020989719775573756
+  },
+  {
+   "key": "$.prior.main.resolve_relative_error",
+   "class": "DIFF",
+   "codex": -0.00018859300240869903,
+   "ours": -0.00018898968646463565,
+   "rel": 0.0020989719775573756
+  },
+  {
+   "key": "$.prior.main.certificate.resid",
+   "class": "DIFF",
+   "codex": 2.761381473905492e-16,
+   "ours": 2.510262822836824e-16,
+   "rel": 0.09093950018919507
+  },
+  {
+   "key": "$.prior.main.certificate.I_bot",
+   "class": "DIFF",
+   "codex": 1.6472243400696e-09,
+   "ours": 1.6472236865187125e-09,
+   "rel": 3.967588819174106e-07
+  },
+  {
+   "key": "$.prior.main.certificate.I_top",
+   "class": "DIFF",
+   "codex": 1.6473750247842089e-09,
+   "ours": 1.6474661563342209e-09,
+   "rel": 5.5316189447417704e-05
+  },
+  {
+   "key": "$.prior.main.certificate.imbalance",
+   "class": "DIFF",
+   "codex": 9.147795533580172e-05,
+   "ours": 0.0001471990826096003,
+   "rel": 0.3785426259862061
+  },
+  {
+   "key": "$.prior.main.certificate.sigma",
+   "class": "DIFF",
+   "codex": 1.6472243400696e-09,
+   "ours": 1.6472236865187125e-09,
+   "rel": 3.967588819174106e-07
+  },
+  {
+   "key": "$.prior.main.certificate.sigma_resolve",
+   "class": "DIFF",
+   "codex": 1.6472243400696e-09,
+   "ours": 1.6472236865187125e-09,
+   "rel": 3.967588819174106e-07
+  },
+  {
+   "key": "$.prior.main.certificate.resolve_I_bot",
+   "class": "DIFF",
+   "codex": 1.6472243400696e-09,
+   "ours": 1.6472236865187125e-09,
+   "rel": 3.967588819174106e-07
+  },
+  {
+   "key": "$.prior.main.certificate.resolve_I_top",
+   "class": "DIFF",
+   "codex": 1.6473750247842089e-09,
+   "ours": 1.6474661563342209e-09,
+   "rel": 5.5316189447417704e-05
+  },
+  {
+   "key": "$.prior.main.certificate.pass_b",
+   "class": "DIFF",
+   "codex": "true",
+   "ours": "false"
+  },
+  {
+   "key": "$.prior.main.certificate.target_lo",
+   "class": "rel_le_1e-12",
+   "codex": 1.647535053651848e-09,
+   "ours": 1.6475350536518483e-09,
+   "rel": 1.2551790790726095e-16
+  },
+  {
+   "key": "$.prior.main.certificate.target_hi",
+   "class": "rel_le_1e-12",
+   "codex": 1.647535053652371e-09,
+   "ours": 1.6475350536523458e-09,
+   "rel": 1.5313184764680975e-14
+  },
+  {
+   "key": "$.prior.main.certificate.target_U",
+   "class": "rel_le_1e-12",
+   "codex": 1.6475350536523678e-09,
+   "ours": 1.6475350536523425e-09,
+   "rel": 1.5313184764681007e-14
+  },
+  {
+   "key": "$.prior.main.certificate.target_W",
+   "class": "DIFF",
+   "codex": 1.6475360772304847e-09,
+   "ours": 1.647535317062908e-09,
+   "rel": 4.6139661961989673e-07
+  },
+  {
+   "key": "$.prior.main.certificate.target_flow_bot",
+   "class": "DIFF",
+   "codex": 1.6475355654411336e-09,
+   "ours": 1.6475351853574196e-09,
+   "rel": 2.3069833635024386e-07
+  },
+  {
+   "key": "$.prior.main.certificate.target_flow_top",
+   "class": "DIFF",
+   "codex": 1.6475355654411336e-09,
+   "ours": 1.6475351853574196e-09,
+   "rel": 2.3069833635024386e-07
+  },
+  {
+   "key": "$.prior.main.certificate.target_kcl_raw",
+   "class": "DIFF",
+   "codex": 5.09477212588476e-13,
+   "ours": 3.830379163800651e-13,
+   "rel": 0.24817458579946475
+  },
+  {
+   "key": "$.prior.main.certificate.target_kcl_defect_bound",
+   "class": "DIFF",
+   "codex": 8.779833209479555e-23,
+   "ours": 8.779831183986642e-23,
+   "rel": 2.3069833619962226e-07
+  },
+  {
+   "key": "$.prior.main.certificate.target_width_rel",
+   "class": "DIFF",
+   "codex": 3.1749466636982435e-13,
+   "ours": 3.020531713590035e-13,
+   "rel": 0.048635446974199796
+  },
+  {
+   "key": "$.prior.main.certificate.target_err_bound_rel",
+   "class": "DIFF",
+   "codex": 0.00018862857669891693,
+   "ours": 0.00018902541056302883,
+   "rel": 0.0020993678200719045
+  },
+  {
+   "key": "$.prior.main.certificate.target_why",
+   "class": "DIFF",
+   "codex": "\"posted G error bound 1.886e-04 > 0.0001 (exact comparison)\"",
+   "ours": "\"posted G error bound 1.890e-04 > 0.0001 (exact comparison)\""
+  },
+  {
+   "key": "$.prior.main.energy_upper_G",
+   "class": "rel_le_1e-12",
+   "codex": 1.647535053652368e-09,
+   "ours": 1.6475350536523425e-09,
+   "rel": 1.5438702672588227e-14
+  },
+  {
+   "key": "$.prior.main.energy_rel_gap",
+   "class": "DIFF",
+   "codex": 2.5868196473766147e-13,
+   "ours": 2.433608869978343e-13,
+   "rel": 0.0592274678111588
+  },
+  {
+   "key": "$.prior.connected.reported_G",
+   "class": "DIFF",
+   "codex": 2.0895679108469276e-12,
+   "ours": 2.0895679101282785e-12,
+   "rel": 3.43922348844788e-10
+  },
+  {
+   "key": "$.prior.connected.relative_error",
+   "class": "DIFF",
+   "codex": -0.009037086166020725,
+   "ours": -0.00903708650683499,
+   "rel": 3.771284754663124e-08
+  },
+  {
+   "key": "$.prior.connected.resolve_relative_error",
+   "class": "DIFF",
+   "codex": -0.009037086166020725,
+   "ours": -0.00903708650683499,
+   "rel": 3.771284754663124e-08
+  },
+  {
+   "key": "$.prior.connected.certificate.resid",
+   "class": "DIFF",
+   "codex": 5.2859556705877186e-17,
+   "ours": 5.285966517278556e-17,
+   "rel": 2.0519787255841946e-06
+  },
+  {
+   "key": "$.prior.connected.certificate.I_bot",
+   "class": "DIFF",
+   "codex": 2.0895679108469276e-12,
+   "ours": 2.0895679101282785e-12,
+   "rel": 3.43922348844788e-10
+  },
+  {
+   "key": "$.prior.connected.certificate.I_top",
+   "class": "rel_le_1e-12",
+   "codex": 2.0895920738768214e-12,
+   "ours": 2.089592073875159e-12,
+   "rel": 7.955807171928989e-13
+  },
+  {
+   "key": "$.prior.connected.certificate.imbalance",
+   "class": "DIFF",
+   "codex": 1.1563649005319417e-05,
+   "ours": 1.1563992136055461e-05,
+   "rel": 2.9672342561876e-05
+  },
+  {
+   "key": "$.prior.connected.certificate.sigma",
+   "class": "DIFF",
+   "codex": 2.0895679108469276e-12,
+   "ours": 2.0895679101282785e-12,
+   "rel": 3.43922348844788e-10
+  },
+  {
+   "key": "$.prior.connected.certificate.sigma_resolve",
+   "class": "DIFF",
+   "codex": 2.0895679108469276e-12,
+   "ours": 2.0895679101282785e-12,
+   "rel": 3.43922348844788e-10
+  },
+  {
+   "key": "$.prior.connected.certificate.resolve_I_bot",
+   "class": "DIFF",
+   "codex": 2.0895679108469276e-12,
+   "ours": 2.0895679101282785e-12,
+   "rel": 3.43922348844788e-10
+  },
+  {
+   "key": "$.prior.connected.certificate.resolve_I_top",
+   "class": "rel_le_1e-12",
+   "codex": 2.0895920738768214e-12,
+   "ours": 2.089592073875159e-12,
+   "rel": 7.955807171928989e-13
+  },
+  {
+   "key": "$.prior.connected.certificate.target_lo",
+   "class": "rel_le_1e-12",
+   "codex": 2.1086237229088536e-12,
+   "ours": 2.1086237229088548e-12,
+   "rel": 5.746356437401465e-16
+  },
+  {
+   "key": "$.prior.connected.certificate.target_hi",
+   "class": "rel_le_1e-12",
+   "codex": 2.1086262578656147e-12,
+   "ours": 2.108626257865615e-12,
+   "rel": 1.9154498430745558e-16
+  },
+  {
+   "key": "$.prior.connected.certificate.target_U",
+   "class": "rel_le_1e-12",
+   "codex": 2.1086262578656103e-12,
+   "ours": 2.1086262578656107e-12,
+   "rel": 1.91544984307456e-16
+  },
+  {
+   "key": "$.prior.connected.certificate.target_W",
+   "class": "DIFF",
+   "codex": 2.0544415196210468e-12,
+   "ours": 2.0544415282194535e-12,
+   "rel": 4.185276942693792e-09
+  },
+  {
+   "key": "$.prior.connected.certificate.target_flow_bot",
+   "class": "DIFF",
+   "codex": 2.0813563187503506e-12,
+   "ours": 2.0813563231058774e-12,
+   "rel": 2.092638697750989e-09
+  },
+  {
+   "key": "$.prior.connected.certificate.target_flow_top",
+   "class": "DIFF",
+   "codex": 2.0813563187503506e-12,
+   "ours": 2.0813563231058774e-12,
+   "rel": 2.092638697750989e-09
+  },
+  {
+   "key": "$.prior.connected.certificate.target_kcl_raw",
+   "class": "DIFF",
+   "codex": 1.2659931536320738e-13,
+   "ours": 1.265998186684447e-13,
+   "rel": 3.975560491359549e-06
+  },
+  {
+   "key": "$.prior.connected.certificate.target_kcl_defect_bound",
+   "class": "DIFF",
+   "codex": 6.850034718978441e-26,
+   "ours": 6.850034733288343e-26,
+   "rel": 2.089026238235732e-09
+  },
+  {
+   "key": "$.prior.connected.certificate.target_width_rel",
+   "class": "DIFF",
+   "codex": 1.2131487797086493e-06,
+   "ours": 1.213148779739294e-06,
+   "rel": 2.526054966258871e-11
+  },
+  {
+   "key": "$.prior.connected.certificate.target_err_bound_rel",
+   "class": "DIFF",
+   "codex": 0.009120711951861179,
+   "ours": 0.009120712298920537,
+   "rel": 3.805178228497302e-08
+  },
+  {
+   "key": "$.prior.iter23.reported_G",
+   "class": "DIFF",
+   "codex": 1.1414071163555076e-05,
+   "ours": 1.1414570222425897e-05,
+   "rel": 4.372121429859371e-05
+  },
+  {
+   "key": "$.prior.iter23.relative_error",
+   "class": "DIFF",
+   "codex": 0.000512087249354698,
+   "ours": 0.0005558327653365502,
+   "rel": 0.07870265790352406
+  },
+  {
+   "key": "$.prior.iter23.resolve_relative_error",
+   "class": "DIFF",
+   "codex": 0.000545995005262423,
+   "ours": 0.0005260408783049897,
+   "rel": 0.03654635438989531
+  },
+  {
+   "key": "$.prior.iter23.certificate.resid",
+   "class": "DIFF",
+   "codex": 1.269156284281238e-13,
+   "ours": 1.3387805310727806e-13,
+   "rel": 0.052005721009217104
+  },
+  {
+   "key": "$.prior.iter23.certificate.I_bot",
+   "class": "DIFF",
+   "codex": 1.1414071163555076e-05,
+   "ours": 1.1414570222425897e-05,
+   "rel": 4.372121429859371e-05
+  },
+  {
+   "key": "$.prior.iter23.certificate.I_top",
+   "class": "DIFF",
+   "codex": 1.141367908638569e-05,
+   "ours": 1.1413684287615284e-05,
+   "rel": 4.5570119716346003e-07
+  },
+  {
+   "key": "$.prior.iter23.certificate.imbalance",
+   "class": "DIFF",
+   "codex": 3.435033510550895e-05,
+   "ours": 7.76143817375435e-05,
+   "rel": 0.557423065976791
+  },
+  {
+   "key": "$.prior.iter23.certificate.sigma",
+   "class": "DIFF",
+   "codex": 1.1414071163555076e-05,
+   "ours": 1.1414570222425897e-05,
+   "rel": 4.372121429859371e-05
+  },
+  {
+   "key": "$.prior.iter23.certificate.sigma_resolve",
+   "class": "DIFF",
+   "codex": 1.1414457991004599e-05,
+   "ours": 1.1414230349751683e-05,
+   "rel": 1.994323804907705e-05
+  },
+  {
+   "key": "$.prior.iter23.certificate.dsigma_rel",
+   "class": "DIFF",
+   "codex": 3.3890401065471194e-05,
+   "ours": 2.977533692388821e-05,
+   "rel": 0.1214227041348167
+  },
+  {
+   "key": "$.prior.iter23.certificate.resolve_I_bot",
+   "class": "DIFF",
+   "codex": 1.1414457991004599e-05,
+   "ours": 1.1414230349751683e-05,
+   "rel": 1.994323804907705e-05
+  },
+  {
+   "key": "$.prior.iter23.certificate.resolve_I_top",
+   "class": "DIFF",
+   "codex": 1.1410957726691399e-05,
+   "ours": 1.1410929349241627e-05,
+   "rel": 2.4868596003552916e-06
+  },
+  {
+   "key": "$.prior.iter23.certificate.target_hi",
+   "class": "DIFF",
+   "codex": 1.140823335915742e-05,
+   "ours": 1.1408233875041403e-05,
+   "rel": 4.522031972662487e-08
+  },
+  {
+   "key": "$.prior.iter23.certificate.target_U",
+   "class": "DIFF",
+   "codex": 1.1408233359157398e-05,
+   "ours": 1.1408233875041381e-05,
+   "rel": 4.522031972662496e-08
+  },
+  {
+   "key": "$.prior.iter23.certificate.target_W",
+   "class": "DIFF",
+   "codex": 1.140823427493821e-05,
+   "ours": 1.1408233275249798e-05,
+   "rel": 8.762867131353967e-08
+  },
+  {
+   "key": "$.prior.iter23.certificate.target_flow_bot",
+   "class": "DIFF",
+   "codex": 1.1408231714902394e-05,
+   "ours": 1.1408231215058289e-05,
+   "rel": 4.3814336653361424e-08
+  },
+  {
+   "key": "$.prior.iter23.certificate.target_flow_top",
+   "class": "DIFF",
+   "codex": 1.1408231714902394e-05,
+   "ours": 1.1408231215058289e-05,
+   "rel": 4.3814336653361424e-08
+  },
+  {
+   "key": "$.prior.iter23.certificate.target_kcl_raw",
+   "class": "DIFF",
+   "codex": 2.056421958954911e-06,
+   "ours": 2.1541611446167337e-06,
+   "rel": 0.04537227212832891
+  },
+  {
+   "key": "$.prior.iter23.certificate.target_kcl_defect_bound",
+   "class": "DIFF",
+   "codex": 1.3982912398238512e-18,
+   "ours": 1.3982911785586484e-18,
+   "rel": 4.3814336418782267e-08
+  },
+  {
+   "key": "$.prior.iter23.certificate.target_width_rel",
+   "class": "DIFF",
+   "codex": 3.6834286744746347e-07,
+   "ours": 4.1352198050393224e-07,
+   "rel": 0.10925444156901148
+  },
+  {
+   "key": "$.prior.iter23.certificate.target_err_bound_rel",
+   "class": "DIFF",
+   "codex": 0.0005118251503469789,
+   "ours": 0.000555523987028491,
+   "rel": 0.07866237588633752
+  },
+  {
+   "key": "$.prior.iter23.certificate.target_why",
+   "class": "DIFF",
+   "codex": "\"posted G error bound 5.118e-04 > 0.0001 (exact comparison)\"",
+   "ours": "\"posted G error bound 5.555e-04 > 0.0001 (exact comparison)\""
+  },
+  {
+   "key": "$.prior.iter23.energy_upper_G",
+   "class": "DIFF",
+   "codex": 1.1408233359157396e-05,
+   "ours": 1.1408233875041383e-05,
+   "rel": 4.522032002361499e-08
+  },
+  {
+   "key": "$.prior.iter23.energy_rel_gap",
+   "class": "DIFF",
+   "codex": 3.685313632040277e-07,
+   "ours": 4.137517020108561e-07,
+   "rel": 0.10929342063622957
+  }
+ ]
+}

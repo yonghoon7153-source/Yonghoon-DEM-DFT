@@ -1,0 +1,120 @@
+{
+ "label": "s0_actual_stage2_changed_bed",
+ "codex": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/x_rr1022/evidence/s0_actual_stage2_changed_bed.json",
+ "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/rr_repro/rint2_rereview_20261022/evidence/s0_actual_stage2_changed_bed.json",
+ "stats": {
+  "exact": 414,
+  "rel_le_1e-12": 0,
+  "path": 9,
+  "diff": 8,
+  "missing_in_ours": 0,
+  "extra_in_ours": 0,
+  "type_diff": 0
+ },
+ "rows": [
+  {
+   "key": "$.kit.path",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\tmp\\s0rev_q67gnx7o\\kit_DBE_sdcp1um_vgcf100",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/rr_repro/rint2_rereview_20261022/tmp/s0rev_0e360z31/kit_DBE_sdcp1um_vgcf100"
+  },
+  {
+   "key": "$.kit.run_dir",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\tmp\\s0rev_q67gnx7o\\kit_DBE_sdcp1um_vgcf100\\run_fx_20261020_000000_1",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/rr_repro/rint2_rereview_20261022/tmp/s0rev_0e360z31/kit_DBE_sdcp1um_vgcf100/run_fx_20261020_000000_1"
+  },
+  {
+   "key": "$.code.python",
+   "class": "DIFF",
+   "codex": "\"3.12.14\"",
+   "ours": "\"3.11.17\""
+  },
+  {
+   "key": "$.code.numpy",
+   "class": "DIFF",
+   "codex": "\"2.5.3\"",
+   "ours": "\"2.4.6\""
+  },
+  {
+   "key": "$.code.scipy",
+   "class": "DIFF",
+   "codex": "\"1.16.3\"",
+   "ours": "\"1.17.1\""
+  },
+  {
+   "key": "$.inputs.files.se.path",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\tmp\\s0rev_q67gnx7o\\kit_DBE_sdcp1um_vgcf100\\run_fx_20261020_000000_1\\se_dump.npy",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/rr_repro/rint2_rereview_20261022/tmp/s0rev_0e360z31/kit_DBE_sdcp1um_vgcf100/run_fx_20261020_000000_1/se_dump.npy"
+  },
+  {
+   "key": "$.inputs.files.phase.path",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\tmp\\s0rev_q67gnx7o\\kit_DBE_sdcp1um_vgcf100\\run_fx_20261020_000000_1\\phase.npy",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/rr_repro/rint2_rereview_20261022/tmp/s0rev_0e360z31/kit_DBE_sdcp1um_vgcf100/run_fx_20261020_000000_1/phase.npy"
+  },
+  {
+   "key": "$.inputs.files.fibre.path",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\tmp\\s0rev_q67gnx7o\\kit_DBE_sdcp1um_vgcf100\\run_fx_20261020_000000_1\\fibre.npy",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/rr_repro/rint2_rereview_20261022/tmp/s0rev_0e360z31/kit_DBE_sdcp1um_vgcf100/run_fx_20261020_000000_1/fibre.npy"
+  },
+  {
+   "key": "$.inputs.files.fibre_kind.path",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\tmp\\s0rev_q67gnx7o\\kit_DBE_sdcp1um_vgcf100\\run_fx_20261020_000000_1\\fibre_kind.npy",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/rr_repro/rint2_rereview_20261022/tmp/s0rev_0e360z31/kit_DBE_sdcp1um_vgcf100/run_fx_20261020_000000_1/fibre_kind.npy"
+  },
+  {
+   "key": "$.inputs.files.metrics_json.path",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\tmp\\s0rev_q67gnx7o\\kit_DBE_sdcp1um_vgcf100\\run_fx_20261020_000000_1\\mpm_metrics.json",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/rr_repro/rint2_rereview_20261022/tmp/s0rev_0e360z31/kit_DBE_sdcp1um_vgcf100/run_fx_20261020_000000_1/mpm_metrics.json"
+  },
+  {
+   "key": "$.inputs.files.scaffold.path",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\tmp\\s0rev_q67gnx7o\\kit_DBE_sdcp1um_vgcf100\\am_scaffold.csv",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/rr_repro/rint2_rereview_20261022/tmp/s0rev_0e360z31/kit_DBE_sdcp1um_vgcf100/am_scaffold.csv"
+  },
+  {
+   "key": "$.inputs.files.scaffold.sha256",
+   "class": "DIFF",
+   "codex": "\"774b52aaad90f4c8146d07d5b55bf3fa406dc4639f58cb8da556053d8faa4a24\"",
+   "ours": "\"d2c9b416356742ef07764c287d9e6bf47cc1c31066c50fc919abb60d4dd5a9d4\""
+  },
+  {
+   "key": "$.inputs.files.scaffold.bytes",
+   "class": "DIFF",
+   "codex": 123,
+   "ours": 120,
+   "rel": 0.024390243902439025
+  },
+  {
+   "key": "$.inputs.files.fibre_dia.path",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\tmp\\s0rev_q67gnx7o\\kit_DBE_sdcp1um_vgcf100\\run_fx_20261020_000000_1\\fibre_dia.npy",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/rr_repro/rint2_rereview_20261022/tmp/s0rev_0e360z31/kit_DBE_sdcp1um_vgcf100/run_fx_20261020_000000_1/fibre_dia.npy"
+  },
+  {
+   "key": "$.inputs.payload_argv_sha256",
+   "class": "DIFF",
+   "codex": "\"79c97ec2634d5243afd1ce103ba66da986f22fb3c7f6b467fe318c0ab369c4e2\"",
+   "ours": "\"ba725e5496def336514e9377f1719ceb06d300477ab7bacad3882d864ed02b4e\""
+  },
+  {
+   "key": "$.plan.sha256",
+   "class": "DIFF",
+   "codex": "\"97499ca0231dbb6c5f4e7f37728430f4f6bbf8b57d1a5ceb62cc47f77e2909f1\"",
+   "ours": "\"61f5e4b6621e56ca791b536c89d4c180b079cbcf339cab81a85e1ac8342c469a\""
+  },
+  {
+   "key": "$.elapsed_s",
+   "class": "DIFF",
+   "codex": 0.2,
+   "ours": 0.1,
+   "rel": 0.5
+  }
+ ]
+}

@@ -1,0 +1,24 @@
+ PASS  T21j 증서 칸 [σ 표 지문 hex 아님] → 거부
+  PASS  T21j 증서 칸 [σ 표 지문 빠짐] → 거부
+  PASS  T21j 증서 칸 [face_alpha 계획 지문 None (face_alpha 런인데)] → 거부
+  PASS  T21j 증서 칸 [접합 계획 행 지문 다름] → 거부
+  PASS  T21j 증서 칸 [접합 원장 지문 None] → 거부
+  PASS  T21j 이온 증서가 접합 지문을 싣는다 (접합 = 전자 주 솔브만) → 거부
+  PASS  T21j 매니페스트 칸 [face_alpha fp 에 plan_electronic 칸 없음] → 거부
+  PASS  T21j 매니페스트 칸 [접합 fp 에 plan_rows 칸 없음] → 거부
+  PASS  T21j 매니페스트 칸 [접합 fp 에 registry 칸 없음] → 거부
+  PASS  T21j 매니페스트 칸 [접합 fp sid hex 아님] → 거부
+  PASS  T21j 매니페스트 칸 [접합 fp sid 다른 hex] → 거부
+  PASS  T21j 접합 런 매니페스트 registry None + 증서도 None (둘이 같아도) → 거부 (접합 런의 주 전자 솔브는 계획이 있다 · 사전 공격 리뷰)
+  PASS  T21k 정본 칸 — 조합 런에서 sid_off 만 틀림 (접합 원장 sid 맞음) → 증서 결합은 받는다 (매니페스트 자기 일관 = ca_ext 계약 · 사슬 멈춤 코드 CA_EXT_RECORD 그대로)
+  PASS  T21k 정본 칸 — face_alpha 만 런 (접합 없음) 은 sid_off 가 정본 · 다른 hex → 거부
+  PASS  T21l API — conv_cert_problem(증서, σ) (매니페스트 없이) = TypeError (조용히 결합을 건너뛰는 기본값 없음)
+  PASS  T21m 양의 증서 결합 칸 = 솔브 입력 지문 (step3_sigma._grid_fp(sid) · σ 표 · face_alpha 계획 fp_plan · 접합 원장 · 계획 행)
+  PASS  T21m 조기 반환 영값 증서 결합 칸 = 같은 지문 (계획 지문까지)
+  PASS  T21m 이온 영값 증서 결합 칸 = 이온 σ 표 · 이온 face_alpha 계획 · 접합 칸 None
+    (T21 0.6 s)
+
+== test_step3_target_cert [빠른 판]: 202/202 PASS (1.5 s)
+
+
+exit_code: 0

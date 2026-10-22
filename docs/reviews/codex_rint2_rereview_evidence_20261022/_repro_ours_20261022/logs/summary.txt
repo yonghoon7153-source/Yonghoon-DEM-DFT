@@ -1,0 +1,7 @@
+registration rc=0 t=0.1
+certificate rc=0 t=2.1
+certificate_selected_tests rc=0 t=2.2
+geometry rc=0 t=26.6
+provenance rc=0 t=0.2
+s0_integration rc=0 t=1.3
+DONE

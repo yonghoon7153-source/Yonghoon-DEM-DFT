@@ -1,0 +1,2 @@
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/rr_repro/rint2_rereview_20261022/source/scripts/step3_conv_cert.py:344: RuntimeWarning: overflow encountered in add
+  tol_r = _LEDGER_TOL * (np.diff(Lc.indptr) + kb + kt + 8.0) * (ar + pl)

@@ -1,0 +1,293 @@
+{
+ "label": "geometry",
+ "codex": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/x_rr1022/geometry/geometry_results.json",
+ "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/rr_repro/rint2_rereview_20261022/geometry/geometry_results.json",
+ "stats": {
+  "exact": 820,
+  "rel_le_1e-12": 21,
+  "path": 1,
+  "diff": 18,
+  "missing_in_ours": 0,
+  "extra_in_ours": 0,
+  "type_diff": 0
+ },
+ "rows": [
+  {
+   "key": "$.source_root",
+   "class": "path",
+   "codex": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source",
+   "ours": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/rr_repro/rint2_rereview_20261022/source"
+  },
+  {
+   "key": "$.runtime.python",
+   "class": "DIFF",
+   "codex": "\"3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]\"",
+   "ours": "\"3.11.17 (main, Oct  1 2026, 15:41:07) [GCC 13.3.0]\""
+  },
+  {
+   "key": "$.runtime.numpy",
+   "class": "DIFF",
+   "codex": "\"2.5.3\"",
+   "ours": "\"2.4.6\""
+  },
+  {
+   "key": "$.two_symmetric_components.record.resid",
+   "class": "DIFF",
+   "codex": 3.4889277443974066e-16,
+   "ours": 3.4342340588725005e-16,
+   "rel": 0.015676359481142703
+  },
+  {
+   "key": "$.first_component_only_mutation.record.resid",
+   "class": "DIFF",
+   "codex": 3.4889277443974066e-16,
+   "ours": 3.4342340588725005e-16,
+   "rel": 0.015676359481142703
+  },
+  {
+   "key": "$.first_component_only_mutation.record.upper.resid",
+   "class": "DIFF",
+   "codex": 2.8794827924366204e-16,
+   "ours": 2.8353105054416656e-16,
+   "rel": 0.015340354563319418
+  },
+  {
+   "key": "$.census_mismatch.record.resid",
+   "class": "DIFF",
+   "codex": 3.4889277443974066e-16,
+   "ours": 3.4342340588725005e-16,
+   "rel": 0.015676359481142703
+  },
+  {
+   "key": "$.two_components_finite_upper.record.resid",
+   "class": "DIFF",
+   "codex": 3.2058812054834396e-16,
+   "ours": 3.17323415850353e-16,
+   "rel": 0.010183486189091873
+  },
+  {
+   "key": "$.two_components_finite_upper.record.upper.resid",
+   "class": "DIFF",
+   "codex": 2.0168691722003555e-16,
+   "ours": 2.0153040392284186e-16,
+   "rel": 0.0007760210694426871
+  },
+  {
+   "key": "$.actual_certified_threshold_crossing.detail.threshold",
+   "class": "rel_le_1e-12",
+   "codex": 10.291251705345072,
+   "ours": 10.291251705344868,
+   "rel": 1.9849969894811657e-14
+  },
+  {
+   "key": "$.actual_certified_threshold_crossing.detail.corners.c1_P0_R_j0.ratio",
+   "class": "rel_le_1e-12",
+   "codex": 10.291249475344962,
+   "ours": 10.291249475345062,
+   "rel": 9.666074391134964e-15
+  },
+  {
+   "key": "$.actual_certified_threshold_crossing.detail.corners.c1_P0_R_j0.ratio_hi",
+   "class": "rel_le_1e-12",
+   "codex": 10.291249475344962,
+   "ours": 10.291249475345062,
+   "rel": 9.666074391134964e-15
+  },
+  {
+   "key": "$.actual_certified_threshold_crossing.record.sv_counterfactual_ratio",
+   "class": "rel_le_1e-12",
+   "codex": 10.291249475344962,
+   "ours": 10.291249475345062,
+   "rel": 9.666074391134964e-15
+  },
+  {
+   "key": "$.actual_certified_threshold_crossing.record.G_full_code",
+   "class": "rel_le_1e-12",
+   "codex": 4.614910078630041,
+   "ours": 4.614910078630086,
+   "rel": 9.622922273317369e-15
+  },
+  {
+   "key": "$.actual_certified_threshold_crossing.record.resid",
+   "class": "DIFF",
+   "codex": 2.1908684765838685e-16,
+   "ours": 2.190854411395404e-16,
+   "rel": 6.419914574905784e-06
+  },
+  {
+   "key": "$.actual_certified_threshold_crossing.record.sv_counterfactual_ratio_hi",
+   "class": "rel_le_1e-12",
+   "codex": 10.291249475344962,
+   "ours": 10.291249475345062,
+   "rel": 9.666074391134964e-15
+  },
+  {
+   "key": "$.actual_certified_threshold_crossing.reference_cut_G",
+   "class": "rel_le_1e-12",
+   "codex": 0.4484304932735439,
+   "ours": 0.4484304932735661,
+   "rel": 4.951594689827939e-14
+  },
+  {
+   "key": "$.actual_certified_threshold_crossing.reference_true_ratio",
+   "class": "rel_le_1e-12",
+   "codex": 10.291253935345182,
+   "ours": 10.291253935344674,
+   "rel": 4.936600138916224e-14
+  },
+  {
+   "key": "$.actual_certified_threshold_crossing.threshold",
+   "class": "rel_le_1e-12",
+   "codex": 10.291251705345072,
+   "ours": 10.291251705344868,
+   "rel": 1.9849969894811657e-14
+  },
+  {
+   "key": "$.actual_certified_threshold_crossing.main_certificate.I_bot",
+   "class": "rel_le_1e-12",
+   "codex": 4.614910078630041,
+   "ours": 4.614910078630086,
+   "rel": 9.622922273317369e-15
+  },
+  {
+   "key": "$.actual_certified_threshold_crossing.main_certificate.imbalance",
+   "class": "DIFF",
+   "codex": 8.667557993817596e-07,
+   "ours": 8.66755789758829e-07,
+   "rel": 1.110223966332193e-08
+  },
+  {
+   "key": "$.actual_certified_threshold_crossing.main_certificate.sigma",
+   "class": "rel_le_1e-12",
+   "codex": 6.768534781990726,
+   "ours": 6.768534781990792,
+   "rel": 9.710403384892981e-15
+  },
+  {
+   "key": "$.actual_certified_threshold_crossing.main_certificate.sigma_resolve",
+   "class": "rel_le_1e-12",
+   "codex": 6.768537715324075,
+   "ours": 6.76853771532414,
+   "rel": 9.579177566125765e-15
+  },
+  {
+   "key": "$.actual_certified_threshold_crossing.main_certificate.dsigma_rel",
+   "class": "DIFF",
+   "codex": 4.333778939083784e-07,
+   "ours": 4.3337789377715253e-07,
+   "rel": 3.0279784221491844e-10
+  },
+  {
+   "key": "$.actual_certified_threshold_crossing.main_certificate.resolve_I_bot",
+   "class": "rel_le_1e-12",
+   "codex": 4.614912078630051,
+   "ours": 4.614912078630096,
+   "rel": 9.622918102957388e-15
+  },
+  {
+   "key": "$.actual_certified_threshold_crossing.main_certificate.target_kcl_raw",
+   "class": "DIFF",
+   "codex": 4.000000218218336e-06,
+   "ours": 4.000000195070186e-06,
+   "rel": 5.787037200149222e-09
+  },
+  {
+   "key": "$.actual_certified_threshold_crossing.main_certificate.target_width_rel",
+   "class": "rel_le_1e-12",
+   "codex": 1.4357400031789653e-13,
+   "ours": 1.4357400031789514e-13,
+   "rel": 9.670241061159017e-15
+  },
+  {
+   "key": "$.actual_certified_threshold_crossing.main_certificate.target_err_bound_rel",
+   "class": "DIFF",
+   "codex": 4.333779186480367e-07,
+   "ours": 4.3337790902511026e-07,
+   "rel": 2.2204468705062147e-08
+  },
+  {
+   "key": "$.actual_certified_threshold_crossing.raw_lower_certificate.resid",
+   "class": "DIFF",
+   "codex": 2.1908684765838685e-16,
+   "ours": 2.190854411395404e-16,
+   "rel": 6.419914574905784e-06
+  },
+  {
+   "key": "$.actual_certified_threshold_crossing.raw_lower_certificate.target_kcl_raw",
+   "class": "DIFF",
+   "codex": 7.971401316808624e-14,
+   "ours": 7.938094626069869e-14,
+   "rel": 0.004178272980501393
+  },
+  {
+   "key": "$.actual_certified_threshold_crossing.computed_ratio",
+   "class": "rel_le_1e-12",
+   "codex": 10.291249475344962,
+   "ours": 10.291249475345062,
+   "rel": 9.666074391134964e-15
+  },
+  {
+   "key": "$.certificate_removed_from_certified_run.detail.threshold",
+   "class": "rel_le_1e-12",
+   "codex": 10.291251705345072,
+   "ours": 10.291251705344868,
+   "rel": 1.9849969894811657e-14
+  },
+  {
+   "key": "$.certificate_removed_from_certified_run.detail.corners.c1_P0_R_j0.ratio",
+   "class": "rel_le_1e-12",
+   "codex": 10.291249475344962,
+   "ours": 10.291249475345062,
+   "rel": 9.666074391134964e-15
+  },
+  {
+   "key": "$.certificate_removed_from_certified_run.detail.corners.c1_P0_R_j0.ratio_hi",
+   "class": "rel_le_1e-12",
+   "codex": 10.291249475344962,
+   "ours": 10.291249475345062,
+   "rel": 9.666074391134964e-15
+  },
+  {
+   "key": "$.certificate_removed_from_certified_run.record.sv_counterfactual_ratio",
+   "class": "rel_le_1e-12",
+   "codex": 10.291249475344962,
+   "ours": 10.291249475345062,
+   "rel": 9.666074391134964e-15
+  },
+  {
+   "key": "$.certificate_removed_from_certified_run.record.G_full_code",
+   "class": "rel_le_1e-12",
+   "codex": 4.614910078630041,
+   "ours": 4.614910078630086,
+   "rel": 9.622922273317369e-15
+  },
+  {
+   "key": "$.certificate_removed_from_certified_run.record.resid",
+   "class": "DIFF",
+   "codex": 2.1908684765838685e-16,
+   "ours": 2.190854411395404e-16,
+   "rel": 6.419914574905784e-06
+  },
+  {
+   "key": "$.certificate_removed_from_certified_run.record.sv_counterfactual_ratio_hi",
+   "class": "rel_le_1e-12",
+   "codex": 10.291249475344962,
+   "ours": 10.291249475345062,
+   "rel": 9.666074391134964e-15
+  },
+  {
+   "key": "$.foreign_certificate_accepted.record.resid",
+   "class": "DIFF",
+   "codex": 3.2058812054834396e-16,
+   "ours": 3.17323415850353e-16,
+   "rel": 0.010183486189091873
+  },
+  {
+   "key": "$.foreign_certificate_accepted.record.upper.resid",
+   "class": "DIFF",
+   "codex": 2.0168691722003555e-16,
+   "ours": 2.0153040392284186e-16,
+   "rel": 0.0007760210694426871
+  }
+ ]
+}
