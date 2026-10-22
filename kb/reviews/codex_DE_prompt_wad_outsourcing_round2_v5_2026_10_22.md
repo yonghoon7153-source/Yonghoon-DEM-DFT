@@ -7,7 +7,7 @@ letter: DE
 track: wad
 channel: codex
 kind: prompt
-status: 초안 — 발송 전 (기준 커밋 9ddfbe448 · 묶음 v5 MANIFEST 714324cc…)
+status: 발송 2026-10-22 (사용자 · 기준 커밋 9ddfbe448 · 묶음 v5 MANIFEST 714324cc…) → 회신 수령 GO · 발송 동의 (P2 1 — codex_DE_reply_wad_outsourcing_round2_v5_2026_10_22.md)
 confidence: medium
 verificationStatus: unverified
 explored: false

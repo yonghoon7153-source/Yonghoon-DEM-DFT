@@ -369,5 +369,13 @@
   },
   "⏭": "편지 DE (고친 곳 diff 만 · 배포본 확인 · 발송 승인) → 발송 (사용자) → 회신 원문 보존 → GO 면 업체 발송 zip · sha · 체크리스트",
   "by": "agent · 2026-10-22"
+ },
+ "⑤-7_DE_GO_2026_10_22": {
+  "출처": "Codex DE 회신 (kb/reviews/codex_DE_reply_wad_outsourcing_round2_v5_2026_10_22.md) — GO · 발송 동의 · 커밋 9ddfbe448 · MANIFEST 714324cc… 로 고정 · P0/P1 없음 · 비차단 P2 1 (selftest 시험 이름의 -0 설명)",
+  "Codex_독립_확인": "봉인 CLI 자식 프로세스 12 건 (정상 0 · listdir 만 EIO · PermissionError → 2 · AUDIT_UNREADABLE · 등록부 없음 · 보존 조건만 뺀 대조판은 DD 결함 재현) · 파이썬 판정 44 · ENCUT 경계 20 + 상태 전이 6 · MANIFEST 170 · 배포 172 · 잡 입력 166 + 잡 행 24 불변 · 러너 = run_all_text() · 도구 sha = jobs.json · 기록 D3 값 재생성 172 바이트 일치 · 부록 A 가 추가 실패를 거부 — gawk · mawk 직접 실행 · Linux 186/186 · 배포본 184/186 · 깨기 7 은 우리 보고로 셈",
+  "배포_zip": "db/properties/wad_round2_vasp_handoff_v5_2026_10_22.json — wad_round2_vasp_2026_10_22_v5_9ddfbe448.zip · sha256 dc4047e3bafc74418a5c7e5aa79bd7dd2142ec595b2e96282951258d7512de09 · 172 파일 · 저장소 폴더와 바이트 동일",
+  "P2": "selftest 시험 이름 정정은 발송 전에는 하지 않는다 (도구 sha 결박 유지) — 파일럿 반송 뒤 검사기를 고칠 때 같이 (handoff P2_남은_것)",
+  "⏭": "사용자 업체 발송 (zip + 메일 본문에 MANIFEST sha) → 발송 기록 → 파일럿 반송 검사 → 등록부 봉인 → 해제 파일",
+  "by": "agent · 2026-10-22"
  }
 }

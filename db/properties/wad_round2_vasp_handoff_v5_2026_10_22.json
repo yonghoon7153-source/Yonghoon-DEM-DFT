@@ -1,0 +1,39 @@
+{
+ "schema": "wad_round2_vasp_handoff/v1",
+ "date": "2026-10-22",
+ "track": "W_ad (1저자 = 사용자)",
+ "record_kind": "handoff",
+ "citable": false,
+ "what": "Codex DE GO (발송 동의) 를 받은 W_ad 외주 2차 VASP 묶음 v5 의 배포 zip — 업체 발송은 사용자 (1저자) · 리뷰 사슬 CZ (v1 NO-GO) → DB (v2 NO-GO) → DC (v3 NO-GO) → DD (v4 NO-GO) → DE (v5 GO)",
+ "zip": {
+  "name": "wad_round2_vasp_2026_10_22_v5_9ddfbe448.zip",
+  "sha256": "dc4047e3bafc74418a5c7e5aa79bd7dd2142ec595b2e96282951258d7512de09",
+  "bytes": 233470,
+  "made_by": "git archive --format=zip --prefix=wad_round2_vasp_v5_2026_10_22/ 9ddfbe448:db/inputs/wad_round2_vasp_v5_2026_10_22",
+  "from_commit": "9ddfbe448f4efab34311eb1d7e12b6ba5e6eb906",
+  "root_folder": "wad_round2_vasp_v5_2026_10_22/",
+  "files": 172,
+  "확인": "풀어서 저장소 폴더와 diff -r 바이트 동일 · zip 안 sha256sum -c MANIFEST.sha256 OK · run_all.sh 실행 비트 보존 · 같은 명령으로 다시 만들어도 sha 같음"
+ },
+ "package": {
+  "MANIFEST_sha256_of_file": "714324cca0d0f05e39966543e3ffa76956fe51109e13f192cad6dc7f8e04cfed",
+  "tool_sha256": "80ecbec3da1ef045 (16 자 · jobs.json tool_sha256 에 전체)",
+  "schema": "wad_round2_vasp_package/v2",
+  "review": "Codex DE GO · 발송 동의 (kb/reviews/codex_DE_reply_wad_outsourcing_round2_v5_2026_10_22.md) — 기술 검토 · 실행 · 인용 승인 아님",
+  "decisions": [
+   "D-2026-10-15-wad-p2small-vasp-card (active)",
+   "D-2026-10-15-wad-aprime-v5-e70-a4-rerun (active)"
+  ],
+  "build_log": "db/properties/wad_round2_build_log_2026_10_17.json ⑤-6_DD_고침_2026_10_22 · ⑤-7_DE_GO_2026_10_22"
+ },
+ "보낼_때": [
+  "① zip sha256 이 위 값과 같은지 (sha256sum <zip> · Windows: certutil -hashfile <zip> SHA256)",
+  "② 메일 본문에 묶음 MANIFEST.sha256 의 sha256 714324cca0d0f05e39966543e3ffa76956fe51109e13f192cad6dc7f8e04cfed 를 적는다 (반송 검사가 이 값으로 승인본을 확인한다)",
+  "③ 파일럿 (단계 P · 5 잡) 만 먼저 — README '돌리는 법' 1 · VASP_CMD · POTCAR_DIR (PBE_54 · V5 와 같은 보유분) · VDW_KERNEL (vdw_kernel.bindat · VASP 5.4.4 배포본) · V5 와 같은 VASP 빌드",
+  "④ 업체 도구가 Linux/GNU 가 아니면 계산 전 PACK_ONLY=1 bash run_all.sh 로 포장만 먼저 확인 (README 10 · 지원 환경 Linux · bash ≥ 4 · GNU coreutils · GNU tar · awk)",
+  "⑤ 반송 오면: sha256sum -c round2_return.tgz.sha256 → 풀어서 python3 -I tools/wad/build_round2_vasp_package.py --check --out db/inputs/wad_round2_vasp_v5_2026_10_22 --ret <반송> --manifest_sha256 714324cc… → 파일럿 원문으로 재시작 · 커널 읽기 문구 확정 → --seal_registry <등록부> --restart_read_regex … --kernel_read_regex … → 등록부 커밋 · sha 기록 → 해제 파일 (단계 · 상한 = 파일럿 실측 · 1저자 확인) 과 그 sha 를 업체에"
+ ],
+ "⛔": "이 zip 을 다시 만들면 (다른 커밋 · 다른 git) sha 가 달라질 수 있다 — 보낸 zip 의 sha 를 여기 값과 대조해 어느 판을 보냈는지 확정한다. 묶음 내용이 바뀌어야 하면 새 판 + Codex 재리뷰. 검사기 (도구) 는 우리 쪽이라 파일럿 원문을 보고 고칠 수 있다 (묶음은 안 바뀐다 · 고치면 그때 도구 sha 를 기록한다)",
+ "P2_남은_것": "Codex DE P2 — selftest 시험 이름 한 줄이 rc = -0 도 '검사기 ATTEMPT_MISMATCH' 로 묶는다 (실제는 파이썬 OK · 러너 SCF_UNVERIFIED · 편지 DE · 빌드 기록 ⑤-6 은 이미 맞게 적음). Codex: 이것만으로 v5 를 다시 만들거나 발송을 보류할 필요 없음. 지금 고치면 도구 sha 가 묶음 jobs.json 의 tool_sha256 과 갈리므로 발송 전에는 손대지 않고, 파일럿 반송 뒤 검사기를 고칠 때 같이 고친다",
+ "지위": "발송 대기 — 사용자가 업체에 보내면 '발송_<날짜>' 를 더한다 (V5 handoff 와 같은 꼴)"
+}
