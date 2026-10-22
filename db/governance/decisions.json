@@ -26,7 +26,8 @@
   "2026-10-14-elastic-60bfgs-gate": "D-2026-10-14-elastic-60bfgs-gate-continue 신설 (active · 1저자 발화 · 결과 본 뒤의 개정) — 60-BFGS 게이트를 넘은 탄성 strain 점을 수렴까지 계속. 기록 db/properties/shear_b2o3_vs_lpscl16_2x_amendment_2026_10_14_bfgs_gate.json.",
   "2026-10-14-ndo-site-stability-estimand": "D-2026-10-14-ndo-site-stability-estimand 신설 (proposed · 트랙 CEI/Nd · 1저자 = 실험) — Nd 자리 조성 균형 · 닫힌계 분해 구동력 · 전자 배치 묘사 보고량 카드. 기록 db/properties/ndo_lpscl16_site_stability_estimand_2026_10_14.json.",
   "2026-10-14-b2o3-site-screen": "D-2026-10-14-b2o3-site-screen 신설 (proposed · 우리 DFT · 1저자 = 사용자) — B 자리 UMA 조성 균형 탐색. D-2026-10-14-ndo-site-stability-estimand statement 에 보조 host modelc10 덧붙임 (비준 전 · 결과 전).",
-  "2026-10-14-site-refs-polymorph-gate": "D-2026-10-14-ndo-site-stability-estimand · D-2026-10-14-b2o3-site-screen statement 개정 (둘 다 proposed · 비준 전 · 결과 전) — 기준상 구조 확정 (Li₃PS₄ MP mp-985583 Pnma E_hull 0 · Li₂S mp-1153) · UMA 기준상은 어닐 없이 이완만 (run_uma_kgy.sh --refs) · 다형 재확인 게이트 (Nd G7 · B G4 · 판정 문턱 ± 0.11 eV/도펀트 = MP 다형 차 최대 0.0138 eV/atom × 8)."
+  "2026-10-14-site-refs-polymorph-gate": "D-2026-10-14-ndo-site-stability-estimand · D-2026-10-14-b2o3-site-screen statement 개정 (둘 다 proposed · 비준 전 · 결과 전) — 기준상 구조 확정 (Li₃PS₄ MP mp-985583 Pnma E_hull 0 · Li₂S mp-1153) · UMA 기준상은 어닐 없이 이완만 (run_uma_kgy.sh --refs) · 다형 재확인 게이트 (Nd G7 · B G4 · 판정 문턱 ± 0.11 eV/도펀트 = MP 다형 차 최대 0.0138 eV/atom × 8).",
+  "2026-10-22-nd-s-vacancy-closed-ratified": "D-2026-10-20-nd-s-vacancy-closed 비준 (proposed → active · 사용자 · CEI 트랙 · 1저자 = 실험 쪽) — Nd 옆·먼 S 빈자리 (중성 · 얼린 격자) 구분 안 됨 마감. 기록 db/properties/nd_s_vacancy_closed_2026_10_20.json."
  },
  "decisions": [
   {
@@ -9414,7 +9415,7 @@
    },
    "title": "Nd 옆 · 먼 S 빈자리 (중성 · 얼린 격자) — 닫는다: 구분 안 됨 (ΔE −0.11 eV · n 2 대 2 · 겹침 · 문턱 0.3 미만) · 넷 다 부분 점유 (금속성) 단서 · 카드 §6 그대로",
    "statement": "마감 기록 db/properties/nd_s_vacancy_closed_2026_10_20.json. 허용 문장은 하나 — 「같은 셀 · 얼린 격자 · 중성 (닫힌 껍질) 에서 Nd 옆 · 먼 자유 S 의 빈자리 에너지는 이 표본 (n 2 대 2) 으로 구분되지 않는다 (차 −0.11 eV · 넷 다 부분 점유 (금속성)).」 · 부호만 보고 '옆이 덜' 로 읽지 않는다 · 한 자리 값만 인용하지 않는다 · 카드 §1a 금지 그대로.",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "closure",
    "results_seen": true,
    "card": "db/properties/nd_s_vacancy_closed_2026_10_20.json",
@@ -9432,17 +9433,30 @@
     "'자리를 하나 더 봤다' 는 재개 사유가 아니다"
    ],
    "proposed_by": "claude-session-2026-10-20 (본 세션 복귀)",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-10-20",
      "state": "proposed",
      "by": "agent",
      "note": "카드 §6 '4 개 판독으로 닫는다' — 네 점 수렴 (§4 발동 없음) · 판독 갈래 '구분 안 됨' + 금속성 단서. 비준 = 사용자 (CEI · 1저자 = 실험 쪽)."
+    },
+    {
+     "at": "2026-10-22",
+     "state": "active",
+     "by": "사용자 (CEI/Nd 트랙 계산 담당)",
+     "note": "AskUserQuestion 'Nd 옆·먼 S 빈자리 마감 (구분 안 됨 · 금속성 단서 · 카드 §6 그대로) 을 비준할까요?' → '비준 (권고)' — 대피 세션 claude/evac-2026-10-22 · 마감 기록 문장 그대로 · 새 계산 0"
     }
    ],
    "ratification": {
-    "state": "proposed"
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-22T04:02:28Z",
+    "commit": "ed84da61d32aee7c2a9d7f381a165f73cfa1bc8b",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "AskUserQuestion 답 (2026-10-22 · 대피 세션): '[CEI · 결정은 '사용자'] Nd 옆·먼 S 빈자리 마감 D-2026-10-20-nd-s-vacancy-closed 를 비준할까요?' → '비준 (권고)'",
+    "decision_digest": "sha256:8e4dcb9e6dac87415c303f68d1794e5ff7ba9854e74696c04f5cf373b8473b27"
    }
   },
   {

@@ -2,7 +2,7 @@
   "schema": "campaign_closed/v1",
   "record_kind": "closure",
   "date": "2026-10-20",
-  "status": "proposed — 사용자 비준 대기 (CEI · 1저자 = 실험 쪽 · 결정은 '사용자')",
+  "status": "closed — 사용자 비준 2026-10-22 (대피 세션 claude/evac-2026-10-22 · AskUserQuestion '비준 (권고)') · 결정 D-2026-10-20-nd-s-vacancy-closed active (CEI · 1저자 = 실험 쪽 · 결정은 '사용자')",
   "트랙": "CEI (Nd 계면 · 1저자 = 실험 쪽 다른 사람 · 결과는 사용자가 1저자에게)",
   "citable": false,
   "results_seen": true,
