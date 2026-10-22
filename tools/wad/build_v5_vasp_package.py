@@ -1029,6 +1029,23 @@ def adopt_a4(base, r1, a4):
     return {**keep, "a4_history": hist, "a4_note": note}
 
 
+def load_a4_result(path, sha):
+    """외주 2차 검사기의 a4 결과 JSON (build_round2_vasp_package.py --a4_result) → result. 파일 sha 고정값 · schema · 잡 ·
+    외주 2차 봉인 등록부 sha · 묶음 MANIFEST sha 가 있어야 받는다 (외주 2차 자체 검토 S2 2026-10-22 — 등록부 없이 낸 결과는 파일럿 결박 ·
+    봉인 환경 대조를 안 거쳤다. 등록부 자체의 sha 대조는 외주 2차 쪽이 낼 때 했다 — 여기서는 그 기록이 있는지만 본다)."""
+    if not sha or _sha(path) != sha.lower():
+        raise PkgError("a4 결과 JSON sha 가 고정값과 다르다")
+    a4 = json.load(open(path, encoding="utf-8"))
+    if not isinstance(a4, dict) or a4.get("schema") != "wad_round2_a4_result/v1" or a4.get("job") != "V5_s_outer_A_G4_e70_far_a4":
+        raise PkgError("a4 결과 JSON 의 schema·잡이 맞지 않는다")
+    for k in ("registry_sha256", "package_manifest_sha256"):
+        if not (isinstance(a4.get(k), str) and HEX64.match(a4[k])):
+            raise PkgError(f"a4 결과 JSON 의 {k} 가 없거나 형식이 아니다 — 외주 2차 봉인 등록부로 낸 결과만 받는다")
+    if not isinstance(a4.get("result"), dict):
+        raise PkgError("a4 결과 JSON 의 result 가 객체가 아니다")
+    return a4["result"]
+
+
 def check(out, ret, manifest_sha256, pp_registry=None, a4_result=None):
     verify_manifest(out, manifest_sha256)
     meta = json.load(open(os.path.join(out, "jobs.json"), encoding="utf-8"))
@@ -2171,6 +2188,23 @@ def _selftest():
     for st_, key in (("RESTART_NOT_HONOURED", "재시작 미이행"), ("STAGE_A_INELIGIBLE", "ⓐ 자격 미달"), ("SCF_NOT_CONVERGED", "a4 값 없음")):
         r_ = adopt_a4(nc(), nc(), {"status": st_})
         ck(r_.get("adopted") is None and r_["status"] != "OK" and key in r_["a4_note"] and r_["a4_history"]["a4"] == st_, f"⛔음성 개정 4: a4 {st_} → 자동 채택 없음 ({key})")
+    # 외주 2차 자체 검토 S2 (2026-10-22) — a4 결과 JSON 은 외주 2차 봉인 등록부로 낸 것만 받는다 (등록부 없이 낸 결과는 파일럿 결박·환경 대조를 안 거쳤다)
+    with tempfile.TemporaryDirectory() as T2:
+        base_ = {"schema": "wad_round2_a4_result/v1", "job": "V5_s_outer_A_G4_e70_far_a4", "package_manifest_sha256": "a" * 64, "registry_sha256": "b" * 64,
+                 "common_environment_failure": None, "result": {"status": "OK"}}
+
+        def a4f(d_):
+            p_ = os.path.join(T2, f"a4_{abs(hash(json.dumps(d_, sort_keys=True)))}.json"); _write(p_, json.dumps(d_)); return p_
+        p_ok = a4f(base_)
+        ck(load_a4_result(p_ok, _sha(p_ok)) == {"status": "OK"}, "외주 2차 a4 결과: 등록부 sha · 묶음 MANIFEST sha 가 있는 JSON → result 를 넘긴다")
+        for lab_, d_ in (("등록부 없이 낸 결과 (registry_sha256 null)", {**base_, "registry_sha256": None}), ("등록부 sha 형식", {**base_, "registry_sha256": "xyz"}),
+                         ("묶음 MANIFEST sha 없음", {k: v for k, v in base_.items() if k != "package_manifest_sha256"}), ("schema", {**base_, "schema": "x"}),
+                         ("result 가 객체가 아님", {**base_, "result": [1]})):
+            p_ = a4f(d_)
+            ck(raises(lambda: load_a4_result(p_, _sha(p_))), f"⛔음성 외주 2차 a4 결과: {lab_} → 거부 (자체 검토 S2)")
+        ck(raises(lambda: load_a4_result(p_ok, "0" * 64)), "⛔음성 외주 2차 a4 결과: 파일 sha 가 고정값과 다르면 거부")
+    import inspect
+    ck("load_a4_result(a.a4_result, a.a4_result_sha256)" in inspect.getsource(main), "외주 2차 a4 결과: CLI --a4_result 가 load_a4_result 로 읽는다 (배선 — 함수만 있고 안 쓰이면 빨강)")
     print(f"{'✅' if not bad else '⛔'} build_v5_vasp_package selftest {ok}/{ok + bad}")
     return 0 if not bad else 1
 
@@ -2196,14 +2230,7 @@ def main():
         if not (a.out and a.ret):
             ap.error("--out 과 --ret 가 필요하다")
         reg = load_pp_registry(a.pp_registry, a.pp_registry_sha256, a.manifest_sha256)
-        a4 = None
-        if a.a4_result:
-            if not a.a4_result_sha256 or _sha(a.a4_result) != a.a4_result_sha256.lower():
-                raise PkgError("a4 결과 JSON sha 가 고정값과 다르다")
-            a4 = json.load(open(a.a4_result, encoding="utf-8"))
-            if a4.get("schema") != "wad_round2_a4_result/v1" or a4.get("job") != "V5_s_outer_A_G4_e70_far_a4":
-                raise PkgError("a4 결과 JSON 의 schema·잡이 맞지 않는다")
-            a4 = a4["result"]
+        a4 = load_a4_result(a.a4_result, a.a4_result_sha256) if a.a4_result else None
         if a.seal_pp:
             r = seal_pp(a.out, a.ret, a.manifest_sha256)
             if a.json:

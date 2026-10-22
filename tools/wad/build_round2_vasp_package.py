@@ -993,6 +993,33 @@ def _raw_text(attdir):
     return (_read_raw(os.path.join(attdir, "stdout.log")) or "") + "\n" + (_read_raw(os.path.join(attdir, "OUTCAR")) or "")
 
 
+HEAD_LINE_RE = re.compile(r"[ \t\r\f\v]*(vasp\.[0-9].*)")      # 실행 머리줄 — 러너 grep '^[[:space:]]*vasp\.[0-9]' 와 같은 줄 (원문을 \n 으로만 나눈다)
+
+
+def env_evidence(attdir):
+    """시도 폴더 → 환경 증거 (VASP 버전 · PP 종별 sha · vdW 커널 sha) — **무결성 검사와 상관없이** 읽는다 (자체 검토 S1: 무결성에서 멈춘 시도 ·
+    attempt.json 없이 끊긴 시도 · 사다리 밖 시도의 다른 빌드가 감사에서 빠졌다). 버전은 OUTCAR 원문의 **모든** 실행 머리줄 (첫 줄만이 아니다) ·
+    커널 sha 는 attempt.json · 없으면 시작 표지 attempt.start.
+    ⚠ 못 하는 것: 결박되지 않은 시도의 파일은 고쳐졌을 수 있다 — 이 증거는 멈추는 쪽으로만 쓴다 (여기서 깨끗하다고 그 시도가 무결한 것은 아니다)."""
+    raw = _read_raw(os.path.join(attdir, "OUTCAR")) or ""
+    vers = [" ".join(m.group(1).split()) for m in (HEAD_LINE_RE.match(ln) for ln in raw.split("\n")) if m]
+    sp = {}
+    for ln in (_read_raw(os.path.join(attdir, "POTCAR.species.sha256")) or "").split("\n"):
+        x = ln.split()
+        if len(x) == 2 and V.HEX64.match(x[1].lower()):
+            sp.setdefault(x[0], set()).add(x[1].lower())
+    ks = None
+    for f in ("attempt.json", "attempt.start"):
+        try:
+            v = json.load(open(os.path.join(attdir, f), encoding="utf-8")).get("kernel_sha256")
+        except (OSError, ValueError, AttributeError):
+            continue
+        if isinstance(v, str) and V.HEX64.match(v.lower()):
+            ks = v.lower()
+            break
+    return {"versions": vers, "potcar_species_sha256": {k: sorted(v) for k, v in sp.items()}, "kernel_sha256": ks}
+
+
 def kernel_state(text):
     """원문 → (상태, 줄): vdW 커널을 말하는 줄에 재생성 표지가 있으면 "regenerated" · 부정 표지면 "not_read" · 그런 줄이 없으면 (None, None).
     ⚠ 표지는 넓다 — 업체 5.4.4 의 실제 긍정 문구에 'calculating' 같은 말이 있으면 거짓 경보다. 파일럿 원문을 보고 다시 정한다 (검사기만 바뀌고 묶음은 안 바뀐다)."""
@@ -1107,6 +1134,7 @@ def check_attempt(job, pkgdir, attdir, rung, registry=None, a_ref=None):
         return r
     if not os.path.isdir(attdir):
         return done("MISSING")
+    r["env"] = env_evidence(attdir)            # 아래 무결성 검사에서 멈춰도 환경 감사는 이 증거를 본다 (자체 검토 S1)
     if not os.path.isfile(os.path.join(attdir, "attempt.json")):
         return done("INCOMPLETE_ATTEMPT", "attempt.json 없음 — 끝나지 않은 시도 (0 스텝 중단이면 업체 기록 · 아니면 1저자)")
     try:
@@ -1247,6 +1275,8 @@ INTEGRITY = ("ATTEMPT_MISMATCH", "INPUT_MODIFIED", "POTCAR_UNVERIFIED", "INCOMPL
 A_TOLERATED = ("SETTINGS_UNVERIFIED", "ENERGY_UNPARSEABLE", "D3_UNVERIFIED", "KERNEL_UNVERIFIED")   # ⓐ (WAVECAR 만 만드는 단) 에서는 자격을 막지 않는 결측
 SEAL_PASS = ("OK", "SCF_NOT_CONVERGED", "RUN_FAILED", "SCF_UNVERIFIED", "RESTART_NOT_HONOURED",   # 봉인을 막지 않는 시도 상태 (정상 · 물리 실패 ·
              "KERNEL_UNVERIFIED")                                                                  #  등록부가 커널 문구를 정하기 전의 optB88 수렴 시도)
+JUDGE_CONTRADICTION = ("run_blocks", "outcar_oszicar_mismatch", "step_numbering", "rows_after_ion_summary", "n_gt_nelm", "nelm_unknown", "ediff_unknown")
+#   판정 근거 (OSZICAR · OUTCAR · INCAR) 가 실행 하나를 말하지 않는 SCF_UNVERIFIED — 봉인에서는 물리 실패가 아니라 모순이다 (자체 검토 S1 · 행 없음 · 비유한은 물리 쪽)
 LADDER_RUNGS = {"carbon": ("0", "r1A", "r1B", "r2B"), "a4": ("a4A", "a4B")}
 RA_OF = {"r1B": "r1A", "r2B": "r1A", "a4B": "a4A"}       # ⓑ 단 → 그 ⓑ 가 읽은 ⓐ 단 (r2 는 r1 의 ⓐ WAVECAR 를 쓴다)
 AB_RE = re.compile(r"^(.+)_(0|r1A|r1B|r2B|a4A|a4B)_([0-9]+)$")   # run_aborted/<잡>_<단>_<k> (러너 --infra-abort)
@@ -1281,38 +1311,61 @@ def _started(d):
     return os.path.isfile(os.path.join(d, "attempt.json")) or os.path.isfile(os.path.join(d, "INCAR"))
 
 
-def env_audit(attempts):
+def _env_of(r):
+    """검사 기록 → 환경 증거 (env_evidence · 없으면 합성 기록의 version · potcar_species_sha256 · kernel_sha256 필드)."""
+    return r.get("env") or {"versions": [r["version"]] if r.get("version") else [], "kernel_sha256": r.get("kernel_sha256"),
+                            "potcar_species_sha256": {k: [v] for k, v in (r.get("potcar_species_sha256") or {}).items()}}
+
+
+def env_audit(attempts, registry=None):
     """[(꼬리표, 검사 기록)] → [(꼬리표, 등급, 사유)] (비면 깨끗하다) — CZ Q-CZ-3: 채택 시도만이 아니라 모든 시도를 본다.
     ① 시도마다 환경 등급 모순 — status 와 conflicts 목록 둘 다 (check_attempt 는 첫 모순만 status 로 올린다)
-    ② 시도 사이 VASP 버전 · PP 종별 sha · vdW 커널 sha 갈림.
-    ⚠ 못 하는 것: 무결성 검사에서 먼저 멈춘 시도 (ATTEMPT_MISMATCH 등) 는 버전·PP 를 읽지 않아 ② 에 안 들어간다 — 그 시도는 무결성으로 따로 막힌다."""
+    ② 등록부가 있으면 시도마다 환경 증거 (env_evidence — 무결성에서 멈춘 시도 · 끊긴 시도도 · 모든 실행 머리줄) 가 등록부와 다른지 (자체 검토 S1)
+    ③ 시도 사이 (한 시도 안의 머리줄 둘도) VASP 버전 · PP 종별 sha · vdW 커널 sha 갈림.
+    환경 증거가 없는 기록 (합성 기록) 은 version · potcar_species_sha256 · kernel_sha256 필드를 쓴다 (_env_of)."""
     out, by = [], {"VERSION_INCONSISTENT": {}, "POTCAR_INCONSISTENT": {}, "KERNEL_INCONSISTENT": {}}
     for tag, r in attempts:
         seen = set()
+
+        def add(k, w):
+            if k not in seen:
+                seen.add(k); out.append((tag, k, w))
         for c in [f"{r.get('status')}: {r.get('why', '')}"] + list(r.get("conflicts") or []):
             k, _, w = c.partition(":")
-            if k in ENV_CLASS and k not in seen:
-                seen.add(k); out.append((tag, k, w.strip()))
-        for sp, hh in (r.get("potcar_species_sha256") or {}).items():
-            by["POTCAR_INCONSISTENT"].setdefault(f"POTCAR {sp}", {}).setdefault(hh, []).append(tag)
-        if r.get("version"):
-            by["VERSION_INCONSISTENT"].setdefault("VASP 버전", {}).setdefault(r["version"], []).append(tag)
-        if r.get("kernel_sha256"):
-            by["KERNEL_INCONSISTENT"].setdefault("vdW 커널 sha", {}).setdefault(r["kernel_sha256"], []).append(tag)
+            if k in ENV_CLASS:
+                add(k, w.strip())
+        ev = _env_of(r)
+        if registry:
+            bv = [v for v in ev["versions"] if v != registry.get("vasp_version")]
+            if bv:
+                add("VERSION_MISMATCH", f"VASP {bv[0]!r} ≠ 등록부 (환경 증거 · 실행 머리줄 {len(ev['versions'])})")
+            bp = sorted(sp for sp, hh in ev["potcar_species_sha256"].items() if any((registry.get("species_sha256") or {}).get(sp) != h for h in hh))
+            if bp:
+                add("POTCAR_MISMATCH", f"PP 종별 sha {bp} ≠ 등록부 (환경 증거)")
+            if ev.get("kernel_sha256") and ev["kernel_sha256"] != registry.get("kernel_sha256"):
+                add("KERNEL_MISMATCH", f"vdW 커널 sha {ev['kernel_sha256']} ≠ 등록부 (환경 증거)")
+        for sp, hh in ev["potcar_species_sha256"].items():
+            for h_ in hh:
+                by["POTCAR_INCONSISTENT"].setdefault(f"POTCAR {sp}", {}).setdefault(h_, []).append(tag)
+        for v in ev["versions"]:
+            by["VERSION_INCONSISTENT"].setdefault("VASP 버전", {}).setdefault(v, []).append(tag)
+        if ev.get("kernel_sha256"):
+            by["KERNEL_INCONSISTENT"].setdefault("vdW 커널 sha", {}).setdefault(ev["kernel_sha256"], []).append(tag)
     for cls, keys in by.items():
         for key, vals in sorted(keys.items()):
             if len(vals) > 1:
-                out.append(("시도 사이", cls, f"{key} 가 갈린다 — " + " · ".join(f"{v[:40]} ← {sorted(ts)[:4]}" for v, ts in sorted(vals.items()))))
+                out.append(("시도 사이", cls, f"{key} 가 갈린다 — " + " · ".join(f"{v[:40]} ← {sorted(set(ts))[:4]}" for v, ts in sorted(vals.items()))))
     return out
 
 
 def aborted_attempts(J, pkgdir, ret, registry=None):
-    """0 스텝 인프라 중단으로 run_aborted/ 에 옮긴 시도 중 attempt.json 이 있는 것 → [(꼬리표, 검사 기록)] — 환경 감사에만 쓴다 (사다리 · 값에는 안 쓴다)."""
+    """0 스텝 인프라 중단으로 run_aborted/ 에 옮긴 시도 → [(꼬리표, 검사 기록)] — 환경 감사에만 쓴다 (사다리 · 값에는 안 쓴다).
+    attempt.json 이 없는 시도 (VASP 가 끝나기 전에 끊김) 도 넣는다 — 환경 증거는 무결성과 상관없이 읽는다 (자체 검토 S1 · 지금까지는 attempt.json 있는 것만)."""
     base = ret if os.path.isdir(os.path.join(ret, "run")) else os.path.dirname(os.path.abspath(ret))
     ab, found = os.path.join(base, "run_aborted"), []
     for name in (sorted(os.listdir(ab)) if os.path.isdir(ab) else []):
         m, d = AB_RE.match(name), os.path.join(ab, name)
-        if m and m.group(1) in J and os.path.isfile(os.path.join(d, "attempt.json")):
+        if m and m.group(1) in J and os.path.isdir(d):
             found.append((f"{m.group(1)}/{m.group(2)}@aborted{m.group(3)}", check_attempt(J[m.group(1)], pkgdir, d, m.group(2), registry)))
     return found
 
@@ -1320,7 +1373,8 @@ def aborted_attempts(J, pkgdir, ret, registry=None):
 def resolve_job(job, pkgdir, run, registry=None):
     """잡 하나의 사다리 → 채택 결과 (+ 이력 · 모든 시도 `attempts`). 탄소: 단 0 → (미수렴·실행 실패면) r1 ⓐ+ⓑ → (그래도면) r2 ⓑ · a4: ⓐ+ⓑ 한 번.
     OK = 그 잡의 모든 시도가 무결성 · 환경 · 결박 검사를 통과했고 채택 시도가 수렴했다 (V5 adopt_a4 가 이 OK 를 그대로 믿는다 — CZ Q-CZ-8):
-    · 환경 등급 모순 · 시도 사이 갈림은 어느 시도에서 나오든 (사다리가 안 지나간 단도) 최종 상태를 덮는다 (원래 값은 adopted_status · 단은 env_in)
+    · 어느 시도든 (사다리가 안 지나간 단도) 무결성 실패면 그 이름으로 덮는다 (자체 검토 S1 — 지금까지는 사다리가 지나간 시도만 봤다)
+    · 환경 등급 모순 · 등록부와 다른 환경 증거 · 시도 사이 갈림은 어느 시도에서 나오든 최종 상태를 덮는다 (원래 값은 adopted_status · 단은 env_in)
     · 등록부가 있으면 파일럿 잡의 반송 시도 집합 · 단마다 run_id · attempt.json · OUTCAR sha 가 봉인과 같아야 한다 (아니면 PILOT_BINDING_MISMATCH ·
       시도 자체가 무결성 실패면 그 이름이 먼저다)."""
     P = lambda rung: os.path.join(run, RUNG_DIR[rung].format(job=job["dir"]))
@@ -1335,13 +1389,17 @@ def resolve_job(job, pkgdir, run, registry=None):
     att = {k: chk(k) for k in LADDER_RUNGS[job["ladder"]] if _started(P(k))}
     res["attempts"] = att
     orig = res["status"]
-    if registry and job["dir"] in PILOT_JOBS and orig not in INTEGRITY:
+    integ = [(k, a) for k, a in att.items() if a["status"] in INTEGRITY]
+    if integ and orig not in INTEGRITY:
+        k_, a_ = integ[0]
+        res.update(status=a_["status"], why=f"시도 {k_} 무결성 실패 — 사다리가 지나갔든 안 지나갔든 모든 시도가 무결해야 OK (자체 검토 S1) · {a_.get('why', '')}"[:300])
+    if registry and job["dir"] in PILOT_JOBS and res["status"] not in INTEGRITY:
         exp = ((registry.get("from_pilot") or {}).get(job["dir"]), (registry.get("from_pilot_sha256") or {}).get(job["dir"]))
         got = ({k: a.get("run_id") for k, a in att.items()},
                {k: {"attempt.json": a.get("attempt_json_sha256"), "OUTCAR": a.get("outcar_sha256")} for k, a in att.items()})
         if got != exp:
             res.update(status="PILOT_BINDING_MISMATCH", why=f"파일럿 반송 시도가 봉인과 다르다 — 단·run_id 반송 {got[0]} · 봉인 {exp[0]} (attempt.json · OUTCAR sha 도 대조)")
-    env = env_audit(list(att.items()))
+    env = env_audit(list(att.items()), registry)
     if env:
         res.update(status=env[0][1], why=f"환경 감사 — {env[0][0]}: {env[0][2]}", env_in=[list(e) for e in env])
     if res["status"] != orig:
@@ -1399,19 +1457,25 @@ DELTA_PAIRS = {"S_A": ("P2S_S_A_optB88_bound", "P2S_S_A_optB88_far"), "Li_A": ("
 CC_PAIRS = {"pbed3": ("CC_S33_AB_pbed3_bound", "CC_S33_AB_pbed3_far"), "optb88": ("CC_S33_AB_optB88_bound", "CC_S33_AB_optB88_far")}
 UMA_NAMES = ("S_A_bound", "S_A_far", "S_A_p05_bound", "Li_A_bound", "Li_A_far", "Li_A_p05_bound")
 UMA_G3 = ("S_A_G3_c2_bound", "S_A_G3_c2_far_i", "S_A_G3_c2_far_ii")
-def collect(out, ret, manifest_sha256, uma=None, registry=None):
-    """반송 → 잡별 채택 결과 · W · Δ_C · G3 · G4 · G5_C · δ · ②′ · far 진단 · 신호 · 80 % 발동 · 질문별 실패 전파. 판정은 카드 문턱 그대로."""
+def resolve_all(out, ret, manifest_sha256, registry=None):
+    """반송 → (jobs.json, {잡: 묶음 잡}, run 폴더, {잡: 채택 결과}, 공통 환경 고장 목록) — collect · --check · --a4_result 가 같은 경로를 쓴다
+    (자체 검토 S2: 전역 감사가 collect 에만 있어서 --check 는 종료 0 · --a4_result 는 OK 를 냈고 V5 가 그것을 채택했다).
+    전역 환경 감사 (CZ Q-CZ-3) = 모든 잡의 모든 시도 (채택 시도만이 아니다) + 0 스텝 중단으로 옮긴 시도 · 하나라도 걸리면 OK 인 잡을 그 등급으로 덮는다."""
     V.verify_manifest(out, manifest_sha256)
     meta = json.load(open(os.path.join(out, "jobs.json"), encoding="utf-8"))
     J = {j["dir"]: j for j in meta["jobs"]}
     run = os.path.join(ret, "run") if os.path.isdir(os.path.join(ret, "run")) else ret
     res = {n: resolve_job(j, out, run, registry) for n, j in J.items()}
-    # 전역 환경 감사 (CZ Q-CZ-3) — 모든 잡의 모든 시도 (채택 시도만이 아니다) + 0 스텝 중단으로 옮긴 시도. 하나라도 걸리면 공통 환경 고장 (전체 정지 · 종료 6)
-    genv = env_audit([(f"{n}/{k}", a) for n, r in res.items() for k, a in (r.get("attempts") or {}).items()] + aborted_attempts(J, out, ret, registry))
+    genv = env_audit([(f"{n}/{k}", a) for n, r in res.items() for k, a in (r.get("attempts") or {}).items()] + aborted_attempts(J, out, ret, registry), registry)
     for n, r in res.items():
         if r["status"] == "OK" and genv:
             r.update(adopted_status="OK", status=genv[0][1], why=f"전역 환경 감사 — {genv[0][0]}: {genv[0][2]}")
-    common = [f"{t} {c}: {w}"[:300] for t, c, w in genv]
+    return meta, J, run, res, [f"{t} {c}: {w}"[:300] for t, c, w in genv]
+
+
+def collect(out, ret, manifest_sha256, uma=None, registry=None):
+    """반송 → 잡별 채택 결과 · W · Δ_C · G3 · G4 · G5_C · δ · ②′ · far 진단 · 신호 · 80 % 발동 · 질문별 실패 전파. 판정은 카드 문턱 그대로."""
+    meta, J, run, res, common = resolve_all(out, ret, manifest_sha256, registry)     # 공통 환경 고장 하나라도 → 전체 정지 · 종료 6
     ok = lambda n: res.get(n, {}).get("status") == "OK"
     E = lambda n, k="TOTEN_eV": fin(res[n].get(k)) if ok(n) else None
 
@@ -1664,7 +1728,8 @@ def seal_registry(out, ret, manifest_sha256, restart_read_regex="", v5_registry=
     """파일럿 반송 → 탄소 등록부 (C 추가 · vdW 커널 신원 · VASP 빌드 · 파일럿 run_id). 은 a4 와 같은 빌드·같은 PP 여야 한다 (V5 등록부 대조).
     모든 시도를 본다 (CZ Q-CZ-3 — 채택 시도만 보면 a4A 만 다른 빌드여도 봉인됐다):
     ⛔ 무결성 실패 · 환경 등급 · 시도 사이 갈림 · 그 밖 모순·결측은 봉인하지 않는다 (자동 교체 없음 · 1저자) ·
-    물리 실패 (실행 실패 · 미수렴 · SCF 미확인 · 재시작 미이행 · 그래서 생긴 ⓐ 자격 미달) 는 봉인을 막지 않는다 · 파일럿 잡마다 완결된 시도가 하나 이상.
+    물리 실패 (실행 실패 · 미수렴 · SCF 미확인 · 재시작 미이행 · 그래서 생긴 ⓐ 자격 미달) 는 봉인을 막지 않는다 — 단 SCF 미확인 중 판정 근거의 확정 모순
+    (JUDGE_CONTRADICTION — 실행 머리줄 둘 · OUTCAR/OSZICAR 스텝 불일치 …) 은 막는다 (자체 검토 S1) · 파일럿 잡마다 완결된 시도가 하나 이상.
     결박 = 모든 시도 {잡: {단: run_id}} · {잡: {단: {attempt.json · OUTCAR sha}}} (resolve_job 이 등록부로 대조한다)."""
     V.verify_manifest(out, manifest_sha256)
     meta = json.load(open(os.path.join(out, "jobs.json"), encoding="utf-8"))
@@ -1675,9 +1740,10 @@ def seal_registry(out, ret, manifest_sha256, restart_read_regex="", v5_registry=
     for n in PILOT_JOBS:
         att = resolve_job(J[n], out, run, None).get("attempts") or {}
         bad = {k: f"{a['status']} {a.get('why', '')}"[:200] for k, a in att.items()
-               if not (a["status"] in SEAL_PASS or (k in ("r1A", "a4A") and a["status"] in A_TOLERATED))}
+               if not (a["status"] in SEAL_PASS or (k in ("r1A", "a4A") and a["status"] in A_TOLERATED))
+               or (a.get("judge") or {}).get("why") in JUDGE_CONTRADICTION}
         if bad:
-            raise PkgError(f"파일럿 {n}: {bad} — 봉인하지 않는다 (무결성·환경·모순·결측은 1저자 · 물리 실패만 통과)")
+            raise PkgError(f"파일럿 {n}: {bad} — 봉인하지 않는다 (무결성·환경·모순·결측은 1저자 · 물리 실패만 통과 · 판정 근거의 확정 모순 {list(JUDGE_CONTRADICTION[:2])}… 도 모순)")
         if not att:
             raise PkgError(f"파일럿 {n}: 완결된 시도 (attempt.json) 가 없다 — 봉인하지 않는다")
         every += [(f"{n}/{k}", a) for k, a in att.items()]
@@ -1693,13 +1759,13 @@ def seal_registry(out, ret, manifest_sha256, restart_read_regex="", v5_registry=
     if env:
         raise PkgError(f"파일럿 환경 감사 {[' '.join(e)[:160] for e in env[:3]]} — 봉인하지 않는다 (공통 환경 고장 · 1저자)")
     sp, vers, ks = {}, set(), set()
-    for _, a in every:
-        for k, hh in (a.get("potcar_species_sha256") or {}).items():
-            sp.setdefault(k, set()).add(hh)
-        if a.get("version"):
-            vers.add(a["version"])
-        if a.get("kernel_sha256"):
-            ks.add(a["kernel_sha256"])
+    for _, a in every:                          # 환경 증거 (자체 검토 S1 — 모든 실행 머리줄 · 무결성에서 멈춘 시도도)
+        ev = _env_of(a)
+        for k, hh in (ev.get("potcar_species_sha256") or {}).items():
+            sp.setdefault(k, set()).update(hh)
+        vers.update(ev.get("versions") or [])
+        if ev.get("kernel_sha256"):
+            ks.add(ev["kernel_sha256"])
     bad = [k for k, v in sp.items() if len(v) > 1] + (["VASP 버전 갈림"] if len(vers) != 1 else []) + (["커널 sha 갈림·없음"] if len(ks) != 1 else [])
     if set(sp) != set(POTCAR_MAP.values()):
         bad.append(f"종 {sorted(sp)} ≠ {sorted(POTCAR_MAP.values())}")
@@ -2655,6 +2721,77 @@ def _selftest():
         ck("⛔음성 R7: 반송 뒤 면평균 파일을 고치면 ATTEMPT_MISMATCH (실행 기록 sha 에 묶임)", rz8_["status"] == "ATTEMPT_MISMATCH", (rz8_["status"], rz8_.get("why")))
         ck("⛔음성 R7: far 가 채택 시도가 아니면 면평균을 집계에 쓰지 않는다 (not_used)", "not_used" in (c_fd["far_diagnostics"]["P2S_S_A_far"].get("locpot_zavg") or {})
            and "V_eV" not in (c_fd["far_diagnostics"]["P2S_S_A_far"].get("locpot_zavg") or {}), c_fd["far_diagnostics"]["P2S_S_A_far"].get("locpot_zavg"))
+        # S1–S2 (자체 검토 2026-10-22 · 편지 DB 전) — 무결성에서 멈춘 시도 · 끊긴 시도 · 사다리 밖 시도도 환경 증거 (모든 실행 머리줄 · PP 종별 sha · 커널 sha) 를 읽는다 ·
+        #   사다리 밖 시도의 무결성 실패도 잡을 OK 에서 뺀다 · 봉인은 판정 근거의 확정 모순을 물리 실패로 넘기지 않는다 · 전역 감사는 --check · --a4_result 도 같은 경로
+        OTHER_HD = " vasp.6.4.2.OTHERBUILD (build Oct  1 2026) complex"
+        REAL_HD = " vasp.5.4.4.18Apr17-6-g9f103f2a35 (build Aug 19 2022 11:57:46) complex"
+
+        def head_edit(att, new_, add=False, fix=True):    # 실행 머리줄을 바꾸거나 (add: 'executed on' 앞에 머리줄을 하나 더) · 실행 기록 sha 맞춤 → 바뀌었는지
+            oc_ = os.path.join(att, "OUTCAR"); t_ = open(oc_).read()
+            t2 = t_.replace(" executed on", new_ + "\n executed on", 1) if add else t_.replace(REAL_HD, new_, 1)
+            open(oc_, "w").write(t2)
+            if fix and os.path.isfile(os.path.join(att, "attempt.json")):
+                aj_ = os.path.join(att, "attempt.json"); a__ = json.load(open(aj_)); a__["sha256"]["OUTCAR"] = _sha(oc_); json.dump(a__, open(aj_, "w"))
+            return t2 != t_
+        ts1 = os.path.join(T, "ts1a"); shutil.copytree(p7, ts1, ignore=shutil.ignore_patterns("round2_return*"))
+        d_ = os.path.join(ts1, "run", "CC_S33_AB_pbed3_far")
+        sw_ = head_edit(d_, OTHER_HD, fix=False); os.remove(os.path.join(d_, "attempt.json"))
+        c_1a = collect(ts1, ts1, msha, uma, reg7)
+        ck("⛔음성 S1 (검토 재현 A): attempt.json 없이 끊긴 시도 (INCOMPLETE_ATTEMPT) 의 OUTCAR 가 다른 VASP 빌드 → 공통 환경 고장 · 종료 6 "
+           "(지금까지는 무결성 검사에서 멈춰 버전을 안 읽었다 — G5_C PASS · 종료 0)",
+           sw_ and bool(c_1a["common_environment_failure"]) and collect_exit(c_1a) == 6, (sw_, c_1a["common_environment_failure"], c_1a["G5_C"]["status"]))
+        ts2 = os.path.join(T, "ts1b"); shutil.copytree(p7, ts2, ignore=shutil.ignore_patterns("round2_return*"))
+        sa_ = os.path.join(ts2, "run", "P2S_Li_A_bound_r1", "stageA"); shutil.copytree(os.path.join(ts2, "run", "P2S_Li_A_bound"), sa_)
+        aj_ = os.path.join(sa_, "attempt.json"); a__ = json.load(open(aj_)); a__["attempt"] = "r1A"; json.dump(a__, open(aj_, "w"))
+        r_1b0 = resolve_job(J["P2S_Li_A_bound"], ts2, os.path.join(ts2, "run"), reg7)
+        ck("⛔음성 S1: 단 0 이 OK 인데 사다리 밖 시도 (r1 ⓐ 폴더 · 단 0 의 INCAR 그대로 → INPUT_MODIFIED) 가 있으면 잡은 OK 가 아니다 (그 시도의 무결성 이름 · 원래 값은 adopted_status)",
+           r_1b0["status"] == "INPUT_MODIFIED" and r_1b0.get("adopted_status") == "OK" and "r1A" in r_1b0.get("why", ""), (r_1b0["status"], r_1b0.get("why")))
+        sw_ = head_edit(sa_, OTHER_HD)
+        r_1b = resolve_job(J["P2S_Li_A_bound"], ts2, os.path.join(ts2, "run"), reg7)
+        c_1b = collect(ts2, ts2, msha, uma, reg7)
+        ck("⛔음성 S1 (검토 재현 B): 그 사다리 밖 시도의 OUTCAR 가 다른 VASP 빌드 (sha 맞춤) → VERSION_MISMATCH (무결성에서 멈춘 시도도 환경 증거는 읽는다) · 집계 종료 6",
+           sw_ and r_1b["status"] == "VERSION_MISMATCH" and collect_exit(c_1b) == 6, (sw_, r_1b["status"], r_1b.get("why"), c_1b["common_environment_failure"]))
+        for lab_, hd_, envc_ in (("다른 빌드", OTHER_HD, ["VERSION_INCONSISTENT"]), ("같은 빌드", REAL_HD, [])):
+            tsc = os.path.join(T, f"ts1c_{abs(hash(lab_))}"); shutil.copytree(PKG, tsc, ignore=shutil.ignore_patterns("round2_return*"))
+            att_ = os.path.join(tsc, "run", "CC_S33_AB_optB88_far")
+            sw_ = head_edit(att_, hd_, add=True)
+            regc_, msgc_ = seal_msg(tsc)
+            ea_ = [e[1] for e in env_audit([("x/0", check_attempt(J["CC_S33_AB_optB88_far"], tsc, att_, "0"))])]
+            ck(f"⛔음성 S1 (검토 재현 C · {lab_}): 파일럿 OUTCAR 에 실행 머리줄이 하나 더 (sha 맞춤) → 봉인하지 않는다 (run_blocks = 판정 근거의 확정 모순 · 물리 실패가 아니다) · "
+               f"환경 감사 {envc_ or '없음'} (모든 머리줄을 본다 — 지금까지는 첫 줄만)",
+               sw_ and regc_ is None and "run_blocks" in msgc_ and ea_ == envc_, (sw_, msgc_[:300], ea_))
+
+        def cli_(pk, *args):
+            return subprocess.run([sys.executable, "-I", os.path.abspath(__file__), *args, "--out", pk, "--ret", pk, "--manifest_sha256", msha], capture_output=True, text=True)
+        rgs = ("--registry", rgf, "--registry_sha256", _sha(rgf))
+        a4n_, a4r_, a47_ = (os.path.join(T, f) for f in ("a4_noreg.json", "a4_reg.json", "a4_p7.json"))
+        cc_, an_, ar_ = cli_(tab, "--check", *rgs), cli_(tab, "--a4_result", a4n_), cli_(tab, "--a4_result", a4r_, *rgs)
+        a4j = json.load(open(a4r_)) if os.path.isfile(a4r_) else {}
+        ck("⛔음성 S2 (검토 재현): 전역 환경 감사 (0 스텝 중단으로 옮긴 다른 빌드 시도) 는 --collect 만이 아니다 — --check 종료 6 · --a4_result 는 등록부 필수 (없으면 종료 2 · 파일 안 씀) · "
+           "등록부로 내면 결과 OK 아님 + common_environment_failure 기록 (지금까지는 --check 0 · a4 OK → V5 가 채택)",
+           cc_.returncode == 6 and an_.returncode == 2 and not os.path.exists(a4n_) and ar_.returncode == 0 and (a4j.get("result") or {}).get("status") not in (None, "OK")
+           and bool(a4j.get("common_environment_failure")), (cc_.returncode, cc_.stdout[-200:], an_.returncode, ar_.returncode, (a4j.get("result") or {}).get("status")))
+        ts1d = os.path.join(T, "ts1d"); shutil.copytree(p7, ts1d, ignore=shutil.ignore_patterns("round2_return*"))
+        abd_ = os.path.join(ts1d, "run_aborted", "P2S_Li_A_far_0_1"); os.makedirs(abd_)
+        open(os.path.join(abd_, "OUTCAR"), "w").write(OTHER_HD + "\n \n executed on             LinuxIFC date 2026.10.22  00:00:00\n")
+        json.dump({"job": "P2S_Li_A_far", "rung": "0", "wall_s": "60", "oszicar": "missing"}, open(os.path.join(abd_, "infra_abort.json"), "w"))
+        c_1d = collect(ts1d, ts1d, msha, uma, reg7)
+        ck("⛔음성 S1: 0 스텝 중단으로 옮긴 시도에 attempt.json 이 없어도 (VASP 가 끝나기 전에 끊김) 환경 감사 — OUTCAR 머리줄이 다른 빌드면 공통 환경 고장 · 종료 6 "
+           "(지금까지는 attempt.json 있는 것만 감사)", collect_exit(c_1d) == 6 and any("aborted" in x for x in c_1d["common_environment_failure"] or []),
+           c_1d["common_environment_failure"])
+        ts1e = os.path.join(T, "ts1e"); shutil.copytree(p7, ts1e, ignore=shutil.ignore_patterns("round2_return*"))
+        for x_ in os.listdir(os.path.join(ts1e, "run")):
+            if os.path.isdir(os.path.join(ts1e, "run", x_)) and x_ != "CC_S33_AB_pbed3_far":
+                shutil.rmtree(os.path.join(ts1e, "run", x_))
+        d_ = os.path.join(ts1e, "run", "CC_S33_AB_pbed3_far"); head_edit(d_, OTHER_HD, fix=False); os.remove(os.path.join(d_, "attempt.json"))
+        c_1e = collect(ts1e, ts1e, msha, uma, reg7)
+        ck("S1 (갈림으로는 못 잡는 꼴): 반송에 끊긴 시도 하나만 있고 다른 빌드 → 전역 감사가 환경 증거를 등록부와 직접 대조 → VERSION_MISMATCH · 종료 6",
+           collect_exit(c_1e) == 6 and any("VERSION_MISMATCH" in x for x in c_1e["common_environment_failure"] or []), c_1e["common_environment_failure"])
+        cc7_, ar7_ = cli_(p7, "--check", *rgs), cli_(p7, "--a4_result", a47_, *rgs)
+        a47 = json.load(open(a47_)) if os.path.isfile(a47_) else {}
+        ck("S2 양성: 깨끗한 반송은 --check 종료 0 · --a4_result OK · 공통 환경 고장 없음 · 등록부 sha · 묶음 MANIFEST sha 기록",
+           cc7_.returncode == 0 and ar7_.returncode == 0 and (a47.get("result") or {}).get("status") == "OK" and a47.get("common_environment_failure") is None
+           and a47.get("registry_sha256") == _sha(rgf) and a47.get("package_manifest_sha256") == msha, (cc7_.returncode, cc7_.stdout[-300:], ar7_.returncode, (a47.get("result") or {}).get("status")))
     finally:
         if os.environ.get("R2_SELFTEST_KEEP") == "1":
             print(f"  (시험 폴더 남김: {T})")
@@ -2706,22 +2843,22 @@ def main():
         print(f"✓ 등록부 → {a.seal_registry} (sha256 {_sha(a.seal_registry)})")
         return 0
     if a.a4_result:
-        V.verify_manifest(a.out, a.manifest_sha256)
-        meta = json.load(open(os.path.join(a.out, "jobs.json"), encoding="utf-8"))
-        run = os.path.join(a.ret, "run") if os.path.isdir(os.path.join(a.ret, "run")) else a.ret
-        r = resolve_job({j["dir"]: j for j in meta["jobs"]}[A4_JOB], a.out, run, reg)
-        _write(a.a4_result, json.dumps({"schema": "wad_round2_a4_result/v1", "job": A4_JOB, "package_manifest_sha256": a.manifest_sha256,
-                                        "registry_sha256": a.registry_sha256, "result": r}, ensure_ascii=False, indent=1, default=float) + "\n")
-        print(f"  a4 {r['status']} · 이력 {r.get('history')} → {a.a4_result} (sha256 {_sha(a.a4_result)})")
+        if reg is None:            # 자체 검토 S2: 등록부 없이 낸 a4 결과는 파일럿 결박 · 봉인 환경 대조를 안 거쳤다 (V5 load_a4_result 도 거부한다)
+            ap.error("--a4_result 에는 봉인 등록부 (--registry · --registry_sha256) 가 필요하다")
+        _, _, _, res, common = resolve_all(a.out, a.ret, a.manifest_sha256, reg)       # 전역 환경 감사까지 (collect 와 같은 경로)
+        r = res[A4_JOB]
+        _write(a.a4_result, json.dumps({"schema": "wad_round2_a4_result/v1", "job": A4_JOB, "package_manifest_sha256": a.manifest_sha256.lower(),
+                                        "registry_sha256": a.registry_sha256.lower(), "common_environment_failure": common or None, "result": r},
+                                       ensure_ascii=False, indent=1, default=float) + "\n")
+        print(f"  a4 {r['status']} · 이력 {r.get('history')} · 공통 환경 고장 {len(common)} → {a.a4_result} (sha256 {_sha(a.a4_result)})")
         return 0
     if a.check:
-        V.verify_manifest(a.out, a.manifest_sha256)
-        meta = json.load(open(os.path.join(a.out, "jobs.json"), encoding="utf-8"))
-        run = os.path.join(a.ret, "run") if os.path.isdir(os.path.join(a.ret, "run")) else a.ret
-        res = {j["dir"]: resolve_job(j, a.out, run, reg) for j in meta["jobs"]}
+        _, _, _, res, common = resolve_all(a.out, a.ret, a.manifest_sha256, reg)       # 전역 환경 감사까지 (자체 검토 S2)
         for n, r in res.items():
             print(f"  {r['status']:<24s} {n}  {r.get('history')}")
-        return 0 if all(r["status"] == "OK" for r in res.values()) else 3
+        for c in common:
+            print(f"  ⛔ 공통 환경 고장: {c}")
+        return 6 if common else (0 if all(r["status"] == "OK" for r in res.values()) else 3)
     if a.collect:
         uma = json.load(open(a.uma, encoding="utf-8")) if a.uma else None
         rec = collect(a.out, a.ret, a.manifest_sha256, uma, reg)
