@@ -201,20 +201,30 @@ def make_plan_and_reg():
     with open(rp, 'w', encoding='utf-8') as f:
         f.write('\n'.join(out) + '\n')
     #  ★ PF2 B (10-22 · Q2) — S0 단계 2 보고 (가짜 · 꼴 = ca_s0_census 보고의 판정 칸) — 봉인 계획 해시 = 이 계획 둘
+    #  ★ PF2 D (10-22 · PRE2-design-08) — 단계 1 · 2 보고의 census · registry 일곱 파일 지문 = 이 트리 실제 파일 (사슬 `S0_SAME_FILES` · 고치기 전 판 = 빈 목록)
+    digests = [{'file': nm, 'sha256': hashlib.sha256(open(os.path.join(SCRIPTS, nm), 'rb').read()).hexdigest()}
+               for nm in getattr(RR, 'S0_SAME_FILES', ())]
+    code = {'git_head': 'b' * 40, 'git_dirty': False, 'file_digests': digests}
     s2 = {'schema': S0.SCHEMA, 'stage': 2, 'tool': S0.TOOL_VERSION, 'kit': {'name': DBE_KIT},
           'plan': {'sha256': s0sha, 'source': 'commit:' + 'a' * 40,
                    'r_plan': {'path': 'docs/data/rint2_s0_sbe_x/rint_r_plan.json', 'sha256': sha, 's_min_um': 0.6, 'tol_ff_um': 0.05,
                               'len_law': 'len_scaled_v0', 'unreg_law': 'cut', 'step3_rtol': 1e-12, 'checked': 'fixture'}},
-          'code': {'git_head': 'b' * 40, 'git_dirty': False, 'file_digests': []}}
-    with open(os.path.join(TD, 's0_stage2.json'), 'w', encoding='utf-8') as f:
-        json.dump(s2, f, ensure_ascii=False, indent=1)
+          'code': code}
+    s1 = {'schema': S0.SCHEMA, 'stage': 1, 'tool': S0.TOOL_VERSION, 'kit': {'name': SBE_KIT},
+          'plan': {'sha256': s0sha, 'source': 'stage1_computed'}, 'code': code}
+    for nm, rep in (('s0_stage2.json', s2), ('s0_stage1.json', s1)):
+        with open(os.path.join(TD, nm), 'w', encoding='utf-8') as f:
+            json.dump(rep, f, ensure_ascii=False, indent=1)
     return pp, sp, rp
 
 
 def s0_args():
-    """★ PF2 B — 사다리 인자에 S0 단계 2 보고 (사슬이 그 인자를 알 때만 · 고치기 전 판 = 옛 꼴)."""
-    return (['--s0-stage2-report', os.path.join(TD, 's0_stage2.json')]
-            if '--s0-stage2-report' in RR.main.__code__.co_consts else [])
+    """★ PF2 B · D — 사다리 인자에 S0 단계 2 · 1 보고 (사슬이 그 인자를 알 때만 · 고치기 전 판 = 옛 꼴)."""
+    out = []
+    for opt, nm in (('--s0-stage2-report', 's0_stage2.json'), ('--s0-stage1-report', 's0_stage1.json')):
+        if opt in RR.main.__code__.co_consts:
+            out += [opt, os.path.join(TD, nm)]
+    return out
 
 
 @contextlib.contextmanager
@@ -243,6 +253,10 @@ def run_ladder(ws, out, law='P0', max_hours='0.5'):
     had = hasattr(RR, 'EXPECT_BACKEND')
     old_bk = getattr(RR, 'EXPECT_BACKEND', None)
     RR.EXPECT_BACKEND = 'cpu'                              # GPU 없음 — 사슬이 러너 env · 정본 check_arm 에 같은 값을 넘긴다
+    #  ★ PF2 D — 사슬 git 신원 = 진짜 HEAD · dirty False (고쳐진 작업 트리에서 돌려도 배선 시험이 dirty 로 멈추지 않게 · dirty 판정 자체 =
+    #    가짜 러너 시험 D03 · D04 · D12) · 코드 파일 지문 = 실제 파일 (그대로)
+    old_gi = RR.git_identity
+    RR.git_identity = lambda path, _g=old_gi: dict(_g(path), dirty=False)
     try:
         with chain_env(ws), contextlib.redirect_stdout(buf), contextlib.redirect_stderr(buf):
             try:
@@ -250,6 +264,7 @@ def run_ladder(ws, out, law='P0', max_hours='0.5'):
             except SystemExit as e:
                 rc = e.code if isinstance(e.code, int) else 2
     finally:
+        RR.git_identity = old_gi
         if had:
             RR.EXPECT_BACKEND = old_bk
         else:

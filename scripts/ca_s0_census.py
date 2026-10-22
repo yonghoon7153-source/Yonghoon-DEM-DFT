@@ -1293,8 +1293,10 @@ def _path_table(kw, shape):
 
 
 def _code_info():
+    #  ★ PF2 D (10-22 · 사전 리뷰 2 회차 PRE2-design-08 · 등록 R §2-1b ⚠) — census · registry 일곱 파일 (옛 다섯 + carbon_junction.py ·
+    #    ptfe_face_alpha.py) · R 런 사슬 (`rint_r_chain.S0_SAME_FILES`) 이 이 지문을 지금 코드와 대조한다
     names = ('ca_s0_census.py', 'step3_sigma.py', 'mpm_webapp_payload.py', 'fibre_segment_raster.py',
-             'sr01_stamp_compare.py')
+             'sr01_stamp_compare.py', 'carbon_junction.py', 'ptfe_face_alpha.py')
     files = {nm: _sha256_file(os.path.join(SCRIPTS, nm)) for nm in names}
     head = dirty = None
     try:

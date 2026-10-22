@@ -10,7 +10,7 @@
   # (3) 보정 사다리 — 법칙 끝마다 (SBE arm 0 · LEAN 2 · 값 봉인)
   python3 scripts/rint_r_chain.py --stage ladder --law P0 --target 1.63 --runner ~/dem-ca1/scripts/sdcp_gain_vox015_8arm.sh \\
       --root ~/sdcp --plan ~/sdcp/ca1_plan.json --s0-plan <리포 S0 계획> --s0-stage2-report <S0 단계 2 보고 (DBE 새 침대)> \\
-      --max-hours H --out ~/sdcp/ca1_ladder_P0
+      --s0-stage1-report <S0 단계 1 보고 (SBE 새 침대)> [--machine <짧은 이름표>] --max-hours H --out ~/sdcp/ca1_ladder_P0
   # (4) 예측 — 네 모서리 × {R_j,lo · R_j,0 · R_j,hi} (DBE arm 0 · R_j · 계획 · S0 계획은 사다리 요약에서 읽는다)
   python3 scripts/rint_r_chain.py --stage predict --ladders ~/sdcp/ca1_ladder_P0 ~/sdcp/ca1_ladder_P1 --kit kit_DBE_sdcp1um_vgcf100 \\
       --runner … --root ~/sdcp --max-hours H --out ~/sdcp/ca1_predict
@@ -57,6 +57,11 @@
   · B (PRE2-design-01 · Q2) — 순서 = S0 단계 1 → ⑥ 숫자 탐침 (SBE · σ 봉인) → 계획 하나 봉인 → S0 단계 2 (DBE) → R 런.  사다리가
     `--s0-stage2-report` (단계 2 보고) 의 봉인 계획 해시 (`plan.r_plan.sha256` = R 계획 · `plan.sha256` = S0 계획) 를 지금 두 계획과 **정확히**
     대조 · 다르면 멈춤 (`S0_REPORT_MISMATCH`) · 예측 · 판정은 요약 기록으로 같은 함수 (`s0_stage2_problem`) 로 다시 대조
+  · D (PRE2-design-02 · 08 · 탐침 C · 결정 없음) — 단계 요약 `code` = git 신원 (HEAD · 추적 파일 수정 여부 dirty) + 코드 파일 지문
+    (`CODE_FILES` 12 · 사슬 폴더 · 러너 폴더 · 러너 sha256) · 다음 단계 (예측 · 감도 `--after-main` · 판정 계산기) 가 지금과 대조 · 다르거나 dirty =
+    멈춤 (`CODE_PIN_MISMATCH` · 옛 = HEAD 만 · 같은 HEAD 의 dirty · 판정 문턱 한 줄을 못 막았다) · 사다리가 `--s0-stage1-report` (S0 단계 1 보고 ·
+    그 보고가 만든 S0 계획 = `--s0-plan`) 와 단계 2 보고의 census · registry 일곱 파일 지문 (`S0_SAME_FILES` · 등록 R §2-1b) = 지금 R 런 코드인지
+    대조 (다르면 멈춤 · s_min 다시 고르기 금지 문장 `S0_RERUN`) · `--machine` = 기계 이름표 (C · Q3 · 기록만 · 판정에 안 씀)
 """
 import argparse
 import glob
@@ -143,6 +148,18 @@ S0_PLAN_SCHEMA = 'ca-cjunc-plan-v1'  # §2-1 · §10-2 ⑪ — S0 단계 1 계�
 #: ★ PF2 B (10-22 · 사전 리뷰 2 회차 PRE2-design-01 · 1저자 Q2 권고대로) — S0 단계 보고 (`ca_s0_census` · `s0_stage<n>_<킷>.json`) 의 schema
 #   (= ca_s0_census.SCHEMA · 시험 B09 가 대조 · 이 모듈은 numpy 없이 뜬다)
 S0_REPORT_SCHEMA = 'ca-s0-census-v2'
+#: ★ PF2 D (10-22 · 사전 리뷰 2 회차 PRE2-design-02 · 08 · 결정 없음) — 같은 판 대조 파일 = 등록 R · kgy 명령이 이름 댄 생산 파일 중 사슬 ·
+#   러너 · payload · 증서 · 접합 · census · registry 쪽 (사슬이 부르는 계약 · SV 증거 · 판독 포함 · 시험 파일 · 재압밀 `mpm3d_compaction.py` 는
+#   R 런이 돌리지 않아 뺐다).  단계 요약에 이름마다 sha256 (사슬 폴더 · 러너 폴더) 을 남기고 다음 단계 · 판정 계산기가 지금 지문과 대조한다.
+CODE_FILES = ('rint_r_chain.py', 'run_contract.py', 'ca_ext_svcf.py', 'sr01_stamp_compare.py', 'step3_conv_cert.py', 'carbon_junction.py',
+              'ca_s0_census.py', 'ptfe_face_alpha.py', 'step3_sigma.py', 'mpm_webapp_payload.py', 'fibre_segment_raster.py',
+              'sdcp_gain_vox015_8arm.sh')
+#: 등록 R §2-1b — S0 단계 1 · 단계 2 · R 런의 census · registry 가 같은 코드여야 하는 일곱 파일 (S0 보고 `code.file_digests` 와 대조)
+S0_SAME_FILES = ('ca_s0_census.py', 'carbon_junction.py', 'ptfe_face_alpha.py', 'step3_sigma.py', 'mpm_webapp_payload.py',
+                 'fibre_segment_raster.py', 'sr01_stamp_compare.py')
+#: 등록 R §10-4 결과 전 문장 3 (10-22 · PRE2-design-03 · 1저자 Q3) — 기계 이름표 = 실행자가 넣는 짧은 이름 (IP · 주소 금지 → 점 · 쌍점 · 빗금 ·
+#   띄어쓰기 없는 낱말) · 단계 요약에 기록만 (판정에는 쓰지 않는다 · 단계끼리 코드 지문은 같아야 한다)
+MACHINE_RE = re.compile(r'[A-Za-z0-9_-]+')
 #: 러너가 읽는 env (부모 셸에서 물려받으면 지운다 — 사슬이 런마다 정확히 정한다 · 지운 이름은 요약에)
 ENV_SCRUB_RE = re.compile(r'^(SIGMA_|SDCP_|PTFE_|CJUNC|STEP3_)')
 ENV_SCRUB_NAMES = frozenset({'VOX', 'BRIDGE_UM', 'ARMS', 'ARM_LIST', 'KITS', 'OUTDIR', 'LEAN', 'FIBRE_STAMP', 'MPM_PERIODIC_SIGMA',
@@ -265,7 +282,8 @@ STOPS = {
     'LADDER_SET': '사다리 묶음이 법칙 끝 둘이 아니다',
     'PREDICT_LADDER_MISMATCH': '예측이 쓴 사다리 ≠ 판정 입력 사다리',
     'REPLAY_MISMATCH': '원 팔 JSON 에서 다시 계산한 결정 ≠ 기록',
-    'CODE_PIN_MISMATCH': '단계마다 코드 (사슬 · 러너) 가 다르다',
+    'CODE_PIN_MISMATCH': '단계마다 코드 (사슬 · 러너) 가 다르다 · (★ PF2 D — PRE2-design-02 · 08) 코드 파일 지문 (sha256) ≠ 앞 단계 기록 · '
+                         '추적 파일이 고쳐진 트리 (dirty) · R 런 코드의 census · registry 일곱 파일 ≠ S0 단계 1 · 2 보고 (등록 R §2-1b)',
     **{k: k for k in CALIB_ORDER},
 }
 
@@ -814,20 +832,29 @@ def recheck_s0_record(rec, reg_path, plan):
     return check_s0(rec['content'], rec['sha256'], None, reg_path, plan)
 
 
-# ═════════════════════════ ★ PF2 B (10-22) S0 단계 2 보고의 봉인 계획 해시 ═════════════════════════
+# ═════════════════════════ ★ PF2 B · D (10-22) S0 단계 보고 — 봉인 계획 해시 · census · registry 파일 지문 ═════════════════════════
 def _hex64(x):
     return isinstance(x, str) and re.fullmatch(r'[0-9a-f]{64}', x) is not None
 
 
-def s0_stage2_record(rep, sha, path):
-    """S0 단계 2 보고 (dict) → 사슬 기록 (판정 칸만 · 보고 경로 · 파일 sha256) — 꼴이 틀려도 기록은 만들고 (값 그대로) 검사는
-    `s0_stage2_problem` 이 한다 (예측 · 판정은 이 기록을 다시 검사한다 · 보고 파일을 다시 읽지 않는다)."""
+S0_STAGE1_SOURCE = 'stage1_computed'   # S0 단계 1 보고의 plan.source (= `ca_s0_census.census_kit` 단계 1 · 그 계획을 그 침대에서 만들었다)
+#: ★ PF2 D (등록 R §2-1b) — census · registry 파일 ≠ S0 보고일 때 멈춤 사유에 붙는 등록 문장
+S0_RERUN = ('R 런을 돌리지 않는다 → S0 단계 1 · 2 를 이 R 런 판으로 다시 (σ 없음) + §2-1 개정 다시 (결과 0 건 · σ 전) · DBE (단계 2) 가 이미 '
+            '열렸으면 s_min 을 다시 고르지 않는다 (같은 s_min · 바꾸려면 새 등록 · 등록 R §2-1b)')
+
+
+def s0_report_record(rep, sha, path):
+    """S0 단계 보고 (dict) → 사슬 기록 (판정 칸만 · 보고 경로 · 파일 sha256) — 꼴이 틀려도 기록은 만들고 (값 그대로) 검사는
+    `s0_stage2_problem` · `s0_stage1_problem` · `s0_code_problem` 이 한다 (예측 · 판정은 이 기록을 다시 검사한다 · 보고 파일을 다시 읽지 않는다).
+    ★ PF2 D — 보고의 code 칸 (git_head · git_dirty · file_digests) 을 그대로 싣는다 (판정 = 파일 지문 · git_head · git_dirty 는 기록만)."""
     rp = rep if isinstance(rep, dict) else {}
     pl = rp.get('plan') if isinstance(rp.get('plan'), dict) else {}
     rr = pl.get('r_plan') if isinstance(pl.get('r_plan'), dict) else {}
     kit = rp.get('kit') if isinstance(rp.get('kit'), dict) else {}
+    code = rp.get('code') if isinstance(rp.get('code'), dict) else {}
     return {'path': path, 'sha256': sha, 'schema': rp.get('schema'), 'stage': rp.get('stage'), 'kit': kit.get('name'),
-            'plan_sha256': pl.get('sha256'), 'plan_source': pl.get('source'), 'r_plan_sha256': rr.get('sha256'), 'r_plan_path': rr.get('path')}
+            'plan_sha256': pl.get('sha256'), 'plan_source': pl.get('source'), 'r_plan_sha256': rr.get('sha256'), 'r_plan_path': rr.get('path'),
+            'git_head': code.get('git_head'), 'git_dirty': code.get('git_dirty'), 'file_digests': code.get('file_digests')}
 
 
 def s0_stage2_problem(rec, plan_sha, s0_sha):
@@ -852,25 +879,159 @@ def s0_stage2_problem(rec, plan_sha, s0_sha):
     return None
 
 
-def read_s0_stage2(path, plan_sha, s0_sha):
-    """사다리 — `--s0-stage2-report` 파일 → 단계 2 기록 · 대조 (`s0_stage2_problem`) · 실패 = Stop S0_REPORT_MISMATCH."""
+def s0_stage1_problem(rec, s0_sha):
+    """★ PF2 D (10-22 · 사전 리뷰 2 회차 PRE2-design-08 · 결정 없음 · 등록 R §2-1b) — 단계 1 기록 → 꼴 문제 | None.  꼴 = 이 도구의 S0 단계 1
+    보고 (schema · 단계 1 · SBE 새 침대 · source stage1_computed) · 그 보고가 만든 S0 계획 sha256 = 지금 S0 계획 (`--s0-plan` · 등록 §2-1 S0 계획
+    해시 칸 — 이 등록의 단계 1 보고여야 그 census · registry 지문이 s_min 을 고른 판이다)."""
+    r = rec if isinstance(rec, dict) else {}
+    if r.get('schema') != S0_REPORT_SCHEMA or type(r.get('stage')) is not int or r.get('stage') != 1:   # noqa: E721 — bool 제외
+        return f'S0 단계 1 보고 꼴 — schema {r.get("schema")!r} · 단계 {r.get("stage")!r} (= {S0_REPORT_SCHEMA!r} · 1)'
+    if r.get('kit') != SBE_KIT:
+        return f'S0 단계 1 보고의 킷 {r.get("kit")!r} ≠ {SBE_KIT!r} (S0 계획을 만든 SBE 새 침대의 보고여야)'
+    if r.get('plan_source') != S0_STAGE1_SOURCE:
+        return f'S0 단계 1 보고의 계획 출처 {r.get("plan_source")!r} (= {S0_STAGE1_SOURCE!r} 이어야 — 그 침대에서 계획을 만든 보고)'
+    if not _hex64(r.get('plan_sha256')):
+        return f'S0 단계 1 보고의 계획 해시 꼴 {r.get("plan_sha256")!r} (64 자 소문자 hex)'
+    if r['plan_sha256'] != s0_sha:
+        return f'S0 단계 1 보고가 만든 S0 계획 {r["plan_sha256"][:16]}… ≠ 지금 S0 계획 {str(s0_sha)[:16]}… (이 등록의 단계 1 보고가 아니다)'
+    return None
+
+
+def _digest_map(lst):
+    """코드 파일 지문 목록 [{file, sha256}] → {이름: sha256} (꼴이 틀린 줄은 버린다 — 대조는 이름별 값으로 · 빈 값 = None)."""
+    out = {}
+    for x in (lst if isinstance(lst, list) else ()):
+        if isinstance(x, dict) and isinstance(x.get('file'), str):
+            out[x['file']] = x.get('sha256')
+    return out
+
+
+def s0_code_problem(rec, label, files, runner_files=None):
+    """★ PF2 D (10-22 · PRE2-design-08 · 등록 R §2-1b) — S0 보고 기록의 census · registry 일곱 파일 지문 (`file_digests`) = 지금 R 런 코드 →
+    문제 | None.  지금 = 사슬 폴더 지문 (`files` · 일곱 다 있어야) · 러너 폴더 지문 (`runner_files` · 그 폴더에 있는 것만 — 없는 파일은 러너가
+    돌릴 수 없다).  보고의 git_dirty 는 보지 않는다 (지문 = 파일 내용 그대로 · 등록 문장은 같은 코드를 요구한다)."""
+    r = rec if isinstance(rec, dict) else {}
+    fd = r.get('file_digests')
+    if not isinstance(fd, list) or not all(isinstance(x, dict) for x in fd):
+        return f'{label} 보고의 code.file_digests 꼴 {type(fd).__name__} (파일 지문 목록이어야) — {S0_RERUN}'
+    rep = {}
+    for x in fd:
+        if x.get('file') in rep:
+            return f'{label} 보고의 code.file_digests 에 {x.get("file")!r} 가 두 번 — {S0_RERUN}'
+        rep[x.get('file')] = x.get('sha256')
+    here, there = _digest_map(files), _digest_map(runner_files)
+    for nm in S0_SAME_FILES:
+        want = rep.get(nm)
+        if not _hex64(want):
+            return (f'{label} 보고에 {nm} 지문이 없다 · 꼴 {want!r} (옛 다섯 파일 보고 = carbon_junction.py · ptfe_face_alpha.py 없음) — '
+                    f'{S0_RERUN}')
+        if here.get(nm) != want:
+            return f'{label} 보고의 {nm} 지문 {want[:16]}… ≠ 지금 사슬 폴더 {str(here.get(nm))[:16]}… — {S0_RERUN}'
+        if there.get(nm) is not None and there[nm] != want:
+            return f'{label} 보고의 {nm} 지문 {want[:16]}… ≠ 지금 러너 폴더 {str(there[nm])[:16]}… — {S0_RERUN}'
+    return None
+
+
+def read_s0_report(path, stage):
+    """사다리 — `--s0-stage<n>-report` 파일 → 기록 (`s0_report_record` · 검사는 `s0_reports_problem`) · 못 읽음 = Stop S0_REPORT_MISMATCH."""
     try:
         raw = Path(path).read_bytes()
         rep = json.loads(raw.decode('utf-8'), parse_constant=_reject_constant)
     except (OSError, UnicodeDecodeError, ValueError, TypeError) as e:
-        raise Stop('S0_REPORT_MISMATCH', f'S0 단계 2 보고 {path}: {type(e).__name__}: {e}')
-    rec = s0_stage2_record(rep, hashlib.sha256(raw).hexdigest(), str(Path(path).resolve()))
-    why = s0_stage2_problem(rec, plan_sha, s0_sha)
+        raise Stop('S0_REPORT_MISMATCH', f'S0 단계 {stage} 보고 {path}: {type(e).__name__}: {e}')
+    return s0_report_record(rep, hashlib.sha256(raw).hexdigest(), str(Path(path).resolve()))
+
+
+def s0_reports_problem(recs, plan_sha, s0_sha, files, runner_files=None):
+    """사다리 · 예측 · 판정 (같은 함수) — 단계 요약의 S0 보고 기록 → (멈춤 이름, 문제) | None.  단계 2 = 봉인 계획 해시 (PF2 B) · 단계 1 = 꼴 ·
+    S0 계획 (PF2 D) → S0_REPORT_MISMATCH · 두 보고의 census · registry 일곱 파일 지문 = 지금 코드 (`files` · `runner_files`) → CODE_PIN_MISMATCH.
+    기록 없음 = 그 보고 없이 돈 단계 · 옛 요약 = 대조 불가 → 멈춤."""
+    if not isinstance(recs, dict) or not isinstance(recs.get('stage2'), dict):
+        return 'S0_REPORT_MISMATCH', 'S0 단계 2 보고 기록이 없다 (--s0-stage2-report 없이 돈 단계 · 옛 요약 — 봉인 계획 해시를 대조할 수 없다)'
+    why = s0_stage2_problem(recs['stage2'], plan_sha, s0_sha)
     if why:
-        raise Stop('S0_REPORT_MISMATCH', why)
+        return 'S0_REPORT_MISMATCH', why
+    if not isinstance(recs.get('stage1'), dict):
+        return ('S0_REPORT_MISMATCH', 'S0 단계 1 보고 기록이 없다 (--s0-stage1-report 없이 돈 단계 · 옛 요약 — census · registry 지문을 대조할 수 '
+                                      '없다)')
+    why = s0_stage1_problem(recs['stage1'], s0_sha)
+    if why:
+        return 'S0_REPORT_MISMATCH', why
+    for k, label in (('stage1', 'S0 단계 1'), ('stage2', 'S0 단계 2')):
+        why = s0_code_problem(recs[k], label, files, runner_files)
+        if why:
+            return 'CODE_PIN_MISMATCH', why
+    return None
+
+
+# ═════════════════════════ ★ PF2 D (10-22) 같은 판 — 코드 파일 지문 · 추적 파일 수정 여부 ═════════════════════════
+def code_files(base):
+    """base 폴더의 CODE_FILES → [{file, sha256 | None}] (CODE_FILES 순서 · 없는 파일 · 못 읽는 파일 = None)."""
+    out = []
+    for nm in CODE_FILES:
+        p = Path(base) / nm
+        try:
+            h = sha256_file(p) if p.is_file() else None
+        except OSError:
+            h = None
+        out.append({'file': nm, 'sha256': h})
+    return out
+
+
+def code_record(runner):
+    """단계 요약의 code 칸 — 사슬 · 러너 git 신원 (HEAD · 추적 파일 수정 여부 dirty) · 러너 경로 (옛 칸) + 코드 파일 지문 (사슬 폴더 `files` ·
+    러너 폴더 `runner_files` · 러너 파일 sha256).  운영 = 사슬과 러너가 한 핀 작업 트리 (등록 R §10 (0)) 라 두 폴더 지문이 같다."""
+    rec = {'chain': git_identity(HERE / 'rint_r_chain.py'), 'runner': None, 'runner_path': None, 'files': code_files(HERE),
+           'runner_files': None, 'runner_sha256': None}
+    if runner:
+        rp = Path(runner).resolve()
+        rec.update({'runner': git_identity(runner), 'runner_path': str(rp), 'runner_files': code_files(rp.parent),
+                    'runner_sha256': (sha256_file(rp) if rp.is_file() else None)})
     return rec
 
 
-def s0_reports_problem(recs, plan_sha, s0_sha):
-    """예측 · 판정 — 단계 요약에 기록된 S0 보고 기록 → 문제 | None (같은 함수로 다시 대조 · 기록 없음 = 옛 요약 = 대조 불가)."""
-    if not isinstance(recs, dict) or not isinstance(recs.get('stage2'), dict):
-        return 'S0 단계 2 보고 기록이 없다 (--s0-stage2-report 없이 돈 단계 · 옛 요약 — 봉인 계획 해시를 대조할 수 없다)'
-    return s0_stage2_problem(recs['stage2'], plan_sha, s0_sha)
+def code_key(rec):
+    """단계끼리 · 지금과 대조하는 코드 칸 (정준 JSON 글) — 사슬 · 러너 HEAD · 러너 경로 (옛 키 그대로) + 코드 파일 지문 (사슬 폴더 · 러너 폴더) ·
+    러너 sha256.  기계 이름표 · dirty 는 키에 없다 (dirty = `code_dirty_problem` 이 따로 멈춘다 · 이름표 = 판정에 쓰지 않는다)."""
+    r = rec if isinstance(rec, dict) else {}
+    pick = {'chain_head': (r.get('chain') or {}).get('head') if isinstance(r.get('chain'), dict) else None,
+            'runner_head': (r.get('runner') or {}).get('head') if isinstance(r.get('runner'), dict) else None,
+            'runner_path': r.get('runner_path'), 'files': r.get('files'), 'runner_files': r.get('runner_files'),
+            'runner_sha256': r.get('runner_sha256')}
+    return json.dumps(pick, sort_keys=True, ensure_ascii=False, default=repr)
+
+
+def code_dirty_problem(rec):
+    """추적 파일이 고쳐진 트리에서 돈 단계인가 (사슬 · 러너 git 신원 dirty True) → 문제 | None.  dirty None = git 밖 · 모름 → 기록만
+    (등록 문장 = *"추적 파일이 고쳐졌으면 멈춘다"* · 파일 지문 대조는 그대로)."""
+    r = rec if isinstance(rec, dict) else {}
+    for k, nm in (('chain', '사슬'), ('runner', '러너')):
+        if isinstance(r.get(k), dict) and r[k].get('dirty') is True:
+            return f'{nm} 작업 트리에 고쳐진 추적 파일이 있다 (dirty · HEAD {r[k].get("head")}) — 핀 커밋 그대로의 깨끗한 트리에서 돌릴 것 (등록 R §10 (0))'
+    return None
+
+
+def code_diff_names(a, b):
+    """두 코드 파일 지문 목록에서 다른 이름 (멈춤 사유용 · 이름별 값이 다 같으면 = 꼴 · HEAD · 러너 칸이 다르다)."""
+    da, db = _digest_map(a), _digest_map(b)
+    return sorted(k for k in set(da) | set(db) if da.get(k) != db.get(k)) or ['이름별 지문 같음 — 꼴 · HEAD · 러너 칸이 다르다']
+
+
+def code_verdict_problem(rec, label):
+    """판정 계산기 — 지금 사슬 쪽 코드 ↔ 단계 기록 → 문제 | None (추적 파일 수정 여부 · HEAD · 사슬 폴더 코드 파일 지문).  러너 쪽 지금 상태는
+    보지 않는다 (판정은 러너를 돌리지 않는다 · 단계끼리의 러너 지문 대조 = 판정 입력 검사 `code_key`)."""
+    now = git_identity(HERE / 'rint_r_chain.py')
+    if now.get('dirty') is True:
+        return f'지금 사슬 작업 트리에 고쳐진 추적 파일이 있다 (dirty · HEAD {now.get("head")}) — 판정 계산기도 깨끗한 핀 트리에서 (등록 R §10 (0))'
+    r = rec if isinstance(rec, dict) else {}
+    head = r['chain'].get('head') if isinstance(r.get('chain'), dict) else None
+    if now.get('head') != head:
+        return f'지금 사슬 HEAD {now.get("head")} ≠ {label} 를 만든 사슬 {head} — 판정 계산기도 같은 핀에서 (다시 판정 = 같은 코드)'
+    files = code_files(HERE)
+    if files != r.get('files'):
+        return (f'지금 사슬 폴더 코드 파일 지문 ≠ {label} 기록 ({", ".join(code_diff_names(files, r.get("files")))}) — 같은 HEAD 라도 파일이 다르면 '
+                f'판정하지 않는다')
+    return None
 
 
 # ═════════════════════════ 팔 읽기 · 계약 (런 하나 = 폴더 하나) ═════════════════════════
@@ -1590,10 +1751,10 @@ class Predict:
 
 # ═════════════════════════ 단계 공통 ═════════════════════════
 def summary_base(stage, a):
+    #  ★ PF2 D (10-22 · PRE2-design-02) — code = git 신원 + 코드 파일 지문 (`code_record`) · machine = 기계 이름표 (등록 R §10-4 문장 3 · 기록만 ·
+    #    판정에는 쓰지 않는다 · 없으면 null)
     return {'tool': TOOL, 'schema': SCHEMA, 'stage': stage, 'status': None, 'stop': None, 'flags': [],
-            'code': {'chain': git_identity(HERE / 'rint_r_chain.py'),
-                     'runner': (git_identity(a.runner) if getattr(a, 'runner', None) else None),
-                     'runner_path': (str(Path(a.runner).resolve()) if getattr(a, 'runner', None) else None)},
+            'machine': getattr(a, 'machine', None), 'code': code_record(getattr(a, 'runner', None)),
             'constants': {'target_sbe_mScm': TARGET_SBE_MS, 'confirm_tol': CONFIRM_TOL, 'e_min': E_MIN, 'tau_mono': TAU_MONO,
                           'neighbor_log10_max': NEIGHBOR_LOG10_MAX, 'origin_sbe_max': ORIGIN_SBE_MAX,
                           'origin_dbe_frac_w': ORIGIN_DBE_FRAC_W}}
@@ -1630,7 +1791,8 @@ def read_summary(d, name):
 
 
 def same_code(a, b):
-    """코드 지문 대조 (HEAD) — 단계마다 같은 핀 작업 트리여야 한다 (등록 R §10 (0))."""
+    """git 신원의 HEAD 대조 (옛 대조 · ★ PF2 D 뒤 단계 대조는 `code_key` (HEAD + 코드 파일 지문) · `code_dirty_problem` 이 한다 — 같은 HEAD 라도
+    dirty · 파일이 다르면 멈춘다 · 이 함수는 남긴다 (탐침 C 가 부른다))."""
     return (a or {}).get('head') == (b or {}).get('head')
 
 
@@ -1640,7 +1802,7 @@ def _e(x):
 
 def check_after_main(after_dir, plan_sha, s0_sha, code):
     """★ Q-F — 감도 단계 = 주 판정 단계 (사다리 둘 · 예측) 가 끝난 뒤에만: 주 예측 요약 = PREDICTED · 변이 없음 · 같은 계획 · 같은 S0 계획 ·
-    같은 사슬 코드 → 묶음 기록 {dir, summary_sha256} (판정이 판정 입력의 주 예측과 대조한다)."""
+    같은 코드 (★ PF2 D — `code_key` = HEAD + 코드 파일 지문 · 러너) → 묶음 기록 {dir, summary_sha256} (판정이 판정 입력의 주 예측과 대조한다)."""
     if not after_dir:
         raise Stop('MAIN_NOT_DONE', '--variant 인데 --after-main (주 예측 폴더) 이 없다 — 감도는 주 판정 단계가 끝난 뒤에만 (Q-F)')
     d = Path(after_dir).resolve()
@@ -1651,8 +1813,8 @@ def check_after_main(after_dir, plan_sha, s0_sha, code):
         raise Stop('MAIN_NOT_DONE', f'{d.name}: 변이 {s.get("variant")!r} · 상태 {s.get("status")!r} — 주 예측 (변이 없음 · PREDICTED) 이어야')
     if (s.get('plan') or {}).get('sha256') != plan_sha or (s.get('s0_plan') or {}).get('sha256') != s0_sha:
         raise Stop('MAIN_NOT_DONE', f'{d.name}: 주 예측의 계획 · S0 계획 ≠ 이 감도 단계의 것')
-    if not same_code((s.get('code') or {}).get('chain'), (code or {}).get('chain')):
-        raise Stop('MAIN_NOT_DONE', f'{d.name}: 주 예측의 사슬 코드 ≠ 지금 사슬 코드')
+    if code_key(s.get('code')) != code_key(code):              # ★ PF2 D — HEAD + 코드 파일 지문 (옛 = HEAD 만)
+        raise Stop('MAIN_NOT_DONE', f'{d.name}: 주 예측의 코드 (HEAD · 코드 파일 지문 · 러너) ≠ 지금 코드')
     return {'dir': str(d), 'summary_sha256': sha}
 
 
@@ -1678,8 +1840,15 @@ def stage_ladder(a, contract):
         s['registration'] = check_plan_registered(plan_sha, a.registration)
         s['s0_plan'] = load_s0_plan(a.s0_plan, a.registration, plan)
         require_plan_numbers(plan)
-        #  ★ PF2 B (10-22 · Q2) — S0 단계 2 보고가 봉인한 계획 해시 = 지금 두 계획 (정확히 · DBE 열람 전 계획 하나)
-        s['s0_reports'] = {'stage2': read_s0_stage2(a.s0_stage2_report, plan_sha, s['s0_plan']['sha256'])}
+        #  ★ PF2 B (10-22 · Q2) — S0 단계 2 보고가 봉인한 계획 해시 = 지금 두 계획 (정확히 · DBE 열람 전 계획 하나) · ★ PF2 D (PRE2-design-08) —
+        #    S0 단계 1 보고 꼴 · 두 보고의 census · registry 일곱 파일 지문 = 지금 R 런 코드 (등록 R §2-1b · 다르면 멈춤 · s_min 다시 고르기 금지)
+        s['s0_reports'] = {'stage2': read_s0_report(a.s0_stage2_report, 2), 'stage1': read_s0_report(a.s0_stage1_report, 1)}
+        got = s0_reports_problem(s['s0_reports'], plan_sha, s['s0_plan']['sha256'], s['code']['files'], s['code']['runner_files'])
+        if got:
+            raise Stop(*got)
+        why = code_dirty_problem(s['code'])                    # ★ PF2 D (PRE2-design-02) — 추적 파일이 고쳐진 트리면 σ 런 없음
+        if why:
+            raise Stop('CODE_PIN_MISMATCH', why)
         s['constants']['max_ladder_points'] = ladder_cap(plan)
         if a.variant is not None:
             s['after_main'] = check_after_main(a.after_main, plan_sha, s['s0_plan']['sha256'], s['code'])
@@ -1733,9 +1902,10 @@ def stage_ladder(a, contract):
 
 
 # ═════════════════════════ (4) 예측 단계 ═════════════════════════
-def load_ladders(dirs, variant, reg_path, contract, sid_reg):
+def load_ladders(dirs, variant, reg_path, contract, sid_reg, now_code=None):
     """사다리 요약 둘 → {법칙: {...}} · 계획 · S0 계획 · 코드 · 변이 사다리의 주 예측 묶음.  R_j 는 요약에서 그대로 (사람이 옮겨 적지 않는다) ·
-    R_j,0 확인 팔을 다시 읽는다."""
+    R_j,0 확인 팔을 다시 읽는다.  ★ PF2 D — 사다리마다 dirty 기록 · 두 사다리 코드 키 (HEAD + 코드 파일 지문) 같음 · S0 보고 지문 = 지금 코드
+    (`now_code` = 예측 단계의 `code_record`)."""
     want_var = None if variant == 'SVORDER' else variant
     out, plan, plan_sha, code, s0, after = {}, None, None, None, None, None
     s0reps, first = None, True
@@ -1759,8 +1929,12 @@ def load_ladders(dirs, variant, reg_path, contract, sid_reg):
             raise Stop('PLAN_HASH_MISMATCH', '두 사다리의 계획이 다르다')
         if s0 is not None and (s.get('s0_plan') or {}).get('sha256') != s0.get('sha256'):
             raise Stop('S0_PLAN_HASH_MISMATCH', '두 사다리의 S0 계획이 다르다')
-        if code is not None and not same_code(s.get('code', {}).get('chain'), code.get('chain')):
-            raise Stop('CODE_PIN_MISMATCH', '두 사다리의 사슬 코드가 다르다')
+        why = code_dirty_problem(s.get('code'))               # ★ PF2 D — 고쳐진 트리에서 돈 사다리 (기록) 는 예측 입력이 아니다
+        if why:
+            raise Stop('CODE_PIN_MISMATCH', f'{rd.name}: {why}')
+        if code is not None and code_key(s.get('code')) != code_key(code):
+            raise Stop('CODE_PIN_MISMATCH', '두 사다리의 코드 (HEAD · 코드 파일 지문 · 러너) 가 다르다 '
+                                            f'({", ".join(code_diff_names((s.get("code") or {}).get("files"), code.get("files")))})')
         if after is not None and s.get('after_main') != after:
             raise Stop('MAIN_NOT_DONE', '두 변이 사다리의 주 예측 묶음이 다르다')
         if not first and s.get('s0_reports') != s0reps:      # ★ PF2 B — 두 사다리가 같은 단계 2 봉인을 읽었나
@@ -1782,9 +1956,18 @@ def load_ladders(dirs, variant, reg_path, contract, sid_reg):
     check_plan_registered(plan_sha, reg_path)
     s0rec = recheck_s0_record(s0, reg_path, plan)
     require_plan_numbers(plan)
-    why = s0_reports_problem(s0reps, plan_sha, s0rec['sha256'])   # ★ PF2 B — 사다리 기록의 단계 2 봉인 = 이 계획 (같은 함수로 다시)
+    #  ★ PF2 D (10-22 · PRE2-design-02) — 지금 트리 dirty · 지금 코드 (HEAD + 코드 파일 지문 · 러너) ≠ 사다리 기록 = 멈춤 (옛 = HEAD 만)
+    now = now_code if now_code is not None else code
+    why = code_dirty_problem(now)
     if why:
-        raise Stop('S0_REPORT_MISMATCH', why)
+        raise Stop('CODE_PIN_MISMATCH', f'지금 {why}')
+    if code_key(code) != code_key(now):
+        raise Stop('CODE_PIN_MISMATCH', f'사다리 코드 (HEAD · 코드 파일 지문 · 러너) ≠ 지금 코드 ({", ".join(code_diff_names(code.get("files"), now.get("files")))}) '
+                                        f'— 같은 핀 작업 트리에서 돌릴 것')
+    #  ★ PF2 B · D — 사다리 기록의 단계 2 봉인 = 이 계획 · 단계 1 꼴 · 두 보고 지문 = 지금 코드 (같은 함수로 다시)
+    got = s0_reports_problem(s0reps, plan_sha, s0rec['sha256'], now.get('files'), now.get('runner_files'))
+    if got:
+        raise Stop(*got)
     return out, plan, plan_sha, code, s0rec, after, s0reps
 
 
@@ -1804,9 +1987,9 @@ def stage_predict(a, contract):
             raise Stop('NOT_REGISTERED', f'--kit {a.kit} (등록 {DBE_KIT})')
         env_forbidden_or_stop()
         sid_reg = {}
-        lads, plan, plan_sha, code, s0rec, lad_after, s0reps = load_ladders(a.ladders, a.variant, a.registration, contract, sid_reg)
-        if not same_code(code.get('chain'), s['code']['chain']):
-            raise Stop('CODE_PIN_MISMATCH', '사다리 사슬 코드 ≠ 지금 사슬 코드 (같은 핀 작업 트리에서 돌릴 것)')
+        #  ★ PF2 D (10-22 · PRE2-design-02) — 지금 코드 (`s['code']`) 를 넘겨 사다리 기록 · S0 보고 지문과 대조 (load_ladders 안 · 옛 = HEAD 만)
+        lads, plan, plan_sha, code, s0rec, lad_after, s0reps = load_ladders(a.ladders, a.variant, a.registration, contract, sid_reg,
+                                                                            now_code=s['code'])
         s['ladders'] = {k: {kk: v[kk] for kk in ('dir', 'summary_sha256', 'variant', 'R_j0', 'R_j_lo', 'R_j_hi')} for k, v in lads.items()}
         s['plan'] = {'sha256': plan_sha, 'content': plan}
         s['s0_plan'] = s0rec
@@ -2070,22 +2253,29 @@ def verdict_compute(dirs, reg_path, contract):
         plan = (s.get('plan') or {}).get('content')
         recheck_s0_record(s.get('s0_plan'), reg_path, plan)
         require_plan_numbers(plan)
-        #  ★ PF2 B (10-22 · Q2) — 단계마다 기록한 S0 단계 2 봉인 = 등록 계획 · S0 계획 (같은 함수) · 단계끼리 같은 기록
-        why = s0_reports_problem(s.get('s0_reports'), plan_hash, s0_hash)
+        #  ★ PF2 D (10-22 · PRE2-design-02 · 탐침 C) — 단계 코드 = HEAD + 코드 파일 지문 (`code_key` · 옛 = HEAD · 러너 HEAD · 경로) · 단계마다
+        #    dirty 기록 = 멈춤 · 첫 단계 ↔ 지금 사슬 쪽 (dirty · HEAD · 사슬 폴더 지문 · `code_verdict_problem`) · 단계끼리 같은 키
+        c = s.get('code') if isinstance(s.get('code'), dict) else {}
+        why = code_dirty_problem(c)
         if why:
-            raise Stop('S0_REPORT_MISMATCH', f'{rd.name}: {why}')
+            raise Stop('CODE_PIN_MISMATCH', f'{rd.name}: {why}')
+        key = code_key(c)
+        if code0 is None:
+            code0, c0 = key, c
+            why = code_verdict_problem(c, rd.name)
+            if why:
+                raise Stop('CODE_PIN_MISMATCH', why)
+        elif key != code0:
+            raise Stop('CODE_PIN_MISMATCH', f'{rd.name}: 코드 (HEAD · 코드 파일 지문 · 러너) ≠ 다른 판정 입력 단계 '
+                                            f'({", ".join(code_diff_names(c.get("files"), c0.get("files")))})')
+        #  ★ PF2 B (10-22 · Q2) · D — 단계마다 기록한 S0 단계 2 봉인 = 등록 계획 · S0 계획 · 단계 1 꼴 · 두 보고 지문 = 이 단계 코드 (같은 함수) ·
+        #    단계끼리 같은 기록
+        got = s0_reports_problem(s.get('s0_reports'), plan_hash, s0_hash, c.get('files'), c.get('runner_files'))
+        if got:
+            raise Stop(got[0], f'{rd.name}: {got[1]}')
         if not s0r_first and s.get('s0_reports') != s0r0:
             raise Stop('S0_REPORT_MISMATCH', f'{rd.name}: S0 단계 보고 기록 ≠ 다른 판정 입력 단계의 기록')
         s0r_first, s0r0 = False, s.get('s0_reports')
-        c = (s.get('code') or {})
-        key = ((c.get('chain') or {}).get('head'), (c.get('runner') or {}).get('head'), c.get('runner_path'))
-        if code0 is None:
-            code0 = key
-            now = git_identity(HERE / 'rint_r_chain.py').get('head')
-            if now != key[0]:
-                raise Stop('CODE_PIN_MISMATCH', f'지금 사슬 HEAD {now} ≠ 단계를 만든 사슬 {key[0]} — 판정 계산기도 같은 핀에서 (다시 판정 = 같은 코드)')
-        elif key != code0:
-            raise Stop('CODE_PIN_MISMATCH', f'{rd.name}: 코드 {key} ≠ {code0}')
         for r in s.get('runs') or []:
             for x in r.get('arms_read') or []:
                 pub['arms'].append({'path': str(rd / r['outdir'] / x['file']), 'sha256': x['sha256']})
@@ -2334,6 +2524,10 @@ def main(argv=None, contract=None):
                                       '두 계획 대조 (§2-1 · §10-2 ⑪)')
     ap.add_argument('--s0-stage2-report', help='ladder — S0 단계 2 보고 (s0_stage2_<DBE 킷>.json · ca_s0_census) · 그 보고가 봉인한 계획 '
                                                '해시 (R 계획 · S0 계획) = 지금 계획이어야 돈다 (★ PF2 B · Q2 · 등록 R §2-1b · §11 ④)')
+    ap.add_argument('--s0-stage1-report', help='ladder — S0 단계 1 보고 (s0_stage1_<SBE 킷>.json · 그 보고가 만든 S0 계획 = --s0-plan) · '
+                                               'census · registry 일곱 파일 지문 = 지금 R 런 코드여야 돈다 (★ PF2 D · 등록 R §2-1b)')
+    ap.add_argument('--machine', default=None, help='ladder · predict — 기계 이름표 (실행자가 넣는 짧은 이름 · 영문 · 숫자 · _ · - 만 · IP · 주소 '
+                                                    '금지 · 단계 요약에 기록만 · 판정에 안 쓴다 · 등록 R §10-4 문장 3)')
     ap.add_argument('--registration', default=str(REGISTRATION_DEFAULT), help='등록 R 문서 (§2-1 계획 해시 · S0 계획 해시를 읽는다)')
     ap.add_argument('--ladders', nargs='+', help='predict — 사다리 폴더 둘 (P0 · P1)')
     ap.add_argument('--runs', nargs='+', help='verdict — 사다리 · 예측 · 감도 폴더 전부')
@@ -2348,9 +2542,13 @@ def main(argv=None, contract=None):
         ap.error('--show-results 는 --stage verdict 에서만 (등록 R §4-1 — 판정에 쓰는 런이 다 끝난 뒤 한 번)')
     if a.after_main and not a.variant:
         ap.error('--after-main 은 --variant (감도 단계) 와만')
+    if a.machine is not None and (a.stage == 'verdict' or not MACHINE_RE.fullmatch(a.machine)):
+        ap.error('--machine 은 ladder · predict 에서만 · 영문 · 숫자 · _ · - 로 된 짧은 이름 (IP · 주소 · 경로 · 띄어쓰기 금지 · 등록 R §10-4 문장 3)')
     if a.stage == 'ladder':
-        if not (a.law and a.runner and a.root and a.plan and a.s0_plan and a.s0_stage2_report and a.out and a.max_hours is not None):
-            ap.error('--stage ladder 는 --law · --runner · --root · --plan · --s0-plan · --s0-stage2-report · --max-hours · --out 이 필요하다')
+        if not (a.law and a.runner and a.root and a.plan and a.s0_plan and a.s0_stage2_report and a.s0_stage1_report and a.out
+                and a.max_hours is not None):
+            ap.error('--stage ladder 는 --law · --runner · --root · --plan · --s0-plan · --s0-stage2-report · --s0-stage1-report · --max-hours · '
+                     '--out 이 필요하다')
         return stage_ladder(a, contract)
     if a.stage == 'predict':
         if not (a.ladders and a.runner and a.root and a.out and a.max_hours is not None):
