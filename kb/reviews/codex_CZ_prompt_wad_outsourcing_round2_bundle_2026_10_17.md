@@ -6,7 +6,7 @@ date: 2026-10-17
 track: wad
 channel: codex
 kind: prompt
-status: 초안 — P2′ 봉인·실제 묶음 전 (⟨봉인 뒤 채움⟩ 칸이 남아 있다) · 발송 전
+status: 발송 가능 — 봉인 · ④ UMA 단일점 · 실제 묶음 빌드 2026-10-22 (기준 커밋 8d41e4e0 · 묶음 MANIFEST 31e47474…) · 발송 전
 confidence: medium
 verificationStatus: unverified
 explored: false
@@ -18,7 +18,7 @@ evidenceScope: multi-source-primary
 
 > 트랙 = W_ad (DEM 협업 · 1저자 = 사용자). CY (설계 · 조건부 GO · 최소 수정 여섯 묶음 뒤 빌드 · **발송 승인은 CZ**) 다음 편지다.
 > ⛔ 점착 W 값은 kb 문서에 싣지 않는다 — 이 편지에도 W 숫자를 쓰지 않는다 (문턱 · 비율 · 벽시계만).
-> 기준 커밋 ⟨봉인 뒤 채움⟩. ⬇ 아래 **보내는 글**만 발송한다. 회신이 오면 `codex_CZ_reply_…` 로 원문 보존.
+> 기준 커밋 `8d41e4e0`. ⬇ 아래 **보내는 글**만 발송한다. 회신이 오면 `codex_CZ_reply_…` 로 원문 보존.
 
 ---
 
@@ -32,15 +32,16 @@ CY 에서 설계를 고친 뒤 (카드 v2 · 개정 4 v2 · 1저자 비준 10-17
 
 - 결정: `D-2026-10-15-wad-p2small-vasp-card` · `D-2026-10-15-wad-aprime-v5-e70-a4-rerun` (active · 비준 2026-10-17). 빌드 기록 `db/properties/wad_round2_build_log_2026_10_17.json`.
 - ① 빌더 `tools/wad/build_aprime_interfaces.py --build P2S` (SE 2층 V5 절단 1×3 + 흑연 AB 2층 · registry A · 끝점 10 Å) · `p05_probe` · `check_rigid_shift` — selftest 75/75 · 일부러 깨기 11/11 빨강.
-- ② 부모 둘 UMA+D3 이완 (kgy · fairchem 2.21.0 · 체크포인트 S1 결박값 · simple-dftd3) ⟨회수 · G1 · G2 결과 — 봉인 뒤 채움⟩ → 봉인 `tools/wad/build_aprime_s3.py --seal_p2s` (계보 · G1 · G2 · 계산기 결박 · p05 · S_A G3 세 구조 · 발송 전 D3 만 G3 예측 80 % 규칙) — selftest 40/40 · 깨기 12/12 빨강. ⟨D3 만 예측 결과 (끝점 10 Å 유지 / 12 Å 이동) — 봉인 뒤 채움⟩
-- ③ 묶음 `tools/wad/build_round2_vasp_package.py` — 24 잡 (P 5 · 1 4 · 2 9 · 3 4 · 4 2) · 러너 (bash · 업체 쪽 python 가정 없음) · 검사기 · 집계기 · 등록부 봉인 · 해제 파일 — selftest 53/53 · 깨기 23 (1차 22 중 18 빨강 → 안 잡힌 넷에 시험을 더해 넷 다 빨강 · 그 과정에서 러너가 ISTART·ICHARG 를 OUTCAR 첫 줄에서 읽던 버그를 고쳤다 — INCAR 를 되울리는 빌드면 입력값을 실제값으로 읽는다).
+- ② 부모 둘 UMA+D3 이완 (kgy · fairchem 2.21.0 · 체크포인트 S1 결박값 · simple-dftd3 1.6.0) — 10-21 21:24 → 21:42 (S_A 12 분 · Li_A 6 분) · G1 S_A FIRE 894 스텝 fmax 0.0164 · Li_A 430 스텝 0.0192 eV/Å (문턱 0.02 · 3000 스텝 안) · G2 깃발 0 · 회수 커밋 `6d3538d9` (SHA256SUMS 13 줄 · 기계·레포·클라우드 일치) → 봉인 `tools/wad/build_aprime_s3.py --seal_p2s` (계보 · G1 · G2 · 계산기 결박 · p05 · S_A G3 세 구조 · 발송 전 D3 만 G3 예측 80 % 규칙) — selftest 41/41 · 깨기 12/12 빨강 + 아래 고침 깨기 3/3 빨강 · 봉인 커밋 `d640e8e7`. D3 만 예측: **끝점 10 Å 유지** — 80 % 문턱 (0.008 J/m²) 대비 검사 (i) 19 % · (ii) 30 % · 발동 안 함 (봉인 manifest `d3_g3_prediction`).
+- 봉인 중 고침 (Q-CZ-9 에서 리뷰 요청) — 1차 봉인이 **G1p ③ 마스크 깃발**로 거부됐다 (S_A_p05 '고정 마스크가 정책 집합과 다르다 — 빠짐 0 · 남음 6' · Li_A_p05 '남음 3'). p05 탐침의 `interface_check` 가 마스크 정책 (기판 중심면 아래 · 동률은 '고정') 을 **이완된 부모로 만든 탐침**에서 다시 계산했다. 이완이 기판 위끝을 내려 (S_A 0.36 Å · Li_A 0.57 Å) 중심면이 옮겨졌고, 빌드 때 중심면 위에 정확히 놓였던 동률 S 원자 (S_A 6 · Li_A 3) 가 '남음' 이 됐다. 마스크 자체는 빌드 초기 구조의 정책 집합과 같다 (S_A 90 = 90 · Li_A 69 = 69 · 부모 G2 통과). 카드 G1p ③ 'G2 와 같다' 를 '기준 = 부모 빌드 초기 구조 (sha = meta)' 로 읽고 고쳤다 — `se_sym_slab.interface_check(policy_ref=)` (원자 수·순서가 다른 기준은 거부) · `build_aprime_interfaces.p05_probe(policy_ref=)` · `seal_p2s` 가 부모 빌드 초기 구조를 넘기고 manifest p05 에 `mask_policy_ref` 를 적는다 · 기본값 None = 옛 동작. 시험: se_sym_slab 122/122 · build_aprime_interfaces 75/75 · build_aprime_s3 41/41 (새 시험 = 가짜 이완에서 Li_A 맨 위 Li 를 0.6 Å 내려 정책 집합을 바꿔도 봉인 p05 깃발 0 · 실제와 같은 '남음' 꼴 재현).
+- ③ 묶음 `tools/wad/build_round2_vasp_package.py` — 24 잡 (P 5 · 1 4 · 2 9 · 3 4 · 4 2) · 러너 (bash · 업체 쪽 python 가정 없음) · 검사기 · 집계기 · 등록부 봉인 · 해제 파일 — selftest 53/53 · 깨기 23 (1차 22 중 18 빨강 → 안 잡힌 넷에 시험을 더해 넷 다 빨강 · 그 과정에서 러너가 ISTART·ICHARG 를 OUTCAR 첫 줄에서 읽던 버그를 고쳤다 — INCAR 를 되울리는 빌드면 입력값을 실제값으로 읽는다). 실제 묶음은 10-22 에 봉인으로 빌드했다 (같은 명령으로 다시 빌드 = 바이트 동일 · 묶음 안 `sha256sum -c MANIFEST.sha256` OK · 쌍극자 구간 여유 = 위 원자·아래 영상 둘 다 5.0 Å).
 - V5 도구 (개정 4): 시도별 NELM 을 검증된 INCAR 에서 읽고 · `adopt_a4` (부모 자격 · a4 OK 만 채택 · 이력 셋) · **실물 V5 반송 재검사·재집계가 저장본과 바이트 일치** · selftest 228/228.
-- 묶음 MANIFEST.sha256 의 sha256 ⟨봉인 뒤 채움⟩ · P2′ 봉인 manifest sha256 ⟨봉인 뒤 채움⟩ · UMA 단일점 (④) ⟨봉인 뒤 채움 — 결과 전에 돌려 묶어 두고 집계는 반송 뒤 한 번⟩.
+- 묶음 MANIFEST.sha256 의 sha256 `31e4747450d154085b070f8c03936a2c4eb0b5b60962841bb022a0846f9ca61a` · P2′ 봉인 manifest sha256 `65a0ca0e376b3c67737399128bee753f506f8ae32122a5308d97ca8436dac2fe` · UMA 단일점 (④) — 10-22 kgy 봉인 구조 9 개 · 벽시계 16 초 · 결박 ✓ (fairchem 2.21.0 · uma-s-1p1 omat · 체크포인트 07068e9c76702ca1 · 행 9 = 봉인 sha) · `db/raw/wad_p2small_uma_sp_2026_10_17/` (회수 커밋 `eb48146b`). 결과 전에 돌려 묶어 두었고 **집계기에는 아직 안 넣었다** (집계는 반송 뒤 한 번).
 
 ## 2. 리뷰할 것
 
-- 묶음 폴더 ⟨경로 — 봉인 뒤 채움⟩ 전체 (README · run_all.sh · jobs.json · STAGES.tsv · jobs/*/INCAR* · MANIFEST.sha256).
-- 코드: `tools/wad/build_round2_vasp_package.py` (빌더 · RUN_ALL · judge_text · check_attempt · resolve_job · collect · seal_registry · release_text · FAKE_VASP · selftest) · `tools/wad/build_v5_vasp_package.py` (adopt_a4 · NELM) · `tools/wad/build_aprime_s3.py` (seal_p2s) · `tools/wad/build_aprime_interfaces.py` (build_p2small · p05_probe).
+- 묶음 폴더 `db/inputs/wad_round2_vasp_2026_10_22/` 전체 (README · run_all.sh · jobs.json · STAGES.tsv · JOBS.txt · jobs/*/INCAR* · MANIFEST.sha256) · 봉인 폴더 `db/inputs/wad_p2small_seal_2026_10_17/` (p2s_seal_manifest.json · structures/).
+- 코드: `tools/wad/build_round2_vasp_package.py` (빌더 · RUN_ALL · judge_text · check_attempt · resolve_job · collect · seal_registry · release_text · FAKE_VASP · selftest) · `tools/wad/build_v5_vasp_package.py` (adopt_a4 · NELM) · `tools/wad/build_aprime_s3.py` (seal_p2s) · `tools/wad/build_aprime_interfaces.py` (build_p2small · p05_probe) · `tools/wad/se_sym_slab.py` (interface_check · policy_ref).
 - 카드 `db/properties/wad_p2small_vasp_card_2026_10_15.json` · 개정 4 `db/properties/wad_aprime_pilot_prereg_v5_amendment_4_e70_rerun_2026_10_15.json` · CY 회신 `kb/reviews/codex_CY_reply_wad_outsourcing_round2_design_2026_10_15.md`.
 
 ## 3. 확인 요청 (질문마다 GO / 조건부 / NO-GO 와 P0·P1·P2 로)
@@ -53,5 +54,5 @@ CY 에서 설계를 고친 뒤 (카드 v2 · 개정 4 v2 · 1저자 비준 10-17
 - **Q-CZ-6 (집계)** — Δ_C = W_VASP − (W_UMA + ΔD3_VASP) · G3 (S_A · D3 차이의 차이 예산 0.001) · G4 세 단계 (k · σ · ENCUT · 같은 기하 Edisp ≤ 1e-4 eV) · G5_C 상태 순서 (UMA → 등록부 → 분모 → G3/G4 → FAIL → PASS) · 80 % 발동은 **기록만** (판정 불변) · δ 라벨 (s = max(0.01, S_A 등록 검사 |ΔW| 최대) · Li_A 는 0.01) · ②′ 는 두 방법 차이만 · 질문별 실패 전파. 카드와 다른 곳은?
 - **Q-CZ-7 (far 진단 · 전하이동 신호 — 카드가 CZ 에 확인을 미룬 것)** — 신호 ⓐ |Δp_z| ≥ 0.02 e·Å (S_A far ↔ G3 far_ii) · ⓑ G3 (ii) PBE 몫 |ΔW_ii − ΔD3_ii| ≥ 0.001 J/m² 는 우리 제안이다. 문턱이 맞나? **파일럿 S_A far 하나에 LOCPOT 면평균 (LVHAR = .TRUE. · 1차원 텍스트만 반송 · awk 로)** 을 더할지 — 더하면 INCAR 가 바뀌므로 지금 정해야 한다.
 - **Q-CZ-8 (은 a4)** — a4 입력 = V5 봉인 INCAR + 개정 4 차이만 (ⓐ LDIPOL F · LWAVE T / ⓑ ISTART 1 · ICHARG 0 · AMIN 0.01 · NELM 300) · POSCAR·KPOINTS·POTCAR.spec = V5 MANIFEST sha · 채택은 V5 검사기 (`--a4_result` sha 고정) · 등록부 봉인이 V5 등록부와 같은 빌드·같은 PP 가 아니면 거부. 빈틈은?
-- **Q-CZ-9 (봉인)** — P2′ 봉인의 계보 (이완 시작 sha = 레포 초기 구조 = build_record) · 계산기 결박 (kgy fairchem 2.21.0 — S1 측정 기계는 gabia 2.19.0 · UMA_REQ 허용 목록에 2.21.0 · 체크포인트 sha 같음) · p05 가 부모 far 를 공유해도 되는 조건 (규칙이 탐침에 주는 c 가 같다 · 파일 왕복 강체 검사) · D3 만 예측 80 % 규칙의 실행 결과 ⟨봉인 뒤 채움⟩.
+- **Q-CZ-9 (봉인)** — P2′ 봉인의 계보 (이완 시작 sha = 레포 초기 구조 = build_record) · 계산기 결박 (kgy fairchem 2.21.0 — S1 측정 기계는 gabia 2.19.0 · UMA_REQ 허용 목록에 2.21.0 · 체크포인트 sha 같음) · p05 가 부모 far 를 공유해도 되는 조건 (규칙이 탐침에 주는 c 가 같다 · 파일 왕복 강체 검사) · D3 만 예측 80 % 규칙의 실행 결과 (끝점 10 Å 유지 · 80 % 문턱 대비 (i) 19 % · (ii) 30 %). 그리고 **봉인 중 고친 G1p ③ 기준** (§1): 마스크 정책을 부모 빌드 초기 구조에서 재는 것이 맞나, 아니면 이완된 부모에서 다시 재고 동률 규칙을 바꾸는 것이 맞나? `policy_ref` 를 넘기는 길이 다른 검사 (부모 G2 · 강체 이동 검사 · 고정 원자 좌표 일치) 를 조용히 약하게 만들지 않았나? 기본값 None (옛 동작) 을 남긴 것이 다른 호출부에서 같은 거짓 깃발을 다시 낼 길은?
 - **Q-CZ-10 (업체 지시 · 메타)** — README 대로 하면 업체가 의도와 다른 일을 할 수 있는 곳은? 이번에도 '제대로 돌렸나' 만 보고 '맞는 양을 재나' 를 놓치는 곳이 있나?
