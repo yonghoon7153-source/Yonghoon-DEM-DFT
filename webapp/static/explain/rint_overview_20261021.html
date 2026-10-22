@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rint 적용 현황</title>
 <style>
-:root{--bg:#fbfaf7;--fg:#1d1d1b;--mut:#5f5e58;--line:#dedcd3;--card:#ffffff;--acc:#2f5d8a;--warn:#9a5b00;--bad:#a1342b;--ok:#2e6b3a;--chip:#eef2f7}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#17181a;--fg:#e9e7e1;--mut:#a9a69d;--line:#34363a;--card:#1f2124;--acc:#8fb4dc;--warn:#e0a54a;--bad:#e07a70;--ok:#7fc28c;--chip:#263040;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#17181a;--fg:#e9e7e1;--mut:#a9a69d;--line:#34363a;--card:#1f2124;--acc:#8fb4dc;--warn:#e0a54a;--bad:#e07a70;--ok:#7fc28c;--chip:#263040;color-scheme:dark}
+:root{--bg:#fbfaf7;--fg:#1d1d1b;--mut:#5f5e58;--line:#dedcd3;--card:#ffffff;--acc:#2f5d8a;--warn:#9a5b00;--bad:#a1342b;--ok:#2e6b3a;--chip:#eef2f7;--hl:#fff4d6;--hlb:#c9932a}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#17181a;--fg:#e9e7e1;--mut:#a9a69d;--line:#34363a;--card:#1f2124;--acc:#8fb4dc;--warn:#e0a54a;--bad:#e07a70;--ok:#7fc28c;--chip:#263040;--hl:#2c2516;--hlb:#e0a54a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#17181a;--fg:#e9e7e1;--mut:#a9a69d;--line:#34363a;--card:#1f2124;--acc:#8fb4dc;--warn:#e0a54a;--bad:#e07a70;--ok:#7fc28c;--chip:#263040;--hl:#2c2516;--hlb:#e0a54a;color-scheme:dark}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.65 "Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif}
 main{max-width:960px;margin:0 auto;padding:28px 16px 64px}
@@ -45,6 +45,14 @@ body{word-break:keep-all;overflow-wrap:break-word}
 @media (max-width:560px){.gloss{font-size:13px}.gloss table{font-size:13px}.gloss table,.gloss tbody,.gloss tr,.gloss td{display:block;width:auto}.gloss tr:first-child{display:none}.gloss table{border-top:1px solid var(--line);margin:0}.gloss .wrap:first-child table{margin-top:8px}.gloss tr{border-bottom:1px solid var(--line);padding:5px 2px}.gloss td{border:0;padding:0}.gloss td:first-child{display:inline;font-weight:700;white-space:normal}.gloss td:first-child::after{content:" — ";font-weight:400;color:var(--mut)}.gloss td + td{display:inline}}
 .easy{background:var(--chip);border-radius:6px;padding:8px 12px;margin:10px 0}
 .easy b{color:var(--acc)}
+/* v3 (10-22): 1저자 결정 상자 — 하이라이트 (쉽게 말하면 ① ② ③ · 1저자 "잘 하이라이트로 저장해두고") */
+.hl-sec{margin:22px 0 6px}
+.hl-sec > h2{border-top:0;margin:0 0 6px;padding-top:0}
+.hl{background:var(--hl);border:2px solid var(--hlb);border-left-width:7px;border-radius:8px;padding:12px 16px;margin:14px 0}
+.hl h3{font-size:16px;margin:0 0 8px}
+.hl ul{margin:6px 0;padding-left:22px}
+.hl pre{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:8px 10px;margin:8px 0;overflow-x:auto;font:13px/1.45 Consolas,"D2Coding",monospace;white-space:pre}
+.hl table{background:var(--card)}
 figure.fig{margin:18px 0 22px}
 figure.fig > figcaption{font-size:14px;font-weight:600;margin:0 0 8px}
 .fig svg{display:block;width:100%;height:auto;font-family:inherit}
@@ -112,7 +120,7 @@ figure.fig > figcaption{font-size:14px;font-weight:600;margin:0 0 8px}
 <main>
 <nav class="backlink"><a href="/">← DEM/MPM Analyzer 로 돌아가기</a></nav>
 <h1>Rint 적용 현황 — 무엇을 넣고, 어디서 막히나</h1>
-<p class="sub">2026-10-21 · 리포 <code>claude/stoic-knuth-NObVQ</code> · 숫자는 리포 기록 · 원장 · Codex 판정문 기준</p>
+<p class="sub">2026-10-21 · 10-22 갱신 (사전 리뷰 2 회차 1저자 결정 — 상자 ① ② ③ · 남은 길 순서 · 날짜) · 리포 <code>claude/stoic-knuth-NObVQ</code> · 숫자는 리포 기록 · 원장 · Codex 판정문 기준</p>
 
 <section class="first" aria-labelledby="first-h">
 <h2 id="first-h">처음 보는 분께</h2>
@@ -133,6 +141,7 @@ figure.fig > figcaption{font-size:14px;font-weight:600;margin:0 0 8px}
 <tr><th>용어</th><th>뜻</th></tr>
 <tr><td>복셀</td><td>계산 격자의 작은 정육면체 칸 (칸마다 재료 하나)</td></tr>
 <tr><td>R<sub>j</sub></td><td>섬유끼리 맞닿은 자리 (접합) 의 저항 · 기준값 R<sub>j,0</sub></td></tr>
+<tr><td>SV 반사실 비</td><td>DBE 에서 SDCP 를 거쳐 다른 섬유로 넘어가는 다리 (SV) 를 끊고 다시 푼 전도 비 G_전체 / G_끊음 (1 = 안 기댐 · ∞ = 끊김) — 가드용 숫자 · 섬유 둘이 같은 SDCP 덩어리를 지나면 범위 [아래, 위] 로 낸다 (상자 ①)</td></tr>
 <tr><td>침대</td><td>시뮬레이션으로 압축해 만든 전극 구조 한 벌</td></tr>
 <tr><td>holdout</td><td>보정에 쓰지 않고 검증용으로 남겨 둔 측정 — 여기서 DBE 4.68 은 현 세대 보정 (σ_VGCF 2.618) 에 쓰였으므로 holdout 이 아니다</td></tr>
 <tr><td>Codex</td><td>반례로 설계 · 코드를 따져 보는 외부 검토</td></tr>
@@ -148,6 +157,71 @@ figure.fig > figcaption{font-size:14px;font-weight:600;margin:0 0 8px}
 그래서 실측 σ<sub>e</sub> 에 맞추려고 VGCF 전도도를 전극마다 따로 깎아 왔다 (SBE 0.347 · DBE 2.618 S/cm).
 Rint ② 는 이 빠진 접촉 물리를 명시적으로 넣어, <b>접합 저항 하나 (R<sub>j,0</sub>) 를 SBE 한 점에서만 보정</b>하고 같은 모형으로 DBE 를 계산해 실측과 비교하려는 작업이다.
 </div>
+
+<section class="hl-sec" id="decisions-1022" aria-labelledby="hl-h">
+<h2 id="hl-h">★ 10-22 1저자 결정 — 쉽게 말하면 ① ② ③ (사전 리뷰 2 회차)</h2>
+<p class="note">1저자 10-22 원문 <i>"이러한 부분 잘 이해못하니까 잘 하이라이트로 저장해두고 권고대로 해줘"</i> — Q1 (다) · Q2 · Q3 권고대로 · Q3-b (추가 GPU 기계) 는 미답. 상자 글 = 수정 계획 <code>docs/reviews/rint2_design_fix_plan_20261021.md</code> §6 원문 그대로 (같은 상자가 등록 R §5-6 · §11 · §10-4 에 있다) · 상자 ② 의 "지금 순서" = 10-22 고치기 전 순서.</p>
+<div class="hl" id="easy-1">
+<h3>★ 쉽게 말하면 ① — SV 반사실 비가 왜 범위로 나오나 (Q1 (다) · 1저자 10-22 <i>"잘 하이라이트로 저장해두고"</i>)</h3>
+<ul>
+<li><b>SV 반사실</b> = DBE 에서 "SDCP 를 거쳐 다른 섬유로 넘어가는 다리" 를 끊고 다시 풀어, 전도가 몇 분의 1 로 주는지 보는 가드다.
+<ul>
+<li>비 = G_전체 / G_끊음 (1 = 안 기댐 · 2 = 반으로 줆 · ∞ = 끊김).</li>
+<li>문턱을 넘으면 <code>SV_DEPENDENT</code> 가 붙고 판정 문장이 보류된다 (SBE 에는 SDCP 가 없어 SBE 보정이 이 기여를 확인할 수 없기 때문).</li>
+</ul>
+</li>
+<li><b>문제</b> = 섬유 두 개가 같은 SDCP 덩어리를 지나가면, 코드가 "섬유 자기 길" 과 "다른 섬유로 건너가는 다리" 를 셀 단위로 못 가른다 → 아무것도 안 끊고 비 1.0 → "SDCP 에 안 기댄다" 로 잘못 나온다.
+<pre>아래 판 ─ 섬유 A ─┐
+                  [SDCP 덩어리]   ← A 와 B 가 둘 다 이 덩어리를 지나감
+                  └─ 섬유 B ─ 위 판        (길이 이것 하나뿐 → 참 비 = ∞)</pre>
+</li>
+<li><b>(다) = 비를 두 번 풀어 범위로 낸다.</b>
+<ul>
+<li>아래 끝 = 덩어리를 그대로 둔 판 (다리가 살아 있어 참 비보다 작거나 같다).</li>
+<li>위 끝 = 덩어리를 통째로 뺀 판 (섬유 자기 길까지 끊어 참 비보다 크거나 같다).</li>
+<li>같은 셀 그래프에서 간선을 더 빼면 전도는 줄기만 한다 → 참 비 ("섬유 자기 길은 살리고 다리만 끊은 판") 는 두 끝 사이다.</li>
+</ul>
+</li>
+<li><b>무엇이 한 값이고 무엇이 범위인가</b>
+<div class="wrap"><table><tr><th>무엇</th><th>(다) 에서</th></tr><tr><td>DBE σ_e (실험 4.68 과 비교하는 주 값)</td><td><b>한 값</b> — 지금과 같다 (주 풀이는 안 바뀜)</td></tr><tr><td>SV 반사실 비 (가드용 숫자)</td><td><b>범위 [아래, 위]</b> — 참값은 그 사이 어딘가 · 정확한 한 값은 구하지 않는다</td></tr><tr><td>SV 판정 (표지)</td><td><b>범위로 정한다</b> — 아래 끝 &gt; 문턱 → <code>SV_DEPENDENT</code> · 위 끝 ≤ 문턱 → 표지 없음 · 걸치면 <code>SV_UNCHECKED</code> (차단)</td></tr></table></div>
+</li>
+<li>풀이 과정은 흐려지지 않는다 — 풀이 두 번이 각각 한 숫자를 정확히 낸다.  못 가른 덩어리가 없는 팔은 두 풀이가 같아 지금처럼 한 값이다.
+</li>
+<li>비유: 저울이 "3–5 kg 사이" 까지만 알려 준다.  "2 kg 넘나?" 는 확실히 예, "4 kg 넘나?" 는 모름 → 모르면 차단한다.
+</li>
+<li>판정 예 (숫자는 예시 · 문턱 2 가정 · 실제 문턱 = Codex 회신 뒤 1저자 · Q-G): [1.0, ∞] → 걸침 → <code>SV_UNCHECKED</code> · [1.02, 1.3] → 표지 없음 · [3.5, 9] → <code>SV_DEPENDENT</code> · [1.1, 1.1] → 한 값.
+</li>
+<li>한정: 범위는 "지금 셀 그래프 안에서" 만 보장된다.  (나) 처럼 섬유 길을 새로 따로 그리는 정의면 드물게 범위 밖일 수 있다 → (나) 가 필요한지 Codex 에 묻는다.
+</li>
+<li>비용: 못 가른 덩어리가 있는 SV 팔에만 한 번 더 푼다 (최대 4 · 세 R 이면 12 · 주 판정 78 팔에 비해 작다).
+</li>
+</ul>
+</div>
+<div class="hl" id="easy-2">
+<h3>★ 쉽게 말하면 ② — 계획 봉인 순서 (Q2)</h3>
+<ul>
+<li>지금 순서: 재압밀 → S0 단계 1 (SBE 기하) → 계획 봉인 → S0 단계 2 (DBE 기하 열람) → ⑥ 숫자 탐침 (maxiter) → 계획 <b>다시</b> 등록 → R 런.  DBE 를 본 뒤 계획을 다시 쓰니, 그때 s_min · SV 문턱 · 점 수를 바꿔도 사슬이 모른다 (사람 규율만 막는다).
+</li>
+<li>바꾼 순서: 재압밀 → S0 단계 1 → <b>⑥ 숫자 탐침 (SBE · σ 봉인)</b> → Codex 요청 (기하 + 반복 수) → 회신 → 세 숫자 → <b>계획 하나 봉인</b> → S0 단계 2 (DBE) → R 런 (<b>사슬이 계획 해시를 대조 · 다르면 멈춤</b>).
+</li>
+<li>얻는 것: DBE 를 보기 전에 계획이 한 번만 봉인되고, 기계가 확인한다.  ⑥ 의 실침대 반복 수를 Codex 요청과 시간 판단 (Q3) 에 바로 쓴다.
+</li>
+</ul>
+</div>
+<div class="hl" id="easy-3">
+<h3>★ 쉽게 말하면 ③ — 시간 (Q3)</h3>
+<ul>
+<li>주 판정 ① = 78 팔.  등록 어림 95–112 h 는 "같은 꼴 안에서 오차 기준만 바꾼 비" 만 넣은 값이었다.  접합이 켜진 꼴은 합성 침대에서 반복이 6–7 배라 ≈ 191–231 h (추정) 다.
+</li>
+<li>이 추정은 작은 합성 침대 값이라 실침대는 더 클 수도 작을 수도 있다 → ⑥ 실측 직후를 결정점으로 둔다.
+</li>
+<li>한 대로 10-25 에 시작하면 ≈ 11-01 – 11-03 에 끝난다 (추정) → 10-31 에는 진행 보고만 한다.  두 대면 ≈ 10-29 – 30 (추정).
+</li>
+<li>팔을 줄이지 않는 이유: 진행을 보고 뺄 팔을 고르면 결과 뒤 선택이 되어 등록 판정이 무너진다.
+</li>
+</ul>
+</div>
+</section>
 
 <h2>1. 지금 시뮬레이션에서 σ 가 나오는 길</h2>
 <p class="easy"><b>쉽게 말하면</b> — 지금 계산은 입자나 섬유가 닿기만 하면 한 덩어리로 붙은 것처럼 전류를 흘린다. 맞닿은 자리의 저항이 통째로 빠져 있다.</p>
@@ -235,30 +309,31 @@ Rint ② 는 이 빠진 접촉 물리를 명시적으로 넣어, <b>접합 저�
 <tr><td>—</td><td>자잘한 실수 · 재시작</td><td>회당 10–45 분</td><td>지운 작업 트리를 가리키던 링크 · 시험 중 트리 수정 · 문서 경로 오타 · 컨테이너 재시작</td><td>게이트 전 문서 참조 검사 · 시험 중 트리 건드리지 않기</td></tr>
 </table></div>
 <figure class="fig">
-<figcaption>그림 6 · 남은 길과 병목이 걸리는 자리 — 금요일 재압밀 전에 코드 · 등록 · Codex GO 를 끝내야 한다</figcaption>
-<svg class="wide" viewBox="0 0 940 258" role="img" aria-label="남은 길: 수정 묶음 A·B·C, 합치기·게이트·push, 사전 공격 리뷰, Codex 재검토, 재압밀 (금요일 10-23 쯤), S0, 문턱·s_min 개정, 숫자 탐침, 보정 사다리, DBE 네 모서리 예측, 판정 (일요일 10-25 목표). 병목: ② push 마다 45 분 게이트, ① Codex HOLD 회차, ③ GPU 재압밀 미착수." xmlns="http://www.w3.org/2000/svg"><defs><marker id="f6w-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,1 L10,5 L0,9 z" class="fm"/></marker><marker id="f6w-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,1 L10,5 L0,9 z" class="fa"/></marker><marker id="f6w-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,1 L10,5 L0,9 z" class="fb"/></marker></defs><path d="M14,40 V32 H326 V40" class="lna"/><text x="14" y="23" font-size="12.5" class="ta b">금요일 (10-23) 전에 끝내 둘 것 — 코드 · 등록 · Codex GO</text><rect x="51" y="50" width="150" height="44" rx="8" class="btag"/><text x="126" y="68" font-size="12.5" text-anchor="middle" class="tb b">② 45 분 게이트</text><text x="126" y="86" font-size="11.5" text-anchor="middle" class="tm">push 마다 · 줄이지 않음</text><line x1="126" y1="94" x2="126" y2="130" class="lnb dash"/><rect x="223" y="50" width="150" height="44" rx="8" class="btag"/><text x="298" y="68" font-size="12.5" text-anchor="middle" class="tb b">① Codex HOLD 회차</text><text x="298" y="86" font-size="11.5" text-anchor="middle" class="tm">회차당 반나절 이상</text><line x1="298" y1="94" x2="298" y2="130" class="lnb dash"/><rect x="395" y="50" width="150" height="44" rx="8" class="btag"/><text x="470" y="68" font-size="12.5" text-anchor="middle" class="tb b">③ GPU 재압밀</text><text x="470" y="86" font-size="11.5" text-anchor="middle" class="tm">미착수 · 금요일 쯤</text><line x1="404" y1="94" x2="388" y2="131" class="lnb dash"/><line x1="24" y1="140" x2="916" y2="140" class="tl"/><circle cx="40" cy="140" r="8" class="tn"/><text x="40" y="170" font-size="12.5" text-anchor="middle" class="b">수정 묶음</text><text x="40" y="187" font-size="12" text-anchor="middle" class="tm">A · B · C</text><text x="40" y="204" font-size="12" text-anchor="middle" class="tm">(진행 중)</text><circle cx="126" cy="140" r="8" class="tn"/><text x="126" y="170" font-size="12.5" text-anchor="middle" class="b">합치기</text><text x="126" y="187" font-size="12" text-anchor="middle" class="tm">게이트 · push</text><circle cx="212" cy="140" r="8" class="tn"/><text x="212" y="170" font-size="12.5" text-anchor="middle" class="b">사전 공격</text><text x="212" y="187" font-size="12" text-anchor="middle" class="tm">리뷰</text><circle cx="298" cy="140" r="8" class="tn"/><text x="298" y="170" font-size="12.5" text-anchor="middle" class="b">Codex</text><text x="298" y="187" font-size="12" text-anchor="middle" class="tm">재검토 → GO</text><circle cx="384" cy="140" r="8" class="tn"/><text x="384" y="170" font-size="12.5" text-anchor="middle" class="b">재압밀</text><text x="384" y="187" font-size="12" text-anchor="middle" class="tm">금요일</text><text x="384" y="204" font-size="12" text-anchor="middle" class="tm">10-23 쯤</text><circle cx="470" cy="140" r="8" class="tn"/><text x="470" y="170" font-size="12.5" text-anchor="middle" class="b">S0</text><text x="470" y="187" font-size="12" text-anchor="middle" class="tm">새 SBE 기하</text><circle cx="556" cy="140" r="8" class="tn"/><text x="556" y="170" font-size="12.5" text-anchor="middle" class="b">문턱 · s_min</text><text x="556" y="187" font-size="12" text-anchor="middle" class="tm">개정</text><circle cx="642" cy="140" r="8" class="tn"/><text x="642" y="170" font-size="12.5" text-anchor="middle" class="b">숫자</text><text x="642" y="187" font-size="12" text-anchor="middle" class="tm">탐침</text><circle cx="728" cy="140" r="8" class="tn"/><text x="728" y="170" font-size="12.5" text-anchor="middle" class="b">보정 사다리</text><text x="728" y="187" font-size="12" text-anchor="middle" class="tm">(SBE)</text><circle cx="814" cy="140" r="8" class="tn"/><text x="814" y="170" font-size="12.5" text-anchor="middle" class="b">DBE 예측</text><text x="814" y="187" font-size="12" text-anchor="middle" class="tm">네 모서리</text><circle cx="900" cy="140" r="8" class="tnf"/><text x="900" y="170" font-size="12.5" text-anchor="middle" class="b">판정</text><text x="900" y="187" font-size="12" text-anchor="middle" class="tm">일요일</text><text x="900" y="204" font-size="12" text-anchor="middle" class="tm">10-25 목표</text><text x="14" y="246" font-size="11.5" class="tm">빨간 점선 = 병목 (위 표의 번호)</text></svg>
-<svg class="tall" viewBox="0 0 380 600" role="img" aria-label="남은 길: 수정 묶음 A·B·C, 합치기·게이트·push, 사전 공격 리뷰, Codex 재검토, 재압밀 (금요일 10-23 쯤), S0, 문턱·s_min 개정, 숫자 탐침, 보정 사다리, DBE 네 모서리 예측, 판정 (일요일 10-25 목표). 병목: ② push 마다 45 분 게이트, ① Codex HOLD 회차, ③ GPU 재압밀 미착수." xmlns="http://www.w3.org/2000/svg"><defs><marker id="f6t-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,1 L10,5 L0,9 z" class="fm"/></marker><marker id="f6t-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,1 L10,5 L0,9 z" class="fa"/></marker><marker id="f6t-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,1 L10,5 L0,9 z" class="fb"/></marker></defs><text x="16" y="24" font-size="12.5" class="ta b">금요일 (10-23) 전에 끝내 둘 것</text><text x="16" y="42" font-size="12.5" class="ta b">코드 · 등록 · Codex GO</text><rect x="6" y="58" width="368" height="180" rx="8" class="bandl"/><line x1="32" y1="76" x2="32" y2="556" class="tl"/><circle cx="32" cy="76" r="7" class="tn"/><text x="52" y="80.5" font-size="13">수정 묶음 A · B · C (진행 중)</text><circle cx="32" cy="124" r="7" class="tn"/><text x="52" y="128.5" font-size="13">합치기 · 게이트 · push</text><circle cx="32" cy="172" r="7" class="tn"/><text x="52" y="176.5" font-size="13">사전 공격 리뷰 (반례 만들기 포함)</text><circle cx="32" cy="220" r="7" class="tn"/><text x="52" y="224.5" font-size="13">Codex 재검토 → GO</text><circle cx="32" cy="268" r="7" class="tn"/><text x="52" y="272.5" font-size="13">재압밀 · 금요일 (10-23) 쯤</text><circle cx="32" cy="316" r="7" class="tn"/><text x="52" y="320.5" font-size="13">S0 · 새 SBE 기하</text><circle cx="32" cy="364" r="7" class="tn"/><text x="52" y="368.5" font-size="13">문턱 · s_min 개정</text><circle cx="32" cy="412" r="7" class="tn"/><text x="52" y="416.5" font-size="13">숫자 탐침</text><circle cx="32" cy="460" r="7" class="tn"/><text x="52" y="464.5" font-size="13">보정 사다리 (SBE)</text><circle cx="32" cy="508" r="7" class="tn"/><text x="52" y="512.5" font-size="13">DBE 네 모서리 예측</text><circle cx="32" cy="556" r="7" class="tnf"/><text x="52" y="560.5" font-size="13" class="ta b">판정 · 일요일 (10-25) 목표</text><rect x="228" y="112" width="146" height="24" rx="12" class="btag"/><text x="301" y="128.5" font-size="11.5" text-anchor="middle" class="tb b">② 45 분 게이트</text><rect x="228" y="208" width="146" height="24" rx="12" class="btag"/><text x="301" y="224.5" font-size="11.5" text-anchor="middle" class="tb b">① Codex HOLD 회차</text><rect x="228" y="256" width="146" height="24" rx="12" class="btag"/><text x="301" y="272.5" font-size="11.5" text-anchor="middle" class="tb b">③ GPU 재압밀</text><text x="16" y="588" font-size="11.5" class="tm">빨간 표 = 병목 (위 표의 번호)</text></svg>
+<figcaption>그림 6 · 남은 길과 병목이 걸리는 자리 (10-22 순서 · 상자 ②) — 금요일 재압밀 전에 2 회차 고침 · 합치기 · 게이트를 끝내고, Codex 요청은 S0 단계 1 · ⑥ 숫자 탐침 뒤에 한다</figcaption>
+<svg class="wide" viewBox="0 0 940 258" role="img" aria-label="남은 길 (10-22 순서 · 상자 ②): 2 회차 고침 A – H, 합치기 · 짧은 재확인 · 게이트 · push, 재압밀 (금요일 10-23 쯤), S0 단계 1 (새 SBE 기하), ⑥ 숫자 탐침 (SBE · σ 봉인), Codex 요청 → 회신 · 세 숫자 (≈ 10-24), 계획 하나 봉인 (개정 커밋), S0 단계 2 (DBE 열람), 보정 사다리 (SBE), DBE 네 모서리 예측, 주 판정 (한 대 ≈ 11-01 – 11-03 추정 · 10-31 판정 = 주 판정만 · 감도 미완료 · 주 판정이 10-31 에 안 끝나면 10-31 판정 없이 진행 보고만). 병목: ② push 마다 45 분 게이트, ③ GPU 재압밀 미착수, ① Codex HOLD 회차." xmlns="http://www.w3.org/2000/svg"><defs><marker id="f6w-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,1 L10,5 L0,9 z" class="fm"/></marker><marker id="f6w-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,1 L10,5 L0,9 z" class="fa"/></marker><marker id="f6w-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,1 L10,5 L0,9 z" class="fb"/></marker></defs><path d="M14,40 V32 H154 V40" class="lna"/><text x="14" y="23" font-size="12.5" class="ta b">금요일 (10-23) 재압밀 전에 끝내 둘 것 — 2 회차 고침 · 합치기 · 게이트 · push</text><rect x="51" y="50" width="150" height="44" rx="8" class="btag"/><text x="126" y="68" font-size="12.5" text-anchor="middle" class="tb b">② 45 분 게이트</text><text x="126" y="86" font-size="11.5" text-anchor="middle" class="tm">push 마다 · 줄이지 않음</text><line x1="126" y1="94" x2="126" y2="130" class="lnb dash"/><rect x="223" y="50" width="150" height="44" rx="8" class="btag"/><text x="298" y="68" font-size="12.5" text-anchor="middle" class="tb b">③ GPU 재압밀</text><text x="298" y="86" font-size="11.5" text-anchor="middle" class="tm">미착수 · 금요일 쯤</text><line x1="250" y1="94" x2="216" y2="131" class="lnb dash"/><rect x="395" y="50" width="150" height="44" rx="8" class="btag"/><text x="470" y="68" font-size="12.5" text-anchor="middle" class="tb b">① Codex HOLD 회차</text><text x="470" y="86" font-size="11.5" text-anchor="middle" class="tm">회차당 반나절 이상</text><line x1="470" y1="94" x2="470" y2="130" class="lnb dash"/><line x1="24" y1="140" x2="916" y2="140" class="tl"/><circle cx="40" cy="140" r="8" class="tn"/><text x="40" y="170" font-size="12.5" text-anchor="middle" class="b">2 회차 고침</text><text x="40" y="187" font-size="12" text-anchor="middle" class="tm">A – H</text><text x="40" y="204" font-size="12" text-anchor="middle" class="tm">(10-22)</text><circle cx="126" cy="140" r="8" class="tn"/><text x="126" y="170" font-size="12.5" text-anchor="middle" class="b">합치기 · 재확인</text><text x="126" y="187" font-size="12" text-anchor="middle" class="tm">게이트 · push</text><circle cx="212" cy="140" r="8" class="tn"/><text x="212" y="170" font-size="12.5" text-anchor="middle" class="b">재압밀</text><text x="212" y="187" font-size="12" text-anchor="middle" class="tm">금요일</text><text x="212" y="204" font-size="12" text-anchor="middle" class="tm">10-23 쯤</text><circle cx="298" cy="140" r="8" class="tn"/><text x="298" y="170" font-size="12.5" text-anchor="middle" class="b">S0 단계 1</text><text x="298" y="187" font-size="12" text-anchor="middle" class="tm">새 SBE 기하</text><circle cx="384" cy="140" r="8" class="tn"/><text x="384" y="170" font-size="12.5" text-anchor="middle" class="b">⑥ 숫자 탐침</text><text x="384" y="187" font-size="12" text-anchor="middle" class="tm">(SBE · σ 봉인)</text><circle cx="470" cy="140" r="8" class="tn"/><text x="470" y="170" font-size="12.5" text-anchor="middle" class="b">Codex 요청</text><text x="470" y="187" font-size="12" text-anchor="middle" class="tm">→ 회신 · 세 숫자</text><text x="470" y="204" font-size="12" text-anchor="middle" class="tm">≈ 10-24</text><circle cx="556" cy="140" r="8" class="tn"/><text x="556" y="170" font-size="12.5" text-anchor="middle" class="b">계획 하나 봉인</text><text x="556" y="187" font-size="12" text-anchor="middle" class="tm">(개정 커밋)</text><circle cx="642" cy="140" r="8" class="tn"/><text x="642" y="170" font-size="12.5" text-anchor="middle" class="b">S0 단계 2</text><text x="642" y="187" font-size="12" text-anchor="middle" class="tm">(DBE 열람)</text><circle cx="728" cy="140" r="8" class="tn"/><text x="728" y="170" font-size="12.5" text-anchor="middle" class="b">보정 사다리</text><text x="728" y="187" font-size="12" text-anchor="middle" class="tm">(SBE)</text><circle cx="814" cy="140" r="8" class="tn"/><text x="814" y="170" font-size="12.5" text-anchor="middle" class="b">DBE 예측</text><text x="814" y="187" font-size="12" text-anchor="middle" class="tm">네 모서리</text><circle cx="900" cy="140" r="8" class="tnf"/><text x="900" y="170" font-size="12.5" text-anchor="middle" class="b">주 판정</text><text x="900" y="187" font-size="12" text-anchor="middle" class="tm">≈ 11-01–03</text><text x="900" y="204" font-size="12" text-anchor="middle" class="tm">추정 · 한 대</text><text x="14" y="246" font-size="11.5" class="tm">빨간 점선 = 병목 (위 표의 번호)</text><text x="926" y="246" font-size="11.5" text-anchor="end" class="tm">10-31 = 주 판정만 (감도 미완료) · 안 끝나면 진행 보고만</text></svg>
+<svg class="tall" viewBox="0 0 380 620" role="img" aria-label="남은 길 (10-22 순서 · 상자 ②): 2 회차 고침 A – H, 합치기 · 짧은 재확인 · 게이트 · push, 재압밀 (금요일 10-23 쯤), S0 단계 1 (새 SBE 기하), ⑥ 숫자 탐침 (SBE · σ 봉인), Codex 요청 → 회신 · 세 숫자 (≈ 10-24), 계획 하나 봉인 (개정 커밋), S0 단계 2 (DBE 열람), 보정 사다리 (SBE), DBE 네 모서리 예측, 주 판정 (한 대 ≈ 11-01 – 11-03 추정 · 10-31 판정 = 주 판정만 · 감도 미완료 · 주 판정이 10-31 에 안 끝나면 10-31 판정 없이 진행 보고만). 병목: ② push 마다 45 분 게이트, ③ GPU 재압밀 미착수, ① Codex HOLD 회차." xmlns="http://www.w3.org/2000/svg"><defs><marker id="f6t-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,1 L10,5 L0,9 z" class="fm"/></marker><marker id="f6t-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,1 L10,5 L0,9 z" class="fa"/></marker><marker id="f6t-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,1 L10,5 L0,9 z" class="fb"/></marker></defs><text x="16" y="24" font-size="12.5" class="ta b">금요일 (10-23) 재압밀 전에 끝내 둘 것</text><text x="16" y="42" font-size="12.5" class="ta b">2 회차 고침 · 합치기 · 게이트 · push</text><rect x="6" y="58" width="368" height="84" rx="8" class="bandl"/><line x1="32" y1="76" x2="32" y2="556" class="tl"/><circle cx="32" cy="76" r="7" class="tn"/><text x="52" y="80.5" font-size="13">2 회차 고침 A – H (10-22)</text><circle cx="32" cy="124" r="7" class="tn"/><text x="52" y="128.5" font-size="13">합치기 · 재확인 · 게이트</text><circle cx="32" cy="172" r="7" class="tn"/><text x="52" y="176.5" font-size="13">재압밀 · 금요일 (10-23) 쯤</text><circle cx="32" cy="220" r="7" class="tn"/><text x="52" y="224.5" font-size="13">S0 단계 1 · 새 SBE 기하</text><circle cx="32" cy="268" r="7" class="tn"/><text x="52" y="272.5" font-size="13">⑥ 숫자 탐침 (SBE · σ 봉인)</text><circle cx="32" cy="316" r="7" class="tn"/><text x="52" y="320.5" font-size="13">Codex 요청 → 회신</text><circle cx="32" cy="364" r="7" class="tn"/><text x="52" y="368.5" font-size="13">세 숫자 → 계획 하나 봉인 (개정 커밋)</text><circle cx="32" cy="412" r="7" class="tn"/><text x="52" y="416.5" font-size="13">S0 단계 2 (DBE 열람)</text><circle cx="32" cy="460" r="7" class="tn"/><text x="52" y="464.5" font-size="13">보정 사다리 (SBE)</text><circle cx="32" cy="508" r="7" class="tn"/><text x="52" y="512.5" font-size="13">DBE 네 모서리 예측</text><circle cx="32" cy="556" r="7" class="tnf"/><text x="52" y="560.5" font-size="13" class="ta b">주 판정 · 한 대 ≈ 11-01–03 (추정)</text><text x="52" y="584" font-size="11.5" class="tm">10-31 = 주 판정만 (감도 미완료) · 안 끝나면 진행 보고만</text><rect x="228" y="112" width="146" height="24" rx="12" class="btag"/><text x="301" y="128.5" font-size="11.5" text-anchor="middle" class="tb b">② 45 분 게이트</text><rect x="228" y="304" width="146" height="24" rx="12" class="btag"/><text x="301" y="320.5" font-size="11.5" text-anchor="middle" class="tb b">① Codex HOLD 회차</text><rect x="228" y="160" width="146" height="24" rx="12" class="btag"/><text x="301" y="176.5" font-size="11.5" text-anchor="middle" class="tb b">③ GPU 재압밀</text><text x="16" y="608" font-size="11.5" class="tm">빨간 표 = 병목 (위 표의 번호)</text></svg>
 </figure>
 
-<h2>6. 남은 길 (목표: 일요일 10-25)</h2>
-<p class="easy"><b>쉽게 말하면</b> — 고친 설계를 다시 검토받아 통과시키고, 금요일 쯤 새 침대를 만든 뒤, 일요일까지 SBE 로 저항값을 맞추고 DBE 를 예측해 판정하는 순서다.</p>
+<h2>6. 남은 길 (10-22 순서 · 10-31 = 주 판정만 · 등록 R §10-4)</h2>
+<p class="easy"><b>쉽게 말하면</b> — 2 회차 고침을 합친 뒤 금요일 쯤 새 침대를 만들고, SBE 기하와 숫자 탐침을 본 다음 Codex 에 다시 보내 계획을 한 번만 봉인한다. 그다음에야 DBE 를 열고, SBE 로 저항값을 맞춰 DBE 를 예측해 판정한다. 주 판정은 한 대로 10-25 에 시작해도 ≈ 11-01 – 11-03 에 끝나 (추정) 10-31 에는 진행 보고만 한다.</p>
 <ol>
-<li>수정 묶음 A (S2 핵심) · B (목표량 증서 · 작은 것) · C (등록 R · 설계 · kgy 문서) — 진행 중</li>
-<li>합치기 → 게이트 → push → 사전 공격 리뷰 (반례 만들기 포함)</li>
-<li>Codex 재검토 요청 (설계 + 구현 한 회차) → GO</li>
-<li>재압밀 (금요일 10-23 쯤 · 1저자) → S0 (새 SBE 기하) → 문턱 · s_min 개정 → 숫자 탐침</li>
-<li>보정 사다리 (SBE) → DBE 네 모서리 예측 → 판정 → 원고 Table S3 · S17</li>
+<li>2 회차 고침 (A – H · 10-22) → 합치기 → 짧은 독립 재확인 → 게이트 → push</li>
+<li>재압밀 (금요일 10-23 쯤 · 1저자 · kgy) → S0 단계 1 (새 SBE 기하 · σ 없음) → s_min 개발 단계</li>
+<li>⑥ 숫자 탐침 (SBE · σ 봉인 · 반복 수 · 시간) — 실측 직후 = 시간 결정점 (실측 반복 수 × 팔 수로 다시 어림 · 등록 R §10-4)</li>
+<li>Codex 재검토 요청 (설계 + 구현 · S0 기하 + ⑥ 반복 수 · ≈ 10-24) → 회신 → 세 숫자 → 계획 하나 봉인 (등록 R §2-1 개정 커밋 하나 · 그 뒤 계획을 다시 등록하지 않는다)</li>
+<li>S0 단계 2 (DBE 열람) → 보정 사다리 (SBE) → DBE 네 모서리 예측 → 주 판정 (10-31 판정 = 주 판정만 · 한정어 ⑰ "감도 미완료") → 감도 → 전체 판정 → 원고 Table S3 · S17</li>
 </ol>
-<p class="note">Codex 재검토 회차가 한 번 더 필요하고 재압밀이 금요일이라, 일요일 안 정량 판정까지는 빠듯하다 — 금요일 전에 코드 · 등록 · Codex GO 를 끝내 두는 것이 관건.</p>
+<p class="note">주 판정 (78 팔) ≈ 191–231 시간 (추정 · 합성 침대 반복 비) — 한 대로 10-25 에 시작하면 ≈ 11-01 – 11-03 · 두 대면 ≈ 10-29 – 30 (추정). 등록 R §10-4 결과 전 문장: 주 판정이 10-31 에 안 끝나면 10-31 판정은 없고 진행 보고만 한다 · 등록 팔은 줄이지 않는다. 추가 GPU 기계 = 1저자 (Q3-b 미답).</p>
 
-<h2>7. 정한 것 (1저자 10-21)</h2>
-<p class="easy"><b>쉽게 말하면</b> — 1저자는 고치는 방법을 권고대로 정했고, 자동 검사는 줄이지 않으며, 검토에 보내기 전에 반례로 먼저 깨 보고, 재압밀은 금요일 쯤 하기로 했다.</p>
+<h2>7. 정한 것 (1저자 10-21 · 10-22)</h2>
+<p class="easy"><b>쉽게 말하면</b> — 1저자는 고치는 방법을 권고대로 정했고, 자동 검사는 줄이지 않으며, 검토에 보내기 전에 반례로 먼저 깨 보고, 재압밀은 금요일 쯤 하기로 했다. 10-22 에는 SV 반사실 비를 범위로 판정하기 · 계획 봉인 순서 · 시간 문장을 권고대로 정했다 (위 상자 ① ② ③).</p>
 <div class="wrap"><table>
 <tr><th>무엇</th><th>결정</th></tr>
 <tr><td>수정 계획 Q1–Q12 · Q13</td><td>전부 권고대로</td></tr>
 <tr><td>게이트</td><td>줄이지 않음 — 모든 push 전 전체 게이트 그대로</td></tr>
 <tr><td>사전 리뷰</td><td>Codex 에 보내기 전, 보장마다 독립 에이전트가 해석 반례를 만들어 깨 본다 (이번 재검토 요청서부터)</td></tr>
 <tr><td>재압밀</td><td>금요일 (10-23) 쯤</td></tr>
+<tr><td>사전 리뷰 2 회차 Q1 (다) · Q2 · Q3 (10-22)</td><td>권고대로 — 위 상자 ① ② ③ · Q3-b (추가 GPU 기계) 는 미답</td></tr>
 </table></div>
 </main>
 </body>
