@@ -1303,10 +1303,6 @@ def check_attempt(job, pkgdir, attdir, rung, registry=None, a_ref=None):
         return done(st, f"판정 계약 {why} (행 {n} · dE {de} · d eps {dp})")
     # ── ③ 완결성 (OK 만) ──
     r["settings_sources"] = src
-    if job["method"] == "optb88" and r.get("kernel_state") != "read":
-        krx = (registry or {}).get("kernel_read_regex") or ""
-        return done("KERNEL_UNVERIFIED", f"등록부 커널 읽기 문구 /{krx}/ 가 OUTCAR·stdout 원문에 없다" if krx else
-                    "vdW 커널 읽기 확인 미완 — 파일럿 원문으로 확정한 문구 (등록부 kernel_read_regex) 가 아직 없다 (CZ: 확정 전에는 읽었다고 하지 않는다)")
     if not o or not o["outcar_titel"] or len(o["outcar_titel"]) < len(titel):
         return done("POTCAR_UNVERIFIED", "성공한 실행인데 OUTCAR TITEL 이 없거나 앞부분만 있다")
     if any(k in missing for k in ("NIONS", "NELECT")):
@@ -1317,6 +1313,10 @@ def check_attempt(job, pkgdir, attdir, rung, registry=None, a_ref=None):
         return done("ENERGY_UNPARSEABLE", "마지막 FREE ENERGIE 구획의 TOTEN·E(σ→0) 가 없다")
     if job["method"] != "optb88" and (ref is None or o["Edisp_eV"] is None):
         return done("D3_UNVERIFIED", "D3 기대값 또는 Edisp 없음")
+    if job["method"] == "optb88" and r.get("kernel_state") != "read":      # 다른 완결성 검사 뒤 — 커널 확인 대기가 결측을 가리지 않게 (Codex DB P1-2)
+        krx = (registry or {}).get("kernel_read_regex") or ""
+        return done("KERNEL_UNVERIFIED", f"등록부 커널 읽기 문구 /{krx}/ 가 OUTCAR·stdout 원문에 없다" if krx else
+                    "vdW 커널 읽기 확인 미완 — 파일럿 원문으로 확정한 문구 (등록부 kernel_read_regex) 가 아직 없다 (CZ: 확정 전에는 읽었다고 하지 않는다)")
     return done("OK")
 
 
@@ -3066,6 +3066,18 @@ def _selftest():
         rdb2b = resolve_job(J[OB], tdb2b, os.path.join(tdb2b, "run"), reg7)
         ck("⛔음성 DB Q-DB-8 ② (Codex · VASP 포럼 출력 사례): vdW 를 말하지 않는 확인된 부정문 'No kernel file found' 가 커널 읽기 긍정 문구와 같이 있으면 KERNEL_NOT_READ "
            "(좁은 예외 패턴 · 지금까지는 긍정이 이겨 OK)", rdb2b["status"] == "KERNEL_NOT_READ", (rdb2b["status"], rdb2b.get("why")))
+        # DB ③ 봉인 완결성 — 커널 확인 대기 (KERNEL_UNVERIFIED) 가 다른 필수값 결측을 가리지 않는다 (ⓐ 에 허용한 결측 예외를 측정 시도까지 넓히지 않는다)
+        for lab_, old_, new_, want_ in (("해석 GGA 줄", "   GGA     =    BO    GGA type\n", "", "SETTINGS_UNVERIFIED"), ("PARAM1 줄", "   PARAM1  =  0.1833\n", "", "SETTINGS_UNVERIFIED"),
+                                         ("TITEL 줄", "   TITEL  = PAW_PBE C 08Apr2002\n", "", "POTCAR_UNVERIFIED")):
+            tdb3 = os.path.join(T, f"tdb3_{abs(hash(lab_))}"); shutil.copytree(PKG, tdb3, ignore=shutil.ignore_patterns("round2_return*"))
+            sw_ = outcar_edit(os.path.join(tdb3, "run", "CC_S33_AB_optB88_bound"), old_, new_)
+            st3 = check_attempt(J["CC_S33_AB_optB88_bound"], tdb3, os.path.join(tdb3, "run", "CC_S33_AB_optB88_bound"), "0")["status"]
+            try:
+                seal_registry(tdb3, tdb3, msha, v5_registry=v5r, kernel_read_regex=KREG); msg3 = "(봉인됨)"
+            except PkgError as e:
+                msg3 = str(e)
+            ck(f"⛔음성 DB P1-2 (Codex 재현 · 파일럿 optB88 OUTCAR 의 {lab_} 지움 · sha 맞춤): 등록부 전이라도 {want_} (커널 확인 대기가 결측을 가리지 않는다) · 봉인 거부 "
+               "(지금까지는 KERNEL_UNVERIFIED 로 봉인됐다)", sw_ and st3 == want_ and want_ in msg3, (sw_, st3, msg3[:200]))
     finally:
         if os.environ.get("R2_SELFTEST_KEEP") == "1":
             print(f"  (시험 폴더 남김: {T})")
