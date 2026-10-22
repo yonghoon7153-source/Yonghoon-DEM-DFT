@@ -30,6 +30,11 @@
   W14 접합 한정어 (PRE-impl-08) — 증거 `qualifiers` (producer `carbon_junction.CJUNC_QUALIFIERS`) 가 화면에 그대로 · 설계 v1 §4-6 의
       세 표지 (분산판 · 같은 셀 재방문 · SV 진단 = 반사실 대조 따로) 를 실제 렌더에서 본다 · 템플릿에 한정어 사본 없음
 
+  ★ 2026-10-22 (사전 리뷰 2 회차 PRE2-impl-01 · 1저자 Q1 (다) · 등록 R §5-6 SV 행 개정 · 시험 먼저) — 같은 두 행:
+  W15 SV 반사실 괄호 — "[아래, 위] · 못 가른 덩어리 n" (아래 = 덩어리 그대로 · 위 = 못 가른 덩어리를 통째로 뺀 판 · +∞ = ratio_limit(_hi)
+      'inf' · 못 읽음 = '—') · 위 끝 상태가 아래와 다르면 "위 끝 <상태>" · 위 끝 칸 없는 옛 기록 = 위 '—' (Jinja · JS) · 생산자 한정어에
+      못 가른 덩어리 · 괄호 판정 문장 (사본 없음)
+
   python3 webapp/test_ca_ext_labels.py
 """
 import os
@@ -248,6 +253,79 @@ def _d_states(tpl, jinja, js, jinja2):
         chk('W12-14 JS 행 (node 실행)', False, f'{type(e).__name__}: {e}')
 
 
+def _d_bracket(tpl, jinja, js, jinja2):
+    """★ 10-22 — W15 SV 반사실 괄호 (Jinja · JS 두 행 · 매니페스트 증거 투영 꼴 = `ca_ext_svcf.sv_cf_record` 의 칸)."""
+    chk('W15a 두 행이 괄호 칸 (위 끝 비 · 위 끝 표지 · 위 끝 상태 · 못 가른 덩어리 수) 을 매니페스트에서 읽는다',
+        len(jinja) == 1 and len(js) == 1
+        and all(k in ln for k in ('sv_counterfactual_ratio_hi', 'ratio_limit_hi', 'status_hi', 'n_unsplit_bridging_components')
+                for ln in (jinja[0], js[0])), (len(jinja), len(js)))
+    try:
+        import carbon_junction as CJ
+        quals = list(CJ.CJUNC_QUALIFIERS)
+    except Exception as e:                                  # noqa: BLE001
+        quals = []
+        print(f'  ⚠ carbon_junction 을 못 불러온다 ({type(e).__name__}: {e})')
+    chk('W15b producer 한정어에 못 가른 덩어리 · 괄호 판정 문장 (아래 끝 · 위 끝 · 걸침 = SV_UNCHECKED · 지금 셀 그래프 안에서만) — 템플릿 사본 없음',
+        any(all(t in q for t in ('못 가른 덩어리', '괄호', '아래 끝', '위 끝', 'SV_UNCHECKED', '셀 그래프')) for q in quals)
+        and not [q for q in quals if q[:24] in tpl], [q[:40] for q in quals if '괄호' in q])
+
+    def sv(st, lo, sh, hi, nu, flag=None):
+        r = {'kind': 'counterfactual_cut_sv_bridges_keep_self_v1', 'status': st, 'flag': flag,
+             'sv_counterfactual_ratio': (None if lo in (None, 'inf') else lo), 'ratio_limit': ('inf' if lo == 'inf' else None),
+             'n_unsplit_bridging_components': nu, 'bracket_rule': 'b',
+             'status_hi': sh, 'sv_counterfactual_ratio_hi': (None if hi in (None, 'inf') else hi), 'ratio_limit_hi': ('inf' if hi == 'inf' else None)}
+        r['upper'] = None if not nu else {'status': sh, 'sv_counterfactual_ratio': r['sv_counterfactual_ratio_hi'],
+                                          'ratio_limit': r['ratio_limit_hi']}
+        return r
+    old_form = {'kind': 'counterfactual_cut_sv_bridges_keep_self_v1', 'status': 'computed', 'sv_counterfactual_ratio': 1.25,
+                'ratio_limit': None, 'flag': None}
+    cases = (
+        ('괄호 [1, ∞] · 덩어리 1 (리뷰어 꼴)', _d_meta(sv=sv('computed', 1.0, 'no_through_without_sv', 'inf', 1)),
+         ('SV 반사실', '[1', ', ∞]', '못 가른 덩어리 1', 'computed', '위 끝 no_through_without_sv', '사슬 계획'), ('SV_DEPENDENT',)),
+        ('괄호 [1.2, 3.4] · 덩어리 1 (둘 다 computed)', _d_meta(sv=sv('computed', 1.2, 'computed', 3.4, 1)),
+         ('[1.2, 3.4]', '못 가른 덩어리 1', 'computed'), ('위 끝', '∞', 'SV_DEPENDENT')),
+        ('덩어리 0 · 위 = 아래 [1.25, 1.25]', _d_meta(sv=sv('computed', 1.25, 'computed', 1.25, 0)),
+         ('[1.25, 1.25]', '못 가른 덩어리 0'), ('위 끝', '∞')),
+        ('덩어리 0 · +∞ [∞, ∞]', _d_meta(sv=sv('no_through_without_sv', 'inf', 'no_through_without_sv', 'inf', 0)),
+         ('[∞, ∞]', '못 가른 덩어리 0', 'no_through_without_sv'), ('위 끝',)),
+        ('위 끝 미수렴 [1.2, —]', _d_meta(sv=sv('computed', 1.2, 'unconverged', None, 2)),
+         ('[1.2, —]', '못 가른 덩어리 2', '위 끝 unconverged'), ('∞',)),
+        ('위 끝 칸 없는 옛 기록 = 위 —', _d_meta(sv=old_form), ('[1.25, —]', '못 가른 덩어리 —'), ('∞', '위 끝')),
+    )
+
+    def _check(lbl, outs):
+        for (nm, _m, want, avoid), out in zip(cases, outs):
+            miss = [t for t in want if t not in (out or '')]
+            bad = [t for t in avoid if t in (out or '')]
+            chk(f'{lbl} [{nm}] — 있어야 할 조각 {len(want)} · 없어야 할 조각 {len(avoid)}', out is not None and not miss and not bad,
+                (miss, bad, (out or '')[-400:]))
+    if jinja2 is not None and len(jinja) == 1:
+        env = jinja2.Environment(autoescape=True)
+        row = env.from_string(jinja[0])
+        _check('W15 Jinja', [row.render(it=m) for _nm, m, _w, _a in cases])
+    else:
+        print('  SKIP  W15 Jinja (jinja2 없음)')
+    if shutil.which('node') is None:
+        print('  SKIP  W15 JS (node 없음)')
+        return
+    import json as _json
+    from test_closed_param_labels import js_fn, run_node
+    script = ('const made = [];\n'
+              'const document = {getElementById: (id) => ({style: {}, textContent: "", insertBefore: () => {}, '
+              'firstChild: null, querySelectorAll: () => []}), createElement: (t) => { const o = {dataset: {}, style: {}}; '
+              'made.push(o); return o; }};\n' + js_fn(tpl, 'labAddRow') + '\n'
+              f'const cases = {_json.dumps([m for _nm, m, _w, _a in cases], ensure_ascii=False)};\n'
+              'const out = cases.map(c => { labAddRow(c); return made[made.length - 1].innerHTML; });\n'
+              'console.log(JSON.stringify(out));\n')
+    try:
+        outs = run_node(script)
+        if outs is None:
+            raise RuntimeError('node 실행 실패')
+        _check('W15 JS', outs)
+    except Exception as e:                                  # noqa: BLE001
+        chk('W15 JS 행 (node 실행)', False, f'{type(e).__name__}: {e}')
+
+
 def main():
     try:
         import ptfe_face_alpha as FA
@@ -331,6 +409,7 @@ def main():
         (meta.get('convention_label'), meta.get('convention_mismatch')))
     _b6_labels(tpl, jinja, js, jinja2, REG)
     _d_states(tpl, jinja, js, jinja2)
+    _d_bracket(tpl, jinja, js, jinja2)
     print(f'\n{_ok} PASS · {len(_fail)} FAIL')
     if _fail:
         for n in _fail:

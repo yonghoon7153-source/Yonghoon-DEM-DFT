@@ -237,11 +237,25 @@ def sv_record():
             break
     st = rule['status']
     r_ = rule.get('ratio') if st == 'computed' else None
-    return {'kind': rule.get('kind', 'counterfactual_cut_sv_faces'), 'requested': True, 'threshold': None, 'status': st, 'flag': None,
-            'cg_info': (0 if st in ('computed', 'unconverged') else None), 'sv_counterfactual_ratio': r_,
-            'ratio_limit': ('inf' if st == 'no_through_without_sv' else None), 'G_full_code': 2.5,
-            'G_cut_code': (2.5 / r_ if r_ else (0.0 if st == 'no_through_without_sv' else None)), 'resid': (1e-13 if r_ else None),
-            'n_sv_faces_cut': 4, 'conv_cert': None, 'backend_last_solve': None}
+    rec = {'kind': rule.get('kind', 'counterfactual_cut_sv_faces'), 'requested': True, 'threshold': None, 'status': st, 'flag': None,
+           'cg_info': (0 if st in ('computed', 'unconverged') else None), 'sv_counterfactual_ratio': r_,
+           'ratio_limit': ('inf' if st == 'no_through_without_sv' else None), 'G_full_code': 2.5,
+           'G_cut_code': (2.5 / r_ if r_ else (0.0 if st == 'no_through_without_sv' else None)), 'resid': (1e-13 if r_ else None),
+           'n_sv_faces_cut': 4, 'conv_cert': None, 'backend_last_solve': None}
+    #  ★ 10-22 (사전 리뷰 2 회차 PRE2-impl-01 · 1저자 Q1 (다)) 괄호 칸 (투영 꼴) — 규칙 'n_unsplit' (기본 0) · 'status_hi' · 'ratio_hi' · 덩어리 0 =
+    #    위 = 아래 (위 끝 기록 None) · 덩어리 > 0 = 위 끝 기록 (같은 꼴)
+    nu = int(rule.get('n_unsplit', 0))
+    sh = rule.get('status_hi', 'computed') if nu else st
+    rh = (rule.get('ratio_hi') if sh == 'computed' else None) if nu else r_
+    lh = 'inf' if sh == 'no_through_without_sv' else None
+    rec.update(n_unsplit_bridging_components=nu, bracket_rule='lower_keep_upper_remove_fake_v1', status_hi=sh,
+               sv_counterfactual_ratio_hi=rh, ratio_limit_hi=lh,
+               upper=(None if not nu else {'status': sh, 'sv_counterfactual_ratio': rh, 'ratio_limit': lh,
+                                          'cg_info': (0 if sh in ('computed', 'unconverged') else None),
+                                          'G_cut_code': (2.5 / rh if rh else (0.0 if sh == 'no_through_without_sv' else None)),
+                                          'resid': (1e-13 if rh else None), 'why': None, 'conv_cert': None, 'backend_last_solve': None,
+                                          'n_edges_cut': 6, 'n_plate_couplings_cut': 0, 'n_cells_removed': 3}))
+    return rec
 
 
 def manifest(i, si):
@@ -1377,6 +1391,31 @@ def t_V06b():
             and 'SV_DEPENDENT' in v2.get('flags', []), (v1.get('flags'), v2.get('flags'), v1.get('stop'), v2.get('stop')))
 
 
+@check('V25', '★ 10-22 SV 괄호 걸침 (PRE2-impl-01 · Q1 (다)) — 가짜 러너 기록 (못 가른 덩어리 1 · 아래 끝 1.0 = 덩어리 그대로 · 위 끝 no_through = +∞) '
+               '→ 실제 검증기 · chain_view · sv_assess → SV_UNCHECKED (옛 = 표지 없음 · PASS 문장 가능) · SV_DEPENDENT 아님 · §7-1 문장 금지 · '
+               '사유 = 걸침 · 모서리 (비 값 없음)')
+def t_V25():
+    v = (sv_set('V25', {'status': 'computed', 'ratio': 1.0, 'n_unsplit': 1, 'status_hi': 'no_through_without_sv'})['v'] or {})
+    why = str((v.get('blocking_reasons') or {}).get('SV_UNCHECKED', ''))
+    return ('SV_UNCHECKED' in v.get('flags', []) and 'SV_UNCHECKED' in v.get('blocking_flags', []) and 'SV_DEPENDENT' not in v.get('flags', [])
+            and v.get('sentence_allowed') is False and '걸침' in why and 'c1_P1_R_j0' in why and '∞' not in why,
+            (v.get('flags'), why, v.get('stop')))
+
+
+@check('V26', '★ 10-22 SV 괄호가 문턱 아래 (못 가른 덩어리 1 · [1.2, 1.5] · 문턱 2.0) → SV 표지 없음 (위 끝 ≤ 문턱 = 참 비도 문턱 아래)')
+def t_V26():
+    v = (sv_set('V26', {'status': 'computed', 'ratio': 1.2, 'n_unsplit': 1, 'status_hi': 'computed', 'ratio_hi': 1.5})['v'] or {})
+    return ('SV_DEPENDENT' not in v.get('flags', ['?']) and 'SV_UNCHECKED' not in v.get('flags', ['?']) and v.get('stop') is None,
+            (v.get('flags'), v.get('stop')))
+
+
+@check('V27', '★ 10-22 SV 괄호 아래 끝이 문턱을 넘음 (못 가른 덩어리 1 · [3.0, 9.0]) → SV_DEPENDENT (위 끝과 무관) · SV_UNCHECKED 아님')
+def t_V27():
+    v = (sv_set('V27', {'status': 'computed', 'ratio': 3.0, 'n_unsplit': 1, 'status_hi': 'computed', 'ratio_hi': 9.0})['v'] or {})
+    return ('SV_DEPENDENT' in v.get('flags', []) and 'SV_UNCHECKED' not in v.get('flags', ['?']) and v.get('sentence_allowed') is False,
+            (v.get('flags'), v.get('stop')))
+
+
 @check('V07', 'CALIB_ORIGIN_SENSITIVE (P0 사다리 origin 넘음) → 판정 표지 · 문장 금지')
 def t_V07():
     def go():
@@ -2012,8 +2051,8 @@ def t_U07():
 
 
 def eval_U08():
-    def rec(st, r):
-        return {'sv_cf': {'status': st, 'ratio': r}}
+    def rec(st, r):                                    # ★ 10-22 (Q1 (다)) chain_view 꼴 — 못 가른 덩어리 0 = 위 끝 = 아래 끝
+        return {'sv_cf': {'status': st, 'ratio': r, 'status_hi': st, 'ratio_hi': r, 'n_unsplit': 0}}
     base = {(c, law, rr): rec('computed', 1.2) for c in ('0', '1') for law in ('P0', 'P1') for rr in ('R_j_lo', 'R_j0', 'R_j_hi')}
     cases = []
     for nm, upd, thr, scope, want in (
@@ -2038,6 +2077,81 @@ def eval_U08():
                '문턱 null = SV_UNCHECKED · 범위 R_j0 (모서리 넷) ↔ all3 (열둘)')
 def t_U08():
     return eval_U08()
+
+
+def eval_U08b():
+    """★ 10-22 (사전 리뷰 2 회차 PRE2-impl-01 · 1저자 Q1 (다) · 등록 R §5-6 SV 행 개정) — 괄호 판정.  모서리마다 아래 끝 (덩어리 그대로) ·
+    위 끝 (못 가른 덩어리를 통째로 뺀 판): 아래 > 문턱 = 의존 · (두 끝을 읽고) 위 ≤ 문턱 = 표지 없음 · 그 밖 (걸침 · 못 읽음) = SV_UNCHECKED ·
+    비교 = 지금 SV 비교 그대로 (증서 여유 없음 · 두 끝 같게) · 모서리 묶기 = 지금 규칙 그대로 (하나라도 의존 → SV_DEPENDENT · 하나라도
+    걸침 · 못 읽음 → SV_UNCHECKED · 둘 다 붙을 수 있다)."""
+    def rec(lo, hi, nu=1, st='computed', sh='computed'):
+        return {'sv_cf': {'status': st, 'ratio': lo, 'status_hi': sh, 'ratio_hi': hi, 'n_unsplit': nu}}
+    base = {(c, law, rr): rec(1.2, 1.2, 0) for c in ('0', '1') for law in ('P0', 'P1') for rr in ('R_j_lo', 'R_j0', 'R_j_hi')}
+    k1, k2 = ('1', 'P1', 'R_j0'), ('0', 'P0', 'R_j0')
+    cases = []
+    for nm, upd, want, det_key in (
+            ('괄호 [1.0, ∞] (리뷰어 꼴 · 걸침)', {k1: rec(1.0, math.inf, sh='no_through_without_sv')}, ['SV_UNCHECKED'], 'straddle'),
+            ('괄호 [1.2, 1.5] (위 ≤ 문턱)', {k1: rec(1.2, 1.5)}, [], None),
+            ('괄호 [1.2, 2.0] (위 = 문턱 · 넘지 않음)', {k1: rec(1.2, 2.0)}, [], None),
+            ('괄호 [1.5, 2.0000001] (위가 문턱을 조금 넘음 · 걸침)', {k1: rec(1.5, 2.0000001)}, ['SV_UNCHECKED'], 'straddle'),
+            ('괄호 [2.0000001, 9.0] (아래 > 문턱)', {k1: rec(2.0000001, 9.0)}, ['SV_DEPENDENT'], 'dependent'),
+            ('괄호 [2.0, 9.0] (아래 = 문턱 · 넘지 않음 → 걸침)', {k1: rec(2.0, 9.0)}, ['SV_UNCHECKED'], 'straddle'),
+            ('괄호 [3.0, 위 못 읽음] (아래만으로 의존)', {k1: rec(3.0, None, sh='unconverged')}, ['SV_DEPENDENT'], 'dependent'),
+            ('괄호 [1.2, 위 못 읽음 (unconverged)]', {k1: rec(1.2, None, sh='unconverged')}, ['SV_UNCHECKED'], 'unreadable'),
+            ('괄호 [아래 못 읽음, 1.5] (지금 방식 = 못 읽음 · 결정 필요 표지)', {k1: rec(None, 1.5, st='unconverged')}, ['SV_UNCHECKED'],
+             'unreadable'),
+            ('위 끝 칸 없는 옛 꼴 (비 1.2 · ratio_hi 없음) = 못 읽음 (fail-closed)', {k1: {'sv_cf': {'status': 'computed', 'ratio': 1.2}}},
+             ['SV_UNCHECKED'], 'unreadable'),
+            ('두 모서리 — 하나 의존 [3, 9] · 하나 걸침 [1, ∞] (묶기 = 지금 규칙 · 둘 다)',
+             {k1: rec(3.0, 9.0), k2: rec(1.0, math.inf, sh='no_through_without_sv')}, ['SV_DEPENDENT', 'SV_UNCHECKED'], None)):
+        r = dict(base)
+        r.update(upd)
+        f, d = RR.sv_assess(r, 2.0, 'R_j0')
+        ok = sorted(f) == sorted(want)
+        if det_key is not None:
+            ok = ok and 'c1_P1_R_j0' in (d.get(det_key) or [])
+        cases.append((nm, ok, f, {k: d.get(k) for k in ('straddle', 'unreadable', 'dependent')}))
+    #  사유 (§5-5b) — 걸침 = 괄호 · 모서리 (비 값 없음) · 못 읽음 사유 = 옛 글자 그대로
+    f1, d1 = RR.sv_assess({**base, k1: rec(1.0, math.inf, sh='no_through_without_sv')}, 2.0, 'R_j0')
+    why = RR.sv_reasons(f1, d1).get('SV_UNCHECKED', '')
+    rs_ok = '걸침' in why and 'c1_P1_R_j0' in why and '∞' not in why and 'inf' not in why
+    f2, d2 = RR.sv_assess({**base, k1: rec(1.2, None, sh='unconverged')}, 2.0, 'R_j0')
+    why2 = RR.sv_reasons(f2, d2).get('SV_UNCHECKED', '')
+    rs_ok = rs_ok and why2.startswith('대조 비를 못 읽음') and '걸침' not in why2
+    corner = d1.get('corners', {}).get('c1_P1_R_j0', {})
+    det_ok = corner.get('ratio') == 1.0 and corner.get('ratio_hi') == math.inf and corner.get('n_unsplit') == 1
+    return (all(c[1] for c in cases) and rs_ok and det_ok,
+            ([c for c in cases if not c[1]], why, why2, corner))
+
+
+@check('U08b', '★ 10-22 SV 반사실 괄호 판정 (PRE2-impl-01 · Q1 (다) · §5-6 SV 행 개정) — 아래 > 문턱 = SV_DEPENDENT · 두 끝을 읽고 위 ≤ 문턱 = 없음 · '
+               '걸침 (아래 ≤ 문턱 < 위) · 못 읽음 · 옛 꼴 (위 끝 칸 없음) = SV_UNCHECKED · 모서리 묶기 = 하나라도 (둘 다 붙음) · 사유 = 걸침 · 모서리 '
+               '(비 값 없음) · 세부 = 두 끝 · 못 가른 덩어리 수')
+def t_U08b():
+    return eval_U08b()
+
+
+@check('M41', '★ 10-22 변이: SV 판정 = 아래 끝 하나만 (옛 규칙 · 위 끝 무시) → U08b 가 떨어진다 (변이 전 통과 확인)')
+def t_M41():
+    def lower_only(recs, threshold, scope):
+        rr_scope = ('R_j_lo', 'R_j0', 'R_j_hi') if scope == 'all3' else ('R_j0',)
+        out, unread, dep = {}, [], []
+        for (c, law, rr), a in sorted(recs.items()):
+            if rr not in rr_scope:
+                continue
+            v = a.get('sv_cf') if isinstance(a, dict) else None
+            r_ = (v or {}).get('ratio')
+            key = f'c{c}_{law}_{rr}'
+            out[key] = {'status': (v or {}).get('status'), 'ratio': r_}
+            if not isinstance(r_, float):
+                unread.append(key)
+            elif threshold is not None and r_ > float(threshold):
+                dep.append(key)
+        flags = (['SV_UNCHECKED'] if (threshold is None or unread or not out) else []) + (['SV_DEPENDENT'] if dep else [])
+        return flags, {'threshold': threshold, 'scope': scope, 'corners': out, 'unreadable': unread, 'dependent': dep, 'straddle': []}
+    base_ok, base_why = eval_U08b()
+    caught, why = mutant('M41', {'sv_assess': lower_only}, eval_U08b)
+    return base_ok and caught, (base_ok, why if base_ok else base_why)
 
 
 def predes01_S(R, i):

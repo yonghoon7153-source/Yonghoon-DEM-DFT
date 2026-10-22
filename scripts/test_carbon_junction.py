@@ -91,13 +91,18 @@ r_port = 2.0 (= 2h) · gap_tol 2.0 · σ_VGCF = 100 S/cm → 축방향 면 g = �
          (계획 · 솔브 입구 · protocol 기록)
   QD     (Q-D · 04) SV 반사실 = 서로 다른 섬유 사이 SV 우회만 끊음 · 섬유 자기 연속 (SDCP 가 덮은 셀을 지나는 같은 조각) 은 남김 ·
          cut-only (비 ≥ 1) — SDCP 를 지나는 섬유 하나 = 비 1 · F1 + 먼 SDCP = 비 1 · SVY (지나는 A + 닿는 B) = 손 회로 비 · SVX 10.29 그대로
+  QD2    ★ 10-22 (사전 리뷰 2 회차 PRE2-impl-01 · 04 · 1저자 Q1 (다)) SV 반사실 괄호 — 못 가른 덩어리 (섬유 둘 이상이 함께 지나는 SDCP 성분)
+         가 있으면 두 번 푼다 (아래 끝 = 덩어리 그대로 · 위 끝 = 덩어리 셀 면 전부 끊음) · 리뷰어 회로 [1, ∞] → SV_UNCHECKED · 대조 (한 섬유만
+         지남) = SV_DEPENDENT · 괄호 성질 (손 참 비가 아래 < 참 < 위) · 변이 J1 회로 (닿기만 하는 C) · J2 회로 (덮이지 않은 사이로 두 번 닿음) ·
+         덩어리 0 = 다시 풀지 않음 · 값 봉인 · census 변조 = fail-closed · 주 해 미수렴 · 주 전류 ≤ 0 의 괄호 칸 (사슬 = 실제 `sv_assess`)
   KBND   (05 · 한계 기록) k 경계 (90° → 89.99°) σ 뜀 크기 = 생산 단위 R_j 1e2 · 1e4 · 1e6 에서 −0.98 % · −2.1e-4 · −2.1e-6 (± 10 % · ∝ 1/R_j)
-  MUT-RCA2 새 보장 변이 (조각 = fid 규칙 · 포트 옮김 · SV 전부 끊음 · 이음매 별칭 끔 · 바닥 = s > D 만) 가 위 시험에 옳은 이유로 걸린다 ·
+  MUT-RCA2 새 보장 변이 (조각 = fid 규칙 · 포트 옮김 · SV 전부 끊음 · 이음매 별칭 끔 · 바닥 = s > D 만 · ★ 10-22 못 가른 다리 지킴 끔 = 2 회차
+         변이 J1 → QD2 ④ · '지남' 에 덮임 · 같은 성분 조건 뺌 = 2 회차 변이 J2 → QD2 ⑤ (훅 `_sv_passes`)) 가 위 시험에 옳은 이유로 걸린다 ·
          변이 안 예외 = 하네스 실패
   FLOOR  (Q-B) 같은 조각 쌍의 바닥 = s > D · s > (π/2)·d — L 자 90° 모서리 = 어느 s_min (없음 · 0) 에서도 자기 후보 0 · 날카로운 V = 후보
   (변이 시험 다지기 · 10-21) KINK KU s_min 없음 L_c 손 값 (자기 L_c = 접합 쌍만) · RING 닫힌 머리핀 = 자기 하나 (쌍 무리 고리 둘레) ·
          CEN 재방문 사이 덮인 위치 = 경로 끊김 (경로로만 아님) · KINK U 분산판 맞은편 = 등분점 선분의 접합 짝 위 (L_par 0.25 · 손 값)
-  MUT-RCA (09) 반사실 변이 = 생산 서명 (certify=) · 변이 안 예외 (`_try` 가 삼킨 것 포함) = 하네스 실패 (옳은 이유 아님)
+  MUT-RCA (09) 반사실 변이 = 생산 서명 (certify= · ★ 10-22 backend=) · 변이 안 예외 (`_try` 가 삼킨 것 포함) = 하네스 실패 (옳은 이유 아님)
 """
 import argparse
 import ast
@@ -2992,11 +2997,12 @@ def t_mut_rca():
 
     real_cf = getattr(base_cls, 'sv_counterfactual', None)
 
-    def cf_nodrop(self, solve_, I_full, request, certify=None):   # 변이 — 반사실이 SV 면을 끊지 않는다 (★ 10-21 PRE-impl-09 — 생산 호출
-        orig = self._assemble                                       #  서명 그대로 (certify=) · 옛 변이는 TypeError 로만 '잡혔다')
-        self._assemble = lambda *a, **k: orig(*a, **dict(k, counterfactual=False))
+    def cf_nodrop(self, solve_, I_full, request, certify=None, backend=None):   # 변이 — 반사실이 SV 면을 끊지 않는다 (★ 10-21 PRE-impl-09 —
+        orig = self._assemble                                       #  생산 호출 서명 그대로 (certify= · ★ 10-22 backend= — 생산이 넘길 때만
+        self._assemble = lambda *a, **k: orig(*a, **dict(k, counterfactual=False))   # 넘긴다) · 옛 변이는 TypeError 로만 '잡혔다')
         try:
-            return real_cf(self, solve_, I_full, request, certify=certify)
+            kw = {'certify': certify} if backend is None else {'certify': certify, 'backend': backend}
+            return real_cf(self, solve_, I_full, request, **kw)
         finally:
             del self._assemble
 
@@ -3458,6 +3464,257 @@ def t_sv_split():
         and all(type(c3.get(k)) is int for k in nfields), f'{kd} · {[(k, c3.get(k)) for k in nfields]}')
 
 
+#  ★ 10-22 (사전 리뷰 2 회차 PRE2-impl-01 · 04 · 1저자 Q1 (다)) — SV 반사실 괄호 회로 (셀 단위 · vox 1 · SDCP 점 = 셀 하나 · 손으로 풀림)
+QD2_N1 = (5, 3, 9)                                                   # ① 리뷰어 회로 — A · B 가 같은 덩어리를 지남 (길 = A → 덩어리 → B 하나)
+QD2_A1 = [(1.5, 1.5, 0.5), (1.5, 1.5, 6.5)]                          #    A = 아래 판 → z 6 끝 (위 판에 안 닿음)
+QD2_B1 = [(3.5, 1.5, 2.5), (3.5, 1.5, 8.5)]                          #    B = z 2 시작 → 위 판 (A ↔ B 중심선 2.0 > D 1.1 · 접합 없음)
+QD2_B1C = [(3.5, 1.5, 4.5), (3.5, 1.5, 8.5)]                         # ② 대조 — B 가 덩어리 안에서 시작 (A 만 지남)
+QD2_S1 = [(1.5, 1.5, 4.5), (2.5, 1.5, 4.5), (3.5, 1.5, 4.5)]         #    덩어리 = (1..3, 1, 4) — A · B 의 z 4 셀을 덮는다
+QD2_N3 = (9, 3, 9)                                                   # ③ 괄호 성질 — 참 비를 손으로 가를 수 있는 꼴 (다리 셀 (2,1,3) 이 따로)
+QD2_A3 = [(1.5, 1.5, 0.5), (1.5, 1.5, 8.5)]                          #    A = 판–판 (덩어리 (1,1,3) 을 지남)
+QD2_B3 = [(3.5, 1.5, 0.5), (3.5, 1.5, 5.5)]                          #    B = 아래 판 → z 5 끝 (덩어리 (3,1,3) 을 지남 · 위 판에 안 닿음)
+QD2_C3 = [(7.5, 1.5, 0.5), (7.5, 1.5, 8.5)]                          #    C = 판–판 (덩어리와 먼 병렬 길)
+QD2_S3 = [(1.5, 1.5, 3.5), (2.5, 1.5, 3.5), (3.5, 1.5, 3.5)]
+QD2_N4 = (7, 3, 9)                                                   # ④ (변이 J1) — 지나는 섬유 둘 (A · B) + 닿기만 하는 섬유 C
+QD2_A4 = [(1.5, 1.5, 0.5), (1.5, 1.5, 8.5)]
+QD2_B4 = [(5.5, 1.5, 0.5), (5.5, 1.5, 8.5)]
+QD2_C4 = [(3.5, 1.5, 4.5), (3.5, 1.5, 8.5)]                          #    C = 덩어리 가운데 셀 위에서 시작 → 위 판 (지나지 않음)
+QD2_S4 = [(1.5, 1.5, 3.5), (2.5, 1.5, 3.5), (3.5, 1.5, 3.5), (4.5, 1.5, 3.5), (5.5, 1.5, 3.5)]
+QD2_N5 = (6, 3, 9)                                                   # ⑤ (변이 J2) — A 는 지남 · B 는 덮이지 않은 사이 셀 (4,1,4) 을 두고 두 번 닿음
+QD2_A5 = [(2.5, 1.5, 0.5), (2.5, 1.5, 8.5)]
+QD2_B5 = [(4.5, 1.5, 0.5), (4.5, 1.5, 8.5)]
+QD2_S5 = [(2.5, 1.5, 3.5), (2.5, 1.5, 4.5), (2.5, 1.5, 5.5), (3.5, 1.5, 3.5), (3.5, 1.5, 5.5)]
+
+
+def _qd2_run(polys, sdcp, n, rj=1e3, thr=None, reg_hook=None):
+    """괄호 회로 하나 → (sid, 원장, 해, 반사실 원 기록).  reg_hook = 원장을 계획 전에 바꾸는 함수 (변조 시험)."""
+    P = cat_rows(rows(polys), rows([[p] for p in sdcp], phase=5, kind=0, fid0=700))
+    sid, _ = bed(P, n, sdcp_sphere_d_um=0.0)
+    reg = _try(lambda: registry(sid, P, tol_sj_um=0.1, r_sdcp_um=0.5), None)
+    if reg is not None and reg_hook is not None:
+        reg_hook(reg)
+    r = _try(lambda: solve(sid, sig_e(), n, plan(reg, rj, sv_counterfactual={'threshold': thr})), None) if reg is not None else None
+    return sid, reg, r, (((r or {}).get('cjunc') or {}).get('sv_counterfactual') or {})
+
+
+def _qd2_ref_I(nn, edges, bot, top):
+    """손 회로 (`ref_I`) — 간선을 뺀 뒤 판에 닿지 않는 조각 (떠 있는 막다른 가지 · 전류 0) 은 빼고 푼다 (특이 방지 · 값 불변).  두 판을 잇는
+    길이 없으면 0 (관통 없음)."""
+    adj = {}
+    for i, j, _g in edges:
+        adj.setdefault(i, set()).add(j)
+        adj.setdefault(j, set()).add(i)
+
+    def reach(seeds):
+        seen, st = set(seeds), list(seeds)
+        while st:
+            for w in adj.get(st.pop(), ()):
+                if w not in seen:
+                    seen.add(w)
+                    st.append(w)
+        return seen
+    rb, rt = reach([i for i, _ in bot]), reach([i for i, _ in top])
+    if not (rb & rt):
+        return 0.0
+    keep = rb | rt
+    return ref_I(nn, [e for e in edges if e[0] in keep and e[1] in keep], [b for b in bot if b[0] in keep],
+                 [t for t in top if t[0] in keep])
+
+
+def _qd2_flags(cf, thr):
+    """반사실 원 기록 → 증거 투영 → 사슬 꼴 → 사슬 판정 (실제 `ca_ext_svcf` · `rint_r_chain.sv_assess` · 모서리 하나 · 범위 R_j0)."""
+    import ca_ext_svcf as _SV
+    import rint_r_chain as _RRC
+    view = _SV.chain_view(_SV.sv_cf_record(cf))
+    return _RRC.sv_assess({('1', 'P0', 'R_j0'): {'sv_cf': view}}, thr, 'R_j0')[0]
+
+
+def _qd2_j1_ok():
+    """④ 아래 끝 = 덩어리 그대로 (지나지 않는 C 의 SV 면도 끊지 않는다 · 끊은 면 0 · 비 1 정확) — 변이 J1 (못 가른 다리 지킴 끔) 이 떨어뜨린다."""
+    _s, _r, r, c = _qd2_run([QD2_A4, QD2_B4, QD2_C4], QD2_S4, QD2_N4)
+    return r is not None and c.get('n_unsplit_bridging_components') == 1 and c.get('n_sv_faces_cut') == 0 \
+        and c.get('sv_counterfactual_ratio') == 1.0
+
+
+def _qd2_j2_ok():
+    """⑤ B (덮이지 않은 사이 셀 (4,1,4) 을 두고 두 번 닿음) 는 덩어리를 지나지 않는다 → 못 가른 덩어리 0 · B 의 SV 면 둘을 끊음 — 변이 J2
+    ('지남' = 사이 위치가 상자 안이기만 · 덮였는지 · 같은 성분인지 안 봄) 가 떨어뜨린다 (B 도 '지남' → 못 가른 덩어리 1 · 끊은 면 0)."""
+    _s, _r, r, c = _qd2_run([QD2_A5, QD2_B5], QD2_S5, QD2_N5)
+    return r is not None and c.get('n_unsplit_bridging_components') == 0 and c.get('n_sv_faces_cut') == 2
+
+
+@case('QD2')
+def t_sv_bracket():
+    """★ 10-22 (사전 리뷰 2 회차 PRE2-impl-01 · 04 · 1저자 Q1 (다) · 등록 R §5-6 SV 행 개정) — SV 반사실 괄호 판정.  못 가른 덩어리 (섬유 둘
+    이상이 함께 지나는 SDCP 성분 — 셀 단위로 섬유 자기 길과 다리를 못 가른다) 가 있으면 반사실을 두 번 푼다: 아래 끝 = 덩어리를 그대로 둔 판
+    (옛 판) · 위 끝 = 그 덩어리 SDCP 셀의 면 (판 결합 포함) 을 전부 끊은 판 (아래 판이 끊은 다리 면도 그대로 끊는다 → 위 ⊇ 아래 · Rayleigh).
+    덩어리 0 = 다시 풀지 않음 (위 = 아래).  사슬 판정 = 아래 끝 > 문턱 → SV_DEPENDENT · 위 끝 ≤ 문턱 → 표지 없음 · 걸침 · 못 읽음 →
+    SV_UNCHECKED.  기대값 = 손 회로 (`ref_I` · 모듈 밖) · 판정 = 실제 `ca_ext_svcf` · `rint_r_chain.sv_assess` (옛 판 = 리뷰어 회로에서 비 1.0 ·
+    computed · 표지 없음)."""
+    import ca_ext_svcf as SVCF
+    gsv = 2.0 * SV * 250.0 / (SV + 250.0) * H
+    gss = 250.0 * H
+    # ① 리뷰어 회로
+    sid1, _r1, r1, c1 = _qd2_run([QD2_A1, QD2_B1], QD2_S1, QD2_N1)
+    w1 = chain_I([G_PL] + [G_AX] * 3 + [gsv, gss, gss, gsv] + [G_AX] * 3 + [G_PL])
+    up1 = c1.get('upper') if isinstance(c1.get('upper'), dict) else {}
+    chk('QD2 ① 리뷰어 회로 (A · B 가 같은 덩어리 (1..3,1,4) 를 지남) — σ = 손 사슬 (1e-12) · 못 가른 덩어리 1 · 아래 끝 = 덩어리 그대로 (끊은 면 0 · '
+        '비 1 정확 · computed) · 위 끝 = 덩어리 셀 셋을 뺀 판 (관통 없음 → +∞ · no_through_without_sv · 위 끝 풀이 기록 · 뺀 셀 3 · 판 결합 0)',
+        r1 is not None and all(int(sid1[x, 1, 4]) == 5 for x in (1, 2, 3)) and rel(I_of(r1, QD2_N1), w1) < 1e-12
+        and c1.get('n_unsplit_bridging_components') == 1 and c1.get('status') == 'computed'
+        and c1.get('sv_counterfactual_ratio') == 1.0 and c1.get('n_sv_faces_cut') == 0
+        and c1.get('status_hi') == 'no_through_without_sv' and c1.get('sv_counterfactual_ratio_hi') == math.inf
+        and up1.get('status') == 'no_through_without_sv' and up1.get('sv_counterfactual_ratio') == math.inf
+        and up1.get('n_cells_removed') == 3 and up1.get('n_plate_couplings_cut') == 0,
+        f'{None if r1 is None else I_of(r1, QD2_N1)} ↔ {w1} · {c1}')
+    f1a, f1b = _try(lambda: _qd2_flags(c1, 2.0), None), _try(lambda: _qd2_flags(c1, 1.0e9), None)
+    chk('QD2 ① 사슬 판정 — 괄호 [1, ∞] 가 문턱에 걸침 → SV_UNCHECKED (문턱 2 · 1e9 — 위 끝 ∞ · 옛 = 표지 없음 = PRE2-impl-01)',
+        f1a == ['SV_UNCHECKED'] and f1b == ['SV_UNCHECKED'], f'{f1a} · {f1b}')
+    # ② 대조 (한 섬유만 지남)
+    _s2, _r2, r2, c2 = _qd2_run([QD2_A1, QD2_B1C], QD2_S1, QD2_N1)
+    f2 = _try(lambda: _qd2_flags(c2, 2.0), None)
+    chk('QD2 ② 대조 (B 가 덩어리 안에서 시작 · A 만 지남) — σ = ① 과 같은 손 사슬 · 못 가른 덩어리 0 · B 의 SV 면을 끊음 (끊은 면 1 · 지금처럼) · '
+        '비 +∞ (no_through_without_sv) · 다시 풀지 않음 (위 끝 풀이 기록 None · 위 = 아래) · 사슬 = SV_DEPENDENT',
+        r2 is not None and rel(I_of(r2, QD2_N1), w1) < 1e-12 and c2.get('n_unsplit_bridging_components') == 0
+        and c2.get('n_sv_faces_cut') == 1 and c2.get('status') == 'no_through_without_sv' and c2.get('sv_counterfactual_ratio') == math.inf
+        and 'upper' in c2 and c2.get('upper') is None and c2.get('status_hi') == 'no_through_without_sv'
+        and c2.get('sv_counterfactual_ratio_hi') == math.inf and f2 == ['SV_DEPENDENT'], f'{c2} · {f2}')
+    # ③ 괄호 성질 — 아래 ≤ 참 ≤ 위 (참 = 섬유 자기 길 (A · B 가 덮인 셀을 지나는 면) 은 살리고 다리 셀 (2,1,3) 의 면만 끊은 판 · 손 회로)
+    _s3, _r3, r3, c3 = _qd2_run([QD2_A3, QD2_B3, QD2_C3], QD2_S3, QD2_N3)
+    #  노드 — A0..A2 = 0..2 · S1 (1,1,3) = 3 · A4..A8 = 4..8 · S2 (2,1,3) = 9 · S3 (3,1,3) = 10 · B0..B2 = 11..13 · B4 · B5 = 14 · 15 · C0..C8 = 16..24
+    E3 = ([(0, 1, G_AX), (1, 2, G_AX), (2, 3, gsv), (3, 4, gsv)] + [(4 + i, 5 + i, G_AX) for i in range(4)]
+          + [(3, 9, gss), (9, 10, gss)] + [(11, 12, G_AX), (12, 13, G_AX), (13, 10, gsv), (10, 14, gsv), (14, 15, G_AX)]
+          + [(16 + i, 17 + i, G_AX) for i in range(8)])
+    bot3, top3 = [(0, G_PL), (11, G_PL), (16, G_PL)], [(8, G_PL), (24, G_PL)]
+    I3 = _qd2_ref_I(25, E3, bot3, top3)
+    I3_true = _qd2_ref_I(25, [e for e in E3 if e[:2] not in ((3, 9), (9, 10))], bot3, top3)
+    I3_hi = _qd2_ref_I(25, [e for e in E3 if not ({e[0], e[1]} & {3, 9, 10})], bot3, top3)
+    lo3, hi3 = c3.get('sv_counterfactual_ratio'), c3.get('sv_counterfactual_ratio_hi')
+    t3, h3 = I3 / I3_true, I3 / I3_hi
+    up3 = c3.get('upper') if isinstance(c3.get('upper'), dict) else {}
+    chk('QD2 ③ 괄호 성질 — σ = 손 회로 (1e-12) · 못 가른 덩어리 1 · 아래 끝 = 1 정확 (덩어리 그대로) · 위 끝 = 손 I_full/I_C (덩어리 셋을 뺀 판 · '
+        '1e-12 · computed) · 손 참 비 (다리 셀 면만 끊음) 가 아래 < 참 < 위 (넓은 괄호 · Rayleigh)',
+        r3 is not None and rel(I_of(r3, QD2_N3), I3) < 1e-12 and c3.get('n_unsplit_bridging_components') == 1
+        and lo3 == 1.0 and c3.get('status_hi') == 'computed' and isinstance(hi3, float) and rel(hi3, h3) < 1e-12
+        and up3.get('status') == 'computed' and up3.get('n_cells_removed') == 3 and 1.0 < t3 < h3 and lo3 <= t3 <= hi3,
+        f'σ {None if r3 is None else I_of(r3, QD2_N3)} ↔ {I3} · 아래 {lo3} · 참 {t3} · 위 {hi3} ↔ 손 {h3} · {up3}')
+    th3 = (1.0, 0.5 * (t3 + h3), (hi3 if isinstance(hi3, float) else math.nan), 2.0 * h3)
+    f3 = [_try(lambda th=th: _qd2_flags(c3, th), None) for th in th3]
+    chk('QD2 ③ 사슬 판정 — 문턱 1 (아래 1 = 문턱 · 넘지 않음) · 참과 위 사이 = 걸침 → SV_UNCHECKED · 문턱 = 위 끝 (그 값) · 위 끝 2 배 = 표지 없음 '
+        '(위 끝 ≤ 문턱)',
+        f3[0] == ['SV_UNCHECKED'] and f3[1] == ['SV_UNCHECKED'] and f3[2] == [] and f3[3] == [], f'{list(zip(th3, f3))}')
+    # ④ 변이 J1 회로 — 지나는 섬유 둘 + 닿기만 하는 C
+    _s4, _r4, r4, c4 = _qd2_run([QD2_A4, QD2_B4, QD2_C4], QD2_S4, QD2_N4)
+    #  노드 — A0..A2 = 0..2 · S1 = 3 · A4..A8 = 4..8 · S2..S4 = 9..11 · B0..B2 = 12..14 · S5 = 15 · B4..B8 = 16..20 · C4..C8 = 21..25
+    E4 = ([(0, 1, G_AX), (1, 2, G_AX), (2, 3, gsv), (3, 4, gsv)] + [(4 + i, 5 + i, G_AX) for i in range(4)]
+          + [(3, 9, gss), (9, 10, gss), (10, 11, gss), (11, 15, gss)]
+          + [(12, 13, G_AX), (13, 14, G_AX), (14, 15, gsv), (15, 16, gsv)] + [(16 + i, 17 + i, G_AX) for i in range(4)]
+          + [(10, 21, gsv)] + [(21 + i, 22 + i, G_AX) for i in range(4)])
+    bot4, top4 = [(0, G_PL), (12, G_PL)], [(8, G_PL), (20, G_PL), (25, G_PL)]
+    I4 = _qd2_ref_I(26, E4, bot4, top4)
+    I4_j1 = _qd2_ref_I(26, [e for e in E4 if e[:2] != (10, 21)], bot4, top4)
+    f4 = _try(lambda: _qd2_flags(c4, 2.0), None)
+    chk('QD2 ④ 변이 J1 회로 (A · B 가 덩어리 (1..5,1,3) 를 지남 · C 는 닿기만) — σ = 손 회로 (1e-12) · 못 가른 덩어리 1 · 아래 끝 = 덩어리 그대로 '
+        '(C 의 SV 면도 남김 · 끊은 면 0 · 비 1 정확 — J1 이면 C 를 끊어 손 비 I_full/I_C끊음 > 1) · 위 끝 = +∞ (뺀 셀 5) · 사슬 = SV_UNCHECKED',
+        r4 is not None and rel(I_of(r4, QD2_N4), I4) < 1e-12 and c4.get('n_unsplit_bridging_components') == 1
+        and c4.get('n_sv_faces_cut') == 0 and c4.get('sv_counterfactual_ratio') == 1.0 and I4 / I4_j1 > 1.0 + 1e-6
+        and c4.get('sv_counterfactual_ratio_hi') == math.inf
+        and (c4.get('upper') if isinstance(c4.get('upper'), dict) else {}).get('n_cells_removed') == 5 and f4 == ['SV_UNCHECKED'],
+        f'σ {None if r4 is None else I_of(r4, QD2_N4)} ↔ {I4} · J1 꼴 비 {I4 / I4_j1} · {c4} · {f4}')
+    # ⑤ 변이 J2 회로 — B 가 덮이지 않은 사이로 두 번 닿음 (지나지 않음)
+    sid5, _r5, r5, c5 = _qd2_run([QD2_A5, QD2_B5], QD2_S5, QD2_N5)
+    #  노드 — A0..A2 = 0..2 · Sa3..Sa5 (2,1,3..5) = 3..5 · A6..A8 = 6..8 · Sb3 (3,1,3) = 9 · Sb5 (3,1,5) = 10 · B0..B8 (4,1,0..8) = 11..19
+    E5 = ([(0, 1, G_AX), (1, 2, G_AX), (2, 3, gsv), (3, 4, gss), (4, 5, gss), (5, 6, gsv), (6, 7, G_AX), (7, 8, G_AX)]
+          + [(3, 9, gss), (5, 10, gss), (9, 14, gsv), (10, 16, gsv)] + [(11 + i, 12 + i, G_AX) for i in range(8)])
+    bot5, top5 = [(0, G_PL), (11, G_PL)], [(8, G_PL), (19, G_PL)]
+    I5 = _qd2_ref_I(20, E5, bot5, top5)
+    I5_cut = _qd2_ref_I(20, [e for e in E5 if e[:2] not in ((9, 14), (10, 16))], bot5, top5)
+    w5 = I5 / I5_cut
+    chk('QD2 ⑤ 변이 J2 회로 (A 는 덩어리를 지남 · B 는 덮이지 않은 사이 셀 (4,1,4) 을 두고 두 번 닿음 = 지나지 않음) — σ = 손 회로 (1e-12) · '
+        '못 가른 덩어리 0 · B 의 SV 면 둘을 끊음 · 비 = 손 I_full/I_cut (1e-10 · > 1) · 다시 풀지 않음 (위 = 아래 · 위 끝 기록 None) · J2 (사이 셀이 '
+        '덮였는지 · 같은 성분인지 안 봄) 이면 B 도 지남 → 못 가른 덩어리 1 · 끊은 면 0',
+        r5 is not None and int(sid5[4, 1, 4]) == 3 and rel(I_of(r5, QD2_N5), I5) < 1e-12
+        and c5.get('n_unsplit_bridging_components') == 0 and c5.get('n_bridging_components') == 1 and c5.get('n_sv_faces_cut') == 2
+        and c5.get('status') == 'computed' and rel(float(c5.get('sv_counterfactual_ratio') or math.nan), w5) < 1e-10 and w5 > 1.0 + 1e-9
+        and 'upper' in c5 and c5.get('upper') is None and c5.get('status_hi') == 'computed'
+        and c5.get('sv_counterfactual_ratio_hi') == c5.get('sv_counterfactual_ratio'),
+        f'σ {None if r5 is None else I_of(r5, QD2_N5)} ↔ {I5} · 손 비 {w5} · {c5}')
+    # ⑥ 덩어리 0 인 회로 (QD ③ SVY) — 기록의 옛 칸은 그대로 · 새 칸 = 위 끝 = 아래 끝 · 값 봉인 (위 끝만 따로 풀지 않음)
+    P6 = cat_rows(rows(SVY), rows([[(1.5, 1.5, 3.5)]], phase=5, kind=0, fid0=700))
+    sid6, _ = bed(P6, SVY_N)
+    reg6 = _try(lambda: registry(sid6, P6, tol_sj_um=0.1, r_sdcp_um=0.5), None)
+    n_before = _CG_CALLS[0]
+    r6 = _try(lambda: solve(sid6, sig_e(), SVY_N, plan(reg6, 1e3, sv_counterfactual={'threshold': None})), None) if reg6 is not None else None
+    n_solves6 = _CG_CALLS[0] - n_before
+    c6 = (((r6 or {}).get('cjunc') or {}).get('sv_counterfactual') or {})
+    chk('QD2 ⑥ 못 가른 덩어리 0 (QD ③ SVY) — 솔브 두 번 (주 + 아래 끝 · 위 끝을 따로 풀지 않음) · 위 끝 풀이 기록 None · 위 끝 상태 · 비 = 아래 끝 · '
+        '괄호 규칙 칸',
+        r6 is not None and c6.get('n_unsplit_bridging_components') == 0 and n_solves6 == 2 and 'upper' in c6 and c6.get('upper') is None
+        and c6.get('status_hi') == c6.get('status') == 'computed' and c6.get('sv_counterfactual_ratio_hi') == c6.get('sv_counterfactual_ratio')
+        and isinstance(c6.get('bracket_rule'), str) and bool(c6.get('bracket_rule')),
+        f'솔브 {n_solves6} · {c6}')
+    n_before = _CG_CALLS[0]
+    _qd2_run([QD2_A3, QD2_B3, QD2_C3], QD2_S3, QD2_N3)
+    n_solves3 = _CG_CALLS[0] - n_before
+    chk('QD2 ⑦ 값 봉인 — 못 가른 덩어리가 있으면 아래 끝 값 (1 = 문턱 아래) 과 무관하게 위 끝도 푼다 (③ 꼴: 주 + 아래 끝 + 위 끝 = 솔브 3 · '
+        '① 의 위 끝은 관통 없음 = 위상으로 끝 = 풀이 없이 +∞)',
+        n_solves3 == 3, f'③ 꼴 솔브 {n_solves3}')
+    # ⑧ 원장 census 변조 (지문 밖) — 위 끝은 지문 묶인 원장으로 다시 가른다 → 다르면 위 끝을 풀지 않는다 (fail-closed) · 검증기 거부
+    def _tamper(reg):
+        reg['census']['n_unsplit_bridging_components'] = 0
+    _s8, _r8, r8, c8 = _qd2_run([QD2_A1, QD2_B1], QD2_S1, QD2_N1, reg_hook=_tamper)
+    up8 = c8.get('upper') if isinstance(c8.get('upper'), dict) else {}
+    ev8 = {'sv_counterfactual_request': {'threshold': None}, 'solve': {'sv_counterfactual': SVCF.sv_cf_record(c8)}}
+    p8 = _try(lambda: SVCF.sv_cf_problem(ev8, True), 'EXC')
+    f8 = _try(lambda: _qd2_flags(c8, 2.0), None)
+    chk('QD2 ⑧ 원장 census 의 못 가른 덩어리 수를 0 으로 변조 (지문 밖) — 위 끝 = 다시 가른 원장과 다름 → 풀지 않음 (위 끝 상태 = 비 없는 이름 · 사유) · '
+        '검증기 거부 (덩어리 0 인데 위 끝 기록) · 사슬 = SV_UNCHECKED',
+        r8 is not None and c8.get('n_unsplit_bridging_components') == 0 and bool(up8) and up8.get('sv_counterfactual_ratio') is None
+        and up8.get('status') not in ('computed', 'no_through_without_sv') and bool(up8.get('why'))
+        and isinstance(p8, str) and p8.startswith('sv_cf|') and f8 == ['SV_UNCHECKED'], f'{c8} · {p8} · {f8}')
+    # ⑨ 주 해 미수렴 (`step3_sigma` 조기 기록) · 주 단자 전류 ≤ 0 (`sv_counterfactual` 첫 갈래) — 괄호 칸이 같은 꼴 (풀이 없음)
+    from scipy.sparse.linalg import spsolve as _sps
+
+    @contextlib.contextmanager
+    def _unconv_solver():
+        old = S3._solve_cg
+        S3._solve_cg = lambda L, b, *a, **k: (_sps(L.tocsc(), b), 1)
+        try:
+            yield
+        finally:
+            S3._solve_cg = old
+    P9 = cat_rows(rows([QD2_A1, QD2_B1]), rows([[p] for p in QD2_S1], phase=5, kind=0, fid0=700))
+    sid9, _ = bed(P9, QD2_N1, sdcp_sphere_d_um=0.0)
+    reg9 = registry(sid9, P9, tol_sj_um=0.1, r_sdcp_um=0.5)
+    with _unconv_solver():
+        r9 = _try(lambda: quiet(S3.solve_sigma_z, sid9, sig_e(), H, z_top_um=float(QD2_N1[2]), z_bot_um=0.0,
+                                cjunc=plan(reg9, 1e3, sv_counterfactual={'threshold': None})), None)
+    c9 = (((r9 or {}).get('cjunc') or {}).get('sv_counterfactual') or {})
+    up9 = c9.get('upper') if isinstance(c9.get('upper'), dict) else {}
+    ev9 = {'sv_counterfactual_request': {'threshold': None}, 'solve': {'sv_counterfactual': SVCF.sv_cf_record(c9)}}
+    chk('QD2 ⑨ 주 해 미수렴 (조기 기록 main_unconverged) — 옛 칸 그대로 (비 · 표지 · 증서 · backend None) + 못 가른 덩어리 1 · 위 끝 = 같은 상태 '
+        '(풀이 없음) · 검증기 받음 · 사슬 = SV_UNCHECKED',
+        r9 is not None and c9.get('status') == 'main_unconverged' and c9.get('sv_counterfactual_ratio') is None and c9.get('flag') is None
+        and c9.get('conv_cert') is None and c9.get('backend_last_solve') is None and c9.get('n_unsplit_bridging_components') == 1
+        and c9.get('status_hi') == 'main_unconverged' and c9.get('sv_counterfactual_ratio_hi') is None
+        and up9.get('status') == 'main_unconverged' and _try(lambda: SVCF.sv_cf_problem(ev9, True), 'EXC') is None
+        and _try(lambda: _qd2_flags(c9, 2.0), None) == ['SV_UNCHECKED'], f'{c9}')
+    _orig_cf = CJ.CjuncAssembler.sv_counterfactual
+
+    def _zero_I(self, solve_, I_full, request, **kw):
+        return _orig_cf(self, solve_, 0.0, request, **kw)
+    CJ.CjuncAssembler.sv_counterfactual = _zero_I
+    try:
+        _s10, _r10, r10, c10 = _qd2_run([QD2_A1, QD2_B1], QD2_S1, QD2_N1)
+    finally:
+        CJ.CjuncAssembler.sv_counterfactual = _orig_cf
+    up10 = c10.get('upper') if isinstance(c10.get('upper'), dict) else {}
+    chk('QD2 ⑩ 주 단자 전류 ≤ 0 (nonpositive_full_current — 풀지 않음) · 못 가른 덩어리 1 — 위 끝도 같은 상태 (풀이 없음) · 위 끝 비 None',
+        r10 is not None and c10.get('status') == 'nonpositive_full_current' and c10.get('n_unsplit_bridging_components') == 1
+        and c10.get('status_hi') == 'nonpositive_full_current' and c10.get('sv_counterfactual_ratio_hi') is None
+        and up10.get('status') == 'nonpositive_full_current' and up10.get('cg_info') is None, f'{c10}')
+
+
 @case('KBND')
 def t_k_boundary():
     """PRE-impl-05 (P3 · 한계 기록 · 고치지 않음) — 분산판 v0 간선 수 k = ceil(L_c/L_par) 의 경계 (깊은 교차 90° → 89.99° · k 1 → 2 · 배율 차
@@ -3546,12 +3803,26 @@ def t_mut_rca2():
         a0, a1 = piece_pos[piece]
         c = np.arange(a0, a1)
         return c[pos['live'][c]]
+
+    def j1_rows(info):                                      # ★ 10-22 (2 회차 변이 J1) — 못 가른 다리 (지나는 무리 ≥ 2) 지킴 줄을 뺀 `_sv_cut_rows`
+        comp, grp, pas = info['comp'], info['group'], info['passing']
+        cut = np.zeros(len(comp), bool)
+        for c_ in np.unique(comp):
+            m_ = comp == c_
+            if len(np.unique(grp[m_])) <= 1:
+                continue
+            cut |= m_ & ~pas
+        return cut
     cases = (
         ('조각 = fid 규칙 (옛 · 같은 fid 조각 쌍을 서로 다른 섬유 규칙에서 뺌) → GAP 같은 셀 σ 0', '_distinct_keep',
          lambda segs, i, j: segs['fid'][i] != segs['fid'][j], gap_ok),
         ('포트 = 살아 있는 위치만 (옛 · 덮이면 r_port 안 이웃 셀로 옮김) → QC ① 옮긴 접합 + SV 병렬', '_piece_cand', live_only, qc_ok),
         ('반사실 = SV 면 전부 끊음 (옛) → QD ① SDCP 를 지나는 섬유 하나도 비 ∞', '_sv_cut_rows',
          lambda info: np.ones(len(info['comp']), bool), qd_ok),
+        ('★ 10-22 못 가른 다리 지킴 끔 (2 회차 변이 J1) → QD2 ④ 아래 끝이 닿기만 하는 C 의 SV 면을 끊음 (덩어리 그대로가 아님)', '_sv_cut_rows',
+         j1_rows, _qd2_j1_ok),
+        ('★ 10-22 \'지남\' 에 덮임 · 같은 성분 조건 뺌 (2 회차 변이 J2) → QD2 ⑤ 덮이지 않은 사이로 두 번 닿는 B 도 \'지남\' (못 가른 덩어리 1 · '
+         'B 를 안 끊음)', '_sv_passes', lambda btw, pos, labf, c_: bool(len(btw) and np.all(pos['lin'][btw] >= 0)), _qd2_j2_ok),
         ('고리 이음매 별칭 끔 → 이음매 첫 · 끝 위치가 따로 (고리가 끊긴다)', '_ring_alias', lambda cu, is_ring: False, ring_ok),
         ('바닥 = s > D 만 ((π/2)·d 없음) → L 자 90° 모서리가 자기 후보', '_self_floor', lambda s_, d_, D_: s_ > D_, floor_ok),
     )

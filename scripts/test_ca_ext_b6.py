@@ -678,13 +678,31 @@ def state_manifest(kind, n_inst=3):
     return s3
 
 
-def _sv_raw(status='computed', ratio=1.25, threshold=None, flag=None):
-    """carbon_junction.CjuncSolver.sv_counterfactual 의 기록 꼴 (A · 10-21) — 투영 전 원 기록."""
+def _sv_ratio_of(status, ratio):
+    return ratio if status == 'computed' else (float('inf') if status == 'no_through_without_sv' else None)
+
+
+def _sv_raw(status='computed', ratio=1.25, threshold=None, flag=None, n_unsplit=0, status_hi=None, ratio_hi=None):
+    """carbon_junction.CjuncSolver.sv_counterfactual 의 기록 꼴 (A · 10-21) — 투영 전 원 기록.  ★ 10-22 (사전 리뷰 2 회차 PRE2-impl-01 ·
+    1저자 Q1 (다)) 괄호 칸 — 못 가른 덩어리 수 (`n_unsplit_bridging_components`) · 위 끝 (`status_hi` · `sv_counterfactual_ratio_hi`) · 위 끝 풀이
+    기록 (`upper` · 덩어리 0 = None · 위 = 아래) · 괄호 규칙."""
     r = {'kind': 'counterfactual_cut_sv_faces', 'requested': True, 'threshold': threshold, 'n_sv_faces_cut': 4, 'G_full_code': 2.5,
          'G_cut_code': (2.5 / ratio if status == 'computed' else (0.0 if status == 'no_through_without_sv' else None)),
-         'sv_counterfactual_ratio': (ratio if status == 'computed' else (float('inf') if status == 'no_through_without_sv' else None)),
+         'sv_counterfactual_ratio': _sv_ratio_of(status, ratio),
          'flag': flag, 'cg_info': (0 if status in ('computed', 'unconverged') else None), 'resid': (1e-13 if status == 'computed' else None),
-         'conv_cert': None, 'status': status, 'backend_last_solve': ({'used': 'gpu', 'requested': 'gpu'} if status == 'computed' else None)}
+         'conv_cert': None, 'status': status, 'backend_last_solve': ({'used': 'gpu', 'requested': 'gpu'} if status == 'computed' else None),
+         'n_unsplit_bridging_components': n_unsplit, 'bracket_rule': 'lower_keep_upper_remove_fake_v1'}
+    if n_unsplit:
+        sh = status_hi or 'computed'
+        rh = _sv_ratio_of(sh, ratio_hi)
+        r['upper'] = {'status': sh, 'sv_counterfactual_ratio': rh, 'cg_info': (0 if sh in ('computed', 'unconverged') else None),
+                      'G_cut_code': (2.5 / rh if sh == 'computed' else (0.0 if sh == 'no_through_without_sv' else None)),
+                      'resid': (1e-13 if sh == 'computed' else None), 'conv_cert': None, 'backend_last_solve': None,
+                      'n_edges_cut': 6, 'n_plate_couplings_cut': 0, 'n_cells_removed': 3}
+        r['status_hi'], r['sv_counterfactual_ratio_hi'] = sh, rh
+    else:
+        r['upper'] = None
+        r['status_hi'], r['sv_counterfactual_ratio_hi'] = status, r['sv_counterfactual_ratio']
     return r
 
 
@@ -914,7 +932,9 @@ def t_states():
            '정의별 수 칸 이름이 바뀜 (n_sv_faces_cut 없음 · n_bridging_faces_cut 3)':
            lambda r: (r.pop('n_sv_faces_cut'), r.update(n_bridging_faces_cut=3)),
            '모르는 상태 · 비 없음 (사슬 = SV_UNCHECKED · 받는다)':
-           lambda r: r.update(status='no_bridging_sv_faces', sv_counterfactual_ratio=None, G_cut_code=None)}
+           #  ★ 10-22 (Q1 (다)) — 못 가른 덩어리 0 기록의 위 끝 = 아래 끝 (괄호 칸도 같은 상태로 · 기록 내부 일관)
+           lambda r: r.update(status='no_bridging_sv_faces', sv_counterfactual_ratio=None, G_cut_code=None,
+                              status_hi='no_bridging_sv_faces', sv_counterfactual_ratio_hi=None)}
     for nm, fn in agn.items():
         raw = _sv_raw('computed', 1.25)
         fn(raw)
@@ -928,6 +948,70 @@ def t_states():
     chk('S8i 투영 — 정의별 수 칸 (n_*) 은 이름 그대로 옮긴다 · 사슬이 읽는 칸 (비 · 상태 · 표지 · 종류) 은 그대로',
         isinstance(pj, dict) and pj.get('n_bridging_faces_cut') == 3 and 'n_sv_faces_cut' not in pj
         and pj.get('sv_counterfactual_ratio') == 1.25 and pj.get('status') == 'computed' and pj.get('flag') is None, pj)
+    #  ── ★ 10-22 (사전 리뷰 2 회차 PRE2-impl-01 · 02 · 1저자 Q1 (다)) 괄호 칸 — 투영 · 검증기 (위 끝 상태 ↔ 비 꼴 · 못 가른 덩어리 수 ↔ 위 끝 기록) ──
+    rb = _sv_raw('computed', 1.0, n_unsplit=1, status_hi='no_through_without_sv')
+    pb = proj(rb)
+    pbu = pb.get('upper') if isinstance(pb, dict) and isinstance(pb.get('upper'), dict) else {}
+    chk('S8j 투영 — 괄호 칸 (위 끝 상태 · 비 (+∞ = null + ratio_limit_hi "inf") · 위 끝 풀이 기록 (아래 끝과 같은 꼴 · +∞ = ratio_limit "inf") · '
+        '괄호 규칙 · 못 가른 덩어리 수) · JSON 유한 (allow_nan False)',
+        isinstance(pb, dict) and pb.get('status_hi') == 'no_through_without_sv' and pb.get('sv_counterfactual_ratio_hi') is None
+        and pb.get('ratio_limit_hi') == 'inf' and pbu.get('status') == 'no_through_without_sv' and pbu.get('sv_counterfactual_ratio') is None
+        and pbu.get('ratio_limit') == 'inf' and pbu.get('n_cells_removed') == 3 and pb.get('bracket_rule') == rb['bracket_rule']
+        and pb.get('n_unsplit_bridging_components') == 1 and json.dumps(pb, allow_nan=False) is not None, pb)
+    good_br = {'덩어리 1 · [1, ∞] (리뷰어 꼴)': rb,
+               '덩어리 1 · [1.2, 3.4] (둘 다 computed)': _sv_raw('computed', 1.2, n_unsplit=1, status_hi='computed', ratio_hi=3.4),
+               '덩어리 1 · 위 끝 미수렴 (비 없음 = 사슬 못 읽음)': _sv_raw('computed', 1.2, n_unsplit=1, status_hi='unconverged'),
+               '덩어리 2 · 아래 끝 미수렴 · 위 끝 +∞': _sv_raw('unconverged', n_unsplit=2, status_hi='no_through_without_sv'),
+               '덩어리 0 · 위 = 아래 (no_through)': _sv_raw('no_through_without_sv')}
+    for nm, raw in good_br.items():
+        x = deep(mm)
+        Es(x)['solve']['sv_counterfactual'] = proj(raw)
+        chk(f'S8k 괄호 정상 기록 받음 [{nm}]', RC.ca_ext_record_ok(x) == (True, None), RC.ca_ext_record_ok(x))
+
+    def _up_set(r, **kw):
+        if isinstance(r.get('upper'), dict):
+            r['upper'].update(kw)
+    bad_br = {      # 덩어리 0 · computed 1.25 (mm 의 투영) 에서 칸 하나씩
+        '괄호 칸 없음 (옛 꼴 · status_hi 없음)': lambda r: r.pop('status_hi', None),
+        '판정문 PRE2-impl-02 다섯째 꼴 (덩어리 1 · computed · 괄호 칸 없음)':
+            lambda r: (r.update(n_unsplit_bridging_components=1), r.pop('status_hi', None), r.pop('upper', None)),
+        '덩어리 1 인데 위 끝 기록 없음 (한 번만 풂)': lambda r: r.update(n_unsplit_bridging_components=1),
+        '덩어리 0 인데 위 끝 기록 있음': lambda r: r.update(upper={'status': 'computed', 'sv_counterfactual_ratio': 1.25, 'ratio_limit': None}),
+        '덩어리 0 인데 위 비 ≠ 아래 비': lambda r: r.update(sv_counterfactual_ratio_hi=2.0),
+        '덩어리 0 인데 위 상태 ≠ 아래 상태': lambda r: r.update(status_hi='unconverged', sv_counterfactual_ratio_hi=None),
+        '위 끝 상태 빈 낱말': lambda r: r.update(status_hi=''),
+        '위 끝 computed 인데 비 None': lambda r: r.update(sv_counterfactual_ratio_hi=None),
+        '위 끝 computed 인데 inf 표지': lambda r: r.update(ratio_limit_hi='inf'),
+        '위 끝 no_through 인데 inf 표지 없음':
+            lambda r: r.update(status_hi='no_through_without_sv', sv_counterfactual_ratio_hi=None, ratio_limit_hi=None),
+        '위 끝 비 없는 상태인데 비가 있다': lambda r: r.update(status_hi='unconverged'),
+        '못 가른 덩어리 수 bool': lambda r: r.update(n_unsplit_bridging_components=True),
+        '못 가른 덩어리 수 음수': lambda r: r.update(n_unsplit_bridging_components=-1),
+        '못 가른 덩어리 수 없음': lambda r: r.pop('n_unsplit_bridging_components', None),
+        '괄호 규칙 없음': lambda r: r.update(bracket_rule=None),
+    }
+    for nm, fn in bad_br.items():
+        x = deep(mm)
+        fn(Es(x)['solve']['sv_counterfactual'])
+        chk(f'S8l 괄호 기록 거부 [{nm}]', not RC.ca_ext_record_ok(x)[0], RC.ca_ext_record_ok(x))
+    bad_br1 = {     # 덩어리 1 · [1.2, 3.4] 에서 칸 하나씩
+        '위 끝 칸 ≠ 위 끝 풀이 기록 (상태)': lambda r: _up_set(r, status='unconverged', sv_counterfactual_ratio=None, ratio_limit=None),
+        '위 끝 칸 ≠ 위 끝 풀이 기록 (비)': lambda r: r.update(sv_counterfactual_ratio_hi=4.0),
+        '덩어리 1 인데 위 끝 기록이 dict 아님': lambda r: r.update(upper='x'),
+        '덩어리 1 인데 위 끝 기록 None': lambda r: r.update(upper=None),
+    }
+    for nm, fn in bad_br1.items():
+        x = deep(mm)
+        Es(x)['solve']['sv_counterfactual'] = proj(_sv_raw('computed', 1.2, n_unsplit=1, status_hi='computed', ratio_hi=3.4))
+        fn(Es(x)['solve']['sv_counterfactual'])
+        chk(f'S8l 괄호 기록 거부 [{nm}]', not RC.ca_ext_record_ok(x)[0], RC.ca_ext_record_ok(x))
+    ch = getattr(SVCF, 'chain_view', None)
+    v_b = ch(proj(rb)) if callable(ch) else {}
+    v_o = ch(proj({k: v for k, v in _sv_raw('computed', 1.25).items() if k not in ('status_hi', 'sv_counterfactual_ratio_hi', 'upper')})) \
+        if callable(ch) else {}
+    chk('S8m 사슬 꼴 (chain_view) — 아래 끝 · 위 끝 (+∞) · 못 가른 덩어리 수 · 위 끝 칸이 없는 옛 꼴 = 위 끝 None (못 읽음 · fail-closed)',
+        v_b.get('ratio') == 1.0 and v_b.get('ratio_hi') == float('inf') and v_b.get('status_hi') == 'no_through_without_sv'
+        and v_b.get('n_unsplit') == 1 and v_o.get('ratio') == 1.25 and v_o.get('ratio_hi') is None and 'ratio_hi' in v_o, (v_b, v_o))
     #  ── 조기 반환 해 (주 솔브 안 풀림) — 반사실 기록 없음 = 정상 · 요청만 남는다 ──
     zz = deep(z['manifest'])
     zz['ca_ext']['cjunc']['evidence']['sv_counterfactual_request'] = {'threshold': None}
@@ -986,6 +1070,35 @@ def make_fixture_thin_cross(d):
     blocks = [(_box(se), 1, -1, 0),
               (_box(line((12.5, 24.5, 0.5), (36.5, 24.5, 0.5), 97)), 2, 0, 1),        # V1 (아래 층 · x 방향)
               (_box(line((24.5, 12.5, 1.5), (24.5, 36.5, 1.5), 97)), 2, 1, 1)]        # V2 (위 층 · y 방향)
+    pts = np.vstack([b[0] for b in blocks])
+    np.save(os.path.join(d, 'se.npy'), pts)
+    np.save(os.path.join(d, 'phase.npy'), np.concatenate([np.full(len(b[0]), b[1], np.int32) for b in blocks]))
+    np.save(os.path.join(d, 'fibre.npy'), np.concatenate([np.full(len(b[0]), b[2], np.int32) for b in blocks]))
+    np.save(os.path.join(d, 'fibre_kind.npy'), np.concatenate([np.full(len(b[0]), b[3], np.int8) for b in blocks]))
+    np.save(os.path.join(d, 'fibre_dia.npy'), np.ones(len(pts)))
+    return d
+
+
+def make_fixture_sv_unsplit(d, b_start_z):
+    """★ 10-22 (사전 리뷰 2 회차 PRE2-impl-01 · payload 끝-끝 꼴 = 판정문 탐침 `probe2_sv_unsplit_payload.py`) — b6 AM 기둥 줄 그대로 · SE 점은
+    섬유에서 먼 x 12–18 µm · VGCF A = (24.5, 24.5) 아래 판 z 0.3 → z 18.5 (위 판에 안 닿음) · B = (26.5, 24.5) z `b_start_z` → 위 판 z 23.2 ·
+    SDCP 점 셋 (24.5 · 25.5 · 26.5, 24.5, 12.5) = 셀 (24 · 25 · 26, 24, 12) — A · B 의 z 12 셀을 덮고 둘을 잇는다.  b_start_z 6.5 = 두 섬유가
+    같은 덩어리를 지남 (못 가른 덩어리) · 12.5 = B 가 덩어리 안에서 시작 (한 섬유만 지남 · 대조)."""
+    with open(os.path.join(d, 'am.csv'), 'w', encoding='utf-8') as f:
+        rows = ['# type,x,y,z,r  (Rint ② PF2 Q1 (다) 못 가른 덩어리 침대)']
+        for ix in range(2):
+            for iy in range(2):
+                for k in range(3):
+                    rows.append('2,%.6f,%.6f,%.6f,%.6f' % (0.020 + 0.008 * ix, 0.020 + 0.008 * iy, 0.004 + 0.0075 * k, 0.004))
+        f.write('\n'.join(rows) + '\n')
+    g = np.arange(12.0, 18.01, 0.75)
+    gy = np.arange(12.0, 36.01, 0.75)
+    gz = np.arange(0.3, 23.2, 0.75)
+    se = np.array([[x, y, z] for x in g for y in gy for z in gz], np.float64)
+    blocks = [(_box(se), 1, -1, 0),
+              (_box(line((24.5, 24.5, 0.3), (24.5, 24.5, 18.5), 73)), 2, 0, 1),
+              (_box(line((26.5, 24.5, b_start_z), (26.5, 24.5, 23.2), 69)), 2, 1, 1),
+              (_box(np.array([[24.5, 24.5, 12.5], [25.5, 24.5, 12.5], [26.5, 24.5, 12.5]])), 5, -1, 0)]
     pts = np.vstack([b[0] for b in blocks])
     np.save(os.path.join(d, 'se.npy'), pts)
     np.save(os.path.join(d, 'phase.npy'), np.concatenate([np.full(len(b[0]), b[1], np.int32) for b in blocks]))
@@ -1098,6 +1211,52 @@ def t_states_payload():
             and isinstance(sq.get('sigma_e_eff_S_cm'), float) and sq['sigma_e_eff_S_cm'] > 0.0
             and (sq.get('conv_cert') or {}).get('status') == CC.STATUS_POSITIVE,
             (rc_f, sf.get('sigma_e_eff_S_cm'), (sf.get('conv_cert') or {}).get('status'), rc_q, sq.get('sigma_e_eff_S_cm')))
+        #  ── ★ 10-22 (사전 리뷰 2 회차 PRE2-impl-01 · 1저자 Q1 (다)) 못 가른 덩어리 payload 끝-끝 — 판정문 탐침 꼴 (rtol 1e-12 · 증서 켬) ──
+        #     옛 판 = 두 섬유 꼴 비 1.0 · computed · 사슬 표지 없음 ↔ 대조 85.42 · SV_DEPENDENT (주 σ 차이 0.02 %)
+        import ca_ext_svcf as _SVc
+        import rint_r_chain as _RRc
+
+        def _flags(rec):
+            return _RRc.sv_assess({('1', 'P0', 'R_j0'): {'sv_cf': _SVc.chain_view(rec)}}, 2.0, 'R_j0')[0]
+        os.makedirs(os.path.join(td, 'svu'))
+        os.makedirs(os.path.join(td, 'svc'))
+        du = make_fixture_sv_unsplit(os.path.join(td, 'svu'), 6.5)
+        dc = make_fixture_sv_unsplit(os.path.join(td, 'svc'), 12.5)
+        SVK = OFF + LEAN2 + CJ + ['--step3-rtol', '1e-12']
+        rc_u, log_u, q_u = run_payload(du, SVK + ['--step3-cjunc-sv-cf'], out='u_on.json')
+        rc_u0, _lu0, q_u0 = run_payload(du, SVK, out='u_off.json')
+        rc_c, log_c, q_c = run_payload(dc, SVK + ['--step3-cjunc-sv-cf'], out='c_on.json')
+        su = ((cj_block(q_u).get('evidence') or {}).get('solve') or {}).get('sv_counterfactual') or {}
+        sc = ((cj_block(q_c).get('evidence') or {}).get('solve') or {}).get('sv_counterfactual') or {}
+        uu = su.get('upper') if isinstance(su.get('upper'), dict) else {}
+        hi_u = (float('inf') if su.get('ratio_limit_hi') == 'inf' else su.get('sv_counterfactual_ratio_hi'))
+        chk('SP14 두 섬유가 같은 덩어리를 지남 (payload · 실제 rasterize · 증서 켬) — rc 0 · 못 가른 덩어리 1 · 아래 끝 = 덩어리 그대로 (끊은 면 0 · '
+            '비 1 (1e-12) · computed) · 위 끝 = 덩어리를 뺀 판 (비를 싣는 상태 · 비 > 2) · 위 끝 풀이 기록 (뺀 셀 3 · computed 면 그 풀이의 '
+            '증서 ok) · ca_ext_record_ok · next_gen_state = positive',
+            rc_u == 0 and su.get('n_unsplit_bridging_components') == 1 and su.get('n_sv_faces_cut') == 0 and su.get('status') == 'computed'
+            and isinstance(su.get('sv_counterfactual_ratio'), float) and abs(su['sv_counterfactual_ratio'] - 1.0) <= 1e-12
+            and su.get('status_hi') in ('computed', 'no_through_without_sv') and isinstance(hi_u, float) and hi_u > 2.0
+            and uu.get('status') == su.get('status_hi') and uu.get('n_cells_removed') == 3
+            and ((uu.get('status') != 'computed') or ((uu.get('conv_cert') or {}).get('ok') is True))
+            and RC.ca_ext_record_ok(man_of(q_u)) == (True, None) and RC.next_gen_state(s3_of(q_u)) == ('positive', None),
+            (rc_u, su, log_u.strip()[-300:]))
+        chk('SP15 사슬 판정 (문턱 2 · 실제 chain_view · sv_assess) — 두 섬유 꼴 = SV_UNCHECKED (괄호가 문턱에 걸침 · 옛 = 표지 없음) · 대조 (한 섬유만 '
+            '지남) = SV_DEPENDENT · 대조 = 못 가른 덩어리 0 · 다시 풀지 않음 (위 = 아래 · 위 끝 기록 None)',
+            _flags(su) == ['SV_UNCHECKED'] and rc_c == 0 and _flags(sc) == ['SV_DEPENDENT']
+            and sc.get('n_unsplit_bridging_components') == 0 and 'upper' in sc and sc.get('upper') is None
+            and sc.get('status_hi') == sc.get('status') and sc.get('sv_counterfactual_ratio_hi') == sc.get('sv_counterfactual_ratio')
+            and sc.get('ratio_limit_hi') == sc.get('ratio_limit') and RC.ca_ext_record_ok(man_of(q_c)) == (True, None),
+            (_flags(su), _flags(sc), sc, log_c.strip()[-300:]))
+        #  주 증서의 결합 칸 fp_cjunc_rows = 계획 행 지문 — 노브를 켠 계획은 지문에 요청이 들어간다 (`plan_rows_fp` · 10-21 RCA-06 · 노브 끔 = 옛 꼴)
+        #  → 그 칸만 빼고 대조 (증서 수 · 상태 · 판정 칸은 같아야 한다)
+        _cc_main = lambda q: {k: v for k, v in (s3_of(q).get('conv_cert') or {}).items() if k != 'fp_cjunc_rows'}   # noqa: E731
+        chk('SP16 위 끝 풀이는 주 결과를 바꾸지 않는다 — 두 섬유 침대 노브 켬 ↔ 끔: σ 비트 같음 · 주 증서 같음 (계획 행 지문 결합 칸 하나 빼고) · '
+            '매니페스트 backend_last_solve 같음 · p3ca id 같음',
+            rc_u0 == 0 and s3_of(q_u).get('sigma_e_eff_S_cm') == s3_of(q_u0).get('sigma_e_eff_S_cm')
+            and bool(_cc_main(q_u)) and _cc_main(q_u) == _cc_main(q_u0)
+            and man_of(q_u).get('backend_last_solve') == man_of(q_u0).get('backend_last_solve')
+            and man_of(q_u).get('physics_protocol_id') == man_of(q_u0).get('physics_protocol_id'),
+            (s3_of(q_u).get('sigma_e_eff_S_cm'), s3_of(q_u0).get('sigma_e_eff_S_cm')))
     finally:
         shutil.rmtree(td, ignore_errors=True)
 
