@@ -993,6 +993,7 @@ KERNEL_LINE_RE = re.compile(r"(?i)vdw.*kernel|kernel.*vdw")          # vdW 커�
 #                                                                     MPI·OS 경고 ('kernel module … not loaded') 가 커널 부재로 잡혀 전체 정지가 되는 오탐
 KERNEL_REGEN_RE = re.compile(r"(?i)\b(recalc\w*|regenerat\w*|generat\w*|comput\w*|writ\w*)\b")   # 재생성 표지
 KERNEL_BAD_RE = re.compile(r"(?i)\b(not|no|error|cannot|unable|fail\w*|missing|differ\w*)\b")      # 부정 표지
+KERNEL_NEG_EXACT_RE = re.compile(r"(?i)\bno\s+kernel\s+file\s+found\b")   # vdW 를 말하지 않는 확인된 VASP 부정문 (Codex DB Q-DB-8 ② · VASP 포럼 출력 사례) — 이 구절만 좁게
 
 
 # ───────────────────────── 반송 검사 (시도 하나) ─────────────────────────
@@ -1033,11 +1034,13 @@ def _raw_text(attdir):
 HEAD_LINE_RE = re.compile(r"[ \t\r\f\v]*(vasp\.[0-9].*)")      # 실행 머리줄 — 러너 grep '^[[:space:]]*vasp\.[0-9]' 와 같은 줄 (원문을 \n 으로만 나눈다)
 
 
-def env_evidence(attdir):
+def env_evidence(attdir, optb88=False):
     """시도 폴더 → 환경 증거 (VASP 버전 · PP 종별 sha · vdW 커널 sha) — **무결성 검사와 상관없이** 읽는다 (자체 검토 S1: 무결성에서 멈춘 시도 ·
     attempt.json 없이 끊긴 시도 · 사다리 밖 시도의 다른 빌드가 감사에서 빠졌다). 버전은 OUTCAR 원문의 **모든** 실행 머리줄 (첫 줄만이 아니다) ·
     커널 sha 는 attempt.json · 없으면 시작 표지 attempt.start.
-    ⚠ 못 하는 것: 결박되지 않은 시도의 파일은 고쳐졌을 수 있다 — 이 증거는 멈추는 쪽으로만 쓴다 (여기서 깨끗하다고 그 시도가 무결한 것은 아니다)."""
+    optB88 시도면 원문 (stdout.log + OUTCAR) 의 커널 부정 · 재생성 줄도 (Codex DB P1-1 — 끊긴 · 무결성 실패 시도의 그 줄이 전역 정지에 안 닿았다).
+    ⚠ 못 하는 것: 결박되지 않은 시도의 파일은 고쳐졌을 수 있다 — 이 증거는 멈추는 쪽으로만 쓴다 (여기서 깨끗하다고 그 시도가 무결한 것은 아니다 ·
+    커널 긍정 문구로 불완전 시도를 올리지 않는다)."""
     raw = _read_raw(os.path.join(attdir, "OUTCAR")) or ""
     vers = [" ".join(m.group(1).split()) for m in (HEAD_LINE_RE.match(ln) for ln in raw.split("\n")) if m]
     sp = {}
@@ -1054,13 +1057,16 @@ def env_evidence(attdir):
         if isinstance(v, str) and V.HEX64.match(v.lower()):
             ks = v.lower()
             break
-    return {"versions": vers, "potcar_species_sha256": {k: sorted(v) for k, v in sp.items()}, "kernel_sha256": ks}
+    kst, kln = kernel_state(_raw_text(attdir)) if optb88 else (None, None)
+    return {"versions": vers, "potcar_species_sha256": {k: sorted(v) for k, v in sp.items()}, "kernel_sha256": ks, "kernel_state": kst, "kernel_line": kln}
 
 
 def kernel_state(text):
     """원문 → (상태, 줄): vdW 커널을 말하는 줄에 재생성 표지가 있으면 "regenerated" · 부정 표지면 "not_read" · 그런 줄이 없으면 (None, None).
     ⚠ 표지는 넓다 — 업체 5.4.4 의 실제 긍정 문구에 'calculating' 같은 말이 있으면 거짓 경보다. 파일럿 원문을 보고 다시 정한다 (검사기만 바뀌고 묶음은 안 바뀐다)."""
     for ln in text.splitlines():
+        if KERNEL_NEG_EXACT_RE.search(ln):
+            return "not_read", ln.strip()
         if KERNEL_LINE_RE.search(ln):
             if KERNEL_REGEN_RE.search(ln):
                 return "regenerated", ln.strip()
@@ -1175,7 +1181,7 @@ def check_attempt(job, pkgdir, attdir, rung, registry=None, a_ref=None):
         return r
     if not os.path.isdir(attdir):
         return done("MISSING")
-    r["env"] = env_evidence(attdir)            # 아래 무결성 검사에서 멈춰도 환경 감사는 이 증거를 본다 (자체 검토 S1)
+    r["env"] = env_evidence(attdir, job["method"] == "optb88")      # 아래 무결성 검사에서 멈춰도 환경 감사는 이 증거를 본다 (자체 검토 S1 · DB P1-1)
     if not os.path.isfile(os.path.join(attdir, "attempt.json")):
         return done("INCOMPLETE_ATTEMPT", "attempt.json 없음 — " + (
             "전자 스텝 뒤 끊긴 시도 (killed.json — 벽시계 기록됨 · 다시 돌리지 않는다 · 값 없음 · 1저자)" if os.path.isfile(os.path.join(attdir, "killed.json")) else
@@ -1353,8 +1359,13 @@ def a_eligible(ra):
 
 
 def _started(d):
-    """시도가 시작됐나 — run_one 은 폴더를 차지한 뒤 맨 먼저 INCAR 를 놓고 끝에 attempt.json 을 쓴다 (r1B · a4B 의 폴더는 ⓐ 의 부모라 폴더만으로는 모른다)."""
-    return os.path.isfile(os.path.join(d, "attempt.json")) or os.path.isfile(os.path.join(d, "INCAR"))
+    """시도가 시작됐나 — 그 시도 폴더 **바로 안에** 파일이 하나라도 있으면 (INCAR · attempt.json · attempt.start · OUTCAR · OSZICAR · stdout.log · PP 기록 ·
+    killed.json … 어느 실행 흔적이든 — Codex DB P0-1: INCAR · attempt.json 둘만 보아 그 둘이 빠진 시도가 감사에서 사라졌다).
+    r1B · a4B 의 폴더는 ⓐ 의 부모라 폴더가 있는 것만으로는 모른다 — 하위 폴더 (stageA/ · .b/) 는 세지 않는다."""
+    try:
+        return any(os.path.isfile(os.path.join(d, f)) for f in os.listdir(d))
+    except OSError:
+        return False
 
 
 def _env_of(r):
@@ -1366,7 +1377,8 @@ def _env_of(r):
 def env_audit(attempts, registry=None):
     """[(꼬리표, 검사 기록)] → [(꼬리표, 등급, 사유)] (비면 깨끗하다) — CZ Q-CZ-3: 채택 시도만이 아니라 모든 시도를 본다.
     ① 시도마다 환경 등급 모순 — status 와 conflicts 목록 둘 다 (check_attempt 는 첫 모순만 status 로 올린다)
-    ② 등록부가 있으면 시도마다 환경 증거 (env_evidence — 무결성에서 멈춘 시도 · 끊긴 시도도 · 모든 실행 머리줄) 가 등록부와 다른지 (자체 검토 S1)
+    ② 등록부가 있으면 시도마다 환경 증거 (env_evidence — 무결성에서 멈춘 시도 · 끊긴 시도도 · 모든 실행 머리줄) 가 등록부와 다른지 (자체 검토 S1) ·
+       optB88 시도 원문의 커널 부정 · 재생성 줄은 등록부와 상관없이 KERNEL_NOT_READ (Codex DB P1-1)
     ③ 시도 사이 (한 시도 안의 머리줄 둘도) VASP 버전 · PP 종별 sha · vdW 커널 sha 갈림.
     환경 증거가 없는 기록 (합성 기록) 은 version · potcar_species_sha256 · kernel_sha256 필드를 쓴다 (_env_of)."""
     out, by = [], {"VERSION_INCONSISTENT": {}, "POTCAR_INCONSISTENT": {}, "KERNEL_INCONSISTENT": {}}
@@ -1381,6 +1393,8 @@ def env_audit(attempts, registry=None):
             if k in ENV_CLASS:
                 add(k, w.strip())
         ev = _env_of(r)
+        if ev.get("kernel_state") in ("not_read", "regenerated"):      # 완결성 · 무결성과 무관 (Codex DB P1-1)
+            add("KERNEL_NOT_READ", f"vdW 커널 {ev['kernel_state']} — {str(ev.get('kernel_line'))[:120]!r} (환경 증거)")
         if registry:
             bv = [v for v in ev["versions"] if v != registry.get("vasp_version")]
             if bv:
@@ -2990,8 +3004,10 @@ def _selftest():
         t7 = os.path.join(T, "ts7"); shutil.copytree(p7, t7, ignore=shutil.ignore_patterns("round2_return*"))
         open(os.path.join(t7, "run", OB, "stdout.log"), "a").write(" vdW kernel not found, recalculating\n")
         r7_ = resolve_job(J[OB], t7, os.path.join(t7, "run"), reg7)
-        ck("⛔음성 S7 (검토 재현): 반송 뒤 stdout.log 에 커널 재생성 줄을 더하면 ATTEMPT_MISMATCH (지금까지는 sha 대조 없이 KERNEL_NOT_READ → 전체 정지)",
-           r7_["status"] == "ATTEMPT_MISMATCH" and "stdout.log" in r7_.get("why", ""), (r7_["status"], r7_.get("why")))
+        a7_ = (r7_.get("attempts") or {}).get("0") or {}
+        ck("⛔음성 S7 (검토 재현): 반송 뒤 stdout.log 에 커널 재생성 줄을 더하면 그 시도는 ATTEMPT_MISMATCH (stdout.log 실행 기록 sha · 지금까지는 sha 대조 없음) · "
+           "잡은 그 재생성 줄 (환경 증거) 로 KERNEL_NOT_READ — 더 엄한 쪽이 덮는다 (Codex DB P1-1)",
+           a7_.get("status") == "ATTEMPT_MISMATCH" and "stdout.log" in a7_.get("why", "") and r7_["status"] == "KERNEL_NOT_READ", (a7_.get("status"), r7_["status"], r7_.get("why")))
         t7b = os.path.join(T, "ts7b"); shutil.copytree(p7, t7b, ignore=shutil.ignore_patterns("round2_return*"))
         pt7 = os.path.join(t7b, "run", "P2S_Li_A_bound", "POTCAR.titel"); pt_ = open(pt7).read()
         open(pt7, "w").write(pt_.replace("PAW_PBE C 08Apr2002", "PAW_PBE C_h 06Feb2004", 1))
@@ -3014,6 +3030,42 @@ def _selftest():
         except Exception as e:  # noqa: BLE001
             st8 = f"예외 {type(e).__name__}: {e}"
         ck("⛔음성 S8 (검토 재현): ⓐ WAVECAR.info 가 객체가 아닌 JSON ([1] · sha 맞춤) → 예외가 아니라 상태 (ⓐ 자격 미달)", st8 == "STAGE_A_INELIGIBLE", st8)
+        # DB (Codex DB 회신 2026-10-22 · NO-GO 해제조건) ① 시도 열거 — INCAR · attempt.json 이 없어도 실행 흔적이 남은 시도는 감사한다 (ⓑ 는 부모 폴더 · .b 만으로는 시작이 아니다)
+        #   ② 끊긴 · 무결성 실패 optB88 시도의 커널 부정 · 재생성 원문도 전역 정지 · Q-DB-8 ② 좁은 부정문
+        tdb1 = os.path.join(T, "tdb1"); shutil.copytree(p7, tdb1, ignore=shutil.ignore_patterns("round2_return*"))
+        sa1 = os.path.join(tdb1, "run", "P2S_Li_A_bound_r1", "stageA"); shutil.copytree(os.path.join(tdb1, "run", "P2S_Li_A_bound"), sa1)
+        aj_ = os.path.join(sa1, "attempt.json"); a__ = json.load(open(aj_)); a__["attempt"] = "r1A"; json.dump(a__, open(aj_, "w"))
+        os.makedirs(os.path.join(tdb1, "run", "P2S_Li_A_bound_r1", ".b"))
+        head_edit(sa1, OTHER_HD)
+        for f_ in ("INCAR", "attempt.json"):
+            os.remove(os.path.join(sa1, f_))
+        rdb1 = resolve_job(J["P2S_Li_A_bound"], tdb1, os.path.join(tdb1, "run"), reg7)
+        cdb1 = collect(tdb1, tdb1, msha, uma, reg7)
+        a4db1 = os.path.join(T, "a4_db1.json"); cc1_, ar1_ = cli_(tdb1, "--check", *rgs), cli_(tdb1, "--a4_result", a4db1, *rgs)
+        a4j1 = json.load(open(a4db1)) if os.path.isfile(a4db1) else {}
+        at1 = rdb1.get("attempts") or {}
+        ck("⛔음성 DB P0-1 (Codex 재현): 사다리 밖 r1 ⓐ 에서 INCAR · attempt.json 만 지움 (attempt.start · OUTCAR (다른 빌드) · stdout · PP 기록 · OSZICAR 는 남음) → 그래도 감사 — "
+           "그 시도 INCOMPLETE_ATTEMPT · 잡 OK 아님 · 공통 환경 고장 (--collect · --check 종료 6 · --a4_result 기록) · ⓑ 는 부모 폴더 · .b 만이라 시작으로 안 센다 "
+           "(지금까지는 감사에서 사라져 --check 0 · a4 OK)",
+           at1.get("r1A", {}).get("status") == "INCOMPLETE_ATTEMPT" and "r1B" not in at1 and rdb1["status"] != "OK" and collect_exit(cdb1) == 6
+           and cc1_.returncode == 6 and bool(a4j1.get("common_environment_failure")), (sorted(at1), rdb1["status"], collect_exit(cdb1), cc1_.returncode,
+                                                                                         a4j1.get("common_environment_failure")))
+        tdb2 = os.path.join(T, "tdb2"); shutil.copytree(p7, tdb2, ignore=shutil.ignore_patterns("round2_return*"))
+        sa2 = os.path.join(tdb2, "run", f"{OB}_r1", "stageA"); shutil.copytree(os.path.join(tdb2, "run", OB), sa2)
+        open(os.path.join(sa2, "stdout.log"), "a").write(" kernel differs, recalculating vdW kernel\n")
+        os.remove(os.path.join(sa2, "attempt.json"))
+        rdb2 = resolve_job(J[OB], tdb2, os.path.join(tdb2, "run"), reg7)
+        cdb2 = collect(tdb2, tdb2, msha, uma, reg7)
+        a4db2 = os.path.join(T, "a4_db2.json"); ar2_ = cli_(tdb2, "--a4_result", a4db2, *rgs); a4j2 = json.load(open(a4db2)) if os.path.isfile(a4db2) else {}
+        ck("⛔음성 DB P1-1 (Codex 재현): optB88 사다리 밖 r1 ⓐ (INCAR 남김 · attempt.json 없음 = 끊김) 의 stdout 에 'kernel differs, recalculating vdW kernel' → 그 시도는 INCOMPLETE_ATTEMPT 라도 "
+           "KERNEL_NOT_READ 가 공통 환경 고장 (종료 6 · --a4_result 기록) — 지금까지는 전역 고장 없음 · a4 OK",
+           (rdb2.get("attempts") or {}).get("r1A", {}).get("status") == "INCOMPLETE_ATTEMPT" and any("KERNEL_NOT_READ" in x for x in cdb2["common_environment_failure"] or [])
+           and collect_exit(cdb2) == 6 and bool(a4j2.get("common_environment_failure")), (rdb2["status"], cdb2["common_environment_failure"], a4j2.get("common_environment_failure")))
+        tdb2b = os.path.join(T, "tdb2b"); shutil.copytree(p7, tdb2b, ignore=shutil.ignore_patterns("round2_return*"))
+        open(os.path.join(tdb2b, "run", OB, "stdout.log"), "a").write(" No kernel file found\n"); fix_att_sha(os.path.join(tdb2b, "run", OB), "stdout.log")
+        rdb2b = resolve_job(J[OB], tdb2b, os.path.join(tdb2b, "run"), reg7)
+        ck("⛔음성 DB Q-DB-8 ② (Codex · VASP 포럼 출력 사례): vdW 를 말하지 않는 확인된 부정문 'No kernel file found' 가 커널 읽기 긍정 문구와 같이 있으면 KERNEL_NOT_READ "
+           "(좁은 예외 패턴 · 지금까지는 긍정이 이겨 OK)", rdb2b["status"] == "KERNEL_NOT_READ", (rdb2b["status"], rdb2b.get("why")))
     finally:
         if os.environ.get("R2_SELFTEST_KEEP") == "1":
             print(f"  (시험 폴더 남김: {T})")
