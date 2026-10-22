@@ -70,8 +70,9 @@ V5_PKG = "db/inputs/wad_aprime_v5_vasp_2026_09_27"
 V5_MANIFEST_SHA256 = "8118bbc023d6699cd7cd1b6e6afd32872e0699af70b412e15b89365e556ee2f1"
 WADCC_PKG = "db/raw/wad_cc_graphite_2026_09_28/stage2_pkg"
 CC_PAIR = ("CC_S33_AB_dft_bound", "CC_S33_AB_dft_far")
-RETURN_ALLOWED = V.RETURN_ALLOWED + ("WAVECAR.info", "warn.log", "infra_abort.json")
-RETURN_FORBIDDEN = V.RETURN_FORBIDDEN + ("vdw_kernel.bindat",)
+RETURN_ALLOWED = V.RETURN_ALLOWED + ("WAVECAR.info", "warn.log", "infra_abort.json", "LOCPOT.zavg.txt")
+RETURN_FORBIDDEN = V.RETURN_FORBIDDEN + ("vdw_kernel.bindat", "LOCPOT")
+LOCPOT_JOBS = ("P2S_S_A_far",)       # LVHAR → 러너가 LOCPOT xy 면평균만 반송 (사용자 결정 2026-10-22 · CZ 권고 · 정보 — 판정 아님 · 카드·결정은 안 바꾼다)
 
 
 # ───────────────────────── 입력 만들기 ─────────────────────────
@@ -108,6 +109,8 @@ def incar_base(job, encut, sigma, dz, method):
     else:
         L += [f"{k} = {v}" for k, v in OPTB88 if k != "GGA"]
     L += ["LDIPOL = .TRUE.", "IDIPOL = 3", f"DIPOL = 0.5 0.5 {dz:.6f}", "LWAVE = .FALSE.", "LCHARG = .FALSE."]
+    if job in LOCPOT_JOBS:
+        L.append("LVHAR = .TRUE.")        # 정전 퍼텐셜 (이온 + Hartree) → LOCPOT → 러너가 면평균만 남긴다
     return "\n".join(L) + "\n"
 
 
@@ -252,7 +255,8 @@ def build(seal_dir, out, v5_pkg=None, wadcc_pkg=None, ledger=None):
                         "encut": m["encut"], "sigma": m["sigma"], "ismear": 0, "kpts": list(m["kpts"]),
                         "cell_A": [round(float(x), 4) for x in at.cell.lengths()], "dipol_z": round(dz, 6), "dip": {"emaxpos": emx, "eopreg": eop},
                         "dip_min_clearance_A": clear, "poscar_order_to_original_index": order,
-                        "area_A2": round(float(abs(c[0][0] * c[1][1] - c[0][1] * c[1][0])), 6), "estimate": estimate(at, m["encut"], m["kpts"])})
+                        "area_A2": round(float(abs(c[0][0] * c[1][1] - c[0][1] * c[1][0])), 6), "estimate": estimate(at, m["encut"], m["kpts"]),
+                        "locpot_zavg": m["dir"] in LOCPOT_JOBS})
             if m["method"] == "pbed3":
                 key = m["structure"]
                 if key not in d3c:
@@ -275,7 +279,7 @@ def build(seal_dir, out, v5_pkg=None, wadcc_pkg=None, ledger=None):
     _write(os.path.join(out, "STAGES.tsv"), "".join(f"{s}\t{STAGE_CAP_H[s]:g}\t{' '.join(stages[s])}\n" for s in STAGE_EXPECT_H) + f"TOTAL\t{TOTAL_CAP_H:g}\t-\n")
     _write(os.path.join(out, "JOBS.txt"), "\n".join(j["dir"] for j in jobs) + "\n")
     _write(os.path.join(out, "run_all.sh"), run_all_text()); os.chmod(os.path.join(out, "run_all.sh"), 0o755)
-    meta = {"schema": "wad_round2_vasp_package/v1", "card": CARD, "amendment_4": AMEND4, "decisions": list(DECISIONS),
+    meta = {"schema": "wad_round2_vasp_package/v2", "card": CARD, "amendment_4": AMEND4, "decisions": list(DECISIONS),
             "status": "준비본 v2 — Codex CZ 고침 반영 · 발송 전",
             "tool_sha256": _sha(os.path.abspath(__file__)), "v5_tool_sha256": _sha(os.path.abspath(V.__file__)),
             "sources": {"p2s_seal_manifest_sha256": _sha(smp), "wadcc_manifest_sha256": _sha(os.path.join(wadcc_pkg, "cc_stage2_manifest.json")),
@@ -640,6 +644,36 @@ wav_head(){ local f=$1 r
 out_num(){ if [ "$2" = ENCUT ]; then grep -aoE "ENCUT *= *[0-9.]+ eV" "$1/OUTCAR" 2>/dev/null | tail -1 | grep -oE '[0-9.]+ eV$' | grep -oE '^[0-9.]+';
   else grep -aoE "$2 *= *[0-9.]+" "$1/OUTCAR" 2>/dev/null | tail -1 | grep -oE '[0-9.]+$'; fi; }
 
+# ── LOCPOT xy 면평균 (LVHAR 잡 · 정보 · 판정 아님) — 머리 구조 · 격자 개수 · 유한수를 확인하고 어긋나면 만들지 않는다 ──
+locpot_zavg(){ # $1 시도 폴더 · $2 run_id → $1/LOCPOT.zavg.txt (z Å · 면평균 eV) · 0 만듦 · 1 안 만듦 (경고만 — 계산 판정과 무관)
+  local d=$1 sh
+  sh=$(h "$d/LOCPOT")
+  awk -v sha="$sh" -v rid="$2" '
+    function isnum(s) { return s ~ /^[-+]?([0-9]+\.?[0-9]*|\.[0-9]+)([eE][-+]?[0-9]+)?$/ }
+    function finite(s,  t) { if (!isnum(s)) return 0; t = sprintf("%g", s + 0); return (t !~ /inf|nan/) }
+    function die(m) { print "LOCPOT 면평균 안 만듦: " m; bad = 1; exit 1 }
+    NR == 2 { if (!finite($1)) die("배율 줄"); sc = $1 + 0 }
+    NR == 5 { if (NF < 3 || !finite($3)) die("c 벡터 줄"); cz = $3 * sc }
+    NR == 6 { if ($1 ~ /^[0-9]/) die("6 째 줄이 원소 이름이 아니다 (VASP 5 꼴만 읽는다)") }
+    NR == 7 { for (i = 1; i <= NF; i++) { if ($i !~ /^[0-9]+$/) die("원자 수 줄"); nat += $i } }
+    NR == 8 { c0 = ($1 ~ /^[Ss]/) ? 10 : 9 }
+    NR > 8 && NR >= c0 && NR < c0 + nat { next }
+    NR > 8 && NR >= c0 + nat && !ng {
+      if (NF == 0) next
+      if (NF != 3 || $1 !~ /^[1-9][0-9]*$/ || $2 !~ /^[1-9][0-9]*$/ || $3 !~ /^[1-9][0-9]*$/) die("격자 줄 (" $0 ")")
+      nx = $1 + 0; ny = $2 + 0; nz = $3 + 0; ng = nx * ny * nz; next }
+    ng && cnt < ng { for (i = 1; i <= NF; i++) { if (cnt >= ng) die("격자 " ng " 개보다 값이 많다"); if (!finite($i)) die("비유한 값 " $i); s[int(cnt / (nx * ny))] += $i; cnt++ }; next }
+    ng && NF > 0 { die("격자 " ng " 개보다 값이 많다") }
+    END { if (bad) exit 1
+          if (!ng) die("격자 줄 없음")
+          if (cnt != ng) die("값 " cnt " 개 ≠ 격자 " nx "×" ny "×" nz " = " ng)
+          printf "# LOCPOT xy-plane average (LVHAR) · grid %d %d %d · LOCPOT sha256 %s · run_id %s · c_z_A %.6f\n", nx, ny, nz, sha, rid, cz
+          print "# z_A V_eV"
+          for (k = 0; k < nz; k++) printf "%.6f %.8f\n", k * cz / nz, s[k] / (nx * ny) }' "$d/LOCPOT" > "$d/LOCPOT.zavg.part"
+  if [ $? = 0 ]; then mv -f "$d/LOCPOT.zavg.part" "$d/LOCPOT.zavg.txt"; return 0; fi
+  log "⚠ $(head -1 "$d/LOCPOT.zavg.part" 2>/dev/null) — $d (정보 항목 · 계산 판정과 무관)"; rm -f "$d/LOCPOT.zavg.part"; return 1
+}
+
 # ── 한 시도 ──
 run_one(){ # $1 잡 · $2 단 · $3 시도 폴더 · $4 INCAR 이름 · $5 WAVECAR 원본 (B 단만) → 0 돌림 · 3 준비 실패 · 6 공통 환경 고장
   #   A·단 0·r2 는 폴더를 mkdir 로 차지한다 · r1B·a4B 는 ⓐ 가 든 시도 폴더 안에서 `.b` 를 mkdir 로 차지한다 (둘 다 원자적 · 덮어쓰지 않는다)
@@ -687,12 +721,14 @@ run_one(){ # $1 잡 · $2 단 · $3 시도 폴더 · $4 INCAR 이름 · $5 WAVEC
       printf '{"src_sha256": "%s", "copied_sha256": "%s", "end_sha256": "%s", "istart": "%s", "icharg": "%s", "not_read_phrase": %s, "positive_regex_match": "%s", "honoured": %s}\n' \
         "$wsha" "$wcp" "$wend" "${istart:-NA}" "${icharg:-NA}" "$nr" "$pr" "$hon" > "$d/WAVECAR.info";;
   esac
-  printf '{"job": "%s", "attempt": "%s", "stage": "%s", "run_id": "%s", "rc": %d, "t_start": %d, "t_end": %d, "vasp_version": "%s", "kernel_sha256": "%s", "perf": "%s", "sha256": {"INCAR": "%s", "POSCAR": "%s", "KPOINTS": "%s", "POTCAR": "%s", "OUTCAR": "%s", "OSZICAR": "%s", "WAVECAR.info": "%s"}}\n' \
+  [ -f "$d/LOCPOT" ] && locpot_zavg "$d" "$rid"
+  printf '{"job": "%s", "attempt": "%s", "stage": "%s", "run_id": "%s", "rc": %d, "t_start": %d, "t_end": %d, "vasp_version": "%s", "kernel_sha256": "%s", "perf": "%s", "sha256": {"INCAR": "%s", "POSCAR": "%s", "KPOINTS": "%s", "POTCAR": "%s", "OUTCAR": "%s", "OSZICAR": "%s", "WAVECAR.info": "%s", "LOCPOT.zavg.txt": "%s"}}\n' \
     "$job" "$rung" "${STAGE_OF[$job]}" "$rid" "$rc" "$t0" "$t1" "$ver" "$ksha" "$(printf '%s' "$PERF_LINES" | tr '\n' ';')" \
-    "$(h "$d/INCAR")" "$(h "$d/POSCAR")" "$(h "$d/KPOINTS")" "$(cat "$d/POTCAR.sha256")" "$(h "$d/OUTCAR")" "$(h "$d/OSZICAR")" "$(h "$d/WAVECAR.info")" > "$d/attempt.json"
+    "$(h "$d/INCAR")" "$(h "$d/POSCAR")" "$(h "$d/KPOINTS")" "$(cat "$d/POTCAR.sha256")" "$(h "$d/OUTCAR")" "$(h "$d/OSZICAR")" "$(h "$d/WAVECAR.info")" \
+    "$(h "$d/LOCPOT.zavg.txt")" > "$d/attempt.json"
   j=$(judge "$d"); set -- $j
   printf "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" "$job" "$rung" "${STAGE_OF[$job]}" "$rc" "$1" "$2" "$3" "$4" "$5" "$((t1 - t0))" >> run/status.tsv
-  rm -f "$d/POTCAR" "$d/CHGCAR" "$d/CHG" "$d/vasprun.xml" "$d/vdw_kernel.bindat"
+  rm -f "$d/POTCAR" "$d/CHGCAR" "$d/CHG" "$d/vasprun.xml" "$d/vdw_kernel.bindat" "$d/LOCPOT"
   case "$rung" in r1A|a4A) ;; *) rm -f "$d/WAVECAR";; esac      # ⓐ WAVECAR 는 그 잡 사다리가 끝날 때까지 둔다 (반송 안 함 · sha·크기·머리만)
   if [ "$need_rel" = 1 ] && [ -n "$ver" ] && [ "$ver" != "$REL_VER" ]; then log "⛔ $job/$rung VASP 빌드 '$ver' ≠ 봉인 — 공통 환경 고장 · 전체 정지"; return 6; fi
   return 0
@@ -885,6 +921,23 @@ def _read(p):
         return None
 
 
+def parse_zavg(path):
+    """LOCPOT.zavg.txt → {격자 · LOCPOT sha · run_id · z_A · V_eV} (정보 — 판정 아님 · 조각별 순전하로 읽지 않는다). 형식이 어긋나면 {"bad": 사유}."""
+    t = _read(path) or ""
+    hd = re.match(r"# LOCPOT xy-plane average \(LVHAR\) · grid (\d+) (\d+) (\d+) · LOCPOT sha256 ([0-9a-f]{64}) · run_id (\S+) · c_z_A (\S+)", t)
+    rows = [ln.split() for ln in t.splitlines() if ln.strip() and not ln.startswith("#")]
+    if not hd or any(len(r) != 2 for r in rows) or len(rows) != int(hd.group(3)):
+        return {"bad": "형식 (머리 · 열 · 줄 수)"}
+    try:
+        z, v = [float(r[0]) for r in rows], [float(r[1]) for r in rows]
+    except ValueError:
+        return {"bad": "숫자 아님"}
+    if not all(math.isfinite(x) for x in z + v):
+        return {"bad": "비유한"}
+    return {"grid": [int(hd.group(i)) for i in (1, 2, 3)], "locpot_sha256": hd.group(4), "run_id": hd.group(5), "c_z_A": float(hd.group(6)),
+            "z_A": z, "V_eV": v, "⛔": "정보 — 판정 아님 · 조각별 순전하로 읽지 않는다 · 채택 시도의 면평균만"}
+
+
 def far_diag(out_text, area):
     """far 끝점 진단 (카드 §3 · 정보) — 마지막 dipolmoment z · 쌍극 보정 에너지 · E-fermi · ΔV = 180.95 × p_z / A (V)."""
     pz = V._last(r"dipolmoment\s+\S+\s+\S+\s+(\S+)\s+electrons", out_text)
@@ -1066,7 +1119,7 @@ def check_attempt(job, pkgdir, attdir, rung, registry=None, a_ref=None):
     isint = lambda x: isinstance(x, int) and not isinstance(x, bool)
     if not (isinstance(rid, str) and V.RUN_ID_RE.match(rid)) or not (isint(t0) and isint(t1) and t1 >= t0) or not isint(rc):
         return done("ATTEMPT_MISMATCH", f"실행 기록 형식 (run_id {rid!r} · t {t0!r}→{t1!r} · rc {rc!r})")
-    files = ("INCAR", "POSCAR", "KPOINTS", "OUTCAR", "OSZICAR") + (("WAVECAR.info",) if rung != "0" else ())
+    files = ("INCAR", "POSCAR", "KPOINTS", "OUTCAR", "OSZICAR", "LOCPOT.zavg.txt") + (("WAVECAR.info",) if rung != "0" else ())
     for f in files:
         p = os.path.join(attdir, f)
         if (a["sha256"].get(f) or "") != (_sha(p) if os.path.isfile(p) else ""):
@@ -1491,6 +1544,15 @@ def collect(out, ret, manifest_sha256, uma=None, registry=None):
         # 진단은 남기되 어느 시도에서 읽었는지 · 채택 시도인지 붙인다 — 채택 안 된 시도의 진단이 채택 자료처럼 안 읽히게 (CZ Q-CZ-7)
         fd[n] = {**((far_diag(t, j["area_A2"]) or {}) if t else {"missing": "OUTCAR 없음"}), "source_rung": rung,
                  "source_status": hist.get(rung, res[n]["status"]), "adopted": res[n]["status"] == "OK" and (j["ladder"] == "a4" or hist.get(rung) == "OK")}
+        if n in LOCPOT_JOBS:                # LOCPOT xy 면평균 — 채택 시도의 것만 (정보)
+            zp = os.path.join(run, RUNG_DIR[rung].format(job=n), "LOCPOT.zavg.txt")
+            if not os.path.isfile(zp):
+                fd[n]["locpot_zavg"] = {"missing": "LOCPOT.zavg.txt 없음 (러너 env.txt 의 ⚠ 줄 확인)"}
+            elif not fd[n]["adopted"]:
+                fd[n]["locpot_zavg"] = {"not_used": "채택 시도가 아니다"}
+            else:
+                zz = parse_zavg(zp)
+                fd[n]["locpot_zavg"] = {**zz, "run_id_matches": zz.get("run_id") == res[n].get("run_id")} if "bad" not in zz else zz
     rec["far_diagnostics"] = fd
     sig, nev = [], []                     # 신호 · 미평가 (자료 결측) — "검사했고 신호 없음" 과 가른다 (CZ Q-CZ-7)
     pz_ = lambda n: (fd.get(n) or {}).get("p_z_eA") if (fd.get(n) or {}).get("adopted") else None
@@ -1796,7 +1858,7 @@ Et = E.get(job, E.get(st, -1000.0)) + d3s.get(st, 0.0)          # 총에너지 =
 Ed = (j.get("d3_2body_eV_ref") + E.get(f"edisp_shift|{job}", 0.0)) if j["method"] != "optb88" else None
 pz = E.get(f"pz|{job}", 0.10)
 rows, rc, term = [], 0, True
-if beh in ("conv", "otherver"):
+if beh in ("conv", "otherver", "locpot_trunc", "locpot_badgrid", "locpot_smallgrid", "locpot_nan"):
     rows = [(i, 1e-3 / i, 1e-4 / i) for i in range(1, 25)] + [(25, -3.1e-8, -1.2e-8)]
 elif beh in ("noconv", "badwav", "nowav"):
     rows = [(i, 2.2e-3, -3.2e-5) for i in range(1, nelm + 1)]
@@ -1871,6 +1933,16 @@ if lwave and beh != "nowav" and rows:
     rec1 = struct.pack("3d", recl, 1, 45200).ljust(recl, b"\0")
     rec2 = struct.pack("3d", 4, nbw, float(iv(inc, "ENCUT"))).ljust(recl, b"\0")
     open("WAVECAR", "wb").write(rec1 + rec2 + os.urandom(256))
+if (iv(inc, "LVHAR") or "").upper().strip(".") in ("TRUE", "T") and term and rows:   # LVHAR → LOCPOT (VASP 5 꼴 · x 가 가장 빠름)
+    nat_ = sum(nn); nx_, ny_, nz_ = 4, 4, 20
+    sv = ["%.11E" % (10.0 + 0.5 * k) for k in range(nz_) for _ in range(nx_ * ny_)]
+    if beh == "locpot_trunc":
+        sv = sv[:-7]
+    if beh == "locpot_nan":
+        sv[37] = "NaN"
+    gz = nz_ + 1 if beh == "locpot_badgrid" else (nz_ - 1 if beh == "locpot_smallgrid" else nz_)
+    body = "\n".join(" " + " ".join(sv[i:i + 5]) for i in range(0, len(sv), 5))
+    open("LOCPOT", "w").write("\n".join(pl[:8 + nat_]) + "\n\n" + f"{nx_:5d}{ny_:5d}{gz:5d}" + "\n" + body + "\n")
 for f in ("CHGCAR", "CHG", "vasprun.xml"):
     open(f, "w").write("FAKE DO_NOT_SHIP\n")
 sys.exit(rc)
@@ -2066,7 +2138,7 @@ def _selftest():
         mem = subprocess.run(["tar", "tzf", os.path.join(PKG, "round2_return.tgz")], capture_output=True, text=True).stdout.split()
         ck("러너 포장: sha 확인 통과 · WAVECAR·POTCAR·CHGCAR·커널 없음 · stageA 의 attempt.json·WAVECAR.info 있음",
            subprocess.run(["sha256sum", "-c", "round2_return.tgz.sha256"], cwd=PKG, capture_output=True).returncode == 0
-           and not any(re.search(r"(^|/)(WAVECAR|POTCAR|CHGCAR|CHG|vasprun\.xml|vdw_kernel\.bindat)$", m_) for m_ in mem)
+           and not any(re.search(r"(^|/)(WAVECAR|POTCAR|CHGCAR|CHG|vasprun\.xml|vdw_kernel\.bindat|LOCPOT)$", m_) for m_ in mem)
            and "run/P2S_S_A_bound_r1/stageA/attempt.json" in mem and "run/P2S_S_A_bound_r1/stageA/WAVECAR.info" in mem, [m_ for m_ in mem if "WAVECAR" in m_][:6])
         res = {n: resolve_job(J[n], PKG, os.path.join(PKG, "run")) for n in PILOT_JOBS}
         ck("검사기 = 러너 (파일럿): S_A bound OK@r1 · far OK@r2 · C–C optB88 bound 수렴이지만 등록부 전이라 KERNEL_UNVERIFIED (R4) · far SCF 미확인 · a4 재시작 미이행",
@@ -2556,6 +2628,33 @@ def _selftest():
         ck("R6 (CZ Q-CZ-10 ③): 영어 요약 = 24 jobs · 실패 없으면 VASP 실행 25 (은 a4 = 두 단계) · 등록 사다리로 최대 94 · 인프라 재시도 따로 · 상태 줄 v2",
            "24 jobs; 25 VASP executions when nothing fails" in rdm and "up to 94 under the registered retry ladder" in rdm and "24 single-point SCF runs" not in rdm
            and "준비본 v2" in rdm, rdm[rdm.find("## English summary"):][:300])
+        # R7 (사용자 결정 2026-10-22 · CZ 권고) — 파일럿 S_A far 의 LOCPOT xy 면평균 (LVHAR · 러너 추출 · 정보 · 판정 아님)
+        lv = {n: [r_ for r_ in ("INCAR", "INCAR.r1A", "INCAR.r1B", "INCAR.r2B") if os.path.isfile(os.path.join(PKG, "jobs", n, r_))
+                  and V.parse_incar_strict(rd(n, r_))[0].get("LVHAR") == ".TRUE."] for n in J}
+        ck("R7: LVHAR = .TRUE. 은 P2S_S_A_far 의 사다리 INCAR 넷에만 · jobs.json 에 locpot_zavg 표시 · 묶음 schema v2",
+           lv["P2S_S_A_far"] == ["INCAR", "INCAR.r1A", "INCAR.r1B", "INCAR.r2B"] and not any(v_ for n, v_ in lv.items() if n != "P2S_S_A_far")
+           and J["P2S_S_A_far"].get("locpot_zavg") is True and meta["schema"] == "wad_round2_vasp_package/v2", {n: v_ for n, v_ in lv.items() if v_})
+        zf = os.path.join(p7, "run", "P2S_S_A_far", "LOCPOT.zavg.txt")
+        zrows = [l.split() for l in (_read(zf) or "").splitlines() if l and not l.startswith("#")]
+        mem7 = subprocess.run(["tar", "tzf", os.path.join(p7, "round2_return.tgz")], capture_output=True, text=True).stdout.split()
+        a7 = json.load(open(os.path.join(p7, "run", "P2S_S_A_far", "attempt.json")))
+        fz = c7["far_diagnostics"]["P2S_S_A_far"].get("locpot_zavg") or {}
+        ck("R7: 러너가 LOCPOT 에서 면평균을 만든다 (격자 4×4×20 · 값 10 + 0.5 k 그대로 · 머리에 LOCPOT sha · run_id) · LOCPOT 은 지우고 반송 안 함 · 면평균은 반송 · 실행 기록 sha 에 묶임 · 집계는 채택 시도의 것",
+           len(zrows) == 20 and all(abs(float(r_[1]) - (10.0 + 0.5 * k)) < 1e-9 for k, r_ in enumerate(zrows)) and a7["run_id"] in (_read(zf) or "")
+           and not os.path.exists(os.path.join(p7, "run", "P2S_S_A_far", "LOCPOT")) and "run/P2S_S_A_far/LOCPOT.zavg.txt" in mem7
+           and not any(m_.endswith("/LOCPOT") for m_ in mem7) and a7["sha256"].get("LOCPOT.zavg.txt") == _sha(zf)
+           and fz.get("V_eV", [None])[0] == 10.0 and fz.get("run_id_matches") is True and len(fz.get("z_A", [])) == 20, (len(zrows), fz.get("run_id_matches"), a7["sha256"].get("LOCPOT.zavg.txt")))
+        for beh_, lab_ in (("locpot_trunc", "잘린 LOCPOT"), ("locpot_badgrid", "격자 줄이 실제보다 큼"), ("locpot_smallgrid", "격자 줄이 실제보다 작음 (값이 남음)"), ("locpot_nan", "NaN 값")):
+            pl_ = fresh(f"pk_{beh_}")
+            rcl, logl = run_r(pl_, {"P2S_S_A_far/0": beh_}, (), JOBS="P2S_S_A_far")
+            ck(f"⛔음성 R7 ({lab_}): 면평균 파일을 만들지 않는다 · 경고 · LOCPOT 은 지운다 · 잡 판정은 그대로 (정보 항목)",
+               rcl == 0 and not os.path.exists(os.path.join(pl_, "run", "P2S_S_A_far", "LOCPOT.zavg.txt")) and "LOCPOT 면평균 안 만듦" in logl
+               and not os.path.exists(os.path.join(pl_, "run", "P2S_S_A_far", "LOCPOT")), (rcl, logl[-300:]))
+        tz8 = os.path.join(T, "tz8"); shutil.copytree(p7, tz8); open(os.path.join(tz8, "run", "P2S_S_A_far", "LOCPOT.zavg.txt"), "a").write("0.0 0.0\n")
+        rz8_ = resolve_job(J["P2S_S_A_far"], tz8, os.path.join(tz8, "run"), reg7)
+        ck("⛔음성 R7: 반송 뒤 면평균 파일을 고치면 ATTEMPT_MISMATCH (실행 기록 sha 에 묶임)", rz8_["status"] == "ATTEMPT_MISMATCH", (rz8_["status"], rz8_.get("why")))
+        ck("⛔음성 R7: far 가 채택 시도가 아니면 면평균을 집계에 쓰지 않는다 (not_used)", "not_used" in (c_fd["far_diagnostics"]["P2S_S_A_far"].get("locpot_zavg") or {})
+           and "V_eV" not in (c_fd["far_diagnostics"]["P2S_S_A_far"].get("locpot_zavg") or {}), c_fd["far_diagnostics"]["P2S_S_A_far"].get("locpot_zavg"))
     finally:
         if os.environ.get("R2_SELFTEST_KEEP") == "1":
             print(f"  (시험 폴더 남김: {T})")

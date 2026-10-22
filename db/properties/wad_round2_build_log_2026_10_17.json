@@ -120,5 +120,54 @@
   "LOCPOT_면평균": "더한다 (CZ Q-CZ-7 권고 반영 · 사용자 결정) — 파일럿 P2S_S_A_far 의 사다리 INCAR 넷에 LVHAR = .TRUE. · 반송 허용 목록에 1 차원 면평균 텍스트 하나 (LOCPOT 원본은 반송 금지) · 러너가 시도마다 만든다 (격자 · 유한수 검사 · 원본 sha · run_id) · 집계는 채택한 최종 시도의 면평균만 · 정보이지 합격선 아님 · 조각별 순전하로 읽지 않는다 · 잡 수 24 그대로 · 카드 · 개정 4 · 결정은 바꾸지 않는다 (인계 카드 §2.7-1)",
   "편지_DB": "보인다 — 고친 묶음 (v2 새 폴더) 을 Codex 에 한 번 더 · diff 만 · 질문 = CZ 해제조건 일곱이 닫혔는지 (P0 다섯이 전부 검사 경로라 같은 꼴의 실수가 또 숨기 쉽다) · 업체 발송은 DB 회신 뒤 · 사용자",
   "by": "agent · 2026-10-22"
+ },
+ "⑤-2_CZ_고침_2026_10_22": {
+  "출처": "Codex CZ 회신 (kb/reviews/codex_CZ_reply_wad_outsourcing_round2_bundle_2026_10_17.md · NO-GO · 발송 해제조건 일곱) → 인계 카드 kb/projects/handoff_2026_10_22_evacuation.md §2 설계대로 고침 (대피 세션 · claude/evac-2026-10-22)",
+  "커밋": {
+   "1/7 판정 순서 (확정 모순 → rc 보다 먼저 · awk = python)": "01c1cc4bd",
+   "2/7 ⓐ→ⓑ 결박 · ⓐ 머리 = 실제 OUTCAR · 재시작 문구": "90ba35b17",
+   "3/7 모든 시도 환경 감사 · 물리 실패는 봉인을 안 막음 · 파일럿 결박 = 모든 시도 · 재개 ⓑ PP · 상한 유한 양수": "744edd949",
+   "4/7 optB88 GGA 해석값 · 커널 읽기/부재/재생성 · 문구는 파일럿 원문 봉인으로만": "c4725b51e",
+   "5/7 0 스텝 중단 — 결측 ≠ 0 행 · 다른 출력 증거면 거부 · 미상 벽시계 UNKNOWN → 다음 잡 보류 · --infra-wall": "0eaa4896a",
+   "6/7 반송 열거 오류 = 종료 4 · δ 의존성 PBE 쌍 · far 진단 출처 · 신호 미평가 · check_rigid_shift NaN · 영어 요약": "44b095ef9",
+   "7/7 LOCPOT 면평균 (사용자 결정 ⑤-1) · 묶음 v2 새 폴더 · 이 기록": "이 기록과 같은 커밋"
+  },
+  "시험": {
+   "build_round2_vasp_package": "121/121 (CZ 전 53)",
+   "build_v5_vasp_package": "229/229 (a4 시도 전부를 일관성 검사에 · 228 → 229)",
+   "build_aprime_interfaces": "79/79 (NaN 넷 · 75 → 79)",
+   "build_aprime_s3": "41/41",
+   "se_sym_slab": "122/122",
+   "validate_canonical · convention_check · kb lint": "통과 · 0 위반 · 0 errors",
+   "규칙": "CZ 재현 사례마다 음성 시험을 먼저 쓰고 고치기 전 판에서 빨간 것을 본 뒤 고침"
+  },
+  "깨기": "고침을 하나씩 되돌린 사본에서 자기 시험만 빨강 — R1 4 · R2 13 · R3 20 · R4 13 · R5 12 · R6 8 · R7 10 (사본 중 하나는 awk 문법 오류로 엉뚱하게 빨개서 바로잡아 다시 돌림 · 커밋 메시지에 목록)",
+  "카드에서_바꾼_곳 (이유)": [
+   "재시작·커널 문구 regex 글자: 카드 §2.2 의 [ ] \\ 를 뺐다 — [\\]] · \\d · [[:space:]] 가 grep -E 와 python 에서 뜻이 갈린다 · '(?' · 빈 문자열에 맞는 regex 도 거부 · 봉인 때 grep -E 와 python 이 파일럿 시도마다 같은 답이어야 한다",
+   "재시작 regex 검증 범위: 읽은 ⓑ 전부에 맞고 + 새로 시작한 시도 (단 0 · ⓐ · 되돌아간 ⓑ) 에는 안 맞아야 봉인 (구별 능력)",
+   "커널 줄 꼴: 카드의 (?i)kernel|vdw_kernel 을 'vdW 와 kernel 을 같이 말하는 줄' 로 좁혔다 — MPI·OS 경고 ('kernel module … not loaded') 가 KERNEL_NOT_READ (전체 정지) 로 잡히는 오탐",
+   "영어 요약: Codex 제안 'at least 25' 대신 '25 VASP executions when nothing fails' — a4A 가 자격 미달이면 a4B 가 안 돌아 24 도 가능",
+   "R3 환경 감사에 run_aborted 의 attempt.json 있는 시도도 넣었다 · ⓐ 단에서 a_eligible 이 봐주는 결측 (SETTINGS_UNVERIFIED 등) 과 등록부 전 KERNEL_UNVERIFIED 는 봉인을 막지 않는다",
+   "R5: WALL_S 없이 기록할 때 attempt.json 이 있으면 ATTEMPT_JSON (벽시계는 이미 안다 · 다음 잡을 막지 않는다)"
+  ],
+  "LOCPOT_면평균": "⑤-1 사용자 결정대로 — P2S_S_A_far 사다리 INCAR 넷에 LVHAR = .TRUE. · 러너 locpot_zavg (VASP 5 머리 · 격자 개수 · 유한수 · 값 남음 검사 · 어긋나면 안 만들고 경고만) → LOCPOT.zavg.txt (z Å · xy 면평균 eV · 머리에 LOCPOT sha · run_id) · LOCPOT 원본은 지우고 반송 금지 · attempt.json sha 에 묶임 · 집계는 채택 시도의 것만 (아니면 not_used) · 정보 — 판정 아님 · 조각별 순전하로 읽지 않는다 · 카드·개정 4·결정은 안 바꿈",
+  "묶음": "db/inputs/wad_round2_vasp_v2_2026_10_22/ — 잡 24 (P 5 · 1 4 · 2 9 · 3 4 · 4 2) · 상한 117 · 170 · 586 · 204 · 24 h · 전체 1,080 h (그대로) · schema wad_round2_vasp_package/v2 · 1.4 MB",
+  "MANIFEST_sha256": "92e41141f9ee3fc0081e23427b13dd067e6657bd220c3aed00145673fd94af66",
+  "명령": "python3 -I tools/wad/build_round2_vasp_package.py --build --seal db/inputs/wad_p2small_seal_2026_10_17 --out db/inputs/wad_round2_vasp_v2_2026_10_22",
+  "확인": "레포 밖 폴더에 같은 명령으로 다시 빌드 → diff -r 바이트 동일 · 묶음 안 sha256sum -c MANIFEST.sha256 OK · bash -n run_all.sh OK",
+  "출처_sha256": {
+   "p2s_seal_manifest": "65a0ca0e376b3c67737399128bee753f506f8ae32122a5308d97ca8436dac2fe",
+   "wadcc_stage2_manifest": "a17385cb2a1110522749978a1ff528741d3796f541438ec43b9378a91727edbc",
+   "v5_manifest": "8118bbc023d6699cd7cd1b6e6afd32872e0699af70b412e15b89365e556ee2f1"
+  },
+  "도구_sha16": {
+   "build_round2_vasp_package.py": "df4cbfa421018600",
+   "build_v5_vasp_package.py": "de0a085374cc5458",
+   "build_aprime_interfaces.py": "de7c472a357f6b23"
+  },
+  "옛_묶음": "db/inputs/wad_round2_vasp_2026_10_22/ (MANIFEST 31e47474…) = CZ NO-GO · 발송 안 함 · 고치지 않는다 (리뷰받은 그대로 남긴다)",
+  "등록부": "schema wad_round2_pp_registry/v2 (아직 봉인한 등록부 없음 — 옛 판과 섞일 일 없음) · 파일럿 뒤 --restart_read_regex · --kernel_read_regex 는 파일럿 원문을 보고 정한다 (지금 후보 문자열을 5.4.4 정답으로 박지 않는다)",
+  "⏭": "편지 DB (Codex · 고친 묶음 v2 · diff 만 · 질문 = 해제조건 일곱이 닫혔는지) → 회신 → 발송은 사용자",
+  "by": "agent · 2026-10-22"
  }
 }
