@@ -4039,6 +4039,110 @@ def t_M26():
     return caught and right and RR.read_run is not fn, (msg, w[:2], str(st.get('cause'))[:160])
 
 
+# ── K 문서 명령 = 실제 인자 계약 (★ PF2 F · 10-22 · 사전 리뷰 2 회차 PRE2-design-05 · 결정 없음) ──
+KGY_DOC = ROOT / 'docs' / 'reviews' / 'rint2_kgy_commands_20261020.md'
+_K_SPLIT = re.compile(r'\s(?:&&|\|\|?|;)\s')
+
+
+def doc_tool_commands(path, tool):
+    """문서의 ```bash 블록에서 `python3 …/<tool>` 명령 → [(첫 줄 번호, 인자 목록)].  `\\` 이음 · 주석 줄 (`#` 시작) 은 뺀다 · `&&` · `|` ·
+    `;` (앞뒤 빈칸) 로 가른 조각 중 그 도구를 python 으로 부르는 것만 · 자리표 `<…>` = 낱말 '1' (수 · 경로 어느 자리든 argparse 를 지난다) ·
+    대괄호 선택 인자 `[…]` · 재지정 (`2>&1`) 은 뺀다."""
+    import shlex
+    out, inb, buf, start = [], False, '', 0
+    for i, ln in enumerate(Path(path).read_text(encoding='utf-8').splitlines(), 1):
+        s = ln.strip()
+        if s.startswith('```'):
+            inb, buf = (not inb) and s.startswith('```bash'), ''
+            continue
+        if not inb:
+            continue
+        if not buf:
+            if not s or s.startswith('#'):
+                continue
+            start = i
+        cont = s.endswith('\\')
+        buf += ' ' + (s[:-1] if cont else s)
+        if cont:
+            continue
+        line, buf = re.sub(r'<[^<>]*>', '1', buf), ''
+        for seg in _K_SPLIT.split(line):
+            if tool not in seg:
+                continue
+            toks = shlex.split(seg)
+            at = [k for k, t in enumerate(toks) if k > 0 and (t == tool or t.endswith('/' + tool))
+                  and re.search(r'(^|/)python3?$', toks[k - 1])]
+            if at:
+                out.append((start, [t for t in toks[at[0] + 1:] if not re.match(r'^\d*>', t) and not t.startswith('[')]))
+    return out
+
+
+@check('K01', '★ PF2 F (10-22 · PRE2-design-05) 문서 명령 = 실제 인자 계약 — kgy 명령 · 등록 R §10-1 의 사슬 명령이 사슬 argparse 를 지난다 '
+              '(단계 함수 = 받기만) · 감도 (--variant) = --after-main · S0 단계 2 명령 = --r-plan-path (관문 앞 인자 검사 그대로) · 두 문서의 '
+              '주 사다리 · 예측 · S0 단계 2 인자 이름이 같다 · 명령이 하나도 없으면 실패')
+def t_K01():
+    import ca_s0_census as S0m
+
+    class _Took(Exception):
+        pass
+    got, bad, names, n_var = {}, [], {}, 0
+
+    def _stage(a, contract):
+        got['a'] = a
+        return 0
+
+    def _vpc(*_a, **_k):
+        raise _Took()
+    saved = (RR.stage_ladder, RR.stage_predict, RR.stage_verdict, S0m.verify_plan_commit)
+    RR.stage_ladder = RR.stage_predict = RR.stage_verdict = _stage
+    S0m.verify_plan_commit = _vpc
+    try:
+        for doc in (KGY_DOC, REG_DOC):
+            dn = 'kgy' if doc == KGY_DOC else 'reg'
+            for ln, args in doc_tool_commands(doc, 'rint_r_chain.py'):
+                got.clear()
+                err = io.StringIO()
+                try:
+                    with contextlib.redirect_stderr(err), contextlib.redirect_stdout(io.StringIO()):
+                        rc = RR.main(args, contract=object())
+                except SystemExit as e:
+                    rc = f'argparse rc {e.code} · {(err.getvalue().strip().splitlines() or [""])[-1][:200]}'
+                if rc != 0 or 'a' not in got:
+                    bad.append(f'{dn}:{ln} {args[:2]} → {rc}')
+                    continue
+                a = got['a']
+                if a.variant:
+                    n_var += 1
+                    if not a.after_main:
+                        bad.append(f'{dn}:{ln} 감도 --variant {a.variant} 인데 --after-main 없음 (MAIN_NOT_DONE · 등록 R §10-1)')
+                elif a.stage in ('ladder', 'predict'):
+                    names.setdefault((dn, a.stage), set()).add(
+                        frozenset(t for t in args if t.startswith('--') and t not in ('--dry-run', '--machine')))
+            for ln, args in doc_tool_commands(doc, 'ca_s0_census.py'):
+                if (args[args.index('--stage') + 1] if '--stage' in args[:-1] else None) != '2':
+                    continue
+                err = io.StringIO()
+                try:
+                    with contextlib.redirect_stderr(err), contextlib.redirect_stdout(io.StringIO()):
+                        rc = S0m.main(args)
+                    bad.append(f'{dn}:{ln} S0 단계 2 → rc {rc} (관문 앞 인자 검사) · {(err.getvalue().strip().splitlines() or [""])[-1][:200]}')
+                except _Took:
+                    names.setdefault((dn, 's0-2'), set()).add(frozenset(t for t in args if t.startswith('--')))
+                except SystemExit as e:
+                    bad.append(f'{dn}:{ln} S0 단계 2 → argparse rc {e.code}')
+    finally:
+        RR.stage_ladder, RR.stage_predict, RR.stage_verdict, S0m.verify_plan_commit = saved
+    for k in ('ladder', 'predict', 's0-2'):
+        kg, rg = names.get(('kgy', k), set()), names.get(('reg', k), set())
+        if not kg or not rg:
+            bad.append(f'{k}: 통과한 명령 없음 (kgy {len(kg)} · 등록 {len(rg)})')
+        elif kg != rg or len(kg) != 1:
+            bad.append(f'{k}: 인자 이름이 다르다 — kgy {sorted(sorted(x) for x in kg)} ↔ 등록 {sorted(sorted(x) for x in rg)}')
+    if n_var == 0:
+        bad.append('감도 명령 (--variant) 이 하나도 없다 (kgy §3 예시)')
+    return not bad, bad
+
+
 # ═════════════════════════ 실행 ═════════════════════════
 def main(argv=None):
     global RR, TD
