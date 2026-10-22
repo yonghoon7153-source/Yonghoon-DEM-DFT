@@ -94,7 +94,8 @@ r_port = 2.0 (= 2h) · gap_tol 2.0 · σ_VGCF = 100 S/cm → 축방향 면 g = �
   QD2    ★ 10-22 (사전 리뷰 2 회차 PRE2-impl-01 · 04 · 1저자 Q1 (다)) SV 반사실 괄호 — 못 가른 덩어리 (섬유 둘 이상이 함께 지나는 SDCP 성분)
          가 있으면 두 번 푼다 (아래 끝 = 덩어리 그대로 · 위 끝 = 덩어리 셀 면 전부 끊음) · 리뷰어 회로 [1, ∞] → SV_UNCHECKED · 대조 (한 섬유만
          지남) = SV_DEPENDENT · 괄호 성질 (손 참 비가 아래 < 참 < 위) · 변이 J1 회로 (닿기만 하는 C) · J2 회로 (덮이지 않은 사이로 두 번 닿음) ·
-         덩어리 0 = 다시 풀지 않음 · 값 봉인 · census 변조 = fail-closed · 주 해 미수렴 · 주 전류 ≤ 0 의 괄호 칸 (사슬 = 실제 `sv_assess`)
+         덩어리 0 = 다시 풀지 않음 · 값 봉인 · census 변조 = fail-closed · 주 해 미수렴 · 주 전류 ≤ 0 의 괄호 칸 · 덩어리가 판에 닿으면 위 끝이
+         판 결합까지 뺀다 (⑪) (사슬 = 실제 `sv_assess`)
   KBND   (05 · 한계 기록) k 경계 (90° → 89.99°) σ 뜀 크기 = 생산 단위 R_j 1e2 · 1e4 · 1e6 에서 −0.98 % · −2.1e-4 · −2.1e-6 (± 10 % · ∝ 1/R_j)
   MUT-RCA2 새 보장 변이 (조각 = fid 규칙 · 포트 옮김 · SV 전부 끊음 · 이음매 별칭 끔 · 바닥 = s > D 만 · ★ 10-22 못 가른 다리 지킴 끔 = 2 회차
          변이 J1 → QD2 ④ · '지남' 에 덮임 · 같은 성분 조건 뺌 = 2 회차 변이 J2 → QD2 ⑤ (훅 `_sv_passes`)) 가 위 시험에 옳은 이유로 걸린다 ·
@@ -3484,6 +3485,10 @@ QD2_N5 = (6, 3, 9)                                                   # ⑤ (변�
 QD2_A5 = [(2.5, 1.5, 0.5), (2.5, 1.5, 8.5)]
 QD2_B5 = [(4.5, 1.5, 0.5), (4.5, 1.5, 8.5)]
 QD2_S5 = [(2.5, 1.5, 3.5), (2.5, 1.5, 4.5), (2.5, 1.5, 5.5), (3.5, 1.5, 3.5), (3.5, 1.5, 5.5)]
+QD2_N11 = (5, 3, 6)                                                  # ⑪ 못 가른 덩어리가 아래 판에 닿음 — A · B (판–판) 가 (1,1,1) · (3,1,1) 을
+QD2_A11 = [(1.5, 1.5, 0.5), (1.5, 1.5, 5.5)]                         #    지나고 덩어리 = (1..3,1,1) + (2,1,0) (아래 판 결합 셀 하나)
+QD2_B11 = [(3.5, 1.5, 0.5), (3.5, 1.5, 5.5)]
+QD2_S11 = [(1.5, 1.5, 1.5), (2.5, 1.5, 1.5), (3.5, 1.5, 1.5), (2.5, 1.5, 0.5)]
 
 
 def _qd2_run(polys, sdcp, n, rj=1e3, thr=None, reg_hook=None):
@@ -3713,6 +3718,18 @@ def t_sv_bracket():
         r10 is not None and c10.get('status') == 'nonpositive_full_current' and c10.get('n_unsplit_bridging_components') == 1
         and c10.get('status_hi') == 'nonpositive_full_current' and c10.get('sv_counterfactual_ratio_hi') is None
         and up10.get('status') == 'nonpositive_full_current' and up10.get('cg_info') is None, f'{c10}')
+    # ⑪ 덩어리가 판에 닿음 — 위 끝 = 그 셀의 판 결합까지 뺀다 (덩어리를 통째로 뺀 판 · 판 결합 1 · 면 9 = 손으로 센 수)
+    sid11, _r11, r11, c11 = _qd2_run([QD2_A11, QD2_B11], QD2_S11, QD2_N11)
+    up11 = c11.get('upper') if isinstance(c11.get('upper'), dict) else {}
+    #  손으로 센 면 (덩어리 셀 넷에 닿는 면): SDCP–SDCP (1,1,1)|(2,1,1) · (2,1,1)|(3,1,1) · (2,1,0)|(2,1,1) = 3 · SV (1,1,0)|(1,1,1) · (1,1,1)|(1,1,2) ·
+    #  (3,1,0)|(3,1,1) · (3,1,1)|(3,1,2) · (1,1,0)|(2,1,0) · (2,1,0)|(3,1,0) = 6 → 9 · 판 결합 = (2,1,0) 아래 판 하나
+    chk('QD2 ⑪ 못 가른 덩어리가 아래 판에 닿음 (A · B 판–판 · 덩어리 (1..3,1,1) + (2,1,0)) — 못 가른 덩어리 1 · 아래 끝 = 덩어리 그대로 (끊은 면 0 · '
+        '비 1 정확) · 위 끝 = 셀 넷 · 면 9 · 판 결합 1 을 뺀 판 (A · B 둘 다 끊김 → 관통 없음 = +∞) · 사슬 = SV_UNCHECKED',
+        r11 is not None and all(int(sid11[x, 1, 1]) == 5 for x in (1, 2, 3)) and int(sid11[2, 1, 0]) == 5
+        and c11.get('n_unsplit_bridging_components') == 1 and c11.get('n_sv_faces_cut') == 0 and c11.get('sv_counterfactual_ratio') == 1.0
+        and c11.get('status_hi') == 'no_through_without_sv' and c11.get('sv_counterfactual_ratio_hi') == math.inf
+        and up11.get('n_cells_removed') == 4 and up11.get('n_edges_cut') == 9 and up11.get('n_plate_couplings_cut') == 1
+        and _try(lambda: _qd2_flags(c11, 2.0), None) == ['SV_UNCHECKED'], f'{c11}')
 
 
 @case('KBND')
