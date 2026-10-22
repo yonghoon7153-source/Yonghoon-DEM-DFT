@@ -1,14 +1,15 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-22 · managed-files: 535
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-22 · managed-files: 536
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 328건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 329건)
 - 2026-10-22 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-10-22 · `kb/reviews/codex_CZ_reply_wad_outsourcing_round2_bundle_2026_10_17.md` — CZ 회신 — W_ad 외주 2차 묶음 리뷰: NO-GO · 발송 보류 · 구조 봉인·집계 산식은 유지 · 반송 검사 경로의 결함 (판정 순서 · A→B 결박 · 시도별 환경 감사 · optB88 판독 · 인프라 중단 비용) 을 고친 뒤 재봉인 · 수령 2026-10-22 (사용자 붙여넣기 · 원문 보존 · 마크다운…
+- 2026-10-22 · `kb/projects/handoff_2026_10_22_evacuation.md` — 대피 인계 — 2026-10-22 (friendly 세션 토큰 소진 → 서브 대시보드 세션 · 머지 때 충돌 0 설계 · W_ad 외주 2차 CZ 고침 설계 포함) · 진행
 - 2026-10-22 · `kb/questions/li3nd_pristine_reconstruction_2026_09_02.md` — Li₃Nd pristine 3×3×3 이 0.65 eV 재구성한다 — NEB 기반 구조도 같은가? · open [open]
 - 2026-10-20 · `kb/projects/handoff_2026_10_20_return_to_origin.md` — 본 세션 복귀 카드 — 서브 세션 (10-15 → 10-20) 134 커밋을 본 세션으로 (2026-10-20) · 발송 대기 — 사용자가 §0 프롬프트를 본 세션 (…CTzs) 에 붙…
 - 2026-10-20 · `kb/papers/b2o3_bo_lpsc16_methods_2026_10_20.md` — B₂O₃ 원고 (BO-LPSC1.6 · paper #2) Computational Methods — 기록대로 · compact 판 (BML 가이드 반영) · 진행
@@ -26,7 +27,6 @@
 - 2026-10-12 · `kb/seminars/Research_Seminar_2026_10_13_cascade_storyline_ko.md` — 연구세미나 2026-10-13 — cascade 진행 브리핑 스토리라인 (대본 준비용) · 진행
 - 2026-10-12 · `kb/seminars/cascade_briefing_2026_10_direction.md` — cascade 진행 브리핑 (2026-10) — 08-18 덱 판정 · 13장 구성 · 현재 상황 · 방향 · 참고문헌 · 진행
 - 2026-10-12 · `kb/seminars/cascade_db_reading_2026_10_12.md` — cascade 원장 정독 — 단계별 커버리지 · 9월 재건 · 세미나 덱 정정 (2026-10-12) · 진행
-- 2026-10-08 · `kb/reviews/codex_CT_reply_cascade_v7_main_runner_2026_10_08.md` — CT 회신 — cascade v7 본 라운드 러너: 조건부 GO · P0 없음 · P1 셋 (판독 입력 결박 · 미정산 시간 · 자식 생성 직후 정리) · P2 (이어받기 대조 · partial · watcher --log) · 수령 2026-10-08 (사용자 붙여넣기 · 원문 보존 · 마크다운…
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -435,7 +435,7 @@
 - `kb/reports/weekly_2026_09_27.md` — 주간 정리 2026-09-21 ~ 09-27 (주간보고 초안)  (2026-09-28 · 완료 (2026-09-28 · 다음 주 문서는 새 파일))
 - `kb/reports/weekly_2026_10_04.md` — 주간 정리 2026-09-28 ~ 10-04 (주간보고 초안)  (2026-10-04 · 초안 (2026-10-04 · 도는 계산은 10-04 17:59 실측…)
 
-## projects/ (49)
+## projects/ (50)
 - `kb/projects/HANDOFF_2026_08_31_session.md` — 인수인계 — 2026-08-31 세션 (외주 C-12 AR→AV · 폴라론 S0 · nscf 사고)  (2026-09-03 · 활성)
 - `kb/projects/MULTI_CATEGORY_BATCH_PLAN_v22.md` — Multi-Category Multi-Compound Batch Plan — Paper #2 (v4.5.18)
 - `kb/projects/MUST_READ_digital_twin_north_star.md` — 🚨🚨🚨 MUST READ — AI 계산 스크리닝 플랫폼 North Star (구: Digital Twin)
@@ -457,6 +457,7 @@
 - `kb/projects/handoff_2026_10_02_evacuation.md` — 대피 인계 — 2026-10-02 (friendly 세션 토큰 소진 → 서브 대시보드 세션 · 머지 때 충돌 0 설계)  (2026-10-02 · 진행)
 - `kb/projects/handoff_2026_10_05_return_to_origin.md` — origin 복귀·통합 카드 — claude/evac-2026-10-02 → claude/friendly-meitner-lldvar (2026-10-05 · no-ff)  (2026-10-05 · 발송 대기 — 사용자가 §0 프롬프트를 origin 세션에 붙여 넣는다)
 - `kb/projects/handoff_2026_10_20_return_to_origin.md` — 본 세션 복귀 카드 — 서브 세션 (10-15 → 10-20) 134 커밋을 본 세션으로 (2026-10-20)  (2026-10-20 · 발송 대기 — 사용자가 §0 프롬프트를 본 세션 (…CTzs) 에 붙…)
+- `kb/projects/handoff_2026_10_22_evacuation.md` — 대피 인계 — 2026-10-22 (friendly 세션 토큰 소진 → 서브 대시보드 세션 · 머지 때 충돌 0 설계 · W_ad 외주 2차 CZ 고침 설계 포함)  (2026-10-22 · 진행)
 - `kb/projects/handoff_cei_2026_09_30.md` — CEI (Nd 계면) 인계 카드 — 실험 쪽 1저자에게 작업 양도 (2026-09-30)  (2026-09-30 · 발송 대기 — 외부 리뷰 회신 CM(NO-GO) 이행판 · 사용자가 …)
 - `kb/projects/li2s_glass_bmeas_650k_letter_DA_send_2026_10_19.md` — li2s_glass_bmeas_650k_letter_DA_send_2026_10_19
 - `kb/projects/li2s_glass_control_cost_letter_CS_send_2026_10_05.md` — li2s_glass_control_cost_letter_CS_send_2026_10_05
