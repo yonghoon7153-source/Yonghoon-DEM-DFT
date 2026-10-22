@@ -70,7 +70,7 @@ V5_PKG = "db/inputs/wad_aprime_v5_vasp_2026_09_27"
 V5_MANIFEST_SHA256 = "8118bbc023d6699cd7cd1b6e6afd32872e0699af70b412e15b89365e556ee2f1"
 WADCC_PKG = "db/raw/wad_cc_graphite_2026_09_28/stage2_pkg"
 CC_PAIR = ("CC_S33_AB_dft_bound", "CC_S33_AB_dft_far")
-RETURN_ALLOWED = V.RETURN_ALLOWED + ("WAVECAR.info", "warn.log", "infra_abort.json", "LOCPOT.zavg.txt")
+RETURN_ALLOWED = V.RETURN_ALLOWED + ("WAVECAR.info", "warn.log", "infra_abort.json", "LOCPOT.zavg.txt", "attempt.start", "killed.json")
 RETURN_FORBIDDEN = V.RETURN_FORBIDDEN + ("vdw_kernel.bindat", "LOCPOT")
 LOCPOT_JOBS = ("P2S_S_A_far",)       # LVHAR → 러너가 LOCPOT xy 면평균만 반송 (사용자 결정 2026-10-22 · CZ 권고 · 정보 — 판정 아님 · 카드·결정은 안 바꾼다)
 
@@ -316,6 +316,8 @@ RUN_ALL = r'''#!/usr/bin/env bash
 #         PACK_ONLY=1 (계산 없이 포장만) · WATCH_S (경보 점검 간격 초 · 기본 60)
 #   0 스텝 인프라 중단 기록 (전자 반복행 0 · 스케줄러 기록이 있을 때만 · 잡마다 2 회):
 #     bash run_all.sh --infra-abort <잡> <단 0|r1A|r1B|r2B|a4A|a4B> <스케줄러 잡 id> <취소 UTC> <사유…>   → 그 시도를 run_aborted/ 로 옮긴다 · 다시 돌리면 같은 단부터
+#   전자 스텝 뒤 러너째 끊긴 시도 (스케줄러 시간 제한 · 노드 고장 — attempt.json 없음 · 다시 돌리지 않는다 · 값 없음):
+#     WALL_S=<초> bash run_all.sh --killed <잡> <단> <스케줄러 잡 id> <취소 UTC> <사유…>   → 그 시도의 벽시계를 기록한다 (그 전에는 다음 잡이 안 뜬다)
 #   ⛔ INCAR·POSCAR·KPOINTS 를 고치지 마세요 · 시도 폴더가 이미 있으면 덮어쓰지 않습니다 (이어 돌리기는 기록을 다시 판정해 다음 단을 정합니다)
 #   종료: 0 고른 잡 전부 값 있음 · 1 값 없는 잡 있음 (묶음 만듦 — 실패도 기록) · 2 패키지·환경·인자 오류 (아무것도 안 돎) · 4 포장 실패 (PACK_ONLY=1 로 다시)
 #         5 단계·전체 누적 상한 (다음 잡 안 띄움 · 묶음 만듦 · 1저자 결정) · 6 공통 환경 고장 (VASP 빌드 · PP · vdW 커널 — 전체 정지 · 묶음 만듦)
@@ -329,6 +331,7 @@ RET_ALLOW='@RET_ALLOW@'
 RET_FORBID='@RET_FORBID@'
 h(){ sha256sum "$1" 2>/dev/null | cut -d' ' -f1; }
 utc(){ date -u +%FT%TZ; }
+up(){ awk '{ printf "%d", $1 }' /proc/uptime 2>/dev/null; }    # 부팅 뒤 초 (단조 시계) — 벽시계 장부는 이것으로 잰다 (date 는 시계 맞춤으로 뒤로 갈 수 있다 · 자체 검토 S4)
 mkdir -p run
 log(){ echo "$*"; echo "$(utc) $*" >> run/env.txt; }
 clean(){ printf '%s' "$1" | tr -d '"\\\r\n\t' ; }
@@ -528,11 +531,37 @@ if [ "${1:-}" = "--infra-wall" ]; then
   echo "✓ $dd 벽시계 $sec 초 (스케줄러 장부) — 다시 돌리면 누적 상한 장부에 들어간다"; exit 0
 fi
 
+# ── 전자 스텝 뒤 끊긴 시도의 벽시계 기록 (스케줄러 시간 제한 · 노드 고장으로 러너째 끊김 — attempt.json 없음 · 0 스텝이 아니다 · 다시 돌리지 않는다 · 값 없음 · 1저자) ──
+#    자체 검토 S3: 이 벽시계를 모르는 채로 0 초로 더하면 누적 상한이 새고, 끊긴 시도가 '사다리가 다룬다' 는 약속도 거짓이었다
+if [ "${1:-}" = "--killed" ]; then
+  [ $# -ge 6 ] || { echo "⛔ 쓰는 법: WALL_S=<초> bash run_all.sh --killed <잡> <단> <스케줄러 잡 id> <취소 UTC> <사유…>"; exit 2; }
+  job=$2; rung=$3; sid=$(clean "$4"); when=$(clean "$5"); shift 5; why=$(clean "$*")
+  [ -n "${STAGE_OF[$job]:-}" ] || { echo "⛔ 모르는 잡 $job"; exit 2; }
+  case "$rung" in 0) src=run/$job;; r1A) src=run/${job}_r1/stageA;; r1B) src=run/${job}_r1;; r2B) src=run/${job}_r2;; a4A) src=run/${job}_a4/stageA;; a4B) src=run/${job}_a4;;
+    *) echo "⛔ 모르는 단 $rung"; exit 2;; esac
+  [ -f "$src/attempt.start" ] || { echo "⛔ $src 에 시작 표지 (attempt.start) 가 없다 — VASP 가 뜨지 않은 시도다 (기록할 벽시계가 없다)"; exit 2; }
+  [ ! -f "$src/attempt.json" ] || { echo "⛔ $src 는 끝난 시도다 (attempt.json 있음) — 기록하지 않는다"; exit 2; }
+  [ ! -f "$src/killed.json" ] || { echo "⛔ $src 는 이미 기록했다 — 고치지 않는다"; exit 2; }
+  [[ "${WALL_S:-}" =~ ^[0-9]+$ ]] || { echo "⛔ WALL_S=<초> (스케줄러 장부의 그 시도 벽시계 · 0 이상의 정수) 가 있어야 한다"; exit 2; }
+  n=$(grep -acE '^[[:space:]]*(DAV|RMM|CG|SDA):' "$src/OSZICAR" 2>/dev/null); so=$(grep -acE '^[[:space:]]*(DAV|RMM|CG|SDA):' "$src/stdout.log" 2>/dev/null)
+  oi=$(grep -acE 'Iteration +[0-9]+\(' "$src/OUTCAR" 2>/dev/null)
+  [ "${n:-0}" != 0 ] || [ "${so:-0}" != 0 ] || [ "${oi:-0}" != 0 ] || { echo "⛔ $src 에 전자 반복 흔적이 없다 — 0 스텝 중단이면 --infra-abort 로 기록한다 (같은 단을 다시 돈다)"; exit 2; }
+  [ -n "$sid" ] && [ -n "$when" ] && [ -n "$why" ] || { echo "⛔ 스케줄러 잡 id · 취소 시각 · 사유가 다 있어야 한다"; exit 2; }
+  rid=$(grep -o '"run_id": "[^"]*"' "$src/attempt.start" | head -1 | sed 's/.*: "//; s/"$//')
+  printf '{"job": "%s", "rung": "%s", "run_id": "%s", "wall_s": "%s", "sched_job_id": "%s", "cancel_utc": "%s", "reason": "%s", "osz_rows": "%s", "recorded_utc": "%s"}\n' \
+    "$job" "$rung" "$rid" "$WALL_S" "$sid" "$when" "$why" "${n:-0}" "$(utc)" > "$src/killed.json.part" && mv -f "$src/killed.json.part" "$src/killed.json" \
+    || { echo "⛔ killed.json 쓰기 실패"; exit 2; }
+  log "✎ $src 끊긴 시도 벽시계 $WALL_S 초 (스케줄러 $sid · $why) — 값 없음 · 다시 돌리지 않는다"
+  echo "✓ $src 벽시계 $WALL_S 초 기록 — 이 시도는 값 없음으로 남는다 (다시 돌리지 않는다 · 1저자). 다시 돌리면 다음 잡부터 이어 간다"; exit 0
+fi
+
 if [ "${PACK_ONLY:-0}" = 1 ]; then
   echo "pack_only $(utc)" >> run/env.txt
   if pack; then echo "✅ 포장만 다시 했다 (계산은 다시 돌리지 않았다)"; exit 0; fi
   echo "⛔ 포장 실패 — 디스크·권한을 확인한 뒤 PACK_ONLY=1 로 다시"; exit 4
 fi
+
+[[ "$(up)" =~ ^[0-9]+$ ]] || { echo "⛔ /proc/uptime 을 읽을 수 없다 — 벽시계 장부는 단조 시계로 잰다 (Linux)"; exit 2; }
 
 # ── 단계 · 해제 파일 ──
 STAGES=${STAGES:-P}
@@ -597,31 +626,34 @@ fi
   [ -n "$KERNEL_RE" ] && echo "KERNEL_READ_RE $KERNEL_RE"; } >> run/env.txt
 [ -f run/status.tsv ] || printf "job\trung\tstage\trc\tstatus\tn_elec\tdE\tdeps\twhy\twall_s\n" > run/status.tsv
 
-# ── 누적 벽시계 (attempt.json t_start→t_end · 0 스텝 중단 포함) ──
-wall_s_of(){ # $1 단계 (ALL = 전체) → 초 · 0 스텝 중단의 벽시계가 미상 (숫자 아님) 이면 UNKNOWN (CZ Q-CZ-4: 미상을 0 초로 더하지 않는다)
-  local f j w s tot=0 d unk=0
-  for f in $(find run run_aborted -name attempt.json 2>/dev/null) $(find run_aborted -name infra_abort.json 2>/dev/null); do
-    d=$(dirname "$f")
-    if [ "$(basename "$f")" = infra_abort.json ]; then
-      [ -f "$d/attempt.json" ] && continue                                   # 알려진 시간 (attempt.json) 과 겹쳐 더하지 않는다
-      w=$(grep -o '"wall_s": "[^"]*"' "$f" | head -1 | sed 's/.*: "//; s/"$//')
-    else
-      w=$(awk '{ if (match($0, /"t_start": [0-9]+/)) a = substr($0, RSTART + 11, RLENGTH - 11); if (match($0, /"t_end": [0-9]+/)) b = substr($0, RSTART + 9, RLENGTH - 9) } END { print (b != "" && a != "") ? b - a : 0 }' "$f")
-    fi
+# ── 누적 벽시계 (시도 폴더마다 한 번 · 0 스텝 중단 · 끊긴 시도 포함) ──
+wall_s_of(){ # $1 단계 (ALL = 전체) → 초 · 미상이 하나라도 있으면 "UNKNOWN <폴더>" (CZ Q-CZ-4 · 자체 검토 S3: 미상을 0 초로 더하지 않는다)
+  #   attempt.json (elapsed_s · 단조 시계 — S4) > infra_abort.json (0 스텝 중단 · 스케줄러 장부) > killed.json (전자 스텝 뒤 끊김 · 스케줄러 장부)
+  #   > attempt.start 만 (VASP 를 띄웠는데 끝 기록이 없다 = 미상) · 시작 표지가 없는 폴더 (준비 실패) 는 VASP 시간이 없다 · 열거 실패도 미상
+  local d f j w s tot=0 unk="" dirs=run lst
+  [ -d run_aborted ] && dirs="run run_aborted"
+  lst=$(find $dirs \( -name attempt.json -o -name attempt.start -o -name infra_abort.json -o -name killed.json \) -type f 2>/dev/null) || { echo "UNKNOWN (반송 폴더 열거 실패)"; return; }
+  for d in $(printf '%s\n' "$lst" | sed 's#/[^/]*$##' | LC_ALL=C sort -u); do
+    if [ -f "$d/attempt.json" ]; then f=$d/attempt.json; w=$(grep -o '"elapsed_s": [0-9]*' "$f" | head -1 | sed 's/.*: *//')
+    elif [ -f "$d/infra_abort.json" ]; then f=$d/infra_abort.json; w=$(grep -o '"wall_s": "[^"]*"' "$f" | head -1 | sed 's/.*: "//; s/"$//')
+    elif [ -f "$d/killed.json" ]; then f=$d/killed.json; w=$(grep -o '"wall_s": "[^"]*"' "$f" | head -1 | sed 's/.*: "//; s/"$//')
+    else f=$d/attempt.start; w=""; fi
     j=$(grep -o '"job": "[^"]*"' "$f" | head -1 | sed 's/"job": "//; s/"$//')
     s=${STAGE_OF[$j]:-?}
     if [ "$1" = ALL ] || [ "$1" = "$s" ]; then
-      case "$w" in ''|*[!0-9]*) unk=1;; *) tot=$((tot + w));; esac
+      case "$w" in ''|*[!0-9]*) [ -n "$unk" ] || unk=$d;; *) tot=$((tot + w));; esac
     fi
   done
-  if [ "$unk" = 1 ]; then echo UNKNOWN; else echo "$tot"; fi
+  if [ -n "$unk" ]; then echo "UNKNOWN $unk"; else echo "$tot"; fi
 }
 cap_ok(){ # $1 잡 → 0 이면 띄워도 된다 (단계 · 전체 상한 · 벽시계 미상이면 안 띄운다)
   local s=${STAGE_OF[$1]} ws wt
   ws=$(wall_s_of "$s"); wt=$(wall_s_of ALL)
-  if [ "$ws" = UNKNOWN ] || [ "$wt" = UNKNOWN ]; then
-    log "⏸ 0 스텝 중단의 벽시계가 미상 (UNKNOWN) — $1 을 띄우지 않는다. 'bash run_all.sh --infra-wall <run_aborted 폴더 이름> <초>' 로 스케줄러 장부 값을 채운 뒤 다시"; return 1
-  fi
+  case "$ws $wt" in *UNKNOWN*)
+    log "⏸ 벽시계 미상 — $(printf '%s\n%s\n' "$ws" "$wt" | grep -m1 UNKNOWN | cut -d' ' -f2-) · $1 을 띄우지 않는다. 0 스텝 중단 (run_aborted) 이면 'bash run_all.sh --infra-wall <run_aborted 폴더 이름> <초>' ·"\
+" 전자 스텝 뒤 끊긴 시도 (attempt.start 만) 면 'WALL_S=<초> bash run_all.sh --killed <잡> <단> <스케줄러 잡 id> <취소 UTC> <사유>' 로 스케줄러 장부 값을 채운 뒤 다시"\
+" (실행 기록이 손상됐으면 반송하고 연락)"; return 1;;
+  esac
   awk -v w="$ws" -v c="${CAP_H[$s]}" 'BEGIN { exit !(w <= c * 3600) }' || { log "⏸ 단계 $s 누적 $((ws / 3600)) h > 상한 ${CAP_H[$s]} h — $1 을 띄우지 않는다"; return 1; }
   awk -v w="$wt" -v c="$TOTAL_CAP" 'BEGIN { exit !(w <= c * 3600) }' || { log "⏸ 전체 누적 $((wt / 3600)) h > 상한 $TOTAL_CAP h — $1 을 띄우지 않는다"; return 1; }
   return 0
@@ -677,7 +709,7 @@ locpot_zavg(){ # $1 시도 폴더 · $2 run_id → $1/LOCPOT.zavg.txt (z Å · �
 # ── 한 시도 ──
 run_one(){ # $1 잡 · $2 단 · $3 시도 폴더 · $4 INCAR 이름 · $5 WAVECAR 원본 (B 단만) → 0 돌림 · 3 준비 실패 · 6 공통 환경 고장
   #   A·단 0·r2 는 폴더를 mkdir 로 차지한다 · r1B·a4B 는 ⓐ 가 든 시도 폴더 안에서 `.b` 를 mkdir 로 차지한다 (둘 다 원자적 · 덮어쓰지 않는다)
-  local job=$1 rung=$2 d=$3 inc=$4 wsrc=${5:-} rid t0 t1 rc j wsha="" wcp="" wend hd istart icharg nr pr hon ksha="" ver
+  local job=$1 rung=$2 d=$3 inc=$4 wsrc=${5:-} rid t0 t1 u0 u1 el rc j wsha="" wcp="" wend hd istart icharg nr pr hon ksha="" ver
   pp_ok "$job" || return 6        # 모든 VASP 실행 직전 · 폴더를 차지하기 전 (이어 돌린 ⓑ 포함 — CZ Q-CZ-3)
   case "$rung" in
     r1B|a4B) mkdir "$d/.b" 2>/dev/null || { echo "⛔ $d/.b 가 이미 있다 — ⓑ 를 덮어쓰지 않는다"; return 3; };;
@@ -700,9 +732,13 @@ run_one(){ # $1 잡 · $2 단 · $3 시도 폴더 · $4 INCAR 이름 · $5 WAVEC
     cp "$wsrc" "$d/WAVECAR" || return 3
     wsha=$(h "$wsrc"); wcp=$(h "$d/WAVECAR")
   fi
-  rid="$(date -u +%Y%m%dT%H%M%S)-$$-$RANDOM"; t0=$(date +%s)
+  rid="$(date -u +%Y%m%dT%H%M%S)-$$-$RANDOM"; t0=$(date +%s); u0=$(up)
+  # 시작 표지 — VASP 를 띄웠다는 기록 (끝 기록 attempt.json 없이 끊기면 장부가 미상으로 본다 · 자체 검토 S3)
+  printf '{"job": "%s", "attempt": "%s", "stage": "%s", "run_id": "%s", "t_start": %d, "kernel_sha256": "%s"}\n' "$job" "$rung" "${STAGE_OF[$job]}" "$rid" "$t0" "$ksha" \
+    > "$d/attempt.start" || return 3
   touch "$d/.running"; watch_scf "$d" "$job/$rung" & local wpid=$!
-  (cd "$d" && $VASP_CMD > stdout.log 2>&1); rc=$?; t1=$(date +%s)
+  (cd "$d" && $VASP_CMD > stdout.log 2>&1); rc=$?; t1=$(date +%s); u1=$(up)
+  el=$((u1 - u0)); [ "$el" -ge 0 ] 2>/dev/null || el=$(( t1 > t0 ? t1 - t0 : 0 ))      # 경과 = 단조 시계 (S4) · 못 읽으면 벽시계 차 (음수면 0)
   rm -f "$d/.running"; kill "$wpid" 2>/dev/null; wait "$wpid" 2>/dev/null
   ver=$(clean "$(ver_of "$d")")
   case "$rung" in
@@ -722,12 +758,12 @@ run_one(){ # $1 잡 · $2 단 · $3 시도 폴더 · $4 INCAR 이름 · $5 WAVEC
         "$wsha" "$wcp" "$wend" "${istart:-NA}" "${icharg:-NA}" "$nr" "$pr" "$hon" > "$d/WAVECAR.info";;
   esac
   [ -f "$d/LOCPOT" ] && locpot_zavg "$d" "$rid"
-  printf '{"job": "%s", "attempt": "%s", "stage": "%s", "run_id": "%s", "rc": %d, "t_start": %d, "t_end": %d, "vasp_version": "%s", "kernel_sha256": "%s", "perf": "%s", "sha256": {"INCAR": "%s", "POSCAR": "%s", "KPOINTS": "%s", "POTCAR": "%s", "OUTCAR": "%s", "OSZICAR": "%s", "WAVECAR.info": "%s", "LOCPOT.zavg.txt": "%s"}}\n' \
-    "$job" "$rung" "${STAGE_OF[$job]}" "$rid" "$rc" "$t0" "$t1" "$ver" "$ksha" "$(printf '%s' "$PERF_LINES" | tr '\n' ';')" \
+  printf '{"job": "%s", "attempt": "%s", "stage": "%s", "run_id": "%s", "rc": %d, "t_start": %d, "t_end": %d, "elapsed_s": %d, "vasp_version": "%s", "kernel_sha256": "%s", "perf": "%s", "sha256": {"INCAR": "%s", "POSCAR": "%s", "KPOINTS": "%s", "POTCAR": "%s", "OUTCAR": "%s", "OSZICAR": "%s", "WAVECAR.info": "%s", "LOCPOT.zavg.txt": "%s"}}\n' \
+    "$job" "$rung" "${STAGE_OF[$job]}" "$rid" "$rc" "$t0" "$t1" "$el" "$ver" "$ksha" "$(printf '%s' "$PERF_LINES" | tr '\n' ';')" \
     "$(h "$d/INCAR")" "$(h "$d/POSCAR")" "$(h "$d/KPOINTS")" "$(cat "$d/POTCAR.sha256")" "$(h "$d/OUTCAR")" "$(h "$d/OSZICAR")" "$(h "$d/WAVECAR.info")" \
     "$(h "$d/LOCPOT.zavg.txt")" > "$d/attempt.json"
   j=$(judge "$d"); set -- $j
-  printf "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" "$job" "$rung" "${STAGE_OF[$job]}" "$rc" "$1" "$2" "$3" "$4" "$5" "$((t1 - t0))" >> run/status.tsv
+  printf "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" "$job" "$rung" "${STAGE_OF[$job]}" "$rc" "$1" "$2" "$3" "$4" "$5" "$el" >> run/status.tsv
   rm -f "$d/POTCAR" "$d/CHGCAR" "$d/CHG" "$d/vasprun.xml" "$d/vdw_kernel.bindat" "$d/LOCPOT"
   case "$rung" in r1A|a4A) ;; *) rm -f "$d/WAVECAR";; esac      # ⓐ WAVECAR 는 그 잡 사다리가 끝날 때까지 둔다 (반송 안 함 · sha·크기·머리만)
   if [ "$need_rel" = 1 ] && [ -n "$ver" ] && [ "$ver" != "$REL_VER" ]; then log "⛔ $job/$rung VASP 빌드 '$ver' ≠ 봉인 — 공통 환경 고장 · 전체 정지"; return 6; fi
@@ -1136,23 +1172,26 @@ def check_attempt(job, pkgdir, attdir, rung, registry=None, a_ref=None):
         return done("MISSING")
     r["env"] = env_evidence(attdir)            # 아래 무결성 검사에서 멈춰도 환경 감사는 이 증거를 본다 (자체 검토 S1)
     if not os.path.isfile(os.path.join(attdir, "attempt.json")):
-        return done("INCOMPLETE_ATTEMPT", "attempt.json 없음 — 끝나지 않은 시도 (0 스텝 중단이면 업체 기록 · 아니면 1저자)")
+        return done("INCOMPLETE_ATTEMPT", "attempt.json 없음 — " + (
+            "전자 스텝 뒤 끊긴 시도 (killed.json — 벽시계 기록됨 · 다시 돌리지 않는다 · 값 없음 · 1저자)" if os.path.isfile(os.path.join(attdir, "killed.json")) else
+            "VASP 를 띄웠는데 끝 기록이 없다 (attempt.start 만 — 끊김 · 벽시계 미상 · 0 스텝이면 업체 기록 · 아니면 1저자)" if os.path.isfile(os.path.join(attdir, "attempt.start")) else
+            "VASP 를 띄우기 전에 멈춘 시도 (시작 표지 없음 — 준비 실패)"))
     try:
         a = json.load(open(os.path.join(attdir, "attempt.json"), encoding="utf-8"))
     except Exception as e:  # noqa: BLE001
         return done("ATTEMPT_MISMATCH", f"attempt.json 읽기 실패 {e}")
     if not isinstance(a, dict) or a.get("job") != job["dir"] or str(a.get("attempt")) != rung or a.get("stage") != job["stage"] or not isinstance(a.get("sha256"), dict):
         return done("ATTEMPT_MISMATCH", "attempt.json 의 잡·단·단계·sha 형식")
-    rid, t0, t1, rc = a.get("run_id"), a.get("t_start"), a.get("t_end"), a.get("rc")
+    rid, t0, t1, el, rc = a.get("run_id"), a.get("t_start"), a.get("t_end"), a.get("elapsed_s"), a.get("rc")
     isint = lambda x: isinstance(x, int) and not isinstance(x, bool)
-    if not (isinstance(rid, str) and V.RUN_ID_RE.match(rid)) or not (isint(t0) and isint(t1) and t1 >= t0) or not isint(rc):
-        return done("ATTEMPT_MISMATCH", f"실행 기록 형식 (run_id {rid!r} · t {t0!r}→{t1!r} · rc {rc!r})")
+    if not (isinstance(rid, str) and V.RUN_ID_RE.match(rid)) or not (isint(t0) and isint(t1) and isint(el) and el >= 0) or not isint(rc):    # 경과 = 단조 시계 (S4 — t_end < t_start 는 시계 맞춤 · 허용)
+        return done("ATTEMPT_MISMATCH", f"실행 기록 형식 (run_id {rid!r} · t {t0!r}→{t1!r} · 경과 {el!r} · rc {rc!r})")
     files = ("INCAR", "POSCAR", "KPOINTS", "OUTCAR", "OSZICAR", "LOCPOT.zavg.txt") + (("WAVECAR.info",) if rung != "0" else ())
     for f in files:
         p = os.path.join(attdir, f)
         if (a["sha256"].get(f) or "") != (_sha(p) if os.path.isfile(p) else ""):
             return done("ATTEMPT_MISMATCH", f"{f} 가 실행 기록(attempt.json)과 다르다")
-    r.update({"run_id": rid, "rc": rc, "wall_s": t1 - t0, "attempt_json_sha256": _sha(os.path.join(attdir, "attempt.json")),
+    r.update({"run_id": rid, "rc": rc, "wall_s": el, "attempt_json_sha256": _sha(os.path.join(attdir, "attempt.json")),
               "outcar_sha256": str(a["sha256"].get("OUTCAR") or ""), "kernel_sha256": a.get("kernel_sha256") or None})
     for f in ("POSCAR", "KPOINTS"):
         if _sha(os.path.join(attdir, f)) != job["files_sha256"][f]:
@@ -1835,7 +1874,10 @@ def _readme(meta, pkg_sha):
 5. 0 스텝 인프라 중단 (스케줄러 취소 등으로 전자 반복 0 회) 이면: `WALL_S=<초> bash run_all.sh --infra-abort <잡> <단> <스케줄러 잡 id> <취소 UTC> <사유>` 로
    기록한 뒤 다시 돌려 주세요 (잡마다 2 회까지). `WALL_S=<초>` (스케줄러 장부의 그 시도 벽시계) 를 꼭 주세요 — 그 시간도 누적 상한 장부에 들어갑니다.
    모르면 UNKNOWN 으로 남고, 그 뒤 잡은 `bash run_all.sh --infra-wall <run_aborted 폴더 이름> <초>` 로 장부 값을 채울 때까지 뜨지 않습니다 (종료 5).
-   OSZICAR · stdout.log · OUTCAR 어디에든 전자 반복 흔적이 있으면 기록을 거부합니다 (그건 실행 실패 — 사다리가 다룹니다).
+   OSZICAR · stdout.log · OUTCAR 어디에든 전자 반복 흔적이 있으면 이 기록은 거부합니다.
+   **전자 스텝이 돈 뒤 러너째 끊긴 시도** (스케줄러 시간 제한 · 노드 고장 — 그 시도 폴더에 `attempt.json` 이 없다) 는 다시 돌리지 않습니다 (값 없음 · 1저자 결정).
+   러너는 그 벽시계를 모르므로 다음 잡을 띄우지 않습니다 (종료 5) — `WALL_S=<초> bash run_all.sh --killed <잡> <단> <스케줄러 잡 id> <취소 UTC> <사유>` 로
+   스케줄러 장부 값을 기록한 뒤 다시 돌려 주세요. (VASP 가 스스로 오류로 끝난 실행 실패는 러너가 기록하고 정해진 사다리대로 다음 단으로 갑니다.)
 6. **누적 상한**: 단계마다 {caps} · 전체 {meta['total_cap_h']:g} h (한 노드 벽시계 합 · 파일럿 뒤에는 해제 파일의 값). 넘으면 러너가 다음 잡을 띄우지 않고 멈춥니다 (종료 5) —
    돌던 잡은 끝까지 돕니다. 반송해 주시고 결정을 기다려 주세요.
 7. **공통 환경 고장 = 전체 정지** (종료 6): VASP 빌드 · POTCAR · vdW 커널 파일이 파일럿에서 봉인한 것과 다르거나, optB88 잡에 커널이 없을 때.
@@ -1864,7 +1906,8 @@ The runner applies a pre-registered retry ladder automatically (rung 0 → r1 st
 WAVECAR with AMIN 0.01 → r2 stage B with AMIX 0.1/BMIX 0.01/AMIN 0.01); the silver a4 job is a single two-stage run. Convergence is judged from the last
 electronic row of OSZICAR (|dE| and |d eps| ≤ EDIFF), never from OUTCAR wording. Please do not edit INCAR/POSCAR/KPOINTS, do not delete stage-A WAVECARs,
 and do not rerun anything by hand; record zero-step infrastructure aborts with WALL_S=<scheduler wall seconds> and --infra-abort (an unknown wall time
-is recorded as UNKNOWN and holds the next job until --infra-wall fills it from the scheduler log). Cumulative wall-time caps stop the runner (exit 5);
+is recorded as UNKNOWN and holds the next job until --infra-wall fills it from the scheduler log); a run killed after electronic steps (no attempt.json) is not
+retried and holds the next job until its scheduler wall time is recorded with WALL_S=<seconds> --killed. Cumulative wall-time caps stop the runner (exit 5);
 a VASP build, POTCAR or vdW-kernel change stops everything (exit 6). Return the round2_return.tgz pair after `sha256sum -c`.
 """
 
@@ -1942,6 +1985,8 @@ elif beh in ("ignore_wavecar", "istart0_quiet", "istart0_only", "icharg2_only"):
     rows = [(i, 1e-3 / i, 1e-4 / i) for i in range(1, 25)] + [(25, -3.1e-8, -1.2e-8)]
 elif beh == "slow":
     rows = [(i, 2e-3, 2e-5) for i in range(1, 161)]
+elif beh == "killed":                            # 자체 검토 S3: 전자 스텝 150 뒤 러너째 끊김 (attempt.json 없음)
+    rows, rc, term = [(i, 2e-3, 2e-5) for i in range(1, 151)], 137, False
 def fmt(x):
     return x if isinstance(x, str) else f"{x: .5E}"
 osz = open("OSZICAR", "w")
@@ -1987,6 +2032,12 @@ if rows and term:
             f"  energy  without entropy=  {Et + 0.01:18.8f}  energy(sigma->0) =  {Et + 0.005:18.8f}",
             " General timing and accounting informations for this job:"]
 open("OUTCAR", "w").write("\n".join(out) + "\n")
+if beh == "killed":
+    open("stdout.log", "w").write(" running on   64 total cores\n")
+    if os.environ.get("FAKE_KILL_OK") == "1":
+        import signal
+        os.killpg(os.getpgrp(), signal.SIGKILL)
+    sys.exit(137)
 so = [" running on   64 total cores", f" {version}"]
 if ist == 0 and beh not in ("istart0_quiet", "istart0_only"):
     so.append(" WAVECAR not read")
@@ -2663,7 +2714,7 @@ def _selftest():
            rcz0 == 1 and rcz1_ == 0 and iz.get("wall_s") == "ATTEMPT_JSON" and iz.get("oszicar") == "zero_rows" and "UNKNOWN" not in logz1_ and rcz2_ == 0,
            (rcz0, rcz1_, iz, rcz2_, logz2_[-200:]))
         p5b = fresh("pk_cap_once"); d5 = os.path.join(p5b, "run_aborted", "P2S_S_A_far_0_1"); os.makedirs(d5)
-        json.dump({"job": "P2S_S_A_far", "attempt": "0", "stage": "P", "t_start": 0, "t_end": 60 * 3600}, open(os.path.join(d5, "attempt.json"), "w"))
+        json.dump({"job": "P2S_S_A_far", "attempt": "0", "stage": "P", "t_start": 0, "t_end": 60 * 3600, "elapsed_s": 60 * 3600}, open(os.path.join(d5, "attempt.json"), "w"))
         json.dump({"job": "P2S_S_A_far", "rung": "0", "wall_s": str(60 * 3600)}, open(os.path.join(d5, "infra_abort.json"), "w"))
         rc5b, log5b = run_r(p5b, {}, (), JOBS="P2S_S_A_bound")
         ck("R5 (알려진 시간 중복 금지): 0 스텝 중단 기록 60 h 와 그 시도의 attempt.json 60 h 는 한 번만 더한다 → 단계 P 60 h ≤ 117 h → 뜬다",
@@ -2792,6 +2843,82 @@ def _selftest():
         ck("S2 양성: 깨끗한 반송은 --check 종료 0 · --a4_result OK · 공통 환경 고장 없음 · 등록부 sha · 묶음 MANIFEST sha 기록",
            cc7_.returncode == 0 and ar7_.returncode == 0 and (a47.get("result") or {}).get("status") == "OK" and a47.get("common_environment_failure") is None
            and a47.get("registry_sha256") == _sha(rgf) and a47.get("package_manifest_sha256") == msha, (cc7_.returncode, cc7_.stdout[-300:], ar7_.returncode, (a47.get("result") or {}).get("status")))
+        # S3–S4 (자체 검토) — 전자 스텝 뒤 끊긴 시도의 벽시계는 미상 (0 초가 아니다) · --killed 로 기록 · 벽시계 장부는 단조 시계 (시계가 뒤로 가도 멈추지 않는다)
+        pk_k = fresh("pk_killed"); dk = os.path.join(pk_k, "run", "P2S_S_A_bound")
+        JK = "P2S_S_A_bound P2S_S_A_far"
+        r_k = subprocess.run(["bash", os.path.join(pk_k, "run_all.sh")], capture_output=True, text=True, timeout=600, start_new_session=True,
+                             env=runner_env(pk_k, {"P2S_S_A_bound/0": "killed"}, JOBS=JK, FAKE_KILL_OK="1"))
+        killed_ok = r_k.returncode == -9 and not os.path.isfile(os.path.join(dk, "attempt.json")) and (_read(os.path.join(dk, "OSZICAR")) or "").count("DAV:") == 150
+        rck1, logk1 = run_r(pk_k, {}, (), JOBS=JK)
+        ck("⛔음성 S3 (검토 재현): 전자 스텝 150 뒤 러너째 끊긴 시도 (스케줄러 시간 제한 흉내 · attempt.json 없음) 의 벽시계는 0 초가 아니라 미상 → 다음 잡 안 뜸 "
+           "(종료 5 · --killed 안내 · 그 폴더) — 지금까지는 0 초로 더하고 다음 잡을 띄웠다",
+           killed_ok and rck1 == 5 and not os.path.isdir(os.path.join(pk_k, "run", "P2S_S_A_far")) and "--killed" in logk1 and "run/P2S_S_A_bound" in logk1,
+           (r_k.returncode, killed_ok, rck1, logk1[-400:]))
+        KL = ("--killed", "P2S_S_A_bound", "0", "SGE-9", "2026-10-22T03:00Z", "wall", "limit")
+        rck2, _ = run_r(pk_k, {}, KL, WALL_S=None)
+        rck3, logk3 = run_r(pk_k, {}, KL, WALL_S="7200")
+        kjf = os.path.join(dk, "killed.json"); kj = json.load(open(kjf)) if os.path.isfile(kjf) else {}
+        stj = json.load(open(os.path.join(dk, "attempt.start"))) if os.path.isfile(os.path.join(dk, "attempt.start")) else {}
+        rck4, _ = run_r(pk_k, {}, KL, WALL_S="7200")
+        rck5, logk5 = run_r(pk_k, {}, (), JOBS=JK)
+        rk_ = resolve_job(J["P2S_S_A_bound"], pk_k, os.path.join(pk_k, "run"))
+        memk = subprocess.run(["tar", "tzf", os.path.join(pk_k, "round2_return.tgz")], capture_output=True, text=True).stdout.split()
+        ck("S3: WALL_S=<초> --killed → killed.json (벽시계 · 시작 표지의 run_id) → 다시 돌면 다음 잡이 뜬다 · 끊긴 시도는 값 없음 그대로 (재시도 없음 · 1저자) · "
+           "반송에 attempt.start · killed.json · WALL_S 없음 · 두 번 기록은 거부",
+           rck2 == 2 and rck3 == 0 and kj.get("wall_s") == "7200" and stj.get("run_id") and kj.get("run_id") == stj.get("run_id") and rck4 == 2 and rck5 == 1
+           and os.path.isfile(os.path.join(pk_k, "run", "P2S_S_A_far", "attempt.json")) and rk_["status"] == "INCOMPLETE_ATTEMPT" and "killed.json" in rk_.get("why", "")
+           and "run/P2S_S_A_bound/killed.json" in memk and "run/P2S_S_A_bound/attempt.start" in memk, (rck2, rck3, kj, stj, rck4, rck5, rk_.get("why"), logk5[-300:]))
+        pk_k0 = fresh("pk_killed0")
+        d0_ = fake_att(pk_k0, "P2S_S_A_bound", {"attempt.start": json.dumps({"job": "P2S_S_A_bound", "attempt": "0", "stage": "P", "run_id": "20261022T000000-1-1",
+                                                                             "t_start": 0, "kernel_sha256": ""}) + "\n"})
+        rck6, logk6 = run_r(pk_k0, {}, KL, WALL_S="60")
+        ck("⛔음성 S3: 전자 반복 흔적이 없는 시도에 --killed → 거부 · 0 스텝 중단 기록 (--infra-abort · 같은 단을 다시 돈다) 으로 안내",
+           rck6 == 2 and "--infra-abort" in logk6 and not os.path.isfile(os.path.join(d0_, "killed.json")), (rck6, logk6[-200:]))
+        pk_kp = fresh("pk_prepfail"); fake_att(pk_kp, "P2S_S_A_bound", {})        # 준비 단계에서 멈춤 (INCAR 만 · 시작 표지 없음 — VASP 가 안 떴다)
+        rck7, logk7 = run_r(pk_kp, {}, (), JOBS=JK)
+        ck("S3: 시작 표지가 없는 시도 (준비 실패 — VASP 시간 없음) 는 장부를 막지 않는다 → 다음 잡이 뜬다 (값 없음 1 · 종료 1)",
+           rck7 == 1 and os.path.isfile(os.path.join(pk_kp, "run", "P2S_S_A_far", "attempt.json")), (rck7, logk7[-300:]))
+        rck8, logk8 = run_r(pk_kp, {}, KL, WALL_S="60")
+        rck9, logk9 = run_r(pk_k, {}, ("--killed", "P2S_S_A_far", "0", "SGE-9", "2026-10-22T03:00Z", "x"), WALL_S="60")
+        ck("⛔음성 S3: --killed 는 시작 표지 없는 시도 (VASP 안 뜸) · 끝난 시도 (attempt.json 있음) 를 거부 (종료 2 · killed.json 안 씀)",
+           rck8 == 2 and "시작 표지" in logk8 and rck9 == 2 and "끝난 시도" in logk9 and not os.path.isfile(os.path.join(pk_k, "run", "P2S_S_A_far", "killed.json")),
+           (rck8, logk8[-150:], rck9, logk9[-150:]))
+        stub_d = os.path.join(T, "stub_date"); os.makedirs(stub_d, exist_ok=True); real_date = shutil.which("date")
+        open(os.path.join(stub_d, "date"), "w").write(f'#!/bin/sh\nif [ "$1" = "+%s" ]; then\n  if [ -f "$DATE_MARK" ]; then echo $(( $({real_date} +%s) + 100000 )); '
+                                                       f'else : > "$DATE_MARK"; {real_date} +%s; fi\nelse exec {real_date} "$@"; fi\n')
+        os.chmod(os.path.join(stub_d, "date"), 0o755)
+        pk_j = fresh("pk_clockjump")
+        rcj, logj = run_r(pk_j, {}, (), JOBS="P2S_S_A_bound", PATH=f"{stub_d}:{os.environ['PATH']}", DATE_MARK=os.path.join(T, "date_mark"))
+        ajj = os.path.join(pk_j, "run", "P2S_S_A_bound", "attempt.json"); aj_j = json.load(open(ajj)) if os.path.isfile(ajj) else {}
+        ck("S4: 시도 중 벽시계가 10 만 초 앞으로 뜀 (가짜 date) → t_end − t_start 는 10 만 초를 넘지만 장부의 경과 elapsed_s 는 단조 시계 = 실제 걸린 시간 (< 600 초)",
+           rcj == 0 and aj_j.get("t_end", 0) - aj_j.get("t_start", 0) >= 100000 and 0 <= aj_j.get("elapsed_s", -1) < 600, (rcj, aj_j.get("t_start"), aj_j.get("t_end"),
+           aj_j.get("elapsed_s"), logj[-200:]))
+        rdm2 = open(os.path.join(PKG, "README.md"), encoding="utf-8").read()
+        ck("S3 README: 전자 스텝 뒤 끊긴 시도 = 다시 안 돌림 (값 없음 · 1저자) · WALL_S --killed 로 벽시계 기록 (한·영) · '사다리가 다룹니다' 같은 거짓 약속 없음",
+           "--killed" in rdm2[rdm2.find("5. "):rdm2.find("6. ")] and "WALL_S=<seconds> --killed" in rdm2 and "사다리가 다룹니다" not in rdm2, rdm2[rdm2.find("5. "):][:700])
+        pk_c = fresh("pk_clock")
+        rcl1, _ = run_r(pk_c, {}, (), JOBS="P2S_S_A_bound")
+        ajc = os.path.join(pk_c, "run", "P2S_S_A_bound", "attempt.json"); ac_ = json.load(open(ajc))
+        has_el = isinstance(ac_.get("elapsed_s"), int) and not isinstance(ac_.get("elapsed_s"), bool) and ac_["elapsed_s"] >= 0
+        ac_["t_end"] = ac_["t_start"] - 3; json.dump(ac_, open(ajc, "w"))
+        rcl2, logl2 = run_r(pk_c, {}, (), JOBS="P2S_S_A_bound P2S_S_A_far")
+        rcl_ = resolve_job(J["P2S_S_A_bound"], pk_c, os.path.join(pk_c, "run"))
+        ck("⛔음성 S4 (검토 재현): 시도 중 시계가 3 초 뒤로 감 (t_end < t_start) → 러너 장부는 단조 시계 경과 (elapsed_s) 로 재서 멈추지 않는다 (다음 잡 뜸) · "
+           "검사기도 형식 위반이 아니다 (지금까지는 영구 보류 · ATTEMPT_MISMATCH)",
+           rcl1 == 0 and has_el and rcl2 == 0 and os.path.isfile(os.path.join(pk_c, "run", "P2S_S_A_far", "attempt.json")) and rcl_["status"] == "OK",
+           (rcl1, has_el, rcl2, logl2[-300:], rcl_["status"], rcl_.get("why")))
+        for lab_, el_ in (("음수", -5), ("없음", None), ("문자열", "60")):
+            a2_ = {**ac_, "t_end": ac_["t_start"] + 10}
+            if el_ is None:
+                a2_.pop("elapsed_s", None)
+            else:
+                a2_["elapsed_s"] = el_
+            json.dump(a2_, open(ajc, "w"))
+            st4 = resolve_job(J["P2S_S_A_bound"], pk_c, os.path.join(pk_c, "run"))["status"]
+            ck(f"⛔음성 S4: 실행 기록의 경과 (elapsed_s) 가 {lab_} → ATTEMPT_MISMATCH (실행 기록 형식)", st4 == "ATTEMPT_MISMATCH", st4)
+        rcl3, logl3 = run_r(pk_c, {}, (), JOBS="P2S_S_A_bound CC_S33_AB_optB88_bound")
+        ck("⛔음성 S4: 경과가 없는 (손상된) 실행 기록은 장부에서 미상 → 다음 잡 안 뜸 (종료 5 · 0 초로 더하지 않는다)",
+           rcl3 == 5 and "미상" in logl3, (rcl3, logl3[-300:]))
     finally:
         if os.environ.get("R2_SELFTEST_KEEP") == "1":
             print(f"  (시험 폴더 남김: {T})")
