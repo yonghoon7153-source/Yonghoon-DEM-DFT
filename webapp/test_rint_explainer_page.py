@@ -13,6 +13,10 @@
   ⑤ 웹앱으로 돌아가는 링크 (`href="/"`)
   ⑥ 사이드바 (base.html) 에 링크가 있고, 실제 앱이 그 경로를 200 · text/html 로 서빙하며 렌더된 화면에 링크가 보인다
   ⑦ 핵심 수치가 정본 그대로 (SBE 1.63 · DBE 4.68 mS/cm · σ* 0.347 · DBE 단독 2.618 S/cm)
+  ⑧ (10-22 · 사전 리뷰 2 회차 · 1저자 *"잘 하이라이트로 저장해두고"* · PF2 F) 쉽게 말하면 상자 ① ② ③ 이 눈에 띄는 상자로 있고
+     (하이라이트 색 토큰 = 밝은 · 어두운 화면 둘 다) · 상자 글 = 수정 계획 `docs/reviews/rint2_design_fix_plan_20261021.md` §6 원문 그대로 ·
+     핵심 문장 · 날짜 (10-22 · "10-25 판정 목표" 없음 · 10-31 = 주 판정만 · 감도 미완료) · 용어 풀이 "SV 반사실 비" ·
+     그림 6 의 남은 길 순서 = 상자 ② 의 바꾼 순서 (PRE2-design-09)
 
   python3 webapp/test_rint_explainer_page.py
 """
@@ -27,6 +31,8 @@ sys.path.insert(0, HERE)
 PAGE_URL = '/static/explain/rint_overview_20261021.html'
 PAGE = os.path.join(HERE, 'static', 'explain', 'rint_overview_20261021.html')
 BASE = os.path.join(HERE, 'templates', 'base.html')
+PLAN = os.path.join(HERE, '..', 'docs', 'reviews', 'rint2_design_fix_plan_20261021.md')
+BOX_MARKS = ('①', '②', '③')
 
 _ok, _fail = 0, []
 
@@ -89,6 +95,77 @@ class _Scan(HTMLParser):
             self.text.append(data)
 
 
+class _Boxes(HTMLParser):
+    """상자 (`<div class="hl" id="easy-N">`) 마다 보이는 글 · 안쪽 div 는 깊이로 센다 · 블록 요소 경계 = 빈칸 하나 (인라인 경계는 그대로)."""
+    BLOCK = {'div', 'p', 'li', 'ul', 'ol', 'h2', 'h3', 'table', 'tr', 'th', 'td', 'pre', 'br'}
+
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.boxes, self._cur, self._depth = {}, None, 0
+
+    def handle_starttag(self, tag, attrs):
+        if self._cur is not None and tag in self.BLOCK:
+            self.boxes[self._cur].append(' ')
+        if tag != 'div':
+            return
+        a = dict(attrs)
+        if self._cur is None:
+            if 'hl' in (a.get('class') or '').split() and re.fullmatch(r'easy-[123]', a.get('id') or ''):
+                self._cur, self._depth = a['id'], 1
+                self.boxes[self._cur] = []
+            return
+        self._depth += 1
+
+    def handle_endtag(self, tag):
+        if self._cur is not None and tag in self.BLOCK:
+            self.boxes[self._cur].append(' ')
+        if tag == 'div' and self._cur is not None:
+            self._depth -= 1
+            if self._depth == 0:
+                self._cur = None
+
+    def handle_data(self, data):
+        if self._cur is not None:
+            self.boxes[self._cur].append(data)
+
+
+def _squash(s):
+    return ' '.join(s.split())
+
+
+def plan_box_text(mark):
+    """수정 계획 §6 의 상자 (인용 블록 `> **★ 쉽게 말하면 ① …`) → 보이는 글 (markdown 표지 · 표 구분 줄 · 코드 울타리를 빼고 공백 하나로).
+    없으면 None."""
+    lines = open(PLAN, encoding='utf-8').read().split('\n')
+    for i, ln in enumerate(lines):
+        if ln.startswith('> **★ 쉽게 말하면 ' + mark):
+            out, j = [], i
+            while j < len(lines) and lines[j].startswith('>'):
+                s = lines[j][1:].strip()
+                j += 1
+                if s.startswith('```') or (s and re.fullmatch(r'\|?[\s\-:|]+\|?', s)):
+                    continue
+                if s.startswith('- '):
+                    s = s[2:]
+                if s.startswith('|'):
+                    s = ' '.join(c.strip() for c in s.strip('|').split('|'))
+                s = s.replace('**', '').replace('`', '')
+                s = re.sub(r'(?<![*\w])\*(?!\s)(.+?)(?<!\s)\*(?![*\w])', r'\1', s)
+                out.append(s)
+            return _squash(' '.join(out))
+    return None
+
+
+def _css_block(src, rx):
+    m = re.search(rx, src)
+    return m.group(1) if m else ''
+
+
+def _tok(block, name):
+    m = re.search(r'(?:^|[;{\s])' + re.escape(name) + r'\s*:\s*([^;}]+)', block)
+    return m.group(1).strip() if m else None
+
+
 def main():
     print('── ① 파일 · 한 파일로 닫힘')
     exists = os.path.isfile(PAGE)
@@ -128,6 +205,50 @@ def main():
     for num, what in (('1.63', 'SBE 실측 mS/cm'), ('4.68', 'DBE 실측 mS/cm'),
                       ('0.347', '현 세대 σ* S/cm'), ('2.618', 'DBE 단독 보정 S/cm')):
         chk(f'{what} {num}', num in text)
+
+    print('── ⑧ 10-22 결정 상자 ① ② ③ · 날짜 · 다크 모드 · 용어 (PF2 F · PRE2-design-09)')
+    bx = _Boxes()
+    bx.feed(src)
+    bx.close()
+    boxes = {k: _squash(''.join(v)) for k, v in bx.boxes.items()}
+    chk('상자 셋 — class="hl" 이 정확히 셋 (id easy-1 · easy-2 · easy-3)',
+        len(re.findall(r'class="hl"', src)) == 3 and sorted(boxes) == ['easy-1', 'easy-2', 'easy-3'])
+    for k, mark in enumerate(BOX_MARKS, 1):
+        want, got = plan_box_text(mark), boxes.get(f'easy-{k}', '')
+        chk(f'상자 {mark} 머리 = "★ 쉽게 말하면 {mark}"', got.startswith(f'★ 쉽게 말하면 {mark}'))
+        chk(f'상자 {mark} 글 = 수정 계획 §6 원문 그대로 (markdown 표지 뺀 글 · 공백 하나로)',
+            want is not None and got == want)
+    b1, b2, b3 = (boxes.get(f'easy-{k}', '') for k in (1, 2, 3))
+    for sent in ('아래 끝 > 문턱 → SV_DEPENDENT', '위 끝 ≤ 문턱 → 표지 없음', '걸치면 SV_UNCHECKED', '숫자는 예시',
+                 '못 가른 덩어리가 없는 팔은 두 풀이가 같아 지금처럼 한 값이다'):
+        chk(f'상자 ① 핵심 문장 — "{sent}"', sent in b1)
+    for sent in ('⑥ 숫자 탐침 (SBE · σ 봉인)', '계획 하나 봉인', '사슬이 계획 해시를 대조 · 다르면 멈춤'):
+        chk(f'상자 ② 핵심 문장 — "{sent}"', sent in b2)
+    for sent in ('10-31 에는 진행 보고만 한다', '팔을 줄이지 않는 이유', '⑥ 실측 직후를 결정점으로'):
+        chk(f'상자 ③ 핵심 문장 — "{sent}"', sent in b3)
+    hsec = re.search(r'<section class="hl-sec"[^>]*>\s*<h2[^>]*>(.*?)</h2>', src, re.S)
+    chk('상자 묶음 머리에 날짜 10-22', bool(hsec) and '10-22' in re.sub(r'<[^>]+>', '', hsec.group(1)))
+    sub = re.search(r'<p class="sub">(.*?)</p>', src, re.S)
+    chk('머리 줄 (.sub) 에 "10-22 갱신"', bool(sub) and '10-22 갱신' in sub.group(1))
+    stale = [s for s in ('10-25 목표', '일요일 10-25', '(10-25) 목표', '목표: 일요일') if s in src]
+    chk(f'"10-25 판정 목표" 낡은 날짜 없음 (보이는 글 · aria-label 모두 · 찾은 것 {stale})', exists and not stale)
+    fig6 = re.findall(r'aria-label="(남은 길[^"]*)"', src)
+    allt = text + ' ' + ' '.join(fig6)
+    for sent in ('10-31', '진행 보고', '감도 미완료', '주 판정'):
+        chk(f'남은 길에 등록 R §10-4 · 한정어 ⑰ 표지 — "{sent}"', sent in allt)
+    order = ('S0 단계 1', '⑥ 숫자 탐침', 'Codex 요청', '계획 하나 봉인', 'S0 단계 2', '보정 사다리', '주 판정')
+    pos_ok = len(fig6) == 2 and all(all(a in f for a in order) and [f.index(a) for a in order] == sorted(f.index(a) for a in order)
+                                    for f in fig6)
+    chk('그림 6 (넓은 · 좁은 판) 의 순서 = 상자 ② 바꾼 순서 (S0 1 → ⑥ → Codex → 계획 봉인 → S0 2 → 사다리 → 주 판정)', pos_ok)
+    light = _css_block(src, r'(?m)^:root\{([^}]*)\}')
+    dmed = _css_block(src, r'@media \(prefers-color-scheme: dark\)\{:root:not\(\[data-theme="light"\]\)\{([^}]*)\}\}')
+    dattr = _css_block(src, r':root\[data-theme="dark"\]\{([^}]*)\}')
+    toks = {nm: (_tok(light, nm), _tok(dmed, nm), _tok(dattr, nm)) for nm in ('--hl', '--hlb')}
+    chk(f'하이라이트 색 토큰 --hl · --hlb = 밝은 :root · 어두운 (media · data-theme) 셋 다 정의 · 어두운 값 ≠ 밝은 값 · 두 어두운 판 같음 {toks}',
+        all(l_ and m_ and a_ and m_ == a_ and m_ != l_ for l_, m_, a_ in toks.values()))
+    hl_rule = _css_block(src, r'\.hl\{([^}]*)\}')
+    chk('.hl 상자 = 하이라이트 배경 var(--hl) · 테두리 var(--hlb)', 'var(--hl)' in hl_rule and 'var(--hlb)' in hl_rule)
+    chk('용어 풀이에 "SV 반사실 비"', bool(re.search(r'<td>SV 반사실 비</td><td>[^<]*G_전체 / G_끊음', src)))
 
     print('── ⑥ 사이드바 링크 · 실제 서빙')
     base = open(BASE, encoding='utf-8').read()
