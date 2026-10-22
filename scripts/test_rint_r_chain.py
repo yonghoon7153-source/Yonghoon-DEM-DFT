@@ -550,6 +550,12 @@ def fixtures():
     FX['reg_unreg'] = reg_with('⬜', 'reg_unreg.md')
     FX['reg_s0_unreg'] = reg_with(f'`{sha}`', 'reg_s0_unreg.md', s0cell='⬜')
     FX['reg_s0_other'] = reg_with(f'`{sha}`', 'reg_s0_other.md', s0cell='`' + '1' * 64 + '`')
+    #  ★ PF2 D (10-22 · PRE2-design-02 · 08) — S0 단계 1 보고 (가짜 · census · registry 일곱 파일 지문 = 이 트리 · dirty False) ·
+    #    사슬의 git 신원 = 진짜 HEAD · **dirty False** (시험을 고쳐진 작업 트리에서 돌려도 단계가 dirty 로 멈추지 않게 — dirty 판정 자체는 D06 이
+    #    임시 git 저장소로 · 단계별 대조는 D01–D05 가 신원을 바꿔 본다) · 파일 지문 = 실제 파일 (사슬 함수 그대로)
+    FX['s1'] = s0_report(1, 's1_main')
+    FX['git_identity_real'] = RR.git_identity
+    RR.git_identity = lambda path, _g=FX['git_identity_real']: dict(_g(path), dirty=False)
 
 
 def plan_set(name, reg_name=None, **over):
@@ -614,11 +620,17 @@ def s0_stage2_for(plan_path):
     return FX[key]
 
 
-def s0_args(plan_path=None, s2=None):
-    """사다리 인자에 S0 단계 2 보고 (사슬이 그 인자를 알 때만)."""
-    if not chain_has(S0_STAGE2_OPT):
-        return []
-    return [S0_STAGE2_OPT, s2 or s0_stage2_for(plan_path or FX['plan'])]
+S0_STAGE1_OPT = '--s0-stage1-report'          # ★ PF2 D (10-22 · PRE2-design-08) — census · registry 지문 대조 (등록 R §2-1b)
+
+
+def s0_args(plan_path=None, s2=None, s1=None):
+    """사다리 인자에 S0 단계 2 · 1 보고 (사슬이 그 인자를 알 때만)."""
+    out = []
+    if chain_has(S0_STAGE2_OPT):
+        out += [S0_STAGE2_OPT, s2 or s0_stage2_for(plan_path or FX['plan'])]
+    if chain_has(S0_STAGE1_OPT):
+        out += [S0_STAGE1_OPT, s1 or FX['s1']]
+    return out
 
 
 @contextlib.contextmanager
@@ -665,14 +677,14 @@ def pass_contract():
 
 
 def ladder(tag, wpath, law='P0', variant=None, extra=(), reg=None, max_hours='2', env=None, prefill=False, contract=None,
-           plan=None, s0=None, after=None, s2=None):
+           plan=None, s0=None, after=None, s2=None, s1=None):
     out = Path(TD) / 'runs' / tag
     if prefill:
         out.mkdir(parents=True)
         (out / 'old.txt').write_text('x')
     argv = ['--stage', 'ladder', '--law', law, '--target', '1.63', '--runner', FX['runner'], '--root', FX['root'],
             '--plan', plan or FX['plan'], '--s0-plan', s0 or FX['s0'], '--registration', reg or FX['reg_ok'], '--max-hours', max_hours,
-            '--out', out] + s0_args(plan or FX['plan'], s2)
+            '--out', out] + s0_args(plan or FX['plan'], s2, s1)
     if variant:
         argv += ['--variant', variant]
         argv += ['--after-main', after if after is not None else s_main_predict()['out']]   # ★ Q-F — 감도 = 주 판정 단계 뒤
@@ -3067,6 +3079,285 @@ def t_B08():
 def t_B09():
     import ca_s0_census as S0m
     return getattr(RR, 'S0_REPORT_SCHEMA', None) == S0m.SCHEMA, (getattr(RR, 'S0_REPORT_SCHEMA', None), S0m.SCHEMA)
+
+
+# ── ★ PF2 D (10-22 · 사전 리뷰 2 회차 PRE2-design-02 · 08 · 탐침 C · 결정 없음 · 등록 문장 그대로) 같은 판 대조 ──
+#    단계 요약 = 코드 파일 지문 (sha256 · 사슬 폴더 · 러너 폴더) + 추적 파일 수정 여부 (git dirty) → 다음 단계 · 판정 계산기가 지금과 대조 ·
+#    R 런 ↔ S0 단계 1 · 2 보고의 census · registry 일곱 파일 지문 (등록 R §2-1b).  옛 사슬 = HEAD 만 보고 dirty · 파일을 안 본다.
+@contextlib.contextmanager
+def d_identity(dirty=True, head=None):
+    """사슬 git 신원 바꿔 끼우기 (진짜 HEAD · dirty 만 바꿈 · head 를 주면 그것도) — 끝나면 고정물 신원 (dirty False) 으로."""
+    orig = RR.git_identity
+
+    def g(path, _g=FX['git_identity_real']):
+        r = dict(_g(path), dirty=dirty)
+        if head is not None:
+            r['head'] = head
+        return r
+    RR.git_identity = g
+    try:
+        yield
+    finally:
+        RR.git_identity = orig
+
+
+@contextlib.contextmanager
+def d_files(name='rint_r_chain.py', digest='0' * 64):
+    """지금 코드 파일 지문 하나 바꿔 끼우기 (같은 HEAD · dirty False 인데 파일 내용이 다른 꼴) — 사슬에 지문 함수가 없으면 아무것도 안 한다
+    (옛 사슬 = 지문을 안 봐 그대로 통과 → 시험 실패가 옳은 이유)."""
+    orig = getattr(RR, 'code_files', None)
+    if orig is not None:
+        RR.code_files = lambda base, _f=orig: [dict(x, sha256=digest) if x.get('file') == name else x for x in _f(base)]
+    try:
+        yield
+    finally:
+        if orig is not None:
+            RR.code_files = orig
+
+
+def _d_set_files(s, name='rint_r_chain.py', v='0' * 64):
+    """요약의 코드 파일 지문 하나 손댐 (옛 사슬 요약 = 칸이 없으면 칸을 만들어 넣는다 · 옛 사슬은 그 칸을 안 본다)."""
+    files = (s.get('code') or {}).get('files')
+    if not isinstance(files, list) or not files:
+        s.setdefault('code', {})['files'] = [{'file': name, 'sha256': v}]
+        return
+    for x in files:
+        if x.get('file') == name:
+            x['sha256'] = v
+
+
+def _d_set_digest(name, v='0' * 64):
+    def fn(r):
+        for x in r['code']['file_digests']:
+            if x['file'] == name:
+                x['sha256'] = v
+    return fn
+
+
+@check('D01', '탐침 C 꼴 — 깨끗한 트리로 사다리 둘 + 예측 → 같은 HEAD · dirty (추적 파일 고침) + 판정 문턱 한 줄 (G0/2 → 0.05) 로 판정 → '
+              'CODE_PIN_MISMATCH · NOT_COMPUTED · rc 3 (옛 사슬 = rc 0 · CONSISTENT_WEAK · 멈춤 없음) · 같은 단계 · 깨끗한 판정 = PASS_INFORMATIVE')
+def t_D01():
+    def go():
+        dirs = main_dirs()
+        old = RR.GRADE_INFORMATIVE_MAX
+        RR.GRADE_INFORMATIVE_MAX = 0.05
+        try:
+            with d_identity(dirty=True):
+                return verdict('D01', dirs)
+        finally:
+            RR.GRADE_INFORMATIVE_MAX = old
+    r = scen('D01', go)
+    v0 = s_verdict_main()
+    return (r['rc'] == 3 and stop_code(r) == 'CODE_PIN_MISMATCH' and (r['v'] or {}).get('verdict') == 'NOT_COMPUTED'
+            and v0['rc'] == 0 and (v0['v'] or {}).get('verdict') == 'PASS_INFORMATIVE',
+            (r['rc'], stop_code(r), (r['v'] or {}).get('verdict'), v0['rc'], (v0['v'] or {}).get('verdict')))
+
+
+@check('D02', '같은 HEAD · dirty False 인데 사슬 파일 지문이 다르다 + 판정 문턱 한 줄 → 판정 CODE_PIN_MISMATCH · NOT_COMPUTED · rc 3 '
+              '(dirty 만 보면 놓치는 꼴 · 파일 지문 대조)')
+def t_D02():
+    def go():
+        dirs = main_dirs()
+        old = RR.GRADE_INFORMATIVE_MAX
+        RR.GRADE_INFORMATIVE_MAX = 0.05
+        try:
+            with d_files('rint_r_chain.py'):
+                return verdict('D02', dirs)
+        finally:
+            RR.GRADE_INFORMATIVE_MAX = old
+    r = scen('D02', go)
+    return (r['rc'] == 3 and stop_code(r) == 'CODE_PIN_MISMATCH' and (r['v'] or {}).get('verdict') == 'NOT_COMPUTED',
+            (r['rc'], stop_code(r), (r['v'] or {}).get('verdict')))
+
+
+@check('D03', '사다리 — 추적 파일이 고쳐진 트리 (dirty) → CODE_PIN_MISMATCH · rc 3 · 러너 0 회 · 요약에 dirty True 기록')
+def t_D03():
+    def go():
+        with d_identity(dirty=True):
+            return ladder('D03', world('D03'))
+    r = scen('D03', go)
+    c = ((r['sum'] or {}).get('code') or {}).get('chain') or {}
+    return (r['rc'] == 3 and stop_code(r) == 'CODE_PIN_MISMATCH' and n_calls(r['world']) == 0 and c.get('dirty') is True,
+            (r['rc'], stop_code(r), n_calls(r['world']), c))
+
+
+@check('D04', '예측 — 지금 트리 dirty (사다리 둘 = 깨끗) → CODE_PIN_MISMATCH · rc 3 · 러너 0 회')
+def t_D04():
+    def go():
+        lads = [s_main('P0')['out'], s_main('P1')['out']]
+        with d_identity(dirty=True):
+            return predict('D04', world('D04'), lads)
+    r = scen('D04', go)
+    return (r['rc'] == 3 and stop_code(r) == 'CODE_PIN_MISMATCH' and n_calls(r['world']) == 0, (r['rc'], stop_code(r), n_calls(r['world'])))
+
+
+@check('D05', '예측 — 지금 코드 파일 지문 ≠ 사다리 기록 (step3_sigma.py · 같은 HEAD) · 사다리 요약 둘의 지문 손댐 · 한 사다리만 손댐 (둘이 다름) '
+              '→ 셋 다 CODE_PIN_MISMATCH · rc 3 · 러너 0 회')
+def t_D05():
+    def go():
+        lads = [s_main('P0')['out'], s_main('P1')['out']]
+        with d_files('step3_sigma.py'):
+            a = predict('D05a', world('D05a'), lads)
+        t = [b_tamper_copy(s_main(law)['out'], f'D05_{law}', 'ladder_summary.json', lambda s: _d_set_files(s, 'carbon_junction.py'))
+             for law in ('P0', 'P1')]
+        b = predict('D05b', world('D05b'), t)
+        c = predict('D05c', world('D05c'), [s_main('P0')['out'], t[1]])
+        return a, b, c
+    rs = scen('D05', go)
+    return (all(r['rc'] == 3 and stop_code(r) == 'CODE_PIN_MISMATCH' and n_calls(r['world']) == 0 for r in rs),
+            [(r['rc'], stop_code(r), n_calls(r['world'])) for r in rs])
+
+
+@check('D06', '판정 — 예측 요약의 코드 파일 지문 손댐 · 사다리 요약의 dirty = True 손댐 → 둘 다 판정 CODE_PIN_MISMATCH · NOT_COMPUTED · rc 3')
+def t_D06():
+    def go():
+        d = b_tamper_copy(s_main_predict()['out'], 'D06_pred', 'predict_summary.json', lambda s: _d_set_files(s, 'step3_conv_cert.py'))
+        a = verdict('D06a', [s_main('P0')['out'], s_main('P1')['out'], d])
+        e = b_tamper_copy(s_main('P1')['out'], 'D06_P1', 'ladder_summary.json',
+                          lambda s: s.setdefault('code', {}).setdefault('chain', {}).update(dirty=True))
+        b = verdict('D06b', [s_main('P0')['out'], e, s_main_predict()['out']])
+        return a, b
+    rs = scen('D06', go)
+    return (all(r['rc'] == 3 and stop_code(r) == 'CODE_PIN_MISMATCH' and (r['v'] or {}).get('verdict') == 'NOT_COMPUTED' for r in rs),
+            [(r['rc'], stop_code(r), (r['v'] or {}).get('verdict')) for r in rs])
+
+
+@check('D07', 'S0 단계 1 보고의 census · registry 지문 ≠ 지금 (carbon_junction.py) · 옛 다섯 파일 보고 (carbon_junction · ptfe_face_alpha 없음) → '
+              'CODE_PIN_MISMATCH · rc 3 · 러너 0 회 · 멈춤 사유에 s_min 다시 고르기 금지 문장 (등록 R §2-1b)')
+def t_D07():
+    has = chain_has(S0_STAGE1_OPT)
+
+    def old5(r):
+        r['code']['file_digests'] = [x for x in r['code']['file_digests'] if x['file'] not in ('carbon_junction.py', 'ptfe_face_alpha.py')]
+    a = c_case('D07a', 'CODE_PIN_MISMATCH', s1=(s0_report(1, 'D07a', mutate=_d_set_digest('carbon_junction.py')) if has else None))
+    b = c_case('D07b', 'CODE_PIN_MISMATCH', s1=(s0_report(1, 'D07b', mutate=old5) if has else None))
+    why = str(((scen('D07a', lambda: None)['sum'] or {}).get('stop') or {}).get('cause'))
+    return has and a[0] and b[0] and 's_min' in why, (a[1], b[1], why[-240:])
+
+
+@check('D08', 'S0 단계 1 보고 꼴 — 파일 없음 · JSON 아님 · 단계 2 보고 · 다른 schema · 다른 킷 (DBE) · source 가 stage1_computed 아님 · '
+              '보고가 만든 S0 계획 ≠ 지금 S0 계획 · 단계 bool → S0_REPORT_MISMATCH · rc 3 · 러너 0 회')
+def t_D08():
+    has = chain_has(S0_STAGE1_OPT)
+    cases = (
+        ('없음', lambda: Path(TD) / 'no_such_s1.json'),
+        ('JSON 아님', lambda: s0_report(1, 'D08b', raw=b'{not json')),
+        ('단계 2', lambda: s0_report(2, 'D08c', kit=SBE_KIT)),
+        ('schema', lambda: s0_report(1, 'D08d', mutate=lambda r: r.update(schema='ca-s0-census-v1'))),
+        ('킷', lambda: s0_report(1, 'D08e', kit=DBE_KIT)),
+        ('source', lambda: s0_report(1, 'D08f', mutate=lambda r: r['plan'].update(source='commit:' + 'a' * 40))),
+        ('S0 계획', lambda: s0_report(1, 'D08g', s0_sha='1' * 64)),
+        ('단계 bool', lambda: s0_report(1, 'D08h', mutate=lambda r: r.update(stage=True))),
+    )
+    rs = [(nm, c_case(f'D08_{i}', 'S0_REPORT_MISMATCH', s1=(fn() if has else None))) for i, (nm, fn) in enumerate(cases)]
+    return has and all(x[1][0] for x in rs), [(nm, x[1]) for nm, x in rs if not x[0]]
+
+
+@check('D09', 'S0 단계 2 보고의 census · registry 지문 ≠ 지금 (step3_sigma.py) → CODE_PIN_MISMATCH · rc 3 · 러너 0 회')
+def t_D09():
+    return c_case('D09', 'CODE_PIN_MISMATCH', s2=s0_report(2, 'D09', mutate=_d_set_digest('step3_sigma.py')))
+
+
+@check('D10', '정상 기록 — 사다리 · 예측 요약 code = git 신원 (dirty False) + 코드 파일 지문 12 (사슬 폴더 = 실제 파일 sha256 · 러너 폴더 · '
+              '러너 sha256) · S0 단계 1 기록 (보고 sha256 · 지문 일곱 · S0 계획 sha256) · 기계 이름표 null · 세 단계 지문 같음')
+def t_D10():
+    s, s1, p = s_main('P0')['sum'] or {}, s_main('P1')['sum'] or {}, s_main_predict()['sum'] or {}
+    c = s.get('code') or {}
+    files = c.get('files') or []
+    want = [{'file': nm, 'sha256': (hashlib.sha256((SCRIPTS / nm).read_bytes()).hexdigest() if (SCRIPTS / nm).is_file() else None)}
+            for nm in getattr(RR, 'CODE_FILES', ())]
+    rec1 = (s.get('s0_reports') or {}).get('stage1') or {}
+    names1 = {x.get('file') for x in rec1.get('file_digests') or []}
+    ok = (len(files) == 12 and files == want and all(x['sha256'] for x in files)
+          and c.get('runner_sha256') == hashlib.sha256(Path(FX['runner']).read_bytes()).hexdigest()
+          and isinstance(c.get('runner_files'), list) and (c.get('chain') or {}).get('dirty') is False
+          and rec1.get('sha256') == hashlib.sha256(Path(FX['s1']).read_bytes()).hexdigest() and rec1.get('plan_sha256') == FX['s0_sha']
+          and set(S0_SAME7) <= names1 and 'machine' in s and s.get('machine') is None
+          and (p.get('code') or {}).get('files') == files and (s1.get('code') or {}).get('files') == files
+          and (p.get('s0_reports') or {}).get('stage1') == rec1)
+    return ok, (len(files), c.get('runner_sha256'), rec1.get('plan_sha256'), s.get('machine', 'absent'))
+
+
+@check('D11', '기계 이름표 — 사다리 P0 m1 · P1 m2 · 예측 m3 → 요약 machine 칸 · 판정 = 주 판정과 같은 이름 (이름표는 판정에 안 쓴다 · 코드 지문만) · '
+              '틀린 이름표 (IP · 경로 · 점 · 빈칸 · 띄어쓰기) · 판정 단계의 --machine → 인자 오류 rc 2 · 러너 0 회')
+def t_D11():
+    def go():
+        a = ladder('D11_P0', world('D11_P0'), law='P0', extra=['--machine', 'm1'])
+        b = ladder('D11_P1', world('D11_P1'), law='P1', extra=['--machine', 'm2'])
+        p = predict('D11_pred', world('D11_pred'), [a['out'], b['out']], extra=['--machine', 'm3'])
+        v = verdict('D11', [a['out'], b['out'], p['out']])
+        bad = []
+        for i, lab in enumerate(('10.0.0.1', 'a/b', 'kgy.lab', '', 'kgy one')):
+            w = world(f'D11_bad{i}')
+            rr = ladder(f'D11_bad{i}', w, extra=['--machine', lab])
+            bad.append((lab, rr['rc'], n_calls(w)))
+        rv = verdict('D11v', [a['out'], b['out'], p['out']], extra=['--machine', 'm1'])
+        return a, b, p, v, bad, rv
+    a, b, p, v, bad, rv = scen('D11', go)
+    v0 = s_verdict_main()
+    return ([(a['sum'] or {}).get('machine'), (b['sum'] or {}).get('machine'), (p['sum'] or {}).get('machine')] == ['m1', 'm2', 'm3']
+            and v['rc'] == 0 and (v['v'] or {}).get('verdict') == (v0['v'] or {}).get('verdict') == 'PASS_INFORMATIVE'
+            and all(rc == 2 and n == 0 for _l, rc, n in bad) and rv['rc'] == 2,
+            ([(x['sum'] or {}).get('machine') for x in (a, b, p)], v['rc'], (v['v'] or {}).get('verdict'), bad, rv['rc']))
+
+
+@check('D12', '추적 파일 수정 여부 = 실제 git (임시 저장소 · 고정물 신원 아님): 깨끗 → dirty False · 추적 안 된 파일만 → False · 추적 파일 고침 '
+              '→ True · code_files = CODE_FILES 이름마다 sha256 (없는 파일 = null)')
+def t_D12():
+    import subprocess
+    g = FX['git_identity_real']
+    d = Path(TD) / 'D12_repo'
+    d.mkdir()
+
+    def run(*a):
+        return subprocess.run(['git', '-C', str(d), *a], capture_output=True, text=True)
+    run('init', '-q')
+    (d / 'rint_r_chain.py').write_text('x = 1\n', encoding='utf-8')
+    run('add', 'rint_r_chain.py')
+    run('-c', 'user.email=t@t', '-c', 'user.name=t', '-c', 'commit.gpgsign=false', 'commit', '-q', '-m', 'c')
+    clean = g(d / 'rint_r_chain.py')
+    (d / 'untracked.txt').write_text('u', encoding='utf-8')
+    untracked = g(d / 'rint_r_chain.py')
+    (d / 'rint_r_chain.py').write_text('x = 2\n', encoding='utf-8')
+    dirty = g(d / 'rint_r_chain.py')
+    cf = RR.code_files(d) if hasattr(RR, 'code_files') else None
+    want = {'rint_r_chain.py': hashlib.sha256(b'x = 2\n').hexdigest()}
+    ok_cf = (isinstance(cf, list) and [x.get('file') for x in cf] == list(getattr(RR, 'CODE_FILES', ()))
+             and all(x.get('sha256') == want.get(x.get('file')) for x in cf))
+    return (clean.get('dirty') is False and untracked.get('dirty') is False and dirty.get('dirty') is True
+            and isinstance(clean.get('head'), str) and len(clean['head']) == 40 and ok_cf,
+            (clean, untracked, dirty, 'ok' if ok_cf else cf))
+
+
+@check('D13', '감도 단계 — --after-main 의 주 예측 요약 코드 파일 지문 ≠ 지금 (손댐) → MAIN_NOT_DONE · rc 3 · 러너 0 회')
+def t_D13():
+    def go():
+        d = b_tamper_copy(s_main_predict()['out'], 'D13_main', 'predict_summary.json', lambda s: _d_set_files(s, 'run_contract.py'))
+        return ladder('D13', world('D13'), law='P0', variant='FIBRE', after=d)
+    r = scen('D13', go)
+    return (r['rc'] == 3 and stop_code(r) == 'MAIN_NOT_DONE' and n_calls(r['world']) == 0, (r['rc'], stop_code(r), n_calls(r['world'])))
+
+
+@check('D14', '같은 판 파일 목록 — 사슬 S0_SAME_FILES = 등록 R §2-1b 일곱 · CODE_FILES (12) ⊇ 일곱 + 사슬 · 러너 · 증서 · 계약 · SV 증거 · '
+              'S0 보고 code.file_digests 가 일곱을 다 싣는다 (ca_s0_census._code_info · 옛 = 다섯)')
+def t_D14():
+    import ca_s0_census as S0m
+    same = tuple(getattr(RR, 'S0_SAME_FILES', ()))
+    code = tuple(getattr(RR, 'CODE_FILES', ()))
+    names = {x['file'] for x in S0m._code_info()['file_digests']}
+    need = set(S0_SAME7) | {'rint_r_chain.py', 'sdcp_gain_vox015_8arm.sh', 'step3_conv_cert.py', 'run_contract.py', 'ca_ext_svcf.py'}
+    return (len(same) == 7 and set(same) == set(S0_SAME7) and need <= set(code) and len(set(code)) == len(code) == 12
+            and set(S0_SAME7) <= names, (same, code, sorted(names)))
+
+
+@check('D15', '사다리 — --s0-stage1-report 없음 → 인자 오류 (rc 2) · 러너 0 회 · 출력 폴더 없음 (단계 1 지문 대조 없이 σ 런 없음)')
+def t_D15():
+    w = world('D15')
+    out = Path(TD) / 'runs' / 'D15'
+    rc, _so = call(['--stage', 'ladder', '--law', 'P0', '--target', '1.63', '--runner', FX['runner'], '--root', FX['root'],
+                    '--plan', FX['plan'], '--s0-plan', FX['s0'], '--registration', FX['reg_ok'], '--max-hours', '1', '--out', out,
+                    S0_STAGE2_OPT, s0_stage2_for(FX['plan'])], w)
+    return rc == 2 and n_calls(w) == 0 and not out.exists() and chain_has(S0_STAGE1_OPT), (rc, n_calls(w), chain_has(S0_STAGE1_OPT))
 
 
 @check('L21', 'Q-E 배선 (가짜 러너) — SBE origin 팔 1 · 2 가 arm 0 과 조금 다르면 (×1.0004 · ×0.9997) 끝 후보에서 띠 안 → 끝을 바깥 실측 이웃으로 · '
