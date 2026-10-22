@@ -18,7 +18,9 @@
    러너의 SCF 판정은 OSZICAR·OUTCAR 기록만 본다 (전자밀도 · 해의 유일성은 모른다) · WAVECAR 읽기 확인 문구는 파일럿 원문으로 확정한다
    (그 전에는 ISTART·ICHARG 되울림 + 'WAVECAR not read' 부재 + ⓑ 원본·복사본·끝 sha = 그 ⓐ 의 기록 WAVECAR sha 로만 본다 ·
    문구 regex 는 파일럿에서 읽은 ⓑ 전부에 맞고 새로 시작한 시도에 안 맞고 grep -E 와 python 이 시도마다 같은 답일 때만 봉인한다 —
-   파일럿에 없던 출력 꼴 (다른 노드 · 다른 실패 경로 · 로캘) 에서도 두 엔진이 같은 답이라는 보증은 없다) · optB88 설정 되울림 줄 형식도 파일럿으로 확정한다.
+   파일럿에 없던 출력 꼴 (다른 노드 · 다른 실패 경로 · 로캘) 에서도 두 엔진이 같은 답이라는 보증은 없다) · optB88 설정 되울림 줄 형식도 파일럿으로 확정한다 ·
+   vdW 커널 읽기 문구 (kernel_read_regex) 를 봉인하기 전에는 optB88 수렴 시도도 KERNEL_UNVERIFIED 다 · 커널 부재·재생성 표지는 넓은 낱말 목록이라
+   5.4.4 실물 긍정 문구에 걸리면 거짓 경보다 (파일럿 원문으로 다시 정한다).
 """
 import argparse
 import hashlib
@@ -493,7 +495,7 @@ fi
 
 # ── 단계 · 해제 파일 ──
 STAGES=${STAGES:-P}
-REL_STAGES=" "; REL_TOTAL=""; REL_VER=""; REL_KERNEL=""; RESTART_RE=""
+REL_STAGES=" "; REL_TOTAL=""; REL_VER=""; REL_KERNEL=""; RESTART_RE=""; KERNEL_RE=""
 declare -A REL_SP
 for s in $STAGES; do [ -n "${CAP_H[$s]:-}" ] || { echo "⛔ 모르는 단계 $s"; exit 2; }; done
 need_rel=0; for s in $STAGES; do [ "$s" = P ] || need_rel=1; done
@@ -509,6 +511,7 @@ if [ "$need_rel" = 1 ]; then
       species_sha256) REL_SP[$a]=$b;;
       kernel_sha256) REL_KERNEL=$a;;
       restart_read_regex) RESTART_RE=$a;;
+      kernel_read_regex) KERNEL_RE=$a;;           # 기록만 (커널 읽기 판정은 검사기)
     esac
   done < "$RELEASE_FILE"
   for s in $STAGES; do [ "$s" = P ] && continue; case "$REL_STAGES" in *" $s "*) ;; *) echo "⛔ 해제 파일이 단계 $s 를 풀지 않았다"; exit 2;; esac; done
@@ -549,7 +552,8 @@ fi
 { echo "date_utc $(utc)"; echo "host $(hostname 2>/dev/null)"; echo "VASP_CMD $VASP_CMD"; echo "POTCAR_DIR $POTCAR_DIR"; echo "STAGES $STAGES"
   echo "PERF_TAGS $(printf '%s' "$PERF_LINES" | tr '\n' ';')"; echo "MANIFEST_sha256 $(h MANIFEST.sha256)"
   [ "$need_k" = 1 ] && echo "VDW_KERNEL $VDW_KERNEL sha256 $KSHA size $KSIZE"
-  [ "$need_rel" = 1 ] && echo "RELEASE $RELEASE_FILE sha256 $RELEASE_SHA256"; } >> run/env.txt
+  [ "$need_rel" = 1 ] && echo "RELEASE $RELEASE_FILE sha256 $RELEASE_SHA256"
+  [ -n "$KERNEL_RE" ] && echo "KERNEL_READ_RE $KERNEL_RE"; } >> run/env.txt
 [ -f run/status.tsv ] || printf "job\trung\tstage\trc\tstatus\tn_elec\tdE\tdeps\twhy\twall_s\n" > run/status.tsv
 
 # ── 누적 벽시계 (attempt.json t_start→t_end · 0 스텝 중단 포함) ──
@@ -852,7 +856,11 @@ def far_diag(out_text, area):
 
 OPTB88_ECHO = {"PARAM1": (r"PARAM1\s*=\s*(\S+)", 0.1833333333, 1e-3), "PARAM2": (r"PARAM2\s*=\s*(\S+)", 0.22, 1e-3),
                "ZAB_VDW": (r"(?i)Zab_vdW\s*=\s*(\S+)", -0.8491, 1e-3), "AGGAC": (r"AGGAC\s*=\s*(\S+)", 0.0, 1e-4)}
-KERNEL_READ_RE = r"vdW kernel|vdw_kernel\.bindat"             # ⚠ 문구 형식은 파일럿 원문으로 확정 (그 전에는 후보) — 없으면 OK 아님 (KERNEL_UNVERIFIED)
+# vdW 커널 상태 (CZ Q-CZ-5) — 준비 (복사본 sha · 등록부 대조) · 읽기 (등록부 kernel_read_regex) · 부재 · 재생성을 가른다
+KERNEL_LINE_RE = re.compile(r"(?i)vdw.*kernel|kernel.*vdw")          # vdW 커널을 말하는 줄 — ⚠ 카드 §2.4 의 (?i)kernel|vdw_kernel 에서 좁혔다:
+#                                                                     MPI·OS 경고 ('kernel module … not loaded') 가 커널 부재로 잡혀 전체 정지가 되는 오탐
+KERNEL_REGEN_RE = re.compile(r"(?i)\b(recalc\w*|regenerat\w*|generat\w*|comput\w*|writ\w*)\b")   # 재생성 표지
+KERNEL_BAD_RE = re.compile(r"(?i)\b(not|no|error|cannot|unable|fail\w*|missing|differ\w*)\b")      # 부정 표지
 
 
 # ───────────────────────── 반송 검사 (시도 하나) ─────────────────────────
@@ -883,6 +891,23 @@ def restart_evidence(attdir, out_text=None):
     body = V._strip_incar_echo(out_text)[0] if out_text else ""
     return {"istart": V._last(r"^\s*ISTART\s*=\s*(\d+)\s+job", body), "icharg": V._last(r"^\s*ICHARG\s*=\s*(\d+)\s+charge", body),
             "not_read_phrase": "WAVECAR not read" in ro or "WAVECAR not read" in rs, "text": rs + "\n" + ro}
+
+
+def _raw_text(attdir):
+    """stdout.log + OUTCAR 원문 (줄바꿈 그대로) — 등록부 문구 regex 를 찾는 곳."""
+    return (_read_raw(os.path.join(attdir, "stdout.log")) or "") + "\n" + (_read_raw(os.path.join(attdir, "OUTCAR")) or "")
+
+
+def kernel_state(text):
+    """원문 → (상태, 줄): vdW 커널을 말하는 줄에 재생성 표지가 있으면 "regenerated" · 부정 표지면 "not_read" · 그런 줄이 없으면 (None, None).
+    ⚠ 표지는 넓다 — 업체 5.4.4 의 실제 긍정 문구에 'calculating' 같은 말이 있으면 거짓 경보다. 파일럿 원문을 보고 다시 정한다 (검사기만 바뀌고 묶음은 안 바뀐다)."""
+    for ln in text.splitlines():
+        if KERNEL_LINE_RE.search(ln):
+            if KERNEL_REGEN_RE.search(ln):
+                return "regenerated", ln.strip()
+            if KERNEL_BAD_RE.search(ln):
+                return "not_read", ln.strip()
+    return None, None
 
 
 def restart_regex_problems(rx):
@@ -941,6 +966,11 @@ def audit_r2(o, job, rung):
                 bad.append(f"{k} {v} ≠ {e}")
         if not re.search(r"(?i)LUSE_VDW\s*=\s*(T|\.TRUE\.)", text):
             missing.append("LUSE_VDW")
+    gga, eg = V._last(r"^\s*GGA\s*=\s*(\S+)\s+GGA type", text), ("BO" if job["method"] == "optb88" else "PE")   # 실제 교환함수 (5.4.4 꼴 '   GGA     =    PE    GGA type')
+    if gga is None:
+        missing.append("GGA")
+    elif gga.upper() != eg:
+        bad.append(f"GGA {gga} ≠ {eg} (실제 교환함수)")
     nelm = V._tok_float(V._last(r"^\s*NELM\s*=\s*(\d+)", text))
     if nelm is None:
         missing.append("NELM")
@@ -1043,6 +1073,13 @@ def check_attempt(job, pkgdir, attdir, rung, registry=None, a_ref=None):
             conflicts.append(("VERSION_MISMATCH", f"VASP {o['version']!r} ≠ 등록부"))
         if job["method"] == "optb88" and r["kernel_sha256"] != registry.get("kernel_sha256"):
             conflicts.append(("KERNEL_MISMATCH", f"vdW 커널 sha {r['kernel_sha256']} ≠ 등록부"))
+    if job["method"] == "optb88":
+        ktext = _raw_text(attdir)
+        kst, kln = kernel_state(ktext)
+        krx = (registry or {}).get("kernel_read_regex") or ""
+        r["kernel_state"] = kst or ("read" if krx and not restart_regex_problems(krx) and re.search(krx, ktext, re.M) else "unconfirmed")
+        if kst:
+            conflicts.append(("KERNEL_NOT_READ", f"vdW 커널 {kst} — {kln[:120]!r} (커널 줄에 부재·재생성 표지)"))
     missing, bad, src = audit_r2(o, job, rung) if o else ([], [], {})
     if bad:
         conflicts.append(("SETTINGS_MISMATCH", "; ".join(bad)))
@@ -1091,8 +1128,10 @@ def check_attempt(job, pkgdir, attdir, rung, registry=None, a_ref=None):
         return done(st, f"판정 계약 {why} (행 {n} · dE {de} · d eps {dp})")
     # ── ③ 완결성 (OK 만) ──
     r["settings_sources"] = src
-    if job["method"] == "optb88" and not re.search(KERNEL_READ_RE, out_text + (_read(os.path.join(attdir, "stdout.log")) or "")):
-        return done("KERNEL_UNVERIFIED", "vdW 커널을 읽었다는 문구가 없다 (형식은 파일럿 원문으로 확정)")
+    if job["method"] == "optb88" and r.get("kernel_state") != "read":
+        krx = (registry or {}).get("kernel_read_regex") or ""
+        return done("KERNEL_UNVERIFIED", f"등록부 커널 읽기 문구 /{krx}/ 가 OUTCAR·stdout 원문에 없다" if krx else
+                    "vdW 커널 읽기 확인 미완 — 파일럿 원문으로 확정한 문구 (등록부 kernel_read_regex) 가 아직 없다 (CZ: 확정 전에는 읽었다고 하지 않는다)")
     if not o or not o["outcar_titel"] or len(o["outcar_titel"]) < len(titel):
         return done("POTCAR_UNVERIFIED", "성공한 실행인데 OUTCAR TITEL 이 없거나 앞부분만 있다")
     if any(k in missing for k in ("NIONS", "NELECT")):
@@ -1106,12 +1145,13 @@ def check_attempt(job, pkgdir, attdir, rung, registry=None, a_ref=None):
     return done("OK")
 
 
-ENV_CLASS = ("VERSION_MISMATCH", "POTCAR_MISMATCH", "KERNEL_MISMATCH")                    # 환경 등급 — 어느 시도에서 나오든 전체 정지 (CZ Q-CZ-3)
+ENV_CLASS = ("VERSION_MISMATCH", "POTCAR_MISMATCH", "KERNEL_MISMATCH", "KERNEL_NOT_READ")   # 환경 등급 — 어느 시도에서 나오든 전체 정지 (CZ Q-CZ-3 · Q-CZ-5)
 ENV_SPLIT = ("VERSION_INCONSISTENT", "POTCAR_INCONSISTENT", "KERNEL_INCONSISTENT")     # 시도 사이 갈림 — 어느 쪽이 맞는지 모르므로 전부 막는다
 COMMON_ENV = ENV_CLASS + ENV_SPLIT
 INTEGRITY = ("ATTEMPT_MISMATCH", "INPUT_MODIFIED", "POTCAR_UNVERIFIED", "INCOMPLETE_ATTEMPT", "MISSING")   # 무결성 실패 (파일럿 결박 대조보다 먼저 이름 붙는다)
 A_TOLERATED = ("SETTINGS_UNVERIFIED", "ENERGY_UNPARSEABLE", "D3_UNVERIFIED", "KERNEL_UNVERIFIED")   # ⓐ (WAVECAR 만 만드는 단) 에서는 자격을 막지 않는 결측
-SEAL_PASS = ("OK", "SCF_NOT_CONVERGED", "RUN_FAILED", "SCF_UNVERIFIED", "RESTART_NOT_HONOURED")    # 봉인을 막지 않는 시도 상태 (정상 · 물리 실패)
+SEAL_PASS = ("OK", "SCF_NOT_CONVERGED", "RUN_FAILED", "SCF_UNVERIFIED", "RESTART_NOT_HONOURED",   # 봉인을 막지 않는 시도 상태 (정상 · 물리 실패 ·
+             "KERNEL_UNVERIFIED")                                                                  #  등록부가 커널 문구를 정하기 전의 optB88 수렴 시도)
 LADDER_RUNGS = {"carbon": ("0", "r1A", "r1B", "r2B"), "a4": ("a4A", "a4B")}
 RA_OF = {"r1B": "r1A", "r2B": "r1A", "a4B": "a4A"}       # ⓑ 단 → 그 ⓑ 가 읽은 ⓐ 단 (r2 는 r1 의 ⓐ WAVECAR 를 쓴다)
 AB_RE = re.compile(r"^(.+)_(0|r1A|r1B|r2B|a4A|a4B)_([0-9]+)$")   # run_aborted/<잡>_<단>_<k> (러너 --infra-abort)
@@ -1479,7 +1519,34 @@ def _restart_regex_check(rx, run, J):
     return {"regex": rx, "read": [t for t, _ in read], "not_read": [t for t, _ in not_read], "unknown": unknown}
 
 
-def seal_registry(out, ret, manifest_sha256, restart_read_regex="", v5_registry=None):
+def _kernel_regex_check(rx, run, J):
+    """봉인 전 커널 읽기 문구 확인 (카드 §2.4 · CZ Q-CZ-5) — 파일럿 optB88 시도 중 전자 스텝이 있는 것 (커널은 첫 전자 스텝 전에 읽는다) 의
+    원문에 전부 맞고, optB88 이 아닌 시도 (커널을 안 읽는다) 에는 하나도 안 맞아야 한다 · 글자 제한은 재시작 문구와 같다.
+    같은 원문의 부정·재생성 줄은 check_attempt 의 KERNEL_NOT_READ (환경 등급) 가 봉인을 막는다."""
+    bad = restart_regex_problems(rx)
+    if bad:
+        raise PkgError(f"커널 regex {rx!r} 형식 — {bad} · 봉인하지 않는다")
+    pos, neg = [], []
+    for n in PILOT_JOBS:
+        for rung in LADDER_RUNGS[J[n]["ladder"]]:
+            d = os.path.join(run, RUNG_DIR[rung].format(job=n))
+            if not os.path.isfile(os.path.join(d, "attempt.json")):
+                continue
+            hit = re.search(rx, _raw_text(d), re.M) is not None
+            if J[n]["method"] == "optb88":
+                if any(_ROW.match(l) for l in (_read(os.path.join(d, "OSZICAR")) or "").splitlines()):
+                    pos.append((f"{n}/{rung}", hit))
+            else:
+                neg.append((f"{n}/{rung}", hit))
+    miss, hits = [t for t, h in pos if not h], [t for t, h in neg if h]
+    why = ([] if pos else ["파일럿 optB88 시도 (전자 스텝 ≥ 1) 가 없다"]) + ([f"optB88 시도 중 안 맞음 {miss}"] if miss else []) \
+        + ([f"optB88 아닌 시도에 맞음 {hits}"] if hits else [])
+    if why:
+        raise PkgError(f"커널 regex {rx!r} 를 파일럿 원문으로 확인하지 못했다 — {' · '.join(why)} · 봉인하지 않는다 (regex 없이 봉인하면 optB88 은 KERNEL_UNVERIFIED 로 남는다)")
+    return {"regex": rx, "optb88": [t for t, _ in pos], "not_optb88": [t for t, _ in neg]}
+
+
+def seal_registry(out, ret, manifest_sha256, restart_read_regex="", v5_registry=None, kernel_read_regex=""):
     """파일럿 반송 → 탄소 등록부 (C 추가 · vdW 커널 신원 · VASP 빌드 · 파일럿 run_id). 은 a4 와 같은 빌드·같은 PP 여야 한다 (V5 등록부 대조).
     모든 시도를 본다 (CZ Q-CZ-3 — 채택 시도만 보면 a4A 만 다른 빌드여도 봉인됐다):
     ⛔ 무결성 실패 · 환경 등급 · 시도 사이 갈림 · 그 밖 모순·결측은 봉인하지 않는다 (자동 교체 없음 · 1저자) ·
@@ -1530,9 +1597,10 @@ def seal_registry(out, ret, manifest_sha256, restart_read_regex="", v5_registry=
         raise PkgError("VASP 빌드 또는 PP 가 V5 등록부와 다르다 — 은 a4 는 같은 빌드·같은 PP 여야 한다 (개정 4) · 봉인하지 않는다")
     kern = next(iter(ks))
     rx_check = _restart_regex_check(restart_read_regex, run, J) if restart_read_regex else None
+    kx_check = _kernel_regex_check(kernel_read_regex, run, J) if kernel_read_regex else None
     return {"schema": REG_SCHEMA, "pp_set": V.PP_SET, "titel": titel, "species_sha256": sps, "vasp_version": ver,
             "kernel_sha256": kern, "package_manifest_sha256": manifest_sha256, "from_pilot": fp, "from_pilot_sha256": fps,
-            "restart_read_regex": restart_read_regex, "restart_read_check": rx_check, "v5_registry_sha256": _sha(v5_registry or os.path.join(REPO, V5_REGISTRY)),
+            "restart_read_regex": restart_read_regex, "restart_read_check": rx_check, "kernel_read_regex": kernel_read_regex, "kernel_read_check": kx_check, "v5_registry_sha256": _sha(v5_registry or os.path.join(REPO, V5_REGISTRY)),
             "⛔": "이 등록부를 봉인 (커밋·해시) 한 뒤 해제 파일을 보낸다 — 이후 모든 잡이 같아야 한다 (공통 환경 고장 = 전체 정지)"}
 
 
@@ -1554,6 +1622,8 @@ def release_text(reg, stages, caps_h, total_cap_h, release_id):
     L += [f"species_sha256\t{k}\t{v}" for k, v in sorted(reg["species_sha256"].items())]
     if reg.get("restart_read_regex"):
         L.append(f"restart_read_regex\t{reg['restart_read_regex']}")
+    if reg.get("kernel_read_regex"):
+        L.append(f"kernel_read_regex\t{reg['kernel_read_regex']}")      # 러너는 기록만 (판정은 검사기)
     return "\n".join(L) + "\n"
 
 
@@ -1710,8 +1780,9 @@ out += [" Dimension of arrays:", f"   k-points           NKPTS =      4   k-poin
         f"   NELECT = {nel:12.4f}    total number of electrons", f"   ISMEAR =     {int(iv(inc, 'ISMEAR'))};   SIGMA  = {float(iv(inc, 'SIGMA')):7.2f}  broadening in eV -4-tet -1-fermi 0-gaus",
         f"     AMIX     = {float(iv(inc, 'AMIX') or 0.4):6.2f};   BMIX     = {float(iv(inc, 'BMIX') or 1.0):5.2f}", f"     AMIN     = {float(iv(inc, 'AMIN') or 0.1):6.2f}",
         f"   LDIPOL =      {'T' if ldip else 'F'}    correct potential (dipole corrections)", "   IDIPOL =      3    1-x, 2-y, 3-z, 4-all directions"]
+out.append(f"   GGA     =    {gga}    GGA type")             # 5.4.4 실물 꼴 (V5 반송 OUTCAR — PE)
 if gga == "BO":
-    out += ["   GGA     =    BO    GGA type", "   PARAM1  =  0.1833", "   PARAM2  =  0.2200", "   Zab_vdW = -0.8491", "   AGGAC   =  0.0000", "   LUSE_VDW =      T"]
+    out += ["   PARAM1  =  0.1833", "   PARAM2  =  0.2200", "   Zab_vdW = -0.8491", "   AGGAC   =  0.0000", "   LUSE_VDW =      T"]
     if os.path.isfile("vdw_kernel.bindat"):
         out.append(" vdW kernel read from vdw_kernel.bindat")
 dz = float(iv(inc, "DIPOL").split()[2])
@@ -1941,9 +2012,10 @@ def _selftest():
            and not any(re.search(r"(^|/)(WAVECAR|POTCAR|CHGCAR|CHG|vasprun\.xml|vdw_kernel\.bindat)$", m_) for m_ in mem)
            and "run/P2S_S_A_bound_r1/stageA/attempt.json" in mem and "run/P2S_S_A_bound_r1/stageA/WAVECAR.info" in mem, [m_ for m_ in mem if "WAVECAR" in m_][:6])
         res = {n: resolve_job(J[n], PKG, os.path.join(PKG, "run")) for n in PILOT_JOBS}
-        ck("검사기 = 러너 (파일럿): S_A bound OK@r1 · far OK@r2 · C–C optB88 bound OK · far SCF 미확인 · a4 재시작 미이행",
+        ck("검사기 = 러너 (파일럿): S_A bound OK@r1 · far OK@r2 · C–C optB88 bound 수렴이지만 등록부 전이라 KERNEL_UNVERIFIED (R4) · far SCF 미확인 · a4 재시작 미이행",
            res["P2S_S_A_bound"]["status"] == "OK" and res["P2S_S_A_bound"]["history"].get("r1B") == "OK" and res["P2S_S_A_far"]["history"].get("r2B") == "OK"
-           and res["P2S_S_A_far"]["status"] == "OK" and res["CC_S33_AB_optB88_bound"]["status"] == "OK" and res["CC_S33_AB_optB88_far"]["status"] == "SCF_UNVERIFIED"
+           and res["P2S_S_A_far"]["status"] == "OK" and res["CC_S33_AB_optB88_bound"]["status"] == "KERNEL_UNVERIFIED"
+           and res["CC_S33_AB_optB88_bound"].get("judge", {}).get("status") == "OK" and res["CC_S33_AB_optB88_far"]["status"] == "SCF_UNVERIFIED"
            and res[A4_JOB]["status"] == "RESTART_NOT_HONOURED", {n: (r["status"], r.get("history"), r.get("why")) for n, r in res.items()})
         nst = len(open(os.path.join(PKG, "run", "status.tsv")).read().splitlines())
         rc2, _ = run_r(PKG, plan_p)
@@ -1952,7 +2024,8 @@ def _selftest():
         v5r = os.path.join(T, "v5reg.json")
         json.dump({"vasp_version": "vasp.5.4.4.18Apr17-6-g9f103f2a35 (build Aug 19 2022 11:57:46) complex",
                    "species_sha256": {p_: _sha(os.path.join(POT, p_, "POTCAR")) for p_ in ("Li_sv", "P", "S", "Cl", "Ag")}}, open(v5r, "w"))
-        reg = seal_registry(PKG, PKG, msha, v5_registry=v5r)
+        KREG = "vdW kernel read from"                    # 가짜 VASP 의 커널 읽기 문구 (실물 문구는 파일럿 원문으로 정한다)
+        reg = seal_registry(PKG, PKG, msha, v5_registry=v5r, kernel_read_regex=KREG)
         ck("등록부: 6 종 (C 포함) · 커널 sha · VASP 빌드 · 파일럿 run_id 5", set(reg["species_sha256"]) == set(POTCAR_MAP.values()) and reg["kernel_sha256"] == _sha(KER)
            and len(reg["from_pilot"]) == 5, reg["from_pilot"])
         bad_v5 = os.path.join(T, "v5bad.json"); json.dump({"vasp_version": "vasp.6.4.2 other", "species_sha256": {}}, open(bad_v5, "w"))
@@ -2065,7 +2138,7 @@ def _selftest():
         # ── 6. 집계 (깨끗한 반송 · 가짜 UMA) ──
         p7 = fresh("pk_clean")
         rcc, logc = run_r(p7, {})
-        reg7 = seal_registry(p7, p7, msha, v5_registry=v5r)
+        reg7 = seal_registry(p7, p7, msha, v5_registry=v5r, kernel_read_regex=KREG)
         rf7 = os.path.join(T, "release7.tsv"); _write(rf7, release_text(reg7, ["1", "2", "3", "4"], {"1": 170, "2": 586, "3": 204, "4": 24}, 1080, "R2-7"))
         rcc2, logc2 = run_r(p7, {}, (), STAGES="1 2 3 4", RELEASE_FILE=rf7, RELEASE_SHA256=_sha(rf7))
         ck("깨끗한 반송: 파일럿 0 · 본 단계 0 (24 잡 OK)", rcc == 0 and rcc2 == 0, (logc[-300:], logc2[-300:]))
@@ -2106,7 +2179,7 @@ def _selftest():
         en2["Li_A_far"] = en["Li_A_bound"] + 0.05 * A * V.A2_M2 / V.EV_J - dD3Li; en2["P2S_Li_A_optB88_far"] = en2["Li_A_far"] + 0.1
         json.dump(en2, open(EF, "w"))
         p8 = fresh("pk_trig")
-        run_r(p8, {}); reg8 = seal_registry(p8, p8, msha, v5_registry=v5r)
+        run_r(p8, {}); reg8 = seal_registry(p8, p8, msha, v5_registry=v5r, kernel_read_regex=KREG)
         rf8 = os.path.join(T, "release8.tsv"); _write(rf8, release_text(reg8, ["1", "2", "3", "4"], {"1": 170, "2": 586, "3": 204, "4": 24}, 1080, "R2-8"))
         run_r(p8, {}, (), STAGES="1 2 3 4", RELEASE_FILE=rf8, RELEASE_SHA256=_sha(rf8))
         r8 = collect(p8, p8, msha, uma, reg8)
@@ -2293,6 +2366,60 @@ def _selftest():
             rcn, logn = run_r(pn, {}, (), STAGES="1", RELEASE_FILE=rfn, RELEASE_SHA256=_sha(rfn), JOBS="P2S_Li_A_far")
             ck(f"⛔음성 R3 상한 값: 러너가 해제 파일의 {lab_} 를 받으면 종료 2 (아무것도 안 돎)", new_ in open(rfn).read() and rcn == 2
                and not os.path.isdir(os.path.join(pn, "run", "P2S_Li_A_far")), (rcn, logn[-200:]))
+        # R4 (CZ Q-CZ-5) — optB88: 실제 교환함수 · 커널 읽기 / 부재 / 재생성
+        def outcar_edit(att, old_, new_):                # OUTCAR 한 곳을 바꾸고 실행 기록 sha 를 맞춘다 → 바뀌었는지
+            oc_ = os.path.join(att, "OUTCAR"); t_ = open(oc_).read()
+            if old_ not in t_:
+                return False
+            open(oc_, "w").write(t_.replace(old_, new_, 1))
+            aj_ = os.path.join(att, "attempt.json"); a__ = json.load(open(aj_)); a__["sha256"]["OUTCAR"] = _sha(oc_); json.dump(a__, open(aj_, "w"))
+            return True
+        OB = "P2S_S_A_optB88_bound"                     # 파일럿 밖 optB88 잡 (파일럿 결박 대조 없이 설정·커널 감사만 본다)
+        r40 = resolve_job(J[OB], p7, os.path.join(p7, "run"), reg7)
+        ck("R4 양성: 커널 읽기 문구를 파일럿 원문으로 봉인한 등록부 → optB88 OK (GGA BO 확인 · 커널 상태 read)", r40["status"] == "OK" and r40.get("kernel_state") == "read",
+           (r40["status"], r40.get("why"), r40.get("kernel_state")))
+        t41 = os.path.join(T, "t41"); shutil.copytree(p7, t41)
+        sw = outcar_edit(os.path.join(t41, "run", OB), "GGA     =    BO    GGA type", "GGA     =    PE    GGA type")
+        r41 = resolve_job(J[OB], t41, os.path.join(t41, "run"), reg7)
+        ck("⛔음성 R4 (CZ 재현 ①): optB88 OUTCAR 해석값 GGA = BO → PE → SETTINGS_MISMATCH (지금까지는 OK)", sw and r41["status"] == "SETTINGS_MISMATCH" and "GGA" in r41.get("why", ""),
+           (sw, r41["status"], r41.get("why")))
+        t42 = os.path.join(T, "t42"); shutil.copytree(p7, t42)
+        sw = outcar_edit(os.path.join(t42, "run", OB), "   GGA     =    BO    GGA type\n", "")
+        r42 = resolve_job(J[OB], t42, os.path.join(t42, "run"), reg7)
+        ck("⛔음성 R4 (CZ 재현 ②): 해석 GGA 줄을 지우면 SETTINGS_UNVERIFIED (형식 못 읽음 = 미검증)", sw and r42["status"] == "SETTINGS_UNVERIFIED" and "GGA" in r42.get("why", ""),
+           (sw, r42["status"], r42.get("why")))
+        for lab_, new_, st_ in (("CZ 재현 ③ 'ERROR: vdw_kernel.bindat not read'", " ERROR: vdw_kernel.bindat not read", "not_read"),
+                                ("CZ 재현 ④ 'kernel differs, recalculating vdW kernel'", " kernel differs, recalculating vdW kernel", "regenerated")):
+            tk = os.path.join(T, f"t4k_{st_}"); shutil.copytree(p7, tk)
+            sw = outcar_edit(os.path.join(tk, "run", OB), " vdW kernel read from vdw_kernel.bindat", new_)
+            rk = resolve_job(J[OB], tk, os.path.join(tk, "run"), reg7)
+            ck(f"⛔음성 R4 ({lab_}): KERNEL_NOT_READ ({st_}) · 환경 등급이라 집계 공통 환경 고장 · 종료 6 (지금까지는 OK)",
+               sw and rk["status"] == "KERNEL_NOT_READ" and rk.get("kernel_state") == st_ and collect_exit(collect(tk, tk, msha, uma, reg7)) == 6,
+               (sw, rk["status"], rk.get("kernel_state"), rk.get("why")))
+        tks = os.path.join(T, "t4seal"); shutil.copytree(PKG, tks, ignore=shutil.ignore_patterns("round2_return*"))
+        sw = outcar_edit(os.path.join(tks, "run", "CC_S33_AB_optB88_bound"), " vdW kernel read from vdw_kernel.bindat", " ERROR: vdw_kernel.bindat not read")
+        try:
+            seal_registry(tks, tks, msha, v5_registry=v5r, kernel_read_regex=KREG); msg_ = "(봉인됨)"
+        except PkgError as e:
+            msg_ = str(e)
+        ck("⛔음성 R4: 파일럿 optB88 시도에 커널 부재 줄이 있으면 봉인하지 않는다 (KERNEL_NOT_READ)", sw and "KERNEL_NOT_READ" in msg_, (sw, msg_))
+        tfp = os.path.join(T, "t4fp"); shutil.copytree(p7, tfp)
+        open(os.path.join(tfp, "run", OB, "stdout.log"), "a").write(" WARNING: kernel module ib_uverbs not loaded (no RDMA) - falling back to TCP\n")
+        rfp = resolve_job(J[OB], tfp, os.path.join(tfp, "run"), reg7)
+        ck("R4 오탐 방지: MPI·OS 의 'kernel … not' 줄은 vdW 커널 줄이 아니다 → OK 그대로 (카드 §2.4 의 넓은 꼴 (?i)kernel 을 vdW 를 같이 말하는 줄로 좁혔다)",
+           rfp["status"] == "OK", (rfp["status"], rfp.get("why")))
+        r46 = [resolve_job(J[OB], p7, os.path.join(p7, "run"), rg_)["status"] for rg_ in (None, {**reg7, "kernel_read_regex": ""}, {**reg7, "kernel_read_regex": "NO SUCH KERNEL PHRASE"})]
+        ck("⛔음성 R4: 등록부 없음 · 등록부에 커널 문구 없음 · 원문에 없는 문구 → optB88 수렴 시도도 KERNEL_UNVERIFIED", r46 == ["KERNEL_UNVERIFIED"] * 3, r46)
+        kchk = reg.get("kernel_read_check") or {}
+        ck("등록부 커널 문구: 파일럿 optB88 두 잡 (전자 스텝 ≥ 1) 에 맞고 optB88 아닌 시도에는 안 맞는다 → 봉인 · 해제 파일에 한 줄 · 러너가 env.txt 에 기록",
+           reg.get("kernel_read_regex") == KREG and sorted(kchk.get("optb88", [])) == ["CC_S33_AB_optB88_bound/0", "CC_S33_AB_optB88_far/0"] and len(kchk.get("not_optb88", [])) >= 5
+           and f"kernel_read_regex\t{KREG}" in release_text(reg, ["1"], {"1": 170}, 1080, "R4") and f"KERNEL_READ_RE {KREG}" in open(os.path.join(p7, "run", "env.txt")).read(), kchk)
+        for rx_, why_ in (("NO SUCH KERNEL PHRASE", "안 맞음"), ("read", "optB88 아닌 시도에 맞음"), ("(?i)vdw kernel", "(?")):
+            try:
+                seal_registry(PKG, PKG, msha, v5_registry=v5r, kernel_read_regex=rx_); msg_ = "(봉인됨)"
+            except PkgError as e:
+                msg_ = str(e)
+            ck(f"⛔음성 등록부 커널 문구 {rx_!r}: 봉인하지 않는다 · 사유 '{why_}'", "커널" in msg_ and why_ in msg_, msg_)
     finally:
         if os.environ.get("R2_SELFTEST_KEEP") == "1":
             print(f"  (시험 폴더 남김: {T})")
@@ -2314,6 +2441,7 @@ def main():
     ap.add_argument("--check", action="store_true")
     ap.add_argument("--seal_registry", metavar="OUT_JSON")
     ap.add_argument("--restart_read_regex", default="")
+    ap.add_argument("--kernel_read_regex", default="", help="파일럿 원문으로 확정한 vdW 커널 읽기 문구 (없으면 optB88 은 KERNEL_UNVERIFIED)")
     ap.add_argument("--collect", metavar="OUT_JSON")
     ap.add_argument("--a4_result", metavar="OUT_JSON", help="은 a4 결과 (V5 검사기 --a4_result 입력 · 개정 4 채택은 V5 쪽에서)")
     ap.add_argument("--uma", help="uma_energies/v1 JSON (relax_uma_d3.py --energies)")
@@ -2338,7 +2466,7 @@ def main():
         if reg.get("schema") != REG_SCHEMA or reg.get("package_manifest_sha256") != a.manifest_sha256:
             raise PkgError("등록부 schema · 묶음 MANIFEST 가 맞지 않는다")
     if a.seal_registry:
-        r = seal_registry(a.out, a.ret, a.manifest_sha256, a.restart_read_regex)
+        r = seal_registry(a.out, a.ret, a.manifest_sha256, a.restart_read_regex, kernel_read_regex=a.kernel_read_regex)
         _write(a.seal_registry, json.dumps(r, ensure_ascii=False, indent=1) + "\n")
         print(f"✓ 등록부 → {a.seal_registry} (sha256 {_sha(a.seal_registry)})")
         return 0
