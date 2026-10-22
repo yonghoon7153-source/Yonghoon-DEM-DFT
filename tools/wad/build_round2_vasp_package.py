@@ -969,11 +969,16 @@ def parse_zavg(path):
         return {"bad": "형식 (머리 · 열 · 줄 수)"}
     try:
         z, v = [float(r[0]) for r in rows], [float(r[1]) for r in rows]
+        grid, cz = [int(hd.group(i)) for i in (1, 2, 3)], float(hd.group(6))      # 머리도 같은 검사 안에서 (DB P2 — 글자면 예외 · nan · 0 · 음수가 정상 자료로 나갔다)
     except ValueError:
         return {"bad": "숫자 아님"}
-    if not all(math.isfinite(x) for x in z + v):
+    if not all(math.isfinite(x) for x in z + v + [cz]):
         return {"bad": "비유한"}
-    return {"grid": [int(hd.group(i)) for i in (1, 2, 3)], "locpot_sha256": hd.group(4), "run_id": hd.group(5), "c_z_A": float(hd.group(6)),
+    if min(grid) <= 0 or cz <= 0:
+        return {"bad": "격자 · c_z 가 양수가 아니다"}
+    if any(abs(zk - k * cz / grid[2]) > 2e-6 for k, zk in enumerate(z)):          # 러너는 c_z · z 를 %.6f 로 쓴다
+        return {"bad": "z 간격이 c_z / nz 와 다르다"}
+    return {"grid": grid, "locpot_sha256": hd.group(4), "run_id": hd.group(5), "c_z_A": cz,
             "z_A": z, "V_eV": v, "⛔": "정보 — 판정 아님 · 조각별 순전하로 읽지 않는다 · 채택 시도의 면평균만"}
 
 
@@ -1001,7 +1006,7 @@ KERNEL_NEG_EXACT_RE = re.compile(r"(?i)\bno\s+kernel\s+file\s+found\b")   # vdW 
 # ───────────────────────── 반송 검사 (시도 하나) ─────────────────────────
 RUNG_DIR = {"0": "{job}", "r1A": "{job}_r1/stageA", "r1B": "{job}_r1", "r2B": "{job}_r2", "a4A": "{job}_a4/stageA", "a4B": "{job}_a4"}
 OUTCAR_DIMS = (("NKPTS", r"NKPTS *= *([0-9.]+)"), ("NBANDS", r"NBANDS *= *([0-9.]+)"), ("ENCUT", r"ENCUT *= *([0-9.]+) eV"))   # 러너 out_num() 과 같은 패턴 · 마지막 값
-RESTART_RX_CHARS = re.compile(r"^[A-Za-z0-9 _:.,=()|*+?^$/-]+$")   # 재시작 긍정 문구 regex — grep -E (러너) 와 python re (검사기) 에서 뜻이 같은 글자만
+RESTART_RX_CHARS = re.compile(r"[A-Za-z0-9 _:.,=()|*+?^$/-]+")      # 재시작 긍정 문구 regex — grep -E (러너) 와 python re (검사기) 에서 뜻이 같은 글자만 (fullmatch — 끝 줄바꿈도 거부 · DB P2)
 
 
 def outcar_dims(text):
@@ -1081,7 +1086,7 @@ def restart_regex_problems(rx):
     """재시작 긍정 문구 regex 가 러너 (grep -E · 줄 단위) 와 검사기 (python re.M) 에서 같은 뜻인지 — 문제 목록 (비면 통과).
     ⚠ 카드 §2.2 는 [ ] \\ 도 허용했는데 괄호 안 역슬래시 ([\\]]) · \\d · [[:space:]] 는 두 엔진에서 뜻이 갈려 뺐다 (구절 하나를 찾는 데는 필요 없다).
     빈 문자열에 맞는 regex (a* · |x · ^) 는 무엇에나 맞아서 구별을 못 한다. '-' 로 시작하거나 수량자가 붙은 꼴 (*+ ++ ?+ +? …) 도 거부한다 (자체 검토 S5)."""
-    if not RESTART_RX_CHARS.match(rx or ""):
+    if not RESTART_RX_CHARS.fullmatch(rx or ""):
         return ["허용 밖 글자 (괄호 표현 [ ] · 역슬래시 · 중괄호 · 탭 등)"]
     bad = []
     if rx.startswith("-"):
@@ -1678,7 +1683,9 @@ def collect(out, ret, manifest_sha256, uma=None, registry=None):
                 fd[n]["locpot_zavg"] = {"not_used": "채택 시도가 아니다"}
             else:
                 zz = parse_zavg(zp)
-                fd[n]["locpot_zavg"] = {**zz, "run_id_matches": zz.get("run_id") == res[n].get("run_id")} if "bad" not in zz else zz
+                if "bad" not in zz and zz.get("run_id") != res[n].get("run_id"):     # 다른 실행의 면평균 — 값을 내지 않는다 (DB P2)
+                    zz = {"bad": f"run_id 불일치 (면평균 {zz.get('run_id')} · 채택 시도 {res[n].get('run_id')}) — 이 시도의 면평균이 아니다", "run_id_matches": False}
+                fd[n]["locpot_zavg"] = zz if "bad" in zz else {**zz, "run_id_matches": True}
     rec["far_diagnostics"] = fd
     sig, nev = [], []                     # 신호 · 미평가 (자료 결측) — "검사했고 신호 없음" 과 가른다 (CZ Q-CZ-7)
     pz_ = lambda n: (fd.get(n) or {}).get("p_z_eA") if (fd.get(n) or {}).get("adopted") else None
@@ -3103,6 +3110,28 @@ def _selftest():
         ck("⛔음성 DB P1-3 (Codex): 손으로 넣는 초에 선행 0 ('0007200') → --infra-abort · --infra-wall · --killed 셋 다 거부 (종료 2) · '0' 과 '7200' 은 받는다 "
            "(지금까지는 그대로 저장 → bash 가 8진으로 더했다)", rz_a == 2 and rz_b == 0 and rz_c == 2 and rz_d == 0 and iz_.get("wall_s") == "0" and rz_e == 2 and rz_f == 0,
            (rz_a, rz_b, rz_c, rz_d, iz_.get("wall_s"), rz_e, rz_f))
+        # DB P2 (비차단 보강) — 재시작 문구 regex 끝 줄바꿈 · LOCPOT 면평균 머리 검사 · 채택 시도와 run_id 가 다른 면평균은 값을 안 낸다
+        pr_ = restart_regex_problems("reading WAVECAR\n")
+        ck("⛔음성 DB P2 (Q-DB-8 ①): 재시작 문구 regex 끝에 줄바꿈 ('reading WAVECAR' + LF) → 형식 거부 (fullmatch — 지금까지는 '$' 가 끝 줄바꿈 앞에서 맞아 통과)", bool(pr_), pr_)
+        zp7 = os.path.join(p7, "run", "P2S_S_A_far", "LOCPOT.zavg.txt"); zgood = _read(zp7) or ""
+        zbad = {}
+        for lab_, fn_ in (("c_z_A 글자", lambda t: re.sub(r"c_z_A \S+", "c_z_A garbage", t, 1)), ("c_z_A nan", lambda t: re.sub(r"c_z_A \S+", "c_z_A nan", t, 1)),
+                          ("c_z_A 0", lambda t: re.sub(r"c_z_A \S+", "c_z_A 0", t, 1)), ("c_z_A 음수", lambda t: re.sub(r"c_z_A \S+", "c_z_A -10", t, 1)),
+                          ("격자 nx 0", lambda t: re.sub(r"grid (\d+) ", "grid 0 ", t, 1)),
+                          ("z 간격 ≠ c_z/nz", lambda t: re.sub(r"c_z_A (\S+)", lambda m: f"c_z_A {float(m.group(1)) * 2:.6f}", t, 1))):
+            zp_ = os.path.join(T, f"zavg_{abs(hash(lab_))}.txt"); open(zp_, "w").write(fn_(zgood))
+            try:
+                zbad[lab_] = "bad" in parse_zavg(zp_)
+            except Exception as e:  # noqa: BLE001
+                zbad[lab_] = f"예외 {type(e).__name__}"
+        ck("⛔음성 DB P2 (Q-DB-9 · parse_zavg): 면평균 머리가 어긋나면 (c_z_A 글자 · nan · 0 · 음수 · 격자 0 · z 간격 ≠ c_z/nz) 예외가 아니라 bad · 정상 파일은 그대로 "
+           "(지금까지는 글자면 예외 · 나머지는 정상 자료)", all(v is True for v in zbad.values()) and "bad" not in parse_zavg(zp7), zbad)
+        tdz = os.path.join(T, "tdz"); shutil.copytree(p7, tdz, ignore=shutil.ignore_patterns("round2_return*"))
+        zf_ = os.path.join(tdz, "run", "P2S_S_A_far", "LOCPOT.zavg.txt"); t_ = open(zf_).read()
+        open(zf_, "w").write(re.sub(r"run_id \S+", "run_id 20200101T000000-1-1", t_, 1)); fix_att_sha(os.path.join(tdz, "run", "P2S_S_A_far"), "LOCPOT.zavg.txt")
+        lz_ = (collect(tdz, tdz, msha, uma, None)["far_diagnostics"]["P2S_S_A_far"] or {}).get("locpot_zavg") or {}
+        ck("⛔음성 DB P2 (Q-DB-9 · collect): 면평균 머리의 run_id 가 채택 시도와 다르면 값 배열을 내지 않는다 (bad · run_id_matches false — 지금까지는 V_eV 가 남았다)",
+           "V_eV" not in lz_ and "bad" in lz_ and lz_.get("run_id_matches") is False, {k: v for k, v in lz_.items() if k not in ("z_A", "V_eV")})
     finally:
         if os.environ.get("R2_SELFTEST_KEEP") == "1":
             print(f"  (시험 폴더 남김: {T})")
