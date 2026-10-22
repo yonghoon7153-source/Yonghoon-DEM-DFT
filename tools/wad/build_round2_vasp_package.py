@@ -280,7 +280,7 @@ def build(seal_dir, out, v5_pkg=None, wadcc_pkg=None, ledger=None):
     _write(os.path.join(out, "JOBS.txt"), "\n".join(j["dir"] for j in jobs) + "\n")
     _write(os.path.join(out, "run_all.sh"), run_all_text()); os.chmod(os.path.join(out, "run_all.sh"), 0o755)
     meta = {"schema": "wad_round2_vasp_package/v2", "card": CARD, "amendment_4": AMEND4, "decisions": list(DECISIONS),
-            "status": "준비본 v3 — Codex CZ · DB 고침 + 발송 전 자체 검토 (S1–S9) 반영 · 발송 전",
+            "status": "준비본 v4 — Codex CZ · DB · DC 고침 + 발송 전 자체 검토 (S1–S9) 반영 · 발송 전",
             "tool_sha256": _sha(os.path.abspath(__file__)), "v5_tool_sha256": _sha(os.path.abspath(V.__file__)),
             "sources": {"p2s_seal_manifest_sha256": _sha(smp), "wadcc_manifest_sha256": _sha(os.path.join(wadcc_pkg, "cc_stage2_manifest.json")),
                         "v5_manifest_sha256": V5_MANIFEST_SHA256},
@@ -345,10 +345,12 @@ incar_val(){ awk -v T="$2" 'BEGIN{T=toupper(T)} { sub(/[#!].*/, ""); n=split($0,
 #  ④ 확정 모순은 rc 보다 먼저 (CZ Q-CZ-1): OUTCAR 실행 머리줄 ≥ 2 → SCF_UNVERIFIED · OUTCAR 가 끝까지 쓰였는데 머리줄 ≠ 1 또는
 #     마지막 전자 반복 번호 k ≠ N → SCF_UNVERIFIED · 안 끝났는데 k > N + 1 (판정 근거 OSZICAR 가 두 스텝 이상 모자람) → SCF_UNVERIFIED
 #     (안 끝난 OUTCAR 의 k 없음 · k ≤ N + 1 은 잘림·스텝 도중 충돌 = 결측이라 ⑤ 로 간다)
-#  ⑤ rc ≠ 0 · 미종료 → RUN_FAILED  ⑥ 마지막 dE·d eps 가 유한수가 아님 → SCF_UNVERIFIED  ⑦ |dE| ≤ EDIFF 그리고 |d eps| ≤ EDIFF → OK · 아니면 SCF_NOT_CONVERGED
+#  ⑤ rc 미상 (attempt.json 의 rc 가 전체 값으로 정수가 아님 — 0.5 · 1e3 · -0 · 뒤 쓰레기) → SCF_UNVERIFIED (rc_unknown · 승격 없음 · Codex DC 와 같은 종류)
+#  ⑤′ rc ≠ 0 · 미종료 → RUN_FAILED  ⑥ 마지막 dE·d eps 가 유한수가 아님 → SCF_UNVERIFIED  ⑦ |dE| ≤ EDIFF 그리고 |d eps| ≤ EDIFF → OK · 아니면 SCF_NOT_CONVERGED
 judge(){
   local d=$1 rc term nrun nelm ediff oit
-  rc=$(grep -o '"rc": *-\{0,1\}[0-9]*' "$d/attempt.json" 2>/dev/null | head -1 | grep -o -- '-\{0,1\}[0-9]*$'); rc=${rc:-${2:-NA}}
+  rc=$(grep -o '"rc": [^,}]*[,}]' "$d/attempt.json" 2>/dev/null | head -1 | sed 's/^"rc": //; s/[,}]$//')   # 전체 값 + 끝 구분자 (숫자 접두부가 아니다 · Codex DC P1-2 와 같은 종류)
+  [ -z "$rc" ] || [[ "$rc" =~ ^(0|-?[1-9][0-9]{0,9})$ ]] || rc=BAD; rc=${rc:-${2:-NA}}
   term=0; grep -aq "General timing and accounting" "$d/OUTCAR" 2>/dev/null && term=1
   nrun=$(grep -acE '^[[:space:]]*vasp\.[0-9]' "$d/OUTCAR" 2>/dev/null); nrun=${nrun:-0}
   nelm=$(incar_val "$d/INCAR" NELM); ediff=$(incar_val "$d/INCAR" EDIFF)
@@ -369,6 +371,7 @@ judge(){
         if (nrun + 0 != 1) { print "SCF_UNVERIFIED", o, "NA", "NA", "run_blocks"; exit }
         if (oit != o) { print "SCF_UNVERIFIED", o, "NA", "NA", "outcar_oszicar_mismatch"; exit }
       } else if (oit ~ /^[0-9]+$/ && oit + 0 > o + 1) { print "SCF_UNVERIFIED", o, "NA", "NA", "outcar_oszicar_mismatch"; exit }
+      if (rc !~ /^(0|-?[1-9][0-9]*)$/) { print "SCF_UNVERIFIED", o, "NA", "NA", "rc_unknown"; exit }
       if (rc != "0" || term != 1) { print "RUN_FAILED", o, (de == "" ? "NA" : de), (dp == "" ? "NA" : dp), "rc_or_not_terminated"; exit }
       if (!finite(de) || !finite(dp)) { print "SCF_UNVERIFIED", o, (de == "" ? "NA" : de), (dp == "" ? "NA" : dp), "nonfinite"; exit }
       if (!finite(ediff)) { print "SCF_UNVERIFIED", o, de, dp, "ediff_unknown"; exit }
@@ -635,7 +638,7 @@ wall_s_of(){ # $1 단계 (ALL = 전체) → 초 · 미상이 하나라도 있으
   [ -d run_aborted ] && dirs="run run_aborted"
   lst=$(find $dirs \( -name attempt.json -o -name attempt.start -o -name infra_abort.json -o -name killed.json \) -type f 2>/dev/null) || { echo "UNKNOWN (반송 폴더 열거 실패)"; return; }
   for d in $(printf '%s\n' "$lst" | sed 's#/[^/]*$##' | LC_ALL=C sort -u); do
-    if [ -f "$d/attempt.json" ]; then f=$d/attempt.json; w=$(grep -o '"elapsed_s": [0-9]*' "$f" | head -1 | sed 's/.*: *//')
+    if [ -f "$d/attempt.json" ]; then f=$d/attempt.json; w=$(grep -o '"elapsed_s": [^,}]*[,}]' "$f" | head -1 | sed 's/^"elapsed_s": //; s/[,}]$//')   # 전체 값 + 끝 구분자 (Codex DC P1-2 — 4.5e5 · 1e12 · 뒤 쓰레기 · 잘린 숫자는 아래 10진 검사에서 미상)
     elif [ -f "$d/infra_abort.json" ]; then f=$d/infra_abort.json; w=$(grep -o '"wall_s": "[^"]*"' "$f" | head -1 | sed 's/.*: "//; s/"$//')
     elif [ -f "$d/killed.json" ]; then f=$d/killed.json; w=$(grep -o '"wall_s": "[^"]*"' "$f" | head -1 | sed 's/.*: "//; s/"$//')
     else f=$d/attempt.start; w=""; fi
@@ -771,7 +774,7 @@ run_one(){ # $1 잡 · $2 단 · $3 시도 폴더 · $4 INCAR 이름 · $5 WAVEC
   if [ "$need_rel" = 1 ] && [ -n "$ver" ] && [ "$ver" != "$REL_VER" ]; then log "⛔ $job/$rung VASP 빌드 '$ver' ≠ 봉인 — 공통 환경 고장 · 전체 정지"; return 6; fi
   return 0
 }
-wsha(){ grep -o "\"$2\": \"[0-9a-f]*\"" "$1" 2>/dev/null | head -1 | grep -o '[0-9a-f]\{64\}'; }   # WAVECAR.info 의 sha 필드 하나 ($1 파일 · $2 키)
+wsha(){ grep -o "\"$2\": \"[0-9a-f]\{64\}\"" "$1" 2>/dev/null | head -1 | grep -o '[0-9a-f]\{64\}'; }   # WAVECAR.info 의 sha 필드 하나 ($1 파일 · $2 키)
 stat_of(){ # 시도 폴더 · 단 → 상태 (B 단은 재시작 확인을 먼저 · 기록 없으면 INCOMPLETE_ATTEMPT)
   #   재시작 확인 = 검사기와 같다: 기록 honoured · ⓑ src = copied = end = 그 ⓐ 의 기록 sha (r1B·a4B ← 같은 폴더 stageA · r2B ← r1 의 stageA)
   #   · 해제 파일에 재시작 regex 가 있으면 원문 (stdout.log · OUTCAR) 을 다시 본다 — 이어 돌리기 · 손댄 기록에서도 검사기와 같은 답
@@ -942,6 +945,8 @@ def judge_text(osz, out, incar, rc):
             return "SCF_UNVERIFIED", n, "NA", "NA", "outcar_oszicar_mismatch"
     elif oit is not None and oit > n + 1:
         return "SCF_UNVERIFIED", n, "NA", "NA", "outcar_oszicar_mismatch"
+    if not (isinstance(rc, int) and not isinstance(rc, bool)):          # rc 미상 — 러너 awk 의 rc_unknown 과 같은 자리 (승격 없음 · 검사기는 그 전에 ATTEMPT_MISMATCH)
+        return "SCF_UNVERIFIED", n, "NA", "NA", "rc_unknown"
     if rc != 0 or not term:
         return "RUN_FAILED", n, na(de), na(dp), "rc_or_not_terminated"
     a, b = _num(de), _num(dp)
@@ -1038,6 +1043,17 @@ def _raw_text(attdir):
     return (_read_raw(os.path.join(attdir, "stdout.log")) or "") + "\n" + (_read_raw(os.path.join(attdir, "OUTCAR")) or "")
 
 
+def _read_ev(p, bad):
+    """증거 파일 원문 (줄바꿈 그대로) — 없으면 None · 있는데 못 읽으면 (권한 · 입출력 · 폴더 …) bad 에 적고 None (ENOENT 만 '없음' · Codex DC P1-1)."""
+    try:
+        return open(p, encoding="utf-8", errors="replace", newline="").read()
+    except FileNotFoundError:
+        return None
+    except OSError as e:
+        bad.append(f"{os.path.basename(p)}: {type(e).__name__}")
+        return None
+
+
 HEAD_LINE_RE = re.compile(r"[ \t\r\f\v]*(vasp\.[0-9].*)")      # 실행 머리줄 — 러너 grep '^[[:space:]]*vasp\.[0-9]' 와 같은 줄 (원문을 \n 으로만 나눈다)
 
 
@@ -1047,25 +1063,29 @@ def env_evidence(attdir, optb88=False):
     커널 sha 는 attempt.json · 없으면 시작 표지 attempt.start.
     optB88 시도면 원문 (stdout.log + OUTCAR) 의 커널 부정 · 재생성 줄도 (Codex DB P1-1 — 끊긴 · 무결성 실패 시도의 그 줄이 전역 정지에 안 닿았다).
     ⚠ 못 하는 것: 결박되지 않은 시도의 파일은 고쳐졌을 수 있다 — 이 증거는 멈추는 쪽으로만 쓴다 (여기서 깨끗하다고 그 시도가 무결한 것은 아니다 ·
-    커널 긍정 문구로 불완전 시도를 올리지 않는다)."""
-    raw = _read_raw(os.path.join(attdir, "OUTCAR")) or ""
+    커널 긍정 문구로 불완전 시도를 올리지 않는다).
+    파일이 없으면 (ENOENT) 증거 없음 · 있는데 못 읽으면 'unreadable' 에 적는다 → env_audit 가 AUDIT_UNREADABLE 전체 정지 (Codex DC P1-1 — 못 읽은 OUTCAR 를
+    '버전 없음' 으로 보면 다른 빌드가 감사에서 빠진다)."""
+    bad = []
+    raw = _read_ev(os.path.join(attdir, "OUTCAR"), bad) or ""
     vers = [" ".join(m.group(1).split()) for m in (HEAD_LINE_RE.match(ln) for ln in raw.split("\n")) if m]
     sp = {}
-    for ln in (_read_raw(os.path.join(attdir, "POTCAR.species.sha256")) or "").split("\n"):
+    for ln in (_read_ev(os.path.join(attdir, "POTCAR.species.sha256"), bad) or "").split("\n"):
         x = ln.split()
         if len(x) == 2 and V.HEX64.match(x[1].lower()):
             sp.setdefault(x[0], set()).add(x[1].lower())
     ks = None
-    for f in ("attempt.json", "attempt.start"):
+    for t in [_read_ev(os.path.join(attdir, f), bad) for f in ("attempt.json", "attempt.start")]:     # 둘 다 읽는다 (못 읽은 것을 놓치지 않게)
         try:
-            v = json.load(open(os.path.join(attdir, f), encoding="utf-8")).get("kernel_sha256")
-        except (OSError, ValueError, AttributeError):
+            v = json.loads(t).get("kernel_sha256") if t is not None else None
+        except (ValueError, AttributeError):
             continue
-        if isinstance(v, str) and V.HEX64.match(v.lower()):
+        if ks is None and isinstance(v, str) and V.HEX64.match(v.lower()):
             ks = v.lower()
-            break
-    kst, kln = kernel_state(_raw_text(attdir)) if optb88 else (None, None)
-    return {"versions": vers, "potcar_species_sha256": {k: sorted(v) for k, v in sp.items()}, "kernel_sha256": ks, "kernel_state": kst, "kernel_line": kln}
+    so = _read_ev(os.path.join(attdir, "stdout.log"), bad) if optb88 else None
+    kst, kln = kernel_state((so or "") + "\n" + raw) if optb88 else (None, None)      # _raw_text 와 같은 원문 (stdout.log + OUTCAR)
+    return {"versions": vers, "potcar_species_sha256": {k: sorted(v) for k, v in sp.items()}, "kernel_sha256": ks, "kernel_state": kst, "kernel_line": kln,
+            "unreadable": bad}
 
 
 def kernel_state(text):
@@ -1330,7 +1350,7 @@ def check_attempt(job, pkgdir, attdir, rung, registry=None, a_ref=None):
 ENV_CLASS = ("VERSION_MISMATCH", "POTCAR_MISMATCH", "KERNEL_MISMATCH", "KERNEL_NOT_READ")   # 환경 등급 — 어느 시도에서 나오든 전체 정지 (CZ Q-CZ-3 · Q-CZ-5)
 ENV_SPLIT = ("VERSION_INCONSISTENT", "POTCAR_INCONSISTENT", "KERNEL_INCONSISTENT")     # 시도 사이 갈림 — 어느 쪽이 맞는지 모르므로 전부 막는다
 COMMON_ENV = ENV_CLASS + ENV_SPLIT
-INTEGRITY = ("ATTEMPT_MISMATCH", "INPUT_MODIFIED", "POTCAR_UNVERIFIED", "INCOMPLETE_ATTEMPT", "MISSING")   # 무결성 실패 (파일럿 결박 대조보다 먼저 이름 붙는다)
+INTEGRITY = ("ATTEMPT_MISMATCH", "INPUT_MODIFIED", "POTCAR_UNVERIFIED", "INCOMPLETE_ATTEMPT", "MISSING", "ATTEMPT_UNREADABLE")   # 무결성 실패 (파일럿 결박 대조보다 먼저 이름 붙는다)
 A_TOLERATED = ("SETTINGS_UNVERIFIED", "ENERGY_UNPARSEABLE", "D3_UNVERIFIED", "KERNEL_UNVERIFIED")   # ⓐ (WAVECAR 만 만드는 단) 에서는 자격을 막지 않는 결측
 SEAL_PASS = ("OK", "SCF_NOT_CONVERGED", "RUN_FAILED", "SCF_UNVERIFIED", "RESTART_NOT_HONOURED",   # 봉인을 막지 않는 시도 상태 (정상 · 물리 실패 ·
              "KERNEL_UNVERIFIED")                                                                  #  등록부가 커널 문구를 정하기 전의 optB88 수렴 시도)
@@ -1368,11 +1388,21 @@ def a_eligible(ra):
 def _started(d):
     """시도가 시작됐나 — 그 시도 폴더 **바로 안에** 파일이 하나라도 있으면 (INCAR · attempt.json · attempt.start · OUTCAR · OSZICAR · stdout.log · PP 기록 ·
     killed.json … 어느 실행 흔적이든 — Codex DB P0-1: INCAR · attempt.json 둘만 보아 그 둘이 빠진 시도가 감사에서 사라졌다).
-    r1B · a4B 의 폴더는 ⓐ 의 부모라 폴더가 있는 것만으로는 모른다 — 하위 폴더 (stageA/ · .b/) 는 세지 않는다."""
+    r1B · a4B 의 폴더는 ⓐ 의 부모라 폴더가 있는 것만으로는 모른다 — 하위 폴더 (stageA/ · .b/) 는 세지 않는다 (폴더가 아닌 것은 다 센다).
+    **없는 폴더 (ENOENT) 만 '시작 안 함'** 이다 — 권한 · 입출력 같은 다른 열거 실패는 OSError 를 그대로 올린다 (부르는 쪽이 감사 불가로 ·
+    Codex DC P1-1: 'except OSError → False' 가 읽지 못한 시도를 감사에서 지웠고 잡 OK · --check 0 · a4 OK 가 났다)."""
     try:
-        return any(os.path.isfile(os.path.join(d, f)) for f in os.listdir(d))
-    except OSError:
+        with os.scandir(d) as it:
+            return any(not e.is_dir(follow_symlinks=False) for e in it)
+    except FileNotFoundError:
         return False
+
+
+def _unreadable(path, rung, e):
+    """읽지 못한 시도 → 검사 기록 (ATTEMPT_UNREADABLE · 환경 증거 'unreadable') — 없음이 아니라 감사 불가 = 전체 정지 (Codex DC P1-1)."""
+    why = f"읽지 못했다 — {type(e).__name__}: {e}"[:300]
+    return {"dir": path, "rung": rung, "status": "ATTEMPT_UNREADABLE", "why": why,
+            "env": {"versions": [], "potcar_species_sha256": {}, "kernel_sha256": None, "kernel_state": None, "kernel_line": None, "unreadable": [why]}}
 
 
 def _env_of(r):
@@ -1402,6 +1432,8 @@ def env_audit(attempts, registry=None):
         ev = _env_of(r)
         if ev.get("kernel_state") in ("not_read", "regenerated"):      # 완결성 · 무결성과 무관 (Codex DB P1-1)
             add("KERNEL_NOT_READ", f"vdW 커널 {ev['kernel_state']} — {str(ev.get('kernel_line'))[:120]!r} (환경 증거)")
+        if ev.get("unreadable"):                                       # 증거를 못 읽음 — 없음이 아니라 감사 불가 = 전체 정지 (Codex DC P1-1)
+            add("AUDIT_UNREADABLE", f"환경 증거를 읽지 못했다 {list(ev['unreadable'])[:3]} — 감사 불가 (없는 것과 다르다)")
         if registry:
             bv = [v for v in ev["versions"] if v != registry.get("vasp_version")]
             if bv:
@@ -1430,11 +1462,54 @@ def aborted_attempts(J, pkgdir, ret, registry=None):
     attempt.json 이 없는 시도 (VASP 가 끝나기 전에 끊김) 도 넣는다 — 환경 증거는 무결성과 상관없이 읽는다 (자체 검토 S1 · 지금까지는 attempt.json 있는 것만)."""
     base = ret if os.path.isdir(os.path.join(ret, "run")) else os.path.dirname(os.path.abspath(ret))
     ab, found = os.path.join(base, "run_aborted"), []
-    for name in (sorted(os.listdir(ab)) if os.path.isdir(ab) else []):
+    try:
+        names = sorted(os.listdir(ab))
+    except FileNotFoundError:
+        names = []
+    except OSError as e:                                # 열거 실패 = 감사 불가 (없음이 아니다 · Codex DC P1-1 — 지금까지는 예외로 죽거나 건너뛰었다)
+        return [("run_aborted", _unreadable(ab, "-", e))]
+    for name in names:
         m, d = AB_RE.match(name), os.path.join(ab, name)
-        if m and m.group(1) in J and os.path.isdir(d):
-            found.append((f"{m.group(1)}/{m.group(2)}@aborted{m.group(3)}", check_attempt(J[m.group(1)], pkgdir, d, m.group(2), registry)))
+        if m and m.group(1) in J:
+            tag = f"{m.group(1)}/{m.group(2)}@aborted{m.group(3)}"
+            try:
+                _started(d)                             # 읽을 수 있는지 (권한 · 입출력 · 폴더 아님 = OSError)
+                if os.path.isdir(d):
+                    found.append((tag, check_attempt(J[m.group(1)], pkgdir, d, m.group(2), registry)))
+            except OSError as e:
+                found.append((tag, _unreadable(d, m.group(2), e)))
     return found
+
+
+TRACE_NAMES = tuple(x for x in RETURN_ALLOWED if x not in ("INCAR", "KPOINTS", "POSCAR"))     # 실행 흔적 = 반송 허용 이름에서 입력 사본 셋만 뺀 것
+
+
+def unregistered_traces(J, ret):
+    """반송 트리 (run/ · run_aborted/) 에서 등록된 시도 폴더 밖의 실행 흔적 → [(꼬리표, 등급, 사유)] (Codex DC Q-DC-6 ④).
+    등록 = 잡마다 사다리 단의 폴더 (RUNG_DIR) · run_aborted/<잡>_<단>_<k> (aborted_attempts 가 감사하는 이름). 그 밖 폴더에 실행 흔적 (TRACE_NAMES) 이
+    있으면 UNREGISTERED_ATTEMPT — 환경 불일치로 단정하지 않고 '감사되지 않음' 으로 전체 집계 · 인용 · 봉인을 보류한다.
+    빈 폴더 · 설명 파일 · 입력 사본 (INCAR · KPOINTS · POSCAR) 만 있는 폴더는 흔적이 아니다. 폴더를 읽지 못하면 흔적이 있는지 모른다 → AUDIT_UNREADABLE.
+    ⚠ 못 하는 것: 반송 포장이 허용 이름만 담으므로 그 밖 이름의 파일은 여기서도 안 보인다 · 미등록 흔적의 내용 (빌드 · PP) 은 감사하지 않는다 (있다는 것만)."""
+    run = os.path.join(ret, "run") if os.path.isdir(os.path.join(ret, "run")) else ret
+    base = ret if run != ret else os.path.dirname(os.path.abspath(ret))
+    abd = os.path.normpath(os.path.join(base, "run_aborted"))
+    reg = {os.path.normpath(os.path.join(run, RUNG_DIR[k].format(job=n))) for n, j in J.items() for k in LADDER_RUNGS[j["ladder"]]}
+    out = []
+    for root in (run, abd):
+        errs = []
+        for dp, _, fns in os.walk(root, onerror=errs.append):
+            tr, dn = sorted(f for f in fns if f in TRACE_NAMES), os.path.normpath(dp)
+            if not tr or dn in reg:
+                continue
+            if os.path.dirname(dn) == abd:
+                m = AB_RE.match(os.path.basename(dn))
+                if m and m.group(1) in J:
+                    continue
+            out.append((os.path.relpath(dn, base), "UNREGISTERED_ATTEMPT", f"등록되지 않은 폴더의 실행 흔적 {tr[:4]} — 감사되지 않음 · 전체 집계 · 인용 보류"))
+        for e in errs:
+            if not isinstance(e, FileNotFoundError):
+                out.append((os.path.relpath(e.filename or root, base), "AUDIT_UNREADABLE", f"반송 폴더를 읽지 못했다 ({type(e).__name__}) — 실행 흔적이 있는지 모른다"))
+    return out
 
 
 def resolve_job(job, pkgdir, run, registry=None):
@@ -1450,10 +1525,19 @@ def resolve_job(job, pkgdir, run, registry=None):
     def chk(rung):
         if rung not in seen:
             ref = chk(RA_OF[rung]) if rung in RA_OF else None
-            seen[rung] = check_attempt(job, pkgdir, P(rung), rung, registry, a_ref=ref)
+            try:
+                seen[rung] = check_attempt(job, pkgdir, P(rung), rung, registry, a_ref=ref)
+            except OSError as e:                        # 검사 도중 읽기 실패 (sha 를 낼 파일 …) = 감사 불가 (Codex DC P1-1)
+                seen[rung] = _unreadable(P(rung), rung, e)
         return seen[rung]
     res = _walk(job, chk)
-    att = {k: chk(k) for k in LADDER_RUNGS[job["ladder"]] if _started(P(k))}
+    att = {}
+    for k in LADDER_RUNGS[job["ladder"]]:
+        try:
+            if _started(P(k)):
+                att[k] = chk(k)
+        except OSError as e:                            # 시도 폴더 열거 실패 = 감사 불가 (없음이 아니다 · Codex DC P1-1)
+            att[k] = _unreadable(P(k), k, e)
     res["attempts"] = att
     orig = res["status"]
     integ = [(k, a) for k, a in att.items() if a["status"] in INTEGRITY]
@@ -1534,6 +1618,7 @@ def resolve_all(out, ret, manifest_sha256, registry=None):
     run = os.path.join(ret, "run") if os.path.isdir(os.path.join(ret, "run")) else ret
     res = {n: resolve_job(j, out, run, registry) for n, j in J.items()}
     genv = env_audit([(f"{n}/{k}", a) for n, r in res.items() for k, a in (r.get("attempts") or {}).items()] + aborted_attempts(J, out, ret, registry), registry)
+    genv += unregistered_traces(J, ret)                # 미등록 실행 흔적 · 못 읽은 반송 폴더 = 전체 정지 (Codex DC Q-DC-6 ④ · P1-1)
     for n, r in res.items():
         if r["status"] == "OK" and genv:
             r.update(adopted_status="OK", status=genv[0][1], why=f"전역 환경 감사 — {genv[0][0]}: {genv[0][2]}")
@@ -1827,6 +1912,9 @@ def seal_registry(out, ret, manifest_sha256, restart_read_regex="", v5_registry=
     env = env_audit(every)
     if env:
         raise PkgError(f"파일럿 환경 감사 {[' '.join(e)[:160] for e in env[:3]]} — 봉인하지 않는다 (공통 환경 고장 · 1저자)")
+    un = unregistered_traces(J, ret)
+    if un:
+        raise PkgError(f"파일럿 반송에 감사되지 않은 실행 흔적 · 못 읽은 폴더 {[' '.join(e)[:160] for e in un[:3]]} — 봉인하지 않는다 (Codex DC Q-DC-6 ④ · 1저자)")
     sp, vers, ks = {}, set(), set()
     for _, a in every:                          # 환경 증거 (자체 검토 S1 — 모든 실행 머리줄 · 무결성에서 멈춘 시도도)
         ev = _env_of(a)
@@ -1882,7 +1970,7 @@ def _readme(meta, pkg_sha):
     caps = " · ".join(f"{s} {meta['stages'][s]['cap_h']:g} h" for s in meta["stages"])
     return f"""# W_ad 외주 2차 — VASP 단일점 묶음 (LPSCl | 흑연 작은 모델 · C–C 대조 · 은 a4)
 
-> 상태: **준비본 v3 — Codex CZ · DB 고침 + 발송 전 자체 검토 (S1–S9) 반영 · 발송 전** · 결정 `D-2026-10-15-wad-p2small-vasp-card` · `D-2026-10-15-wad-aprime-v5-e70-a4-rerun` (active)
+> 상태: **준비본 v4 — Codex CZ · DB · DC 고침 + 발송 전 자체 검토 (S1–S9) 반영 · 발송 전** · 결정 `D-2026-10-15-wad-p2small-vasp-card` · `D-2026-10-15-wad-aprime-v5-e70-a4-rerun` (active)
 > 이 묶음 MANIFEST.sha256 의 sha256 = `{pkg_sha}` (보낼 때 메일 본문에 적는다 — 반송 검사가 이 값으로 승인본을 확인한다)
 
 ## 무엇을 하나
@@ -2193,7 +2281,7 @@ def _selftest():
         out_ok = lambda n, extra="": f" vasp.5.4.4 x\n{extra}" + "".join(f" Iteration      1( {i:3d})\n" for i in range(1, n + 1)) + " General timing and accounting\n"
         noterm = lambda k: " vasp.5.4.4 x\n" + "".join(f" Iteration      1( {i:3d})\n" for i in range(1, k + 1))          # 안 끝난 OUTCAR (마지막 반복 번호 k)
         inc = "NELM = 30\nEDIFF = 1E-6\n"
-        probes = {"ok": (okrows, out_ok(25), inc, 0), "noconv": (okrows.replace("-0.31E-07", "0.22E-02"), out_ok(25), inc, 0),
+        probes = {"rc_na": (okrows, out_ok(25), inc, "NA"), "ok": (okrows, out_ok(25), inc, 0), "noconv": (okrows.replace("-0.31E-07", "0.22E-02"), out_ok(25), inc, 0),
                   "deps_only": (okrows.replace("-0.12E-07", "0.2E-05"), out_ok(25), inc, 0),
                   "edge_eq": (okrows.replace("-0.31E-07", "0.1E-05").replace("-0.12E-07", "-1E-6"), out_ok(25), inc, 0),
                   "nan": (okrows.replace("-0.31E-07", "NaN"), out_ok(25), inc, 0), "inf": (okrows.replace("-0.31E-07", "1E+400"), out_ok(25), inc, 0),
@@ -2233,7 +2321,7 @@ def _selftest():
             if sh != py:
                 agree = False
         ck(f"판정 계약: 러너 awk = 파이썬 (탐침 {len(probes)} · 상태·행수·dE·d eps·사유 전부)", agree, {k: v for k, v in seen.items() if v[0] != v[1]})
-        want = {"ok": "OK", "noconv": "SCF_NOT_CONVERGED", "deps_only": "SCF_NOT_CONVERGED", "edge_eq": "OK", "nan": "SCF_UNVERIFIED", "inf": "SCF_UNVERIFIED",
+        want = {"rc_na": "SCF_UNVERIFIED", "ok": "OK", "noconv": "SCF_NOT_CONVERGED", "deps_only": "SCF_NOT_CONVERGED", "edge_eq": "OK", "nan": "SCF_UNVERIFIED", "inf": "SCF_UNVERIFIED",
                 "stars": "SCF_UNVERIFIED", "four_fields": "SCF_UNVERIFIED", "step0": "SCF_UNVERIFIED", "skip": "SCF_UNVERIFIED", "two_blocks": "SCF_UNVERIFIED",
                 "after_ion": "OK", "no_rows": "SCF_UNVERIFIED", "gt_nelm": "SCF_UNVERIFIED", "rc1": "RUN_FAILED", "not_term": "RUN_FAILED", "rc1_nan": "RUN_FAILED",
                 "two_runs": "SCF_UNVERIFIED", "it_mismatch": "SCF_UNVERIFIED", "no_ediff": "SCF_UNVERIFIED", "no_nelm": "SCF_UNVERIFIED", "nelm_semicolon": "OK", "dup_nelm_last": "OK",
@@ -2787,9 +2875,9 @@ def _selftest():
            and any(x.startswith("ⓐ") for x in c_fd["charge_transfer_signals"].get("not_evaluated", [])) and any("미평가" in l for l in c_fd["G5_C"]["labels"])
            and c7["charge_transfer_signals"].get("not_evaluated") == [] and (c7["far_diagnostics"]["P2S_S_A_far"] or {}).get("adopted") is True,
            (fdf, c_fd["charge_transfer_signals"], c_fd["G5_C"]["labels"], c7["charge_transfer_signals"]))
-        ck("R6 (CZ Q-CZ-10 ③): 영어 요약 = 24 jobs · 실패 없으면 VASP 실행 25 (은 a4 = 두 단계) · 등록 사다리로 최대 94 · 인프라 재시도 따로 · 상태 줄 v3",
+        ck("R6 (CZ Q-CZ-10 ③): 영어 요약 = 24 jobs · 실패 없으면 VASP 실행 25 (은 a4 = 두 단계) · 등록 사다리로 최대 94 · 인프라 재시도 따로 · 상태 줄 v4",
            "24 jobs; 25 VASP executions when nothing fails" in rdm and "up to 94 under the registered retry ladder" in rdm and "24 single-point SCF runs" not in rdm
-           and "준비본 v3" in rdm, rdm[rdm.find("## English summary"):][:300])
+           and "준비본 v4" in rdm, rdm[rdm.find("## English summary"):][:300])
         ck("DB ③ README: WALL_S 초 형식 (10진 · 선행 0 없이) 을 5 번 항목과 영어 요약에 적는다 (러너가 거부하는 꼴을 미리 알린다)",
            "선행 0 없이" in rdm[rdm.find("5. "):rdm.find("6. ")] and "`07200`" in rdm and "without leading zeros" in rdm, rdm[rdm.find("5. "):][:500])
         # R7 (사용자 결정 2026-10-22 · CZ 권고) — 파일럿 S_A far 의 LOCPOT xy 면평균 (LVHAR · 러너 추출 · 정보 · 판정 아님)
@@ -3136,6 +3224,205 @@ def _selftest():
         lz_ = (collect(tdz, tdz, msha, uma, None)["far_diagnostics"]["P2S_S_A_far"] or {}).get("locpot_zavg") or {}
         ck("⛔음성 DB P2 (Q-DB-9 · collect): 면평균 머리의 run_id 가 채택 시도와 다르면 값 배열을 내지 않는다 (bad · run_id_matches false — 지금까지는 V_eV 가 남았다)",
            "V_eV" not in lz_ and "bad" in lz_ and lz_.get("run_id_matches") is False, {k: v for k, v in lz_.items() if k not in ("z_A", "V_eV")})
+        # DC (Codex DC 회신 2026-10-22 · NO-GO 재승인 최소조건) ① 없는 것 (ENOENT) 만 '없음' — 권한 · 입출력 실패는 감사 불가 = 정지 (--check · a4 까지)
+        #   ② 장부 attempt.json elapsed_s 는 전체 값 + 끝 구분자 · 같은 종류 (러너 judge 의 rc · wsha) · Q-DC-6 ④ 미등록 실행 흔적 = UNREGISTERED_ATTEMPT
+        import builtins
+        import contextlib
+        import io
+
+        @contextlib.contextmanager
+        def deny(paths):                              # 이 경로만 열거 · 열기에서 PermissionError (root 는 chmod 로 못 막아서 주입 — 운영체제 권한 실험이 아니다)
+            P_ = {os.path.abspath(x) for x in paths}
+            o_sc, o_ld, o_op = os.scandir, os.listdir, builtins.open
+
+            def bad_(x):
+                try:
+                    a_ = os.path.abspath(os.fspath(x))
+                except TypeError:
+                    return
+                if a_ in P_:
+                    raise PermissionError(13, "Permission denied (시험 주입)", a_)
+
+            def sc_(x=".", *a, **k):
+                bad_(x)
+                return o_sc(x, *a, **k)
+
+            def ld_(x=".", *a, **k):
+                bad_(x)
+                return o_ld(x, *a, **k)
+
+            def op_(f, *a, **k):
+                if isinstance(f, (str, bytes, os.PathLike)):
+                    bad_(f)
+                return o_op(f, *a, **k)
+            os.scandir, os.listdir, builtins.open = sc_, ld_, op_
+            try:
+                yield
+            finally:
+                os.scandir, os.listdir, builtins.open = o_sc, o_ld, o_op
+
+        def safe(f, *a, **k):                         # 고치기 전 판에서 예외로 죽으면 그것도 빨강으로 (selftest 가 멈추지 않게)
+            try:
+                return f(*a, **k)
+            except Exception as e:  # noqa: BLE001
+                return {"예외": f"{type(e).__name__}: {e}"[:200]}
+
+        def cli_in(pk, *args):                        # CLI 를 같은 프로세스에서 (주입이 닿게) — 종료 코드
+            o_argv = sys.argv
+            sys.argv = [os.path.abspath(__file__), *args, "--out", pk, "--ret", pk, "--manifest_sha256", msha]
+            try:
+                with contextlib.redirect_stdout(io.StringIO()):
+                    return main()
+            except SystemExit as e:
+                return e.code
+            except PkgError:
+                return 2
+            except Exception as e:  # noqa: BLE001
+                return f"예외 {type(e).__name__}: {e}"[:200]
+            finally:
+                sys.argv = o_argv
+        cfail = lambda c: [x for x in ((c or {}).get("common_environment_failure") or [])] if isinstance(c, dict) else [str(c)]
+        cx = lambda c: collect_exit(c) if isinstance(c, dict) and "G5_C" in c else None      # 예외로 죽은 집계는 종료 코드 없음
+        tdc1 = os.path.join(T, "tdc1"); shutil.copytree(p7, tdc1, ignore=shutil.ignore_patterns("round2_return*"))
+        sdc1 = os.path.join(tdc1, "run", "P2S_Li_A_bound_r1", "stageA"); shutil.copytree(os.path.join(tdc1, "run", "P2S_Li_A_bound"), sdc1)
+        aj_ = os.path.join(sdc1, "attempt.json"); a__ = json.load(open(aj_)); a__["attempt"] = "r1A"; json.dump(a__, open(aj_, "w"))
+        head_edit(sdc1, OTHER_HD)
+        r0_ = safe(resolve_job, J["P2S_Li_A_bound"], tdc1, os.path.join(tdc1, "run"), reg7)
+        with deny([sdc1]):
+            r1_ = safe(resolve_job, J["P2S_Li_A_bound"], tdc1, os.path.join(tdc1, "run"), reg7)
+            c1_ = safe(collect, tdc1, tdc1, msha, uma, reg7)
+            k1_ = cli_in(tdc1, "--check", *rgs)
+            a4d1 = os.path.join(T, "a4_dc1.json"); k1a = cli_in(tdc1, "--a4_result", a4d1, *rgs)
+        a4j_ = json.load(open(a4d1)) if os.path.isfile(a4d1) else {}
+        ck("⛔음성 DC P1-1 (Codex 재현): 다른 빌드 r1A 가 있는 반송 — 읽기 오류 없으면 VERSION_MISMATCH · 그 r1A 폴더 열거에만 PermissionError 를 주면 "
+           "그 시도 ATTEMPT_UNREADABLE · 잡 OK 아님 · 공통 고장 AUDIT_UNREADABLE (collect 종료 6) · --check 6 · --a4_result 에 공통 고장 "
+           "(지금까지는 '시도 없음' 으로 잡 OK · --check 0 · a4 OK)",
+           r0_.get("status") == "VERSION_MISMATCH" and (r1_.get("attempts") or {}).get("r1A", {}).get("status") == "ATTEMPT_UNREADABLE" and r1_.get("status") != "OK"
+           and any("AUDIT_UNREADABLE" in x for x in cfail(c1_)) and cx(c1_) == 6 and k1_ == 6 and k1a == 0
+           and any("AUDIT_UNREADABLE" in x for x in (a4j_.get("common_environment_failure") or [])),
+           (r0_.get("status"), r1_.get("status"), sorted((r1_.get("attempts") or {})), cfail(c1_)[:2], k1_, k1a, a4j_.get("common_environment_failure")))
+        tdc2 = os.path.join(T, "tdc2"); shutil.copytree(tdc1, tdc2)
+        sdc2 = os.path.join(tdc2, "run", "P2S_Li_A_bound_r1", "stageA")
+        with deny([os.path.join(sdc2, "OUTCAR")]):
+            r2_ = safe(resolve_job, J["P2S_Li_A_bound"], tdc2, os.path.join(tdc2, "run"), reg7)
+            c2_ = safe(collect, tdc2, tdc2, msha, uma, reg7)
+        ck("⛔음성 DC (같은 종류 · 증거 파일): 폴더는 읽히는데 OUTCAR 열기만 PermissionError → 그 시도 증거 감사 불가 → 잡 OK 아님 · 공통 고장 AUDIT_UNREADABLE "
+           "(지금까지는 못 읽은 OUTCAR 를 '버전 없음' 으로 보아 다른 빌드가 감사에서 빠지거나 예외로 죽었다)",
+           r2_.get("status") not in (None, "OK") and any("AUDIT_UNREADABLE" in x for x in cfail(c2_)) and cx(c2_) == 6,
+           (r2_.get("status"), r2_.get("예외"), cfail(c2_)[:2]))
+        tdc2c = os.path.join(T, "tdc2c"); shutil.copytree(p7, tdc2c, ignore=shutil.ignore_patterns("round2_return*"))
+        with deny([os.path.join(tdc2c, "run", "P2S_Li_A_bound", "INCAR")]):
+            r2c = safe(resolve_job, J["P2S_Li_A_bound"], tdc2c, os.path.join(tdc2c, "run"), reg7)
+            c2c = safe(collect, tdc2c, tdc2c, msha, uma, reg7)
+            k2c = cli_in(tdc2c, "--check", *rgs)
+        ck("⛔음성 DC (같은 종류 · 채택 시도 검사 도중): 사다리가 채택한 단 0 의 INCAR (환경 증거가 아니라 실행 기록 sha 대조에서 읽는다) 열기만 PermissionError → "
+           "그 시도 ATTEMPT_UNREADABLE · 잡 OK 아님 · 공통 고장 AUDIT_UNREADABLE · --check 6 — 지금까지는 예외로 죽었다",
+           (r2c.get("history") or {}).get("0") == "ATTEMPT_UNREADABLE" and r2c.get("status") not in (None, "OK") and any("AUDIT_UNREADABLE" in x for x in cfail(c2c))
+           and cx(c2c) == 6 and k2c == 6, (r2c.get("history"), r2c.get("status"), r2c.get("예외"), cfail(c2c)[:2], k2c))
+        ev2b = {}
+        for jn_, f_ in (("P2S_Li_A_bound", "OUTCAR"), ("P2S_Li_A_bound", "POTCAR.species.sha256"), ("P2S_Li_A_bound", "attempt.start"), (OB, "stdout.log")):
+            t_ = os.path.join(T, f"tdc2b_{abs(hash(jn_ + f_))}"); shutil.copytree(p7, t_, ignore=shutil.ignore_patterns("round2_return*"))
+            s_ = os.path.join(t_, "run", f"{jn_}_r1", "stageA"); shutil.copytree(os.path.join(t_, "run", jn_), s_)
+            os.remove(os.path.join(s_, "attempt.json"))
+            with deny([os.path.join(s_, f_)]):
+                r_ = safe(resolve_job, J[jn_], t_, os.path.join(t_, "run"), reg7)
+                c_ = safe(collect, t_, t_, msha, uma, reg7)
+            ev2b[f"{jn_}/{f_}"] = ((r_.get("attempts") or {}).get("r1A", {}).get("status"), any("AUDIT_UNREADABLE" in x for x in cfail(c_)), cx(c_))
+        ck("⛔음성 DC (같은 종류 · 끊긴 시도의 증거 파일): attempt.json 없는 r1A (끊김 — 검사기는 환경 증거만 읽는다) 에서 OUTCAR · PP 종별 sha · 시작 표지 · "
+           "(optB88) stdout.log 를 하나씩 열기만 PermissionError → 그 시도 INCOMPLETE_ATTEMPT 이면서 공통 고장 AUDIT_UNREADABLE (종료 6) — "
+           "지금까지는 못 읽은 파일을 '증거 없음' 으로 보아 고장 없음",
+           all(v == ("INCOMPLETE_ATTEMPT", True, 6) for v in ev2b.values()), ev2b)
+        tdc3 = os.path.join(T, "tdc3"); shutil.copytree(p7, tdc3, ignore=shutil.ignore_patterns("round2_return*"))
+        dab_ = os.path.join(tdc3, "run_aborted", "P2S_S_A_bound_0_1"); os.makedirs(dab_)
+        json.dump({"job": "P2S_S_A_bound", "rung": "0", "wall_s": "60"}, open(os.path.join(dab_, "infra_abort.json"), "w"))
+        with deny([os.path.join(tdc3, "run_aborted")]):
+            c3_ = safe(collect, tdc3, tdc3, msha, uma, reg7)
+            k3_ = cli_in(tdc3, "--check", *rgs)
+        ck("⛔음성 DC (같은 종류 · run_aborted): run_aborted 열거에 PermissionError → 감사 불가 = 공통 고장 (collect 종료 6 · --check 6) — 지금까지는 예외로 죽었다",
+           any("AUDIT_UNREADABLE" in x for x in cfail(c3_)) and cx(c3_) == 6 and k3_ == 6, (cfail(c3_)[:2], k3_))
+        with deny([os.path.join(tdc3, "run_aborted")]):
+            ab1 = safe(aborted_attempts, J, tdc3, tdc3, reg7)
+        with deny([dab_]):
+            ab2 = safe(aborted_attempts, J, tdc3, tdc3, reg7)
+        st_ = lambda L: [(t, a.get("status")) for t, a in L] if isinstance(L, list) else L
+        ck("⛔음성 DC (같은 종류 · aborted_attempts 직접): 열거 실패 → ('run_aborted', ATTEMPT_UNREADABLE) 이고 env_audit 가 AUDIT_UNREADABLE · "
+           "폴더 하나 열거 실패 → 그 시도 ATTEMPT_UNREADABLE (반송 폴더 훑기가 같은 정지를 내서 집계에서는 가려진다 — 여기서 따로 본다)",
+           st_(ab1) == [("run_aborted", "ATTEMPT_UNREADABLE")] and any(e[1] == "AUDIT_UNREADABLE" for e in env_audit(ab1))
+           and st_(ab2) == [("P2S_S_A_bound/0@aborted1", "ATTEMPT_UNREADABLE")], (st_(ab1), st_(ab2)))
+
+        def tree(name_, files_):                      # p7 사본 + 파일 (값 None = 빈 폴더)
+            t_ = os.path.join(T, name_); shutil.copytree(p7, t_, ignore=shutil.ignore_patterns("round2_return*"))
+            for rel_, txt_ in files_.items():
+                fp_ = os.path.join(t_, rel_)
+                if txt_ is None:
+                    os.makedirs(fp_, exist_ok=True)
+                else:
+                    os.makedirs(os.path.dirname(fp_), exist_ok=True); open(fp_, "w").write(txt_)
+            return t_
+        tdc4 = tree("tdc4", {"run/notes/README.txt": "memo\n"})
+        with deny([os.path.join(tdc4, "run", "notes")]):
+            c4_ = safe(collect, tdc4, tdc4, msha, uma, reg7)
+        ck("⛔음성 DC (같은 종류 · 미등록 폴더 열거): 반송 트리의 폴더를 읽지 못하면 실행 흔적이 있는지 모른다 → 감사 불가 = 공통 고장 (종료 6)",
+           any("AUDIT_UNREADABLE" in x for x in cfail(c4_)) and cx(c4_) == 6, cfail(c4_)[:2])
+        otr = {"OUTCAR": OTHER_HD + "\n", "attempt.start": json.dumps({"job": "P2S_S_A_bound", "attempt": "r3", "run_id": "20261022T000000-1-1"}) + "\n"}
+        un_ = {"r3 (사다리 밖 단 이름)": {f"run/P2S_S_A_bound_r3/{f}": t for f, t in otr.items()},
+               "등록 시도 안의 다른 하위 폴더 (r1/stageB)": {"run/P2S_Li_A_bound_r1/stageB/OUTCAR": otr["OUTCAR"]},
+               "run_aborted 의 모르는 이름": {"run_aborted/junk/OSZICAR": "DAV:   1   -0.1E+04   -0.1E+04   -0.1E+02  100   0.1E+02\n"},
+               "run 바로 아래 OUTCAR": {"run/OUTCAR": otr["OUTCAR"]}}
+        unr = {}
+        for lab_, fs_ in un_.items():
+            t_ = tree(f"tun_{abs(hash(lab_))}", fs_)
+            c_ = safe(collect, t_, t_, msha, uma, reg7)
+            unr[lab_] = (any("UNREGISTERED_ATTEMPT" in x for x in cfail(c_)), cx(c_) == 6)
+        tun = tree("tun_cli", un_["r3 (사다리 밖 단 이름)"])
+        kun, a4u = cli_(tun, "--check", *rgs), os.path.join(T, "a4_un.json")
+        aun = cli_(tun, "--a4_result", a4u, *rgs); a4uj = json.load(open(a4u)) if os.path.isfile(a4u) else {}
+        ck("⛔음성 DC Q-DC-6 ④ (Codex 재현): 등록되지 않은 폴더의 실행 흔적 (run/<잡>_r3 에 다른 빌드 OUTCAR + 시작 표지 · r1/stageB · run_aborted/junk · run/OUTCAR) → "
+           "UNREGISTERED_ATTEMPT (감사되지 않음 · 공통 고장으로 집계·인용 보류 · 종료 6) · --check 6 · a4 공통 고장 (지금까지는 24 잡 OK · 고장 없음)",
+           all(v == (True, True) for v in unr.values()) and kun.returncode == 6 and aun.returncode == 0
+           and any("UNREGISTERED_ATTEMPT" in x for x in (a4uj.get("common_environment_failure") or [])), (unr, kun.returncode, aun.returncode, a4uj.get("common_environment_failure")))
+        tok = tree("tun_ok", {"run/notes/README.txt": "memo\n", "run/P2S_S_A_bound_r3/INCAR": "ENCUT = 520\n", "run/P2S_S_A_far_r3": None,
+                              "run_aborted/P2S_S_A_bound_0_1/infra_abort.json": json.dumps({"job": "P2S_S_A_bound", "rung": "0", "wall_s": "60"}) + "\n"})
+        cok = safe(collect, tok, tok, msha, uma, reg7)
+        ck("DC Q-DC-6 ④ (Codex: 빈 폴더 · 설명 파일은 고장이 아니다): 미등록 폴더라도 빈 폴더 · README · 입력 사본 (INCAR) 만이면 실행 흔적이 아니다 · "
+           "정상 run_aborted/<잡>_<단>_<k> 는 등록된 이름 → 공통 고장 없음",
+           "G5_C" in cok and not cfail(cok), cfail(cok)[:3])
+        tus = tree("tun_seal", un_["r3 (사다리 밖 단 이름)"])
+        try:
+            seal_registry(tus, tus, msha, v5_registry=v5r, kernel_read_regex=KREG); msu = "(봉인됨)"
+        except PkgError as e:
+            msu = str(e)
+        ck("⛔음성 DC Q-DC-6 ④: 파일럿 반송에 미등록 실행 흔적이 있으면 등록부를 봉인하지 않는다 (지금까지는 봉인됐다)", "UNREGISTERED_ATTEMPT" in msu, msu[:200])
+        # DC P1-2 — 러너 장부: attempt.json 의 elapsed_s 는 전체 값 + 끝 구분자 (지수 · 소수 · 뒤 쓰레기 · 숫자 중간에서 잘림 = 미상 → 다음 잡 안 뜸)
+        led = {}
+        for lab_, body_ in (("4.5e5", '"elapsed_s": 4.5e5, "rc": 0}\n'), ("1e12", '"elapsed_s": 1e12, "rc": 0}\n'),
+                            ("뒤 쓰레기 450000x", '"elapsed_s": 450000x, "rc": 0}\n'), ("숫자 중간에서 잘림", '"elapsed_s": 4'),
+                            ("450000 (정상 · 상한 넘음)", '"elapsed_s": 450000, "rc": 0}\n'), ("7200 (정상)", '"elapsed_s": 7200, "rc": 0}\n')):
+            pk_l = fresh(f"pk_led_{abs(hash(lab_))}"); d_l = os.path.join(pk_l, "run_aborted", "P2S_S_A_bound_0_1"); os.makedirs(d_l)
+            open(os.path.join(d_l, "attempt.json"), "w").write('{"job": "P2S_S_A_bound", "attempt": "0", "stage": "P", ' + body_)
+            rc_l, log_l = run_r(pk_l, {}, (), JOBS="P2S_S_A_far")
+            led[lab_] = (rc_l, os.path.isdir(os.path.join(pk_l, "run", "P2S_S_A_far")), "미상" in log_l, "누적" in log_l)
+        ck("⛔음성 DC P1-2 (Codex): 장부 attempt.json 의 elapsed_s 가 4.5e5 · 1e12 · 뒤 쓰레기 · 숫자 중간에서 잘림 → 미상 · 다음 잡 안 뜸 (종료 5) — "
+           "지금까지는 숫자 접두부 (4 · 1 · 450000 · 4) 를 더했다 · 정상 450000 은 상한 넘음으로 보류 · 정상 7200 은 뜬다",
+           all(led[k][:3] == (5, False, True) for k in ("4.5e5", "1e12", "뒤 쓰레기 450000x", "숫자 중간에서 잘림"))
+           and led["450000 (정상 · 상한 넘음)"][:2] == (5, False) and led["450000 (정상 · 상한 넘음)"][3] and led["7200 (정상)"][1] is True, led)
+        rcj = {}
+        for lab_, rv_ in (("0.5", "0.5"), ("1e3", "1e3"), ("-0", "-0"), ("0", "0"), ("-1", "-1")):
+            d_ = os.path.join(T, "probe_rc", f"rc_{abs(hash(lab_))}"); os.makedirs(d_)
+            for f_, t_ in (("OSZICAR", okrows), ("OUTCAR", out_ok(25)), ("INCAR", inc)):
+                open(os.path.join(d_, f_), "w", newline="").write(t_)
+            open(os.path.join(d_, "attempt.json"), "w").write('{"job": "x", "attempt": "0", "rc": ' + rv_ + ', "elapsed_s": 1}\n')
+            rcj[lab_] = (subprocess.run(["bash", jt, d_, ""], capture_output=True, text=True).stdout.split() or ["(없음)"])[0]
+        ck("⛔음성 DC (같은 종류 · 러너 judge 의 rc): attempt.json 의 rc 를 전체 값으로 — 0.5 · 1e3 · -0 은 SCF_UNVERIFIED (rc_unknown · 승격 없음 · 검사기는 "
+           "ATTEMPT_MISMATCH) · 0 은 OK · -1 은 RUN_FAILED (지금까지는 접두부 0 · 1 로 읽어 OK · RUN_FAILED → 다음 단)",
+           rcj == {"0.5": "SCF_UNVERIFIED", "1e3": "SCF_UNVERIFIED", "-0": "SCF_UNVERIFIED", "0": "OK", "-1": "RUN_FAILED"}, rcj)
+        wfn = re.search(r"(?m)^wsha\(\)\{.*$", runner).group(0)
+        wsh = os.path.join(T, "wsha.sh"); open(wsh, "w").write(wfn + '\nwsha "$1" "$2"\n')
+        wif = os.path.join(T, "wsha_info.json"); h64 = "a" * 64
+        open(wif, "w").write(json.dumps({"sha256": h64 + "b", "src_sha256": h64}) + "\n")
+        w65, w64 = (subprocess.run(["bash", wsh, wif, k_], capture_output=True, text=True).stdout.strip() for k_ in ("sha256", "src_sha256"))
+        ck("⛔음성 DC (같은 종류 · 러너 wsha): WAVECAR.info 의 sha 가 65 자면 빈 값 (지금까지는 앞 64 자를 sha 로 읽어 앞부분이 같으면 재시작 이행) · 64 자는 그대로",
+           w65 == "" and w64 == h64, (w65, w64))
     finally:
         if os.environ.get("R2_SELFTEST_KEEP") == "1":
             print(f"  (시험 폴더 남김: {T})")
