@@ -1,12 +1,12 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-22 · managed-files: 542
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-22 · managed-files: 543
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 335건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 336건)
 - 2026-10-22 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-10-22 · `kb/reviews/codex_CZ_reply_wad_outsourcing_round2_bundle_2026_10_17.md` — CZ 회신 — W_ad 외주 2차 묶음 리뷰: NO-GO · 발송 보류 · 구조 봉인·집계 산식은 유지 · 반송 검사 경로의 결함 (판정 순서 · A→B 결박 · 시도별 환경 감사 · optB88 판독 · 인프라 중단 비용) 을 고친 뒤 재봉인 · 수령 2026-10-22 (사용자 붙여넣기 · 원문 보존 · 마크다운…
 - 2026-10-22 · `kb/reviews/codex_DB_prompt_wad_outsourcing_round2_v2_2026_10_22.md` — DB 프롬프트 — W_ad 외주 2차 묶음 v2 재리뷰: CZ 해제조건 일곱 + 발송 전 자체 검토 고침 (S1–S9) 이 닫혔는지 (고친 곳 diff 만) · 발송 승인 여부 · 발송 2026-10-22 (사용자 · 기준 커밋 3d684e502 ·…
@@ -15,6 +15,7 @@
 - 2026-10-22 · `kb/reviews/codex_DC_reply_wad_outsourcing_round2_v3_2026_10_22.md` — DC 회신 — W_ad 외주 2차 묶음 v3 (3e70329cb · MANIFEST bf7b2ac9…): NO-GO · P1 2 (시도 폴더 읽기 실패를 '시도 없음' 으로 — 새 회귀 · 러너 장부 elapsed_s 숫자 접두부만 검사 — 잔존) · Q-DC-2 · 3 · 5 GO · Q-DC-6 조건부 수용 (미등록 실행 흔적은 '감사되지 않음' 으로 구분) · 재승인 최소조건 셋 · 수령 2026-10-22 (사용자 붙여넣기 · 원문 보존 · 마크다운…
 - 2026-10-22 · `kb/reviews/codex_DD_prompt_wad_outsourcing_round2_v4_2026_10_22.md` — DD 프롬프트 — W_ad 외주 2차 묶음 v4 확인: DC 재승인 최소조건 셋 (읽기 실패 ≠ 없음 · 장부 전체 값 · 결박 갱신) + 같은 종류 훑기 + 미등록 실행 흔적 자동 보류 · 발송 승인 여부 · 발송 2026-10-22 (사용자 · 기준 커밋 1e4d113d2 ·…
 - 2026-10-22 · `kb/reviews/codex_DD_reply_wad_outsourcing_round2_v4_2026_10_22.md` — DD 회신 — W_ad 외주 2차 묶음 v4 (1e4d113d2 · MANIFEST 39522906…): NO-GO · P1 2 (run_aborted 루트 감사 불가 기록을 봉인 필터가 버림 — 새 fail-open · 뺀 bash rc 검사는 awk -v 이스케이프 해석 때문에 awk 검사와 동등하지 않음) · P2 2 (미등록 흔적 보장 범위 = 반송물에 도착한 흔적 · rc=-0 설명 정정) · Q-DD-2 · 3 GO · 재승인 최소조건 셋 · 수령 2026-10-22 (사용자 붙여넣기 · 원문 보존 · 마크다운…
+- 2026-10-22 · `kb/reviews/codex_DE_prompt_wad_outsourcing_round2_v5_2026_10_22.md` — DE 프롬프트 — W_ad 외주 2차 묶음 v5 확인: DD 재승인 최소조건 셋 (봉인 필터의 루트 감사 불가 · rc 원문 검증 · 결박 갱신) + 같은 종류 (INCAR 이스케이프 · ENCUT 숫자 꼴) · 발송 승인 여부 · 초안 — 발송 전 (기준 커밋 9ddfbe448 · 묶음 v5 MAN…
 - 2026-10-22 · `kb/projects/handoff_2026_10_22_evacuation.md` — 대피 인계 — 2026-10-22 (friendly 세션 토큰 소진 → 서브 대시보드 세션 · 머지 때 충돌 0 설계 · W_ad 외주 2차 CZ 고침 설계 포함) · 진행
 - 2026-10-22 · `kb/questions/li3nd_pristine_reconstruction_2026_09_02.md` — Li₃Nd pristine 3×3×3 이 0.65 eV 재구성한다 — NEB 기반 구조도 같은가? · open [open]
 - 2026-10-20 · `kb/projects/handoff_2026_10_20_return_to_origin.md` — 본 세션 복귀 카드 — 서브 세션 (10-15 → 10-20) 134 커밋을 본 세션으로 (2026-10-20) · 발송 대기 — 사용자가 §0 프롬프트를 본 세션 (…CTzs) 에 붙…
@@ -26,7 +27,6 @@
 - 2026-10-16 · `kb/seminars/Research_Seminar_2026_10_13_cascade_script_ko.md` — 연구세미나 2026-10-13 — cascade 진행 브리핑 발표 대본 (장별) · 진행
 - 2026-10-16 · `kb/seminars/Research_Seminar_2026_10_16_cascade_script_plain_ko.md` — 연구세미나 2026-10-16 — cascade 1부 대본 쉬운 판 (1–15쪽 · 노트 칸 붙여넣기용) · 진행
 - 2026-10-15 · `kb/reviews/codex_CY_prompt_wad_outsourcing_round2_design_2026_10_15.md` — CY 프롬프트 — W_ad 외주 2차 설계 리뷰: 탄소 작은 모델 (P2′) 보고량 카드 + V5 은 쪽 ENCUT 짝 재시도 (개정 4) + 러너 고칠 점 · 빌드 전 · 범위·수렴·문턱부터 · 발송 2026-10-15 · ✅ 회신 수령 2026-10-15 → `…
-- 2026-10-15 · `kb/reviews/codex_CY_reply_wad_outsourcing_round2_design_2026_10_15.md` — CY 회신 — W_ad 외주 2차 설계 리뷰: 조건부 GO · 탄소 작은 모델 추가와 은 a4 재개 찬성 · 카드 그대로 실행 승인 아님 · 최소 수정 여섯 묶음 뒤 빌드 · 발송 승인은 CZ · 수령 2026-10-15 (사용자 붙여넣기 · 원문 보존 · 마크다운…
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -212,7 +212,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (218)
+## reviews/ (219)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-10-22 · 자동생성)
 - `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
@@ -339,6 +339,7 @@
 - `kb/reviews/codex_DC_reply_wad_outsourcing_round2_v3_2026_10_22.md` — DC 회신 — W_ad 외주 2차 묶음 v3 (3e70329cb · MANIFEST bf7b2ac9…): NO-GO · P1 2 (시도 폴더 읽기 실패를 '시도 없음' 으로 — 새 회귀 · 러너 장부 elapsed_s 숫자 접두부만 검사 — 잔존) · Q-DC-2 · 3 · 5 GO · Q-DC-6 조건부 수용 (미등록 실행 흔적은 '감사되지 않음' 으로 구분) · 재승인 최소조건 셋  (2026-10-22 · 수령 2026-10-22 (사용자 붙여넣기 · 원문 보존 · 마크다운…)
 - `kb/reviews/codex_DD_prompt_wad_outsourcing_round2_v4_2026_10_22.md` — DD 프롬프트 — W_ad 외주 2차 묶음 v4 확인: DC 재승인 최소조건 셋 (읽기 실패 ≠ 없음 · 장부 전체 값 · 결박 갱신) + 같은 종류 훑기 + 미등록 실행 흔적 자동 보류 · 발송 승인 여부  (2026-10-22 · 발송 2026-10-22 (사용자 · 기준 커밋 1e4d113d2 ·…)
 - `kb/reviews/codex_DD_reply_wad_outsourcing_round2_v4_2026_10_22.md` — DD 회신 — W_ad 외주 2차 묶음 v4 (1e4d113d2 · MANIFEST 39522906…): NO-GO · P1 2 (run_aborted 루트 감사 불가 기록을 봉인 필터가 버림 — 새 fail-open · 뺀 bash rc 검사는 awk -v 이스케이프 해석 때문에 awk 검사와 동등하지 않음) · P2 2 (미등록 흔적 보장 범위 = 반송물에 도착한 흔적 · rc=-0 설명 정정) · Q-DD-2 · 3 GO · 재승인 최소조건 셋  (2026-10-22 · 수령 2026-10-22 (사용자 붙여넣기 · 원문 보존 · 마크다운…)
+- `kb/reviews/codex_DE_prompt_wad_outsourcing_round2_v5_2026_10_22.md` — DE 프롬프트 — W_ad 외주 2차 묶음 v5 확인: DD 재승인 최소조건 셋 (봉인 필터의 루트 감사 불가 · rc 원문 검증 · 결박 갱신) + 같은 종류 (INCAR 이스케이프 · ENCUT 숫자 꼴) · 발송 승인 여부  (2026-10-22 · 초안 — 발송 전 (기준 커밋 9ddfbe448 · 묶음 v5 MAN…)
 - `kb/reviews/codex_D_symposium_talk_standard_2026_08_25.md` — 교차리뷰 D — 심포지엄 세션(덱+녹취) 표준 (codex 작업지시서)  (2026-08-25 · 리뷰완료-HOLD)
 - `kb/reviews/codex_E_sdcp_wave1_gate_2026_08_25.md` — 교차리뷰 E — SDCP wave1 게이트 수정·물리 결론 (판정 수령 + 반영)  (2026-08-25 · 종결-실행승인(내부 max 리뷰))
 - `kb/reviews/codex_F_beta_null_model_2026_08_27.md` — 교차리뷰 F — β 귀무모형이 뒤집혔다 (08-11 Q1 재개 + 신규 3건)  (2026-08-27 · 회신수령-반영완료 (→ codex_G_reply_to_F_2026_0…)
