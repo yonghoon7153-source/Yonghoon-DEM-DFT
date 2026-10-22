@@ -1,7 +1,7 @@
 # W_ad 외주 2차 — VASP 단일점 묶음 (LPSCl | 흑연 작은 모델 · C–C 대조 · 은 a4)
 
-> 상태: **준비본 v2 — Codex CZ 고침 반영 · 발송 전** · 결정 `D-2026-10-15-wad-p2small-vasp-card` · `D-2026-10-15-wad-aprime-v5-e70-a4-rerun` (active)
-> 이 묶음 MANIFEST.sha256 의 sha256 = `92e41141f9ee3fc0081e23427b13dd067e6657bd220c3aed00145673fd94af66` (보낼 때 메일 본문에 적는다 — 반송 검사가 이 값으로 승인본을 확인한다)
+> 상태: **준비본 v2 — Codex CZ 고침 + 발송 전 자체 검토 (S1–S8) 반영 · 발송 전** · 결정 `D-2026-10-15-wad-p2small-vasp-card` · `D-2026-10-15-wad-aprime-v5-e70-a4-rerun` (active)
+> 이 묶음 MANIFEST.sha256 의 sha256 = `b9450f6f7e188b9159030b6cc6a031a106682fbd2076c27dd66acfd6f4f7bc70` (보낼 때 메일 본문에 적는다 — 반송 검사가 이 값으로 승인본을 확인한다)
 
 ## 무엇을 하나
 단일점 (SCF) 24 잡 — 이완 없음. 좌표는 정해져 있습니다 (POSCAR 그대로). 단계마다 돌립니다.
@@ -45,7 +45,10 @@
 5. 0 스텝 인프라 중단 (스케줄러 취소 등으로 전자 반복 0 회) 이면: `WALL_S=<초> bash run_all.sh --infra-abort <잡> <단> <스케줄러 잡 id> <취소 UTC> <사유>` 로
    기록한 뒤 다시 돌려 주세요 (잡마다 2 회까지). `WALL_S=<초>` (스케줄러 장부의 그 시도 벽시계) 를 꼭 주세요 — 그 시간도 누적 상한 장부에 들어갑니다.
    모르면 UNKNOWN 으로 남고, 그 뒤 잡은 `bash run_all.sh --infra-wall <run_aborted 폴더 이름> <초>` 로 장부 값을 채울 때까지 뜨지 않습니다 (종료 5).
-   OSZICAR · stdout.log · OUTCAR 어디에든 전자 반복 흔적이 있으면 기록을 거부합니다 (그건 실행 실패 — 사다리가 다룹니다).
+   OSZICAR · stdout.log · OUTCAR 어디에든 전자 반복 흔적이 있으면 이 기록은 거부합니다.
+   **전자 스텝이 돈 뒤 러너째 끊긴 시도** (스케줄러 시간 제한 · 노드 고장 — 그 시도 폴더에 `attempt.json` 이 없다) 는 다시 돌리지 않습니다 (값 없음 · 1저자 결정).
+   러너는 그 벽시계를 모르므로 다음 잡을 띄우지 않습니다 (종료 5) — `WALL_S=<초> bash run_all.sh --killed <잡> <단> <스케줄러 잡 id> <취소 UTC> <사유>` 로
+   스케줄러 장부 값을 기록한 뒤 다시 돌려 주세요. (VASP 가 스스로 오류로 끝난 실행 실패는 러너가 기록하고 정해진 사다리대로 다음 단으로 갑니다.)
 6. **누적 상한**: 단계마다 P 117 h · 1 170 h · 2 586 h · 3 204 h · 4 24 h · 전체 1080 h (한 노드 벽시계 합 · 파일럿 뒤에는 해제 파일의 값). 넘으면 러너가 다음 잡을 띄우지 않고 멈춥니다 (종료 5) —
    돌던 잡은 끝까지 돕니다. 반송해 주시고 결정을 기다려 주세요.
 7. **공통 환경 고장 = 전체 정지** (종료 6): VASP 빌드 · POTCAR · vdW 커널 파일이 파일럿에서 봉인한 것과 다르거나, optB88 잡에 커널이 없을 때.
@@ -61,7 +64,7 @@
 - **optB88-vdW**: `vdw_kernel.bindat` (VASP 5.4.4 배포본) 경로를 `VDW_KERNEL` 로 주세요. 러너가 sha256 · 크기를 기록합니다 (파일럿 뒤 봉인).
 
 ## 돌려받을 것
-`round2_return.tgz` + `.sha256` — 시도마다 OUTCAR · OSZICAR · INCAR · KPOINTS · POSCAR · IBZKPT · POTCAR.titel · POTCAR.sha256 · POTCAR.species.sha256 · attempt.json · stdout.log · WAVECAR.info · warn.log · infra_abort.json · LOCPOT.zavg.txt (있는 것만) · `run/status.tsv` · `run/env.txt` · `run/infra_aborts.tsv` · `MANIFEST.sha256`.
+`round2_return.tgz` + `.sha256` — 시도마다 OUTCAR · OSZICAR · INCAR · KPOINTS · POSCAR · IBZKPT · POTCAR.titel · POTCAR.sha256 · POTCAR.species.sha256 · attempt.json · stdout.log · WAVECAR.info · warn.log · infra_abort.json · LOCPOT.zavg.txt · attempt.start · killed.json (있는 것만) · `run/status.tsv` · `run/env.txt` · `run/infra_aborts.tsv` · `MANIFEST.sha256`.
 VASP 빌드 · 노드/코어 · **잡별 peak RSS · 벽시계** 를 `run/env.txt` 에 한 줄씩 덧붙여 주세요.
 
 ## English summary
@@ -74,5 +77,6 @@ The runner applies a pre-registered retry ladder automatically (rung 0 → r1 st
 WAVECAR with AMIN 0.01 → r2 stage B with AMIX 0.1/BMIX 0.01/AMIN 0.01); the silver a4 job is a single two-stage run. Convergence is judged from the last
 electronic row of OSZICAR (|dE| and |d eps| ≤ EDIFF), never from OUTCAR wording. Please do not edit INCAR/POSCAR/KPOINTS, do not delete stage-A WAVECARs,
 and do not rerun anything by hand; record zero-step infrastructure aborts with WALL_S=<scheduler wall seconds> and --infra-abort (an unknown wall time
-is recorded as UNKNOWN and holds the next job until --infra-wall fills it from the scheduler log). Cumulative wall-time caps stop the runner (exit 5);
+is recorded as UNKNOWN and holds the next job until --infra-wall fills it from the scheduler log); a run killed after electronic steps (no attempt.json) is not
+retried and holds the next job until its scheduler wall time is recorded with WALL_S=<seconds> --killed. Cumulative wall-time caps stop the runner (exit 5);
 a VASP build, POTCAR or vdW-kernel change stops everything (exit 6). Return the round2_return.tgz pair after `sha256sum -c`.

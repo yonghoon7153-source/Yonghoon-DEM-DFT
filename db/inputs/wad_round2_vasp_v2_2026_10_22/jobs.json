@@ -6,9 +6,9 @@
   "D-2026-10-15-wad-p2small-vasp-card",
   "D-2026-10-15-wad-aprime-v5-e70-a4-rerun"
  ],
- "status": "준비본 v2 — Codex CZ 고침 반영 · 발송 전",
- "tool_sha256": "df4cbfa421018600799c67faeffbcaeeb8655feddac86bf2ef00a2e91f26bd80",
- "v5_tool_sha256": "de0a085374cc5458b7b67ddb52ff5287af5654674e0ab12b388e03a6079e7911",
+ "status": "준비본 v2 — Codex CZ 고침 + 발송 전 자체 검토 (S1–S8) 반영 · 발송 전",
+ "tool_sha256": "764d6692e445040d5f965c4c2da434ca9fdc20fb0dec39a8e7fa9f2decd86ef6",
+ "v5_tool_sha256": "0d912331fe6003d22a3511831d2b258fb2249ca8f59c889ea2df538b2f82c4ea",
  "sources": {
   "p2s_seal_manifest_sha256": "65a0ca0e376b3c67737399128bee753f506f8ae32122a5308d97ca8436dac2fe",
   "wadcc_manifest_sha256": "a17385cb2a1110522749978a1ff528741d3796f541438ec43b9378a91727edbc",
@@ -142,7 +142,9 @@
    "WAVECAR.info",
    "warn.log",
    "infra_abort.json",
-   "LOCPOT.zavg.txt"
+   "LOCPOT.zavg.txt",
+   "attempt.start",
+   "killed.json"
   ],
   "return_forbidden": [
    "POTCAR",

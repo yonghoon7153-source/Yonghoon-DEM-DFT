@@ -280,7 +280,7 @@ def build(seal_dir, out, v5_pkg=None, wadcc_pkg=None, ledger=None):
     _write(os.path.join(out, "JOBS.txt"), "\n".join(j["dir"] for j in jobs) + "\n")
     _write(os.path.join(out, "run_all.sh"), run_all_text()); os.chmod(os.path.join(out, "run_all.sh"), 0o755)
     meta = {"schema": "wad_round2_vasp_package/v2", "card": CARD, "amendment_4": AMEND4, "decisions": list(DECISIONS),
-            "status": "준비본 v2 — Codex CZ 고침 반영 · 발송 전",
+            "status": "준비본 v2 — Codex CZ 고침 + 발송 전 자체 검토 (S1–S8) 반영 · 발송 전",
             "tool_sha256": _sha(os.path.abspath(__file__)), "v5_tool_sha256": _sha(os.path.abspath(V.__file__)),
             "sources": {"p2s_seal_manifest_sha256": _sha(smp), "wadcc_manifest_sha256": _sha(os.path.join(wadcc_pkg, "cc_stage2_manifest.json")),
                         "v5_manifest_sha256": V5_MANIFEST_SHA256},
@@ -1859,7 +1859,7 @@ def _readme(meta, pkg_sha):
     caps = " · ".join(f"{s} {meta['stages'][s]['cap_h']:g} h" for s in meta["stages"])
     return f"""# W_ad 외주 2차 — VASP 단일점 묶음 (LPSCl | 흑연 작은 모델 · C–C 대조 · 은 a4)
 
-> 상태: **준비본 v2 — Codex CZ 고침 반영 · 발송 전** · 결정 `D-2026-10-15-wad-p2small-vasp-card` · `D-2026-10-15-wad-aprime-v5-e70-a4-rerun` (active)
+> 상태: **준비본 v2 — Codex CZ 고침 + 발송 전 자체 검토 (S1–S8) 반영 · 발송 전** · 결정 `D-2026-10-15-wad-p2small-vasp-card` · `D-2026-10-15-wad-aprime-v5-e70-a4-rerun` (active)
 > 이 묶음 MANIFEST.sha256 의 sha256 = `{pkg_sha}` (보낼 때 메일 본문에 적는다 — 반송 검사가 이 값으로 승인본을 확인한다)
 
 ## 무엇을 하나

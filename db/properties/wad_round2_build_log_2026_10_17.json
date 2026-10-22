@@ -169,5 +169,56 @@
   "등록부": "schema wad_round2_pp_registry/v2 (아직 봉인한 등록부 없음 — 옛 판과 섞일 일 없음) · 파일럿 뒤 --restart_read_regex · --kernel_read_regex 는 파일럿 원문을 보고 정한다 (지금 후보 문자열을 5.4.4 정답으로 박지 않는다)",
   "⏭": "편지 DB (Codex · 고친 묶음 v2 · diff 만 · 질문 = 해제조건 일곱이 닫혔는지) → 회신 → 발송은 사용자",
   "by": "agent · 2026-10-22"
+ },
+ "⑤-3_자체_검토_고침_2026_10_22": {
+  "출처": "편지 DB 를 보내기 전 적대적 자체 검토 (같은 세션 · 검토 에이전트는 저장소 읽기만 · 재현 폴더는 scratchpad) — CZ 고침 diff 8d41e4e0..b3c13f0aa 에서 지적 8 (P0 2 · P1 1 · P2 5) · 우리가 하나씩 다시 재현 (전부 맞음) · 하나 더 찾음 (S9) → 고침 셋 · 첫 DB 초안 (ed84da61d · 묶음 92e41141…) 은 발송 안 함",
+  "지적과_고침": {
+   "S1 (P0) 무결성에서 멈춘 시도 · 끊긴 시도 · 사다리 밖 시도 · OUTCAR 두 번째 머리줄의 VASP 빌드가 감사에 안 들어감": "c11446827 — env_evidence (무결성 검사 전 · 모든 머리줄 · PP 종별 sha · 커널 sha) · env_audit 등록부 직접 대조 · 사다리 밖 무결성 실패 → 잡 OK 아님 · run_aborted 전부 · 봉인은 판정 근거 확정 모순 일곱 사유를 막는다",
+   "S2 (P0) 전역 환경 감사가 collect 에만 (--check 0 · --a4_result OK → V5 채택)": "c11446827 — resolve_all 한 경로 · --check 종료 6 · --a4_result 등록부 필수 + common_environment_failure · V5 load_a4_result (등록부 sha · 묶음 MANIFEST sha 없으면 거부 · CLI 배선 시험)",
+   "S3 (P1) 전자 스텝 뒤 러너째 끊긴 시도 비용 0 초 · README '사다리가 다룬다' 거짓": "a9cf825b0 — 시작 표지 attempt.start · 장부 미상 → 다음 잡 보류 · --killed (WALL_S) → killed.json · README 5 · 영어 요약 · 재시도는 그대로 안 함 (사전등록)",
+   "S4 (P2) 시계가 뒤로 가면 장부 음수 → 영구 보류 · 검사기 형식 위반": "a9cf825b0 — elapsed_s = /proc/uptime 차 (시작 때 못 읽으면 종료 2) · 검사기는 t_end ≥ t_start 를 안 요구",
+   "S5 (P2) 재시작 regex 두 엔진 뜻 갈림 (러너 grep 에 -e 없음 · 파이썬 3.11 소유·게으른 수량자)": "a551036e3 — 러너 grep -e (run_one · stat_of) · '-' 시작 · 붙은 수량자 형식 거부",
+   "S6 (P2) 판정 근거의 줄·칸 나눔이 awk 와 갈림 (\\r)": "a551036e3 — 원문 그대로 (줄바꿈 안 바꿈) · 줄 \\n · 칸 빈칸·탭 · 탐침 다섯 · 탐침 비교도 바이트로 (text=True 가 \\r 를 줄바꿈으로 바꿔 갈림을 숨겼다)",
+   "S7 (P2) stdout.log · POTCAR.titel · POTCAR.species.sha256 가 실행 기록 sha 밖": "a551036e3 — 넷 + 시작 표지를 attempt.json sha 에 · 검사기 결박",
+   "S8 (P2) WAVECAR.info 가 객체 아닌 JSON 이면 a_eligible 예외": "a551036e3 — 없는 것으로 → ⓐ 자격 미달",
+   "S9 (우리 · 덤) incar_val 이 빈 마지막 대입을 건너뜀 (awk 는 값 없음)": "a551036e3 — awk 와 같게"
+  },
+  "시험": {
+   "build_round2_vasp_package": "156/156 (CZ 고침 뒤 121 · 새 35 — S1–S2 9 · S3–S4 12 · S5–S8 14) · mawk 1.3.4 · gawk 5.2.1 둘 다",
+   "build_v5_vasp_package": "237/237 (229 + load_a4_result 8)",
+   "build_aprime_interfaces · build_aprime_s3 · se_sym_slab": "79/79 · 41/41 · 122/122",
+   "validate_canonical · convention_check · kb lint": "통과 · 0 위반 · 0 errors",
+   "규칙": "지적마다 음성 시험을 먼저 쓰고 고치기 전 판에서 빨간 것을 본 뒤 고침 (S1d · S1e · 시계 앞으로 뜀 · --killed 거부 둘 · INCAR \\r 탐침 · 종별 sha·시작 표지 위조는 깨기를 위한 지킴 시험)",
+   "기존 시험을 바꾼 곳 (이유)": "run_aborted 고정물 attempt.json 에 elapsed_s (기록 형식 바뀜) · stdout.log 를 일부러 고치는 시험 둘은 기록 sha 도 맞춤 (S7 로 묶였다 — 시험 목적은 regex 줄 나눔 · 커널 줄 분류)"
+  },
+  "깨기": "고침 한 부분씩 되돌린 사본 42 (A 12 · B 16 · C 14) — 전부 자기 시험이 빨강 · 다른 빨강은 같은 고침에 기대는 뒤 시험만 (B1 · B14 → --killed 거부 시험 · C6 · C7 → 판정 기대 상태 표) · 러너 sha 맵을 빼면 (C14) 검사기가 모든 시도를 ATTEMPT_MISMATCH 로 봐 넓게 빨강",
+  "깨지_않는_것 (따로 시험 없음 · 이유)": [
+   "봉인의 버전·종별·커널 집합을 환경 증거로 — 그 전에 env_audit 가 같은 증거로 먼저 거부한다",
+   "러너 시작 때 /proc/uptime 확인 · 도중에 못 읽을 때 벽시계 차로 물러나는 길 — /proc 을 흉내 내야 한다"
+  ],
+  "넣었다가_뺀_것 (옛 코드와 시험으로 구별 안 됨)": [
+   "봉인 grep 을 -- 에서 -e 로 (GNU grep 에서 같은 뜻)",
+   "ⓑ 단 WAVECAR.info 객체 확인 (이미 그 자리에서 막는다)",
+   "커널 문구 검사의 줄 나눔 (원래대로)",
+   "_started 가 시작 표지를 보게 (INCAR 가 늘 먼저 놓인다)"
+  ],
+  "검토_권고와_다르게": [
+   "단조 시계: 검토는 bash $SECONDS 를 권했으나 그것도 벽시계 기반 → /proc/uptime",
+   "봉인에서 막는 판정 사유: 권고 둘 (run_blocks · outcar_oszicar_mismatch) → 판정 근거가 실행 하나를 말하지 않는 일곱 (행 없음 · 비유한은 물리 쪽 그대로)",
+   "V5: a4 결과의 등록부 sha 는 있는지·형식만 (대조는 외주 2차가 낼 때 고정 sha 로 · V5 는 a4 결과 파일 sha 를 고정값으로 받는다)",
+   "끊긴 시도: 기록 경로 (--killed) 만 · 재시도는 사전등록대로 안 함"
+  ],
+  "묶음": "같은 폴더 db/inputs/wad_round2_vasp_v2_2026_10_22/ 를 다시 빌드 (첫 v2 는 발송 안 함 · git 에 남는다) — 바뀐 파일 넷 (run_all.sh · README.md · jobs.json · MANIFEST.sha256) · 잡 입력 (INCAR · POSCAR · KPOINTS · POTCAR.spec) 그대로 · jobs.json 은 상태 줄 · 도구 sha · 반송 허용 (attempt.start · killed.json)",
+  "MANIFEST_sha256": "b9450f6f7e188b9159030b6cc6a031a106682fbd2076c27dd66acfd6f4f7bc70",
+  "첫_v2_MANIFEST": "92e41141f9ee3fc0081e23427b13dd067e6657bd220c3aed00145673fd94af66 (발송 안 함 · 이 판으로 바뀜)",
+  "명령": "python3 -I tools/wad/build_round2_vasp_package.py --build --seal db/inputs/wad_p2small_seal_2026_10_17 --out db/inputs/wad_round2_vasp_v2_2026_10_22",
+  "확인": "scratch 에 두 번 빌드 → diff -r 바이트 동일 · 묶음 안 sha256sum -c MANIFEST.sha256 OK · bash -n run_all.sh OK · run_all.sh = run_all_text()",
+  "도구_sha16": {
+   "build_round2_vasp_package.py": "764d6692e445040d",
+   "build_v5_vasp_package.py": "0d912331fe6003d2",
+   "build_aprime_interfaces.py": "de7c472a357f6b23"
+  },
+  "⏭": "편지 DB 개정 (자체 검토 절 §2b · Q-DB-10 자체 검토 고침 · Q-DB-11 발송 승인 MANIFEST b9450f6f…) → 발송 (사용자) → 회신 원문 보존 → 업체 발송은 DB 회신 뒤",
+  "by": "agent · 2026-10-22"
  }
 }

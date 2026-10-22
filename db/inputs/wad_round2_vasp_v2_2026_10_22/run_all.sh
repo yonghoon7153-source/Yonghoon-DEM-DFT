@@ -8,6 +8,8 @@
 #         PACK_ONLY=1 (계산 없이 포장만) · WATCH_S (경보 점검 간격 초 · 기본 60)
 #   0 스텝 인프라 중단 기록 (전자 반복행 0 · 스케줄러 기록이 있을 때만 · 잡마다 2 회):
 #     bash run_all.sh --infra-abort <잡> <단 0|r1A|r1B|r2B|a4A|a4B> <스케줄러 잡 id> <취소 UTC> <사유…>   → 그 시도를 run_aborted/ 로 옮긴다 · 다시 돌리면 같은 단부터
+#   전자 스텝 뒤 러너째 끊긴 시도 (스케줄러 시간 제한 · 노드 고장 — attempt.json 없음 · 다시 돌리지 않는다 · 값 없음):
+#     WALL_S=<초> bash run_all.sh --killed <잡> <단> <스케줄러 잡 id> <취소 UTC> <사유…>   → 그 시도의 벽시계를 기록한다 (그 전에는 다음 잡이 안 뜬다)
 #   ⛔ INCAR·POSCAR·KPOINTS 를 고치지 마세요 · 시도 폴더가 이미 있으면 덮어쓰지 않습니다 (이어 돌리기는 기록을 다시 판정해 다음 단을 정합니다)
 #   종료: 0 고른 잡 전부 값 있음 · 1 값 없는 잡 있음 (묶음 만듦 — 실패도 기록) · 2 패키지·환경·인자 오류 (아무것도 안 돎) · 4 포장 실패 (PACK_ONLY=1 로 다시)
 #         5 단계·전체 누적 상한 (다음 잡 안 띄움 · 묶음 만듦 · 1저자 결정) · 6 공통 환경 고장 (VASP 빌드 · PP · vdW 커널 — 전체 정지 · 묶음 만듦)
@@ -17,10 +19,11 @@
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd); cd "$HERE"
 sha256sum -c --quiet MANIFEST.sha256 || { echo "⛔ 패키지 파일이 MANIFEST 와 다르다 — 실행하지 않는다"; exit 2; }
-RET_ALLOW='OUTCAR|OSZICAR|INCAR|KPOINTS|POSCAR|IBZKPT|POTCAR\.titel|POTCAR\.sha256|POTCAR\.species\.sha256|attempt\.json|stdout\.log|WAVECAR\.info|warn\.log|infra_abort\.json|LOCPOT\.zavg\.txt'
+RET_ALLOW='OUTCAR|OSZICAR|INCAR|KPOINTS|POSCAR|IBZKPT|POTCAR\.titel|POTCAR\.sha256|POTCAR\.species\.sha256|attempt\.json|stdout\.log|WAVECAR\.info|warn\.log|infra_abort\.json|LOCPOT\.zavg\.txt|attempt\.start|killed\.json'
 RET_FORBID='POTCAR|WAVECAR|CHGCAR|CHG|vasprun\.xml|vdw_kernel\.bindat|LOCPOT'
 h(){ sha256sum "$1" 2>/dev/null | cut -d' ' -f1; }
 utc(){ date -u +%FT%TZ; }
+up(){ awk '{ printf "%d", $1 }' /proc/uptime 2>/dev/null; }    # 부팅 뒤 초 (단조 시계) — 벽시계 장부는 이것으로 잰다 (date 는 시계 맞춤으로 뒤로 갈 수 있다 · 자체 검토 S4)
 mkdir -p run
 log(){ echo "$*"; echo "$(utc) $*" >> run/env.txt; }
 clean(){ printf '%s' "$1" | tr -d '"\\\r\n\t' ; }
@@ -220,11 +223,37 @@ if [ "${1:-}" = "--infra-wall" ]; then
   echo "✓ $dd 벽시계 $sec 초 (스케줄러 장부) — 다시 돌리면 누적 상한 장부에 들어간다"; exit 0
 fi
 
+# ── 전자 스텝 뒤 끊긴 시도의 벽시계 기록 (스케줄러 시간 제한 · 노드 고장으로 러너째 끊김 — attempt.json 없음 · 0 스텝이 아니다 · 다시 돌리지 않는다 · 값 없음 · 1저자) ──
+#    자체 검토 S3: 이 벽시계를 모르는 채로 0 초로 더하면 누적 상한이 새고, 끊긴 시도가 '사다리가 다룬다' 는 약속도 거짓이었다
+if [ "${1:-}" = "--killed" ]; then
+  [ $# -ge 6 ] || { echo "⛔ 쓰는 법: WALL_S=<초> bash run_all.sh --killed <잡> <단> <스케줄러 잡 id> <취소 UTC> <사유…>"; exit 2; }
+  job=$2; rung=$3; sid=$(clean "$4"); when=$(clean "$5"); shift 5; why=$(clean "$*")
+  [ -n "${STAGE_OF[$job]:-}" ] || { echo "⛔ 모르는 잡 $job"; exit 2; }
+  case "$rung" in 0) src=run/$job;; r1A) src=run/${job}_r1/stageA;; r1B) src=run/${job}_r1;; r2B) src=run/${job}_r2;; a4A) src=run/${job}_a4/stageA;; a4B) src=run/${job}_a4;;
+    *) echo "⛔ 모르는 단 $rung"; exit 2;; esac
+  [ -f "$src/attempt.start" ] || { echo "⛔ $src 에 시작 표지 (attempt.start) 가 없다 — VASP 가 뜨지 않은 시도다 (기록할 벽시계가 없다)"; exit 2; }
+  [ ! -f "$src/attempt.json" ] || { echo "⛔ $src 는 끝난 시도다 (attempt.json 있음) — 기록하지 않는다"; exit 2; }
+  [ ! -f "$src/killed.json" ] || { echo "⛔ $src 는 이미 기록했다 — 고치지 않는다"; exit 2; }
+  [[ "${WALL_S:-}" =~ ^[0-9]+$ ]] || { echo "⛔ WALL_S=<초> (스케줄러 장부의 그 시도 벽시계 · 0 이상의 정수) 가 있어야 한다"; exit 2; }
+  n=$(grep -acE '^[[:space:]]*(DAV|RMM|CG|SDA):' "$src/OSZICAR" 2>/dev/null); so=$(grep -acE '^[[:space:]]*(DAV|RMM|CG|SDA):' "$src/stdout.log" 2>/dev/null)
+  oi=$(grep -acE 'Iteration +[0-9]+\(' "$src/OUTCAR" 2>/dev/null)
+  [ "${n:-0}" != 0 ] || [ "${so:-0}" != 0 ] || [ "${oi:-0}" != 0 ] || { echo "⛔ $src 에 전자 반복 흔적이 없다 — 0 스텝 중단이면 --infra-abort 로 기록한다 (같은 단을 다시 돈다)"; exit 2; }
+  [ -n "$sid" ] && [ -n "$when" ] && [ -n "$why" ] || { echo "⛔ 스케줄러 잡 id · 취소 시각 · 사유가 다 있어야 한다"; exit 2; }
+  rid=$(grep -o '"run_id": "[^"]*"' "$src/attempt.start" | head -1 | sed 's/.*: "//; s/"$//')
+  printf '{"job": "%s", "rung": "%s", "run_id": "%s", "wall_s": "%s", "sched_job_id": "%s", "cancel_utc": "%s", "reason": "%s", "osz_rows": "%s", "recorded_utc": "%s"}\n' \
+    "$job" "$rung" "$rid" "$WALL_S" "$sid" "$when" "$why" "${n:-0}" "$(utc)" > "$src/killed.json.part" && mv -f "$src/killed.json.part" "$src/killed.json" \
+    || { echo "⛔ killed.json 쓰기 실패"; exit 2; }
+  log "✎ $src 끊긴 시도 벽시계 $WALL_S 초 (스케줄러 $sid · $why) — 값 없음 · 다시 돌리지 않는다"
+  echo "✓ $src 벽시계 $WALL_S 초 기록 — 이 시도는 값 없음으로 남는다 (다시 돌리지 않는다 · 1저자). 다시 돌리면 다음 잡부터 이어 간다"; exit 0
+fi
+
 if [ "${PACK_ONLY:-0}" = 1 ]; then
   echo "pack_only $(utc)" >> run/env.txt
   if pack; then echo "✅ 포장만 다시 했다 (계산은 다시 돌리지 않았다)"; exit 0; fi
   echo "⛔ 포장 실패 — 디스크·권한을 확인한 뒤 PACK_ONLY=1 로 다시"; exit 4
 fi
+
+[[ "$(up)" =~ ^[0-9]+$ ]] || { echo "⛔ /proc/uptime 을 읽을 수 없다 — 벽시계 장부는 단조 시계로 잰다 (Linux)"; exit 2; }
 
 # ── 단계 · 해제 파일 ──
 STAGES=${STAGES:-P}
@@ -289,31 +318,34 @@ fi
   [ -n "$KERNEL_RE" ] && echo "KERNEL_READ_RE $KERNEL_RE"; } >> run/env.txt
 [ -f run/status.tsv ] || printf "job\trung\tstage\trc\tstatus\tn_elec\tdE\tdeps\twhy\twall_s\n" > run/status.tsv
 
-# ── 누적 벽시계 (attempt.json t_start→t_end · 0 스텝 중단 포함) ──
-wall_s_of(){ # $1 단계 (ALL = 전체) → 초 · 0 스텝 중단의 벽시계가 미상 (숫자 아님) 이면 UNKNOWN (CZ Q-CZ-4: 미상을 0 초로 더하지 않는다)
-  local f j w s tot=0 d unk=0
-  for f in $(find run run_aborted -name attempt.json 2>/dev/null) $(find run_aborted -name infra_abort.json 2>/dev/null); do
-    d=$(dirname "$f")
-    if [ "$(basename "$f")" = infra_abort.json ]; then
-      [ -f "$d/attempt.json" ] && continue                                   # 알려진 시간 (attempt.json) 과 겹쳐 더하지 않는다
-      w=$(grep -o '"wall_s": "[^"]*"' "$f" | head -1 | sed 's/.*: "//; s/"$//')
-    else
-      w=$(awk '{ if (match($0, /"t_start": [0-9]+/)) a = substr($0, RSTART + 11, RLENGTH - 11); if (match($0, /"t_end": [0-9]+/)) b = substr($0, RSTART + 9, RLENGTH - 9) } END { print (b != "" && a != "") ? b - a : 0 }' "$f")
-    fi
+# ── 누적 벽시계 (시도 폴더마다 한 번 · 0 스텝 중단 · 끊긴 시도 포함) ──
+wall_s_of(){ # $1 단계 (ALL = 전체) → 초 · 미상이 하나라도 있으면 "UNKNOWN <폴더>" (CZ Q-CZ-4 · 자체 검토 S3: 미상을 0 초로 더하지 않는다)
+  #   attempt.json (elapsed_s · 단조 시계 — S4) > infra_abort.json (0 스텝 중단 · 스케줄러 장부) > killed.json (전자 스텝 뒤 끊김 · 스케줄러 장부)
+  #   > attempt.start 만 (VASP 를 띄웠는데 끝 기록이 없다 = 미상) · 시작 표지가 없는 폴더 (준비 실패) 는 VASP 시간이 없다 · 열거 실패도 미상
+  local d f j w s tot=0 unk="" dirs=run lst
+  [ -d run_aborted ] && dirs="run run_aborted"
+  lst=$(find $dirs \( -name attempt.json -o -name attempt.start -o -name infra_abort.json -o -name killed.json \) -type f 2>/dev/null) || { echo "UNKNOWN (반송 폴더 열거 실패)"; return; }
+  for d in $(printf '%s\n' "$lst" | sed 's#/[^/]*$##' | LC_ALL=C sort -u); do
+    if [ -f "$d/attempt.json" ]; then f=$d/attempt.json; w=$(grep -o '"elapsed_s": [0-9]*' "$f" | head -1 | sed 's/.*: *//')
+    elif [ -f "$d/infra_abort.json" ]; then f=$d/infra_abort.json; w=$(grep -o '"wall_s": "[^"]*"' "$f" | head -1 | sed 's/.*: "//; s/"$//')
+    elif [ -f "$d/killed.json" ]; then f=$d/killed.json; w=$(grep -o '"wall_s": "[^"]*"' "$f" | head -1 | sed 's/.*: "//; s/"$//')
+    else f=$d/attempt.start; w=""; fi
     j=$(grep -o '"job": "[^"]*"' "$f" | head -1 | sed 's/"job": "//; s/"$//')
     s=${STAGE_OF[$j]:-?}
     if [ "$1" = ALL ] || [ "$1" = "$s" ]; then
-      case "$w" in ''|*[!0-9]*) unk=1;; *) tot=$((tot + w));; esac
+      case "$w" in ''|*[!0-9]*) [ -n "$unk" ] || unk=$d;; *) tot=$((tot + w));; esac
     fi
   done
-  if [ "$unk" = 1 ]; then echo UNKNOWN; else echo "$tot"; fi
+  if [ -n "$unk" ]; then echo "UNKNOWN $unk"; else echo "$tot"; fi
 }
 cap_ok(){ # $1 잡 → 0 이면 띄워도 된다 (단계 · 전체 상한 · 벽시계 미상이면 안 띄운다)
   local s=${STAGE_OF[$1]} ws wt
   ws=$(wall_s_of "$s"); wt=$(wall_s_of ALL)
-  if [ "$ws" = UNKNOWN ] || [ "$wt" = UNKNOWN ]; then
-    log "⏸ 0 스텝 중단의 벽시계가 미상 (UNKNOWN) — $1 을 띄우지 않는다. 'bash run_all.sh --infra-wall <run_aborted 폴더 이름> <초>' 로 스케줄러 장부 값을 채운 뒤 다시"; return 1
-  fi
+  case "$ws $wt" in *UNKNOWN*)
+    log "⏸ 벽시계 미상 — $(printf '%s\n%s\n' "$ws" "$wt" | grep -m1 UNKNOWN | cut -d' ' -f2-) · $1 을 띄우지 않는다. 0 스텝 중단 (run_aborted) 이면 'bash run_all.sh --infra-wall <run_aborted 폴더 이름> <초>' ·"\
+" 전자 스텝 뒤 끊긴 시도 (attempt.start 만) 면 'WALL_S=<초> bash run_all.sh --killed <잡> <단> <스케줄러 잡 id> <취소 UTC> <사유>' 로 스케줄러 장부 값을 채운 뒤 다시"\
+" (실행 기록이 손상됐으면 반송하고 연락)"; return 1;;
+  esac
   awk -v w="$ws" -v c="${CAP_H[$s]}" 'BEGIN { exit !(w <= c * 3600) }' || { log "⏸ 단계 $s 누적 $((ws / 3600)) h > 상한 ${CAP_H[$s]} h — $1 을 띄우지 않는다"; return 1; }
   awk -v w="$wt" -v c="$TOTAL_CAP" 'BEGIN { exit !(w <= c * 3600) }' || { log "⏸ 전체 누적 $((wt / 3600)) h > 상한 $TOTAL_CAP h — $1 을 띄우지 않는다"; return 1; }
   return 0
@@ -369,7 +401,7 @@ locpot_zavg(){ # $1 시도 폴더 · $2 run_id → $1/LOCPOT.zavg.txt (z Å · �
 # ── 한 시도 ──
 run_one(){ # $1 잡 · $2 단 · $3 시도 폴더 · $4 INCAR 이름 · $5 WAVECAR 원본 (B 단만) → 0 돌림 · 3 준비 실패 · 6 공통 환경 고장
   #   A·단 0·r2 는 폴더를 mkdir 로 차지한다 · r1B·a4B 는 ⓐ 가 든 시도 폴더 안에서 `.b` 를 mkdir 로 차지한다 (둘 다 원자적 · 덮어쓰지 않는다)
-  local job=$1 rung=$2 d=$3 inc=$4 wsrc=${5:-} rid t0 t1 rc j wsha="" wcp="" wend hd istart icharg nr pr hon ksha="" ver
+  local job=$1 rung=$2 d=$3 inc=$4 wsrc=${5:-} rid t0 t1 u0 u1 el rc j wsha="" wcp="" wend hd istart icharg nr pr hon ksha="" ver
   pp_ok "$job" || return 6        # 모든 VASP 실행 직전 · 폴더를 차지하기 전 (이어 돌린 ⓑ 포함 — CZ Q-CZ-3)
   case "$rung" in
     r1B|a4B) mkdir "$d/.b" 2>/dev/null || { echo "⛔ $d/.b 가 이미 있다 — ⓑ 를 덮어쓰지 않는다"; return 3; };;
@@ -392,9 +424,13 @@ run_one(){ # $1 잡 · $2 단 · $3 시도 폴더 · $4 INCAR 이름 · $5 WAVEC
     cp "$wsrc" "$d/WAVECAR" || return 3
     wsha=$(h "$wsrc"); wcp=$(h "$d/WAVECAR")
   fi
-  rid="$(date -u +%Y%m%dT%H%M%S)-$$-$RANDOM"; t0=$(date +%s)
+  rid="$(date -u +%Y%m%dT%H%M%S)-$$-$RANDOM"; t0=$(date +%s); u0=$(up)
+  # 시작 표지 — VASP 를 띄웠다는 기록 (끝 기록 attempt.json 없이 끊기면 장부가 미상으로 본다 · 자체 검토 S3)
+  printf '{"job": "%s", "attempt": "%s", "stage": "%s", "run_id": "%s", "t_start": %d, "kernel_sha256": "%s"}\n' "$job" "$rung" "${STAGE_OF[$job]}" "$rid" "$t0" "$ksha" \
+    > "$d/attempt.start" || return 3
   touch "$d/.running"; watch_scf "$d" "$job/$rung" & local wpid=$!
-  (cd "$d" && $VASP_CMD > stdout.log 2>&1); rc=$?; t1=$(date +%s)
+  (cd "$d" && $VASP_CMD > stdout.log 2>&1); rc=$?; t1=$(date +%s); u1=$(up)
+  el=$((u1 - u0)); [ "$el" -ge 0 ] 2>/dev/null || el=$(( t1 > t0 ? t1 - t0 : 0 ))      # 경과 = 단조 시계 (S4) · 못 읽으면 벽시계 차 (음수면 0)
   rm -f "$d/.running"; kill "$wpid" 2>/dev/null; wait "$wpid" 2>/dev/null
   ver=$(clean "$(ver_of "$d")")
   case "$rung" in
@@ -408,18 +444,18 @@ run_one(){ # $1 잡 · $2 단 · $3 시도 폴더 · $4 INCAR 이름 · $5 WAVEC
       istart=$(grep -aE '^[[:space:]]*ISTART *= *[0-9]+[[:space:]]+job' "$d/OUTCAR" 2>/dev/null | tail -1 | grep -oE 'ISTART *= *[0-9]+' | grep -oE '[0-9]+$')
       icharg=$(grep -aE '^[[:space:]]*ICHARG *= *[0-9]+[[:space:]]+charge' "$d/OUTCAR" 2>/dev/null | tail -1 | grep -oE 'ICHARG *= *[0-9]+' | grep -oE '[0-9]+$')
       nr=0; grep -aq "WAVECAR not read" "$d/stdout.log" "$d/OUTCAR" 2>/dev/null && nr=1
-      pr=NA; if [ -n "$RESTART_RE" ]; then pr=0; grep -aqE "$RESTART_RE" "$d/stdout.log" "$d/OUTCAR" 2>/dev/null && pr=1; fi
+      pr=NA; if [ -n "$RESTART_RE" ]; then pr=0; grep -aqE -e "$RESTART_RE" "$d/stdout.log" "$d/OUTCAR" 2>/dev/null && pr=1; fi
       hon=0; [ "$istart" = 1 ] && [ "$icharg" = 0 ] && [ "$nr" = 0 ] && [ "$pr" != 0 ] && [ -n "$wsha" ] && [ "$wsha" = "$wcp" ] && [ "$wcp" = "$wend" ] && hon=1
       printf '{"src_sha256": "%s", "copied_sha256": "%s", "end_sha256": "%s", "istart": "%s", "icharg": "%s", "not_read_phrase": %s, "positive_regex_match": "%s", "honoured": %s}\n' \
         "$wsha" "$wcp" "$wend" "${istart:-NA}" "${icharg:-NA}" "$nr" "$pr" "$hon" > "$d/WAVECAR.info";;
   esac
   [ -f "$d/LOCPOT" ] && locpot_zavg "$d" "$rid"
-  printf '{"job": "%s", "attempt": "%s", "stage": "%s", "run_id": "%s", "rc": %d, "t_start": %d, "t_end": %d, "vasp_version": "%s", "kernel_sha256": "%s", "perf": "%s", "sha256": {"INCAR": "%s", "POSCAR": "%s", "KPOINTS": "%s", "POTCAR": "%s", "OUTCAR": "%s", "OSZICAR": "%s", "WAVECAR.info": "%s", "LOCPOT.zavg.txt": "%s"}}\n' \
-    "$job" "$rung" "${STAGE_OF[$job]}" "$rid" "$rc" "$t0" "$t1" "$ver" "$ksha" "$(printf '%s' "$PERF_LINES" | tr '\n' ';')" \
+  printf '{"job": "%s", "attempt": "%s", "stage": "%s", "run_id": "%s", "rc": %d, "t_start": %d, "t_end": %d, "elapsed_s": %d, "vasp_version": "%s", "kernel_sha256": "%s", "perf": "%s", "sha256": {"INCAR": "%s", "POSCAR": "%s", "KPOINTS": "%s", "POTCAR": "%s", "OUTCAR": "%s", "OSZICAR": "%s", "WAVECAR.info": "%s", "LOCPOT.zavg.txt": "%s", "stdout.log": "%s", "POTCAR.titel": "%s", "POTCAR.species.sha256": "%s", "attempt.start": "%s"}}\n' \
+    "$job" "$rung" "${STAGE_OF[$job]}" "$rid" "$rc" "$t0" "$t1" "$el" "$ver" "$ksha" "$(printf '%s' "$PERF_LINES" | tr '\n' ';')" \
     "$(h "$d/INCAR")" "$(h "$d/POSCAR")" "$(h "$d/KPOINTS")" "$(cat "$d/POTCAR.sha256")" "$(h "$d/OUTCAR")" "$(h "$d/OSZICAR")" "$(h "$d/WAVECAR.info")" \
-    "$(h "$d/LOCPOT.zavg.txt")" > "$d/attempt.json"
+    "$(h "$d/LOCPOT.zavg.txt")" "$(h "$d/stdout.log")" "$(h "$d/POTCAR.titel")" "$(h "$d/POTCAR.species.sha256")" "$(h "$d/attempt.start")" > "$d/attempt.json"
   j=$(judge "$d"); set -- $j
-  printf "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" "$job" "$rung" "${STAGE_OF[$job]}" "$rc" "$1" "$2" "$3" "$4" "$5" "$((t1 - t0))" >> run/status.tsv
+  printf "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" "$job" "$rung" "${STAGE_OF[$job]}" "$rc" "$1" "$2" "$3" "$4" "$5" "$el" >> run/status.tsv
   rm -f "$d/POTCAR" "$d/CHGCAR" "$d/CHG" "$d/vasprun.xml" "$d/vdw_kernel.bindat" "$d/LOCPOT"
   case "$rung" in r1A|a4A) ;; *) rm -f "$d/WAVECAR";; esac      # ⓐ WAVECAR 는 그 잡 사다리가 끝날 때까지 둔다 (반송 안 함 · sha·크기·머리만)
   if [ "$need_rel" = 1 ] && [ -n "$ver" ] && [ "$ver" != "$REL_VER" ]; then log "⛔ $job/$rung VASP 빌드 '$ver' ≠ 봉인 — 공통 환경 고장 · 전체 정지"; return 6; fi
@@ -436,7 +472,7 @@ stat_of(){ # 시도 폴더 · 단 → 상태 (B 단은 재시작 확인을 먼�
     s=$(wsha "$a/WAVECAR.info" sha256)
     { grep -q '"honoured": 1' "$d/WAVECAR.info" 2>/dev/null && [ -n "$s" ] && [ "$(wsha "$d/WAVECAR.info" src_sha256)" = "$s" ] \
       && [ "$(wsha "$d/WAVECAR.info" copied_sha256)" = "$s" ] && [ "$(wsha "$d/WAVECAR.info" end_sha256)" = "$s" ] \
-      && { [ -z "$RESTART_RE" ] || grep -aqE "$RESTART_RE" "$d/stdout.log" "$d/OUTCAR" 2>/dev/null; }; } || { echo RESTART_NOT_HONOURED; return; };;
+      && { [ -z "$RESTART_RE" ] || grep -aqE -e "$RESTART_RE" "$d/stdout.log" "$d/OUTCAR" 2>/dev/null; }; } || { echo RESTART_NOT_HONOURED; return; };;
   esac
   j=$(judge "$d"); echo "${j%% *}"
 }
