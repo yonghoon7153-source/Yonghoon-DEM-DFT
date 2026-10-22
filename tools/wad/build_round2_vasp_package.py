@@ -280,7 +280,7 @@ def build(seal_dir, out, v5_pkg=None, wadcc_pkg=None, ledger=None):
     _write(os.path.join(out, "JOBS.txt"), "\n".join(j["dir"] for j in jobs) + "\n")
     _write(os.path.join(out, "run_all.sh"), run_all_text()); os.chmod(os.path.join(out, "run_all.sh"), 0o755)
     meta = {"schema": "wad_round2_vasp_package/v2", "card": CARD, "amendment_4": AMEND4, "decisions": list(DECISIONS),
-            "status": "준비본 v4 — Codex CZ · DB · DC 고침 + 발송 전 자체 검토 (S1–S9) 반영 · 발송 전",
+            "status": "준비본 v5 — Codex CZ · DB · DC · DD 고침 + 발송 전 자체 검토 (S1–S9) 반영 · 발송 전",
             "tool_sha256": _sha(os.path.abspath(__file__)), "v5_tool_sha256": _sha(os.path.abspath(V.__file__)),
             "sources": {"p2s_seal_manifest_sha256": _sha(smp), "wadcc_manifest_sha256": _sha(os.path.join(wadcc_pkg, "cc_stage2_manifest.json")),
                         "v5_manifest_sha256": V5_MANIFEST_SHA256},
@@ -1975,7 +1975,7 @@ def _readme(meta, pkg_sha):
     caps = " · ".join(f"{s} {meta['stages'][s]['cap_h']:g} h" for s in meta["stages"])
     return f"""# W_ad 외주 2차 — VASP 단일점 묶음 (LPSCl | 흑연 작은 모델 · C–C 대조 · 은 a4)
 
-> 상태: **준비본 v4 — Codex CZ · DB · DC 고침 + 발송 전 자체 검토 (S1–S9) 반영 · 발송 전** · 결정 `D-2026-10-15-wad-p2small-vasp-card` · `D-2026-10-15-wad-aprime-v5-e70-a4-rerun` (active)
+> 상태: **준비본 v5 — Codex CZ · DB · DC · DD 고침 + 발송 전 자체 검토 (S1–S9) 반영 · 발송 전** · 결정 `D-2026-10-15-wad-p2small-vasp-card` · `D-2026-10-15-wad-aprime-v5-e70-a4-rerun` (active)
 > 이 묶음 MANIFEST.sha256 의 sha256 = `{pkg_sha}` (보낼 때 메일 본문에 적는다 — 반송 검사가 이 값으로 승인본을 확인한다)
 
 ## 무엇을 하나
@@ -2881,9 +2881,9 @@ def _selftest():
            and any(x.startswith("ⓐ") for x in c_fd["charge_transfer_signals"].get("not_evaluated", [])) and any("미평가" in l for l in c_fd["G5_C"]["labels"])
            and c7["charge_transfer_signals"].get("not_evaluated") == [] and (c7["far_diagnostics"]["P2S_S_A_far"] or {}).get("adopted") is True,
            (fdf, c_fd["charge_transfer_signals"], c_fd["G5_C"]["labels"], c7["charge_transfer_signals"]))
-        ck("R6 (CZ Q-CZ-10 ③): 영어 요약 = 24 jobs · 실패 없으면 VASP 실행 25 (은 a4 = 두 단계) · 등록 사다리로 최대 94 · 인프라 재시도 따로 · 상태 줄 v4",
+        ck("R6 (CZ Q-CZ-10 ③): 영어 요약 = 24 jobs · 실패 없으면 VASP 실행 25 (은 a4 = 두 단계) · 등록 사다리로 최대 94 · 인프라 재시도 따로 · 상태 줄 v5",
            "24 jobs; 25 VASP executions when nothing fails" in rdm and "up to 94 under the registered retry ladder" in rdm and "24 single-point SCF runs" not in rdm
-           and "준비본 v4" in rdm, rdm[rdm.find("## English summary"):][:300])
+           and "준비본 v5" in rdm, rdm[rdm.find("## English summary"):][:300])
         ck("DB ③ README: WALL_S 초 형식 (10진 · 선행 0 없이) 을 5 번 항목과 영어 요약에 적는다 (러너가 거부하는 꼴을 미리 알린다)",
            "선행 0 없이" in rdm[rdm.find("5. "):rdm.find("6. ")] and "`07200`" in rdm and "without leading zeros" in rdm, rdm[rdm.find("5. "):][:500])
         # R7 (사용자 결정 2026-10-22 · CZ 권고) — 파일럿 S_A far 의 LOCPOT xy 면평균 (LVHAR · 러너 추출 · 정보 · 판정 아님)

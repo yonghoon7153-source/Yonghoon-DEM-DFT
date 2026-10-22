@@ -311,5 +311,63 @@
   "⏭": "편지 DD (고친 곳 diff 만 · 배포본 확인 · 발송 승인) → 발송 (사용자) → 회신 원문 보존 → GO 면 업체 발송 zip · sha · 체크리스트",
   "by": "agent · 2026-10-22",
   "커밋_메시지_정정": "셈 오류 둘 — d538279df 의 '13 new checks … plus one control' 과 1e4d113d2 의 '169/182 (the 13 new negative checks red)' 는 새 시험 13 = 음성 12 + 대조 1 · 고치기 전 판의 빨강 13 = 음성 12 + 기존 '기대 상태' 표 (밀어 올린 커밋이라 고치지 않고 여기 적는다)"
+ },
+ "⑤-6_DD_고침_2026_10_22": {
+  "출처": "Codex DD 회신 (kb/reviews/codex_DD_reply_wad_outsourcing_round2_v4_2026_10_22.md · 31603c13c) — 묶음 v4 (39522906…) NO-GO · P1 2 (봉인 필터가 run_aborted 루트 감사 불가 기록을 버림 — 새 fail-open · 뺀 bash rc 검사는 awk -v 이스케이프 해석 때문에 awk 검사와 동등하지 않음) · P2 2 (미등록 흔적 보장 범위 문구 · rc=-0 설명) · Q-DD-2 · 3 GO · Q-DD-5 조건부 GO · 물리 설계 · 잡 조건은 그대로",
+  "재승인조건과_고침": {
+   "① 봉인 필터 (DD P1-1 — seal_registry 가 파일럿 이름으로 거르면서 ('run_aborted', ATTEMPT_UNREADABLE) 을 버리고, 뒤 scandir 순회는 성공해 등록명 중단 시도를 건너뜀 → 봉인 · CLI 종료 0)": "c4d0f0d39 — 필터가 루트 기록 (꼬리표 'run_aborted') 을 남긴다 → env_audit AUDIT_UNREADABLE → 봉인 거부 · 이 기록을 거르는 다른 곳 없음 (resolve_all 은 모든 중단 기록을 넘긴다)",
+   "② rc 원문 검증 (DD P1-2 — awk -v 가 \\060 → 0 (OK) · \\061 → 1 (RUN_FAILED → 다음 단))": "c4d0f0d39 — judge 가 rc · term · nrun · nelm · ediff · oit 를 환경 변수 → awk ENVIRON 으로 넘긴다 (ENVIRON 은 이스케이프를 안 푼다) · 기존 rc_unknown 가지가 원문을 본다 · DD 의 두 길 중 둘째 (원문 전달) — bash 검사를 되살리면 nelm · ediff 에 같은 문제가 남는다",
+   "③ 결박 갱신": "이 기록과 같은 커밋 — 묶음 v5 · jobs.json tool_sha256 = 고친 도구 · run_all.sh = run_all_text() · MANIFEST 714324cc…",
+   "같은 종류 (우리가 찾음)": "c4d0f0d39 — judge 의 nelm · ediff (INCAR 값) 도 -v 로 풀렸다 (NELM = \\063\\060 → 30 · 파이썬은 nelm_unknown) → ENVIRON 으로 같이 · 판정 탐침 둘 (nelm_esc · ediff_esc) / ⓐ 자격의 WAVECAR 머리 ENCUT — awk 가 '520abc' 를 520 으로 → enc_eq() 숫자 꼴만 (러너가 쓰는 %.0f · %.4f) · 검사기 a_eligible 같은 꼴 (5.2e2 를 float 이 받아 러너와 갈렸다)",
+   "그대로 둔 awk -v (확인함)": "잡 이름 · 단계 (알려진 값만 통과) · 해제 파일 상한 (cap_num 정규식 뒤) · 우리가 만든 sha · run_id · 초 (secs_ok 뒤) · --infra-wall 의 infra_aborts.tsv 고치기 (정보용 · 장부는 json · 폴더 이름은 검증된 잡 · 단 · 번호로 러너가 만든다)",
+   "P2 둘": "c4d0f0d39 — unregistered_traces 보장 범위를 '반송물에 포함되어 검사기에 도착한 실행 흔적' 으로 · 포장 경로 필터 (stageA 말고 다른 하위 폴더 · run/ 바로 아래) 를 한계로 / rc=-0 — 파이썬 JSON 은 -0 을 0 으로 읽어 검사기 OK · 러너 SCF_UNVERIFIED (보수 쪽 비대칭 · 편지 DE 에서 정정)"
+  },
+  "시험": {
+   "build_round2_vasp_package": "186/186 (v4 182 → 새 음성 넷: DD P1-2 · DD P1-1 · enc_eq · a_eligible + 기존 넓힘: 판정 탐침 nelm_esc · ediff_esc (44 개) · rc 사례 \\060 · \\061) · gawk 5.2.1 · mawk 1.3.4 · bash 5.2.21 · 고치기 전 판 + 새 시험 180/186 (빨강 여섯 = 새 음성 넷 + 판정 계약 대조 + DC rc 시험)",
+   "build_v5_vasp_package · build_aprime_interfaces · build_aprime_s3 · se_sym_slab": "237/237 · 79/79 · 41/41 · 122/122",
+   "validate_canonical · convention_check · kb lint": "통과 · 0 위반 · 0 errors",
+   "주입": "DD 재현대로 os.listdir(run_aborted) 만 실패 (EIO · PermissionError) · scandir 순회는 성공 — 둘을 같이 막으면 순회 오류가 대신 봉인을 막아 누락을 가린다 (Codex) · CLI --seal_registry 는 같은 프로세스 (주입이 닿게 · V5 등록부는 시험 것)",
+   "대조": "오류 없이 읽으면 봉인 거부 (버전 갈림 — 등록부 없이 봉인할 때는 VERSION_INCONSISTENT) · 깨끗한 반송은 같은 CLI 로 봉인됨"
+  },
+  "깨기": "고침을 한 부분씩 되돌린 사본 7 — 첫 판 전부 빨강 (J1 봉인 필터 · J2 rc -v (기대 빨강 둘) · J3 nelm -v · J4 ediff -v · J5 enc_eq 숫자 꼴 · J6 elig_A 가 enc_eq 안 씀 · J7 a_eligible 숫자 꼴)",
+  "배포본_확인": {
+   "부록_A (v5 사본 위 selftest · 종료 코드가 판정)": "184/186 · 빨강 정확히 예상한 둘 (DIPOL 구간 · 두 번째 빌드 MANIFEST sha) · 그 밖 0 · 감싸개 종료 0 · gawk · mawk 같음",
+   "부록_B (러너 v4 대 v5 · gawk · mawk 같음)": [
+    "장부 attempt.json elapsed_s 4.5e5: 종료 5 · 안 뜸 · 미상 → 종료 5 · 안 뜸 · 미상",
+    "장부 attempt.json elapsed_s 1e12: 종료 5 · 안 뜸 · 미상 → 종료 5 · 안 뜸 · 미상",
+    "장부 attempt.json elapsed_s 450000x (뒤 쓰레기): 종료 5 · 안 뜸 · 미상 → 종료 5 · 안 뜸 · 미상",
+    "장부 attempt.json elapsed_s …: 4 (숫자 중간에서 잘림): 종료 5 · 안 뜸 · 미상 → 종료 5 · 안 뜸 · 미상",
+    "장부 attempt.json elapsed_s 450000 (정상 · 상한 넘음): 종료 5 · 안 뜸 · 누적 → 종료 5 · 안 뜸 · 누적",
+    "장부 attempt.json elapsed_s 7200 (정상): 종료 1 · 다음 잡 뜸 · - → 종료 1 · 다음 잡 뜸 · -",
+    "장부 infra_abort.json wall_s 0450000: 종료 5 · 안 뜸 · 미상 → 종료 5 · 안 뜸 · 미상",
+    "장부 infra_abort.json wall_s 0007200: 종료 5 · 안 뜸 · 미상 → 종료 5 · 안 뜸 · 미상",
+    "장부 infra_abort.json wall_s 08: 종료 5 · 안 뜸 · 미상 → 종료 5 · 안 뜸 · 미상",
+    "장부 infra_abort.json wall_s 18446744073709551616: 종료 5 · 안 뜸 · 미상 → 종료 5 · 안 뜸 · 미상",
+    "장부 infra_abort.json wall_s 7200: 종료 1 · 다음 잡 뜸 · - → 종료 1 · 다음 잡 뜸 · -",
+    "judge · attempt.json rc 0.5: SCF_UNVERIFIED rc_unknown → SCF_UNVERIFIED rc_unknown",
+    "judge · attempt.json rc 1e3: SCF_UNVERIFIED rc_unknown → SCF_UNVERIFIED rc_unknown",
+    "judge · attempt.json rc -0: SCF_UNVERIFIED rc_unknown → SCF_UNVERIFIED rc_unknown",
+    "judge · attempt.json rc 0: OK - → OK -",
+    "judge · attempt.json rc -1: RUN_FAILED rc_or_not_terminated → RUN_FAILED rc_or_not_terminated",
+    "judge · attempt.json rc \\060: OK - → SCF_UNVERIFIED rc_unknown",
+    "judge · attempt.json rc \\061: RUN_FAILED rc_or_not_terminated → SCF_UNVERIFIED rc_unknown",
+    "judge · INCAR NELM = \\063\\060: OK - → SCF_UNVERIFIED nelm_unknown",
+    "judge · INCAR EDIFF = \\061E-6: OK - → SCF_UNVERIFIED ediff_unknown",
+    "wsha · 65 자 sha: 빈 값 → 빈 값",
+    "wsha · 64 자 sha: 64 자 → 64 자"
+   ]
+  },
+  "묶음": "새 폴더 db/inputs/wad_round2_vasp_v5_2026_10_22/ (v4 폴더는 Codex DD 가 검토한 판이라 그대로) — v4 와 다른 파일 넷 (run_all.sh · README.md 상태 줄 · jobs.json · MANIFEST.sha256) · 잡 입력 그대로 · schema wad_round2_vasp_package/v2 그대로",
+  "MANIFEST_sha256": "714324cca0d0f05e39966543e3ffa76956fe51109e13f192cad6dc7f8e04cfed",
+  "v4_MANIFEST": "395229065660432afb5b9c96e518d891efd293a28f8d2e4279a5588a0ceaa321 (Codex DD 검토 · NO-GO · 발송 안 함 · 폴더 그대로)",
+  "명령": "python3 -I tools/wad/build_round2_vasp_package.py --build --seal db/inputs/wad_p2small_seal_2026_10_17 --out db/inputs/wad_round2_vasp_v5_2026_10_22",
+  "확인": "scratch 에 두 번 빌드 → diff -r 바이트 동일 · 저장소 빌드 = scratch 빌드 · 묶음 안 sha256sum -c MANIFEST.sha256 OK · bash -n run_all.sh OK · run_all.sh = run_all_text() · jobs.json tool_sha256 = 도구",
+  "도구_sha16": {
+   "build_round2_vasp_package.py": "80ecbec3da1ef045",
+   "build_v5_vasp_package.py": "0d912331fe6003d2",
+   "build_aprime_interfaces.py": "de7c472a357f6b23"
+  },
+  "⏭": "편지 DE (고친 곳 diff 만 · 배포본 확인 · 발송 승인) → 발송 (사용자) → 회신 원문 보존 → GO 면 업체 발송 zip · sha · 체크리스트",
+  "by": "agent · 2026-10-22"
  }
 }
