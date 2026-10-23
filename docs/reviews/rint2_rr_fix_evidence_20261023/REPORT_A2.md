@@ -1,7 +1,7 @@
 # 묶음 A′ 보고 — 사전 공격 리뷰 C1–C5 고침 (Rint ② RR · 10-23)
 
 > 이 파일 = 묶음 A′ 에이전트 (작업 트리 · 가지 `rr-fix-a2` · 시작 `fdb48d378`) 의 마지막 보고를 메인 세션이 옮겨 적은 것 (내용 그대로).  메인은 `e07d8c63b` 를 fast-forward 로 받았다 (커밋 SHA 그대로).
-> 지시서 = 메인 스크래치 `brief_a2.md` (1저자 10-23 *"권고대로 해"* = Q12–Q14 (가) 범위 · 사전 공격 리뷰 `docs/reviews/rint2_rr_fix_evidence_20261023/preattack/PREATTACK_A.md` §A C1–C5) · 형식 = 지난 묶음 지시서 `docs/reviews/rint2_rr_fix_evidence_20261023/BRIEF.md` §보고.
+> 지시서 = 메인 스크래치 `brief_a2.md` (10-23 반입 사본 = `docs/reviews/rint2_rr_fix_evidence_20261023/BRIEF_A2.md` · 1저자 10-23 *"권고대로 해"* = Q12–Q14 (가) 범위 · 사전 공격 리뷰 `docs/reviews/rint2_rr_fix_evidence_20261023/preattack/PREATTACK_A.md` §A C1–C5) · 형식 = 지난 묶음 지시서 `docs/reviews/rint2_rr_fix_evidence_20261023/BRIEF.md` §보고.
 
 C1–C5 를 모두 고쳤습니다. 커밋 7 개, 가지 `rr-fix-a2`, `fdb48d378` → `e07d8c63b` 입니다.
 - 회귀 68 묶음은 전부 rc 0 입니다. 끈 경로는 고치기 전과 비트가 같고, SV 를 켠 꼴에서는 투영 칸이 더해지기만 했습니다.
