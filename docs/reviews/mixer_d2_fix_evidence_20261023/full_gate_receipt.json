@@ -1,0 +1,7 @@
+{
+  "status": "PENDING_PARENT_INTEGRATION",
+  "rc": null,
+  "command": "bash scripts/check_all.sh",
+  "source_sha256": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27",
+  "note": "Generator-only independent review is complete. Parent must run the complete gate on the integrated codex branch before packaging. This is not a PASS receipt."
+}

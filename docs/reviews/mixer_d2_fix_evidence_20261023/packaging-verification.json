@@ -1,0 +1,42 @@
+{
+  "production_files_touched_by_this_assembly": [],
+  "doc_reference_precheck": {
+    "kind": "new-documents scan only with unmodified checker and scratch/live repository path union; not full repository gate",
+    "scanned_documents": 8,
+    "failures": []
+  },
+  "independent_manifests": {
+    "v1": {
+      "rc": 0,
+      "stdout": "REVIEW.md: OK\nreproduce.py: OK\ninput_generator.patch: OK\nevidence/results.json: OK\n",
+      "stderr": ""
+    },
+    "v2": {
+      "rc": 0,
+      "stdout": "REVIEW.md: OK\nreproduce.py: OK\ncompare_prior.py: OK\ninput_generator.patch: OK\ninput_review_delta.patch: OK\nevidence/results.json: OK\nprior_comparison.json: OK\nevidence/snapshot/scripts/make_mixer_deck.py: OK\n",
+      "stderr": ""
+    }
+  },
+  "patch_applications": {
+    "full": {
+      "rc": 0,
+      "sha256": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27",
+      "stdout": "patching file scripts/make_mixer_deck.py\n",
+      "stderr": ""
+    },
+    "delta": {
+      "rc": 0,
+      "sha256": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27",
+      "stdout": "patching file scripts/make_mixer_deck.py\n",
+      "stderr": ""
+    }
+  },
+  "live_repo_patch_check": {
+    "rc": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "symlinks": 0,
+  "source_sha256": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27",
+  "full_gate": "PENDING_PARENT_INTEGRATION; no full gate executed by child"
+}

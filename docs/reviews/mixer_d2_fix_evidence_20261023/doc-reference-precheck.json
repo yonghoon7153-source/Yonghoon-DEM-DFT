@@ -1,0 +1,5 @@
+{
+  "kind": "new-documents scan only with unmodified checker and scratch/live repository path union; not full repository gate",
+  "scanned_documents": 9,
+  "failures": []
+}

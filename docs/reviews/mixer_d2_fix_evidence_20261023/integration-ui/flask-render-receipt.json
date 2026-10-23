@@ -1,0 +1,34 @@
+{
+  "argv": [
+    "nice",
+    "-n",
+    "10",
+    "/workspace/.venvs/yonghoon-dem/bin/python",
+    "-I",
+    "-B",
+    "/workspace/Yonghoon-DEM-DFT/docs/reviews/mixer_d2_fix_evidence_20261023/package_followup/check_devlog.py",
+    "--repo",
+    "/workspace/Yonghoon-DEM-DFT",
+    "--devlog",
+    "/workspace/Yonghoon-DEM-DFT/docs/mixer_devlog/v17_20261023.md",
+    "--out",
+    "/workspace/.cloud-setup/nonrint/integration-runs/mxd2-ui-render/render"
+  ],
+  "started_at_utc": "2026-10-23T15:59:53.781535+00:00",
+  "finished_at_utc": "2026-10-23T15:59:54.676737+00:00",
+  "exit_code": 0,
+  "status": "PASS",
+  "tool_sha256": "4596c39fac3d3d2d7376e76a2e7063dab148802628e44665d3ea5dd5e61627c5",
+  "devlog_sha256": "232df926a7e593d1e64dfa9b939dd54208d133a4ca65818e5087471f53b5edb5",
+  "generator_sha256_before": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27",
+  "generator_sha256_after": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27",
+  "source_identity_unchanged": true,
+  "log_sha256": "c49a1249d26d5d5e49f7316234569c307e306a2f4494ef3cc4939b2adf55c039",
+  "environment": {
+    "TMPDIR": "/var/tmp/codex-nonrint-20261023",
+    "OPENBLAS_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1"
+  }
+}

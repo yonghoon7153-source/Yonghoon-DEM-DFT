@@ -1,0 +1,120 @@
+--- a/scripts/make_mixer_deck.py
++++ b/scripts/make_mixer_deck.py
+@@ -535,13 +535,16 @@
+     if desc is None:
+         desc = ('D2 결합 규칙 (기하평균 W_ij = 2√(γ_iγ_j) · 혼합쌍 · 벽) · γ/γ_SE '
+                 + ' · '.join(f'{t} {g[t]:g}' for t in TYPES) + f' · γ_W/γ_SE {gw:g} · SE–SE Bo_code {bo:g} — 개발 · 등록 전 (결과 0)')
++    if not isinstance(desc, str) or '\n' in desc or '\r' in desc:
++        raise SystemExit('⛔ D2 결합 규칙: 설명은 줄바꿈 없는 문자열이어야 한다 (덱 명령 주입 거부)')
+     arm = dict(desc=desc, bond=1.0, layered=bool(layered), rule='geomean', gamma=g, gamma_wall=gw, bo_se=bo, _gm_valid=True)
+     if rho_uncoated_ncm is not None:                 # 벽 = 비코팅 NCM 에 묶음 (1저자 10-14 Q2) — 값이 규칙과 정확히 같아야 한다
+         if gw != gm_wall_from_ncm(rho_uncoated_ncm):
+             raise SystemExit(f'⛔ D2 결합 규칙: γ_W/γ_SE {gw!r} ≠ 0.0256 × ρ_비코팅 {rho_uncoated_ncm!r} — 벽 규칙과 값이 어긋난다')
+         rho = _gm_num(rho_uncoated_ncm, 'ρ_비코팅 NCM')
+-        if (g.get('AM_P'), g.get('AM_S')) not in ((rho, rho), (1.0, 1.0)):
+-            raise SystemExit('⛔ D2 결합 규칙: 같은 ρ 세계의 NCM γ 는 비코팅 (ρ, ρ) 또는 코팅 기준 (1, 1) 이어야 한다')
++        ncm = [g[t] for t in ('AM_P', 'AM_S') if t in g]
++        if not (all(v == rho for v in ncm) or all(v == 1.0 for v in ncm)):
++            raise SystemExit('⛔ D2 결합 규칙: 활성 NCM 상의 γ 는 모두 비코팅 ρ 또는 모두 코팅 기준 1 이어야 한다')
+         arm.update(wall_rule=GM_WALL_RULE_NCM, rho_uncoated_ncm=rho)
+     return arm
+ 
+@@ -2815,7 +2818,11 @@
+         rs = radius / 2.0
+         c = float(cc[7 + 2 * int(cc[6]) + 2])
+         force = 4.5 * math.pi**3 * rs**2 * c**3 / es**2
+-        weight = (4.0/3.0) * math.pi * radius**3 * density * 9.81
++        gravity = [t for t in ls if len(t) > 4 and t[0] == 'fix' and t[3] == 'gravity']
++        assert len(gravity) == 1, 'one actual gravity command is required'
++        gravity_magnitude = float(gravity[0][4])
++        assert math.isfinite(gravity_magnitude) and gravity_magnitude > 0
++        weight = (4.0/3.0) * math.pi * radius**3 * density * gravity_magnitude
+         return force / weight
+ 
+     def _mxd_absolute():
+@@ -2898,6 +2905,85 @@
+         r = _sp.run([sys.executable, os.path.abspath(__file__), '--help'], capture_output=True, text=True)
+         return r.returncode == 0 and '비준 규칙상 필수' in r.stdout and '0.0256·ρ 여부' not in r.stdout
+     chk('MXD05 help states ratified wall binding as required rather than an open question', _ok(_mxd_help))
++
++
++    # Independent review follow-up: consume actual gravity, preserve active-phase API,
++    # and stop description line breaks before they can become deck commands.
++    def _mxd_review_gravity():
++        txt, _ = _mxd_deck(bo=0.73)
++        gravity_line = next(ln for ln in txt.splitlines() if ln.split()[:4] == ['fix', 'gravi', 'all', 'gravity'])
++        tokens = gravity_line.split()
++        tokens[4] = '1.0'
++        altered = txt.replace(gravity_line, ' '.join(tokens), 1)
++        return (txt != altered and abs(_mxd_bo_tokens(txt) / 0.73 - 1.0) < 2e-5
++                and abs(_mxd_bo_tokens(altered) / (0.73 * 9.81) - 1.0) < 2e-5)
++    chk('MXDR1 actual deck gravity participates in independently read Bo (9.81 → 1 changes Bo ×9.81)',
++        _ok(_mxd_review_gravity))
++
++    def _mxd_review_active_phases():
++        before = TYPES
++        nm = 'MXDACTIVE'
++        try:
++            for phases in (('AM_P', 'SE'), ('AM_P', 'AM_S', 'SE')):
++                set_phases(phases)
++                for coating in (False, True):
++                    gamma = {t: (1.0 if t == 'SE' or coating else 0.3) for t in TYPES}
++                    a_ = gm_arm(gamma, gamma_wall=gm_wall_from_ncm(0.3), bo_se=0.73, rho_uncoated_ncm=0.3)
++                    register_arm(nm, a_)
++                    p_ = plan(100000, cgf=151.4, dens_gen='lab20261014')
++                    rp = resolve_rpm(p_['R'])
++                    txt = deck(p_, rp, 2, arm=nm)
++                    meta = deck_meta(p_, rp, 2, 32452843, nm, txt)
++                    if not (meta['adhesion_rule']['gamma'] == gamma and len(meta['types']) == len(TYPES)+1
++                            and 'create_box' in txt):
++                        return False
++                    ARMS.pop(nm)
++            return True
++        finally:
++            ARMS.pop(nm, None)
++            set_phases(before)
++    chk('MXDR2 active AM_P/SE and three-phase D2 decks preserve coated/uncoated wall worlds',
++        _ok(_mxd_review_active_phases))
++
++    def _mxd_review_desc():
++        for bad in ('review\nprint "DESC_EXECUTES"\n#', 'review\rprint "DESC_EXECUTES"\r#', 7, []):
++            if not _raises(lambda bad=bad: gm_arm({'AM_P':0.3, 'AM_S':0.3, 'SE':1.0},
++                    gamma_wall=gm_wall_from_ncm(0.3), bo_se=0.73, rho_uncoated_ncm=0.3, desc=bad)):
++                return False
++        # A mutable arm dictionary cannot bypass the guard after its constructor.
++        nm = register_arm('MXDDESC', _mxd_arm())
++        try:
++            ARMS[nm]['desc'] = 'review\nprint "DESC_EXECUTES"\n#'
++            p_ = plan(100000, cgf=151.4, dens_gen='lab20261014')
++            rp = resolve_rpm(p_['R'])
++            return (_raises(lambda: deck(p_, rp, 2, arm=nm))
++                    and _raises(lambda: deck_meta(p_, rp, 2, 32452843, nm, '')))
++        finally:
++            ARMS.pop(nm, None)
++    chk('MXDR3 description CR/LF and non-string values are rejected before deck/metadata emission',
++        _ok(_mxd_review_desc))
++
++
++    def _mxd_review_scalar_cli():
++        cases = [('--gm-wall-ncm', '0_3', '3'), ('--gm-wall-ncm', '０.３', '0.3'),
++                 ('--gm-wall-ncm', ' 0.3', '0.3'), ('--gm-bo-se', '0_73', '0.3'),
++                 ('--gm-bo-se', '０.７３', '0.3'), ('--gm-bo-se', ' 0.73', '0.3')]
++        with _tf.TemporaryDirectory() as td:
++            for i, (flag, value, rho) in enumerate(cases):
++                out = os.path.join(td, str(i))
++                opts = {'--gm-wall-ncm':rho, '--gm-bo-se':'0.73'}
++                opts[flag] = value
++                cmd = [sys.executable, os.path.abspath(__file__), '--out', out, '--n-total', '100000',
++                       '--cgf', '151.4', '--dens-gen', 'lab20261014', '--gm-gamma', f'AM_P={rho},AM_S={rho}']
++                for key, val in opts.items():
++                    cmd.extend([key, val])
++                r = _sp.run(cmd, capture_output=True, text=True)
++                if (r.returncode == 0 or os.path.exists(os.path.join(out, 'in.mixer'))
++                        or 'ASCII 십진수' not in r.stderr):
++                    return False
++        return True
++    chk('MXDR4 both scalar CLI flags reject underscore, Unicode digits and whitespace before float conversion',
++        _ok(_mxd_review_scalar_cli))
+ 
+     print(f'\nmake_mixer_deck selftest: {ok}/{ok+len(fail)} PASS'
+           + (f'   FAILED: {fail}' if fail else ''))

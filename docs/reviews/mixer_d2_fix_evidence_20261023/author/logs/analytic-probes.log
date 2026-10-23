@@ -1,0 +1,50 @@
+{
+  "kind": "synthetic arithmetic only; no simulation or fitted threshold",
+  "old_underflow": {
+    "AM_P_CED": 0.0,
+    "Fpp_Fss": 0.0,
+    "hand_ratio": 9e-200
+  },
+  "new_underflow": {
+    "AM_P_CED": 2.343923146510521e-62,
+    "Fpp_Fss": 9.000000000000226e-200,
+    "hand_ratio": 9e-200
+  },
+  "MXD2_07_ceiling_diagnostic": [
+    {
+      "dens_gen": "gen1",
+      "bo": 637.32,
+      "max_fraction": 0.008367437151378639,
+      "pair": [
+        "SE",
+        "SE"
+      ],
+      "bo_at_static_1pct_by_power_law": 832.6622178589664
+    },
+    {
+      "dens_gen": "gen1",
+      "bo": 850.0,
+      "rejected": "⛔ 팔 D2 결합 규칙 (기하평균 W_ij = 2√(γ_iγ_j) · 혼합쌍 · 벽) · γ/γ_SE AM_P 1 · AM_S 1 · SE 1 · γ_W/γ_SE 0.0256 · SE–SE Bo_code 850 — 개발 · 등록 전 (결과 0): SE–SE 겹침 1.014 % > 천장 1.0 % (D2 쌍별) — Bo_SE 를 낮추거나 천장을 논의할 것"
+    },
+    {
+      "dens_gen": "lab20261014",
+      "bo": 637.32,
+      "max_fraction": 0.00733052412342327,
+      "pair": [
+        "SE",
+        "SE"
+      ],
+      "bo_at_static_1pct_by_power_law": 1015.4417290962999
+    },
+    {
+      "dens_gen": "lab20261014",
+      "bo": 850.0,
+      "max_fraction": 0.008881969539452928,
+      "pair": [
+        "SE",
+        "SE"
+      ],
+      "bo_at_static_1pct_by_power_law": 1015.4417290962995
+    }
+  ]
+}

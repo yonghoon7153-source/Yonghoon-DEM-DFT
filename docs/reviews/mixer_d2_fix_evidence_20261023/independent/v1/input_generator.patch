@@ -1,0 +1,362 @@
+--- a/scripts/make_mixer_deck.py
++++ b/scripts/make_mixer_deck.py
+@@ -482,7 +482,7 @@
+ #  γ_pp 0.25 · γ_pw 0.04 J/m² (EDEM JKR · 짝마다 준 접착 에너지 w = 2γ · NMC622 ↔ 스테인리스) ⇒ w_pW/w_pp = 0.16 = √(γ_W/γ_p) ⇒ γ_W/γ_p = 0.16² = 0.0256.
+ #  검산: 구–벽 R* = 2 × 구–구 R* ⇒ 당김힘 비 0.32 (Hare 단분산과 같음 · 셀프테스트 GM⑥).  JKR 당김힘 상수 규약 (γ ↔ 2γ) 은 비에서 약분된다.
+ #  ⚠ 0.0256 은 Hare 의 "입자" 기준 — 그 입자는 비코팅 NMC622 이므로 γ_NCM/γ_SE = ρ ≠ 1 인 런에서는 γ_W/γ_SE = 0.0256·ρ 가 글자 그대로의 이전이다
+-#    (ρ = 1 = 같은 γ 기준 런에서 0.0256) · 어느 상에 묶을지 = 1저자 결정 (docs/mixer_d2_wall_gamma_derivation_20261014.md §5).
++#    (ρ = 1 = 같은 γ 기준 런에서 0.0256) · 비준 규칙 = 비코팅 NCM 에 묶음 (1저자 10-14 Q2 · docs/mixer_d2_wall_gamma_derivation_20261014.md §5).
+ #  ⛔ 옛 제안 0.0064 (= 당김힘 비 0.16) 는 Hare 의 에너지 비를 당김힘 비로 읽은 옛 벽 규약 (`MIX-12`) 을 이은 값 — 근거 문헌 없음 · 철회 (1저자 10-14 (가)).
+ #  팔 · CLI 에는 **명시**해야 한다 (숨은 기본값 없음).
+ GM_WALL_HARE2026 = (0.04 / 0.25) ** 2
+@@ -492,7 +492,7 @@
+ def gm_wall_from_ncm(rho_uncoated):
+     """벽 = 비코팅 NCM 에 묶기 (1저자 10-14 Q2) — γ_W = 0.0256 × γ_NCM(비코팅) ⇒ 생성기 단위 γ_W/γ_SE = 0.0256 × ρ_비코팅.
+     같은 ρ 세계의 코팅 팔도 **이 값 (비코팅 ρ 로 정한 벽)** 을 쓴다 — 코팅은 NCM 표면만 바꾸고 강철 · SE 는 안 바꾼다."""
+-    return GM_WALL_HARE2026 * _gm_num(rho_uncoated, 'ρ_비코팅 NCM = γ_NCM/γ_SE')
++    return _gm_num(GM_WALL_HARE2026 * _gm_num(rho_uncoated, 'ρ_비코팅 NCM = γ_NCM/γ_SE'), 'γ_W/γ_SE')
+ _ARM_NAME_RE = __import__('re').compile(r'^[A-Za-z][A-Za-z0-9_]{0,31}$')
+ 
+ 
+@@ -500,10 +500,21 @@
+     """유한한 양의 실수만 (bool · 문자열 · NaN · ∞ · 0 · 음수 = 거부)."""
+     if isinstance(v, bool) or not isinstance(v, (int, float)):
+         raise SystemExit(f'⛔ D2 결합 규칙: {what} = {v!r} — 수가 아니다')
+-    v = float(v)
+-    if not (math.isfinite(v) and v > 0.0):
+-        raise SystemExit(f'⛔ D2 결합 규칙: {what} = {v!r} — 유한한 양수여야 한다')
++    try:
++        v = float(v)
++    except (OverflowError, ValueError):
++        raise SystemExit(f'⛔ D2 결합 규칙: {what} — float 범위를 벗어났다')
++    if not (math.isfinite(v) and v >= sys.float_info.min):
++        raise SystemExit(f'⛔ D2 결합 규칙: {what} = {v!r} — 유한한 양의 정규 float 이어야 한다 (0 · subnormal 거부)')
+     return v
++
++
++def _gm_cli_number(text):
++    """ASCII decimal syntax before float conversion; no underscore or Unicode normalization."""
++    if not isinstance(text, str) or not __import__('re').fullmatch(
++            r'[+-]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?', text):
++        raise argparse.ArgumentTypeError(f'D2 숫자 {text!r} — ASCII 십진수만 (공백 · 밑줄 · 유니코드 숫자 거부)')
++    return _gm_num(float(text), 'CLI 숫자')
+ 
+ 
+ def gm_arm(gamma, gamma_wall=None, bo_se=None, layered=True, desc=None, rho_uncoated_ncm=None):
+@@ -528,13 +539,16 @@
+     if rho_uncoated_ncm is not None:                 # 벽 = 비코팅 NCM 에 묶음 (1저자 10-14 Q2) — 값이 규칙과 정확히 같아야 한다
+         if gw != gm_wall_from_ncm(rho_uncoated_ncm):
+             raise SystemExit(f'⛔ D2 결합 규칙: γ_W/γ_SE {gw!r} ≠ 0.0256 × ρ_비코팅 {rho_uncoated_ncm!r} — 벽 규칙과 값이 어긋난다')
+-        arm.update(wall_rule=GM_WALL_RULE_NCM, rho_uncoated_ncm=float(rho_uncoated_ncm))
++        rho = _gm_num(rho_uncoated_ncm, 'ρ_비코팅 NCM')
++        if (g.get('AM_P'), g.get('AM_S')) not in ((rho, rho), (1.0, 1.0)):
++            raise SystemExit('⛔ D2 결합 규칙: 같은 ρ 세계의 NCM γ 는 비코팅 (ρ, ρ) 또는 코팅 기준 (1, 1) 이어야 한다')
++        arm.update(wall_rule=GM_WALL_RULE_NCM, rho_uncoated_ncm=rho)
+     return arm
+ 
+ 
+ def register_arm(name, arm):
+     """런타임 팔 등록 (CLI `--gm-*` · 셀프테스트).  옛 팔 이름을 덮어쓰지 않는다 · 이름 형식 검사 · D2 팔은 `gm_arm` 이 만든 것만."""
+-    if not isinstance(name, str) or not _ARM_NAME_RE.match(name):
++    if not isinstance(name, str) or not _ARM_NAME_RE.fullmatch(name):
+         raise SystemExit(f'⛔ 팔 이름 {name!r} — 영문자로 시작하는 영숫자 · _ (최대 32 자)')
+     if name in ARMS:
+         raise SystemExit(f'⛔ 팔 {name} 은 이미 있다 — 덮어쓰지 않는다')
+@@ -582,9 +596,12 @@
+     g = dict(a['gamma'])
+     g[WALL] = a['gamma_wall']
+     nu_se, mat_se = PHASE_MECH['SE']
+-    ced_ss = ced_for_bond(a['bo_se'], d['SE'] / 2.0, nu_se, (DENS if dens is None else dens)[mat_se], E=E['SE'])
+-    rss = rstar_pair('SE', 'SE', d)
+-    f_ss = f0_pair(ced_ss, rss, estar_pair('SE', 'SE', E))
++    try:
++        ced_ss = ced_for_bond(a['bo_se'], d['SE'] / 2.0, nu_se, (DENS if dens is None else dens)[mat_se], E=E['SE'])
++        rss = rstar_pair('SE', 'SE', d)
++        f_ss = _gm_num(f0_pair(ced_ss, rss, estar_pair('SE', 'SE', E)), 'SE–SE F0 계산값')
++    except (OverflowError, ZeroDivisionError, ValueError):
++        raise SystemExit('⛔ D2 결합 규칙: SE–SE F0 를 유한한 양수로 표현할 수 없다')
+     n = len(names)
+     M = [[0.0] * n for _ in range(n)]
+     for i in range(n):
+@@ -594,8 +611,13 @@
+                 continue
+             rs = rstar_pair(ti, tj, d)
+             es = estar_pair(ti, tj, E)
+-            f = f_ss * math.sqrt(g[ti] * g[tj]) * rs / rss
+-            M[i][j] = M[j][i] = (f * es ** 2 / (4.5 * math.pi ** 3 * rs ** 2)) ** (1.0 / 3.0)
++            try:
++                # Separate roots avoid a zero product for representable positive gamma (MXD2-04).
++                f = _gm_num(f_ss * math.sqrt(g[ti]) * math.sqrt(g[tj]) * rs / rss, f'{ti}–{tj} F0 계산값')
++                c = _gm_num((f * es ** 2 / (4.5 * math.pi ** 3 * rs ** 2)) ** (1.0 / 3.0), f'{ti}–{tj} CED 계산값')
++            except (OverflowError, ZeroDivisionError, ValueError):
++                raise SystemExit(f'⛔ D2 결합 규칙: {ti}–{tj} CED 를 유한한 양수로 표현할 수 없다')
++            M[i][j] = M[j][i] = c
+     _assert_ceiling_pairwise(a.get('desc', 'D2'), M, d, E)
+     return M
+ 
+@@ -1050,6 +1072,13 @@
+         raise SystemExit(f'⛔ 팔 {arm}: D2 결합 규칙 덱은 새 세대 덱이다 — 밀도 세대를 명시해야 한다 '
+                          f'(CLI --dens-gen {"|".join(sorted(DENS_GENERATIONS))} · plan(…, dens_gen=…) · docs/density_generations_20261014.md)')
+ 
++    if ARMS[arm].get('rule') == 'geomean':
++        a = ARMS[arm]
++        if a.get('wall_rule') != GM_WALL_RULE_NCM or a.get('rho_uncoated_ncm') is None:
++            raise SystemExit('⛔ D2 덱: 비준 규칙상 --gm-wall-ncm (비코팅 NCM ρ) 이 필수다 — 직접 벽 값만으로 덱을 쓰지 않는다')
++        gm_arm(a['gamma'], gamma_wall=a['gamma_wall'], bo_se=a['bo_se'],
++               rho_uncoated_ncm=a['rho_uncoated_ncm'])
++
+ 
+ def _dens_header(p):
+     """밀도 세대 머리 주석 — 세대를 **명시한** 덱에만 (미지정 = 빈 문자열 → 덱 바이트 그대로).  ⚠ 줄 끝 `&` 금지 (LIGGGHTS 줄 잇기)."""
+@@ -1109,6 +1138,7 @@
+         meta['dump_modify_format'] = dump_modify_format(dump_columns())
+     if ARMS[arm].get('rule') == 'geomean':          # D2 팔에만 (옛 팔 = 키 집합 그대로)
+         a_ = ARMS[arm]
++        meta.update(schema='mixer_deck_meta/2', registered=None, development_contract='D2-geomean/unregistered')
+         meta['adhesion_rule'] = dict(rule='geomean', gamma=dict(a_['gamma']), gamma_wall=a_['gamma_wall'], bo_se=a_['bo_se'],
+                                      ratified='1저자 10-14 D2 (가) — docs/mixer_paper_pipeline_draft_20261013.md §4',
+                                      law='W_ij = 2√(γ_iγ_j) · F0_ij = F0_SS·√(γ_iγ_j)/γ_SE·R*_ij/R*_SS · F0_SS = Bo_SE × SE 무게',
+@@ -1276,6 +1306,8 @@
+                  '좌표 반폭 최대 5e-8 m\n'
+                  '#   LIGGGHTS-PUBLIC 3.x 옛 문법 (한 줄 형식 · 공개 소스 3d5c00f 판독) — ⚠ ibb 바이너리 실측 전 · 덤프 크기 ≈ 2 배\n'
+                  f'dump_modify dmp format "{dump_modify_format(_dump_cols)}"')
++    _wall_note = ('점착 = D2 기하평균 (비코팅 NCM 벽 규칙)' if ARMS[arm].get('rule') == 'geomean'
++                  else f'점착 = 입자값 ÷ {WALL_CED_DIV:.3f}')
+     return f"""# 믹싱 드럼 — 표면에너지 스윕  (생성: scripts/make_mixer_deck.py)
+ # ⚠ 손으로 고치지 말 것 — 치수가 조성에서 유도된다.  조성을 바꾸면 생성기를 다시 돌린다.
+ #
+@@ -1302,7 +1334,7 @@
+ 
+ region          reg block -{box:.6g} {box:.6g} -{box:.6g} {box:.6g} -{box:.6g} {box:.6g} units box
+ create_box      {_nt} reg
+-# ★ 메시 `type {_nt}` = 벽 전용 타입 (강철 ÷135, 점착 = 입자값 ÷ {WALL_CED_DIV:.3f}).  옛 판은 type 2 = AM_S 를 빌려 썼다
++# ★ 메시 `type {_nt}` = 벽 전용 타입 (강철 ÷135, {_wall_note}).  옛 판은 type 2 = AM_S 를 빌려 썼다
+ neighbor        {min(d.values())*0.5:.6g} bin
+ neigh_modify    delay 0
+ 
+@@ -2549,7 +2581,7 @@
+             #  ★ 10-14 밤 — D2 덱 = 새 세대 덱 → --dens-gen 필수 (DG⑥).  같은 세대로 메모리 덱도 만든다.
+             base = ['--n-total', '100000', '--cgf', '151.4', '--seed', '32452843', '--revolutions', '2',
+                     '--stiffen-se', '20', '--hold-bo-pairwise', '--dens-gen', 'lab20261014']
+-            gmo = ['--gm-gamma', 'AM_P=0.3,AM_S=0.5', '--gm-gamma-wall', '0.0256', '--gm-bo-se', '0.21244']
++            gmo = ['--gm-gamma', 'AM_P=0.3,AM_S=0.3', '--gm-wall-ncm', '0.3', '--gm-bo-se', '0.21244']
+             a = _sp.run([sys.executable, me, '--out', os.path.join(td, 'a')] + base + gmo, capture_output=True, text=True)
+             b = _sp.run([sys.executable, me, '--out', os.path.join(td, 'b')] + base + gmo[:4], capture_output=True, text=True)
+             c = _sp.run([sys.executable, me, '--out', os.path.join(td, 'c'), '--arm', 'LC'] + base + gmo, capture_output=True, text=True)
+@@ -2558,7 +2590,7 @@
+                 return False
+             dk = open(os.path.join(td, 'a', 'in.mixer'), encoding='utf-8').read()
+             meta = _js.load(open(os.path.join(td, 'a', 'deck_meta.json'), encoding='utf-8'))
+-            nm = register_arm('GM', gm_arm({'AM_P': 0.3, 'AM_S': 0.5, 'SE': 1.0}, gamma_wall=0.0256, bo_se=0.21244))
++            nm = register_arm('GM', gm_arm({'AM_P': 0.3, 'AM_S': 0.3, 'SE': 1.0}, gamma_wall=gm_wall_from_ncm(0.3), bo_se=0.21244, rho_uncoated_ncm=0.3))
+             try:
+                 p20 = plan(100000, cgf=151.4, stiffen_se=20.0, dens_gen='lab20261014')
+                 want = deck(p20, resolve_rpm(p20['R'], FR_ANCHOR, None, False), 2, arm=nm, seed=32452843, hold_bo_pairwise=True)
+@@ -2566,10 +2598,10 @@
+                 ARMS.pop(nm, None)
+             ar = meta.get('adhesion_rule') or {}
+             return (dk == want and 'D2 결합 규칙' in dk and 'γ_W/γ_SE' in dk and ar.get('rule') == 'geomean'
+-                    and ar.get('gamma') == {'AM_P': 0.3, 'AM_S': 0.5, 'SE': 1.0} and ar.get('gamma_wall') == 0.0256
++                    and ar.get('gamma') == {'AM_P': 0.3, 'AM_S': 0.3, 'SE': 1.0} and ar.get('gamma_wall') == gm_wall_from_ncm(0.3)
+                     and ar.get('bo_se') == 0.21244 and b.returncode != 0 and c.returncode != 0
+                     and h.returncode == 0 and '--gm-gamma' in h.stdout)
+-    chk('GM⑫ CLI --gm-gamma · --gm-gamma-wall · --gm-bo-se → in.mixer = deck(같은 팔) · 머리에 규칙 · γ 표 · deck_meta.json adhesion_rule · '
++    chk('GM⑫ CLI --gm-gamma · --gm-wall-ncm · --gm-bo-se → in.mixer = deck(같은 팔) · 머리에 규칙 · γ 표 · deck_meta.json adhesion_rule · '
+         'Bo_SE 빠지면 거부 · --arm 과 함께면 거부 · --help rc 0', _ok(_gm12))
+     #  ★ GM⑬ — 벽 = 비코팅 NCM 에 묶기 (1저자 10-14 Q2 *"이렇게 진행해"* · docs/mixer_d2_wall_gamma_derivation_20261014.md §5) — 시험 먼저
+     def _gm13():
+@@ -2703,7 +2735,7 @@
+         with _tf.TemporaryDirectory() as td:
+             me = os.path.abspath(__file__)
+             base = ['--n-total', '100000', '--cgf', '151.4', '--seed', '32452843', '--revolutions', '2']
+-            gmo = ['--gm-gamma', 'AM_P=0.3,AM_S=0.5', '--gm-wall-ncm', '0.3', '--gm-bo-se', '0.21244']
++            gmo = ['--gm-gamma', 'AM_P=0.3,AM_S=0.3', '--gm-wall-ncm', '0.3', '--gm-bo-se', '0.21244']
+             no = _sp.run([sys.executable, me, '--out', os.path.join(td, 'a')] + base + gmo, capture_output=True, text=True)
+             yes = _sp.run([sys.executable, me, '--out', os.path.join(td, 'b')] + base + gmo + ['--dens-gen', _LAB],
+                           capture_output=True, text=True)
+@@ -2712,7 +2744,7 @@
+             no_made = os.path.exists(os.path.join(td, 'a', 'in.mixer'))
+             meta = _js.load(open(os.path.join(td, 'b', 'deck_meta.json'), encoding='utf-8'))
+             dk = open(os.path.join(td, 'b', 'in.mixer'), encoding='utf-8').read()
+-        nm = register_arm('GMDGTEST', gm_arm({'AM_P': 0.3, 'AM_S': 0.5, 'SE': 1.0}, gamma_wall=gm_wall_from_ncm(0.3), bo_se=BO_BASE,
++        nm = register_arm('GMDGTEST', gm_arm({'AM_P': 0.3, 'AM_S': 0.3, 'SE': 1.0}, gamma_wall=gm_wall_from_ncm(0.3), bo_se=BO_BASE,
+                                              rho_uncoated_ncm=0.3))
+         try:
+             p0 = plan(100000, cgf=151.4)
+@@ -2751,6 +2783,122 @@
+                 and same_ab and same_cd and no_c and md.get('dens_gen') == 'gen1')
+     chk('DG⑦ 기록은 **요청했을 때만** — 강성 덱 (--dens-gen 없음) deck_meta 에 세대 키 없음 · gen1 명시 = 같은 메타 + 세대 키 · 덱 = 머리 주석만 더함 · '
+         '기본 덱 (강성 아님) 은 deck_meta 를 안 쓰고 (파일 목록 그대로) gen1 명시면 deck_meta 를 쓴다', _ok(_dg7))
++
++    # MXD2-02–06 (2026-10-23): independent deck-token arithmetic and input boundaries.
++    # These probes do not execute LIGGGHTS or authorize a new cohort.
++    def _mxd_arm(rho=0.3, coating=False, bo=0.73):
++        ga = 1.0 if coating else rho
++        return gm_arm({'AM_P': ga, 'AM_S': ga, 'SE': 1.0},
++                      gamma_wall=gm_wall_from_ncm(rho), bo_se=bo, rho_uncoated_ncm=rho)
++
++    def _mxd_deck(bo=0.73, gen='lab20261014', stiff=20.0):
++        nm = register_arm('MXDSELFTEST', _mxd_arm(bo=bo))
++        try:
++            p_ = plan(100000, cgf=151.4, stiffen_se=stiff, dens_gen=gen)
++            rpm_ = resolve_rpm(p_['R'])
++            txt = deck(p_, rpm_, 2, arm=nm, hold_bo_pairwise=True)
++            meta = deck_meta(p_, rpm_, 2, 32452843, nm, txt, hold_bo_pairwise=True)
++            return txt, meta
++        finally:
++            ARMS.pop(nm, None)
++
++    def _mxd_bo_tokens(txt):
++        # Use printed SI values; do not call production inverse/force helpers.
++        ls = [ln.split('#', 1)[0].split() for ln in txt.replace('&\n', ' ').splitlines()]
++        e = next(t for t in ls if len(t) > 6 and t[0] == 'fix' and t[4] == 'youngsModulus')
++        nu = next(t for t in ls if len(t) > 6 and t[0] == 'fix' and t[4] == 'poissonsRatio')
++        cc = next(t for t in ls if len(t) > 7 and t[0] == 'fix' and t[4] == 'cohesionEnergyDensity')
++        tpl = next(t for t in ls if 'particletemplate/sphere' in t and t[t.index('atom_type')+1] == '3')
++        radius = float(tpl[tpl.index('radius')+2])
++        density = float(tpl[tpl.index('density')+2])
++        es = float(e[8]) / (2.0 * (1.0 - float(nu[8]) ** 2))
++        rs = radius / 2.0
++        c = float(cc[7 + 2 * int(cc[6]) + 2])
++        force = 4.5 * math.pi**3 * rs**2 * c**3 / es**2
++        weight = (4.0/3.0) * math.pi * radius**3 * density * 9.81
++        return force / weight
++
++    def _mxd_absolute():
++        for gen in ('gen1', 'lab20261014'):
++            for bo in (0.73, 12.5):
++                for stiff in (1.0, 20.0):
++                    txt, meta = _mxd_deck(bo, gen, stiff)
++                    # 6-digit CED prints propagate cubically; this tolerance is from formatting.
++                    if abs(_mxd_bo_tokens(txt) / bo - 1.0) > 2e-5:
++                        return False
++                    if meta['adhesion_rule']['bo_se'] != bo:
++                        return False
++        return True
++    chk('MXD02 independent printed-deck Bo matches explicit input and metadata, gen1/lab × soft/20 × two Bo', _ok(_mxd_absolute))
++
++    def _mxd_mixed_ceiling():
++        # Reported counterexample: mixed AM_P–SE crosses 1% while each same-material pair stays below.
++        a_ = _mxd_arm(rho=10.0, bo=800.0)
++        why = _exit_msg(lambda: ced_matrix_geomean(a_, _dg))
++        return why is not None and 'AM_P–SE' in why and '천장' in why
++    chk('MXD03 mixed-pair ceiling rejects rho 10 / Bo 800 for AM_P–SE, not a diagonal surrogate', _ok(_mxd_mixed_ceiling))
++
++    def _mxd_underflow():
++        a_ = gm_arm({'AM_P': 1e-200, 'AM_S': 1e-200, 'SE': 1.0}, gamma_wall=0.0256, bo_se=BO_BASE)
++        try:
++            M = ced_matrix_geomean(a_, _dg)
++        except SystemExit:
++            return True                    # explicit nonrepresentability is fail-closed
++        return all(math.isfinite(c) and c > 0 for i, row in enumerate(M) for j, c in enumerate(row)
++                   if (i, j) != (len(M)-1, len(M)-1))
++    chk('MXD04 positive gamma must never silently produce zero CED after product underflow', _ok(_mxd_underflow))
++    chk('MXD04 subnormal Bo is rejected explicitly', _ok(lambda: _raises(lambda: _mxd_arm(bo=1e-310))))
++    chk('MXD04 huge integer is a controlled input rejection',
++        _ok(lambda: _raises(lambda: _mxd_arm(bo=10**1000))))
++
++    def _mxd_name():
++        try:
++            return _raises(lambda: register_arm('MXDNAME\n', _mxd_arm()))
++        finally:
++            ARMS.pop('MXDNAME\n', None)
++    chk('MXD04 terminal newline cannot become an executable deck line through arm name', _ok(_mxd_name))
++
++    def _mxd_cli_bad():
++        with _tf.TemporaryDirectory() as td:
++            base = [sys.executable, os.path.abspath(__file__), '--n-total', '100000', '--cgf', '151.4',
++                    '--dens-gen', 'lab20261014', '--gm-wall-ncm', '0.3', '--gm-bo-se', '0.73']
++            for i, ga in enumerate(('AM_P=0.3_0,AM_S=0.3_0', 'AM_P=０.３,AM_S=０.３', 'AM_P= 0.3,AM_S=0.3')):
++                out = os.path.join(td, str(i))
++                r = _sp.run(base + ['--out', out, '--gm-gamma', ga], capture_output=True, text=True)
++                if (r.returncode == 0 or os.path.exists(os.path.join(out, 'in.mixer'))
++                        or '수가 아니다' not in r.stderr):
++                    return False
++        return True
++    chk('MXD04 CLI rejects underscore, Unicode digits and whitespace before numeric normalization', _ok(_mxd_cli_bad))
++
++    def _mxd_binding():
++        a_ = gm_arm({'AM_P': 0.3, 'AM_S': 0.3, 'SE': 1.0}, gamma_wall=0.0256, bo_se=0.73)
++        nm = register_arm('MXDUNBOUND', a_)
++        try:
++            p_ = plan(100000, cgf=151.4, dens_gen='lab20261014')
++            rp = resolve_rpm(p_['R'])
++            return (_raises(lambda: deck(p_, rp, 2, arm=nm))
++                    and _raises(lambda: deck_meta(p_, rp, 2, 32452843, nm, '')))
++        finally:
++            ARMS.pop(nm, None)
++    chk('MXD05 production deck and metadata require ratified uncoated-NCM wall binding', _ok(_mxd_binding))
++    chk('MXD05 uncoated rho must match both NCM gamma values, or both must equal coating reference 1',
++        _ok(lambda: _raises(lambda: gm_arm({'AM_P': 0.3, 'AM_S': 0.5, 'SE': 1.0},
++             gamma_wall=gm_wall_from_ncm(0.3), bo_se=0.73, rho_uncoated_ncm=0.3))))
++
++    def _mxd_metadata():
++        txt, meta = _mxd_deck()
++        return (meta['schema'] == 'mixer_deck_meta/2' and meta['registered'] is None
++                and meta.get('development_contract') == 'D2-geomean/unregistered'
++                and '점착 = 입자값 ÷' not in txt
++                and '점착 = D2 기하평균 (비코팅 NCM 벽 규칙)' in txt)
++    chk('MXD06 D2 metadata is unregistered schema 2 and deck wall commentary describes its actual rule', _ok(_mxd_metadata))
++
++    def _mxd_help():
++        r = _sp.run([sys.executable, os.path.abspath(__file__), '--help'], capture_output=True, text=True)
++        return r.returncode == 0 and '비준 규칙상 필수' in r.stdout and '0.0256·ρ 여부' not in r.stdout
++    chk('MXD05 help states ratified wall binding as required rather than an open question', _ok(_mxd_help))
++
+     print(f'\nmake_mixer_deck selftest: {ok}/{ok+len(fail)} PASS'
+           + (f'   FAILED: {fail}' if fail else ''))
+     return 1 if fail else 0
+@@ -2780,14 +2928,13 @@
+                     help='점착 팔 (기본 E1).  `all` 대신 하나씩 — 디렉터리가 갈린다.  D2 결합 규칙 팔은 --arm 대신 --gm-* 로 (팔 이름 GM)')
+     ap.add_argument('--gm-gamma', default=None,
+                     help='★ D2 결합 규칙 (기하평균 W_ij = 2√(γ_iγ_j) · 1저자 비준 10-14 D2 (가)) — 상별 γ/γ_SE, 예: AM_P=0.3,AM_S=0.3 '
+-                         '(SE = 1 기준 · 생략하면 1 · 다른 값이면 거부).  --gm-gamma-wall · --gm-bo-se 와 함께 (셋 다 필수) · --arm · --all-arms 와 함께 못 씀')
+-    ap.add_argument('--gm-gamma-wall', type=float, default=None,
+-                    help=f'D2 벽 γ_W/γ_SE (명시 필수 · 1저자 10-14 = Hare 2026 Table 3 에서 {GM_WALL_HARE2026:g} (같은 γ 기준 · 당김힘 비 0.32) · ρ ≠ 1 이면 0.0256·ρ 여부 = '
+-                         'docs/mixer_d2_wall_gamma_derivation_20261014.md §5)')
+-    ap.add_argument('--gm-wall-ncm', type=float, default=None,
++                         '(SE = 1 기준 · 생략하면 1 · 다른 값이면 거부).  --gm-wall-ncm · --gm-bo-se 와 함께 (셋 다 필수) · --arm · --all-arms 와 함께 못 씀')
++    ap.add_argument('--gm-gamma-wall', type=_gm_cli_number, default=None,
++                    help='직접 벽 값 입력은 덱 발행에 허용하지 않는다 — 비준 규칙상 필수인 --gm-wall-ncm 을 쓴다')
++    ap.add_argument('--gm-wall-ncm', type=_gm_cli_number, default=None,
+                     help='★ 벽 = 비코팅 NCM 에 묶기 (1저자 10-14 Q2): 이 세계의 비코팅 NCM γ/γ_SE (ρ) 를 주면 γ_W/γ_SE = 0.0256 × ρ 로 계산 · '
+                          '같은 세계의 코팅 팔에도 같은 ρ 를 준다 · --gm-gamma-wall 과 함께 못 씀')
+-    ap.add_argument('--gm-bo-se', type=float, default=None,
++    ap.add_argument('--gm-bo-se', type=_gm_cli_number, default=None,
+                     help='D2 절대 수준 = SE–SE Bo_code 하나 (명시 필수 · D3 유동성 앵커 전 = 개발 입력)')
+     ap.add_argument('--all-arms', action='store_true',
+                     help='--out 아래에 팔마다 하위 디렉터리를 만든다')
+@@ -2822,10 +2969,10 @@
+                              'docs/density_generations_20261014.md)')
+         if a.arm is not None or a.all_arms:
+             raise SystemExit('⛔ --gm-* (D2 결합 규칙 팔 GM) 는 --arm · --all-arms 와 함께 쓰지 않는다')
+-        if a.gm_gamma_wall is not None and a.gm_wall_ncm is not None:
+-            raise SystemExit('⛔ D2 결합 규칙: --gm-gamma-wall 과 --gm-wall-ncm 은 하나만 (벽 값을 두 번 정하지 않는다)')
+-        if a.gm_gamma is None or (a.gm_gamma_wall is None and a.gm_wall_ncm is None) or a.gm_bo_se is None:
+-            raise SystemExit('⛔ D2 결합 규칙: --gm-gamma · (--gm-gamma-wall 또는 --gm-wall-ncm) · --gm-bo-se 를 명시해야 한다 (숨은 기본값 없음)')
++        if a.gm_gamma_wall is not None:
++            raise SystemExit('⛔ D2 덱: 직접 --gm-gamma-wall 은 허용하지 않는다 — 비준 규칙상 필수인 --gm-wall-ncm 으로 ρ 를 명시한다')
++        if a.gm_gamma is None or a.gm_wall_ncm is None or a.gm_bo_se is None:
++            raise SystemExit('⛔ D2 결합 규칙: --gm-gamma · --gm-wall-ncm · --gm-bo-se 를 명시해야 한다 (숨은 기본값 없음)')
+         _g = {}
+         for _kv in a.gm_gamma.split(','):
+             _k, _sep, _v = _kv.partition('=')
+@@ -2833,14 +2980,12 @@
+             if not _sep or not _k or _k in _g:
+                 raise SystemExit(f'⛔ --gm-gamma {a.gm_gamma!r} — "상=값" 을 쉼표로 (상 중복 금지)')
+             try:
+-                _g[_k] = float(_v)
+-            except ValueError:
++                _g[_k] = _gm_cli_number(_v)
++            except (ValueError, argparse.ArgumentTypeError):
+                 raise SystemExit(f'⛔ --gm-gamma {_k}={_v!r} — 수가 아니다')
+         _g.setdefault('SE', 1.0)
+-        if a.gm_wall_ncm is not None:
+-            register_arm('GM', gm_arm(_g, gamma_wall=gm_wall_from_ncm(a.gm_wall_ncm), bo_se=a.gm_bo_se, rho_uncoated_ncm=a.gm_wall_ncm))
+-        else:
+-            register_arm('GM', gm_arm(_g, gamma_wall=a.gm_gamma_wall, bo_se=a.gm_bo_se))
++        register_arm('GM', gm_arm(_g, gamma_wall=gm_wall_from_ncm(a.gm_wall_ncm), bo_se=a.gm_bo_se,
++                                  rho_uncoated_ncm=a.gm_wall_ncm))
+         a.arm = 'GM'
+     if a.arm is None:
+         a.arm = 'E1'
