@@ -76,6 +76,7 @@ import shlex
 import subprocess
 import sys
 import time
+from fractions import Fraction
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -274,6 +275,8 @@ STOPS = {
     'PTFE_CELLS_OBSERVED': 'face_alpha 런의 ptfe_cells_observed > 0',
     'SID_GRID': 'sid 격자 지문이 같은 킷 · 같은 래스터 런 사이에서 다르다 (off 격자 대조)',
     'SAME_P_CONSISTENCY': '같은 P 일관 검사 위반 (SBE c no-op · DBE c 순서)',
+    'R_MONOTONE_VIOLATION': '예측 — DBE 같은 모서리 · 같은 origin · 같은 최종 추정량의 σ(R_j,lo) ≥ σ(R_j,0) ≥ σ(R_j,hi) 와 증서 구간이 모순 '
+                            '(★ 10-23 · Codex 재검토 RCA2-09 · 판정문 §8 · 1저자 Q8 (가) · 추가 풀이 없음 · 새 숫자 없음 · 구현 결함 의심)',
     'TIME_LIMIT': '시간 상한',
     'DUPLICATE_RUN': '같은 킷 · 같은 계획 두 번',
     'INPUT_SHA_MISMATCH': '판정 입력 sha256 ≠ 런 산출',
@@ -426,6 +429,44 @@ def arm_err(rec):
     if isinstance(e, bool) or not isinstance(e, float) or not math.isfinite(e) or e < 0.0:
         raise Stop('ARM_UNREADABLE', f'판독 보장 오차 err_rel {e!r} — 유한 0 이상 float 이어야 (§3-2b ③″ 보호 띠 · 증서 ⓓ target_err_bound_rel)')
     return e
+
+
+def arm_band(rec):
+    """★ 10-23 (Codex 재검토 RCA2-09 · 판정문 §8 · 1저자 Q8 (가)) 팔 기록 → 증서 구간 (정확 분수 끝 둘) [σ(1 − e), σ(1 + e)] — e = 그 런 증서 ⓓ 의
+    보장 오차 (`err_rel` · read_run 이 증서에서 다시 계산 · 없으면 멈춤 = `arm_err` · 0 으로 두지 않는다) · σ 0 (영값 위상 · e 0) = [0, 0] ·
+    단락은 NOT_COMPUTED 라 여기 오지 않는다 (+∞ 없음)."""
+    e = Fraction(arm_err(rec))
+    s = Fraction(float(rec['sigma']))
+    return s * (1 - e), s * (1 + e)
+
+
+def mean_band(recs):
+    """★ 10-23 (RCA2-09) n 팔 평균의 증서 구간 — 끝마다 평균 (Σ σ_i(1 − e_i)/n · Σ σ_i(1 + e_i)/n · 정확 분수 · 참 평균은 그 사이)."""
+    bs = [arm_band(r) for r in recs]
+    return sum(b[0] for b in bs) / len(bs), sum(b[1] for b in bs) / len(bs)
+
+
+def r_monotone_problem(pts):
+    """★ 10-23 (Codex 재검토 RCA2-09 · 1저자 Q8 (가)) 같은 모서리 · 같은 origin · 같은 최종 추정량의 점 [(R, 이름, (아래끝, 위끝))] → 첫 모순 쌍
+    (R 작은 쪽 이름, R 큰 쪽 이름) | None — 단조 = R 이 클수록 σ 는 크지 않다 (R_a < R_b ⟹ σ(R_a) ≥ σ(R_b)) · 모순 = 증서 구간끼리 그 순서가
+    불가능 (R_a < R_b 인데 위끝_a < 아래끝_b · R 이 같은데 두 구간이 떨어짐) · 쌍 전부를 본다 (이웃 쌍만이 아니다) · 증서 띠 안에서만 겹치는 비단조
+    = 모순 아님 (멈추지 않는다)."""
+    for i, (ra, na, ba) in enumerate(pts):
+        for rb, nb, bb in pts[i + 1:]:
+            (r1, n1, b1), (r2, n2, b2) = sorted(((ra, na, ba), (rb, nb, bb)), key=lambda t: t[0])
+            if r1 < r2 and b1[1] < b2[0]:
+                return n1, n2
+            if r1 == r2 and (b1[1] < b2[0] or b2[1] < b1[0]):
+                return n1, n2
+    return None
+
+
+def final_band(pr, key):
+    """★ 10-23 (RCA2-09) 모서리 · R 의 최종 추정량 (판정에 들어가는 값 = `Predict.values`) 의 증서 구간 → (구간, 'arm0' | 'mean8') — origin 규칙이
+    바꾼 모서리 = 8 팔 평균의 구간 (세 R 전부 · 같은 8 origin 집합) · 아니면 arm 0 팔의 구간."""
+    if key in pr.adj_band:
+        return pr.adj_band[key], 'mean8'
+    return arm_band(pr.vals[key]), 'arm0'
 
 
 def sbe_origin_ok(vals):
@@ -1738,10 +1779,11 @@ class Predict:
     def __init__(self, fetch, ladders, variant, sv_scope=None):
         self.fetch, self.ladders, self.variant, self.sv_scope = fetch, ladders, variant, sv_scope
         self.main = variant is None
-        self.checks = {'sbe_noop': [], 'same_p': []}
+        self.checks = {'sbe_noop': [], 'same_p': [], 'r_monotone': []}     # ★ 10-23 r_monotone = RCA2-09 (모서리마다 ok · 최종 추정량 이름)
         self.origin = []
         self.vals = {}                       # (c, 법칙, 역할) → arm 0 팔 기록
         self.adj = {}                        # (c, 법칙, 역할) → 8 팔 평균 (origin 규칙이 바꾼 모서리 · 세 R 전부)
+        self.adj_band = {}                   # ★ 10-23 (RCA2-09) (c, 법칙, 역할) → 그 8 팔 평균의 증서 구간 (`mean_band`)
         self.sealed = {'W0': None, 'origin': {}}
 
     def _sv_on(self, rr):
@@ -1792,9 +1834,32 @@ class Predict:
                         r8 = self.fetch(DBE_KIT, 'origin8', law, c, self.ladders[law][rr], 8)
                         m8 = mean_ext([x['sigma'] for x in r8])
                         self.adj[(c, law, rr)] = m8
+                        self.adj_band[(c, law, rr)] = mean_band(r8)
                         so[rr]['mean8'] = m8
                 self.origin.append(ent)
                 self.sealed['origin'][f'c{c}_{law}'] = so
+        self._r_monotone()
+
+    def _r_monotone(self):
+        """★ 10-23 (Codex 재검토 RCA2-09 · 판정문 §8 · 1저자 Q8 (가) · author 10-23 ratified Q1-Q8) DBE R 단조 방어 검사 — 이미 구한 값으로 (추가
+        풀이 없음) 모서리마다 같은 origin · 같은 최종 추정량 (`final_band` — arm 0 · origin 규칙이 바꾼 모서리 = 8 팔 평균) 의 σ(R_j,lo) ≥ σ(R_j,0) ≥
+        σ(R_j,hi) 를 증서 구간끼리 본다 (`r_monotone_problem` · 정확 분수 · 쌍 전부) — 구간이 단조와 모순일 때만 멈춤 `R_MONOTONE_VIOLATION` (새 숫자
+        없음 · 값 봉인 = 문장에 σ 없음) · 검사 기록 `checks['r_monotone']` (판정의 다시 계산이 같은 검사를 다시 낸다).  표본 통과 ≠ 연속 곡선의 독립
+        증명 (판정문 §8)."""
+        for law in LAWS:
+            for c in CS:
+                pts, est = [], set()
+                for rr in RJ_ROLES:
+                    b, e = final_band(self, (c, law, rr))
+                    pts.append((rj_float(self.ladders[law][rr]), rr, b))
+                    est.add(e)
+                bad = r_monotone_problem(pts)
+                ent = {'law': law, 'c': c, 'ok': bad is None, 'estimator': '+'.join(sorted(est))}
+                self.checks['r_monotone'].append(ent)
+                if bad is not None:
+                    raise Stop('R_MONOTONE_VIOLATION', f'σ_DBE({law}, c {c}) 의 증서 구간이 R_j 단조와 모순 — {bad[0]} (R 작음) 구간의 위끝 < {bad[1]} '
+                                                       f'(R 큼) 구간의 아래끝 (같은 origin · 같은 최종 추정량 {ent["estimator"]} · 추가 풀이 없음 · '
+                                                       f'구현 결함 의심 · 판정문 §8 RCA2-09)')
 
     def values(self):
         """모서리 값 (S/cm · 확장 실수) — origin 규칙이 바꾼 모서리는 세 R 전부 8 팔 평균 (§4-2 3판)."""
