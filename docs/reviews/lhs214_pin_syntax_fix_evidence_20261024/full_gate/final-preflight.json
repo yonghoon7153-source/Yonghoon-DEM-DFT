@@ -1,0 +1,54 @@
+{
+  "status": "PASS",
+  "candidate": "ed6ed401f904d9f818cbdced42d111a7b1efb8d2",
+  "branch": "codex/lhs214-relaunch",
+  "cwd": "/workspace/Yonghoon-DEM-DFT",
+  "started_at_utc": "2026-10-23T20:07:27.112290+00:00",
+  "checked_index_tree_before": "b7b381615efc48b4001fd1a6e8ae9b409437e200",
+  "checks": [
+    {
+      "name": "docrefs",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python3",
+        "-I",
+        "scripts/check_doc_refs.py"
+      ],
+      "cwd": "/workspace/Yonghoon-DEM-DFT",
+      "started_at_utc": "2026-10-23T20:07:27.112380+00:00",
+      "finished_at_utc": "2026-10-23T20:07:28.003004+00:00",
+      "exit_code": 0,
+      "log": "final-docrefs.log",
+      "log_sha256": "64d2aca7830e8eeccdba60d29b8f242251f7875527c97499d9fe48411a47904e"
+    },
+    {
+      "name": "ledger",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python3",
+        "-I",
+        "scripts/check_review_findings.py"
+      ],
+      "cwd": "/workspace/Yonghoon-DEM-DFT",
+      "started_at_utc": "2026-10-23T20:07:28.003128+00:00",
+      "finished_at_utc": "2026-10-23T20:07:48.416505+00:00",
+      "exit_code": 0,
+      "log": "final-ledger.log",
+      "log_sha256": "7483b4664c4d3c52e24db54600e4b9c5fa164c0b4fc7746c8682a1b6360e090c"
+    }
+  ],
+  "finished_at_utc": "2026-10-23T20:07:48.448074+00:00",
+  "checked_index_tree_after": "b7b381615efc48b4001fd1a6e8ae9b409437e200",
+  "input_inventory_unchanged": true,
+  "working_tree_equals_index": true,
+  "checked_inventory_file": "checked-inventory.json",
+  "checked_inventory_sha256": "b563f15194cd5dab862874092d11201462177263cfde6e7812cc98be90cb77ac",
+  "post_check_additions": [
+    "final-preflight.json",
+    "final-docrefs.log",
+    "final-ledger.log",
+    "checked-inventory.json"
+  ],
+  "post_check_existing_updates": [
+    "MANIFEST.sha256"
+  ],
+  "post_check_scope": "Only these raw proof files and the live manifest inventory may be added or updated after the checked snapshot; no source or Markdown changes."
+}

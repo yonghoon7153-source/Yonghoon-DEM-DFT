@@ -1,0 +1,43 @@
+{
+  "scope": "Current full-gate finalization; historical author provenance remains unchanged",
+  "candidate_reference": "<<sha:Fix LHS214 preflight receipt SHA boundaries>>",
+  "original_snapshot": "docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/history/pre-full-gate-inputs.zip",
+  "original_snapshot_sha256": "8ce587a93287699bef2b0f44cc10c34061d9f1ad7d2229d4c0bde7a06624b56c",
+  "original_paths": {
+    "docs/collab/codex_to_claude/20261024-0300_lhs214-pin-syntax-fix.md": "423004ef8ffc7e710a8174a97eb2c984c473f74864059e8cdd600c659f81c0db",
+    "docs/reviews/codex_lhs214_pin_syntax_recheck_request_20261024.md": "02edd5ffa6e2471b22bbcf95e0c9f4ff5e5c2707c8100dad8e81ac7fb93a0d4c",
+    "docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/MANIFEST.sha256": "1b5c935e378e1a10b0983115ef5253b811c1b0c56085dd8d308c72f5246b724f",
+    "docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/README.md": "af60492d605cedb441d2388475772b8a36b017048f8c300ab543f341d188d7d4",
+    "docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/execution.json": "f7f2ddf8a3000d84043a7a76969f76d3fad8d65386b57a8d11d7f33629dc6190",
+    "docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/green/boundaries.json": "99ede19465a7df0cf1afee8d94f73073624d8793c49101f794a12e65a491bdb9",
+    "docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/green/receipt_selftest.log": "235859e7592c536ccfac5c0ebac944cee845b066ffc7aee9760683d80176ab71",
+    "docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/green/summary.json": "158f3c721c4d0b161ec2e7891cbe11bab22ddab94b4d3178978877aa9559620e",
+    "docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/green/synthetic_preflight.log": "11e606d39d24fe1d7e45418a1de36ef175f58e99b17ce5a53acb9bb062b62773",
+    "docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/independent/MANIFEST.sha256": "5dc8ca1e12eb45f69a12f420119189d33a16df876097faa7d4809340750e1351",
+    "docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/independent/attack_lhs_pin.py": "32d201ce969271493e69de7299808f5c069848548760c495af07b590e5ac2fc4",
+    "docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/independent/canonical_receipt_selftest.log": "235859e7592c536ccfac5c0ebac944cee845b066ffc7aee9760683d80176ab71",
+    "docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/independent/fixture.log": "87d54772e846fc43a7b5abb0bb1166d2f01454bce30e4d905536354ffcfda77c",
+    "docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/independent/fixture.original.json": "10198fe787011918d542ba70519de41d5706fd29f1b80237b0dff754588a66ee",
+    "docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/independent/lhs-pin.log": "963e2ad1001940fd4e97ee50c9339b514da9f7eec0e01ea83e718a58ceff8dae",
+    "docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/independent/result.json": "dabc930d23d670217ca68de050fe3078dfb201edc34bc19030ffb62c59fea966",
+    "docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/independent/review.md": "2ad3b5eae47ef2beb5b5a0fbb5734da757ea5047b9e1d87e323fd832b82940b3",
+    "docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/independent_integration.md": "2be8b66856b8bb0dfe79674bf3d481753a544fd7ba908bee3af66c3036ae0b72",
+    "docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/red/boundaries.json": "627a4145b355bc12e1f0df5d600489bd6f3d83f2da7b2be236cd95fe1e4c33bf",
+    "docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/red/receipt_selftest.log": "235859e7592c536ccfac5c0ebac944cee845b066ffc7aee9760683d80176ab71",
+    "docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/red/summary.json": "9899b54619ba16de30f53ee0ecd3f1b047222bd830ece9ef301bf09b62d502f9",
+    "docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/red/synthetic_preflight.log": "d187ef91b8c0e1d319fb4a7abbfd6bb209f3c9e457d3c2c2c63afa33848b2152",
+    "docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/runner.diff": "36edcc24769c8f3225376054571b9f5a18acbeab9b18dd338a550daf8695b26c",
+    "docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/source-audit-after.json": "6e0a96b907765cf51b385deba1084e9706ba44af3eb4fdf9cd8a90e10b34e930",
+    "docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/source-audit-before.json": "3658560d7e4d108ce1be04fb1b14943cbcbe0de9b1d38fd7b33aae09a0244bdb",
+    "docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/tools/check_pin_boundaries.py": "cc8aa1018c328f2c7e09fda83c18c0107fddbd8a2bcb95d58e8d62bd3cc89a7c",
+    "docs/reviews/lhs214_wsl_receipt_checklist_20261024.md": "87b7435293e81fe1f0ac8c58c5a504474e2e669171159e383be8dc13165eb2f5",
+    "scripts/run_network_194_parallel.py": "3220be53fb89cd16c81f0273c8b9f7444f262c5311d02b2017756fd94fd66ac8"
+  },
+  "historical_fields": [
+    "execution.json#/full_repository_gate: pending root canonical integration is the author execution snapshot",
+    "independent_integration.md: pre-candidate import record"
+  ],
+  "outer_manifest_orientation": "evidence",
+  "nested_manifests": "Preserved verbatim; only outer live manifest regenerated",
+  "current_status_document": "docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/completion.md"
+}
