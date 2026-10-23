@@ -425,6 +425,8 @@ def early_cert(i, man):
 tag = rj.replace('.', 'p').replace('+', '').replace('-', 'm')
 for i in idx:
     si = s0 * af[i]
+    if is_dbe and hit('dbe_arm_scale') and i == int(hit('dbe_arm_scale').get('arm', -1)):
+        si = si * float(hit('dbe_arm_scale').get('f', 1.0))   # ★ 10-23 (사전 공격 리뷰 C3) — 한 R · 한 origin 팔만 배수 (V33)
     man_i = manifest(i, si)
     if REASON:
         st = {'sigma_e_eff_S_cm': (0.0 if ST == 'zero' else None), 'reason': REASON, 'vox_um': vox, 'manifest': man_i,
@@ -2851,17 +2853,21 @@ def eval_U17():
         return out
     st6 = _u17_state(_zero_hi)
     cases.append(('R_j,hi 영값 위상 · 나머지 단조 → 통과', st6 == 'PREDICTED', st6, ''))
-    #  ⑦ 최종 추정량 = 8 팔 평균 (origin 규칙이 바꾼 모서리 c0 P0) — arm 0 은 단조인데 8 팔 평균이 비단조 → 멈춤 (최종 추정량을 본다)
+    #  ⑦ 최종 추정량 = 8 팔 평균 (origin 규칙이 바꾼 모서리 c0 P0) — arm 0 은 단조인데 8 팔 평균이 비단조 → 멈춤 (최종 추정량을 본다 · 그 검사가
+    #     먼저 = 사유에 '최종 추정량 mean8' · ★ 10-23 C3 origin 마다 검사도 팔 1–7 을 잡지만 최종 추정량 검사가 앞선다)
     st, why, pr = run_U17({'R_j_lo': 5.0, 'R_j0': 4.7, 'R_j_hi': 4.4}, o12={'R_j_lo': 6.0}, o8={'R_j_lo': 3.0, 'R_j0': 4.7, 'R_j_hi': 4.4},
                           only=('0', 'P0'))
     org = {f'c{o["c"]}_{o["law"]}': o['status'] for o in pr.origin}
-    cases.append(('8 팔 평균 비단조 (arm 0 단조) → 멈춤', st == 'R_MONOTONE_VIOLATION' and org.get('c0_P0') == 'adjusted', st, (why, org)))
-    #  ⑧ 반대 — arm 0 은 비단조인데 그 모서리의 최종 추정량 (8 팔 평균) 은 단조 → 통과 (arm 0 이 판정 값이 아니다)
+    cases.append(('8 팔 평균 비단조 (arm 0 단조) → 멈춤 · 사유 = 최종 추정량 mean8', st == 'R_MONOTONE_VIOLATION' and org.get('c0_P0') == 'adjusted'
+                  and '최종 추정량 mean8' in why, st, (why, org)))
+    #  ⑧ arm 0 은 비단조인데 그 모서리의 최종 추정량 (8 팔 평균) 은 단조 — 옛 판 = 통과 (최종 추정량만 봤다) → ★ 10-23 (사전 공격 리뷰 C3 · 1저자 Q13
+    #     (가)) 같은 모서리의 이미 구한 origin 마다 (arm 0 = 모서리 런) 세 R 단조도 본다 → 멈춤 · 사유에 origin 이름 (corner_a0) · 최종 추정량은 통과
     st, why, pr = run_U17({'R_j_lo': 4.2, 'R_j0': 4.7, 'R_j_hi': 4.4}, o12={'R_j_lo': 6.0}, o8={'R_j_lo': 5.6, 'R_j0': 4.7, 'R_j_hi': 4.4},
                           only=('0', 'P0'))
     org = {f'c{o["c"]}_{o["law"]}': o['status'] for o in pr.origin}
     rm = {(x.get('c'), x.get('law')): x for x in (pr.checks.get('r_monotone') or [])}
-    cases.append(('arm 0 비단조 · 8 팔 평균 단조 → 통과 (추정량 mean8)', st == 'PREDICTED' and org.get('c0_P0') == 'adjusted'
+    cases.append(('arm 0 비단조 · 8 팔 평균 단조 → 멈춤 (origin corner_a0 · 최종 추정량 mean8 은 통과)',
+                  st == 'R_MONOTONE_VIOLATION' and org.get('c0_P0') == 'adjusted' and 'corner_a0' in why and '최종 추정량' not in why
                   and (rm.get(('0', 'P0')) or {}).get('estimator') == 'mean8', st, (why, org, rm.get(('0', 'P0')))))
 
     #  ⑨ 팔의 증서 보장 오차가 없다 (err_rel 없음) → 띠를 잴 수 없음 = ARM_UNREADABLE (0 으로 두지 않는다)
@@ -2876,8 +2882,8 @@ def eval_U17():
 
 @check('U17', '★ 10-23 (Codex 재검토 RCA2-09 · 1저자 Q8 (가)) DBE R 단조 방어 검사 (예측 · 이미 구한 값 · 증서 구간끼리 · 같은 최종 추정량) — '
               '판정문 꼴 4.2 / 4.7 / 4.4 → R_MONOTONE_VIOLATION (문장에 σ 없음) · 정상 단조 · 증서 띠 안 비단조 · 평탄 · 영값 위상 → 통과 · '
-              '이웃 겹침 + lo ↔ hi 모순 → 멈춤 · 8 팔 평균 비단조 → 멈춤 · arm 0 만 비단조 (최종 추정량 단조) → 통과 · err_rel 없음 → '
-              'ARM_UNREADABLE · STOPS 에 이름 (PREDICT_OUTCOMES 밖 = STOPPED)')
+              '이웃 겹침 + lo ↔ hi 모순 → 멈춤 · 8 팔 평균 비단조 → 멈춤 (사유 = 최종 추정량 mean8) · arm 0 만 비단조 (최종 추정량 단조) → '
+              '★ 10-23 C3 멈춤 (origin corner_a0) · err_rel 없음 → ARM_UNREADABLE · STOPS 에 이름 (PREDICT_OUTCOMES 밖 = STOPPED)')
 def t_U17():
     return eval_U17()
 
@@ -2936,12 +2942,111 @@ def t_M46():
     return base_ok and caught, (base_ok, why if base_ok else base_why)
 
 
-@check('M47', '★ 10-23 변이: 최종 추정량 대신 arm 0 (origin 규칙이 바꾼 모서리도) → U17 ⑦ ⑧ 이 떨어진다')
+@check('M47', '★ 10-23 변이: 최종 추정량 대신 arm 0 (origin 규칙이 바꾼 모서리도) → U17 ⑦ ⑧ 이 떨어진다 (★ 10-23 C3 뒤 — ⑦ = 사유가 '
+              '최종 추정량 mean8 이 아님 · ⑧ = 사유가 최종 추정량 arm0)')
 def t_M47():
     def arm0_band(pr, key):
         return RR.arm_band(pr.vals[key]), 'arm0'
     base_ok, base_why = eval_U17()
     caught, why = mutant('M47', {'final_band': arm0_band}, eval_U17)
+    return base_ok and caught, (base_ok, why if base_ok else base_why)
+
+
+#  ★ 10-23 (사전 공격 리뷰 C3 · `docs/reviews/rint2_rr_fix_evidence_20261023/preattack/PREATTACK_A.md` · 1저자 Q13 (가)) — R 단조 검사 =
+#    최종 추정량 + 같은 모서리의 이미 구한 origin 마다 (arm 0 = 모서리 런 · arm 1 · 2 = origin 런 · 넘친 모서리 = 8 팔 런의 origin 0–7) ─────────
+U19_BASE = {0.5: 5.0, 1.0: 4.7, 2.0: 4.4}
+
+
+def u19_fetch(fn, err=1e-4):
+    """fn(R, i) → DBE 팔 i 의 σ (mS/cm · c 0 · 두 법칙 같은 값) — c 1 = ×1.5 (첫 폭 W 를 넓혀 arm 1 · 2 의 작은 차가 origin 문턱 0.1 W 안 ·
+    리뷰 탐침 `atk_rmono.py` 꼴) · 모서리 런 = arm 0 · origin 런 = arm 1 · 2 · 8 팔 런 = arm 0–7 (같은 fn) · err = 팔마다 증서 보장 오차."""
+    def fetch(kit, role, law, c, rj, arms, sv_cf=False):
+        if kit == SBE_KIT:
+            return [{'sigma': 1.63e-3, 'n_sdcp_near': 0, 'state': 'positive', 'err_rel': 0.0}]
+        R = RR.rj_float(rj)
+        return [{'sigma': fn(R, i) * (1.5 if c == '1' else 1.0) * 1e-3, 'state': 'positive', 'n_sdcp_near': 7, 'err_rel': err}
+                for i in _arms_of(arms)]
+    return fetch
+
+
+def run_U19(fn, **kw):
+    pr = RR.Predict(u19_fetch(fn, **kw), U17_LADS, None, sv_scope=None)
+    try:
+        pr.run()
+        return 'PREDICTED', '', pr
+    except RR.Stop as e:
+        return e.code, e.cause, pr
+
+
+U19_O3 = ['corner_a0', 'origin_a1', 'origin_a2']
+U19_O11 = U19_O3 + [f'origin8_a{i}' for i in range(8)]
+
+
+def eval_U19():
+    """★ 10-23 (사전 공격 리뷰 C3 · 1저자 Q13 (가) · author 10-23 ratified Q12-Q16) — 리뷰 R1 (넘침 없는 모서리의 arm 1 = 4.80 / 4.85 / 4.40) ·
+    R1c (넘친 모서리의 arm 0 = 4.6 / 4.7 / 4.4 · 8 팔 평균 단조) · R1d (넘친 모서리의 origin 3 = 4.4 / 4.7 / 4.4 · arm 1 · 2 를 R_j,lo 에서 ×1.08
+    로 넘침) → `R_MONOTONE_VIOLATION` · 사유 = origin 이름 (최종 추정량 아님 · σ 없음) · 정상 · origin 의 증서 띠 안 비단조 · 평탄 → 통과 ·
+    검사 기록 `origins` = 모서리의 이미 구한 origin (넘침 없음 = 3 · 넘침 = 11) 마다 ok (σ 없음)."""
+    B = U19_BASE
+    cases = []
+
+    def _names(pr):
+        return [[o.get('origin') for o in (x.get('origins') or [])] for x in pr.checks.get('r_monotone') or []]
+    #  ① 정상 → 통과 · 모서리 넷 · origins = 셋 (넘침 없음) · 다 ok
+    st, why, pr = run_U19(lambda R, i: B[R])
+    rm = pr.checks.get('r_monotone') or []
+    cases.append(('정상 → 통과 · origins 3 · 다 ok', st == 'PREDICTED' and not pr.adj and len(rm) == 4
+                  and all(n == U19_O3 for n in _names(pr)) and all(o.get('ok') is True for x in rm for o in x['origins']), st, rm))
+    #  ② R1 — 넘침 없는 모서리의 arm 1 비단조 (구간 떨어짐) → 멈춤 · origin_a1
+    r1 = {0.5: 4.80, 1.0: 4.85, 2.0: 4.4}
+    st, why, pr = run_U19(lambda R, i: r1[R] if i == 1 else B[R])
+    cases.append(('R1 arm 1 비단조 (넘침 없음) → 멈춤 · origin_a1', st == 'R_MONOTONE_VIOLATION' and not pr.adj and 'origin_a1' in why
+                  and '최종 추정량' not in why and not re.search(r'4\.8|4\.85', why), st, why))
+    #  ③ R1c — 넘친 모서리의 arm 0 비단조 · 8 팔 평균 단조 (최종 추정량 통과) → 멈춤 · corner_a0 (모서리 런 arm 0 이 앞)
+    r1c = {0.5: 4.6, 1.0: 4.7, 2.0: 4.4}
+    st, why, pr = run_U19(lambda R, i: r1c[R] if i == 0 else B[R])
+    rm = pr.checks.get('r_monotone') or []
+    first = rm[0] if rm else {}
+    cases.append(('R1c 넘친 모서리 arm 0 비단조 → 멈춤 · corner_a0 · 최종 추정량 mean8 통과', st == 'R_MONOTONE_VIOLATION' and len(pr.adj) == 12
+                  and 'corner_a0' in why and '최종 추정량' not in why and first.get('estimator') == 'mean8' and first.get('ok') is True
+                  and [o['origin'] for o in first.get('origins') or [] if o.get('ok') is False] == ['corner_a0', 'origin8_a0'],
+                  st, (why, first)))
+    #  ④ R1d — 넘친 모서리의 origin 3 비단조 (arm 1 · 2 를 R_j,lo 에서 ×1.08 로 넘침) → 멈춤 · origin8_a3
+    r1d = {0.5: 4.4, 1.0: 4.7, 2.0: 4.4}
+    st, why, pr = run_U19(lambda R, i: B[R] * 1.08 if (i in (1, 2) and R == 0.5) else (r1d[R] if i == 3 else B[R]))
+    rm = pr.checks.get('r_monotone') or []
+    first = rm[0] if rm else {}
+    cases.append(('R1d 넘친 모서리 origin 3 비단조 → 멈춤 · origin8_a3', st == 'R_MONOTONE_VIOLATION' and len(pr.adj) == 12
+                  and 'origin8_a3' in why and '최종 추정량' not in why and first.get('estimator') == 'mean8' and first.get('ok') is True
+                  and [o['origin'] for o in first.get('origins') or [] if o.get('ok') is False] == ['origin8_a3'], st, (why, first)))
+    #  ⑤ 넘친 모서리 · 모든 origin 단조 → 통과 · origins = 11 (모서리 런 arm 0 · origin 런 arm 1 · 2 · 8 팔 런 0–7)
+    st, why, pr = run_U19(lambda R, i: B[R] * 1.08 if (i in (1, 2) and R == 0.5) else B[R])
+    cases.append(('넘친 모서리 · 다 단조 → 통과 · origins 11', st == 'PREDICTED' and len(pr.adj) == 12 and all(n == U19_O11 for n in _names(pr)),
+                  st, _names(pr)[:1]))
+    #  ⑥ origin 의 증서 띠 안 비단조 (arm 1 = 4.75 / 4.7504 · e 1e-4 · 구간 겹침 · 넘침 없음) → 통과
+    st, why, pr = run_U19(lambda R, i: {0.5: 4.75, 1.0: 4.7504, 2.0: 4.4}[R] if i == 1 else B[R])
+    cases.append(('origin 띠 안 비단조 → 통과', st == 'PREDICTED' and not pr.adj, st, why))
+    #  ⑦ 평탄 (모든 origin 4.7) → 통과
+    st, why, pr = run_U19(lambda R, i: 4.7)
+    cases.append(('평탄 → 통과', st == 'PREDICTED', st, why))
+    #  ⑧ 검사 기록에 σ 없음 (이름 · bool 만)
+    st, why, pr = run_U19(lambda R, i: B[R])
+    flat = json.dumps(pr.checks.get('r_monotone'), ensure_ascii=False)
+    cases.append(('검사 기록에 σ 숫자 없음', not re.search(r'\d\.\d', flat), st, flat[:200]))
+    return all(c[1] for c in cases), [c for c in cases if not c[1]]
+
+
+@check('U19', '★ 10-23 (사전 공격 리뷰 C3 · 1저자 Q13 (가)) R 단조 검사 = 최종 추정량 + 같은 모서리의 이미 구한 origin 마다 — 리뷰 R1 (넘침 없는 '
+              '모서리 arm 1) · R1c (넘친 모서리 arm 0) · R1d (넘친 모서리 origin 3) → R_MONOTONE_VIOLATION (사유 = origin 이름 · σ 없음) · 정상 · '
+              '띠 안 비단조 · 평탄 → 통과 · 검사 기록 origins (3 · 11)')
+def t_U19():
+    return eval_U19()
+
+
+@check('M49', '★ 10-23 변이: origin 마다 검사 끔 (최종 추정량만 · 옛 판) → U19 R1 · R1c · R1d 가 떨어진다 (변이 전 통과 확인)')
+def t_M49():
+    base_ok, base_why = eval_U19()
+    caught, why = mutant('M49', {'origin_points': lambda pr, law, c: []}, eval_U19)
     return base_ok and caught, (base_ok, why if base_ok else base_why)
 
 
@@ -2956,6 +3061,27 @@ def t_V31():
     st = (p.get('sum') or {}).get('stop') or {}
     return (p['rc'] == 3 and (p.get('sum') or {}).get('status') == 'STOPPED' and st.get('code') == 'R_MONOTONE_VIOLATION'
             and not re.search(r'\d\.\d{3,}e-0[23]', str(st.get('cause', ''))), (p['rc'], st))
+
+
+@check('V33', '★ 10-23 (사전 공격 리뷰 C3 · 1저자 Q13 (가)) 끝-끝 — 가짜 러너 세계에서 DBE R_j,lo 런의 origin 팔 1 만 0.9 배 (그 origin 의 세 R 이 '
+              '단조와 모순 · 최종 추정량은 단조) → 예측 STOPPED · R_MONOTONE_VIOLATION · 사유 = origin 이름 (최종 추정량 아님 · σ 없음) · rc 3 · '
+              '정상 주 예측 요약의 검사 기록 r_monotone 마다 origins 칸 (이미 구한 origin 이름 · ok) · 다시 판정 (V10) 이 같은 검사를 다시 낸다')
+def t_V33():
+    def go():
+        m = {'kit_has': 'DBE', 'rj': lad(s_main('P0'))['R_j_lo']}
+        W = dict(PW, faults=[{'do': 'dbe_arm_scale', 'match': m, 'arm': 1, 'f': 0.9}])
+        return predict('V33', world('V33', W), [s_main('P0')['out'], s_main('P1')['out']])
+    p = scen('V33', go)
+    st = (p.get('sum') or {}).get('stop') or {}
+    cause = str(st.get('cause', ''))
+    stop_ok = (p['rc'] == 3 and (p.get('sum') or {}).get('status') == 'STOPPED' and st.get('code') == 'R_MONOTONE_VIOLATION'
+               and re.search(r'origin(8)?_a1\b', cause) is not None and '최종 추정량' not in cause
+               and not re.search(r'\d\.\d{3,}e-0[23]', cause))
+    rm = ((s_main_predict().get('sum') or {}).get('checks') or {}).get('r_monotone') or []
+    names_ok = (len(rm) == 4 and all(isinstance(x.get('origins'), list) and x['origins'] and all(o.get('ok') is True for o in x['origins'])
+                                     and [o.get('origin') for o in x['origins']][:3] == ['corner_a0', 'origin_a1', 'origin_a2']
+                                     for x in rm))
+    return stop_ok and names_ok, (p['rc'], st, [x.get('origins') for x in rm][:1])
 
 
 def u18_raw(nu, removed, standing='certified_interval'):

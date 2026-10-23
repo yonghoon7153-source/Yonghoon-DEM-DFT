@@ -275,7 +275,8 @@ STOPS = {
     'PTFE_CELLS_OBSERVED': 'face_alpha 런의 ptfe_cells_observed > 0',
     'SID_GRID': 'sid 격자 지문이 같은 킷 · 같은 래스터 런 사이에서 다르다 (off 격자 대조)',
     'SAME_P_CONSISTENCY': '같은 P 일관 검사 위반 (SBE c no-op · DBE c 순서)',
-    'R_MONOTONE_VIOLATION': '예측 — DBE 같은 모서리 · 같은 origin · 같은 최종 추정량의 σ(R_j,lo) ≥ σ(R_j,0) ≥ σ(R_j,hi) 와 증서 구간이 모순 '
+    'R_MONOTONE_VIOLATION': '예측 — DBE 같은 모서리의 최종 추정량 (arm 0 · 8 팔 평균) 또는 이미 구한 origin 마다 (★ 10-23 사전 공격 리뷰 C3 · '
+                            '1저자 Q13 (가)) σ(R_j,lo) ≥ σ(R_j,0) ≥ σ(R_j,hi) 와 증서 구간이 모순 '
                             '(★ 10-23 · Codex 재검토 RCA2-09 · 판정문 §8 · 1저자 Q8 (가) · 추가 풀이 없음 · 새 숫자 없음 · 구현 결함 의심)',
     'TIME_LIMIT': '시간 상한',
     'DUPLICATE_RUN': '같은 킷 · 같은 계획 두 번',
@@ -467,6 +468,20 @@ def final_band(pr, key):
     if key in pr.adj_band:
         return pr.adj_band[key], 'mean8'
     return arm_band(pr.vals[key]), 'arm0'
+
+
+#: ★ 10-23 (사전 공격 리뷰 C3 · 1저자 Q13 (가)) 예측이 이미 구한 origin 의 이름 · 검사 순서 — 모서리 런의 arm 0 · origin 런의 팔 (`ORIGIN_ARMS`) ·
+#: origin 규칙이 바꾼 모서리의 8 팔 런 팔 0–7 (그 모서리만 · 세 R 전부)
+ORIGIN_NAMES = ('corner_a0',) + tuple(f'origin_a{i}' for i in ORIGIN_ARMS) + tuple(f'origin8_a{i}' for i in range(8))
+
+
+def origin_points(pr, law, c):
+    """★ 10-23 (사전 공격 리뷰 C3 · 1저자 Q13 (가)) 모서리 (c · 법칙) 의 이미 구한 origin 마다 세 R 점 → [(origin 이름, [(R, 역할, 증서 구간)])] —
+    세 R 모두에 그 origin 이 있을 때만 (예측은 origin 런을 세 R 전부에서 · 8 팔 런을 넘친 모서리의 세 R 전부에서 돌린다) · 순서 = `ORIGIN_NAMES` ·
+    구간 = `arm_band` (최종 추정량 검사와 같은 띠) · 추가 풀이 없음."""
+    sets = [pr.org.get((c, law, rr)) or {} for rr in RJ_ROLES]
+    return [(n, [(rj_float(pr.ladders[law][rr]), rr, arm_band(s[n])) for rr, s in zip(RJ_ROLES, sets)])
+            for n in ORIGIN_NAMES if all(n in s for s in sets)]
 
 
 def sbe_origin_ok(vals):
@@ -1781,11 +1796,13 @@ class Predict:
     def __init__(self, fetch, ladders, variant, sv_scope=None):
         self.fetch, self.ladders, self.variant, self.sv_scope = fetch, ladders, variant, sv_scope
         self.main = variant is None
-        self.checks = {'sbe_noop': [], 'same_p': [], 'r_monotone': []}     # ★ 10-23 r_monotone = RCA2-09 (모서리마다 ok · 최종 추정량 이름)
+        self.checks = {'sbe_noop': [], 'same_p': [], 'r_monotone': []}     # ★ 10-23 r_monotone = RCA2-09 (모서리마다 ok · 최종 추정량 이름 ·
+        #                                                                     ★ 10-23 C3 origins = 이미 구한 origin 마다 ok)
         self.origin = []
         self.vals = {}                       # (c, 법칙, 역할) → arm 0 팔 기록
         self.adj = {}                        # (c, 법칙, 역할) → 8 팔 평균 (origin 규칙이 바꾼 모서리 · 세 R 전부)
         self.adj_band = {}                   # ★ 10-23 (RCA2-09) (c, 법칙, 역할) → 그 8 팔 평균의 증서 구간 (`mean_band`)
+        self.org = {}                        # ★ 10-23 (사전 공격 리뷰 C3) (c, 법칙, 역할) → {origin 이름 (`ORIGIN_NAMES`): 이미 구한 팔 기록}
         self.sealed = {'W0': None, 'origin': {}}
 
     def _sv_on(self, rr):
@@ -1822,6 +1839,7 @@ class Predict:
                 for rr in ORIGIN_CHECK_ROLES:        # §4-2 3판 — 세 R 모두 (RCA-02)
                     a0r = self.vals[(c, law, rr)]
                     r12 = self.fetch(DBE_KIT, 'origin', law, c, self.ladders[law][rr], ORIGIN_ARMS)
+                    self.org[(c, law, rr)] = dict([('corner_a0', a0r)] + [(f'origin_a{i}', x) for i, x in zip(ORIGIN_ARMS, r12)])
                     vv = [a0r['sigma']] + [x['sigma'] for x in r12]
                     sts = [a0r.get('state', 'positive')] + [x.get('state', 'positive') for x in r12]
                     ok, sp = dbe_origin_ok(vv, W0, states=sts, w_pos=W_pos)   # ★ 4판 (Q2-3 · §4-2 ①) 상태 다름 = 넘음
@@ -1837,6 +1855,7 @@ class Predict:
                         m8 = mean_ext([x['sigma'] for x in r8])
                         self.adj[(c, law, rr)] = m8
                         self.adj_band[(c, law, rr)] = mean_band(r8)
+                        self.org[(c, law, rr)].update((f'origin8_a{i}', x) for i, x in enumerate(r8))
                         so[rr]['mean8'] = m8
                 self.origin.append(ent)
                 self.sealed['origin'][f'c{c}_{law}'] = so
@@ -1847,7 +1866,11 @@ class Predict:
         풀이 없음) 모서리마다 같은 origin · 같은 최종 추정량 (`final_band` — arm 0 · origin 규칙이 바꾼 모서리 = 8 팔 평균) 의 σ(R_j,lo) ≥ σ(R_j,0) ≥
         σ(R_j,hi) 를 증서 구간끼리 본다 (`r_monotone_problem` · 정확 분수 · 쌍 전부) — 구간이 단조와 모순일 때만 멈춤 `R_MONOTONE_VIOLATION` (새 숫자
         없음 · 값 봉인 = 문장에 σ 없음) · 검사 기록 `checks['r_monotone']` (판정의 다시 계산이 같은 검사를 다시 낸다).  표본 통과 ≠ 연속 곡선의 독립
-        증명 (판정문 §8)."""
+        증명 (판정문 §8).
+        ★ 10-23 (사전 공격 리뷰 C3 · 1저자 Q13 (가) · author 10-23 ratified Q12-Q16) — 최종 추정량 검사 (그대로 · 먼저) 를 지나면 같은 모서리의 이미
+        구한 origin 마다 (`origin_points` — 모서리 런 arm 0 · origin 런 arm 1 · 2 · 넘친 모서리 = 8 팔 런 origin 0–7) 세 R 의 증서 구간도 같은
+        판정 (`r_monotone_problem`) 으로 본다 — 모순 = 같은 멈춤 이름 · 사유에 origin 이름 (최종 추정량 아님) · 기록 칸 `origins` (origin 마다 ok ·
+        최종 추정량 검사가 멈추면 None = 보지 않음) · 추가 풀이 · 새 숫자 없음."""
         for law in LAWS:
             for c in CS:
                 pts, est = [], set()
@@ -1856,12 +1879,19 @@ class Predict:
                     pts.append((rj_float(self.ladders[law][rr]), rr, b))
                     est.add(e)
                 bad = r_monotone_problem(pts)
-                ent = {'law': law, 'c': c, 'ok': bad is None, 'estimator': '+'.join(sorted(est))}
+                ent = {'law': law, 'c': c, 'ok': bad is None, 'estimator': '+'.join(sorted(est)), 'origins': None}
                 self.checks['r_monotone'].append(ent)
                 if bad is not None:
                     raise Stop('R_MONOTONE_VIOLATION', f'σ_DBE({law}, c {c}) 의 증서 구간이 R_j 단조와 모순 — {bad[0]} (R 작음) 구간의 위끝 < {bad[1]} '
                                                        f'(R 큼) 구간의 아래끝 (같은 origin · 같은 최종 추정량 {ent["estimator"]} · 추가 풀이 없음 · '
                                                        f'구현 결함 의심 · 판정문 §8 RCA2-09)')
+                org = [(n, r_monotone_problem(p)) for n, p in origin_points(self, law, c)]
+                ent['origins'] = [{'origin': n, 'ok': b is None} for n, b in org]
+                for n, b in org:
+                    if b is not None:
+                        raise Stop('R_MONOTONE_VIOLATION', f'σ_DBE({law}, c {c}) origin {n} 의 증서 구간이 R_j 단조와 모순 — {b[0]} (R 작음) 구간의 '
+                                                           f'위끝 < {b[1]} (R 큼) 구간의 아래끝 (같은 origin 의 세 R · 이미 구한 값 · 추가 풀이 '
+                                                           f'없음 · 구현 결함 의심 · 판정문 §8 RCA2-09 · 10-23 사전 공격 리뷰 C3)')
 
     def values(self):
         """모서리 값 (S/cm · 확장 실수) — origin 규칙이 바꾼 모서리는 세 R 전부 8 팔 평균 (§4-2 3판)."""
