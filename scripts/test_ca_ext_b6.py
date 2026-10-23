@@ -1020,6 +1020,9 @@ def t_sv_mismatch(mm, proj, Es):
         '풀이 칸 — 증서': mm_rec(up={'conv_cert': _cp(_fake_pos_cert(2.0))}),
         '풀이 칸 — backend': mm_rec(up={'backend_last_solve': {'used': 'gpu', 'requested': 'gpu', 'precond': None, 'fallback_reason': None}}),
         '풀이 칸 — 제거 셀 수 3 (풀지 않은 끝)': mm_rec(up={'n_cells_removed': 3}),
+        '풀이 칸 — 끊은 간선 수 6': mm_rec(up={'n_edges_cut': 6}),
+        '풀이 칸 — 판 결합 끊은 수 0': mm_rec(up={'n_plate_couplings_cut': 0}),
+        '풀이 칸 — SV 면 끊은 수 0': mm_rec(up={'n_sv_faces_cut': 0}),
         '위 끝 칸 = 아래 끝 (census 1 · computed 1.25 — 구조화 실패를 위 끝 칸이 숨김)':
             mm_rec(status_hi='computed', sv_counterfactual_ratio_hi=1.25, ratio_limit_hi=None),
         '위 끝 칸 = 아래 끝 (census 0 · computed 1.25)':
