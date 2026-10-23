@@ -65,7 +65,7 @@ def test_one_more_cycle_is_a_different_question():
     cycles, capacities = _fading()
     memo.knee_analysis(cycles, capacities, reference_cycle=3)
     memo.knee_analysis(cycles + [61], capacities + [1.0], reference_cycle=3)
-    assert memo.knee_stats() == {"hits": 0, "misses": 2, "entries": 2}
+    assert memo.knee_stats() == {"hits": 0, "disk": 0, "misses": 2, "entries": 2}
 
 
 def test_different_options_are_different_questions():
@@ -75,10 +75,81 @@ def test_different_options_are_different_questions():
     assert memo.knee_stats()["misses"] == 2
 
 
-def test_the_knee_table_stops_growing():
+def test_the_knee_table_stops_growing(monkeypatch):
+    monkeypatch.setattr(memo, "KNEE_CACHE_SIZE", 6)
     for i in range(memo.KNEE_CACHE_SIZE + 5):
         memo.knee_analysis([1.0, 2.0, 3.0], [2.0, 1.9 - i * 1e-4, 1.8], reference_cycle=1)
     assert memo.knee_stats()["entries"] == memo.KNEE_CACHE_SIZE
+
+
+def _restart():
+    """서버가 다시 뜬 것처럼 -- 메모리만 비우고 디스크는 둔다."""
+    memo._knee_entries.clear()
+    for name in memo._knee_stats:
+        memo._knee_stats[name] = 0
+
+
+def _series():
+    """knee 가 있는 것, 없는 것, 기준 사이클 앞에서 끝나는 짧은 것, NaN 이 낀 것."""
+    fading = _fading()
+    flat = (list(range(1, 41)), [2.0 - 1e-4 * i for i in range(40)])
+    short = ([1.0, 2.0, 3.0, 4.0], [2.0, 1.95, 1.9, 1.89])
+    holed = (fading[0], [q if i != 20 else float("nan") for i, q in enumerate(fading[1])])
+    return [fading, flat, short, holed]
+
+
+def test_the_answer_survives_a_restart_and_is_the_same_answer():
+    """ADR 0048: `bml` 이 pull 하면 서버가 다시 뜬다.  그때 첫 대시보드가 모든
+    셀의 knee 를 다시 세지 않는다 -- 그리고 디스크에서 온 답이 계산한 답과
+    **글자 하나까지** 같다 (JSON 으로 비교해 NaN 까지 본다)."""
+    for cycles, capacities in _series():
+        memo.clear()
+        computed = memo.knee_analysis(cycles, capacities, reference_cycle=3)
+        _restart()
+        restored = memo.knee_analysis(cycles, capacities, reference_cycle=3)
+        assert memo.knee_stats() == {"hits": 0, "disk": 1, "misses": 0, "entries": 1}
+        direct = detect_knee(cycles, capacities, reference_cycle=3)
+        assert memo.knee_to_json(restored) == memo.knee_to_json(direct)
+        assert memo.knee_to_json(computed) == memo.knee_to_json(direct)
+
+
+def test_the_restored_primary_is_one_of_the_results_like_detect_knee_makes_it():
+    cycles, capacities = _fading()
+    direct = detect_knee(cycles, capacities, reference_cycle=3)
+    restored = memo.knee_from_json(memo.knee_to_json(direct))
+    assert any(item is direct.primary for item in direct.results) == any(
+        item is restored.primary for item in restored.results)
+
+
+def test_a_changed_knee_code_does_not_read_the_old_answer(monkeypatch):
+    """코드가 바뀌면 디스크의 옛 답은 남의 답이다 -- 소스의 지문이 키에 있다."""
+    cycles, capacities = _fading()
+    memo.knee_analysis(cycles, capacities, reference_cycle=3)
+    _restart()
+    monkeypatch.setattr(memo, "_knee_code", b"knee.py changed")
+    memo.knee_analysis(cycles, capacities, reference_cycle=3)
+    assert memo.knee_stats()["disk"] == 0
+    assert memo.knee_stats()["misses"] == 1
+
+
+def test_a_half_written_file_is_counted_again_not_served():
+    cycles, capacities = _fading()
+    memo.knee_analysis(cycles, capacities, reference_cycle=3)
+    _restart()
+    for path in memo.settings.knee_dir.glob("*.json"):
+        path.write_text('{"primary": {"method": "dbw"', encoding="utf-8")
+    again = memo.knee_analysis(cycles, capacities, reference_cycle=3)
+    assert memo.knee_stats()["misses"] == 1
+    direct = detect_knee(cycles, capacities, reference_cycle=3)
+    assert memo.knee_to_json(again) == memo.knee_to_json(direct)
+
+
+def test_the_disk_stops_growing(monkeypatch):
+    """구동 중인 셀은 사이클마다 새 답을 남긴다 -- 상한을 넘으면 오래된 것부터."""
+    monkeypatch.setattr(memo, "KNEE_DISK_LIMIT", 10)
+    for i in range(25):
+        memo.knee_analysis([1.0, 2.0, 3.0], [2.0, 1.9 - i * 1e-4, 1.8], reference_cycle=1)
+    assert len(list(memo.settings.knee_dir.glob("*.json"))) <= 10
 
 
 # --------------------------------------------------------------------------

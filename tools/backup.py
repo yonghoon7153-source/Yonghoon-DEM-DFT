@@ -18,6 +18,8 @@ Some of what is in there is irreplaceable and some of it is not:
   rebuild themselves from the originals (ADR 0003, 0020, 0022) and they are
   the bulk of the directory; copying them would multiply the time and the
   space for something the app throws away on its own when it looks doubtful.
+* ``knee/`` — the dashboard's knee answers (ADR 0048).  **Skipped** for the
+  same reason: a cache, recomputed the next time the dashboard opens.
 
 The database is copied through SQLite's own backup API, not as a file.  A live
 SQLite database has pages in flight, and ``cp`` of one while the server is

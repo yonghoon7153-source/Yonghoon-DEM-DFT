@@ -97,6 +97,15 @@ class Settings:
         """
         return self.data_dir / "gitt"
 
+    @property
+    def knee_dir(self) -> Path:
+        """knee 분석의 답, 입력 지문마다 JSON 하나 (ADR 0048).
+
+        계산 캐시다 -- 지워도 다음 대시보드가 다시 센다.  그래서 백업하지 않는다
+        (`tools/backup.py` 는 원본과 데이터베이스만 옮긴다).
+        """
+        return self.data_dir / "knee"
+
     def ensure_dirs(self) -> None:
         self.uploads_dir.mkdir(parents=True, exist_ok=True)
         self.runs_dir.mkdir(parents=True, exist_ok=True)
