@@ -12683,6 +12683,7 @@
         "scripts/test_rint_r_chain_e2e.py (16/16 · 10-23 A4 판)",
         "webapp/test_ca_ext_labels.py (84/84 · 10-23 A2 판 · 고치기 전 68 PASS / 16 FAIL) — W16 (SV 줄 = 증서 구간 판정 근거 · nominal = 판정 아님 · 진단 · 옛 기록 표지)",
         "webapp/test_rint_explainer_page.py (62/62 · 10-23 A2 판 · 고치기 전 54/62) — 쉽게 말하면 상자 ④",
+        "scripts/test_ca_ext_b6.py (427/427 · 10-23 A6 판 `fba004f2d`) — S8r (구간 함수 `cert_interval` = 끊은 반사실 그래프의 영값 위상 증서만 +∞ · 다른 그래프의 0 = 못 정함 · A6 변이 표 A2-c15 생존 → 상주)",
         "docs/reviews/codex_rint2_rereview_evidence_20261022/geometry/run_review.py",
         "docs/reviews/codex_rint2_rereview_evidence_20261022/geometry/geometry_results.json",
         "docs/reviews/codex_rint2_rereview_evidence_20261022/_repro_ours_20261022/README.md"
@@ -12731,6 +12732,7 @@
       "evidence_tests": [
         "scripts/test_ca_ext_b6.py (424/424 · 10-23 A4 판 · A2 고치기 전 357 PASS / 31 FAIL) — S8n (판정문 F3 다섯 꼴 + 같은 부류 — 끝 증서 없음 · 외부 · 결합 안 된 증서 · 등록 밖 괄호 규칙 · 제거 수 · 10^400 · census · I_bot_code · fp 증거 불일치 · 판정 근거 칸 변조 · 실제 소비자 run_contract.ca_ext_record_ok) · S8q (검증기 상수 = 생산자 상수) · SP15",
         "scripts/test_rint_r_chain.py (231/231 · 10-23 A4 판) — V30 (기록의 주 해 증서 ≠ 그 런의 step3 주 증서 → CA_EXT_RECORD)",
+        "scripts/test_ca_ext_b6.py (427/427 · 10-23 A6 판 `fba004f2d`) — S8s 일관 변조 48 꼴 (판정 근거 칸을 변조한 기록의 증서에서 다시 센 값으로 맞춰도 각 검사가 제 문장으로 거부) · 끝 증서 게시 판 전류 ≠ 그 끝 G 꼴 (A6 변이 표 A2-c7 · c8 · c9 · c10 · c17 생존 → 상주)",
         "docs/reviews/codex_rint2_rereview_evidence_20261022/geometry/run_review.py",
         "docs/reviews/codex_rint2_rereview_evidence_20261022/geometry/geometry_results.json",
         "docs/reviews/codex_rint2_rereview_evidence_20261022/_repro_ours_20261022/README.md"
@@ -12817,6 +12819,7 @@
       "evidence_tests": [
         "scripts/test_rint_r_chain.py (231/231 · 10-23 A4 판 · A3 고치기 전 --only U17,M44,M45,M46,M47,V31,U02,U13 3/9) — U17 (판정문 꼴 4.2 / 4.7 / 4.4 → R_MONOTONE_VIOLATION · 정상 · 증서 띠 안 비단조 · 평탄 · 영값 위상 · lo ↔ hi 모순 · 8 팔 평균 · arm 0 만 비단조 · err_rel 없음) · M44–M47 · V31 (가짜 러너 끝-끝)",
         "scripts/test_rint_r_chain_e2e.py (16/16 · 10-23 A4 판)",
+        "scripts/test_rint_r_chain.py (232/232 · 10-23 A6 판 `fba004f2d`) — U17b (`r_monotone_problem` R 같은 갈래 · A6 변이 표 A3-r3 생존 → 상주)",
         "docs/reviews/codex_review_rint2_rereview_20261022.md",
         "docs/reviews/codex_rint2_rereview_evidence_20261022/_repro_ours_20261022/README.md"
       ],
