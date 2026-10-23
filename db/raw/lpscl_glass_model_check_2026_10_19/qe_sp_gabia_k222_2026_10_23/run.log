@@ -1,0 +1,33 @@
+[2026-10-23 16:24:26] ════ 준비된 QE 폴더 2 개 (JOB=dirs · sp/A_s3 kpt/k222_A_s3) · HEAD 0e549060d · MODE auto · DRY_RUN · OUT /data/work/runs/li2s_k222_gabia_2026_10_23 ════
+PP ✓ 4 개 내용 sha256 = PP_MANIFEST · 폴더 2
+[2026-10-23 16:24:26] 입력 ✓ 2 개 — 실행 순서 sp/A_s3 kpt/k222_A_s3 · 프로브 = 첫 폴더 · 입력은 만들지도 고치지도 않는다
+[2026-10-23 16:24:26] 프로브 생략 — PROBE_EST_MIB=30065 를 준 값으로 쓴다
+[2026-10-23 16:24:26] GPU 총 49140 · 사용 37220 · 빔 11920 MiB · 추정 30065 → need 40108 MiB (×1.3 + 1024) · r2 pw.x: 484861 · 다른 잡: 없음
+[2026-10-23 16:24:26] 결정: pause — r2 를 다음 BFGS 줄 직후 EXIT 로 세우고 · dirs SCF 혼자 · 끝나면 r2 restart
+[2026-10-23 16:24:26] DRY_RUN — 여기서 끝 (GPU 계산 0 · r2 손대지 않음)
+[2026-10-23 16:24:26] ════ 준비된 QE 폴더 2 개 (JOB=dirs · sp/A_s3 kpt/k222_A_s3) · HEAD 0e549060d · MODE auto · OUT /data/work/runs/li2s_k222_gabia_2026_10_23 ════
+PP ✓ 4 개 내용 sha256 = PP_MANIFEST · 폴더 2
+[2026-10-23 16:24:26] 입력 ✓ 2 개 — 실행 순서 sp/A_s3 kpt/k222_A_s3 · 프로브 = 첫 폴더 · 입력은 만들지도 고치지도 않는다
+[2026-10-23 16:24:26] 프로브 생략 — PROBE_EST_MIB=30065 를 준 값으로 쓴다
+[2026-10-23 16:24:26] GPU 총 49140 · 사용 37220 · 빔 11920 MiB · 추정 30065 → need 40108 MiB (×1.3 + 1024) · r2 pw.x: 484861 · 다른 잡: 없음
+[2026-10-23 16:24:26] 결정: pause — r2 를 다음 BFGS 줄 직후 EXIT 로 세우고 · dirs SCF 혼자 · 끝나면 r2 restart
+[2026-10-23 16:24:26] GPU 런타임 ✓ libmpi /data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/lib/libmpi.so.40 → /data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/bin/mpirun · OMP 1
+[2026-10-23 16:24:27] r2 이번 실행 nstep 200 · 지금까지 SCF 63 — 재개 때 남은 만큼만 준다
+[2026-10-23 16:24:27] ▶ r2 정지 — pw.x 484861 · in 00_control_relax.restart.in · out 00_control_relax.out · 다음 BFGS 줄 직후 EXIT (최대 14400 s)
+[2026-10-23 16:24:27] pw.x 484861 · cwd /data/work/runs/sei_control/li3nd_mp-976264_p333_r2 · prefix li3nd_mp-976264_p333_r2 · bfgs /data/work/runs/sei_control/li3nd_mp-976264_p333_r2/./tmp/li3nd_mp-976264_p333_r2.bfgs · 출력 00_control_relax.out · 러너 안 얼림 (--no_runner)
+[2026-10-23 16:24:27] BFGS 줄 63 개에서 다음 줄을 기다린다 (최대 14400 s)
+[2026-10-23 16:33:48] BFGS 줄 64 — /data/work/runs/sei_control/li3nd_mp-976264_p333_r2/li3nd_mp-976264_p333_r2.EXIT 생성
+[2026-10-23 16:34:08] pw.x 끝 (20 s 뒤)
+[2026-10-23 16:34:08] .bfgs b756f5fc · 2026-10-23 16:33:43
+[2026-10-23 16:34:08] 상태 = stopped · BFGS 줄 64 · 마지막  Total force = 0.007500 Total SCF correction = 0.000028
+[2026-10-23 16:34:08] ✅ 세움 (러너 안 얼림 · --no_runner) · 재개 = 드라이버를 새로 띄운다 (stopped/exhausted + .bfgs → restart)
+[2026-10-23 16:34:08] r2 정지 확인:  ⏸ li3nd_mp-976264_p333_r2 사람이 세움(EXIT·max_seconds) → nstep 200 · restart (BFGS 이력 승계)
+[2026-10-23 16:34:38] GPU 빔 × 2 — dirs SCF 혼자 간다
+[2026-10-23 16:34:38] ▶ SCF A_s3 (GPU · pause)
+[2026-10-23 16:37:21] SCF ✓ A_s3 ! total energy = -2428.95245987 Ry · 반복 18 iterations ·  PWSCF : 2m38.27s CPU 2m42.08s WALL · 응력 P=-2.38 kbar
+[2026-10-23 16:37:21] ▶ SCF k222_A_s3 (GPU · pause)
+[2026-10-23 17:32:24] SCF ✓ k222_A_s3 ! total energy = -2428.95718263 Ry · 반복 19 iterations ·  PWSCF : 54m53.22s CPU 55m 2.00s WALL · 응력 P=-2.42 kbar
+[2026-10-23 17:32:24] r2 판정:  ⏸ li3nd_mp-976264_p333_r2 사람이 세움(EXIT·max_seconds) → nstep 200 · restart (BFGS 이력 승계)
+[2026-10-23 17:32:24] r2 재개 nstep = 실행 nstep 200 − 쓴 SCF 64 = 136 (EXIT 정지는 새 한도를 주지 않는다)
+[2026-10-23 17:32:29] ✅ r2 재개 — tmux li3nd_r2_res_10231732 (restart_qe_relax.sh --run --nstep 136 · GPU 여유를 스스로 기다린다) · 로그 /data/work/runs/li2s_k222_gabia_2026_10_23/r2_resume.log
+[2026-10-23 17:32:29] ■ 끝 · 끝 코드 0 · 결정 pause
