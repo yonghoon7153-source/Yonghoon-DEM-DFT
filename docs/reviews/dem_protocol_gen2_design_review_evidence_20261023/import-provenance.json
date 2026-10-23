@@ -1,0 +1,47 @@
+{
+  "source_pin": "7799a2ff64ba462b42ce05edd3e63b7c2854d557",
+  "request_import_path": "docs/reviews/codex_dem_protocol_gen2_design_request_20261023.md",
+  "request_import_sha256": "19cfb12f9524ef1d82dd267dc0472cfee410d1ec487bb973b6023dbaa6c41b84",
+  "preserved_author_files": {
+    "probe_design_arithmetic.py": "8c7adf1f4957c7a5a145f7da8e55994caabfa5e26c60e07bd7f0916071a6a5e1",
+    "legacy-pressure-results.json": "807aee11913257345343f4e672888f59df7107a5e941bbf8663e2707065edf5f",
+    "CLAIM_AUDIT.md": "951f1803f69152448f26ce47515f07abaa8241fc8cac021ffca03fda50ef32d5",
+    "RESPONSE_G2IR_v2.md": "5b3beea2513842ebb017f819b657c59bff1d0ec5513dddd78ab105248af07f6b",
+    "revision-v2-identity.json": "22b380abba69c6288232d3f6d170bd7b86e74289d3c12608dfcad0b7c9622879",
+    "codex_dem_protocol_gen2_design_request_20261023_draft_v2.md": "4ee2d07ccd392c9233d57262d2511ae0d32bfac52a95a9808593e97cf26929a2",
+    "request-v1-to-v2.diff": "47a0d33d159c3134d96c56dd2ce3c83a8ac5e66b8ce521644a008986b1adbded",
+    "ledger-status.json": "80073512ff3684e2921a1640bd008045579422d5430c0e5401b293627290a537",
+    "MANIFEST.v2.sha256": "d9b54423891ce89d0c5b33b9d7bc16475f6bd6c1a45ba932cb8170e8632e5e34",
+    "codex_dem_protocol_gen2_design_request_20261023_draft.md": "0e9b62b26ac73ac0173e73c4d3ceff0a8f8e57a76d2a0dd9d866ebcb2c458d61",
+    "arithmetic-results.json": "53221788aeacb759ccb45264d943cc94c86f01932eaf9bc33ff21f1f331fdf87",
+    "MANIFEST.sha256": "52f7721f88c9d5a51e443fa0db11b8205ce2c11015bc06d14b8b447efc712c56",
+    "source-manifest.json": "80e403011beb7264ed02bbd4a80a7bdfabee32b02deb01870348e785e93d4b8d",
+    "verification.json": "c1c7987ad22047fd816641cf87223a2c654a1f377ee01bf019b39875eb44e06f",
+    "literature-manifest.json": "565082165981a48576e6d15567bfe3de78512f81a25a859e59fe718dad59c806",
+    "verification-v2.json": "6115e2293110081112dedce8607b79ca60faee8fff4818aa306426cdebe78641"
+  },
+  "preserved_independent_files": {
+    "probe_repo_mc.py": "720abc1a743f7c9f2393436502bd2fa2cf7468b017f5116404261a5244d8924e",
+    "REVIEW.md": "60ea178361a92f45c3bb9402e327ee8cc275e45495364266f589c43661168ed2",
+    "recheck-v2-evidence.json": "044f47f84da1ceb948bef475953fabfe39336e71d756056b416e2a18392effdf",
+    "RECHECK-v2.md": "549b4783f0269a42c057c7a80d4508b11f35c30657b21e846b3a33b9e3bdbd70",
+    "probe_independent.py": "57105fc0e9d076da5303636e2819b9da1f0cc8bb14d5d393fc414fa60489188d",
+    "results.json": "3e7b627316e9963e100af795241525044a4573f98a4edd18ed3deb315702cfde",
+    "repo-mc-results.json": "452f225e12baa52ad844aedc797a493d144bb05fcde7e032693c6ef1bb4b25ce",
+    "MANIFEST.sha256": "44520a78333b940cc25151d2bd6e634eaa6767e4c3539e4a67c5f26d5ec9161a",
+    "RECHECK-v2-MANIFEST.sha256": "41644115a5f058a1c70a69b0bd37ff01e4d8fcbf72de12958ec163e888b26c0b"
+  },
+  "scope": "Import status/path/baseline scope and chunk-label clarification only; gate state is in full_gate_receipt.json; no new scientific decision or full-gate completion claim; later canonical-path-only normalization recorded in import-paths/provenance.json",
+  "package_audit": {
+    "audited_request_sha256": "cbe5892499180ad7822f7b3d795ef4064ba866c2b6bc1bd92c7b59fdb8ec8f00",
+    "report": "package-audit/dem-gen2.md",
+    "replay_summary": "package-audit/replay-summary.json",
+    "post_audit_diff": "package-audit/audit-to-current-request.diff",
+    "audited_request_sha256_scope": "Historical audit input in original-package-docs.zip; the live audited_request.md has path-only normalization.",
+    "live_audited_request_sha256": "72d16209dbf68c106e75e8056577f8690cd0fba439348d71a3ea64a9154b5500"
+  },
+  "archived_request_import_sha256": "5d1921cea1eb281b2b6a6171a51ec9e0d5130d241e15a4c977574f9c9d3ccca6",
+  "preserved_author_files_scope": "Historical pre-import bytes in import-paths/original-package-docs.zip; path-normalized live author drafts and import manifests have separate live hashes.",
+  "preserved_independent_files_scope": "Original independent files remain byte-identical both live and in the archive.",
+  "path_normalization_provenance": "import-paths/provenance.json"
+}

@@ -1,0 +1,24 @@
+--- independent/probe_independent.py
++++ tools/probe_independent_portable.py
+@@ -9,10 +9,11 @@
+     ap.add_argument('--repo', required=True, type=Path)
+     ap.add_argument('--request', required=True, type=Path)
+     ap.add_argument('--out', required=True, type=Path)
++    ap.add_argument("--git-repo", required=True, type=Path, help="Read-only Git object store; --repo is a materialized source snapshot")
+     args = ap.parse_args()
+     repo = args.repo.resolve()
+     def git(*xs):
+-        return subprocess.check_output(['git', '-C', str(repo), *xs])
++        return subprocess.check_output(['git', '-C', str(args.git_repo.resolve()), *xs])
+     pin='7799a2ff64ba462b42ce05edd3e63b7c2854d557'
+     old='9dc235c38f6347c1d94febc598b1d93ee2ffef68'
+     new='aaa275e2081ce43a6892c7dde40ea4d8f82576de'
+@@ -97,7 +98,7 @@
+     ids={f'MV-{x:02}' for x in range(1,10)}|{'DEMP-01','DEMP-02'}
+     status={x['id']:x['status'] for x in findings if x['id'] in ids}
+     check('eleven_findings_remain_open',len(status)==11 and set(status.values())=={'open'},status=status)
+-    out=dict(schema='independent_dem_gen2_preattack_v1',repo_head=git('rev-parse','HEAD').decode().strip(),python=sys.version,request_sha256=hashlib.sha256(args.request.read_bytes()).hexdigest(),checks=checks,source_files=sources,literature=lit,limitations=['No author CLAIM_AUDIT, probe, verification results or explanations read.','No DEM, LIGGGHTS, GPU, scheduler or external action.','No existing whole-repo gates repeated.','Analytic counterexamples do not establish magnitude in real beds.'])
++    out=dict(schema='independent_dem_gen2_preattack_v1',source_pin=pin,object_store_head=git('rev-parse','HEAD').decode().strip(),python=sys.version,request_sha256=hashlib.sha256(args.request.read_bytes()).hexdigest(),checks=checks,source_files=sources,literature=lit,limitations=['Portable replay of the preserved independent probe; not a new independent review.','No DEM, LIGGGHTS, GPU, scheduler or external action.','No existing whole-repo gates repeated.','Analytic counterexamples do not establish magnitude in real beds.'])
+     args.out.parent.mkdir(parents=True,exist_ok=True)
+     args.out.write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+     print(json.dumps(dict(checks=len(checks),passed=sum(x['pass_'] for x in checks),out=str(args.out)),ensure_ascii=False))

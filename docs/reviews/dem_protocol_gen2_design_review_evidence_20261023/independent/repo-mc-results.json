@@ -1,0 +1,68 @@
+{
+  "synthetic_only": true,
+  "analytic_void_pct": 50,
+  "radius": 0.4923725109213483,
+  "box": [
+    1,
+    1,
+    1
+  ],
+  "center": [
+    0.5,
+    0.5,
+    0.5
+  ],
+  "n": 100,
+  "rows": [
+    {
+      "seed": 0,
+      "void_pct": 56.99999999999999,
+      "se_pct": 4.950757517794625,
+      "within_1sigma": false
+    },
+    {
+      "seed": 1,
+      "void_pct": 55.00000000000001,
+      "se_pct": 4.9749371855331,
+      "within_1sigma": false
+    },
+    {
+      "seed": 2,
+      "void_pct": 51.0,
+      "se_pct": 4.998999899979995,
+      "within_1sigma": true
+    },
+    {
+      "seed": 3,
+      "void_pct": 40.0,
+      "se_pct": 4.898979485566356,
+      "within_1sigma": false
+    },
+    {
+      "seed": 4,
+      "void_pct": 54.0,
+      "se_pct": 4.983974317750845,
+      "within_1sigma": true
+    },
+    {
+      "seed": 5,
+      "void_pct": 47.0,
+      "se_pct": 4.990991885387111,
+      "within_1sigma": true
+    },
+    {
+      "seed": 6,
+      "void_pct": 53.0,
+      "se_pct": 4.990991885387111,
+      "within_1sigma": true
+    },
+    {
+      "seed": 7,
+      "void_pct": 49.0,
+      "se_pct": 4.998999899979995,
+      "within_1sigma": true
+    }
+  ],
+  "operator_sha256": "39fb19cb7eb962f11fe88546fa0ad93c4a9074846be13d15b27c2eae44fb620f",
+  "note": "Seeds are witnesses, not a binomial-coverage estimate; independent exact coverage is in results.json."
+}

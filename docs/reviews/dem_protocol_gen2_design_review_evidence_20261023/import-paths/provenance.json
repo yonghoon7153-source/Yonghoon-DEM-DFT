@@ -1,0 +1,259 @@
+{
+  "track": "dem-gen2",
+  "created_at_utc": "2026-10-23T14:54:00.272645+00:00",
+  "scope": "Path-only document import plus explicit historical/current provenance and affected live import manifests; no source/science/test changes",
+  "archive": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/import-paths/original-package-docs.zip",
+  "archive_sha256": "c6686007224764e09d9bf75acba1ca27750ba06467677bfb3f820fd2647fbb63",
+  "original_docs_count": 56,
+  "original_members": {
+    "docs/collab/codex_to_claude/20261023-1301_dem-gen2-request.md": "0a13dd5d34c218e13d8135f8fc1cf531cc0735f3507c62108b66486de27b8a14",
+    "docs/reviews/codex_dem_protocol_gen2_design_request_20261023.md": "5d1921cea1eb281b2b6a6171a51ec9e0d5130d241e15a4c977574f9c9d3ccca6",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/MANIFEST.sha256": "ad7ffd55c69dbeea30fc147e36ed8469fd8f45e64d9354e96aad683da0652645",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/README.md": "48c409e5c97ba9a3eccfefcc75c67efc8182eda9e715357c45288c749a330701",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/CLAIM_AUDIT.md": "951f1803f69152448f26ce47515f07abaa8241fc8cac021ffca03fda50ef32d5",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/MANIFEST.sha256": "52f7721f88c9d5a51e443fa0db11b8205ce2c11015bc06d14b8b447efc712c56",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/MANIFEST.v2.sha256": "d9b54423891ce89d0c5b33b9d7bc16475f6bd6c1a45ba932cb8170e8632e5e34",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/RESPONSE_G2IR_v2.md": "5b3beea2513842ebb017f819b657c59bff1d0ec5513dddd78ab105248af07f6b",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/arithmetic-results.json": "53221788aeacb759ccb45264d943cc94c86f01932eaf9bc33ff21f1f331fdf87",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/codex_dem_protocol_gen2_design_request_20261023_draft.md": "0e9b62b26ac73ac0173e73c4d3ceff0a8f8e57a76d2a0dd9d866ebcb2c458d61",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/codex_dem_protocol_gen2_design_request_20261023_draft_v2.md": "4ee2d07ccd392c9233d57262d2511ae0d32bfac52a95a9808593e97cf26929a2",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/ledger-status.json": "80073512ff3684e2921a1640bd008045579422d5430c0e5401b293627290a537",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/legacy-pressure-results.json": "807aee11913257345343f4e672888f59df7107a5e941bbf8663e2707065edf5f",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/literature-manifest.json": "565082165981a48576e6d15567bfe3de78512f81a25a859e59fe718dad59c806",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/probe_design_arithmetic.py": "8c7adf1f4957c7a5a145f7da8e55994caabfa5e26c60e07bd7f0916071a6a5e1",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/request-v1-to-v2.diff": "47a0d33d159c3134d96c56dd2ce3c83a8ac5e66b8ce521644a008986b1adbded",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/revision-v2-identity.json": "22b380abba69c6288232d3f6d170bd7b86e74289d3c12608dfcad0b7c9622879",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/source-manifest.json": "80e403011beb7264ed02bbd4a80a7bdfabee32b02deb01870348e785e93d4b8d",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/verification-v2.json": "6115e2293110081112dedce8607b79ca60faee8fff4818aa306426cdebe78641",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/verification.json": "c1c7987ad22047fd816641cf87223a2c654a1f377ee01bf019b39875eb44e06f",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/full_gate_receipt.json": "60c660739672ec141bec2b77609b72ac9420bc8f1254953e00a8d8654b4204a9",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/import-provenance.json": "a67e92cf1c7cb2b5abf3c9e5810aa58f8d26a5151f09641a8de7b64538786450",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/import-verification.json": "e4004d75edcc3703c81191a84a8050295d9411ff6058af3e44ca5deb743bb551",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/MANIFEST.sha256": "44520a78333b940cc25151d2bd6e634eaa6767e4c3539e4a67c5f26d5ec9161a",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/RECHECK-v2-MANIFEST.sha256": "41644115a5f058a1c70a69b0bd37ff01e4d8fcbf72de12958ec163e888b26c0b",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/RECHECK-v2.md": "549b4783f0269a42c057c7a80d4508b11f35c30657b21e846b3a33b9e3bdbd70",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/REVIEW.md": "60ea178361a92f45c3bb9402e327ee8cc275e45495364266f589c43661168ed2",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/probe_independent.py": "57105fc0e9d076da5303636e2819b9da1f0cc8bb14d5d393fc414fa60489188d",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/probe_repo_mc.py": "720abc1a743f7c9f2393436502bd2fa2cf7468b017f5116404261a5244d8924e",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/recheck-v2-evidence.json": "044f47f84da1ceb948bef475953fabfe39336e71d756056b416e2a18392effdf",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/repo-mc-results.json": "452f225e12baa52ad844aedc797a493d144bb05fcde7e032693c6ef1bb4b25ce",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/results.json": "3e7b627316e9963e100af795241525044a4573f98a4edd18ed3deb315702cfde",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/package-audit/audit-input-identity.json": "ace376db82142293c47f7fb61659bf08e2b69e24db6cdd23ad1bb37df224ddda",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/package-audit/audit-to-current-request.diff": "2f69baa1e32806695dbc5b7057f319ab3ea01cf44eba1dbf336d40a6d5fba6fe",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/package-audit/audited_request.md": "cbe5892499180ad7822f7b3d795ef4064ba866c2b6bc1bd92c7b59fdb8ec8f00",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/package-audit/dem-gen2.md": "21ae868dd317e99e4e18abd16b94dbcc4dda2ecdd4150c8513757fea9eb5ec94",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/package-audit/replay-summary.json": "ccb1c2620c98cc1df64a262053580b2a6327afb599c6be66120e290f0781194c",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/portable-replay/arithmetic-results.json": "53221788aeacb759ccb45264d943cc94c86f01932eaf9bc33ff21f1f331fdf87",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/portable-replay/author-arithmetic.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/portable-replay/independent-arithmetic.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/portable-replay/independent-arithmetic.stdout.txt": "61d6997f326a5612ec80eaa8c86cbcb3c60d5dd9a66d0c5b99e7d6eca03ead9b",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/portable-replay/independent-results.json": "2e25ffe986ccc275e6eee70154165d5524621a070b2f32d31e258f117d5fe299",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/portable-replay/legacy-pressure-results.json": "807aee11913257345343f4e672888f59df7107a5e941bbf8663e2707065edf5f",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/portable-replay/legacy-pressure.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/portable-replay/materialized-source-manifest.json": "743b4c7fbf127a4d281ad20e8333772146bbbc8bb5c6d1da0a5734cc5cc08f38",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/portable-replay/replay-summary.json": "ccb1c2620c98cc1df64a262053580b2a6327afb599c6be66120e290f0781194c",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/portable-replay/repo-mc-results.json": "452f225e12baa52ad844aedc797a493d144bb05fcde7e032693c6ef1bb4b25ce",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/portable-replay/repo-mc.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/portable-replay/repo-mc.stdout.txt": "e3db4430d0dd7fb5cec6b642332acf90718d24d14a5e68587203c2f861a59ebb",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/request-v2-to-import.diff": "86954f47f693ec0f8a984fd73a8e85d9ccef0d4d1bec9dbc4e6f8d9e9737b7d3",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/tools/mv_pressure_arithmetic.py": "d73d210604ce44771c6d225111edf1a42b6d1fb9ccca8e5dd023d36ac627e306",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/tools/portable-adapter.diff": "7279fcdf7872099fe03bff6ab64dff871455b6c0abb69d333976b401ddced1d1",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/tools/probe_design_arithmetic.py": "8c7adf1f4957c7a5a145f7da8e55994caabfa5e26c60e07bd7f0916071a6a5e1",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/tools/probe_independent_portable.py": "aa38c54dddc870838bd5bb237c1471db2fcc2a41c0bfc3443909519113474d6d",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/tools/probe_repo_mc.py": "720abc1a743f7c9f2393436502bd2fa2cf7468b017f5116404261a5244d8924e",
+    "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/tools/replay_evidence.py": "b6bf43cf68207f7bec59856f06a580921f52a3193036f29e902a1776535d1114"
+  },
+  "original_manifest_context": "반입 전 docs 56개의 모든 원 바이트와 당시 outer/nested manifest를 원래 저장소 상대 경로로 original-package-docs.zip에 보존한다. 원 manifest의 docs 멤버는 그 ZIP에서 대조하며, source/literature 지문이 가리키는 외부 Git 소스와 문헌은 이 docs ZIP 밖에 있으므로 각 기록의 원 source pin으로 대조한다. 최종 review ZIP의 선택 소스 문맥은 별도 selected_paths 기준이다.",
+  "token_substitutions": [
+    {
+      "doc": "docs/reviews/codex_dem_protocol_gen2_design_request_20261023.md",
+      "original_token": "author/source-manifest.json",
+      "import_token": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/source-manifest.json",
+      "occurrences": 2,
+      "original_line_numbers": [
+        25,
+        29
+      ]
+    },
+    {
+      "doc": "docs/reviews/codex_dem_protocol_gen2_design_request_20261023.md",
+      "original_token": "independent/RECHECK-v2.md",
+      "import_token": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/RECHECK-v2.md",
+      "occurrences": 2,
+      "original_line_numbers": [
+        11,
+        116
+      ]
+    },
+    {
+      "doc": "docs/reviews/codex_dem_protocol_gen2_design_request_20261023.md",
+      "original_token": "independent/REVIEW.md",
+      "import_token": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/REVIEW.md",
+      "occurrences": 2,
+      "original_line_numbers": [
+        11,
+        116
+      ]
+    },
+    {
+      "doc": "docs/reviews/codex_dem_protocol_gen2_design_request_20261023.md",
+      "original_token": "independent/results.json",
+      "import_token": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/results.json",
+      "occurrences": 1,
+      "original_line_numbers": [
+        25
+      ]
+    },
+    {
+      "doc": "docs/reviews/codex_dem_protocol_gen2_design_request_20261023.md",
+      "original_token": "package-audit/audited_request.md",
+      "import_token": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/package-audit/audited_request.md",
+      "occurrences": 1,
+      "original_line_numbers": [
+        120
+      ]
+    },
+    {
+      "doc": "docs/reviews/codex_dem_protocol_gen2_design_request_20261023.md",
+      "original_token": "package-audit/dem-gen2.md",
+      "import_token": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/package-audit/dem-gen2.md",
+      "occurrences": 1,
+      "original_line_numbers": [
+        120
+      ]
+    },
+    {
+      "doc": "docs/reviews/codex_dem_protocol_gen2_design_request_20261023.md",
+      "original_token": "probes/mv_pressure_arithmetic.py",
+      "import_token": "docs/reviews/codex_model_validation_review_evidence_20261008/probes/mv_pressure_arithmetic.py",
+      "occurrences": 1,
+      "original_line_numbers": [
+        32
+      ]
+    },
+    {
+      "doc": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/codex_dem_protocol_gen2_design_request_20261023_draft.md",
+      "original_token": "probes/mv_pressure_arithmetic.py",
+      "import_token": "docs/reviews/codex_model_validation_review_evidence_20261008/probes/mv_pressure_arithmetic.py",
+      "occurrences": 1,
+      "original_line_numbers": [
+        29
+      ]
+    },
+    {
+      "doc": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/codex_dem_protocol_gen2_design_request_20261023_draft_v2.md",
+      "original_token": "probes/mv_pressure_arithmetic.py",
+      "import_token": "docs/reviews/codex_model_validation_review_evidence_20261008/probes/mv_pressure_arithmetic.py",
+      "occurrences": 1,
+      "original_line_numbers": [
+        29
+      ]
+    },
+    {
+      "doc": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/package-audit/audited_request.md",
+      "original_token": "author/source-manifest.json",
+      "import_token": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/source-manifest.json",
+      "occurrences": 2,
+      "original_line_numbers": [
+        25,
+        29
+      ]
+    },
+    {
+      "doc": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/package-audit/audited_request.md",
+      "original_token": "independent/RECHECK-v2.md",
+      "import_token": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/RECHECK-v2.md",
+      "occurrences": 2,
+      "original_line_numbers": [
+        11,
+        116
+      ]
+    },
+    {
+      "doc": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/package-audit/audited_request.md",
+      "original_token": "independent/REVIEW.md",
+      "import_token": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/REVIEW.md",
+      "occurrences": 2,
+      "original_line_numbers": [
+        11,
+        116
+      ]
+    },
+    {
+      "doc": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/package-audit/audited_request.md",
+      "original_token": "independent/results.json",
+      "import_token": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/results.json",
+      "occurrences": 1,
+      "original_line_numbers": [
+        25
+      ]
+    },
+    {
+      "doc": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/package-audit/audited_request.md",
+      "original_token": "probes/mv_pressure_arithmetic.py",
+      "import_token": "docs/reviews/codex_model_validation_review_evidence_20261008/probes/mv_pressure_arithmetic.py",
+      "occurrences": 1,
+      "original_line_numbers": [
+        32
+      ]
+    }
+  ],
+  "changed_preexisting_files": [
+    {
+      "path": "docs/reviews/codex_dem_protocol_gen2_design_request_20261023.md",
+      "original_sha256": "5d1921cea1eb281b2b6a6171a51ec9e0d5130d241e15a4c977574f9c9d3ccca6",
+      "import_sha256": "19cfb12f9524ef1d82dd267dc0472cfee410d1ec487bb973b6023dbaa6c41b84"
+    },
+    {
+      "path": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/README.md",
+      "original_sha256": "48c409e5c97ba9a3eccfefcc75c67efc8182eda9e715357c45288c749a330701",
+      "import_sha256": "6376730b7bbf741fb19854f107f6b12c8835de6489181e5c54007f2208a42b4e"
+    },
+    {
+      "path": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/MANIFEST.sha256",
+      "original_sha256": "52f7721f88c9d5a51e443fa0db11b8205ce2c11015bc06d14b8b447efc712c56",
+      "import_sha256": "87d32f118eb997df6956c9aff0c8ecd966571151e87b5b55a883ee542d7cc7a7"
+    },
+    {
+      "path": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/MANIFEST.v2.sha256",
+      "original_sha256": "d9b54423891ce89d0c5b33b9d7bc16475f6bd6c1a45ba932cb8170e8632e5e34",
+      "import_sha256": "01e12f65ed4c831146912b7bdb0736a96e380a57b4ccba772c1368bca6b9bd32"
+    },
+    {
+      "path": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/codex_dem_protocol_gen2_design_request_20261023_draft.md",
+      "original_sha256": "0e9b62b26ac73ac0173e73c4d3ceff0a8f8e57a76d2a0dd9d866ebcb2c458d61",
+      "import_sha256": "a558d71b0baf863416bc1fbacccd6a59d54fa32b5e3f6bc466f61d52e0c29658"
+    },
+    {
+      "path": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/codex_dem_protocol_gen2_design_request_20261023_draft_v2.md",
+      "original_sha256": "4ee2d07ccd392c9233d57262d2511ae0d32bfac52a95a9808593e97cf26929a2",
+      "import_sha256": "8eb4274946081fe1bee21a2b71680bc8825843e1be1f147fcd5598d8a97f4ecd"
+    },
+    {
+      "path": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/import-provenance.json",
+      "original_sha256": "a67e92cf1c7cb2b5abf3c9e5810aa58f8d26a5151f09641a8de7b64538786450",
+      "import_sha256": "ea2df790a3867e9af825946573d5d736c2b161c20adb3fcf0adb75c3eeebbd48"
+    },
+    {
+      "path": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/package-audit/audited_request.md",
+      "original_sha256": "cbe5892499180ad7822f7b3d795ef4064ba866c2b6bc1bd92c7b59fdb8ec8f00",
+      "import_sha256": "72d16209dbf68c106e75e8056577f8690cd0fba439348d71a3ea64a9154b5500"
+    }
+  ],
+  "live_import_manifests": [
+    {
+      "path": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/MANIFEST.sha256",
+      "role": "live path-normalized import manifest",
+      "original_sha256": "52f7721f88c9d5a51e443fa0db11b8205ce2c11015bc06d14b8b447efc712c56",
+      "import_sha256": "87d32f118eb997df6956c9aff0c8ecd966571151e87b5b55a883ee542d7cc7a7"
+    },
+    {
+      "path": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/MANIFEST.v2.sha256",
+      "role": "live path-normalized import manifest",
+      "original_sha256": "d9b54423891ce89d0c5b33b9d7bc16475f6bd6c1a45ba932cb8170e8632e5e34",
+      "import_sha256": "01e12f65ed4c831146912b7bdb0736a96e380a57b4ccba772c1368bca6b9bd32"
+    }
+  ],
+  "current_outer_manifest": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/MANIFEST.sha256",
+  "canonical_checks": "NOT RUN: this staging preparation is not a canonical checker or full-gate result"
+}

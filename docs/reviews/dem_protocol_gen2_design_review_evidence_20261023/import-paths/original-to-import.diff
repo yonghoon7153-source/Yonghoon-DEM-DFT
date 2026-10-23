@@ -1,0 +1,179 @@
+--- original/docs/reviews/codex_dem_protocol_gen2_design_request_20261023.md
++++ import/docs/reviews/codex_dem_protocol_gen2_design_request_20261023.md
+@@ -8,7 +8,7 @@
+ 
+ **현재 지위**: 발송 전 초안. 계획서 §8의 Q1–Q16 결정 기록은 유지한다. 남은 측정·선행 증거는 승인으로 대체하지 않는다. 독립 재확인 `RECHECK-v2.md`는 **G2IR-01(P2)·G2IR-02(P3)가 문서 범위에서 해소되고 v1→v2 변경에 새 회귀 finding이 없음**을 판정했다. 이는 요청서 반입·최종 묶음 준비를 진행할 수 있다는 한정 판정이며, 외부 발송·등록·실행·물리 검증 GO가 아니다. 원 v1/v2·독립 보고서·실행 증거는 바이트 그대로 보존한다. 이 반입판은 v2에서 상태·경로·기준 검증 범위와 chunk 표기를 정리했다. 발송은 1저자가 한다.
+ 
+-증거 폴더: `docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/` (이하 **증거**). 최초·재확인 보고서는 `independent/REVIEW.md`·`independent/RECHECK-v2.md`, 원 v1/v2와 작성자 검산은 `author/`, 이식 가능한 재현 도구는 `tools/`에 있다. 반입판과 검토 v2의 차이는 `request-v2-to-import.diff`다.
++증거 폴더: `docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/` (이하 **증거**). 최초·재확인 보고서는 `docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/REVIEW.md`·`docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/RECHECK-v2.md`, 원 v1/v2와 작성자 검산은 `author/`, 이식 가능한 재현 도구는 `tools/`에 있다. 반입판과 검토 v2의 차이는 `request-v2-to-import.diff`다.
+ 
+ ## 1. 핀과 동봉 자료
+ 
+@@ -22,14 +22,14 @@
+ | 계획서가 읽은 문헌 핀 | `9dc235c38f6347c1d94febc598b1d93ee2ffef68` |
+ | 이번에 존재·변경을 대조한 문헌 핀 | `aaa275e2081ce43a6892c7dde40ea4d8f82576de` · `origin/claude/friendly-meitner-lldvar` 정본 |
+ | 문헌 대조 범위 | 계획서 §10의 서로 다른 카드 45개가 두 핀 모두에 존재. 44개는 바이트 동일, `sakuda2013_sulfide_mechanical_property` 1개는 10-21 원문 대조 정정이 추가됨. 원문 PDF/SI 45편의 새 전수 감사는 수행하지 않음 |
+-| 기준 스냅숏 신원 | 최초 검산 때 아래 A의 22개 파일이 **기준 `7799a2ff64ba462b42ce05edd3e63b7c2854d557`의 blob**과 같았고, 같은 시점 봉인 `CODE_FILES` 32개도 그 핀 대비 diff rc 0이었다. 증거 `author/source-manifest.json`·`independent/results.json`의 확인 범위다. 이후 ULPR 트랙의 등록·README 변경이나 다른 트랙 최종판까지 바이트 동일하다는 주장이 아님 |
++| 기준 스냅숏 신원 | 최초 검산 때 아래 A의 22개 파일이 **기준 `7799a2ff64ba462b42ce05edd3e63b7c2854d557`의 blob**과 같았고, 같은 시점 봉인 `CODE_FILES` 32개도 그 핀 대비 diff rc 0이었다. 증거 `docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/source-manifest.json`·`docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/results.json`의 확인 범위다. 이후 ULPR 트랙의 등록·README 변경이나 다른 트랙 최종판까지 바이트 동일하다는 주장이 아님 |
+ 
+ §7-A의 필수 선행(언로딩 외부 GO·독립 재확인·최종 핀/묶음·필수 게이트)이 남으면 발송하지 않는다. Q7–Q9의 미확인 실측 자료는 §7-B로 분리한다. 그 자료가 없는 조건부 설계 검토의 발송 여부는 1저자가 정하며, §7-A를 면제하지 않는다. 최종 묶음은 작업 디렉터리 사본으로 만들지 말고 확정 핀의 blob으로 만든다. 문헌은 위 정본 핀을 별도로 기록해 함께 넣는다. 이 요청서 자체의 커밋을 본문에서 자기 SHA로 적지 않는다.
+ 
+-**A. 기준 자료** (경로·크기·sha256 = 증거 `author/source-manifest.json`; 기준 핀에서 복원하는 목록이며 현재 ULPR 판과 구분)
++**A. 기준 자료** (경로·크기·sha256 = 증거 `docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/source-manifest.json`; 기준 핀에서 복원하는 목록이며 현재 ULPR 판과 구분)
+ 
+ - 인계서와 계획서, `findings.json`·`claims.json`의 기준판.
+-- `codex_review_model_validation_20261008.md`, 그 재현 폴더의 `_README_reproduction.md`·`probes/mv_pressure_arithmetic.py`.
++- `codex_review_model_validation_20261008.md`, 그 재현 폴더의 `_README_reproduction.md`·`docs/reviews/codex_model_validation_review_evidence_20261008/probes/mv_pressure_arithmetic.py`.
+ - `ps73_damping_branch_20261007/`의 README·`in.branch_B.liggghts`·`make_branch_decks.py`.
+ - 언로딩 등록 `dem_unloading_ps45_prereg_20261009.md`, 키트 README·`unload_params.json`, 10-14 키트 판정문·수정 계획.
+ - `dem_governing_equations_background_20261011.md`·`dem_governing_equations_report_20261009.md`.
+@@ -113,11 +113,11 @@
+ | 새 `probe_design_arithmetic.py` | Python 3.11.17, `python -I -B`, rc 0, 모든 assert 통과. `arithmetic-results.json` 동봉. stdlib 산술만 실행 |
+ | 기존 `mv_pressure_arithmetic.py` 원본 | `python -I -B`, rc 0. MV-01 반례가 CONVERGED: chunk 10·14, MV-02 0.16→0.40, MV-08 손실 기여 재현. `legacy-pressure-results.json` 동봉 |
+ | 기준 신원 대조 | 최초 검산의 기준 `7799a2ff` 스냅숏: 자료 22개 핀 blob 일치·봉인 32 diff rc 0. 문헌 두 핀의 카드 45개 존재·44개 동일. 이후 ULPR 변경이나 현재 작업트리의 동등성 검사가 아님. 증거의 원 manifest 유지 |
+-| 독립 사전 리뷰·v2 재확인 | `independent/REVIEW.md`·`independent/RECHECK-v2.md`. G2IR-01·02 문서 범위 해소, v1→v2 새 회귀 finding 없음. 실제 언로딩·세대 2 캠페인 시험 통과나 전체 게이트 통과가 아님 |
++| 독립 사전 리뷰·v2 재확인 | `docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/REVIEW.md`·`docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/RECHECK-v2.md`. G2IR-01·02 문서 범위 해소, v1→v2 새 회귀 finding 없음. 실제 언로딩·세대 2 캠페인 시험 통과나 전체 게이트 통과가 아님 |
+ 
+ 미수행: 실제 LIGGGHTS·T0–T14·새 판정기/덱 구현·순수 SE 보정·실험 대조·원문 PDF/SI의 새 전수 감사·원장 상태 변경. 작성자는 전체 게이트를 중복 실행하지 않았다. 최종 반영판의 필수 게이트 상태와 실행 근거는 증거 `full_gate_receipt.json`을 참조한다. 이전 작업의 게이트 결과를 이 요청서의 최종판 통과로 기재하지 않는다.
+ 
+-패키지 독립 감사 원문은 증거 `package-audit/dem-gen2.md`, 그 감사 입력 요청서는 `package-audit/audited_request.md`다. 감사자는 당시 패키지의 실제 결함을 발견하지 않았고 별도 경로의 replay도 rc 0이었다. 감사 뒤 비율로 오독될 수 있는 위 chunk 표기를 명확히 하고 전체 게이트 상태를 receipt 참조로 옮겼다. 이 감사 역시 외부 GO나 전체 게이트 판정이 아니다.
++패키지 독립 감사 원문은 증거 `docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/package-audit/dem-gen2.md`, 그 감사 입력 요청서는 `docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/package-audit/audited_request.md`다. 감사자는 당시 패키지의 실제 결함을 발견하지 않았고 별도 경로의 replay도 rc 0이었다. 감사 뒤 비율로 오독될 수 있는 위 chunk 표기를 명확히 하고 전체 게이트 상태를 receipt 참조로 옮겼다. 이 감사 역시 외부 GO나 전체 게이트 판정이 아니다.
+ 
+ ## 7. 발송 전에 채울 항목
+ 
+--- original/docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/README.md
++++ import/docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/README.md
+@@ -8,7 +8,7 @@
+ 
+ | 자료 | 보존·범위 |
+ |---|---|
+-| `author/` | 작성자 자료 16개를 바이트 그대로 복사. 최초 v1·수정 v2, 작성자 산술 탐침·결과, G2IR 대응표·diff, 두 원 manifest 포함. 그 안의 ‘재확인 대기’는 당시 기록이며 고치지 않음 |
++| `author/` | 반입 전 작성자 자료 16개의 원 바이트는 원본 ZIP에 보존. 현재 live 초안 두 개는 경로만 정규화했고 두 manifest는 live 반입 지문이다. 최초 v1·수정 v2, 작성자 산술 탐침·결과, G2IR 대응표·diff, 두 원 manifest는 원본 ZIP에서 확인한다. 그 안의 ‘재확인 대기’는 당시 기록이며 고치지 않음 |
+ | `independent/` | 독립 리뷰 자료 9개를 바이트 그대로 복사. 최초 REVIEW·프로브 2개·결과 2개·manifest, RECHECK-v2·재확인 증거·재확인 manifest |
+ | `request-v2-to-import.diff` | 독립 검토 v2→저장소 요청서의 차이. 재확인 상태·경로·기준 스냅숏 검증 범위를 정리. 새 물리 결정·문턱 비준 없음 |
+ | `import-provenance.json` | 원본 파일별 sha256, 반입 요청서의 경로·sha256, 읽은 소스 핀 |
+@@ -64,3 +64,7 @@
+ - 언로딩 외부 GO·T12 적용 핀은 별도로 반입해야 한다. ULPR 내부 수정·시험이나 이 문서 재확인으로 대신하지 않는다.
+ - Q7–Q9 미확인 자료가 있는 조건부 설계 검토의 발송 여부는 1저자가 정한다. 이 조건부 범위도 언로딩 외부 GO·최종 핀/묶음·필수 게이트를 면제하지 않는다.
+ - shared ledger·CLAUDE·진행 기록은 직접 수정하지 않았다. 제안 문안은 새 Codex→Claude 쪽지에만 둔다.
++
++## 경로 정규화 반입의 원본·현재 구분
++
++현재 저장소 문서 참조 검사를 위해 누락 경로 토큰만 실제 저장소 상대 경로로 확장했다. 숫자·판정·설계·미비준·실행 한계는 바꾸지 않았다. 원문 안의 “그대로/변경하지 않음”과 입력 SHA·원 diff·검토 행 번호는 당시 검토판의 이력이다. 원 바이트는 `import-paths/original-package-docs.zip`에서 확인한다. 현재 파일과 혼동하지 않도록 각 원본/반입 SHA·토큰 치환·diff를 `import-paths/provenance.json`에 기록했다. 아래 live manifest만 경로 정규화본의 반입 manifest로 재계산했으며, 같은 이름의 원 manifest는 ZIP에 그대로 있다: `author/MANIFEST.sha256`, `author/MANIFEST.v2.sha256`. 원 source/literature 지문과 수치 JSON·로그·도구는 변경하지 않았다.
+--- original/docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/MANIFEST.sha256
++++ import/docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/MANIFEST.sha256
+@@ -1,6 +1,6 @@
+ 951f1803f69152448f26ce47515f07abaa8241fc8cac021ffca03fda50ef32d5  CLAIM_AUDIT.md
+ 53221788aeacb759ccb45264d943cc94c86f01932eaf9bc33ff21f1f331fdf87  arithmetic-results.json
+-0e9b62b26ac73ac0173e73c4d3ceff0a8f8e57a76d2a0dd9d866ebcb2c458d61  codex_dem_protocol_gen2_design_request_20261023_draft.md
++a558d71b0baf863416bc1fbacccd6a59d54fa32b5e3f6bc466f61d52e0c29658  codex_dem_protocol_gen2_design_request_20261023_draft.md
+ 80073512ff3684e2921a1640bd008045579422d5430c0e5401b293627290a537  ledger-status.json
+ 807aee11913257345343f4e672888f59df7107a5e941bbf8663e2707065edf5f  legacy-pressure-results.json
+ 565082165981a48576e6d15567bfe3de78512f81a25a859e59fe718dad59c806  literature-manifest.json
+--- original/docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/MANIFEST.v2.sha256
++++ import/docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/MANIFEST.v2.sha256
+@@ -1,9 +1,9 @@
+ 951f1803f69152448f26ce47515f07abaa8241fc8cac021ffca03fda50ef32d5  CLAIM_AUDIT.md
+-52f7721f88c9d5a51e443fa0db11b8205ce2c11015bc06d14b8b447efc712c56  MANIFEST.sha256
++87d32f118eb997df6956c9aff0c8ecd966571151e87b5b55a883ee542d7cc7a7  MANIFEST.sha256
+ 5b3beea2513842ebb017f819b657c59bff1d0ec5513dddd78ab105248af07f6b  RESPONSE_G2IR_v2.md
+ 53221788aeacb759ccb45264d943cc94c86f01932eaf9bc33ff21f1f331fdf87  arithmetic-results.json
+-0e9b62b26ac73ac0173e73c4d3ceff0a8f8e57a76d2a0dd9d866ebcb2c458d61  codex_dem_protocol_gen2_design_request_20261023_draft.md
+-4ee2d07ccd392c9233d57262d2511ae0d32bfac52a95a9808593e97cf26929a2  codex_dem_protocol_gen2_design_request_20261023_draft_v2.md
++a558d71b0baf863416bc1fbacccd6a59d54fa32b5e3f6bc466f61d52e0c29658  codex_dem_protocol_gen2_design_request_20261023_draft.md
++8eb4274946081fe1bee21a2b71680bc8825843e1be1f147fcd5598d8a97f4ecd  codex_dem_protocol_gen2_design_request_20261023_draft_v2.md
+ 80073512ff3684e2921a1640bd008045579422d5430c0e5401b293627290a537  ledger-status.json
+ 807aee11913257345343f4e672888f59df7107a5e941bbf8663e2707065edf5f  legacy-pressure-results.json
+ 565082165981a48576e6d15567bfe3de78512f81a25a859e59fe718dad59c806  literature-manifest.json
+--- original/docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/codex_dem_protocol_gen2_design_request_20261023_draft.md
++++ import/docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/codex_dem_protocol_gen2_design_request_20261023_draft.md
+@@ -26,7 +26,7 @@
+ **A. 기준 자료** (경로·크기·sha256 = 동봉 `source-manifest.json`)
+ 
+ - 인계서와 계획서, `findings.json`·`claims.json`의 기준판.
+-- `codex_review_model_validation_20261008.md`, 그 재현 폴더의 `_README_reproduction.md`·`probes/mv_pressure_arithmetic.py`.
++- `codex_review_model_validation_20261008.md`, 그 재현 폴더의 `_README_reproduction.md`·`docs/reviews/codex_model_validation_review_evidence_20261008/probes/mv_pressure_arithmetic.py`.
+ - `ps73_damping_branch_20261007/`의 README·`in.branch_B.liggghts`·`make_branch_decks.py`.
+ - 언로딩 등록 `dem_unloading_ps45_prereg_20261009.md`, 키트 README·`unload_params.json`, 10-14 키트 판정문·수정 계획.
+ - `dem_governing_equations_background_20261011.md`·`dem_governing_equations_report_20261009.md`.
+--- original/docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/codex_dem_protocol_gen2_design_request_20261023_draft_v2.md
++++ import/docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/codex_dem_protocol_gen2_design_request_20261023_draft_v2.md
+@@ -26,7 +26,7 @@
+ **A. 기준 자료** (경로·크기·sha256 = 동봉 `source-manifest.json`)
+ 
+ - 인계서와 계획서, `findings.json`·`claims.json`의 기준판.
+-- `codex_review_model_validation_20261008.md`, 그 재현 폴더의 `_README_reproduction.md`·`probes/mv_pressure_arithmetic.py`.
++- `codex_review_model_validation_20261008.md`, 그 재현 폴더의 `_README_reproduction.md`·`docs/reviews/codex_model_validation_review_evidence_20261008/probes/mv_pressure_arithmetic.py`.
+ - `ps73_damping_branch_20261007/`의 README·`in.branch_B.liggghts`·`make_branch_decks.py`.
+ - 언로딩 등록 `dem_unloading_ps45_prereg_20261009.md`, 키트 README·`unload_params.json`, 10-14 키트 판정문·수정 계획.
+ - `dem_governing_equations_background_20261011.md`·`dem_governing_equations_report_20261009.md`.
+--- original/docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/import-provenance.json
++++ import/docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/import-provenance.json
+@@ -1,7 +1,7 @@
+ {
+   "source_pin": "7799a2ff64ba462b42ce05edd3e63b7c2854d557",
+   "request_import_path": "docs/reviews/codex_dem_protocol_gen2_design_request_20261023.md",
+-  "request_import_sha256": "5d1921cea1eb281b2b6a6171a51ec9e0d5130d241e15a4c977574f9c9d3ccca6",
++  "request_import_sha256": "19cfb12f9524ef1d82dd267dc0472cfee410d1ec487bb973b6023dbaa6c41b84",
+   "preserved_author_files": {
+     "probe_design_arithmetic.py": "8c7adf1f4957c7a5a145f7da8e55994caabfa5e26c60e07bd7f0916071a6a5e1",
+     "legacy-pressure-results.json": "807aee11913257345343f4e672888f59df7107a5e941bbf8663e2707065edf5f",
+@@ -31,11 +31,17 @@
+     "MANIFEST.sha256": "44520a78333b940cc25151d2bd6e634eaa6767e4c3539e4a67c5f26d5ec9161a",
+     "RECHECK-v2-MANIFEST.sha256": "41644115a5f058a1c70a69b0bd37ff01e4d8fcbf72de12958ec163e888b26c0b"
+   },
+-  "scope": "Import status/path/baseline scope and chunk-label clarification only; gate state is in full_gate_receipt.json; no new scientific decision or full-gate completion claim",
++  "scope": "Import status/path/baseline scope and chunk-label clarification only; gate state is in full_gate_receipt.json; no new scientific decision or full-gate completion claim; later canonical-path-only normalization recorded in import-paths/provenance.json",
+   "package_audit": {
+     "audited_request_sha256": "cbe5892499180ad7822f7b3d795ef4064ba866c2b6bc1bd92c7b59fdb8ec8f00",
+     "report": "package-audit/dem-gen2.md",
+     "replay_summary": "package-audit/replay-summary.json",
+-    "post_audit_diff": "package-audit/audit-to-current-request.diff"
+-  }
++    "post_audit_diff": "package-audit/audit-to-current-request.diff",
++    "audited_request_sha256_scope": "Historical audit input in original-package-docs.zip; the live audited_request.md has path-only normalization.",
++    "live_audited_request_sha256": "72d16209dbf68c106e75e8056577f8690cd0fba439348d71a3ea64a9154b5500"
++  },
++  "archived_request_import_sha256": "5d1921cea1eb281b2b6a6171a51ec9e0d5130d241e15a4c977574f9c9d3ccca6",
++  "preserved_author_files_scope": "Historical pre-import bytes in import-paths/original-package-docs.zip; path-normalized live author drafts and import manifests have separate live hashes.",
++  "preserved_independent_files_scope": "Original independent files remain byte-identical both live and in the archive.",
++  "path_normalization_provenance": "import-paths/provenance.json"
+ }
+--- original/docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/package-audit/audited_request.md
++++ import/docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/package-audit/audited_request.md
+@@ -8,7 +8,7 @@
+ 
+ **현재 지위**: 발송 전 초안. 계획서 §8의 Q1–Q16 결정 기록은 유지한다. 남은 측정·선행 증거는 승인으로 대체하지 않는다. 독립 재확인 `RECHECK-v2.md`는 **G2IR-01(P2)·G2IR-02(P3)가 문서 범위에서 해소되고 v1→v2 변경에 새 회귀 finding이 없음**을 판정했다. 이는 요청서 반입·최종 묶음 준비를 진행할 수 있다는 한정 판정이며, 외부 발송·등록·실행·물리 검증 GO가 아니다. 원 v1/v2·독립 보고서·실행 증거는 바이트 그대로 보존한다. 이 반입판은 v2에서 상태·경로·기준 검증 범위만 정리했다. 발송은 1저자가 한다.
+ 
+-증거 폴더: `docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/` (이하 **증거**). 최초·재확인 보고서는 `independent/REVIEW.md`·`independent/RECHECK-v2.md`, 원 v1/v2와 작성자 검산은 `author/`, 이식 가능한 재현 도구는 `tools/`에 있다. 반입판과 검토 v2의 차이는 `request-v2-to-import.diff`다.
++증거 폴더: `docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/` (이하 **증거**). 최초·재확인 보고서는 `docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/REVIEW.md`·`docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/RECHECK-v2.md`, 원 v1/v2와 작성자 검산은 `author/`, 이식 가능한 재현 도구는 `tools/`에 있다. 반입판과 검토 v2의 차이는 `request-v2-to-import.diff`다.
+ 
+ ## 1. 핀과 동봉 자료
+ 
+@@ -22,14 +22,14 @@
+ | 계획서가 읽은 문헌 핀 | `9dc235c38f6347c1d94febc598b1d93ee2ffef68` |
+ | 이번에 존재·변경을 대조한 문헌 핀 | `aaa275e2081ce43a6892c7dde40ea4d8f82576de` · `origin/claude/friendly-meitner-lldvar` 정본 |
+ | 문헌 대조 범위 | 계획서 §10의 서로 다른 카드 45개가 두 핀 모두에 존재. 44개는 바이트 동일, `sakuda2013_sulfide_mechanical_property` 1개는 10-21 원문 대조 정정이 추가됨. 원문 PDF/SI 45편의 새 전수 감사는 수행하지 않음 |
+-| 기준 스냅숏 신원 | 최초 검산 때 아래 A의 22개 파일이 **기준 `7799a2ff64ba462b42ce05edd3e63b7c2854d557`의 blob**과 같았고, 같은 시점 봉인 `CODE_FILES` 32개도 그 핀 대비 diff rc 0이었다. 증거 `author/source-manifest.json`·`independent/results.json`의 확인 범위다. 이후 ULPR 트랙의 등록·README 변경이나 다른 트랙 최종판까지 바이트 동일하다는 주장이 아님 |
++| 기준 스냅숏 신원 | 최초 검산 때 아래 A의 22개 파일이 **기준 `7799a2ff64ba462b42ce05edd3e63b7c2854d557`의 blob**과 같았고, 같은 시점 봉인 `CODE_FILES` 32개도 그 핀 대비 diff rc 0이었다. 증거 `docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/source-manifest.json`·`docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/results.json`의 확인 범위다. 이후 ULPR 트랙의 등록·README 변경이나 다른 트랙 최종판까지 바이트 동일하다는 주장이 아님 |
+ 
+ §7-A의 필수 선행(언로딩 외부 GO·독립 재확인·최종 핀/묶음·필수 게이트)이 남으면 발송하지 않는다. Q7–Q9의 미확인 실측 자료는 §7-B로 분리한다. 그 자료가 없는 조건부 설계 검토의 발송 여부는 1저자가 정하며, §7-A를 면제하지 않는다. 최종 묶음은 작업 디렉터리 사본으로 만들지 말고 확정 핀의 blob으로 만든다. 문헌은 위 정본 핀을 별도로 기록해 함께 넣는다. 이 요청서 자체의 커밋을 본문에서 자기 SHA로 적지 않는다.
+ 
+-**A. 기준 자료** (경로·크기·sha256 = 증거 `author/source-manifest.json`; 기준 핀에서 복원하는 목록이며 현재 ULPR 판과 구분)
++**A. 기준 자료** (경로·크기·sha256 = 증거 `docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/source-manifest.json`; 기준 핀에서 복원하는 목록이며 현재 ULPR 판과 구분)
+ 
+ - 인계서와 계획서, `findings.json`·`claims.json`의 기준판.
+-- `codex_review_model_validation_20261008.md`, 그 재현 폴더의 `_README_reproduction.md`·`probes/mv_pressure_arithmetic.py`.
++- `codex_review_model_validation_20261008.md`, 그 재현 폴더의 `_README_reproduction.md`·`docs/reviews/codex_model_validation_review_evidence_20261008/probes/mv_pressure_arithmetic.py`.
+ - `ps73_damping_branch_20261007/`의 README·`in.branch_B.liggghts`·`make_branch_decks.py`.
+ - 언로딩 등록 `dem_unloading_ps45_prereg_20261009.md`, 키트 README·`unload_params.json`, 10-14 키트 판정문·수정 계획.
+ - `dem_governing_equations_background_20261011.md`·`dem_governing_equations_report_20261009.md`.
+@@ -113,7 +113,7 @@
+ | 새 `probe_design_arithmetic.py` | Python 3.11.17, `python -I -B`, rc 0, 모든 assert 통과. `arithmetic-results.json` 동봉. stdlib 산술만 실행 |
+ | 기존 `mv_pressure_arithmetic.py` 원본 | `python -I -B`, rc 0. MV-01 반례가 CONVERGED 10/14, MV-02 0.16→0.40, MV-08 손실 기여 재현. `legacy-pressure-results.json` 동봉 |
+ | 기준 신원 대조 | 최초 검산의 기준 `7799a2ff` 스냅숏: 자료 22개 핀 blob 일치·봉인 32 diff rc 0. 문헌 두 핀의 카드 45개 존재·44개 동일. 이후 ULPR 변경이나 현재 작업트리의 동등성 검사가 아님. 증거의 원 manifest 유지 |
+-| 독립 사전 리뷰·v2 재확인 | `independent/REVIEW.md`·`independent/RECHECK-v2.md`. G2IR-01·02 문서 범위 해소, v1→v2 새 회귀 finding 없음. 실제 언로딩·세대 2 캠페인 시험 통과나 전체 게이트 통과가 아님 |
++| 독립 사전 리뷰·v2 재확인 | `docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/REVIEW.md`·`docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/RECHECK-v2.md`. G2IR-01·02 문서 범위 해소, v1→v2 새 회귀 finding 없음. 실제 언로딩·세대 2 캠페인 시험 통과나 전체 게이트 통과가 아님 |
+ 
+ 미수행: 실제 LIGGGHTS·T0–T14·새 판정기/덱 구현·순수 SE 보정·실험 대조·원문 PDF/SI의 새 전수 감사·원장 상태 변경. 이 초안만을 위한 전체 게이트는 따로 중복 실행하지 않았다. 최종 반영 후 메인 작업자가 문서 참조·원장 자기일관·`scripts/check_all.sh` 전체 결과를 첨부해야 한다. 이전 작업의 게이트 결과를 이 요청서의 최종판 통과로 기재하지 않는다.
+ 

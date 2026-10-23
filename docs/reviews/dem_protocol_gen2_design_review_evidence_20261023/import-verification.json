@@ -1,0 +1,23 @@
+{
+  "source_pin": "7799a2ff64ba462b42ce05edd3e63b7c2854d557",
+  "request_sha256": "5d1921cea1eb281b2b6a6171a51ec9e0d5130d241e15a4c977574f9c9d3ccca6",
+  "preserved_author_files": 16,
+  "preserved_independent_files": 9,
+  "original_manifests_verified": 4,
+  "quotation_ban_scan": {
+    "files": 19,
+    "bans": 42,
+    "problems": []
+  },
+  "portable_replay": {
+    "probes_rc0": 4,
+    "compared_fields_equal": 7,
+    "source_pin_materialized_files": 55
+  },
+  "full_gate": "See full_gate_receipt.json; only actual final-run evidence may change PENDING",
+  "scope": "Prepared new deliverables only; no tracked repository writes or Git mutations by this child",
+  "package_audit_original_report_copied": true,
+  "package_audit_replay_summary_original_copied": true,
+  "package_audit_input_snapshot_preserved": true,
+  "legacy_converged_label": "CONVERGED: chunk 10·14 (chunk identifiers, not ratio)"
+}

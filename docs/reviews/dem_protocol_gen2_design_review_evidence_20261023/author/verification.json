@@ -1,0 +1,26 @@
+{
+  "python": "3.11.17 (main, Oct  3 2026, 01:05:36) [Clang 22.1.3 ]",
+  "source_pin": "7799a2ff64ba462b42ce05edd3e63b7c2854d557",
+  "commands": [
+    {
+      "command": "python -I -B probe_design_arithmetic.py",
+      "rc": 0,
+      "output": "arithmetic-results.json"
+    },
+    {
+      "command": "python -I -B docs/reviews/codex_model_validation_review_evidence_20261008/probes/mv_pressure_arithmetic.py",
+      "rc": 0,
+      "output": "legacy-pressure-results.json"
+    }
+  ],
+  "new_document_quotation_ban_scan": {
+    "files": 2,
+    "bans": 42,
+    "problems": []
+  },
+  "source_manifest_file_count": 22,
+  "sealed_file_count": 32,
+  "literature_card_count": 45,
+  "full_gate": "Not run by this child; root integration owns complete gate",
+  "independent_review": "Not performed by this author; separate reviewer required"
+}

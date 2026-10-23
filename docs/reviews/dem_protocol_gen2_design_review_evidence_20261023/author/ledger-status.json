@@ -1,0 +1,68 @@
+[
+  {
+    "id": "DEMP-01",
+    "severity": "P1",
+    "status": "open",
+    "opened_in": "docs/data/ps45_plane_load_20261007/README.md"
+  },
+  {
+    "id": "MV-01",
+    "severity": "P1",
+    "status": "open",
+    "opened_in": "docs/reviews/codex_review_model_validation_20261008.md"
+  },
+  {
+    "id": "MV-02",
+    "severity": "P1",
+    "status": "open",
+    "opened_in": "docs/reviews/codex_review_model_validation_20261008.md"
+  },
+  {
+    "id": "MV-03",
+    "severity": "P1",
+    "status": "open",
+    "opened_in": "docs/reviews/codex_review_model_validation_20261008.md"
+  },
+  {
+    "id": "MV-04",
+    "severity": "P1",
+    "status": "open",
+    "opened_in": "docs/reviews/codex_review_model_validation_20261008.md"
+  },
+  {
+    "id": "MV-05",
+    "severity": "P1",
+    "status": "open",
+    "opened_in": "docs/reviews/codex_review_model_validation_20261008.md"
+  },
+  {
+    "id": "MV-06",
+    "severity": "P2",
+    "status": "open",
+    "opened_in": "docs/reviews/codex_review_model_validation_20261008.md"
+  },
+  {
+    "id": "MV-07",
+    "severity": "P1",
+    "status": "open",
+    "opened_in": "docs/reviews/codex_review_model_validation_20261008.md"
+  },
+  {
+    "id": "MV-08",
+    "severity": "P2",
+    "status": "open",
+    "opened_in": "docs/reviews/codex_review_model_validation_20261008.md"
+  },
+  {
+    "id": "MV-09",
+    "severity": "P2",
+    "status": "open",
+    "opened_in": "docs/reviews/codex_review_model_validation_20261008.md"
+  },
+  {
+    "id": "DEMP-02",
+    "severity": "P3",
+    "status": "open",
+    "opened_in": "docs/data/ps73_compaction_curve_20261006/README.md"
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "original_request_preserved": true,
+  "independent_review_files_preserved": 6,
+  "original_manifest_preserved": true,
+  "new_documents_quotation_ban_scan": {
+    "files": 2,
+    "bans": 42,
+    "problems": []
+  },
+  "independent_recheck": "pending",
+  "full_gate": "root integration owns full final gate; not run by this child",
+  "source_edits": "none by this child"
+}
