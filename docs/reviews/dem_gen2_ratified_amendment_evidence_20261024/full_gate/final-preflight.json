@@ -1,0 +1,54 @@
+{
+  "status": "PASS",
+  "candidate": "be6af85342428731030042c8a669f0b830a7e882",
+  "branch": "codex/dem-gen2-request",
+  "cwd": "/workspace/Yonghoon-DEM-DFT",
+  "started_at_utc": "2026-10-23T20:53:20.626142+00:00",
+  "checked_index_tree_before": "aad4263f012dc3530150f0a9a6780e7cb12f28a0",
+  "checks": [
+    {
+      "name": "docrefs",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "scripts/check_doc_refs.py"
+      ],
+      "cwd": "/workspace/Yonghoon-DEM-DFT",
+      "started_at_utc": "2026-10-23T20:53:20.626173+00:00",
+      "finished_at_utc": "2026-10-23T20:53:21.406929+00:00",
+      "exit_code": 0,
+      "log": "final-docrefs.log",
+      "log_sha256": "2fe2ca2f14f9316256586b3a43db1ee1e6a6c106229228830e303404acf3c24c"
+    },
+    {
+      "name": "ledger",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "scripts/check_review_findings.py"
+      ],
+      "cwd": "/workspace/Yonghoon-DEM-DFT",
+      "started_at_utc": "2026-10-23T20:53:21.407049+00:00",
+      "finished_at_utc": "2026-10-23T20:53:43.189699+00:00",
+      "exit_code": 0,
+      "log": "final-ledger.log",
+      "log_sha256": "7483b4664c4d3c52e24db54600e4b9c5fa164c0b4fc7746c8682a1b6360e090c"
+    }
+  ],
+  "finished_at_utc": "2026-10-23T20:53:43.219795+00:00",
+  "checked_index_tree_after": "aad4263f012dc3530150f0a9a6780e7cb12f28a0",
+  "input_inventory_unchanged": true,
+  "working_tree_equals_index": true,
+  "checked_inventory_file": "checked-inventory.json",
+  "checked_inventory_sha256": "e8f65db63680b5686b7de179ea3201d82bb4730f97d7e2fb29bee2114b760a5c",
+  "post_check_additions": [
+    "final-preflight.json",
+    "final-docrefs.log",
+    "final-ledger.log",
+    "checked-inventory.json"
+  ],
+  "post_check_existing_updates": [
+    "MANIFEST.sha256"
+  ],
+  "post_check_scope": "Only these raw proof files and the live manifest inventory may be added or updated after the checked snapshot; no source or Markdown changes."
+}
