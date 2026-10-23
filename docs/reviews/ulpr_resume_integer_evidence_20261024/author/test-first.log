@@ -1,0 +1,64 @@
+  ✓ R37 ULPR-01 독립 리뷰 양성: 첫 시도는 경계 직후 끊겨 CSV 꼬리 없음 · 승인 RESUME 뒤 새 CROSS/RM 완성 → CSV 되감기 없이도 새 완료 사건이 증명한 주 값 OK
+  ✓ R37 ULPR-01 새 시도 TIMEOUT · 유지 2 창 · 확인 두 번째 단 줄 전 중단 → fresh/resume 둘 다 UNIDENTIFIED · 옛 정상 단 제외 · UVa 거부
+  ✓ R37 ULPR-01 새 시도 GUARD · 유지 2 창 · 확인 두 번째 단 줄 전 중단 → fresh/resume 둘 다 UNIDENTIFIED · 옛 정상 단 제외 · UVa 거부
+  ✓ R37 ULPR-01 새 시도 TIMEOUT · 유지 0 창 · 확인 두 번째 단 줄 전 중단 → fresh/resume 둘 다 UNIDENTIFIED · 옛 정상 단 제외 · UVa 거부
+  ✓ R37 ULPR-01 새 시도 GUARD · 유지 4 창 · 확인 두 번째 단 줄 전 중단 → fresh/resume 둘 다 UNIDENTIFIED · 옛 정상 단 제외 · UVa 거부
+  ✓ R37 ULPR-01 교차 전 새 시도 중단 → 옛 단으로 하한을 늘리지 않는다 · fresh/resume 마지막 정상 단 하한 동일
+  ✓ R37 ULPR-01 UB 경계 앞에서 교차 + 확인 두 단 완료 · 그 뒤 새 단은 TIMEOUT → fresh/resume 모두 이전 주 값 OK 보존
+  ✓ R37 ULPR-01 UB 소속 불명확 꼬리 격리도 원 CSV 를 고치지 않는다 (resumed=False)
+  ✓ R37 ULPR-01 UB 소속 불명확 꼬리 격리도 원 CSV 를 고치지 않는다 (resumed=True)
+  ✓ R37 ULPR-01 UB 측정 뒤 이동 중 TIMEOUT · 새 창 0 · 꼬리 소속 불명확 → 경계 앞 주 교차+확인은 재검증해 OK 보존 · 전체 합집합/분리/표면은 미확인
+  ✓ R37 ULPR-01 UB 불명확 꼬리 밖 주 교차 끝점 결손 → 경계 앞이란 이유로 허용하지 않는다 · S3 사유와 UNIDENTIFIED 유지
+  ✓ R37 ULPR-01 사건 없는 교차 전 옛 단 · 새 TIMEOUT 0 창 · 같은 시각/창 수 또는 새 기록 없음 → 소속 모호성 사유 + 값 없음
+  ✓ R37 ULPR-01 사건 없는 교차 전 옛 단 · 새 GUARD 4 창 · 같은 시각/창 수 또는 새 기록 없음 → 소속 모호성 사유 + 값 없음
+  ✓ R37 ULPR-01 새 시도 창 CSV 부분 쓰기 → 행 교체가 열 수 결손 사유를 숨기지 않는다 · 주 값 없음
+  ✓ R38 ULPR-02 resume_from 밖 RESUME · 그 상태 파일은 맞음 → 해당 승인 없음 + resume_from 사유
+  ✓ R38 ULPR-02 RESUME k 숫자 아님 → 승인 없음 + 숫자 아님 사유
+  ✓ R38 ULPR-02 RESUME step 숫자 아님 → 승인 없음 + 숫자 아님 사유
+  ✓ R38 ULPR-02 사건 k 3 ↔ 상태 파일 k 2 → 승인 없음 + 상태 파일 불일치 사유
+  ✓ R38 ULPR-02 되감기 뒤 step 이지만 k = k_r 인 사건 → 삭제 금지 + 버릴 사건 k > k_r 사유
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/ulpr/work/docs/data/ps45_unload_20261009/ul_reader.py", line 3737, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/workspace/.cloud-setup/nonrint-20261024/ulpr/work/docs/data/ps45_unload_20261009/ul_reader.py", line 3658, in main
+    return selftest()
+           ^^^^^^^^^^
+  File "/workspace/.cloud-setup/nonrint-20261024/ulpr/work/docs/data/ps45_unload_20261009/ul_reader.py", line 2658, in selftest
+    _ulpr_resume_tests(chk, P)
+  File "/workspace/.cloud-setup/nonrint-20261024/ulpr/work/docs/data/ps45_unload_20261009/ul_reader.py", line 2560, in _ulpr_resume_tests
+    vp = _mk_gram(root, 'e' * 64, files)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.cloud-setup/nonrint-20261024/ulpr/work/docs/data/ps45_unload_20261009/ul_reader.py", line 2359, in _mk_gram
+    rh.synth_gram_run(run, Ph)   # 단계 P · GA · GB 원자료 (rc · np.txt · screen.out · 덤프 · 판 mesh · restart · 상태 파일 · ckpt.txt · vars.txt)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.cloud-setup/nonrint-20261024/ulpr/work/docs/data/ps45_unload_20261009/history_test/read_history.py", line 1136, in synth_gram_run
+    synth_stage(s, os.path.join(root, s), P, scenario)
+  File "/workspace/.cloud-setup/nonrint-20261024/ulpr/work/docs/data/ps45_unload_20261009/history_test/read_history.py", line 930, in synth_stage
+    st = _state(P, zero=zero)
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.cloud-setup/nonrint-20261024/ulpr/work/docs/data/ps45_unload_20261009/history_test/read_history.py", line 836, in _state
+    D, H = _design(P)
+           ^^^^^^^^^^
+  File "/workspace/.cloud-setup/nonrint-20261024/ulpr/work/docs/data/ps45_unload_20261009/history_test/read_history.py", line 829, in _design
+    D = M.fixture_design(P)
+        ^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.cloud-setup/nonrint-20261024/ulpr/work/docs/data/ps45_unload_20261009/history_test/make_history_decks.py", line 503, in fixture_design
+    H = extract_head(P)
+        ^^^^^^^^^^^^^^^
+  File "/workspace/.cloud-setup/nonrint-20261024/ulpr/work/docs/data/ps45_unload_20261009/history_test/make_history_decks.py", line 432, in extract_head
+    raw = _member_text(P)
+          ^^^^^^^^^^^^^^^
+  File "/workspace/.cloud-setup/nonrint-20261024/ulpr/work/docs/data/ps45_unload_20261009/history_test/make_history_decks.py", line 420, in _member_text
+    with tarfile.open(tgz, 'r:gz') as t:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.cloud-setup/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/tarfile.py", line 1910, in open
+    return func(name, filemode, fileobj, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.cloud-setup/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/tarfile.py", line 1956, in gzopen
+    fileobj = GzipFile(name, mode + "b", compresslevel, fileobj)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.cloud-setup/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/gzip.py", line 174, in __init__
+    fileobj = self.myfileobj = builtins.open(filename, mode or 'rb')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/.cloud-setup/nonrint-20261024/ulpr/work/docs/data/ps73_compaction_curve_20261006/raw/ps73_logs.tgz'

@@ -1,0 +1,6 @@
+$ python3 -I make_unload_decks.py --check
+# cwd = kit folder · rc = 0 · 1.9 s
+# ── stdout ──
+✓ check — 덱 64 개 = 생성 결과 · ✓ seal — 파일 76 · SHA256SUMS 일치 · 폐기 규칙 0 건 · 활성 규칙 24 (증인 실재 True)
+# ── stderr ──
+# ── rc = 0 ──

@@ -1,0 +1,13 @@
+ul_lib_selftest                          rc=0 ok=24 fail=0    0.1s  selftest: PASS (0 실패)
+ul_s3_selftest                           rc=0 ok=16 fail=0    0.4s  selftest: PASS (0 실패)
+ul_observers_selftest                    rc=0 ok=21 fail=0    0.1s  selftest: PASS (0 실패)
+ul_gates_selftest                        rc=0 ok=202 fail=0    0.3s  selftest: PASS (0 실패)
+ul_reader_selftest                       rc=0 ok=304 fail=0   10.0s  selftest: PASS (0 실패)
+seal_kit_selftest                        rc=0 ok=12 fail=0   11.7s  selftest: PASS (0 실패)
+seal_kit_check                           rc=0 ok=1 fail=0    1.4s  ✓ seal — 파일 76 · SHA256SUMS 일치 · 폐기 규칙 0 건 · 활성 규칙 24 (증인 실재 True)
+make_unload_decks_selftest               rc=0 ok=291 fail=0    6.8s  selftest: PASS (0 실패)
+make_unload_decks_check                  rc=0 ok=1 fail=0    2.0s  ✓ check — 덱 64 개 = 생성 결과 · ✓ seal — 파일 76 · SHA256SUMS 일치 · 폐기 규칙 0 건 · 활성 규칙 24 (증인 실재 Tr
+history_make_history_decks_selftest      rc=0 ok=172 fail=0    0.7s  selftest: PASS (0 실패)
+history_make_history_decks_check         rc=0 ok=1 fail=0    0.2s  ✓ check: 덱 9 · 판 STL = 생성 결과 · SHA256SUMS 일치 (15 파일 · 러너 · 래퍼 · 읽는 쪽 포함)
+history_read_history_selftest            rc=0 ok=56 fail=0   14.5s  selftest: PASS (0 실패)
+ul_runner_test_selftest                  rc=0 ok=38 fail=0   61.0s  selftest: PASS (0 실패)

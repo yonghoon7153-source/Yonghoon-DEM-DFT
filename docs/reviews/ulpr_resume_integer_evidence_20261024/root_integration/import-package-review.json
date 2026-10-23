@@ -1,0 +1,93 @@
+{
+  "status": "PASS",
+  "failures": [],
+  "file_count": 282,
+  "total_bytes": 4317460,
+  "checks": [
+    {
+      "name": "package exact member selection",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "package 280 member hashes/bytes",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "package byte total",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "outer manifest exact set",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "outer manifest hashes",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "external list exact set",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "external all 282 identities",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "total 4317460 bytes",
+      "pass": true,
+      "detail": 4317460
+    },
+    {
+      "name": "all original copies/archives current match",
+      "pass": true,
+      "detail": {
+        "records": 274,
+        "zip_members": 1097,
+        "failures": []
+      }
+    },
+    {
+      "name": "six reviewed source bytes unchanged",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "baseline six hashes pinned Git",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "source diff identity",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "portable copies exact",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "current live document links resolve",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "fullgate not silently promoted",
+      "pass": true,
+      "detail": {
+        "status": "PENDING",
+        "scope": "Root must run bash scripts/check_all.sh on the integrated clean candidate. The author 13-command kit suite and independent probes are not the complete repository gate.",
+        "command": "bash scripts/check_all.sh",
+        "rc": null
+      }
+    }
+  ],
+  "scope": "Frozen pre-integration package preservation, document scope and manifest audit; fullgate remains PENDING."
+}

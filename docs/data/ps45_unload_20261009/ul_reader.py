@@ -29,6 +29,7 @@
 from __future__ import annotations
 
 import argparse
+from decimal import Decimal, DecimalException
 import json
 import math
 import os
@@ -81,6 +82,25 @@ def _i(x):
     return int(round(v)) if v is not None else None
 
 
+def _resume_integer(x):
+    """RESUME 식별자 원문 → 정확한 비음수 정수. 공용 관측의 반올림 파서와 분리한다.
+    생산자의 정수값 decimal/scientific 표기는 보존한다. ASCII 숫자만, 기존 유한 수 범위 안에서
+    Decimal 로 소수부를 확인한 뒤 int 로 만든다. 큰 지수를 거대 int 로 확장하기 전에 거부한다.
+    4096 자 제한은 비정상 토큰의 파싱 비용 한도이며 물리 관측/파라미터의 제한이 아니다."""
+    if not isinstance(x, str):
+        return None
+    s = x.strip(' \t\r\n')
+    if len(s) > 4096 or not re.fullmatch(r'\+?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?', s):
+        return None
+    if _f(s) is None:   # 유한성/넘침만 확인. 이 float 값으로 정수 여부나 경계를 판정하지 않는다.
+        return None
+    try:
+        v = Decimal(s)
+        return int(v) if v.is_finite() and v == v.to_integral_value() else None
+    except (DecimalException, ValueError, OverflowError):
+        return None
+
+
 def _csv(path, cols):
     """→ (행 dict 목록 · 문제 목록) — 머리 = 표 · 열 수 다른 줄은 버리지 않고 문제로 적는다."""
     if not os.path.exists(path):
@@ -105,8 +125,15 @@ def _state_vars(path):
     out = {}
     if not os.path.isfile(path):
         return out
-    for ln in open(path, encoding='utf-8', errors='replace').read().splitlines():
+    # open() 의 보편 개행은 CRLF/CR 을 지원한다. Unicode 줄구분은 지우지 않고 원문 검사에 남긴다.
+    for ln in open(path, encoding='utf-8', errors='replace').read().split('\n'):
         w = ln.split()
+        if len(w) >= 2 and w[0] == 'variable' and w[1] in ('ul_k', 'ul_rstep'):
+            key = w[1]
+            # 같은 경계 식별자를 두 번 쓰면 (같은 값이어도) 마지막 줄을 임의로 고르지 않는다.
+            ascii_space = not any(c.isspace() and c not in ' \t' for c in ln)
+            out[key] = (_resume_integer(w[3]) if key not in out and len(w) == 4 and w[2] == 'equal' and ascii_space else None)
+            continue
         if len(w) == 4 and w[0] == 'variable' and w[2] == 'equal':
             v = _f(w[3])
             out[w[1]] = int(v) if v is not None and v.is_integer() else None
@@ -120,14 +147,22 @@ def _resume_auth(d, events):
     사건 k ↔ 상태 파일 불일치 · 러너 resume_from 밖 step 의 RESUME · k · step 숫자 아님 = 승인 없음 + 사유 (ULKRF-01 — 중복 사건이 승인 하나를 둘로 늘리지 않는다).
     러너 resume_from 이 없는 폴더 (예 UTc = 부모 R_M 경계 · 다른 규칙 · _read_run_cont) 는 승인 · 문제 모두 없음."""
     man = os.path.join(d, 'run_manifest.txt')
-    rf = set()
+    rf, pr = set(), []
     if os.path.isfile(man):
-        for ln in open(man, encoding='utf-8', errors='replace').read().splitlines():
-            m = re.fullmatch(r'resume_from=(\d+)', ln.strip())
+        for ln in open(man, encoding='utf-8', errors='replace').read().split('\n'):
+            line = ln.strip(' \t\r\n')
+            m = re.fullmatch(r'resume_from=([0-9]+)', line)
             if m:
-                rf.add(int(m.group(1)))
-    out, pr = [], []
-    if not rf:
+                step = _resume_integer(m.group(1))
+                if step is not None:
+                    rf.add(step)
+                else:
+                    pr.append('run_manifest.txt: resume_from 정수 범위/길이 위반 — 승인 없음')
+            elif ln.strip().startswith('resume_from='):
+                # 비ASCII 공백을 지워 정상 승인하지는 않는다. 표지를 인식해 거부 사유를 남길 때만 본다.
+                pr.append('run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음')
+    out = []
+    if pr or not rf:
         return out, pr
     by = {}
     for e in events:
@@ -139,6 +174,8 @@ def _resume_auth(d, events):
             pr.append(f'ul_events.csv: RESUME (k {e["k"]} · step {e["step"]}) 의 step ∉ 러너 resume_from {sorted(rf)} — 상충 · 승인 없음 (ULKRF-01)')
         else:
             by.setdefault(e['step'], []).append(e['k'])
+    if any(e['event'] == 'RESUME' and (e['k'] is None or e['step'] is None) for e in events):
+        return out, pr  # 모호한 사건을 빼고 나머지 한 줄만 고유 경계라고 인증하지 않는다.
     for s in sorted(by):
         ks = by[s]
         if len(ks) > 1:
@@ -282,10 +319,17 @@ def read_run(d, P=None):
            'resume_auth': []}
     ev, pr = _csv(os.path.join(d, 'ul_events.csv'), R['events_cols'])
     out['problems'] += pr
-    events = [{'event': r['event'], 'k': _i(r['k']), 'step': _i(r['step']), 'plate_z': _f(r['plate_z']), 'lift': _f(r['lift']),
-               'detail': r['detail']} for r in (ev or [])]
+    events = []
+    for r in ev or []:
+        index = _resume_integer if r['event'] == 'RESUME' else _i
+        e = {'event': r['event'], 'k': index(r['k']), 'step': index(r['step']), 'plate_z': _f(r['plate_z']), 'lift': _f(r['lift']),
+             'detail': r['detail']}
+        if r['event'] == 'RESUME' and (e['k'] is None or e['step'] is None):
+            out['problems'].append('ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음')
+        events.append(e)
     out['resume_steps'] = [e['step'] for e in events if e['event'] == 'RESUME']
-    auth, apr = _resume_auth(d, events)
+    # 사건 CSV 에 버린/깨진 행이 있으면 남은 RESUME 만 보고 고유 경계를 인증하지 않는다.
+    auth, apr = ([], []) if pr else _resume_auth(d, events)
     out['resume_auth'] = auth
     out['problems'] += apr
     kept, used = [], set()
@@ -2574,6 +2618,119 @@ def _ulpr_resume_tests(chk, P):
             lambda: any('rc 7' in w for w in pr) and rec['rc'] == 7 and rec['status'] == 'PASS' and not rec['diff'], str((pr, rec)))
 
 
+def _resume_integer_tests(chk, P):
+    """R39: RESUME 경계 원문을 정수로 확인하기 전에 반올림하지 않는다."""
+    import tempfile
+    with tempfile.TemporaryDirectory() as root:
+        d = _unfinished_resume(root, P)
+        ep = os.path.join(d, 'ul_events.csv')
+        mp = os.path.join(d, 'run_manifest.txt')
+        ev0, man0 = open(ep).read(), open(mp).read()
+        sr = int(ul_lib.read_kv(mp)['resume_from'])
+        sp = os.path.join(d, 'restart', f'state_unload_{sr}.in')
+        st0 = open(sp).read()
+
+        def read_event(field, token, duplicate=False):
+            _w(ep, ev0)
+            def edit(rows):
+                row = next(r for r in rows if r['event'] == 'RESUME')
+                if duplicate:
+                    rows.insert(rows.index(row), dict(row))
+                row[field] = token
+            _edit_rows(ep, edit)
+            before = {name: ul_lib.sha256_file(os.path.join(d, name))
+                      for name in ('ul_events.csv', 'ul_windows.csv', 'ul_steps.csv')}
+            rr = read_run(d, P)
+            unchanged = all(ul_lib.sha256_file(os.path.join(d, name)) == h for name, h in before.items())
+            return rr, unchanged
+
+        for field, val in (('k', 3), ('step', sr)):
+            for token in (str(val), f'{val}.0', f'{val}e0', f'+{val}', f'  {val}  '):
+                rr, same = read_event(field, token)
+                chk(f'R39 RESUME {field} 정확한 정수값 {token!r} → 경계 승인 유지 · CSV 무변경',
+                    lambda rr=rr, same=same: rr['resume_auth'] == [(3, sr)] and same, str(rr['resume_auth']))
+            bad = (f'{val}.49', f'{val}.5', f'{val}.51', f'{val}.0000000000000001',
+                   'nan', 'inf', '-inf', '1e309', '1e1000000000', '1e-1000000000', '',
+                   '-3', '٣', '３', '3_0', '\u00a03', '3\u200b')
+            for token in bad:
+                rr, same = read_event(field, token)
+                chk(f'R39 RESUME {field} 비정수/모호 token {token!r} → 승인·옛 행 삭제 없음 + 정수 사유 · CSV 무변경',
+                    lambda rr=rr, same=same: not rr['resume_auth'] and rr['n_superseded_rows'] == 0 and same
+                    and any('정수' in w for w in rr['problems']), str((rr['resume_auth'], rr['problems'])))
+        rr, same = read_event('k', '3.49', duplicate=True)
+        chk('R39 같은 경계 정상 RESUME + 소수 RESUME → 모호 사건을 무시해 승인하지 않는다',
+            lambda: not rr['resume_auth'] and rr['n_superseded_rows'] == 0 and same, str(rr['resume_auth']))
+        for sep in ('\u0085', '\u2028', '\u2029'):
+            rr, same = read_event('k', f'3{sep}.49', duplicate=True)
+            chk(f'R39 정상 RESUME + token 안 줄구분 {sep!r} → 사건 CSV 구조 결손을 버려 승인하지 않음',
+                lambda rr=rr, same=same: not rr['resume_auth'] and rr['n_superseded_rows'] == 0 and same
+                and any('열 수' in w for w in rr['problems']), str(rr['resume_auth']))
+        _w(ep, ev0)
+        for key, val in (('ul_k', 3), ('ul_rstep', sr)):
+            for token in (f'{val}.0', f'{val}e0'):
+                _w(sp, st0.replace(f'variable {key} equal {val}\n', f'variable {key} equal {token}\n'))
+                rr = read_run(d, P)
+                chk(f'R39 상태 {key} 정확한 정수값 {token!r} → 경계 승인 유지',
+                    lambda rr=rr: rr['resume_auth'] == [(3, sr)], str(rr['resume_auth']))
+            for token in (f'{val}.0000000000000001', 'nan', 'inf', '1e1000000000', '٣', f'\u00a0{val}', f'{val}\u00a0'):
+                _w(sp, st0.replace(f'variable {key} equal {val}\n', f'variable {key} equal {token}\n'))
+                rr = read_run(d, P)
+                chk(f'R39 상태 {key} 비정수/모호 token {token!r} → 승인 없음 + 상태 불일치 사유',
+                    lambda rr=rr: not rr['resume_auth'] and any('≠ 상태 파일' in w for w in rr['problems']), str(rr['resume_auth']))
+            for token in (str(val), str(val + 1)):
+                _w(sp, st0 + f'variable {key} equal {token}\n')
+                rr = read_run(d, P)
+                chk(f'R39 상태 {key} 중복 정의 {token!r} → 마지막 값을 골라 승인하지 않는다',
+                    lambda rr=rr: not rr['resume_auth'], str(rr['resume_auth']))
+        _w(sp, st0)
+        # float 경유라면 2**53 + 1 을 바로 아래 경계로 바꾼다. 승인 집합에서도 정확한 정수를 보존한다.
+        big = 2 ** 53 + 1
+        _w(sp, st0.replace('variable ul_k equal 3\n', f'variable ul_k equal {big}\n'))
+        rr, same = read_event('k', str(big))
+        chk('R39 2**53 + 1 경계 k → 원문 정수 그대로 승인 (float 이웃으로 바꾸지 않음)',
+            lambda: rr['resume_auth'] == [(big, sr)] and same, str(rr['resume_auth']))
+        _w(sp, st0.replace('variable ul_k equal 3\n', f'variable ul_k equal {big - 1}\n'))
+        rr, same = read_event('k', str(big))
+        chk('R39 사건 k 2**53 + 1 ≠ 상태 k 2**53 → 인접 정수를 합쳐 승인하지 않음',
+            lambda: not rr['resume_auth'] and same, str(rr['resume_auth']))
+        _w(sp, st0)
+        _w(ep, ev0)
+        for token in (f'{sr}.49', 'nan', '1e1000000000', '', str(sr).translate(str.maketrans('0123456789', '٠١٢٣٤٥٦٧٨٩'))):
+            _w(mp, man0 + f'resume_from={token}\n')
+            rr = read_run(d, P)
+            chk(f'R39 올바른 runner 경계 + malformed resume_from={token!r} → 모호 표지 무시 없이 승인 없음 + 사유',
+                lambda rr=rr: not rr['resume_auth'] and any('resume_from' in w for w in rr['problems']), str(rr['resume_auth']))
+        for space in ('\u00a0', '\u2003'):
+            _w(mp, man0 + f'{space}resume_from=3.49\n')
+            rr = read_run(d, P)
+            chk(f'R39 runner 표지 앞 비ASCII 공백 {space!r} → malformed 표지를 무시하지 않고 승인 없음',
+                lambda rr=rr: not rr['resume_auth'] and rr['n_superseded_rows'] == 0
+                and any('resume_from' in w for w in rr['problems']), str(rr['resume_auth']))
+        _w(mp, man0)
+        _w(ep, ev0)
+        for sep in ('\u0085', '\u2028', '\u2029'):
+            for key, val in (('ul_k', 3), ('ul_rstep', sr)):
+                _w(sp, st0.replace(f'variable {key} equal {val}\n', f'variable {key} equal {val}{sep}#tail\n'))
+                rr = read_run(d, P)
+                chk(f'R39 상태 {key} 비ASCII 줄구분 {sep!r} → 별도 정상 줄로 정규화하지 않고 승인 없음',
+                    lambda rr=rr: not rr['resume_auth'] and rr['n_superseded_rows'] == 0, str(rr['resume_auth']))
+            _w(sp, st0)
+            _w(mp, man0.replace(f'resume_from={sr}\n', f'resume_from={sr}{sep}#tail\n'))
+            rr = read_run(d, P)
+            chk(f'R39 runner 비ASCII 줄구분 {sep!r} → 표지 뒤 잘못된 내용을 주석 줄로 분리해 승인하지 않음',
+                lambda rr=rr: not rr['resume_auth'] and rr['n_superseded_rows'] == 0, str(rr['resume_auth']))
+            _w(mp, man0)
+        _w(sp, st0.replace('\n', '\r\n'))
+        _w(mp, man0.replace('\n', '\r\n'))
+        rr = read_run(d, P)
+        chk('R39 CRLF 상태/runner 정상 줄 구분 → 승인 유지', lambda: rr['resume_auth'] == [(3, sr)], str(rr['resume_auth']))
+        _w(sp, st0)
+        _w(mp, man0)
+        rr = read_run(d, P)
+        chk('R39 원본 정수 경계 복원 → 승인 그대로 (음성 fixture 교정 뒤 양성)',
+            lambda: rr['resume_auth'] == [(3, sr)], str(rr['resume_auth']))
+
+
 def selftest() -> int:
     import tempfile
     fails = []
@@ -2589,6 +2746,7 @@ def selftest() -> int:
 
     P = ul_lib.load_params()
     _ulpr_resume_tests(chk, P)
+    _resume_integer_tests(chk, P)
     import make_unload_decks as mk  # noqa: E402 — 생성된 덱에서 물리 창을 다시 읽는다 (ULR1-04)
     decks = {k: mk.render(B73, k, P) for k in ('U_UB', 'UT', 'U_UVa', 'U_UVb', 'U_UT3')}
     h0um = P['beds'][B73]['h0'] * 1000.0

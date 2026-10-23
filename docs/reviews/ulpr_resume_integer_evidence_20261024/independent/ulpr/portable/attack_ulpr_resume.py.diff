@@ -1,0 +1,14 @@
+--- original/attack_ulpr_resume.py
++++ portable/attack_ulpr_resume.py
+@@ -2,9 +2,9 @@
+ from pathlib import Path
+ import argparse, ast, contextlib, hashlib, json, subprocess, sys
+ sys.dont_write_bytecode=True
+-ap=argparse.ArgumentParser();ap.add_argument('--work',required=True);ap.add_argument('--out',required=True);ap.add_argument('--reader-sha',required=True);a=ap.parse_args()
++ap=argparse.ArgumentParser(description='Independent ULPR reader attacks; --repo is the baseline Git repository, --work is the candidate repository/export.');ap.add_argument('--repo',required=True);ap.add_argument('--work',required=True);ap.add_argument('--out',required=True);ap.add_argument('--reader-sha',required=True);a=ap.parse_args()
+ work=Path(a.work);out=Path(a.out);out.mkdir(parents=True,exist_ok=False)
+-kit=work/'docs/data/ps45_unload_20261009'; repo=Path('/workspace/Yonghoon-DEM-DFT');base='8347d32ea678c0174bd77d4c79cfbd7b0591e4a3';rel='docs/data/ps45_unload_20261009/ul_reader.py'
++kit=work/'docs/data/ps45_unload_20261009'; repo=Path(a.repo);base='8347d32ea678c0174bd77d4c79cfbd7b0591e4a3';rel='docs/data/ps45_unload_20261009/ul_reader.py'
+ sha=lambda b:hashlib.sha256(b).hexdigest(); before=(kit/'ul_reader.py').read_bytes();assert sha(before)==a.reader_sha
+ sys.path.insert(0,str(kit));import ul_reader as u
+ baseline=subprocess.check_output(['git','show',f'{base}:{rel}'],cwd=repo); old={'__file__':str(kit/'ul_reader.py'),'__name__':'baseline_reader'};exec(compile(baseline,f'{base}:{rel}','exec'),old)

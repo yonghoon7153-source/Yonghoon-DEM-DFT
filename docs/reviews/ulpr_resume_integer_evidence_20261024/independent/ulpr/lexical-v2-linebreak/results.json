@@ -1,0 +1,155 @@
+{
+  "reader_sha256": "276a0461c4fc12ec6e5fc16f491178735ad20f3e0ff5bedb6f024357ce1c2790",
+  "cases": [
+    {
+      "case": "normal",
+      "resume_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded": 5,
+      "problems": [],
+      "state_vars": {
+        "ul_rstep": 3350000,
+        "ul_k": 3
+      }
+    },
+    {
+      "case": "ul_k_suffix_linebreak_U0085",
+      "resume_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded": 5,
+      "problems": [],
+      "state_vars": {
+        "ul_rstep": 3350000,
+        "ul_k": 3
+      }
+    },
+    {
+      "case": "ul_k_suffix_linebreak_U2028",
+      "resume_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded": 5,
+      "problems": [],
+      "state_vars": {
+        "ul_rstep": 3350000,
+        "ul_k": 3
+      }
+    },
+    {
+      "case": "ul_k_suffix_linebreak_U2029",
+      "resume_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded": 5,
+      "problems": [],
+      "state_vars": {
+        "ul_rstep": 3350000,
+        "ul_k": 3
+      }
+    },
+    {
+      "case": "ul_rstep_suffix_linebreak_U0085",
+      "resume_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded": 5,
+      "problems": [],
+      "state_vars": {
+        "ul_rstep": 3350000,
+        "ul_k": 3
+      }
+    },
+    {
+      "case": "ul_rstep_suffix_linebreak_U2028",
+      "resume_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded": 5,
+      "problems": [],
+      "state_vars": {
+        "ul_rstep": 3350000,
+        "ul_k": 3
+      }
+    },
+    {
+      "case": "ul_rstep_suffix_linebreak_U2029",
+      "resume_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded": 5,
+      "problems": [],
+      "state_vars": {
+        "ul_rstep": 3350000,
+        "ul_k": 3
+      }
+    },
+    {
+      "case": "manifest_bad_mark_prefix_U0085",
+      "resume_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded": 5,
+      "problems": [],
+      "state_vars": {
+        "ul_rstep": 3350000,
+        "ul_k": 3
+      }
+    },
+    {
+      "case": "manifest_bad_mark_prefix_U2028",
+      "resume_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded": 5,
+      "problems": [],
+      "state_vars": {
+        "ul_rstep": 3350000,
+        "ul_k": 3
+      }
+    },
+    {
+      "case": "manifest_bad_mark_prefix_U2029",
+      "resume_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded": 5,
+      "problems": [],
+      "state_vars": {
+        "ul_rstep": 3350000,
+        "ul_k": 3
+      }
+    }
+  ]
+}

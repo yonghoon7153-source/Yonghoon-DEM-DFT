@@ -1,0 +1,13 @@
+--- original/independent_mutations.py
++++ portable/independent_mutations.py
+@@ -1,7 +1,8 @@
+ from pathlib import Path
+-import sys,json,hashlib,contextlib
++import sys,json,hashlib,contextlib,argparse
+ sys.dont_write_bytecode=True
+-K=Path('/workspace/.cloud-setup/nonrint-20261024/ulpr/work/docs/data/ps45_unload_20261009');O=Path('/workspace/.cloud-setup/nonrint-20261024/audit/ulpr/independent-mutations-v5');O.mkdir(exist_ok=False);sys.path.insert(0,str(K))
++ap=argparse.ArgumentParser(description='Independent ULPR mutations; --repo is the frozen candidate repository/export.');ap.add_argument('--repo',required=True);ap.add_argument('--out',required=True);args=ap.parse_args()
++K=Path(args.repo)/'docs/data/ps45_unload_20261009';O=Path(args.out);O.mkdir(parents=True,exist_ok=False);sys.path.insert(0,str(K))
+ p=K/'ul_reader.py';b=p.read_bytes();h=hashlib.sha256(b).hexdigest();assert h=='7a395a549e8ad3eae820a9e575f094219ca7d47a4b9a07c5bc27623d7018af4b';s=b.decode();results=[]
+ for label,old,new in [('event_rounding_restored',"index = _resume_integer if r['event'] == 'RESUME' else _i","index = _i"),('event_csv_structure_guard_removed','auth, apr = ([], []) if pr else _resume_auth(d, events)','auth, apr = _resume_auth(d, events)')]:
+  assert s.count(old)==1

@@ -1,0 +1,217 @@
+{
+  "source_sha256": "7a395a549e8ad3eae820a9e575f094219ca7d47a4b9a07c5bc27623d7018af4b",
+  "script_sha256": "641fa98de7b510384c15b963c5c53a82b361796808471782bb9a4975137849ed",
+  "cases": [
+    {
+      "name": "normal",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/work/docs/data/ps45_unload_20261009/ul_reader.py",
+        "arm",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/evidence/cli-v5/normal",
+        "ps_7_3_r45",
+        "UT"
+      ],
+      "rc": 0,
+      "auth": [
+        [
+          3,
+          3410000
+        ]
+      ],
+      "primary_status": "OK",
+      "rho": 0.20260778734286913,
+      "problems": [],
+      "csv_unchanged": true
+    },
+    {
+      "name": "exact_decimal",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/work/docs/data/ps45_unload_20261009/ul_reader.py",
+        "arm",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/evidence/cli-v5/exact_decimal",
+        "ps_7_3_r45",
+        "UT"
+      ],
+      "rc": 0,
+      "auth": [
+        [
+          3,
+          3410000
+        ]
+      ],
+      "primary_status": "OK",
+      "rho": 0.20260778734286913,
+      "problems": [],
+      "csv_unchanged": true
+    },
+    {
+      "name": "fractional_k",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/work/docs/data/ps45_unload_20261009/ul_reader.py",
+        "arm",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/evidence/cli-v5/fractional_k",
+        "ps_7_3_r45",
+        "UT"
+      ],
+      "rc": 0,
+      "auth": [],
+      "primary_status": "UNIDENTIFIED",
+      "rho": null,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3410000) — 승인 없음 (ULKRF-01)"
+      ],
+      "csv_unchanged": true
+    },
+    {
+      "name": "fractional_step",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/work/docs/data/ps45_unload_20261009/ul_reader.py",
+        "arm",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/evidence/cli-v5/fractional_step",
+        "ps_7_3_r45",
+        "UT"
+      ],
+      "rc": 0,
+      "auth": [],
+      "primary_status": "UNIDENTIFIED",
+      "rho": null,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)"
+      ],
+      "csv_unchanged": true
+    },
+    {
+      "name": "rounded_decimal_k",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/work/docs/data/ps45_unload_20261009/ul_reader.py",
+        "arm",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/evidence/cli-v5/rounded_decimal_k",
+        "ps_7_3_r45",
+        "UT"
+      ],
+      "rc": 0,
+      "auth": [],
+      "primary_status": "UNIDENTIFIED",
+      "rho": null,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3410000) — 승인 없음 (ULKRF-01)"
+      ],
+      "csv_unchanged": true
+    },
+    {
+      "name": "unicode_k",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/work/docs/data/ps45_unload_20261009/ul_reader.py",
+        "arm",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/evidence/cli-v5/unicode_k",
+        "ps_7_3_r45",
+        "UT"
+      ],
+      "rc": 0,
+      "auth": [],
+      "primary_status": "UNIDENTIFIED",
+      "rho": null,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3410000) — 승인 없음 (ULKRF-01)"
+      ],
+      "csv_unchanged": true
+    },
+    {
+      "name": "ambiguous_event",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/work/docs/data/ps45_unload_20261009/ul_reader.py",
+        "arm",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/evidence/cli-v5/ambiguous_event",
+        "ps_7_3_r45",
+        "UT"
+      ],
+      "rc": 0,
+      "auth": [],
+      "primary_status": "UNIDENTIFIED",
+      "rho": null,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3410000) — 승인 없음 (ULKRF-01)"
+      ],
+      "csv_unchanged": true
+    },
+    {
+      "name": "fractional_state",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/work/docs/data/ps45_unload_20261009/ul_reader.py",
+        "arm",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/evidence/cli-v5/fractional_state",
+        "ps_7_3_r45",
+        "UT"
+      ],
+      "rc": 0,
+      "auth": [],
+      "primary_status": "UNIDENTIFIED",
+      "rho": null,
+      "problems": [
+        "RESUME (k 3 · step 3410000) ≠ 상태 파일 state_unload_3410000.in (ul_k None · ul_rstep 3410000) — 상충 · 승인 없음 (ULKRF-01)"
+      ],
+      "csv_unchanged": true
+    },
+    {
+      "name": "duplicate_state",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/work/docs/data/ps45_unload_20261009/ul_reader.py",
+        "arm",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/evidence/cli-v5/duplicate_state",
+        "ps_7_3_r45",
+        "UT"
+      ],
+      "rc": 0,
+      "auth": [],
+      "primary_status": "UNIDENTIFIED",
+      "rho": null,
+      "problems": [
+        "RESUME (k 3 · step 3410000) ≠ 상태 파일 state_unload_3410000.in (ul_k None · ul_rstep 3410000) — 상충 · 승인 없음 (ULKRF-01)"
+      ],
+      "csv_unchanged": true
+    },
+    {
+      "name": "malformed_manifest",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/work/docs/data/ps45_unload_20261009/ul_reader.py",
+        "arm",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/evidence/cli-v5/malformed_manifest",
+        "ps_7_3_r45",
+        "UT"
+      ],
+      "rc": 0,
+      "auth": [],
+      "primary_status": "UNIDENTIFIED",
+      "rho": null,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음"
+      ],
+      "csv_unchanged": true
+    }
+  ]
+}
