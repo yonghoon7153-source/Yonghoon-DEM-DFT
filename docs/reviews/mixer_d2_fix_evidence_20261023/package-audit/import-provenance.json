@@ -1,0 +1,18 @@
+{
+  "kind": "immutable independent package audit reports",
+  "reports": [
+    {
+      "file": "mxd2.md",
+      "source_sha256": "b2bcb1a70509828eb14912098e954066615d0723f39ad4721ebc780033c2b5b1",
+      "import_sha256": "b2bcb1a70509828eb14912098e954066615d0723f39ad4721ebc780033c2b5b1",
+      "byte_equal": true
+    },
+    {
+      "file": "mxd2-recheck.md",
+      "source_sha256": "345dbc0fc60ba9fd72eb20b0b422c4203796db9934046ceb5000aaa829a20a6a",
+      "import_sha256": "345dbc0fc60ba9fd72eb20b0b422c4203796db9934046ceb5000aaa829a20a6a",
+      "byte_equal": true
+    }
+  ],
+  "scope": "Original audit-time counts and pending gate statements are historical; final integrated full-gate status is recorded in the evidence root full_gate_receipt.json."
+}

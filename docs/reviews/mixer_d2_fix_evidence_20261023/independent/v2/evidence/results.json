@@ -1,0 +1,803 @@
+{
+  "source_sha256": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27",
+  "normal": {
+    "decks": 192,
+    "physical_pair_checks": 1728,
+    "max_relative_Bo_error": 1.2876531367167487e-05,
+    "max_relative_pair_rule_error": 2.5893352707528905e-05,
+    "max_delta0_over_r": 0.0016053900582541662
+  },
+  "input": {
+    "bo_nan": {
+      "kind": "controlled_rejection",
+      "type": "SystemExit",
+      "message": "⛔ D2 결합 규칙: SE–SE Bo_code = nan — 유한한 양의 정규 float 이어야 한다 (0 · subnormal 거부)"
+    },
+    "rho_nan": {
+      "kind": "controlled_rejection",
+      "type": "SystemExit",
+      "message": "⛔ D2 결합 규칙: ρ_비코팅 NCM = γ_NCM/γ_SE = nan — 유한한 양의 정규 float 이어야 한다 (0 · subnormal 거부)"
+    },
+    "bo_inf": {
+      "kind": "controlled_rejection",
+      "type": "SystemExit",
+      "message": "⛔ D2 결합 규칙: SE–SE Bo_code = inf — 유한한 양의 정규 float 이어야 한다 (0 · subnormal 거부)"
+    },
+    "rho_inf": {
+      "kind": "controlled_rejection",
+      "type": "SystemExit",
+      "message": "⛔ D2 결합 규칙: ρ_비코팅 NCM = γ_NCM/γ_SE = inf — 유한한 양의 정규 float 이어야 한다 (0 · subnormal 거부)"
+    },
+    "bo_neg_inf": {
+      "kind": "controlled_rejection",
+      "type": "SystemExit",
+      "message": "⛔ D2 결합 규칙: SE–SE Bo_code = -inf — 유한한 양의 정규 float 이어야 한다 (0 · subnormal 거부)"
+    },
+    "rho_neg_inf": {
+      "kind": "controlled_rejection",
+      "type": "SystemExit",
+      "message": "⛔ D2 결합 규칙: ρ_비코팅 NCM = γ_NCM/γ_SE = -inf — 유한한 양의 정규 float 이어야 한다 (0 · subnormal 거부)"
+    },
+    "bo_zero": {
+      "kind": "controlled_rejection",
+      "type": "SystemExit",
+      "message": "⛔ D2 결합 규칙: SE–SE Bo_code = 0.0 — 유한한 양의 정규 float 이어야 한다 (0 · subnormal 거부)"
+    },
+    "rho_zero": {
+      "kind": "controlled_rejection",
+      "type": "SystemExit",
+      "message": "⛔ D2 결합 규칙: ρ_비코팅 NCM = γ_NCM/γ_SE = 0.0 — 유한한 양의 정규 float 이어야 한다 (0 · subnormal 거부)"
+    },
+    "bo_negative": {
+      "kind": "controlled_rejection",
+      "type": "SystemExit",
+      "message": "⛔ D2 결합 규칙: SE–SE Bo_code = -1.0 — 유한한 양의 정규 float 이어야 한다 (0 · subnormal 거부)"
+    },
+    "rho_negative": {
+      "kind": "controlled_rejection",
+      "type": "SystemExit",
+      "message": "⛔ D2 결합 규칙: ρ_비코팅 NCM = γ_NCM/γ_SE = -1.0 — 유한한 양의 정규 float 이어야 한다 (0 · subnormal 거부)"
+    },
+    "bo_boolean": {
+      "kind": "controlled_rejection",
+      "type": "SystemExit",
+      "message": "⛔ D2 결합 규칙: SE–SE Bo_code = True — 수가 아니다"
+    },
+    "rho_boolean": {
+      "kind": "controlled_rejection",
+      "type": "SystemExit",
+      "message": "⛔ D2 결합 규칙: ρ_비코팅 NCM = γ_NCM/γ_SE = True — 수가 아니다"
+    },
+    "bo_string": {
+      "kind": "controlled_rejection",
+      "type": "SystemExit",
+      "message": "⛔ D2 결합 규칙: SE–SE Bo_code = '0.3' — 수가 아니다"
+    },
+    "rho_string": {
+      "kind": "controlled_rejection",
+      "type": "SystemExit",
+      "message": "⛔ D2 결합 규칙: ρ_비코팅 NCM = γ_NCM/γ_SE = '0.3' — 수가 아니다"
+    },
+    "bo_subnormal": {
+      "kind": "controlled_rejection",
+      "type": "SystemExit",
+      "message": "⛔ D2 결합 규칙: SE–SE Bo_code = 1e-310 — 유한한 양의 정규 float 이어야 한다 (0 · subnormal 거부)"
+    },
+    "rho_subnormal": {
+      "kind": "controlled_rejection",
+      "type": "SystemExit",
+      "message": "⛔ D2 결합 규칙: ρ_비코팅 NCM = γ_NCM/γ_SE = 1e-310 — 유한한 양의 정규 float 이어야 한다 (0 · subnormal 거부)"
+    },
+    "bo_huge_integer": {
+      "kind": "controlled_rejection",
+      "type": "SystemExit",
+      "message": "⛔ D2 결합 규칙: SE–SE Bo_code — float 범위를 벗어났다"
+    },
+    "rho_huge_integer": {
+      "kind": "controlled_rejection",
+      "type": "SystemExit",
+      "message": "⛔ D2 결합 규칙: ρ_비코팅 NCM = γ_NCM/γ_SE — float 범위를 벗어났다"
+    },
+    "bo_none": {
+      "kind": "controlled_rejection",
+      "type": "SystemExit",
+      "message": "⛔ D2 결합 규칙: gamma_wall (γ_W/γ_SE) 와 bo_se (SE–SE Bo_code) 를 명시해야 한다 — 숨은 기본값 없음"
+    },
+    "rho_none": {
+      "kind": "controlled_rejection",
+      "type": "SystemExit",
+      "message": "⛔ D2 결합 규칙: ρ_비코팅 NCM = γ_NCM/γ_SE = None — 수가 아니다"
+    },
+    "bo_list": {
+      "kind": "controlled_rejection",
+      "type": "SystemExit",
+      "message": "⛔ D2 결합 규칙: SE–SE Bo_code = [] — 수가 아니다"
+    },
+    "rho_list": {
+      "kind": "controlled_rejection",
+      "type": "SystemExit",
+      "message": "⛔ D2 결합 규칙: ρ_비코팅 NCM = γ_NCM/γ_SE = [] — 수가 아니다"
+    },
+    "bo_empty_dict": {
+      "kind": "controlled_rejection",
+      "type": "SystemExit",
+      "message": "⛔ D2 결합 규칙: SE–SE Bo_code = {} — 수가 아니다"
+    },
+    "rho_empty_dict": {
+      "kind": "controlled_rejection",
+      "type": "SystemExit",
+      "message": "⛔ D2 결합 규칙: ρ_비코팅 NCM = γ_NCM/γ_SE = {} — 수가 아니다"
+    },
+    "gamma_empty": {
+      "kind": "controlled_rejection",
+      "type": "SystemExit",
+      "message": "⛔ D2 결합 규칙: gamma 의 상 [] ≠ 도는 상 ['AM_P', 'AM_S', 'SE'] — 빠지거나 남는 상은 거부"
+    },
+    "gamma_partial": {
+      "kind": "controlled_rejection",
+      "type": "SystemExit",
+      "message": "⛔ D2 결합 규칙: gamma 의 상 ['AM_P'] ≠ 도는 상 ['AM_P', 'AM_S', 'SE'] — 빠지거나 남는 상은 거부"
+    },
+    "gamma_mixed_key": {
+      "kind": "uncontrolled_exception",
+      "type": "TypeError",
+      "message": "'<' not supported between instances of 'int' and 'str'"
+    },
+    "gamma_list": {
+      "kind": "controlled_rejection",
+      "type": "SystemExit",
+      "message": "⛔ D2 결합 규칙: gamma 는 상 → γ/γ_SE 사전이어야 한다 ([])"
+    },
+    "gamma_none": {
+      "kind": "controlled_rejection",
+      "type": "SystemExit",
+      "message": "⛔ D2 결합 규칙: gamma 는 상 → γ/γ_SE 사전이어야 한다 (None)"
+    },
+    "arm_empty": {
+      "kind": "uncontrolled_exception",
+      "type": "KeyError",
+      "message": "'bond'"
+    },
+    "arm_partial": {
+      "kind": "controlled_rejection",
+      "type": "SystemExit",
+      "message": "⛔ D2 덱: 비준 규칙상 --gm-wall-ncm (비코팅 NCM ρ) 이 필수다 — 직접 벽 값만으로 덱을 쓰지 않는다"
+    },
+    "arm_list": {
+      "kind": "uncontrolled_exception",
+      "type": "AttributeError",
+      "message": "'list' object has no attribute 'get'"
+    },
+    "arm_none": {
+      "kind": "uncontrolled_exception",
+      "type": "AttributeError",
+      "message": "'NoneType' object has no attribute 'get'"
+    },
+    "mixed_ceiling": {
+      "kind": "controlled_rejection",
+      "type": "SystemExit",
+      "message": "⛔ 팔 D2 결합 규칙 (기하평균 W_ij = 2√(γ_iγ_j) · 혼합쌍 · 벽) · γ/γ_SE AM_P 10 · AM_S 10 · SE 1 · γ_W/γ_SE 0.256 · SE–SE Bo_code 800 — 개발 · 등록 전 (결과 0): AM_P–SE 겹침 1.418 % > 천장 1.0 % (D2 쌍별) — Bo_SE 를 낮추거나 천장을 논의할 것"
+    },
+    "no_density_generation": {
+      "kind": "controlled_rejection",
+      "type": "SystemExit",
+      "message": "⛔ 팔 INDEPENDENT: D2 결합 규칙 덱은 새 세대 덱이다 — 밀도 세대를 명시해야 한다 (CLI --dens-gen gen1|lab20261014 · plan(…, dens_gen=…) · docs/density_generations_20261014.md)"
+    },
+    "unbound_wall": {
+      "kind": "controlled_rejection",
+      "type": "SystemExit",
+      "message": "⛔ D2 덱: 비준 규칙상 --gm-wall-ncm (비코팅 NCM ρ) 이 필수다 — 직접 벽 값만으로 덱을 쓰지 않는다"
+    },
+    "rho_gamma_mismatch": {
+      "kind": "controlled_rejection",
+      "type": "SystemExit",
+      "message": "⛔ D2 결합 규칙: 활성 NCM 상의 γ 는 모두 비코팅 ρ 또는 모두 코팅 기준 1 이어야 한다"
+    },
+    "cli_''": {
+      "kind": "controlled_rejection",
+      "type": "ArgumentTypeError",
+      "message": "D2 숫자 '' — ASCII 십진수만 (공백 · 밑줄 · 유니코드 숫자 거부)"
+    },
+    "cli_' '": {
+      "kind": "controlled_rejection",
+      "type": "ArgumentTypeError",
+      "message": "D2 숫자 ' ' — ASCII 십진수만 (공백 · 밑줄 · 유니코드 숫자 거부)"
+    },
+    "cli_'NaN'": {
+      "kind": "controlled_rejection",
+      "type": "ArgumentTypeError",
+      "message": "D2 숫자 'NaN' — ASCII 십진수만 (공백 · 밑줄 · 유니코드 숫자 거부)"
+    },
+    "cli_'inf'": {
+      "kind": "controlled_rejection",
+      "type": "ArgumentTypeError",
+      "message": "D2 숫자 'inf' — ASCII 십진수만 (공백 · 밑줄 · 유니코드 숫자 거부)"
+    },
+    "cli_'1e999'": {
+      "kind": "controlled_rejection",
+      "type": "SystemExit",
+      "message": "⛔ D2 결합 규칙: CLI 숫자 = inf — 유한한 양의 정규 float 이어야 한다 (0 · subnormal 거부)"
+    },
+    "cli_'0_3'": {
+      "kind": "controlled_rejection",
+      "type": "ArgumentTypeError",
+      "message": "D2 숫자 '0_3' — ASCII 십진수만 (공백 · 밑줄 · 유니코드 숫자 거부)"
+    },
+    "cli_'０.３'": {
+      "kind": "controlled_rejection",
+      "type": "ArgumentTypeError",
+      "message": "D2 숫자 '０.３' — ASCII 십진수만 (공백 · 밑줄 · 유니코드 숫자 거부)"
+    },
+    "cli_' 0.3'": {
+      "kind": "controlled_rejection",
+      "type": "ArgumentTypeError",
+      "message": "D2 숫자 ' 0.3' — ASCII 십진수만 (공백 · 밑줄 · 유니코드 숫자 거부)"
+    },
+    "cli_'0.3 '": {
+      "kind": "controlled_rejection",
+      "type": "ArgumentTypeError",
+      "message": "D2 숫자 '0.3 ' — ASCII 십진수만 (공백 · 밑줄 · 유니코드 숫자 거부)"
+    },
+    "cli_'0.3\\n'": {
+      "kind": "controlled_rejection",
+      "type": "ArgumentTypeError",
+      "message": "D2 숫자 '0.3\\n' — ASCII 십진수만 (공백 · 밑줄 · 유니코드 숫자 거부)"
+    },
+    "cli_'0x1'": {
+      "kind": "controlled_rejection",
+      "type": "ArgumentTypeError",
+      "message": "D2 숫자 '0x1' — ASCII 십진수만 (공백 · 밑줄 · 유니코드 숫자 거부)"
+    },
+    "cli_'1e-310'": {
+      "kind": "controlled_rejection",
+      "type": "SystemExit",
+      "message": "⛔ D2 결합 규칙: CLI 숫자 = 1e-310 — 유한한 양의 정규 float 이어야 한다 (0 · subnormal 거부)"
+    }
+  },
+  "mutations": {
+    "gravity_1": {
+      "selftest_rc": 1,
+      "failed": [
+        "FAIL  ㉟ 기존 팔 덱이 편집 전과 **바이트 동일** (골든 해시, plan(8000)·2바퀴·시드 32452843; LA·LC 는 09-27 주석 정정판)",
+        "FAIL  ㉟b ★ LA·LC 정정은 주석 한 줄뿐 — 옛 설명 문자열이면 옛 골든 해시 그대로 (돌고 있는 런의 덱 = 물리 동일)",
+        "FAIL  DP① ★ 기본 끔 (플래그 없음 · dump_full_precision=False) = 커밋 · 실행 덱과 바이트 동일 — v26 LC_ref_r2 · LH_ref_r2 · E0_ref · dev-u LU212 · LU637 (sha256 다섯) · dump_modify 줄 없음",
+        "FAIL  DP⑤ CLI --dump-full-precision → in.mixer = deck(…, True) · deck_meta.json 에 dump_modify_format · 덱 sha256 · argv — 플래그 없으면 실행 덱 sha256 그대로 · meta 에 그 키 없음 · --help rc 0 (argparse % 이스케이프)",
+        "FAIL  MXD02 independent printed-deck Bo matches explicit input and metadata, gen1/lab × soft/20 × two Bo",
+        "FAIL  MXDR1 actual deck gravity participates in independently read Bo (9.81 → 1 changes Bo ×9.81)",
+        "make_mixer_deck selftest: 152/158 PASS   FAILED: ['㉟ 기존 팔 덱이 편집 전과 **바이트 동일** (골든 해시, plan(8000)·2바퀴·시드 32452843; LA·LC 는 09-27 주석 정정판)', '㉟b ★ LA·LC 정정은 주석 한 줄뿐 — 옛 설명 문자열이면 옛 골든 해시 그대로 (돌고 있는 런의 덱 = 물리 동일)', 'DP① ★ 기본 끔 (플래그 없음 · dump_full_precision=False) = 커밋 · 실행 덱과 바이트 동일 — v26 LC_ref_r2 · LH_ref_r2 · E0_ref · dev-u LU212 · LU637 (sha256 다섯) · dump_modify 줄 없음', 'DP⑤ CLI --dump-full-precision → in.mixer = deck(…, True) · deck_meta.json 에 dump_modify_format · 덱 sha256 · argv — 플래그 없으면 실행 덱 sha256 그대로 · meta 에 그 키 없음 · --help rc 0 (argparse % 이스케이프)', 'MXD02 independent printed-deck Bo matches explicit input and metadata, gen1/lab × soft/20 × two Bo', 'MXDR1 actual deck gravity participates in independently read Bo (9.81 → 1 changes Bo ×9.81)']"
+      ],
+      "printed_gravity": 1.0,
+      "actual_Bo_from_printed_SI": 7.16120778729592,
+      "meta_Bo": 0.73
+    },
+    "gravity_1_d2_only": {
+      "selftest_rc": 1,
+      "failed": [
+        "FAIL  MXD02 independent printed-deck Bo matches explicit input and metadata, gen1/lab × soft/20 × two Bo",
+        "FAIL  MXDR1 actual deck gravity participates in independently read Bo (9.81 → 1 changes Bo ×9.81)",
+        "make_mixer_deck selftest: 156/158 PASS   FAILED: ['MXD02 independent printed-deck Bo matches explicit input and metadata, gen1/lab × soft/20 × two Bo', 'MXDR1 actual deck gravity participates in independently read Bo (9.81 → 1 changes Bo ×9.81)']"
+      ],
+      "printed_gravity": 1.0,
+      "actual_Bo_from_printed_SI": 7.16120778729592,
+      "meta_Bo": 0.73
+    },
+    "radius_half": {
+      "selftest_rc": 1,
+      "failed": [
+        "FAIL  ㉟ 기존 팔 덱이 편집 전과 **바이트 동일** (골든 해시, plan(8000)·2바퀴·시드 32452843; LA·LC 는 09-27 주석 정정판)",
+        "FAIL  ㉟b ★ LA·LC 정정은 주석 한 줄뿐 — 옛 설명 문자열이면 옛 골든 해시 그대로 (돌고 있는 런의 덱 = 물리 동일)",
+        "FAIL  DP① ★ 기본 끔 (플래그 없음 · dump_full_precision=False) = 커밋 · 실행 덱과 바이트 동일 — v26 LC_ref_r2 · LH_ref_r2 · E0_ref · dev-u LU212 · LU637 (sha256 다섯) · dump_modify 줄 없음",
+        "FAIL  DP⑤ CLI --dump-full-precision → in.mixer = deck(…, True) · deck_meta.json 에 dump_modify_format · 덱 sha256 · argv — 플래그 없으면 실행 덱 sha256 그대로 · meta 에 그 키 없음 · --help rc 0 (argparse % 이스케이프)",
+        "FAIL  MXD02 independent printed-deck Bo matches explicit input and metadata, gen1/lab × soft/20 × two Bo",
+        "FAIL  MXDR1 actual deck gravity participates in independently read Bo (9.81 → 1 changes Bo ×9.81)",
+        "make_mixer_deck selftest: 152/158 PASS   FAILED: ['㉟ 기존 팔 덱이 편집 전과 **바이트 동일** (골든 해시, plan(8000)·2바퀴·시드 32452843; LA·LC 는 09-27 주석 정정판)', '㉟b ★ LA·LC 정정은 주석 한 줄뿐 — 옛 설명 문자열이면 옛 골든 해시 그대로 (돌고 있는 런의 덱 = 물리 동일)', 'DP① ★ 기본 끔 (플래그 없음 · dump_full_precision=False) = 커밋 · 실행 덱과 바이트 동일 — v26 LC_ref_r2 · LH_ref_r2 · E0_ref · dev-u LU212 · LU637 (sha256 다섯) · dump_modify 줄 없음', 'DP⑤ CLI --dump-full-precision → in.mixer = deck(…, True) · deck_meta.json 에 dump_modify_format · 덱 sha256 · argv — 플래그 없으면 실행 덱 sha256 그대로 · meta 에 그 키 없음 · --help rc 0 (argparse % 이스케이프)', 'MXD02 independent printed-deck Bo matches explicit input and metadata, gen1/lab × soft/20 × two Bo', 'MXDR1 actual deck gravity participates in independently read Bo (9.81 → 1 changes Bo ×9.81)']"
+      ]
+    },
+    "force_gen1_density": {
+      "selftest_rc": 1,
+      "failed": [
+        "FAIL  MXD02 independent printed-deck Bo matches explicit input and metadata, gen1/lab × soft/20 × two Bo",
+        "FAIL  MXDR1 actual deck gravity participates in independently read Bo (9.81 → 1 changes Bo ×9.81)",
+        "make_mixer_deck selftest: 156/158 PASS   FAILED: ['MXD02 independent printed-deck Bo matches explicit input and metadata, gen1/lab × soft/20 × two Bo', 'MXDR1 actual deck gravity participates in independently read Bo (9.81 → 1 changes Bo ×9.81)']"
+      ]
+    },
+    "meta_bo_constant": {
+      "selftest_rc": 1,
+      "failed": [
+        "FAIL  MXD02 independent printed-deck Bo matches explicit input and metadata, gen1/lab × soft/20 × two Bo",
+        "make_mixer_deck selftest: 157/158 PASS   FAILED: ['MXD02 independent printed-deck Bo matches explicit input and metadata, gen1/lab × soft/20 × two Bo']"
+      ]
+    },
+    "mixed_ceiling_removed": {
+      "selftest_rc": 1,
+      "failed": [
+        "FAIL  MXD03 mixed-pair ceiling rejects rho 10 / Bo 800 for AM_P–SE, not a diagonal surrogate",
+        "make_mixer_deck selftest: 157/158 PASS   FAILED: ['MXD03 mixed-pair ceiling rejects rho 10 / Bo 800 for AM_P–SE, not a diagonal surrogate']"
+      ]
+    },
+    "schema_old": {
+      "selftest_rc": 1,
+      "failed": [
+        "FAIL  MXD06 D2 metadata is unregistered schema 2 and deck wall commentary describes its actual rule",
+        "make_mixer_deck selftest: 157/158 PASS   FAILED: ['MXD06 D2 metadata is unregistered schema 2 and deck wall commentary describes its actual rule']"
+      ]
+    },
+    "register_name_match": {
+      "selftest_rc": 1,
+      "failed": [
+        "FAIL  MXD04 terminal newline cannot become an executable deck line through arm name",
+        "make_mixer_deck selftest: 157/158 PASS   FAILED: ['MXD04 terminal newline cannot become an executable deck line through arm name']"
+      ]
+    },
+    "wall_cli_float": {
+      "selftest_rc": 1,
+      "failed": [
+        "FAIL  MXDR4 both scalar CLI flags reject underscore, Unicode digits and whitespace before float conversion",
+        "make_mixer_deck selftest: 157/158 PASS   FAILED: ['MXDR4 both scalar CLI flags reject underscore, Unicode digits and whitespace before float conversion']"
+      ],
+      "cli_rc": 0,
+      "emitted": true,
+      "raw_wall": "0_3",
+      "raw_bo": ".73"
+    },
+    "bo_cli_float": {
+      "selftest_rc": 1,
+      "failed": [
+        "FAIL  MXDR4 both scalar CLI flags reject underscore, Unicode digits and whitespace before float conversion",
+        "make_mixer_deck selftest: 157/158 PASS   FAILED: ['MXDR4 both scalar CLI flags reject underscore, Unicode digits and whitespace before float conversion']"
+      ],
+      "cli_rc": 0,
+      "emitted": true,
+      "raw_wall": ".3",
+      "raw_bo": "0_73"
+    },
+    "gravity_parser_hardcoded": {
+      "selftest_rc": 1,
+      "failed": [
+        "FAIL  MXDR1 actual deck gravity participates in independently read Bo (9.81 → 1 changes Bo ×9.81)",
+        "make_mixer_deck selftest: 157/158 PASS   FAILED: ['MXDR1 actual deck gravity participates in independently read Bo (9.81 → 1 changes Bo ×9.81)']"
+      ]
+    },
+    "active_pair_old": {
+      "selftest_rc": 1,
+      "failed": [
+        "FAIL  MXDR2 active AM_P/SE and three-phase D2 decks preserve coated/uncoated wall worlds",
+        "make_mixer_deck selftest: 157/158 PASS   FAILED: ['MXDR2 active AM_P/SE and three-phase D2 decks preserve coated/uncoated wall worlds']"
+      ]
+    },
+    "desc_guard_removed": {
+      "selftest_rc": 1,
+      "failed": [
+        "FAIL  MXDR3 description CR/LF and non-string values are rejected before deck/metadata emission",
+        "make_mixer_deck selftest: 157/158 PASS   FAILED: ['MXDR3 description CR/LF and non-string values are rejected before deck/metadata emission']"
+      ]
+    },
+    "desc_cr_guard_removed": {
+      "selftest_rc": 1,
+      "failed": [
+        "FAIL  MXDR3 description CR/LF and non-string values are rejected before deck/metadata emission",
+        "make_mixer_deck selftest: 157/158 PASS   FAILED: ['MXDR3 description CR/LF and non-string values are rejected before deck/metadata emission']"
+      ]
+    }
+  },
+  "observations": {
+    "active_phases_regression": {
+      "original": {
+        "kind": "accepted",
+        "type": "str"
+      },
+      "patched": {
+        "kind": "accepted",
+        "type": "str"
+      }
+    },
+    "description_input": [
+      {
+        "value": "'independent review\\nprint \"DESC_EXECUTES\"\\n#'",
+        "constructor": {
+          "kind": "controlled_rejection",
+          "type": "SystemExit",
+          "message": "⛔ D2 결합 규칙: 설명은 줄바꿈 없는 문자열이어야 한다 (덱 명령 주입 거부)"
+        },
+        "deck_mutation": {
+          "kind": "controlled_rejection",
+          "type": "SystemExit",
+          "message": "⛔ D2 결합 규칙: 설명은 줄바꿈 없는 문자열이어야 한다 (덱 명령 주입 거부)"
+        },
+        "meta_mutation": {
+          "kind": "controlled_rejection",
+          "type": "SystemExit",
+          "message": "⛔ D2 결합 규칙: 설명은 줄바꿈 없는 문자열이어야 한다 (덱 명령 주입 거부)"
+        }
+      },
+      {
+        "value": "'independent review\\rprint \"DESC_EXECUTES\"\\r#'",
+        "constructor": {
+          "kind": "controlled_rejection",
+          "type": "SystemExit",
+          "message": "⛔ D2 결합 규칙: 설명은 줄바꿈 없는 문자열이어야 한다 (덱 명령 주입 거부)"
+        },
+        "deck_mutation": {
+          "kind": "controlled_rejection",
+          "type": "SystemExit",
+          "message": "⛔ D2 결합 규칙: 설명은 줄바꿈 없는 문자열이어야 한다 (덱 명령 주입 거부)"
+        },
+        "meta_mutation": {
+          "kind": "controlled_rejection",
+          "type": "SystemExit",
+          "message": "⛔ D2 결합 규칙: 설명은 줄바꿈 없는 문자열이어야 한다 (덱 명령 주입 거부)"
+        }
+      },
+      {
+        "value": "'independent review\\r\\nprint \"DESC_EXECUTES\"\\r\\n#'",
+        "constructor": {
+          "kind": "controlled_rejection",
+          "type": "SystemExit",
+          "message": "⛔ D2 결합 규칙: 설명은 줄바꿈 없는 문자열이어야 한다 (덱 명령 주입 거부)"
+        },
+        "deck_mutation": {
+          "kind": "controlled_rejection",
+          "type": "SystemExit",
+          "message": "⛔ D2 결합 규칙: 설명은 줄바꿈 없는 문자열이어야 한다 (덱 명령 주입 거부)"
+        },
+        "meta_mutation": {
+          "kind": "controlled_rejection",
+          "type": "SystemExit",
+          "message": "⛔ D2 결합 규칙: 설명은 줄바꿈 없는 문자열이어야 한다 (덱 명령 주입 거부)"
+        }
+      },
+      {
+        "value": "7",
+        "constructor": {
+          "kind": "controlled_rejection",
+          "type": "SystemExit",
+          "message": "⛔ D2 결합 규칙: 설명은 줄바꿈 없는 문자열이어야 한다 (덱 명령 주입 거부)"
+        },
+        "deck_mutation": {
+          "kind": "controlled_rejection",
+          "type": "SystemExit",
+          "message": "⛔ D2 결합 규칙: 설명은 줄바꿈 없는 문자열이어야 한다 (덱 명령 주입 거부)"
+        },
+        "meta_mutation": {
+          "kind": "controlled_rejection",
+          "type": "SystemExit",
+          "message": "⛔ D2 결합 규칙: 설명은 줄바꿈 없는 문자열이어야 한다 (덱 명령 주입 거부)"
+        }
+      },
+      {
+        "value": "[]",
+        "constructor": {
+          "kind": "controlled_rejection",
+          "type": "SystemExit",
+          "message": "⛔ D2 결합 규칙: 설명은 줄바꿈 없는 문자열이어야 한다 (덱 명령 주입 거부)"
+        },
+        "deck_mutation": {
+          "kind": "controlled_rejection",
+          "type": "SystemExit",
+          "message": "⛔ D2 결합 규칙: 설명은 줄바꿈 없는 문자열이어야 한다 (덱 명령 주입 거부)"
+        },
+        "meta_mutation": {
+          "kind": "controlled_rejection",
+          "type": "SystemExit",
+          "message": "⛔ D2 결합 규칙: 설명은 줄바꿈 없는 문자열이어야 한다 (덱 명령 주입 거부)"
+        }
+      },
+      {
+        "value": "{}",
+        "constructor": {
+          "kind": "controlled_rejection",
+          "type": "SystemExit",
+          "message": "⛔ D2 결합 규칙: 설명은 줄바꿈 없는 문자열이어야 한다 (덱 명령 주입 거부)"
+        },
+        "deck_mutation": {
+          "kind": "controlled_rejection",
+          "type": "SystemExit",
+          "message": "⛔ D2 결합 규칙: 설명은 줄바꿈 없는 문자열이어야 한다 (덱 명령 주입 거부)"
+        },
+        "meta_mutation": {
+          "kind": "controlled_rejection",
+          "type": "SystemExit",
+          "message": "⛔ D2 결합 규칙: 설명은 줄바꿈 없는 문자열이어야 한다 (덱 명령 주입 거부)"
+        }
+      },
+      {
+        "value": "True",
+        "constructor": {
+          "kind": "controlled_rejection",
+          "type": "SystemExit",
+          "message": "⛔ D2 결합 규칙: 설명은 줄바꿈 없는 문자열이어야 한다 (덱 명령 주입 거부)"
+        },
+        "deck_mutation": {
+          "kind": "controlled_rejection",
+          "type": "SystemExit",
+          "message": "⛔ D2 결합 규칙: 설명은 줄바꿈 없는 문자열이어야 한다 (덱 명령 주입 거부)"
+        },
+        "meta_mutation": {
+          "kind": "controlled_rejection",
+          "type": "SystemExit",
+          "message": "⛔ D2 결합 규칙: 설명은 줄바꿈 없는 문자열이어야 한다 (덱 명령 주입 거부)"
+        }
+      }
+    ],
+    "active_phase_numeric": [
+      {
+        "rho": 0.03,
+        "coating": false,
+        "SE_Bo": 0.7299906001321019,
+        "deck_bytes": 12506
+      },
+      {
+        "rho": 0.03,
+        "coating": true,
+        "SE_Bo": 0.7299906001321019,
+        "deck_bytes": 12501
+      },
+      {
+        "rho": 0.3,
+        "coating": false,
+        "SE_Bo": 0.7299906001321019,
+        "deck_bytes": 12501
+      },
+      {
+        "rho": 0.3,
+        "coating": true,
+        "SE_Bo": 0.7299906001321019,
+        "deck_bytes": 12497
+      },
+      {
+        "rho": 1.0,
+        "coating": false,
+        "SE_Bo": 0.7299906001321019,
+        "deck_bytes": 12492
+      },
+      {
+        "rho": 1.0,
+        "coating": true,
+        "SE_Bo": 0.7299906001321019,
+        "deck_bytes": 12492
+      },
+      {
+        "rho": 10.0,
+        "coating": false,
+        "SE_Bo": 0.7299906001321019,
+        "deck_bytes": 12488
+      },
+      {
+        "rho": 10.0,
+        "coating": true,
+        "SE_Bo": 0.7299906001321019,
+        "deck_bytes": 12486
+      }
+    ],
+    "density_identity": {
+      "label": "lab20261014",
+      "meta_SE_g_cm3": 2.0,
+      "printed_SE_kg_m3": 2000.0
+    },
+    "metadata_text_mismatch": {
+      "printed_Bo": 0.7299906001321019,
+      "meta_Bo": 12.5,
+      "hash_matches_text": true
+    },
+    "static_contact_scope": {
+      "bo": 1015.4211813368634,
+      "limiting_pair": "(2, 2)",
+      "SE_SE_unloaded_delta_over_r": 0.009999866799323059,
+      "SE_SE_one_weight_delta_over_r": 0.010019533792156731
+    }
+  },
+  "cli_input": [
+    {
+      "gamma": "",
+      "rc": 1,
+      "emitted": false,
+      "traceback": false
+    },
+    {
+      "gamma": "AM_P=.3",
+      "rc": 1,
+      "emitted": false,
+      "traceback": false
+    },
+    {
+      "gamma": "AM_P=.3,AM_S=.3,AM_P=.3",
+      "rc": 1,
+      "emitted": false,
+      "traceback": false
+    },
+    {
+      "gamma": "AM_P=NaN,AM_S=.3",
+      "rc": 1,
+      "emitted": false,
+      "traceback": false
+    },
+    {
+      "gamma": "AM_P=inf,AM_S=.3",
+      "rc": 1,
+      "emitted": false,
+      "traceback": false
+    },
+    {
+      "gamma": "AM_P=1e999,AM_S=.3",
+      "rc": 1,
+      "emitted": false,
+      "traceback": false
+    },
+    {
+      "gamma": "AM_P=0_3,AM_S=.3",
+      "rc": 1,
+      "emitted": false,
+      "traceback": false
+    },
+    {
+      "gamma": "AM_P=０.３,AM_S=.3",
+      "rc": 1,
+      "emitted": false,
+      "traceback": false
+    },
+    {
+      "gamma": "AM_P= .3,AM_S=.3",
+      "rc": 1,
+      "emitted": false,
+      "traceback": false
+    },
+    {
+      "gamma": "AM_P=.3,AM_S=.3,",
+      "rc": 1,
+      "emitted": false,
+      "traceback": false
+    },
+    {
+      "gamma": "AM_P=.3,AM_S=.3,SE=2",
+      "rc": 1,
+      "emitted": false,
+      "traceback": false
+    },
+    {
+      "gamma": "AM_P=1e-310,AM_S=1e-310",
+      "rc": 1,
+      "emitted": false,
+      "traceback": false
+    },
+    {
+      "flag": "--gm-wall-ncm",
+      "value": "nan",
+      "rc": 2,
+      "emitted": false,
+      "traceback": false
+    },
+    {
+      "flag": "--gm-wall-ncm",
+      "value": "inf",
+      "rc": 2,
+      "emitted": false,
+      "traceback": false
+    },
+    {
+      "flag": "--gm-wall-ncm",
+      "value": "1e999",
+      "rc": 1,
+      "emitted": false,
+      "traceback": false
+    },
+    {
+      "flag": "--gm-wall-ncm",
+      "value": "1e-310",
+      "rc": 1,
+      "emitted": false,
+      "traceback": false
+    },
+    {
+      "flag": "--gm-wall-ncm",
+      "value": "0_3",
+      "rc": 2,
+      "emitted": false,
+      "traceback": false
+    },
+    {
+      "flag": "--gm-wall-ncm",
+      "value": "０.３",
+      "rc": 2,
+      "emitted": false,
+      "traceback": false
+    },
+    {
+      "flag": "--gm-wall-ncm",
+      "value": " 0.3",
+      "rc": 2,
+      "emitted": false,
+      "traceback": false
+    },
+    {
+      "flag": "--gm-wall-ncm",
+      "value": "",
+      "rc": 2,
+      "emitted": false,
+      "traceback": false
+    },
+    {
+      "flag": "--gm-wall-ncm",
+      "value": "0",
+      "rc": 1,
+      "emitted": false,
+      "traceback": false
+    },
+    {
+      "flag": "--gm-wall-ncm",
+      "value": "-1",
+      "rc": 1,
+      "emitted": false,
+      "traceback": false
+    },
+    {
+      "flag": "--gm-bo-se",
+      "value": "nan",
+      "rc": 2,
+      "emitted": false,
+      "traceback": false
+    },
+    {
+      "flag": "--gm-bo-se",
+      "value": "inf",
+      "rc": 2,
+      "emitted": false,
+      "traceback": false
+    },
+    {
+      "flag": "--gm-bo-se",
+      "value": "1e999",
+      "rc": 1,
+      "emitted": false,
+      "traceback": false
+    },
+    {
+      "flag": "--gm-bo-se",
+      "value": "1e-310",
+      "rc": 1,
+      "emitted": false,
+      "traceback": false
+    },
+    {
+      "flag": "--gm-bo-se",
+      "value": "0_3",
+      "rc": 2,
+      "emitted": false,
+      "traceback": false
+    },
+    {
+      "flag": "--gm-bo-se",
+      "value": "０.３",
+      "rc": 2,
+      "emitted": false,
+      "traceback": false
+    },
+    {
+      "flag": "--gm-bo-se",
+      "value": " 0.3",
+      "rc": 2,
+      "emitted": false,
+      "traceback": false
+    },
+    {
+      "flag": "--gm-bo-se",
+      "value": "",
+      "rc": 2,
+      "emitted": false,
+      "traceback": false
+    },
+    {
+      "flag": "--gm-bo-se",
+      "value": "0",
+      "rc": 1,
+      "emitted": false,
+      "traceback": false
+    },
+    {
+      "flag": "--gm-bo-se",
+      "value": "-1",
+      "rc": 1,
+      "emitted": false,
+      "traceback": false
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "started_at_utc": "2026-10-23T15:59:59.765Z",
+  "scope": "Live loopback webapp; document visibility and tab interaction only; no simulation or registration.",
+  "phase": "Imported MXD2 working tree before candidate commit",
+  "pages": [
+    {
+      "path": "/",
+      "status": 200,
+      "title": "DEM Analyzer - Dashboard",
+      "javascript_errors": []
+    },
+    {
+      "path": "/mixer",
+      "status": 200,
+      "title": "믹서 개발 이력 — DEM/MPM Analyzer",
+      "latest_version": "17",
+      "easy_development_label_visible": true,
+      "detail_required_tokens": [
+        "python3 -I scripts/make_mixer_deck.py",
+        "--dens-gen lab20261014",
+        "--gm-wall-ncm 0.3",
+        "mixer_deck_meta/2",
+        "registered: null",
+        "development_contract: D2-geomean/unregistered",
+        "MXD2-01"
+      ],
+      "easy_detail_roundtrip": "PASS",
+      "javascript_errors": []
+    },
+    {
+      "path": "/hetero",
+      "status": 200,
+      "title": "이종기술",
+      "javascript_errors": []
+    }
+  ],
+  "branch": "codex/mixer-mxd2",
+  "head_before_candidate": "7799a2ff64ba462b42ce05edd3e63b7c2854d557",
+  "devlog_sha256": "232df926a7e593d1e64dfa9b939dd54208d133a4ca65818e5087471f53b5edb5",
+  "generator_sha256": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27",
+  "status": "PASS",
+  "finished_at_utc": "2026-10-23T16:00:02.917Z"
+}

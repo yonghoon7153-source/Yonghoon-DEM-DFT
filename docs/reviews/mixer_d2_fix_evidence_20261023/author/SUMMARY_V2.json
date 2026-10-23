@@ -1,0 +1,13 @@
+{
+  "source_sha256": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27",
+  "before_review_tests": "155/158 PASS; R1,R2,R3 fail",
+  "after": "158/158 PASS",
+  "local_mutations_killed": 16,
+  "reviewer_mutations_killed": 10,
+  "reviewer_normal_decks": 192,
+  "reviewer_pair_checks": 1728,
+  "two_phase_command_tokens_identical": true,
+  "description_injection_rejected": true,
+  "whole_repository_gate": "parent pending",
+  "independent_review_verdict": "parent/reviewer pending"
+}

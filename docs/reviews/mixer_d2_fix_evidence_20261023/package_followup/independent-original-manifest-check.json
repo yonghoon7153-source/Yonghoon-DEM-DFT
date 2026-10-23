@@ -1,0 +1,10 @@
+{
+  "v1": {
+    "rc": 0,
+    "stdout": "REVIEW.md: OK\nreproduce.py: OK\ninput_generator.patch: OK\nevidence/results.json: OK\n"
+  },
+  "v2": {
+    "rc": 0,
+    "stdout": "REVIEW.md: OK\nreproduce.py: OK\ncompare_prior.py: OK\ninput_generator.patch: OK\ninput_review_delta.patch: OK\nevidence/results.json: OK\nprior_comparison.json: OK\nevidence/snapshot/scripts/make_mixer_deck.py: OK\n"
+  }
+}

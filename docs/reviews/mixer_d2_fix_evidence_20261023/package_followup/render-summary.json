@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "page_checks": "9/9",
+  "isolated_cli_visible": true,
+  "required_density_wall_schema_and_hold_visible": true,
+  "devlog_sha256": "232df926a7e593d1e64dfa9b939dd54208d133a4ca65818e5087471f53b5edb5",
+  "python_isolated": true,
+  "production_source_changed": false,
+  "scope": "Real /mixer route with scratch document lookup and writable directories; no simulation."
+}

@@ -1,0 +1,21 @@
+--- reviewer-original-reproduce.py
++++ reviewer-reproduce-adapted.py
+@@ -195,10 +195,14 @@
+ 
+     # A name terminator was fixed, but description has an independent route into executable text.
+     injected_desc = 'independent review\nprint "DESC_EXECUTES"\n#'
+-    text, meta = emit(m, a=arm(m, desc=injected_desc))
+-    (out/'description_injection.in.mixer').write_text(text)
+-    result['observations']['description_injection'] = {'emitted_executable_line':'print "DESC_EXECUTES"' in text.splitlines(),
+-                                                        'lines':[i for i,line in enumerate(text.splitlines(),1) if line == 'print "DESC_EXECUTES"']}
++    try:
++        text, meta = emit(m, a=arm(m, desc=injected_desc))
++    except SystemExit as exc:
++        result['observations']['description_injection'] = {'emitted_executable_line':False, 'rejection':str(exc)}
++    else:
++        (out/'description_injection.in.mixer').write_text(text)
++        result['observations']['description_injection'] = {'emitted_executable_line':'print "DESC_EXECUTES"' in text.splitlines(),
++                                                          'lines':[i for i,line in enumerate(text.splitlines(),1) if line == 'print "DESC_EXECUTES"']}
+ 
+     # Mutated density identity still yields deck and meta despite the declared generation.
+     plan = m.plan(100000, cgf=151.4, dens_gen='lab20261014', stiffen_se=20.)

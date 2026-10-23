@@ -1,0 +1,14 @@
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+  PASS  ① /mixer 200
+  PASS  ② 버전이 하나 이상 잡힌다
+  PASS  ③ 최신 버전이 앞 (키 내림차순)
+  PASS  ④ 모든 버전에 쉬운 판·자세한 판이 둘 다 비어 있지 않다
+  PASS  ⑤ 그림이 /static/mixer/ 경로로 들어 있고 실제 파일이 있다
+  PASS  ⑥ 페이지에 토글과 타임라인이 있다
+  PASS  ⑦ 메뉴에 /mixer 링크
+  PASS  ⑧ 렌더 직전 ledger_view.redact 를 통과한다
+  PASS  ⑨ 파일명 정규식 밖은 무시된다 (vNN_YYYYMMDD.md 만)
+
+test_mixer_devlog_page: 9/9 PASS
+draft v17 rendered through real /mixer route: PASS (scratch document lookup only)

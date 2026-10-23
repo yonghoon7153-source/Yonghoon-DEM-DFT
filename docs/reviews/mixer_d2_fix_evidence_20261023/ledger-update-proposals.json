@@ -1,0 +1,61 @@
+{
+  "kind": "append/update proposal, not a replacement ledger; apply only after final integration review",
+  "commit_placeholder": "<<sha:Fix mixer D2>>",
+  "updates": [
+    {
+      "id": "MXD2-02",
+      "proposed_status": "claimed_fixed",
+      "append_note": "10-23 Codex 생성기 v2 수정·시험 먼저·내부 독립 재확인. 정상 158/158, 작성자 16변이 및 독립 14변이 각각 예상 검사로 검출. 요청서 codex_mixer_d2_fix_request_20261023.md와 항목별 근거 확인. 전체 게이트 최종 receipt 확인 후 반영, 외부 verified 아님. 커밋 <<sha:Fix mixer D2>>.",
+      "evidence_append": [
+        "docs/reviews/codex_mixer_d2_fix_request_20261023.md",
+        "docs/reviews/mixer_d2_fix_evidence_20261023/independent/v2/REVIEW.md"
+      ]
+    },
+    {
+      "id": "MXD2-03",
+      "proposed_status": "claimed_fixed",
+      "append_note": "10-23 Codex 생성기 v2 수정·시험 먼저·내부 독립 재확인. 정상 158/158, 작성자 16변이 및 독립 14변이 각각 예상 검사로 검출. 요청서 codex_mixer_d2_fix_request_20261023.md와 항목별 근거 확인. 전체 게이트 최종 receipt 확인 후 반영, 외부 verified 아님. 커밋 <<sha:Fix mixer D2>>.",
+      "evidence_append": [
+        "docs/reviews/codex_mixer_d2_fix_request_20261023.md",
+        "docs/reviews/mixer_d2_fix_evidence_20261023/independent/v2/REVIEW.md"
+      ]
+    },
+    {
+      "id": "MXD2-04",
+      "proposed_status": "claimed_fixed",
+      "append_note": "10-23 Codex 생성기 v2 수정·시험 먼저·내부 독립 재확인. 정상 158/158, 작성자 16변이 및 독립 14변이 각각 예상 검사로 검출. 요청서 codex_mixer_d2_fix_request_20261023.md와 항목별 근거 확인. 전체 게이트 최종 receipt 확인 후 반영, 외부 verified 아님. 커밋 <<sha:Fix mixer D2>>.",
+      "evidence_append": [
+        "docs/reviews/codex_mixer_d2_fix_request_20261023.md",
+        "docs/reviews/mixer_d2_fix_evidence_20261023/independent/v2/REVIEW.md"
+      ]
+    },
+    {
+      "id": "MXD2-05",
+      "proposed_status": "claimed_fixed",
+      "append_note": "10-23 Codex 생성기 v2 수정·시험 먼저·내부 독립 재확인. 정상 158/158, 작성자 16변이 및 독립 14변이 각각 예상 검사로 검출. 요청서 codex_mixer_d2_fix_request_20261023.md와 항목별 근거 확인. 전체 게이트 최종 receipt 확인 후 반영, 외부 verified 아님. 커밋 <<sha:Fix mixer D2>>.",
+      "evidence_append": [
+        "docs/reviews/codex_mixer_d2_fix_request_20261023.md",
+        "docs/reviews/mixer_d2_fix_evidence_20261023/independent/v2/REVIEW.md"
+      ]
+    },
+    {
+      "id": "MXD2-06",
+      "proposed_status": "claimed_fixed",
+      "append_note": "10-23 Codex 생성기 v2 수정·시험 먼저·내부 독립 재확인. 정상 158/158, 작성자 16변이 및 독립 14변이 각각 예상 검사로 검출. 요청서 codex_mixer_d2_fix_request_20261023.md와 항목별 근거 확인. 전체 게이트 최종 receipt 확인 후 반영, 외부 verified 아님. 커밋 <<sha:Fix mixer D2>>.",
+      "evidence_append": [
+        "docs/reviews/codex_mixer_d2_fix_request_20261023.md",
+        "docs/reviews/mixer_d2_fix_evidence_20261023/independent/v2/REVIEW.md"
+      ]
+    }
+  ],
+  "retain_open": [
+    {
+      "id": "MXD2-01",
+      "reason": "HOLD: lab/D2 readback/diff/smoke, S1 cohort/policy v5 unimplemented and unregistered; current probe still FAIL."
+    },
+    {
+      "id": "MXD2-07",
+      "reason": "D3 v2 density-specific static ceiling design review; not generator implementation closure."
+    }
+  ]
+}

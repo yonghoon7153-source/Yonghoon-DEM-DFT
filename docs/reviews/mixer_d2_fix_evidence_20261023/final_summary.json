@@ -1,0 +1,80 @@
+{
+  "kind": "MXD2 generator v2 review deliverables; no external GO",
+  "baseline_commit": "7799a2ff64ba462b42ce05edd3e63b7c2854d557",
+  "intended_branch": "codex/mixer-mxd2",
+  "intended_commit_title": "Fix mixer D2 validation and preserve supported phase sets",
+  "commit_placeholder": "<<sha:Fix mixer D2>>",
+  "baseline_source_sha256": "6baaa04c13c842c2d8e486cbef83bb5cb6f6e3d5f88c5f0f0d8c0904d3949f30",
+  "reviewed_v1_source_sha256": "dada1ebbf22dfc74a0d47000e1a35493d5e2d30cc2bc8d9e92509984665ef81b",
+  "final_source_sha256": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27",
+  "generator_full_patch_sha256": "2b865ee1e553f4ebc737599888cd22ab99c7be6fe41cd65cf440b793786ad210",
+  "review_delta_sha256": "ac13a4c415ab1d03985a56e12102b665a61a2746abccb1c5da795c5ae6604586",
+  "scope": {
+    "MXD2-01": "HOLD/open; D2 S1 consumers/cohort/policy remain",
+    "MXD2-02--06": "claimed_fixed proposal; independent internal v2 R1--R4 closed",
+    "MXD2-07": "D3 v2 design review; not closed by this generator package"
+  },
+  "tests_first": {
+    "baseline": "143/143 PASS",
+    "initial_red": "145/154 PASS; 9 FAIL",
+    "v1_green": "154/154 PASS",
+    "review_red": "155/158 PASS; R1,R2,R3 FAIL; R4 already rejects",
+    "v2_green": "158/158 PASS"
+  },
+  "author_mutations": {
+    "total": 16,
+    "caught_by_expected_checks": 16,
+    "historical_analogue_baseline_survivors": 3
+  },
+  "independent_v1_mutations": {
+    "total": 10,
+    "caught": 7,
+    "survivors": [
+      "gravity_1_d2_only",
+      "wall_cli_float",
+      "bo_cli_float"
+    ]
+  },
+  "author_rerun_of_independent_v1_tool": {
+    "total": 10,
+    "caught": 10,
+    "role": "author rerun only; not independent verdict"
+  },
+  "independent_v2": {
+    "mutations": 14,
+    "caught_by_related_checks": 14,
+    "normal_three_phase_decks": 192,
+    "physical_pair_checks": 1728,
+    "additional_AM_P_SE_decks": 8,
+    "description_controlled_rejections": 21,
+    "valid_descriptions": 4,
+    "CLI_rejections": 32,
+    "CLI_gamma_rejections": 12,
+    "CLI_scalar_rejections": 20,
+    "numeric_structural_helper_observations": 49,
+    "prior192deck_bytes_identical": true,
+    "prior_metadata_identical_except_source_hash": true,
+    "verdict": "v1 R1--R4 closed within generator/test scope; no new defect found in v2 diff"
+  },
+  "full_repository_gate": "PENDING_PARENT_INTEGRATION",
+  "external_review_GO": "NOT_GRANTED",
+  "policy_v5_registration": "NOT_GRANTED",
+  "simulator_runs": 0,
+  "experiment_runs": 0,
+  "shared_files_modified_by_author": false,
+  "ledger_status_changed_by_author": false,
+  "known_limits": [
+    "arbitrary deck text versus deck_meta inputs binding",
+    "caller-mutated plan density generation label versus table",
+    "static cohesion-only unloaded overlap versus gravity-loaded contact",
+    "some malformed library dictionaries raise TypeError/KeyError",
+    "AM_S+SE-only plan has preexisting AM_P KeyError; no general phase-set claim"
+  ],
+  "package_audit_followup": {
+    "v17_cli_isolation_flag": true,
+    "collab_inline_ledger_json_matches_file": true,
+    "render": "9/9 PASS plus exact isolated CLI and required markers visible",
+    "evidence": "package_followup/render-summary.json",
+    "request_sha256_unchanged": "dc1cf24c4c1e72ec310a949567a90f3f3f89c527828fcc7632433f8d128bb082"
+  }
+}

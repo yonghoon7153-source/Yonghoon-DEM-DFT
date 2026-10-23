@@ -1,0 +1,20 @@
+{
+  "kind": "package audit follow-up only; original independent evidence unchanged",
+  "changes": [
+    {
+      "path": "docs/mixer_devlog/v17_20261023.md",
+      "before_sha256": "6e33219539d2acfa9535aa0f1c2773d6ac193cb0eac1b8ba3fb954d3c3555d11",
+      "after_sha256": "232df926a7e593d1e64dfa9b939dd54208d133a4ca65818e5087471f53b5edb5"
+    },
+    {
+      "path": "docs/collab/codex_to_claude/20261023-1308_mixer-mxd2.md",
+      "before_sha256": "66641c57bfd4db03a0705d268ae4e86035a48de66b18992ef278d432839a149b",
+      "after_sha256": "4cbefa3e7471ae15a67b941d3e78f3d7a02fa7754ab124a1b61e7b225cc8f6b7"
+    },
+    {
+      "path": "docs/reviews/codex_mixer_d2_fix_request_20261023.md",
+      "before_sha256": "dc1cf24c4c1e72ec310a949567a90f3f3f89c527828fcc7632433f8d128bb082",
+      "after_sha256": "dc1cf24c4c1e72ec310a949567a90f3f3f89c527828fcc7632433f8d128bb082"
+    }
+  ]
+}

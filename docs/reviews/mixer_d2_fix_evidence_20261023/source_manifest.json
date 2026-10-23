@@ -1,0 +1,112 @@
+[
+  {
+    "path": "author/auxiliary_archive/analytic_probes.py",
+    "sha256": "509ecb45b8a8c2a7f6ed2ab8cdf51422f6e5261a4289ded15705dc20220828e7",
+    "bytes": 1903
+  },
+  {
+    "path": "author/auxiliary_archive/check_devlog_draft.py",
+    "sha256": "86b457a762b41dec7f3b7f8a3bb92d0dabbc4066b08fe389a694096b99fb919b",
+    "bytes": 1086
+  },
+  {
+    "path": "author/auxiliary_archive/probe_mxd2_01.py",
+    "sha256": "f6d168565b2b73163fcee78513800f7bab2d69d1e643e9f123e940dbdc3dd977",
+    "bytes": 1982
+  },
+  {
+    "path": "author/auxiliary_archive/reviewer-original-reproduce.py",
+    "sha256": "cecd9d04d75d4714b5fcaa8412576a3ba17e729df64fea379646a45a205e37d3",
+    "bytes": 16493
+  },
+  {
+    "path": "author/auxiliary_archive/reviewer-reproduce-adapted.py",
+    "sha256": "22ac247849e26e4c0859d1edb2439779c3bdc796bea2037e5cfeaac84c92b83b",
+    "bytes": 16670
+  },
+  {
+    "path": "author/baseline/additives.py",
+    "sha256": "e22782501ddb0d2bd5ac8cce381c48ff3b0c1bbb570489f4f6345612dc79d84a",
+    "bytes": 104659
+  },
+  {
+    "path": "author/baseline/make_mixer_deck.py",
+    "sha256": "6baaa04c13c842c2d8e486cbef83bb5cb6f6e3d5f88c5f0f0d8c0904d3949f30",
+    "bytes": 215003
+  },
+  {
+    "path": "author/baseline/reviewed_make_mixer_deck.py",
+    "sha256": "dada1ebbf22dfc74a0d47000e1a35493d5e2d30cc2bc8d9e92509984665ef81b",
+    "bytes": 223646
+  },
+  {
+    "path": "author/mutation_runner.py",
+    "sha256": "40e9b15f519f83332255c369e8edb2cec6feff480f291698e0580f4c5c0638f8",
+    "bytes": 5967
+  },
+  {
+    "path": "author/scripts/additives.py",
+    "sha256": "e22782501ddb0d2bd5ac8cce381c48ff3b0c1bbb570489f4f6345612dc79d84a",
+    "bytes": 104659
+  },
+  {
+    "path": "author/scripts/make_mixer_deck.py",
+    "sha256": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27",
+    "bytes": 228396
+  },
+  {
+    "path": "author/tests_first/additives.py",
+    "sha256": "e22782501ddb0d2bd5ac8cce381c48ff3b0c1bbb570489f4f6345612dc79d84a",
+    "bytes": 104659
+  },
+  {
+    "path": "author/tests_first/generator-review-tests-only.py",
+    "sha256": "d92c7669a4d4c4372650be98c831957c8df863b7fe43519c9ad4c992c68fae1b",
+    "bytes": 227760
+  },
+  {
+    "path": "author/tests_first/generator-tests-only.py",
+    "sha256": "eac52b656da0a36364488d87adaf0c56d3c1c702e51b03c6e0cc7fab9e827136",
+    "bytes": 221545
+  },
+  {
+    "path": "independent/v1/evidence/snapshot/scripts/additives.py",
+    "sha256": "e22782501ddb0d2bd5ac8cce381c48ff3b0c1bbb570489f4f6345612dc79d84a",
+    "bytes": 104659
+  },
+  {
+    "path": "independent/v1/evidence/snapshot/scripts/make_mixer_deck.py",
+    "sha256": "dada1ebbf22dfc74a0d47000e1a35493d5e2d30cc2bc8d9e92509984665ef81b",
+    "bytes": 223646
+  },
+  {
+    "path": "independent/v1/reproduce.py",
+    "sha256": "cecd9d04d75d4714b5fcaa8412576a3ba17e729df64fea379646a45a205e37d3",
+    "bytes": 16493
+  },
+  {
+    "path": "independent/v2/compare_prior.py",
+    "sha256": "66a3ba6f220351307b431d2b1a7b065f7f84bd86c87f9c7d2815e2c1bcabd5ae",
+    "bytes": 1365
+  },
+  {
+    "path": "independent/v2/evidence/snapshot/scripts/additives.py",
+    "sha256": "e22782501ddb0d2bd5ac8cce381c48ff3b0c1bbb570489f4f6345612dc79d84a",
+    "bytes": 104659
+  },
+  {
+    "path": "independent/v2/evidence/snapshot/scripts/make_mixer_deck.py",
+    "sha256": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27",
+    "bytes": 228396
+  },
+  {
+    "path": "independent/v2/reproduce.py",
+    "sha256": "f307913bb410cdcbdd0e6962cc6eb6cded9476c60e1d4ff99bdefed26ecb3673",
+    "bytes": 19257
+  },
+  {
+    "path": "package_followup/check_devlog.py",
+    "sha256": "4596c39fac3d3d2d7376e76a2e7063dab148802628e44665d3ea5dd5e61627c5",
+    "bytes": 2136
+  }
+]
