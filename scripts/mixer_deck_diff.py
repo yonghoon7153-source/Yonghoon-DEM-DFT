@@ -166,6 +166,44 @@ def parse_deck(text):
     return dict(cmds=cmds, ced=ced, names=names, ced_head=head)
 
 
+def diff_d2_decks(text_ref, text_new, meta_ref, meta_new):
+    """Explicit development-only uncoated -> coated pair; legacy allowlists unchanged."""
+    import mixer_deck_readback as rb
+    a = rb.read_d2(text_ref, meta_ref)
+    b = rb.read_d2(text_new, meta_new)
+    result = dict(schema='mixer_d2_pair_development/1', allow='D2', verdict='FAIL',
+                  registered=None, execution_authorized=False, failures=[], table=[],
+                  old=a, new=b, scope='same-world D2 development pair, not a cohort or launch certificate')
+    result['failures'] = ['old: '+s for s in a['failures']] + ['new: '+s for s in b['failures']]
+    if result['failures']:
+        return result
+    try:
+        for key in ('dens_gen','dens_g_cm3','types','cgf','seed','stiffen_se','hold_bo_pairwise',
+                    'dt_factor','n_atoms_planned','revolutions','rpm'):
+            rb._d2_need(meta_ref[key] == meta_new[key], 'pair metadata axis differs: '+key)
+        for key in ('rho_uncoated_ncm','bo_se'):
+            rb._d2_need(a[key] == b[key], 'pair must share the same physical world: '+key)
+        rho = a['rho_uncoated_ncm']
+        ncm = [p for p in a['gamma'] if p.startswith('AM_')]
+        rb._d2_need(all(a['gamma'][p] == rho and b['gamma'][p] == 1 for p in ncm),
+                    'pair direction must be uncoated rho -> coated 1')
+        pa, pb = parse_deck(text_ref), parse_deck(text_new)
+        rb._d2_need(pa['cmds']==pb['cmds'] and pa['ced_head']==pb['ced_head'],
+                    'non-CED command tokens differ (geometry/seed/gravity/material/time/etc.)')
+        rb._d2_need(a['expected_counts'] == b['expected_counts'], 'pair actual phase counts differ')
+        for x,y in zip(a['pairs'],b['pairs']):
+            rb._d2_need(x['pair']==y['pair'], 'pair phase identity differs')
+            pi,pj = a['phase_names'][x['i']],a['phase_names'][x['j']]
+            expected = ((b['gamma'][pi]/a['gamma'][pi]) * (b['gamma'][pj]/a['gamma'][pj]))**.5
+            ratio = y['F0']/x['F0']
+            rb._d2_close(ratio, expected, rb.TOL['f0_ratio'], 'coated/uncoated pair force '+x['pair'])
+            result['table'].append(dict(pair=x['pair'],ref=x['F0'],new=y['F0'],ratio=ratio,rule=expected))
+        result.update(verdict='PASS',degenerate_same_gamma_world=(rho==1))
+    except (ValueError,TypeError,KeyError,IndexError,OverflowError,ZeroDivisionError) as exc:
+        result['failures'].append('D2 pair contract: '+str(exc))
+    return result
+
+
 def diff_decks(text_ref, text_new, allow='B', expect=None, expect_text=None):
     """두 덱 → 판정 dict(verdict, non_ced_diffs, changed, outside, missing, wrong_direction, target_mismatch, table).
 
@@ -1726,10 +1764,12 @@ def _selftest():
 def main():
     ap = argparse.ArgumentParser(description='믹서 실행 덱 두 벌의 CED 차이 = 허용목록인가 (Codex HB-03)')
     ap.add_argument('decks', nargs='*', help='<기준 덱> <새 덱>')
-    ap.add_argument('--allow', choices=sorted(ALLOW) + ['E', 'EB', 'U'], default='B',
+    ap.add_argument('--allow', choices=sorted(ALLOW) + ['E', 'EB', 'U', 'D2'], default='B',
                     help='B = 같은 강성 LC→LH (다섯 쌍) · A = AM–AM 셋 · E = 같은 팔 · 다른 강성 (또는 dt 만 1/k) · '
                          'EB = LC→LH 이면서 다른 강성 (E 와 B 동시) · U = 같은 강성 · CED 비영 원소 전부 한 공통 배율 > 1 (균일 γ 배율 · dev-u).  '
                          'E · EB 는 두 덱 모드 전용')
+    ap.add_argument('--meta-ref', help='--allow D2: reference deck metadata (development only)')
+    ap.add_argument('--meta-new', help='--allow D2: coated deck metadata (development only)')
     ap.add_argument('--runs', help='runs 디렉터리 — <ref-arm>_s<시드>/in.mixer 와 <arm>_s<시드>/in.mixer 를 같은 시드끼리 '
                                    '+ 디렉터리마다 실제 시드 서명 = 생성기 기대 서명 · 시드 간 고유 (HBR3-07).  ★ --ref-arm · --arm 에 강성 축 '
                                    '꼬리표 (예 LC_soft_r2 · LH_ref_r2 · E0_ref) 를 주면 E · EB 도 받고 폴더마다 덱 전체를 재생성 덱과 바이트 대조한다')
@@ -1748,6 +1788,20 @@ def main():
     a = ap.parse_args()
     if a.selftest:
         raise SystemExit(_selftest())
+    if a.allow == 'D2':
+        if (len(a.decks) != 2 or not a.meta_ref or not a.meta_new or a.runs or a.cohort
+                or a.expect_deck or a.expect_seeds
+                or any(x.split('=',1)[0] in ('--arm','--ref-arm') for x in sys.argv[1:])):
+            ap.error('D2 개발: OLD NEW --allow D2 --meta-ref OLD_META --meta-new NEW_META [--json REPORT] only')
+        import mixer_deck_readback as rb
+        try:
+            old, new = (_read(path) for path in a.decks)
+            d2_result = diff_d2_decks(old,new,rb.load_d2_meta(a.meta_ref),rb.load_d2_meta(a.meta_new))
+        except (OSError,ValueError) as exc:
+            ap.error(str(exc))
+        raise SystemExit(rb._d2_cli_report(d2_result,a.json))
+    if a.meta_ref or a.meta_new:
+        ap.error('--meta-ref/--meta-new require explicit --allow D2')
     if a.cohort is not None:
         #  ★ 등록 코호트 모드 (2026-09-30 · piece 1 · 2) — 이름 목록 · 쌍 · 허용목록은 등록 (COHORTS · cohort_pairs) 이 정한다.
         #    다른 짝 인자를 섞으면 무엇을 검사했는지가 흐려지므로 거부한다.

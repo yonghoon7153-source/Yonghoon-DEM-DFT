@@ -1,0 +1,31 @@
+test_actual_command_scope (test_mixer_d2_consumers.D2Consumers.test_actual_command_scope) ... ok
+test_actual_common_mode_mutations (test_mixer_d2_consumers.D2Consumers.test_actual_common_mode_mutations) ... ok
+test_ceiling_and_ced_meta_rebinding (test_mixer_d2_consumers.D2Consumers.test_ceiling_and_ced_meta_rebinding) ... FAIL
+test_cli_and_duplicate_json (test_mixer_d2_consumers.D2Consumers.test_cli_and_duplicate_json) ... ok
+test_command_lifecycle (test_mixer_d2_consumers.D2Consumers.test_command_lifecycle) ... ok
+test_coordinated_density_and_gravity_vector (test_mixer_d2_consumers.D2Consumers.test_coordinated_density_and_gravity_vector) ... ok
+test_counts_are_from_actual_inputs (test_mixer_d2_consumers.D2Consumers.test_counts_are_from_actual_inputs) ... ok
+test_d2_pairs_and_old_contracts (test_mixer_d2_consumers.D2Consumers.test_d2_pairs_and_old_contracts) ... ok
+test_dt_half_and_legacy_cli_positive (test_mixer_d2_consumers.D2Consumers.test_dt_half_and_legacy_cli_positive) ... ok
+test_generation_and_supported_phase_positive (test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive) ... ok
+test_meta_binding_and_numeric_boundaries (test_mixer_d2_consumers.D2Consumers.test_meta_binding_and_numeric_boundaries) ... ok
+test_pair_identity_and_orientation (test_mixer_d2_consumers.D2Consumers.test_pair_identity_and_orientation) ... ok
+test_tokens_and_nested_schema (test_mixer_d2_consumers.D2Consumers.test_tokens_and_nested_schema) ... ok
+
+======================================================================
+FAIL: test_ceiling_and_ced_meta_rebinding (test_mixer_d2_consumers.D2Consumers.test_ceiling_and_ced_meta_rebinding)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/mxd2-independent/candidate-v3/scripts/test_mixer_d2_consumers.py", line 148, in test_ceiling_and_ced_meta_rebinding
+    self.assert_fail(result)
+  File "/workspace/.cloud-setup/nonrint-20261024/mxd2-independent/candidate-v3/scripts/test_mixer_d2_consumers.py", line 53, in assert_fail
+    self.assertEqual(result['verdict'], 'FAIL', result)
+AssertionError: 'PASS' != 'FAIL'
+- PASS
++ FAIL
+ : {'schema': 'mixer_d2_development/1', 'verdict': 'PASS', 'failures': [], 'registered': None, 'execution_authorized': False, 'scope': 'D2 development deck and planned counts only; not execution evidence', 'deck_sha256': '6d2ae72e585c24d398cc999c88a37024ef2f5a0284accda9b75cbeb0bdd551e4', 'density_generation': 'lab20261014', 'phase_names': {1: 'AM_P', 2: 'AM_S', 3: 'SE', 4: 'WALL'}, 'expected_counts': {'1': 143, '2': 699, '3': 99158}, 'n_atoms_planned': 100000, 'Bo_SE': 729990.6001321018, 'gravity': 9.81, 'rho_uncoated_ncm': 0.3, 'gamma': {'AM_P': 0.3, 'AM_S': 0.3, 'SE': 1.0, 'WALL': 0.00768}, 'bo_se': 730000.0, 'pairs': [{'pair': 'AM_P-AM_P', 'i': 1, 'j': 1, 'F0': 0.05762056386024636, 'expected_F0': 0.05761958623113773, 'CED': 10286900.0, 'overlap_fraction': 0.0038411948264080874}, {'pair': 'AM_P-AM_S', 'i': 1, 'j': 2, 'F0': 0.035459051298510624, 'expected_F0': 0.03545820691146938, 'CED': 12094000.0, 'overlap_fraction': 0.007351337819054404}, {'pair': 'AM_P-SE', 'i': 1, 'j': 3, 'F0': 0.02104013281862581, 'expected_F0': 0.021039698088605476, 'CED': 10298100.0, 'overlap_fraction': 0.06304885957683845}, {'pair': 'AM_P-WALL', 'i': 1, 'j': 4, 'F0': 0.01843847269551933, 'expected_F0': 0.018438267593964077, 'CED': 4978590.0, 'overlap_fraction': 0.0012698778143316798}, {'pair': 'AM_S-AM_S', 'i': 2, 'j': 2, 'F0': 0.025608841273169414, 'expected_F0': 0.02560870499161677, 'CED': 13479600.0, 'overlap_fraction': 0.006595554435016157}, {'pair': 'AM_S-SE', 'i': 2, 'j': 3, 'F0': 0.01870204897498837, 'expected_F0': 0.0187019538565382, 'CED': 10710400.0, 'overlap_fraction': 0.060620830925907386}, {'pair': 'AM_S-WALL', 'i': 2, 'j': 4, 'F0': 0.008194882598823979, 'expected_F0': 0.008194785597317367, 'CED': 6523800.0, 'overlap_fraction': 0.0021804718674125383}, {'pair': 'SE-SE', 'i': 3, 'j': 3, 'F0': 0.021340587493013975, 'expected_F0': 0.021340587493013975, 'CED': 10883700.0, 'overlap_fraction': 0.10891512070064581}, {'pair': 'SE-WALL', 'i': 3, 'j': 4, 'F0': 0.003740430042738864, 'expected_F0': 0.0037403907713076403, 'CED': 5597360.0, 'overlap_fraction': 0.018559516978638762}], 'tolerances': {'absolute_Bo_relative': 2e-05, 'pair_force_relative': 3.0000000000000004e-05}, 'metadata_fields_checked': 'schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts'}
+
+----------------------------------------------------------------------
+Ran 13 tests in 3.187s
+
+FAILED (failures=1)

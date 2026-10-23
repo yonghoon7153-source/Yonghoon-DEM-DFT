@@ -1,0 +1,8 @@
+{
+  "pin": "486a57cf58d3e0d93ef79be6aae50968929099c0",
+  "owned": {
+    "mixer_deck_readback.py": "1bab4ba10d67a149a56708b1d2b2088394f4f394c3b5196aec660adeaae401bd",
+    "mixer_deck_diff.py": "8cc033cede06d33db06470897732d3bcd8d38f9c779449be0329aaeb4b0f0423",
+    "mixer_smoke_blind.py": "69265c0621ef28754945b4849a3931621b257127c6bd6d13a043be57abbfbdee"
+  }
+}

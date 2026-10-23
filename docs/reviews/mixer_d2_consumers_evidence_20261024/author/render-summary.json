@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "page_checks": "9/9",
+  "latest_key": "19",
+  "two_sections": true,
+  "markers": {
+    "--d2": true,
+    "--allow D2": true,
+    "--d2-plan": true,
+    "--d2-meta": true,
+    "python3 -I": true,
+    "execution_authorized": true,
+    "143": true,
+    "99,158": true,
+    "전체 비준": true
+  },
+  "document_sha256": "b6aed5a65ec2c3b23cf349e0e4e71240bd2c8d5262cd3571e7a629a93b65fcac",
+  "python_isolated": true,
+  "production_source_changed": false,
+  "scope": "Real /mixer route, scratch document lookup and writable data folders; no simulator or launch"
+}

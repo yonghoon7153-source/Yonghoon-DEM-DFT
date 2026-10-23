@@ -1,0 +1,49 @@
+[
+  {
+    "argv": [
+      "/workspace/.venvs/yonghoon-dem/bin/python",
+      "-I",
+      "/workspace/.cloud-setup/nonrint-20261024/mxd2-independent/candidate-v3/scripts/test_mixer_d2_consumers.py"
+    ],
+    "exit_code": 0,
+    "started_utc": "2026-10-23T18:24:58.894383+00:00",
+    "seconds": 2.535,
+    "log": "test_mixer_d2_consumers.py.log"
+  },
+  {
+    "argv": [
+      "/workspace/.venvs/yonghoon-dem/bin/python",
+      "-I",
+      "/workspace/.cloud-setup/nonrint-20261024/mxd2-independent/candidate-v3/scripts/mixer_deck_readback.py",
+      "--selftest"
+    ],
+    "exit_code": 0,
+    "started_utc": "2026-10-23T18:25:01.429479+00:00",
+    "seconds": 0.465,
+    "log": "mixer_deck_readback.py.log"
+  },
+  {
+    "argv": [
+      "/workspace/.venvs/yonghoon-dem/bin/python",
+      "-I",
+      "/workspace/.cloud-setup/nonrint-20261024/mxd2-independent/candidate-v3/scripts/mixer_deck_diff.py",
+      "--selftest"
+    ],
+    "exit_code": 0,
+    "started_utc": "2026-10-23T18:25:01.894593+00:00",
+    "seconds": 1.469,
+    "log": "mixer_deck_diff.py.log"
+  },
+  {
+    "argv": [
+      "/workspace/.venvs/yonghoon-dem/bin/python",
+      "-I",
+      "/workspace/.cloud-setup/nonrint-20261024/mxd2-independent/candidate-v3/scripts/mixer_smoke_blind.py",
+      "--selftest"
+    ],
+    "exit_code": 0,
+    "started_utc": "2026-10-23T18:25:03.363802+00:00",
+    "seconds": 49.763,
+    "log": "mixer_smoke_blind.py.log"
+  }
+]

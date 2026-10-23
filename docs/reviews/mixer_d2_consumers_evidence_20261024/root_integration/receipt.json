@@ -1,0 +1,14 @@
+{
+  "status": "TARGETED_PASS_FULL_GATE_PENDING",
+  "command": "python -I scripts/test_mixer_d2_consumers.py",
+  "direct_test_exit_code": 0,
+  "direct_test_methods": 13,
+  "browser_status": "PASS",
+  "browser_json_sha256": "ee47a3fcd81adcda0079fd67fd506098b9f7874e04a2831615ffeb2e0dcad1dc",
+  "source_sha256": {
+    "scripts/mixer_deck_readback.py": "bfeaf8497048360ba328cb1a01575f2c2f7573d93e7627f53e535da73b8874d3",
+    "scripts/mixer_deck_diff.py": "9a86950434b4abe852a6e3411fa809e78eef3d5ef6d7c8e125fb694cc1582877",
+    "scripts/mixer_smoke_blind.py": "83760d9d81e4b2b6cf2d4ae7eda7f140dbec87cadc836b82079b1fd64f15dd4a",
+    "scripts/test_mixer_d2_consumers.py": "a5014bf3f5349b6f6569586141d3f4e4447b1c0cc767343a5a487d3ce822c5a9"
+  }
+}

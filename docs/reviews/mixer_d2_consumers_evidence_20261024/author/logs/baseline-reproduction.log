@@ -1,0 +1,24 @@
+{
+  "reproduced": {
+    "lab_readback_rejected": true,
+    "no_d2_comparison": true,
+    "smoke_lab_plan_mismatch": true
+  },
+  "gen1_actual_plan": {
+    "1": 176,
+    "2": 859,
+    "3": 98965
+  },
+  "lab_actual_plan": {
+    "1": 143,
+    "2": 699,
+    "3": 99158
+  },
+  "old_smoke_counts": {
+    "1": 176,
+    "2": 859,
+    "3": 98965
+  },
+  "all_reproduced": true,
+  "new_development_paths_pass": true
+}

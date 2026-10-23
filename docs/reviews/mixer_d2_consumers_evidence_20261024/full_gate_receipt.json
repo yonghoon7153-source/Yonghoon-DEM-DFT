@@ -1,0 +1,7 @@
+{
+  "status": "PENDING_ROOT_FULL_GATE",
+  "scope": "Final repository integration and complete required gates are owned by root",
+  "development_tests_pass": true,
+  "execution_authorized": false,
+  "registered": null
+}

@@ -1,0 +1,16 @@
+test_actual_command_scope (test_mixer_d2_consumers.D2Consumers.test_actual_command_scope) ... ok
+test_actual_common_mode_mutations (test_mixer_d2_consumers.D2Consumers.test_actual_common_mode_mutations) ... ok
+test_ceiling_and_ced_meta_rebinding (test_mixer_d2_consumers.D2Consumers.test_ceiling_and_ced_meta_rebinding) ... ok
+test_cli_and_duplicate_json (test_mixer_d2_consumers.D2Consumers.test_cli_and_duplicate_json) ... ok
+test_counts_are_from_actual_inputs (test_mixer_d2_consumers.D2Consumers.test_counts_are_from_actual_inputs) ... ok
+test_d2_pairs_and_old_contracts (test_mixer_d2_consumers.D2Consumers.test_d2_pairs_and_old_contracts) ... ok
+test_dt_half_and_legacy_cli_positive (test_mixer_d2_consumers.D2Consumers.test_dt_half_and_legacy_cli_positive) ... ok
+test_generation_and_supported_phase_positive (test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive) ... ok
+test_meta_binding_and_numeric_boundaries (test_mixer_d2_consumers.D2Consumers.test_meta_binding_and_numeric_boundaries) ... ok
+test_pair_identity_and_orientation (test_mixer_d2_consumers.D2Consumers.test_pair_identity_and_orientation) ... ok
+test_tokens_and_nested_schema (test_mixer_d2_consumers.D2Consumers.test_tokens_and_nested_schema) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 1.817s
+
+OK

@@ -1,0 +1,21 @@
+{
+  "baseline_pin": "486a57cf58d3e0d93ef79be6aae50968929099c0",
+  "final_frozen": {
+    "baseline_pin": "486a57cf58d3e0d93ef79be6aae50968929099c0",
+    "patch_sha256": "d448105d262db69c111bf88cb283d23777ca6973e4b7befce35d3655ed1e5fdd",
+    "files": {
+      "scripts/additives.py": "e22782501ddb0d2bd5ac8cce381c48ff3b0c1bbb570489f4f6345612dc79d84a",
+      "scripts/make_mixer_deck.py": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27",
+      "scripts/mixer_deck_diff.py": "9a86950434b4abe852a6e3411fa809e78eef3d5ef6d7c8e125fb694cc1582877",
+      "scripts/mixer_deck_readback.py": "bfeaf8497048360ba328cb1a01575f2c2f7573d93e7627f53e535da73b8874d3",
+      "scripts/mixer_smoke_blind.py": "83760d9d81e4b2b6cf2d4ae7eda7f140dbec87cadc836b82079b1fd64f15dd4a",
+      "scripts/test_mixer_d2_consumers.py": "a5014bf3f5349b6f6569586141d3f4e4447b1c0cc767343a5a487d3ce822c5a9"
+    }
+  },
+  "canonical_spec_blobs": {
+    "docs/hetero_thesis.md": "fdb53a9bfe3ba31cffd35b98081ec39e489b8ededc11ff1beb929fbe1afd4980",
+    "docs/mixer_paper_pipeline_draft_20261013.md": "64ae8d06f14fe0e4219af987c1e94503132c018d066a658715828310d9794d70",
+    "docs/mixer_d2_wall_gamma_derivation_20261014.md": "dee1022cb14a16eb83257aac5d72ba7242f3cc394bc6c6fb93b46be1f2694444",
+    "docs/density_generations_20261014.md": "8e5a51726dc00e1d0ff64e5a9b026419370e87df1838785ea14fbfc9721ce7d3"
+  }
+}
