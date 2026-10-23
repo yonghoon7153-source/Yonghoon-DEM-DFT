@@ -1,0 +1,178 @@
+{
+  "track": "d3",
+  "created_at_utc": "2026-10-23T14:54:00.654651+00:00",
+  "scope": "Path-only document import plus explicit historical/current provenance and affected live import manifests; no source/science/test changes",
+  "archive": "docs/reviews/mixer_d3_design_v2_evidence_20261023/import-paths/original-package-docs.zip",
+  "archive_sha256": "2d69d0289b4af11e43ee4b761b0c400f6313080a2aed19f07f09f34ae8049f38",
+  "original_docs_count": 44,
+  "original_members": {
+    "docs/collab/codex_to_claude/20261023-1258_mixer-d3-design.md": "bc23c85c018c54752a3664324aeeafc1b74498090872165036f56c79b9782117",
+    "docs/reviews/codex_mixer_d3_design_v2_request_20261023.md": "64be057bedcc6c0326b5d7ffb6bf26f5b13ab4d720ae48dc2cfadb79a5cad5ce",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/FINAL_DOCUMENTS.sha256": "33eea7c4c6632f3d2dcaf8a401010cfd2359e1eaf66fb23126795f86b94e5538",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/MANIFEST.sha256": "fe3f000873915aa52023f59145eace5b07d13007612c35e1f3922cf85b027909",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/ORIGINAL_MANIFEST_MAP.json": "7ec7bff5dbac785c6ca79a25826333bea82ccf6d619b8aa3b9b068cc934e86ed",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/PACKAGE_CHECKS.json": "d80a70055e8af17a8729942f6f723902438cca63c8aa51b1a860f64ef00b607a",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/PACKAGE_PROVENANCE.json": "43113d9ca84f619ddfea2e872c86c8af122d0cd2e7a02693db833b040c692663",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/README.md": "a129032cc4c384928897bc9417f31688b3f176329e359d793864256fd396f766",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/SOURCE_SHA256SUMS": "a3e96ad2866c7936c45877bb0cbaa21ddf0a6e984ebbcf0dfaec2578ca2e3ee8",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/baseline_numbers.txt": "30683fcb6fd85a8f8e16c270d33567105e1ff233ac45a026d8371c4f3d06b19c",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/counterexamples.json": "f724cab93cdc5a30c2f48887c8be9dbce85de63d812bebcee92c882b10ea9059",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/d3_v2_counterexamples.py": "00c5af465a2a2067e5e7e413204a7ed9ec8e8e370c7366730b7446022d98ab61",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/harness_first_output.json": "6404c5b54adf6385b743db48b16eafa4cc01e1d8aeab0ac18d6830933f897ba7",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/MANIFEST.sha256": "81a82a8f7a42832462807dbe782e4f9b97c12e057ab26826235d23a086b0ddf5",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/RECHECK-v2.md": "e54af24966b2da280723c489e10a56457e9c4d0c7e09081e59d4e283384d3962",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/REVIEW.md": "5c4d9c5860f9217c483e463e4fedeadde9c67e365005c3cc59777044a71706f1",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/REVIEWED_INPUTS.sha256": "28165cb829390072fd14a950dd36e0effa0f76c324e3c9d761d70e2e5bc199b6",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/independent_d3_review.py": "ead3b9cc3706882368ca1c63c4457d076d6bdafe7e547936c80614b898432f97",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/independent_results.json": "53f2c5e30e47d2b7c8f3d57b92fd3b9af590226abd941417d20a81e954683c1c",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/recheck-v2-evidence/INPUTS.sha256": "98b6c2e99275acd1d0c5abe1bc13a495d3e62b5a9e8d96e6f1a85cf603be10e3",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/recheck-v2-evidence/MANIFEST.sha256": "ec0ddcc39e3d0480e5924ad52e1392a7a6d3d35cfbbc65ab233d4623bf156342",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/recheck-v2-evidence/recheck_probes.py": "341317ba1137e25c5a1e721d218d6625f62e27d1ad2d79184a664df4771ed2a8",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/recheck-v2-evidence/results.json": "fa0fd94afd80a8b107c394002e7a7233d0b021922d415d557d5f763980f2e13b",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/seed-confirmation/ADDENDUM-reserved-seeds.md": "067532dd8b7f38a5a28e4b4104ff73351e1135fd2d3e5832dda2b74147c1807c",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/seed-confirmation/INPUTS.sha256": "c2ed255b9b302b8308167ae75f587334c61affa9ab7e69358403b68578ced08a",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/seed-confirmation/MANIFEST.sha256": "d796f5ff2d577176e2633f79047fe94f22aa389318621dfe6b0252067f23900b",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/seed-confirmation/PRESERVED_REPORTS.sha256": "258f4dec0cfb1b86f7d87c02705ec617b67655ddb7cd25b17dc5f32bf148753c",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/seed-confirmation/check_seed_provenance.py": "fa75de4d20ab7da9833f6e0db100bdcf96e96aba2af2cb9fcaad3a9b711594e8",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/seed-confirmation/results.json": "f397959d3f8441d79805bc78eed19a19c93ef49c6d952548b12377c466e35499",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/original-draft/MANIFEST.sha256": "de84af3a44b7e683cf49d6e5b65bd9b59292ce76a676426c514f02cec3ff8bed",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/original-draft/README.md": "b6af96854e113a7a7b995767ed354ad1316ad951fbe2d0dd1c5dc5e6d6c03ee2",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/original-draft/codex_mixer_d3_design_v2_request_20261023.md": "a2d744be9c4903d8946a0382e099b26b84da6907889fbe9bcacef84dbb64d120",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/original-draft/mixer_d3_se_flowability_anchor_design_v2_20261023.md": "24fda5535c511aa5d8930d2971003122180046519c693c2e55dcdec3fde39373",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/package-audit/README.md": "74a7481c0b7f3b5b3ac3b9aa51ef22e034fb0c7ec60f837a1dd3d0eeea670de3",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/package-audit/d3.md": "81c62d0559315092538bf5848042fae904fae7915e5d3fcb400d1b1d866c2931",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/package-audit/import-provenance.json": "983b14e0eaf3beeaeda2b9bf6c3c8b0062e7dfa2a3677f86dec5c695ee3d2a33",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/reviewed-revision1/MANIFEST.sha256": "19471a9f0a59e757ef33e03ad4994794c485a78f87cea66b4c03551ce79f11bd",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/reviewed-revision1/ORIGINAL_EVIDENCE_MANIFEST.sha256": "de84af3a44b7e683cf49d6e5b65bd9b59292ce76a676426c514f02cec3ff8bed",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/reviewed-revision1/ORIGINAL_REVIEWED_INPUTS.sha256": "21fa15833798ab33a10a8ca7e52bb92484ee5909b8942c46e909e65be16c2b11",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/reviewed-revision1/REVISION_PROVENANCE.json": "4cdac40e28682b38e6b16ddac5ed6281df83e00e67cef64801a6a8aa8ca0e5ec",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/reviewed-revision1/codex_mixer_d3_design_v2_request_20261023.md": "77b0e6004b3528500b2fbad2da1e2b5af7e4a3d2250f747ae7e36f49083f7827",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/reviewed-revision1/mixer_d3_se_flowability_anchor_design_v2_20261023.md": "889fa4e89646912236f81e41f2f9dd1a483416856d4513a5c7f957b898d458cd",
+    "docs/reviews/mixer_d3_design_v2_evidence_20261023/reviewed-revision1/revision.diff": "1190ce613aee4d91205a1b79b2c52d72b6a212b83b3dc9fd2977f7be56af1c6d",
+    "docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261023.md": "e00083cc6900ce38649c62673326280f57e3577f7038953204d1054fe4d257b2"
+  },
+  "original_manifest_context": "반입 전 docs 44개의 모든 원 바이트와 당시 outer/nested manifest를 원래 저장소 상대 경로로 original-package-docs.zip에 보존한다. 원 manifest의 docs 멤버는 그 ZIP에서 대조하며, source/literature 지문이 가리키는 외부 Git 소스와 문헌은 이 docs ZIP 밖에 있으므로 각 기록의 원 source pin으로 대조한다. 최종 review ZIP의 선택 소스 문맥은 별도 selected_paths 기준이다.",
+  "token_substitutions": [
+    {
+      "doc": "docs/collab/codex_to_claude/20261023-1258_mixer-d3-design.md",
+      "original_token": "independent/RECHECK-v2.md",
+      "import_token": "docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/RECHECK-v2.md",
+      "occurrences": 1,
+      "original_line_numbers": [
+        17
+      ]
+    },
+    {
+      "doc": "docs/collab/codex_to_claude/20261023-1258_mixer-d3-design.md",
+      "original_token": "independent/REVIEW.md",
+      "import_token": "docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/REVIEW.md",
+      "occurrences": 1,
+      "original_line_numbers": [
+        16
+      ]
+    },
+    {
+      "doc": "docs/collab/codex_to_claude/20261023-1258_mixer-d3-design.md",
+      "original_token": "independent/seed-confirmation/ADDENDUM-reserved-seeds.md",
+      "import_token": "docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/seed-confirmation/ADDENDUM-reserved-seeds.md",
+      "occurrences": 1,
+      "original_line_numbers": [
+        18
+      ]
+    },
+    {
+      "doc": "docs/reviews/codex_mixer_d3_design_v2_request_20261023.md",
+      "original_token": "seed-confirmation/ADDENDUM-reserved-seeds.md",
+      "import_token": "docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/seed-confirmation/ADDENDUM-reserved-seeds.md",
+      "occurrences": 1,
+      "original_line_numbers": [
+        67
+      ]
+    },
+    {
+      "doc": "docs/reviews/mixer_d3_design_v2_evidence_20261023/README.md",
+      "original_token": "seed-confirmation/ADDENDUM-reserved-seeds.md",
+      "import_token": "docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/seed-confirmation/ADDENDUM-reserved-seeds.md",
+      "occurrences": 1,
+      "original_line_numbers": [
+        20
+      ]
+    },
+    {
+      "doc": "docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/REVIEW.md",
+      "original_token": "d3-design-v2/mixer_d3_se_flowability_anchor_design_v2_20261023.md",
+      "import_token": "docs/reviews/mixer_d3_design_v2_evidence_20261023/original-draft/mixer_d3_se_flowability_anchor_design_v2_20261023.md",
+      "occurrences": 1,
+      "original_line_numbers": [
+        9
+      ]
+    },
+    {
+      "doc": "docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261023.md",
+      "original_token": "seed-confirmation/ADDENDUM-reserved-seeds.md",
+      "import_token": "docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/seed-confirmation/ADDENDUM-reserved-seeds.md",
+      "occurrences": 1,
+      "original_line_numbers": [
+        157
+      ]
+    }
+  ],
+  "changed_preexisting_files": [
+    {
+      "path": "docs/collab/codex_to_claude/20261023-1258_mixer-d3-design.md",
+      "original_sha256": "bc23c85c018c54752a3664324aeeafc1b74498090872165036f56c79b9782117",
+      "import_sha256": "8a223634451e56bcda1101f70b0e84eac6d513b822ff808efa001f87f3a0afa7"
+    },
+    {
+      "path": "docs/reviews/codex_mixer_d3_design_v2_request_20261023.md",
+      "original_sha256": "64be057bedcc6c0326b5d7ffb6bf26f5b13ab4d720ae48dc2cfadb79a5cad5ce",
+      "import_sha256": "26453ca240cde954ebead3bf702bf54a6a7c8160086db446bd3ae1ea6a2ea9ab"
+    },
+    {
+      "path": "docs/reviews/mixer_d3_design_v2_evidence_20261023/FINAL_DOCUMENTS.sha256",
+      "original_sha256": "33eea7c4c6632f3d2dcaf8a401010cfd2359e1eaf66fb23126795f86b94e5538",
+      "import_sha256": "f7ea6dd03a30a298946f1a6fb3ddd8e78b6d9c0493f6edc609d83c5e425f7086"
+    },
+    {
+      "path": "docs/reviews/mixer_d3_design_v2_evidence_20261023/PACKAGE_PROVENANCE.json",
+      "original_sha256": "43113d9ca84f619ddfea2e872c86c8af122d0cd2e7a02693db833b040c692663",
+      "import_sha256": "d6f8dc1a1ed65195f62fbc91136f31d605c44fe2f52a6e1188b467686fc5aa64"
+    },
+    {
+      "path": "docs/reviews/mixer_d3_design_v2_evidence_20261023/README.md",
+      "original_sha256": "a129032cc4c384928897bc9417f31688b3f176329e359d793864256fd396f766",
+      "import_sha256": "e9dcf3193200c1bb5517f866421286ebd91f4630d17ec8b7703a9e8e9f5a0f87"
+    },
+    {
+      "path": "docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/MANIFEST.sha256",
+      "original_sha256": "81a82a8f7a42832462807dbe782e4f9b97c12e057ab26826235d23a086b0ddf5",
+      "import_sha256": "978d39a3321d01488422179f092f11380b525664d7085dac6875a1c654e61a6b"
+    },
+    {
+      "path": "docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/REVIEW.md",
+      "original_sha256": "5c4d9c5860f9217c483e463e4fedeadde9c67e365005c3cc59777044a71706f1",
+      "import_sha256": "2f000af138922fd1bbbc78ad2b5599f836dbb2bcdd3493f092bd39db9aedfd94"
+    },
+    {
+      "path": "docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261023.md",
+      "original_sha256": "e00083cc6900ce38649c62673326280f57e3577f7038953204d1054fe4d257b2",
+      "import_sha256": "b2decfae1567465131b3391acb428646ffa2992448bbc08c862cb2b1efd9195d"
+    }
+  ],
+  "live_import_manifests": [
+    {
+      "path": "docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/MANIFEST.sha256",
+      "role": "live path-normalized import manifest",
+      "original_sha256": "81a82a8f7a42832462807dbe782e4f9b97c12e057ab26826235d23a086b0ddf5",
+      "import_sha256": "978d39a3321d01488422179f092f11380b525664d7085dac6875a1c654e61a6b"
+    },
+    {
+      "path": "docs/reviews/mixer_d3_design_v2_evidence_20261023/FINAL_DOCUMENTS.sha256",
+      "role": "live path-normalized import manifest",
+      "original_sha256": "33eea7c4c6632f3d2dcaf8a401010cfd2359e1eaf66fb23126795f86b94e5538",
+      "import_sha256": "f7ea6dd03a30a298946f1a6fb3ddd8e78b6d9c0493f6edc609d83c5e425f7086"
+    }
+  ],
+  "current_outer_manifest": "docs/reviews/mixer_d3_design_v2_evidence_20261023/MANIFEST.sha256",
+  "canonical_checks": "NOT RUN: this staging preparation is not a canonical checker or full-gate result"
+}

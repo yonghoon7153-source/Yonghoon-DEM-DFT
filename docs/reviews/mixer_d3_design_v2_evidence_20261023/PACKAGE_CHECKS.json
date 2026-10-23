@@ -1,0 +1,89 @@
+{
+  "scope": "Packaging portability and byte preservation; not new independent review or full repository gate",
+  "original_manifest_members": [
+    {
+      "member": "README.md",
+      "sha256": "b6af96854e113a7a7b995767ed354ad1316ad951fbe2d0dd1c5dc5e6d6c03ee2",
+      "retained": true
+    },
+    {
+      "member": "mixer_d3_se_flowability_anchor_design_v2_20261023.md",
+      "sha256": "24fda5535c511aa5d8930d2971003122180046519c693c2e55dcdec3fde39373",
+      "retained": true
+    },
+    {
+      "member": "codex_mixer_d3_design_v2_request_20261023.md",
+      "sha256": "a2d744be9c4903d8946a0382e099b26b84da6907889fbe9bcacef84dbb64d120",
+      "retained": true
+    },
+    {
+      "member": "d3_v2_counterexamples.py",
+      "sha256": "00c5af465a2a2067e5e7e413204a7ed9ec8e8e370c7366730b7446022d98ab61",
+      "retained": true
+    },
+    {
+      "member": "counterexamples.json",
+      "sha256": "f724cab93cdc5a30c2f48887c8be9dbce85de63d812bebcee92c882b10ea9059",
+      "retained": true
+    },
+    {
+      "member": "baseline_numbers.txt",
+      "sha256": "30683fcb6fd85a8f8e16c270d33567105e1ff233ac45a026d8371c4f3d06b19c",
+      "retained": true
+    },
+    {
+      "member": "SOURCE_SHA256SUMS",
+      "sha256": "a3e96ad2866c7936c45877bb0cbaa21ddf0a6e984ebbcf0dfaec2578ca2e3ee8",
+      "retained": true
+    },
+    {
+      "member": "proposed_ledger_fragments.json",
+      "sha256": "cf409d251c2c452efb6f4e23d0d804b62cdbdd5631e42319e802ac0ffd8874ea",
+      "retained": true
+    }
+  ],
+  "packaged_tool_runs": [
+    {
+      "tool": "d3_v2_counterexamples.py",
+      "rc": 0,
+      "summary": {
+        "passed": 29,
+        "total": 29,
+        "failed": []
+      },
+      "stdout_sha256": "f724cab93cdc5a30c2f48887c8be9dbce85de63d812bebcee92c882b10ea9059",
+      "stderr": ""
+    },
+    {
+      "tool": "independent/independent_d3_review.py",
+      "rc": 0,
+      "summary": {
+        "passed": 25,
+        "total": 25
+      },
+      "stdout_sha256": "53f2c5e30e47d2b7c8f3d57b92fd3b9af590226abd941417d20a81e954683c1c",
+      "stderr": ""
+    },
+    {
+      "tool": "independent/recheck-v2-evidence/recheck_probes.py",
+      "rc": 0,
+      "summary": {
+        "passed": 7,
+        "total": 7
+      },
+      "stdout_sha256": "fa0fd94afd80a8b107c394002e7a7233d0b021922d415d557d5f763980f2e13b",
+      "stderr": ""
+    },
+    {
+      "tool": "independent/seed-confirmation/check_seed_provenance.py",
+      "rc": 0,
+      "summary": {
+        "passed": 5,
+        "total": 5
+      },
+      "stdout_sha256": "c15547df3ece2b5e95e12b7125b1501c4b35de80d7fc280116b40337b36a9e96",
+      "stderr": ""
+    }
+  ],
+  "full_gate": "pending"
+}

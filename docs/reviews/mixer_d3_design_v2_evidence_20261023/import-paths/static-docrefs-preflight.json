@@ -1,0 +1,76 @@
+{
+  "markdown_files_scanned": 14,
+  "inventory_docs_files": 44,
+  "missing_unique_doc_token_pairs": 7,
+  "missing": [
+    {
+      "doc": "docs/collab/codex_to_claude/20261023-1258_mixer-d3-design.md",
+      "token": "independent/RECHECK-v2.md",
+      "lines": [
+        17
+      ],
+      "existing_suffix_matches": [
+        "docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/RECHECK-v2.md"
+      ]
+    },
+    {
+      "doc": "docs/collab/codex_to_claude/20261023-1258_mixer-d3-design.md",
+      "token": "independent/REVIEW.md",
+      "lines": [
+        16
+      ],
+      "existing_suffix_matches": [
+        "docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/REVIEW.md"
+      ]
+    },
+    {
+      "doc": "docs/collab/codex_to_claude/20261023-1258_mixer-d3-design.md",
+      "token": "independent/seed-confirmation/ADDENDUM-reserved-seeds.md",
+      "lines": [
+        18
+      ],
+      "existing_suffix_matches": [
+        "docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/seed-confirmation/ADDENDUM-reserved-seeds.md"
+      ]
+    },
+    {
+      "doc": "docs/reviews/codex_mixer_d3_design_v2_request_20261023.md",
+      "token": "seed-confirmation/ADDENDUM-reserved-seeds.md",
+      "lines": [
+        67
+      ],
+      "existing_suffix_matches": [
+        "docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/seed-confirmation/ADDENDUM-reserved-seeds.md"
+      ]
+    },
+    {
+      "doc": "docs/reviews/mixer_d3_design_v2_evidence_20261023/README.md",
+      "token": "seed-confirmation/ADDENDUM-reserved-seeds.md",
+      "lines": [
+        20
+      ],
+      "existing_suffix_matches": [
+        "docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/seed-confirmation/ADDENDUM-reserved-seeds.md"
+      ]
+    },
+    {
+      "doc": "docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/REVIEW.md",
+      "token": "d3-design-v2/mixer_d3_se_flowability_anchor_design_v2_20261023.md",
+      "lines": [
+        9
+      ],
+      "existing_suffix_matches": []
+    },
+    {
+      "doc": "docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261023.md",
+      "token": "seed-confirmation/ADDENDUM-reserved-seeds.md",
+      "lines": [
+        157
+      ],
+      "existing_suffix_matches": [
+        "docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/seed-confirmation/ADDENDUM-reserved-seeds.md"
+      ]
+    }
+  ],
+  "allowed": []
+}

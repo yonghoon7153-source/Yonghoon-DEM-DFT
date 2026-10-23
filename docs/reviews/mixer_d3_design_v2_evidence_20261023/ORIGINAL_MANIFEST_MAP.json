@@ -1,0 +1,30 @@
+{
+  "purpose": "Locations of byte-preserved original draft manifest members; paths relative to this evidence folder unless repo_path is used",
+  "members": {
+    "README.md": {
+      "path": "original-draft/README.md"
+    },
+    "mixer_d3_se_flowability_anchor_design_v2_20261023.md": {
+      "path": "original-draft/mixer_d3_se_flowability_anchor_design_v2_20261023.md"
+    },
+    "codex_mixer_d3_design_v2_request_20261023.md": {
+      "path": "original-draft/codex_mixer_d3_design_v2_request_20261023.md"
+    },
+    "d3_v2_counterexamples.py": {
+      "path": "d3_v2_counterexamples.py"
+    },
+    "counterexamples.json": {
+      "path": "counterexamples.json"
+    },
+    "baseline_numbers.txt": {
+      "path": "baseline_numbers.txt"
+    },
+    "SOURCE_SHA256SUMS": {
+      "path": "SOURCE_SHA256SUMS"
+    },
+    "proposed_ledger_fragments.json": {
+      "repo_path": "docs/collab/codex_to_claude/20261023-1258_mixer-d3-design.md",
+      "fenced_json_marker": "ORIGINAL_LEDGER_PROPOSAL_BEGIN"
+    }
+  }
+}

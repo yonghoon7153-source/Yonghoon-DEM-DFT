@@ -1,0 +1,330 @@
+{
+  "provenance": {
+    "head": "7799a2ff64ba462b42ce05edd3e63b7c2854d557",
+    "sha256": {
+      "scripts/make_mixer_deck.py": "6baaa04c13c842c2d8e486cbef83bb5cb6f6e3d5f88c5f0f0d8c0904d3949f30",
+      "scripts/check_contact_validity.py": "738bf397821a94697069308c9d7ebe54b3dfb61bbb19bb2f0c7be6e6f6df60c1",
+      "docs/reviews/mixer_d3_se_flowability_anchor_design_20261015.md": "9a6412362e33d0cfa933182758674f0bafbbb8fa5c755d25d40d2be770b02a02",
+      "docs/reviews/codex_mixer_d3_design_request_20261021.md": "fb332be9fe79be194ffae64d4c3b4ba68b1d0d9f36d8f68f7a26fd42c81ef4bc"
+    },
+    "python": "3.11.17",
+    "kind": "analytical witnesses; no production judge, calibration, registration, or experiment"
+  },
+  "numerical_table": {
+    "gen1": {
+      "density_g_cm3": {
+        "AM": 4.8,
+        "SE": 2.0,
+        "VGCF": 2.0,
+        "PTFE": 2.2
+      },
+      "soft_ceiling_Bo": 832.6622178589646,
+      "soft_overlap_percent": {
+        "637.32": 0.8367437151378652,
+        "849.76": 1.013642823799923,
+        "1010.0": 1.137369758331135,
+        "1020.0": 1.1448648152427765
+      },
+      "stiff20_analytic_ceiling_Bo": 16653.24435717929,
+      "soft_upper_extension_factor": 1.3065057080571212,
+      "drum_D_mm": 26.275374470496057,
+      "drum_L_mm": 5.255074894099211,
+      "rpm_at_Fr": 75.04109820964047,
+      "dt_stiff20_s": 2.6204261296816886e-07,
+      "one_s_wall_hours_if_63_70_steps_s": [
+        15.143544491887678,
+        16.826160546541864
+      ]
+    },
+    "lab20261014": {
+      "density_g_cm3": {
+        "AM": 4.85,
+        "SE": 1.64,
+        "VGCF": 2.0,
+        "PTFE": 2.2
+      },
+      "soft_ceiling_Bo": 1015.4417290962982,
+      "soft_overlap_percent": {
+        "637.32": 0.7330524123423281,
+        "849.76": 0.888029756061681,
+        "1010.0": 0.9964241499351769,
+        "1020.0": 1.0029904012858857
+      },
+      "stiff20_analytic_ceiling_Bo": 20308.834581925963,
+      "soft_upper_extension_factor": 1.593299643972099,
+      "drum_D_mm": 25.16647170925682,
+      "drum_L_mm": 5.033294341851365,
+      "rpm_at_Fr": 76.67653377936789,
+      "dt_stiff20_s": 2.372896783030651e-07,
+      "one_s_wall_hours_if_63_70_steps_s": [
+        16.72324728421493,
+        18.581385871349926
+      ]
+    }
+  },
+  "checks": [
+    {
+      "name": "D3K-01-common-bias",
+      "pass": true,
+      "detail": {
+        "true_log10Bo": 1.0,
+        "both_inferred": 0.7,
+        "nuisance_delta": 0.0375
+      }
+    },
+    {
+      "name": "D3K-01-detection-limit",
+      "pass": true,
+      "detail": {
+        "minimum_detectable_delta": 0.19999999999999998,
+        "old_probe_half_width": 0.0375
+      }
+    },
+    {
+      "name": "D3K-02-hidden-bump",
+      "pass": true,
+      "detail": {
+        "samples": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "unsampled_value": 10.0,
+        "half_endpoint_difference": 0
+      }
+    },
+    {
+      "name": "D3K-02-half-difference-not-bound",
+      "pass": true,
+      "detail": {
+        "monotone_step_value": 10.0,
+        "linear_prediction": 1.0,
+        "absolute_error": 9.0,
+        "claimed_half_range": 5
+      }
+    },
+    {
+      "name": "D3K-03-centre-outside-set",
+      "pass": true,
+      "detail": {
+        "components": [
+          [
+            0.672,
+            2.12
+          ],
+          [
+            67.2,
+            212.0
+          ]
+        ],
+        "hull_geometric_centre": 11.935828416997289
+      }
+    },
+    {
+      "name": "D3K-03-empty-vs-disjoint",
+      "pass": true,
+      "detail": {
+        "test_A": [
+          1,
+          2
+        ],
+        "test_B": [
+          3,
+          4
+        ],
+        "each_nonempty_joint_empty": true,
+        "different_case_one_test_empty": []
+      }
+    },
+    {
+      "name": "D3K-04-one-seed-sd",
+      "pass": true,
+      "detail": {
+        "n": 1,
+        "sample_sd": null
+      }
+    },
+    {
+      "name": "D3K-04-two-seed-probability",
+      "pass": true,
+      "detail": {
+        "normal_iid_example_probability_s_below_half_sigma": 0.3829249225480262,
+        "df": 1
+      }
+    },
+    {
+      "name": "D3K-05-old-wall-range-misses-low-rho",
+      "pass": true,
+      "detail": {
+        "0": 0.0,
+        "0.01": 0.032,
+        "0.1": 0.10119288512538814,
+        "0.31": 0.17816845961056071,
+        "1": 0.32
+      }
+    },
+    {
+      "name": "D3K-05-endpoints-not-envelope",
+      "pass": true,
+      "detail": {
+        "synthetic_response_at_wall_0_05_1": [
+          0,
+          0.25,
+          0
+        ]
+      }
+    },
+    {
+      "name": "D3K-08-order",
+      "pass": true,
+      "detail": {
+        "measurement_start": 1,
+        "sop_commit": 2,
+        "curve_seal": 3,
+        "analyst_open": 4
+      }
+    },
+    {
+      "name": "D3K-10-actual-contract",
+      "pass": true,
+      "detail": {
+        "Funnel": "벽 메시 ['Funnel'] — 볼록 용기(드럼+끝판) 밖의 메시(배플 등)는 지원하지 않는다",
+        "TapFloor": "벽 메시 ['TapFloor'] — 볼록 용기(드럼+끝판) 밖의 메시(배플 등)는 지원하지 않는다"
+      }
+    },
+    {
+      "name": "MXD2-07-gen1-closed-form",
+      "pass": true,
+      "detail": {
+        "soft_ceiling_Bo": 832.6622178589646,
+        "generator_overlap_at_cap": 0.010000000000000004
+      }
+    },
+    {
+      "name": "D3K-13-gen1-extension-truncated",
+      "pass": true,
+      "detail": {
+        "allowed_factor": 1.3065057080571212,
+        "sqrt10": 3.1622776601683795
+      }
+    },
+    {
+      "name": "MXD2-07-lab20261014-closed-form",
+      "pass": true,
+      "detail": {
+        "soft_ceiling_Bo": 1015.4417290962982,
+        "generator_overlap_at_cap": 0.010000000000000004
+      }
+    },
+    {
+      "name": "D3K-13-lab20261014-extension-truncated",
+      "pass": true,
+      "detail": {
+        "allowed_factor": 1.593299643972099,
+        "sqrt10": 3.1622776601683795
+      }
+    },
+    {
+      "name": "MXD2-07-generation-changes-acceptance",
+      "pass": true,
+      "detail": {
+        "Bo": 849.76,
+        "gen1": "above ceiling",
+        "lab20261014": "below ceiling"
+      }
+    },
+    {
+      "name": "D3K-13-model-floor",
+      "pass": true,
+      "detail": {
+        "synthetic_prediction_near_zero": [
+          10,
+          10.1,
+          10.2
+        ],
+        "measurement": 8,
+        "band": 1,
+        "causal_attribution": "not identified"
+      }
+    },
+    {
+      "name": "D3K-06-no-free-surface-angle",
+      "pass": true,
+      "detail": {
+        "all_wall_coated_symmetric_fixture": "no unique free-surface line; angle undefined"
+      }
+    },
+    {
+      "name": "D3K-07-Bo-transfer-conditional",
+      "pass": true,
+      "detail": {
+        "Bo_1g": 212.44,
+        "G_example_only": 268.0,
+        "Bo_over_G": 0.7926865671641791,
+        "actual_mixer_G": null,
+        "transfer_rule_approved_here": false
+      }
+    },
+    {
+      "name": "D3K-09-binary-no-discrimination",
+      "pass": true,
+      "detail": {
+        "predictions_at_all_eight_levels": "stopped",
+        "discriminating_levels": 0
+      }
+    },
+    {
+      "name": "D3K-09-centre-and-ends-miss-interior",
+      "pass": true,
+      "detail": {
+        "tested_end_centre": [
+          0,
+          0.5,
+          1
+        ],
+        "hidden_transition_at": 0.25,
+        "required_without_shape_proof": "all accepted finite candidates, or explicit unvalidated subset"
+      }
+    },
+    {
+      "name": "D3K-14-day-uncertainty",
+      "pass": true,
+      "detail": {
+        "within_day_se": 0.4472135954999579,
+        "day_mean_difference": 3.0,
+        "adequacy_of_actual_replication": "pending"
+      }
+    },
+    {
+      "name": "D3K-15-gen1-ncm-ratio",
+      "pass": true,
+      "detail": {
+        "Bo_AM_P_over_Bo_SE": "rho / 194.40000000",
+        "rho_flow_causal_identity": false
+      }
+    },
+    {
+      "name": "D3K-15-lab20261014-ncm-ratio",
+      "pass": true,
+      "detail": {
+        "Bo_AM_P_over_Bo_SE": "rho / 239.54268293",
+        "rho_flow_causal_identity": false
+      }
+    },
+    {
+      "name": "D3K-16-last-grid-ratio",
+      "pass": false,
+      "detail": {
+        "last_ratio": 3,
+        "sqrt10": 3.1622776601683795
+      }
+    }
+  ],
+  "summary": {
+    "passed": 25,
+    "total": 26,
+    "failed": [
+      "D3K-16-last-grid-ratio"
+    ]
+  }
+}

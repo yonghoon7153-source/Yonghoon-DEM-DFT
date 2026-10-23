@@ -1,0 +1,68 @@
+{
+  "scope": "Source-text provenance only; no actual run manifest, seed use, approval, or execution verified",
+  "v1_reserved_IDs": [
+    15485863,
+    86028121,
+    104395301
+  ],
+  "revision_reserved_IDs": [
+    15485863,
+    86028121,
+    104395301
+  ],
+  "checks": {
+    "exact_ordered_numeric_ID_match": true,
+    "three_distinct_reserved_IDs": true,
+    "v1_excludes_D3_use": true,
+    "D1_reserves_for_new_block": true,
+    "D12_keeps_confirmation_seed_set": true
+  },
+  "summary": {
+    "passed": 5,
+    "total": 5
+  },
+  "sources": {
+    "v1": {
+      "path": "/workspace/Yonghoon-DEM-DFT/docs/reviews/mixer_d3_se_flowability_anchor_design_20261015.md",
+      "sha256": "9a6412362e33d0cfa933182758674f0bafbbb8fa5c755d25d40d2be770b02a02"
+    },
+    "D1_D12": {
+      "path": "/workspace/Yonghoon-DEM-DFT/docs/mixer_paper_pipeline_draft_20261013.md",
+      "sha256": "64ae8d06f14fe0e4219af987c1e94503132c018d066a658715828310d9794d70"
+    },
+    "revision": {
+      "path": "/workspace/.cloud-setup/nonrint/d3-design-v2-revision1/mixer_d3_se_flowability_anchor_design_v2_20261023.md",
+      "sha256": "889fa4e89646912236f81e41f2f9dd1a483416856d4513a5c7f957b898d458cd"
+    }
+  },
+  "source_excerpts": {
+    "v1_seed_reservation": {
+      "line": 173,
+      "text": "| 시드 | **보정 전용 새 소수 2 개** ⬜ — 확인 시드 셋 (15485863 · 86028121 · 104395301) 은 쓰지 않는다 (새 확인 블록 몫) · DEV seed 1 (32452843) 은 C0 탐침에만 |"
+    },
+    "v1_new_block_reservation": {
+      "line": 239,
+      "text": "| 동결 블록 | LC ↔ LH × soft/ref × 확인 시드 + 무작위 기준 = **D3 와 무관** — 그 블록의 질문 (AM 표면 공동 개입) · min 규칙 · 옛 벽 규약은 동결 그대로 · D3 앵커를 그 블록에 적용하지 않는다 · 그 확인 시드는 새 블록 몫 (D3 에 쓰지 않는다) (파이프라인 D1 (나)) |"
+    },
+    "D1": {
+      "line": 219,
+      "text": "| D1 | 지금 등록된 확인 18 런 (낮은 점착 비교군 ↔ AM 표면 고점착 · 강성 두 수준) | (가) 그대로 발사 (나) 동결 · 논문 주 증거에서 제외 · 결합 규칙 팔로 새 확인 블록 (다) 폐기 | **(나)** — 그 블록은 AM 표면 공동 개입의 질문이지 논지의 SE–SE 기전이 아니다 [T:129 · ST:9–11] · 정지된 고-Bo 확장 · D-2 후행 6 런도 함께 동결 · 미사용 확인 시드 셋은 새 블록으로 [ST:281] | 1저자 · Codex |"
+    },
+    "D12": {
+      "line": 229,
+      "text": "| D12 | 강성 · 환경 · 시드 | — | ×20 만 · ibb NP 20 · 처음부터 · 확인 시드 셋 그대로 [BR:173 · ST:281, 291, 347] | 1저자 · Codex |"
+    },
+    "existing_D1_decision_record": {
+      "line": 233,
+      "text": "> ✅ **1저자 10-14 — D1–D6 권고대로** (*\"나머지는 다 권고대로\"*): D1 (나) 동결 · 논문 주 증거에서 제외 · 결합 규칙 팔로 새 확인 블록 · D2 (가) 기하평균 W_ij = 2√(γ_iγ_j) 를 혼합쌍 · 벽까지 · D3 (가) 분말 유동성 실측 + 같은 시험의 DEM 보정 (Hausner 비 하나만 쓰지 않고 동적 안식각 · 흐름 시간 함께) · D4 (가) 요청 범위 확정 — 보내는 시점 = DFT 쪽 VASP 외주 결과 뒤 (1저자 10-14 · DEM–DFT HOLD) · D5 · D6 = 10/21 자료 믹싱 내용 빼기 · 한글 맑은 고딕 · D7–D14 = 그대로 대기."
+    },
+    "existing_D12_decision_record": {
+      "line": 234,
+      "text": "> ✅ **1저자 10-20 — D7–D14 권고대로** (*\"q는 권고대로\"* · 용훈 포메이션 Q7): D7 = (나) 코팅 SE 를 자유 SE 에서 뺀다 (코팅 두께 실측 필요) · D8 = (가) 통계 이식 + 무작위 배치 음성 대조 · D9 = (가) s1 · s2 + 점착 0 회전 기준 + 이론 분모 Lacey · D10 = 8 바퀴 한 런을 bin 1 · 3 · 7 로 · 강도 = 실험 혼합기 확인 뒤 Bo/G 한 수준 · D11 = (가) 층상 유지 + (나) SE 덩어리 시작을 DEV 에서 먼저 · D12 = ×20 · ibb NP 20 · 처음부터 · 확인 시드 셋 · D13 = (가) 빠진 원자 처리 권고안 (≤ 10 · id 1..N · 집합 불변) — 보류됐던 커밋은 이 클론에 없어 시험 먼저 다시 만든다 · D14 = §6-2 · Codex 회차 = D3 ① (설계 + 결정) 먼저 → ② (등록 초안 · 시험 기하 코드 · D2 생성기 · 원장 claimed_fixed 25 · 덱 검사기 밀도 세대) (용훈 포메이션 Q9)."
+    },
+    "revision_reservation": {
+      "line": 86,
+      "text": "**시드 역할과 예약:** C0 DEV·C1 보정·C2 검증·새 확인 블록의 시드 집합을 S3/S6에 각각 명시한다. v1과 D1/D12의 예약 확인 시드(15485863·86028121·104395301)는 D3 C0·C1·C2에서 사용하지 않는다. `(C0 ∪ C1 ∪ C2) ∩ 예약 확인 시드 = ∅`를 등록과 실행 전 실제 manifest에서 검사하고, 교집합이 있으면 재사용하지 않고 HOLD한다. D3 내부의 역할 간 허용 중복/짝짓기 관계도 결과 전에 정해 기록하며, 역할 이름이 다르다는 이유만으로 독립 표본이라 세지 않는다. 특정 새 시드 값은 여기서 고르지 않는다."
+    }
+  }
+}

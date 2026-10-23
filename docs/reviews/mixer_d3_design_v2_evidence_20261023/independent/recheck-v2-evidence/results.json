@@ -1,0 +1,96 @@
+{
+  "scope": "Independent synthetic semantics; no production implementation, measurement, or execution approval",
+  "checks": [
+    {
+      "name": "I01_empty_grid_scope",
+      "pass": true,
+      "detail": {
+        "finite_supported": [],
+        "unsampled_exact_solution": 1.5
+      }
+    },
+    {
+      "name": "I02_exhaustive_status_tables",
+      "pass": true,
+      "detail": {
+        "tables": 81,
+        "aggregate_counts": {
+          "all-compatible": 1,
+          "mixed": 6,
+          "none-compatible": 9,
+          "incomplete": 65
+        },
+        "false_success": []
+      }
+    },
+    {
+      "name": "I02_partial_failure",
+      "pass": true,
+      "detail": {
+        "table": [
+          [
+            "compatible",
+            "compatible"
+          ],
+          [
+            "incompatible",
+            "compatible"
+          ]
+        ],
+        "aggregate": "mixed"
+      }
+    },
+    {
+      "name": "I02_known_failure_preserved_under_incomplete",
+      "pass": true,
+      "detail": {
+        "table_retained": [
+          [
+            "incompatible",
+            "unassessed"
+          ],
+          [
+            "compatible",
+            "compatible"
+          ]
+        ],
+        "aggregate": "incomplete"
+      }
+    },
+    {
+      "name": "I02_empty_S_not_success",
+      "pass": true,
+      "detail": {
+        "S": [],
+        "aggregate": "not-applicable"
+      }
+    },
+    {
+      "name": "I03_per_unit_release",
+      "pass": true,
+      "detail": {
+        "C1_seal": 10,
+        "calibration_release": 11,
+        "C2_seal": 20,
+        "validation_release": 21,
+        "common_release_at_11_would_violate_validation_order": true,
+        "times_are_synthetic_order_indices": true
+      }
+    },
+    {
+      "name": "I04_reserved_intersection",
+      "pass": true,
+      "detail": {
+        "clean_intersection": [],
+        "reused_intersection": [
+          "reserved_b"
+        ],
+        "actual_reserved_numeric_ID_provenance": "not_checked_in_this_input_scope"
+      }
+    }
+  ],
+  "summary": {
+    "passed": 7,
+    "total": 7
+  }
+}
