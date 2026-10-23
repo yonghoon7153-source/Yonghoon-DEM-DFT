@@ -1,0 +1,55 @@
+{
+  "status": "PASS",
+  "candidate": "652d43704034f24d2f4a024092b36ce0ddf558fe",
+  "branch": "codex/unloading-ulpr",
+  "cwd": "/workspace/Yonghoon-DEM-DFT",
+  "started_at_utc": "2026-10-23T20:09:04.661768+00:00",
+  "checked_index_tree_before": "3ca81e1285c60d8a9cb11a29523319bab45f3f1a",
+  "checks": [
+    {
+      "name": "docrefs",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python3",
+        "-I",
+        "scripts/check_doc_refs.py"
+      ],
+      "cwd": "/workspace/Yonghoon-DEM-DFT",
+      "started_at_utc": "2026-10-23T20:09:04.661801+00:00",
+      "finished_at_utc": "2026-10-23T20:09:05.742381+00:00",
+      "exit_code": 0,
+      "log": "final-docrefs.log",
+      "log_sha256": "67019b05abfdf4bfe0fd4f2797495b8c56f84c500fa57ab08812916d21710e29"
+    },
+    {
+      "name": "ledger",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python3",
+        "-I",
+        "scripts/check_review_findings.py"
+      ],
+      "cwd": "/workspace/Yonghoon-DEM-DFT",
+      "started_at_utc": "2026-10-23T20:09:05.742504+00:00",
+      "finished_at_utc": "2026-10-23T20:09:29.025099+00:00",
+      "exit_code": 0,
+      "log": "final-ledger.log",
+      "log_sha256": "7483b4664c4d3c52e24db54600e4b9c5fa164c0b4fc7746c8682a1b6360e090c"
+    }
+  ],
+  "finished_at_utc": "2026-10-23T20:09:29.078246+00:00",
+  "checked_index_tree_after": "3ca81e1285c60d8a9cb11a29523319bab45f3f1a",
+  "input_inventory_unchanged": true,
+  "working_tree_equals_index": true,
+  "checked_inventory_file": "checked-inventory.json",
+  "checked_inventory_sha256": "77aa4ad492a781a05d38a98c3beffbdaf2cdc772819a5b7e80a767152a14568c",
+  "post_check_additions": [
+    "final-preflight.json",
+    "final-docrefs.log",
+    "final-ledger.log",
+    "checked-inventory.json"
+  ],
+  "post_check_existing_updates": [
+    "MANIFEST.sha256",
+    "package_manifest.json"
+  ],
+  "post_check_scope": "Only these raw proof files and the live manifest inventory may be added or updated after the checked snapshot; no source or Markdown changes."
+}

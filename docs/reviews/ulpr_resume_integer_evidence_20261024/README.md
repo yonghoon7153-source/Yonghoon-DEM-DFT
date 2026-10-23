@@ -1,5 +1,8 @@
 # ULPR 재개 식별자 정수 파싱 — 구현·검토 증거 (2026-10-24 KST)
 
+> 현재 canonical 전체 gate: **PASS, 155/0, rc 0**. [완료 기록](completion.md)을 따른다. 아래 작성자/초기 반입 시점의 예정·대기 문구는 원 스냅샷의 범위이며 현재 상태를 대신하지 않는다.
+
+
 사용자 “계속 진행”·“다 비준이야” 이후, 기존에 남긴 fractional RESUME k 문제를 기존 등록의 정수 경계 요구 안에서 수정했다. 새로운 과학값이나 물리 실행 결과를 정한 작업은 아니다. [검토 요청서](../codex_dem_unloading_resume_integer_request_20261024.md), [상세 인계 NOTE](NOTE.md), [수정 diff](source/candidate.diff)를 함께 읽는다.
 
 기준 pin은 `8347d32ea678c0174bd77d4c79cfbd7b0591e4a3`이다. 최종 reader SHA-256은 `7a395a549e8ad3eae820a9e575f094219ca7d47a4b9a07c5bc27623d7018af4b`, 6파일 diff SHA-256은 `ccd610c9e7c9b3d1443edba03324a8c0fdf0bed0330f908ca7844586b293efd0`이다. [source_manifest.json](source_manifest.json)은 6파일의 기준·현재 SHA와 바이트 수를 기록한다. 자기 커밋 번호를 예측하지 않으며 최종 반입 pin은 root가 따로 고정한다.
@@ -14,7 +17,7 @@
 | 독립 직접 공격 | 150/150 PASS; reader 별도 304/304; manifest 일치 | [review.md](independent/ulpr/final-v5/review.md), [result.json](independent/ulpr/final-v5/result.json) |
 | 독립 변이 | 별도 2개: `_i` 복귀 22개, 사건 CSV 구조 guard 제거 3개 R39 단언 실패; 예외 0 | [result.json](independent/ulpr/independent-mutations-v5/result.json), 개별 로그 |
 | 독립 원문 NOTE 대조 | 원문 구체적 주장 41/41 확인 | [note-review.md](independent/ulpr/note-review.md), [JSON](independent/ulpr/note-review.json) |
-| 저장소 전체 gate | **PENDING** — root의 통합된 깨끗한 후보에서 실제 수행 필요 | [full_gate_receipt.json](full_gate_receipt.json) |
+| 저장소 전체 gate | **PASS — 155/0, rc 0; 현재 완료 기록 참조** | [full_gate_receipt.json](full_gate_receipt.json) |
 
 13개 명령·304개 reader 확인·150개 독립 공격·작성자 변이 11개·독립 변이 2개는 서로 다른 집계다. 합쳐서 독립 시험 수나 과학적 완전성으로 표시하지 않는다. 내부 독립 검토는 외부 Codex 세션 판정문을 새로 만든 기록이 아니다.
 
