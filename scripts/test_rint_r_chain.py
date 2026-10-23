@@ -2914,6 +2914,58 @@ def t_V31():
             and not re.search(r'\d\.\d{3,}e-0[23]', str(st.get('cause', ''))), (p['rc'], st))
 
 
+def u18_raw(nu, removed, standing='certified_interval'):
+    """★ 10-23 (Codex 재검토 RCA2-06 F6) 위 끝 구조화 실패의 원 기록 — 아래 끝 = `u16_raw` (computed · 비 1.2 · 증서 구간) · 위 끝 = 생산자 함수
+    그대로 (`carbon_junction._sv_cf_upper_unsolved` · `_sv_cf_bracket` · census 의 못 가른 덩어리 수 nu ≠ 다시 가른 수 removed · 풀지 않음)."""
+    import carbon_junction as CJm
+    raw = u16_raw(1.0, (1.0, 1.0), ('computed', 1.0 / 1.2, (1.0 / 1.2, 1.0 / 1.2)), standing=standing)
+    if standing == 'diagnostic_uncertified':
+        raw.update(conv_cert=None, conv_cert_full=None)
+    raw['n_unsplit_bridging_components'] = nu
+    up = CJm._sv_cf_upper_unsolved(CJm.SV_CF_UNSPLIT_MISMATCH, n_components=removed, why=f'census {nu} ≠ 다시 가른 수 {removed}')
+    return CJm._sv_cf_bracket(raw, up)
+
+
+def eval_U18():
+    """★ 10-23 (Codex 재검토 RCA2-06 F6 · author 10-23 ratified Q1-Q8) 위 끝 구조화 실패 (`unsplit_census_mismatch`) 를 사슬 끝까지 보존 — 실제
+    투영 → chain_view → sv_assess → sv_reasons: SV_UNCHECKED (못 읽음 · 진단 기록이면 판정 입력 아님) · 사유의 모서리 이름에 상태 이름 (비를
+    싣지 않는 상태 · 비 값 없음).  기록 없는 모서리 = 이름만 (옛 글자) · 미수렴 = 상태 이름 한 번 (두 끝 같은 상태 = 한 번)."""
+    import ca_ext_svcf as SVCF
+    MM = 'unsplit_census_mismatch'
+    base = {(c, law, rr): sv_cv('computed', 1.2, 'computed', 1.2, 0) for c in ('0', '1') for law in ('P0', 'P1')
+            for rr in ('R_j_lo', 'R_j0', 'R_j_hi')}
+    k1 = ('1', 'P1', 'R_j0')
+    got = []
+    for nm, raw, lst in (('census 0 · 다시 가른 수 1 (증서 구간)', u18_raw(0, 1), 'unreadable'),
+                         ('census 1 · 다시 가른 수 2 (증서 구간)', u18_raw(1, 2), 'unreadable'),
+                         ('census 0 · 다시 가른 수 1 (진단 기록 · 증서 없는 런)', u18_raw(0, 1, 'diagnostic_uncertified'), 'uncertified')):
+        cv = SVCF.chain_view(SVCF.sv_cf_record(raw))
+        f, d = RR.sv_assess({**base, k1: {'sv_cf': cv}}, 2.0, 'R_j0')
+        why = RR.sv_reasons(f, d).get('SV_UNCHECKED', '')
+        ok = (f == ['SV_UNCHECKED'] and 'c1_P1_R_j0' in (d.get(lst) or []) and f'c1_P1_R_j0 ({MM})' in why
+              and (d.get('corners') or {}).get('c1_P1_R_j0', {}).get('status_hi') == MM)
+        got.append((nm, ok, f, why))
+    f2, d2 = RR.sv_assess({**base, k1: {'sv_cf': None}}, 2.0, 'R_j0')
+    w2 = RR.sv_reasons(f2, d2).get('SV_UNCHECKED', '')
+    f3, d3 = RR.sv_assess({**base, k1: sv_cv('unconverged', None, 'unconverged', None, 0)}, 2.0, 'R_j0')
+    w3 = RR.sv_reasons(f3, d3).get('SV_UNCHECKED', '')
+    extra = w2 == '대조 비를 못 읽음 — 모서리 c1_P1_R_j0 (§5-6 SV 행)' and 'c1_P1_R_j0 (unconverged)' in w3 and w3.count('unconverged') == 1
+    return all(c[1] for c in got) and extra, ([c for c in got if not c[1]], w2, w3)
+
+
+@check('U18', '★ 10-23 (Codex 재검토 RCA2-06 F6) 위 끝 구조화 실패 unsplit_census_mismatch 를 사슬 끝까지 보존 (실제 투영 · chain_view · sv_assess · '
+              'sv_reasons) — census 0 · census 1 · 진단 기록 = SV_UNCHECKED · 사유의 모서리 이름에 상태 이름 · 기록 없는 모서리 = 이름만 · 미수렴 = 한 번')
+def t_U18():
+    return eval_U18()
+
+
+@check('M48', '★ 10-23 변이: 사유의 모서리 이름에 상태를 붙이지 않음 (옛 글자) → U18 이 떨어진다 (변이 전 통과 확인)')
+def t_M48():
+    base_ok, base_why = eval_U18()
+    caught, why = mutant('M48', {'sv_corner_label': lambda det, key: key}, eval_U18)
+    return base_ok and caught, (base_ok, why if base_ok else base_why)
+
+
 #  Q2-5 §5-6 변이 표지 ─────────────────────────────────────────────────
 def eval_U14():
     main = {'statuses': CAL2, 'vals': rca09_main(), 'flags': []}

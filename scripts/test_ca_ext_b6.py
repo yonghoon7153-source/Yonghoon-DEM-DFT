@@ -942,6 +942,141 @@ def t_sv_values(mm, proj, Es):
             and ev('computed', 1.25, None) == 1.25 and ev('no_through_without_sv', None, 'inf') == math.inf, (bad_v, vt))
 
 
+def _sv_raw_mm(nu, removed, certs=True):
+    """★ 10-23 (Codex 재검토 RCA2-06 F6) 위 끝 구조화 실패의 원 기록 — 생산자 함수 그대로 (`carbon_junction._sv_cf_upper_unsolved` ·
+    `_sv_cf_bracket`): census 의 못 가른 덩어리 수 nu ≠ 지문 묶인 원장에서 다시 가른 수 removed → 위 끝을 풀지 않음 (비 · 증서 · backend 없음 ·
+    사유) · 아래 끝 = computed 1.25 (증서 구간 · certs False = 진단 기록)."""
+    import carbon_junction as _cj
+    r = _sv_raw('computed', 1.25, certs=certs)
+    r['n_unsplit_bridging_components'] = nu
+    up = _cj._sv_cf_upper_unsolved(_cj.SV_CF_UNSPLIT_MISMATCH, n_components=removed,
+                                   why=f'못 가른 덩어리 수 census {nu} ≠ 지문 묶인 원장에서 다시 가른 수 {removed} — 위 끝을 풀지 않는다')
+    return _cj._sv_cf_bracket(r, up)
+
+
+def t_sv_mismatch(mm, proj, Es):
+    """★ 10-23 (Codex 재검토 RCA2-06 F6 · author 10-23 ratified Q1-Q8) 위 끝 구조화 실패 `unsplit_census_mismatch` (census 의 못 가른 덩어리 수 ≠
+    지문 묶인 원장에서 다시 가른 수 · 위 끝을 풀지 않음 · fail-closed) 를 끝-끝 보존한다 — 실제 소비자 `run_contract.ca_ext_record_ok`.
+    옛 판: census 0 꼴 = '덩어리 0 인데 위 끝 기록' 으로 게시 거부 (사슬에 닿지 않았다) · census > 0 꼴 = 꼴을 보지 않고 받았다 (풀이 칸이 차
+    있어도 · 다시 가른 수 = census 수여도).  고친 판: 꼴 = 다시 가른 수 (0 이상 정수 · int64) ≠ census 수 · 사유 = 비지 않은 글 · 풀이 칸
+    (비 · 표지 · G_cut · 잔차 · CG · 증서 · backend · 제거 셀 수) 없음 · 위 끝 칸 = (상태, None, None) → 받음 · 사슬 = SV_UNCHECKED (못 읽음 ·
+    진단 기록이면 판정 입력 아님) · 사유에 상태 이름."""
+    try:
+        import ca_ext_svcf as SVCF
+        import rint_r_chain as RRc
+    except Exception as e:                                  # noqa: BLE001
+        chk('SM0 ca_ext_svcf · rint_r_chain 을 불러온다', False, f'{type(e).__name__}: {e}')
+        return
+    MM = getattr(SVCF, 'UNSPLIT_MISMATCH', 'unsplit_census_mismatch')
+    KNOWN = getattr(SVCF, 'KNOWN_STATUSES', ())
+    chk('SM0 상태 목록에 구조화 실패 이름 (기록 · 문서용 목록 · 이것만으로 끝내지 않는다 = SM1–SM4)', MM in KNOWN, KNOWN)
+
+    def ok_of(rec, census=None, ibot=SV_GF):
+        return RC.ca_ext_record_ok(_sv_put(deep(mm), rec, census=census, ibot=ibot))
+
+    def chain_of(rec):
+        f, d = RRc.sv_assess({('1', 'P1', 'R_j0'): {'sv_cf': SVCF.chain_view(rec)}}, 2.0, 'R_j0')
+        return f, d, RRc.sv_reasons(f, d).get('SV_UNCHECKED', '')
+
+    good = {
+        'census 0 · 다시 가른 수 1 (QD2 ⑧ 꼴 · 증서 구간)': _sv_raw_mm(0, 1),
+        'census 1 · 다시 가른 수 2 (증서 구간)': _sv_raw_mm(1, 2),
+        'census 2 · 다시 가른 수 0 (원장에서 덩어리가 사라짐)': _sv_raw_mm(2, 0),
+        'census 0 · 다시 가른 수 1 (진단 기록 · 증서 없는 런)': _sv_raw_mm(0, 1, certs=False),
+    }
+    for nm, raw in good.items():
+        rec = proj(raw)
+        got = ok_of(rec)
+        f, d, why = chain_of(rec)
+        lst = 'uncertified' if raw.get('standing') == 'diagnostic_uncertified' else 'unreadable'
+        chk(f'SM1 구조화 실패 받음 · 사슬 SV_UNCHECKED · 사유에 상태 이름 [{nm}]',
+            got == (True, None) and f == ['SV_UNCHECKED'] and 'c1_P1_R_j0' in (d.get(lst) or []) and f'c1_P1_R_j0 ({MM})' in why,
+            (got, f, why))
+    _cp = getattr(SVCF, '_cert_proj', lambda c: c)
+
+    def mm_rec(nu=1, removed=2, up=None, **kw):              # 구조화 실패 꼴의 투영 + 손댐 (위 끝 · 기록)
+        p = proj(_sv_raw_mm(nu, removed))
+        if up:
+            p['upper'].update(up)
+        p.update(kw)
+        return p
+    bad = {
+        '다시 가른 수 = census 수 (1 · 1 — 상태의 정의와 모순)': mm_rec(1, 1),
+        '다시 가른 수 = census 수 (0 · 0)': mm_rec(0, 0),
+        '다시 가른 수 없음': mm_rec(up={'n_components_removed': None}),
+        '다시 가른 수 bool': mm_rec(up={'n_components_removed': True}),
+        '다시 가른 수 음수': mm_rec(up={'n_components_removed': -1}),
+        '다시 가른 수 10^400': mm_rec(up={'n_components_removed': 10 ** 400}),
+        '사유 없음 (None)': mm_rec(up={'why': None}),
+        '사유 빈 글': mm_rec(up={'why': ''}),
+        '사유 공백만': mm_rec(up={'why': '   '}),
+        '사유 글 아님 (수)': mm_rec(up={'why': 7}),
+        '풀이 칸 — 비 2.0': mm_rec(up={'sv_counterfactual_ratio': 2.0}),
+        '풀이 칸 — inf 표지': mm_rec(up={'ratio_limit': 'inf'}),
+        '풀이 칸 — G_cut 1.0': mm_rec(up={'G_cut_code': 1.0}),
+        '풀이 칸 — G_cut 0.0 (관통 없음을 숨김)': mm_rec(up={'G_cut_code': 0.0}),
+        '풀이 칸 — 잔차': mm_rec(up={'resid': 1e-13}),
+        '풀이 칸 — CG info 0': mm_rec(up={'cg_info': 0}),
+        '풀이 칸 — 증서': mm_rec(up={'conv_cert': _cp(_fake_pos_cert(2.0))}),
+        '풀이 칸 — backend': mm_rec(up={'backend_last_solve': {'used': 'gpu', 'requested': 'gpu', 'precond': None, 'fallback_reason': None}}),
+        '풀이 칸 — 제거 셀 수 3 (풀지 않은 끝)': mm_rec(up={'n_cells_removed': 3}),
+        '위 끝 칸 = 아래 끝 (census 1 · computed 1.25 — 구조화 실패를 위 끝 칸이 숨김)':
+            mm_rec(status_hi='computed', sv_counterfactual_ratio_hi=1.25, ratio_limit_hi=None),
+        '위 끝 칸 = 아래 끝 (census 0 · computed 1.25)':
+            mm_rec(0, 1, status_hi='computed', sv_counterfactual_ratio_hi=1.25, ratio_limit_hi=None),
+        '위 끝 칸 상태 unconverged (위 끝 풀이 기록 = 구조화 실패)': mm_rec(status_hi='unconverged'),
+        '위 끝 칸 상태 = 구조화 실패 · 위 끝 풀이 기록 상태 unconverged': mm_rec(up={'status': 'unconverged'}),
+    }
+    reasons = {}
+    for nm, rec in bad.items():
+        got = ok_of(rec)
+        chk(f'SM2 구조화 실패 꼴 거부 [{nm}]', not got[0], got)
+        reasons[nm] = got[1]
+    odd = {nm: why for nm, why in reasons.items() if not (isinstance(why, str) and why.startswith('CAEXT|cjunc| sv_cf|'))}
+    chk('SM2 거부 사유 = 검증기 자신의 문장 (CAEXT|cjunc| sv_cf| …) — 예외 감싸기 (unverifiable) 로 거부된 꼴 없음', not odd, odd)
+    #  ── 실제 생산자 기록 → 투영 → 실제 소비자 (`run_contract.ca_ext_record_ok`) → 사슬 (chain_view · sv_assess · sv_reasons) ──
+    #     원장 census 의 못 가른 덩어리 수를 계획 전에 변조 (지문 밖) — 위 끝은 지문 묶인 원장으로 다시 가른다
+    #     꼴 ① = QD2 ⑧ (덩어리 하나 · census 0) · 꼴 ② = QD4 두 성분 (census 1) · 증서 끔 (진단) · 켬 (증서 구간 · 증거 fp = 그 런의 원장 · 계획 지문)
+    try:
+        import test_carbon_junction as TCJ
+        import carbon_junction as _cjm
+        import step3_sigma as _s3
+    except Exception as e:                                  # noqa: BLE001
+        chk('SM3 test_carbon_junction · carbon_junction · step3_sigma 를 불러온다', False, f'{type(e).__name__}: {e}')
+        return
+    TCJ.CJ, TCJ.S3 = _cjm, _s3
+    forms = (('꼴 ① 덩어리 하나 · census 0 (QD2 ⑧)', [TCJ.QD2_A1, TCJ.QD2_B1], TCJ.QD2_S1, TCJ.QD2_N1, 0, 1),
+             ('꼴 ② 두 성분 · census 1 (QD4)', getattr(TCJ, 'QD4_POLYS', None), getattr(TCJ, 'QD4_SDCP', None), getattr(TCJ, 'QD4_N', None), 1, 2))
+    for nm, polys, sdcp, n, nu, k in forms:
+        if polys is None:
+            chk(f'SM3 실제 생산자 [{nm}] — 시험 꼴이 있다 (test_carbon_junction.QD4_*)', False, 'QD4 꼴 없음')
+            continue
+        for cert in (False, True):
+            def _hook(reg, nu=nu):
+                reg['census']['n_unsplit_bridging_components'] = nu
+            _s, reg, r, cf = TCJ._qd2_run(polys, sdcp, n, reg_hook=_hook, cert=cert)
+            if r is None:
+                chk(f'SM3 실제 생산자 [{nm} · 증서 {"켬" if cert else "끔"}] — 풀이', False, '풀이 실패')
+                continue
+            rec = SVCF.sv_cf_record(cf)
+            up = rec.get('upper') if isinstance(rec.get('upper'), dict) else {}
+            cen = TCJ._qd2_census(r)
+            x = _sv_put(deep(mm), rec, census={c: cen[c] for c in SVCF.CENSUS_COPY_KEYS if c in cen}, ibot=r['cjunc'].get('I_bot_code'))
+            if cert:
+                pl = TCJ.plan(reg, 1e3, sv_counterfactual={'threshold': None})
+                Es(x)['fp'].update(sid=reg['fp']['sid'], registry=reg['fp']['registry'], plan_rows=pl['fp_rows'])
+                Es(x)['receipts']['electronic_main']['fp_registry'] = reg['fp']['registry']
+            got = RC.ca_ext_record_ok(x)
+            f, d, why = chain_of(rec)
+            lst = 'unreadable' if cert else 'uncertified'
+            chk(f'SM3 실제 생산자 → 실제 소비자 → 사슬 [{nm} · 증서 {"켬 (증서 구간)" if cert else "끔 (진단)"}] — 위 끝 = 구조화 실패 (다시 가른 수 '
+                f'{k} · census {nu} · 사유 · 풀이 칸 없음) · ca_ext_record_ok 받음 · 사슬 SV_UNCHECKED · 사유에 상태 이름',
+                rec.get('n_unsplit_bridging_components') == nu and up.get('status') == MM and up.get('n_components_removed') == k
+                and bool(up.get('why')) and rec.get('standing') == ('certified_interval' if cert else 'diagnostic_uncertified')
+                and got == (True, None) and f == ['SV_UNCHECKED'] and 'c1_P1_R_j0' in (d.get(lst) or []) and f'c1_P1_R_j0 ({MM})' in why,
+                (got, f, why, up))
+
+
 @case('S 해 상태 (영값 · 단락) · SV 반사실 노브 — 계약 · 러너 · payload (시험 먼저 · 10-21 D)')
 def t_states():
     ngs = getattr(RC, 'next_gen_state', None)
@@ -1249,6 +1384,7 @@ def t_states():
         v_b.get('ratio') == 1.0 and v_b.get('ratio_hi') == float('inf') and v_b.get('status_hi') == 'no_through_without_sv'
         and v_b.get('n_unsplit') == 1 and v_o.get('ratio') == 1.25 and v_o.get('ratio_hi') is None and 'ratio_hi' in v_o, (v_b, v_o))
     t_sv_values(mm, proj, Es)
+    t_sv_mismatch(mm, proj, Es)
     #  ── 조기 반환 해 (주 솔브 안 풀림) — 반사실 기록 없음 = 정상 · 요청만 남는다 ──
     zz = deep(z['manifest'])
     zz['ca_ext']['cjunc']['evidence']['sv_counterfactual_request'] = {'threshold': None}

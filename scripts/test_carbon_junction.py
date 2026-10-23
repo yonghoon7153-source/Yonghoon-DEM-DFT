@@ -97,6 +97,8 @@ r_port = 2.0 (= 2h) · gap_tol 2.0 · σ_VGCF = 100 S/cm → 축방향 면 g = �
          덩어리 0 = 다시 풀지 않음 · 값 봉인 · census 변조 = fail-closed · 주 해 미수렴 · 주 전류 ≤ 0 의 괄호 칸 · 덩어리가 판에 닿으면 위 끝이
          판 결합까지 뺀다 (⑪) (사슬 = 실제 `sv_assess`) · ★ 10-23 판정을 보는 자리 (① ② ③ ④ ⑪) = 증서 켠 런 (사슬 판정 = 증서 구간 · 증서
          없는 런 = 진단 → SV_UNCHECKED)
+  QD4    ★ 10-23 (Codex 재검토 RCA2-06 F4) 두 성분 괄호 — 독립 4 rail · 두 SDCP 성분 (판정문 §4 · G 47.61904761904763 · [1, ∞]) · 위 끝 = 두
+         성분 SDCP 셀 전부 · 판정문 변이 (첫 성분만 · 위비 2) 가 떨어진다
   QD3    ★ 10-23 (Codex 재검토 RCA2-01 · 04 · 1저자 Q1 (가)) SV 문턱 = 증서 구간 판정 — 판정문 실제 반례 꼴 (SVX · 첫 선형 해에만 +1e-8 ·
          나머지 직접해 · 실제 생산자 → 투영 → 검증기 → 사슬): nominal < 문턱 < 증서 구간 아래 끝 → SV_DEPENDENT (옛 = 표지 없음) · 정확 풀이
          구간 ∋ 손 회로 참 비 · +∞ = 영값 위상 증서 · 증서 없는 런 = 진단 (SV_UNCHECKED · uncertified) · 괄호 회로 구간 ∋ 손 참 비 · 한 끝
@@ -3711,7 +3713,9 @@ def t_sv_bracket():
     chk('QD2 ⑦ 값 봉인 — 못 가른 덩어리가 있으면 아래 끝 값 (1 = 문턱 아래) 과 무관하게 위 끝도 푼다 (③ 꼴: 주 + 아래 끝 + 위 끝 = 솔브 3 · '
         '① 의 위 끝은 관통 없음 = 위상으로 끝 = 풀이 없이 +∞)',
         n_solves3 == 3, f'③ 꼴 솔브 {n_solves3}')
-    # ⑧ 원장 census 변조 (지문 밖) — 위 끝은 지문 묶인 원장으로 다시 가른다 → 다르면 위 끝을 풀지 않는다 (fail-closed) · 검증기 거부
+    # ⑧ 원장 census 변조 (지문 밖) — 위 끝은 지문 묶인 원장으로 다시 가른다 → 다르면 위 끝을 풀지 않는다 (fail-closed) · ★ 10-23 (Codex 재검토
+    #    RCA2-06 F6) 구조화 실패를 끝-끝 보존 — 검증기 받음 (옛 = '덩어리 0 인데 위 끝 기록' 으로 게시 거부 → 사슬에 닿지 않았다) · 사슬 = 위 끝
+    #    못 읽음 → SV_UNCHECKED · 사유에 상태 이름 (실제 소비자 경로 `run_contract.ca_ext_record_ok` 시험 = test_ca_ext_b6 SM)
     def _tamper(reg):
         reg['census']['n_unsplit_bridging_components'] = 0
     _s8, _r8, r8, c8 = _qd2_run([QD2_A1, QD2_B1], QD2_S1, QD2_N1, reg_hook=_tamper)
@@ -3720,11 +3724,16 @@ def t_sv_bracket():
            'census': _qd2_census(r8)}
     p8 = _try(lambda: SVCF.sv_cf_problem(ev8, True), 'EXC')
     f8 = _try(lambda: _qd2_flags(c8, 2.0), None)
-    chk('QD2 ⑧ 원장 census 의 못 가른 덩어리 수를 0 으로 변조 (지문 밖) — 위 끝 = 다시 가른 원장과 다름 → 풀지 않음 (위 끝 상태 = 비 없는 이름 · 사유) · '
-        '검증기 거부 (덩어리 0 인데 위 끝 기록) · 사슬 = SV_UNCHECKED',
+    import rint_r_chain as _RRC8
+    _v8 = SVCF.chain_view(SVCF.sv_cf_record(c8))
+    _f8b, _d8 = _RRC8.sv_assess({('1', 'P0', 'R_j0'): {'sv_cf': _v8}}, 2.0, 'R_j0')
+    why8 = _RRC8.sv_reasons(_f8b, _d8).get('SV_UNCHECKED', '')
+    chk('QD2 ⑧ 원장 census 의 못 가른 덩어리 수를 0 으로 변조 (지문 밖) — 위 끝 = 다시 가른 원장과 다름 → 풀지 않음 (위 끝 상태 '
+        'unsplit_census_mismatch · 다시 가른 수 1 (덩어리 하나) · 사유) · ★ 10-23 (RCA2-06 F6) 검증기 받음 (구조화 실패 끝-끝 보존) · 사슬 = SV_UNCHECKED · '
+        '사유에 상태 이름',
         r8 is not None and c8.get('n_unsplit_bridging_components') == 0 and bool(up8) and up8.get('sv_counterfactual_ratio') is None
-        and up8.get('status') not in ('computed', 'no_through_without_sv') and bool(up8.get('why'))
-        and isinstance(p8, str) and p8.startswith('sv_cf|') and f8 == ['SV_UNCHECKED'], f'{c8} · {p8} · {f8}')
+        and up8.get('status') == 'unsplit_census_mismatch' and up8.get('n_components_removed') == 1 and bool(up8.get('why'))
+        and p8 is None and f8 == ['SV_UNCHECKED'] and 'unsplit_census_mismatch' in why8, f'{c8} · {p8} · {f8} · {why8}')
     # ⑨ 주 해 미수렴 (`step3_sigma` 조기 기록) · 주 단자 전류 ≤ 0 (`sv_counterfactual` 첫 갈래) — 괄호 칸이 같은 꼴 (풀이 없음)
     from scipy.sparse.linalg import spsolve as _sps
 
@@ -3974,6 +3983,79 @@ def t_sv_cert_interval():
     chk('QD3 ⑦ 같은 기록을 진단 (지위 진단 · 증서 전부 없음 · 판정 근거 칸 [None, None]) 으로 = 검증기 받음 · 사슬 = SV_UNCHECKED (uncertified · 판정 '
         '입력 아님)',
         why_d is None and fd == ['SV_UNCHECKED'] and dd.get('uncertified') == ['c1_P1_R_j0'], f'{why_d!r} · {fd} · {dd.get("uncertified")}')
+
+
+# ═════════════════════════ ★ 10-23 QD4 — 두 성분 괄호 (Codex 재검토 RCA2-06 F4 · 회귀 사각) ═════════════════════════
+#: 판정문 §4 F4 꼴 (`docs/reviews/codex_rint2_rereview_evidence_20261022/geometry/run_review.py` two_symmetric_components) — 독립 4 rail
+#  (x = 1 · 3 · 7 · 9 · z 0.5 → 8.5 · 대칭 = 가로 전류 없음 → 참 다리 영향 1) · SDCP 두 성분 (x ∈ {1,2,3} · {7,8,9} · z 4.5 · 성분마다 섬유 둘)
+QD4_N = (11, 3, 9)
+QD4_POLYS = [[(x + 0.5, 1.5, 0.5), (x + 0.5, 1.5, 8.5)] for x in (1, 3, 7, 9)]
+QD4_SDCP = [(x + 0.5, 1.5, 4.5) for x in (1, 2, 3, 7, 8, 9)]
+#: 손 회로 (rail 하나 = 판 결합 0.005 + 축 0.01 × 6 + SDCP 경유 0.007 × 2 + 판 결합 0.005 · 네 rail 병렬 · 판정문 §4 와 같은 식)
+QD4_G = 4.0 / (0.005 + 6 * 0.01 + 2 * 0.007 + 0.005)
+
+
+def _qd4_first_component_only(original):
+    """판정문 F4 변이 — 원장 번호 · census 는 그대로 두고 첫 성분의 SDCP 셀만 지운다 (위비 2)."""
+    def mutant(self):
+        labels, _lins = original(self)
+        grid_labels, _ = CJ.ndimage.label(self.sid == 5)
+        return labels, np.flatnonzero(np.isin(grid_labels.ravel(), labels[:1]))
+    return mutant
+
+
+def _qd4_eval(cert=False, thr=2.0):
+    """QD4 꼴 한 런 → (통과?, 보고) — 아래 끝 = 덩어리 그대로 (비 1) · 위 끝 = 두 성분의 SDCP 셀 전부 (원장 SDCP 셀 수 = 6) · 성분 2 · 판 결합 0
+    (SDCP 셀이 판 줄에 없다) · 관통 없음 (+∞) · G = 손 회로 · cert = 증서 켬 → 지위 증서 구간 · 문턱 thr (1 이상) = 걸침 (SV_UNCHECKED)."""
+    s, _reg, r, c = _qd2_run(QD4_POLYS, QD4_SDCP, QD4_N, cert=cert)
+    up = c.get('upper') if isinstance(c.get('upper'), dict) else {}
+    G = I_of(r, QD4_N) if r is not None else math.nan
+    n_sdcp = int(np.count_nonzero(np.asarray(s) == 5)) if s is not None else -1
+    ok = (r is not None and abs(G / QD4_G - 1.0) <= 1e-12 and c.get('n_unsplit_bridging_components') == 2
+          and c.get('status') == 'computed' and abs(c.get('sv_counterfactual_ratio', math.nan) - 1.0) <= 1e-9
+          and n_sdcp == 6 and up.get('n_components_removed') == 2 and up.get('n_cells_removed') == n_sdcp
+          and up.get('n_plate_couplings_cut') == 0 and up.get('status') == 'no_through_without_sv'
+          and up.get('sv_counterfactual_ratio') == math.inf and up.get('G_cut_code') == 0.0)
+    flags = None
+    if cert:
+        flags = _try(lambda: _qd2_flags(c, thr), None)
+        ok = ok and c.get('standing') == 'certified_interval' and flags == ['SV_UNCHECKED']
+    return ok, {'G': G, 'n_sdcp': n_sdcp, 'n_unsplit': c.get('n_unsplit_bridging_components'), 'ratio': c.get('sv_counterfactual_ratio'),
+                'upper': {k: up.get(k) for k in ('status', 'sv_counterfactual_ratio', 'n_components_removed', 'n_cells_removed',
+                                                 'n_plate_couplings_cut')}, 'flags': flags, 'standing': c.get('standing')}
+
+
+@case('QD4')
+def t_sv_two_components():
+    """★ 10-23 (Codex 재검토 RCA2-06 F4 · author 10-23 ratified Q1-Q8) — 다중 덩어리 위 끝 = 덩어리 전부의 SDCP 셀 · 면 · 판 결합을 뺀 판.
+    판정문 반례: 첫 성분만 지우는 변이 (`_sv_unsplit_cells` 가 첫 성분 셀만 · 원장 번호 · census 그대로) 는 위비 2 → 문턱 2 에서 표지 없음 —
+    옛 QD2 13/13 은 그 변이에서도 통과했다.  이 꼴 = 판정문 §4 (G 47.61904761904763 · 괄호 [1, ∞]) · 상주."""
+    ok0, rep0 = _qd4_eval()
+    print(f'    QD4 증서 끔 {rep0}')
+    chk('QD4 ① 두 성분 꼴 (증서 끔) — G = 손 회로 4/(0.005 + 6·0.01 + 2·0.007 + 0.005) (1e-12) · 못 가른 덩어리 2 · 아래 끝 비 1 · 위 끝 = '
+        '두 성분 전부 (제거 성분 2 · 제거 셀 = 원장 SDCP 셀 6 · 판 결합 0 · 관통 없음 +∞ · G_cut 0)', ok0, rep0)
+    ok1, rep1 = _qd4_eval(cert=True)
+    print(f'    QD4 증서 켬 {rep1}')
+    chk('QD4 ② 증서 켬 — 같은 기록 + 지위 증서 구간 · 문턱 2 = 걸침 (아래비 ≤ 2 < 위비 +∞) → SV_UNCHECKED', ok1, rep1)
+    #  ③ 판정문 F4 변이 — 기록 칸 (제거 셀 · 위 끝 상태 · 비) 으로 ① ② 가 잡는다.  변이의 결과: 위비 ≈ 2 (nominal 2.0 · 증서 구간이면 τ 폭만큼
+    #     위) → 문턱 2 는 증서 폭 때문에 걸침이 될 수 있어 표지로 가르지 않는다 → 시험 문턱 2.5 (등록 값 아님 · 2 와 +∞ 사이 아무 값) 에서 바른
+    #     판 = 걸침 (SV_UNCHECKED) · 변이 = 표지 없음 (위비 ≤ 2.5 — SV 의존을 '없음' 으로 숨긴다)
+    ok25, rep25 = _qd4_eval(cert=True, thr=2.5)
+    original = CJ.CjuncAssembler._sv_unsplit_cells
+    CJ.CjuncAssembler._sv_unsplit_cells = _qd4_first_component_only(original)
+    try:
+        okm0, repm0 = _qd4_eval()
+        okm1, repm1 = _qd4_eval(cert=True)
+        _okm25, repm25 = _qd4_eval(cert=True, thr=2.5)
+    finally:
+        CJ.CjuncAssembler._sv_unsplit_cells = original
+    print(f'    QD4 변이 (첫 성분만) {repm0} · {repm1} · 시험 문턱 2.5 = 바른 판 {rep25.get("flags")} · 변이 {repm25.get("flags")}')
+    mu = repm0['upper']
+    chk('QD4 ③ 판정문 F4 변이 (첫 성분 셀만 지움) → ① ② 가 떨어진다 (변이 전 통과 · 변이 = 제거 셀 3 · 위 끝 computed · nominal 위비 2 (1e-9)) · '
+        '시험 문턱 2.5 (등록 값 아님) — 바른 판 = 걸침 SV_UNCHECKED · 변이 = 표지 없음 (SV 의존을 숨긴다)',
+        ok0 and ok1 and ok25 and not okm0 and not okm1 and mu.get('n_cells_removed') == 3 and mu.get('status') == 'computed'
+        and abs((mu.get('sv_counterfactual_ratio') or 0.0) - 2.0) <= 1e-9 and rep25.get('flags') == ['SV_UNCHECKED'] and repm25.get('flags') == [],
+        (repm0, repm1, rep25, repm25))
 
 
 @case('KBND')
