@@ -1,0 +1,18 @@
+[
+  {
+    "name": "docrefs",
+    "command": [
+      "python",
+      "scripts/check_doc_refs.py"
+    ],
+    "rc": 1
+  },
+  {
+    "name": "ledger",
+    "command": [
+      "python",
+      "scripts/check_review_findings.py"
+    ],
+    "rc": 0
+  }
+]

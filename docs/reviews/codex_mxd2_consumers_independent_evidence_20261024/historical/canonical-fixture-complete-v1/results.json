@@ -1,0 +1,26 @@
+[
+  {
+    "argv": [
+      "/workspace/.venvs/yonghoon-dem/bin/python",
+      "-I",
+      "/workspace/.cloud-setup/nonrint-20261024/mxd2-independent/candidate/scripts/mixer_deck_diff.py",
+      "--selftest"
+    ],
+    "exit_code": 1,
+    "started_utc": "2026-10-23T18:19:30.683420+00:00",
+    "seconds": 1.226,
+    "log": "mixer_deck_diff.py.log"
+  },
+  {
+    "argv": [
+      "/workspace/.venvs/yonghoon-dem/bin/python",
+      "-I",
+      "/workspace/.cloud-setup/nonrint-20261024/mxd2-independent/candidate/scripts/mixer_smoke_blind.py",
+      "--selftest"
+    ],
+    "exit_code": 0,
+    "started_utc": "2026-10-23T18:19:31.910056+00:00",
+    "seconds": 38.172,
+    "log": "mixer_smoke_blind.py.log"
+  }
+]

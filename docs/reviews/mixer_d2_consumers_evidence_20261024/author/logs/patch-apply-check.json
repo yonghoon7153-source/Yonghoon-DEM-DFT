@@ -1,0 +1,12 @@
+{
+  "baseline_pin": "486a57cf58d3e0d93ef79be6aae50968929099c0",
+  "whitespace_check_rc": 0,
+  "patch_apply_rc": 0,
+  "files_match_frozen_v3": {
+    "mixer_deck_readback.py": true,
+    "mixer_deck_diff.py": true,
+    "mixer_smoke_blind.py": true,
+    "test_mixer_d2_consumers.py": true
+  },
+  "all_match": true
+}

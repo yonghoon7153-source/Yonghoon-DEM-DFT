@@ -1,0 +1,17 @@
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+
++ [
++   'Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED',
++   'Failed to load resource: the server responded with a status of 404 (NOT FOUND)'
++ ]
+- []
+
+    at /workspace/.cloud-setup/nonrint-20261024/browser-smoke-mxd2.cjs:78:14 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: [Array],
+  expected: [],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}

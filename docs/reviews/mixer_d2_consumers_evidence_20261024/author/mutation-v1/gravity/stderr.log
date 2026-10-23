@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint/mxd2-01-work/mutation-v1/gravity/scripts/test_mixer_d2_consumers.py", line 15, in <module>
+    import mixer_deck_diff as dd
+  File "/workspace/.cloud-setup/nonrint/mxd2-01-work/mutation-v1/gravity/scripts/mixer_deck_diff.py", line 64, in <module>
+    from make_mixer_resume import logical_commands, _tokens      # noqa: E402  덱 논리 명령 파서 — 한 벌만 둔다
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'make_mixer_resume'

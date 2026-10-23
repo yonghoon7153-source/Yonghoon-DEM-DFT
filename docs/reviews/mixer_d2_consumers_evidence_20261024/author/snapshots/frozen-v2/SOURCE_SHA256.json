@@ -1,0 +1,12 @@
+{
+  "baseline_pin": "486a57cf58d3e0d93ef79be6aae50968929099c0",
+  "patch_sha256": "fae21b9484f4a977ed3e2cd59c6c59193d2998169c2f921dc669369b9af7fd04",
+  "files": {
+    "scripts/additives.py": "e22782501ddb0d2bd5ac8cce381c48ff3b0c1bbb570489f4f6345612dc79d84a",
+    "scripts/make_mixer_deck.py": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27",
+    "scripts/mixer_deck_diff.py": "9a86950434b4abe852a6e3411fa809e78eef3d5ef6d7c8e125fb694cc1582877",
+    "scripts/mixer_deck_readback.py": "bfeaf8497048360ba328cb1a01575f2c2f7573d93e7627f53e535da73b8874d3",
+    "scripts/mixer_smoke_blind.py": "83760d9d81e4b2b6cf2d4ae7eda7f140dbec87cadc836b82079b1fd64f15dd4a",
+    "scripts/test_mixer_d2_consumers.py": "af01046d505035180255c06fb483153e6518431d320c37da31391e477cd74784"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "/workspace/.venvs/yonghoon-dem/bin/python",
+    "-I",
+    "/workspace/.cloud-setup/nonrint-20261024/mxd2-independent/candidate/scripts/mixer_deck_diff.py",
+    "--selftest"
+  ],
+  "exit_code": 0,
+  "seconds": 1.5210689140003524,
+  "fixture_source_pin": "486a57cf58d3e0d93ef79be6aae50968929099c0"
+}

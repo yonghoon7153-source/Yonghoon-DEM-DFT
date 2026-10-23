@@ -937,8 +937,412 @@ def _selftest():
     return 1 if fail else 0
 
 
+# D2 development contract. Independent copies of ratified material/recipe values;
+# no generator import on this path and no registered cohort or launch certificate.
+D2_CONTRACT = 'mixer_d2_development/1'
+D2_DENSITY = {'gen1': {'AM': 4.80, 'SE': 2.00, 'VGCF': 2.00, 'PTFE': 2.20},
+              'lab20261014': {'AM': 4.85, 'SE': 1.64, 'VGCF': 2.00, 'PTFE': 2.20}}
+D2_META_KEYS = frozenset(('schema registered generator generator_sha256 argv deck_file deck_sha256 deck_bytes arm arm_desc seed '
+                         'revolutions n_atoms_planned cgf rpm period_s stiffen_se hold_bo_pairwise dt_factor cohesion_nonzero types '
+                         'E_soft_Pa E_Pa nu radius_m dt steps physical_s pairs caveat development_contract adhesion_rule dens_gen '
+                         'dens_g_cm3 dens_carried_from_gen1 dump_modify_format').split())
+D2_ADHESION_KEYS = frozenset(('rule gamma gamma_wall bo_se ratified law ceiling status wall_rule rho_uncoated_ncm').split())
+D2_RAW_WEIGHT = {'AM_P': 56., 'AM_S': 24., 'SE': 18.}
+D2_FORCE_REL = 2e-5                       # CED cubed + radius print rounding; fixed before comparisons.
+
+
+def _d2_need(condition, message):
+    if not condition:
+        raise ValueError(message)
+
+
+def _d2_number(value, name, positive=True):
+    _d2_need(type(value) in (int, float), name + ': real number required (no bool/string)')
+    value = float(value)
+    _d2_need(math.isfinite(value) and (value >= sys.float_info.min if positive else value >= 0),
+             name + ': finite normal positive number required')
+    return value
+
+
+def _d2_integer(value, name):
+    _d2_need(type(value) is int and value > 0, name + ': positive integer required')
+    return value
+
+
+def _d2_float_token(value, name):
+    import re
+    _d2_need(isinstance(value,str) and re.fullmatch(r'[-+]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:[eE][-+]?[0-9]+)?',value) is not None,
+             name + ': ASCII decimal token required before float conversion')
+    number = float(value)
+    _d2_need(math.isfinite(number), name + ': finite token required')
+    return number
+
+
+def _d2_numeric_tokens(text):
+    """Check the numeric spellings consumed below before the legacy parser normalizes them."""
+    for _, token, _ in _logical(text):
+        if not token: continue
+        numeric = []
+        if token[0] in ('timestep','run','create_box','restart'):
+            numeric = token[1:2]
+        elif token[0] == 'fix' and len(token)>4:
+            if token[3]=='property/global' and token[4] in ('youngsModulus','poissonsRatio'):
+                numeric=token[6:]
+            elif token[3]=='property/global' and token[4]=='cohesionEnergyDensity':
+                numeric=token[6:]
+            elif token[3]=='particletemplate/sphere':
+                for field in ('density','radius','atom_type'):
+                    _d2_need(token.count(field)==1,'duplicate/missing template '+field)
+                numeric=[token[4],token[token.index('atom_type')+1],token[token.index('density')+2],token[token.index('radius')+2]]
+            elif token[3]=='gravity':
+                numeric=token[4:5]+token[6:]
+            elif token[3]=='move/mesh' and 'period' in token:
+                _d2_need(token.count('period')==1,'duplicate period')
+                numeric=[token[token.index('period')+1]]
+        for value in numeric:
+            _d2_float_token(value,'actual numeric command')
+
+
+def _d2_int_token(value, name):
+    import re
+    _d2_need(isinstance(value, str) and re.fullmatch(r'[1-9][0-9]*', value) is not None,
+             name + ': ASCII positive integer token required')
+    return int(value)
+
+
+def _d2_close(value, expected, tol, name):
+    value = _d2_number(value, name, positive=expected > 0)
+    _d2_need(value == 0 if expected == 0 else abs(value / expected - 1) <= tol,
+             f'{name}: {value!r} != expected {expected!r} (relative tolerance {tol})')
+
+
+def load_d2_meta(path):
+    """Reject duplicate JSON keys and nonfinite constants before normalization."""
+    def pairs(items):
+        result = {}
+        for key, value in items:
+            _d2_need(key not in result, f'duplicate metadata key: {key}')
+            result[key] = value
+        return result
+    def constant(value):
+        raise ValueError('nonfinite JSON constant: ' + value)
+    with open(path, encoding='utf-8') as stream:
+        return json.load(stream, object_pairs_hook=pairs, parse_constant=constant)
+
+
+def _d2_counts(D, meta, phases, density):
+    """Bind printed distribution/insert counts to the ratified recipe and actual material density.
+
+    Uniform insertion gives the requested total directly. Layered insertion prints rounded
+    group totals; enumerate the at-most-two-atom total-rounding interval and require one
+    unique phase-count vector. No requested total is guessed from a default campaign.
+    """
+    template_ids, distributions, insertions = {}, {}, []
+    for _, token in D['cmds']:
+        if token[0] != 'fix' or len(token) < 4:
+            continue
+        if token[3] == 'particletemplate/sphere':
+            _d2_need(token[1] not in template_ids, 'duplicate particle template id')
+            _d2_need(token[token.index('density')+1]=='constant' and token[token.index('radius')+1]=='constant', 'template density/radius must be constant')
+            template_ids[token[1]] = _d2_int_token(token[token.index('atom_type')+1], 'template atom_type')
+        elif token[3].startswith('particledistribution/'):
+            _d2_need(token[3] == 'particledistribution/discrete' and token[1] not in distributions,
+                     'unsupported/duplicate distribution')
+            count = _d2_int_token(token[5], 'distribution template count')
+            _d2_need(len(token) == 6 + 2*count, 'distribution entry count/trailing tokens')
+            entries = token[6:]
+            _d2_need(len(set(entries[::2])) == count, 'duplicate distribution template')
+            distributions[token[1]] = dict(zip(entries[::2], entries[1::2]))
+        elif token[3].startswith('insert/'):
+            _d2_need(token[3] == 'insert/pack', 'unsupported insertion style')
+            for field in ('distributiontemplate', 'particles_in_region', 'seed'):
+                _d2_need(token.count(field) == 1, 'missing/duplicate insertion ' + field)
+            insertions.append((token[token.index('distributiontemplate')+1],
+                               _d2_int_token(token[token.index('particles_in_region')+1], 'insert count'),
+                               _d2_int_token(token[token.index('seed')+1], 'insert seed')))
+    _d2_need(len(template_ids) == len(phases), 'template ids do not match active phases')
+    _d2_need(len(insertions) in (1, 2) and len(distributions) == len(insertions), 'unsupported insertion partition')
+    _d2_need(len({x[0] for x in insertions}) == len(insertions), 'reused insertion distribution')
+    _d2_need(insertions[0][2] == _d2_integer(meta['seed'], 'meta seed'), 'actual insertion seed != metadata')
+    groups = []
+    for dist, total, seed in insertions:
+        _d2_need(dist in distributions, 'missing referenced distribution')
+        entries = distributions[dist]
+        _d2_need(all(key in template_ids for key in entries), 'unknown template in distribution')
+        indices = [template_ids[key] for key in entries]
+        labels = [D['names'][i] for i in indices]
+        weight = sum(D2_RAW_WEIGHT[p] for p in labels)
+        for key, label in zip(entries, labels):
+            # Fractions are printed with six digits after the point, hence absolute tolerance.
+            fraction = _d2_number(_d2_float_token(entries[key], 'distribution mass fraction'), 'distribution mass fraction')
+            _d2_need(abs(fraction - D2_RAW_WEIGHT[label]/weight) <= 0.500001e-6,
+                     'actual distribution fraction != ratified active-phase mass recipe')
+        groups.append((tuple(indices), total))
+    flattened = [i for group, _ in groups for i in group]
+    _d2_need(sorted(flattened) == list(range(1, len(phases)+1)), 'distribution partition repeats/omits a phase')
+    if len(groups) == 2:
+        _d2_need(set(groups[0][0]) == {i for i,p in D['names'].items() if p.startswith('AM_')}
+                 and groups[1][0] == (len(phases),), 'only AM then SE layered insertion is supported')
+    radii = {p: REG_D_UM[p]*1e-6*meta['cgf']/2 for p in phases}
+    counts_per_mass = {i: D2_RAW_WEIGHT[p] / (density['SE' if p == 'SE' else 'AM'] * radii[p]**3)
+                       for i,p in D['names'].items() if p != 'WALL'}
+    denominator = sum(counts_per_mass.values())
+    total = sum(n for _,n in groups)
+    candidates = [total] if len(groups) == 1 else range(max(1,total-2), total+3)
+    vectors = set()
+    for requested in candidates:
+        vector = tuple(int(round(requested * counts_per_mass[i]/denominator)) for i in sorted(counts_per_mass))
+        if len(groups) == 1 or all(sum(vector[i-1] for i in ids) == n for ids,n in groups):
+            vectors.add(vector)
+    _d2_need(len(vectors) == 1, 'insertion counts do not identify a unique actual phase plan')
+    vector = next(iter(vectors))
+    _d2_need(all(n > 0 for n in vector), 'development contract requires all active phase counts positive')
+    _d2_need(sum(vector) == _d2_integer(meta['n_atoms_planned'], 'n_atoms_planned'), 'actual planned counts != metadata total')
+    return {str(i+1): n for i,n in enumerate(vector)}
+
+
+def _d2_lifecycle(commands):
+    """Validate the supported insertion/settling/rotation program, without executing it.
+
+    Geometry remains supplied input; references and command lifetimes must still make
+    the planned-count interpretation meaningful. No STL/physical geometry is certified.
+    """
+    runs=[i for i,t in enumerate(commands) if t[0]=='run']
+    _d2_need(len(runs)==4,'D2 requires insertion, two settling, and rotation runs')
+    regions,fixes={},{}
+    for i,t in enumerate(commands):
+        if t[0]=='region':
+            _d2_need(len(t)>3 and t[1] not in regions,'duplicate/malformed region')
+            _d2_need(t[-2:]==['units','box'],'region units must be explicit box')
+            if t[2]=='block':
+                _d2_need(len(t)==11,'unsupported block region syntax')
+                v=[_d2_float_token(x,'region coordinate') for x in t[3:9]]
+                _d2_need(all(v[k]<v[k+1] for k in (0,2,4)),'invalid block bounds')
+            else:
+                _d2_need(t[2:4]==['cylinder','x'] and len(t)==11,'unsupported cylinder region syntax')
+                v=[_d2_float_token(x,'region coordinate') for x in t[4:9]]
+                _d2_need(v[2]>0 and v[3]<v[4],'invalid cylinder bounds')
+            regions[t[1]]=i
+        elif t[0]=='fix':
+            _d2_need(len(t)>3 and t[1] not in fixes,'duplicate/malformed fix id')
+            fixes[t[1]]=(i,t)
+    create=[(i,t) for i,t in enumerate(commands) if t[0]=='create_box']
+    _d2_need(len(create)==1 and len(create[0][1])==3 and create[0][1][2] in regions
+             and regions[create[0][1][2]]<create[0][0]<runs[0],'create_box region/reference order')
+    integrators=[(i,t) for i,t in fixes.values() if t[3]=='nve/sphere']
+    _d2_need(len(integrators)==1 and len(integrators[0][1])==4 and integrators[0][0]<runs[0],
+             'one persistent sphere integrator required before insertion run')
+    meshes={name:(i,t) for name,(i,t) in fixes.items() if t[3]=='mesh/surface'}
+    _d2_need(bool(meshes),'wall meshes required')
+    for i,t in meshes.values():
+        _d2_need(len(t)==10 and t[4]=='file' and t[6]=='type' and t[8]=='scale' and i<runs[0],
+                 'unsupported mesh declaration/order')
+        _d2_number(_d2_float_token(t[9],'mesh scale'),'mesh scale')
+    walls=[(i,t) for i,t in fixes.values() if t[3]=='wall/gran']
+    _d2_need(len(walls)==1,'one wall fix required')
+    wi,wt=walls[0]
+    _d2_need(wt[12:14]==['mesh','n_meshes'] and len(wt)>16 and wt[15]=='meshes','wall mesh syntax')
+    nmesh=_d2_int_token(wt[14],'wall mesh count'); references=wt[16:]
+    _d2_need(len(references)==nmesh and len(set(references))==nmesh and set(references)==set(meshes)
+             and all(meshes[name][0]<wi<runs[0] for name in references),'wall mesh references/order')
+    moves=[(i,t) for i,t in fixes.values() if t[3]=='move/mesh']
+    moved=[]
+    for i,t in moves:
+        _d2_need(len(t)==17 and t[4]=='mesh' and t[6:8]==['rotate','origin']
+                 and t[11]=='axis' and t[15]=='period','unsupported mesh motion syntax')
+        moved.append(t[5])
+        origin=[_d2_float_token(x,'rotation origin') for x in t[8:11]]
+        axis=[_d2_float_token(x,'rotation axis') for x in t[12:15]]
+        _d2_need(origin==[0.,0.,0.] and axis==[1.,0.,0.],'unsupported rotation origin/axis')
+        _d2_need(runs[2]<i<runs[3],'mesh rotation must follow both settling runs')
+    _d2_need(len(moved)==len(set(moved)) and set(moved)==set(meshes),'each wall mesh must rotate exactly once')
+    inserts=[(name,i,t) for name,(i,t) in fixes.items() if t[3]=='insert/pack']
+    _d2_need(len(inserts) in (1,2),'unsupported insertion count')
+    for ordinal,(name,i,t) in enumerate(inserts):
+        for field in ('region','distributiontemplate'):
+            _d2_need(t.count(field)==1,'missing/duplicate insertion '+field)
+        region=t[t.index('region')+1];distribution=t[t.index('distributiontemplate')+1]
+        _d2_need(region in regions and regions[region]<i,'insertion region/reference order')
+        _d2_need(distribution in fixes and fixes[distribution][1][3]=='particledistribution/discrete'
+                 and fixes[distribution][0]<i,'insertion distribution/reference order')
+        removed=[j for j,x in enumerate(commands) if x==['unfix',name]]
+        _d2_need(len(removed)==1,'each insertion must be removed exactly once')
+        if ordinal==0:
+            _d2_need(i<runs[0] and runs[1]<removed[0]<runs[2],'first insertion lifecycle differs')
+        else:
+            _d2_need(runs[1]<i<runs[2] and runs[2]<removed[0]<runs[3],'second insertion lifecycle differs')
+    for name,(i,t) in fixes.items():
+        if t[3] not in ('insert/pack','move/mesh'):
+            _d2_need(create[0][0]<i<runs[0],'material/template/force fix must precede insertion run')
+        if t[3]=='particledistribution/discrete':
+            _d2_need(all(template in fixes and fixes[template][1][3]=='particletemplate/sphere'
+                         and fixes[template][0]<i for template in t[6::2]),'distribution template/reference order')
+
+
+def read_d2(text, meta):
+    """Validate explicit D2 development deck+metadata; PASS never authorizes a run.
+
+    Supported active phase sets are AM_P+AM_S+SE and AM_P+SE. Legacy table paths
+    remain gen1/registered contracts. This path neither names cells nor registers a cohort.
+    """
+    result = dict(schema=D2_CONTRACT, verdict='FAIL', failures=[], registered=None,
+                  execution_authorized=False, scope='D2 development deck and planned counts only; not execution evidence')
+    try:
+        _d2_need(isinstance(text, str), 'deck text must be a string')
+        _d2_need(isinstance(meta, dict), 'metadata must be an object')
+        _d2_need(set(meta) <= D2_META_KEYS, 'unknown metadata keys')
+        _d2_need(meta.get('schema') == 'mixer_deck_meta/2' and meta.get('registered', False) is None
+                 and meta.get('development_contract') == 'D2-geomean/unregistered', 'D2 unregistered metadata schema required')
+        raw = text.encode('utf-8')
+        digest = hashlib.sha256(raw).hexdigest()
+        _d2_need(meta.get('deck_sha256') == digest, 'metadata SHA256 != actual deck')
+        _d2_need(_d2_integer(meta['deck_bytes'], 'deck_bytes') == len(raw), 'metadata bytes != actual deck')
+        generation = meta.get('dens_gen')
+        _d2_need(isinstance(generation,str) and generation in D2_DENSITY, 'unknown/missing exact density generation')
+        density = D2_DENSITY[generation]
+        _d2_need(isinstance(meta.get('dens_g_cm3'),dict) and set(meta['dens_g_cm3']) == set(density), 'density table keys differ')
+        for key,value in density.items():
+            _d2_close(meta['dens_g_cm3'][key], value, 0, 'density table '+key)
+        _d2_need(meta.get('dens_carried_from_gen1') == ([] if generation == 'gen1' else ['VGCF','PTFE']), 'carried density provenance differs')
+        types = meta.get('types')
+        choices = [{'1':'AM_P','2':'AM_S','3':'SE','4':'WALL'}, {'1':'AM_P','2':'SE','3':'WALL'}]
+        _d2_need(isinstance(types,dict) and types in choices, 'unsupported active phase/type map')
+        names = {int(i):p for i,p in types.items()}; phases = [names[i] for i in range(1,len(names))]
+        cgf = _d2_number(meta['cgf'], 'cgf')
+        stiff = _d2_number(meta['stiffen_se'], 'stiffen_se')
+        _d2_need(type(meta['hold_bo_pairwise']) is bool and (stiff == 1 or meta['hold_bo_pairwise']), 'stiff D2 requires pairwise force preservation')
+        _d2_need(meta.get('cohesion_nonzero') is True, 'D2 must have nonzero cohesion')
+        _d2_numeric_tokens(text)
+        D = read_deck(text, label=meta.get('arm'))
+        _d2_need(not D['problems'], 'deck parsing: '+ '; '.join(D['problems']))
+        _d2_need(D['n_types'] == len(names) and sorted(D['templates']) == list(range(1,len(names)))
+                 and set(D['mesh_types']) == {len(names)}, 'actual phase/mesh layout != metadata')
+        D['names'], D['type_problems'] = names, []
+        for key in ('E_Pa','E_soft_Pa','nu'):
+            _d2_need(isinstance(meta.get(key),dict) and set(meta[key]) == set(names.values()), 'metadata material keys: '+key)
+        _d2_need(isinstance(meta.get('radius_m'),dict) and set(meta['radius_m']) == set(phases), 'metadata radius keys differ')
+        for i,p in names.items():
+            e = (1e7*stiff if p == 'SE' else REG_E_FIXED[p])
+            _d2_close(D['E'][i-1], e, 0, 'actual E '+p)
+            _d2_close(D['nu'][i-1], REG_NU[p], 0, 'actual nu '+p)
+            _d2_close(meta['E_Pa'][p],e,0,'metadata E '+p)
+            _d2_close(meta['E_soft_Pa'][p],1e7 if p=='SE' else REG_E_FIXED[p],0,'metadata soft E '+p)
+            _d2_close(meta['nu'][p],REG_NU[p],0,'metadata nu '+p)
+            if p != 'WALL':
+                tpl = D['templates'][i]
+                _d2_need(tpl['style']=='particletemplate/sphere' and REG_TPL_SEED.get(tpl['seed'])==p, 'actual phase template identity')
+                _d2_close(tpl['density'],1000*density['SE' if p=='SE' else 'AM'],0,'actual density '+p)
+                radius = REG_D_UM[p]*1e-6*cgf/2
+                _d2_close(tpl['radius'],radius,5e-6,'actual radius/CGF '+p)
+                _d2_close(meta['radius_m'][p],radius,1e-12,'metadata radius/CGF '+p)
+        commands = [t for _,t in D['cmds']]
+        _d2_need([t for t in commands if t[0]=='units'] == [['units','si']], 'D2 requires one units si command')
+        allowed_commands=set('atom_modify atom_style boundary communicate compute create_box dump dump_modify fix hard_particles neigh_modify neighbor newton pair_coeff pair_style region restart run shell thermo thermo_modify thermo_style timestep unfix units write_restart'.split())
+        _d2_need(all(t[0] in allowed_commands for t in commands),'unsupported command/control flow in development deck')
+        insertion_ids={t[1] for t in commands if t[0]=='fix' and len(t)>3 and t[3]=='insert/pack'}
+        _d2_need(all(len(t)==2 and t[1] in insertion_ids for t in commands if t[0]=='unfix'), 'only insertion fixes may be removed')
+        _d2_need(all(t in (['shell','mkdir','post'],['shell','mkdir','restart']) for t in commands if t[0]=='shell'), 'unsupported shell command')
+        allowed_styles={'property/global','gravity','mesh/surface','wall/gran','particletemplate/sphere',
+                        'particledistribution/discrete','insert/pack','nve/sphere','move/mesh'}
+        _d2_need(all(len(t)>3 and t[2]=='all' and t[3] in allowed_styles for t in commands if t[0]=='fix'), 'unsupported fix style/group')
+        walls=[t for t in commands if t[0]=='fix' and t[3]=='wall/gran']
+        wall_style=['wall/gran','model','hertz','tangential','history','cohesion','sjkr','rolling_friction','cdt']
+        _d2_need(len(walls)==1 and walls[0][3:12]==wall_style,'unsupported/missing wall contact law')
+        style = ['pair_style','gran','model','hertz','tangential','history','cohesion','sjkr','rolling_friction','cdt']
+        _d2_need([t for t in commands if t[0]=='pair_style']==[style], 'unsupported pair contact law')
+        gravity = [t for t in commands if t[0]=='fix' and len(t)>3 and t[3]=='gravity']
+        _d2_need(len(gravity)==1 and len(gravity[0])==9 and gravity[0][2]=='all' and gravity[0][5]=='vector', 'one explicit gravity vector required')
+        grav = _d2_number(float(gravity[0][4]), 'actual gravity')
+        _d2_need(grav==9.81 and [float(v) for v in gravity[0][6:]]==[0.,0.,-1.], 'actual gravity != declared mixer gravity')
+        _d2_lifecycle(commands)
+        adhesion = meta.get('adhesion_rule')
+        _d2_need(isinstance(adhesion,dict) and set(adhesion)==D2_ADHESION_KEYS, 'unknown/missing adhesion rule keys')
+        _d2_need(adhesion['rule']=='geomean' and adhesion['wall_rule']=='hare2026_x_rho_uncoated_ncm', 'D2 pair/wall rule differs')
+        rho = _d2_number(adhesion['rho_uncoated_ncm'], 'rho_uncoated_ncm')
+        bo = _d2_number(adhesion['bo_se'], 'bo_se')
+        gamma = adhesion['gamma']
+        _d2_need(isinstance(gamma,dict) and set(gamma)==set(phases), 'gamma active phase keys differ')
+        gamma = {p:_d2_number(v,'gamma '+p) for p,v in gamma.items()}
+        ncm = [gamma[p] for p in phases if p.startswith('AM_')]
+        _d2_need(gamma['SE']==1 and (all(v==rho for v in ncm) or all(v==1 for v in ncm)), 'active gamma is neither uncoated rho nor coated 1')
+        wall = _d2_number(adhesion['gamma_wall'], 'gamma_wall')
+        _d2_close(wall,.0256*rho,1e-12,'wall bound to uncoated NCM')
+        gamma['WALL'] = wall
+        material = _phases(D); se = material['SE']; iseed = se['type']; radius = se['r']
+        weight = (4/3)*math.pi*radius**3*D['templates'][iseed]['density']*grav
+        fss = f0(D['ced'][(iseed,iseed)], radius/2, estar(se,se))
+        _d2_close(fss/weight,bo,D2_FORCE_REL,'absolute printed SE Bo')
+        rows = []
+        for i,pi in names.items():
+            for j,pj in names.items():
+                if j<i: continue
+                ced = D['ced'][(i,j)]
+                _d2_need(D['ced_tok'][(i,j)]==D['ced_tok'][(j,i)], 'CED must be symmetric including print tokens')
+                _d2_number(ced,'CED',positive=pi!='WALL' or pj!='WALL')
+                if pi==pj=='WALL':
+                    _d2_need(ced==0, 'wall-wall CED must be zero');continue
+                aa,bb=material[pi],material[pj]; rs=rstar(aa,bb); es=estar(aa,bb)
+                force=f0(ced,rs,es)
+                expected=fss*math.sqrt(gamma[pi])*math.sqrt(gamma[pj])*rs/(radius/2)
+                _d2_close(force,expected,TOL['f0_ratio'],'geomean force '+pi+'-'+pj)
+                overlap=(2*math.pi*rs*ced / ((4/3)*es*math.sqrt(rs)))**2/min(x for x in (aa['r'],bb['r']) if x is not None)
+                _d2_need(overlap <= .01*(1+D2_FORCE_REL), 'static pair overlap exceeds 1%')
+                rows.append(dict(pair=pi+'-'+pj,i=i,j=j,F0=force,expected_F0=expected,CED=ced,overlap_fraction=overlap))
+        dt=meta['dt'];step=meta['steps']
+        _d2_need(isinstance(dt,dict) and isinstance(step,dict), 'dt/step metadata objects required')
+        _d2_need(D['dt_txt']==dt['deck_txt'] and D['dt']==dt['deck_s'], 'actual timestep != metadata')
+        factor=_d2_number(meta['dt_factor'],'dt_factor')
+        k=round(1/factor)
+        _d2_need(k>=1 and factor==1/k, 'dt_factor must be exactly 1/k for an integer k>=1')
+        _d2_need(set(dt)=={'soft_rule_s','soft_set_by','rule_s','rule_set_by','deck_txt','deck_s','k'}, 'unknown/missing dt keys')
+        _d2_need(set(step)=={'insert','fill','run','dump_every','restart_every','t0_planned','steps_per_rev'}, 'unknown/missing step keys')
+        rule,by=rayleigh_dt(D);_d2_close(D['dt']*k,rule,TOL['rayleigh_rel'],'actual Rayleigh timestep')
+        _d2_close(dt['rule_s'],rule,5e-6,'metadata timestep rule')
+        _d2_need(type(dt['k']) is int and dt['k']==k and dt['rule_set_by']==by,'metadata dt factor/setter')
+        soft=dict(D,E=[1e7 if names[i+1]=='SE' else value for i,value in enumerate(D['E'])])
+        soft_rule,soft_by=rayleigh_dt(soft)
+        _d2_close(dt['soft_rule_s'],soft_rule,5e-6,'metadata soft timestep')
+        _d2_need(dt['soft_set_by']==soft_by,'metadata soft timestep setter')
+        for key,actual in [('insert',1),('fill',D['runs'][1]),('run',D['runs'][3]),('dump_every',D['dump_every']),('restart_every',D['restart_every'])]:
+            _d2_need(type(step[key]) is int and step[key]==actual,'actual step metadata '+key)
+        _d2_close(D['period'],_d2_number(meta['period_s'],'period_s'),5e-6,'actual drum period')
+        _d2_close(meta['period_s'],60/_d2_number(meta['rpm'],'rpm'),1e-12,'rpm/period metadata')
+        t0=planned_t0(D['runs'][1],D['dump_every'])
+        _d2_need(type(step['t0_planned']) is int and step['t0_planned']==t0,'actual planned t0 != metadata')
+        _d2_close(step['steps_per_rev'],meta['period_s']/D['dt'],1e-12,'steps per revolution metadata')
+        physical=meta['physical_s']
+        expected_time=dict(settle=2*D['runs'][1]*D['dt'],rotation=D['runs'][3]*D['dt'],
+                           dump_interval=D['dump_every']*D['dt'],t0_planned=t0*D['dt'])
+        _d2_need(isinstance(physical,dict) and set(physical)==set(expected_time),'unknown/missing physical time keys')
+        for key,value in expected_time.items(): _d2_close(physical[key],value,1e-12,'actual physical time '+key)
+        revolutions=_d2_number(meta['revolutions'],'revolutions',positive=False)
+        expected_duration=revolutions*meta['period_s']
+        _d2_need(abs(expected_time['rotation']-expected_duration)<=expected_duration*TOL['dt_print_rel']+D['dt'],
+                 'actual rotation steps/time != declared revolutions')
+        counts=_d2_counts(D,meta,phases,density)
+        result.update(verdict='PASS',deck_sha256=digest,density_generation=generation,phase_names=names,
+                      expected_counts=counts,n_atoms_planned=sum(counts.values()),Bo_SE=fss/weight,
+                      gravity=grav,rho_uncoated_ncm=rho,gamma=gamma,bo_se=bo,pairs=rows,
+                      tolerances=dict(absolute_Bo_relative=D2_FORCE_REL,pair_force_relative=TOL['f0_ratio']),
+                      metadata_fields_checked='schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts')
+    except (ValueError,TypeError,KeyError,IndexError,OverflowError,ZeroDivisionError) as exc:
+        result['failures'].append(f'D2 development contract: {type(exc).__name__}: {exc}')
+    return result
+
+
+def _d2_cli_report(report, path=None):
+    print(f"D2 개발 덱 계약 {report['verdict']} — 실제 런/코호트/발사 인증 아님")
+    for failure in report['failures']:
+        print('  '+failure)
+    if path:
+        with open(path,'w',encoding='utf-8') as stream:
+            json.dump(report,stream,ensure_ascii=False,indent=2,allow_nan=False);stream.write('\n')
+    return 0 if report['verdict']=='PASS' else 1
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description='믹서 실행 덱 되읽기 — 덱 텍스트에서 E · ν · CED · dt · step 을 읽어 표 E · E0 · DT · B · U 를 독립 검산')
+    ap.add_argument('--d2', nargs=2, metavar=('DECK','META'), help='명시적 D2 개발 덱+메타 독립 검산 (실행/등록 인증 아님)')
     ap.add_argument('--table', nargs=3, action='append', metavar=('KIND', 'OLD', 'NEW'),
                     help='KIND ∈ E · E0 · DT · B · U — OLD · NEW = in.mixer 경로 (B 는 LC 다음 LH · U 는 LC 다음 LU).  여러 번 줄 수 있다')
     ap.add_argument('--json', help='JSON 보고 (도구 sha256 · 허용오차 · 등록 상수 · 덱 sha256 · 생성 명령 · 표 · 실패 항)')
@@ -947,6 +1351,15 @@ def main(argv=None):
     a = ap.parse_args(argv)
     if a.selftest:
         raise SystemExit(_selftest())
+    if a.d2:
+        if a.table or a.md:
+            ap.error('--d2 DECK META [--json REPORT] cannot mix registered tables/markdown')
+        try:
+            text = open(a.d2[0], encoding='utf-8').read()
+            report = read_d2(text, load_d2_meta(a.d2[1]))
+        except (OSError, ValueError) as exc:
+            ap.error(str(exc))
+        raise SystemExit(_d2_cli_report(report, a.json))
     if not a.table:
         ap.error('--table KIND OLD NEW 가 하나도 없다')
     decks, tables = {}, []

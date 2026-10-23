@@ -1,0 +1,7 @@
+{
+  "file": "docs/reviews/codex_mixer_d2_consumers_request_20261024.md",
+  "before_sha256": "ca5c8e2ef6cb3b245462c315457892df1e29d98226e41be263f74ff1750bbd07",
+  "after_sha256": "4feec7e8d4ff36984b8a95b8010ead0bb9c3ae300d5c2c28d7005d6a1624c137",
+  "reason": "three evidence-relative paths interpreted relative to request directory",
+  "source_changed": false
+}

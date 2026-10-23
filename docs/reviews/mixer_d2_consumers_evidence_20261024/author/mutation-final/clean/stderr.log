@@ -1,0 +1,21 @@
+test_actual_command_scope (__main__.D2Consumers.test_actual_command_scope) ... /workspace/.cloud-setup/nonrint/mxd2-01-work/mutation-final/clean/scripts/make_mixer_deck.py:1122: ResourceWarning: unclosed file <_io.BufferedReader name='/workspace/.cloud-setup/nonrint/mxd2-01-work/mutation-final/clean/scripts/make_mixer_deck.py'>
+  generator_sha256=hashlib.sha256(open(os.path.abspath(__file__), 'rb').read()).hexdigest(),
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_actual_common_mode_mutations (__main__.D2Consumers.test_actual_common_mode_mutations) ... ok
+test_ceiling_and_ced_meta_rebinding (__main__.D2Consumers.test_ceiling_and_ced_meta_rebinding) ... ok
+test_cli_and_duplicate_json (__main__.D2Consumers.test_cli_and_duplicate_json) ... ok
+test_command_lifecycle (__main__.D2Consumers.test_command_lifecycle) ... ok
+test_coordinated_density_and_gravity_vector (__main__.D2Consumers.test_coordinated_density_and_gravity_vector) ... ok
+test_counts_are_from_actual_inputs (__main__.D2Consumers.test_counts_are_from_actual_inputs) ... ok
+test_d2_pairs_and_old_contracts (__main__.D2Consumers.test_d2_pairs_and_old_contracts) ... ok
+test_dt_half_and_legacy_cli_positive (__main__.D2Consumers.test_dt_half_and_legacy_cli_positive) ... ok
+test_generation_and_supported_phase_positive (__main__.D2Consumers.test_generation_and_supported_phase_positive) ... ok
+test_meta_binding_and_numeric_boundaries (__main__.D2Consumers.test_meta_binding_and_numeric_boundaries) ... ok
+test_pair_identity_and_orientation (__main__.D2Consumers.test_pair_identity_and_orientation) ... ok
+test_tokens_and_nested_schema (__main__.D2Consumers.test_tokens_and_nested_schema) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 3.144s
+
+OK

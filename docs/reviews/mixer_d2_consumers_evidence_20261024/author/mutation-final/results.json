@@ -1,0 +1,268 @@
+{
+  "clean_pass": true,
+  "mutations": 19,
+  "caught": 19,
+  "all_expected": true,
+  "results": [
+    {
+      "case": "clean",
+      "skip_guard_condition": null,
+      "source_sha256": "bfeaf8497048360ba328cb1a01575f2c2f7573d93e7627f53e535da73b8874d3",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "mutation-final/clean/scripts/test_mixer_d2_consumers.py"
+      ],
+      "returncode": 0,
+      "expected_returncode": "zero",
+      "caught": true
+    },
+    {
+      "case": "deck_hash",
+      "skip_guard_condition": "message == 'metadata SHA256 != actual deck'",
+      "source_sha256": "8d5cc3517d4c2b6eaf43f00e7feac6320210a59fed67c4f97e0e8ef1e34ecf93",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "mutation-final/deck_hash/scripts/test_mixer_d2_consumers.py"
+      ],
+      "returncode": 1,
+      "expected_returncode": "nonzero",
+      "caught": true
+    },
+    {
+      "case": "deck_bytes",
+      "skip_guard_condition": "message == 'metadata bytes != actual deck'",
+      "source_sha256": "26965364fdef349c61c4b94d9d7dbd436bd7c47a7b3112c9c9e40e2c2c8659ce",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "mutation-final/deck_bytes/scripts/test_mixer_d2_consumers.py"
+      ],
+      "returncode": 1,
+      "expected_returncode": "nonzero",
+      "caught": true
+    },
+    {
+      "case": "actual_density",
+      "skip_guard_condition": "message.startswith('actual density ')",
+      "source_sha256": "76200f39198f1615349540204e7483ad7954a306be31947e69b8505845ad780a",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "mutation-final/actual_density/scripts/test_mixer_d2_consumers.py"
+      ],
+      "returncode": 1,
+      "expected_returncode": "nonzero",
+      "caught": true
+    },
+    {
+      "case": "absolute_bo",
+      "skip_guard_condition": "message.startswith('absolute printed SE Bo:')",
+      "source_sha256": "194a35c4cc6af9573960e0713645b39c1c14e2228bed0f314336a0224d71cfe2",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "mutation-final/absolute_bo/scripts/test_mixer_d2_consumers.py"
+      ],
+      "returncode": 1,
+      "expected_returncode": "nonzero",
+      "caught": true
+    },
+    {
+      "case": "gravity",
+      "skip_guard_condition": "message == 'actual gravity != declared mixer gravity'",
+      "source_sha256": "3bc38ca95d54bef916edd2d37c2fd286813c1d268adb53c1e4afc0b754e1c7d1",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "mutation-final/gravity/scripts/test_mixer_d2_consumers.py"
+      ],
+      "returncode": 1,
+      "expected_returncode": "nonzero",
+      "caught": true
+    },
+    {
+      "case": "mass_fraction",
+      "skip_guard_condition": "message == 'actual distribution fraction != ratified active-phase mass recipe'",
+      "source_sha256": "4d75d64d3c56189506f1b0ef704e833e17ce7eb880d6c3482d7bc3eee4f7f4e9",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "mutation-final/mass_fraction/scripts/test_mixer_d2_consumers.py"
+      ],
+      "returncode": 1,
+      "expected_returncode": "nonzero",
+      "caught": true
+    },
+    {
+      "case": "plan_total",
+      "skip_guard_condition": "message == 'actual planned counts != metadata total'",
+      "source_sha256": "4bde0e6b2db4e7e891985270c094cd61085227fc5034e071274eb6504b424736",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "mutation-final/plan_total/scripts/test_mixer_d2_consumers.py"
+      ],
+      "returncode": 1,
+      "expected_returncode": "nonzero",
+      "caught": true
+    },
+    {
+      "case": "first_seed",
+      "skip_guard_condition": "message == 'actual insertion seed != metadata'",
+      "source_sha256": "95421f115d2e1541e6c9ca187f781d9a510f053e426ca500a51f2e3e7a22ea5b",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "mutation-final/first_seed/scripts/test_mixer_d2_consumers.py"
+      ],
+      "returncode": 1,
+      "expected_returncode": "nonzero",
+      "caught": true
+    },
+    {
+      "case": "unknown_meta",
+      "skip_guard_condition": "message == 'unknown metadata keys'",
+      "source_sha256": "5b84d57940bd1ee5a2af5cc3c792966ae40831c5e339b2ede2cec0989983e61a",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "mutation-final/unknown_meta/scripts/test_mixer_d2_consumers.py"
+      ],
+      "returncode": 1,
+      "expected_returncode": "nonzero",
+      "caught": true
+    },
+    {
+      "case": "ascii_numeric",
+      "skip_guard_condition": "message.endswith(': ASCII decimal token required before float conversion')",
+      "source_sha256": "11f3ed3e1d1081b2fddc7de380861b2e39087502c6d8ff3e149baf8f0483160a",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "mutation-final/ascii_numeric/scripts/test_mixer_d2_consumers.py"
+      ],
+      "returncode": 1,
+      "expected_returncode": "nonzero",
+      "caught": true
+    },
+    {
+      "case": "duplicate_json",
+      "skip_guard_condition": "message.startswith('duplicate metadata key:')",
+      "source_sha256": "7f3121cfa3dbeaf796e781d6d61d43a8d199e3422c3d756305bd2f4b2b14df29",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "mutation-final/duplicate_json/scripts/test_mixer_d2_consumers.py"
+      ],
+      "returncode": 1,
+      "expected_returncode": "nonzero",
+      "caught": true
+    },
+    {
+      "case": "pair_non_ced",
+      "skip_guard_condition": "message == 'non-CED command tokens differ (geometry/seed/gravity/material/time/etc.)'",
+      "source_sha256": "9701ed4be1199fc56d283976e590aac63f8e70101bd809bad31497828f1ed045",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "mutation-final/pair_non_ced/scripts/test_mixer_d2_consumers.py"
+      ],
+      "returncode": 1,
+      "expected_returncode": "nonzero",
+      "caught": true
+    },
+    {
+      "case": "pair_orientation",
+      "skip_guard_condition": "message == 'pair direction must be uncoated rho -> coated 1'",
+      "source_sha256": "86421eba680d4071d18a23ffddf109656108a811c709f4a9f4d48e1d75ca8db5",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "mutation-final/pair_orientation/scripts/test_mixer_d2_consumers.py"
+      ],
+      "returncode": 1,
+      "expected_returncode": "nonzero",
+      "caught": true
+    },
+    {
+      "case": "command_scope",
+      "skip_guard_condition": "message == 'unsupported command/control flow in development deck'",
+      "source_sha256": "fcdbfef9c16205463b4480c3de1328eb409d9a11d5dc22741d4d01a83d103ab7",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "mutation-final/command_scope/scripts/test_mixer_d2_consumers.py"
+      ],
+      "returncode": 1,
+      "expected_returncode": "nonzero",
+      "caught": true
+    },
+    {
+      "case": "insertion_lifetime",
+      "skip_guard_condition": "message == 'first insertion lifecycle differs'",
+      "source_sha256": "b7f57265908e6d45ebe8639f56c125258a741432b05633079f189c47a747c46c",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "mutation-final/insertion_lifetime/scripts/test_mixer_d2_consumers.py"
+      ],
+      "returncode": 1,
+      "expected_returncode": "nonzero",
+      "caught": true
+    },
+    {
+      "case": "sphere_integrator",
+      "skip_guard_condition": "message == 'one persistent sphere integrator required before insertion run'",
+      "source_sha256": "b83e0a211428d4849c491b317941abd6a51f9dbff56dd81ea5a31be181666f8f",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "mutation-final/sphere_integrator/scripts/test_mixer_d2_consumers.py"
+      ],
+      "returncode": 1,
+      "expected_returncode": "nonzero",
+      "caught": true
+    },
+    {
+      "case": "rotation_order",
+      "skip_guard_condition": "message == 'mesh rotation must follow both settling runs'",
+      "source_sha256": "eded26173758dce76e1eebb19d3e33e926351a963294445a4863f8d92c3a9bb8",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "mutation-final/rotation_order/scripts/test_mixer_d2_consumers.py"
+      ],
+      "returncode": 1,
+      "expected_returncode": "nonzero",
+      "caught": true
+    },
+    {
+      "case": "insertion_region",
+      "skip_guard_condition": "message == 'insertion region/reference order'",
+      "source_sha256": "f3b4e2f2cfe78f0c4c5e726aaffa47af1c18cc0376f1c9fcabe34a4abbc29d77",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "mutation-final/insertion_region/scripts/test_mixer_d2_consumers.py"
+      ],
+      "returncode": 1,
+      "expected_returncode": "nonzero",
+      "caught": true
+    },
+    {
+      "case": "overlap_ceiling",
+      "skip_guard_condition": "message == 'static pair overlap exceeds 1%'",
+      "source_sha256": "0cf4c9f8c1ac2f92863cdf94f8ede09733b5207f184a3bbe91f61f04803375d2",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "mutation-final/overlap_ceiling/scripts/test_mixer_d2_consumers.py"
+      ],
+      "returncode": 1,
+      "expected_returncode": "nonzero",
+      "caught": true
+    }
+  ]
+}

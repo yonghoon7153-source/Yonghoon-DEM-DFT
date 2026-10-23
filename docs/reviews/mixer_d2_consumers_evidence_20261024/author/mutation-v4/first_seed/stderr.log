@@ -1,0 +1,35 @@
+test_actual_command_scope (__main__.D2Consumers.test_actual_command_scope) ... /workspace/.cloud-setup/nonrint/mxd2-01-work/mutation-v4/first_seed/scripts/make_mixer_deck.py:1122: ResourceWarning: unclosed file <_io.BufferedReader name='/workspace/.cloud-setup/nonrint/mxd2-01-work/mutation-v4/first_seed/scripts/make_mixer_deck.py'>
+  generator_sha256=hashlib.sha256(open(os.path.abspath(__file__), 'rb').read()).hexdigest(),
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_actual_common_mode_mutations (__main__.D2Consumers.test_actual_common_mode_mutations) ... ok
+test_ceiling_and_ced_meta_rebinding (__main__.D2Consumers.test_ceiling_and_ced_meta_rebinding) ... ok
+test_cli_and_duplicate_json (__main__.D2Consumers.test_cli_and_duplicate_json) ... ok
+test_command_lifecycle (__main__.D2Consumers.test_command_lifecycle) ... ok
+test_coordinated_density_and_gravity_vector (__main__.D2Consumers.test_coordinated_density_and_gravity_vector) ... ok
+test_counts_are_from_actual_inputs (__main__.D2Consumers.test_counts_are_from_actual_inputs) ... ok
+test_d2_pairs_and_old_contracts (__main__.D2Consumers.test_d2_pairs_and_old_contracts) ... ok
+test_dt_half_and_legacy_cli_positive (__main__.D2Consumers.test_dt_half_and_legacy_cli_positive) ... ok
+test_generation_and_supported_phase_positive (__main__.D2Consumers.test_generation_and_supported_phase_positive) ... ok
+test_meta_binding_and_numeric_boundaries (__main__.D2Consumers.test_meta_binding_and_numeric_boundaries) ... FAIL
+test_pair_identity_and_orientation (__main__.D2Consumers.test_pair_identity_and_orientation) ... ok
+test_tokens_and_nested_schema (__main__.D2Consumers.test_tokens_and_nested_schema) ... ok
+
+======================================================================
+FAIL: test_meta_binding_and_numeric_boundaries (__main__.D2Consumers.test_meta_binding_and_numeric_boundaries)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint/mxd2-01-work/mutation-v4/first_seed/scripts/test_mixer_d2_consumers.py", line 120, in test_meta_binding_and_numeric_boundaries
+    q=copy.deepcopy(m);f(q);self.assert_fail(rb.read_d2(t,q))
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.cloud-setup/nonrint/mxd2-01-work/mutation-v4/first_seed/scripts/test_mixer_d2_consumers.py", line 53, in assert_fail
+    self.assertEqual(result['verdict'], 'FAIL', result)
+AssertionError: 'PASS' != 'FAIL'
+- PASS
++ FAIL
+ : {'schema': 'mixer_d2_development/1', 'verdict': 'PASS', 'failures': [], 'registered': None, 'execution_authorized': False, 'scope': 'D2 development deck and planned counts only; not execution evidence', 'deck_sha256': '32033f6b0e17f33ecfe70121eaee393aa6c2748151f54b073243b916c6080644', 'density_generation': 'lab20261014', 'phase_names': {1: 'AM_P', 2: 'AM_S', 3: 'SE', 4: 'WALL'}, 'expected_counts': {'1': 143, '2': 699, '3': 99158}, 'n_atoms_planned': 100000, 'Bo_SE': 0.7299906001321018, 'gravity': 9.81, 'rho_uncoated_ncm': 0.3, 'gamma': {'AM_P': 0.3, 'AM_S': 0.3, 'SE': 1.0, 'WALL': 0.00768}, 'bo_se': 0.73, 'pairs': [{'pair': 'AM_P-AM_P', 'i': 1, 'j': 1, 'F0': 5.762056386024637e-08, 'expected_F0': 5.761958623113774e-08, 'CED': 102869.0, 'overlap_fraction': 3.8411948264080864e-07}, {'pair': 'AM_P-AM_S', 'i': 1, 'j': 2, 'F0': 3.545905129851062e-08, 'expected_F0': 3.545820691146938e-08, 'CED': 120940.0, 'overlap_fraction': 7.351337819054406e-07}, {'pair': 'AM_P-SE', 'i': 1, 'j': 3, 'F0': 2.104013281862581e-08, 'expected_F0': 2.1039698088605478e-08, 'CED': 102981.0, 'overlap_fraction': 6.304885957683845e-06}, {'pair': 'AM_P-WALL', 'i': 1, 'j': 4, 'F0': 1.8438472695519334e-08, 'expected_F0': 1.8438267593964075e-08, 'CED': 49785.9, 'overlap_fraction': 1.2698778143316802e-07}, {'pair': 'AM_S-AM_S', 'i': 2, 'j': 2, 'F0': 2.5608841273169413e-08, 'expected_F0': 2.560870499161677e-08, 'CED': 134796.0, 'overlap_fraction': 6.595554435016158e-07}, {'pair': 'AM_S-SE', 'i': 2, 'j': 3, 'F0': 1.870204897498837e-08, 'expected_F0': 1.87019538565382e-08, 'CED': 107104.0, 'overlap_fraction': 6.06208309259074e-06}, {'pair': 'AM_S-WALL', 'i': 2, 'j': 4, 'F0': 8.19488259882398e-09, 'expected_F0': 8.194785597317367e-09, 'CED': 65238.0, 'overlap_fraction': 2.1804718674125384e-07}, {'pair': 'SE-SE', 'i': 3, 'j': 3, 'F0': 2.1340587493013975e-08, 'expected_F0': 2.1340587493013975e-08, 'CED': 108837.0, 'overlap_fraction': 1.089151207006458e-05}, {'pair': 'SE-WALL', 'i': 3, 'j': 4, 'F0': 3.740430042738864e-09, 'expected_F0': 3.74039077130764e-09, 'CED': 55973.6, 'overlap_fraction': 1.8559516978638765e-06}], 'tolerances': {'absolute_Bo_relative': 2e-05, 'pair_force_relative': 3.0000000000000004e-05}, 'metadata_fields_checked': 'schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts'}
+
+----------------------------------------------------------------------
+Ran 13 tests in 1.454s
+
+FAILED (failures=1)

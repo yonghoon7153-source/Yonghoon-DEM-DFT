@@ -1,0 +1,3506 @@
+{
+  "source_hashes": {
+    "make_mixer_deck.py": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27",
+    "mixer_deck_readback.py": "bfeaf8497048360ba328cb1a01575f2c2f7573d93e7627f53e535da73b8874d3",
+    "mixer_deck_diff.py": "9a86950434b4abe852a6e3411fa809e78eef3d5ef6d7c8e125fb694cc1582877",
+    "mixer_smoke_blind.py": "83760d9d81e4b2b6cf2d4ae7eda7f140dbec87cadc836b82079b1fd64f15dd4a",
+    "test_mixer_d2_consumers.py": "af01046d505035180255c06fb483153e6518431d320c37da31391e477cd74784"
+  },
+  "cases": [
+    {
+      "label": "positive_0",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 176,
+            "2": 859,
+            "3": 98968
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 176,
+            "2": 859,
+            "3": 98968
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_1",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 176,
+            "2": 859,
+            "3": 98968
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 176,
+            "2": 859,
+            "3": 98968
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_2",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 176,
+            "2": 859,
+            "3": 98968
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 176,
+            "2": 859,
+            "3": 98968
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_3",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 176,
+            "2": 859,
+            "3": 98968
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 176,
+            "2": 859,
+            "3": 98968
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_4",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 176,
+            "2": 859,
+            "3": 98968
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 176,
+            "2": 859,
+            "3": 98968
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_5",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 176,
+            "2": 859,
+            "3": 98968
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 176,
+            "2": 859,
+            "3": 98968
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_6",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 176,
+            "2": 859,
+            "3": 98968
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 176,
+            "2": 859,
+            "3": 98968
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_7",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 176,
+            "2": 859,
+            "3": 98968
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 176,
+            "2": 859,
+            "3": 98968
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_8",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 176,
+            "2": 859,
+            "3": 98968
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 176,
+            "2": 859,
+            "3": 98968
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_9",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 176,
+            "2": 859,
+            "3": 98968
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 176,
+            "2": 859,
+            "3": 98968
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_10",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 176,
+            "2": 859,
+            "3": 98968
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 176,
+            "2": 859,
+            "3": 98968
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_11",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 176,
+            "2": 859,
+            "3": 98968
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 176,
+            "2": 859,
+            "3": 98968
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_12",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 143,
+            "2": 699,
+            "3": 99161
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 143,
+            "2": 699,
+            "3": 99161
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_13",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 143,
+            "2": 699,
+            "3": 99161
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 143,
+            "2": 699,
+            "3": 99161
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_14",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 143,
+            "2": 699,
+            "3": 99161
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 143,
+            "2": 699,
+            "3": 99161
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_15",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 143,
+            "2": 699,
+            "3": 99161
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 143,
+            "2": 699,
+            "3": 99161
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_16",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 143,
+            "2": 699,
+            "3": 99161
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 143,
+            "2": 699,
+            "3": 99161
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_17",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 143,
+            "2": 699,
+            "3": 99161
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 143,
+            "2": 699,
+            "3": 99161
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_18",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 143,
+            "2": 699,
+            "3": 99161
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 143,
+            "2": 699,
+            "3": 99161
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_19",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 143,
+            "2": 699,
+            "3": 99161
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 143,
+            "2": 699,
+            "3": 99161
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_20",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 143,
+            "2": 699,
+            "3": 99161
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 143,
+            "2": 699,
+            "3": 99161
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_21",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 143,
+            "2": 699,
+            "3": 99161
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 143,
+            "2": 699,
+            "3": 99161
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_22",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 143,
+            "2": 699,
+            "3": 99161
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 143,
+            "2": 699,
+            "3": 99161
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_23",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 143,
+            "2": 699,
+            "3": 99161
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 143,
+            "2": 699,
+            "3": 99161
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_24",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 178,
+            "2": 99825
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 178,
+            "2": 99825
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_25",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 178,
+            "2": 99825
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 178,
+            "2": 99825
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_26",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 178,
+            "2": 99825
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 178,
+            "2": 99825
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_27",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 178,
+            "2": 99825
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 178,
+            "2": 99825
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_28",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 178,
+            "2": 99825
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 178,
+            "2": 99825
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_29",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 178,
+            "2": 99825
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 178,
+            "2": 99825
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_30",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 178,
+            "2": 99825
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 178,
+            "2": 99825
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_31",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 178,
+            "2": 99825
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 178,
+            "2": 99825
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_32",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 178,
+            "2": 99825
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 178,
+            "2": 99825
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_33",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 178,
+            "2": 99825
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 178,
+            "2": 99825
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_34",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 178,
+            "2": 99825
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 178,
+            "2": 99825
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_35",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 178,
+            "2": 99825
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 178,
+            "2": 99825
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_36",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 144,
+            "2": 99859
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 144,
+            "2": 99859
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_37",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 144,
+            "2": 99859
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 144,
+            "2": 99859
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_38",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 144,
+            "2": 99859
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 144,
+            "2": 99859
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_39",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 144,
+            "2": 99859
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 144,
+            "2": 99859
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_40",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 144,
+            "2": 99859
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 144,
+            "2": 99859
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_41",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 144,
+            "2": 99859
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 144,
+            "2": 99859
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_42",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 144,
+            "2": 99859
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 144,
+            "2": 99859
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_43",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 144,
+            "2": 99859
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 144,
+            "2": 99859
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_44",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 144,
+            "2": 99859
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 144,
+            "2": 99859
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_45",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 144,
+            "2": 99859
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 144,
+            "2": 99859
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_46",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 144,
+            "2": 99859
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 144,
+            "2": 99859
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "positive_47",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 144,
+            "2": 99859
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 144,
+            "2": 99859
+          },
+          "matches_expectation": true,
+          "authority_boundary": true,
+          "counts_match_independent_fixture": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "comments_removed_normal",
+      "expected": "PASS",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 143,
+            "2": 699,
+            "3": 99161
+          },
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 143,
+            "2": 699,
+            "3": 99161
+          },
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "stale_hash",
+      "expected": "FAIL",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: metadata SHA256 != actual deck"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "plan": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: metadata SHA256 != actual deck"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "pair": {
+          "verdict": "FAIL",
+          "failures": [
+            "old: D2 development contract: ValueError: metadata SHA256 != actual deck",
+            "new: D2 development contract: ValueError: metadata SHA256 != actual deck"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "gravity_wrong",
+      "expected": "FAIL",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: actual gravity != declared mixer gravity"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "plan": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: actual gravity != declared mixer gravity"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "pair": {
+          "verdict": "FAIL",
+          "failures": [
+            "old: D2 development contract: ValueError: actual gravity != declared mixer gravity",
+            "new: D2 development contract: ValueError: actual gravity != declared mixer gravity"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "gravity_nan",
+      "expected": "FAIL",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "plan": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "pair": {
+          "verdict": "FAIL",
+          "failures": [
+            "old: D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion",
+            "new: D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "gravity_infinity",
+      "expected": "FAIL",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "plan": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "pair": {
+          "verdict": "FAIL",
+          "failures": [
+            "old: D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion",
+            "new: D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "gravity_unicode",
+      "expected": "FAIL",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "plan": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "pair": {
+          "verdict": "FAIL",
+          "failures": [
+            "old: D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion",
+            "new: D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "gravity_underscore",
+      "expected": "FAIL",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "plan": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "pair": {
+          "verdict": "FAIL",
+          "failures": [
+            "old: D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion",
+            "new: D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "gravity_unknown_group",
+      "expected": "FAIL",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: unsupported fix style/group"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "plan": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: unsupported fix style/group"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "pair": {
+          "verdict": "FAIL",
+          "failures": [
+            "old: D2 development contract: ValueError: unsupported fix style/group",
+            "new: D2 development contract: ValueError: unsupported fix style/group"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "gravity_SE_only",
+      "expected": "FAIL",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: unsupported command/control flow in development deck"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "plan": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: unsupported command/control flow in development deck"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "pair": {
+          "verdict": "FAIL",
+          "failures": [
+            "old: D2 development contract: ValueError: unsupported command/control flow in development deck",
+            "new: D2 development contract: ValueError: unsupported command/control flow in development deck"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "gravity_wrong_vector",
+      "expected": "FAIL",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: actual gravity != declared mixer gravity"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "plan": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: actual gravity != declared mixer gravity"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "pair": {
+          "verdict": "FAIL",
+          "failures": [
+            "old: D2 development contract: ValueError: actual gravity != declared mixer gravity",
+            "new: D2 development contract: ValueError: actual gravity != declared mixer gravity"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "unfix_gravity_before_run",
+      "expected": "FAIL",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: only insertion fixes may be removed"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "plan": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: only insertion fixes may be removed"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "pair": {
+          "verdict": "FAIL",
+          "failures": [
+            "old: D2 development contract: ValueError: only insertion fixes may be removed",
+            "new: D2 development contract: ValueError: only insertion fixes may be removed"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "unfix_CED_before_run",
+      "expected": "FAIL",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: only insertion fixes may be removed"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "plan": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: only insertion fixes may be removed"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "pair": {
+          "verdict": "FAIL",
+          "failures": [
+            "old: D2 development contract: ValueError: only insertion fixes may be removed",
+            "new: D2 development contract: ValueError: only insertion fixes may be removed"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "density_wrong_same_both",
+      "expected": "FAIL",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: actual density SE: 2000.0 != expected 1640.0 (relative tolerance 0)"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "plan": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: actual density SE: 2000.0 != expected 1640.0 (relative tolerance 0)"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "pair": {
+          "verdict": "FAIL",
+          "failures": [
+            "old: D2 development contract: ValueError: actual density SE: 2000.0 != expected 1640.0 (relative tolerance 0)",
+            "new: D2 development contract: ValueError: actual density SE: 2000.0 != expected 1640.0 (relative tolerance 0)"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "density_unicode",
+      "expected": "FAIL",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "plan": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "pair": {
+          "verdict": "FAIL",
+          "failures": [
+            "old: D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion",
+            "new: D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "density_underscore",
+      "expected": "FAIL",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "plan": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "pair": {
+          "verdict": "FAIL",
+          "failures": [
+            "old: D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion",
+            "new: D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "radius_wrong",
+      "expected": "FAIL",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: actual radius/CGF AM_P: 0.00061875 != expected 0.0005625000000000001 (relative tolerance 5e-06)"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "plan": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: actual radius/CGF AM_P: 0.00061875 != expected 0.0005625000000000001 (relative tolerance 5e-06)"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "pair": {
+          "verdict": "FAIL",
+          "failures": [
+            "old: D2 development contract: ValueError: actual radius/CGF AM_P: 0.00061875 != expected 0.0005625000000000001 (relative tolerance 5e-06)",
+            "new: D2 development contract: ValueError: actual radius/CGF AM_P: 0.00061875 != expected 0.0005625000000000001 (relative tolerance 5e-06)"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "radius_nan",
+      "expected": "FAIL",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "plan": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "pair": {
+          "verdict": "FAIL",
+          "failures": [
+            "old: D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion",
+            "new: D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "ced_nan",
+      "expected": "FAIL",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "plan": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "pair": {
+          "verdict": "FAIL",
+          "failures": [
+            "old: D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion",
+            "new: D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "ced_unicode",
+      "expected": "FAIL",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "plan": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "pair": {
+          "verdict": "FAIL",
+          "failures": [
+            "old: D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion",
+            "new: D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "ced_negative",
+      "expected": "FAIL",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: CED: finite normal positive number required"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "plan": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: CED: finite normal positive number required"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "pair": {
+          "verdict": "FAIL",
+          "failures": [
+            "old: D2 development contract: ValueError: CED: finite normal positive number required",
+            "new: D2 development contract: ValueError: CED: finite normal positive number required"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "duplicate_gravity",
+      "expected": "FAIL",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: one explicit gravity vector required"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "plan": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: one explicit gravity vector required"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "pair": {
+          "verdict": "FAIL",
+          "failures": [
+            "old: D2 development contract: ValueError: one explicit gravity vector required",
+            "new: D2 development contract: ValueError: one explicit gravity vector required"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "duplicate_ced",
+      "expected": "FAIL",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: deck parsing: cohesionEnergyDensity 명령이 2 개 — 하나여야 한다"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "plan": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: deck parsing: cohesionEnergyDensity 명령이 2 개 — 하나여야 한다"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "pair": {
+          "verdict": "FAIL",
+          "failures": [
+            "old: D2 development contract: ValueError: deck parsing: cohesionEnergyDensity 명령이 2 개 — 하나여야 한다",
+            "new: D2 development contract: ValueError: deck parsing: cohesionEnergyDensity 명령이 2 개 — 하나여야 한다"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "duplicate_create_box",
+      "expected": "FAIL",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: deck parsing: create_box 명령이 2 개 — 하나여야 한다"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "plan": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: deck parsing: create_box 명령이 2 개 — 하나여야 한다"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "pair": {
+          "verdict": "FAIL",
+          "failures": [
+            "old: D2 development contract: ValueError: deck parsing: create_box 명령이 2 개 — 하나여야 한다",
+            "new: D2 development contract: ValueError: deck parsing: create_box 명령이 2 개 — 하나여야 한다"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "duplicate_distribution",
+      "expected": "FAIL",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: duplicate/malformed fix id"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "plan": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: duplicate/malformed fix id"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "pair": {
+          "verdict": "FAIL",
+          "failures": [
+            "old: D2 development contract: ValueError: duplicate/malformed fix id",
+            "new: D2 development contract: ValueError: duplicate/malformed fix id"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "insert_count",
+      "expected": "FAIL",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: insertion counts do not identify a unique actual phase plan"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "plan": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: insertion counts do not identify a unique actual phase plan"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "pair": {
+          "verdict": "FAIL",
+          "failures": [
+            "old: D2 development contract: ValueError: insertion counts do not identify a unique actual phase plan",
+            "new: D2 development contract: ValueError: insertion counts do not identify a unique actual phase plan"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "insert_count_unicode",
+      "expected": "FAIL",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: insert count: ASCII positive integer token required"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "plan": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: insert count: ASCII positive integer token required"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "pair": {
+          "verdict": "FAIL",
+          "failures": [
+            "old: D2 development contract: ValueError: insert count: ASCII positive integer token required",
+            "new: D2 development contract: ValueError: insert count: ASCII positive integer token required"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "second_insert_seed",
+      "expected": null,
+      "note": "Observation only: independently assess whether single meta.seed promises binding of all actual insertion seeds.",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 143,
+            "2": 699,
+            "3": 99161
+          },
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 143,
+            "2": 699,
+            "3": 99161
+          },
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "one_sided_geometry",
+      "expected": "FAIL",
+      "calls": {
+        "pair": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 pair contract: non-CED command tokens differ (geometry/seed/gravity/material/time/etc.)"
+          ],
+          "matches_expectation": true
+        }
+      }
+    },
+    {
+      "label": "common_geometry_unregistered",
+      "expected": null,
+      "note": "No concrete D2 geometry registration is supplied; equal physical geometry alone is not declared invalid by this audit.",
+      "calls": {
+        "readback": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 143,
+            "2": 699,
+            "3": 99161
+          },
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "plan": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": {
+            "1": 143,
+            "2": 699,
+            "3": 99161
+          },
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "pair": {
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "meta_bo_wrong",
+      "expected": "FAIL",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: absolute printed SE Bo: 1.1250029778013293 != expected 9.0 (relative tolerance 2e-05)"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "plan": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: absolute printed SE Bo: 1.1250029778013293 != expected 9.0 (relative tolerance 2e-05)"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "meta_bo_nan",
+      "expected": "FAIL",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: bo_se: finite normal positive number required"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "plan": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: bo_se: finite normal positive number required"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "meta_density_generation_wrong",
+      "expected": "FAIL",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: density table AM: 4.85 != expected 4.8 (relative tolerance 0)"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "plan": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: density table AM: 4.85 != expected 4.8 (relative tolerance 0)"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "meta_seed_wrong",
+      "expected": "FAIL",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: actual insertion seed != metadata"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "plan": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: actual insertion seed != metadata"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "meta_count_wrong",
+      "expected": "FAIL",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: actual planned counts != metadata total"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "plan": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: actual planned counts != metadata total"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "meta_revolutions_nan",
+      "expected": "FAIL",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: revolutions: finite normal positive number required"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "plan": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: revolutions: finite normal positive number required"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "meta_unknown_field",
+      "expected": "FAIL",
+      "note": "",
+      "calls": {
+        "readback": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: unknown metadata keys"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        },
+        "plan": {
+          "verdict": "FAIL",
+          "failures": [
+            "D2 development contract: ValueError: unknown metadata keys"
+          ],
+          "registered": null,
+          "execution_authorized": false,
+          "expected_counts": null,
+          "matches_expectation": true,
+          "authority_boundary": true
+        }
+      }
+    },
+    {
+      "label": "legacy_B",
+      "expected": "PASS",
+      "calls": {
+        "pair": {
+          "verdict": "PASS",
+          "matches_expectation": true
+        }
+      }
+    },
+    {
+      "label": "D2_rejected_by_legacy_A",
+      "expected": "FAIL",
+      "calls": {
+        "pair": {
+          "verdict": "FAIL",
+          "matches_expectation": true
+        }
+      }
+    },
+    {
+      "label": "D2_rejected_by_legacy_B",
+      "expected": "FAIL",
+      "calls": {
+        "pair": {
+          "verdict": "FAIL",
+          "matches_expectation": true
+        }
+      }
+    },
+    {
+      "label": "D2_rejected_by_legacy_U",
+      "expected": "FAIL",
+      "calls": {
+        "pair": {
+          "verdict": "FAIL",
+          "matches_expectation": true
+        }
+      }
+    },
+    {
+      "label": "D2_rejected_by_legacy_E",
+      "expected": "FAIL",
+      "calls": {
+        "pair": {
+          "verdict": "FAIL",
+          "matches_expectation": true
+        }
+      }
+    },
+    {
+      "label": "D2_rejected_by_legacy_EB",
+      "expected": "FAIL",
+      "calls": {
+        "pair": {
+          "verdict": "FAIL",
+          "matches_expectation": true
+        }
+      }
+    }
+  ],
+  "failed_expectations": [],
+  "case_count": 90,
+  "call_count": 249,
+  "scope": "synthetic source/deck tests only; no physical simulation, registration or launch authority"
+}

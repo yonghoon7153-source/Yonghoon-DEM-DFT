@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "returncode": 0,
+  "command": "node /workspace/.cloud-setup/nonrint-20261024/browser-smoke-mxd2.cjs /workspace/.cloud-setup/nonrint-20261024/browser-smoke-mxd2.json",
+  "pages": [
+    {
+      "path": "/",
+      "status": 200,
+      "js_errors": 0,
+      "unexpected_console_errors": 0,
+      "unexpected_network_failures": 0
+    },
+    {
+      "path": "/mixer",
+      "status": 200,
+      "js_errors": 0,
+      "unexpected_console_errors": 0,
+      "unexpected_network_failures": 0
+    },
+    {
+      "path": "/hetero",
+      "status": 200,
+      "js_errors": 0,
+      "unexpected_console_errors": 0,
+      "unexpected_network_failures": 0
+    }
+  ],
+  "scope": "v18 display and tab interactions; optional preexisting Google font transport failure and missing favicon explicitly recorded",
+  "hashes": {
+    "browser-smoke-mxd2.cjs": "25dd2895d6f810d97c713796b6dccaab5f564603caf96abd101f6a1fd23d2c44",
+    "browser-smoke-mxd2.json": "ee47a3fcd81adcda0079fd67fd506098b9f7874e04a2831615ffeb2e0dcad1dc",
+    "browser-smoke-mxd2.log": "507a925f7666ca564a2c47ff98ea1fb0365d63b1d84843c9a965f03cffe226e7",
+    "browser-smoke-mxd2-initial-network-strict.cjs": "e947daeeca1270ee4b29cb68eab99da440f199230e8d942d8dadb3ebb4e50fe9",
+    "browser-smoke-mxd2-initial-network-strict.json": "899877d8eaacfeeddf16d95d15de9c0dfaeb50dc7ecd046208d64e30d9541ae6",
+    "browser-smoke-mxd2-initial-network-strict.log": "c1e78491a994a18aee670ca6cb094b416c481850120fe7e775f8ab22c48c752f",
+    "browser-smoke-mxd2-network-observed.cjs": "549f206d5292ec5caa236661261f0db6114fe639eba43261174c108fa3d35cc3",
+    "browser-smoke-mxd2-network-observed.json": "feab50910330b96ea90d20a7bb5e2a5f9c9384fa7bfe09e80bc0b1484412ba5f",
+    "browser-smoke-mxd2-network-observed.log": "a724befc1d7b430ed401b5f7efb10061945dcd7f62c697d47e72b3b30bd5ad71",
+    "browser-smoke-mxd2-scope-refinement.patch": "868e5484d68c32f6390b90294c436221234f66b61d0507198c5f090f16ff67f1"
+  }
+}

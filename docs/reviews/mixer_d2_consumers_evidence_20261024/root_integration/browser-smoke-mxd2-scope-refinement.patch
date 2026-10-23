@@ -1,0 +1,68 @@
+--- browser-smoke-mxd2-initial-network-strict.cjs
++++ browser-smoke-mxd2.cjs
+@@ -16,6 +16,14 @@
+   assert.ok(Number.isInteger(receipt.verified_uid));
+   assert.ok(Date.parse(receipt.at_utc) <= Date.now());
+   const sha = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
++  const fontUrl = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap';
++  const faviconUrl = 'http://127.0.0.1:5002/favicon.ico';
++  const baseline = '486a57cf58d3e0d93ef79be6aae50968929099c0';
++  const baselineTemplate = execFileSync('git', ['-C', root, 'show', baseline + ':webapp/templates/base.html']);
++  assert.equal(sha(baselineTemplate), sha(await fs.readFile(root + '/webapp/templates/base.html')));
++  assert.ok(baselineTemplate.toString().includes(fontUrl));
++  const baselineWebFiles = execFileSync('git', ['-C', root, 'ls-tree', '-r', '--name-only', baseline, 'webapp'], {encoding:'utf8'});
++  assert.equal(/favicon/i.test(baselineWebFiles),false);
+   const report = {
+     started_at_utc: new Date().toISOString(),
+     scope: 'Live loopback webapp; v18 document visibility and tab interaction only; no simulation or registration.',
+@@ -23,6 +31,12 @@
+     service_reload_receipt: receipt,
+     service_reload_receipt_sha256: sha(receiptBytes),
+     script_sha256: sha(await fs.readFile(__filename)),
++    known_nonessential_resource_scope: {
++      font: {url:fontUrl, failure:'net::ERR_TUNNEL_CONNECTION_FAILED', reason:'Preexisting optional Google font stylesheet; local font stack has system fallbacks'},
++      favicon: {url:faviconUrl, status:404, reason:'Automatic browser icon request; absent from baseline tracked webapp'},
++      baseline_pin:baseline,
++      unchanged_base_template_sha256:sha(baselineTemplate)
++    },
+     pages: []
+   };
+   const browser = await chromium.launch({ executablePath: '/usr/bin/chromium', headless: true });
+@@ -37,9 +51,11 @@
+     }
+     for (const [path, expected] of [['/', 'DEM'], ['/mixer', '믹서'], ['/hetero', '건식']]) {
+       const page = await browser.newPage();
+-      const errors = [], consoleErrors = [];
++      const errors = [], consoleErrors = [], networkFailures = [];
+       page.on('pageerror', error => errors.push(error.message));
+-      page.on('console', message => { if (message.type() === 'error') consoleErrors.push(message.text()); });
++      page.on('console', message => { if (message.type() === 'error') consoleErrors.push({text:message.text(),location:message.location()}); });
++      page.on('requestfailed', request => networkFailures.push({url:request.url(),failure:request.failure()}));
++      page.on('response', response => { if (response.status()>=400) networkFailures.push({url:response.url(),status:response.status()}); });
+       const response = await page.goto('http://127.0.0.1:5002' + path, { waitUntil: 'networkidle', timeout: 45000 });
+       assert.equal(response.status(), 200);
+       assert.ok((await page.locator('body').innerText()).includes(expected));
+@@ -75,9 +91,22 @@
+         result.easy_detail_roundtrip = 'PASS';
+       }
+       assert.deepEqual(errors, []);
+-      assert.deepEqual(consoleErrors, []);
++      // Only these two observed preexisting optional resources are exempted.
++      // Any other console error or failed app resource still fails the check.
++      const knownWarning = error =>
++        (error.location.url === fontUrl && error.text === 'Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED') ||
++        (error.location.url === faviconUrl && error.text === 'Failed to load resource: the server responded with a status of 404 (NOT FOUND)');
++      const unexpectedConsoleErrors = consoleErrors.filter(error => !knownWarning(error));
++      const unexpectedNetworkFailures = networkFailures.filter(error =>
++        !((error.url === fontUrl && error.failure?.errorText === 'net::ERR_TUNNEL_CONNECTION_FAILED') ||
++          (error.url === faviconUrl && error.status === 404)));
++      assert.deepEqual(unexpectedConsoleErrors, []);
++      assert.deepEqual(unexpectedNetworkFailures, []);
+       result.javascript_errors = errors;
+       result.console_errors = consoleErrors;
++      result.unexpected_console_errors = unexpectedConsoleErrors;
++      result.network_failures = networkFailures;
++      result.unexpected_network_failures = unexpectedNetworkFailures;
+       report.pages.push(result);
+       await page.close();
+     }

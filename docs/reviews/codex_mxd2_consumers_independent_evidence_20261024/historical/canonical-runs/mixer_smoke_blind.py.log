@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/mxd2-independent/candidate/scripts/mixer_smoke_blind.py", line 1772, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/workspace/.cloud-setup/nonrint-20261024/mxd2-independent/candidate/scripts/mixer_smoke_blind.py", line 978, in main
+    return selftest()
+           ^^^^^^^^^^
+  File "/workspace/.cloud-setup/nonrint-20261024/mxd2-independent/candidate/scripts/mixer_smoke_blind.py", line 1065, in selftest
+    run, ref, cert, original, invoke = build(td)
+                                       ^^^^^^^^^
+  File "/workspace/.cloud-setup/nonrint-20261024/mxd2-independent/candidate/scripts/mixer_gate_reader_diff.py", line 146, in build
+    run = _rundir(td, FIRST, deck)
+          ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.cloud-setup/nonrint-20261024/mxd2-independent/candidate/scripts/mixer_gate_reader_diff.py", line 84, in _rundir
+    shutil.copyfile(ROOT / f'dem_scripts/mixer_20260919/{n}.stl', p / f'{n}.stl')
+  File "/workspace/.cloud-setup/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/shutil.py", line 256, in copyfile
+    with open(src, 'rb') as fsrc:
+         ^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/.cloud-setup/nonrint-20261024/mxd2-independent/candidate/dem_scripts/mixer_20260919/Drum.stl'

@@ -1,0 +1,1425 @@
+{
+  "source_hashes_before": {
+    "make_mixer_deck.py": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27",
+    "mixer_deck_readback.py": "855a636eeee8cf0924f9c0807da9a6021b31187b1bff5922e14d0a9162205b44",
+    "mixer_deck_diff.py": "9a86950434b4abe852a6e3411fa809e78eef3d5ef6d7c8e125fb694cc1582877",
+    "mixer_smoke_blind.py": "83760d9d81e4b2b6cf2d4ae7eda7f140dbec87cadc836b82079b1fd64f15dd4a",
+    "test_mixer_d2_consumers.py": "5e755d35bb719d0bb9abe1517825f4abfee58bf4987ebda7b7d3ac31720dd563"
+  },
+  "source_hashes_after": {
+    "make_mixer_deck.py": "661936b78c3d60794714a63102f5461f7f42f581a5ad7da466c7c6fe0465bc27",
+    "mixer_deck_readback.py": "855a636eeee8cf0924f9c0807da9a6021b31187b1bff5922e14d0a9162205b44",
+    "mixer_deck_diff.py": "9a86950434b4abe852a6e3411fa809e78eef3d5ef6d7c8e125fb694cc1582877",
+    "mixer_smoke_blind.py": "83760d9d81e4b2b6cf2d4ae7eda7f140dbec87cadc836b82079b1fd64f15dd4a",
+    "test_mixer_d2_consumers.py": "5e755d35bb719d0bb9abe1517825f4abfee58bf4987ebda7b7d3ac31720dd563"
+  },
+  "source_unchanged": true,
+  "results": [
+    {
+      "name": "baseline",
+      "probe_before": {
+        "schema": "mixer_d2_development/1",
+        "verdict": "PASS",
+        "failures": [],
+        "registered": null,
+        "execution_authorized": false,
+        "scope": "D2 development deck and planned counts only; not execution evidence",
+        "deck_sha256": "61e75e2eea7ebfb5b88e03dbef8a8e1e010e64a063d7c19d7619c74983999010",
+        "density_generation": "lab20261014",
+        "phase_names": {
+          "1": "AM_P",
+          "2": "AM_S",
+          "3": "SE",
+          "4": "WALL"
+        },
+        "expected_counts": {
+          "1": 143,
+          "2": 699,
+          "3": 99161
+        },
+        "n_atoms_planned": 100003,
+        "Bo_SE": 1.1250029778013293,
+        "gravity": 9.81,
+        "rho_uncoated_ncm": 0.25,
+        "gamma": {
+          "AM_P": 0.25,
+          "AM_S": 0.25,
+          "SE": 1.0,
+          "WALL": 0.0064
+        },
+        "bo_se": 1.125,
+        "pairs": [
+          {
+            "pair": "AM_P-AM_P",
+            "i": 1,
+            "j": 1,
+            "F0": 4.164678000279175e-08,
+            "expected_F0": 4.164642309200807e-08,
+            "CED": 104897.0,
+            "overlap_fraction": 3.994141391688713e-07
+          },
+          {
+            "pair": "AM_P-AM_S",
+            "i": 1,
+            "j": 2,
+            "F0": 2.5628801803379172e-08,
+            "expected_F0": 2.5628568056620353e-08,
+            "CED": 123324.0,
+            "overlap_fraction": 7.644017226945981e-07
+          },
+          {
+            "pair": "AM_P-SE",
+            "i": 1,
+            "j": 3,
+            "F0": 1.6658703151843826e-08,
+            "expected_F0": 1.6658569236803236e-08,
+            "CED": 108251.0,
+            "overlap_fraction": 6.966695999131846e-06
+          },
+          {
+            "pair": "AM_P-WALL",
+            "i": 1,
+            "j": 4,
+            "F0": 1.3326813882300475e-08,
+            "expected_F0": 1.3326855389442584e-08,
+            "CED": 50767.3,
+            "overlap_fraction": 1.3204359627736851e-07
+          },
+          {
+            "pair": "AM_S-AM_S",
+            "i": 2,
+            "j": 2,
+            "F0": 1.850929419458042e-08,
+            "expected_F0": 1.850952137422581e-08,
+            "CED": 137453.0,
+            "overlap_fraction": 6.858130506770103e-07
+          },
+          {
+            "pair": "AM_S-SE",
+            "i": 2,
+            "j": 3,
+            "F0": 1.4807508481592286e-08,
+            "expected_F0": 1.4807617099380648e-08,
+            "CED": 112585.0,
+            "overlap_fraction": 6.698407552609897e-06
+          },
+          {
+            "pair": "AM_S-WALL",
+            "i": 2,
+            "j": 4,
+            "F0": 5.923033122320102e-09,
+            "expected_F0": 5.92304683975226e-09,
+            "CED": 66524.0,
+            "overlap_fraction": 2.2672839865654927e-07
+          },
+          {
+            "pair": "SE-SE",
+            "i": 3,
+            "j": 3,
+            "F0": 1.850952137422581e-08,
+            "expected_F0": 1.850952137422581e-08,
+            "CED": 117937.0,
+            "overlap_fraction": 1.2788959294693293e-05
+          },
+          {
+            "pair": "SE-WALL",
+            "i": 3,
+            "j": 4,
+            "F0": 2.9615140564033988e-09,
+            "expected_F0": 2.96152341987613e-09,
+            "CED": 58838.0,
+            "overlap_fraction": 2.050765455740494e-06
+          }
+        ],
+        "tolerances": {
+          "absolute_Bo_relative": 2e-05,
+          "pair_force_relative": 3.0000000000000004e-05
+        },
+        "metadata_fields_checked": "schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts"
+      },
+      "probe_after": {
+        "schema": "mixer_d2_development/1",
+        "verdict": "PASS",
+        "failures": [],
+        "registered": null,
+        "execution_authorized": false,
+        "scope": "D2 development deck and planned counts only; not execution evidence",
+        "deck_sha256": "61e75e2eea7ebfb5b88e03dbef8a8e1e010e64a063d7c19d7619c74983999010",
+        "density_generation": "lab20261014",
+        "phase_names": {
+          "1": "AM_P",
+          "2": "AM_S",
+          "3": "SE",
+          "4": "WALL"
+        },
+        "expected_counts": {
+          "1": 143,
+          "2": 699,
+          "3": 99161
+        },
+        "n_atoms_planned": 100003,
+        "Bo_SE": 1.1250029778013293,
+        "gravity": 9.81,
+        "rho_uncoated_ncm": 0.25,
+        "gamma": {
+          "AM_P": 0.25,
+          "AM_S": 0.25,
+          "SE": 1.0,
+          "WALL": 0.0064
+        },
+        "bo_se": 1.125,
+        "pairs": [
+          {
+            "pair": "AM_P-AM_P",
+            "i": 1,
+            "j": 1,
+            "F0": 4.164678000279175e-08,
+            "expected_F0": 4.164642309200807e-08,
+            "CED": 104897.0,
+            "overlap_fraction": 3.994141391688713e-07
+          },
+          {
+            "pair": "AM_P-AM_S",
+            "i": 1,
+            "j": 2,
+            "F0": 2.5628801803379172e-08,
+            "expected_F0": 2.5628568056620353e-08,
+            "CED": 123324.0,
+            "overlap_fraction": 7.644017226945981e-07
+          },
+          {
+            "pair": "AM_P-SE",
+            "i": 1,
+            "j": 3,
+            "F0": 1.6658703151843826e-08,
+            "expected_F0": 1.6658569236803236e-08,
+            "CED": 108251.0,
+            "overlap_fraction": 6.966695999131846e-06
+          },
+          {
+            "pair": "AM_P-WALL",
+            "i": 1,
+            "j": 4,
+            "F0": 1.3326813882300475e-08,
+            "expected_F0": 1.3326855389442584e-08,
+            "CED": 50767.3,
+            "overlap_fraction": 1.3204359627736851e-07
+          },
+          {
+            "pair": "AM_S-AM_S",
+            "i": 2,
+            "j": 2,
+            "F0": 1.850929419458042e-08,
+            "expected_F0": 1.850952137422581e-08,
+            "CED": 137453.0,
+            "overlap_fraction": 6.858130506770103e-07
+          },
+          {
+            "pair": "AM_S-SE",
+            "i": 2,
+            "j": 3,
+            "F0": 1.4807508481592286e-08,
+            "expected_F0": 1.4807617099380648e-08,
+            "CED": 112585.0,
+            "overlap_fraction": 6.698407552609897e-06
+          },
+          {
+            "pair": "AM_S-WALL",
+            "i": 2,
+            "j": 4,
+            "F0": 5.923033122320102e-09,
+            "expected_F0": 5.92304683975226e-09,
+            "CED": 66524.0,
+            "overlap_fraction": 2.2672839865654927e-07
+          },
+          {
+            "pair": "SE-SE",
+            "i": 3,
+            "j": 3,
+            "F0": 1.850952137422581e-08,
+            "expected_F0": 1.850952137422581e-08,
+            "CED": 117937.0,
+            "overlap_fraction": 1.2788959294693293e-05
+          },
+          {
+            "pair": "SE-WALL",
+            "i": 3,
+            "j": 4,
+            "F0": 2.9615140564033988e-09,
+            "expected_F0": 2.96152341987613e-09,
+            "CED": 58838.0,
+            "overlap_fraction": 2.050765455740494e-06
+          }
+        ],
+        "tolerances": {
+          "absolute_Bo_relative": 2e-05,
+          "pair_force_relative": 3.0000000000000004e-05
+        },
+        "metadata_fields_checked": "schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts"
+      },
+      "tests_run": 11,
+      "failures": [],
+      "errors": [],
+      "regression_suite_passed": true,
+      "mutation_effective": true,
+      "killed_by_tests": true
+    },
+    {
+      "name": "hash_binding_removed",
+      "probe_before": {
+        "schema": "mixer_d2_development/1",
+        "verdict": "FAIL",
+        "failures": [
+          "D2 development contract: ValueError: metadata SHA256 != actual deck"
+        ],
+        "registered": null,
+        "execution_authorized": false,
+        "scope": "D2 development deck and planned counts only; not execution evidence"
+      },
+      "probe_after": {
+        "schema": "mixer_d2_development/1",
+        "verdict": "FAIL",
+        "failures": [
+          "D2 development contract: ValueError: metadata SHA256 != actual deck"
+        ],
+        "registered": null,
+        "execution_authorized": false,
+        "scope": "D2 development deck and planned counts only; not execution evidence"
+      },
+      "tests_run": 11,
+      "failures": [],
+      "errors": [],
+      "regression_suite_passed": true,
+      "mutation_effective": false,
+      "killed_by_tests": false
+    },
+    {
+      "name": "absolute_Bo_removed",
+      "probe_before": {
+        "schema": "mixer_d2_development/1",
+        "verdict": "FAIL",
+        "failures": [
+          "D2 development contract: ValueError: absolute printed SE Bo: 1.1250029778013293 != expected 2.25 (relative tolerance 2e-05)"
+        ],
+        "registered": null,
+        "execution_authorized": false,
+        "scope": "D2 development deck and planned counts only; not execution evidence"
+      },
+      "probe_after": {
+        "schema": "mixer_d2_development/1",
+        "verdict": "PASS",
+        "failures": [],
+        "registered": null,
+        "execution_authorized": false,
+        "scope": "D2 development deck and planned counts only; not execution evidence",
+        "deck_sha256": "61e75e2eea7ebfb5b88e03dbef8a8e1e010e64a063d7c19d7619c74983999010",
+        "density_generation": "lab20261014",
+        "phase_names": {
+          "1": "AM_P",
+          "2": "AM_S",
+          "3": "SE",
+          "4": "WALL"
+        },
+        "expected_counts": {
+          "1": 143,
+          "2": 699,
+          "3": 99161
+        },
+        "n_atoms_planned": 100003,
+        "Bo_SE": 1.1250029778013293,
+        "gravity": 9.81,
+        "rho_uncoated_ncm": 0.25,
+        "gamma": {
+          "AM_P": 0.25,
+          "AM_S": 0.25,
+          "SE": 1.0,
+          "WALL": 0.0064
+        },
+        "bo_se": 2.25,
+        "pairs": [
+          {
+            "pair": "AM_P-AM_P",
+            "i": 1,
+            "j": 1,
+            "F0": 4.164678000279175e-08,
+            "expected_F0": 4.164642309200807e-08,
+            "CED": 104897.0,
+            "overlap_fraction": 3.994141391688713e-07
+          },
+          {
+            "pair": "AM_P-AM_S",
+            "i": 1,
+            "j": 2,
+            "F0": 2.5628801803379172e-08,
+            "expected_F0": 2.5628568056620353e-08,
+            "CED": 123324.0,
+            "overlap_fraction": 7.644017226945981e-07
+          },
+          {
+            "pair": "AM_P-SE",
+            "i": 1,
+            "j": 3,
+            "F0": 1.6658703151843826e-08,
+            "expected_F0": 1.6658569236803236e-08,
+            "CED": 108251.0,
+            "overlap_fraction": 6.966695999131846e-06
+          },
+          {
+            "pair": "AM_P-WALL",
+            "i": 1,
+            "j": 4,
+            "F0": 1.3326813882300475e-08,
+            "expected_F0": 1.3326855389442584e-08,
+            "CED": 50767.3,
+            "overlap_fraction": 1.3204359627736851e-07
+          },
+          {
+            "pair": "AM_S-AM_S",
+            "i": 2,
+            "j": 2,
+            "F0": 1.850929419458042e-08,
+            "expected_F0": 1.850952137422581e-08,
+            "CED": 137453.0,
+            "overlap_fraction": 6.858130506770103e-07
+          },
+          {
+            "pair": "AM_S-SE",
+            "i": 2,
+            "j": 3,
+            "F0": 1.4807508481592286e-08,
+            "expected_F0": 1.4807617099380648e-08,
+            "CED": 112585.0,
+            "overlap_fraction": 6.698407552609897e-06
+          },
+          {
+            "pair": "AM_S-WALL",
+            "i": 2,
+            "j": 4,
+            "F0": 5.923033122320102e-09,
+            "expected_F0": 5.92304683975226e-09,
+            "CED": 66524.0,
+            "overlap_fraction": 2.2672839865654927e-07
+          },
+          {
+            "pair": "SE-SE",
+            "i": 3,
+            "j": 3,
+            "F0": 1.850952137422581e-08,
+            "expected_F0": 1.850952137422581e-08,
+            "CED": 117937.0,
+            "overlap_fraction": 1.2788959294693293e-05
+          },
+          {
+            "pair": "SE-WALL",
+            "i": 3,
+            "j": 4,
+            "F0": 2.9615140564033988e-09,
+            "expected_F0": 2.96152341987613e-09,
+            "CED": 58838.0,
+            "overlap_fraction": 2.050765455740494e-06
+          }
+        ],
+        "tolerances": {
+          "absolute_Bo_relative": 2e-05,
+          "pair_force_relative": 3.0000000000000004e-05
+        },
+        "metadata_fields_checked": "schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts"
+      },
+      "tests_run": 11,
+      "failures": [
+        "test_mixer_d2_consumers.D2Consumers.test_ceiling_and_ced_meta_rebinding"
+      ],
+      "errors": [],
+      "regression_suite_passed": false,
+      "mutation_effective": true,
+      "killed_by_tests": true
+    },
+    {
+      "name": "gravity_vector_removed",
+      "probe_before": {
+        "schema": "mixer_d2_development/1",
+        "verdict": "FAIL",
+        "failures": [
+          "D2 development contract: ValueError: actual gravity != declared mixer gravity"
+        ],
+        "registered": null,
+        "execution_authorized": false,
+        "scope": "D2 development deck and planned counts only; not execution evidence"
+      },
+      "probe_after": {
+        "schema": "mixer_d2_development/1",
+        "verdict": "PASS",
+        "failures": [],
+        "registered": null,
+        "execution_authorized": false,
+        "scope": "D2 development deck and planned counts only; not execution evidence",
+        "deck_sha256": "ff76e281838fd52de467b2a193512b758da6787ea87a2e12d76c9c37c65c749d",
+        "density_generation": "lab20261014",
+        "phase_names": {
+          "1": "AM_P",
+          "2": "AM_S",
+          "3": "SE",
+          "4": "WALL"
+        },
+        "expected_counts": {
+          "1": 143,
+          "2": 699,
+          "3": 99161
+        },
+        "n_atoms_planned": 100003,
+        "Bo_SE": 1.1250029778013293,
+        "gravity": 9.81,
+        "rho_uncoated_ncm": 0.25,
+        "gamma": {
+          "AM_P": 0.25,
+          "AM_S": 0.25,
+          "SE": 1.0,
+          "WALL": 0.0064
+        },
+        "bo_se": 1.125,
+        "pairs": [
+          {
+            "pair": "AM_P-AM_P",
+            "i": 1,
+            "j": 1,
+            "F0": 4.164678000279175e-08,
+            "expected_F0": 4.164642309200807e-08,
+            "CED": 104897.0,
+            "overlap_fraction": 3.994141391688713e-07
+          },
+          {
+            "pair": "AM_P-AM_S",
+            "i": 1,
+            "j": 2,
+            "F0": 2.5628801803379172e-08,
+            "expected_F0": 2.5628568056620353e-08,
+            "CED": 123324.0,
+            "overlap_fraction": 7.644017226945981e-07
+          },
+          {
+            "pair": "AM_P-SE",
+            "i": 1,
+            "j": 3,
+            "F0": 1.6658703151843826e-08,
+            "expected_F0": 1.6658569236803236e-08,
+            "CED": 108251.0,
+            "overlap_fraction": 6.966695999131846e-06
+          },
+          {
+            "pair": "AM_P-WALL",
+            "i": 1,
+            "j": 4,
+            "F0": 1.3326813882300475e-08,
+            "expected_F0": 1.3326855389442584e-08,
+            "CED": 50767.3,
+            "overlap_fraction": 1.3204359627736851e-07
+          },
+          {
+            "pair": "AM_S-AM_S",
+            "i": 2,
+            "j": 2,
+            "F0": 1.850929419458042e-08,
+            "expected_F0": 1.850952137422581e-08,
+            "CED": 137453.0,
+            "overlap_fraction": 6.858130506770103e-07
+          },
+          {
+            "pair": "AM_S-SE",
+            "i": 2,
+            "j": 3,
+            "F0": 1.4807508481592286e-08,
+            "expected_F0": 1.4807617099380648e-08,
+            "CED": 112585.0,
+            "overlap_fraction": 6.698407552609897e-06
+          },
+          {
+            "pair": "AM_S-WALL",
+            "i": 2,
+            "j": 4,
+            "F0": 5.923033122320102e-09,
+            "expected_F0": 5.92304683975226e-09,
+            "CED": 66524.0,
+            "overlap_fraction": 2.2672839865654927e-07
+          },
+          {
+            "pair": "SE-SE",
+            "i": 3,
+            "j": 3,
+            "F0": 1.850952137422581e-08,
+            "expected_F0": 1.850952137422581e-08,
+            "CED": 117937.0,
+            "overlap_fraction": 1.2788959294693293e-05
+          },
+          {
+            "pair": "SE-WALL",
+            "i": 3,
+            "j": 4,
+            "F0": 2.9615140564033988e-09,
+            "expected_F0": 2.96152341987613e-09,
+            "CED": 58838.0,
+            "overlap_fraction": 2.050765455740494e-06
+          }
+        ],
+        "tolerances": {
+          "absolute_Bo_relative": 2e-05,
+          "pair_force_relative": 3.0000000000000004e-05
+        },
+        "metadata_fields_checked": "schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts"
+      },
+      "tests_run": 11,
+      "failures": [],
+      "errors": [],
+      "regression_suite_passed": true,
+      "mutation_effective": true,
+      "killed_by_tests": false
+    },
+    {
+      "name": "nonCED_pair_equality_removed",
+      "probe_before": {
+        "schema": "mixer_d2_pair_development/1",
+        "allow": "D2",
+        "verdict": "FAIL",
+        "registered": null,
+        "execution_authorized": false,
+        "failures": [
+          "D2 pair contract: non-CED command tokens differ (geometry/seed/gravity/material/time/etc.)"
+        ],
+        "table": [],
+        "old": {
+          "schema": "mixer_d2_development/1",
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "scope": "D2 development deck and planned counts only; not execution evidence",
+          "deck_sha256": "b5e32f470b3c3991800ebd0083af0863cc98839dc0cac5878706db9f3b7a4638",
+          "density_generation": "lab20261014",
+          "phase_names": {
+            "1": "AM_P",
+            "2": "AM_S",
+            "3": "SE",
+            "4": "WALL"
+          },
+          "expected_counts": {
+            "1": 143,
+            "2": 699,
+            "3": 99161
+          },
+          "n_atoms_planned": 100003,
+          "Bo_SE": 1.1250029778013293,
+          "gravity": 9.81,
+          "rho_uncoated_ncm": 0.25,
+          "gamma": {
+            "AM_P": 0.25,
+            "AM_S": 0.25,
+            "SE": 1.0,
+            "WALL": 0.0064
+          },
+          "bo_se": 1.125,
+          "pairs": [
+            {
+              "pair": "AM_P-AM_P",
+              "i": 1,
+              "j": 1,
+              "F0": 4.164678000279175e-08,
+              "expected_F0": 4.164642309200807e-08,
+              "CED": 104897.0,
+              "overlap_fraction": 3.994141391688713e-07
+            },
+            {
+              "pair": "AM_P-AM_S",
+              "i": 1,
+              "j": 2,
+              "F0": 2.5628801803379172e-08,
+              "expected_F0": 2.5628568056620353e-08,
+              "CED": 123324.0,
+              "overlap_fraction": 7.644017226945981e-07
+            },
+            {
+              "pair": "AM_P-SE",
+              "i": 1,
+              "j": 3,
+              "F0": 1.6658703151843826e-08,
+              "expected_F0": 1.6658569236803236e-08,
+              "CED": 108251.0,
+              "overlap_fraction": 6.966695999131846e-06
+            },
+            {
+              "pair": "AM_P-WALL",
+              "i": 1,
+              "j": 4,
+              "F0": 1.3326813882300475e-08,
+              "expected_F0": 1.3326855389442584e-08,
+              "CED": 50767.3,
+              "overlap_fraction": 1.3204359627736851e-07
+            },
+            {
+              "pair": "AM_S-AM_S",
+              "i": 2,
+              "j": 2,
+              "F0": 1.850929419458042e-08,
+              "expected_F0": 1.850952137422581e-08,
+              "CED": 137453.0,
+              "overlap_fraction": 6.858130506770103e-07
+            },
+            {
+              "pair": "AM_S-SE",
+              "i": 2,
+              "j": 3,
+              "F0": 1.4807508481592286e-08,
+              "expected_F0": 1.4807617099380648e-08,
+              "CED": 112585.0,
+              "overlap_fraction": 6.698407552609897e-06
+            },
+            {
+              "pair": "AM_S-WALL",
+              "i": 2,
+              "j": 4,
+              "F0": 5.923033122320102e-09,
+              "expected_F0": 5.92304683975226e-09,
+              "CED": 66524.0,
+              "overlap_fraction": 2.2672839865654927e-07
+            },
+            {
+              "pair": "SE-SE",
+              "i": 3,
+              "j": 3,
+              "F0": 1.850952137422581e-08,
+              "expected_F0": 1.850952137422581e-08,
+              "CED": 117937.0,
+              "overlap_fraction": 1.2788959294693293e-05
+            },
+            {
+              "pair": "SE-WALL",
+              "i": 3,
+              "j": 4,
+              "F0": 2.9615140564033988e-09,
+              "expected_F0": 2.96152341987613e-09,
+              "CED": 58838.0,
+              "overlap_fraction": 2.050765455740494e-06
+            }
+          ],
+          "tolerances": {
+            "absolute_Bo_relative": 2e-05,
+            "pair_force_relative": 3.0000000000000004e-05
+          },
+          "metadata_fields_checked": "schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts"
+        },
+        "new": {
+          "schema": "mixer_d2_development/1",
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "scope": "D2 development deck and planned counts only; not execution evidence",
+          "deck_sha256": "d806401160e03ef5acad03f55839b23465a549738c0d040ba850c56818da78a3",
+          "density_generation": "lab20261014",
+          "phase_names": {
+            "1": "AM_P",
+            "2": "AM_S",
+            "3": "SE",
+            "4": "WALL"
+          },
+          "expected_counts": {
+            "1": 143,
+            "2": 699,
+            "3": 99161
+          },
+          "n_atoms_planned": 100003,
+          "Bo_SE": 1.1250029778013293,
+          "gravity": 9.81,
+          "rho_uncoated_ncm": 0.25,
+          "gamma": {
+            "AM_P": 1.0,
+            "AM_S": 1.0,
+            "SE": 1.0,
+            "WALL": 0.0064
+          },
+          "bo_se": 1.125,
+          "pairs": [
+            {
+              "pair": "AM_P-AM_P",
+              "i": 1,
+              "j": 1,
+              "F0": 1.6658529476745885e-07,
+              "expected_F0": 1.6658569236803227e-07,
+              "CED": 166513.0,
+              "overlap_fraction": 1.0064532114635399e-06
+            },
+            {
+              "pair": "AM_P-AM_S",
+              "i": 1,
+              "j": 2,
+              "F0": 1.0251419025896638e-07,
+              "expected_F0": 1.0251427222648141e-07,
+              "CED": 195764.0,
+              "overlap_fraction": 1.9261589035151874e-06
+            },
+            {
+              "pair": "AM_P-SE",
+              "i": 1,
+              "j": 3,
+              "F0": 3.331688336253181e-08,
+              "expected_F0": 3.331713847360647e-08,
+              "CED": 136387.0,
+              "overlap_fraction": 1.105882483866697e-05
+            },
+            {
+              "pair": "AM_P-WALL",
+              "i": 1,
+              "j": 4,
+              "F0": 2.6653640370358902e-08,
+              "expected_F0": 2.6653710778885168e-08,
+              "CED": 63962.8,
+              "overlap_fraction": 2.0960620972477615e-07
+            },
+            {
+              "pair": "AM_S-AM_S",
+              "i": 2,
+              "j": 2,
+              "F0": 7.403815728448703e-08,
+              "expected_F0": 7.403808549690324e-08,
+              "CED": 218194.0,
+              "overlap_fraction": 1.7281558553201406e-06
+            },
+            {
+              "pair": "AM_S-SE",
+              "i": 2,
+              "j": 3,
+              "F0": 2.9614884553828972e-08,
+              "expected_F0": 2.9615234198761296e-08,
+              "CED": 141848.0,
+              "overlap_fraction": 1.0633027501748806e-05
+            },
+            {
+              "pair": "AM_S-WALL",
+              "i": 2,
+              "j": 4,
+              "F0": 1.184607136529414e-08,
+              "expected_F0": 1.184609367950452e-08,
+              "CED": 83815.0,
+              "overlap_fraction": 3.599090022560966e-07
+            },
+            {
+              "pair": "SE-SE",
+              "i": 3,
+              "j": 3,
+              "F0": 1.850952137422581e-08,
+              "expected_F0": 1.850952137422581e-08,
+              "CED": 117937.0,
+              "overlap_fraction": 1.2788959294693293e-05
+            },
+            {
+              "pair": "SE-WALL",
+              "i": 3,
+              "j": 4,
+              "F0": 2.9615140564033988e-09,
+              "expected_F0": 2.96152341987613e-09,
+              "CED": 58838.0,
+              "overlap_fraction": 2.050765455740494e-06
+            }
+          ],
+          "tolerances": {
+            "absolute_Bo_relative": 2e-05,
+            "pair_force_relative": 3.0000000000000004e-05
+          },
+          "metadata_fields_checked": "schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts"
+        },
+        "scope": "same-world D2 development pair, not a cohort or launch certificate"
+      },
+      "probe_after": {
+        "schema": "mixer_d2_pair_development/1",
+        "allow": "D2",
+        "verdict": "PASS",
+        "registered": null,
+        "execution_authorized": false,
+        "failures": [],
+        "table": [
+          {
+            "pair": "AM_P-AM_P",
+            "ref": 4.164678000279175e-08,
+            "new": 1.6658529476745885e-07,
+            "ratio": 3.9999561732333677,
+            "rule": 4.0
+          },
+          {
+            "pair": "AM_P-AM_S",
+            "ref": 2.5628801803379172e-08,
+            "new": 1.0251419025896638e-07,
+            "ratio": 3.9999603198558358,
+            "rule": 4.0
+          },
+          {
+            "pair": "AM_P-SE",
+            "ref": 1.6658703151843826e-08,
+            "new": 3.331688336253181e-08,
+            "ratio": 1.9999686085314639,
+            "rule": 2.0
+          },
+          {
+            "pair": "AM_P-WALL",
+            "ref": 1.3326813882300475e-08,
+            "new": 2.6653640370358902e-08,
+            "ratio": 2.00000094589435,
+            "rule": 2.0
+          },
+          {
+            "pair": "AM_S-AM_S",
+            "ref": 1.850929419458042e-08,
+            "new": 7.403815728448703e-08,
+            "ratio": 4.000052973719853,
+            "rule": 4.0
+          },
+          {
+            "pair": "AM_S-SE",
+            "ref": 1.4807508481592286e-08,
+            "new": 2.9614884553828972e-08,
+            "ratio": 1.9999910579584834,
+            "rule": 2.0
+          },
+          {
+            "pair": "AM_S-WALL",
+            "ref": 5.923033122320102e-09,
+            "new": 1.184607136529414e-08,
+            "ratio": 2.0000008645323826,
+            "rule": 2.0
+          },
+          {
+            "pair": "SE-SE",
+            "ref": 1.850952137422581e-08,
+            "new": 1.850952137422581e-08,
+            "ratio": 1.0,
+            "rule": 1.0
+          },
+          {
+            "pair": "SE-WALL",
+            "ref": 2.9615140564033988e-09,
+            "new": 2.9615140564033988e-09,
+            "ratio": 1.0,
+            "rule": 1.0
+          }
+        ],
+        "old": {
+          "schema": "mixer_d2_development/1",
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "scope": "D2 development deck and planned counts only; not execution evidence",
+          "deck_sha256": "b5e32f470b3c3991800ebd0083af0863cc98839dc0cac5878706db9f3b7a4638",
+          "density_generation": "lab20261014",
+          "phase_names": {
+            "1": "AM_P",
+            "2": "AM_S",
+            "3": "SE",
+            "4": "WALL"
+          },
+          "expected_counts": {
+            "1": 143,
+            "2": 699,
+            "3": 99161
+          },
+          "n_atoms_planned": 100003,
+          "Bo_SE": 1.1250029778013293,
+          "gravity": 9.81,
+          "rho_uncoated_ncm": 0.25,
+          "gamma": {
+            "AM_P": 0.25,
+            "AM_S": 0.25,
+            "SE": 1.0,
+            "WALL": 0.0064
+          },
+          "bo_se": 1.125,
+          "pairs": [
+            {
+              "pair": "AM_P-AM_P",
+              "i": 1,
+              "j": 1,
+              "F0": 4.164678000279175e-08,
+              "expected_F0": 4.164642309200807e-08,
+              "CED": 104897.0,
+              "overlap_fraction": 3.994141391688713e-07
+            },
+            {
+              "pair": "AM_P-AM_S",
+              "i": 1,
+              "j": 2,
+              "F0": 2.5628801803379172e-08,
+              "expected_F0": 2.5628568056620353e-08,
+              "CED": 123324.0,
+              "overlap_fraction": 7.644017226945981e-07
+            },
+            {
+              "pair": "AM_P-SE",
+              "i": 1,
+              "j": 3,
+              "F0": 1.6658703151843826e-08,
+              "expected_F0": 1.6658569236803236e-08,
+              "CED": 108251.0,
+              "overlap_fraction": 6.966695999131846e-06
+            },
+            {
+              "pair": "AM_P-WALL",
+              "i": 1,
+              "j": 4,
+              "F0": 1.3326813882300475e-08,
+              "expected_F0": 1.3326855389442584e-08,
+              "CED": 50767.3,
+              "overlap_fraction": 1.3204359627736851e-07
+            },
+            {
+              "pair": "AM_S-AM_S",
+              "i": 2,
+              "j": 2,
+              "F0": 1.850929419458042e-08,
+              "expected_F0": 1.850952137422581e-08,
+              "CED": 137453.0,
+              "overlap_fraction": 6.858130506770103e-07
+            },
+            {
+              "pair": "AM_S-SE",
+              "i": 2,
+              "j": 3,
+              "F0": 1.4807508481592286e-08,
+              "expected_F0": 1.4807617099380648e-08,
+              "CED": 112585.0,
+              "overlap_fraction": 6.698407552609897e-06
+            },
+            {
+              "pair": "AM_S-WALL",
+              "i": 2,
+              "j": 4,
+              "F0": 5.923033122320102e-09,
+              "expected_F0": 5.92304683975226e-09,
+              "CED": 66524.0,
+              "overlap_fraction": 2.2672839865654927e-07
+            },
+            {
+              "pair": "SE-SE",
+              "i": 3,
+              "j": 3,
+              "F0": 1.850952137422581e-08,
+              "expected_F0": 1.850952137422581e-08,
+              "CED": 117937.0,
+              "overlap_fraction": 1.2788959294693293e-05
+            },
+            {
+              "pair": "SE-WALL",
+              "i": 3,
+              "j": 4,
+              "F0": 2.9615140564033988e-09,
+              "expected_F0": 2.96152341987613e-09,
+              "CED": 58838.0,
+              "overlap_fraction": 2.050765455740494e-06
+            }
+          ],
+          "tolerances": {
+            "absolute_Bo_relative": 2e-05,
+            "pair_force_relative": 3.0000000000000004e-05
+          },
+          "metadata_fields_checked": "schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts"
+        },
+        "new": {
+          "schema": "mixer_d2_development/1",
+          "verdict": "PASS",
+          "failures": [],
+          "registered": null,
+          "execution_authorized": false,
+          "scope": "D2 development deck and planned counts only; not execution evidence",
+          "deck_sha256": "d806401160e03ef5acad03f55839b23465a549738c0d040ba850c56818da78a3",
+          "density_generation": "lab20261014",
+          "phase_names": {
+            "1": "AM_P",
+            "2": "AM_S",
+            "3": "SE",
+            "4": "WALL"
+          },
+          "expected_counts": {
+            "1": 143,
+            "2": 699,
+            "3": 99161
+          },
+          "n_atoms_planned": 100003,
+          "Bo_SE": 1.1250029778013293,
+          "gravity": 9.81,
+          "rho_uncoated_ncm": 0.25,
+          "gamma": {
+            "AM_P": 1.0,
+            "AM_S": 1.0,
+            "SE": 1.0,
+            "WALL": 0.0064
+          },
+          "bo_se": 1.125,
+          "pairs": [
+            {
+              "pair": "AM_P-AM_P",
+              "i": 1,
+              "j": 1,
+              "F0": 1.6658529476745885e-07,
+              "expected_F0": 1.6658569236803227e-07,
+              "CED": 166513.0,
+              "overlap_fraction": 1.0064532114635399e-06
+            },
+            {
+              "pair": "AM_P-AM_S",
+              "i": 1,
+              "j": 2,
+              "F0": 1.0251419025896638e-07,
+              "expected_F0": 1.0251427222648141e-07,
+              "CED": 195764.0,
+              "overlap_fraction": 1.9261589035151874e-06
+            },
+            {
+              "pair": "AM_P-SE",
+              "i": 1,
+              "j": 3,
+              "F0": 3.331688336253181e-08,
+              "expected_F0": 3.331713847360647e-08,
+              "CED": 136387.0,
+              "overlap_fraction": 1.105882483866697e-05
+            },
+            {
+              "pair": "AM_P-WALL",
+              "i": 1,
+              "j": 4,
+              "F0": 2.6653640370358902e-08,
+              "expected_F0": 2.6653710778885168e-08,
+              "CED": 63962.8,
+              "overlap_fraction": 2.0960620972477615e-07
+            },
+            {
+              "pair": "AM_S-AM_S",
+              "i": 2,
+              "j": 2,
+              "F0": 7.403815728448703e-08,
+              "expected_F0": 7.403808549690324e-08,
+              "CED": 218194.0,
+              "overlap_fraction": 1.7281558553201406e-06
+            },
+            {
+              "pair": "AM_S-SE",
+              "i": 2,
+              "j": 3,
+              "F0": 2.9614884553828972e-08,
+              "expected_F0": 2.9615234198761296e-08,
+              "CED": 141848.0,
+              "overlap_fraction": 1.0633027501748806e-05
+            },
+            {
+              "pair": "AM_S-WALL",
+              "i": 2,
+              "j": 4,
+              "F0": 1.184607136529414e-08,
+              "expected_F0": 1.184609367950452e-08,
+              "CED": 83815.0,
+              "overlap_fraction": 3.599090022560966e-07
+            },
+            {
+              "pair": "SE-SE",
+              "i": 3,
+              "j": 3,
+              "F0": 1.850952137422581e-08,
+              "expected_F0": 1.850952137422581e-08,
+              "CED": 117937.0,
+              "overlap_fraction": 1.2788959294693293e-05
+            },
+            {
+              "pair": "SE-WALL",
+              "i": 3,
+              "j": 4,
+              "F0": 2.9615140564033988e-09,
+              "expected_F0": 2.96152341987613e-09,
+              "CED": 58838.0,
+              "overlap_fraction": 2.050765455740494e-06
+            }
+          ],
+          "tolerances": {
+            "absolute_Bo_relative": 2e-05,
+            "pair_force_relative": 3.0000000000000004e-05
+          },
+          "metadata_fields_checked": "schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts"
+        },
+        "scope": "same-world D2 development pair, not a cohort or launch certificate",
+        "degenerate_same_gamma_world": false
+      },
+      "tests_run": 11,
+      "failures": [
+        "test_mixer_d2_consumers.D2Consumers.test_actual_command_scope"
+      ],
+      "errors": [],
+      "regression_suite_passed": false,
+      "mutation_effective": true,
+      "killed_by_tests": true
+    },
+    {
+      "name": "ASCII_float_lexeme_removed",
+      "probe_before": {
+        "schema": "mixer_d2_development/1",
+        "verdict": "FAIL",
+        "failures": [
+          "D2 development contract: ValueError: actual numeric command: ASCII decimal token required before float conversion"
+        ],
+        "registered": null,
+        "execution_authorized": false,
+        "scope": "D2 development deck and planned counts only; not execution evidence"
+      },
+      "probe_after": {
+        "schema": "mixer_d2_development/1",
+        "verdict": "PASS",
+        "failures": [],
+        "registered": null,
+        "execution_authorized": false,
+        "scope": "D2 development deck and planned counts only; not execution evidence",
+        "deck_sha256": "94b32482a00b2d97ed698a016d863acc210fbe93df147980b98653433b280c67",
+        "density_generation": "lab20261014",
+        "phase_names": {
+          "1": "AM_P",
+          "2": "AM_S",
+          "3": "SE",
+          "4": "WALL"
+        },
+        "expected_counts": {
+          "1": 143,
+          "2": 699,
+          "3": 99161
+        },
+        "n_atoms_planned": 100003,
+        "Bo_SE": 1.1250029778013293,
+        "gravity": 9.81,
+        "rho_uncoated_ncm": 0.25,
+        "gamma": {
+          "AM_P": 0.25,
+          "AM_S": 0.25,
+          "SE": 1.0,
+          "WALL": 0.0064
+        },
+        "bo_se": 1.125,
+        "pairs": [
+          {
+            "pair": "AM_P-AM_P",
+            "i": 1,
+            "j": 1,
+            "F0": 4.164678000279175e-08,
+            "expected_F0": 4.164642309200807e-08,
+            "CED": 104897.0,
+            "overlap_fraction": 3.994141391688713e-07
+          },
+          {
+            "pair": "AM_P-AM_S",
+            "i": 1,
+            "j": 2,
+            "F0": 2.5628801803379172e-08,
+            "expected_F0": 2.5628568056620353e-08,
+            "CED": 123324.0,
+            "overlap_fraction": 7.644017226945981e-07
+          },
+          {
+            "pair": "AM_P-SE",
+            "i": 1,
+            "j": 3,
+            "F0": 1.6658703151843826e-08,
+            "expected_F0": 1.6658569236803236e-08,
+            "CED": 108251.0,
+            "overlap_fraction": 6.966695999131846e-06
+          },
+          {
+            "pair": "AM_P-WALL",
+            "i": 1,
+            "j": 4,
+            "F0": 1.3326813882300475e-08,
+            "expected_F0": 1.3326855389442584e-08,
+            "CED": 50767.3,
+            "overlap_fraction": 1.3204359627736851e-07
+          },
+          {
+            "pair": "AM_S-AM_S",
+            "i": 2,
+            "j": 2,
+            "F0": 1.850929419458042e-08,
+            "expected_F0": 1.850952137422581e-08,
+            "CED": 137453.0,
+            "overlap_fraction": 6.858130506770103e-07
+          },
+          {
+            "pair": "AM_S-SE",
+            "i": 2,
+            "j": 3,
+            "F0": 1.4807508481592286e-08,
+            "expected_F0": 1.4807617099380648e-08,
+            "CED": 112585.0,
+            "overlap_fraction": 6.698407552609897e-06
+          },
+          {
+            "pair": "AM_S-WALL",
+            "i": 2,
+            "j": 4,
+            "F0": 5.923033122320102e-09,
+            "expected_F0": 5.92304683975226e-09,
+            "CED": 66524.0,
+            "overlap_fraction": 2.2672839865654927e-07
+          },
+          {
+            "pair": "SE-SE",
+            "i": 3,
+            "j": 3,
+            "F0": 1.850952137422581e-08,
+            "expected_F0": 1.850952137422581e-08,
+            "CED": 117937.0,
+            "overlap_fraction": 1.2788959294693293e-05
+          },
+          {
+            "pair": "SE-WALL",
+            "i": 3,
+            "j": 4,
+            "F0": 2.9615140564033988e-09,
+            "expected_F0": 2.96152341987613e-09,
+            "CED": 58838.0,
+            "overlap_fraction": 2.050765455740494e-06
+          }
+        ],
+        "tolerances": {
+          "absolute_Bo_relative": 2e-05,
+          "pair_force_relative": 3.0000000000000004e-05
+        },
+        "metadata_fields_checked": "schema/content hash/bytes; active types/materials; density; gamma/wall/Bo; E/nu/radius/CGF; dt/steps/period; seed; actual planned counts"
+      },
+      "tests_run": 11,
+      "failures": [
+        "test_mixer_d2_consumers.D2Consumers.test_tokens_and_nested_schema"
+      ],
+      "errors": [],
+      "regression_suite_passed": false,
+      "mutation_effective": true,
+      "killed_by_tests": true
+    },
+    {
+      "name": "actual_counts_replaced_by_gen1_default",
+      "probe_before": {
+        "verdict": "FAIL",
+        "counts": {
+          "1": 143,
+          "2": 699,
+          "3": 99161
+        }
+      },
+      "probe_after": {
+        "verdict": "PASS",
+        "counts": {
+          "1": 176,
+          "2": 859,
+          "3": 98965
+        }
+      },
+      "tests_run": 11,
+      "failures": [
+        "test_mixer_d2_consumers.D2Consumers.test_actual_command_scope",
+        "test_mixer_d2_consumers.D2Consumers.test_actual_common_mode_mutations",
+        "test_mixer_d2_consumers.D2Consumers.test_counts_are_from_actual_inputs",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'AM_S', 'SE'), gen='lab20261014', stiff=1.0, rho=0.03, coated=False, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'AM_S', 'SE'), gen='lab20261014', stiff=1.0, rho=0.03, coated=False, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'AM_S', 'SE'), gen='lab20261014', stiff=1.0, rho=0.03, coated=True, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'AM_S', 'SE'), gen='lab20261014', stiff=1.0, rho=0.03, coated=True, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'AM_S', 'SE'), gen='lab20261014', stiff=1.0, rho=0.3, coated=False, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'AM_S', 'SE'), gen='lab20261014', stiff=1.0, rho=0.3, coated=False, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'AM_S', 'SE'), gen='lab20261014', stiff=1.0, rho=0.3, coated=True, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'AM_S', 'SE'), gen='lab20261014', stiff=1.0, rho=0.3, coated=True, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'AM_S', 'SE'), gen='lab20261014', stiff=1.0, rho=1.0, coated=False, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'AM_S', 'SE'), gen='lab20261014', stiff=1.0, rho=1.0, coated=False, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'AM_S', 'SE'), gen='lab20261014', stiff=1.0, rho=1.0, coated=True, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'AM_S', 'SE'), gen='lab20261014', stiff=1.0, rho=1.0, coated=True, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'AM_S', 'SE'), gen='lab20261014', stiff=1.0, rho=10.0, coated=False, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'AM_S', 'SE'), gen='lab20261014', stiff=1.0, rho=10.0, coated=False, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'AM_S', 'SE'), gen='lab20261014', stiff=1.0, rho=10.0, coated=True, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'AM_S', 'SE'), gen='lab20261014', stiff=1.0, rho=10.0, coated=True, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'AM_S', 'SE'), gen='lab20261014', stiff=20.0, rho=0.03, coated=False, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'AM_S', 'SE'), gen='lab20261014', stiff=20.0, rho=0.03, coated=False, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'AM_S', 'SE'), gen='lab20261014', stiff=20.0, rho=0.03, coated=True, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'AM_S', 'SE'), gen='lab20261014', stiff=20.0, rho=0.03, coated=True, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'AM_S', 'SE'), gen='lab20261014', stiff=20.0, rho=0.3, coated=False, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'AM_S', 'SE'), gen='lab20261014', stiff=20.0, rho=0.3, coated=False, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'AM_S', 'SE'), gen='lab20261014', stiff=20.0, rho=0.3, coated=True, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'AM_S', 'SE'), gen='lab20261014', stiff=20.0, rho=0.3, coated=True, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'AM_S', 'SE'), gen='lab20261014', stiff=20.0, rho=1.0, coated=False, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'AM_S', 'SE'), gen='lab20261014', stiff=20.0, rho=1.0, coated=False, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'AM_S', 'SE'), gen='lab20261014', stiff=20.0, rho=1.0, coated=True, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'AM_S', 'SE'), gen='lab20261014', stiff=20.0, rho=1.0, coated=True, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'AM_S', 'SE'), gen='lab20261014', stiff=20.0, rho=10.0, coated=False, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'AM_S', 'SE'), gen='lab20261014', stiff=20.0, rho=10.0, coated=False, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'AM_S', 'SE'), gen='lab20261014', stiff=20.0, rho=10.0, coated=True, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'AM_S', 'SE'), gen='lab20261014', stiff=20.0, rho=10.0, coated=True, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='gen1', stiff=1.0, rho=0.03, coated=False, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='gen1', stiff=1.0, rho=0.03, coated=False, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='gen1', stiff=1.0, rho=0.03, coated=True, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='gen1', stiff=1.0, rho=0.03, coated=True, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='gen1', stiff=1.0, rho=0.3, coated=False, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='gen1', stiff=1.0, rho=0.3, coated=False, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='gen1', stiff=1.0, rho=0.3, coated=True, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='gen1', stiff=1.0, rho=0.3, coated=True, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='gen1', stiff=1.0, rho=1.0, coated=False, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='gen1', stiff=1.0, rho=1.0, coated=False, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='gen1', stiff=1.0, rho=1.0, coated=True, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='gen1', stiff=1.0, rho=1.0, coated=True, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='gen1', stiff=1.0, rho=10.0, coated=False, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='gen1', stiff=1.0, rho=10.0, coated=False, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='gen1', stiff=1.0, rho=10.0, coated=True, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='gen1', stiff=1.0, rho=10.0, coated=True, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='gen1', stiff=20.0, rho=0.03, coated=False, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='gen1', stiff=20.0, rho=0.03, coated=False, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='gen1', stiff=20.0, rho=0.03, coated=True, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='gen1', stiff=20.0, rho=0.03, coated=True, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='gen1', stiff=20.0, rho=0.3, coated=False, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='gen1', stiff=20.0, rho=0.3, coated=False, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='gen1', stiff=20.0, rho=0.3, coated=True, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='gen1', stiff=20.0, rho=0.3, coated=True, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='gen1', stiff=20.0, rho=1.0, coated=False, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='gen1', stiff=20.0, rho=1.0, coated=False, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='gen1', stiff=20.0, rho=1.0, coated=True, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='gen1', stiff=20.0, rho=1.0, coated=True, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='gen1', stiff=20.0, rho=10.0, coated=False, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='gen1', stiff=20.0, rho=10.0, coated=False, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='gen1', stiff=20.0, rho=10.0, coated=True, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='gen1', stiff=20.0, rho=10.0, coated=True, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='lab20261014', stiff=1.0, rho=0.03, coated=False, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='lab20261014', stiff=1.0, rho=0.03, coated=False, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='lab20261014', stiff=1.0, rho=0.03, coated=True, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='lab20261014', stiff=1.0, rho=0.03, coated=True, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='lab20261014', stiff=1.0, rho=0.3, coated=False, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='lab20261014', stiff=1.0, rho=0.3, coated=False, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='lab20261014', stiff=1.0, rho=0.3, coated=True, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='lab20261014', stiff=1.0, rho=0.3, coated=True, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='lab20261014', stiff=1.0, rho=1.0, coated=False, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='lab20261014', stiff=1.0, rho=1.0, coated=False, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='lab20261014', stiff=1.0, rho=1.0, coated=True, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='lab20261014', stiff=1.0, rho=1.0, coated=True, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='lab20261014', stiff=1.0, rho=10.0, coated=False, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='lab20261014', stiff=1.0, rho=10.0, coated=False, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='lab20261014', stiff=1.0, rho=10.0, coated=True, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='lab20261014', stiff=1.0, rho=10.0, coated=True, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='lab20261014', stiff=20.0, rho=0.03, coated=False, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='lab20261014', stiff=20.0, rho=0.03, coated=False, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='lab20261014', stiff=20.0, rho=0.03, coated=True, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='lab20261014', stiff=20.0, rho=0.03, coated=True, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='lab20261014', stiff=20.0, rho=0.3, coated=False, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='lab20261014', stiff=20.0, rho=0.3, coated=False, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='lab20261014', stiff=20.0, rho=0.3, coated=True, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='lab20261014', stiff=20.0, rho=0.3, coated=True, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='lab20261014', stiff=20.0, rho=1.0, coated=False, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='lab20261014', stiff=20.0, rho=1.0, coated=False, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='lab20261014', stiff=20.0, rho=1.0, coated=True, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='lab20261014', stiff=20.0, rho=1.0, coated=True, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='lab20261014', stiff=20.0, rho=10.0, coated=False, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='lab20261014', stiff=20.0, rho=10.0, coated=False, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='lab20261014', stiff=20.0, rho=10.0, coated=True, layered=False)",
+        "test_mixer_d2_consumers.D2Consumers.test_generation_and_supported_phase_positive (phases=('AM_P', 'SE'), gen='lab20261014', stiff=20.0, rho=10.0, coated=True, layered=True)",
+        "test_mixer_d2_consumers.D2Consumers.test_meta_binding_and_numeric_boundaries",
+        "test_mixer_d2_consumers.D2Consumers.test_tokens_and_nested_schema"
+      ],
+      "errors": [],
+      "regression_suite_passed": false,
+      "mutation_effective": true,
+      "killed_by_tests": true
+    }
+  ],
+  "all_expectations_met": false,
+  "scope": "in-process guards mutated in memory only; child CLI tests still see original source"
+}

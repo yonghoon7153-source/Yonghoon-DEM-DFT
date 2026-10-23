@@ -242,6 +242,15 @@ def _run_total(run_dir):
     return sum(int(x) for x in _re.findall(r'^run\s+(\d+)', Path(run_dir, 'in.mixer').read_text(encoding='utf-8'), _re.M))
 
 
+def d2_plan_check(text, meta):
+    """Development preflight only: counts bound to the actual D2 deck, not a rest/contact cert."""
+    import mixer_deck_readback as rb
+    result = rb.read_d2(text, meta)
+    result['schema'] = 'mixer_d2_plan_check/1'
+    result['scope'] = 'D2 development planned counts; no observed frames, rest/contact certificate, cohort or execution authority'
+    return result
+
+
 def _expected_counts(c):
     """생성기 계획의 상별 입자 수 → {타입: 수} (check_window expect_counts — 모체 §2-4 "상별 수 = 계획")."""
     p = dd._gen.plan(dd.GEN_ARGS['n_total'], cgf=dd.GEN_ARGS['cgf'], stiffen_se=c['stiffen_se'])
@@ -949,6 +958,9 @@ def interim_screen(rc, s):
 def main(argv=None):
     ap = argparse.ArgumentParser(description='bin 0 스모크 M-맹검 래퍼 (Codex 6 차 Q5) · 강성 축 접촉 상태 증서 (--contract)')
     ap.add_argument('run', nargs='?', help='평가 런 폴더 (예 <OUT>/LH_s32452843 · 강성 축 셀 <OUT>/LC_ref_r8_s15485863)')
+    ap.add_argument('--d2-plan', metavar='DECK', help='D2 개발 덱 실제 계획 수 점검 (기존 스모크/관문 증서 아님)')
+    ap.add_argument('--d2-meta', metavar='META', help='--d2-plan 의 명시적 덱 메타')
+    ap.add_argument('--json', help='D2 개발 계획 JSON 보고 (--d2-plan 전용)')
     ap.add_argument('--ref', help='E0 기준 런 폴더 (회전 팔)')
     ap.add_argument('--cert', help='증서 경로 (관문 rest · confirm-rest 의 입력)')
     ap.add_argument('--contract', action='store_true',
@@ -964,6 +976,19 @@ def main(argv=None):
     a = ap.parse_args(argv)
     if a.selftest:
         return selftest()
+    if a.d2_plan or a.d2_meta:
+        if (not a.d2_plan or not a.d2_meta or a.run or a.ref or a.cert or a.contract
+                or a.phase_receipt or a.e0_diag or a.record or a.interim or a.eps):
+            ap.error('--d2-plan DECK --d2-meta META [--json REPORT] only; no registered certificate mode')
+        import mixer_deck_readback as rb
+        try:
+            text = Path(a.d2_plan).read_text(encoding='utf-8')
+            result = d2_plan_check(text, rb.load_d2_meta(a.d2_meta))
+        except (OSError,ValueError) as exc:
+            ap.error(str(exc))
+        return rb._d2_cli_report(result,a.json)
+    if a.json:
+        ap.error('--json requires --d2-plan')
     if a.interim:
         if a.run or a.contract or a.e0_diag or a.cert or a.ref or a.record:
             ap.error('--interim <OUT> --eps <ε 등록> [--phase-receipt R] 만 (다른 방식과 섞지 않는다)')
