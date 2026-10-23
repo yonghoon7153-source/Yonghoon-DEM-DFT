@@ -120,7 +120,7 @@ figure.fig > figcaption{font-size:14px;font-weight:600;margin:0 0 8px}
 <main>
 <nav class="backlink"><a href="/">← DEM/MPM Analyzer 로 돌아가기</a></nav>
 <h1>Rint 적용 현황 — 무엇을 넣고, 어디서 막히나</h1>
-<p class="sub">2026-10-21 · 10-22 갱신 (사전 리뷰 2 회차 1저자 결정 — 상자 ① ② ③ · 남은 길 순서 · 날짜) · 리포 <code>claude/stoic-knuth-NObVQ</code> · 숫자는 리포 기록 · 원장 · Codex 판정문 기준</p>
+<p class="sub">2026-10-21 · 10-22 갱신 (사전 리뷰 2 회차 1저자 결정 — 상자 ① ② ③ · 남은 길 순서 · 날짜) · 10-23 갱신 (Codex 재검토 수정 계획 1저자 결정 — 상자 ④) · 리포 <code>claude/stoic-knuth-NObVQ</code> · 숫자는 리포 기록 · 원장 · Codex 판정문 기준</p>
 
 <section class="first" aria-labelledby="first-h">
 <h2 id="first-h">처음 보는 분께</h2>
@@ -160,6 +160,7 @@ Rint ② 는 이 빠진 접촉 물리를 명시적으로 넣어, <b>접합 저�
 
 <section class="hl-sec" id="decisions-1022" aria-labelledby="hl-h">
 <h2 id="hl-h">★ 10-22 1저자 결정 — 쉽게 말하면 ① ② ③ (사전 리뷰 2 회차)</h2>
+<p class="note">⚠ 10-23 — 상자 ① 의 두 끝 (아래 끝 · 위 끝) 은 10-23 부터 <b>증서 구간</b>의 두 끝으로 판정한다 (아래 상자 ④ · Codex 재검토 RCA2-01 · 1저자 Q1 (가)).</p>
 <p class="note">1저자 10-22 원문 <i>"이러한 부분 잘 이해못하니까 잘 하이라이트로 저장해두고 권고대로 해줘"</i> — Q1 (다) · Q2 · Q3 권고대로 · Q3-b (추가 GPU 기계) 는 미답. 상자 글 = 수정 계획 <code>docs/reviews/rint2_design_fix_plan_20261021.md</code> §6 원문 그대로 (같은 상자가 등록 R §5-6 · §11 · §10-4 에 있다) · 상자 ② 의 "지금 순서" = 10-22 고치기 전 순서.</p>
 <div class="hl" id="easy-1">
 <h3>★ 쉽게 말하면 ① — SV 반사실 비가 왜 범위로 나오나 (Q1 (다) · 1저자 10-22 <i>"잘 하이라이트로 저장해두고"</i>)</h3>
@@ -219,6 +220,19 @@ Rint ② 는 이 빠진 접촉 물리를 명시적으로 넣어, <b>접합 저�
 </li>
 <li>팔을 줄이지 않는 이유: 진행을 보고 뺄 팔을 고르면 결과 뒤 선택이 되어 등록 판정이 무너진다.
 </li>
+</ul>
+</div>
+</section>
+
+<section class="hl-sec" id="decisions-1023" aria-labelledby="hl-h4">
+<h2 id="hl-h4">★ 10-23 1저자 결정 — 쉽게 말하면 ④ (Codex 재검토 Q1)</h2>
+<p class="note">1저자 10-23 원문 <i>"다 권고대로 해줘"</i> — 수정 계획 Q1–Q8 권고대로 (숫자 칸은 안 정함). 상자 글 = 수정 계획 <code>docs/reviews/rint2_rereview_fix_plan_20261022.md</code> §2 원문 그대로 (같은 상자가 등록 R §5-6 에 있다) · 상자 ④ 의 "지금" = 10-23 고치기 전 사슬 (고친 뒤 = (가) 증서 구간 판정 · 증서 없는 런의 기록 = 진단 · 판정 입력 아님).</p>
+<div class="hl" id="easy-4">
+<h3>★ 쉽게 말하면 ④ — nominal 비 vs 증서 구간 (Q1)</h3>
+<ul>
+<li>지금 사슬은 풀이가 낸 비 하나 (nominal) 를 문턱과 비교한다.  풀이는 허용오차 안에서 조금 틀릴 수 있다.</li>
+<li>증서는 "참 비는 이 구간 안에 있다" 를 보장한다.  Codex 반례는 구간 전체가 문턱 위 (= SDCP 에 기댄다가 확실) 인데, nominal 비는 문턱 바로 아래라 표지가 안 붙었다.</li>
+<li>(가) 는 구간의 양끝으로 판정해 이 반례를 <code>SV_DEPENDENT</code> 로 잡는다.  (나) 는 모든 비를 같은 폭으로 넓혀 "모름" (<code>SV_UNCHECKED</code>) 으로 둔다 — 안전하지만 덜 알려 준다.</li>
 </ul>
 </div>
 </section>
