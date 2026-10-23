@@ -12855,6 +12855,34 @@
         "docs/reviews/rint2_rr_fix_evidence_20261023/q9_time_budget.py",
         "docs/reviews/rint2_rr_fix_evidence_20261023/q9_time_budget.json"
       ]
+    },
+    {
+      "id": "SELF-130",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude 10-23 (kgy 재압밀 결과 검사 §1-4 첫 실행이 FileNotFoundError 로 멈춤)",
+      "opened_in": "docs/data/rint2_recompaction_vgcf100_20261023/README.md",
+      "title": "kgy 명령 §1-4 가 옛 킷의 latest_run 을 기준 런으로 읽었다 — kgy 의 kit_SBE/latest_run 은 v100 시절 절대 경로 링크 (/home/ubuntu/…) 이고 가리키는 런도 08-12 런 (등록 기준 08-27 런 아님) · §1-4b 의 run_* 글롭은 run_mpm.sh 같은 파일까지 재시도 목록에 넣었다 — 킷 폴더를 보지 않고 쓴 경로 (SELF-123 과 같은 부류)",
+      "note": "영향 = 첫 실행이 계산 전에 멈춤 (잘못된 비교 숫자는 나오지 않음) · §1-4b 재시도 목록에 파일 셋 섞임 (런 판정 무영향).  고침 = 이 커밋 — 명령 문서 §1-4 기준 런을 기록의 폴더로 직접 지정 (SBE 08-27 `run_VGCF3_PTFE1_20260827_134104_3672586` · DBE R1 `run_VGCF3_PTFE0.5_SDCP0.5_20261019_191217_2231061`) · 없으면 run_* 목록을 찍고 건너뜀 · §1-4b = `run_*/` (디렉터리만).  고친 §1-4 는 10-23 kgy 에서 이미 돌았다 (원자료 둘째 실행 = 기대 전부 일치).  claimed_fixed = 이 커밋 push 뒤 다음 기록 커밋.  교훈 = 지시문의 경로도 실제 폴더 · 링크 (readlink) 를 보고 쓴다.",
+      "evidence_tests": [
+        "docs/data/rint2_recompaction_vgcf100_20261023/s1_4_output.txt (첫 실행 Traceback · 둘째 실행)",
+        "docs/data/rint2_recompaction_vgcf100_20261023/s1_4b_output.txt (재시도 목록에 파일 셋)"
+      ]
+    },
+    {
+      "id": "SELF-131",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude 10-23 (1저자 \"100으로 바뀌었다고 뭔가 바뀌지는 않네?\" 에 답하며 낸 변위 검사의 최대값 920 이 침대보다 커서 · 튄 점 확인 출력의 좌표 범위로 단위 오류 발견)",
+      "opened_in": "docs/data/rint2_recompaction_vgcf100_20261023/README.md",
+      "title": "선택 변위 검사 첫 판 (채팅 · 리포 밖) 이 se_dump 좌표를 1 단위 = 1000 µm 로 읽었다 (scaffold CSV 단위 주석을 좌표 배열에 옮겨 씀 · 실제 = metrics um_box_um 54.3478 µm) — 값이 18.40 배 컸고 그 위에서 'SE 점의 12–13 % 가 격자 한 칸 넘게 움직였다 · σ_e 가 바뀔 여지' 와 '침대 밖으로 튄 점' 을 1저자에게 말했다",
+      "note": "같은 날 정정 · 철회를 1저자에게 알림 · 고친 판 = 명령 문서 §1-4c (metrics um_box_um · 옆 주기 최소 영상) — 이 커밋.  고친 결과 = SE p99 0.079 · 0.075 µm · 0.15 µm 넘음 0.032 · 0.019 % · 최대 0.92015 단위 = 주기 한 바퀴 (튄 점 아님).  첫 판 출력은 리포에 싣지 않는다 (README §4).  claimed_fixed = 이 커밋 push 뒤 다음 기록 커밋.  교훈 = 배열의 단위는 그 배열을 쓰는 코드 (mpm3d_compaction.py um_box) 에서 확인하고, 다른 파일의 단위 주석을 옮기지 않는다 (CLAUDE.md '확인하지 않은 추정을 지시문에 쓰지 않는다').",
+      "evidence_tests": [
+        "docs/data/rint2_recompaction_vgcf100_20261023/displacement_output.txt (고친 판 출력)",
+        "docs/reviews/rint2_kgy_commands_20261020.md (§1-4c 고친 판)"
+      ]
     }
   ]
 }

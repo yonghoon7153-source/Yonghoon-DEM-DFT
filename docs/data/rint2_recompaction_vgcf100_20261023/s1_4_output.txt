@@ -1,0 +1,45 @@
+# kgy 10-23 · 재압밀 결과 검사 §1-4 (읽기만) — 1저자 화면 출력 그대로
+# 첫 실행 = 문서 §1-4 첫 판 (옛 킷 latest_run 기준) → 실패 (SELF-130)
+── kit_SBE_vgcf100  (기준 kit_SBE)
+   런 run_VGCF3_PTFE1_20261023_210442_2904445 · 완료 마커 True
+Traceback (most recent call last):
+  File "<stdin>", line 15, in <module>
+  File "<stdin>", line 15, in <genexpr>
+FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/sdcp/kit_SBE/run_VGCF3_PTFE1_20260812_204806_75857/mpm_metrics.json'
+
+# 두 번째 실행 = 기준 런을 기록에 적힌 폴더로 직접 지정한 판 (문서 §1-4 10-23 정정판과 같은 스크립트)
+── kit_SBE_vgcf100  (기준 kit_SBE/run_VGCF3_PTFE1_20260827_134104_3672586)
+   런 run_VGCF3_PTFE1_20261023_210442_2904445 · 완료 마커 True
+   E_anchor                                                     None → ADD_E_SET_20260926_VGCF100GPa
+   dt_effective                                                 None → 0.00013108617602605851
+   platen_mach_VcP                                            0.2717 → 0.4145
+   quasistatic_violation                                        True → True
+   porosity_at_target_pct                                       7.86 → 7.86
+   porosity_settled_pct                                         7.86 → 7.86
+   thickness_um                                               72.534 → 72.534
+   VGCF  E_GPa 10.0 → 100.0 · n_points 1643483 → 1643483
+   PTFE  E_GPa 1.8 → 1.8 · n_points 235046 → 235046
+   phase.npy        같음
+   fibre.npy        같음
+   fibre_kind.npy   같음
+   fibre_dia.npy    같음
+   se_dump.npy      다름
+   점 수 (상별) {1: 66044152, 2: 1643483, 4: 235046} · 합 67922681
+── kit_DBE_sdcp1um_vgcf100  (기준 kit_DBE_sdcp1um/run_VGCF3_PTFE0.5_SDCP0.5_20261019_191217_2231061)
+   런 run_VGCF3_PTFE0.5_SDCP0.5_20261023_213224_2924195 · 완료 마커 True
+   E_anchor                 ADD_E_SET_20260926+override:VGCF=10.0GPa → ADD_E_SET_20260926_VGCF100GPa
+   dt_effective                                               0.0002 → 0.00013108617602605851
+   platen_mach_VcP                                            0.2717 → 0.4145
+   quasistatic_violation                                        True → True
+   porosity_at_target_pct                                      7.368 → 7.368
+   porosity_settled_pct                                        7.368 → 7.368
+   thickness_um                                               72.534 → 72.534
+   VGCF  E_GPa 10.0 → 100.0 · n_points 1643483 → 1643483
+   PTFE  E_GPa 1.8 → 1.8 · n_points 115555 → 115555
+   SDCP  E_GPa 9.0 → 9.0 · n_points 116532 → 116532
+   phase.npy        같음
+   fibre.npy        같음
+   fibre_kind.npy   같음
+   fibre_dia.npy    같음
+   se_dump.npy      다름
+   점 수 (상별) {1: 66044152, 2: 1643483, 4: 115555, 5: 116532} · 합 67919722

@@ -111,9 +111,11 @@ tail -f ~/sdcp/kit_DBE_sdcp1um_vgcf100/run_*/mpm_run.log
 
 ### 1-4. 결과 검사 — 읽기만 · 이 출력을 보내 주세요
 
+- (10-23 정정 · `SELF-130`) 기준 런 = 기록에 적힌 폴더로 직접 지정 — 첫 판은 옛 킷의 `latest_run` 을 읽어 kgy 에서 FileNotFoundError (`kit_SBE/latest_run` = v100 시절 절대 경로 링크 · 가리키는 런 = 08-12 런 · 등록 기준 08-27 런 아님 · 원자료 = `docs/data/rint2_recompaction_vgcf100_20261023/s1_4_output.txt`).
+
 ```bash
 python3 - <<'PY'
-import hashlib, json, os
+import glob, hashlib, json, os
 import numpy as np
 H = os.path.expanduser('~/sdcp')
 
@@ -124,9 +126,15 @@ def sha(p):
             h.update(b)
     return h.hexdigest()[:16]
 
-for old, new in (('kit_SBE', 'kit_SBE_vgcf100'), ('kit_DBE_sdcp1um', 'kit_DBE_sdcp1um_vgcf100')):
-    ro, rn = (os.path.realpath(os.path.join(H, k, 'latest_run')) for k in (old, new))
-    print(f'── {new}  (기준 {old})\n   런 {os.path.basename(rn)} · 완료 마커 {os.path.exists(os.path.join(rn, "mpm_done.marker"))}')
+#: 기준 런 = 기록에 적힌 폴더 (옛 킷 latest_run 은 쓰지 않는다 — kit_SBE 의 것은 v100 절대 경로 · 08-12 런 · SELF-130)
+REF = (('kit_SBE_vgcf100', 'kit_SBE/run_VGCF3_PTFE1_20260827_134104_3672586'),
+       ('kit_DBE_sdcp1um_vgcf100', 'kit_DBE_sdcp1um/run_VGCF3_PTFE0.5_SDCP0.5_20261019_191217_2231061'))
+for new, ref in REF:
+    ro, rn = os.path.join(H, ref), os.path.realpath(os.path.join(H, new, 'latest_run'))
+    print(f'── {new}  (기준 {ref})\n   런 {os.path.basename(rn)} · 완료 마커 {os.path.exists(os.path.join(rn, "mpm_done.marker"))}')
+    if not os.path.isfile(os.path.join(ro, 'mpm_metrics.json')):
+        print('   ⚠ 기준 런 없음 · 있는 run_*:', sorted(os.path.basename(x) for x in glob.glob(os.path.join(H, ref.split('/')[0], 'run_*'))))
+        continue
     mo, mn = (json.load(open(os.path.join(r, 'mpm_metrics.json'))) for r in (ro, rn))
     for k in ('E_anchor', 'dt_effective', 'platen_mach_VcP', 'quasistatic_violation', 'porosity_at_target_pct',
               'porosity_settled_pct', 'thickness_um'):
@@ -245,8 +253,8 @@ for kit in ('kit_SBE_vgcf100', 'kit_DBE_sdcp1um_vgcf100'):
         wp = [w for _f, _ph, w, _p in fr]
         print(f'   wallP 궤적 (frame 줄)    최대 {max(wp):.4g} · 끝 {wp[-1]:.4g} GPa · 끝 porosity {fr[-1][3]:.4g} %')
     print('   로그 끝 세 줄            ' + ' ⏎ '.join(x[:110] for x in tail))
-    # ③ 재시도 · 선별 이력 — 킷의 run_* 전부 (지우지 않는다)
-    runs = sorted(glob.glob(os.path.join(K, 'run_*')))
+    # ③ 재시도 · 선별 이력 — 킷의 run_* 디렉터리 전부 (지우지 않는다 · 10-23 정정 SELF-130: 'run_*/' = 디렉터리만 — 'run_*' 는 run_mpm.sh 파일도 집었다)
+    runs = sorted(d.rstrip('/') for d in glob.glob(os.path.join(K, 'run_*/')))
     print(f'   재시도 · 선별            run_* {len(runs)} 개 (latest_run → {os.path.basename(run)})')
     for r in runs:
         ls = []
@@ -277,6 +285,53 @@ PY
 | 누적 코드 시간 | 150 프레임 예산 = 150 × 40 × dt = 0.7865170562 이하 (옛 1.2) · hold 40 프레임 = 0.2097378816 (옛 0.32) — 실제 총량은 종료 경로에 따라 다르다 | 판정문 §5-2 (예산) |
 | 재시도 · 선별 | 이번 재압밀의 시도 전부 (OOM · 다른 venv 등 실패 시도 포함 · 지우지 않는다) | 판정문 §5-2 ("모든 재시도/선별 이력") |
 | 실행 코드 지문 | scripts → `~/dem-anchor1019b/scripts` · HEAD `298a73197` · dirty False | §1-1 |
+
+### 1-4c. (10-23 · 선택 · 기술 보고 · 판정 미사용) SE 위치가 얼마나 바뀌었나 — 읽기만
+
+- 옛 · 새 침대는 시딩이 같아 (`phase` 같음) 점 순서가 같다 → 점마다 최종 위치 차.  단위 = metrics `um_box_um` (µm / 상자 단위 · scaffold 상자 x · y 0.04–0.96 = 50 µm · `scripts/mpm3d_compaction.py` 1950 · 2028 행) · 옆 경계가 주기면 최소 영상으로 접는다 (주기 = 격자에 맞춘 폭 · 같은 파일 2095 · 2799 행).
+- ⚠ 첫 판 (10-23 채팅) 은 1 단위 = 1000 µm 로 잡아 값이 18.40 배 컸다 (`SELF-131` · 철회) — 아래가 고친 판이다.
+
+```bash
+python3 - <<'PY'
+import json, os, re
+import numpy as np
+H = os.path.expanduser('~/sdcp')
+PAIRS = (('SBE', 'kit_SBE/run_VGCF3_PTFE1_20260827_134104_3672586', 'kit_SBE_vgcf100/latest_run'),
+         ('DBE', 'kit_DBE_sdcp1um/run_VGCF3_PTFE0.5_SDCP0.5_20261019_191217_2231061', 'kit_DBE_sdcp1um_vgcf100/latest_run'))
+NAME = {1: 'SE', 2: 'VGCF', 4: 'PTFE', 5: 'SDCP'}
+for tag, a, b in PAIRS:
+    ra, rb = os.path.join(H, a), os.path.realpath(os.path.join(H, b))
+    m = json.load(open(os.path.join(rb, 'mpm_metrics.json')))
+    um, ng = float(m.get('um_box_um') or 1000.0 * float(m.get('lateral_box', 0.05)) / 0.92), int(m['n_grid'])
+    P = round(0.92 * ng) / ng                     # 옆 주기 = 격자에 맞춘 폭 (mpm3d_compaction.py 2095 · 2799 행)
+    xy = sorted(set(re.findall(r'xy=(periodic|walls)', open(os.path.join(rb, 'mpm_run.log'), encoding='utf-8', errors='replace').read())))
+    print(f'── {tag}: µm/단위 {um:.4f} · 옆 경계 {xy or "기록 없음"} · 주기 {P:.8f} 단위 = {P * um:.4f} µm')
+    ph = np.load(os.path.join(rb, 'phase.npy'), mmap_mode='r'); n = ph.size
+    pa = np.load(os.path.join(ra, 'se_dump.npy'), mmap_mode='r').reshape(n, 3)
+    pb = np.load(os.path.join(rb, 'se_dump.npy'), mmap_mode='r').reshape(n, 3)
+    acc, wrap = {c: [] for c in NAME}, {c: 0 for c in NAME}
+    for s in range(0, n, 4_000_000):
+        e = min(n, s + 4_000_000)
+        dv = pb[s:e].astype(np.float64) - pa[s:e]
+        w = (np.abs(dv[:, 0]) > P / 2) | (np.abs(dv[:, 1]) > P / 2)
+        dv[:, :2] -= P * np.round(dv[:, :2] / P)      # 최소 영상 (x · y 만 · z 는 접지 않음)
+        d = (np.sqrt((dv * dv).sum(1)) * um).astype(np.float32)
+        p = np.asarray(ph[s:e])
+        for c in NAME:
+            mk = p == c
+            if mk.any():
+                acc[c].append(d[mk]); wrap[c] += int(w[mk].sum())
+    for c, nm in NAME.items():
+        if not acc[c]:
+            continue
+        d = np.concatenate(acc[c])
+        q = np.percentile(d, [50, 90, 99, 99.9])
+        print(f'   {nm:5s} n {d.size:>10,d} · 중앙 {q[0]:.5f} · p90 {q[1]:.5f} · p99 {q[2]:.5f} · p99.9 {q[3]:.5f} · 최대 {d.max():.4f} µm · '
+              f'> 0.15 µm {np.mean(d > 0.15) * 100:.3f} % · > 0.4 µm {np.mean(d > 0.4) * 100:.3f} % · 주기 넘은 점 {wrap[c]}')
+PY
+```
+
+- ★ **10-23 결과 (§1-4 · §1-4b · §1-4c)** = `docs/data/rint2_recompaction_vgcf100_20261023/README.md` — 결과 전 기대 전부 일치 · 두께 · porosity 는 옛 값과 같음 · SE 위치 차 p99 0.079 · 0.075 µm (기술 보고).
 
 ### 1-5. ⚠ 1저자 결정 — 이 두 킷의 플래튼은 기하 규칙이라 VGCF 100 GPa 가 **재하율도** 바꾼다 (산술 · 결과 전)
 

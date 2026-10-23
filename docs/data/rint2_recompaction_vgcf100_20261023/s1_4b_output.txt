@@ -1,0 +1,57 @@
+# kgy 10-23 · 재압밀 추가 기록 칸 §1-4b (읽기만) — 1저자 화면 출력 그대로 (문서 §1-4b 첫 판 · run_* 글롭 결함 = SELF-130)
+── kit_SBE_vgcf100 · 런 run_VGCF3_PTFE1_20261023_210442_2904445
+   protocol                 hold
+   stop_mode                legacy_moving
+   n_grid                   263
+   sub                      40
+   frames_budget            150
+   dt_requested             0.0002
+   dt_effective             0.00013108617602605851
+   dt_cfl_cap               0.00013108617602605851
+   dt_cfl_limited           True
+   platen_mach_VcP          0.4145
+   platen_mach_VcS          2.9602
+   settled_over_target      0.0005
+   E_SE_GPa                 1.53
+   nu_SE                    0.49
+   CFL 제한 상              M_max 134.61538 GPa → ['VGCF'] · 후보 SE 26.184564 · PTFE 2.4230769 · VGCF 134.61538
+   종료 이유                hold — 도달 뒤 40 프레임 이완 (✓ held at target) · FINAL 있음
+   frame 줄                 9 개 · 마지막 frame 40 · 첫 비-descend frame 5 (도달 어림 · ±5)
+   실제 substep (어림)      1640 – 1800 · 누적 코드 시간 0.214981 – 0.235955 (코드 단위 · 초 아님)
+   stroke · hold 코드 시간  ≈ 0.0262172 · ≈ 0.188764 (어림)
+   wallP 궤적 (frame 줄)    최대 4.039 · 끝 0.0005 GPa · 끝 porosity 7.86 %
+   로그 끝 세 줄                      (additive run이면 mpm_metrics.json의 step3.sigma_e_eff_S_cm = STEP3 σ_e — viewer 전류밀도 모드로 색칠) ⏎           (step4 결과: step4_c*.npz/step4_chg_c*.npz = 곡선 시계열, step4_viz_*.json = 뷰어 st4 입력) ⏎           (오래된 run_* 폴더는 디스크 차면 지워도 됨 — 산출물 회수 후)
+   재시도 · 선별            run_* 4 개 (latest_run → run_VGCF3_PTFE1_20261023_210442_2904445)
+     run_VGCF3_PTFE1_20261020_224827_3428337 · 완료 마커 False · 로그 끝 '          leftover porosity as if it were this run.  Fix the error and re-run.'
+     run_VGCF3_PTFE1_20261023_210442_2904445 · 완료 마커 True · 로그 끝 '          (오래된 run_* 폴더는 디스크 차면 지워도 됨 — 산출물 회수 후)'
+     run_a1_anchors.sh · 완료 마커 False · 로그 끝 ''
+     run_mpm.sh · 완료 마커 False · 로그 끝 ''
+   실행 코드 지문           scripts → /home/kgy/dem-anchor1019b/scripts · HEAD 298a73197 · dirty False · mpm3d_compaction.py sha256 b8bb85278b09e423
+── kit_DBE_sdcp1um_vgcf100 · 런 run_VGCF3_PTFE0.5_SDCP0.5_20261023_213224_2924195
+   protocol                 hold
+   stop_mode                legacy_moving
+   n_grid                   263
+   sub                      40
+   frames_budget            150
+   dt_requested             0.0002
+   dt_effective             0.00013108617602605851
+   dt_cfl_cap               0.00013108617602605851
+   dt_cfl_limited           True
+   platen_mach_VcP          0.4145
+   platen_mach_VcS          2.9602
+   settled_over_target      0.001
+   E_SE_GPa                 1.53
+   nu_SE                    0.49
+   CFL 제한 상              M_max 134.61538 GPa → ['VGCF'] · 후보 SE 26.184564 · PTFE 2.4230769 · SDCP 14.444444 · VGCF 134.61538
+   종료 이유                hold — 도달 뒤 40 프레임 이완 (✓ held at target) · FINAL 있음
+   frame 줄                 9 개 · 마지막 frame 40 · 첫 비-descend frame 5 (도달 어림 · ±5)
+   실제 substep (어림)      1640 – 1800 · 누적 코드 시간 0.214981 – 0.235955 (코드 단위 · 초 아님)
+   stroke · hold 코드 시간  ≈ 0.0262172 · ≈ 0.188764 (어림)
+   wallP 궤적 (frame 줄)    최대 4.06 · 끝 0.0006 GPa · 끝 porosity 7.37 %
+   로그 끝 세 줄                      (additive run이면 mpm_metrics.json의 step3.sigma_e_eff_S_cm = STEP3 σ_e — viewer 전류밀도 모드로 색칠) ⏎           (step4 결과: step4_c*.npz/step4_chg_c*.npz = 곡선 시계열, step4_viz_*.json = 뷰어 st4 입력) ⏎           (오래된 run_* 폴더는 디스크 차면 지워도 됨 — 산출물 회수 후)
+   재시도 · 선별            run_* 4 개 (latest_run → run_VGCF3_PTFE0.5_SDCP0.5_20261023_213224_2924195)
+     run_VGCF3_PTFE0.5_SDCP0.5_20261023_213224_2924195 · 완료 마커 True · 로그 끝 '          (오래된 run_* 폴더는 디스크 차면 지워도 됨 — 산출물 회수 후)'
+     run_a1_anchors.sh · 완료 마커 False · 로그 끝 ''
+     run_mpm.sh · 완료 마커 False · 로그 끝 ''
+     run_mpm.sh.orig · 완료 마커 False · 로그 끝 ''
+   실행 코드 지문           scripts → /home/kgy/dem-anchor1019b/scripts · HEAD 298a73197 · dirty False · mpm3d_compaction.py sha256 b8bb85278b09e423
