@@ -1,0 +1,739 @@
+{
+  "status": "PASS",
+  "base_pin": "ffbd438e7522d58eb069561fe58020f4086707ac",
+  "runner_before_sha256": "f4048aca55b912628278dbdd7b184ac449723736cd3f4f5cdc7eeca31294921a",
+  "runner_after_sha256": "3220be53fb89cd16c81f0273c8b9f7444f262c5311d02b2017756fd94fd66ac8",
+  "scope_checks": {
+    "exact_two_call_changes": true,
+    "runner_not_sealed": true,
+    "sealed32_unchanged": true,
+    "receipt_unchanged": true,
+    "deliverable_equals_test_source": true,
+    "only_preflight_AST_changed": true,
+    "old_LF_counterexample_reproduced": true,
+    "canonical_selftest_rc0": true,
+    "fixture_observed": true,
+    "source_unchanged_during_attack": true,
+    "canonical123_summary": true
+  },
+  "attack_cases": [
+    {
+      "case": "normal",
+      "approval": "full40",
+      "actual_bad": [],
+      "expected_bad": [],
+      "pass": true
+    },
+    {
+      "case": "normal",
+      "approval": "prefix7",
+      "actual_bad": [],
+      "expected_bad": [],
+      "pass": true
+    },
+    {
+      "case": "normal",
+      "approval": "omitted",
+      "actual_bad": [],
+      "expected_bad": [],
+      "pass": true
+    },
+    {
+      "case": "LF",
+      "approval": "full40",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "LF",
+      "approval": "prefix7",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "LF",
+      "approval": "omitted",
+      "actual_bad": [
+        "P7"
+      ],
+      "expected_bad": [
+        "P7"
+      ],
+      "pass": true
+    },
+    {
+      "case": "CRLF",
+      "approval": "full40",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "CRLF",
+      "approval": "prefix7",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "CRLF",
+      "approval": "omitted",
+      "actual_bad": [
+        "P7"
+      ],
+      "expected_bad": [
+        "P7"
+      ],
+      "pass": true
+    },
+    {
+      "case": "double_LF",
+      "approval": "full40",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "double_LF",
+      "approval": "prefix7",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "double_LF",
+      "approval": "omitted",
+      "actual_bad": [
+        "P7"
+      ],
+      "expected_bad": [
+        "P7"
+      ],
+      "pass": true
+    },
+    {
+      "case": "space",
+      "approval": "full40",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "space",
+      "approval": "prefix7",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "space",
+      "approval": "omitted",
+      "actual_bad": [
+        "P7"
+      ],
+      "expected_bad": [
+        "P7"
+      ],
+      "pass": true
+    },
+    {
+      "case": "tab",
+      "approval": "full40",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "tab",
+      "approval": "prefix7",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "tab",
+      "approval": "omitted",
+      "actual_bad": [
+        "P7"
+      ],
+      "expected_bad": [
+        "P7"
+      ],
+      "pass": true
+    },
+    {
+      "case": "NUL",
+      "approval": "full40",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "NUL",
+      "approval": "prefix7",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "NUL",
+      "approval": "omitted",
+      "actual_bad": [
+        "P7"
+      ],
+      "expected_bad": [
+        "P7"
+      ],
+      "pass": true
+    },
+    {
+      "case": "leading_LF",
+      "approval": "full40",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "leading_LF",
+      "approval": "prefix7",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "leading_LF",
+      "approval": "omitted",
+      "actual_bad": [
+        "P7"
+      ],
+      "expected_bad": [
+        "P7"
+      ],
+      "pass": true
+    },
+    {
+      "case": "middle_LF",
+      "approval": "full40",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "middle_LF",
+      "approval": "prefix7",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "middle_LF",
+      "approval": "omitted",
+      "actual_bad": [
+        "P7"
+      ],
+      "expected_bad": [
+        "P7"
+      ],
+      "pass": true
+    },
+    {
+      "case": "zero_width",
+      "approval": "full40",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "zero_width",
+      "approval": "prefix7",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "zero_width",
+      "approval": "omitted",
+      "actual_bad": [
+        "P7"
+      ],
+      "expected_bad": [
+        "P7"
+      ],
+      "pass": true
+    },
+    {
+      "case": "unicode_digit",
+      "approval": "full40",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "unicode_digit",
+      "approval": "prefix7",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "unicode_digit",
+      "approval": "omitted",
+      "actual_bad": [
+        "P7"
+      ],
+      "expected_bad": [
+        "P7"
+      ],
+      "pass": true
+    },
+    {
+      "case": "uppercase",
+      "approval": "full40",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "uppercase",
+      "approval": "prefix7",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "uppercase",
+      "approval": "omitted",
+      "actual_bad": [
+        "P7"
+      ],
+      "expected_bad": [
+        "P7"
+      ],
+      "pass": true
+    },
+    {
+      "case": "short39",
+      "approval": "full40",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "short39",
+      "approval": "prefix7",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "short39",
+      "approval": "omitted",
+      "actual_bad": [
+        "P7"
+      ],
+      "expected_bad": [
+        "P7"
+      ],
+      "pass": true
+    },
+    {
+      "case": "long41_hex",
+      "approval": "full40",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "long41_hex",
+      "approval": "prefix7",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "long41_hex",
+      "approval": "omitted",
+      "actual_bad": [
+        "P7"
+      ],
+      "expected_bad": [
+        "P7"
+      ],
+      "pass": true
+    },
+    {
+      "case": "null",
+      "approval": "full40",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "null",
+      "approval": "prefix7",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "null",
+      "approval": "omitted",
+      "actual_bad": [
+        "P7"
+      ],
+      "expected_bad": [
+        "P7"
+      ],
+      "pass": true
+    },
+    {
+      "case": "bool",
+      "approval": "full40",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "bool",
+      "approval": "prefix7",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "bool",
+      "approval": "omitted",
+      "actual_bad": [
+        "P7"
+      ],
+      "expected_bad": [
+        "P7"
+      ],
+      "pass": true
+    },
+    {
+      "case": "integer",
+      "approval": "full40",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "integer",
+      "approval": "prefix7",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "integer",
+      "approval": "omitted",
+      "actual_bad": [
+        "P7"
+      ],
+      "expected_bad": [
+        "P7"
+      ],
+      "pass": true
+    },
+    {
+      "case": "list",
+      "approval": "full40",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "list",
+      "approval": "prefix7",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "list",
+      "approval": "omitted",
+      "actual_bad": [
+        "P7"
+      ],
+      "expected_bad": [
+        "P7"
+      ],
+      "pass": true
+    },
+    {
+      "case": "dict",
+      "approval": "full40",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "dict",
+      "approval": "prefix7",
+      "actual_bad": [
+        "P7",
+        "P10"
+      ],
+      "expected_bad": [
+        "P7",
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "dict",
+      "approval": "omitted",
+      "actual_bad": [
+        "P7"
+      ],
+      "expected_bad": [
+        "P7"
+      ],
+      "pass": true
+    },
+    {
+      "case": "wrong_last_hex",
+      "approval": "full40",
+      "actual_bad": [
+        "P10"
+      ],
+      "expected_bad": [
+        "P10"
+      ],
+      "pass": true
+    },
+    {
+      "case": "wrong_last_hex",
+      "approval": "prefix7",
+      "actual_bad": [],
+      "expected_bad": [],
+      "pass": true
+    },
+    {
+      "case": "wrong_last_hex",
+      "approval": "omitted",
+      "actual_bad": [],
+      "expected_bad": [],
+      "pass": true
+    }
+  ],
+  "case_count": 60,
+  "canonical_selftest_rc": 0,
+  "canonical_last_line": "supp20_input_receipt selftest: 123/123 PASS",
+  "canonical_log_sha256": "235859e7592c536ccfac5c0ebac944cee845b066ffc7aee9760683d80176ab71",
+  "failures": [],
+  "scope": "Direct canonical preflight function attacks on synthetic existing selftest receipt; no WSL/B7 real approval, production launch or fullgate."
+}

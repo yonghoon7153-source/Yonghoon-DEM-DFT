@@ -1,0 +1,64 @@
+{
+  "baseline_pin": "ffbd438e7522d58eb069561fe58020f4086707ac",
+  "source_method": "git archive into a new scratch folder, without .git; baseline execution before two-callsite edit",
+  "test_written_before_source_edit": true,
+  "python": "3.11.17 (main, Oct  3 2026, 01:05:36) [Clang 22.1.3 ]",
+  "executable": "/workspace/.venvs/yonghoon-dem/bin/python",
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "versions": {
+    "numpy": "2.4.6",
+    "pandas": "2.3.3",
+    "scipy": "1.17.1",
+    "networkx": "3.6.1"
+  },
+  "thread_environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1"
+  },
+  "TMPDIR": "/var/tmp/codex-nonrint-20261023",
+  "executions": [
+    {
+      "phase": "red",
+      "command": [
+        "nice",
+        "-n",
+        "10",
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "/workspace/.cloud-setup/nonrint-20261024/lhs-readiness/deliverables/docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/tools/check_pin_boundaries.py",
+        "--repo",
+        "/workspace/.cloud-setup/nonrint-20261024/lhs-readiness/snapshot",
+        "--out",
+        "/workspace/.cloud-setup/nonrint-20261024/lhs-readiness/results/red"
+      ],
+      "tool_observed_exit_code": 1,
+      "receipt_selftest_rc": 0,
+      "result_written_at_utc": "2026-10-23T17:56:10.577718+00:00",
+      "runner_sha256": "f4048aca55b912628278dbdd7b184ac449723736cd3f4f5cdc7eeca31294921a"
+    },
+    {
+      "phase": "green",
+      "command": [
+        "nice",
+        "-n",
+        "10",
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "/workspace/.cloud-setup/nonrint-20261024/lhs-readiness/deliverables/docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/tools/check_pin_boundaries.py",
+        "--repo",
+        "/workspace/.cloud-setup/nonrint-20261024/lhs-readiness/snapshot",
+        "--out",
+        "/workspace/.cloud-setup/nonrint-20261024/lhs-readiness/results/green"
+      ],
+      "tool_observed_exit_code": 0,
+      "receipt_selftest_rc": 0,
+      "result_written_at_utc": "2026-10-23T17:56:54.472291+00:00",
+      "runner_sha256": "3220be53fb89cd16c81f0273c8b9f7444f262c5311d02b2017756fd94fd66ac8"
+    }
+  ],
+  "main_checkout_modified": false,
+  "WSL_or_physical_launch": false,
+  "full_repository_gate": "pending root canonical integration"
+}
