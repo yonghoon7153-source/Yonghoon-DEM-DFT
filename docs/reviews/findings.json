@@ -12838,12 +12838,19 @@
     {
       "id": "SELF-129",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "claude 10-23 (1저자 질문 \"206–249시간이나 걸리는 이유\" 에 답하며 등록 §10-4 를 다시 읽다가 · 기계 수 어림 중)",
       "opened_in": "docs/reviews/rint2_rereview_fix_plan_20261022.md",
       "title": "수정 계획 §4-6 \"R 주 판정 ≈ 205.8–248.9 h (… Q5 (나) · Q6 (나) 면 더 김)\" 이 비준한 Q5 (가) all3 의 SV 반사실 풀이를 빼먹었다 — 옛 등록 표 · 판정문 RCA2-07 의 82 상당량은 SV = R_j0 만 (아래 4 · 위끝 4) · all3 면 아래 12 · 위끝 0–12 · 판정문이 \"all3 … 따로 측정\" 이라 적었는데 반영 안 함 · 같은 숫자를 10-23 채팅 답에도 씀",
-      "note": "정정 = 수정 계획 §4-6 취소선 + §5 · Q9 설계안 §6 · `docs/reviews/rint2_rr_fix_evidence_20261023/q9_time_budget.json` (한 대 220.2–318.8 h · 두 대 + 12 단위 110.1–159.4 h · 세 대 81.2–115.7 h · 추정 · 넘침 없음) · 등록 §10-4 시간표 = 묶음 C 개정.  같은 부류 = SELF-124 (범위 · 시험 판).  claimed_fixed = 이 정정 커밋 push 뒤."
+      "note": "정정 = 수정 계획 §4-6 취소선 + §5 · Q9 설계안 §6 · `docs/reviews/rint2_rr_fix_evidence_20261023/q9_time_budget.json` (한 대 220.2–318.8 h · 두 대 + 12 단위 110.1–159.4 h · 세 대 81.2–115.7 h · 추정 · 넘침 없음) · 등록 §10-4 시간표 = 묶음 C 개정.  같은 부류 = SELF-124 (범위 · 시험 판).  claimed_fixed = 이 정정 커밋 push 뒤. ★ 10-23 claimed_fixed = 정정 커밋 `2a093e5da` push (수정 계획 §4-6 · Q9 설계 §6 · 시간 어림 JSON) · 등록 §10-4 시간표 = 묶음 C 개정 · 확인 = Codex 회차 ① (요청서 작성 중).",
+      "claimed_fixed_sha": "2a093e5da",
+      "evidence_tests": [
+        "docs/reviews/rint2_rereview_fix_plan_20261022.md (§4-6 취소선 · §5 정정 줄)",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/q9_predict_units_design.md (§6 시간표 · all3 · 기계 1 · 2 · 3 대 · 추정)",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/q9_time_budget.py",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/q9_time_budget.json"
+      ]
     }
   ]
 }

@@ -99,3 +99,8 @@
 - 10-23 Q9 설계안 `docs/reviews/rint2_rr_fix_evidence_20261023/q9_predict_units_design.md` — 12 단위는 완전히 독립이 아니다 (origin 문턱 W0 = 12 모서리 전체 · 넘침 = 모서리 세 R 전부) → 단위 실행 → 합치기 (넘침 판정 · 등록 규칙 그대로) → 넘침 런 → 합치기 · 같은 팔 기록 → 같은 요약 · 판정 (시험) · 구현 = 묶음 C (Codex 회차 ① 설계 검토 뒤).
 - 10-23 1저자 *"codex 리뷰를 적극적으로 활용해도 좋아"* → Codex 두 회차: ① 묶음 A 수정 + Q9 설계 + 기계 목록 · 시간 정정 (A 병합 · 사전 공격 리뷰 뒤 · 그동안 묶음 B) · ② 묶음 B · C + 작은 끝-끝 증거 + S0 실측 + 봉인 계획 (R 전 마지막).
 - 10-23 정정 (`SELF-129`) — §4-6 의 시간 (위 취소선).
+- 10-23 묶음 A 병합 (`49a1af626..bd0e85ce6` fast-forward · 보고 `docs/reviews/rint2_rr_fix_evidence_20261023/REPORT_A.md` · 게이트 156 ✓ · 0 ✗ · push `2a093e5da`) — RCA2-01 · 04 · 06 · 08 · 09 = claimed_fixed (확인 = Codex).
+- 10-23 1저자 *"ㄱ"* = 묶음 A 보고 §10 결정 필요 12 자리 — 1–10 = 지금 동작 유지 · 11 = 묶음 B 가 b6 B · z3 O 끈 경로 비교에 SV 켬 꼴 · 허용 행을 더한다 (시험만) · 12 = Codex 요청서에 "판정문 geometry 탐침이 증거에 census · `I_bot_code` · `fp` 없이 기록을 만들어 조여진 계약이 그 정상 기록을 거부한다" 를 적는다.
+- 10-23 사전 공격 리뷰 (독립 에이전트 · 묶음 A diff + Q9 설계) `docs/reviews/rint2_rr_fix_evidence_20261023/preattack/PREATTACK_A.md` — 코드 P1 0 · P2 1 (C1) · P3 4 (C2–C5) · Q9 설계 P2 4 (D1–D4) · P3 2 · 질문 1 (D7).
+- 10-23 1저자 *"권고대로 해"* = Q12 (가) C1 을 Codex ① 전에 고침 (C2 · C4 와 함께) · Q13 (가) R 단조 검사 = origin 마다 · Q14 (가) SV kind · rule = 등록값 · Q15 (가) SBE 대조 (no-op) 런 = 그 법칙의 사다리 기계 · Q16 (가) 시도 원장 (결과 전 커밋 · 덧붙이기만) + 합치기가 시도 폴더 전부를 받아 채택 규칙 적용.
+- 10-23 묶음 A′ 병합 (`fdb48d378..e07d8c63b` · 7 커밋 fast-forward · 보고 `docs/reviews/rint2_rr_fix_evidence_20261023/REPORT_A2.md`) — C1–C5 고침 · RCA2-04 claimed_fixed `5cf848157` · RCA2-09 claimed_fixed `720e401eb` · Q9 설계 개정 1 (사전 공격 D1–D7 · Q15 · Q16) · 남은 것 = C1 의 정상 FLOAT 기록 거부 · 끊은 수까지 맞춘 일관 편집 · 위 끝 ← 아래 끝 증서 (⬜ 1저자 Q17 · Q18).
