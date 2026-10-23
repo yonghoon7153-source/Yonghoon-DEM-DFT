@@ -1,0 +1,132 @@
+[
+  {
+    "file": "contacts.csv",
+    "line": 3,
+    "column": "contact_area",
+    "pandas310": {
+      "repr": "1.0026929429675727e-08",
+      "hex": "0x1.5885cdd252ff3p-27"
+    },
+    "pandas233": {
+      "repr": "1.0026929429675728e-08",
+      "hex": "0x1.5885cdd252ff4p-27"
+    }
+  },
+  {
+    "file": "contacts.csv",
+    "line": 4,
+    "column": "delta",
+    "pandas310": {
+      "repr": "1.9999999999999998e-05",
+      "hex": "0x1.4f8b588e368f0p-16"
+    },
+    "pandas233": {
+      "repr": "2e-05",
+      "hex": "0x1.4f8b588e368f1p-16"
+    }
+  },
+  {
+    "file": "contacts.csv",
+    "line": 6,
+    "column": "delta",
+    "pandas310": {
+      "repr": "1.6666666666666668e-07",
+      "hex": "0x1.65e9f80f29212p-23"
+    },
+    "pandas233": {
+      "repr": "1.666666666666667e-07",
+      "hex": "0x1.65e9f80f29213p-23"
+    }
+  },
+  {
+    "file": "contacts.csv",
+    "line": 7,
+    "column": "contact_area",
+    "pandas310": {
+      "repr": "6.864075236685054e-08",
+      "hex": "0x1.26cf4e2c822a4p-24"
+    },
+    "pandas233": {
+      "repr": "6.864075236685055e-08",
+      "hex": "0x1.26cf4e2c822a5p-24"
+    }
+  },
+  {
+    "file": "contacts.csv",
+    "line": 8,
+    "column": "contact_area",
+    "pandas310": {
+      "repr": "1.9512235621905366e-08",
+      "hex": "0x1.4f37b844dcd43p-26"
+    },
+    "pandas233": {
+      "repr": "1.951223562190537e-08",
+      "hex": "0x1.4f37b844dcd44p-26"
+    }
+  },
+  {
+    "file": "contacts.csv",
+    "line": 9,
+    "column": "contact_area",
+    "pandas310": {
+      "repr": "1.1339185984050674e-07",
+      "hex": "0x1.e703ab1b97c59p-24"
+    },
+    "pandas233": {
+      "repr": "1.1339185984050675e-07",
+      "hex": "0x1.e703ab1b97c5ap-24"
+    }
+  },
+  {
+    "file": "contacts.csv",
+    "line": 10,
+    "column": "delta",
+    "pandas310": {
+      "repr": "0.00022500000000000002",
+      "hex": "0x1.d7dbf487fcb93p-13"
+    },
+    "pandas233": {
+      "repr": "0.000225",
+      "hex": "0x1.d7dbf487fcb92p-13"
+    }
+  },
+  {
+    "file": "contacts.csv",
+    "line": 10,
+    "column": "contact_area",
+    "pandas310": {
+      "repr": "3.1366839150685595e-07",
+      "hex": "0x1.50cc82cc6ec69p-22"
+    },
+    "pandas233": {
+      "repr": "3.13668391506856e-07",
+      "hex": "0x1.50cc82cc6ec6ap-22"
+    }
+  },
+  {
+    "file": "contacts.csv",
+    "line": 11,
+    "column": "delta",
+    "pandas310": {
+      "repr": "0.00019999999999999998",
+      "hex": "0x1.a36e2eb1c432cp-13"
+    },
+    "pandas233": {
+      "repr": "0.0001999999999999",
+      "hex": "0x1.a36e2eb1c34c3p-13"
+    }
+  },
+  {
+    "file": "contacts.csv",
+    "line": 13,
+    "column": "contact_area",
+    "pandas310": {
+      "repr": "1.9512235621905366e-08",
+      "hex": "0x1.4f37b844dcd43p-26"
+    },
+    "pandas233": {
+      "repr": "1.951223562190537e-08",
+      "hex": "0x1.4f37b844dcd44p-26"
+    }
+  }
+]

@@ -1,0 +1,13 @@
+bed=ps_7_3_r45
+job=UT
+resume=0
+gate=ALLOW
+start=a1
+end=a1 fails=1 reader_rc=0
+resume=1
+gate=RESUME
+start=a2
+resume_from=3410000
+stage=UT screen=screen_a2.txt rc=0 check=PASS
+reader_arm_rc=0
+end=a2 fails=0 reader_rc=0

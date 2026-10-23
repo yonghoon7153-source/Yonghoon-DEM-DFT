@@ -1,0 +1,169 @@
+{
+  "mutations/resume-six/results.json": [
+    {
+      "mutation": "resume_outside_manifest",
+      "rc": 1,
+      "killed": true,
+      "expected_guard_failure": true,
+      "unexpected_failures": [],
+      "failure_count": 1
+    },
+    {
+      "mutation": "resume_nonnumeric",
+      "rc": 1,
+      "killed": true,
+      "expected_guard_failure": true,
+      "unexpected_failures": [],
+      "failure_count": 2
+    },
+    {
+      "mutation": "resume_state_mismatch",
+      "rc": 1,
+      "killed": true,
+      "expected_guard_failure": true,
+      "unexpected_failures": [],
+      "failure_count": 1
+    },
+    {
+      "mutation": "event_rewind_k_guard",
+      "rc": 1,
+      "killed": true,
+      "expected_guard_failure": true,
+      "unexpected_failures": [],
+      "failure_count": 1
+    },
+    {
+      "mutation": "reader_listed_hash",
+      "rc": 1,
+      "killed": true,
+      "expected_guard_failure": true,
+      "unexpected_failures": [],
+      "failure_count": 3
+    },
+    {
+      "mutation": "reader_process_rc",
+      "rc": 1,
+      "killed": true,
+      "expected_guard_failure": true,
+      "unexpected_failures": [],
+      "failure_count": 1
+    }
+  ],
+  "dump-final/mutations/results.json": [
+    {
+      "name": "baseline-ul_gates",
+      "rc": 0,
+      "checks": 202,
+      "unexpected_failures": [],
+      "exception_failures": [],
+      "passed": true,
+      "failure_count": 0
+    },
+    {
+      "name": "baseline-ul_reader",
+      "rc": 0,
+      "checks": 214,
+      "unexpected_failures": [],
+      "exception_failures": [],
+      "passed": true,
+      "failure_count": 0
+    },
+    {
+      "name": "box_finite",
+      "rc": 1,
+      "checks": 202,
+      "unexpected_failures": [],
+      "exception_failures": [],
+      "passed": true,
+      "failure_count": 39
+    },
+    {
+      "name": "box_order",
+      "rc": 1,
+      "checks": 202,
+      "unexpected_failures": [],
+      "exception_failures": [],
+      "passed": true,
+      "failure_count": 12
+    },
+    {
+      "name": "box_two_values",
+      "rc": 1,
+      "checks": 202,
+      "unexpected_failures": [],
+      "exception_failures": [],
+      "passed": true,
+      "failure_count": 6
+    },
+    {
+      "name": "exact_header_names",
+      "rc": 1,
+      "checks": 202,
+      "unexpected_failures": [],
+      "exception_failures": [],
+      "passed": true,
+      "failure_count": 12
+    },
+    {
+      "name": "g2_header_guard",
+      "rc": 1,
+      "checks": 202,
+      "unexpected_failures": [],
+      "exception_failures": [],
+      "passed": true,
+      "failure_count": 72
+    },
+    {
+      "name": "g2c_header_guard",
+      "rc": 1,
+      "checks": 202,
+      "unexpected_failures": [],
+      "exception_failures": [],
+      "passed": true,
+      "failure_count": 21
+    },
+    {
+      "name": "g2c_same_step",
+      "rc": 1,
+      "checks": 202,
+      "unexpected_failures": [],
+      "exception_failures": [],
+      "passed": true,
+      "failure_count": 2
+    },
+    {
+      "name": "g2c_expected_step",
+      "rc": 1,
+      "checks": 202,
+      "unexpected_failures": [],
+      "exception_failures": [],
+      "passed": true,
+      "failure_count": 1
+    },
+    {
+      "name": "restore_g2c_expected_binding",
+      "rc": 1,
+      "checks": 214,
+      "unexpected_failures": [],
+      "exception_failures": [],
+      "passed": true,
+      "failure_count": 1
+    },
+    {
+      "name": "gravity_g2c_expected_binding",
+      "rc": 1,
+      "checks": 214,
+      "unexpected_failures": [],
+      "exception_failures": [],
+      "passed": true,
+      "failure_count": 1
+    }
+  ],
+  "ul_reader_snapshot_matches": true,
+  "ul_gates_snapshot_matches": true,
+  "deck_probe.py_portable_copy_matches": true,
+  "restore_probe.py_portable_copy_matches": true,
+  "edge_probe.py_portable_copy_matches": true,
+  "v2/downstream_probe.py_portable_copy_matches": true,
+  "v2/focused_mutations.py_portable_copy_matches": true
+}

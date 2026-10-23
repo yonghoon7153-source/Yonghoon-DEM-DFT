@@ -1,0 +1,230 @@
+{
+  "baseline_logs": [
+    {
+      "name": "ul_lib_selftest",
+      "ok": 24,
+      "fail": 0,
+      "rc": "0",
+      "match": true
+    },
+    {
+      "name": "ul_s3_selftest",
+      "ok": 16,
+      "fail": 0,
+      "rc": "0",
+      "match": true
+    },
+    {
+      "name": "ul_observers_selftest",
+      "ok": 21,
+      "fail": 0,
+      "rc": "0",
+      "match": true
+    },
+    {
+      "name": "ul_gates_selftest",
+      "ok": 41,
+      "fail": 0,
+      "rc": "0",
+      "match": true
+    },
+    {
+      "name": "ul_reader_selftest",
+      "ok": 182,
+      "fail": 0,
+      "rc": "0",
+      "match": true
+    },
+    {
+      "name": "seal_kit_selftest",
+      "ok": 12,
+      "fail": 0,
+      "rc": "0",
+      "match": true
+    },
+    {
+      "name": "seal_kit_check",
+      "ok": 1,
+      "fail": 0,
+      "rc": "0",
+      "match": true
+    },
+    {
+      "name": "make_unload_decks_selftest",
+      "ok": 291,
+      "fail": 0,
+      "rc": "0",
+      "match": true
+    },
+    {
+      "name": "make_unload_decks_check",
+      "ok": 1,
+      "fail": 0,
+      "rc": "0",
+      "match": true
+    },
+    {
+      "name": "history_make_history_decks_selftest",
+      "ok": 172,
+      "fail": 0,
+      "rc": "0",
+      "match": true
+    },
+    {
+      "name": "history_make_history_decks_check",
+      "ok": 1,
+      "fail": 0,
+      "rc": "0",
+      "match": true
+    },
+    {
+      "name": "history_read_history_selftest",
+      "ok": 56,
+      "fail": 0,
+      "rc": "0",
+      "match": true
+    },
+    {
+      "name": "ul_runner_test_selftest",
+      "ok": 38,
+      "fail": 0,
+      "rc": "0",
+      "match": true
+    }
+  ],
+  "mutations/resume-six": [
+    {
+      "name": "resume_outside_manifest",
+      "failures_match_raw": true,
+      "traceback": false,
+      "mutant_preserved": false,
+      "mutant_hash_matches": null
+    },
+    {
+      "name": "resume_nonnumeric",
+      "failures_match_raw": true,
+      "traceback": false,
+      "mutant_preserved": false,
+      "mutant_hash_matches": null
+    },
+    {
+      "name": "resume_state_mismatch",
+      "failures_match_raw": true,
+      "traceback": false,
+      "mutant_preserved": false,
+      "mutant_hash_matches": null
+    },
+    {
+      "name": "event_rewind_k_guard",
+      "failures_match_raw": true,
+      "traceback": false,
+      "mutant_preserved": false,
+      "mutant_hash_matches": null
+    },
+    {
+      "name": "reader_listed_hash",
+      "failures_match_raw": true,
+      "traceback": false,
+      "mutant_preserved": false,
+      "mutant_hash_matches": null
+    },
+    {
+      "name": "reader_process_rc",
+      "failures_match_raw": true,
+      "traceback": false,
+      "mutant_preserved": false,
+      "mutant_hash_matches": null
+    }
+  ],
+  "dump-final/mutations": [
+    {
+      "name": "baseline-ul_gates",
+      "failures_match_raw": true,
+      "traceback": false,
+      "mutant_preserved": false,
+      "mutant_hash_matches": null
+    },
+    {
+      "name": "baseline-ul_reader",
+      "failures_match_raw": true,
+      "traceback": false,
+      "mutant_preserved": false,
+      "mutant_hash_matches": null
+    },
+    {
+      "name": "box_finite",
+      "failures_match_raw": true,
+      "traceback": false,
+      "mutant_preserved": false,
+      "mutant_hash_matches": null
+    },
+    {
+      "name": "box_order",
+      "failures_match_raw": true,
+      "traceback": false,
+      "mutant_preserved": false,
+      "mutant_hash_matches": null
+    },
+    {
+      "name": "box_two_values",
+      "failures_match_raw": true,
+      "traceback": false,
+      "mutant_preserved": false,
+      "mutant_hash_matches": null
+    },
+    {
+      "name": "exact_header_names",
+      "failures_match_raw": true,
+      "traceback": false,
+      "mutant_preserved": false,
+      "mutant_hash_matches": null
+    },
+    {
+      "name": "g2_header_guard",
+      "failures_match_raw": true,
+      "traceback": false,
+      "mutant_preserved": false,
+      "mutant_hash_matches": null
+    },
+    {
+      "name": "g2c_header_guard",
+      "failures_match_raw": true,
+      "traceback": false,
+      "mutant_preserved": false,
+      "mutant_hash_matches": null
+    },
+    {
+      "name": "g2c_same_step",
+      "failures_match_raw": true,
+      "traceback": false,
+      "mutant_preserved": false,
+      "mutant_hash_matches": null
+    },
+    {
+      "name": "g2c_expected_step",
+      "failures_match_raw": true,
+      "traceback": false,
+      "mutant_preserved": false,
+      "mutant_hash_matches": null
+    },
+    {
+      "name": "restore_g2c_expected_binding",
+      "failures_match_raw": true,
+      "traceback": false,
+      "mutant_preserved": false,
+      "mutant_hash_matches": null
+    },
+    {
+      "name": "gravity_g2c_expected_binding",
+      "failures_match_raw": true,
+      "traceback": false,
+      "mutant_preserved": false,
+      "mutant_hash_matches": null
+    }
+  ],
+  "r10_bytes": {
+    "ul_steps.csv": true,
+    "ul_windows.csv": true,
+    "ul_events.csv": false
+  }
+}

@@ -1,0 +1,27 @@
+ps45_sigmae_factor_off_variant selftest 32/58
+  FAIL: ①k 새 빈 폴더 (생산 밖) = 허용 ['--out /tmp/ps45e_m2vgel_o/fresh_out 이 git 체크아웃 /tmp 안이다 (리포 · 작업트리에 쓰지 않는다 — 반입은 따로)']
+  FAIL: ④a 정상 = rc 0 · manifest.json · 다섯 ok rc 2
+  FAIL: ④b SC 만 = 인자 끔 q 와 켬 q 비트 같음 (G4)
+  FAIL: ④c PC 만 (균일 반경) OFF/ON = 35/8 (기록) None
+  FAIL: ④d 혼합 OFF/ON ≠ 35/8 (보간 · 배율 금지 근거) None
+  FAIL: ④e 주 팔 증서 σ_bulk = 0.0041 · 표 σ = q × 4.1
+  FAIL: ④f 표 다섯 행 · 등록 순서 · 값 채움
+  FAIL: ④g manifest 다시 검사 = 문제 0
+  FAIL: ④n 입력이 저장 실행과 다르면 control_mismatch · 그 행 값 비움 · 다섯 행 그대로 · rc 1 rc 2 {}
+  FAIL: ④o 기하 ≠ 저장 증서 = inputs_refused · rc 1 rc 2 {}
+  FAIL: ④p --check-only = rc 0 · 쓰기 없음
+  FAIL: ⑤ 예외 RuntimeError: ④a manifest 없음 — ⑤ 전제 실패
+  FAIL: ⑤ 시험 미실행 #1 (앞 단계 실패)
+  FAIL: ⑤ 시험 미실행 #2 (앞 단계 실패)
+  FAIL: ⑤ 시험 미실행 #3 (앞 단계 실패)
+  FAIL: ⑤ 시험 미실행 #4 (앞 단계 실패)
+  FAIL: ⑤ 시험 미실행 #5 (앞 단계 실패)
+  FAIL: ⑤ 시험 미실행 #6 (앞 단계 실패)
+  FAIL: ⑤ 시험 미실행 #7 (앞 단계 실패)
+  FAIL: ⑤ 시험 미실행 #8 (앞 단계 실패)
+  FAIL: ⑤ 시험 미실행 #9 (앞 단계 실패)
+  FAIL: ⑤ 시험 미실행 #10 (앞 단계 실패)
+  FAIL: ⑤ 시험 미실행 #11 (앞 단계 실패)
+  FAIL: ⑤ 시험 미실행 #12 (앞 단계 실패)
+  FAIL: ⑤ 시험 미실행 #13 (앞 단계 실패)
+  FAIL: ⑤ 시험 미실행 #14 (앞 단계 실패)

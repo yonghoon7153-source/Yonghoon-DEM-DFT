@@ -1,0 +1,32 @@
+[
+  {
+    "name": "resume_outside_manifest",
+    "sitecount": 1,
+    "mutant_hash_matches": true
+  },
+  {
+    "name": "resume_nonnumeric",
+    "sitecount": 1,
+    "mutant_hash_matches": true
+  },
+  {
+    "name": "resume_state_mismatch",
+    "sitecount": 1,
+    "mutant_hash_matches": true
+  },
+  {
+    "name": "event_rewind_k_guard",
+    "sitecount": 1,
+    "mutant_hash_matches": true
+  },
+  {
+    "name": "reader_listed_hash",
+    "sitecount": 1,
+    "mutant_hash_matches": true
+  },
+  {
+    "name": "reader_process_rc",
+    "sitecount": 1,
+    "mutant_hash_matches": true
+  }
+]

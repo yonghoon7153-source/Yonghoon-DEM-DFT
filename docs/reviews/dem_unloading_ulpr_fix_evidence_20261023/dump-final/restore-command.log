@@ -1,0 +1,12 @@
+baseline: RESTORED restore_rc=0 gate_rc=0 expected=True
+nan_box: VALUE_MISMATCH restore_rc=2 gate_rc=2 expected=True
+short_box: VALUE_MISMATCH restore_rc=2 gate_rc=2 expected=True
+no_bounds: VALUE_MISMATCH restore_rc=2 gate_rc=2 expected=True
+bad_atoms_header: VALUE_MISMATCH restore_rc=2 gate_rc=2 expected=True
+g2c_wrong_step: VALUE_MISMATCH restore_rc=2 gate_rc=2 expected=True
+missing_c26: UNCONFIRMED restore_rc=2 gate_rc=2 expected=True
+g2_duplicate_id: VALUE_MISMATCH restore_rc=2 gate_rc=2 expected=True
+g2_nan: VALUE_MISMATCH restore_rc=2 gate_rc=2 expected=True
+g2_extra_short_row: VALUE_MISMATCH restore_rc=2 gate_rc=2 expected=True
+g2_both_wrong_step: VALUE_MISMATCH restore_rc=2 gate_rc=2 expected=True
+g2_numeric_equal_token: VALUE_MISMATCH restore_rc=2 gate_rc=2 expected=True

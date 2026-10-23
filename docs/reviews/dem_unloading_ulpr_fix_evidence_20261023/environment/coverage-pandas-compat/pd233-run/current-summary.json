@@ -1,0 +1,24 @@
+{
+  "AM_P": {
+    "delta_mean_pct": 130.44058468949203,
+    "delta_rough_pct": -28.897832432195823,
+    "hertzian_mean": 0.5053519016064315,
+    "hertzian_std": 0.0,
+    "n": 1,
+    "physics_mean": 1.1645358768013272,
+    "physics_std": 0.0,
+    "rough_mean": 0.8280102505104773,
+    "rough_std": 0.0
+  },
+  "AM_S": {
+    "delta_mean_pct": 76.2419732731264,
+    "delta_rough_pct": -9.645550620686263,
+    "hertzian_mean": 0.6097808985329526,
+    "hertzian_std": 0.0,
+    "n": 1,
+    "physics_mean": 1.0746898882170763,
+    "physics_std": 0.0,
+    "rough_mean": 0.9710301310337016,
+    "rough_std": 0.0
+  }
+}

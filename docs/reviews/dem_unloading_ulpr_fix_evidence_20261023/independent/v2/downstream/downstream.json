@@ -1,0 +1,246 @@
+{
+  "arm_rc": 0,
+  "arm": {
+    "primary_status": "OK",
+    "rho_pct": 0.2026077873428664,
+    "rank_eligible": true,
+    "resume_tail": {
+      "status": "UNCONFIRMED",
+      "boundary_k": 4,
+      "boundary_step": 3295000,
+      "excluded_rows": {
+        "windows": 4,
+        "steps": 1,
+        "events": 0
+      },
+      "why": [
+        "ULPR-01 단 기록: RESUME (k 4 · step 3295000) 뒤 단 [5] 의 새 시도 소속을 확인할 수 없다 (새 단 되감기 없음 · 창 수/마지막 step 만으로 같은 시각의 옛 행을 인증하지 않는다)"
+      ]
+    },
+    "union_bracket_pct": null,
+    "nonmonotone": null,
+    "separation": {
+      "declared_step": null,
+      "separated_final": null,
+      "recontact_index": null,
+      "missing_index": null,
+      "moved_index": null,
+      "gap_index": null,
+      "n_post": null,
+      "declared_w": null,
+      "status": "NOT_COMPUTED",
+      "why": [
+        "승인 경계 뒤 꼬리 소속 미확인 (ULPR-01)"
+      ]
+    },
+    "s4_status": "NOT_COMPUTED",
+    "surface_um": null,
+    "w_proxy_J": 4.036875000000115e-08,
+    "eps": {
+      "status": "OK",
+      "C_all_m": 2.199114857512857e-05,
+      "area_m2": 0.0025000000000000005,
+      "n_s0": 105,
+      "S0": {
+        "status": "OK",
+        "eps_all": 0.9998019743131584,
+        "eps_inside": 0.9998019743131584,
+        "n_inside": 105,
+        "h_m": 0.111052
+      },
+      "endpoints": [
+        {
+          "k": 1,
+          "step": 3235000,
+          "h_m": 0.111252,
+          "status": "OK",
+          "eps_all": 0.9998023303079933,
+          "eps_inside": 0.9998023303079933,
+          "n_inside": 105,
+          "why": []
+        },
+        {
+          "k": 2,
+          "step": 3255000,
+          "h_m": 0.111302,
+          "status": "OK",
+          "eps_all": 0.9998024191067983,
+          "eps_inside": 0.9998024191067983,
+          "n_inside": 105,
+          "why": []
+        }
+      ],
+      "M": {
+        "h_m": 0.111277,
+        "status": "OK",
+        "eps_all": 0.9998023747173708,
+        "eps_inside": null
+      },
+      "why": []
+    }
+  },
+  "uva_gate_before_uv_rc": 0,
+  "select_rc": 0,
+  "selection": {
+    "stage": "resolved",
+    "delta_dt": 0.0,
+    "delta_v": 0.0,
+    "dt_star": "dt0",
+    "tuple": "t1",
+    "arm": "UB",
+    "next": [],
+    "why": []
+  },
+  "report_rc": 0,
+  "report_bed": {
+    "job": "UB",
+    "bed": "ps_7_3_r45",
+    "dir": "/workspace/.cloud-setup/nonrint/ulpr-independent-review/v2/downstream/fixture/ps_7_3_r45/UB",
+    "problems": [
+      "ULPR-01 단 기록: RESUME (k 4 · step 3295000) 뒤 단 [5] 의 새 시도 소속을 확인할 수 없다 (새 단 되감기 없음 · 창 수/마지막 step 만으로 같은 시각의 옛 행을 인증하지 않는다)"
+    ],
+    "n_superseded_rows": 0,
+    "primary_status": "OK",
+    "rho_pct": 0.2026077873428664,
+    "bracket_um": [
+      0.2,
+      0.25
+    ],
+    "bracket_pct": [
+      0.18009581097143681,
+      0.225119763714296
+    ],
+    "union_bracket_um": null,
+    "union_bracket_pct": null,
+    "lower_bound_pct": null,
+    "nonmonotone": null,
+    "cancellation": false,
+    "disposition": "VALUE",
+    "rank_eligible": true,
+    "endpoint_states": [
+      "CONTACT",
+      "CONTACT"
+    ],
+    "sigma_P": 0.0010259783520850981,
+    "trajectory_status": "TIMEOUT",
+    "separation": {
+      "declared_step": null,
+      "separated_final": null,
+      "recontact_index": null,
+      "missing_index": null,
+      "moved_index": null,
+      "gap_index": null,
+      "n_post": null,
+      "declared_w": null,
+      "status": "NOT_COMPUTED",
+      "why": [
+        "승인 경계 뒤 꼬리 소속 미확인 (ULPR-01)"
+      ]
+    },
+    "s4_status": "NOT_COMPUTED",
+    "why": [
+      "ULPR-01 소속 불명확 꼬리 격리: 분석은 승인 경계 k 4 · step 3295000 이전만 — 주 값 · 끝점 ε · 0→M 일 대리값은 이 구간의 원래 검사를 통과한 경우만 사용; 전체 교차 합집합 · 분리 · 표면은 미확인"
+    ],
+    "cancellation_detail": {
+      "tension_N": [
+        0,
+        0
+      ],
+      "threshold_N": 1.25
+    },
+    "resume_tail": {
+      "status": "UNCONFIRMED",
+      "boundary_k": 4,
+      "boundary_step": 3295000,
+      "excluded_rows": {
+        "windows": 4,
+        "steps": 1,
+        "events": 0
+      },
+      "why": [
+        "ULPR-01 단 기록: RESUME (k 4 · step 3295000) 뒤 단 [5] 의 새 시도 소속을 확인할 수 없다 (새 단 되감기 없음 · 창 수/마지막 step 만으로 같은 시각의 옛 행을 인증하지 않는다)"
+      ]
+    },
+    "surface_um": null,
+    "eps": {
+      "status": "OK",
+      "C_all_m": 2.199114857512857e-05,
+      "area_m2": 0.0025000000000000005,
+      "n_s0": 105,
+      "S0": {
+        "status": "OK",
+        "eps_all": 0.9998019743131584,
+        "eps_inside": 0.9998019743131584,
+        "n_inside": 105,
+        "h_m": 0.111052
+      },
+      "endpoints": [
+        {
+          "k": 1,
+          "step": 3235000,
+          "h_m": 0.111252,
+          "status": "OK",
+          "eps_all": 0.9998023303079933,
+          "eps_inside": 0.9998023303079933,
+          "n_inside": 105,
+          "why": []
+        },
+        {
+          "k": 2,
+          "step": 3255000,
+          "h_m": 0.111302,
+          "status": "OK",
+          "eps_all": 0.9998024191067983,
+          "eps_inside": 0.9998024191067983,
+          "n_inside": 105,
+          "why": []
+        }
+      ],
+      "M": {
+        "h_m": 0.111277,
+        "status": "OK",
+        "eps_all": 0.9998023747173708,
+        "eps_inside": null
+      },
+      "why": []
+    },
+    "w_proxy_J": 4.036875000000115e-08,
+    "w_proxy": {
+      "status": "OK",
+      "n_points": 3,
+      "why": []
+    }
+  },
+  "pair_relations": [
+    {
+      "a": "ps_0_10_r45",
+      "b": "ps_7_3_r45",
+      "relation": "UNIDENTIFIED"
+    },
+    {
+      "a": "ps_3_7_r45",
+      "b": "ps_7_3_r45",
+      "relation": "UNIDENTIFIED"
+    },
+    {
+      "a": "ps_5_5_r45",
+      "b": "ps_7_3_r45",
+      "relation": "UNIDENTIFIED"
+    },
+    {
+      "a": "ps_7_3_r45",
+      "b": "ps_10_0_r45",
+      "relation": "UNIDENTIFIED"
+    }
+  ],
+  "g_ub_gate_rc": 0,
+  "raw_csv_unchanged": true,
+  "checks": {
+    "primary_kept": true,
+    "union_unknown": true,
+    "pairs_unknown": true,
+    "select_primary_valid": true,
+    "raw_unchanged": true,
+    "all_cli_no_error": true
+  }
+}

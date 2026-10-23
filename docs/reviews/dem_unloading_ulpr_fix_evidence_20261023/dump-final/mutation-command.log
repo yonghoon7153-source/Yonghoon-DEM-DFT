@@ -1,0 +1,12 @@
+baseline-ul_gates: rc=0 checks=202 failed=0 expected=True
+baseline-ul_reader: rc=0 checks=214 failed=0 expected=True
+box_finite: rc=1 checks=202 failed=39 expected=True
+box_order: rc=1 checks=202 failed=12 expected=True
+box_two_values: rc=1 checks=202 failed=6 expected=True
+exact_header_names: rc=1 checks=202 failed=12 expected=True
+g2_header_guard: rc=1 checks=202 failed=72 expected=True
+g2c_header_guard: rc=1 checks=202 failed=21 expected=True
+g2c_same_step: rc=1 checks=202 failed=2 expected=True
+g2c_expected_step: rc=1 checks=202 failed=1 expected=True
+restore_g2c_expected_binding: rc=1 checks=214 failed=1 expected=True
+gravity_g2c_expected_binding: rc=1 checks=214 failed=1 expected=True

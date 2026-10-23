@@ -1,0 +1,62 @@
+{
+  "source_sha256": "34b46ebcf4530989917493f20d2d953043209e36d89e6b8282a2d629050a078d",
+  "script_sha256": "d5f62cd00c044560691c65c01eeaf0d32ff0b3d424bde812ea8c4b0fd5a06a49",
+  "python": "3.11.17 (main, Oct  3 2026, 01:05:36) [Clang 22.1.3 ]",
+  "mutations": [
+    {
+      "name": "resume_outside_manifest_condition",
+      "old": "elif e['step'] not in rf:",
+      "new": "elif False:",
+      "rc": 1,
+      "mutant_sha256": "3729f5a8f02fa0ee1e600df3ee2eae5b8dc699bb2c585d4c6eccfd584850712b",
+      "failures": [
+        "✗ R38 ULPR-02 resume_from 밖 RESUME · 그 상태 파일은 맞음 → 해당 승인 없음 + resume_from 사유  — ([(3, 3350001)], [])"
+      ],
+      "expected_failures": [
+        "✗ R38 ULPR-02 resume_from 밖 RESUME · 그 상태 파일은 맞음 → 해당 승인 없음 + resume_from 사유  — ([(3, 3350001)], [])"
+      ],
+      "unexpected_failures": [],
+      "traceback": false,
+      "killed_for_expected_reason": true
+    },
+    {
+      "name": "resume_nonnumeric_condition",
+      "old": "if e['k'] is None or e['step'] is None:",
+      "new": "if False:",
+      "rc": 1,
+      "mutant_sha256": "6e946ba648bfec5a22c22bb7d009b67a34e6edeafc036307e79463ef385430e6",
+      "failures": [
+        "✗ R38 ULPR-02 RESUME k 숫자 아님 → 승인 없음 + 숫자 아님 사유  — ([], ['RESUME (k None · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k 3 · ul_rstep 3350000) — 상충 · 승인 없음 (ULKRF-01)'])",
+        "✗ R38 ULPR-02 RESUME step 숫자 아님 → 승인 없음 + 숫자 아님 사유  — ([], ['ul_events.csv: RESUME (k 3 · step None) 의 step ∉ 러너 resume_from [3350000] — 상충 · 승인 없음 (ULKRF-01)'])"
+      ],
+      "expected_failures": [
+        "✗ R38 ULPR-02 RESUME k 숫자 아님 → 승인 없음 + 숫자 아님 사유  — ([], ['RESUME (k None · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k 3 · ul_rstep 3350000) — 상충 · 승인 없음 (ULKRF-01)'])",
+        "✗ R38 ULPR-02 RESUME step 숫자 아님 → 승인 없음 + 숫자 아님 사유  — ([], ['ul_events.csv: RESUME (k 3 · step None) 의 step ∉ 러너 resume_from [3350000] — 상충 · 승인 없음 (ULKRF-01)'])"
+      ],
+      "unexpected_failures": [],
+      "traceback": false,
+      "killed_for_expected_reason": true
+    },
+    {
+      "name": "resume_state_match_condition",
+      "old": "if st.get('ul_rstep') == s and st.get('ul_k') == ks[0]:",
+      "new": "if True:",
+      "rc": 1,
+      "mutant_sha256": "8777813edc676a4c694cf17c22c90dfeec6be780f7065e605b5b73e1a8b5348b",
+      "failures": [
+        "✗ R38 ULPR-02 사건 k 3 ↔ 상태 파일 k 2 → 승인 없음 + 상태 파일 불일치 사유  — ([(3, 3350000)], [])",
+        "✗ R28 ULKRR-02 이어 돌림 꼴인데 상태 파일 ul_k 0 ≠ RESUME 사건 k 1 → 남긴 줄을 버리지 않는다 · UT 주 값 미식별 (사유) · UVa 거부  —",
+        "✗ R28 ULKRR-02 이어 돌림 꼴인데 상태 파일 (state_unload_<s_r>.in) 없음 → 남긴 줄을 버리지 않는다 · UT 주 값 미식별 (사유) · UVa 거부  —"
+      ],
+      "expected_failures": [
+        "✗ R38 ULPR-02 사건 k 3 ↔ 상태 파일 k 2 → 승인 없음 + 상태 파일 불일치 사유  — ([(3, 3350000)], [])"
+      ],
+      "unexpected_failures": [
+        "✗ R28 ULKRR-02 이어 돌림 꼴인데 상태 파일 ul_k 0 ≠ RESUME 사건 k 1 → 남긴 줄을 버리지 않는다 · UT 주 값 미식별 (사유) · UVa 거부  —",
+        "✗ R28 ULKRR-02 이어 돌림 꼴인데 상태 파일 (state_unload_<s_r>.in) 없음 → 남긴 줄을 버리지 않는다 · UT 주 값 미식별 (사유) · UVa 거부  —"
+      ],
+      "traceback": false,
+      "killed_for_expected_reason": false
+    }
+  ]
+}

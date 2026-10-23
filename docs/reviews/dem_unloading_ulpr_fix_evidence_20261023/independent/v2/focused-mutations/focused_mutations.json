@@ -1,0 +1,135 @@
+[
+  {
+    "name": "no_uncertain_output",
+    "error": null,
+    "failures": [
+      "R37 ULPR-01 UB 측정 뒤 이동 중 TIMEOUT · 새 창 0 · 꼬리 소속 불명확 → 경계 앞 주 교차+확인은 재검증해 OK 보존 · 전체 합집합/분리/표면은 미확인 ('UNIDENTIFIED', ['CSV 기록 결손 · 무결성 (ULPR-01 단 기록: RESUME (k 4 · step 3295000) 뒤 단 [5] 의 새 시도 소속을 확인할 수 없다 (새 단 되감기 없음 · 창 수/마지막 step 만으로 같은 시각의 옛 행을 인증하지 않는다)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다'])"
+    ],
+    "relevant_failures": [
+      "R37 ULPR-01 UB 측정 뒤 이동 중 TIMEOUT · 새 창 0 · 꼬리 소속 불명확 → 경계 앞 주 교차+확인은 재검증해 OK 보존 · 전체 합집합/분리/표면은 미확인 ('UNIDENTIFIED', ['CSV 기록 결손 · 무결성 (ULPR-01 단 기록: RESUME (k 4 · step 3295000) 뒤 단 [5] 의 새 시도 소속을 확인할 수 없다 (새 단 되감기 없음 · 창 수/마지막 step 만으로 같은 시각의 옛 행을 인증하지 않는다)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다'])"
+    ],
+    "killed_for_expected_reason": true
+  },
+  {
+    "name": "keep_union_of_prefix",
+    "error": null,
+    "failures": [
+      "R37 ULPR-01 UB 측정 뒤 이동 중 TIMEOUT · 새 창 0 · 꼬리 소속 불명확 → 경계 앞 주 교차+확인은 재검증해 OK 보존 · 전체 합집합/분리/표면은 미확인 ('OK', ['ULPR-01 소속 불명확 꼬리 격리: 분석은 승인 경계 k 4 · step 3295000 이전만 — 주 값 · 끝점 ε · 0→M 일 대리값은 이 구간의 원래 검사를 통과한 경우만 사용; 전체 교차 합집합 · 분리 · 표면은 미확인'])"
+    ],
+    "relevant_failures": [
+      "R37 ULPR-01 UB 측정 뒤 이동 중 TIMEOUT · 새 창 0 · 꼬리 소속 불명확 → 경계 앞 주 교차+확인은 재검증해 OK 보존 · 전체 합집합/분리/표면은 미확인 ('OK', ['ULPR-01 소속 불명확 꼬리 격리: 분석은 승인 경계 k 4 · step 3295000 이전만 — 주 값 · 끝점 ε · 0→M 일 대리값은 이 구간의 원래 검사를 통과한 경우만 사용; 전체 교차 합집합 · 분리 · 표면은 미확인'])"
+    ],
+    "killed_for_expected_reason": true
+  },
+  {
+    "name": "nonfinite_box_allowed",
+    "error": null,
+    "failures": [
+      "✗ C6 ULPR-03 G2 test axis0_end0_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 orig axis0_end0_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 both axis0_end0_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 test axis0_end0_-inf = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 orig axis0_end0_-inf = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 both axis0_end0_-inf = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 test axis0_end1_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 orig axis0_end1_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 both axis0_end1_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 test axis0_end1_inf = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 orig axis0_end1_inf = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 both axis0_end1_inf = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 test axis1_end0_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 orig axis1_end0_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 both axis1_end0_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 test axis1_end0_-inf = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 orig axis1_end0_-inf = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 both axis1_end0_-inf = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 test axis1_end1_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 orig axis1_end1_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 both axis1_end1_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 test axis1_end1_inf = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 orig axis1_end1_inf = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 both axis1_end1_inf = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 test axis2_end0_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 orig axis2_end0_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 both axis2_end0_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 test axis2_end0_-inf = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 orig axis2_end0_-inf = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 both axis2_end0_-inf = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 test axis2_end1_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 orig axis2_end1_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 both axis2_end1_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 test axis2_end1_inf = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 orig axis2_end1_inf = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 both axis2_end1_inf = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C7 G2c test box_nonfinite = FAIL + 사유 (쌍 값은 그대로)  —",
+      "✗ C7 G2c orig box_nonfinite = FAIL + 사유 (쌍 값은 그대로)  —",
+      "✗ C7 G2c both box_nonfinite = FAIL + 사유 (쌍 값은 그대로)  —"
+    ],
+    "relevant_failures": [
+      "✗ C6 ULPR-03 G2 test axis0_end0_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 orig axis0_end0_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 both axis0_end0_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 test axis0_end0_-inf = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 orig axis0_end0_-inf = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 both axis0_end0_-inf = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 test axis0_end1_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 orig axis0_end1_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 both axis0_end1_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 test axis0_end1_inf = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 orig axis0_end1_inf = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 both axis0_end1_inf = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 test axis1_end0_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 orig axis1_end0_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 both axis1_end0_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 test axis1_end0_-inf = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 orig axis1_end0_-inf = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 both axis1_end0_-inf = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 test axis1_end1_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 orig axis1_end1_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 both axis1_end1_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 test axis1_end1_inf = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 orig axis1_end1_inf = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 both axis1_end1_inf = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 test axis2_end0_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 orig axis2_end0_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 both axis2_end0_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 test axis2_end0_-inf = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 orig axis2_end0_-inf = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 both axis2_end0_-inf = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 test axis2_end1_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 orig axis2_end1_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 both axis2_end1_nan = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 test axis2_end1_inf = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 orig axis2_end1_inf = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 both axis2_end1_inf = FAIL + 사유 (원자 행은 그대로)  —"
+    ],
+    "killed_for_expected_reason": true
+  },
+  {
+    "name": "reversed_box_allowed",
+    "error": null,
+    "failures": [
+      "✗ C6 ULPR-03 G2 test reversed_bound = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 orig reversed_bound = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 both reversed_bound = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 test zero_width = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 orig zero_width = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 both zero_width = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C7 G2c test box_reversed = FAIL + 사유 (쌍 값은 그대로)  —",
+      "✗ C7 G2c orig box_reversed = FAIL + 사유 (쌍 값은 그대로)  —",
+      "✗ C7 G2c both box_reversed = FAIL + 사유 (쌍 값은 그대로)  —",
+      "✗ C7 G2c test box_zero_width = FAIL + 사유 (쌍 값은 그대로)  —",
+      "✗ C7 G2c orig box_zero_width = FAIL + 사유 (쌍 값은 그대로)  —",
+      "✗ C7 G2c both box_zero_width = FAIL + 사유 (쌍 값은 그대로)  —"
+    ],
+    "relevant_failures": [
+      "✗ C6 ULPR-03 G2 test reversed_bound = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 orig reversed_bound = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 both reversed_bound = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 test zero_width = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 orig zero_width = FAIL + 사유 (원자 행은 그대로)  —",
+      "✗ C6 ULPR-03 G2 both zero_width = FAIL + 사유 (원자 행은 그대로)  —"
+    ],
+    "killed_for_expected_reason": true
+  }
+]

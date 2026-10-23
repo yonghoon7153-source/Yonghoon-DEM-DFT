@@ -1,0 +1,190 @@
+[
+  {
+    "kr": 0,
+    "sr": 3230000,
+    "baseline": "OK",
+    "baseline_rho": 0.20260778734286913,
+    "new_sim_result": "RM_STOP",
+    "new_sim_aborted": null,
+    "csv_rows_match_uninterrupted": false,
+    "new_events": [
+      [
+        "RESUME",
+        "0",
+        "3230000",
+        "0.111052",
+        "0",
+        "state"
+      ],
+      [
+        "MODE_B",
+        "1",
+        "3310000",
+        "0.111252",
+        "0.000200000000000006",
+        "next"
+      ],
+      [
+        "CROSS",
+        "2",
+        "3360000",
+        "0.111302",
+        "0.00025",
+        "first"
+      ],
+      [
+        "RM",
+        "4",
+        "3460000",
+        "0.111402",
+        "0.000350000000000003",
+        "ncross2"
+      ],
+      [
+        "RM_STOP",
+        "4",
+        "3460000",
+        "0.111402",
+        "0.000350000000000003",
+        "UT"
+      ]
+    ],
+    "cli_rc": 0,
+    "primary_status": "UNIDENTIFIED",
+    "rho": null,
+    "problems": [
+      "ULPR-01 단 기록: RESUME (k 0 · step 3230000) 뒤 단 [1, 2, 3, 4] 의 새 시도 소속을 확인할 수 없다 (새 단 되감기 없음 · 창 수/마지막 step 만으로 같은 시각의 옛 행을 인증하지 않는다)"
+    ]
+  },
+  {
+    "kr": 1,
+    "sr": 3310000,
+    "baseline": "OK",
+    "baseline_rho": 0.20260778734286913,
+    "new_sim_result": "RM_STOP",
+    "new_sim_aborted": null,
+    "csv_rows_match_uninterrupted": false,
+    "new_events": [
+      [
+        "RESUME",
+        "1",
+        "3310000",
+        "0.111252",
+        "0.000200000000000006",
+        "state"
+      ],
+      [
+        "CROSS",
+        "2",
+        "3360000",
+        "0.111302",
+        "0.00025",
+        "first"
+      ],
+      [
+        "RM",
+        "4",
+        "3460000",
+        "0.111402",
+        "0.000350000000000003",
+        "ncross2"
+      ],
+      [
+        "RM_STOP",
+        "4",
+        "3460000",
+        "0.111402",
+        "0.000350000000000003",
+        "UT"
+      ]
+    ],
+    "cli_rc": 0,
+    "primary_status": "UNIDENTIFIED",
+    "rho": null,
+    "problems": [
+      "ULPR-01 단 기록: RESUME (k 1 · step 3310000) 뒤 단 [2, 3, 4] 의 새 시도 소속을 확인할 수 없다 (새 단 되감기 없음 · 창 수/마지막 step 만으로 같은 시각의 옛 행을 인증하지 않는다)"
+    ]
+  },
+  {
+    "kr": 2,
+    "sr": 3360000,
+    "baseline": "OK",
+    "baseline_rho": 0.20260778734286913,
+    "new_sim_result": "RM_STOP",
+    "new_sim_aborted": null,
+    "csv_rows_match_uninterrupted": true,
+    "new_events": [
+      [
+        "RESUME",
+        "2",
+        "3360000",
+        "0.111302",
+        "0.00025",
+        "state"
+      ],
+      [
+        "RM",
+        "4",
+        "3460000",
+        "0.111402",
+        "0.000350000000000003",
+        "ncross2"
+      ],
+      [
+        "RM_STOP",
+        "4",
+        "3460000",
+        "0.111402",
+        "0.000350000000000003",
+        "UT"
+      ]
+    ],
+    "cli_rc": 0,
+    "primary_status": "UNIDENTIFIED",
+    "rho": null,
+    "problems": [
+      "ULPR-01 단 기록: RESUME (k 2 · step 3360000) 뒤 단 [3, 4] 의 새 시도 소속을 확인할 수 없다 (새 단 되감기 없음 · 창 수/마지막 step 만으로 같은 시각의 옛 행을 인증하지 않는다)"
+    ]
+  },
+  {
+    "kr": 3,
+    "sr": 3410000,
+    "baseline": "OK",
+    "baseline_rho": 0.20260778734286913,
+    "new_sim_result": "RM_STOP",
+    "new_sim_aborted": null,
+    "csv_rows_match_uninterrupted": true,
+    "new_events": [
+      [
+        "RESUME",
+        "3",
+        "3410000",
+        "0.111352",
+        "0.000300000000000009",
+        "state"
+      ],
+      [
+        "RM",
+        "4",
+        "3460000",
+        "0.111402",
+        "0.000350000000000003",
+        "ncross2"
+      ],
+      [
+        "RM_STOP",
+        "4",
+        "3460000",
+        "0.111402",
+        "0.000350000000000003",
+        "UT"
+      ]
+    ],
+    "cli_rc": 0,
+    "primary_status": "UNIDENTIFIED",
+    "rho": null,
+    "problems": [
+      "ULPR-01 단 기록: RESUME (k 3 · step 3410000) 뒤 단 [4] 의 새 시도 소속을 확인할 수 없다 (새 단 되감기 없음 · 창 수/마지막 step 만으로 같은 시각의 옛 행을 인증하지 않는다)"
+    ]
+  }
+]

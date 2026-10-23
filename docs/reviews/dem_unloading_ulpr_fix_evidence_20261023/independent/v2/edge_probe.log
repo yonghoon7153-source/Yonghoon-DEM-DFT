@@ -1,0 +1,112 @@
+[
+  {
+    "class": "G2_ID",
+    "token": "nan",
+    "status": "FAIL"
+  },
+  {
+    "class": "G2_ID",
+    "token": "inf",
+    "status": "FAIL"
+  },
+  {
+    "class": "G2_ID",
+    "token": "-inf",
+    "status": "FAIL"
+  },
+  {
+    "class": "G2_ID",
+    "token": "1e309",
+    "status": "FAIL"
+  },
+  {
+    "class": "G2_ID",
+    "token": "9007199254740993",
+    "status": "FAIL"
+  },
+  {
+    "class": "G2_ID",
+    "token": "1.5",
+    "status": "FAIL"
+  },
+  {
+    "class": "G2_ID",
+    "token": "1.0000000000000001",
+    "status": "FAIL"
+  },
+  {
+    "class": "G2_ID",
+    "token": "0",
+    "status": "FAIL"
+  },
+  {
+    "class": "G2_ID",
+    "token": "-1",
+    "status": "FAIL"
+  },
+  {
+    "class": "G2_ID",
+    "token": "١",
+    "status": "FAIL"
+  },
+  {
+    "class": "G2_coordinate",
+    "token": "nan",
+    "status": "FAIL"
+  },
+  {
+    "class": "G2_coordinate",
+    "token": "inf",
+    "status": "FAIL"
+  },
+  {
+    "class": "G2_coordinate",
+    "token": "1e309",
+    "status": "FAIL"
+  },
+  {
+    "class": "RESUME_k",
+    "token": "nan",
+    "status": []
+  },
+  {
+    "class": "RESUME_k",
+    "token": "inf",
+    "status": []
+  },
+  {
+    "class": "RESUME_k",
+    "token": "1e309",
+    "status": []
+  },
+  {
+    "class": "RESUME_k",
+    "token": "3.49",
+    "status": [
+      [
+        3,
+        3410000
+      ]
+    ]
+  },
+  {
+    "class": "RESUME_k",
+    "token": "٣",
+    "status": [
+      [
+        3,
+        3410000
+      ]
+    ]
+  },
+  {
+    "class": "RESUME_k",
+    "token": " 3 ",
+    "status": [
+      [
+        3,
+        3410000
+      ]
+    ]
+  }
+]

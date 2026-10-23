@@ -1,0 +1,296 @@
+[
+  {
+    "name": "no_resume_reconcile",
+    "suite": "ul_reader",
+    "rc": 1,
+    "error": null,
+    "failures": [
+      "✗ R37 ULPR-01 새 시도 TIMEOUT · 유지 2 창 · 확인 두 번째 단 줄 전 중단 → fresh/resume 둘 다 UNIDENTIFIED · 옛 정상 단 제외 · UVa 거부  — ('UNIDENTIFIED', 'OK', [])",
+      "✗ R37 ULPR-01 새 시도 GUARD · 유지 2 창 · 확인 두 번째 단 줄 전 중단 → fresh/resume 둘 다 UNIDENTIFIED · 옛 정상 단 제외 · UVa 거부  — ('UNIDENTIFIED', 'OK', [])",
+      "✗ R37 ULPR-01 새 시도 TIMEOUT · 유지 0 창 · 확인 두 번째 단 줄 전 중단 → fresh/resume 둘 다 UNIDENTIFIED · 옛 정상 단 제외 · UVa 거부  — ('UNIDENTIFIED', 'OK', [])",
+      "✗ R37 ULPR-01 새 시도 GUARD · 유지 4 창 · 확인 두 번째 단 줄 전 중단 → fresh/resume 둘 다 UNIDENTIFIED · 옛 정상 단 제외 · UVa 거부  — ('UNIDENTIFIED', 'OK', [])",
+      "✗ R37 ULPR-01 교차 전 새 시도 중단 → 옛 단으로 하한을 늘리지 않는다 · fresh/resume 마지막 정상 단 하한 동일  — [('LOWER_BOUND', 0.225119763714296), ('LOWER_BOUND', 0.27014371645715524)]",
+      "✗ R37 ULPR-01 사건 없는 교차 전 옛 단 · 새 TIMEOUT 0 창 · 같은 시각/창 수 또는 새 기록 없음 → 소속 모호성 사유 + 값 없음  — ('LOWER_BOUND', [])",
+      "✗ R37 ULPR-01 사건 없는 교차 전 옛 단 · 새 GUARD 4 창 · 같은 시각/창 수 또는 새 기록 없음 → 소속 모호성 사유 + 값 없음  — ('LOWER_BOUND', [])"
+    ],
+    "relevant_failures": [
+      "✗ R37 ULPR-01 새 시도 TIMEOUT · 유지 2 창 · 확인 두 번째 단 줄 전 중단 → fresh/resume 둘 다 UNIDENTIFIED · 옛 정상 단 제외 · UVa 거부  — ('UNIDENTIFIED', 'OK', [])",
+      "✗ R37 ULPR-01 새 시도 GUARD · 유지 2 창 · 확인 두 번째 단 줄 전 중단 → fresh/resume 둘 다 UNIDENTIFIED · 옛 정상 단 제외 · UVa 거부  — ('UNIDENTIFIED', 'OK', [])",
+      "✗ R37 ULPR-01 새 시도 TIMEOUT · 유지 0 창 · 확인 두 번째 단 줄 전 중단 → fresh/resume 둘 다 UNIDENTIFIED · 옛 정상 단 제외 · UVa 거부  — ('UNIDENTIFIED', 'OK', [])",
+      "✗ R37 ULPR-01 새 시도 GUARD · 유지 4 창 · 확인 두 번째 단 줄 전 중단 → fresh/resume 둘 다 UNIDENTIFIED · 옛 정상 단 제외 · UVa 거부  — ('UNIDENTIFIED', 'OK', [])",
+      "✗ R37 ULPR-01 교차 전 새 시도 중단 → 옛 단으로 하한을 늘리지 않는다 · fresh/resume 마지막 정상 단 하한 동일  — [('LOWER_BOUND', 0.225119763714296), ('LOWER_BOUND', 0.27014371645715524)]",
+      "✗ R37 ULPR-01 사건 없는 교차 전 옛 단 · 새 TIMEOUT 0 창 · 같은 시각/창 수 또는 새 기록 없음 → 소속 모호성 사유 + 값 없음  — ('LOWER_BOUND', [])",
+      "✗ R37 ULPR-01 사건 없는 교차 전 옛 단 · 새 GUARD 4 창 · 같은 시각/창 수 또는 새 기록 없음 → 소속 모호성 사유 + 값 없음  — ('LOWER_BOUND', [])"
+    ],
+    "killed_for_expected_reason": true
+  },
+  {
+    "name": "resume_outside_manifest",
+    "suite": "ul_reader",
+    "rc": 1,
+    "error": null,
+    "failures": [
+      "✗ R38 ULPR-02 resume_from 밖 RESUME · 그 상태 파일은 맞음 → 해당 승인 없음 + resume_from 사유  — ([(3, 3350001)], [])"
+    ],
+    "relevant_failures": [
+      "✗ R38 ULPR-02 resume_from 밖 RESUME · 그 상태 파일은 맞음 → 해당 승인 없음 + resume_from 사유  — ([(3, 3350001)], [])"
+    ],
+    "killed_for_expected_reason": true
+  },
+  {
+    "name": "resume_nonnumeric",
+    "suite": "ul_reader",
+    "rc": 1,
+    "error": null,
+    "failures": [
+      "✗ R38 ULPR-02 RESUME k 숫자 아님 → 승인 없음 + 숫자 아님 사유  — ([], ['RESUME (k None · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k 3 · ul_rstep 3350000) — 상충 · 승인 없음 (ULKRF-01)'])",
+      "✗ R38 ULPR-02 RESUME step 숫자 아님 → 승인 없음 + 숫자 아님 사유  — ([], ['ul_events.csv: RESUME (k 3 · step None) 의 step ∉ 러너 resume_from [3350000] — 상충 · 승인 없음 (ULKRF-01)'])"
+    ],
+    "relevant_failures": [
+      "✗ R38 ULPR-02 RESUME k 숫자 아님 → 승인 없음 + 숫자 아님 사유  — ([], ['RESUME (k None · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k 3 · ul_rstep 3350000) — 상충 · 승인 없음 (ULKRF-01)'])",
+      "✗ R38 ULPR-02 RESUME step 숫자 아님 → 승인 없음 + 숫자 아님 사유  — ([], ['ul_events.csv: RESUME (k 3 · step None) 의 step ∉ 러너 resume_from [3350000] — 상충 · 승인 없음 (ULKRF-01)'])"
+    ],
+    "killed_for_expected_reason": true
+  },
+  {
+    "name": "resume_state_mismatch",
+    "suite": "ul_reader",
+    "rc": 1,
+    "error": null,
+    "failures": [
+      "✗ R38 ULPR-02 사건 k 3 ↔ 상태 파일 k 2 → 승인 없음 + 상태 파일 불일치 사유  — ([(3, 3350000)], [])",
+      "✗ R28 ULKRR-02 이어 돌림 꼴인데 상태 파일 ul_k 0 ≠ RESUME 사건 k 1 → 남긴 줄을 버리지 않는다 · UT 주 값 미식별 (사유) · UVa 거부  —",
+      "✗ R28 ULKRR-02 이어 돌림 꼴인데 상태 파일 (state_unload_<s_r>.in) 없음 → 남긴 줄을 버리지 않는다 · UT 주 값 미식별 (사유) · UVa 거부  —"
+    ],
+    "relevant_failures": [
+      "✗ R38 ULPR-02 사건 k 3 ↔ 상태 파일 k 2 → 승인 없음 + 상태 파일 불일치 사유  — ([(3, 3350000)], [])"
+    ],
+    "killed_for_expected_reason": true
+  },
+  {
+    "name": "event_k_guard",
+    "suite": "ul_reader",
+    "rc": 1,
+    "error": null,
+    "failures": [
+      "✗ R38 ULPR-02 되감기 뒤 step 이지만 k = k_r 인 사건 → 삭제 금지 + 버릴 사건 k > k_r 사유  — []"
+    ],
+    "relevant_failures": [
+      "✗ R38 ULPR-02 되감기 뒤 step 이지만 k = k_r 인 사건 → 삭제 금지 + 버릴 사건 k > k_r 사유  — []"
+    ],
+    "killed_for_expected_reason": true
+  },
+  {
+    "name": "grammar_list_guard",
+    "suite": "ul_reader",
+    "rc": 1,
+    "error": null,
+    "failures": [
+      "✗ R38 ULPR-02 실제 판독기는 승인 봉인과 같지만 kit SHA256SUMS 목록 없음/누락/불일치 → 실행 전 거부 + 목록 사유  — ([], {'reader': '/tmp/tmpo1rh_3co/work/kit_20261014_000000/read_history.py', 'reader_sha256': '70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c', 'status': 'PASS', 'exit_code': 0, 'rc': 0, 'diff': None, 'problems': []})",
+      "✗ R38 ULPR-02 실제 판독기는 승인 봉인과 같지만 kit SHA256SUMS 목록 없음/누락/불일치 → 실행 전 거부 + 목록 사유  — ([], {'reader': '/tmp/tmpo1rh_3co/work/kit_20261014_000000/read_history.py', 'reader_sha256': '70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c', 'status': 'PASS', 'exit_code': 0, 'rc': 0, 'diff': None, 'problems': []})",
+      "✗ R38 ULPR-02 실제 판독기는 승인 봉인과 같지만 kit SHA256SUMS 목록 없음/누락/불일치 → 실행 전 거부 + 목록 사유  — ([], {'reader': '/tmp/tmpo1rh_3co/work/kit_20261014_000000/read_history.py', 'reader_sha256': '70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c', 'status': 'PASS', 'exit_code': 0, 'rc': 0, 'diff': None, 'problems': []})"
+    ],
+    "relevant_failures": [
+      "✗ R38 ULPR-02 실제 판독기는 승인 봉인과 같지만 kit SHA256SUMS 목록 없음/누락/불일치 → 실행 전 거부 + 목록 사유  — ([], {'reader': '/tmp/tmpo1rh_3co/work/kit_20261014_000000/read_history.py', 'reader_sha256': '70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c', 'status': 'PASS', 'exit_code': 0, 'rc': 0, 'diff': None, 'problems': []})",
+      "✗ R38 ULPR-02 실제 판독기는 승인 봉인과 같지만 kit SHA256SUMS 목록 없음/누락/불일치 → 실행 전 거부 + 목록 사유  — ([], {'reader': '/tmp/tmpo1rh_3co/work/kit_20261014_000000/read_history.py', 'reader_sha256': '70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c', 'status': 'PASS', 'exit_code': 0, 'rc': 0, 'diff': None, 'problems': []})",
+      "✗ R38 ULPR-02 실제 판독기는 승인 봉인과 같지만 kit SHA256SUMS 목록 없음/누락/불일치 → 실행 전 거부 + 목록 사유  — ([], {'reader': '/tmp/tmpo1rh_3co/work/kit_20261014_000000/read_history.py', 'reader_sha256': '70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c', 'status': 'PASS', 'exit_code': 0, 'rc': 0, 'diff': None, 'problems': []})"
+    ],
+    "killed_for_expected_reason": true
+  },
+  {
+    "name": "grammar_process_rc",
+    "suite": "ul_reader",
+    "rc": 1,
+    "error": null,
+    "failures": [
+      "✗ R38 ULPR-02 재판독 JSON PASS · exit_code 정수 0 · 검사 19 참, 프로세스 rc 7 → rc 자체로 거부  — ([], {'reader': '/tmp/tmpckmb98mz/work/kit_20261014_000000/read_history.py', 'reader_sha256': '70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c', 'status': 'PASS', 'exit_code': 0, 'rc': 7, 'diff': None, 'problems': []})"
+    ],
+    "relevant_failures": [
+      "✗ R38 ULPR-02 재판독 JSON PASS · exit_code 정수 0 · 검사 19 참, 프로세스 rc 7 → rc 자체로 거부  — ([], {'reader': '/tmp/tmpckmb98mz/work/kit_20261014_000000/read_history.py', 'reader_sha256': '70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c', 'status': 'PASS', 'exit_code': 0, 'rc': 7, 'diff': None, 'problems': []})"
+    ],
+    "killed_for_expected_reason": true
+  },
+  {
+    "name": "g2_duplicate_id",
+    "suite": "ul_gates",
+    "rc": 1,
+    "error": null,
+    "failures": [
+      "✗ C5 ULPR-03 G2 test duplicate_id = FAIL + 사유 (다른 쪽 정상)  —",
+      "✗ C5 ULPR-03 G2 orig duplicate_id = FAIL + 사유 (다른 쪽 정상)  —"
+    ],
+    "relevant_failures": [
+      "✗ C5 ULPR-03 G2 test duplicate_id = FAIL + 사유 (다른 쪽 정상)  —",
+      "✗ C5 ULPR-03 G2 orig duplicate_id = FAIL + 사유 (다른 쪽 정상)  —"
+    ],
+    "killed_for_expected_reason": true
+  },
+  {
+    "name": "g2_parser_ok",
+    "suite": "ul_gates",
+    "rc": 1,
+    "error": null,
+    "failures": [
+      "✗ C5 ULPR-03 G2 test truncated_extra_row = FAIL + 사유 (다른 쪽 정상)  —",
+      "✗ C5 ULPR-03 G2 orig truncated_extra_row = FAIL + 사유 (다른 쪽 정상)  —",
+      "✗ C5 ULPR-03 G2 test declared_count = FAIL + 사유 (다른 쪽 정상)  —",
+      "✗ C5 ULPR-03 G2 orig declared_count = FAIL + 사유 (다른 쪽 정상)  —",
+      "✗ C5 ULPR-03 G2 test second_frame = FAIL + 사유 (다른 쪽 정상)  —",
+      "✗ C5 ULPR-03 G2 orig second_frame = FAIL + 사유 (다른 쪽 정상)  —",
+      "✗ C5 ULPR-03 G2 test nonfinite = FAIL + 사유 (다른 쪽 정상)  —",
+      "✗ C5 ULPR-03 G2 orig nonfinite = FAIL + 사유 (다른 쪽 정상)  —"
+    ],
+    "relevant_failures": [
+      "✗ C5 ULPR-03 G2 test truncated_extra_row = FAIL + 사유 (다른 쪽 정상)  —",
+      "✗ C5 ULPR-03 G2 orig truncated_extra_row = FAIL + 사유 (다른 쪽 정상)  —",
+      "✗ C5 ULPR-03 G2 test declared_count = FAIL + 사유 (다른 쪽 정상)  —",
+      "✗ C5 ULPR-03 G2 orig declared_count = FAIL + 사유 (다른 쪽 정상)  —",
+      "✗ C5 ULPR-03 G2 test second_frame = FAIL + 사유 (다른 쪽 정상)  —",
+      "✗ C5 ULPR-03 G2 orig second_frame = FAIL + 사유 (다른 쪽 정상)  —",
+      "✗ C5 ULPR-03 G2 test nonfinite = FAIL + 사유 (다른 쪽 정상)  —",
+      "✗ C5 ULPR-03 G2 orig nonfinite = FAIL + 사유 (다른 쪽 정상)  —"
+    ],
+    "killed_for_expected_reason": true
+  },
+  {
+    "name": "g2_expected_step",
+    "suite": "ul_gates",
+    "rc": 1,
+    "error": null,
+    "failures": [
+      "✗ C5 ULPR-03 G2 양쪽 같은 잘못된 step = 요청 step 3200000 과 다르면 FAIL · 같은 정상 step 은 PASS  —"
+    ],
+    "relevant_failures": [
+      "✗ C5 ULPR-03 G2 양쪽 같은 잘못된 step = 요청 step 3200000 과 다르면 FAIL · 같은 정상 step 은 PASS  —"
+    ],
+    "killed_for_expected_reason": true
+  },
+  {
+    "name": "g2_normalize_tokens",
+    "suite": "ul_gates",
+    "rc": 1,
+    "error": null,
+    "failures": [
+      "✗ C5 ULPR-03 G2 수치가 같아도 원 토큰이 다른 z (0.003 → 0.0030) = FAIL (문자열 비교 보존)  —"
+    ],
+    "relevant_failures": [
+      "✗ C5 ULPR-03 G2 수치가 같아도 원 토큰이 다른 z (0.003 → 0.0030) = FAIL (문자열 비교 보존)  —"
+    ],
+    "killed_for_expected_reason": true
+  },
+  {
+    "name": "g2c_observation_status",
+    "suite": "ul_gates",
+    "rc": 1,
+    "error": null,
+    "failures": [
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[1] → not_c_cpl[1] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[1] → not_c_cpl[1] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[2] → not_c_cpl[2] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[2] → not_c_cpl[2] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[3] → not_c_cpl[3] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[3] → not_c_cpl[3] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[4] → not_c_cpl[4] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[4] → not_c_cpl[4] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[5] → not_c_cpl[5] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[5] → not_c_cpl[5] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[6] → not_c_cpl[6] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[6] → not_c_cpl[6] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[7] → not_c_cpl[7] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[7] → not_c_cpl[7] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[8] → not_c_cpl[8] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[8] → not_c_cpl[8] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[9] → not_c_cpl[9] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[9] → not_c_cpl[9] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[10] → not_c_cpl[10] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[10] → not_c_cpl[10] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[11] → not_c_cpl[11] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[11] → not_c_cpl[11] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[12] → not_c_cpl[12] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[12] → not_c_cpl[12] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[13] → not_c_cpl[13] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[13] → not_c_cpl[13] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[14] → not_c_cpl[14] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[14] → not_c_cpl[14] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[15] → not_c_cpl[15] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[15] → not_c_cpl[15] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[16] → not_c_cpl[16] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[16] → not_c_cpl[16] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[17] → not_c_cpl[17] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[17] → not_c_cpl[17] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[18] → not_c_cpl[18] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[18] → not_c_cpl[18] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[19] → not_c_cpl[19] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[19] → not_c_cpl[19] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[20] → not_c_cpl[20] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[20] → not_c_cpl[20] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[21] → not_c_cpl[21] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[21] → not_c_cpl[21] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[22] → not_c_cpl[22] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[22] → not_c_cpl[22] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[23] → not_c_cpl[23] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[23] → not_c_cpl[23] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[24] → not_c_cpl[24] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[24] → not_c_cpl[24] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[25] → not_c_cpl[25] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[25] → not_c_cpl[25] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[26] → not_c_cpl[26] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[26] → not_c_cpl[26] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —"
+    ],
+    "relevant_failures": [
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[1] → not_c_cpl[1] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[1] → not_c_cpl[1] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[2] → not_c_cpl[2] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[2] → not_c_cpl[2] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[3] → not_c_cpl[3] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[3] → not_c_cpl[3] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[4] → not_c_cpl[4] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[4] → not_c_cpl[4] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[5] → not_c_cpl[5] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[5] → not_c_cpl[5] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[6] → not_c_cpl[6] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[6] → not_c_cpl[6] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[7] → not_c_cpl[7] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[7] → not_c_cpl[7] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[8] → not_c_cpl[8] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[8] → not_c_cpl[8] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[9] → not_c_cpl[9] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[9] → not_c_cpl[9] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[10] → not_c_cpl[10] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[10] → not_c_cpl[10] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[11] → not_c_cpl[11] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[11] → not_c_cpl[11] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[12] → not_c_cpl[12] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[12] → not_c_cpl[12] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[13] → not_c_cpl[13] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[13] → not_c_cpl[13] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[14] → not_c_cpl[14] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[14] → not_c_cpl[14] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[15] → not_c_cpl[15] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[15] → not_c_cpl[15] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[16] → not_c_cpl[16] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[16] → not_c_cpl[16] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[17] → not_c_cpl[17] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[17] → not_c_cpl[17] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[18] → not_c_cpl[18] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[18] → not_c_cpl[18] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[19] → not_c_cpl[19] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[19] → not_c_cpl[19] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[20] → not_c_cpl[20] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[20] → not_c_cpl[20] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[21] → not_c_cpl[21] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[21] → not_c_cpl[21] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[22] → not_c_cpl[22] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[22] → not_c_cpl[22] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[23] → not_c_cpl[23] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[23] → not_c_cpl[23] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[24] → not_c_cpl[24] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[24] → not_c_cpl[24] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[25] → not_c_cpl[25] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[25] → not_c_cpl[25] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 시험 쪽 쌍 덤프 머리 c_cpl[26] → not_c_cpl[26] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —",
+      "✗ C4 ULPR-04 G2c 원 쪽 쌍 덤프 머리 c_cpl[26] → not_c_cpl[26] (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 (파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)  —"
+    ],
+    "killed_for_expected_reason": true
+  }
+]

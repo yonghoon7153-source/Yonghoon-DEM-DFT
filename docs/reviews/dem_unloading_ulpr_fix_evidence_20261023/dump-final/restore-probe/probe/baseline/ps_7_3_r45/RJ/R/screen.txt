@@ -1,0 +1,18 @@
+LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, git commit 3d5c00f)
+Resetting global state of Fix history_zwall_bot Style property/atom from restart file info
+Resetting per-atom state of Fix history_zwall_bot Style property/atom from restart file info
+Resetting global state of Fix top_mesh Style mesh/surface/stress from restart file info
+Resetting global state of Fix n_neighs_mesh_top_mesh Style property/atom from restart file info
+Resetting per-atom state of Fix n_neighs_mesh_top_mesh Style property/atom from restart file info
+Resetting global state of Fix tracker_top_mesh Style contacthistory/mesh from restart file info
+Resetting per-atom state of Fix tracker_top_mesh Style contacthistory/mesh from restart file info
+Resetting global state of Fix contacthistory Style contacthistory from restart file info
+Resetting per-atom state of Fix contacthistory Style contacthistory from restart file info
+    Step    Atoms         KinEng        ul_erot          ul_Ps       pressMPa            CPU 
+ 3200000 160417 1.3419507e-06 1e-08 0.16576139 0.16576139 0
+Loop time of 0 on 6 procs for 0 steps with 160417 atoms
+    Step    Atoms         KinEng        ul_erot          ul_Ps       pressMPa            CPU 
+ 3200000 160417 1.3419507e-06 1e-08 0.16576139 0.16576139 0
+ 3201000 160417 1.5111245e-06 1e-08 0.16542994 0.16542994 1
+Loop time of 1 on 6 procs for 2000 steps with 160417 atoms
+UL_R_DONE

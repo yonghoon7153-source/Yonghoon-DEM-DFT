@@ -1,0 +1,124 @@
+{
+  "archive_sha256": "75f71c209720e5da48e236271a106ff94eea961940e998e63d63fe79c75ff854",
+  "archive_hash_matches": true,
+  "member_count": 10,
+  "archive_crc_ok": true,
+  "archived_report_sha256": "6c89262bb17b71e88d215fc001a7c11e498a6b757735eeedd6ba59555d270b8b",
+  "archived_report_matches_original": true,
+  "snapshot_members": [
+    {
+      "name": "docs/reviews/codex_dem_unloading_ulpr_recheck_request_20261023.md",
+      "hash_matches": true
+    },
+    {
+      "name": "docs/reviews/dem_unloading_ulpr_fix_evidence_20261023/README.md",
+      "hash_matches": true
+    },
+    {
+      "name": "docs/reviews/dem_unloading_ps45_prereg_20261009.md",
+      "hash_matches": true
+    },
+    {
+      "name": "docs/data/ps45_unload_20261009/README.md",
+      "hash_matches": true
+    },
+    {
+      "name": "docs/data/ps45_unload_20261009/active_rules.json",
+      "hash_matches": true
+    },
+    {
+      "name": "docs/data/ps45_unload_20261009/seal_kit.py",
+      "hash_matches": true
+    },
+    {
+      "name": "docs/data/ps45_unload_20261009/SHA256SUMS",
+      "hash_matches": true
+    },
+    {
+      "name": "docs/reviews/dem_unloading_ulpr_fix_evidence_20261023/tools/mutation_check.py",
+      "hash_matches": true
+    },
+    {
+      "name": "docs/reviews/dem_unloading_ulpr_fix_evidence_20261023/full_gate_receipt.json",
+      "hash_matches": true
+    }
+  ],
+  "diff_hash_matches": true,
+  "archive_bytes_match_original": {
+    "snapshot/docs/data/ps45_unload_20261009/README.md": true,
+    "snapshot/docs/data/ps45_unload_20261009/SHA256SUMS": true,
+    "snapshot/docs/data/ps45_unload_20261009/active_rules.json": true,
+    "snapshot/docs/data/ps45_unload_20261009/seal_kit.py": true,
+    "snapshot/docs/reviews/codex_dem_unloading_ulpr_recheck_request_20261023.md": true,
+    "snapshot/docs/reviews/dem_unloading_ps45_prereg_20261009.md": true,
+    "snapshot/docs/reviews/dem_unloading_ulpr_fix_evidence_20261023/README.md": true,
+    "snapshot/docs/reviews/dem_unloading_ulpr_fix_evidence_20261023/full_gate_receipt.json": true,
+    "snapshot/docs/reviews/dem_unloading_ulpr_fix_evidence_20261023/tools/mutation_check.py": true,
+    "PACKAGE-REVIEW.original.md": true
+  },
+  "copied_package_bytes_match_original": {
+    "authorization_mutations.py": true,
+    "raw-log-audit.json": true,
+    "audit.py": true,
+    "seal-check.log": true,
+    "audit.json": true,
+    "input-package.diff": true,
+    "raw-summary.json": true,
+    "reconstructed-mutations.json": true,
+    "final-audit.log": true,
+    "snapshot-sha256.json": true,
+    "authorization-mutations/results.json": true,
+    "authorization-mutations/resume_state_match_condition.py": true,
+    "authorization-mutations/resume_nonnumeric_condition.log": true,
+    "authorization-mutations/resume_outside_manifest_condition.py": true,
+    "authorization-mutations/runner-initial.py": true,
+    "authorization-mutations/resume_outside_manifest_condition.log": true,
+    "authorization-mutations/resume_state_match_condition.log": true,
+    "authorization-mutations/resume_nonnumeric_condition.py": true,
+    "final-audit/audit.json": true,
+    "authorization-mutations-final/results.json": true,
+    "authorization-mutations-final/resume_state_match_condition.py": true,
+    "authorization-mutations-final/resume_nonnumeric_condition.log": true,
+    "authorization-mutations-final/resume_outside_manifest_condition.py": true,
+    "authorization-mutations-final/resume_outside_manifest_condition.log": true,
+    "authorization-mutations-final/resume_state_match_condition.log": true,
+    "authorization-mutations-final/resume_nonnumeric_condition.py": true
+  },
+  "live_report_only_reference_fix_and_note": true,
+  "source_matches_current": true,
+  "script_hash_matches": true,
+  "mutations": [
+    {
+      "name": "resume_outside_manifest_condition",
+      "rc": 1,
+      "R38": 1,
+      "related_R28": 0,
+      "traceback": false,
+      "unexpected": [],
+      "raw_failures_match": true,
+      "mutant_hash_matches": true
+    },
+    {
+      "name": "resume_nonnumeric_condition",
+      "rc": 1,
+      "R38": 2,
+      "related_R28": 0,
+      "traceback": false,
+      "unexpected": [],
+      "raw_failures_match": true,
+      "mutant_hash_matches": true
+    },
+    {
+      "name": "resume_state_match_condition",
+      "rc": 1,
+      "R38": 1,
+      "related_R28": 2,
+      "traceback": false,
+      "unexpected": [],
+      "raw_failures_match": true,
+      "mutant_hash_matches": true
+    }
+  ],
+  "request_sha256": "44b940965817159637cc8c74fd85a62b9065b795f40e9376ab4bef6050730f58",
+  "evidence_readme_sha256": "a45e985e70f02eacc8401c4cddd6c837b272f2ef5351be43d42fe524da8314a5"
+}

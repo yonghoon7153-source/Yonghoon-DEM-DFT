@@ -1,0 +1,1 @@
+ARM_VERDICT bed=ps_7_3_r45 job=UT primary=UNIDENTIFIED rho_pct=None bracket_pct=[0.18009581097144223, 0.225119763714296] trajectory=RM_STOP cancellation=False nonmonotone=False why=CSV 기록 결손 · 무결성 (ULPR-01 단 기록: RESUME (k 2 · step 3360000) 뒤 단 [3, 4] 의 새 시도 소속을 확인할 수 없다 (새 단 되감기 없음 · 창 수/마지막 step 만으로 같은 시각의 옛 행을 인증하지 않는다)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다

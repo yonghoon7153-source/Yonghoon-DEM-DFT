@@ -154,7 +154,7 @@ def _resume_auth(d, events):
     return out, pr
 
 
-def _supersede(rows, auth, name, steps_csv=False):
+def _supersede(rows, auth, name, steps_csv=False, used_out=None, stale_out=None):
     """이어 돌림 경계 (ULKRR-02 · ULKRF-01 · 02): 실패한 시도가 남긴 줄을 버리는 것 = 승인된 경계 (k_r, s_r) (_resume_auth · 고유) 에서만, 경계마다 한 번 —
     새 시도 시작 = 승인 경계 뒤 **먼저 오는 쪽**: step 역행 (step ≤ 앞 줄 · 창 CSV · 단 CSV) 또는 (단 CSV · steps_csv) k 가 되돌아옴 (k ≤ 앞 줄 k — 한 단 한 줄이라
     새 시도가 옛 시도보다 늦게 끝나도 (유지 창 수가 늘어도) 보인다 · ULKRF-02) · 그 줄 = 그 경계 새 시도의 첫 줄 (k = k_r + 1 · step > s_r) · 버릴 줄 = 끝의 step > s_r
@@ -176,6 +176,8 @@ def _supersede(rows, auth, name, steps_csv=False):
                 stale = kept[j:]
                 if stale and j > 0 and all(x.get('k') is not None and x['k'] > kr for x in stale) \
                         and (kept[j - 1].get('k'), kept[j - 1].get('step')) == (kr, sr):
+                    if stale_out is not None:
+                        stale_out[(kr, sr)] = list(stale)
                     del kept[j:]
                     dropped += len(stale)
                     used.add((kr, sr))
@@ -187,6 +189,8 @@ def _supersede(rows, auth, name, steps_csv=False):
                 pr.append(f'{name} {n} 째 줄 (k {k} · step {s}) {what} — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) '
                           '가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)')
         kept.append(r)
+    if used_out is not None:
+        used_out.update(used)
     return kept, dropped, pr
 
 
@@ -208,6 +212,69 @@ def _order_problems(rows, name, windows):
     return pr
 
 
+
+def _resume_reconcile(out, auth, used_rows, rewound_events, stale_windows):
+    """ULPR-01: 창 · 단 · 사건을 따로 되감은 뒤 같은 시도의 기록으로 맞춘다.
+    사건을 되감았는데 CSV 가 새 줄을 아직 안 썼으면 그 사건의 옛 시도 CSV 꼬리도 버린다.
+    새 창은 있으나 새 단 줄이 없는 경우 = 남은 단 줄의 창 수 · 마지막 step 이 새 창과 안 맞음 → 옛 단 제외.
+    같은 창 수/step 만으로 옛 단 ↔ 새 단을 구분할 수 없는 경우는 값을 추측하지 않고 문제로 남긴다 (CSV 에 시도 표지가 없다).
+    승인 없는 행 삭제 없음. 유효한 CSV 되감기 자체가 없거나 사건/행이 잘못된 경우 다른 결손 사유를 지우지 않는다."""
+    completed_events = {'HOLD0_DONE', 'MODE_B', 'CROSS', 'RM', 'RM_STOP', 'CONFIRMED', 'GRAVITY_HOLD_DONE', 'NO_BRACKET', 'LIFT_CAP'}
+    for b in auth:
+        kr, sr = b
+        # 사건 CROSS / RM 등은 단 줄 뒤 쓰인다. 그 사건이 옛 시도라면 새 단 행으로 되감기지 않은 CSV 꼬리도 옛 시도다.
+        if b in rewound_events:
+            for key in ('windows', 'steps'):
+                if b in used_rows[key]:
+                    continue
+                if key == 'steps' and not any(e['event'] in completed_events for e in rewound_events[b]):
+                    continue
+                rows = out[key]
+                cut = next((i + 1 for i, r in enumerate(rows) if (r.get('k'), r.get('step')) == b), None)
+                if cut is None:
+                    if any(r.get('step') is not None and r['step'] > sr for r in rows):
+                        out['problems'].append(f'ULPR-01 {key}: 사건 되감기 경계 (k {kr} · step {sr}) 행 없음 — 옛/새 시도 분리 불가')
+                    continue
+                tail = rows[cut:]
+                if tail and all(r.get('k') is not None and r['k'] > kr and r.get('step') is not None and r['step'] > sr for r in tail):
+                    out['n_superseded_rows'] += len(tail)
+                    out[key] = rows[:cut]
+        if b in used_rows['steps']:
+            continue
+        tail = [r for r in out['steps'] if r.get('k') is not None and r['k'] > kr]
+        if not tail:
+            continue
+        # 창 되감기의 양쪽을 대조한다. 옛 시도가 창 둘만 쓴 경우 새 네 창짜리 완성 단은 옛 행일 수 없다 (R10 양성 유지).
+        old = stale_windows.get(b, [])
+        stale_steps, ambiguous = [], []
+        ei = next((i for i, e in enumerate(out['events']) if e['event'] == 'RESUME' and (e['k'], e['step']) == b), len(out['events']))
+        new_completed = {(e['k'], e['step']) for e in out['events'][ei + 1:] if e['event'] in completed_events}
+
+        def matches(r, windows):
+            ws = [w for w in windows if w.get('k') == r['k']]
+            return bool(ws) and r.get('n_windows') == len(ws) and r.get('step') == ws[-1].get('step')
+
+        # 덱은 단 줄 → 완료 사건 → 다음 k 순서다. RESUME 뒤 완료 사건과 같은 단/창이 있으면 그 사이 단들도 새 시도가 지났다.
+        # 첫 시도가 CSV 꼬리 없이 끊긴 정상 재개에는 역행이 없다. 사건만 미래 k 를 선언하고 실제 단/창이 없으면 증거로 쓰지 않는다.
+        anchors = [r for r in tail if (r['k'], r.get('step')) in new_completed and matches(r, out['windows'])]
+        for r in tail:
+            old_match = matches(r, old)
+            new_match = matches(r, out['windows'])
+            covered = any(r.get('step') is not None and r['k'] <= a['k'] and r['step'] <= a['step'] for a in anchors)
+            if b in used_rows['windows'] and old_match and not new_match:
+                stale_steps.append(r)
+            elif not (new_match and (covered or (b in used_rows['windows'] and not old_match))):
+                ambiguous.append(r['k'])
+        if stale_steps:
+            out['steps'] = [r for r in out['steps'] if r not in stale_steps]
+            out['n_superseded_rows'] += len(stale_steps)
+        if ambiguous:
+            why = (f'ULPR-01 단 기록: RESUME (k {kr} · step {sr}) 뒤 단 {ambiguous} 의 새 시도 소속을 확인할 수 없다 '
+                   '(새 단 되감기 없음 · 창 수/마지막 step 만으로 같은 시각의 옛 행을 인증하지 않는다)')
+            out['problems'].append(why)
+            out.setdefault('resume_uncertain', []).append({'k': kr, 'step': sr, 'why': why})
+
+
 def read_run(d, P=None):
     P = P or ul_lib.load_params()
     R = P['records']
@@ -222,6 +289,7 @@ def read_run(d, P=None):
     out['resume_auth'] = auth
     out['problems'] += apr
     kept, used = [], set()
+    rewound_events = {}
     for e in events:   # 승인된 RESUME 앞에 실패한 시도가 남긴 그 step 뒤 사건 (k > k_r) 만 버린다 · 경계마다 한 번 (ULKRR-02 · ULKRF-01 — 아니면 버리지 않고 문제)
         if e['event'] == 'RESUME' and e['step'] is not None:
             stale = [x for x in kept if x['step'] is not None and x['step'] > e['step']]
@@ -229,11 +297,14 @@ def read_run(d, P=None):
             if stale and b in auth and b not in used and all(x['k'] is not None and x['k'] > e['k'] for x in stale):
                 kept = [x for x in kept if x['step'] is None or x['step'] <= e['step']]
                 used.add(b)
+                rewound_events[b] = list(stale)
             elif stale:
                 out['problems'].append(f'ul_events.csv: RESUME (k {e["k"]} · step {e["step"]}) 앞 사건 {len(stale)} 개가 그 step 뒤 — 승인된 이어 돌림 경계 '
                                        '(러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)')
         kept.append(e)
     out['events'] = kept
+    used_rows = {'windows': set(), 'steps': set()}
+    stale_windows = {}
     for name, key, cols in (('ul_windows.csv', 'windows', R['windows_cols']), ('ul_steps.csv', 'steps', R['steps_cols'])):
         rows, pr = _csv(os.path.join(d, name), cols)
         out['problems'] += pr
@@ -246,10 +317,12 @@ def read_run(d, P=None):
                 if k in c and c[k] is not None:
                     c[k] = int(round(c[k]))
             conv.append(c)
-        conv, dropped, spr = _supersede(conv, auth, name, steps_csv=(key == 'steps'))
+        conv, dropped, spr = _supersede(conv, auth, name, steps_csv=(key == 'steps'), used_out=used_rows[key],
+                                         stale_out=stale_windows if key == 'windows' else None)
         out['problems'] += spr + ([] if spr else _order_problems(conv, name, key == 'windows'))
         out[key] = conv
         out['n_superseded_rows'] += dropped
+    _resume_reconcile(out, auth, used_rows, rewound_events, stale_windows)
     sp = os.path.join(d, 'ul_summary.txt')
     out['summary'] = ul_lib.read_kv(sp) if os.path.exists(sp) else None
     return out
@@ -666,6 +739,21 @@ def arm_verdict(d, bed, job, P=None, root=None):
     root = root or os.path.dirname(os.path.dirname(d))
     cont = _continuation(d) if job == 'UTc' else None          # 개정 3 §14-3 — UT 부모 관측 (경로 + sha256 · 복사 없음)
     run = _read_run_cont(d, cont, P) if (cont and cont['dir']) else read_run(d, P)
+    # ULPR-01: 승인 경계 뒤 소속을 못 가리는 꼬리는 분석에서 격리한다 (원자료 · read_run 행은 보존).
+    # 그 경계 앞에서 이미 끝난 첫 교차+확인 둘은 원래 endpoint 검사를 다시 통과할 때만 유효하다. 그 밖 파서 문제는 그대로 차단한다.
+    resume_tail = None
+    uncertain = run.get('resume_uncertain') or []
+    if uncertain:
+        boundary = min(uncertain, key=lambda x: x['step'])
+        kr, sr = boundary['k'], boundary['step']
+        resume_tail = {'status': 'UNCONFIRMED', 'boundary_k': kr, 'boundary_step': sr, 'excluded_rows': {},
+                       'why': [x['why'] for x in uncertain]}
+        run = dict(run)
+        for key in ('windows', 'steps', 'events'):
+            before = run[key]
+            run[key] = [r for r in before if r.get('k') is not None and r['k'] <= kr and r.get('step') is not None and r['step'] <= sr]
+            resume_tail['excluded_rows'][key] = len(before) - len(run[key])
+        run['problems'] = [w for w in run['problems'] if w not in resume_tail['why']]
     Pm = P['P_meas_report_MPa']
     scale = P['units']['report_MPa_per_Ps']
     um = P['units']['um_per_deck_m']
@@ -924,6 +1012,21 @@ def arm_verdict(d, bed, job, P=None, root=None):
             v['primary_status'] = 'TECH'
             v['rank_eligible'] = False
             v['why'].append(f'중력 팔 R_M 복원 {g["status"]} (G1 {g.get("G1")} · G2 {g.get("G2")} · G2c {g.get("G2c")}) — choice C12')
+    if resume_tail is not None:
+        v['resume_tail'] = resume_tail
+        v['problems'] += resume_tail['why']
+        v['why'].append(f'ULPR-01 소속 불명확 꼬리 격리: 분석은 승인 경계 k {resume_tail["boundary_k"]} · step {resume_tail["boundary_step"]} 이전만 '
+                        '— 주 값 · 끝점 ε · 0→M 일 대리값은 이 구간의 원래 검사를 통과한 경우만 사용; 전체 교차 합집합 · 분리 · 표면은 미확인')
+        if v['primary_status'] not in ('OK', 'NOISE_FLOOR', 'TECH'):
+            v['primary_status'] = 'UNIDENTIFIED'
+            v['rho_pct'] = v['lower_bound_pct'] = None
+            v['rank_eligible'] = False
+            v['disposition'] = 'NONE'
+        v['union_bracket_um'] = v['union_bracket_pct'] = v['nonmonotone'] = None
+        v['separation'] = dict.fromkeys(v['separation'])
+        v['separation'].update(status='NOT_COMPUTED', why=['승인 경계 뒤 꼬리 소속 미확인 (ULPR-01)'])
+        v['surface_um'] = None
+        v['s4_status'] = 'NOT_COMPUTED'
     # ε_sphere · W_proxy (개정 3 §14-8 · Q7 · ULKR-12) — 보조 관측 (주 값 판정이 끝난 뒤 · 주 ρ 무영향)
     v['eps'], v['w_proxy_J'], v['w_proxy'] = _aux_eps_w(v, steps, first, s0d, fp, s0_ids, P['beds'][bed]['h0'], P)
     return v
@@ -947,8 +1050,8 @@ def _g_restore(d, run, root, bed, job):
         return out
     ref = f'{rm} {int(row["Atoms"])} {row["KinEng"]!r} 0 0'
     g1 = ul_gates.g1_check(open(scrp, encoding='utf-8', errors='replace').read(), ref, rm)
-    g2 = ul_gates.g2_compare(os.path.join(d, 'dump', f'atom_{rm}.dump'), os.path.join(src, 'dump', f'atom_{rm}.dump'))
-    g2c = ul_gates.g2c_compare(os.path.join(d, 'dump', f'contact_{rm}.dump'), os.path.join(src, 'dump', f'contact_{rm}.dump'))
+    g2 = ul_gates.g2_compare(os.path.join(d, 'dump', f'atom_{rm}.dump'), os.path.join(src, 'dump', f'atom_{rm}.dump'), expected_step=rm)
+    g2c = ul_gates.g2c_compare(os.path.join(d, 'dump', f'contact_{rm}.dump'), os.path.join(src, 'dump', f'contact_{rm}.dump'), expected_step=rm)
     out.update(rm_step=rm, source=src, G1=g1['status'], G2=g2['status'], G2c=g2c['status'], G3='해당 없음 (중력 교체)')
     out['status'] = 'PASS' if (g1['status'], g2['status'], g2c['status']) == ('PASS', 'PASS', 'PASS') else 'FAIL'
     return out
@@ -1422,8 +1525,8 @@ def restore_verdict(root, bed, job='RJ', hist=None, P=None):
     g2a = os.path.join(R, 'g2', f'atom_{s0}.liggghts')
     g2c = os.path.join(R, 'g2', f'contact_{s0}.liggghts')
     g2m = os.path.join(R, 'g2', f'mesh_{s0}.stl')
-    out['checks']['G2'] = ul_gates.g2_compare(g2a, orig_atom) if orig_atom and os.path.exists(g2a) else {'status': 'NOT_COMPUTED'}
-    out['checks']['G2c'] = ul_gates.g2c_compare(g2c, orig_con) if orig_con and os.path.exists(g2c) else {'status': 'NOT_COMPUTED'}
+    out['checks']['G2'] = ul_gates.g2_compare(g2a, orig_atom, expected_step=s0) if orig_atom and os.path.exists(g2a) else {'status': 'NOT_COMPUTED'}
+    out['checks']['G2c'] = ul_gates.g2c_compare(g2c, orig_con, expected_step=s0) if orig_con and os.path.exists(g2c) else {'status': 'NOT_COMPUTED'}
     out['checks']['mesh_md5'] = {'status': ('NOT_COMPUTED' if not (orig_mesh and os.path.exists(g2m))
                                             else ('PASS' if ul_gates.mesh_md5_equal(g2m, orig_mesh) else 'FAIL'))}
     log = _orig_log_text(root, bed, job, P)
@@ -1964,6 +2067,11 @@ def _mk_rj(root, bed, P, mut=None):
         col = f'c_cpl[{m3.group(2)}]'
         _dump_field(os.path.join(R_, 'g2', f'contact_{s0}.liggghts') if m3.group(1) == 'test' else os.path.join(root, bed, 'in', f'contact_{s0}.liggghts'),
                     col, rename=f'not_{col}')
+    if mut in ('g2c_test_wrong_step', 'g2c_orig_wrong_step', 'g2c_both_wrong_step'):
+        cps = {'test': os.path.join(R_, 'g2', f'contact_{s0}.liggghts'), 'orig': os.path.join(root, bed, 'in', f'contact_{s0}.liggghts')}
+        for side, cp in cps.items():
+            if mut in (f'g2c_{side}_wrong_step', 'g2c_both_wrong_step'):
+                _w(cp, open(cp).read().replace(f'ITEM: TIMESTEP\n{s0}\n', f'ITEM: TIMESTEP\n{s0 + 1}\n'))
     stl = 'solid LIGGGHTS_STL_EXPORT\n facet normal 0 0 -1\n  outer loop\n   vertex 0 0 0.111052\n   vertex 0.05 0.05 0.111052\n   vertex 0.05 0 0.111052\n'
     for p in (os.path.join(root, bed, 'in', f'mesh_{s0}.stl'), os.path.join(R_, 'g2', f'mesh_{s0}.stl')):
         _w(p, stl)
@@ -2306,6 +2414,166 @@ def _mk_gram(base, lmp_sha, files, mut=None):
     return vp
 
 
+
+def _unfinished_resume(root, P, kr=3, nw=2, stop='TIMEOUT', resumed=True, precross=False, job='UT'):
+    """ULPR-01 합성 런: 완성된 옛 단 k_r+1 뒤 restart 전에 중단 → 같은 경계에서 새 시도는 단 줄 전 중단.
+    nw = 새 유지 창 수 (0 = 이동 중 TIMEOUT); 옛 단 · 덤프는 정상 값 그대로 남겨 false OK / 잘못된 하한을 드러낸다.
+    resumed=False 는 같은 새 시도 단독 대조. 실제 입자 계산 · 외부 실행은 없다."""
+    spec = {'W': 5000 if job == 'UB' else 10000, 'dt': 1e-6 if job == 'UB' else 5e-7,
+            'steps': _ladder([0.2, 0.25, 0.3, 0.35], [1.9, 1.6, 1.3, 1.1] if precross else [1.2, 0.8, 0.6, 0.4]),
+            'summary': None, 'events': [] if precross else [('CROSS', 2, 'first'), ('RM', 4, 'ncross2')]}
+    if kr >= 4:
+        spec['steps'].append({'lift_um': 0.4, 'P': 0.3, 'steady': True, 'nw': 4, 'kind': 'B', 'phase': 2, 'modeB': 1})
+    shutil.rmtree(os.path.join(root, B73, job), ignore_errors=True)  # 각 합성 시도는 요약/manifest 등 이전 fixture 파일을 상속하지 않는다.
+    d = _mk_arm(root, B73, job, spec, P)
+    R = P['records']
+    rows = {n: [dict(zip(R[n + '_cols'], ln.split(','))) for ln in open(os.path.join(d, 'ul_' + n + '.csv')).read().splitlines()[1:]]
+            for n in ('windows', 'steps', 'events')}
+    rowk = next(r for r in rows['steps'] if int(r['k']) == kr)
+    sr = int(rowk['step'])
+    endw = [dict(r) for r in rows['windows'] if int(r['k']) == kr + 1][:nw]
+    e_new = []
+    if stop == 'GUARD':
+        end = endw[-1]
+        end['ke_inst'] = str(2 * P['protocol']['guards']['ke_trans_max'])
+        e_new = [dict(event='GUARD', k=end['k'], step=end['step'], plate_z=end['plate_z'], lift=end['lift'], detail='ke_trans_inst')]
+        _w(os.path.join(d, 'ul_summary.txt'), f'result=GUARD\narm={job}\nbed={B73}\n')
+    res = dict(event='RESUME', k=str(kr), step=str(sr), plate_z=rowk['plate_z'], lift=rowk['lift'], detail='state')
+    for n in ('windows', 'steps', 'events'):
+        head = [r for r in rows[n] if int(r['step']) <= sr]
+        stale = [r for r in rows[n] if int(r['k']) == kr + 1] if resumed else []
+        new = endw if n == 'windows' else e_new if n == 'events' else []
+        if n == 'events' and resumed:
+            stale = stale + [res]
+        _w(os.path.join(d, 'ul_' + n + '.csv'), ','.join(R[n + '_cols']) + '\n' +
+           ''.join(','.join(r[c] for c in R[n + '_cols']) + '\n' for r in head + stale + new))
+    if resumed:
+        _w(os.path.join(d, 'restart', f'state_unload_{sr}.in'), f'variable ul_rstep equal {sr}\nvariable ul_k equal {kr}\n')
+        _w(os.path.join(d, 'run_manifest.txt'), f'resume_from={sr}\n')
+    return d
+
+
+def _ulpr_resume_tests(chk, P):
+    """ULPR-01/02: 각 경계 사유 자체를 단언해 다른 실패가 가드를 대신 덮지 못한다."""
+    import tempfile
+    from unittest.mock import patch
+    from types import SimpleNamespace
+    with tempfile.TemporaryDirectory() as root:
+        _fake_restored(root, B73)
+        _w(os.path.join(root, B73, 'ul_base.in'), 'variable ul_S2max equal 1e-05\n')
+        _mk_arm(root, B73, 'UB', {'W': 5000, 'dt': 1e-6, 'steps': _ladder([0.2, 0.25, 0.3, 0.35], [1.2, 0.8, 0.6, 0.4]),
+                                'summary': 'DONE', 'events': [('CROSS', 2, 'first'), ('RM', 4, 'ncross2')]}, P)
+        d = _mk_arm(root, B73, 'UT', {'W': 10000, 'dt': 5e-7, 'steps': _ladder([0.2, 0.25, 0.3, 0.35], [1.2, 0.8, 0.6, 0.4]),
+                                    'summary': None, 'events': [('CROSS', 2, 'first'), ('RM', 4, 'ncross2')]}, P)
+        plain = arm_verdict(d, B73, 'UT', P, root=root)
+        rs, _ = _csv(os.path.join(d, 'ul_steps.csv'), P['records']['steps_cols'])
+        boundary = rs[1]
+        sr = int(boundary['step'])
+        _edit_rows(os.path.join(d, 'ul_events.csv'), lambda rows: rows.insert(1, dict(event='RESUME', k='1', step=str(sr),
+                   plate_z=boundary['plate_z'], lift=boundary['lift'], detail='state')))
+        _w(os.path.join(d, 'restart', f'state_unload_{sr}.in'), f'variable ul_rstep equal {sr}\nvariable ul_k equal 1\n')
+        _w(os.path.join(d, 'run_manifest.txt'), f'resume_from={sr}\n')
+        clean = arm_verdict(d, B73, 'UT', P, root=root)
+        chk('R37 ULPR-01 독립 리뷰 양성: 첫 시도는 경계 직후 끊겨 CSV 꼬리 없음 · 승인 RESUME 뒤 새 CROSS/RM 완성 → CSV 되감기 없이도 새 완료 사건이 증명한 주 값 OK',
+            lambda: plain['primary_status'] == clean['primary_status'] == 'OK' and abs(plain['rho_pct'] - clean['rho_pct']) < 1e-12
+            and clean['n_superseded_rows'] == 0 and gate(root, B73, 'UVa', P)[0], str((clean['primary_status'], clean['why'])))
+        for stop, nw in (('TIMEOUT', 2), ('GUARD', 2), ('TIMEOUT', 0), ('GUARD', 4)):
+            pair = []
+            for resumed in (False, True):
+                d = _unfinished_resume(root, P, nw=nw, stop=stop, resumed=resumed)
+                pair.append((arm_verdict(d, B73, 'UT', P, root=root), read_run(d, P), gate(root, B73, 'UVa', P)))
+            a, b = pair
+            chk(f'R37 ULPR-01 새 시도 {stop} · 유지 {nw} 창 · 확인 두 번째 단 줄 전 중단 → fresh/resume 둘 다 UNIDENTIFIED · 옛 정상 단 제외 · UVa 거부',
+                lambda a=a, b=b: a[0]['primary_status'] == b[0]['primary_status'] == 'UNIDENTIFIED' and b[0]['rho_pct'] is None
+                and [r['k'] for r in b[1]['steps']] == [0, 1, 2, 3] and not a[2][0] and not b[2][0], str((a[0]['primary_status'], b[0]['primary_status'], b[0]['why'])))
+        pair = []
+        for resumed in (False, True):
+            d = _unfinished_resume(root, P, kr=2, resumed=resumed, precross=True)
+            pair.append(arm_verdict(d, B73, 'UT', P, root=root))
+        chk('R37 ULPR-01 교차 전 새 시도 중단 → 옛 단으로 하한을 늘리지 않는다 · fresh/resume 마지막 정상 단 하한 동일',
+            lambda: pair[0]['primary_status'] == pair[1]['primary_status'] == 'LOWER_BOUND'
+            and abs(pair[0]['lower_bound_pct'] - pair[1]['lower_bound_pct']) < 1e-12, str([(u['primary_status'], u['lower_bound_pct']) for u in pair]))
+        measured = []
+        for resumed in (False, True):
+            d = _unfinished_resume(root, P, kr=4, resumed=resumed, job='UB')
+            measured.append(arm_verdict(d, B73, 'UB', P, root=root))
+        chk('R37 ULPR-01 UB 경계 앞에서 교차 + 확인 두 단 완료 · 그 뒤 새 단은 TIMEOUT → fresh/resume 모두 이전 주 값 OK 보존',
+            lambda: all(u['primary_status'] == 'OK' for u in measured) and abs(measured[0]['rho_pct'] - measured[1]['rho_pct']) < 1e-12,
+            str([(u['primary_status'], u['why']) for u in measured]))
+        prior = []
+        for resumed in (False, True):
+            d = _unfinished_resume(root, P, kr=4, nw=0, resumed=resumed, job='UB')
+            sums = {n: ul_lib.sha256_file(os.path.join(d, n)) for n in ('ul_steps.csv', 'ul_windows.csv', 'ul_events.csv')}
+            prior.append(arm_verdict(d, B73, 'UB', P, root=root))
+            chk(f'R37 ULPR-01 UB 소속 불명확 꼬리 격리도 원 CSV 를 고치지 않는다 (resumed={resumed})',
+                lambda sums=sums, d=d: all(h == ul_lib.sha256_file(os.path.join(d, n)) for n, h in sums.items()))
+        a, b = prior
+        chk('R37 ULPR-01 UB 측정 뒤 이동 중 TIMEOUT · 새 창 0 · 꼬리 소속 불명확 → 경계 앞 주 교차+확인은 재검증해 OK 보존 · 전체 합집합/분리/표면은 미확인',
+            lambda: a['primary_status'] == b['primary_status'] == 'OK' and abs(a['rho_pct'] - b['rho_pct']) < 1e-12
+            and a['bracket_um'] == b['bracket_um'] and a['w_proxy_J'] == b['w_proxy_J'] and a['eps']['M'] == b['eps']['M']
+            and b['union_bracket_um'] is None and b['union_bracket_pct'] is None and b['nonmonotone'] is None
+            and b['separation']['separated_final'] is None and b['s4_status'] == 'NOT_COMPUTED' and b.get('surface_um') is None
+            and b.get('resume_tail', {}).get('boundary_k') == 4 and any('소속' in w for w in b['problems']), str((b['primary_status'], b['why'])))
+        rs, _ = _csv(os.path.join(d, 'ul_steps.csv'), P['records']['steps_cols'])
+        cross_end = next(r['step'] for r in rs if r['k'] == '2')
+        _dump_field(os.path.join(d, 'dump', f'atom_{cross_end}.dump'), 'fz', 0, 'nan')
+        bad_prefix = arm_verdict(d, B73, 'UB', P, root=root)
+        chk('R37 ULPR-01 UB 불명확 꼬리 밖 주 교차 끝점 결손 → 경계 앞이란 이유로 허용하지 않는다 · S3 사유와 UNIDENTIFIED 유지',
+            lambda: bad_prefix['primary_status'] == 'UNIDENTIFIED' and bad_prefix['rho_pct'] is None
+            and any('S3' in w for w in bad_prefix['why']), str(bad_prefix['why']))
+        for nw, stop in ((0, 'TIMEOUT'), (4, 'GUARD')):
+            d = _unfinished_resume(root, P, kr=2, nw=nw, stop=stop, precross=True)
+            u = arm_verdict(d, B73, 'UT', P, root=root)
+            chk(f'R37 ULPR-01 사건 없는 교차 전 옛 단 · 새 {stop} {nw} 창 · 같은 시각/창 수 또는 새 기록 없음 → 소속 모호성 사유 + 값 없음',
+                lambda u=u: u['primary_status'] == 'UNIDENTIFIED' and u['rho_pct'] is None and u['lower_bound_pct'] is None
+                and any('소속' in w for w in u['problems']), str((u['primary_status'], u['why'])))
+        d = _unfinished_resume(root, P)
+        with open(os.path.join(d, 'ul_windows.csv'), 'a') as f:
+            f.write('UT,partial_write\n')
+        u = arm_verdict(d, B73, 'UT', P, root=root)
+        chk('R37 ULPR-01 새 시도 창 CSV 부분 쓰기 → 행 교체가 열 수 결손 사유를 숨기지 않는다 · 주 값 없음',
+            lambda: u['primary_status'] == 'UNIDENTIFIED' and any('열 수' in w for w in u['problems']), str(u['problems']))
+        d = _unfinished_resume(root, P)
+        base = {'event': 'RESUME', 'k': 3, 'step': 3420000, 'plate_z': 0, 'lift': 0, 'detail': 'state'}
+        sr = int(ul_lib.read_kv(os.path.join(d, 'run_manifest.txt'))['resume_from'])
+        base['step'] = sr
+        _w(os.path.join(d, 'restart', f'state_unload_{sr + 1}.in'), f'variable ul_rstep equal {sr + 1}\nvariable ul_k equal 3\n')
+        a, pr = _resume_auth(d, [dict(base, step=sr + 1)])
+        chk('R38 ULPR-02 resume_from 밖 RESUME · 그 상태 파일은 맞음 → 해당 승인 없음 + resume_from 사유',
+            lambda: not a and any('resume_from' in w for w in pr), str((a, pr)))
+        for fld in ('k', 'step'):
+            a, pr = _resume_auth(d, [dict(base, **{fld: None})])
+            chk(f'R38 ULPR-02 RESUME {fld} 숫자 아님 → 승인 없음 + 숫자 아님 사유',
+                lambda a=a, pr=pr: not a and any('숫자 아님' in w for w in pr), str((a, pr)))
+        _w(os.path.join(d, 'restart', f'state_unload_{sr}.in'), f'variable ul_rstep equal {sr}\nvariable ul_k equal 2\n')
+        a, pr = _resume_auth(d, [base])
+        chk('R38 ULPR-02 사건 k 3 ↔ 상태 파일 k 2 → 승인 없음 + 상태 파일 불일치 사유',
+            lambda: not a and any('≠ 상태 파일' in w for w in pr), str((a, pr)))
+        d = _unfinished_resume(root, P)
+        _edit_rows(os.path.join(d, 'ul_events.csv'), lambda rows: rows.insert(len(rows) - 1, dict(rows[-1], event='GUARD', step=str(sr + 1), k='3')))
+        rr = read_run(d, P)
+        chk('R38 ULPR-02 되감기 뒤 step 이지만 k = k_r 인 사건 → 삭제 금지 + 버릴 사건 k > k_r 사유',
+            lambda: any(e['event'] == 'GUARD' and e['step'] == sr + 1 for e in rr['events'])
+            and any('버릴 사건 k > k_r' in w for w in rr['problems']), str(rr['problems']))
+    with tempfile.TemporaryDirectory() as root:
+        files = {'in.hist_producer.liggghts': '# producer\n', 'in.hist_grammar.liggghts': '# grammar\n', 'plate_hist.stl': 'solid x\nendsolid x\n'}
+        vp = _mk_gram(root, 'e' * 64, files)
+        rd = os.path.dirname(vp)
+        kit = ul_lib.read_kv(os.path.join(rd, 'run_manifest.txt'))['kit']
+        checks = {k: True for k in GRAMMAR_CHECKS}
+        for listed in (None, {}, dict(GRAMMAR_READER, **{'read_history.py': '0' * 64})):
+            pr, rec = _grammar_reread(rd, kit, listed, checks)
+            chk('R38 ULPR-02 실제 판독기는 승인 봉인과 같지만 kit SHA256SUMS 목록 없음/누락/불일치 → 실행 전 거부 + 목록 사유',
+                lambda pr=pr, rec=rec: any('kit SHA256SUMS' in w for w in pr) and rec['rc'] is None, str((pr, rec)))
+        def fake_run(args, **kwargs):
+            _w(args[args.index('--out') + 1], json.dumps({'schema': GRAMMAR_SCHEMA, 'status': 'PASS', 'exit_code': 0, 'checks': checks, 'problems': []}))
+            return SimpleNamespace(returncode=7, stderr='injected nonzero return code')
+        with patch('subprocess.run', side_effect=fake_run):
+            pr, rec = _grammar_reread(rd, kit, dict(GRAMMAR_READER), checks)
+        chk('R38 ULPR-02 재판독 JSON PASS · exit_code 정수 0 · 검사 19 참, 프로세스 rc 7 → rc 자체로 거부',
+            lambda: any('rc 7' in w for w in pr) and rec['rc'] == 7 and rec['status'] == 'PASS' and not rec['diff'], str((pr, rec)))
+
+
 def selftest() -> int:
     import tempfile
     fails = []
@@ -2320,6 +2588,7 @@ def selftest() -> int:
             fails.append(name)
 
     P = ul_lib.load_params()
+    _ulpr_resume_tests(chk, P)
     import make_unload_decks as mk  # noqa: E402 — 생성된 덱에서 물리 창을 다시 읽는다 (ULR1-04)
     decks = {k: mk.render(B73, k, P) for k in ('U_UB', 'UT', 'U_UVa', 'U_UVb', 'U_UT3')}
     h0um = P['beds'][B73]['h0'] * 1000.0
@@ -2785,7 +3054,12 @@ def selftest() -> int:
         resume_step = int([ln.split(',') for ln in L[1:] if ln.split(',')[2] == '1'][-1][5])
         extra = [','.join(r[:5] + [str(int(r[5]))] + r[6:8] + ['9.999'] + r[9:]) for r in stale[:2]]
         _w(wpath, '\n'.join(L[:1] + [ln for ln in L[1:] if int(ln.split(',')[5]) <= resume_step] + extra + L[1:][len([1 for ln in L[1:] if int(ln.split(',')[5]) <= resume_step]):]) + '\n')
-        open(os.path.join(d, 'ul_events.csv'), 'a').write(f'RESUME,1,{resume_step},0.111252,0.0002,state\n')
+        # RESUME 는 새 시도의 CROSS/RM 앞에 쓴다. 끝에 붙이면 그 사건들이 옛 시도가 된다 (ULPR-01).
+        ep = os.path.join(d, 'ul_events.csv')
+        el = open(ep).read().splitlines()
+        _w(ep, '\n'.join(el[:1] + [ln for ln in el[1:] if int(ln.split(',')[2]) <= resume_step]
+                         + [f'RESUME,1,{resume_step},0.111252,0.0002,state']
+                         + [ln for ln in el[1:] if int(ln.split(',')[2]) > resume_step]) + '\n')
         # 러너 · 덱이 쓰는 이어 돌림 기록 (ULKRR-02 — 승인 경계 = RESUME 사건 + 러너 시도 기록 resume_from + 덱 상태 파일 k)
         _w(os.path.join(d, 'run_manifest.txt'), f'bed={B73}\njob=UB\nresume=0\ngate=ALLOW\nend=a1 fails=1 reader_rc=0\nbed={B73}\njob=UB\nresume=1\ngate=RESUME\n'
            f'resume_from={resume_step}\nend=a2 fails=0 reader_rc=0\n')
@@ -2932,16 +3206,15 @@ def selftest() -> int:
             '(fails=0) → 다음 제출 (UB) 거부 (판독 오류를 rc 0 으로 삼키지 않는다)',
             lambda: cli.get('rc_r') == 120 and cli.get('rc_k') == 120 and cli.get('status') == 'RESTORED' and cli.get('base') is True and cli.get('gate') is False,
             str(cli))
-        # ── ULKRF-03 (Codex 수정 재확인 10-15 · g2c_c_cpl7_missing · g2c_c_cpl8_missing · g2c_missing_column_actual_cli) — G2c 쌍 덤프 필수 열 결손 (양쪽 비교 파일) =
-        #    예외 없이 G2c FAIL + 사유 → RESTORED 아님 · 다음 제출 거부 · 실제 restore CLI = rc 2 (Traceback rc 1 아님) · 증서 미발행 · 숫자 채우기 · 행 삭제 없음 ──
-        def g2c_fail(r):
+        # ── ULPR-04 (등록 §14-10) — G2c 쌍 덤프 필수 열 결손 = 비교 미계산 → UNCONFIRMED · 다음 제출 거부 ──
+        def g2c_unconfirmed(r):
             g = r['checks']['G2c']
-            return r['status'] != 'RESTORED' and g.get('status') == 'FAIL' and any('열 이름' in w for w in g.get('why', []))
+            return r['status'] == 'UNCONFIRMED' and g.get('status') == 'NOT_COMPUTED' and any('열 이름' in w for w in g.get('why', []))
         for mut, what in (('g2c_test_no_c7', 'R/g2 쌍 덤프 머리 c_cpl[7] → not_c_cpl[7] (Codex g2c_c_cpl7_missing)'),
                           ('g2c_test_no_c8', 'R/g2 쌍 덤프 머리 c_cpl[8] → not_c_cpl[8] (Codex g2c_c_cpl8_missing)'),
                           ('g2c_orig_no_c7', '원 in/ 쌍 덤프 머리 c_cpl[7] → not_c_cpl[7]'), ('g2c_orig_no_c8', '원 in/ 쌍 덤프 머리 c_cpl[8] → not_c_cpl[8]')):
-            chk(f'R35 ULKRF-03 복원 {what} → 예외 없이 G2c FAIL + 사유 (열 이름) · RESTORED 아님 · 다음 제출 (UB) 거부',
-                lambda mut=mut: g2c_fail(rv(good, mut, full=True)) and rv_gate(good, mut)[1] is False)
+            chk(f'R35 ULPR-04 복원 {what} → 예외 없이 G2c NOT_COMPUTED + 사유 (열 이름) · UNCONFIRMED · 다음 제출 (UB) 거부',
+                lambda mut=mut: g2c_unconfirmed(rv(good, mut, full=True)) and rv_gate(good, mut) == ('UNCONFIRMED', False))
         clg = {}
         try:
             shutil.rmtree(os.path.join(root, B73), ignore_errors=True)
@@ -2959,10 +3232,39 @@ def selftest() -> int:
             clg['gate'] = gate(root, B73, 'UB', P)[0]
         except Exception as ex:  # noqa: BLE001 — 시험 먼저 · 예외도 실패
             clg['error'] = repr(ex)
-        chk('R35 ULKRF-03 실제 restore CLI — R/g2 쌍 덤프 머리 c_cpl[7] 결손 → rc 2 (Traceback · rc 1 아님) · restore_verdict.json = RESTORED 아님 (증서 미발행) · '
-            'G2c FAIL + 사유 (열 이름) · 덤프 그대로 (채우기 · 지우기 없음) · 다음 제출 (UB) 거부',
-            lambda: clg.get('rc') == 2 and clg.get('traceback') is False and clg.get('status') not in (None, 'RESTORED') and clg['g2c'].get('status') == 'FAIL'
+        chk('R35 ULPR-04 실제 restore CLI — R/g2 쌍 덤프 머리 c_cpl[7] 결손 → rc 2 (Traceback · rc 1 아님) · restore_verdict.json = UNCONFIRMED · '
+            'G2c NOT_COMPUTED + 사유 (열 이름) · 덤프 그대로 (채우기 · 지우기 없음) · 다음 제출 (UB) 거부',
+            lambda: clg.get('rc') == 2 and clg.get('traceback') is False and clg.get('status') == 'UNCONFIRMED' and clg['g2c'].get('status') == 'NOT_COMPUTED'
             and any('열 이름' in w for w in clg['g2c'].get('why', [])) and clg.get('dump_same') is True and clg.get('gate') is False, str(clg)[:600])
+        # 양쪽 atom 머리가 같은 잘못된 시점이어도 요청한 S0 복원으로 인정하지 않는다.
+        J = _mk_rj(root, B73, P)
+        s0 = P['beds'][B73]['s0']
+        for ap in (os.path.join(J, 'R', 'g2', f'atom_{s0}.liggghts'), os.path.join(root, B73, 'in', f'atom_{s0}.liggghts')):
+            _w(ap, open(ap).read().replace(f'ITEM: TIMESTEP\n{s0}\n', f'ITEM: TIMESTEP\n{s0 + 1}\n'))
+        chk('R35 ULPR-03 G2 양쪽 같은 S0 + 1 머리 = 요청 S0 와 달라 G2 FAIL (같은 시점끼리 비교만으로 통과하지 않는다)',
+            lambda: restore_verdict(root, B73, 'RJ', hv, P)['checks']['G2']['status'] == 'FAIL')
+        J = _mk_rj(root, B73, P)
+        cp = os.path.join(J, 'R', 'g2', f'contact_{s0}.liggghts')
+        _dump_field(cp, 'c_cpl[17]', 0, '0.02')
+        chk('R35 ULPR-04 대조: 완전한 G2c 관측의 접선 힘 불일치 = FAIL · 복원 VALUE_MISMATCH (UNCONFIRMED 로 숨기지 않는다)',
+            lambda: (lambda r: r['status'] == 'VALUE_MISMATCH' and r['checks']['G2c']['status'] == 'FAIL')(
+                restore_verdict(root, B73, 'RJ', hv, P)))
+        J = _mk_rj(root, B73, P, 'g2c_test_no_c7')
+        sp = os.path.join(J, 'UN', 'screen.txt')
+        _w(sp, open(sp).read() + 'ERROR: synthetic failure with missing G2c column\n')
+        chk('R35 ULPR-04 대조: G2c 열 결손과 UN 기술 실패가 함께 있으면 SYNTAX_FAIL (기술 실패를 미확인으로 숨기지 않는다)',
+            lambda: restore_verdict(root, B73, 'RJ', hv, P)['status'] == 'SYNTAX_FAIL')
+        for mut in ('g2c_test_wrong_step', 'g2c_orig_wrong_step', 'g2c_both_wrong_step'):
+            chk(f'R35 G2c 시점 결합 {mut} → G2c FAIL + TIMESTEP 사유 · VALUE_MISMATCH · 다음 제출 (UB) 거부',
+                lambda mut=mut: (lambda r: r['status'] == 'VALUE_MISMATCH' and r['checks']['G2c']['status'] == 'FAIL'
+                                 and any('TIMESTEP' in w for w in r['checks']['G2c']['why']))(rv(good, mut, full=True))
+                and rv_gate(good, mut) == ('VALUE_MISMATCH', False))
+        J = _mk_rj(root, B73, P, 'g2c_test_wrong_step')
+        pr_ = subprocess.run([sys.executable, '-I', os.path.abspath(__file__), 'restore', root, B73, '--hist', hv], capture_output=True, text=True, timeout=600)
+        rj = _readjson(os.path.join(J, 'restore_verdict.json')) or {}
+        chk('R35 실제 restore CLI: G2c 시험 덤프 TIMESTEP 만 S0 + 1 → rc 2 · VALUE_MISMATCH · UB 거부 (과거 rc 0 · RESTORED · UB 허용)',
+            lambda: pr_.returncode == 2 and 'Traceback' not in pr_.stderr and rj.get('status') == 'VALUE_MISMATCH'
+            and (rj.get('checks') or {}).get('G2c', {}).get('status') == 'FAIL' and not gate(root, B73, 'UB', P)[0])
     with tempfile.TemporaryDirectory() as root:
         # ── ULKRR-03 RJ2 관문 = S0′ 결정 PASS + 그 EXT 잡 완료 영수증 (fails=0 · reader_rc=0) ──
         _w(os.path.join(root, B100, 's0_decision.json'), json.dumps({'status': 'PASS', 's0': 3650000}))
@@ -3240,6 +3542,22 @@ def selftest() -> int:
             gv = None
         chk('R16 중력 팔 복원: R_M setup 줄 (KE · 원자) = 출처 팔 R_M 정규 줄 · G2 원자 · G2c 쌍 = 출처 팔 R_M 창 끝 덤프 → PASS · 판정 NO_BRACKET',
             lambda: gv['g_restore']['status'] == 'PASS' and gv['primary_status'] == 'NO_BRACKET')
+        aps = [os.path.join(p, 'dump', f'atom_{rm}.dump') for p in (gd, src)]
+        atom_bytes = [open(p).read() for p in aps]
+        for ap, raw in zip(aps, atom_bytes):
+            _w(ap, raw.replace(f'ITEM: TIMESTEP\n{rm}\n', f'ITEM: TIMESTEP\n{rm + 1}\n'))
+        chk('R16 ULPR-03 중력 팔과 출처 원자 머리가 같은 R_M + 1 = 요청 R_M 과 달라 G2 FAIL · 복원 FAIL',
+            lambda: (lambda g: g['status'] == 'FAIL' and g['G2'] == 'FAIL')(_g_restore(gd, read_run(gd), root, B73, 'G_UB')))
+        for ap, raw in zip(aps, atom_bytes):
+            _w(ap, raw)
+        cps = [os.path.join(p, 'dump', f'contact_{rm}.dump') for p in (gd, src)]
+        contact_bytes = [open(p).read() for p in cps]
+        for cp, raw in zip(cps, contact_bytes):
+            _w(cp, raw.replace(f'ITEM: TIMESTEP\n{rm}\n', f'ITEM: TIMESTEP\n{rm + 1}\n'))
+        chk('R16 중력 팔과 출처 G2c 머리가 같은 R_M + 1 = 요청 R_M 과 달라 G2c FAIL · 복원 FAIL',
+            lambda: (lambda g: g['status'] == 'FAIL' and g['G2c'] == 'FAIL')(_g_restore(gd, read_run(gd), root, B73, 'G_UB')))
+        for cp, raw in zip(cps, contact_bytes):
+            _w(cp, raw)
         A = ul_lib.read_dump(os.path.join(gd, 'dump', f'atom_{rm}.dump'), 'custom')
         rows = A['rows']
         rows[0]['z'] += 1e-6

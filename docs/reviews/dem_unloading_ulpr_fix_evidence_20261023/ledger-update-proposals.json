@@ -1,0 +1,58 @@
+[
+  {
+    "id": "ULPR-01",
+    "proposed_changes": {
+      "status": "claimed_fixed",
+      "fixed_in": "<<sha:Fix ULPR resume ownership>>",
+      "note_append": "10-23 Codex 승인된 ULPR 수정·독립 코드 재확인. 외부 반박 세션 GO 대기. G2c 결손 분류는 등록 §14-12, 한정은 재확인 요청서 참조.",
+      "evidence_tests_append": [
+        "docs/data/ps45_unload_20261009/ul_reader.py --selftest",
+        "docs/data/ps45_unload_20261009/ul_gates.py --selftest",
+        "docs/reviews/dem_unloading_ulpr_fix_evidence_20261023/final/summary.json",
+        "docs/reviews/dem_unloading_ulpr_fix_evidence_20261023/independent/RECHECK-v2.md"
+      ]
+    }
+  },
+  {
+    "id": "ULPR-02",
+    "proposed_changes": {
+      "status": "claimed_fixed",
+      "fixed_in": "<<sha:Fix ULPR resume ownership>>",
+      "note_append": "10-23 Codex 승인된 ULPR 수정·독립 코드 재확인. 외부 반박 세션 GO 대기. G2c 결손 분류는 등록 §14-12, 한정은 재확인 요청서 참조.",
+      "evidence_tests_append": [
+        "docs/data/ps45_unload_20261009/ul_reader.py --selftest",
+        "docs/data/ps45_unload_20261009/ul_gates.py --selftest",
+        "docs/reviews/dem_unloading_ulpr_fix_evidence_20261023/final/summary.json",
+        "docs/reviews/dem_unloading_ulpr_fix_evidence_20261023/independent/RECHECK-v2.md"
+      ]
+    }
+  },
+  {
+    "id": "ULPR-03",
+    "proposed_changes": {
+      "status": "claimed_fixed",
+      "fixed_in": "<<sha:Fix ULPR resume ownership>>",
+      "note_append": "10-23 Codex 승인된 ULPR 수정·독립 코드 재확인. 외부 반박 세션 GO 대기. G2c 결손 분류는 등록 §14-12, 한정은 재확인 요청서 참조.",
+      "evidence_tests_append": [
+        "docs/data/ps45_unload_20261009/ul_reader.py --selftest",
+        "docs/data/ps45_unload_20261009/ul_gates.py --selftest",
+        "docs/reviews/dem_unloading_ulpr_fix_evidence_20261023/final/summary.json",
+        "docs/reviews/dem_unloading_ulpr_fix_evidence_20261023/independent/RECHECK-v2.md"
+      ]
+    }
+  },
+  {
+    "id": "ULPR-04",
+    "proposed_changes": {
+      "status": "claimed_fixed",
+      "fixed_in": "<<sha:Fix ULPR resume ownership>>",
+      "note_append": "10-23 Codex 승인된 ULPR 수정·독립 코드 재확인. 외부 반박 세션 GO 대기. G2c 결손 분류는 등록 §14-12, 한정은 재확인 요청서 참조.",
+      "evidence_tests_append": [
+        "docs/data/ps45_unload_20261009/ul_reader.py --selftest",
+        "docs/data/ps45_unload_20261009/ul_gates.py --selftest",
+        "docs/reviews/dem_unloading_ulpr_fix_evidence_20261023/final/summary.json",
+        "docs/reviews/dem_unloading_ulpr_fix_evidence_20261023/independent/RECHECK-v2.md"
+      ]
+    }
+  }
+]

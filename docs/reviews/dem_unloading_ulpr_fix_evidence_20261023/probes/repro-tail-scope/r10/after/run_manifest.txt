@@ -1,0 +1,11 @@
+bed=ps_7_3_r45
+job=UB
+resume=0
+gate=ALLOW
+end=a1 fails=1 reader_rc=0
+bed=ps_7_3_r45
+job=UB
+resume=1
+gate=RESUME
+resume_from=3235000
+end=a2 fails=0 reader_rc=0

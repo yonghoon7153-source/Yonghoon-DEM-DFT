@@ -1,0 +1,35 @@
+{
+  "baseline": {
+    "primary_status": "OK",
+    "rho_pct": 0.2026077873428664,
+    "why": []
+  },
+  "resume": {
+    "rc": 0,
+    "primary_status": "UNIDENTIFIED",
+    "rho_pct": null,
+    "why": [
+      "CSV 기록 결손 · 무결성 (ULPR-01 단 기록: RESUME (k 1 · step 3270000) 뒤 단 [2, 3, 4] 의 새 시도 소속을 확인할 수 없다 (새 단 되감기 없음 · 창 수/마지막 step 만으로 같은 시각의 옛 행을 인증하지 않는다)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다"
+    ],
+    "problems": [
+      "ULPR-01 단 기록: RESUME (k 1 · step 3270000) 뒤 단 [2, 3, 4] 의 새 시도 소속을 확인할 수 없다 (새 단 되감기 없음 · 창 수/마지막 step 만으로 같은 시각의 옛 행을 인증하지 않는다)"
+    ],
+    "auth": [
+      [
+        1,
+        3270000
+      ]
+    ],
+    "n_superseded": 0
+  },
+  "g2_bad_box": {
+    "status": "PASS",
+    "why": [],
+    "n_atoms": 5,
+    "n_mismatch": 0,
+    "missing": [],
+    "extra": [],
+    "example": [],
+    "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+  }
+}
