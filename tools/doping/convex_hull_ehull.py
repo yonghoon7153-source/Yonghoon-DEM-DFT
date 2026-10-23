@@ -32,6 +32,27 @@ def get_mp_entries(elements, key):
     return ents
 
 
+def mp_db_version(key):
+    """MP DB 판 (기저를 봉인할 때 같이 적는다 · 못 읽으면 None — 조용히 지어내지 않는다)."""
+    try:
+        from mp_api.client import MPRester
+        with MPRester(key) as mpr:
+            return str(mpr.get_database_version())
+    except Exception as e:                      # noqa: BLE001 — 판 기록은 부가 정보
+        return f"unknown ({type(e).__name__})"
+
+
+def decomposition_entries(decomp):
+    """pd.get_decomposition 결과 → [{formula, entry_id, amount}] (amount = 원자 분율).
+
+    2026-10-23 (Nd Q2 기저): 환원식만 남기면 **어느 다형체인지** 가 사라진다 —
+    분해상 구조를 받을 때 그 엔트리 (mp-id) 를 그대로 쓰려고 id 를 같이 남긴다."""
+    out = [{"formula": d.composition.reduced_formula,
+            "entry_id": getattr(d, "entry_id", None),
+            "amount": round(float(a), 6)} for d, a in decomp.items()]
+    return sorted(out, key=lambda r: -r["amount"])
+
+
 def tieline_points(xs, compA, nA, eA_tot, compB, nB, eB_tot, hull_fn):
     """유사이원계 (1−x)·A + x·B 선을 훑어 **반응에너지** ΔE_rxn(x) 를 낸다.
 
@@ -99,6 +120,19 @@ def _selftest_tieline():
         "조성이 모든 x 에서 1 원자로 정규화된다 (출력 반올림 허용오차 5e-6)")
     chk(r0[0]["comp_per_atom"]["Cl"] > 0 and r0[-1]["comp_per_atom"].get("Cl", 0) == 0,
         "x=0 은 A(Cl 있음) · x=1 은 B(Cl 없음)")
+    # decomposition_entries (2026-10-23) — id 를 남기고 · 없는 id 를 지어내지 않는다
+    from types import SimpleNamespace as _NS
+
+    class _Ent:                       # dict 키라 해시가 돼야 한다 (SimpleNamespace 는 안 된다)
+        def __init__(self, f, i):
+            self.composition = _NS(reduced_formula=f)
+            if i is not None:
+                self.entry_id = i
+    _e = _Ent
+    de = decomposition_entries({_e("Li2S", "mp-1153-GGA"): 0.25, _e("LiCl", None): 0.75})
+    chk(de[0]["formula"] == "LiCl" and de[1]["entry_id"] == "mp-1153-GGA",
+        "분해 엔트리: 큰 분율 순 · mp-id 를 그대로 남긴다")
+    chk(de[0]["entry_id"] is None, "⛔음성: id 가 없는 엔트리는 None — 지어내지 않는다")
     it2 = iter([v - 0.05 for v in ref])
     r1 = tieline_points(xs, A, nA, eA, B, nB, eB, lambda c: next(it2))
     chk(all(abs(r["dE_rxn_meV_per_atom"] + 50.0) < 1e-6 for r in r1),
@@ -318,17 +352,24 @@ def main():
         pd = PhaseDiagram(mp_entries)
         decomp = pd.get_decomposition(comp)
         hull_e = pd.get_hull_energy(comp)
+        from datetime import datetime, timezone
         result.update({
             "hull_energy_eV": float(hull_e),
             "hull_energy_per_atom": float(hull_e) / comp.num_atoms,
             "decomposition_products": {d.composition.reduced_formula: round(amt, 4)
                                        for d, amt in decomp.items()},
+            "decomposition_entries": decomposition_entries(decomp),
+            "mp_database_version": mp_db_version(key),
+            "query_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "note": "MP-energy hull. Products + hull energy at our composition. "
                     "Absolute E_above_hull of OUR structure needs an MP-compatible "
                     "energy (use --mode uma for a self-consistent number).",
         })
         print("\nMP-hull decomposition products at our composition:")
         print(result["decomposition_products"])
+        for r_ in result["decomposition_entries"]:
+            print(f"  {r_['formula']:<14} {r_['entry_id']}  원자 분율 {r_['amount']:.4f}")
+        print(f"  MP DB {result['mp_database_version']} · {result['query_utc']}")
 
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     Path(args.out).write_text(json.dumps(result, indent=2))

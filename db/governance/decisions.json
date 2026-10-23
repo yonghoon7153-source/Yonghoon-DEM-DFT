@@ -9615,6 +9615,62 @@
     "근거_발화": "사용자 2026-10-23 (이 세션): k222 OOM 원인 설명 (QE 어림 29.4 GB > 3090 24 GB) 을 인용하고 '필요하면 gabia에서 잠깐 저거 stop하고 해도 되고'",
     "decision_digest": "sha256:9c0459c7ddd93940a8a6c17dc52302444d84d17dea6b95467fdcf99ce0839400"
    }
+  },
+  {
+   "id": "D-2026-10-23-nd-q2-decomp-card",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "cei.nd_doped.q2_closed_decomposition",
+   "slot": "nd_q2_closed_decomposition_run",
+   "applies_to": {
+    "systems": [
+     "modelc_nd_doped",
+     "modelc_lpscl16_host"
+    ],
+    "tasks": [
+     "closed_system_decomposition"
+    ],
+    "methods": [
+     "qe_pbe_paw_psl_frozen4f_70_560"
+    ],
+    "use_cases": [
+     "internal",
+     "first_author_question"
+    ]
+   },
+   "title": "Nd Q2 실행 카드 — Nd₂O₃@LPSCl1.6 (Nd@Li · 10 f.u. · 9 월 판) 대 정본 LPSCl1.6 의 닫힌계 분해 구동력 · MP hull 기저 · 9 월 설정 (PAW psl 70/560) · EOS 대신 압력 어림 (트랙 CEI · 1저자 = 실험)",
+   "statement": "보고량 카드 db/properties/nd_q2_decomp_estimand_2026_10_23.json. Y = ΔE_decomp(도핑) − ΔE_decomp(host) [meV/atom] · ΔE_decomp(X) = [Σ nᵢ·E(상ᵢ) − E(X)]/N(X). X = 9 월 vc-relax 도핑 셀 그대로 (구조 결정 D-2026-10-19) + modelc_V0_k663 host (고정셀 이온 이완). 기저 = MP hull 이 두 조성에 고른 분해 생성물의 합집합 (QE 에너지 전 봉인 · G5 해 하나). 설정 = 9 월 탐침 입력 그대로. 부피는 EOS 대신 −P²V/(2B) 어림 (G_V 문턱 넘으면 그 셀만 3 점 EOS 를 새 결정으로). 분해능 |Y| ≤ 2 meV/atom. 부모 카드 §5 Q2 문장의 x = 0.40 은 이 실행에서 'Nd₂O₃ 1 단위 / 10 f.u. (Nd/(Nd+P) 0.2 명목)'.",
+   "rationale": "사용자 10-23 '1번하자' (Q2 를 먼저) · 10-19 '그 상태에서의 분해에너지' (구조 결정) · 10-23 '앞으로 이런 경우가 있으면 eos까지 갈 필요가 없는거넹' — Q1 뒤돌아보기에서 압력 어림이 EOS 보정 (−0.100 eV/Nd) 을 −0.098 로 맞췄다 (카드 §6).",
+   "decision_state": "proposed",
+   "record_kind": "estimand",
+   "results_seen": false,
+   "results_seen_note": "Q2 값 0 건 (host · 상 에너지 · MP hull 생성물 없음). 이미 있는 것: 도핑 셀 70/560 k331 총에너지 (9 월 k-탐침 · Q2 값 아님) · G0 골격 시험 통과 (10-23 · 결과 전 게이트).",
+   "card": "db/properties/nd_q2_decomp_estimand_2026_10_23.json",
+   "depends_on": [
+    "D-2026-10-19-nd-q23-ppswap-structure",
+    "D-2026-10-14-ndo-site-stability-estimand"
+   ],
+   "evidence": [
+    "db/raw/nd_q3_bader_2026_10_19/scf_input_copy.in (9 월 탐침 입력 = vc-relax 최종 좌표 · sha256 adbd6f70…)",
+    "db/properties/nd_icohp_frozen4f_result_2026_09_23.json (k-탐침 k331 −3.21 meV/atom 대 k221)",
+    "db/properties/ndo_site_eos_fit_2026_10_23.json + ndo_site_dft_v0_readout_2026_10_23.json (G_V 근거)"
+   ],
+   "reopen_criteria": [
+    "카드 §4 게이트 (G0 · G5 · G_F · G_V · G_k) 가 정한 갈래",
+    "Q1 판정이 바뀌면 (구조 결정 재개 ②)",
+    "'배치를 하나 더 봤다' · '더 촘촘하면 더 정확하다' 는 재개 사유가 아니다"
+   ],
+   "enforcement": "① 기저 봉인은 QE 에너지 0 건일 때 ② 상 이완 방식 (vc-relax 대 고정셀) · 계산 자리 (kgy 대 gabia) 는 사용자 결정 — 비준 때 같이 ③ QE run 은 GPU · CPU 는 검사 프로브만 ④ 서술은 '우리 스크리닝 최저 모델 (Nd@Li) 에서' 로 묶는다 ⑤ 1저자 통지는 사용자를 통해",
+   "proposed_by": "claude-session-2026-10-23",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-10-23",
+     "state": "proposed",
+     "by": "agent",
+     "note": "사용자 '1번하자' — 결과 전 카드 · G0 통과 뒤 제출"
+    }
+   ]
   }
  ]
 }
