@@ -23,7 +23,12 @@ from wrdkit.gitt import diffusion, pseudo_ocv, segment_pulses
 
 from .. import storage
 from ..db import get_session
-from ..deps import circle_cm2, order_by_date_anchor, resolve_conditions
+from ..deps import (
+    circle_cm2,
+    one_upload_at_a_time,
+    order_by_date_anchor,
+    resolve_conditions,
+)
 from ..models import ExperimentGroup, GittRun, Sample
 from ..schemas import (
     DiffusionOut,
@@ -209,13 +214,14 @@ def list_runs(session: Session = Depends(get_session),
 
 
 @router.post("/runs/upload", response_model=GittRunOut, status_code=201)
-async def upload_run(file: UploadFile = File(...),
-                     sample_id: int | None = Query(None, description="이 셀에 붙인다"),
-                     group_id: int | None = Query(
-                         None,
-                         description="이 측정이 속한 그룹 — 셀에 안 붙여도 남는다"),
-                     purpose: str = Query("", description="무엇을 보려고 잰 측정인가"),
-                     session: Session = Depends(get_session)):
+def upload_run(file: UploadFile = File(...),
+               sample_id: int | None = Query(None, description="이 셀에 붙인다"),
+               group_id: int | None = Query(
+                   None,
+                   description="이 측정이 속한 그룹 — 셀에 안 붙여도 남는다"),
+               purpose: str = Query("", description="무엇을 보려고 잰 측정인가"),
+               session: Session = Depends(get_session),
+               _queue: None = Depends(one_upload_at_a_time)):
     """Store one GITT ``.wrd`` and count what is in it.
 
     The same bytes twice is the same record.  Nothing is analysed here beyond
@@ -225,7 +231,8 @@ async def upload_run(file: UploadFile = File(...),
     if file.size is not None and file.size > settings.max_upload_bytes:
         raise HTTPException(413, f"file is {file.size / 1e6:.0f} MB; the limit is "
                                  f"{settings.max_upload_bytes / 1e6:.0f} MB")
-    content = await file.read()
+    # 스레드에서 돈다 -- 업로드가 다른 화면을 붙잡지 않는다 (ADR 0048).
+    content = file.file.read()
     if not content:
         raise HTTPException(422, "uploaded file is empty")
 

@@ -12,7 +12,7 @@ from wrdkit import WrdError, read_wrd_bytes
 
 from .. import storage
 from ..db import get_session
-from ..deps import get_run
+from ..deps import get_run, one_upload_at_a_time
 from ..models import CycleRecord, Run, Sample
 from ..schemas import ReparseAllOut, RunOut, RunUpdate
 from ..services import (
@@ -80,10 +80,11 @@ def list_runs(session: Session = Depends(get_session),
 
 
 @router.post("/upload", response_model=RunOut, status_code=201)
-async def upload_run(
+def upload_run(
     file: UploadFile = File(...),
     sample_id: int | None = Query(None, description="attach to this sample"),
     session: Session = Depends(get_session),
+    _queue: None = Depends(one_upload_at_a_time),
 ):
     """Parse a ``.wrd`` and store its summary.
 
@@ -101,7 +102,9 @@ async def upload_run(
             f"{settings.max_upload_bytes / 1e6:.0f} MB",
         )
 
-    content = await file.read()
+    # 일반 함수라 스레드에서 돈다 -- 파싱하는 동안 다른 화면이 멈추지 않는다
+    # (ADR 0048).  Starlette 가 이미 임시 파일에 받아 두었으므로 그대로 읽는다.
+    content = file.file.read()
     if not content:
         raise HTTPException(422, "uploaded file is empty")
     if len(content) > settings.max_upload_bytes:

@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import math
+import threading
+from collections.abc import Iterator
 
 from fastapi import HTTPException
 from sqlmodel import Session, select
@@ -11,6 +13,23 @@ from wrdkit import BASES, ResolvedCell, basis_label
 
 from .models import ExperimentGroup, Run, Sample
 from .schemas import ComponentOut, ResolvedCellOut
+
+#: 업로드는 한 번에 하나씩 (ADR 0048).
+#:
+#: 업로드 셋(충방전·EIS·GITT)은 `async def` 였고, 파싱·맞춤을 이벤트 루프 위에서
+#: 돌렸다.  그래서 저절로 한 줄로 섰지만, 그동안 **서버 전체가 멈췄다** -- EIS 한
+#: 장을 자동 맞춤으로 올리는 25 초 동안 다른 사람의 셀 목록이 0.13 초에서 25.6
+#: 초가 됐다 (실측, ADR 0048).  이제 업로드는 일반 함수라 스레드에서 돌고, 화면
+#: 요청은 그 옆에서 계속 답한다.  줄은 이 자물쇠가 대신 세운다: 같은 바이트의
+#: 중복 검사와 삽입 사이, 사이클 번호 다시 매기기, 스캔의 스윕 행들 -- 업로드끼리
+#: 섞이면 안 되는 것들은 예전처럼 하나씩이다.
+UPLOAD_LOCK = threading.Lock()
+
+
+def one_upload_at_a_time() -> Iterator[None]:
+    """업로드 라우트의 의존성.  요청이 끝날 때까지 다른 업로드를 기다리게 한다."""
+    with UPLOAD_LOCK:
+        yield
 
 
 def circle_cm2(diameter_mm: float) -> float:

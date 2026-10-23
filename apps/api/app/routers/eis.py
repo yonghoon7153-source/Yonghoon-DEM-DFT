@@ -52,7 +52,12 @@ from wrdkit.eis.fit import is_exponent, seed_spread_exceeded
 
 from .. import storage
 from ..db import get_session
-from ..deps import circle_cm2, order_by_date_anchor, resolve_conditions
+from ..deps import (
+    circle_cm2,
+    one_upload_at_a_time,
+    order_by_date_anchor,
+    resolve_conditions,
+)
 from ..models import ExperimentGroup, Sample, SpectrumFit, SpectrumRecord
 from ..schemas import (
     ActivationEnergyOut,
@@ -1640,7 +1645,7 @@ def _check_settings_stem(data_name: str | None, settings_name: str | None) -> No
 
 
 @router.post("/spectra/upload", response_model=SpectrumOut, status_code=201)
-async def upload_spectrum(
+def upload_spectrum(
     file: UploadFile = File(...),
     settings_file: UploadFile | None = File(None),
     sample_id: int | None = Query(None),
@@ -1653,6 +1658,7 @@ async def upload_spectrum(
     fit: str = Query("none", pattern="^(auto|none)$",
                      description="올리면서 회로를 골라 맞출지 (auto) 말지 (none)"),
     session: Session = Depends(get_session),
+    _queue: None = Depends(one_upload_at_a_time),
 ):
     """Store one ``.mpr`` or ``.mpt``, with its ``.mps`` when there is one.
 
@@ -1690,7 +1696,10 @@ async def upload_spectrum(
     if file.size is not None and file.size > settings.max_upload_bytes:
         raise HTTPException(413, f"file is {file.size / 1e6:.0f} MB; the limit is "
                                  f"{settings.max_upload_bytes / 1e6:.0f} MB")
-    content = await file.read()
+    # **일반 함수다** -- 스레드에서 돌아서, 자동 맞춤이 25 초를 쓰는 동안에도
+    # 다른 화면은 답한다 (ADR 0048).  업로드끼리는 `one_upload_at_a_time` 이
+    # 줄을 세운다.
+    content = file.file.read()
     if not content:
         raise HTTPException(422, "uploaded file is empty")
 
@@ -1734,7 +1743,7 @@ async def upload_spectrum(
             changed = True
         if settings_file is not None and not existing.settings_json:
             _check_settings_stem(file.filename, settings_file.filename)
-            raw = await settings_file.read()
+            raw = settings_file.file.read()
             if raw:
                 existing.settings_sha256 = hashlib.sha256(raw).hexdigest()
                 existing.settings_name = settings_file.filename or ""
@@ -1773,7 +1782,7 @@ async def upload_spectrum(
     settings_name = ""
     if settings_file is not None:
         _check_settings_stem(file.filename, settings_file.filename)
-        raw = await settings_file.read()
+        raw = settings_file.file.read()
         if raw:
             # 원문 보존이 먼저다 (§0.2 정신, 리뷰 #21).  settings_json 은
             # 파서가 이해한 부분집합이고, 파서가 모르는 줄은 원문 바이트에서만
