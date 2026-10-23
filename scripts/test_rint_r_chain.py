@@ -94,6 +94,7 @@ WD = W['dir']
 T = W['tpl']                                   # 정본 기록 틀 (시험 프로세스가 정본 함수로 만들었다 · 이 프로세스는 -S = numpy 없음)
 sys.path.insert(0, W['scripts'])
 import run_contract as RC
+import ca_ext_svcf as SVM                      # ★ 10-23 — 반사실 투영 · 증서 구간 = 정본 함수 (이 모듈은 numpy 없이 뜬다 · SVCF = 노브 bool)
 exec(W['model_src'])
 
 
@@ -225,37 +226,63 @@ REASON = {'zero': 'no_through_component', 'short': 'cjunc_electrode_short'}.get(
 SVCF = E.get('CJUNC_SV_CF', '') == '1'
 
 
-def sv_record():
-    """SV 반사실 기록 (증거 투영 꼴 · `ca_ext_svcf.sv_cf_record`) — 세계 `sv_cf` 규칙 (첫 일치) · 기본 = computed 1.2."""
-    rule = {'status': 'computed', 'ratio': 1.2}
+def sv_rule():
+    """세계 `sv_cf` 규칙 (첫 일치) · 기본 = computed 1.2."""
     for f in W.get('sv_cf', []):
         ok = True
         for k, v in (f.get('match') or {}).items():
             ok = ok and ((v in kit) if k == 'kit_has' else str(ctx.get(k)) == str(v))
         if ok:
-            rule = f
-            break
-    st = rule['status']
-    r_ = rule.get('ratio') if st == 'computed' else None
-    rec = {'kind': rule.get('kind', 'counterfactual_cut_sv_faces'), 'requested': True, 'threshold': None, 'status': st, 'flag': None,
-           'cg_info': (0 if st in ('computed', 'unconverged') else None), 'sv_counterfactual_ratio': r_,
-           'ratio_limit': ('inf' if st == 'no_through_without_sv' else None), 'G_full_code': 2.5,
-           'G_cut_code': (2.5 / r_ if r_ else (0.0 if st == 'no_through_without_sv' else None)), 'resid': (1e-13 if r_ else None),
-           'n_sv_faces_cut': 4, 'conv_cert': None, 'backend_last_solve': None}
-    #  ★ 10-22 (사전 리뷰 2 회차 PRE2-impl-01 · 1저자 Q1 (다)) 괄호 칸 (투영 꼴) — 규칙 'n_unsplit' (기본 0) · 'status_hi' · 'ratio_hi' · 덩어리 0 =
-    #    위 = 아래 (위 끝 기록 None) · 덩어리 > 0 = 위 끝 기록 (같은 꼴)
+            return f
+    return {'status': 'computed', 'ratio': 1.2}
+
+
+def sv_record(cm):
+    """SV 반사실 기록 — 원 기록 (생산자 `carbon_junction.sv_counterfactual` 꼴) → 정본 투영 (`ca_ext_svcf.sv_cf_record`) · 세계 `sv_cf` 규칙.
+    ★ 10-22 (사전 리뷰 2 회차 PRE2-impl-01 · 1저자 Q1 (다)) 괄호 칸 — 규칙 'n_unsplit' (기본 0) · 'status_hi' · 'ratio_hi' · 덩어리 0 = 위 = 아래
+    (위 끝 기록 None) · 덩어리 > 0 = 위 끝 기록 (같은 꼴).
+    ★ 10-23 (Codex 재검토 RCA2-01 · 04 · 1저자 Q1 (가)) 증서 구간 기록 — 주 해 증서 = 이 팔의 주 증서 cm (분자 G_full = 그 게시 판 전류 ·
+    목표량 구간 = 그 증서) · 끝마다 증서 (computed = 양의 해 · 게시 판 전류 = 그 끝 G_cut · 목표량 구간 = G_cut × (1 + 규칙 'cut_br' · 'cut_br_hi'
+    [아래, 위]) · 기본 [0, 0] · 관통 없음 = 영값 위상 증서 틀) · 결합 칸 = 주 증서 · 규칙 'diag' = 증서 없는 런의 진단 기록 · 주 증서 실패 =
+    생산자처럼 반사실을 풀지 않음 ('main_unconverged' · `carbon_junction.sv_cf_unsolved_record` 꼴) · 규칙 'full_br' [아래, 위] = 기록에 실은
+    주 해 증서의 목표량 구간만 GF × (1 + ·) 로 바꿈 (그 자체로는 유효한 증서 · 이 런의 주 증서와 다름 → 사슬 read_run 대조가 잡는다)."""
+    rule = sv_rule()
     nu = int(rule.get('n_unsplit', 0))
-    sh = rule.get('status_hi', 'computed') if nu else st
-    rh = (rule.get('ratio_hi') if sh == 'computed' else None) if nu else r_
-    lh = 'inf' if sh == 'no_through_without_sv' else None
-    rec.update(n_unsplit_bridging_components=nu, bracket_rule='lower_keep_upper_remove_fake_v1', status_hi=sh,
-               sv_counterfactual_ratio_hi=rh, ratio_limit_hi=lh,
-               upper=(None if not nu else {'status': sh, 'sv_counterfactual_ratio': rh, 'ratio_limit': lh,
-                                          'cg_info': (0 if sh in ('computed', 'unconverged') else None),
-                                          'G_cut_code': (2.5 / rh if rh else (0.0 if sh == 'no_through_without_sv' else None)),
-                                          'resid': (1e-13 if rh else None), 'why': None, 'conv_cert': None, 'backend_last_solve': None,
-                                          'n_edges_cut': 6, 'n_plate_couplings_cut': 0, 'n_cells_removed': 3}))
-    return rec
+    GF = float(cm['I_bot'])
+    diag = bool(rule.get('diag'))
+    bind = {k: cm.get(k) for k in ('bind_version', 'fp_sid', 'fp_sig', 'fp_face_plan', 'fp_cjunc_registry', 'fp_cjunc_rows')}
+    raw = {'kind': rule.get('kind', 'counterfactual_cut_sv_faces'), 'requested': True, 'threshold': None, 'flag': None, 'G_full_code': GF,
+           'n_sv_faces_cut': 4, 'backend_last_solve': None, 'n_unsplit_bridging_components': nu, 'bracket_rule': T['sv_rule'],
+           'standing': (T['sv_diag'] if diag else T['sv_cert']), 'conv_cert_full': (None if diag else cp_(cm))}
+    if not diag and rule.get('full_br'):
+        raw['conv_cert_full'].update(target_lo=GF * (1.0 + rule['full_br'][0]), target_hi=GF * (1.0 + rule['full_br'][1]))
+
+    def end(st, r_, br):
+        g = GF / r_ if (st == 'computed' and r_) else (0.0 if st == 'no_through_without_sv' else None)
+        cc = None
+        if not diag and st == 'computed':
+            cc = dict(cp_(cm), I_bot=g, target_lo=g * (1.0 + br[0]), target_hi=g * (1.0 + br[1]))
+        elif not diag and st == 'no_through_without_sv':
+            cc = dict(cp_(T['sv_zero']), **bind)
+        return {'status': st, 'sv_counterfactual_ratio': (math.inf if st == 'no_through_without_sv' else (r_ if st == 'computed' else None)),
+                'cg_info': (0 if st in ('computed', 'unconverged') else None), 'G_cut_code': g,
+                'resid': (1e-13 if st == 'computed' else None), 'conv_cert': cc}
+    if cm.get('ok') is not True:               # 주 해 증서 실패 = 반사실을 풀지 않는다 (분자 G 를 믿을 수 없다 · 생산자 꼴)
+        raw.update(status='main_unconverged', sv_counterfactual_ratio=None, cg_info=None, G_cut_code=None, resid=None, conv_cert=None,
+                   conv_cert_full=None)
+        up = None if not nu else {'status': 'main_unconverged', 'sv_counterfactual_ratio': None, 'cg_info': None, 'G_cut_code': None,
+                                  'resid': None, 'conv_cert': None, 'why': None, 'backend_last_solve': None, 'n_components_removed': nu}
+    else:
+        raw.update(end(rule['status'], rule.get('ratio'), rule.get('cut_br', [0.0, 0.0])))
+        up = None
+        if nu:
+            up = end(rule.get('status_hi', 'computed'), rule.get('ratio_hi'), rule.get('cut_br_hi', [0.0, 0.0]))
+            up.update(why=None, backend_last_solve=None, n_components_removed=nu, n_edges_cut=6, n_plate_couplings_cut=0,
+                      n_cells_removed=max(3, nu))
+    raw['upper'] = up
+    raw['status_hi'] = up['status'] if up is not None else raw['status']
+    raw['sv_counterfactual_ratio_hi'] = up['sv_counterfactual_ratio'] if up is not None else raw['sv_counterfactual_ratio']
+    return SVM.sv_cf_record(raw)
 
 
 def manifest(i, si):
@@ -279,8 +306,6 @@ def manifest(i, si):
              'dissipation_share': {'junction': (0.4 if n_edge else 0.0), 'va_face': 0.2, 'sv_face': 0.05, 'sdcp_cell': 0.02},
              'sv_local_dissipation': {'kind': 'diagnostic_local_dissipation', 'sv_share': 0.07, 'vv_junction_share': 0.4,
                                       'meaning': 'fake'}}
-    if SVCF:
-        solve['sv_counterfactual'] = sv_record()
     if REASON:                                 # 조기 반환 해 — 주 솔브 없음 (payload `_step3_early` · `solve_receipt` 꼴)
         rc_cj['electronic_main'] = {'status': 'failed', 'why': REASON, 'n_instances': N_INST, 'n_junction_edges': 0, 'solved': False,
                                     'fp_registry': regfp}
@@ -395,8 +420,17 @@ for i in idx:
         st = {'sigma_e_eff_S_cm': (0.0 if ST == 'zero' else None), 'reason': REASON, 'vox_um': vox, 'manifest': man_i,
               'conv_cert': early_cert(i, man_i)}
     else:
+        cm = cert(si, man_i)
+        if SVCF and isinstance(man_i.get('ca_ext'), dict):
+            #  ★ 10-23 (RCA2-01 · 04) — 반사실 기록 = 주 증서가 정해진 뒤 (분자 구간 = 그 증서) · 솔브 기록 I_bot_code = 주 해 단자 전류 ·
+            #    census = 못 가른 덩어리 수와 일관 (못 가른 ⊆ 다리 놓는 ⊆ 닿는 성분 · 생산자 정의)
+            ev_ = man_i['ca_ext']['cjunc']['evidence']
+            ev_['solve']['sv_counterfactual'] = sv_record(cm)
+            ev_['solve']['I_bot_code'] = float(cm['I_bot'])
+            nu_ = ev_['solve']['sv_counterfactual']['n_unsplit_bridging_components']
+            ev_['census'].update(n_unsplit_bridging_components=nu_, n_bridging_components=nu_ + 1, n_sdcp_components_touching=nu_ + 2)
         st = {'sigma_e_eff_S_cm': si, 'cg_info': 0, 'unconverged': False, 'cg_resid': 3e-13, 'n_dof': 1234, 'vox_um': vox,
-              'status': 'complete', 'manifest': man_i, 'conv_cert': cert(si, man_i), 'cg_iters': 321}
+              'status': 'complete', 'manifest': man_i, 'conv_cert': cm, 'cg_iters': 321}
     json.dump({'mpm_metrics': {'step3': st}}, open(os.path.join(out, 'p2_%s_sph_fa_cj%s_c%s_a%d.json' % (kit[4:], tag, c, i)), 'w'))
     jl('ledger.jsonl', {'sigma': (si if not REASON else 0.0)})
 cj_req = {'R_j_ohm': Rv, 'len_law': E['CJUNC_LEN_LAW'], 'unreg_law': unreg, 's_min_um': s_min, 'tol_ff_um': tol_ff, 'ptfe_jlaw': law}
@@ -462,7 +496,16 @@ def record_templates():
                      #  ★ 3판 — 조기 반환 해의 상태 증서 틀 (정본 함수 · 가짜 러너가 격자 지문만 채운다)
                      **{f'early_{k}': CCm.early_record({'sigma_eff': 0.0, 'n_dof': 1234, 'reason': rs}, zero_graph='cjunc_assembled',
                                                        fp_sid='0' * 32, fp_sig='0' * 32)
-                        for k, rs in (('zero', 'no_through_component'), ('short', 'cjunc_electrode_short'))}}
+                        for k, rs in (('zero', 'no_through_component'), ('short', 'cjunc_electrode_short'))},
+                     #  ★ 10-23 (RCA2-01 · 04) — SV 반사실 기록 틀: +∞ 끝 영값 위상 증서 (정본 함수 · 결합 칸은 가짜가 주 증서에서 채운다) ·
+                     #    괄호 규칙 · 지위 (생산자 상수)
+                     #    (getattr 기본 = 같은 글자 — 고치기 전 판에 이 시험을 얹어 돌릴 때 틀이 먼저 죽지 않게 · 옳은 이유로 떨어지는지 본다)
+                     'sv_zero': CCm.early_record({'reason': 'no_through_component', 'n_through_dof': 0, 'sigma_eff': 0.0},
+                                                 zero_graph=getattr(CJ, 'SV_CF_ZERO_GRAPH', 'cjunc_sv_counterfactual'),
+                                                 fp_sid='0' * 32, fp_sig='0' * 32),
+                     'sv_rule': CJ.CJUNC_SV_CF_BRACKET_RULE,
+                     'sv_cert': getattr(CJ, 'SV_CF_STANDING_CERTIFIED', 'certified_interval'),
+                     'sv_diag': getattr(CJ, 'SV_CF_STANDING_DIAGNOSTIC', 'diagnostic_uncertified')}
     return FX['tpl']
 
 
@@ -1489,6 +1532,39 @@ def t_V27():
             (v.get('flags'), v.get('stop')))
 
 
+@check('V28', '★ 10-23 (Codex 재검토 RCA2-01 · 1저자 Q1 (가)) 판정문 꼴 끝-끝 — 가짜 러너 기록 nominal 비 2·(1 − 1e-7) < 계획 문턱 2.0 인데 자를 끝 증서의 '
+               '목표량 구간이 게시 G_cut 보다 아래 ([−3e-7, −2e-7] 상대) → 실제 검증기 · 투영 · chain_view · sv_assess → SV_DEPENDENT (옛 nominal 판정 = '
+               '표지 없음) · §7-1 문장 금지 · 사유 = 증서 구간 아래 끝')
+def t_V28():
+    v = (sv_set('V28', {'status': 'computed', 'ratio': 2.0 * (1.0 - 1e-7), 'cut_br': [-3e-7, -2e-7]})['v'] or {})
+    why = str((v.get('blocking_reasons') or {}).get('SV_DEPENDENT', ''))
+    return ('SV_DEPENDENT' in v.get('flags', []) and 'SV_UNCHECKED' not in v.get('flags', ['?']) and v.get('sentence_allowed') is False
+            and '증서 구간' in why and 'nominal 아님' in why, (v.get('flags'), why, v.get('stop')))
+
+
+@check('V29', '★ 10-23 (RCA2-04 · Q1 (가)) 증서 없는 런의 진단 기록 (지위 diagnostic_uncertified · nominal 비 3.0 > 문턱) → 검증기 받음 · 사슬 = '
+               'SV_UNCHECKED (판정 입력 아님 · SV_DEPENDENT 아님) · 사유 = "증서 없는 진단 기록 (판정 입력 아님)" · 모서리')
+def t_V29():
+    v = (sv_set('V29', {'status': 'computed', 'ratio': 3.0, 'diag': True})['v'] or {})
+    why = str((v.get('blocking_reasons') or {}).get('SV_UNCHECKED', ''))
+    return ('SV_UNCHECKED' in v.get('flags', []) and 'SV_DEPENDENT' not in v.get('flags', ['?']) and v.get('stop') is None
+            and '증서 없는 진단 기록 (판정 입력 아님)' in why and 'c1_P1_R_j0' in why, (v.get('flags'), why, v.get('stop')))
+
+
+@check('V30', '★ 10-23 (RCA2-04) 기록에 실은 주 해 증서 ≠ 이 런의 주 증서 (목표량 구간만 다름 · 그 자체로는 유효 = 기록 계약은 받음) → 사슬 read_run 대조가 '
+               '잡는다: 예측 STOPPED · rc 3 · CA_EXT_RECORD · 사유 = 주 해 증서 칸 (다른 칸 target_lo)')
+def t_V30():
+    def go():
+        m = {'kit_has': 'DBE', 'rj': lad(s_main('P1'))['R_j0'], 'c': '1'}
+        W = dict(PW, sv_cf=[{'match': m, 'status': 'computed', 'ratio': 1.2, 'full_br': [-1e-6, 0.0]}])
+        return predict('V30', world('V30', W), [s_main('P0')['out'], s_main('P1')['out']])
+    p = scen('V30', go)
+    st = ((p.get('sum') or {}).get('stop') or {})
+    cause = str(st.get('cause', ''))
+    return (p['rc'] == 3 and (p.get('sum') or {}).get('status') == 'STOPPED' and st.get('code') == 'CA_EXT_RECORD'
+            and '주 해 증서 칸' in cause and 'target_lo' in cause, (p['rc'], st))
+
+
 @check('V07', 'CALIB_ORIGIN_SENSITIVE (P0 사다리 origin 넘음) → 판정 표지 · 문장 금지')
 def t_V07():
     def go():
@@ -2124,9 +2200,19 @@ def t_U07():
     return eval_U07()
 
 
+def sv_cv(st, lo, sh, hi, nu, standing='certified_interval', cert_lo=None, cert_hi=None):
+    """chain_view 꼴 (★ 10-23 · RCA2-01 · Q1 (가)) — nominal 비 (ratio · ratio_hi · 기록만) + 판정 근거 증서 구간 (ratio_cert_lo · ratio_cert_hi ·
+    기본 = nominal 과 같은 값 = 폭 0 증서) · 지위.  진단 지위 = 증서 구간 None (`ca_ext_svcf.cert_interval` 꼴)."""
+    diag = standing == 'diagnostic_uncertified'
+    clo = None if diag else (lo if cert_lo is None else cert_lo)
+    chi = None if diag else (hi if cert_hi is None else cert_hi)
+    return {'sv_cf': {'status': st, 'ratio': lo, 'status_hi': sh, 'ratio_hi': hi, 'n_unsplit': nu, 'standing': standing,
+                      'ratio_cert_lo': clo, 'ratio_cert_hi': chi}}
+
+
 def eval_U08():
-    def rec(st, r):                                    # ★ 10-22 (Q1 (다)) chain_view 꼴 — 못 가른 덩어리 0 = 위 끝 = 아래 끝
-        return {'sv_cf': {'status': st, 'ratio': r, 'status_hi': st, 'ratio_hi': r, 'n_unsplit': 0}}
+    def rec(st, r):                                    # ★ 10-22 (Q1 (다)) chain_view 꼴 — 못 가른 덩어리 0 = 위 끝 = 아래 끝 · ★ 10-23 증서 구간 = 같은 값
+        return sv_cv(st, r, st, r, 0)
     base = {(c, law, rr): rec('computed', 1.2) for c in ('0', '1') for law in ('P0', 'P1') for rr in ('R_j_lo', 'R_j0', 'R_j_hi')}
     cases = []
     for nm, upd, thr, scope, want in (
@@ -2158,8 +2244,8 @@ def eval_U08b():
     위 끝 (못 가른 덩어리를 통째로 뺀 판): 아래 > 문턱 = 의존 · (두 끝을 읽고) 위 ≤ 문턱 = 표지 없음 · 그 밖 (걸침 · 못 읽음) = SV_UNCHECKED ·
     비교 = 지금 SV 비교 그대로 (증서 여유 없음 · 두 끝 같게) · 모서리 묶기 = 지금 규칙 그대로 (하나라도 의존 → SV_DEPENDENT · 하나라도
     걸침 · 못 읽음 → SV_UNCHECKED · 둘 다 붙을 수 있다)."""
-    def rec(lo, hi, nu=1, st='computed', sh='computed'):
-        return {'sv_cf': {'status': st, 'ratio': lo, 'status_hi': sh, 'ratio_hi': hi, 'n_unsplit': nu}}
+    def rec(lo, hi, nu=1, st='computed', sh='computed'):     # ★ 10-23 — 증서 구간 끝 = 두 끝 값 (폭 0 증서 · 판정 근거)
+        return sv_cv(st, lo, sh, hi, nu)
     base = {(c, law, rr): rec(1.2, 1.2, 0) for c in ('0', '1') for law in ('P0', 'P1') for rr in ('R_j_lo', 'R_j0', 'R_j_hi')}
     k1, k2 = ('1', 'P1', 'R_j0'), ('0', 'P0', 'R_j0')
     cases = []
@@ -2248,8 +2334,8 @@ def eval_U15():
     옛 사슬 = NaN · −∞ · 0 · 음수가 float 라 '읽음' → 아래 NaN + 위 1.5 = 표지 없음 (위 ≤ 문턱)."""
     import ca_ext_svcf as SVCF
 
-    def rec(lo, hi, nu=1):
-        return {'sv_cf': {'status': 'computed', 'ratio': lo, 'status_hi': 'computed', 'ratio_hi': hi, 'n_unsplit': nu}}
+    def rec(lo, hi, nu=1):                             # ★ 10-23 — 이상한 값 = 증서 구간 끝 (판정 근거 · nominal 도 같은 값)
+        return sv_cv('computed', lo, 'computed', hi, nu)
     base = {(c, law, rr): rec(1.2, 1.2, 0) for c in ('0', '1') for law in ('P0', 'P1') for rr in ('R_j_lo', 'R_j0', 'R_j_hi')}
     k1 = ('1', 'P1', 'R_j0')
     weird = (float('nan'), -math.inf, 0.0, -0.0, -1.0, None, '', True, False, '1.2', [], {})
@@ -2273,6 +2359,122 @@ def eval_U15():
                '아니다 (SV_UNCHECKED) · 아래 +∞ = SV_DEPENDENT · 위 +∞ = 걸침 · 정상 [1.2, 1.2] = 없음 · 사슬 꼴 (chain_view) 을 거친 NaN 도')
 def t_U15():
     return eval_U15()
+
+
+def u16_raw(GF, full_br, lo_end, hi_end=None, standing='certified_interval'):
+    """★ 10-23 (Codex 재검토 RCA2-01 · 1저자 Q1 (가)) 반사실 원 기록 (생산자 꼴 · 증서 구간 칸) — 끝 = (상태, 게시 G_cut, 목표량 구간 (lo, hi) |
+    'zero' (영값 위상 증서) | None (증서 없음)) · 주 해 증서 = 게시 판 전류 GF · 목표량 구간 full_br · hi_end None = 못 가른 덩어리 0."""
+    import carbon_junction as CJm
+    import step3_conv_cert as CC
+
+    def pos(G, br):
+        return {'version': CC.CERT_VERSION, 'status': CC.STATUS_POSITIVE, 'ok': True, 'pass_a': True, 'pass_b': True, 'pass_c': True,
+                'pass_d': True, 'I_bot': G, 'target_lo': br[0], 'target_hi': br[1], 'target_version': CC.TARGET_VERSION,
+                'target_fp': CC.TARGET_FP_RULE, 'target_tol': CC.CERT_TARGET_TOL}
+
+    def end(e):
+        st, g, br = e
+        cc = None if br is None else (CC.early_record({'reason': 'no_through_component', 'n_through_dof': 0, 'sigma_eff': 0.0},
+                                                      zero_graph=getattr(CJm, 'SV_CF_ZERO_GRAPH', 'cjunc_sv_counterfactual'),
+                                                      fp_sid='a' * 32, fp_sig='b' * 32)
+                                      if br == 'zero' else pos(g, br))
+        rt = (min(GF / g, 1e308) if st == 'computed' else (math.inf if st == 'no_through_without_sv' else None))
+        return {'status': st, 'G_cut_code': g, 'sv_counterfactual_ratio': rt, 'conv_cert': cc, 'cg_info': 0, 'resid': 1e-13}
+    raw = {'kind': 'counterfactual_cut_sv_faces', 'requested': True, 'threshold': None, 'flag': None, 'G_full_code': GF,
+           'conv_cert_full': pos(GF, full_br), 'standing': standing, 'bracket_rule': CJm.CJUNC_SV_CF_BRACKET_RULE,
+           'n_unsplit_bridging_components': (0 if hi_end is None else 1)}
+    raw.update(end(lo_end))
+    up = None
+    if hi_end is not None:
+        up = end(hi_end)
+        up.update(n_components_removed=1, n_cells_removed=3, why=None, backend_last_solve=None)
+    raw['upper'] = up
+    raw['status_hi'] = up['status'] if up else raw['status']
+    raw['sv_counterfactual_ratio_hi'] = up['sv_counterfactual_ratio'] if up else raw['sv_counterfactual_ratio']
+    return raw
+
+
+def eval_U16():
+    """★ 10-23 (Codex 재검토 RCA2-01 · 1저자 Q1 (가) · author 10-23 ratified Q1-Q8) SV 판정 = 증서 구간 — 원 기록 → 실제 투영 (`sv_cf_record`) →
+    실제 사슬 꼴 (`chain_view` · `cert_interval`) → `sv_assess`.  아래비 = Gfull_lo / Gcut_lower_hi (내림) > 문턱 → SV_DEPENDENT · 위비 =
+    Gfull_hi / Gcut_upper_lo (올림) ≤ 문턱 → 표지 없음 · 그 밖 SV_UNCHECKED · ∞ = 영값 위상 증서가 증명한 0 분모만 · nominal 비 = 기록만.
+    판정문 반례 꼴 (nominal < 문턱 < 증서 구간) 의 합성판 · 경계 (아래비 = 문턱 · 위비 = 문턱) · 위 끝 구간 아래끝 0 (위상 증명 없음) ·
+    넘침 (위 = 못 정함 · 아래 = 가장 큰 유한 float) · 진단 기록 (증서 없는 런 = 판정 입력 아님)."""
+    import ca_ext_svcf as SVCF
+    base = {(c, law, rr): sv_cv('computed', 1.2, 'computed', 1.2, 0) for c in ('0', '1') for law in ('P0', 'P1')
+            for rr in ('R_j_lo', 'R_j0', 'R_j_hi')}
+    k1 = ('1', 'P1', 'R_j0')
+    r = 1.99999
+    g = 1.0 / r
+    cross = u16_raw(1.0, (1.0, 1.0), ('computed', g, (g * (1.0 - 3e-7), g * (1.0 - 2e-7))))
+    rev = u16_raw(1.0, (1.0, 1.0), ('computed', g, (g * (1.0 + 1e-7), g * (1.0 + 3e-7))))
+    cv_x, cv_r = SVCF.chain_view(SVCF.sv_cf_record(cross)), SVCF.chain_view(SVCF.sv_cf_record(rev))
+    #  (칸이 없는 고치기 전 판 = nominal 로 대신 — 시험이 KeyError 가 아니라 판정 차이로 떨어지게)
+    lo_x = cv_x.get('ratio_cert_lo') if isinstance(cv_x.get('ratio_cert_lo'), float) else cv_x.get('ratio')
+    hi_x = cv_x.get('ratio_cert_hi') if isinstance(cv_x.get('ratio_cert_hi'), float) else cv_x.get('ratio_hi')
+    g15 = 1.0 / 1.5
+    cases = (
+        #  (이름, 기록, 문턱, 기대 표지, 세부 칸 (c1_P1_R_j0 가 들어 있어야))
+        ('판정문 꼴 — nominal 1.99999 < 문턱 1.99999·(1 + 1e-7) < 증서 구간 아래비 (자를 G_cut 의 참값이 게시보다 작다)', cross, r * (1.0 + 1e-7),
+         ['SV_DEPENDENT'], 'dependent'),
+        ('뒤집은 꼴 — nominal > 문턱 1.99999·(1 − 2e-7) 인데 증서 구간이 문턱에 걸침 → SV_DEPENDENT 아님', rev, r * (1.0 - 2e-7),
+         ['SV_UNCHECKED'], 'straddle'),
+        ('경계 — 문턱 = 아래비 (넘지 않음 · 위비 > 문턱 → 걸침)', cross, lo_x, ['SV_UNCHECKED'], 'straddle'),
+        ('경계 — 문턱 = 위비 (위비 ≤ 문턱 → 표지 없음)', cross, hi_x, [], None),
+        ('+∞ = 아래 끝 영값 위상 증서 (관통 없음 · 위상이 증명한 0 분모)', u16_raw(1.0, (1.0, 1.0), ('no_through_without_sv', 0.0, 'zero')), 2.0,
+         ['SV_DEPENDENT'], 'dependent'),
+        ('관통 없음인데 영값 위상 증서 없음 → ∞ 아님 (못 읽음)', u16_raw(1.0, (1.0, 1.0), ('no_through_without_sv', 0.0, None)), 2.0,
+         ['SV_UNCHECKED'], 'unreadable'),
+        ('위 끝 증서 구간 아래끝 0 (위상 증명 없음) → 위비 못 정함 (nominal 위 1.5 ≤ 문턱이어도 "표지 없음" 아님)',
+         u16_raw(1.0, (1.0, 1.0), ('computed', 1.0 / 1.2, (1.0 / 1.2, 1.0 / 1.2)), ('computed', g15, (0.0, g15))), 2.0,
+         ['SV_UNCHECKED'], 'unreadable'),
+        ('위비 넘침 (Gfull_hi / Gcut_upper_lo > 가장 큰 float) → 못 정함 (∞ 아님)',
+         u16_raw(1e300, (1e300, 1e300), ('computed', 1e300 / 1.2, (1e300 / 1.2, 1e300 / 1.2)), ('computed', 1e-300, (1e-300, 1e-300))), 2.0,
+         ['SV_UNCHECKED'], 'unreadable'),
+        ('아래비 넘침 → 가장 큰 유한 float (> 문턱 → SV_DEPENDENT)',
+         u16_raw(1e300, (1e300, 1e300), ('computed', 1e-300, (1e-300, 1e-300))), 2.0, ['SV_DEPENDENT'], 'dependent'),
+        ('진단 기록 (증서 없는 런 · nominal 3.0 > 문턱) → 판정 입력 아님 = SV_UNCHECKED (SV_DEPENDENT 아님)',
+         dict(u16_raw(1.0, (1.0, 1.0), ('computed', 1.0 / 3.0, None)), standing='diagnostic_uncertified', conv_cert_full=None), 2.0,
+         ['SV_UNCHECKED'], 'uncertified'))
+    got = []
+    for nm, raw, t, want, dk in cases:
+        cv = SVCF.chain_view(SVCF.sv_cf_record(raw))
+        f, d = RR.sv_assess({**base, k1: {'sv_cf': cv}}, t, 'R_j0')
+        ok = sorted(f) == sorted(want) and (dk is None or 'c1_P1_R_j0' in (d.get(dk) or []))
+        got.append((nm, ok, f, cv.get('ratio'), cv.get('ratio_cert_lo'), cv.get('ratio_cert_hi')))
+    #  판정 근거 = 증서 구간 · nominal 은 그 밖일 수 있다 (게시 G 의 보장 오차 τ 안 · 판정문 반례와 같은 구조)
+    rlo, rhi = cv_r.get('ratio_cert_lo'), cv_r.get('ratio_cert_hi')
+    shape = (cv_x['ratio'] < r * (1.0 + 1e-7) < lo_x <= hi_x and isinstance(rlo, float) and isinstance(rhi, float)
+             and rlo < r * (1.0 - 2e-7) < rhi < cv_r['ratio'])
+    #  사유 (§5-5b) — 진단 = "증서 없는 진단 기록 (판정 입력 아님)" · 의존 = 증서 구간 아래 끝
+    fd, dd = RR.sv_assess({**base, k1: {'sv_cf': SVCF.chain_view(SVCF.sv_cf_record(cases[-1][1]))}}, 2.0, 'R_j0')
+    fx, dx = RR.sv_assess({**base, k1: {'sv_cf': cv_x}}, r * (1.0 + 1e-7), 'R_j0')
+    wd, wx = RR.sv_reasons(fd, dd).get('SV_UNCHECKED', ''), RR.sv_reasons(fx, dx).get('SV_DEPENDENT', '')
+    rs_ok = '증서 없는 진단 기록 (판정 입력 아님)' in wd and 'c1_P1_R_j0' in wd and '증서 구간' in wx and 'nominal 아님' in wx
+    return (all(c[1] for c in got) and shape and rs_ok, ([c for c in got if not c[1]], shape, wd, wx))
+
+
+@check('U16', '★ 10-23 (Codex 재검토 RCA2-01 · 1저자 Q1 (가)) SV 판정 = 증서 구간 (실제 투영 · chain_view · sv_assess) — 판정문 꼴 nominal < 문턱 < 아래비 → '
+              'SV_DEPENDENT · 뒤집은 꼴 nominal > 문턱 · 구간 걸침 → SV_UNCHECKED · 문턱 = 아래비 → 걸침 · 문턱 = 위비 → 표지 없음 · ∞ = 영값 위상 증서만 · '
+              '위 끝 구간 아래끝 0 · 위비 넘침 = 못 정함 · 아래비 넘침 = 의존 · 진단 기록 = 판정 입력 아님 · 사유 글자')
+def t_U16():
+    return eval_U16()
+
+
+@check('M43', '★ 10-23 변이: SV 판정 = nominal 비 (옛 규칙 · 증서 구간 무시 · 진단도 받음) → U16 이 떨어진다 (변이 전 통과 확인)')
+def t_M43():
+    orig = RR.sv_assess
+
+    def nominal_judge(recs, threshold, scope):
+        def nom(a):
+            v = a.get('sv_cf') if isinstance(a, dict) else None
+            if not isinstance(v, dict):
+                return a
+            return {'sv_cf': dict(v, standing='certified_interval', ratio_cert_lo=v.get('ratio'), ratio_cert_hi=v.get('ratio_hi'))}
+        return orig({k: nom(a) for k, a in recs.items()}, threshold, scope)
+    base_ok, base_why = eval_U16()
+    caught, why = mutant('M43', {'sv_assess': nominal_judge}, eval_U16)
+    return base_ok and caught, (base_ok, why if base_ok else base_why)
 
 
 def eval_G01():

@@ -35,6 +35,11 @@
       'inf' · 못 읽음 = '—') · 위 끝 상태가 아래와 다르면 "위 끝 <상태>" · 위 끝 칸 없는 옛 기록 = 위 '—' (Jinja · JS) · 생산자 한정어에
       못 가른 덩어리 · 괄호 판정 문장 (사본 없음)
 
+  ★ 2026-10-23 (Codex 재검토 RCA2-01 · 04 · 1저자 Q1 (가) · author 10-23 ratified Q1-Q8 · 시험 먼저) — 같은 두 행:
+  W16 SV 반사실 증서 구간 — 판정 근거 = "증서 구간 비 [아래비, 위비] (판정 근거)" (매니페스트 `ratio_cert_interval` · +∞ = 'inf' →
+      ∞ · 못 정함 = '—') · nominal 비 = 따로 "nominal [아래, 위] (판정 아님)" · 증서 없는 런 (지위 `diagnostic_uncertified`) = "진단 (판정
+      입력 아님 …)" · 지위 칸 없는 옛 기록 = "지위 없음 (옛 기록 · 판정 입력 아님)" · 생산자 한정어에 증서 구간 판정 문장 (사본 없음)
+
   python3 webapp/test_ca_ext_labels.py
 """
 import os
@@ -326,6 +331,88 @@ def _d_bracket(tpl, jinja, js, jinja2):
         chk('W15 JS 행 (node 실행)', False, f'{type(e).__name__}: {e}')
 
 
+def _d_interval(tpl, jinja, js, jinja2):
+    """★ 10-23 — W16 SV 반사실 증서 구간 (Jinja · JS 두 행 · 매니페스트 증거 투영 꼴 = `ca_ext_svcf.sv_cf_record` 의 칸)."""
+    chk('W16a 두 행이 증서 구간 칸 (ratio_cert_interval) · 지위 (standing) 를 매니페스트에서 읽는다 · "판정 근거" · "판정 아님" · "진단 (판정 입력 아님" 표지',
+        len(jinja) == 1 and len(js) == 1
+        and all(k in ln for k in ('ratio_cert_interval', 'standing', '판정 근거', '판정 아님', '진단 (판정 입력 아님') for ln in (jinja[0], js[0])),
+        (len(jinja), len(js)))
+    try:
+        import carbon_junction as CJ
+        quals = list(CJ.CJUNC_QUALIFIERS)
+        st_c = getattr(CJ, 'SV_CF_STANDING_CERTIFIED', 'certified_interval')
+        st_d = getattr(CJ, 'SV_CF_STANDING_DIAGNOSTIC', 'diagnostic_uncertified')
+    except Exception as e:                                  # noqa: BLE001
+        quals, st_c, st_d = [], 'certified_interval', 'diagnostic_uncertified'
+        print(f'  ⚠ carbon_junction 을 못 불러온다 ({type(e).__name__}: {e})')
+    chk('W16b producer 한정어의 괄호 판정 문장에 증서 구간 판정 (아래비 · 위비 · nominal = 기록만 · 진단 기록 = SV_UNCHECKED) — 템플릿 사본 없음',
+        any(all(t in q for t in ('증서 구간', '아래비', '위비', 'nominal', '진단 기록')) for q in quals)
+        and not [q for q in quals if q[:24] in tpl], [q[:40] for q in quals if '괄호' in q])
+
+    def sv(lo, hi, ci, standing, nu=0, st='computed', sh='computed'):
+        r = {'kind': 'counterfactual_cut_sv_bridges_keep_self_v1', 'status': st, 'flag': None,
+             'sv_counterfactual_ratio': (None if lo in (None, 'inf') else lo), 'ratio_limit': ('inf' if lo == 'inf' else None),
+             'n_unsplit_bridging_components': nu, 'bracket_rule': 'b', 'status_hi': sh,
+             'sv_counterfactual_ratio_hi': (None if hi in (None, 'inf') else hi), 'ratio_limit_hi': ('inf' if hi == 'inf' else None)}
+        r['upper'] = None if not nu else {'status': sh, 'sv_counterfactual_ratio': r['sv_counterfactual_ratio_hi'],
+                                          'ratio_limit': r['ratio_limit_hi']}
+        if standing is not None:
+            r['standing'] = standing
+            r['ratio_cert_interval'] = ci
+        return r
+    cases = (
+        ('판정문 꼴 — nominal < 문턱 < 증서 구간 (판정 근거 = 증서 구간)',
+         _d_meta(sv=sv(10.291249475345062, 10.291249475345062, [10.29125393534377, 10.291253935346631], st_c)),
+         ('SV 반사실', '증서 구간 비 [10.29125393534377, 10.291253935346631] (판정 근거)', 'nominal [10.291249475345062, 10.291249475345062] (판정 아님)',
+          '못 가른 덩어리 0', '사슬 계획'), ('진단', '지위 없음')),
+        ('증서 구간 [1.2499, 3.4002] · 덩어리 1', _d_meta(sv=sv(1.25, 3.4, [1.2499, 3.4002], st_c, nu=1)),
+         ('증서 구간 비 [1.2499, 3.4002] (판정 근거)', 'nominal [1.25, 3.4] (판정 아님)', '못 가른 덩어리 1'), ('진단', '지위 없음')),
+        ('증서 구간 [∞, ∞] (영값 위상 증서 · inf 표지)',
+         _d_meta(sv=sv('inf', 'inf', ['inf', 'inf'], st_c, st='no_through_without_sv', sh='no_through_without_sv')),
+         ('증서 구간 비 [∞, ∞] (판정 근거)', 'nominal [∞, ∞] (판정 아님)'), ('진단', '지위 없음')),
+        ('증서 구간 위 못 정함 [1.2499, —]', _d_meta(sv=sv(1.25, 3.4, [1.2499, None], st_c, nu=1)),
+         ('증서 구간 비 [1.2499, —] (판정 근거)',), ('진단', '지위 없음')),
+        ('증서 구간 칸 이상 (bool · 글자) = —', _d_meta(sv=sv(1.25, 1.25, [True, '2.5'], st_c)),
+         ('증서 구간 비 [—, —] (판정 근거)',), ('True', "'2.5'", '[2.5')),
+        ('진단 기록 (증서 없는 런)', _d_meta(sv=sv(3.25, 3.25, [None, None], st_d)),
+         ('SV 반사실', '진단 (판정 입력 아님', 'nominal [3.25, 3.25] (판정 아님)'), ('증서 구간 비', '판정 근거', '지위 없음')),
+        ('지위 칸 없는 옛 기록', _d_meta(sv=sv(1.25, 1.25, None, None)),
+         ('SV 반사실', '지위 없음 (옛 기록 · 판정 입력 아님)', 'nominal [1.25, 1.25] (판정 아님)'), ('증서 구간 비', '판정 근거')),
+    )
+
+    def _check(lbl, outs):
+        for (nm, _m, want, avoid), out in zip(cases, outs):
+            miss = [t for t in want if t not in (out or '')]
+            bad = [t for t in avoid if t in (out or '')]
+            chk(f'{lbl} [{nm}] — 있어야 할 조각 {len(want)} · 없어야 할 조각 {len(avoid)}', out is not None and not miss and not bad,
+                (miss, bad, (out or '')[-500:]))
+    if jinja2 is not None and len(jinja) == 1:
+        env = jinja2.Environment(autoescape=True)
+        row = env.from_string(jinja[0])
+        _check('W16 Jinja', [row.render(it=m) for _nm, m, _w, _a in cases])
+    else:
+        print('  SKIP  W16 Jinja (jinja2 없음)')
+    if shutil.which('node') is None:
+        print('  SKIP  W16 JS (node 없음)')
+        return
+    import json as _json
+    from test_closed_param_labels import js_fn, run_node
+    script = ('const made = [];\n'
+              'const document = {getElementById: (id) => ({style: {}, textContent: "", insertBefore: () => {}, '
+              'firstChild: null, querySelectorAll: () => []}), createElement: (t) => { const o = {dataset: {}, style: {}}; '
+              'made.push(o); return o; }};\n' + js_fn(tpl, 'labAddRow') + '\n'
+              f'const cases = {_json.dumps([m for _nm, m, _w, _a in cases], ensure_ascii=False)};\n'
+              'const out = cases.map(c => { labAddRow(c); return made[made.length - 1].innerHTML; });\n'
+              'console.log(JSON.stringify(out));\n')
+    try:
+        outs = run_node(script)
+        if outs is None:
+            raise RuntimeError('node 실행 실패')
+        _check('W16 JS', outs)
+    except Exception as e:                                  # noqa: BLE001
+        chk('W16 JS 행 (node 실행)', False, f'{type(e).__name__}: {e}')
+
+
 def main():
     try:
         import ptfe_face_alpha as FA
@@ -410,6 +497,7 @@ def main():
     _b6_labels(tpl, jinja, js, jinja2, REG)
     _d_states(tpl, jinja, js, jinja2)
     _d_bracket(tpl, jinja, js, jinja2)
+    _d_interval(tpl, jinja, js, jinja2)
     print(f'\n{_ok} PASS · {len(_fail)} FAIL')
     if _fail:
         for n in _fail:

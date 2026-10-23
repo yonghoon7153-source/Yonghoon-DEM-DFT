@@ -95,7 +95,13 @@ r_port = 2.0 (= 2h) · gap_tol 2.0 · σ_VGCF = 100 S/cm → 축방향 면 g = �
          가 있으면 두 번 푼다 (아래 끝 = 덩어리 그대로 · 위 끝 = 덩어리 셀 면 전부 끊음) · 리뷰어 회로 [1, ∞] → SV_UNCHECKED · 대조 (한 섬유만
          지남) = SV_DEPENDENT · 괄호 성질 (손 참 비가 아래 < 참 < 위) · 변이 J1 회로 (닿기만 하는 C) · J2 회로 (덮이지 않은 사이로 두 번 닿음) ·
          덩어리 0 = 다시 풀지 않음 · 값 봉인 · census 변조 = fail-closed · 주 해 미수렴 · 주 전류 ≤ 0 의 괄호 칸 · 덩어리가 판에 닿으면 위 끝이
-         판 결합까지 뺀다 (⑪) (사슬 = 실제 `sv_assess`)
+         판 결합까지 뺀다 (⑪) (사슬 = 실제 `sv_assess`) · ★ 10-23 판정을 보는 자리 (① ② ③ ④ ⑪) = 증서 켠 런 (사슬 판정 = 증서 구간 · 증서
+         없는 런 = 진단 → SV_UNCHECKED)
+  QD3    ★ 10-23 (Codex 재검토 RCA2-01 · 04 · 1저자 Q1 (가)) SV 문턱 = 증서 구간 판정 — 판정문 실제 반례 꼴 (SVX · 첫 선형 해에만 +1e-8 ·
+         나머지 직접해 · 실제 생산자 → 투영 → 검증기 → 사슬): nominal < 문턱 < 증서 구간 아래 끝 → SV_DEPENDENT (옛 = 표지 없음) · 정확 풀이
+         구간 ∋ 손 회로 참 비 · +∞ = 영값 위상 증서 · 증서 없는 런 = 진단 (SV_UNCHECKED · uncertified) · 괄호 회로 구간 ∋ 손 참 비 · 한 끝
+         증서 실패 = 위 끝 못 읽음 · 실제 기록 변이 (증서 없음 · 외부 증서 · 임의 규칙 · 제거 수 · 10^400 · census · I_bot_code · fp · 판정
+         근거 칸 · 지위) = 거부 · 진단 + 무증서 = 받음 (판정 입력 아님)
   KBND   (05 · 한계 기록) k 경계 (90° → 89.99°) σ 뜀 크기 = 생산 단위 R_j 1e2 · 1e4 · 1e6 에서 −0.98 % · −2.1e-4 · −2.1e-6 (± 10 % · ∝ 1/R_j)
   MUT-RCA2 새 보장 변이 (조각 = fid 규칙 · 포트 옮김 · SV 전부 끊음 · 이음매 별칭 끔 · 바닥 = s > D 만 · ★ 10-22 못 가른 다리 지킴 끔 = 2 회차
          변이 J1 → QD2 ④ · '지남' 에 덮임 · 같은 성분 조건 뺌 = 2 회차 변이 J2 → QD2 ⑤ (훅 `_sv_passes`)) 가 위 시험에 옳은 이유로 걸린다 ·
@@ -2998,11 +3004,12 @@ def t_mut_rca():
 
     real_cf = getattr(base_cls, 'sv_counterfactual', None)
 
-    def cf_nodrop(self, solve_, I_full, request, certify=None, backend=None):   # 변이 — 반사실이 SV 면을 끊지 않는다 (★ 10-21 PRE-impl-09 —
-        orig = self._assemble                                       #  생산 호출 서명 그대로 (certify= · ★ 10-22 backend= — 생산이 넘길 때만
-        self._assemble = lambda *a, **k: orig(*a, **dict(k, counterfactual=False))   # 넘긴다) · 옛 변이는 TypeError 로만 '잡혔다')
-        try:
+    def cf_nodrop(self, solve_, I_full, request, certify=None, backend=None, **extra):   # 변이 — 반사실이 SV 면을 끊지 않는다 (★ 10-21
+        orig = self._assemble                                       #  PRE-impl-09 — 생산 호출 서명 그대로 (certify= · ★ 10-22 backend= ·
+        self._assemble = lambda *a, **k: orig(*a, **dict(k, counterfactual=False))   # ★ 10-23 main_cert= · certify_zero= — 생산이 넘길 때만
+        try:                                                        #  넘긴다) · 옛 변이는 TypeError 로만 '잡혔다')
             kw = {'certify': certify} if backend is None else {'certify': certify, 'backend': backend}
+            kw.update(extra)
             return real_cf(self, solve_, I_full, request, **kw)
         finally:
             del self._assemble
@@ -3491,15 +3498,45 @@ QD2_B11 = [(3.5, 1.5, 0.5), (3.5, 1.5, 5.5)]
 QD2_S11 = [(1.5, 1.5, 1.5), (2.5, 1.5, 1.5), (3.5, 1.5, 1.5), (2.5, 1.5, 0.5)]
 
 
-def _qd2_run(polys, sdcp, n, rj=1e3, thr=None, reg_hook=None):
-    """괄호 회로 하나 → (sid, 원장, 해, 반사실 원 기록).  reg_hook = 원장을 계획 전에 바꾸는 함수 (변조 시험)."""
+@contextlib.contextmanager
+def cert_on(solver=None):
+    """증서 켠 풀이 (★ 10-23 · 생산 `--step3-rtol` 꼴 — CONV_CERT · 정지 rtol 1e-12 · 직접해 (또는 주어진 풀이)) — SV 반사실 기록이 증서 구간
+    지위로 나온다 (사슬 판정 = 증서 구간 비).  끝나면 셋 다 되돌린다."""
+    from scipy.sparse.linalg import spsolve
+
+    def _direct(L, b, *a, **k):
+        _CG_CALLS[0] += 1
+        return spsolve(L.tocsc(), b), 0
+    old = S3._solve_cg, S3.CONV_CERT, S3.CG_RTOL
+    S3._solve_cg, S3.CONV_CERT, S3.CG_RTOL = (solver or _direct), True, 1.0e-12
+    try:
+        yield
+    finally:
+        S3._solve_cg, S3.CONV_CERT, S3.CG_RTOL = old
+
+
+def _qd2_run(polys, sdcp, n, rj=1e3, thr=None, reg_hook=None, cert=False):
+    """괄호 회로 하나 → (sid, 원장, 해, 반사실 원 기록).  reg_hook = 원장을 계획 전에 바꾸는 함수 (변조 시험) · ★ 10-23 cert = 증서 켠 풀이
+    (`cert_on` · 사슬 판정을 보는 자리)."""
     P = cat_rows(rows(polys), rows([[p] for p in sdcp], phase=5, kind=0, fid0=700))
     sid, _ = bed(P, n, sdcp_sphere_d_um=0.0)
     reg = _try(lambda: registry(sid, P, tol_sj_um=0.1, r_sdcp_um=0.5), None)
     if reg is not None and reg_hook is not None:
         reg_hook(reg)
-    r = _try(lambda: solve(sid, sig_e(), n, plan(reg, rj, sv_counterfactual={'threshold': thr})), None) if reg is not None else None
+    if reg is None:
+        r = None
+    elif cert:
+        with cert_on():
+            r = _try(lambda: quiet(S3.solve_sigma_z, sid, sig_e(), H, z_top_um=float(n[2]) * H, z_bot_um=0.0,
+                                   cjunc=plan(reg, rj, sv_counterfactual={'threshold': thr})), None)
+    else:
+        r = _try(lambda: solve(sid, sig_e(), n, plan(reg, rj, sv_counterfactual={'threshold': thr})), None)
     return sid, reg, r, (((r or {}).get('cjunc') or {}).get('sv_counterfactual') or {})
+
+
+def _qd2_census(r):
+    """해의 접합 기록 census (= 원장 census · 증거 `census` 꼴 — JSON 정수) — 검증기에 실제 census 를 준다 (★ 10-23 · RCA2-04)."""
+    return json.loads(json.dumps(((r or {}).get('cjunc') or {}).get('census') or {}, default=int))
 
 
 def _qd2_ref_I(nn, edges, bot, top):
@@ -3524,6 +3561,19 @@ def _qd2_ref_I(nn, edges, bot, top):
     keep = rb | rt
     return ref_I(nn, [e for e in edges if e[0] in keep and e[1] in keep], [b for b in bot if b[0] in keep],
                  [t for t in top if t[0] in keep])
+
+
+def _qd2_ref3():
+    """QD2 ③ 괄호 회로의 손 회로 (모듈 밖) → (I_full · I_참 (다리 셀 (2,1,3) 의 면만 끊음) · I_위 (덩어리 셀 셋을 뺀 판)) — QD2 ③ · QD3 ⑤ 공용.
+    노드 — A0..A2 = 0..2 · S1 (1,1,3) = 3 · A4..A8 = 4..8 · S2 (2,1,3) = 9 · S3 (3,1,3) = 10 · B0..B2 = 11..13 · B4 · B5 = 14 · 15 · C0..C8 = 16..24."""
+    gsv = 2.0 * SV * 250.0 / (SV + 250.0) * H
+    gss = 250.0 * H
+    E3 = ([(0, 1, G_AX), (1, 2, G_AX), (2, 3, gsv), (3, 4, gsv)] + [(4 + i, 5 + i, G_AX) for i in range(4)]
+          + [(3, 9, gss), (9, 10, gss)] + [(11, 12, G_AX), (12, 13, G_AX), (13, 10, gsv), (10, 14, gsv), (14, 15, G_AX)]
+          + [(16 + i, 17 + i, G_AX) for i in range(8)])
+    bot3, top3 = [(0, G_PL), (11, G_PL), (16, G_PL)], [(8, G_PL), (24, G_PL)]
+    return (_qd2_ref_I(25, E3, bot3, top3), _qd2_ref_I(25, [e for e in E3 if e[:2] not in ((3, 9), (9, 10))], bot3, top3),
+            _qd2_ref_I(25, [e for e in E3 if not ({e[0], e[1]} & {3, 9, 10})], bot3, top3))
 
 
 def _qd2_flags(cf, thr):
@@ -3560,7 +3610,7 @@ def t_sv_bracket():
     gsv = 2.0 * SV * 250.0 / (SV + 250.0) * H
     gss = 250.0 * H
     # ① 리뷰어 회로
-    sid1, _r1, r1, c1 = _qd2_run([QD2_A1, QD2_B1], QD2_S1, QD2_N1)
+    sid1, _r1, r1, c1 = _qd2_run([QD2_A1, QD2_B1], QD2_S1, QD2_N1, cert=True)
     w1 = chain_I([G_PL] + [G_AX] * 3 + [gsv, gss, gss, gsv] + [G_AX] * 3 + [G_PL])
     up1 = c1.get('upper') if isinstance(c1.get('upper'), dict) else {}
     chk('QD2 ① 리뷰어 회로 (A · B 가 같은 덩어리 (1..3,1,4) 를 지남) — σ = 손 사슬 (1e-12) · 못 가른 덩어리 1 · 아래 끝 = 덩어리 그대로 (끊은 면 0 · '
@@ -3576,7 +3626,7 @@ def t_sv_bracket():
     chk('QD2 ① 사슬 판정 — 괄호 [1, ∞] 가 문턱에 걸침 → SV_UNCHECKED (문턱 2 · 1e9 — 위 끝 ∞ · 옛 = 표지 없음 = PRE2-impl-01)',
         f1a == ['SV_UNCHECKED'] and f1b == ['SV_UNCHECKED'], f'{f1a} · {f1b}')
     # ② 대조 (한 섬유만 지남)
-    _s2, _r2, r2, c2 = _qd2_run([QD2_A1, QD2_B1C], QD2_S1, QD2_N1)
+    _s2, _r2, r2, c2 = _qd2_run([QD2_A1, QD2_B1C], QD2_S1, QD2_N1, cert=True)
     f2 = _try(lambda: _qd2_flags(c2, 2.0), None)
     chk('QD2 ② 대조 (B 가 덩어리 안에서 시작 · A 만 지남) — σ = ① 과 같은 손 사슬 · 못 가른 덩어리 0 · B 의 SV 면을 끊음 (끊은 면 1 · 지금처럼) · '
         '비 +∞ (no_through_without_sv) · 다시 풀지 않음 (위 끝 풀이 기록 None · 위 = 아래) · 사슬 = SV_DEPENDENT',
@@ -3585,15 +3635,8 @@ def t_sv_bracket():
         and 'upper' in c2 and c2.get('upper') is None and c2.get('status_hi') == 'no_through_without_sv'
         and c2.get('sv_counterfactual_ratio_hi') == math.inf and f2 == ['SV_DEPENDENT'], f'{c2} · {f2}')
     # ③ 괄호 성질 — 아래 ≤ 참 ≤ 위 (참 = 섬유 자기 길 (A · B 가 덮인 셀을 지나는 면) 은 살리고 다리 셀 (2,1,3) 의 면만 끊은 판 · 손 회로)
-    _s3, _r3, r3, c3 = _qd2_run([QD2_A3, QD2_B3, QD2_C3], QD2_S3, QD2_N3)
-    #  노드 — A0..A2 = 0..2 · S1 (1,1,3) = 3 · A4..A8 = 4..8 · S2 (2,1,3) = 9 · S3 (3,1,3) = 10 · B0..B2 = 11..13 · B4 · B5 = 14 · 15 · C0..C8 = 16..24
-    E3 = ([(0, 1, G_AX), (1, 2, G_AX), (2, 3, gsv), (3, 4, gsv)] + [(4 + i, 5 + i, G_AX) for i in range(4)]
-          + [(3, 9, gss), (9, 10, gss)] + [(11, 12, G_AX), (12, 13, G_AX), (13, 10, gsv), (10, 14, gsv), (14, 15, G_AX)]
-          + [(16 + i, 17 + i, G_AX) for i in range(8)])
-    bot3, top3 = [(0, G_PL), (11, G_PL), (16, G_PL)], [(8, G_PL), (24, G_PL)]
-    I3 = _qd2_ref_I(25, E3, bot3, top3)
-    I3_true = _qd2_ref_I(25, [e for e in E3 if e[:2] not in ((3, 9), (9, 10))], bot3, top3)
-    I3_hi = _qd2_ref_I(25, [e for e in E3 if not ({e[0], e[1]} & {3, 9, 10})], bot3, top3)
+    _s3, _r3, r3, c3 = _qd2_run([QD2_A3, QD2_B3, QD2_C3], QD2_S3, QD2_N3, cert=True)
+    I3, I3_true, I3_hi = _qd2_ref3()
     lo3, hi3 = c3.get('sv_counterfactual_ratio'), c3.get('sv_counterfactual_ratio_hi')
     t3, h3 = I3 / I3_true, I3 / I3_hi
     up3 = c3.get('upper') if isinstance(c3.get('upper'), dict) else {}
@@ -3603,13 +3646,17 @@ def t_sv_bracket():
         and lo3 == 1.0 and c3.get('status_hi') == 'computed' and isinstance(hi3, float) and rel(hi3, h3) < 1e-12
         and up3.get('status') == 'computed' and up3.get('n_cells_removed') == 3 and 1.0 < t3 < h3 and lo3 <= t3 <= hi3,
         f'σ {None if r3 is None else I_of(r3, QD2_N3)} ↔ {I3} · 아래 {lo3} · 참 {t3} · 위 {hi3} ↔ 손 {h3} · {up3}')
-    th3 = (1.0, 0.5 * (t3 + h3), (hi3 if isinstance(hi3, float) else math.nan), 2.0 * h3)
+    #  ★ 10-23 (RCA2-01 · Q1 (가)) — 판정 = 증서 구간: "문턱 = 위 끝" 의 위 끝 = 증서 구간 위비 (nominal 위 끝이 아니다 · 그 위비 ≥ nominal)
+    import ca_ext_svcf as _SVq
+    v3 = _try(lambda: _SVq.chain_view(_SVq.sv_cf_record(c3)), {}) or {}
+    hc3 = v3.get('ratio_cert_hi')
+    th3 = (1.0, 0.5 * (t3 + h3), (hc3 if isinstance(hc3, float) else math.nan), 2.0 * h3)
     f3 = [_try(lambda th=th: _qd2_flags(c3, th), None) for th in th3]
-    chk('QD2 ③ 사슬 판정 — 문턱 1 (아래 1 = 문턱 · 넘지 않음) · 참과 위 사이 = 걸침 → SV_UNCHECKED · 문턱 = 위 끝 (그 값) · 위 끝 2 배 = 표지 없음 '
-        '(위 끝 ≤ 문턱)',
+    chk('QD2 ③ 사슬 판정 (증서 구간 · 10-23) — 문턱 1 (아래비 ≤ 1 · 넘지 않음) · 참과 위 사이 = 걸침 → SV_UNCHECKED · 문턱 = 증서 구간 위비 (그 값) · '
+        '위 끝 2 배 = 표지 없음 (위비 ≤ 문턱)',
         f3[0] == ['SV_UNCHECKED'] and f3[1] == ['SV_UNCHECKED'] and f3[2] == [] and f3[3] == [], f'{list(zip(th3, f3))}')
     # ④ 변이 J1 회로 — 지나는 섬유 둘 + 닿기만 하는 C
-    _s4, _r4, r4, c4 = _qd2_run([QD2_A4, QD2_B4, QD2_C4], QD2_S4, QD2_N4)
+    _s4, _r4, r4, c4 = _qd2_run([QD2_A4, QD2_B4, QD2_C4], QD2_S4, QD2_N4, cert=True)
     #  노드 — A0..A2 = 0..2 · S1 = 3 · A4..A8 = 4..8 · S2..S4 = 9..11 · B0..B2 = 12..14 · S5 = 15 · B4..B8 = 16..20 · C4..C8 = 21..25
     E4 = ([(0, 1, G_AX), (1, 2, G_AX), (2, 3, gsv), (3, 4, gsv)] + [(4 + i, 5 + i, G_AX) for i in range(4)]
           + [(3, 9, gss), (9, 10, gss), (10, 11, gss), (11, 15, gss)]
@@ -3669,7 +3716,8 @@ def t_sv_bracket():
         reg['census']['n_unsplit_bridging_components'] = 0
     _s8, _r8, r8, c8 = _qd2_run([QD2_A1, QD2_B1], QD2_S1, QD2_N1, reg_hook=_tamper)
     up8 = c8.get('upper') if isinstance(c8.get('upper'), dict) else {}
-    ev8 = {'sv_counterfactual_request': {'threshold': None}, 'solve': {'sv_counterfactual': SVCF.sv_cf_record(c8)}}
+    ev8 = {'sv_counterfactual_request': {'threshold': None}, 'solve': {'sv_counterfactual': SVCF.sv_cf_record(c8)},
+           'census': _qd2_census(r8)}
     p8 = _try(lambda: SVCF.sv_cf_problem(ev8, True), 'EXC')
     f8 = _try(lambda: _qd2_flags(c8, 2.0), None)
     chk('QD2 ⑧ 원장 census 의 못 가른 덩어리 수를 0 으로 변조 (지문 밖) — 위 끝 = 다시 가른 원장과 다름 → 풀지 않음 (위 끝 상태 = 비 없는 이름 · 사유) · '
@@ -3696,7 +3744,8 @@ def t_sv_bracket():
                                 cjunc=plan(reg9, 1e3, sv_counterfactual={'threshold': None})), None)
     c9 = (((r9 or {}).get('cjunc') or {}).get('sv_counterfactual') or {})
     up9 = c9.get('upper') if isinstance(c9.get('upper'), dict) else {}
-    ev9 = {'sv_counterfactual_request': {'threshold': None}, 'solve': {'sv_counterfactual': SVCF.sv_cf_record(c9)}}
+    ev9 = {'sv_counterfactual_request': {'threshold': None}, 'solve': {'sv_counterfactual': SVCF.sv_cf_record(c9)},
+           'census': _qd2_census(r9)}
     chk('QD2 ⑨ 주 해 미수렴 (조기 기록 main_unconverged) — 옛 칸 그대로 (비 · 표지 · 증서 · backend None) + 못 가른 덩어리 1 · 위 끝 = 같은 상태 '
         '(풀이 없음) · 검증기 받음 · 사슬 = SV_UNCHECKED',
         r9 is not None and c9.get('status') == 'main_unconverged' and c9.get('sv_counterfactual_ratio') is None and c9.get('flag') is None
@@ -3719,7 +3768,7 @@ def t_sv_bracket():
         and c10.get('status_hi') == 'nonpositive_full_current' and c10.get('sv_counterfactual_ratio_hi') is None
         and up10.get('status') == 'nonpositive_full_current' and up10.get('cg_info') is None, f'{c10}')
     # ⑪ 덩어리가 판에 닿음 — 위 끝 = 그 셀의 판 결합까지 뺀다 (덩어리를 통째로 뺀 판 · 판 결합 1 · 면 9 = 손으로 센 수)
-    sid11, _r11, r11, c11 = _qd2_run([QD2_A11, QD2_B11], QD2_S11, QD2_N11)
+    sid11, _r11, r11, c11 = _qd2_run([QD2_A11, QD2_B11], QD2_S11, QD2_N11, cert=True)
     up11 = c11.get('upper') if isinstance(c11.get('upper'), dict) else {}
     #  손으로 센 면 (덩어리 셀 넷에 닿는 면): SDCP–SDCP (1,1,1)|(2,1,1) · (2,1,1)|(3,1,1) · (2,1,0)|(2,1,1) = 3 · SV (1,1,0)|(1,1,1) · (1,1,1)|(1,1,2) ·
     #  (3,1,0)|(3,1,1) · (3,1,1)|(3,1,2) · (1,1,0)|(2,1,0) · (2,1,0)|(3,1,0) = 6 → 9 · 판 결합 = (2,1,0) 아래 판 하나
@@ -3730,6 +3779,201 @@ def t_sv_bracket():
         and c11.get('status_hi') == 'no_through_without_sv' and c11.get('sv_counterfactual_ratio_hi') == math.inf
         and up11.get('n_cells_removed') == 4 and up11.get('n_edges_cut') == 9 and up11.get('n_plate_couplings_cut') == 1
         and _try(lambda: _qd2_flags(c11, 2.0), None) == ['SV_UNCHECKED'], f'{c11}')
+
+
+# ═════════════════════════ ★ 10-23 QD3 — SV 문턱 = 증서 구간 판정 (Codex 재검토 RCA2-01 · 04 · 1저자 Q1 (가)) ═════════════════════════
+def _qd3_run(polys, sdcp, n, rj=1e3, cert=True, solver=None):
+    """괄호 회로 한 런 (증서 켬 기본) → (원장, 계획, 해, 반사실 원 기록) — 증거 fp 의 계획 행 지문을 계획에서 바로 읽으려고 계획을 돌려준다."""
+    P = cat_rows(rows(polys), rows([[p] for p in sdcp], phase=5, kind=0, fid0=700))
+    sid, _ = bed(P, n, sdcp_sphere_d_um=0.0)
+    reg = registry(sid, P, tol_sj_um=0.1, r_sdcp_um=0.5)
+    pl = plan(reg, rj, sv_counterfactual={'threshold': None})
+    if cert:
+        with cert_on(solver):
+            r = quiet(S3.solve_sigma_z, sid, sig_e(), H, z_top_um=float(n[2]) * H, z_bot_um=0.0, cjunc=pl)
+    else:
+        r = solve(sid, sig_e(), n, pl)
+    return reg, pl, r, (((r or {}).get('cjunc') or {}).get('sv_counterfactual') or {})
+
+
+def _qd3_svx(cert=True, solver=None):
+    """SVX (RCA06 픽스처 · 손 회로 `_svx_ref` · 비 ≈ 10.29) 반사실 한 런 → (원장, 계획, 해, 반사실 원 기록)."""
+    P = cat_rows(rows(SVX), rows(SVX_SDCP, phase=5, kind=0, fid0=700))
+    sid, _ = bed(P, SVX_N)
+    reg = registry(sid, P, tol_sj_um=0.1, r_sdcp_um=0.5)
+    pl = plan(reg, SVX_RJ, sv_counterfactual={'threshold': None})
+    if cert:
+        with cert_on(solver):
+            r = quiet(S3.solve_sigma_z, sid, sig_e(), H, z_top_um=float(SVX_N[2]) * H, z_bot_um=0.0, cjunc=pl)
+    else:
+        r = solve(sid, sig_e(), SVX_N, pl)
+    return reg, pl, r, (((r or {}).get('cjunc') or {}).get('sv_counterfactual') or {})
+
+
+def _qd3_ev(reg, pl, r, cf):
+    """실제 증거 꼴 (payload `ca_ext_cjunc.payload_blocks` · `ca_ext_svcf.attach_evidence` 와 같은 칸) — 요청 · 투영 · 솔브 기록 `I_bot_code` ·
+    원장 census (JSON 정수) · fp (원장 sid · registry · 계획 행 지문)."""
+    import ca_ext_svcf as SVCF
+    return {'sv_counterfactual_request': {'threshold': None},
+            'solve': {'sv_counterfactual': SVCF.sv_cf_record(cf), 'I_bot_code': ((r or {}).get('cjunc') or {}).get('I_bot_code')},
+            'census': json.loads(json.dumps(reg['census'], default=int)),
+            'fp': {'sid': reg['fp']['sid'], 'registry': reg['fp']['registry'], 'plan_rows': pl['fp_rows']}}
+
+
+def _qd3_assess(view, thr):
+    import rint_r_chain as _RRC
+    return _RRC.sv_assess({('1', 'P1', 'R_j0'): {'sv_cf': view}}, thr, 'R_j0')
+
+
+@case('QD3')
+def t_sv_cert_interval():
+    """★ 10-23 (Codex 재검토 RCA2-01 · 04 · 1저자 Q1 (가) · author 10-23 ratified Q1-Q8) — SV 문턱을 증서 구간으로 판정한다.
+    판정문 반례 (`docs/reviews/codex_rint2_rereview_evidence_20261022/geometry/run_review.py` → `actual_certified_threshold_crossing`): 실제 SVX
+    raster → 원장 → 계획 → 풀이 (첫 선형 해 벡터에만 +1e-8 · 나머지 직접해) → 증서 → 기록 → 검증기 → `sv_assess` 에서 nominal 비는 문턱 바로
+    아래인데 증서가 보장하는 참 비 구간 전체가 문턱 위 → 옛 판 = 표지 없음.  고친 판 = 아래비 (Gfull_lo / Gcut_lower_hi) > 문턱 →
+    SV_DEPENDENT · 위비 ≤ 문턱 → 표지 없음 · 그 밖 → SV_UNCHECKED · ∞ = 위상 증명 · 증서 없는 런 = 진단.  기대 = 손 회로 (모듈 밖)."""
+    import ca_ext_svcf as SVCF
+    from scipy.sparse.linalg import spsolve
+    CERT = getattr(SVCF, 'STANDING_CERTIFIED', 'certified_interval')
+    DIAG = getattr(SVCF, 'STANDING_DIAGNOSTIC', 'diagnostic_uncertified')
+    I_full, _, _ = _svx_ref(SVX_RJ)
+    I_cut, _, _ = _svx_ref(SVX_RJ, with_sv=False)
+    true_r = I_full / I_cut
+    # ① 판정문 실제 반례 꼴
+    calls = [0]
+
+    def _pert(L, b, *a, **k):
+        calls[0] += 1
+        phi = spsolve(L.tocsc(), b)
+        return (phi + 1.0e-8 if calls[0] == 1 else phi), 0
+    reg1, pl1, r1, c1 = _qd3_svx(cert=True, solver=_pert)
+    p1 = SVCF.sv_cf_record(c1)
+    v1 = SVCF.chain_view(p1)
+    nom = c1.get('sv_counterfactual_ratio')
+    thr = 0.5 * (nom + true_r) if isinstance(nom, float) else math.nan
+    lo1, hi1 = v1.get('ratio_cert_lo'), v1.get('ratio_cert_hi')
+    f1, _d1 = _qd3_assess(v1, thr)
+    pr1 = _try(lambda: SVCF.sv_cf_problem(_qd3_ev(reg1, pl1, r1, c1), True), 'EXC')
+    mc1, lc1 = (r1 or {}).get('conv_cert') or {}, c1.get('conv_cert') or {}
+    print(f'    QD3 ① nominal {nom!r} · 문턱 {thr!r} · 증서 구간 [{lo1!r}, {hi1!r}] · 손 참 비 {true_r!r} · 풀이 {calls[0]}')
+    chk('QD3 ① 판정문 실제 반례 꼴 (SVX · 첫 선형 해에만 +1e-8 · 증서 켬) — 주 해 · 아래 끝 증서 통과 · nominal < 문턱 < 증서 구간 아래비 ≤ 손 회로 '
+        '참 비 ≤ 위비 · 사슬 = SV_DEPENDENT (옛 nominal 판정 = 표지 없음) · 실제 증거 꼴 검증기 받음 · 지위 증서 구간 · 판정 근거 칸 = 사슬 꼴 값',
+        r1 is not None and calls[0] >= 2 and mc1.get('ok') is True and lc1.get('ok') is True and c1.get('standing') == CERT
+        and isinstance(nom, float) and nom < thr and isinstance(lo1, float) and isinstance(hi1, float) and thr < lo1 <= true_r <= hi1
+        and f1 == ['SV_DEPENDENT'] and pr1 is None and p1.get('ratio_cert_interval') == [lo1, hi1],
+        f'표지 {f1} · 검증 {pr1!r} · 지위 {c1.get("standing")!r} · 판정 근거 칸 {p1.get("ratio_cert_interval")!r}')
+    f1n, _ = _qd3_assess({'standing': CERT, 'ratio': nom, 'ratio_hi': nom, 'ratio_cert_lo': nom, 'ratio_cert_hi': nom}, thr)
+    chk('QD3 ① 옛 판정 재현 — 두 끝에 nominal 을 두면 표지 없음 (반례 = nominal 판정의 결함 · 증서 구간이 판정을 바꾼다)', f1n == [], f1n)
+    # ② 정확 풀이 (증서 켬)
+    reg2, pl2, r2, c2 = _qd3_svx(cert=True)
+    v2 = SVCF.chain_view(SVCF.sv_cf_record(c2))
+    lo2, hi2 = v2.get('ratio_cert_lo'), v2.get('ratio_cert_hi')
+    ok2 = isinstance(lo2, float) and isinstance(hi2, float) and lo2 <= true_r <= hi2
+    fa = _qd3_assess(v2, lo2 * (1.0 - 1e-9))[0] if ok2 else None
+    fb = _qd3_assess(v2, hi2 * (1.0 + 1e-9))[0] if ok2 else None
+    pr2 = _try(lambda: SVCF.sv_cf_problem(_qd3_ev(reg2, pl2, r2, c2), True), 'EXC')
+    chk('QD3 ② 정확 풀이 (증서 켬) — 증서 구간 ∋ 손 회로 참 비 · 문턱 = 아래비 × (1 − 1e-9) → SV_DEPENDENT · 위비 × (1 + 1e-9) → 표지 없음 · 검증기 받음',
+        ok2 and fa == ['SV_DEPENDENT'] and fb == [] and pr2 is None, f'[{lo2!r}, {hi2!r}] ∋ {true_r!r}? · {fa} · {fb} · {pr2!r}')
+    # ③ +∞ = 위상 증명 (QD2 ② 꼴 — 아래 끝 관통 없음)
+    reg3, pl3, r3, c3 = _qd3_run([QD2_A1, QD2_B1C], QD2_S1, QD2_N1)
+    p3 = SVCF.sv_cf_record(c3)
+    v3 = SVCF.chain_view(p3)
+    zc, mc3 = c3.get('conv_cert') or {}, (r3 or {}).get('conv_cert') or {}
+    f3 = _qd3_assess(v3, 2.0)[0]
+    pr3 = _try(lambda: SVCF.sv_cf_problem(_qd3_ev(reg3, pl3, r3, c3), True), 'EXC')
+    chk('QD3 ③ +∞ = 위상이 증명한 0 분모 (QD2 ② 꼴 · 아래 끝 no_through_without_sv) — 그 끝 증서 = 영값 위상 (VALID_ZERO_TOPOLOGY · 조기 반환 · '
+        '관통 dof 0 · 결합 칸 = 주 해 증서) · 증서 구간 [∞, ∞] (투영 = "inf") · 사슬 SV_DEPENDENT · 검증기 받음',
+        c3.get('status') == 'no_through_without_sv' and zc.get('status') == 'VALID_ZERO_TOPOLOGY' and zc.get('zero_source') == 'early_return'
+        and zc.get('n_through_dof') == 0 and all(zc.get(k) == mc3.get(k) for k in ('fp_sid', 'fp_sig', 'fp_cjunc_registry', 'fp_cjunc_rows'))
+        and v3.get('ratio_cert_lo') == math.inf and v3.get('ratio_cert_hi') == math.inf and p3.get('ratio_cert_interval') == ['inf', 'inf']
+        and f3 == ['SV_DEPENDENT'] and pr3 is None, f'{zc} · {v3} · {f3} · {pr3!r}')
+    # ④ 증서 없는 런 = 진단
+    reg4, pl4, r4, c4 = _qd3_svx(cert=False)
+    p4 = SVCF.sv_cf_record(c4)
+    f4, d4 = _qd3_assess(SVCF.chain_view(p4), 2.0)
+    pr4 = _try(lambda: SVCF.sv_cf_problem(_qd3_ev(reg4, pl4, r4, c4), True), 'EXC')
+    chk('QD3 ④ 증서 없는 런 (rtol 노브 없음) = 진단 기록 — 지위 diagnostic_uncertified · 주 해 · 끝 증서 없음 · 증서 구간 [None, None] · nominal 비 > 문턱 2 '
+        '인데 사슬 = SV_UNCHECKED (판정 입력 아님 · 세부 uncertified · 옛 = SV_DEPENDENT) · 검증기 받음',
+        c4.get('standing') == DIAG and c4.get('conv_cert_full') is None and c4.get('conv_cert') is None
+        and p4.get('ratio_cert_interval') == [None, None] and isinstance(c4.get('sv_counterfactual_ratio'), float)
+        and c4['sv_counterfactual_ratio'] > 2.0 and f4 == ['SV_UNCHECKED'] and d4.get('uncertified') == ['c1_P1_R_j0'] and pr4 is None,
+        f'{c4.get("standing")!r} · {p4.get("ratio_cert_interval")!r} · {f4} · {d4.get("uncertified")} · {pr4!r}')
+    # ⑤ 괄호 회로 (QD2 ③ · 못 가른 덩어리 1 · 두 끝 computed) — 증서 구간 ∋ 손 회로 참값
+    I3_, I3t, I3h = _qd2_ref3()
+    t5, h5 = I3_ / I3t, I3_ / I3h
+    reg5, pl5, r5, c5 = _qd3_run([QD2_A3, QD2_B3, QD2_C3], QD2_S3, QD2_N3)
+    v5 = SVCF.chain_view(SVCF.sv_cf_record(c5))
+    lo5, hi5 = v5.get('ratio_cert_lo'), v5.get('ratio_cert_hi')
+    ev5 = _qd3_ev(reg5, pl5, r5, c5)
+    pr5 = _try(lambda: SVCF.sv_cf_problem(ev5, True), 'EXC')
+    chk('QD3 ⑤ 괄호 회로 (QD2 ③ · 못 가른 덩어리 1 · 증서 켬) — 아래비 ≤ 아래 끝 손 참값 1 · 손 참 비 (다리만 끊음) ∈ [아래비, 위비] · 위 끝 손 참값 ≤ 위비 · '
+        '검증기 받음',
+        isinstance(lo5, float) and isinstance(hi5, float) and lo5 <= 1.0 and lo5 <= t5 <= hi5 and h5 <= hi5 and pr5 is None,
+        f'[{lo5!r}, {hi5!r}] · 참 {t5!r} · 위 끝 {h5!r} · {pr5!r}')
+    # ⑥ 한 끝 실패 — 위 끝 증서 실패 (세 번째 증서 = 위 끝 풀이) → 위 끝 미수렴 · 위비 못 정함
+    cc_mod = sys.modules.get('step3_conv_cert') or importlib.import_module('step3_conv_cert')
+    real_cert, n_cert = cc_mod.certify, [0]
+
+    def _fail_third(*a, **k):
+        n_cert[0] += 1
+        out = real_cert(*a, **k)
+        return dict(out, pass_c=False, ok=False) if n_cert[0] == 3 else out
+    cc_mod.certify = _fail_third
+    try:
+        reg6, pl6, r6, c6 = _qd3_run([QD2_A3, QD2_B3, QD2_C3], QD2_S3, QD2_N3)
+    finally:
+        cc_mod.certify = real_cert
+    v6 = SVCF.chain_view(SVCF.sv_cf_record(c6))
+    lo6 = v6.get('ratio_cert_lo')
+    f6a, d6a = _qd3_assess(v6, 1.5)
+    f6b = _qd3_assess(v6, 0.5)[0]
+    pr6 = _try(lambda: SVCF.sv_cf_problem(_qd3_ev(reg6, pl6, r6, c6), True), 'EXC')
+    chk('QD3 ⑥ 한 끝 실패 (위 끝 풀이 증서 실패) — 위 끝 상태 unconverged · 위비 None · 문턱 1.5 (≥ 아래비) → SV_UNCHECKED (못 읽음) · 문턱 0.5 '
+        '(< 아래비) → SV_DEPENDENT (아래만으로) · 검증기 받음 (구조화 상태)',
+        n_cert[0] == 3 and c6.get('status_hi') == 'unconverged' and isinstance(lo6, float) and v6.get('ratio_cert_hi') is None
+        and f6a == ['SV_UNCHECKED'] and d6a.get('unreadable') == ['c1_P1_R_j0'] and f6b == ['SV_DEPENDENT'] and pr6 is None,
+        f'증서 {n_cert[0]} · {c6.get("status_hi")!r} · {v6} · {f6a} · {f6b} · {pr6!r}')
+    # ⑦ 실제 기록 (⑤) 변이 — 실제 소비자가 부르는 검증기 (`ca_ext_svcf.sv_cf_problem`) 가 자기 문장으로 거부
+    foreign = (SVCF.sv_cf_record(c1) or {}).get('conv_cert')         # 다른 실제 회로 (SVX) 의 통과 증서
+
+    def _mut(fn):
+        ev = json.loads(json.dumps(ev5))
+        fn(ev, ev['solve']['sv_counterfactual'])
+        return _try(lambda: SVCF.sv_cf_problem(ev, True), 'EXC'), ev
+    muts = {
+        '아래 끝 증서 없음 (증서 구간 기록)': lambda e, s: s.update(conv_cert=None),
+        '위 끝 증서 없음': lambda e, s: s['upper'].update(conv_cert=None),
+        '주 해 증서 없음 (분자 G_full 을 묶을 증서)': lambda e, s: s.update(conv_cert_full=None),
+        '외부 증서 — 다른 실제 회로 (SVX) 의 통과 증서를 위 끝에': lambda e, s: s['upper'].update(conv_cert=dict(foreign or {})),
+        '외부 증서 — 게시 판 전류만 그 끝 G 로 고침 (목표량 구간 · 결합 칸 = 다른 회로)':
+            lambda e, s: s['upper'].update(conv_cert=dict(foreign or {}, I_bot=s['upper'].get('G_cut_code'))),
+        '임의 괄호 규칙': lambda e, s: s.update(bracket_rule='not-the-registered-rule'),
+        '제거 성분 수 0 (못 가른 덩어리 1)': lambda e, s: s['upper'].update(n_components_removed=0),
+        '제거 셀 수 0 (< 성분 수)': lambda e, s: s['upper'].update(n_cells_removed=0),
+        '못 가른 덩어리 수 10**400': lambda e, s: s.update(n_unsplit_bridging_components=10 ** 400),
+        '실제 census 와 다름 (census 못 가른 덩어리 0)': lambda e, s: e['census'].update(n_unsplit_bridging_components=0),
+        'I_bot_code ≠ G_full': lambda e, s: e['solve'].update(I_bot_code=2.0 * s['G_full_code']),
+        '증거 fp sid = 다른 런': lambda e, s: e['fp'].update(sid='f' * 32),
+        '판정 근거 칸 변조': lambda e, s: s.update(ratio_cert_interval=[9.0, 9.0]),
+        '지위 칸 없음 (옛 기록)': lambda e, s: s.pop('standing'),
+        '지위 = 진단 인데 증서가 실려 있다': lambda e, s: s.update(standing=DIAG),
+        '아래 끝 증서 옛 판': lambda e, s: s['conv_cert'].update(version='conv-cert-v1'),
+        '아래 끝 증서 ⓓ 거짓 (ok True 그대로)': lambda e, s: s['conv_cert'].update(pass_d=False),
+    }
+    chk('QD3 ⑦ 변이 전 기록 (⑤ 실제 증거 꼴) = 검증기 받음', pr5 is None, pr5)
+    for nm, fn in muts.items():
+        why, _e = _mut(fn)
+        chk(f'QD3 ⑦ 실제 기록 변이 거부 [{nm}] — 검증기 자신의 문장 (sv_cf| · 예외 아님)', isinstance(why, str) and why.startswith('sv_cf|'),
+            why)
+
+    def _diag(e, s):
+        s.update(standing=DIAG, conv_cert_full=None, conv_cert=None, ratio_cert_interval=[None, None])
+        s['upper']['conv_cert'] = None
+    why_d, ev_d = _mut(_diag)
+    fd, dd = _qd3_assess(SVCF.chain_view(ev_d['solve']['sv_counterfactual']), 1.5)
+    chk('QD3 ⑦ 같은 기록을 진단 (지위 진단 · 증서 전부 없음 · 판정 근거 칸 [None, None]) 으로 = 검증기 받음 · 사슬 = SV_UNCHECKED (uncertified · 판정 '
+        '입력 아님)',
+        why_d is None and fd == ['SV_UNCHECKED'] and dd.get('uncertified') == ['c1_P1_R_j0'], f'{why_d!r} · {fd} · {dd.get("uncertified")}')
 
 
 @case('KBND')

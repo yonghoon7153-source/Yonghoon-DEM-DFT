@@ -18,6 +18,8 @@
      핵심 문장 · 날짜 (10-22 · "10-25 판정 목표" 없음 · 10-31 = 주 판정만 · 감도 미완료) · 용어 풀이 "SV 반사실 비" ·
      그림 6 의 남은 길 순서 = 상자 ② 의 바꾼 순서 (PRE2-design-09) · 6 절 목록 끝 항목 · 주석의 등록 R §10-4 문장이 그 자리에
      (PF2 H 변이 MF12 · MF13)
+  ⑨ (10-23 · Codex 재검토 RCA2-01 · 1저자 10-23 Q1 (가) · author 10-23 ratified Q1-Q8) 쉽게 말하면 상자 ④ (nominal 비 vs 증서 구간) 가
+     같은 꼴의 상자로 있고 · 상자 글 = 수정 계획 `docs/reviews/rint2_rereview_fix_plan_20261022.md` §2 원문 그대로 · 핵심 문장 · 머리 줄 10-23
 
   python3 webapp/test_rint_explainer_page.py
 """
@@ -33,6 +35,8 @@ PAGE_URL = '/static/explain/rint_overview_20261021.html'
 PAGE = os.path.join(HERE, 'static', 'explain', 'rint_overview_20261021.html')
 BASE = os.path.join(HERE, 'templates', 'base.html')
 PLAN = os.path.join(HERE, '..', 'docs', 'reviews', 'rint2_design_fix_plan_20261021.md')
+#: ★ 10-23 — 상자 ④ 의 원문 = Codex 재검토 수정 계획 §2 (상자 ① ② ③ = 10-21 수정 계획 §6)
+PLAN_1022 = os.path.join(HERE, '..', 'docs', 'reviews', 'rint2_rereview_fix_plan_20261022.md')
 BOX_MARKS = ('①', '②', '③')
 
 _ok, _fail = 0, []
@@ -111,7 +115,7 @@ class _Boxes(HTMLParser):
             return
         a = dict(attrs)
         if self._cur is None:
-            if 'hl' in (a.get('class') or '').split() and re.fullmatch(r'easy-[123]', a.get('id') or ''):
+            if 'hl' in (a.get('class') or '').split() and re.fullmatch(r'easy-[1-9]', a.get('id') or ''):
                 self._cur, self._depth = a['id'], 1
                 self.boxes[self._cur] = []
             return
@@ -134,10 +138,10 @@ def _squash(s):
     return ' '.join(s.split())
 
 
-def plan_box_text(mark):
+def plan_box_text(mark, plan=PLAN):
     """수정 계획 §6 의 상자 (인용 블록 `> **★ 쉽게 말하면 ① …`) → 보이는 글 (markdown 표지 · 표 구분 줄 · 코드 울타리를 빼고 공백 하나로).
-    없으면 None."""
-    lines = open(PLAN, encoding='utf-8').read().split('\n')
+    없으면 None.  ★ 10-23 — plan = 원문 문서 (상자 ④ = Codex 재검토 수정 계획 §2)."""
+    lines = open(plan, encoding='utf-8').read().split('\n')
     for i, ln in enumerate(lines):
         if ln.startswith('> **★ 쉽게 말하면 ' + mark):
             out, j = [], i
@@ -212,8 +216,8 @@ def main():
     bx.feed(src)
     bx.close()
     boxes = {k: _squash(''.join(v)) for k, v in bx.boxes.items()}
-    chk('상자 셋 — class="hl" 이 정확히 셋 (id easy-1 · easy-2 · easy-3)',
-        len(re.findall(r'class="hl"', src)) == 3 and sorted(boxes) == ['easy-1', 'easy-2', 'easy-3'])
+    chk('상자 넷 — class="hl" 이 정확히 넷 (id easy-1 · easy-2 · easy-3 · ★ 10-23 easy-4)',
+        len(re.findall(r'class="hl"', src)) == 4 and sorted(boxes) == ['easy-1', 'easy-2', 'easy-3', 'easy-4'])
     for k, mark in enumerate(BOX_MARKS, 1):
         want, got = plan_box_text(mark), boxes.get(f'easy-{k}', '')
         chk(f'상자 {mark} 머리 = "★ 쉽게 말하면 {mark}"', got.startswith(f'★ 쉽게 말하면 {mark}'))
@@ -227,6 +231,17 @@ def main():
         chk(f'상자 ② 핵심 문장 — "{sent}"', sent in b2)
     for sent in ('10-31 에는 진행 보고만 한다', '팔을 줄이지 않는 이유', '⑥ 실측 직후를 결정점으로'):
         chk(f'상자 ③ 핵심 문장 — "{sent}"', sent in b3)
+    #  ★ 10-23 (Codex 재검토 RCA2-01 · 1저자 Q1 (가)) 상자 ④ — 같은 꼴 · 원문 = 수정 계획 (10-22) §2 그대로 · 핵심 문장 · 머리 줄 10-23
+    b4, want4 = boxes.get('easy-4', ''), plan_box_text('④', PLAN_1022)
+    chk('상자 ④ 머리 = "★ 쉽게 말하면 ④"', b4.startswith('★ 쉽게 말하면 ④'))
+    chk('상자 ④ 글 = 수정 계획 (10-22) §2 원문 그대로 (markdown 표지 뺀 글 · 공백 하나로)', want4 is not None and b4 == want4)
+    for sent in ('구간의 양끝으로 판정해 이 반례를 SV_DEPENDENT 로 잡는다', '참 비는 이 구간 안에 있다', 'nominal'):
+        chk(f'상자 ④ 핵심 문장 — "{sent}"', sent in b4)
+    sec4 = re.search(r'<section class="hl-sec" id="decisions-1023"[^>]*>\s*<h2[^>]*>(.*?)</h2>(.*?)</section>', src, re.S)
+    chk('상자 ④ 묶음 = 따로 section (id decisions-1023) · 머리에 날짜 10-23 · 상자 ④ 가 그 안에',
+        bool(sec4) and '10-23' in re.sub(r'<[^>]+>', '', sec4.group(1)) and 'id="easy-4"' in sec4.group(2))
+    sub4 = re.search(r'<p class="sub">(.*?)</p>', src, re.S)
+    chk('머리 줄 (.sub) 에 "10-23 갱신"', bool(sub4) and '10-23 갱신' in sub4.group(1))
     hsec = re.search(r'<section class="hl-sec"[^>]*>\s*<h2[^>]*>(.*?)</h2>', src, re.S)
     chk('상자 묶음 머리에 날짜 10-22', bool(hsec) and '10-22' in re.sub(r'<[^>]+>', '', hsec.group(1)))
     sub = re.search(r'<p class="sub">(.*?)</p>', src, re.S)
