@@ -173,6 +173,8 @@ if arms == 1 and not is_dbe and W.get('bump_seq') and R not in (0.0, math.inf) \
     open(bp, 'w').write(str(k + 1))
 if is_dbe and c == '1' and hit('dbe_c_inv'):
     s0 = s0 * 0.80
+if is_dbe and hit('dbe_r_scale'):                # ★ 10-23 (RCA2-09 · Q8) — 한 R 의 DBE σ 를 배수로 (R 단조와 모순되는 세계 · V31)
+    s0 = s0 * float(hit('dbe_r_scale').get('f', 1.0))
 if not is_dbe and c == '1' and hit('sbe_c_dep'):
     s0 = s0 * (1.0 + 1e-12)
 af = W.get('arm_factor_dbe' if is_dbe else 'arm_factor') or [1.0] * 8
@@ -1785,7 +1787,9 @@ def t_X05():
             'CALIB_ORIGIN_SENSITIVE', 'DIA_UNCHECKED', RR.SENTENCE_PASS,
             #  ★ 3판 — 상태 · 판정 · 표지 · 문장 · 두 계획 (등록 R §5-0 · §5-5 · §5-6a · §7-1 · §2-1)
             'VALID_ZERO_TOPOLOGY', 'GAP_ENVELOPE_ONLY', 'ASSUMED_UNVALIDATED', 'SV_DEPENDENT', 'SV_UNCHECKED', RR.SENTENCE_GAP,
-            RR.SENTENCE_WEAK, 'S0 계획 해시', RR.S0_PLAN_SCHEMA, 'sv_counterfactual_ratio', *RR.BLOCKING_FLAGS]
+            RR.SENTENCE_WEAK, 'S0 계획 해시', RR.S0_PLAN_SCHEMA, 'sv_counterfactual_ratio', *RR.BLOCKING_FLAGS,
+            #  ★ 10-23 (Codex 재검토 RCA2-01 · 04 · 09 · 1저자 Q1 (가) · Q8 (가)) — 증서 구간 판정 이름 · R 단조 멈춤 이름
+            'certified_interval', 'diagnostic_uncertified', 'ratio_cert_interval', 'R_MONOTONE_VIOLATION']
     miss = [n for n in need if n not in t]
     consts = (RR.TARGET_SBE_MS == 1.63 and RR.EXP_DBE_MS == 4.68 and RR.CUR_GEN_DBE_MS == 1.8877 and RR.CONFIRM_TOL == 0.02
               and RR.TAU_MONO == 1e-3 and RR.NEIGHBOR_LOG10_MAX == 0.5 and not hasattr(RR, 'MAX_LADDER_POINTS')
@@ -1941,10 +1945,11 @@ def t_U01():
 def rca02_fetch(kit, role, law, c, rj, arms, sv_cf=False):
     """Codex RCA-02 — DBE arm 0 = 3.02 + 1/(r + 0.1) · arm 1–7 = 1.02 + 3.2/(r + 0.1) (r = 1 에서 모두 3.9290909) · SBE no-op = 사다리 값."""
     if kit == SBE_KIT:
-        return [{'sigma': 1.63e-3, 'n_sdcp_near': 0, 'state': 'positive'}]
+        return [{'sigma': 1.63e-3, 'n_sdcp_near': 0, 'state': 'positive', 'err_rel': 0.0}]
     r = float(rj)
     a0, oth = 3.02 + 1.0 / (r + 0.1), 1.02 + 3.2 / (r + 0.1)
-    return [{'sigma': (a0 if i == 0 else oth) * 1e-3, 'state': 'positive', 'n_sdcp_near': 7} for i in _arms_of(arms)]
+    #  ★ 10-23 (RCA2-09) — 실제 fetch (read_run) 는 늘 err_rel (그 런 증서 ⓓ 보장 오차) 을 싣는다 · 예측의 R 단조 검사가 읽는다
+    return [{'sigma': (a0 if i == 0 else oth) * 1e-3, 'state': 'positive', 'n_sdcp_near': 7, 'err_rel': 0.0} for i in _arms_of(arms)]
 
 
 def eval_U02():
@@ -2742,6 +2747,171 @@ def eval_U13b():
                 'c1 P1 의 origin 산포 ln 1.05 > 0.1 W₊ → 넘음 → 세 R 8 팔 평균 4.175 · zero 모서리 (세 origin 다 zero) = 통과 (3판 = 문턱 +∞ → 통과)')
 def t_U13b():
     return eval_U13b()
+
+
+#  ★ 10-23 (Codex 재검토 RCA2-09 · 판정문 §8 · 1저자 Q8 (가)) DBE R 단조 방어 검사 ─────────────────────────────────────
+U17_LADS = {law: {'R_j_lo': '0.5', 'R_j0': '1.0', 'R_j_hi': '2.0', 'r0_sigma': 1.63e-3} for law in ('P0', 'P1')}
+
+
+def u17_fetch(sig, err=1e-4, o12=None, o8=None, only=None):
+    """sig[역할] = DBE arm 0 σ mS (모든 모서리 · 두 법칙 같은 값 · only = (c, 법칙) 이면 그 모서리만 sig · 나머지 = 단조 기본값) · origin 팔
+    1 · 2 = arm 0 그대로 (o12 = {역할: σ mS} 면 그 값 · 넘게 하면 그 모서리 8 팔 평균) · 8 팔 런의 팔 1–7 = o8[역할] (없으면 arm 0) ·
+    err = 팔마다 증서 보장 오차 (`err_rel` · 실제 fetch = read_run 이 증서에서 다시 계산한 칸)."""
+    base = {'R_j_lo': 5.0, 'R_j0': 4.7, 'R_j_hi': 4.4}
+
+    def fetch(kit, role, law, c, rj, arms, sv_cf=False):
+        if kit == SBE_KIT:
+            return [{'sigma': 1.63e-3, 'n_sdcp_near': 0, 'state': 'positive', 'err_rel': 0.0}]
+        rr = next(k for k in RR.RJ_ROLES if U17_LADS[law][k] == rj)
+        mine = only is None or only == (c, law)
+        a0 = (sig if mine else base)[rr]
+        out = []
+        for i in _arms_of(arms):
+            if i == 0:
+                v = a0
+            elif isinstance(arms, int):
+                v = (o8 or {}).get(rr, a0) if mine else a0
+            else:
+                v = (o12 or {}).get(rr, a0) if mine else a0
+            out.append({'sigma': v * 1e-3, 'state': 'positive', 'n_sdcp_near': 7, 'err_rel': err})
+        return out
+    return fetch
+
+
+def run_U17(sig, **kw):
+    """예측 한 번 → (상태 'PREDICTED' | 멈춤 코드, 멈춤 원인 문장, Predict)."""
+    pr = RR.Predict(u17_fetch(sig, **kw), U17_LADS, None, sv_scope=None)
+    try:
+        pr.run()
+        return 'PREDICTED', '', pr
+    except RR.Stop as e:
+        return e.code, e.cause, pr
+
+
+def _u17_state(fetch):
+    pr = RR.Predict(fetch, U17_LADS, None, sv_scope=None)
+    try:
+        pr.run()
+        return 'PREDICTED'
+    except RR.Stop as e:
+        return e.code
+
+
+def eval_U17():
+    """★ 10-23 (Codex 재검토 RCA2-09 · 판정문 §8 · 1저자 Q8 (가) · author 10-23 ratified Q1-Q8) — 예측 단계가 이미 구한 값으로 같은 모서리 · 같은
+    origin · 같은 최종 추정량 (arm 0 · origin 규칙이 바꾼 모서리 = 8 팔 평균) 의 σ(R_j,lo) ≥ σ(R_j,0) ≥ σ(R_j,hi) 를 증서 구간끼리 본다 (팔마다
+    [σ(1 − e), σ(1 + e)] · e = 그 런 증서 ⓓ 보장 오차 · 8 팔 평균 = 끝마다 평균 · 정확 분수) — 구간이 단조와 모순일 때만 멈춤
+    `R_MONOTONE_VIOLATION` (새 숫자 없음 · 추가 풀이 없음 · 값 봉인 = 멈춤 문장에 σ 없음)."""
+    cases = []
+    #  ① 판정문 꼴 (R = 0.5 / 1 / 2 에 σ = 4.2 / 4.7 / 4.4 mS/cm · 증서 오차 1e-4) → 멈춤
+    st, why, pr = run_U17({'R_j_lo': 4.2, 'R_j0': 4.7, 'R_j_hi': 4.4})
+    cases.append(('판정문 꼴 4.2 / 4.7 / 4.4 → 멈춤', st == 'R_MONOTONE_VIOLATION' and '4.2' not in why and '4.7' not in why, st, why))
+    #  ② 정상 단조 → 통과 · 검사 기록 (모서리마다 ok · 추정량 이름)
+    st, why, pr = run_U17({'R_j_lo': 5.0, 'R_j0': 4.7, 'R_j_hi': 4.4})
+    rm = pr.checks.get('r_monotone') or []
+    cases.append(('정상 단조 → 통과 · 모서리 넷 기록 ok', st == 'PREDICTED' and len(rm) == 4 and all(x.get('ok') is True for x in rm)
+                  and all(x.get('estimator') == 'arm0' for x in rm), st, rm))
+    #  ③ 증서 띠 안에서만 겹치는 비단조 (nominal 4.6995 < 4.7 · 증서 구간끼리 모순 아님) → 통과
+    st, why, pr = run_U17({'R_j_lo': 4.6995, 'R_j0': 4.7, 'R_j_hi': 4.4})
+    cases.append(('증서 띠 안 비단조 (구간 겹침) → 통과', st == 'PREDICTED', st, why))
+    #  ④ 이웃 쌍은 겹치고 R_j,lo ↔ R_j,hi 만 모순 (4.6995 / 4.7 / 4.70045 · e 1e-4) → 멈춤 (쌍 전부를 본다)
+    st, why, pr = run_U17({'R_j_lo': 4.6995, 'R_j0': 4.7, 'R_j_hi': 4.70045})
+    cases.append(('이웃은 겹치고 lo ↔ hi 만 모순 → 멈춤', st == 'R_MONOTONE_VIOLATION', st, why))
+    #  ⑤ 같은 값 셋 (평탄) → 통과
+    st, why, pr = run_U17({'R_j_lo': 4.7, 'R_j0': 4.7, 'R_j_hi': 4.7})
+    cases.append(('평탄 4.7 / 4.7 / 4.7 → 통과', st == 'PREDICTED', st, why))
+
+    #  ⑥ R_j,hi 영값 위상 (σ 0 · e 0) · 나머지 양수 단조 → 통과 (0 ≤ 양수)
+    def _zero_hi(kit, role, law, c, rj, arms, sv_cf=False):
+        out = u17_fetch({'R_j_lo': 5.0, 'R_j0': 4.7, 'R_j_hi': 4.4})(kit, role, law, c, rj, arms, sv_cf)
+        if kit != SBE_KIT and rj == U17_LADS[law]['R_j_hi'] and (c, law) == ('0', 'P0'):
+            out = [dict(x, sigma=0.0, state='zero', err_rel=0.0) for x in out]
+        return out
+    st6 = _u17_state(_zero_hi)
+    cases.append(('R_j,hi 영값 위상 · 나머지 단조 → 통과', st6 == 'PREDICTED', st6, ''))
+    #  ⑦ 최종 추정량 = 8 팔 평균 (origin 규칙이 바꾼 모서리 c0 P0) — arm 0 은 단조인데 8 팔 평균이 비단조 → 멈춤 (최종 추정량을 본다)
+    st, why, pr = run_U17({'R_j_lo': 5.0, 'R_j0': 4.7, 'R_j_hi': 4.4}, o12={'R_j_lo': 6.0}, o8={'R_j_lo': 3.0, 'R_j0': 4.7, 'R_j_hi': 4.4},
+                          only=('0', 'P0'))
+    org = {f'c{o["c"]}_{o["law"]}': o['status'] for o in pr.origin}
+    cases.append(('8 팔 평균 비단조 (arm 0 단조) → 멈춤', st == 'R_MONOTONE_VIOLATION' and org.get('c0_P0') == 'adjusted', st, (why, org)))
+    #  ⑧ 반대 — arm 0 은 비단조인데 그 모서리의 최종 추정량 (8 팔 평균) 은 단조 → 통과 (arm 0 이 판정 값이 아니다)
+    st, why, pr = run_U17({'R_j_lo': 4.2, 'R_j0': 4.7, 'R_j_hi': 4.4}, o12={'R_j_lo': 6.0}, o8={'R_j_lo': 5.6, 'R_j0': 4.7, 'R_j_hi': 4.4},
+                          only=('0', 'P0'))
+    org = {f'c{o["c"]}_{o["law"]}': o['status'] for o in pr.origin}
+    rm = {(x.get('c'), x.get('law')): x for x in (pr.checks.get('r_monotone') or [])}
+    cases.append(('arm 0 비단조 · 8 팔 평균 단조 → 통과 (추정량 mean8)', st == 'PREDICTED' and org.get('c0_P0') == 'adjusted'
+                  and (rm.get(('0', 'P0')) or {}).get('estimator') == 'mean8', st, (why, org, rm.get(('0', 'P0')))))
+
+    #  ⑨ 팔의 증서 보장 오차가 없다 (err_rel 없음) → 띠를 잴 수 없음 = ARM_UNREADABLE (0 으로 두지 않는다)
+    def _no_err(kit, role, law, c, rj, arms, sv_cf=False):
+        out = u17_fetch({'R_j_lo': 5.0, 'R_j0': 4.7, 'R_j_hi': 4.4})(kit, role, law, c, rj, arms, sv_cf)
+        return [{k: v for k, v in x.items() if k != 'err_rel'} for x in out] if kit != SBE_KIT else out
+    st9 = _u17_state(_no_err)
+    cases.append(('err_rel 없음 → ARM_UNREADABLE', st9 == 'ARM_UNREADABLE', st9, ''))
+    stops_ok = 'R_MONOTONE_VIOLATION' in RR.STOPS and 'R_MONOTONE_VIOLATION' not in RR.PREDICT_OUTCOMES
+    return all(c[1] for c in cases) and stops_ok, ([c for c in cases if not c[1]], stops_ok)
+
+
+@check('U17', '★ 10-23 (Codex 재검토 RCA2-09 · 1저자 Q8 (가)) DBE R 단조 방어 검사 (예측 · 이미 구한 값 · 증서 구간끼리 · 같은 최종 추정량) — '
+              '판정문 꼴 4.2 / 4.7 / 4.4 → R_MONOTONE_VIOLATION (문장에 σ 없음) · 정상 단조 · 증서 띠 안 비단조 · 평탄 · 영값 위상 → 통과 · '
+              '이웃 겹침 + lo ↔ hi 모순 → 멈춤 · 8 팔 평균 비단조 → 멈춤 · arm 0 만 비단조 (최종 추정량 단조) → 통과 · err_rel 없음 → '
+              'ARM_UNREADABLE · STOPS 에 이름 (PREDICT_OUTCOMES 밖 = STOPPED)')
+def t_U17():
+    return eval_U17()
+
+
+@check('M44', '★ 10-23 변이: R 단조 검사 끔 (모순 쌍 없음) → U17 이 떨어진다 (변이 전 통과 확인)')
+def t_M44():
+    base_ok, base_why = eval_U17()
+    caught, why = mutant('M44', {'r_monotone_problem': lambda pts: None}, eval_U17)
+    return base_ok and caught, (base_ok, why if base_ok else base_why)
+
+
+@check('M45', '★ 10-23 변이: 이웃 쌍만 본다 (R_j,lo ↔ R_j,hi 안 봄) → U17 ④ 가 떨어진다')
+def t_M45():
+    def adjacent_only(pts):
+        ps = sorted(pts, key=lambda t: t[0])
+        for (ra, na, ba), (rb, nb, bb) in zip(ps, ps[1:]):
+            if ra < rb and ba[1] < bb[0]:
+                return na, nb
+        return None
+    base_ok, base_why = eval_U17()
+    caught, why = mutant('M45', {'r_monotone_problem': adjacent_only}, eval_U17)
+    return base_ok and caught, (base_ok, why if base_ok else base_why)
+
+
+@check('M46', '★ 10-23 변이: 띠 없이 nominal 끼리 비교 (e 무시) → U17 ③ (증서 띠 안 비단조) 가 떨어진다')
+def t_M46():
+    from fractions import Fraction
+
+    def nominal_band(rec):
+        s = Fraction(float(rec['sigma']))
+        return s, s
+    base_ok, base_why = eval_U17()
+    caught, why = mutant('M46', {'arm_band': nominal_band}, eval_U17)
+    return base_ok and caught, (base_ok, why if base_ok else base_why)
+
+
+@check('M47', '★ 10-23 변이: 최종 추정량 대신 arm 0 (origin 규칙이 바꾼 모서리도) → U17 ⑦ ⑧ 이 떨어진다')
+def t_M47():
+    def arm0_band(pr, key):
+        return RR.arm_band(pr.vals[key]), 'arm0'
+    base_ok, base_why = eval_U17()
+    caught, why = mutant('M47', {'final_band': arm0_band}, eval_U17)
+    return base_ok and caught, (base_ok, why if base_ok else base_why)
+
+
+@check('V31', '★ 10-23 (RCA2-09) 끝-끝 — 가짜 러너 세계에서 DBE σ(R_j,lo) 를 0.8 배 (R 단조와 모순) → 예측 STOPPED · R_MONOTONE_VIOLATION · rc 3 · '
+              '멈춤 문장에 σ 없음')
+def t_V31():
+    def go():
+        m = {'kit_has': 'DBE', 'rj': lad(s_main('P0'))['R_j_lo']}
+        W = dict(PW, faults=[{'do': 'dbe_r_scale', 'match': m, 'f': 0.8}])
+        return predict('V31', world('V31', W), [s_main('P0')['out'], s_main('P1')['out']])
+    p = scen('V31', go)
+    st = (p.get('sum') or {}).get('stop') or {}
+    return (p['rc'] == 3 and (p.get('sum') or {}).get('status') == 'STOPPED' and st.get('code') == 'R_MONOTONE_VIOLATION'
+            and not re.search(r'\d\.\d{3,}e-0[23]', str(st.get('cause', ''))), (p['rc'], st))
 
 
 #  Q2-5 §5-6 변이 표지 ─────────────────────────────────────────────────
