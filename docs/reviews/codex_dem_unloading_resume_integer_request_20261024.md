@@ -1,5 +1,8 @@
 # [DEM 제하] 재개 식별자 정수 파싱 보완 검토 요청 — 2026-10-24 KST
 
+> 현재 canonical 전체 gate: **PASS, 155/0, rc 0**. [완료 기록](ulpr_resume_integer_evidence_20261024/completion.md)을 따른다. 아래 작성자/초기 반입 시점의 예정·대기 문구는 원 스냅샷의 범위이며 현재 상태를 대신하지 않는다.
+
+
 사용자 “계속 진행”·“다 비준이야” 이후 기존 ULPR의 fractional RESUME k 잔여 문제를 수정했다. 이 지시는 좁은 코드 오류 수정과 검토 진행 권한이며 새 물리값·실물 결과·외부 GO를 공급한 것으로 해석하지 않았다. 기존 등록 §14-11①/§14-12의 같은 정수 경계를 확인하기 전에 반올림하던 파서 경로가 대상이다.
 
 | 항목 | 범위 |
@@ -10,7 +13,7 @@
 | 증거 | [README](ulpr_resume_integer_evidence_20261024/README.md), [NOTE](ulpr_resume_integer_evidence_20261024/NOTE.md), [6파일 diff](ulpr_resume_integer_evidence_20261024/source/candidate.diff) |
 | 파일 신원 | [source_manifest.json](ulpr_resume_integer_evidence_20261024/source_manifest.json), [package_manifest.json](ulpr_resume_integer_evidence_20261024/package_manifest.json) |
 | 최종 리뷰 pin | root가 고정한 실제 커밋/외부 PIN.txt를 따른다. 본문에 자기 SHA를 예측해 쓰지 않음 |
-| 전체 저장소 gate | [receipt](ulpr_resume_integer_evidence_20261024/full_gate_receipt.json)의 실제 상태 확인. 현재 PENDING |
+| 전체 저장소 gate | [receipt](ulpr_resume_integer_evidence_20261024/full_gate_receipt.json)의 실제 상태 확인. 현재 전체 gate PASS (완료 기록 참조) |
 
 다음을 반박해 달라.
 
