@@ -44,7 +44,7 @@ from ..services import (
     sample_formation,
     sample_reference_cycle,
 )
-from .eis import _best_fit, _FitStub, _ParameterStub
+from .eis import _best_fit, _fits_by_spectrum, _FitStub, _in_use, _ParameterStub
 
 router = APIRouter(prefix="/api/samples", tags=["samples"])
 
@@ -72,16 +72,48 @@ def _impedance(session: Session, sample_id: int | None) -> tuple[int, float | No
         return 0, None
     in_use = [fit for fit in (_best_fit(session, spectrum_id) for spectrum_id in spectra)
               if fit is not None]
+    return len(spectra), _lowest_total(in_use)
+
+
+def _impedances(session: Session, sample_ids) -> dict[int, tuple[int, float | None]]:
+    """`_impedance` 를 셀 목록 전체에 — 조회 두세 번으로 (ADR 0048 보완 2).
+
+    셀 라이브러리는 화면 열세 곳이 부르는 요청인데, 셀마다 스펙트럼을 묻고 그
+    스펙트럼마다 맞춤을 다시 물었다 (합성 셀 40 · 스펙트럼 440 에서 조회 500
+    번, 목록 시간의 80 %).  답은 `_impedance` 와 같다: 스펙트럼은 id 순, 맞춤은
+    `_in_use` 의 규칙으로 고른다.
+    """
+    wanted = sorted({int(i) for i in sample_ids if i is not None})
+    by_sample: dict[int, list[int]] = {i: [] for i in wanted}
+    for start in range(0, len(wanted), 500):
+        for spectrum_id, owner in session.exec(
+                select(SpectrumRecord.id, SpectrumRecord.sample_id).where(
+                    SpectrumRecord.sample_id.in_(wanted[start:start + 500]))):
+            by_sample[owner].append(spectrum_id)
+    fits = _fits_by_spectrum(session, (i for ids in by_sample.values() for i in ids))
+    out: dict[int, tuple[int, float | None]] = {}
+    for sample_id, spectra in by_sample.items():
+        spectra.sort()
+        in_use = [fit for fit in (_in_use(fits.get(i, [])) for i in spectra)
+                  if fit is not None]
+        out[sample_id] = (len(spectra), _lowest_total(in_use) if spectra else None)
+    return out
+
+
+def _lowest_total(in_use) -> float | None:
+    """χ² 가 작은 스펙트럼부터, 전체 저항이 나오는 첫 맞춤의 그 값."""
     for fit in sorted(in_use, key=lambda f: f.chi_squared):
         stub = _FitStub(circuit=fit.circuit, parameters=[
             _ParameterStub(**p) for p in json.loads(fit.parameters_json or "[]")])
         total = total_resistance(stub)
         if total is not None:
-            return len(spectra), float(total)
-    return len(spectra), None
+            return float(total)
+    return None
 
 
-def _out(session: Session, sample: Sample) -> SampleOut:
+def _out(session: Session, sample: Sample, *,
+         impedance: tuple[int, float | None] | None = None) -> SampleOut:
+    """``impedance`` 를 주면 그 셀의 스펙트럼을 다시 묻지 않는다 (목록이 한꺼번에 센 것)."""
     runs = session.exec(select(Run).where(Run.sample_id == sample.id)).all()
     cycles = sum(run.complete_cycle_count for run in runs)
     group_name = None
@@ -98,7 +130,8 @@ def _out(session: Session, sample: Sample) -> SampleOut:
     # 입력란은 저장값을 보여 줘야 하고, 화면 문구는 쓰이는 값을 말해야 한다.
     formation = sample_formation(sample)
     anchor, anchor_reason = sample_reference_cycle(sample)
-    spectrum_count, impedance = _impedance(session, sample.id)
+    spectrum_count, impedance_ohm = (impedance if impedance is not None
+                                     else _impedance(session, sample.id))
     return SampleOut(
         **sample.model_dump(exclude={"composition_json"}),
         group_name=group_name,
@@ -106,7 +139,7 @@ def _out(session: Session, sample: Sample) -> SampleOut:
         run_count=len(runs),
         cycle_count=cycles,
         spectrum_count=spectrum_count,
-        impedance_ohm=impedance,
+        impedance_ohm=impedance_ohm,
         composition=[ComponentOut(**c) for c in composition.to_json()],
         composition_label=composition.label(),
         resolved_cell=resolved_cell_out(resolve_cell(sample)),
@@ -169,7 +202,9 @@ def list_samples(
         anchor=lambda s: s.test_date or "",
         recency=lambda s: newest.get(s.id or 0, datetime.min),
     )
-    return [_out(session, sample) for sample in samples]
+    impedances = _impedances(session, (sample.id for sample in samples))
+    return [_out(session, sample, impedance=impedances.get(sample.id or 0, (0, None)))
+            for sample in samples]
 
 
 @router.get("/facets")

@@ -332,14 +332,56 @@ def _validate_config(config: str) -> str:
     return config
 
 
+#: 목록이 맞춤을 한 번에 읽을 때 `IN (...)` 에 넣는 id 수.  SQLite 의 변수 상한
+#: (옛 판 999) 아래로 잘라 묻는다.
+_IN_CHUNK = 500
+
+
+def _fits_by_spectrum(session: Session, spectrum_ids) -> dict[int, list[SpectrumFit]]:
+    """스펙트럼마다의 맞춤 — 목록 하나에 조회 한두 번으로 (ADR 0048 보완 2).
+
+    행마다 `select(SpectrumFit) ... == id` 를 물으면 목록 길이만큼 조회가 는다
+    (합성 710 행에서 목록 시간의 절반).  답은 같아야 한다: 한 스펙트럼의 맞춤을
+    **id 순**으로 둔다 -- 행마다 물을 때 SQLite 가 주던 차례이고, `_in_use` 의
+    동률은 그 차례로 갈린다.
+    """
+    ids = sorted({int(i) for i in spectrum_ids if i is not None})
+    out: dict[int, list[SpectrumFit]] = {i: [] for i in ids}
+    for start in range(0, len(ids), _IN_CHUNK):
+        chunk = ids[start:start + _IN_CHUNK]
+        for fit in session.exec(
+                select(SpectrumFit).where(SpectrumFit.spectrum_id.in_(chunk))):
+            out[fit.spectrum_id].append(fit)
+    for fits in out.values():
+        fits.sort(key=lambda fit: fit.id or 0)
+    return out
+
+
+def _warm_identity_map(session: Session, records) -> None:
+    """행마다 `session.get` 으로 꺼낼 셀과 그룹을 한 번에 읽어 둔다.
+
+    `_out` 과 `resolve_conditions` 는 행마다 셀·그룹을 `session.get` 으로
+    꺼낸다.  처음 꺼낼 때마다 조회가 하나씩 나가는데, 여기서 미리 읽어 두면
+    그 뒤는 세션의 identity map 이 답한다 -- 코드는 그대로, 조회만 준다.
+    """
+    sample_ids = sorted({r.sample_id for r in records if r.sample_id})
+    for start in range(0, len(sample_ids), _IN_CHUNK):
+        session.exec(select(Sample).where(
+            Sample.id.in_(sample_ids[start:start + _IN_CHUNK]))).all()
+    session.exec(select(ExperimentGroup)).all()
+
+
 def _out(session: Session, record: SpectrumRecord, *,
-         duplicate: bool = False, spread_to: int = 0) -> SpectrumOut:
+         duplicate: bool = False, spread_to: int = 0,
+         fits: list[SpectrumFit] | None = None) -> SpectrumOut:
+    """``fits`` 를 주면 그 스펙트럼의 맞춤을 다시 묻지 않는다 (목록이 한꺼번에 읽어 둔 것)."""
     sample_name = None
     if record.sample_id:
         sample = session.get(Sample, record.sample_id)
         sample_name = sample.name if sample else None
-    fits = session.exec(
-        select(SpectrumFit).where(SpectrumFit.spectrum_id == record.id)).all()
+    if fits is None:
+        fits = session.exec(
+            select(SpectrumFit).where(SpectrumFit.spectrum_id == record.id)).all()
     best = _in_use(fits)
     return SpectrumOut(
         **record.model_dump(exclude={"settings_json"}),
@@ -451,7 +493,10 @@ def list_spectra(session: Session = Depends(get_session),
         needle = search.lower()
         records = [r for r in records
                    if needle in r.name.lower() or needle in r.original_name.lower()]
-    return [_out(session, record) for record in records]
+    _warm_identity_map(session, records)
+    fits = _fits_by_spectrum(session, (record.id for record in records))
+    return [_out(session, record, fits=fits.get(record.id or 0, []))
+            for record in records]
 
 
 @router.get("/spectra/{spectrum_id}", response_model=SpectrumDetailOut)
