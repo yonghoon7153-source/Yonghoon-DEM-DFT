@@ -111,7 +111,9 @@ r_port = 2.0 (= 2h) · gap_tol 2.0 · σ_VGCF = 100 S/cm → 축방향 면 g = �
          → SV_UNCHECKED · 정확 아래 몫 이상 가장 작은 float → SV_DEPENDENT 아님 · 구간 끝 = 정확 방향 반올림 · 리뷰 변이 M7 · M1 이 걸린다 (상주)
   QD7    ★ 10-23 (묶음 A″ · 1저자 Q17 (가) · Q18 (가)) 판에 닿는 성분에서 끊은 쌍 수 (`n_reach_pairs_cut`) — 생산자 기록마다 끝의 그 수 > 0 ⇔ 끝 증서
          위상 수 ≠ 주 해 (위 끝 = + 판 결합) · 새 칸 ↔ 옛 칸 관계 · FLOAT (끊은 다리가 떠 있는 섬에만 · 묶음 A′ 결정 필요 1) · 병렬 간선 꼴 (S3 c = 1
-         축약 · 끊는 면 옆에 남는 면) = 받음 · 리뷰 A2 = 거부 · 새 칸 결손 · 꼴 · 관계 위반 = 거부 · 한정 (a) (b) (c) = 받음 (Q18 (가) · 막지 않음)
+         축약 · 끊는 면 옆에 남는 면) = 받음 · 리뷰 A2 = 거부 · 새 칸 결손 · 꼴 · 관계 위반 = 거부 · 한정 (a) (b) (c) = 받음 (Q18 (가) · 막지 않음) ·
+         (a′) (b′) 새 칸만 0 = 받음 (정직한 FLOAT · 위 끝 FLOAT 과 같은 꼴 · 결정 필요) · 변이 표 생존 (P8 주 계 판 입력 · V13 위 끝 +∞ 새 칸 꼴) → ③″ · ⑤
+         상주 · ⑦ 모티프 무작위 침대 (시드 고정)
   KBND  (05 · 한계 기록) k 경계 (90° → 89.99°) σ 뜀 크기 = 생산 단위 R_j 1e2 · 1e4 · 1e6 에서 −0.98 % · −2.1e-4 · −2.1e-6 (± 10 % · ∝ 1/R_j)
   MUT-RCA2 새 보장 변이 (조각 = fid 규칙 · 포트 옮김 · SV 전부 끊음 · 이음매 별칭 끔 · 바닥 = s > D 만 · ★ 10-22 못 가른 다리 지킴 끔 = 2 회차
          변이 J1 → QD2 ④ · '지남' 에 덮임 · 같은 성분 조건 뺌 = 2 회차 변이 J2 → QD2 ⑤ (훅 `_sv_passes`)) 가 위 시험에 옳은 이유로 걸린다 ·
@@ -4351,6 +4353,13 @@ QD7_PAR_SDCP = [(1.95, 1.5, 5.05)]
 QD7_UFL_N = (9, 3, 12)
 QD7_UFL_POLYS = [[(1.5, 1.5, 2.5), (1.5, 1.5, 7.5)], [(3.5, 1.5, 2.5), (3.5, 1.5, 6.5)], [(7.5, 1.5, 0.5), (7.5, 1.5, 11.5)]]
 QD7_UFL_SDCP = [(1.5, 1.5, 4.5), (2.5, 1.5, 4.5), (3.5, 1.5, 4.5)]
+#: UPLATE — 덩어리를 통해서만 판에 닿는 성분: A (x 방향 · z 2.5) · B (y 방향 · z 2.5) 가 SDCP 기둥 (2,1,0..2) 의 꼭대기 셀 (2,1,2) 을 함께 지나고
+#  (못 가른 덩어리 1) 그 기둥 바닥 셀 (2,1,0) 만 아래 판에 닿는다 · 판–판 길 P (x 6.5) — 위 끝이 덩어리 셀 (판 결합 1 포함) 을 빼면 A · B 가 떠서 버려진다.
+#  주 계에서는 그 성분이 판에 닿으므로 위 끝이 뺀 간선 쌍 6 이 전부 판에 닿는 성분 안 (생산자 정의 = 주 계의 판 입력 · ★ 변이 표 P8 = 위 끝이 판 결합을
+#  뺀 판 입력으로 판정하면 0 — 검증기 관계로는 못 가른다 (판 결합 1 > 0 이라 ⑥ 이 같은 답) → 값으로 묶는다)
+QD7_UPL_N = (7, 3, 8)
+QD7_UPL_POLYS = [[(0.5, 1.5, 2.5), (4.5, 1.5, 2.5)], [(2.5, 0.5, 2.5), (2.5, 2.5, 2.5)], [(6.5, 1.5, 0.5), (6.5, 1.5, 7.5)]]
+QD7_UPL_SDCP = [(2.5, 1.5, 0.5), (2.5, 1.5, 1.5), (2.5, 1.5, 2.5)]
 QD7_KEY = 'n_reach_pairs_cut'
 #: ⑦ 모티프 합성 무작위 침대 (시드 고정 · 시험이 기하를 만든다) — 높이 · 길이 무작위 (판에 닿기 · 떠 있기) 의 다리 짝 · PAR (c = 1 병렬) · 덮인 섬유 +
 #  닿는 섬유 · 못 가른 덩어리 (QD2 ③ 꼴) 를 x 로 늘어놓고 판–판 길 하나 — 생산자 기록마다 ① 의 관계 (⇔ · ≤) · 계약 받음
@@ -4449,6 +4458,7 @@ def t_sv_reach_pairs():
         'PAR c 1 (병렬 간선 · 축약 2)': lambda: _qd3_run(QD7_PAR_POLYS, QD7_PAR_SDCP, QD7_PAR_N, sdcp_mod={'c': 1.0}),
         'PAR c 없음 (대조 · 축약 0)': lambda: _qd3_run(QD7_PAR_POLYS, QD7_PAR_SDCP, QD7_PAR_N),
         'UFLOAT (위 끝이 뺀 덩어리가 떠 있는 성분에만)': lambda: _qd3_run(QD7_UFL_POLYS, QD7_UFL_SDCP, QD7_UFL_N),
+        'UPLATE (덩어리를 통해서만 판에 닿는 성분)': lambda: _qd3_run(QD7_UPL_POLYS, QD7_UPL_SDCP, QD7_UPL_N),
     }
     evs, raws, pls = {}, {}, {}
     for nm, mk in runs.items():
@@ -4505,6 +4515,18 @@ def t_sv_reach_pairs():
         and _rej(E_UF) is None,
         (pu.get('n_unsplit_bridging_components'), {k: uu.get(k) for k in ('status', 'n_edges_cut', 'n_plate_couplings_cut', QD7_KEY)}, Uu, Mu,
          _rej(E_UF)))
+    #  ③″ (★ 10-23 변이 표 P8 생존 → 상주) 덩어리를 통해서만 판에 닿는 성분 — 새 칸 = 주 계의 판 입력으로 판정 (위 끝이 판 결합을 빼기 전)
+    E_UP = evs['UPLATE (덩어리를 통해서만 판에 닿는 성분)']
+    pp = E_UP['solve']['sv_counterfactual']
+    up_p = pp.get('upper') if isinstance(pp.get('upper'), dict) else {}
+    Mp, Up = _qd7_topo(pp.get('conv_cert_full'), SVCF), _qd7_topo(up_p.get('conv_cert'), SVCF)
+    chk('QD7 ③″ 덩어리를 통해서만 판에 닿는 성분 (UPLATE) — 위 끝 computed · 더 뺀 간선 6 · 판 결합 1 · 위 끝 판에 닿는 성분에서 끊은 쌍 6 (= 뺀 간선 쌍 전부 · '
+        '주 계에서 그 성분은 판에 닿는다) · 아래 끝 0 · 위 끝 증서 dof < 주 해 · 계약 받음',
+        pp.get('n_unsplit_bridging_components') == 1 and up_p.get('status') == 'computed' and up_p.get('n_edges_cut') == 6
+        and up_p.get('n_plate_couplings_cut') == 1 and up_p.get(QD7_KEY) == 6 and pp.get(QD7_KEY) == 0 and Up is not None and Mp is not None
+        and Up[1] < Mp[1] and _rej(E_UP) is None,
+        (pp.get('n_unsplit_bridging_components'), {k: up_p.get(k) for k in ('status', 'n_edges_cut', 'n_plate_couplings_cut', QD7_KEY)},
+         pp.get(QD7_KEY), Up, Mp, _rej(E_UP)))
     #  ④ 리뷰 A2 (끊은 수 그대로 바꿔 끼우기) — 새 칸으로 판단해도 거부
     why_a2 = _rej(_qd5_swap(E_SVX, 'lower', SVCF))
     chk('QD7 ④ 리뷰 A2 — SVX 아래 끝 증서 = 주 해 증서 (끊은 수 그대로) → 거부 (판에 닿는 성분에서 끊은 쌍 2 인데 아래 끝 그래프 = 주 해 그래프)',
@@ -4539,6 +4561,8 @@ def t_sv_reach_pairs():
         'QDX 위 끝 새 칸 > 아래 끝 + n_edges_cut (위 끝에서만 빠진 쌍마다 더 뺀 간선 ≥ 1)':
             _ed(E_X, 'upper', lambda s: s.update({QD7_KEY: k_x + ne_x + 1})),
         'QD2 ③ 위 끝 새 칸 0 (판 결합 0 · 위 끝 그래프 ≠ 주 해)': _ed(E_23, 'upper', lambda s: s.update({QD7_KEY: 0})),
+        #  ★ 10-23 (변이 표 V13 생존 → 상주) 위 끝이 비를 싣지 않는 끝 (+∞ · 위상 대조 밖) 이어도 새 칸 꼴 = 0 이상 정수 (`_removed_problem`)
+        'QD2 ① 위 끝 (+∞ · 위상 대조 밖) 새 칸 bool True': _ed(evs['QD2 ① (덩어리 1 · 위 끝 +∞)'], 'upper', lambda s: s.update({QD7_KEY: True})),
     }
     for nm, e in bad.items():
         why5 = _rej(e)
@@ -4582,6 +4606,23 @@ def t_sv_reach_pairs():
     fc = _flags(sc)
     chk('QD7 ⑥ 한정 (c) — QDX 위 끝 ← 아래 끝 증서 (끊은 수 그대로) = 받음 (표지 [] · 원래 SV_UNCHECKED · 생산자 보장 = 위 끝 ≤ 아래 끝 뿐 · 막지 않음)',
         why_cc is None and fc == [] and fx['QDX (끊은 다리 2 + 덩어리 1 · 두 끝 computed)'] == ['SV_UNCHECKED'], (why_cc, fc, fx))
+    #  ⑥′ 한정 (a′) (b′) — 새 칸만 0 으로 고친 바꿔 끼우기 (옛 칸 그대로) = 정직한 FLOAT · 위 끝 FLOAT 기록과 같은 꼴 (끊은 수 > 0 · 판에 닿는 성분에서 끊은
+    #     쌍 0 · 끝 = 주 해) → 받는다 (검증기가 가를 수 없다 · 묶음 A″ 보고 결정 필요) · 위 끝 풀이 기록이 있으면 위 끝 새 칸 관계 (≤ 아래 끝 + n_edges_cut)
+    #     가 독립 출처로 아래 끝 새 칸 편집을 잡는다 (QDX)
+    ea2 = _qd5_swap(E_SVX, 'lower', SVCF)
+    ea2['solve']['sv_counterfactual'][QD7_KEY] = 0
+    why_a2k = _rej(ea2)
+    eb2 = _qd5_swap(E_23, 'upper', SVCF)
+    eb2['solve']['sv_counterfactual']['upper'][QD7_KEY] = 0
+    why_b2k = _rej(eb2)
+    ex2 = _qd5_swap(E_X, 'lower', SVCF)
+    ex2['solve']['sv_counterfactual'][QD7_KEY] = 0
+    why_x2k = _rej(ex2)
+    chk('QD7 ⑥′ 한정 (a′) (b′) — SVX 아래 끝 ← 주 해 증서 + 새 칸만 0 (n_sv_faces_cut 2 그대로) · QD2 ③ 위 끝 ← 주 해 증서 + 위 끝 새 칸만 0 (n_edges_cut '
+        '6 그대로) = 받음 (정직한 FLOAT · 위 끝 FLOAT 과 같은 꼴 · 막지 않음) / QDX 아래 끝 ← 주 해 증서 + 아래 끝 새 칸만 0 = 거부 (위 끝 새 칸 > 아래 끝 + '
+        'n_edges_cut · 위 끝 풀이 기록 = 독립 출처)',
+        why_a2k is None and _flags(ea2['solve']['sv_counterfactual']) == [] and why_b2k is None
+        and _flags(eb2['solve']['sv_counterfactual']) == [] and _is_a3(why_x2k), (why_a2k, why_b2k, why_x2k))
     #  ⑦ 모티프 합성 무작위 침대 (시드 고정) — 생산자 기록마다 ① 의 관계 · 계약 받음 · 판별력 = 옛 판정 (끊은 수 = n_sv_faces_cut · 위 끝 + n_edges_cut +
     #     n_plate_couplings_cut) 이면 거짓 거부였을 기록이 아래 끝 · 위 끝 둘 다 있다
     st7 = {'records': 0, 'bad': [], 'old_lo': 0, 'old_up': 0, 'up_c': 0, 'contracted': 0}

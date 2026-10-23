@@ -49,7 +49,8 @@
   내는 판에 닿는 성분에서 끊은 쌍 수 (`n_reach_pairs_cut` — 주 계 가지치기와 같은 판정 · 병렬 간선 = 한 쌍 = 증서 간선 수의 셈 · 위 끝은 +
   `n_plate_couplings_cut`) — 옛 판 = 떠 있는 성분을 버리기 전에 센 `n_sv_faces_cut` 으로 판단해 끊은 다리가 판에 닿지 않는 성분에만 있는 정상 기록
   (FLOAT) · 끊는 면 옆에 같은 두 dof 를 잇는 간선이 남는 정상 기록 (S3 c = 1 축약) 을 거부했다 (거짓 거부) · 새 칸 ↔ 옛 칸 = 생산자 보장 관계만 (⑧) ·
-  끊은 수 칸까지 같이 고친 일관 편집 · 위 끝 ← 아래 끝 증서 = 받는다 (Q18 (가) · 한정 · Codex 회차 ①).
+  끊은 수 칸까지 같이 고친 일관 편집 · 위 끝 ← 아래 끝 증서 = 받는다 (Q18 (가) · 한정 · Codex 회차 ①) · 새 칸만 0 으로 고친 바꿔 끼우기 = 정직한
+  FLOAT 기록과 같은 꼴이라 받는다 (가를 수 없다 · `_topo_problem` ⚠).
 numpy 없이 뜬다 (`numbers` · `fractions` · 원 기록의 numpy 수도 받는다 · 검증기의 증서 대조만 `step3_conv_cert` 를 그 자리에서 부른다)."""
 import math
 import numbers
@@ -592,8 +593,10 @@ def _topo_problem(rec):
     ⚠ 한정 — ~~⑥ 거짓 거부~~ (★ 10-23 묶음 A″ 고침 — 끊은 간선이 판에 닿지 않는 성분에만 있는 꼴 (FLOAT) · 같은 두 dof 를 잇는 끊지 않은 병렬
       간선이 남는 꼴 (S3 c = 1 축약) = 판에 닿는 성분에서 끊은 쌍 0 → 같은 계로 받는다) · 끊은 수 칸까지 같이 고친 일관 편집 ((a) 아래 끝 ← 주 해
       증서 + n_sv_faces_cut · n_reach_pairs_cut 0 · (b) 위 끝 ← 주 해 증서 + n_edges_cut · n_reach_pairs_cut 0) · 위 끝 ← 아래 끝 증서 (c) 는 받는다
-      (1저자 Q18 (가) — 고치지 않는다 · Codex 회차 ① 한정 · 새 칸만 남긴 (a) · (b) 꼴은 ⑧ 이 거부) · 증서 수 자체를 지어 낸 편집 (위상 수까지 고친
-      위조) 은 이 대조 밖 (봉인이 아니다)."""
+      (1저자 Q18 (가) — 고치지 않는다 · Codex 회차 ① 한정 · 새 칸만 남긴 (a) · (b) 꼴은 ⑧ 이 거부) · 새 칸만 0 으로 고친 바꿔 끼우기 ((a′) 아래 끝 ←
+      주 해 증서 + n_reach_pairs_cut 0 · (b′) 위 끝 ← 주 해 증서 + 위 끝 n_reach_pairs_cut 0 · 옛 칸 그대로) = 정직한 FLOAT · 위 끝 FLOAT 기록과 같은 꼴 →
+      받는다 (가를 수 없다 · 위 끝 풀이 기록이 있으면 ⑧ 위 끝 ≤ 아래 끝 + n_edges_cut 이 아래 끝 편집을 잡는다) · 증서 수 자체를 지어 낸 편집 (위상
+      수까지 고친 위조) 은 이 대조 밖 (봉인이 아니다)."""
     lo_c = RATIO_STATUSES.get(rec.get('status')) == 'finite'
     up = rec.get('upper') if isinstance(rec.get('upper'), dict) else None
     up_c = up is not None and RATIO_STATUSES.get(up.get('status')) == 'finite'
