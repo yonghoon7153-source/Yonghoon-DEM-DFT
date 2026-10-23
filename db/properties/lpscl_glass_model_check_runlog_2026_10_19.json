@@ -321,5 +321,16 @@
   "상태": "'Nd EOS 잠금 대기 (/tmp/ndsite_eos.lock)' — 바로 풀리지 않았다 = Nd 러너가 그 잠금을 잡고 있다 · 내부 러너 run_force_check_scf.sh sha16 e6fc5b25e4f2b3ad (Nd 발사판과 같은 러너) · 풀리면 VRAM ≥ 20,000 MiB 확인 뒤 sp → pulay → kpt",
   "예상_어림": "Nd EOS 남은 4 점 (MP_07 x102 진행 · 점당 ≈ 10 h) → ≈ 10-23 오전 · 그 뒤 li2s ≈ 3 h · 그다음 Nd --fit · V₀ 이완",
   "by": "agent · 2026-10-21"
+ },
+ "관측_2026_10_23_1314": {
+  "출처": "사용자 붙여넣기 10-23 13:14:32 (kgy · chain.log 끝 4 줄 + watch_qe_relax RUN=$HOME/work/runs/li2s_model_check_sp_2026_10_21)",
+  "시작": "Nd EOS 러너 끝 (10-23 11:22:23 · 12 점 완료) 뒤 잠금이 풀려 시작 — 사용자 10-21 순서 결정 그대로",
+  "sp": "10 / 10 단발종료 (A_s1–s5 · B_s1–s5 · 죽음/오류 0 · 점마다 ≈ 9–10 분 — 화면 '조용m' 102 → 18 로 어림)",
+  "pulay": "12:56:25 '점 2개' · VRAM 여유 21,077 MiB (문턱 20,000) · ecut_hi_A_s3 ✓ 12 분 (13:09:01) · ecut_hi_B_s4 진행 (13:14 · pid 2580114)",
+  "kpt": "대기 — k222_A_s3 (K_POINTS automatic 2 2 2 · 복소 파동함수라 Γ 단일점보다 GPU 메모리를 더 쓸 수 있다 · 메모리 프로브 안 함 (10-21 러너 기록 '메모리' 줄 — 그래서 맨 뒤에 둠)) · 실패하면 대체하지 않는다 → 카드 개정 9 규칙대로 k 대조 없음 = 문장 단서 (보류 아님)",
+  "GPU": "13:14 23,650 / 24,576 MiB — ecut_hi 점 (≈ 20.1 GB) + cascade v7 UMA (≈ 3.5 GB · 12:56 여유 21,077 에서 역산) · 여유 ≈ 0.9 GB",
+  "값": "없음 — 판독은 회수 뒤 glass_model_check.py --sp 로만 (화면 E_Ry · |F| 를 읽지 않는다)",
+  "⏭": "chain.log '■ 끝 — sp:rc… pulay:rc… kpt:rc…' 붙여넣기 → 회수 블록 (인계 카드 §3 · claude/evac-2026-10-22 · db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/{sp,pulay,kpt}/) → SHA256SUMS 대조 → --sp → 편지 DA Q-DA-4",
+  "by": "agent · 2026-10-23"
  }
 }

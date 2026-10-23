@@ -156,5 +156,15 @@
   "진행": "수렴 8 / 12 — MLi_04 여섯 점 (BFGS 84 · 83 · 87 · 49 · 46 · 66) + MP_07 x0.98 · x1.00 (BFGS 46 · 46 · x1.00 616 분 · 17:22:32 끝) · MP_07 x1.02 진행 (step 1) · 단발 종료 0 · 죽음/오류 0 · VRAM 여유 21,419 MiB (17:22, 문턱 8,000)",
   "어림": "MP_07 점마다 ≈ 10 h (M_Li 의 ≈ 18.6 h 보다 짧음 · BFGS 46) — 이대로면 남은 넷 끝 ≈ 10-23 오전 (어림 · BFGS 수가 점마다 다르다) → --fit (바닥 확인) → V₀ relax → ΔG",
   "값": "없음 — 에너지는 판독 도구로만 읽는다 (감시 화면 E_Ry 로 ΔG 손계산 안 함). 두 모델의 절대 에너지는 조성이 달라 (M@P Li31 P3 · M@Li Li21 P5 · 차 = 8 Li₂S − 2 Li₃PS₄) 직접 비교하지 않는다 — 사용자 질문 10-21 '절대값으로 보는건 아닌거지?' 에 답함"
+ },
+ "✅_EOS_12점_끝_2026_10_23": {
+  "출처": "사용자 붙여넣기 10-23 13:14:24 (kgy esp-Z590-AORUS-MASTER · watch_qe_relax 화면 + run.log 끝 · RE=$HOME/work/runs/ndo_site_eos_2026_10_16)",
+  "진행": "수렴 12 / 12 · 단발종료 0 · 죽음/오류 0 — MLi_04 BFGS 84 · 83 · 87 · 49 · 46 · 66 / MP_07 x0.98–1.08 BFGS 46 · 46 · 46 · 47 · 48 · 50 (화면 |F| 0.0019–0.0024 = QE Total force · 완료 판정은 'bfgs converged' 선언 · 러너 _fc_ok)",
+  "run_log_끝": "[10-23 11:22:23] ✓ MP_07_x108 658분 · 끝 — 완료 12 · 건너뜀 0 · 실패 0 · 총 9336분 (≈ 155.6 h · 10-16 23:45 발사 · 10-16 kgy 전원 끊김 재시작 포함)",
+  "러너_끝_줄": "'다음: UMA 힘 (같은 frame.xyz) → 분석' 은 tools/doping/run_force_check_scf.sh:351 의 고정 문구 (힘 대조 카드 시절) — 이 EOS 의 다음 단계가 아니다",
+  "값": "없음 — 에너지는 회수 뒤 make_eos_inputs.py --fit 으로만 읽는다 (감시 화면 E_Ry 로 맞춤 · 끝점 · 바닥 · ΔG 를 손으로 판단하지 않는다 · 10-20 미리보기의 MLi_04 두 묶음은 --fit 의 바닥 확인이 가른다)",
+  "곁": "잠금 /tmp/ndsite_eos.lock 이 풀리자 li2s 사슬 (tmux li2s_qe_sp) 이 시작 — 13:14 GPU 23,650 / 24,576 MiB (li2s ecut_hi 점 + cascade v7 UMA) · 기록 lpscl_glass_model_check_runlog_2026_10_19.json 관측_2026_10_23_1314",
+  "⏭": "회수 블록 (kgy → claude/evac-2026-10-22 · db/raw/ndo_site_eos_2026_10_16/ · 12 점 scf.in · scf.out + run.log + SHA256SUMS = 26 파일 · tmp/ 는 안 가져온다) → 클라우드 SHA256SUMS 대조 · scf.in 12 = db/inputs 바이트 대조 → make_eos_inputs.py --fit → (V0_relax 면) --v0 → V₀ relax 둘 (kgy GPU · li2s 사슬 뒤) → site_dg.py --qe <root_v0> --expect 1 --top 1 --thresholds Nd=0.10 → 한쪽 방향 규칙 (G3_EOS_계속_읽기_규칙_2026_10_19) → §5",
+  "by": "agent · 2026-10-23"
  }
 }
