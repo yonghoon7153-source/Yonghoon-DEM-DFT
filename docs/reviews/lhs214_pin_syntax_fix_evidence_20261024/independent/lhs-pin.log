@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "base_pin": "ffbd438e7522d58eb069561fe58020f4086707ac",
+  "runner_before_sha256": "f4048aca55b912628278dbdd7b184ac449723736cd3f4f5cdc7eeca31294921a",
+  "runner_after_sha256": "3220be53fb89cd16c81f0273c8b9f7444f262c5311d02b2017756fd94fd66ac8",
+  "scope_checks": {
+    "exact_two_call_changes": true,
+    "runner_not_sealed": true,
+    "sealed32_unchanged": true,
+    "receipt_unchanged": true,
+    "deliverable_equals_test_source": true,
+    "only_preflight_AST_changed": true,
+    "old_LF_counterexample_reproduced": true,
+    "canonical_selftest_rc0": true,
+    "fixture_observed": true,
+    "source_unchanged_during_attack": true,
+    "canonical123_summary": true
+  },
+  "case_count": 60,
+  "canonical_selftest_rc": 0,
+  "canonical_last_line": "supp20_input_receipt selftest: 123/123 PASS",
+  "canonical_log_sha256": "235859e7592c536ccfac5c0ebac944cee845b066ffc7aee9760683d80176ab71",
+  "failures": [],
+  "scope": "Direct canonical preflight function attacks on synthetic existing selftest receipt; no WSL/B7 real approval, production launch or fullgate."
+}
