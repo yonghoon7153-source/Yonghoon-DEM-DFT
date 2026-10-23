@@ -1,11 +1,107 @@
 {
-  "status": "PENDING_CLEAN_COMMIT_GATE",
-  "command": "bash scripts/check_all.sh",
-  "scope": "Full repository gate; no reduced lane",
-  "previous_attempt": {
-    "rc": 1,
-    "log": "environment/check-all-uncommitted.log",
-    "sha256": "fe779e6d41034b7ffd10890c8c47b599f7f11e596e37c2f6e3ed6eb52771e25f"
+  "schema": "nonrint_clean_candidate_full_gate_v1",
+  "status": "PASS",
+  "branch": "codex/unloading-ulpr",
+  "source_base": "7799a2ff64ba462b42ce05edd3e63b7c2854d557",
+  "candidate_commit_placeholder": "<<sha:Fix ULPR resume ownership and dump validation>>",
+  "followup_commit_placeholder": "<<sha:Record ULPR full gate and environment compatibility>>",
+  "tested_git_tree_content_id": "41a687735f17f6e9734f1f5c37a79a6dbfb159f8",
+  "clean_candidate_gate": {
+    "track": "ulpr",
+    "branch": "codex/unloading-ulpr",
+    "candidate_tree": "41a687735f17f6e9734f1f5c37a79a6dbfb159f8",
+    "started_at_utc": "2026-10-23T13:51:01.562855+00:00",
+    "finished_at_utc": "2026-10-23T14:28:43.543344+00:00",
+    "command": "nice -n 10 bash scripts/check_all.sh",
+    "cwd": "/workspace/Yonghoon-DEM-DFT",
+    "environment_activation": "source /workspace/.cloud-setup/nonrint/activate.sh",
+    "environment": {
+      "TMPDIR": "/var/tmp/codex-nonrint-20261023",
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "MPLBACKEND": "Agg"
+    },
+    "python_executable": "/workspace/.venvs/yonghoon-dem/bin/python",
+    "python_version": "3.11.17 (main, Oct  3 2026, 01:05:36) [Clang 22.1.3 ]",
+    "versions": {
+      "numpy": "2.4.6",
+      "pandas": "2.3.3",
+      "pytz": "2026.5",
+      "scipy": "1.17.1"
+    },
+    "actual_temp_parent": "/var/tmp/codex-nonrint-20261023",
+    "clean_before": true,
+    "log_path": "final-gate/check-all.log",
+    "exit_code": 0,
+    "status": "PASS",
+    "runner_pid": 256731,
+    "gate_pid": 256761,
+    "log_sha256": "f27982bb9f2497c32dcea0a3e50130c6dea2dac16492d1fde3b32750bd8656c3",
+    "source_identity_before_sha256": "fc2fdd8b587f9da3f7370e871c3c1734a2265f46195807491a8225d9bacfbc7b",
+    "source_identity_after_sha256": "fc2fdd8b587f9da3f7370e871c3c1734a2265f46195807491a8225d9bacfbc7b",
+    "source_identity_unchanged": true,
+    "clean_after": true,
+    "pass_lane_count": 155,
+    "fail_lane_count": 0,
+    "all_pass_marker": true,
+    "candidate_commit_placeholder": "<<sha:Fix ULPR resume ownership and dump validation>>"
   },
-  "external_execution_authorized": false
+  "evidence_paths": [
+    "final-gate/check-all.log",
+    "final-gate/run-result.json",
+    "final-gate/source-identity-before.json",
+    "final-gate/source-identity-after.json"
+  ],
+  "post_gate_scope": "Evidence and append-only status note only; no production/shared source changes.",
+  "prior_receipt": {
+    "status": "PENDING_CLEAN_COMMIT_GATE",
+    "command": "bash scripts/check_all.sh",
+    "scope": "Full repository gate; no reduced lane",
+    "previous_attempt": {
+      "rc": 1,
+      "log": "environment/check-all-uncommitted.log",
+      "sha256": "fe779e6d41034b7ffd10890c8c47b599f7f11e596e37c2f6e3ed6eb52771e25f"
+    },
+    "external_execution_authorized": false
+  },
+  "final_document_checks": [
+    {
+      "name": "docrefs",
+      "argv": [
+        "nice",
+        "-n",
+        "10",
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "scripts/check_doc_refs.py"
+      ],
+      "command": "nice -n 10 python -I scripts/check_doc_refs.py",
+      "started_at_utc": "2026-10-23T14:29:40.460505+00:00",
+      "finished_at_utc": "2026-10-23T14:29:41.213464+00:00",
+      "exit_code": 0,
+      "log_path": "final-gate/final-docrefs.log",
+      "log_sha256": "a96ba533942db00684d0ea6385047cce377f479bc4f4bb70296c0ad3a94cf0e8"
+    },
+    {
+      "name": "ledger",
+      "argv": [
+        "nice",
+        "-n",
+        "10",
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "scripts/check_review_findings.py"
+      ],
+      "command": "nice -n 10 python -I scripts/check_review_findings.py",
+      "started_at_utc": "2026-10-23T14:29:41.213763+00:00",
+      "finished_at_utc": "2026-10-23T14:29:57.980165+00:00",
+      "exit_code": 0,
+      "log_path": "final-gate/final-ledger.log",
+      "log_sha256": "7483b4664c4d3c52e24db54600e4b9c5fa164c0b4fc7746c8682a1b6360e090c"
+    }
+  ],
+  "external_execution_authorized": false,
+  "recorded_at_utc": "2026-10-23T14:30:40.298066+00:00"
 }
