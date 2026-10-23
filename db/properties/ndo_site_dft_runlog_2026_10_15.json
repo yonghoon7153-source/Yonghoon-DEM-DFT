@@ -203,5 +203,21 @@
   "값": "없음 — site_dg.py 로만",
   "⏭": "회수 (db/raw/ndo_site_eos_v0_2026_10_23/ · 7 파일) → 판독 폴더 (V₀ 두 점 + Q1 Li2S · Li3PS4 scf.in · scf.out) → site_dg.py --qe <폴더> --expect 1 --top 1 --thresholds Nd=0.10 --compare_uma … → E(V₀ relax) − BM3 E₀ > 5 meV 면 기록 → 한쪽 방향 규칙 (10-19) → §5",
   "by": "agent · 2026-10-23"
+ },
+ "✅_Q1_EOS_판독_2026_10_23": {
+  "회수": "✅ 1fdf43b9b (kgy push) → db/raw/ndo_site_eos_v0_2026_10_23/ — 7 파일 · SHA256SUMS ✓ · scf.in 2 = db/inputs/ndo_site_eos_v0_2026_10_23 바이트 같음 · v0_inputs_manifest.json 같음",
+  "판독_폴더": "db/raw/ndo_site_dft_2026_10_15/v0_read_2026_10_23/ — V₀ 두 셀 + Q1 기준상 Li2S · Li3PS4 (40a1b6aa4 · 다시 안 돌림 · eos_plan.json 3단계 '폴더') · COMPOSITION.json 8 파일 sha256 · bundle/",
+  "도구": "db/inputs/ndo_site_2026_10_14/site_dg.py (d309ed2ee 이후 안 바뀜 · selftest 32/32) · 명령 = eos_plan.json 3단계 그대로 (--expect 1 --top 1 --thresholds Nd=0.10 --compare_uma site_dg_rietveld.json) · rc 0",
+  "판독_기록": "db/properties/ndo_site_dft_v0_readout_2026_10_23.json",
+  "ΔG_site": "+0.490 eV/Nd (V₀ 이온 이완 에너지 · Li₃PS₄/Li₂S 교환 · 조성차 8 Li₂S − 2 Li₃PS₄ 닫힘 ✓) — Q1 단일점 +0.240 에서 올랐다 (두 셀 다 DFT 이완으로 내려갔고 MLi_04 쪽이 더 내려감)",
+  "게이트": "G2 UMA +0.319 와 같은 부호 ✓ · G7 문턱 0.10 에서 0.390 떨어짐 (> 0.11) → 다형 재확인 안 함 · E(V₀ relax) − BM3 E₀ = MLi_04 +3.0 · MP_07 +0.1 meV/셀 (< 5 meV → 표시 없음)",
+  "⚠_도구_출력_문구": "--qe 모드 출력의 'DFT 단일점' · 'G3 … 단일점 부호를 쓸 수 있다' · 'G4 k 탐침 대상' 줄은 Q1 단일점 판독용 고정 문구다 — 이번 값은 V₀ 이온 이완의 마지막 '!' 에너지이고, G3 는 이 판독 자체 · G4 는 Q1 에서 이미 판정 (k 3 3 1 움직임 0.017 ≤ 0.05)",
+  "한쪽_방향_규칙_10_19": "ΔG ≥ +0.10 → 카드 §5 문장을 쓸 수 있다 · M_Li 후보의 O 배치 비대칭은 ΔG 를 P 자리 쪽으로만 밀므로 (Li 선호를 작게 보이게) X = 0.49 는 하한 쪽으로 읽는다 · M_Li 재추출 (같은 O 배치 공간) 은 이 결론을 뒤집을 수 없어 발동하지 않는다",
+  "카드_5_문장": "'Li₃PS₄/Li₂S 교환 기준 · Nd/(Nd+P) 0.40 셀 · frozen-4f PBE 에서 Nd@4b 모델이 Nd@Li 모델보다 0.49 eV/Nd 높다. 다른 저장소와 x = 0.02 에서의 크기는 확인하지 않았다.' (+ 하한 쪽 · 모델마다 후보 10 개 안의 최저)",
+  "참고_크기": "MLi_04 EOS 의 두 묶음 차 (Li 하나 자리 바꿈) ≈ 40 meV/Nd — ΔG 0.49 에 비해 작다",
+  "그대로_남는_한계": "모델마다 후보 10 개 · Nd/(Nd+P) 0.40 (1저자 목표 x = 0.02 의 20 배) · Li₃PS₄/Li₂S 교환 하나 · frozen-4f PBE · 1저자 Rietveld 5 f.u. 셀 · Rietveld 는 4b 자리였다 — 이 계산은 반대 방향이지만 조건 (농도 · 저장소 · 4f) 이 달라 '실험이 틀렸다' 로 읽지 않는다 (카드 금지: x = 0.40 크기를 x = 0.02 로 옮기지 않는다 · '무조건 Li 자리' 금지)",
+  "지위": "잠정 — CEI 트랙 (1저자 = 실험 쪽) · 통지는 사용자가",
+  "⏭": "1저자 통지 (사용자) · Q2 (분해) 는 계획만 · 트랙 정리",
+  "by": "agent · 2026-10-23"
  }
 }
