@@ -887,6 +887,9 @@ def t_sv_values(mm, proj, Es):
         '옛 꼴 괄호 규칙 (lower_keep_upper_remove_fake_v1 — 등록 밖)': lo_rec(1.25, bracket_rule='lower_keep_upper_remove_fake_v1'),
         '외부 증서 (게시 판 전류만 그 끝 G 로 · 목표량 구간 = 다른 회로)': lo_rec(1.25, conv_cert=_cp(_fake_pos_cert(2.0, lo=0.448, hi=0.449))),
         '외부 증서 (결합 칸 = 다른 런 · 격자 지문)': lo_rec(1.25, conv_cert=_cp(_fake_pos_cert(2.0, fp_sid='e' * 32))),
+        #  ★ 10-23 (A6 변이 표 A2-c7 생존 → 상주) 게시 판 전류만 다르고 목표량 구간은 그 끝 G 를 담는 증서 (같은 회로의 다른 풀이 증서 꼴)
+        '끝 증서 게시 판 전류 ≠ 그 끝 G (목표량 구간은 G 를 담음)':
+            lo_rec(1.25, conv_cert=_cp(_fake_pos_cert(2.0 * (1.0 + 1e-9), lo=2.0 * (1.0 - 1e-6), hi=2.0 * (1.0 + 1e-6)))),
         '위 끝 증서 없음': br_rec(1.2, 3.4, up={'conv_cert': None}),
         '주 해 증서 없음 (분자 G_full)': lo_rec(1.25, conv_cert_full=None),
         '주 해 증서 게시 판 전류 ≠ G_full': lo_rec(1.25, conv_cert_full=_cp(_fake_pos_cert(2.6))),
@@ -908,6 +911,25 @@ def t_sv_values(mm, proj, Es):
         got = ok_of(rec)
         chk(f'S8n 수 대조 거부 [{nm}]', not got[0], got)
         reasons[nm] = got[1]
+    #  ★ 10-23 (A6 변이 표 — 생존 A2-c7 · c8 · c9 · c10 · c17 → 상주) 일관 변조 — 위 거부 꼴의 판정 근거 칸 (`ratio_cert_interval`) 을 변조한
+    #    기록의 증서에서 다시 센 값으로 맞춘다 (그 칸을 함께 고친 변조자) → 그 칸 대조 (`_interval_problem`) 에 기대지 않고 각 검사가 제 문장으로
+    #    거부해야 한다 (옛 시험 = 변조 뒤 그 칸이 낡아 칸 대조가 대신 거부 → 끝 증서 게시 판 전류 · 목표량 구간 · 영값 그래프 · 진단 지위 · 지위 칸
+    #    검사를 꺼도 통과) · 판정 근거 칸 자체를 바꾼 꼴은 뺀다
+    _ci, _en = getattr(SVCF, 'cert_interval', None), getattr(SVCF, '_enc', lambda v: v)
+    if callable(_ci):
+        cons = {}
+        for nm, rec in bad.items():
+            if '판정 근거 칸' in nm:
+                continue
+            r2 = deep(rec)
+            lo2, hi2 = _ci(r2)
+            r2['ratio_cert_interval'] = [_en(lo2), _en(hi2)]
+            cons[nm] = ok_of(r2)
+        odd_c = {nm: g for nm, g in cons.items() if g[0] or not (isinstance(g[1], str) and g[1].startswith('CAEXT|cjunc| sv_cf|'))}
+        chk(f'S8s 일관 변조 {len(cons)} 꼴 (판정 근거 칸 = 변조한 기록의 증서에서 다시 셈) — 전부 검증기 자신의 문장으로 거부 (칸 대조에 기대지 않음)',
+            len(cons) == len(bad) - 2 and not odd_c, odd_c)
+    else:
+        chk('S8s ca_ext_svcf.cert_interval 이 있다', False, 'cert_interval 없음')
     #  ★ 10-23 (RCA2-04) — 증거 쪽 대조 (실제 census · 솔브 기록 I_bot_code · fp) — 같은 기록 · 다른 증거
     lo1, br1 = proj(_sv_raw('computed', 1.25)), proj(_sv_raw('computed', 1.2, n_unsplit=1, ratio_hi=3.4))
     ev_bad = {
@@ -924,6 +946,14 @@ def t_sv_values(mm, proj, Es):
         got = ok_of(rec, census=cen, ibot=ib, fp=fpo)
         chk(f'S8n 증거 대조 거부 [{nm}]', not got[0], got)
         reasons[nm] = got[1]
+    #  ★ 10-23 (A6 변이 표 A2-c15 생존 → 상주) 구간 함수 — +∞ 끝 = 끊은 반사실 그래프의 영값 위상 증서만 (검증기의 영값 증서 검사와 따로 ·
+    #    다른 그래프의 0 = 그 끝 못 정함 None · 사슬 = 못 읽음)
+    if callable(_ci):
+        _z0 = proj(_sv_raw('no_through_without_sv'))
+        _z1 = deep(_z0)
+        _z1['conv_cert'] = _cp(_fake_zero_cert(zero_graph='cjunc_assembled'))
+        chk('S8r 구간 함수 — +∞ 끝 = 끊은 반사실 그래프의 영값 위상 증서 (∞ · ∞) · 같은 기록에 다른 그래프의 0 (조립 그래프) = 못 정함 (None · None)',
+            _ci(_z0) == (math.inf, math.inf) and _ci(_z1) == (None, None), (_ci(_z0), _ci(_z1)))
     #  ★ 같은 부류 (10-22 · 변이 ME8 · ME9) — 증서 꼴 · G_cut 꼴 검사를 끄면 뒤의 셈이 예외로 무너지고 계약의 감싸기 (`unverifiable`) 가
     #    대신 거부했다 (받음 · 거부는 같고 사유만 다르다) → 거부 사유 = 검증기 자신의 문장 (`sv_cf|`) 이어야 한다
     odd = {nm: why for nm, why in reasons.items() if not (isinstance(why, str) and why.startswith('CAEXT|cjunc| sv_cf|'))}

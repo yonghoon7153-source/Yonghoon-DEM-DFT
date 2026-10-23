@@ -2860,6 +2860,28 @@ def t_U17():
     return eval_U17()
 
 
+def eval_U17b():
+    """★ 10-23 (A6 변이 표 A3-r3 생존 → 상주) `r_monotone_problem` 의 R 같은 갈래 — 같은 R 에 떨어진 두 구간 = 모순 (그 쌍) · 같은 R 에 겹친
+    구간 = 통과 · R 다른 쌍 = 그대로 (R 작은 쪽 위끝 < R 큰 쪽 아래끝 = 모순 · 띠 안 비단조 = 통과).  사다리의 세 R 은 늘 다르다 (방어 갈래)."""
+    from fractions import Fraction as Fr
+
+    def b(a, c):
+        return (Fr(a), Fr(c))
+    cases = (('같은 R · 떨어짐', [(1.0, 'a', b(1, 2)), (1.0, 'b', b(3, 4))], ('a', 'b')),
+             ('같은 R · 떨어짐 (순서 반대)', [(1.0, 'a', b(3, 4)), (1.0, 'b', b(1, 2))], ('a', 'b')),
+             ('같은 R · 겹침', [(1.0, 'a', b(1, 3)), (1.0, 'b', b(2, 4))], None),
+             ('R 다름 · 모순', [(1.0, 'lo', b(1, 2)), (2.0, 'hi', b(3, 4))], ('lo', 'hi')),
+             ('R 다름 · 띠 안 비단조', [(1.0, 'lo', b(1, 3)), (2.0, 'hi', b(2, 4))], None),
+             ('R 다름 · 정상 단조', [(1.0, 'lo', b(3, 4)), (2.0, 'hi', b(1, 2))], None))
+    got = [(nm, RR.r_monotone_problem(pts), want) for nm, pts, want in cases]
+    return all(g == w for _n, g, w in got), [x for x in got if x[1] != x[2]]
+
+
+@check('U17b', '★ 10-23 (A6 변이 표 A3-r3) R 단조 모순 판정의 R 같은 갈래 — 같은 R · 떨어진 구간 = 모순 · 겹침 = 통과 · R 다른 쌍 그대로 (방어 갈래 상주)')
+def t_U17b():
+    return eval_U17b()
+
+
 @check('M44', '★ 10-23 변이: R 단조 검사 끔 (모순 쌍 없음) → U17 이 떨어진다 (변이 전 통과 확인)')
 def t_M44():
     base_ok, base_why = eval_U17()
