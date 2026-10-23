@@ -28,6 +28,24 @@
   · 구조를 만들지 않는다. --prepare 는 MP 에서 상 구조를 받아 입력만 쓴다.
   · 계산을 돌리지 않는다. 입력을 쓰고, 나중에 출력을 읽는다.
 
+2026-10-23 확장 (Nd Q2 · 카드 nd_q2_decomp_estimand_2026_10_23.json):
+  · --basis <json> — 기저를 파일로 ({"phases": {상: {"formula": {...}, "mp_id": ...}},
+    "per_target": {타깃: [상…]}}). 없으면 Y 5 상 그대로.
+  · 해가 하나인지 본다 — 기저가 과완비면 (상 수 > 독립 조성 수) lstsq 의 최소 노름 해는
+    물리 분해가 아니다 → 거부하고 per_target 을 쓰라고 한다.
+  · --phase_structs <폴더> — MP 대신 그 폴더의 <상>.cif 로 입력을 쓴다 (MP 키 불필요) ·
+    --save_phase_structs <폴더> — MP 에서 받은 구조를 cif 로 남긴다.
+  · --kspacing_phase · --calculation_phase · --smearing · --degauss · --conv_thr · --mixing_beta
+    — 상 입력 설정을 넘긴다 (안 주면 예전 값 그대로).
+  · --collect --bulk_modulus_GPa B0 --bulk_modulus_range Bmin Bmax — 타깃마다 압력 P 로
+    ΔE_V = −P²V/(2B) 어림 (EOS 대신 · CLAUDE.md 2026-10-23 규칙) · --pair A B 로 Y = ΔE_A − ΔE_B ·
+    G_V (|P| ≤ 2 GPa · 셀 간 보정 차 ≤ 1 meV/atom) · 분해능 (--resolution_meV) · 상 Pulay 차.
+
+  ⛔ 확장이 못 하는 것
+    · 압력 어림은 조화 근사다 — |P| 가 크면 (> 2 GPa) 틀어진다 (그래서 G_V 가 EOS 로 넘긴다)
+    · 비등방 응력 (모양) 은 안 본다 — P (평균) 만 쓴다
+    · V 는 타깃 입력 (<out>/in/<타깃>.in) 의 셀이다 — 고정셀 계산에만 맞다
+
 사용:
   python3 tools/doping/dft_decomp_check.py --selftest
   MP_API_KEY=... python3 tools/doping/dft_decomp_check.py --prepare \\
@@ -90,12 +108,20 @@ def balance(target: dict, basis: dict = None):
     x, *_ = np.linalg.lstsq(A, b, rcond=None)
     resid = float(np.abs(A @ x - b).max())
     neg = [n for n, v in zip(basis, x) if v < NEG_TOL]
-    ok = resid <= BALANCE_TOL and not neg
+    # ⛔ 2026-10-23 — 해가 하나인지. 상 조성이 서로 독립이 아니면 lstsq 는 최소 노름 해를
+    #   돌려준다 (물리 분해가 아니다 · 에너지가 그 임의 선택을 따라간다).
+    rank = int(np.linalg.matrix_rank(A))
+    unique = rank == A.shape[1]
+    ok = resid <= BALANCE_TOL and not neg and unique
     info = {"elements": els, "residual_max_atoms": resid,
-            "negative_phases": neg, "ok": ok,
+            "negative_phases": neg, "ok": ok, "rank": rank,
+            "n_phases": int(A.shape[1]), "unique": unique,
             "coeffs": {n: float(v) for n, v in zip(basis, x)}}
     if not ok:
-        if resid > BALANCE_TOL:
+        if not unique:
+            info["why"] = (f"기저가 과완비다 (상 {A.shape[1]} 개 · 독립 조성 {rank} 개) — "
+                           f"분해가 하나로 안 정해진다. 타깃마다 자기 상 목록 (per_target) 을 쓸 것")
+        elif resid > BALANCE_TOL:
             info["why"] = (f"원소 수지가 안 맞는다 (잔차 {resid:.3g} 원자 > "
                            f"{BALANCE_TOL:g}) — 이 기저로는 이 조성을 표현할 수 없다")
         else:
@@ -178,6 +204,75 @@ def target_composition(stem: str, out, struct_dir=None):
 #:  분해 에너지는 물리적으로 수백 meV/atom 규모다. 2026-08-26 실측: 셀당 에너지를
 #:  화학식당처럼 써서 **−532 eV/atom** 이 나왔다. 그 값이 화면에 찍혔다는 게 문제였다.
 SANITY_MAX_DE_EV = 2.0
+
+#: 2026-10-23 — 압력 어림 · 게이트 문턱 (카드 nd_q2_decomp_estimand_2026_10_23.json §4)
+GV_MAX_P_GPA = 2.0          #: G_V — 이보다 크면 조화 어림을 믿지 않는다 (EOS 로)
+GV_MAX_PAIR_MEV = 1.0       #: G_V — 두 셀의 원자당 보정 차가 이보다 크면 EOS 로
+PULAY_MAX_MEV = 0.5         #: vc-relax 상 — 끝 SCF 와 마지막 BFGS 에너지 차 (원자당)
+EV_PER_J = 1.0 / 1.602176634e-19
+
+
+def load_basis(path):
+    """--basis 파일 → (basis {상: 조성}, mpids {상: mp-id|None}, per_target {타깃: [상…]}).
+
+    ⛔ 조성이 비었거나 양의 정수가 아니면 거부 · per_target 이 기저 밖 상을 가리키면 거부 —
+      반쯤 맞는 기저로 계산을 시작하면 끝에서야 '상 에너지가 없다' 로 멈춘다.
+    """
+    d = json.loads(Path(path).read_text())
+    ph = d.get("phases") or {}
+    if not ph:
+        raise ValueError(f"{path}: 'phases' 가 비었다")
+    basis, mpids = {}, {}
+    for name, rec in ph.items():
+        f = rec.get("formula") or {}
+        if not f or any((not isinstance(v, int)) or v < 1 for v in f.values()):
+            raise ValueError(f"{path}: {name} 조성이 양의 정수가 아니다 — {f}")
+        basis[name], mpids[name] = dict(f), rec.get("mp_id")
+    per = {k: list(v) for k, v in (d.get("per_target") or {}).items()}
+    for k, v in per.items():
+        bad = [n for n in v if n not in basis]
+        if bad:
+            raise ValueError(f"{path}: per_target[{k}] 의 {bad} 가 기저에 없다")
+    return basis, mpids, per
+
+
+def parse_qe_pressure_kbar(path):
+    """QE 출력의 **마지막** 'total   stress … P=' 압력 (kbar). 없으면 None."""
+    try:
+        txt = Path(path).read_text(errors="ignore")
+    except OSError:
+        return None
+    hits = re.findall(r"total\s+stress\s+\(Ry/bohr\*\*3\)\s+\(kbar\)\s+P=\s*(-?\d+\.?\d*)", txt)
+    return float(hits[-1]) if hits else None
+
+
+def volume_correction_eV(p_kbar: float, v_A3: float, b_GPa: float) -> float:
+    """ΔE_V = −P²V/(2B) (eV) — 그 셀이 제 V₀ 로 갔으면 내려갔을 에너지의 조화 어림 (항상 ≤ 0)."""
+    p = p_kbar * 1e8                  # kbar → Pa
+    return -(p * p) * (v_A3 * 1e-30) / (2.0 * b_GPa * 1e9) * EV_PER_J
+
+
+def pulay_gap_meV_per_atom(path, nat: int):
+    """vc-relax 출력: 끝 SCF ('!' 마지막) 와 그 앞 BFGS 의 마지막 '!' 의 차 (meV/원자).
+
+    끝 SCF 가 없으면 (vc-relax 가 아니거나 안 끝났으면) None — 0 으로 두지 않는다.
+    """
+    try:
+        txt = Path(path).read_text(errors="ignore")
+    except OSError:
+        return None
+    if "A final scf calculation at the relaxed structure" not in txt:
+        return None
+    es = [float(x) for x in re.findall(r"^!\s+total energy\s+=\s+(-?\d+\.\d+)\s+Ry", txt, re.M)]
+    if len(es) < 2 or nat < 1:
+        return None
+    return abs(es[-1] - es[-2]) * 13.605693122994 * 1000.0 / nat
+
+
+def kmesh_from_spacing(cell, spacing: float) -> str:
+    """k 간격 (Å⁻¹ · 2π 포함) → 'k1 k2 k3' (k_i = ⌈|b_i|/간격⌉ · 최소 1)."""
+    b = 2 * np.pi * np.linalg.inv(np.asarray(cell, float)).T
+    return " ".join(str(max(1, int(np.ceil(np.linalg.norm(v) / spacing - 1e-9)))) for v in b)
 
 
 def phase_energy_per_fu(name: str, cell_E: float, out, formula: dict):
@@ -405,6 +500,176 @@ def _selftest() -> int:
         chk(find_pseudo("Li", d, prefer="nope.UPF")[0] is None,
             "[음성] 지정 이름이 없으면 자동으로 넘어가되 모호하면 여전히 거부")
 
+    # ══ 2026-10-23 확장 (Nd Q2) ═══════════════════════════════════════════
+    import subprocess
+    # 과완비 기저 — Li6PS5Cl = Li3PS4 + Li2S + LiCl 이라 독립이 아니다
+    ov = {"Li3PS4": {"Li": 3, "P": 1, "S": 4}, "Li2S": {"Li": 2, "S": 1},
+          "LiCl": {"Li": 1, "Cl": 1}, "Li6PS5Cl": {"Li": 6, "P": 1, "S": 5, "Cl": 1}}
+    xo, io_ = balance({"Li": 54, "P": 10, "S": 44, "Cl": 16}, ov)
+    chk(xo is None and "과완비" in io_.get("why", "") and io_["rank"] == 3,
+        "★ [음성] 과완비 기저 (상 4 · 독립 3) 는 **거부** — 최소 노름 해를 분해로 쓰지 않는다")
+    # 같은 조성 다형체 둘 (예: Li3PO4 β · γ) — 최소 노름 해가 둘로 **양수로** 나눠 버린다
+    #   (음수 계수 검사로는 못 잡는다 · 해 하나 검사만 잡는다)
+    poly = {"Li2S": {"Li": 2, "S": 1}, "Li2S_b": {"Li": 2, "S": 1}, "LiCl": {"Li": 1, "Cl": 1}}
+    xp, ip = balance({"Li": 5, "S": 2, "Cl": 1}, poly)
+    chk(xp is None and "과완비" in ip.get("why", "") and not ip["negative_phases"],
+        "★ [음성] 같은 조성 다형체 둘이 기저에 있으면 거부 — 계수가 다 양수여도 (최소 노름 해가 반씩 나눔)")
+    h3 = {k: ov[k] for k in ("Li3PS4", "Li2S", "LiCl")}
+    xh, ih = balance({"Li": 54, "P": 10, "S": 44, "Cl": 16}, h3)
+    chk(xh is not None and ih["unique"] and abs(ih["coeffs"]["Li2S"] - 4) < 1e-9
+        and abs(ih["coeffs"]["LiCl"] - 16) < 1e-9,
+        "host Li54P10S44Cl16 = 10 Li3PS4 + 4 Li2S + 16 LiCl (손검산)")
+    # 압력 어림 — Q1 뒤돌아보기 (카드 §6 · CLAUDE.md 2026-10-23) 를 재현한다
+    v1 = 1175.6618475785592
+    cMP, cLi = volume_correction_eV(13.10, v1, 30.0), volume_correction_eV(3.37, v1, 30.0)
+    chk(abs(cMP + 0.20987) < 5e-5 and abs(cLi + 0.013889) < 5e-6,
+        f"ΔE_V = −P²V/2B 손계산 (MP_07 −0.20987 · MLi_04 −0.013889 eV) ← {cMP:.5f} · {cLi:.6f}")
+    chk(abs((cMP - cLi) / 2 + 0.0980) < 5e-4,
+        f"★ Q1 기록 재현: 압력 어림 보정 −0.098 eV/Nd (EOS −0.100) ← {(cMP - cLi) / 2:.4f}")
+    chk(volume_correction_eV(-13.10, v1, 30.0) == cMP and volume_correction_eV(0.0, v1, 30.0) == 0.0,
+        "부호와 무관하게 보정은 ≤ 0 (늘이든 줄이든 V₀ 쪽이 낮다) · P = 0 이면 0")
+    # k 간격 — 카드 §1b (도핑 k 3 3 1 · host k 3 3 2 가 같은 간격)
+    host_cell = [[6.068323323041438, 0.0, 3.5035497376181044],
+                 [2.0227744410138127, 5.7212757002319385, 3.5035497376181044],
+                 [0.0, 0.0, 35.035511390379995]]
+    # 간격 규칙은 **상** 에만 쓴다 — host 는 카드가 k 3 3 2 로 박았다 (도핑 1×1×10 의 k 3 3 1 과
+    #   접힘 등가 · 긴 축 2 × 5 = 10 · 간격 규칙만 쓰면 긴 축이 1 로 떨어져 더 성기다)
+    chk(kmesh_from_spacing(host_cell, 0.37) == "3 3 1",
+        f"host 셀 간격 0.37 → 3 3 1 (긴 축 |b| 0.22 < 0.37) ← {kmesh_from_spacing(host_cell, 0.37)}")
+    chk(kmesh_from_spacing(host_cell, 0.11) == "10 10 2", "host 셀 간격 0.11 → 10 10 2 (긴 축 0.2196/0.11 → 2)")
+    with tempfile.TemporaryDirectory() as td:
+        td = _P(td)
+        # load_basis — 양성 · 음성 둘
+        good = {"phases": {"Li2S": {"formula": {"Li": 2, "S": 1}, "mp_id": "mp-1153"},
+                           "LiCl": {"formula": {"Li": 1, "Cl": 1}, "mp_id": "mp-22905"},
+                           "Li3PS4": {"formula": {"Li": 3, "P": 1, "S": 4}, "mp_id": "mp-985583"}},
+                "per_target": {"B": ["Li2S", "LiCl", "Li3PS4"]}}
+        (td / "b.json").write_text(json.dumps(good))
+        bb, mm, pp = load_basis(td / "b.json")
+        chk(set(bb) == {"Li2S", "LiCl", "Li3PS4"} and mm["Li2S"] == "mp-1153" and pp["B"][0] == "Li2S",
+            "load_basis: 조성 · mp-id · per_target 를 읽는다")
+        for bad, why in [({"phases": {"X": {"formula": {"Li": 1.5}}}}, "비정수 조성"),
+                         ({"phases": good["phases"], "per_target": {"A": ["NdCl3"]}}, "기저 밖 상")]:
+            (td / "x.json").write_text(json.dumps(bad))
+            try:
+                load_basis(td / "x.json"); ok_ = False
+            except ValueError:
+                ok_ = True
+            chk(ok_, f"★ [음성] load_basis 가 {why} 를 거부한다")
+        # 출력 파서 — 압력은 **마지막** 블록 · Pulay 는 끝 SCF 가 있을 때만
+        so = ("!    total energy              =    -100.00000000 Ry\n"
+              "          total   stress  (Ry/bohr**3)                   (kbar)     P=        9.99\n"
+              "!    total energy              =    -100.00100000 Ry\n"
+              " A final scf calculation at the relaxed structure.\n"
+              "!    total energy              =    -100.00110000 Ry\n"
+              "          total   stress  (Ry/bohr**3)                   (kbar)     P=       -1.25\n")
+        (td / "v.out").write_text(so)
+        chk(parse_qe_pressure_kbar(td / "v.out") == -1.25, "압력은 마지막 stress 블록에서 (−1.25 kbar)")
+        g = pulay_gap_meV_per_atom(td / "v.out", 10)
+        chk(g is not None and abs(g - 0.0001 * 13.605693122994 * 1000 / 10) < 1e-9,
+            f"Pulay 차 = |끝 SCF − 마지막 BFGS| / 원자 ← {g}")
+        (td / "s.out").write_text(so.replace(" A final scf calculation at the relaxed structure.\n", ""))
+        chk(pulay_gap_meV_per_atom(td / "s.out", 10) is None,
+            "★ [음성] 끝 SCF 가 없으면 Pulay 차는 None — 0 으로 두지 않는다")
+        # --collect 끝까지 — 상 셋 + 타깃 둘 (A: 압력 작음 · B: 압력 큼)
+        cd = td / "c"
+        (cd / "in").mkdir(parents=True)
+
+        def _qe_in(name, syms_pos, cell):
+            sp = "".join(f" {s} 1.0 {s.lower()}.upf\n" for s in sorted({s for s, _ in syms_pos}))
+            ps = "".join(f" {s} {x} {y} {z}\n" for s, (x, y, z) in syms_pos)
+            cl = "".join(f" {r[0]} {r[1]} {r[2]}\n" for r in cell)
+            (cd / "in" / f"{name}.in").write_text(
+                f"&CONTROL\n calculation='scf'\n/\n&SYSTEM\n ibrav=0\n nat={len(syms_pos)}\n"
+                f" ntyp={len(sp.splitlines())}\n ecutwfc=60\n/\n&ELECTRONS\n/\n"
+                f"ATOMIC_SPECIES\n{sp}CELL_PARAMETERS angstrom\n{cl}ATOMIC_POSITIONS angstrom\n{ps}K_POINTS gamma\n")
+
+        def _qe_out(name, e_ry, p_kbar=None):
+            s = f"!    total energy              =    {e_ry:.8f} Ry\n"
+            if p_kbar is not None:
+                s += f"          total   stress  (Ry/bohr**3)                   (kbar)     P=  {p_kbar:10.2f}\n"
+            (cd / f"{name}.out").write_text(s)
+
+        box = [[10.0, 0.0, 0.0], [0.0, 10.0, 0.0], [0.0, 0.0, 10.0]]
+        _qe_in("Li2S", [("Li", (0, 0, 0)), ("Li", (1, 1, 1)), ("S", (2, 2, 2))], box)
+        _qe_in("LiCl", [("Li", (0, 0, 0)), ("Cl", (2, 2, 2))], box)
+        _qe_in("Li3PS4", [("Li", (0, 0, i)) for i in range(3)] + [("P", (3, 3, 3))]
+               + [("S", (4, 4, i)) for i in range(4)], box)
+        tA = [("Li", (0, 0, i)) for i in range(4)] + [("P", (3, 3, 3))] + [("S", (4, 4, i)) for i in range(5)]
+        tA += [("Li", (5, 5, 5)), ("Li", (5, 5, 6)), ("Cl", (6, 6, 6))]   # Li6PS5Cl = Li3PS4 + Li2S + LiCl
+        _qe_in("A", tA, box)
+        _qe_in("B", tA, box)
+        E = {"Li2S": -10.0, "LiCl": -8.0, "Li3PS4": -30.0}   # Ry/셀 (상 셀 = 화학식 하나)
+        for n, e in E.items():
+            _qe_out(n, e)
+        _qe_out("A", -48.10, 3.0)     # 분해보다 0.10 Ry 낮다 · 0.3 GPa
+        _qe_out("B", -48.10, 30.0)    # 같은 에너지 · 3 GPa → G_V 불통과
+        (cd / "basis.json").write_text(json.dumps({"phases": {
+            "Li2S": {"formula": {"Li": 2, "S": 1}}, "LiCl": {"formula": {"Li": 1, "Cl": 1}},
+            "Li3PS4": {"formula": {"Li": 3, "P": 1, "S": 4}}}}))
+        me = str(Path(__file__).resolve())
+        rr = subprocess.run([sys.executable, me, "--collect", "--out", str(cd), "--basis", str(cd / "basis.json"),
+                             "--bulk_modulus_GPa", "25", "--bulk_modulus_range", "21.7", "32.5",
+                             "--pair", "A", "B"], capture_output=True, text=True)
+        res = json.loads((cd / "decomp_result.json").read_text()) if (cd / "decomp_result.json").exists() else {}
+        if not res:
+            print("    (collect 출력 끝)\n" + rr.stdout[-900:] + rr.stderr[-200:])
+            res = {"targets": {"A": {"delta_E_decomp_eV_per_atom": 9e9}}}
+        pr = res.get("pair") or {}
+        want_raw = 0.10 * 13.605693122994 / 13 * 1000          # meV/atom (13 원자)
+        chk(rr.returncode == 0 and abs(res["targets"]["A"]["delta_E_decomp_eV_per_atom"] * 1000 - want_raw) < 1e-6,
+            f"--collect --basis: ΔE_decomp(A) = 0.10 Ry / 13 원자 ← rc {rr.returncode}")
+        chk(abs(pr.get("Y_raw_meV_per_atom", 9) - 0.0) < 1e-9, "Y (보정 전) = 0 (두 타깃 에너지 같음)")
+        vA, vB = volume_correction_eV(3.0, 1000.0, 25.0), volume_correction_eV(30.0, 1000.0, 25.0)
+        chk(abs(pr.get("Y_corrected_meV_per_atom", {}).get("25.0", 9) - (-(vA - vB) / 13 * 1000)) < 1e-6,
+            "Y (보정) = −(ΔE_V,A − ΔE_V,B)/N — B 셀이 더 내려간 만큼 A 가 상대적으로 덜 안정")
+        chk(pr.get("G_V_pass") is False and "G_V 불통과" in rr.stdout,
+            "★ [음성] 3 GPa 셀이 끼면 G_V 불통과 — 보정값을 결과로 쓰지 않는다고 찍는다")
+        chk("Li3PS4" in res.get("phase_pulay_meV_per_atom", {}) and res["phase_pulay_meV_per_atom"]["Li3PS4"] is None,
+            "끝 SCF 없는 상 출력 → Pulay None (지어내지 않는다)")
+        _qe_out("B", -48.10)          # 압력 줄 없음 → 보정 못 함 (0 으로 안 둔다)
+        rr2 = subprocess.run([sys.executable, me, "--collect", "--out", str(cd), "--basis", str(cd / "basis.json"),
+                              "--bulk_modulus_GPa", "25", "--pair", "A", "B"], capture_output=True, text=True)
+        res2 = json.loads((cd / "decomp_result.json").read_text())
+        chk(res2["targets"]["B"].get("volume_correction", "x") is None and "보정 못 함" in rr2.stdout
+            and res2["pair"]["G_V_pass"] is None,
+            "★ [음성] 압력 줄이 없으면 보정 None · G_V 판정 None (0 으로 두지 않는다)")
+        # --prepare (MP 없이 --phase_structs) — pseudo_dir 이 이 기계에 없을 때 --pseudo_map 을 쓴다
+        try:
+            from ase.io import write as _w
+            from ase import Atoms as _A
+            sd = td / "ps"; sd.mkdir()
+            _w(str(sd / "Li2S.cif"), _A("Li2S", positions=[[0, 0, 0], [1.4, 1.4, 1.4], [2.8, 2.8, 0]],
+                                        cell=[[0, 2.85, 2.85], [2.85, 0, 2.85], [2.85, 2.85, 0]], pbc=True))
+            _w(str(sd / "LiCl.cif"), _A("LiCl", positions=[[0, 0, 0], [2.57, 0, 0]],
+                                        cell=[[0, 2.57, 2.57], [2.57, 0, 2.57], [2.57, 2.57, 0]], pbc=True))
+            (td / "b2.json").write_text(json.dumps({"phases": {
+                "Li2S": {"formula": {"Li": 2, "S": 1}}, "LiCl": {"formula": {"Li": 1, "Cl": 1}}}}))
+            _w(str(td / "host.xyz"), _A("Li3SCl", positions=[[0, 0, 0], [1, 1, 1], [2, 2, 2], [3, 3, 3], [4, 4, 4]],
+                                        cell=[8, 8, 8], pbc=True), format="extxyz")
+            base = [sys.executable, me, "--prepare", "--basis", str(td / "b2.json"), "--phase_structs", str(sd),
+                    "--targets", str(td / "host.xyz"), "--pseudo_dir", "/nonexistent/pseudo",
+                    "--calculation", "relax", "--calculation_phase", "vc-relax", "--kspacing_phase", "0.25",
+                    "--ecutwfc", "70", "--ecutrho", "560", "--conv_thr", "1.0d-9", "--mixing_beta", "0.3"]
+            r3 = subprocess.run(base + ["--out", str(td / "p1"), "--pseudo_map", "Li=Li.paw.UPF,S=S.paw.UPF"],
+                                capture_output=True, text=True)
+            chk(r3.returncode == 3 and not (td / "p1" / "in").exists(),
+                "★ [음성] pseudo_dir 이 없는 기계에서 --pseudo_map 에 Cl 이 빠지면 **입력을 안 쓴다** (끝 3)")
+            r4 = subprocess.run(base + ["--out", str(td / "p2"),
+                                        "--pseudo_map", "Li=Li.paw.UPF,S=S.paw.UPF,Cl=Cl.paw.UPF"],
+                                capture_output=True, text=True)
+            li2s = (td / "p2" / "in" / "Li2S.in").read_text() if (td / "p2" / "in" / "Li2S.in").exists() else ""
+            hst = (td / "p2" / "in" / "host.in").read_text() if (td / "p2" / "in" / "host.in").exists() else ""
+            chk(r4.returncode == 0 and "Li.paw.UPF" in li2s and "li_pbe" not in li2s
+                and "calculation = 'vc-relax'" in li2s and "calculation = 'relax'" in hst
+                and "conv_thr     = 1.0d-9" in li2s and "mixing_beta  = 0.3" in li2s,
+                f"--prepare: --pseudo_map 이름 · 상 vc-relax · 타깃 relax · 설정을 그대로 쓴다 ← rc {r4.returncode}")
+            kl = [ln for ln in li2s.splitlines() if ln.strip() and ln.strip()[0].isdigit()][-1].split()[:3] if li2s else []
+            chk(kl == kmesh_from_spacing([[0, 2.85, 2.85], [2.85, 0, 2.85], [2.85, 2.85, 0]], 0.25).split(),
+                f"상 k 를 간격 0.25 로 셈한다 ← {kl}")
+        except ImportError:
+            chk(False, "ase 가 없어 --prepare 시험을 못 했다")
+
     print(f"selftest {'PASS' if not n_bad else 'FAIL'} — {n_ok} ok, {n_bad} bad")
     return 1 if n_bad else 0
 
@@ -449,6 +714,26 @@ def main():
                          "고에너지 다형체를 기저로 쓰면 비교 전체가 그만큼 밀린다.")
     ap.add_argument("--kpoints_phase", default="4 4 4",
                     help="기저 상은 작아서 k 를 더 촘촘히 (기본 4 4 4)")
+    # ── 2026-10-23 확장 (Nd Q2) ────────────────────────────────────────────
+    ap.add_argument("--basis", help="기저 파일 (json · phases · per_target) — 없으면 Y 5 상")
+    ap.add_argument("--phase_structs", help="상 구조 폴더 (<상>.cif) — 주면 MP 를 안 부른다")
+    ap.add_argument("--save_phase_structs", help="MP 에서 받은 상 구조를 <폴더>/<상>.cif 로 남긴다")
+    ap.add_argument("--kspacing_phase", type=float,
+                    help="상 k 간격 (Å⁻¹ · 2π 포함) — 주면 --kpoints_phase 대신 상마다 셈")
+    ap.add_argument("--calculation_phase", choices=["scf", "relax", "vc-relax"],
+                    help="상 계산 (안 주면 --calculation 과 같다)")
+    ap.add_argument("--smearing", default="mv")
+    ap.add_argument("--degauss", type=float, default=0.01)
+    ap.add_argument("--conv_thr", default="1.0d-8")
+    ap.add_argument("--mixing_beta", type=float, default=0.2)
+    ap.add_argument("--bulk_modulus_GPa", type=float,
+                    help="--collect: 압력 어림 ΔE_V = −P²V/(2B) 의 중심 B (GPa) — 주면 보정한다")
+    ap.add_argument("--bulk_modulus_range", type=float, nargs=2, metavar=("BMIN", "BMAX"),
+                    help="--collect: 보정 폭을 볼 B 범위 (GPa)")
+    ap.add_argument("--pair", nargs=2, metavar=("A", "B"),
+                    help="--collect: Y = ΔE_decomp(A) − ΔE_decomp(B) (meV/atom) 와 G_V · 분해능")
+    ap.add_argument("--resolution_meV", type=float, default=2.0,
+                    help="--collect --pair: |Y| 가 이 안이면 '구분 못 함' (카드 §4 분해능)")
     a = ap.parse_args()
 
     if a.selftest:
@@ -457,32 +742,58 @@ def main():
         print("⛔ --out 이 필요하다")
         return 2
     out = Path(a.out)
+    if a.basis:
+        try:
+            basis, mpids, per_target = load_basis(a.basis)
+        except (ValueError, OSError, json.JSONDecodeError) as e:
+            print(f"⛔ --basis 를 못 읽었다 — {e}")
+            return 2
+    else:
+        basis, mpids, per_target = DEFAULT_BASIS, BASIS_MPID, {}
 
     if a.prepare:
         import os
         from ase.io import read
         from generate_dft_inputs import generate_pwin
         key = os.environ.get("MP_API_KEY")
-        if not key:
-            print("⛔ MP_API_KEY 가 없다 (기저 상 구조를 받아야 한다)")
+        if not key and not a.phase_structs:
+            print("⛔ MP_API_KEY 가 없다 (기저 상 구조를 받아야 한다 — 아니면 --phase_structs)")
             return 2
         if not a.targets:
             print("⛔ --targets 가 필요하다")
             return 2
-        from mp_api.client import MPRester
-        from pymatgen.io.ase import AseAtomsAdaptor
         from generate_dft_inputs import PSEUDOS, PSEUDO_DIR_KISTI
-        ad = AseAtomsAdaptor()
         offhull, need_pp, pending, mp_used = [], set(), [], {}
+        calc_phase = a.calculation_phase or a.calculation
+
+        def _phase_k(at):
+            return kmesh_from_spacing(at.cell, a.kspacing_phase) if a.kspacing_phase else a.kpoints_phase
         pdir = Path(a.pseudo_dir or PSEUDO_DIR_KISTI)
         print(f"pseudo_dir = {pdir}"
               + ("" if a.pseudo_dir else "   ⚠ 기본값(KISTI) — 다른 머신이면 --pseudo_dir 를 줄 것"))
         pp_names = dict(x.split("=", 1) for x in (a.pseudo_map or "").split(",") if x)
         if pp_names:
             print(f"  · 수동 지정 {pp_names}")
-        with MPRester(key) as mpr:
-            for name in DEFAULT_BASIS:
-                mpid = BASIS_MPID.get(name)
+        if a.phase_structs:
+            # MP 를 부르지 않는다 — 폴더의 <상>.cif 를 그대로 쓴다 (키 없는 기계에서 입력을 쓸 때)
+            for name in basis:
+                f = Path(a.phase_structs) / f"{name}.cif"
+                if not f.is_file():
+                    print(f"  ⛔ {name}: {f} 가 없다")
+                    offhull.append(name)
+                    continue
+                at = read(str(f))
+                pending.append((name, at, _phase_k(at), not a.phase_symmetry))
+                mp_used[name] = {"mp_id": mpids.get(name), "n_atoms": len(at), "from": str(f)}
+                need_pp.update(at.get_chemical_symbols())
+                print(f"  ✓ {name:<8} {mpids.get(name)}  {len(at)} atoms  (← {f.name} · k {_phase_k(at)})")
+        else:
+          from mp_api.client import MPRester
+          from pymatgen.io.ase import AseAtomsAdaptor
+          ad = AseAtomsAdaptor()
+          with MPRester(key) as mpr:
+            for name in basis:
+                mpid = mpids.get(name)
                 kw = ({"material_ids": [mpid]} if mpid else {"formula": name})
                 docs = mpr.materials.summary.search(
                     fields=["material_id", "structure", "energy_above_hull"], **kw)
@@ -505,10 +816,15 @@ def main():
                         offhull.append(name)
                         continue
                 at = ad.get_atoms(d.structure)
-                pending.append((name, at, a.kpoints_phase,
+                pending.append((name, at, _phase_k(at),
                                 not a.phase_symmetry))
                 mp_used[name] = {"mp_id": d.material_id, "n_atoms": len(at),
                                  "mp_e_above_hull": float(d.energy_above_hull)}
+                if a.save_phase_structs:
+                    sd = Path(a.save_phase_structs)
+                    sd.mkdir(parents=True, exist_ok=True)
+                    d.structure.to(filename=str(sd / f"{name}.cif"))
+                    mp_used[name]["saved_cif"] = str(sd / f"{name}.cif")
                 need_pp.update(at.get_chemical_symbols())
                 print(f"  ✓ {name:<8} {d.material_id}  {len(at)} atoms  "
                       f"(MP e_hull {d.energy_above_hull:.4f})")
@@ -532,7 +848,18 @@ def main():
                 else:
                     unresolved[e] = why
         else:
-            resolved = {e: PSEUDOS[e][1] for e in sorted(need_pp) if e in PSEUDOS}
+            # ⛔ 2026-10-23 — 이 기계에 pseudo_dir 이 없을 때 예전엔 --pseudo_map 을 무시하고
+            #   PSEUDOS 기본 이름을 조용히 썼다 (Nd 기본값 = 4f 원자가 atompaw — frozen-4f 계산이
+            #   다른 PP 로 바뀐다). 이제 --pseudo_map 을 쓰고, 빠진 원소가 있으면 거부한다.
+            miss = [e for e in sorted(need_pp) if e not in pp_names]
+            if pp_names and not miss:
+                resolved = {e: pp_names[e] for e in sorted(need_pp)}
+            elif pp_names:
+                unresolved = {e: "--pseudo_map 에 없다 (이 기계에 pseudo_dir 이 없어 파일로 못 찾는다)"
+                              for e in miss}
+            else:
+                resolved = {e: PSEUDOS[e][1] for e in sorted(need_pp) if e in PSEUDOS}
+                print(f"  ⚠ pseudo_dir 이 이 기계에 없고 --pseudo_map 도 없다 — 기본 이름을 쓴다: {resolved}")
 
         if unresolved:
             print(f"\n  ⛔ pseudo 를 못 정한 원소 {len(unresolved)}개 — "
@@ -543,10 +870,18 @@ def main():
             return 3
         (out / "in").mkdir(parents=True, exist_ok=True)
         for name, at, kp, nosym in pending:
-            (out / "in" / f"{name}.in").write_text(
-                generate_pwin(at, name, a.ecutwfc, a.ecutrho, kp,
-                              pseudo_dir=str(pdir), pp_names=resolved,
-                              calculation=a.calculation, nosym=nosym))
+            txt = generate_pwin(at, name, a.ecutwfc, a.ecutrho, kp,
+                                pseudo_dir=str(pdir), pp_names=resolved,
+                                calculation=(calc_phase if name in basis else a.calculation),
+                                nosym=nosym, conv_thr=a.conv_thr, mixing_beta=a.mixing_beta,
+                                smearing=a.smearing, degauss=a.degauss)
+            # 쓴 입력의 PP 이름이 정한 것과 같은지 (generate_pwin 의 기본값으로 새지 않았는지)
+            sp = re.search(r"ATOMIC_SPECIES\n(.*?)\nCELL_PARAMETERS", txt, re.S).group(1).split("\n")
+            got = {ln.split()[0]: ln.split()[2] for ln in sp if ln.strip()}
+            if any(got.get(e) != resolved.get(e) for e in got):
+                print(f"  ⛔ {name}: 입력의 PP {got} 가 정한 것 {resolved} 와 다르다 — 쓰지 않았다")
+                return 3
+            (out / "in" / f"{name}.in").write_text(txt)
 
         if pdir.is_dir():
             print(f"\n  ▸ pseudo 해결 ({len(resolved)}종)")
@@ -576,11 +911,17 @@ def main():
                 "relax — DFT 가 기하까지 정한다. 수렴 여부를 출력에서 확인할 것."),
             "ecutwfc": a.ecutwfc, "ecutrho": a.ecutrho,
             "kpoints_target": a.kpoints, "kpoints_phase": a.kpoints_phase,
-            "basis": DEFAULT_BASIS, "basis_mp": mp_used,
+            "basis": basis, "basis_mp": mp_used, "per_target": per_target,
+            "basis_file": a.basis, "basis_file_sha256": (
+                __import__("hashlib").sha256(Path(a.basis).read_bytes()).hexdigest() if a.basis else None),
+            "calculation_phase": calc_phase, "kspacing_phase": a.kspacing_phase,
+            "phase_kpoints": {n: k for n, _, k, _ in pending if n in basis},
+            "smearing": a.smearing, "degauss": a.degauss, "conv_thr": a.conv_thr,
+            "mixing_beta": a.mixing_beta,
             "targets": [str(x) for x in a.targets],
             "⛔_do_not": "E_above_hull 로 인용 금지. 5상 공통기저 안의 상대 비교다.",
         }, indent=2, ensure_ascii=False))
-        print(f"\n✓ 입력 → {out/'in'}   (기저 {len(DEFAULT_BASIS)} + 타깃 {len(a.targets)})")
+        print(f"\n✓ 입력 → {out/'in'}   (기저 {len(basis)} + 타깃 {len(a.targets)})")
         print(f"✓ 설정 기록 → {out/'prepare_provenance.json'}")
         return 0
 
@@ -588,7 +929,7 @@ def main():
         import collections
         from ase.io import read
         phase_E, phase_Z, missing, badnorm = {}, {}, [], []
-        for name, formula in DEFAULT_BASIS.items():
+        for name, formula in basis.items():
             e = parse_qe_total(out / f"{name}.out")
             if e is None:
                 missing.append(name)
@@ -611,10 +952,23 @@ def main():
             return 3
         print(f"  기저 {len(phase_E)}상 (셀당 → 화학식당, Z = "
               + ", ".join(f"{n}×{phase_Z[n]}" for n in phase_E) + ")")
+        # 상 Pulay (vc-relax 끝 SCF 대 마지막 BFGS) — 끝 SCF 가 없으면 None (지어내지 않는다)
+        pulay = {}
+        for name in phase_E:
+            pc, _, _ = target_composition(name, out, None)
+            pulay[name] = pulay_gap_meV_per_atom(out / f"{name}.out", sum(pc.values()) if pc else 0)
+        bad_pulay = {n: v for n, v in pulay.items() if v is not None and v > PULAY_MAX_MEV}
+        if any(v is not None for v in pulay.values()):
+            print("  상 Pulay (끝 SCF − 마지막 BFGS, meV/원자): "
+                  + ", ".join(f"{n} {'—' if v is None else f'{v:.3f}'}" for n, v in pulay.items())
+                  + (f"   ⛔ {PULAY_MAX_MEV} 넘음: {sorted(bad_pulay)} — 끝 구조에서 한 번 더" if bad_pulay else "   ✓"))
+        Bs = []
+        if a.bulk_modulus_GPa:
+            Bs = [a.bulk_modulus_GPa] + (list(a.bulk_modulus_range) if a.bulk_modulus_range else [])
         rows = []
         for f in sorted(out.glob("*.out")):
             stem = f.stem
-            if stem in DEFAULT_BASIS:
+            if stem in basis:
                 continue
             E = parse_qe_total(f)
             comp, csrc, cwhy = target_composition(stem, out, a.struct_dir)
@@ -628,10 +982,29 @@ def main():
             if comp is None:
                 print(f"  ⛔ {stem}: 조성을 못 정했다 — {cwhy}")
                 continue
-            r, info = decomp_energy(comp, E, phase_E)
+            bsub = ({n: basis[n] for n in per_target[stem]} if stem in per_target else basis)
+            r, info = decomp_energy(comp, E, {n: phase_E[n] for n in bsub}, bsub)
             if r is None:
                 print(f"  ⛔ {stem}: {info.get('why')}")
                 continue
+            r["basis_used"] = sorted(bsub)
+            if Bs:
+                pk = parse_qe_pressure_kbar(f)
+                try:
+                    vol = float(read(str(out / "in" / f"{stem}.in"), format="espresso-in").get_volume())
+                except Exception as e:                       # noqa: BLE001
+                    vol, why_v = None, f"{type(e).__name__}"
+                r["P_kbar"], r["V_A3"] = pk, vol
+                if pk is None or vol is None:
+                    r["volume_correction"] = None
+                    print(f"  ⚠ {stem}: 압력 {pk} · 부피 {vol} — 보정 못 함 (0 으로 두지 않는다)")
+                else:
+                    dev = {str(B): float(volume_correction_eV(pk, vol, B)) for B in Bs}
+                    r["volume_correction"] = {
+                        "B_GPa": Bs, "dE_V_eV": dev,
+                        "delta_E_decomp_corrected_eV_per_atom": {
+                            k: float(r["delta_E_decomp_eV_per_atom"] - v / r["n_atoms"]) for k, v in dev.items()},
+                        "G_V_P_ok": bool(abs(pk) / 10.0 <= GV_MAX_P_GPA)}
             # ★ 정신차림 검사 — 물리적으로 불가능한 크기면 **찍지 말고 죽는다**.
             #   화면에 -532 eV/atom 이 찍히고 '★ 더 안정' 까지 나온 게 실제 사고였다(2026-08-26).
             de = r["delta_E_decomp_eV_per_atom"]
@@ -646,6 +1019,41 @@ def main():
             print(f"  {stem:<24} ΔE_decomp = "
                   f"{r['delta_E_decomp_eV_per_atom']*1000:+8.1f} meV/atom  "
                   f"(원자 {r['n_atoms']} · 조성 ← {csrc})")
+        pair = None
+        if a.pair and rows:
+            R = dict(rows)
+            A_, B_ = a.pair
+            if A_ not in R or B_ not in R:
+                print(f"⛔ --pair {A_} {B_}: 점수를 못 매긴 쪽이 있다 ({sorted(R)})")
+                return 4
+            ya = float((R[A_]["delta_E_decomp_eV_per_atom"] - R[B_]["delta_E_decomp_eV_per_atom"]) * 1000)
+            pair = {"A": A_, "B": B_, "Y_raw_meV_per_atom": ya}
+            ca, cb = R[A_].get("volume_correction"), R[B_].get("volume_correction")
+            if Bs and ca and cb:
+                yc = {k: float((ca["delta_E_decomp_corrected_eV_per_atom"][k]
+                                - cb["delta_E_decomp_corrected_eV_per_atom"][k]) * 1000) for k in ca["dE_V_eV"]}
+                dd = {k: float(abs(ca["dE_V_eV"][k] / R[A_]["n_atoms"] - cb["dE_V_eV"][k] / R[B_]["n_atoms"]) * 1000)
+                      for k in ca["dE_V_eV"]}
+                gv = bool(ca["G_V_P_ok"] and cb["G_V_P_ok"] and max(dd.values()) <= GV_MAX_PAIR_MEV)
+                pair.update({"Y_corrected_meV_per_atom": yc, "pair_correction_diff_meV_per_atom": dd,
+                             "G_V_pass": gv})
+                y0 = yc[str(Bs[0])]
+            else:
+                pair["G_V_pass"] = None
+                y0 = ya
+            pair["Y_report_meV_per_atom"] = y0
+            pair["within_resolution"] = bool(abs(y0) <= a.resolution_meV)
+            pair["resolution_meV"] = a.resolution_meV
+            print(f"\n★ Y = ΔE_decomp({A_}) − ΔE_decomp({B_}) = {ya:+.2f} meV/atom (보정 전)"
+                  + (f" · 보정 (B {Bs[0]:g}) {y0:+.2f} · 범위 "
+                     + " · ".join(f"B {k}: {v:+.2f}" for k, v in pair['Y_corrected_meV_per_atom'].items())
+                     if "Y_corrected_meV_per_atom" in pair else ""))
+            if pair["G_V_pass"] is False:
+                print(f"  ⛔ G_V 불통과 (|P| > {GV_MAX_P_GPA} GPa 또는 셀 간 보정 차 > {GV_MAX_PAIR_MEV} meV/atom) "
+                      f"— 보정값을 결과로 쓰지 않는다 · 그 셀만 EOS (새 결정)")
+            print(f"  분해능 {a.resolution_meV:g} meV/atom → "
+                  + ("'구분 못 함' 문장만" if pair["within_resolution"]
+                     else f"Y < 0 이면 {A_} 의 분해 구동력이 더 크다 · Y > 0 이면 더 작다"))
         if len(rows) >= 2:
             rows.sort(key=lambda x: -x[1]["delta_E_decomp_eV_per_atom"])
             gap = (rows[0][1]["delta_E_decomp_eV_per_atom"]
@@ -661,7 +1069,8 @@ def main():
                   f"위 ⛔ 줄이 어느 단계에서 막혔는지 말해 준다.")
             return 4
         (out / "decomp_result.json").write_text(json.dumps(
-            {"phase_E_eV": phase_E, "basis": DEFAULT_BASIS,
+            {"phase_E_eV": phase_E, "basis": basis, "per_target": per_target,
+             "phase_pulay_meV_per_atom": pulay, "pair": pair,
              "phase_formula_units_Z": phase_Z,
              "phase_E_note": "화학식당(eV/f.u.) 로 정규화된 값이다 — 셀 총에너지가 아니다",
              "targets": {k: v for k, v in rows},
