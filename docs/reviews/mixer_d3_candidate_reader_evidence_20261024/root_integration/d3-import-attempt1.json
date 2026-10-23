@@ -1,0 +1,8 @@
+{
+  "status": "SETUP_GUARD_REJECTED",
+  "main_repository_mutated": false,
+  "reason": "Deliverable filelist included four generated scripts/__pycache__ files; guard rejected before all writes",
+  "followup_test_rc": 2,
+  "followup_test_reason": "No source imported, script absent; not a code regression",
+  "resolution": "Author asked to regenerate list excluding caches"
+}

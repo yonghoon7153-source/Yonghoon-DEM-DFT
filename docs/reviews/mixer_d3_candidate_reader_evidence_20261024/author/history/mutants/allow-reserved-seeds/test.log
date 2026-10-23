@@ -1,0 +1,15 @@
+test_seed_reserved_duplicates_and_overlap (__main__.DecisionTests.test_seed_reserved_duplicates_and_overlap) ... FAIL
+
+======================================================================
+FAIL: test_seed_reserved_duplicates_and_overlap (__main__.DecisionTests.test_seed_reserved_duplicates_and_overlap)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/allow-reserved-seeds/test_mixer_d3_candidates.py", line 274, in test_seed_reserved_duplicates_and_overlap
+    with self.assertRaises(reader.ContractError): self.run_case(c, o)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ContractError not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (failures=1)

@@ -1,0 +1,117 @@
+{
+  "scope": "author mutation checks of synthetic decision tests; not independent review",
+  "source_sha256": "ea4528156e8eb9762999fef0643985bebf0b0735691202fddb4a2c17814ee7f8",
+  "test_sha256": "12155f4e420ea3b15529501562b9fd6758c2767cbfcf4e1c79d6cdd7f4034d4c",
+  "count": 12,
+  "all_detected_by_assertion": true,
+  "results": [
+    {
+      "name": "strict-boundary",
+      "target": "test_boundary_is_exact_inclusive_decimal",
+      "rc": 1,
+      "syntactically_valid": true,
+      "assertion_failed": true,
+      "unexpected_error": false,
+      "source_sha256": "b8bbde1b4722d2529d3b35574de8f76ea31c385e2282fe4a055ce37ed51aaa37"
+    },
+    {
+      "name": "union-instead-of-intersection",
+      "target": "test_calibration_states_exhaustive_81",
+      "rc": 1,
+      "syntactically_valid": true,
+      "assertion_failed": true,
+      "unexpected_error": false,
+      "source_sha256": "6853a79723e5bceaa01c02d84a5ea4590963a377b3dcabc556ec8a76fe4de7ec"
+    },
+    {
+      "name": "forget-missing-validation",
+      "target": "test_validation_states_exhaustive_81_preserves_S",
+      "rc": 1,
+      "syntactically_valid": true,
+      "assertion_failed": true,
+      "unexpected_error": false,
+      "source_sha256": "ee171bea323d852e414f1870d7988d6d2118ea40255fba1608a85f012c750003"
+    },
+    {
+      "name": "drop-failed-candidates",
+      "target": "test_validation_states_exhaustive_81_preserves_S",
+      "rc": 1,
+      "syntactically_valid": true,
+      "assertion_failed": true,
+      "unexpected_error": false,
+      "source_sha256": "3e40f4f5c6507999c2770b6f4a5e6816e6a644e0f2f26cbf46ac80df4da6baa0"
+    },
+    {
+      "name": "ignore-unknown-predictions",
+      "target": "test_unknown_fields_ids_units_rejected_even_excluded_candidate",
+      "rc": 1,
+      "syntactically_valid": true,
+      "assertion_failed": true,
+      "unexpected_error": false,
+      "source_sha256": "dd369115cbc9b259343d5d821434aad0911474f143c66b86162831f7201bbfbd"
+    },
+    {
+      "name": "trust-source-digest",
+      "target": "test_artifact_and_contract_binding",
+      "rc": 1,
+      "syntactically_valid": true,
+      "assertion_failed": true,
+      "unexpected_error": false,
+      "source_sha256": "dc5601e22c0cc4e8b5d2a5ff015313dd2ce9611c5c5a5bc4c2245304abc81ded"
+    },
+    {
+      "name": "allow-reserved-seeds",
+      "target": "test_seed_reserved_duplicates_and_overlap",
+      "rc": 1,
+      "syntactically_valid": true,
+      "assertion_failed": true,
+      "unexpected_error": false,
+      "source_sha256": "95ba9ae312806cf1fa89368288e7e7d2087ca6d8397bd698da18d29c5716da8e"
+    },
+    {
+      "name": "join-across-gap",
+      "target": "test_groups_respect_registered_topology_and_unknown_gap",
+      "rc": 1,
+      "syntactically_valid": true,
+      "assertion_failed": true,
+      "unexpected_error": false,
+      "source_sha256": "75d584121950c3f293b8fc34406958da332891e14be40673b5d44ee68e13a426"
+    },
+    {
+      "name": "empty-success",
+      "target": "test_empty_grid_result_not_validation_success",
+      "rc": 1,
+      "syntactically_valid": true,
+      "assertion_failed": true,
+      "unexpected_error": false,
+      "source_sha256": "95dcded05b29f6f1f9e110d4f62b2a1dbbcc5c2bb5dfd202d5465901ba8fc7bc"
+    },
+    {
+      "name": "ignore-unit-mismatch",
+      "target": "test_unknown_fields_ids_units_rejected_even_excluded_candidate",
+      "rc": 1,
+      "syntactically_valid": true,
+      "assertion_failed": true,
+      "unexpected_error": false,
+      "source_sha256": "0bf951fef1cd0b7c1e1ae7b10105636a1d8903f7599ed98757f464452c9aeb79"
+    },
+    {
+      "name": "flat-is-missing",
+      "target": "test_flat_valid_response_keeps_candidates_without_identifiability_claim",
+      "rc": 1,
+      "syntactically_valid": true,
+      "assertion_failed": true,
+      "unexpected_error": false,
+      "source_sha256": "2e5a168d8977238e3d332ccb453adb0ad513b4c3f86f98f2c9e7b2d983a7e137"
+    },
+    {
+      "name": "binary-float-boundary",
+      "target": "test_boundary_is_exact_inclusive_decimal",
+      "rc": 1,
+      "syntactically_valid": true,
+      "assertion_failed": true,
+      "unexpected_error": false,
+      "source_sha256": "0328160a4aeeb757082a88753c3d1ed2f1050de789a602f20d7fc43f0d4946c8"
+    }
+  ]
+}

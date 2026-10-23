@@ -1,0 +1,56 @@
+{
+  "schema": "mixer_d3_decision_contract/1",
+  "analysis_id": "synthetic-test",
+  "condition_sha256": "f3c56c473620a9b7ada44ea021d4260fb8e4f34a54eca13b7b91a7d53ba30c95",
+  "grid": [
+    {
+      "id": "b1",
+      "bo": 1
+    },
+    {
+      "id": "b2",
+      "bo": 2
+    }
+  ],
+  "calibration": {
+    "T1": {
+      "unit": "synthetic-unit",
+      "boundary": "inclusive",
+      "widths": {
+        "b1": 0.5,
+        "b2": 0.5
+      }
+    },
+    "T2": {
+      "unit": "synthetic-unit",
+      "boundary": "inclusive",
+      "widths": {
+        "b1": 0.5,
+        "b2": 0.5
+      }
+    }
+  },
+  "validation": {
+    "v1": {
+      "kind": "scalar",
+      "unit": "synthetic-unit",
+      "boundary": "inclusive",
+      "widths": {
+        "b1": 0.5,
+        "b2": 0.5
+      }
+    },
+    "v2": {
+      "kind": "categorical",
+      "unit": "synthetic-state",
+      "rule": "exact-match",
+      "labels": [
+        "flow",
+        "stopped"
+      ]
+    }
+  },
+  "seed_policy": {
+    "allowed_role_overlap": []
+  }
+}

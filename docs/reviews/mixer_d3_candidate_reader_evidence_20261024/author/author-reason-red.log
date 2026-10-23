@@ -1,0 +1,15 @@
+test_eligible_reason_is_validated_and_preserved (__main__.DecisionTests.test_eligible_reason_is_validated_and_preserved) ... ERROR
+
+======================================================================
+ERROR: test_eligible_reason_is_validated_and_preserved (__main__.DecisionTests.test_eligible_reason_is_validated_and_preserved)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/deliverables/scripts/test_mixer_d3_candidates.py", line 195, in test_eligible_reason_is_validated_and_preserved
+    self.assertEqual(result["calibration"]["T1"][0]["prediction"]["declared_reason"], point["reason"])
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+KeyError: 'declared_reason'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (errors=1)

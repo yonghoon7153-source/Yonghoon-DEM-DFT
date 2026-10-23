@@ -1,0 +1,26 @@
+{
+  "control": {
+    "rc": 0,
+    "output_exists": true,
+    "stdout": "{\"output\": \"/tmp/tmpufv3oe6w/result.json\", \"candidate_count\": 3, \"validation\": \"all-compatible\", \"execution_ready\": false}\n",
+    "stderr": ""
+  },
+  "huge_positive_exponent": {
+    "rc": 2,
+    "output_exists": false,
+    "stdout": "",
+    "stderr": "D3_CONTRACT_ERROR: JSON: [<class 'decimal.InvalidOperation'>]\n"
+  },
+  "huge_negative_exponent": {
+    "rc": 2,
+    "output_exists": false,
+    "stdout": "",
+    "stderr": "D3_CONTRACT_ERROR: JSON: [<class 'decimal.InvalidOperation'>]\n"
+  },
+  "duplicate": {
+    "rc": 2,
+    "output_exists": false,
+    "stdout": "",
+    "stderr": "D3_CONTRACT_ERROR: JSON: duplicate key 'bo'\n"
+  }
+}

@@ -1,0 +1,918 @@
+test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) ... 
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'compatible', 'compatible', 'incompatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'compatible', 'compatible', 'unassessed')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'compatible', 'incompatible', 'compatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'compatible', 'incompatible', 'incompatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'compatible', 'incompatible', 'unassessed')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'compatible', 'unassessed', 'compatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'compatible', 'unassessed', 'incompatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'compatible', 'unassessed', 'unassessed')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'incompatible', 'compatible', 'compatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'incompatible', 'incompatible', 'compatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'incompatible', 'incompatible', 'incompatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'incompatible', 'incompatible', 'unassessed')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'incompatible', 'unassessed', 'compatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'incompatible', 'unassessed', 'incompatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'incompatible', 'unassessed', 'unassessed')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'unassessed', 'compatible', 'compatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'unassessed', 'incompatible', 'compatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'unassessed', 'incompatible', 'incompatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'unassessed', 'incompatible', 'unassessed')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'unassessed', 'unassessed', 'compatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'unassessed', 'unassessed', 'incompatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'unassessed', 'unassessed', 'unassessed')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('incompatible', 'compatible', 'compatible', 'compatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('incompatible', 'compatible', 'compatible', 'incompatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('incompatible', 'compatible', 'compatible', 'unassessed')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('incompatible', 'compatible', 'incompatible', 'incompatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('incompatible', 'compatible', 'incompatible', 'unassessed')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('incompatible', 'compatible', 'unassessed', 'incompatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('incompatible', 'compatible', 'unassessed', 'unassessed')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('incompatible', 'incompatible', 'compatible', 'compatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('incompatible', 'incompatible', 'compatible', 'incompatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('incompatible', 'incompatible', 'compatible', 'unassessed')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('incompatible', 'incompatible', 'incompatible', 'compatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('incompatible', 'incompatible', 'unassessed', 'compatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('incompatible', 'unassessed', 'compatible', 'compatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('incompatible', 'unassessed', 'compatible', 'incompatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('incompatible', 'unassessed', 'compatible', 'unassessed')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('incompatible', 'unassessed', 'incompatible', 'compatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('incompatible', 'unassessed', 'unassessed', 'compatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('unassessed', 'compatible', 'compatible', 'compatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('unassessed', 'compatible', 'compatible', 'incompatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('unassessed', 'compatible', 'compatible', 'unassessed')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('unassessed', 'compatible', 'incompatible', 'incompatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('unassessed', 'compatible', 'incompatible', 'unassessed')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('unassessed', 'compatible', 'unassessed', 'incompatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('unassessed', 'compatible', 'unassessed', 'unassessed')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('unassessed', 'incompatible', 'compatible', 'compatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('unassessed', 'incompatible', 'compatible', 'incompatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('unassessed', 'incompatible', 'compatible', 'unassessed')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('unassessed', 'incompatible', 'incompatible', 'compatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('unassessed', 'incompatible', 'unassessed', 'compatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('unassessed', 'unassessed', 'compatible', 'compatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('unassessed', 'unassessed', 'compatible', 'incompatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('unassessed', 'unassessed', 'compatible', 'unassessed')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('unassessed', 'unassessed', 'incompatible', 'compatible')) ... FAIL
+  test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('unassessed', 'unassessed', 'unassessed', 'compatible')) ... FAIL
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'compatible', 'compatible', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1', 'b2'] != ['b1']
+
+First list contains 1 additional elements.
+First extra element 1:
+'b2'
+
+- ['b1', 'b2']
++ ['b1']
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'compatible', 'compatible', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1', 'b2'] != ['b1']
+
+First list contains 1 additional elements.
+First extra element 1:
+'b2'
+
+- ['b1', 'b2']
++ ['b1']
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'compatible', 'incompatible', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1', 'b2'] != ['b2']
+
+First differing element 0:
+'b1'
+'b2'
+
+First list contains 1 additional elements.
+First extra element 1:
+'b2'
+
+- ['b1', 'b2']
++ ['b2']
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'compatible', 'incompatible', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1', 'b2'] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- ['b1', 'b2']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'compatible', 'incompatible', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1', 'b2'] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- ['b1', 'b2']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'compatible', 'unassessed', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1', 'b2'] != ['b2']
+
+First differing element 0:
+'b1'
+'b2'
+
+First list contains 1 additional elements.
+First extra element 1:
+'b2'
+
+- ['b1', 'b2']
++ ['b2']
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'compatible', 'unassessed', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1', 'b2'] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- ['b1', 'b2']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'compatible', 'unassessed', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1', 'b2'] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- ['b1', 'b2']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'incompatible', 'compatible', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1', 'b2'] != ['b1']
+
+First list contains 1 additional elements.
+First extra element 1:
+'b2'
+
+- ['b1', 'b2']
++ ['b1']
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'incompatible', 'incompatible', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1', 'b2'] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- ['b1', 'b2']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'incompatible', 'incompatible', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'b1'
+
+- ['b1']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'incompatible', 'incompatible', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'b1'
+
+- ['b1']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'incompatible', 'unassessed', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1', 'b2'] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- ['b1', 'b2']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'incompatible', 'unassessed', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'b1'
+
+- ['b1']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'incompatible', 'unassessed', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'b1'
+
+- ['b1']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'unassessed', 'compatible', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1', 'b2'] != ['b1']
+
+First list contains 1 additional elements.
+First extra element 1:
+'b2'
+
+- ['b1', 'b2']
++ ['b1']
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'unassessed', 'incompatible', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1', 'b2'] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- ['b1', 'b2']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'unassessed', 'incompatible', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'b1'
+
+- ['b1']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'unassessed', 'incompatible', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'b1'
+
+- ['b1']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'unassessed', 'unassessed', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1', 'b2'] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- ['b1', 'b2']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'unassessed', 'unassessed', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'b1'
+
+- ['b1']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('compatible', 'unassessed', 'unassessed', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'b1'
+
+- ['b1']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('incompatible', 'compatible', 'compatible', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1', 'b2'] != ['b2']
+
+First differing element 0:
+'b1'
+'b2'
+
+First list contains 1 additional elements.
+First extra element 1:
+'b2'
+
+- ['b1', 'b2']
++ ['b2']
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('incompatible', 'compatible', 'compatible', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1', 'b2'] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- ['b1', 'b2']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('incompatible', 'compatible', 'compatible', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1', 'b2'] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- ['b1', 'b2']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('incompatible', 'compatible', 'incompatible', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b2'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'b2'
+
+- ['b2']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('incompatible', 'compatible', 'incompatible', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b2'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'b2'
+
+- ['b2']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('incompatible', 'compatible', 'unassessed', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b2'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'b2'
+
+- ['b2']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('incompatible', 'compatible', 'unassessed', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b2'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'b2'
+
+- ['b2']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('incompatible', 'incompatible', 'compatible', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1', 'b2'] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- ['b1', 'b2']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('incompatible', 'incompatible', 'compatible', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'b1'
+
+- ['b1']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('incompatible', 'incompatible', 'compatible', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'b1'
+
+- ['b1']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('incompatible', 'incompatible', 'incompatible', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b2'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'b2'
+
+- ['b2']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('incompatible', 'incompatible', 'unassessed', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b2'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'b2'
+
+- ['b2']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('incompatible', 'unassessed', 'compatible', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1', 'b2'] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- ['b1', 'b2']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('incompatible', 'unassessed', 'compatible', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'b1'
+
+- ['b1']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('incompatible', 'unassessed', 'compatible', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'b1'
+
+- ['b1']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('incompatible', 'unassessed', 'incompatible', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b2'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'b2'
+
+- ['b2']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('incompatible', 'unassessed', 'unassessed', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b2'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'b2'
+
+- ['b2']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('unassessed', 'compatible', 'compatible', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1', 'b2'] != ['b2']
+
+First differing element 0:
+'b1'
+'b2'
+
+First list contains 1 additional elements.
+First extra element 1:
+'b2'
+
+- ['b1', 'b2']
++ ['b2']
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('unassessed', 'compatible', 'compatible', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1', 'b2'] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- ['b1', 'b2']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('unassessed', 'compatible', 'compatible', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1', 'b2'] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- ['b1', 'b2']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('unassessed', 'compatible', 'incompatible', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b2'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'b2'
+
+- ['b2']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('unassessed', 'compatible', 'incompatible', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b2'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'b2'
+
+- ['b2']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('unassessed', 'compatible', 'unassessed', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b2'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'b2'
+
+- ['b2']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('unassessed', 'compatible', 'unassessed', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b2'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'b2'
+
+- ['b2']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('unassessed', 'incompatible', 'compatible', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1', 'b2'] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- ['b1', 'b2']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('unassessed', 'incompatible', 'compatible', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'b1'
+
+- ['b1']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('unassessed', 'incompatible', 'compatible', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'b1'
+
+- ['b1']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('unassessed', 'incompatible', 'incompatible', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b2'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'b2'
+
+- ['b2']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('unassessed', 'incompatible', 'unassessed', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b2'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'b2'
+
+- ['b2']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('unassessed', 'unassessed', 'compatible', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1', 'b2'] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- ['b1', 'b2']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('unassessed', 'unassessed', 'compatible', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'b1'
+
+- ['b1']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('unassessed', 'unassessed', 'compatible', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b1'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'b1'
+
+- ['b1']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('unassessed', 'unassessed', 'incompatible', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b2'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'b2'
+
+- ['b2']
++ []
+
+======================================================================
+FAIL: test_calibration_states_exhaustive_81 (__main__.DecisionTests.test_calibration_states_exhaustive_81) (combination=('unassessed', 'unassessed', 'unassessed', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/union-instead-of-intersection/test_mixer_d3_candidates.py", line 105, in test_calibration_states_exhaustive_81
+    self.assertEqual(out["S"], [b for b in ("b1", "b2") if b in accepted["T1"] and b in accepted["T2"]])
+AssertionError: Lists differ: ['b2'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'b2'
+
+- ['b2']
++ []
+
+----------------------------------------------------------------------
+Ran 1 test in 0.038s
+
+FAILED (failures=56)

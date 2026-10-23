@@ -1,0 +1,23 @@
+{
+  "reader_sha256": "3160506f199983e2ff2bcc00ab8aaa461c0cb6dea82adecd163f7cdd86b1c5ad",
+  "grid": [
+    {
+      "id": "a",
+      "bo_code": "1",
+      "bo_po_approx": "0.14814814814814814814814814814814814814814814814815"
+    },
+    {
+      "id": "b",
+      "bo_code": "2",
+      "bo_po_approx": "0.29629629629629629629629629629629629629629629629630"
+    },
+    {
+      "id": "c",
+      "bo_code": "3",
+      "bo_po_approx": "0.44444444444444444444444444444444444444444444444444"
+    }
+  ],
+  "bo_po_definition": "Bo_code / 6.75; 50 significant decimal digits",
+  "corrected_observation": "Bo_po was already reported in the frozen v1 under bo_po_approx; prior probe looked for the wrong key bo_po",
+  "D3IR-02": "WITHDRAWN_REVIEWER_ERROR"
+}

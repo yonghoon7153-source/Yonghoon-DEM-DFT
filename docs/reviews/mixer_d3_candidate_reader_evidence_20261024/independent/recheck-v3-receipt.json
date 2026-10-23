@@ -1,0 +1,26 @@
+{
+  "review_scope": "Input-conditioned finite-grid calculator, not physical qualification or external GO",
+  "reader_sha256": "ea4528156e8eb9762999fef0643985bebf0b0735691202fddb4a2c17814ee7f8",
+  "tests_sha256": "12155f4e420ea3b15529501562b9fd6758c2767cbfcf4e1c79d6cdd7f4034d4c",
+  "python": "Python 3.11.17",
+  "author_suite_reexecuted": {
+    "tests": 28,
+    "rc": 0
+  },
+  "independent_named_checks": {
+    "checks": 19,
+    "passed": 19,
+    "calibration_truth_rows_within_one_check": 729
+  },
+  "mutations": {
+    "core": 7,
+    "additional": 3,
+    "expected_assertion_failures": 10
+  },
+  "findings": {
+    "D3IR-01": "RESOLVED",
+    "D3IR-02": "WITHDRAWN_REVIEWER_ERROR"
+  },
+  "full_repository_gate": "NOT_RUN_BY_REVIEWER",
+  "actual_DEM_or_experiment_run": false
+}

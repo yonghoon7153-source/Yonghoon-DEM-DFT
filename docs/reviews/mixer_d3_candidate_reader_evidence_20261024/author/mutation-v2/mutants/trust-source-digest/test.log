@@ -1,0 +1,15 @@
+test_artifact_and_contract_binding (__main__.DecisionTests.test_artifact_and_contract_binding) ... 
+  test_artifact_and_contract_binding (__main__.DecisionTests.test_artifact_and_contract_binding) (change='bytes') ... FAIL
+
+======================================================================
+FAIL: test_artifact_and_contract_binding (__main__.DecisionTests.test_artifact_and_contract_binding) (change='bytes')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/trust-source-digest/test_mixer_d3_candidates.py", line 277, in test_artifact_and_contract_binding
+    with self.subTest(change=change), self.assertRaises(reader.ContractError): self.run_case(c, o, a)
+AssertionError: ContractError not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+FAILED (failures=1)

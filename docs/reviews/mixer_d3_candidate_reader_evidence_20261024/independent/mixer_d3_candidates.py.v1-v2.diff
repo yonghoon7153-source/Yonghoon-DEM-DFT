@@ -1,0 +1,11 @@
+--- reviewed-v1/mixer_d3_candidates.py
++++ reviewed-v2/mixer_d3_candidates.py
+@@ -107,7 +107,7 @@
+             _fail("JSON", "input exceeds byte limit")
+         return json.loads(text, object_pairs_hook=_pairs_no_duplicates, parse_float=Decimal,
+                           parse_constant=lambda token: _fail("JSON", f"nonfinite token {token}"))
+-    except (json.JSONDecodeError, UnicodeError, RecursionError, ValueError) as exc:
++    except (json.JSONDecodeError, UnicodeError, RecursionError, ValueError, InvalidOperation) as exc:
+         if isinstance(exc, ContractError):
+             raise
+         raise ContractError(f"JSON: {exc}") from exc

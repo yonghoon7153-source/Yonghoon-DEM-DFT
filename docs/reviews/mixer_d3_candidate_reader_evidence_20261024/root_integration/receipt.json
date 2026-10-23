@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "scope": "Direct tests of imported source and actual webapp display before candidate commit",
+  "reader_sha256": "ea4528156e8eb9762999fef0643985bebf0b0735691202fddb4a2c17814ee7f8",
+  "tests_command": "python -I scripts/test_mixer_d3_candidates.py",
+  "tests_count": 28,
+  "tests_rc": 0,
+  "browser_final": "browser-smoke-d3-after-reload.json",
+  "full_gate": "PENDING separate frozen candidate gate",
+  "setup_guard_records": [
+    "d3-import-attempt1.json",
+    "cache-exclusion-check.json",
+    "service-reload-d3.json"
+  ],
+  "notes": "Generated pyc files rejected before import; initial reload guard rejected different app module spelling. Source tests and browser checks passed after diagnosis; prior evidence preserved."
+}

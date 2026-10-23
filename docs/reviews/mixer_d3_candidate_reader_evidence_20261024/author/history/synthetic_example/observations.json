@@ -1,0 +1,207 @@
+{
+  "schema": "mixer_d3_observations/1",
+  "contract_sha256": "3ffe3232b2ac39dcaf031ecea36b744de4434c1ada16438fcb6733ef202ae1c1",
+  "condition_artifact": "conditions",
+  "artifacts": [
+    {
+      "id": "conditions",
+      "path": "conditions.txt",
+      "sha256": "f3c56c473620a9b7ada44ea021d4260fb8e4f34a54eca13b7b91a7d53ba30c95"
+    },
+    {
+      "id": "raw",
+      "path": "observations.txt",
+      "sha256": "3b977b79815551801efc4df43d15b0fc3d09eaefb66517a31e30127d92346e91"
+    }
+  ],
+  "calibration": {
+    "T1": {
+      "experiment": {
+        "state": "eligible",
+        "value": 10,
+        "unit": "synthetic-unit",
+        "source_ids": [
+          "raw"
+        ],
+        "uncertainty": {
+          "value": 0.1,
+          "unit": "synthetic-unit",
+          "n": 2,
+          "df": 1,
+          "method": "synthetic supplied uncertainty"
+        }
+      },
+      "predictions": {
+        "b1": {
+          "state": "eligible",
+          "value": 10,
+          "unit": "synthetic-unit",
+          "source_ids": [
+            "raw"
+          ],
+          "uncertainty": {
+            "value": 0.1,
+            "unit": "synthetic-unit",
+            "n": 2,
+            "df": 1,
+            "method": "synthetic supplied uncertainty"
+          }
+        },
+        "b2": {
+          "state": "eligible",
+          "value": 10,
+          "unit": "synthetic-unit",
+          "source_ids": [
+            "raw"
+          ],
+          "uncertainty": {
+            "value": 0.1,
+            "unit": "synthetic-unit",
+            "n": 2,
+            "df": 1,
+            "method": "synthetic supplied uncertainty"
+          }
+        }
+      }
+    },
+    "T2": {
+      "experiment": {
+        "state": "eligible",
+        "value": 10,
+        "unit": "synthetic-unit",
+        "source_ids": [
+          "raw"
+        ],
+        "uncertainty": {
+          "value": 0.1,
+          "unit": "synthetic-unit",
+          "n": 2,
+          "df": 1,
+          "method": "synthetic supplied uncertainty"
+        }
+      },
+      "predictions": {
+        "b1": {
+          "state": "eligible",
+          "value": 10,
+          "unit": "synthetic-unit",
+          "source_ids": [
+            "raw"
+          ],
+          "uncertainty": {
+            "value": 0.1,
+            "unit": "synthetic-unit",
+            "n": 2,
+            "df": 1,
+            "method": "synthetic supplied uncertainty"
+          }
+        },
+        "b2": {
+          "state": "eligible",
+          "value": 10,
+          "unit": "synthetic-unit",
+          "source_ids": [
+            "raw"
+          ],
+          "uncertainty": {
+            "value": 0.1,
+            "unit": "synthetic-unit",
+            "n": 2,
+            "df": 1,
+            "method": "synthetic supplied uncertainty"
+          }
+        }
+      }
+    }
+  },
+  "validation": {
+    "v1": {
+      "experiment": {
+        "state": "eligible",
+        "value": 10,
+        "unit": "synthetic-unit",
+        "source_ids": [
+          "raw"
+        ],
+        "uncertainty": {
+          "value": 0.1,
+          "unit": "synthetic-unit",
+          "n": 2,
+          "df": 1,
+          "method": "synthetic supplied uncertainty"
+        }
+      },
+      "predictions": {
+        "b1": {
+          "state": "eligible",
+          "value": 10,
+          "unit": "synthetic-unit",
+          "source_ids": [
+            "raw"
+          ],
+          "uncertainty": {
+            "value": 0.1,
+            "unit": "synthetic-unit",
+            "n": 2,
+            "df": 1,
+            "method": "synthetic supplied uncertainty"
+          }
+        },
+        "b2": {
+          "state": "eligible",
+          "value": 10,
+          "unit": "synthetic-unit",
+          "source_ids": [
+            "raw"
+          ],
+          "uncertainty": {
+            "value": 0.1,
+            "unit": "synthetic-unit",
+            "n": 2,
+            "df": 1,
+            "method": "synthetic supplied uncertainty"
+          }
+        }
+      }
+    },
+    "v2": {
+      "experiment": {
+        "state": "eligible",
+        "value": "flow",
+        "unit": "synthetic-state",
+        "source_ids": [
+          "raw"
+        ]
+      },
+      "predictions": {
+        "b1": {
+          "state": "eligible",
+          "value": "flow",
+          "unit": "synthetic-state",
+          "source_ids": [
+            "raw"
+          ]
+        },
+        "b2": {
+          "state": "eligible",
+          "value": "flow",
+          "unit": "synthetic-state",
+          "source_ids": [
+            "raw"
+          ]
+        }
+      }
+    }
+  },
+  "seed_manifest": {
+    "C0": [
+      101
+    ],
+    "C1": [
+      103
+    ],
+    "C2": [
+      107
+    ]
+  }
+}

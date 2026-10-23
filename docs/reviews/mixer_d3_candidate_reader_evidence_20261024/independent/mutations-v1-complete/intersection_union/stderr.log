@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3-independent/probe_independent.py", line 159, in <module>
+    evidence = run(load(args.module)); evidence['reader_sha256'] = sha(args.module.read_bytes())
+               ^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.cloud-setup/nonrint-20261024/d3-independent/probe_independent.py", line 68, in run
+    check('missing_uncertainty_UNASSESSED', r['calibration']['T1'][1]['status'] == 'UNASSESSED' and r['S'] == ['a', 'c'])
+  File "/workspace/.cloud-setup/nonrint-20261024/d3-independent/probe_independent.py", line 58, in check
+    raise AssertionError(name)
+AssertionError: missing_uncertainty_UNASSESSED

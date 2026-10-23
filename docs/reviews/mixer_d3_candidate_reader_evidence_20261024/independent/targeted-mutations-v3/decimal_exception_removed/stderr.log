@@ -1,0 +1,34 @@
+test_extreme_decimal_exponent_cli_contract_error (__main__.CliTests.test_extreme_decimal_exponent_cli_contract_error) ... FAIL
+
+======================================================================
+FAIL: test_extreme_decimal_exponent_cli_contract_error (__main__.CliTests.test_extreme_decimal_exponent_cli_contract_error)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3-independent/targeted-mutations-v3/decimal_exception_removed/test_mixer_d3_candidates.py", line 368, in test_extreme_decimal_exponent_cli_contract_error
+    self.assertEqual(result.returncode, 2, result.stderr)
+AssertionError: 1 != 2 : Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3-independent/targeted-mutations-v3/decimal_exception_removed/mixer_d3_candidates.py", line 478, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/workspace/.cloud-setup/nonrint-20261024/d3-independent/targeted-mutations-v3/decimal_exception_removed/mixer_d3_candidates.py", line 456, in main
+    observations = loads_strict(observation_bytes.decode("utf-8"))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.cloud-setup/nonrint-20261024/d3-independent/targeted-mutations-v3/decimal_exception_removed/mixer_d3_candidates.py", line 108, in loads_strict
+    return json.loads(text, object_pairs_hook=_pairs_no_duplicates, parse_float=Decimal,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.cloud-setup/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/json/__init__.py", line 359, in loads
+    return cls(**kw).decode(s)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.cloud-setup/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.cloud-setup/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/json/decoder.py", line 353, in raw_decode
+    obj, end = self.scan_once(s, idx)
+               ^^^^^^^^^^^^^^^^^^^^^^
+decimal.InvalidOperation: [<class 'decimal.InvalidOperation'>]
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.048s
+
+FAILED (failures=1)

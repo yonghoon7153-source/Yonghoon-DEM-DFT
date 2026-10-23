@@ -1,0 +1,92 @@
+{
+  "scope": "synthetic arithmetic and malformed-input probes only",
+  "checks": [
+    {
+      "name": "flat_INSENSITIVE_retained",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "missing_uncertainty_UNASSESSED",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "unknown_gap_not_bridged",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "intersection_729_truth_rows",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "validation_incomplete_precedence",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "exact_inclusive_boundary",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "just_outside_64_digit_boundary",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "large_exact_difference_1E+300",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "large_exact_difference_-1E+300",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "large_exact_difference_1E-300",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "invalid_numeric_rejected",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "reserved_seeds_nine_cases",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "undeclared_seed_overlap",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "explicit_seed_pairing_not_independence",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "changed_raw_bytes_rejected",
+      "pass": true,
+      "detail": null
+    }
+  ],
+  "source_value_binding_limit": {
+    "same_verified_raw_hashes": true,
+    "S_before": [
+      "a",
+      "b",
+      "c"
+    ],
+    "S_after": [],
+    "meaning": "supplied summary numbers are not re-extracted from source bytes"
+  },
+  "bo_po_present": false,
+  "reader_sha256": "3160506f199983e2ff2bcc00ab8aaa461c0cb6dea82adecd163f7cdd86b1c5ad"
+}

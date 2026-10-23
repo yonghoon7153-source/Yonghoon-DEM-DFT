@@ -1,0 +1,421 @@
+{
+  "schema": "mixer_d3_decision_result/1",
+  "analysis_id": "synthetic-test",
+  "numeric_encoding": "decimal-text",
+  "contract_sha256": "3ffe3232b2ac39dcaf031ecea36b744de4434c1ada16438fcb6733ef202ae1c1",
+  "contract_binding": "actual-input-bytes-verified",
+  "verified_artifact_sha256": {
+    "conditions": "f3c56c473620a9b7ada44ea021d4260fb8e4f34a54eca13b7b91a7d53ba30c95",
+    "raw": "3b977b79815551801efc4df43d15b0fc3d09eaefb66517a31e30127d92346e91"
+  },
+  "condition_sha256": "f3c56c473620a9b7ada44ea021d4260fb8e4f34a54eca13b7b91a7d53ba30c95",
+  "grid": [
+    {
+      "id": "b1",
+      "bo_code": "1",
+      "bo_po_approx": "0.14814814814814814814814814814814814814814814814815"
+    },
+    {
+      "id": "b2",
+      "bo_code": "2",
+      "bo_po_approx": "0.29629629629629629629629629629629629629629629629630"
+    }
+  ],
+  "bo_po_definition": "Bo_code / 6.75; 50 significant decimal digits",
+  "calibration": {
+    "T1": [
+      {
+        "id": "b1",
+        "prediction": {
+          "eligible": true,
+          "reason": "eligible declaration with verified source bytes",
+          "flags": [],
+          "source_ids": [
+            "raw"
+          ],
+          "unit": "synthetic-unit",
+          "value": "10",
+          "uncertainty": {
+            "value": "0.1",
+            "unit": "synthetic-unit",
+            "n": 2,
+            "df": "1",
+            "method": "synthetic supplied uncertainty"
+          }
+        },
+        "experiment": {
+          "eligible": true,
+          "reason": "eligible declaration with verified source bytes",
+          "flags": [],
+          "source_ids": [
+            "raw"
+          ],
+          "unit": "synthetic-unit",
+          "value": "10",
+          "uncertainty": {
+            "value": "0.1",
+            "unit": "synthetic-unit",
+            "n": 2,
+            "df": "1",
+            "method": "synthetic supplied uncertainty"
+          }
+        },
+        "absolute_difference": "0",
+        "width": "0.5",
+        "boundary": "inclusive",
+        "status": "COMPATIBLE",
+        "reason": "explicit contract comparison"
+      },
+      {
+        "id": "b2",
+        "prediction": {
+          "eligible": true,
+          "reason": "eligible declaration with verified source bytes",
+          "flags": [],
+          "source_ids": [
+            "raw"
+          ],
+          "unit": "synthetic-unit",
+          "value": "10",
+          "uncertainty": {
+            "value": "0.1",
+            "unit": "synthetic-unit",
+            "n": 2,
+            "df": "1",
+            "method": "synthetic supplied uncertainty"
+          }
+        },
+        "experiment": {
+          "eligible": true,
+          "reason": "eligible declaration with verified source bytes",
+          "flags": [],
+          "source_ids": [
+            "raw"
+          ],
+          "unit": "synthetic-unit",
+          "value": "10",
+          "uncertainty": {
+            "value": "0.1",
+            "unit": "synthetic-unit",
+            "n": 2,
+            "df": "1",
+            "method": "synthetic supplied uncertainty"
+          }
+        },
+        "absolute_difference": "0",
+        "width": "0.5",
+        "boundary": "inclusive",
+        "status": "COMPATIBLE",
+        "reason": "explicit contract comparison"
+      }
+    ],
+    "T2": [
+      {
+        "id": "b1",
+        "prediction": {
+          "eligible": true,
+          "reason": "eligible declaration with verified source bytes",
+          "flags": [],
+          "source_ids": [
+            "raw"
+          ],
+          "unit": "synthetic-unit",
+          "value": "10",
+          "uncertainty": {
+            "value": "0.1",
+            "unit": "synthetic-unit",
+            "n": 2,
+            "df": "1",
+            "method": "synthetic supplied uncertainty"
+          }
+        },
+        "experiment": {
+          "eligible": true,
+          "reason": "eligible declaration with verified source bytes",
+          "flags": [],
+          "source_ids": [
+            "raw"
+          ],
+          "unit": "synthetic-unit",
+          "value": "10",
+          "uncertainty": {
+            "value": "0.1",
+            "unit": "synthetic-unit",
+            "n": 2,
+            "df": "1",
+            "method": "synthetic supplied uncertainty"
+          }
+        },
+        "absolute_difference": "0",
+        "width": "0.5",
+        "boundary": "inclusive",
+        "status": "COMPATIBLE",
+        "reason": "explicit contract comparison"
+      },
+      {
+        "id": "b2",
+        "prediction": {
+          "eligible": true,
+          "reason": "eligible declaration with verified source bytes",
+          "flags": [],
+          "source_ids": [
+            "raw"
+          ],
+          "unit": "synthetic-unit",
+          "value": "10",
+          "uncertainty": {
+            "value": "0.1",
+            "unit": "synthetic-unit",
+            "n": 2,
+            "df": "1",
+            "method": "synthetic supplied uncertainty"
+          }
+        },
+        "experiment": {
+          "eligible": true,
+          "reason": "eligible declaration with verified source bytes",
+          "flags": [],
+          "source_ids": [
+            "raw"
+          ],
+          "unit": "synthetic-unit",
+          "value": "10",
+          "uncertainty": {
+            "value": "0.1",
+            "unit": "synthetic-unit",
+            "n": 2,
+            "df": "1",
+            "method": "synthetic supplied uncertainty"
+          }
+        },
+        "absolute_difference": "0",
+        "width": "0.5",
+        "boundary": "inclusive",
+        "status": "COMPATIBLE",
+        "reason": "explicit contract comparison"
+      }
+    ]
+  },
+  "S_T1": [
+    "b1",
+    "b2"
+  ],
+  "S_T2": [
+    "b1",
+    "b2"
+  ],
+  "S": [
+    "b1",
+    "b2"
+  ],
+  "calibration_complete": true,
+  "empty_case": "not-empty",
+  "neighbor_groups": [
+    [
+      "b1",
+      "b2"
+    ]
+  ],
+  "boundary": {
+    "lower_candidate": true,
+    "upper_candidate": true,
+    "lower_unassessed": false,
+    "upper_unassessed": false
+  },
+  "range_limited": true,
+  "validation": {
+    "aggregate": "all-compatible",
+    "counts": {
+      "compatible": 2,
+      "incompatible": 0,
+      "unassessed": 0
+    },
+    "candidates": [
+      {
+        "id": "b1",
+        "status": "compatible",
+        "items": {
+          "v1": {
+            "id": "b1",
+            "prediction": {
+              "eligible": true,
+              "reason": "eligible declaration with verified source bytes",
+              "flags": [],
+              "source_ids": [
+                "raw"
+              ],
+              "unit": "synthetic-unit",
+              "value": "10",
+              "uncertainty": {
+                "value": "0.1",
+                "unit": "synthetic-unit",
+                "n": 2,
+                "df": "1",
+                "method": "synthetic supplied uncertainty"
+              }
+            },
+            "experiment": {
+              "eligible": true,
+              "reason": "eligible declaration with verified source bytes",
+              "flags": [],
+              "source_ids": [
+                "raw"
+              ],
+              "unit": "synthetic-unit",
+              "value": "10",
+              "uncertainty": {
+                "value": "0.1",
+                "unit": "synthetic-unit",
+                "n": 2,
+                "df": "1",
+                "method": "synthetic supplied uncertainty"
+              }
+            },
+            "absolute_difference": "0",
+            "width": "0.5",
+            "boundary": "inclusive",
+            "status": "compatible",
+            "reason": "explicit contract comparison"
+          },
+          "v2": {
+            "id": "b1",
+            "prediction": {
+              "eligible": true,
+              "reason": "eligible declaration with verified source bytes",
+              "flags": [],
+              "source_ids": [
+                "raw"
+              ],
+              "unit": "synthetic-state",
+              "value": "flow"
+            },
+            "experiment": {
+              "eligible": true,
+              "reason": "eligible declaration with verified source bytes",
+              "flags": [],
+              "source_ids": [
+                "raw"
+              ],
+              "unit": "synthetic-state",
+              "value": "flow"
+            },
+            "rule": "exact-match",
+            "status": "compatible",
+            "reason": "explicit contract comparison"
+          }
+        }
+      },
+      {
+        "id": "b2",
+        "status": "compatible",
+        "items": {
+          "v1": {
+            "id": "b2",
+            "prediction": {
+              "eligible": true,
+              "reason": "eligible declaration with verified source bytes",
+              "flags": [],
+              "source_ids": [
+                "raw"
+              ],
+              "unit": "synthetic-unit",
+              "value": "10",
+              "uncertainty": {
+                "value": "0.1",
+                "unit": "synthetic-unit",
+                "n": 2,
+                "df": "1",
+                "method": "synthetic supplied uncertainty"
+              }
+            },
+            "experiment": {
+              "eligible": true,
+              "reason": "eligible declaration with verified source bytes",
+              "flags": [],
+              "source_ids": [
+                "raw"
+              ],
+              "unit": "synthetic-unit",
+              "value": "10",
+              "uncertainty": {
+                "value": "0.1",
+                "unit": "synthetic-unit",
+                "n": 2,
+                "df": "1",
+                "method": "synthetic supplied uncertainty"
+              }
+            },
+            "absolute_difference": "0",
+            "width": "0.5",
+            "boundary": "inclusive",
+            "status": "compatible",
+            "reason": "explicit contract comparison"
+          },
+          "v2": {
+            "id": "b2",
+            "prediction": {
+              "eligible": true,
+              "reason": "eligible declaration with verified source bytes",
+              "flags": [],
+              "source_ids": [
+                "raw"
+              ],
+              "unit": "synthetic-state",
+              "value": "flow"
+            },
+            "experiment": {
+              "eligible": true,
+              "reason": "eligible declaration with verified source bytes",
+              "flags": [],
+              "source_ids": [
+                "raw"
+              ],
+              "unit": "synthetic-state",
+              "value": "flow"
+            },
+            "rule": "exact-match",
+            "status": "compatible",
+            "reason": "explicit contract comparison"
+          }
+        }
+      }
+    ]
+  },
+  "seed_check": {
+    "status": "CHECKED_SUPPLIED_MANIFEST",
+    "roles": {
+      "C0": [
+        101
+      ],
+      "C1": [
+        103
+      ],
+      "C2": [
+        107
+      ]
+    },
+    "reserved_confirmation_seeds": [
+      15485863,
+      86028121,
+      104395301
+    ],
+    "overlaps": [],
+    "historical_nonuse_verified": false,
+    "independent_samples_certified": false
+  },
+  "execution_ready": false,
+  "limitations": [
+    "finite-grid-only",
+    "no-continuous-interval-or-center",
+    "no-identifiability-claim",
+    "input-eligibility-and-uncertainty-declarations-not-physically-validated",
+    "artifact-hashes-do-not-prove-preregistration-or-blinding",
+    "validation-does-not-redefine-calibration-S",
+    "not-an-execution-approval"
+  ],
+  "input_sha256": {
+    "contract": "3ffe3232b2ac39dcaf031ecea36b744de4434c1ada16438fcb6733ef202ae1c1",
+    "observations": "bc7cbcd7f91f8e705f51a570d97e9f89eeb86da4314e45b41a801976a1236548"
+  },
+  "reader_sha256": "3160506f199983e2ff2bcc00ab8aaa461c0cb6dea82adecd163f7cdd86b1c5ad"
+}

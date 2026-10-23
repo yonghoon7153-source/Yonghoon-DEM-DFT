@@ -1,0 +1,15 @@
+test_unknown_fields_ids_units_rejected_even_excluded_candidate (__main__.DecisionTests.test_unknown_fields_ids_units_rejected_even_excluded_candidate) ... FAIL
+
+======================================================================
+FAIL: test_unknown_fields_ids_units_rejected_even_excluded_candidate (__main__.DecisionTests.test_unknown_fields_ids_units_rejected_even_excluded_candidate)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/ignore-unit-mismatch/test_mixer_d3_candidates.py", line 257, in test_unknown_fields_ids_units_rejected_even_excluded_candidate
+    with self.assertRaises(reader.ContractError): self.run_case(c, o)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ContractError not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (failures=1)
