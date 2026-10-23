@@ -95,6 +95,12 @@ CJUNC_SV_CF_RULE = 'sdcp_component_owner_groups_same_piece_continuity_or_covered
 #:   셀의 면 · 판 결합을 전부 끊은 판 (덩어리 0 = 위 = 아래 · 다시 풀지 않음 · 판정 = 사슬 · 등록 R §5-6 SV 행)
 CJUNC_SV_CF_BRACKET_RULE = 'lower_keep_unsplit_upper_remove_unsplit_sdcp_cells_v1'
 SV_CF_UNSPLIT_MISMATCH = 'unsplit_census_mismatch'    # 위 끝 상태 — census 의 못 가른 덩어리 수 ≠ 지문 묶인 원장에서 다시 가른 수 (풀지 않음)
+#: ★ 10-23 (Codex 재검토 RCA2-01 · 04 · 1저자 Q1 (가)) 반사실 기록 지위 — 증서 구간 = 주 해 증서 + 끝마다 증서 (증서를 켠 런 · 사슬 판정 =
+#:   증서 구간 비) · 진단 = 증서 없는 런 (사슬은 R 판정 입력으로 받지 않는다 · SV_UNCHECKED) · = `ca_ext_svcf.STANDING_*` (시험이 대조)
+SV_CF_STANDING_CERTIFIED = 'certified_interval'
+SV_CF_STANDING_DIAGNOSTIC = 'diagnostic_uncertified'
+#: +∞ 끝 영값 위상 증서의 그래프 이름표 (`step3_conv_cert.early_record` 의 zero_graph · 끊은 반사실 그래프의 0 · = `ca_ext_svcf.ZERO_GRAPH_SV_CF`)
+SV_CF_ZERO_GRAPH = 'cjunc_sv_counterfactual'
 CJUNC_BRANCH_RULE = 'membership_cell_fid_traversal_branch_v1'                 # 위치 = (셀, fid, 그 셀을 지나는 연속 구간)
 CJUNC_ORDER_RULE = 'canonical_first_last_then_point_sequence_lex_v2'           # 경로 순서 = 기하 정준 (fid 라벨 무관 · 끝점 먼저)
 CJUNC_CP_RULE = 'nearest_pairs_eps_band_lexmin_midpoint_v1'                  # instance 접점 (나란한 접촉 비유일 최근접점)
@@ -141,8 +147,9 @@ CJUNC_QUALIFIERS = (
     'SV 반사실 괄호 (10-22 · 1저자 Q1 (다)) — 못 가른 덩어리 (섬유 둘 이상이 함께 지나는 SDCP 성분 · 셀 단위로 섬유 자기 길과 다리를 못 '
     '가른다) 가 있으면 반사실을 두 번 푼다: 아래 끝 = 덩어리를 그대로 둔 판 · 위 끝 = 그 덩어리 SDCP 셀의 면을 전부 끊은 판 (관통 없음 = '
     '+∞) → 비 = 괄호 [아래 끝, 위 끝] · 참 비 (다리만 끊은 판) 는 그 사이 = 지금 셀 그래프 안에서만 보장 (섬유 길을 새로 그리는 정의면 밖일 '
-    '수 있다) · 판정 = 사슬 (아래 끝 > 문턱 = SV_DEPENDENT · 위 끝 ≤ 문턱 = 표지 없음 · 걸침 · 못 읽음 = SV_UNCHECKED) · 못 가른 덩어리 0 = '
-    '한 번 (위 = 아래)',
+    '수 있다) · 판정 = 사슬 · 증서 구간 (10-23 · 1저자 Q1 (가) — 아래비 = 주 해 증서 하한 / 아래 끝 증서 상한 > 문턱 = SV_DEPENDENT · 위비 = '
+    '주 해 증서 상한 / 위 끝 증서 하한 ≤ 문턱 = 표지 없음 · 걸침 · 못 읽음 · 무증서 (진단 기록) = SV_UNCHECKED · ∞ = 위상이 증명한 0 분모만 · '
+    'nominal 비 = 기록만 · 판정 아님) · 못 가른 덩어리 0 = 한 번 (위 = 아래)',
 )
 
 _TINY = 1.0e-24                            # 퇴화 선분 (길이² µm² · 1e-12 µm 미만)
@@ -2460,14 +2467,18 @@ class CjuncAssembler:
                 'sv_local_dissipation': sld,
                 'sv_face_abs_current_over_I': sv_I, 'junction_current_code': jI, 'I_bot_code': I_bot}
 
-    def _sv_cf_end(self, solve, I_full, out, certify=None, backend=None):
+    def _sv_cf_end(self, solve, I_full, out, certify=None, backend=None, certify_zero=None):
         """반사실 한 끝 (조립 결과 out) → {상태 · G_cut · 비 · cg_info · 잔차 · 증서 · backend} (★ 10-22 — 아래 끝 · 위 끝이 **같은 함수**:
         상태 · 증서 · 비 규칙 그대로).  비 inf (`no_through_without_sv`) = 위상 (끊은 그래프에 관통 성분 없음 · 가지치기 사유) 에서만 ·
-        관통 성분이 있는데 I_cut ≤ 0 · 비유한 = 수치 실패 (`nonpositive_cut_current`) · 증서 실패 = 미수렴 (비 없음)."""
+        관통 성분이 있는데 I_cut ≤ 0 · 비유한 = 수치 실패 (`nonpositive_cut_current`) · 증서 실패 = 미수렴 (비 없음).
+        ★ 10-23 (Codex 재검토 RCA2-01 · 1저자 Q1 (가)) certify_zero = 영값 위상 증서 함수 (사유 → 증서 · `step3_sigma` 가 증서를 켠 런에서 넘긴다) —
+        +∞ 끝의 0 분모를 위상 증서로 싣는다 (∞ = 위상이 증명한 0 분모만 · 사슬 증서 구간의 +∞)."""
         end = {'G_cut_code': None, 'sv_counterfactual_ratio': None, 'cg_info': None, 'resid': None, 'conv_cert': None}
         if out.get('reason'):
             if out['reason'] in ('no_through_component', 'all_floating_dropped'):
                 end.update(status='no_through_without_sv', G_cut_code=0.0, sv_counterfactual_ratio=math.inf)
+                if certify_zero is not None:
+                    end['conv_cert'] = certify_zero(out['reason'])
             else:
                 end.update(status=str(out['reason']))
         else:
@@ -2503,7 +2514,7 @@ class CjuncAssembler:
         lins = np.flatnonzero(np.isin(g['labf'], labels)) if labels else np.zeros(0, np.int64)
         return labels, lins
 
-    def sv_counterfactual(self, solve, I_full, request, certify=None, backend=None):
+    def sv_counterfactual(self, solve, I_full, request, certify=None, backend=None, main_cert=None, certify_zero=None):
         """반사실 대조 (10-21 Codex RCA-06 · 1저자 Q4 (가) · 선택 노브) — 같은 침대 · 같은 R_j · 같은 판 입력에서 ★ 10-21 (사전 리뷰
         PRE-impl-04 · 1저자 Q-D) **SV 다리만** 끊은 계의 단자 전류 I_cut → `sv_counterfactual_ratio` = I_full / I_cut (≥ 1 · Rayleigh —
         끊기만 = 부분 그래프).  다리 = 서로 다른 섬유 · 접합으로 갈린 가지를 잇는 SDCP 성분의 SV 면 (원장 'sv_cut' · `_sv_split`) ·
@@ -2520,7 +2531,14 @@ class CjuncAssembler:
         섬유 자기 길은 남기는 참 비 = 두 끝 사이 (**지금 셀 그래프 안에서만** 보장).  덩어리 0 = 다시 풀지 않는다 (위 = 아래 · `upper` None).
         값 봉인 = 아래 끝 값을 보고 건너뛰지 않는다 (덩어리가 있으면 늘 두 번).  덩어리 = 지문 묶인 원장에서 다시 가른다 — census 수와 다르면
         위 끝을 풀지 않는다 (`unsplit_census_mismatch` · 사유 · fail-closed).  backend = 이 솔브의 출처 읽개 (`step3_sigma` 가 넘긴다) — 끝마다
-        `backend_last_solve` (풀이가 없으면 None)."""
+        `backend_last_solve` (풀이가 없으면 None).
+        ★★ 10-23 (Codex 재검토 RCA2-01 · 04 · 1저자 Q1 (가)) **증서 구간** — main_cert = 주 해의 수렴 증서 (목표량 구간 · 게시 판 전류 = G_full ·
+        결합 칸) · certify · certify_zero = 끝마다 증서 (양의 해 · 영값 위상).  셋이 다 있으면 지위 `certified_interval` (사슬 판정 = 증서 구간 비 ·
+        기록 = 주 해 증서 `conv_cert_full` + 끝마다 `conv_cert`) · 하나라도 없으면 지위 `diagnostic_uncertified` (끝 증서도 싣지 않는다 · 사슬은 R
+        판정 입력으로 받지 않는다)."""
+        certified = isinstance(main_cert, dict) and certify is not None and certify_zero is not None
+        if not certified:
+            certify = certify_zero = None
         thr = request.get('threshold') if isinstance(request, dict) else None
         Ab, gb, At, gt, cb, ct = self._plate_in
         out, st = self._assemble(Ab, gb, At, gt, cb, ct, counterfactual=True)
@@ -2533,12 +2551,14 @@ class CjuncAssembler:
                'n_sv_faces_kept_self': int(cen.get('n_sv_faces_kept_self', 0)),
                'n_unsplit_bridging_components': n_cen,
                'G_full_code': float(I_full), 'G_cut_code': None,
-               'sv_counterfactual_ratio': None, 'flag': None, 'cg_info': None, 'resid': None, 'conv_cert': None}
+               'sv_counterfactual_ratio': None, 'flag': None, 'cg_info': None, 'resid': None, 'conv_cert': None,
+               'standing': (SV_CF_STANDING_CERTIFIED if certified else SV_CF_STANDING_DIAGNOSTIC),
+               'conv_cert_full': (dict(main_cert) if certified else None)}
         full_ok = math.isfinite(float(I_full)) and float(I_full) > 0.0
         if not full_ok:
             rec.update(status='nonpositive_full_current', backend_last_solve=None)   # 주 해 단자 전류 ≤ 0 · 비유한 — 비의 분자를 믿을 수 없다
         else:
-            rec.update(self._sv_cf_end(solve, I_full, out, certify, backend))
+            rec.update(self._sv_cf_end(solve, I_full, out, certify, backend, certify_zero))
         r_ = rec['sv_counterfactual_ratio']
         if thr is not None and r_ is not None and r_ >= thr:
             rec['flag'] = 'SV_DEPENDENT'
@@ -2558,7 +2578,7 @@ class CjuncAssembler:
             out_h, st_h = self._assemble(Ab, gb, At, gt, cb, ct, counterfactual=True, remove_dofs=dofs)
             up = {'n_components_removed': int(len(labels)), 'n_cells_removed': int(len(lins)), 'n_edges_cut': int(st_h['n_rm_edges']),
                   'n_plate_couplings_cut': int(st_h['n_rm_plate']), 'n_sv_faces_cut': int(st_h['n_cf_edges']), 'why': None}
-            up.update(self._sv_cf_end(solve, I_full, out_h, certify, backend))
+            up.update(self._sv_cf_end(solve, I_full, out_h, certify, backend, certify_zero))
         return _sv_cf_bracket(rec, up)
 
 
@@ -2583,14 +2603,15 @@ def _sv_cf_bracket(rec, up):
     return rec
 
 
-def sv_cf_unsolved_record(plan, status):
+def sv_cf_unsolved_record(plan, status, standing=SV_CF_STANDING_DIAGNOSTIC):
     """★ 10-22 — 반사실을 풀지 않고 끝난 기록 (`step3_sigma` — 주 해 미수렴 = 'main_unconverged') — 옛 칸 (종류 · 규칙 · 요청 · 문턱 · 상태 ·
-    비 None · 표지 None · 증서 None · backend None) + 못 가른 덩어리 수 (census) + 괄호 칸 (위 끝 = 같은 상태 · 풀이 없음)."""
+    비 None · 표지 None · 증서 None · backend None) + 못 가른 덩어리 수 (census) + 괄호 칸 (위 끝 = 같은 상태 · 풀이 없음).
+    ★ 10-23 (RCA2-01 · 04) — 지위 (standing · 증서를 켠 런 = `certified_interval` · 비를 싣는 끝이 없어 증서 대조 없음) · 주 해 증서 칸 None."""
     req = plan.get('sv_counterfactual') or {}
     n = int(((plan.get('registry') or {}).get('census') or {}).get('n_unsplit_bridging_components', 0))
     rec = {'kind': CJUNC_SV_CF_KIND, 'rule': CJUNC_SV_CF_RULE, 'requested': True, 'threshold': req.get('threshold'),
            'status': str(status), 'sv_counterfactual_ratio': None, 'flag': None, 'conv_cert': None, 'backend_last_solve': None,
-           'n_unsplit_bridging_components': n}
+           'n_unsplit_bridging_components': n, 'standing': str(standing), 'conv_cert_full': None}
     return _sv_cf_bracket(rec, (_sv_cf_upper_unsolved(status, n_components=n) if n else None))
 
 

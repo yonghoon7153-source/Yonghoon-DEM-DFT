@@ -38,7 +38,9 @@
   · SV 반사실 (CJUNC_SV_CF · 계획 범위 · 비 > 문턱 = `SV_DEPENDENT` · 못 읽음 = `SV_UNCHECKED` · 옛 `SV_DOMINANT` 철회 · RCA-06) —
     사슬은 비 · 상태만 읽는다 (끊는 면의 정의 무관 · PRE-impl-04 · `ca_ext_svcf.chain_view`) · ★ 10-22 (사전 리뷰 2 회차 PRE2-impl-01 ·
     1저자 Q1 (다)) 괄호 판정 — 모서리마다 아래 끝 (못 가른 덩어리 그대로) > 문턱 = `SV_DEPENDENT` · 두 끝을 읽고 위 끝 (덩어리를 통째로 뺀 판)
-    ≤ 문턱 = 표지 없음 · 걸침 · 못 읽음 = `SV_UNCHECKED` (`sv_assess`)
+    ≤ 문턱 = 표지 없음 · 걸침 · 못 읽음 = `SV_UNCHECKED` (`sv_assess`) · ★ 10-23 (Codex 재검토 RCA2-01 · 1저자 Q1 (가)) 두 끝 = 증서 구간
+    (아래비 = 주 해 증서 하한 / 아래 끝 증서 상한 · 위비 = 주 해 증서 상한 / 위 끝 증서 하한 · nominal 비 = 기록만) · 증서 없는 진단 기록 =
+    `SV_UNCHECKED`
   · 감도 단계 = 주 판정 단계 (사다리 둘 · 예측) 가 끝난 뒤에만 (`--after-main` · 판정이 묶음을 대조 · Q-F)
 ★ 4판 (10-21 · DQ · 등록 R 4판 · 1저자 10-21 Q1 · Q2 "권고대로"):
   · Q1 (§5-0 ①–③ · §4-2 ③ · R4-Q5) 단락 (ELECTRODE_SHORT · J11) = 생산자 미게시 → 그 런 = NOT_COMPUTED (사유 = 상태 이름 ELECTRODE_SHORT) —
@@ -559,42 +561,50 @@ def sv_assess(recs, threshold, scope):
     ★ 10-22 (사전 리뷰 2 회차 PRE2-impl-01 · 1저자 Q1 (다) · 등록 R §5-6 SV 행 개정) 괄호 판정 — 모서리마다 아래 끝 (`ratio` · 못 가른 덩어리
     그대로) · 위 끝 (`ratio_hi` · 그 덩어리를 통째로 뺀 판 · 덩어리 0 = 아래 끝과 같다): 아래 끝 > 문턱 = 의존 (위 끝과 무관) · 두 끝을 읽고
     위 끝 ≤ 문턱 = 표지 없음 · 두 끝을 읽었는데 아래 ≤ 문턱 < 위 = 걸침 · 그 밖 = 못 읽음 (위 끝 칸 없는 옛 기록 포함 · 아래 끝을 못 읽은
-    모서리 = 위 끝 값과 무관하게 못 읽음 = 지금 방식) → 걸침 · 못 읽음 = `SV_UNCHECKED`.  비교 = 지금 SV 비교 그대로 (증서 여유 없음 · 두 끝
-    같게) · 모서리 묶기 = 지금 규칙 그대로 (하나라도 의존 → `SV_DEPENDENT` · 하나라도 걸침 · 못 읽음 · 문턱 없음 · 모서리 없음 →
-    `SV_UNCHECKED` · 둘 다 붙을 수 있다)."""
+    모서리 = 위 끝 값과 무관하게 못 읽음 = 지금 방식) → 걸침 · 못 읽음 = `SV_UNCHECKED`.  ~~비교 = 지금 SV 비교 그대로 (증서 여유 없음 · 두 끝
+    같게)~~ · 모서리 묶기 = 지금 규칙 그대로 (하나라도 의존 → `SV_DEPENDENT` · 하나라도 걸침 · 못 읽음 · 문턱 없음 · 모서리 없음 →
+    `SV_UNCHECKED` · 둘 다 붙을 수 있다).
+    ★★ 10-23 (Codex 재검토 RCA2-01 · 1저자 Q1 (가) · author 10-23 ratified Q1-Q8) **증서 구간으로 판정** — 아래 = 아래비 (`ratio_cert_lo` =
+    Gfull_lo / Gcut_lower_hi · 내림) · 위 = 위비 (`ratio_cert_hi` = Gfull_hi / Gcut_upper_lo · 올림) · `ca_ext_svcf.cert_interval` (사슬 꼴이
+    기록의 증서에서 다시 센다) · 아래비 > 문턱 → 의존 · 위비 ≤ 문턱 → 표지 없음 · 그 밖 → `SV_UNCHECKED` · +∞ = 위상이 증명한 0 분모만 ·
+    nominal 비 (`ratio` · `ratio_hi`) = 기록 · 보고만 (판정에 쓰지 않는다 · 옛 판 = nominal 로 판정 → 판정문 반례 증서 구간 전체가 문턱 위인데
+    표지 없음) · 진단 기록 (증서 없는 런 · 지위 `diagnostic_uncertified`) = R 판정 입력 아님 → `SV_UNCHECKED` (세부 `uncertified`)."""
     rr_scope = ('R_j_lo', 'R_j0', 'R_j_hi') if scope == 'all3' else ('R_j0',)
-    out, unread, straddle, dep = {}, [], [], []
+    out, unread, straddle, dep, uncert = {}, [], [], [], []
     for (c, law, rr), a in sorted(recs.items()):
         if rr not in rr_scope:
             continue
         v = a.get('sv_cf') if isinstance(a, dict) else None
         v = v if isinstance(v, dict) else {}
         st, r_, rh = v.get('status'), v.get('ratio'), v.get('ratio_hi')
+        lo_c, hi_c = v.get('ratio_cert_lo'), v.get('ratio_cert_hi')
         key = f'c{c}_{law}_{rr}'
-        out[key] = {'status': st, 'ratio': r_, 'status_hi': v.get('status_hi'), 'ratio_hi': rh, 'n_unsplit': v.get('n_unsplit')}
+        out[key] = {'status': st, 'ratio': r_, 'status_hi': v.get('status_hi'), 'ratio_hi': rh, 'n_unsplit': v.get('n_unsplit'),
+                    'standing': v.get('standing'), 'ratio_cert_lo': lo_c, 'ratio_cert_hi': hi_c}
         #  ★ PF2 E (10-22 · PRE2-impl-02 옆 자리) — 읽는 비 = float (bool 아님) · 유한 양수 또는 +∞ (옛 = float 이기만 하면 읽음 → 아래 NaN ·
-        #    −∞ · 0 · 음수 + 위 ≤ 문턱 = 표지 없음) · 그 밖 = 못 읽음 (SV_UNCHECKED)
-        lo_ok, hi_ok = _sv_readable(r_), _sv_readable(rh)
+        #    −∞ · 0 · 음수 + 위 ≤ 문턱 = 표지 없음) · 그 밖 = 못 읽음 (SV_UNCHECKED) · ★ 10-23 — 읽는 값 = 증서 구간 끝 (nominal 아님)
+        lo_ok, hi_ok = _sv_readable(lo_c), _sv_readable(hi_c)
+        miss = uncert if v.get('standing') == SVCF.STANDING_DIAGNOSTIC else unread
         if threshold is None:
             if not (lo_ok and hi_ok):
-                unread.append(key)
+                miss.append(key)
             continue
         t = float(threshold)
-        if lo_ok and r_ > t:
+        if lo_ok and lo_c > t:
             dep.append(key)
-        elif lo_ok and hi_ok and rh <= t:
+        elif lo_ok and hi_ok and hi_c <= t:
             pass
         elif lo_ok and hi_ok:
             straddle.append(key)
         else:
-            unread.append(key)
+            miss.append(key)
     flags = []
-    if threshold is None or unread or straddle or not out:
+    if threshold is None or unread or straddle or uncert or not out:
         flags.append('SV_UNCHECKED')
     if dep:
         flags.append('SV_DEPENDENT')
     return flags, {'threshold': threshold, 'scope': scope, 'corners': out, 'unreadable': unread, 'straddle': straddle,
-                   'dependent': dep}
+                   'dependent': dep, 'uncertified': uncert}
 
 
 def mask_sigma(text, vals):
@@ -1354,6 +1364,15 @@ def read_run(outdir, req, plan, contract, sid_reg, want_sha=None):
                 stop('NOT_COMPUTED', f'증서 ⓓ 보장 오차를 다시 계산할 수 없다 ({jd.get("target_why")}) — 보호 띠 (§3-2b ③″) 를 잴 수 없다')
         solve = (ca['cjunc'].get('evidence') or {}).get('solve') or {}
         svr = solve.get('sv_counterfactual')
+        #  ★ 10-23 (Codex 재검토 RCA2-04 · 1저자 Q1 (가)) — 증서 구간 기록의 주 해 증서 (비의 분자 구간) = 이 런의 주 증서 (계약이 이미 수로 다시
+        #    판정한 `step3.conv_cert`) — 기록 계약 (매니페스트만 본다) 이 못 보는 결합을 판정 입력 자리에서 맞춘다 · 다르면 기록 위반
+        if isinstance(svr, dict) and svr.get('standing') == SVCF.STANDING_CERTIFIED and isinstance(svr.get('conv_cert_full'), dict):
+            _ccf = svr['conv_cert_full']
+            _mis = [k for k in ('version', 'status', 'I_bot', 'target_lo', 'target_hi') + SVCF.BIND_FIELDS
+                    if _ccf.get(k) != (cert or {}).get(k)]
+            if _mis:
+                stop('CA_EXT_RECORD', f'SV 반사실 기록의 주 해 증서 칸 {_mis} ≠ 이 런의 주 증서 (비의 분자 구간이 이 런의 것이 아니다 · '
+                                      f'10-23 RCA2-04)')
         cf = SVCF.chain_view(svr) if isinstance(svr, dict) else None
         out.append({'file': os.path.basename(p), 'index': i, 'sha256': hashlib.sha256(raw).hexdigest(), 'protocol_id': pid,
                     'state': state, 'cg_info': s3.get('cg_info'), 'cg_resid': s3.get('cg_resid'), 'imbalance': (cert or {}).get('imbalance'),
@@ -2180,16 +2199,18 @@ def sv_reasons(flags, det):
     """§5-5b 사유 — SV 표지 (§5-6 SV 행) → {표지: 사유} (대조 비 · 문턱 · 모서리 · 비 값 = 판정 결과에만)."""
     out = {}
     if 'SV_DEPENDENT' in flags:
-        out['SV_DEPENDENT'] = (f'대조 비 > 문턱 {det.get("threshold")!r} — 모서리 {SENTENCE_JOIN.join(det.get("dependent") or [])} '
-                               f'(범위 {det.get("scope")} · 비 = 판정 결과에만 · §5-6 SV 행)')
+        out['SV_DEPENDENT'] = (f'대조 비 > 문턱 {det.get("threshold")!r} (증서 구간 아래 끝 · nominal 아님) — 모서리 '
+                               f'{SENTENCE_JOIN.join(det.get("dependent") or [])} (범위 {det.get("scope")} · 비 = 판정 결과에만 · §5-6 SV 행)')
     if 'SV_UNCHECKED' in flags:
         parts = []
         if det.get('threshold') is None:
             parts.append('문턱 없음 (계획 sv_cf_threshold null)')
         if det.get('unreadable'):
             parts.append(f'대조 비를 못 읽음 — 모서리 {SENTENCE_JOIN.join(det["unreadable"])}')
-        if det.get('straddle'):                         # ★ 10-22 (Q1 (다)) — 괄호가 문턱에 걸침 (비 값 = 판정 결과에만)
-            parts.append(f'대조 비 괄호가 문턱에 걸침 (아래 끝 ≤ 문턱 < 위 끝 · 못 가른 덩어리) — 모서리 '
+        if det.get('uncertified'):                      # ★ 10-23 (RCA2-04 · Q1 (가)) — 증서 없는 런의 진단 기록 = 판정 입력 아님
+            parts.append(f'증서 없는 진단 기록 (판정 입력 아님) — 모서리 {SENTENCE_JOIN.join(det["uncertified"])}')
+        if det.get('straddle'):                         # ★ 10-22 (Q1 (다)) — 괄호가 문턱에 걸침 (비 값 = 판정 결과에만) · ★ 10-23 증서 구간
+            parts.append(f'대조 비 증서 구간이 문턱에 걸침 (아래 끝 ≤ 문턱 < 위 끝 · 못 가른 덩어리 · 증서 폭) — 모서리 '
                          f'{SENTENCE_JOIN.join(det["straddle"])}')
         if not det.get('corners'):
             parts.append(f'범위 {det.get("scope")} 안 모서리 기록 없음')

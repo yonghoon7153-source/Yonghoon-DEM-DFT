@@ -444,7 +444,9 @@ _CG_RTOL_DEFAULT = 1.0e-8
 #: 수렴 증서 (ⓐ 정지 rtol ≤ 봉인 · ⓑ 판 전류 불균형 ≤ ε_I · ⓒ rtol/100 이어 풀기 |Δσ|/σ ≤ 1e-4 · ★ 10-21 ⓓ 목표량 증서 (에너지 상한 ·
 #:   보정 흐름 하한 → 게시 G 의 보장 오차 ≤ 1e-4) · 해 상태 — `step3_conv_cert`) — 켜면 실패 = 미수렴.  조기 반환 해에도 상태 증서.
 #:   ★ 10-21 (사전 리뷰 PRE-impl-07) — 주 솔브의 증서 (양의 해 · 영값 · 조기 반환) 에 결합 칸 (그 솔브의 격자 · σ 표 · 계획 지문 —
-#:   `step3_conv_cert.bind_record`) · SV 반사실 진단 솔브의 증서 (접합 기록 안) 는 결합 칸 없음 (계약 밖 진단).
+#:   `step3_conv_cert.bind_record`) · ~~SV 반사실 진단 솔브의 증서 (접합 기록 안) 는 결합 칸 없음 (계약 밖 진단)~~ → ★ 10-23 (Codex 재검토
+#:   RCA2-01 · 04 · 1저자 Q1 (가)) SV 반사실 끝 증서 (양의 해 · +∞ 끝의 영값 위상) 도 같은 결합 칸 · 주 해 증서를 반사실 기록에 싣는다
+#:   (`conv_cert_full` · 증서 구간 판정 · 기록 계약 `ca_ext_svcf.sv_cf_problem` 이 대조).
 #:   기본 False = 이 파일의 솔브 결과 · 키가 옛 그대로.
 CONV_CERT = False
 #: ★ Z3 (2026-10-20 · 등록 R §11 숫자 탐침 칸 — σ 아님) — 마지막 `_solve_cg` 의 CG **반복 수** (수렴했을 때도).  수렴 증서
@@ -2328,25 +2330,38 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
             if unconv:                                     #   주 해가 미수렴 · 증서 실패 = 비를 내지 않는다 (분자 G 를 믿을 수 없다)
                 #  ★ 10-21 (사전 리뷰 PRE-impl-04 · Q-D) — 기록 종류 = 원장 정본 상수 (반사실 = SV 다리만 끊음 · 옛 'SV 면 전부' 와 다른 양)
                 #  ★ 10-22 (PRE2-impl-01 · Q1 (다)) — 옛 칸 그대로 + 못 가른 덩어리 수 · 괄호 칸 (위 끝 = 같은 상태 · 풀이 없음) = 생산자 함수 하나
-                out['cjunc']['sv_counterfactual'] = _cjm.sv_cf_unsolved_record(_cjp, 'main_unconverged')
+                #  ★ 10-23 (RCA2-01 · 04 · Q1 (가)) — 지위 = 증서를 켠 런이면 증서 구간 (비를 싣는 끝이 없어 증서 대조 없음) · 끈 런 = 진단
+                out['cjunc']['sv_counterfactual'] = _cjm.sv_cf_unsolved_record(
+                    _cjp, 'main_unconverged',
+                    standing=(_cjm.SV_CF_STANDING_CERTIFIED if CONV_CERT else _cjm.SV_CF_STANDING_DIAGNOSTIC))
             else:
                 #  ★ 10-21 (사전 공격 리뷰) — 반사실 솔브는 진단이다: ① 모듈 전역 출처 (`LAST_BACKEND` · `LAST_CG` — 매니페스트
                 #    'backend_last_solve' 가 읽는다) 를 주 해 쪽 그대로 되돌리고 반사실 솔브의 backend 는 자기 기록에 싣는다 (노브 켬 = 주 결과
                 #    출처가 노브 끔과 같다) ② 수렴 증서를 켠 런 (CONV_CERT) 은 반사실 솔브도 주 해와 **같은 증서 함수** 를 지나야 비를 낸다.
-                _cf_cert = None
+                _cf_cert = _cf_zero = None
                 if CONV_CERT:
                     import step3_conv_cert as _cc
                     _cf_scale = (z_plate - z_b) / _A
 
                     def _cf_cert(L_, b_, phi_, info_, resid_, Ab_, gb_, At_, gt_):
-                        return _cc.certify(L_, b_, phi_, int(info_) if info_ else 0, resid_, CG_RTOL, Ab_, gb_, At_, gt_, _cf_scale,
-                                           lambda L2, b2, x02, rt2: _solve_cg(L2, b2, x0=x02, rtol=rt2))
+                        _c = _cc.certify(L_, b_, phi_, int(info_) if info_ else 0, resid_, CG_RTOL, Ab_, gb_, At_, gt_, _cf_scale,
+                                         lambda L2, b2, x02, rt2: _solve_cg(L2, b2, x0=x02, rtol=rt2))
+                        #  ★ 10-23 (Codex 재검토 RCA2-04) — 끝 증서 ↔ 런 결합 칸 (주 해 증서와 같은 솔브 입력 지문 · 다른 런 증서 = 계약이 거부)
+                        _c.update(_cc.bind_record(**_cert_bind_kw()))
+                        return _c
+
+                    def _cf_zero(reason_):
+                        #  ★ 10-23 (Codex 재검토 RCA2-01 · Q1 (가)) — +∞ 끝 (끊은 그래프에 관통 성분 없음) 의 영값 위상 증서 (조기 반환 증서와 같은 함수 ·
+                        #    같은 결합 칸) — ∞ = 위상이 증명한 0 분모만
+                        return _cc.early_record({'reason': reason_, 'n_through_dof': 0, 'sigma_eff': 0.0},
+                                                zero_graph=_cjm.SV_CF_ZERO_GRAPH, **_cert_bind_kw())
                 _bk0, _cg0 = dict(LAST_BACKEND), dict(LAST_CG)
                 try:
                     #  ★ 10-22 (Q1 (다)) — 못 가른 덩어리가 있으면 생산자가 위 끝을 한 번 더 푼다 → backend 는 끝마다 (풀이 직후 읽개 ·
                     #    옛 = 호출 뒤 한 번 · 덩어리 0 이면 같은 값)
+                    #  ★ 10-23 (RCA2-01 · Q1 (가)) — 주 해 증서 (분자 G_full 의 목표량 구간) · 영값 위상 증서 함수를 넘긴다 (증서를 끈 런 = 진단 기록)
                     _svc = _cjs.sv_counterfactual(_solve_cg, I, _cjp['sv_counterfactual'], certify=_cf_cert,
-                                                  backend=lambda: dict(LAST_BACKEND))
+                                                  backend=lambda: dict(LAST_BACKEND), main_cert=_cert, certify_zero=_cf_zero)
                 finally:
                     LAST_BACKEND.clear(); LAST_BACKEND.update(_bk0)
                     LAST_CG.clear(); LAST_CG.update(_cg0)
