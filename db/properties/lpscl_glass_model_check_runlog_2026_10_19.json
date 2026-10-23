@@ -375,5 +375,14 @@
   "어림": "r2 다음 BFGS 줄까지 0–1.2 h → Γ ≈ 10 분 → k222 ≈ 2.3 h + 힘 · 응력 → r2 재개 (≈ 3–4 h 정지 · r2 한도 ≈ BFGS 386 은 그대로 · 끝나는 날만 미뤄짐)",
   "⏭": "gabia 블록 (DRY_RUN → tmux li2sk) → 감시 → '■ 끝' · r2 재개 줄 → 회수 → 판독 폴더 (kgy sp · pulay + gabia kpt) → glass_model_check.py --sp → 편지 DA Q-DA-4",
   "by": "agent · 2026-10-23"
+ },
+ "k222_gabia_발사_2026_10_23_1624": {
+  "출처": "사용자 붙여넣기 10-23 16:24:36 (gabia kserver116-27 · run.log 끝 8 줄 · nvidia-smi · tmux ls)",
+  "발사": "tmux li2sk 16:24:26 (DRY_RUN 통과 뒤 && 로만 뜬다) · worktree /data/work/wt_li2sk_1023 (0e549060d 이후) · OUT /data/work/runs/li2s_k222_gabia_2026_10_23",
+  "결정": "프로브 생략 (PROBE_EST_MIB 30065) · GPU 총 49,140 · 사용 37,220 · 빔 11,920 MiB → need 40,108 · r2 pw.x 484861 · 다른 잡 없음 ⇒ pause · GPU 런타임 ✓ (nvhpc 24.11 hpcx-2.20 libmpi)",
+  "r2": "이번 실행 nstep 200 · 지금까지 SCF 63 (10-22 09:15 의 37 에서 +26 · ≈ 1.2 h/스텝 그대로) · 16:24:27 '다음 BFGS 줄 직후 EXIT' 대기 (최대 14,400 s) · 재개 때 nstep = 200 − 쓴 SCF",
+  "어림": "다음 BFGS 줄 ≈ 17:3x 까지 → Γ ≈ 10 분 → k222 ≈ 2.5 h → ≈ 20:30 전후 r2 재개 (어림)",
+  "값": "없음",
+  "by": "agent · 2026-10-23"
  }
 }
