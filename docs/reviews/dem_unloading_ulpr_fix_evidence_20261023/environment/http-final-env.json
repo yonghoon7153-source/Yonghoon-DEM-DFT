@@ -1,0 +1,19 @@
+{
+  "/": {
+    "status": 200
+  },
+  "/mixer": {
+    "status": 200
+  },
+  "/hetero": {
+    "status": 200
+  },
+  "/api/mixer/runs": {
+    "status": 200,
+    "ok": true,
+    "policy_ok": true
+  },
+  "/api/mixer/frame?run=../outside": {
+    "status": 400
+  }
+}
