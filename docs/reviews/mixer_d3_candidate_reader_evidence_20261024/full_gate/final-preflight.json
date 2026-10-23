@@ -1,0 +1,54 @@
+{
+  "status": "PASS",
+  "candidate": "9c2f7b47fd4559ee4c08f23e667cdae92badbb04",
+  "branch": "codex/mixer-d3-design",
+  "cwd": "/workspace/Yonghoon-DEM-DFT",
+  "started_at_utc": "2026-10-23T21:35:45.315110+00:00",
+  "checked_index_tree_before": "6141553a8c64661604872fb9e83ba13be1c6230d",
+  "checks": [
+    {
+      "name": "docrefs",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "scripts/check_doc_refs.py"
+      ],
+      "cwd": "/workspace/Yonghoon-DEM-DFT",
+      "started_at_utc": "2026-10-23T21:35:45.315147+00:00",
+      "finished_at_utc": "2026-10-23T21:35:46.129216+00:00",
+      "exit_code": 0,
+      "log": "final-docrefs.log",
+      "log_sha256": "efba587880a69634e1e8dafa7d5f75749ae559e4eeffea02e69036210de786bd"
+    },
+    {
+      "name": "ledger",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "scripts/check_review_findings.py"
+      ],
+      "cwd": "/workspace/Yonghoon-DEM-DFT",
+      "started_at_utc": "2026-10-23T21:35:46.129354+00:00",
+      "finished_at_utc": "2026-10-23T21:36:05.965486+00:00",
+      "exit_code": 0,
+      "log": "final-ledger.log",
+      "log_sha256": "7483b4664c4d3c52e24db54600e4b9c5fa164c0b4fc7746c8682a1b6360e090c"
+    }
+  ],
+  "finished_at_utc": "2026-10-23T21:36:05.995422+00:00",
+  "checked_index_tree_after": "6141553a8c64661604872fb9e83ba13be1c6230d",
+  "input_inventory_unchanged": true,
+  "working_tree_equals_index": true,
+  "checked_inventory_file": "checked-inventory.json",
+  "checked_inventory_sha256": "e7da5ddcfed21517e5c743e0a4676e5e29bc3afd1d60a8edfe3442c62d552f8d",
+  "post_check_additions": [
+    "final-preflight.json",
+    "final-docrefs.log",
+    "final-ledger.log",
+    "checked-inventory.json"
+  ],
+  "post_check_existing_updates": [
+    "MANIFEST.sha256"
+  ],
+  "post_check_scope": "Only these raw proof files and the live manifest inventory may be added or updated after the checked snapshot; no source or Markdown changes."
+}

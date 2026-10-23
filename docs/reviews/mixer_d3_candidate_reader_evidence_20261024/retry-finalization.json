@@ -1,0 +1,55 @@
+{
+  "status": "ACTUAL_SERIAL_PASS_WITH_ORIGINAL_FAILURE_PRESERVED",
+  "created_at_utc": "2026-10-23T21:34:10.590921+00:00",
+  "standard_plan_sha256": "b0ddc6794876fc64205c8035655f5617dc6174395f6b50c5c33dc46abf46339c",
+  "standard_stage_history": "/workspace/.cloud-setup/nonrint-20261024/finalization-history/d3-standard-overlay",
+  "standard_overlay_zip_sha256": "afb967800efdf1d6f5fb8b3bb7a235ade1788ec4dd8f234ea345fce26833b686",
+  "failed_result_sha256": "d51a9268552255db89e1dd42ed2c69dc79d7cd6ed3ad3e40fb12c7a09fbbc789",
+  "serial_result_sha256": "852e83e554e47e4feba83a75189d9c06f40d4ca9e2d5d86466d9e7c9edb99c2b",
+  "same_candidate": "9c2f7b47fd4559ee4c08f23e667cdae92badbb04",
+  "failed_archive_source": "/workspace/artifacts/nonrint-20261024/gate-failure-history/d3-verified",
+  "failed_archive_members": {
+    "docs/reviews/mixer_d3_candidate_reader_evidence_20261024/history/parallel-timeout-attempt/MANIFEST.sha256": "eb8cac83956b0a9e530f9792623d827af406ba86b763bfbedbc8bb6b70c7cf57",
+    "docs/reviews/mixer_d3_candidate_reader_evidence_20261024/history/parallel-timeout-attempt/diagnosis.json": "0ea3cd7d5d03e3270b82787ee1e067d282bc1861870f1477637fc01dcc0a0d24",
+    "docs/reviews/mixer_d3_candidate_reader_evidence_20261024/history/parallel-timeout-attempt/diagnosis.md": "b24d1f6f3bc619796f591b25f5058338bad68b6d3d0a22e643ee284ee2f17ac9",
+    "docs/reviews/mixer_d3_candidate_reader_evidence_20261024/history/parallel-timeout-attempt/original-gate-records.zip": "07e8fd785d611fd257504c58d038f261eb2664c488172f210c1a5679837267aa",
+    "docs/reviews/mixer_d3_candidate_reader_evidence_20261024/history/parallel-timeout-attempt/raw/MANIFEST.sha256": "498d3158c2d2887029ec75591ab4d4ef587b2aadbb4a1dd23f1931c7fe192789",
+    "docs/reviews/mixer_d3_candidate_reader_evidence_20261024/history/parallel-timeout-attempt/raw/check-all.log": "46b9000a6da15d6233696fad6784756e96549e1339b00d26945f4d0e3e7d48b1",
+    "docs/reviews/mixer_d3_candidate_reader_evidence_20261024/history/parallel-timeout-attempt/raw/clone.log": "2150937b173b5d6f2d91301e4cf6e653380fc97493681e2f54e49e3ad7d33ee0",
+    "docs/reviews/mixer_d3_candidate_reader_evidence_20261024/history/parallel-timeout-attempt/raw/docrefs-preflight.json": "19c85335ee5c204a382ee6305e4c0d1945132f2c4058bd9301cf46c802cdedee",
+    "docs/reviews/mixer_d3_candidate_reader_evidence_20261024/history/parallel-timeout-attempt/raw/docrefs-preflight.log": "726b561101b3f7f9f0aa7820865f06944fd69be8ddc77e537c048ac51de49c1a",
+    "docs/reviews/mixer_d3_candidate_reader_evidence_20261024/history/parallel-timeout-attempt/raw/fetch.log": "47b1ace3279abce84442797325d2784be7619e48dbacf304845d6dd749ad1816",
+    "docs/reviews/mixer_d3_candidate_reader_evidence_20261024/history/parallel-timeout-attempt/raw/object-cache.json": "2035b420ef3886a627ebe58f97c745ff96669e42294444e6cd05b0834e54a65c",
+    "docs/reviews/mixer_d3_candidate_reader_evidence_20261024/history/parallel-timeout-attempt/raw/ref-setup.json": "1a41fd03ce5ecf294935ebb2f4aedf70c808f76f954018ff59fc9b269bbd8aee",
+    "docs/reviews/mixer_d3_candidate_reader_evidence_20261024/history/parallel-timeout-attempt/raw/refs-after-removal.json": "3e114151ba3644bd2aa81b937db38e35265494261677f9be363c812080eb279b",
+    "docs/reviews/mixer_d3_candidate_reader_evidence_20261024/history/parallel-timeout-attempt/raw/refs-fetched-after.json": "96279d020e23eaaa7d159ad136636b3a111f08bcacb20f32c86fe8120358b927",
+    "docs/reviews/mixer_d3_candidate_reader_evidence_20261024/history/parallel-timeout-attempt/raw/refs-generated-before.json": "3eee4c1d377991387899bbfe9800d23cb0a448bd5ccc09781e60d73ba33820b0",
+    "docs/reviews/mixer_d3_candidate_reader_evidence_20261024/history/parallel-timeout-attempt/raw/remote-heads-after.json": "2cc03df0e01f41c13b7fe1b968ed614f20fe1e78f2198db03c77a17554a7b590",
+    "docs/reviews/mixer_d3_candidate_reader_evidence_20261024/history/parallel-timeout-attempt/raw/remote-heads-before.json": "a629e70129ff78628095c64de0602e07e2831cf6c0b650a5eea1094c08755761",
+    "docs/reviews/mixer_d3_candidate_reader_evidence_20261024/history/parallel-timeout-attempt/raw/result.json": "d51a9268552255db89e1dd42ed2c69dc79d7cd6ed3ad3e40fb12c7a09fbbc789",
+    "docs/reviews/mixer_d3_candidate_reader_evidence_20261024/history/parallel-timeout-attempt/raw/source-identity-after.json": "b726ecd23464406074c4fd6e8198174b007662ed24dad1eb08d956912197e597",
+    "docs/reviews/mixer_d3_candidate_reader_evidence_20261024/history/parallel-timeout-attempt/raw/source-identity-before.json": "b726ecd23464406074c4fd6e8198174b007662ed24dad1eb08d956912197e597"
+  },
+  "controller_originals": {
+    "docs/reviews/mixer_d3_candidate_reader_evidence_20261024/history/serial-retry-control/controller.json": {
+      "source": "/workspace/.cloud-setup/nonrint-20261024/d3-serial-controller.json",
+      "sha256": "da370279befcfa24c67c44467cf1baedbaf36c12361dbbef8ef0d17f78057c19"
+    },
+    "docs/reviews/mixer_d3_candidate_reader_evidence_20261024/history/serial-retry-control/launch.json": {
+      "source": "/workspace/.cloud-setup/nonrint-20261024/d3-serial-controller-launch.json",
+      "sha256": "4d2a3a134d30b6bf8813f752f5782169e4c232a8fbaea3a744a137597d7f7b82"
+    },
+    "docs/reviews/mixer_d3_candidate_reader_evidence_20261024/history/serial-retry-control/platform-baseline.json": {
+      "source": "/workspace/.cloud-setup/nonrint-20261024/d3-serial-platform-baseline.json",
+      "sha256": "57fce69c00d57e4d10ef4753de50a1ae0caeb2016b0fefe0ec3353805e1bf65d"
+    },
+    "docs/reviews/mixer_d3_candidate_reader_evidence_20261024/history/serial-retry-control/ready-proof.json": {
+      "source": "/workspace/.cloud-setup/nonrint-20261024/d3-serial-ready-proof.json",
+      "sha256": "9b58ae90ed68c7f219b73b4868320b4fdb50989a99f082a6ce492217c6dfd21e"
+    }
+  },
+  "unchanged_receipt_sha256": "9512c3d6d646ee56a0f539e04c62e22fb0bbf7edbfc8723741715457f891780e",
+  "unchanged_original_candidate_zip_sha256": "bd1c4317b24dba1cc826715ca48b92770a08730d49eca373e27849760543a7b0",
+  "unchanged_original_run_zip_sha256": "027b7c53fa9af1de126c8a94259ed0f38a2985de89e98838fea4e99e5693c8b1",
+  "exclusive_timeout_cause_claimed": false
+}

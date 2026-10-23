@@ -1,0 +1,45 @@
+{
+  "refs": [
+    {
+      "ref": "refs/remotes/origin/HEAD",
+      "oid": "01c1aaf5be8acdf7d1716f34cc86fc77d8e27362",
+      "symref": "refs/remotes/origin/codex/unloading-ulpr"
+    },
+    {
+      "ref": "refs/remotes/origin/codex/dem-gen2-request",
+      "oid": "2443a63eaa87d52e385a35f8bab4225efa0d25fe",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/codex/lhs214-relaunch",
+      "oid": "854857e576a2a8aba07ec861dbee39d4bb59efae",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/codex/mixer-d3-design",
+      "oid": "9c2f7b47fd4559ee4c08f23e667cdae92badbb04",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/codex/mixer-mxd2",
+      "oid": "045e0b3098e8fe5a64d6eb0da310da776e68f995",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/codex/nonrint-environment",
+      "oid": "7799a2ff64ba462b42ce05edd3e63b7c2854d557",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/codex/unloading-ulpr",
+      "oid": "01c1aaf5be8acdf7d1716f34cc86fc77d8e27362",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/work",
+      "oid": "3fe789ff68815cff04a42b09c26f00c464dfd477",
+      "symref": ""
+    }
+  ],
+  "observed_at_utc": "2026-10-23T20:54:37.734347+00:00"
+}
