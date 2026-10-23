@@ -9639,9 +9639,9 @@
     ]
    },
    "title": "Nd Q2 실행 카드 — Nd₂O₃@LPSCl1.6 (Nd@Li · 10 f.u. · 9 월 판) 대 정본 LPSCl1.6 의 닫힌계 분해 구동력 · MP hull 기저 · 9 월 설정 (PAW psl 70/560) · EOS 대신 압력 어림 (트랙 CEI · 1저자 = 실험)",
-   "statement": "보고량 카드 db/properties/nd_q2_decomp_estimand_2026_10_23.json. Y = ΔE_decomp(도핑) − ΔE_decomp(host) [meV/atom] · ΔE_decomp(X) = [Σ nᵢ·E(상ᵢ) − E(X)]/N(X). X = 9 월 vc-relax 도핑 셀 그대로 (구조 결정 D-2026-10-19) + modelc_V0_k663 host (고정셀 이온 이완). 기저 = MP hull 이 두 조성에 고른 분해 생성물의 합집합 (QE 에너지 전 봉인 · G5 해 하나). 설정 = 9 월 탐침 입력 그대로. 부피는 EOS 대신 −P²V/(2B) 어림 (G_V 문턱 넘으면 그 셀만 3 점 EOS 를 새 결정으로). 분해능 |Y| ≤ 2 meV/atom. 부모 카드 §5 Q2 문장의 x = 0.40 은 이 실행에서 'Nd₂O₃ 1 단위 / 10 f.u. (Nd/(Nd+P) 0.2 명목)'.",
+   "statement": "보고량 카드 db/properties/nd_q2_decomp_estimand_2026_10_23.json. Y = ΔE_decomp(도핑) − ΔE_decomp(host) [meV/atom] · ΔE_decomp(X) = [Σ nᵢ·E(상ᵢ) − E(X)]/N(X). X = 9 월 vc-relax 도핑 셀 그대로 (구조 결정 D-2026-10-19) + modelc_V0_k663 host (고정셀 이온 이완). 기저 = MP hull 이 두 조성에 고른 분해 생성물의 합집합 (QE 에너지 전 봉인 · G5 해 하나). 설정 = 9 월 탐침 입력 그대로. 부피는 EOS 대신 −P²V/(2B) 어림 (G_V 문턱 넘으면 그 셀만 3 점 EOS 를 새 결정으로). 분해능 |Y| ≤ 2 meV/atom. 부모 카드 §5 Q2 문장의 x = 0.40 은 이 실행에서 'Nd₂O₃ 1 단위 / 10 f.u. (Nd/(Nd+P) 0.2 명목)'. 상 이완 = vc-relax (비-argyrodite 기준 결정 · MP 엔트리 구조에서 · 10-15 선례와 같은 꼴) · 자리 = kgy (구조 결정 10-19 의 'gabia' 를 이 실행의 host · 상에 한해 바꿈 · 도핑 셀 새 계산은 gabia 새 결정).",
    "rationale": "사용자 10-23 '1번하자' (Q2 를 먼저) · 10-19 '그 상태에서의 분해에너지' (구조 결정) · 10-23 '앞으로 이런 경우가 있으면 eos까지 갈 필요가 없는거넹' — Q1 뒤돌아보기에서 압력 어림이 EOS 보정 (−0.100 eV/Nd) 을 −0.098 로 맞췄다 (카드 §6).",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "estimand",
    "results_seen": false,
    "results_seen_note": "Q2 값 0 건 (host · 상 에너지 · MP hull 생성물 없음). 이미 있는 것: 도핑 셀 70/560 k331 총에너지 (9 월 k-탐침 · Q2 값 아님) · G0 골격 시험 통과 (10-23 · 결과 전 게이트).",
@@ -9660,17 +9660,33 @@
     "Q1 판정이 바뀌면 (구조 결정 재개 ②)",
     "'배치를 하나 더 봤다' · '더 촘촘하면 더 정확하다' 는 재개 사유가 아니다"
    ],
-   "enforcement": "① 기저 봉인은 QE 에너지 0 건일 때 ② 상 이완 방식 (vc-relax 대 고정셀) · 계산 자리 (kgy 대 gabia) 는 사용자 결정 — 비준 때 같이 ③ QE run 은 GPU · CPU 는 검사 프로브만 ④ 서술은 '우리 스크리닝 최저 모델 (Nd@Li) 에서' 로 묶는다 ⑤ 1저자 통지는 사용자를 통해",
+   "enforcement": "① 기저 봉인은 QE 에너지 0 건일 때 ② 상 = vc-relax · 자리 = kgy (사용자 10-23) — 도핑 셀 120 원자를 새로 돌릴 일이 생기면 gabia 새 결정 ③ QE run 은 GPU · CPU 는 검사 프로브만 ④ 서술은 '우리 스크리닝 최저 모델 (Nd@Li) 에서' 로 묶는다 ⑤ 1저자 통지는 사용자를 통해",
    "proposed_by": "claude-session-2026-10-23",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-10-23",
      "state": "proposed",
      "by": "agent",
      "note": "사용자 '1번하자' — 결과 전 카드 · G0 통과 뒤 제출"
+    },
+    {
+     "at": "2026-10-23",
+     "state": "active",
+     "by": "사용자 (CEI/Nd 트랙 · 계산 담당 — 1저자는 실험 쪽)",
+     "note": "AskUserQuestion — 비준 · 상 vc-relax · 자리 kgy · EOS 규칙 CLAUDE.md 에 (넷 다 권고안)"
     }
-   ]
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-23T13:11:56Z",
+    "commit": "ae55a80241b0e882fd8077f575be4c21ad73458a",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-10-23 (이 세션): '1번하자' → 카드 제시 뒤 AskUserQuestion '비준 (Recommended)' · 'vc-relax (Recommended)' · 'kgy (Recommended)'",
+    "decision_digest": "sha256:08b3ec88dc37e4acd3c0fb0f1de8f0960510e320b2e20e19b650dda8db555072"
+   }
   }
  ]
 }
