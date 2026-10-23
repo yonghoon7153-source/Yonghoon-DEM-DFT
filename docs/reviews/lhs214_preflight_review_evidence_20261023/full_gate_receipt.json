@@ -1,0 +1,97 @@
+{
+  "schema": "nonrint_clean_candidate_full_gate_v1",
+  "status": "PASS",
+  "branch": "codex/lhs214-relaunch",
+  "source_base": "7799a2ff64ba462b42ce05edd3e63b7c2854d557",
+  "candidate_commit_placeholder": "<<sha:Review LHS214 relaunch preflight and pin syntax>>",
+  "followup_commit_placeholder": "<<sha:Record LHS214 full gate evidence>>",
+  "tested_git_tree_content_id": "4174d705bcfe8463d2d9aa1f5f04cb7c297eb262",
+  "clean_candidate_gate": {
+    "track": "lhs214",
+    "branch": "codex/lhs214-relaunch",
+    "candidate_tree": "4174d705bcfe8463d2d9aa1f5f04cb7c297eb262",
+    "started_at_utc": "2026-10-23T14:37:56.985221+00:00",
+    "finished_at_utc": "2026-10-23T15:16:16.324821+00:00",
+    "command": "nice -n 10 bash scripts/check_all.sh",
+    "cwd": "/workspace/Yonghoon-DEM-DFT",
+    "environment_activation": "source /workspace/.cloud-setup/nonrint/activate.sh",
+    "environment": {
+      "TMPDIR": "/var/tmp/codex-nonrint-20261023",
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "MPLBACKEND": "Agg"
+    },
+    "python_executable": "/workspace/.venvs/yonghoon-dem/bin/python",
+    "python_version": "3.11.17 (main, Oct  3 2026, 01:05:36) [Clang 22.1.3 ]",
+    "versions": {
+      "numpy": "2.4.6",
+      "pandas": "2.3.3",
+      "pytz": "2026.5",
+      "scipy": "1.17.1"
+    },
+    "actual_temp_parent": "/var/tmp/codex-nonrint-20261023",
+    "clean_before": true,
+    "log_path": "final-gate/check-all.log",
+    "exit_code": 0,
+    "status": "PASS",
+    "runner_pid": 344453,
+    "gate_pid": 344483,
+    "log_sha256": "f27982bb9f2497c32dcea0a3e50130c6dea2dac16492d1fde3b32750bd8656c3",
+    "source_identity_before_sha256": "a6a5a3e773fd38e1ce73382dd7f7d81d50be0be5884136f21a30855a5b9e7aa7",
+    "source_identity_after_sha256": "a6a5a3e773fd38e1ce73382dd7f7d81d50be0be5884136f21a30855a5b9e7aa7",
+    "source_identity_unchanged": true,
+    "clean_after": true,
+    "pass_lane_count": 155,
+    "fail_lane_count": 0,
+    "all_pass_marker": true,
+    "candidate_commit_placeholder": "<<sha:Review LHS214 relaunch preflight and pin syntax>>"
+  },
+  "evidence_paths": [
+    "final-gate/check-all.log",
+    "final-gate/run-result.json",
+    "final-gate/source-identity-before.json",
+    "final-gate/source-identity-after.json"
+  ],
+  "post_gate_scope": "Evidence and append-only status note only; no production/shared source changes.",
+  "prior_receipt": null,
+  "final_document_checks": [
+    {
+      "name": "docrefs",
+      "argv": [
+        "nice",
+        "-n",
+        "10",
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "scripts/check_doc_refs.py"
+      ],
+      "command": "nice -n 10 python -I scripts/check_doc_refs.py",
+      "started_at_utc": "2026-10-23T15:16:27.287945+00:00",
+      "finished_at_utc": "2026-10-23T15:16:28.050681+00:00",
+      "exit_code": 0,
+      "log_path": "final-gate/final-docrefs.log",
+      "log_sha256": "67bdf52ee2b0995296bd2d7e325c65748ca1bc20c5da341ceec35a5b5be37702"
+    },
+    {
+      "name": "ledger",
+      "argv": [
+        "nice",
+        "-n",
+        "10",
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "scripts/check_review_findings.py"
+      ],
+      "command": "nice -n 10 python -I scripts/check_review_findings.py",
+      "started_at_utc": "2026-10-23T15:16:28.050934+00:00",
+      "finished_at_utc": "2026-10-23T15:16:45.597181+00:00",
+      "exit_code": 0,
+      "log_path": "final-gate/final-ledger.log",
+      "log_sha256": "7483b4664c4d3c52e24db54600e4b9c5fa164c0b4fc7746c8682a1b6360e090c"
+    }
+  ],
+  "external_execution_authorized": false,
+  "recorded_at_utc": "2026-10-23T15:16:58.634075+00:00"
+}

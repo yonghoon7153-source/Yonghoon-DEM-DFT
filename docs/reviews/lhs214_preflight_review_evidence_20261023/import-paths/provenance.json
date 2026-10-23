@@ -83,5 +83,5 @@
       "change_scope": "Evidence paths and path-context sentence only; no finding, number, result, or limitation changed."
     }
   ],
-  "original_manifest_context": "All 65 pre-import package docs, including all original manifests and their members, are retained in the archive. Only current outer evidence MANIFEST is regenerated."
+  "original_manifest_context": "반입 전 docs 65개와 원 증거 MANIFEST.sha256의 62개 멤버를 ZIP에 보존한다. SOURCE_SHA256SUMS의 40개 대상은 기준 저장소 7799a2ff64ba462b42ce05edd3e63b7c2854d557의 소스이며 이 원본 docs ZIP 밖에 있다. 최종 review ZIP은 별도 selected_paths에 따라 해당 검토 소스 문맥을 포함한다."
 }
