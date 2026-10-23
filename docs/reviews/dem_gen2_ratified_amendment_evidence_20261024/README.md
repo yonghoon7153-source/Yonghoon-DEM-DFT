@@ -1,5 +1,8 @@
 # DEM 세대 2 비준 개정 근거 (2026-10-24)
 
+> 현재 canonical 전체 gate: **PASS, 155/0, rc 0**. [완료 기록](completion.md)을 따른다. 아래 작성자/초기 반입 시점의 예정·대기 문구는 원 스냅샷의 범위이며 현재 상태를 대신하지 않는다.
+
+
 현재 문서는 `docs/reviews/dem_protocol_gen2_plan_draft_20261014.md`의 **§12**와 `docs/reviews/codex_dem_protocol_gen2_ratified_update_20261024.md`다. 이 폴더의 과거 사본은 현재 지시가 아니다.
 
 - `source-provenance.json`: 지정 기준 `962caea2d1857b0e34fe724e38815661936b7183`에서 원계획·당시 요청서·기존 산술 JSON·검산 도구를 가져온 경로와 SHA256. 사본 4개는 원 blob과 바이트 동일하다.
