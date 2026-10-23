@@ -1,13 +1,14 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-22 · managed-files: 544
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-23 · managed-files: 544
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
 ## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 337건)
-- 2026-10-22 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
+- 2026-10-23 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
+- 2026-10-23 · `kb/reviews/li2s1a_DA_prompt_li2s_glass_bmeas_650k_readout_2026_10_19.md` — DA 프롬프트 — li2s B 측정 가능 조건 카드 ① 단계 판독: N_B 5/5 · 골격 이동 2 (이량체 다리 교환) · R 집합 3 → R 불가 · A 650 K 여부 · 모델 검증 (UMA–PBE p1 · p1 · BVSE) · 트랙 마감 제안 · 초안 — 발송 전 (사용자가 보낸다 · 발송판 `kb/projects…
 - 2026-10-22 · `kb/reviews/codex_CZ_reply_wad_outsourcing_round2_bundle_2026_10_17.md` — CZ 회신 — W_ad 외주 2차 묶음 리뷰: NO-GO · 발송 보류 · 구조 봉인·집계 산식은 유지 · 반송 검사 경로의 결함 (판정 순서 · A→B 결박 · 시도별 환경 감사 · optB88 판독 · 인프라 중단 비용) 을 고친 뒤 재봉인 · 수령 2026-10-22 (사용자 붙여넣기 · 원문 보존 · 마크다운…
 - 2026-10-22 · `kb/reviews/codex_DB_prompt_wad_outsourcing_round2_v2_2026_10_22.md` — DB 프롬프트 — W_ad 외주 2차 묶음 v2 재리뷰: CZ 해제조건 일곱 + 발송 전 자체 검토 고침 (S1–S9) 이 닫혔는지 (고친 곳 diff 만) · 발송 승인 여부 · 발송 2026-10-22 (사용자 · 기준 커밋 3d684e502 ·…
 - 2026-10-22 · `kb/reviews/codex_DB_reply_wad_outsourcing_round2_v2_2026_10_22.md` — DB 회신 — W_ad 외주 2차 묶음 v2 (3d684e502 · MANIFEST b9450f6f…): NO-GO · 발송 보류 · P0 1 (시도 열거 — INCAR·attempt.json 없는 실행 흔적이 감사에서 빠짐) · P1 3 (불완전 시도의 커널 부정 증거 · KERNEL_UNVERIFIED 가 다른 결측을 가려 봉인 · 수동 초의 선행 0 = 8진수) · 해제 최소조건 넷 · 수령 2026-10-22 (사용자 붙여넣기 · 원문 보존 · 마크다운…
@@ -23,7 +24,6 @@
 - 2026-10-20 · `kb/papers/b2o3_bo_lpsc16_methods_2026_10_20.md` — B₂O₃ 원고 (BO-LPSC1.6 · paper #2) Computational Methods — 기록대로 · compact 판 (BML 가이드 반영) · 진행
 - 2026-10-19 · `kb/reviews/li2s1a_CX_prompt_li2s_glass_control_readout_2026_10_14.md` — CX 프롬프트 — li2s 소셀 유리 대조 계 B 600 K 판독: 규칙 적용 갈래 c2 (N_B 1/5) · 결과 전 선택 셋 확인 · 트랙 끝 제안 · 발송됨 (사용자 · 발송일 기록 없음 · 발송판 `kb/project…
 - 2026-10-19 · `kb/reviews/li2s1a_CX_reply_li2s_glass_control_readout_2026_10_19.md` — 회신 CX — 외부 1저자 (li2s 소셀 유리 대조 계 B 600 K 판독): Q-CX-1 c2 확정 · 문장 안에 단서 (경계 4 · 미통과 0 · C1 5/5) · 잣대 비대칭 한 줄 · N_eff 옆 금지 문구 · Q-CX-2 셋 수용 (③ 대조 잡은 상시 절차로) · Q-CX-3a 650 K 두 계 + Tg 거리 한계 결과 전 · 3b 순차 · 3c 문턱 5 + 통과 런도 네 지표 분포 기록 · p90² 포화 예상 · 3d 이 카드로 닫음 + 닫기 전 비용 0 둘 (A T₅₀ 네 시드 · 결정 Li₃PS₄ 1.88 의 상·출처) · 담금질 발견 둘 · 미해결 목록 7 · 수령 (2026-10-19 · 사용자 붙여넣기 'li2S는 이렇게 회…
-- 2026-10-19 · `kb/reviews/li2s1a_DA_prompt_li2s_glass_bmeas_650k_readout_2026_10_19.md` — DA 프롬프트 — li2s B 측정 가능 조건 카드 ① 단계 판독: N_B 5/5 · 골격 이동 2 (이량체 다리 교환) · R 집합 3 → R 불가 · A 650 K 여부 · 트랙 마감 제안 · 초안 — 발송 전 (사용자가 보낸다 · 발송판 `kb/projects…
 - 2026-10-17 · `kb/reviews/codex_CZ_prompt_wad_outsourcing_round2_bundle_2026_10_17.md` — CZ 프롬프트 — W_ad 외주 2차 묶음 리뷰: 탄소 P2′ · C–C · 은 a4 VASP 묶음 (코드 · 러너 사다리 · 판정 계약 · 검사기·집계기 · 봉인) · 발송 승인 여부 · 발송 2026-10-22 (기준 커밋 8d41e4e0 · 묶음 MAN…
 - 2026-10-16 · `kb/seminars/Research_Seminar_2026_10_13_cascade_script_ko.md` — 연구세미나 2026-10-13 — cascade 진행 브리핑 발표 대본 (장별) · 진행
 - 2026-10-16 · `kb/seminars/Research_Seminar_2026_10_16_cascade_script_plain_ko.md` — 연구세미나 2026-10-16 — cascade 1부 대본 쉬운 판 (1–15쪽 · 노트 칸 붙여넣기용) · 진행
@@ -214,7 +214,7 @@
 
 ## reviews/ (220)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
-- `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-10-22 · 자동생성)
+- `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-10-23 · 자동생성)
 - `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
 - `kb/reviews/cascade_preflight_audit_2026_09_09.md` — cascade_preflight_audit_2026_09_09  (2026-09-09 · 진행)
 - `kb/reviews/codex_AA_prompt_stageA_v5_regate_2026_08_29.md` — Codex 재검토 요청 AA — 회신 Z 의 P0 8건 처리 후 Stage A v5 재게이트  (2026-08-29 · 발송 완료 — 회신 AA 접수, 후속은 codex_AB_prompt_…)
@@ -420,7 +420,7 @@
 - `kb/reviews/li2s1a_CS_reply_li2s_glass_control_cost_2026_10_05.md` — 회신 CS — 외부 1저자 (li2s 소셀 유리 대조 계 비용): Q-CS-1 kgy 는 등분 가정으로 상한 비교 (과대평가 방향 = 보수적 · 벽시계 병기 · gabia 는 nvidia-smi 실측 · 기계별 방식 명시) · Q-CS-2 140 수용 + 셋 (80 이 틀린 이유 기록 · 다음 카드 비용 항목에 실측 장부 대조 필수 · 여유 14 % 얇음 → 160 또는 멈춤 경로 명시 · MD 40 을 v2 장부에서 다시) · Q-CS-3 그 처리로 됨 + 넷에서 멈출 때 규칙을 지금 박을 것 · 덧붙임 R 은 B 실제 산포 쪽 검출한계로 읽기  (2026-10-05 · 수령 (2026-10-05 · 사용자 붙여넣기) — 회신 원문 · 고…)
 - `kb/reviews/li2s1a_CX_prompt_li2s_glass_control_readout_2026_10_14.md` — CX 프롬프트 — li2s 소셀 유리 대조 계 B 600 K 판독: 규칙 적용 갈래 c2 (N_B 1/5) · 결과 전 선택 셋 확인 · 트랙 끝 제안  (2026-10-19 · 발송됨 (사용자 · 발송일 기록 없음 · 발송판 `kb/project…)
 - `kb/reviews/li2s1a_CX_reply_li2s_glass_control_readout_2026_10_19.md` — 회신 CX — 외부 1저자 (li2s 소셀 유리 대조 계 B 600 K 판독): Q-CX-1 c2 확정 · 문장 안에 단서 (경계 4 · 미통과 0 · C1 5/5) · 잣대 비대칭 한 줄 · N_eff 옆 금지 문구 · Q-CX-2 셋 수용 (③ 대조 잡은 상시 절차로) · Q-CX-3a 650 K 두 계 + Tg 거리 한계 결과 전 · 3b 순차 · 3c 문턱 5 + 통과 런도 네 지표 분포 기록 · p90² 포화 예상 · 3d 이 카드로 닫음 + 닫기 전 비용 0 둘 (A T₅₀ 네 시드 · 결정 Li₃PS₄ 1.88 의 상·출처) · 담금질 발견 둘 · 미해결 목록 7  (2026-10-19 · 수령 (2026-10-19 · 사용자 붙여넣기 'li2S는 이렇게 회…)
-- `kb/reviews/li2s1a_DA_prompt_li2s_glass_bmeas_650k_readout_2026_10_19.md` — DA 프롬프트 — li2s B 측정 가능 조건 카드 ① 단계 판독: N_B 5/5 · 골격 이동 2 (이량체 다리 교환) · R 집합 3 → R 불가 · A 650 K 여부 · 트랙 마감 제안  (2026-10-19 · 초안 — 발송 전 (사용자가 보낸다 · 발송판 `kb/projects…)
+- `kb/reviews/li2s1a_DA_prompt_li2s_glass_bmeas_650k_readout_2026_10_19.md` — DA 프롬프트 — li2s B 측정 가능 조건 카드 ① 단계 판독: N_B 5/5 · 골격 이동 2 (이량체 다리 교환) · R 집합 3 → R 불가 · A 650 K 여부 · 모델 검증 (UMA–PBE p1 · p1 · BVSE) · 트랙 마감 제안  (2026-10-23 · 초안 — 발송 전 (사용자가 보낸다 · 발송판 `kb/projects…)
 - `kb/reviews/litdb_dopant_sota_2026_09_09.md` — litdb_dopant_sota_2026_09_09  (2026-09-09 · 진행)
 - `kb/reviews/section3_review_candidates.md` — 📋 §3 리뷰 코멘트 후보 — 소거법 작업용 (ECER-D-26-00097)
 - `kb/reviews/section3_review_comments_compressed.md` — Comments on Section 3 (Intrinsic Stability of Sulfide SEs) — 압축판 v2
