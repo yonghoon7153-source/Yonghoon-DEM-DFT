@@ -1,0 +1,76 @@
+[10-21 21:00:01] ■ li2s 축소안 묶음 · RUN=/home/kgy/work/runs/li2s_model_check_sp_2026_10_21 · 러너 e6fc5b25e4f2b3ad · 문턱 20000 MiB
+[10-21 21:00:01] Nd EOS 잠금 대기 (/tmp/ndsite_eos.lock) — 그 러너가 끝나야 풀린다
+[10-23 11:22:23] Nd EOS 잠금 풀림 · 마지막 끝 줄: [10-23 11:22:23] 끝 — 완료 12 · 건너뜀 0 · 실패 0 · 총 9336분
+[10-23 11:22:23] VRAM 여유 21076 MiB ≥ 20000 — 시작
+[10-23 11:22:23] GPU 빌드 → 랭크 1 (GPU 하나당 랭크 하나)
+[10-23 11:22:23] MPI 를 바이너리에서 읽었다: /home/kgy/apps/openmpi-4.1.6/lib/libmpi.so.40
+[10-23 11:22:23]   prefix=/home/kgy/apps/openmpi-4.1.6 · mpirun=/home/kgy/apps/openmpi-4.1.6/bin/mpirun
+[10-23 11:22:23]   ⚠ libnvomp + libgomp 동시 링크 — OMP_NUM_THREADS=1 로 고정(libgomp: TODO 회피)
+[10-23 11:22:23] 코어: 물리 8 · 논리 16 → 랭크 1
+[10-23 11:22:23] 설정 균일성 ✓ (10점 동일 · key 9e752bad)
+               occupations = 'smearing'
+               electron_maxstep = 200
+               mixing_mode  = 'plain'
+[10-23 11:22:23] 점 10개 · /home/kgy/apps/openmpi-4.1.6/bin/mpirun --oversubscribe -np 1 · pw.x=/home/kgy/apps/qe-7.4.1-gpu/bin/pw.x · pseudo=/home/kgy/work/pseudo
+[10-23 11:22:23]   VRAM 여유 21076 MiB (문턱 20000)
+[10-23 11:31:38] ✓ A_s1  9분
+[10-23 11:31:38]   VRAM 여유 21077 MiB (문턱 20000)
+[10-23 11:41:39] ✓ A_s2  10분
+[10-23 11:41:39]   VRAM 여유 21076 MiB (문턱 20000)
+[10-23 11:51:25] ✓ A_s3  9분
+[10-23 11:51:25]   VRAM 여유 21077 MiB (문턱 20000)
+[10-23 12:01:10] ✓ A_s4  9분
+[10-23 12:01:10]   VRAM 여유 21079 MiB (문턱 20000)
+[10-23 12:10:34] ✓ A_s5  9분
+[10-23 12:10:34]   VRAM 여유 21076 MiB (문턱 20000)
+[10-23 12:19:45] ✓ B_s1  9분
+[10-23 12:19:45]   VRAM 여유 21076 MiB (문턱 20000)
+[10-23 12:28:58] ✓ B_s2  9분
+[10-23 12:28:58]   VRAM 여유 21077 MiB (문턱 20000)
+[10-23 12:38:24] ✓ B_s3  9분
+[10-23 12:38:24]   VRAM 여유 21076 MiB (문턱 20000)
+[10-23 12:47:03] ✓ B_s4  8분
+[10-23 12:47:03]   VRAM 여유 21076 MiB (문턱 20000)
+[10-23 12:56:25] ✓ B_s5  9분
+[10-23 12:56:25] 끝 — 완료 10 · 건너뜀 0 · 실패 0 · 총 94분
+다음: UMA 힘 (같은 frame.xyz) → 분석
+[10-23 12:56:25] ✓ sp 끝
+[10-23 12:56:25] VRAM 여유 21077 MiB ≥ 20000 — 시작
+[10-23 12:56:25] GPU 빌드 → 랭크 1 (GPU 하나당 랭크 하나)
+[10-23 12:56:25] MPI 를 바이너리에서 읽었다: /home/kgy/apps/openmpi-4.1.6/lib/libmpi.so.40
+[10-23 12:56:25]   prefix=/home/kgy/apps/openmpi-4.1.6 · mpirun=/home/kgy/apps/openmpi-4.1.6/bin/mpirun
+[10-23 12:56:25]   ⚠ libnvomp + libgomp 동시 링크 — OMP_NUM_THREADS=1 로 고정(libgomp: TODO 회피)
+[10-23 12:56:25] 코어: 물리 8 · 논리 16 → 랭크 1
+[10-23 12:56:25] 설정 균일성 ✓ (2점 동일 · key 2cecd626)
+               occupations = 'smearing'
+               electron_maxstep = 200
+               mixing_mode  = 'plain'
+[10-23 12:56:25] 점 2개 · /home/kgy/apps/openmpi-4.1.6/bin/mpirun --oversubscribe -np 1 · pw.x=/home/kgy/apps/qe-7.4.1-gpu/bin/pw.x · pseudo=/home/kgy/work/pseudo
+[10-23 12:56:25]   VRAM 여유 21077 MiB (문턱 20000)
+[10-23 13:09:01] ✓ ecut_hi_A_s3  12분
+[10-23 13:09:01]   VRAM 여유 21077 MiB (문턱 20000)
+[10-23 13:21:09] ✓ ecut_hi_B_s4  12분
+[10-23 13:21:09] 끝 — 완료 2 · 건너뜀 0 · 실패 0 · 총 24분
+다음: UMA 힘 (같은 frame.xyz) → 분석
+[10-23 13:21:10] ✓ pulay 끝
+[10-23 13:21:10] VRAM 여유 21079 MiB ≥ 20000 — 시작
+[10-23 13:21:10] GPU 빌드 → 랭크 1 (GPU 하나당 랭크 하나)
+[10-23 13:21:10] MPI 를 바이너리에서 읽었다: /home/kgy/apps/openmpi-4.1.6/lib/libmpi.so.40
+[10-23 13:21:10]   prefix=/home/kgy/apps/openmpi-4.1.6 · mpirun=/home/kgy/apps/openmpi-4.1.6/bin/mpirun
+[10-23 13:21:10]   ⚠ libnvomp + libgomp 동시 링크 — OMP_NUM_THREADS=1 로 고정(libgomp: TODO 회피)
+[10-23 13:21:10] 코어: 물리 8 · 논리 16 → 랭크 1
+[10-23 13:21:10] 설정 균일성 ✓ (1점 동일 · key 9e752bad)
+               occupations = 'smearing'
+               electron_maxstep = 200
+               mixing_mode  = 'plain'
+[10-23 13:21:10] 점 1개 · /home/kgy/apps/openmpi-4.1.6/bin/mpirun --oversubscribe -np 1 · pw.x=/home/kgy/apps/qe-7.4.1-gpu/bin/pw.x · pseudo=/home/kgy/work/pseudo
+[10-23 13:21:10]   VRAM 여유 21079 MiB (문턱 20000)
+[10-23 15:39:53] ⛔ k222_A_s3  실패 — /home/kgy/work/runs/li2s_model_check_sp_2026_10_21/kpt/k222_A_s3/scf.out 마지막 줄:
+         Process name: [[63340,1],0]
+         Exit code:    1
+       --------------------------------------------------------------------------
+[10-23 15:39:53] 끝 — 완료 0 · 건너뜀 0 · 실패 1 · 총 138분
+⛔ 실패한 점이 있다. 카드 §8 무효 조건: **19점으로 판정하지 않는다** —
+   그 점을 다시 돌리거나, 규칙에 미리 적은 대체(실패 프레임의 +1 ps)를 쓴다.
+[10-23 15:39:53] ⚠ kpt: 러너 rc 1 (실패한 잡 있음 · 대기 1) — 대체하지 않고 다음 폴더로
+[10-23 15:39:53] ■ 끝 — sp:rc0 pulay:rc0 kpt:rc1 · 다음: 회수 → glass_model_check.py --sp --qe_root <회수본>

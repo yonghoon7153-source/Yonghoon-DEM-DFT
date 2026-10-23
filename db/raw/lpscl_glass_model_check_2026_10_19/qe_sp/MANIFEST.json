@@ -1,0 +1,131 @@
+{
+ "card": "db/properties/lpscl_smallcell_glass_model_check_estimand_2026_10_19.json",
+ "mode": "sp",
+ "pseudo_dir": "/home/kgy/work/pseudo",
+ "pseudos": {
+  "Cl": {
+   "file": "cl_pbe_v1.4.uspp.F.UPF",
+   "sha256": "5b1ebdea1e5ba743fba0100806206287e1f7f00460c7e6f19791446beaee0655"
+  },
+  "Li": {
+   "file": "li_pbe_v1.4.uspp.F.UPF",
+   "sha256": "02cc4b3810e28a43b570277840d9631ca24f634d922928200c047b72c0a86bf5"
+  },
+  "P": {
+   "file": "P.pbe-n-rrkjus_psl.1.0.0.UPF",
+   "sha256": "2d112dfec2e2d9b75a971574d9116aa92249988177791659bbcd2ba15f23c20c"
+  },
+  "S": {
+   "file": "s_pbe_v1.4.uspp.F.UPF",
+   "sha256": "84ad731864187f416f714e961c3ad2f04dcbf811618e724d277885c18cb470df"
+  }
+ },
+ "jobs": [
+  {
+   "dir": "sp/A_s1",
+   "kind": "path",
+   "source": "A_s1/x1.00.xyz",
+   "geom_sha256": "630b9666bbd4fa11b586e21e873cd9680d4c15aa9d715f3f8afee81c8b6e84ae",
+   "scf_in_sha256": "6cf32108ac47b4ed37bf8cd1c1ffbe492e60a14a68e5c22fb9b5fbaf9586a946",
+   "check": "✓"
+  },
+  {
+   "dir": "sp/A_s2",
+   "kind": "path",
+   "source": "A_s2/x1.00.xyz",
+   "geom_sha256": "12beab6027647f60b5f8efef4404d4e4c3e068c9662124984ae189870d9f24f3",
+   "scf_in_sha256": "3a367492d1f0f147d47ec286d60faf63b9ad95a85bfe5ab213e84be19658fa3f",
+   "check": "✓"
+  },
+  {
+   "dir": "sp/A_s3",
+   "kind": "path",
+   "source": "A_s3/x1.00.xyz",
+   "geom_sha256": "3d8ae4fc648f41ba5695cba2101d2d0eebd038e9f56ca1a54f5fff92f7ad67af",
+   "scf_in_sha256": "78ae74d7da65fb1177a829c591bae6589dcc2d2d7ef598c7fba9220ced71573d",
+   "check": "✓"
+  },
+  {
+   "dir": "sp/A_s4",
+   "kind": "path",
+   "source": "A_s4/x1.00.xyz",
+   "geom_sha256": "01bf0d80a25e9e5a7e554f092b7ec9f6994eaffeeab9797920ed9326339db955",
+   "scf_in_sha256": "729f96143a3a41eb8faab6fcb3b28cb75af4adccae563da1f11046e936eb2048",
+   "check": "✓"
+  },
+  {
+   "dir": "sp/A_s5",
+   "kind": "path",
+   "source": "A_s5/x1.00.xyz",
+   "geom_sha256": "ddce9cb15baeed3a42f871184923fe2299bcef7601517182d5f5f7c0f27d5648",
+   "scf_in_sha256": "f3278afc523317bdebeb362a4ec0ab07067f80111b2ef9c3c405bc351d1c39b5",
+   "check": "✓"
+  },
+  {
+   "dir": "sp/B_s1",
+   "kind": "path",
+   "source": "B_s1/x1.00.xyz",
+   "geom_sha256": "84f92e17b8d9843ca08f97d0d6b106cc4ddb10b83df51defb69495423112a011",
+   "scf_in_sha256": "12c1fec11405507c3615808fbfb578f45a64cc51acb94bc3191500b25711b1cf",
+   "check": "✓"
+  },
+  {
+   "dir": "sp/B_s2",
+   "kind": "path",
+   "source": "B_s2/x1.00.xyz",
+   "geom_sha256": "a92830f89ad49e262d501c5e61a0cd99bac74e2c9888207c50ccdf8b53b3f3aa",
+   "scf_in_sha256": "e4240e36ef897305446658872e0d169e5ea52f91d208b4a9a8526e0fdbec55a9",
+   "check": "✓"
+  },
+  {
+   "dir": "sp/B_s3",
+   "kind": "path",
+   "source": "B_s3/x1.00.xyz",
+   "geom_sha256": "b0bf8ed0df9c6f6dd7ae4aa9dfd0b3d2687fa7b4a3f64027b3803f3d4f74fda9",
+   "scf_in_sha256": "efc83b2d4f62a1e54e71d78af41fcff9f8e8c81cf8a339f4456daf0791bae47a",
+   "check": "✓"
+  },
+  {
+   "dir": "sp/B_s4",
+   "kind": "path",
+   "source": "B_s4/x1.00.xyz",
+   "geom_sha256": "8715e69f14c17a725001eda3cf978966a035ce66232733844dfd2d3eb8abbd1f",
+   "scf_in_sha256": "aa7653449b5fb5654d48d3a81a337c6d328db4e2f396bab98f76ca357ea5b519",
+   "check": "✓"
+  },
+  {
+   "dir": "sp/B_s5",
+   "kind": "path",
+   "source": "B_s5/x1.00.xyz",
+   "geom_sha256": "f563e7de0f074b73d1c00953730ff1b27e972f615d0c8fe827e7df0b3a45ee0c",
+   "scf_in_sha256": "c73d342706fc905861fbd92f71cd3003812e22dc77f6ccd1f4f13acaebc2528b",
+   "check": "✓"
+  },
+  {
+   "dir": "pulay/ecut_hi_A_s3",
+   "kind": "ecut_hi",
+   "source": "A_s3/x1.00.xyz",
+   "geom_sha256": "3d8ae4fc648f41ba5695cba2101d2d0eebd038e9f56ca1a54f5fff92f7ad67af",
+   "scf_in_sha256": "0a4898f2fe8490014e1fd8737b7a81b2762f60d54968fd66477e96157d10c220",
+   "check": "✓"
+  },
+  {
+   "dir": "pulay/ecut_hi_B_s4",
+   "kind": "ecut_hi",
+   "source": "B_s4/x1.00.xyz",
+   "geom_sha256": "8715e69f14c17a725001eda3cf978966a035ce66232733844dfd2d3eb8abbd1f",
+   "scf_in_sha256": "46a9a286439891fc7f25415a071570493ffd08df6bea99e21b29806ccc265389",
+   "check": "✓"
+  },
+  {
+   "dir": "kpt/k222_A_s3",
+   "kind": "k222",
+   "source": "A_s3/x1.00.xyz",
+   "geom_sha256": "3d8ae4fc648f41ba5695cba2101d2d0eebd038e9f56ca1a54f5fff92f7ad67af",
+   "scf_in_sha256": "ff406ac135242b8860e808aca0d5576f859260853b50b7db7ccf8b67aac7751b",
+   "check": "✓"
+  }
+ ],
+ "k_label": "A_s3",
+ "c_입력_설정": "✓"
+}
