@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-23 · managed-files: 544
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-23 · managed-files: 545
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -443,7 +443,7 @@
 - `kb/reports/weekly_2026_09_27.md` — 주간 정리 2026-09-21 ~ 09-27 (주간보고 초안)  (2026-09-28 · 완료 (2026-09-28 · 다음 주 문서는 새 파일))
 - `kb/reports/weekly_2026_10_04.md` — 주간 정리 2026-09-28 ~ 10-04 (주간보고 초안)  (2026-10-04 · 초안 (2026-10-04 · 도는 계산은 10-04 17:59 실측…)
 
-## projects/ (50)
+## projects/ (51)
 - `kb/projects/HANDOFF_2026_08_31_session.md` — 인수인계 — 2026-08-31 세션 (외주 C-12 AR→AV · 폴라론 S0 · nscf 사고)  (2026-09-03 · 활성)
 - `kb/projects/MULTI_CATEGORY_BATCH_PLAN_v22.md` — Multi-Category Multi-Compound Batch Plan — Paper #2 (v4.5.18)
 - `kb/projects/MUST_READ_digital_twin_north_star.md` — 🚨🚨🚨 MUST READ — AI 계산 스크리닝 플랫폼 North Star (구: Digital Twin)
@@ -479,6 +479,7 @@
 - `kb/projects/merge_request_2026_10_05.md` — 머지 요청 (최종) — 대피 브랜치 claude/evac-2026-10-02 → claude/friendly-meitner-lldvar (2026-10-05)  (2026-10-05 · 최종 — 10-05 밤 실측 (no-ff · 가상 병합 텍스트 충돌 …)
 - `kb/projects/ml_opportunities_from_lab_ppt_2026_07.md` — 랩 ML 파이프라인(TabPFN)과 우리 캠페인의 접점 — 2026-07-28
 - `kb/projects/mlip_next_campaigns_2026_07.md` — MLIP(UMA) 차기 캠페인 후보 제안서 — cascade 확장 7건  (2026-07-27 · proposal)
+- `kb/projects/nd_site_q1_message_send_2026_10_23.md` — nd_site_q1_message_send_2026_10_23
 - `kb/projects/restart_runbook_2026_09_07.md` — 재기동 절차서 — 2026-09-07 재부팅 (gabia · desktop)  (2026-09-07 · 진행)
 - `kb/projects/screening_roadmap_2026_07.md` — AI 계산 스크리닝 로드맵 — 문헌 7편(2013–2020) 대비 우리 좌표와 실행 항목  (2026-07-28 · roadmap)
 - `kb/projects/sdcp_linio2_binding.md` — SDCP–LiNiO₂ Binding Anchoring Scan
