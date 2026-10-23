@@ -1,0 +1,90 @@
+{
+  "date_note": "생성 시각은 git 커밋으로 추적",
+  "pseudo_dir": "/home/kgy/work/pseudo",
+  "pseudos_used": {
+    "Cl": "Cl.pbe-nl-kjpaw_psl.1.0.0.UPF",
+    "Li": "Li.pbe-sl-kjpaw_psl.1.0.0.UPF",
+    "Nd": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF",
+    "O": "O.pbe-n-kjpaw_psl.0.1.UPF",
+    "P": "P.pbe-n-kjpaw_psl.1.0.0.UPF",
+    "S": "S.pbe-nl-kjpaw_psl.1.0.0.UPF"
+  },
+  "⚠_pseudo_note": "머신마다 파일명 구두점이 다르고 판(USPP/PAW)도 다를 수 있다. gabia SSSP 는 Y 가 USPP(Y_pbe_v1.uspp.F.UPF)이고 우리 PSEUDOS 목록의 PAW 와 다르다 — **모든 계산에 같은 것을 쓰므로 내부 일관성은 유지되나, 다른 머신 결과와 섞으면 안 된다.**",
+  "calculation": "relax",
+  "⛔_calculation_note": "relax — DFT 가 기하까지 정한다. 수렴 여부를 출력에서 확인할 것.",
+  "ecutwfc": 70.0,
+  "ecutrho": 560.0,
+  "kpoints_target": "3 3 2",
+  "kpoints_phase": "4 4 4",
+  "basis": {
+    "Li3PS4": {
+      "Li": 3,
+      "P": 1,
+      "S": 4
+    },
+    "Li2S": {
+      "Li": 2,
+      "S": 1
+    },
+    "LiCl": {
+      "Li": 1,
+      "Cl": 1
+    },
+    "Li3PO4": {
+      "Li": 3,
+      "P": 1,
+      "O": 4
+    },
+    "Nd2S3": {
+      "Nd": 2,
+      "S": 3
+    }
+  },
+  "basis_mp": {
+    "Li3PS4": {
+      "mp_id": "mp-aaacebzb",
+      "n_atoms": 32,
+      "from": "db/raw/nd_q2_decomp_2026_10_23/step1b/structs_doped/Li3PS4.cif"
+    },
+    "Li2S": {
+      "mp_id": "mp-aaaaabsj",
+      "n_atoms": 3,
+      "from": "db/raw/nd_q2_decomp_2026_10_23/step1b/structs_doped/Li2S.cif"
+    },
+    "LiCl": {
+      "mp_id": "mp-aaacpllf",
+      "n_atoms": 4,
+      "from": "db/raw/nd_q2_decomp_2026_10_23/step1b/structs_doped/LiCl.cif"
+    },
+    "Li3PO4": {
+      "mp_id": "mp-aaaaauhx",
+      "n_atoms": 16,
+      "from": "db/raw/nd_q2_decomp_2026_10_23/step1b/structs_doped/Li3PO4.cif"
+    },
+    "Nd2S3": {
+      "mp_id": "mp-aaaaaaqw",
+      "n_atoms": 20,
+      "from": "db/raw/nd_q2_decomp_2026_10_23/step1b/structs_doped/Nd2S3.cif"
+    }
+  },
+  "per_target": {},
+  "basis_file": "db/inputs/nd_q2_decomp_2026_10_23/basis.json",
+  "basis_file_sha256": "3485bfef1762cb47713eef838753857c40fa5727cfc3f31c9ce84381392798a7",
+  "calculation_phase": "vc-relax",
+  "kspacing_phase": 0.25,
+  "phase_kpoints": {
+    "Li3PS4": "5 4 2",
+    "Li2S": "8 8 8",
+    "LiCl": "8 8 4",
+    "Li3PO4": "6 5 5",
+    "Nd2S3": "7 4 2"
+  },
+  "smearing": "mv",
+  "degauss": 0.01,
+  "conv_thr": "1.0d-9",
+  "mixing_beta": 0.3,
+  "targets": [
+    "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/q2_stage/host.xyz"
+  ],
+  "⛔_do_not": "E_above_hull 로 인용 금지. 5상 공통기저 안의 상대 비교다."
+}

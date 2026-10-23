@@ -1,0 +1,64 @@
+&CONTROL
+    calculation = 'vc-relax'
+    prefix      = 'Li3PO4'
+    outdir      = './tmp'
+    pseudo_dir  = '/home/kgy/work/pseudo'
+    tprnfor     = .true.
+    tstress     = .true.
+    etot_conv_thr = 1.0d-6
+    forc_conv_thr = 1.0d-4
+    nstep        = 200
+/
+&SYSTEM
+    ibrav       = 0
+    nat         = 16
+    ntyp        = 3
+    ecutwfc     = 70.0
+    ecutrho     = 560.0
+    occupations = 'smearing'
+    smearing    = 'mv'
+    degauss     = 0.01
+    nosym       = .true.
+/
+&ELECTRONS
+    conv_thr     = 1.0d-9
+    electron_maxstep = 100
+    mixing_mode  = 'plain'
+    mixing_beta  = 0.3
+    mixing_ndim  = 8
+    diagonalization = 'david'
+/
+&IONS
+    ion_dynamics = 'bfgs'
+/
+&CELL
+    cell_dynamics = 'bfgs'
+    press_conv_thr = 0.5
+/
+ATOMIC_SPECIES
+  Li  6.9410  Li.pbe-sl-kjpaw_psl.1.0.0.UPF
+  O  15.9994  O.pbe-n-kjpaw_psl.0.1.UPF
+  P  30.9740  P.pbe-n-kjpaw_psl.1.0.0.UPF
+CELL_PARAMETERS angstrom
+    4.9224480000    0.0000000000    0.0000000000
+    0.0000000000    5.2964020000    0.0000000000
+    0.0000000000    0.0000000000    6.1761360000
+ATOMIC_POSITIONS crystal
+  Li    0.5094170000    0.8445200000    0.0000000000
+  Li    0.0094170000    0.1554800000    0.5000000000
+  Li    0.5083630000    0.3264340000    0.2528730000
+  Li    0.0083630000    0.6735660000    0.2471270000
+  Li    0.0083630000    0.6735660000    0.7528730000
+  Li    0.5083630000    0.3264340000    0.7471270000
+  P    0.5014200000    0.8242610000    0.5000000000
+  P    0.0014200000    0.1757390000    0.0000000000
+  O    0.1070100000    0.3135090000    0.7928620000
+  O    0.6021260000    0.1035080000    0.5000000000
+  O    0.1851910000    0.8183960000    0.5000000000
+  O    0.6851910000    0.1816040000    0.0000000000
+  O    0.6070100000    0.6864910000    0.2928620000
+  O    0.1070100000    0.3135090000    0.2071380000
+  O    0.1021260000    0.8964920000    0.0000000000
+  O    0.6070100000    0.6864910000    0.7071380000
+K_POINTS automatic
+  6 5 5 0 0 0

@@ -33,5 +33,16 @@
   "kgy_PAW": "Nd · O 있음 (sha256 gabia 와 같음) · Li · P · S · Cl 없음 → 공식 사이트에서 받아 gabia sha256 과 같을 때만 넣는다 · GPU 3,078 / 24,576 MiB (cascade cv7main)",
   "⛔_MP_hull_기본값": "엉터리 — host → Li + S + Li₃P + LiCl · 도핑 → NdS₂ · Li₂O · NdPS₄ · Li₃P · LiCl · S (엔트리 322 · r2SCAN 접미 · mp_api 기본 thermo type 이 혼합으로 바뀜) ⇒ 기저로 안 쓴다 · 카드 개정 11 (GGA_GGA+U 명시 · G5a 정상성)",
   "by": "agent · 2026-10-23"
+ },
+ "✅_기저_봉인_입력_2026_10_23": {
+  "①b_회수": "gabia push dac0ad04f (첫 push 는 인증 실패 → 같은 작업 폴더에서 push 만 다시) → db/raw/nd_q2_decomp_2026_10_23/step1b/ · thermo GGA_GGA+U · 엔트리 321 (전부 GGA) · MP DB 2026.09.28",
+  "G5a_정상성": "✅ host = {Li₃PS₄, Li₂S, LiCl} (알려진 답) · 도핑 = Li₃PS₄ · LiCl · Li₃PO₄ · Nd₂S₃ · Li₂S · 원소상 없음 · 공통 세 상은 두 질의에서 같은 엔트리 · cif 바이트도 같음",
+  "G5": "✅ 기저 다섯 · 계수 5/5 (해 하나) · 잔차 ≤ 6e-14 · 음 아닌 계수 — 도핑 Li₃PS₄ 9.25 · Li₂S 1 · LiCl 16 · Li₃PO₄ 0.75 · Nd₂S₃ 1 / host 5 · 2 · 8 · 0 · 0",
+  "봉인": "db/inputs/nd_q2_decomp_2026_10_23/basis.json (sha256 3485bfef1762cb47… · QE 에너지 0 건)",
+  "다형_메모": "Li₃PS₄ 32 원자 사방정 · Li₂S 3 원자 · LiCl 육방 4 원자 (MP GGA 최저 · 실험은 암염) · Li₃PO₄ 16 원자 β · Nd₂S₃ 20 원자 α — 공통상 계수 차 (원자당) Li₃PS₄ −0.0036 · Li₂S −0.024 · LiCl +0.0043 ⇒ 공통상 다형 오차는 Y 에 대부분 상쇄 (Li₂S 10 meV/원자 오차 → Y ≈ 0.7 meV/원자) · 도핑에만 있는 Li₃PO₄ · Nd₂S₃ 는 상쇄 없음",
+  "입력": "db/inputs/nd_q2_decomp_2026_10_23/run/{Li2S,Li3PO4,Li3PS4,LiCl,Nd2S3,host}/scf.in (MANIFEST · SHA256SUMS) — 상 vc-relax (k 간격 0.25: 8 8 8 · 6 5 5 · 5 4 2 · 8 8 4 · 7 4 2) · host 고정셀 이온 이완 k 3 3 2 · 방법 설정 여섯 다 같고 9 월 탐침과 같다 · nosym .true. 로 통일 (러너의 설정 균일성 검사 · 대칭은 에너지를 안 바꾼다)",
+  "kgy_PAW": "✅ Li · P · S · Cl 공식 사이트에서 받아 gabia sha256 과 같음 확인 뒤 넣음 (Nd · O 는 원래 같았음)",
+  "⏭": "kgy: worktree → 입력 복사 · sha 확인 → GPU 프로브 (host · 120 초 · 어림 줄만) → 들어가면 tmux ndq2 (run_force_check_scf.sh · MIN_FREE_MIB = 어림 × 1.3 + 1024)",
+  "by": "agent · 2026-10-23"
  }
 }

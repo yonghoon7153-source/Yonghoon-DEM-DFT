@@ -1,0 +1,51 @@
+&CONTROL
+    calculation = 'vc-relax'
+    prefix      = 'LiCl'
+    outdir      = './tmp'
+    pseudo_dir  = '/home/kgy/work/pseudo'
+    tprnfor     = .true.
+    tstress     = .true.
+    etot_conv_thr = 1.0d-6
+    forc_conv_thr = 1.0d-4
+    nstep        = 200
+/
+&SYSTEM
+    ibrav       = 0
+    nat         = 4
+    ntyp        = 2
+    ecutwfc     = 70.0
+    ecutrho     = 560.0
+    occupations = 'smearing'
+    smearing    = 'mv'
+    degauss     = 0.01
+    nosym       = .true.
+/
+&ELECTRONS
+    conv_thr     = 1.0d-9
+    electron_maxstep = 100
+    mixing_mode  = 'plain'
+    mixing_beta  = 0.3
+    mixing_ndim  = 8
+    diagonalization = 'david'
+/
+&IONS
+    ion_dynamics = 'bfgs'
+/
+&CELL
+    cell_dynamics = 'bfgs'
+    press_conv_thr = 0.5
+/
+ATOMIC_SPECIES
+  Cl  35.4530  Cl.pbe-nl-kjpaw_psl.1.0.0.UPF
+  Li  6.9410  Li.pbe-sl-kjpaw_psl.1.0.0.UPF
+CELL_PARAMETERS angstrom
+    3.9248824200    0.0000000000    0.0000000000
+   -1.9624416265    3.3990476421    0.0000000000
+    0.0000000000    0.0000000000    6.3571610000
+ATOMIC_POSITIONS crystal
+  Li    0.6666670000    0.3333330000    0.8760170000
+  Li    0.3333330000    0.6666670000    0.3760170000
+  Cl    0.6666670000    0.3333330000    0.4989840000
+  Cl    0.3333330000    0.6666670000    0.9989840000
+K_POINTS automatic
+  8 8 4 0 0 0
