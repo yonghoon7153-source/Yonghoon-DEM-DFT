@@ -1,0 +1,11 @@
+{
+  "status": "PREFLIGHT_PASS",
+  "audit_checks": 21,
+  "candidate_commit_placeholder": "<<sha:Fix mixer D2 validation and preserve supported phase sets>>",
+  "original_members": {
+    "mxd2-ui-preflight.md": "0b4c9554a40f2f46a46b8470be007f630141e0e74e058861e20171cb348a4279",
+    "mxd2-ui-preflight.json": "5fe84e457deef2e77d4b7daf3b229bd18b742977f1199f9e720d182e3bfe7134"
+  },
+  "archive_sha256": "555e9132c69b232409696631099ab8dd4b24a0a4f47819768c0a0e166fcf1a95",
+  "scope": "Frozen-candidate UI evidence consistency audit; original candidate SHA remains only in untouched original audit records/archive and external pin; no full publication claim"
+}
