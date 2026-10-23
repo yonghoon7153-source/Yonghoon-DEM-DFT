@@ -194,5 +194,14 @@
   "값": "없음",
   "⏭": "두 점 끝 → 회수 → 판독 폴더 (V₀ 두 점 + Q1 Li2S · Li3PS4) → site_dg.py --qe … --thresholds Nd=0.10 → E(V₀ relax) − BM3 E₀ > 5 meV 면 기록 → 한쪽 방향 규칙 (10-19) → §5",
   "by": "agent · 2026-10-23"
+ },
+ "V0_끝_2026_10_23": {
+  "출처": "사용자 붙여넣기 10-23 20:51:48 (kgy · run.log 끝 · watch_qe_relax RV=$HOME/work/runs/ndo_site_eos_v0_2026_10_23)",
+  "결과": "수렴 2 / 2 · 실패 0 — MLi_04 BFGS 8 · MP_07 BFGS 8 (MP_07 100 분) · run.log '끝 — 완료 2 · 건너뜀 0 · 실패 0 · 총 216분' (19:16:48) · 화면 |F| 0.0022 (QE Total force · 완료 판정은 'bfgs converged')",
+  "러너_끝_줄": "'다음: UMA 힘 …' 은 러너 고정 문구 (EOS 때와 같음)",
+  "GPU": "20:51 3,079 MiB (cascade 만)",
+  "값": "없음 — site_dg.py 로만",
+  "⏭": "회수 (db/raw/ndo_site_eos_v0_2026_10_23/ · 7 파일) → 판독 폴더 (V₀ 두 점 + Q1 Li2S · Li3PS4 scf.in · scf.out) → site_dg.py --qe <폴더> --expect 1 --top 1 --thresholds Nd=0.10 --compare_uma … → E(V₀ relax) − BM3 E₀ > 5 meV 면 기록 → 한쪽 방향 규칙 (10-19) → §5",
+  "by": "agent · 2026-10-23"
  }
 }
