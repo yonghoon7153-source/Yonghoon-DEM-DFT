@@ -1,0 +1,54 @@
+{
+  "status": "PASS",
+  "candidate": "34782a1874435e317f44c9d8f2045d53ceaf4dcc",
+  "branch": "codex/mixer-mxd2",
+  "cwd": "/workspace/Yonghoon-DEM-DFT",
+  "started_at_utc": "2026-10-23T20:51:35.871345+00:00",
+  "checked_index_tree_before": "b143cf6fd89a4caec79c963708c0188b7f368c66",
+  "checks": [
+    {
+      "name": "docrefs",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "scripts/check_doc_refs.py"
+      ],
+      "cwd": "/workspace/Yonghoon-DEM-DFT",
+      "started_at_utc": "2026-10-23T20:51:35.871393+00:00",
+      "finished_at_utc": "2026-10-23T20:51:37.171814+00:00",
+      "exit_code": 0,
+      "log": "final-docrefs.log",
+      "log_sha256": "d1ee7d0b04b48dc9710ef20da292d88679baa0cd11550c3b712dfb695f06d04d"
+    },
+    {
+      "name": "ledger",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "scripts/check_review_findings.py"
+      ],
+      "cwd": "/workspace/Yonghoon-DEM-DFT",
+      "started_at_utc": "2026-10-23T20:51:37.171943+00:00",
+      "finished_at_utc": "2026-10-23T20:52:05.015806+00:00",
+      "exit_code": 0,
+      "log": "final-ledger.log",
+      "log_sha256": "7483b4664c4d3c52e24db54600e4b9c5fa164c0b4fc7746c8682a1b6360e090c"
+    }
+  ],
+  "finished_at_utc": "2026-10-23T20:52:05.044080+00:00",
+  "checked_index_tree_after": "b143cf6fd89a4caec79c963708c0188b7f368c66",
+  "input_inventory_unchanged": true,
+  "working_tree_equals_index": true,
+  "checked_inventory_file": "checked-inventory.json",
+  "checked_inventory_sha256": "8c4a5988191b0a54e269f8ce36154d1c589715743f9274c96fd3cc9f2e534d26",
+  "post_check_additions": [
+    "final-preflight.json",
+    "final-docrefs.log",
+    "final-ledger.log",
+    "checked-inventory.json"
+  ],
+  "post_check_existing_updates": [
+    "MANIFEST.sha256"
+  ],
+  "post_check_scope": "Only these raw proof files and the live manifest inventory may be added or updated after the checked snapshot; no source or Markdown changes."
+}

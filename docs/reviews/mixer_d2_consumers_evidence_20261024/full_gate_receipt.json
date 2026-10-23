@@ -1,7 +1,541 @@
 {
-  "status": "PENDING_ROOT_FULL_GATE",
-  "scope": "Final repository integration and complete required gates are owned by root",
-  "development_tests_pass": true,
-  "execution_authorized": false,
-  "registered": null
+  "runner_version": 3,
+  "track": "mxd2",
+  "branch": "codex/mixer-mxd2",
+  "candidate_head": "34782a1874435e317f44c9d8f2045d53ceaf4dcc",
+  "candidate_tree": "2e3e36a90ec43ebeaf491f6d864a09b64a3a6962",
+  "source_repository": "/workspace/Yonghoon-DEM-DFT",
+  "cwd": "/workspace/.cloud-setup/nonrint-20261024/gates/mxd2-verified/repository",
+  "runner_sha256": "4a04a878e05937e3a9208d128075b6e7f86e207e6da4fae3995f6cdb2c5cffc4",
+  "command": "nice -n 10 bash scripts/check_all.sh",
+  "started_at_utc": "2026-10-23T20:03:02.973761+00:00",
+  "status": "PASS",
+  "environment_activation": "source /workspace/.cloud-setup/nonrint/activate.sh",
+  "actual_temp_parent": "/var/tmp/codex-nonrint-20261023",
+  "runner_pid": 1009047,
+  "python_executable": "/workspace/.venvs/yonghoon-dem/bin/python",
+  "python_version": "3.11.17 (main, Oct  3 2026, 01:05:36) [Clang 22.1.3 ]",
+  "versions": {
+    "numpy": "2.4.6",
+    "pandas": "2.3.3",
+    "pytz": "2026.5",
+    "scipy": "1.17.1"
+  },
+  "environment": {
+    "TMPDIR": "/var/tmp/codex-nonrint-20261023",
+    "OPENBLAS_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "MPLBACKEND": "Agg"
+  },
+  "initialization_evidence": {
+    "clone.log": "4c95bbd75cb310d0f114108d67916f0a56ac9625ea7ca50b87ca9405ca7ffd24",
+    "object-cache.json": "89337cfb7a086dd5e5766f3757f80e1c051c499fe50b486c996cf0cf57652314",
+    "refs-generated-before.json": "beec0051e4720f44ca861d00905035c3f11da89456bfe7e320661d184c9d8b3d",
+    "refs-after-removal.json": "cda25f92b2adf77a5f96382fc9addce19a64c655cd5f77759949d0ff46c7ac66",
+    "remote-heads-before.json": "0bf5e4030fae0ddb89db0a918220a8c864963bfb6a4080ea69f8b2e6705d42fd",
+    "fetch.log": "f0747748fb7b3517a06a913f21be3c77a1df1a6479150804a70a1160787bb24f",
+    "refs-fetched-after.json": "6692e683aee474109f3b8e159267b694282e2795f722fd2e10bbc57cbd45b42f",
+    "remote-heads-after.json": "e67d929981d6d1eb961ec3f2a670c9e058ac8301f110b725c05fea452be779f0",
+    "ref-setup.json": "d990c6bf428a8389aab08e0a86329685537058215070df37c419f297c3765d07",
+    "docrefs-preflight.log": "67ef78efef9ff92545e0bf1407b0b49bd4a08e9d10b7f176325d09b61e7b4bbd",
+    "docrefs-preflight.json": "c03cda2c53a3613aa63394c649963ad0e907bd8aabfac677e67f22f40bcaf4d6"
+  },
+  "exit_code": 0,
+  "reference_object_cache": {
+    "status": "USED",
+    "fixed_optional_path": "/workspace/.cloud-setup/nonrint-20261024/gates/lhs214-refready/repository",
+    "scope": "Read-only content-addressed object cache; refs still come only from actual origin fetch",
+    "head_before": "ed6ed401f904d9f818cbdced42d111a7b1efb8d2",
+    "refs_before": [
+      {
+        "ref": "refs/remotes/origin/Codex/dem-mpm-crosscheck",
+        "oid": "ee445817c3beceb7425c0c33f0f454cb4c0c1b4d",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/Codex/friendly-meitner-lldvar",
+        "oid": "dde6b77cd228b288d834789d1d349b83ebbc4422",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/HEAD",
+        "oid": "3fe789ff68815cff04a42b09c26f00c464dfd477",
+        "symref": "refs/remotes/origin/claude/dft-script-generator-webapp-GPSAG"
+      },
+      {
+        "ref": "refs/remotes/origin/claude/14-gate-code-review-9qkx05",
+        "oid": "3d3ee8c198f44aa8c2f1c6358f3a1a1aaa99fc5d",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/battery-charge-discharge-webapp-dq4ja3",
+        "oid": "0e12dee60f4e161a8bc5b3c1c91655210828c9ac",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/battery-charge-discharge-webapp-vag24d",
+        "oid": "a7efba10b55f47f4e58d39a77c8cceed03effeaa",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/bms-alpha-beta-verify",
+        "oid": "698d226deff8ec3cf8cb273d45c77e3961f834ee",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/dashboard-standby-e2f56971",
+        "oid": "17e03fa2c149babb760550151955f1c54cd045c3",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/dft-script-generator-webapp-GPSAG",
+        "oid": "3fe789ff68815cff04a42b09c26f00c464dfd477",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/evac-2026-09-28",
+        "oid": "ae881f54fa6227c082c69ebe68438e0567886c57",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/evac-2026-10-02",
+        "oid": "3b421bd92f52e95c6a6e161d142332425a33cf23",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/evac-2026-10-22",
+        "oid": "305629d632f27f923a197417059d553f980d0495",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/friendly-meitner-lldvar",
+        "oid": "aaa275e2081ce43a6892c7dde40ea4d8f82576de",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/gate80-standby-9a26dd5f",
+        "oid": "87f960e1e3a42245e0c7496d149ba633ddba8d13",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/li2s-assb-wiki",
+        "oid": "ef1455e6a1b8fb25f6d7836fd164613402c69b39",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/market-research-presentation-bC9Yi",
+        "oid": "a35442859fa639034fa6c96bf19ebe543d3e9cd7",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/md-status-monitoring-q2xbu1",
+        "oid": "f7e32d0058e46baf688747cf4625338983d4fbec",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/midni-formation-wiki",
+        "oid": "4355e06bd556aae2509a0300577136848da89c35",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/phase-a-96arm-kgy",
+        "oid": "48d145f1eab30ee95113de085c985a7fcaeb9c54",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/resistor-network-solver-LDjW6",
+        "oid": "9a49cfa72ab84db89b5b89027e93baabd18882fc",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/review-ml-migration-1BN1c",
+        "oid": "ac7bed0e93d7df19e0d103f33677fb6e6e194b63",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/rint-pf2-handoff-20261022",
+        "oid": "82dbe003c4a218770e6785df1857b66860146dc2",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/sdcp-dem-manuscript-si-pqwtv8",
+        "oid": "9a72d65c6498babaa8791439216bc666c525bd82",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/solid-state-cathode-improvement-hevry0",
+        "oid": "921e8c98c6596be622be741f981a4b99dc2d219d",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/stoic-knuth-NObVQ",
+        "oid": "93d93bc02f5a68d6551137ab420dbc0eea40b455",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/windows-reinstall-backup-oducnh",
+        "oid": "7880ace88b1ad500785450d1a2c5871bdb89e1c9",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/wip-20261021/evac",
+        "oid": "0f628ee5252028be3f72825e944d45f0b932a6af",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/zip-git-gpu-setup-vdqdtd",
+        "oid": "1b436de5d60a4ddc6547a5f7280b8e097e9b8fe0",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/codex/dem-gen2-request",
+        "oid": "962caea2d1857b0e34fe724e38815661936b7183",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/codex/lhs214-relaunch",
+        "oid": "ffbd438e7522d58eb069561fe58020f4086707ac",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/codex/mixer-d3-design",
+        "oid": "d5ab56ba9a9416e5cae2becf3c85b7c54d30d1d2",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/codex/mixer-mxd2",
+        "oid": "486a57cf58d3e0d93ef79be6aae50968929099c0",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/codex/unloading-ulpr",
+        "oid": "8347d32ea678c0174bd77d4c79cfbd7b0591e4a3",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/main",
+        "oid": "bf0dd1a32ce3096a7bb67cb462a96f920c6dfab7",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/manuscript-track",
+        "oid": "f70446c5fe21b3c24b61dfe8fcdead5cf608b408",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/nihonchizu",
+        "oid": "d8c145134f9d3cd45aea223ddc5c65760e0576d5",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/rescue/lineage-2026-06-nd-pair01",
+        "oid": "a90fd1cf94924f2cb3d1b547fa175f807cb7cb85",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/review/defective-cell-ml-v2.0.0",
+        "oid": "63e1abc4c1a17b5ee78f4446c1466bdc397ab2ad",
+        "symref": ""
+      }
+    ],
+    "object_directory": "/workspace/.cloud-setup/nonrint-20261024/gates/lhs214-refready/repository/.git/objects",
+    "cache_alternates_before": [
+      "/workspace/Yonghoon-DEM-DFT/.git/objects"
+    ],
+    "clone_command": [
+      "git",
+      "clone",
+      "--shared",
+      "--reference",
+      "/workspace/.cloud-setup/nonrint-20261024/gates/lhs214-refready/repository",
+      "--branch",
+      "codex/mixer-mxd2",
+      "/workspace/Yonghoon-DEM-DFT",
+      "/workspace/.cloud-setup/nonrint-20261024/gates/mxd2-verified/repository"
+    ],
+    "clone_alternates": [
+      "/workspace/.cloud-setup/nonrint-20261024/gates/lhs214-refready/repository/.git/objects",
+      "/workspace/Yonghoon-DEM-DFT/.git/objects"
+    ],
+    "head_after": "ed6ed401f904d9f818cbdced42d111a7b1efb8d2",
+    "refs_after": [
+      {
+        "ref": "refs/remotes/origin/Codex/dem-mpm-crosscheck",
+        "oid": "ee445817c3beceb7425c0c33f0f454cb4c0c1b4d",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/Codex/friendly-meitner-lldvar",
+        "oid": "dde6b77cd228b288d834789d1d349b83ebbc4422",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/HEAD",
+        "oid": "3fe789ff68815cff04a42b09c26f00c464dfd477",
+        "symref": "refs/remotes/origin/claude/dft-script-generator-webapp-GPSAG"
+      },
+      {
+        "ref": "refs/remotes/origin/claude/14-gate-code-review-9qkx05",
+        "oid": "3d3ee8c198f44aa8c2f1c6358f3a1a1aaa99fc5d",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/battery-charge-discharge-webapp-dq4ja3",
+        "oid": "0e12dee60f4e161a8bc5b3c1c91655210828c9ac",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/battery-charge-discharge-webapp-vag24d",
+        "oid": "a7efba10b55f47f4e58d39a77c8cceed03effeaa",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/bms-alpha-beta-verify",
+        "oid": "698d226deff8ec3cf8cb273d45c77e3961f834ee",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/dashboard-standby-e2f56971",
+        "oid": "17e03fa2c149babb760550151955f1c54cd045c3",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/dft-script-generator-webapp-GPSAG",
+        "oid": "3fe789ff68815cff04a42b09c26f00c464dfd477",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/evac-2026-09-28",
+        "oid": "ae881f54fa6227c082c69ebe68438e0567886c57",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/evac-2026-10-02",
+        "oid": "3b421bd92f52e95c6a6e161d142332425a33cf23",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/evac-2026-10-22",
+        "oid": "305629d632f27f923a197417059d553f980d0495",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/friendly-meitner-lldvar",
+        "oid": "aaa275e2081ce43a6892c7dde40ea4d8f82576de",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/gate80-standby-9a26dd5f",
+        "oid": "87f960e1e3a42245e0c7496d149ba633ddba8d13",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/li2s-assb-wiki",
+        "oid": "ef1455e6a1b8fb25f6d7836fd164613402c69b39",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/market-research-presentation-bC9Yi",
+        "oid": "a35442859fa639034fa6c96bf19ebe543d3e9cd7",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/md-status-monitoring-q2xbu1",
+        "oid": "f7e32d0058e46baf688747cf4625338983d4fbec",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/midni-formation-wiki",
+        "oid": "4355e06bd556aae2509a0300577136848da89c35",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/phase-a-96arm-kgy",
+        "oid": "48d145f1eab30ee95113de085c985a7fcaeb9c54",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/resistor-network-solver-LDjW6",
+        "oid": "9a49cfa72ab84db89b5b89027e93baabd18882fc",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/review-ml-migration-1BN1c",
+        "oid": "ac7bed0e93d7df19e0d103f33677fb6e6e194b63",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/rint-pf2-handoff-20261022",
+        "oid": "82dbe003c4a218770e6785df1857b66860146dc2",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/sdcp-dem-manuscript-si-pqwtv8",
+        "oid": "9a72d65c6498babaa8791439216bc666c525bd82",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/solid-state-cathode-improvement-hevry0",
+        "oid": "921e8c98c6596be622be741f981a4b99dc2d219d",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/stoic-knuth-NObVQ",
+        "oid": "93d93bc02f5a68d6551137ab420dbc0eea40b455",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/windows-reinstall-backup-oducnh",
+        "oid": "7880ace88b1ad500785450d1a2c5871bdb89e1c9",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/wip-20261021/evac",
+        "oid": "0f628ee5252028be3f72825e944d45f0b932a6af",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/claude/zip-git-gpu-setup-vdqdtd",
+        "oid": "1b436de5d60a4ddc6547a5f7280b8e097e9b8fe0",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/codex/dem-gen2-request",
+        "oid": "962caea2d1857b0e34fe724e38815661936b7183",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/codex/lhs214-relaunch",
+        "oid": "ffbd438e7522d58eb069561fe58020f4086707ac",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/codex/mixer-d3-design",
+        "oid": "d5ab56ba9a9416e5cae2becf3c85b7c54d30d1d2",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/codex/mixer-mxd2",
+        "oid": "486a57cf58d3e0d93ef79be6aae50968929099c0",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/codex/unloading-ulpr",
+        "oid": "8347d32ea678c0174bd77d4c79cfbd7b0591e4a3",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/main",
+        "oid": "bf0dd1a32ce3096a7bb67cb462a96f920c6dfab7",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/manuscript-track",
+        "oid": "f70446c5fe21b3c24b61dfe8fcdead5cf608b408",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/nihonchizu",
+        "oid": "d8c145134f9d3cd45aea223ddc5c65760e0576d5",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/rescue/lineage-2026-06-nd-pair01",
+        "oid": "a90fd1cf94924f2cb3d1b547fa175f807cb7cb85",
+        "symref": ""
+      },
+      {
+        "ref": "refs/remotes/origin/review/defective-cell-ml-v2.0.0",
+        "oid": "63e1abc4c1a17b5ee78f4446c1466bdc397ab2ad",
+        "symref": ""
+      }
+    ],
+    "cache_alternates_after": [
+      "/workspace/Yonghoon-DEM-DFT/.git/objects"
+    ],
+    "cache_ref_metadata_unchanged": true
+  },
+  "reference_setup": {
+    "status": "PASS",
+    "fetch_command": [
+      "git",
+      "-C",
+      "/workspace/.cloud-setup/nonrint-20261024/gates/mxd2-verified/repository",
+      "fetch",
+      "--prune",
+      "origin"
+    ],
+    "fetch_exit_code": 0,
+    "fetch_refspec": "+refs/heads/*:refs/remotes/origin/*",
+    "generated_origin_ref_count": 8,
+    "remaining_after_removal": 0,
+    "fetched_head_count": 37,
+    "actual_remote_head_count": 37,
+    "actual_remote_equal_fetched": true,
+    "fetched_symbolic_refs": [
+      {
+        "ref": "refs/remotes/origin/HEAD",
+        "oid": "3fe789ff68815cff04a42b09c26f00c464dfd477",
+        "symref": "refs/remotes/origin/claude/dft-script-generator-webapp-GPSAG"
+      }
+    ],
+    "fetched_ref_count_total": 38,
+    "remote_changed_during_fetch": false,
+    "reachable_commit_count": 11575,
+    "checker_reachability_contract": "git rev-list --remotes HEAD; no local-only branches added to remotes",
+    "observed_at_utc": "2026-10-23T20:03:13.928943+00:00"
+  },
+  "retained_ignored_cache": "litdb_cache (existing generated literature index)",
+  "docrefs_preflight": {
+    "command": [
+      "nice",
+      "-n",
+      "10",
+      "/workspace/.venvs/yonghoon-dem/bin/python",
+      "-I",
+      "scripts/check_doc_refs.py"
+    ],
+    "cwd": "/workspace/.cloud-setup/nonrint-20261024/gates/mxd2-verified/repository",
+    "candidate_head": "34782a1874435e317f44c9d8f2045d53ceaf4dcc",
+    "started_at_utc": "2026-10-23T20:03:14.785911+00:00",
+    "finished_at_utc": "2026-10-23T20:03:19.368287+00:00",
+    "exit_code": 0,
+    "clean_after": true,
+    "source_and_head_unchanged": true,
+    "log_sha256": "67ef78efef9ff92545e0bf1407b0b49bd4a08e9d10b7f176325d09b61e7b4bbd",
+    "status": "PASS"
+  },
+  "clean_before": true,
+  "gate_started_at_utc": "2026-10-23T20:03:19.370470+00:00",
+  "gate_pid": 1011724,
+  "finished_at_utc": "2026-10-23T20:49:58.832062+00:00",
+  "log_sha256": "f27982bb9f2497c32dcea0a3e50130c6dea2dac16492d1fde3b32750bd8656c3",
+  "source_identity_before_sha256": "10f9f8399d0eaf747774e4abfc966cbea9dfbc0f2a28d2d53c90b188d020b8d2",
+  "source_identity_after_sha256": "10f9f8399d0eaf747774e4abfc966cbea9dfbc0f2a28d2d53c90b188d020b8d2",
+  "source_identity_unchanged": true,
+  "head_unchanged": true,
+  "clean_after": true,
+  "pass_lane_count": 155,
+  "fail_lane_count": 0,
+  "all_pass_marker": true,
+  "publication_evidence": {
+    "scope": "Complete candidate gate; final publication/scientific execution remain separate.",
+    "candidate_reference": "<<sha:Add mixer D2 consumers with bound deck validation>>",
+    "original_run_record": "docs/reviews/mixer_d2_consumers_evidence_20261024/full_gate/result.json",
+    "log": "docs/reviews/mixer_d2_consumers_evidence_20261024/full_gate/check-all.log",
+    "original_candidate_context": "docs/reviews/mixer_d2_consumers_evidence_20261024/history/pre-full-gate-inputs.zip",
+    "historical_fields": [
+      "author/snapshots/frozen-v*/SOURCE_SHA256.json: per-frozen-folder scripts hashes; unchanged",
+      "sibling independent evidence and reports: original review scope, unchanged",
+      "original outside PACKAGE_MANIFEST.sha256: delivered package-root orientation; not the new evidence-root manifest"
+    ],
+    "candidate_source_hash_review": "docs/reviews/mixer_d2_consumers_evidence_20261024/full_gate/original-run-records.zip",
+    "raw_result_sha256": "989a482e0542a5c772b17e55c7366722b400211136b7533e27cbeae8feed0c1e",
+    "original_candidate_context_sha256": "44f24a77a842b4210a8e92525ea27f36280ae20ac2aa12780aafdd9a1cacf25d",
+    "candidate_review_json_sha256": "edea498b01825256454b7441ad5ebd14c467cc1c535d338d36b3d45c35bf3e0a",
+    "archived_run_records_sha256": "b06f53d77338ac062a482fd6b59a0620134c4b7eb397fadbe67413437501c67a",
+    "pre_commit_docrefs_and_ledger": "Root records the actual evidence-commit preflight separately; not attested by this full-gate receipt."
+  }
 }
