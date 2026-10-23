@@ -1,0 +1,15 @@
+{
+  "status": "revision1 proposal; independent recheck pending",
+  "original_design_sha256": "24fda5535c511aa5d8930d2971003122180046519c693c2e55dcdec3fde39373",
+  "original_request_sha256": "a2d744be9c4903d8946a0382e099b26b84da6907889fbe9bcacef84dbb64d120",
+  "review_sha256": "5c4d9c5860f9217c483e463e4fedeadde9c67e365005c3cc59777044a71706f1",
+  "new_design_sha256": "889fa4e89646912236f81e41f2f9dd1a483416856d4513a5c7f957b898d458cd",
+  "new_request_sha256": "77b0e6004b3528500b2fbad2da1e2b5af7e4a3d2250f747ae7e36f49083f7827",
+  "changed_files": [
+    "mixer_d3_se_flowability_anchor_design_v2_20261023.md",
+    "codex_mixer_d3_design_v2_request_20261023.md"
+  ],
+  "unchanged": "original reviewed documents, evidence scripts/outputs, numerical table, blank user inputs; tracked repository untouched by this agent",
+  "scope": "D3V2-I01–I04 prose/contract clarification; no new physical/statistical thresholds or seed values",
+  "new_execution": "no experimental/DEM run; no source-code tests newly claimed"
+}

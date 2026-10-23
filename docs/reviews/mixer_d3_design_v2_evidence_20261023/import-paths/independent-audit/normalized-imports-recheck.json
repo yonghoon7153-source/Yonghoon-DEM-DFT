@@ -1,0 +1,306 @@
+{
+  "dem-gen2": {
+    "status": "PASS",
+    "failures": [],
+    "checks": {
+      "archive_exact_original_files": {
+        "ok": true,
+        "detail": {
+          "original": 56,
+          "import": 61
+        }
+      },
+      "archive_hash_crc": {
+        "ok": true,
+        "detail": null
+      },
+      "changes_exhaustive": {
+        "ok": true,
+        "detail": [
+          "docs/reviews/codex_dem_protocol_gen2_design_request_20261023.md",
+          "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/MANIFEST.sha256",
+          "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/README.md",
+          "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/MANIFEST.sha256",
+          "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/MANIFEST.v2.sha256",
+          "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/codex_dem_protocol_gen2_design_request_20261023_draft.md",
+          "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/codex_dem_protocol_gen2_design_request_20261023_draft_v2.md",
+          "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/import-provenance.json",
+          "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/package-audit/audited_request.md"
+        ]
+      },
+      "changed_hashes": {
+        "ok": true,
+        "detail": null
+      },
+      "token_count:docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/package-audit/audited_request.md:author/source-manifest.json": {
+        "ok": true,
+        "detail": null
+      },
+      "token_count:docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/package-audit/audited_request.md:independent/RECHECK-v2.md": {
+        "ok": true,
+        "detail": null
+      },
+      "token_count:docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/package-audit/audited_request.md:independent/REVIEW.md": {
+        "ok": true,
+        "detail": null
+      },
+      "token_count:docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/package-audit/audited_request.md:independent/results.json": {
+        "ok": true,
+        "detail": null
+      },
+      "token_count:docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/package-audit/audited_request.md:probes/mv_pressure_arithmetic.py": {
+        "ok": true,
+        "detail": null
+      },
+      "token_count:docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/codex_dem_protocol_gen2_design_request_20261023_draft_v2.md:probes/mv_pressure_arithmetic.py": {
+        "ok": true,
+        "detail": null
+      },
+      "token_count:docs/reviews/codex_dem_protocol_gen2_design_request_20261023.md:author/source-manifest.json": {
+        "ok": true,
+        "detail": null
+      },
+      "token_count:docs/reviews/codex_dem_protocol_gen2_design_request_20261023.md:independent/RECHECK-v2.md": {
+        "ok": true,
+        "detail": null
+      },
+      "token_count:docs/reviews/codex_dem_protocol_gen2_design_request_20261023.md:independent/REVIEW.md": {
+        "ok": true,
+        "detail": null
+      },
+      "token_count:docs/reviews/codex_dem_protocol_gen2_design_request_20261023.md:independent/results.json": {
+        "ok": true,
+        "detail": null
+      },
+      "token_count:docs/reviews/codex_dem_protocol_gen2_design_request_20261023.md:package-audit/audited_request.md": {
+        "ok": true,
+        "detail": null
+      },
+      "token_count:docs/reviews/codex_dem_protocol_gen2_design_request_20261023.md:package-audit/dem-gen2.md": {
+        "ok": true,
+        "detail": null
+      },
+      "token_count:docs/reviews/codex_dem_protocol_gen2_design_request_20261023.md:probes/mv_pressure_arithmetic.py": {
+        "ok": true,
+        "detail": null
+      },
+      "token_count:docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/codex_dem_protocol_gen2_design_request_20261023_draft.md:probes/mv_pressure_arithmetic.py": {
+        "ok": true,
+        "detail": null
+      },
+      "markdown_only_tokens_and_context_append": {
+        "ok": true,
+        "detail": []
+      },
+      "stored_diff_exact": {
+        "ok": true,
+        "detail": null
+      },
+      "original_manifest:docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/MANIFEST.sha256": {
+        "ok": true,
+        "detail": {
+          "count": 9,
+          "bad": []
+        }
+      },
+      "import_manifest:docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/MANIFEST.sha256": {
+        "ok": true,
+        "detail": {
+          "count": 9,
+          "bad": []
+        }
+      },
+      "original_manifest:docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/MANIFEST.v2.sha256": {
+        "ok": true,
+        "detail": {
+          "count": 15,
+          "bad": []
+        }
+      },
+      "import_manifest:docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/MANIFEST.v2.sha256": {
+        "ok": true,
+        "detail": {
+          "count": 15,
+          "bad": []
+        }
+      },
+      "original_manifest:docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/MANIFEST.sha256": {
+        "ok": true,
+        "detail": {
+          "count": 53,
+          "bad": []
+        }
+      },
+      "import_manifest:docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/MANIFEST.sha256": {
+        "ok": true,
+        "detail": {
+          "count": 58,
+          "bad": []
+        }
+      },
+      "source_data_tool_unchanged": {
+        "ok": true,
+        "detail": []
+      },
+      "static_canonical_path_scan": {
+        "ok": true,
+        "detail": {
+          "missing": [],
+          "actual_gate": false
+        }
+      },
+      "current_request_hash": {
+        "ok": true,
+        "detail": null
+      },
+      "audit_old_current_hashes": {
+        "ok": true,
+        "detail": null
+      },
+      "original_author_hashes": {
+        "ok": true,
+        "detail": null
+      },
+      "independent_files_unchanged": {
+        "ok": true,
+        "detail": null
+      }
+    }
+  },
+  "d3": {
+    "status": "PASS",
+    "failures": [],
+    "checks": {
+      "archive_exact_original_files": {
+        "ok": true,
+        "detail": {
+          "original": 44,
+          "import": 49
+        }
+      },
+      "archive_hash_crc": {
+        "ok": true,
+        "detail": null
+      },
+      "changes_exhaustive": {
+        "ok": true,
+        "detail": [
+          "docs/collab/codex_to_claude/20261023-1258_mixer-d3-design.md",
+          "docs/reviews/codex_mixer_d3_design_v2_request_20261023.md",
+          "docs/reviews/mixer_d3_design_v2_evidence_20261023/FINAL_DOCUMENTS.sha256",
+          "docs/reviews/mixer_d3_design_v2_evidence_20261023/MANIFEST.sha256",
+          "docs/reviews/mixer_d3_design_v2_evidence_20261023/PACKAGE_PROVENANCE.json",
+          "docs/reviews/mixer_d3_design_v2_evidence_20261023/README.md",
+          "docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/MANIFEST.sha256",
+          "docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/REVIEW.md",
+          "docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261023.md"
+        ]
+      },
+      "changed_hashes": {
+        "ok": true,
+        "detail": null
+      },
+      "token_count:docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/REVIEW.md:d3-design-v2/mixer_d3_se_flowability_anchor_design_v2_20261023.md": {
+        "ok": true,
+        "detail": null
+      },
+      "token_count:docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261023.md:seed-confirmation/ADDENDUM-reserved-seeds.md": {
+        "ok": true,
+        "detail": null
+      },
+      "token_count:docs/collab/codex_to_claude/20261023-1258_mixer-d3-design.md:independent/RECHECK-v2.md": {
+        "ok": true,
+        "detail": null
+      },
+      "token_count:docs/collab/codex_to_claude/20261023-1258_mixer-d3-design.md:independent/REVIEW.md": {
+        "ok": true,
+        "detail": null
+      },
+      "token_count:docs/collab/codex_to_claude/20261023-1258_mixer-d3-design.md:independent/seed-confirmation/ADDENDUM-reserved-seeds.md": {
+        "ok": true,
+        "detail": null
+      },
+      "token_count:docs/reviews/mixer_d3_design_v2_evidence_20261023/README.md:seed-confirmation/ADDENDUM-reserved-seeds.md": {
+        "ok": true,
+        "detail": null
+      },
+      "token_count:docs/reviews/codex_mixer_d3_design_v2_request_20261023.md:seed-confirmation/ADDENDUM-reserved-seeds.md": {
+        "ok": true,
+        "detail": null
+      },
+      "markdown_only_tokens_and_context_append": {
+        "ok": true,
+        "detail": []
+      },
+      "stored_diff_exact": {
+        "ok": true,
+        "detail": null
+      },
+      "original_manifest:docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/MANIFEST.sha256": {
+        "ok": true,
+        "detail": {
+          "count": 4,
+          "bad": []
+        }
+      },
+      "import_manifest:docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/MANIFEST.sha256": {
+        "ok": true,
+        "detail": {
+          "count": 4,
+          "bad": []
+        }
+      },
+      "original_manifest:docs/reviews/mixer_d3_design_v2_evidence_20261023/FINAL_DOCUMENTS.sha256": {
+        "ok": true,
+        "detail": {
+          "count": 3,
+          "bad": []
+        }
+      },
+      "import_manifest:docs/reviews/mixer_d3_design_v2_evidence_20261023/FINAL_DOCUMENTS.sha256": {
+        "ok": true,
+        "detail": {
+          "count": 3,
+          "bad": []
+        }
+      },
+      "original_manifest:docs/reviews/mixer_d3_design_v2_evidence_20261023/MANIFEST.sha256": {
+        "ok": true,
+        "detail": {
+          "count": 40,
+          "bad": []
+        }
+      },
+      "import_manifest:docs/reviews/mixer_d3_design_v2_evidence_20261023/MANIFEST.sha256": {
+        "ok": true,
+        "detail": {
+          "count": 45,
+          "bad": []
+        }
+      },
+      "source_data_tool_unchanged": {
+        "ok": true,
+        "detail": []
+      },
+      "static_canonical_path_scan": {
+        "ok": true,
+        "detail": {
+          "missing": [],
+          "actual_gate": false
+        }
+      },
+      "d3_current_document_hashes": {
+        "ok": true,
+        "detail": null
+      },
+      "d3_original_document_hashes": {
+        "ok": true,
+        "detail": null
+      },
+      "d3_first_review_input": {
+        "ok": true,
+        "detail": null
+      }
+    }
+  }
+}

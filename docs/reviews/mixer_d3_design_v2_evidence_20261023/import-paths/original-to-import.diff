@@ -1,0 +1,104 @@
+--- original/docs/collab/codex_to_claude/20261023-1258_mixer-d3-design.md
++++ import/docs/collab/codex_to_claude/20261023-1258_mixer-d3-design.md
+@@ -13,9 +13,9 @@
+ |---|---|
+ | 설계 v2 | 유한 Bo 후보 집합·미평가/공집합 범위·후보별 holdout 집계·보정/검증 열람 분리·예약 확인 시드 분리·고정 벽 조건부성을 제안한다. **V2-Q1을 포함한 새 제안은 미비준**이다. |
+ | 최초 작성자 반례/산술 | 29/29 관계 검사 PASS. 생산 D3 코드 회귀·실험 검증이 아니다. 기존 10-21 숫자 스크립트도 rc 0으로 재실행했다. |
+-| 독립 사전 리뷰 | `independent/REVIEW.md`: 새 P1/P2 발견 없음, P3 D3V2-I01–04 네 건. 독립 반례/산술 25/25. |
+-| 수정판 독립 재확인 | `independent/RECHECK-v2.md`: **네 건 문서 수준 해소**, 수정 범위 새 P1/P2/P3 발견 없음. 의미 재공격 7/7(81개 상태 조합 포함). 구현·접근통제·통계·실제 manifest 인증이 아니다. |
+-| 예약 시드 부록 | `independent/seed-confirmation/ADDENDUM-reserved-seeds.md`: 기존 v1과 ID·순서·D1/D12 역할 일치 5/5. 실제 C0/C1/C2 manifest의 미사용·교집합 검사 구현은 미확인. |
++| 독립 사전 리뷰 | `docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/REVIEW.md`: 새 P1/P2 발견 없음, P3 D3V2-I01–04 네 건. 독립 반례/산술 25/25. |
++| 수정판 독립 재확인 | `docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/RECHECK-v2.md`: **네 건 문서 수준 해소**, 수정 범위 새 P1/P2/P3 발견 없음. 의미 재공격 7/7(81개 상태 조합 포함). 구현·접근통제·통계·실제 manifest 인증이 아니다. |
++| 예약 시드 부록 | `docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/seed-confirmation/ADDENDUM-reserved-seeds.md`: 기존 v1과 ID·순서·D1/D12 역할 일치 5/5. 실제 C0/C1/C2 manifest의 미사용·교집합 검사 구현은 미확인. |
+ | MXD2-07 | v2 §7에 gen1/lab 수치 분리. soft 정적 천장 832.6622/1015.4417, Bo 849.76의 δ/r 1.013643%/0.888030%. 점착 지배 동종 단일 접촉 산술이며 저장 프레임/전 시간 동적 유효성은 아니다. |
+ | 전체 게이트 | **이 최종 반입 묶음의 `bash scripts/check_all.sh`는 대기**. 이 쪽지의 부분 검사 수를 전체 게이트로 계산하지 않는다. |
+ | 외부 검토·발송·실행 | 외부 발송 승인 없음·D3 ① 외부 GO 없음·S1/S3/S6 등록 미완료·실측/DEM 실행 승인 없음. **HOLD**. |
+--- original/docs/reviews/codex_mixer_d3_design_v2_request_20261023.md
++++ import/docs/reviews/codex_mixer_d3_design_v2_request_20261023.md
+@@ -64,6 +64,6 @@
+ 
+ `docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/REVIEW.md`는 최초 독립 리뷰의 P3 네 건과 25/25 해석·산술 결과를 보존한다. `RECHECK-v2.md`는 그 네 건(D3V2-I01–04)이 **문서 수준에서 해소**되었고 수정 범위에서 새 P1/P2/P3를 발견하지 못했다고 판정했다. 별도 의미 재공격은 7/7이며 후보×필수 검증항목 상태 81조합을 포함한다. 이 결과는 생산 판독기·접근 통제·통계 구현의 회귀 통과가 아니다.
+ 
+-`seed-confirmation/ADDENDUM-reserved-seeds.md`는 재확인 당시 입력 범위 때문에 미확인이었던 예약 시드의 **정본 ID·순서·역할 일치**만 5/5로 보충 확인했다. 실제 manifest의 시드 미사용과 교집합 검사 구현은 여전히 미확인이다. 두 독립 보고서의 당시 표현과 검토 입력을 그대로 보존했다.
++`docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/seed-confirmation/ADDENDUM-reserved-seeds.md`는 재확인 당시 입력 범위 때문에 미확인이었던 예약 시드의 **정본 ID·순서·역할 일치**만 5/5로 보충 확인했다. 실제 manifest의 시드 미사용과 교집합 검사 구현은 여전히 미확인이다. 두 독립 보고서의 당시 표현과 검토 입력을 그대로 보존했다.
+ 
+ 현재 독립 사전 문서 검토 자료는 첨부했으나 전체 `bash scripts/check_all.sh`는 이 묶음에서 **대기**, 리뷰 핀은 예정 자리 표시, 외부 발송 승인은 없다. V2-Q1을 비롯한 새 설계 제안도 미비준이다. 따라서 발송·실측·C0/C1·새 확인 블록 상태는 **HOLD**이며 사전 재확인이 외부 Codex GO나 1저자 실행 승인을 대신하지 않는다.
+--- original/docs/reviews/mixer_d3_design_v2_evidence_20261023/FINAL_DOCUMENTS.sha256
++++ import/docs/reviews/mixer_d3_design_v2_evidence_20261023/FINAL_DOCUMENTS.sha256
+@@ -1,3 +1,3 @@
+-e00083cc6900ce38649c62673326280f57e3577f7038953204d1054fe4d257b2  ../mixer_d3_se_flowability_anchor_design_v2_20261023.md
+-64be057bedcc6c0326b5d7ffb6bf26f5b13ab4d720ae48dc2cfadb79a5cad5ce  ../codex_mixer_d3_design_v2_request_20261023.md
+-bc23c85c018c54752a3664324aeeafc1b74498090872165036f56c79b9782117  ../../collab/codex_to_claude/20261023-1258_mixer-d3-design.md
++b2decfae1567465131b3391acb428646ffa2992448bbc08c862cb2b1efd9195d  ../mixer_d3_se_flowability_anchor_design_v2_20261023.md
++26453ca240cde954ebead3bf702bf54a6a7c8160086db446bd3ae1ea6a2ea9ab  ../codex_mixer_d3_design_v2_request_20261023.md
++8a223634451e56bcda1101f70b0e84eac6d513b822ff808efa001f87f3a0afa7  ../../collab/codex_to_claude/20261023-1258_mixer-d3-design.md
+--- original/docs/reviews/mixer_d3_design_v2_evidence_20261023/PACKAGE_PROVENANCE.json
++++ import/docs/reviews/mixer_d3_design_v2_evidence_20261023/PACKAGE_PROVENANCE.json
+@@ -10,10 +10,15 @@
+     "codex_mixer_d3_design_v2_request_20261023.md": "77b0e6004b3528500b2fbad2da1e2b5af7e4a3d2250f747ae7e36f49083f7827"
+   },
+   "final_import_documents": {
++    "mixer_d3_se_flowability_anchor_design_v2_20261023.md": "b2decfae1567465131b3391acb428646ffa2992448bbc08c862cb2b1efd9195d",
++    "codex_mixer_d3_design_v2_request_20261023.md": "26453ca240cde954ebead3bf702bf54a6a7c8160086db446bd3ae1ea6a2ea9ab"
++  },
++  "post_recheck_change": "status summaries and planned branch/commit only; reviewed design rules unchanged; canonical-path-only normalization with originals archived",
++  "independent_recheck": "P3 I01-I04 resolved at document level only",
++  "reserved_seeds": "IDs/order/source role matched; actual run manifest use not checked",
++  "archived_pre_import_documents": {
+     "mixer_d3_se_flowability_anchor_design_v2_20261023.md": "e00083cc6900ce38649c62673326280f57e3577f7038953204d1054fe4d257b2",
+     "codex_mixer_d3_design_v2_request_20261023.md": "64be057bedcc6c0326b5d7ffb6bf26f5b13ab4d720ae48dc2cfadb79a5cad5ce"
+   },
+-  "post_recheck_change": "status summaries and planned branch/commit only; reviewed design rules unchanged",
+-  "independent_recheck": "P3 I01-I04 resolved at document level only",
+-  "reserved_seeds": "IDs/order/source role matched; actual run manifest use not checked"
++  "path_normalization_provenance": "import-paths/provenance.json"
+ }
+--- original/docs/reviews/mixer_d3_design_v2_evidence_20261023/README.md
++++ import/docs/reviews/mixer_d3_design_v2_evidence_20261023/README.md
+@@ -17,7 +17,7 @@
+ | `independent/RECHECK-v2.md`, `recheck-v2-evidence/` | P3 네 건 문서 수준 해소, 의미 재공격 7/7(81상태 조합) | 실제 접근 통제·통계 판독기·manifest 검사의 구현 인증이 아니다. |
+ | `independent/seed-confirmation/` | 원문 ID·순서·D1/D12 역할 5/5 대조 | 실제 C0/C1/C2 manifest의 미사용이나 교집합 검사를 확인한 것이 아니다. |
+ 
+-독립 재확인 보고서의 “숫자 출처 미확인”은 당시 제한된 입력 범위다. 이를 삭제하지 않고 `seed-confirmation/ADDENDUM-reserved-seeds.md`로 보충했다. 시드 부록도 새로운 비준이나 실행 허가가 아니다.
++독립 재확인 보고서의 “숫자 출처 미확인”은 당시 제한된 입력 범위다. 이를 삭제하지 않고 `docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/seed-confirmation/ADDENDUM-reserved-seeds.md`로 보충했다. 시드 부록도 새로운 비준이나 실행 허가가 아니다.
+ 
+ 원장 JSON은 **새 협업 쪽지 `docs/collab/codex_to_claude/20261023-1258_mixer-d3-design.md` 안에만** 있다. 현 제안과 원초안 이력 블록을 구분했으며, MXD3 여덟 건은 open 등재 제안, MXD2-07은 상태 자동 변경 없음이다. 원초안 JSON의 바이트는 이력 블록(끝 LF 포함)에서 복원해 원 manifest와 대조했다. 공유 원장·CLAUDE·진행 기록은 이 묶음에서 수정하지 않는다.
+ 
+@@ -42,3 +42,7 @@
+ 옛 지문 목록에는 당시 scratch 절대 경로가 남아 있다. 당시 입력의 출처 표지로 보존했으며 재현 명령은 위의 저장소 상대 경로를 사용한다. `independent/recheck-v2-evidence/MANIFEST.sha256`의 상대 경로 기준은 `independent/`이다. `original-draft/MANIFEST.sha256`은 분산 배치된 옛 멤버 목록이므로 `ORIGINAL_MANIFEST_MAP.json`으로 대조한다.
+ 
+ 중복 `counterexamples_repeat.json`과 생성된 fixture 복사본은 반입하지 않았다. 실험·LIGGGHTS/GPU 실행·생산 덱 생성은 없다. 장비·G·벽·시료량·반복·밀도·측정자·탭·입도 입력은 미정이다. 최종 저장소 전체 게이트·핀·외부 발송·등록·단계별 실행 승인 전 HOLD를 유지한다.
++
++## 경로 정규화 반입의 원본·현재 구분
++
++현재 저장소 문서 참조 검사를 위해 누락 경로 토큰만 실제 저장소 상대 경로로 확장했다. 숫자·판정·설계·미비준·실행 한계는 바꾸지 않았다. 원문 안의 “그대로/변경하지 않음”과 입력 SHA·원 diff·검토 행 번호는 당시 검토판의 이력이다. 원 바이트는 `import-paths/original-package-docs.zip`에서 확인한다. 현재 파일과 혼동하지 않도록 각 원본/반입 SHA·토큰 치환·diff를 `import-paths/provenance.json`에 기록했다. 아래 live manifest만 경로 정규화본의 반입 manifest로 재계산했으며, 같은 이름의 원 manifest는 ZIP에 그대로 있다: `independent/MANIFEST.sha256`, `FINAL_DOCUMENTS.sha256`. 원 source/literature 지문과 수치 JSON·로그·도구는 변경하지 않았다.
+--- original/docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/MANIFEST.sha256
++++ import/docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/MANIFEST.sha256
+@@ -1,4 +1,4 @@
+-5c4d9c5860f9217c483e463e4fedeadde9c67e365005c3cc59777044a71706f1  REVIEW.md
++2f000af138922fd1bbbc78ad2b5599f836dbb2bcdd3493f092bd39db9aedfd94  REVIEW.md
+ 28165cb829390072fd14a950dd36e0effa0f76c324e3c9d761d70e2e5bc199b6  REVIEWED_INPUTS.sha256
+ ead3b9cc3706882368ca1c63c4457d076d6bdafe7e547936c80614b898432f97  independent_d3_review.py
+ 53f2c5e30e47d2b7c8f3d57b92fd3b9af590226abd941417d20a81e954683c1c  independent_results.json
+--- original/docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/REVIEW.md
++++ import/docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/REVIEW.md
+@@ -6,7 +6,7 @@
+ 
+ ## 범위와 독립성
+ 
+-- 새 입력은 `d3-design-v2/mixer_d3_se_flowability_anchor_design_v2_20261023.md`와 `codex_mixer_d3_design_v2_request_20261023.md` 두 파일이다. 이하 `설계:N`, `요청서:N`은 검토한 파일의 실제 행 번호다. 입력 지문은 `REVIEWED_INPUTS.sha256`에 있다.
++- 새 입력은 `docs/reviews/mixer_d3_design_v2_evidence_20261023/original-draft/mixer_d3_se_flowability_anchor_design_v2_20261023.md`와 `codex_mixer_d3_design_v2_request_20261023.md` 두 파일이다. 이하 `설계:N`, `요청서:N`은 검토한 파일의 실제 행 번호다. 입력 지문은 `REVIEWED_INPUTS.sha256`에 있다.
+ - 저자의 `README.md`, 반례 스크립트, 29개 출력, baseline 출력, 원장 제안 JSON은 열거나 실행하지 않았다. 설계/요청서 안의 주장과 예시를 읽은 뒤 별도 코드로 계산했다. 따라서 저자 29/29 실행 사실·그 코드 품질은 이 리뷰에서 인증하지 않는다.
+ - 대조 정본: handoff §5-3, `CLAUDE.md:101` 사전 공격 리뷰, v1 D3 설계, 10-21 요청서 D3K-01–17, 파이프라인 D1–D14, `findings.json`의 MXD2-07. D3K 번호는 기존 요청서의 사전 리뷰 번호이며 공유 원장 등재·verified 상태로 취급하지 않았다. MXD2-07은 대조 시 open이었다.
+ - 실제 사용한 생산 함수는 `make_mixer_deck.py`의 계획·CED 환산·타입 검증과 `check_contact_validity.py`의 기하 거부 함수뿐이다. LIGGGHTS/GPU·장비·실험·전체 저장소 게이트를 실행하지 않았다. tracked 파일·공유 원장·비준 블록을 바꾸거나 commit/push하지 않았다.
+--- original/docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261023.md
++++ import/docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261023.md
+@@ -154,7 +154,7 @@
+ |---|---|---|
+ | `docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/REVIEW.md` | 최초 독립 리뷰: 새 P1/P2 반례 발견 없음, P3 네 건. 독립 해석/산술 검사는 25/25. | 생산 D3 판독기·통계·기하 구현 검증이나 실행 GO가 아니다. |
+ | 같은 폴더 `RECHECK-v2.md` | P3 D3V2-I01–04를 **문서 수준에서 해소**. 수정 범위에서 새 P1/P2/P3 발견 없음. 의미 재공격 7/7(후보×검증 상태 81조합 포함). | 실물 접근통제·통계 판독·실제 manifest 검사를 완료한 것이 아니다. |
+-| 같은 폴더 `seed-confirmation/ADDENDUM-reserved-seeds.md` | 예약 시드 세 ID가 v1과 순서까지 일치하고 D1/D12 역할에 맞음을 원문 대조 5/5로 확인. | 실제 C0/C1/C2 manifest의 미사용 여부·교집합 검사 구현은 미확인이다. |
++| 같은 폴더 `docs/reviews/mixer_d3_design_v2_evidence_20261023/independent/seed-confirmation/ADDENDUM-reserved-seeds.md` | 예약 시드 세 ID가 v1과 순서까지 일치하고 D1/D12 역할에 맞음을 원문 대조 5/5로 확인. | 실제 C0/C1/C2 manifest의 미사용 여부·교집합 검사 구현은 미확인이다. |
+ 
+ 재확인 보고서의 당시 “시드 숫자 출처 미확인” 문장은 삭제하지 않고 위 부록으로 범위를 보충했다. 독립 검토 입력 두 판과 지문·도구·결과를 증거 폴더에 보존했다. 현재 반입본의 이 상태 요약은 검토된 설계 규칙을 추가 변경하지 않는다.
+ 

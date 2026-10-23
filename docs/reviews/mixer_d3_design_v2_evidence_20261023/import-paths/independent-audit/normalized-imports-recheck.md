@@ -1,0 +1,11 @@
+# DEM / D3 normalized import recheck — 2026-10-23
+
+Verdict: both PASS within this read-only packaging recheck. Actual canonical docrefs/full gates remain integration work; none was rerun here.
+
+DEM normalized-imports/dem-gen2 contains 61 docs. Its original ZIP preserves all 56 staging docs with exact names, bytes, per-member hashes and archive SHA `c6686007224764e09d9bf75acba1ca27750ba06467677bfb3f820fd2647fbb63`. The 20 reported path occurrences were corrected exactly. The request, author drafts and audited request retain all non-path content. Evidence README additionally corrects the author-original/live distinction and appends explicit provenance context. Both original and live author manifests and outer manifest validate in their respective contexts; source/literature targets outside the docs ZIP are explicitly distinguished. Current request and audited-request hashes match actual live bytes; original hashes match archived bytes. Independent originals remain unchanged.
+
+D3 normalized-imports/d3 contains 49 docs. Its original ZIP preserves all 44 staging docs with exact names, bytes, per-member hashes and archive SHA `2d69d0289b4af11e43ee4b761b0c400f6313080a2aed19f07f09f34ae8049f38`. All seven path occurrences were corrected exactly. The original independent REVIEW now points to original-draft, whose actual SHA matches the original reviewed input. Source/scientific wording is unchanged. Original and live independent manifest, FINAL_DOCUMENTS and outer manifests validate. PACKAGE_PROVENANCE distinguishes current document hashes from archived pre-import hashes and both match actual bytes.
+
+Both stored original-to-import diffs equal independent diffs of the declared changed files. Changed-file lists and before/after hashes are complete except the deliberately separate outer manifest. No Python, numerical CSV or raw log changed. On the same canonical scan_text + fixedbase/package inventory static preflight, both normalized packages now have zero missing backtick paths. No allowance or checker code was changed; this is not a full canonical checker PASS claim.
+
+Machine results: `normalized-imports-recheck.json`; audit code: `audit_normalized_imports.py`; concise log: `normalized-imports-recheck.log`.

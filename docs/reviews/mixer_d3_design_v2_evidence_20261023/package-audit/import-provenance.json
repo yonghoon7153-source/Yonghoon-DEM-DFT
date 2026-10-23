@@ -1,0 +1,12 @@
+{
+  "kind": "immutable independent package audit reports",
+  "reports": [
+    {
+      "file": "d3.md",
+      "source_sha256": "81c62d0559315092538bf5848042fae904fae7915e5d3fcb400d1b1d866c2931",
+      "import_sha256": "81c62d0559315092538bf5848042fae904fae7915e5d3fcb400d1b1d866c2931",
+      "byte_equal": true
+    }
+  ],
+  "scope": "Original audit-time counts and pending gate statements are historical; final integrated full-gate status is recorded in the evidence root full_gate_receipt.json."
+}

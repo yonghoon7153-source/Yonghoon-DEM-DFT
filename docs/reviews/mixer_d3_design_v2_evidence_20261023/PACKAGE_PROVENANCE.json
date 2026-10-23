@@ -1,0 +1,24 @@
+{
+  "branch_planned": "codex/mixer-d3-design",
+  "commit_subject_planned": "Revise mixer D3 finite-grid design proposal",
+  "commit_placeholder": "<<sha:Revise mixer D3>>",
+  "full_gate": "pending",
+  "external_dispatch": "not authorized",
+  "V2_Q1_ratification": "not granted",
+  "reviewed_revision1": {
+    "mixer_d3_se_flowability_anchor_design_v2_20261023.md": "889fa4e89646912236f81e41f2f9dd1a483416856d4513a5c7f957b898d458cd",
+    "codex_mixer_d3_design_v2_request_20261023.md": "77b0e6004b3528500b2fbad2da1e2b5af7e4a3d2250f747ae7e36f49083f7827"
+  },
+  "final_import_documents": {
+    "mixer_d3_se_flowability_anchor_design_v2_20261023.md": "b2decfae1567465131b3391acb428646ffa2992448bbc08c862cb2b1efd9195d",
+    "codex_mixer_d3_design_v2_request_20261023.md": "26453ca240cde954ebead3bf702bf54a6a7c8160086db446bd3ae1ea6a2ea9ab"
+  },
+  "post_recheck_change": "status summaries and planned branch/commit only; reviewed design rules unchanged; canonical-path-only normalization with originals archived",
+  "independent_recheck": "P3 I01-I04 resolved at document level only",
+  "reserved_seeds": "IDs/order/source role matched; actual run manifest use not checked",
+  "archived_pre_import_documents": {
+    "mixer_d3_se_flowability_anchor_design_v2_20261023.md": "e00083cc6900ce38649c62673326280f57e3577f7038953204d1054fe4d257b2",
+    "codex_mixer_d3_design_v2_request_20261023.md": "64be057bedcc6c0326b5d7ffb6bf26f5b13ab4d720ae48dc2cfadb79a5cad5ce"
+  },
+  "path_normalization_provenance": "import-paths/provenance.json"
+}

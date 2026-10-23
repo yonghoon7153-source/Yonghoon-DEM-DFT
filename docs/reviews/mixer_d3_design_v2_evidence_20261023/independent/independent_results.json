@@ -1,0 +1,319 @@
+{
+  "scope": "Independent analytic/synthetic probes; no DEM/measurement/ratification",
+  "checks": [
+    {
+      "name": "gen1_printed_statics",
+      "pass": true,
+      "detail": {
+        "am_p_Bo_ratio_denominator": 194.4,
+        "soft_ceiling_Bo": 832.6622178589646,
+        "stiff20_homogeneous_ceiling_Bo": 16653.24435717929,
+        "delta_percent": {
+          "637.32": 0.8367437151378653,
+          "849.76": 1.013642823799923
+        },
+        "upper_factor_from_637_32": 1.3065057080571212,
+        "cgf200_delta_percent_Bo637_32": 1.0073843646777965,
+        "drum_diameter_mm": 26.275374470496057,
+        "drum_length_mm": 5.255074894099211,
+        "rpm": 75.04109820964047,
+        "dt_s": 2.6204261296816886e-07,
+        "assumed_hours_per_simulated_second": [
+          15.143544491887678,
+          16.826160546541864
+        ]
+      }
+    },
+    {
+      "name": "gen1_CED_vs_independent_Hertz",
+      "pass": true,
+      "detail": {
+        "Hertz": 0.008367437151378653,
+        "CED": 0.008367437151378651
+      }
+    },
+    {
+      "name": "gen1_geometry_and_timestep",
+      "pass": true,
+      "detail": {
+        "independent_R": 0.013137687235248028,
+        "production_R": 0.013137687235248028,
+        "independent_dt": 2.6204261296816886e-07,
+        "production_dt": 2.6204261296816886e-07
+      }
+    },
+    {
+      "name": "lab20261014_printed_statics",
+      "pass": true,
+      "detail": {
+        "am_p_Bo_ratio_denominator": 239.54268292682926,
+        "soft_ceiling_Bo": 1015.4417290962983,
+        "stiff20_homogeneous_ceiling_Bo": 20308.834581925967,
+        "delta_percent": {
+          "637.32": 0.7330524123423279,
+          "849.76": 0.8880297560616806
+        },
+        "upper_factor_from_637_32": 1.5932996439720992,
+        "cgf200_delta_percent_Bo637_32": 0.8825468603147255,
+        "drum_diameter_mm": 25.16647170925682,
+        "drum_length_mm": 5.033294341851365,
+        "rpm": 76.67653377936789,
+        "dt_s": 2.372896783030651e-07,
+        "assumed_hours_per_simulated_second": [
+          16.72324728421493,
+          18.581385871349926
+        ]
+      }
+    },
+    {
+      "name": "lab20261014_CED_vs_independent_Hertz",
+      "pass": true,
+      "detail": {
+        "Hertz": 0.007330524123423279,
+        "CED": 0.007330524123423281
+      }
+    },
+    {
+      "name": "lab20261014_geometry_and_timestep",
+      "pass": true,
+      "detail": {
+        "independent_R": 0.012583235854628411,
+        "production_R": 0.012583235854628411,
+        "independent_dt": 2.372896783030651e-07,
+        "production_dt": 2.372896783030651e-07
+      }
+    },
+    {
+      "name": "confounded_two_tests",
+      "pass": true,
+      "detail": {
+        "inferred_log10_Bo_shifts": [
+          -0.30000000000000004,
+          -0.30000000000000004
+        ]
+      }
+    },
+    {
+      "name": "local_detection_threshold",
+      "pass": true,
+      "detail": {
+        "minimum_abs_delta_mu": 0.19999999999999998
+      }
+    },
+    {
+      "name": "empty_complete_grid_not_continuous_rejection",
+      "pass": true,
+      "detail": {
+        "grid": [
+          1.0,
+          2.0
+        ],
+        "grid_outputs": [
+          0.25,
+          0.25
+        ],
+        "accepted": [],
+        "interior_true_Bo": 1.5,
+        "interior_output": 0.0,
+        "m": 0,
+        "tolerance": 0.01
+      }
+    },
+    {
+      "name": "monotone_half_difference_not_error_bound",
+      "pass": true,
+      "detail": {
+        "monotone_actual_at_0_89": 0,
+        "endpoint_interpolant": 8.9,
+        "half_endpoint_difference": 5
+      }
+    },
+    {
+      "name": "disconnected_hull_center_outside",
+      "pass": true,
+      "detail": {
+        "geometric_hull_center": 11.935828416997289
+      }
+    },
+    {
+      "name": "two_seed_small_SD_probability",
+      "pass": true,
+      "detail": {
+        "P_s_less_than_half_sigma_normal_iid_n2": 0.3829249225480262
+      }
+    },
+    {
+      "name": "wall_endpoint_not_envelope",
+      "pass": true,
+      "detail": {
+        "endpoints": [
+          0,
+          0
+        ],
+        "midpoint": 0.25
+      }
+    },
+    {
+      "name": "stored_frames_not_all_time_guard",
+      "pass": true,
+      "detail": {
+        "stored_max": 0.005,
+        "between_frame": 0.02,
+        "limit": 0.01
+      }
+    },
+    {
+      "name": "static_ceiling_not_loaded_ceiling",
+      "pass": true,
+      "detail": {
+        "overlap_if_applied_load_doubles_reference_force": 0.015874010519681993
+      }
+    },
+    {
+      "name": "positive_candidates_not_positive_cohesion_evidence",
+      "pass": true,
+      "detail": {
+        "null_output": 0,
+        "positive_candidate_output": 0
+      }
+    },
+    {
+      "name": "all_candidates_predicted_not_all_candidates_validated",
+      "pass": true,
+      "detail": {
+        "calibration_candidates": [
+          1,
+          2
+        ],
+        "holdout_predictions": {
+          "1": 0,
+          "2": 10
+        },
+        "holdout_m": 0,
+        "tolerance": 1,
+        "passed": [
+          1
+        ],
+        "failed": [
+          2
+        ]
+      }
+    },
+    {
+      "name": "stop_for_all_candidates_has_no_discrimination",
+      "pass": true,
+      "detail": {
+        "n_candidates": 8,
+        "unique_holdout_outcomes": 1
+      }
+    },
+    {
+      "name": "two_independent_point95_not_joint95",
+      "pass": true,
+      "detail": {
+        "two_tests_joint_coverage_if_independent": 0.9025,
+        "any_false_accept_if_8_independent_rejections_at_95": 0.33657956871093775
+      }
+    },
+    {
+      "name": "day_component_not_within_day_SE",
+      "pass": true,
+      "detail": {
+        "within_day_SE": 0.4472135954999579,
+        "day_mean_shift": 3
+      }
+    },
+    {
+      "name": "last_grid_ratio_is_three",
+      "pass": true,
+      "detail": {
+        "grid": [
+          0.21244,
+          0.6717942661261705,
+          2.1244,
+          6.717942661261705,
+          21.244,
+          67.17942661261705,
+          212.44,
+          637.3199999999999
+        ],
+        "last_ratio": 2.9999999999999996
+      }
+    },
+    {
+      "name": "Bo_G_is_separate_transform",
+      "pass": true,
+      "detail": {
+        "hypothetical_G": 268,
+        "one_g_Bo": 637.32,
+        "transformed_Bo": 2.3780597014925373
+      }
+    },
+    {
+      "name": "actual_Funnel_unsupported",
+      "pass": true,
+      "detail": "벽 메시 ['Funnel'] — 볼록 용기(드럼+끝판) 밖의 메시(배플 등)는 지원하지 않는다"
+    },
+    {
+      "name": "actual_TapFloor_unsupported",
+      "pass": true,
+      "detail": "벽 메시 ['TapFloor'] — 볼록 용기(드럼+끝판) 밖의 메시(배플 등)는 지원하지 않는다"
+    },
+    {
+      "name": "actual_SE_only_type_unsupported",
+      "pass": true,
+      "detail": "AM 과 SE 는 있어야 한다"
+    }
+  ],
+  "numbers": {
+    "gen1": {
+      "am_p_Bo_ratio_denominator": 194.4,
+      "soft_ceiling_Bo": 832.6622178589646,
+      "stiff20_homogeneous_ceiling_Bo": 16653.24435717929,
+      "delta_percent": {
+        "637.32": 0.8367437151378653,
+        "849.76": 1.013642823799923
+      },
+      "upper_factor_from_637_32": 1.3065057080571212,
+      "cgf200_delta_percent_Bo637_32": 1.0073843646777965,
+      "drum_diameter_mm": 26.275374470496057,
+      "drum_length_mm": 5.255074894099211,
+      "rpm": 75.04109820964047,
+      "dt_s": 2.6204261296816886e-07,
+      "assumed_hours_per_simulated_second": [
+        15.143544491887678,
+        16.826160546541864
+      ]
+    },
+    "lab20261014": {
+      "am_p_Bo_ratio_denominator": 239.54268292682926,
+      "soft_ceiling_Bo": 1015.4417290962983,
+      "stiff20_homogeneous_ceiling_Bo": 20308.834581925967,
+      "delta_percent": {
+        "637.32": 0.7330524123423279,
+        "849.76": 0.8880297560616806
+      },
+      "upper_factor_from_637_32": 1.5932996439720992,
+      "cgf200_delta_percent_Bo637_32": 0.8825468603147255,
+      "drum_diameter_mm": 25.16647170925682,
+      "drum_length_mm": 5.033294341851365,
+      "rpm": 76.67653377936789,
+      "dt_s": 2.372896783030651e-07,
+      "assumed_hours_per_simulated_second": [
+        16.72324728421493,
+        18.581385871349926
+      ]
+    }
+  },
+  "source_sha256": {
+    "scripts/make_mixer_deck.py": "6baaa04c13c842c2d8e486cbef83bb5cb6f6e3d5f88c5f0f0d8c0904d3949f30",
+    "scripts/check_contact_validity.py": "738bf397821a94697069308c9d7ebe54b3dfb61bbb19bb2f0c7be6e6f6df60c1",
+    "docs/reviews/mixer_d3_se_flowability_anchor_design_20261015.md": "9a6412362e33d0cfa933182758674f0bafbbb8fa5c755d25d40d2be770b02a02",
+    "docs/reviews/codex_mixer_d3_design_request_20261021.md": "fb332be9fe79be194ffae64d4c3b4ba68b1d0d9f36d8f68f7a26fd42c81ef4bc",
+    "docs/mixer_paper_pipeline_draft_20261013.md": "64ae8d06f14fe0e4219af987c1e94503132c018d066a658715828310d9794d70"
+  },
+  "summary": {
+    "passed": 25,
+    "total": 25
+  }
+}
