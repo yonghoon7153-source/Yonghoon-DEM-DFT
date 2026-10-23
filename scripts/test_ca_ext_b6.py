@@ -686,7 +686,8 @@ def _sv_ratio_of(status, ratio):
 SV_GF = 2.5
 #: ★ 10-23 (사전 공격 리뷰 C1 · 1저자 Q12 (가)) 합성 기록의 증서 위상 수 (간선 · dof · 아래 · 위 판 결합 — `step3_conv_cert.target_bracket` 칸) —
 #   생산자 관계 그대로: 아래 끝 = 주 해 − 끊은 다리 면 4 (`_sv_raw` n_sv_faces_cut · 판 결합 수 같다) · 위 끝 = 아래 끝 − 덩어리 셀 간선 6 (n_edges_cut ·
-#   판 결합 0 뺌) · dof 는 떠 있는 성분을 버린 만큼 준다
+#   판 결합 0 뺌) · dof 는 떠 있는 성분을 버린 만큼 준다 · ★ 10-23 묶음 A″ (1저자 Q17 (가)) 판에 닿는 성분에서 끊은 쌍 수 (`n_reach_pairs_cut`) =
+#   아래 끝 4 (끊은 면 4 = 서로 다른 쌍 4 · 판에 닿는 성분 안) · 위 끝 10 (= 4 + 덩어리 셀 간선 6 · 주 해 간선 쌍 40 → 30)
 SV_TOPO_MAIN = (40, 30, 3, 2)
 SV_TOPO_LO = (36, 30, 3, 2)
 SV_TOPO_UP = (30, 27, 3, 2)
@@ -740,7 +741,7 @@ def _sv_raw(status='computed', ratio=1.25, threshold=None, flag=None, n_unsplit=
     #  ★ 10-23 (사전 공격 리뷰 C5 · 1저자 Q14 (가)) 종류 · 규칙 = 등록된 생산자 이름 (옛 고정물 = 철회된 'counterfactual_cut_sv_faces' = SV 면 전부 ·
     #    다른 양) — 검증기가 이름을 대조한다
     r = {'kind': _cj.CJUNC_SV_CF_KIND, 'rule': _cj.CJUNC_SV_CF_RULE, 'requested': True, 'threshold': threshold, 'n_sv_faces_cut': 4,
-         'G_full_code': SV_GF,
+         'n_reach_pairs_cut': 4, 'G_full_code': SV_GF,
          'G_cut_code': gl, 'sv_counterfactual_ratio': _sv_ratio_of(status, ratio),
          'flag': flag, 'cg_info': (0 if status in ('computed', 'unconverged') else None), 'resid': (1e-13 if status == 'computed' else None),
          'conv_cert': _cc(status, gl, SV_TOPO_LO), 'status': status,
@@ -756,7 +757,8 @@ def _sv_raw(status='computed', ratio=1.25, threshold=None, flag=None, n_unsplit=
         r['upper'] = {'status': sh, 'sv_counterfactual_ratio': rh, 'cg_info': (0 if sh in ('computed', 'unconverged') else None),
                       'G_cut_code': gh, 'resid': (1e-13 if sh == 'computed' else None), 'conv_cert': _cc(sh, gh, SV_TOPO_UP),
                       'backend_last_solve': None,
-                      'n_components_removed': n_unsplit, 'n_edges_cut': 6, 'n_plate_couplings_cut': 0, 'n_cells_removed': max(3, n_unsplit)}
+                      'n_components_removed': n_unsplit, 'n_edges_cut': 6, 'n_plate_couplings_cut': 0, 'n_cells_removed': max(3, n_unsplit),
+                      'n_reach_pairs_cut': 10}
         r['status_hi'], r['sv_counterfactual_ratio_hi'] = sh, rh
     else:
         r['upper'] = None
@@ -1089,6 +1091,7 @@ def t_sv_mismatch(mm, proj, Es):
         '풀이 칸 — 끊은 간선 수 6': mm_rec(up={'n_edges_cut': 6}),
         '풀이 칸 — 판 결합 끊은 수 0': mm_rec(up={'n_plate_couplings_cut': 0}),
         '풀이 칸 — SV 면 끊은 수 0': mm_rec(up={'n_sv_faces_cut': 0}),
+        '풀이 칸 — 판에 닿는 성분에서 끊은 쌍 수 0 (★ 10-23 묶음 A″)': mm_rec(up={'n_reach_pairs_cut': 0}),
         '위 끝 칸 = 아래 끝 (census 1 · computed 1.25 — 구조화 실패를 위 끝 칸이 숨김)':
             mm_rec(status_hi='computed', sv_counterfactual_ratio_hi=1.25, ratio_limit_hi=None),
         '위 끝 칸 = 아래 끝 (census 0 · computed 1.25)':
@@ -1427,6 +1430,28 @@ def t_states():
     chk('S8i 투영 — 정의별 수 칸 (n_*) 은 이름 그대로 옮긴다 · 사슬이 읽는 칸 (비 · 상태 · 표지 · 종류) 은 그대로',
         isinstance(pj, dict) and pj.get('n_bridging_faces_cut') == 3 and 'n_sv_faces_cut' not in pj
         and pj.get('sv_counterfactual_ratio') == 1.25 and pj.get('status') == 'computed' and pj.get('flag') is None, pj)
+    #  ★ 10-23 (묶음 A″ · 1저자 Q17 (가) · author 10-23 ratified Q17-Q18 (가)) 판에 닿는 성분에서 끊은 쌍 수 (`n_reach_pairs_cut`) — C1 ⑥ 이 그 수로
+    #    판단한다 → 증서 구간 기록의 비를 싣는 끝 (아래 끝 · 위 끝 computed) 은 그 칸 필수 (없음 · 투영이 버린 bool = 거부 · 실제 소비자) · 투영이 옮긴다
+    pj2 = proj(_sv_raw('computed', 1.2, n_unsplit=1, ratio_hi=3.4))
+    chk('S8h″ 투영 — 판에 닿는 성분에서 끊은 쌍 수 (n_reach_pairs_cut · 아래 끝 · 위 끝) 를 정수 그대로 옮긴다 (10-23 묶음 A″)',
+        isinstance(pj2, dict) and pj2.get('n_reach_pairs_cut') == 4 and (pj2.get('upper') or {}).get('n_reach_pairs_cut') == 10, pj2)
+    c8h = {}
+    raw = _sv_raw('computed', 1.25)
+    raw.pop('n_reach_pairs_cut')
+    c8h['아래 끝 칸 없음 (덩어리 0 · computed)'] = raw
+    raw = _sv_raw('computed', 1.25)
+    raw['n_reach_pairs_cut'] = True
+    c8h['아래 끝 칸 bool (투영이 버린다 = 칸 없음)'] = raw
+    raw = _sv_raw('computed', 1.2, n_unsplit=1, ratio_hi=3.4)
+    raw['upper'].pop('n_reach_pairs_cut')
+    c8h['위 끝 칸 없음 (덩어리 1 · 위 끝 computed)'] = raw
+    for nm, raw in c8h.items():
+        x = deep(mm)
+        _sv_put(x, proj(raw))
+        got = RC.ca_ext_record_ok(x)
+        chk(f'S8h″ 증서 구간 기록에 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut 없음 → 실제 소비자 거부 (C1 ⑥ 을 판단할 수 없다 · 10-23 묶음 A″) [{nm}]',
+            not got[0] and isinstance(got[1], str) and got[1].startswith('CAEXT|cjunc| sv_cf|') and '묶음 A″' in got[1]
+            and 'n_reach_pairs_cut' in got[1], got)
     #  ── ★ 10-22 (사전 리뷰 2 회차 PRE2-impl-01 · 02 · 1저자 Q1 (다)) 괄호 칸 — 투영 · 검증기 (위 끝 상태 ↔ 비 꼴 · 못 가른 덩어리 수 ↔ 위 끝 기록) ──
     rb = _sv_raw('computed', 1.0, n_unsplit=1, status_hi='no_through_without_sv')
     pb = proj(rb)

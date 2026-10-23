@@ -190,7 +190,8 @@ if hit('receipt_rtol'):                        # 러너가 다른 rtol 로 돌�
 am_s = float(E['SIGMA_AM_S_OVERRIDE']) * (0.01 / 0.0041 if hit('bad_am_s') else 1.0)   # 러너가 다른 σ_AM_S 로 (영수증 = 매니페스트)
 CERT = W['cert']
 #  ★ 10-23 (사전 공격 리뷰 C1) 증서 위상 수 (가짜 · 생산자 관계 그대로) — 주 해 · 아래 끝 = 주 해 − 끊은 다리 면 (반사실 기록 n_sv_faces_cut 4 ·
-#    판 결합 수 같다) · 위 끝 = 아래 끝 − 덩어리 셀 간선 (n_edges_cut 6 · 판 결합 0 뺌) · dof = 떠 있는 성분을 버린 만큼
+#    판 결합 수 같다) · 위 끝 = 아래 끝 − 덩어리 셀 간선 (n_edges_cut 6 · 판 결합 0 뺌) · dof = 떠 있는 성분을 버린 만큼 · ★ 10-23 묶음 A″ (1저자
+#    Q17 (가)) 판에 닿는 성분에서 끊은 쌍 수 (n_reach_pairs_cut) = 아래 끝 4 · 위 끝 10 (= 4 + 6 · 주 해 간선 쌍 100 → 90)
 TOPO_MAIN, TOPO_LO, TOPO_UP = (100, 90, 5, 5), (96, 90, 5, 5), (90, 86, 5, 5)
 #  원장 수 (가짜 접합 원장 · 정본 검증기의 항등식을 채운다): instance 12 · PTFE 덮임 2 · DBE SDCP 근접 7
 N_INST, N_COV = 12, 2
@@ -260,7 +261,7 @@ def sv_record(cm):
     #    'cf_rule' = 다른 이름 (검증기가 거부 · V35)
     raw = {'kind': rule.get('kind', T['sv_cf_kind']), 'rule': rule.get('cf_rule', T['sv_cf_rule']), 'requested': True, 'threshold': None,
            'flag': None, 'G_full_code': GF,
-           'n_sv_faces_cut': 4, 'backend_last_solve': None, 'n_unsplit_bridging_components': nu, 'bracket_rule': T['sv_rule'],
+           'n_sv_faces_cut': 4, 'n_reach_pairs_cut': 4, 'backend_last_solve': None, 'n_unsplit_bridging_components': nu, 'bracket_rule': T['sv_rule'],
            'standing': (T['sv_diag'] if diag else T['sv_cert']), 'conv_cert_full': (None if diag else cp_(cm))}
     if not diag and rule.get('full_br'):
         raw['conv_cert_full'].update(target_lo=GF * (1.0 + rule['full_br'][0]), target_hi=GF * (1.0 + rule['full_br'][1]))
@@ -289,7 +290,7 @@ def sv_record(cm):
         if nu:
             up = end(rule.get('status_hi', 'computed'), rule.get('ratio_hi'), rule.get('cut_br_hi', [0.0, 0.0]), TOPO_UP)
             up.update(why=None, backend_last_solve=None, n_components_removed=nu, n_edges_cut=6, n_plate_couplings_cut=0,
-                      n_cells_removed=max(3, nu))
+                      n_cells_removed=max(3, nu), n_reach_pairs_cut=10)
     raw['upper'] = up
     raw['status_hi'] = up['status'] if up is not None else raw['status']
     raw['sv_counterfactual_ratio_hi'] = up['sv_counterfactual_ratio'] if up is not None else raw['sv_counterfactual_ratio']

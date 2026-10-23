@@ -2159,6 +2159,38 @@ _CAT = {'other_bulk': 0, 'vv_axial': 1, 'vv_unreg_fused': 2, 'va_face': 3, 'sv_f
 _CAT_NAME = {v: k for k, v in _CAT.items()}
 
 
+def _reach_pairs_cut(n, U, V, keep0, keep, A_bot, A_top):
+    """★ 10-23 (묶음 A″ · 1저자 Q17 (가) · author 10-23 ratified Q17-Q18 (가)) 반사실 한 끝의 '판에 닿는 성분에서 끊은 쌍 수' (`n_reach_pairs_cut`).
+    주 계 그래프 = keep0 (끊기 전 간선 · 축약 뒤 dof U · V · 같은 판 입력 A_bot · A_top = 주 계의 판 결합 dof) 에서 판에 닿는 연결 성분 (주 계 가지치기
+    `kept_c` 와 같은 판정 — 아래 · 위 판 결합 dof 가 있는 성분) 안의 dof 쌍 중 그 끝 그래프 (keep) 에 간선이 하나도 남지 않은 쌍의 수 — 병렬 간선 =
+    한 쌍 (증서 `step3_conv_cert.target_bracket` 의 간선 수 `target_n_edges` = L 위 삼각 비대각 쌍과 같은 셈).
+    > 0 ⇔ 그 끝의 판에 닿는 계 (간선 쌍 · dof) 가 주 계와 다르다 — 빠진 쌍이 있으면 증서 간선 쌍 수가 준다 · 빠진 쌍이 없으면 주 계의 판에 닿는 성분마다
+    쌍이 하나도 안 빠져 연결이 그대로라 같은 판 입력에서 같은 계 (판 결합을 뺀 위 끝은 그 수 + `n_plate_couplings_cut`).  끊은 간선이 판에 닿지 않는
+    성분에만 있거나 (그 성분은 주 계에서도 버려진다) 같은 두 dof 를 잇는 끊지 않은 간선이 남으면 그 쌍은 빠지지 않는다 (0 · 끊어도 증서 위상 수 = 주 해).
+    옛 칸 (`n_sv_faces_cut` · `n_edges_cut` = 원래 간선 목록에서 떠 있는 성분을 버리기 전에 센 수) 은 그대로 둔다 — 생산자 보장: 이 수 ≤ 그 끝에서 뺀
+    원래 간선 수 (빠진 쌍마다 뺀 간선 ≥ 1)."""
+    rmv = keep0 & ~keep
+    if not rmv.any():
+        return 0
+    from scipy.sparse.csgraph import connected_components
+    k0 = np.flatnonzero(keep0)
+    ncomp, lab = connected_components(sparse.coo_matrix((np.ones(len(k0), np.int8), (U[k0], V[k0])), shape=(n, n)), directed=False)
+    reach = np.zeros(ncomp, bool)
+    reach[lab[np.asarray(A_bot, np.int64)]] = True
+    reach[lab[np.asarray(A_top, np.int64)]] = True
+    a, b = np.minimum(U[rmv], V[rmv]), np.maximum(U[rmv], V[rmv])
+    gone = np.unique(np.stack([a, b], 1), axis=0)
+    mark = np.zeros(n, bool)
+    mark[a] = True
+    mark[b] = True
+    s = keep & mark[U] & mark[V]                             # 남은 간선 중 병렬 후보 (두 끝 다 뺀 간선의 끝 dof)
+    if s.any():
+        live = np.unique(np.stack([np.minimum(U[s], V[s]), np.maximum(U[s], V[s])], 1), axis=0)
+        _u, inv, cnt = np.unique(np.concatenate([gone, live]), axis=0, return_inverse=True, return_counts=True)
+        gone = gone[cnt[np.asarray(inv).reshape(-1)[:len(gone)]] == 1]
+    return int(np.count_nonzero(reach[lab[gone[:, 0]]])) if len(gone) else 0
+
+
 class CjuncAssembler:
     """`solve_sigma_z` 가 셀 dof 로 만든 면 (couple) · 판 결합을 받아 멤버십 dof · 접합 간선 · 절단 · 축약 · 실제 그래프 가지치기를
     한 계를 만든다 (J1 · J3 · J5 · J6 · J7 · J9 · J11 · J12 · E1 · E3 · E6)."""
@@ -2309,6 +2341,7 @@ class CjuncAssembler:
                           np.zeros(len(e), bool)))
         rm = None if remove_dofs is None else np.unique(np.asarray(remove_dofs, np.int64).reshape(-1))
         n_rm_plate = 0
+        Ab_in, At_in = Ab, At                                # ★ 10-23 묶음 A″ — 주 계의 판 입력 (판에 닿는 성분 판정 · 위 끝이 판 결합을 빼기 전)
         if rm is not None and len(rm):                       # ★ 10-22 위 끝 — 그 셀의 판 결합 (셀 dof · 주인 고르기 전) 을 뺀다
             def _drop(A, g, c):
                 if A is None:
@@ -2354,12 +2387,21 @@ class CjuncAssembler:
         keep = (U != V) & (G > 0.0)
         n_sv_edges = int(np.sum(keep & (CAT == _CAT['sv_face'])))
         n_cf_edges = int(np.sum(keep & CF))
+        keep0 = keep.copy() if (counterfactual or rm_e is not None) else None   # ★ 10-23 묶음 A″ — 주 계 간선 (끊기 전)
         if counterfactual:
             keep &= ~CF
         n_rm_edges = 0
         if rm_e is not None:
             n_rm_edges = int(np.sum(keep & rm_e))
             keep &= ~rm_e
+        n_reach_pairs_cut = 0
+        if keep0 is not None:                                # ★ 10-23 묶음 A″ (1저자 Q17 (가)) — 판에 닿는 성분에서 끊은 쌍 수 (`_reach_pairs_cut`)
+            if n_rm_plate:                                   #   위 끝이 판 결합을 뺐으면 주 계의 판 결합 dof 를 그 입력에서 다시 (빼기 전 = 주 계)
+                Ab_m = rep[self._plate_owner(Ab_in, False)] if Ab_in is not None else np.zeros(0, np.int64)
+                At_m = rep[self._plate_owner(At_in, True)] if At_in is not None else np.zeros(0, np.int64)
+            else:
+                Ab_m, At_m = Ab2, At2
+            n_reach_pairs_cut = _reach_pairs_cut(self.n_total, U, V, keep0, keep, Ab_m, At_m)
         U, V, G, CAT, SA, SB, IA, IB, TG = (U[keep], V[keep], G[keep], CAT[keep], SA[keep], SB[keep], IA[keep], IB[keep],
                                             TG[keep])
         # 단락 (J11) — 축약 무리가 두 판에 다 닿음
@@ -2388,7 +2430,7 @@ class CjuncAssembler:
                  'n_unreg_fused': int(self.n_unreg_fused), 'n_junction_edges': int(np.sum(TG >= 0)),
                  'n_self_fused_faces': int(self.n_self_fused), 'n_self_revisits_path_only': n_path_only}
         st = {'e': e, 'n_contracted': n_contracted, 'stats': stats, 'n_sv_edges': n_sv_edges, 'n_cf_edges': n_cf_edges,
-              'n_rm_edges': n_rm_edges, 'n_rm_plate': n_rm_plate}
+              'n_rm_edges': n_rm_edges, 'n_rm_plate': n_rm_plate, 'n_reach_pairs_cut': n_reach_pairs_cut}
         if short:
             return {'reason': 'cjunc_electrode_short'}, st
         if n_kept == 0:
@@ -2535,7 +2577,10 @@ class CjuncAssembler:
         ★★ 10-23 (Codex 재검토 RCA2-01 · 04 · 1저자 Q1 (가)) **증서 구간** — main_cert = 주 해의 수렴 증서 (목표량 구간 · 게시 판 전류 = G_full ·
         결합 칸) · certify · certify_zero = 끝마다 증서 (양의 해 · 영값 위상).  셋이 다 있으면 지위 `certified_interval` (사슬 판정 = 증서 구간 비 ·
         기록 = 주 해 증서 `conv_cert_full` + 끝마다 `conv_cert`) · 하나라도 없으면 지위 `diagnostic_uncertified` (끝 증서도 싣지 않는다 · 사슬은 R
-        판정 입력으로 받지 않는다)."""
+        판정 입력으로 받지 않는다).
+        ★ 10-23 (묶음 A″ · 1저자 Q17 (가)) 끝마다 (푼 끝 · 조립한 끝) `n_reach_pairs_cut` = 판에 닿는 성분에서 끊은 쌍 수 (`_reach_pairs_cut` · 주 계
+        가지치기와 같은 판정 · 병렬 간선 = 한 쌍) — 검증기 C1 ⑥ 이 이 수로 판단한다 (옛 칸 `n_sv_faces_cut` · `n_edges_cut` · `n_plate_couplings_cut`
+        = 그대로 · 기록 · ⑦)."""
         certified = isinstance(main_cert, dict) and certify is not None and certify_zero is not None
         if not certified:
             certify = certify_zero = None
@@ -2545,7 +2590,7 @@ class CjuncAssembler:
         cen = self.reg.get('census') or {}
         n_cen = int(cen.get('n_unsplit_bridging_components', 0))
         rec = {'kind': CJUNC_SV_CF_KIND, 'rule': CJUNC_SV_CF_RULE, 'requested': True, 'threshold': thr,
-               'n_sv_faces_cut': int(st['n_cf_edges']),
+               'n_sv_faces_cut': int(st['n_cf_edges']), 'n_reach_pairs_cut': int(st['n_reach_pairs_cut']),
                'n_sdcp_components_touching': int(cen.get('n_sdcp_components_touching', 0)),
                'n_bridging_components': int(cen.get('n_bridging_components', 0)),
                'n_sv_faces_kept_self': int(cen.get('n_sv_faces_kept_self', 0)),
@@ -2577,7 +2622,8 @@ class CjuncAssembler:
             dofs = dofs[dofs >= 0]
             out_h, st_h = self._assemble(Ab, gb, At, gt, cb, ct, counterfactual=True, remove_dofs=dofs)
             up = {'n_components_removed': int(len(labels)), 'n_cells_removed': int(len(lins)), 'n_edges_cut': int(st_h['n_rm_edges']),
-                  'n_plate_couplings_cut': int(st_h['n_rm_plate']), 'n_sv_faces_cut': int(st_h['n_cf_edges']), 'why': None}
+                  'n_plate_couplings_cut': int(st_h['n_rm_plate']), 'n_sv_faces_cut': int(st_h['n_cf_edges']),
+                  'n_reach_pairs_cut': int(st_h['n_reach_pairs_cut']), 'why': None}
             up.update(self._sv_cf_end(solve, I_full, out_h, certify, backend, certify_zero))
         return _sv_cf_bracket(rec, up)
 
