@@ -1,0 +1,32 @@
+{
+  "schema": "dem_gen2_full_gate_receipt_v1",
+  "status": "PENDING",
+  "scope": "Required checks for the final integrated DEM generation 2 request package; local probe replay and document audits are not substitutes",
+  "request_sha256": "5d1921cea1eb281b2b6a6171a51ec9e0d5130d241e15a4c977574f9c9d3ccca6",
+  "tested_content_manifest_sha256": null,
+  "commands": [
+    {
+      "command": "python scripts/check_doc_refs.py",
+      "status": "PENDING",
+      "exit_code": null,
+      "log_path": null,
+      "log_sha256": null
+    },
+    {
+      "command": "python scripts/check_review_findings.py",
+      "status": "PENDING",
+      "exit_code": null,
+      "log_path": null,
+      "log_sha256": null
+    },
+    {
+      "command": "bash scripts/check_all.sh",
+      "status": "PENDING",
+      "exit_code": null,
+      "log_path": null,
+      "log_sha256": null
+    }
+  ],
+  "recorded_at_utc": "2026-10-23T13:13:03.999627+00:00",
+  "recorded_by": "request package author: pending template only; root records actual final runs"
+}

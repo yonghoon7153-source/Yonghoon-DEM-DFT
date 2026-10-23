@@ -1,0 +1,154 @@
+{
+  "markdown_files_scanned": 11,
+  "inventory_docs_files": 56,
+  "missing_unique_doc_token_pairs": 14,
+  "missing": [
+    {
+      "doc": "docs/reviews/codex_dem_protocol_gen2_design_request_20261023.md",
+      "token": "author/source-manifest.json",
+      "lines": [
+        25,
+        29
+      ],
+      "existing_suffix_matches": [
+        "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/source-manifest.json"
+      ]
+    },
+    {
+      "doc": "docs/reviews/codex_dem_protocol_gen2_design_request_20261023.md",
+      "token": "independent/RECHECK-v2.md",
+      "lines": [
+        11,
+        116
+      ],
+      "existing_suffix_matches": [
+        "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/RECHECK-v2.md"
+      ]
+    },
+    {
+      "doc": "docs/reviews/codex_dem_protocol_gen2_design_request_20261023.md",
+      "token": "independent/REVIEW.md",
+      "lines": [
+        11,
+        116
+      ],
+      "existing_suffix_matches": [
+        "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/REVIEW.md"
+      ]
+    },
+    {
+      "doc": "docs/reviews/codex_dem_protocol_gen2_design_request_20261023.md",
+      "token": "independent/results.json",
+      "lines": [
+        25
+      ],
+      "existing_suffix_matches": [
+        "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/results.json"
+      ]
+    },
+    {
+      "doc": "docs/reviews/codex_dem_protocol_gen2_design_request_20261023.md",
+      "token": "package-audit/audited_request.md",
+      "lines": [
+        120
+      ],
+      "existing_suffix_matches": [
+        "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/package-audit/audited_request.md"
+      ]
+    },
+    {
+      "doc": "docs/reviews/codex_dem_protocol_gen2_design_request_20261023.md",
+      "token": "package-audit/dem-gen2.md",
+      "lines": [
+        120
+      ],
+      "existing_suffix_matches": [
+        "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/package-audit/dem-gen2.md"
+      ]
+    },
+    {
+      "doc": "docs/reviews/codex_dem_protocol_gen2_design_request_20261023.md",
+      "token": "probes/mv_pressure_arithmetic.py",
+      "lines": [
+        32
+      ],
+      "existing_suffix_matches": [
+        "docs/reviews/codex_model_validation_review_evidence_20261008/probes/mv_pressure_arithmetic.py"
+      ]
+    },
+    {
+      "doc": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/codex_dem_protocol_gen2_design_request_20261023_draft.md",
+      "token": "probes/mv_pressure_arithmetic.py",
+      "lines": [
+        29
+      ],
+      "existing_suffix_matches": [
+        "docs/reviews/codex_model_validation_review_evidence_20261008/probes/mv_pressure_arithmetic.py"
+      ]
+    },
+    {
+      "doc": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/codex_dem_protocol_gen2_design_request_20261023_draft_v2.md",
+      "token": "probes/mv_pressure_arithmetic.py",
+      "lines": [
+        29
+      ],
+      "existing_suffix_matches": [
+        "docs/reviews/codex_model_validation_review_evidence_20261008/probes/mv_pressure_arithmetic.py"
+      ]
+    },
+    {
+      "doc": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/package-audit/audited_request.md",
+      "token": "author/source-manifest.json",
+      "lines": [
+        25,
+        29
+      ],
+      "existing_suffix_matches": [
+        "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/source-manifest.json"
+      ]
+    },
+    {
+      "doc": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/package-audit/audited_request.md",
+      "token": "independent/RECHECK-v2.md",
+      "lines": [
+        11,
+        116
+      ],
+      "existing_suffix_matches": [
+        "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/RECHECK-v2.md"
+      ]
+    },
+    {
+      "doc": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/package-audit/audited_request.md",
+      "token": "independent/REVIEW.md",
+      "lines": [
+        11,
+        116
+      ],
+      "existing_suffix_matches": [
+        "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/REVIEW.md"
+      ]
+    },
+    {
+      "doc": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/package-audit/audited_request.md",
+      "token": "independent/results.json",
+      "lines": [
+        25
+      ],
+      "existing_suffix_matches": [
+        "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/results.json"
+      ]
+    },
+    {
+      "doc": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/package-audit/audited_request.md",
+      "token": "probes/mv_pressure_arithmetic.py",
+      "lines": [
+        32
+      ],
+      "existing_suffix_matches": [
+        "docs/reviews/codex_model_validation_review_evidence_20261008/probes/mv_pressure_arithmetic.py"
+      ]
+    }
+  ],
+  "allowed": []
+}

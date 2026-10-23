@@ -1,0 +1,24 @@
+{
+  "v1_sha256": "0e9b62b26ac73ac0173e73c4d3ceff0a8f8e57a76d2a0dd9d866ebcb2c458d61",
+  "v2_sha256": "4ee2d07ccd392c9233d57262d2511ae0d32bfac52a95a9808593e97cf26929a2",
+  "diff_sha256": "47a0d33d159c3134d96c56dd2ce3c83a8ac5e66b8ce521644a008986b1adbded",
+  "diff_matches_actual_v1_to_v2": true,
+  "v1_matches_original_review_input": true,
+  "v1_review_artifacts_unchanged": {
+    "REVIEW.md": true,
+    "probe_independent.py": true,
+    "probe_repo_mc.py": true,
+    "results.json": true,
+    "repo-mc-results.json": true
+  },
+  "plan_matches_original_review": true,
+  "unchanged_A_rows": {
+    "A1": true,
+    "A2": true,
+    "A3": true,
+    "A4": true,
+    "A5": true
+  },
+  "repo_head": "7799a2ff64ba462b42ce05edd3e63b7c2854d557",
+  "scope": "Document delta recheck only; no rerun of unchanged numerical probes or whole-repo gates; no author response table read."
+}

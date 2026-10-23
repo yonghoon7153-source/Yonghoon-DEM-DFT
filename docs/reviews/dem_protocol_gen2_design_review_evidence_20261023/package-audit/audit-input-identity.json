@@ -1,0 +1,6 @@
+{
+  "audited_request_sha256": "cbe5892499180ad7822f7b3d795ef4064ba866c2b6bc1bd92c7b59fdb8ec8f00",
+  "report_sha256": "21ae868dd317e99e4e18abd16b94dbcc4dda2ecdd4150c8513757fea9eb5ec94",
+  "replay_summary_sha256": "ccb1c2620c98cc1df64a262053580b2a6327afb599c6be66120e290f0781194c",
+  "scope": "Independent audit of the preserved input package; later chunk-label and gate-receipt-reference changes are in audit-to-current-request.diff"
+}

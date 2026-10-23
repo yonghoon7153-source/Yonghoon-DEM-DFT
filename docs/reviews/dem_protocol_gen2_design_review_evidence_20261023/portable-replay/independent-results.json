@@ -1,0 +1,571 @@
+{
+  "schema": "independent_dem_gen2_preattack_v1",
+  "source_pin": "7799a2ff64ba462b42ce05edd3e63b7c2854d557",
+  "object_store_head": "7799a2ff64ba462b42ce05edd3e63b7c2854d557",
+  "python": "3.11.17 (main, Oct  3 2026, 01:05:36) [Clang 22.1.3 ]",
+  "request_sha256": "0e9b62b26ac73ac0173e73c4d3ceff0a8f8e57a76d2a0dd9d866ebcb2c458d61",
+  "checks": [
+    {
+      "name": "recovery_porosity",
+      "pass_": true,
+      "delta_percentage_points": [
+        1.3937007874015737,
+        5.789719626168231
+      ]
+    },
+    {
+      "name": "density_threshold",
+      "pass_": true,
+      "boundary_mm": 0.7763655760580263,
+      "interval_g_cm3": [
+        1.63072603229542,
+        1.6769905056314445
+      ],
+      "diameter_exact_mm": 10
+    },
+    {
+      "name": "MC_true_SE_A3",
+      "pass_": true,
+      "coverage": 0.7287469759261652,
+      "at_least_one_failure_three_independent": 0.6129827731023424
+    },
+    {
+      "name": "MC_actual_plugin_SE",
+      "pass_": true,
+      "coverage": 0.6317983826733038,
+      "failure": 0.3682016173266962,
+      "accepted_binomial_counts": [
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54
+      ],
+      "reported_se_at_zero_count": 0,
+      "rare_p_001_zero_count_probability": 0.3660323412732292
+    },
+    {
+      "name": "E_ladder_not_exact_geometric",
+      "pass_": true,
+      "ratios": [
+        1.4814814814814814,
+        1.5,
+        1.5,
+        1.5
+      ]
+    },
+    {
+      "name": "control_dimensions_and_counterexample",
+      "pass_": true,
+      "a": [
+        2.0,
+        2.2
+      ],
+      "eigenvalues": [
+        -1.0,
+        -1.2000000000000002
+      ],
+      "units": "K=N/deck_m, vmax=deck_m/deck_s, period=deck_s, F=deck_N"
+    },
+    {
+      "name": "X4_union_density_order_not_universal",
+      "pass_": true,
+      "h_ratio": 1.02,
+      "conserved_sphere_volume": 0.9,
+      "sphere_D": [
+        0.9,
+        0.8823529411764706
+      ],
+      "union_D": [
+        0.85,
+        0.8725490196078431
+      ],
+      "description": "kinematic admissibility counterexample only, not a demonstrated LIGGGHTS trajectory"
+    },
+    {
+      "name": "two_spheres_analytic",
+      "pass_": true,
+      "radius": 1,
+      "center_distance": 1,
+      "box": [
+        3,
+        2,
+        2
+      ],
+      "centers": [
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          2,
+          1,
+          1
+        ]
+      ],
+      "delta_percentage_points": 10.90830782496456,
+      "boundary": "nonperiodic for this analytic witness"
+    },
+    {
+      "name": "mass_conservation_counterexample",
+      "pass_": true,
+      "one_AM_loss_pp": 0.13748640543570934,
+      "fifty_AM_loss_pp": 6.874320271785467,
+      "one_AM_replaced_by_SE_equal_count_pp": 0.1372978095434793
+    },
+    {
+      "name": "sample_aliasing",
+      "pass_": true,
+      "sampled_max_error_N": 2.2737367544323206e-13,
+      "continuous_max_error_N": 20,
+      "fractional_max": 0.02666666666666667,
+      "period_deck_s": 0.005
+    },
+    {
+      "name": "rotation_and_residual_cancellation",
+      "pass_": true,
+      "Ktrans": 0,
+      "Krot": 0.2,
+      "net_force": 0,
+      "sum_force_norms": 20
+    },
+    {
+      "name": "parameter_identifiability",
+      "pass_": true,
+      "E_multiplier": 2,
+      "V_multiplier": 0.25,
+      "stiffness_multiplier": 0.9999999999999999
+    },
+    {
+      "name": "sources_22_pin_identity",
+      "pass_": true,
+      "count": 22
+    },
+    {
+      "name": "sealed_32_pin_identity",
+      "pass_": true,
+      "count": 32,
+      "different": []
+    },
+    {
+      "name": "literature_45_44_identity",
+      "pass_": true,
+      "count": 45,
+      "changed": [
+        "litdb/papers/sakuda2013_sulfide_mechanical_property.md"
+      ]
+    },
+    {
+      "name": "eleven_findings_remain_open",
+      "pass_": true,
+      "status": {
+        "DEMP-01": "open",
+        "MV-01": "open",
+        "MV-02": "open",
+        "MV-03": "open",
+        "MV-04": "open",
+        "MV-05": "open",
+        "MV-06": "open",
+        "MV-07": "open",
+        "MV-08": "open",
+        "MV-09": "open",
+        "DEMP-02": "open"
+      }
+    }
+  ],
+  "source_files": [
+    {
+      "path": "docs/handoff_codex_nonrint_20261023.md",
+      "sha256": "b03fd626124f35200805bc72f48c4988192fc885853262e963b7a2ab69324d9e",
+      "same_as_pin": true
+    },
+    {
+      "path": "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+      "sha256": "b7f9c115ab6c092cd667be82e237994d50591342ff5e61793156c0c3ed74e333",
+      "same_as_pin": true
+    },
+    {
+      "path": "docs/reviews/findings.json",
+      "sha256": "972989040a1eacb5d8fb1555b474c2e7dc1ec7514a050c766bd29cba19da49d6",
+      "same_as_pin": true
+    },
+    {
+      "path": "docs/reviews/claims.json",
+      "sha256": "efe76794e308d468bf7fbdbcc5e4c871ae0e5c53174e6ac794ef2a61675080ce",
+      "same_as_pin": true
+    },
+    {
+      "path": "docs/reviews/codex_review_model_validation_20261008.md",
+      "sha256": "4393346f5fc183fca20501a91e4d88a28672f67ce9a6678af26be698f76974b1",
+      "same_as_pin": true
+    },
+    {
+      "path": "docs/reviews/codex_model_validation_review_evidence_20261008/_README_reproduction.md",
+      "sha256": "8cf72b24b03490896a7bc1cda69b336685f619c6ad0776c8d3afb5aff9fb3e0c",
+      "same_as_pin": true
+    },
+    {
+      "path": "docs/reviews/codex_model_validation_review_evidence_20261008/probes/mv_pressure_arithmetic.py",
+      "sha256": "d73d210604ce44771c6d225111edf1a42b6d1fb9ccca8e5dd023d36ac627e306",
+      "same_as_pin": true
+    },
+    {
+      "path": "docs/data/ps73_damping_branch_20261007/README.md",
+      "sha256": "30e7d2c375251e7147e34c1f02cf07b5baad98916ce9615f3e49d6843fc47f29",
+      "same_as_pin": true
+    },
+    {
+      "path": "docs/data/ps73_damping_branch_20261007/in.branch_B.liggghts",
+      "sha256": "a3dd4cb74c9238e9f5f27eada91a7a25b7fa4d1fbe9601021bae32ddfcd9032f",
+      "same_as_pin": true
+    },
+    {
+      "path": "docs/data/ps73_damping_branch_20261007/make_branch_decks.py",
+      "sha256": "b18db82782585e37a9b3a9237cab7ab92aad7048a7aac66502f7578075f7de31",
+      "same_as_pin": true
+    },
+    {
+      "path": "docs/reviews/dem_unloading_ps45_prereg_20261009.md",
+      "sha256": "03b379ce9fffecb68fc8384f65e191387a6d05a379ee6191cdab17214586b30d",
+      "same_as_pin": true
+    },
+    {
+      "path": "docs/data/ps45_unload_20261009/README.md",
+      "sha256": "82d8f75fd108d028f3cb228aa466e575bfe728e238fc455092e9fcef1329c592",
+      "same_as_pin": true
+    },
+    {
+      "path": "docs/data/ps45_unload_20261009/unload_params.json",
+      "sha256": "332ad7c2040eb614ac21b31ccbb226479928d7ed8363f733b960cf4527204aae",
+      "same_as_pin": true
+    },
+    {
+      "path": "docs/reviews/codex_review_dem_unloading_kit_20261014.md",
+      "sha256": "73d4f5856b9ec728cac035d7b140737b76f767ada8332abe167623f1f79241c7",
+      "same_as_pin": true
+    },
+    {
+      "path": "docs/reviews/dem_unloading_kit_fix_plan_20261014.md",
+      "sha256": "1ed22cfad15d046e19f05ea54810eece543a2490328af457c9b4d2d5df1a5aa2",
+      "same_as_pin": true
+    },
+    {
+      "path": "docs/dem_governing_equations_background_20261011.md",
+      "sha256": "c8d252862eaa7174f04ff95f32f240ed4db7fbdb0c6608ba0b50cc71a056bbde",
+      "same_as_pin": true
+    },
+    {
+      "path": "docs/dem_governing_equations_report_20261009.md",
+      "sha256": "ec9898bea9621848f0d4c9528979051ab12e57b4dfe848b1c29fc18c9aac95fb",
+      "same_as_pin": true
+    },
+    {
+      "path": "dem_scripts/ps_sweep_6mah_20260914/in.ps_7_3_r45.liggghts",
+      "sha256": "69f4359c0f436ebe4728c9fe0f360326ab5a515d6dc25d75ff7d45ba7cb9dc15",
+      "same_as_pin": true
+    },
+    {
+      "path": "scripts/make_heckel_inputs.py",
+      "sha256": "5525024412d607513428182c1fc5cce261d086a3626b3d7fdea1c429265f7a63",
+      "same_as_pin": true
+    },
+    {
+      "path": "docs/data/heckel_pure_se_dem.csv",
+      "sha256": "9885b1c006cf39894e4eb24262ddab1a3408bbb60802ab0d097831bd7c445e4d",
+      "same_as_pin": true
+    },
+    {
+      "path": "docs/esse_calibration_2mAh_real_9.md",
+      "sha256": "55ab874ea16346c4206797a7229849ee46fd5a7da74d42102be093d85cfe5592",
+      "same_as_pin": true
+    },
+    {
+      "path": "docs/data/esse_calibration_2mAh_real_9.csv",
+      "sha256": "168bd59b5fd7c7fc419fcd51816d9ba2eefba039d32d75a3a1136ebf3e99fd62",
+      "same_as_pin": true
+    }
+  ],
+  "literature": [
+    {
+      "path": "litdb/papers/alabdali2023_cgmd_wet_manufacturing_ssb_cathode.md",
+      "same": true,
+      "old_sha256": "aa8b28253c6dc22875271d31da5e84d8a8b3967d74ebe62b3b143deb63cf15e7",
+      "new_sha256": "aa8b28253c6dc22875271d31da5e84d8a8b3967d74ebe62b3b143deb63cf15e7"
+    },
+    {
+      "path": "litdb/papers/bazzoun2025_dem_parameter_sensitivity_assb_cathode.md",
+      "same": true,
+      "old_sha256": "bdea395354108d6e9ba416c6cc8f2ab9f533c545c373f592a4cb7fbbac2905e2",
+      "new_sha256": "bdea395354108d6e9ba416c6cc8f2ab9f533c545c373f592a4cb7fbbac2905e2"
+    },
+    {
+      "path": "litdb/papers/bazzoun2026_dem_fem_rnm_ionic.md",
+      "same": true,
+      "old_sha256": "6a60d77202b6600d9386f7c6c2b899179a60d9a027ef82c287b19ee6fafe5502",
+      "new_sha256": "6a60d77202b6600d9386f7c6c2b899179a60d9a027ef82c287b19ee6fafe5502"
+    },
+    {
+      "path": "litdb/papers/bielefeld2020_effective_ionic_conductivity_binder.md",
+      "same": true,
+      "old_sha256": "ff2f347a914fad419002a714d8361875f418900148beaf19b132867a090f3cb0",
+      "new_sha256": "ff2f347a914fad419002a714d8361875f418900148beaf19b132867a090f3cb0"
+    },
+    {
+      "path": "litdb/papers/cho2024_conflicting_roles_conductive_additive.md",
+      "same": true,
+      "old_sha256": "df8dd730d60f8ed89859bd05b6622491261f8e1420388ee25ecbd7f9907f7f68",
+      "new_sha256": "df8dd730d60f8ed89859bd05b6622491261f8e1420388ee25ecbd7f9907f7f68"
+    },
+    {
+      "path": "litdb/papers/coetzee2017_dem_calibration_review.md",
+      "same": true,
+      "old_sha256": "54ddef04982d0ffa41288c521d66ebb6f69870267402ee33c7c61bdeec9ebf45",
+      "new_sha256": "54ddef04982d0ffa41288c521d66ebb6f69870267402ee33c7c61bdeec9ebf45"
+    },
+    {
+      "path": "litdb/papers/demirtas2021_mpfem_hollow_sphere_die_compaction.md",
+      "same": true,
+      "old_sha256": "dd102e16eeac99915ea0c494da85c6e738da41b8c3dd344253e1a3134f056698",
+      "new_sha256": "dd102e16eeac99915ea0c494da85c6e738da41b8c3dd344253e1a3134f056698"
+    },
+    {
+      "path": "litdb/papers/deng2016_elastic_superionic_electrolytes_dft.md",
+      "same": true,
+      "old_sha256": "d3a7a022dc5386f19bf228366ccb4c0161454f17d99772856bb8776e020e24bd",
+      "new_sha256": "d3a7a022dc5386f19bf228366ccb4c0161454f17d99772856bb8776e020e24bd"
+    },
+    {
+      "path": "litdb/papers/doux2020_stack_pressure_assb.md",
+      "same": true,
+      "old_sha256": "ec0ed86dd5df48f93d71914fd6ea4b8d3ebfd46d0bf5b41721ae2015725ce7a6",
+      "new_sha256": "ec0ed86dd5df48f93d71914fd6ea4b8d3ebfd46d0bf5b41721ae2015725ce7a6"
+    },
+    {
+      "path": "litdb/papers/faka2026_particle_size_consolidation_strain_lpscl.md",
+      "same": true,
+      "old_sha256": "1ad598fe5f4920501e5f7b0fae5237856e29e86e8fa99d038bc52c1701a439f3",
+      "new_sha256": "1ad598fe5f4920501e5f7b0fae5237856e29e86e8fa99d038bc52c1701a439f3"
+    },
+    {
+      "path": "litdb/papers/frankenberg2024_dem_high_intensity_mixer_assb.md",
+      "same": true,
+      "old_sha256": "5907117004d38cc7021e5b6bbee0d8aa1af6f2045e8e58764d668a256bab7dfc",
+      "new_sha256": "5907117004d38cc7021e5b6bbee0d8aa1af6f2045e8e58764d668a256bab7dfc"
+    },
+    {
+      "path": "litdb/papers/giannis2021_stress_based_multicontact_dem.md",
+      "same": true,
+      "old_sha256": "9d2618cafd7087912c45d630e728fd230caa2287b7cb80c668c3df3165c79f6e",
+      "new_sha256": "9d2618cafd7087912c45d630e728fd230caa2287b7cb80c668c3df3165c79f6e"
+    },
+    {
+      "path": "litdb/papers/heck2026_densification_sulfide_se_binder_scalable.md",
+      "same": true,
+      "old_sha256": "fb144a3b14719a4d0ee7ef47c2f7bf7e2b7c94b0fe38a2308b7faab0e4b1b189",
+      "new_sha256": "fb144a3b14719a4d0ee7ef47c2f7bf7e2b7c94b0fe38a2308b7faab0e4b1b189"
+    },
+    {
+      "path": "litdb/papers/ketter2025_resistor_network_models_predict_transport_properties.md",
+      "same": true,
+      "old_sha256": "8d58d69da8ab3bc1b9928782c1071d4b77c43d5a43baead63e9f3bbe2c08de72",
+      "new_sha256": "8d58d69da8ab3bc1b9928782c1071d4b77c43d5a43baead63e9f3bbe2c08de72"
+    },
+    {
+      "path": "litdb/papers/kraft2017_lattice_polarizability_argyrodite_Li6PS5X.md",
+      "same": true,
+      "old_sha256": "3276f195536f8b79664240a0c6a7b10b21ad3d28df023f959bd7cfab9932d446",
+      "new_sha256": "3276f195536f8b79664240a0c6a7b10b21ad3d28df023f959bd7cfab9932d446"
+    },
+    {
+      "path": "litdb/papers/lee2024_multiphysics_dem_fem_initial_pressure_assb.md",
+      "same": true,
+      "old_sha256": "d9ee323a4edb56c3950721f52665cbb6deff39831c9ee98cdcb28cdb428ad936",
+      "new_sha256": "d9ee323a4edb56c3950721f52665cbb6deff39831c9ee98cdcb28cdb428ad936"
+    },
+    {
+      "path": "litdb/papers/lee2025_heckel_argyrodite_powder_densification_nanoindentation.md",
+      "same": true,
+      "old_sha256": "225e31cca079c3af408948e5ec3e3870904236627cebe3db01d5cf2ce6e5ad46",
+      "new_sha256": "225e31cca079c3af408948e5ec3e3870904236627cebe3db01d5cf2ce6e5ad46"
+    },
+    {
+      "path": "litdb/papers/lee2026_lpscl_coating_thickness_ncm811.md",
+      "same": true,
+      "old_sha256": "209be8e1ec94c8abcc9a2c1b94a1c904d016e549c7b813a166a2f169bf7d237c",
+      "new_sha256": "209be8e1ec94c8abcc9a2c1b94a1c904d016e549c7b813a166a2f169bf7d237c"
+    },
+    {
+      "path": "litdb/papers/luding2008_cohesive_frictional_contact_models.md",
+      "same": true,
+      "old_sha256": "87fe537e4dd59a184fe3fcafeb742b68cb09cbc6cc2bb3ca07ee24d9b122a756",
+      "new_sha256": "87fe537e4dd59a184fe3fcafeb742b68cb09cbc6cc2bb3ca07ee24d9b122a756"
+    },
+    {
+      "path": "litdb/papers/martinbouvard2003_dem_composite_cold_compaction.md",
+      "same": true,
+      "old_sha256": "32588bf078df06c9648f964d0064aaf94a7e79b984138eb329a3ab3c96fbd53a",
+      "new_sha256": "32588bf078df06c9648f964d0064aaf94a7e79b984138eb329a3ab3c96fbd53a"
+    },
+    {
+      "path": "litdb/papers/mcgeary1961_bimodal_sphere_packing.md",
+      "same": true,
+      "old_sha256": "dd68aec3b126a4f653add7a62e158b464d40342bc36b7b450cd962a953e4c22f",
+      "new_sha256": "dd68aec3b126a4f653add7a62e158b464d40342bc36b7b450cd962a953e4c22f"
+    },
+    {
+      "path": "litdb/papers/minnmann2021_jes_charge_transport_bottlenecks.md",
+      "same": true,
+      "old_sha256": "d56b7d487712fdd9e8c6ce798e7e86565aa5084fe86b28ad9babe6f8cd3aaa76",
+      "new_sha256": "d56b7d487712fdd9e8c6ce798e7e86565aa5084fe86b28ad9babe6f8cd3aaa76"
+    },
+    {
+      "path": "litdb/papers/miss2026_insitu_conductivity_porosity_pressure_compaction.md",
+      "same": true,
+      "old_sha256": "8b88570d2cfdeadc5b96b5bbbc69d439e37970501a712b38b36374231c698121",
+      "new_sha256": "8b88570d2cfdeadc5b96b5bbbc69d439e37970501a712b38b36374231c698121"
+    },
+    {
+      "path": "litdb/papers/ngandjong2021_dem_calendering_digital_twin.md",
+      "same": true,
+      "old_sha256": "322a32dd3f03d47249c88862c54514003b82fb8d1164d8e953d7279f358a52c7",
+      "new_sha256": "322a32dd3f03d47249c88862c54514003b82fb8d1164d8e953d7279f358a52c7"
+    },
+    {
+      "path": "litdb/papers/otani2025_dem_se_dispersion_aggregation_compression.md",
+      "same": true,
+      "old_sha256": "0de2427e9663f486e1b35edbd61b5b37a46889573ae32d9821db40d10145e1ba",
+      "new_sha256": "0de2427e9663f486e1b35edbd61b5b37a46889573ae32d9821db40d10145e1ba"
+    },
+    {
+      "path": "litdb/papers/paulick2015_elastic_particle_properties_dem_review.md",
+      "same": true,
+      "old_sha256": "ef4dc80c43ec69648c9655bb426bee01134a13da333e984f04ba7fe01f4b0995",
+      "new_sha256": "ef4dc80c43ec69648c9655bb426bee01134a13da333e984f04ba7fe01f4b0995"
+    },
+    {
+      "path": "litdb/papers/pustorino2025_lpscl_bulk_surface_mechanical_electronic_li_filament.md",
+      "same": true,
+      "old_sha256": "8f82f5b07f53518bfcacb2755f9e0748272b5751606e01cc3728d5309ee1c68e",
+      "new_sha256": "8f82f5b07f53518bfcacb2755f9e0748272b5751606e01cc3728d5309ee1c68e"
+    },
+    {
+      "path": "litdb/papers/pycompact2025_dem_mpfem_workflow.md",
+      "same": true,
+      "old_sha256": "3257b836affaf8cb091beb703be27aa6188b7e3b1c3c7947628e2ee50fe3c583",
+      "new_sha256": "3257b836affaf8cb091beb703be27aa6188b7e3b1c3c7947628e2ee50fe3c583"
+    },
+    {
+      "path": "litdb/papers/sakuda2013_sulfide_mechanical_property.md",
+      "same": false,
+      "old_sha256": "f29b34872a91726e29bcd884286d7eea5c040fc99fdcdbd1bfce818b85baf184",
+      "new_sha256": "a167fa19939f3e295f9d9eddaf3357d2a9232dd28ec6557cc0aaba69dabbe839"
+    },
+    {
+      "path": "litdb/papers/schneider2023_particle_size_pressure_transport.md",
+      "same": true,
+      "old_sha256": "539e1603d9b24f5f0a5f2b13d5a0116c8af4a6ef74fc307d79305f471ef4a7b7",
+      "new_sha256": "539e1603d9b24f5f0a5f2b13d5a0116c8af4a6ef74fc307d79305f471ef4a7b7"
+    },
+    {
+      "path": "litdb/papers/sedlatschek2026_nmc811_grain_boundary_strength_micro_tensile.md",
+      "same": true,
+      "old_sha256": "fc503282b0ddb2547fd97be1c1389da3abbb57880274d84949414a83f6c72d14",
+      "new_sha256": "fc503282b0ddb2547fd97be1c1389da3abbb57880274d84949414a83f6c72d14"
+    },
+    {
+      "path": "litdb/papers/shenouda2020_dem_metal_powder_am_liggghts_tutorial.md",
+      "same": true,
+      "old_sha256": "caa0aa5083a565673153130ea6c83cde8e331bf248d0d3ca1aa683d9ea0692ba",
+      "new_sha256": "caa0aa5083a565673153130ea6c83cde8e331bf248d0d3ca1aa683d9ea0692ba"
+    },
+    {
+      "path": "litdb/papers/shi2019_high_am_loading_particle_size_assb.md",
+      "same": true,
+      "old_sha256": "e50bc5bf15f7ad60eca01c3f52a3e3011383e20781747031e3be12744d52ca22",
+      "new_sha256": "e50bc5bf15f7ad60eca01c3f52a3e3011383e20781747031e3be12744d52ca22"
+    },
+    {
+      "path": "litdb/papers/so2021_dem_mold_pressure_assb_coldpress.md",
+      "same": true,
+      "old_sha256": "aa75871b99f8882950a485acbc3a22b61ad878b964c5853482579cf614f0a8f4",
+      "new_sha256": "aa75871b99f8882950a485acbc3a22b61ad878b964c5853482579cf614f0a8f4"
+    },
+    {
+      "path": "litdb/papers/so2022_dem_compaction_coated_particles_assb.md",
+      "same": true,
+      "old_sha256": "d86458f4a35c4652797b41ff625e61a602a84c1ea785d4640bd09f7cced3f86c",
+      "new_sha256": "d86458f4a35c4652797b41ff625e61a602a84c1ea785d4640bd09f7cced3f86c"
+    },
+    {
+      "path": "litdb/papers/so2022_dem_contact_model_assb_compaction_sintering.md",
+      "same": true,
+      "old_sha256": "ea1e32d0970c8632f88d9f7369be1dcf767c2e0f9133c60ced07c0b071a296bc",
+      "new_sha256": "ea1e32d0970c8632f88d9f7369be1dcf767c2e0f9133c60ced07c0b071a296bc"
+    },
+    {
+      "path": "litdb/papers/song2025_porous_argyrodite_modulus_fracture_toughness.md",
+      "same": true,
+      "old_sha256": "e81ee1ef0efee30823c519314a006632502757784ac03ff1fbb44471898e7367",
+      "new_sha256": "e81ee1ef0efee30823c519314a006632502757784ac03ff1fbb44471898e7367"
+    },
+    {
+      "path": "litdb/papers/thakur2014_eepa_adhesive_elastoplastic_dem.md",
+      "same": true,
+      "old_sha256": "716b94823eb95e18644ceeef2fbe5810c4741358b09637af12e8d7d74af72405",
+      "new_sha256": "716b94823eb95e18644ceeef2fbe5810c4741358b09637af12e8d7d74af72405"
+    },
+    {
+      "path": "litdb/papers/thompson2026_high_pressure_densification_lps_lpscl_xrd_tomography.md",
+      "same": true,
+      "old_sha256": "d248f7efa559b651692591491560f27acc213aaffea09f280027dbf645f4f2eb",
+      "new_sha256": "d248f7efa559b651692591491560f27acc213aaffea09f280027dbf645f4f2eb"
+    },
+    {
+      "path": "litdb/papers/thorntonning1998_adhesive_elastoplastic_contact.md",
+      "same": true,
+      "old_sha256": "85a4619ebcdd9705f8ae40b220d6ebbda7581a2203a91d7e2a96f0192924c23b",
+      "new_sha256": "85a4619ebcdd9705f8ae40b220d6ebbda7581a2203a91d7e2a96f0192924c23b"
+    },
+    {
+      "path": "litdb/papers/torii2025_lpscl_mechanical_anisotropy_dft.md",
+      "same": true,
+      "old_sha256": "b8254236f25008d0c8be4f9800708658006f5f85710f203a0891f055e7f97708",
+      "new_sha256": "b8254236f25008d0c8be4f9800708658006f5f85710f203a0891f055e7f97708"
+    },
+    {
+      "path": "litdb/papers/varkey2026_multicontact_elastoplastic_dem.md",
+      "same": true,
+      "old_sha256": "250538f9e11c12f6848c3b6258a500d7d15269a6fc91848fc741e2868413ef3a",
+      "new_sha256": "250538f9e11c12f6848c3b6258a500d7d15269a6fc91848fc741e2868413ef3a"
+    },
+    {
+      "path": "litdb/papers/zhang2026_xct_dem_cathode_calendering_peel_calibration.md",
+      "same": true,
+      "old_sha256": "3cce60f4f910a0faac380a0d46488f17e1a1a412d21f1e1439fa0cff7d857e5b",
+      "new_sha256": "3cce60f4f910a0faac380a0d46488f17e1a1a412d21f1e1439fa0cff7d857e5b"
+    },
+    {
+      "path": "litdb/papers/zunker2024_mdr_contact_model_partI.md",
+      "same": true,
+      "old_sha256": "e2221a929bd9ed71daa474dfbecdb7f9eea465cac5523d189e2bd136cc627eec",
+      "new_sha256": "e2221a929bd9ed71daa474dfbecdb7f9eea465cac5523d189e2bd136cc627eec"
+    },
+    {
+      "path": "litdb/papers/zunker2025_dem_large_deformation_compaction.md",
+      "same": true,
+      "old_sha256": "58fb77cb98e7db8eadc46972b02c5660b648aeca4a7088113d9f5dfbf1b61a05",
+      "new_sha256": "58fb77cb98e7db8eadc46972b02c5660b648aeca4a7088113d9f5dfbf1b61a05"
+    }
+  ],
+  "limitations": [
+    "Portable replay of the preserved independent probe; not a new independent review.",
+    "No DEM, LIGGGHTS, GPU, scheduler or external action.",
+    "No existing whole-repo gates repeated.",
+    "Analytic counterexamples do not establish magnitude in real beds."
+  ]
+}

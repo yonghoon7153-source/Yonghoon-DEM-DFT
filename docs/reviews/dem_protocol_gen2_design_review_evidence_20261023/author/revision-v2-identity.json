@@ -1,0 +1,17 @@
+{
+  "original_request": "codex_dem_protocol_gen2_design_request_20261023_draft.md",
+  "original_request_sha256": "0e9b62b26ac73ac0173e73c4d3ceff0a8f8e57a76d2a0dd9d866ebcb2c458d61",
+  "independent_review_request_sha256": "0e9b62b26ac73ac0173e73c4d3ceff0a8f8e57a76d2a0dd9d866ebcb2c458d61",
+  "revised_request": "codex_dem_protocol_gen2_design_request_20261023_draft_v2.md",
+  "revised_request_sha256": "4ee2d07ccd392c9233d57262d2511ae0d32bfac52a95a9808593e97cf26929a2",
+  "independent_review_files_unchanged": {
+    "probe_repo_mc.py": "720abc1a743f7c9f2393436502bd2fa2cf7468b017f5116404261a5244d8924e",
+    "REVIEW.md": "60ea178361a92f45c3bb9402e327ee8cc275e45495364266f589c43661168ed2",
+    "probe_independent.py": "57105fc0e9d076da5303636e2819b9da1f0cc8bb14d5d393fc414fa60489188d",
+    "results.json": "3e7b627316e9963e100af795241525044a4573f98a4edd18ed3deb315702cfde",
+    "repo-mc-results.json": "452f225e12baa52ad844aedc797a493d144bb05fcde7e032693c6ef1bb4b25ce",
+    "MANIFEST.sha256": "44520a78333b940cc25151d2bd6e634eaa6767e4c3539e4a67c5f26d5ec9161a"
+  },
+  "original_manifest_sha256": "52f7721f88c9d5a51e443fa0db11b8205ce2c11015bc06d14b8b447efc712c56",
+  "scope": "new scratch document revision only; no repository tracked file changes; independent recheck pending"
+}
