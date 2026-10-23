@@ -31,6 +31,9 @@ Q7 일부).
       없는 매니페스트 = 거부 · 정당한 짝 = 받는다 · 두 인자 호출 = TypeError
   T22 실제 payload (face_alpha + 접합 + rtol · LEAN 3) 끝-끝 — 정당한 런 통과 · 같은 σ 의 다른 계획 런 증서 = 거부
   T23 기반 (a76f59d0d) 대조 — 증서 끔 = 결과 같음 · 증서 켬 = 기반 칸 그대로 · 더해진 칸 = 결합 칸뿐
+합산 넘침 (★ 10-23 · Codex 재검토 RCA2-08 · 1저자 10-23 Q1–Q8 권고대로):
+  T24 유한 중간값의 최종 합 (U · W fsum) · 원장 행 허용 · 판 전류 합 넘침 → 예외 · 경고 대신 NOT_CERTIFIABLE (판정문 5 노드 8e307 꼴 ·
+      U 만 · W 만 · 숨은 접지 + 허용 넘침) · 정상 회로 증서 = 기반 (49a1af626) 과 비트 같음
 빠른 판 (기본 · 게이트) ↔ 긴 판 (`--long` · 따로): 긴 판만 = T5 표본 1,500 (빠른 300) · T16 무작위 200 (빠른 40) · T17 순열 20
   (빠른 3) + 탐침 순열 (T17b) + OpenBLAS 경로 자식 여섯 (T17c) · T4 접합 탐침 · T14 시간 (간선 > 2²⁰ 계) · T18 변이 표.
 
@@ -1294,6 +1297,86 @@ def t20():
     chk('T20b 합 넘침 (1.7e308 × 4) → (inf, inf) · 예외 아님 (호출자가 비유한으로 NOT_CERTIFIABLE)', ok, r)
 
 
+#: ★ 10-23 (Codex 재검토 RCA2-08 · 1저자 10-23 Q1–Q8 권고대로) — 합산 넘침 고침의 기반 (묶음 A 시작 판) · T24 정상 회로 비트 대조
+RCA208_BASE = '49a1af626'
+
+
+def _rca208_sys(n, g):
+    """판정문 RCA2-08 꼴 — 독립 노드 n 개 (내부 간선 없음) · 노드마다 아래 · 위 판 간선 g (L 대각 2g · b = g · 모두 유한)."""
+    return _hand_system(n, [], [(i, g) for i in range(n)], [(i, g) for i in range(n)])
+
+
+def _cert_with(mod, L, b, phi, Ab, gb, At, gt):
+    """모듈 mod (지금 판 · 기반 판) 의 certify — `_cert_of` 와 같은 인자 (이어 풀기 = 같은 φ)."""
+    return quiet(mod.certify, L, b, phi, 0, 0.0, 1e-12, Ab, gb, At, gt, 1.0, lambda L_, b_, x0, rt: (np.asarray(x0), 0))
+
+
+@case('T24 ★ 10-23 (Codex 재검토 RCA2-08 · P3) 합산 넘침 — 유한 중간값의 최종 합 (U · W `fsum`) · 원장 행 허용 (tol_r) · 판 전류 합이 넘치면 '
+      '예외 · 경고 대신 NOT_CERTIFIABLE (판정문 꼴 5 노드 gb = gt = 8e307 · p 0.5 · 원장 허용 유한 · U 합만 넘침 10 노드 4e307 · U 유한 · '
+      'W 합만 넘침 5 노드 3e307 · p 1) · 경고를 오류로 바꿔 본다 · 정상 회로 증서 = 고치기 전 판 (49a1af626) 과 비트 같음')
+def t24():
+    import warnings
+    N = getattr(CC, 'STATUS_NOT_CERTIFIABLE', '?')
+    cases = (('판정문 꼴 — 독립 노드 5 · gb = gt = 8e307 · p 0.5 (원장 행 허용 :344 · U 최종 합 :476)', 5, 8e307, 0.5),
+             ('독립 노드 10 · gb = gt = 4e307 · p 0.5 (원장 허용 유한 · U 최종 합 :476 만 넘침)', 10, 4e307, 0.5),
+             ('독립 노드 5 · gb = gt = 3e307 · p 1 (U 유한 · W 최종 합 :553 만 넘침)', 5, 3e307, 1.0))
+    for nm, n, g, p in cases:
+        L, b, Ab, gb, At, gt = _rca208_sys(n, g)
+        phi = np.full(n, p)
+        for how, fn in (('target_bracket (판정문 탐침과 같은 호출)', lambda: CC.target_bracket(L, b, phi, Ab, gb, At, gt)),
+                        ('certify', lambda: _cert_of(L, b, phi, Ab, gb, At, gt))):
+            try:
+                with warnings.catch_warnings():
+                    warnings.simplefilter('error')             # numpy RuntimeWarning (넘침 · 무효) = 예외 → 시험 실패
+                    r = fn()
+                err = None
+            except Exception as e:                              # noqa: BLE001 — 예외 · 경고 = 고치기 전 꼴 (증서가 상태로 말해야 한다)
+                r, err = {}, f'{type(e).__name__}: {e}'
+            why = r.get('target_ledger_problem')
+            ok = (err is None and r.get('target_ledger_ok') is False and isinstance(why, str) and '넘침' in why
+                  and r.get('target_lo') is None and r.get('target_hi') is None)
+            if how == 'certify':
+                ok = ok and r.get('status') == N and r.get('ok') is False and r.get('pass_d') is False
+            chk(f'T24a [{nm} · {how}] → 예외 · 경고 없이 원장 문제 (넘침 사유 · 구간 없음)' + (' · NOT_CERTIFIABLE · ok False' if how == 'certify'
+                                                                                     else ''),
+                ok, err or {k: r.get(k) for k in ('status', 'ok', 'target_ledger_ok', 'target_ledger_problem', 'target_lo')})
+    #  같은 부류의 판별 — 원장 행 허용이 넘치면 (옛 판: 허용 = inf → 행 합 대조가 비어 버린다) 숨은 접지 항 (대각 8e307 · 원장 밖) 을 받았다.
+    #  노드 1 · gb = gt = 4e307 · 접지 8e307 (대각 1.6e308 유한) · φ = 접지 계의 정확 해 0.25 → 원장 문제 '원장 대조 넘침' (NOT_CERTIFIABLE)
+    from scipy import sparse
+    Lg = sparse.csr_matrix(np.array([[1.6e308]]))
+    try:
+        with warnings.catch_warnings():
+            warnings.simplefilter('error')
+            cg = _cert_of(Lg, np.array([4e307]), np.array([0.25]), np.array([0]), np.array([4e307]), np.array([0]), np.array([4e307]))
+        errg = None
+    except Exception as e:                                      # noqa: BLE001
+        cg, errg = {}, f'{type(e).__name__}: {e}'
+    chk('T24c 숨은 접지 항 + 원장 허용 넘침 (노드 1 · gb = gt = 4e307 · 접지 8e307) → 예외 · 경고 없이 NOT_CERTIFIABLE · 원장 문제 = 대조 넘침 '
+        '(옛 판 = 허용 inf 로 행 합 대조가 비어 원장 통과 · POSITIVE_SOLVED)',
+        errg is None and cg.get('status') == N and cg.get('target_ledger_ok') is False
+        and '원장 대조 넘침' in str(cg.get('target_ledger_problem')),
+        errg or {k: cg.get(k) for k in ('status', 'ok', 'target_ledger_ok', 'target_ledger_problem', 'pass_d')})
+    #  정상 회로 — 지금 판 ↔ 고치기 전 판 (기반 49a1af626) 의 증서 dict 전체가 비트 같다 (넘침 보호가 정상 값을 바꾸지 않는다)
+    try:
+        CCb = quiet(_load_base, 'scripts/step3_conv_cert.py', 'step3_conv_cert_rca208_base', commit=RCA208_BASE)
+    except Exception as e:                                      # noqa: BLE001
+        chk(f'T24b 기반 판 ({RCA208_BASE}) step3_conv_cert 불러오기', False, f'{type(e).__name__}: {e}')
+        return
+    systems = []
+    for nm, n, edges, bot, top, _closed in HAND:
+        L, b, Ab, gb, At, gt = _hand_system(n, edges, bot, top)
+        ph = np.array([float(x) for x in _fr_solve(n, edges, bot, top)[0]])
+        systems += [(f'{nm} · 정확 해', (L, b, ph, Ab, gb, At, gt)), (f'{nm} · 흔든 해 (×(1 + 1e-7))', (L, b, ph * (1.0 + 1e-7), Ab, gb, At, gt))]
+    systems.append(('무작위 침대 5×5×10 · 직접해', _grid_system((5, 5, 10), 7)))
+    systems.append(('정확 2 노드', _exact2()))
+    bad = []
+    for nm, args in systems:
+        a, c = _cert_with(CC, *args), _cert_with(CCb, *args)
+        if not _same(a, c):
+            bad.append((nm, sorted(k for k in set(a) | set(c) if not _same(a.get(k), c.get(k)))[:6]))
+    chk(f'T24b 정상 회로 {len(systems)} 개 — 증서 dict 전체 = 고치기 전 판 ({RCA208_BASE}) 과 비트 같음 (ⓐ–ⓓ · 구간 · 상태 · 칸)', not bad, bad[:4])
+
+
 # ═════════════════════════ 증서 ↔ 런 결합 (사전 리뷰 PRE-impl-07 · 1저자 10-21 "권고대로 해") ═════════════════════════
 #  반례 (판정문 PRE-impl-07 · 탐침 `probe_zero_binding.py`): CX 바닥 (R_j = ∞) 의 실제 영값 증서에서 지문만 바꾼 사본을
 #  `conv_cert_problem` · `next_gen_cert_ok` 가 받았다 — 영값 증서의 `fp_sid` · `fp_sig` 는 hex32 형식만 · σ 결합 (0 = 0) 은 아무것도 묶지
@@ -1634,8 +1717,8 @@ MUTANTS = (
     ('결손 항 뺌 (D = 0)', 'step3_conv_cert', (('    if _defect_term:\n', '    if False:\n'),), ('t6',), ('T6c',)),
     ('상한의 부동소수 여유 뺌 (상한 = 계산된 U 그대로)', 'step3_conv_cert',
      (('hi = (U + e1 + e2 + e3) * (1.0 + 8.0 * _UNIT)', 'hi = U'),), ('t16',), ('T16a', 'T16b', 'T16g', 'T16i')),
-    ('원장 행 합 검사 뺌', 'step3_conv_cert', (("    if (np.abs(rs - pl) > ", "    if False and (np.abs(rs - pl) > "),), ('t7',),
-     ('T7 [접지',)),
+    ('원장 행 합 검사 뺌', 'step3_conv_cert', (("        bad_r = bool((np.abs(rs - pl) > ", "        bad_r = False and bool((np.abs(rs - pl) > "),),
+     ('t7',), ('T7 [접지',)),                               # ★ 10-23 (RCA2-08) — 행 합 대조가 넘침 보호 안으로 옮겨 글자 자리만 바뀜
     ('영값 위상의 정확 0 요구 뺌', 'step3_conv_cert',
      (("zero_exact = bool(out['I_bot'] == 0.0 and out['I_top'] == 0.0 and out['sigma'] == 0.0)", 'zero_exact = True'),),
      ('t3', 't16'), ('T3c', 'T16f')),
@@ -1701,6 +1784,19 @@ MUTANTS = (
     ('조기 반환 기록이 계획 지문을 버림', 'step3_conv_cert',
      (('fp_face_plan=fp_face_plan,\n                           fp_cjunc_registry=fp_cjunc_registry, fp_cjunc_rows=fp_cjunc_rows))',
        'fp_face_plan=None,\n                           fp_cjunc_registry=None, fp_cjunc_rows=None))'),), ('t21',), ('T21a', 'T21m')),
+    #  ★ 10-23 (Codex 재검토 RCA2-08) — 합산 넘침 보호의 자리 (최종 U · W 합 · 원장 허용 · 판 전류 합의 경고)
+    ('최종 U 합 보호 뺌 (math.fsum 그대로)', 'step3_conv_cert', (('    U = _fsum_bound([u1, u2, u3])[0]', '    U = math.fsum([u1, u2, u3])'),),
+     ('t24',), ('T24a [독립 노드 10',)),
+    ('최종 W 합 보호 뺌 (math.fsum 그대로)', 'step3_conv_cert', (('    W = _fsum_bound([w1, w2, w3])[0]', '    W = math.fsum([w1, w2, w3])'),),
+     ('t24',), ('T24a [독립 노드 5 · gb = gt = 3e307',)),
+    ('원장 허용 넘침 검사 뺌 (허용 inf = 대조 비움)', 'step3_conv_cert', (('    if not fin_t:\n', '    if False:\n'),), ('t24',), ('T24c',)),
+    ('원장 대조 경고 막기 뺌', 'step3_conv_cert',
+     (("    with np.errstate(over='ignore', invalid='ignore'):\n        rs = np.asarray(Lc.sum(axis=1)).ravel()",
+       '    if True:\n        rs = np.asarray(Lc.sum(axis=1)).ravel()'),), ('t24',), ('T24a [판정문 꼴',)),
+    ('판 전류 합 경고 막기 뺌', 'step3_conv_cert',
+     (("    with np.errstate(over='ignore', invalid='ignore'):\n        Ib = float(", '    if True:\n        Ib = float('),), ('t24',),
+     ('T24a [판정문 꼴 — 독립 노드 5 · gb = gt = 8e307 · p 0.5 (원장 행 허용 :344 · U 최종 합 :476) · certify',
+      'T24a [독립 노드 10 · gb = gt = 4e307 · p 0.5 (원장 허용 유한 · U 최종 합 :476 만 넘침) · certify')),
 )
 
 
@@ -1740,7 +1836,7 @@ def _muted(fns, run):
       '센다 · 빠른 판 = 변이 자리 존재만)')
 def t18():
     global CC, RC, S3
-    fns = {'t1': t1, 't3': t3, 't6': t6, 't7': t7, 't13': t13, 't15': t15, 't16': t16, 't19': t19, 't21': t21}
+    fns = {'t1': t1, 't3': t3, 't6': t6, 't7': t7, 't13': t13, 't15': t15, 't16': t16, 't19': t19, 't21': t21, 't24': t24}
     srcs = {}
     for mod in sorted({m[1] for m in MUTANTS}):
         with open(os.path.join(SCRIPTS, mod + '.py'), encoding='utf-8') as fh:

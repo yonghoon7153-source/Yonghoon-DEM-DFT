@@ -113,10 +113,13 @@ SEAL_EPS_START = 1.0e-4
 
 
 def plate_currents(phi, Ab, gb, At, gt):
-    """해 → (아래 판 전류 I_bot = Σ g_b (1 − φ) · 위 판 전류 I_top = Σ g_t φ) — 코드 단위 · ΔV = 1."""
+    """해 → (아래 판 전류 I_bot = Σ g_b (1 − φ) · 위 판 전류 I_top = Σ g_t φ) — 코드 단위 · ΔV = 1.
+    ★ 10-23 (Codex 재검토 RCA2-08 같은 부류) — 유한 항의 합이 넘치면 ±inf 그대로 (경고 없이 · 값은 옛 판과 같다 · ⓑ ⓒ 가 비유한으로 실패하고
+    ⓓ 원장이 NOT_CERTIFIABLE 을 낸다)."""
     phi = np.asarray(phi, np.float64)
-    Ib = float(np.sum(np.asarray(gb, np.float64) * (1.0 - phi[np.asarray(Ab)]))) if Ab is not None and len(Ab) else 0.0
-    It = float(np.sum(np.asarray(gt, np.float64) * phi[np.asarray(At)])) if At is not None and len(At) else 0.0
+    with np.errstate(over='ignore', invalid='ignore'):
+        Ib = float(np.sum(np.asarray(gb, np.float64) * (1.0 - phi[np.asarray(Ab)]))) if Ab is not None and len(Ab) else 0.0
+        It = float(np.sum(np.asarray(gt, np.float64) * phi[np.asarray(At)])) if At is not None and len(At) else 0.0
     return Ib, It
 
 
@@ -335,16 +338,26 @@ def _ledger(L, b, Ab, gb, At, gt):
     bv = b0.astype(np.float64).ravel()
     if bv.shape != (n,) or not np.isfinite(bv).all():
         return None, f'b 모양 {bv.shape} · 비유한'
-    rs = np.asarray(Lc.sum(axis=1)).ravel()
-    ar = np.asarray(abs(Lc).sum(axis=1)).ravel()
-    bb = np.bincount(Ab, gb, n) if len(Ab) else np.zeros(n)
-    pl = bb + (np.bincount(At, gt, n) if len(At) else np.zeros(n))
     kb = np.bincount(Ab, minlength=n) if len(Ab) else np.zeros(n, np.int64)
     kt = np.bincount(At, minlength=n) if len(At) else np.zeros(n, np.int64)
-    tol_r = _LEDGER_TOL * (np.diff(Lc.indptr) + kb + kt + 8.0) * (ar + pl)
-    if (np.abs(rs - pl) > tol_r).any():
+    #  ★ 10-23 (Codex 재검토 RCA2-08 같은 부류 · 판정문 §4 · 우리 재현 stderr `overflow encountered in add`) — 행 합 · 판 결합 · 허용의 중간값이
+    #    넘치면 (유한 원소 · 무한 허용 = 대조가 비어 버린다 · 경고) 예외 · 경고 대신 원장 문제 (NOT_CERTIFIABLE) — 원장을 대조할 수 없다
+    with np.errstate(over='ignore', invalid='ignore'):
+        rs = np.asarray(Lc.sum(axis=1)).ravel()
+        ar = np.asarray(abs(Lc).sum(axis=1)).ravel()
+        bb = np.bincount(Ab, gb, n) if len(Ab) else np.zeros(n)
+        pl = bb + (np.bincount(At, gt, n) if len(At) else np.zeros(n))
+        tol_r = _LEDGER_TOL * (np.diff(Lc.indptr) + kb + kt + 8.0) * (ar + pl)
+        tol_b = _LEDGER_TOL * (kb + 8.0) * (np.abs(bv) + bb)
+        fin_t = bool(np.isfinite(rs).all() and np.isfinite(ar).all() and np.isfinite(pl).all() and np.isfinite(tol_r).all()
+                     and np.isfinite(tol_b).all())
+        bad_r = bool((np.abs(rs - pl) > tol_r).any()) if fin_t else False
+        bad_b = bool((np.abs(bv - bb) > tol_b).any()) if fin_t else False
+    if not fin_t:
+        return None, '원장 대조 넘침 (행 합 · 판 결합 · 허용의 중간값이 비유한 — 원장을 대조할 수 없다)'
+    if bad_r:
         return None, '행 합 ≠ 판 결합 합 (원장 밖 대각 항 — 접지 · 다른 경계)'
-    if (np.abs(bv - bb) > _LEDGER_TOL * (kb + 8.0) * (np.abs(bv) + bb)).any():
+    if bad_b:
         return None, 'b ≠ 아래 판 결합 합 (아래 판 φ 1 · 위 판 φ 0 이 아닌 경계)'
     rows = np.repeat(np.arange(n, dtype=np.int64), np.diff(up.indptr))
     keep = up.data < 0.0
@@ -473,7 +486,9 @@ def target_bracket(L, b, phi, Ab, gb, At, gt, *, _tree=True, _defect_term=True):
     del tu
     #  항 반올림 상한 (Δφ · g·Δφ · ·Δφ 의 반올림 넷 = 항마다 상대 ≤ 4u · 항이 모두 ≥ 0) — 2 배 (8u) 를 묶음 상한에 더한다
     e1, e2, e3 = e1 + 8.0 * _UNIT * abs(u1), e2 + 8.0 * _UNIT * abs(u2), e3 + 8.0 * _UNIT * abs(u3)
-    U = math.fsum([u1, u2, u3])
+    #  ★ 10-23 (Codex 재검토 RCA2-08) — 묶음 합은 유한한데 최종 합이 넘치면 (`math.fsum` OverflowError) 예외 대신 +inf → 아래 비유한 검사 =
+    #    NOT_CERTIFIABLE (`_fsum_bound` = 같은 `math.fsum` · 유한이면 값 그대로)
+    U = _fsum_bound([u1, u2, u3])[0]
     hi = (U + e1 + e2 + e3) * (1.0 + 8.0 * _UNIT)
     if not math.isfinite(hi):
         rec.update(_target_empty('φ: 에너지 합 넘침 (비유한)'))
@@ -550,7 +565,7 @@ def target_bracket(L, b, phi, Ab, gb, At, gt, *, _tree=True, _defect_term=True):
     del wq
     #  항 반올림 상한 (q/g · q·(q/g) = 상대 ≤ 2u · 항 ≥ 0) — 2 배 (4u) 를 묶음 상한에 더한다
     we1, we2, we3 = we1 + 4.0 * _UNIT * abs(w1), we2 + 4.0 * _UNIT * abs(w2), we3 + 4.0 * _UNIT * abs(w3)
-    W = math.fsum([w1, w2, w3])
+    W = _fsum_bound([w1, w2, w3])[0]                       # ★ 10-23 (RCA2-08) — 최종 합 넘침 = +inf → 아래 비유한 검사 (예외 아님)
     Whi = (W + we1 + we2 + we3) * (1.0 + 8.0 * _UNIT)
     if not all(math.isfinite(v) for v in (Dp, Dm, FB, FBe, FT, FTe, W, Whi)):
         rec.update(_target_empty('φ: 하한 합 넘침 (비유한)'))
