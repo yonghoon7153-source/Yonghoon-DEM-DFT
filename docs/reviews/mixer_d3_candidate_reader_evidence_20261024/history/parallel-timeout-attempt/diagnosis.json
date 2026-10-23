@@ -1,0 +1,97 @@
+{
+  "status": "FAILED_GATE_PRESERVED",
+  "scope": "Actual failed gate and read-only resource diagnosis; no rerun, bypass, code change or publication PASS",
+  "observed_at_utc": "2026-10-23T20:05:55.450440+00:00",
+  "track": "d3",
+  "candidate": "9c2f7b47fd4559ee4c08f23e667cdae92badbb04",
+  "source_run": "/workspace/.cloud-setup/nonrint-20261024/gates/d3-verified",
+  "actual_finished_at_utc": "2026-10-23T20:02:53.269689+00:00",
+  "actual_gate": {
+    "status": "FAIL",
+    "exit_code": 1,
+    "pass_lane_count": 154,
+    "fail_lane_count": 1,
+    "clean_after": true,
+    "head_unchanged": true,
+    "source_identity_unchanged": true
+  },
+  "failed_lane": "fast 자기검사 전수 (등재 기반 드라이버)",
+  "failed_command": "scripts/run_network_194_parallel.py --selftest",
+  "failed_command_exit_code": 124,
+  "recorded_timeout_seconds": 300,
+  "fast_driver_pass_count": 191,
+  "fast_driver_total_count": 192,
+  "fast_driver_elapsed_seconds": 384,
+  "driver_default_workers": 6,
+  "configured_full_gate_concurrency": 3,
+  "cpu_max_observed": "400000 100000",
+  "diagnosis": "Resource contention is a plausible cause: three full gates can each launch up to six fast-driver child tests on a four-CPU quota. This is not a proven exclusive cause; no diagnostic rerun was performed.",
+  "initialization_review": {
+    "status": "INITIALIZATION_VERIFIED",
+    "actual_remote_head_count": 37,
+    "reachable_commit_count": 11575,
+    "docrefs_preflight_exit_code": 0,
+    "initialization_evidence": {
+      "clone.log": "2150937b173b5d6f2d91301e4cf6e653380fc97493681e2f54e49e3ad7d33ee0",
+      "object-cache.json": "2035b420ef3886a627ebe58f97c745ff96669e42294444e6cd05b0834e54a65c",
+      "refs-generated-before.json": "3eee4c1d377991387899bbfe9800d23cb0a448bd5ccc09781e60d73ba33820b0",
+      "refs-after-removal.json": "3e114151ba3644bd2aa81b937db38e35265494261677f9be363c812080eb279b",
+      "remote-heads-before.json": "a629e70129ff78628095c64de0602e07e2831cf6c0b650a5eea1094c08755761",
+      "fetch.log": "47b1ace3279abce84442797325d2784be7619e48dbacf304845d6dd749ad1816",
+      "refs-fetched-after.json": "96279d020e23eaaa7d159ad136636b3a111f08bcacb20f32c86fe8120358b927",
+      "remote-heads-after.json": "2cc03df0e01f41c13b7fe1b968ed614f20fe1e78f2198db03c77a17554a7b590",
+      "ref-setup.json": "1a41fd03ce5ecf294935ebb2f4aedf70c808f76f954018ff59fc9b269bbd8aee",
+      "docrefs-preflight.log": "726b561101b3f7f9f0aa7820865f06944fd69be8ddc77e537c048ac51de49c1a",
+      "docrefs-preflight.json": "19c85335ee5c204a382ee6305e4c0d1945132f2c4058bd9301cf46c802cdedee"
+    }
+  },
+  "unchanged_shared_driver_and_failed_test": {
+    "scripts/check_all.sh": {
+      "parent_sha256": "0fbefe4e35cbb5d17427fa4724407d7d0fd5efb183bd37a05d19f05b80fcfda0",
+      "candidate_sha256": "0fbefe4e35cbb5d17427fa4724407d7d0fd5efb183bd37a05d19f05b80fcfda0",
+      "unchanged": true
+    },
+    "scripts/check_selftest_inventory.py": {
+      "parent_sha256": "65a25e9e3e5caa3dcafad310db55ecce007f6896cd347b630dd80c28e47b0566",
+      "candidate_sha256": "65a25e9e3e5caa3dcafad310db55ecce007f6896cd347b630dd80c28e47b0566",
+      "unchanged": true
+    },
+    "scripts/run_network_194_parallel.py": {
+      "parent_sha256": "f4048aca55b912628278dbdd7b184ac449723736cd3f4f5cdc7eeca31294921a",
+      "candidate_sha256": "f4048aca55b912628278dbdd7b184ac449723736cd3f4f5cdc7eeca31294921a",
+      "unchanged": true
+    },
+    "docs/reviews/selftest_inventory.tsv": {
+      "parent_sha256": "90710f5cbf428711e4253c82a5349cead2033d9daf84c306252c20e981b36448",
+      "candidate_sha256": "90710f5cbf428711e4253c82a5349cead2033d9daf84c306252c20e981b36448",
+      "unchanged": true
+    }
+  },
+  "raw_file_count": 15,
+  "raw_file_hashes": {
+    "check-all.log": "46b9000a6da15d6233696fad6784756e96549e1339b00d26945f4d0e3e7d48b1",
+    "clone.log": "2150937b173b5d6f2d91301e4cf6e653380fc97493681e2f54e49e3ad7d33ee0",
+    "docrefs-preflight.json": "19c85335ee5c204a382ee6305e4c0d1945132f2c4058bd9301cf46c802cdedee",
+    "docrefs-preflight.log": "726b561101b3f7f9f0aa7820865f06944fd69be8ddc77e537c048ac51de49c1a",
+    "fetch.log": "47b1ace3279abce84442797325d2784be7619e48dbacf304845d6dd749ad1816",
+    "object-cache.json": "2035b420ef3886a627ebe58f97c745ff96669e42294444e6cd05b0834e54a65c",
+    "ref-setup.json": "1a41fd03ce5ecf294935ebb2f4aedf70c808f76f954018ff59fc9b269bbd8aee",
+    "refs-after-removal.json": "3e114151ba3644bd2aa81b937db38e35265494261677f9be363c812080eb279b",
+    "refs-fetched-after.json": "96279d020e23eaaa7d159ad136636b3a111f08bcacb20f32c86fe8120358b927",
+    "refs-generated-before.json": "3eee4c1d377991387899bbfe9800d23cb0a448bd5ccc09781e60d73ba33820b0",
+    "remote-heads-after.json": "2cc03df0e01f41c13b7fe1b968ed614f20fe1e78f2198db03c77a17554a7b590",
+    "remote-heads-before.json": "a629e70129ff78628095c64de0602e07e2831cf6c0b650a5eea1094c08755761",
+    "result.json": "d51a9268552255db89e1dd42ed2c69dc79d7cd6ed3ad3e40fb12c7a09fbbc789",
+    "source-identity-after.json": "b726ecd23464406074c4fd6e8198174b007662ed24dad1eb08d956912197e597",
+    "source-identity-before.json": "b726ecd23464406074c4fd6e8198174b007662ed24dad1eb08d956912197e597"
+  },
+  "archive_sha256": "07e8fd785d611fd257504c58d038f261eb2664c488172f210c1a5679837267aa",
+  "actions": {
+    "failed_raw_records_copied_byte_identically": true,
+    "new_overlay_created": false,
+    "tests_rerun": false,
+    "processes_stopped": false,
+    "main_or_refs_mutated": false
+  },
+  "recommendation": "Root may schedule future full unmodified gate attempts serially with new labels; preserve this failure and leave current authorized executions unchanged."
+}

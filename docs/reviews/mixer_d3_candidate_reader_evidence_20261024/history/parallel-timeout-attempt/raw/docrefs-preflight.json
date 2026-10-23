@@ -1,0 +1,19 @@
+{
+  "command": [
+    "nice",
+    "-n",
+    "10",
+    "/workspace/.venvs/yonghoon-dem/bin/python",
+    "-I",
+    "scripts/check_doc_refs.py"
+  ],
+  "cwd": "/workspace/.cloud-setup/nonrint-20261024/gates/d3-verified/repository",
+  "candidate_head": "9c2f7b47fd4559ee4c08f23e667cdae92badbb04",
+  "started_at_utc": "2026-10-23T19:08:30.922252+00:00",
+  "finished_at_utc": "2026-10-23T19:08:31.904463+00:00",
+  "exit_code": 0,
+  "clean_after": true,
+  "source_and_head_unchanged": true,
+  "log_sha256": "726b561101b3f7f9f0aa7820865f06944fd69be8ddc77e537c048ac51de49c1a",
+  "status": "PASS"
+}

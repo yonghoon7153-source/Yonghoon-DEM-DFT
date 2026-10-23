@@ -1,0 +1,108 @@
+{
+  "scope": "Observed pre-existing managed platform signatures, not arbitrary same-UID exemptions; no exe validation claimed when unreadable",
+  "observed_at_utc": "2026-10-23T20:13:56.649163+00:00",
+  "cleanup_guard_reference": "cleanup/cleanup_validation_clones.py:known_outside_gate_process",
+  "cleanup_helper_sha256": "bbafacf68e6bb74d42c0a57de11ce065c0513234ecd384ed4f6f5a59a78c86de",
+  "processes": [
+    {
+      "pid": 1,
+      "uid": 1000,
+      "parent_pid": 0,
+      "process_group": 1,
+      "session": 1,
+      "start_ticks": 54,
+      "argv": [
+        "tail",
+        "-f",
+        "/dev/null"
+      ],
+      "argv_sha256": "9eaa60f145781d1c90910e7759e82375ebdcd6ff94d9db24f11bcf81334c7b14",
+      "cwd_read_failure": {
+        "type": "PermissionError",
+        "errno": 13
+      },
+      "exe_read_failure": {
+        "type": "PermissionError",
+        "errno": 13
+      }
+    },
+    {
+      "pid": 2,
+      "uid": 1000,
+      "parent_pid": 1,
+      "process_group": 1,
+      "session": 1,
+      "start_ticks": 57,
+      "argv": [
+        "/usr/local/bin/cloud-agent-log-forwarder",
+        "caas-prefix-transfer-server",
+        "/tmp/caas-prefix-transfer-server.log",
+        "--",
+        "/usr/local/bin/caas-prefix-transfer-server",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "1040"
+      ],
+      "argv_sha256": "ca53620cd4893e4715e421dfd18eda1bd25a61b2740e3c6221e3d7de1ad6e551",
+      "cwd_read_failure": {
+        "type": "PermissionError",
+        "errno": 13
+      },
+      "exe_read_failure": {
+        "type": "PermissionError",
+        "errno": 13
+      }
+    },
+    {
+      "pid": 3,
+      "uid": 1000,
+      "parent_pid": 2,
+      "process_group": 1,
+      "session": 1,
+      "start_ticks": 57,
+      "argv": [
+        "/usr/local/bin/caas-prefix-transfer-server",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "1040"
+      ],
+      "argv_sha256": "cbb81d3bec89a72a5532f034e8dd8753cc182932e80a768d4227fd84c0f178bb",
+      "cwd_read_failure": {
+        "type": "PermissionError",
+        "errno": 13
+      },
+      "exe_read_failure": {
+        "type": "PermissionError",
+        "errno": 13
+      }
+    },
+    {
+      "pid": 485,
+      "uid": 1000,
+      "parent_pid": 0,
+      "process_group": 485,
+      "session": 485,
+      "start_ticks": 1619,
+      "argv": [
+        "/opt/codex/bin/codex",
+        "exec-server",
+        "--remote",
+        "https://codex-cloud-environments.chatgpt.com/api",
+        "--environment-id",
+        "ccarenv_b64_Y2NhcmVudl9mMDM3MGI4OTJhY2M4MTkxYTAyMTc2OWFiYWRlZDAwYw",
+        "--linux-sandbox-pid-namespace=inherit"
+      ],
+      "argv_sha256": "aada3fc942281d5eeda4da177bd35ca19d427b8f7f03c8059b173f9491414f12",
+      "cwd_read_failure": {
+        "type": "PermissionError",
+        "errno": 13
+      },
+      "exe_read_failure": {
+        "type": "PermissionError",
+        "errno": 13
+      }
+    }
+  ]
+}

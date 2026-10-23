@@ -1,0 +1,414 @@
+{
+  "status": "USED",
+  "fixed_optional_path": "/workspace/.cloud-setup/nonrint-20261024/gates/lhs214-refready/repository",
+  "scope": "Read-only content-addressed object cache; refs still come only from actual origin fetch",
+  "head_before": "ed6ed401f904d9f818cbdced42d111a7b1efb8d2",
+  "refs_before": [
+    {
+      "ref": "refs/remotes/origin/Codex/dem-mpm-crosscheck",
+      "oid": "ee445817c3beceb7425c0c33f0f454cb4c0c1b4d",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/Codex/friendly-meitner-lldvar",
+      "oid": "dde6b77cd228b288d834789d1d349b83ebbc4422",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/HEAD",
+      "oid": "3fe789ff68815cff04a42b09c26f00c464dfd477",
+      "symref": "refs/remotes/origin/claude/dft-script-generator-webapp-GPSAG"
+    },
+    {
+      "ref": "refs/remotes/origin/claude/14-gate-code-review-9qkx05",
+      "oid": "3d3ee8c198f44aa8c2f1c6358f3a1a1aaa99fc5d",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/battery-charge-discharge-webapp-dq4ja3",
+      "oid": "0e12dee60f4e161a8bc5b3c1c91655210828c9ac",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/battery-charge-discharge-webapp-vag24d",
+      "oid": "a7efba10b55f47f4e58d39a77c8cceed03effeaa",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/bms-alpha-beta-verify",
+      "oid": "698d226deff8ec3cf8cb273d45c77e3961f834ee",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/dashboard-standby-e2f56971",
+      "oid": "17e03fa2c149babb760550151955f1c54cd045c3",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/dft-script-generator-webapp-GPSAG",
+      "oid": "3fe789ff68815cff04a42b09c26f00c464dfd477",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/evac-2026-09-28",
+      "oid": "ae881f54fa6227c082c69ebe68438e0567886c57",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/evac-2026-10-02",
+      "oid": "3b421bd92f52e95c6a6e161d142332425a33cf23",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/evac-2026-10-22",
+      "oid": "305629d632f27f923a197417059d553f980d0495",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/friendly-meitner-lldvar",
+      "oid": "aaa275e2081ce43a6892c7dde40ea4d8f82576de",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/gate80-standby-9a26dd5f",
+      "oid": "87f960e1e3a42245e0c7496d149ba633ddba8d13",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/li2s-assb-wiki",
+      "oid": "ef1455e6a1b8fb25f6d7836fd164613402c69b39",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/market-research-presentation-bC9Yi",
+      "oid": "a35442859fa639034fa6c96bf19ebe543d3e9cd7",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/md-status-monitoring-q2xbu1",
+      "oid": "f7e32d0058e46baf688747cf4625338983d4fbec",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/midni-formation-wiki",
+      "oid": "4355e06bd556aae2509a0300577136848da89c35",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/phase-a-96arm-kgy",
+      "oid": "48d145f1eab30ee95113de085c985a7fcaeb9c54",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/resistor-network-solver-LDjW6",
+      "oid": "9a49cfa72ab84db89b5b89027e93baabd18882fc",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/review-ml-migration-1BN1c",
+      "oid": "ac7bed0e93d7df19e0d103f33677fb6e6e194b63",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/rint-pf2-handoff-20261022",
+      "oid": "82dbe003c4a218770e6785df1857b66860146dc2",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/sdcp-dem-manuscript-si-pqwtv8",
+      "oid": "9a72d65c6498babaa8791439216bc666c525bd82",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/solid-state-cathode-improvement-hevry0",
+      "oid": "921e8c98c6596be622be741f981a4b99dc2d219d",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/stoic-knuth-NObVQ",
+      "oid": "93d93bc02f5a68d6551137ab420dbc0eea40b455",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/windows-reinstall-backup-oducnh",
+      "oid": "7880ace88b1ad500785450d1a2c5871bdb89e1c9",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/wip-20261021/evac",
+      "oid": "0f628ee5252028be3f72825e944d45f0b932a6af",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/zip-git-gpu-setup-vdqdtd",
+      "oid": "1b436de5d60a4ddc6547a5f7280b8e097e9b8fe0",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/codex/dem-gen2-request",
+      "oid": "962caea2d1857b0e34fe724e38815661936b7183",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/codex/lhs214-relaunch",
+      "oid": "ffbd438e7522d58eb069561fe58020f4086707ac",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/codex/mixer-d3-design",
+      "oid": "d5ab56ba9a9416e5cae2becf3c85b7c54d30d1d2",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/codex/mixer-mxd2",
+      "oid": "486a57cf58d3e0d93ef79be6aae50968929099c0",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/codex/unloading-ulpr",
+      "oid": "8347d32ea678c0174bd77d4c79cfbd7b0591e4a3",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/main",
+      "oid": "bf0dd1a32ce3096a7bb67cb462a96f920c6dfab7",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/manuscript-track",
+      "oid": "f70446c5fe21b3c24b61dfe8fcdead5cf608b408",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/nihonchizu",
+      "oid": "d8c145134f9d3cd45aea223ddc5c65760e0576d5",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/rescue/lineage-2026-06-nd-pair01",
+      "oid": "a90fd1cf94924f2cb3d1b547fa175f807cb7cb85",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/review/defective-cell-ml-v2.0.0",
+      "oid": "63e1abc4c1a17b5ee78f4446c1466bdc397ab2ad",
+      "symref": ""
+    }
+  ],
+  "object_directory": "/workspace/.cloud-setup/nonrint-20261024/gates/lhs214-refready/repository/.git/objects",
+  "cache_alternates_before": [
+    "/workspace/Yonghoon-DEM-DFT/.git/objects"
+  ],
+  "clone_command": [
+    "git",
+    "clone",
+    "--shared",
+    "--reference",
+    "/workspace/.cloud-setup/nonrint-20261024/gates/lhs214-refready/repository",
+    "--branch",
+    "codex/mixer-d3-design",
+    "/workspace/Yonghoon-DEM-DFT",
+    "/workspace/.cloud-setup/nonrint-20261024/gates/d3-serial/repository"
+  ],
+  "clone_alternates": [
+    "/workspace/.cloud-setup/nonrint-20261024/gates/lhs214-refready/repository/.git/objects",
+    "/workspace/Yonghoon-DEM-DFT/.git/objects"
+  ],
+  "head_after": "ed6ed401f904d9f818cbdced42d111a7b1efb8d2",
+  "refs_after": [
+    {
+      "ref": "refs/remotes/origin/Codex/dem-mpm-crosscheck",
+      "oid": "ee445817c3beceb7425c0c33f0f454cb4c0c1b4d",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/Codex/friendly-meitner-lldvar",
+      "oid": "dde6b77cd228b288d834789d1d349b83ebbc4422",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/HEAD",
+      "oid": "3fe789ff68815cff04a42b09c26f00c464dfd477",
+      "symref": "refs/remotes/origin/claude/dft-script-generator-webapp-GPSAG"
+    },
+    {
+      "ref": "refs/remotes/origin/claude/14-gate-code-review-9qkx05",
+      "oid": "3d3ee8c198f44aa8c2f1c6358f3a1a1aaa99fc5d",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/battery-charge-discharge-webapp-dq4ja3",
+      "oid": "0e12dee60f4e161a8bc5b3c1c91655210828c9ac",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/battery-charge-discharge-webapp-vag24d",
+      "oid": "a7efba10b55f47f4e58d39a77c8cceed03effeaa",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/bms-alpha-beta-verify",
+      "oid": "698d226deff8ec3cf8cb273d45c77e3961f834ee",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/dashboard-standby-e2f56971",
+      "oid": "17e03fa2c149babb760550151955f1c54cd045c3",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/dft-script-generator-webapp-GPSAG",
+      "oid": "3fe789ff68815cff04a42b09c26f00c464dfd477",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/evac-2026-09-28",
+      "oid": "ae881f54fa6227c082c69ebe68438e0567886c57",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/evac-2026-10-02",
+      "oid": "3b421bd92f52e95c6a6e161d142332425a33cf23",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/evac-2026-10-22",
+      "oid": "305629d632f27f923a197417059d553f980d0495",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/friendly-meitner-lldvar",
+      "oid": "aaa275e2081ce43a6892c7dde40ea4d8f82576de",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/gate80-standby-9a26dd5f",
+      "oid": "87f960e1e3a42245e0c7496d149ba633ddba8d13",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/li2s-assb-wiki",
+      "oid": "ef1455e6a1b8fb25f6d7836fd164613402c69b39",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/market-research-presentation-bC9Yi",
+      "oid": "a35442859fa639034fa6c96bf19ebe543d3e9cd7",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/md-status-monitoring-q2xbu1",
+      "oid": "f7e32d0058e46baf688747cf4625338983d4fbec",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/midni-formation-wiki",
+      "oid": "4355e06bd556aae2509a0300577136848da89c35",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/phase-a-96arm-kgy",
+      "oid": "48d145f1eab30ee95113de085c985a7fcaeb9c54",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/resistor-network-solver-LDjW6",
+      "oid": "9a49cfa72ab84db89b5b89027e93baabd18882fc",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/review-ml-migration-1BN1c",
+      "oid": "ac7bed0e93d7df19e0d103f33677fb6e6e194b63",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/rint-pf2-handoff-20261022",
+      "oid": "82dbe003c4a218770e6785df1857b66860146dc2",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/sdcp-dem-manuscript-si-pqwtv8",
+      "oid": "9a72d65c6498babaa8791439216bc666c525bd82",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/solid-state-cathode-improvement-hevry0",
+      "oid": "921e8c98c6596be622be741f981a4b99dc2d219d",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/stoic-knuth-NObVQ",
+      "oid": "93d93bc02f5a68d6551137ab420dbc0eea40b455",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/windows-reinstall-backup-oducnh",
+      "oid": "7880ace88b1ad500785450d1a2c5871bdb89e1c9",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/wip-20261021/evac",
+      "oid": "0f628ee5252028be3f72825e944d45f0b932a6af",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/claude/zip-git-gpu-setup-vdqdtd",
+      "oid": "1b436de5d60a4ddc6547a5f7280b8e097e9b8fe0",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/codex/dem-gen2-request",
+      "oid": "962caea2d1857b0e34fe724e38815661936b7183",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/codex/lhs214-relaunch",
+      "oid": "ffbd438e7522d58eb069561fe58020f4086707ac",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/codex/mixer-d3-design",
+      "oid": "d5ab56ba9a9416e5cae2becf3c85b7c54d30d1d2",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/codex/mixer-mxd2",
+      "oid": "486a57cf58d3e0d93ef79be6aae50968929099c0",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/codex/unloading-ulpr",
+      "oid": "8347d32ea678c0174bd77d4c79cfbd7b0591e4a3",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/main",
+      "oid": "bf0dd1a32ce3096a7bb67cb462a96f920c6dfab7",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/manuscript-track",
+      "oid": "f70446c5fe21b3c24b61dfe8fcdead5cf608b408",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/nihonchizu",
+      "oid": "d8c145134f9d3cd45aea223ddc5c65760e0576d5",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/rescue/lineage-2026-06-nd-pair01",
+      "oid": "a90fd1cf94924f2cb3d1b547fa175f807cb7cb85",
+      "symref": ""
+    },
+    {
+      "ref": "refs/remotes/origin/review/defective-cell-ml-v2.0.0",
+      "oid": "63e1abc4c1a17b5ee78f4446c1466bdc397ab2ad",
+      "symref": ""
+    }
+  ],
+  "cache_alternates_after": [
+    "/workspace/Yonghoon-DEM-DFT/.git/objects"
+  ],
+  "cache_ref_metadata_unchanged": true
+}

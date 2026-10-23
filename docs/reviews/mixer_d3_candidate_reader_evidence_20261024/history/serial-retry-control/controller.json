@@ -1,0 +1,679 @@
+{
+  "status": "PASS",
+  "owner": "/root/overnight_integration",
+  "scope": "One full unchanged D3 retry after original gates end, other four tracks are pushed, and owned gate processes finish; no main writes",
+  "started_at_utc": "2026-10-23T20:24:30.551311+00:00",
+  "controller": {
+    "pid": 1070036,
+    "state": "R",
+    "parent_pid": 1,
+    "process_group": 1070036,
+    "session": 1070036,
+    "start_ticks": 3113720,
+    "uid": 1000,
+    "read_failures": {},
+    "argv": [
+      "/workspace/.venvs/yonghoon-dem/bin/python",
+      "-I",
+      "/workspace/.cloud-setup/nonrint-20261024/run_d3_serial_retry_v3.py"
+    ],
+    "argv_sha256": "68371ac5657f88b39a3889abea447eb25088781b42f2557d066b32cd5b168586",
+    "cwd": "/workspace/.cloud-setup/nonrint-20261024",
+    "exe": "/workspace/.venvs/yonghoon-dem/bin/python"
+  },
+  "controller_sha256": "567d6659122d1c68d0d7c39bc0fed2dbd88bc18f8b8a00fc01100295a716c65b",
+  "runner_sha256": "4a04a878e05937e3a9208d128075b6e7f86e207e6da4fae3995f6cdb2c5cffc4",
+  "track": "d3",
+  "branch": "codex/mixer-d3-design",
+  "candidate": "9c2f7b47fd4559ee4c08f23e667cdae92badbb04",
+  "platform_baseline": "/workspace/.cloud-setup/nonrint-20261024/d3-serial-platform-baseline.json",
+  "platform_baseline_sha256": "57fce69c00d57e4d10ef4753de50a1ae0caeb2016b0fefe0ec3353805e1bf65d",
+  "label": "d3-serial",
+  "max_parallel_full_gates": 1,
+  "poll_interval_seconds": 45,
+  "original_queue": "/workspace/.cloud-setup/nonrint-20261024/verified-queue.json",
+  "original_failed_result": "/workspace/.cloud-setup/nonrint-20261024/gates/d3-verified/result.json",
+  "result": "/workspace/.cloud-setup/nonrint-20261024/gates/d3-serial/result.json",
+  "last_readiness": {
+    "observed_at_utc": "2026-10-23T20:54:30.925187+00:00",
+    "original_queue_status": "COMPLETE_WITH_FAILURES",
+    "original_queue_sha256": "1a5df6ddc5c5b906cfaa8ab8ac1297a6f963285d49083784f53280bbd6578bc7",
+    "original_queue_path": "/workspace/.cloud-setup/nonrint-20261024/verified-queue.json",
+    "original_runtime_results": {
+      "lhs214": {
+        "path": "/workspace/.cloud-setup/nonrint-20261024/gates/lhs214-verified/result.json",
+        "sha256": "9118b7570966ab18cd94be93a79493eafb57e1115782d029b2e31cc12d105a7e",
+        "status": "PASS",
+        "runner_pid_observation": {
+          "pid": 817648,
+          "state": "ABSENT"
+        },
+        "gate_pid_observation": {
+          "pid": 817783,
+          "state": "ABSENT"
+        }
+      },
+      "d3": {
+        "path": "/workspace/.cloud-setup/nonrint-20261024/gates/d3-verified/result.json",
+        "sha256": "d51a9268552255db89e1dd42ed2c69dc79d7cd6ed3ad3e40fb12c7a09fbbc789",
+        "status": "FAIL",
+        "runner_pid_observation": {
+          "pid": 817832,
+          "state": "ABSENT"
+        },
+        "gate_pid_observation": {
+          "pid": 818296,
+          "state": "ABSENT"
+        }
+      },
+      "ulpr": {
+        "path": "/workspace/.cloud-setup/nonrint-20261024/gates/ulpr-verified/result.json",
+        "sha256": "8edf0cf3cdd0292d3a90702da30e43b9e7e06708cb056310f5bce12abf01afba",
+        "status": "PASS",
+        "runner_pid_observation": {
+          "pid": 818397,
+          "state": "ABSENT"
+        },
+        "gate_pid_observation": {
+          "pid": 819373,
+          "state": "ABSENT"
+        }
+      },
+      "mxd2": {
+        "path": "/workspace/.cloud-setup/nonrint-20261024/gates/mxd2-verified/result.json",
+        "sha256": "989a482e0542a5c772b17e55c7366722b400211136b7533e27cbeae8feed0c1e",
+        "status": "PASS",
+        "runner_pid_observation": {
+          "pid": 1009047,
+          "state": "ABSENT"
+        },
+        "gate_pid_observation": {
+          "pid": 1011724,
+          "state": "ABSENT"
+        }
+      },
+      "dem-gen2": {
+        "path": "/workspace/.cloud-setup/nonrint-20261024/gates/dem-gen2-verified/result.json",
+        "sha256": "3b1fbbb2ad368466ec9d463ec5d6a5be6e3333c79b381d86582faf6048e975e8",
+        "status": "PASS",
+        "runner_pid_observation": {
+          "pid": 1021606,
+          "state": "ABSENT"
+        },
+        "gate_pid_observation": {
+          "pid": 1022836,
+          "state": "ABSENT"
+        }
+      }
+    },
+    "original_controller_observation": {
+      "pid": 817647,
+      "state": "Z",
+      "parent_pid": 1,
+      "process_group": 817647,
+      "session": 817647,
+      "start_ticks": 2656150,
+      "uid": 1000
+    },
+    "original_controller_same_identity": true,
+    "publications": {
+      "ulpr": {
+        "path": "/workspace/.cloud-setup/nonrint-20261024/publication/ulpr/receipt.json",
+        "sha256": "f60b34bc5c9a69bbf5dcd5a2b1bfae8eb2ebd9855ce5f00b841511b2fa769069",
+        "status": "PUSHED_REMOTE_VERIFIED",
+        "final_pin": "01c1aaf5be8acdf7d1716f34cc86fc77d8e27362",
+        "finished_at_utc": "2026-10-23T20:10:02.890662+00:00"
+      },
+      "lhs214": {
+        "path": "/workspace/.cloud-setup/nonrint-20261024/publication/lhs214/receipt.json",
+        "sha256": "5747aacd27308baab4fad5208809c3adb13273358ffcb19ca6c34e2b28edb62e",
+        "status": "PUSHED_REMOTE_VERIFIED",
+        "final_pin": "854857e576a2a8aba07ec861dbee39d4bb59efae",
+        "finished_at_utc": "2026-10-23T20:08:27.981463+00:00"
+      },
+      "dem-gen2": {
+        "path": "/workspace/.cloud-setup/nonrint-20261024/publication/dem-gen2/receipt.json",
+        "sha256": "d34d544dd337b535a955238ed10627c8a8fa7c092ec06c41782eb193aef6311b",
+        "status": "PUSHED_REMOTE_VERIFIED",
+        "final_pin": "2443a63eaa87d52e385a35f8bab4225efa0d25fe",
+        "finished_at_utc": "2026-10-23T20:54:02.744877+00:00"
+      },
+      "mxd2": {
+        "path": "/workspace/.cloud-setup/nonrint-20261024/publication/mxd2/receipt.json",
+        "sha256": "89d68d0f9f3a105c9bd9dbf88dd7d3b2d5775895ae368bd2f6fc477dc12d7c1e",
+        "status": "PUSHED_REMOTE_VERIFIED",
+        "final_pin": "045e0b3098e8fe5a64d6eb0da310da776e68f995",
+        "finished_at_utc": "2026-10-23T20:52:38.265692+00:00"
+      }
+    },
+    "active_owned_gate_processes": [],
+    "uninspectable_same_uid_processes": [],
+    "known_outside_gate_processes": [
+      {
+        "process": {
+          "pid": 1,
+          "state": "S",
+          "parent_pid": 0,
+          "process_group": 1,
+          "session": 1,
+          "start_ticks": 54,
+          "uid": 1000,
+          "read_failures": {},
+          "argv": [
+            "tail",
+            "-f",
+            "/dev/null"
+          ],
+          "argv_sha256": "9eaa60f145781d1c90910e7759e82375ebdcd6ff94d9db24f11bcf81334c7b14",
+          "cwd": "/workspace",
+          "exe": "/usr/bin/tail"
+        },
+        "provenance": {
+          "classification": "CURRENT_READONLY_PROBE_OR_CONTROLLER_ANCESTOR"
+        }
+      },
+      {
+        "process": {
+          "pid": 1070036,
+          "state": "R",
+          "parent_pid": 1,
+          "process_group": 1070036,
+          "session": 1070036,
+          "start_ticks": 3113720,
+          "uid": 1000,
+          "read_failures": {},
+          "argv": [
+            "/workspace/.venvs/yonghoon-dem/bin/python",
+            "-I",
+            "/workspace/.cloud-setup/nonrint-20261024/run_d3_serial_retry_v3.py"
+          ],
+          "argv_sha256": "68371ac5657f88b39a3889abea447eb25088781b42f2557d066b32cd5b168586",
+          "cwd": "/workspace/.cloud-setup/nonrint-20261024",
+          "exe": "/workspace/.venvs/yonghoon-dem/bin/python"
+        },
+        "provenance": {
+          "classification": "CURRENT_READONLY_PROBE_OR_CONTROLLER_ANCESTOR"
+        }
+      },
+      {
+        "process": {
+          "pid": 2,
+          "state": "S",
+          "parent_pid": 1,
+          "process_group": 1,
+          "session": 1,
+          "start_ticks": 57,
+          "uid": 1000,
+          "read_failures": {},
+          "argv": [
+            "/usr/local/bin/cloud-agent-log-forwarder",
+            "caas-prefix-transfer-server",
+            "/tmp/caas-prefix-transfer-server.log",
+            "--",
+            "/usr/local/bin/caas-prefix-transfer-server",
+            "--host",
+            "0.0.0.0",
+            "--port",
+            "1040"
+          ],
+          "argv_sha256": "ca53620cd4893e4715e421dfd18eda1bd25a61b2740e3c6221e3d7de1ad6e551",
+          "cwd": "/workspace",
+          "exe": "/usr/local/bin/cloud-agent-log-forwarder"
+        },
+        "provenance": {
+          "classification": "EXACT_OBSERVED_PLATFORM",
+          "baseline_pid": 2,
+          "exe_validation": "unreadable; not claimed"
+        }
+      },
+      {
+        "process": {
+          "pid": 3,
+          "state": "S",
+          "parent_pid": 2,
+          "process_group": 1,
+          "session": 1,
+          "start_ticks": 57,
+          "uid": 1000,
+          "read_failures": {},
+          "argv": [
+            "/usr/local/bin/caas-prefix-transfer-server",
+            "--host",
+            "0.0.0.0",
+            "--port",
+            "1040"
+          ],
+          "argv_sha256": "cbb81d3bec89a72a5532f034e8dd8753cc182932e80a768d4227fd84c0f178bb",
+          "cwd": "/workspace",
+          "exe": "/usr/local/bin/caas-prefix-transfer-server"
+        },
+        "provenance": {
+          "classification": "EXACT_OBSERVED_PLATFORM",
+          "baseline_pid": 3,
+          "exe_validation": "unreadable; not claimed"
+        }
+      },
+      {
+        "process": {
+          "pid": 485,
+          "state": "S",
+          "parent_pid": 0,
+          "process_group": 485,
+          "session": 485,
+          "start_ticks": 1619,
+          "uid": 1000,
+          "read_failures": {},
+          "argv": [
+            "/opt/codex/bin/codex",
+            "exec-server",
+            "--remote",
+            "https://codex-cloud-environments.chatgpt.com/api",
+            "--environment-id",
+            "ccarenv_b64_Y2NhcmVudl9mMDM3MGI4OTJhY2M4MTkxYTAyMTc2OWFiYWRlZDAwYw",
+            "--linux-sandbox-pid-namespace=inherit"
+          ],
+          "argv_sha256": "aada3fc942281d5eeda4da177bd35ca19d427b8f7f03c8059b173f9491414f12",
+          "cwd": "/workspace",
+          "exe": "/opt/codex/bin/codex"
+        },
+        "provenance": {
+          "classification": "EXACT_OBSERVED_PLATFORM",
+          "baseline_pid": 485,
+          "exe_validation": "unreadable; not claimed"
+        }
+      },
+      {
+        "process": {
+          "pid": 258824,
+          "state": "S",
+          "parent_pid": 1,
+          "process_group": 258823,
+          "session": 258823,
+          "start_ticks": 759501,
+          "uid": 1000,
+          "read_failures": {},
+          "argv": [
+            "/workspace/.venvs/yonghoon-dem/bin/python",
+            "/workspace/.venvs/yonghoon-dem/bin/gunicorn",
+            "--chdir",
+            "webapp",
+            "--bind",
+            "127.0.0.1:5002",
+            "--workers",
+            "1",
+            "--threads",
+            "2",
+            "--timeout",
+            "120",
+            "--no-control-socket",
+            "--pid",
+            "/workspace/.cloud-setup/nonrint/gunicorn.pid",
+            "--access-logfile",
+            "/workspace/.cloud-setup/nonrint/access.log",
+            "--error-logfile",
+            "/workspace/.cloud-setup/nonrint/server.log",
+            "app:app"
+          ],
+          "argv_sha256": "034ef08250ecc0f81efd8d1ea6df181525a311afe803ea1376dec0a83ba9e2d9",
+          "cwd": "/workspace/Yonghoon-DEM-DFT/webapp",
+          "exe": "/workspace/.venvs/yonghoon-dem/bin/python"
+        },
+        "provenance": {
+          "classification": "RECORDED_MAIN_GUNICORN_FAMILY",
+          "service_receipt": "/workspace/.cloud-setup/nonrint-20261024/service-reload-mxd2.json",
+          "service_receipt_sha256": "a7463a9ab9c76c61a9545906b9d18133f0edbce8c10e3501a36e8781144eeb63"
+        }
+      },
+      {
+        "process": {
+          "pid": 737643,
+          "state": "S",
+          "parent_pid": 258824,
+          "process_group": 258823,
+          "session": 258823,
+          "start_ticks": 2442562,
+          "uid": 1000,
+          "read_failures": {},
+          "argv": [
+            "/workspace/.venvs/yonghoon-dem/bin/python",
+            "/workspace/.venvs/yonghoon-dem/bin/gunicorn",
+            "--chdir",
+            "webapp",
+            "--bind",
+            "127.0.0.1:5002",
+            "--workers",
+            "1",
+            "--threads",
+            "2",
+            "--timeout",
+            "120",
+            "--no-control-socket",
+            "--pid",
+            "/workspace/.cloud-setup/nonrint/gunicorn.pid",
+            "--access-logfile",
+            "/workspace/.cloud-setup/nonrint/access.log",
+            "--error-logfile",
+            "/workspace/.cloud-setup/nonrint/server.log",
+            "app:app"
+          ],
+          "argv_sha256": "034ef08250ecc0f81efd8d1ea6df181525a311afe803ea1376dec0a83ba9e2d9",
+          "cwd": "/workspace/Yonghoon-DEM-DFT/webapp",
+          "exe": "/workspace/.venvs/yonghoon-dem/bin/python"
+        },
+        "provenance": {
+          "classification": "RECORDED_MAIN_GUNICORN_FAMILY",
+          "service_receipt": "/workspace/.cloud-setup/nonrint-20261024/service-reload-mxd2.json",
+          "service_receipt_sha256": "a7463a9ab9c76c61a9545906b9d18133f0edbce8c10e3501a36e8781144eeb63"
+        }
+      }
+    ],
+    "active_original_runner_groups": [],
+    "current_probe_or_controller_ancestor_pids": [
+      1,
+      1070036
+    ],
+    "platform_baseline_sha256": "57fce69c00d57e4d10ef4753de50a1ae0caeb2016b0fefe0ec3353805e1bf65d",
+    "active_fixture_processes": [],
+    "fixture_process_guard": {
+      "roots": [
+        "/var/tmp/codex-nonrint-20261023",
+        "/var/tmp",
+        "/tmp"
+      ],
+      "directory_prefix": "np194_",
+      "scope": "same UID argv/cwd fixture paths plus process-group/session and parent descendants",
+      "observed_at_utc": "2026-10-23T20:54:31.027746+00:00"
+    },
+    "status": "READY_FOR_ONE_SERIAL_RETRY",
+    "final_prelaunch_scan": {
+      "active_owned_gate_processes": [],
+      "uninspectable_same_uid_processes": [],
+      "known_outside_gate_processes": [
+        {
+          "process": {
+            "pid": 1,
+            "state": "S",
+            "parent_pid": 0,
+            "process_group": 1,
+            "session": 1,
+            "start_ticks": 54,
+            "uid": 1000,
+            "read_failures": {},
+            "argv": [
+              "tail",
+              "-f",
+              "/dev/null"
+            ],
+            "argv_sha256": "9eaa60f145781d1c90910e7759e82375ebdcd6ff94d9db24f11bcf81334c7b14",
+            "cwd": "/workspace",
+            "exe": "/usr/bin/tail"
+          },
+          "provenance": {
+            "classification": "CURRENT_READONLY_PROBE_OR_CONTROLLER_ANCESTOR"
+          }
+        },
+        {
+          "process": {
+            "pid": 1070036,
+            "state": "R",
+            "parent_pid": 1,
+            "process_group": 1070036,
+            "session": 1070036,
+            "start_ticks": 3113720,
+            "uid": 1000,
+            "read_failures": {},
+            "argv": [
+              "/workspace/.venvs/yonghoon-dem/bin/python",
+              "-I",
+              "/workspace/.cloud-setup/nonrint-20261024/run_d3_serial_retry_v3.py"
+            ],
+            "argv_sha256": "68371ac5657f88b39a3889abea447eb25088781b42f2557d066b32cd5b168586",
+            "cwd": "/workspace/.cloud-setup/nonrint-20261024",
+            "exe": "/workspace/.venvs/yonghoon-dem/bin/python"
+          },
+          "provenance": {
+            "classification": "CURRENT_READONLY_PROBE_OR_CONTROLLER_ANCESTOR"
+          }
+        },
+        {
+          "process": {
+            "pid": 2,
+            "state": "S",
+            "parent_pid": 1,
+            "process_group": 1,
+            "session": 1,
+            "start_ticks": 57,
+            "uid": 1000,
+            "read_failures": {},
+            "argv": [
+              "/usr/local/bin/cloud-agent-log-forwarder",
+              "caas-prefix-transfer-server",
+              "/tmp/caas-prefix-transfer-server.log",
+              "--",
+              "/usr/local/bin/caas-prefix-transfer-server",
+              "--host",
+              "0.0.0.0",
+              "--port",
+              "1040"
+            ],
+            "argv_sha256": "ca53620cd4893e4715e421dfd18eda1bd25a61b2740e3c6221e3d7de1ad6e551",
+            "cwd": "/workspace",
+            "exe": "/usr/local/bin/cloud-agent-log-forwarder"
+          },
+          "provenance": {
+            "classification": "EXACT_OBSERVED_PLATFORM",
+            "baseline_pid": 2,
+            "exe_validation": "unreadable; not claimed"
+          }
+        },
+        {
+          "process": {
+            "pid": 3,
+            "state": "S",
+            "parent_pid": 2,
+            "process_group": 1,
+            "session": 1,
+            "start_ticks": 57,
+            "uid": 1000,
+            "read_failures": {},
+            "argv": [
+              "/usr/local/bin/caas-prefix-transfer-server",
+              "--host",
+              "0.0.0.0",
+              "--port",
+              "1040"
+            ],
+            "argv_sha256": "cbb81d3bec89a72a5532f034e8dd8753cc182932e80a768d4227fd84c0f178bb",
+            "cwd": "/workspace",
+            "exe": "/usr/local/bin/caas-prefix-transfer-server"
+          },
+          "provenance": {
+            "classification": "EXACT_OBSERVED_PLATFORM",
+            "baseline_pid": 3,
+            "exe_validation": "unreadable; not claimed"
+          }
+        },
+        {
+          "process": {
+            "pid": 485,
+            "state": "S",
+            "parent_pid": 0,
+            "process_group": 485,
+            "session": 485,
+            "start_ticks": 1619,
+            "uid": 1000,
+            "read_failures": {},
+            "argv": [
+              "/opt/codex/bin/codex",
+              "exec-server",
+              "--remote",
+              "https://codex-cloud-environments.chatgpt.com/api",
+              "--environment-id",
+              "ccarenv_b64_Y2NhcmVudl9mMDM3MGI4OTJhY2M4MTkxYTAyMTc2OWFiYWRlZDAwYw",
+              "--linux-sandbox-pid-namespace=inherit"
+            ],
+            "argv_sha256": "aada3fc942281d5eeda4da177bd35ca19d427b8f7f03c8059b173f9491414f12",
+            "cwd": "/workspace",
+            "exe": "/opt/codex/bin/codex"
+          },
+          "provenance": {
+            "classification": "EXACT_OBSERVED_PLATFORM",
+            "baseline_pid": 485,
+            "exe_validation": "unreadable; not claimed"
+          }
+        },
+        {
+          "process": {
+            "pid": 258824,
+            "state": "S",
+            "parent_pid": 1,
+            "process_group": 258823,
+            "session": 258823,
+            "start_ticks": 759501,
+            "uid": 1000,
+            "read_failures": {},
+            "argv": [
+              "/workspace/.venvs/yonghoon-dem/bin/python",
+              "/workspace/.venvs/yonghoon-dem/bin/gunicorn",
+              "--chdir",
+              "webapp",
+              "--bind",
+              "127.0.0.1:5002",
+              "--workers",
+              "1",
+              "--threads",
+              "2",
+              "--timeout",
+              "120",
+              "--no-control-socket",
+              "--pid",
+              "/workspace/.cloud-setup/nonrint/gunicorn.pid",
+              "--access-logfile",
+              "/workspace/.cloud-setup/nonrint/access.log",
+              "--error-logfile",
+              "/workspace/.cloud-setup/nonrint/server.log",
+              "app:app"
+            ],
+            "argv_sha256": "034ef08250ecc0f81efd8d1ea6df181525a311afe803ea1376dec0a83ba9e2d9",
+            "cwd": "/workspace/Yonghoon-DEM-DFT/webapp",
+            "exe": "/workspace/.venvs/yonghoon-dem/bin/python"
+          },
+          "provenance": {
+            "classification": "RECORDED_MAIN_GUNICORN_FAMILY",
+            "service_receipt": "/workspace/.cloud-setup/nonrint-20261024/service-reload-mxd2.json",
+            "service_receipt_sha256": "a7463a9ab9c76c61a9545906b9d18133f0edbce8c10e3501a36e8781144eeb63"
+          }
+        },
+        {
+          "process": {
+            "pid": 737643,
+            "state": "S",
+            "parent_pid": 258824,
+            "process_group": 258823,
+            "session": 258823,
+            "start_ticks": 2442562,
+            "uid": 1000,
+            "read_failures": {},
+            "argv": [
+              "/workspace/.venvs/yonghoon-dem/bin/python",
+              "/workspace/.venvs/yonghoon-dem/bin/gunicorn",
+              "--chdir",
+              "webapp",
+              "--bind",
+              "127.0.0.1:5002",
+              "--workers",
+              "1",
+              "--threads",
+              "2",
+              "--timeout",
+              "120",
+              "--no-control-socket",
+              "--pid",
+              "/workspace/.cloud-setup/nonrint/gunicorn.pid",
+              "--access-logfile",
+              "/workspace/.cloud-setup/nonrint/access.log",
+              "--error-logfile",
+              "/workspace/.cloud-setup/nonrint/server.log",
+              "app:app"
+            ],
+            "argv_sha256": "034ef08250ecc0f81efd8d1ea6df181525a311afe803ea1376dec0a83ba9e2d9",
+            "cwd": "/workspace/Yonghoon-DEM-DFT/webapp",
+            "exe": "/workspace/.venvs/yonghoon-dem/bin/python"
+          },
+          "provenance": {
+            "classification": "RECORDED_MAIN_GUNICORN_FAMILY",
+            "service_receipt": "/workspace/.cloud-setup/nonrint-20261024/service-reload-mxd2.json",
+            "service_receipt_sha256": "a7463a9ab9c76c61a9545906b9d18133f0edbce8c10e3501a36e8781144eeb63"
+          }
+        }
+      ],
+      "active_original_runner_groups": [],
+      "current_probe_or_controller_ancestor_pids": [
+        1,
+        1070036
+      ],
+      "platform_baseline_sha256": "57fce69c00d57e4d10ef4753de50a1ae0caeb2016b0fefe0ec3353805e1bf65d",
+      "active_fixture_processes": [],
+      "fixture_process_guard": {
+        "roots": [
+          "/var/tmp/codex-nonrint-20261023",
+          "/var/tmp",
+          "/tmp"
+        ],
+        "directory_prefix": "np194_",
+        "scope": "same UID argv/cwd fixture paths plus process-group/session and parent descendants",
+        "observed_at_utc": "2026-10-23T20:54:31.088580+00:00"
+      }
+    },
+    "final_prelaunch_observed_at_utc": "2026-10-23T20:54:31.088698+00:00"
+  },
+  "observed_at_utc": "2026-10-23T21:33:31.890006+00:00",
+  "launched_at_utc": "2026-10-23T20:54:31.090740+00:00",
+  "command": [
+    "/workspace/.venvs/yonghoon-dem/bin/python",
+    "-I",
+    "/workspace/.cloud-setup/nonrint-20261024/run_full_gate_v3c.py",
+    "--track",
+    "d3",
+    "--branch",
+    "codex/mixer-d3-design",
+    "--candidate",
+    "9c2f7b47fd4559ee4c08f23e667cdae92badbb04",
+    "--label",
+    "d3-serial"
+  ],
+  "child": {
+    "pid": 1183633,
+    "state": "R",
+    "parent_pid": 1070036,
+    "process_group": 1183633,
+    "session": 1183633,
+    "start_ticks": 3293778,
+    "uid": 1000,
+    "read_failures": {},
+    "argv": [
+      "/workspace/.venvs/yonghoon-dem/bin/python",
+      "-I",
+      "/workspace/.cloud-setup/nonrint-20261024/run_full_gate_v3c.py",
+      "--track",
+      "d3",
+      "--branch",
+      "codex/mixer-d3-design",
+      "--candidate",
+      "9c2f7b47fd4559ee4c08f23e667cdae92badbb04",
+      "--label",
+      "d3-serial"
+    ],
+    "argv_sha256": "792afdd5cbd927bcced0e045b7e51165700ee3ce96aec8e8caf713f01a6e5584",
+    "cwd": "/workspace/.cloud-setup/nonrint-20261024",
+    "exe": "/workspace/.venvs/yonghoon-dem/bin/python"
+  },
+  "launch_log": "/workspace/.cloud-setup/nonrint-20261024/d3-serial-launch.log",
+  "readiness_proof": "/workspace/.cloud-setup/nonrint-20261024/d3-serial-ready-proof.json",
+  "readiness_proof_sha256": "9b58ae90ed68c7f219b73b4868320b4fdb50989a99f082a6ce492217c6dfd21e",
+  "exit_code": 0,
+  "finished_at_utc": "2026-10-23T21:33:46.897229+00:00",
+  "result_status": "PASS",
+  "result_sha256": "852e83e554e47e4feba83a75189d9c06f40d4ca9e2d5d86466d9e7c9edb99c2b",
+  "launch_log_sha256": "c40ea7eccca398456429e2b98c461ca9df4067c20a12d7dfff8e493c210ffe0c"
+}

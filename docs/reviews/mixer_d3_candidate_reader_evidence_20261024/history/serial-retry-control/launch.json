@@ -1,0 +1,22 @@
+{
+  "status": "DETACHED_WAITING_CONTROLLER_LAUNCHED",
+  "owner": "/root/overnight_integration",
+  "started_at_utc": "2026-10-23T20:24:30.509418+00:00",
+  "pid": 1070036,
+  "start_ticks": 3113720,
+  "process_group": 1070036,
+  "session_id": 1070036,
+  "command": [
+    "/workspace/.venvs/yonghoon-dem/bin/python",
+    "-I",
+    "/workspace/.cloud-setup/nonrint-20261024/run_d3_serial_retry_v3.py"
+  ],
+  "cwd": "/workspace/.cloud-setup/nonrint-20261024",
+  "stdin": "DEVNULL",
+  "log": "/workspace/.cloud-setup/nonrint-20261024/d3-serial-controller.log",
+  "controller_sha256": "567d6659122d1c68d0d7c39bc0fed2dbd88bc18f8b8a00fc01100295a716c65b",
+  "runner_sha256": "4a04a878e05937e3a9208d128075b6e7f86e207e6da4fae3995f6cdb2c5cffc4",
+  "tmpdir": "/var/tmp/codex-nonrint-20261023",
+  "main_mutations": false,
+  "launch_scope": "One serial D3 retry only after original queue complete, four publications verified, and owned/fixture/unknown process absence proof"
+}
