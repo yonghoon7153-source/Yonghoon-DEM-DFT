@@ -1,0 +1,12 @@
+{
+ "R1c arm0 4.6/4.7/4.4 (impossible order) inside adjusted corner": [
+  "STOP ARM_UNREADABLE",
+  1,
+  []
+ ],
+ "R1d origin 3 4.4/4.7/4.4 inside adjusted corner (arms 1,2 raised at R_lo to force adjustment)": [
+  "STOP ARM_UNREADABLE",
+  1,
+  []
+ ]
+}

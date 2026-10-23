@@ -1,0 +1,1066 @@
+{
+ "B0 base SVX": {
+  "nu": 0,
+  "status": [
+   "computed",
+   "computed"
+  ],
+  "c": 2,
+  "k": 2,
+  "up": null,
+  "M": [
+   44,
+   44,
+   1,
+   1
+  ],
+  "L": [
+   42,
+   43,
+   1,
+   1
+  ],
+  "U": null,
+  "nominal": [
+   10.291253935345084,
+   10.291253935345084
+  ],
+  "interval": [
+   10.291253935343772,
+   10.291253935346543
+  ],
+  "contract": null
+ },
+ "B0 base QD2-1": {
+  "nu": 1,
+  "status": [
+   "computed",
+   "no_through_without_sv"
+  ],
+  "c": 0,
+  "k": 0,
+  "up": {
+   "status": "no_through_without_sv",
+   "n_edges_cut": 6,
+   "n_plate_couplings_cut": 0,
+   "n_sv_faces_cut": 0,
+   "n_reach_pairs_cut": 6
+  },
+  "M": [
+   14,
+   15,
+   1,
+   1
+  ],
+  "L": [
+   14,
+   15,
+   1,
+   1
+  ],
+  "U": [
+   null,
+   null,
+   null,
+   null
+  ],
+  "nominal": [
+   1.0,
+   Infinity
+  ],
+  "interval": [
+   0.9999999999999343,
+   Infinity
+  ],
+  "contract": null
+ },
+ "B0 base QD2-2": {
+  "nu": 0,
+  "status": [
+   "no_through_without_sv",
+   "no_through_without_sv"
+  ],
+  "c": 1,
+  "k": 1,
+  "up": null,
+  "M": [
+   12,
+   13,
+   1,
+   1
+  ],
+  "L": [
+   null,
+   null,
+   null,
+   null
+  ],
+  "U": null,
+  "nominal": [
+   Infinity,
+   Infinity
+  ],
+  "interval": [
+   Infinity,
+   Infinity
+  ],
+  "contract": null
+ },
+ "B0 base QD2-3": {
+  "nu": 1,
+  "status": [
+   "computed",
+   "computed"
+  ],
+  "c": 0,
+  "k": 0,
+  "up": {
+   "status": "computed",
+   "n_edges_cut": 6,
+   "n_plate_couplings_cut": 0,
+   "n_sv_faces_cut": 0,
+   "n_reach_pairs_cut": 6
+  },
+  "M": [
+   23,
+   25,
+   3,
+   2
+  ],
+  "L": [
+   23,
+   25,
+   3,
+   2
+  ],
+  "U": [
+   16,
+   20,
+   3,
+   2
+  ],
+  "nominal": [
+   1.0,
+   2.2898089171974574
+  ],
+  "interval": [
+   0.9999999999999434,
+   2.2898089171975746
+  ],
+  "contract": null
+ },
+ "B0 base QD4": {
+  "nu": 2,
+  "status": [
+   "computed",
+   "no_through_without_sv"
+  ],
+  "c": 0,
+  "k": 0,
+  "up": {
+   "status": "no_through_without_sv",
+   "n_edges_cut": 12,
+   "n_plate_couplings_cut": 0,
+   "n_sv_faces_cut": 0,
+   "n_reach_pairs_cut": 12
+  },
+  "M": [
+   36,
+   38,
+   4,
+   4
+  ],
+  "L": [
+   36,
+   38,
+   4,
+   4
+  ],
+  "U": [
+   null,
+   null,
+   null,
+   null
+  ],
+  "nominal": [
+   1.0,
+   Infinity
+  ],
+  "interval": [
+   0.9999999999999459,
+   Infinity
+  ],
+  "contract": null
+ },
+ "B0 base RAIL5": {
+  "nu": 2,
+  "status": [
+   "computed",
+   "computed"
+  ],
+  "c": 0,
+  "k": 0,
+  "up": {
+   "status": "computed",
+   "n_edges_cut": 12,
+   "n_plate_couplings_cut": 0,
+   "n_sv_faces_cut": 0,
+   "n_reach_pairs_cut": 12
+  },
+  "M": [
+   44,
+   47,
+   5,
+   5
+  ],
+  "L": [
+   44,
+   47,
+   5,
+   5
+  ],
+  "U": [
+   32,
+   41,
+   5,
+   5
+  ],
+  "nominal": [
+   1.0,
+   5.285714285714302
+  ],
+  "interval": [
+   0.9999999999999458,
+   5.285714285714569
+  ],
+  "contract": null
+ },
+ "B0 base QDX": {
+  "nu": 1,
+  "status": [
+   "computed",
+   "computed"
+  ],
+  "c": 2,
+  "k": 2,
+  "up": {
+   "status": "computed",
+   "n_edges_cut": 6,
+   "n_plate_couplings_cut": 0,
+   "n_sv_faces_cut": 2,
+   "n_reach_pairs_cut": 8
+  },
+  "M": [
+   37,
+   40,
+   4,
+   3
+  ],
+  "L": [
+   35,
+   39,
+   4,
+   3
+  ],
+  "U": [
+   28,
+   34,
+   4,
+   3
+  ],
+  "nominal": [
+   1.377928747191614,
+   3.1551935325820857
+  ],
+  "interval": [
+   1.3779287471915314,
+   3.155193532582236
+  ],
+  "contract": null
+ },
+ "B0 base QD11R": {
+  "nu": 1,
+  "status": [
+   "computed",
+   "computed"
+  ],
+  "c": 0,
+  "k": 0,
+  "up": {
+   "status": "computed",
+   "n_edges_cut": 9,
+   "n_plate_couplings_cut": 1,
+   "n_sv_faces_cut": 0,
+   "n_reach_pairs_cut": 9
+  },
+  "M": [
+   20,
+   20,
+   4,
+   3
+  ],
+  "L": [
+   20,
+   20,
+   4,
+   3
+  ],
+  "U": [
+   11,
+   16,
+   3,
+   3
+  ],
+  "nominal": [
+   1.0,
+   3.4611601654185806
+  ],
+  "interval": [
+   0.9999999999999587,
+   3.461160165418705
+  ],
+  "contract": null
+ },
+ "B0 base FLOAT": {
+  "nu": 0,
+  "status": [
+   "computed",
+   "computed"
+  ],
+  "c": 2,
+  "k": 0,
+  "up": null,
+  "M": [
+   11,
+   12,
+   1,
+   1
+  ],
+  "L": [
+   11,
+   12,
+   1,
+   1
+  ],
+  "U": null,
+  "nominal": [
+   1.0,
+   1.0
+  ],
+  "interval": [
+   0.999999999999931,
+   1.000000000000069
+  ],
+  "contract": null
+ },
+ "B0 base PARc1": {
+  "nu": 0,
+  "status": [
+   "computed",
+   "computed"
+  ],
+  "c": 1,
+  "k": 0,
+  "up": null,
+  "M": [
+   17,
+   19,
+   2,
+   1
+  ],
+  "L": [
+   17,
+   19,
+   2,
+   1
+  ],
+  "U": null,
+  "nominal": [
+   1.0000000000000067,
+   1.0000000000000067
+  ],
+  "interval": [
+   0.9999999999999415,
+   1.0000000000000586
+  ],
+  "contract": null
+ },
+ "B0 base PARc0": {
+  "nu": 0,
+  "status": [
+   "computed",
+   "computed"
+  ],
+  "c": 1,
+  "k": 1,
+  "up": null,
+  "M": [
+   20,
+   21,
+   2,
+   1
+  ],
+  "L": [
+   19,
+   21,
+   2,
+   1
+  ],
+  "U": null,
+  "nominal": [
+   0.9999999999999911,
+   0.9999999999999911
+  ],
+  "interval": [
+   0.9999999999999415,
+   1.0000000000000586
+  ],
+  "contract": null
+ },
+ "B0 base UFLOAT": {
+  "nu": 1,
+  "status": [
+   "computed",
+   "computed"
+  ],
+  "c": 0,
+  "k": 0,
+  "up": {
+   "status": "computed",
+   "n_edges_cut": 6,
+   "n_plate_couplings_cut": 0,
+   "n_sv_faces_cut": 0,
+   "n_reach_pairs_cut": 0
+  },
+  "M": [
+   11,
+   12,
+   1,
+   1
+  ],
+  "L": [
+   11,
+   12,
+   1,
+   1
+  ],
+  "U": [
+   11,
+   12,
+   1,
+   1
+  ],
+  "nominal": [
+   1.0,
+   1.0
+  ],
+  "interval": [
+   0.999999999999931,
+   1.000000000000069
+  ],
+  "contract": null
+ },
+ "B0 base UPLATE": {
+  "nu": 1,
+  "status": [
+   "computed",
+   "computed"
+  ],
+  "c": 0,
+  "k": 0,
+  "up": {
+   "status": "computed",
+   "n_edges_cut": 6,
+   "n_plate_couplings_cut": 1,
+   "n_sv_faces_cut": 0,
+   "n_reach_pairs_cut": 6
+  },
+  "M": [
+   15,
+   17,
+   2,
+   1
+  ],
+  "L": [
+   15,
+   17,
+   2,
+   1
+  ],
+  "U": [
+   7,
+   8,
+   1,
+   1
+  ],
+  "nominal": [
+   1.0,
+   1.0000000000000089
+  ],
+  "interval": [
+   0.9999999999999521,
+   1.000000000000048
+  ],
+  "contract": null
+ },
+ "X1 A2 (no count edit) lower<-main [SVX]": {
+  "expected": "reject (end cert certifies main graph) unless honestly same graph & same G",
+  "contract": "sv_cf| 판에 닿는 성분에서 끊은 쌍 2 (n_reach_pairs_cut · 끊은 다리 면 2) 인데 아래 끝 증서 위상 수 = 주 해 (44, 44, 1, 1) (끊었으면 주 해보다 작다 — 주 해 증서를 끝 자리에 옮긴 기록 · 같은 수 = 거부) (10-23 사전 공격 리뷰 C1 · 묶음 A″)",
+  "base_interval": [
+   10.291253935343772,
+   10.291253935346543
+  ],
+  "new_interval": [
+   0.9999999999998652,
+   1.0000000000001348
+  ],
+  "t_between_1_and_base_lo": 5.645626967671886,
+  "flags_base@t": [
+   "SV_DEPENDENT"
+  ],
+  "flags_attack@t": []
+ },
+ "X1 A2 (no count edit) lower<-main [QD2-1]": {
+  "expected": "reject (end cert certifies main graph) unless honestly same graph & same G",
+  "contract": null,
+  "base_interval": [
+   0.9999999999999343,
+   Infinity
+  ],
+  "new_interval": [
+   0.9999999999999343,
+   Infinity
+  ],
+  "t_between_1_and_base_lo": null,
+  "flags_base@t": null,
+  "flags_attack@t": null
+ },
+ "X1 A2 (no count edit) lower<-main [QD2-3]": {
+  "expected": "reject (end cert certifies main graph) unless honestly same graph & same G",
+  "contract": null,
+  "base_interval": [
+   0.9999999999999434,
+   2.2898089171975746
+  ],
+  "new_interval": [
+   0.9999999999999434,
+   2.2898089171975746
+  ],
+  "t_between_1_and_base_lo": null,
+  "flags_base@t": null,
+  "flags_attack@t": null
+ },
+ "X1 A2 (no count edit) lower<-main [QD4]": {
+  "expected": "reject (end cert certifies main graph) unless honestly same graph & same G",
+  "contract": null,
+  "base_interval": [
+   0.9999999999999459,
+   Infinity
+  ],
+  "new_interval": [
+   0.9999999999999459,
+   Infinity
+  ],
+  "t_between_1_and_base_lo": null,
+  "flags_base@t": null,
+  "flags_attack@t": null
+ },
+ "X1 A2 (no count edit) lower<-main [RAIL5]": {
+  "expected": "reject (end cert certifies main graph) unless honestly same graph & same G",
+  "contract": null,
+  "base_interval": [
+   0.9999999999999458,
+   5.285714285714569
+  ],
+  "new_interval": [
+   0.9999999999999458,
+   5.285714285714569
+  ],
+  "t_between_1_and_base_lo": null,
+  "flags_base@t": null,
+  "flags_attack@t": null
+ },
+ "X1 A2 (no count edit) lower<-main [QDX]": {
+  "expected": "reject (end cert certifies main graph) unless honestly same graph & same G",
+  "contract": "sv_cf| 판에 닿는 성분에서 끊은 쌍 2 (n_reach_pairs_cut · 끊은 다리 면 2) 인데 아래 끝 증서 위상 수 = 주 해 (37, 40, 4, 3) (끊었으면 주 해보다 작다 — 주 해 증서를 끝 자리에 옮긴 기록 · 같은 수 = 거부) (10-23 사전 공격 리뷰 C1 · 묶음 A″)",
+  "base_interval": [
+   1.3779287471915314,
+   3.155193532582236
+  ],
+  "new_interval": [
+   0.9999999999999414,
+   3.155193532582236
+  ],
+  "t_between_1_and_base_lo": 1.1889643735957658,
+  "flags_base@t": [
+   "SV_DEPENDENT"
+  ],
+  "flags_attack@t": [
+   "SV_UNCHECKED"
+  ]
+ },
+ "X1 A2 (no count edit) lower<-main [QD11R]": {
+  "expected": "reject (end cert certifies main graph) unless honestly same graph & same G",
+  "contract": null,
+  "base_interval": [
+   0.9999999999999587,
+   3.461160165418705
+  ],
+  "new_interval": [
+   0.9999999999999587,
+   3.461160165418705
+  ],
+  "t_between_1_and_base_lo": null,
+  "flags_base@t": null,
+  "flags_attack@t": null
+ },
+ "X1 A2 (no count edit) lower<-main [FLOAT]": {
+  "expected": "reject (end cert certifies main graph) unless honestly same graph & same G",
+  "contract": null,
+  "base_interval": [
+   0.999999999999931,
+   1.000000000000069
+  ],
+  "new_interval": [
+   0.999999999999931,
+   1.000000000000069
+  ],
+  "t_between_1_and_base_lo": null,
+  "flags_base@t": null,
+  "flags_attack@t": null
+ },
+ "X1 A2 (no count edit) lower<-main [PARc1]": {
+  "expected": "reject (end cert certifies main graph) unless honestly same graph & same G",
+  "contract": null,
+  "base_interval": [
+   0.9999999999999415,
+   1.0000000000000586
+  ],
+  "new_interval": [
+   0.9999999999999415,
+   1.0000000000000586
+  ],
+  "t_between_1_and_base_lo": null,
+  "flags_base@t": null,
+  "flags_attack@t": null
+ },
+ "X1 A2 (no count edit) lower<-main [PARc0]": {
+  "expected": "reject (end cert certifies main graph) unless honestly same graph & same G",
+  "contract": "sv_cf| 판에 닿는 성분에서 끊은 쌍 1 (n_reach_pairs_cut · 끊은 다리 면 1) 인데 아래 끝 증서 위상 수 = 주 해 (20, 21, 2, 1) (끊었으면 주 해보다 작다 — 주 해 증서를 끝 자리에 옮긴 기록 · 같은 수 = 거부) (10-23 사전 공격 리뷰 C1 · 묶음 A″)",
+  "base_interval": [
+   0.9999999999999415,
+   1.0000000000000586
+  ],
+  "new_interval": [
+   0.9999999999999415,
+   1.0000000000000586
+  ],
+  "t_between_1_and_base_lo": null,
+  "flags_base@t": null,
+  "flags_attack@t": null
+ },
+ "X1 A2 (no count edit) lower<-main [UFLOAT]": {
+  "expected": "reject (end cert certifies main graph) unless honestly same graph & same G",
+  "contract": null,
+  "base_interval": [
+   0.999999999999931,
+   1.000000000000069
+  ],
+  "new_interval": [
+   0.999999999999931,
+   1.000000000000069
+  ],
+  "t_between_1_and_base_lo": null,
+  "flags_base@t": null,
+  "flags_attack@t": null
+ },
+ "X1 A2 (no count edit) lower<-main [UPLATE]": {
+  "expected": "reject (end cert certifies main graph) unless honestly same graph & same G",
+  "contract": null,
+  "base_interval": [
+   0.9999999999999521,
+   1.000000000000048
+  ],
+  "new_interval": [
+   0.9999999999999521,
+   1.000000000000048
+  ],
+  "t_between_1_and_base_lo": null,
+  "flags_base@t": null,
+  "flags_attack@t": null
+ },
+ "X2 upper<-main (no count edit) [QD2-3]": {
+  "contract": "sv_cf| 위 끝이 판에 닿는 성분에서 끊은 것 6 (n_reach_pairs_cut 6 · 판 결합 0 · 옛 칸 다리 면 0 · 간선 6) 인데 위 끝 증서 위상 수 = 주 해 (23, 25, 3, 2) (끊었으면 주 해보다 작다 — 주 해 증서를 끝 자리에 옮긴 기록 · 같은 수 = 거부) (10-23 사전 공격 리뷰 C1 · 묶음 A″)",
+  "base": [
+   0.9999999999999434,
+   2.2898089171975746
+  ],
+  "new": [
+   0.9999999999999434,
+   1.0000000000000566
+  ]
+ },
+ "X2 upper<-main (no count edit) [RAIL5]": {
+  "contract": "sv_cf| 위 끝이 판에 닿는 성분에서 끊은 것 12 (n_reach_pairs_cut 12 · 판 결합 0 · 옛 칸 다리 면 0 · 간선 12) 인데 위 끝 증서 위상 수 = 주 해 (44, 47, 5, 5) (끊었으면 주 해보다 작다 — 주 해 증서를 끝 자리에 옮긴 기록 · 같은 수 = 거부) (10-23 사전 공격 리뷰 C1 · 묶음 A″)",
+  "base": [
+   0.9999999999999458,
+   5.285714285714569
+  ],
+  "new": [
+   0.9999999999999458,
+   1.0000000000000542
+  ]
+ },
+ "X2 upper<-main (no count edit) [QDX]": {
+  "contract": "sv_cf| 괄호 위 1.0 < 아래 1.377928747191614 × (1 − τ)/(1 + τ) (위 = 덩어리를 더 뺀 판 · 참 G_cut,hi ≤ G_cut,lo · 아래 +∞ 면 위도 +∞ · 증서 폭 여유 τ 0.0001 · Rayleigh)",
+  "base": [
+   1.3779287471915314,
+   3.155193532582236
+  ],
+  "new": [
+   1.3779287471915314,
+   1.0000000000000586
+  ]
+ },
+ "X2 upper<-main (no count edit) [QD11R]": {
+  "contract": "sv_cf| 위 끝 증서 판 결합 수 (4, 3) — 주 해 (4, 3) 에서 뺀 수 0 ≠ n_plate_couplings_cut 1 (위 끝 = 덩어리 셀의 판 결합만 뺀 판) (10-23 사전 공격 리뷰 C1)",
+  "base": [
+   0.9999999999999587,
+   3.461160165418705
+  ],
+  "new": [
+   0.9999999999999587,
+   1.0000000000000413
+  ]
+ },
+ "X2 upper<-main (no count edit) [UFLOAT]": {
+  "contract": null,
+  "base": [
+   0.999999999999931,
+   1.000000000000069
+  ],
+  "new": [
+   0.999999999999931,
+   1.000000000000069
+  ]
+ },
+ "X2 upper<-main (no count edit) [UPLATE]": {
+  "contract": "sv_cf| 위 끝 증서 판 결합 수 (2, 1) — 주 해 (2, 1) 에서 뺀 수 0 ≠ n_plate_couplings_cut 1 (위 끝 = 덩어리 셀의 판 결합만 뺀 판) (10-23 사전 공격 리뷰 C1)",
+  "base": [
+   0.9999999999999521,
+   1.000000000000048
+  ],
+  "new": [
+   0.9999999999999521,
+   1.000000000000048
+  ]
+ },
+ "X3 lower<-upper cert (no count edit) [QD2-3]": {
+  "expected": "reject (lower end cert certifies the upper graph)",
+  "contract": "sv_cf| 끊은 다리 면 0 인데 아래 끝 증서 위상 수 (16, 20, 3, 2) ≠ 주 해 (23, 25, 3, 2) (끊은 것 없음 = 같은 계) (10-23 사전 공격 리뷰 C1)",
+  "base": [
+   0.9999999999999434,
+   2.2898089171975746
+  ],
+  "new": [
+   2.289808917197323,
+   2.2898089171975746
+  ],
+  "k_ku_ne_npc": [
+   0,
+   6,
+   6,
+   0
+  ]
+ },
+ "X3 lower<-upper cert (no count edit) [RAIL5]": {
+  "expected": "reject (lower end cert certifies the upper graph)",
+  "contract": "sv_cf| 끊은 다리 면 0 인데 아래 끝 증서 위상 수 (32, 41, 5, 5) ≠ 주 해 (44, 47, 5, 5) (끊은 것 없음 = 같은 계) (10-23 사전 공격 리뷰 C1)",
+  "base": [
+   0.9999999999999458,
+   5.285714285714569
+  ],
+  "new": [
+   5.2857142857140005,
+   5.285714285714569
+  ],
+  "k_ku_ne_npc": [
+   0,
+   12,
+   12,
+   0
+  ]
+ },
+ "X3 lower<-upper cert (no count edit) [QDX]": {
+  "expected": "reject (lower end cert certifies the upper graph)",
+  "contract": null,
+  "base": [
+   1.3779287471915314,
+   3.155193532582236
+  ],
+  "new": [
+   3.1551935325818827,
+   3.155193532582236
+  ],
+  "k_ku_ne_npc": [
+   2,
+   8,
+   6,
+   0
+  ]
+ },
+ "X3 lower<-upper cert (no count edit) [QD11R]": {
+  "expected": "reject (lower end cert certifies the upper graph)",
+  "contract": "sv_cf| 아래 끝 증서 판 결합 수 (3, 3) ≠ 주 해 (4, 3) (아래 끝 = 같은 판 입력 · SV 다리 면만 끊음) (10-23 사전 공격 리뷰 C1)",
+  "base": [
+   0.9999999999999587,
+   3.461160165418705
+  ],
+  "new": [
+   3.461160165418434,
+   3.461160165418705
+  ],
+  "k_ku_ne_npc": [
+   0,
+   9,
+   9,
+   1
+  ]
+ },
+ "X3 lower<-upper cert (no count edit) [UFLOAT]": {
+  "expected": "reject (lower end cert certifies the upper graph)",
+  "contract": null,
+  "base": [
+   0.999999999999931,
+   1.000000000000069
+  ],
+  "new": [
+   0.999999999999931,
+   1.000000000000069
+  ],
+  "k_ku_ne_npc": [
+   0,
+   0,
+   6,
+   0
+  ]
+ },
+ "X3 lower<-upper cert (no count edit) [UPLATE]": {
+  "expected": "reject (lower end cert certifies the upper graph)",
+  "contract": "sv_cf| 아래 끝 증서 판 결합 수 (1, 1) ≠ 주 해 (2, 1) (아래 끝 = 같은 판 입력 · SV 다리 면만 끊음) (10-23 사전 공격 리뷰 C1)",
+  "base": [
+   0.9999999999999521,
+   1.000000000000048
+  ],
+  "new": [
+   0.9999999999999521,
+   1.000000000000048
+  ],
+  "k_ku_ne_npc": [
+   0,
+   6,
+   6,
+   1
+  ]
+ },
+ "X4 form attacks [QD2-3]": {
+  "lower True": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut True (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-23",
+  "lower False": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut False (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-2",
+  "lower -1": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut -1 (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-23 사",
+  "lower 1.0": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut 1.0 (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-23 ",
+  "lower \"1\"": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut '1' (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-23 ",
+  "lower None": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut None (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-23",
+  "lower 2**63": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut 9223372036854775808 (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대",
+  "lower NaN": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut nan (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-23 ",
+  "lower inf": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut inf (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-23 ",
+  "lower [1]": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut [1] (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-23 ",
+  "lower \"0\"": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut '0' (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-23 ",
+  "lower 0.0": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut 0.0 (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-23 ",
+  "lower <missing>": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut None (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-23",
+  "upper True": "sv_cf| 위 끝 n_reach_pairs_cut True (0 이상 정수 · int64 범위 · 10-23 사전 공격 리뷰 C1 · 묶음 A″)",
+  "upper False": "sv_cf| 위 끝 n_reach_pairs_cut False (0 이상 정수 · int64 범위 · 10-23 사전 공격 리뷰 C1 · 묶음 A″)",
+  "upper -1": "sv_cf| 위 끝 n_reach_pairs_cut -1 (0 이상 정수 · int64 범위 · 10-23 사전 공격 리뷰 C1 · 묶음 A″)",
+  "upper 1.0": "sv_cf| 위 끝 n_reach_pairs_cut 1.0 (0 이상 정수 · int64 범위 · 10-23 사전 공격 리뷰 C1 · 묶음 A″)",
+  "upper \"1\"": "sv_cf| 위 끝 n_reach_pairs_cut '1' (0 이상 정수 · int64 범위 · 10-23 사전 공격 리뷰 C1 · 묶음 A″)",
+  "upper None": "sv_cf| 위 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut None (0 이상 정수 · int64 — 위 끝 끊은 그래프를 주 해에 대조할 수 없다) (10-23 사전 공격",
+  "upper 2**63": "sv_cf| 위 끝 n_reach_pairs_cut 9223372036854775808 (0 이상 정수 · int64 범위 · 10-23 사전 공격 리뷰 C1 · 묶음 A″)",
+  "upper NaN": "sv_cf| 위 끝 n_reach_pairs_cut nan (0 이상 정수 · int64 범위 · 10-23 사전 공격 리뷰 C1 · 묶음 A″)",
+  "upper inf": "sv_cf| 위 끝 n_reach_pairs_cut inf (0 이상 정수 · int64 범위 · 10-23 사전 공격 리뷰 C1 · 묶음 A″)",
+  "upper [1]": "sv_cf| 위 끝 n_reach_pairs_cut [1] (0 이상 정수 · int64 범위 · 10-23 사전 공격 리뷰 C1 · 묶음 A″)",
+  "upper \"0\"": "sv_cf| 위 끝 n_reach_pairs_cut '0' (0 이상 정수 · int64 범위 · 10-23 사전 공격 리뷰 C1 · 묶음 A″)",
+  "upper 0.0": "sv_cf| 위 끝 n_reach_pairs_cut 0.0 (0 이상 정수 · int64 범위 · 10-23 사전 공격 리뷰 C1 · 묶음 A″)",
+  "upper <missing>": "sv_cf| 위 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut None (0 이상 정수 · int64 — 위 끝 끊은 그래프를 주 해에 대조할 수 없다) (10-23 사전 공격"
+ },
+ "X4 form attacks [QDX]": {
+  "lower True": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut True (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-23",
+  "lower False": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut False (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-2",
+  "lower -1": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut -1 (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-23 사",
+  "lower 1.0": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut 1.0 (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-23 ",
+  "lower \"1\"": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut '1' (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-23 ",
+  "lower None": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut None (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-23",
+  "lower 2**63": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut 9223372036854775808 (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대",
+  "lower NaN": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut nan (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-23 ",
+  "lower inf": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut inf (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-23 ",
+  "lower [1]": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut [1] (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-23 ",
+  "lower \"0\"": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut '0' (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-23 ",
+  "lower 0.0": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut 0.0 (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-23 ",
+  "lower <missing>": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut None (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-23",
+  "upper True": "sv_cf| 위 끝 n_reach_pairs_cut True (0 이상 정수 · int64 범위 · 10-23 사전 공격 리뷰 C1 · 묶음 A″)",
+  "upper False": "sv_cf| 위 끝 n_reach_pairs_cut False (0 이상 정수 · int64 범위 · 10-23 사전 공격 리뷰 C1 · 묶음 A″)",
+  "upper -1": "sv_cf| 위 끝 n_reach_pairs_cut -1 (0 이상 정수 · int64 범위 · 10-23 사전 공격 리뷰 C1 · 묶음 A″)",
+  "upper 1.0": "sv_cf| 위 끝 n_reach_pairs_cut 1.0 (0 이상 정수 · int64 범위 · 10-23 사전 공격 리뷰 C1 · 묶음 A″)",
+  "upper \"1\"": "sv_cf| 위 끝 n_reach_pairs_cut '1' (0 이상 정수 · int64 범위 · 10-23 사전 공격 리뷰 C1 · 묶음 A″)",
+  "upper None": "sv_cf| 위 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut None (0 이상 정수 · int64 — 위 끝 끊은 그래프를 주 해에 대조할 수 없다) (10-23 사전 공격",
+  "upper 2**63": "sv_cf| 위 끝 n_reach_pairs_cut 9223372036854775808 (0 이상 정수 · int64 범위 · 10-23 사전 공격 리뷰 C1 · 묶음 A″)",
+  "upper NaN": "sv_cf| 위 끝 n_reach_pairs_cut nan (0 이상 정수 · int64 범위 · 10-23 사전 공격 리뷰 C1 · 묶음 A″)",
+  "upper inf": "sv_cf| 위 끝 n_reach_pairs_cut inf (0 이상 정수 · int64 범위 · 10-23 사전 공격 리뷰 C1 · 묶음 A″)",
+  "upper [1]": "sv_cf| 위 끝 n_reach_pairs_cut [1] (0 이상 정수 · int64 범위 · 10-23 사전 공격 리뷰 C1 · 묶음 A″)",
+  "upper \"0\"": "sv_cf| 위 끝 n_reach_pairs_cut '0' (0 이상 정수 · int64 범위 · 10-23 사전 공격 리뷰 C1 · 묶음 A″)",
+  "upper 0.0": "sv_cf| 위 끝 n_reach_pairs_cut 0.0 (0 이상 정수 · int64 범위 · 10-23 사전 공격 리뷰 C1 · 묶음 A″)",
+  "upper <missing>": "sv_cf| 위 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut None (0 이상 정수 · int64 — 위 끝 끊은 그래프를 주 해에 대조할 수 없다) (10-23 사전 공격"
+ },
+ "X4 form attacks [SVX]": {
+  "lower True": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut True (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-23",
+  "lower False": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut False (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-2",
+  "lower -1": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut -1 (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-23 사",
+  "lower 1.0": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut 1.0 (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-23 ",
+  "lower \"1\"": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut '1' (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-23 ",
+  "lower None": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut None (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-23",
+  "lower 2**63": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut 9223372036854775808 (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대",
+  "lower NaN": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut nan (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-23 ",
+  "lower inf": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut inf (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-23 ",
+  "lower [1]": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut [1] (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-23 ",
+  "lower \"0\"": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut '0' (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-23 ",
+  "lower 0.0": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut 0.0 (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-23 ",
+  "lower <missing>": "sv_cf| 아래 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut None (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 주 해에 대조할 수 없다) (10-23"
+ },
+ "X5 relation/form on records with no computed end or +inf upper": {
+  "QD2-2 (inf/inf) lower True": null,
+  "QD2-2 (inf/inf) upper? True": null,
+  "QD2-2 (inf/inf) lower False": null,
+  "QD2-2 (inf/inf) upper? False": null,
+  "QD2-2 (inf/inf) lower -1": null,
+  "QD2-2 (inf/inf) upper? -1": null,
+  "QD2-2 (inf/inf) lower 1.0": null,
+  "QD2-2 (inf/inf) upper? 1.0": null,
+  "QD2-2 (inf/inf) lower \"1\"": null,
+  "QD2-2 (inf/inf) upper? \"1\"": null,
+  "QD2-2 (inf/inf) lower None": null,
+  "QD2-2 (inf/inf) upper? None": null,
+  "QD2-2 (inf/inf) lower 2**63": null,
+  "QD2-2 (inf/inf) upper? 2**63": null,
+  "QD2-2 (inf/inf) lower NaN": null,
+  "QD2-2 (inf/inf) upper? NaN": null,
+  "QD2-2 (inf/inf) lower inf": null,
+  "QD2-2 (inf/inf) upper? inf": null,
+  "QD2-2 (inf/inf) lower [1]": null,
+  "QD2-2 (inf/inf) upper? [1]": null,
+  "QD2-2 (inf/inf) lower \"0\"": null,
+  "QD2-2 (inf/inf) upper? \"0\"": null,
+  "QD2-2 (inf/inf) lower 0.0": null,
+  "QD2-2 (inf/inf) upper? 0.0": null,
+  "QD2-2 lower <missing>": null,
+  "QD2-2 lower 10**6 (> n_sv_faces_cut)": null,
+  "QD4 base (k, ku, ne)": [
+   0,
+   12,
+   12
+  ],
+  "QD4 upper(+inf) ku := 0": null,
+  "QD4 upper(+inf) ku := 10**6 (> k + ne)": null,
+  "QD4 lower k := 10**6 (> n_sv_faces_cut)": "sv_cf| 아래 끝 n_reach_pairs_cut 1000000 > n_sv_faces_cut 0 (판에 닿는 성분에서 빠진 쌍마다 끊은 다리 면 ≥ 1 — 생산자 보장 · 새 칸 ↔ 옛 칸 모순) (10-23 사전 공격 리뷰 C1 · 묶음 A″)",
+  "QD2-1 base (k, ku, ne)": [
+   0,
+   6,
+   6
+  ],
+  "QD2-1 upper(+inf) ku := 0": null,
+  "QD2-1 upper(+inf) ku := 10**6 (> k + ne)": null,
+  "QD2-1 lower k := 10**6 (> n_sv_faces_cut)": "sv_cf| 아래 끝 n_reach_pairs_cut 1000000 > n_sv_faces_cut 0 (판에 닿는 성분에서 빠진 쌍마다 끊은 다리 면 ≥ 1 — 생산자 보장 · 새 칸 ↔ 옛 칸 모순) (10-23 사전 공격 리뷰 C1 · 묶음 A″)"
+ },
+ "X6 nu->0 (record + census) drops upper end": {
+  "QD2-3": {
+   "contract": null,
+   "base_interval": [
+    0.9999999999999434,
+    2.2898089171975746
+   ],
+   "new_interval": [
+    0.9999999999999434,
+    1.0000000000000566
+   ],
+   "t": 1.6449044585988157,
+   "flags_base@t": [
+    "SV_UNCHECKED"
+   ],
+   "flags_attack@t": []
+  },
+  "QDX": {
+   "contract": null,
+   "base_interval": [
+    1.3779287471915314,
+    3.155193532582236
+   ],
+   "new_interval": [
+    1.3779287471915314,
+    1.3779287471916901
+   ],
+   "t": 2.2665611398869627,
+   "flags_base@t": [
+    "SV_UNCHECKED"
+   ],
+   "flags_attack@t": []
+  },
+  "RAIL5": {
+   "contract": null,
+   "base_interval": [
+    0.9999999999999458,
+    5.285714285714569
+   ],
+   "new_interval": [
+    0.9999999999999458,
+    1.0000000000000542
+   ],
+   "t": 3.1428571428573115,
+   "flags_base@t": [
+    "SV_UNCHECKED"
+   ],
+   "flags_attack@t": []
+  },
+  "QD2-1": {
+   "contract": null,
+   "base_interval": [
+    0.9999999999999343,
+    Infinity
+   ],
+   "new_interval": [
+    0.9999999999999343,
+    1.0000000000000657
+   ],
+   "t": Infinity,
+   "flags_base@t": [],
+   "flags_attack@t": []
+  },
+  "QD4": {
+   "contract": null,
+   "base_interval": [
+    0.9999999999999459,
+    Infinity
+   ],
+   "new_interval": [
+    0.9999999999999459,
+    1.0000000000000542
+   ],
+   "t": Infinity,
+   "flags_base@t": [],
+   "flags_attack@t": []
+  }
+ },
+ "X7 QDX upper n_sv_faces_cut deleted + (a) lower<-main c=k=0": {
+  "contract": "sv_cf| 위 끝 n_reach_pairs_cut 8 ∉ [아래 끝 0, 아래 끝 + n_edges_cut 6] (위 끝 = 아래 끝 계에서 더 뺀 계 · 위 끝에서만 빠진 쌍마다 더 뺀 간선 ≥ 1 — 생산자 보장 · 새 칸 ↔ 옛 칸 모순) (10-23 사전 공격 리뷰 C1 · 묶음 A″)",
+  "interval": [
+   0.9999999999999414,
+   3.155193532582236
+  ]
+ }
+}

@@ -1,0 +1,4 @@
+r2 registration/probe_registration_current.py rc=1 secs=0
+r2 certificate/probe_certificate.py rc=0 secs=2
+r2 geometry/run_review.py rc=0 secs=27
+reg_each rc=0

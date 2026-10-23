@@ -1,0 +1,144 @@
+{
+ "A1 QD2-3 bracket (nu=1, finite upper)": {
+  "contract_problem": null,
+  "standing": "certified_interval",
+  "status": [
+   "computed",
+   "computed"
+  ],
+  "interval": [
+   0.9999999999999434,
+   2.2898089171975746
+  ],
+  "nominal": [
+   1.0,
+   2.2898089171974574
+  ],
+  "exact_lo<=got_lo": true,
+  "got_hi>=exact_hi": true
+ },
+ "A1 QD4 two comps (nu=2, inf upper)": {
+  "contract_problem": null,
+  "standing": "certified_interval",
+  "status": [
+   "computed",
+   "no_through_without_sv"
+  ],
+  "interval": [
+   0.9999999999999459,
+   Infinity
+  ],
+  "nominal": [
+   1.0,
+   Infinity
+  ],
+  "exact_lo<=got_lo": true,
+  "got_hi>=exact_hi": null
+ },
+ "A1 two comps + 5th rail (nu=2, finite upper)": {
+  "contract_problem": null,
+  "standing": "certified_interval",
+  "status": [
+   "computed",
+   "computed"
+  ],
+  "interval": [
+   0.9999999999999458,
+   5.285714285714569
+  ],
+  "nominal": [
+   1.0,
+   5.285714285714302
+  ],
+  "exact_lo<=got_lo": true,
+  "got_hi>=exact_hi": true
+ },
+ "A1 QD2-1 reviewer (nu=1, inf upper)": {
+  "contract_problem": null,
+  "standing": "certified_interval",
+  "status": [
+   "computed",
+   "no_through_without_sv"
+  ],
+  "interval": [
+   0.9999999999999343,
+   Infinity
+  ],
+  "nominal": [
+   1.0,
+   Infinity
+  ],
+  "exact_lo<=got_lo": true,
+  "got_hi>=exact_hi": null
+ },
+ "A1 QD2-2 (nu=0, inf lower)": {
+  "contract_problem": null,
+  "standing": "certified_interval",
+  "status": [
+   "no_through_without_sv",
+   "no_through_without_sv"
+  ],
+  "interval": [
+   Infinity,
+   Infinity
+  ],
+  "nominal": [
+   Infinity,
+   Infinity
+  ],
+  "exact_lo<=got_lo": null,
+  "got_hi>=exact_hi": null
+ },
+ "A2 base SVX": {
+  "contract": null,
+  "flags@t=2": [
+   "SV_DEPENDENT"
+  ],
+  "interval": [
+   10.291253935343772,
+   10.291253935346543
+  ]
+ },
+ "A2 main-cert-as-lower-end (consistent edit; true ratio ~10.29)": {
+  "expected": "reject (end cert certifies the full system, not the cut system)",
+  "contract": "sv_cf| 판에 닿는 성분에서 끊은 쌍 2 (n_reach_pairs_cut · 끊은 다리 면 2) 인데 아래 끝 증서 위상 수 = 주 해 (44, 44, 1, 1) (끊었으면 주 해보다 작다 — 주 해 증서를 끝 자리에 옮긴 기록 · 같은 수 = 거부) (10-23 사전 공격 리뷰 C1 · 묶음 A″)",
+  "interval": [
+   0.9999999999998652,
+   1.0000000000001348
+  ],
+  "flags@t=2": []
+ },
+ "A3 knife": {
+  "t=lo (equal)": [
+   "SV_UNCHECKED"
+  ],
+  "t=hi (equal)": [],
+  "t=nextafter(lo,-inf)": [
+   "SV_DEPENDENT"
+  ],
+  "t=nextafter(hi,+inf)": [],
+  "t between": [
+   "SV_UNCHECKED"
+  ]
+ },
+ "A4 field attacks": {
+  "standing trailing space": "sv_cf| 기록 지위 'certified_interval ' (∈ ('certified_interval', 'diagnostic_uncertified') · 10-23 RCA2-04 — 지위 칸 없는 옛 기록 = 거부)",
+  "standing fullwidth/homoglyph": "sv_cf| 기록 지위 'certified_іnterval' (∈ ('certified_interval', 'diagnostic_uncertified') · 10-23 RCA2-04 — 지위 칸 없는 옛 기록 = 거부)",
+  "n_unsplit True": "sv_cf| 못 가른 덩어리 수 True (0 이상 정수 · int64 범위 — 의미 범위 · 괄호 판정 10-22 · 10-23 RCA2-04)",
+  "n_unsplit 0.0": "sv_cf| 못 가른 덩어리 수 0.0 (0 이상 정수 · int64 범위 — 의미 범위 · 괄호 판정 10-22 · 10-23 RCA2-04)",
+  "census n_unsplit True": "sv_cf| 증거 census n_unsplit_bridging_components = True (0 이상 정수 · int64 범위)",
+  "I_bot_code True-ish (1.0 if G==1)": "sv_cf| 분자 G_full 4.614912078630096 ≠ 솔브 기록 I_bot_code '4.614912078630096' (그 런의 주 해 단자 전류와 정확히 같아야 · 10-23 RCA2-04)",
+  "conv_cert_full target_lo string": "sv_cf| 주 해 (분자 G_full) 증서 목표량 구간을 그 끝의 G 로 다시 보면 실패 — non-finite / non-numeric (lo '4.614912078629504' · hi 4.614912078630126 · G 4.614912078630096 · tol 0.0001)",
+  "end cert target_hi < target_lo": "sv_cf| 아래 끝 증서 목표량 구간을 그 끝의 G 로 다시 보면 실패 — bracket not 0 < lo <= hi (0.44843049327354356, 0.4484304932734833)",
+  "end cert pass_d 1 (int not bool)": "sv_cf| 아래 끝 computed 인데 반사실 증서 상태 'POSITIVE_SOLVED' · 참이 아닌 칸 ['pass_d'] (ok · ⓐ–ⓓ 참 · POSITIVE_SOLVED 이어야 · 플래그를 믿지 않는다)",
+  "end cert ok \"true\"": "sv_cf| 아래 끝 computed 인데 반사실 증서 상태 'POSITIVE_SOLVED' · 참이 아닌 칸 ['ok'] (ok · ⓐ–ⓓ 참 · POSITIVE_SOLVED 이어야 · 플래그를 믿지 않는다)",
+  "end cert target_tol 1e-3": "sv_cf| 아래 끝 증서 target_tol = 0.001 ≠ 이 코드의 봉인 0.0001",
+  "main cert bind_version other": "sv_cf| 주 해 증서 결합 판 'cert-bind-v0' · σ 표 지문 'e1ef58546901bd7844d0b071a69f829a' (cert-bind-v1 · hex32 이어야)",
+  "end cert fp_face_plan differs": "sv_cf| 아래 끝 증서 결합 칸 ['fp_face_plan'] ≠ 주 해 증서 — 다른 런 · 다른 계획의 증서 (10-23 RCA2-04)",
+  "ratio_cert_interval list of strings": "sv_cf| 증서 구간 비 칸 ['10.291253935343772', '10.291253935346543'] ≠ 기록의 증서에서 다시 셈 [10.291253935343772, 10.291253935346543] (판정 근거 칸 · 10-23 RCA2-01)",
+  "ratio_cert_interval ints": "sv_cf| 증서 구간 비 칸 [10, 10] ≠ 기록의 증서에서 다시 셈 [10.291253935343772, 10.291253935346543] (판정 근거 칸 · 10-23 RCA2-01)",
+  "G_full_code -0.0": "sv_cf| 아래 끝 computed 인데 G_full -0.0 (유한 양수 — 비의 분자 · 주 해 단자 G)",
+  "kind other counterfactual": "sv_cf| 기록 종류 'counterfactual_cut_sv_faces_all' · requested True — 등록된 반사실 종류 'counterfactual_cut_sv_bridges_keep_self_v1' · requested True 이어야 (이름 대조뿐 · 10-23 사전 공격 리뷰 C5)",
+  "rule field changed": "sv_cf| 기록 규칙 'some_other_rule' ≠ 등록된 끊기 규칙 'sdcp_component_owner_groups_same_piece_continuity_or_covered_through_cut_nonpassing_v1' (이름 대조뿐 · 10-23 사전 공격 리뷰 C5)"
+ }
+}

@@ -1,0 +1,517 @@
+{
+ "C1-k<=c": {
+  "tcj": {
+   "rc": 1,
+   "summary": [
+    "== test_carbon_junction: 125/126 PASS"
+   ],
+   "fails": [
+    "FAIL  QD7 ⑤ 새 칸 결손 · 꼴 · 관계 위반 → 거부 [SVX 아래 끝 새 칸 = n_sv_faces_cut + 1 (빠진 쌍마다 끊은 면 ≥ 1 — 생산자 보장)]",
+    "FAIL: QD7 ⑤ 새 칸 결손 · 꼴 · 관계 위반 → 거부 [SVX 아래 끝 새 칸 = n_sv_faces_cut + 1 (빠진 쌍마다 끊은 면 ≥ 1 — 생산자 보장)]"
+   ]
+  }
+ },
+ "C1-ku-in-[k,k+ne]": {
+  "tcj": {
+   "rc": 1,
+   "summary": [
+    "== test_carbon_junction: 123/126 PASS"
+   ],
+   "fails": [
+    "FAIL  QD7 ⑤ 새 칸 결손 · 꼴 · 관계 위반 → 거부 [QDX 위 끝 새 칸 < 아래 끝 (위 끝 = 아래 끝 계에서 더 뺀 계)]",
+    "FAIL  QD7 ⑤ 새 칸 결손 · 꼴 · 관계 위반 → 거부 [QDX 위 끝 새 칸 > 아래 끝 + n_edges_cut (위 끝에서만 빠진 쌍마다 더 뺀 간선 ≥ 1)]",
+    "FAIL  QD7 ⑥′ 한정 (a′) (b′) — SVX 아래 끝 ← 주 해 증서 + 새 칸만 0 (n_sv_faces_cut 2 그대로) · QD2 ③ 위 끝 ← 주 해 증서 + 위 끝 새 칸만 0 (n_edges_cut 6 그대로) = 받음 (정직한 FLOAT · ",
+    "FAIL: QD7 ⑤ 새 칸 결손 · 꼴 · 관계 위반 → 거부 [QDX 위 끝 새 칸 < 아래 끝 (위 끝 = 아래 끝 계에서 더 뺀 계)] · QD7 ⑤ 새 칸 결손 · 꼴 · 관계 위반 → 거부 [QDX 위 끝 새 칸 > 아래 끝 + n_edges_cut (위 끝"
+   ]
+  }
+ },
+ "C1-lo-k>0-L==M": {
+  "tcj": {
+   "rc": 1,
+   "summary": [
+    "== test_carbon_junction: 122/126 PASS"
+   ],
+   "fails": [
+    "FAIL  QD5 ② 리뷰 A2 — SVX 아래 끝 증서 = 주 해 증서 (G_cut = G_full · 비 1 · 판정 근거 칸 다시 셈 · 바꾼 기록의 사슬 표지 = [] 거짓 clear) → 거부 (끊은 다리 2 인데 아래 끝 그래프 = 주 해 그래프)  ((No",
+    "FAIL  QD5 ② 위 끝이 있는 기록 (QDX) 의 아래 끝 증서 = 주 해 증서 → 거부 (끊은 다리 2)",
+    "FAIL  QD7 ④ 리뷰 A2 — SVX 아래 끝 증서 = 주 해 증서 (끊은 수 그대로) → 거부 (판에 닿는 성분에서 끊은 쌍 2 인데 아래 끝 그래프 = 주 해 그래프)",
+    "FAIL  QD7 ⑤ 새 칸 결손 · 꼴 · 관계 위반 → 거부 [FLOAT 아래 끝 새 칸 1 (아래 끝 그래프 = 주 해 — 빠진 쌍 1 이면 작아야)]"
+   ]
+  }
+ },
+ "C1-lo-k==0-L!=M": {
+  "tcj": {
+   "rc": 1,
+   "summary": [
+    "== test_carbon_junction: 125/126 PASS"
+   ],
+   "fails": [
+    "FAIL  QD7 ⑤ 새 칸 결손 · 꼴 · 관계 위반 → 거부 [SVX 아래 끝 새 칸 0 (아래 끝 그래프 ≠ 주 해 — 빠진 쌍 0 = 같은 계여야)]",
+    "FAIL: QD7 ⑤ 새 칸 결손 · 꼴 · 관계 위반 → 거부 [SVX 아래 끝 새 칸 0 (아래 끝 그래프 ≠ 주 해 — 빠진 쌍 0 = 같은 계여야)]"
+   ]
+  }
+ },
+ "C1-up-reach>0-U==M": {
+  "tcj": {
+   "rc": 1,
+   "summary": [
+    "== test_carbon_junction: 123/126 PASS"
+   ],
+   "fails": [
+    "FAIL  QD5 ② 위 끝 증서 = 주 해 증서 (일관 편집) → 거부 [QD2 ③ (아래 끝 끊은 것 없음 · 위 끝 덩어리 셀 간선 6 뺌)]",
+    "FAIL  QD5 ② 위 끝 증서 = 주 해 증서 (일관 편집) → 거부 [다섯째 판–판 길 (위 끝 간선 12 뺌)]",
+    "FAIL  QD7 ④ QD2 ③ 위 끝 증서 = 주 해 증서 (끊은 수 그대로) → 거부 (위 끝이 판에 닿는 성분에서 끊은 쌍 > 0 인데 = 주 해)",
+    "FAIL: QD5 ② 위 끝 증서 = 주 해 증서 (일관 편집) → 거부 [QD2 ③ (아래 끝 끊은 것 없음 · 위 끝 덩어리 셀 간선 6 뺌)] · QD5 ② 위 끝 증서 = 주 해 증서 (일관 편집) → 거부 [다섯째 판–판 길 (위 끝 간선 12 뺌)] · QD"
+   ]
+  }
+ },
+ "C1-up-reach==0-U!=M": {
+  "tcj": {
+   "rc": 1,
+   "summary": [
+    "== test_carbon_junction: 125/126 PASS"
+   ],
+   "fails": [
+    "FAIL  QD7 ⑤ 새 칸 결손 · 꼴 · 관계 위반 → 거부 [QD2 ③ 위 끝 새 칸 0 (판 결합 0 · 위 끝 그래프 ≠ 주 해)]",
+    "FAIL: QD7 ⑤ 새 칸 결손 · 꼴 · 관계 위반 → 거부 [QD2 ③ 위 끝 새 칸 0 (판 결합 0 · 위 끝 그래프 ≠ 주 해)]"
+   ]
+  }
+ },
+ "C1-up-plate-diff==npc": {
+  "tcj": {
+   "rc": 1,
+   "summary": [
+    "== test_carbon_junction: 125/126 PASS"
+   ],
+   "fails": [
+    "FAIL  QD5 ④ 증서 위상 수 편집 → 거부 [QD11R 위 끝 아래 판 결합 + 1 (주 해 판 결합 합 − 위 끝 합 = n_plate_couplings_cut 1)]",
+    "FAIL: QD5 ④ 증서 위상 수 편집 → 거부 [QD11R 위 끝 아래 판 결합 + 1 (주 해 판 결합 합 − 위 끝 합 = n_plate_couplings_cut 1)]"
+   ]
+  }
+ },
+ "C1-(7)-upper-c==lower-c": {
+  "tcj": {
+   "rc": 1,
+   "summary": [
+    "== test_carbon_junction: 125/126 PASS"
+   ],
+   "fails": [
+    "FAIL  QD5 ③ QD2 ① 위 끝 (+∞ · 푼 끝) n_sv_faces_cut 1 ≠ 아래 끝 0 → 거부 (위 끝 상태와 무관하게 같은 수)",
+    "FAIL: QD5 ③ QD2 ① 위 끝 (+∞ · 푼 끝) n_sv_faces_cut 1 ≠ 아래 끝 0 → 거부 (위 끝 상태와 무관하게 같은 수)"
+   ]
+  }
+ },
+ "C1-lo-plates==M": {
+  "tcj": {
+   "rc": 1,
+   "summary": [
+    "== test_carbon_junction: 125/126 PASS"
+   ],
+   "fails": [
+    "FAIL  QD5 ④ 증서 위상 수 편집 → 거부 [SVX 아래 끝 위 판 결합 수 + 1 (아래 끝 = 같은 판 입력 · 판 결합 수 = 주 해)]",
+    "FAIL: QD5 ④ 증서 위상 수 편집 → 거부 [SVX 아래 끝 위 판 결합 수 + 1 (아래 끝 = 같은 판 입력 · 판 결합 수 = 주 해)]"
+   ]
+  }
+ },
+ "C1-lo-c==0-L!=M": {
+  "tcj": {
+   "rc": 0,
+   "summary": [
+    "== test_carbon_junction: 126/126 PASS"
+   ],
+   "fails": []
+  },
+  "trc": {
+   "rc": 0,
+   "summary": [
+    "test_rint_r_chain: 16/16 PASS (16.7 s)"
+   ],
+   "fails": []
+  },
+  "b6S": {
+   "rc": 0,
+   "summary": [
+    "270 PASS · 0 FAIL"
+   ],
+   "fails": []
+  }
+ },
+ "C1-up-cut0-U!=M": {
+  "tcj": {
+   "rc": 1,
+   "summary": [
+    "== test_carbon_junction: 125/126 PASS"
+   ],
+   "fails": [
+    "FAIL  QD5 ⑤ 가려진 관계 → 그 문장으로 거부 [C1-k QD2 ③ 아래 끝 unconverged + 위 끝 n_edges_cut 0 (끊은 다리 0 · 판 결합 0 · 위 끝 그래프 ≠ 주 해)]  (sv_cf| 위 끝 n_reach_pairs_cut 6 ∉",
+    "FAIL: QD5 ⑤ 가려진 관계 → 그 문장으로 거부 [C1-k QD2 ③ 아래 끝 unconverged + 위 끝 n_edges_cut 0 (끊은 다리 0 · 판 결합 0 · 위 끝 그래프 ≠ 주 해)]"
+   ]
+  }
+ },
+ "C1-up<=lo": {
+  "tcj": {
+   "rc": 1,
+   "summary": [
+    "== test_carbon_junction: 125/126 PASS"
+   ],
+   "fails": [
+    "FAIL  QD5 ④ 증서 위상 수 편집 → 거부 [QDX 위 끝 간선 = 아래 끝 + 1 (위 끝 ≤ 아래 끝 · 더 뺀 판)]",
+    "FAIL: QD5 ④ 증서 위상 수 편집 → 거부 [QDX 위 끝 간선 = 아래 끝 + 1 (위 끝 ≤ 아래 끝 · 더 뺀 판)]"
+   ]
+  }
+ },
+ "C1-up-ne0npc0-U!=L": {
+  "tcj": {
+   "rc": 1,
+   "summary": [
+    "== test_carbon_junction: 125/126 PASS"
+   ],
+   "fails": [
+    "FAIL  QD5 ⑤ 가려진 관계 → 그 문장으로 거부 [C1-j QDX 위 끝 n_edges_cut 0 (판 결합 0 · 더 뺀 것 없음 주장 · 위 끝 그래프 ≠ 아래 끝)]  (sv_cf| 위 끝 n_reach_pairs_cut 8 ∉ [아래 끝 2, 아래 끝 +",
+    "FAIL: QD5 ⑤ 가려진 관계 → 그 문장으로 거부 [C1-j QDX 위 끝 n_edges_cut 0 (판 결합 0 · 더 뺀 것 없음 주장 · 위 끝 그래프 ≠ 아래 끝)]"
+   ]
+  }
+ },
+ "C1-topo-off": {
+  "tcj": {
+   "rc": 1,
+   "summary": [
+    "== test_carbon_junction: 87/126 PASS"
+   ],
+   "fails": [
+    "FAIL  QD5 ② 리뷰 A2 — SVX 아래 끝 증서 = 주 해 증서 (G_cut = G_full · 비 1 · 판정 근거 칸 다시 셈 · 바꾼 기록의 사슬 표지 = [] 거짓 clear) → 거부 (끊은 다리 2 인데 아래 끝 그래프 = 주 해 그래프)  ((No",
+    "FAIL  QD5 ② 위 끝 증서 = 주 해 증서 (일관 편집) → 거부 [QD2 ③ (아래 끝 끊은 것 없음 · 위 끝 덩어리 셀 간선 6 뺌)]",
+    "FAIL  QD5 ② 위 끝 증서 = 주 해 증서 (일관 편집) → 거부 [다섯째 판–판 길 (위 끝 간선 12 뺌)]",
+    "FAIL  QD5 ② 위 끝이 있는 기록 (QDX) 의 아래 끝 증서 = 주 해 증서 → 거부 (끊은 다리 2)"
+   ]
+  }
+ },
+ "C1-proj-no-topo": {
+  "tcj": {
+   "rc": 1,
+   "summary": [
+    "== test_carbon_junction: 55/88 PASS"
+   ],
+   "fails": [
+    "FAIL  QD3 ① 판정문 실제 반례 꼴 (SVX · 첫 선형 해에만 +1e-8 · 증서 켬) — 주 해 · 아래 끝 증서 통과 · nominal < 문턱 < 증서 구간 아래비 ≤ 손 회로 참 비 ≤ 위비 · 사슬 = SV_DEPENDENT (옛 nominal 판정 ",
+    "FAIL  QD3 ② 정확 풀이 (증서 켬) — 증서 구간 ∋ 손 회로 참 비 · 문턱 = 아래비 × (1 − 1e-9) → SV_DEPENDENT · 위비 × (1 + 1e-9) → 표지 없음 · 검증기 받음  ([10.291253935343772, 10.291253",
+    "FAIL  QD3 ⑤ 괄호 회로 (QD2 ③ · 못 가른 덩어리 1 · 증서 켬) — 아래비 ≤ 아래 끝 손 참값 1 · 손 참 비 (다리만 끊음) ∈ [아래비, 위비] · 위 끝 손 참값 ≤ 위비 · 검증기 받음  ([0.9999999999999434, 2.28980",
+    "FAIL  QD3 ⑥ 한 끝 실패 (위 끝 풀이 증서 실패) — 위 끝 상태 unconverged · 위비 None · 문턱 1.5 (≥ 아래비) → SV_UNCHECKED (못 읽음) · 문턱 0.5 (< 아래비) → SV_DEPENDENT (아래만으로) · 검증기 "
+   ]
+  }
+ },
+ "C1-up<=M": {
+  "tcj": {
+   "rc": 1,
+   "summary": [
+    "== test_carbon_junction: 125/126 PASS"
+   ],
+   "fails": [
+    "FAIL  QD5 ⑤ 가려진 관계 → 그 문장으로 거부 [C1-g QDX 아래 끝 unconverged + 위 끝 dof = 주 해 + 1 (아래 끝 위상 수 없음 → 위 끝 ≤ 주 해 하나)]",
+    "FAIL: QD5 ⑤ 가려진 관계 → 그 문장으로 거부 [C1-g QDX 아래 끝 unconverged + 위 끝 dof = 주 해 + 1 (아래 끝 위상 수 없음 → 위 끝 ≤ 주 해 하나)]"
+   ]
+  }
+ },
+ "C1-lo<=M": {
+  "tcj": {
+   "rc": 1,
+   "summary": [
+    "== test_carbon_junction: 124/126 PASS"
+   ],
+   "fails": [
+    "FAIL  QD5 ⑤ 가려진 관계 → 그 문장으로 거부 [C1-d SVX 아래 끝 간선 = 주 해 + 1 (끊은 다리 2 · 판 결합 같음 · 부분 그래프 ≤ 주 해)]",
+    "FAIL  QD5 ⑤ 가려진 관계 → 그 문장으로 거부 [C1-d SVX 아래 끝 dof = 주 해 + 1]",
+    "FAIL: QD5 ⑤ 가려진 관계 → 그 문장으로 거부 [C1-d SVX 아래 끝 간선 = 주 해 + 1 (끊은 다리 2 · 판 결합 같음 · 부분 그래프 ≤ 주 해)] · QD5 ⑤ 가려진 관계 → 그 문장으로 거부 [C1-d SVX 아래 끝 dof = 주 해 + 1"
+   ]
+  }
+ },
+ "C5-kind-prefix": {
+  "tcj": {
+   "rc": 0,
+   "summary": [
+    "== test_carbon_junction: 126/126 PASS"
+   ],
+   "fails": []
+  },
+  "trc": {
+   "rc": 1,
+   "summary": [
+    "test_rint_r_chain: 15/16 PASS (17.3 s)   FAILED: ['V35']"
+   ],
+   "fails": [
+    "FAIL  V35 ★ 10-23 (사전 공격 리뷰 C5 · 1저자 Q14 (가)) 끝-끝 — 가짜 러너가 SV 반사실 기록의 종류를 옛 이름 (counterfactual_cut_sv_faces) · 규칙을 다른 이름으로 쓰면 정본 기록 계약 (ca_ext_record_"
+   ]
+  }
+ },
+ "C5-rule-off": {
+  "tcj": {
+   "rc": 0,
+   "summary": [
+    "== test_carbon_junction: 126/126 PASS"
+   ],
+   "fails": []
+  },
+  "trc": {
+   "rc": 1,
+   "summary": [
+    "test_rint_r_chain: 15/16 PASS (17.3 s)   FAILED: ['V35']"
+   ],
+   "fails": [
+    "FAIL  V35 ★ 10-23 (사전 공격 리뷰 C5 · 1저자 Q14 (가)) 끝-끝 — 가짜 러너가 SV 반사실 기록의 종류를 옛 이름 (counterfactual_cut_sv_faces) · 규칙을 다른 이름으로 쓰면 정본 기록 계약 (ca_ext_record_"
+   ]
+  }
+ },
+ "C5-rule-not-projected": {
+  "tcj": {
+   "rc": 1,
+   "summary": [
+    "== test_carbon_junction: 44/126 PASS"
+   ],
+   "fails": [
+    "FAIL  QD2 ⑧ 원장 census 의 못 가른 덩어리 수를 0 으로 변조 (지문 밖) — 위 끝 = 다시 가른 원장과 다름 → 풀지 않음 (위 끝 상태 unsplit_census_mismatch · 다시 가른 수 1 (덩어리 하나) · 사유) · ★ 10-23 (",
+    "FAIL  QD2 ⑨ 주 해 미수렴 (조기 기록 main_unconverged) — 옛 칸 그대로 (비 · 표지 · 증서 · backend None) + 못 가른 덩어리 1 · 위 끝 = 같은 상태 (풀이 없음) · 검증기 받음 · 사슬 = SV_UNCHECKED  (",
+    "FAIL  QD3 ① 판정문 실제 반례 꼴 (SVX · 첫 선형 해에만 +1e-8 · 증서 켬) — 주 해 · 아래 끝 증서 통과 · nominal < 문턱 < 증서 구간 아래비 ≤ 손 회로 참 비 ≤ 위비 · 사슬 = SV_DEPENDENT (옛 nominal 판정 ",
+    "FAIL  QD3 ② 정확 풀이 (증서 켬) — 증서 구간 ∋ 손 회로 참 비 · 문턱 = 아래비 × (1 − 1e-9) → SV_DEPENDENT · 위비 × (1 + 1e-9) → 표지 없음 · 검증기 받음  ([10.291253935343772, 10.291253"
+   ]
+  }
+ },
+ "P-parallel-filter-off": {
+  "tcj": {
+   "rc": 1,
+   "summary": [
+    "== test_carbon_junction: 123/126 PASS"
+   ],
+   "fails": [
+    "FAIL  QD7 ① 생산자 기록 받음 · 새 칸 (끝마다 정수 · ≤ 옛 칸 · 위 끝 ∈ [아래, 아래 + n_edges_cut]) · 비를 싣는 끝마다 새 칸 (+ 판 결합) > 0 ⇔ 증서 위상 수 ≠ 주 해 [PAR c 1 (병렬 간선 · 축약 2)]  (('",
+    "FAIL  QD7 ③ 병렬 간선 꼴 (S3 c = 1 · 축약 2) — 끊은 다리 면 1 · 판에 닿는 성분에서 끊은 쌍 0 (같은 두 dof 를 잇는 남는 면) · 아래 끝 증서 위상 수 = 주 해 · 계약 받음 / 대조 c 없음 (축약 0) — 끊은 쌍 1 · 아래",
+    "FAIL  QD7 ⑦ 모티프 합성 무작위 침대 (시드 0–39 × c 없음 · 1) — 생산자 기록마다 새 칸 관계 (⇔ · ≤) · 계약 받음 · 옛 판정이면 거짓 거부였을 기록 (아래 끝 · 위 끝) > 0 (판별력)  ({'records': 80, 'bad': [",
+    "FAIL: QD7 ① 생산자 기록 받음 · 새 칸 (끝마다 정수 · ≤ 옛 칸 · 위 끝 ∈ [아래, 아래 + n_edges_cut]) · 비를 싣는 끝마다 새 칸 (+ 판 결합) > 0 ⇔ 증서 위상 수 ≠ 주 해 [PAR c 1 (병렬 간선 · 축약 2)] · QD"
+   ]
+  }
+ },
+ "P-reach-filter-off": {
+  "tcj": {
+   "rc": 1,
+   "summary": [
+    "== test_carbon_junction: 121/126 PASS"
+   ],
+   "fails": [
+    "FAIL  QD7 ① 생산자 기록 받음 · 새 칸 (끝마다 정수 · ≤ 옛 칸 · 위 끝 ∈ [아래, 아래 + n_edges_cut]) · 비를 싣는 끝마다 새 칸 (+ 판 결합) > 0 ⇔ 증서 위상 수 ≠ 주 해 [FLOAT (끊은 다리가 떠 있는 섬에만)]  ((",
+    "FAIL  QD7 ① 생산자 기록 받음 · 새 칸 (끝마다 정수 · ≤ 옛 칸 · 위 끝 ∈ [아래, 아래 + n_edges_cut]) · 비를 싣는 끝마다 새 칸 (+ 판 결합) > 0 ⇔ 증서 위상 수 ≠ 주 해 [UFLOAT (위 끝이 뺀 덩어리가 떠 있는 성분에",
+    "FAIL  QD7 ② FLOAT (끊은 다리 2 가 판에 닿지 않는 섬에만) — 끊은 다리 면 2 · census 끊을 면 행 2 · 판에 닿는 성분에서 끊은 쌍 0 · 아래 끝 증서 위상 수 = 주 해 · 비 1 · 계약 받음 · 사슬 표지 (문턱 2) = [] (원",
+    "FAIL  QD7 ③′ 위 끝 FLOAT (못 가른 덩어리 1 이 판에 닿지 않는 성분) — 위 끝 computed · 더 뺀 간선 6 · 판 결합 0 · 위 끝 판에 닿는 성분에서 끊은 쌍 0 · 위 끝 증서 위상 수 = 주 해 · 계약 받음  ((1, {'statu"
+   ]
+  }
+ },
+ "P-upper-main-plates-off": {
+  "tcj": {
+   "rc": 1,
+   "summary": [
+    "== test_carbon_junction: 125/126 PASS"
+   ],
+   "fails": [
+    "FAIL  QD7 ③″ 덩어리를 통해서만 판에 닿는 성분 (UPLATE) — 위 끝 computed · 더 뺀 간선 6 · 판 결합 1 · 위 끝 판에 닿는 성분에서 끊은 쌍 6 (= 뺀 간선 쌍 전부 · 주 계에서 그 성분은 판에 닿는다) · 아래 끝 0 · 위 끝 ",
+    "FAIL: QD7 ③″ 덩어리를 통해서만 판에 닿는 성분 (UPLATE) — 위 끝 computed · 더 뺀 간선 6 · 판 결합 1 · 위 끝 판에 닿는 성분에서 끊은 쌍 6 (= 뺀 간선 쌍 전부 · 주 계에서 그 성분은 판에 닿는다) · 아래 끝 0 · 위 끝 "
+   ]
+  }
+ },
+ "R-readrun-topo-off": {
+  "tcj": {
+   "rc": 0,
+   "summary": [
+    "== test_carbon_junction: 126/126 PASS"
+   ],
+   "fails": []
+  },
+  "trc": {
+   "rc": 1,
+   "summary": [
+    "test_rint_r_chain: 15/16 PASS (17.1 s)   FAILED: ['V32']"
+   ],
+   "fails": [
+    "FAIL  V32 ★ 10-23 (사전 공격 리뷰 C1 · 1저자 Q12 (가)) 기록에 실은 주 해 증서의 위상 수 ≠ 이 런의 주 증서 (간선 수만 + 1 · 끝 ≤ 주 해 그대로 = 기록 계약은 받음) → 사슬 read_run 대조가 잡는다: 예측 STOPPED "
+   ]
+  }
+ },
+ "C3-origin-check-off": {
+  "tcj": {
+   "rc": 0,
+   "summary": [
+    "== test_carbon_junction: 126/126 PASS"
+   ],
+   "fails": []
+  },
+  "trc": {
+   "rc": 1,
+   "summary": [
+    "test_rint_r_chain: 12/16 PASS (16.3 s)   FAILED: ['U17', 'U19', 'M49', 'V33']"
+   ],
+   "fails": [
+    "FAIL  U17 ★ 10-23 (Codex 재검토 RCA2-09 · 1저자 Q8 (가)) DBE R 단조 방어 검사 (예측 · 이미 구한 값 · 증서 구간끼리 · 같은 최종 추정량) — 판정문 꼴 4.2 / 4.7 / 4.4 → R_MONOTONE_VIOLATION ",
+    "FAIL  U19 ★ 10-23 (사전 공격 리뷰 C3 · 1저자 Q13 (가)) R 단조 검사 = 최종 추정량 + 같은 모서리의 이미 구한 origin 마다 — 리뷰 R1 (넘침 없는 모서리 arm 1) · R1c (넘친 모서리 arm 0) · R1d (넘친 모서리 ",
+    "FAIL  M49 ★ 10-23 변이: origin 마다 검사 끔 (최종 추정량만 · 옛 판) → U19 R1 · R1c · R1d 가 떨어진다 (변이 전 통과 확인)   (False, [('정상 → 통과 · origins 3 · 다 ok', False, 'PREDIC",
+    "FAIL  V33 ★ 10-23 (사전 공격 리뷰 C3 · 1저자 Q13 (가)) 끝-끝 — 가짜 러너 세계에서 DBE R_j,lo 런의 origin 팔 1 만 0.9 배 (그 origin 의 세 R 이 단조와 모순 · 최종 추정량은 단조) → 예측 STOPPED · "
+   ]
+  }
+ },
+ "C3-origin8-not-recorded": {
+  "tcj": {
+   "rc": 0,
+   "summary": [
+    "== test_carbon_junction: 126/126 PASS"
+   ],
+   "fails": []
+  },
+  "trc": {
+   "rc": 1,
+   "summary": [
+    "test_rint_r_chain: 14/16 PASS (16.5 s)   FAILED: ['U19', 'M49']"
+   ],
+   "fails": [
+    "FAIL  U19 ★ 10-23 (사전 공격 리뷰 C3 · 1저자 Q13 (가)) R 단조 검사 = 최종 추정량 + 같은 모서리의 이미 구한 origin 마다 — 리뷰 R1 (넘침 없는 모서리 arm 1) · R1c (넘친 모서리 arm 0) · R1d (넘친 모서리 ",
+    "FAIL  M49 ★ 10-23 변이: origin 마다 검사 끔 (최종 추정량만 · 옛 판) → U19 R1 · R1c · R1d 가 떨어진다 (변이 전 통과 확인)   (False, [('R1c 넘친 모서리 arm 0 비단조 → 멈춤 · corner_a0 · 최종 "
+   ]
+  }
+ },
+ "C3-origin12-not-recorded": {
+  "tcj": {
+   "rc": 0,
+   "summary": [
+    "== test_carbon_junction: 126/126 PASS"
+   ],
+   "fails": []
+  },
+  "trc": {
+   "rc": 1,
+   "summary": [
+    "test_rint_r_chain: 12/16 PASS (16.3 s)   FAILED: ['U17', 'U19', 'M49', 'V33']"
+   ],
+   "fails": [
+    "FAIL  U17 ★ 10-23 (Codex 재검토 RCA2-09 · 1저자 Q8 (가)) DBE R 단조 방어 검사 (예측 · 이미 구한 값 · 증서 구간끼리 · 같은 최종 추정량) — 판정문 꼴 4.2 / 4.7 / 4.4 → R_MONOTONE_VIOLATION ",
+    "FAIL  U19 ★ 10-23 (사전 공격 리뷰 C3 · 1저자 Q13 (가)) R 단조 검사 = 최종 추정량 + 같은 모서리의 이미 구한 origin 마다 — 리뷰 R1 (넘침 없는 모서리 arm 1) · R1c (넘친 모서리 arm 0) · R1d (넘친 모서리 ",
+    "FAIL  M49 ★ 10-23 변이: origin 마다 검사 끔 (최종 추정량만 · 옛 판) → U19 R1 · R1c · R1d 가 떨어진다 (변이 전 통과 확인)   (False, [('정상 → 통과 · origins 3 · 다 ok', False, 'PREDIC",
+    "FAIL  V33 ★ 10-23 (사전 공격 리뷰 C3 · 1저자 Q13 (가)) 끝-끝 — 가짜 러너 세계에서 DBE R_j,lo 런의 origin 팔 1 만 0.9 배 (그 origin 의 세 R 이 단조와 모순 · 최종 추정량은 단조) → 예측 STOPPED · "
+   ]
+  }
+ },
+ "C4-old-band": {
+  "tcj": {
+   "rc": 0,
+   "summary": [
+    "== test_carbon_junction: 126/126 PASS"
+   ],
+   "fails": []
+  },
+  "trc": {
+   "rc": 1,
+   "summary": [
+    "test_rint_r_chain: 14/16 PASS (16.2 s)   FAILED: ['U20', 'M50']"
+   ],
+   "fails": [
+    "FAIL  U20 ★ 10-23 (사전 공격 리뷰 C4) R 단조 띠 = 팔 기록의 증서 목표량 구간 × 증서 scale (정확 분수) — 리뷰 R2 (맞닿음 · 옛 띠는 떨어짐) → 모순 아님 · 예측 통과 · 한 ULP 떨어짐 → 모순 · 예측 R_MONOTONE_",
+    "FAIL  M50 ★ 10-23 변이: 띠 = 옛 [σ(1 − e), σ(1 + e)] (float e · 증서 구간 무시) → U20 (R2 맞닿음 · 증서 칸 못 읽음) 이 떨어진다 (변이 전 통과 확인)   (False, [('R2 맞닿음 → 모순 아님 (옛 띠는"
+   ]
+  }
+ },
+ "C4-band-collapse-lo": {
+  "tcj": {
+   "rc": 0,
+   "summary": [
+    "== test_carbon_junction: 126/126 PASS"
+   ],
+   "fails": []
+  },
+  "trc": {
+   "rc": 1,
+   "summary": [
+    "test_rint_r_chain: 11/16 PASS (16.4 s)   FAILED: ['U17', 'U19', 'M49', 'U20', 'M50']"
+   ],
+   "fails": [
+    "FAIL  U17 ★ 10-23 (Codex 재검토 RCA2-09 · 1저자 Q8 (가)) DBE R 단조 방어 검사 (예측 · 이미 구한 값 · 증서 구간끼리 · 같은 최종 추정량) — 판정문 꼴 4.2 / 4.7 / 4.4 → R_MONOTONE_VIOLATION ",
+    "FAIL  U19 ★ 10-23 (사전 공격 리뷰 C3 · 1저자 Q13 (가)) R 단조 검사 = 최종 추정량 + 같은 모서리의 이미 구한 origin 마다 — 리뷰 R1 (넘침 없는 모서리 arm 1) · R1c (넘친 모서리 arm 0) · R1d (넘친 모서리 ",
+    "FAIL  M49 ★ 10-23 변이: origin 마다 검사 끔 (최종 추정량만 · 옛 판) → U19 R1 · R1c · R1d 가 떨어진다 (변이 전 통과 확인)   (False, [('origin 띠 안 비단조 → 통과', False, 'R_MONOTONE_VI",
+    "FAIL  U20 ★ 10-23 (사전 공격 리뷰 C4) R 단조 띠 = 팔 기록의 증서 목표량 구간 × 증서 scale (정확 분수) — 리뷰 R2 (맞닿음 · 옛 띠는 떨어짐) → 모순 아님 · 예측 통과 · 한 ULP 떨어짐 → 모순 · 예측 R_MONOTONE_"
+   ]
+  }
+ },
+ "C4-touch=stop": {
+  "tcj": {
+   "rc": 0,
+   "summary": [
+    "== test_carbon_junction: 126/126 PASS"
+   ],
+   "fails": []
+  },
+  "trc": {
+   "rc": 1,
+   "summary": [
+    "test_rint_r_chain: 14/16 PASS (16.6 s)   FAILED: ['U20', 'M50']"
+   ],
+   "fails": [
+    "FAIL  U20 ★ 10-23 (사전 공격 리뷰 C4) R 단조 띠 = 팔 기록의 증서 목표량 구간 × 증서 scale (정확 분수) — 리뷰 R2 (맞닿음 · 옛 띠는 떨어짐) → 모순 아님 · 예측 통과 · 한 ULP 떨어짐 → 모순 · 예측 R_MONOTONE_",
+    "FAIL  M50 ★ 10-23 변이: 띠 = 옛 [σ(1 − e), σ(1 + e)] (float e · 증서 구간 무시) → U20 (R2 맞닿음 · 증서 칸 못 읽음) 이 떨어진다 (변이 전 통과 확인)   (False, [('R2 맞닿음 → 모순 아님 (옛 띠는"
+   ]
+  }
+ },
+ "C4-no-field-check": {
+  "tcj": {
+   "rc": 0,
+   "summary": [
+    "== test_carbon_junction: 126/126 PASS"
+   ],
+   "fails": []
+  },
+  "trc": {
+   "rc": 1,
+   "summary": [
+    "test_rint_r_chain: 14/16 PASS (16.2 s)   FAILED: ['U20', 'M50']"
+   ],
+   "fails": [
+    "FAIL  U20 ★ 10-23 (사전 공격 리뷰 C4) R 단조 띠 = 팔 기록의 증서 목표량 구간 × 증서 scale (정확 분수) — 리뷰 R2 (맞닿음 · 옛 띠는 떨어짐) → 모순 아님 · 예측 통과 · 한 ULP 떨어짐 → 모순 · 예측 R_MONOTONE_",
+    "FAIL  M50 ★ 10-23 변이: 띠 = 옛 [σ(1 − e), σ(1 + e)] (float e · 증서 구간 무시) → U20 (R2 맞닿음 · 증서 칸 못 읽음) 이 떨어진다 (변이 전 통과 확인)   TypeError: argument should be a"
+   ]
+  }
+ },
+ "C4-readrun-no-fields": {
+  "tcj": {
+   "rc": 0,
+   "summary": [
+    "== test_carbon_junction: 126/126 PASS"
+   ],
+   "fails": []
+  },
+  "trc": {
+   "rc": 1,
+   "summary": [
+    "test_rint_r_chain: 11/16 PASS (15.5 s)   FAILED: ['V28', 'V29', 'V31', 'V33', 'V34']"
+   ],
+   "fails": [
+    "FAIL  V28 ★ 10-23 (Codex 재검토 RCA2-01 · 1저자 Q1 (가)) 판정문 꼴 끝-끝 — 가짜 러너 기록 nominal 비 2·(1 − 1e-7) < 계획 문턱 2.0 인데 자를 끝 증서의 목표량 구간이 게시 G_cut 보다 아래 ([−3e-7,",
+    "FAIL  V29 ★ 10-23 (RCA2-04 · Q1 (가)) 증서 없는 런의 진단 기록 (지위 diagnostic_uncertified · nominal 비 3.0 > 문턱) → 검증기 받음 · 사슬 = SV_UNCHECKED (판정 입력 아님 · SV_DEPEN",
+    "FAIL  V31 ★ 10-23 (RCA2-09) 끝-끝 — 가짜 러너 세계에서 DBE σ(R_j,lo) 를 0.8 배 (R 단조와 모순) → 예측 STOPPED · R_MONOTONE_VIOLATION · rc 3 · 멈춤 문장에 σ 없음   (3, {'cause':",
+    "FAIL  V33 ★ 10-23 (사전 공격 리뷰 C3 · 1저자 Q13 (가)) 끝-끝 — 가짜 러너 세계에서 DBE R_j,lo 런의 origin 팔 1 만 0.9 배 (그 origin 의 세 R 이 단조와 모순 · 최종 추정량은 단조) → 예측 STOPPED · "
+   ]
+  }
+ },
+ "C4-scale-ignored": {
+  "tcj": {
+   "rc": 0,
+   "summary": [
+    "== test_carbon_junction: 126/126 PASS"
+   ],
+   "fails": []
+  },
+  "trc": {
+   "rc": 1,
+   "summary": [
+    "test_rint_r_chain: 9/16 PASS (16.7 s)   FAILED: ['U17', 'U19', 'M49', 'U20', 'M50', 'V31', 'V33']"
+   ],
+   "fails": [
+    "FAIL  U17 ★ 10-23 (Codex 재검토 RCA2-09 · 1저자 Q8 (가)) DBE R 단조 방어 검사 (예측 · 이미 구한 값 · 증서 구간끼리 · 같은 최종 추정량) — 판정문 꼴 4.2 / 4.7 / 4.4 → R_MONOTONE_VIOLATION ",
+    "FAIL  U19 ★ 10-23 (사전 공격 리뷰 C3 · 1저자 Q13 (가)) R 단조 검사 = 최종 추정량 + 같은 모서리의 이미 구한 origin 마다 — 리뷰 R1 (넘침 없는 모서리 arm 1) · R1c (넘친 모서리 arm 0) · R1d (넘친 모서리 ",
+    "FAIL  M49 ★ 10-23 변이: origin 마다 검사 끔 (최종 추정량만 · 옛 판) → U19 R1 · R1c · R1d 가 떨어진다 (변이 전 통과 확인)   (False, [('R1 arm 1 비단조 (넘침 없음) → 멈춤 · origin_a1', Fal",
+    "FAIL  U20 ★ 10-23 (사전 공격 리뷰 C4) R 단조 띠 = 팔 기록의 증서 목표량 구간 × 증서 scale (정확 분수) — 리뷰 R2 (맞닿음 · 옛 띠는 떨어짐) → 모순 아님 · 예측 통과 · 한 ULP 떨어짐 → 모순 · 예측 R_MONOTONE_"
+   ]
+  }
+ }
+}

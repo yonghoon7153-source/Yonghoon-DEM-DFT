@@ -1,0 +1,21 @@
+{
+ "tree": "new_src",
+ "SVX nu=0": {
+  "exact_U_is_float": false,
+  "t (largest float <= U)": 10.29125393534654,
+  "ratio_cert_hi": 10.291253935346543,
+  "hi>=U": true,
+  "flags@t": [
+   "SV_UNCHECKED"
+  ]
+ },
+ "QD2-3 nu=1 finite upper": {
+  "exact_U_is_float": false,
+  "t (largest float <= U)": 2.289808917197574,
+  "ratio_cert_hi": 2.2898089171975746,
+  "hi>=U": true,
+  "flags@t": [
+   "SV_UNCHECKED"
+  ]
+ }
+}

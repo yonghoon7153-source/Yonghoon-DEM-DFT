@@ -1,0 +1,162 @@
+{
+ "QD2-3 census_edit=False": {
+  "contract": "sv_cf| 기록 n_unsplit_bridging_components 0 ≠ 증거 census 1 (기록의 census 사본 = 실제 census · 10-23 RCA2-04)",
+  "base_iv": [
+   0.9999999999999434,
+   2.2898089171975746
+  ],
+  "new_iv": [
+   0.9999999999999434,
+   1.0000000000000566
+  ],
+  "t": 1.2,
+  "flags_base": [
+   "SV_UNCHECKED"
+  ],
+  "flags_attack": []
+ },
+ "QD2-3 census_edit=True": {
+  "contract": "None",
+  "base_iv": [
+   0.9999999999999434,
+   2.2898089171975746
+  ],
+  "new_iv": [
+   0.9999999999999434,
+   1.0000000000000566
+  ],
+  "t": 1.2,
+  "flags_base": [
+   "SV_UNCHECKED"
+  ],
+  "flags_attack": []
+ },
+ "QDX census_edit=False": {
+  "contract": "sv_cf| 기록 n_unsplit_bridging_components 0 ≠ 증거 census 1 (기록의 census 사본 = 실제 census · 10-23 RCA2-04)",
+  "base_iv": [
+   1.3779287471915314,
+   3.155193532582236
+  ],
+  "new_iv": [
+   1.3779287471915314,
+   1.3779287471916901
+  ],
+  "t": 2.0,
+  "flags_base": [
+   "SV_UNCHECKED"
+  ],
+  "flags_attack": []
+ },
+ "QDX census_edit=True": {
+  "contract": "None",
+  "base_iv": [
+   1.3779287471915314,
+   3.155193532582236
+  ],
+  "new_iv": [
+   1.3779287471915314,
+   1.3779287471916901
+  ],
+  "t": 2.0,
+  "flags_base": [
+   "SV_UNCHECKED"
+  ],
+  "flags_attack": []
+ },
+ "RAIL5 census_edit=False": {
+  "contract": "sv_cf| 기록 n_unsplit_bridging_components 0 ≠ 증거 census 2 (기록의 census 사본 = 실제 census · 10-23 RCA2-04)",
+  "base_iv": [
+   0.9999999999999458,
+   5.285714285714569
+  ],
+  "new_iv": [
+   0.9999999999999458,
+   1.0000000000000542
+  ],
+  "t": 1.2,
+  "flags_base": [
+   "SV_UNCHECKED"
+  ],
+  "flags_attack": []
+ },
+ "RAIL5 census_edit=True": {
+  "contract": "None",
+  "base_iv": [
+   0.9999999999999458,
+   5.285714285714569
+  ],
+  "new_iv": [
+   0.9999999999999458,
+   1.0000000000000542
+  ],
+  "t": 1.2,
+  "flags_base": [
+   "SV_UNCHECKED"
+  ],
+  "flags_attack": []
+ },
+ "QD2-1 census_edit=False": {
+  "contract": "sv_cf| 기록 n_unsplit_bridging_components 0 ≠ 증거 census 1 (기록의 census 사본 = 실제 census · 10-23 RCA2-04)",
+  "base_iv": [
+   0.9999999999999343,
+   Infinity
+  ],
+  "new_iv": [
+   0.9999999999999343,
+   1.0000000000000657
+  ],
+  "t": 1.2,
+  "flags_base": [
+   "SV_UNCHECKED"
+  ],
+  "flags_attack": []
+ },
+ "QD2-1 census_edit=True": {
+  "contract": "None",
+  "base_iv": [
+   0.9999999999999343,
+   Infinity
+  ],
+  "new_iv": [
+   0.9999999999999343,
+   1.0000000000000657
+  ],
+  "t": 1.2,
+  "flags_base": [
+   "SV_UNCHECKED"
+  ],
+  "flags_attack": []
+ },
+ "QD4 census_edit=False": {
+  "contract": "sv_cf| 기록 n_unsplit_bridging_components 0 ≠ 증거 census 2 (기록의 census 사본 = 실제 census · 10-23 RCA2-04)",
+  "base_iv": [
+   0.9999999999999459,
+   Infinity
+  ],
+  "new_iv": [
+   0.9999999999999459,
+   1.0000000000000542
+  ],
+  "t": 1.2,
+  "flags_base": [
+   "SV_UNCHECKED"
+  ],
+  "flags_attack": []
+ },
+ "QD4 census_edit=True": {
+  "contract": "None",
+  "base_iv": [
+   0.9999999999999459,
+   Infinity
+  ],
+  "new_iv": [
+   0.9999999999999459,
+   1.0000000000000542
+  ],
+  "t": 1.2,
+  "flags_base": [
+   "SV_UNCHECKED"
+  ],
+  "flags_attack": []
+ }
+}

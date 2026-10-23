@@ -1,0 +1,24 @@
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/preattack2_work/ev_new/registration/probe_registration_current.py", line 249, in <module>
+    if __name__=='__main__': main()
+                             ^^^^^^
+  File "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/preattack2_work/ev_new/registration/probe_registration_current.py", line 241, in main
+    'SBE_origin_union':sbe_origin_union(),'RCA02_and_origin_scope':dbe_origin(),
+                                                                   ^^^^^^^^^^^^
+  File "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/preattack2_work/ev_new/registration/probe_registration_current.py", line 118, in dbe_origin
+    oldcase=predict(lambda r,i,l,c:base(r) if i==0 else other(r))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/preattack2_work/ev_new/registration/probe_registration_current.py", line 42, in predict
+    obj.run()
+  File "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/preattack2_work/new_src/scripts/rint_r_chain.py", line 1875, in run
+    self.adj_band[(c, law, rr)] = mean_band(r8)
+                                  ^^^^^^^^^^^^^
+  File "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/preattack2_work/new_src/scripts/rint_r_chain.py", line 460, in mean_band
+    bs = [arm_band(r) for r in recs]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/preattack2_work/new_src/scripts/rint_r_chain.py", line 460, in <listcomp>
+    bs = [arm_band(r) for r in recs]
+          ^^^^^^^^^^^
+  File "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/preattack2_work/new_src/scripts/rint_r_chain.py", line 451, in arm_band
+    raise Stop('ARM_UNREADABLE', f'증서 목표량 구간 [{lo!r}, {hi!r}] · scale {k!r} — 유한 수 · 0 < 아래 ≤ 위 · scale > 0 이어야 (R 단조 띠 = 그 런 '
+rint_r_chain.Stop: ARM_UNREADABLE: 증서 목표량 구간 [None, None] · scale None — 유한 수 · 0 < 아래 ≤ 위 · scale > 0 이어야 (R 단조 띠 = 그 런 증서 구간 · 10-23 사전 공격 리뷰 C4)

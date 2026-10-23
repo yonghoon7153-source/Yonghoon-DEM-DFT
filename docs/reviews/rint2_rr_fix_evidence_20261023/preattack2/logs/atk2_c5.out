@@ -1,0 +1,20 @@
+{
+ "kind old name counterfactual_cut_sv_faces": "sv_cf| 기록 종류 'counterfactual_cut_sv_faces' · requested True — 등록된 반사실 종류 'counterfactual_cut_sv_bridges_keep_self_v1' · requested True 이어야 (",
+ "kind trailing space": "sv_cf| 기록 종류 'counterfactual_cut_sv_bridges_keep_self_v1 ' · requested True — 등록된 반사실 종류 'counterfactual_cut_sv_bridges_keep_self_v1' · requ",
+ "kind upper-case": "sv_cf| 기록 종류 'COUNTERFACTUAL_CUT_SV_BRIDGES_KEEP_SELF_V1' · requested True — 등록된 반사실 종류 'counterfactual_cut_sv_bridges_keep_self_v1' · reque",
+ "kind None": "sv_cf| 기록 종류 None · requested True — 등록된 반사실 종류 'counterfactual_cut_sv_bridges_keep_self_v1' · requested True 이어야 (이름 대조뿐 · 10-23 사전 공격 리뷰 C",
+ "kind missing": "sv_cf| 기록 종류 None · requested True — 등록된 반사실 종류 'counterfactual_cut_sv_bridges_keep_self_v1' · requested True 이어야 (이름 대조뿐 · 10-23 사전 공격 리뷰 C",
+ "kind fullwidth-ish (Cyrillic a)": "sv_cf| 기록 종류 'counterfаctual_cut_sv_bridges_keep_self_v1' · requested True — 등록된 반사실 종류 'counterfactual_cut_sv_bridges_keep_self_v1' · reque",
+ "rule None": "sv_cf| 기록 규칙 None ≠ 등록된 끊기 규칙 'sdcp_component_owner_groups_same_piece_continuity_or_covered_through_cut_nonpassing_v1' (이름 대조뿐 · 10-23 사전 공격",
+ "rule missing": "sv_cf| 기록 규칙 None ≠ 등록된 끊기 규칙 'sdcp_component_owner_groups_same_piece_continuity_or_covered_through_cut_nonpassing_v1' (이름 대조뿐 · 10-23 사전 공격",
+ "rule trailing newline": "sv_cf| 기록 규칙 'sdcp_component_owner_groups_same_piece_continuity_or_covered_through_cut_nonpassing_v1\\n' ≠ 등록된 끊기 규칙 'sdcp_component_owner_gr",
+ "rule list": "sv_cf| 기록 규칙 ['sdcp_component_owner_groups_same_piece_continuity_or_covered_through_cut_nonpassing_v1'] ≠ 등록된 끊기 규칙 'sdcp_component_owner_gr",
+ "rule = kind": "sv_cf| 기록 규칙 'counterfactual_cut_sv_bridges_keep_self_v1' ≠ 등록된 끊기 규칙 'sdcp_component_owner_groups_same_piece_continuity_or_covered_through_",
+ "requested 1 (int)": "sv_cf| 기록 종류 'counterfactual_cut_sv_bridges_keep_self_v1' · requested 1 — 등록된 반사실 종류 'counterfactual_cut_sv_bridges_keep_self_v1' · requeste",
+ "requested \"true\"": "sv_cf| 기록 종류 'counterfactual_cut_sv_bridges_keep_self_v1' · requested 'true' — 등록된 반사실 종류 'counterfactual_cut_sv_bridges_keep_self_v1' · req",
+ "producer constants equal verifier constants": [
+  true,
+  true
+ ],
+ "base": null
+}

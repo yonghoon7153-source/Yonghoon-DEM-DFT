@@ -1,0 +1,58 @@
+{
+ "C2-M1-plain-div": {
+  "tcj": {
+   "rc": 1,
+   "summary": [
+    "== test_carbon_junction: 122/126 PASS"
+   ],
+   "fails": [
+    "FAIL  QD6 ① 방향 반올림 칼날 [QD2 ③ (위 끝 유한) · t = U 이하 가장 큰 float → SV_UNCHECKED]  ((2.289808917197574, [], 0.9999999999999435, 2.289808917197574))",
+    "FAIL  QD6 ① 방향 반올림 칼날 [QD2 ③ (위 끝 유한) · t = L 이하 가장 큰 float → SV_DEPENDENT 아님 (아래비 = 내림 · SV_UNCHECKED)]  ((0.9999999999999434, ['SV_DEPENDENT'], 0.99",
+    "FAIL  QD6 ① 방향 반올림 칼날 [QD2 ③ (위 끝 유한) · 구간 끝 = [L 이하 가장 큰 float, U 이상 가장 작은 float]]  ((0.9999999999999435, 0.9999999999999434, 2.289808917197574, 2.28",
+    "FAIL  QD6 ② 변이 M7 · M1 이 이 시험에 걸린다 (변이 전 전부 통과 · 변이마다 칼날 하나 이상 실패)  ({'M7 (방향 맞바꿈)': ['SVX (덩어리 0 · 위 끝 = 아래 끝) · t = U 이하 가장 큰 float → SV_UNCHECKED',"
+   ]
+  }
+ },
+ "C2-M7-swapped": {
+  "tcj": {
+   "rc": 1,
+   "summary": [
+    "== test_carbon_junction: 119/126 PASS"
+   ],
+   "fails": [
+    "FAIL  QD6 ① 방향 반올림 칼날 [SVX (덩어리 0 · 위 끝 = 아래 끝) · t = U 이하 가장 큰 float → SV_UNCHECKED]  ((10.29125393534654, [], 10.291253935343773, 10.29125393534654)",
+    "FAIL  QD6 ① 방향 반올림 칼날 [SVX (덩어리 0 · 위 끝 = 아래 끝) · t = L 이하 가장 큰 float → SV_DEPENDENT 아님 (아래비 = 내림 · SV_UNCHECKED)]  ((10.291253935343772, ['SV_DEPENDE",
+    "FAIL  QD6 ① 방향 반올림 칼날 [SVX (덩어리 0 · 위 끝 = 아래 끝) · 구간 끝 = [L 이하 가장 큰 float, U 이상 가장 작은 float]]  ((10.291253935343773, 10.291253935343772, 10.2912539353",
+    "FAIL  QD6 ① 방향 반올림 칼날 [QD2 ③ (위 끝 유한) · t = U 이하 가장 큰 float → SV_UNCHECKED]  ((2.289808917197574, [], 0.9999999999999435, 2.289808917197574))"
+   ]
+  }
+ },
+ "C2-up-only-round": {
+  "tcj": {
+   "rc": 1,
+   "summary": [
+    "== test_carbon_junction: 123/126 PASS"
+   ],
+   "fails": [
+    "FAIL  QD6 ① 방향 반올림 칼날 [QD2 ③ (위 끝 유한) · t = L 이하 가장 큰 float → SV_DEPENDENT 아님 (아래비 = 내림 · SV_UNCHECKED)]  ((0.9999999999999434, ['SV_DEPENDENT'], 0.99",
+    "FAIL  QD6 ① 방향 반올림 칼날 [QD2 ③ (위 끝 유한) · 구간 끝 = [L 이하 가장 큰 float, U 이상 가장 작은 float]]  ((0.9999999999999435, 0.9999999999999434, 2.2898089171975746, 2.2",
+    "FAIL  QD6 ② 변이 M7 · M1 이 이 시험에 걸린다 (변이 전 전부 통과 · 변이마다 칼날 하나 이상 실패)  ({'M7 (방향 맞바꿈)': ['SVX (덩어리 0 · 위 끝 = 아래 끝) · t = U 이하 가장 큰 float → SV_UNCHECKED',",
+    "FAIL: QD6 ① 방향 반올림 칼날 [QD2 ③ (위 끝 유한) · t = L 이하 가장 큰 float → SV_DEPENDENT 아님 (아래비 = 내림 · SV_UNCHECKED)] · QD6 ① 방향 반올림 칼날 [QD2 ③ (위 끝 유한) · 구간 끝 = [L"
+   ]
+  }
+ },
+ "C2-lo-only-round": {
+  "tcj": {
+   "rc": 1,
+   "summary": [
+    "== test_carbon_junction: 123/126 PASS"
+   ],
+   "fails": [
+    "FAIL  QD6 ① 방향 반올림 칼날 [QD2 ③ (위 끝 유한) · t = U 이하 가장 큰 float → SV_UNCHECKED]  ((2.289808917197574, [], 0.9999999999999434, 2.289808917197574))",
+    "FAIL  QD6 ① 방향 반올림 칼날 [QD2 ③ (위 끝 유한) · 구간 끝 = [L 이하 가장 큰 float, U 이상 가장 작은 float]]  ((0.9999999999999434, 0.9999999999999434, 2.289808917197574, 2.28",
+    "FAIL  QD6 ② 변이 M7 · M1 이 이 시험에 걸린다 (변이 전 전부 통과 · 변이마다 칼날 하나 이상 실패)  ({'M7 (방향 맞바꿈)': ['SVX (덩어리 0 · 위 끝 = 아래 끝) · t = U 이하 가장 큰 float → SV_UNCHECKED',",
+    "FAIL: QD6 ① 방향 반올림 칼날 [QD2 ③ (위 끝 유한) · t = U 이하 가장 큰 float → SV_UNCHECKED] · QD6 ① 방향 반올림 칼날 [QD2 ③ (위 끝 유한) · 구간 끝 = [L 이하 가장 큰 float, U 이상 가장 작은 fl"
+   ]
+  }
+ }
+}

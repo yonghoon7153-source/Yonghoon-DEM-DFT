@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/preattack2_work/tools_r1/atk_rmono.py", line 99, in <module>
+    ba, bb = rr.arm_band(A), rr.arm_band(B)
+             ^^^^^^^^^^^^^^
+  File "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/preattack2_work/new_src/scripts/rint_r_chain.py", line 451, in arm_band
+    raise Stop('ARM_UNREADABLE', f'증서 목표량 구간 [{lo!r}, {hi!r}] · scale {k!r} — 유한 수 · 0 < 아래 ≤ 위 · scale > 0 이어야 (R 단조 띠 = 그 런 '
+rint_r_chain.Stop: ARM_UNREADABLE: 증서 목표량 구간 [None, None] · scale None — 유한 수 · 0 < 아래 ≤ 위 · scale > 0 이어야 (R 단조 띠 = 그 런 증서 구간 · 10-23 사전 공격 리뷰 C4)

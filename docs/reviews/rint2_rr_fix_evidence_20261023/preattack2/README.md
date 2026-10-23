@@ -1,0 +1,7 @@
+# 사전 공격 리뷰 2 회차 — 묶음 A′ · A″ + Q9 설계 개정 1 (Rint ② RR · 10-23)
+
+- 독립 에이전트 · 고친 사람 보고 · 지시 (`REPORT_A*` · `BRIEF*`) 안 읽음 · 시작 SHA `a32fcf32f` · 대상 = 코드 diff `fdb48d378..a32fcf32f` + Q9 설계 `docs/reviews/rint2_rr_fix_evidence_20261023/q9_predict_units_design.md` (개정 1) · 판정 = `docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/PREATTACK_A2.md` (코드 P1 0 · P2 1 · P3 3 · Q9 설계 P2 1 · P3 4 · 질문 2).
+- 이 폴더 = 판정 + 그 에이전트가 새로 쓴 탐침 (`tools/`) + 실행기 (`r.sh` · `probes.sh`) + 결과 기록 (`logs/`) + 메인 재확인 (`logs/main_recheck_atk2_census.json`).
+- 작업 폴더 경로가 박힌 세 곳만 환경 변수 `ATK_ROOT` 로 바꿨다 (`tools/mut2.py` 의 `W =` 한 줄 · `r.sh` · `probes.sh` 의 `W=` 한 줄) — 나머지 그대로.  `ATK_ROOT` = 리뷰어 작업 폴더: `new_src/` = `a32fcf32f` 트리 사본 · `tools_r1/` = 1 회차 탐침 사본 (`docs/reviews/rint2_rr_fix_evidence_20261023/preattack/tools/`) · `ev_new/` = 판정문 증거 폴더 사본 (`docs/reviews/codex_rint2_rereview_evidence_20261022/`) · `logs/`.  `logs/` 원자료 안의 `/tmp/claude-0/…/preattack2_work/` 경로 = 그 작업 폴더로 읽는다 (원자료라 고치지 않음).
+- 탐침 실행 = `RINT_REVIEW_SOURCE=<트리> OPENBLAS_NUM_THREADS=1 python3 -I -B tools/<도구>` (출력 = 표준 출력 JSON) · `tools/atk2_census.py` · `tools/atk2_sv.py` · `tools/atk2_rmono.py` · `tools/atk2_c5.py` 는 `RINT_REVIEW_SOURCE` 만 쓴다 (작업 폴더 불요).
+- 메인 재확인 (10-23 · 리포 트리 `46abdde9e` (코드 = `a32fcf32f`) · Linux · Python 3.11 · NumPy 2.4.6 · BLAS 스레드 1): `RINT_REVIEW_SOURCE=<리포> python3 -I -B tools/atk2_census.py` → `logs/main_recheck_atk2_census.json` = X6 재현 (PREATTACK_A2.md 메인 메모).
