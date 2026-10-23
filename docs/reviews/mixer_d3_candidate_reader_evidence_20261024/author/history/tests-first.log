@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/deliverables/scripts/test_mixer_d3_candidates.py", line 19, in <module>
+    spec.loader.exec_module(reader)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1132, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1190, in get_data
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/.cloud-setup/nonrint-20261024/d3/deliverables/scripts/mixer_d3_candidates.py'

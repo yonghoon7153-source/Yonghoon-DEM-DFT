@@ -1,0 +1,43 @@
+{
+  "started_at_utc": "2026-10-23T18:16:49.127Z",
+  "scope": "Live loopback webapp; document visibility and tab interaction only; no simulation or registration.",
+  "phase": "Imported D3 reader working tree before candidate commit",
+  "pages": [
+    {
+      "path": "/",
+      "status": 200,
+      "title": "DEM Analyzer - Dashboard",
+      "javascript_errors": []
+    },
+    {
+      "path": "/mixer",
+      "status": 200,
+      "title": "믹서 개발 이력 — DEM/MPM Analyzer",
+      "latest_version": "19",
+      "easy_development_label_visible": true,
+      "detail_required_tokens": [
+        "python3 -I scripts/mixer_d3_candidates.py",
+        "--contract",
+        "--observations",
+        "UNASSESSED",
+        "all-compatible / mixed / none-compatible / incomplete",
+        "V2-Q1–Q4",
+        "비준"
+      ],
+      "easy_detail_roundtrip": "PASS",
+      "javascript_errors": []
+    },
+    {
+      "path": "/hetero",
+      "status": 200,
+      "title": "이종기술",
+      "javascript_errors": []
+    }
+  ],
+  "branch": "codex/mixer-d3-design",
+  "head_before_candidate": "d5ab56ba9a9416e5cae2becf3c85b7c54d30d1d2",
+  "devlog_sha256": "e58b436fd1032b50f03177985615d284b6f21d94a76ba6cebd22f1a59922e4ec",
+  "reader_sha256": "ea4528156e8eb9762999fef0643985bebf0b0735691202fddb4a2c17814ee7f8",
+  "status": "PASS",
+  "finished_at_utc": "2026-10-23T18:16:52.333Z"
+}

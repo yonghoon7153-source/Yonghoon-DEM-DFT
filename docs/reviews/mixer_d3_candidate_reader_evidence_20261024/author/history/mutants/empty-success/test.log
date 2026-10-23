@@ -1,0 +1,17 @@
+test_empty_grid_result_not_validation_success (__main__.DecisionTests.test_empty_grid_result_not_validation_success) ... FAIL
+
+======================================================================
+FAIL: test_empty_grid_result_not_validation_success (__main__.DecisionTests.test_empty_grid_result_not_validation_success)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/empty-success/test_mixer_d3_candidates.py", line 151, in test_empty_grid_result_not_validation_success
+    self.assertEqual(out["validation"]["aggregate"], "not-applicable")
+AssertionError: 'all-compatible' != 'not-applicable'
+- all-compatible
++ not-applicable
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (failures=1)

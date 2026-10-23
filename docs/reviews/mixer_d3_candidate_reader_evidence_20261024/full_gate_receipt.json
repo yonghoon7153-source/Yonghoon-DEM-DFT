@@ -1,0 +1,6 @@
+{
+  "status": "PENDING",
+  "scope": "Root must run the complete repository gate on the integrated clean candidate; separate D3 reader tests are also required because the shared gate is unchanged.",
+  "command": "bash scripts/check_all.sh",
+  "rc": null
+}

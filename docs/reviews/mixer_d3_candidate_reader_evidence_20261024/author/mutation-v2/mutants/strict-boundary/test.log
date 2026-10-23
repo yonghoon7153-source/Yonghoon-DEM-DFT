@@ -1,0 +1,18 @@
+test_boundary_is_exact_inclusive_decimal (__main__.DecisionTests.test_boundary_is_exact_inclusive_decimal) ... FAIL
+
+======================================================================
+FAIL: test_boundary_is_exact_inclusive_decimal (__main__.DecisionTests.test_boundary_is_exact_inclusive_decimal)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/strict-boundary/test_mixer_d3_candidates.py", line 204, in test_boundary_is_exact_inclusive_decimal
+    self.assertEqual(self.run_case(c, o)["calibration"]["T1"][0]["status"], "COMPATIBLE")
+AssertionError: 'INCOMPATIBLE' != 'COMPATIBLE'
+- INCOMPATIBLE
+? --
++ COMPATIBLE
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (failures=1)

@@ -1,0 +1,16 @@
+{
+  "command": [
+    "/workspace/.venvs/yonghoon-dem/bin/python",
+    "-I",
+    "/workspace/.cloud-setup/nonrint-20261024/d3/deliverables/scripts/mixer_d3_candidates.py",
+    "--contract",
+    "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/synthetic_example_v2/contract.json",
+    "--observations",
+    "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/synthetic_example_v2/observations.json",
+    "--out",
+    "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/synthetic_example_v2/result.json"
+  ],
+  "rc": 0,
+  "reader_sha256": "ea4528156e8eb9762999fef0643985bebf0b0735691202fddb4a2c17814ee7f8",
+  "scope": "synthetic CLI fixture; no physical execution"
+}

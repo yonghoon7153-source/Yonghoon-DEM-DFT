@@ -1,0 +1,23 @@
+[
+  {
+    "name": "decimal_exception_removed",
+    "rc": 1,
+    "expected_assertion_detected": true,
+    "expected": "1 != 2",
+    "source_sha256": "5a0b5da43cb203f89433c62a3c07a9707d3ca58ab0f8a07e1e11514608b087c3"
+  },
+  {
+    "name": "declared_reason_guard_removed",
+    "rc": 1,
+    "expected_assertion_detected": true,
+    "expected": "eligible_reason_type_checked",
+    "source_sha256": "7a239fbce1b7efc7c7057dce6493bd7b2c0eb355d93c3686921818af88589344"
+  },
+  {
+    "name": "Bo_po_divisor_changed",
+    "rc": 1,
+    "expected_assertion_detected": true,
+    "expected": "Bo_po_50_digit_ratio",
+    "source_sha256": "723d6592c7e315ffda7f7d93eb833b4db300fc3d267b08d2c5b996dbc1049f86"
+  }
+]

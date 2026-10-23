@@ -1,0 +1,33 @@
+--- reviewed-v1/test_mixer_d3_candidates.py
++++ reviewed-v2/test_mixer_d3_candidates.py
+@@ -293,6 +293,15 @@
+         for text in ('{"a":1,"a":2}', '{"n":NaN}', '{"n":Infinity}', '{"n":١}', '[' * 10000 + '0' + ']' * 10000):
+             with self.assertRaises(reader.ContractError): reader.loads_strict(text)
+ 
++    def test_extreme_decimal_exponent_is_controlled_rejection(self):
++        with self.assertRaises(reader.ContractError):
++            reader.loads_strict('{"x":1e9999999999999999999999}')
++
++    def test_particle_bo_definition_is_reported(self):
++        out = self.run_case()
++        self.assertAlmostEqual(float(out["grid"][0]["bo_po_approx"]), 1 / 6.75)
++        self.assertIn("6.75", out["bo_po_definition"])
++
+ 
+ class CliTests(unittest.TestCase):
+     def setUp(self):
+@@ -344,6 +353,14 @@
+         self.assertNotEqual(self.run_cli().returncode, 0)
+         self.assertFalse((self.root / "result.json").exists())
+ 
++    def test_extreme_decimal_exponent_cli_contract_error(self):
++        self.observations.write_text('{"x":1e9999999999999999999999}')
++        result = self.run_cli()
++        self.assertEqual(result.returncode, 2, result.stderr)
++        self.assertIn("D3_CONTRACT_ERROR", result.stderr)
++        self.assertNotIn("Traceback", result.stderr)
++        self.assertFalse((self.root / "result.json").exists())
++
+ 
+ if __name__ == "__main__":
+     unittest.main(verbosity=2)

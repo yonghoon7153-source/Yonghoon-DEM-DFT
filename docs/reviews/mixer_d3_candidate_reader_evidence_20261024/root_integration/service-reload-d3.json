@@ -1,0 +1,11 @@
+{
+  "pid": 258824,
+  "verified_uid": 1000,
+  "cwd": "/workspace/Yonghoon-DEM-DFT/webapp",
+  "action": "SIGHUP owned master",
+  "at_utc": "2026-10-23T18:16:22.032367+00:00",
+  "http_status": 200,
+  "v19_title_in_response": true,
+  "initial_reload_guard_rejected": true,
+  "initial_rejection_reason": "Expected webapp.app:app; actual verified launcher uses --chdir webapp app:app. Initial guard did not signal the process."
+}

@@ -1,0 +1,27 @@
+test_groups_respect_registered_topology_and_unknown_gap (__main__.DecisionTests.test_groups_respect_registered_topology_and_unknown_gap) ... FAIL
+
+======================================================================
+FAIL: test_groups_respect_registered_topology_and_unknown_gap (__main__.DecisionTests.test_groups_respect_registered_topology_and_unknown_gap)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutants/join-across-gap/test_mixer_d3_candidates.py", line 205, in test_groups_respect_registered_topology_and_unknown_gap
+    self.assertEqual(out["neighbor_groups"], [["b1"], ["b2"]])
+AssertionError: Lists differ: [['b1', 'b2']] != [['b1'], ['b2']]
+
+First differing element 0:
+['b1', 'b2']
+['b1']
+
+Second list contains 1 additional elements.
+First extra element 1:
+['b2']
+
+- [['b1', 'b2']]
++ [['b1'], ['b2']]
+?       +  +
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (failures=1)

@@ -1,0 +1,21 @@
+test_flat_valid_response_keeps_candidates_without_identifiability_claim (__main__.DecisionTests.test_flat_valid_response_keeps_candidates_without_identifiability_claim) ... FAIL
+
+======================================================================
+FAIL: test_flat_valid_response_keeps_candidates_without_identifiability_claim (__main__.DecisionTests.test_flat_valid_response_keeps_candidates_without_identifiability_claim)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/flat-is-missing/test_mixer_d3_candidates.py", line 186, in test_flat_valid_response_keeps_candidates_without_identifiability_claim
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (failures=1)

@@ -1,0 +1,1318 @@
+test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) ... 
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'compatible', 'compatible', 'incompatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'compatible', 'compatible', 'unassessed')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'compatible', 'incompatible', 'compatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'compatible', 'incompatible', 'incompatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'compatible', 'incompatible', 'unassessed')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'compatible', 'unassessed', 'compatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'compatible', 'unassessed', 'incompatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'compatible', 'unassessed', 'unassessed')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'incompatible', 'compatible', 'compatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'incompatible', 'compatible', 'incompatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'incompatible', 'compatible', 'unassessed')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'incompatible', 'incompatible', 'compatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'incompatible', 'incompatible', 'incompatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'incompatible', 'incompatible', 'unassessed')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'incompatible', 'unassessed', 'compatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'incompatible', 'unassessed', 'incompatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'incompatible', 'unassessed', 'unassessed')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'unassessed', 'compatible', 'compatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'unassessed', 'compatible', 'incompatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'unassessed', 'compatible', 'unassessed')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'unassessed', 'incompatible', 'compatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'unassessed', 'incompatible', 'incompatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'unassessed', 'incompatible', 'unassessed')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'unassessed', 'unassessed', 'compatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'unassessed', 'unassessed', 'incompatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'unassessed', 'unassessed', 'unassessed')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'compatible', 'compatible', 'compatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'compatible', 'compatible', 'incompatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'compatible', 'compatible', 'unassessed')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'compatible', 'incompatible', 'compatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'compatible', 'incompatible', 'incompatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'compatible', 'incompatible', 'unassessed')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'compatible', 'unassessed', 'compatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'compatible', 'unassessed', 'incompatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'compatible', 'unassessed', 'unassessed')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'incompatible', 'compatible', 'compatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'incompatible', 'compatible', 'incompatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'incompatible', 'compatible', 'unassessed')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'incompatible', 'incompatible', 'compatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'incompatible', 'incompatible', 'incompatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'incompatible', 'incompatible', 'unassessed')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'incompatible', 'unassessed', 'compatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'incompatible', 'unassessed', 'incompatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'incompatible', 'unassessed', 'unassessed')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'unassessed', 'compatible', 'compatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'unassessed', 'compatible', 'incompatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'unassessed', 'compatible', 'unassessed')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'unassessed', 'incompatible', 'compatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'unassessed', 'incompatible', 'incompatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'unassessed', 'incompatible', 'unassessed')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'unassessed', 'unassessed', 'compatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'unassessed', 'unassessed', 'incompatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'unassessed', 'unassessed', 'unassessed')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'compatible', 'compatible', 'compatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'compatible', 'compatible', 'incompatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'compatible', 'compatible', 'unassessed')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'compatible', 'incompatible', 'compatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'compatible', 'incompatible', 'incompatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'compatible', 'incompatible', 'unassessed')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'compatible', 'unassessed', 'compatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'compatible', 'unassessed', 'incompatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'compatible', 'unassessed', 'unassessed')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'incompatible', 'compatible', 'compatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'incompatible', 'compatible', 'incompatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'incompatible', 'compatible', 'unassessed')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'incompatible', 'incompatible', 'compatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'incompatible', 'incompatible', 'incompatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'incompatible', 'incompatible', 'unassessed')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'incompatible', 'unassessed', 'compatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'incompatible', 'unassessed', 'incompatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'incompatible', 'unassessed', 'unassessed')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'unassessed', 'compatible', 'compatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'unassessed', 'compatible', 'incompatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'unassessed', 'compatible', 'unassessed')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'unassessed', 'incompatible', 'compatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'unassessed', 'incompatible', 'incompatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'unassessed', 'incompatible', 'unassessed')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'unassessed', 'unassessed', 'compatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'unassessed', 'unassessed', 'incompatible')) ... FAIL
+  test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'unassessed', 'unassessed', 'unassessed')) ... FAIL
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'compatible', 'compatible', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: ['b1'] != ['b1', 'b2']
+
+Second list contains 1 additional elements.
+First extra element 1:
+'b2'
+
+- ['b1']
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'compatible', 'compatible', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: ['b1'] != ['b1', 'b2']
+
+Second list contains 1 additional elements.
+First extra element 1:
+'b2'
+
+- ['b1']
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'compatible', 'incompatible', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: ['b1'] != ['b1', 'b2']
+
+Second list contains 1 additional elements.
+First extra element 1:
+'b2'
+
+- ['b1']
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'compatible', 'incompatible', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: ['b1'] != ['b1', 'b2']
+
+Second list contains 1 additional elements.
+First extra element 1:
+'b2'
+
+- ['b1']
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'compatible', 'incompatible', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: ['b1'] != ['b1', 'b2']
+
+Second list contains 1 additional elements.
+First extra element 1:
+'b2'
+
+- ['b1']
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'compatible', 'unassessed', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: ['b1'] != ['b1', 'b2']
+
+Second list contains 1 additional elements.
+First extra element 1:
+'b2'
+
+- ['b1']
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'compatible', 'unassessed', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: ['b1'] != ['b1', 'b2']
+
+Second list contains 1 additional elements.
+First extra element 1:
+'b2'
+
+- ['b1']
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'compatible', 'unassessed', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: ['b1'] != ['b1', 'b2']
+
+Second list contains 1 additional elements.
+First extra element 1:
+'b2'
+
+- ['b1']
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'incompatible', 'compatible', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: ['b2'] != ['b1', 'b2']
+
+First differing element 0:
+'b2'
+'b1'
+
+Second list contains 1 additional elements.
+First extra element 1:
+'b2'
+
+- ['b2']
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'incompatible', 'compatible', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'incompatible', 'compatible', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'incompatible', 'incompatible', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'incompatible', 'incompatible', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'incompatible', 'incompatible', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'incompatible', 'unassessed', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'incompatible', 'unassessed', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'incompatible', 'unassessed', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'unassessed', 'compatible', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: ['b2'] != ['b1', 'b2']
+
+First differing element 0:
+'b2'
+'b1'
+
+Second list contains 1 additional elements.
+First extra element 1:
+'b2'
+
+- ['b2']
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'unassessed', 'compatible', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'unassessed', 'compatible', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'unassessed', 'incompatible', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'unassessed', 'incompatible', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'unassessed', 'incompatible', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'unassessed', 'unassessed', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'unassessed', 'unassessed', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('compatible', 'unassessed', 'unassessed', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'compatible', 'compatible', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: ['b2'] != ['b1', 'b2']
+
+First differing element 0:
+'b2'
+'b1'
+
+Second list contains 1 additional elements.
+First extra element 1:
+'b2'
+
+- ['b2']
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'compatible', 'compatible', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'compatible', 'compatible', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'compatible', 'incompatible', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'compatible', 'incompatible', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'compatible', 'incompatible', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'compatible', 'unassessed', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'compatible', 'unassessed', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'compatible', 'unassessed', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'incompatible', 'compatible', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: ['b2'] != ['b1', 'b2']
+
+First differing element 0:
+'b2'
+'b1'
+
+Second list contains 1 additional elements.
+First extra element 1:
+'b2'
+
+- ['b2']
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'incompatible', 'compatible', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'incompatible', 'compatible', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'incompatible', 'incompatible', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'incompatible', 'incompatible', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'incompatible', 'incompatible', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'incompatible', 'unassessed', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'incompatible', 'unassessed', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'incompatible', 'unassessed', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'unassessed', 'compatible', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: ['b2'] != ['b1', 'b2']
+
+First differing element 0:
+'b2'
+'b1'
+
+Second list contains 1 additional elements.
+First extra element 1:
+'b2'
+
+- ['b2']
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'unassessed', 'compatible', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'unassessed', 'compatible', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'unassessed', 'incompatible', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'unassessed', 'incompatible', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'unassessed', 'incompatible', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'unassessed', 'unassessed', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'unassessed', 'unassessed', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('incompatible', 'unassessed', 'unassessed', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'compatible', 'compatible', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: ['b2'] != ['b1', 'b2']
+
+First differing element 0:
+'b2'
+'b1'
+
+Second list contains 1 additional elements.
+First extra element 1:
+'b2'
+
+- ['b2']
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'compatible', 'compatible', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'compatible', 'compatible', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'compatible', 'incompatible', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'compatible', 'incompatible', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'compatible', 'incompatible', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'compatible', 'unassessed', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'compatible', 'unassessed', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'compatible', 'unassessed', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'incompatible', 'compatible', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: ['b2'] != ['b1', 'b2']
+
+First differing element 0:
+'b2'
+'b1'
+
+Second list contains 1 additional elements.
+First extra element 1:
+'b2'
+
+- ['b2']
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'incompatible', 'compatible', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'incompatible', 'compatible', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'incompatible', 'incompatible', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'incompatible', 'incompatible', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'incompatible', 'incompatible', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'incompatible', 'unassessed', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'incompatible', 'unassessed', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'incompatible', 'unassessed', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'unassessed', 'compatible', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: ['b2'] != ['b1', 'b2']
+
+First differing element 0:
+'b2'
+'b1'
+
+Second list contains 1 additional elements.
+First extra element 1:
+'b2'
+
+- ['b2']
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'unassessed', 'compatible', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'unassessed', 'compatible', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'unassessed', 'incompatible', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'unassessed', 'incompatible', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'unassessed', 'incompatible', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'unassessed', 'unassessed', 'compatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'unassessed', 'unassessed', 'incompatible'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+======================================================================
+FAIL: test_validation_states_exhaustive_81_preserves_S (__main__.DecisionTests.test_validation_states_exhaustive_81_preserves_S) (combination=('unassessed', 'unassessed', 'unassessed', 'unassessed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/.cloud-setup/nonrint-20261024/d3/evidence/mutation-v2/mutants/drop-failed-candidates/test_mixer_d3_candidates.py", line 128, in test_validation_states_exhaustive_81_preserves_S
+    self.assertEqual(out["S"], ["b1", "b2"])
+AssertionError: Lists differ: [] != ['b1', 'b2']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'b1'
+
+- []
++ ['b1', 'b2']
+
+----------------------------------------------------------------------
+Ran 1 test in 0.083s
+
+FAILED (failures=80)

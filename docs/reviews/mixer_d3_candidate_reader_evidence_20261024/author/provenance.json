@@ -1,0 +1,20 @@
+{
+  "source_branch": "codex/mixer-d3-design",
+  "source_pin": "d5ab56ba9a9416e5cae2becf3c85b7c54d30d1d2",
+  "user_ratification_date": "2026-10-24 Asia/Seoul",
+  "user_words": [
+    "계속 진행",
+    "다 비준이야"
+  ],
+  "ratification_scope": "Presented V2-Q1–Q4 policy choices; unfilled scientific inputs remain absent",
+  "final_test_python": "3.11.17 (main, Oct  3 2026, 01:05:36) [Clang 22.1.3 ]",
+  "initial_test_python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "source_files": {
+    "scripts/mixer_d3_candidates.py": "ea4528156e8eb9762999fef0643985bebf0b0735691202fddb4a2c17814ee7f8",
+    "scripts/test_mixer_d3_candidates.py": "12155f4e420ea3b15529501562b9fd6758c2767cbfcf4e1c79d6cdd7f4034d4c"
+  },
+  "scientific_runs": 0,
+  "full_gate": "PENDING root integration",
+  "independent_review": "PASS input-conditioned calculator scope; independent/RECHECK-v3.md",
+  "independent_source_sha256": "ea4528156e8eb9762999fef0643985bebf0b0735691202fddb4a2c17814ee7f8"
+}

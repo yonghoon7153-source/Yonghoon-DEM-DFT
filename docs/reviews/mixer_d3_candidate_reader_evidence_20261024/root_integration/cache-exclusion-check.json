@@ -1,0 +1,25 @@
+{
+  "removed_generated_files": [
+    "scripts/__pycache__/mixer_d3_candidates.cpython-312.pyc",
+    "scripts/__pycache__/test_mixer_d3_candidates.cpython-312.pyc",
+    "scripts/__pycache__/test_mixer_d3_candidates.cpython-311.pyc",
+    "scripts/__pycache__/mixer_d3_candidates.cpython-311.pyc"
+  ],
+  "delivered_files": 205,
+  "payload_bytes": 2404918,
+  "manifests": {
+    "docs/reviews/mixer_d3_candidate_reader_evidence_20261024/MANIFEST.sha256": {
+      "entries": 198,
+      "sha256": "ad198845dbe884fe5ad3cceaa77753a6eeb732a52c0cd475a4d54770980a80b6",
+      "unchanged": true
+    },
+    "docs/reviews/mixer_d3_candidate_reader_evidence_20261024/independent/MANIFEST.sha256": {
+      "entries": 92,
+      "sha256": "87dba069695076e1f1a43cefb197f56d2be8ca1e6a8beb0269334cd70ecb8601",
+      "unchanged": true
+    }
+  },
+  "source_sha256": "ea4528156e8eb9762999fef0643985bebf0b0735691202fddb4a2c17814ee7f8",
+  "test_sha256": "12155f4e420ea3b15529501562b9fd6758c2767cbfcf4e1c79d6cdd7f4034d4c",
+  "retests": "not needed; source and evidence unchanged"
+}

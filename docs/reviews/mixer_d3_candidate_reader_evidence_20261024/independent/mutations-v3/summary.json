@@ -1,0 +1,51 @@
+[
+  {
+    "mutation": "boundary_exclusive",
+    "rc": 1,
+    "expected_failure": "exact_inclusive_boundary",
+    "expected_assertion_detected": true,
+    "mutant_sha256": "b8bbde1b4722d2529d3b35574de8f76ea31c385e2282fe4a055ce37ed51aaa37"
+  },
+  {
+    "mutation": "intersection_union",
+    "rc": 1,
+    "expected_failure": "missing_uncertainty_UNASSESSED",
+    "expected_assertion_detected": true,
+    "mutant_sha256": "6853a79723e5bceaa01c02d84a5ea4590963a377b3dcabc556ec8a76fe4de7ec"
+  },
+  {
+    "mutation": "bridge_unknown_gap",
+    "rc": 1,
+    "expected_failure": "unknown_gap_not_bridged",
+    "expected_assertion_detected": true,
+    "mutant_sha256": "df0925b15d241266d179175d01caa7d8057ff23a8485e87de41b12426783145f"
+  },
+  {
+    "mutation": "missing_uncertainty_accepted",
+    "rc": 1,
+    "expected_failure": "missing_uncertainty_UNASSESSED",
+    "expected_assertion_detected": true,
+    "mutant_sha256": "6717687278955e861c07c8270cc3ca5b3f06d1022b5c0578d5c09da2d5864547"
+  },
+  {
+    "mutation": "reserved_seed_check_removed",
+    "rc": 1,
+    "expected_failure": "reserved_seeds_nine_cases",
+    "expected_assertion_detected": true,
+    "mutant_sha256": "95ba9ae312806cf1fa89368288e7e7d2087ca6d8397bd698da18d29c5716da8e"
+  },
+  {
+    "mutation": "source_bytes_check_removed",
+    "rc": 1,
+    "expected_failure": "changed_raw_bytes_rejected",
+    "expected_assertion_detected": true,
+    "mutant_sha256": "dc5601e22c0cc4e8b5d2a5ff015313dd2ce9611c5c5a5bc4c2245304abc81ded"
+  },
+  {
+    "mutation": "incompatible_beats_incomplete",
+    "rc": 1,
+    "expected_failure": "validation_incomplete_precedence",
+    "expected_assertion_detected": true,
+    "mutant_sha256": "a7b454e02e1d28cf49151d5416a82159082f8d9e56d8be1f994c84811c451963"
+  }
+]
