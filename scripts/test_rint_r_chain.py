@@ -256,7 +256,10 @@ def sv_record(cm):
     GF = float(cm['I_bot'])
     diag = bool(rule.get('diag'))
     bind = {k: cm.get(k) for k in ('bind_version', 'fp_sid', 'fp_sig', 'fp_face_plan', 'fp_cjunc_registry', 'fp_cjunc_rows')}
-    raw = {'kind': rule.get('kind', 'counterfactual_cut_sv_faces'), 'requested': True, 'threshold': None, 'flag': None, 'G_full_code': GF,
+    #  ★ 10-23 (사전 공격 리뷰 C5 · 1저자 Q14 (가)) 종류 · 규칙 = 등록된 생산자 이름 (옛 고정물 = 철회된 'counterfactual_cut_sv_faces') · 규칙 'kind' ·
+    #    'cf_rule' = 다른 이름 (검증기가 거부 · V35)
+    raw = {'kind': rule.get('kind', T['sv_cf_kind']), 'rule': rule.get('cf_rule', T['sv_cf_rule']), 'requested': True, 'threshold': None,
+           'flag': None, 'G_full_code': GF,
            'n_sv_faces_cut': 4, 'backend_last_solve': None, 'n_unsplit_bridging_components': nu, 'bracket_rule': T['sv_rule'],
            'standing': (T['sv_diag'] if diag else T['sv_cert']), 'conv_cert_full': (None if diag else cp_(cm))}
     if not diag and rule.get('full_br'):
@@ -516,6 +519,7 @@ def record_templates():
                                                  zero_graph=getattr(CJ, 'SV_CF_ZERO_GRAPH', 'cjunc_sv_counterfactual'),
                                                  fp_sid='0' * 32, fp_sig='0' * 32),
                      'sv_rule': CJ.CJUNC_SV_CF_BRACKET_RULE,
+                     'sv_cf_kind': CJ.CJUNC_SV_CF_KIND, 'sv_cf_rule': CJ.CJUNC_SV_CF_RULE,     # ★ 10-23 C5 반사실 종류 · 끊기 규칙 (생산자 상수)
                      'sv_cert': getattr(CJ, 'SV_CF_STANDING_CERTIFIED', 'certified_interval'),
                      'sv_diag': getattr(CJ, 'SV_CF_STANDING_DIAGNOSTIC', 'diagnostic_uncertified')}
     return FX['tpl']
@@ -1591,6 +1595,24 @@ def t_V32():
             and '주 해 증서 칸' in cause and 'target_n_edges' in cause, (p['rc'], st))
 
 
+@check('V35', '★ 10-23 (사전 공격 리뷰 C5 · 1저자 Q14 (가)) 끝-끝 — 가짜 러너가 SV 반사실 기록의 종류를 옛 이름 (counterfactual_cut_sv_faces) · '
+              '규칙을 다른 이름으로 쓰면 정본 기록 계약 (ca_ext_record_ok · sv_cf_problem) 이 거부 → 예측 STOPPED · rc 3 · CA_EXT_RECORD · 사유에 '
+              '그 칸 (기록 종류 · 기록 규칙)')
+def t_V35():
+    out = {}
+    for tag, extra, want in (('V35k', {'kind': 'counterfactual_cut_sv_faces'}, '기록 종류'), ('V35r', {'cf_rule': 'some_other_rule'}, '기록 규칙')):
+        def go(tag=tag, extra=extra):
+            m = {'kit_has': 'DBE', 'rj': lad(s_main('P1'))['R_j0'], 'c': '1'}
+            W = dict(PW, sv_cf=[dict({'match': m, 'status': 'computed', 'ratio': 1.2}, **extra)])
+            return predict(tag, world(tag, W), [s_main('P0')['out'], s_main('P1')['out']])
+        p = scen(tag, go)
+        st = ((p.get('sum') or {}).get('stop') or {})
+        cause = str(st.get('cause', ''))
+        out[tag] = (p['rc'] == 3 and (p.get('sum') or {}).get('status') == 'STOPPED' and st.get('code') == 'CA_EXT_RECORD'
+                    and want in cause and '사전 공격 리뷰 C5' in cause, p['rc'], st.get('code'), cause[:200])
+    return all(v[0] for v in out.values()), out
+
+
 @check('V07', 'CALIB_ORIGIN_SENSITIVE (P0 사다리 origin 넘음) → 판정 표지 · 문장 금지')
 def t_V07():
     def go():
@@ -2418,8 +2440,8 @@ def u16_raw(GF, full_br, lo_end, hi_end=None, standing='certified_interval'):
                                       if br == 'zero' else pos(g, br))
         rt = (min(GF / g, 1e308) if st == 'computed' else (math.inf if st == 'no_through_without_sv' else None))
         return {'status': st, 'G_cut_code': g, 'sv_counterfactual_ratio': rt, 'conv_cert': cc, 'cg_info': 0, 'resid': 1e-13}
-    raw = {'kind': 'counterfactual_cut_sv_faces', 'requested': True, 'threshold': None, 'flag': None, 'G_full_code': GF,
-           'conv_cert_full': pos(GF, full_br), 'standing': standing, 'bracket_rule': CJm.CJUNC_SV_CF_BRACKET_RULE,
+    raw = {'kind': CJm.CJUNC_SV_CF_KIND, 'rule': CJm.CJUNC_SV_CF_RULE, 'requested': True, 'threshold': None, 'flag': None,   # ★ 10-23 C5
+           'G_full_code': GF, 'conv_cert_full': pos(GF, full_br), 'standing': standing, 'bracket_rule': CJm.CJUNC_SV_CF_BRACKET_RULE,
            'n_unsplit_bridging_components': (0 if hi_end is None else 1)}
     raw.update(end(lo_end))
     up = None

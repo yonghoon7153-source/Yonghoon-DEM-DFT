@@ -8,7 +8,10 @@
 
 이 모듈 = 그 원 기록의 **JSON 투영** (payload · 증거 `ca_ext.cjunc.evidence.solve.sv_counterfactual`) 과 **검증기** (`run_contract.ca_ext_record_ok`
 가 접합 블록 검증 뒤 부른다).  접합 모듈 (A 소관) 밖에 둔다 — 그리고 **끊는 면의 정의에 기대지 않는다** (사전 리뷰 PRE-impl-04 · 코디네이터
-10-21 Q-D): 읽는 칸 = 비 · 상태 · 표지 (· 종류는 'counterfactual…' 이기만 하면 아무 정의 · 정의별 수 칸 `n_*` 은 이름 그대로 옮긴다).
+10-21 Q-D): 읽는 칸 = 비 · 상태 · 표지 (· ~~종류는 'counterfactual…' 이기만 하면 아무 정의~~ → ★ 10-23 (사전 공격 리뷰 C5 · 1저자 Q14 (가))
+종류 · 규칙 = 등록된 이름 (`SV_CF_KIND` · `SV_CF_RULE` = 생산자 `carbon_junction.CJUNC_SV_CF_KIND` · `CJUNC_SV_CF_RULE` · 시험이 대조) 만 받는다 —
+**이름 대조뿐** (그 이름이 뜻하는 끊기 정의를 검증기가 다시 세지 않는다 · 옛 판 = 접두어만 보고 규칙은 투영에서 버려 다른 정의의 기록 · 철회된
+옛 정의 이름을 받았다) · 정의별 수 칸 `n_*` 은 이름 그대로 옮긴다).
 · 비 +∞ (위상 — 끊은 그래프에 관통 성분 없음) = JSON 비 null + `ratio_limit` 'inf' (극한 R_j 의 `R_j_ohm` null + `rj_limit` 'inf' 와 한 꼴)
 · 비를 싣는 상태 = `RATIO_STATUSES` 둘뿐 — 그 밖의 상태 (미수렴 · 수치 실패 · 주 해 미수렴 · 앞으로 producer 가 더할 이름) = 비 없음 →
   사슬은 그 모서리를 `SV_UNCHECKED` 로 센다 (fail-closed · 모르는 상태를 '의존 없음' 으로 읽지 않는다)
@@ -54,7 +57,11 @@ RATIO_STATUSES = {'computed': 'finite', 'no_through_without_sv': 'inf'}
 KNOWN_STATUSES = ('computed', 'no_through_without_sv', 'unconverged', 'nonpositive_cut_current', 'nonpositive_full_current',
                   'main_unconverged', 'cjunc_electrode_short', 'all_floating_dropped', 'no_through_component',
                   'unsplit_census_mismatch')       # ★ 10-23 (RCA2-06 F6) = `UNSPLIT_MISMATCH` (위 끝 구조화 실패 · 검증기 `_mismatch_problem`)
-KIND_PREFIX = 'counterfactual'
+#: ★ 10-23 (사전 공격 리뷰 C5 · 1저자 Q14 (가) · author 10-23 ratified Q12-Q16) 반사실 기록 종류 · 끊기 규칙 = 등록된 생산자 이름 (=
+#:   `carbon_junction.CJUNC_SV_CF_KIND` · `CJUNC_SV_CF_RULE` · 시험 S8q 가 대조) — 이 밖의 값 = 거부 (이름 대조뿐 · 옛 `KIND_PREFIX` 'counterfactual'
+#:   접두어 검사 철회 · 옛 이름 'counterfactual_cut_sv_faces' = SV 면 전부를 끊는 다른 양)
+SV_CF_KIND = 'counterfactual_cut_sv_bridges_keep_self_v1'
+SV_CF_RULE = 'sdcp_component_owner_groups_same_piece_continuity_or_covered_through_cut_nonpassing_v1'
 FLAGS = (None, 'SV_DEPENDENT')
 #: ★ PF2 E (10-22 · 사전 리뷰 2 회차 PRE2-impl-02 · 결정 없음) — 기록 안 수의 다시 대조.  τ = 수렴 증서 ⓓ 의 보장 상대 오차
 #   (= `step3_conv_cert.CERT_TARGET_TOL` · |G − G*| ≤ τ·G · 시험 S8o 가 대조 · 이 모듈은 numpy 없이 뜬다)
@@ -98,8 +105,8 @@ BIND_FIELDS = ('bind_version', 'fp_sid', 'fp_sig', 'fp_face_plan', 'fp_cjunc_reg
 #: 실제 census 칸 (증거 `census` · 생산자 `carbon_junction._sv_split` 정의: 못 가른 ⊆ 다리 놓는 ⊆ 닿는 성분) · 기록이 옮겨 실은 census 사본
 CENSUS_KEYS = ('n_unsplit_bridging_components', 'n_bridging_components', 'n_sdcp_components_touching')
 CENSUS_COPY_KEYS = CENSUS_KEYS + ('n_sv_faces_kept_self',)
-#: 투영이 옮기는 칸 (판정 · 기록) — 정의별 수 칸 (`n_*` · int) 은 이 목록 밖이어도 이름 그대로 옮긴다
-_COPY = ('kind', 'requested', 'threshold', 'status', 'flag', 'cg_info')
+#: 투영이 옮기는 칸 (판정 · 기록) — 정의별 수 칸 (`n_*` · int) 은 이 목록 밖이어도 이름 그대로 옮긴다 · ★ 10-23 C5 규칙 (옛 판 = 버렸다)
+_COPY = ('kind', 'rule', 'requested', 'threshold', 'status', 'flag', 'cg_info')
 
 
 def _is_bool(x):
@@ -232,9 +239,12 @@ def sv_cf_problem(ev, solved):
     rec = sol.get('sv_counterfactual')
     if not isinstance(rec, dict):
         return 'sv_cf| 요청했고 주 솔브가 풀렸는데 반사실 기록이 없다 (배선 누락)'
-    kd = rec.get('kind')
-    if not (isinstance(kd, str) and kd.startswith(KIND_PREFIX)) or rec.get('requested') is not True:
-        return f'sv_cf| 기록 종류 {kd!r} · requested {rec.get("requested")!r} (반사실 기록이어야 · 정의는 producer 이름 그대로)'
+    kd, ru = rec.get('kind'), rec.get('rule')
+    if not (isinstance(kd, str) and kd == SV_CF_KIND) or rec.get('requested') is not True:
+        return (f'sv_cf| 기록 종류 {kd!r} · requested {rec.get("requested")!r} — 등록된 반사실 종류 {SV_CF_KIND!r} · requested True 이어야 '
+                f'(이름 대조뿐 · 10-23 사전 공격 리뷰 C5)')
+    if not (isinstance(ru, str) and ru == SV_CF_RULE):
+        return f'sv_cf| 기록 규칙 {ru!r} ≠ 등록된 끊기 규칙 {SV_CF_RULE!r} (이름 대조뿐 · 10-23 사전 공격 리뷰 C5)'
     thr = req['threshold']
     if rec.get('threshold') != thr:
         return f'sv_cf| 기록 문턱 {rec.get("threshold")!r} ≠ 요청 {thr!r}'

@@ -737,7 +737,10 @@ def _sv_raw(status='computed', ratio=1.25, threshold=None, flag=None, n_unsplit=
             return None
         return _fake_pos_cert(gc, topo=topo) if st == 'computed' else (_fake_zero_cert() if st == 'no_through_without_sv' else None)
     gl = _gc(status, ratio)
-    r = {'kind': 'counterfactual_cut_sv_faces', 'requested': True, 'threshold': threshold, 'n_sv_faces_cut': 4, 'G_full_code': SV_GF,
+    #  ★ 10-23 (사전 공격 리뷰 C5 · 1저자 Q14 (가)) 종류 · 규칙 = 등록된 생산자 이름 (옛 고정물 = 철회된 'counterfactual_cut_sv_faces' = SV 면 전부 ·
+    #    다른 양) — 검증기가 이름을 대조한다
+    r = {'kind': _cj.CJUNC_SV_CF_KIND, 'rule': _cj.CJUNC_SV_CF_RULE, 'requested': True, 'threshold': threshold, 'n_sv_faces_cut': 4,
+         'G_full_code': SV_GF,
          'G_cut_code': gl, 'sv_counterfactual_ratio': _sv_ratio_of(status, ratio),
          'flag': flag, 'cg_info': (0 if status in ('computed', 'unconverged') else None), 'resid': (1e-13 if status == 'computed' else None),
          'conv_cert': _cc(status, gl, SV_TOPO_LO), 'status': status,
@@ -803,8 +806,10 @@ def t_sv_values(mm, proj, Es):
     import carbon_junction as _CJ
     _cst = [(getattr(SVCF, a, None), getattr(_CJ, b, None)) for a, b in
             (('STANDING_CERTIFIED', 'SV_CF_STANDING_CERTIFIED'), ('STANDING_DIAGNOSTIC', 'SV_CF_STANDING_DIAGNOSTIC'),
-             ('ZERO_GRAPH_SV_CF', 'SV_CF_ZERO_GRAPH'), ('UNSPLIT_MISMATCH', 'SV_CF_UNSPLIT_MISMATCH'))]
-    chk('S8q 검증기 상수 = 생산자 상수 (★ 10-23 RCA2-01 · 04) — 지위 둘 · 영값 위상 그래프 이름표 · 위 끝 구조화 실패 · 등록 괄호 규칙 = 생산자 규칙 하나',
+             ('ZERO_GRAPH_SV_CF', 'SV_CF_ZERO_GRAPH'), ('UNSPLIT_MISMATCH', 'SV_CF_UNSPLIT_MISMATCH'),
+             ('SV_CF_KIND', 'CJUNC_SV_CF_KIND'), ('SV_CF_RULE', 'CJUNC_SV_CF_RULE'))]   # ★ 10-23 C5 종류 · 규칙
+    chk('S8q 검증기 상수 = 생산자 상수 (★ 10-23 RCA2-01 · 04) — 지위 둘 · 영값 위상 그래프 이름표 · 위 끝 구조화 실패 · 등록 괄호 규칙 = 생산자 규칙 하나 · '
+        '(★ 10-23 사전 공격 리뷰 C5) 반사실 종류 · 끊기 규칙 이름',
         all(a is not None and a == b for a, b in _cst)
         and getattr(SVCF, 'BRACKET_RULES', None) == (getattr(_CJ, 'CJUNC_SV_CF_BRACKET_RULE', None),),
         (_cst, getattr(SVCF, 'BRACKET_RULES', None)))
@@ -1364,9 +1369,8 @@ def t_states():
     #  ── 정의 무관 (PRE-impl-04 · Q-D) — 끊는 면의 정의 (A 가 바꾼다) 와 그 이름 · 수 칸이 바뀌어도 비 · 상태 · 표지만으로 받는다 ──
     #  ★ 10-23 (사전 공격 리뷰 C1 · 1저자 Q12 (가)) — 정의별 수 칸 이름이 바뀐 꼴 = 증서 없는 런 (진단 기록) 에서만 정의 무관 그대로 받는다 · 증서 구간
     #    기록의 비를 싣는 끝은 끊은 다리 면 수 (n_sv_faces_cut) 로 끝 증서를 끊은 그래프에 묶어야 해서 그 칸이 없으면 거부 (아래 S8h′)
-    agn = {'다른 정의의 반사실 (kind counterfactual_cut_bridging_sv_faces)':
-           lambda r: r.update(kind='counterfactual_cut_bridging_sv_faces'),
-           '정의별 수 칸 이름이 바뀜 (n_sv_faces_cut 없음 · n_bridging_faces_cut 3 · 진단 기록)':
+    #  ★ 10-23 (사전 공격 리뷰 C5 · 1저자 Q14 (가)) — 종류 · 규칙 이름은 등록값만 받는다 (옛 '다른 정의의 반사실 = 받음' 꼴 → 아래 S8w 거부)
+    agn = {'정의별 수 칸 이름이 바뀜 (n_sv_faces_cut 없음 · n_bridging_faces_cut 3 · 진단 기록)':
            lambda r: (r.pop('n_sv_faces_cut'), r.update(n_bridging_faces_cut=3, standing='diagnostic_uncertified', conv_cert=None,
                                                         conv_cert_full=None)),
            '모르는 상태 · 비 없음 (사슬 = SV_UNCHECKED · 받는다)':
@@ -1379,6 +1383,34 @@ def t_states():
         x = deep(mm)
         _sv_put(x, proj(raw))
         chk(f'S8h 정의 무관 받음 [{nm}]', RC.ca_ext_record_ok(x) == (True, None), RC.ca_ext_record_ok(x))
+    #  ★ 10-23 (사전 공격 리뷰 C5 · 1저자 Q14 (가)) — 종류 = `carbon_junction.CJUNC_SV_CF_KIND` · 규칙 = `CJUNC_SV_CF_RULE` 만 (이름 대조 · 끊는 면의
+    #    뜻에는 기대지 않는다) · 다른 값 = 자기 사유 문장으로 거부 · 증서 구간 · 진단 기록 둘 다
+    import carbon_junction as _cjw
+    c5 = {'다른 정의 이름 (kind counterfactual_cut_bridging_sv_faces)': (lambda r: r.update(kind='counterfactual_cut_bridging_sv_faces'), 'kind'),
+          '옛 정의 이름 (kind counterfactual_cut_sv_faces = SV 면 전부)': (lambda r: r.update(kind='counterfactual_cut_sv_faces'), 'kind'),
+          '리뷰 A4 (kind counterfactual_cut_sv_faces_all)': (lambda r: r.update(kind='counterfactual_cut_sv_faces_all'), 'kind'),
+          '종류 접두어만 같음 (kind counterfactual)': (lambda r: r.update(kind='counterfactual'), 'kind'),
+          '종류 글자 아님 (목록)': (lambda r: r.update(kind=[_cjw.CJUNC_SV_CF_KIND]), 'kind'),
+          '리뷰 A4 (rule some_other_rule)': (lambda r: r.update(rule='some_other_rule'), 'rule'),
+          '규칙 없음': (lambda r: r.pop('rule'), 'rule'),
+          '규칙 None': (lambda r: r.update(rule=None), 'rule'),
+          '규칙 = 괄호 규칙 이름': (lambda r: r.update(rule=_cjw.CJUNC_SV_CF_BRACKET_RULE), 'rule')}
+    for certs in (True, False):
+        for nm, (fn, field) in c5.items():
+            raw = _sv_raw('computed', 1.25, certs=certs)
+            fn(raw)
+            x = deep(mm)
+            _sv_put(x, proj(raw))
+            got = RC.ca_ext_record_ok(x)
+            chk(f'S8w 종류 · 규칙 = 등록 이름만 (10-23 사전 공격 리뷰 C5) → 거부 [{nm} · {"증서 구간" if certs else "진단"}]',
+                not got[0] and isinstance(got[1], str) and '사전 공격 리뷰 C5' in got[1] and f'기록 {"종류" if field == "kind" else "규칙"}' in got[1],
+                got)
+    raw = _sv_raw('computed', 1.25)
+    x = deep(mm)
+    _sv_put(x, proj(raw))
+    chk('S8w′ 등록 종류 · 규칙 (생산자 상수) → 받음 · 투영이 규칙을 옮긴다 (10-23 사전 공격 리뷰 C5)',
+        RC.ca_ext_record_ok(x) == (True, None) and proj(raw).get('rule') == _cjw.CJUNC_SV_CF_RULE
+        and proj(raw).get('kind') == _cjw.CJUNC_SV_CF_KIND, (RC.ca_ext_record_ok(x), proj(raw).get('rule')))
     raw = _sv_raw('computed', 1.25)
     raw.pop('n_sv_faces_cut')
     raw['n_bridging_faces_cut'] = 3
