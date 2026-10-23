@@ -1,0 +1,6 @@
+{
+  "status": "PENDING",
+  "scope": "Root must run bash scripts/check_all.sh on the integrated clean candidate. The author 13-command kit suite and independent probes are not the complete repository gate.",
+  "command": "bash scripts/check_all.sh",
+  "rc": null
+}

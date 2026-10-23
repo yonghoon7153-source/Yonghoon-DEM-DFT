@@ -1,0 +1,68 @@
+{
+  "status": "PASS",
+  "failures": [],
+  "scope": "Independent narrow ULPR resume identifier code and accompanying README/preregistration review; no physical run, fullgate, publication or external approval evidence.",
+  "base": "8347d32ea678c0174bd77d4c79cfbd7b0591e4a3",
+  "reader_sha256": "7a395a549e8ad3eae820a9e575f094219ca7d47a4b9a07c5bc27623d7018af4b",
+  "candidate_diff_sha256": "ccd610c9e7c9b3d1443edba03324a8c0fdf0bed0330f908ca7844586b293efd0",
+  "direct_cases": {
+    "pass": 150,
+    "fail": 0
+  },
+  "canonical_reader_selftest": {
+    "rc": 0,
+    "pass": 304,
+    "fail": 0,
+    "log_sha256": "78a2b504dc5f9e3854af79c647361ce9e1845ad0c65df243485eb1a662fd1e67"
+  },
+  "kit_manifest_members": 76,
+  "changed_paths": [
+    "docs/reviews/dem_unloading_ps45_prereg_20261009.md",
+    "docs/data/ps45_unload_20261009/seal_kit.py",
+    "docs/data/ps45_unload_20261009/README.md",
+    "docs/data/ps45_unload_20261009/active_rules.json",
+    "docs/data/ps45_unload_20261009/SHA256SUMS",
+    "docs/data/ps45_unload_20261009/ul_reader.py"
+  ],
+  "historical_findings": [
+    {
+      "id": "ULPR-ID-01",
+      "detail": "Non-ASCII prefix allowed malformed manifest marker to be ignored.",
+      "status": "FIXED_AND_INDEPENDENTLY_RETESTED"
+    },
+    {
+      "id": "ULPR-ID-02",
+      "detail": "Unicode line separators erased malformed state/manifest content before integer validation.",
+      "status": "FIXED_AND_INDEPENDENTLY_RETESTED"
+    },
+    {
+      "id": "ULPR-ID-03",
+      "detail": "Event CSV structural errors could remove an ambiguous RESUME row while authorizing a remaining valid event.",
+      "status": "FIXED_AND_INDEPENDENTLY_RETESTED"
+    }
+  ],
+  "source_scope": "Patch exactly reconstructed from pinned base for six paths; all 73 unmodified kit-manifest members equal baseline; all 76 current kit manifest members verify. Partial author snapshot excludes sealed32 from patch, not a full imported-tree proof.",
+  "limits": [
+    "Full repository gate and final imported-tree source checks are root follow-up.",
+    "No installed simulation binary, external GO, physical run or real resume data were tested.",
+    "New handoff documents outside the six-file patch were not available in this code review."
+  ],
+  "independent_mutations": {
+    "tested": 2,
+    "detected": 2,
+    "exceptions": 0,
+    "source_unchanged": true,
+    "details": {
+      "event_rounding_restored": {
+        "canonical_R39_pass": 68,
+        "canonical_R39_fail": 22
+      },
+      "event_csv_structure_guard_removed": {
+        "canonical_R39_pass": 87,
+        "canonical_R39_fail": 3
+      }
+    },
+    "evidence": "../independent-mutations-v5/result.json",
+    "separate_from_author_mutations": true
+  }
+}

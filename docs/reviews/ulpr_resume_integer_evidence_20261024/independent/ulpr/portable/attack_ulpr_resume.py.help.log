@@ -1,0 +1,12 @@
+usage: attack_ulpr_resume.py [-h] --repo REPO --work WORK --out OUT
+                             --reader-sha READER_SHA
+
+Independent ULPR reader attacks; --repo is the baseline Git repository, --work
+is the candidate repository/export.
+
+options:
+  -h, --help            show this help message and exit
+  --repo REPO
+  --work WORK
+  --out OUT
+  --reader-sha READER_SHA

@@ -1,0 +1,47 @@
+{
+  "reader_sha256": "857e9e869f7e12ad45c8e95ed0c79d1b0ab66a1f3367866b59f95553d3cec9c7",
+  "cases": [
+    {
+      "separator": "0x85",
+      "resume_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded": 5,
+      "problems": [
+        "ul_events.csv:6 열 수 2 ≠ 6",
+        "ul_events.csv:7 열 수 5 ≠ 6"
+      ]
+    },
+    {
+      "separator": "0x2028",
+      "resume_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded": 5,
+      "problems": [
+        "ul_events.csv:6 열 수 2 ≠ 6",
+        "ul_events.csv:7 열 수 5 ≠ 6"
+      ]
+    },
+    {
+      "separator": "0x2029",
+      "resume_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded": 5,
+      "problems": [
+        "ul_events.csv:6 열 수 2 ≠ 6",
+        "ul_events.csv:7 열 수 5 ≠ 6"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,182 @@
+[
+  {
+    "kr": 0,
+    "sr": 3230000,
+    "baseline": "OK",
+    "baseline_rho": 0.20260778734286913,
+    "new_sim_result": "RM_STOP",
+    "new_sim_aborted": null,
+    "csv_rows_match_uninterrupted": false,
+    "new_events": [
+      [
+        "RESUME",
+        "0",
+        "3230000",
+        "0.111052",
+        "0",
+        "state"
+      ],
+      [
+        "MODE_B",
+        "1",
+        "3310000",
+        "0.111252",
+        "0.000200000000000006",
+        "next"
+      ],
+      [
+        "CROSS",
+        "2",
+        "3360000",
+        "0.111302",
+        "0.00025",
+        "first"
+      ],
+      [
+        "RM",
+        "4",
+        "3460000",
+        "0.111402",
+        "0.000350000000000003",
+        "ncross2"
+      ],
+      [
+        "RM_STOP",
+        "4",
+        "3460000",
+        "0.111402",
+        "0.000350000000000003",
+        "UT"
+      ]
+    ],
+    "cli_rc": 0,
+    "primary_status": "OK",
+    "rho": 0.20260778734286913,
+    "problems": []
+  },
+  {
+    "kr": 1,
+    "sr": 3310000,
+    "baseline": "OK",
+    "baseline_rho": 0.20260778734286913,
+    "new_sim_result": "RM_STOP",
+    "new_sim_aborted": null,
+    "csv_rows_match_uninterrupted": false,
+    "new_events": [
+      [
+        "RESUME",
+        "1",
+        "3310000",
+        "0.111252",
+        "0.000200000000000006",
+        "state"
+      ],
+      [
+        "CROSS",
+        "2",
+        "3360000",
+        "0.111302",
+        "0.00025",
+        "first"
+      ],
+      [
+        "RM",
+        "4",
+        "3460000",
+        "0.111402",
+        "0.000350000000000003",
+        "ncross2"
+      ],
+      [
+        "RM_STOP",
+        "4",
+        "3460000",
+        "0.111402",
+        "0.000350000000000003",
+        "UT"
+      ]
+    ],
+    "cli_rc": 0,
+    "primary_status": "OK",
+    "rho": 0.20260778734286913,
+    "problems": []
+  },
+  {
+    "kr": 2,
+    "sr": 3360000,
+    "baseline": "OK",
+    "baseline_rho": 0.20260778734286913,
+    "new_sim_result": "RM_STOP",
+    "new_sim_aborted": null,
+    "csv_rows_match_uninterrupted": true,
+    "new_events": [
+      [
+        "RESUME",
+        "2",
+        "3360000",
+        "0.111302",
+        "0.00025",
+        "state"
+      ],
+      [
+        "RM",
+        "4",
+        "3460000",
+        "0.111402",
+        "0.000350000000000003",
+        "ncross2"
+      ],
+      [
+        "RM_STOP",
+        "4",
+        "3460000",
+        "0.111402",
+        "0.000350000000000003",
+        "UT"
+      ]
+    ],
+    "cli_rc": 0,
+    "primary_status": "OK",
+    "rho": 0.20260778734286913,
+    "problems": []
+  },
+  {
+    "kr": 3,
+    "sr": 3410000,
+    "baseline": "OK",
+    "baseline_rho": 0.20260778734286913,
+    "new_sim_result": "RM_STOP",
+    "new_sim_aborted": null,
+    "csv_rows_match_uninterrupted": true,
+    "new_events": [
+      [
+        "RESUME",
+        "3",
+        "3410000",
+        "0.111352",
+        "0.000300000000000009",
+        "state"
+      ],
+      [
+        "RM",
+        "4",
+        "3460000",
+        "0.111402",
+        "0.000350000000000003",
+        "ncross2"
+      ],
+      [
+        "RM_STOP",
+        "4",
+        "3460000",
+        "0.111402",
+        "0.000350000000000003",
+        "UT"
+      ]
+    ],
+    "cli_rc": 0,
+    "primary_status": "OK",
+    "rho": 0.20260778734286913,
+    "problems": []
+  }
+]

@@ -57,8 +57,9 @@ RULES = (
      '(ul_rstep · ul_k) 이 맞고 · 버릴 줄 = 그 step 뒤 · 버린 뒤 앞 줄 = (k · step) · 새 시도 첫 줄 = k + 1 · 그 밖 중복 · 역행 step · k · w = 버리지 않고 주 값 미식별 · '
      '경계 하나에 승인 한 번 (같은 경계 RESUME 중복 · 상충 · 사건 ↔ 상태 파일 불일치 = 승인 없음 + 사유 · 사건 되감기도 같은 규칙 · ULKRF-01) · 새 시도 시작 = 승인 경계 뒤 '
      'step 역행 또는 (단 CSV) k 가 경계 k + 1 로 되돌아옴 — 먼저 오는 쪽 (새 시도가 옛 시도보다 늦게 끝나도 · ULKRF-02) · ULPR-01 창·단·사건 소속 대조: 불명확 꼬리 격리, 경계 앞 완료 주 값은 보존하되 전체 union은 미확인 '
+     '· RESUME k/step 및 상태 ul_k/ul_rstep = 원문 정수값 정확 확인 (반올림 없음) · 모호 사건/상태 중복/잘못된 resume_from 표지로 승인하지 않음 (10-24 R39) '
      '(개정 3 §14-4 · §14-10 · ULKRR-02 · 등록 §14-11 · §14-12)',
-     'ul_reader.py', '_supersede', ('ul_reader R28', 'ul_reader R10', 'ul_reader R33', 'ul_reader R34', 'ul_reader R37', 'ul_reader R38', 'ul_runner_test M23')),
+     'ul_reader.py', '_supersede', ('ul_reader R28', 'ul_reader R10', 'ul_reader R33', 'ul_reader R34', 'ul_reader R37', 'ul_reader R38', 'ul_reader R39', 'ul_runner_test M23')),
     ('separation', '창 접촉 상태 CONTACT · TENSION · ZERO · OBS_MISSING (≠ 0) · 분리 = 같은 단 (k) 안 연속 두 0 창의 둘째 창 끝 (SEPARATE 단계 창 · 이동 = 연속 '
      '초기화 · 덱과 같은 규칙) · 재접촉 = 계수 · 분리 뒤 창 초기화 · 창 기록 = 같은 k 안 고유 · 연속 w + 그 팔 창 간격 W (빈 구간 = 연속 끊김 · 예산 끝 선언 → '
      '분리 뒤 4 창은 그대로) (§13-3 · 개정 3 §14-7 · Q4 가)',

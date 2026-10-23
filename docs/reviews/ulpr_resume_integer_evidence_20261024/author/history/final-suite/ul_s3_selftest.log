@@ -1,0 +1,22 @@
+$ python3 -I ul_s3.py --selftest
+# cwd = kit folder · rc = 1 · 0.1 s
+# ── stdout ──
+  ✓ F1 중력과 정확히 평형인 다섯 구 사슬 = PASS (총힘 잔차 ≈ 부동소수)
+  ✓ F1 같은 입력의 옛 쌍 전용 잔차 = 0.0400 (CX1 §3 · 진단 열 — 관문 아님)
+  ✗ F1 봉인 plane_load_share.compute 의 balance_residual 도 0.0400 (같은 식 · 리포 함수 그대로 부름 · 고치지 않음)  — FileNotFoundError: [Errno 2] No such file or directory: '/workspace/.cloud-setup/nonrint-20261024/ulpr/work/scripts/plane_load_share.py'
+  ✓ F2 힘 불균형 사슬 (13 → 13.5 w) = FAIL (R = 1 w / 106 w ≈ 0.0094)
+  ✓ F3 같은 크기 반대 힘 (+1e-5 · −1e-5 N · 분모 0.01 N) = 입자별 norm 합 0.002 → FAIL · 전역 합 0 은 진단 열로만
+  ✓ F4 문턱 양옆: R 0.999e-3 PASS · 1.001e-3 FAIL (문턱 1e-3 그대로 · 넓히지 않는다)
+  ✓ F5 저압 (접촉력 ≪ 무게) 평형 = PASS (분모 = 무게 floor)
+  ✓ F6 무접촉 (바닥에 놓인 입자 · 총힘 0) = PASS · 분모 = Σ m g (중력을 다시 더하면 실패해야 — 이중 가산 금지)
+  ✓ F7 유효 집합 공집합 (전부 판 위로 이탈) = NOT_COMPUTED (PASS 아님)
+  ✓ F8 단위 환산 (힘 · 무게 × 1000) = 같은 R
+  ✓ F9 누락 열 (fz 없음) = NOT_COMPUTED
+  ✓ F9 비유한 힘 (NaN) = NOT_COMPUTED (비교로 흘려보내지 않는다)
+  ✓ F10 두 덤프의 step 이 다름 (동일 시점 아님) = NOT_COMPUTED
+  ✓ F11 판 위로 이탈한 입자 · S0 에 없던 id 는 집합 밖 (자유 낙하 −m g 가 잔차에 안 들어간다)
+  ✓ F12 ULKRR-04 소수 원자 ID (2 → 2.5 — 정수 2 로 자르지 않는다) = NOT_COMPUTED
+  ✓ F12 ULKRR-04 소수 쌍 참조 (id2 2 → 2.5) = NOT_COMPUTED · 대조: 정수 그대로 = PASS
+selftest: FAIL (1 실패)
+# ── stderr ──
+# ── rc = 1 ──

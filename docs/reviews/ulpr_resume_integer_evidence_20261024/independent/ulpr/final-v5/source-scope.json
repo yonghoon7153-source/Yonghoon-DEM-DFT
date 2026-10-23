@@ -1,0 +1,56 @@
+{
+  "status": "PASS",
+  "base": "8347d32ea678c0174bd77d4c79cfbd7b0591e4a3",
+  "candidate_diff_sha256": "ccd610c9e7c9b3d1443edba03324a8c0fdf0bed0330f908ca7844586b293efd0",
+  "diff_exactly_matches_pinned_base_to_work": true,
+  "paths": [
+    "docs/reviews/dem_unloading_ps45_prereg_20261009.md",
+    "docs/data/ps45_unload_20261009/seal_kit.py",
+    "docs/data/ps45_unload_20261009/README.md",
+    "docs/data/ps45_unload_20261009/active_rules.json",
+    "docs/data/ps45_unload_20261009/SHA256SUMS",
+    "docs/data/ps45_unload_20261009/ul_reader.py"
+  ],
+  "path_count": 6,
+  "manifest_changed_members": [
+    "ul_reader.py",
+    "seal_kit.py",
+    "active_rules.json"
+  ],
+  "manifest_unchanged_members": 73,
+  "manifest_unchanged_members_equal_base": true,
+  "sealed32_patch_intersection": [],
+  "sealed32_base_count": 32,
+  "snapshot_scope": "Author work is a partial ULPR snapshot; untouched full repository bytes are not present. Verified patch excludes all sealed paths; root must verify final imported tree.",
+  "source_hashes": {
+    "docs/reviews/dem_unloading_ps45_prereg_20261009.md": {
+      "base": "69ebe5a144d9e8fb67c2a9c0aa913417fd4f2e8e5b42ee37770382139bbd8f9b",
+      "candidate": "2453fa640f21844691f7b158d7d9fe84caadb3877024a364ee6fa8bffa7f9496"
+    },
+    "docs/data/ps45_unload_20261009/seal_kit.py": {
+      "base": "0fc504fafbbb6a650a5b7868f8ce8edcb5cac6525f0c509257776ae45f31d22a",
+      "candidate": "807f1fca5a0e34a368227793382d3773e6c50c9205f2bee0c47701ec5814430a"
+    },
+    "docs/data/ps45_unload_20261009/README.md": {
+      "base": "9dda2b3d23d55cd75ff38d9491a808e821683fe82a38e6e49f13893de28e922b",
+      "candidate": "ead310ad38736904fcda7d8175856ffccd1c7d6b4d5c13ea6b1f39edbd28cc2f"
+    },
+    "docs/data/ps45_unload_20261009/active_rules.json": {
+      "base": "ba180bf5a375f7d068cd85478da637960cab5a049241a142626f19dedf8b3e7e",
+      "candidate": "8eb0cff450857bf4c23e62c0d5a121ed36bf212dc618be4c53c4d52a47eef42e"
+    },
+    "docs/data/ps45_unload_20261009/SHA256SUMS": {
+      "base": "6f75c01e297801f43ff6470dfda371f4520f2da1b29f1b4bafa82c799ed020e8",
+      "candidate": "48be53ecc2853a34a883dc38c2a26398939e682f47db2cff6ae26b01e85a338f"
+    },
+    "docs/data/ps45_unload_20261009/ul_reader.py": {
+      "base": "34b46ebcf4530989917493f20d2d953043209e36d89e6b8282a2d629050a078d",
+      "candidate": "7a395a549e8ad3eae820a9e575f094219ca7d47a4b9a07c5bc27623d7018af4b"
+    }
+  },
+  "original_resume_contract": [
+    "- ① 이어 돌림 경계 (`ULKRF-01` · `02` · §14-4 · §14-10 덧붙임): 승인 = **고유 경계 (k_r, s_r) 하나에 한 번** — 러너 `resume_from` 의 step 마다 RESUME 사건 정확히 한 줄 ·",
+    "  같은 경계의 RESUME 중복 · 상충 (같은 step 다른 k) · 사건 ↔ 상태 파일 불일치 · `resume_from` 밖 RESUME = 승인 없음 + 사유 (주 값 미식별) · 사건 되감기도 같은 규칙.",
+    "  새 시도 시작 = 승인 경계 뒤 먼저 오는 쪽 — step 역행 (창 · 단 기록) 또는 단 기록에서 k 가 k_r + 1 로 되돌아옴 (새 시도의 유지 창 수가 옛 시도와 달라 단 끝이 늦어져도) ·"
+  ]
+}
