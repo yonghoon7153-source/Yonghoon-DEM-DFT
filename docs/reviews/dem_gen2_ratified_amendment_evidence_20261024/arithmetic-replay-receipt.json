@@ -1,0 +1,12 @@
+{
+  "command": [
+    "/workspace/.venvs/yonghoon-dem/bin/python3.11",
+    "-I",
+    "-B",
+    "prior-probe_design_arithmetic.py"
+  ],
+  "python": "Python 3.11.17",
+  "exit_code": 0,
+  "equal_to_original_json": true,
+  "scope": "Replay of unchanged existing algebraic probe only; no physical execution or new registration"
+}

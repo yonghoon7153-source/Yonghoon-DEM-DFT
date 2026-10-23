@@ -1,0 +1,26 @@
+[
+  {
+    "pin": "962caea2d1857b0e34fe724e38815661936b7183",
+    "source": "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+    "copy": "plan-before-20261024.md",
+    "sha256": "b7f9c115ab6c092cd667be82e237994d50591342ff5e61793156c0c3ed74e333"
+  },
+  {
+    "pin": "962caea2d1857b0e34fe724e38815661936b7183",
+    "source": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/arithmetic-results.json",
+    "copy": "prior-arithmetic-results.json",
+    "sha256": "53221788aeacb759ccb45264d943cc94c86f01932eaf9bc33ff21f1f331fdf87"
+  },
+  {
+    "pin": "962caea2d1857b0e34fe724e38815661936b7183",
+    "source": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/probe_design_arithmetic.py",
+    "copy": "prior-probe_design_arithmetic.py",
+    "sha256": "8c7adf1f4957c7a5a145f7da8e55994caabfa5e26c60e07bd7f0916071a6a5e1"
+  },
+  {
+    "pin": "962caea2d1857b0e34fe724e38815661936b7183",
+    "source": "docs/reviews/codex_dem_protocol_gen2_design_request_20261023.md",
+    "copy": "request-before-20261024.md",
+    "sha256": "19cfb12f9524ef1d82dd267dc0472cfee410d1ec487bb973b6023dbaa6c41b84"
+  }
+]

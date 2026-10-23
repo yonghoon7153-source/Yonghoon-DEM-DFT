@@ -1,0 +1,34 @@
+[
+  {
+    "path": "docs/collab/codex_to_claude/20261024-0257_dem-gen2-t12-readiness.md",
+    "sha256": "ee40a8c4d317ebd69457f4f07c53879b69a9e67a48c8d6052d6bbed8f4837262"
+  },
+  {
+    "path": "docs/reviews/dem_gen2_t12_readiness_20261024.md",
+    "sha256": "62eaaa794b902acbe443b71f3ae2bc854dcdc1099fd6349180a361628be9d6cb"
+  },
+  {
+    "path": "docs/reviews/dem_gen2_t12_readiness_evidence_20261024/factual-input-form.blank.json",
+    "sha256": "caccb0e9784043d2f7f0aa71f64ab8aa1079768524f32e753dd4ae23c7b29aaa"
+  },
+  {
+    "path": "docs/reviews/dem_gen2_t12_readiness_evidence_20261024/independent/dem-t12-factual-review.json",
+    "sha256": "84aa4653ff81371717b89a8355b357e67a1ff7c1a527bcfbfd8b9e4ced10503e"
+  },
+  {
+    "path": "docs/reviews/dem_gen2_t12_readiness_evidence_20261024/independent/dem-t12-factual-review.md",
+    "sha256": "fabcc5076e086bc2cc8a4e8ceb99b0ea4ef5cc30d20a60fd255a6f50f8e154ca"
+  },
+  {
+    "path": "docs/reviews/dem_gen2_t12_readiness_evidence_20261024/p1-consumer-contract.json",
+    "sha256": "4078ec6d4bf45703f671ab06d6a7efa3e0c4d762a66a02b0f291896d6a41d503"
+  },
+  {
+    "path": "docs/reviews/dem_gen2_t12_readiness_evidence_20261024/source-manifest.json",
+    "sha256": "c8dddb586776671a920066d9493b519552389faba2408ce97b071becd8160f80"
+  },
+  {
+    "path": "docs/reviews/dem_gen2_t12_readiness_evidence_20261024/verification.json",
+    "sha256": "0f67810251bca55b0cc9289cf232688d00a04e7a9a7b3136377ec88eba8a21d8"
+  }
+]

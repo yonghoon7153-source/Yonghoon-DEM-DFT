@@ -1,0 +1,32 @@
+{
+  "schema": "dem_gen2_ratified_amendment_full_gate_v1",
+  "status": "PENDING",
+  "branch": "codex/dem-gen2-request",
+  "source_base": "962caea2d1857b0e34fe724e38815661936b7183",
+  "candidate_commit_placeholder": "<<sha:Apply ratified DEM generation 2 corrections>>",
+  "plan_sha256": "674ce63cc21a767e6c74d3824e3b02b5e8409fceb8cc1dd729dec979e521b0c1",
+  "commands": [
+    {
+      "command": "python3 scripts/check_doc_refs.py",
+      "status": "PENDING",
+      "exit_code": null,
+      "log_path": null,
+      "log_sha256": null
+    },
+    {
+      "command": "python3 scripts/check_review_findings.py",
+      "status": "PENDING",
+      "exit_code": null,
+      "log_path": null,
+      "log_sha256": null
+    },
+    {
+      "command": "bash scripts/check_all.sh",
+      "status": "PENDING",
+      "exit_code": null,
+      "log_path": null,
+      "log_sha256": null
+    }
+  ],
+  "scope": "Root records actual final integrated runs; prior 10-23 PASS does not establish this changed plan passes."
+}

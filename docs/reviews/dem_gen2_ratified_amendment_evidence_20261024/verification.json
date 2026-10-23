@@ -1,0 +1,1246 @@
+{
+  "state": "FOCUSED_CHECKS_PASS",
+  "python": "3.11.17 (main, Oct  3 2026, 01:05:36) [Clang 22.1.3 ]",
+  "source_base": "962caea2d1857b0e34fe724e38815661936b7183",
+  "plan_sha256": "674ce63cc21a767e6c74d3824e3b02b5e8409fceb8cc1dd729dec979e521b0c1",
+  "request_sha256": "13bc7f7192f49be2fc63f78426b43db49ede84e963159243b2419849acb84dd9",
+  "proof_checks": [
+    {
+      "check": "pinned_original_blob",
+      "path": "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+      "sha256": "b7f9c115ab6c092cd667be82e237994d50591342ff5e61793156c0c3ed74e333",
+      "status": "PASS"
+    },
+    {
+      "check": "pinned_original_blob",
+      "path": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/arithmetic-results.json",
+      "sha256": "53221788aeacb759ccb45264d943cc94c86f01932eaf9bc33ff21f1f331fdf87",
+      "status": "PASS"
+    },
+    {
+      "check": "pinned_original_blob",
+      "path": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/probe_design_arithmetic.py",
+      "sha256": "8c7adf1f4957c7a5a145f7da8e55994caabfa5e26c60e07bd7f0916071a6a5e1",
+      "status": "PASS"
+    },
+    {
+      "check": "pinned_original_blob",
+      "path": "docs/reviews/codex_dem_protocol_gen2_design_request_20261023.md",
+      "sha256": "19cfb12f9524ef1d82dd267dc0472cfee410d1ec487bb973b6023dbaa6c41b84",
+      "status": "PASS"
+    },
+    {
+      "check": "T12_byte_preservation",
+      "path": "docs/collab/codex_to_claude/20261024-0257_dem-gen2-t12-readiness.md",
+      "sha256": "ee40a8c4d317ebd69457f4f07c53879b69a9e67a48c8d6052d6bbed8f4837262",
+      "status": "PASS"
+    },
+    {
+      "check": "T12_byte_preservation",
+      "path": "docs/reviews/dem_gen2_t12_readiness_20261024.md",
+      "sha256": "62eaaa794b902acbe443b71f3ae2bc854dcdc1099fd6349180a361628be9d6cb",
+      "status": "PASS"
+    },
+    {
+      "check": "T12_byte_preservation",
+      "path": "docs/reviews/dem_gen2_t12_readiness_evidence_20261024/factual-input-form.blank.json",
+      "sha256": "caccb0e9784043d2f7f0aa71f64ab8aa1079768524f32e753dd4ae23c7b29aaa",
+      "status": "PASS"
+    },
+    {
+      "check": "T12_byte_preservation",
+      "path": "docs/reviews/dem_gen2_t12_readiness_evidence_20261024/independent/dem-t12-factual-review.json",
+      "sha256": "84aa4653ff81371717b89a8355b357e67a1ff7c1a527bcfbfd8b9e4ced10503e",
+      "status": "PASS"
+    },
+    {
+      "check": "T12_byte_preservation",
+      "path": "docs/reviews/dem_gen2_t12_readiness_evidence_20261024/independent/dem-t12-factual-review.md",
+      "sha256": "fabcc5076e086bc2cc8a4e8ceb99b0ea4ef5cc30d20a60fd255a6f50f8e154ca",
+      "status": "PASS"
+    },
+    {
+      "check": "T12_byte_preservation",
+      "path": "docs/reviews/dem_gen2_t12_readiness_evidence_20261024/p1-consumer-contract.json",
+      "sha256": "4078ec6d4bf45703f671ab06d6a7efa3e0c4d762a66a02b0f291896d6a41d503",
+      "status": "PASS"
+    },
+    {
+      "check": "T12_byte_preservation",
+      "path": "docs/reviews/dem_gen2_t12_readiness_evidence_20261024/source-manifest.json",
+      "sha256": "c8dddb586776671a920066d9493b519552389faba2408ce97b071becd8160f80",
+      "status": "PASS"
+    },
+    {
+      "check": "T12_byte_preservation",
+      "path": "docs/reviews/dem_gen2_t12_readiness_evidence_20261024/verification.json",
+      "sha256": "0f67810251bca55b0cc9289cf232688d00a04e7a9a7b3136377ec88eba8a21d8",
+      "status": "PASS"
+    },
+    {
+      "check": "unique_numbered_sections_0_through_12",
+      "status": "PASS"
+    },
+    {
+      "check": "Q12_Q15_exact_original_row_preserved",
+      "row": "| Q12 |",
+      "status": "PASS"
+    },
+    {
+      "check": "Q12_Q15_exact_original_row_preserved",
+      "row": "| Q15 |",
+      "status": "PASS"
+    },
+    {
+      "check": "original_section11_preserved",
+      "status": "PASS"
+    },
+    {
+      "check": "documented_replacement_present",
+      "id": "A1 recovery range",
+      "count": 2,
+      "status": "PASS"
+    },
+    {
+      "check": "documented_replacement_present",
+      "id": "A2 rounded table boundary",
+      "count": 1,
+      "status": "PASS"
+    },
+    {
+      "check": "documented_replacement_present",
+      "id": "A2 point rejection",
+      "count": 1,
+      "status": "PASS"
+    },
+    {
+      "check": "documented_replacement_present",
+      "id": "A2 no guaranteed measurement discrimination",
+      "count": 1,
+      "status": "PASS"
+    },
+    {
+      "check": "documented_replacement_present",
+      "id": "A4 ladder wording",
+      "count": 1,
+      "status": "PASS"
+    },
+    {
+      "check": "documented_replacement_present",
+      "id": "A3 T5 acceptance",
+      "count": 1,
+      "status": "PASS"
+    },
+    {
+      "check": "documented_replacement_present",
+      "id": "A5 servo qualification",
+      "count": 1,
+      "status": "PASS"
+    },
+    {
+      "check": "documented_replacement_present",
+      "id": "A5 T11 scope",
+      "count": 1,
+      "status": "PASS"
+    },
+    {
+      "check": "documented_replacement_present",
+      "id": "A5 T11 pass scope",
+      "count": 1,
+      "status": "PASS"
+    },
+    {
+      "check": "documented_replacement_present",
+      "id": "A2 Q7 interpretation",
+      "count": 1,
+      "status": "PASS"
+    },
+    {
+      "check": "documented_replacement_present",
+      "id": "A2 historical quotation precedence",
+      "count": 1,
+      "status": "PASS"
+    },
+    {
+      "check": "documented_replacement_present",
+      "id": "historical status label",
+      "count": 1,
+      "status": "PASS"
+    },
+    {
+      "check": "documented_replacement_present",
+      "id": "historical sequence label",
+      "count": 1,
+      "status": "PASS"
+    },
+    {
+      "check": "documented_replacement_present",
+      "id": "historical prerequisites label",
+      "count": 1,
+      "status": "PASS"
+    },
+    {
+      "check": "documented_replacement_present",
+      "id": "historical dissemination heading",
+      "count": 1,
+      "status": "PASS"
+    },
+    {
+      "check": "documented_replacement_present",
+      "id": "historical dissemination pending status",
+      "count": 1,
+      "status": "PASS"
+    },
+    {
+      "check": "remaining_section11_references_are_original_literature",
+      "lines": [
+        "> **문헌**: litdb 정본 브랜치 `origin/claude/friendly-meitner-lldvar` 의 카드만 (이 초안이 읽은 판 = 커밋 `9dc235c38`) — 인용 꼴 = `litdb-canon:<slug>` + 카드가 적은 쪽 · 그림 · 표.  카드에 없는 서지 · 값은 채우지 않았다 (규율 ⑥) — 찾을 문헌 = §11.",
+        "| D7 | 10-14 저녁 4 | 계획서는 **litdb 정본 카드 등 근거와 함께** (*\"이 모든 과정을 litdb 등의 reference와 함께\"*) | §10 · §11 |"
+      ],
+      "status": "PASS"
+    },
+    {
+      "check": "unchanged_prior_arithmetic_probe_replay_matches_pinned_json",
+      "status": "PASS"
+    }
+  ],
+  "ban_sweep": {
+    "scope": "all exported Markdown and Python files, including historical copies; repository claims.json used",
+    "files": 15,
+    "registered_bans": 42,
+    "problems": []
+  },
+  "focused_doc_refs": {
+    "scope": "exported Markdown only; paths resolved against export then pinned source tree; SHA reachability is remotes+the explicitly designated source-base ancestors, equivalent to checker rule with HEAD at source base; actual shared-checkout HEAD may be another track; no full gate claim",
+    "pin": "962caea2d1857b0e34fe724e38815661936b7183",
+    "files": 13,
+    "reachable_commit_count": 8859,
+    "shared_checkout_current_HEAD_bad_sha_context": [
+      [
+        "docs/collab/codex_to_claude/20261024-0345_dem-gen2-ratified-plan.md",
+        "962caea2d1857b0e34fe724e38815661936b7183"
+      ],
+      [
+        "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/20261024-0345_dem-gen2-ratified-plan.md",
+        "962caea2d1857b0e34fe724e38815661936b7183"
+      ]
+    ],
+    "allowlist_bad": [],
+    "allowlist_external_hash_warnings": [
+      "docs/data/mpm_dem_match.csv — sha256 없음 (위치만: 사용자 WSL `~/work/mpm/` (sha256 미기록))",
+      "post_lhs00_110/atom_2980000.liggghts — sha256 없음 (위치만: ibb `~/dem_test/post_lhs00_110/` (sha256 미기록))",
+      "post_lhs00_000/atom_2425000.liggghts — sha256 없음 (위치만: ibb `~/dem_test/post_lhs00_000/` (sha256 미기록))",
+      "Mixer/input.liggghts — sha256 없음 (위치만: 사용자 Windows `F:\\DEM\\examples\\LIGGGHTS\\Tutorials_public\\Mixer\\` (LIGGGHTS-PUBLIC 동봉 예제, sha256 미기록))",
+      "lhs_coverage_reverify_evidence_20260930/prior_audit_results.json — sha256 없음 (위치만: 사용자 Windows Codex 작업 공간 C:/Users/Administrator/Documents/Codex/2026-08-24/claude-stoic-knuth-nobvq-x20/ (같은 내용의 리포 사본 = docs/reviews/codex_lhs_coverage_reverify_evidence_20260930/prior_audit_results.json))",
+      "lhs_coverage_review_20260930/baseline/scripts/lhs_descriptor_harvest.py — sha256 없음 (위치만: 사용자 Windows Codex 작업 공간 C:/Users/Administrator/Documents/Codex/2026-08-24/claude-stoic-knuth-nobvq-x20/ (첫 리뷰의 기준 사본 · 우리 쪽 = 커밋 2e57dff90 의 같은 파일))",
+      "evidence/audit_results.json — sha256 없음 (위치만: 사용자 Windows Codex 작업 공간 C:/Users/Administrator/Documents/Codex/2026-08-24/claude-stoic-knuth-nobvq-x20/mixer_highbo_round10_review_20260930/ (같은 내용의 리포 사본 = docs/reviews/codex_review_mixer_highbo_round10_evidence_20260930/evidence/audit_results.json))",
+      "comsol/BDM_UG.txt — sha256 없음 (위치만: https://doc.comsol.com/5.6/doc/com.comsol.help.battery/BatteryDesignModuleUsersGuide.pdf)",
+      "out/status.json — sha256 없음 (위치만: 위치: 1저자 WSL ~/net194_11fcf91e8/cases/<case>/out/status.json (194 케이스 · 리포 미반입 · sha256 미기록 — merge 가 읽어 docs/data/lhs_network194_11fcf91e8/merged/{lhs,lhsx}/status.json 로 합친 것은 커밋됨))",
+      "evidence/seal_paths.json — sha256 없음 (위치만: 위치: 사용자 Windows Codex 작업 공간 — ZIP codex_gen2_network_reverify2_20261007.zip (판정문 머리 반입 표지 · 아직 리포 미반입 · sha256 미기록 — 받으면 docs/reviews/codex_gen2_network_reverify2_evidence_20261007/ 로))",
+      "evidence/dependency_gap.json — sha256 없음 (위치만: 위치: 사용자 Windows Codex 작업 공간 — ZIP codex_gen2_network_reverify2_20261007.zip (판정문 머리 반입 표지 · 아직 리포 미반입 · sha256 미기록 — 받으면 docs/reviews/codex_gen2_network_reverify2_evidence_20261007/ 로))",
+      "evidence/branch_policy.json — sha256 없음 (위치만: 위치: 사용자 Windows Codex 작업 공간 — ZIP codex_gen2_network_reverify2_20261007.zip (판정문 머리 반입 표지 · 아직 리포 미반입 · sha256 미기록 — 받으면 docs/reviews/codex_gen2_network_reverify2_evidence_20261007/ 로))"
+    ],
+    "sha_exception_stale": [],
+    "results": {
+      "missing": [],
+      "bad_sha": [],
+      "cross": [],
+      "unsure": [
+        [
+          "docs/collab/codex_to_claude/20261024-0257_dem-gen2-t12-readiness.md",
+          "8347d32ea678c0174bd77d4c79cfbd7b0591e4a3"
+        ],
+        [
+          "docs/reviews/codex_dem_protocol_gen2_ratified_update_20261024.md",
+          "source-provenance.json"
+        ],
+        [
+          "docs/reviews/codex_dem_protocol_gen2_ratified_update_20261024.md",
+          "full_gate_receipt.json"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "all_dem_porosity.csv"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "all_dem_porosity.csv"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/request-before-20261024.md",
+          "RECHECK-v2.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/request-before-20261024.md",
+          "PIN.txt"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/request-before-20261024.md",
+          "findings.json"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/request-before-20261024.md",
+          "claims.json"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/request-before-20261024.md",
+          "codex_review_model_validation_20261008.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/request-before-20261024.md",
+          "_README_reproduction.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/request-before-20261024.md",
+          "in.branch_B.liggghts"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/request-before-20261024.md",
+          "make_branch_decks.py"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/request-before-20261024.md",
+          "dem_unloading_ps45_prereg_20261009.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/request-before-20261024.md",
+          "unload_params.json"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/request-before-20261024.md",
+          "dem_governing_equations_background_20261011.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/request-before-20261024.md",
+          "dem_governing_equations_report_20261009.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/request-before-20261024.md",
+          "heckel_pure_se_dem.csv"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/request-before-20261024.md",
+          "CLAIM_AUDIT.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/request-before-20261024.md",
+          "probe_design_arithmetic.py"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/request-before-20261024.md",
+          "literature-manifest.json"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/request-before-20261024.md",
+          "repo-mc-results.json"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/request-before-20261024.md",
+          "probe_design_arithmetic.py"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/request-before-20261024.md",
+          "arithmetic-results.json"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/request-before-20261024.md",
+          "mv_pressure_arithmetic.py"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/request-before-20261024.md",
+          "legacy-pressure-results.json"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/request-before-20261024.md",
+          "RECHECK-v2.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/codex_dem_protocol_gen2_ratified_update_20261024.md",
+          "source-provenance.json"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/codex_dem_protocol_gen2_ratified_update_20261024.md",
+          "full_gate_receipt.json"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "all_dem_porosity.csv"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "all_dem_porosity.csv"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "plan-before-20261024.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "request-before-20261024.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "source-provenance.json"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "prior-arithmetic-results.json"
+        ],
+        [
+          "docs/reviews/dem_gen2_t12_readiness_20261024.md",
+          "run_unload.sh"
+        ],
+        [
+          "docs/reviews/dem_gen2_t12_readiness_20261024.md",
+          "verification.json"
+        ],
+        [
+          "docs/reviews/dem_gen2_t12_readiness_20261024.md",
+          "8347d32ea678c0174bd77d4c79cfbd7b0591e4a3"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "all_dem_porosity.csv"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "all_dem_porosity.csv"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "plan-before-20261024.md"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "request-before-20261024.md"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "source-provenance.json"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "prior-arithmetic-results.json"
+        ]
+      ],
+      "allowed": [],
+      "resolved_at_pinned_base": [
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/reviews/findings.json"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/reviews/codex_review_model_validation_20261008.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/data/ps73_damping_branch_20261007/README.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/reviews/dem_unloading_ps45_prereg_20261009.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/data/ps45_unload_20261009/README.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/reviews/codex_review_dem_unloading_kit_20261014.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/reviews/dem_unloading_kit_fix_plan_20261014.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/dem_governing_equations_background_20261011.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/dem_governing_equations_report_20261009.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/esse_calibration_2mAh_real_9.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/reviews/claims.json"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/session_20260923_progress.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "scripts/make_heckel_inputs.py"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/data/ps73_damping_branch_20261007/in.branch_B.liggghts"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/data/ps73_compaction_curve_20261006/README.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/data/heckel_pure_se_dem.csv"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/data/esse_calibration_2mAh_real_9.csv"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/resume_ckpt_procedure_20260927.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "scripts/plane_load_share.py"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/data/ps45_unload_20261009/README.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/data/ps45_unload_20261009/unload_params.json"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "scripts/make_heckel_inputs.py"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/data/heckel_pure_se_dem.csv"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/porosity_regression_final.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "scripts/fit_porosity_v4_global.py"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/esse_calibration_2mAh_real_9.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "dem_scripts/ps_sweep_6mah_20260914/in.ps_7_3_r45.liggghts"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "scripts/make_heckel_inputs.py"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "scripts/dem_analysis_core.py"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "scripts/lhs_union_webapp.py"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/data/heckel_pure_se_dem.csv"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/data/ps45_unload_20261009/history_test/make_history_decks.py"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/data/ps73_damping_branch_20261007/make_branch_decks.py"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "scripts/resume_ckpt.sh"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/resume_ckpt_procedure_20260927.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/data/lhs_release_20261006_v12/README.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/reviews/lhs_release_v13_plan_20261007.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/data/ps45_r45_union_20260929/README.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/data/ps45_plane_load_20261007/README.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/data/ps73_compaction_curve_20261006/README.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/data/heckel_pure_se_dem.csv"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/data/heckel_reproduction_20260917/RESULT.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/data/heckel_real14_composite_multiP.csv"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/esse_calibration_2mAh_real_9.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/data/esse_calibration_2mAh_real_9.csv"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/porosity_regression_final.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "scripts/fit_porosity_v4_global.py"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/data/real14_am_scaffold.csv"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/data/real14_se_scaffold.csv"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/data/heckel_pure_se_dem.csv"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/data/heckel_real14_composite_multiP.csv"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/esse_calibration_2mAh_real_9.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/porosity_regression_final.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/data/heckel_pure_se_dem.csv"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/data/ps73_damping_branch_20261007/in.branch_B.liggghts"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/esse_calibration_2mAh_real_9.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/data/heckel_pure_se_dem.csv"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/data/heckel_real14_composite_multiP.csv"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "dem_scripts/ps_sweep_6mah_20260914/in.ps_7_3_r45.liggghts"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "scripts/make_heckel_inputs.py"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/plan-before-20261024.md",
+          "docs/reviews/codex_model_validation_review_evidence_20261008/_README_reproduction.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/request-before-20261024.md",
+          "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/REVIEW.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/request-before-20261024.md",
+          "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/RECHECK-v2.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/request-before-20261024.md",
+          "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/source-manifest.json"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/request-before-20261024.md",
+          "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/results.json"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/request-before-20261024.md",
+          "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/author/source-manifest.json"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/request-before-20261024.md",
+          "docs/reviews/codex_model_validation_review_evidence_20261008/probes/mv_pressure_arithmetic.py"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/request-before-20261024.md",
+          "scripts/make_heckel_inputs.py"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/request-before-20261024.md",
+          "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/REVIEW.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/request-before-20261024.md",
+          "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/independent/RECHECK-v2.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/request-before-20261024.md",
+          "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/package-audit/dem-gen2.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/request-before-20261024.md",
+          "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/package-audit/audited_request.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/request-before-20261024.md",
+          "scripts/check_all.sh"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/reviews/findings.json"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/reviews/codex_review_model_validation_20261008.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/ps73_damping_branch_20261007/README.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/reviews/dem_unloading_ps45_prereg_20261009.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/ps45_unload_20261009/README.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/reviews/codex_review_dem_unloading_kit_20261014.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/reviews/dem_unloading_kit_fix_plan_20261014.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/dem_governing_equations_background_20261011.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/dem_governing_equations_report_20261009.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/esse_calibration_2mAh_real_9.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/reviews/claims.json"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/session_20260923_progress.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "scripts/make_heckel_inputs.py"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/ps73_damping_branch_20261007/in.branch_B.liggghts"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/ps73_compaction_curve_20261006/README.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/heckel_pure_se_dem.csv"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/esse_calibration_2mAh_real_9.csv"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/resume_ckpt_procedure_20260927.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "scripts/plane_load_share.py"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/ps45_unload_20261009/README.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/ps45_unload_20261009/unload_params.json"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "scripts/make_heckel_inputs.py"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/heckel_pure_se_dem.csv"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/porosity_regression_final.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "scripts/fit_porosity_v4_global.py"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/esse_calibration_2mAh_real_9.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "dem_scripts/ps_sweep_6mah_20260914/in.ps_7_3_r45.liggghts"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "scripts/make_heckel_inputs.py"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "scripts/dem_analysis_core.py"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "scripts/lhs_union_webapp.py"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/heckel_pure_se_dem.csv"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/ps45_unload_20261009/history_test/make_history_decks.py"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/ps73_damping_branch_20261007/make_branch_decks.py"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "scripts/resume_ckpt.sh"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/resume_ckpt_procedure_20260927.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/lhs_release_20261006_v12/README.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/reviews/lhs_release_v13_plan_20261007.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/ps45_r45_union_20260929/README.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/ps45_plane_load_20261007/README.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/ps73_compaction_curve_20261006/README.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/heckel_pure_se_dem.csv"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/heckel_reproduction_20260917/RESULT.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/heckel_real14_composite_multiP.csv"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/esse_calibration_2mAh_real_9.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/esse_calibration_2mAh_real_9.csv"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/porosity_regression_final.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "scripts/fit_porosity_v4_global.py"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/real14_am_scaffold.csv"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/real14_se_scaffold.csv"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/heckel_pure_se_dem.csv"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/heckel_real14_composite_multiP.csv"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/esse_calibration_2mAh_real_9.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/porosity_regression_final.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/heckel_pure_se_dem.csv"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/ps73_damping_branch_20261007/in.branch_B.liggghts"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/esse_calibration_2mAh_real_9.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/heckel_pure_se_dem.csv"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/heckel_real14_composite_multiP.csv"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "dem_scripts/ps_sweep_6mah_20260914/in.ps_7_3_r45.liggghts"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "scripts/make_heckel_inputs.py"
+        ],
+        [
+          "docs/reviews/dem_gen2_ratified_amendment_evidence_20261024/reviewed-draft-v1/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/reviews/codex_model_validation_review_evidence_20261008/_README_reproduction.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_t12_readiness_20261024.md",
+          "docs/resume_ckpt_procedure_20260927.md"
+        ],
+        [
+          "docs/reviews/dem_gen2_t12_readiness_20261024.md",
+          "scripts/resume_ckpt.sh"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/reviews/findings.json"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/reviews/codex_review_model_validation_20261008.md"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/ps73_damping_branch_20261007/README.md"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/reviews/dem_unloading_ps45_prereg_20261009.md"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/ps45_unload_20261009/README.md"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/reviews/codex_review_dem_unloading_kit_20261014.md"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/reviews/dem_unloading_kit_fix_plan_20261014.md"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/dem_governing_equations_background_20261011.md"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/dem_governing_equations_report_20261009.md"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/esse_calibration_2mAh_real_9.md"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/reviews/claims.json"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/session_20260923_progress.md"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "scripts/make_heckel_inputs.py"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/ps73_damping_branch_20261007/in.branch_B.liggghts"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/ps73_compaction_curve_20261006/README.md"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/heckel_pure_se_dem.csv"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/esse_calibration_2mAh_real_9.csv"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/resume_ckpt_procedure_20260927.md"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "scripts/plane_load_share.py"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/ps45_unload_20261009/README.md"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/ps45_unload_20261009/unload_params.json"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "scripts/make_heckel_inputs.py"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/heckel_pure_se_dem.csv"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/porosity_regression_final.md"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "scripts/fit_porosity_v4_global.py"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/esse_calibration_2mAh_real_9.md"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "dem_scripts/ps_sweep_6mah_20260914/in.ps_7_3_r45.liggghts"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "scripts/make_heckel_inputs.py"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "scripts/dem_analysis_core.py"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "scripts/lhs_union_webapp.py"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/heckel_pure_se_dem.csv"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/ps45_unload_20261009/history_test/make_history_decks.py"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/ps73_damping_branch_20261007/make_branch_decks.py"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "scripts/resume_ckpt.sh"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/resume_ckpt_procedure_20260927.md"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/lhs_release_20261006_v12/README.md"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/reviews/lhs_release_v13_plan_20261007.md"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/ps45_r45_union_20260929/README.md"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/ps45_plane_load_20261007/README.md"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/ps73_compaction_curve_20261006/README.md"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/heckel_pure_se_dem.csv"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/heckel_reproduction_20260917/RESULT.md"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/heckel_real14_composite_multiP.csv"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/esse_calibration_2mAh_real_9.md"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/esse_calibration_2mAh_real_9.csv"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/porosity_regression_final.md"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "scripts/fit_porosity_v4_global.py"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/real14_am_scaffold.csv"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/real14_se_scaffold.csv"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/heckel_pure_se_dem.csv"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/heckel_real14_composite_multiP.csv"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/esse_calibration_2mAh_real_9.md"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/porosity_regression_final.md"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/heckel_pure_se_dem.csv"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/ps73_damping_branch_20261007/in.branch_B.liggghts"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/esse_calibration_2mAh_real_9.md"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/heckel_pure_se_dem.csv"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/data/heckel_real14_composite_multiP.csv"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "dem_scripts/ps_sweep_6mah_20260914/in.ps_7_3_r45.liggghts"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "scripts/make_heckel_inputs.py"
+        ],
+        [
+          "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+          "docs/reviews/codex_model_validation_review_evidence_20261008/_README_reproduction.md"
+        ]
+      ]
+    }
+  },
+  "independent_review": {
+    "state": "PASS",
+    "scope": "Independent document/numeric source comparison only; no repeated arithmetic/MC experiment or physical/fullgate execution.",
+    "check_count": 25,
+    "reviewed_plan_sha256": "674ce63cc21a767e6c74d3824e3b02b5e8409fceb8cc1dd729dec979e521b0c1",
+    "copied_verbatim": [
+      {
+        "path": "independent/review.md",
+        "sha256": "13b2e69de9769cb6cbbb0e27e68d62ce40e68160e3e80a6939ce07058c2c9af6"
+      },
+      {
+        "path": "independent/result.json",
+        "sha256": "8c2a3c78a2888ee50f13dfbbe87b9771fe4243a3012563acdeb45031b3e19373"
+      },
+      {
+        "path": "independent/check_amendment.py",
+        "sha256": "b4d94e684184bdfaab5a12bba4decff09394d0a65928345d9d426c2e53d816ff"
+      }
+    ]
+  },
+  "full_gate": "See full_gate_receipt.json; PENDING until actual integrated runs",
+  "physical_status": {
+    "T5": "NOT_RUN",
+    "T11": "NOT_RUN",
+    "T12": "NOT_RUN",
+    "physical_ready": false
+  }
+}

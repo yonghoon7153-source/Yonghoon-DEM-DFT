@@ -1,0 +1,40 @@
+{
+  "scope": "Focused new-document checks only; no physical run, new implementation test or whole repository gate",
+  "source_git_blobs_sha256_verified": 12,
+  "consumer_param_groups_equal_to_pin": 16,
+  "new_document_count": 2,
+  "quotation_ban_scan": {
+    "files": 2,
+    "patterns": 42,
+    "problems": []
+  },
+  "focused_doc_refs": {
+    "docs/collab/codex_to_claude/20261024-0257_dem-gen2-t12-readiness.md": {
+      "missing": [],
+      "cross": [],
+      "bad_sha": [],
+      "unsure": [
+        "962caea2d1857b0e34fe724e38815661936b7183"
+      ]
+    },
+    "docs/reviews/dem_gen2_t12_readiness_20261024.md": {
+      "missing": [],
+      "cross": [],
+      "bad_sha": [],
+      "unsure": [
+        "run_unload.sh",
+        "verification.json",
+        "962caea2d1857b0e34fe724e38815661936b7183"
+      ]
+    }
+  },
+  "actual_s0_and_qualification_fields_remain_null": true,
+  "T12": "NOT_RUN",
+  "physical_ready": false,
+  "independent_document_review": {
+    "status": "PASS",
+    "scope": "Document factual claims only; no T12 function or physical readiness validation",
+    "report": "independent/dem-t12-factual-review.md"
+  },
+  "full_gate": "NOT_RUN by child; root records integration gate separately"
+}

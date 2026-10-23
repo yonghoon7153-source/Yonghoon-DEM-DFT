@@ -1,0 +1,125 @@
+{
+  "form_kind": "dem_gen2_t12_factual_input_form_v1",
+  "scope": "Blank evidence collection form; not a validated producer schema, registration, launch command, or T12 result. Null means not supplied to this task. No automatic classifier is provided.",
+  "reference_pins": {
+    "dem_gen2_design": "962caea2d1857b0e34fe724e38815661936b7183",
+    "ulpr_consumer": "8347d32ea678c0174bd77d4c79cfbd7b0591e4a3"
+  },
+  "user_ratification": {
+    "date_context": "2026-10-24 KST, supplied by coordinating agent",
+    "statements": [
+      "계속 진행",
+      "다 비준이야"
+    ],
+    "effect": "Continue authorized non-Rint local development; ratification does not populate missing measured or reviewer facts.",
+    "repeat_ratification_requested": false
+  },
+  "status": {
+    "physical_ready": false,
+    "T12": "NOT_RUN",
+    "physical_execution_in_this_work": false
+  },
+  "external_review": {
+    "unloading_go_report_path": null,
+    "unloading_reviewed_commit": null,
+    "unloading_go_report_sha256": null,
+    "gen2_design_review_report_path": null,
+    "gen2_design_reviewed_commit": null
+  },
+  "registration": {
+    "document_path": null,
+    "document_sha256": null,
+    "producer_consumer_interface_revision": null,
+    "window_time_definition": null,
+    "h0_scaling_reference_and_values": null,
+    "branch_and_gravity_exception_policy": null,
+    "qualification_case_selection": null,
+    "resume_state_name_and_transition_table": null
+  },
+  "implementation": {
+    "producer_commit": null,
+    "producer_deck_path": null,
+    "producer_deck_sha256": null,
+    "consumer_commit": null,
+    "consumer_params_path": null,
+    "consumer_params_sha256": null,
+    "protocol_generation": null,
+    "arm_kind": null,
+    "bed_id": null,
+    "actual_binary_sha256": null,
+    "actual_mpi_ranks": null
+  },
+  "ra_end_s0": {
+    "run_id": null,
+    "step": null,
+    "dt_deck_time": null,
+    "dt_physical_time_and_conversion": null,
+    "plate_z_deck": null,
+    "bottom_z_deck": null,
+    "height_deck": null,
+    "area_deck": null,
+    "preparation_g_deck": null,
+    "final_g_deck": null,
+    "P_target_report_MPa": null,
+    "P_window_mean_report_MPa": null,
+    "relax_drop_fraction": null,
+    "steady_window_and_ke_force_balance_evidence": null,
+    "id_type_radius_mass_inventory_path": null,
+    "atom_dump_path": null,
+    "contact_dump_path": null,
+    "wall_dump_path": null,
+    "mesh_path": null,
+    "restart_path": null,
+    "state_path": null,
+    "artifact_hashes_path": null,
+    "active_fix_history_evidence_path": null,
+    "epsilon_union_inside_and_all": null,
+    "epsilon_sphere_inside_and_all": null
+  },
+  "qualification_evidence": {
+    "actual_binary_history_and_grammar": null,
+    "T2_history_continuity_and_negative_control": null,
+    "T10_dt_half_same_time_endpoint": null,
+    "T11_servo_qualification": null,
+    "T12_reader_restore_gate_positive_and_negative": null,
+    "T13_stage_resume_G1_G3": null,
+    "future_adapter_independent_review": null,
+    "future_adapter_full_gate_receipt": null
+  },
+  "measurements": {
+    "Q7_three_pellets": null,
+    "Q7_required_fields": [
+      "sample_id",
+      "mass_g",
+      "mass_uncertainty_g",
+      "diameter_mm",
+      "diameter_uncertainty_mm",
+      "thickness_mm",
+      "thickness_uncertainty_mm",
+      "preparation",
+      "measurement_load_and_state",
+      "uncertainty_definition_and_shared_systematics",
+      "source_record"
+    ],
+    "Q8_reference": null,
+    "Q8_required_fields": [
+      "source_record",
+      "sample_count",
+      "material",
+      "mass",
+      "density_basis",
+      "thickness",
+      "porosity_operator",
+      "load_and_state",
+      "model_vs_experiment_provenance"
+    ],
+    "Q9_measured_state": null,
+    "Q9_required_fields": [
+      "in_die_loaded_or_unloaded_or_out_of_die_or_EIS_jig",
+      "applied_pressure",
+      "unloading_reloading_history",
+      "measurement_time",
+      "source_record"
+    ]
+  }
+}

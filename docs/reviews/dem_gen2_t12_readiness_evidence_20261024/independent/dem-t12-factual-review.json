@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "scope": "Read-only factual document/form audit; no implementation or T12 physical readiness verdict",
+  "checks": {
+    "source12exact": true,
+    "params_subset_exact": true,
+    "bed_subset_exact": true,
+    "source_params_sha": true,
+    "blank_factual_groups": true,
+    "no_T12_execution_claim": true,
+    "ratification_not_repeated": true,
+    "Q12_exception_preserved": true
+  },
+  "failures": [],
+  "source_pin": "8347d32ea678c0174bd77d4c79cfbd7b0591e4a3",
+  "reviewed_document_sha256": "62eaaa794b902acbe443b71f3ae2bc854dcdc1099fd6349180a361628be9d6cb",
+  "form_sha256": "caccb0e9784043d2f7f0aa71f64ab8aa1079768524f32e753dd4ae23c7b29aaa"
+}
