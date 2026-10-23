@@ -1,0 +1,18 @@
+/data/work/wt_ndq2b_1023/tools/doping/convex_hull_ehull.py:270: DeprecationWarning: Entry, ComputedEntry and ComputedStructureEntry have been moved to pymatgen.core.entries module. This stub will be removed v2027.1.
+  from pymatgen.entries.computed_entries import ComputedEntry
+/data/work/wt_ndq2b_1023/tools/doping/convex_hull_ehull.py:270: DeprecationWarning: Entry, ComputedEntry and ComputedStructureEntry have been moved to pymatgen.core.entries module. This stub will be removed v2027.1.
+  from pymatgen.entries.computed_entries import ComputedEntry
+our composition: Li48Nd2P10S41Cl16O3  (Li48 Nd2 P10 S41 Cl16 O3)   [modelc_nd_doped_DFTrelax.cif]
+Retrieving ThermoDoc documents:   0%|          | 0/321 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 321/321 [00:00<00:00, 7199848.04it/s]
+MP entries in Li-Nd-P-S-Cl-O: 321
+
+MP-hull decomposition products at our composition:
+{'Li3PS4': np.float64(0.6167), 'Nd2S3': np.float64(0.0417), 'Li2S': np.float64(0.025), 'Li3PO4': np.float64(0.05), 'LiCl': np.float64(0.2667)}
+  Li3PS4         mp-aaacebzb-GGA  원자 분율 0.6167
+  LiCl           mp-aaacpllf-GGA  원자 분율 0.2667
+  Li3PO4         mp-aaaaauhx-GGA  원자 분율 0.0500
+  Nd2S3          mp-aaaaaaqw-GGA  원자 분율 0.0417
+  Li2S           mp-aaaaabsj-GGA  원자 분율 0.0250
+  MP DB 2026.09.28 · mp_api unknown · thermo GGA_GGA+U · 엔트리 321 {'GGA': 321} · 2026-10-23T14:04:48+00:00
+  ✓ 정상성 (원소상 없음)
+-> db/raw/nd_q2_decomp_2026_10_23/step1b/mp_hull_doped.json
