@@ -12350,7 +12350,7 @@
         "docs/reviews/codex_review_rint2_rereview_20261022.md §2 · §4 RCA2-01"
       ],
       "claimed_fixed_sha": "eb571a458",
-      "partial_note": "부분 (Codex 재검토 10-22 · 핀 0b3012460 · 판정문 §2 · §5 PRE2-impl-01) — 옛 국소 소산 반례 닫힘 (실제 SVX Gfull 4.61491207863014 · Gcut 0.4484304932735439 · 비 10.291253935345182) · 못 가른 덩어리 전부 제거 (원 반례 닫힘) · 남은 것 = RCA2-01 (증서 구간 미전파 → 최종 문턱 보장 안 닫힘) · 닫는 조건 = RCA2-01 검증."
+      "partial_note": "부분 (Codex 재검토 10-22 · 핀 0b3012460 · 판정문 §2 · §5 PRE2-impl-01) — 옛 국소 소산 반례 닫힘 (실제 SVX Gfull 4.61491207863014 · Gcut 0.4484304932735439 · 비 10.291253935345182) · 못 가른 덩어리 전부 제거 (원 반례 닫힘) · 남은 것 = RCA2-01 (증서 구간 미전파 → 최종 문턱 보장 안 닫힘) · 닫는 조건 = RCA2-01 검증. ★ 10-23 닫는 조건 RCA2-01 고침 = `df0f6f01c` (묶음 A2) · 검증 = Codex."
     },
     {
       "id": "RCA-07",
@@ -12670,17 +12670,24 @@
     {
       "id": "RCA2-01",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-22 Rint ② 설계·구현 재검토 (검토 핀 0b3012460 · 비교 기준 5dc6f7f0b · 독립 해석 회로 · 실제 생산 함수 호출 · 작은 합성 S0 census 본체 · 실침대 · 생산 · 전체 CLI 실행 없음)",
       "opened_in": "docs/reviews/codex_review_rint2_rereview_20261022.md",
       "title": "SV 문턱이 인증된 비가 아니라 nominal 비를 판정한다 — 증서 구간 전체가 문턱 위인데 최종 SV 표지 없음",
-      "note": "판정문 §4 RCA2-01 · 영향 = RCA-06 · PF2 의 \"보장 괄호로 SV 비의존 판정\" 결론 (수렴 증서 ⓓ 자체는 무너지지 않음) · 자리 (핀 0b3012460) = scripts/ca_ext_svcf.py:75–77 · 303 (증서 구간 투영 탈락) · scripts/rint_r_chain.py:554 · 583–586 (nominal 비교) · scripts/carbon_junction.py:2463 (증서 생산) · 등록 R :177 · 179 · 435 의 \"증서 여유 없음\".  반례 = 실제 SVX raster → registry → plan → solve → certificate → record → validator → sv_assess · 첫 선형 해 벡터에만 +1e−8 · 후속 풀이 = spsolve · 증서 · 기록 · 검증 · 판정 = 실제 생산 함수 · nominal 비 10.291249475344962 · 비교 문턱 10.291251705345072 · 증서 참 비 구간 [10.29125393534377, 10.291253935346631] · 주 해 오차 상계 4.333779186480367e−7 (허용 1e−4 안) · 주 해 · 반사실 증서 통과 · 기록 검증 None · 최종 SV 표지 [] (허용오차 안 후보 해의 충분성 반례 · 자연 CG 빈도 주장 아님).  최소 해결 = 주 해 · 각 cut 끝의 목표량 구간과 G 결합 보존 · 아래비 = Gfull_lo/Gcut_lower_hi · 위비 = Gfull_hi/Gcut_upper_lo · topology 가 증명한 0 분모만 ∞ · 아래 > t = DEPENDENT · 위 ≤ t = clear · 나머지 UNCHECKED · 대안 = 모든 computed 해의 실제 인증을 먼저 강제한 뒤 nominal 괄호를 [(1−τ)/(1+τ), (1+τ)/(1−τ)] (τ 1e−4) 로 넓힘 · 경계 양쪽 · 같음 · ∞ · 한 끝 실패를 상주 회귀로.  재현 = geometry/run_review.py → geometry_results.json actual_certified_threshold_crossing.",
+      "note": "판정문 §4 RCA2-01 · 영향 = RCA-06 · PF2 의 \"보장 괄호로 SV 비의존 판정\" 결론 (수렴 증서 ⓓ 자체는 무너지지 않음) · 자리 (핀 0b3012460) = scripts/ca_ext_svcf.py:75–77 · 303 (증서 구간 투영 탈락) · scripts/rint_r_chain.py:554 · 583–586 (nominal 비교) · scripts/carbon_junction.py:2463 (증서 생산) · 등록 R :177 · 179 · 435 의 \"증서 여유 없음\".  반례 = 실제 SVX raster → registry → plan → solve → certificate → record → validator → sv_assess · 첫 선형 해 벡터에만 +1e−8 · 후속 풀이 = spsolve · 증서 · 기록 · 검증 · 판정 = 실제 생산 함수 · nominal 비 10.291249475344962 · 비교 문턱 10.291251705345072 · 증서 참 비 구간 [10.29125393534377, 10.291253935346631] · 주 해 오차 상계 4.333779186480367e−7 (허용 1e−4 안) · 주 해 · 반사실 증서 통과 · 기록 검증 None · 최종 SV 표지 [] (허용오차 안 후보 해의 충분성 반례 · 자연 CG 빈도 주장 아님).  최소 해결 = 주 해 · 각 cut 끝의 목표량 구간과 G 결합 보존 · 아래비 = Gfull_lo/Gcut_lower_hi · 위비 = Gfull_hi/Gcut_upper_lo · topology 가 증명한 0 분모만 ∞ · 아래 > t = DEPENDENT · 위 ≤ t = clear · 나머지 UNCHECKED · 대안 = 모든 computed 해의 실제 인증을 먼저 강제한 뒤 nominal 괄호를 [(1−τ)/(1+τ), (1+τ)/(1−τ)] (τ 1e−4) 로 넓힘 · 경계 양쪽 · 같음 · ∞ · 한 끝 실패를 상주 회귀로.  재현 = geometry/run_review.py → geometry_results.json actual_certified_threshold_crossing. ★ 10-23 묶음 A2 (수정 지시서 `docs/reviews/rint2_rr_fix_evidence_20261023/BRIEF.md` · 1저자 10-23 *\"다 권고대로 해줘\"* = 수정 계획 Q1–Q8 (가) · §3 · Q1 (가)) = claimed_fixed — 시험 먼저 `ad32382f6` · 고침 `df0f6f01c` (생산자 = 증서 켠 런의 기록에 주 해 증서 `conv_cert_full` · 끝마다 증서 · 결합 칸 · 지위 `certified_interval` · 증서 없는 런 = `diagnostic_uncertified` (증서 없음) · 투영 = 증서의 목표량 구간 · 게시 판 전류 · 결합 칸 보존 · 판정 근거 칸 `ratio_cert_interval` · 사슬 = 아래비 Gfull_lo / Gcut_lower_hi (내림) > 문턱 → SV_DEPENDENT · 위비 Gfull_hi / Gcut_upper_lo (올림) ≤ 문턱 → 표지 없음 · 그 밖 SV_UNCHECKED · ∞ = 영값 위상 증서가 증명한 0 분모만 · nominal = 기록만 · 진단 기록 = 판정 입력 아님) · 웹앱 `584472daf` (SV 줄 = 증서 구간 · 설명 페이지 상자 ④) · 등록 R `435e73732` · 확인 = Codex 재검토.",
       "evidence_tests": [
+        "scripts/test_carbon_junction.py (356/356 · 10-23 A4 판 · A2 고치기 전 --only QD2,QD3,MUT-RCA 20/41) — QD3 (판정문 실제 걸침 꼴 · 실제 SVX raster → 원장 → 계획 → 풀이 (첫 선형 해 +1e-8) → 증서 → 기록 → 검증기 → sv_assess · 아래비 > 문턱 → SV_DEPENDENT · 위비 ≤ 문턱 → 표지 없음 · 걸침 → SV_UNCHECKED · ∞ = 영값 위상 증서 · 증서 없는 런 = 진단) · QD2 (증서 구간 문구) · MUT-RCA",
+        "scripts/test_rint_r_chain.py (231/231 · 10-23 A4 판 · A2 고치기 전 부분 실행 13/18) — U16 (증서 구간 판정 · 실제 투영 · chain_view · sv_assess) · M43 (nominal 판정 변이) · V28 (판정문 걸침 꼴 끝-끝) · V29 (진단 기록) · U08 · U08b · U15",
+        "scripts/test_ca_ext_b6.py (424/424 · 10-23 A4 판 · A2 고치기 전 357 PASS / 31 FAIL) — S8n · S8q · SP15 (실제 payload 기록 · 지위 증서 구간 · 판정 근거 칸 · 기록의 주 해 증서 = 그 런의 step3 주 증서)",
+        "scripts/test_rint_r_chain_e2e.py (16/16 · 10-23 A4 판)",
+        "webapp/test_ca_ext_labels.py (84/84 · 10-23 A2 판 · 고치기 전 68 PASS / 16 FAIL) — W16 (SV 줄 = 증서 구간 판정 근거 · nominal = 판정 아님 · 진단 · 옛 기록 표지)",
+        "webapp/test_rint_explainer_page.py (62/62 · 10-23 A2 판 · 고치기 전 54/62) — 쉽게 말하면 상자 ④",
         "docs/reviews/codex_rint2_rereview_evidence_20261022/geometry/run_review.py",
         "docs/reviews/codex_rint2_rereview_evidence_20261022/geometry/geometry_results.json",
         "docs/reviews/codex_rint2_rereview_evidence_20261022/_repro_ours_20261022/README.md"
-      ]
+      ],
+      "claimed_fixed_sha": "df0f6f01c"
     },
     {
       "id": "RCA2-02",
@@ -12715,17 +12722,20 @@
     {
       "id": "RCA2-04",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-22 Rint ② 설계·구현 재검토 (검토 핀 0b3012460 · 비교 기준 5dc6f7f0b · 독립 해석 회로 · 실제 생산 함수 호출 · 작은 합성 S0 census 본체 · 실침대 · 생산 · 전체 CLI 실행 없음)",
       "opened_in": "docs/reviews/codex_review_rint2_rereview_20261022.md",
       "title": "F3 — SV 기록의 증서 · 규칙 · 제거 수 결합이 불완전하다 (computed 끝 cert None · removed ≠ n_unsplit · 임의 bracket_rule · n_unsplit 10⁴⁰⁰ · 다른 회로 증서 통과)",
-      "note": "판정문 §4 RCA2-04 · 영향 = 옮겨온 기록 · 다른 판본 · 재판정의 계약 (정상 producer 오계산 확인 아님 · RCA2-01 을 보장 구간으로 고치려면 함께 닫아야 함) · 자리 (핀 0b3012460) = scripts/ca_ext_svcf.py:196 · 200 · 259 · 투영 :75–77 · 실제 소비자 scripts/run_contract.py:756.  실제 검증기 음성 입력: ratio/G 불일치 · cert.ok False = 거부 · 통과 = computed 끝 cert None · n_unsplit 2 인데 removed 0 · 임의 비어 있지 않은 bracket_rule · n_unsplit 10⁴⁰⁰ (예외가 아니라 의미 범위 검사 없음) · 다른 실제 회로의 성공 증서를 붙인 정상 G/ratio 기록 (투영이 목표량 숫자를 버려 붙임 검사 불가).  최소 해결 = 등록 R 의 computed 끝마다 현 증서 필수 · 각 G / target / 분자 및 등록 rule / version 결합 · 실제 census 와 제거 수 · 셀 수 일관성 · 진단 전용 무증서 실행은 별도 지위 (R 판정 입력으로 승격 안 함).  재현 = geometry/run_review.py · certificate_removed_from_certified_run · foreign_certificate_accepted.",
+      "note": "판정문 §4 RCA2-04 · 영향 = 옮겨온 기록 · 다른 판본 · 재판정의 계약 (정상 producer 오계산 확인 아님 · RCA2-01 을 보장 구간으로 고치려면 함께 닫아야 함) · 자리 (핀 0b3012460) = scripts/ca_ext_svcf.py:196 · 200 · 259 · 투영 :75–77 · 실제 소비자 scripts/run_contract.py:756.  실제 검증기 음성 입력: ratio/G 불일치 · cert.ok False = 거부 · 통과 = computed 끝 cert None · n_unsplit 2 인데 removed 0 · 임의 비어 있지 않은 bracket_rule · n_unsplit 10⁴⁰⁰ (예외가 아니라 의미 범위 검사 없음) · 다른 실제 회로의 성공 증서를 붙인 정상 G/ratio 기록 (투영이 목표량 숫자를 버려 붙임 검사 불가).  최소 해결 = 등록 R 의 computed 끝마다 현 증서 필수 · 각 G / target / 분자 및 등록 rule / version 결합 · 실제 census 와 제거 수 · 셀 수 일관성 · 진단 전용 무증서 실행은 별도 지위 (R 판정 입력으로 승격 안 함).  재현 = geometry/run_review.py · certificate_removed_from_certified_run · foreign_certificate_accepted. ★ 10-23 묶음 A2 (수정 지시서 `docs/reviews/rint2_rr_fix_evidence_20261023/BRIEF.md` · 1저자 10-23 *\"다 권고대로 해줘\"* = 수정 계획 Q1–Q8 (가) · §3 · Q1 (가)) = claimed_fixed — 시험 먼저 `ad32382f6` · 고침 `df0f6f01c` (`ca_ext_svcf.sv_cf_problem` → `_cert_problem` · `_census_problem` · `_interval_problem` · `_removed_problem` — 증서 구간 기록의 비를 싣는 끝마다 현 증서 · 그 끝 G 와 결합 (게시 판 전류 정확 · 목표량 구간을 `step3_conv_cert.target_judge` 로 다시) · 분자 G_full = 주 해 증서 = 솔브 기록 `I_bot_code` · 결합 칸 = 증거 fp · 등록 괄호 규칙만 · 수 칸 0 이상 정수 · int64 범위 · 제거 성분 = 못 가른 덩어리 수 · 제거 셀 ≥ 성분 · census 일관 (못 가른 ≤ 다리 놓는 ≤ 닿는 성분) · 사슬 read_run 이 기록의 주 해 증서 = 그 런의 step3 주 증서를 대조 (다르면 CA_EXT_RECORD · 새 이름 없음)) · 등록 R `435e73732` · 확인 = Codex 재검토.",
       "evidence_tests": [
+        "scripts/test_ca_ext_b6.py (424/424 · 10-23 A4 판 · A2 고치기 전 357 PASS / 31 FAIL) — S8n (판정문 F3 다섯 꼴 + 같은 부류 — 끝 증서 없음 · 외부 · 결합 안 된 증서 · 등록 밖 괄호 규칙 · 제거 수 · 10^400 · census · I_bot_code · fp 증거 불일치 · 판정 근거 칸 변조 · 실제 소비자 run_contract.ca_ext_record_ok) · S8q (검증기 상수 = 생산자 상수) · SP15",
+        "scripts/test_rint_r_chain.py (231/231 · 10-23 A4 판) — V30 (기록의 주 해 증서 ≠ 그 런의 step3 주 증서 → CA_EXT_RECORD)",
         "docs/reviews/codex_rint2_rereview_evidence_20261022/geometry/run_review.py",
         "docs/reviews/codex_rint2_rereview_evidence_20261022/geometry/geometry_results.json",
         "docs/reviews/codex_rint2_rereview_evidence_20261022/_repro_ours_20261022/README.md"
-      ]
+      ],
+      "claimed_fixed_sha": "df0f6f01c"
     },
     {
       "id": "RCA2-05",
@@ -12745,17 +12755,21 @@
     {
       "id": "RCA2-06",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-22 Rint ② 설계·구현 재검토 (검토 핀 0b3012460 · 비교 기준 5dc6f7f0b · 독립 해석 회로 · 실제 생산 함수 호출 · 작은 합성 S0 census 본체 · 실침대 · 생산 · 전체 CLI 실행 없음)",
       "opened_in": "docs/reviews/codex_review_rint2_rereview_20261022.md",
       "title": "F4 · F6 — 첫 성분만 제거하는 변이가 기존 QD2 13/13 을 통과 (두 성분 fixture 필요) · census 불일치 실패 경로와 시험 문구가 실제 끝-끝 경로와 다름",
-      "note": "판정문 §4 RCA2-06 · F4: 현재 다중 덩어리 제거는 맞다 · 독립 4 개 수직 rail · 두 SDCP 성분 회로에서 참 다리 영향 1 · 실제 G 47.61904761904763 · 코드 괄호 [1, ∞] · 첫 성분만 제거하는 메모리 변이 → 위비 2 · 문턱 2 에서 표지 없어짐 · 그런데 기존 QD2 13/13 이 그 변이에서도 통과 → 새 두 성분 fixture 의 전 셀 · 판 결합 제거를 상주 시험으로 (현 구현의 잘못을 새로 주장하는 finding 아님 · 자리 scripts/carbon_junction.py:2491 · 2556).  F6: census 0 으로 바꿔도 실제 2 성분 입력은 unsplit_census_mismatch · 실제 소비자는 \"덩어리 0 인데 위 끝 dict\" 로 먼저 게시 거부 · sv_assess 직접 호출 결과 UNCHECKED ↔ 실제 경로 다름 · 안전하게 막혀 false-green 아님 · 구조화 실패를 끝-끝 보존하고 시험 문구 · 실제 호출 경로 일치 · KNOWN_STATUSES 에 이름 추가만으로 해결 아님 (자리 scripts/carbon_junction.py:2547 · scripts/run_contract.py:759).  재현 = geometry/first_component_mutation.log · geometry/geometry_results.json.",
+      "note": "판정문 §4 RCA2-06 · F4: 현재 다중 덩어리 제거는 맞다 · 독립 4 개 수직 rail · 두 SDCP 성분 회로에서 참 다리 영향 1 · 실제 G 47.61904761904763 · 코드 괄호 [1, ∞] · 첫 성분만 제거하는 메모리 변이 → 위비 2 · 문턱 2 에서 표지 없어짐 · 그런데 기존 QD2 13/13 이 그 변이에서도 통과 → 새 두 성분 fixture 의 전 셀 · 판 결합 제거를 상주 시험으로 (현 구현의 잘못을 새로 주장하는 finding 아님 · 자리 scripts/carbon_junction.py:2491 · 2556).  F6: census 0 으로 바꿔도 실제 2 성분 입력은 unsplit_census_mismatch · 실제 소비자는 \"덩어리 0 인데 위 끝 dict\" 로 먼저 게시 거부 · sv_assess 직접 호출 결과 UNCHECKED ↔ 실제 경로 다름 · 안전하게 막혀 false-green 아님 · 구조화 실패를 끝-끝 보존하고 시험 문구 · 실제 호출 경로 일치 · KNOWN_STATUSES 에 이름 추가만으로 해결 아님 (자리 scripts/carbon_junction.py:2547 · scripts/run_contract.py:759).  재현 = geometry/first_component_mutation.log · geometry/geometry_results.json. ★ 10-23 묶음 A4 (수정 지시서 `docs/reviews/rint2_rr_fix_evidence_20261023/BRIEF.md` · 1저자 10-23 *\"다 권고대로 해줘\"* = 수정 계획 Q1–Q8 (가) · §3) = claimed_fixed — 시험 먼저 `b72105582` · `149597bf2` · 고침 `afa5cad8b` (F4 = 두 성분 괄호 상주 시험 QD4 (판정문 §4 꼴 · 코드 변경 없음 — 현 구현은 맞다 · 판정문 첫 성분만 지우는 변이가 걸린다) · F6 = 검증기가 구조화 실패 `unsplit_census_mismatch` 를 못 가른 덩어리 수 (0 · > 0) 와 무관하게 그 꼴로 받는다 (`_mismatch_problem` — 다시 가른 수 ≠ census 수 · 사유 · 풀이 칸 없음 · 위 끝 칸 = 그 상태 · 옛 = 덩어리 0 꼴 게시 거부 · 덩어리 > 0 꼴은 꼴을 보지 않고 받음) · 사슬 사유 모서리 이름에 상태 이름 (`sv_corner_label`) · 시험 = 실제 소비자 `run_contract.ca_ext_record_ok` 경로 · `KNOWN_STATUSES` 이름 추가는 기록용) · 등록 R `1f0a84cb6` · 확인 = Codex 재검토.",
       "evidence_tests": [
+        "scripts/test_carbon_junction.py (356/356 · 10-23 A4 판 · 고치기 전 --only QD2,QD4 15/16) — QD4 (두 성분 괄호 · G = 손 회로 · 위 끝 = 두 성분 SDCP 셀 6 · 성분 2 · 판 결합 0 · 관통 없음 · 판정문 첫 성분만 지우는 변이 → 걸림) · QD2 ⑧ (census 0 변조 → 구조화 실패 · 검증기 받음 · 사슬 SV_UNCHECKED · 사유에 상태 이름)",
+        "scripts/test_ca_ext_b6.py (424/424 · 10-23 A4 판 · 고치기 전 --only='S 해' 195 PASS / 29 FAIL) — SM0–SM3 (구조화 실패 꼴 · 실제 생산자 기록 → 실제 소비자 run_contract.ca_ext_record_ok → 사슬 · 증서 끔 · 켬)",
+        "scripts/test_rint_r_chain.py (231/231 · 10-23 A4 판 · 고치기 전 U18 · M48 실패) — U18 · M48",
         "docs/reviews/codex_rint2_rereview_evidence_20261022/geometry/first_component_mutation.log",
         "docs/reviews/codex_rint2_rereview_evidence_20261022/geometry/geometry_results.json",
         "docs/reviews/codex_rint2_rereview_evidence_20261022/_repro_ours_20261022/README.md"
-      ]
+      ],
+      "claimed_fixed_sha": "afa5cad8b"
     },
     {
       "id": "RCA2-07",
@@ -12775,31 +12789,38 @@
     {
       "id": "RCA2-08",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-22 Rint ② 설계·구현 재검토 (검토 핀 0b3012460 · 비교 기준 5dc6f7f0b · 독립 해석 회로 · 실제 생산 함수 호출 · 작은 합성 S0 census 본체 · 실침대 · 생산 · 전체 CLI 실행 없음)",
       "opened_in": "docs/reviews/codex_review_rint2_rereview_20261022.md",
       "title": "유한 중간값의 합산 넘침이 구조화 실패 대신 예외가 된다 — step3_conv_cert 최종 U fsum · W 합에서 OverflowError (5 노드 · gb = gt = 8e307)",
-      "note": "판정문 §4 RCA2-08 · 자리 (핀 0b3012460) = scripts/step3_conv_cert.py:476 (최종 U fsum) · 유사 W :553 · 독립 노드 5 개 · 각 gb = gt = 8×10³⁰⁷ · p 0.5 · 행렬 대각 1.6×10³⁰⁸ 및 바닥 · 위판 에너지 subtotal 각 10³⁰⁸ 은 유한하지만 최종 합산이 OverflowError · 정상 등록 물성 범위 밖 · 잘못된 σ 게시가 아니라 중단 · 기존 RCA-07 수치 충분성을 뒤집지 않음.  최소 해결 = 최종 합도 보호 합산 / 예외 처리해 NOT_CERTIFIABLE 반환 · 이 5 노드 시험 상주.  재현 = certificate/results.json topology_scale.finite_subtotals_overflow. ★ 10-22 우리 트리 재현 관찰 (시험으로 확인 전 · 고치지 않음): 같은 탐침의 stderr 에 step3_conv_cert.py:344 `RuntimeWarning: overflow encountered in add` (`tol_r`) — 최종 fsum 전에 중간값이 이미 inf · 수정 때 함께 본다.",
+      "note": "판정문 §4 RCA2-08 · 자리 (핀 0b3012460) = scripts/step3_conv_cert.py:476 (최종 U fsum) · 유사 W :553 · 독립 노드 5 개 · 각 gb = gt = 8×10³⁰⁷ · p 0.5 · 행렬 대각 1.6×10³⁰⁸ 및 바닥 · 위판 에너지 subtotal 각 10³⁰⁸ 은 유한하지만 최종 합산이 OverflowError · 정상 등록 물성 범위 밖 · 잘못된 σ 게시가 아니라 중단 · 기존 RCA-07 수치 충분성을 뒤집지 않음.  최소 해결 = 최종 합도 보호 합산 / 예외 처리해 NOT_CERTIFIABLE 반환 · 이 5 노드 시험 상주.  재현 = certificate/results.json topology_scale.finite_subtotals_overflow. ★ 10-22 우리 트리 재현 관찰 (시험으로 확인 전 · 고치지 않음): 같은 탐침의 stderr 에 step3_conv_cert.py:344 `RuntimeWarning: overflow encountered in add` (`tol_r`) — 최종 fsum 전에 중간값이 이미 inf · 수정 때 함께 본다. ★ 10-23 묶음 A1 (수정 지시서 `docs/reviews/rint2_rr_fix_evidence_20261023/BRIEF.md` · 1저자 10-23 *\"다 권고대로 해줘\"* = 수정 계획 Q1–Q8 (가) · §3) = claimed_fixed — 고침 `ddbb6cee3` (시험 먼저 = 고치기 전 T24 1/7 · 같은 커밋 · 최종 U · W 합 = `_fsum_bound` (넘침 → +inf → 기존 비유한 검사 → NOT_CERTIFIABLE · OverflowError 없음) · `_ledger` 중간값 · 허용폭 넘침 = 원장 문제 'ledger comparison overflow' (옛 = inf 허용폭이 행 합 검사를 조용히 비움 · 같은 부류 · 시험 T24c) · `plate_currents` 넘침 경고 없음 · 유한 정상 회로 20 개 증서 dict = 고치기 전 49a1af626 모듈과 비트 같음 (T24b)) · 확인 = Codex 재검토.",
       "evidence_tests": [
+        "scripts/test_step3_target_cert.py (빠른 판 260/260 · 10-23 A1 판 · 고치기 전 T24 1/7) — T24 (Codex 5 노드 gb = gt = 8e307 · 10 노드 U · 5 노드 W 넘침 → NOT_CERTIFIABLE · 예외 · 경고 없음) · T24b (정상 회로 20 개 증서 = 고치기 전 모듈과 비트 같음) · T24c (숨은 접지 + 허용폭 넘침)",
+        "scripts/test_step3_target_cert.py --long T18 변이 표 40/40 (10-23 A1 판 · A1 새 변이 5 잡음)",
+        "scripts/test_step3_conv_cert.py (27/27 · 10-23 A1 판)",
         "docs/reviews/codex_rint2_rereview_evidence_20261022/certificate/probe_certificate.py",
         "docs/reviews/codex_rint2_rereview_evidence_20261022/certificate/results.json",
         "docs/reviews/codex_rint2_rereview_evidence_20261022/_repro_ours_20261022/README.md"
-      ]
+      ],
+      "claimed_fixed_sha": "ddbb6cee3"
     },
     {
       "id": "RCA2-09",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-22 Rint ② 설계·구현 재검토 (검토 핀 0b3012460 · 비교 기준 5dc6f7f0b · 독립 해석 회로 · 실제 생산 함수 호출 · 작은 합성 S0 census 본체 · 실침대 · 생산 · 전체 CLI 실행 없음)",
       "opened_in": "docs/reviews/codex_review_rint2_rereview_20261022.md",
       "title": "(Codex 번호 없음 · 판정문 §8) DBE R 단조 방어 검사 부재 — R = .5 / 1 / 2 에 σ 4.2 / 4.7 / 4.4 mS/cm (불가능한 순서) 를 넣어도 PASS",
-      "note": "판정문 §8 \"DBE R 단조 검사 부재\" (방어 검사 틈 · P3 · Codex 가 ID 를 붙이지 않아 원장에 RCA2-09 로 둔다 · Codex 번호 아님) · 자리 (핀 0b3012460) = scripts/rint_r_chain.py:1731–1782 (c / origin 만 봄) · 실제 solver 가 그 값을 냈다는 반례 아님.  권고 = 이미 구한 값으로 같은 origin 및 같은 최종 추정량의 σlo ≥ σ0 ≥ σhi 를 증서 / 등록 ln 여유와 함께 검사 · 추가 solve 불필요 · 표본 통과를 연속곡선의 독립 증명이라 부르지 않음.",
+      "note": "판정문 §8 \"DBE R 단조 검사 부재\" (방어 검사 틈 · P3 · Codex 가 ID 를 붙이지 않아 원장에 RCA2-09 로 둔다 · Codex 번호 아님) · 자리 (핀 0b3012460) = scripts/rint_r_chain.py:1731–1782 (c / origin 만 봄) · 실제 solver 가 그 값을 냈다는 반례 아님.  권고 = 이미 구한 값으로 같은 origin 및 같은 최종 추정량의 σlo ≥ σ0 ≥ σhi 를 증서 / 등록 ln 여유와 함께 검사 · 추가 solve 불필요 · 표본 통과를 연속곡선의 독립 증명이라 부르지 않음. ★ 10-23 묶음 A3 (수정 지시서 `docs/reviews/rint2_rr_fix_evidence_20261023/BRIEF.md` · 1저자 10-23 *\"다 권고대로 해줘\"* = 수정 계획 Q1–Q8 (가) · §3 · Q8 (가)) = claimed_fixed — 시험 먼저 `c18f39d71` · 고침 `aa2bf5a73` (예측 `Predict._r_monotone` — 모서리마다 같은 origin · 같은 최종 추정량 (arm 0 · origin 규칙이 바꾼 모서리 = 8 팔 평균) 의 σ(R_j,lo) ≥ σ(R_j,0) ≥ σ(R_j,hi) 를 증서 띠 [σ(1 − e), σ(1 + e)] (e = 그 런의 `err_rel`) 끼리 · 쌍 전부 · 모순 → `R_MONOTONE_VIOLATION` (새 멈춤 이름 하나 · 예측 STOPPED · 이미 구한 값 · 추가 풀이 없음 · 새 숫자 없음 · 등록 τ_mono 는 더하지 않음 = 결정 필요)) · 등록 R `385e872a0` · 확인 = Codex 재검토.",
       "evidence_tests": [
+        "scripts/test_rint_r_chain.py (231/231 · 10-23 A4 판 · A3 고치기 전 --only U17,M44,M45,M46,M47,V31,U02,U13 3/9) — U17 (판정문 꼴 4.2 / 4.7 / 4.4 → R_MONOTONE_VIOLATION · 정상 · 증서 띠 안 비단조 · 평탄 · 영값 위상 · lo ↔ hi 모순 · 8 팔 평균 · arm 0 만 비단조 · err_rel 없음) · M44–M47 · V31 (가짜 러너 끝-끝)",
+        "scripts/test_rint_r_chain_e2e.py (16/16 · 10-23 A4 판)",
         "docs/reviews/codex_review_rint2_rereview_20261022.md",
         "docs/reviews/codex_rint2_rereview_evidence_20261022/_repro_ours_20261022/README.md"
-      ]
+      ],
+      "claimed_fixed_sha": "aa2bf5a73"
     }
   ]
 }
