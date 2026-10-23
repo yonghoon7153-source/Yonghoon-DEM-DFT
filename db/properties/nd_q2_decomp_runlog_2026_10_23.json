@@ -16,5 +16,22 @@
  },
  "⏩_블록_①_2026_10_23": "gabia CPU (검사용 · QE 아님): MP hull 생성물 (도핑 modelc_nd_doped_DFTrelax.cif · host modelc_v3_62atom_V0.cif · 원소 Li Nd P S Cl O) + 9 월 탐침 출력의 '!' · 힘 · 응력 줄 + PAW psl 여섯 sha256 → db/raw/nd_q2_decomp_2026_10_23/step1/ — 사용자 실행 대기",
  "⏭": "블록 ① 회수 → G5 (해 하나 · 음 아닌 계수 · 잔차) → 기저 파일 봉인 커밋 (QE 에너지 0 건) → 블록 ② gabia (상 구조 --save_phase_structs · MP 키) → 입력 (host 고정셀 이온 이완 k 3 3 2 · 상 vc-relax 간격 0.25) → kgy (PAW sha256 확인 · CPU 검사 프로브 · tmux)",
- "by": "agent · 2026-10-23"
+ "by": "agent · 2026-10-23",
+ "✅_블록_①_회수_2026_10_23": {
+  "회수": "gabia push 804164101 → db/raw/nd_q2_decomp_2026_10_23/step1/ (7 파일)",
+  "G_F_도핑": "✅ 9 월 탐침 kprobe.out (sha256 4a3db754…) 최대 |F| 0.000976 Ry/bohr = 0.0251 eV/Å ≤ 0.05 → 그대로 쓴다 · Total force 0.004",
+  "G_V_도핑_압력": "P = −0.03 kbar (≈ 0 · 9 월 vc-relax 가 같은 PP 세트) → ΔE_V ≈ 0",
+  "E_도핑": "−6399.21429237 Ry (9 월 기록 E_k221 + ΔE 와 같다)",
+  "PAW_sha256_gabia": {
+   "Li": "785699766999b40fd07ed2b82069dffc3391c15ada838377ce03ee1b379642af",
+   "Nd": "18a3835e6437aa953c8a5b783aae1f5b8c83e48f0fa699f8992f6754bdc35101",
+   "P": "7bad261e718f8ece9fcf82dc4ec6a2c7b06badd552f95ad6f1faaf2183b58dd1",
+   "O": "7c4b6ed541f83d0afdf5c1d3a8c611340f073f3e2b11e95b7963bb2ee26929aa",
+   "S": "050bc08cac9e419863a5e35267110217be51cd560fe8db9bf7a4e1ed40611a6f",
+   "Cl": "b31db101b8b2754ad93f530a6c831e17dba53ef167d2ac5fac98ef7d49f2803a"
+  },
+  "kgy_PAW": "Nd · O 있음 (sha256 gabia 와 같음) · Li · P · S · Cl 없음 → 공식 사이트에서 받아 gabia sha256 과 같을 때만 넣는다 · GPU 3,078 / 24,576 MiB (cascade cv7main)",
+  "⛔_MP_hull_기본값": "엉터리 — host → Li + S + Li₃P + LiCl · 도핑 → NdS₂ · Li₂O · NdPS₄ · Li₃P · LiCl · S (엔트리 322 · r2SCAN 접미 · mp_api 기본 thermo type 이 혼합으로 바뀜) ⇒ 기저로 안 쓴다 · 카드 개정 11 (GGA_GGA+U 명시 · G5a 정상성)",
+  "by": "agent · 2026-10-23"
+ }
 }

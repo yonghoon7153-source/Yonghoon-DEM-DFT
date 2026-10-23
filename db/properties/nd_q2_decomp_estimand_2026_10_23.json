@@ -97,5 +97,18 @@
   "사용자": "AskUserQuestion — 카드 '비준 (Recommended)' · 상 이완 'vc-relax (Recommended)' · 자리 'kgy (Recommended)' · EOS 규칙 '붙인다 (Recommended)' (CLAUDE.md '고정셀 + EOS 기본' 줄에 압력 어림 조건)",
   "결정": "D-2026-10-23-nd-q2-decomp-card active (decision_digest 는 원장)",
   "by": "agent · 2026-10-23"
+ },
+ "11_개정_2026_10_23_MP_hull_질의_결과_전": {
+  "무엇": "기저 질의를 MP thermo_types ['GGA_GGA+U'] (MP2020 보정 GGA/GGA+U hull) 로 명시한다 — mp_api 기본값 (GGA_GGA+U_R2SCAN 혼합) 은 쓰지 않는다",
+  "왜": "10-23 블록 ① (gabia · mp_api 기본) — MPRestWarning '기본 thermo type 이 GGA_GGA+U → GGA_GGA+U_R2SCAN 로 바뀌었다' · Li-Nd-P-S-Cl-O 엔트리 322 (생성물 id 전부 r2SCAN 접미) · host Li27P5S22Cl8 → Li + S + Li₃P + LiCl (Li 와 S 가 같이 안정 = 불가능) · 도핑 → … + S 원소. mp_api 0.46.5 문서: 혼합 엔트리는 하위계마다 에너지 기준이 달라 MP 가 미리 만든 상도 없이 섞으면 상도용으로 못 쓴다 (issue #1104) ⇒ 그 hull 은 기저로 안 쓴다 (봉인 안 함 · 기록만 db/raw/nd_q2_decomp_2026_10_23/step1/)",
+  "G5a_정상성_결과_전": {
+   "host": "분해 생성물 = {Li₃PS₄, Li₂S, LiCl} 이어야 한다 (알려진 답 · 손검산 Li₅.₄PS₄.₄Cl₁.₆ = Li₃PS₄ + 0.4 Li₂S + 1.6 LiCl) — 다르면 멈추고 보고 · 원소상이 없고 다른 Li–P–S 상 (예 Li₇PS₆) 만 다르면 그대로 쓸지 사용자가 정한다",
+   "도핑": "분해 생성물에 원소상 (원소 하나짜리) 이 없어야 한다 — 있으면 멈추고 보고",
+   "⛔": "다른 thermo type 을 결과를 보고 고르지 않는다 — GGA_GGA+U 가 정상성을 못 넘으면 사용자에게 간다"
+  },
+  "기록": "mp_api 판 · thermo type · 엔트리 수 (접미별) · MP DB 판 · 생성물 엔트리 id (문자열) · 재료 id",
+  "상_구조": "같은 질의의 생성물 엔트리 구조를 --save_product_structs 로 받아 둔다 (QE 에너지 0 건이라 봉인 전에 받아도 된다)",
+  "도구": "tools/doping/convex_hull_ehull.py — --thermo_type (기본 GGA_GGA+U 명시) · --expect · 원소상 검사 (기본 끝 3) · --save_product_structs · 새 MP id dict → 문자열 · selftest 16 · 깨기 6/6",
+  "by": "agent · 2026-10-23 (블록 ①b 전)"
  }
 }

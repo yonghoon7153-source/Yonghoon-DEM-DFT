@@ -22,14 +22,57 @@ import argparse, os, json
 from pathlib import Path
 
 
-def get_mp_entries(elements, key):
+#: 2026-10-23 — mp_api 의 기본 thermo type 이 GGA_GGA+U → GGA_GGA+U_R2SCAN (혼합) 로 바뀌었다.
+#:   혼합 엔트리는 하위계마다 에너지 기준이 달라 (mp_api issue #1104 · 0.46.5 docstring) MP 가 미리
+#:   만든 상도가 없는 큰 계에서 섞으면 hull 이 엉터리가 된다 — 실측 10-23 gabia (Li-Nd-P-S-Cl-O ·
+#:   엔트리 322): Li27P5S22Cl8 → Li + S + Li3P + LiCl (Li 와 S 가 같이 안정 · 불가능).
+#:   ⇒ 기본을 GGA_GGA+U 로 **명시** 한다 (MP2020 보정 · 하위계끼리 같은 기준 · 예전 기본값).
+DEFAULT_THERMO_TYPE = "GGA_GGA+U"
+
+
+def get_mp_entries(elements, key, thermo_type=DEFAULT_THERMO_TYPE):
     from mp_api.client import MPRester
+    crit = {"thermo_types": [thermo_type]}
     with MPRester(key) as mpr:
         try:
-            ents = mpr.get_entries_in_chemsys(elements, inc_structure=True)
+            ents = mpr.get_entries_in_chemsys(elements, inc_structure=True,
+                                              additional_criteria=crit)
         except TypeError:
-            ents = mpr.get_entries_in_chemsys(elements)   # older client
+            ents = mpr.get_entries_in_chemsys(elements, additional_criteria=crit)
     return ents
+
+
+def entry_id_str(eid):
+    """엔트리 id → 문자열. 새 MP 는 {'identifier','suffix','separator'} 를 준다 (10-23 실측)."""
+    if eid is None:
+        return None
+    if isinstance(eid, dict):
+        i, s, sep = eid.get("identifier"), eid.get("suffix"), eid.get("separator") or "-"
+        if i is None:
+            return None
+        return f"{i}{sep}{s}" if s else str(i)
+    return str(eid)
+
+
+def mp_id_plain(eid):
+    """'mp-aaaaabci-r2SCAN' · 'mp-1153-GGA' → 'mp-aaaaabci' · 'mp-1153' (재료 id 만). 없으면 None."""
+    import re as _re
+    s = entry_id_str(eid)
+    m = _re.match(r"^(mp-[A-Za-z0-9]+)", s or "")
+    return m.group(1) if m else None
+
+
+def elemental_products(formulas):
+    """분해 생성물 중 원소상 (원소 하나짜리). 전하 균형 이온 화합물의 분해에 원소가 나오면
+    hull 을 의심한다 (10-23 엉터리 hull 의 신호가 Li 와 S 였다)."""
+    import re as _re
+    return sorted(f for f in formulas if len(set(_re.findall(r"[A-Z][a-z]?", f))) == 1)
+
+
+def expect_check(formulas, expect):
+    """알려진 답 대조 — 생성물 환원식 집합이 expect 와 같은가. → (ok, 빠진 것, 남는 것)."""
+    got, want = set(formulas), set(expect)
+    return got == want, sorted(want - got), sorted(got - want)
 
 
 def mp_db_version(key):
@@ -48,7 +91,8 @@ def decomposition_entries(decomp):
     2026-10-23 (Nd Q2 기저): 환원식만 남기면 **어느 다형체인지** 가 사라진다 —
     분해상 구조를 받을 때 그 엔트리 (mp-id) 를 그대로 쓰려고 id 를 같이 남긴다."""
     out = [{"formula": d.composition.reduced_formula,
-            "entry_id": getattr(d, "entry_id", None),
+            "entry_id": entry_id_str(getattr(d, "entry_id", None)),
+            "mp_id": mp_id_plain(getattr(d, "entry_id", None)),
             "amount": round(float(a), 6)} for d, a in decomp.items()]
     return sorted(out, key=lambda r: -r["amount"])
 
@@ -133,6 +177,26 @@ def _selftest_tieline():
     chk(de[0]["formula"] == "LiCl" and de[1]["entry_id"] == "mp-1153-GGA",
         "분해 엔트리: 큰 분율 순 · mp-id 를 그대로 남긴다")
     chk(de[0]["entry_id"] is None, "⛔음성: id 가 없는 엔트리는 None — 지어내지 않는다")
+    # 새 MP id 꼴 (10-23 실측) — dict 를 문자열로 · 재료 id 만 따로
+    nid = {"identifier": "mp-aaaaabci", "suffix": "r2SCAN", "separator": "-"}
+    chk(entry_id_str(nid) == "mp-aaaaabci-r2SCAN" and mp_id_plain(nid) == "mp-aaaaabci"
+        and mp_id_plain("mp-1153-GGA") == "mp-1153" and mp_id_plain(None) is None,
+        "엔트리 id: 새 dict 꼴 → 'mp-…-r2SCAN' · 재료 id 'mp-…' (옛 문자열 꼴도)")
+    # 정상성 — 10-23 엉터리 hull 의 생성물을 그대로 넣어 잡히는지
+    chk(elemental_products(["Li3P", "LiCl", "Li", "S"]) == ["Li", "S"],
+        "⛔음성: 10-23 엉터리 hull (Li3P · LiCl · Li · S) 에서 원소상 Li · S 를 잡는다")
+    chk(elemental_products(["Li3PS4", "Li2S", "LiCl"]) == [], "정상 분해 (Li3PS4 · Li2S · LiCl) 는 원소상 없음")
+    ok1, m1, x1 = expect_check(["Li3PS4", "Li2S", "LiCl"], ["Li2S", "LiCl", "Li3PS4"])
+    ok2, m2, x2 = expect_check(["Li3P", "LiCl", "Li", "S"], ["Li3PS4", "Li2S", "LiCl"])
+    chk(ok1 and not ok2 and m2 == ["Li2S", "Li3PS4"] and x2 == ["Li", "Li3P", "S"],
+        "알려진 답 대조: 순서 무관 같음 · 10-23 엉터리는 빠짐/남음을 짚는다")
+    import inspect as _insp
+    gsrc, msrc = _insp.getsource(get_mp_entries), _insp.getsource(main)   # 이 시험 줄 자체는 안 들어간다
+    chk("get_mp_entries(args.elements, key, args.thermo_type)" in msrc
+        and '"thermo_types": [thermo_type]' in gsrc and gsrc.count("additional_criteria=crit") == 2,
+        "⛔음성: main() 이 --thermo_type 을 실제로 MP 질의에 넘긴다 (플래그만 있고 배선 없는 상태를 잡는다)")
+    chk("raise SystemExit(3)" in msrc and "sanity_ok" in msrc,
+        "⛔음성: 정상성 실패면 끝 3 으로 멈춘다 (JSON 은 남기고)")
     it2 = iter([v - 0.05 for v in ref])
     r1 = tieline_points(xs, A, nA, eA, B, nB, eB, lambda c: next(it2))
     chk(all(abs(r["dE_rxn_meV_per_atom"] + 50.0) < 1e-6 for r in r1),
@@ -170,6 +234,13 @@ def main():
                     help="구조 파일 1개 이상. **여러 개를 주면 경쟁상 hull 을 한 번만 "
                          "만들어 재사용한다** — 같은 chemsys 를 구조마다 다시 도는 것은 "
                          "GPU 시간 낭비이고, 다른 GPU 런과 같이 돌 때는 위험까지 된다.")
+    ap.add_argument("--thermo_type", default=DEFAULT_THERMO_TYPE,
+                    help="MP thermo type (기본 GGA_GGA+U 명시 — 혼합 GGA_GGA+U_R2SCAN 은 큰 계에서 엉터리 hull · 10-23)")
+    ap.add_argument("--expect", help="--mode mp: 알려진 답 (환원식 쉼표 목록) — 생성물이 다르면 끝 3")
+    ap.add_argument("--allow_elemental", action="store_true",
+                    help="--mode mp: 원소상 생성물을 허용 (기본은 끝 3 — 전하 균형 계에서는 hull 고장 신호)")
+    ap.add_argument("--save_product_structs",
+                    help="--mode mp: 분해 생성물 엔트리의 구조를 <폴더>/<환원식>.cif 로 남긴다")
     ap.add_argument("--elements", nargs="+",
                     default=["Li", "P", "S", "Cl", "B", "O"])
     ap.add_argument("--mode", choices=["uma", "mp"], default="uma")
@@ -205,7 +276,7 @@ def main():
         print(f"our composition: {s.composition.reduced_formula}  "
               f"({s.composition.formula})   [{sp.name}]")
     ours, comp = structs[0][1], structs[0][1].composition
-    mp_entries = get_mp_entries(args.elements, key)
+    mp_entries = get_mp_entries(args.elements, key, args.thermo_type)
     print(f"MP entries in {'-'.join(args.elements)}: {len(mp_entries)}")
 
     result = {"cif": args.cif, "composition": comp.formula,
@@ -365,15 +436,54 @@ def main():
                     "Absolute E_above_hull of OUR structure needs an MP-compatible "
                     "energy (use --mode uma for a self-consistent number).",
         })
+        from collections import Counter
+        try:
+            import mp_api as _mpa
+            mpv = getattr(_mpa, "__version__", "unknown")
+        except Exception:                       # noqa: BLE001
+            mpv = "unknown"
+        sfx = Counter((entry_id_str(getattr(e, "entry_id", None)) or "?").rsplit("-", 1)[-1]
+                      for e in mp_entries)
+        forms = [r_["formula"] for r_ in result["decomposition_entries"]]
+        elem = elemental_products(forms)
+        result.update({"thermo_type": args.thermo_type, "mp_api_version": mpv,
+                       "entries_by_suffix": dict(sfx), "elemental_products": elem})
+        bad = []
+        if elem and not args.allow_elemental:
+            bad.append(f"원소상 생성물 {elem} — 전하 균형 계의 분해에 원소가 나오면 hull 이 고장난 것 (10-23 선례)")
+        if args.expect:
+            ok_, miss, extra = expect_check(forms, [x.strip() for x in args.expect.split(",") if x.strip()])
+            result["expect"] = {"want": args.expect, "ok": ok_, "missing": miss, "extra": extra}
+            if not ok_:
+                bad.append(f"알려진 답과 다르다 — 빠짐 {miss} · 남음 {extra}")
+        if args.save_product_structs:
+            sd = Path(args.save_product_structs)
+            sd.mkdir(parents=True, exist_ok=True)
+            for d_ in decomp:
+                st = getattr(d_, "structure", None)
+                f_ = d_.composition.reduced_formula
+                if st is None:
+                    bad.append(f"{f_}: 엔트리에 구조가 없다 — 저장 못 함")
+                    continue
+                st.to(filename=str(sd / f"{f_}.cif"))
+            result["saved_product_structs"] = str(sd)
+        result["sanity_ok"] = not bad
         print("\nMP-hull decomposition products at our composition:")
         print(result["decomposition_products"])
         for r_ in result["decomposition_entries"]:
             print(f"  {r_['formula']:<14} {r_['entry_id']}  원자 분율 {r_['amount']:.4f}")
-        print(f"  MP DB {result['mp_database_version']} · {result['query_utc']}")
+        print(f"  MP DB {result['mp_database_version']} · mp_api {mpv} · thermo {args.thermo_type} · "
+              f"엔트리 {len(mp_entries)} {dict(sfx)} · {result['query_utc']}")
+        for b_ in bad:
+            print(f"  ⛔ {b_}")
+        if not bad:
+            print("  ✓ 정상성 (원소상 없음" + (" · 알려진 답 같음" if args.expect else "") + ")")
 
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     Path(args.out).write_text(json.dumps(result, indent=2))
     print(f"-> {args.out}")
+    if args.mode == "mp" and not result.get("sanity_ok", True):
+        raise SystemExit(3)
 
 
 if __name__ == "__main__":
