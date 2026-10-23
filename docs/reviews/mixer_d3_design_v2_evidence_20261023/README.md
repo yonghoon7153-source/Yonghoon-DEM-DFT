@@ -1,5 +1,7 @@
 # D3 v2 설계 · 독립 사전 검토 반입 증거 (2026-10-23)
 
+최종 통합 상태는 [전체 게이트 영수증](full_gate_receipt.json)과 `final-gate/` 로그가 정본이다. 아래 및 원 검토문·쪽지의 작성 당시 대기 표현은 이력으로 보존한다. 깨끗한 후보 커밋에서 축소 없는 전체 게이트를 실행했고, 이후 커밋은 이 영수증·로그와 새 상태 쪽지만 기록한다. 외부 GO·비준·발송·실제 기계 실행 상태는 승격하지 않는다.
+
 현재 문서 = `docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261023.md`, 요청서 = `docs/reviews/codex_mixer_d3_design_v2_request_20261023.md`. 작업 가지는 `codex/mixer-d3-design`, 예정 커밋은 `<<sha:Revise mixer D3>>` (`Revise mixer D3 finite-grid design proposal`)이다. 이 증거를 준비한 것만으로 가지 생성·커밋·push·핀 ZIP 제작이 끝났다고 주장하지 않는다.
 
 **현재 지위:** 독립 사전 리뷰의 P3 네 건은 수정판에서 문서 수준 해소했다. 예약 시드의 정본 ID·순서·역할 일치도 확인했다. 전체 `bash scripts/check_all.sh`는 최종 반입 묶음에서 대기이며, 외부 발송 승인·D3 ① 외부 GO·V2-Q1 등 새 제안 비준·실제 manifest 검증·실측/DEM 실행은 완료하지 않았다.

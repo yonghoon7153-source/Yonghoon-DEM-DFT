@@ -2,7 +2,7 @@
   "branch_planned": "codex/mixer-d3-design",
   "commit_subject_planned": "Revise mixer D3 finite-grid design proposal",
   "commit_placeholder": "<<sha:Revise mixer D3>>",
-  "full_gate": "pending",
+  "full_gate": "PASS",
   "external_dispatch": "not authorized",
   "V2_Q1_ratification": "not granted",
   "reviewed_revision1": {
@@ -20,5 +20,7 @@
     "mixer_d3_se_flowability_anchor_design_v2_20261023.md": "e00083cc6900ce38649c62673326280f57e3577f7038953204d1054fe4d257b2",
     "codex_mixer_d3_design_v2_request_20261023.md": "64be057bedcc6c0326b5d7ffb6bf26f5b13ab4d720ae48dc2cfadb79a5cad5ce"
   },
-  "path_normalization_provenance": "import-paths/provenance.json"
+  "path_normalization_provenance": "import-paths/provenance.json",
+  "pre_integration_full_gate_snapshot": "pending",
+  "full_gate_receipt": "full_gate_receipt.json"
 }
