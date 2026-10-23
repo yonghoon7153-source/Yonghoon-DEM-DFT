@@ -1,0 +1,62 @@
+[
+  {
+    "pin": "962caea2d1857b0e34fe724e38815661936b7183",
+    "path": "docs/reviews/codex_dem_protocol_gen2_design_request_20261023.md",
+    "sha256": "19cfb12f9524ef1d82dd267dc0472cfee410d1ec487bb973b6023dbaa6c41b84"
+  },
+  {
+    "pin": "962caea2d1857b0e34fe724e38815661936b7183",
+    "path": "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+    "sha256": "b7f9c115ab6c092cd667be82e237994d50591342ff5e61793156c0c3ed74e333"
+  },
+  {
+    "pin": "8347d32ea678c0174bd77d4c79cfbd7b0591e4a3",
+    "path": "docs/data/ps45_unload_20261009/README.md",
+    "sha256": "9dda2b3d23d55cd75ff38d9491a808e821683fe82a38e6e49f13893de28e922b"
+  },
+  {
+    "pin": "8347d32ea678c0174bd77d4c79cfbd7b0591e4a3",
+    "path": "docs/data/ps45_unload_20261009/ul_reader.py",
+    "sha256": "34b46ebcf4530989917493f20d2d953043209e36d89e6b8282a2d629050a078d"
+  },
+  {
+    "pin": "8347d32ea678c0174bd77d4c79cfbd7b0591e4a3",
+    "path": "docs/data/ps45_unload_20261009/ul_lib.py",
+    "sha256": "23a79392352e01631c6d1f6aaecdb31fc8a53be518ee6f27b815896e161727e6"
+  },
+  {
+    "pin": "8347d32ea678c0174bd77d4c79cfbd7b0591e4a3",
+    "path": "docs/data/ps45_unload_20261009/ul_gates.py",
+    "sha256": "c8d45a9cf75f0806e612d810942d23adea4b40feaa5f31f7d279eb8386358de6"
+  },
+  {
+    "pin": "8347d32ea678c0174bd77d4c79cfbd7b0591e4a3",
+    "path": "docs/data/ps45_unload_20261009/ul_observers.py",
+    "sha256": "77b5dc891421fbecf059bb907ff5f5b6ab6433bf1d2cb9649e66535a1ae5ca74"
+  },
+  {
+    "pin": "8347d32ea678c0174bd77d4c79cfbd7b0591e4a3",
+    "path": "docs/data/ps45_unload_20261009/make_unload_decks.py",
+    "sha256": "9e64f0673e12c81cf195410eaf23032e3974ab10508944d106b8d990bb347c4a"
+  },
+  {
+    "pin": "8347d32ea678c0174bd77d4c79cfbd7b0591e4a3",
+    "path": "docs/data/ps45_unload_20261009/unload_params.json",
+    "sha256": "332ad7c2040eb614ac21b31ccbb226479928d7ed8363f733b960cf4527204aae"
+  },
+  {
+    "pin": "8347d32ea678c0174bd77d4c79cfbd7b0591e4a3",
+    "path": "docs/reviews/dem_unloading_ps45_prereg_20261009.md",
+    "sha256": "69ebe5a144d9e8fb67c2a9c0aa913417fd4f2e8e5b42ee37770382139bbd8f9b"
+  },
+  {
+    "pin": "8347d32ea678c0174bd77d4c79cfbd7b0591e4a3",
+    "path": "docs/handoff_codex_nonrint_20261023.md",
+    "sha256": "b03fd626124f35200805bc72f48c4988192fc885853262e963b7a2ab69324d9e"
+  },
+  {
+    "pin": "8347d32ea678c0174bd77d4c79cfbd7b0591e4a3",
+    "path": "CLAUDE.md",
+    "sha256": "1cdf6e33bb3d563eb7387791efcf2833698c88ea64aced50b777fea52112493a"
+  }
+]

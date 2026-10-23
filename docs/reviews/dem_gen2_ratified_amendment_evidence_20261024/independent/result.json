@@ -1,0 +1,150 @@
+{
+  "status": "PASS",
+  "base": "962caea2d1857b0e34fe724e38815661936b7183",
+  "plan_sha256": "674ce63cc21a767e6c74d3824e3b02b5e8409fceb8cc1dd729dec979e521b0c1",
+  "checks": [
+    {
+      "name": "pinned original plan-before-20261024.md",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "pinned original prior-arithmetic-results.json",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "pinned original prior-probe_design_arithmetic.py",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "pinned original request-before-20261024.md",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "actual baseline-to-current diff exact",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "A1 low existing exact rounding",
+      "pass": true,
+      "detail": "1.3937007874"
+    },
+    {
+      "name": "A1 high existing exact rounding",
+      "pass": true,
+      "detail": "5.7897196262"
+    },
+    {
+      "name": "A2 point boundary existing exact rounding",
+      "pass": true,
+      "detail": "0.7763655761"
+    },
+    {
+      "name": "A2 interval bound 0",
+      "pass": true,
+      "detail": "1.6307260323"
+    },
+    {
+      "name": "A2 interval bound 1",
+      "pass": true,
+      "detail": "1.6769905056"
+    },
+    {
+      "name": "A3 true-SE exact_single_probe_coverage",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "A3 true-SE exact_single_probe_false_failure_probability",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "A3 true-SE exact_three_independent_probes_any_false_failure_probability",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "A3 no deterministic one-sigma rule",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "A4 exact existing five inputs",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "A5 existing analytical witness",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "A5 qualification without invented values",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "prior replay exactly equal JSON",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "recorded replay rc0 and same source only",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "T12 eight original package files preserved",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "T12 explicitly not run and no physical readiness",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "same user ratification not requested again",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "new fullgate remains pending",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "current amendment section unique and references consistent",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "historical status and approval context explicit",
+      "pass": true,
+      "detail": null
+    }
+  ],
+  "failures": [],
+  "scope": "Independent document/numeric source comparison only; no repeated arithmetic/MC experiment or physical/fullgate execution.",
+  "current_docs_use_section12": true,
+  "reviewed_v1_plan_preserved": true,
+  "resolved_findings": [
+    {
+      "id": "DEM-DOC-01",
+      "finding": "Historical unchanged-document and pending-ratification wording could be read as current.",
+      "resolution": "Explicit dated historical labels and current ratification-complete precedence added.",
+      "status": "RESOLVED"
+    },
+    {
+      "id": "DEM-DOC-02",
+      "finding": "Author identified duplicate section11 between existing literature section and new amendment.",
+      "resolution": "New amendment uses unique section12; current document references updated.",
+      "status": "RESOLVED"
+    }
+  ]
+}

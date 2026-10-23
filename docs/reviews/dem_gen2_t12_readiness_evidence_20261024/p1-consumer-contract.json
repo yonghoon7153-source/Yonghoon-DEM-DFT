@@ -1,0 +1,263 @@
+{
+  "scope": "Extracted P1 consumer constants at ULPR pin; not a P2 producer schema or T12 validation",
+  "ulpr_pin": "8347d32ea678c0174bd77d4c79cfbd7b0591e4a3",
+  "gen2_design_pin": "962caea2d1857b0e34fe724e38815661936b7183",
+  "source_params_sha256": "332ad7c2040eb614ac21b31ccbb226479928d7ed8363f733b960cf4527204aae",
+  "params": {
+    "schema": "ps45_unload_kit_v1",
+    "units": {
+      "report_MPa_per_Ps": 1000.0,
+      "um_per_deck_m": 1000.0,
+      "W_report_per_W_deck": 1e-06,
+      "note": "Ps = f_top_mesh[3] / A / 1e6 = 덱 MPa (r8 pressMPa 식에서 abs 를 뺀 글자 · A 는 그 식의 글자) · 보고 MPa = 1000 · Ps (REG §12-11)"
+    },
+    "Ps_sign": 1,
+    "plate_fn_compressive_sign": -1,
+    "P_meas_report_MPa": 1.0,
+    "protocol": {
+      "v0": 0.01,
+      "dt0": 1e-06,
+      "dz_A": 0.0002,
+      "dz_B": 5e-05,
+      "B_switch_factor": 3.0,
+      "confirm_steps": 2,
+      "lift_cap": 0.016,
+      "guards": {
+        "atoms_lost": 50,
+        "leak_increase": 100,
+        "ke_trans_max": 0.0017
+      },
+      "note": "REG §4-2 (판 속도 0.01 덱 m/s = 0.01 µm / 1,000 step · Δz_A 0.20 µm · Δz_B 0.05 µm · P̄ ≤ 3 P_meas 인 단 다음부터 B · 첫 교차 + B 두 단 → R_M · 들어 올림 상한 16 µm · 가드 = 분기 키트 §7 값)"
+    },
+    "windows": {
+      "W0": 5000,
+      "T_W_note": "T_W = dt0 · W0 = 0.005 덱 s · W(dt) = T_W / dt (§13-4)",
+      "k0_min": 3,
+      "general_min": 4,
+      "budget_max": 12,
+      "sep_declare": 2,
+      "post_sep": 4,
+      "gravity_hold_min": 4,
+      "gravity_hold_max": 12,
+      "uk_windows": 3,
+      "uc_steps_dt0": 50000,
+      "ave_nevery_dt0": 100,
+      "ave_nrepeat": 50,
+      "thermo_dt0": 500,
+      "R_steps": 2000,
+      "R_thermo": 1000,
+      "big_every": 1000000000
+    },
+    "steady": {
+      "S1_rel": 0.005,
+      "S1_abs_factor_of_Pmeas": 0.05,
+      "S2_factor": 10.0,
+      "S3_max": 0.001,
+      "S4_um_per_window": 0.002,
+      "note": "REG §5-2 문턱 그대로 (§13-2 — S1 · S2 · S4 문턱은 그대로) · S3 = 총힘 함수 (K5 · ul_s3.py)"
+    },
+    "records": {
+      "windows_cols": [
+        "arm",
+        "bed",
+        "k",
+        "w",
+        "phase",
+        "step",
+        "plate_z",
+        "lift",
+        "Ps_avg",
+        "ke_tr_avg",
+        "ke_rot_avg",
+        "ke_tot_avg",
+        "S1",
+        "S2",
+        "ok",
+        "n_contact_geo",
+        "atoms",
+        "leak",
+        "ke_inst"
+      ],
+      "steps_cols": [
+        "arm",
+        "bed",
+        "k",
+        "kind",
+        "dz",
+        "n_move",
+        "step",
+        "plate_z",
+        "lift",
+        "Pbar",
+        "n_windows",
+        "steady",
+        "phase",
+        "modeB",
+        "n_contact_last"
+      ],
+      "events_cols": [
+        "event",
+        "k",
+        "step",
+        "plate_z",
+        "lift",
+        "detail"
+      ],
+      "phases": {
+        "0": "SEARCH",
+        "1": "CONFIRM",
+        "2": "SEPARATE",
+        "3": "POST",
+        "4": "HOLD0"
+      },
+      "thermo_style": "step atoms ke c_ul_erot v_ul_Ps v_pressMPa cpu",
+      "thermo_cols": [
+        "Step",
+        "Atoms",
+        "KinEng",
+        "ul_erot",
+        "ul_Ps",
+        "pressMPa",
+        "CPU"
+      ],
+      "thermo_note": "LIGGGHTS 3d5c00f thermo.cpp — c_ · v_ 열 머리 = ID 앞 8 글자 (접두 없이) · 읽는 쪽은 이 이름만 쓴다 (생성기 selftest 가 덱 thermo_style 과 대조)"
+    },
+    "s3": {
+      "threshold": 0.001,
+      "set": "s0_ids_inside",
+      "norm_order": "per_particle_then_sum",
+      "denominator": "sum_contact_magnitude_plus_weight",
+      "g": 9.81,
+      "note": "choice C1 · C2 (ul_s3.py)"
+    },
+    "g_aux": 9.81e-06,
+    "ke_rot_base": {
+      "source": "UK",
+      "aggregate": "median_of_window_means",
+      "note": "choice C4 — 침대마다 S0 에서 무이동 3 창 (k = 0 창 미사용 · 순환 방지)"
+    },
+    "surface": {
+      "grid": 10,
+      "quantile": 0.999,
+      "quantile_method": "nearest_rank",
+      "empty_cell": "not_computed",
+      "exclusion": "s0_fixed",
+      "note": "choice C5"
+    },
+    "selection": {
+      "delta_max_pp": 0.1,
+      "note": "§12-4 결정표 · §13-1 끝점 유효성 — 유효한 δ 둘이 있을 때만 행이 있다 · 아니면 SELECTION_UNRESOLVED (다음 팔 · 본 런 제출 없음)",
+      "uses_pressure_rule_max_1pct_05MPa": false,
+      "pressure_rule_note": "REG:648 의 max(1 %, 0.5 MPa) = 옛 §4-4 UT 다섯 단 압력 비교선 — 개정 §12-4 결정표는 끝점 ρ 차 (0.10 %p) 만 쓴다 → 보고 열로만 (choice C9)"
+    },
+    "arms": {
+      "UB": {
+        "v_factor": 1.0,
+        "dt_factor": 1.0,
+        "hold_factor": 1,
+        "stop": "full",
+        "dev_only": false,
+        "note": "기본 팔 · 튜플 t1"
+      },
+      "UT": {
+        "v_factor": 1.0,
+        "dt_factor": 0.5,
+        "hold_factor": 1,
+        "stop": "RM",
+        "dev_only": true,
+        "note": "dt₀/2 · 첫 교차 + 확인 두 단 → R_M 에서 멈춤 (§13-5 ③) · 행 3 이면 UTc = UT3 덱을 UT 의 R_M (상태 파일) 에서 재개"
+      },
+      "UVa": {
+        "v_factor": 0.5,
+        "dt_factor": 1.0,
+        "hold_factor": 2,
+        "stop": "full",
+        "dev_only": false,
+        "note": "dt* = dt₀ 의 UV · 튜플 t2"
+      },
+      "UVb": {
+        "v_factor": 0.5,
+        "dt_factor": 0.5,
+        "hold_factor": 2,
+        "stop": "full",
+        "dev_only": false,
+        "note": "dt* = dt₀/2 의 UV · 튜플 t4"
+      },
+      "UT3": {
+        "v_factor": 1.0,
+        "dt_factor": 0.5,
+        "hold_factor": 1,
+        "stop": "full",
+        "dev_only": false,
+        "note": "튜플 t3 의 본 런 (7:3 은 UT + UTc — 같은 덱 블록 · UT 의 R_M 재개)"
+      },
+      "UC": {
+        "v_factor": 0.0,
+        "dt_factor": 1.0,
+        "hold_factor": 1,
+        "stop": "uc",
+        "dev_only": false,
+        "note": "무이동 50,000 step × dt₀/dt · 판 압력 표류 · 잡음 바닥 · KE"
+      }
+    },
+    "tuples": {
+      "t1": {
+        "arm": "UB",
+        "row": "δ_dt ≤ 0.10 · δ_v ≤ 0.10"
+      },
+      "t2": {
+        "arm": "UVa",
+        "row": "δ_dt ≤ 0.10 · δ_v > 0.10"
+      },
+      "t3": {
+        "arm": "UT3",
+        "row": "δ_dt > 0.10 · δ_v ≤ 0.10",
+        "dev73": "UT + UTc (UT 의 R_M 에서 같은 덱 재개)"
+      },
+      "t4": {
+        "arm": "UVb",
+        "row": "δ_dt > 0.10 · δ_v > 0.10"
+      }
+    }
+  },
+  "bed_parameters": {
+    "ps_0_10_r45": {
+      "s0": 3200000,
+      "h0": 0.117208,
+      "atoms": 163348,
+      "orig_np": 5,
+      "s0_candidates": null
+    },
+    "ps_3_7_r45": {
+      "s0": 3200000,
+      "h0": 0.114361,
+      "atoms": 162093,
+      "orig_np": 4,
+      "s0_candidates": null
+    },
+    "ps_5_5_r45": {
+      "s0": 2900000,
+      "h0": 0.112436,
+      "atoms": 161257,
+      "orig_np": 5,
+      "s0_candidates": null
+    },
+    "ps_7_3_r45": {
+      "s0": 3200000,
+      "h0": 0.111052,
+      "atoms": 160417,
+      "orig_np": 24,
+      "s0_candidates": null
+    },
+    "ps_10_0_r45": {
+      "s0": null,
+      "h0": 0.112597,
+      "atoms": 159152,
+      "orig_np": 11,
+      "s0_candidates": [
+        3650000,
+        3700000
+      ]
+    }
+  }
+}

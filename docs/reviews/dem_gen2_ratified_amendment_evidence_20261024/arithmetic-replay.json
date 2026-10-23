@@ -1,0 +1,136 @@
+{
+  "scope": "algebraic design probes only; no physical-run result",
+  "springback": [
+    {
+      "thickness_recovery_percent": 1.6,
+      "porosity_percent": 12.893700787401574,
+      "porosity_change_pp": 1.3937007874015737
+    },
+    {
+      "thickness_recovery_percent": 7.000000000000001,
+      "porosity_percent": 17.28971962616823,
+      "porosity_change_pp": 5.789719626168231
+    }
+  ],
+  "zero_porosity_thickness_mm_density_1_64": 0.7763655760580263,
+  "density_measurement_interval_counterexamples": [
+    {
+      "thickness_mm": 0.76,
+      "assumed_mass_interval_g": [
+        0.0999,
+        0.10010000000000001
+      ],
+      "assumed_thickness_interval_mm": [
+        0.75,
+        0.77
+      ],
+      "apparent_density_interval_g_cm3": [
+        1.6519042924551008,
+        1.699350379039864
+      ],
+      "rejects_density_1_64_under_stated_bounds": true
+    },
+    {
+      "thickness_mm": 0.77,
+      "assumed_mass_interval_g": [
+        0.0999,
+        0.10010000000000001
+      ],
+      "assumed_thickness_interval_mm": [
+        0.76,
+        0.78
+      ],
+      "apparent_density_interval_g_cm3": [
+        1.63072603229542,
+        1.676990505631445
+      ],
+      "rejects_density_1_64_under_stated_bounds": false
+    }
+  ],
+  "discrete_linear_servo": [
+    {
+      "K_N_per_m": 4700.0,
+      "gain": 0.0094,
+      "linear_stable": true,
+      "initial_relative_error": 0.001,
+      "relative_error_after_10_chunks": 0.0009098781511425324
+    },
+    {
+      "K_N_per_m": 47000.0,
+      "gain": 0.094,
+      "linear_stable": true,
+      "initial_relative_error": 0.001,
+      "relative_error_after_10_chunks": 0.0003726335695763793
+    },
+    {
+      "K_N_per_m": 470000.0,
+      "gain": 0.94,
+      "linear_stable": true,
+      "initial_relative_error": 0.001,
+      "relative_error_after_10_chunks": 6.0466176000000545e-16
+    },
+    {
+      "K_N_per_m": 1000000.0,
+      "gain": 2.0,
+      "linear_stable": false,
+      "initial_relative_error": 0.001,
+      "relative_error_after_10_chunks": 0.001
+    },
+    {
+      "K_N_per_m": 1100000.0,
+      "gain": 2.2,
+      "linear_stable": false,
+      "initial_relative_error": 0.001,
+      "relative_error_after_10_chunks": 0.006191736422400009
+    }
+  ],
+  "MC_one_sigma_acceptance": {
+    "n": 100,
+    "true_probability": 0.5,
+    "known_standard_error": 0.05,
+    "acceptance_counts_inclusive": [
+      45,
+      55
+    ],
+    "exact_single_probe_coverage": 0.7287469759261652,
+    "exact_single_probe_false_failure_probability": 0.2712530240738348,
+    "exact_three_independent_probes_any_false_failure_probability": 0.6129827731023425
+  },
+  "sphere_vs_union_operators": {
+    "sphere_porosity_percent": 30.18682992022682,
+    "exact_union_porosity_percent": 41.09513774519139,
+    "definition_difference_pp": 10.90830782496456
+  },
+  "conservation": {
+    "AM_radius_um": 4.5,
+    "box_um3": 277630.0,
+    "one_AM_loss_porosity_pp": 0.13748640543570936,
+    "fifty_AM_loss_porosity_pp": 6.874320271785468
+  },
+  "energy_and_local_cancellation": {
+    "P_deck_Pa": 300000,
+    "V_deck_m3": 0.00025000000000000006,
+    "translation_0_5J_K_over_PV": 0.006666666666666667,
+    "rotation_only_0_009J_K_over_PV": 0.00011999999999999999,
+    "two_opposed_residual_forces_N": [
+      10,
+      -10
+    ],
+    "sum_residual_N": 0,
+    "sum_absolute_residual_over_target": 0.02666666666666667
+  },
+  "E_ladder_GPa": [
+    1.35,
+    2.0,
+    3.0,
+    4.5,
+    6.75
+  ],
+  "successive_ratios": [
+    1.4814814814814814,
+    1.5,
+    1.5,
+    1.5
+  ],
+  "checks": "all assertions passed"
+}
