@@ -12686,7 +12686,8 @@
         "scripts/test_ca_ext_b6.py (427/427 · 10-23 A6 판 `fba004f2d`) — S8r (구간 함수 `cert_interval` = 끊은 반사실 그래프의 영값 위상 증서만 +∞ · 다른 그래프의 0 = 못 정함 · A6 변이 표 A2-c15 생존 → 상주)",
         "docs/reviews/codex_rint2_rereview_evidence_20261022/geometry/run_review.py",
         "docs/reviews/codex_rint2_rereview_evidence_20261022/geometry/geometry_results.json",
-        "docs/reviews/codex_rint2_rereview_evidence_20261022/_repro_ours_20261022/README.md"
+        "docs/reviews/codex_rint2_rereview_evidence_20261022/_repro_ours_20261022/README.md",
+        "scripts/test_carbon_junction.py (392/392 · 10-23 A′ 판 `9b920cc3b` · 시험만) — QD6 (사전 공격 리뷰 C2 · 실제 증서 기록 SVX · QD2-3 · 정확 몫 (Fraction) 칼날 — 위 몫 이하 가장 큰 float = SV_UNCHECKED · 이상 가장 작은 float = 표지 없음 · 아래 몫 쪽 = SV_DEPENDENT 아님 · 사슬 구간 끝 = 정확한 방향 반올림 · 리뷰 변이 M7 (방향 맞바꿈) · M1 (그냥 a/b) 상주 잡음 · 글자 변이 --only QD2,QD3,QD4,QD6 = M7 46/53 · M1 49/53)"
       ],
       "claimed_fixed_sha": "df0f6f01c"
     },
@@ -12728,16 +12729,21 @@
       "found_by": "codex 10-22 Rint ② 설계·구현 재검토 (검토 핀 0b3012460 · 비교 기준 5dc6f7f0b · 독립 해석 회로 · 실제 생산 함수 호출 · 작은 합성 S0 census 본체 · 실침대 · 생산 · 전체 CLI 실행 없음)",
       "opened_in": "docs/reviews/codex_review_rint2_rereview_20261022.md",
       "title": "F3 — SV 기록의 증서 · 규칙 · 제거 수 결합이 불완전하다 (computed 끝 cert None · removed ≠ n_unsplit · 임의 bracket_rule · n_unsplit 10⁴⁰⁰ · 다른 회로 증서 통과)",
-      "note": "판정문 §4 RCA2-04 · 영향 = 옮겨온 기록 · 다른 판본 · 재판정의 계약 (정상 producer 오계산 확인 아님 · RCA2-01 을 보장 구간으로 고치려면 함께 닫아야 함) · 자리 (핀 0b3012460) = scripts/ca_ext_svcf.py:196 · 200 · 259 · 투영 :75–77 · 실제 소비자 scripts/run_contract.py:756.  실제 검증기 음성 입력: ratio/G 불일치 · cert.ok False = 거부 · 통과 = computed 끝 cert None · n_unsplit 2 인데 removed 0 · 임의 비어 있지 않은 bracket_rule · n_unsplit 10⁴⁰⁰ (예외가 아니라 의미 범위 검사 없음) · 다른 실제 회로의 성공 증서를 붙인 정상 G/ratio 기록 (투영이 목표량 숫자를 버려 붙임 검사 불가).  최소 해결 = 등록 R 의 computed 끝마다 현 증서 필수 · 각 G / target / 분자 및 등록 rule / version 결합 · 실제 census 와 제거 수 · 셀 수 일관성 · 진단 전용 무증서 실행은 별도 지위 (R 판정 입력으로 승격 안 함).  재현 = geometry/run_review.py · certificate_removed_from_certified_run · foreign_certificate_accepted. ★ 10-23 묶음 A2 (수정 지시서 `docs/reviews/rint2_rr_fix_evidence_20261023/BRIEF.md` · 1저자 10-23 *\"다 권고대로 해줘\"* = 수정 계획 Q1–Q8 (가) · §3 · Q1 (가)) = claimed_fixed — 시험 먼저 `ad32382f6` · 고침 `df0f6f01c` (`ca_ext_svcf.sv_cf_problem` → `_cert_problem` · `_census_problem` · `_interval_problem` · `_removed_problem` — 증서 구간 기록의 비를 싣는 끝마다 현 증서 · 그 끝 G 와 결합 (게시 판 전류 정확 · 목표량 구간을 `step3_conv_cert.target_judge` 로 다시) · 분자 G_full = 주 해 증서 = 솔브 기록 `I_bot_code` · 결합 칸 = 증거 fp · 등록 괄호 규칙만 · 수 칸 0 이상 정수 · int64 범위 · 제거 성분 = 못 가른 덩어리 수 · 제거 셀 ≥ 성분 · census 일관 (못 가른 ≤ 다리 놓는 ≤ 닿는 성분) · 사슬 read_run 이 기록의 주 해 증서 = 그 런의 step3 주 증서를 대조 (다르면 CA_EXT_RECORD · 새 이름 없음)) · 등록 R `435e73732` · 확인 = Codex 재검토.",
+      "note": "판정문 §4 RCA2-04 · 영향 = 옮겨온 기록 · 다른 판본 · 재판정의 계약 (정상 producer 오계산 확인 아님 · RCA2-01 을 보장 구간으로 고치려면 함께 닫아야 함) · 자리 (핀 0b3012460) = scripts/ca_ext_svcf.py:196 · 200 · 259 · 투영 :75–77 · 실제 소비자 scripts/run_contract.py:756.  실제 검증기 음성 입력: ratio/G 불일치 · cert.ok False = 거부 · 통과 = computed 끝 cert None · n_unsplit 2 인데 removed 0 · 임의 비어 있지 않은 bracket_rule · n_unsplit 10⁴⁰⁰ (예외가 아니라 의미 범위 검사 없음) · 다른 실제 회로의 성공 증서를 붙인 정상 G/ratio 기록 (투영이 목표량 숫자를 버려 붙임 검사 불가).  최소 해결 = 등록 R 의 computed 끝마다 현 증서 필수 · 각 G / target / 분자 및 등록 rule / version 결합 · 실제 census 와 제거 수 · 셀 수 일관성 · 진단 전용 무증서 실행은 별도 지위 (R 판정 입력으로 승격 안 함).  재현 = geometry/run_review.py · certificate_removed_from_certified_run · foreign_certificate_accepted. ★ 10-23 묶음 A2 (수정 지시서 `docs/reviews/rint2_rr_fix_evidence_20261023/BRIEF.md` · 1저자 10-23 *\"다 권고대로 해줘\"* = 수정 계획 Q1–Q8 (가) · §3 · Q1 (가)) = claimed_fixed — 시험 먼저 `ad32382f6` · 고침 `df0f6f01c` (`ca_ext_svcf.sv_cf_problem` → `_cert_problem` · `_census_problem` · `_interval_problem` · `_removed_problem` — 증서 구간 기록의 비를 싣는 끝마다 현 증서 · 그 끝 G 와 결합 (게시 판 전류 정확 · 목표량 구간을 `step3_conv_cert.target_judge` 로 다시) · 분자 G_full = 주 해 증서 = 솔브 기록 `I_bot_code` · 결합 칸 = 증거 fp · 등록 괄호 규칙만 · 수 칸 0 이상 정수 · int64 범위 · 제거 성분 = 못 가른 덩어리 수 · 제거 셀 ≥ 성분 · census 일관 (못 가른 ≤ 다리 놓는 ≤ 닿는 성분) · 사슬 read_run 이 기록의 주 해 증서 = 그 런의 step3 주 증서를 대조 (다르면 CA_EXT_RECORD · 새 이름 없음)) · 등록 R `435e73732` · 확인 = Codex 재검토. ★ 10-23 사전 공격 리뷰 (`docs/reviews/rint2_rr_fix_evidence_20261023/preattack/PREATTACK_A.md`) C1 고침 `5182fb1fc` (끝 증서 ↔ 끊은 그래프 — 투영이 증서 위상 수 `CERT_TOPO_KEYS` 를 싣고 `_topo_problem` 이 끝마다 주 해 증서 · 기록의 끊은 수와 대조 · 생산자 보장 관계 + 등록 핵심 조건 (끊었으면 주 해보다 작다 · 같은 수 = 거부) · 사슬 read_run 이 주 해 증서 위상 수도 런의 주 증서와 대조) · C5 고침 `5cf848157` (기록 종류 · 끊기 규칙 = 등록된 생산자 이름 `CJUNC_SV_CF_KIND` · `CJUNC_SV_CF_RULE` 만 · 투영이 규칙을 옮긴다 · 이름 대조뿐 · 옛 이름 고정물 3 곳 고침) · 확인 = Codex.",
       "evidence_tests": [
         "scripts/test_ca_ext_b6.py (424/424 · 10-23 A4 판 · A2 고치기 전 357 PASS / 31 FAIL) — S8n (판정문 F3 다섯 꼴 + 같은 부류 — 끝 증서 없음 · 외부 · 결합 안 된 증서 · 등록 밖 괄호 규칙 · 제거 수 · 10^400 · census · I_bot_code · fp 증거 불일치 · 판정 근거 칸 변조 · 실제 소비자 run_contract.ca_ext_record_ok) · S8q (검증기 상수 = 생산자 상수) · SP15",
         "scripts/test_rint_r_chain.py (231/231 · 10-23 A4 판) — V30 (기록의 주 해 증서 ≠ 그 런의 step3 주 증서 → CA_EXT_RECORD)",
         "scripts/test_ca_ext_b6.py (427/427 · 10-23 A6 판 `fba004f2d`) — S8s 일관 변조 48 꼴 (판정 근거 칸을 변조한 기록의 증서에서 다시 센 값으로 맞춰도 각 검사가 제 문장으로 거부) · 끝 증서 게시 판 전류 ≠ 그 끝 G 꼴 (A6 변이 표 A2-c7 · c8 · c9 · c10 · c17 생존 → 상주)",
         "docs/reviews/codex_rint2_rereview_evidence_20261022/geometry/run_review.py",
         "docs/reviews/codex_rint2_rereview_evidence_20261022/geometry/geometry_results.json",
-        "docs/reviews/codex_rint2_rereview_evidence_20261022/_repro_ours_20261022/README.md"
+        "docs/reviews/codex_rint2_rereview_evidence_20261022/_repro_ours_20261022/README.md",
+        "scripts/test_carbon_junction.py (392/392 · 10-23 A′ 판 · C1 고치기 전 --only QD5 3/18 · 묶음 예외로 중간 정지) — QD5 (C1 · 생산자 기록 SVX · QD2-1 · QD2-2 · QD2-3 · QD4 · 다섯째 rail · 진단 · census 불일치 = 계약 None · 아래 끝 · 위 끝 · 위 끝 있는 기록의 아래 끝 바꿔 끼우기 · 끊은 수까지 고친 꼴 = 자기 문장으로 거부)",
+        "scripts/test_ca_ext_b6.py (449/449 · 10-23 A′ 판 · C1 고치기 전 427 PASS / 4 FAIL · C5 고치기 전 429 PASS / 20 FAIL) — S8t (C1 소비자 경로 바꿔 끼우기 셋) · S8h′ (C1 · 증서 구간 기록에 n_sv_faces_cut 없음) · S8w (C5 · 다른 · 옛 · 리뷰 A4 종류 · 접두어만 · 글자 아님 · 리뷰 A4 규칙 · 규칙 없음 · None · 괄호 규칙 이름 × 증서 구간 · 진단 = 18) · S8w′ (등록 이름 받음 · 투영이 규칙을 옮긴다) · S8q (C5 종류 · 규칙 상수 = 생산자)",
+        "scripts/test_rint_r_chain.py (240/240 · 10-23 A′ 판 · C1 고치기 전 V32 0/1 · C5 고치기 전 239/240) — V32 (C1 · 기록의 주 해 증서 위상 수 ≠ 런의 주 증서 → CA_EXT_RECORD) · V35 (C5 끝-끝 · 옛 종류 · 다른 규칙 → CA_EXT_RECORD)",
+        "scripts/test_rint_r_chain_e2e.py (16/16 · 10-23 A′ 판)",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/preattack/PREATTACK_A.md"
       ],
-      "claimed_fixed_sha": "df0f6f01c"
+      "claimed_fixed_sha": "5cf848157"
     },
     {
       "id": "RCA2-05",
@@ -12815,15 +12821,18 @@
       "found_by": "codex 10-22 Rint ② 설계·구현 재검토 (검토 핀 0b3012460 · 비교 기준 5dc6f7f0b · 독립 해석 회로 · 실제 생산 함수 호출 · 작은 합성 S0 census 본체 · 실침대 · 생산 · 전체 CLI 실행 없음)",
       "opened_in": "docs/reviews/codex_review_rint2_rereview_20261022.md",
       "title": "(Codex 번호 없음 · 판정문 §8) DBE R 단조 방어 검사 부재 — R = .5 / 1 / 2 에 σ 4.2 / 4.7 / 4.4 mS/cm (불가능한 순서) 를 넣어도 PASS",
-      "note": "판정문 §8 \"DBE R 단조 검사 부재\" (방어 검사 틈 · P3 · Codex 가 ID 를 붙이지 않아 원장에 RCA2-09 로 둔다 · Codex 번호 아님) · 자리 (핀 0b3012460) = scripts/rint_r_chain.py:1731–1782 (c / origin 만 봄) · 실제 solver 가 그 값을 냈다는 반례 아님.  권고 = 이미 구한 값으로 같은 origin 및 같은 최종 추정량의 σlo ≥ σ0 ≥ σhi 를 증서 / 등록 ln 여유와 함께 검사 · 추가 solve 불필요 · 표본 통과를 연속곡선의 독립 증명이라 부르지 않음. ★ 10-23 묶음 A3 (수정 지시서 `docs/reviews/rint2_rr_fix_evidence_20261023/BRIEF.md` · 1저자 10-23 *\"다 권고대로 해줘\"* = 수정 계획 Q1–Q8 (가) · §3 · Q8 (가)) = claimed_fixed — 시험 먼저 `c18f39d71` · 고침 `aa2bf5a73` (예측 `Predict._r_monotone` — 모서리마다 같은 origin · 같은 최종 추정량 (arm 0 · origin 규칙이 바꾼 모서리 = 8 팔 평균) 의 σ(R_j,lo) ≥ σ(R_j,0) ≥ σ(R_j,hi) 를 증서 띠 [σ(1 − e), σ(1 + e)] (e = 그 런의 `err_rel`) 끼리 · 쌍 전부 · 모순 → `R_MONOTONE_VIOLATION` (새 멈춤 이름 하나 · 예측 STOPPED · 이미 구한 값 · 추가 풀이 없음 · 새 숫자 없음 · 등록 τ_mono 는 더하지 않음 = 결정 필요)) · 등록 R `385e872a0` · 확인 = Codex 재검토.",
+      "note": "판정문 §8 \"DBE R 단조 검사 부재\" (방어 검사 틈 · P3 · Codex 가 ID 를 붙이지 않아 원장에 RCA2-09 로 둔다 · Codex 번호 아님) · 자리 (핀 0b3012460) = scripts/rint_r_chain.py:1731–1782 (c / origin 만 봄) · 실제 solver 가 그 값을 냈다는 반례 아님.  권고 = 이미 구한 값으로 같은 origin 및 같은 최종 추정량의 σlo ≥ σ0 ≥ σhi 를 증서 / 등록 ln 여유와 함께 검사 · 추가 solve 불필요 · 표본 통과를 연속곡선의 독립 증명이라 부르지 않음. ★ 10-23 묶음 A3 (수정 지시서 `docs/reviews/rint2_rr_fix_evidence_20261023/BRIEF.md` · 1저자 10-23 *\"다 권고대로 해줘\"* = 수정 계획 Q1–Q8 (가) · §3 · Q8 (가)) = claimed_fixed — 시험 먼저 `c18f39d71` · 고침 `aa2bf5a73` (예측 `Predict._r_monotone` — 모서리마다 같은 origin · 같은 최종 추정량 (arm 0 · origin 규칙이 바꾼 모서리 = 8 팔 평균) 의 σ(R_j,lo) ≥ σ(R_j,0) ≥ σ(R_j,hi) 를 증서 띠 [σ(1 − e), σ(1 + e)] (e = 그 런의 `err_rel`) 끼리 · 쌍 전부 · 모순 → `R_MONOTONE_VIOLATION` (새 멈춤 이름 하나 · 예측 STOPPED · 이미 구한 값 · 추가 풀이 없음 · 새 숫자 없음 · 등록 τ_mono 는 더하지 않음 = 결정 필요)) · 등록 R `385e872a0` · 확인 = Codex 재검토. ★ 10-23 사전 공격 리뷰 (`docs/reviews/rint2_rr_fix_evidence_20261023/preattack/PREATTACK_A.md`) C3 고침 `7603139b6` (최종 추정량 검사 다음 같은 모서리의 이미 구한 origin 마다 — 모서리 런 arm 0 · origin 런 arm 1 · 2 · 넘친 모서리 = 8 팔 런 origin 0–7 — 세 R 증서 구간 단조 · 같은 멈춤 이름 · 사유에 origin 이름 · 검사 기록 `origins` · 추가 풀이 없음) · C4 고침 `720e401eb` (띠 = 그 런 증서의 목표량 구간 × 그 증서 scale · 정확 분수 · read_run 이 증서 칸을 싣는다 · 공개 칸 아님 · 없거나 꼴이 틀리면 ARM_UNREADABLE · 옛 [σ(1 − e), σ(1 + e)] 철회) · 확인 = Codex.",
       "evidence_tests": [
         "scripts/test_rint_r_chain.py (231/231 · 10-23 A4 판 · A3 고치기 전 --only U17,M44,M45,M46,M47,V31,U02,U13 3/9) — U17 (판정문 꼴 4.2 / 4.7 / 4.4 → R_MONOTONE_VIOLATION · 정상 · 증서 띠 안 비단조 · 평탄 · 영값 위상 · lo ↔ hi 모순 · 8 팔 평균 · arm 0 만 비단조 · err_rel 없음) · M44–M47 · V31 (가짜 러너 끝-끝)",
         "scripts/test_rint_r_chain_e2e.py (16/16 · 10-23 A4 판)",
         "scripts/test_rint_r_chain.py (232/232 · 10-23 A6 판 `fba004f2d`) — U17b (`r_monotone_problem` R 같은 갈래 · A6 변이 표 A3-r3 생존 → 상주)",
         "docs/reviews/codex_review_rint2_rereview_20261022.md",
-        "docs/reviews/codex_rint2_rereview_evidence_20261022/_repro_ours_20261022/README.md"
+        "docs/reviews/codex_rint2_rereview_evidence_20261022/_repro_ours_20261022/README.md",
+        "scripts/test_rint_r_chain.py (240/240 · 10-23 A′ 판 · C3 고치기 전 228/236 · C4 고치기 전 236/239) — U19 (C3 · 리뷰 R1 · R1c · R1d → 멈춤 · origin 이름 · 정상 · 띠 안 · 평탄 → 통과 · origins 3 · 11) · M49 · V33 (C3 끝-끝 · origin 팔 하나 0.9 배 → STOPPED · origin_a1) · U17 ⑦ ⑧ (C3) · U20 (C4 · 리뷰 R2 맞닿음 → 모순 아님 · 예측 통과 · 한 ULP 떨어짐 → 멈춤 · 8 팔 평균 띠 · 영값 · 못 읽음 11 꼴) · M50 · V34 (C4 · read_run 이 증서 목표량 구간 · scale 을 싣는다 · 공개 칸 아님)",
+        "scripts/test_rint_r_chain_e2e.py (16/16 · 10-23 A′ 판)",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/preattack/PREATTACK_A.md"
       ],
-      "claimed_fixed_sha": "aa2bf5a73"
+      "claimed_fixed_sha": "720e401eb"
     },
     {
       "id": "SELF-129",
