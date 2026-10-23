@@ -107,6 +107,8 @@ r_port = 2.0 (= 2h) · gap_tol 2.0 · σ_VGCF = 100 S/cm → 축방향 면 g = �
   QD5    ★ 10-23 (사전 공격 리뷰 C1 · 1저자 Q12 (가)) 끝 증서 ↔ 끊은 그래프 — 생산자 기록 (SVX · QD2 ① ② ③ · QD4 · 다섯째 길 · QDX · QD11R ·
          진단 · census 불일치) 받음 · 투영이 증서 위상 수를 싣는다 · 리뷰 A2 (아래 끝 증서 = 주 해 증서) · 위 끝 바꿔 끼우기 · 위 끝이 있는
          기록의 아래 끝 바꿔 끼우기 · 끊은 수까지 고친 꼴 (독립 출처 = 위 끝 n_sv_faces_cut) · 위상 수 편집 = 자기 문장으로 거부
+  QD6    ★ 10-23 (사전 공격 리뷰 C2 · 시험만) 증서 구간 비의 방향 반올림 칼날 — 실제 증서 기록 (SVX · QD2 ③) 에서 t = 정확 위 몫 이하 가장 큰 float
+         → SV_UNCHECKED · 정확 아래 몫 이상 가장 작은 float → SV_DEPENDENT 아님 · 구간 끝 = 정확 방향 반올림 · 리뷰 변이 M7 · M1 이 걸린다 (상주)
   KBND   (05 · 한계 기록) k 경계 (90° → 89.99°) σ 뜀 크기 = 생산 단위 R_j 1e2 · 1e4 · 1e6 에서 −0.98 % · −2.1e-4 · −2.1e-6 (± 10 % · ∝ 1/R_j)
   MUT-RCA2 새 보장 변이 (조각 = fid 규칙 · 포트 옮김 · SV 전부 끊음 · 이음매 별칭 끔 · 바닥 = s > D 만 · ★ 10-22 못 가른 다리 지킴 끔 = 2 회차
          변이 J1 → QD2 ④ · '지남' 에 덮임 · 같은 성분 조건 뺌 = 2 회차 변이 J2 → QD2 ⑤ (훅 `_sv_passes`)) 가 위 시험에 옳은 이유로 걸린다 ·
@@ -129,6 +131,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from fractions import Fraction
 
 import numpy as np
 
@@ -4201,6 +4204,93 @@ def t_sv_end_cert_topology():
     for nm, e in edits.items():
         why4 = _rej(e)
         chk(f'QD5 ④ 증서 위상 수 편집 → 거부 [{nm}]', _is_c1(why4), why4)
+
+
+# ═════════════════════════ ★ 10-23 QD6 — 증서 구간 비의 방향 반올림 칼날 (사전 공격 리뷰 C2 · 시험만) ═════════════════════════
+def _qd6_floor(q):
+    """정확 분수 q 이하의 가장 큰 float (시험의 기대값 — 모듈 함수를 쓰지 않는다)."""
+    f = float(q)
+    return f if Fraction(f) <= q else math.nextafter(f, -math.inf)
+
+
+def _qd6_ceil(q):
+    """정확 분수 q 이상의 가장 작은 float."""
+    f = float(q)
+    return f if Fraction(f) >= q else math.nextafter(f, math.inf)
+
+
+def _qd6_m7(a, b, up):
+    """리뷰 변이 M7 (`docs/reviews/rint2_rr_fix_evidence_20261023/preattack/tools/mkmut.py` M7_divdir_swapped) — 방향을 맞바꾼 `_div_dir`."""
+    q = Fraction(a) / Fraction(b)
+    try:
+        f = q.numerator / q.denominator
+    except OverflowError:
+        return None if up else sys.float_info.max
+    if not math.isfinite(f):
+        return None if up else sys.float_info.max
+    fq = Fraction(f)
+    if (not up) and fq < q:
+        f = math.nextafter(f, math.inf)
+    elif up and fq > q:
+        f = math.nextafter(f, -math.inf)
+    if not math.isfinite(f):
+        return None if up else sys.float_info.max
+    return f
+
+
+def _qd6_m1(a, b, up):
+    """리뷰 변이 M1 (mkmut.py M1_divdir_nearest) — 그냥 a/b (가장 가까운 float)."""
+    return a / b
+
+
+def _qd6_eval(recs):
+    """실제 증서 기록마다 칼날 넷 + 구간 끝 = 정확 방향 반올림 → [(이름, 통과?, 세부)] — t = 정확 위 몫 U 이하의 가장 큰 float → SV_UNCHECKED
+    (표지 없음 아님) · t = U 이상의 가장 작은 float → 표지 없음 · t = 정확 아래 몫 L 이상의 가장 작은 float → SV_DEPENDENT 아님 · t = L 이하의
+    가장 큰 float → SV_DEPENDENT 아님 (아래비 = 내림) · 사슬 꼴의 구간 끝 = [L 이하 가장 큰 float, U 이상 가장 작은 float]."""
+    import ca_ext_svcf as SVCF
+    out = []
+    for nm, c in recs.items():
+        p = SVCF.sv_cf_record(c)
+        v = SVCF.chain_view(p)
+        full, loc = p['conv_cert_full'], p['conv_cert']
+        up = p['upper'] if isinstance(p.get('upper'), dict) else p
+        L = Fraction(full['target_lo']) / Fraction(loc['target_hi'])
+        U = Fraction(full['target_hi']) / Fraction(up['conv_cert']['target_lo'])
+        for kn, t, want in (('t = U 이하 가장 큰 float → SV_UNCHECKED', _qd6_floor(U), ['SV_UNCHECKED']),
+                            ('t = U 이상 가장 작은 float → 표지 없음', _qd6_ceil(U), []),
+                            ('t = L 이상 가장 작은 float → SV_DEPENDENT 아님 (SV_UNCHECKED)', _qd6_ceil(L), ['SV_UNCHECKED']),
+                            ('t = L 이하 가장 큰 float → SV_DEPENDENT 아님 (아래비 = 내림 · SV_UNCHECKED)', _qd6_floor(L), ['SV_UNCHECKED'])):
+            f = _try(lambda t=t: _qd3_assess(v, t)[0], None)
+            out.append((f'{nm} · {kn}', f == want, (t, f, v.get('ratio_cert_lo'), v.get('ratio_cert_hi'))))
+        out.append((f'{nm} · 구간 끝 = [L 이하 가장 큰 float, U 이상 가장 작은 float]',
+                    v.get('ratio_cert_lo') == _qd6_floor(L) and v.get('ratio_cert_hi') == _qd6_ceil(U),
+                    (v.get('ratio_cert_lo'), _qd6_floor(L), v.get('ratio_cert_hi'), _qd6_ceil(U))))
+    return out
+
+
+@case('QD6')
+def t_sv_divdir_knife():
+    """★ 10-23 (사전 공격 리뷰 C2 · 시험만 · author 10-23 ratified Q12-Q16) — 증서 구간 비의 방향 반올림 (`ca_ext_svcf._div_dir` · 아래비 = 내림 ·
+    위비 = 올림) 을 실제 증서 기록 (SVX 덩어리 0 · QD2 ③ 위 끝 유한) 의 1 ulp 칼날에 상주로 묶는다.  리뷰: 방향을 맞바꾼 변이 M7 이 옛 상주 시험
+    (QD2–QD4 · U15–U17 · V28–V31 · b6 S) 을 전부 통과 · 그냥 a/b 변이 M1 은 U16 하나만 걸림 (QD3 ② 의 경계가 위 · 아래비 × (1 ± 1e-9) 라 1 ulp
+    칼날보다 넓다).  기대값 = 정확 분수 (`Fraction`) 로 시험이 직접 센다 · 변이 M7 · M1 이 이 시험에 걸린다 (상주 변이 검사)."""
+    import ca_ext_svcf as SVCF
+    recs = {'SVX (덩어리 0 · 위 끝 = 아래 끝)': _qd3_svx(cert=True)[3],
+            'QD2 ③ (위 끝 유한)': _qd3_run([QD2_A3, QD2_B3, QD2_C3], QD2_S3, QD2_N3)[3]}
+    base = _qd6_eval(recs)
+    for nm, ok, det in base:
+        chk(f'QD6 ① 방향 반올림 칼날 [{nm}]', ok, det)
+    orig = SVCF._div_dir
+    caught = {}
+    for mn, mf in (('M7 (방향 맞바꿈)', _qd6_m7), ('M1 (그냥 a/b)', _qd6_m1)):
+        SVCF._div_dir = mf
+        try:
+            got = _qd6_eval(recs)
+        finally:
+            SVCF._div_dir = orig
+        caught[mn] = [nm for nm, ok, _d in got if not ok]
+    chk('QD6 ② 변이 M7 · M1 이 이 시험에 걸린다 (변이 전 전부 통과 · 변이마다 칼날 하나 이상 실패)',
+        all(ok for _n, ok, _d in base) and all(caught.values()), caught)
 
 
 @case('KBND')
