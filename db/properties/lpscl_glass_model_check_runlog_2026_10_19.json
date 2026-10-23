@@ -402,5 +402,19 @@
   "⏭": "회수 (gabia → 대피 브랜치 · qe_sp_gabia_k222_2026_10_23/ · 11 파일 · r2_resume.log 는 재개 뒤 자라 해시 대조에서 뺌) → 기계 대조 (|P_Γ gabia − P_Γ kgy| ≤ 0.01 GPa) → 판독 폴더 → --sp",
   "값": "판독 전 — 기계 대조 · ΔP_k 는 판독 도구로",
   "by": "agent · 2026-10-23"
+ },
+ "✅_sp_판독_2026_10_23": {
+  "회수": "gabia 8a0abefe8 → db/raw/lpscl_glass_model_check_2026_10_19/qe_sp_gabia_k222_2026_10_23/ (11 파일 · SHA256SUMS 전부 OK · r2_resume.log 포함 · scf.in 2 = repo 입력 바이트 · struct.xyz = kgy)",
+  "기계_대조_카드_개정_10": "|P_Γ(gabia) − P_Γ(kgy)| = 0.00000 GPa (문턱 0.01) · ΔE 0 · max|ΔF| 0 — 출력 자릿수에서 같다 ⇒ 판독기 그대로",
+  "판독_폴더": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp_read_2026_10_23/ (kgy sp 10 · pulay 2 + gabia kpt/k222_A_s3 · COMPOSITION.json 39 파일 sha256) — kgy k222 OOM 출력은 판독에 안 씀",
+  "도구": "tools/ionic/glass_model_check.py sha16 eac72dfe7c12d08d (10-21 결과 전 커밋판 그대로) · selftest 68/68 · --sp 한 번 · rc 0",
+  "판독_기록": "db/properties/lpscl_glass_model_check_sp_readout_2026_10_23.json (값 · 문장은 그 파일이 정본)",
+  "갈래": "A p1 · B p1 (둘 다 |중앙 ε₁| + 띠 ≤ 3 % · 구조 범위가 문턱을 안 걸침) ⇒ p0 재개 규칙 (대조 시드 PBE 7 점) 발동 안 함 · A–B 문장 '3 % 를 넘는 조성 의존 모델 밀도 오차로 기울지 않았다'",
+  "대조": "Pulay ΔP_cut A +0.003 · B +0.001 GPa (문턱 0.05 → 보정 없음) · k ΔP_k −0.004 GPa (문턱 0.1 → 띠 몫 0) — 개정 9 단서 '(k 대조 없음 · Γ 만)' 는 안 붙는다 (gabia 로 채움)",
+  "구조": "A 유효 4 (A_s2 = UMA 자기일관 −0.595 % > 0.5 % 로 경로 불량 — 10-21 건식 판독에서 이미 예고 · QE 결과 아님) · B 유효 5",
+  "⚠_결과_노출_이력": "k222_gabia_관측_2026_10_23_1715 의 '결과 노출' (gabia Γ 압력 원값이 감시 화면에) — 판독 규칙은 그 전에 커밋 · 바뀐 것 없음",
+  "지위": "잠정 — 카드 (draft) · 결정 D-2026-10-19-lpscl-smallcell-glass-model-check proposed · 외부 1저자 동의는 편지 DA Q-DA-4",
+  "⏭": "편지 DA 에 Q-DA-4 절 (판독 문장 그대로 · 단서 · k 대조 경위) → 발송은 사용자 (외부 1저자에게)",
+  "by": "agent · 2026-10-23"
  }
 }

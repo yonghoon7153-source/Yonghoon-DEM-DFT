@@ -1,0 +1,204 @@
+{
+ "schema": "li2s_sp_read_root/v1",
+ "date": "2026-10-23",
+ "무엇": "glass_model_check.py --sp 의 판독 폴더 — kgy sp 10 · pulay 2 (de26e3be1) + gabia kpt/k222_A_s3 (8a0abefe8) · 카드 개정 10 (기계 대조 통과 뒤)",
+ "기계_대조": "|P_Γ(gabia) − P_Γ(kgy)| = 0.00000 GPa (A_s3 · 문턱 0.01) · ΔE 0 · max|ΔF| 0 — 출력 자릿수에서 같다",
+ "kgy_k222_OOM_출력": "판독에 안 쓴다 — 기록은 qe_sp/kpt/k222_A_s3 (힘 단계 GPU OOM)",
+ "files": [
+  {
+   "file": "sp/A_s1/scf.in",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/sp/A_s1/scf.in",
+   "sha256": "6cf32108ac47b4ed37bf8cd1c1ffbe492e60a14a68e5c22fb9b5fbaf9586a946"
+  },
+  {
+   "file": "sp/A_s1/scf.out",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/sp/A_s1/scf.out",
+   "sha256": "d62bdad9c9eb90a4435cbdb07793ae1009af37c23796cfd118fb331e465a7a88"
+  },
+  {
+   "file": "sp/A_s1/struct.xyz",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/sp/A_s1/struct.xyz",
+   "sha256": "630b9666bbd4fa11b586e21e873cd9680d4c15aa9d715f3f8afee81c8b6e84ae"
+  },
+  {
+   "file": "sp/A_s2/scf.in",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/sp/A_s2/scf.in",
+   "sha256": "3a367492d1f0f147d47ec286d60faf63b9ad95a85bfe5ab213e84be19658fa3f"
+  },
+  {
+   "file": "sp/A_s2/scf.out",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/sp/A_s2/scf.out",
+   "sha256": "ca8607d9f1f4ff5878e0b90bcd67d021ede7312da5c40db2744d0f69832c3a15"
+  },
+  {
+   "file": "sp/A_s2/struct.xyz",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/sp/A_s2/struct.xyz",
+   "sha256": "12beab6027647f60b5f8efef4404d4e4c3e068c9662124984ae189870d9f24f3"
+  },
+  {
+   "file": "sp/A_s3/scf.in",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/sp/A_s3/scf.in",
+   "sha256": "78ae74d7da65fb1177a829c591bae6589dcc2d2d7ef598c7fba9220ced71573d"
+  },
+  {
+   "file": "sp/A_s3/scf.out",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/sp/A_s3/scf.out",
+   "sha256": "ce0199ca1e4fb658640f5d0e64a1d8bf896439b83563c257840604163bac4665"
+  },
+  {
+   "file": "sp/A_s3/struct.xyz",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/sp/A_s3/struct.xyz",
+   "sha256": "3d8ae4fc648f41ba5695cba2101d2d0eebd038e9f56ca1a54f5fff92f7ad67af"
+  },
+  {
+   "file": "sp/A_s4/scf.in",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/sp/A_s4/scf.in",
+   "sha256": "729f96143a3a41eb8faab6fcb3b28cb75af4adccae563da1f11046e936eb2048"
+  },
+  {
+   "file": "sp/A_s4/scf.out",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/sp/A_s4/scf.out",
+   "sha256": "bc95ee7923d0780df2dcf11536a32e09f2caed5a4b084fe3565fec0dd30d4d1f"
+  },
+  {
+   "file": "sp/A_s4/struct.xyz",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/sp/A_s4/struct.xyz",
+   "sha256": "01bf0d80a25e9e5a7e554f092b7ec9f6994eaffeeab9797920ed9326339db955"
+  },
+  {
+   "file": "sp/A_s5/scf.in",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/sp/A_s5/scf.in",
+   "sha256": "f3278afc523317bdebeb362a4ec0ab07067f80111b2ef9c3c405bc351d1c39b5"
+  },
+  {
+   "file": "sp/A_s5/scf.out",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/sp/A_s5/scf.out",
+   "sha256": "caa3426714891a81d853185f168e8d67e7ef75f73f3b7c97c694e3c3673d68d0"
+  },
+  {
+   "file": "sp/A_s5/struct.xyz",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/sp/A_s5/struct.xyz",
+   "sha256": "ddce9cb15baeed3a42f871184923fe2299bcef7601517182d5f5f7c0f27d5648"
+  },
+  {
+   "file": "sp/B_s1/scf.in",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/sp/B_s1/scf.in",
+   "sha256": "12c1fec11405507c3615808fbfb578f45a64cc51acb94bc3191500b25711b1cf"
+  },
+  {
+   "file": "sp/B_s1/scf.out",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/sp/B_s1/scf.out",
+   "sha256": "5cec3c721b8c216e6444f1edfbc6b4343d46876fc7db7a195d6aee3f8850314e"
+  },
+  {
+   "file": "sp/B_s1/struct.xyz",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/sp/B_s1/struct.xyz",
+   "sha256": "84f92e17b8d9843ca08f97d0d6b106cc4ddb10b83df51defb69495423112a011"
+  },
+  {
+   "file": "sp/B_s2/scf.in",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/sp/B_s2/scf.in",
+   "sha256": "e4240e36ef897305446658872e0d169e5ea52f91d208b4a9a8526e0fdbec55a9"
+  },
+  {
+   "file": "sp/B_s2/scf.out",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/sp/B_s2/scf.out",
+   "sha256": "11794ef750fb0c09aacffc5599387ba24ec3ea527e7ab3af73b2de7f172fb0f8"
+  },
+  {
+   "file": "sp/B_s2/struct.xyz",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/sp/B_s2/struct.xyz",
+   "sha256": "a92830f89ad49e262d501c5e61a0cd99bac74e2c9888207c50ccdf8b53b3f3aa"
+  },
+  {
+   "file": "sp/B_s3/scf.in",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/sp/B_s3/scf.in",
+   "sha256": "efc83b2d4f62a1e54e71d78af41fcff9f8e8c81cf8a339f4456daf0791bae47a"
+  },
+  {
+   "file": "sp/B_s3/scf.out",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/sp/B_s3/scf.out",
+   "sha256": "9c48e8cbfa8337730247b67ce2c02c263d27f3c71be38f0c32d48a128b362bb2"
+  },
+  {
+   "file": "sp/B_s3/struct.xyz",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/sp/B_s3/struct.xyz",
+   "sha256": "b0bf8ed0df9c6f6dd7ae4aa9dfd0b3d2687fa7b4a3f64027b3803f3d4f74fda9"
+  },
+  {
+   "file": "sp/B_s4/scf.in",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/sp/B_s4/scf.in",
+   "sha256": "aa7653449b5fb5654d48d3a81a337c6d328db4e2f396bab98f76ca357ea5b519"
+  },
+  {
+   "file": "sp/B_s4/scf.out",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/sp/B_s4/scf.out",
+   "sha256": "9ad85c6c50314d56b9031887e3c0dc08a89e1a48b537dda6ad2c4f5f154b6603"
+  },
+  {
+   "file": "sp/B_s4/struct.xyz",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/sp/B_s4/struct.xyz",
+   "sha256": "8715e69f14c17a725001eda3cf978966a035ce66232733844dfd2d3eb8abbd1f"
+  },
+  {
+   "file": "sp/B_s5/scf.in",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/sp/B_s5/scf.in",
+   "sha256": "c73d342706fc905861fbd92f71cd3003812e22dc77f6ccd1f4f13acaebc2528b"
+  },
+  {
+   "file": "sp/B_s5/scf.out",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/sp/B_s5/scf.out",
+   "sha256": "039351d90318c3b2d0281304fa71d5223b927ab58b8d4fe9005c80ab94a32131"
+  },
+  {
+   "file": "sp/B_s5/struct.xyz",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/sp/B_s5/struct.xyz",
+   "sha256": "f563e7de0f074b73d1c00953730ff1b27e972f615d0c8fe827e7df0b3a45ee0c"
+  },
+  {
+   "file": "pulay/ecut_hi_A_s3/scf.in",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/pulay/ecut_hi_A_s3/scf.in",
+   "sha256": "0a4898f2fe8490014e1fd8737b7a81b2762f60d54968fd66477e96157d10c220"
+  },
+  {
+   "file": "pulay/ecut_hi_A_s3/scf.out",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/pulay/ecut_hi_A_s3/scf.out",
+   "sha256": "81331061ca9eb2058319e4309290edb2fb1543cb40cf208555ad6d7f38c520fa"
+  },
+  {
+   "file": "pulay/ecut_hi_A_s3/struct.xyz",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/pulay/ecut_hi_A_s3/struct.xyz",
+   "sha256": "3d8ae4fc648f41ba5695cba2101d2d0eebd038e9f56ca1a54f5fff92f7ad67af"
+  },
+  {
+   "file": "pulay/ecut_hi_B_s4/scf.in",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/pulay/ecut_hi_B_s4/scf.in",
+   "sha256": "46a9a286439891fc7f25415a071570493ffd08df6bea99e21b29806ccc265389"
+  },
+  {
+   "file": "pulay/ecut_hi_B_s4/scf.out",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/pulay/ecut_hi_B_s4/scf.out",
+   "sha256": "b7db87b26fa3ee32b51433ccd20357bffd36d1834202e0583e707d13a1787761"
+  },
+  {
+   "file": "pulay/ecut_hi_B_s4/struct.xyz",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/pulay/ecut_hi_B_s4/struct.xyz",
+   "sha256": "8715e69f14c17a725001eda3cf978966a035ce66232733844dfd2d3eb8abbd1f"
+  },
+  {
+   "file": "kpt/k222_A_s3/scf.in",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp_gabia_k222_2026_10_23/kpt/k222_A_s3/scf.in",
+   "sha256": "b1fdca74ccfd1cb664ea41aa8516e2eb0a6e0ef1b6f88a3582292f85f0fb1f63"
+  },
+  {
+   "file": "kpt/k222_A_s3/scf.out",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp_gabia_k222_2026_10_23/kpt/k222_A_s3/scf.out",
+   "sha256": "48d38ac1d40a4dfd49f6074d62c78b37e608a8aec176104fe6532fcd20949b56"
+  },
+  {
+   "file": "kpt/k222_A_s3/struct.xyz",
+   "from": "db/raw/lpscl_glass_model_check_2026_10_19/qe_sp_gabia_k222_2026_10_23/kpt/k222_A_s3/struct.xyz",
+   "sha256": "3d8ae4fc648f41ba5695cba2101d2d0eebd038e9f56ca1a54f5fff92f7ad67af"
+  }
+ ]
+}
