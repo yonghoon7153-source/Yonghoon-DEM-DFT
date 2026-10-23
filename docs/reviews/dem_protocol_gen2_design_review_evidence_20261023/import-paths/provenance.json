@@ -255,5 +255,13 @@
     }
   ],
   "current_outer_manifest": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/MANIFEST.sha256",
-  "canonical_checks": "NOT RUN: this staging preparation is not a canonical checker or full-gate result"
+  "canonical_checks": "NOT RUN: this staging preparation is not a canonical checker or full-gate result",
+  "snapshot_scope": "The original-to-import diff and import_sha256 values describe the candidate import snapshot. Later full-gate evidence and reproduction-context README updates are evidence-only followups; current evidence bytes are covered by the current outer MANIFEST.sha256. Original ZIP bytes, normalized substantive reports and original scientific results remain unchanged.",
+  "post_gate_changed_snapshot_members": [
+    {
+      "path": "docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/README.md",
+      "candidate_import_sha256": "6376730b7bbf741fb19854f107f6b12c8835de6489181e5c54007f2208a42b4e",
+      "current_evidence_sha256": "46d88f172b62c1f79db37d90726b2739d18a32719ebb03cc436344cdd8d24d8e"
+    }
+  ]
 }

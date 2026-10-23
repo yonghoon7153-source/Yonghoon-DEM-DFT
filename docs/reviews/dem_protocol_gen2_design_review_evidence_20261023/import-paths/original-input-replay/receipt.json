@@ -1,0 +1,32 @@
+{
+  "status": "PASS",
+  "exit_code": 0,
+  "recorded_at_utc": "2026-10-23T15:57:03.447310+00:00",
+  "argv": [
+    "nice",
+    "-n",
+    "10",
+    "/workspace/.venvs/yonghoon-dem/bin/python",
+    "-I",
+    "-B",
+    "/workspace/.cloud-setup/nonrint/integration-runs/dem-gen2-original-replay/original/docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/tools/replay_evidence.py",
+    "--repo",
+    "/workspace/Yonghoon-DEM-DFT",
+    "--out",
+    "/workspace/.cloud-setup/nonrint/integration-runs/dem-gen2-original-replay/output"
+  ],
+  "scope": "Preserved original review input replay from the exact pre-import docs ZIP; not normalized-current-request identity, new independent review, external GO or simulation",
+  "archive_sha256": "c6686007224764e09d9bf75acba1ca27750ba06467677bfb3f820fd2647fbb63",
+  "archive_member_count_verified": 56,
+  "tool_sha256": "b6bf43cf68207f7bec59856f06a580921f52a3193036f29e902a1776535d1114",
+  "original_request_sha256": "0e9b62b26ac73ac0173e73c4d3ceff0a8f8e57a76d2a0dd9d866ebcb2c458d61",
+  "live_normalized_draft_sha256": "a558d71b0baf863416bc1fbacccd6a59d54fa32b5e3f6bc466f61d52e0c29658",
+  "source_pin": "7799a2ff64ba462b42ce05edd3e63b7c2854d557",
+  "materialized_source_files": 55,
+  "probe_runs_rc0": 4,
+  "compared_fields_equal": 7,
+  "summary_sha256": "ccb1c2620c98cc1df64a262053580b2a6327afb599c6be66120e290f0781194c",
+  "stdout_log_sha256": "303dc43fde74b9c79c67159bf18ec90424ca94556fca4a169cecc143fc0e40f1",
+  "raw_output_directory_external": "/workspace/.cloud-setup/nonrint/integration-runs/dem-gen2-original-replay/output",
+  "original_tools_and_results_modified": false
+}

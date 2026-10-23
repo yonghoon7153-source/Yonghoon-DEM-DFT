@@ -1,5 +1,7 @@
 # DEM 프로토콜 세대 2 설계 요청서 — 사전 검산·독립 리뷰 반입 (2026-10-23)
 
+최종 통합 상태는 [전체 게이트 영수증](full_gate_receipt.json)과 `final-gate/` 로그가 정본이다. 아래 및 원 검토문·쪽지의 작성 당시 대기 표현은 이력으로 보존한다. 깨끗한 후보 커밋에서 축소 없는 전체 게이트를 실행했고, 이후 커밋은 이 영수증·로그와 새 상태 쪽지만 기록한다. 외부 GO·비준·발송·실제 기계 실행 상태는 승격하지 않는다.
+
 요청서: `docs/reviews/codex_dem_protocol_gen2_design_request_20261023.md`.
 
 독립 재확인 `independent/RECHECK-v2.md`는 **G2IR-01(P2)·G2IR-02(P3)의 문서 범위 해소와 v1→v2 변경의 새 회귀 finding 없음**을 판정했다. 요청서 반입·최종 묶음 준비가 가능한 상태다. 외부 발송·등록·실제 실행·물리 검증 GO는 아니다. 언로딩 키트 외부 GO와 T12 적용 핀, 최종 리뷰 핀·ZIP은 대기다. 필수 전체 게이트의 최신 상태는 `full_gate_receipt.json`을 참조한다. Q7–Q9 실측 자료도 미확인이다.
@@ -42,12 +44,21 @@
 
 Python 3.11 환경과 NumPy·NetworkX가 필요하다. Git 저장소에 위 소스 핀과 두 문헌 핀의 객체가 있어야 한다. 원 리뷰의 절대 scratch 경로는 당시 기록이며, 아래 도구는 그 경로를 사용하지 않는다.
 
+원 재현 도구는 검토 당시 초안의 request SHA를 원 독립 결과와 대조한다. 따라서 경로 정규화된 live 초안이 아니라 원본 ZIP에서 함께 복원한 원 도구·초안·독립 결과를 사용한다. Git 객체 저장소는 현재 저장소를 읽되 실제 복원 소스는 원 source manifest의 고정 핀이다. 정규화본의 신원은 별도 import provenance로 확인한다. 이 방법의 실제 재확인은 `import-paths/original-input-replay/receipt.json` 및 로그에 기록했다.
+
 저장소 루트에서 **아직 없는 출력 디렉터리**를 골라 실행한다:
 
 ```bash
-python -I -B docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/tools/replay_evidence.py \
+# 활성화한 환경의 TMPDIR 아래 두 경로는 모두 아직 없어야 한다.
+G2_ORIGINAL="$TMPDIR/dem-gen2-original-docs-new"
+G2_REPLAY="$TMPDIR/dem-gen2-original-replay-new"
+test -n "$TMPDIR" && test ! -e "$G2_ORIGINAL" && test ! -e "$G2_REPLAY" &&
+python -I -B -m zipfile -e \
+  docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/import-paths/original-package-docs.zip \
+  "$G2_ORIGINAL" &&
+python -I -B "$G2_ORIGINAL/docs/reviews/dem_protocol_gen2_design_review_evidence_20261023/tools/replay_evidence.py" \
   --repo "$PWD" \
-  --out /tmp/dem-gen2-evidence-replay-new
+  --out "$G2_REPLAY"
 ```
 
 도구는 `git show`로 기준 핀의 필요한 파일 55개(자료 22개 + 봉인 32개 + 그 목록을 정의한 실행기)를 출력 디렉터리에 복원한다. `.git`을 만들지 않으며 checkout·worktree·branch를 만들거나 변경하지 않는다. Git 객체 읽기와 임시 source snapshot을 분리한다. 이미 존재하는 출력 디렉터리는 거부한다.
