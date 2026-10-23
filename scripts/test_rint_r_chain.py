@@ -1908,6 +1908,14 @@ def _arms_of(arms):
     return list(range(arms)) if isinstance(arms, int) else list(arms)
 
 
+def cert_iv(sig_S, err):
+    """★ 10-23 (사전 공격 리뷰 C4) 가짜 DBE 팔 기록의 증서 목표량 구간 칸 — 러너 세계 `cert()` 꼴 (게시 판 전류 1 · 구간 [1 − e, 1 + e] · scale = σ)
+    · 실제 fetch = read_run 이 그 런 증서에서 옮겨 싣는다 (R 단조 띠 = `arm_band` 가 이 칸을 읽는다) · σ 0 (영값 위상) = 칸 None (띠 [0, 0])."""
+    if sig_S == 0.0:
+        return {'target_lo': None, 'target_hi': None, 'scale': None}
+    return {'target_lo': 1.0 - err, 'target_hi': 1.0 + err, 'scale': sig_S}
+
+
 def ladder_fetch(S_mS, err=0.0, read=1.0):
     """Ladder 의 fetch — S_mS(R [Ω], 팔 번호) [mS/cm] → 팔 기록 (S/cm · 상태 positive).  ★ 4판 (Q2-2 · §3-2b ③″) — err = 그 런 증서의
     보장 오차 (`err_rel` · 사슬 read_run 이 증서에서 다시 계산해 싣는 칸) · read = 판독 배수 (증서 허용 안의 낮은 판독 · 반례)."""
@@ -1973,7 +1981,8 @@ def rca02_fetch(kit, role, law, c, rj, arms, sv_cf=False):
     r = float(rj)
     a0, oth = 3.02 + 1.0 / (r + 0.1), 1.02 + 3.2 / (r + 0.1)
     #  ★ 10-23 (RCA2-09) — 실제 fetch (read_run) 는 늘 err_rel (그 런 증서 ⓓ 보장 오차) 을 싣는다 · 예측의 R 단조 검사가 읽는다
-    return [{'sigma': (a0 if i == 0 else oth) * 1e-3, 'state': 'positive', 'n_sdcp_near': 7, 'err_rel': 0.0} for i in _arms_of(arms)]
+    return [{'sigma': (a0 if i == 0 else oth) * 1e-3, 'state': 'positive', 'n_sdcp_near': 7, 'err_rel': 0.0,
+             **cert_iv((a0 if i == 0 else oth) * 1e-3, 0.0)} for i in _arms_of(arms)]
 
 
 def eval_U02():
@@ -2720,7 +2729,7 @@ def u13_fetch(spec):
         out = []
         for i in _arms_of(arms):
             v, st = (a0, s0) if i == 0 else ((o8, 'positive') if isinstance(arms, int) else (o12, so))
-            out.append({'sigma': v * 1e-3, 'state': st, 'n_sdcp_near': 7, 'err_rel': 0.0})
+            out.append({'sigma': v * 1e-3, 'state': st, 'n_sdcp_near': 7, 'err_rel': 0.0, **cert_iv(v * 1e-3, 0.0)})
         return out
     return fetch
 
@@ -2780,7 +2789,8 @@ U17_LADS = {law: {'R_j_lo': '0.5', 'R_j0': '1.0', 'R_j_hi': '2.0', 'r0_sigma': 1
 def u17_fetch(sig, err=1e-4, o12=None, o8=None, only=None):
     """sig[역할] = DBE arm 0 σ mS (모든 모서리 · 두 법칙 같은 값 · only = (c, 법칙) 이면 그 모서리만 sig · 나머지 = 단조 기본값) · origin 팔
     1 · 2 = arm 0 그대로 (o12 = {역할: σ mS} 면 그 값 · 넘게 하면 그 모서리 8 팔 평균) · 8 팔 런의 팔 1–7 = o8[역할] (없으면 arm 0) ·
-    err = 팔마다 증서 보장 오차 (`err_rel` · 실제 fetch = read_run 이 증서에서 다시 계산한 칸)."""
+    err = 팔마다 증서 보장 오차 (`err_rel` · 실제 fetch = read_run 이 증서에서 다시 계산한 칸) · ★ 10-23 C4 증서 목표량 구간 칸 = `cert_iv`
+    (구간 [1 − e, 1 + e] × scale σ)."""
     base = {'R_j_lo': 5.0, 'R_j0': 4.7, 'R_j_hi': 4.4}
 
     def fetch(kit, role, law, c, rj, arms, sv_cf=False):
@@ -2797,7 +2807,7 @@ def u17_fetch(sig, err=1e-4, o12=None, o8=None, only=None):
                 v = (o8 or {}).get(rr, a0) if mine else a0
             else:
                 v = (o12 or {}).get(rr, a0) if mine else a0
-            out.append({'sigma': v * 1e-3, 'state': 'positive', 'n_sdcp_near': 7, 'err_rel': err})
+            out.append({'sigma': v * 1e-3, 'state': 'positive', 'n_sdcp_near': 7, 'err_rel': err, **cert_iv(v * 1e-3, err)})
         return out
     return fetch
 
@@ -2964,8 +2974,8 @@ def u19_fetch(fn, err=1e-4):
         if kit == SBE_KIT:
             return [{'sigma': 1.63e-3, 'n_sdcp_near': 0, 'state': 'positive', 'err_rel': 0.0}]
         R = RR.rj_float(rj)
-        return [{'sigma': fn(R, i) * (1.5 if c == '1' else 1.0) * 1e-3, 'state': 'positive', 'n_sdcp_near': 7, 'err_rel': err}
-                for i in _arms_of(arms)]
+        return [{'sigma': fn(R, i) * (1.5 if c == '1' else 1.0) * 1e-3, 'state': 'positive', 'n_sdcp_near': 7, 'err_rel': err,
+                 **cert_iv(fn(R, i) * (1.5 if c == '1' else 1.0) * 1e-3, err)} for i in _arms_of(arms)]
     return fetch
 
 
@@ -3050,6 +3060,121 @@ def t_M49():
     return base_ok and caught, (base_ok, why if base_ok else base_why)
 
 
+#  ★ 10-23 (사전 공격 리뷰 C4 · `docs/reviews/rint2_rr_fix_evidence_20261023/preattack/PREATTACK_A.md`) — R 단조 띠 = 팔 기록이 가진 증서의
+#    목표량 구간 [target_lo, target_hi] 을 그 증서의 scale (게시 판 전류 × scale = 증서 σ · 계약 `run_contract._positive_cert_problem`) 로 σ 에
+#    옮긴 정확 분수 (옛 띠 [σ(1 − e), σ(1 + e)] = float e 라 증서 구간보다 좁을 수 있었다) ───────────────────────────────────────────────
+#: 리뷰 R2 (`atk_rmono.py` · 두 증서 = `step3_conv_cert.target_judge` 통과 · R_a < R_b) — (게시 판 전류 G, 아래끝, 위끝) · a 의 위끝 = b 의 아래끝
+R2_A = (1.4656500700997732, 1.4656491487242123, 1.4656880073121192)
+R2_B = (1.4657027350682457, 1.4656880073121192, 1.4657035569138221)
+R2_C = (1.4, 1.39999, 1.40001)
+
+
+def c4_rec(G, lo, hi, scale=1.0, **kw):
+    """증서 하나 (게시 판 전류 G · 목표량 구간 [lo, hi] · scale) → 사슬 팔 기록 꼴 — σ = G × scale · err_rel = read_run 과 같은 함수
+    (`step3_conv_cert.target_judge`) 로 다시 계산 · 증서 칸 이름 = read_run 이 옮겨 싣는 이름 (`target_lo` · `target_hi` · `scale`)."""
+    import step3_conv_cert as CCm
+    jd = CCm.target_judge(lo, hi, G)
+    rec = {'sigma': G * scale, 'state': 'positive', 'n_sdcp_near': 7, 'err_rel': jd['target_err_bound_rel'], 'target_lo': lo,
+           'target_hi': hi, 'scale': scale}
+    rec.update(kw)
+    return rec
+
+
+def c4_fetch(by_role):
+    """by_role[역할] = 팔 기록 (모든 모서리 · 두 법칙 · 모든 origin 같은 기록 → origin 넘침 없음 · c 0 = c 1 → 같은 P 검사 통과)."""
+    def fetch(kit, role, law, c, rj, arms, sv_cf=False):
+        if kit == SBE_KIT:
+            return [{'sigma': 1.63e-3, 'n_sdcp_near': 0, 'state': 'positive', 'err_rel': 0.0}]
+        rr = next(k for k in RR.RJ_ROLES if U17_LADS[law][k] == rj)
+        return [dict(by_role[rr]) for _ in _arms_of(arms)]
+    return fetch
+
+
+def _unreadable(rec):
+    try:
+        RR.arm_band(rec)
+    except RR.Stop as e:
+        return e.code == 'ARM_UNREADABLE'
+    return False
+
+
+def eval_U20():
+    """★ 10-23 (사전 공격 리뷰 C4 · author 10-23 ratified Q12-Q16) — 띠 = 증서 목표량 구간 × scale (정확 분수): 리뷰 R2 (두 증서 구간이 한 점에서
+    맞닿음 · 옛 띠는 떨어짐) → 모순 아님 · 예측 통과 · 한 ULP 떨어짐 → 모순 · 예측 멈춤 · 8 팔 평균 띠 = 증서 띠의 끝마다 평균 (팔마다 그 scale) ·
+    영값 (σ 0) = [0, 0] · err_rel 없음 · 증서 칸 없음 · 꼴이 틀린 칸 → ARM_UNREADABLE (0 · 옛 띠로 두지 않는다)."""
+    from fractions import Fraction as Fr
+    cases = []
+    A, B = c4_rec(*R2_A), c4_rec(*R2_B)
+
+    def old(r):
+        return Fr(r['sigma']) * (1 - Fr(r['err_rel'])), Fr(r['sigma']) * (1 + Fr(r['err_rel']))
+    e_ok = A['err_rel'] == 2.588422238019952e-05 and B['err_rel'] == 1.0048255880306897e-05
+    ba, bb = RR.arm_band(A), RR.arm_band(B)
+    touch = ba == (Fr(R2_A[1]), Fr(R2_A[2])) and bb == (Fr(R2_B[1]), Fr(R2_B[2])) and ba[1] == bb[0]
+    p = RR.r_monotone_problem([(0.5, 'R_j_lo', ba), (1.0, 'R_j0', bb)])
+    cases.append(('R2 맞닿음 → 모순 아님 (옛 띠는 떨어졌다 · err 재현)', e_ok and old(A)[1] < old(B)[0] and touch and p is None, p,
+                  (e_ok, touch)))
+    B1 = c4_rec(R2_B[0], math.nextafter(R2_A[2], math.inf), R2_B[2])
+    p1 = RR.r_monotone_problem([(0.5, 'R_j_lo', RR.arm_band(A)), (1.0, 'R_j0', RR.arm_band(B1))])
+    cases.append(('한 ULP 떨어짐 → 모순', p1 == ('R_j_lo', 'R_j0'), p1, ''))
+    #  예측 단계 — 모서리 넷 · 두 법칙 · 모든 origin = R_j,lo 에 A · R_j,0 에 B · R_j,hi 에 C (scale 1e-3 = 게시 σ ~1.47 mS/cm)
+    k = 1e-3
+    roles = {'R_j_lo': c4_rec(*R2_A, scale=k), 'R_j0': c4_rec(*R2_B, scale=k), 'R_j_hi': c4_rec(*R2_C, scale=k)}
+    pr = RR.Predict(c4_fetch(roles), U17_LADS, None, sv_scope=None)
+    try:
+        pr.run()
+        st = 'PREDICTED'
+    except RR.Stop as e:
+        st = e.code
+    cases.append(('예측 — R2 맞닿음 (scale 1e-3) → 통과', st == 'PREDICTED' and not pr.adj, st, ''))
+    roles1 = dict(roles, R_j0=c4_rec(R2_B[0], math.nextafter(R2_A[2], math.inf), R2_B[2], scale=k))
+    pr = RR.Predict(c4_fetch(roles1), U17_LADS, None, sv_scope=None)
+    try:
+        pr.run()
+        st, why = 'PREDICTED', ''
+    except RR.Stop as e:
+        st, why = e.code, e.cause
+    cases.append(('예측 — 한 ULP 떨어짐 → 멈춤 (최종 추정량 arm0)', st == 'R_MONOTONE_VIOLATION' and '최종 추정량 arm0' in why, st, why))
+    #  8 팔 평균 띠 — 팔마다 그 scale 의 증서 띠 · 끝마다 평균 (정확 분수)
+    recs = [c4_rec(*R2_A, scale=k * (1 + i / 8)) for i in range(8)]
+    mb = RR.mean_band(recs)
+    want = (sum(Fr(r['scale']) * Fr(r['target_lo']) for r in recs) / 8, sum(Fr(r['scale']) * Fr(r['target_hi']) for r in recs) / 8)
+    cases.append(('8 팔 평균 띠 = 증서 띠 끝마다 평균', mb == want, mb, want))
+    #  영값 위상 (σ 0 · 증서 구간 칸 없음) → [0, 0]
+    z = {'sigma': 0.0, 'state': 'zero', 'n_sdcp_near': 7, 'err_rel': 0.0}
+    cases.append(('영값 → [0, 0]', RR.arm_band(z) == (0, 0), RR.arm_band(z), ''))
+    #  못 읽음 — err_rel 없음 · 증서 칸 없음 · 꼴이 틀림 (아래 > 위 · NaN · scale 0 · 음수 · bool · 글자)
+    bad = {'err_rel 없음': {k_: v for k_, v in A.items() if k_ != 'err_rel'},
+           'target_lo 없음': {k_: v for k_, v in A.items() if k_ != 'target_lo'},
+           'scale 없음': {k_: v for k_, v in A.items() if k_ != 'scale'},
+           '아래 > 위': dict(A, target_lo=A['target_hi'], target_hi=A['target_lo']),
+           'NaN': dict(A, target_hi=math.nan), 'inf': dict(A, target_hi=math.inf), 'scale 0': dict(A, scale=0.0),
+           'scale 음수': dict(A, scale=-1.0), 'bool': dict(A, target_lo=True), '글자': dict(A, target_lo='1.0'), '아래 0': dict(A, target_lo=0.0)}
+    miss = [nm for nm, r in bad.items() if not _unreadable(r)]
+    cases.append(('못 읽음 → ARM_UNREADABLE', not miss, miss, ''))
+    return all(c[1] for c in cases), [c for c in cases if not c[1]]
+
+
+@check('U20', '★ 10-23 (사전 공격 리뷰 C4) R 단조 띠 = 팔 기록의 증서 목표량 구간 × 증서 scale (정확 분수) — 리뷰 R2 (맞닿음 · 옛 띠는 떨어짐) → '
+              '모순 아님 · 예측 통과 · 한 ULP 떨어짐 → 모순 · 예측 R_MONOTONE_VIOLATION · 8 팔 평균 띠 · 영값 [0, 0] · err_rel · 증서 칸 없음 · '
+              '꼴 틀림 → ARM_UNREADABLE')
+def t_U20():
+    return eval_U20()
+
+
+@check('M50', '★ 10-23 변이: 띠 = 옛 [σ(1 − e), σ(1 + e)] (float e · 증서 구간 무시) → U20 (R2 맞닿음 · 증서 칸 못 읽음) 이 떨어진다 (변이 전 통과 확인)')
+def t_M50():
+    from fractions import Fraction
+
+    def old_band(rec):
+        e = Fraction(RR.arm_err(rec))
+        s = Fraction(float(rec['sigma']))
+        return s * (1 - e), s * (1 + e)
+    base_ok, base_why = eval_U20()
+    caught, why = mutant('M50', {'arm_band': old_band}, eval_U20)
+    return base_ok and caught, (base_ok, why if base_ok else base_why)
+
+
 @check('V31', '★ 10-23 (RCA2-09) 끝-끝 — 가짜 러너 세계에서 DBE σ(R_j,lo) 를 0.8 배 (R 단조와 모순) → 예측 STOPPED · R_MONOTONE_VIOLATION · rc 3 · '
               '멈춤 문장에 σ 없음')
 def t_V31():
@@ -3082,6 +3207,27 @@ def t_V33():
                                      and [o.get('origin') for o in x['origins']][:3] == ['corner_a0', 'origin_a1', 'origin_a2']
                                      for x in rm))
     return stop_ok and names_ok, (p['rc'], st, [x.get('origins') for x in rm][:1])
+
+
+@check('V34', '★ 10-23 (사전 공격 리뷰 C4) read_run 이 그 런 증서의 목표량 구간 · scale (target_lo · target_hi · scale) 을 팔 기록에 싣는다 — 주 예측의 '
+              '모서리 · origin 런마다 원 팔 JSON 의 증서와 같은 값 · 공개 칸 (ARM_PUBLIC · 요약 arms_read) 에는 없다 (값 봉인 · scale × 구간 = σ)')
+def t_V34():
+    p = s_main_predict()
+    s = p.get('sum') or {}
+    bad, n = [], 0
+    for r in [x for x in s.get('runs') or [] if x.get('kit') == DBE_KIT][:6]:
+        req = {k: r.get(k) for k in RR.REQ_KEYS}
+        arms_ = RR.read_run(Path(p['out']) / r['outdir'], req, s['plan']['content'], RR.RealContract(), {})
+        for a in arms_:
+            d = json.loads((Path(p['out']) / r['outdir'] / a['file']).read_text(encoding='utf-8'))
+            cc_ = d['mpm_metrics']['step3']['conv_cert']
+            n += 1
+            if [a.get(k) for k in ('target_lo', 'target_hi', 'scale')] != [cc_.get(k) for k in ('target_lo', 'target_hi', 'scale')]:
+                bad.append((r['name'], a['file']))
+        if any(k in ar for ar in r.get('arms_read') or [] for k in ('target_lo', 'target_hi', 'scale')):
+            bad.append((r['name'], 'arms_read 에 증서 칸'))
+    pub_ok = not set(RR.ARM_PUBLIC) & {'target_lo', 'target_hi', 'scale'}
+    return n > 0 and not bad and pub_ok, (n, bad[:4], pub_ok)
 
 
 def u18_raw(nu, removed, standing='certified_interval'):

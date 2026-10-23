@@ -433,16 +433,30 @@ def arm_err(rec):
 
 
 def arm_band(rec):
-    """★ 10-23 (Codex 재검토 RCA2-09 · 판정문 §8 · 1저자 Q8 (가)) 팔 기록 → 증서 구간 (정확 분수 끝 둘) [σ(1 − e), σ(1 + e)] — e = 그 런 증서 ⓓ 의
-    보장 오차 (`err_rel` · read_run 이 증서에서 다시 계산 · 없으면 멈춤 = `arm_err` · 0 으로 두지 않는다) · σ 0 (영값 위상 · e 0) = [0, 0] ·
-    단락은 NOT_COMPUTED 라 여기 오지 않는다 (+∞ 없음)."""
-    e = Fraction(arm_err(rec))
-    s = Fraction(float(rec['sigma']))
-    return s * (1 - e), s * (1 + e)
+    """★ 10-23 (Codex 재검토 RCA2-09 · 판정문 §8 · 1저자 Q8 (가)) 팔 기록 → 증서 구간 (정확 분수 끝 둘) — ★ 10-23 (사전 공격 리뷰 C4 · author 10-23
+    ratified Q12-Q16) 그 런 증서의 목표량 구간 [target_lo, target_hi] (코드 단위 = 아래 판 전류) 을 그 증서의 scale (게시 판 전류 × scale = 증서 σ ·
+    계약 `run_contract._positive_cert_problem`) 로 σ 에 옮긴 정확 분수 [scale·target_lo, scale·target_hi] — read_run 이 증서에서 옮겨 싣는다 ·
+    칸이 없거나 꼴이 틀리면 멈춤 `ARM_UNREADABLE` (옛 띠 [σ(1 − e), σ(1 + e)] = float e 라 증서 구간보다 좁을 수 있었다 · 그리로 되돌아가지 않는다) ·
+    같은 origin 의 세 R 은 같은 침대 · 같은 래스터라 scale (판 간격 / 단면적 · `step3_sigma` · R_j 와 무관) 이 같다 → 그 비교 = 증서 전류
+    구간끼리 그대로 · 게시 판 전류가 증서 구간 안이면 새 띠는 옛 띠 안에 든다 (반올림 크기 차이 제외) · 판독 보장 오차 `err_rel` 도 그대로
+    요구한다 (`arm_err` · 0 으로 두지 않는다) · σ 0 (영값 위상 · e 0) = [0, 0] · 단락은 NOT_COMPUTED 라 여기 오지 않는다 (+∞ 없음)."""
+    arm_err(rec)
+    s = rec.get('sigma')
+    if not (_num(s) and s >= 0):
+        raise Stop('ARM_UNREADABLE', f'σ {s!r} — 유한 0 이상 수여야 (R 단조 띠)')
+    if s == 0:
+        return Fraction(0), Fraction(0)
+    lo, hi, k = rec.get('target_lo'), rec.get('target_hi'), rec.get('scale')
+    if not (_num(lo) and _num(hi) and _num(k) and 0 < lo <= hi and k > 0):
+        raise Stop('ARM_UNREADABLE', f'증서 목표량 구간 [{lo!r}, {hi!r}] · scale {k!r} — 유한 수 · 0 < 아래 ≤ 위 · scale > 0 이어야 (R 단조 띠 = 그 런 '
+                                     f'증서 구간 · 10-23 사전 공격 리뷰 C4)')
+    k = Fraction(k)
+    return k * Fraction(lo), k * Fraction(hi)
 
 
 def mean_band(recs):
-    """★ 10-23 (RCA2-09) n 팔 평균의 증서 구간 — 끝마다 평균 (Σ σ_i(1 − e_i)/n · Σ σ_i(1 + e_i)/n · 정확 분수 · 참 평균은 그 사이)."""
+    """★ 10-23 (RCA2-09) n 팔 평균의 증서 구간 — 끝마다 평균 (팔마다 `arm_band` (★ C4 = 그 증서 구간 × 그 scale) 의 아래끝 합 / n · 위끝 합 / n ·
+    정확 분수 · 참 평균은 그 사이)."""
     bs = [arm_band(r) for r in recs]
     return sum(b[0] for b in bs) / len(bs), sum(b[1] for b in bs) / len(bs)
 
@@ -1439,6 +1453,10 @@ def read_run(outdir, req, plan, contract, sid_reg, want_sha=None):
                     'sid_fp': sid, 'cg_iters': _int_or_none(s3.get('cg_iters')),
                     'resolve_iters': _int_or_none((cert or {}).get('resolve_iters')),
                     'sigma': sigma, 'dsigma_rel': (cert or {}).get('dsigma_rel'), 'err_rel': err,
+                    #  ★ 10-23 (사전 공격 리뷰 C4) — R 단조 띠 = 그 런 증서의 목표량 구간 × scale (`arm_band`) · 공개 칸 (ARM_PUBLIC) 아님 (scale × 구간
+                    #    = σ · 값 봉인) · 영값 위상 = 칸 없음 (σ 0 → 띠 [0, 0])
+                    **({k: (cert or {}).get(k) for k in ('target_lo', 'target_hi', 'scale')} if reg != 'VALID_ZERO_TOPOLOGY' else
+                       {'target_lo': None, 'target_hi': None, 'scale': None}),
                     'sv_cf': cf, 'sv_cf_status': (cf or {}).get('status'),
                     'sv_local': solve.get('sv_local_dissipation'), 'dissipation_share': solve.get('dissipation_share'),
                     'n_sdcp_near': (((ca.get('sdcp_mod') or {}).get('evidence') or {}).get('n_sdcp_near')
