@@ -185,5 +185,14 @@
   "실행_계획": "kgy · tools/doping/run_force_check_scf.sh (sha16 e6fc5b25e4f2b3ad = EOS 발사판) · MIN_FREE_MIB 8000 · LOCK /tmp/ndsite_eos.lock · tmux ndsite_v0 · RUN ~/work/runs/ndo_site_eos_v0_2026_10_23 · li2s 사슬 잠금 (/tmp/li2s_qe_sp_chain.lock) 이 풀릴 때까지 flock 대기 → 2 점 차례로 · cascade v7 과 GPU 공유 (10-16 사용자 ② 그대로)",
   "⏭": "발사 출력 (입력 해시 2/2 · 설정 균일성 key bc3759b0 · 2 점 대기 · tmux ndsite_v0 · '잠금 대기' 줄) → 감시 → 끝 → 회수 → 판독 폴더 = V₀ 두 점 + Q1 Li2S · Li3PS4 (scf.in · scf.out 복사 · 기준상은 다시 안 돌림) → site_dg.py --qe <root_v0> --expect 1 --top 1 --thresholds Nd=0.10 --compare_uma … → E(V₀ relax) − BM3 E₀ > 5 meV 면 기록 · 표시 → 10-19 한쪽 방향 규칙 → §5",
   "by": "agent · 2026-10-23"
+ },
+ "V0_발사_2026_10_23": {
+  "출처": "사용자 붙여넣기 10-23 (kgy · tmux ls · ~/work/runs/ndo_site_eos_v0_2026_10_23/run.log 끝 · nvidia-smi)",
+  "발사": "tmux ndsite_v0 13:37:34 생성 (블록이 && 로 묶여 있어 입력 해시 2/2 · DRY_RUN 통과 뒤에만 생긴다) · worktree ~/wt_ndv0_1023 (대피 브랜치 6283f33d9 이후) · 러너 run_force_check_scf.sh · MIN_FREE_MIB 8000 · LOCK /tmp/ndsite_eos.lock",
+  "시작": "li2s 사슬 잠금 (/tmp/li2s_qe_sp_chain.lock) 이 풀린 15:39:53 에 시작 — '점 2개' · VRAM 여유 21,076 MiB (문턱 8,000) · MLi_04 → MP_07 차례",
+  "GPU": "합계 13,094 / 24,576 MiB (MLi_04 V₀ pw.x + cascade v7 UMA)",
+  "값": "없음",
+  "⏭": "두 점 끝 → 회수 → 판독 폴더 (V₀ 두 점 + Q1 Li2S · Li3PS4) → site_dg.py --qe … --thresholds Nd=0.10 → E(V₀ relax) − BM3 E₀ > 5 meV 면 기록 → 한쪽 방향 규칙 (10-19) → §5",
+  "by": "agent · 2026-10-23"
  }
 }
