@@ -166,5 +166,24 @@
   "곁": "잠금 /tmp/ndsite_eos.lock 이 풀리자 li2s 사슬 (tmux li2s_qe_sp) 이 시작 — 13:14 GPU 23,650 / 24,576 MiB (li2s ecut_hi 점 + cascade v7 UMA) · 기록 lpscl_glass_model_check_runlog_2026_10_19.json 관측_2026_10_23_1314",
   "⏭": "회수 블록 (kgy → claude/evac-2026-10-22 · db/raw/ndo_site_eos_2026_10_16/ · 12 점 scf.in · scf.out + run.log + SHA256SUMS = 26 파일 · tmp/ 는 안 가져온다) → 클라우드 SHA256SUMS 대조 · scf.in 12 = db/inputs 바이트 대조 → make_eos_inputs.py --fit → (V0_relax 면) --v0 → V₀ relax 둘 (kgy GPU · li2s 사슬 뒤) → site_dg.py --qe <root_v0> --expect 1 --top 1 --thresholds Nd=0.10 → 한쪽 방향 규칙 (G3_EOS_계속_읽기_규칙_2026_10_19) → §5",
   "by": "agent · 2026-10-23"
+ },
+ "G3_EOS_맞춤_결과_2026_10_23": {
+  "회수": "✅ 721556a06 (kgy 사용자 push 10-23) → db/raw/ndo_site_eos_2026_10_16/ — 26 파일 (12 점 scf.in · scf.out + run.log + SHA256SUMS) · 클라우드 sha256sum -c 25/25 ✓ · **12 점 scf.in = db/inputs/ndo_site_eos_2026_10_16/ 입력과 바이트 같음** · 16 MB · tmp/ 안 가져옴",
+  "도구": "make_eos_inputs.py sha256 b13002f2fa1cdb52… = 결과 전 커밋판 (G3_EOS_맞춤_도구_결과_전_2026_10_17 의 생성기_sha256 와 같음) · selftest 27/27 · eos_plan.json sha256 30908eba…",
+  "맞춤": "--fit → db/properties/ndo_site_eos_fit_2026_10_23.json (rc 0) · 전체 상태 V0_relax · 두 셀 다 끝점 연장 없음 · 바닥 표시 0 · 값 (V₀ · E₀ · B₀ · rms · 점별 basin_dev) 은 그 파일에만",
+  "V0_다음_입력에_쓰는_값": "MLi_04 V₀ 1184.14 Å³ (x0 1.0072 · 시작 x 1.00) · MP_07 V₀ 1229.67 Å³ (x0 1.0459 · 시작 x 1.04) — 인용값 아님 (V₀ relax 셀을 정하는 데만 쓴다)",
+  "바닥_확인_결과": "원자 평균 차 (x 1.04 기준 · 문턱 0.3 Å) — MLi_04 0.129 · 0.102 · 0.081 · 0 · 0.026 · 0.058 / MP_07 0.064 · 0.044 · 0.023 · 0 · 0.024 · 0.047 (x 0.98 → 1.08) ⇒ 표시 0 · 둘째 맞춤 없음 · 규칙대로 V₀ relax",
+  "⚠_결과_뒤_진단_판정_불변": {
+   "무엇": "10-20 미리보기의 MLi_04 두 묶음 (x ≤ 1.02 / x ≥ 1.04 · 상수 차 ≈ 1.4 meV/atom) 의 원인을 원자별 차로 봤다 — 규칙 · 판정은 바꾸지 않는다",
+   "MLi_04": "x 1.02 ↔ x 1.04 에서 **Li51 하나가 0.88 Å** (네 번째 이웃 S32 2.53 Å → S22 2.79 Å · Cl33 · Cl34 · S24 는 그대로 · 가장 가까운 Nd 6.4–7.1 Å — Nd 와 떨어진 Li 자리 바꿈) + Li56 0.32 Å · 나머지 원자 ≤ 0.15 Å · 묶음 안 (x 1.00 ↔ 1.02 · 1.04 ↔ 1.06) 은 최대 0.09 Å",
+   "MP_07": "최대 0.18 Å (x 0.98 · Li50) · |x − 1.04| 에 따라 고르게 커짐 — 한 바닥 · 맞춤 rms 0.03 meV/셀 (MLi_04 12.3 meV/셀)",
+   "규칙_한계": "원자 평균 0.3 Å (lpsocl 선례) 는 원자 하나의 자리 바꿈을 58 원자로 나눠 0.08 Å 로 묽힌다 — 이 바닥 확인은 국소 재배치를 못 잡는다. 결과 전 규칙이라 이번엔 그대로 쓴다 (eos_plan.json ⛔ · 바꾸면 새 개정 '결과 뒤'). 다음 EOS 카드는 원자별 최대 차 문턱을 평균과 같이 결과 전에 적을 것 (제안 · 결정 아님)",
+   "판독에_미치는_것": "V₀ 시작 규칙 (V₀ 에 가장 가까운 격자점) 이 x 1.00 = 아래 묶음 (10-20 상수 차 맞춤에서 에너지가 낮은 쪽) 을 골랐다. V₀ 는 계단에 끌려 1184 Å³ (상수 차 맞춤 ≈ 1194.5) — 아래 묶음 곡선에서 ≈ 8 meV/셀 ≈ 4 meV/Nd 로 문턱 0.10 eV/Nd 보다 작다. 묶음 차 ≈ 79 meV/셀 ≈ 40 meV/Nd 는 'Li 하나의 자리 바꿈' 크기 — ΔG 판독 때 참고 크기로 같이 적는다 (새 규칙 아님)",
+   "⛔": "B₀ (MLi_04 · MP_07) 를 인용하지 않는다 — 이 캠페인의 보고량이 아니고 MLi_04 는 계단 때문에 B′ 가 비정상 (10-20 미리보기 ⛔ 그대로)"
+  },
+  "V0_입력": "make_eos_inputs.py --v0 → db/inputs/ndo_site_eos_v0_2026_10_23/{MLi_04,MP_07}/scf.in + v0_inputs_manifest.json (fit_sha256 5560c752… · 입력 sha256 MLi_04 ca048e38… · MP_07 47adf2eb…) · 생성기 자체 대조 통과 (Q1 단일점 입력에서 calculation · 문턱 · CELL · &IONS · 좌표만 다름 · 부피 = V₀ · relax · &CELL 없음) · 러너 설정 키 bc3759b0 = Q1 · EOS 와 같음 (로컬 계산)",
+  "실행_계획": "kgy · tools/doping/run_force_check_scf.sh (sha16 e6fc5b25e4f2b3ad = EOS 발사판) · MIN_FREE_MIB 8000 · LOCK /tmp/ndsite_eos.lock · tmux ndsite_v0 · RUN ~/work/runs/ndo_site_eos_v0_2026_10_23 · li2s 사슬 잠금 (/tmp/li2s_qe_sp_chain.lock) 이 풀릴 때까지 flock 대기 → 2 점 차례로 · cascade v7 과 GPU 공유 (10-16 사용자 ② 그대로)",
+  "⏭": "발사 출력 (입력 해시 2/2 · 설정 균일성 key bc3759b0 · 2 점 대기 · tmux ndsite_v0 · '잠금 대기' 줄) → 감시 → 끝 → 회수 → 판독 폴더 = V₀ 두 점 + Q1 Li2S · Li3PS4 (scf.in · scf.out 복사 · 기준상은 다시 안 돌림) → site_dg.py --qe <root_v0> --expect 1 --top 1 --thresholds Nd=0.10 --compare_uma … → E(V₀ relax) − BM3 E₀ > 5 meV 면 기록 · 표시 → 10-19 한쪽 방향 규칙 → §5",
+  "by": "agent · 2026-10-23"
  }
 }
