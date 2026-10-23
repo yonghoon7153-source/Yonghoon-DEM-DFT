@@ -104,6 +104,9 @@ r_port = 2.0 (= 2h) · gap_tol 2.0 · σ_VGCF = 100 S/cm → 축방향 면 g = �
          구간 ∋ 손 회로 참 비 · +∞ = 영값 위상 증서 · 증서 없는 런 = 진단 (SV_UNCHECKED · uncertified) · 괄호 회로 구간 ∋ 손 참 비 · 한 끝
          증서 실패 = 위 끝 못 읽음 · 실제 기록 변이 (증서 없음 · 외부 증서 · 임의 규칙 · 제거 수 · 10^400 · census · I_bot_code · fp · 판정
          근거 칸 · 지위) = 거부 · 진단 + 무증서 = 받음 (판정 입력 아님)
+  QD5    ★ 10-23 (사전 공격 리뷰 C1 · 1저자 Q12 (가)) 끝 증서 ↔ 끊은 그래프 — 생산자 기록 (SVX · QD2 ① ② ③ · QD4 · 다섯째 길 · QDX · QD11R ·
+         진단 · census 불일치) 받음 · 투영이 증서 위상 수를 싣는다 · 리뷰 A2 (아래 끝 증서 = 주 해 증서) · 위 끝 바꿔 끼우기 · 위 끝이 있는
+         기록의 아래 끝 바꿔 끼우기 · 끊은 수까지 고친 꼴 (독립 출처 = 위 끝 n_sv_faces_cut) · 위상 수 편집 = 자기 문장으로 거부
   KBND   (05 · 한계 기록) k 경계 (90° → 89.99°) σ 뜀 크기 = 생산 단위 R_j 1e2 · 1e4 · 1e6 에서 −0.98 % · −2.1e-4 · −2.1e-6 (± 10 % · ∝ 1/R_j)
   MUT-RCA2 새 보장 변이 (조각 = fid 규칙 · 포트 옮김 · SV 전부 끊음 · 이음매 별칭 끔 · 바닥 = s > D 만 · ★ 10-22 못 가른 다리 지킴 끔 = 2 회차
          변이 J1 → QD2 ④ · '지남' 에 덮임 · 같은 성분 조건 뺌 = 2 회차 변이 J2 → QD2 ⑤ (훅 `_sv_passes`)) 가 위 시험에 옳은 이유로 걸린다 ·
@@ -4056,6 +4059,148 @@ def t_sv_two_components():
         ok0 and ok1 and ok25 and not okm0 and not okm1 and mu.get('n_cells_removed') == 3 and mu.get('status') == 'computed'
         and abs((mu.get('sv_counterfactual_ratio') or 0.0) - 2.0) <= 1e-9 and rep25.get('flags') == ['SV_UNCHECKED'] and repm25.get('flags') == [],
         (repm0, repm1, rep25, repm25))
+
+
+# ═════════════════════════ ★ 10-23 QD5 — 끝 증서 ↔ 끊은 그래프 (사전 공격 리뷰 C1 · 1저자 Q12 (가)) ═════════════════════════
+#: QDX — 끊는 다리 (A = 아래 판 → z 6 · B = z 2 → 위 판 · 둘 사이 SDCP 셀 하나 (2,1,4) · 어느 섬유도 지나지 않음 → 그 SV 면 2 끊음) + QD2 ③ 덩어리
+#  (x + 5 · 못 가른 덩어리 1) + 먼 판–판 길 (x 12.5) — 아래 끝 그래프가 주 해보다 작고 (끊은 다리 면) 위 끝 풀이도 있는 증서 구간 기록
+QDX_N = (15, 3, 9)
+QDX_POLYS = [[(1.5, 1.5, 0.5), (1.5, 1.5, 6.5)], [(3.5, 1.5, 2.5), (3.5, 1.5, 8.5)],
+             [(6.5, 1.5, 0.5), (6.5, 1.5, 8.5)], [(8.5, 1.5, 0.5), (8.5, 1.5, 5.5)], [(12.5, 1.5, 0.5), (12.5, 1.5, 8.5)]]
+QDX_SDCP = [(2.5, 1.5, 4.5), (6.5, 1.5, 3.5), (7.5, 1.5, 3.5), (8.5, 1.5, 3.5)]
+#: QD11R — QD2 ⑪ (덩어리가 아래 판에 닿음) + 먼 판–판 길 (x 7.5) — 위 끝이 computed 이면서 판 결합 하나를 뺀 기록
+QD11R_N = (9, 3, 6)
+QD11R_POLYS = [QD2_A11, QD2_B11, [(7.5, 1.5, 0.5), (7.5, 1.5, 5.5)]]
+#: 두 성분 + 다섯째 판–판 길 (위 끝 computed · 리뷰 A1 꼴)
+QD5_RAIL5_N = (15, 3, 9)
+QD5_RAIL5 = QD4_POLYS + [[(13.5, 1.5, 0.5), (13.5, 1.5, 8.5)]]
+
+
+def _qd5_swap(ev, where, SVCF):
+    """끝 증서를 같은 런의 주 해 증서로 바꾼다 (리뷰 A2 꼴 · 일관 편집) — 그 끝 G = G_full · 비 1 · 위 끝 칸 (덩어리 0 = 아래 끝과 같다) · 판정 근거
+    칸 (`cert_interval` 로 다시 셈)."""
+    e = json.loads(json.dumps(ev))
+    s = e['solve']['sv_counterfactual']
+    G = s['G_full_code']
+    end = s if where == 'lower' else s['upper']
+    end['G_cut_code'] = G
+    end['sv_counterfactual_ratio'] = G / G
+    end['conv_cert'] = dict(s['conv_cert_full'])
+    if where == 'upper' or s.get('upper') is None:
+        s['sv_counterfactual_ratio_hi'] = G / G
+    lo, hi = SVCF.cert_interval(s)
+    s['ratio_cert_interval'] = [SVCF._enc(lo), SVCF._enc(hi)]
+    return e
+
+
+@case('QD5')
+def t_sv_end_cert_topology():
+    """★ 10-23 (사전 공격 리뷰 C1 · 1저자 Q12 (가) · author 10-23 ratified Q12-Q16) — 끝 증서를 끊은 그래프에 묶는다.  리뷰 반례
+    (`docs/reviews/rint2_rr_fix_evidence_20261023/preattack/tools/atk_sv.py` A2): 같은 런의 주 해 증서를 끝 자리에 옮기고 G_cut = G_full · 비 1 ·
+    판정 근거 칸을 다시 세면 옛 검증기 = 받음 (증서 ↔ 끝 결합 = 게시 판 전류 하나 · 결합 칸 = 런 단위) → 거짓 clear.  고친 판 = 증서 자신의
+    위상 수 (`CERT_TOPO_KEYS`) 를 투영하고 생산자 (`carbon_junction.CjuncAssembler._assemble`) 가 보장하는 관계 + 등록 핵심 조건 (끊었으면 주 해보다
+    작다 · 같은 수 = 거부) 을 대조 · 끊은 수의 독립 출처 (위 끝 n_sv_faces_cut = 아래 끝 · census n_sv_faces_cut_rows ≥ 기록) 를 묶는다."""
+    import ca_ext_svcf as SVCF
+    TOPO = getattr(SVCF, 'CERT_TOPO_KEYS', ('target_n_edges', 'target_n_dof', 'target_n_plate_bot', 'target_n_plate_top'))
+    runs = {
+        'SVX (덩어리 0 · 아래 끝 끊은 다리 2)': lambda: _qd3_svx(cert=True),
+        'QD2 ① (덩어리 1 · 위 끝 +∞)': lambda: _qd3_run([QD2_A1, QD2_B1], QD2_S1, QD2_N1),
+        'QD2 ② (아래 끝 +∞)': lambda: _qd3_run([QD2_A1, QD2_B1C], QD2_S1, QD2_N1),
+        'QD2 ③ (덩어리 1 · 두 끝 computed)': lambda: _qd3_run([QD2_A3, QD2_B3, QD2_C3], QD2_S3, QD2_N3),
+        'QD4 (두 성분 · 위 끝 +∞)': lambda: _qd3_run(QD4_POLYS, QD4_SDCP, QD4_N),
+        '두 성분 + 다섯째 판–판 길 (위 끝 computed)': lambda: _qd3_run(QD5_RAIL5, QD4_SDCP, QD5_RAIL5_N),
+        'QDX (끊은 다리 2 + 덩어리 1 · 두 끝 computed)': lambda: _qd3_run(QDX_POLYS, QDX_SDCP, QDX_N),
+        'QD11R (덩어리가 판에 닿음 + 먼 길 · 위 끝 판 결합 1 뺌)': lambda: _qd3_run(QD11R_POLYS, QD2_S11, QD11R_N),
+    }
+    evs = {}
+    for nm, mk in runs.items():
+        reg, pl, r, c = mk()
+        ev = _qd3_ev(reg, pl, r, c)
+        evs[nm] = ev
+        p = ev['solve']['sv_counterfactual']
+        why = _try(lambda: SVCF.sv_cf_problem(ev, True), 'EXC')
+        topo_ok = all(type((p.get('conv_cert_full') or {}).get(k)) is int for k in TOPO)          # noqa: E721
+        chk(f'QD5 ① 생산자 기록 받음 · 투영이 주 해 증서 위상 수 넷을 싣는다 [{nm}]',
+            why is None and p.get('standing') == 'certified_interval' and topo_ok, (why, {k: (p.get('conv_cert_full') or {}).get(k) for k in TOPO}))
+    #  진단 기록 (증서 없는 런) · census 불일치 꼴 (증서 켬 · QD2 ⑧ 꼴 = 위 끝 unsplit_census_mismatch)
+    reg_d, pl_d, r_d, c_d = _qd3_svx(cert=False)
+    why_d = _try(lambda: SVCF.sv_cf_problem(_qd3_ev(reg_d, pl_d, r_d, c_d), True), 'EXC')
+    chk('QD5 ① 진단 기록 (증서 없는 런 · SVX) 받음', why_d is None and c_d.get('standing') == 'diagnostic_uncertified', why_d)
+    P_m = cat_rows(rows([QD2_A1, QD2_B1]), rows([[q] for q in QD2_S1], phase=5, kind=0, fid0=700))
+    sid_m, _ = bed(P_m, QD2_N1, sdcp_sphere_d_um=0.0)
+    reg_m = registry(sid_m, P_m, tol_sj_um=0.1, r_sdcp_um=0.5)
+    reg_m['census']['n_unsplit_bridging_components'] = 0
+    pl_m = plan(reg_m, 1e3, sv_counterfactual={'threshold': None})
+    with cert_on():
+        r_m = _try(lambda: quiet(S3.solve_sigma_z, sid_m, sig_e(), H, z_top_um=float(QD2_N1[2]) * H, z_bot_um=0.0, cjunc=pl_m), None)
+    c_m = (((r_m or {}).get('cjunc') or {}).get('sv_counterfactual') or {})
+    why_m = _try(lambda: SVCF.sv_cf_problem(_qd3_ev(reg_m, pl_m, r_m, c_m), True), 'EXC')
+    chk('QD5 ① census 불일치 꼴 (증서 켬 · 위 끝 unsplit_census_mismatch) 받음',
+        why_m is None and c_m.get('standing') == 'certified_interval' and (c_m.get('upper') or {}).get('status') == 'unsplit_census_mismatch',
+        why_m)
+
+    def _rej(e):
+        return _try(lambda: SVCF.sv_cf_problem(e, True), 'EXC')
+
+    def _is_c1(why):
+        return isinstance(why, str) and why.startswith('sv_cf|') and '사전 공격 리뷰 C1' in why
+    SVX_, QD23, QDX_, QD11 = (evs['SVX (덩어리 0 · 아래 끝 끊은 다리 2)'], evs['QD2 ③ (덩어리 1 · 두 끝 computed)'],
+                             evs['QDX (끊은 다리 2 + 덩어리 1 · 두 끝 computed)'], evs['QD11R (덩어리가 판에 닿음 + 먼 길 · 위 끝 판 결합 1 뺌)'])
+    RAIL5 = evs['두 성분 + 다섯째 판–판 길 (위 끝 computed)']
+    #  ② 바꿔 끼우기 — 같은 런의 주 해 증서를 끝 자리에 (일관 편집) → 자기 문장으로 거부
+    a2 = _qd5_swap(SVX_, 'lower', SVCF)
+    why_a2 = _rej(a2)
+    flags_a2 = _qd3_assess(SVCF.chain_view(a2['solve']['sv_counterfactual']), 2.0)[0]
+    chk('QD5 ② 리뷰 A2 — SVX 아래 끝 증서 = 주 해 증서 (G_cut = G_full · 비 1 · 판정 근거 칸 다시 셈 · 바꾼 기록의 사슬 표지 = [] 거짓 clear) → 거부 '
+        '(끊은 다리 2 인데 아래 끝 그래프 = 주 해 그래프)', _is_c1(why_a2) and flags_a2 == [], (why_a2, flags_a2))
+    for nm, base in (('QD2 ③ (아래 끝 끊은 것 없음 · 위 끝 덩어리 셀 간선 6 뺌)', QD23), ('다섯째 판–판 길 (위 끝 간선 12 뺌)', RAIL5)):
+        why_u = _rej(_qd5_swap(base, 'upper', SVCF))
+        chk(f'QD5 ② 위 끝 증서 = 주 해 증서 (일관 편집) → 거부 [{nm}]', _is_c1(why_u), why_u)
+    why_ux = _rej(_qd5_swap(QDX_, 'upper', SVCF))
+    chk('QD5 ② 위 끝 증서 = 주 해 증서 [QDX — 아래 끝 비 > 1 이라 위 끝 비 1 은 괄호 순서 (위 ≥ 아래) 가 먼저 거부 · 이 꼴은 옛 판도 거부]',
+        isinstance(why_ux, str) and why_ux.startswith('sv_cf|'), why_ux)
+    why_lx = _rej(_qd5_swap(QDX_, 'lower', SVCF))
+    chk('QD5 ② 위 끝이 있는 기록 (QDX) 의 아래 끝 증서 = 주 해 증서 → 거부 (끊은 다리 2)', _is_c1(why_lx), why_lx)
+    #  ③ 끊은 수까지 고친 꼴 — 기록 안의 독립 출처가 있는 꼴 (위 끝 풀이 기록의 n_sv_faces_cut = 아래 끝 · 생산자 = 같은 원장 · 같은 끊을 면 표 ·
+    #     같은 조립에서 센 수) · 독립 출처가 없는 꼴 (위 끝 없는 기록의 n_sv_faces_cut 0 · 두 칸 다 고침) = 결정 필요 (10-23 보고 · 상주 시험 아님)
+    e3 = _qd5_swap(QDX_, 'lower', SVCF)
+    e3['solve']['sv_counterfactual']['n_sv_faces_cut'] = 0
+    why3 = _rej(e3)
+    chk('QD5 ③ QDX 아래 끝 바꿔 끼우기 + 아래 끝 n_sv_faces_cut 0 (끊은 것 없음 주장) → 거부 (위 끝 n_sv_faces_cut 2 ≠ 0 · 같은 원장 · 같은 끊을 면 표)',
+        _is_c1(why3) and 'n_sv_faces_cut' in why3, why3)
+    e3b = json.loads(json.dumps(evs['QD2 ① (덩어리 1 · 위 끝 +∞)']))
+    e3b['solve']['sv_counterfactual']['upper']['n_sv_faces_cut'] = 1
+    why3b = _rej(e3b)
+    chk('QD5 ③ QD2 ① 위 끝 (+∞ · 푼 끝) n_sv_faces_cut 1 ≠ 아래 끝 0 → 거부 (위 끝 상태와 무관하게 같은 수)', _is_c1(why3b) and 'n_sv_faces_cut' in why3b,
+        why3b)
+
+    #  ④ 위상 수 관계 (생산자 보장) — 그 끝 증서의 위상 수만 바꾼 편집
+    def _edit(base, where, **kv):
+        e = json.loads(json.dumps(base))
+        s = e['solve']['sv_counterfactual']
+        tgt = {'main': s['conv_cert_full'], 'lower': s['conv_cert'], 'upper': (s.get('upper') or {}).get('conv_cert')}[where]
+        tgt.update(kv)
+        return e
+    lo_svx = SVX_['solve']['sv_counterfactual']['conv_cert']
+    lo_23 = QD23['solve']['sv_counterfactual']['conv_cert']
+    s_x = QDX_['solve']['sv_counterfactual']
+    up_11 = QD11['solve']['sv_counterfactual']['upper']['conv_cert']
+    edits = {
+        'SVX 아래 끝 위 판 결합 수 + 1 (아래 끝 = 같은 판 입력 · 판 결합 수 = 주 해)':
+            _edit(SVX_, 'lower', target_n_plate_top=lo_svx['target_n_plate_top'] + 1),
+        'QD2 ③ 아래 끝 간선 − 1 (끊은 다리 0 = 주 해와 같은 계)': _edit(QD23, 'lower', target_n_edges=lo_23['target_n_edges'] - 1),
+        'QDX 위 끝 dof = 주 해 + 1 (끝 ≤ 주 해 · 부분 그래프)':
+            _edit(QDX_, 'upper', target_n_dof=s_x['conv_cert_full']['target_n_dof'] + 1),
+        'QDX 위 끝 간선 = 아래 끝 + 1 (위 끝 ≤ 아래 끝 · 더 뺀 판)': _edit(QDX_, 'upper', target_n_edges=s_x['conv_cert']['target_n_edges'] + 1),
+        'QD11R 위 끝 아래 판 결합 + 1 (주 해 판 결합 합 − 위 끝 합 = n_plate_couplings_cut 1)':
+            _edit(QD11, 'upper', target_n_plate_bot=up_11['target_n_plate_bot'] + 1),
+        'SVX 아래 끝 간선 수 없음 (None)': _edit(SVX_, 'lower', target_n_edges=None),
+        'SVX 주 해 dof 수 bool': _edit(SVX_, 'main', target_n_dof=True),
+        'QDX 위 끝 판 결합 수 음수': _edit(QDX_, 'upper', target_n_plate_top=-1),
+    }
+    for nm, e in edits.items():
+        why4 = _rej(e)
+        chk(f'QD5 ④ 증서 위상 수 편집 → 거부 [{nm}]', _is_c1(why4), why4)
 
 
 @case('KBND')

@@ -189,6 +189,9 @@ if hit('receipt_rtol'):                        # 러너가 다른 rtol 로 돌�
     rtol = rtol * 0.1
 am_s = float(E['SIGMA_AM_S_OVERRIDE']) * (0.01 / 0.0041 if hit('bad_am_s') else 1.0)   # 러너가 다른 σ_AM_S 로 (영수증 = 매니페스트)
 CERT = W['cert']
+#  ★ 10-23 (사전 공격 리뷰 C1) 증서 위상 수 (가짜 · 생산자 관계 그대로) — 주 해 · 아래 끝 = 주 해 − 끊은 다리 면 (반사실 기록 n_sv_faces_cut 4 ·
+#    판 결합 수 같다) · 위 끝 = 아래 끝 − 덩어리 셀 간선 (n_edges_cut 6 · 판 결합 0 뺌) · dof = 떠 있는 성분을 버린 만큼
+TOPO_MAIN, TOPO_LO, TOPO_UP = (100, 90, 5, 5), (96, 90, 5, 5), (90, 86, 5, 5)
 #  원장 수 (가짜 접합 원장 · 정본 검증기의 항등식을 채운다): instance 12 · PTFE 덮임 2 · DBE SDCP 근접 7
 N_INST, N_COV = 12, 2
 near = 7 if is_dbe else 0
@@ -258,12 +261,15 @@ def sv_record(cm):
            'standing': (T['sv_diag'] if diag else T['sv_cert']), 'conv_cert_full': (None if diag else cp_(cm))}
     if not diag and rule.get('full_br'):
         raw['conv_cert_full'].update(target_lo=GF * (1.0 + rule['full_br'][0]), target_hi=GF * (1.0 + rule['full_br'][1]))
+    if not diag and rule.get('full_topo'):         # ★ 10-23 (C1) 기록에 실은 주 해 증서의 위상 수만 바꿈 (끝 ≤ 주 해 그대로 → 기록 계약은 받음)
+        raw['conv_cert_full'].update(target_n_edges=raw['conv_cert_full']['target_n_edges'] + int(rule['full_topo']))
 
-    def end(st, r_, br):
+    def end(st, r_, br, topo):
         g = GF / r_ if (st == 'computed' and r_) else (0.0 if st == 'no_through_without_sv' else None)
         cc = None
         if not diag and st == 'computed':
-            cc = dict(cp_(cm), I_bot=g, target_lo=g * (1.0 + br[0]), target_hi=g * (1.0 + br[1]))
+            cc = dict(cp_(cm), I_bot=g, target_lo=g * (1.0 + br[0]), target_hi=g * (1.0 + br[1]),
+                      **dict(zip(('target_n_edges', 'target_n_dof', 'target_n_plate_bot', 'target_n_plate_top'), topo)))
         elif not diag and st == 'no_through_without_sv':
             cc = dict(cp_(T['sv_zero']), **bind)
         return {'status': st, 'sv_counterfactual_ratio': (math.inf if st == 'no_through_without_sv' else (r_ if st == 'computed' else None)),
@@ -275,10 +281,10 @@ def sv_record(cm):
         up = None if not nu else {'status': 'main_unconverged', 'sv_counterfactual_ratio': None, 'cg_info': None, 'G_cut_code': None,
                                   'resid': None, 'conv_cert': None, 'why': None, 'backend_last_solve': None, 'n_components_removed': nu}
     else:
-        raw.update(end(rule['status'], rule.get('ratio'), rule.get('cut_br', [0.0, 0.0])))
+        raw.update(end(rule['status'], rule.get('ratio'), rule.get('cut_br', [0.0, 0.0]), TOPO_LO))
         up = None
         if nu:
-            up = end(rule.get('status_hi', 'computed'), rule.get('ratio_hi'), rule.get('cut_br_hi', [0.0, 0.0]))
+            up = end(rule.get('status_hi', 'computed'), rule.get('ratio_hi'), rule.get('cut_br_hi', [0.0, 0.0]), TOPO_UP)
             up.update(why=None, backend_last_solve=None, n_components_removed=nu, n_edges_cut=6, n_plate_couplings_cut=0,
                       n_cells_removed=max(3, nu))
     raw['upper'] = up
@@ -392,6 +398,8 @@ def cert(si, man):
             'target_fp': CERT['target_fp'], 'target_ledger_ok': True, 'target_topology': 'through',
             #  ★ 4판 (Q2-2 · §3-2b ③″) — 세계 'cert_e' = 그 팔 증서의 보장 오차 (구간 [1 − e, 1] ∋ 게시 판 전류 1 · 폭 = 오차 = e ≤ τ)
             'target_lo': 1.0 - float(W.get('cert_e', 0.0)), 'target_hi': 1.0, 'scale': si,
+            #  ★ 10-23 (사전 공격 리뷰 C1) — 증서 위상 수 (원장 간선 · dof · 아래 · 위 판 결합 · `step3_conv_cert.target_bracket` 칸 · 가짜 값)
+            'target_n_edges': TOPO_MAIN[0], 'target_n_dof': TOPO_MAIN[1], 'target_n_plate_bot': TOPO_MAIN[2], 'target_n_plate_top': TOPO_MAIN[3],
             #  ★ 10-21 (사전 리뷰 PRE-impl-07 · B 픽스처 패치) — 증서 ↔ 런 결합 칸 = 그 팔 매니페스트의 정본 지문 (접합 원장 sid · registry ·
             #    plan_rows · face_alpha 전자 계획) · σ 표 지문 = 킷마다 (가짜)
             **_bind(man)}
@@ -1565,6 +1573,20 @@ def t_V30():
     cause = str(st.get('cause', ''))
     return (p['rc'] == 3 and (p.get('sum') or {}).get('status') == 'STOPPED' and st.get('code') == 'CA_EXT_RECORD'
             and '주 해 증서 칸' in cause and 'target_lo' in cause, (p['rc'], st))
+
+
+@check('V32', '★ 10-23 (사전 공격 리뷰 C1 · 1저자 Q12 (가)) 기록에 실은 주 해 증서의 위상 수 ≠ 이 런의 주 증서 (간선 수만 + 1 · 끝 ≤ 주 해 그대로 = 기록 '
+              '계약은 받음) → 사슬 read_run 대조가 잡는다: 예측 STOPPED · rc 3 · CA_EXT_RECORD · 사유 = 주 해 증서 칸 (target_n_edges)')
+def t_V32():
+    def go():
+        m = {'kit_has': 'DBE', 'rj': lad(s_main('P1'))['R_j0'], 'c': '1'}
+        W = dict(PW, sv_cf=[{'match': m, 'status': 'computed', 'ratio': 1.2, 'full_topo': 1}])
+        return predict('V32', world('V32', W), [s_main('P0')['out'], s_main('P1')['out']])
+    p = scen('V32', go)
+    st = ((p.get('sum') or {}).get('stop') or {})
+    cause = str(st.get('cause', ''))
+    return (p['rc'] == 3 and (p.get('sum') or {}).get('status') == 'STOPPED' and st.get('code') == 'CA_EXT_RECORD'
+            and '주 해 증서 칸' in cause and 'target_n_edges' in cause, (p['rc'], st))
 
 
 @check('V07', 'CALIB_ORIGIN_SENSITIVE (P0 사다리 origin 넘음) → 판정 표지 · 문장 금지')

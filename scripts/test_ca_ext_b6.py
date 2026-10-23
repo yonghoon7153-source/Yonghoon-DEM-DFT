@@ -684,17 +684,28 @@ def _sv_ratio_of(status, ratio):
 
 #: ★ 10-23 — 합성 반사실 기록의 주 해 단자 전류 (G_full · 증거 솔브 기록 `I_bot_code` 와 같은 값)
 SV_GF = 2.5
+#: ★ 10-23 (사전 공격 리뷰 C1 · 1저자 Q12 (가)) 합성 기록의 증서 위상 수 (간선 · dof · 아래 · 위 판 결합 — `step3_conv_cert.target_bracket` 칸) —
+#   생산자 관계 그대로: 아래 끝 = 주 해 − 끊은 다리 면 4 (`_sv_raw` n_sv_faces_cut · 판 결합 수 같다) · 위 끝 = 아래 끝 − 덩어리 셀 간선 6 (n_edges_cut ·
+#   판 결합 0 뺌) · dof 는 떠 있는 성분을 버린 만큼 준다
+SV_TOPO_MAIN = (40, 30, 3, 2)
+SV_TOPO_LO = (36, 30, 3, 2)
+SV_TOPO_UP = (30, 27, 3, 2)
 
 
-def _fake_pos_cert(G, lo=None, hi=None, **over):
+def _topo_kw(topo):
+    return {} if topo is None else dict(zip(('target_n_edges', 'target_n_dof', 'target_n_plate_bot', 'target_n_plate_top'), topo))
+
+
+def _fake_pos_cert(G, lo=None, hi=None, topo=None, **over):
     """반사실 · 주 해의 양의 해 증서 꼴 (★ 10-23 · Codex 재검토 RCA2-01 · 04 — `ca_ext_svcf.CERT_PROJ_KEYS` 칸: 게시 판 전류 = 그 끝 G · 목표량 구간
-    [G, G] 기본 · 봉인 · 결합 칸 = `cj_manifest` 의 지문)."""
+    [G, G] 기본 · 봉인 · 결합 칸 = `cj_manifest` 의 지문 · ★ 10-23 (C1) topo = 증서 위상 수 넷 (없으면 칸 없음))."""
     import step3_conv_cert as CC
     c = {'version': CC.CERT_VERSION, 'status': CC.STATUS_POSITIVE, 'ok': True, 'pass_a': True, 'pass_b': True, 'pass_c': True,
          'pass_d': True, 'I_bot': float(G), 'target_lo': float(G if lo is None else lo), 'target_hi': float(G if hi is None else hi),
          'target_version': CC.TARGET_VERSION, 'target_fp': CC.TARGET_FP_RULE, 'target_tol': CC.CERT_TARGET_TOL,
          'bind_version': CC.BIND_VERSION, 'fp_sid': CJ_FP['sid'], 'fp_sig': 'd' * 32, 'fp_face_plan': None,
          'fp_cjunc_registry': CJ_FP['registry'], 'fp_cjunc_rows': CJ_FP['plan_rows']}
+    c.update(_topo_kw(topo))
     c.update(over)
     return c
 
@@ -721,26 +732,27 @@ def _sv_raw(status='computed', ratio=1.25, threshold=None, flag=None, n_unsplit=
     def _gc(st, r_):
         return SV_GF / r_ if st == 'computed' else (0.0 if st == 'no_through_without_sv' else None)
 
-    def _cc(st, gc):
+    def _cc(st, gc, topo):
         if not certs:
             return None
-        return _fake_pos_cert(gc) if st == 'computed' else (_fake_zero_cert() if st == 'no_through_without_sv' else None)
+        return _fake_pos_cert(gc, topo=topo) if st == 'computed' else (_fake_zero_cert() if st == 'no_through_without_sv' else None)
     gl = _gc(status, ratio)
     r = {'kind': 'counterfactual_cut_sv_faces', 'requested': True, 'threshold': threshold, 'n_sv_faces_cut': 4, 'G_full_code': SV_GF,
          'G_cut_code': gl, 'sv_counterfactual_ratio': _sv_ratio_of(status, ratio),
          'flag': flag, 'cg_info': (0 if status in ('computed', 'unconverged') else None), 'resid': (1e-13 if status == 'computed' else None),
-         'conv_cert': _cc(status, gl), 'status': status,
+         'conv_cert': _cc(status, gl, SV_TOPO_LO), 'status': status,
          'backend_last_solve': ({'used': 'gpu', 'requested': 'gpu'} if status == 'computed' else None),
          'n_unsplit_bridging_components': n_unsplit,
          'bracket_rule': getattr(_cj, 'CJUNC_SV_CF_BRACKET_RULE', 'lower_keep_unsplit_upper_remove_unsplit_sdcp_cells_v1'),
          'standing': ('certified_interval' if certs else 'diagnostic_uncertified'),
-         'conv_cert_full': (_fake_pos_cert(SV_GF) if certs else None)}
+         'conv_cert_full': (_fake_pos_cert(SV_GF, topo=SV_TOPO_MAIN) if certs else None)}
     if n_unsplit:
         sh = status_hi or 'computed'
         rh = _sv_ratio_of(sh, ratio_hi)
         gh = _gc(sh, ratio_hi)
         r['upper'] = {'status': sh, 'sv_counterfactual_ratio': rh, 'cg_info': (0 if sh in ('computed', 'unconverged') else None),
-                      'G_cut_code': gh, 'resid': (1e-13 if sh == 'computed' else None), 'conv_cert': _cc(sh, gh), 'backend_last_solve': None,
+                      'G_cut_code': gh, 'resid': (1e-13 if sh == 'computed' else None), 'conv_cert': _cc(sh, gh, SV_TOPO_UP),
+                      'backend_last_solve': None,
                       'n_components_removed': n_unsplit, 'n_edges_cut': 6, 'n_plate_couplings_cut': 0, 'n_cells_removed': max(3, n_unsplit)}
         r['status_hi'], r['sv_counterfactual_ratio_hi'] = sh, rh
     else:
@@ -825,7 +837,7 @@ def t_sv_values(mm, proj, Es):
     r_lo = math.nextafter(fl, 0.0)
     knife = 1.5 * fl
     raw_w = _sv_raw('computed', 1.25)
-    raw_w['conv_cert_full'] = _fake_pos_cert(SV_GF, lo=SV_GF * (1.0 - 1e-5), hi=SV_GF * (1.0 + 1e-5))
+    raw_w['conv_cert_full'] = _fake_pos_cert(SV_GF, lo=SV_GF * (1.0 - 1e-5), hi=SV_GF * (1.0 + 1e-5), topo=SV_TOPO_MAIN)
     good = {
         '증서 구간 기록 · 비 1.25 (주 해 · 아래 끝 증서 · 결합 칸)': proj(_sv_raw('computed', 1.25)),
         '비 1 − 1e-9 (참 비 1 · 막다른 덩어리의 풀이 잡음 · 증서 폭 안)': proj(_sv_raw('computed', 1.0 - 1e-9)),
@@ -930,6 +942,25 @@ def t_sv_values(mm, proj, Es):
             len(cons) == len(bad) - 2 and not odd_c, odd_c)
     else:
         chk('S8s ca_ext_svcf.cert_interval 이 있다', False, 'cert_interval 없음')
+    #  ★ 10-23 (사전 공격 리뷰 C1 · 1저자 Q12 (가)) 끝 증서 ↔ 끊은 그래프 — 실제 소비자 (`run_contract.ca_ext_record_ok`) 경로: 같은 기록의 주 해
+    #    증서를 끝 자리에 옮긴 일관 편집 (그 끝 G = G_full · 비 1 · 위 끝 칸 · 판정 근거 칸 다시 셈) → 자기 문장으로 거부 (리뷰 A2 꼴 · 옛 판 = 받음)
+    if callable(_ci):
+        def _swap(raw, where):
+            p = proj(raw)
+            end = p if where == 'lower' else p['upper']
+            end.update(G_cut_code=SV_GF, sv_counterfactual_ratio=1.0, conv_cert=deep(p['conv_cert_full']))
+            if where == 'upper' or p.get('upper') is None:
+                p['sv_counterfactual_ratio_hi'] = 1.0
+            lo3, hi3 = _ci(p)
+            p['ratio_cert_interval'] = [_en(lo3), _en(hi3)]
+            return p
+        c1 = {'덩어리 0 · 아래 끝 증서 = 주 해 증서 (끊은 다리 면 4)': _swap(_sv_raw('computed', 1.25), 'lower'),
+              '덩어리 1 · 아래 끝 증서 = 주 해 증서 (위 끝 [3.4] 그대로)': _swap(_sv_raw('computed', 1.2, n_unsplit=1, ratio_hi=3.4), 'lower'),
+              '덩어리 1 · 위 끝 증서 = 주 해 증서 (아래 끝 비 1 · 위 끝 간선 6 뺌)': _swap(_sv_raw('computed', 1.0, n_unsplit=1, ratio_hi=3.4), 'upper')}
+        for nm, rec in c1.items():
+            got = ok_of(rec)
+            chk(f'S8t 끝 증서 = 같은 기록의 주 해 증서 (일관 편집) → 실제 소비자 거부 [{nm}]',
+                not got[0] and isinstance(got[1], str) and got[1].startswith('CAEXT|cjunc| sv_cf|') and '사전 공격 리뷰 C1' in got[1], got)
     #  ★ 10-23 (RCA2-04) — 증거 쪽 대조 (실제 census · 솔브 기록 I_bot_code · fp) — 같은 기록 · 다른 증거
     lo1, br1 = proj(_sv_raw('computed', 1.25)), proj(_sv_raw('computed', 1.2, n_unsplit=1, ratio_hi=3.4))
     ev_bad = {
@@ -1331,10 +1362,13 @@ def t_states():
     _sv_put(x, proj(_sv_raw('computed', 3.0, threshold=2.0, flag=None)))
     chk('S8f 문턱 2 · 비 3 인데 표지 없음 (문턱 판정과 기록이 갈림) → 거부', not RC.ca_ext_record_ok(x)[0])
     #  ── 정의 무관 (PRE-impl-04 · Q-D) — 끊는 면의 정의 (A 가 바꾼다) 와 그 이름 · 수 칸이 바뀌어도 비 · 상태 · 표지만으로 받는다 ──
+    #  ★ 10-23 (사전 공격 리뷰 C1 · 1저자 Q12 (가)) — 정의별 수 칸 이름이 바뀐 꼴 = 증서 없는 런 (진단 기록) 에서만 정의 무관 그대로 받는다 · 증서 구간
+    #    기록의 비를 싣는 끝은 끊은 다리 면 수 (n_sv_faces_cut) 로 끝 증서를 끊은 그래프에 묶어야 해서 그 칸이 없으면 거부 (아래 S8h′)
     agn = {'다른 정의의 반사실 (kind counterfactual_cut_bridging_sv_faces)':
            lambda r: r.update(kind='counterfactual_cut_bridging_sv_faces'),
-           '정의별 수 칸 이름이 바뀜 (n_sv_faces_cut 없음 · n_bridging_faces_cut 3)':
-           lambda r: (r.pop('n_sv_faces_cut'), r.update(n_bridging_faces_cut=3)),
+           '정의별 수 칸 이름이 바뀜 (n_sv_faces_cut 없음 · n_bridging_faces_cut 3 · 진단 기록)':
+           lambda r: (r.pop('n_sv_faces_cut'), r.update(n_bridging_faces_cut=3, standing='diagnostic_uncertified', conv_cert=None,
+                                                        conv_cert_full=None)),
            '모르는 상태 · 비 없음 (사슬 = SV_UNCHECKED · 받는다)':
            #  ★ 10-22 (Q1 (다)) — 못 가른 덩어리 0 기록의 위 끝 = 아래 끝 (괄호 칸도 같은 상태로 · 기록 내부 일관)
            lambda r: r.update(status='no_bridging_sv_faces', sv_counterfactual_ratio=None, G_cut_code=None,
@@ -1345,6 +1379,15 @@ def t_states():
         x = deep(mm)
         _sv_put(x, proj(raw))
         chk(f'S8h 정의 무관 받음 [{nm}]', RC.ca_ext_record_ok(x) == (True, None), RC.ca_ext_record_ok(x))
+    raw = _sv_raw('computed', 1.25)
+    raw.pop('n_sv_faces_cut')
+    raw['n_bridging_faces_cut'] = 3
+    x = deep(mm)
+    _sv_put(x, proj(raw))
+    got = RC.ca_ext_record_ok(x)
+    chk('S8h′ 증서 구간 기록 (비를 싣는 끝 computed) 에 끊은 다리 면 수 n_sv_faces_cut 없음 (이름이 바뀜) → 거부 (끝 증서를 끊은 그래프에 묶을 수 없다 · '
+        '10-23 사전 공격 리뷰 C1)',
+        not got[0] and isinstance(got[1], str) and '사전 공격 리뷰 C1' in got[1] and 'n_sv_faces_cut' in got[1], got)
     raw = _sv_raw('computed', 1.25)
     raw.pop('n_sv_faces_cut')
     raw['n_bridging_faces_cut'] = 3

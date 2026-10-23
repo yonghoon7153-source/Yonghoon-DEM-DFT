@@ -1407,9 +1407,11 @@ def read_run(outdir, req, plan, contract, sid_reg, want_sha=None):
         svr = solve.get('sv_counterfactual')
         #  ★ 10-23 (Codex 재검토 RCA2-04 · 1저자 Q1 (가)) — 증서 구간 기록의 주 해 증서 (비의 분자 구간) = 이 런의 주 증서 (계약이 이미 수로 다시
         #    판정한 `step3.conv_cert`) — 기록 계약 (매니페스트만 본다) 이 못 보는 결합을 판정 입력 자리에서 맞춘다 · 다르면 기록 위반
+        #  ★ 10-23 (사전 공격 리뷰 C1 · 1저자 Q12 (가)) — 주 해 증서의 위상 수 (`CERT_TOPO_KEYS`) 도 맞춘다 (기록 계약이 끝 증서 위상 수를 그 수와
+        #    대조한다 — 기록 안에서만 부풀린 주 해 위상 수를 이 자리에서 잡는다)
         if isinstance(svr, dict) and svr.get('standing') == SVCF.STANDING_CERTIFIED and isinstance(svr.get('conv_cert_full'), dict):
             _ccf = svr['conv_cert_full']
-            _mis = [k for k in ('version', 'status', 'I_bot', 'target_lo', 'target_hi') + SVCF.BIND_FIELDS
+            _mis = [k for k in ('version', 'status', 'I_bot', 'target_lo', 'target_hi') + SVCF.BIND_FIELDS + SVCF.CERT_TOPO_KEYS
                     if _ccf.get(k) != (cert or {}).get(k)]
             if _mis:
                 stop('CA_EXT_RECORD', f'SV 반사실 기록의 주 해 증서 칸 {_mis} ≠ 이 런의 주 증서 (비의 분자 구간이 이 런의 것이 아니다 · '
