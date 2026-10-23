@@ -31,6 +31,10 @@
     괄호 규칙 = 등록된 값만 (`BRACKET_RULES`) · 수 칸 = 0 이상 정수 · int64 범위 · 제거 성분 수 = 못 가른 덩어리 수 · 제거 셀 수 ≥ 성분 수 ·
     실제 census (증거 `census`) 와 일관 (못 가른 ⊆ 다리 놓는 ⊆ 닿는 성분) · 진단 기록 = 증서 없음 (사슬은 R 판정 입력으로 받지 않는다 =
     SV_UNCHECKED) · 판정 근거 칸 = 기록의 증서에서 다시 센 값.
+★ 10-23 (Codex 재검토 RCA2-06 F6 · author 10-23 ratified Q1-Q8) 위 끝 구조화 실패 `unsplit_census_mismatch` (census 의 못 가른 덩어리 수 ≠ 지문
+  묶인 원장에서 다시 가른 수 · 위 끝을 풀지 않음 · fail-closed) = 끝-끝 보존 — 검증기가 그 꼴 (`_mismatch_problem`: 다시 가른 수 ≠ census 수 ·
+  사유 · 풀이 칸 없음 · 위 끝 칸 = (상태, None, None)) 을 받는다 (옛 판 = 못 가른 덩어리 0 꼴을 '위 끝 기록' 으로 게시 거부 · 덩어리 > 0 꼴은
+  꼴을 보지 않고 받음) → 사슬 = 위 끝 못 읽음 (SV_UNCHECKED · 사유에 상태 이름 · `rint_r_chain.sv_corner_label`).
 numpy 없이 뜬다 (`numbers` · `fractions` · 원 기록의 numpy 수도 받는다 · 검증기의 증서 대조만 `step3_conv_cert` 를 그 자리에서 부른다)."""
 import math
 import numbers
@@ -41,7 +45,8 @@ from fractions import Fraction
 RATIO_STATUSES = {'computed': 'finite', 'no_through_without_sv': 'inf'}
 #: 지금 producer 가 내는 상태 낱말 (기록 · 문서용 — 검증기는 이 목록 밖 상태도 '비 없음' 이면 받는다 · 정의 무관)
 KNOWN_STATUSES = ('computed', 'no_through_without_sv', 'unconverged', 'nonpositive_cut_current', 'nonpositive_full_current',
-                  'main_unconverged', 'cjunc_electrode_short', 'all_floating_dropped', 'no_through_component')
+                  'main_unconverged', 'cjunc_electrode_short', 'all_floating_dropped', 'no_through_component',
+                  'unsplit_census_mismatch')       # ★ 10-23 (RCA2-06 F6) = `UNSPLIT_MISMATCH` (위 끝 구조화 실패 · 검증기 `_mismatch_problem`)
 KIND_PREFIX = 'counterfactual'
 FLAGS = (None, 'SV_DEPENDENT')
 #: ★ PF2 E (10-22 · 사전 리뷰 2 회차 PRE2-impl-02 · 결정 없음) — 기록 안 수의 다시 대조.  τ = 수렴 증서 ⓓ 의 보장 상대 오차
@@ -63,8 +68,12 @@ STANDINGS = (STANDING_CERTIFIED, STANDING_DIAGNOSTIC)
 ZERO_GRAPH_SV_CF = 'cjunc_sv_counterfactual'
 #: 등록된 괄호 규칙 (= `carbon_junction.CJUNC_SV_CF_BRACKET_RULE` · 시험이 대조 · 등록 R §5-6 SV 행 · 이 밖의 낱말 = 거부)
 BRACKET_RULES = ('lower_keep_unsplit_upper_remove_unsplit_sdcp_cells_v1',)
-#: 위 끝 구조화 실패 (= `carbon_junction.SV_CF_UNSPLIT_MISMATCH` · 다시 가른 수 ≠ census 수 = 그 상태의 정의 · 제거 수 대조 밖)
+#: 위 끝 구조화 실패 (= `carbon_junction.SV_CF_UNSPLIT_MISMATCH` · 다시 가른 수 ≠ census 수 = 그 상태의 정의 · 제거 수 대조 밖 · 꼴 = `_mismatch_problem`)
 UNSPLIT_MISMATCH = 'unsplit_census_mismatch'
+#: ★ 10-23 (RCA2-06 F6) 구조화 실패 끝의 풀이 칸 — 풀지 않은 끝 = 전부 없다 (생산자 `carbon_junction._sv_cf_upper_unsolved` 정의: 비 · 표지 (투영) ·
+#   G_cut · 잔차 · CG · 증서 · backend 는 None · 제거 셀 · 끊은 간선 · 판 결합 · SV 면 수는 푼 끝만 싣는다)
+MISMATCH_EMPTY_KEYS = ('sv_counterfactual_ratio', 'ratio_limit', 'G_cut_code', 'resid', 'cg_info', 'conv_cert', 'backend_last_solve',
+                       'n_cells_removed', 'n_edges_cut', 'n_plate_couplings_cut', 'n_sv_faces_cut')
 #: 수 칸의 의미 범위 (0 이상 · int64 — 10**400 같은 값 = 거부 · RCA2-04)
 COUNT_MAX = 2 ** 63 - 1
 #: 증서 투영 칸 (★ 10-23 — 목표량 구간 · 게시 판 전류 · 영값 위상 칸 · 결합 칸까지 · 옛 판 = 판 · 상태 · ok · ⓐ–ⓓ 만 → 다른 회로 증서를 못 가렸다)
@@ -270,7 +279,9 @@ def _form_problem(st, r_, lim, what):
 def _bracket_problem(rec):
     """★ 10-22 (PRE2-impl-01 · 02 · 1저자 Q1 (다)) 괄호 칸의 꼴 → 문제 | None — 못 가른 덩어리 수 = 0 이상 정수 · 규칙 = 비지 않은 낱말 ·
     위 끝 상태 ↔ 비 ↔ 표지 (아래 끝과 같은 규칙) · 덩어리 0 ⟹ 위 끝 풀이 기록 없음 · 위 = 아래 (상태 · 비 · 표지) · 덩어리 > 0 ⟹ 위 끝 풀이
-    기록 (dict · 꼴) = 위 끝 칸.  비 값의 대조 (G 비 다시 셈 · 아래 ≤ 위) 는 이 함수 밖 (★ PF2 E `_values_problem`)."""
+    기록 (dict · 꼴) = 위 끝 칸.  비 값의 대조 (G 비 다시 셈 · 아래 ≤ 위) 는 이 함수 밖 (★ PF2 E `_values_problem`).
+    ★ 10-23 (RCA2-06 F6) 예외 하나 — 위 끝 풀이 기록이 구조화 실패 (`UNSPLIT_MISMATCH` · census 수 ≠ 다시 가른 수) 면 덩어리 수 (0 · > 0) 와 무관하게
+    그 꼴만 본다 (`_mismatch_problem` · 덩어리 0 인데 위 끝 기록이 있는 유일한 꼴 · 제거 수 대조 밖)."""
     nu = rec.get('n_unsplit_bridging_components')
     if not _count_ok(nu):
         return f'sv_cf| 못 가른 덩어리 수 {nu!r} (0 이상 정수 · int64 범위 — 의미 범위 · 괄호 판정 10-22 · 10-23 RCA2-04)'
@@ -284,6 +295,8 @@ def _bracket_problem(rec):
     if why:
         return why
     up = rec.get('upper')
+    if isinstance(up, dict) and up.get('status') == UNSPLIT_MISMATCH:
+        return _mismatch_problem(rec, up, int(nu))
     if int(nu) == 0:
         if up is not None:
             return f'sv_cf| 못 가른 덩어리 0 인데 위 끝 풀이 기록 {type(up).__name__} (다시 풀지 않는다 · 위 = 아래)'
@@ -301,9 +314,28 @@ def _bracket_problem(rec):
         return why
     if (ust, ur, ul) != (sh, rh, lh):
         return f'sv_cf| 위 끝 칸 ({sh!r}, {rh!r}, {lh!r}) ≠ 위 끝 풀이 기록 ({ust!r}, {ur!r}, {ul!r})'
-    if ust == UNSPLIT_MISMATCH:                    # 구조화 실패 (다시 가른 수 ≠ census 수 = 그 상태의 정의) — 제거 수 대조 밖 (RCA2-06 F6 = 묶음 A4)
-        return None
     return _removed_problem(up, int(nu))
+
+
+def _mismatch_problem(rec, up, nu):
+    """★ 10-23 (Codex 재검토 RCA2-06 F6 · author 10-23 ratified Q1-Q8) 위 끝 구조화 실패 `UNSPLIT_MISMATCH` → 문제 | None — 생산자 정의
+    (`carbon_junction.sv_counterfactual`): census 의 못 가른 덩어리 수 nu ≠ 지문 묶인 원장에서 다시 가른 수 → 위 끝을 풀지 않는다 (fail-closed).
+    받는 꼴 = 다시 가른 수 (`n_components_removed` · 0 이상 정수 · int64 범위) ≠ nu · 사유 (`why`) = 비지 않은 글 · 풀이 칸 (`MISMATCH_EMPTY_KEYS`)
+    없음 · 위 끝 칸 (`status_hi` · 비 · 표지) = (상태, None, None).  받은 기록의 위 끝 = 비 없음 → 사슬 = 못 읽음 (SV_UNCHECKED · 사유에 상태 이름)."""
+    nr = up.get('n_components_removed')
+    if not _count_ok(nr) or int(nr) == nu:
+        return (f'sv_cf| 위 끝 {UNSPLIT_MISMATCH} 인데 다시 가른 덩어리 수 {nr!r} (0 이상 정수 · int64 범위 · census 수 {nu} 와 달라야 — 그 상태의 '
+                f'정의 · 10-23 RCA2-06)')
+    why = up.get('why')
+    if not (isinstance(why, str) and why.strip()):
+        return f'sv_cf| 위 끝 {UNSPLIT_MISMATCH} 인데 사유 {why!r} (비지 않은 글 · 10-23 RCA2-06)'
+    filled = [k for k in MISMATCH_EMPTY_KEYS if up.get(k) is not None]
+    if filled:
+        return f'sv_cf| 위 끝 {UNSPLIT_MISMATCH} 인데 풀이 칸 {filled} 이 있다 (풀지 않은 끝 · 10-23 RCA2-06)'
+    hi = (rec.get('status_hi'), rec.get('sv_counterfactual_ratio_hi'), rec.get('ratio_limit_hi'))
+    if hi != (UNSPLIT_MISMATCH, None, None):
+        return f'sv_cf| 위 끝 풀이 기록 = {UNSPLIT_MISMATCH} 인데 위 끝 칸 {hi!r} (같은 상태 · 비 · 표지 없음 · 10-23 RCA2-06)'
+    return None
 
 
 def _count_ok(v):

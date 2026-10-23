@@ -2260,8 +2260,18 @@ WHY_ORIGIN_SENSITIVE = ('세 값 (주 사다리 R_j,0 의 arm 0 · 1 · 2) 의 l
 WHY_NOT_RUN = '안 돌림'
 
 
+def sv_corner_label(det, key):
+    """★ 10-23 (Codex 재검토 RCA2-06 F6 · author 10-23 ratified Q1-Q8) 사유의 모서리 이름 — 그 모서리의 비를 싣지 않는 상태 (위 끝 구조화 실패
+    `unsplit_census_mismatch` · 미수렴 · …) 를 이름 그대로 괄호에 붙인다 (구조화 실패를 끝-끝 보존 · 같은 상태 = 한 번 · 비 값은 붙이지 않는다) ·
+    그런 상태가 없으면 (기록 없음 · 비를 싣는 상태인데 증서 구간을 못 정함) 모서리 이름만 (옛 글자)."""
+    c = (det.get('corners') or {}).get(key) or {}
+    sts = [s for s in (c.get('status'), c.get('status_hi')) if isinstance(s, str) and s and s not in SVCF.RATIO_STATUSES]
+    return f'{key} ({SENTENCE_JOIN.join(dict.fromkeys(sts))})' if sts else key
+
+
 def sv_reasons(flags, det):
-    """§5-5b 사유 — SV 표지 (§5-6 SV 행) → {표지: 사유} (대조 비 · 문턱 · 모서리 · 비 값 = 판정 결과에만)."""
+    """§5-5b 사유 — SV 표지 (§5-6 SV 행) → {표지: 사유} (대조 비 · 문턱 · 모서리 · 비 값 = 판정 결과에만).  ★ 10-23 (RCA2-06 F6) 못 읽음 ·
+    진단 모서리 이름 = `sv_corner_label` (비를 싣지 않는 상태 이름을 붙인다)."""
     out = {}
     if 'SV_DEPENDENT' in flags:
         out['SV_DEPENDENT'] = (f'대조 비 > 문턱 {det.get("threshold")!r} (증서 구간 아래 끝 · nominal 아님) — 모서리 '
@@ -2271,9 +2281,10 @@ def sv_reasons(flags, det):
         if det.get('threshold') is None:
             parts.append('문턱 없음 (계획 sv_cf_threshold null)')
         if det.get('unreadable'):
-            parts.append(f'대조 비를 못 읽음 — 모서리 {SENTENCE_JOIN.join(det["unreadable"])}')
+            parts.append(f'대조 비를 못 읽음 — 모서리 {SENTENCE_JOIN.join(sv_corner_label(det, k) for k in det["unreadable"])}')
         if det.get('uncertified'):                      # ★ 10-23 (RCA2-04 · Q1 (가)) — 증서 없는 런의 진단 기록 = 판정 입력 아님
-            parts.append(f'증서 없는 진단 기록 (판정 입력 아님) — 모서리 {SENTENCE_JOIN.join(det["uncertified"])}')
+            parts.append(f'증서 없는 진단 기록 (판정 입력 아님) — 모서리 '
+                         f'{SENTENCE_JOIN.join(sv_corner_label(det, k) for k in det["uncertified"])}')
         if det.get('straddle'):                         # ★ 10-22 (Q1 (다)) — 괄호가 문턱에 걸침 (비 값 = 판정 결과에만) · ★ 10-23 증서 구간
             parts.append(f'대조 비 증서 구간이 문턱에 걸침 (아래 끝 ≤ 문턱 < 위 끝 · 못 가른 덩어리 · 증서 폭) — 모서리 '
                          f'{SENTENCE_JOIN.join(det["straddle"])}')
