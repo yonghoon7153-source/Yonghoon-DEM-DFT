@@ -174,5 +174,18 @@
     }
   ],
   "current_outer_manifest": "docs/reviews/mixer_d3_design_v2_evidence_20261023/MANIFEST.sha256",
-  "canonical_checks": "NOT RUN: this staging preparation is not a canonical checker or full-gate result"
+  "canonical_checks": "NOT RUN: this staging preparation is not a canonical checker or full-gate result",
+  "snapshot_scope": "The original-to-import diff and import_sha256 values describe the candidate import snapshot. Later full-gate evidence and reproduction-context README updates are evidence-only followups; current evidence bytes are covered by the current outer MANIFEST.sha256. Original ZIP bytes, normalized substantive reports and original scientific results remain unchanged.",
+  "post_gate_changed_snapshot_members": [
+    {
+      "path": "docs/reviews/mixer_d3_design_v2_evidence_20261023/PACKAGE_PROVENANCE.json",
+      "candidate_import_sha256": "d6f8dc1a1ed65195f62fbc91136f31d605c44fe2f52a6e1188b467686fc5aa64",
+      "current_evidence_sha256": "b8d1161c2e371894415d28eaec33be3eba50dc0f383e5eb74983d1ab223ec53d"
+    },
+    {
+      "path": "docs/reviews/mixer_d3_design_v2_evidence_20261023/README.md",
+      "candidate_import_sha256": "e9dcf3193200c1bb5517f866421286ebd91f4630d17ec8b7703a9e8e9f5a0f87",
+      "current_evidence_sha256": "233ae27677cf19b31a9d4f5f007c6602506d8cd52eb5a972b61dc40a63b6b298"
+    }
+  ]
 }
