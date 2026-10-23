@@ -1,0 +1,30 @@
+{
+  "status": "PASS",
+  "fetch_command": [
+    "git",
+    "-C",
+    "/workspace/.cloud-setup/nonrint-20261024/gates/mxd2-verified/repository",
+    "fetch",
+    "--prune",
+    "origin"
+  ],
+  "fetch_exit_code": 0,
+  "fetch_refspec": "+refs/heads/*:refs/remotes/origin/*",
+  "generated_origin_ref_count": 8,
+  "remaining_after_removal": 0,
+  "fetched_head_count": 37,
+  "actual_remote_head_count": 37,
+  "actual_remote_equal_fetched": true,
+  "fetched_symbolic_refs": [
+    {
+      "ref": "refs/remotes/origin/HEAD",
+      "oid": "3fe789ff68815cff04a42b09c26f00c464dfd477",
+      "symref": "refs/remotes/origin/claude/dft-script-generator-webapp-GPSAG"
+    }
+  ],
+  "fetched_ref_count_total": 38,
+  "remote_changed_during_fetch": false,
+  "reachable_commit_count": 11575,
+  "checker_reachability_contract": "git rev-list --remotes HEAD; no local-only branches added to remotes",
+  "observed_at_utc": "2026-10-23T20:03:13.928943+00:00"
+}
