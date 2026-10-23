@@ -1,0 +1,14 @@
+
+── T24 ★ 10-23 (Codex 재검토 RCA2-08 · P3) 합산 넘침 — 유한 중간값의 최종 합 (U · W `fsum`) · 원장 행 허용 (tol_r) · 판 전류 합이 넘치면 예외 · 경고 대신 NOT_CERTIFIABLE (판정문 꼴 5 노드 gb = gt = 8e307 · p 0.5 · 원장 허용 유한 · U 합만 넘침 10 노드 4e307 · U 유한 · W 합만 넘침 5 노드 3e307 · p 1) · 경고를 오류로 바꿔 본다 · 정상 회로 증서 = 고치기 전 판 (49a1af626) 과 비트 같음
+  PASS  T24a [판정문 꼴 — 독립 노드 5 · gb = gt = 8e307 · p 0.5 (원장 행 허용 :344 · U 최종 합 :476) · target_bracket (판정문 탐침과 같은 호출)] → 예외 · 경고 없이 원장 문제 (넘침 사유 · 구간 없음)
+  PASS  T24a [판정문 꼴 — 독립 노드 5 · gb = gt = 8e307 · p 0.5 (원장 행 허용 :344 · U 최종 합 :476) · certify] → 예외 · 경고 없이 원장 문제 (넘침 사유 · 구간 없음) · NOT_CERTIFIABLE · ok False
+  FAIL  T24a [독립 노드 10 · gb = gt = 4e307 · p 0.5 (원장 허용 유한 · U 최종 합 :476 만 넘침) · target_bracket (판정문 탐침과 같은 호출)] → 예외 · 경고 없이 원장 문제 (넘침 사유 · 구간 없음)  (OverflowError: intermediate overflow in fsum)
+  FAIL  T24a [독립 노드 10 · gb = gt = 4e307 · p 0.5 (원장 허용 유한 · U 최종 합 :476 만 넘침) · certify] → 예외 · 경고 없이 원장 문제 (넘침 사유 · 구간 없음) · NOT_CERTIFIABLE · ok False  (OverflowError: intermediate overflow in fsum)
+  FAIL  T24a [독립 노드 5 · gb = gt = 3e307 · p 1 (U 유한 · W 최종 합 :553 만 넘침) · target_bracket (판정문 탐침과 같은 호출)] → 예외 · 경고 없이 원장 문제 (넘침 사유 · 구간 없음)  (OverflowError: intermediate overflow in fsum)
+  FAIL  T24a [독립 노드 5 · gb = gt = 3e307 · p 1 (U 유한 · W 최종 합 :553 만 넘침) · certify] → 예외 · 경고 없이 원장 문제 (넘침 사유 · 구간 없음) · NOT_CERTIFIABLE · ok False  (OverflowError: intermediate overflow in fsum)
+  PASS  T24c 숨은 접지 항 + 원장 허용 넘침 (노드 1 · gb = gt = 4e307 · 접지 8e307) → 예외 · 경고 없이 NOT_CERTIFIABLE · 원장 문제 = 대조 넘침 (옛 판 = 허용 inf 로 행 합 대조가 비어 원장 통과 · POSITIVE_SOLVED)
+  FAIL  T24b 기반 판 (49a1af626) step3_conv_cert 불러오기  (CalledProcessError: Command '['git', '-C', '/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/atk1023/mut/M9_fsum_no_guard', 'show', '49a1af626:scripts/step3_conv_cert.py']' returned non-zero exit status 128.)
+    (T24 0.0 s)
+
+== test_step3_target_cert [빠른 판]: 3/8 PASS (0.0 s)
+FAIL: T24a [독립 노드 10 · gb = gt = 4e307 · p 0.5 (원장 허용 유한 · U 최종 합 :476 만 넘침) · target_bracket (판정문 탐침과 같은 호출)] → 예외 · 경고 없이 원장 문제 (넘침 사유 · 구간 없음) · T24a [독립 노드 10 · gb = gt = 4e307 · p 0.5 (원장 허용 유한 · U 최종 합 :476 만 넘침) · certify] → 예외 · 경고 없이 원장 문제 (넘침 사유 · 구간 없음) · NOT_CERTIFIABLE · ok False · T24a [독립 노드 5 · gb = gt = 3e307 · p 1 (U 유한 · W 최종 합 :553 만 넘침) · target_bracket (판정문 탐침과 같은 호출)] → 예외 · 경고 없이 원장 문제 (넘침 사유 · 구간 없음) · T24a [독립 노드 5 · gb = gt = 3e307 · p 1 (U 유한 · W 최종 합 :553 만 넘침) · certify] → 예외 · 경고 없이 원장 문제 (넘침 사유 · 구간 없음) · NOT_CERTIFIABLE · ok False · T24b 기반 판 (49a1af626) step3_conv_cert 불러오기

@@ -1,0 +1,160 @@
+{
+ "M1_divdir_nearest": {
+  "tcj": {
+   "rc": 0,
+   "summary": [
+    "== test_carbon_junction: 42/42 PASS"
+   ],
+   "fails": []
+  },
+  "trc": {
+   "rc": 1,
+   "summary": [
+    "test_rint_r_chain: 7/8 PASS (9.0 s)   FAILED: ['U16']"
+   ],
+   "fails": [
+    "FAIL  U16 ★ 10-23 (Codex 재검토 RCA2-01 · 1저자 Q1 (가)) SV 판정 = 증서 구간 (실제 투영 · chain_view · sv_assess) — 판정문 꼴 nominal < 문턱 < 아래비 → SV_DEPENDENT · 뒤집은 꼴 nominal > 문턱"
+   ]
+  },
+  "b6S": {
+   "rc": 0,
+   "summary": [
+    "243 PASS · 0 FAIL"
+   ],
+   "fails": []
+  }
+ },
+ "M2_hi_uses_upper_target_hi": {
+  "tcj": {
+   "rc": 1,
+   "summary": [
+    "== test_carbon_junction: 41/42 PASS"
+   ],
+   "fails": [
+    "FAIL  QD3 ⑤ 괄호 회로 (QD2 ③ · 못 가른 덩어리 1 · 증서 켬) — 아래비 ≤ 아래 끝 손 참값 1 · 손 참 비 (다리만 끊음) ∈ [아래비, 위비] · 위 끝 손 참값 ≤ 위비 · 검증기 받음  ([0.9999999999999434, 2.289808917197452",
+    "FAIL: QD3 ⑤ 괄호 회로 (QD2 ③ · 못 가른 덩어리 1 · 증서 켬) — 아래비 ≤ 아래 끝 손 참값 1 · 손 참 비 (다리만 끊음) ∈ [아래비, 위비] · 위 끝 손 참값 ≤ 위비 · 검증기 받음"
+   ]
+  },
+  "trc": {
+   "rc": 1,
+   "summary": [
+    "test_rint_r_chain: 7/8 PASS (9.0 s)   FAILED: ['U16']"
+   ],
+   "fails": [
+    "FAIL  U16 ★ 10-23 (Codex 재검토 RCA2-01 · 1저자 Q1 (가)) SV 판정 = 증서 구간 (실제 투영 · chain_view · sv_assess) — 판정문 꼴 nominal < 문턱 < 아래비 → SV_DEPENDENT · 뒤집은 꼴 nominal > 문턱"
+   ]
+  },
+  "b6S": {
+   "rc": 0,
+   "summary": [
+    "243 PASS · 0 FAIL"
+   ],
+   "fails": []
+  }
+ },
+ "M3_lo_uses_lower_target_lo": {
+  "tcj": {
+   "rc": 1,
+   "summary": [
+    "== test_carbon_junction: 40/42 PASS"
+   ],
+   "fails": [
+    "FAIL  QD3 ① 판정문 실제 반례 꼴 (SVX · 첫 선형 해에만 +1e-8 · 증서 켬) — 주 해 · 아래 끝 증서 통과 · nominal < 문턱 < 증서 구간 아래비 ≤ 손 회로 참 비 ≤ 위비 · 사슬 = SV_DEPENDENT (옛 nominal 판정 = 표지 없음) ·",
+    "FAIL  QD3 ② 정확 풀이 (증서 켬) — 증서 구간 ∋ 손 회로 참 비 · 문턱 = 아래비 × (1 − 1e-9) → SV_DEPENDENT · 위비 × (1 + 1e-9) → 표지 없음 · 검증기 받음  ([10.291253935345155, 10.291253935346543]",
+    "FAIL: QD3 ① 판정문 실제 반례 꼴 (SVX · 첫 선형 해에만 +1e-8 · 증서 켬) — 주 해 · 아래 끝 증서 통과 · nominal < 문턱 < 증서 구간 아래비 ≤ 손 회로 참 비 ≤ 위비 · 사슬 = SV_DEPENDENT (옛 nominal 판정 = 표지 없음) ·"
+   ]
+  },
+  "trc": {
+   "rc": 1,
+   "summary": [
+    "test_rint_r_chain: 7/8 PASS (9.0 s)   FAILED: ['U16']"
+   ],
+   "fails": [
+    "FAIL  U16 ★ 10-23 (Codex 재검토 RCA2-01 · 1저자 Q1 (가)) SV 판정 = 증서 구간 (실제 투영 · chain_view · sv_assess) — 판정문 꼴 nominal < 문턱 < 아래비 → SV_DEPENDENT · 뒤집은 꼴 nominal > 문턱"
+   ]
+  },
+  "b6S": {
+   "rc": 0,
+   "summary": [
+    "243 PASS · 0 FAIL"
+   ],
+   "fails": []
+  }
+ },
+ "M4_lo_uses_full_hi": {
+  "tcj": {
+   "rc": 1,
+   "summary": [
+    "== test_carbon_junction: 40/42 PASS"
+   ],
+   "fails": [
+    "FAIL  QD3 ① 판정문 실제 반례 꼴 (SVX · 첫 선형 해에만 +1e-8 · 증서 켬) — 주 해 · 아래 끝 증서 통과 · nominal < 문턱 < 증서 구간 아래비 ≤ 손 회로 참 비 ≤ 위비 · 사슬 = SV_DEPENDENT (옛 nominal 판정 = 표지 없음) ·",
+    "FAIL  QD3 ② 정확 풀이 (증서 켬) — 증서 구간 ∋ 손 회로 참 비 · 문턱 = 아래비 × (1 − 1e-9) → SV_DEPENDENT · 위비 × (1 + 1e-9) → 표지 없음 · 검증기 받음  ([10.291253935345157, 10.291253935346543]",
+    "FAIL: QD3 ① 판정문 실제 반례 꼴 (SVX · 첫 선형 해에만 +1e-8 · 증서 켬) — 주 해 · 아래 끝 증서 통과 · nominal < 문턱 < 증서 구간 아래비 ≤ 손 회로 참 비 ≤ 위비 · 사슬 = SV_DEPENDENT (옛 nominal 판정 = 표지 없음) ·"
+   ]
+  },
+  "trc": {
+   "rc": 0,
+   "summary": [
+    "test_rint_r_chain: 8/8 PASS (8.9 s)"
+   ],
+   "fails": []
+  },
+  "b6S": {
+   "rc": 0,
+   "summary": [
+    "243 PASS · 0 FAIL"
+   ],
+   "fails": []
+  }
+ },
+ "M5_hi_uses_full_lo": {
+  "tcj": {
+   "rc": 1,
+   "summary": [
+    "== test_carbon_junction: 41/42 PASS"
+   ],
+   "fails": [
+    "FAIL  QD3 ⑤ 괄호 회로 (QD2 ③ · 못 가른 덩어리 1 · 증서 켬) — 아래비 ≤ 아래 끝 손 참값 1 · 손 참 비 (다리만 끊음) ∈ [아래비, 위비] · 위 끝 손 참값 ≤ 위비 · 검증기 받음  ([0.9999999999999434, 2.289808917197445",
+    "FAIL: QD3 ⑤ 괄호 회로 (QD2 ③ · 못 가른 덩어리 1 · 증서 켬) — 아래비 ≤ 아래 끝 손 참값 1 · 손 참 비 (다리만 끊음) ∈ [아래비, 위비] · 위 끝 손 참값 ≤ 위비 · 검증기 받음"
+   ]
+  },
+  "trc": {
+   "rc": 0,
+   "summary": [
+    "test_rint_r_chain: 8/8 PASS (8.9 s)"
+   ],
+   "fails": []
+  },
+  "b6S": {
+   "rc": 0,
+   "summary": [
+    "243 PASS · 0 FAIL"
+   ],
+   "fails": []
+  }
+ },
+ "M7_divdir_swapped": {
+  "tcj": {
+   "rc": 0,
+   "summary": [
+    "== test_carbon_junction: 42/42 PASS"
+   ],
+   "fails": []
+  },
+  "trc": {
+   "rc": 0,
+   "summary": [
+    "test_rint_r_chain: 8/8 PASS (9.0 s)"
+   ],
+   "fails": []
+  },
+  "b6S": {
+   "rc": 0,
+   "summary": [
+    "243 PASS · 0 FAIL"
+   ],
+   "fails": []
+  }
+ }
+}

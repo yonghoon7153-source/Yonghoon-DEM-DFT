@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/atk1023/ev_new/registration/probe_registration_current.py", line 249, in <module>
+    if __name__=='__main__': main()
+                             ^^^^^^
+  File "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/atk1023/ev_new/registration/probe_registration_current.py", line 242, in main
+    'RCA08_09_10_13':logic(),'DBE_R_monotonicity':dbe_nonmonotone(),
+                                                  ^^^^^^^^^^^^^^^^^
+  File "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/atk1023/ev_new/registration/probe_registration_current.py", line 165, in dbe_nonmonotone
+    p=predict(f)
+      ^^^^^^^^^^
+  File "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/atk1023/ev_new/registration/probe_registration_current.py", line 42, in predict
+    obj.run()
+  File "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/atk1023/new_src/scripts/rint_r_chain.py", line 1841, in run
+    self._r_monotone()
+  File "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/atk1023/new_src/scripts/rint_r_chain.py", line 1860, in _r_monotone
+    raise Stop('R_MONOTONE_VIOLATION', f'σ_DBE({law}, c {c}) 의 증서 구간이 R_j 단조와 모순 — {bad[0]} (R 작음) 구간의 위끝 < {bad[1]} '
+rint_r_chain.Stop: R_MONOTONE_VIOLATION: σ_DBE(P0, c 0) 의 증서 구간이 R_j 단조와 모순 — R_j_lo (R 작음) 구간의 위끝 < R_j0 (R 큼) 구간의 아래끝 (같은 origin · 같은 최종 추정량 arm0 · 추가 풀이 없음 · 구현 결함 의심 · 판정문 §8 RCA2-09)

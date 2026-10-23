@@ -1,0 +1,169 @@
+{
+ "budget": {
+  "ok": true,
+  "summary": {
+   "DBE_arms_if_4_upper_solves": 44,
+   "DBE_arms_old": 40,
+   "SBE_arms": 38,
+   "published_formula_hours": [
+    191.35251059414892,
+    231.4088918182376
+   ],
+   "qualification": "arm-equivalent estimate only; upper solve can disconnect early or have different iterations; measure separately",
+   "same_formula_with_upper_hours": [
+    205.80605719650507,
+    248.88804164339155
+   ]
+  }
+ },
+ "dbe_nonmonotone": {
+  "ok": true,
+  "summary": {
+   "R": [
+    0.5,
+    1.0,
+    2.0
+   ],
+   "same_p_all_pass": true,
+   "scope": "missing invariant guard, not a production physical counterexample",
+   "sigma_mScm": [
+    4.2,
+    4.7,
+    4.4
+   ],
+   "verdict": "PASS_INFORMATIVE"
+  }
+ },
+ "dbe_origin": {
+  "ok": true,
+  "summary": {
+   "prior_counterexample": {
+    "W": 0.8362390828158662,
+    "adjusted": 12,
+    "label": "CONSISTENT_WEAK"
+   },
+   "three_origin_blindspot": {
+    "adjusted_count": 0,
+    "eight_mean_W": 0.6803855313301495,
+    "eight_mean_label": "CONSISTENT_WEAK",
+    "hidden_origins": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "sampled_W": 0.2930476573691437,
+    "sampled_label": "PASS_INFORMATIVE",
+    "sampled_origins": [
+     0,
+     1,
+     2
+    ]
+   }
+  }
+ },
+ "endpoint_sweep": {
+  "ok": true,
+  "summary": {
+   "checked_passive_responses": 54,
+   "fail_closed": 0
+  }
+ },
+ "guard_padding": {
+  "ok": true,
+  "summary": {
+   "n_runs": 15,
+   "padding_factor": 443434903.80578315,
+   "reported_hi_R": 1e+16
+  }
+ },
+ "logic": {
+  "ok": true,
+  "summary": {
+   "gap": "GAP_ENVELOPE_ONLY",
+   "noop": "PASS_INFORMATIVE",
+   "zeros": [
+    {
+     "label": "FAIL",
+     "state": "extended",
+     "values": [
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "label": "UNINFORMATIVE",
+     "state": "extended",
+     "values": [
+      0.0,
+      5.0
+     ]
+    },
+    {
+     "label": "PASS_INFORMATIVE",
+     "state": "point",
+     "values": [
+      4.68,
+      4.68
+     ]
+    }
+   ]
+  }
+ },
+ "plan_validation": {
+  "ok": true,
+  "summary": {
+   "duplicate_top": "PLAN_INVALID",
+   "inf": "PLAN_INVALID",
+   "nan": "PLAN_INVALID",
+   "overflow_calib_rj_ratio_max": "PLAN_INVALID",
+   "overflow_max_ladder_points": "PLAN_INVALID",
+   "overflow_s_min_um": "PLAN_INVALID",
+   "overflow_sv_cf_threshold": "PLAN_INVALID"
+  }
+ },
+ "rca01": {
+  "ok": true,
+  "summary": [
+   {
+    "W": 0.7852375308170949,
+    "end_R": [
+     10000.0,
+     5990349.747387542
+    ],
+    "err": 0.0,
+    "verdict": "CONSISTENT_WEAK"
+   },
+   {
+    "W": 0.7864872060387711,
+    "end_R": [
+     10000.0,
+     10000000.0
+    ],
+    "err": 0.0001,
+    "verdict": "CONSISTENT_WEAK"
+   }
+  ]
+ },
+ "sbe_origin_union": {
+  "ok": true,
+  "summary": "..."
+ },
+ "sv_origin_scope": {
+  "ok": true,
+  "summary": {
+   "adjusted_values": 12,
+   "fetch_counts": {
+    "corner": 12,
+    "origin": 12,
+    "origin8": 12
+   },
+   "sv_enabled_counts": {
+    "corner": 12,
+    "origin": 0,
+    "origin8": 0
+   }
+  }
+ }
+}

@@ -1,0 +1,56 @@
+{
+ "M6_upper_first_component_only": {
+  "tcj": {
+   "rc": 1,
+   "summary": [
+    "== test_carbon_junction: 39/42 PASS"
+   ],
+   "fails": [
+    "FAIL  QD4 ① 두 성분 꼴 (증서 끔) — G = 손 회로 4/(0.005 + 6·0.01 + 2·0.007 + 0.005) (1e-12) · 못 가른 덩어리 2 · 아래 끝 비 1 · 위 끝 = 두 성분 전부 (제거 성분 2 · 제거 셀 = 원장 SDCP 셀 6 · 판 결합 0",
+    "FAIL  QD4 ② 증서 켬 — 같은 기록 + 지위 증서 구간 · 문턱 2 = 걸침 (아래비 ≤ 2 < 위비 +∞) → SV_UNCHECKED  ({'G': 47.61904761904763, 'n_sdcp': 6, 'n_unsplit': 2, 'ratio': 1.0, 'upper': ",
+    "FAIL  QD4 ③ 판정문 F4 변이 (첫 성분 셀만 지움) → ① ② 가 떨어진다 (변이 전 통과 · 변이 = 제거 셀 3 · 위 끝 computed · nominal 위비 2 (1e-9)) · 시험 문턱 2.5 (등록 값 아님) — 바른 판 = 걸침 SV_UNCHECKED · 변이",
+    "FAIL: QD4 ① 두 성분 꼴 (증서 끔) — G = 손 회로 4/(0.005 + 6·0.01 + 2·0.007 + 0.005) (1e-12) · 못 가른 덩어리 2 · 아래 끝 비 1 · 위 끝 = 두 성분 전부 (제거 성분 2 · 제거 셀 = 원장 SDCP 셀 6 · 판 결합 0"
+   ]
+  },
+  "trc": {
+   "rc": 0,
+   "summary": [
+    "test_rint_r_chain: 8/8 PASS (9.0 s)"
+   ],
+   "fails": []
+  },
+  "b6S": {
+   "rc": 0,
+   "summary": [
+    "243 PASS · 0 FAIL"
+   ],
+   "fails": []
+  }
+ },
+ "M8_rmono_guard_noop": {
+  "tcj": {
+   "rc": 0,
+   "summary": [
+    "== test_carbon_junction: 42/42 PASS"
+   ],
+   "fails": []
+  },
+  "trc": {
+   "rc": 1,
+   "summary": [
+    "test_rint_r_chain: 6/8 PASS (9.0 s)   FAILED: ['U17', 'V31']"
+   ],
+   "fails": [
+    "FAIL  U17 ★ 10-23 (Codex 재검토 RCA2-09 · 1저자 Q8 (가)) DBE R 단조 방어 검사 (예측 · 이미 구한 값 · 증서 구간끼리 · 같은 최종 추정량) — 판정문 꼴 4.2 / 4.7 / 4.4 → R_MONOTONE_VIOLATION (문장에 σ 없음)",
+    "FAIL  V31 ★ 10-23 (RCA2-09) 끝-끝 — 가짜 러너 세계에서 DBE σ(R_j,lo) 를 0.8 배 (R 단조와 모순) → 예측 STOPPED · R_MONOTONE_VIOLATION · rc 3 · 멈춤 문장에 σ 없음   (0, {})"
+   ]
+  },
+  "b6S": {
+   "rc": 0,
+   "summary": [
+    "243 PASS · 0 FAIL"
+   ],
+   "fails": []
+  }
+ }
+}

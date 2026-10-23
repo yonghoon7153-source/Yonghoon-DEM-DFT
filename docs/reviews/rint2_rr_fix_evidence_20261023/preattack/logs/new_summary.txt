@@ -1,0 +1,3 @@
+new registration/probe_registration_current.py rc=1 secs=0
+new certificate/probe_certificate.py rc=0 secs=2
+new geometry/run_review.py rc=0 secs=26

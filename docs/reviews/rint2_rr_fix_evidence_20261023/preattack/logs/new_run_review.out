@@ -1,0 +1,137 @@
+{
+  "two_symmetric_components": {
+    "G": 47.61904761904763,
+    "sigma": 12.98701298701299,
+    "problem": "sv_cf| 증거 census 가 없다 — 못 가른 덩어리 수 · 제거 수를 실제 census 와 대조할 수 없다 (10-23 RCA2-04)",
+    "flags": [
+      "SV_UNCHECKED"
+    ],
+    "independent_expected_G": 47.61904761904761
+  },
+  "first_component_only_mutation": {
+    "G": 47.61904761904763,
+    "sigma": 12.98701298701299,
+    "problem": "sv_cf| 증거 census 가 없다 — 못 가른 덩어리 수 · 제거 수를 실제 census 와 대조할 수 없다 (10-23 RCA2-04)",
+    "flags": [
+      "SV_UNCHECKED"
+    ]
+  },
+  "census_mismatch": {
+    "G": 47.61904761904763,
+    "sigma": 12.98701298701299,
+    "problem": "sv_cf| 증거 census 가 없다 — 못 가른 덩어리 수 · 제거 수를 실제 census 와 대조할 수 없다 (10-23 RCA2-04)",
+    "flags": [
+      "SV_UNCHECKED"
+    ]
+  },
+  "two_components_finite_upper": {
+    "G": 58.730158730158706,
+    "sigma": 11.74603174603174,
+    "problem": "sv_cf| 증거 census 가 없다 — 못 가른 덩어리 수 · 제거 수를 실제 census 와 대조할 수 없다 (10-23 RCA2-04)",
+    "flags": [
+      "SV_UNCHECKED"
+    ]
+  },
+  "actual_certified_threshold_crossing": {
+    "problem": "sv_cf| 분자 G_full 4.614910078630086 ≠ 솔브 기록 I_bot_code None (그 런의 주 해 단자 전류와 정확히 같아야 · 10-23 RCA2-04)",
+    "flags": [
+      "SV_DEPENDENT"
+    ],
+    "reference_true_ratio": 10.291253935344674,
+    "threshold": 10.291251705344868,
+    "solver_calls": 4,
+    "certified_ratio_interval": [
+      10.29125393534377,
+      10.291253935346631
+    ],
+    "computed_ratio": 10.291249475345062,
+    "certificate_ok": {
+      "main": true,
+      "lower": true
+    }
+  },
+  "certificate_removed_from_certified_run": {
+    "problem": "sv_cf| 분자 G_full 4.614910078630086 ≠ 솔브 기록 I_bot_code None (그 런의 주 해 단자 전류와 정확히 같아야 · 10-23 RCA2-04)",
+    "flags": [
+      "SV_UNCHECKED"
+    ]
+  },
+  "foreign_certificate_accepted": {
+    "problem": "sv_cf| 진단 기록 (증서 없는 런) 인데 증서가 실려 있다 (['아래 끝', '위 끝']) — 지위 ↔ 증서 모순",
+    "flags": [
+      "SV_UNCHECKED"
+    ]
+  },
+  "regression": {
+    "passed": 122,
+    "failed": [],
+    "tags": [
+      "CEN",
+      "FA+CJ",
+      "GAP",
+      "KBND",
+      "QC",
+      "QD",
+      "QD2",
+      "RCA03",
+      "RCA04",
+      "RCA04-DUP",
+      "RCA04-EPS",
+      "RCA04-V",
+      "RCA05",
+      "RCA06",
+      "RCA06-H",
+      "RING",
+      "S3",
+      "SELFD"
+    ]
+  },
+  "s1_regression": {
+    "passed": 44,
+    "failed": []
+  },
+  "record_mutations": {
+    "lower_wrong_ratio": {
+      "problem": "sv_cf| 아래 끝 비 1.1 ≠ G_full/G_cut 1.0 (상대 1e-12 · 기록 안 수가 서로 맞지 않는다)",
+      "flags": [
+        "SV_UNCHECKED"
+      ]
+    },
+    "upper_wrong_ratio": {
+      "problem": "sv_cf| 위 끝 비 1.1 ≠ G_full/G_cut 5.285714285714302 (상대 1e-12 · 기록 안 수가 서로 맞지 않는다)",
+      "flags": [
+        "SV_UNCHECKED"
+      ]
+    },
+    "upper_removed_count_zero": {
+      "problem": "sv_cf| 위 끝 제거 성분 수 0 ≠ 못 가른 덩어리 수 2 (생산자 정의 = 같다 · 0 이상 정수 · int64 범위 · 10-23 RCA2-04)",
+      "flags": [
+        "SV_UNCHECKED"
+      ]
+    },
+    "computed_without_certificates": {
+      "problem": "sv_cf| 증거 census 가 없다 — 못 가른 덩어리 수 · 제거 수를 실제 census 와 대조할 수 없다 (10-23 RCA2-04)",
+      "flags": [
+        "SV_UNCHECKED"
+      ]
+    },
+    "arbitrary_bracket_rule": {
+      "problem": "sv_cf| 괄호 규칙 'not-the-registered-rule' — 등록된 값만 ('lower_keep_unsplit_upper_remove_unsplit_sdcp_cells_v1',) (10-23 RCA2-04 · 위 끝 칸 없는 옛 기록 = 거부)",
+      "flags": [
+        "SV_UNCHECKED"
+      ]
+    },
+    "huge_unsplit_count": {
+      "problem": "sv_cf| 못 가른 덩어리 수 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (0 이상 정수 · int64 범위 — 의미 범위 · 괄호 판정 10-22 · 10-23 RCA2-04)",
+      "flags": [
+        "SV_UNCHECKED"
+      ]
+    },
+    "false_certificate": {
+      "problem": "sv_cf| 아래 끝 computed 인데 반사실 증서 상태 'POSITIVE_SOLVED' · 참이 아닌 칸 ['ok', 'pass_a', 'pass_b', 'pass_c', 'pass_d'] (ok · ⓐ–ⓓ 참 · POSITIVE_SOLVED 이어야 · 플래그를 믿지 않는다)",
+      "flags": [
+        "SV_UNCHECKED"
+      ]
+    }
+  }
+}
