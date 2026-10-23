@@ -1,0 +1,11 @@
+--- lhs214.md (original)
++++ lhs214.md (import)
+@@ -22,7 +22,7 @@
+ 
+ ## 발견 사항 — LHS-PKG-01: 격리 실행 규율 누락
+ 
+-handoff §7은 `python -I`를 명시한다. 그러나 증거 README의 재생 예시 네 명령은 `python "$REVIEW_TOOLS/..."`이고, `tools/mutations.py` 및 `tools/provenance_replay.py`의 자식 실행도 `[sys.executable, '-c', ...]`다. 전자의 진입 명령과 후자의 자식 인터프리터에 `-I`(필요시 `-B`)를 추가해야 한다. 명시적인 sys.path 삽입을 사용하므로 구조상 격리 실행에 필요한 저장소 경로는 유지된다. 이 누락은 숫자·기존 반례의 거짓을 뜻하지 않으나 저장한 재생 절차가 적용 지침과 맞지 않는 실제 결함이다. 부모에게 즉시 전달했다. 수정되면 영향받은 도구 해시와 MANIFEST도 갱신해야 한다.
++handoff §7은 `python -I`를 명시한다. 그러나 증거 README의 재생 예시 네 명령은 `python "$REVIEW_TOOLS/..."`이고, `docs/reviews/lhs214_preflight_review_evidence_20261023/tools/mutations.py` 및 `docs/reviews/lhs214_preflight_review_evidence_20261023/tools/provenance_replay.py`의 자식 실행도 `[sys.executable, '-c', ...]`다. 전자의 진입 명령과 후자의 자식 인터프리터에 `-I`(필요시 `-B`)를 추가해야 한다. 명시적인 sys.path 삽입을 사용하므로 구조상 격리 실행에 필요한 저장소 경로는 유지된다. 이 누락은 숫자·기존 반례의 거짓을 뜻하지 않으나 저장한 재생 절차가 적용 지침과 맞지 않는 실제 결함이다. 부모에게 즉시 전달했다. 수정되면 영향받은 도구 해시와 MANIFEST도 갱신해야 한다.
+ 
+ ## 감사자의 별도 재현
+ 

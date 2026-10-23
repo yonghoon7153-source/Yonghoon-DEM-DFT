@@ -1,0 +1,9 @@
+{"script": "audit.py", "compile": "PASS", "only_import_and_path_setup_changed": true}
+{"script": "audit.py", "nondefault_path_header": "PASS", "repo": "/workspace/.cloud-setup/nonrint/other repo for path smoke", "out": "/workspace/.cloud-setup/nonrint/lhs214 portability smoke/header"}
+{"script": "pin_probe.py", "compile": "PASS", "only_import_and_path_setup_changed": true}
+{"script": "pin_probe.py", "nondefault_path_header": "PASS", "repo": "/workspace/.cloud-setup/nonrint/other repo for path smoke", "out": "/workspace/.cloud-setup/nonrint/lhs214 portability smoke/header"}
+{"script": "mutations.py", "compile": "PASS", "only_import_and_path_setup_changed": true}
+{"script": "mutations.py", "nondefault_path_header": "PASS", "repo": "/workspace/.cloud-setup/nonrint/other repo for path smoke", "out": "/workspace/.cloud-setup/nonrint/lhs214 portability smoke/header"}
+{"preexisting_non_wrapper_evidence_changed": []}
+{"actual_audit": "PASS", "cwd": "/tmp", "repo": "/workspace/Yonghoon-DEM-DFT", "out": "/workspace/.cloud-setup/nonrint/lhs214 portability smoke/audit", "truth_table_n": 512, "truth_table_mismatch": 0, "sealed32_equal_baseline": true}
+{"actual_pin_probe": "PASS", "cwd": "/tmp", "repo": "/workspace/Yonghoon-DEM-DFT", "out": "/workspace/.cloud-setup/nonrint/lhs214 portability smoke/pin", "cases": {"normal": [], "trailing_LF": [], "trailing_CRLF": ["P7", "P10"], "wrong_last_digit": ["P10"], "trailing_space": ["P7", "P10"], "trailing_NUL": ["P7", "P10"]}, "selftest": "supp20_input_receipt selftest: 123/123 PASS"}

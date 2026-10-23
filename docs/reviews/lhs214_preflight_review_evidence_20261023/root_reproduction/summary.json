@@ -1,0 +1,25 @@
+{
+  "source": "primary agent independently reran pin_probe.py with a distinct EVIDENCE_OUT",
+  "git_sha": "7799a2ff64ba462b42ce05edd3e63b7c2854d557",
+  "cases": {
+    "normal": [],
+    "trailing_LF": [],
+    "trailing_CRLF": [
+      "P7",
+      "P10"
+    ],
+    "wrong_last_digit": [
+      "P10"
+    ],
+    "trailing_space": [
+      "P7",
+      "P10"
+    ],
+    "trailing_NUL": [
+      "P7",
+      "P10"
+    ]
+  },
+  "selftest_last_line": "supp20_input_receipt selftest: 123/123 PASS",
+  "scope": "same local Linux checkout; not WSL or an external rebuttal session"
+}

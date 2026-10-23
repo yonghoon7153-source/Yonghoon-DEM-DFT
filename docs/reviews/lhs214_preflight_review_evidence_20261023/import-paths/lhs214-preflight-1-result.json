@@ -1,0 +1,41 @@
+{
+  "track": "lhs214",
+  "branch": "codex/lhs214-relaunch",
+  "checks": [
+    {
+      "name": "docrefs",
+      "argv": [
+        "nice",
+        "-n",
+        "10",
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "scripts/check_doc_refs.py"
+      ],
+      "command": "nice -n 10 python -I scripts/check_doc_refs.py",
+      "started_at_utc": "2026-10-23T14:31:51.536772+00:00",
+      "finished_at_utc": "2026-10-23T14:31:52.231183+00:00",
+      "exit_code": 1,
+      "log_path": "/workspace/.cloud-setup/nonrint/integration-runs/lhs214-preflight-1/docrefs.log",
+      "log_sha256": "b01df281a6834f7aaea3569a0457b483c46b6c4e2e9c550a41891744e1c5a8ca"
+    },
+    {
+      "name": "ledger",
+      "argv": [
+        "nice",
+        "-n",
+        "10",
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "scripts/check_review_findings.py"
+      ],
+      "command": "nice -n 10 python -I scripts/check_review_findings.py",
+      "started_at_utc": "2026-10-23T14:31:52.231494+00:00",
+      "finished_at_utc": "2026-10-23T14:32:16.195923+00:00",
+      "exit_code": 0,
+      "log_path": "/workspace/.cloud-setup/nonrint/integration-runs/lhs214-preflight-1/ledger.log",
+      "log_sha256": "7483b4664c4d3c52e24db54600e4b9c5fa164c0b4fc7746c8682a1b6360e090c"
+    }
+  ],
+  "status": "FAIL"
+}

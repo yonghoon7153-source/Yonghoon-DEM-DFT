@@ -1,0 +1,26 @@
+[
+  {
+    "tool": "tools/audit.py",
+    "pre_isolation_sha256": "2b379631d3b2321f04e1d123c1005145886804135453909e039beaaeefdf5432",
+    "current_sha256": "2b379631d3b2321f04e1d123c1005145886804135453909e039beaaeefdf5432",
+    "change": "unchanged; invoked with -I for revalidation"
+  },
+  {
+    "tool": "tools/pin_probe.py",
+    "pre_isolation_sha256": "d4ec320d324ecb98458547577487cd080dc566019f84945f84d26089c3bbf09a",
+    "current_sha256": "d4ec320d324ecb98458547577487cd080dc566019f84945f84d26089c3bbf09a",
+    "change": "unchanged; invoked with -I for revalidation"
+  },
+  {
+    "tool": "tools/mutations.py",
+    "pre_isolation_sha256": "f14d2c1daaa4b2e7b03e19775af064291ff9d9ea1bd35ce57141dc071a610d50",
+    "current_sha256": "12f9f1ff7516abce3dd27ce55f3c2d04c71b4e36b3cddd7a975402e57605d882",
+    "change": "Python child argv adds -I; no other tool change"
+  },
+  {
+    "tool": "tools/provenance_replay.py",
+    "pre_isolation_sha256": "95cd3303f06b6459d02e5f942e6f38ebdad7806fb9e594ef08b5a1957785cd81",
+    "current_sha256": "b494c72986a856cc8da5e71e72a29d3af418c25b94677bdeb75885a96548e20f",
+    "change": "Python child argv adds -I; no other tool change"
+  }
+]

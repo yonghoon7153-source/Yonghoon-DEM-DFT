@@ -1,0 +1,20 @@
+[
+  {
+    "tool": "audit.py",
+    "original_portable_sha256": "fcf33cb52627f306ffea829ec0fa88e92996f7a8240dc8c33d6893f9a324b89d",
+    "bundled_sha256": "2b379631d3b2321f04e1d123c1005145886804135453909e039beaaeefdf5432",
+    "only_changes": "default REPO_ROOT derived from bundle location; default EVIDENCE_OUT derived from cwd; computation unchanged"
+  },
+  {
+    "tool": "pin_probe.py",
+    "original_portable_sha256": "8811ac8e88ecbcd394d0d82c34d838fec4cf2087adacdc4a4630d658c7823815",
+    "bundled_sha256": "d4ec320d324ecb98458547577487cd080dc566019f84945f84d26089c3bbf09a",
+    "only_changes": "default REPO_ROOT derived from bundle location; default EVIDENCE_OUT derived from cwd; computation unchanged"
+  },
+  {
+    "tool": "mutations.py",
+    "original_portable_sha256": "227344fef40613d09e4cec09a10019e26dfe802614b8bacbf82ba32a4e54a8c4",
+    "bundled_sha256": "f14d2c1daaa4b2e7b03e19775af064291ff9d9ea1bd35ce57141dc071a610d50",
+    "only_changes": "default REPO_ROOT derived from bundle location; default EVIDENCE_OUT derived from cwd; computation unchanged"
+  }
+]
