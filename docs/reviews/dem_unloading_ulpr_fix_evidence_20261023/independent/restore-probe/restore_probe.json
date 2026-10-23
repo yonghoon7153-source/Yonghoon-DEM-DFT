@@ -1,0 +1,329 @@
+[
+  {
+    "case": "baseline",
+    "restore_rc": 0,
+    "status": "RESTORED",
+    "G2": {
+      "status": "PASS",
+      "why": [],
+      "n_atoms": 3,
+      "n_mismatch": 0,
+      "missing": [],
+      "extra": [],
+      "example": [],
+      "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+    },
+    "G2c": {
+      "status": "PASS",
+      "why": [],
+      "n_orig": 1,
+      "n_test": 1,
+      "n_mismatch": 0,
+      "missing": [],
+      "extra": [],
+      "n_dup_consistent": 0,
+      "dup_conflicts": [],
+      "discriminating_frac": 1.0,
+      "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+    },
+    "gate_rc": 0
+  },
+  {
+    "case": "nan_box",
+    "restore_rc": 0,
+    "status": "RESTORED",
+    "G2": {
+      "status": "PASS",
+      "why": [],
+      "n_atoms": 3,
+      "n_mismatch": 0,
+      "missing": [],
+      "extra": [],
+      "example": [],
+      "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+    },
+    "G2c": {
+      "status": "PASS",
+      "why": [],
+      "n_orig": 1,
+      "n_test": 1,
+      "n_mismatch": 0,
+      "missing": [],
+      "extra": [],
+      "n_dup_consistent": 0,
+      "dup_conflicts": [],
+      "discriminating_frac": 1.0,
+      "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+    },
+    "gate_rc": 0
+  },
+  {
+    "case": "short_box",
+    "restore_rc": 0,
+    "status": "RESTORED",
+    "G2": {
+      "status": "PASS",
+      "why": [],
+      "n_atoms": 3,
+      "n_mismatch": 0,
+      "missing": [],
+      "extra": [],
+      "example": [],
+      "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+    },
+    "G2c": {
+      "status": "PASS",
+      "why": [],
+      "n_orig": 1,
+      "n_test": 1,
+      "n_mismatch": 0,
+      "missing": [],
+      "extra": [],
+      "n_dup_consistent": 0,
+      "dup_conflicts": [],
+      "discriminating_frac": 1.0,
+      "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+    },
+    "gate_rc": 0
+  },
+  {
+    "case": "no_bounds",
+    "restore_rc": 0,
+    "status": "RESTORED",
+    "G2": {
+      "status": "PASS",
+      "why": [],
+      "n_atoms": 3,
+      "n_mismatch": 0,
+      "missing": [],
+      "extra": [],
+      "example": [],
+      "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+    },
+    "G2c": {
+      "status": "PASS",
+      "why": [],
+      "n_orig": 1,
+      "n_test": 1,
+      "n_mismatch": 0,
+      "missing": [],
+      "extra": [],
+      "n_dup_consistent": 0,
+      "dup_conflicts": [],
+      "discriminating_frac": 1.0,
+      "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+    },
+    "gate_rc": 0
+  },
+  {
+    "case": "bad_atoms_header",
+    "restore_rc": 0,
+    "status": "RESTORED",
+    "G2": {
+      "status": "PASS",
+      "why": [],
+      "n_atoms": 3,
+      "n_mismatch": 0,
+      "missing": [],
+      "extra": [],
+      "example": [],
+      "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+    },
+    "G2c": {
+      "status": "PASS",
+      "why": [],
+      "n_orig": 1,
+      "n_test": 1,
+      "n_mismatch": 0,
+      "missing": [],
+      "extra": [],
+      "n_dup_consistent": 0,
+      "dup_conflicts": [],
+      "discriminating_frac": 1.0,
+      "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+    },
+    "gate_rc": 0
+  },
+  {
+    "case": "g2c_wrong_step",
+    "restore_rc": 0,
+    "status": "RESTORED",
+    "G2": {
+      "status": "PASS",
+      "why": [],
+      "n_atoms": 3,
+      "n_mismatch": 0,
+      "missing": [],
+      "extra": [],
+      "example": [],
+      "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+    },
+    "G2c": {
+      "status": "PASS",
+      "why": [],
+      "n_orig": 1,
+      "n_test": 1,
+      "n_mismatch": 0,
+      "missing": [],
+      "extra": [],
+      "n_dup_consistent": 0,
+      "dup_conflicts": [],
+      "discriminating_frac": 1.0,
+      "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+    },
+    "gate_rc": 0
+  },
+  {
+    "case": "missing_c26",
+    "restore_rc": 2,
+    "status": "UNCONFIRMED",
+    "G2": {
+      "status": "PASS",
+      "why": [],
+      "n_atoms": 3,
+      "n_mismatch": 0,
+      "missing": [],
+      "extra": [],
+      "example": [],
+      "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+    },
+    "G2c": {
+      "status": "NOT_COMPUTED",
+      "why": [
+        "열 이름 ['c_cpl[1]', 'c_cpl[2]', 'c_cpl[3]', 'c_cpl[4]', 'c_cpl[5]', 'c_cpl[6]', 'c_cpl[7]', 'c_cpl[8]', 'c_cpl[9]', 'c_cpl[10]', 'c_cpl[11]', 'c_cpl[12]', 'c_cpl[13]', 'c_cpl[14]', 'c_cpl[15]', 'c_cpl[16]', 'c_cpl[17]', 'c_cpl[18]', 'c_cpl[19]', 'c_cpl[20]', 'c_cpl[21]', 'c_cpl[22]', 'c_cpl[23]', 'c_cpl[24]', 'c_cpl[25]', 'absent_c26'] ≠ 기대 ['c_cpl[1]', 'c_cpl[2]', 'c_cpl[3]', 'c_cpl[4]', 'c_cpl[5]', 'c_cpl[6]', 'c_cpl[7]', 'c_cpl[8]', 'c_cpl[9]', 'c_cpl[10]', 'c_cpl[11]', 'c_cpl[12]', 'c_cpl[13]', 'c_cpl[14]', 'c_cpl[15]', 'c_cpl[16]', 'c_cpl[17]', 'c_cpl[18]', 'c_cpl[19]', 'c_cpl[20]', 'c_cpl[21]', 'c_cpl[22]', 'c_cpl[23]', 'c_cpl[24]', 'c_cpl[25]', 'c_cpl[26]']"
+      ]
+    },
+    "gate_rc": 2
+  },
+  {
+    "case": "g2_duplicate_id",
+    "restore_rc": 2,
+    "status": "VALUE_MISMATCH",
+    "G2": {
+      "status": "FAIL",
+      "why": [
+        "덤프 읽기 실패: ValueError: 원자 ID 중복"
+      ]
+    },
+    "G2c": {
+      "status": "PASS",
+      "why": [],
+      "n_orig": 1,
+      "n_test": 1,
+      "n_mismatch": 0,
+      "missing": [],
+      "extra": [],
+      "n_dup_consistent": 0,
+      "dup_conflicts": [],
+      "discriminating_frac": 1.0,
+      "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+    },
+    "gate_rc": 2
+  },
+  {
+    "case": "g2_nan",
+    "restore_rc": 2,
+    "status": "VALUE_MISMATCH",
+    "G2": {
+      "status": "FAIL",
+      "why": [
+        "덤프 읽기 실패: ValueError: 비유한 값: 1 3 0.001 0.002 nan 0.0005 1e-06 0 0 0 0 0 0"
+      ]
+    },
+    "G2c": {
+      "status": "PASS",
+      "why": [],
+      "n_orig": 1,
+      "n_test": 1,
+      "n_mismatch": 0,
+      "missing": [],
+      "extra": [],
+      "n_dup_consistent": 0,
+      "dup_conflicts": [],
+      "discriminating_frac": 1.0,
+      "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+    },
+    "gate_rc": 2
+  },
+  {
+    "case": "g2_extra_short_row",
+    "restore_rc": 2,
+    "status": "VALUE_MISMATCH",
+    "G2": {
+      "status": "FAIL",
+      "why": [
+        "덤프 읽기 실패: ValueError: 열 수 3 ≠ 13"
+      ]
+    },
+    "G2c": {
+      "status": "PASS",
+      "why": [],
+      "n_orig": 1,
+      "n_test": 1,
+      "n_mismatch": 0,
+      "missing": [],
+      "extra": [],
+      "n_dup_consistent": 0,
+      "dup_conflicts": [],
+      "discriminating_frac": 1.0,
+      "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+    },
+    "gate_rc": 2
+  },
+  {
+    "case": "g2_both_wrong_step",
+    "restore_rc": 2,
+    "status": "VALUE_MISMATCH",
+    "G2": {
+      "status": "FAIL",
+      "why": [
+        "원자 덤프 TIMESTEP 3200001 · 3200001 ≠ 같은 요청 step 3200000"
+      ]
+    },
+    "G2c": {
+      "status": "PASS",
+      "why": [],
+      "n_orig": 1,
+      "n_test": 1,
+      "n_mismatch": 0,
+      "missing": [],
+      "extra": [],
+      "n_dup_consistent": 0,
+      "dup_conflicts": [],
+      "discriminating_frac": 1.0,
+      "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+    },
+    "gate_rc": 2
+  },
+  {
+    "case": "g2_numeric_equal_token",
+    "restore_rc": 2,
+    "status": "VALUE_MISMATCH",
+    "G2": {
+      "status": "FAIL",
+      "why": [],
+      "n_atoms": 3,
+      "n_mismatch": 1,
+      "missing": [],
+      "extra": [],
+      "example": [
+        1
+      ],
+      "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+    },
+    "G2c": {
+      "status": "PASS",
+      "why": [],
+      "n_orig": 1,
+      "n_test": 1,
+      "n_mismatch": 0,
+      "missing": [],
+      "extra": [],
+      "n_dup_consistent": 0,
+      "dup_conflicts": [],
+      "discriminating_frac": 1.0,
+      "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+    },
+    "gate_rc": 2
+  }
+]

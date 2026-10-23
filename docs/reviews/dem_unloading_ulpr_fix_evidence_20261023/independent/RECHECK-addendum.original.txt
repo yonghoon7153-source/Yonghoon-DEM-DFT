@@ -1,0 +1,19 @@
+# ULPR package addendum — 2026-10-23
+
+요청받은 **추가 세 승인 조건 변이의 문구와 반입 원본/archive 무결성**을 확인했다. 이 범위에서 새 지적은 없다. production 코드·전체 suite·저장소 fullgate를 다시 실행하지 않았고 추적 파일도 수정하지 않았다. 최종 pin/ZIP 및 확정 fullgate receipt 판정은 이번 범위 밖이다.
+
+- 요청서 `docs/reviews/codex_dem_unloading_ulpr_recheck_request_20261023.md:68`은 추가 3변이를 기존 구현자 6변이·독립 v2 4변이와 별도 행으로 기록한다. R38 실패 1/2/1, 상태 조건의 관련 기존 R28 2실패를 정확히 구분한다. 비수치 조건 제거 후 다른 가드가 승인 거부를 유지하므로 해당 사유 단언이 실패한다는 한정도 맞다. 예외·무관 실패 0이라는 기록은 raw 로그와 일치한다.
+- 증거 README 16행은 같은 한정과 초기 실행기의 R28 분류 부족을 보존한다고 정확히 설명한다. 초기/최종 JSON·로그·mutant·도구를 포함한 반입 파일 26개가 독립 검토 원본과 바이트가 같다. 현재 reader SHA와 추가 변이 입력 SHA, 재현기 SHA 및 세 mutant SHA가 각각 맞는다.
+- `independent/package/reviewed-snapshot.zip`은 10개 항목(문서/봉인 snapshot 9개 + `PACKAGE-REVIEW.original.md`)이며 CRC 오류가 없다. 아홉 snapshot의 SHA는 `snapshot-sha256.json`과 모두 일치하고, 모든 ZIP 항목은 검토자의 원본 파일과 바이트가 같다. 검토 당시 상대 경로를 담은 문서는 현재 라이브 문서와 구분되어 있다.
+- ZIP SHA256은 `75f71c209720e5da48e236271a106ff94eea961940e998e63d63fe79c75ff854`이며 `archive-provenance.json`과 일치한다. 보관된 원 보고서 SHA256은 `6c89262bb17b71e88d215fc001a7c11e498a6b757735eeedd6ba59555d270b8b`로 검토자가 작성한 원본과 같다.
+- 라이브 `independent/PACKAGE-REVIEW.md`의 변경은 `dump-final/SUMMARY.md` 참조에 `../`를 추가한 것과 말미의 명시적 반입 메모뿐이다. 검토 결론·실패 수·미검증 범위는 바뀌지 않았다.
+
+이번 문구 확인 시 요청서 SHA256은 `44b940965817159637cc8c74fd85a62b9065b795f40e9376ab4bef6050730f58`, 증거 README SHA256은 `a45e985e70f02eacc8401c4cddd6c837b272f2ef5351be43d42fe524da8314a5`다. 그 뒤의 수정은 이 확인에 자동 포함되지 않는다.
+
+원 결과는 이 보고서 옆 `package/addendum/verification.json`이다. 재현 도구는 `package/verify_addendum.py`이며 다른 checkout에서도 다음과 같이 실행한다.
+
+```bash
+python -I "$REVIEW/package/verify_addendum.py" --repo "$REPO" --out "$OUT"
+```
+
+검토자의 원본 scratch도 보유했다면 `--original "$REVIEW"`로 실제 원본 바이트 대조를 추가한다. 원본 scratch가 없어도 ZIP/항목/도구/mutant 해시 및 raw 실패 목록 대조는 수행한다. 최종 발송 pin과 fullgate 확정 원자료는 별도로 확인해야 한다.

@@ -1,0 +1,38 @@
+Using Python 3.11.17 environment at: /workspace/.venvs/yonghoon-dem
+Resolved 53 packages in 1.03s
+Uninstalled 1 package in 36ms
+Installed 2 packages in 20ms
+ - pandas==3.1.0
+ + pandas==2.3.3
+ + pytz==2026.5
+From https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT
+   7799a2ff6..fe1be7960  claude/sdcp-dem-manuscript-si-pqwtv8 -> origin/claude/sdcp-dem-manuscript-si-pqwtv8
+litdb 전 브랜치 스캔 (체크아웃 없음 — git plumbing):
+  [canonical] claude/friendly-meitner-lldvar                441장
+  [worknotes] claude/solid-state-cathode-improvement-hevry   29장
+  [frozen   ] claude/stoic-knuth-NObVQ                       64장
+  [context  ] 큐레이션·포지셔닝 문서 5건
+→ 슬러그 445개 (파일 534개) → /workspace/Yonghoon-DEM-DFT/litdb_cache/index.json
+
+인터프리터: /workspace/.venvs/yonghoon-dem/bin/python
+  ✅  flask          필수   3.1.3
+  ✅  numpy          필수   2.4.6
+  ✅  scipy          필수   1.17.1
+  ✅  pandas         필수   2.3.3
+  ✅  matplotlib     필수   3.11.2
+  ✅  networkx       필수   3.6.1
+  ✅  sklearn        필수   1.9.1
+  ✅  requests       필수   2.34.2
+  ✅  adjustText     권장   1.4.0
+  ✅  markdown       권장   3.11.2
+  ✅  tabulate       권장   0.10.0
+  ✅  joblib         권장   1.6.0
+
+✅ 필수 전부 있음
+
+── 스모크 (실패했던 모듈을 실제로 import) ──
+   ✅ dem_analysis_core
+   ✅ network_conductivity
+   ✅ generate_comparison_plots
+   ✅ grade_engine
+No broken requirements found.

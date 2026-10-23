@@ -1,0 +1,11 @@
+{
+  "status": "PENDING_CLEAN_COMMIT_GATE",
+  "command": "bash scripts/check_all.sh",
+  "scope": "Full repository gate; no reduced lane",
+  "previous_attempt": {
+    "rc": 1,
+    "log": "environment/check-all-uncommitted.log",
+    "sha256": "fe779e6d41034b7ffd10890c8c47b599f7f11e596e37c2f6e3ed6eb52771e25f"
+  },
+  "external_execution_authorized": false
+}

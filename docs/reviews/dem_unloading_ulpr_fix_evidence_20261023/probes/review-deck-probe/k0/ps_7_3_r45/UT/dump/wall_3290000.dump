@@ -1,0 +1,10 @@
+ITEM: TIMESTEP
+3290000
+ITEM: NUMBER OF ENTRIES
+1
+ITEM: BOX BOUNDS pp pp ff
+0.0 0.05
+0.0 0.05
+-0.01 1.0
+ITEM: ENTRIES c_ul_wh[1] c_ul_wh[2] c_ul_wh[3] c_ul_wh[4] c_ul_wh[5] c_ul_wh[6]
+0.0 0.0 100.0 0.0 0.0 -3.0

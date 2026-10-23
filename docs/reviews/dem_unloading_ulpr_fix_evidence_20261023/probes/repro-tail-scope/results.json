@@ -1,0 +1,2946 @@
+{
+  "source_sha256": {
+    "before": "48e8f5f52ebf7555cd614f66c6c390408cafeb0665018edcb77e915d01312976",
+    "after": "3e2686f7eb91d0b3d2254ec7f0ab886a3f25c2c3af2862d1c374c4e5fa917206"
+  },
+  "python": "3.11.17 (main, Oct  3 2026, 01:05:36) [Clang 22.1.3 ]",
+  "cases": {
+    "confirmation_timeout": {
+      "fresh": {
+        "sha256": {
+          "ul_events.csv": "ddb774ce2fca8c7014578380e603591e011f7cac9cb29157f0dcecf4dd05ae24",
+          "ul_windows.csv": "872140fca25446f8f2294a78a7a1695fac5609aeff6bca3827355d46af24a714",
+          "ul_steps.csv": "3586b2aa9c5611849a1ee392b13fbaaa39106d04591c28a237333a8dfb8a612e"
+        },
+        "verdicts": {
+          "before": {
+            "primary_status": "UNIDENTIFIED",
+            "rho_pct": null,
+            "lower_bound_pct": null,
+            "trajectory_status": "TIMEOUT",
+            "n_superseded_rows": 0,
+            "problems": [],
+            "why": [
+              "확인 단 2 없음 (주 측정 미완료 · 하한 · 점 추정 자동 발행 없음)"
+            ],
+            "resume_tail": null,
+            "bracket_um": [
+              0.2,
+              0.25
+            ],
+            "union_bracket_um": [
+              0.2,
+              0.25
+            ],
+            "nonmonotone": false,
+            "separation": {
+              "declared_step": null,
+              "separated_final": false,
+              "recontact_index": [],
+              "missing_index": [],
+              "moved_index": [],
+              "gap_index": [],
+              "n_post": 0,
+              "declared_w": null
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [
+                {
+                  "k": 1,
+                  "step": 3270000,
+                  "h_m": 0.111252,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                },
+                {
+                  "k": 2,
+                  "step": 3310000,
+                  "h_m": 0.111302,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                }
+              ],
+              "M": null,
+              "why": []
+            },
+            "w_proxy_J": null,
+            "UVa_allowed": false
+          },
+          "after": {
+            "primary_status": "UNIDENTIFIED",
+            "rho_pct": null,
+            "lower_bound_pct": null,
+            "trajectory_status": "TIMEOUT",
+            "n_superseded_rows": 0,
+            "problems": [],
+            "why": [
+              "확인 단 2 없음 (주 측정 미완료 · 하한 · 점 추정 자동 발행 없음)"
+            ],
+            "resume_tail": null,
+            "bracket_um": [
+              0.2,
+              0.25
+            ],
+            "union_bracket_um": [
+              0.2,
+              0.25
+            ],
+            "nonmonotone": false,
+            "separation": {
+              "declared_step": null,
+              "separated_final": false,
+              "recontact_index": [],
+              "missing_index": [],
+              "moved_index": [],
+              "gap_index": [],
+              "n_post": 0,
+              "declared_w": null
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [
+                {
+                  "k": 1,
+                  "step": 3270000,
+                  "h_m": 0.111252,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                },
+                {
+                  "k": 2,
+                  "step": 3310000,
+                  "h_m": 0.111302,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                }
+              ],
+              "M": null,
+              "why": []
+            },
+            "w_proxy_J": null,
+            "UVa_allowed": false
+          }
+        }
+      },
+      "resumed": {
+        "sha256": {
+          "ul_events.csv": "6916ddc90ec1946e77e2209f739bf2ad1222c5e0bd681baf65735d900ba567e0",
+          "run_manifest.txt": "ac5dcad3b3098450ee012f5811f12e19a10bdd53e66efc54c579fb472df5fc58",
+          "ul_windows.csv": "6fb255eb56019dac96722044227e0883261e6733d45b912f751bb513a670e782",
+          "ul_steps.csv": "cc32e28a363620371f28f4a089ea3e8e78bea79cfa2aad3e58710b4bf6b164fb"
+        },
+        "verdicts": {
+          "before": {
+            "primary_status": "OK",
+            "rho_pct": 0.2026077873428664,
+            "lower_bound_pct": null,
+            "trajectory_status": "TIMEOUT",
+            "n_superseded_rows": 4,
+            "problems": [],
+            "why": [],
+            "resume_tail": null,
+            "bracket_um": [
+              0.2,
+              0.25
+            ],
+            "union_bracket_um": [
+              0.2,
+              0.25
+            ],
+            "nonmonotone": false,
+            "separation": {
+              "declared_step": null,
+              "separated_final": false,
+              "recontact_index": [],
+              "missing_index": [],
+              "moved_index": [],
+              "gap_index": [],
+              "n_post": 0,
+              "declared_w": null
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [
+                {
+                  "k": 1,
+                  "step": 3270000,
+                  "h_m": 0.111252,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                },
+                {
+                  "k": 2,
+                  "step": 3310000,
+                  "h_m": 0.111302,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                }
+              ],
+              "M": {
+                "h_m": 0.111277,
+                "status": "OK",
+                "eps_all": 0.9998023747173708,
+                "eps_inside": null
+              },
+              "why": []
+            },
+            "w_proxy_J": 4.036875000000115e-08,
+            "UVa_allowed": true
+          },
+          "after": {
+            "primary_status": "UNIDENTIFIED",
+            "rho_pct": null,
+            "lower_bound_pct": null,
+            "trajectory_status": "TIMEOUT",
+            "n_superseded_rows": 5,
+            "problems": [],
+            "why": [
+              "확인 단 2 없음 (주 측정 미완료 · 하한 · 점 추정 자동 발행 없음)"
+            ],
+            "resume_tail": null,
+            "bracket_um": [
+              0.2,
+              0.25
+            ],
+            "union_bracket_um": [
+              0.2,
+              0.25
+            ],
+            "nonmonotone": false,
+            "separation": {
+              "declared_step": null,
+              "separated_final": false,
+              "recontact_index": [],
+              "missing_index": [],
+              "moved_index": [],
+              "gap_index": [],
+              "n_post": 0,
+              "declared_w": null
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [
+                {
+                  "k": 1,
+                  "step": 3270000,
+                  "h_m": 0.111252,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                },
+                {
+                  "k": 2,
+                  "step": 3310000,
+                  "h_m": 0.111302,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                }
+              ],
+              "M": null,
+              "why": []
+            },
+            "w_proxy_J": null,
+            "UVa_allowed": false
+          }
+        }
+      }
+    },
+    "confirmation_guard": {
+      "fresh": {
+        "sha256": {
+          "ul_events.csv": "6d9ab65f8df1f3b8bd0ef90b67392d37884b144d11e525669a3dd2040dcf2583",
+          "ul_summary.txt": "dd5117a983437b39e3ac3acbacc101219135b792745c11458d054ba5a6d5aa63",
+          "ul_windows.csv": "b14bafb3019409f473b721ca8620291125ae558664804c9ce2ca5f7fc0f4df58",
+          "ul_steps.csv": "3586b2aa9c5611849a1ee392b13fbaaa39106d04591c28a237333a8dfb8a612e"
+        },
+        "verdicts": {
+          "before": {
+            "primary_status": "UNIDENTIFIED",
+            "rho_pct": null,
+            "lower_bound_pct": null,
+            "trajectory_status": "GUARD",
+            "n_superseded_rows": 0,
+            "problems": [],
+            "why": [
+              "확인 단 2 없음 (주 측정 미완료 · 하한 · 점 추정 자동 발행 없음)"
+            ],
+            "resume_tail": null,
+            "bracket_um": [
+              0.2,
+              0.25
+            ],
+            "union_bracket_um": [
+              0.2,
+              0.25
+            ],
+            "nonmonotone": false,
+            "separation": {
+              "declared_step": null,
+              "separated_final": false,
+              "recontact_index": [],
+              "missing_index": [],
+              "moved_index": [],
+              "gap_index": [],
+              "n_post": 0,
+              "declared_w": null
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [
+                {
+                  "k": 1,
+                  "step": 3270000,
+                  "h_m": 0.111252,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                },
+                {
+                  "k": 2,
+                  "step": 3310000,
+                  "h_m": 0.111302,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                }
+              ],
+              "M": null,
+              "why": []
+            },
+            "w_proxy_J": null,
+            "UVa_allowed": false
+          },
+          "after": {
+            "primary_status": "UNIDENTIFIED",
+            "rho_pct": null,
+            "lower_bound_pct": null,
+            "trajectory_status": "GUARD",
+            "n_superseded_rows": 0,
+            "problems": [],
+            "why": [
+              "확인 단 2 없음 (주 측정 미완료 · 하한 · 점 추정 자동 발행 없음)"
+            ],
+            "resume_tail": null,
+            "bracket_um": [
+              0.2,
+              0.25
+            ],
+            "union_bracket_um": [
+              0.2,
+              0.25
+            ],
+            "nonmonotone": false,
+            "separation": {
+              "declared_step": null,
+              "separated_final": false,
+              "recontact_index": [],
+              "missing_index": [],
+              "moved_index": [],
+              "gap_index": [],
+              "n_post": 0,
+              "declared_w": null
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [
+                {
+                  "k": 1,
+                  "step": 3270000,
+                  "h_m": 0.111252,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                },
+                {
+                  "k": 2,
+                  "step": 3310000,
+                  "h_m": 0.111302,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                }
+              ],
+              "M": null,
+              "why": []
+            },
+            "w_proxy_J": null,
+            "UVa_allowed": false
+          }
+        }
+      },
+      "resumed": {
+        "sha256": {
+          "ul_events.csv": "df73e47697e2b2af532d3a5a15fa5dc1e4971b4c8f1b0c299e2974c40c87a780",
+          "ul_summary.txt": "dd5117a983437b39e3ac3acbacc101219135b792745c11458d054ba5a6d5aa63",
+          "run_manifest.txt": "ac5dcad3b3098450ee012f5811f12e19a10bdd53e66efc54c579fb472df5fc58",
+          "ul_windows.csv": "52fe9e9059c9b777bf24cc9eb82bc52f965c1ea14e74d00066602e23de07317a",
+          "ul_steps.csv": "cc32e28a363620371f28f4a089ea3e8e78bea79cfa2aad3e58710b4bf6b164fb"
+        },
+        "verdicts": {
+          "before": {
+            "primary_status": "OK",
+            "rho_pct": 0.2026077873428664,
+            "lower_bound_pct": null,
+            "trajectory_status": "GUARD",
+            "n_superseded_rows": 4,
+            "problems": [],
+            "why": [],
+            "resume_tail": null,
+            "bracket_um": [
+              0.2,
+              0.25
+            ],
+            "union_bracket_um": [
+              0.2,
+              0.25
+            ],
+            "nonmonotone": false,
+            "separation": {
+              "declared_step": null,
+              "separated_final": false,
+              "recontact_index": [],
+              "missing_index": [],
+              "moved_index": [],
+              "gap_index": [],
+              "n_post": 0,
+              "declared_w": null
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [
+                {
+                  "k": 1,
+                  "step": 3270000,
+                  "h_m": 0.111252,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                },
+                {
+                  "k": 2,
+                  "step": 3310000,
+                  "h_m": 0.111302,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                }
+              ],
+              "M": {
+                "h_m": 0.111277,
+                "status": "OK",
+                "eps_all": 0.9998023747173708,
+                "eps_inside": null
+              },
+              "why": []
+            },
+            "w_proxy_J": 4.036875000000115e-08,
+            "UVa_allowed": true
+          },
+          "after": {
+            "primary_status": "UNIDENTIFIED",
+            "rho_pct": null,
+            "lower_bound_pct": null,
+            "trajectory_status": "GUARD",
+            "n_superseded_rows": 5,
+            "problems": [],
+            "why": [
+              "확인 단 2 없음 (주 측정 미완료 · 하한 · 점 추정 자동 발행 없음)"
+            ],
+            "resume_tail": null,
+            "bracket_um": [
+              0.2,
+              0.25
+            ],
+            "union_bracket_um": [
+              0.2,
+              0.25
+            ],
+            "nonmonotone": false,
+            "separation": {
+              "declared_step": null,
+              "separated_final": false,
+              "recontact_index": [],
+              "missing_index": [],
+              "moved_index": [],
+              "gap_index": [],
+              "n_post": 0,
+              "declared_w": null
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [
+                {
+                  "k": 1,
+                  "step": 3270000,
+                  "h_m": 0.111252,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                },
+                {
+                  "k": 2,
+                  "step": 3310000,
+                  "h_m": 0.111302,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                }
+              ],
+              "M": null,
+              "why": []
+            },
+            "w_proxy_J": null,
+            "UVa_allowed": false
+          }
+        }
+      }
+    },
+    "confirmation_moving_timeout": {
+      "fresh": {
+        "sha256": {
+          "ul_events.csv": "ddb774ce2fca8c7014578380e603591e011f7cac9cb29157f0dcecf4dd05ae24",
+          "ul_windows.csv": "61bbfb5a03e579b88c68c8074fc96e8031060e41633af5dbe64ec9d44af3b3d1",
+          "ul_steps.csv": "3586b2aa9c5611849a1ee392b13fbaaa39106d04591c28a237333a8dfb8a612e"
+        },
+        "verdicts": {
+          "before": {
+            "primary_status": "UNIDENTIFIED",
+            "rho_pct": null,
+            "lower_bound_pct": null,
+            "trajectory_status": "TIMEOUT",
+            "n_superseded_rows": 0,
+            "problems": [],
+            "why": [
+              "확인 단 2 없음 (주 측정 미완료 · 하한 · 점 추정 자동 발행 없음)"
+            ],
+            "resume_tail": null,
+            "bracket_um": [
+              0.2,
+              0.25
+            ],
+            "union_bracket_um": [
+              0.2,
+              0.25
+            ],
+            "nonmonotone": false,
+            "separation": {
+              "declared_step": null,
+              "separated_final": false,
+              "recontact_index": [],
+              "missing_index": [],
+              "moved_index": [],
+              "gap_index": [],
+              "n_post": 0,
+              "declared_w": null
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [
+                {
+                  "k": 1,
+                  "step": 3270000,
+                  "h_m": 0.111252,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                },
+                {
+                  "k": 2,
+                  "step": 3310000,
+                  "h_m": 0.111302,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                }
+              ],
+              "M": null,
+              "why": []
+            },
+            "w_proxy_J": null,
+            "UVa_allowed": false
+          },
+          "after": {
+            "primary_status": "UNIDENTIFIED",
+            "rho_pct": null,
+            "lower_bound_pct": null,
+            "trajectory_status": "TIMEOUT",
+            "n_superseded_rows": 0,
+            "problems": [],
+            "why": [
+              "확인 단 2 없음 (주 측정 미완료 · 하한 · 점 추정 자동 발행 없음)"
+            ],
+            "resume_tail": null,
+            "bracket_um": [
+              0.2,
+              0.25
+            ],
+            "union_bracket_um": [
+              0.2,
+              0.25
+            ],
+            "nonmonotone": false,
+            "separation": {
+              "declared_step": null,
+              "separated_final": false,
+              "recontact_index": [],
+              "missing_index": [],
+              "moved_index": [],
+              "gap_index": [],
+              "n_post": 0,
+              "declared_w": null
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [
+                {
+                  "k": 1,
+                  "step": 3270000,
+                  "h_m": 0.111252,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                },
+                {
+                  "k": 2,
+                  "step": 3310000,
+                  "h_m": 0.111302,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                }
+              ],
+              "M": null,
+              "why": []
+            },
+            "w_proxy_J": null,
+            "UVa_allowed": false
+          }
+        }
+      },
+      "resumed": {
+        "sha256": {
+          "ul_events.csv": "6916ddc90ec1946e77e2209f739bf2ad1222c5e0bd681baf65735d900ba567e0",
+          "run_manifest.txt": "ac5dcad3b3098450ee012f5811f12e19a10bdd53e66efc54c579fb472df5fc58",
+          "ul_windows.csv": "f476681912dab06fd6b2d45549bed1ee690e3900b537c53ee356e092e0b9a368",
+          "ul_steps.csv": "cc32e28a363620371f28f4a089ea3e8e78bea79cfa2aad3e58710b4bf6b164fb"
+        },
+        "verdicts": {
+          "before": {
+            "primary_status": "OK",
+            "rho_pct": 0.2026077873428664,
+            "lower_bound_pct": null,
+            "trajectory_status": "TIMEOUT",
+            "n_superseded_rows": 0,
+            "problems": [],
+            "why": [],
+            "resume_tail": null,
+            "bracket_um": [
+              0.2,
+              0.25
+            ],
+            "union_bracket_um": [
+              0.2,
+              0.25
+            ],
+            "nonmonotone": false,
+            "separation": {
+              "declared_step": null,
+              "separated_final": false,
+              "recontact_index": [],
+              "missing_index": [],
+              "moved_index": [],
+              "gap_index": [],
+              "n_post": 0,
+              "declared_w": null
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [
+                {
+                  "k": 1,
+                  "step": 3270000,
+                  "h_m": 0.111252,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                },
+                {
+                  "k": 2,
+                  "step": 3310000,
+                  "h_m": 0.111302,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                }
+              ],
+              "M": {
+                "h_m": 0.111277,
+                "status": "OK",
+                "eps_all": 0.9998023747173708,
+                "eps_inside": null
+              },
+              "why": []
+            },
+            "w_proxy_J": 4.036875000000115e-08,
+            "UVa_allowed": true
+          },
+          "after": {
+            "primary_status": "UNIDENTIFIED",
+            "rho_pct": null,
+            "lower_bound_pct": null,
+            "trajectory_status": "TIMEOUT",
+            "n_superseded_rows": 5,
+            "problems": [],
+            "why": [
+              "확인 단 2 없음 (주 측정 미완료 · 하한 · 점 추정 자동 발행 없음)"
+            ],
+            "resume_tail": null,
+            "bracket_um": [
+              0.2,
+              0.25
+            ],
+            "union_bracket_um": [
+              0.2,
+              0.25
+            ],
+            "nonmonotone": false,
+            "separation": {
+              "declared_step": null,
+              "separated_final": false,
+              "recontact_index": [],
+              "missing_index": [],
+              "moved_index": [],
+              "gap_index": [],
+              "n_post": 0,
+              "declared_w": null
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [
+                {
+                  "k": 1,
+                  "step": 3270000,
+                  "h_m": 0.111252,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                },
+                {
+                  "k": 2,
+                  "step": 3310000,
+                  "h_m": 0.111302,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                }
+              ],
+              "M": null,
+              "why": []
+            },
+            "w_proxy_J": null,
+            "UVa_allowed": false
+          }
+        }
+      }
+    },
+    "confirmation_guard_same_window_count": {
+      "fresh": {
+        "sha256": {
+          "ul_events.csv": "49190a3d6abd40277de4600733aa7953af5b6ade89c6a13ef3594ab7ba42b1d2",
+          "ul_summary.txt": "dd5117a983437b39e3ac3acbacc101219135b792745c11458d054ba5a6d5aa63",
+          "ul_windows.csv": "8723a5b18997718815de68115226789520382bc54b6ae1cd571bf4ad5f4bedad",
+          "ul_steps.csv": "3586b2aa9c5611849a1ee392b13fbaaa39106d04591c28a237333a8dfb8a612e"
+        },
+        "verdicts": {
+          "before": {
+            "primary_status": "UNIDENTIFIED",
+            "rho_pct": null,
+            "lower_bound_pct": null,
+            "trajectory_status": "GUARD",
+            "n_superseded_rows": 0,
+            "problems": [],
+            "why": [
+              "확인 단 2 없음 (주 측정 미완료 · 하한 · 점 추정 자동 발행 없음)"
+            ],
+            "resume_tail": null,
+            "bracket_um": [
+              0.2,
+              0.25
+            ],
+            "union_bracket_um": [
+              0.2,
+              0.25
+            ],
+            "nonmonotone": false,
+            "separation": {
+              "declared_step": null,
+              "separated_final": false,
+              "recontact_index": [],
+              "missing_index": [],
+              "moved_index": [],
+              "gap_index": [],
+              "n_post": 0,
+              "declared_w": null
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [
+                {
+                  "k": 1,
+                  "step": 3270000,
+                  "h_m": 0.111252,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                },
+                {
+                  "k": 2,
+                  "step": 3310000,
+                  "h_m": 0.111302,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                }
+              ],
+              "M": null,
+              "why": []
+            },
+            "w_proxy_J": null,
+            "UVa_allowed": false
+          },
+          "after": {
+            "primary_status": "UNIDENTIFIED",
+            "rho_pct": null,
+            "lower_bound_pct": null,
+            "trajectory_status": "GUARD",
+            "n_superseded_rows": 0,
+            "problems": [],
+            "why": [
+              "확인 단 2 없음 (주 측정 미완료 · 하한 · 점 추정 자동 발행 없음)"
+            ],
+            "resume_tail": null,
+            "bracket_um": [
+              0.2,
+              0.25
+            ],
+            "union_bracket_um": [
+              0.2,
+              0.25
+            ],
+            "nonmonotone": false,
+            "separation": {
+              "declared_step": null,
+              "separated_final": false,
+              "recontact_index": [],
+              "missing_index": [],
+              "moved_index": [],
+              "gap_index": [],
+              "n_post": 0,
+              "declared_w": null
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [
+                {
+                  "k": 1,
+                  "step": 3270000,
+                  "h_m": 0.111252,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                },
+                {
+                  "k": 2,
+                  "step": 3310000,
+                  "h_m": 0.111302,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                }
+              ],
+              "M": null,
+              "why": []
+            },
+            "w_proxy_J": null,
+            "UVa_allowed": false
+          }
+        }
+      },
+      "resumed": {
+        "sha256": {
+          "ul_events.csv": "beee7111ab8a51e990b20ee1cc417da01053fb55a460383822ff61d1ac066219",
+          "ul_summary.txt": "dd5117a983437b39e3ac3acbacc101219135b792745c11458d054ba5a6d5aa63",
+          "run_manifest.txt": "ac5dcad3b3098450ee012f5811f12e19a10bdd53e66efc54c579fb472df5fc58",
+          "ul_windows.csv": "d25d84a1588e8b840f25f7f4c9f113fadd20dabac2567b5ebc419e8af6b09263",
+          "ul_steps.csv": "cc32e28a363620371f28f4a089ea3e8e78bea79cfa2aad3e58710b4bf6b164fb"
+        },
+        "verdicts": {
+          "before": {
+            "primary_status": "OK",
+            "rho_pct": 0.2026077873428664,
+            "lower_bound_pct": null,
+            "trajectory_status": "GUARD",
+            "n_superseded_rows": 4,
+            "problems": [],
+            "why": [],
+            "resume_tail": null,
+            "bracket_um": [
+              0.2,
+              0.25
+            ],
+            "union_bracket_um": [
+              0.2,
+              0.25
+            ],
+            "nonmonotone": false,
+            "separation": {
+              "declared_step": null,
+              "separated_final": false,
+              "recontact_index": [],
+              "missing_index": [],
+              "moved_index": [],
+              "gap_index": [],
+              "n_post": 0,
+              "declared_w": null
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [
+                {
+                  "k": 1,
+                  "step": 3270000,
+                  "h_m": 0.111252,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                },
+                {
+                  "k": 2,
+                  "step": 3310000,
+                  "h_m": 0.111302,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                }
+              ],
+              "M": {
+                "h_m": 0.111277,
+                "status": "OK",
+                "eps_all": 0.9998023747173708,
+                "eps_inside": null
+              },
+              "why": []
+            },
+            "w_proxy_J": 4.036875000000115e-08,
+            "UVa_allowed": true
+          },
+          "after": {
+            "primary_status": "UNIDENTIFIED",
+            "rho_pct": null,
+            "lower_bound_pct": null,
+            "trajectory_status": "GUARD",
+            "n_superseded_rows": 5,
+            "problems": [],
+            "why": [
+              "확인 단 2 없음 (주 측정 미완료 · 하한 · 점 추정 자동 발행 없음)"
+            ],
+            "resume_tail": null,
+            "bracket_um": [
+              0.2,
+              0.25
+            ],
+            "union_bracket_um": [
+              0.2,
+              0.25
+            ],
+            "nonmonotone": false,
+            "separation": {
+              "declared_step": null,
+              "separated_final": false,
+              "recontact_index": [],
+              "missing_index": [],
+              "moved_index": [],
+              "gap_index": [],
+              "n_post": 0,
+              "declared_w": null
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [
+                {
+                  "k": 1,
+                  "step": 3270000,
+                  "h_m": 0.111252,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                },
+                {
+                  "k": 2,
+                  "step": 3310000,
+                  "h_m": 0.111302,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                }
+              ],
+              "M": null,
+              "why": []
+            },
+            "w_proxy_J": null,
+            "UVa_allowed": false
+          }
+        }
+      }
+    },
+    "precross_lower_bound": {
+      "fresh": {
+        "sha256": {
+          "ul_events.csv": "7c39e6f935dc54e27a778828d34df4bfd456285a13751950f90a78da1fc4fdf7",
+          "ul_windows.csv": "431a9482364818fc0a5789fda3a8bf522134ab5fc85525b80db7ceceba342832",
+          "ul_steps.csv": "6e598e8adc9d2c9175ea45a7122eb0ddacdcd377b8005ea8905728acd8461c2a"
+        },
+        "verdicts": {
+          "before": {
+            "primary_status": "LOWER_BOUND",
+            "rho_pct": null,
+            "lower_bound_pct": 0.225119763714296,
+            "trajectory_status": "TIMEOUT",
+            "n_superseded_rows": 0,
+            "problems": [],
+            "why": [],
+            "resume_tail": null,
+            "bracket_um": null,
+            "union_bracket_um": null,
+            "nonmonotone": false,
+            "separation": {
+              "declared_step": null,
+              "separated_final": false,
+              "recontact_index": [],
+              "missing_index": [],
+              "moved_index": [],
+              "gap_index": [],
+              "n_post": 0,
+              "declared_w": null
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [],
+              "M": null,
+              "why": []
+            },
+            "w_proxy_J": null,
+            "UVa_allowed": false
+          },
+          "after": {
+            "primary_status": "LOWER_BOUND",
+            "rho_pct": null,
+            "lower_bound_pct": 0.225119763714296,
+            "trajectory_status": "TIMEOUT",
+            "n_superseded_rows": 0,
+            "problems": [],
+            "why": [],
+            "resume_tail": null,
+            "bracket_um": null,
+            "union_bracket_um": null,
+            "nonmonotone": false,
+            "separation": {
+              "declared_step": null,
+              "separated_final": false,
+              "recontact_index": [],
+              "missing_index": [],
+              "moved_index": [],
+              "gap_index": [],
+              "n_post": 0,
+              "declared_w": null
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [],
+              "M": null,
+              "why": []
+            },
+            "w_proxy_J": null,
+            "UVa_allowed": false
+          }
+        }
+      },
+      "resumed": {
+        "sha256": {
+          "ul_events.csv": "05e49f58d0e06830cc6dcf085c2df40f6ac2f89ca6d8f1b46c18a6b10904dc33",
+          "run_manifest.txt": "e11ea7747e932ebaddc946d16089fa56320ab3a1e4250e9cf370787d477d784b",
+          "ul_windows.csv": "b8661389a8eb05afd8ffaf28daf16c74f604000ad290927e4d64b1cfb6f6a4f8",
+          "ul_steps.csv": "fe2fabca9af5934872d6abd014fa9d9b3e6ac0ec6996cacf0ed47a14662b9595"
+        },
+        "verdicts": {
+          "before": {
+            "primary_status": "LOWER_BOUND",
+            "rho_pct": null,
+            "lower_bound_pct": 0.27014371645715524,
+            "trajectory_status": "TIMEOUT",
+            "n_superseded_rows": 4,
+            "problems": [],
+            "why": [],
+            "resume_tail": null,
+            "bracket_um": null,
+            "union_bracket_um": null,
+            "nonmonotone": false,
+            "separation": {
+              "declared_step": null,
+              "separated_final": false,
+              "recontact_index": [],
+              "missing_index": [],
+              "moved_index": [],
+              "gap_index": [],
+              "n_post": 0,
+              "declared_w": null
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [],
+              "M": null,
+              "why": []
+            },
+            "w_proxy_J": null,
+            "UVa_allowed": false
+          },
+          "after": {
+            "primary_status": "LOWER_BOUND",
+            "rho_pct": null,
+            "lower_bound_pct": 0.225119763714296,
+            "trajectory_status": "TIMEOUT",
+            "n_superseded_rows": 5,
+            "problems": [],
+            "why": [],
+            "resume_tail": null,
+            "bracket_um": null,
+            "union_bracket_um": null,
+            "nonmonotone": false,
+            "separation": {
+              "declared_step": null,
+              "separated_final": false,
+              "recontact_index": [],
+              "missing_index": [],
+              "moved_index": [],
+              "gap_index": [],
+              "n_post": 0,
+              "declared_w": null
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [],
+              "M": null,
+              "why": []
+            },
+            "w_proxy_J": null,
+            "UVa_allowed": false
+          }
+        }
+      }
+    },
+    "precross_ambiguous_no_new_window": {
+      "fresh": {
+        "sha256": {
+          "ul_events.csv": "7c39e6f935dc54e27a778828d34df4bfd456285a13751950f90a78da1fc4fdf7",
+          "ul_windows.csv": "d6bc4954f97ae2233ce13162177eb300036055d412eb5887de97a445fa047582",
+          "ul_steps.csv": "6e598e8adc9d2c9175ea45a7122eb0ddacdcd377b8005ea8905728acd8461c2a"
+        },
+        "verdicts": {
+          "before": {
+            "primary_status": "LOWER_BOUND",
+            "rho_pct": null,
+            "lower_bound_pct": 0.225119763714296,
+            "trajectory_status": "TIMEOUT",
+            "n_superseded_rows": 0,
+            "problems": [],
+            "why": [],
+            "resume_tail": null,
+            "bracket_um": null,
+            "union_bracket_um": null,
+            "nonmonotone": false,
+            "separation": {
+              "declared_step": null,
+              "separated_final": false,
+              "recontact_index": [],
+              "missing_index": [],
+              "moved_index": [],
+              "gap_index": [],
+              "n_post": 0,
+              "declared_w": null
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [],
+              "M": null,
+              "why": []
+            },
+            "w_proxy_J": null,
+            "UVa_allowed": false
+          },
+          "after": {
+            "primary_status": "LOWER_BOUND",
+            "rho_pct": null,
+            "lower_bound_pct": 0.225119763714296,
+            "trajectory_status": "TIMEOUT",
+            "n_superseded_rows": 0,
+            "problems": [],
+            "why": [],
+            "resume_tail": null,
+            "bracket_um": null,
+            "union_bracket_um": null,
+            "nonmonotone": false,
+            "separation": {
+              "declared_step": null,
+              "separated_final": false,
+              "recontact_index": [],
+              "missing_index": [],
+              "moved_index": [],
+              "gap_index": [],
+              "n_post": 0,
+              "declared_w": null
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [],
+              "M": null,
+              "why": []
+            },
+            "w_proxy_J": null,
+            "UVa_allowed": false
+          }
+        }
+      },
+      "resumed": {
+        "sha256": {
+          "ul_events.csv": "05e49f58d0e06830cc6dcf085c2df40f6ac2f89ca6d8f1b46c18a6b10904dc33",
+          "run_manifest.txt": "e11ea7747e932ebaddc946d16089fa56320ab3a1e4250e9cf370787d477d784b",
+          "ul_windows.csv": "60453ea8ed9e35e519d47f8f5d06d05ca4e27cb381a891e10aec120ba03edc43",
+          "ul_steps.csv": "fe2fabca9af5934872d6abd014fa9d9b3e6ac0ec6996cacf0ed47a14662b9595"
+        },
+        "verdicts": {
+          "before": {
+            "primary_status": "LOWER_BOUND",
+            "rho_pct": null,
+            "lower_bound_pct": 0.27014371645715524,
+            "trajectory_status": "TIMEOUT",
+            "n_superseded_rows": 0,
+            "problems": [],
+            "why": [],
+            "resume_tail": null,
+            "bracket_um": null,
+            "union_bracket_um": null,
+            "nonmonotone": false,
+            "separation": {
+              "declared_step": null,
+              "separated_final": false,
+              "recontact_index": [],
+              "missing_index": [],
+              "moved_index": [],
+              "gap_index": [],
+              "n_post": 0,
+              "declared_w": null
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [],
+              "M": null,
+              "why": []
+            },
+            "w_proxy_J": null,
+            "UVa_allowed": false
+          },
+          "after": {
+            "primary_status": "UNIDENTIFIED",
+            "rho_pct": null,
+            "lower_bound_pct": null,
+            "trajectory_status": "TIMEOUT",
+            "n_superseded_rows": 0,
+            "problems": [
+              "ULPR-01 단 기록: RESUME (k 2 · step 3310000) 뒤 단 [3] 의 새 시도 소속을 확인할 수 없다 (새 단 되감기 없음 · 창 수/마지막 step 만으로 같은 시각의 옛 행을 인증하지 않는다)"
+            ],
+            "why": [
+              "ULPR-01 소속 불명확 꼬리 격리: 분석은 승인 경계 k 2 · step 3310000 이전만 — 그 안에서 첫 교차 + 확인 두 단을 재검증한 주 값 · 끝점 ε · 0→M 일 대리값만 유효; 전체 교차 합집합 · 분리 · 표면은 미확인"
+            ],
+            "resume_tail": {
+              "status": "UNCONFIRMED",
+              "boundary_k": 2,
+              "boundary_step": 3310000,
+              "excluded_rows": {
+                "windows": 4,
+                "steps": 1,
+                "events": 0
+              },
+              "why": [
+                "ULPR-01 단 기록: RESUME (k 2 · step 3310000) 뒤 단 [3] 의 새 시도 소속을 확인할 수 없다 (새 단 되감기 없음 · 창 수/마지막 step 만으로 같은 시각의 옛 행을 인증하지 않는다)"
+              ]
+            },
+            "bracket_um": null,
+            "union_bracket_um": null,
+            "nonmonotone": null,
+            "separation": {
+              "declared_step": null,
+              "separated_final": null,
+              "recontact_index": null,
+              "missing_index": null,
+              "moved_index": null,
+              "gap_index": null,
+              "n_post": null,
+              "declared_w": null,
+              "status": "NOT_COMPUTED",
+              "why": [
+                "승인 경계 뒤 꼬리 소속 미확인 (ULPR-01)"
+              ]
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [],
+              "M": null,
+              "why": []
+            },
+            "w_proxy_J": null,
+            "UVa_allowed": false
+          }
+        }
+      }
+    },
+    "precross_ambiguous_same_count": {
+      "fresh": {
+        "sha256": {
+          "ul_events.csv": "5aad0ffb1cc4be40f0e71ab78f4261d9b82a84c5220752923295f409cf5915c1",
+          "ul_summary.txt": "dd5117a983437b39e3ac3acbacc101219135b792745c11458d054ba5a6d5aa63",
+          "ul_windows.csv": "643ca5238623028203dd0d1ad87dedc65dc008c4c4bf768d4f56fb725c8ad4ea",
+          "ul_steps.csv": "6e598e8adc9d2c9175ea45a7122eb0ddacdcd377b8005ea8905728acd8461c2a"
+        },
+        "verdicts": {
+          "before": {
+            "primary_status": "LOWER_BOUND",
+            "rho_pct": null,
+            "lower_bound_pct": 0.225119763714296,
+            "trajectory_status": "GUARD",
+            "n_superseded_rows": 0,
+            "problems": [],
+            "why": [],
+            "resume_tail": null,
+            "bracket_um": null,
+            "union_bracket_um": null,
+            "nonmonotone": false,
+            "separation": {
+              "declared_step": null,
+              "separated_final": false,
+              "recontact_index": [],
+              "missing_index": [],
+              "moved_index": [],
+              "gap_index": [],
+              "n_post": 0,
+              "declared_w": null
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [],
+              "M": null,
+              "why": []
+            },
+            "w_proxy_J": null,
+            "UVa_allowed": false
+          },
+          "after": {
+            "primary_status": "LOWER_BOUND",
+            "rho_pct": null,
+            "lower_bound_pct": 0.225119763714296,
+            "trajectory_status": "GUARD",
+            "n_superseded_rows": 0,
+            "problems": [],
+            "why": [],
+            "resume_tail": null,
+            "bracket_um": null,
+            "union_bracket_um": null,
+            "nonmonotone": false,
+            "separation": {
+              "declared_step": null,
+              "separated_final": false,
+              "recontact_index": [],
+              "missing_index": [],
+              "moved_index": [],
+              "gap_index": [],
+              "n_post": 0,
+              "declared_w": null
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [],
+              "M": null,
+              "why": []
+            },
+            "w_proxy_J": null,
+            "UVa_allowed": false
+          }
+        }
+      },
+      "resumed": {
+        "sha256": {
+          "ul_events.csv": "0d3c4d036d36121f156c7335c8e1f4756328141436751ea0ceac073f4e3686df",
+          "ul_summary.txt": "dd5117a983437b39e3ac3acbacc101219135b792745c11458d054ba5a6d5aa63",
+          "run_manifest.txt": "e11ea7747e932ebaddc946d16089fa56320ab3a1e4250e9cf370787d477d784b",
+          "ul_windows.csv": "8fa5f2105a3633889c65d364fa0e90fa72de70ce0d89fd782582a85bdcd02581",
+          "ul_steps.csv": "fe2fabca9af5934872d6abd014fa9d9b3e6ac0ec6996cacf0ed47a14662b9595"
+        },
+        "verdicts": {
+          "before": {
+            "primary_status": "LOWER_BOUND",
+            "rho_pct": null,
+            "lower_bound_pct": 0.27014371645715524,
+            "trajectory_status": "GUARD",
+            "n_superseded_rows": 4,
+            "problems": [],
+            "why": [],
+            "resume_tail": null,
+            "bracket_um": null,
+            "union_bracket_um": null,
+            "nonmonotone": false,
+            "separation": {
+              "declared_step": null,
+              "separated_final": false,
+              "recontact_index": [],
+              "missing_index": [],
+              "moved_index": [],
+              "gap_index": [],
+              "n_post": 0,
+              "declared_w": null
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [],
+              "M": null,
+              "why": []
+            },
+            "w_proxy_J": null,
+            "UVa_allowed": false
+          },
+          "after": {
+            "primary_status": "UNIDENTIFIED",
+            "rho_pct": null,
+            "lower_bound_pct": null,
+            "trajectory_status": "GUARD",
+            "n_superseded_rows": 4,
+            "problems": [
+              "ULPR-01 단 기록: RESUME (k 2 · step 3310000) 뒤 단 [3] 의 새 시도 소속을 확인할 수 없다 (새 단 되감기 없음 · 창 수/마지막 step 만으로 같은 시각의 옛 행을 인증하지 않는다)"
+            ],
+            "why": [
+              "ULPR-01 소속 불명확 꼬리 격리: 분석은 승인 경계 k 2 · step 3310000 이전만 — 그 안에서 첫 교차 + 확인 두 단을 재검증한 주 값 · 끝점 ε · 0→M 일 대리값만 유효; 전체 교차 합집합 · 분리 · 표면은 미확인"
+            ],
+            "resume_tail": {
+              "status": "UNCONFIRMED",
+              "boundary_k": 2,
+              "boundary_step": 3310000,
+              "excluded_rows": {
+                "windows": 4,
+                "steps": 1,
+                "events": 1
+              },
+              "why": [
+                "ULPR-01 단 기록: RESUME (k 2 · step 3310000) 뒤 단 [3] 의 새 시도 소속을 확인할 수 없다 (새 단 되감기 없음 · 창 수/마지막 step 만으로 같은 시각의 옛 행을 인증하지 않는다)"
+              ]
+            },
+            "bracket_um": null,
+            "union_bracket_um": null,
+            "nonmonotone": null,
+            "separation": {
+              "declared_step": null,
+              "separated_final": null,
+              "recontact_index": null,
+              "missing_index": null,
+              "moved_index": null,
+              "gap_index": null,
+              "n_post": null,
+              "declared_w": null,
+              "status": "NOT_COMPUTED",
+              "why": [
+                "승인 경계 뒤 꼬리 소속 미확인 (ULPR-01)"
+              ]
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [],
+              "M": null,
+              "why": []
+            },
+            "w_proxy_J": null,
+            "UVa_allowed": false
+          }
+        }
+      }
+    },
+    "prior_measurement_preserved": {
+      "fresh": {
+        "sha256": {
+          "ul_events.csv": "48140537e2b0f48e8c84b547adfbda3fb87ca36f1592af78c05415fc08cd2baf",
+          "ul_windows.csv": "0a5673358844c68baf6bd9f2cdb13be320d62a3acfe89f7691a0df34cad9fd9a",
+          "ul_steps.csv": "4b481b7c1efc7dddfd1fb15863c3044e5dbfa73e1c4b8a69b12f52a8c8d9fbc1"
+        },
+        "verdicts": {
+          "before": {
+            "primary_status": "OK",
+            "rho_pct": 0.2026077873428664,
+            "lower_bound_pct": null,
+            "trajectory_status": "TIMEOUT",
+            "n_superseded_rows": 0,
+            "problems": [],
+            "why": [],
+            "resume_tail": null,
+            "bracket_um": [
+              0.2,
+              0.25
+            ],
+            "union_bracket_um": [
+              0.2,
+              0.25
+            ],
+            "nonmonotone": false,
+            "separation": {
+              "declared_step": null,
+              "separated_final": false,
+              "recontact_index": [],
+              "missing_index": [],
+              "moved_index": [],
+              "gap_index": [],
+              "n_post": 0,
+              "declared_w": null
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [
+                {
+                  "k": 1,
+                  "step": 3235000,
+                  "h_m": 0.111252,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                },
+                {
+                  "k": 2,
+                  "step": 3255000,
+                  "h_m": 0.111302,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                }
+              ],
+              "M": {
+                "h_m": 0.111277,
+                "status": "OK",
+                "eps_all": 0.9998023747173708,
+                "eps_inside": null
+              },
+              "why": []
+            },
+            "w_proxy_J": 4.036875000000115e-08,
+            "UVa_allowed": false
+          },
+          "after": {
+            "primary_status": "OK",
+            "rho_pct": 0.2026077873428664,
+            "lower_bound_pct": null,
+            "trajectory_status": "TIMEOUT",
+            "n_superseded_rows": 0,
+            "problems": [],
+            "why": [],
+            "resume_tail": null,
+            "bracket_um": [
+              0.2,
+              0.25
+            ],
+            "union_bracket_um": [
+              0.2,
+              0.25
+            ],
+            "nonmonotone": false,
+            "separation": {
+              "declared_step": null,
+              "separated_final": false,
+              "recontact_index": [],
+              "missing_index": [],
+              "moved_index": [],
+              "gap_index": [],
+              "n_post": 0,
+              "declared_w": null
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [
+                {
+                  "k": 1,
+                  "step": 3235000,
+                  "h_m": 0.111252,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                },
+                {
+                  "k": 2,
+                  "step": 3255000,
+                  "h_m": 0.111302,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                }
+              ],
+              "M": {
+                "h_m": 0.111277,
+                "status": "OK",
+                "eps_all": 0.9998023747173708,
+                "eps_inside": null
+              },
+              "why": []
+            },
+            "w_proxy_J": 4.036875000000115e-08,
+            "UVa_allowed": false
+          }
+        }
+      },
+      "resumed": {
+        "sha256": {
+          "ul_events.csv": "5ba2204c8cdece834418805dbd07ea2e7274a70ba9c524e417f160f56f375fb4",
+          "run_manifest.txt": "55b8a9cc17bb99f896913379df91fd15cea300228b00a36901d5b2af58087132",
+          "ul_windows.csv": "018b8e4daeb32ece7037da49d8240195fa11b9da9d3948e8b3b0ffdb73e54f4d",
+          "ul_steps.csv": "6ec3aa380553184ed31d66864031e0a5db155cd86cdd629faac97ac2be33b560"
+        },
+        "verdicts": {
+          "before": {
+            "primary_status": "OK",
+            "rho_pct": 0.2026077873428664,
+            "lower_bound_pct": null,
+            "trajectory_status": "TIMEOUT",
+            "n_superseded_rows": 4,
+            "problems": [],
+            "why": [],
+            "resume_tail": null,
+            "bracket_um": [
+              0.2,
+              0.25
+            ],
+            "union_bracket_um": [
+              0.2,
+              0.25
+            ],
+            "nonmonotone": false,
+            "separation": {
+              "declared_step": null,
+              "separated_final": false,
+              "recontact_index": [],
+              "missing_index": [],
+              "moved_index": [],
+              "gap_index": [],
+              "n_post": 0,
+              "declared_w": null
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [
+                {
+                  "k": 1,
+                  "step": 3235000,
+                  "h_m": 0.111252,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                },
+                {
+                  "k": 2,
+                  "step": 3255000,
+                  "h_m": 0.111302,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                }
+              ],
+              "M": {
+                "h_m": 0.111277,
+                "status": "OK",
+                "eps_all": 0.9998023747173708,
+                "eps_inside": null
+              },
+              "why": []
+            },
+            "w_proxy_J": 4.036875000000115e-08,
+            "UVa_allowed": false
+          },
+          "after": {
+            "primary_status": "OK",
+            "rho_pct": 0.2026077873428664,
+            "lower_bound_pct": null,
+            "trajectory_status": "TIMEOUT",
+            "n_superseded_rows": 5,
+            "problems": [],
+            "why": [],
+            "resume_tail": null,
+            "bracket_um": [
+              0.2,
+              0.25
+            ],
+            "union_bracket_um": [
+              0.2,
+              0.25
+            ],
+            "nonmonotone": false,
+            "separation": {
+              "declared_step": null,
+              "separated_final": false,
+              "recontact_index": [],
+              "missing_index": [],
+              "moved_index": [],
+              "gap_index": [],
+              "n_post": 0,
+              "declared_w": null
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [
+                {
+                  "k": 1,
+                  "step": 3235000,
+                  "h_m": 0.111252,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                },
+                {
+                  "k": 2,
+                  "step": 3255000,
+                  "h_m": 0.111302,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                }
+              ],
+              "M": {
+                "h_m": 0.111277,
+                "status": "OK",
+                "eps_all": 0.9998023747173708,
+                "eps_inside": null
+              },
+              "why": []
+            },
+            "w_proxy_J": 4.036875000000115e-08,
+            "UVa_allowed": false
+          }
+        }
+      }
+    },
+    "prior_measurement_ambiguous_tail": {
+      "fresh": {
+        "sha256": {
+          "ul_events.csv": "48140537e2b0f48e8c84b547adfbda3fb87ca36f1592af78c05415fc08cd2baf",
+          "ul_windows.csv": "057423f3b65ed36d00a6959099d2e4032104ba3b40ad1c81928119817063946a",
+          "ul_steps.csv": "4b481b7c1efc7dddfd1fb15863c3044e5dbfa73e1c4b8a69b12f52a8c8d9fbc1"
+        },
+        "verdicts": {
+          "before": {
+            "primary_status": "OK",
+            "rho_pct": 0.2026077873428664,
+            "lower_bound_pct": null,
+            "trajectory_status": "TIMEOUT",
+            "n_superseded_rows": 0,
+            "problems": [],
+            "why": [],
+            "resume_tail": null,
+            "bracket_um": [
+              0.2,
+              0.25
+            ],
+            "union_bracket_um": [
+              0.2,
+              0.25
+            ],
+            "nonmonotone": false,
+            "separation": {
+              "declared_step": null,
+              "separated_final": false,
+              "recontact_index": [],
+              "missing_index": [],
+              "moved_index": [],
+              "gap_index": [],
+              "n_post": 0,
+              "declared_w": null
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [
+                {
+                  "k": 1,
+                  "step": 3235000,
+                  "h_m": 0.111252,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                },
+                {
+                  "k": 2,
+                  "step": 3255000,
+                  "h_m": 0.111302,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                }
+              ],
+              "M": {
+                "h_m": 0.111277,
+                "status": "OK",
+                "eps_all": 0.9998023747173708,
+                "eps_inside": null
+              },
+              "why": []
+            },
+            "w_proxy_J": 4.036875000000115e-08,
+            "UVa_allowed": false
+          },
+          "after": {
+            "primary_status": "OK",
+            "rho_pct": 0.2026077873428664,
+            "lower_bound_pct": null,
+            "trajectory_status": "TIMEOUT",
+            "n_superseded_rows": 0,
+            "problems": [],
+            "why": [],
+            "resume_tail": null,
+            "bracket_um": [
+              0.2,
+              0.25
+            ],
+            "union_bracket_um": [
+              0.2,
+              0.25
+            ],
+            "nonmonotone": false,
+            "separation": {
+              "declared_step": null,
+              "separated_final": false,
+              "recontact_index": [],
+              "missing_index": [],
+              "moved_index": [],
+              "gap_index": [],
+              "n_post": 0,
+              "declared_w": null
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [
+                {
+                  "k": 1,
+                  "step": 3235000,
+                  "h_m": 0.111252,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                },
+                {
+                  "k": 2,
+                  "step": 3255000,
+                  "h_m": 0.111302,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                }
+              ],
+              "M": {
+                "h_m": 0.111277,
+                "status": "OK",
+                "eps_all": 0.9998023747173708,
+                "eps_inside": null
+              },
+              "why": []
+            },
+            "w_proxy_J": 4.036875000000115e-08,
+            "UVa_allowed": false
+          }
+        }
+      },
+      "resumed": {
+        "sha256": {
+          "ul_events.csv": "5ba2204c8cdece834418805dbd07ea2e7274a70ba9c524e417f160f56f375fb4",
+          "run_manifest.txt": "55b8a9cc17bb99f896913379df91fd15cea300228b00a36901d5b2af58087132",
+          "ul_windows.csv": "feb79ca7acd2b729b7b2770d666b328cd431498065a28ccb4ec11b1517bf5533",
+          "ul_steps.csv": "6ec3aa380553184ed31d66864031e0a5db155cd86cdd629faac97ac2be33b560"
+        },
+        "verdicts": {
+          "before": {
+            "primary_status": "OK",
+            "rho_pct": 0.2026077873428664,
+            "lower_bound_pct": null,
+            "trajectory_status": "TIMEOUT",
+            "n_superseded_rows": 0,
+            "problems": [],
+            "why": [],
+            "resume_tail": null,
+            "bracket_um": [
+              0.2,
+              0.25
+            ],
+            "union_bracket_um": [
+              0.2,
+              0.25
+            ],
+            "nonmonotone": false,
+            "separation": {
+              "declared_step": null,
+              "separated_final": false,
+              "recontact_index": [],
+              "missing_index": [],
+              "moved_index": [],
+              "gap_index": [],
+              "n_post": 0,
+              "declared_w": null
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [
+                {
+                  "k": 1,
+                  "step": 3235000,
+                  "h_m": 0.111252,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                },
+                {
+                  "k": 2,
+                  "step": 3255000,
+                  "h_m": 0.111302,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                }
+              ],
+              "M": {
+                "h_m": 0.111277,
+                "status": "OK",
+                "eps_all": 0.9998023747173708,
+                "eps_inside": null
+              },
+              "why": []
+            },
+            "w_proxy_J": 4.036875000000115e-08,
+            "UVa_allowed": false
+          },
+          "after": {
+            "primary_status": "OK",
+            "rho_pct": 0.2026077873428664,
+            "lower_bound_pct": null,
+            "trajectory_status": "TIMEOUT",
+            "n_superseded_rows": 0,
+            "problems": [
+              "ULPR-01 단 기록: RESUME (k 4 · step 3295000) 뒤 단 [5] 의 새 시도 소속을 확인할 수 없다 (새 단 되감기 없음 · 창 수/마지막 step 만으로 같은 시각의 옛 행을 인증하지 않는다)"
+            ],
+            "why": [
+              "ULPR-01 소속 불명확 꼬리 격리: 분석은 승인 경계 k 4 · step 3295000 이전만 — 그 안에서 첫 교차 + 확인 두 단을 재검증한 주 값 · 끝점 ε · 0→M 일 대리값만 유효; 전체 교차 합집합 · 분리 · 표면은 미확인"
+            ],
+            "resume_tail": {
+              "status": "UNCONFIRMED",
+              "boundary_k": 4,
+              "boundary_step": 3295000,
+              "excluded_rows": {
+                "windows": 4,
+                "steps": 1,
+                "events": 0
+              },
+              "why": [
+                "ULPR-01 단 기록: RESUME (k 4 · step 3295000) 뒤 단 [5] 의 새 시도 소속을 확인할 수 없다 (새 단 되감기 없음 · 창 수/마지막 step 만으로 같은 시각의 옛 행을 인증하지 않는다)"
+              ]
+            },
+            "bracket_um": [
+              0.2,
+              0.25
+            ],
+            "union_bracket_um": null,
+            "nonmonotone": null,
+            "separation": {
+              "declared_step": null,
+              "separated_final": null,
+              "recontact_index": null,
+              "missing_index": null,
+              "moved_index": null,
+              "gap_index": null,
+              "n_post": null,
+              "declared_w": null,
+              "status": "NOT_COMPUTED",
+              "why": [
+                "승인 경계 뒤 꼬리 소속 미확인 (ULPR-01)"
+              ]
+            },
+            "s4_status": "NOT_COMPUTED",
+            "surface_um": null,
+            "eps": {
+              "status": "OK",
+              "C_all_m": 2.199114857512857e-05,
+              "area_m2": 0.0025000000000000005,
+              "n_s0": 105,
+              "S0": {
+                "status": "OK",
+                "eps_all": 0.9998019743131584,
+                "eps_inside": 0.9998019743131584,
+                "n_inside": 105,
+                "h_m": 0.111052
+              },
+              "endpoints": [
+                {
+                  "k": 1,
+                  "step": 3235000,
+                  "h_m": 0.111252,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                },
+                {
+                  "k": 2,
+                  "step": 3255000,
+                  "h_m": 0.111302,
+                  "status": "NOT_COMPUTED",
+                  "eps_all": null,
+                  "eps_inside": null,
+                  "n_inside": null,
+                  "why": [
+                    "프레임 S0 ID 5 / 105 (불완전)"
+                  ]
+                }
+              ],
+              "M": {
+                "h_m": 0.111277,
+                "status": "OK",
+                "eps_all": 0.9998023747173708,
+                "eps_inside": null
+              },
+              "why": []
+            },
+            "w_proxy_J": 4.036875000000115e-08,
+            "UVa_allowed": false
+          }
+        }
+      }
+    }
+  },
+  "r10": {
+    "before": {
+      "sha256": {
+        "ul_events.csv": "e56bebbd2f2bf4a6ee964d3ddf17abf289b5ff34bac5ef96210c1de564f2a93a",
+        "ul_summary.txt": "70bfa6e74b5a44233b67a529e1e6db83a7750e9554ebc93a315b03466fd5cb22",
+        "run_manifest.txt": "3fc352839d4aa22485e8aa8d15971f24b1091e854c6a4a1a277b88ade0e02a2c",
+        "ul_windows.csv": "4b25a8ad8e7367d217779a75b090a85f9c1aeeeaff7ad31069c2b2980b1a4224",
+        "ul_steps.csv": "4b481b7c1efc7dddfd1fb15863c3044e5dbfa73e1c4b8a69b12f52a8c8d9fbc1"
+      },
+      "verdicts": {
+        "before": {
+          "primary_status": "OK",
+          "rho_pct": 0.2026077873428664,
+          "lower_bound_pct": null,
+          "trajectory_status": "SEP_INCOMPLETE",
+          "n_superseded_rows": 2,
+          "problems": [],
+          "why": [
+            "보조 미완료 (분리 · 표면 — 주 ρ 무영향): 덱 DONE 인데 판독기 최종 분리 · 분리 뒤 창 0 < 4 (재접촉 창 [] · 벽 덤프 결손 창 [] · 이동 [] · 창 기록 끊김 (w · 간격) [])"
+          ],
+          "resume_tail": null,
+          "bracket_um": [
+            0.2,
+            0.25
+          ],
+          "union_bracket_um": [
+            0.2,
+            0.25
+          ],
+          "nonmonotone": false,
+          "separation": {
+            "declared_step": null,
+            "separated_final": false,
+            "recontact_index": [],
+            "missing_index": [],
+            "moved_index": [],
+            "gap_index": [],
+            "n_post": 0,
+            "declared_w": null
+          },
+          "s4_status": "NOT_COMPUTED",
+          "surface_um": null,
+          "eps": {
+            "status": "OK",
+            "C_all_m": 2.199114857512857e-05,
+            "area_m2": 0.0025000000000000005,
+            "n_s0": 105,
+            "S0": {
+              "status": "OK",
+              "eps_all": 0.9998019743131584,
+              "eps_inside": 0.9998019743131584,
+              "n_inside": 105,
+              "h_m": 0.111052
+            },
+            "endpoints": [
+              {
+                "k": 1,
+                "step": 3235000,
+                "h_m": 0.111252,
+                "status": "NOT_COMPUTED",
+                "eps_all": null,
+                "eps_inside": null,
+                "n_inside": null,
+                "why": [
+                  "프레임 S0 ID 5 / 105 (불완전)"
+                ]
+              },
+              {
+                "k": 2,
+                "step": 3255000,
+                "h_m": 0.111302,
+                "status": "NOT_COMPUTED",
+                "eps_all": null,
+                "eps_inside": null,
+                "n_inside": null,
+                "why": [
+                  "프레임 S0 ID 5 / 105 (불완전)"
+                ]
+              }
+            ],
+            "M": {
+              "h_m": 0.111277,
+              "status": "OK",
+              "eps_all": 0.9998023747173708,
+              "eps_inside": null
+            },
+            "why": []
+          },
+          "w_proxy_J": 4.036875000000115e-08
+        },
+        "after": {
+          "primary_status": "NO_CROSSING",
+          "rho_pct": null,
+          "lower_bound_pct": null,
+          "trajectory_status": "SEP_INCOMPLETE",
+          "n_superseded_rows": 5,
+          "problems": [],
+          "why": [
+            "끝났는데 교차 없음",
+            "보조 미완료 (분리 · 표면 — 주 ρ 무영향): 덱 DONE 인데 판독기 최종 분리 · 분리 뒤 창 0 < 4 (재접촉 창 [] · 벽 덤프 결손 창 [] · 이동 [] · 창 기록 끊김 (w · 간격) [])"
+          ],
+          "resume_tail": null,
+          "bracket_um": null,
+          "union_bracket_um": null,
+          "nonmonotone": false,
+          "separation": {
+            "declared_step": null,
+            "separated_final": false,
+            "recontact_index": [],
+            "missing_index": [],
+            "moved_index": [],
+            "gap_index": [],
+            "n_post": 0,
+            "declared_w": null
+          },
+          "s4_status": "NOT_COMPUTED",
+          "surface_um": null,
+          "eps": {
+            "status": "OK",
+            "C_all_m": 2.199114857512857e-05,
+            "area_m2": 0.0025000000000000005,
+            "n_s0": 105,
+            "S0": {
+              "status": "OK",
+              "eps_all": 0.9998019743131584,
+              "eps_inside": 0.9998019743131584,
+              "n_inside": 105,
+              "h_m": 0.111052
+            },
+            "endpoints": [],
+            "M": null,
+            "why": []
+          },
+          "w_proxy_J": null
+        }
+      }
+    },
+    "after": {
+      "sha256": {
+        "ul_events.csv": "815c41ab87c6faa21a7e89f5b3257ca9e39c7cb6c89ff263ed8eab1ee1e77853",
+        "ul_summary.txt": "70bfa6e74b5a44233b67a529e1e6db83a7750e9554ebc93a315b03466fd5cb22",
+        "run_manifest.txt": "3fc352839d4aa22485e8aa8d15971f24b1091e854c6a4a1a277b88ade0e02a2c",
+        "ul_windows.csv": "4b25a8ad8e7367d217779a75b090a85f9c1aeeeaff7ad31069c2b2980b1a4224",
+        "ul_steps.csv": "4b481b7c1efc7dddfd1fb15863c3044e5dbfa73e1c4b8a69b12f52a8c8d9fbc1"
+      },
+      "verdicts": {
+        "before": {
+          "primary_status": "OK",
+          "rho_pct": 0.2026077873428664,
+          "lower_bound_pct": null,
+          "trajectory_status": "SEP_INCOMPLETE",
+          "n_superseded_rows": 2,
+          "problems": [],
+          "why": [
+            "보조 미완료 (분리 · 표면 — 주 ρ 무영향): 덱 DONE 인데 판독기 최종 분리 · 분리 뒤 창 0 < 4 (재접촉 창 [] · 벽 덤프 결손 창 [] · 이동 [] · 창 기록 끊김 (w · 간격) [])"
+          ],
+          "resume_tail": null,
+          "bracket_um": [
+            0.2,
+            0.25
+          ],
+          "union_bracket_um": [
+            0.2,
+            0.25
+          ],
+          "nonmonotone": false,
+          "separation": {
+            "declared_step": null,
+            "separated_final": false,
+            "recontact_index": [],
+            "missing_index": [],
+            "moved_index": [],
+            "gap_index": [],
+            "n_post": 0,
+            "declared_w": null
+          },
+          "s4_status": "NOT_COMPUTED",
+          "surface_um": null,
+          "eps": {
+            "status": "OK",
+            "C_all_m": 2.199114857512857e-05,
+            "area_m2": 0.0025000000000000005,
+            "n_s0": 105,
+            "S0": {
+              "status": "OK",
+              "eps_all": 0.9998019743131584,
+              "eps_inside": 0.9998019743131584,
+              "n_inside": 105,
+              "h_m": 0.111052
+            },
+            "endpoints": [
+              {
+                "k": 1,
+                "step": 3235000,
+                "h_m": 0.111252,
+                "status": "NOT_COMPUTED",
+                "eps_all": null,
+                "eps_inside": null,
+                "n_inside": null,
+                "why": [
+                  "프레임 S0 ID 5 / 105 (불완전)"
+                ]
+              },
+              {
+                "k": 2,
+                "step": 3255000,
+                "h_m": 0.111302,
+                "status": "NOT_COMPUTED",
+                "eps_all": null,
+                "eps_inside": null,
+                "n_inside": null,
+                "why": [
+                  "프레임 S0 ID 5 / 105 (불완전)"
+                ]
+              }
+            ],
+            "M": {
+              "h_m": 0.111277,
+              "status": "OK",
+              "eps_all": 0.9998023747173708,
+              "eps_inside": null
+            },
+            "why": []
+          },
+          "w_proxy_J": 4.036875000000115e-08
+        },
+        "after": {
+          "primary_status": "OK",
+          "rho_pct": 0.2026077873428664,
+          "lower_bound_pct": null,
+          "trajectory_status": "SEP_INCOMPLETE",
+          "n_superseded_rows": 2,
+          "problems": [],
+          "why": [
+            "보조 미완료 (분리 · 표면 — 주 ρ 무영향): 덱 DONE 인데 판독기 최종 분리 · 분리 뒤 창 0 < 4 (재접촉 창 [] · 벽 덤프 결손 창 [] · 이동 [] · 창 기록 끊김 (w · 간격) [])"
+          ],
+          "resume_tail": null,
+          "bracket_um": [
+            0.2,
+            0.25
+          ],
+          "union_bracket_um": [
+            0.2,
+            0.25
+          ],
+          "nonmonotone": false,
+          "separation": {
+            "declared_step": null,
+            "separated_final": false,
+            "recontact_index": [],
+            "missing_index": [],
+            "moved_index": [],
+            "gap_index": [],
+            "n_post": 0,
+            "declared_w": null
+          },
+          "s4_status": "NOT_COMPUTED",
+          "surface_um": null,
+          "eps": {
+            "status": "OK",
+            "C_all_m": 2.199114857512857e-05,
+            "area_m2": 0.0025000000000000005,
+            "n_s0": 105,
+            "S0": {
+              "status": "OK",
+              "eps_all": 0.9998019743131584,
+              "eps_inside": 0.9998019743131584,
+              "n_inside": 105,
+              "h_m": 0.111052
+            },
+            "endpoints": [
+              {
+                "k": 1,
+                "step": 3235000,
+                "h_m": 0.111252,
+                "status": "NOT_COMPUTED",
+                "eps_all": null,
+                "eps_inside": null,
+                "n_inside": null,
+                "why": [
+                  "프레임 S0 ID 5 / 105 (불완전)"
+                ]
+              },
+              {
+                "k": 2,
+                "step": 3255000,
+                "h_m": 0.111302,
+                "status": "NOT_COMPUTED",
+                "eps_all": null,
+                "eps_inside": null,
+                "n_inside": null,
+                "why": [
+                  "프레임 S0 ID 5 / 105 (불완전)"
+                ]
+              }
+            ],
+            "M": {
+              "h_m": 0.111277,
+              "status": "OK",
+              "eps_all": 0.9998023747173708,
+              "eps_inside": null
+            },
+            "why": []
+          },
+          "w_proxy_J": 4.036875000000115e-08
+        }
+      }
+    }
+  }
+}

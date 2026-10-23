@@ -1,0 +1,404 @@
+{
+  "final_hash_mismatch": [],
+  "final_logs": [
+    {
+      "name": "ul_lib_selftest",
+      "ok": 24,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "ul_s3_selftest",
+      "ok": 16,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "ul_observers_selftest",
+      "ok": 21,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "ul_gates_selftest",
+      "ok": 202,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "ul_reader_selftest",
+      "ok": 214,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "seal_kit_selftest",
+      "ok": 12,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "seal_kit_check",
+      "ok": 1,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "make_unload_decks_selftest",
+      "ok": 291,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "make_unload_decks_check",
+      "ok": 1,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "history_make_history_decks_selftest",
+      "ok": 172,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "history_make_history_decks_check",
+      "ok": 1,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "history_read_history_selftest",
+      "ok": 56,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "ul_runner_test_selftest",
+      "ok": 38,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    }
+  ],
+  "first_test_counts": {
+    "dump-tests-first-box-g2c-gates.log": {
+      "ok": 106,
+      "fail": 96
+    },
+    "dump-tests-first-box-g2c-reader.log": {
+      "ok": 186,
+      "fail": 5
+    },
+    "dump-tests-first-box-gates.log": {
+      "ok": 106,
+      "fail": 72
+    },
+    "dump-tests-first-gates.log": {
+      "ok": 40,
+      "fail": 17
+    },
+    "dump-tests-first-reader.log": {
+      "ok": 177,
+      "fail": 6
+    },
+    "resume-review-fix-test-first.log": {
+      "ok": 200,
+      "fail": 1
+    },
+    "resume-tail-scope-clean-fixtures.log": {
+      "ok": 205,
+      "fail": 0
+    },
+    "resume-tail-scope-test-first.log": {
+      "ok": 204,
+      "fail": 1
+    },
+    "resume.log": {
+      "ok": 191,
+      "fail": 5
+    }
+  },
+  "baseline_mismatch": [],
+  "changed_paths": [
+    "docs/data/ps45_unload_20261009/README.md",
+    "docs/data/ps45_unload_20261009/SHA256SUMS",
+    "docs/data/ps45_unload_20261009/active_rules.json",
+    "docs/data/ps45_unload_20261009/seal_kit.py",
+    "docs/data/ps45_unload_20261009/ul_gates.py",
+    "docs/data/ps45_unload_20261009/ul_reader.py"
+  ],
+  "baseline_count": 94,
+  "scope_changed_paths_match": true,
+  "scope_sealed32_mismatch": [],
+  "formal_seals": [
+    {
+      "path": "docs/data/ps45_unload_20261009/SHA256SUMS",
+      "count": 76,
+      "bad": []
+    },
+    {
+      "path": "docs/data/ps45_unload_20261009/history_test/SHA256SUMS",
+      "count": 15,
+      "bad": []
+    }
+  ],
+  "evidence_manifests": [
+    {
+      "path": "dump-final/MANIFEST.sha256",
+      "count": 299,
+      "bad": [],
+      "bad_count": 0
+    }
+  ],
+  "baseline_logs": [
+    {
+      "name": "ul_lib_selftest",
+      "ok": 24,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "ul_s3_selftest",
+      "ok": 16,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "ul_observers_selftest",
+      "ok": 21,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "ul_gates_selftest",
+      "ok": 41,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "ul_reader_selftest",
+      "ok": 182,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "seal_kit_selftest",
+      "ok": 12,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "seal_kit_check",
+      "ok": 1,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "make_unload_decks_selftest",
+      "ok": 291,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "make_unload_decks_check",
+      "ok": 1,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "history_make_history_decks_selftest",
+      "ok": 172,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "history_make_history_decks_check",
+      "ok": 1,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "history_read_history_selftest",
+      "ok": 56,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "ul_runner_test_selftest",
+      "ok": 38,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    }
+  ],
+  "mutation_logs": {
+    "mutations/resume-six": [
+      {
+        "name": "resume_outside_manifest",
+        "failures_match_raw": true,
+        "traceback": false
+      },
+      {
+        "name": "resume_nonnumeric",
+        "failures_match_raw": true,
+        "traceback": false
+      },
+      {
+        "name": "resume_state_mismatch",
+        "failures_match_raw": true,
+        "traceback": false
+      },
+      {
+        "name": "event_rewind_k_guard",
+        "failures_match_raw": true,
+        "traceback": false
+      },
+      {
+        "name": "reader_listed_hash",
+        "failures_match_raw": true,
+        "traceback": false
+      },
+      {
+        "name": "reader_process_rc",
+        "failures_match_raw": true,
+        "traceback": false
+      }
+    ],
+    "dump-final/mutations": [
+      {
+        "name": "baseline-ul_gates",
+        "failures_match_raw": true,
+        "traceback": false
+      },
+      {
+        "name": "baseline-ul_reader",
+        "failures_match_raw": true,
+        "traceback": false
+      },
+      {
+        "name": "box_finite",
+        "failures_match_raw": true,
+        "traceback": false
+      },
+      {
+        "name": "box_order",
+        "failures_match_raw": true,
+        "traceback": false
+      },
+      {
+        "name": "box_two_values",
+        "failures_match_raw": true,
+        "traceback": false
+      },
+      {
+        "name": "exact_header_names",
+        "failures_match_raw": true,
+        "traceback": false
+      },
+      {
+        "name": "g2_header_guard",
+        "failures_match_raw": true,
+        "traceback": false
+      },
+      {
+        "name": "g2c_header_guard",
+        "failures_match_raw": true,
+        "traceback": false
+      },
+      {
+        "name": "g2c_same_step",
+        "failures_match_raw": true,
+        "traceback": false
+      },
+      {
+        "name": "g2c_expected_step",
+        "failures_match_raw": true,
+        "traceback": false
+      },
+      {
+        "name": "restore_g2c_expected_binding",
+        "failures_match_raw": true,
+        "traceback": false
+      },
+      {
+        "name": "gravity_g2c_expected_binding",
+        "failures_match_raw": true,
+        "traceback": false
+      }
+    ]
+  },
+  "reconstructed_mutants": [
+    {
+      "name": "resume_outside_manifest",
+      "sitecount": 1,
+      "hash_matches": true
+    },
+    {
+      "name": "resume_nonnumeric",
+      "sitecount": 1,
+      "hash_matches": true
+    },
+    {
+      "name": "resume_state_mismatch",
+      "sitecount": 1,
+      "hash_matches": true
+    },
+    {
+      "name": "event_rewind_k_guard",
+      "sitecount": 1,
+      "hash_matches": true
+    },
+    {
+      "name": "reader_listed_hash",
+      "sitecount": 1,
+      "hash_matches": true
+    },
+    {
+      "name": "reader_process_rc",
+      "sitecount": 1,
+      "hash_matches": true
+    }
+  ],
+  "reviewed_code_copies": {
+    "ul_reader": true,
+    "ul_gates": true
+  },
+  "r10_bytes_equal": {
+    "ul_windows.csv": true,
+    "ul_steps.csv": true,
+    "ul_events.csv": false
+  },
+  "fullgate": {
+    "status": "PENDING",
+    "command": "bash scripts/check_all.sh",
+    "scope": "Full repository gate; no reduced lane",
+    "external_execution_authorized": false
+  },
+  "python": "3.11.17",
+  "script_sha256": "d84384ebc46238c8289c7469e236ea5ebda59b73120d5736f7f15441d9b2115f"
+}

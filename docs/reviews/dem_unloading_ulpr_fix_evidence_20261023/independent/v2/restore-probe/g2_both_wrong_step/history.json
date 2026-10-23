@@ -1,0 +1,1 @@
+{"schema": "ps45_unload_history_verdict_v1", "exit_code": 0, "rows": {"H0": {"status": "PASS"}, "H1": {"status": "PASS"}, "H2": {"status": "PASS"}, "H3": {"status": "PASS"}, "H4": {"status": "PASS"}, "H5": {"status": "PASS"}}, "info": {"syn": {"status": "PASS", "plate_fn_sign": -1}, "force_timing": "PASS"}}

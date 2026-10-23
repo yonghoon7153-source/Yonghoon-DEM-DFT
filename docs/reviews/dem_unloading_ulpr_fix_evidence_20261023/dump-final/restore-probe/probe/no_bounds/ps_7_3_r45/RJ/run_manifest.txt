@@ -1,0 +1,6 @@
+bed=ps_7_3_r45
+job=RJ
+resume=0
+grammar_prereq=PASS
+start=x
+end=x fails=0 reader_rc=0

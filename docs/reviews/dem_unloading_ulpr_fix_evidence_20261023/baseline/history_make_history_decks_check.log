@@ -1,0 +1,6 @@
+$ python3 -I history_test/make_history_decks.py --check
+# cwd = kit folder · rc = 0 · 0.2 s
+# ── stdout ──
+✓ check: 덱 9 · 판 STL = 생성 결과 · SHA256SUMS 일치 (15 파일 · 러너 · 래퍼 · 읽는 쪽 포함)
+# ── stderr ──
+# ── rc = 0 ──

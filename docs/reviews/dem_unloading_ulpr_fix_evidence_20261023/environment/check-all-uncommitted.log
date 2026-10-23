@@ -1,0 +1,227 @@
+── selftest (검사기가 맞나) ──
+  ✓ run_contract          --selftest
+  ✓ check_review_findings   --selftest
+  ✓ check_method_discipline --selftest
+  ✓ sdcp_gain_verdict       --selftest
+  ✓ sdcp_phase_ledger_match --selftest
+  ✓ porosity_filter_axes    --selftest
+  ✓ sr01_stamp_compare     --selftest
+  ✓ mpm_webapp_payload     --selftest-temperature
+  ✓ step3_sigma            --selftest
+  ✓ step3_sigma            --selftest-rint
+  ✓ repair_focus_top       --selftest
+  ✓ webapp_env_audit       --selftest
+  ✓ type_map_resolve       --selftest
+  ✓ type_map_unknown_sweep --selftest
+  ✓ gen_plots  --selftest-descriptions
+  ✓ gen_plots  --selftest-fits
+  ✓ eis_drt_ica            --selftest
+  ✓ se_net_diagnostics     --selftest
+  ✓ grade_engine          --selftest
+  ✓ constriction_deleted  --selftest
+  ✓ gen_plots  --selftest-temp
+  ✓ reduce_arm_payloads     --selftest
+  ✓ bridge_grid_verdict    --selftest
+  ✓ ion_r_verdict          --selftest
+  ✓ plot_cbd_contacts       --selftest
+  ✓ plot_sigma_e_bars       --selftest
+  ✓ colorbar_fit (JS 문법)
+  ✓ colorbar_fit (라벨 폭)
+  ✓ lhs_perc_extract       --selftest
+  ✓ lhs_descriptor_harvest --selftest
+  ✓ lhs_perc_fit           --selftest
+  ✓ hetero_transcript      --selftest
+  ✓ make_heckel_manifest   --selftest
+  ✓ oat_sensitivity        --selftest
+  ✓ build_methods_docx     --selftest
+  ✓ check_cohort_packages  --selftest
+── 리포 실물 (리포가 맞나 — selftest 가 **대신해 주지 않는다**) ──
+  ✓ mutation_sweep (문법 — 배터리 자신이 도는가)
+  ✓ check_review_findings   (원장 + 철회값 스윕)
+  ✓ check_method_discipline (규칙 A~M + claims 원장)
+  ✓ webapp: pipeline_provenance
+  ✓ webapp: predictor_ui
+  ✓ webapp: security_phase_a
+  ✓ webapp: seminar_page
+  ✓ webapp: worklog_page
+  ✓ webapp: mixer_devlog_page
+  ✓ webapp: closed_param_labels
+  ✓ webapp: closed_param_values
+  ✓ webapp: closed_param_groupview
+  ✓ webapp: cf_full_labels
+  ✓ webapp: tortuosity_all
+  ✓ webapp: closed_param_exact_union
+  ✓ webapp: coverage_handover_scope
+  ✓ webapp: am_isolation_labels
+  ✓ webapp: percolation_labels
+  ✓ webapp: ionic_isolation_labels
+  ✓ webapp: mixer_bed_view
+  ✓ webapp: png_transparent_export
+  ✓ mixer launcher (완주 판정 · 덮어쓰기 가드)
+  ✓ webapp: launcher (포트 선점)
+  ✓ webapp: temp_pressure
+  ✓ webapp: ledger_view
+  ✓ webapp: meta_json_robust
+  ✓ webapp: atoms_only_viewer
+  ✓ webapp: atoms_only_porosity
+  ✓ webapp: dem_pore_path_view
+  ✓ webapp: tau_paths_view
+  ✓ webapp: force_chain_view
+  ✓ webapp: viewer_coordination
+  ✓ webapp: viewer_am_contacts
+  ✓ webapp: network_current_view
+  ✓ webapp: net_current_density
+  ✓ webapp: viewer_load_view
+  ✓ webapp: je_definition_label
+  ✓ webapp: rint_scope_labels
+  ✓ webapp: tau_labels
+  ✓ webapp: tau_handover_status
+  ✓ webapp: stress_lw_labels
+  ✓ webapp: constriction_power
+  ✓ webapp: s567_labels
+  ✓ webapp: tau_grade_unify
+  ✓ webapp: network_handover_chain
+  ✓ webapp: l214r03_display
+  ✓ webapp: web09_accepted_refresh
+  ✓ webapp: single_null_metrics
+  ✓ webapp: psi_generation_stamp
+  ✓ webapp: gen2_publication_handover
+  ✓ g2_network_reread --selftest
+  ✓ webapp: gen2_stamp_record
+  ✓ webapp: hetero_transcript
+  ✓ webapp: rint_explainer (Rint 설명 정적 페이지 + 사이드바 링크 · 봉인 app.py 무변경 · 10-21)
+  ✓ webapp: mpm_lab_cmp_absent_phase (MPM lab 비교표 · 없는 상 = — · 참 0 유지 · 10-21)
+  ✓ rint_receipts (요청 ↔ 적용 영수증 · AST 변이 4)
+  ✓ rint_g2_am_iface (①′ AM–AM 계약 v3.1 · 반례 먼저)
+  ✓ ptfe_face_alpha (Rint ② S1 · 시험 먼저)
+  ✓ webapp: ca_ext_labels (S1 표지 · 봉인 밖 템플릿)
+  ✓ carbon_junction (Rint ② S2 · S3 · 시험 먼저)
+  ✓ ca_ext_b6 (Rint ② B6 payload 배선 · 조합 정책 · 시험 먼저)
+  ✓ ca_ext_runner (Rint ② B6 러너 다음 세대 손잡이 · 시험 먼저)
+  ✓ ca_ext_verdict (Rint ② B6 판정기 소비자 검사 · 시험 먼저)
+  ✓ ca_ext_z1 (Rint ② Z1 러너 · 판정기 굳히기 · 시험 먼저)
+  ✓ rint_r_chain (Rint ② R 런 사슬 · 사다리 · 예측 · 판정 · 가짜 러너 · 시험 먼저)
+  ✓ ca_ext_z3 (Rint ② Z3 face_alpha + 탄소 접합 한 런 · 극한 런 · ARM_LIST · sid_off · CG 반복 수 · 시험 먼저)
+  ✓ rint_r_chain_e2e (Rint ② R 사슬 · 실제 러너 끝-끝 · 픽스처 킷 · CPU)
+  ✓ step3_target_cert (STEP3 목표량 증서 ⓓ · RCA-07 · 13 · 해 상태 · 빠른 판 · 시험 먼저)
+  ✓ step3_conv_cert (STEP3 수렴 증서 A/B/C · 봉인 표 · 10-21 실측 115–124 s 로 게이트에 넣음)
+  ✓ ca_s0_census (Rint ② S0 표현 원장 · 시험 먼저)
+  ✓ network boundary_rule (안 A · 동작 중립)
+  ✓ tau_flux (이온 인계 열 · 게이트 G1–G6)
+  ✓ reread_v12 (RGLR4-01 · 02 반례 · 원본 PASS)
+  ✓ lhs_release v1.3 (빈칸 뜻 · ML 표 · 재적합 · 세대 g2 · τ 다시 읽기 · 발사 봉인 대조 · DRY RUN)
+  ✓ lhs_pressure_record (DESC-06 완료 압력 · 생성기 관문)
+  ✓ compaction_curve (로그 잇기 · 설정 줄 · 판 재부양 반례)
+  ✓ psi default switch (L2-01 세대 2)
+  ✓ physics area g2 (C2 ①–⑤ · L1-01/02/03)
+  ✓ network dirichlet (L2-05 · D1–D7)
+  ✓ network generation 2 (CF 표지 · H12 · 세대 표기)
+  ✓ gen2 role contract (G2R-01 · 02 — 역할 · 닫힌 열거 · 옛 세대 추론)
+  ✓ network solve certificate (G2R-03 · GEN2-01)
+  ✓ L214R-01 증서 유한성 · 채택 단 결합 (반례 먼저)
+  ✓ L214R-02 모형 한계 독립 표지 · 배포 HOLD (반례 먼저)
+  ✓ L214R-05 게시 증서 유한성 (반례 먼저)
+  ✓ L214R-06–08 같은 부류 셋 (반례 먼저)
+  ✓ L214R-09–11 같은 부류 셋 (마지막 라운드 · 반례 먼저)
+  ✓ L214R-R01 보류 값 게시 복원 거부 (반례 먼저)
+  ✓ L214R-R04 게시 이온 가지 표지 ↔ 재구성 q (반례 먼저)
+  ✗ union coverage ⑥ (C2-⑥ · LHS-25)
+      [실패 줄] 26:  FAIL  P8 피복 모듈 selftest (① legacy 바이트 핀 · v2 계약 ⑬–⑮) 그대로 통과   rc=1
+      [실패 줄] 44:38 PASS · 1 FAIL
+        PASS  P3 AM_S 평균 · std = 넷 (고립 AM 3 의 측정된 0 포함 · 빼지 않는다) · 전체 = AM 다섯의 입자 수 가중   S 0.479 vs 0.479 · all 1.254 vs 1.254
+        PASS  P4 주기 경계 너머 SE (저장 x = 실제 + L) → 최소영상 방향 (−x) — 원 좌표차 (+x) 면 AM–AM 가림 안이라 0 이 된다   AM 4 = 1.916
+        PASS  P5 진단 — AM 5 · cap AM–SE 5 · AM–AM 2 접촉 (양쪽 cap 4) · SE 접촉 없는 AM 3 (2 · 3 · 5) · 접촉 실패 0 · 방향 어긋남 0 · 상자 기록 · 면적 규칙 g2 표면   {'n_am': 5, 'n_am_no_se_contact': 3, 'n_free_surface_empty': 0, 'n_radius_invalid': 0, 'n_caps_am_se': 5, 'n_caps_am_am': 4, 'n_caps_clipped_hemisphere': 0, 'n_contacts_unknown_id': 0, 'n_contact_failures': 0, 'n_dir_inconsistent': 0, 'dist_err_max_sim': 8.673617379884035e-19, 'dist_tol_rule': '|d_최소영상 − (r1 + r2 − δ)| ≤ 0.001·(r1 + r2) + 1e-05·max(L_x, L_y)', 'box_xy_sim': [0.02, 0.02], 'scale': 1000.0, 'area_rule': 'physics_g2', 'area_consumer': 'surface', 'first_failure': None, 'rule_text': 'AM 마다 SE 접촉 하나 = AM 구면 위 cap 하나 (중심 = AM → SE 중심 방향 · x · y 주기 최소영상 · 넓이 = 세대 2 표면 소비자 면적 film_area_g2(pair AM_SE, consumer surface) = max(c_cpl[22] 원판, min(Tabor · 정확 lens/5 nm · 2π r_min²)) · µm) · 피복 = SE cap 합집합 (겹침 한 번) ∩ 가리지 않은 표면 ÷ 가리지 않은 표면 × 100 · 가린 표면 = AM–AM cap 합집합 (넓이 = c_cpl[22] 원판 · film_area_g2 AM_AM) · Fibonacci 점 N (결정적) · 반구 넘는 cap 은 반구로 자르고 센다 · 접촉 0 인 AM = 측정된 0 · 상 = 입자 평균 · 전체 = 입자 수 가중 (legacy 와 같은 가중) · 무효 입력 · 방향 검사 실패 · 분모 무효 AM 이 하나라도 있으면 침대 빈칸 + 사유 (LHSC-01 (a) 와 같은 계약)'}
+        PASS  P6 깊은 접촉의 cap = 표면 소비자 상한 2π r_SE² (수송 π r_SE² 와 다르다 — 배치가 소비자를 가른다)   1.5707963267948966 · 0.7853981633974483
+        PASS  P7 legacy · v2 키는 union 장부와 독립 (legacy 피복 = 접촉 면적 합 · v2 상태 ok) · 원래 키 그대로
+        FAIL  P8 피복 모듈 selftest (① legacy 바이트 핀 · v2 계약 ⑬–⑮) 그대로 통과   rc=1
+        PASS  P9 미리 있던 *_physics_union 키는 전부 걷고 새로 쓴다 (bogus 없음 · 999 덮임)
+        PASS  P10 ★ 상자 없음 (input_params.json 없음) → 빈칸 + 사유 (0.05 기본값으로 떨어지지 않는다) · legacy 는 계산   status='blank: 주기 상자 box 를 모른다 (input_params.json 이 없다 — 주기 상자 box_x · box_y 를 모른다) — 최소영상 방향을 만들 수 없다 (0.05 기본값으로 떨어지지 않는다)' · None=None
+        PASS  P11 ★ 상자 어긋남 (0.019 — 주기 쌍의 최소영상 거리 ≠ r1 + r2 − δ) → 빈칸 + 방향 어긋남 수   status='blank: 1 접촉의 방향 검사 실패 (최소영상 거리 ≠ r1 + r2 − δ — 상자 · 프레임 어긋남) — 첫 사례 4–20: 최소영상 거리 0.00045 ≠ r1 + r2 − δ = 0.00145 (상자 0.019 × 0.019) — 방향을 믿을 수 없다' · n_dir_inconsistent=1
+        PASS  P12 ★ δ NaN 한 행 → 빈칸 + 접촉 실패 1 (조용히 건너뛰지 않는다)   status='blank: 1 접촉을 거부했다 (비유한 입력 · film_area_g2 정의역 밖) — 첫 사례 1–11: 비유한 입력 (δ nan · c_cpl[22] 1.2152163857007147e-07 · r 0.002, 0.0005)' · n_contact_failures=1
+        PASS  P13 ★ 고립 AM 반경 NaN (접촉 0 이라 접촉 검사를 안 지난다) → 빈칸 + 반경 무효 1   status='blank: AM 1 개의 반경이 유한 양수가 아니다 (첫 사례 id 3: r=nan)' · n_radius_invalid=1
+        PASS  P14 ★ AM–AM 이 AM 표면 전부를 가림 → 빈칸 + 분모 무효 1 (LHSC-01 (a) 와 같은 계약)   status='blank: AM 1 개의 가리지 않은 표면 표본 0 = 분모 무효 (첫 사례 id 30 (AM–AM cap 6 개))' · n_free_surface_empty=1
+        PASS  P15 ★ c_cpl[22] < 0 (통째로 포함된 쌍의 생산자 값) → film_area_g2 거부 → 빈칸 (v2 와 같은 사유 · 원판으로 바꿔 넣지 않는다)   status='blank: 1 접촉을 거부했다 (비유한 입력 · film_area_g2 정의역 밖) — 첫 사례 1–10: ValueError: ligg_area < 0 (-0.12152163857007148)' · n_contact_failures=1
+        PASS  P16 AM 0 개 (SE 만) → ok · 피복 값 키 없음 (적용 대상 없음 — 0 으로 채우지 않는다)
+      [R] 실침대 — parse_liggghts → compute_case (웹앱과 같은 사슬)
+        PASS  R1 real_14 legacy 합-클립 (Physics v1) 그대로 = 51.522 · AM_P 48.286 · AM_S 51.798 (a0a24c538 실측 · 설계 원형 sumclip 과 같다)   (51.522, 48.286, 51.798)
+        PASS  R2 ★ real_14 합집합 = 43.218 · AM_P 39.718 · AM_S 43.518 (원형 cov_union2.py N 6000) ± 0.05 %p   status='ok' · (43.218, 39.718, 43.518)
+        PASS  R3 real_14 합집합 / 합-클립 = 0.839 ± 0.002 (×0.84 · C2-⑥ 기록)   0.8388
+        PASS  R4 real_14 진단 — AM 457 · 접촉 실패 0 · 방향 어긋남 0 (상자 0.05 · 최소영상 거리 = r1 + r2 − δ) · 반구 자름 0 · 분모 무효 0   {'n_am': 457, 'n_contact_failures': 0, 'n_dir_inconsistent': 0, 'n_caps_clipped_hemisphere': 0, 'dist_err_max_sim': 1.2873340101120928e-07}
+        PASS  R5 표본: real_14 합집합 N 24000 ↔ 6000 차 ≤ 0.05 %p (결정적 격자 · N 은 키로 기록)   N24000 43.225 vs 43.218
+        PASS  R6 ★ case15 생산 경로 = 빈칸 + 사유 (c_cpl[22] < 0 두 접촉 · 첫 사례 31–29241 = 반경 0.5 µm SE 가 6 µm AM 안에 통째로) · v2 도 같은 사유로 빈칸 · legacy 18.324 그대로   'blank: 2 접촉을 거부했다 (비유한 입력 · film_area_g2 정의역 밖) — 첫 사례 31–29241: ValueError: ligg_area < 0 (-0.186036)'
+        PASS  R7 case15 원형 재현 — 음수 c_cpl[22] 두 행을 원판 π r_SE² 로 바꿔 넣으면 15.984 ± 허용 = ×0.872 (C2-⑥ 기록의 ×0.87 이 이 값)   15.984 · 음수 행 2
+      
+      38 PASS · 1 FAIL
+        - P8 피복 모듈 selftest (① legacy 바이트 핀 · v2 계약 ⑬–⑮) 그대로 통과
+  ✓ wall near tangent (LHSC-08)
+  ✓ coverage CLI no tracked write (LHS-27)
+  ✓ webapp: coverage_union_display
+  ✓ parse_case_paste ⑥ 라벨 (합집합 · legacy 줄)
+  ✓ love_weber_stress (④b · LHS-29)
+  ✓ constriction_power_share (④a · LHS-30)
+  ✓ audit_coverage      --selftest
+  ✓ claimed_sha_provenance --selftest
+  ✓ audit_adjudication  --selftest
+  ✓ audit_validation_flags --selftest
+  ✓ constriction_reference --selftest
+  ✓ transport_cap_equivalence --selftest
+  ✓ plastic_coverage    --selftest
+  ✓ review_before_after --selftest
+  ✓ seal_area_cohort   --selftest
+  ✓ measure_rho        --selftest
+  ✓ seal_s3_prerun     --selftest
+  ✓ run_s3_psi         --selftest
+  ✓ check_doc_refs          --selftest
+  ✓ check_cohort_packages  (커밋된 패키지 ↔ 원장)
+  ✓ audit_adjudication   (원시 감사 ↔ 판정 원장)
+  ✓ check_doc_refs         (문서가 가리키는 것이 실재하는가)
+  ✓ lhs_ext_materialize     --selftest
+  ✓ lhs_supp_design (보충 · 후막 설계 · 10-06)
+  ✓ lhs_supp_design (봉인 CSV ↔ 해시 · 재검증)
+  ✓ lhs_ext_submit_gate     --selftest
+  ✓ lhs_ext_design (봉인 CSV ↔ 상자 ↔ 해시)
+  ✓ selftest_inventory     (분류·레인·CI 의존)
+  ✗ fast 자기검사 전수     (등재 기반 드라이버)
+      [실패 줄] 1:  ✗ scripts/coverage_physics_vs_hertzian.py --selftest  rc=1
+      [실패 줄] 4:  ✗ scripts/ps45_sigmae_factor_off_variant.py --selftest  rc=1
+      [실패 줄] 9:  ✗ scripts/wsl_network_smoke.py --selftest  rc=1
+      [실패 줄] 24:   coverage_physics_vs_hertzian SELFTEST FAIL (1)
+      [실패 줄] 27:     FAIL: ⑤ 시험 미실행 #3 (앞 단계 실패)
+      [실패 줄] 28:     FAIL: ⑤ 시험 미실행 #4 (앞 단계 실패)
+      [실패 줄] 29:     FAIL: ⑤ 시험 미실행 #5 (앞 단계 실패)
+      [실패 줄] 30:     FAIL: ⑤ 시험 미실행 #6 (앞 단계 실패)
+      [실패 줄] 31:     FAIL: ⑤ 시험 미실행 #7 (앞 단계 실패)
+      [실패 줄] 32:     FAIL: ⑤ 시험 미실행 #8 (앞 단계 실패)
+      [실패 줄] 33:     FAIL: ⑤ 시험 미실행 #9 (앞 단계 실패)
+      [실패 줄] 34:     FAIL: ⑤ 시험 미실행 #10 (앞 단계 실패)
+      [실패 줄] 35:     FAIL: ⑤ 시험 미실행 #11 (앞 단계 실패)
+      [실패 줄] 36:     FAIL: ⑤ 시험 미실행 #12 (앞 단계 실패)
+      [실패 줄] 37:     FAIL: ⑤ 시험 미실행 #13 (앞 단계 실패)
+           FAIL: ⑤ 시험 미실행 #4 (앞 단계 실패)
+           FAIL: ⑤ 시험 미실행 #5 (앞 단계 실패)
+           FAIL: ⑤ 시험 미실행 #6 (앞 단계 실패)
+           FAIL: ⑤ 시험 미실행 #7 (앞 단계 실패)
+           FAIL: ⑤ 시험 미실행 #8 (앞 단계 실패)
+           FAIL: ⑤ 시험 미실행 #9 (앞 단계 실패)
+           FAIL: ⑤ 시험 미실행 #10 (앞 단계 실패)
+           FAIL: ⑤ 시험 미실행 #11 (앞 단계 실패)
+           FAIL: ⑤ 시험 미실행 #12 (앞 단계 실패)
+           FAIL: ⑤ 시험 미실행 #13 (앞 단계 실패)
+           FAIL: ⑤ 시험 미실행 #14 (앞 단계 실패)
+      
+      ── scripts/wsl_network_smoke.py --selftest  rc=1 ──────────────────────────────
+           ✓ ★ G2RR5-02 실제 망 시도 검사 (합성) — 양성 = case15 검사 일곱 전부 PASS (실제 시도 포함) · PermissionError · FileNotFoundError · TimeoutExpired · rc 1 + Traceback · rc 0 인데 per-mo
+           ✓ ★ G2RR5-03 한 곳 — 스모크의 CASE15_NEGCTL 은 인계 도구 (g2_network_reread) 의 것 (같은 객체) · 생산자 case15 검사 = 등록 안정 ID 일곱 (차례 · id 키) · 미등록 표지 · 등록 표지 + kind 다름 = "미등록 음성 대
+           ✓ ★ G2RR5-02 기록기 = 그대로 통과 — 망 CLI 아닌 호출 · 망 CLI 호출 모두 같은 결과 객체 · 인자 그대로 · 예외 그대로 다시 올림 (종류 기록) · 망 CLI 만 기록 (입력 digest · rc · per-mode sha256 · 채널 상태 · 사유) · 
+           ✓ 판정 C3 — CV 100 computed = FAIL · CV 0 = PASS (zero) · null = PASS (null) / FAIL (zero)
+           ✓ 실제 파이프라인 — 합성 일반 경로 = partial/done · Stage E 돌았다 · 망 정지 = done · Stage E 안 돌았다 (rc 0)
+           ✓ 케이스마다 경과 · 최대 RSS · rc 가 기록된다
+           ✓ A 묶음 검사 (합성) 전부 PASS — 6 개
+           ✓ C 묶음 — 네 대조 판정이 나온다 (시험 도구 오류 없음 · 지금 코드 결과: [('C1 ', 'PASS'), ('C1b', 'PASS'), ('C2 ', 'PASS'), ('C3 ', 'PASS')])
+           ✓ 보고 파일 둘 · rc 규칙 (A·B FAIL 없으면 C 결과에 따라 0/2)
+           ✗ 격리 — 리포 추적 파일 무변경 (LHS-27 요약 CSV 포함)
+           ✓ 비어 있지 않은 ROOT 거부 (rc 3)
+         ✗ 1 건 실패 (15/16)
+
+✗ 실패가 있다 — 고치고 다시.  ⚠ 이대로 푸시하면 러너의 fail-closed 게이트가
+  사용자의 GPU 런을 막는다 (규율 검사는 런 시작 전에 걸린다).

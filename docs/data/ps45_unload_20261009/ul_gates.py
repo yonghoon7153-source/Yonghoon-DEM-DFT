@@ -212,8 +212,52 @@ def g3_check(screen_text, orig_log_text, s0, tol=0.05):
     return out
 
 
+def _dump_header_problems(d, kind, lines=None):
+    """G2/G2c의 직교 BOX 구조만 검증한다. 박스 값/PBC 선택은 고정하지 않는다.
+
+    입력은 완료되어 바뀌지 않는 덤프다. 공용 파싱과 머리/원 토큰 읽기 사이의
+    동시 갱신을 지원하거나 원자적 snapshot을 보장하는 함수는 아니다.
+    """
+    head = 'ITEM: ATOMS' if kind == 'custom' else 'ITEM: ENTRIES'
+    if lines is None:
+        lines = []
+        with open(d['path'], encoding='utf-8', errors='replace') as f:
+            for ln in f:
+                lines.append(ln.rstrip('\n'))
+                if ln.startswith(head):
+                    break
+    try:
+        kb = next(i for i, ln in enumerate(lines) if ln.startswith('ITEM: BOX BOUNDS'))
+        kh = next(i for i, ln in enumerate(lines) if ln.startswith(head))
+    except StopIteration:
+        return ['BOX BOUNDS · 관측 머리 없음']
+    pr = []
+    if lines[kb].split()[:3] != ['ITEM:', 'BOX', 'BOUNDS'] or lines[kh].split()[:2] != head.split():
+        pr.append('BOX BOUNDS · 관측 머리 이름 오류 (접두 문자열만 같은 머리는 허용하지 않는다)')
+    bounds, box = lines[kb + 1:kb + 4], d['box']
+    if len(bounds) != 3 or any(len(ln.split()) != 2 for ln in bounds) or len(box) != 3 or any(len(axis) != 2 for axis in box):
+        pr.append('BOX BOUNDS 는 3축 각각 하한 · 상한 두 값이어야 한다')
+    elif any(not math.isfinite(v) for axis in box for v in axis):
+        pr.append('BOX BOUNDS 비유한 값')
+    elif any(lo >= hi for lo, hi in box):
+        pr.append('BOX BOUNDS 하한 < 상한 아님')
+    return pr
+
+
 def _dump_tokens(path, cols):
+    """완료된 고정 프레임을 검증한 뒤 비교 열의 원 토큰을 보존한다 (ULPR-03)."""
+    d = ul_lib.read_dump(path, 'custom')
+    if not d['ok']:
+        raise ValueError('; '.join(d['problems']))
+    if len(set(d['cols'])) != len(d['cols']):
+        raise ValueError('원자 덤프 열 이름 중복')
+    ids, problems = ul_lib.ids_of(d['rows'])
+    if ids is None or len(set(ids)) != len(ids):
+        raise ValueError('; '.join(problems) if ids is None else '원자 ID 중복')
     lines = open(path, encoding='utf-8', errors='replace').read().splitlines()
+    header_problems = _dump_header_problems(d, 'custom', lines)
+    if header_problems:
+        raise ValueError('; '.join(header_problems))
     k = next(i for i, x in enumerate(lines) if x.startswith('ITEM: ATOMS'))
     head = lines[k].split()[2:]
     idx = [head.index(c) for c in cols]
@@ -222,15 +266,18 @@ def _dump_tokens(path, cols):
         t = ln.split()
         if len(t) == len(head):
             out[int(t[head.index('id')])] = tuple(t[i] for i in idx)
-    return out
+    return d['step'], out
 
 
-def g2_compare(test_atom_path, orig_atom_path, cols=('id', 'type', 'x', 'y', 'z', 'radius', 'vx', 'vy', 'vz')):
+def g2_compare(test_atom_path, orig_atom_path, cols=('id', 'type', 'x', 'y', 'z', 'radius', 'vx', 'vy', 'vz'), expected_step=None):
     out = {'status': 'FAIL', 'why': []}
     try:
-        a, b = _dump_tokens(test_atom_path, cols), _dump_tokens(orig_atom_path, cols)
+        (sa, a), (sb, b) = _dump_tokens(test_atom_path, cols), _dump_tokens(orig_atom_path, cols)
     except (OSError, StopIteration, ValueError) as e:
         out['why'].append(f'덤프 읽기 실패: {type(e).__name__}: {e}')
+        return out
+    if sa != sb or (expected_step is not None and sa != expected_step):
+        out['why'].append(f'원자 덤프 TIMESTEP {sa} · {sb} ≠ 같은 요청 step {expected_step if expected_step is not None else sb}')
         return out
     miss, extra = sorted(set(b) - set(a)), sorted(set(a) - set(b))
     bad = [i for i in set(a) & set(b) if a[i] != b[i]]
@@ -252,7 +299,12 @@ _SYM = (21, 22, 23, 24, 25)
 def _contacts(path, box):
     d = ul_lib.read_dump(path, 'local', [f'c_cpl[{i}]' for i in range(1, 27)])
     rows, dup, conflicts = {}, 0, []
-    if not d['ok']:   # ULKRF-03 — 파서 · 필수 열 문제 (예: 머리 c_cpl[7] 결손) 를 먼저 돌려준다 → g2c_compare 의 FAIL + 사유 (열을 읽지 않는다 · 채우지 · 지우지 않는다)
+    if not d['ok']:   # ULKRF-03 — 파서 · 필수 열 문제를 먼저 돌려준다 (열을 읽지 않는다 · 채우지 · 지우지 않는다)
+        return d, rows, dup, conflicts
+    header_problems = _dump_header_problems(d, 'local')
+    if header_problems:
+        d['ok'] = False
+        d['problems'] += header_problems
         return d, rows, dup, conflicts
     for r in d['rows']:
         v = [r[f'c_cpl[{i}]'] for i in range(1, 27)]
@@ -284,12 +336,18 @@ def _cmpvals(v, box):
     return pos + list(v[9:18]) + [v[21], v[22], _wrap(v[23], lx), _wrap(v[24], ly), v[25]]
 
 
-def g2c_compare(test_contact_path, orig_contact_path, box=(0.05, 0.05), rel=1e-5):
+def g2c_compare(test_contact_path, orig_contact_path, box=(0.05, 0.05), rel=1e-5, expected_step=None):
     out = {'status': 'FAIL', 'why': []}
     dt, T, dupt, ct = _contacts(test_contact_path, box)
     do, O, dupo, co = _contacts(orig_contact_path, box)
     if not (dt['ok'] and do['ok']):
         out['why'] += dt['problems'][:3] + do['problems'][:3]
+        required = {f'c_cpl[{i}]' for i in range(1, 27)}
+        if any(not required.issubset(d['cols'] or []) for d in (dt, do)):
+            out['status'] = 'NOT_COMPUTED'   # ULPR-04 — 관측 열 결손 → 복원 UNCONFIRMED (§14-10) · 수치 불일치 FAIL 과 구별
+        return out
+    if dt['step'] != do['step'] or (expected_step is not None and dt['step'] != expected_step):
+        out['why'].append(f'쌍 덤프 TIMESTEP {dt["step"]} · {do["step"]} ≠ 같은 요청 step {expected_step if expected_step is not None else do["step"]}')
         return out
     miss, extra = sorted(set(O) - set(T)), sorted(set(T) - set(O))
     ov = {k: _cmpvals(v, box) for k, v in O.items()}
@@ -462,6 +520,66 @@ def selftest():
         ul_lib.write_custom(os.path.join(td, 'm.a'), 3200000, cols, r2_, fmt=fmt)
         chk('C1 G2 위치 하나 다름 = FAIL (1 / 5)', lambda: (lambda g: g['status'] == 'FAIL' and g['n_mismatch'] == 1)(
             g2_compare(os.path.join(td, 'm.a'), os.path.join(td, 'o.a'))))
+        # ULPR-03 — 양쪽 파일의 모든 행과 머리를 읽어야 한다. 비교 값은 원래 토큰 그대로 (float 재직렬화 금지).
+        oa = os.path.join(td, 'o.a')
+        atom_text = open(oa).read()
+        atom_line = atom_text.splitlines()[-1]
+        bad_atoms = {
+            'duplicate_id': atom_text.replace('ITEM: NUMBER OF ATOMS\n5\n', 'ITEM: NUMBER OF ATOMS\n6\n') + atom_line + '\n',
+            'wrong_step': atom_text.replace('ITEM: TIMESTEP\n3200000\n', 'ITEM: TIMESTEP\n3200001\n'),
+            'truncated_extra_row': atom_text + '6 3 0.006\n',
+            'declared_count': atom_text.replace('ITEM: NUMBER OF ATOMS\n5\n', 'ITEM: NUMBER OF ATOMS\n6\n'),
+            'second_frame': atom_text + atom_text,
+            'nonfinite': atom_text.replace(' 0.003 ', ' nan ', 1),
+            'duplicate_column': atom_text.replace(' vy vz ', ' vx vz ', 1),
+        }
+        for what, raw in bad_atoms.items():
+            ap = os.path.join(td, what + '.a')
+            with open(ap, 'w', newline='\n') as f:
+                f.write(raw)
+            for side in ('test', 'orig'):
+                pair = (ap, oa) if side == 'test' else (oa, ap)
+                chk(f'C5 ULPR-03 G2 {side} {what} = FAIL + 사유 (다른 쪽 정상)',
+                    lambda pair=pair: (lambda g: g['status'] == 'FAIL' and bool(g['why']))(g2_compare(*pair)))
+        eqnum = os.path.join(td, 'equal_number.a')
+        with open(eqnum, 'w', newline='\n') as f:
+            f.write(atom_text.replace(' 0.003 ', ' 0.0030 ', 1))
+        chk('C5 ULPR-03 G2 수치가 같아도 원 토큰이 다른 z (0.003 → 0.0030) = FAIL (문자열 비교 보존)',
+            lambda: (lambda g: g['status'] == 'FAIL' and g['n_mismatch'] == 1)(g2_compare(eqnum, oa)))
+        wrong_step = os.path.join(td, 'wrong_step.a')
+        chk('C5 ULPR-03 G2 양쪽 같은 잘못된 step = 요청 step 3200000 과 다르면 FAIL · 같은 정상 step 은 PASS',
+            lambda: g2_compare(wrong_step, wrong_step, expected_step=3200000)['status'] == 'FAIL'
+            and g2_compare(oa, oa, expected_step=3200000)['status'] == 'PASS')
+        # 독립 공격 리뷰: 원자 행은 같아도 BOX BOUNDS nan/inf 는 완전한 관측이 아니다.
+        box_lines = atom_text.splitlines()
+        kb = box_lines.index('ITEM: BOX BOUNDS pp pp ff')
+        bad_boxes = {}
+        for axis in range(3):
+            for end in range(2):
+                for value in ('nan', 'inf', '-inf'):
+                    ls = list(box_lines)
+                    bound = ls[kb + axis + 1].split()
+                    bound[end] = value
+                    ls[kb + axis + 1] = ' '.join(bound)
+                    bad_boxes[f'axis{axis}_end{end}_{value}'] = '\n'.join(ls) + '\n'
+        for name, value in (('short_bound', '0.0'), ('extra_bound', '0.0 0.05 1.0'),
+                            ('reversed_bound', '0.05 0.0'), ('zero_width', '0.05 0.05')):
+            ls = list(box_lines)
+            ls[kb + 1] = value
+            bad_boxes[name] = '\n'.join(ls) + '\n'
+        bad_boxes['box_header_prefix'] = atom_text.replace('ITEM: BOX BOUNDS ', 'ITEM: BOX BOUNDSextra ', 1)
+        bad_boxes['atom_header_prefix'] = atom_text.replace('ITEM: ATOMS ', 'ITEM: ATOMSextra ', 1)
+        for what, raw in bad_boxes.items():
+            bp = os.path.join(td, 'bad_box.a')
+            with open(bp, 'w', newline='\n') as f:
+                f.write(raw)
+            for side, pair in (('test', (bp, oa)), ('orig', (oa, bp)), ('both', (bp, bp))):
+                chk(f'C6 ULPR-03 G2 {side} {what} = FAIL + 사유 (원자 행은 그대로)',
+                    lambda pair=pair: (lambda g: g['status'] == 'FAIL' and bool(g['why']))(g2_compare(*pair)))
+        with open(bp, 'w', newline='\n') as f:
+            f.write(atom_text.replace('ITEM: BOX BOUNDS pp pp ff', 'ITEM: BOX BOUNDS ff pp ss').replace('0.0 0.05', '-1.0 0.25', 1))
+        chk('C6 ULPR-03 양성 대조: 유한 · 순서가 맞는 다른 BOX 수치와 경계 표지 = PASS (고정 PBC/상자 값 기준을 새로 만들지 않는다)',
+            lambda: g2_compare(bp, oa)['status'] == 'PASS')
         ccols = [f'c_cpl[{i}]' for i in range(1, 27)]
 
         def crow(i, j, f, ft, x1=0.001, x2=0.0015, pflag=0.0):
@@ -474,6 +592,34 @@ def selftest():
         chk('C2 G2c 방향 바뀐 행 (힘 부호 · 두 위치 바꿈) · 주기 image (x + L) · 주기 플래그 다름 = PASS · 판별력 = 접선 0 아닌 몫 2/3',
             lambda: (lambda g: g['status'] == 'PASS' and abs(g['discriminating_frac'] - 2.0 / 3.0) < 1e-12)(
                 g2c_compare(os.path.join(td, 's.c'), os.path.join(td, 'o.c'))))
+        # 독립 공격 리뷰: G2c도 요청 S0/R_M의 관측이어야 한다 (다른 시점의 값이 같아도 복원 증거 아님).
+        oc = os.path.join(td, 'o.c')
+        contact_text = open(oc).read()
+        wc = os.path.join(td, 'wrong_step.c')
+        with open(wc, 'w', newline='\n') as f:
+            f.write(contact_text.replace('ITEM: TIMESTEP\n3200000\n', 'ITEM: TIMESTEP\n3200001\n'))
+        for side, pair in (('test', (wc, oc)), ('orig', (oc, wc))):
+            chk(f'C7 G2c {side} 다른 TIMESTEP = FAIL + 사유 (쌍 값은 그대로)',
+                lambda pair=pair: (lambda g: g['status'] == 'FAIL' and any('TIMESTEP' in w for w in g['why']))(g2c_compare(*pair)))
+        chk('C7 G2c 양쪽 같은 S0 + 1 = 요청 S0 와 다르면 FAIL · 같은 정상 시점은 PASS',
+            lambda: g2c_compare(wc, wc, expected_step=3200000)['status'] == 'FAIL'
+            and g2c_compare(oc, oc, expected_step=3200000)['status'] == 'PASS')
+        bad_contacts = {
+            'box_nonfinite': contact_text.replace('0.0 0.05', 'nan inf', 1),
+            'box_short': contact_text.replace('0.0 0.05', '0.0', 1),
+            'box_extra': contact_text.replace('0.0 0.05', '0.0 0.05 1.0', 1),
+            'box_reversed': contact_text.replace('0.0 0.05', '0.05 0.0', 1),
+            'box_zero_width': contact_text.replace('0.0 0.05', '0.05 0.05', 1),
+            'box_header_prefix': contact_text.replace('ITEM: BOX BOUNDS ', 'ITEM: BOX BOUNDSextra ', 1),
+            'entries_header_prefix': contact_text.replace('ITEM: ENTRIES ', 'ITEM: ENTRIESextra ', 1),
+        }
+        for what, raw in bad_contacts.items():
+            bc = os.path.join(td, 'bad_header.c')
+            with open(bc, 'w', newline='\n') as f:
+                f.write(raw)
+            for side, pair in (('test', (bc, oc)), ('orig', (oc, bc)), ('both', (bc, bc))):
+                chk(f'C7 G2c {side} {what} = FAIL + 사유 (쌍 값은 그대로)',
+                    lambda pair=pair: (lambda g: g['status'] == 'FAIL' and bool(g['why']))(g2c_compare(*pair)))
         bad = [crow(1, 2, -0.5, 0.0100002), base[1], base[2]]
         ul_lib.write_local(os.path.join(td, 'b.c'), 3200000, ccols, bad)
         chk('C2 G2c 접선 힘 상대 2e-5 차 (허용 1e-5 밖) = FAIL', lambda: g2c_compare(os.path.join(td, 'b.c'), os.path.join(td, 'o.c'))['status'] == 'FAIL')
@@ -493,18 +639,19 @@ def selftest():
         open(fa, 'w').write(fa_text)
         chk('C3 ULKRR-04 G2 원자 ID 소수 (2 → 2.5) = FAIL (글자 그대로 정수 변환 — 잘라서 같은 원자로 보지 않는다)',
             lambda: '\n2.5 3 ' in open(fa).read() and g2_compare(fa, os.path.join(td, 'o.a'))['status'] == 'FAIL')
-        # ── ULKRF-03 (Codex 수정 재확인 10-15 · g2c_c_cpl7_missing · g2c_c_cpl8_missing) — 필수 열 결손 = 파서 ok 거짓을 먼저 → FAIL + 사유 (KeyError 아님) ──
-        for col in ('c_cpl[7]', 'c_cpl[8]'):
+        # ── ULPR-04 — 필수 열 26 개 각각 결손 (양쪽) = 비교 미계산 + 사유 (KeyError · 수치 불일치 아님) ──
+        for col in ccols:
             for side in ('test', 'orig'):
-                nc = os.path.join(td, f'nc_{side}_{col[6]}.c')
+                nc = os.path.join(td, f'nc_{side}_{col[6:-1]}.c')
                 ul_lib.write_local(nc, 3200000, ccols, base)
-                txt = open(nc).read().replace(f' {col} ', f' not_{col} ', 1)   # 머리의 열 이름 하나만 · 숫자 행은 그대로
+                txt = open(nc).read().replace('ITEM: ENTRIES ' + ' '.join(ccols),
+                                             'ITEM: ENTRIES ' + ' '.join(f'not_{c}' if c == col else c for c in ccols), 1)
                 with open(nc, 'w', newline='\n') as f:
                     f.write(txt)
                 pair = (nc, os.path.join(td, 'o.c')) if side == 'test' else (os.path.join(td, 's.c'), nc)
-                chk(f'C4 ULKRF-03 G2c {"시험" if side == "test" else "원"} 쪽 쌍 덤프 머리 {col} → not_{col} (필수 열 결손) = 예외 없이 FAIL + 사유 '
+                chk(f'C4 ULPR-04 G2c {"시험" if side == "test" else "원"} 쪽 쌍 덤프 머리 {col} → not_{col} (필수 열 결손) = 예외 없이 NOT_COMPUTED + 사유 '
                     '(파서 ok 거짓을 먼저 · 숫자를 채우거나 행을 지우지 않는다)',
-                    lambda pair=pair, nc=nc, col=col: (lambda g: g['status'] == 'FAIL' and any('열 이름' in w for w in g['why'])
+                    lambda pair=pair, nc=nc, col=col: (lambda g: g['status'] == 'NOT_COMPUTED' and any('열 이름' in w for w in g['why'])
                                                        and f'not_{col}' in open(nc).read())(g2c_compare(*pair)))
         stl = 'solid x\n  facet normal 0 0 -1\n    outer loop\n      vertex 0 0 {z}\n      vertex 0 0.05 {z}\n      vertex 0.05 0.05 {z}\n'
         for name, z in (('m1.stl', '0.111252'), ('m2.stl', '0.111254')):

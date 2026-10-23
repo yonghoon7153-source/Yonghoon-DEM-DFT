@@ -18,6 +18,7 @@
   → ✅ **수정 10-15 (시험 먼저 · 이 README §1-6 · §3 · §4 · §5 · §9 = 수정 뒤 판 · 등록 §14-11)** — 경계 하나에 승인 한 번 · k 되돌아옴 = 새 시도 시작 · G2c 파서 문제 먼저 ·
   문법 사전 점검이 그 런 원자료를 승인된 판독기로 다시 읽음 (Q3) · ID 정수 토큰 정확 (Q4) · Linux 전체 로그 (`docs/reviews/dem_unloading_kit_fix_recheck_fix_evidence_20261015/`)
   → ⬜ Codex 짧은 재확인 (`docs/reviews/codex_dem_unloading_kit_fix_recheck2_request_20261015.md` · 발송 = 1저자) · ⬜ ibb 문법 fixture 실행 2.
+- **10-23 ULPR 보완**: 재개 중단의 창·단·사건 소속을 대조하고, G2 입력과 요청 시점 검증 및 G2c 열 결손 분류를 보완한다. 현재 재확인 요청은 `docs/reviews/codex_dem_unloading_ulpr_recheck_request_20261023.md`이며, 본 실행은 외부 재확인 GO 뒤다. 과거 시험 수는 아래 이력의 해당 판에만 적용한다.
 - 이 README 가 **이름의 정본**이다 (REG §8-2 "이름은 가칭 · 키트 README 가 정본").
 - 지금 할 수 있는 것 = **§1 작은 침대 이력 시험 (H0–H5) 만** — 본 키트 봉인과 따로 봉인 (`history_test/SHA256SUMS`) 해서 먼저 돌릴 수 있다.
   ⛔ 이 시험이 PASS 여도 본 R · 10:0 연장 · U 의 GO 가 아니다 (CX2 §0 · REG §13-6 — 키트 증거 → Codex 재검토 → 본 실행).
@@ -256,6 +257,13 @@ WSL 로 가져오는 꼴 (접속 정보는 자리표시): `scp -P <port> <user>@
   사건 k ↔ 상태 파일 불일치 · `resume_from` 밖 step 의 RESUME = 승인 없음 + 사유 (주 값 미식별 · 다음 관문 거부) · 사건 되감기도 같은 규칙.
   **새 시도 시작** (ULKRF-02 · 10-15) = 승인 경계 뒤 먼저 오는 쪽 — step 역행 (창 · 단 CSV) 또는 단 CSV 에서 k 가 k_r + 1 로 되돌아옴 (새 시도의 유지 창이 늘어
   옛 단 끝보다 늦게 끝나도 · 덱은 단 줄 → 사건 → restart · 상태 파일 순서로 쓴다) · 승인 없는 되돌아옴 · 중복 = 그대로 미식별.
+- **새 단 줄 전에 끊긴 재개 (ULPR-01)**: 승인된 경계의 창·단 CSV와 RESUME 앞뒤 사건을 함께 대조한다. 옛 시도의 완료 단을 새 시도의 정상 관측으로 쓰지 않는다.
+  CSV에 시도 표지가 없으므로 동일 시각·창 수만으로 소속을 확정하지 않는다. 필요한 관측의 소속이 불명확하면 사유를 남겨 미식별로 처리한다. 원 CSV를 고치거나 삭제하지 않는다.
+  경계 앞에서 교차와 확인 두 단까지 끝난 유효 주 값은 보존하되, 불명확한 꼬리를 제외한 범위만 분석한다(`resume_tail`에 경계·제외 행 수·사유). 전체 궤적의 union·비단조·최종 분리·표면 관측은 미확인이다.
+  `rank_eligible`만으로 순위가 인증되지는 않는다. 쌍 비교는 유효한 union까지 요구하므로 해당 쌍은 UNIDENTIFIED로 남는다. 기존 RESUME 소수 k의 반올림 파싱은 이번 수정에서 닫지 않았다.
+- **G2/G2c (ULPR-03·04)**: G2 원자 비교는 전체 관측 검증 뒤 원 토큰을 비교한다. 수치가 같아도 다른 원 토큰을 같다고 정규화하지 않는다.
+  복원과 중력 복원에서는 요청한 S0/R_M 시점에 결합한다. G2c 필수 열 결손은 비교 미계산이며 복원 UNCONFIRMED다. 구조 파손·다른 시점 및 완전한 관측의 값 불일치는 VALUE_MISMATCH, 기술 실패는 SYNTAX_FAIL을 유지한다.
+  완료되어 바뀌지 않는 직교 덤프를 대상으로 한다. BOX의 유한·순서·구조를 확인하지만 박스 수치나 경계 표지를 특정 물리 조건으로 고정하지 않는다.
 - 잡 기록 (`run_manifest.txt` · 덧붙이기만 · 개정 3 §14-10): `gate=ALLOW` (+ `gate_why=`) · (RJ · RJ2 · EXT) `grammar_prereq=PASS` · `grammar_verdict=` · `grammar_verdict_sha256=` ·
   단계마다 `stage=<덱 종류> screen=… rc=… check=PASS|…` · `stage=G0 rc=…` · 판독기 `reader_<명령>_rc=` (0 = 정상 판독 · 미식별도 JSON 으로 0 · ≠ 0 = 프로그램 오류 → 러너 rc ≠ 0) ·
   끝 줄 `end=… fails=… reader_rc=…`.  **G0 · Ut0 기술 실패 = R · UN · UK 를 돌리지 않는다** (복원 판정 RESTORED 아님 · kebase 건너뜀 기록).
@@ -327,7 +335,7 @@ scp -P <port> <user>@<ibb-host>:~/ps45_unload_20261009/<침대>/<잡>.report.tgz
 | 끝점 유효 | 덱 정상 (S1 ∧ S2 두 창) ∧ S3 PASS (단 끝 원자 + 쌍 덤프 · K5) ∧ P̄ · 높이 유한 ∧ 판 접촉 (CONTACT · TENSION) ∧ (k*) NOISE_FLOOR 아님 (σ_P = k* 마지막 두 창 thermo 정규 줄 `ul_Ps` · ddof 1 · 최소 10) |
 | 확인 두 단 | 실제로 이어지는 k* + 1 · k* + 2 (B · CONFIRM) 의 등록 정상 완료 = 덱 정상 · S3 PASS · 유한 · 순서 · 누락 없음 — **판 접촉 요구 없음** (분리 = 확인) · 아니면 주 값 UNIDENTIFIED · 선택 UNRESOLVED (§14-1 · Q1) |
 | 교차 · 괄호 | P̄ − P_meas 부호 바뀜 (> ↔ ≤) · 첫 교차 = P 두 점 선형 보간 (점 추정) + 실제 괄호 [h_lo, h_hi] · A 단 교차 = A 괄호 그대로 · 비단조 = **k = 0 부터** 모든 교차 괄호의 외곽 구간 [최소, 최대] ⊇ 첫 교차 괄호 + 표지 (b 판정 없음 · 기록 단 비유한 = 미계산 · §14-2) |
-| 관측 파싱 | 모든 경로에서 덤프 전부 읽힘 (머리 · 열 · 행 수 · 유한) · 머리 step = 요청 step · ID 고유 · S0 밖 ID 없음 · CSV 결손 · 단 k 불연속 = 주 값 미식별 · 버린 행을 정상 부분 관측으로 쓰지 않는다 (§14-10) · 필수 열 · 파서 문제를 먼저 (열 결손 = 사유 있는 미식별 · 미계산 — 예외 없음 · G2c 쌍 덤프 `c_cpl[7]` · `c_cpl[8]` 결손 = FAIL + 사유 · ULKRF-03) · ID = 유한 · 양의 정확한 정수 (S0 · 원자 · 복원 관측 · 쌍 참조 — 소수를 정수로 자르지 않는다 · ULKRR-04 · ID 열 정수 토큰은 float 를 거치지 않는다 — `9007199254740993` 거부 · Q4) |
+| 관측 파싱 | 모든 경로에서 덤프 전부 읽힘 (머리 · 열 · 행 수 · 유한) · 머리 step = 요청 step · ID 고유 · S0 밖 ID 없음 · CSV 결손 · 단 k 불연속 = 주 값 미식별 · 버린 행을 정상 부분 관측으로 쓰지 않는다 (§14-10) · 필수 열 · 파서 문제를 먼저 (열 결손 = 사유 있는 미식별 · 미계산 — 예외 없음 · G2c 쌍 덤프 필수 26열 중 하나라도 결손 = NOT_COMPUTED + 사유 → 복원 UNCONFIRMED · ULPR-04 · 등록 §14-12) · ID = 유한 · 양의 정확한 정수 (S0 · 원자 · 복원 관측 · 쌍 참조 — 소수를 정수로 자르지 않는다 · ULKRR-04 · ID 열 정수 토큰은 float 를 거치지 않는다 — `9007199254740993` 거부 · Q4) |
 | S3 무게 항 | 분모의 m g 의 g = 그 팔의 실제 중력 (중력 팔 G_* = g_aux 9.81e-6 · 그 밖 9.81 · §14-6 · Q5) |
 | 상태 두 축 | `primary_status` OK · NOISE_FLOOR · LOWER_BOUND (교차 전 끝 + 정상 · 접촉 · 단조) · UNIDENTIFIED (사유) · NO_CROSSING · TECH · NO_BRACKET (중력 팔만) ↔ `trajectory_status` DONE · TIMEOUT (요약 없음) · LIFT_CAP · GUARD · TECH · RM_STOP · **SEP_INCOMPLETE** (재접촉 뒤 예산 끝 · 덱 DONE 인데 판독기 최종 분리 · 분리 뒤 4 창 · 선언 창 ≤ 예산 · SEPARATED · POST_DONE 사건이 맞지 않음 = 보조 미완료 · 주 ρ 무영향 · §14-7) |
 | 보조 ε · W_proxy | ε_sphere,all = 1 − C_all / h (C_all = 검증한 S0 에서 봉인 · 프레임마다 다시 계산 없음) · 자리 S0 · 교차 끝점 둘 (S0 ID 전부 · 같은 반경 아니면 그 자리 NOT_COMPUTED) · M (ε_all 만) · ε_sphere,inside 따로 · W_proxy = k 0 → M 정착 단 사다리꼴 (끝 조각 P_meas) × 1e-6 J (비정상 · 비유한 = 미계산 · 판이 받은 일 아님) — 팔 판정 · 최종 보고 (§14-8 · Q7) |

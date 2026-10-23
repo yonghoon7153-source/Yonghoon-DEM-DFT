@@ -1,0 +1,7 @@
+Using CPython 3.11.17 interpreter at: .venvs/yonghoon-dem/bin/python
+Resolved 1 package in 267ms
+Downloading pandas (12.2MiB)
+ Downloaded pandas
+Prepared 1 package in 670ms
+Installed 1 package in 23ms
+ + pandas==2.3.3

@@ -1,0 +1,4 @@
+LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, git commit 3d5c00f)
+UL_UN_START
+Loop time of 0 on 6 procs for 0 steps with 160417 atoms
+UL_UN_DONE

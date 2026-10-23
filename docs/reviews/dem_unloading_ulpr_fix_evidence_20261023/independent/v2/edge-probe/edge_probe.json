@@ -1,0 +1,195 @@
+[
+  {
+    "class": "G2_ID",
+    "token": "nan",
+    "verdict": {
+      "status": "FAIL",
+      "why": [
+        "덤프 읽기 실패: ValueError: 비유한 값: nan 3 0.001 0.002 0.003 0.0005 1e-06 0 0 0 0 0 0"
+      ]
+    }
+  },
+  {
+    "class": "G2_ID",
+    "token": "inf",
+    "verdict": {
+      "status": "FAIL",
+      "why": [
+        "덤프 읽기 실패: ValueError: 비유한 값: inf 3 0.001 0.002 0.003 0.0005 1e-06 0 0 0 0 0 0"
+      ]
+    }
+  },
+  {
+    "class": "G2_ID",
+    "token": "-inf",
+    "verdict": {
+      "status": "FAIL",
+      "why": [
+        "덤프 읽기 실패: ValueError: 비유한 값: -inf 3 0.001 0.002 0.003 0.0005 1e-06 0 0 0 0 0 0"
+      ]
+    }
+  },
+  {
+    "class": "G2_ID",
+    "token": "1e309",
+    "verdict": {
+      "status": "FAIL",
+      "why": [
+        "덤프 읽기 실패: ValueError: 비유한 값: 1e309 3 0.001 0.002 0.003 0.0005 1e-06 0 0 0 0 0 0"
+      ]
+    }
+  },
+  {
+    "class": "G2_ID",
+    "token": "9007199254740993",
+    "verdict": {
+      "status": "FAIL",
+      "why": [
+        "덤프 읽기 실패: ValueError: id 가 유한 · 양의 정확한 정수가 아니다 ([9007199254740993]) — 정수로 자르지 않는다"
+      ]
+    }
+  },
+  {
+    "class": "G2_ID",
+    "token": "1.5",
+    "verdict": {
+      "status": "FAIL",
+      "why": [
+        "덤프 읽기 실패: ValueError: id 가 유한 · 양의 정확한 정수가 아니다 ([1.5]) — 정수로 자르지 않는다"
+      ]
+    }
+  },
+  {
+    "class": "G2_ID",
+    "token": "1.0000000000000001",
+    "verdict": {
+      "status": "FAIL",
+      "why": [
+        "덤프 읽기 실패: ValueError: ID 정확한 정수 아님: ID 토큰 '1.0000000000000001' 의 정확한 값이 정수 1 가 아니다 (float 변환이 정수로 가린다 · Q4) — 1.0000000000000001 3 0.001 0.002 0.003 0.0005 1e-06 0 0 0 0 "
+      ]
+    }
+  },
+  {
+    "class": "G2_ID",
+    "token": "0",
+    "verdict": {
+      "status": "FAIL",
+      "why": [
+        "덤프 읽기 실패: ValueError: id 가 유한 · 양의 정확한 정수가 아니다 ([0]) — 정수로 자르지 않는다"
+      ]
+    }
+  },
+  {
+    "class": "G2_ID",
+    "token": "-1",
+    "verdict": {
+      "status": "FAIL",
+      "why": [
+        "덤프 읽기 실패: ValueError: id 가 유한 · 양의 정확한 정수가 아니다 ([-1]) — 정수로 자르지 않는다"
+      ]
+    }
+  },
+  {
+    "class": "G2_ID",
+    "token": "١",
+    "verdict": {
+      "status": "FAIL",
+      "why": [],
+      "n_atoms": 3,
+      "n_mismatch": 1,
+      "missing": [],
+      "extra": [],
+      "example": [
+        1
+      ],
+      "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+    }
+  },
+  {
+    "class": "G2_coordinate",
+    "token": "nan",
+    "verdict": {
+      "status": "FAIL",
+      "why": [
+        "덤프 읽기 실패: ValueError: 비유한 값: 1 3 0.001 0.002 nan 0.0005 1e-06 0 0 0 0 0 0"
+      ]
+    }
+  },
+  {
+    "class": "G2_coordinate",
+    "token": "inf",
+    "verdict": {
+      "status": "FAIL",
+      "why": [
+        "덤프 읽기 실패: ValueError: 비유한 값: 1 3 0.001 0.002 inf 0.0005 1e-06 0 0 0 0 0 0"
+      ]
+    }
+  },
+  {
+    "class": "G2_coordinate",
+    "token": "1e309",
+    "verdict": {
+      "status": "FAIL",
+      "why": [
+        "덤프 읽기 실패: ValueError: 비유한 값: 1 3 0.001 0.002 1e309 0.0005 1e-06 0 0 0 0 0 0"
+      ]
+    }
+  },
+  {
+    "class": "RESUME_k",
+    "token": "nan",
+    "auth": [],
+    "problems": [
+      "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3410000) — 승인 없음 (ULKRF-01)"
+    ]
+  },
+  {
+    "class": "RESUME_k",
+    "token": "inf",
+    "auth": [],
+    "problems": [
+      "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3410000) — 승인 없음 (ULKRF-01)"
+    ]
+  },
+  {
+    "class": "RESUME_k",
+    "token": "1e309",
+    "auth": [],
+    "problems": [
+      "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3410000) — 승인 없음 (ULKRF-01)"
+    ]
+  },
+  {
+    "class": "RESUME_k",
+    "token": "3.49",
+    "auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "problems": []
+  },
+  {
+    "class": "RESUME_k",
+    "token": "٣",
+    "auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "problems": []
+  },
+  {
+    "class": "RESUME_k",
+    "token": " 3 ",
+    "auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "problems": []
+  }
+]

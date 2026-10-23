@@ -1,0 +1,94 @@
+{
+ "bed": "ps_7_3_r45",
+ "job": "RJ",
+ "s0": 3200000,
+ "checks": {
+  "syntax": {
+   "ok": true,
+   "stages": {
+    "R": [],
+    "UN": [],
+    "Ut0": []
+   },
+   "loops": [
+    6,
+    6
+   ],
+   "errors": []
+  },
+  "reset_log": {
+   "ok": true,
+   "missing": []
+  },
+  "g0": {
+   "ok": true,
+   "violations": []
+  },
+  "G1": {
+   "status": "PASS",
+   "why": [],
+   "step": 3200000,
+   "atoms": 160417,
+   "ke": 1.3419507e-06,
+   "rel": 0.0
+  },
+  "G2": {
+   "status": "PASS",
+   "why": [],
+   "n_atoms": 3,
+   "n_mismatch": 0,
+   "missing": [],
+   "extra": [],
+   "example": [],
+   "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+  },
+  "G2c": {
+   "status": "PASS",
+   "why": [],
+   "n_orig": 1,
+   "n_test": 1,
+   "n_mismatch": 0,
+   "missing": [],
+   "extra": [],
+   "n_dup_consistent": 0,
+   "dup_conflicts": [],
+   "discriminating_frac": 1.0,
+   "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+  },
+  "mesh_md5": {
+   "status": "PASS"
+  },
+  "G3": {
+   "status": "PASS",
+   "why": [],
+   "step": 3201000,
+   "atoms": [
+    160417.0,
+    160417.0
+   ],
+   "press": [
+    0.16542994,
+    0.16542994
+   ],
+   "rel": 0.0
+  },
+  "pre_post": {
+   "ok": true,
+   "equal": true,
+   "problems": []
+  },
+  "un_erasure": {
+   "seen": true,
+   "problems": []
+  },
+  "history_test": {
+   "pass": true,
+   "why": [],
+   "source": "/workspace/.cloud-setup/nonrint/ulpr-independent-review/restore-probe/baseline/history.json",
+   "source_sha256": "95e47fc0a589407492fdf86209184f39bee915429b68a815d2ca1831436ffea7",
+   "plate_fn_sign": -1,
+   "table_sign": -1
+  }
+ },
+ "status": "RESTORED"
+}

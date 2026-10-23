@@ -1,0 +1,18 @@
+  ✓ ① legacy 바이트 동일: full_metrics(v2 키 제외) · per-AM CSV · 반환값 = v2 이전 코드의 실측 핀
+  ✓ ①b 원래 있던 키는 그대로 (porosity · kept_key · coverage_AM_P_mean)
+  ✓ ② v2 키가 legacy 옆에 선다 — 이름 규약 (*_physics_v2) · status ok · NaN/Infinity 토큰 없음   없음 [] · 남음 [] · status='ok' · strict=True
+  ✓ ③ ★ DESC-03: legacy 부피 결속 0.0 % (단위 교란) ↔ v2 결속 수 = 접촉별 직접 호출과 같다 (volume ≥ 1)   legacy volume 0.0 % · v2 {'elastic': 1, 'tabor': 5, 'volume': 3, 'geom': 1, 'none': 1} · 기대 {'elastic': 1, 'tabor': 5, 'volume': 3, 'geom': 1, 'none': 1}
+  ✓ ④ ★ L1-01: legacy 산출에는 충돌 키가 없다 ↔ v2 = 직접 호출 장부 (n · 분율 · cap 가지 분율 · 상 쌍별)   legacy [] · v2 n=2 / 11 · cap 9 · pair {'AM_SE': 2, 'SE_SE': 0, 'AM_AM': 0, 'other': 0}
+  ✓ ⑤ ★ 분모 장부: native AM–AM 면적만 바꾸면 legacy physics 피복률이 움직인다 (분자 physics · 분모 native) ↔ v2 는 그대로 (같은 장부)   legacy AM_P 1.165→1.184 · v2 AM_P 1.195→1.195
+  ✓ ⑥ v2 피복률 · 면적 합 = 접촉별 직접 호출로 다시 센 값 (분모 v2 AM–AM · 전체 = 입자 수 가중 평균)   AM_P 1.195 vs 1.195 · AM_S 1.241 vs 1.241
+  ✓ ⑦ ★ 접촉 하나가 v2 함수에서 실패 → 침대 v2 = 빈칸 + 사유 (legacy 는 native 로 조용히 대체해 값을 낸다)   status='blank: 1 접촉을 film_area_physics_v2 가 거부했다 — 첫 사례 1–5: ValueError: delta 비유한 (nan)' · 실패 1
+  ✓ ⑧ scale ≠ 1000 → v2 빈칸 + 사유 (길이 규약이 모호하다) · legacy 는 계산된다   status='blank: scale=1 ≠ 1000 — 이 코드의 두 길이 규약 (µm = sim×scale · SI = sim/scale) 이 1000 에서만 같아 5 nm 막을 덤프 단위로 옮길 수 없다'
+  ✓ ⑨ contacts.csv 에 contact_area 열이 없으면 v2 빈칸 + 사유 · legacy 는 계산된다   status='blank: contacts.csv 에 contact_area 열이 없다'
+  ✓ ⑩ ★ WEBAPP_*_FOLDER 를 따른다 — `<case_id>` 호출이 코드 밖 results/uploads 에서 침대를 찾아 v2 까지 쓴다   반환 summary · status='ok'
+  ✓ ⑪ 미리 있던 *_physics_v2 키는 전부 걷고 새로 쓴다 (bogus 없음 · 999 덮임)   bogus=False · AM_P=1.195
+  ✓ ⑫ δ = 0 행 → v2 결속 none 1 · 미지 id 행 1 (세어 둔다)   none=1 · unknown=1
+  ✓ ⑬ ★ LHSC-01 ①: 유한 입력인데 v2 분모 ≤ 0 인 AM 4 (geom cap 셋 = 6πr² > 4πr²) → 침대 v2 빈칸 + 사유 (분모) · 제외 수 (n_free_surface_nonpositive 4 / n_am 5 · 반경 무효 0) 는 빈칸에도 실린다 · legacy 는 계산된다   status='blank: AM 4 개의 v2 자유 표면 ≤ 0 = 분모 무효 (첫 사례 id 2: 4πr² 1.257e-05 − ΣA_v2(AM–AM) 2.142e-05 = -8.851e-06 — 이웃 AM–AM v2 면적 합이 표면적 이상) (LHSC-01)' · diag={'n_am': 5, 'n_free_surface_nonpositive': 4, 'n_coverage_clipped_100': 0, 'n_radius_invalid': 0} · AM_S v2=None
+  ✓ ⑭ ★ LHSC-01 ②: 고립 AM 의 반경 NaN (접촉 0 이라 접촉별 검사를 안 지난다) → 침대 v2 빈칸 + 사유 (반경) · n_radius_invalid 1 · 분모 ≤ 0 은 0 · 값 키 전부 None   status='blank: AM 1 개의 반경 · 표면적이 유한 양수가 아니다 (첫 사례 id 14: r=nan) — 분모를 만들 수 없다 (LHSC-01)' · diag={'n_am': 3, 'n_free_surface_nonpositive': 0, 'n_coverage_clipped_100': 0, 'n_radius_invalid': 1}
+  ✓ ⑮ LHSC-01 ③ 양성 대조: 정상 반경 · 접촉 0 인 고립 AM 은 참 피복률 0 — 침대 v2 는 ok 그대로 · AM_S 평균 = (cov₂ + 0)/2 · 제외 수 0 · n_am 3   status='ok' · diag={'n_am': 3, 'n_free_surface_nonpositive': 0, 'n_coverage_clipped_100': 0, 'n_radius_invalid': 0} · AM_S 0.621 vs 0.621
+
+coverage_physics_vs_hertzian SELFTEST PASS

@@ -1,0 +1,7 @@
+variable ul_rstep equal 3460000
+variable ul_k equal 4
+variable ul_phase equal 2
+variable ul_modeB equal 1
+variable ul_pz equal 0.111402
+variable ul_lift equal 0.00035
+variable ul_ncross equal 2

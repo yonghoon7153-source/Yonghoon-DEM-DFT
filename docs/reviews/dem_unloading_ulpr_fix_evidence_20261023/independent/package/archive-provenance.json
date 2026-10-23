@@ -1,0 +1,6 @@
+{
+  "archive": "reviewed-snapshot.zip",
+  "sha256": "75f71c209720e5da48e236271a106ff94eea961940e998e63d63fe79c75ff854",
+  "reason": "Preserve immutable reviewed documents with their original relative-path context; not live repository documentation",
+  "members_verified_byte_equal": true
+}

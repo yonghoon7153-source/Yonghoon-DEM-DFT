@@ -1,0 +1,30 @@
+{
+  "base_clean_resume": {
+    "primary_status": "OK",
+    "rho_pct": 0.20260778734286913,
+    "problems": []
+  },
+  "base_nan_box_g2": {
+    "status": "PASS",
+    "why": [],
+    "n_atoms": 3,
+    "n_mismatch": 0,
+    "missing": [],
+    "extra": [],
+    "example": [],
+    "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+  },
+  "base_wrong_step_g2c": {
+    "status": "PASS",
+    "why": [],
+    "n_orig": 1,
+    "n_test": 1,
+    "n_mismatch": 0,
+    "missing": [],
+    "extra": [],
+    "n_dup_consistent": 0,
+    "dup_conflicts": [],
+    "discriminating_frac": 1.0,
+    "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+  }
+}

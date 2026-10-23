@@ -1,0 +1,173 @@
+{
+  "final_hash_mismatch": [],
+  "final_logs": [
+    {
+      "name": "ul_lib_selftest",
+      "ok": 24,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "ul_s3_selftest",
+      "ok": 16,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "ul_observers_selftest",
+      "ok": 21,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "ul_gates_selftest",
+      "ok": 202,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "ul_reader_selftest",
+      "ok": 214,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "seal_kit_selftest",
+      "ok": 12,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "seal_kit_check",
+      "ok": 1,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "make_unload_decks_selftest",
+      "ok": 291,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "make_unload_decks_check",
+      "ok": 1,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "history_make_history_decks_selftest",
+      "ok": 172,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "history_make_history_decks_check",
+      "ok": 1,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "history_read_history_selftest",
+      "ok": 56,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    },
+    {
+      "name": "ul_runner_test_selftest",
+      "ok": 38,
+      "fail": 0,
+      "rc": "0",
+      "matches_summary": true
+    }
+  ],
+  "first_test_counts": {
+    "dump-tests-first-box-g2c-gates.log": {
+      "ok": 106,
+      "fail": 96
+    },
+    "dump-tests-first-box-g2c-reader.log": {
+      "ok": 186,
+      "fail": 5
+    },
+    "dump-tests-first-box-gates.log": {
+      "ok": 106,
+      "fail": 72
+    },
+    "dump-tests-first-gates.log": {
+      "ok": 40,
+      "fail": 17
+    },
+    "dump-tests-first-reader.log": {
+      "ok": 177,
+      "fail": 6
+    },
+    "resume-review-fix-test-first.log": {
+      "ok": 200,
+      "fail": 1
+    },
+    "resume-tail-scope-clean-fixtures.log": {
+      "ok": 205,
+      "fail": 0
+    },
+    "resume-tail-scope-test-first.log": {
+      "ok": 204,
+      "fail": 1
+    },
+    "resume.log": {
+      "ok": 191,
+      "fail": 5
+    }
+  },
+  "baseline_mismatch": [],
+  "changed_paths": [
+    "docs/data/ps45_unload_20261009/README.md",
+    "docs/data/ps45_unload_20261009/SHA256SUMS",
+    "docs/data/ps45_unload_20261009/active_rules.json",
+    "docs/data/ps45_unload_20261009/seal_kit.py",
+    "docs/data/ps45_unload_20261009/ul_gates.py",
+    "docs/data/ps45_unload_20261009/ul_reader.py"
+  ],
+  "baseline_count": 94,
+  "scope_changed_paths_match": true,
+  "scope_sealed32_mismatch": [],
+  "formal_seals": [
+    {
+      "path": "docs/data/ps45_unload_20261009/SHA256SUMS",
+      "count": 76,
+      "bad": []
+    },
+    {
+      "path": "docs/data/ps45_unload_20261009/history_test/SHA256SUMS",
+      "count": 15,
+      "bad": []
+    }
+  ],
+  "evidence_manifests": [
+    {
+      "path": "dump-final/MANIFEST.sha256",
+      "count": 299,
+      "bad": [],
+      "bad_count": 0
+    }
+  ],
+  "fullgate": {
+    "status": "PENDING",
+    "command": "bash scripts/check_all.sh",
+    "scope": "Full repository gate; no reduced lane",
+    "external_execution_authorized": false
+  },
+  "python": "3.11.17"
+}
