@@ -9536,6 +9536,85 @@
     "근거_발화": "사용자 2026-10-22 (이 세션): 인계 카드 §4 세 질문을 붙여 넣고 '권고대로하자' — [SEI] 'Li₃Nd r2 가 이번 실행 한도 (≈ BFGS 386 · ≈ 10-30) 에서도 안 끝나면 미수렴으로 닫을지. 권고: 닫아요.'",
     "decision_digest": "sha256:3401ec8d3b1f90bed02cd5ee268b1fc3c18e0a403c69d550a7eff697488682ec"
    }
+  },
+  {
+   "id": "D-2026-10-23-gabia-li2s-k222-pause-li3nd",
+   "schema_version": 2,
+   "kind": "policy",
+   "scope": "ops.gabia.gpu.concurrency",
+   "slot": "gabia_gpu_li2s_k222_pause_li3nd_r2",
+   "applies_to": {
+    "systems": [
+     "lpscl_smallcell_glass_a_li4ps4cl",
+     "li3nd_pristine_333_control"
+    ],
+    "tasks": [
+     "li2s_model_check_k222_control",
+     "li3nd_p0_2_control_r2_pause_resume"
+    ],
+    "methods": [
+     "qe_gpu_scf",
+     "qe_gpu_relax"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "li2s 모델 검증 k 2×2×2 대조 (k222_A_s3) + Γ 기계 대조 (sp/A_s3) 두 잡 (gabia GPU · 한 묶음) 은 Li₃Nd r2 를 BFGS 경계에서 EXIT 로 잠깐 세우고 차례로 돌린 뒤 r2 를 남은 nstep 으로 잇는다",
+   "statement": "tools/electronic/run_nd_elf_nc_gabia.sh JOB=dirs (OUT = gabia 작업 폴더 · DIRS 'sp/A_s3 kpt/k222_A_s3' · PP_MANIFEST = db/inputs/lpscl_glass_model_check_2026_10_19/gabia_k222_2026_10_23/inputs_manifest.json · PROBE_EST_MIB 30065 (kgy 출력의 QE 어림 29.36 GB) · R2_NSTEP=remaining · MODE=auto) 한 번만 해당한다. ① need = 어림 × 1.3 + 1024 MiB ② GPU 계산 0 → 혼자 · 빔 − need ≥ 4,096 → r2 옆 (가드 47,500) · 아니면 GPU 위가 r2 하나뿐일 때만 세운다 ③ 세우기 = pause_relax_at_bfgs.sh --no_runner (다음 BFGS 줄 직후 EXIT) · 판정 '사람이 세움 → restart' 확인 · 세우기 전에 r2 실행 nstep 을 못 읽으면 세우지 않는다 ④ 두 잡을 차례로 (오류 점은 같은 입력으로 한 번 다시 · 'convergence NOT achieved' 는 다시 안 돌림 · 완료 = 수렴 + JOB DONE + 힘 · 응력 블록) ⑤ 끝나면 성공 · 실패 상관없이 r2 를 restart_qe_relax.sh --run --nstep (실행 nstep − 그 실행에서 쓴 SCF) 로 tmux 에서 다시 건다 — D-2026-10-22 마감 규칙 (EXIT 정지는 새 한도를 주지 않는다) · 남은 게 0 이하면 다시 걸지 않는다 ⑥ r2 말고 다른 잡이 GPU 에 있으면 아무것도 세우지 않는다. 탄성 · UMA 는 건드리지 않는다.",
+   "rationale": "kgy 3090 의 k222_A_s3 가 SCF 수렴 뒤 힘 단계에서 GPU OOM (QE 어림 29.36 GB > 24 GB — cascade 탓 아님). gabia A6000 48 GB 만 들어간다 (r2 ≈ 37 GB 와 같이는 안 들어감). 사용자 10-23 *'필요하면 gabia에서 잠깐 저거 stop하고 해도 되고'*. EXIT 정지 + BFGS 이력 승계는 비정상 종료가 아니다 (10-19 ELF · 10-20 S 빈자리 선례) · r2 한도 (≈ BFGS 386) 는 남은 nstep 으로 지킨다.",
+   "decision_state": "active",
+   "record_kind": "scope_declaration",
+   "results_seen": false,
+   "results_seen_note": "k222 압력 · Γ 압력 (판독량) 아무도 안 봤다 — kgy k222 는 응력 전에 죽었다",
+   "record": "db/properties/lpscl_glass_model_check_runlog_2026_10_19.json",
+   "depends_on": [
+    "D-2026-10-19-lpscl-smallcell-glass-model-check",
+    "D-2026-10-22-li3nd-r2-close-at-run-limit"
+   ],
+   "supersedes": [],
+   "amends": null,
+   "evidence": [
+    "tools/electronic/run_nd_elf_nc_gabia.sh",
+    "tools/elastic/pause_relax_at_bfgs.sh",
+    "tools/sei/restart_qe_relax.sh",
+    "db/inputs/lpscl_glass_model_check_2026_10_19/gabia_k222_2026_10_23/inputs_manifest.json",
+    "db/properties/lpscl_smallcell_glass_model_check_estimand_2026_10_19.json"
+   ],
+   "reopen_criteria": [
+    "이 러너의 두 잡 (오류 점 다시 한 번 포함) 이 끝나면 소멸 — 다른 GPU 잡 · 다른 공존 · 탄성 재개 · 세 번째 시도로 넘어가지 않는다 (새 결정)"
+   ],
+   "enforcement": "러너가 건다: DIRS 의 scf.in 존재 · PP 내용 sha256 = PP_MANIFEST (scf.in 의 pseudo_dir) · 입력을 만들지도 고치지도 않는다 · 완료 판정에 힘 · 응력 블록 (tprnfor · tstress 입력) · GPU 위 프로세스를 /proc cwd 로 가름 · pause 는 r2 하나뿐일 때만 · R2_NSTEP=remaining 이면 세우기 전에 실행 nstep 을 읽고 재개 nstep = 실행 nstep − '!' 줄 수 (0 이하 → 재개 안 함) · SCF 뒤 무조건 r2 재개 시도 (실패면 끝 12) · selftest 55 (dirs 13: 혼자 · 순서 · PP 대조 · SHA256SUMS · 입력 불변 · 힘·응력 없음 · 힘 단계 OOM · PP 다름 · scf.in 없음 · pause · 남은 nstep 163 · 한도 소진 · nstep 못 읽음) · 깨기 6/6",
+   "track": {
+    "name": "li2s (계산) · SEI (r2)",
+    "first_author": "li2s = 외부 1저자 (k 대조 경위는 편지 DA) · GPU 자리 · r2 = 사용자"
+   },
+   "proposed_by": "claude-session-2026-10-23",
+   "status_history": [
+    {
+     "at": "2026-10-23",
+     "state": "proposed",
+     "by": "agent",
+     "note": "kgy k222 OOM 원인 확인 직후 · 사용자 제안 받아 러너 확장"
+    },
+    {
+     "at": "2026-10-23",
+     "state": "active",
+     "by": "사용자 (gabia GPU 자리 · r2 = SEI 1저자)",
+     "note": "'필요하면 gabia에서 잠깐 저거 stop하고 해도 되고' (이 세션 · OOM 원인 설명 뒤)"
+    }
+   ],
+   "status": "active",
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-23T07:14:15Z",
+    "commit": "de26e3be1eace266f7a86f34bd18396be2fc067a",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-10-23 (이 세션): k222 OOM 원인 설명 (QE 어림 29.4 GB > 3090 24 GB) 을 인용하고 '필요하면 gabia에서 잠깐 저거 stop하고 해도 되고'",
+    "decision_digest": "sha256:9c0459c7ddd93940a8a6c17dc52302444d84d17dea6b95467fdcf99ce0839400"
+   }
   }
  ]
 }

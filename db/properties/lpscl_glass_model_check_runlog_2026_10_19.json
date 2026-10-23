@@ -364,5 +364,16 @@
   "Nd_V0": "tmux ndsite_v0 13:37:34 생성 → 15:39:53 li2s 사슬 끝과 같은 시각 시작 ('점 2개' · VRAM 여유 21,076 MiB · 문턱 8,000) · GPU 합계 13,094 MiB (MLi_04 V₀ + cascade) — 기록 ndo_site_dft_runlog_2026_10_15.json V0_발사_2026_10_23",
   "⏭": "회수 블록 (qe_sp/{sp,pulay,kpt}/<잡>/ scf.in · scf.out · struct.xyz + MANIFEST.json + chain.log + SHA256SUMS = 42 파일 · tmp/ 안 가져옴) → 클라우드 해시 대조 → glass_model_check.py --sp → 편지 DA Q-DA-4 (k 실패와 이유를 같이 싣는다)",
   "by": "agent · 2026-10-23"
+ },
+ "k222_gabia_준비_2026_10_23": {
+  "사용자": "'필요하면 gabia에서 잠깐 저거 stop하고 해도 되고' (OOM 원인 설명 뒤)",
+  "회수_검증": "✅ de26e3be1 (kgy push) → db/raw/lpscl_glass_model_check_2026_10_19/qe_sp/ — 42 파일 · SHA256SUMS 41/41 ✓ · MANIFEST 13 잡 scf_in_sha256 · geom_sha256 대조 어긋남 0 · --sp 판독은 안 돌림 (카드 개정 10: k 결과 뒤 한 번)",
+  "러너": "tools/electronic/run_nd_elf_nc_gabia.sh (sha16 3a01a4966ba2e16b) — 기존 도구 확장: JOB=dirs (준비된 QE 폴더 · PP 내용 sha256 대조 · 힘 · 응력 블록 완료 판정) · R2_NSTEP=remaining (재개 nstep = 실행 nstep − 쓴 SCF · D-2026-10-22) · selftest 55/55 (새 13 · 음성 7) · 깨기 6/6 (힘·응력 검사 → 그 시험만 빨강 · 남은 nstep 안 뺌 · PP sha 대조 뺌 · 순서 정렬 · 한도 소진 검사 뺌 · 세우기 전 nstep 검사 뺌) — ⚠ 첫 깨기 M1 은 줄을 지워 문법이 깨진 엉뚱한 빨강이었다 → 빈 명령으로 바꿔 다시 (그 시험 하나만 빨강)",
+  "입력": "db/inputs/lpscl_glass_model_check_2026_10_19/gabia_k222_2026_10_23/ — sp/A_s3 (Γ 기계 대조 · 먼저) · kpt/k222_A_s3 · kgy 입력에서 pseudo_dir 한 줄만 '/data/work/pseudo' (diff 확인) · inputs_manifest.json (원본 sha · 새 sha · PP 넷 sha256 = kgy MANIFEST = comp1 정본 세트)",
+  "카드": "개정 10 (결과 전 · 잠정) — Γ 기계 대조 |ΔP| ≤ 0.01 GPa 면 판독기 그대로 · 넘으면 멈춤 · gabia 실패면 개정 9 '(k 대조 없음 · Γ 만)'",
+  "결정": "D-2026-10-23-gabia-li2s-k222-pause-li3nd active (사용자 발화 · GPU 자리 · r2 남은 nstep)",
+  "어림": "r2 다음 BFGS 줄까지 0–1.2 h → Γ ≈ 10 분 → k222 ≈ 2.3 h + 힘 · 응력 → r2 재개 (≈ 3–4 h 정지 · r2 한도 ≈ BFGS 386 은 그대로 · 끝나는 날만 미뤄짐)",
+  "⏭": "gabia 블록 (DRY_RUN → tmux li2sk) → 감시 → '■ 끝' · r2 재개 줄 → 회수 → 판독 폴더 (kgy sp · pulay + gabia kpt) → glass_model_check.py --sp → 편지 DA Q-DA-4",
+  "by": "agent · 2026-10-23"
  }
 }

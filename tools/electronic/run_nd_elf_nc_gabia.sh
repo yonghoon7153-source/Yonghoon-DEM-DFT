@@ -30,11 +30,25 @@
 #   바로 남은 점을 멈춘 뒤 r2 재개 — 카드 §4) · ELF 후처리 (pp.x · 표본 · gap) 는 없다.
 #   ⛔ v1 (전하 떼어내기 · 2026-10-19 · 첫 점 100 반복 미수렴) 카드는 도구가 거부한다 — 바늘 셀 배경 전하 띠 휨 (runlog 진단).
 #
+# JOB=dirs (2026-10-23 · 첫 쓰임 li2s 모델 검증 k 2×2×2 대조 — kgy 3090 에 안 들어감 · QE 어림 29.4 GB · GPU 자리
+#   D-2026-10-23-gabia-li2s-k222-pause-li3nd): OUT 아래에 **이미 준비된** QE 폴더 (DIRS = 상대 경로 · 공백으로 · 실행 순서 ·
+#   첫 = 탐침) 를 같은 프로브 · GPU 자리 결정 · r2 정지/재개 안에서 차례로 돌린다. 입력을 만들지도 고치지도 않는다.
+#   PP_MANIFEST ({"pseudos": {원소: {"file", "sha256"}}}) 와 각 scf.in 의 pseudo_dir 안 파일 내용을 대조한다
+#   (이름이 같아도 다른 파일이 있다 — P rrkjus · cascade_rebuild_log §3-2). 완료 = 수렴 + JOB DONE + 입력이 켠 힘 ·
+#   응력 블록 (tools/doping/run_force_check_scf.sh _fc_ok 와 같은 뜻 — 응력 단계에서 죽은 출력을 완료로 세지 않는다).
+#   오류 점은 같은 입력으로 한 번 다시 · 'convergence NOT achieved' 는 다시 안 돌린다 (removal 과 같은 규칙).
+#
+# R2_NSTEP=remaining (2026-10-23 · D-2026-10-22-li3nd-r2-close-at-run-limit: 다른 잡 때문의 EXIT 정지 + 이력 승계는
+#   새 한도를 주지 않는다): r2 재개 nstep = 세운 실행의 입력 nstep − 그 실행에서 쓴 SCF ('!' 줄 수 · 세운 .out).
+#   0 이하면 다시 걸지 않는다 (한도 소진 = 마감 규칙). 숫자를 주면 예전처럼 그 값 (기본 200 · 10-20 이전 선례).
+#
 # 쓰는 법 (worktree 뿌리에서)
 #   DRY_RUN=1 PY=<uma python> bash tools/electronic/run_nd_elf_nc_gabia.sh    # 점검 + 프로브 + 결정만 (CPU 검사 · GPU 계산 0)
 #   tmux new -d -s ndelf "PY=<uma python> bash $PWD/tools/electronic/run_nd_elf_nc_gabia.sh"
 #
-# 종료: 0 끝 · 3 입력 (kprobe sha · UPF sha · SG15) · 4 프로브 실패 · 5 GPU 상태가 기대와 다름 (세우지 않음) · 6 r2 정지 실패 ·
+#   JOB=dirs PROBE_EST_MIB=<MiB> OUT=<폴더> DIRS="a/x b/y" PP_MANIFEST=<json> R2_NSTEP=remaining bash …   # 어림을 알면 CPU 프로브 생략
+#
+# 종료: 0 끝 · 3 입력 (kprobe sha · UPF sha · SG15 · dirs: 폴더 · PP 대조) · 4 프로브 실패 · 5 GPU 상태가 기대와 다름 (세우지 않음) · 6 r2 정지 실패 ·
 #       7 ELF SCF 실패 · 8 pp.x 실패 · 9 표본 실패 · 10 이미 실행 중 · 11 공존 가드 발동 (우리 pw.x 만 죽임) ·
 #       12 r2 재개를 못 걸었다 (⚠ 사람이 바로 본다 — r2 가 서 있다)
 # ⛔ 못 하는 것: Li₃Nd 말고 다른 잡을 세우지 않는다 · 탄성을 재개하지 않는다 · 결합 해석 (그건 기록에서 사람이) ·
@@ -49,8 +63,12 @@ ND_UPF_SHA=${ND_UPF_SHA:-56b2e141cc9726c8b544bfd1fe87e5a2098ac8d8117e4f2c23b280d
 SG15_DIR=${SG15_DIR:-/data/work/runs/lpsocl_elf/pseudo}
 JOB=${JOB:-elf}
 case "$JOB" in elf) OUT_DEF=/data/work/runs/nd_q3_elf_2026_10_19 ;; removal) OUT_DEF=/data/work/runs/nd_s_vacancy_2026_10_20 ;;
-  *) echo "⛔ JOB '$JOB' 모름 (elf · removal)"; exit 3 ;; esac
+  dirs) OUT_DEF= ;;
+  *) echo "⛔ JOB '$JOB' 모름 (elf · removal · dirs)"; exit 3 ;; esac
 OUT=${OUT:-$OUT_DEF}
+[ -n "$OUT" ] || { echo "⛔ JOB=dirs 에는 OUT (준비된 폴더들의 뿌리) 이 있어야 한다"; exit 3; }
+DIRS=${DIRS:-}                  # JOB=dirs: OUT 아래 상대 경로 (공백 · 실행 순서 · 첫 = 탐침)
+PP_MANIFEST=${PP_MANIFEST:-}    # JOB=dirs: {"pseudos": {원소: {"file", "sha256"}}} — scf.in 의 pseudo_dir 파일과 대조
 PSEUDO_DIR=${PSEUDO_DIR:-/data/work/pseudo}       # JOB=removal: PAW (kprobe.in 의 pseudo_dir 와 같다)
 RM_TOOL=${RM_TOOL:-$REPO/tools/electronic/nd_anion_removal.py}
 RM_CARD=${RM_CARD:-$REPO/db/properties/nd_s_vacancy_neutral_estimand_2026_10_20.json}   # JOB=removal: 카드 (모드 · 원소 · 자리 · 전자 수)
@@ -97,8 +115,9 @@ EOF
 #!/bin/bash
 # QE 처럼 pseudo_dir (실행 폴더 기준) 에서 ATOMIC_SPECIES 의 파일을 찾는다 — 없으면 readpp 오류로 죽는다
 f=$(printf '%s\n' "$@" | awk 'p{print; exit} /^-in$/{p=1}')
-pd=$(grep -o "pseudo_dir='[^']*'" "$f" | cut -d"'" -f2)
-for u in $(sed -n '/^ATOMIC_SPECIES/,/^$/p' "$f" | awk 'NF==3{print $3}'); do
+pd=$(grep -oE "pseudo_dir *= *'[^']*'" "$f" | cut -d"'" -f2)
+# 종 줄 = ATOMIC_SPECIES 다음의 '원소 질량 파일.UPF' 줄들 (빈 줄 없이 CELL 이 바로 와도 — 실물 li2s 입력 꼴)
+for u in $(awk '/^ATOMIC_SPECIES/{s=1; next} s && NF==3 && $3 ~ /\.(UPF|upf)$/ {print $3; next} s {s=0}' "$f"); do
   [ -f "$pd/$u" ] || { echo "     Error in routine readpp (1):"; echo "     file $pd/$u not found"; exit 1; }
 done
 EOF
@@ -129,6 +148,7 @@ case "${SCF_MODE:-ok}" in
   fail) echo "     Error in routine c_bands (1):"; exit 1 ;;
   long) exec sleep 60 ;;
   noconv) printf '     estimated scf accuracy    <       0.04361629 Ry\n     convergence NOT achieved after 100 iterations: stopping\nFORTRAN STOP\n'; exit 0 ;;
+  oomforce) printf '!    total energy              =   -2428.95718263 Ry\n     convergence has been achieved in  19 iterations\nAccelerator Fatal Error: call to cuMemAlloc returned error 2 (CUDA_ERROR_OUT_OF_MEMORY): Out of memory\n File: PW/src/addusforce.f90\n'; exit 1 ;;
 esac
 sleep 1
 cat <<'OUT'
@@ -152,9 +172,9 @@ cat <<'OUT'
 
 !    total energy              =   -1234.56789012 Ry
      convergence has been achieved in  12 iterations
-     PWSCF        :   1h 2m CPU      1h 3m WALL
-   JOB DONE.
 OUT
+[ "${SCF_MODE:-ok}" = full ] && printf '     Forces acting on atoms (cartesian axes, Ry/au):\n     atom    1 type  1   force =     0.00100000    0.00000000    0.00000000\n     Total force =     0.025000     Total SCF correction =     0.000100\n     Computing stress (Cartesian axis) and pressure\n          total   stress  (Ry/bohr**3)                   (kbar)     P=       -3.21\n'
+printf '     PWSCF        :   1h 2m CPU      1h 3m WALL\n   JOB DONE.\n'
 EOF
   cat > "$T/bin/nvsmi" <<'EOF'
 #!/bin/bash
@@ -308,6 +328,53 @@ EOF
      "$(run y JOB=removal PSEUDO_DIR="$T/paw" RM_CARD="$REPO/db/properties/nd_anion_removal_estimand_2026_10_19.json"):$(ls -d "$T"/out_y/rm_*/ 2>/dev/null | wc -l | tr -d ' ')" "3:0"
   mkdir -p "$T/paw2"; cp "$T"/paw/* "$T/paw2/"; rm "$T/paw2/$(ls "$T/paw2" | head -1)"
   st w 500; ck "⛔음성: removal PAW 하나 없음 → rc 3" "$(run w JOB=removal PSEUDO_DIR="$T/paw2")" 3
+  # 21– JOB=dirs (2026-10-23 · li2s k222) — 준비된 폴더 둘 (Γ 대조 → k222) · 가짜 GBRV · PP_MANIFEST · 힘·응력 완료 · r2 남은 nstep
+  mkdir -p "$T/gbrv"; for f in cl_pbe_v1.4.uspp.F.UPF li_pbe_v1.4.uspp.F.UPF P.pbe-n-rrkjus_psl.1.0.0.UPF s_pbe_v1.4.uspp.F.UPF; do echo "fake $f" > "$T/gbrv/$f"; done
+  "$PY" - "$T/gbrv" > "$T/ppman.json" <<'PY'
+import hashlib, json, pathlib, sys
+d = pathlib.Path(sys.argv[1])
+el = {"cl_pbe_v1.4.uspp.F.UPF": "Cl", "li_pbe_v1.4.uspp.F.UPF": "Li", "P.pbe-n-rrkjus_psl.1.0.0.UPF": "P", "s_pbe_v1.4.uspp.F.UPF": "S"}
+print(json.dumps({"pseudos": {e: {"file": f, "sha256": hashlib.sha256((d / f).read_bytes()).hexdigest()} for f, e in el.items()}}))
+PY
+  mkdirs(){   # $1 = OUT — 실물 꼴: 'pseudo_dir  = …' (공백) · tprnfor · tstress · 종 네 줄 다음 빈 줄 없이 CELL
+    for j in sp/A_s3 kpt/k222_A_s3; do mkdir -p "$1/$j"
+      printf "&CONTROL\n    calculation = 'scf'\n    prefix      = '%s'\n    outdir      = './tmp'\n    pseudo_dir  = '%s'\n    tprnfor     = .true.\n    tstress     = .true.\n/\nATOMIC_SPECIES\n  Cl  35.4530  cl_pbe_v1.4.uspp.F.UPF\n  Li  6.9410  li_pbe_v1.4.uspp.F.UPF\n  P  30.9740  P.pbe-n-rrkjus_psl.1.0.0.UPF\n  S  32.0650  s_pbe_v1.4.uspp.F.UPF\nCELL_PARAMETERS angstrom\n   14.06    0.00    0.00\n    0.00   14.06    0.00\n    0.00    0.00   14.06\n" \
+        "$(basename "$j")" "$T/gbrv" > "$1/$j/scf.in"; echo "fake xyz" > "$1/$j/struct.xyz"
+    done; }
+  DARGS=(JOB=dirs DIRS="sp/A_s3 kpt/k222_A_s3" PP_MANIFEST="$T/ppman.json" PROBE_EST_MIB=30065)
+  mkdirs "$T/out_d1"; st d1 500; rc=$(run d1 "${DARGS[@]}" SCF_MODE=full)
+  ck "dirs alone: rc 0 · 결정 alone · scf.out 2 · 프로브 생략 (CPU 0)" \
+     "$rc:$(grep -c '결정: alone' "$T/out_d1/run.log"):$(ls "$T"/out_d1/*/*/scf.out 2>/dev/null | wc -l | tr -d ' '):$(grep -c 'PROBE_EST_MIB=30065' "$T/out_d1/run.log"):$(has "$T/out_d1/probe/probe.out")" "0:1:2:1:no"
+  ck "dirs: 실행 순서 = DIRS (A_s3 → k222_A_s3)" "$(grep -o '▶ SCF [A-Za-z0-9_]*' "$T/out_d1/run.log" | awk '{print $3}' | tr '\n' ' ')" "A_s3 k222_A_s3 "
+  ck "dirs: PP 넷 대조 ✓ · ELF 후처리 없음" "$(grep -c 'PP ✓ 4 개' "$T/out_d1/run.log"):$(has "$T/out_d1/nd_elf_nc.cube")" "1:no"
+  ck "dirs: SHA256SUMS 에 두 폴더 scf.in · scf.out · struct.xyz (6)" "$(grep -cE '  \./(sp/A_s3|kpt/k222_A_s3)/(scf\.in|scf\.out|struct\.xyz)$' "$T/out_d1/SHA256SUMS")" 6
+  ck "dirs: 입력을 고치지 않았다 (scf.in 바이트 그대로)" "$(mkdirs "$T/ref_d1"; cmp -s "$T/out_d1/kpt/k222_A_s3/scf.in" "$T/ref_d1/kpt/k222_A_s3/scf.in" && echo same)" same
+  mkdirs "$T/out_d2"; st d2 500; rc=$(run d2 "${DARGS[@]}" SCF_MODE=ok)
+  ck "⛔음성: tstress · tprnfor 인데 힘·응력 블록 없음 → 완료 아님 → 한 번 다시 → rc 7" "$rc:$(grep -c '같은 입력으로 한 번 다시' "$T/out_d2/run.log")" "7:1"
+  mkdirs "$T/out_d3"; st d3 500; rc=$(run d3 "${DARGS[@]}" SCF_MODE=oomforce)
+  ck "⛔음성: SCF 수렴 ('!') 뒤 힘 단계 OOM (kgy 10-23 꼴) → rc 7 · 두 번 실패 기록" "$rc:$(grep -c '두 번 실패' "$T/out_d3/run.log")" "7:1"
+  mkdirs "$T/out_d4"; st d4 500; echo "tampered" >> "$T/gbrv/s_pbe_v1.4.uspp.F.UPF"; rc=$(run d4 "${DARGS[@]}" SCF_MODE=full)
+  ck "⛔음성: PP 내용이 PP_MANIFEST 와 다르면 rc 3 · SCF 없음" "$rc:$(ls "$T"/out_d4/*/*/scf.out 2>/dev/null | wc -l | tr -d ' ')" "3:0"
+  echo "fake s_pbe_v1.4.uspp.F.UPF" > "$T/gbrv/s_pbe_v1.4.uspp.F.UPF"
+  mkdirs "$T/out_d5"; rm "$T/out_d5/kpt/k222_A_s3/scf.in"; st d5 500
+  ck "⛔음성: DIRS 의 scf.in 이 없으면 rc 3" "$(run d5 "${DARGS[@]}" SCF_MODE=full)" 3
+  # r2 남은 nstep — 세운 실행 nstep 200 · 쓴 SCF 37 → 재개 --nstep 163 (D-2026-10-22 · EXIT 정지는 새 한도를 안 준다)
+  R2RI="$T/r2/00_control_relax.restart.in"; cp "$R2RI" "$T/r2_restart_in.bak"
+  printf "&CONTROL\n  calculation='relax'\n  prefix='li3nd'\n  nstep = 200\n  restart_mode = 'restart'\n/\n" > "$R2RI"
+  bangs(){ for i in $(seq "$1"); do echo '!    total energy              =  -14652.03000000 Ry'; done >> "$T/r2/00_control_relax.out"; }
+  mkdirs "$T/out_d6"; st d6 37250; r2_up "$T/st_d6"; bangs 37; rc=$(run d6 "${DARGS[@]}" SCF_MODE=full R2_NSTEP=remaining)
+  ck "dirs pause: rc 0 · 결정 pause · 정지 있음 · scf.out 2" \
+     "$rc:$(grep -c '결정: pause' "$T/out_d6/run.log"):$(has "$T/st_d6/pause_args"):$(ls "$T"/out_d6/*/*/scf.out 2>/dev/null | wc -l | tr -d ' ')" "0:1:yes:2"
+  ck "r2 남은 nstep: 재개 --run --nstep 163 (= 200 − 37)" "$(grep -c -- "--run --nstep 163 $T/r2" "$T/st_d6/restart_ran" 2>/dev/null)" 1
+  down "$T/st_d6"
+  mkdirs "$T/out_d7"; st d7 37250; r2_up "$T/st_d7"; bangs 200; rc=$(run d7 "${DARGS[@]}" SCF_MODE=full R2_NSTEP=remaining)
+  ck "r2 한도 소진 (SCF 200 / nstep 200) → 다시 걸지 않는다 · rc 0 · 기록" "$rc:$(has "$T/st_d7/restart_ran"):$(grep -c '한도를 다 썼다' "$T/out_d7/run.log")" "0:no:1"
+  down "$T/st_d7"
+  cp "$T/r2_restart_in.bak" "$R2RI"
+  mkdirs "$T/out_d8"; st d8 37250; r2_up "$T/st_d8"; rc=$(run d8 "${DARGS[@]}" SCF_MODE=full R2_NSTEP=remaining)
+  ck "⛔음성: remaining 인데 세울 실행의 nstep 을 못 읽음 → 세우기 전에 rc 6 · 정지 없음 · SCF 없음 · r2 살아 있음" \
+     "$rc:$(has "$T/st_d8/pause_args"):$(ls "$T"/out_d8/*/*/scf.out 2>/dev/null | wc -l | tr -d ' '):$(alive "$T/st_d8")" "6:no:0:yes"
+  down "$T/st_d8"
   for x in $(pgrep -f -- "$T/bin/" 2>/dev/null); do kill -9 "$x" 2>/dev/null; done
   cat "$T"/st_*/orphans 2>/dev/null | xargs -r kill 2>/dev/null
   [ "${KEEP_T:-0}" = 1 ] && echo "  (시험 폴더 남김: $T)" || rm -rf "$T"
@@ -320,12 +387,55 @@ say(){ echo "[$(date '+%F %T')] $*" | tee -a "$LOG"; }
 exec 9>"$OUT/.lock"; flock -n 9 || { say "⛔ 이미 실행 중 ($OUT/.lock)"; exit 10; }
 # ⚠ 자식 프로세스에는 fd 9 를 닫아서 넘긴다 (… 9>&-) — 물려받은 자식이 남으면 락이 안 풀린다
 #   (2026-10-19 selftest 실측: 프로브의 자식이 살아 남아 DRY_RUN 뒤 본 실행이 '이미 실행 중' 으로 멈췄다)
-say "════ Nd $([ "$JOB" = removal ] && echo "떼어내기 SCF ($(basename "$RM_CARD" .json) · PAW 70/560)" || echo 'ELF (NC 80/320)') · HEAD $(git -C "$REPO" rev-parse --short HEAD 2>/dev/null) · MODE $MODE${DRY_RUN:+ · DRY_RUN} · OUT $OUT ════"
+case "$JOB" in
+  removal) TITLE="Nd 떼어내기 SCF ($(basename "$RM_CARD" .json) · PAW 70/560)" ;;
+  dirs)    TITLE="준비된 QE 폴더 $(echo $DIRS | wc -w) 개 (JOB=dirs · $DIRS)" ;;
+  *)       TITLE="Nd ELF (NC 80/320)" ;;
+esac
+say "════ $TITLE · HEAD $(git -C "$REPO" rev-parse --short HEAD 2>/dev/null) · MODE $MODE${DRY_RUN:+ · DRY_RUN} · OUT $OUT ════"
 
 # ① 입력 ───────────────────────────────────────────────────────────────────
-[ -s "$SCF_IN" ] || { say "⛔ kprobe 입력 없음 ($SCF_IN)"; exit 3; }
-[ "$(sha256sum "$SCF_IN" | cut -c1-64)" = "$SCF_IN_SHA" ] || { say "⛔ kprobe 입력 sha256 ≠ Bader 계보 기록 ($SCF_IN_SHA) — 다른 기하다"; exit 3; }
-if [ "$JOB" = removal ]; then
+if [ "$JOB" != dirs ]; then
+  [ -s "$SCF_IN" ] || { say "⛔ kprobe 입력 없음 ($SCF_IN)"; exit 3; }
+  [ "$(sha256sum "$SCF_IN" | cut -c1-64)" = "$SCF_IN_SHA" ] || { say "⛔ kprobe 입력 sha256 ≠ Bader 계보 기록 ($SCF_IN_SHA) — 다른 기하다"; exit 3; }
+fi
+if [ "$JOB" = dirs ]; then
+  [ -n "$DIRS" ] || { say "⛔ JOB=dirs 인데 DIRS 가 비었다"; exit 3; }
+  [ -s "$PP_MANIFEST" ] || { say "⛔ PP_MANIFEST 없음 (${PP_MANIFEST:-빈 값})"; exit 3; }
+  for d in $DIRS; do [ -s "$OUT/$d/scf.in" ] || { say "⛔ $OUT/$d/scf.in 없음"; exit 3; }; done
+  # PP 내용 대조 — 이름이 같아도 다른 파일이 있다 (P rrkjus: QE 사이트판 ≠ 우리 판 · cascade_rebuild_log §3-2)
+  "$PY" - "$PP_MANIFEST" "$OUT" $DIRS <<'PY' 2>&1 9>&- | tee -a "$LOG"
+import hashlib, json, pathlib, re, sys
+want = {v["file"]: v["sha256"] for v in json.load(open(sys.argv[1]))["pseudos"].values()}
+out, bad, seen = pathlib.Path(sys.argv[2]), [], set()
+for d in sys.argv[3:]:
+    t = (out / d / "scf.in").read_text()
+    m = re.search(r"^\s*pseudo_dir\s*=\s*'([^']+)'", t, re.M)
+    if not m:
+        bad.append(f"{d}: pseudo_dir 줄 없음"); continue
+    pd = pathlib.Path(m.group(1))
+    pd = pd if pd.is_absolute() else out / d / pd
+    files = re.findall(r"^\s*[A-Z][a-z]?\s+[\d.]+\s+(\S+\.(?:UPF|upf))\s*$", t, re.M)
+    if not files:
+        bad.append(f"{d}: ATOMIC_SPECIES 를 못 읽었다")
+    for f in files:
+        if f not in want:
+            bad.append(f"{d}: {f} 가 PP_MANIFEST 에 없다"); continue
+        p = pd / f
+        if not p.is_file():
+            bad.append(f"{d}: {p} 없음"); continue
+        if hashlib.sha256(p.read_bytes()).hexdigest() != want[f]:
+            bad.append(f"{d}: {p} sha256 ≠ PP_MANIFEST")
+        seen.add(f)
+if bad:
+    print("⛔ PP 대조 실패 —\n   " + "\n   ".join(bad)); sys.exit(1)
+print(f"PP ✓ {len(seen)} 개 내용 sha256 = PP_MANIFEST · 폴더 {len(sys.argv) - 3}")
+PY
+  [ "${PIPESTATUS[0]}" = 0 ] || { say "⛔ PP 대조 실패 — 아무것도 돌리지 않는다"; exit 3; }
+  RM_DIRS=$(for d in $DIRS; do echo "$OUT/$d"; done)     # 실행 목록 (아래 removal 과 같은 고리)
+  PROBE_IN=$OUT/$(echo $DIRS | awk '{print $1}')/scf.in
+  say "입력 ✓ $(echo $DIRS | wc -w) 개 — 실행 순서 $DIRS · 프로브 = 첫 폴더 · 입력은 만들지도 고치지도 않는다"
+elif [ "$JOB" = removal ]; then
   PAWS=$(sed -n '/^ATOMIC_SPECIES/,/^$/p' "$SCF_IN" | awk 'NF==3{print $3}')
   [ "$(echo "$PAWS" | grep -c .)" = 6 ] || { say "⛔ kprobe 의 ATOMIC_SPECIES 가 여섯이 아니다"; exit 3; }
   for f in $PAWS; do [ -s "$PSEUDO_DIR/$f" ] || { say "⛔ PAW pseudo 없음 ($PSEUDO_DIR/$f)"; exit 3; }; done
@@ -490,12 +600,22 @@ resume_r2(){   # → 0 걸었다/필요 없음 · 1 못 걸었다
     *수렴*) say "r2 는 수렴 상태 — 다시 걸 것 없음"; return 0 ;;
     *) say "⛔ r2 가 '사람이 세움 → restart' 가 아니다 — 걸지 않는다 (사람이 본다)"; return 1 ;;
   esac
+  local ns=$R2_NSTEP used
+  if [ "$R2_NSTEP" = remaining ]; then
+    # D-2026-10-22 마감 규칙 — 다른 잡 때문의 EXIT 정지 + 이력 승계는 같은 실행으로 센다 (새 한도를 주지 않는다)
+    used=$(grep -ac '^!' "$R2_DIR/$R2_OUTB" 2>/dev/null)
+    [[ "${R2_CAP:-}" =~ ^[0-9]+$ ]] && [[ "$used" =~ ^[0-9]+$ ]] \
+      || { say "⛔ r2 남은 nstep 을 못 셌다 (실행 nstep '${R2_CAP:-?}' · 쓴 SCF '${used:-?}') — 걸지 않는다 (사람이 본다)"; return 1; }
+    ns=$((R2_CAP - used))
+    if [ "$ns" -le 0 ]; then say "r2 이번 실행 한도를 다 썼다 (SCF $used / nstep $R2_CAP) — 다시 걸지 않는다 (마감 규칙 · 늘리지 않는다)"; return 0; fi
+    say "r2 재개 nstep = 실행 nstep $R2_CAP − 쓴 SCF $used = $ns (EXIT 정지는 새 한도를 주지 않는다)"
+  fi
   local s=li3nd_r2_res_$(date +%m%d%H%M)
-  "$TMUX_BIN" new -d -s "$s" "bash $RESTART_TOOL --run --nstep $R2_NSTEP $R2_DIR > $OUT/r2_resume.log 2>&1" 9>&- || { say "⛔ tmux 로 r2 재개를 못 띄웠다"; return 1; }
+  "$TMUX_BIN" new -d -s "$s" "bash $RESTART_TOOL --run --nstep $ns $R2_DIR > $OUT/r2_resume.log 2>&1" 9>&- || { say "⛔ tmux 로 r2 재개를 못 띄웠다"; return 1; }
   sleep 5
   "$TMUX_BIN" has-session -t "$s" 2>/dev/null || grep -aq "▶" "$OUT/r2_resume.log" 2>/dev/null \
     || { say "⛔ r2 재개 세션 $s 가 바로 사라졌다 — $OUT/r2_resume.log"; return 1; }
-  say "✅ r2 재개 — tmux $s (restart_qe_relax.sh --run --nstep $R2_NSTEP · GPU 여유를 스스로 기다린다) · 로그 $OUT/r2_resume.log"
+  say "✅ r2 재개 — tmux $s (restart_qe_relax.sh --run --nstep $ns · GPU 여유를 스스로 기다린다) · 로그 $OUT/r2_resume.log"
   return 0
 }
 finish_fail(){   # $1 = 끝 코드 — pause 였으면 r2 부터 다시 건다
@@ -511,6 +631,13 @@ if [ "$DEC" = pause ]; then
   R2_SRC=$(ls -1 "$R2_DIR"/*.in 2>/dev/null | head -1)          # restart_qe_relax.sh 와 같은 규칙: 첫 .in → .out
   R2_OUTB=$(basename "${R2_SRC%.in}.out")
   [ -n "$R2_IN" ] && [ -f "$R2_DIR/$R2_IN" ] && [ -f "$R2_DIR/$R2_OUTB" ] || { say "⛔ r2 입력·출력을 못 정했다 (in '$R2_IN' · out '$R2_OUTB')"; exit 6; }
+  if [ "$R2_NSTEP" = remaining ]; then   # 재개 nstep 을 못 셀 거면 세우기 전에 멈춘다 (세워 놓고 못 거는 것보다 낫다)
+    R2_CAP=$(awk -F= 'tolower($1) ~ /^[ \t]*nstep[ \t]*$/ {gsub(/[ \t,]/, "", $2); print $2; exit}' "$R2_DIR/$R2_IN")
+    [[ "$R2_CAP" =~ ^[0-9]+$ ]] || { say "⛔ R2_NSTEP=remaining 인데 $R2_IN 의 nstep 을 못 읽었다 ('$R2_CAP') — 세우지 않는다"; exit 6; }
+    say "r2 이번 실행 nstep $R2_CAP · 지금까지 SCF $(grep -ac '^!' "$R2_DIR/$R2_OUTB") — 재개 때 남은 만큼만 준다"
+  elif ! [[ "$R2_NSTEP" =~ ^[0-9]+$ ]]; then
+    say "⛔ R2_NSTEP '$R2_NSTEP' 는 숫자나 remaining 이어야 한다 — 세우지 않는다"; exit 6
+  fi
   say "▶ r2 정지 — pw.x $p · in $R2_IN · out $R2_OUTB · 다음 BFGS 줄 직후 EXIT (최대 ${PAUSE_TIMEOUT} s)"
   bash "$PAUSE_TOOL" --in "$R2_IN" --out "$R2_OUTB" --no_runner --poll "$PAUSE_POLL" --timeout "$PAUSE_TIMEOUT" >> "$LOG" 2>&1 9>&-
   prc=$?
@@ -531,11 +658,20 @@ if [ "$DEC" = pause ]; then
   say "GPU 빔 × $EMPTY_N — $JOB SCF 혼자 간다"
 fi
 
-# ⑤ SCF (GPU) — ELF 는 OUT 하나 · removal 은 MANIFEST 의 rm_* ──────────────────────────
+# ⑤ SCF (GPU) — ELF 는 OUT 하나 · removal 은 MANIFEST 의 rm_* · dirs 는 DIRS ──────────────────
+scf_done(){   # 지금 폴더 — 수렴 + JOB DONE · JOB=dirs 는 입력이 켠 힘 · 응력 블록까지 (run_force_check_scf.sh _fc_ok 와 같은 뜻)
+  #   ⚠ 2026-10-23 li2s k222 (kgy): SCF 수렴 ('!' 줄) 뒤 힘 단계 (addusforce) 에서 GPU OOM — 압력이 필요한 잡은 그 출력을 끝난 것으로 세면 안 된다
+  grep -aq "convergence has been achieved" scf.out 2>/dev/null && grep -aq "JOB DONE" scf.out || return 1
+  if [ "$JOB" = dirs ]; then
+    if grep -aqiE "^[ \t]*tprnfor[ \t]*=[ \t]*\.true\." scf.in && ! grep -aq "Forces acting on atoms" scf.out; then return 1; fi
+    if grep -aqiE "^[ \t]*tstress[ \t]*=[ \t]*\.true\." scf.in && ! grep -aqE "total +stress" scf.out; then return 1; fi
+  fi
+  return 0
+}
 run_scf(){   # $1 = 폴더 → 0 수렴 · 7 실패 · 8 결정론적 미수렴 ('convergence NOT achieved') · 11 가드
   local d=$1 rc GP=""
   cd "$d" || return 7
-  if grep -aq "JOB DONE" scf.out 2>/dev/null && grep -aq "convergence has been achieved" scf.out; then
+  if scf_done; then
     say "$(basename "$d"): scf.out 이 이미 끝나 있다 — 생략"; return 0
   fi
   [ -f scf.out ] && mv scf.out "scf.out.$(date +%m%d%H%M%S)"
@@ -560,8 +696,8 @@ run_scf(){   # $1 = 폴더 → 0 수렴 · 7 실패 · 8 결정론적 미수렴 
   wait "$MP"; rc=$?
   [ -n "$GP" ] && { kill "$GP" 2>/dev/null; wait "$GP" 2>/dev/null; }
   if [ -e "$OUT/.guard_fired" ]; then rm -f "$OUT/.guard_fired"; say "⛔ 공존 가드 발동 — 우리 SCF 만 죽였다 · MODE=pause 로 다시"; return 11; fi
-  if grep -aq "convergence has been achieved" scf.out && grep -aq "JOB DONE" scf.out; then
-    say "SCF ✓ $(basename "$d") $(grep -a '^!' scf.out | tail -1 | tr -s ' ') · 반복 $(grep -a 'convergence has been achieved' scf.out | tail -1 | grep -oE '[0-9]+ iterations') · $(grep -a 'PWSCF.*WALL' scf.out | tail -1 | tr -s ' ')"
+  if scf_done; then
+    say "SCF ✓ $(basename "$d") $(grep -a '^!' scf.out | tail -1 | tr -s ' ') · 반복 $(grep -a 'convergence has been achieved' scf.out | tail -1 | grep -oE '[0-9]+ iterations') · $(grep -a 'PWSCF.*WALL' scf.out | tail -1 | tr -s ' ')$([ "$JOB" = dirs ] && grep -aqE 'total +stress' scf.out && echo " · 응력 $(grep -aE 'total +stress' scf.out | tail -1 | grep -oE 'P= *-?[0-9.]+' | tr -d ' ') kbar")"
     return 0
   fi
   if grep -aq "convergence NOT achieved" scf.out; then
@@ -570,11 +706,11 @@ run_scf(){   # $1 = 폴더 → 0 수렴 · 7 실패 · 8 결정론적 미수렴 
   fi
   say "⛔ SCF $(basename "$d") rc=$rc · 수렴/JOB DONE 없음 — scf.out 끝:"; tail -5 scf.out | tee -a "$LOG"; return 7
 }
-if [ "$JOB" = removal ]; then
+if [ "$JOB" = removal ] || [ "$JOB" = dirs ]; then
   for d in $RM_DIRS; do
     run_scf "$d"; r=$?
     [ "$r" = 11 ] && exit 11
-    if [ "$r" = 8 ]; then say "⛔ $(basename "$d") 결정론적 미수렴 — 같은 입력으로 다시 돌리지 않는다 (같은 시작 → 같은 길) · 남은 점을 멈춘다 (카드 §4 재개 규칙)"; finish_fail 7; fi
+    if [ "$r" = 8 ]; then say "⛔ $(basename "$d") 결정론적 미수렴 — 같은 입력으로 다시 돌리지 않는다 (같은 시작 → 같은 길) · 남은 점을 멈춘다$([ "$JOB" = removal ] && echo ' (카드 §4 재개 규칙)')"; finish_fail 7; fi
     if [ "$r" != 0 ]; then say "↻ $(basename "$d") 같은 입력으로 한 번 다시"; run_scf "$d"; r=$?; [ "$r" = 11 ] && exit 11; fi
     [ "$r" = 0 ] || { say "⛔ $(basename "$d") 두 번 실패 — 남은 점을 멈춘다"; finish_fail 7; }
   done
@@ -629,7 +765,8 @@ RC_END=0; [ -n "${R2_FAIL:-}" ] && RC_END=12
 say "■ 끝 · 끝 코드 $RC_END$([ "$RC_END" = 12 ] && echo ' (계산은 끝 · ⛔ r2 재개 실패 — 사람이 바로 본다)') · 결정 $DEC"
 find . -maxdepth 1 -type f ! -name '.lock' ! -name SHA256SUMS ! -name 'nd_elf_pl' ! -name '*.cube' -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS
 [ "$JOB" = removal ] && find . -mindepth 2 -maxdepth 2 -path './rm_*' -type f \( -name scf.in -o -name scf.out \) -print0 | sort -z | xargs -0 sha256sum >> SHA256SUMS
+if [ "$JOB" = dirs ]; then for d in $DIRS; do for f in scf.in scf.out struct.xyz; do [ -f "./$d/$f" ] && sha256sum "./$d/$f"; done; done >> SHA256SUMS; fi
 [ -d pseudo ] && ( cd pseudo && sha256sum * ) | sed 's#  #  ./pseudo/#' >> SHA256SUMS
 [ -f probe/probe.out ] && sha256sum probe/probe.out | sed 's#  probe/#  ./probe/#' >> SHA256SUMS
-echo "SHA256SUMS $(wc -l < SHA256SUMS) 줄 (회수: $([ "$JOB" = removal ] && echo 'rm_*/scf.in · rm_*/scf.out · MANIFEST.json' || echo 'scf.in · scf.out · pp_elf.* · nd_elf_bonds.csv') · run.log · probe/probe.out · SOURCE_COMMIT)"
+echo "SHA256SUMS $(wc -l < SHA256SUMS) 줄 (회수: $(case "$JOB" in removal) echo 'rm_*/scf.in · rm_*/scf.out · MANIFEST.json' ;; dirs) echo "DIRS 의 scf.in · scf.out · struct.xyz" ;; *) echo 'scf.in · scf.out · pp_elf.* · nd_elf_bonds.csv' ;; esac) · run.log · probe/probe.out · SOURCE_COMMIT)"
 exit "$RC_END"
