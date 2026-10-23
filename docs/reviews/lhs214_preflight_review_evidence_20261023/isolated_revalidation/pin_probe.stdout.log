@@ -1,0 +1,22 @@
+{
+  "selftest_rc": 0,
+  "cases": {
+    "normal": [],
+    "trailing_LF": [],
+    "trailing_CRLF": [
+      "P7",
+      "P10"
+    ],
+    "wrong_last_digit": [
+      "P10"
+    ],
+    "trailing_space": [
+      "P7",
+      "P10"
+    ],
+    "trailing_NUL": [
+      "P7",
+      "P10"
+    ]
+  }
+}

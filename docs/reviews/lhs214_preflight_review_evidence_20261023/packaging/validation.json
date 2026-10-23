@@ -1,0 +1,17 @@
+{
+  "new_replay_tool": "tools/provenance_replay.py",
+  "new_replay_tool_exit_code": 0,
+  "ratification_expected_date_counts": [
+    8,
+    7
+  ],
+  "old_tool_expected_failure": "121/122; S0b only; rc 1",
+  "existing_reviewer_manifest_files_checked": 51,
+  "existing_reviewer_manifest_changes": [],
+  "markdown_link_targets": "all resolved in staging or existing repository",
+  "json_documents": "all parsed",
+  "replay_tools_compiled": 4,
+  "reviewed_source_files_unchanged": 40,
+  "markdown_absolute_workspace_dependencies": 0,
+  "whole_repository_gate": "pending in main task; not executed by this packaging step"
+}

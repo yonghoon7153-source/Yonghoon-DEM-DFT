@@ -1,0 +1,132 @@
+{
+  "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+  "registrations": {
+    "docs/reviews/lhs_network_batch_registration_20261007_g2.md": {
+      "values": {
+        "n": 194,
+        "ids_sha256": "a04282d7275bd8f92b0afb4ac8b045f72f3867ccebbb7813b530b3901fd7b3bf",
+        "raw_sha256_table_sha256": null,
+        "cohort_tsv_sha256": null,
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+        "harvest_pin": null,
+        "design_csv_sha256": null,
+        "adapter_csv_sha256": null,
+        "code_fp_pending": null,
+        "r3_tgz_sha256": "e4aa0b9492a48368d47ad20555cd71114da53488badedbaea330835c467b9958",
+        "r2_tgz_sha256": "baa03b6b65d57b7850df151a011d8102b605fc15d81aa9f58969629ac9d00aff",
+        "harvest_head": "1e09f661d83edd674a1686b22552f609b61a34b6"
+      },
+      "problems": [
+        "등록 문서 raw_sha256_table_sha256 — 자리 없음",
+        "등록 문서 cohort_tsv_sha256 — 자리 없음",
+        "등록 문서 harvest_pin — 자리 없음",
+        "등록 문서 design_csv_sha256 — 자리 없음 ((설계 `docs/data/lhs_supp_design_20261006.csv`)",
+        "등록 문서 adapter_csv_sha256 — 자리 없음 (설계 어댑터 출력 = `docs/data/lhss_design_adapted_20261)"
+      ],
+      "fp_problems": []
+    },
+    "docs/reviews/lhs_network_batch_registration_20261012_supp20.md": {
+      "values": {
+        "n": 20,
+        "ids_sha256": "991cf1150b183f64bc69926a8b3e7c05453ec47e13b89ba3a6ad2fd2c981c694",
+        "raw_sha256_table_sha256": "a7aaa3c8c7683f1835a096acb83ecdb055eaf5f129221f7067c5f34462807d0e",
+        "cohort_tsv_sha256": "69d3f913072288b1d6b8ca8a14e43b0bc8f80e8836a8f79a9b26b2d8ed6dcaf7",
+        "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+        "harvest_pin": "1e09f661d",
+        "design_csv_sha256": "73d9a47f76f49989ddbd2c1237007c8499601d63bd5baf0e1ad11c527f21beb0",
+        "adapter_csv_sha256": "df505b79a756ee3fe2759c740bfb43282dd69035c5a9fb9354a657300117dc0c",
+        "code_fp_pending": null,
+        "r3_tgz_sha256": "e4aa0b9492a48368d47ad20555cd71114da53488badedbaea330835c467b9958",
+        "r2_tgz_sha256": "baa03b6b65d57b7850df151a011d8102b605fc15d81aa9f58969629ac9d00aff",
+        "harvest_head": "1e09f661d83edd674a1686b22552f609b61a34b6"
+      },
+      "problems": [],
+      "fp_problems": []
+    }
+  },
+  "historical_rows": 32,
+  "active_rows_cover_sealed": true,
+  "active_row_mismatch": {},
+  "other_tool_hashes": {
+    "scripts/lhs_design_dataset.py": "d1815155142e909200053c2d8e9de8c0a88c2dc6d3d9462ad18614a42845e1f0",
+    "scripts/g2_network_reread.py": "0e2ec7ef37571268b85b0d17b71f7a2858aa2a7e6bcfadf4be1c6b5416dd5cd8",
+    "scripts/lhs_release_build.py": "3096e33fd0f1953363bcde251a77368366a0568c923447111a48a873ad4a1383",
+    "scripts/run_network_194_parallel.py": "f4048aca55b912628278dbdd7b184ac449723736cd3f4f5cdc7eeca31294921a",
+    "scripts/wsl_network_smoke.py": "feb3e84b9c01d2dee28a158fbbd179e57a4c947325181c276d66d2cec1831b11",
+    "scripts/supp20_input_receipt.py": "3d6110be24d24bf91ad1e71232a2e5dad580cf95178d6135b13aa6ca6de6f950"
+  },
+  "input_digests": {
+    "production194": {
+      "n": 194,
+      "ids_sha256": "a04282d7275bd8f92b0afb4ac8b045f72f3867ccebbb7813b530b3901fd7b3bf",
+      "raw_sha256_table_sha256": "da7c93f9a0887145ff171e381c8608cb79779d96aea5a595a25677dc361ef784",
+      "missing_raw_sha": [],
+      "cohort_tsv_sha256": {
+        "lhs": "32f00daa8394188d1e72531fd7fda1a8b47a9c279be76311ae7f2afa024b2809",
+        "lhsx": "0b85e8589917c9a3936ce29e9f36326993985ddd113ef32353a4ff96d981cb45"
+      }
+    },
+    "supp20": {
+      "n": 20,
+      "ids_sha256": "991cf1150b183f64bc69926a8b3e7c05453ec47e13b89ba3a6ad2fd2c981c694",
+      "raw_sha256_table_sha256": "a7aaa3c8c7683f1835a096acb83ecdb055eaf5f129221f7067c5f34462807d0e",
+      "missing_raw_sha": [],
+      "cohort_tsv_sha256": {
+        "lhss": "69d3f913072288b1d6b8ca8a14e43b0bc8f80e8836a8f79a9b26b2d8ed6dcaf7"
+      }
+    }
+  },
+  "generation": {
+    "generation": "g2",
+    "g2_name": "g2",
+    "problems": [],
+    "modes": [
+      "hertz",
+      "physics",
+      "hertz_h12"
+    ],
+    "method": "chain21 — network_conductivity._run_all_networks (망 CLI 기본값 · hertzian + physics · 21 구 SE 사슬 · 판 20 · 상자 10 · 척도 1) → tau_flux.network_generation_contract (같은 워커 체크아웃 · python -I -B)",
+    "python": "/workspace/.venvs/yonghoon-dem/bin/python",
+    "code_root": "/workspace/Yonghoon-DEM-DFT",
+    "error": "",
+    "nc_file": "/workspace/Yonghoon-DEM-DFT/scripts/network_conductivity.py",
+    "tf_file": "/workspace/Yonghoon-DEM-DFT/scripts/tau_flux.py"
+  },
+  "closure_files": [
+    "scripts/analyze_contacts.py",
+    "scripts/analyze_contacts_bimodal.py",
+    "scripts/coverage_physics_vs_hertzian.py",
+    "scripts/dem_analysis_core.py",
+    "scripts/export_master_csv.py",
+    "scripts/fracture_model.py",
+    "scripts/grade_engine.py",
+    "scripts/lens_geometry.py",
+    "scripts/lhs_descriptor_harvest.py",
+    "scripts/lhs_harvest_batch.py",
+    "scripts/lhs_perc_extract.py",
+    "scripts/lhs_union_webapp.py",
+    "scripts/lhs_webapp_batch.py",
+    "scripts/metrics_json.py",
+    "scripts/ml_design_structure.py",
+    "scripts/network_conductivity.py",
+    "scripts/parse_liggghts.py",
+    "scripts/plastic_coverage.py",
+    "scripts/press_units.py",
+    "scripts/se_material.py",
+    "scripts/tau_flux.py",
+    "scripts/type_map_resolve.py",
+    "webapp/app.py",
+    "webapp/ledger_view.py",
+    "webapp/mpm_lab_register.py",
+    "webapp/pipeline_service.py",
+    "webapp/predictor_engine.py",
+    "webapp/security.py",
+    "webapp/storage_sync.py",
+    "webapp/structure_predictor.py"
+  ],
+  "closure_outside_sealed": [],
+  "lazy_count": 92,
+  "lazy_unclassified": [],
+  "lazy_stale": [],
+  "fork_census": []
+}

@@ -1,0 +1,259 @@
+{
+  "head": "7799a2ff64ba462b42ce05edd3e63b7c2854d557",
+  "baseline": "34713ac9650ece7c8d59b7c4d9a2aefccee693ea",
+  "ratified": "f82929b0644be39b44e9fba9ea04cf9d60de9146",
+  "hashes": {
+    "docs/reviews/lhs_network_batch_registration_20261007_g2.md": {
+      "working": "4a3695e48a9deb982c3793a7e678415492a5012d76b020932d9e18e1f86da205",
+      "HEAD": "4a3695e48a9deb982c3793a7e678415492a5012d76b020932d9e18e1f86da205",
+      "baseline": "7fd158cb5b130e2150e58e5938c92b80731fc3292ef8e363346adfc2b62e1699",
+      "ratified": "2c3ed36f97aa7ec8b0c377cfe3c07093b7902cb552f7bdc3da6a607659303114"
+    },
+    "docs/reviews/lhs_network_batch_registration_20261012_supp20.md": {
+      "working": "a154beceb8736b3bebc0399bdb75db42e83026f637881e7bd14d1c0187152c52",
+      "HEAD": "a154beceb8736b3bebc0399bdb75db42e83026f637881e7bd14d1c0187152c52",
+      "baseline": "b2389709695cf3e94095a1855014b44868914362d112e5e0e29d084fc9e11032",
+      "ratified": "7cad47d191445bb6adb4ae0c6aeebd4fb147c2ce3824792f365b47f8ebfd8397"
+    },
+    "scripts/analyze_contacts.py": {
+      "working": "a383ada7aef3d13ba08bd84728a20b6207f9b124a01ce3852c01ae2518ca1aa9",
+      "HEAD": "a383ada7aef3d13ba08bd84728a20b6207f9b124a01ce3852c01ae2518ca1aa9",
+      "baseline": "a383ada7aef3d13ba08bd84728a20b6207f9b124a01ce3852c01ae2518ca1aa9",
+      "ratified": "a383ada7aef3d13ba08bd84728a20b6207f9b124a01ce3852c01ae2518ca1aa9"
+    },
+    "scripts/analyze_contacts_bimodal.py": {
+      "working": "8afcc76030b747d8632014fa5b6cae1c1f066007b9247902caefb05288cf1ca5",
+      "HEAD": "8afcc76030b747d8632014fa5b6cae1c1f066007b9247902caefb05288cf1ca5",
+      "baseline": "8afcc76030b747d8632014fa5b6cae1c1f066007b9247902caefb05288cf1ca5",
+      "ratified": "8afcc76030b747d8632014fa5b6cae1c1f066007b9247902caefb05288cf1ca5"
+    },
+    "scripts/audit_constriction_deleted.py": {
+      "working": "180287be199ea60e6a50ba6cd0baf854c18a18568c476f7e0200c2caca3faf9d",
+      "HEAD": "180287be199ea60e6a50ba6cd0baf854c18a18568c476f7e0200c2caca3faf9d",
+      "baseline": "180287be199ea60e6a50ba6cd0baf854c18a18568c476f7e0200c2caca3faf9d",
+      "ratified": "180287be199ea60e6a50ba6cd0baf854c18a18568c476f7e0200c2caca3faf9d"
+    },
+    "scripts/coverage_physics_vs_hertzian.py": {
+      "working": "1bf4ee8c0061e69760596b05318e0b750605e85ad16f34176e74f31db80b6253",
+      "HEAD": "1bf4ee8c0061e69760596b05318e0b750605e85ad16f34176e74f31db80b6253",
+      "baseline": "1bf4ee8c0061e69760596b05318e0b750605e85ad16f34176e74f31db80b6253",
+      "ratified": "1bf4ee8c0061e69760596b05318e0b750605e85ad16f34176e74f31db80b6253"
+    },
+    "scripts/dem_analysis_core.py": {
+      "working": "39fb19cb7eb962f11fe88546fa0ad93c4a9074846be13d15b27c2eae44fb620f",
+      "HEAD": "39fb19cb7eb962f11fe88546fa0ad93c4a9074846be13d15b27c2eae44fb620f",
+      "baseline": "39fb19cb7eb962f11fe88546fa0ad93c4a9074846be13d15b27c2eae44fb620f",
+      "ratified": "39fb19cb7eb962f11fe88546fa0ad93c4a9074846be13d15b27c2eae44fb620f"
+    },
+    "scripts/export_master_csv.py": {
+      "working": "2899dc2410ad8840dadf41993511c225d60f29f77edfdb2fac6703b25ccf767b",
+      "HEAD": "2899dc2410ad8840dadf41993511c225d60f29f77edfdb2fac6703b25ccf767b",
+      "baseline": "2899dc2410ad8840dadf41993511c225d60f29f77edfdb2fac6703b25ccf767b",
+      "ratified": "2899dc2410ad8840dadf41993511c225d60f29f77edfdb2fac6703b25ccf767b"
+    },
+    "scripts/extract_se_network_diagnostics.py": {
+      "working": "db7151b51252e60c42c2bc2a2b3173ae6f4b97a94226b51a97b1e357e028ea9a",
+      "HEAD": "db7151b51252e60c42c2bc2a2b3173ae6f4b97a94226b51a97b1e357e028ea9a",
+      "baseline": "db7151b51252e60c42c2bc2a2b3173ae6f4b97a94226b51a97b1e357e028ea9a",
+      "ratified": "db7151b51252e60c42c2bc2a2b3173ae6f4b97a94226b51a97b1e357e028ea9a"
+    },
+    "scripts/fracture_model.py": {
+      "working": "3cd8dabb3ebaea3950f53951f776fceabc82f9431633587fc7bd85a8dd9d8170",
+      "HEAD": "3cd8dabb3ebaea3950f53951f776fceabc82f9431633587fc7bd85a8dd9d8170",
+      "baseline": "3cd8dabb3ebaea3950f53951f776fceabc82f9431633587fc7bd85a8dd9d8170",
+      "ratified": "3cd8dabb3ebaea3950f53951f776fceabc82f9431633587fc7bd85a8dd9d8170"
+    },
+    "scripts/g2_network_reread.py": {
+      "working": "0e2ec7ef37571268b85b0d17b71f7a2858aa2a7e6bcfadf4be1c6b5416dd5cd8",
+      "HEAD": "0e2ec7ef37571268b85b0d17b71f7a2858aa2a7e6bcfadf4be1c6b5416dd5cd8",
+      "baseline": "0e2ec7ef37571268b85b0d17b71f7a2858aa2a7e6bcfadf4be1c6b5416dd5cd8",
+      "ratified": "0e2ec7ef37571268b85b0d17b71f7a2858aa2a7e6bcfadf4be1c6b5416dd5cd8"
+    },
+    "scripts/grade_engine.py": {
+      "working": "9a4d27ea9e937298ab84c0cf1bcd4c4f4957317e783247fd047923758dc96efc",
+      "HEAD": "9a4d27ea9e937298ab84c0cf1bcd4c4f4957317e783247fd047923758dc96efc",
+      "baseline": "9a4d27ea9e937298ab84c0cf1bcd4c4f4957317e783247fd047923758dc96efc",
+      "ratified": "9a4d27ea9e937298ab84c0cf1bcd4c4f4957317e783247fd047923758dc96efc"
+    },
+    "scripts/lens_geometry.py": {
+      "working": "891ac67f8b6c1b4c7978b5e806800ae74f5c8791928d6ece19a29e5f3b212b77",
+      "HEAD": "891ac67f8b6c1b4c7978b5e806800ae74f5c8791928d6ece19a29e5f3b212b77",
+      "baseline": "891ac67f8b6c1b4c7978b5e806800ae74f5c8791928d6ece19a29e5f3b212b77",
+      "ratified": "891ac67f8b6c1b4c7978b5e806800ae74f5c8791928d6ece19a29e5f3b212b77"
+    },
+    "scripts/lhs_descriptor_harvest.py": {
+      "working": "96fa643e309aab46b2a5cbd59e2276ee16b99107a9a7514e5d9fdcaf5c2d8d9e",
+      "HEAD": "96fa643e309aab46b2a5cbd59e2276ee16b99107a9a7514e5d9fdcaf5c2d8d9e",
+      "baseline": "96fa643e309aab46b2a5cbd59e2276ee16b99107a9a7514e5d9fdcaf5c2d8d9e",
+      "ratified": "96fa643e309aab46b2a5cbd59e2276ee16b99107a9a7514e5d9fdcaf5c2d8d9e"
+    },
+    "scripts/lhs_design_dataset.py": {
+      "working": "d1815155142e909200053c2d8e9de8c0a88c2dc6d3d9462ad18614a42845e1f0",
+      "HEAD": "d1815155142e909200053c2d8e9de8c0a88c2dc6d3d9462ad18614a42845e1f0",
+      "baseline": "d1815155142e909200053c2d8e9de8c0a88c2dc6d3d9462ad18614a42845e1f0",
+      "ratified": "d1815155142e909200053c2d8e9de8c0a88c2dc6d3d9462ad18614a42845e1f0"
+    },
+    "scripts/lhs_harvest_batch.py": {
+      "working": "4d798c631ac893ca32018fde58145bc5c8a2e3e2a6423da61cb87bd13599148e",
+      "HEAD": "4d798c631ac893ca32018fde58145bc5c8a2e3e2a6423da61cb87bd13599148e",
+      "baseline": "4d798c631ac893ca32018fde58145bc5c8a2e3e2a6423da61cb87bd13599148e",
+      "ratified": "4d798c631ac893ca32018fde58145bc5c8a2e3e2a6423da61cb87bd13599148e"
+    },
+    "scripts/lhs_perc_extract.py": {
+      "working": "0750d0964d006e64934e42e83b98fe0786115440f024fc5215d5d2aaf6396a16",
+      "HEAD": "0750d0964d006e64934e42e83b98fe0786115440f024fc5215d5d2aaf6396a16",
+      "baseline": "0750d0964d006e64934e42e83b98fe0786115440f024fc5215d5d2aaf6396a16",
+      "ratified": "0750d0964d006e64934e42e83b98fe0786115440f024fc5215d5d2aaf6396a16"
+    },
+    "scripts/lhs_release_build.py": {
+      "working": "3096e33fd0f1953363bcde251a77368366a0568c923447111a48a873ad4a1383",
+      "HEAD": "3096e33fd0f1953363bcde251a77368366a0568c923447111a48a873ad4a1383",
+      "baseline": "3096e33fd0f1953363bcde251a77368366a0568c923447111a48a873ad4a1383",
+      "ratified": "3096e33fd0f1953363bcde251a77368366a0568c923447111a48a873ad4a1383"
+    },
+    "scripts/lhs_union_webapp.py": {
+      "working": "3f06e9d36060a366d79e1abb76b5fe07e23b51d63666f51ba3afeabf64211408",
+      "HEAD": "3f06e9d36060a366d79e1abb76b5fe07e23b51d63666f51ba3afeabf64211408",
+      "baseline": "3f06e9d36060a366d79e1abb76b5fe07e23b51d63666f51ba3afeabf64211408",
+      "ratified": "3f06e9d36060a366d79e1abb76b5fe07e23b51d63666f51ba3afeabf64211408"
+    },
+    "scripts/lhs_webapp_batch.py": {
+      "working": "b9d0199cc1bd23cd1ed5405a283081c2c3a31bc6ce256670c8a9b63d177b5668",
+      "HEAD": "b9d0199cc1bd23cd1ed5405a283081c2c3a31bc6ce256670c8a9b63d177b5668",
+      "baseline": "b9d0199cc1bd23cd1ed5405a283081c2c3a31bc6ce256670c8a9b63d177b5668",
+      "ratified": "b9d0199cc1bd23cd1ed5405a283081c2c3a31bc6ce256670c8a9b63d177b5668"
+    },
+    "scripts/metrics_json.py": {
+      "working": "baa671f895dd6103cf95c25647ee45877d98306f00ab15cd3968fbe4354a7702",
+      "HEAD": "baa671f895dd6103cf95c25647ee45877d98306f00ab15cd3968fbe4354a7702",
+      "baseline": "baa671f895dd6103cf95c25647ee45877d98306f00ab15cd3968fbe4354a7702",
+      "ratified": "baa671f895dd6103cf95c25647ee45877d98306f00ab15cd3968fbe4354a7702"
+    },
+    "scripts/ml_design_structure.py": {
+      "working": "35378c5eedae36a75074279066db1db81617c02c334b5d0e4c7f19a76d0bf628",
+      "HEAD": "35378c5eedae36a75074279066db1db81617c02c334b5d0e4c7f19a76d0bf628",
+      "baseline": "35378c5eedae36a75074279066db1db81617c02c334b5d0e4c7f19a76d0bf628",
+      "ratified": "35378c5eedae36a75074279066db1db81617c02c334b5d0e4c7f19a76d0bf628"
+    },
+    "scripts/network_conductivity.py": {
+      "working": "a525e2db98fd044f0aa9353b028a3d5c7164c006a8e870dda24e7a0991d9751e",
+      "HEAD": "a525e2db98fd044f0aa9353b028a3d5c7164c006a8e870dda24e7a0991d9751e",
+      "baseline": "a525e2db98fd044f0aa9353b028a3d5c7164c006a8e870dda24e7a0991d9751e",
+      "ratified": "a525e2db98fd044f0aa9353b028a3d5c7164c006a8e870dda24e7a0991d9751e"
+    },
+    "scripts/parse_liggghts.py": {
+      "working": "4fe3f1f32ebc4168978c7278b7a1d37b072d64fbf00e97d0933351337d223425",
+      "HEAD": "4fe3f1f32ebc4168978c7278b7a1d37b072d64fbf00e97d0933351337d223425",
+      "baseline": "4fe3f1f32ebc4168978c7278b7a1d37b072d64fbf00e97d0933351337d223425",
+      "ratified": "4fe3f1f32ebc4168978c7278b7a1d37b072d64fbf00e97d0933351337d223425"
+    },
+    "scripts/plastic_coverage.py": {
+      "working": "cce27a34c0bf2e4f5c122e43d983aa3414a825ab461a00abd408dba02e151348",
+      "HEAD": "cce27a34c0bf2e4f5c122e43d983aa3414a825ab461a00abd408dba02e151348",
+      "baseline": "cce27a34c0bf2e4f5c122e43d983aa3414a825ab461a00abd408dba02e151348",
+      "ratified": "cce27a34c0bf2e4f5c122e43d983aa3414a825ab461a00abd408dba02e151348"
+    },
+    "scripts/press_units.py": {
+      "working": "493fcc42f2ed4b880362c81766004cf96d0f3a3ed8514aeff9cfe6ed387842dd",
+      "HEAD": "493fcc42f2ed4b880362c81766004cf96d0f3a3ed8514aeff9cfe6ed387842dd",
+      "baseline": "493fcc42f2ed4b880362c81766004cf96d0f3a3ed8514aeff9cfe6ed387842dd",
+      "ratified": "493fcc42f2ed4b880362c81766004cf96d0f3a3ed8514aeff9cfe6ed387842dd"
+    },
+    "scripts/run_network_194_parallel.py": {
+      "working": "f4048aca55b912628278dbdd7b184ac449723736cd3f4f5cdc7eeca31294921a",
+      "HEAD": "f4048aca55b912628278dbdd7b184ac449723736cd3f4f5cdc7eeca31294921a",
+      "baseline": "f4048aca55b912628278dbdd7b184ac449723736cd3f4f5cdc7eeca31294921a",
+      "ratified": "f4048aca55b912628278dbdd7b184ac449723736cd3f4f5cdc7eeca31294921a"
+    },
+    "scripts/se_material.py": {
+      "working": "767a6a383d4581274b07ee79146a53fbe118f1f6eb0acb9ec0a5af21c9c9930c",
+      "HEAD": "767a6a383d4581274b07ee79146a53fbe118f1f6eb0acb9ec0a5af21c9c9930c",
+      "baseline": "767a6a383d4581274b07ee79146a53fbe118f1f6eb0acb9ec0a5af21c9c9930c",
+      "ratified": "767a6a383d4581274b07ee79146a53fbe118f1f6eb0acb9ec0a5af21c9c9930c"
+    },
+    "scripts/supp20_input_receipt.py": {
+      "working": "3d6110be24d24bf91ad1e71232a2e5dad580cf95178d6135b13aa6ca6de6f950",
+      "HEAD": "3d6110be24d24bf91ad1e71232a2e5dad580cf95178d6135b13aa6ca6de6f950",
+      "baseline": "2c7e0b81dbe81d0518e27c8e1781959b9cc983509a1ce66001028faa3768a2f9",
+      "ratified": "3d6110be24d24bf91ad1e71232a2e5dad580cf95178d6135b13aa6ca6de6f950"
+    },
+    "scripts/tau_flux.py": {
+      "working": "c0a7da6e1b73bea97136f06803810dbe159bf5c4395d8d218a90217a58ef0f78",
+      "HEAD": "c0a7da6e1b73bea97136f06803810dbe159bf5c4395d8d218a90217a58ef0f78",
+      "baseline": "c0a7da6e1b73bea97136f06803810dbe159bf5c4395d8d218a90217a58ef0f78",
+      "ratified": "c0a7da6e1b73bea97136f06803810dbe159bf5c4395d8d218a90217a58ef0f78"
+    },
+    "scripts/type_map_resolve.py": {
+      "working": "4a289c6412e4b8e1bc0fba573cb287966dfa00a053399097b587f1e14726bfe5",
+      "HEAD": "4a289c6412e4b8e1bc0fba573cb287966dfa00a053399097b587f1e14726bfe5",
+      "baseline": "4a289c6412e4b8e1bc0fba573cb287966dfa00a053399097b587f1e14726bfe5",
+      "ratified": "4a289c6412e4b8e1bc0fba573cb287966dfa00a053399097b587f1e14726bfe5"
+    },
+    "scripts/wsl_network_smoke.py": {
+      "working": "feb3e84b9c01d2dee28a158fbbd179e57a4c947325181c276d66d2cec1831b11",
+      "HEAD": "feb3e84b9c01d2dee28a158fbbd179e57a4c947325181c276d66d2cec1831b11",
+      "baseline": "feb3e84b9c01d2dee28a158fbbd179e57a4c947325181c276d66d2cec1831b11",
+      "ratified": "feb3e84b9c01d2dee28a158fbbd179e57a4c947325181c276d66d2cec1831b11"
+    },
+    "webapp/app.py": {
+      "working": "3e82140f47c7e87b138f8a6f24b8f8575bc7476e91b8369b20cdf698b69b4bc1",
+      "HEAD": "3e82140f47c7e87b138f8a6f24b8f8575bc7476e91b8369b20cdf698b69b4bc1",
+      "baseline": "3e82140f47c7e87b138f8a6f24b8f8575bc7476e91b8369b20cdf698b69b4bc1",
+      "ratified": "3e82140f47c7e87b138f8a6f24b8f8575bc7476e91b8369b20cdf698b69b4bc1"
+    },
+    "webapp/ledger_view.py": {
+      "working": "ce445f36e01258fb2d46cc8c384b50c7545f87a97e5c1eb4785a0db64a8a7930",
+      "HEAD": "ce445f36e01258fb2d46cc8c384b50c7545f87a97e5c1eb4785a0db64a8a7930",
+      "baseline": "ce445f36e01258fb2d46cc8c384b50c7545f87a97e5c1eb4785a0db64a8a7930",
+      "ratified": "ce445f36e01258fb2d46cc8c384b50c7545f87a97e5c1eb4785a0db64a8a7930"
+    },
+    "webapp/mpm_lab_register.py": {
+      "working": "3b8318fb3980f1466ad2bb642f61924de3fb4d55c539690691cc86540f490967",
+      "HEAD": "3b8318fb3980f1466ad2bb642f61924de3fb4d55c539690691cc86540f490967",
+      "baseline": "3b8318fb3980f1466ad2bb642f61924de3fb4d55c539690691cc86540f490967",
+      "ratified": "3b8318fb3980f1466ad2bb642f61924de3fb4d55c539690691cc86540f490967"
+    },
+    "webapp/pipeline_service.py": {
+      "working": "8026169f61e8bddcceea3dfb42758bb6a4e599a28271d8159c387dfc2a79d4ef",
+      "HEAD": "8026169f61e8bddcceea3dfb42758bb6a4e599a28271d8159c387dfc2a79d4ef",
+      "baseline": "8026169f61e8bddcceea3dfb42758bb6a4e599a28271d8159c387dfc2a79d4ef",
+      "ratified": "8026169f61e8bddcceea3dfb42758bb6a4e599a28271d8159c387dfc2a79d4ef"
+    },
+    "webapp/predictor_engine.py": {
+      "working": "9b341d4e1bf74e071888213656afb8dde4de985081d704818ba5d6b629555c2d",
+      "HEAD": "9b341d4e1bf74e071888213656afb8dde4de985081d704818ba5d6b629555c2d",
+      "baseline": "9b341d4e1bf74e071888213656afb8dde4de985081d704818ba5d6b629555c2d",
+      "ratified": "9b341d4e1bf74e071888213656afb8dde4de985081d704818ba5d6b629555c2d"
+    },
+    "webapp/security.py": {
+      "working": "6f9e98d8748bdd420e73f1db19df50ede1c5f9ce7fb60a25cdea582583de770f",
+      "HEAD": "6f9e98d8748bdd420e73f1db19df50ede1c5f9ce7fb60a25cdea582583de770f",
+      "baseline": "6f9e98d8748bdd420e73f1db19df50ede1c5f9ce7fb60a25cdea582583de770f",
+      "ratified": "6f9e98d8748bdd420e73f1db19df50ede1c5f9ce7fb60a25cdea582583de770f"
+    },
+    "webapp/storage_sync.py": {
+      "working": "352314ffb1908998f51c1ec25289846b3644e736d2d8df5e145c41646edf811a",
+      "HEAD": "352314ffb1908998f51c1ec25289846b3644e736d2d8df5e145c41646edf811a",
+      "baseline": "352314ffb1908998f51c1ec25289846b3644e736d2d8df5e145c41646edf811a",
+      "ratified": "352314ffb1908998f51c1ec25289846b3644e736d2d8df5e145c41646edf811a"
+    },
+    "webapp/structure_predictor.py": {
+      "working": "e468d6dfe18db338a6d6afc7ec10fb867464b80a02d17d475ee4ee8068392064",
+      "HEAD": "e468d6dfe18db338a6d6afc7ec10fb867464b80a02d17d475ee4ee8068392064",
+      "baseline": "e468d6dfe18db338a6d6afc7ec10fb867464b80a02d17d475ee4ee8068392064",
+      "ratified": "e468d6dfe18db338a6d6afc7ec10fb867464b80a02d17d475ee4ee8068392064"
+    }
+  },
+  "sealed32_equal_baseline": true,
+  "other_tools_equal_baseline": true,
+  "receipt_equal_code_commit": true,
+  "all_working_equal_HEAD": true,
+  "top_level_nodes": [
+    59,
+    59
+  ],
+  "changed_ast": [
+    "_selftest"
+  ],
+  "ratification_to_head_diff": "diff --git a/docs/reviews/lhs_network_batch_registration_20261007_g2.md b/docs/reviews/lhs_network_batch_registration_20261007_g2.md\nindex 03503e651..96dd6c538 100644\n--- a/docs/reviews/lhs_network_batch_registration_20261007_g2.md\n+++ b/docs/reviews/lhs_network_batch_registration_20261007_g2.md\n@@ -403,7 +403,7 @@ $PY scripts/run_network_194_parallel.py run --root \"$R\" 2>&1 | tee ~/net194_run_\n      Physics · H12 · 0 · 1.5 대체 금지 · 행 삭제 금지 · 주 타깃 결측을 허용하는 마스크 부분 배포 = 별도 등록 · 1저자 결정 · 집계 · 학습 규약.  Physics · H12 만 모형 한계 = 레코드 게시 · 부록 공란.\n   ⑥ **결과 보고 (C9)** — Hertz 주 타깃 가용 수와 Physics 모형 한계 수를 따로 (배포 README 상태 집계 = 모형 한계 별도 줄 · 재적합 제외 사유 `NOT_COMPUTED:full_over_conduction`) · 입력 영수증 ≠ 결과 완료 증서.\n   ⑦ **발사 (B7)** — 새 code_fp 하나로 두 새 ROOT (194 · 보충 20) · fast16 · real4 · 전체 사전 점검 로그 + 완료 영수증 · §2 손 대조 · 1저자 발사 승인 · 10-14 ROOT 는 지우지 않는다.  ⚠ 이 초안은 등록 기대의 개정안이다 — 비준 · 발사 승인을 대신하지 않는다 · S3 = 별개 (봉인 수치 모듈 둘이 바뀜 → S3 재봉인 의무 · S3 HOLD 그대로).\n-- 9-9 **비준 · 변경 이력 (✅ 10-21 · 1저자 비준 · L214 개정 §9-8 · 결과 열람 뒤 정책 개정 — 10-14 실행 결과 (194 done 186 · 실패 8 · 보충 20 done 14 · 실패 6) 를 본 뒤)** — 대화 원문 ⬜ · 비준 커밋 = 이 줄을 담은 커밋 (메인 세션).\n+- 9-9 **비준 · 변경 이력 (✅ 10-21 · 1저자 비준 · L214 개정 §9-8 · 결과 열람 뒤 정책 개정 — 10-14 실행 결과 (194 done 186 · 실패 8 · 보충 20 done 14 · 실패 6) 를 본 뒤)** — 대화 원문 = 1저자 10-21 (06:10 UTC · 메인 세션) 이 질문 *\"[LHS] Q1. 보충 영수증 selftest S0b (121/122) 를 비준 커밋 전에 작은 코드 커밋으로 고칩니다. 시험 먼저 쓰고, 고친 뒤 비준 커밋을 만들고 Codex 확인 요청서를 정리합니다. 발송은 1저자가 합니다.\"* 에 *\"다 진행하자\"* · 비준 커밋 = `f82929b06` (메인 세션 · 묶음 §1-4 diff 를 날짜 자리만 채워 넣음) · 이 대화 원문은 같은 날 뒤 커밋에서 채움.\n   바뀐 자리 (원문 보존 · 비준 표지 · 기계 구문만 고침): ① §3 활성 봉인 지문 — 10-07 재등록 `e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71` → `2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb` (§3 끝 ✅ 줄 · 옛 두 줄의 `code_fp` 기계 구문을 떼고 값은 그대로) · ② §3 표의 4 행 = 역사 (옛 값 = 표에 전체 그대로 · 새 값 = §3 끝 ✅ 줄) · ③ §9-8 대기 선언 (`code_fp_pending` 꼴) 삭제 · 머리 · 표 머리 비준 표지 · ④ §5 = §9-8 ①–⑦ 활성 (§5 머리 표지).\n   바꾸지 않은 것 = §9-8 '바꾸지 않는 것' 그대로 (문턱 1.5 · 허용치 1e−6 · 사다리 · G > 0 · 병렬 상한 · ID 집합 · 원 입력 · 실행 형식 v3 · 관측 필수 · §5-1–6 기존 차단) · §2 표 · 10-14 ROOT · 실패 기록 (보존 · 사후 성공 전환 없음).\n   ⛔ 비준은 등록 기대의 비준이다 — 발사 승인 아님 (§9-8 ⑦ B7 · 새 승인 핀 · 새 ROOT 둘 · 사전 점검 · 1저자 별도 승인) · S3 = 별개 HOLD (S3 수치 모듈 `scripts/network_conductivity.py` 가 바뀜 → S3 재봉인 의무) · v1.3 주 타깃 = H0 모형 한계 HOLD 그대로.\ndiff --git a/docs/reviews/lhs_network_batch_registration_20261012_supp20.md b/docs/reviews/lhs_network_batch_registration_20261012_supp20.md\nindex bfb7fc304..742a4da6a 100644\n--- a/docs/reviews/lhs_network_batch_registration_20261012_supp20.md\n+++ b/docs/reviews/lhs_network_batch_registration_20261012_supp20.md\n@@ -111,7 +111,7 @@ $PY scripts/run_network_194_parallel.py run --root \"$R\" --cohorts lhss --observe\n   | §5-5 배포 관문 | 두 배치 각각 ⓪ · ⓪b + 교차 + 결합 | 그대로 + 결합 뒤 주 타깃 모형 한계 관문 (빌드 · 대조 같은 함수) · 한 배치의 PASS 가 다른 배치를 면제하지 않는다 (그대로) |\n \n   ⚠ 이 초안은 등록 기대의 개정안이다 — 비준 · 발사 승인 (B7 — 새 핀 사전 점검 · 영수증 · 손 대조) 을 대신하지 않는다.\n-- 9-4 **비준 · 변경 이력 (✅ 10-21 · 1저자 비준 · L214 개정 §9-3 · 결과 열람 뒤 정책 개정 — 10-14 실행 결과 (done 14 · 실패 6) 를 본 뒤)** — 194 등록 §9-9 와 같은 비준 · 대화 원문 ⬜.\n+- 9-4 **비준 · 변경 이력 (✅ 10-21 · 1저자 비준 · L214 개정 §9-3 · 결과 열람 뒤 정책 개정 — 10-14 실행 결과 (done 14 · 실패 6) 를 본 뒤)** — 194 등록 §9-9 와 같은 비준 · 대화 원문 = 194 등록 §9-9 와 같음 (1저자 10-21 *\"다 진행하자\"* — [LHS] Q1 에 대해) · 비준 커밋 = `f82929b06` (묶음 §1-5 diff · 날짜 자리만 채움) · 이 대화 원문은 같은 날 뒤 커밋에서 채움.\n   바뀐 자리: ① §3 활성 봉인 지문 `e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71` → `2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb` (§3 줄 안 값만 · 옛 값은 그 줄과 §9-3 표 원문 칸에 보존 — 영수증 도구 `registration_values` 는 활성 §3 의 기계 구문만 읽는다 · L214R-04) · ② §9-3 대기 선언 (`code_fp_pending` 꼴) 삭제 · 머리 · 표 머리 비준 표지 · ③ §5 = §9-3 활성 (§5 머리 표지) · ④ §3 에 비준 판 인계 도구 · 배포 빌더 지문 자리 (194 등록 §3 끝 ✅ 줄).\n   바꾸지 않은 것 = §9-3 '바꾸지 않는 것' 그대로 (§2 표 · 등록 집합 supp20 · 문턱 · 허용치 · 관측 필수) · 10-14 ROOT (`~/netsupp20_1087a9b2f`) · 실패 기록 보존 · 사후 성공 전환 없음.\n   ⛔ 비준은 발사 승인이 아니다 (B7 — 새 승인 핀 사전 점검 · 영수증 · 손 대조 · 1저자 별도 발사 승인).\n"
+}

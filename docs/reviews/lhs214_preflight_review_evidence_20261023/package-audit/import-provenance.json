@@ -1,0 +1,19 @@
+{
+  "kind": "Independent package audit: original bytes and original manifest context preserved in archive; live lhs214.md has evidence-path corrections only.",
+  "reports": [
+    {
+      "file": "lhs214.md",
+      "source_sha256": "9d62197569a177dcfdae6904030d6c8eff91d6313847868e7d22dbaef4596998",
+      "import_sha256": "dabb3890f958e979b728a501edf0d44c48bfea16d0f9b3450d1e4cff49bd82bd",
+      "byte_equal": false,
+      "original_preserved_in": "import-paths/original-package-docs.zip!docs/reviews/lhs214_preflight_review_evidence_20261023/package-audit/lhs214.md"
+    },
+    {
+      "file": "lhs214-recheck.md",
+      "source_sha256": "0913ec4966e527b81ead71729e91ed69f9a09dfe51e77d02898e0f16b3e47912",
+      "import_sha256": "0913ec4966e527b81ead71729e91ed69f9a09dfe51e77d02898e0f16b3e47912",
+      "byte_equal": true
+    }
+  ],
+  "scope": "Original audit-time counts and pending gate statements are historical; final integrated full-gate status is recorded in the evidence root full_gate_receipt.json."
+}

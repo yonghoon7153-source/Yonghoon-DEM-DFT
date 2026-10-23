@@ -1,0 +1,54 @@
+{
+  "m1_leftover_pending": {
+    "rc": 1,
+    "seconds": 20.685,
+    "sha256": "cd93e865e0821fe72506faef38d3a5204c06e25a5ac292a754454fcec751376a",
+    "failures": [
+      "  FAIL  S11g ★ 10-21 S0b 지문 기대 (상수 없음) — 실물 상태와 무관한 일곱 꼴 (보충 · 194 등록 사본 쌍 · 지문 토큰만 바꿈 · 도구 registration_values 로 읽음): registered (등록 §3 = 체크아웃 · 대기 없음) · pending (대기 = 체크아웃 · 두 등록 같음) = 참 / 보충만 비준 (194 = 대기) · pending 인데 194 등록 §3 다름 · 비준 + 남은 대기 · 194 대기 값 둘 (문제) · 선언 없음 = 거짓 (고치기 전: 옛 앞자리 상수라 registered · pending 이 거짓)  ({'ratified_pending_left': (True, False, '상태 registered')})"
+    ],
+    "last_lines": [
+      "  PASS  S12k4 L214R-S06 지킴 (고치기 전과 같음) — 제목 아닌 줄 (`#5 bolt` · `#hashtag` · `#` 7 개 · `#` 바로 뒤 NBSP · U+2003 · `\\##`) · 빈 h3 · h6 · 울타리 속 빈 `#` · `##` = h2 절을 끝내지 않음 / 이름 있는 제목 · 닫는 `#` 줄 제목 = 경계 / §3 식별은 닫는 `#` 줄과 무관 (`## 3.##` = §3 아님) → 24 꼴 다 기대대로",
+      "",
+      "supp20_input_receipt selftest: 122/123 PASS   FAILED: ['S11g ★ 10-21 S0b 지문 기대 (상수 없음) — 실물 상태와 무관한 일곱 꼴 (보충 · 194 등록 사본 쌍 · 지문 토큰만 바꿈 · 도구 registration_values 로 읽음): registered (등록 §3 = 체크아웃 · 대기 없음) · pending (대기 = 체크아웃 · 두 등록 같음) = 참 / 보충만 비준 (194 = 대기) · pending 인데 194 등록 §3 다름 · 비준 + 남은 대기 · 194 대기 값 둘 (문제) · 선언 없음 = 거짓 (고치기 전: 옛 앞자리 상수라 registered · pending 이 거짓)']"
+    ]
+  },
+  "m2_cross_document": {
+    "rc": 1,
+    "seconds": 19.219,
+    "sha256": "a66957d3d28a6a8192334934f57ddaad78cfa3f73188737b667f3a65a862a223",
+    "failures": [
+      "  FAIL  S11g ★ 10-21 S0b 지문 기대 (상수 없음) — 실물 상태와 무관한 일곱 꼴 (보충 · 194 등록 사본 쌍 · 지문 토큰만 바꿈 · 도구 registration_values 로 읽음): registered (등록 §3 = 체크아웃 · 대기 없음) · pending (대기 = 체크아웃 · 두 등록 같음) = 참 / 보충만 비준 (194 = 대기) · pending 인데 194 등록 §3 다름 · 비준 + 남은 대기 · 194 대기 값 둘 (문제) · 선언 없음 = 거짓 (고치기 전: 옛 앞자리 상수라 registered · pending 이 거짓)  ({'supp_only_ratified': (True, False, '상태 registered'), 'pending_base_differs': (True, False, '상태 pending')})"
+    ],
+    "last_lines": [
+      "  PASS  S12k4 L214R-S06 지킴 (고치기 전과 같음) — 제목 아닌 줄 (`#5 bolt` · `#hashtag` · `#` 7 개 · `#` 바로 뒤 NBSP · U+2003 · `\\##`) · 빈 h3 · h6 · 울타리 속 빈 `#` · `##` = h2 절을 끝내지 않음 / 이름 있는 제목 · 닫는 `#` 줄 제목 = 경계 / §3 식별은 닫는 `#` 줄과 무관 (`## 3.##` = §3 아님) → 24 꼴 다 기대대로",
+      "",
+      "supp20_input_receipt selftest: 122/123 PASS   FAILED: ['S11g ★ 10-21 S0b 지문 기대 (상수 없음) — 실물 상태와 무관한 일곱 꼴 (보충 · 194 등록 사본 쌍 · 지문 토큰만 바꿈 · 도구 registration_values 로 읽음): registered (등록 §3 = 체크아웃 · 대기 없음) · pending (대기 = 체크아웃 · 두 등록 같음) = 참 / 보충만 비준 (194 = 대기) · pending 인데 194 등록 §3 다름 · 비준 + 남은 대기 · 194 대기 값 둘 (문제) · 선언 없음 = 거짓 (고치기 전: 옛 앞자리 상수라 registered · pending 이 거짓)']"
+    ]
+  },
+  "m3_base_problems": {
+    "rc": 1,
+    "seconds": 22.01,
+    "sha256": "69ff9d580128e19fb8833ec146a237ebc0b0b6288c28c561c050829c0a40ad1e",
+    "failures": [
+      "  FAIL  S11g ★ 10-21 S0b 지문 기대 (상수 없음) — 실물 상태와 무관한 일곱 꼴 (보충 · 194 등록 사본 쌍 · 지문 토큰만 바꿈 · 도구 registration_values 로 읽음): registered (등록 §3 = 체크아웃 · 대기 없음) · pending (대기 = 체크아웃 · 두 등록 같음) = 참 / 보충만 비준 (194 = 대기) · pending 인데 194 등록 §3 다름 · 비준 + 남은 대기 · 194 대기 값 둘 (문제) · 선언 없음 = 거짓 (고치기 전: 옛 앞자리 상수라 registered · pending 이 거짓)  ({'base_pending_conflict': (True, False, '상태 registered')})"
+    ],
+    "last_lines": [
+      "  PASS  S12k4 L214R-S06 지킴 (고치기 전과 같음) — 제목 아닌 줄 (`#5 bolt` · `#hashtag` · `#` 7 개 · `#` 바로 뒤 NBSP · U+2003 · `\\##`) · 빈 h3 · h6 · 울타리 속 빈 `#` · `##` = h2 절을 끝내지 않음 / 이름 있는 제목 · 닫는 `#` 줄 제목 = 경계 / §3 식별은 닫는 `#` 줄과 무관 (`## 3.##` = §3 아님) → 24 꼴 다 기대대로",
+      "",
+      "supp20_input_receipt selftest: 122/123 PASS   FAILED: ['S11g ★ 10-21 S0b 지문 기대 (상수 없음) — 실물 상태와 무관한 일곱 꼴 (보충 · 194 등록 사본 쌍 · 지문 토큰만 바꿈 · 도구 registration_values 로 읽음): registered (등록 §3 = 체크아웃 · 대기 없음) · pending (대기 = 체크아웃 · 두 등록 같음) = 참 / 보충만 비준 (194 = 대기) · pending 인데 194 등록 §3 다름 · 비준 + 남은 대기 · 194 대기 값 둘 (문제) · 선언 없음 = 거짓 (고치기 전: 옛 앞자리 상수라 registered · pending 이 거짓)']"
+    ]
+  },
+  "m4_undeclared": {
+    "rc": 1,
+    "seconds": 21.393,
+    "sha256": "740c3381f8e7a11ac4accc2fe097057149d73a7234b3d66213169c1eb977dc8d",
+    "failures": [
+      "  FAIL  S11g ★ 10-21 S0b 지문 기대 (상수 없음) — 실물 상태와 무관한 일곱 꼴 (보충 · 194 등록 사본 쌍 · 지문 토큰만 바꿈 · 도구 registration_values 로 읽음): registered (등록 §3 = 체크아웃 · 대기 없음) · pending (대기 = 체크아웃 · 두 등록 같음) = 참 / 보충만 비준 (194 = 대기) · pending 인데 194 등록 §3 다름 · 비준 + 남은 대기 · 194 대기 값 둘 (문제) · 선언 없음 = 거짓 (고치기 전: 옛 앞자리 상수라 registered · pending 이 거짓)  ({'undeclared': (True, False, '상태 undeclared')})"
+    ],
+    "last_lines": [
+      "  PASS  S12k4 L214R-S06 지킴 (고치기 전과 같음) — 제목 아닌 줄 (`#5 bolt` · `#hashtag` · `#` 7 개 · `#` 바로 뒤 NBSP · U+2003 · `\\##`) · 빈 h3 · h6 · 울타리 속 빈 `#` · `##` = h2 절을 끝내지 않음 / 이름 있는 제목 · 닫는 `#` 줄 제목 = 경계 / §3 식별은 닫는 `#` 줄과 무관 (`## 3.##` = §3 아님) → 24 꼴 다 기대대로",
+      "",
+      "supp20_input_receipt selftest: 122/123 PASS   FAILED: ['S11g ★ 10-21 S0b 지문 기대 (상수 없음) — 실물 상태와 무관한 일곱 꼴 (보충 · 194 등록 사본 쌍 · 지문 토큰만 바꿈 · 도구 registration_values 로 읽음): registered (등록 §3 = 체크아웃 · 대기 없음) · pending (대기 = 체크아웃 · 두 등록 같음) = 참 / 보충만 비준 (194 = 대기) · pending 인데 194 등록 §3 다름 · 비준 + 남은 대기 · 194 대기 값 둘 (문제) · 선언 없음 = 거짓 (고치기 전: 옛 앞자리 상수라 registered · pending 이 거짓)']"
+    ]
+  }
+}

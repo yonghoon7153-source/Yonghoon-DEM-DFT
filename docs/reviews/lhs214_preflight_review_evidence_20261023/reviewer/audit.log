@@ -1,0 +1,70 @@
+{
+  "head": "7799a2ff64ba462b42ce05edd3e63b7c2854d557",
+  "sealed32_equal": true,
+  "tools_equal": true,
+  "AST": [
+    "_selftest"
+  ],
+  "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+  "active_row_mismatch": {},
+  "receipt_rc": 0,
+  "truth_table_n": 512,
+  "truth_table_mismatch": 0,
+  "counterexamples": {
+    "same_prefix_wrong_tail": {
+      "rc": 1,
+      "bad": [
+        "D1"
+      ],
+      "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3e0"
+    },
+    "short_63": {
+      "rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    "uppercase": {
+      "rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    "unicode_digit": {
+      "rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    "space_inside": {
+      "rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    "nan": {
+      "rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    },
+    "infinity": {
+      "rc": 1,
+      "bad": [
+        "R0",
+        "D1"
+      ],
+      "code_fp": null
+    }
+  }
+}
