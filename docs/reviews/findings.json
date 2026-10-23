@@ -12741,7 +12741,8 @@
         "scripts/test_ca_ext_b6.py (449/449 · 10-23 A′ 판 · C1 고치기 전 427 PASS / 4 FAIL · C5 고치기 전 429 PASS / 20 FAIL) — S8t (C1 소비자 경로 바꿔 끼우기 셋) · S8h′ (C1 · 증서 구간 기록에 n_sv_faces_cut 없음) · S8w (C5 · 다른 · 옛 · 리뷰 A4 종류 · 접두어만 · 글자 아님 · 리뷰 A4 규칙 · 규칙 없음 · None · 괄호 규칙 이름 × 증서 구간 · 진단 = 18) · S8w′ (등록 이름 받음 · 투영이 규칙을 옮긴다) · S8q (C5 종류 · 규칙 상수 = 생산자)",
         "scripts/test_rint_r_chain.py (240/240 · 10-23 A′ 판 · C1 고치기 전 V32 0/1 · C5 고치기 전 239/240) — V32 (C1 · 기록의 주 해 증서 위상 수 ≠ 런의 주 증서 → CA_EXT_RECORD) · V35 (C5 끝-끝 · 옛 종류 · 다른 규칙 → CA_EXT_RECORD)",
         "scripts/test_rint_r_chain_e2e.py (16/16 · 10-23 A′ 판)",
-        "docs/reviews/rint2_rr_fix_evidence_20261023/preattack/PREATTACK_A.md"
+        "docs/reviews/rint2_rr_fix_evidence_20261023/preattack/PREATTACK_A.md",
+        "scripts/test_carbon_junction.py (399/399 · 10-23 A′ 끝 판 · 시험만) — QD5 ⑤ (A12 변이 표: C1 한 줄 되돌림 14 중 생존 4 = C1-d 아래 끝 ≤ 주 해 · C1-g 위 끝 ≤ 주 해 · C1-j 더 뺀 것 없음 → 위 끝 = 아래 끝 · C1-k 끊은 것 없음 → 위 끝 = 주 해 (다른 검사에 가려짐 · 시험 없음) → 그 검사 하나만 잡는 꼴로 상주 (아래 끝 unconverged 꼴 받음 확인 포함) → 다시 돌림 4/4 잡음 · QD5 문서 정정 = census 끊을 면 행 수는 대조하지 않는다)"
       ],
       "claimed_fixed_sha": "5cf848157"
     },

@@ -4102,7 +4102,9 @@ def t_sv_end_cert_topology():
     (`docs/reviews/rint2_rr_fix_evidence_20261023/preattack/tools/atk_sv.py` A2): 같은 런의 주 해 증서를 끝 자리에 옮기고 G_cut = G_full · 비 1 ·
     판정 근거 칸을 다시 세면 옛 검증기 = 받음 (증서 ↔ 끝 결합 = 게시 판 전류 하나 · 결합 칸 = 런 단위) → 거짓 clear.  고친 판 = 증서 자신의
     위상 수 (`CERT_TOPO_KEYS`) 를 투영하고 생산자 (`carbon_junction.CjuncAssembler._assemble`) 가 보장하는 관계 + 등록 핵심 조건 (끊었으면 주 해보다
-    작다 · 같은 수 = 거부) 을 대조 · 끊은 수의 독립 출처 (위 끝 n_sv_faces_cut = 아래 끝 · census n_sv_faces_cut_rows ≥ 기록) 를 묶는다."""
+    작다 · 같은 수 = 거부) 을 대조 · 끊은 수의 독립 출처 (위 끝 n_sv_faces_cut = 아래 끝) 를 묶는다 · census 의 끊을 면 행 수는 대조에 쓰지 않는다
+    (생산자 보장 = ≤ 뿐 · 0 으로 고친 편집을 못 잡는다 · 10-23 보고 결정 필요 — ★ 10-23 A12 정정: 옛 문장 "census n_sv_faces_cut_rows ≥ 기록" 은
+    구현에 없다).  ⑤ = 변이 표 (A12) 가 찾은 가려진 · 시험 없던 관계 (C1-d · g · j · k) 를 그 검사 하나만 잡는 꼴로 상주."""
     import ca_ext_svcf as SVCF
     TOPO = getattr(SVCF, 'CERT_TOPO_KEYS', ('target_n_edges', 'target_n_dof', 'target_n_plate_bot', 'target_n_plate_top'))
     runs = {
@@ -4204,6 +4206,36 @@ def t_sv_end_cert_topology():
     for nm, e in edits.items():
         why4 = _rej(e)
         chk(f'QD5 ④ 증서 위상 수 편집 → 거부 [{nm}]', _is_c1(why4), why4)
+
+    #  ⑤ ★ 10-23 (A12 변이 표) 다른 검사에 가려진 · 시험이 없던 관계 — 그 검사 하나만 잡는 꼴 (아래 끝을 비를 싣지 않는 상태로 = 아래 끝 위상 수
+    #     없음 → 위 끝 ≤ 아래 끝 · 위 끝 = 아래 끝 검사가 서지 않는 기록 · 생산자 꼴 그대로 받는지 먼저 본다)
+    def _lo_unconv(base):
+        e = json.loads(json.dumps(base))
+        s = e['solve']['sv_counterfactual']
+        s.update(status='unconverged', sv_counterfactual_ratio=None, ratio_limit=None, G_cut_code=None, conv_cert=None, resid=None)
+        lo, hi = SVCF.cert_interval(s)
+        s['ratio_cert_interval'] = [SVCF._enc(lo), SVCF._enc(hi)]
+        return e
+    for nm, base in (('QDX', QDX_), ('QD2 ③', QD23)):
+        w5 = _rej(_lo_unconv(base))
+        chk(f'QD5 ⑤ 아래 끝 unconverged (비 · G · 증서 없음) + 위 끝 computed 꼴 = 받음 (아래 끝 위상 수 없음) [{nm}]', w5 is None, w5)
+    m_svx = SVX_['solve']['sv_counterfactual']['conv_cert_full']
+    m_x = QDX_['solve']['sv_counterfactual']['conv_cert_full']
+    e5g = _lo_unconv(QDX_)
+    e5g['solve']['sv_counterfactual']['upper']['conv_cert']['target_n_dof'] = m_x['target_n_dof'] + 1
+    e5j = json.loads(json.dumps(QDX_))
+    e5j['solve']['sv_counterfactual']['upper']['n_edges_cut'] = 0
+    e5k = _lo_unconv(QD23)
+    e5k['solve']['sv_counterfactual']['upper']['n_edges_cut'] = 0
+    five = (('C1-d SVX 아래 끝 간선 = 주 해 + 1 (끊은 다리 2 · 판 결합 같음 · 부분 그래프 ≤ 주 해)',
+             _edit(SVX_, 'lower', target_n_edges=m_svx['target_n_edges'] + 1), '아래 끝 증서 [\'간선\']'),
+            ('C1-d SVX 아래 끝 dof = 주 해 + 1', _edit(SVX_, 'lower', target_n_dof=m_svx['target_n_dof'] + 1), '아래 끝 증서 [\'dof\']'),
+            ('C1-g QDX 아래 끝 unconverged + 위 끝 dof = 주 해 + 1 (아래 끝 위상 수 없음 → 위 끝 ≤ 주 해 하나)', e5g, '위 끝 증서 [\'dof\']'),
+            ('C1-j QDX 위 끝 n_edges_cut 0 (판 결합 0 · 더 뺀 것 없음 주장 · 위 끝 그래프 ≠ 아래 끝)', e5j, '더 뺀 간선 · 판 결합 0'),
+            ('C1-k QD2 ③ 아래 끝 unconverged + 위 끝 n_edges_cut 0 (끊은 다리 0 · 판 결합 0 · 위 끝 그래프 ≠ 주 해)', e5k, '위 끝이 끊은 것 0'))
+    for nm, e, frag in five:
+        why5 = _rej(e)
+        chk(f'QD5 ⑤ 가려진 관계 → 그 문장으로 거부 [{nm}]', _is_c1(why5) and frag in why5, why5)
 
 
 # ═════════════════════════ ★ 10-23 QD6 — 증서 구간 비의 방향 반올림 칼날 (사전 공격 리뷰 C2 · 시험만) ═════════════════════════
