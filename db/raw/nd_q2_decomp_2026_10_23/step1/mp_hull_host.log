@@ -1,0 +1,24 @@
+/data/work/wt_ndq2_1023/tools/doping/convex_hull_ehull.py:199: DeprecationWarning: Entry, ComputedEntry and ComputedStructureEntry have been moved to pymatgen.core.entries module. This stub will be removed v2027.1.
+  from pymatgen.entries.computed_entries import ComputedEntry
+/data/work/wt_ndq2_1023/tools/doping/convex_hull_ehull.py:199: DeprecationWarning: Entry, ComputedEntry and ComputedStructureEntry have been moved to pymatgen.core.entries module. This stub will be removed v2027.1.
+  from pymatgen.entries.computed_entries import ComputedEntry
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/pymatgen/io/cif.py:1057: UserWarning: No _symmetry_equiv_pos_as_xyz type key found. Spacegroup from _symmetry_space_group_name_H-M used.
+  self.symmetry_operations = self.get_symops(data)  # type:ignore[assignment]
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/pymatgen/core/structure.py:3117: UserWarning: Issues encountered while parsing CIF: No _symmetry_equiv_pos_as_xyz type key found. Spacegroup from _symmetry_space_group_name_H-M used.
+  struct = parser.parse_structures(primitive=primitive)[0]
+/data/work/wt_ndq2_1023/tools/doping/convex_hull_ehull.py:29: MPRestWarning: The default thermo type when retrieving entries has been changed from the mixed/corrected PBE GGA and GGA+U hull (`thermo_type = GGA_GGA+U`) to the joint PBE GGA / GGA+U / r2SCAN hull (`thermo_type = GGA_GGA+U_R2SCAN`). To use the older behavior, call `get_entries_in_chemsys` with `additional_criteria = {"thermo_types": ["GGA_GGA+U"]}`
+  ents = mpr.get_entries_in_chemsys(elements, inc_structure=True)
+our composition: Li27P5(S11Cl4)2  (Li27 P5 S22 Cl8)   [modelc_v3_62atom_V0.cif]
+Retrieving ThermoDoc documents:   0%|          | 0/322 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 322/322 [00:00<00:00, 6653033.93it/s]
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/uncertainties/core.py:1024: UserWarning: Using UFloat objects with std_dev==0 may give unexpected results.
+  warn("Using UFloat objects with std_dev==0 may give unexpected results.")
+MP entries in Li-Nd-P-S-Cl-O: 322
+
+MP-hull decomposition products at our composition:
+{'Li3P': np.float64(0.3226), 'LiCl': np.float64(0.2581), 'Li': np.float64(0.0645), 'S': np.float64(0.3548)}
+  S              {'identifier': 'mp-aaaaaacz', 'suffix': 'r2SCAN', 'separator': '-'}  원자 분율 0.3548
+  Li3P           {'identifier': 'mp-aaaaabci', 'suffix': 'r2SCAN', 'separator': '-'}  원자 분율 0.3226
+  LiCl           {'identifier': 'mp-aaaabhwz', 'suffix': 'r2SCAN', 'separator': '-'}  원자 분율 0.2581
+  Li             {'identifier': 'mp-aaacfyda', 'suffix': 'r2SCAN', 'separator': '-'}  원자 분율 0.0645
+  MP DB 2026.09.28 · 2026-10-23T13:50:28+00:00
+-> db/raw/nd_q2_decomp_2026_10_23/step1/mp_hull_host.json
