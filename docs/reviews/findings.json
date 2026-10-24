@@ -12906,12 +12906,12 @@
     {
       "id": "SELF-133",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "claude 10-24 (SELF-132 의 3.8 재현에서 test_step3_conv_cert K4 만 고친 뒤에도 실패)",
       "opened_in": "docs/reviews/rint2_py38_compat_evidence_20261024/README.md",
       "title": "`step3_sigma._solve_cg` 의 CPU 폴백이 scipy < 1.12 에서 `cg(..., tol=…)` (legacy) 로 내려가 의미가 다르다 — 정확한 해에서 rtol 1e-14 이어 풀기 (수렴 증서 ⓒ 의 바탕 · 시험 K4) = scipy 1.10.1 에서 30,000 회 미수렴 · 상대 잔차 2.7e-14 → 1.1e-10 (나빠짐 · atol=0 줘도 같음) ↔ scipy 1.17.1 = 바로 수렴",
-      "note": "영향 = kgy R 은 GPU 필수 (EXPECT_BACKEND=gpu · CPU 폴백 거부) · S0 는 풀이 없음 → 지금 돌릴 것과 무관 · kgy 판 시험에서 K4 실패.  처분 = 1저자 10-24 Q2 (가) — 오래된 scipy 의 CPU 폴백을 scipy ≥ 1.12 와 같은 CG 로 맞춘다 (시험 먼저 · 다음 단계).  고침 = 다음 커밋 (`step3_sigma` 모듈 이름 `cg` = scipy ≥ 1.12 이면 scipy cg · 옛 판이면 `_cg_v112` (scipy 1.17.1 cg 반복 옮김) · `_solve_cg` 의 legacy 폴백 뺌 · 시험 먼저 `test_step3_conv_cert` K4b–K4d (고치기 전 27/28 AttributeError → 3.11 30/30 · K4b = scipy 1.17.1 cg 와 해 바이트 · info · callback 수 같음 · 3.8 29/29) · 옛 커밋 기반 모듈과의 끈 경로 비트 대조 세 시험은 3.8 에서 기반 모듈에도 같은 cg 를 넣는다 (3.11 = 무변경) · 게이트 kgy 판 단계 11 묶음 통과 (사본)).  claimed_fixed = 그 다음 기록 커밋.",
+      "note": "영향 = kgy R 은 GPU 필수 (EXPECT_BACKEND=gpu · CPU 폴백 거부) · S0 는 풀이 없음 → 지금 돌릴 것과 무관 · kgy 판 시험에서 K4 실패.  처분 = 1저자 10-24 Q2 (가) — 오래된 scipy 의 CPU 폴백을 scipy ≥ 1.12 와 같은 CG 로 맞춘다 (시험 먼저 · 다음 단계).  고침 = 다음 커밋 (`step3_sigma` 모듈 이름 `cg` = scipy ≥ 1.12 이면 scipy cg · 옛 판이면 `_cg_v112` (scipy 1.17.1 cg 반복 옮김) · `_solve_cg` 의 legacy 폴백 뺌 · 시험 먼저 `test_step3_conv_cert` K4b–K4d (고치기 전 27/28 AttributeError → 3.11 30/30 · K4b = scipy 1.17.1 cg 와 해 바이트 · info · callback 수 같음 · 3.8 29/29) · 옛 커밋 기반 모듈과의 끈 경로 비트 대조 세 시험은 3.8 에서 기반 모듈에도 같은 cg 를 넣는다 (3.11 = 무변경) · 게이트 kgy 판 단계 11 묶음 통과 (사본)).  claimed_fixed = 그 다음 기록 커밋.  claimed_fixed = `c8056df9c` (게이트 156 ✓ · 0 ✗ · 새 kgy 판 단계 포함 · push 10-24 · 1저자 10-24 *\"권고대로해\"*).",
       "evidence_tests": [
         "docs/reviews/rint2_py38_compat_evidence_20261024/logs/k4probe_py38.out",
         "docs/reviews/rint2_py38_compat_evidence_20261024/logs/k4probe_py311.out",
@@ -12920,7 +12920,8 @@
         "docs/reviews/rint2_py38_compat_evidence_20261024/logs/stepB/conv_cert_after_py311.out",
         "docs/reviews/rint2_py38_compat_evidence_20261024/logs/stepB/conv_cert_after_py38.out",
         "docs/reviews/rint2_py38_compat_evidence_20261024/logs/stepB/kgy_step/summary.txt"
-      ]
+      ],
+      "claimed_fixed_sha": "c8056df9c"
     }
   ]
 }
