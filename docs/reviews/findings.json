@@ -12926,16 +12926,18 @@
     {
       "id": "SELF-134",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "claude 10-24 (Q9 설계 개정 4 를 쓰다가 — 1저자가 Q1 · Q5 를 '권고대로' 비준한 뒤)",
       "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/q9_predict_units_design.md",
       "title": "10-24 보고의 Q1 권고 문장 (원장 밖 DBE 단위 런 금지 · '환경 시험 = 합성 · SBE 로만') 이 같은 보고의 Q5 권고 (사다리 = SBE 킷 시도도 원장에 넣음) 와 겹친다 — 원장 밖 SBE 킷 풀이는 사다리의 그림자 런이 될 수 있다 (사다리에도 칼날: R_j,0 유효숫자 3 자리 반올림 · 확인 ±0.02 · SBE origin 0.02 · 4차 사전 공격 R4-05)",
-      "note": "영향 = 아직 없음 (설계 단계 · 결과 0 건 · 실행 전).  처분 = 설계 개정 4 §0 · §3-5 에 ⬜ 로 적고 1저자에게 다시 묻는다 — 권고 = 원장 밖 킷 풀이는 SBE · DBE 모두 하지 않고 환경 시험은 합성 픽스처 · 게이트 시험 · S0 단계 (풀이 없음) 로만.  1저자가 정하면 설계 표지를 고치고 이 항목을 닫는다.  처분 (10-24) = 1저자 Q7 *\"권고대로해\"* = 권고 채택 (원장 밖 킷 풀이 SBE · DBE 없음 · 환경 시험 = 합성 픽스처 · 게이트 시험 · S0 단계) · 설계 표지 고침 = 이 기록 커밋 (개정 4 결정 Q7 줄 · §0 · §3-5 · §7) · claimed_fixed = 다음 기록 커밋 (Codex 회차 ① 요청서와 함께).",
+      "note": "영향 = 아직 없음 (설계 단계 · 결과 0 건 · 실행 전).  처분 = 설계 개정 4 §0 · §3-5 에 ⬜ 로 적고 1저자에게 다시 묻는다 — 권고 = 원장 밖 킷 풀이는 SBE · DBE 모두 하지 않고 환경 시험은 합성 픽스처 · 게이트 시험 · S0 단계 (풀이 없음) 로만.  1저자가 정하면 설계 표지를 고치고 이 항목을 닫는다.  처분 (10-24) = 1저자 Q7 *\"권고대로해\"* = 권고 채택 (원장 밖 킷 풀이 SBE · DBE 없음 · 환경 시험 = 합성 픽스처 · 게이트 시험 · S0 단계) · 설계 표지 고침 = 이 기록 커밋 (개정 4 결정 Q7 줄 · §0 · §3-5 · §7) · claimed_fixed = 다음 기록 커밋 (Codex 회차 ① 요청서와 함께). ★ claimed_fixed = `f4ac30491` (개정 4 결정 Q7 줄 · §0 · §3-5 · §7 표지) · 기록 = Codex 회차 ① 요청서 커밋 (`docs/reviews/codex_rint2_rr_round1_request_20261024.md`) · 검증 = Codex 회차 ① (요청서 §7 C4 · Q9 설계 §9).",
       "evidence_tests": [
         "docs/reviews/rint2_rr_fix_evidence_20261023/preattack4/PREATTACK_Q9R3.md (R4-01 · R4-05)",
-        "docs/reviews/rint2_rr_fix_evidence_20261023/q9_predict_units_design.md §0 · §3-5 (개정 4)"
-      ]
+        "docs/reviews/rint2_rr_fix_evidence_20261023/q9_predict_units_design.md §0 · §3-5 (개정 4)",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/q9_predict_units_design.md 개정 4 결정 Q7 줄"
+      ],
+      "claimed_fixed_sha": "f4ac30491"
     }
   ]
 }

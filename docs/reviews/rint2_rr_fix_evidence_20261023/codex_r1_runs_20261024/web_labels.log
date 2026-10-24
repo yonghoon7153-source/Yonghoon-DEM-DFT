@@ -1,0 +1,86 @@
+  PASS  W1 표지 문자열 한정어 (PTFE 면 개구율 · α · Ø0.248 rope · 규약 선택 · 불투과 가정 · 전자/이온)
+  PASS  W2a Jinja 행이 매니페스트 ca_ext.ptfe_face 표지를 읽는다
+  PASS  W2b JS 행이 매니페스트 ca_ext.ptfe_face 표지를 읽는다
+  PASS  W2c 표지 문자열 사본을 템플릿에 두지 않는다 (producer 상수 하나)
+  PASS  W3 face_alpha + 관측 PTFE 셀 > 0 = 불일치 경고 (두 행)
+  PASS  W5 템플릿 전체가 Jinja 문법으로 파싱된다
+  PASS  W6 Jinja 행 렌더 — face_alpha = 표지 · 셀 > 0 = 경고 · 옛 meta (매니페스트 없음) = 둘 다 없음
+  PASS  W7 JS 행 (node 실행) — face_alpha = 표지 · 셀 > 0 = 경고 · 옛 meta = 둘 다 없음
+  PASS  W4 봉인 build_meta → 규약 칩 "PTFE face_alpha" · 불일치 없음
+  PASS  W8a Jinja 행이 매니페스트 ca_ext.cjunc · ca_ext.sdcp_mod 를 읽는다
+  PASS  W8b JS 행이 매니페스트 ca_ext.cjunc · ca_ext.sdcp_mod 를 읽는다
+  PASS  W8c S2 · S3 표지 문자열 사본을 템플릿에 두지 않는다 (producer 상수 하나)
+  PASS  W9 Jinja [접합] — 있어야 할 조각 6 · 없어야 할 조각 3
+  PASS  W9 Jinja [접합 + 수정자 c 1 (판별)] — 있어야 할 조각 3 · 없어야 할 조각 2
+  PASS  W9 Jinja [접합 + 수정자 (SDCP 0 침대)] — 있어야 할 조각 4 · 없어야 할 조각 1
+  PASS  W9 Jinja [요청 · 블록 없음] — 있어야 할 조각 2 · 없어야 할 조각 2
+  PASS  W9 Jinja [블록인데 id 가 p2] — 있어야 할 조각 2 · 없어야 할 조각 0
+  PASS  W9 Jinja [옛 meta (매니페스트 없음)] — 접합 · 수정자 표지 · 경고 없음
+  PASS  W10 JS [접합] — 있어야 할 조각 6 · 없어야 할 조각 3
+  PASS  W10 JS [접합 + 수정자 c 1 (판별)] — 있어야 할 조각 3 · 없어야 할 조각 2
+  PASS  W10 JS [접합 + 수정자 (SDCP 0 침대)] — 있어야 할 조각 4 · 없어야 할 조각 1
+  PASS  W10 JS [요청 · 블록 없음] — 있어야 할 조각 2 · 없어야 할 조각 2
+  PASS  W10 JS [블록인데 id 가 p2] — 있어야 할 조각 2 · 없어야 할 조각 0
+  PASS  W10 JS [옛 meta] — 접합 · 수정자 표지 · 경고 없음
+  PASS  W11 봉인 build_meta (읽기만) 가 매니페스트를 그대로 싣는다 — 템플릿이 읽는 ca_ext.cjunc · sdcp_mod 자리가 meta 에 있다
+  PASS  W12a 두 행이 증서 상태 낱말을 producer 상수와 같은 철자로 쓴다 (VALID_ZERO_TOPOLOGY · ELECTRODE_SHORT · NOT_CERTIFIABLE)
+  PASS  W14a 템플릿에 접합 한정어 사본이 없다 (producer 상수 CJUNC_QUALIFIERS 하나 · 매니페스트에서 읽는다) · 두 행이 qualifiers 를 읽는다
+  PASS  W14b producer 한정어가 설계 v1 §4-6 의 세 표지를 담는다 (긴 접촉 = 분산판 · 같은 셀 재방문 = 가지 따로 · SV 진단 = 반사실 대조 따로)
+  PASS  W12-14 Jinja [σ_e 영값 위상] — 있어야 할 조각 4 · 없어야 할 조각 3
+  PASS  W12-14 Jinja [σ_e 단락] — 있어야 할 조각 5 · 없어야 할 조각 4
+  PASS  W12-14 Jinja [σ_e 증서 못 정함] — 있어야 할 조각 2 · 없어야 할 조각 2
+  PASS  W12-14 Jinja [σ_ion 영값 위상] — 있어야 할 조각 3 · 없어야 할 조각 2
+  PASS  W12-14 Jinja [양의 해] — 있어야 할 조각 0 · 없어야 할 조각 4
+  PASS  W12-14 Jinja [증서 없음] — 있어야 할 조각 0 · 없어야 할 조각 3
+  PASS  W12-14 Jinja [SV 비 유한] — 있어야 할 조각 4 · 없어야 할 조각 2
+  PASS  W12-14 Jinja [SV 비 +∞] — 있어야 할 조각 3 · 없어야 할 조각 1
+  PASS  W12-14 Jinja [SV producer 표지] — 있어야 할 조각 3 · 없어야 할 조각 0
+  PASS  W12-14 Jinja [SV 비 없는 상태] — 있어야 할 조각 3 · 없어야 할 조각 2
+  PASS  W12-14 Jinja [SV 기록 없음] — 있어야 할 조각 0 · 없어야 할 조각 1
+  PASS  W12-14 Jinja [접합 한정어] — 있어야 할 조각 5 · 없어야 할 조각 0
+  PASS  W12-14 Jinja [한정어 없는 옛 기록] — 있어야 할 조각 0 · 없어야 할 조각 4
+  PASS  W12-14 JS [σ_e 영값 위상] — 있어야 할 조각 4 · 없어야 할 조각 3
+  PASS  W12-14 JS [σ_e 단락] — 있어야 할 조각 5 · 없어야 할 조각 4
+  PASS  W12-14 JS [σ_e 증서 못 정함] — 있어야 할 조각 2 · 없어야 할 조각 2
+  PASS  W12-14 JS [σ_ion 영값 위상] — 있어야 할 조각 3 · 없어야 할 조각 2
+  PASS  W12-14 JS [양의 해] — 있어야 할 조각 0 · 없어야 할 조각 4
+  PASS  W12-14 JS [증서 없음] — 있어야 할 조각 0 · 없어야 할 조각 3
+  PASS  W12-14 JS [SV 비 유한] — 있어야 할 조각 4 · 없어야 할 조각 2
+  PASS  W12-14 JS [SV 비 +∞] — 있어야 할 조각 3 · 없어야 할 조각 1
+  PASS  W12-14 JS [SV producer 표지] — 있어야 할 조각 3 · 없어야 할 조각 0
+  PASS  W12-14 JS [SV 비 없는 상태] — 있어야 할 조각 3 · 없어야 할 조각 2
+  PASS  W12-14 JS [SV 기록 없음] — 있어야 할 조각 0 · 없어야 할 조각 1
+  PASS  W12-14 JS [접합 한정어] — 있어야 할 조각 5 · 없어야 할 조각 0
+  PASS  W12-14 JS [한정어 없는 옛 기록] — 있어야 할 조각 0 · 없어야 할 조각 4
+  PASS  W15a 두 행이 괄호 칸 (위 끝 비 · 위 끝 표지 · 위 끝 상태 · 못 가른 덩어리 수) 을 매니페스트에서 읽는다
+  PASS  W15b producer 한정어에 못 가른 덩어리 · 괄호 판정 문장 (아래 끝 · 위 끝 · 걸침 = SV_UNCHECKED · 지금 셀 그래프 안에서만) — 템플릿 사본 없음
+  PASS  W15 Jinja [괄호 [1, ∞] · 덩어리 1 (리뷰어 꼴)] — 있어야 할 조각 7 · 없어야 할 조각 1
+  PASS  W15 Jinja [괄호 [1.2, 3.4] · 덩어리 1 (둘 다 computed)] — 있어야 할 조각 3 · 없어야 할 조각 3
+  PASS  W15 Jinja [덩어리 0 · 위 = 아래 [1.25, 1.25]] — 있어야 할 조각 2 · 없어야 할 조각 2
+  PASS  W15 Jinja [덩어리 0 · +∞ [∞, ∞]] — 있어야 할 조각 3 · 없어야 할 조각 1
+  PASS  W15 Jinja [위 끝 미수렴 [1.2, —]] — 있어야 할 조각 3 · 없어야 할 조각 1
+  PASS  W15 Jinja [위 끝 칸 없는 옛 기록 = 위 —] — 있어야 할 조각 2 · 없어야 할 조각 2
+  PASS  W15 JS [괄호 [1, ∞] · 덩어리 1 (리뷰어 꼴)] — 있어야 할 조각 7 · 없어야 할 조각 1
+  PASS  W15 JS [괄호 [1.2, 3.4] · 덩어리 1 (둘 다 computed)] — 있어야 할 조각 3 · 없어야 할 조각 3
+  PASS  W15 JS [덩어리 0 · 위 = 아래 [1.25, 1.25]] — 있어야 할 조각 2 · 없어야 할 조각 2
+  PASS  W15 JS [덩어리 0 · +∞ [∞, ∞]] — 있어야 할 조각 3 · 없어야 할 조각 1
+  PASS  W15 JS [위 끝 미수렴 [1.2, —]] — 있어야 할 조각 3 · 없어야 할 조각 1
+  PASS  W15 JS [위 끝 칸 없는 옛 기록 = 위 —] — 있어야 할 조각 2 · 없어야 할 조각 2
+  PASS  W16a 두 행이 증서 구간 칸 (ratio_cert_interval) · 지위 (standing) 를 매니페스트에서 읽는다 · "판정 근거" · "판정 아님" · "진단 (판정 입력 아님" 표지
+  PASS  W16b producer 한정어의 괄호 판정 문장에 증서 구간 판정 (아래비 · 위비 · nominal = 기록만 · 진단 기록 = SV_UNCHECKED) — 템플릿 사본 없음
+  PASS  W16 Jinja [판정문 꼴 — nominal < 문턱 < 증서 구간 (판정 근거 = 증서 구간)] — 있어야 할 조각 5 · 없어야 할 조각 2
+  PASS  W16 Jinja [증서 구간 [1.2499, 3.4002] · 덩어리 1] — 있어야 할 조각 3 · 없어야 할 조각 2
+  PASS  W16 Jinja [증서 구간 [∞, ∞] (영값 위상 증서 · inf 표지)] — 있어야 할 조각 2 · 없어야 할 조각 2
+  PASS  W16 Jinja [증서 구간 위 못 정함 [1.2499, —]] — 있어야 할 조각 1 · 없어야 할 조각 2
+  PASS  W16 Jinja [증서 구간 칸 이상 (bool · 글자) = —] — 있어야 할 조각 1 · 없어야 할 조각 3
+  PASS  W16 Jinja [진단 기록 (증서 없는 런)] — 있어야 할 조각 3 · 없어야 할 조각 3
+  PASS  W16 Jinja [지위 칸 없는 옛 기록] — 있어야 할 조각 3 · 없어야 할 조각 2
+  PASS  W16 JS [판정문 꼴 — nominal < 문턱 < 증서 구간 (판정 근거 = 증서 구간)] — 있어야 할 조각 5 · 없어야 할 조각 2
+  PASS  W16 JS [증서 구간 [1.2499, 3.4002] · 덩어리 1] — 있어야 할 조각 3 · 없어야 할 조각 2
+  PASS  W16 JS [증서 구간 [∞, ∞] (영값 위상 증서 · inf 표지)] — 있어야 할 조각 2 · 없어야 할 조각 2
+  PASS  W16 JS [증서 구간 위 못 정함 [1.2499, —]] — 있어야 할 조각 1 · 없어야 할 조각 2
+  PASS  W16 JS [증서 구간 칸 이상 (bool · 글자) = —] — 있어야 할 조각 1 · 없어야 할 조각 3
+  PASS  W16 JS [진단 기록 (증서 없는 런)] — 있어야 할 조각 3 · 없어야 할 조각 3
+  PASS  W16 JS [지위 칸 없는 옛 기록] — 있어야 할 조각 3 · 없어야 할 조각 2
+
+84 PASS · 0 FAIL

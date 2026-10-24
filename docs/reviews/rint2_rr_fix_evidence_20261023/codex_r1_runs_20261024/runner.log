@@ -1,0 +1,157 @@
+
+── N0 정적 — bash -n · 손잡이 표 · 러너가 표의 이름을 읽는다 · P2_EXTRA 의 rtol = 러너 축
+  PASS  N0a 러너 bash -n
+  PASS  N0b run_contract.RUNNER_CA_EXT_ENV = 러너 손잡이 표 (열 이름 · Z1 SIGMA_FIBRE_BULK 보탬)
+  PASS  N0c 표의 선언 칸 = ca_ext_cjunc 의 REQUEST_KEYS (사본 없이 같은 집합)
+  PASS  N0d 러너가 손잡이 열을 `${NAME:-}` 로 읽는다 (env 게이트가 "읽지 않는 축" 으로 죽이지 않게)
+  PASS  N0e P2_EXTRA 허용목록에 --step3-rtol 이 없다 (영수증 · OUTDIR · 증서 대조 = 러너 축 STEP3_RTOL)
+  PASS  N0f PTFE_STAMP 가 face_alpha 를 받는다 (거부 목록이 아니다)
+  PASS  N0g env 게이트가 CJUNC 이름꼴도 본다 (오타 축 = 죽음)
+
+── N1 끔 (기본) — 옛 팔 이름 · 영수증 · payload 인자 그대로
+  PASS  N1a 러너 rc 0 · 팔 둘 (p2_SBE_a0 · p2_DBE_a0)
+  PASS  N1b 영수증에 다음 세대 칸 없음 (ca_ext_request · step3_rtol)
+  PASS  N1c payload 인자에 새 플래그 없음 · --ptfe-stamp off · 선언에 ca_ext 칸 없음
+  PASS  N1d OUTDIR 이름에 새 태그 없음 (_cj · _rt · _c0 · _c1)
+  PASS  N1e 팔 매니페스트 = p2 세대 (ca_ext 없음 · 요청 칸 없음)
+
+── N2 탄소 접합 + rtol — 인자 · 선언 · 영수증 · 팔 이름 · p3ca · check_arm · 증서
+  PASS  N2a 러너 rc 0 · 팔 둘 · 이름 = p2_<침대>_cj1000000_<h8>_rt1em12_a0 (옛 p2_SBE_a0 와 다르다)
+  PASS  N2b 영수증 — ca_ext_request = 선언 값 (형 맞춤 · float · str) · step3_rtol 1e-12 · 러너 요청 검사 통과
+  PASS  N2c [SBE] payload 인자 (명령줄 대조) — 접합 일곱 · rtol · 수정자 c
+  PASS  N2d [SBE] --expect-physics 선언 = 켠 블록의 칸 전부 · 값 = 영수증 (선언한 축 = 매니페스트 축)
+  PASS  N2e [SBE] 팔 = p3ca · ca_ext_record_ok · receipt_match · 수렴 증서 (다음 세대 게시 조건) · protocol R_j 1e6
+  PASS  N2c [DBE] payload 인자 (명령줄 대조) — 접합 일곱 · rtol · 수정자 c
+  PASS  N2d [DBE] --expect-physics 선언 = 켠 블록의 칸 전부 · 값 = 영수증 (선언한 축 = 매니페스트 축)
+  PASS  N2e [DBE] 팔 = p3ca · ca_ext_record_ok · receipt_match · 수렴 증서 (다음 세대 게시 조건) · protocol R_j 1e6
+  PASS  N2g OUTDIR 이름에 새 태그 (_cj1000000_<h8>_rt1em12) · 끔 런과 다른 디렉터리
+
+── N3 탄소 접합 + SDCP 수정자 c = 1 + rtol
+  PASS  N3a 러너 rc 0 · 팔 둘 · 이름 = p2_<침대>_cj1000000_<h8>_c1_rt1em12_a0 (옛 p2_SBE_a0 와 다르다)
+  PASS  N3b 영수증 — ca_ext_request = 선언 값 (형 맞춤 · float · str) · step3_rtol 1e-12 · 러너 요청 검사 통과
+  PASS  N3c [SBE] payload 인자 (명령줄 대조) — 접합 일곱 · rtol · 수정자 c
+  PASS  N3d [SBE] --expect-physics 선언 = 켠 블록의 칸 전부 · 값 = 영수증 (선언한 축 = 매니페스트 축)
+  PASS  N3e [SBE] 팔 = p3ca · ca_ext_record_ok · receipt_match · 수렴 증서 (다음 세대 게시 조건) · protocol R_j 1e6
+  PASS  N3f [SBE] SDCP 수정자 — c 1 · 판별 표지 False (DBE 근접 1 · SBE = 구성상 no-op)
+  PASS  N3c [DBE] payload 인자 (명령줄 대조) — 접합 일곱 · rtol · 수정자 c
+  PASS  N3d [DBE] --expect-physics 선언 = 켠 블록의 칸 전부 · 값 = 영수증 (선언한 축 = 매니페스트 축)
+  PASS  N3e [DBE] 팔 = p3ca · ca_ext_record_ok · receipt_match · 수렴 증서 (다음 세대 게시 조건) · protocol R_j 1e6
+  PASS  N3f [DBE] SDCP 수정자 — c 1 · 판별 표지 True (DBE 근접 1 · SBE = 구성상 no-op)
+  PASS  N3g OUTDIR 이름에 새 태그 (_cj1000000_<h8>_c1_rt1em12) · 끔 런과 다른 디렉터리
+
+── N4 face_alpha + rtol (LEAN 2)
+  PASS  N4a 러너 rc 0 · 팔 둘 · 이름 = p2_<침대>_fa_rt1em12_a0
+  PASS  N4b 영수증 — ptfe_stamp face_alpha · step3_rtol 1e-12 · 접합 요청 없음
+  PASS  N4c [SBE] payload 인자 — --ptfe-stamp face_alpha · --step3-rtol 1e-12 · 접합 플래그 없음 · 선언 ptfe_stamp
+  PASS  N4d [SBE] 팔 = p3ca (ptfe_face) · ca_ext_record_ok · receipt_match · 다음 세대 게시 조건 (전자 증서)
+  PASS  N4c [DBE] payload 인자 — --ptfe-stamp face_alpha · --step3-rtol 1e-12 · 접합 플래그 없음 · 선언 ptfe_stamp
+  PASS  N4d [DBE] 팔 = p3ca (ptfe_face) · ca_ext_record_ok · receipt_match · 다음 세대 게시 조건 (전자 증서)
+
+── N5 face_alpha + rtol (LEAN 3 · 이온 증서)
+  PASS  N5a 러너 rc 0 · 팔 둘 · 이름 = p2_<침대>_fa_rt1em12_a0
+  PASS  N5b 영수증 — ptfe_stamp face_alpha · step3_rtol 1e-12 · 접합 요청 없음
+  PASS  N5c [SBE] payload 인자 — --ptfe-stamp face_alpha · --step3-rtol 1e-12 · 접합 플래그 없음 · 선언 ptfe_stamp
+  PASS  N5d [SBE] 팔 = p3ca (ptfe_face) · ca_ext_record_ok · receipt_match · 다음 세대 게시 조건 (전자 + 이온 증서)
+  PASS  N5c [DBE] payload 인자 — --ptfe-stamp face_alpha · --step3-rtol 1e-12 · 접합 플래그 없음 · 선언 ptfe_stamp
+  PASS  N5d [DBE] 팔 = p3ca (ptfe_face) · ca_ext_record_ok · receipt_match · 다음 세대 게시 조건 (전자 + 이온 증서)
+
+── N10 face_alpha + 접합 (P0 · P1) + rtol — 한 런 · 두 하위 블록 · p3ca · check_arm · 접합 sid = off 격자 sid
+  PASS  N10a [P0] 러너 rc 0 · 팔 둘 · 이름 = p2_<침대>_fa_cj1000000_<h8>_rt1em12_a0
+  PASS  N10b [P0] 영수증 — ptfe_stamp face_alpha · ca_ext_request 접합 (ptfe_jlaw P0) · 정본 요청 검사 (face_alpha 로) 통과
+  PASS  N10c [P0 · p2_DBE] 팔 = p3ca · 하위 블록 ptfe_face + cjunc · ca_ext_record_ok · receipt_match · 게시 조건 · check_arm (cpu) · 접합 원장 sid = off 격자 sid_off
+  PASS  N10c [P0 · p2_SBE] 팔 = p3ca · 하위 블록 ptfe_face + cjunc · ca_ext_record_ok · receipt_match · 게시 조건 · check_arm (cpu) · 접합 원장 sid = off 격자 sid_off
+  PASS  N10a [P1] 러너 rc 0 · 팔 둘 · 이름 = p2_<침대>_fa_cj1000000_<h8>_rt1em12_a0
+  PASS  N10b [P1] 영수증 — ptfe_stamp face_alpha · ca_ext_request 접합 (ptfe_jlaw P1) · 정본 요청 검사 (face_alpha 로) 통과
+  PASS  N10c [P1 · p2_DBE] 팔 = p3ca · 하위 블록 ptfe_face + cjunc · ca_ext_record_ok · receipt_match · 게시 조건 · check_arm (cpu) · 접합 원장 sid = off 격자 sid_off
+  PASS  N10c [P1 · p2_SBE] 팔 = p3ca · 하위 블록 ptfe_face + cjunc · ca_ext_record_ok · receipt_match · 게시 조건 · check_arm (cpu) · 접합 원장 sid = off 격자 sid_off
+
+── N6 발사 전 거부 — 구조화 사유 · rc 2 · 디렉터리를 만들지 않는다
+  PASS  N6 [스위치 값 (CJUNC=yes)] → rc 2 · `RUNNER_CA_EXT|SWITCH|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [접합 켬 · s_min 없음] → rc 2 · `RUNNER_CA_EXT|MISSING|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [접합 켬 · 값 여섯 다 없음] → rc 2 · `RUNNER_CA_EXT|MISSING|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [R_j 만 (접합 안 켬)] → rc 2 · `RUNNER_CA_EXT|FLAG_WITHOUT_CJUNC|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [SDCP 수정자만 (S2 없이)] → rc 2 · `RUNNER_CA_EXT|NO_CJUNC|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [수정자 c = 0.5] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [수정자 c = 1.0 (payload 선택지 0 · 1 밖)] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [R_j nan] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [R_j INF (극한 낱말은 inf 하나)] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [R_j +inf] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [R_j 1e999 (넘침 → inf)] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [R_j 음수] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [R_j −0 (부호)] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [R_j 끝 공백] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [R_j 유니코드 숫자 (١٠)] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [R_j 밑줄 (1_000)] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [R_j 변수 참조 ($HOME)] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [미등록 면 법칙 auto] → rc 2 · `RUNNER_CA_EXT|REQUEST|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [미등록 면 법칙 구분자 (cut;x)] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [길이 법칙 다른 판] → rc 2 · `RUNNER_CA_EXT|REQUEST|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [PTFE–접합 P1 (face_alpha 에서만)] → rc 2 · `RUNNER_CA_EXT|REQUEST|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [접합 + LEAN 미지정] → rc 2 · `RUNNER_CA_EXT|LEAN|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [접합 + LEAN 1] → rc 2 · `RUNNER_CA_EXT|LEAN|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [접합 + LEAN 4 (필드)] → rc 2 · `RUNNER_CA_EXT|LEAN|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [접합 + 점 스탬프] → rc 2 · `RUNNER_CA_EXT|SEGMENT|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [접합 + 주기] → rc 2 · `RUNNER_CA_EXT|PERIODIC|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [접합 + SDCP 브리지 진단 팔] → rc 2 · `RUNNER_CA_EXT|SDCP_BRIDGE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [접합 + σ_VGCF 고정 0] → rc 2 · `RUNNER_CA_EXT|VGCF_INSULATING|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [접합 + P1 + centerline (P1 = face_alpha 에서만)] → rc 2 · `RUNNER_CA_EXT|REQUEST|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [접합 + centerline (P0 · Rayleigh)] → rc 2 · `RUNNER_CA_EXT|PTFE_CENTERLINE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [접합 + P1 + centerline (코드 PTFE_CENTERLINE)] → rc 2 · `RUNNER_CA_EXT|PTFE_CENTERLINE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [face_alpha + LEAN 미지정] → rc 2 · `RUNNER_CA_EXT|LEAN|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [face_alpha + LEAN 1] → rc 2 · `RUNNER_CA_EXT|LEAN|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [face_alpha + LEAN 4] → rc 2 · `RUNNER_CA_EXT|LEAN|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [face_alpha + σ_PTFE > 0] → rc 2 · `RUNNER_CA_EXT|SIGMA_PTFE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [face_alpha + PTFE 차단 (LEAN 3)] → rc 2 · `RUNNER_CA_EXT|PTFE_BLOCK|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [face_alpha + 주기] → rc 2 · `RUNNER_CA_EXT|PERIODIC|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [face_alpha + 점 스탬프] → rc 2 · `RUNNER_CA_EXT|SEGMENT|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [rtol 1e-10 (봉인 상한 1e-12 밖 · 증서 ⓐ 실패 확정)] → rc 2 · `RUNNER_CA_EXT|RTOL|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [rtol 0] → rc 2 · `RUNNER_CA_EXT|RTOL|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [rtol 글자] → rc 2 · `RUNNER_CA_EXT|VALUE|` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [P2_EXTRA 로 rtol (러너 축으로 옮김)] → rc 2 · `STEP3_RTOL` · 새 디렉터리 없음 · payload 미호출
+  PASS  N6 [오타 축 (CJUNC_BOGUS)] → rc 2 · `CJUNC_BOGUS` · 새 디렉터리 없음 · payload 미호출
+
+── N6b 러너 거부 ⊆ payload 거부 — 같은 조합을 payload 에 직접 주면 거부 (과잉차단 없음)
+  PASS  N6b [접합 + LEAN 1] payload 도 거부 — `S2_CJUNC_REFUSED|COLLECTOR|`
+  PASS  N6b [접합 + LEAN 4] payload 도 거부 — `S2_CJUNC_REFUSED|FIELD|`
+  PASS  N6b [접합 + LEAN 미지정] payload 도 거부 — `S2_CJUNC_REFUSED|FIELD|`
+  PASS  N6b [접합 + 점 스탬프] payload 도 거부 — `S2_CJUNC_REFUSED|SEGMENT|`
+  PASS  N6b [접합 + 주기] payload 도 거부 — `S2_CJUNC_REFUSED|PERIODIC|`
+  PASS  N6b [접합 + SDCP 브리지] payload 도 거부 — `S2_CJUNC_REFUSED|SDCP_BRIDGE|`
+  PASS  N6b [접합 + σ_VGCF 0] payload 도 거부 — `S2_CJUNC_REFUSED|VGCF_INSULATING|`
+  PASS  N6b [접합 + P1 + centerline] payload 도 거부 — `S2_CJUNC_REFUSED|P1_NEEDS_FACE_ALPHA|`
+  PASS  N6b [접합 + centerline (P0 · Rayleigh · Q-C)] payload 도 거부 — `S2_CJUNC_REFUSED|PTFE_CENTERLINE|`
+  PASS  N6b [face_alpha + LEAN 1] payload 도 거부 — `S1_FACE_ALPHA_REFUSED|COLLECTOR|`
+  PASS  N6b [face_alpha + LEAN 4] payload 도 거부 — `S1_FACE_ALPHA_REFUSED|FIELD|`
+  PASS  N6b [face_alpha + σ_PTFE] payload 도 거부 — `S1_FACE_ALPHA_REFUSED|SIGMA_PTFE|`
+  PASS  N6b [face_alpha + PTFE 차단] payload 도 거부 — `S1_FACE_ALPHA_REFUSED|PTFE_BLOCK|`
+  PASS  N6b [face_alpha + 주기] payload 도 거부 — `S1_FACE_ALPHA_REFUSED|PERIODIC|`
+  PASS  N6b [face_alpha + 점 스탬프] payload 도 거부 — `S1_FACE_ALPHA_REFUSED|SEGMENT|`
+  PASS  N6b [rtol 1e-10] payload 는 받지만 그 팔은 게시할 수 없다 (증서 ⓐ 실패 · 미수렴) — 러너 거부는 계산 낭비만 막는다
+
+── N7 OUTDIR · 팔 태그 · 인자 · 선언 — 다른 요청 = 다른 이름 · 같은 물리 = 같은 이름
+  PASS  N7a 설정부 실행 (접합 + rtol) — 중단 없음 · 다섯 값이 조립된다
+  PASS  N7b 인자 꼴 — 켜기 + 값 플래그 여섯 + rtol (값 = 정규 표기) · 선행 공백
+  PASS  N7c 선언 꼴 — `,ca_ext.cjunc.<칸>=<값>` 여섯 (앞 쉼표 · 러너 선언 뒤에 붙는다)
+  PASS  N7d 끔 — 넷 다 빈 문자열 (옛 조립 그대로)
+  PASS  N7e 같은 R_j 다른 표기 (1000000 · 1.0e6 · 1e+6 · 1E6) = 같은 OUTDIR · 같은 팔 태그 `_cj1000000_…` (정규 · 같은 물리 = 같은 이름)
+  PASS  N7f 요청 13 가지 = OUTDIR 13 개 · 팔 태그 13 개 (전부 다르다 · 2.5 ↔ 25 무손실 · R_j 가 같아도 s_min · tol_ff · 법칙이 다르면 다르다)
+  PASS  N7g 읽을 수 있는 태그 — R_j 1e2 → `_cj100_` · 2.5 → `_cj2p5_` · c 1 → `_c1_rt…` · rtol 1e-13 → `_rt1em13` · bulk 1e4 → `_fb10000`
+  PASS  N7h face_alpha + rtol — 팔 태그 `_fa_rt1em12` (OUTDIR 은 `_ptsface_alpha` 가 이미 가른다) · 끔 + rtol = `_rt1em12`
+  PASS  N7i face_alpha + σ_PTFE 0 은 거부하지 않는다 (payload 도 > 0 만 거부 · 과잉차단 없음)
+  PASS  N7j CJUNC_SV_CF=1 — rc 0 · 팔 태그 = 끈 태그 + `_svcf` · OUTDIR 다름 · NG_FLAG 에 `--step3-cjunc-sv-cf` 한 번 · NG_DECL 같음
+  PASS  N7k CJUNC_SV_CF=1 인데 CJUNC 없음 → 발사 전 거부 (RUNNER_CA_EXT|FLAG_WITHOUT_CJUNC| · 조용한 no-op 금지)
+
+── N8 SKIP 캐시 함정 — 옛 팔이 있는 OUTDIR 을 명시해도 재사용 · 삭제하지 않는다
+  PASS  N8a 옛 팔을 SKIP (재사용) 하지 않는다
+  PASS  N8b 옛 팔 두 파일이 그대로 (삭제 · 덮어쓰기 없음)
+  PASS  N8c 새 팔은 새 이름으로만 돈다 (payload --out = p2_<침대>_cj…_rt1em12_a0)
+
+── N9 규율 검사기 격리 — 부모 셸의 새 축 env 가 규칙 L 탐침을 오염시키지 않는다
+  PASS  N9a 새 손잡이 열이 규율 검사기의 격리 목록 (_RUNNER_AXES) 에 있다
+  PASS  N9b 오염된 부모 셸 (CJUNC=1 … SDCP_MOD_C=1 · STEP3_RTOL) 에서도 기본 탐침 = 끔 조립 (중단 없음 · LEAN_FLAGS 빈)
+  PASS  N9c (판별력) 격리 목록에서 새 이름을 빼면 같은 탐침이 오염된다 (중단) — 위 통과가 우연이 아니다
+
+── NB 끔 경로 — 고치기 전 러너와 payload argv · 영수증 · OUTDIR · 팔 이름 · 매니페스트 대조 (--old-runner)
+    (--old-runner 없음 — 건너뜀 · 커밋 증거는 그 인자로 돌린 기록)
+
+128 PASS · 0 FAIL

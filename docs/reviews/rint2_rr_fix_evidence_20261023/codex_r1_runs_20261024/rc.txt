@@ -1,0 +1,21 @@
+chain rc=0 sec=105
+chain_e2e rc=0 sec=115
+b6 rc=0 sec=38
+carbon_junction rc=0 sec=13
+s0_census rc=0 sec=15
+runner rc=0 sec=62
+z1 rc=0 sec=26
+z3 rc=0 sec=24
+verdict rc=0 sec=26
+target_cert rc=0 sec=13
+conv_cert rc=0 sec=71
+ptfe rc=0 sec=57
+receipts rc=0 sec=26
+run_contract rc=0 sec=0
+step3_rint rc=0 sec=1
+web_labels rc=0 sec=0
+web_explainer rc=0 sec=1
+web_cmp rc=0 sec=1
+kgy_py38 rc=0 sec=490
+target_cert_long rc=0 sec=856
+done
