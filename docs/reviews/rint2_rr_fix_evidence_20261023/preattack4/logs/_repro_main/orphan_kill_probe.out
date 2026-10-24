@@ -1,0 +1,31 @@
+{
+ "T": {
+  "timeout": true,
+  "seconds_to_return": 0.5,
+  "right_after": {
+   "attempt_folder_payloads": [],
+   "kit_run_folder_payloads": []
+  },
+  "after_3s": {
+   "attempt_folder_payloads": [],
+   "kit_run_folder_payloads": [
+    "p2_DBE_a0.json"
+   ]
+  }
+ },
+ "K": {
+  "returncode_seen_by_chain": -9,
+  "right_after": {
+   "attempt_folder_payloads": [],
+   "kit_run_folder_payloads": []
+  },
+  "after_3s": {
+   "attempt_folder_payloads": [],
+   "kit_run_folder_payloads": [
+    "p2_DBE_a0.json"
+   ]
+  }
+ },
+ "tmp": "work/orphan_probe_pp_f4ml9"
+}
+rc=0

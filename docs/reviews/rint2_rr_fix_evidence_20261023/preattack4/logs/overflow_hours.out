@@ -1,0 +1,16 @@
+{
+ "dbe_arm_s": 2578.0,
+ "multiplier_json": {
+  "lo": 5.0446,
+  "hi": 6.1018
+ },
+ "multiplier_recomputed": {
+  "lo": 5.0446,
+  "hi": 6.1018
+ },
+ "overflow_24_arms_h": {
+  "lo": 86.7,
+  "hi": 104.87
+ },
+ "json_overflow_note": "등록 §10-4: 모서리 하나 origin 넘침 = +24 팔 ≈ +87 h (×6.05 · 한 기계) — 이 표에 넣지 않았다"
+}

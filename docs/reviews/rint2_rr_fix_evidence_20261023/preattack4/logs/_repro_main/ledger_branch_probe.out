@@ -1,0 +1,15 @@
+{
+ "start_commit_of_#2": "974272f188",
+ "is_on_main": false,
+ "literal_check_L113 (earlier result lines present in start commit)": true,
+ "byte_prefix_check (start-commit ledger ⊑ merged ledger)": false,
+ "ancestor_check (start commit ⊑ merged commit)": false,
+ "outcomes_after_seeing_#2": {
+  "#1 = deliberate pre-solve reject (결과 전)": "adopt #2",
+  "#1 = normal run (완주)": "#1 adopted → #2 = ATTEMPT_AFTER_ADOPTED → STOPPED",
+  "#1 never run (폴더 · 거부 기록 없음 = 결과 뒤 · L118)": "#1 adopted (folderless) → unit STOPPED (+ #2 ATTEMPT_AFTER_ADOPTED)"
+ },
+ "net": "{adopt #2 | STOPPED} — a veto, not a choice between two σ draws (ATTEMPT_AFTER_ADOPTED closes the second branch)",
+ "tmp": "work/ledger_probe_koru3jpm"
+}
+rc=0

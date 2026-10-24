@@ -1,0 +1,30 @@
+{
+ "T": {
+  "timeout": true,
+  "seconds_to_return": 0.5,
+  "right_after": {
+   "attempt_folder_payloads": [],
+   "kit_run_folder_payloads": []
+  },
+  "after_3s": {
+   "attempt_folder_payloads": [],
+   "kit_run_folder_payloads": [
+    "p2_DBE_a0.json"
+   ]
+  }
+ },
+ "K": {
+  "returncode_seen_by_chain": -9,
+  "right_after": {
+   "attempt_folder_payloads": [],
+   "kit_run_folder_payloads": []
+  },
+  "after_3s": {
+   "attempt_folder_payloads": [],
+   "kit_run_folder_payloads": [
+    "p2_DBE_a0.json"
+   ]
+  }
+ },
+ "tmp": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/preattack4/work/orphan_probe_esv_humw"
+}

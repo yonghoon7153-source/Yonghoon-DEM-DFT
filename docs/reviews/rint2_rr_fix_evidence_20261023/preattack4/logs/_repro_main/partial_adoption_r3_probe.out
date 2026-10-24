@@ -1,0 +1,159 @@
+[
+ {
+  "name": "S1 round-3 lazy counterexample (A origin NOT_COMPUTED · B corner ARM_CONTRACT)",
+  "chain": {
+   "status": "STOPPED",
+   "stop": "ARM_CONTRACT",
+   "dbe_runs": 12,
+   "runs_incl_noop": 14
+  },
+  "merge": {
+   "status": "STOPPED",
+   "stop": "ARM_CONTRACT",
+   "dbe_runs": 12,
+   "runs_incl_noop": 14
+  },
+  "same": true,
+  "rules": {}
+ },
+ {
+  "name": "S2 resume after post-payload CUDA OOM",
+  "chain": {
+   "status": "PREDICTED",
+   "stop": null,
+   "dbe_runs": 24,
+   "runs_incl_noop": 26
+  },
+  "merge": {
+   "status": "PREDICTED",
+   "stop": null,
+   "dbe_runs": 24,
+   "runs_incl_noop": 26
+  },
+  "same": true,
+  "rules": {}
+ },
+ {
+  "name": "S3 rejected resume then good resume (ATTEMPT_AFTER_ADOPTED reading A)",
+  "chain": {
+   "status": "PREDICTED",
+   "stop": null,
+   "dbe_runs": 24,
+   "runs_incl_noop": 26
+  },
+  "merge": {
+   "status": "STOPPED",
+   "stop": "ATTEMPT_AFTER_ADOPTED",
+   "dbe_runs": 3,
+   "runs_incl_noop": 5
+  },
+  "same": false,
+  "rules": {
+   "aaa_reading": "A"
+  }
+ },
+ {
+  "name": "S3 rejected resume then good resume (ATTEMPT_AFTER_ADOPTED reading B)",
+  "chain": {
+   "status": "PREDICTED",
+   "stop": null,
+   "dbe_runs": 24,
+   "runs_incl_noop": 26
+  },
+  "merge": {
+   "status": "PREDICTED",
+   "stop": null,
+   "dbe_runs": 24,
+   "runs_incl_noop": 26
+  },
+  "same": true,
+  "rules": {
+   "aaa_reading": "B"
+  }
+ },
+ {
+  "name": "S4 pre-payload parent death then same-machine resume (resume rule L123)",
+  "chain": {
+   "status": "PREDICTED",
+   "stop": null,
+   "dbe_runs": 24,
+   "runs_incl_noop": 26
+  },
+  "merge": {
+   "status": "STOPPED",
+   "stop": "RESUME_NOT_ALLOWED(이름 없음)",
+   "dbe_runs": 3,
+   "runs_incl_noop": 5
+  },
+  "same": false,
+  "rules": {
+   "resume_reading": "L123"
+  }
+ },
+ {
+  "name": "S4 pre-payload parent death then same-machine resume (resume rule L128)",
+  "chain": {
+   "status": "PREDICTED",
+   "stop": null,
+   "dbe_runs": 24,
+   "runs_incl_noop": 26
+  },
+  "merge": {
+   "status": "PREDICTED",
+   "stop": null,
+   "dbe_runs": 24,
+   "runs_incl_noop": 26
+  },
+  "same": true,
+  "rules": {
+   "resume_reading": "L128"
+  }
+ },
+ {
+  "name": "S5 version mismatch found only at merge · re-run blocked",
+  "chain": {
+   "status": "PREDICTED",
+   "stop": null,
+   "dbe_runs": 24,
+   "runs_incl_noop": 26
+  },
+  "merge": {
+   "status": "STOPPED",
+   "stop": "ATTEMPT_AFTER_ADOPTED",
+   "dbe_runs": 12,
+   "runs_incl_noop": 14
+  },
+  "same": false,
+  "rules": {
+   "extra_unit_stop": null
+  },
+  "note": "second attempt alone → ATTEMPT_AFTER_ADOPTED; without it the merge stops on the python/numpy/scipy inequality (§3-3)"
+ },
+ {
+  "name": "S5b same, without the second attempt",
+  "merge": {
+   "status": "STOPPED",
+   "stop": "UNIT_PROVENANCE_MISMATCH(판 다름 · §3-3)",
+   "dbe_runs": 12
+  }
+ },
+ {
+  "name": "S6 signal-9 attempt whose σ landed in $RUN, then another machine",
+  "chain": {
+   "status": "PREDICTED",
+   "stop": null,
+   "dbe_runs": 24,
+   "runs_incl_noop": 26
+  },
+  "merge": {
+   "status": "PREDICTED",
+   "stop": null,
+   "dbe_runs": 24,
+   "runs_incl_noop": 26
+  },
+  "same": true,
+  "rules": {},
+  "note": "ledger rules accept #2 (L119: #1 = 결과 전) although #1 σ was readable in $RUN before #2 started"
+ }
+]
+rc=0

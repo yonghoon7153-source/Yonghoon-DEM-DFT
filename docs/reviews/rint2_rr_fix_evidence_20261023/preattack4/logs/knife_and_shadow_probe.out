@@ -1,0 +1,33 @@
+{
+ "shadow_kgy": {
+  "edge_unit_mScm": "4.679999999064",
+  "verdict": "FAIL",
+  "in_U": false,
+  "W": 0.15700374860966476
+ },
+ "shadow_gabia": {
+  "edge_unit_mScm": "4.680000000935999",
+  "verdict": "PASS_INFORMATIVE",
+  "in_U": true,
+  "W": 0.15700374900966463
+ },
+ "shadow_note": "run U(c1,P0,R_j_lo) outside the ledger on both machines (L134 allows it) → commit ONE ledger entry on the machine whose verdict you prefer → it is the first attempt, order/start-sha/prefix checks pass, nothing after it",
+ "ladder_sig3_rounding": {
+  "kgy": {
+   "interp_R": "1234999.9943542343",
+   "R_j0 = sig3": 1230000.0
+  },
+  "gabia": {
+   "interp_R": "1235000.0056457967",
+   "R_j0 = sig3": 1240000.0
+  }
+ },
+ "ladder_confirm_tol": {
+  "kgy": true,
+  "gabia": false
+ },
+ "ladder_sbe_origin_0.02": {
+  "kgy": true,
+  "gabia": false
+ }
+}
