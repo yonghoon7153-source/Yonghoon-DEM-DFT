@@ -1,0 +1,75 @@
+{
+  "scope": "Shell syntax and synthetic command exit-status/read-only inventory checks only. No real WSL, LHS selftests, preflight, Git mutations, or physical runs.",
+  "document_sha256": "fe4cf304304c7f67e8ceecbaf1e484995b60686515b56e9d2909a28af40c7317",
+  "document_lines": 149,
+  "results": [
+    {
+      "case": "syntax-1",
+      "rc": 0,
+      "ok": true
+    },
+    {
+      "case": "missing-required-1",
+      "rc": 1,
+      "ok": true
+    },
+    {
+      "case": "syntax-2",
+      "rc": 0,
+      "ok": true
+    },
+    {
+      "case": "missing-required-2",
+      "rc": 1,
+      "ok": true
+    },
+    {
+      "case": "syntax-3",
+      "rc": 0,
+      "ok": true
+    },
+    {
+      "case": "missing-required-3",
+      "rc": 1,
+      "ok": true
+    },
+    {
+      "case": "inventory-synthetic-rc-0",
+      "rc": 0,
+      "ok": true
+    },
+    {
+      "case": "fast16-synthetic-rc-0",
+      "rc": 0,
+      "saved_rc": "0",
+      "ok": true
+    },
+    {
+      "case": "fast16-refuse-existing-0",
+      "rc": 2,
+      "ok": true
+    },
+    {
+      "case": "inventory-synthetic-rc-7",
+      "rc": 7,
+      "ok": true
+    },
+    {
+      "case": "fast16-synthetic-rc-7",
+      "rc": 7,
+      "saved_rc": "7",
+      "ok": true
+    },
+    {
+      "case": "fast16-refuse-existing-7",
+      "rc": 2,
+      "ok": true
+    },
+    {
+      "case": "file-inventory-synthetic",
+      "rc": 0,
+      "ok": true
+    }
+  ],
+  "all_pass": true
+}

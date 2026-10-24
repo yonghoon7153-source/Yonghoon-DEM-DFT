@@ -1,0 +1,74 @@
+[
+  {
+    "case": "wrong-pin",
+    "returncode": 2,
+    "status": null,
+    "expected_rc": 2,
+    "expected_status": null,
+    "pass": true,
+    "stderr": "T12 preparation source failure: Consumer pin/prefix differs from this fixture specification"
+  },
+  {
+    "case": "wrong-prefix",
+    "returncode": 2,
+    "status": null,
+    "expected_rc": 2,
+    "expected_status": null,
+    "pass": true,
+    "stderr": "T12 preparation source failure: Consumer pin/prefix differs from this fixture specification"
+  },
+  {
+    "case": "missing-source",
+    "returncode": 2,
+    "status": null,
+    "expected_rc": 2,
+    "expected_status": null,
+    "pass": true,
+    "stderr": "T12 preparation source failure: Source manifest must cover the complete six-file import/params closure"
+  },
+  {
+    "case": "wrong-hash",
+    "returncode": 2,
+    "status": null,
+    "expected_rc": 2,
+    "expected_status": null,
+    "pass": true,
+    "stderr": "T12 preparation source failure: Pinned source SHA256 mismatch: ul_reader.py"
+  },
+  {
+    "case": "missing-git-objects",
+    "returncode": 2,
+    "status": null,
+    "expected_rc": 2,
+    "expected_status": null,
+    "pass": true,
+    "stderr": "T12 preparation source failure: Pinned Git object unavailable: 01c1aaf5be8acdf7d1716f34cc86fc77d8e27362:docs/data/ps45_unload_20261009/ul_gates.py; fetch origin codex/unloading-ulpr explicitly, then retry. No fetch was run."
+  },
+  {
+    "case": "empty-excerpts",
+    "returncode": 1,
+    "status": "FAIL",
+    "expected_rc": 1,
+    "expected_status": "FAIL",
+    "pass": true,
+    "stderr": ""
+  },
+  {
+    "case": "missing-bed",
+    "returncode": 1,
+    "status": "FAIL",
+    "expected_rc": 1,
+    "expected_status": "FAIL",
+    "pass": true,
+    "stderr": ""
+  },
+  {
+    "case": "missing-h0",
+    "returncode": 1,
+    "status": "FAIL",
+    "expected_rc": 1,
+    "expected_status": "FAIL",
+    "pass": true,
+    "stderr": ""
+  }
+]
