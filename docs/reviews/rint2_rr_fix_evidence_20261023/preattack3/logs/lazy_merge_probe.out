@@ -1,0 +1,25 @@
+{
+ "chain": {
+  "status": "STOPPED",
+  "stop": "ARM_CONTRACT",
+  "at": "req14",
+  "runs": 14
+ },
+ "merge_literal": {
+  "status": "NOT_COMPUTED",
+  "stop": "NOT_COMPUTED",
+  "at": "req5",
+  "runs": 5
+ },
+ "units_requested_by_chain_not_by_merge": [
+  "u_c0_P0_R_j_hi",
+  "u_c0_P1_R_j0",
+  "u_c0_P1_R_j_hi",
+  "u_c0_P1_R_j_lo",
+  "u_c1_P0_R_j0",
+  "u_c1_P0_R_j_hi",
+  "u_c1_P1_R_j0",
+  "u_c1_P1_R_j_hi",
+  "u_c1_P1_R_j_lo"
+ ]
+}

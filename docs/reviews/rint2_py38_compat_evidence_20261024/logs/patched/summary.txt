@@ -1,0 +1,12 @@
+run_contract rc=0 1s :: run_contract selftest: 124/124 PASS
+step3_rint rc=0 0s :: STEP3 RINT SELFTEST PASS
+ptfe_face_alpha rc=0 47s :: 242 PASS · 0 FAIL
+carbon_junction rc=0 12s :: == test_carbon_junction: 440/440 PASS
+ca_ext_b6 rc=0 29s :: 454 PASS · 0 FAIL
+ca_ext_runner rc=0 40s :: 128 PASS · 0 FAIL
+rint_r_chain rc=0 78s :: test_rint_r_chain: 240/240 PASS (78.1 s)
+rint_r_chain_e2e rc=0 75s :: test_rint_r_chain_e2e: 16 PASS · 0 FAIL (74.6 s)
+step3_target_cert rc=0 13s :: == test_step3_target_cert [빠른 판]: 260/260 PASS (12.3 s)
+step3_conv_cert rc=1 71s :: FAIL: K4 `_solve_cg(x0=…, rtol=…)` — 초기값 · 조임 rtol 을 받는다 (이어 풀기 ⓒ 의 바탕)
+ca_s0_census rc=0 14s :: 152 PASS · 0 FAIL
+DONE

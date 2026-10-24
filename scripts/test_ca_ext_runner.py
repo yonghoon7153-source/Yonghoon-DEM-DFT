@@ -686,7 +686,7 @@ def main():
     SHIMDIR = os.path.join(TD, '_bin')
     os.makedirs(SHIMDIR)
     with open(os.path.join(SHIMDIR, 'python3'), 'w', encoding='utf-8') as f:
-        f.write(SHIM.replace('__REAL__', os.path.realpath(sys.executable)))
+        f.write(SHIM.replace('__REAL__', os.path.abspath(sys.executable)))   # realpath = venv 밖 (kgy dem-venv · 10-24)
     os.chmod(os.path.join(SHIMDIR, 'python3'), 0o755)
     only = [x.strip() for x in ARGS.only.split(',') if x.strip()]
     try:

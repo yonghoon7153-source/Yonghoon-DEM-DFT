@@ -1,0 +1,27 @@
+
+── E1
+    보고 E1 — 사슬 rc 3 · 상태 STOPPED · 런 1 (['floor']) · 1 s · 멈춤 RUNNER_RC
+  FAIL  E1a 실제 러너 — 바닥 · 천장 · 사다리 점 하나 이상이 rc 0 · 팔 계약 (정본 ca_ext_record_ok · check_arm · 수렴 증서) 통과  ((3, ['floor'], {'cause': 'rc 1 (로그 /tmp/rint_r_chain_e2e_zmvglp2g/runs/e1_P0/logs/L01_floor.log)', 'code': 'RUNNER_RC', 'reason': None, 'run': 'L01_floor', 'what': '러너 rc ≠ 0'}, '사다리 P0 — SBE arm 0 · LEAN 2 · 표적 1.63 mS/cm (값은 봉인 — 상태 · 반복 · 잔차 · 시간만)\n멈춤 [RUNNER_RC] 러너 rc ≠ 0 — rc 1 (로그 /tmp/rint_r_chain_e2e_zmvglp2g/runs/e1_P0/logs/L01_floor.log) (런 L01_floor)\n보정 = STOPPED\n요약 → /tmp/rint_r_chain_e2e_zmvglp2g/runs/e1_P0/ladder_summary.json\n'))
+  FAIL  E1b 사다리가 등록 결과 이름으로 끝난다 (STOPPED · 계약 · 러너 멈춤 아님)  (('STOPPED', {'cause': 'rc 1 (로그 /tmp/rint_r_chain_e2e_zmvglp2g/runs/e1_P0/logs/L01_floor.log)', 'code': 'RUNNER_RC', 'reason': None, 'run': 'L01_floor', 'what': '러너 rc ≠ 0'}))
+
+── E6
+    보고 E6 — 사슬 rc 3 · 상태 STOPPED · 멈춤 RUNNER_RC · 런 1 · payload 거부 사유 ['JOULE', 'STEP4_GRID']
+  PASS  E6 (현재 꼴 기록) 생산 킷 꼴 payload 줄 (--joule-heat · --save-step4-grid) = 첫 런 (바닥) 에서 payload 입구 거부 (JOULE · STEP4_GRID) → 러너 rc ≠ 0 → 사슬 RUNNER_RC (fail-closed · 팔 없음) — 실제 런을 막는 것
+
+── E8
+    보고 E8 — 사슬 rc 3 · 상태 STOPPED · 런 1 (['floor']) · 1 s · 멈춤 RUNNER_RC · 상태 기록 {}
+  FAIL  E8a 바닥 (CJUNC_RJ=inf · AM 이 판에 안 닿음) = 실제 payload 조기 반환 해 → 팔 상태 zero (σ 0 · 증서 VALID_ZERO_TOPOLOGY) · 정본 계약 통과 · 사슬이 받아 다음 런 (천장) 으로  ((3, ['floor'], {}, {'cause': 'rc 1 (로그 /tmp/rint_r_chain_e2e_zmvglp2g/runs/e8_P0/logs/L01_floor.log)', 'code': 'RUNNER_RC', 'reason': None, 'run': 'L01_floor', 'what': '러너 rc ≠ 0'}, '사다리 P0 — SBE arm 0 · LEAN 2 · 표적 1.63 mS/cm (값은 봉인 — 상태 · 반복 · 잔차 · 시간만)\n멈춤 [RUNNER_RC] 러너 rc ≠ 0 — rc 1 (로그 /tmp/rint_r_chain_e2e_zmvglp2g/runs/e8_P0/logs/L01_floor.log) (런 L01_floor)\n보정 = STOPPED\n요약 → /tmp/rint_r_chain_e2e_zmvglp2g/runs/e8_P0/ladder_summary.json\n'))
+  FAIL  E8c 사다리가 등록 결과 이름으로 끝난다 · 바닥에서 멈추지 않는다 (ARM_UNREADABLE · NOT_COMPUTED · 계약 · 러너 멈춤 아님)  (('STOPPED', {'cause': 'rc 1 (로그 /tmp/rint_r_chain_e2e_zmvglp2g/runs/e8_P0/logs/L01_floor.log)', 'code': 'RUNNER_RC', 'reason': None, 'run': 'L01_floor', 'what': '러너 rc ≠ 0'}))
+
+── E9
+    보고 E9 — 사슬 rc 3 · 상태 STOPPED · 런 1 (['floor']) · 1 s · 멈춤 RUNNER_RC · 사유 None · 런 L01_floor
+  FAIL  E9a 바닥 (R_j → ∞) = 실제 payload 영값 위상 (팔 상태 zero) · 천장 (R_j → 0) 런 = 러너 rc 0 (정본 check_arm 이 단락 기록을 받아 옮겼다) · 런 둘에서 멈춤  ((3, ['floor'], [1], {'cause': 'rc 1 (로그 /tmp/rint_r_chain_e2e_zmvglp2g/runs/e9_P0/logs/L01_floor.log)', 'code': 'RUNNER_RC', 'reason': None, 'run': 'L01_floor', 'what': '러너 rc ≠ 0'}, '사다리 P0 — SBE arm 0 · LEAN 2 · 표적 1.63 mS/cm (값은 봉인 — 상태 · 반복 · 잔차 · 시간만)\n멈춤 [RUNNER_RC] 러너 rc ≠ 0 — rc 1 (로그 /tmp/rint_r_chain_e2e_zmvglp2g/runs/e9_P0/logs/L01_floor.log) (런 L01_floor)\n보정 = STOPPED\n요약 → /tmp/rint_r_chain_e2e_zmvglp2g/runs/e9_P0/ladder_summary.json\n'))
+  FAIL  E9b 사다리 = 등록 결과 NOT_COMPUTED · 멈춤 코드 NOT_COMPUTED · 사유 ELECTRODE_SHORT · 멈춘 런 = 천장 (RUNNER_RC · CA_EXT_RECORD · ARM_CONTRACT · MANIFEST_MISMATCH 아님) · rc 3  ((3, 'STOPPED', {'cause': 'rc 1 (로그 /tmp/rint_r_chain_e2e_zmvglp2g/runs/e9_P0/logs/L01_floor.log)', 'code': 'RUNNER_RC', 'reason': None, 'run': 'L01_floor', 'what': '러너 rc ≠ 0'}))
+
+test_rint_r_chain_e2e: 1 PASS · 6 FAIL (5.1 s)
+  - E1a 실제 러너 — 바닥 · 천장 · 사다리 점 하나 이상이 rc 0 · 팔 계약 (정본 ca_ext_record_ok · check_arm · 수렴 증서) 통과
+  - E1b 사다리가 등록 결과 이름으로 끝난다 (STOPPED · 계약 · 러너 멈춤 아님)
+  - E8a 바닥 (CJUNC_RJ=inf · AM 이 판에 안 닿음) = 실제 payload 조기 반환 해 → 팔 상태 zero (σ 0 · 증서 VALID_ZERO_TOPOLOGY) · 정본 계약 통과 · 사슬이 받아 다음 런 (천장) 으로
+  - E8c 사다리가 등록 결과 이름으로 끝난다 · 바닥에서 멈추지 않는다 (ARM_UNREADABLE · NOT_COMPUTED · 계약 · 러너 멈춤 아님)
+  - E9a 바닥 (R_j → ∞) = 실제 payload 영값 위상 (팔 상태 zero) · 천장 (R_j → 0) 런 = 러너 rc 0 (정본 check_arm 이 단락 기록을 받아 옮겼다) · 런 둘에서 멈춤
+  - E9b 사다리 = 등록 결과 NOT_COMPUTED · 멈춤 코드 NOT_COMPUTED · 사유 ELECTRODE_SHORT · 멈춘 런 = 천장 (RUNNER_RC · CA_EXT_RECORD · ARM_CONTRACT · MANIFEST_MISMATCH 아님) · rc 3

@@ -56,6 +56,9 @@ import time
 
 import numpy as np
 
+#: math.nextafter = 3.9+ (kgy dem-venv = Python 3.8.10 · 10-24) → numpy 의 IEEE nextafter (같은 값 · 모듈 구현과 독립)
+_nextafter = getattr(math, 'nextafter', None) or (lambda x, y: float(np.nextafter(x, y)))
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCRIPTS = os.path.join(ROOT, 'scripts')
 sys.path.insert(0, SCRIPTS)
@@ -464,7 +467,7 @@ def t7():
     chk('T7u 대조 — 작지만 정상 범위 (g 1e-290 · 항 ~1e-291) 정확 해 → POSITIVE_SOLVED · ⓓ 통과 · 구간 ∋ G* (분수) (거짓 거부 없음)',
         cs.get('status') == getattr(CC, 'STATUS_POSITIVE', '?') and cs.get('pass_d') is True and _fin(cs.get('target_lo'))
         and _fin(cs.get('target_hi')) and Fr(cs['target_lo']) <= Gs <= Fr(cs['target_hi']),
-        {k: cs.get(k) for k in ('status', 'pass_d', 'target_lo', 'target_hi')} | {'G*': float(Gs)})
+        {**{k: cs.get(k) for k in ('status', 'pass_d', 'target_lo', 'target_hi')}, 'G*': float(Gs)})
 
 
 @case('T15 원장 허용 = 반올림 수준만 — 중복 합 순서가 다른 비대칭 (1e16 + 1 × 40) · 큰 차수 행 합 반올림 (1e16 + 1 × 200 이 대각에서 사라짐) '
@@ -982,7 +985,7 @@ def t16():
         chk(f'T16a [{nm}] 정확 해 → POSITIVE_SOLVED · ⓓ 통과 · 상한 ≥ G* ≥ 하한 (분수) · 구간 상대 폭 ≤ 1e-12',
             c.get('status') == getattr(CC, 'STATUS_POSITIVE', '?') and c.get('pass_d') is True and ok_num
             and Fr(lo) <= Gs <= Fr(hi) and (Fr(hi) - Fr(lo)) <= Fr(1, 10 ** 12) * Gs,
-            {k: c.get(k) for k in ('status', 'pass_d', 'target_lo', 'target_hi')} | {'G*': float(Gs)})
+            {**{k: c.get(k) for k in ('status', 'pass_d', 'target_lo', 'target_hi')}, 'G*': float(Gs)})
         e_fr = _fr_energy(phi, edges, bot, top)
         chk(f'T16b [{nm}] Dirichlet — 정확 에너지 (분수) ≥ G* · 기록 상한 ≥ 정확 에너지 (부동소수 여유가 덮는다)',
             ok_num and e_fr >= Gs and Fr(hi) >= e_fr, (float(e_fr - Gs), float(Fr(hi) - e_fr) if ok_num else None))
@@ -996,7 +999,7 @@ def t16():
             if dl == 1e-3:
                 chk(f'T16c [{nm}] φ 를 망가뜨림 (노드 0 + 1e-3) → ⓓ 거부 · 구간은 여전히 G* 를 담는다 (건전)',
                     cb.get('pass_d') is False and cb.get('ok') is False and sound,
-                    {k: cb.get(k) for k in ('pass_d', 'target_why', 'target_lo', 'target_hi')} | {'G*': float(Gs)})
+                    {**{k: cb.get(k) for k in ('pass_d', 'target_why', 'target_lo', 'target_hi')}, 'G*': float(Gs)})
             else:
                 exact_ok = _fin(Gp) and abs(Fr(Gp) - Gs) <= tau * Fr(Gp)
                 chk(f'T16d [{nm}] 아주 작게 (+1e-13) → 건전 · 통과면 게시 G 의 실제 오차 ≤ 1e-4 (분수)',
@@ -1093,14 +1096,14 @@ def probe_env():
     for which in CODEX:
         L, b, Ab, gb, At, gt, _Gs = codex_chain(which)
         c = _cg_cert(L, b, Ab, gb, At, gt)
-        out[which] = _decisions(c) | {'sigma_hex': float(c['sigma']).hex(), 'imbalance': c.get('imbalance'),
+        out[which] = {**_decisions(c), 'sigma_hex': float(c['sigma']).hex(), 'imbalance': c.get('imbalance'),
                                       'err_bound': c.get('target_err_bound_rel'), 'width': c.get('target_width_rel')}
     sidp = CC.probe_bed(0)
     base = quiet(CC.probe_system, sidp, CC.probe_sigma_table(), s3=S3)
     for variant, sysd in (('plain', base), ('junction', quiet(CC.junction_variant, base, sidp))):
         for rt in PROBE_ENV_RTOLS:
             c = _cg_cert(sysd['L'], sysd['b'], sysd['Ab'], sysd['gb'], sysd['At'], sysd['gt'], rt=rt, maxiter=400000)
-            out[f'probe_{variant}_{rt:.0e}'] = _decisions(c) | {'sigma_hex': float(c['sigma']).hex(), 'imbalance': c.get('imbalance'),
+            out[f'probe_{variant}_{rt:.0e}'] = {**_decisions(c), 'sigma_hex': float(c['sigma']).hex(), 'imbalance': c.get('imbalance'),
                                                                 'err_bound': c.get('target_err_bound_rel'),
                                                                 'width': c.get('target_width_rel')}
     try:
@@ -1252,7 +1255,7 @@ def t19():
         j = CC.target_judge(G, hi, G)
         chk(f'T19a 칼날 {i} — 정확 오차 상한이 τ 를 {float(ex - tau):.1e} 넘는다 (float 나눗셈 비교면 통과 = {flt}) → ⓓ 거부 (보수 · 정확 비교)',
             ex > tau and j.get('pass_d') is False, (j.get('pass_d'), j.get('target_why')))
-        hi2 = math.nextafter(hi, 0.0)
+        hi2 = _nextafter(hi, 0.0)
         j2 = CC.target_judge(G, hi2, G)
         chk(f'T19b 칼날 {i} 한 ulp 안쪽 (정확 오차 상한 ≤ τ) → 통과 (보수가 지나치지 않다)',
             (Fr(hi2) - Fr(G)) / Fr(G) <= tau and j2.get('pass_d') is True, (j2.get('pass_d'), j2.get('target_why')))

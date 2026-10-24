@@ -459,7 +459,7 @@ def main():
     TR.SHIMDIR = os.path.join(TR.TD, '_bin')
     os.makedirs(TR.SHIMDIR)
     with open(os.path.join(TR.SHIMDIR, 'python3'), 'w', encoding='utf-8') as f:
-        f.write(TR.SHIM.replace('__REAL__', os.path.realpath(sys.executable)))
+        f.write(TR.SHIM.replace('__REAL__', os.path.abspath(sys.executable)))   # realpath = venv 밖 (kgy dem-venv · 10-24)
     os.chmod(os.path.join(TR.SHIMDIR, 'python3'), 0o755)
     t0 = time.time()
     sel = [x for x in ARGS.only.split(',') if x]

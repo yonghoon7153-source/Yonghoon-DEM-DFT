@@ -1,0 +1,154 @@
+== S0 no-overflow all-pass
+   current : status=PREDICTED    stop=None                   runs=26
+   new     : status=PREDICTED    stop=None                   runs=26  early_checks=16
+   same request sequence: True  · same outcome: True
+== S0b no-overflow monotone-contradiction
+   current : status=STOPPED      stop=R_MONOTONE_VIOLATION   runs=26
+   new     : status=STOPPED      stop=R_MONOTONE_VIOLATION   runs=26  early_checks=5
+   same request sequence: True  · same outcome: True
+   current checks[r_monotone] = [{'law': 'P0', 'c': '0', 'ok': True, 'estimator': 'arm0', 'origins': [{'origin': 'corner_a0', 'ok': True}, {'origin': 'origin_a1', 'ok': True}, {'origin': 'origin_a2', 'ok': True}]}, {'law': 'P0', 'c': '1', 'ok': False, 'estimator': 'arm0', 'origins': None}]
+   new     checks[r_monotone] = [] (early check recorded elsewhere)
+== S1 origin8 NOT_COMPUTED vs early monotone
+   current : status=NOT_COMPUTED stop=NOT_COMPUTED           runs=18
+   new     : status=STOPPED      stop=R_MONOTONE_VIOLATION   runs=26  early_checks=4
+   same request sequence: False  · same outcome: False
+== S2 origin8 NOT_COMPUTED vs later origin-sample defect
+   current : status=NOT_COMPUTED stop=NOT_COMPUTED           runs=18
+   new     : status=STOPPED      stop=ARM_CONTRACT           runs=24  early_checks=0
+   same request sequence: False  · same outcome: False
+== S2r origin8 defect vs later origin-sample NOT_COMPUTED
+   current : status=STOPPED      stop=ARM_CONTRACT           runs=18
+   new     : status=NOT_COMPUTED stop=NOT_COMPUTED           runs=24  early_checks=0
+   same request sequence: False  · same outcome: False
+== S3 overflow all-pass
+   current : status=PREDICTED    stop=None                   runs=29
+   new     : status=PREDICTED    stop=None                   runs=29  early_checks=15
+   same request sequence: False  · same outcome: True
+[
+ {
+  "name": "S0 no-overflow all-pass",
+  "current": {
+   "status": "PREDICTED",
+   "stop": null,
+   "runs": 26
+  },
+  "new": {
+   "status": "PREDICTED",
+   "stop": null,
+   "runs": 26,
+   "early_checks": 16
+  },
+  "same_sequence": true,
+  "same_outcome": true
+ },
+ {
+  "name": "S0b no-overflow monotone-contradiction",
+  "current": {
+   "status": "STOPPED",
+   "stop": "R_MONOTONE_VIOLATION",
+   "runs": 26
+  },
+  "new": {
+   "status": "STOPPED",
+   "stop": "R_MONOTONE_VIOLATION",
+   "runs": 26,
+   "early_checks": 5
+  },
+  "same_sequence": true,
+  "same_outcome": true,
+  "current_checks_r_monotone": [
+   {
+    "law": "P0",
+    "c": "0",
+    "ok": true,
+    "estimator": "arm0",
+    "origins": [
+     {
+      "origin": "corner_a0",
+      "ok": true
+     },
+     {
+      "origin": "origin_a1",
+      "ok": true
+     },
+     {
+      "origin": "origin_a2",
+      "ok": true
+     }
+    ]
+   },
+   {
+    "law": "P0",
+    "c": "1",
+    "ok": false,
+    "estimator": "arm0",
+    "origins": null
+   }
+  ],
+  "new_checks_r_monotone": []
+ },
+ {
+  "name": "S1 origin8 NOT_COMPUTED vs early monotone",
+  "current": {
+   "status": "NOT_COMPUTED",
+   "stop": "NOT_COMPUTED",
+   "runs": 18
+  },
+  "new": {
+   "status": "STOPPED",
+   "stop": "R_MONOTONE_VIOLATION",
+   "runs": 26,
+   "early_checks": 4
+  },
+  "same_sequence": false,
+  "same_outcome": false
+ },
+ {
+  "name": "S2 origin8 NOT_COMPUTED vs later origin-sample defect",
+  "current": {
+   "status": "NOT_COMPUTED",
+   "stop": "NOT_COMPUTED",
+   "runs": 18
+  },
+  "new": {
+   "status": "STOPPED",
+   "stop": "ARM_CONTRACT",
+   "runs": 24,
+   "early_checks": 0
+  },
+  "same_sequence": false,
+  "same_outcome": false
+ },
+ {
+  "name": "S2r origin8 defect vs later origin-sample NOT_COMPUTED",
+  "current": {
+   "status": "STOPPED",
+   "stop": "ARM_CONTRACT",
+   "runs": 18
+  },
+  "new": {
+   "status": "NOT_COMPUTED",
+   "stop": "NOT_COMPUTED",
+   "runs": 24,
+   "early_checks": 0
+  },
+  "same_sequence": false,
+  "same_outcome": false
+ },
+ {
+  "name": "S3 overflow all-pass",
+  "current": {
+   "status": "PREDICTED",
+   "stop": null,
+   "runs": 29
+  },
+  "new": {
+   "status": "PREDICTED",
+   "stop": null,
+   "runs": 29,
+   "early_checks": 15
+  },
+  "same_sequence": false,
+  "same_outcome": true
+ }
+]

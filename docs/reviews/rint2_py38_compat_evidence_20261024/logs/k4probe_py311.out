@@ -1,0 +1,4 @@
+scipy 1.17.1 | |r0| 1.40486519343502e-13 |b| 5.0 |r0|/|b| 2.8097303868700398e-14
+tol only (legacy atol) TypeError cg() got an unexpected keyword argument 'tol'
+tol + atol=0 TypeError cg() got an unexpected keyword argument 'tol'
+rtol=1e-14               info=0 maxdiff/max=2.412e-14

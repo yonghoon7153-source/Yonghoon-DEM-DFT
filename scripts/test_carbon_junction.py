@@ -109,6 +109,8 @@ r_port = 2.0 (= 2h) · gap_tol 2.0 · σ_VGCF = 100 S/cm → 축방향 면 g = �
          기록의 아래 끝 바꿔 끼우기 · 끊은 수까지 고친 꼴 (독립 출처 = 위 끝 n_sv_faces_cut) · 위상 수 편집 = 자기 문장으로 거부
   QD6    ★ 10-23 (사전 공격 리뷰 C2 · 시험만) 증서 구간 비의 방향 반올림 칼날 — 실제 증서 기록 (SVX · QD2 ③) 에서 t = 정확 위 몫 이하 가장 큰 float
          → SV_UNCHECKED · 정확 아래 몫 이상 가장 작은 float → SV_DEPENDENT 아님 · 구간 끝 = 정확 방향 반올림 · 리뷰 변이 M7 · M1 이 걸린다 (상주)
+  QD6x   ★ 10-24 (`SELF-132` · kgy dem-venv = Python 3.8.10) 방향 반올림이 쓰는 `_nextafter` 의 3.8 가지 (비트 한 칸) = np.nextafter (비트 ·
+         경계 + 무작위 · 3.9+ 에서는 `math.nextafter` 를 잠시 떼고 돌린다)
   QD7    ★ 10-23 (묶음 A″ · 1저자 Q17 (가) · Q18 (가)) 판에 닿는 성분에서 끊은 쌍 수 (`n_reach_pairs_cut`) — 생산자 기록마다 끝의 그 수 > 0 ⇔ 끝 증서
          위상 수 ≠ 주 해 (위 끝 = + 판 결합) · 새 칸 ↔ 옛 칸 관계 · FLOAT (끊은 다리가 떠 있는 섬에만 · 묶음 A′ 결정 필요 1) · 병렬 간선 꼴 (S3 c = 1
          축약 · 끊는 면 옆에 남는 면) = 받음 · 리뷰 A2 = 거부 · 새 칸 결손 · 꼴 · 관계 위반 = 거부 · 한정 (a) (b) (c) = 받음 (Q18 (가) · 막지 않음) ·
@@ -4246,16 +4248,20 @@ def t_sv_end_cert_topology():
 
 
 # ═════════════════════════ ★ 10-23 QD6 — 증서 구간 비의 방향 반올림 칼날 (사전 공격 리뷰 C2 · 시험만) ═════════════════════════
+#: math.nextafter = 3.9+ (kgy dem-venv = Python 3.8.10 · 10-24) → numpy 의 IEEE nextafter (같은 값 · 모듈 구현과 독립)
+_nextafter = getattr(math, 'nextafter', None) or (lambda x, y: float(np.nextafter(x, y)))
+
+
 def _qd6_floor(q):
     """정확 분수 q 이하의 가장 큰 float (시험의 기대값 — 모듈 함수를 쓰지 않는다)."""
     f = float(q)
-    return f if Fraction(f) <= q else math.nextafter(f, -math.inf)
+    return f if Fraction(f) <= q else _nextafter(f, -math.inf)
 
 
 def _qd6_ceil(q):
     """정확 분수 q 이상의 가장 작은 float."""
     f = float(q)
-    return f if Fraction(f) >= q else math.nextafter(f, math.inf)
+    return f if Fraction(f) >= q else _nextafter(f, math.inf)
 
 
 def _qd6_m7(a, b, up):
@@ -4269,9 +4275,9 @@ def _qd6_m7(a, b, up):
         return None if up else sys.float_info.max
     fq = Fraction(f)
     if (not up) and fq < q:
-        f = math.nextafter(f, math.inf)
+        f = _nextafter(f, math.inf)
     elif up and fq > q:
-        f = math.nextafter(f, -math.inf)
+        f = _nextafter(f, -math.inf)
     if not math.isfinite(f):
         return None if up else sys.float_info.max
     return f
@@ -4330,6 +4336,39 @@ def t_sv_divdir_knife():
         caught[mn] = [nm for nm, ok, _d in got if not ok]
     chk('QD6 ② 변이 M7 · M1 이 이 시험에 걸린다 (변이 전 전부 통과 · 변이마다 칼날 하나 이상 실패)',
         all(ok for _n, ok, _d in base) and all(caught.values()), caught)
+
+
+@case('QD6x')
+def t_nextafter_py38():
+    """★ 10-24 (`SELF-132` · kgy dem-venv = Python 3.8.10 · `math.nextafter` 는 3.9+) — `ca_ext_svcf._nextafter` 의 3.8 가지 (IEEE 754 비트 한 칸)
+    가 C99 nextafter 와 비트까지 같다.  3.9+ 에서는 `math.nextafter` 를 잠시 떼어 3.8 가지를 돌린다 · 기준 = numpy `np.nextafter` (독립 구현) ·
+    경계 (±0 · 최소 비정규 · 최소 정규 · 최대 유한 · ±inf · NaN) + 무작위 비트 패턴 (시드 고정)."""
+    import random
+    import struct
+    import ca_ext_svcf as SVCF
+    real = getattr(math, 'nextafter', None)
+    if real is not None:
+        del math.nextafter
+    n, bad, first = 0, 0, None
+    try:
+        fb = SVCF._nextafter
+
+        def bits(u):
+            return struct.unpack('<d', struct.pack('<Q', u))[0]
+        rng = random.Random(20261024)
+        edge = [0.0, -0.0, 5e-324, -5e-324, 2.2250738585072014e-308, -2.2250738585072014e-308, 1.0, -1.0, 0.1,
+                sys.float_info.max, -sys.float_info.max, math.inf, -math.inf, math.nan]
+        for x in edge + [bits(rng.getrandbits(64)) for _ in range(4000)]:
+            for t in (math.inf, -math.inf, 0.0, -0.0, 1.0, -1.0, math.nan, bits(rng.getrandbits(64))):
+                a, b = float(np.nextafter(x, t)), fb(x, t)
+                n += 1
+                if not ((math.isnan(a) and math.isnan(b)) or struct.pack('<d', a) == struct.pack('<d', b)):
+                    bad += 1
+                    first = first or (x, t, a, b)
+    finally:
+        if real is not None:
+            math.nextafter = real
+    chk(f'QD6x `_nextafter` 의 3.8 가지 = np.nextafter (비트 · ±0 · NaN 포함 · {n} 쌍)', bad == 0 and n > 30000, (bad, first))
 
 
 # ═════════════════════════ ★ 10-23 QD7 — 판에 닿는 성분에서 끊은 쌍 수 (묶음 A″ · 1저자 Q17 (가) · Q18 (가)) ═════════════════════════

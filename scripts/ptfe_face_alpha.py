@@ -239,8 +239,9 @@ def capsule_volume_um3(caps):
 
 def capsule_summary(caps):
     #  ★ 10-21 — volume_um3 = 명목 tube 체적 (VOLUME_BASIS · 합집합 아님) — 이름 칸을 같이 싣는다
-    return {k: caps[k] for k in ('n_paths', 'n_pieces', 'n_point_pieces', 'n_segments', 'volume_um3')} | {
-        'dia_classes': dict(caps['dia_classes']), 'volume_basis': VOLUME_BASIS}
+    #  ⚠ dict-union `|` 금지 — kgy dem-venv = Python 3.8.10 (`|` 는 3.9+ · 10-24 kgy S0 단계 1 이 여기서 TypeError 로 멈췄다)
+    return {**{k: caps[k] for k in ('n_paths', 'n_pieces', 'n_point_pieces', 'n_segments', 'volume_um3')},
+            'dia_classes': dict(caps['dia_classes']), 'volume_basis': VOLUME_BASIS}
 
 
 def _tree(caps):

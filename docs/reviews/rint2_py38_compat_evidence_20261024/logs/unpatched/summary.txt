@@ -1,0 +1,12 @@
+run_contract rc=0 1s :: run_contract selftest: 124/124 PASS
+step3_rint rc=0 0s :: STEP3 RINT SELFTEST PASS
+ptfe_face_alpha rc=1 46s ::   - P14 둘 다 (LEAN 3) — 이온 영수증 applied · 이온 소산 분담 None · ca_ext_record_ok
+carbon_junction rc=1 9s :: FAIL: QD2 ③ 사슬 판정 (증서 구간 · 10-23) — 문턱 1 (아래비 ≤ 1 · 넘지 않음) · 참과 위 사이 = 걸침 → SV_UNCHECKED · 문턱 = 
+ca_ext_b6 rc=1 27s ::   - SP6 노브 켬 = 주 결과 그대로 — σ 비트 같음 · 증서 같음 · p3ca id 같음 · protocol 같음 · 끈 런에는 요청 · 기록 칸 없�
+ca_ext_runner rc=1 32s ::   - N10a [P1] 러너 rc 0 · 팔 둘 · 이름 = p2_<침대>_fa_cj1000000_<h8>_rt1em12_a0
+rint_r_chain rc=1 39s :: test_rint_r_chain: 186/240 PASS (38.1 s)   FAILED: ['S22', 'P01', 'P01b', 'P02', 'P05', 'V01', 'V02', 'V03', 'V04', 'V05', 'V06', 'V06b', 'V25', 'V26', 'V27', '
+rint_r_chain_e2e rc=1 5s ::   - E9b 사다리 = 등록 결과 NOT_COMPUTED · 멈춤 코드 NOT_COMPUTED · 사유 ELECTRODE_SHORT · 멈춘 런 = 천장 (RUNNER_RC · CA_EXT_RECORD · ARM
+step3_target_cert rc=1 11s :: FAIL: T7: 실행 · T16: 실행 · T19: 실행 · T21: 실행 · T22a payload 두 런 rc 0 · 전자 · 이온 증서 있음 · T22d fused 런의 전자 증서�
+step3_conv_cert rc=1 69s :: FAIL: K4 `_solve_cg(x0=…, rtol=…)` — 초기값 · 조임 rtol 을 받는다 (이어 풀기 ⓒ 의 바탕)
+ca_s0_census rc=1 13s :: FAIL: E1 | E11 | R | R8 | A
+DONE

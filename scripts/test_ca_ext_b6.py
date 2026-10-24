@@ -34,6 +34,9 @@ import tempfile
 
 import numpy as np
 
+#: math.nextafter = 3.9+ (kgy dem-venv = Python 3.8.10 · 10-24) → numpy 의 IEEE nextafter (같은 값 · 모듈 구현과 독립)
+_nextafter = getattr(__import__('math'), 'nextafter', None) or (lambda x, y: float(np.nextafter(x, y)))
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCRIPTS = os.path.join(ROOT, 'scripts')
 sys.path.insert(0, SCRIPTS)
@@ -841,7 +844,7 @@ def t_sv_values(mm, proj, Es):
     _cp = getattr(SVCF, '_cert_proj', lambda c: c)
     nt = dict(status='no_through_without_sv', sv_counterfactual_ratio=None, ratio_limit='inf', G_cut_code=0.0,
               status_hi='no_through_without_sv', sv_counterfactual_ratio_hi=None, ratio_limit_hi='inf')
-    r_lo = math.nextafter(fl, 0.0)
+    r_lo = _nextafter(fl, 0.0)
     knife = 1.5 * fl
     raw_w = _sv_raw('computed', 1.25)
     raw_w['conv_cert_full'] = _fake_pos_cert(SV_GF, lo=SV_GF * (1.0 - 1e-5), hi=SV_GF * (1.0 + 1e-5), topo=SV_TOPO_MAIN)
@@ -894,7 +897,7 @@ def t_sv_values(mm, proj, Es):
         #  괄호 아래 ≤ 위
         '괄호 위 1.2 < 아래 3.0 (둘 다 일관 · Rayleigh 위반)': br_rec(3.0, 1.2),
         '괄호 아래 +∞ 인데 위 유한 2.0': br_rec(1.0, 2.0, st='no_through_without_sv'),
-        '괄호 위 = 아래 × RATIO_FLOOR 바로 아래 (nextafter)': br_rec(1.5, math.nextafter(knife, 0.0)),
+        '괄호 위 = 아래 × RATIO_FLOOR 바로 아래 (nextafter)': br_rec(1.5, _nextafter(knife, 0.0)),
         #  ★ 10-23 (Codex 재검토 RCA2-04 · 판정문 F3 다섯 꼴 + 같은 부류 · 실제 소비자 `run_contract.ca_ext_record_ok`)
         '판정문 F3 ① computed 끝 증서 없음 (증서 구간 기록)': lo_rec(1.25, conv_cert=None),
         '판정문 F3 ② 못 가른 덩어리 2 인데 제거 성분 0': br_rec(1.2, 3.4, nu=2, up={'n_components_removed': 0}),

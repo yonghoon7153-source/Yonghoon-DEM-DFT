@@ -1,0 +1,111 @@
+── G 기하 원시
+  PASS  G1a 수직 엇갈림 — d = 0.3 · s = t = 0.5
+  PASS  G1b 평행 겹침 — d = 0.15
+  PASS  G1c 퇴화 (점–선분) — d = 1
+  PASS  G1d 무작위 300 쌍 (평행 40 포함) — d ≤ 표본 최솟값 + 1e-12 · 차이 ≤ 표본 해상도 한계 (|d1| + |d2|)/800
+  PASS  G1e 최근접점이 선분 위 · 거리 일치
+  PASS  G2a 조각 — 2.1 µm 틈에서 둘로 (4 점 · 3 점)
+  PASS  G2b 점 간격 = 조각 안 간격만 (틈 제외) — 중앙값 0.3 · u 0.15 · n 5
+  PASS  G2c 한 점 · 두 점 경로 — 조각 하나
+── C 접합 census 미리보기
+  PASS  C1a 평행 접촉 — instance 1
+  PASS  C1b L_touch = 겹침 길이 1.0 (퇴화 경계 1e-8) · L_band = 1 + 2√(thr² − 0.15²) = 1.335410
+  PASS  C1c 긴 접촉 (> L_par 0.30) — 두 판 모두 1 · 각 0°
+  PASS  C2a 수직 스침 — L_touch ≈ 0 · L_band = 2√(thr² − 0.15²) = 0.335410 · 틈 0
+  PASS  C2b ★ 정의 쟁점 — 같은 수직 스침이 band 판에서는 긴 접촉 (0.335 > 0.30) · touch 판에서는 아님
+  PASS  C3 수직 관통 — 틈 −0.05 · L_touch 2√(0.15²−0.1²) · L_band 2√(thr²−0.1²) · 90°
+  PASS  C4 떨어진 두 자리 — instance 2
+  PASS  C5 꼭짓점 걸침 — instance 1 (조각 · 선분 경계 넘어도)
+  PASS  C6a U 턴 — 자기 접촉 instance 1
+  PASS  C6b 직선 — 자기 접촉 0
+  PASS  C6c 날카로운 꺾임 (반원 아님) — 자기 접촉 0
+  PASS  C7 문턱 — thr + 0.01 → 0 · thr − 0.001 → 1 (L_touch 0)
+  PASS  C8 섬유 순열 · 이름 불변 — 수 · 분포 같음
+  PASS  C8b 무작위 40 섬유 — instance ≥ 5 · 순열 · 이름 바꿔도 분포가 비트 같음
+  PASS  C9 정의 표지 — lc_definition 이 두 판을 이름으로 싣는다
+── P 격자 원시
+  PASS  P1 복셀 관계 — same · face · edge · vertex · apart
+  PASS  P2a 포트 직접 — 셀 (9,2,2) · 거리 0
+  PASS  P2b 덮임 (SDCP) → 탐색 — 등거리 (8 · 10) 동률 = 경로 열 번호 작은 (8,2,2) · 거리 0.1
+  PASS  P2c r_port 안에 sid 3 없음 → 미실현
+  PASS  P2d 상자 밖 → outside_box
+  PASS  P3 SDCP 경유 — 덩어리 2 · 두 섬유를 잇는 것 1 · fid 쌍 1
+  PASS  P4 SDCP 셀 1 · 2 · 3 개 사이 → 깊이 1 · 2 · 없음 (k = 2)
+  PASS  P5 교차 셀 — 멤버십 ≥ 2 한 셀 · ≥ 3 한 셀 (2,1,1)
+  PASS  P6 섬유–구 (T1-9) — d 2.12 아님 · 2.07 맞음 → instance 1
+── L 계획
+  PASS  L1a 식 — u 0.15 → tol_ff = min(u, r_f) = 0.075 · L_par 0.30 · r_port 0.30 · tol_P = tol_sj = tol_ff
+  PASS  L1b u 0.05 → tol_ff 0.05
+  PASS  L1c K_alpha 8 · k 2 · gap_tol 2.0
+  PASS  L1d 정준 바이트 · sha256 = 바이트의 sha256 · 다시 만들어도 같음
+  PASS  L1e 계획에 σ 칸 없음
+  PASS  L2a 손댄 계획 (tol_ff ≠ min(u, r_f)) 거부
+  PASS  L2b 비유한 u 거부
+  PASS  L2c 다른 스키마 거부
+  PASS  L2d 정상 계획 통과
+  PASS  L3a 개정 커밋 · 계획 · 해시 일치 → 통과 (계획 · sha256 · 전체 sha)
+  PASS  L3a2 ★ R 런 계획 결합 기록 — 경로 · sha256 (= 같은 커밋의 `| 계획 해시 |` 끝 칸) · s_min · tol_ff (= S0 tol_ff) · 법칙
+  PASS  L3b 없는 커밋 거부
+  PASS  L3c 전각 · 비 ASCII sha 거부
+  PASS  L3d 계획 경로 없음 거부
+  PASS  L3e HEAD 의 조상 아닌 커밋 거부 (가지 밖)
+  PASS  L3f R 문서에 계획 해시 없음 거부
+  PASS  L3g 커밋 안 계획이 식 어긋남 (손댐) → 거부
+  PASS  L3h S0 해시가 `| S0 계획 해시 |` 줄 밖 (산문 줄) · 그 줄 = ⬜ → 거부
+  PASS  L3i R 런 계획 줄 (`| 계획 해시 |`) = ⬜ (s_min 미등록 · 탐침 꼴) → 거부
+  PASS  L3j R 런 계획 줄 없음 → 거부
+  PASS  L3k R 런 계획 줄 = 64 hex 인데 파일 sha256 와 다름 → 거부
+  PASS  L3l R 런 계획 파일 없음 (줄만) → 거부
+  PASS  L3m R 런 계획 tol_ff_um ≠ S0 values_um.tol_ff (두 계획 대조) → 거부
+  PASS  L3n R 런 계획 s_min_um = null (미등록 숫자) → 거부
+  PASS  L3o R 런 계획 len_law ≠ 이 코드의 길이 법칙 → 거부
+  PASS  L3p R 런 계획 꼴 틀림 (칸 하나 더) → 거부
+  PASS  L3q `| 계획 해시 |` 줄 둘 → 거부
+  PASS  L3r `| S0 계획 해시 |` 줄 둘 → 거부
+  PASS  L3v R 런 계획 결과 전 등록 숫자 max_ladder_points = null (⬜ · Q-G — 단계 2 전에 등록) → 거부
+  PASS  L3v R 런 계획 결과 전 등록 숫자 calib_rj_ratio_max = null (⬜ · Q-G — 단계 2 전에 등록) → 거부
+  PASS  L3v R 런 계획 결과 전 등록 숫자 sv_cf_threshold = null (⬜ · Q-G — 단계 2 전에 등록) → 거부
+  PASS  L3v R 런 계획 결과 전 등록 숫자 sv_cf_scope = null (⬜ · Q-G — 단계 2 전에 등록) → 거부
+  PASS  L3w Q-G 거부 사유 = 사슬 require_plan_numbers 의 PLAN_NUMBER_UNREGISTERED (sv_cf_threshold · 단계 2 전 등록)
+  PASS  L3x S0 계획 values_um.u = 정수 10**400 → S0Error (구조화 · 옛 = 잡히지 않은 OverflowError)
+  PASS  L3y R 런 계획 sv_cf_threshold = 정수 10**400 → S0Error (사슬 load_plan PLAN_INVALID · 옛 = OverflowError)
+  PASS  L3y2 R 런 계획 max_ladder_points = 정수 10**400 → S0Error (넘침 = 유한 아님 · 옛 = 받음)
+  PASS  L3z R 런 계획 중복 칸 ("sv_cf_threshold": 2.0 … 50.0 · 사람 = 앞 · 옛 관문 = 뒤) → S0Error
+  PASS  L3z2 S0 계획 중복 칸 ("gap_tol" 둘) → S0Error · 사유 = 중복 칸 (정준 바이트 검사 앞)
+  PASS  L3s R 런 계획 경로 = 리포 상대 ASCII (절대 · .. · 공백 = 거부)
+  PASS  L3t 단계 2 · --r-plan-path 없음 → 관문에서 거부 (킷을 보기 전 · 사유에 r-plan-path)
+  PASS  L3u CLI --r-plan-path 받음 — 관문 통과 뒤 킷 없음으로 rc 2 (인자 오류 아님)
+── S 스키마
+  PASS  S1a σ 칸 찾기 (중첩 · 목록)
+  PASS  S1b 전류 · 소산 · 컨덕턴스 칸도
+  PASS  S1c 깨끗한 dict
+── E 끝-끝 (payload 실물)
+  FAIL  E1  (TypeError: unsupported operand type(s) for |: 'dict' and 'dict')
+  PASS  E6 단계 1 + SDCP 있는 침대 → 거부 (DBE 분포는 개정 커밋 뒤)
+  PASS  E6b 그 거부가 가로채기 전 (payload 로그 없음 · 헛통과 방지 = 거부가 실제로 일어났을 때만)
+  PASS  S0-7a 단계 2 + 개정 커밋 없음 → 거부
+  PASS  S0-7b 단계 1 에 킷 둘 → 거부
+  PASS  S0-5a fibre 길이 ≠ 점 수 → 거부 (조용한 강등 없음)
+  PASS  S0-5b phase 길이 ≠ 점 수 → 거부
+  PASS  S0-5c NaN 좌표 → 거부
+  PASS  S0-5d +inf 좌표 → 거부
+  PASS  S0-5e −inf 좌표 → 거부
+  PASS  S0-5f 같은 fid 가 떨어진 두 블록 → 거부
+  PASS  S0-5g fibre_kind.npy 없음 → 거부 (연속 중심선 근거 없음)
+  PASS  S0-5h VGCF 행 kind ≠ 1 (경로 아님) → 거부
+  PASS  S0-5i 정확 중복 경로 → 거부
+  PASS  S0-5j 출력 폴더가 비어 있지 않음 → 거부
+  FAIL  E11  (TypeError: unsupported operand type(s) for |: 'dict' and 'dict')
+  PASS  E10a --no-step3 킷 (payload 가 rasterize 전 · 뒤 경로에서 예외) → S0Error 로 거부 (fail-closed)
+  PASS  E10b payload main 이 rasterize 없이 정상 종료 → 거부 (가로채기 안 걸림)
+  PASS  E10c payload 예외 (ValueError) → S0Error · rasterize 원상
+  PASS  E10d rasterize 호출 → 인자 (기본값 채움) 를 잡고 멈춤 · 원상 복구
+── R 접합 census = cjunc_registry (같은 함수)
+  FAIL  R  (TypeError: unsupported operand type(s) for |: 'dict' and 'dict')
+── R8 census 보탬 (재방문 · 동률 · 긴 접촉 간선 · 간선별 덮임 · 10-21)
+  FAIL  R8  (TypeError: unsupported operand type(s) for |: 'dict' and 'dict')
+── A α 분포 = ptfe_face_alpha 함수 (같은 함수)
+  FAIL  A  (TypeError: unsupported operand type(s) for |: 'dict' and 'dict')
+
+94 PASS · 5 FAIL
+FAIL: E1 | E11 | R | R8 | A

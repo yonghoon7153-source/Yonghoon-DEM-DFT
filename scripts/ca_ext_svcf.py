@@ -54,6 +54,7 @@
 numpy 없이 뜬다 (`numbers` · `fractions` · 원 기록의 numpy 수도 받는다 · 검증기의 증서 대조만 `step3_conv_cert` 를 그 자리에서 부른다)."""
 import math
 import numbers
+import struct
 import sys
 from fractions import Fraction
 
@@ -747,6 +748,24 @@ def _end_bracket(end):
     return None
 
 
+def _nextafter(x, toward):
+    """x 다음의 float (toward 쪽) — `math.nextafter` 와 같은 값.  `math.nextafter` 는 3.9+ 이고 kgy dem-venv 는 Python 3.8.10 이다
+    (10-24 실측) → 3.8 에서는 IEEE 754 비트 한 칸으로 셈한다 (NaN · ±0 · ±inf · 부호 규칙 = C99 nextafter)."""
+    f = getattr(math, 'nextafter', None)
+    if f is not None:
+        return f(x, toward)
+    x, toward = float(x), float(toward)
+    if math.isnan(x) or math.isnan(toward):
+        return x + toward
+    if x == toward:
+        return toward
+    if x == 0.0:
+        return math.copysign(5e-324, toward)
+    n = struct.unpack('<q', struct.pack('<d', x))[0]
+    n += 1 if (toward > x) == (x > 0.0) else -1
+    return struct.unpack('<d', struct.pack('<q', n))[0]
+
+
 def _div_dir(a, b, up):
     """a / b (유한 양의 float 둘) 의 방향 반올림 — 아래 (up False) = 정확 몫 이하의 가장 큰 float · 위 = 정확 몫 이상의 가장 작은 float
     (정확 분수 — float 나눗셈의 반올림이 칼날에서 판정 쪽으로 기울지 않게) · 위 끝 넘침 = None (∞ = 위상만) · 아래 끝 넘침 = 가장 큰 유한 float."""
@@ -759,9 +778,9 @@ def _div_dir(a, b, up):
         return None if up else sys.float_info.max
     fq = Fraction(f)
     if up and fq < q:
-        f = math.nextafter(f, math.inf)
+        f = _nextafter(f, math.inf)
     elif not up and fq > q:
-        f = math.nextafter(f, -math.inf)
+        f = _nextafter(f, -math.inf)
     if not math.isfinite(f):
         return None if up else sys.float_info.max
     return f

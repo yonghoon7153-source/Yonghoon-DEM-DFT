@@ -1,0 +1,16 @@
+{
+ "A_selection": {
+  "operator saw #2 (gabia) result, liked it → started #1 with a forbidden env": "adopt U#2 (gabia)",
+  "operator saw #2 (gabia) result, disliked it → ran #1 normally": "adopt U#1 (kgy)"
+ },
+ "B_noop_env_dead_end": {
+  "after #1 only": "adopt N#1 → STOP NOOP_ENV_MISMATCH",
+  "after correct re-run #2": "adopt N#1 → STOP NOOP_ENV_MISMATCH"
+ },
+ "B2_machine_typo_dead_end": "adopt M#1 → STOP MACHINE_NOT_ALLOWED",
+ "C_folderless_dead_end": "STOP ATTEMPT_LEDGER_MISMATCH (folder-less entry C#1)",
+ "D_unconverged_payload_outside_folder": {
+  "if RUNNER_RC ∈ pre-result list (Q4 불수렴 = 결과 뒤 contradicted)": "adopt D#2 (gabia)",
+  "if RUNNER_RC ∉ list (then every OOM kill is post-result too)": "unit result = stop RUNNER_RC of D#1 (post-result)"
+ }
+}

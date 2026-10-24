@@ -363,6 +363,7 @@ python3 ~/dem-ca1/scripts/test_ca_s0_census.py 2>&1 | tail -3        # '121 PASS
 ```
 
 - (10-21) S0 census 보탬 (같은 셀 비연속 재방문 · 포트 동률 · 분산판 간선 · 간선별 덮임 — 수정 계획 Q1 · Q2 · Q3 · Q11 · 구현 중) 이 들어간 핀에서는 시험 수가 바뀐다 → 그 핀의 기대 숫자는 메인이 핀과 함께 알려 드린다 (그 전에는 위 121 을 기대값으로 쓰지 않는다).
+- **(10-24 · `SELF-132`) kgy `~/dem-venv` = Python 3.8.10 · numpy 1.24.4 · scipy 1.10.1** — 10-24 전 핀 (`fe1be7960` 등) 은 3.8 에서 이 시험 5 개 (E1 · E11 · R · R8 · A) 가 `dict |` TypeError 로 실패하고 단계 1 이 α 분포 계산에서 멈춘다 (10-23 23:56 kgy 시도 = `~/sdcp/ca1_s0_sbe_20261023` 에 payload 로그만 · 폴더 보존 · 새 시도는 새 폴더).  3.8 호환 수정 커밋 이후 핀만 쓴다 — 그 핀의 기대 = **152 PASS · 0 FAIL** (같은 라이브러리 판 재현 환경 · 증거 `docs/reviews/rint2_py38_compat_evidence_20261024/`) · 이 연장 세션의 커밋은 `claude/sdcp-dem-manuscript-si-pqwtv8` 에 있다 (§2-0 의 fetch 가지를 그것으로).
 
 ### 2-1b. (선택) 도구 시험 — 현 세대 `kit_SBE` (옛 침대 · 재압밀과 무관 · GPU 안 씀)
 

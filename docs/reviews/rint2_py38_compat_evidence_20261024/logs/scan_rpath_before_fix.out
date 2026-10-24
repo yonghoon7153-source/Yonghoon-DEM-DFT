@@ -1,0 +1,27 @@
+closure 31 : additives build_methods_docx ca_ext_cjunc ca_ext_svcf ca_s0_census cam_kinetics carbon_junction check_method_discipline check_review_findings fibre_segment_raster lens_geometry mpm_webapp_payload ptfe_face_alpha rint_cycle_traj rint_r_chain run_contract sdcp_gain_verdict se_material sr01_stamp_compare step3_conv_cert step3_sigma step4_dyn test_ca_ext_b6 test_ca_ext_runner test_ca_s0_census test_carbon_junction test_rint_r_chain test_rint_r_chain_e2e test_step3_conv_cert test_step3_target_cert viz_mpm_continuum
+ca_ext_svcf                    762  ATTR39       nextafter
+ca_ext_svcf                    764  ATTR39       nextafter
+ptfe_face_alpha                242  DICT_UNION   {k: caps[k] for k in ('n_paths', 'n_pieces', 'n_point_pieces', 'n_segments', 'volume_um3')} | {'dia_classes': 
+step3_sigma                    553  SCIPY_RTOL   cg(rtol=)
+step4_dyn                      430  SCIPY_RTOL   cg(rtol=)
+step4_dyn                     2397  SCIPY_RTOL   cg(rtol=)
+test_ca_ext_b6                 844  ATTR39       nextafter
+test_ca_ext_b6                 897  ATTR39       nextafter
+test_carbon_junction          5054  ATTR39       nextafter
+test_carbon_junction          4252  ATTR39       nextafter
+test_carbon_junction          4258  ATTR39       nextafter
+test_carbon_junction          4272  ATTR39       nextafter
+test_carbon_junction          5065  ATTR39       nextafter
+test_carbon_junction          4274  ATTR39       nextafter
+test_rint_r_chain             3140  ATTR39       nextafter
+test_rint_r_chain             2547  ATTR39       nextafter
+test_rint_r_chain             2547  ATTR39       nextafter
+test_rint_r_chain             2548  ATTR39       nextafter
+test_rint_r_chain             2548  ATTR39       nextafter
+test_rint_r_chain             3153  ATTR39       nextafter
+test_step3_target_cert         467  DICT_UNION   {k: cs.get(k) for k in ('status', 'pass_d', 'target_lo', 'target_hi')} | {'G*': float(Gs)}
+test_step3_target_cert        1096  DICT_UNION   _decisions(c) | {'sigma_hex': float(c['sigma']).hex(), 'imbalance': c.get('imbalance'), 'err_bound': c.get('ta
+test_step3_target_cert         985  DICT_UNION   {k: c.get(k) for k in ('status', 'pass_d', 'target_lo', 'target_hi')} | {'G*': float(Gs)}
+test_step3_target_cert        1103  DICT_UNION   _decisions(c) | {'sigma_hex': float(c['sigma']).hex(), 'imbalance': c.get('imbalance'), 'err_bound': c.get('ta
+test_step3_target_cert        1255  ATTR39       nextafter
+test_step3_target_cert         999  DICT_UNION   {k: cb.get(k) for k in ('pass_d', 'target_why', 'target_lo', 'target_hi')} | {'G*': float(Gs)}

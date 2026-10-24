@@ -1,0 +1,4 @@
+scipy 1.10.1 | |r0| 1.372140120759313e-13 |b| 5.0 |r0|/|b| 2.744280241518626e-14
+tol only (legacy atol)   info=30000 maxdiff/max=2.694e-10 |r|/|b|=1.114e-10
+tol + atol=0             info=30000 maxdiff/max=2.694e-10 |r|/|b|=1.114e-10
+rtol kw: TypeError cg() got an unexpected keyword argument 'rtol'

@@ -43,6 +43,15 @@ SBE_KIT = 'kit_SBE_vgcf100'
 DBE_KIT = 'kit_DBE_sdcp1um_vgcf100'
 T_S = 1.63e-3                                            # 표적 S/cm (등록 R §0)
 
+def _nextafter(x, toward):
+    """math.nextafter (3.9+) — kgy dem-venv = Python 3.8.10 (10-24) 이면 SV 모듈의 같은 함수 (`ca_ext_svcf._nextafter`)."""
+    f = getattr(math, 'nextafter', None)
+    if f is not None:
+        return f(x, toward)
+    import ca_ext_svcf
+    return ca_ext_svcf._nextafter(x, toward)
+
+
 RR = None                                                # 사슬 모듈 (없으면 전부 FAIL — 시험 먼저)
 TD = None
 FX = {}                                                  # 고정물 (러너 · 킷 뿌리 · 계획 · 등록 사본)
@@ -2544,8 +2553,8 @@ def eval_G01():
     표시 반올림 0.454 · 0.908 은 정확 문턱 위라 한 등급 아래 (WEAK · UNINFORMATIVE — 판정문 탐침 B)."""
     G0 = math.log(RR.EXP_DBE_MS / RR.CUR_GEN_DBE_MS)
     a, b = RR.GRADE_INFORMATIVE_MAX, RR.GRADE_WEAK_MAX
-    want = ((a, 'PASS_INFORMATIVE'), (math.nextafter(a, 0.0), 'PASS_INFORMATIVE'), (math.nextafter(a, math.inf), 'CONSISTENT_WEAK'),
-            (b, 'CONSISTENT_WEAK'), (math.nextafter(b, 0.0), 'CONSISTENT_WEAK'), (math.nextafter(b, math.inf), 'UNINFORMATIVE'),
+    want = ((a, 'PASS_INFORMATIVE'), (_nextafter(a, 0.0), 'PASS_INFORMATIVE'), (_nextafter(a, math.inf), 'CONSISTENT_WEAK'),
+            (b, 'CONSISTENT_WEAK'), (_nextafter(b, 0.0), 'CONSISTENT_WEAK'), (_nextafter(b, math.inf), 'UNINFORMATIVE'),
             (0.454, 'CONSISTENT_WEAK'), (0.908, 'UNINFORMATIVE'), (0.0, 'PASS_INFORMATIVE'))
     got = [(w, RR.grade_W(w), v) for w, v in want]
     return (all(g == v for _w, g, v in got) and a == G0 / 2.0 and b == G0 and RR.G0 == G0,
@@ -3137,7 +3146,7 @@ def eval_U20():
     p = RR.r_monotone_problem([(0.5, 'R_j_lo', ba), (1.0, 'R_j0', bb)])
     cases.append(('R2 맞닿음 → 모순 아님 (옛 띠는 떨어졌다 · err 재현)', e_ok and old(A)[1] < old(B)[0] and touch and p is None, p,
                   (e_ok, touch)))
-    B1 = c4_rec(R2_B[0], math.nextafter(R2_A[2], math.inf), R2_B[2])
+    B1 = c4_rec(R2_B[0], _nextafter(R2_A[2], math.inf), R2_B[2])
     p1 = RR.r_monotone_problem([(0.5, 'R_j_lo', RR.arm_band(A)), (1.0, 'R_j0', RR.arm_band(B1))])
     cases.append(('한 ULP 떨어짐 → 모순', p1 == ('R_j_lo', 'R_j0'), p1, ''))
     #  예측 단계 — 모서리 넷 · 두 법칙 · 모든 origin = R_j,lo 에 A · R_j,0 에 B · R_j,hi 에 C (scale 1e-3 = 게시 σ ~1.47 mS/cm)
@@ -3150,7 +3159,7 @@ def eval_U20():
     except RR.Stop as e:
         st = e.code
     cases.append(('예측 — R2 맞닿음 (scale 1e-3) → 통과', st == 'PREDICTED' and not pr.adj, st, ''))
-    roles1 = dict(roles, R_j0=c4_rec(R2_B[0], math.nextafter(R2_A[2], math.inf), R2_B[2], scale=k))
+    roles1 = dict(roles, R_j0=c4_rec(R2_B[0], _nextafter(R2_A[2], math.inf), R2_B[2], scale=k))
     pr = RR.Predict(c4_fetch(roles1), U17_LADS, None, sv_scope=None)
     try:
         pr.run()
