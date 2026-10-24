@@ -443,6 +443,10 @@ def _load_base():
     spec = importlib.util.spec_from_file_location('step3_sigma_base_d1768', p)
     m = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(m)
+    #  ★ 10-24 (`SELF-133`) — scipy < 1.12 이면 지금 판의 CPU `cg` = `_cg_v112` (옛 legacy `cg(tol=…)` 폴백 대신) → 기반 모듈에도
+    #    같은 cg 를 넣어 끈 경로 비트 대조가 코드 경로만 본다 (scipy ≥ 1.12 = 둘 다 scipy cg · 이 줄은 아무것도 바꾸지 않는다)
+    if S3 is not None and getattr(S3, 'cg', None) is getattr(S3, '_cg_v112', 0) and hasattr(m, '_solve_cg'):
+        m.cg = S3.cg
     return m, ''
 
 

@@ -271,6 +271,10 @@ run 'step3_conv_cert (STEP3 수렴 증서 A/B/C · 봉인 표 · 10-21 실측 11
 #  ★ 2026-10-20 (Rint ② S0 · 설계 v1 §2 · 등록 R §2-1) — 표현 원장 (raster 만 · 솔브 없음): 기하 원시 · 접합 census 미리보기 · 격자 원시 ·
 #    계획 (식 · 해시 · 개정 커밋 대조) · 스키마 (σ · 전류 칸 없음) · 끝-끝 (payload 실물로 생산 raster 입력을 잡는다).  구현 전 = 0/23 PASS.
 run 'ca_s0_census (Rint ② S0 표현 원장 · 시험 먼저)' python3 scripts/test_ca_s0_census.py
+#  ★ 2026-10-24 (`SELF-132` · `SELF-133` · 1저자 Q2 (가)) — kgy 실행 환경 판 (Python 3.8 · numpy 1.24.4 · scipy 1.10.1 = kgy `~/dem-venv`) 에서
+#    R 경로 11 묶음 (S0 · S1 · S2/S3 · 계약 · 사슬 · 끝-끝 · 증서).  3.11 에서만 돌던 코드가 kgy 에서 멈춘 일 (08-16 · 08-25 · 10-24 세 번째) 을 막는다.
+#    인터프리터 없음 · 판 다름 = 실패 (건너뛰지 않는다) → `bash scripts/setup_kgy_py38.sh` (컨테이너 재시작 뒤 한 번) · 실측 ≈ 6–7 분.
+run 'kgy 판 R 경로 시험 (Python 3.8 · numpy 1.24.4 · scipy 1.10.1 · SELF-132)' bash scripts/check_kgy_py38.sh
 #  ★ 2026-10-04 (τ 결정 16 ② · 1저자 비준 *"권고대로"*) — 안 A: 망 솔버 띠 선택을 `boundary_sets` 로 추출 (추출 전 기준값과 비트 동일)
 #    + 쓴 규칙 · 띠 폭 기록 (LHS-17 · TAU-14) · 이온 인계 열 도우미 `tau_flux` (v2 §5 · 게이트 G1–G6 · 생산자 ↔ 소비자 계약).
 run 'network boundary_rule (안 A · 동작 중립)' python3 scripts/test_network_boundary_rule.py

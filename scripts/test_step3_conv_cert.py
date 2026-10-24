@@ -72,6 +72,10 @@ def _load_base():
     spec = importlib.util.spec_from_file_location('step3_sigma_base_cc', p)
     m = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(m)
+    #  ★ 10-24 (`SELF-133`) — scipy < 1.12 이면 지금 판의 CPU `cg` = `_cg_v112` (옛 legacy `cg(tol=…)` 폴백 대신) → 기반 모듈에도
+    #    같은 cg 를 넣어 끈 경로 비트 대조가 코드 경로만 본다 (scipy ≥ 1.12 = 둘 다 scipy cg · 이 줄은 아무것도 바꾸지 않는다)
+    if S3 is not None and getattr(S3, 'cg', None) is getattr(S3, '_cg_v112', 0) and hasattr(m, '_solve_cg'):
+        m.cg = S3.cg
     return m
 
 
@@ -153,6 +157,47 @@ def _exact_system():
     b = np.array([2.0, 0.0])
     phi = spsolve(L.tocsc(), b)
     return L, b, phi, (np.array([0]), np.array([2.0])), (np.array([1]), np.array([2.0]))
+
+
+def t_k4b_v112():
+    """★ 10-24 (`SELF-133` · kgy scipy 1.10.1) — 옛 scipy 의 `cg` 자리에 쓰는 `_cg_v112` 가 scipy ≥ 1.12 의 cg 와 같은 판에서 비트 같다
+    (해 · info · callback 수 · 네 계) · 그 길 (`S3.cg` = `_cg_v112`) 로 K4 (정확한 해에서 rtol 1e-14 이어 풀기) 가 수렴한다 · 판에 맞는 `cg` 가 묶였다."""
+    import inspect
+    import scipy
+    import scipy.sparse.linalg as SL
+    from scipy import sparse
+    from scipy.sparse.linalg import spsolve
+    real = SL.cg
+    has = 'rtol' in inspect.signature(real).parameters
+    rng = np.random.default_rng(24)
+    rows = []
+    for n, x0kind, rt, mi in ((200, None, 1e-8, 5000), (500, 'exact', 1e-14, 30000), (300, 'rand', 1e-10, 5000), (400, None, 1e-12, 7)):
+        L, b = _lap(n, rng)
+        M = sparse.diags(1.0 / L.diagonal())
+        x0 = None if x0kind is None else (spsolve(L.tocsc(), b) if x0kind == 'exact' else rng.normal(size=n))
+        cv, cr = [0], [0]
+        xv, iv = S3._cg_v112(L, b, x0=x0, rtol=rt, maxiter=mi, M=M, callback=lambda xk: cv.__setitem__(0, cv[0] + 1))
+        if has:
+            xr, ir = real(L, b, x0=x0, rtol=rt, maxiter=mi, M=M, callback=lambda xk: cr.__setitem__(0, cr[0] + 1))
+            rows.append((n, x0kind, rt, mi, iv == ir and cv[0] == cr[0] and xv.tobytes() == xr.tobytes(), (iv, ir, cv[0], cr[0])))
+    if has:
+        chk('K4b `_cg_v112` = scipy ≥ 1.12 cg (같은 판 · 해 비트 · info · callback 수 · 초기값 없음 · 정확한 해 · 무작위 · maxiter 소진)',
+            len(rows) == 4 and all(r[4] for r in rows), rows)
+    else:
+        print(f'  --  K4b 대조 건너뜀 (scipy {scipy.__version__} < 1.12 · 비교 대상 cg(rtol=) 없음 · 3.11 게이트가 본다 · 세지 않음)')
+    rng = np.random.default_rng(9)
+    L, b = _lap(500, rng)
+    xs = spsolve(L.tocsc(), b)
+    saved = S3.cg
+    S3.cg = S3._cg_v112
+    try:
+        x, info = quiet(S3._solve_cg, L, b, x0=xs, rtol=1e-14)
+    finally:
+        S3.cg = saved
+    chk('K4c 옛 scipy 길 (`cg` = `_cg_v112`) 로 K4 — 정확한 해에서 rtol 1e-14 이어 풀기 수렴 (info 0 · 최대 차 ≤ 1e-10 · 옛 scipy cg = 30,000 회 미수렴)',
+        info == 0 and np.max(np.abs(x - xs)) <= 1e-10 * np.max(np.abs(xs)), f'{info}')
+    chk('K4d 판에 맞는 `cg` (scipy ≥ 1.12 = scipy cg · < 1.12 = `_cg_v112`)',
+        (S3.cg is real) == has and (S3.cg is S3._cg_v112) == (not has), f'has_rtol={has} cg={getattr(S3.cg, "__name__", S3.cg)}')
 
 
 def t_k5_certify_unit():
@@ -270,7 +315,7 @@ def main():
                   f"it {r.get('iters', '-')}")
         print(CC.derive_seal(tab))
         return 0
-    for fn in (t_k1_default_bitid, t_k2_defaults, t_k3_knob, t_k4_x0, t_k5_certify_unit, t_k6_solve_cert, t_k7_probe,
+    for fn in (t_k1_default_bitid, t_k2_defaults, t_k3_knob, t_k4_x0, t_k4b_v112, t_k5_certify_unit, t_k6_solve_cert, t_k7_probe,
                t_k8_seal, t_k9_cli):
         print(f'── {fn.__name__}')
         try:

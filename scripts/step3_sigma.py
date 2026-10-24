@@ -62,11 +62,60 @@ import sys
 import os as _os
 import numpy as np
 from scipy import ndimage, sparse
-from scipy.sparse.linalg import cg
+from scipy.sparse.linalg import cg as _cg_scipy
+import inspect as _inspect
 
 _THIS_DIR = _os.path.dirname(_os.path.abspath(__file__))
 if _THIS_DIR not in sys.path:
     sys.path.insert(0, _THIS_DIR)
+
+
+def _cg_v112(A, b, x0=None, *, rtol=1e-5, atol=0., maxiter=None, M=None, callback=None):
+    """scipy ≥ 1.12 의 `cg` 와 같은 반복 (`scipy/sparse/linalg/_isolve/iterative.py` · 1.17.1 에서 옮김 · 실수 계).
+    scipy < 1.12 (kgy dem-venv = scipy 1.10.1 · 1저자 10-24) 의 `cg` 는 `tol=` (legacy atol) 이라 정지 의미가 다르고, 정확한 해에서
+    rtol 1e-14 로 이어 풀면 30,000 회 동안 수렴하지 못하고 잔차가 나빠진다 (`SELF-133` · 시험 K4) → 옛 판에서는 이것이 `cg` 다 (아래).
+    1.12+ 에서는 쓰지 않는다 (scipy 의 `cg` 그대로 · 같은 판에서 비트 같음 = 시험 K4b)."""
+    from scipy.sparse.linalg import aslinearoperator
+    A = aslinearoperator(A)
+    N = A.shape[0]
+    b = np.asarray(b, dtype=np.float64).ravel()
+    x = np.zeros(N, dtype=np.float64) if x0 is None else np.array(x0, dtype=np.float64).ravel()
+    psolve = (lambda v: v) if M is None else aslinearoperator(M).matvec
+    bnrm2 = np.linalg.norm(b)
+    atol = max(float(atol), float(rtol) * float(bnrm2))
+    if bnrm2 == 0:
+        return b, 0
+    if maxiter is None:
+        maxiter = N * 10
+    matvec = A.matvec
+    r = b - matvec(x) if x.any() else b.copy()
+    rho_prev, p = None, None
+    for iteration in range(maxiter):
+        if np.linalg.norm(r) < atol:
+            return x, 0
+        z = psolve(r)
+        rho_cur = np.dot(r, z)
+        if iteration > 0:
+            beta = rho_cur / rho_prev
+            p *= beta
+            p += z
+        else:
+            p = np.empty_like(r)
+            p[:] = z[:]
+        q = matvec(p)
+        alpha = rho_cur / np.dot(p, q)
+        x += alpha * p
+        r -= alpha * q
+        rho_prev = rho_cur
+        if callback:
+            callback(x)
+    return x, maxiter
+
+
+#: CPU CG — scipy ≥ 1.12 = scipy `cg` (`rtol=`) · 옛 판 = `_cg_v112` (같은 반복 · 같은 정지 의미 · `SELF-133`).  감싸기 (`step3_conv_cert._cg_count`) 가
+#  이 이름을 바꿔 끼우므로 두 판 모두 이 이름 하나로 부른다.
+cg = _cg_scipy if 'rtol' in _inspect.signature(_cg_scipy).parameters else _cg_v112
+
 import se_material  # single source of truth for σ_ion(SE) + its temperature convention
 
 # ── SE ionic σ (S/cm) — the ONE definition, declared at se_material.T_REF_C = 25 °C ──
@@ -549,11 +598,8 @@ def _solve_cg(L, b, x0=None, rtol=None):
     if Minv is None:
         Minv = sparse.diags(1.0 / diag)
     _cnt[0] = 0
-    try:
-        _r = cg(L, b, rtol=_rt, maxiter=CG_MAXITER, M=Minv, **_x0k, **_cbk)
-    except TypeError:                                      # scipy < 1.12 has no rtol kwarg
-        _cnt[0] = 0
-        _r = cg(L, b, tol=_rt, maxiter=CG_MAXITER, M=Minv, **_x0k, **_cbk)
+    #  ★ 10-24 (SELF-133) — 옛 `except TypeError → cg(tol=…)` (scipy < 1.12 의 legacy 정지) 를 뺐다 · 옛 판의 `cg` = `_cg_v112` (위)
+    _r = cg(L, b, rtol=_rt, maxiter=CG_MAXITER, M=Minv, **_x0k, **_cbk)
     if _cbk:
         LAST_CG['iters'] = int(_cnt[0])
     return _r

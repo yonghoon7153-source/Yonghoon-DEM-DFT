@@ -1,0 +1,242 @@
+  PASS  L01 정상 사다리 (거듭제곱) — CALIBRATED · 바닥 · 천장 · 1e4 · 1e6 · 1e8 · 반씩 둘 (1e7 · 10^6.5) · 확인 하나 · 끝 확인 둘 (lo · hi 후보)
+  PASS  L02 R_j,0 손계산 = R_ref·(s_ref/1.63)^(1/e) 의 유효숫자 3 자리 (2.27e6 · ln–ln 보간이 거듭제곱에서 정확)
+  PASS  L03 §3-2b 끝 규칙 (3판 · RCA-01) — 후보 = 참 역상 · 끝 확인 런 → 후보 (바깥) 또는 바깥 실측 이웃 · 참 허용집합을 바깥에서 감싼다 · 역상 R 비 기록
+  PASS  L04 끼는 이웃 비 ≤ 10^0.5 · 확인 1 회 통과 · 국소 e ≥ e_min (진단) · 점 수 ≤ 계획 상한 · 상한 없음 (none) = width_ok None
+  PASS  L05 ×100 아래 확장 — 세 점 모두 표적 아래 → 1e2 → 반씩 → R_j,0 = 1e4·(1.2/1.63)^4 의 3 자리 (2.94e3)
+  PASS  L06 ×100 위 확장 — R_j,0 = 1e8·(2.5/1.63)^4 의 3 자리 (5.53e8) · 1e10 점
+  PASS  L07 로지스틱 — R_j,0 = 사슬이 고른 끼는 쌍에서 손으로 ln–ln 보간한 값의 3 자리 (독립 계산) · 쌍이 참 근을 낀다
+  PASS  L08 CALIB_IMPOSSIBLE — 천장 1.5 < 1.63 · 런 둘 (바닥 · 천장) 뒤 멈춤 · rc 3
+  PASS  L09 CALIB_IMPOSSIBLE — 바닥 2.0 > 1.63
+  PASS  L10 CALIB_EDGE — 바닥 1.60 (1.63 의 2 % 안) · 사다리 점 없음
+  PASS  L11 3판 e_min = 국소 진단 (RCA-01 · R3-Q3) — 탄성 e = 0.01 < e_min 이어도 멈추지 않는다 · 확인 · 끝 규칙 → CALIBRATED (상한 none) · 역상 R 비 ≥ 참 54.6 · local_e_ge_emin False 기록
+  PASS  L11b 역상 R 비 상한이 등록되면 (계획 calib_rj_ratio_max 50) — 실제 역상 폭 54.6 이상 > 50 → CALIB_UNIDENTIFIED (§3-2b ④ · 3판 뜻)
+  PASS  L12 CALIB_UNCONFIRMED — 확인 두 번 다 2 % 넘음 (확인 런 정확히 둘)
+  PASS  L13 확인 한 번 실패 → 그 점을 넣고 다시 보간 → 둘째 확인 통과 (CALIBRATED · 확인 2) — ★ 3판: 곡률로 (매끈한 로지스틱 β 1.5 · Rc 1e4) · 옛 잡음 범프 (×1.03) 는 끝 런 사이에서 비단조 (τ_mono) 로 잡힌다 = 세계가 단조가 아니다
+  PASS  L14 CALIB_NONMONOTONE — 1e8 이 1e6 보다 높다 (ln 차 > τ_mono)
+  PASS  L15 평탄 (τ_mono 안에서 오름) = 기록만 · 비단조로 멈추지 않음
+  PASS  L16 CALIB_LADDER_EXHAUSTED — 계획 점 수 상한 12 (시험 값) · 런 12 개 (바닥 · 천장 · 셋 · ×100 일곱) 뒤 13 째 요청에서 · 상한 = 계획 칸 (사슬 기본값 없음)
+  PASS  L17 NOT_COMPUTED — 1e6 점 수렴 증서 실패 → 그 점 NOT_COMPUTED · 사다리 멈춤 (뒤 런 없음)
+  PASS  L18 origin §3-3 통과 — R_j,0 에서 arm 1 · 2 만 (ARM_LIST=1,2 한 런 · ARMS 없음 · a0 다시 안 돎) · 팔 sid 지문 = origin 마다 (arm 1 ≠ arm 2 인데 SID_GRID 아님) · ln(max/min) ≤ 0.02 · 8 팔 없음 · 표지 없음
+  PASS  L19 origin §3-3 넘음 (arm 1 +2 % · arm 2 −1 %) → 8 팔 런 · CALIB_ORIGIN_SENSITIVE · R_j,0 는 arm 0 값 그대로
+  PASS  L20 P1 법칙 사다리 — 같은 SBE · 법칙 배수 0.95 → R_j,0 = 1.85e6 (법칙 끝마다 따로 보정)
+  PASS  S01 출력 폴더가 있고 비어 있지 않음 → OUTDIR_NOT_EMPTY · 러너 0 회 · 그 폴더에 아무것도 안 씀
+  PASS  S02 러너 rc 2 → RUNNER_RC
+  PASS  S03 .rejected_* 기록 → REJECTED_MARKER
+  PASS  S04 팔 JSON 이 같은 번호로 둘 → ARM_JSON_COUNT
+  PASS  S05 러너가 다른 σ_AM_S (0.01 · 영수증 = 매니페스트 → 정본 계약은 지난다) → 사슬 MAN_FIXED 대조 → MANIFEST_MISMATCH
+  PASS  S06 섞인 세대 — p2 팔 (ca_ext 없음 · centerline) → GENERATION
+  PASS  S07 unknown:ca_ext (요청 칸 있음 · 블록 없음) → GENERATION
+  PASS  S08 저장 id ≠ 다시 계산한 id → GENERATION
+  PASS  S09 ca_ext 블록 변조 (쓴 뒤 원장 수) → CA_EXT_RECORD (계약 자리)
+  PASS  S10 솔브 영수증 ≠ LEAN 2 표 (접합 주 솔브 failed — 정본 계약 허용 · LEAN 2 표 = applied | absent_geometry) → RECEIPT_LEAN
+  PASS  S11 face_alpha 런의 ptfe_cells_observed > 0 → 정본 계약 (ptfe_face 검증기) 이 먼저 잡는다 → CA_EXT_RECORD
+  PASS  S12 sid 격자 지문이 같은 킷 · 같은 래스터 · 같은 origin 런 사이에서 다르다 (두 블록 다 · 정본 계약은 지난다) → SID_GRID
+  PASS  S13 env 에 SIGMA_VGCF_OVERRIDE → ENV_SIGMA_VGCF_OVERRIDE · 러너 0 회
+  PASS  S14 부모 env 오염 (SIGMA_ION_SE · P2_SCR · SIGMA_PTFE · MPM_PERIODIC_SIGMA · EXPECT_PROTOCOL · CJUNC_RJ · ★ ARM_LIST · EXPECT_BACKEND) → 지우고 돈다 · 요약에 이름
+  PASS  S15 계획 해시 ≠ 등록 §2-1 개정값 → PLAN_HASH_MISMATCH · 러너 0 회
+  PASS  S16 등록 §2-1 계획 해시 칸이 아직 ⬜ → PLAN_HASH_UNREGISTERED · 러너 0 회
+  PASS  S17 시간 상한 — 첫 런이 상한 안에 안 끝남 → TIME_LIMIT
+  PASS  S18 러너가 다른 rtol (1e-13 · 영수증 = 매니페스트 = 증서 → 정본 계약 · 증서는 지난다) ≠ 계획 → MANIFEST_MISMATCH
+  PASS  S19 표적 ≠ 등록 (1.64) → NOT_REGISTERED · 러너 0 회 (판정선을 옮기지 않는다)
+  PASS  S20 같은 킷 · 같은 계획 두 번 — 예측에 P0 사다리 둘 → DUPLICATE_RUN · 런 0
+  PASS  S21 판정 입력에 같은 폴더 두 번 → DUPLICATE_RUN · 판정 NOT_COMPUTED
+  PASS  S22 판정 입력 sha256 ≠ 런 산출 (사다리 확인 팔 변조) → INPUT_SHA_MISMATCH · 판정 NOT_COMPUTED
+  PASS  S23 멈춤 = 구조화 사유 (code · cause · run) · 화면에 코드 · rc 3
+  PASS  S24 매니페스트만 σ_AM_S 0.01 (영수증 0.0041) → 정본 check_arm (receipt_match) → ARM_CONTRACT
+  PASS  S25 집전체 솔브에 접합 적용 (LEAN 2 표 밖) → 정본 계약 (접합 검증기) → CA_EXT_RECORD
+  PASS  S26 off 격자 sid 지문 ≠ 접합 원장 sid (같은 솔브) → 정본 계약 → CA_EXT_RECORD
+  PASS  S27 off 격자 sid 지문 칸 없음 → 정본 계약 (ptfe_face 검증기) → CA_EXT_RECORD
+  PASS  P01 예측 — SBE c no-op 런 둘 · 모서리 12 런 (arm 0) · origin = 네 모서리 × 세 R = 12 (ARM_LIST=1,2 · §4-2 3판 · RCA-02) · 상태 PREDICTED
+  PASS  P01b SV 반사실 (§5-6 SV 행 · 계획 범위 R_j0) — CJUNC_SV_CF=1 은 DBE 모서리 × R_j,0 런 넷에만 (다른 R · origin · SBE no-op 없음) · 팔 증거 요청 {threshold: null} · 영수증 sv_counterfactual True · 팔 기록 sv_cf_status = computed
+  PASS  P02 R_j 는 사다리 요약에서 — 모서리 런의 CJUNC_RJ = 사다리 R_j,lo · R_j,0 · R_j,hi 문자열 그대로 (사람 옮김 없음)
+  PASS  P03 SBE c no-op 위반 (c1 비트 다름) → SAME_P_CONSISTENCY · 모서리 런 없음
+  PASS  P04 DBE c1 < c0 − τ_mono → SAME_P_CONSISTENCY
+  PASS  P05 origin §4-2 3판 — 넘는 모서리 넷 → 모서리마다 세 R 전부 8 팔 (런 12) · 값 = 그 R 의 8 팔 평균 (판정 결과 손계산)
+  PASS  P06 사다리가 CALIB_* 면 예측 안 함 → LADDER_NOT_CALIBRATED · 런 0
+  PASS  V01 판정 손계산 — 구간 · W · p · S (가짜 함수에서 직접) · PASS_INFORMATIVE (4.68 ∈ I · W ≤ G0/2)
+  PASS  V02 감도 넷 안 돌림 → FIBRE · UNREG · GRID · SVORDER _UNCHECKED · §7-1 문장 금지 (판정 이름은 그대로) · ★ 4판 (Q2-4 · §5-5b · ⑰) 문장 = "계산기 판정 이름 `PASS_INFORMATIVE` · 차단 표지 <넷> — 판정 문장 보류 · 감도 미완료" · 표지마다 사유 (안 돌림) · 감도 미완료 표지
+  PASS  V03 감도 넷 다 돌림 · 둔감 · SV 반사실 비 1.2 < 문턱 2 → 차단 표지 없음 → §7-1 문장 (판정문 §5-3 문안) 허용 · 보고 범주 ASSUMED_UNVALIDATED (DIA_UNCHECKED 포함) 는 늘 · ★ 4판 (Q2-6) 한정어 ①–⑱ · 계산기 상태 주석 · 감도 완료 · 사유 없음
+  PASS  V04 GRID 변이에서 DBE ×1.6 → 등급 바뀜 → GRID_SENSITIVE · 문장 금지
+  PASS  V05 SV_DEPENDENT (3판 · RCA-06) — 한 모서리의 반사실 비 3.0 > 계획 문턱 2.0 → 차단 표지 · §7-1 문장 금지 (판정 이름은 그대로) · 옛 SV_DOMINANT 없음
+  PASS  V06 SV_UNCHECKED — 한 모서리의 반사실 기록이 비를 싣지 않는 상태 (unconverged) → 못 읽음 = 차단 (§5-6 · 모르는 것을 의존 없음으로 읽지 않는다)
+  PASS  V06b SV 반사실 비 = 문턱 2.0 (같음) → SV_DEPENDENT 아님 (등록 문장 "넘으면") · no_through_without_sv (비 +∞) → SV_DEPENDENT
+  PASS  V25 ★ 10-22 SV 괄호 걸침 (PRE2-impl-01 · Q1 (다)) — 가짜 러너 기록 (못 가른 덩어리 1 · 아래 끝 1.0 = 덩어리 그대로 · 위 끝 no_through = +∞) → 실제 검증기 · chain_view · sv_assess → SV_UNCHECKED (옛 = 표지 없음 · PASS 문장 가능) · SV_DEPENDENT 아님 · §7-1 문장 금지 · 사유 = 걸침 · 모서리 (비 값 없음)
+  PASS  V26 ★ 10-22 SV 괄호가 문턱 아래 (못 가른 덩어리 1 · [1.2, 1.5] · 문턱 2.0) → SV 표지 없음 (위 끝 ≤ 문턱 = 참 비도 문턱 아래)
+  PASS  V27 ★ 10-22 SV 괄호 아래 끝이 문턱을 넘음 (못 가른 덩어리 1 · [3.0, 9.0]) → SV_DEPENDENT (위 끝과 무관) · SV_UNCHECKED 아님
+  PASS  V28 ★ 10-23 (Codex 재검토 RCA2-01 · 1저자 Q1 (가)) 판정문 꼴 끝-끝 — 가짜 러너 기록 nominal 비 2·(1 − 1e-7) < 계획 문턱 2.0 인데 자를 끝 증서의 목표량 구간이 게시 G_cut 보다 아래 ([−3e-7, −2e-7] 상대) → 실제 검증기 · 투영 · chain_view · sv_assess → SV_DEPENDENT (옛 nominal 판정 = 표지 없음) · §7-1 문장 금지 · 사유 = 증서 구간 아래 끝
+  PASS  V29 ★ 10-23 (RCA2-04 · Q1 (가)) 증서 없는 런의 진단 기록 (지위 diagnostic_uncertified · nominal 비 3.0 > 문턱) → 검증기 받음 · 사슬 = SV_UNCHECKED (판정 입력 아님 · SV_DEPENDENT 아님) · 사유 = "증서 없는 진단 기록 (판정 입력 아님)" · 모서리
+  PASS  V30 ★ 10-23 (RCA2-04) 기록에 실은 주 해 증서 ≠ 이 런의 주 증서 (목표량 구간만 다름 · 그 자체로는 유효 = 기록 계약은 받음) → 사슬 read_run 대조가 잡는다: 예측 STOPPED · rc 3 · CA_EXT_RECORD · 사유 = 주 해 증서 칸 (다른 칸 target_lo)
+  PASS  V32 ★ 10-23 (사전 공격 리뷰 C1 · 1저자 Q12 (가)) 기록에 실은 주 해 증서의 위상 수 ≠ 이 런의 주 증서 (간선 수만 + 1 · 끝 ≤ 주 해 그대로 = 기록 계약은 받음) → 사슬 read_run 대조가 잡는다: 예측 STOPPED · rc 3 · CA_EXT_RECORD · 사유 = 주 해 증서 칸 (target_n_edges)
+  PASS  V35 ★ 10-23 (사전 공격 리뷰 C5 · 1저자 Q14 (가)) 끝-끝 — 가짜 러너가 SV 반사실 기록의 종류를 옛 이름 (counterfactual_cut_sv_faces) · 규칙을 다른 이름으로 쓰면 정본 기록 계약 (ca_ext_record_ok · sv_cf_problem) 이 거부 → 예측 STOPPED · rc 3 · CA_EXT_RECORD · 사유에 그 칸 (기록 종류 · 기록 규칙)
+  PASS  V07 CALIB_ORIGIN_SENSITIVE (P0 사다리 origin 넘음) → 판정 표지 · 문장 금지
+  PASS  V08 사다리 CALIB_EDGE → 판정 = CALIB_EDGE (예측 폴더 없이 · rc 0 · 등록 결과)
+  PASS  V09 등급 표 단위 — W 경계 (G0/2 · G0) · FAIL 거리 · 방향 · CONSISTENT_WEAK · UNINFORMATIVE · S (손계산)
+  PASS  V10 다시 판정 (--reverify) = 같은 답 (판정 JSON · 결과 JSON 바이트 같음) · 읽기 전용
+  PASS  V11 다시 판정이 판정 뒤 변조를 잡는다 (팔 하나 σ 바꿈 → REVERIFY_DIFF · rc 1)
+  PASS  V12 --show-results 는 판정 단계에서만 (사다리에 주면 인자 오류) · 판정에서 열람 기록 (views.jsonl)
+  PASS  V13 사다리 NOT_COMPUTED (증서 실패) → 판정 = NOT_COMPUTED (등록 결과 · rc 0 · 멈춤 아님 — 실패 팔 sha256 도 기록돼 다시 계산된다)
+  PASS  V14 3판 — 감도 변이 = 주 판정과 같은 판정 함수 (§5-6 · RCA-09): 변이 사다리도 SBE origin (§3-3) · 끝 origin · 변이 예측도 네 모서리 × 세 R + DBE origin 세 R (§10 런 수 표 3판) · 변이 예측에는 SV 반사실 없음
+  PASS  V15 판정 코드 ≠ 단계 코드 (지금 사슬 HEAD 가 다르다) → CODE_PIN_MISMATCH · 판정 NOT_COMPUTED
+  PASS  V16 판정 결과에 수렴 증서 ⓒ 값 (런마다 Δσ/σ · §8) · 공개 판정에 §9 격자 문장 = not_computed (이 사슬 밖 · 현 세대 대조)
+  PASS  X01 값 봉인 — 사다리 · 예측 · 판정 (show 없이) 의 화면 · 로그 · 공개 JSON 에 σ 숫자 없음 (가짜 러너 장부 대조)
+  PASS  X02 --show-results 는 봉인했던 σ 를 실제로 보여준다 (봉인이 무엇을 숨겼는지의 대조)
+  PASS  X03 기본 계약 = 정본 함수 위임 (run_contract.ca_ext_record_ok · sr01_stamp_compare.check_arm)
+  PASS  X04 dry-run — 러너 안 부름 · 출력 폴더 없음 · 첫 다섯 런의 env 꼴 (CJUNC_RJ=inf · 0 · 10000.0 · …) · SIGMA_VGCF_OVERRIDE 없음
+  PASS  X05 등록 문서에 이 도구의 숫자 · 이름 · 문장이 있다 (상수 대조 · 사본 금지의 짝)
+  PASS  X05b ★ 4판 (Q2-4 · Q2-6) 결정표 칸 글자 · ⑰ ⑱ 문장 · 보호 띠 · W₊ · 이름 우선순위가 등록 문서 (4판) 에 그대로 있다 (시험 상수 대조 · 사본 금지의 짝) · ★ RI 4판 정정 — ⑱ · UNINFORMATIVE 문장이 등록에서 하나 (§5-1 = §7-1 ⑱ · §5-5 = §5-5b · 사슬 꼴)
+  PASS  X06 바닥 · 천장 극한 = 러너 env CJUNC_RJ=inf · 0 (런 순서 첫 둘) · 팔 protocol 표지 rj_limit inf · zero (R_j_ohm null · 0.0 · quantitative False · allow_rj_limits True) · 영수증 요청 같은 꼴 — 사슬이 받아 다음 런으로 간다
+  PASS  X07 극한 표지 = 정본 낱말 (ca_ext_cjunc.RJ_LIMITS) · 사슬이 기대하는 요청 (expected_request) 에 rj_limit · R_j null · 0.0 · 정량 런엔 칸 없음
+  PASS  X08 러너 backend = 사슬 상수 EXPECT_BACKEND (gpu) — env 로 넘긴다 (부모 셸 값은 지운다) · 정본 check_arm 에도 같은 값
+  PASS  X09 사슬 자신의 off 격자 대조 — 정본 계약을 비켜도 (통과 계약) sid_off 없음 · ≠ 접합 sid = SID_GRID (계약 뒤 둘째 겹)
+  PASS  X10 CG 반복 수 (주 솔브 · ⓒ 이어 풀기) = 공개 기록 · 화면 (등록 R §11 숫자 탐침 칸 · σ 아님)
+  PASS  U01 RCA-01 (§3-2b ⑧ · PRE-design-05) — Codex 양의 저항망: 끝 = 실제 역상 · R_lo 10,000 (후보 26,758 확인 실패 → 바깥 실측 이웃) · R_hi 5,990,349.75 (후보 확인) · R 비 599.03 · 12 점 · 참 [25,494 · 5,097,624] 바깥 감쌈 · DBE W 0.785238 CONSISTENT_WEAK (2판 보간 = PASS W 0.419)
+  PASS  U02 RCA-02 (§4-2 3판) — 중앙 (R_j,0) 산포 0 인데 양끝 origin 산포 0.304 · 0.318 > 0.1 W → 모서리마다 세 R 전부 8 팔 평균 → [2.6629, 6.1450] W 0.8362 CONSISTENT_WEAK (2판 = R_j,0 만 점검 · arm 0 [3.4962, 4.6867] PASS)
+  PASS  U03 RCA-08 (§5-1 · §5-5 3판) — I_P0 [3.8, 4.0] · I_P1 [5.2, 5.4] · 4.68 = E ∖ U → GAP_ENVELOPE_ONLY (2판 hull W 0.351 = PASS) · 문장 = 판정문 §5-3 GAP 문안 + ★ 4판 ⑱ (§5-1 · §5-5b "P 는 두 끝만 등록했다 (사이 감쇠는 모형 밖)") · 법칙 집합까지 ln 거리 기록
+  PASS  U04 RCA-09 (§5-6 3판) — 같은 판정 함수: 주 판정 (허용폭 포함 [4.30, 4.80] W 0.110 PASS) ↔ 엄밀한 no-op 변이 = PASS 그대로 (중앙 네 점만 판정하면 W 0.0335 FAIL = 거짓 SENSITIVE) · 표지 없음 · §7-1 문장
+  PASS  U04b RCA-09 같은 부류 — 변이가 중앙 네 점은 같고 양끝만 넓다 ([3.0, 7.0]) → 같은 판정 함수 = CONSISTENT_WEAK ≠ PASS → FIBRE_SENSITIVE (2판 = 중앙 네 점끼리 비교 → 둘 다 FAIL → 놓침)
+  PASS  U05 RCA-10 (§5-6a) — 차단 표지 = 닫힌 집합 11 · DIA_UNCHECKED · 모르는 *_UNCHECKED · *_SENSITIVE · 옛 SV_DOMINANT = 차단 아님 · 닫힌 집합 이름 하나하나 = 차단 · DIA 만 있으면 PASS 문장 허용
+  PASS  U06 RCA-13 (§5-0 · §3-2) — 단위 불변 (S/cm ↔ mS/cm · 판정 · W · p · d · S) · τ_mono = ln 차 (999.5 → 1000 평탄 · 999 → 1000 비단조 · 두 단위 같음) · 0/0 · 점 구간 (W 0 · p null) · zero 끝 (W +∞ · p · S null · d +∞ 방향 · ★ 4판 단락은 판정에 오지 않는다 — +∞ 값은 도구만) · gap · 확장 실수 도구 (★ 4판 dbe_origin_ok — W₊ · 상태 다름 = 넘음)
+  PASS  U07 ★ 4판 결정표 (§5-5b · PRE-design-09 · R4-Q7) 전수 — (상태 4 × 판정 12) × 차단 {없음 · 둘} × 감도 미완료 = 칸 글자 하나: PASS = §7-1 헤드라인 · 차단 = "계산기 판정 이름 `PASS_INFORMATIVE` · 차단 표지 <목록> — 판정 문장 보류" · WEAK · UNINF · GAP (+ ⑱) · FAIL = 왼쪽 칸 + "(차단 표지 <목록>)" · CALIB_* · NOT_COMPUTED = 판정 없음 칸 · 점 구간 · 감도 미완료 (⑰) 덧붙임 · 허용 짝 17 · 짝 밖 · 닫힌 집합 밖 = ValueError (3판 = 차단 PASS · UNINF · FAIL · CALIB 문장 없음)
+  PASS  U08 SV 반사실 판정 (§5-6 SV 행 · RCA-06) — 비 > 문턱 = SV_DEPENDENT (= 문턱 은 아님 · "넘으면") · 비 +∞ = 의존 · 비 없는 상태 · 기록 없음 · 문턱 null = SV_UNCHECKED · 범위 R_j0 (모서리 넷) ↔ all3 (열둘)
+  PASS  U08b ★ 10-22 SV 반사실 괄호 판정 (PRE2-impl-01 · Q1 (다) · §5-6 SV 행 개정) — 아래 > 문턱 = SV_DEPENDENT · 두 끝을 읽고 위 ≤ 문턱 = 없음 · 걸침 (아래 ≤ 문턱 < 위) · 못 읽음 · 옛 꼴 (위 끝 칸 없음) = SV_UNCHECKED · 모서리 묶기 = 하나라도 (둘 다 붙음) · 사유 = 걸침 · 모서리 (비 값 없음) · 세부 = 두 끝 · 못 가른 덩어리 수
+  PASS  M41 ★ 10-22 변이: SV 판정 = 아래 끝 하나만 (옛 규칙 · 위 끝 무시) → U08b 가 떨어진다 (변이 전 통과 확인)
+  PASS  M42 ★ PF2 E (10-22 · 판정문 변이 Ml) 등급 경계 ≤ → < (정보 있음 칸 · 약함 칸 각각) → G01 이 떨어진다 (옛 시험 묶음에서는 살아남았다)
+  PASS  U15 ★ PF2 E (10-22 · PRE2-impl-02) SV 판정 — 아래 · 위 끝 어느 쪽의 NaN · −∞ · 0 · −0 · 음수 · 빈칸 · bool · 글자 · 목록도 "표지 없음" 이 아니다 (SV_UNCHECKED) · 아래 +∞ = SV_DEPENDENT · 위 +∞ = 걸침 · 정상 [1.2, 1.2] = 없음 · 사슬 꼴 (chain_view) 을 거친 NaN 도
+  PASS  U16 ★ 10-23 (Codex 재검토 RCA2-01 · 1저자 Q1 (가)) SV 판정 = 증서 구간 (실제 투영 · chain_view · sv_assess) — 판정문 꼴 nominal < 문턱 < 아래비 → SV_DEPENDENT · 뒤집은 꼴 nominal > 문턱 · 구간 걸침 → SV_UNCHECKED · 문턱 = 아래비 → 걸침 · 문턱 = 위비 → 표지 없음 · ∞ = 영값 위상 증서만 · 위 끝 구간 아래끝 0 · 위비 넘침 = 못 정함 · 아래비 넘침 = 의존 · 진단 기록 = 판정 입력 아님 · 사유 글자
+  PASS  M43 ★ 10-23 변이: SV 판정 = nominal 비 (옛 규칙 · 증서 구간 무시 · 진단도 받음) → U16 이 떨어진다 (변이 전 통과 확인)
+  PASS  G01 ★ PF2 E (10-22 · PRE2-design-06) 등급 경계 — W = 정확 G0/2 → PASS · nextafter 위 → WEAK · W = 정확 G0 → WEAK · nextafter 위 → UNINFORMATIVE · 바로 아래 그대로 · 표시 반올림 0.454 → WEAK · 0.908 → UNINFORMATIVE · 문턱 = ln(4.68/1.8877) 의 정확값
+  PASS  U10 PRE-design-01 (Q-E · P1) — 중앙 (R_j,0) 산포 2.2e-16 · CALIB_ORIGIN_SENSITIVE 안 걸리는데 arm 1 · 2 의 허용집합이 arm 0 보다 넓다 → 끝에서 arm 1 · 2 도 돌려 하나라도 띠 안이면 바깥 실측 이웃으로 → 끝의 세 origin 이 모두 띠 밖 (합집합을 바깥에서 감쌈)
+  PASS  U11 ★ 4판 Q2-1 (§3-2c · PRE-design-08) — 두 법칙 이름이 다르면 하나라도 NOT_COMPUTED = 판정 전체 NOT_COMPUTED (상태 먼저) · 아니면 등록 나열 순서의 첫 CALIB_* · 반례 P0 NOT_COMPUTED · P1 CALIB_EDGE → NOT_COMPUTED (3판 = CALIB_EDGE · CALIB_ORDER 끝)
+  PASS  U11b ★ 4판 Q2-1 (사슬) — P0 사다리 NOT_COMPUTED (증서 실패 · L17) + P1 사다리 CALIB_EDGE → 판정 NOT_COMPUTED (rc 0 · 법칙별 이름 늘 보고 · 사유 둘)
+  PASS  U01e ★ 4판 Q2-2 (§3-2b ③″ ⑧ · PRE-design-12 · R4-Q2 · R4-Q3) — 끝 판정 = 판독 [σ(1 − e), σ(1 + e)] (e = 그 런 증서 보장 오차) 가 띠에 걸치면 바깥으로: RCA-01 회로 e = 0 · 3.7e-5 → 비 599.03 (후보) · e = 3.8e-5 · 1e-4 (≥ 3.728e-5) → hi 끝 = 바깥 이웃 1e7 · 비 1,000 · W 0.786487 · CONSISTENT_WEAK (3판 = 띠 없음 · 늘 599.03)
+  PASS  U12 ★ 4판 Q2-2 (§3-1 · §3-2b ③″) — EDGE 판정에도 보호 띠: 바닥 F = T⁻(1 − 5e-5) (EDGE 안 걸림 · |F/1.63 − 1| = 0.02005) · 판독 오차 e = 1e-4 → [F(1 − e), F(1 + e)] 가 EDGE 띠에 걸침 → CALIB_EDGE (바닥 · 천장 두 런 뒤 · 3판 = EDGE 아님 · 사다리 계속) · e = 4e-5 → EDGE 아님
+  PASS  U12b ★ 4판 Q2-2 (§3-2b ③″ 반례 · 보수 쪽) — 증서 허용 안의 낮은 판독 (σ × (1 − e) · e 4e-5) 에서도 hi 끝은 참 끝 6.259e7 의 바깥 (≥) 이거나 사다리 소진 (CALIB_LADDER_EXHAUSTED) — 안쪽 끝 (낮은 판독이 "≤ T⁻" 로 읽힌 자리) 을 쓰지 않는다 (3판 = 안쪽 끝)
+  PASS  L22 ★ 4판 Q2-2 (사슬 배선 · 가짜 러너) — 증서 보장 오차 9e-5 = 팔 기록 err_rel (증서 구간에서 다시 계산 · 공개 칸) · 사다리 기록 err_rel · 바닥 T⁻(1 − 5e-5) 침대 = 증서 오차 9e-5 면 CALIB_EDGE (두 런) · 0 이면 EDGE 아님
+  PASS  U13 ★ 4판 Q2-3 (§4-2 PRE-design-10 ① · R4-Q4) — 한 모서리 · R 의 세 origin 상태가 다르면 = 넘음 (8 팔 평균 · zero 는 0 으로 더함): 등록 반례 arm 0 {0 (VALID_ZERO) · 3.0 · 3.5 · 4.0} · zero 모서리 arm 1 · 2 = 6.0 → 그 모서리 5.25 → [3.0, 5.25] · W 0.5596 · CONSISTENT_WEAK (3판 = W +∞ → 문턱 +∞ → 전환 없음 → FAIL)
+  PASS  U13b ★ 4판 Q2-3 (§4-2 ②) — 상태는 같은데 W (arm 0 첫 폭) 가 +∞ (다른 모서리의 zero) → 문턱의 W = W₊ (arm 0 양수 값의 폭 ln(4/3)) · c1 P1 의 origin 산포 ln 1.05 > 0.1 W₊ → 넘음 → 세 R 8 팔 평균 4.175 · zero 모서리 (세 origin 다 zero) = 통과 (3판 = 문턱 +∞ → 통과)
+  PASS  U17 ★ 10-23 (Codex 재검토 RCA2-09 · 1저자 Q8 (가)) DBE R 단조 방어 검사 (예측 · 이미 구한 값 · 증서 구간끼리 · 같은 최종 추정량) — 판정문 꼴 4.2 / 4.7 / 4.4 → R_MONOTONE_VIOLATION (문장에 σ 없음) · 정상 단조 · 증서 띠 안 비단조 · 평탄 · 영값 위상 → 통과 · 이웃 겹침 + lo ↔ hi 모순 → 멈춤 · 8 팔 평균 비단조 → 멈춤 (사유 = 최종 추정량 mean8) · arm 0 만 비단조 (최종 추정량 단조) → ★ 10-23 C3 멈춤 (origin corner_a0) · err_rel 없음 → ARM_UNREADABLE · STOPS 에 이름 (PREDICT_OUTCOMES 밖 = STOPPED)
+  PASS  U17b ★ 10-23 (A6 변이 표 A3-r3) R 단조 모순 판정의 R 같은 갈래 — 같은 R · 떨어진 구간 = 모순 · 겹침 = 통과 · R 다른 쌍 그대로 (방어 갈래 상주)
+  PASS  M44 ★ 10-23 변이: R 단조 검사 끔 (모순 쌍 없음) → U17 이 떨어진다 (변이 전 통과 확인)
+  PASS  M45 ★ 10-23 변이: 이웃 쌍만 본다 (R_j,lo ↔ R_j,hi 안 봄) → U17 ④ 가 떨어진다
+  PASS  M46 ★ 10-23 변이: 띠 없이 nominal 끼리 비교 (e 무시) → U17 ③ (증서 띠 안 비단조) 가 떨어진다
+  PASS  M47 ★ 10-23 변이: 최종 추정량 대신 arm 0 (origin 규칙이 바꾼 모서리도) → U17 ⑦ ⑧ 이 떨어진다 (★ 10-23 C3 뒤 — ⑦ = 사유가 최종 추정량 mean8 이 아님 · ⑧ = 사유가 최종 추정량 arm0)
+  PASS  U19 ★ 10-23 (사전 공격 리뷰 C3 · 1저자 Q13 (가)) R 단조 검사 = 최종 추정량 + 같은 모서리의 이미 구한 origin 마다 — 리뷰 R1 (넘침 없는 모서리 arm 1) · R1c (넘친 모서리 arm 0) · R1d (넘친 모서리 origin 3) → R_MONOTONE_VIOLATION (사유 = origin 이름 · σ 없음) · 정상 · 띠 안 비단조 · 평탄 → 통과 · 검사 기록 origins (3 · 11)
+  PASS  M49 ★ 10-23 변이: origin 마다 검사 끔 (최종 추정량만 · 옛 판) → U19 R1 · R1c · R1d 가 떨어진다 (변이 전 통과 확인)
+  PASS  U20 ★ 10-23 (사전 공격 리뷰 C4) R 단조 띠 = 팔 기록의 증서 목표량 구간 × 증서 scale (정확 분수) — 리뷰 R2 (맞닿음 · 옛 띠는 떨어짐) → 모순 아님 · 예측 통과 · 한 ULP 떨어짐 → 모순 · 예측 R_MONOTONE_VIOLATION · 8 팔 평균 띠 · 영값 [0, 0] · err_rel · 증서 칸 없음 · 꼴 틀림 → ARM_UNREADABLE
+  PASS  M50 ★ 10-23 변이: 띠 = 옛 [σ(1 − e), σ(1 + e)] (float e · 증서 구간 무시) → U20 (R2 맞닿음 · 증서 칸 못 읽음) 이 떨어진다 (변이 전 통과 확인)
+  PASS  V31 ★ 10-23 (RCA2-09) 끝-끝 — 가짜 러너 세계에서 DBE σ(R_j,lo) 를 0.8 배 (R 단조와 모순) → 예측 STOPPED · R_MONOTONE_VIOLATION · rc 3 · 멈춤 문장에 σ 없음
+  PASS  V33 ★ 10-23 (사전 공격 리뷰 C3 · 1저자 Q13 (가)) 끝-끝 — 가짜 러너 세계에서 DBE R_j,lo 런의 origin 팔 1 만 0.9 배 (그 origin 의 세 R 이 단조와 모순 · 최종 추정량은 단조) → 예측 STOPPED · R_MONOTONE_VIOLATION · 사유 = origin 이름 (최종 추정량 아님 · σ 없음) · rc 3 · 정상 주 예측 요약의 검사 기록 r_monotone 마다 origins 칸 (이미 구한 origin 이름 · ok) · 다시 판정 (V10) 이 같은 검사를 다시 낸다
+  PASS  V34 ★ 10-23 (사전 공격 리뷰 C4) read_run 이 그 런 증서의 목표량 구간 · scale (target_lo · target_hi · scale) 을 팔 기록에 싣는다 — 주 예측의 모서리 · origin 런마다 원 팔 JSON 의 증서와 같은 값 · 공개 칸 (ARM_PUBLIC · 요약 arms_read) 에는 없다 (값 봉인 · scale × 구간 = σ)
+  PASS  U18 ★ 10-23 (Codex 재검토 RCA2-06 F6) 위 끝 구조화 실패 unsplit_census_mismatch 를 사슬 끝까지 보존 (실제 투영 · chain_view · sv_assess · sv_reasons) — census 0 · census 1 · 진단 기록 = SV_UNCHECKED · 사유의 모서리 이름에 상태 이름 · 기록 없는 모서리 = 이름만 · 미수렴 = 한 번
+  PASS  M48 ★ 10-23 변이: 사유의 모서리 이름에 상태를 붙이지 않음 (옛 글자) → U18 이 떨어진다 (변이 전 통과 확인)
+  PASS  U14 ★ 4판 Q2-5 (§5-6 PRE-design-17 ② ③ ④ ⑤ · R4-Q8) — 변이 NOT_COMPUTED (예측 · 사다리) → <V>_UNCHECKED (3판 = _SENSITIVE) · 변이 이름 같음 + 자신의 CALIB_ORIGIN_SENSITIVE → <V>_UNCHECKED · 결과 이름 다름 (CALIB_* 포함) → <V>_SENSITIVE (② 먼저) · 변이 자신의 표지는 주 표지 목록에 옮기지 않는다 · 표지마다 사유
+  PASS  V18 ★ 4판 Q2-5 (사슬) — 감도 FIBRE 사다리 P0 가 NOT_COMPUTED (증서 실패) → FIBRE 판정 NOT_COMPUTED → FIBRE_UNCHECKED (FIBRE_SENSITIVE 아님 · 3판 = 이름 다름 → SENSITIVE) · 주 판정 이름 그대로
+  PASS  U12c ★ 4판 Q2-2 (§3-2b ③″ · 구현 가장자리) — 바깥 실측 점이 보호 띠로 다 걸치면 (1e4 점 σ = T⁺(1 + 3e-5) · e 1e-4 · 더 작은 R 실측 없음) 사다리 규칙 그대로 같은 쪽 ×100 새 점 (1e2) 을 돌아 끝으로 (③′ 연장 꼴 · 죽지 않는다 · 참 끝 10,011.9 의 바깥) · e = 0 이면 3판 그대로 (끝 1e4 · 연장 없음)
+  PASS  V19 ★ 4판 (Q2-4 · §5-5b 같은 레코드 = 같은 문장) — 판정 기록 문장 칸: CALIB_EDGE (V08) = 판정 없음 칸 (법칙별 이름 · 사유 · …) · 등록 결과 NOT_COMPUTED (V13) = 판정 없음 칸 (사유) · 사슬 멈춤 (S21 DUPLICATE_RUN) = 같은 NOT_COMPUTED 칸 + 사유 = 멈춤 코드 (단계 verdict) · 감도 미완료 칸 = 해당 없음 (null) (3판 = 셋 다 문장 null · 멈춤 사유 없음)
+  PASS  V20 ★ 4판 (Q2-4 · §5-5b "표지마다 사유") — SV_DEPENDENT = 대조 비 > 문턱 2.0 (모서리 c1_P1_R_j0 · 비 값은 결과에만) · SV_UNCHECKED = 못 읽음 (모서리) · CALIB_ORIGIN_SENSITIVE = 세 값 (§3-3) · 안 돌린 변이 = 안 돌림 · 차단 표지마다 사유 하나 (빈 칸 없음)
+  PASS  V21 ★ RI (§5-6 ③) — 감도 FIBRE 사다리 P0 가 멈춤 (러너 rc 2 · RUNNER_RC · STOPPED) · P1 보정됨 → 판정 = 주 판정 (rc 0 · 주 숫자 같음) + FIBRE_UNCHECKED (변이 판정 NOT_COMPUTED · 이름 비교 안 함 · 차단) · 문장 = 결정표 오른쪽 칸 · 다시 판정 같음 (4판 사슬 = INPUT_STAGE_STOPPED 로 판정 전체 거부)
+  PASS  V22 ★ RI (§5-6 ③) — 감도 SVORDER 예측이 멈춤 (주 묶음 기록 뒤 · 첫 DBE 모서리 러너 rc 2 · STOPPED) → 판정 = 주 판정 + SVORDER_UNCHECKED (변이 판정 NOT_COMPUTED · 차단 · 4판 사슬 = INPUT_STAGE_STOPPED)
+  PASS  V23 ★ RI (§5-5 사슬 멈춤 행 · 그대로) — 주 판정 단계의 멈춤은 여전히 판정 전체 NOT_COMPUTED: 주 사다리 P0 멈춤 (S02 · RUNNER_RC) · 주 예측 멈춤 (P03 · SAME_P_CONSISTENCY) → INPUT_STAGE_STOPPED · rc 3 · 결과 파일 없음 · 문장 = NOT_COMPUTED 칸 · 사유 = 멈춤 코드
+  PASS  V24 ★ RI — 멈춘 변이 단계도 판정 입력 검사는 그대로 (4판 사슬은 그 검사 전에 판정 전체를 거부했다): 주 예측 묶음을 기록하기 전에 멈춘 SVORDER 예측 (F01b · MAIN_NOT_DONE · after_main 없음) → MAIN_BINDING · 판정 NOT_COMPUTED · rc 3 (등록이 정하지 않은 자리 = 지금 동작)
+  PASS  Z01 바닥 VALID_ZERO_TOPOLOGY (조기 반환 · σ 0 · 증서 영값) — 정본 계약 (ca_ext_record_ok · check_arm) 통과 · 사슬이 받아 사다리 계속 · CALIBRATED · 상태 기록 zero (등록 R §5-0 ② — 2판 = ARM_UNREADABLE · NOT_COMPUTED 멈춤)
+  PASS  Z02 ★ 4판 (Q1 · §5-0 ② · R4-Q5) 천장 ELECTRODE_SHORT (J11 · 생산자 미게시) — 사다리 = NOT_COMPUTED (등록 결과 · 사유 ELECTRODE_SHORT · 바닥 · 천장 두 런 뒤 · 천장 런 rc 0 = 팔은 정본 계약을 지났다) · 판정 (P1 주 사다리와) = NOT_COMPUTED rc 0 · 사유 기록 (3판 = 받아서 σ +∞ · CALIBRATED)
+  PASS  Z03 DBE 모서리 하나 VALID_ZERO_TOPOLOGY (P0 c0 R_j,hi) — 확장 실수 0 그대로 구간에 · W +∞ · 4.68 ∈ U → UNINFORMATIVE · p · S null · 상태 extended · 그 모서리 origin 팔도 0 (산포 0)
+  PASS  Z04 ★ 4판 (Q1 · §5-0 ③) DBE 모서리 하나 ELECTRODE_SHORT (P1 c1 R_j,0 · c 1 축약) — 예측 = NOT_COMPUTED (등록 결과 · 사유 ELECTRODE_SHORT · 그 모서리 런에서 멈춤) · 판정 = NOT_COMPUTED rc 0 · 사유 기록 (예측 단계) · +∞ 구간 없음 (3판 = σ +∞ · UNINFORMATIVE)
+  PASS  Z05 ★ 4판 (Q1 · §4-2 ③) DBE origin 팔 (arm 1 · 2 · P0 c1 R_j,0 · c 1 축약 모서리) 이 ELECTRODE_SHORT — origin 값으로 단락이 오지 않는다 → 예측 = NOT_COMPUTED (사유 ELECTRODE_SHORT · origin 런에서 멈춤) · 판정 = NOT_COMPUTED rc 0 (3판 = 산포 +∞ → 8 팔 평균)
+  PASS  Z07 ★ 4판 (Q1) 사슬의 등록 풀이 상태 셋 (§5-0) — 생산자 기록 상태 (run_contract.next_gen_state) positive · zero · short → POSITIVE_SOLVED · VALID_ZERO_TOPOLOGY · NOT_COMPUTED (사유 ELECTRODE_SHORT = 생산자 상태 상수) · 상태 안 섬 (None) = NOT_COMPUTED
+  PASS  C01 두 계획 대조 — S0 계획이 정준 바이트가 아님 (같은 내용 · 들여쓰기) → S0_PLAN_INVALID · 러너 0 회
+  PASS  C02 S0 계획 식 위반 (tol_ff ≠ min(u, r_f) · 정준 바이트로 다시 써도) → S0_PLAN_INVALID (정본 ca_s0_census.check_plan)
+  PASS  C03 등록 §2-1 | S0 계획 해시 | 칸 ⬜ → S0_PLAN_HASH_UNREGISTERED · 러너 0 회
+  PASS  C04 S0 계획 sha256 ≠ 등록 칸 → S0_PLAN_HASH_MISMATCH
+  PASS  C05 R 계획 tol_ff_um 0.04 ≠ S0 values_um.tol_ff 0.05 (같은 float 이어야) → PLAN_CROSS_MISMATCH (§2-1 · §10-2 ⑪)
+  PASS  C06 R 계획 step3_rtol 1e-13 ≠ §3-5 봉인 CERT_RTOL_MAX 1e-12 → PLAN_CROSS_MISMATCH
+  PASS  C07 R 계획 len_law len_scaled_v1 ≠ 등록 v0 길이 법칙 (carbon_junction.CJUNC_LEN_LAW) → PLAN_CROSS_MISMATCH
+  PASS  C08 --s0-plan 없음 → 인자 오류 (rc 2) · 러너 0 회 (두 계획 대조 없이 σ 런 없음)
+  PASS  C09 S0 계획 schema 다름 (ca-cjunc-plan-v0) → S0_PLAN_INVALID
+  PASS  N01 결과 전 등록 숫자 넷 (점 수 상한 · 역상 R 비 상한 · SV 문턱 · 범위) 중 하나라도 null (⬜) → PLAN_NUMBER_UNREGISTERED · 러너 0 회 (★ Q-G: SV 문턱이 ⬜ 인 채로 DBE 단계에 못 간다)
+  PASS  N02 옛 계획 rint-r-plan-v1 (칸 일곱) → PLAN_INVALID (3판 사슬은 결과 전 등록 숫자 칸 없이 돌지 않는다)
+  PASS  N03 계획 숫자 꼴 — 점 수 0 · True · 역상 비 상한 1.0 · "None" · SV 문턱 0.5 · 범위 R_j_lo → PLAN_INVALID (값을 고치지 않는다)
+  PASS  N04 ★ PF2 E (10-22 · PRE2-impl-03) 계획 넘침 — 정수 10**400 (SV 문턱 · s_min · tol_ff · rtol · 역상 비 상한 · 점 수 상한) · -10**400 (s_min) → PLAN_INVALID (구조화 멈춤 · rc 3 · 러너 0 회 · 옛 = 잡히지 않은 OverflowError · 점 수 상한 = 받음)
+  PASS  N05 ★ PF2 E (10-22 · PRE2-impl-03) 계획 중복 칸 — "sv_cf_threshold": 2.0 … "sv_cf_threshold": 50.0 (사람 = 앞 · 옛 사슬 = 뒤) · 앞에 덧붙인 꼴 → PLAN_INVALID (rc 3 · 러너 0 회 · 옛 = 마지막 값으로 받음)
+  PASS  N06 ★ PF2 E (10-22 · PRE2-impl-03 같은 부류) S0 보고 중복 칸 — 단계 2 보고에 plan 이 둘 (앞 = 다른 계획 · 뒤 = 이 계획) · 단계 1 보고에 code 가 둘 (앞 = 다른 지문) → S0_REPORT_MISMATCH (rc 3 · 러너 0 회 · 옛 = 마지막 값으로 받음)
+  PASS  F01 Q-F — 감도 변이 사다리 · 예측에 --after-main 이 없다 → MAIN_NOT_DONE · 러너 0 회 (주 판정 단계 뒤에만)
+  PASS  F02 Q-F — --after-main 이 주 예측이 아님 (사다리 폴더 · 멈춘 예측 P03) → MAIN_NOT_DONE · 러너 0 회
+  PASS  F03 Q-F — 판정: 감도 단계가 묶인 주 예측 (after_main sha256) ≠ 판정 입력의 주 예측 → MAIN_BINDING · 판정 NOT_COMPUTED
+  PASS  F04 --after-main 은 --variant 와만 (주 단계에 주면 인자 오류 rc 2)
+  PASS  B01 탐침 E 꼴 — 단계 2 보고가 계획 A 를 봉인했는데 계획 B 를 다시 등록 (등록 줄 · 계획 파일 = B) → S0_REPORT_MISMATCH · 러너 0 회 (옛 사슬 = CALIBRATED · DBE 를 본 뒤 s_min · SV 문턱 · 점 수를 바꾼 계획도 돌았다)
+  PASS  B02 정상 — 같은 계획을 봉인한 단계 2 보고 → 사다리 CALIBRATED · 요약에 단계 2 기록 (보고 경로 · sha256 · 봉인 R 계획 sha256 = 계획 · S0 계획 sha256 · DBE 킷 · source commit:)
+  PASS  B03 단계 2 보고의 S0 계획 sha256 ≠ 지금 S0 계획 (R 계획은 같음) → S0_REPORT_MISMATCH · 러너 0 회
+  PASS  B04 단계 2 보고 꼴 — 파일 없음 · JSON 아님 · NaN · 단계 1 보고 · 다른 schema · 다른 킷 (옛 kit_DBE) · r_plan 없음 · r_plan sha256 64 hex 아님 · source 가 commit: 아님 · 단계 bool → S0_REPORT_MISMATCH · 러너 0 회 (fail-closed)
+  PASS  B05 예측 — 사다리 요약 둘의 단계 2 봉인 R 계획 sha256 이 계획과 다르다 (요약 손댐) → S0_REPORT_MISMATCH · 러너 0 회 · 한 사다리만 다르면 (두 사다리 기록 다름) → S0_REPORT_MISMATCH
+  PASS  B06 판정 — 예측 요약의 단계 2 봉인 R 계획 sha256 손댐 → 판정 NOT_COMPUTED (S0_REPORT_MISMATCH · rc 3) · 손대지 않은 같은 묶음 = 판정 (B 대조가 정상 묶음을 막지 않는다)
+  PASS  B07 사다리 — --s0-stage2-report 없음 → 인자 오류 (rc 2) · 러너 0 회 · 출력 폴더 없음 (단계 2 봉인 대조 없이 σ 런 없음)
+  PASS  B08 dry-run 도 대조 — 계획 B (단계 2 = 계획 A) + --dry-run → S0_REPORT_MISMATCH (rc 3 · env 를 찍지 않는다)
+  PASS  B09 사슬 상수 = S0 보고 schema (ca_s0_census.SCHEMA · 사슬은 numpy 없이 뜬다)
+  PASS  D01 탐침 C 꼴 — 깨끗한 트리로 사다리 둘 + 예측 → 같은 HEAD · dirty (추적 파일 고침) + 판정 문턱 한 줄 (G0/2 → 0.05) 로 판정 → CODE_PIN_MISMATCH · NOT_COMPUTED · rc 3 (옛 사슬 = rc 0 · CONSISTENT_WEAK · 멈춤 없음) · 같은 단계 · 깨끗한 판정 = PASS_INFORMATIVE
+  PASS  D02 같은 HEAD · dirty False 인데 사슬 파일 지문이 다르다 + 판정 문턱 한 줄 → 판정 CODE_PIN_MISMATCH · NOT_COMPUTED · rc 3 (dirty 만 보면 놓치는 꼴 · 파일 지문 대조)
+  PASS  D03 사다리 — 추적 파일이 고쳐진 트리 (dirty) → CODE_PIN_MISMATCH · rc 3 · 러너 0 회 · 요약에 dirty True 기록
+  PASS  D04 예측 — 지금 트리 dirty (사다리 둘 = 깨끗) → CODE_PIN_MISMATCH · rc 3 · 러너 0 회
+  PASS  D05 예측 — 지금 코드 파일 지문 ≠ 사다리 기록 (step3_sigma.py · 같은 HEAD) · 사다리 요약 둘의 지문 손댐 · 한 사다리만 손댐 (둘이 다름) → 셋 다 CODE_PIN_MISMATCH · rc 3 · 러너 0 회
+  PASS  D06 판정 — 예측 요약의 코드 파일 지문 손댐 · 사다리 요약의 dirty = True 손댐 → 둘 다 판정 CODE_PIN_MISMATCH · NOT_COMPUTED · rc 3
+  PASS  D07 S0 단계 1 보고의 census · registry 지문 ≠ 지금 (carbon_junction.py) · 옛 다섯 파일 보고 (carbon_junction · ptfe_face_alpha 없음) → CODE_PIN_MISMATCH · rc 3 · 러너 0 회 · 멈춤 사유에 s_min 다시 고르기 금지 문장 (등록 R §2-1b)
+  PASS  D08 S0 단계 1 보고 꼴 — 파일 없음 · JSON 아님 · 단계 2 보고 · 다른 schema · 다른 킷 (DBE) · source 가 stage1_computed 아님 · 보고가 만든 S0 계획 ≠ 지금 S0 계획 · 단계 bool → S0_REPORT_MISMATCH · rc 3 · 러너 0 회
+  PASS  D09 S0 단계 2 보고의 census · registry 지문 ≠ 지금 (step3_sigma.py) → CODE_PIN_MISMATCH · rc 3 · 러너 0 회
+  PASS  D10 정상 기록 — 사다리 · 예측 요약 code = git 신원 (dirty False) + 코드 파일 지문 12 (사슬 폴더 = 실제 파일 sha256 · 러너 폴더 · 러너 sha256) · S0 단계 1 기록 (보고 sha256 · 지문 일곱 · S0 계획 sha256) · 기계 이름표 null · 세 단계 지문 같음
+  PASS  D11 기계 이름표 — 사다리 P0 m1 · P1 m2 · 예측 m3 → 요약 machine 칸 · 판정 = 주 판정과 같은 이름 (이름표는 판정에 안 쓴다 · 코드 지문만) · 틀린 이름표 (IP · 경로 · 점 · 빈칸 · 띄어쓰기) · 판정 단계의 --machine → 인자 오류 rc 2 · 러너 0 회
+  PASS  D12 추적 파일 수정 여부 = 실제 git (임시 저장소 · 고정물 신원 아님): 깨끗 → dirty False · 추적 안 된 파일만 → False · 추적 파일 고침 → True · code_files = CODE_FILES 이름마다 sha256 (없는 파일 = null)
+  PASS  D13 감도 단계 — --after-main 의 주 예측 요약 코드 파일 지문 ≠ 지금 (손댐) → MAIN_NOT_DONE · rc 3 · 러너 0 회
+  PASS  D14 같은 판 파일 목록 — 사슬 S0_SAME_FILES = 등록 R §2-1b 일곱 · CODE_FILES (12) ⊇ 일곱 + 사슬 · 러너 · 증서 · 계약 · SV 증거 · S0 보고 code.file_digests 가 일곱을 다 싣는다 (ca_s0_census._code_info · 옛 = 다섯)
+  PASS  D15 사다리 — --s0-stage1-report 없음 → 인자 오류 (rc 2) · 러너 0 회 · 출력 폴더 없음 (단계 1 지문 대조 없이 σ 런 없음)
+  PASS  D16 러너 폴더의 census · registry 파일 (step3_sigma.py) ≠ S0 보고 지문 (사슬 폴더는 같음) → CODE_PIN_MISMATCH · 러너 0 회 · 사유 = 러너 폴더 (러너가 돌리는 코드 = 러너 폴더 · 그 폴더에 있는 파일만 대조)
+  PASS  D17 판정 — 예측 요약의 러너 폴더 지문 (runner_files) · 러너 sha256 손댐 → 판정 CODE_PIN_MISMATCH · NOT_COMPUTED · rc 3 (키 = 사슬 폴더만이 아니다)
+  PASS  D18 예측 — 사다리 요약 하나가 dirty True 를 기록 (고쳐진 트리에서 돈 사다리 · 지문은 같음) → CODE_PIN_MISMATCH · 러너 0 회 · 어느 순서로 넘겨도
+  PASS  D19 예측 — 손댄 사다리를 앞에 (뒤 = 깨끗한 사다리 = 지금 코드와 같음) → 두 사다리 코드 다름 = CODE_PIN_MISMATCH · 러너 0 회 (마지막 사다리만 지금과 대조하면 놓치는 순서)
+  PASS  B10 예측 — 두 사다리의 단계 2 기록이 경로만 다르다 (각각은 봉인 해시 대조 통과) → S0_REPORT_MISMATCH (두 사다리 기록 다름) · 러너 0 회 · 어느 순서로 넘겨도
+  PASS  B11 판정 — 예측 요약의 단계 2 기록이 경로만 다르다 (봉인 해시 대조 통과) → S0_REPORT_MISMATCH (단계끼리 기록 다름) · NOT_COMPUTED · rc 3
+  PASS  B12 판정 — 세 단계 요약의 단계 2 봉인 R 계획 sha256 을 같게 손댐 (단계끼리 기록은 같음) → S0_REPORT_MISMATCH (단계마다 같은 함수로 다시 대조 · 같음 대조만으로는 못 잡는 꼴) · NOT_COMPUTED · rc 3
+  PASS  N07 ★ PF2 E (PRE2-impl-03) S0 계획 중복 칸 ("gap_tol" 둘 · 등록 S0 줄 = 그 바이트의 sha256) → S0_PLAN_INVALID · 사유 = 중복 칸 (정준 바이트 검사 앞 · 러너 0 회)
+  PASS  L21 Q-E 배선 (가짜 러너) — SBE origin 팔 1 · 2 가 arm 0 과 조금 다르면 (×1.0004 · ×0.9997) 끝 후보에서 띠 안 → 끝을 바깥 실측 이웃으로 · end_origin 런 (ARM_LIST=1,2 · 끝 R) · 밀기 기록 · 세 origin 이 끝에서 모두 띠 밖 (모형 손계산)
+  PASS  V17 SV 범위 all3 (계획) — 모서리 열둘 전부 CJUNC_SV_CF=1 · R_j,hi 모서리의 큰 비 (9.0) → SV_DEPENDENT (R_j0 범위면 못 본다 — U08)
+  PASS  M01 변이: 보간을 선형 R (ln 아님) 로 → L02 손계산이 떨어진다
+  PASS  M02 변이: ±2 % → ±3 % → L03 (허용폭 양끝) 손계산이 떨어진다
+  PASS  M03 변이: origin 규칙 끔 → L19 (8 팔 · 표지) 이 떨어진다
+  PASS  M04 변이: 2판 e_min 빠른 멈춤을 되살림 (국소 e < e_min → CALIB_UNIDENTIFIED) → L11 (3판 = 진단 · CALIBRATED) 이 떨어진다
+  PASS  M05 변이: τ_mono 끔 (∞) → L14 가 CALIB_NONMONOTONE 을 못 낸다
+  PASS  M06 변이: 판정 입력 sha256 대조 끔 → S22 가 INPUT_SHA_MISMATCH 를 못 낸다
+  PASS  M07 변이: 점 수 상한을 계획 칸 + 1 로 (사슬이 숫자를 고른다) → L16 (계획 12 · 런 정확히 12) 이 떨어진다
+  PASS  M08 변이: 정본 ca_ext_record_ok 끔 → S09 (원장 수 변조) 가 CA_EXT_RECORD 를 못 낸다 (정본 계약이 실제로 일한다)
+  PASS  M09 변이: 정본 check_arm 끔 → S24 (매니페스트만 σ_AM_S) 가 ARM_CONTRACT 를 못 낸다
+  PASS  M10 변이: sid 무리에서 origin 을 뺌 (옛 키) → L18 (origin 팔 1 · 2 의 다른 지문) 이 떨어진다
+  PASS  M11 변이 M1 (끝 = 확인 실패한 후보 26,758) → U01 이 떨어진다 (W 0.4536 PASS 로 줄어든다)
+  PASS  M12 변이 M2 (끝 = 안쪽 이웃 31,622.8 · 비 189.4 · FAIL) → U01 이 떨어진다 (PRE-design-05 — "약 200 · PASS 면 실패" 시험은 통과시켰다)
+  PASS  M13 변이 M3 (hi 끝만 2판 보간 · 비 18.7 · WEAK) → U01 이 떨어진다 (판정 이름만 보면 놓친다 · 끝 값으로 잡는다)
+  PASS  M14 변이 M4 (양끝 2판 보간 · 비 8.34 · PASS) → U01 이 떨어진다
+  PASS  M15 변이: DBE origin 을 R_j,0 에서만 (2판) → U02 (RCA-02) 가 떨어진다
+  PASS  M16 변이: 4.68 ∈ U 를 envelope (hull) 로 → U03 (RCA-08 GAP) 이 떨어진다
+  PASS  M17 변이: 판정 함수가 중앙 (R_j,0) 네 점만 (2판 감도 비교) → U04b (양끝만 넓은 변이의 SENSITIVE) 가 떨어진다
+  PASS  M18 변이: 차단 표지를 와일드카드 (*_SENSITIVE · *_UNCHECKED 꼬리) 로 → U05 (닫힌 집합) 가 떨어진다
+  PASS  M19 변이: ln 차 대신 절대차 → U06 (단위 불변 · τ_mono) 이 떨어진다
+  PASS  M20 변이: SV 문턱 비교를 ≥ 로 (비 = 문턱 도 의존) → U08 이 떨어진다 (등록 문장 "넘으면")
+  PASS  M21 변이: 끝 origin 밀기 끔 (Q-E 없음) → U10 (PRE-design-01 합집합 바깥 감쌈) 이 떨어진다
+  PASS  M22 변이: 조기 반환 해 상태를 받지 않음 (2판 — 양수 σ 만) → Z01 (바닥 영값) 이 떨어진다
+  PASS  M27 ★ 4판 (Q1) 변이: 단락 → 등록 풀이 상태 NOT_COMPUTED 를 끔 (short 를 양의 해 자리로 · 3판 짝) → Z02 꼴 (천장 단락) 이 떨어진다 (NOT_COMPUTED · 사유 ELECTRODE_SHORT 가 아니다)
+  PASS  M28 ★ 4판 (Q1) 변이: 예측 단계의 NOT_COMPUTED 를 등록 결과로 받지 않음 (STOPPED · 3판 꼴) → Z04 꼴 (DBE 모서리 단락) 판정이 INPUT_STAGE_STOPPED 로 흐려진다 = 떨어진다
+  PASS  M29 ★ 4판 Q2-1 변이: 이름 우선순위를 3판으로 (CALIB_ORDER 끝의 NOT_COMPUTED 가 진다 · min 순서) → U11 이 떨어진다
+  PASS  M30 ★ 4판 Q2-2 변이: 끝 판정의 보호 띠 끔 (e 무시 · 3판 outside_band) → U01e (e ≥ 3.728e-5 → 1e7 · 비 1,000) 가 떨어진다
+  PASS  M31 ★ 4판 Q2-2 변이: EDGE 판정의 보호 띠 끔 (3판 |σ/T − 1| ≤ 2 % 만) → U12 (바닥 T⁻(1 − 5e-5) · e 1e-4 → CALIB_EDGE) 가 떨어진다
+  PASS  M32 ★ 4판 Q2-3 변이: dbe_origin_ok 를 3판으로 (상태 무시 · W +∞ → 문턱 +∞) → U13 (상태 다름 = 넘음 · [3.0, 5.25]) 이 떨어진다
+  PASS  M33 ★ 4판 Q2-3 변이: W₊ 대신 W (+∞ 그대로) 를 문턱에 → U13b (W₊ 로 넘음 · 4.175) 가 떨어진다
+  PASS  M34 ★ 4판 Q2-4 변이: 결정표 오른쪽 칸을 3판으로 (차단 표지가 있으면 PASS 문장 없음 · None) → U07 이 떨어진다
+  PASS  M35 ★ 4판 Q2-5 변이: 변이 NOT_COMPUTED 를 이름 비교로 (3판 · <V>_SENSITIVE) → U14 가 떨어진다
+  PASS  M36 ★ 4판 Q2-5 변이: 변이 자신의 CALIB_ORIGIN_SENSITIVE 를 안 봄 → U14 (c) 가 떨어진다
+  PASS  M37 ★ 4판 Q2-6 변이: 한정어 ⑰ ⑱ 없음 (①–⑯) → X05 가 떨어진다
+  PASS  M38 ★ RI 변이: 멈춘 단계 거부를 4판 사슬 꼴로 (주 · 변이 가리지 않고 STOPPED = 판정 전체 거부) → V21 · V22 (멈춘 변이 = <V>_UNCHECKED) 가 떨어진다
+  PASS  M39 ★ RI 변이: 주 판정 단계의 멈춤도 거부하지 않음 → V23 (주 사다리 · 주 예측 멈춤 = INPUT_STAGE_STOPPED) 이 떨어진다
+  PASS  M40 ★ RI 변이: 멈춘 변이 단계를 NOT_COMPUTED 로 두지 않고 원 팔에서 다시 계산 → V21 · V22 가 떨어진다
+  PASS  M23 변이: 두 계획 대조 끔 → C05 (tol_ff 다름) 가 PLAN_CROSS_MISMATCH 를 못 낸다
+  PASS  M24 변이: 결과 전 등록 숫자 검사 끔 → N01 (SV 문턱 null) 이 PLAN_NUMBER_UNREGISTERED 를 못 낸다 (Q-G)
+  PASS  M25 변이: 감도 단계의 주 판정 묶음 검사 끔 → F01 (--after-main 없음) 이 MAIN_NOT_DONE 을 못 낸다 (Q-F)
+  PASS  M26 변이: 해 상태 (증서 · 증서 ↔ 런 결합) 를 기록 검사 (세대 · ca_ext) 앞으로 (PRE-impl-07 병합 이전 순서) → S07 꼴 (unknown:ca_ext) 이 GENERATION 을 못 낸다 (옳은 이유 = NOT_COMPUTED · CERT|bind|)
+  PASS  K01 ★ PF2 F (10-22 · PRE2-design-05) 문서 명령 = 실제 인자 계약 — kgy 명령 · 등록 R §10-1 의 사슬 명령이 사슬 argparse 를 지난다 (단계 함수 = 받기만) · 감도 (--variant) = --after-main · S0 단계 2 명령 = --r-plan-path (관문 앞 인자 검사 그대로) · 두 문서의 주 사다리 · 예측 · S0 단계 2 인자 이름이 같다 · 명령이 하나도 없으면 실패
+
+test_rint_r_chain: 240/240 PASS (100.9 s)

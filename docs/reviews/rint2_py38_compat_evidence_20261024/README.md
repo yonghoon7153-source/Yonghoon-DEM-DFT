@@ -62,5 +62,24 @@
 
 ## 폴더
 
-- `tools/` — `py38_runall.sh` (11 묶음 실행 · `PY38_BIN`) · `apply_py38_fix.py` (사본에 한 바꿈) · `check_nextafter.py` · `k4probe.py` · `scan.py`.
+- `tools/` — `py38_runall.sh` (11 묶음 실행 · `PY38_BIN`) · `apply_py38_fix.py` (사본에 한 바꿈) · `apply_stepB.py` (Step B 바꿈) · `check_nextafter.py` · `k4probe.py` · `scan.py`.
 - `logs/unpatched/` · `logs/patched/` — 묶음별 전체 출력 + `summary.txt` · `logs/check_nextafter.out` · `logs/k4probe_py38.out` · `logs/k4probe_py311.out` · `logs/scan_rpath_*.out`.
+
+## Step B — K4 고침 + 게이트 kgy 판 단계 (1저자 10-24 Q2 (가) · `SELF-133`)
+
+- **K4 고침** — `scripts/step3_sigma.py`: 모듈 이름 `cg` = scipy ≥ 1.12 이면 scipy 의 `cg` 그대로 · 옛 판이면 `_cg_v112` (scipy 1.17.1 의 `cg` 반복을 옮긴 것 · 실수 계) · `_solve_cg` 의 옛 `except TypeError → cg(tol=…)` (legacy 정지) 를 뺐다.
+  - 이름 하나로 바꿔 끼우므로 감싸기 (`step3_conv_cert._cg_count` · 시험 K3 의 spy) 가 두 판 모두에서 그대로 걸린다.
+  - 3.11 (scipy 1.17.1) 에서는 `cg` 가 같은 scipy 함수라 계산이 바뀌지 않는다.
+- **시험 먼저** — `test_step3_conv_cert.py` 에 `t_k4b_v112` (K4b · K4c · K4d):
+  - 고치기 전 (모듈 = `89fc47011`) = `AttributeError: … no attribute '_cg_v112'` → 27/28 (`logs/stepB/conv_cert_tests_only_py311.out`).
+  - 고친 뒤 3.11 = 30/30 — K4b = `_cg_v112` 와 scipy 1.17.1 `cg` 가 네 계 (초기값 없음 · 정확한 해 · 무작위 · maxiter 소진) 에서 해 바이트 · info · callback 수까지 같음.
+  - 고친 뒤 3.8 (scipy 1.10.1) = 29/29 — K4 통과 · K4b 는 비교 대상 (`cg(rtol=)`) 이 없어 건너뜀 표시 (세지 않음 · 3.11 게이트가 본다) · K4c (옛 판 길로 K4 수렴) · K4d (판에 맞는 `cg`).
+- **시험 기반 모듈에 같은 cg (3.8 에서만 뜻)** — 옛 커밋의 `step3_sigma` 를 불러 "끈 경로 비트 같음" 을 보는 세 시험 (`test_carbon_junction` C0 · `test_step3_conv_cert` K1 기반 · `test_step3_target_cert` T12 · T23 기반) 은
+  scipy < 1.12 에서 기반 모듈이 legacy `cg(tol=…)` 를 써서 첫 3.8 실행에서 C0 · T23a · T23b 가 갈렸다 (σ · 잔차 · 불균형) → 기반 모듈에도 지금 판의 `cg` (= `_cg_v112`) 를 넣어 코드 경로만 비교한다.
+  3.11 에서는 조건 (`S3.cg is S3._cg_v112`) 이 거짓이라 아무것도 바꾸지 않는다.
+- **게이트 단계** — `scripts/check_kgy_py38.sh` (11 묶음 · 인터프리터 = `$KGY_PY38` 또는 `uv python find 3.8` · 판이 (3.8 · numpy 1.24.4 · scipy 1.10.1) 이 아니거나 없으면 실패 — 건너뛰지 않는다) ·
+  설치 = `scripts/setup_kgy_py38.sh` (컨테이너 재시작 뒤 한 번 · uv · 네트워크) · `scripts/check_all.sh` 에 한 줄.
+  - 사본 실행 (Step B + 같은 cg) = 11 묶음 통과 (`logs/stepB/kgy_step/`) — S0 152 · 접합 441 · 사슬 240 · 끝-끝 16 · 목표 증서 260 · 수렴 증서 29 · b6 454 · 러너 128 · S1 242 · 계약 124 · rint 자체시험.
+  - 시간 ≈ 6–7 분 (차례로 · BLAS 스레드 1).
+- ⚠ 재현 판 = uv CPython 3.8.20 (kgy = 3.8.10) · 나머지 패키지 (scikit-image 0.21.0 · matplotlib 3.7.5 · threadpoolctl 3.5.0 · plotly 7.1.0 · pyamg 5.1.0) 는 kgy 의 판 확인 전 (1저자 `pip freeze` 대기).
+- `step4_dyn` 의 같은 꼴 폴백 (`cg(rtol=)` → `cg(tol=)`) 은 R 경로 밖 (`--no-step4`) 이라 그대로 둔다.

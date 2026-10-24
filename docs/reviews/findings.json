@@ -12889,18 +12889,19 @@
     {
       "id": "SELF-132",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "1저자 10-24 kgy 출력 (S0 시험 FAIL: E1 | E11 | R | R8 | A · 단계 1 폴더에 payload 로그만) → claude 가 Python 3.8.20 · numpy 1.24.4 · scipy 1.10.1 재현 환경에서 같은 5 개 재현",
       "opened_in": "docs/reviews/rint2_py38_compat_evidence_20261024/README.md",
       "title": "R 경로 코드 (S0 · R 사슬 · payload) 가 kgy 실행 환경 (dem-venv = Python 3.8.10 · numpy 1.24.4 · scipy 1.10.1) 에서 멈춘다 — 개발 · 게이트 · 시험은 3.11 · numpy 2.4.6 · scipy 1.17.1 에서만 돌았다: `ptfe_face_alpha.capsule_summary` 의 dict-union `|` (3.9+ · kgy S0 단계 1 이 α 분포에서 TypeError) · `ca_ext_svcf._div_dir` 의 `math.nextafter` (3.9+ · SV 증서 구간 = R 사슬 · 계약 검사가 kgy 에서 멈출 자리) · 시험 4 파일 (`math.nextafter` 13 곳 · dict-union 5 곳) · 시험 심 2 곳 (`realpath(sys.executable)` = venv 밖) — 08-16 · 08-25 에 이은 같은 부류 세 번째 (막는 검사 없음)",
-      "note": "영향 = kgy S0 단계 1 이 계산 중 멈춤 (10-23 23:56 시도 · 폴더 보존 · 잘못된 숫자 없음) · R 을 kgy 에서 돌렸다면 SV 증서 구간에서 멈췄을 것 (fail-closed).  재현 = 고치기 전 R 경로 11 묶음 중 9 실패 · 고친 사본 = 10 통과 (S0 152/152 · 사슬 240/240 · 끝-끝 16/16 · 접합 440/440 · b6 454 · 러너 128 · S1 242 · 목표 증서 260/260 · 계약 124/124 · rint 자체시험) · 남은 K4 = SELF-133.  고침 = 이 커밋 (① `{**a, …}` · ② `_nextafter` = 3.9+ 는 `math.nextafter` 그대로 · 3.8 은 IEEE 754 비트 한 칸 (160만 쌍 차이 0) · ③ 시험 · ④ 심 `abspath` · 상주 시험 test_carbon_junction QD6x (고치기 전 = AttributeError FAIL)).  3.11 계산 불변.  claimed_fixed = 다음 기록 커밋.  재발 방지 = 1저자 10-24 Q2 (가) — 게이트에 kgy 판 (3.8 · numpy 1.24.4 · scipy 1.10.1) R 경로 시험 단계 (다음 단계).  ⚠ 채팅 보고 (10-24) 의 '시험 nextafter 11 곳' 은 오기 — 실제 13 곳 (4 · 2 · 1 · 6).",
+      "note": "영향 = kgy S0 단계 1 이 계산 중 멈춤 (10-23 23:56 시도 · 폴더 보존 · 잘못된 숫자 없음) · R 을 kgy 에서 돌렸다면 SV 증서 구간에서 멈췄을 것 (fail-closed).  재현 = 고치기 전 R 경로 11 묶음 중 9 실패 · 고친 사본 = 10 통과 (S0 152/152 · 사슬 240/240 · 끝-끝 16/16 · 접합 440/440 · b6 454 · 러너 128 · S1 242 · 목표 증서 260/260 · 계약 124/124 · rint 자체시험) · 남은 K4 = SELF-133.  고침 = 이 커밋 (① `{**a, …}` · ② `_nextafter` = 3.9+ 는 `math.nextafter` 그대로 · 3.8 은 IEEE 754 비트 한 칸 (160만 쌍 차이 0) · ③ 시험 · ④ 심 `abspath` · 상주 시험 test_carbon_junction QD6x (고치기 전 = AttributeError FAIL)).  3.11 계산 불변.  claimed_fixed = 다음 기록 커밋.  재발 방지 = 1저자 10-24 Q2 (가) — 게이트에 kgy 판 (3.8 · numpy 1.24.4 · scipy 1.10.1) R 경로 시험 단계 (다음 단계).  ⚠ 채팅 보고 (10-24) 의 '시험 nextafter 11 곳' 은 오기 — 실제 13 곳 (4 · 2 · 1 · 6).  claimed_fixed = `89fc47011` (게이트 155 ✓ · 0 ✗ · push 10-24) · 그 커밋본을 3.8.20 · numpy 1.24.4 · scipy 1.10.1 에서 다시 돌림 = S0 152/152 · 접합 441/441 (QD6x 포함) · 사슬 240/240 · 끝-끝 16/16 · 목표 증서 260/260 · K4 만 실패 (= SELF-133).  재발 방지 = 다음 커밋의 게이트 kgy 판 단계 (`scripts/check_kgy_py38.sh`).",
       "evidence_tests": [
         "docs/reviews/rint2_py38_compat_evidence_20261024/logs/unpatched/summary.txt (고치기 전 · 3.8)",
         "docs/reviews/rint2_py38_compat_evidence_20261024/logs/patched/summary.txt (고친 사본 · 3.8)",
         "docs/reviews/rint2_py38_compat_evidence_20261024/logs/check_nextafter.out (160만 쌍)",
         "scripts/test_carbon_junction.py QD6x"
-      ]
+      ],
+      "claimed_fixed_sha": "89fc47011"
     },
     {
       "id": "SELF-133",
@@ -12910,11 +12911,15 @@
       "found_by": "claude 10-24 (SELF-132 의 3.8 재현에서 test_step3_conv_cert K4 만 고친 뒤에도 실패)",
       "opened_in": "docs/reviews/rint2_py38_compat_evidence_20261024/README.md",
       "title": "`step3_sigma._solve_cg` 의 CPU 폴백이 scipy < 1.12 에서 `cg(..., tol=…)` (legacy) 로 내려가 의미가 다르다 — 정확한 해에서 rtol 1e-14 이어 풀기 (수렴 증서 ⓒ 의 바탕 · 시험 K4) = scipy 1.10.1 에서 30,000 회 미수렴 · 상대 잔차 2.7e-14 → 1.1e-10 (나빠짐 · atol=0 줘도 같음) ↔ scipy 1.17.1 = 바로 수렴",
-      "note": "영향 = kgy R 은 GPU 필수 (EXPECT_BACKEND=gpu · CPU 폴백 거부) · S0 는 풀이 없음 → 지금 돌릴 것과 무관 · kgy 판 시험에서 K4 실패.  처분 = 1저자 10-24 Q2 (가) — 오래된 scipy 의 CPU 폴백을 scipy ≥ 1.12 와 같은 CG 로 맞춘다 (시험 먼저 · 다음 단계).",
+      "note": "영향 = kgy R 은 GPU 필수 (EXPECT_BACKEND=gpu · CPU 폴백 거부) · S0 는 풀이 없음 → 지금 돌릴 것과 무관 · kgy 판 시험에서 K4 실패.  처분 = 1저자 10-24 Q2 (가) — 오래된 scipy 의 CPU 폴백을 scipy ≥ 1.12 와 같은 CG 로 맞춘다 (시험 먼저 · 다음 단계).  고침 = 다음 커밋 (`step3_sigma` 모듈 이름 `cg` = scipy ≥ 1.12 이면 scipy cg · 옛 판이면 `_cg_v112` (scipy 1.17.1 cg 반복 옮김) · `_solve_cg` 의 legacy 폴백 뺌 · 시험 먼저 `test_step3_conv_cert` K4b–K4d (고치기 전 27/28 AttributeError → 3.11 30/30 · K4b = scipy 1.17.1 cg 와 해 바이트 · info · callback 수 같음 · 3.8 29/29) · 옛 커밋 기반 모듈과의 끈 경로 비트 대조 세 시험은 3.8 에서 기반 모듈에도 같은 cg 를 넣는다 (3.11 = 무변경) · 게이트 kgy 판 단계 11 묶음 통과 (사본)).  claimed_fixed = 그 다음 기록 커밋.",
       "evidence_tests": [
         "docs/reviews/rint2_py38_compat_evidence_20261024/logs/k4probe_py38.out",
         "docs/reviews/rint2_py38_compat_evidence_20261024/logs/k4probe_py311.out",
-        "docs/reviews/rint2_py38_compat_evidence_20261024/logs/patched/step3_conv_cert.log"
+        "docs/reviews/rint2_py38_compat_evidence_20261024/logs/patched/step3_conv_cert.log",
+        "docs/reviews/rint2_py38_compat_evidence_20261024/logs/stepB/conv_cert_tests_only_py311.out (고치기 전)",
+        "docs/reviews/rint2_py38_compat_evidence_20261024/logs/stepB/conv_cert_after_py311.out",
+        "docs/reviews/rint2_py38_compat_evidence_20261024/logs/stepB/conv_cert_after_py38.out",
+        "docs/reviews/rint2_py38_compat_evidence_20261024/logs/stepB/kgy_step/summary.txt"
       ]
     }
   ]
