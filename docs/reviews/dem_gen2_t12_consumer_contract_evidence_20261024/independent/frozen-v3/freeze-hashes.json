@@ -1,0 +1,9 @@
+{
+  "docs/reviews/dem_gen2_t12_consumer_contract_20261024.md": "137052a0c9cbb4785627b35b562d1ae88296943f6dc91e50f732453bb5b6d9d0",
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/README.md": "3d22ec324173afb0a2ac42ca93ae29e24c85c303a0bbd3596d1ea0a845982a2d",
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/factual-input-form.blank.json": "332763fcc3b9abef8c81076c2411080f5c3e12e3ab138fc71fc440d5d70c7a2c",
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/fixture-results.json": "cd0e75422dff2c9a44f6a8e751cd51d1903c3a8e4d9d677de308f3cd4f172842",
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/p1-consumer-contract.json": "7952117c42891cfe5c17c929ab48960a91264269ecd2977987979187b87fe960",
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/source-manifest.json": "57780cf5bdcc3351005d348693297c0168bb6a3d05e2d791d70530ae4bb4da11",
+  "scripts/test_dem_gen2_t12_consumer_contract.py": "71ee1e16efe3f9b1527da50af5f4fe8ac63ff9752e92d0fc7dad614483a8826f"
+}

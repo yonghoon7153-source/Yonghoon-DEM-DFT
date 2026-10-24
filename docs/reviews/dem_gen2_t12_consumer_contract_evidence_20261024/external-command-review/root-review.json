@@ -1,0 +1,15 @@
+{
+  "scope": "Read-only shell review against LHS pinned source plus bash -n; no actual WSL or physical run",
+  "syntax_rcs": [
+    0,
+    0,
+    0
+  ],
+  "document_sha256": "fe4cf304304c7f67e8ceecbaf1e484995b60686515b56e9d2909a28af40c7317",
+  "relative_cross_branch_links_replaced": true,
+  "B7_is_not_LHS_review_pin": true,
+  "no_P2_launch_command": true,
+  "final_document_sha256": "d578ff7b9cc0136ff4f27170358d8951c3d73531e4d1d68c286e50dc2df5033b",
+  "final_edit": "Replace remaining cross-branch inline path with reference to the pinned links; executable shell blocks identical to reviewed original.",
+  "shell_blocks_identical_after_link_edit": true
+}
