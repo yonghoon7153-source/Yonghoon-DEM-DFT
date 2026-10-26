@@ -5385,6 +5385,14 @@ def t_RG06():
     return (p['rc'] == 0 and 'SV_UNCHECKED' in vv.get('flags', []) and 'SV_DEPENDENT' not in vv.get('flags', ['?']), (p['rc'], vv.get('flags')))
 
 
+@check('RG07', '★ 10-26 묶음 B6 변이 보강 — RG03 꼴 (기록에 실은 주 해 증서 지문만 ≠ 이 런의 주 증서) 을 원천 없이 → 예측 CA_EXT_RECORD (주 해 증서 '
+               '사본 ↔ 이 런 주 증서 대조 · 원천과 무관 · 사유에 fp_cjunc_graph — RG03 은 원천 대조도 같은 이름으로 멈춰 이 대조 줄만 끈 사슬을 못 가렸다)')
+def t_RG07():
+    p, _v = sv_src_set('RG07', {'status': 'computed', 'ratio': 1.2, 'full_fp_other': True}, None)
+    return (p['rc'] == 3 and stop_code(p) == 'CA_EXT_RECORD' and 'fp_cjunc_graph' in y_why(p) and '주 증서' in y_why(p),
+            (p['rc'], stop_code(p), y_why(p)[-200:]))
+
+
 @check('N07', '★ PF2 E (PRE2-impl-03) S0 계획 중복 칸 ("gap_tol" 둘 · 등록 S0 줄 = 그 바이트의 sha256) → S0_PLAN_INVALID · 사유 = 중복 칸 '
               '(정준 바이트 검사 앞 · 러너 0 회)')
 def t_N07():

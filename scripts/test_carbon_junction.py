@@ -124,7 +124,8 @@ r_port = 2.0 (= 2h) · gap_tol 2.0 · σ_VGCF = 100 S/cm → 축방향 면 g = �
   QG     ★ 10-26 묶음 B6 (Codex 회차 ① RR1-01 · 1저자 10-26 Q1 · Q2 (가)) — 주 해 · 끝 증서에 그 끝에서 실제로 푼 가중 그래프 지문
          (`fp_cjunc_graph` = dof 식별 집합 · 쌍별 정확 합산 전도도 · 판 결합) · 소비자 = 봉인 원천에서 다시 조립 (솔브 없음 ·
          `solve_sigma_z(cjunc_graph_only=True)`) 해 대조 → 판정문 반례 (PAR + (0.5, 1.5, 9.5) · c 1 · 아래 끝 ← 주 해 증서 · n_* 그대로) = 거부 ·
-         정직한 FLOAT · UFLOAT · PAR c 1 · 등전위 다리 (G 같음) = 받음 · k > 0 원 반례 = 거부 그대로 · 지문 칸 꼴 · 지문 함수 성질 · +∞ 끝
+         정직한 FLOAT · UFLOAT · PAR c 1 · 등전위 다리 (G 같음) = 받음 · k > 0 원 반례 = 거부 그대로 · 지문 칸 꼴 · 지문 함수 성질 · +∞ 끝 ·
+         ★ 변이 보강 ⑥′ (고립 dof · 같은 n) · ⑧ (원천 주 계만 다름) · ⑨ (X6 꼴 다섯 + 원천 = 위 끝을 지운 기록 거부) · ⑩ (원천 꼴 = 구조화 실패)
   KBND  (05 · 한계 기록) k 경계 (90° → 89.99°) σ 뜀 크기 = 생산 단위 R_j 1e2 · 1e4 · 1e6 에서 −0.98 % · −2.1e-4 · −2.1e-6 (± 10 % · ∝ 1/R_j)
   MUT-RCA2 새 보장 변이 (조각 = fid 규칙 · 포트 옮김 · SV 전부 끊음 · 이음매 별칭 끔 · 바닥 = s > D 만 · ★ 10-22 못 가른 다리 지킴 끔 = 2 회차
          변이 J1 → QD2 ④ · '지남' 에 덮임 · 같은 성분 조건 뺌 = 2 회차 변이 J2 → QD2 ⑤ (훅 `_sv_passes`)) 가 위 시험에 옳은 이유로 걸린다 ·
@@ -5611,7 +5612,7 @@ def t_sv_graph_binding():
     원시 간선 개수 검사 → ③ 등전위 다리 · ② FLOAT (아래 끝 지문 = 주 해 지문이 정직) 을 받는다.
     ① Codex 반례 (지금 = 받음 · 거짓 clear) → 거부 · ② 정직한 FLOAT · UFLOAT · PAR c=1 = 대조 통과 · ③ 등전위 다리 (G 같음) = 통과 · ④ k > 0 원 반례
     (SVX 아래 끝 ← 주 해) = 거부 그대로 · ⑤ 증서 지문 칸 꼴 (없음 · hex 아님) = 원천 없이도 거부 · ⑥ 지문 함수 성질 · ⑦ +∞ 끝 (영값 위상 증서)
-    지문 = 다시 조립한 위 끝."""
+    지문 = 다시 조립한 위 끝 · (변이 보강) ⑥′ 고립 dof · ⑧ 원천 주 계만 다름 = 거부 · ⑨ X6 꼴 + 원천 = 위 끝을 지운 기록 거부 · ⑩ 원천 꼴 = 구조화 실패."""
     import ca_ext_svcf as SVCF
     import run_contract as RCm
     # ── ①′ 판정문 반례 재현 (고치기 전 · 뒤 같음 — 원천 대조 없이는 기록만으로 못 가른다) ──
@@ -5729,6 +5730,14 @@ def t_sv_graph_binding():
         isinstance(base, str) and len(base) == 64 and all(v == base for v in same.values()) and all(v != base for v in diff.values())
         and len(set(diff.values())) == len(diff),
         f"{ {k: v == base for k, v in same.items()} } · { {k: v != base for k, v in diff.items()} }")
+    #  ⑥′ (★ 10-26 묶음 B6 변이 보강 — dof 식별 집합 칸만 지운 지문 함수가 받던 꼴: 위 'dof 하나 더' 는 번호 상한 n 도 바꿔 머리에서 갈렸다) —
+    #     같은 n · 같은 간선 · 같은 판 결합인데 고립 dof (간선 · 판 결합 없음) 하나만 다른 두 계 = 다른 지문 (docstring '간선 없는 dof 도')
+    iso_in = f(np.array([0, 1, 2, 3]), np.array([0, 2]), np.array([2, 3]), np.array([1.0, 2.0]), np.array([0]), np.array([3.0]), np.array([3]),
+               np.array([4.0]))
+    iso_out = f(np.array([0, 2, 3]), np.array([0, 2]), np.array([2, 3]), np.array([1.0, 2.0]), np.array([0]), np.array([3.0]), np.array([3]),
+                np.array([4.0]))
+    chk('QG ⑥′ 지문 함수 — 같은 dof 번호 상한 · 같은 간선 · 같은 판 결합 · 고립 dof (1) 하나만 다른 두 계 = 다른 지문 (식별 집합 칸)',
+        isinstance(iso_in, str) and isinstance(iso_out, str) and iso_in != iso_out, f'{iso_in[:12]} · {iso_out[:12]}')
     # ── ⑦ +∞ 끝 (영값 위상 증서) 지문 = 다시 조립한 위 끝 ──
     rq = _qd3_run([QD2_A1, QD2_B1], QD2_S1, QD2_N1)
     eq = json.loads(json.dumps(_qd3_ev(*rq)))
@@ -5742,6 +5751,49 @@ def t_sv_graph_binding():
                                                upper=dict(up, conv_cert=dict(up.get('conv_cert') or {},
                                                                              **{QG_KEY: (gq or {}).get('lower')}))), gq), str),
         f"{up.get('status')} · {(up.get('conv_cert') or {}).get(QG_KEY)} · {(gq or {}).get('upper')}")
+    # ── ★ 10-26 묶음 B6 변이 보강 (첫 판 변이 21 중 생존 = 소비자 줄 셋 · 사슬 줄 하나 · 지문 함수 줄 하나 — 이 절 ⑧ ⑨ ⑩ · ⑥′ · 사슬 RG07) ──
+    #  ⑧ 원천 주 계 대조 — 끝 지문은 원천 그대로 맞고 원천의 주 계만 다른 침대 (① PAR 고정물) 의 주 계 → 기록의 주 해 증서가 이 원천의 주 계를 푼 증서가
+    #    아니다 = 거부 (주 해 증서 대조 줄만 끈 소비자 = 받던 꼴)
+    g_other = dict(gq or {}, main=(g or {}).get('main'))
+    p8 = SVCF.sv_cf_problem(eq, True, graphs=g_other)
+    chk('QG ⑧ 원천 주 계만 다르다 (끝 지문 = 원천 그대로 · 원천 주 계 = 다른 침대 (PAR) 의 주 계) → 주 해 증서 대조 = 구조화 실패 · 같은 기록 · 맞는 원천 = 받음',
+        isinstance(p8, str) and p8.startswith('sv_cf|') and '주 해 증서' in p8 and QG_KEY in p8 and (g or {}).get('main') != (gq or {}).get('main')
+        and SVCF.sv_cf_problem(eq, True, graphs=gq) is None, f'{p8}')
+    #  ⑨ X6 꼴 다섯 (2 차 사전 공격 §A · 회차 ① §4 — 기록 · 증거 census 의 못 가른 수 0 · 위 끝 지움 · 구간을 아래 끝으로 맞춤) — 원천 없는 계약 = 받는다
+    #    (사슬은 S0 봉인 census 로 멈춘다 · 묶음 B2x) · 원천 대조 = 원천에 위 끝 그래프가 있다 = 위 끝을 지운 기록 → 거부 (위 끝 지움 줄만 끈 소비자 = 받던 꼴)
+    x6 = {}
+    for nm, (polys, sdcp, n) in (('QD2-3', ([QD2_A3, QD2_B3, QD2_C3], QD2_S3, QD2_N3)), ('QDX', (QDX_POLYS, QDX_SDCP, QDX_N)),
+                                 ('RAIL5', (QD5_RAIL5, QD4_SDCP, QD5_RAIL5_N)), ('QD2-1', ([QD2_A1, QD2_B1], QD2_S1, QD2_N1)),
+                                 ('QD4', (QD4_POLYS, QD4_SDCP, QD4_N))):
+        base9 = json.loads(json.dumps(_qd3_ev(*_qd3_run(polys, sdcp, n))))
+        g9 = _qg_graphs(polys, sdcp, n)
+        e9 = json.loads(json.dumps(base9))
+        s9 = e9['solve']['sv_counterfactual']
+        s9['n_unsplit_bridging_components'] = 0
+        e9['census']['n_unsplit_bridging_components'] = 0
+        s9['upper'] = None
+        s9['status_hi'], s9['sv_counterfactual_ratio_hi'], s9['ratio_limit_hi'] = s9['status'], s9['sv_counterfactual_ratio'], s9['ratio_limit']
+        lo9, hi9 = SVCF.cert_interval(s9)
+        s9['ratio_cert_interval'] = [SVCF._enc(lo9), SVCF._enc(hi9)]
+        x6[nm] = (SVCF.sv_cf_problem(base9, True, graphs=g9), SVCF.sv_cf_problem(e9, True), SVCF.sv_cf_problem(e9, True, graphs=g9),
+                  (g9 or {}).get('upper') is not None)
+    chk('QG ⑨ X6 꼴 다섯 (QD2-3 · QDX · RAIL5 · QD2-1 · QD4 — 못 가른 수 · 증거 census 0 · 위 끝 지움) — 원천 없는 계약 = 받음 (사슬 = S0 봉인 census 로 '
+        '멈춤 · 묶음 B2x) · 원천 대조 = 거부 (원천에 위 끝 그래프가 있다 = 위 끝을 지운 기록) · 정직한 기록 + 원천 = 받음',
+        len(x6) == 5 and all(v[0] is None and v[1] is None and isinstance(v[2], str) and '위 끝을 지운 기록' in v[2] and v[3] for v in x6.values()),
+        f'{ {k: (v[0], v[1], (v[2] or "")[:70], v[3]) for k, v in x6.items()} }')
+    #  ⑩ 원천 꼴 — 소비자 안 원천 꼴 대조 (사슬은 따로 `graph_source_problem` 을 부르지만 계약 `ca_ext_record_ok(graphs=)` · `sv_cf_problem(graphs=)` 를
+    #    직접 부르는 자리도 구조화 실패여야 한다 · 원천 꼴 줄만 끈 소비자 = 규칙 이름이 달라도 받고 칸이 빠지면 예외)
+    bad_src = {'규칙 이름 다름': dict(gq or {}, rule='other_rule'), '칸 빠짐 (upper 없음)': {k: v for k, v in (gq or {}).items() if k != 'upper'},
+               '모르는 칸': dict(gq or {}, extra=None), '주 계 대문자 hex': dict(gq or {}, main=str((gq or {}).get('main')).upper()),
+               '주 계 63 자': dict(gq or {}, main=str((gq or {}).get('main'))[:63]), '원천 dict 아님': ['x']}
+    got10 = {}
+    for nm, bg in bad_src.items():
+        try:
+            got10[nm] = SVCF.sv_cf_problem(eq, True, graphs=bg)
+        except Exception as ex:                              # noqa: BLE001 — 예외 = 구조화 실패 아님 (시험 실패로 기록)
+            got10[nm] = f'EXC {type(ex).__name__}'
+    chk('QG ⑩ 원천 꼴 틀림 (규칙 이름 · 칸 빠짐 · 모르는 칸 · 대문자 · 63 자 · dict 아님) → 구조화 실패 (봉인 원천 대조 불가 · 예외 아님)',
+        all(isinstance(v, str) and v.startswith('sv_cf|') and '봉인 원천 대조 불가' in v for v in got10.values()), f'{got10}')
 
 
 def main():
