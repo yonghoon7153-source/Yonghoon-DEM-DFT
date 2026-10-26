@@ -1,0 +1,623 @@
+{
+  "pin": "bffc42cab29da37b45f8a713e30e8572b91e7da3",
+  "parents": [
+    "2b4b40ea5e375659bfad8243c1ccb6fe0ef2853f"
+  ],
+  "files": [
+    {
+      "path": "docs/collab/codex_to_claude/20261026-1345_ulpri-closure.md",
+      "oid": "772ab4dc4b673f80963121c96c156f671ab6274d",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_dem_unloading_resume_integer_request_20261024.md",
+      "oid": "a623aa9e22c9263c3666b92f876ed53d7d291fff",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_dem_unloading_ulpri_recheck_request_20261024.md",
+      "oid": "c3e06d988b031f77ba2aa5013c5af922c767197d",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpr_integer_20261024/.gitattributes",
+      "oid": "f97e2d7592f8a94a45fe4c065fca2a80ae41a1ee",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpr_integer_20261024/codex_review_unloading_ulpr_integer_20261024.md",
+      "oid": "68631751e9d81aaee2487f344040adc2e21ba825",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpr_integer_20261024/evidence/boundary/result.json",
+      "oid": "10c62decfc8439eddc5ecf6f0271e799b66bde46",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpr_integer_20261024/evidence/boundary_baseline/result.json",
+      "oid": "2326f2f0ba50d3612afce41e2df7f393cf2e71dc",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpr_integer_20261024/evidence/independent/integer_oracle.json",
+      "oid": "1b120ac3fb88ad73d3781ae6ededdd832c693733",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpr_integer_20261024/evidence/mutations_replayed/results.json",
+      "oid": "1fff42d611725ee279843ce1ebe406a2f2d2055d",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpr_integer_20261024/evidence/scope_and_counts.json",
+      "oid": "b2a2a6a59aa9da51a723f869d35d388ac192a202",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpr_integer_20261024/evidence/windows_diagnostic/results.json",
+      "oid": "d585a7756bbd95b0521010a1bcebfc804ee2f280",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/.gitattributes",
+      "oid": "fa1385d99a319b43c06f5309d1aae9fdd3adea46",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/INTAKE.md",
+      "oid": "8c2273ae11e085fc37f028ab0432df8a7b184f08",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/MANIFEST.sha256",
+      "oid": "604c8691a6dab814f0754f8c940c1229f8af91c8",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/README.md.diff",
+      "oid": "a6af4966d25475f6c413373230b576a592cae349",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/README_REVIEW.md",
+      "oid": "b112e17b2b6d270968b4d2119b331e31c9d12241",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/SHA256SUMS.diff",
+      "oid": "c30e3709433e0a6c6cf6c8c5f70e3b63c128de9e",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/active_rules.json.diff",
+      "oid": "93861fba3592be5e947a37b39c5d698c896e30ed",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/archive-verification.json",
+      "oid": "937c12ba43d3c8ffa11a891efe1c1eeb7a03ccf5",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/codex_review_unloading_ulpri_recheck_20261026.md",
+      "oid": "9953e4c3403a77373e8a68c80e63ab6b131152d6",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/dem_unloading_ps45_prereg_20261009.md.diff",
+      "oid": "a399572458210bce770bbd084852e84e9e2623d9",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/diagnose_deck_utf8.py",
+      "oid": "1e61c1bf5b78af94c2aaa5118adb3e67b6c87b4c",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/diagnose_utf8.py",
+      "oid": "e68f20ea949bdb5c4aab791241418253c596c442",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/a43.log",
+      "oid": "5c02dc1ef3efa33b3b57ab7a625913b8c4ebcbb0",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/a43/result.json",
+      "oid": "18e6ebe8ba0bff5d462905b46d3280c4d38f07dd",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/checks/deck_check.log",
+      "oid": "eb693e042ac72d6d5c88e46e3d02e06ebd5f9f70",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/checks/deck_check_utf8.log",
+      "oid": "f568e79628088abb783c0a4cb484e051968ce0fb",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/checks/history_deck_check.log",
+      "oid": "3d782b415e4c5a9013a918a78301fe101d55c5f2",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/checks/result.json",
+      "oid": "5fd0f0061e64ea1ff923f8be1715f6f20bacf76b",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/checks/seal_check.log",
+      "oid": "df611a79fc8c61391efe79e57007ea8ec92069cf",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/checks/seal_selftest.log",
+      "oid": "c37556fefd68d725b92f5e87c9d45053fed58b44",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/matrix.log",
+      "oid": "fb7b8562ebe030af7c5a5a175d2a0410489eea50",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/matrix_v2.log",
+      "oid": "c3550e25880663ab3bcd4b5f836ebf28f7c570c2",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/matrix_v2/result.json",
+      "oid": "87357056aca6484f76fb7c11fd07a763aefbd3bf",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/mutants/result.json",
+      "oid": "fe573ac1f250b2edd269385310332c75413348af",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/new6.log",
+      "oid": "6dd322fc08fecf270ef9abaa733e7af6d9a4ccfe",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/new6/result.json",
+      "oid": "1eb1a9ce7b54a91582639c2a70153572eefb2d21",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/old6.log",
+      "oid": "4760663c7d35c04537c05ad703eacaf252c8bf6d",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/old6/result.json",
+      "oid": "332b9b1725d5f637a89b430191dfdd75f975c017",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/raw_child_encoding.stderr",
+      "oid": "8702bf4a339f57a5583e5074f099a20d5928dee7",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/raw_child_encoding.stdout",
+      "oid": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/reader_selftest.log",
+      "oid": "952915cc62b164ba84f1f7e4d0e875915f4123ec",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/reader_selftest_workspace_tmp.log",
+      "oid": "3b22d626928894767610b8e3f6c864edf33c942d",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/utf8_diagnostic.log",
+      "oid": "dae0a9a14f79b0fef567519e40bd3c73563b38a9",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/utf8_selftest/reader.log",
+      "oid": "f17a1dfd039b3eea2ffdf678ba454ef360ae28f4",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/utf8_selftest/result.json",
+      "oid": "a9930db4497845794ac8b94d72ec902bb7193637",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/intake.json",
+      "oid": "5c21a32f1c3c109ec04b610f15414054dbc4af34",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/package_review.py",
+      "oid": "4f166c4586897865f2aa469919065b3fd21e7bc5",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/probe_independent.py",
+      "oid": "3c2b6eaa9659b1c52b5e26ce0aa0c69024c6df32",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/probe_mutants.py",
+      "oid": "65b945910d6564f96f5f55c5644d97e28e0fb443",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/receipt-verification.json",
+      "oid": "375cab576a89f5ea9241d4c1d74bf21f484345fa",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/receipt_audit.json",
+      "oid": "56bb0b831d71ff5b35cc0152258d23bfd349a413",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/remote_candidate_modified.json",
+      "oid": "ae5ca3223b37d6a58fde36455c37825eb343fc1f",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/remote_compare_summary.json",
+      "oid": "0f5afa64f3f568d494d9b2b34515b14f07e35584",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/remote_files_0.json",
+      "oid": "2c26baf1da69a0b01d5040b61ea35d42ad8af7a6",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/remote_files_120.json",
+      "oid": "1a57e9c912a5e2de02ddd645eb64cc63835c44a2",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/remote_files_180.json",
+      "oid": "4ccf5c8e783a76b8a40a4a7b5de7a5a505faa52d",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/remote_files_240.json",
+      "oid": "9da7ec34bb9d7a5b4eabc388d0b3bab4e2c715c3",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/remote_files_300.json",
+      "oid": "cf4586e008ecf18cf3d5f6458b56dc0c15a65a69",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/remote_files_360.json",
+      "oid": "8b05e585f871c8c940475ef8a8b65b9175b7ad91",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/remote_files_60.json",
+      "oid": "d76d1bf5074f5a9b7445f2952703c3f28da18f40",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/remote_final_commit.json",
+      "oid": "f01aacf49edaf9b6eb8c047b4e6b1dab9fa97e3e",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/remote_scope.json",
+      "oid": "a445de5b9378475e41bc1015045eadbc5975113e",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/repro_boundary.py",
+      "oid": "5a72eb6e10629c33263b14baa91a28c766371554",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/review_result.json",
+      "oid": "9b7545fafbf2b67ad6d137558ef6fb2caa0b7870",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/run_checks.py",
+      "oid": "2949e772d989068700ab17fb34b8c5f54e2e41a4",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/scope.json",
+      "oid": "32e8deb72989781ce0014afea388864420c0b1a9",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/seal_kit.py.diff",
+      "oid": "73c13d66fbc8f7a18765b96cb7a62417890b38de",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/snapshot/MANIFEST.sha256",
+      "oid": "d8520f01a4501bdcb5352127cc485e1619d25640",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/snapshot/PIN.txt",
+      "oid": "b6af97f1e276087c3881941fadbb3a5107ab881b",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/snapshot/REVIEW-README.md",
+      "oid": "df3765e22be357fd04d2511c9dfe304ef5a67fd3",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/snapshot/SOURCES.json",
+      "oid": "6b7cef10dc21b3cd49cf904ff1387de944d9bd4f",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/source_postcheck.json",
+      "oid": "f06693631ef1bb87eb1361530b5b5b9919a20e3a",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/ul_reader.py.diff",
+      "oid": "a10c77da3ce962da73018d70ff0b55217483593a",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/dem_gen2_t12_external_review_packet_20261026.md",
+      "oid": "1b5ae71def22c37836b8799d998f23db731ac06d",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/dem_unloading_ulpri_closure_20261026.md",
+      "oid": "be6902b35f6167110096691ba05d9aa5d4459721",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpr_resume_integer_evidence_20261024/NOTE.md",
+      "oid": "4f77807cac1f40e9eaeb0ef35decc13f0cbdddec",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpr_resume_integer_evidence_20261024/README.md",
+      "oid": "239912ed9d17f2ccd09ce6f130508741f150575d",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpr_resume_integer_evidence_20261024/archive-provenance.json",
+      "oid": "8beab528562acfa8146d8fa9c220193581df4f68",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpr_resume_integer_evidence_20261024/author/cli-before/results.json",
+      "oid": "1e108039aee13f9f7491dd4da2c45d229d09f48a",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpr_resume_integer_evidence_20261024/author/cli-v5/results.json",
+      "oid": "5d3578188fdca49d0dc7395ee5757a4e8b1376f8",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpr_resume_integer_evidence_20261024/author/deck-probe-v5/deck_probe.json",
+      "oid": "94aace07a4b0598ce7b4655365b2789d0f69c37d",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpr_resume_integer_evidence_20261024/author/final-v5-suite/summary.json",
+      "oid": "43f6479fb669565256191cc853c9d2fa25e54f7d",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpr_resume_integer_evidence_20261024/author/mutations-v5/results.json",
+      "oid": "ea1bd1efc4facb69caba8a001dd3ee1fb253c3b7",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpr_resume_integer_evidence_20261024/author/scope.json",
+      "oid": "eb8f29f2be98220f13ef052c9ac2bfc63368fdcd",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpr_resume_integer_evidence_20261024/author/test-first-event-separator.log",
+      "oid": "8c9f0d2c548cba5a509382749b50320c0ff4e932",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpr_resume_integer_evidence_20261024/author/test-first-final.log",
+      "oid": "f3b956c496f753c4b2e0e0569544507a859c3a46",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpr_resume_integer_evidence_20261024/author/test-first-line-separator.log",
+      "oid": "995955c989d000eeb45077e5b2229cf6b146caa8",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpr_resume_integer_evidence_20261024/author/test-first-manifest-space.log",
+      "oid": "41b1d81d511eeaf47c8658e7833d598ad30d25fb",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpr_resume_integer_evidence_20261024/author/test-first-r39.log",
+      "oid": "bf466506fb0d6a85f541f3fc06f0fc76aef368c3",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpr_resume_integer_evidence_20261024/author/test-first-state-space.log",
+      "oid": "1843cc20399b912ec8a77cf0173c66085bd445ba",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpr_resume_integer_evidence_20261024/completion.md",
+      "oid": "da4e64fceb85ca6b3604fe749aa22365d8640efe",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpr_resume_integer_evidence_20261024/full_gate/check-all.log",
+      "oid": "661b84028ce1aea6f2c4776fd820530a9fff55ca",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpr_resume_integer_evidence_20261024/full_gate_receipt.json",
+      "oid": "bcf9449b36c85c3914334a0801bb5df7e5e64068",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpr_resume_integer_evidence_20261024/history/pre-full-gate-inputs.zip",
+      "oid": "0464d185e2478f7455a4181c6cfe7b0107639e28",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpr_resume_integer_evidence_20261024/history/reports-original.zip",
+      "oid": "11ed5848a8c7074d2d504dba28facb634fac7821",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpr_resume_integer_evidence_20261024/independent/ulpr/final-v5/result.json",
+      "oid": "5214d183a35db8692e3d098e95ef113f9383abb3",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpr_resume_integer_evidence_20261024/independent/ulpr/final-v5/review.md",
+      "oid": "4bb2ed744de533d81f8402968c848667cb8ecc47",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpr_resume_integer_evidence_20261024/independent/ulpr/independent-mutations-v5/result.json",
+      "oid": "063dc7d2296b0b5c5f7741ced75edcdd373aa7d6",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpr_resume_integer_evidence_20261024/independent/ulpr/note-review.json",
+      "oid": "1965a990ac220192accc2b19e1f2cc0d01ff559c",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpr_resume_integer_evidence_20261024/independent/ulpr/note-review.md",
+      "oid": "ec78e624d678433819dab8ea1c14f423c907adfa",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpr_resume_integer_evidence_20261024/independent/ulpr/portable/provenance.json",
+      "oid": "a92f5fccac513816fa25e6635e246b8b37c6b710",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpr_resume_integer_evidence_20261024/package_manifest.json",
+      "oid": "b607a4f7dde6f72feb9982e28da898c37a995b71",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpr_resume_integer_evidence_20261024/source/candidate.diff",
+      "oid": "849aad11fa20f5f193773066d988f82d667460a4",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpr_resume_integer_evidence_20261024/source_manifest.json",
+      "oid": "2a424c751a37dcdb10b93fa8c67041591525850d",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpri_closure_evidence_20261026/document-provenance-checks.json",
+      "oid": "13dfa65df38730a9c85e2c0b6946780c5b43050d",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpri_closure_evidence_20261026/scoped-external-receipt.json",
+      "oid": "45a07af76e06dacbd07c4bf5cd69237d3a3c7bd1",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpri_closure_evidence_20261026/source-observation.json",
+      "oid": "9d2e26cd1141e82c3acd71aa70c1b48019abf5fd",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpri_marker_evidence_20261024/NOTE.md",
+      "oid": "4af2d1982e5735f6494b7a4bb07eb476446e1f54",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpri_marker_evidence_20261024/README.md",
+      "oid": "3d96c4264e8c56ac0e86f42b63cec759e32ad69b",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpri_marker_evidence_20261024/author/cli/baseline-result.json",
+      "oid": "a12aab68a78e7654b1bb3b793f66fbe5139bc6fc",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpri_marker_evidence_20261024/author/cli/final-result.json",
+      "oid": "9abd088b6ef7036c9f6251936cf2ed41527858af",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpri_marker_evidence_20261024/author/doc-only-delta.json",
+      "oid": "795de6896e9af3cf0a1724c35309b95b0d81637f",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpri_marker_evidence_20261024/author/kit-suite/summary.json",
+      "oid": "80bafbaf2ec67fa7a7ad8f4b73fd9aa289882c82",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpri_marker_evidence_20261024/author/mutants/portable-check.json",
+      "oid": "f48373c9c83cdee80192d3fa87afb3bcd3c6b374",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpri_marker_evidence_20261024/author/mutants/report.json",
+      "oid": "343377854ae25e934cffb0aed32f8a5deebd1ee4",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpri_marker_evidence_20261024/author/mutate_markers.original-v2.py",
+      "oid": "2847ea67cc8c3374699efec7bdc63f966bae0af4",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpri_marker_evidence_20261024/author/r40-fixed.json",
+      "oid": "d51eeabe493dcd4d6c3905530e268d76b29ffe51",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpri_marker_evidence_20261024/author/source-freeze.json",
+      "oid": "2d84df249f1b8108b89edc4c2a569d1d6c79230e",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpri_marker_evidence_20261024/author/source-scope.json",
+      "oid": "2b282ca51e983f873a14769e772a061ba3f60900",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpri_marker_evidence_20261024/author/tests-first-raw-marker.json",
+      "oid": "2b05f1181976b74b7a2dfa134e594b2bbd9a6bea",
+      "status": "added"
+    },
+    {
+      "path": "docs/reviews/ulpri_marker_evidence_20261024/author/tests-first.json",
+      "oid": "4eb2159126dd93286dc3b59c7e456bd5c9c6ea20",
+      "status": "added"
+    }
+  ],
+  "stats": {
+    "total": 56729,
+    "additions": 56729,
+    "deletions": 0
+  }
+}

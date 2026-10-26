@@ -1,0 +1,22 @@
+{
+  "schema": "external_report_repository_mapping_v1",
+  "archive_original_path": "codex_review_dem_gen2_t12_consumer_20261026.md",
+  "repository_raw_txt_path": "docs/reviews/codex_review_dem_gen2_t12_consumer_20261026/codex_review_dem_gen2_t12_consumer_20261026.original.txt",
+  "raw_sha256": "ee8ce50a6c7ab5ae3fa92c81ca28b2d89e2cefe581dc87e6b7bb02b1af19b531",
+  "verbatim_bytes": true,
+  "authored_index": "docs/reviews/codex_review_dem_gen2_t12_consumer_20261026/REPORT.md",
+  "reason": "Keep external text verbatim while distinguishing its archive-relative references and Git blob identity from local Markdown link/commit checks",
+  "external_review_scope_report_field": "Original archive path and raw hash retained unchanged; not an index hash",
+  "git_object_note": {
+    "oid": "55e8793ad35f72723de7195101be1834996b16a2",
+    "kind": "blob",
+    "path": "docs/data/ps45_unload_20261009/ul_gates.py"
+  },
+  "shorthand_paths": {
+    "loader/report.json": "evidence/loader/report.json",
+    "mutants/report.json": "evidence/mutants/report.json",
+    "scope_probes/result.json": "evidence/scope_probes/result.json",
+    "scope_probes/restore_truth_table.json": "evidence/scope_probes/restore_truth_table.json",
+    "promisor_probe/result.json": "evidence/promisor_probe/result.json"
+  }
+}

@@ -1,0 +1,6 @@
+branch=codex/ulpri-closure
+commit=bffc42cab29da37b45f8a713e30e8572b91e7da3
+base=2b4b40ea5e375659bfad8243c1ccb6fe0ef2853f
+accepted_ulpri=4c29705fa1c4ba94737a858b206fa4f4c5bb2bde
+closure=ULPRI-01/02 marker-integrity only
+physical_T12=NOT_RUN

@@ -1,0 +1,9479 @@
+[
+  {
+    "input": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "actual": "RESTORED",
+    "expected": "RESTORED",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      false
+    ],
+    "actual": "UNCONFIRMED",
+    "expected": "UNCONFIRMED",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      null
+    ],
+    "actual": "UNCONFIRMED",
+    "expected": "UNCONFIRMED",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      true,
+      true,
+      false,
+      true
+    ],
+    "actual": "UNCONFIRMED",
+    "expected": "UNCONFIRMED",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      true,
+      true,
+      false,
+      false
+    ],
+    "actual": "UNCONFIRMED",
+    "expected": "UNCONFIRMED",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      true,
+      true,
+      false,
+      null
+    ],
+    "actual": "UNCONFIRMED",
+    "expected": "UNCONFIRMED",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      true,
+      true,
+      null,
+      true
+    ],
+    "actual": "UNCONFIRMED",
+    "expected": "UNCONFIRMED",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      true,
+      true,
+      null,
+      false
+    ],
+    "actual": "UNCONFIRMED",
+    "expected": "UNCONFIRMED",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      true,
+      true,
+      null,
+      null
+    ],
+    "actual": "UNCONFIRMED",
+    "expected": "UNCONFIRMED",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      true,
+      false,
+      true,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      true,
+      false,
+      true,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      true,
+      false,
+      true,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      true,
+      false,
+      false,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      true,
+      false,
+      false,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      true,
+      false,
+      false,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      true,
+      false,
+      null,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      true,
+      false,
+      null,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      true,
+      false,
+      null,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      true,
+      null,
+      true,
+      true
+    ],
+    "actual": "UNCONFIRMED",
+    "expected": "UNCONFIRMED",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      true,
+      null,
+      true,
+      false
+    ],
+    "actual": "UNCONFIRMED",
+    "expected": "UNCONFIRMED",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      true,
+      null,
+      true,
+      null
+    ],
+    "actual": "UNCONFIRMED",
+    "expected": "UNCONFIRMED",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      true,
+      null,
+      false,
+      true
+    ],
+    "actual": "UNCONFIRMED",
+    "expected": "UNCONFIRMED",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      true,
+      null,
+      false,
+      false
+    ],
+    "actual": "UNCONFIRMED",
+    "expected": "UNCONFIRMED",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      true,
+      null,
+      false,
+      null
+    ],
+    "actual": "UNCONFIRMED",
+    "expected": "UNCONFIRMED",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      true,
+      null,
+      null,
+      true
+    ],
+    "actual": "UNCONFIRMED",
+    "expected": "UNCONFIRMED",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      true,
+      null,
+      null,
+      false
+    ],
+    "actual": "UNCONFIRMED",
+    "expected": "UNCONFIRMED",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      true,
+      null,
+      null,
+      null
+    ],
+    "actual": "UNCONFIRMED",
+    "expected": "UNCONFIRMED",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      false,
+      true,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      false,
+      true,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      false,
+      true,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      false,
+      true,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      false,
+      true,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      false,
+      true,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      false,
+      true,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      false,
+      true,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      false,
+      true,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      false,
+      false,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      false,
+      false,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      false,
+      false,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      false,
+      false,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      false,
+      false,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      false,
+      false,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      false,
+      false,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      false,
+      false,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      false,
+      false,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      false,
+      null,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      false,
+      null,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      false,
+      null,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      false,
+      null,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      false,
+      null,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      false,
+      null,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      false,
+      null,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      false,
+      null,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      false,
+      null,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      null,
+      true,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      null,
+      true,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      null,
+      true,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      null,
+      true,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      null,
+      true,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      null,
+      true,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      null,
+      true,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      null,
+      true,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      null,
+      true,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      null,
+      false,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      null,
+      false,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      null,
+      false,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      null,
+      false,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      null,
+      false,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      null,
+      false,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      null,
+      false,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      null,
+      false,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      null,
+      false,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      null,
+      null,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      null,
+      null,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      null,
+      null,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      null,
+      null,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      null,
+      null,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      null,
+      null,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      null,
+      null,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      null,
+      null,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      true,
+      null,
+      null,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      true,
+      true,
+      true,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      true,
+      true,
+      true,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      true,
+      true,
+      true,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      true,
+      true,
+      false,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      true,
+      true,
+      false,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      true,
+      true,
+      false,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      true,
+      true,
+      null,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      true,
+      true,
+      null,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      true,
+      true,
+      null,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      true,
+      false,
+      true,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      true,
+      false,
+      true,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      true,
+      false,
+      true,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      true,
+      false,
+      false,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      true,
+      false,
+      false,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      true,
+      false,
+      false,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      true,
+      false,
+      null,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      true,
+      false,
+      null,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      true,
+      false,
+      null,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      true,
+      null,
+      true,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      true,
+      null,
+      true,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      true,
+      null,
+      true,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      true,
+      null,
+      false,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      true,
+      null,
+      false,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      true,
+      null,
+      false,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      true,
+      null,
+      null,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      true,
+      null,
+      null,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      true,
+      null,
+      null,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      false,
+      true,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      false,
+      true,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      false,
+      true,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      false,
+      true,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      false,
+      true,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      false,
+      true,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      false,
+      true,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      false,
+      true,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      false,
+      true,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      false,
+      false,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      false,
+      false,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      false,
+      false,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      false,
+      false,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      false,
+      false,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      false,
+      false,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      false,
+      false,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      false,
+      false,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      false,
+      null,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      false,
+      null,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      false,
+      null,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      false,
+      null,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      false,
+      null,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      false,
+      null,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      false,
+      null,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      false,
+      null,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      false,
+      null,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      null,
+      true,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      null,
+      true,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      null,
+      true,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      null,
+      true,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      null,
+      true,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      null,
+      true,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      null,
+      true,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      null,
+      true,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      null,
+      true,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      null,
+      false,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      null,
+      false,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      null,
+      false,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      null,
+      false,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      null,
+      false,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      null,
+      false,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      null,
+      false,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      null,
+      false,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      null,
+      false,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      null,
+      null,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      null,
+      null,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      null,
+      null,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      null,
+      null,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      null,
+      null,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      null,
+      null,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      null,
+      null,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      null,
+      null,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      false,
+      null,
+      null,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      true,
+      true,
+      true,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      true,
+      true,
+      true,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      true,
+      true,
+      true,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      true,
+      true,
+      false,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      true,
+      true,
+      false,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      true,
+      true,
+      false,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      true,
+      true,
+      null,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      true,
+      true,
+      null,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      true,
+      true,
+      null,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      true,
+      false,
+      true,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      true,
+      false,
+      true,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      true,
+      false,
+      true,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      true,
+      false,
+      false,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      true,
+      false,
+      false,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      true,
+      false,
+      false,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      true,
+      false,
+      null,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      true,
+      false,
+      null,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      true,
+      false,
+      null,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      true,
+      null,
+      true,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      true,
+      null,
+      true,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      true,
+      null,
+      true,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      true,
+      null,
+      false,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      true,
+      null,
+      false,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      true,
+      null,
+      false,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      true,
+      null,
+      null,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      true,
+      null,
+      null,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      true,
+      null,
+      null,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      false,
+      true,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      false,
+      true,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      false,
+      true,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      false,
+      true,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      false,
+      true,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      false,
+      true,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      false,
+      true,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      false,
+      true,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      false,
+      true,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      false,
+      false,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      false,
+      false,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      false,
+      false,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      false,
+      false,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      false,
+      false,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      false,
+      false,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      false,
+      false,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      false,
+      false,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      false,
+      false,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      false,
+      null,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      false,
+      null,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      false,
+      null,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      false,
+      null,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      false,
+      null,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      false,
+      null,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      false,
+      null,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      false,
+      null,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      false,
+      null,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      null,
+      true,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      null,
+      true,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      null,
+      true,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      null,
+      true,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      null,
+      true,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      null,
+      true,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      null,
+      true,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      null,
+      true,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      null,
+      true,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      null,
+      false,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      null,
+      false,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      null,
+      false,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      null,
+      false,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      null,
+      false,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      null,
+      false,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      null,
+      false,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      null,
+      false,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      null,
+      false,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      null,
+      null,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      null,
+      null,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      null,
+      null,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      null,
+      null,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      null,
+      null,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      null,
+      null,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      null,
+      null,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      null,
+      null,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      true,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      true,
+      true,
+      true,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      true,
+      true,
+      true,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      true,
+      true,
+      false,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      true,
+      true,
+      false,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      true,
+      true,
+      false,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      true,
+      true,
+      null,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      true,
+      true,
+      null,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      true,
+      true,
+      null,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      true,
+      false,
+      true,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      true,
+      false,
+      true,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      true,
+      false,
+      true,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      true,
+      false,
+      false,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      true,
+      false,
+      false,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      true,
+      false,
+      false,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      true,
+      false,
+      null,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      true,
+      false,
+      null,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      true,
+      false,
+      null,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      true,
+      null,
+      true,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      true,
+      null,
+      true,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      true,
+      null,
+      true,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      true,
+      null,
+      false,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      true,
+      null,
+      false,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      true,
+      null,
+      false,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      true,
+      null,
+      null,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      true,
+      null,
+      null,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      true,
+      null,
+      null,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      false,
+      true,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      false,
+      true,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      false,
+      true,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      false,
+      true,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      false,
+      true,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      false,
+      true,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      false,
+      true,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      false,
+      true,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      false,
+      true,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      false,
+      false,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      false,
+      false,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      false,
+      false,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      false,
+      false,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      false,
+      false,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      false,
+      false,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      false,
+      null,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      false,
+      null,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      false,
+      null,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      false,
+      null,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      false,
+      null,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      false,
+      null,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      false,
+      null,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      false,
+      null,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      false,
+      null,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      null,
+      true,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      null,
+      true,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      null,
+      true,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      null,
+      true,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      null,
+      true,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      null,
+      true,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      null,
+      true,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      null,
+      true,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      null,
+      true,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      null,
+      false,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      null,
+      false,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      null,
+      false,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      null,
+      false,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      null,
+      false,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      null,
+      false,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      null,
+      false,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      null,
+      false,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      null,
+      false,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      null,
+      null,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      null,
+      null,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      null,
+      null,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      null,
+      null,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      null,
+      null,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      null,
+      null,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      null,
+      null,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      null,
+      null,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      true,
+      null,
+      null,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      true,
+      true,
+      true,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      true,
+      true,
+      true,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      true,
+      true,
+      true,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      true,
+      true,
+      false,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      true,
+      true,
+      false,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      true,
+      true,
+      false,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      true,
+      true,
+      null,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      true,
+      true,
+      null,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      true,
+      true,
+      null,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      true,
+      false,
+      true,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      true,
+      false,
+      true,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      true,
+      false,
+      true,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      true,
+      false,
+      false,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      true,
+      false,
+      false,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      true,
+      false,
+      false,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      true,
+      false,
+      null,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      true,
+      false,
+      null,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      true,
+      false,
+      null,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      true,
+      null,
+      true,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      true,
+      null,
+      true,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      true,
+      null,
+      true,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      true,
+      null,
+      false,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      true,
+      null,
+      false,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      true,
+      null,
+      false,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      true,
+      null,
+      null,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      true,
+      null,
+      null,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      true,
+      null,
+      null,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      false,
+      true,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      false,
+      true,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      false,
+      true,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      false,
+      true,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      false,
+      true,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      false,
+      true,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      false,
+      true,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      false,
+      true,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      false,
+      true,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      false,
+      false,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      false,
+      false,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      false,
+      false,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      false,
+      false,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      false,
+      false,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      false,
+      false,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      false,
+      null,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      false,
+      null,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      false,
+      null,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      false,
+      null,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      false,
+      null,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      false,
+      null,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      false,
+      null,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      false,
+      null,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      false,
+      null,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      null,
+      true,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      null,
+      true,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      null,
+      true,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      null,
+      true,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      null,
+      true,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      null,
+      true,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      null,
+      true,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      null,
+      true,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      null,
+      true,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      null,
+      false,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      null,
+      false,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      null,
+      false,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      null,
+      false,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      null,
+      false,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      null,
+      false,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      null,
+      false,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      null,
+      false,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      null,
+      false,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      null,
+      null,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      null,
+      null,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      null,
+      null,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      null,
+      null,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      null,
+      null,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      null,
+      null,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      null,
+      null,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      null,
+      null,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      false,
+      null,
+      null,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      true,
+      true,
+      true,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      true,
+      true,
+      true,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      true,
+      true,
+      true,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      true,
+      true,
+      false,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      true,
+      true,
+      false,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      true,
+      true,
+      false,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      true,
+      true,
+      null,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      true,
+      true,
+      null,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      true,
+      true,
+      null,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      true,
+      false,
+      true,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      true,
+      false,
+      true,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      true,
+      false,
+      true,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      true,
+      false,
+      false,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      true,
+      false,
+      false,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      true,
+      false,
+      false,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      true,
+      false,
+      null,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      true,
+      false,
+      null,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      true,
+      false,
+      null,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      true,
+      null,
+      true,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      true,
+      null,
+      true,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      true,
+      null,
+      true,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      true,
+      null,
+      false,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      true,
+      null,
+      false,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      true,
+      null,
+      false,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      true,
+      null,
+      null,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      true,
+      null,
+      null,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      true,
+      null,
+      null,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      false,
+      true,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      false,
+      true,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      false,
+      true,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      false,
+      true,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      false,
+      true,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      false,
+      true,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      false,
+      true,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      false,
+      true,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      false,
+      true,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      false,
+      false,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      false,
+      false,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      false,
+      false,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      false,
+      false,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      false,
+      false,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      false,
+      false,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      false,
+      false,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      false,
+      false,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      false,
+      false,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      false,
+      null,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      false,
+      null,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      false,
+      null,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      false,
+      null,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      false,
+      null,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      false,
+      null,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      false,
+      null,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      false,
+      null,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      false,
+      null,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      null,
+      true,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      null,
+      true,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      null,
+      true,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      null,
+      true,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      null,
+      true,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      null,
+      true,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      null,
+      true,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      null,
+      true,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      null,
+      true,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      null,
+      false,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      null,
+      false,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      null,
+      false,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      null,
+      false,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      null,
+      false,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      null,
+      false,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      null,
+      false,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      null,
+      false,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      null,
+      false,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      null,
+      null,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      null,
+      null,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      null,
+      null,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      null,
+      null,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      null,
+      null,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      null,
+      null,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      null,
+      null,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      null,
+      null,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      false,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      true,
+      true,
+      true,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      true,
+      true,
+      true,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      true,
+      true,
+      false,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      true,
+      true,
+      false,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      true,
+      true,
+      false,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      true,
+      true,
+      null,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      true,
+      true,
+      null,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      true,
+      true,
+      null,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      true,
+      false,
+      true,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      true,
+      false,
+      true,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      true,
+      false,
+      true,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      true,
+      false,
+      false,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      true,
+      false,
+      false,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      true,
+      false,
+      false,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      true,
+      false,
+      null,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      true,
+      false,
+      null,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      true,
+      false,
+      null,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      true,
+      null,
+      true,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      true,
+      null,
+      true,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      true,
+      null,
+      true,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      true,
+      null,
+      false,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      true,
+      null,
+      false,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      true,
+      null,
+      false,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      true,
+      null,
+      null,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      true,
+      null,
+      null,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      true,
+      null,
+      null,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      false,
+      true,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      false,
+      true,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      false,
+      true,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      false,
+      true,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      false,
+      true,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      false,
+      true,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      false,
+      true,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      false,
+      true,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      false,
+      true,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      false,
+      false,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      false,
+      false,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      false,
+      false,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      false,
+      false,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      false,
+      false,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      false,
+      false,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      false,
+      false,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      false,
+      false,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      false,
+      false,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      false,
+      null,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      false,
+      null,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      false,
+      null,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      false,
+      null,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      false,
+      null,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      false,
+      null,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      false,
+      null,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      false,
+      null,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      false,
+      null,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      null,
+      true,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      null,
+      true,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      null,
+      true,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      null,
+      true,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      null,
+      true,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      null,
+      true,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      null,
+      true,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      null,
+      true,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      null,
+      true,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      null,
+      false,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      null,
+      false,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      null,
+      false,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      null,
+      false,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      null,
+      false,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      null,
+      false,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      null,
+      false,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      null,
+      false,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      null,
+      false,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      null,
+      null,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      null,
+      null,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      null,
+      null,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      null,
+      null,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      null,
+      null,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      null,
+      null,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      null,
+      null,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      null,
+      null,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      true,
+      null,
+      null,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      true,
+      true,
+      true,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      true,
+      true,
+      true,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      true,
+      true,
+      true,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      true,
+      true,
+      false,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      true,
+      true,
+      false,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      true,
+      true,
+      false,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      true,
+      true,
+      null,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      true,
+      true,
+      null,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      true,
+      true,
+      null,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      true,
+      false,
+      true,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      true,
+      false,
+      true,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      true,
+      false,
+      true,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      true,
+      false,
+      false,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      true,
+      false,
+      false,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      true,
+      false,
+      false,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      true,
+      false,
+      null,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      true,
+      false,
+      null,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      true,
+      false,
+      null,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      true,
+      null,
+      true,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      true,
+      null,
+      true,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      true,
+      null,
+      true,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      true,
+      null,
+      false,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      true,
+      null,
+      false,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      true,
+      null,
+      false,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      true,
+      null,
+      null,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      true,
+      null,
+      null,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      true,
+      null,
+      null,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      false,
+      true,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      false,
+      true,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      false,
+      true,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      false,
+      true,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      false,
+      true,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      false,
+      true,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      false,
+      true,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      false,
+      true,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      false,
+      true,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      false,
+      false,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      false,
+      false,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      false,
+      false,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      false,
+      false,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      false,
+      false,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      false,
+      false,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      false,
+      false,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      false,
+      false,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      false,
+      null,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      false,
+      null,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      false,
+      null,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      false,
+      null,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      false,
+      null,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      false,
+      null,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      false,
+      null,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      false,
+      null,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      false,
+      null,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      null,
+      true,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      null,
+      true,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      null,
+      true,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      null,
+      true,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      null,
+      true,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      null,
+      true,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      null,
+      true,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      null,
+      true,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      null,
+      true,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      null,
+      false,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      null,
+      false,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      null,
+      false,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      null,
+      false,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      null,
+      false,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      null,
+      false,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      null,
+      false,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      null,
+      false,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      null,
+      false,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      null,
+      null,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      null,
+      null,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      null,
+      null,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      null,
+      null,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      null,
+      null,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      null,
+      null,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      null,
+      null,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      null,
+      null,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      false,
+      null,
+      null,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      true,
+      true,
+      true,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      true,
+      true,
+      true,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      true,
+      true,
+      true,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      true,
+      true,
+      false,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      true,
+      true,
+      false,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      true,
+      true,
+      false,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      true,
+      true,
+      null,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      true,
+      true,
+      null,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      true,
+      true,
+      null,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      true,
+      false,
+      true,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      true,
+      false,
+      true,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      true,
+      false,
+      true,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      true,
+      false,
+      false,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      true,
+      false,
+      false,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      true,
+      false,
+      false,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      true,
+      false,
+      null,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      true,
+      false,
+      null,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      true,
+      false,
+      null,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      true,
+      null,
+      true,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      true,
+      null,
+      true,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      true,
+      null,
+      true,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      true,
+      null,
+      false,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      true,
+      null,
+      false,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      true,
+      null,
+      false,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      true,
+      null,
+      null,
+      true
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      true,
+      null,
+      null,
+      false
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      true,
+      null,
+      null,
+      null
+    ],
+    "actual": "VALUE_MISMATCH",
+    "expected": "VALUE_MISMATCH",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      false,
+      true,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      false,
+      true,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      false,
+      true,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      false,
+      true,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      false,
+      true,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      false,
+      true,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      false,
+      true,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      false,
+      true,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      false,
+      true,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      false,
+      false,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      false,
+      false,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      false,
+      false,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      false,
+      false,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      false,
+      false,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      false,
+      false,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      false,
+      false,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      false,
+      false,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      false,
+      false,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      false,
+      null,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      false,
+      null,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      false,
+      null,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      false,
+      null,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      false,
+      null,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      false,
+      null,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      false,
+      null,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      false,
+      null,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      false,
+      null,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      null,
+      true,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      null,
+      true,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      null,
+      true,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      null,
+      true,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      null,
+      true,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      null,
+      true,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      null,
+      true,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      null,
+      true,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      null,
+      true,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      null,
+      false,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      null,
+      false,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      null,
+      false,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      null,
+      false,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      null,
+      false,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      null,
+      false,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      null,
+      false,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      null,
+      false,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      null,
+      false,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      null,
+      null,
+      true,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      null,
+      null,
+      true,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      null,
+      null,
+      true,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      null,
+      null,
+      false,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      null,
+      null,
+      false,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      null,
+      null,
+      false,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      true
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      false
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  },
+  {
+    "input": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "actual": "SYNTAX_FAIL",
+    "expected": "SYNTAX_FAIL",
+    "pass": true
+  }
+]

@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "reviewed_pin": "bffc42cab29da37b45f8a713e30e8572b91e7da3",
+  "consumer_pin": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde",
+  "original_submission_zip_sha256": "125c7652bc83a8fec42be56d7b299785b82bc4e3b98e86b481f9173e6e588220",
+  "snapshot194_members_equal_original": true,
+  "snapshot190_source_blobs_equal_git": true,
+  "consumer6blobs_equal_git": true,
+  "object_tree_metadata4_exact_git": true,
+  "direct52": 52,
+  "loader_contract": 8,
+  "mutants_detected": 13,
+  "scope_probes": 35,
+  "truth_table": 729,
+  "raw_promisor_fetch_counts": [
+    3,
+    0
+  ],
+  "promisor_rcs": [
+    2,
+    2
+  ],
+  "finite_inputs_hashes_verified": true,
+  "tests_rerun": false,
+  "scope": "Contract/interpretation accepted;ULPRI01/02closed retained;T12R01P2OPEN awaiting fix/externalrecheck;physicalNOT_RUN;shared155log audit only"
+}

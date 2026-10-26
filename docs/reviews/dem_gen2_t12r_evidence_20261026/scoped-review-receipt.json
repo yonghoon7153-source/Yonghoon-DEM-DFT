@@ -1,0 +1,48 @@
+{
+  "schema": "t12r_offline_external_review_followup_v1",
+  "reviewed_pin": "bffc42cab29da37b45f8a713e30e8572b91e7da3",
+  "consumer_pin": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde",
+  "external_report_raw_sha256": "ee8ce50a6c7ab5ae3fa92c81ca28b2d89e2cefe581dc87e6b7bb02b1af19b531",
+  "external_archive_sha256": "73b5586b60fd963aba90a6ee717eb6eaa2d9810e1874423d0f71f97c63ca149c",
+  "finding": {
+    "id": "T12R-01",
+    "severity": "P2",
+    "external_status": "OPEN",
+    "local_status": "CLAIMED_FIXED_PENDING_EXTERNAL_RECHECK"
+  },
+  "accepted_scopes": [
+    "P1 excerpt/P2 registration separation",
+    "52 consumer observations and bounded interpretation",
+    "ULPRI-01/02 marker-integrity closure",
+    "future evidence and integration sequence"
+  ],
+  "new_local_evidence": {
+    "offline_result": "author/final/result.json",
+    "direct52": "author/final/complete-six-blobs/stdout.json",
+    "source_contract_rejections": "loader-report.json",
+    "consumer_mutants": "mutants-report.json",
+    "scope_binding": "targeted-binding.json",
+    "direct_and_offline_in_shared_gate": false
+  },
+  "git_capability": "Global --no-lazy-fetch must be recognized; each snapshot child forces GIT_NO_LAZY_FETCH=1",
+  "tested_git": "2.52.0",
+  "unsupported_git_test": "Explicitly labeled mock, not real older Git validation",
+  "external_windows_git": "2.55.0.windows.3 baseline only, not patched-platform certification",
+  "future_acceptance_sections": [
+    "A facts and registration",
+    "B producer-to-consumer positive/negative tests",
+    "C actual R-a/S0 and qualification",
+    "D fixed-pin versus integrated-tree CI"
+  ],
+  "future_conditions_implemented": false,
+  "P2_registration": null,
+  "physical_T12": "NOT_RUN",
+  "physical_ready": false,
+  "broad_P1_GO": null,
+  "generation2_design_GO": null,
+  "claude_integration": "DEFERRED",
+  "new_physical_runs": 0,
+  "archive_original_report": "codex_review_dem_gen2_t12_consumer_20261026.md",
+  "repository_raw_report": "docs/reviews/codex_review_dem_gen2_t12_consumer_20261026/codex_review_dem_gen2_t12_consumer_20261026.original.txt",
+  "repository_authored_index": "docs/reviews/codex_review_dem_gen2_t12_consumer_20261026/REPORT.md"
+}

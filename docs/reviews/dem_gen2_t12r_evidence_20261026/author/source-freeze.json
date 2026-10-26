@@ -1,0 +1,203 @@
+{
+  "status": "FROZEN",
+  "base": "bffc42cab29da37b45f8a713e30e8572b91e7da3",
+  "code_files": [
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/frozen/scripts/test_dem_gen2_t12_consumer_contract.py",
+      "main_path": "scripts/test_dem_gen2_t12_consumer_contract.py",
+      "sha256": "cd1bd28429ae90a206e833638b086bd99dc5d6d2123bed6b04fe412b66abcf3b"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/frozen/scripts/test_dem_gen2_t12_offline.py",
+      "main_path": "scripts/test_dem_gen2_t12_offline.py",
+      "sha256": "b9bf6344c30d1a1c6ae458dd7cc5c0694c805563e872ad4aa2d86af4bb8c4da6"
+    }
+  ],
+  "evidence_files": [
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/pre-fix/complete-six-blobs/stderr.txt",
+      "relative_path": "pre-fix/complete-six-blobs/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/pre-fix/complete-six-blobs/stdout.json",
+      "relative_path": "pre-fix/complete-six-blobs/stdout.json",
+      "sha256": "0f577b9cbc238a3cf19346198672ee04b7588820db6f30ceb10596f9ec82f4ac"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/pre-fix/complete-six-blobs/trace.jsonl",
+      "relative_path": "pre-fix/complete-six-blobs/trace.jsonl",
+      "sha256": "e92319bd9d368319846559b531589444a55c186200461e6b3ef8839ca8290260"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/pre-fix/missing-blob/stderr.txt",
+      "relative_path": "pre-fix/missing-blob/stderr.txt",
+      "sha256": "044fbc186fa664f024aaff9973a16888f96916b8397aeed0f56e1b015cb29328"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/pre-fix/missing-blob/stdout.json",
+      "relative_path": "pre-fix/missing-blob/stdout.json",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/pre-fix/missing-blob/trace.jsonl",
+      "relative_path": "pre-fix/missing-blob/trace.jsonl",
+      "sha256": "a656810edd33918a2a4adf503543dc8e6c6d37c5aaab54844baee10ee6fd3540"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/pre-fix/missing-commit/stderr.txt",
+      "relative_path": "pre-fix/missing-commit/stderr.txt",
+      "sha256": "044fbc186fa664f024aaff9973a16888f96916b8397aeed0f56e1b015cb29328"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/pre-fix/missing-commit/stdout.json",
+      "relative_path": "pre-fix/missing-commit/stdout.json",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/pre-fix/missing-commit/trace.jsonl",
+      "relative_path": "pre-fix/missing-commit/trace.jsonl",
+      "sha256": "2881f8370b0e5dac494c29067b8229dc34ca189d00e4f81e998c51a6162fbbcb"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/pre-fix/missing-kit-tree/stderr.txt",
+      "relative_path": "pre-fix/missing-kit-tree/stderr.txt",
+      "sha256": "044fbc186fa664f024aaff9973a16888f96916b8397aeed0f56e1b015cb29328"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/pre-fix/missing-kit-tree/stdout.json",
+      "relative_path": "pre-fix/missing-kit-tree/stdout.json",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/pre-fix/missing-kit-tree/trace.jsonl",
+      "relative_path": "pre-fix/missing-kit-tree/trace.jsonl",
+      "sha256": "65f3e77d4a758e13e6f4319e5c0b66688189a7970c1939db9e2281d8023dc058"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/pre-fix/missing-root-tree/stderr.txt",
+      "relative_path": "pre-fix/missing-root-tree/stderr.txt",
+      "sha256": "044fbc186fa664f024aaff9973a16888f96916b8397aeed0f56e1b015cb29328"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/pre-fix/missing-root-tree/stdout.json",
+      "relative_path": "pre-fix/missing-root-tree/stdout.json",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/pre-fix/missing-root-tree/trace.jsonl",
+      "relative_path": "pre-fix/missing-root-tree/trace.jsonl",
+      "sha256": "0f459e85241e3a13bd28d9c68222e4de04cff976bc3960f5ae2ce31317e80002"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/pre-fix/result.json",
+      "relative_path": "pre-fix/result.json",
+      "sha256": "bd72809b5fe0deefec8c58bc70bc49f59143772e2685de3e86aee2e4354370bf"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/final/complete-six-blobs/stderr.txt",
+      "relative_path": "final/complete-six-blobs/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/final/complete-six-blobs/stdout.json",
+      "relative_path": "final/complete-six-blobs/stdout.json",
+      "sha256": "1b73f682ad2deeedee6ec9baa35e11e1740cff9e1aec49fa8693342e12da7a02"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/final/complete-six-blobs/trace.jsonl",
+      "relative_path": "final/complete-six-blobs/trace.jsonl",
+      "sha256": "037aa1c975749bf209468f4ac5c7a99c4303d042b5e44ece85f721811465e28a"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/final/guard-removal-local-fetch/stderr.txt",
+      "relative_path": "final/guard-removal-local-fetch/stderr.txt",
+      "sha256": "cb6ab37f233b2fcaf7fbeedc0178f2caad1797f02fd1d12cc6529ff09db3f811"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/final/guard-removal-local-fetch/stdout.json",
+      "relative_path": "final/guard-removal-local-fetch/stdout.json",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/final/guard-removal-local-fetch/trace.jsonl",
+      "relative_path": "final/guard-removal-local-fetch/trace.jsonl",
+      "sha256": "601522321a11a968b64e67a8d11b677f72e42cde63b2fde9bef113ab2d161182"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/final/missing-blob/stderr.txt",
+      "relative_path": "final/missing-blob/stderr.txt",
+      "sha256": "cb6ab37f233b2fcaf7fbeedc0178f2caad1797f02fd1d12cc6529ff09db3f811"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/final/missing-blob/stdout.json",
+      "relative_path": "final/missing-blob/stdout.json",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/final/missing-blob/trace.jsonl",
+      "relative_path": "final/missing-blob/trace.jsonl",
+      "sha256": "0a451caafb7158b6bff620694899a9ac3598370383f520063cc46db647863093"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/final/missing-commit/stderr.txt",
+      "relative_path": "final/missing-commit/stderr.txt",
+      "sha256": "cb6ab37f233b2fcaf7fbeedc0178f2caad1797f02fd1d12cc6529ff09db3f811"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/final/missing-commit/stdout.json",
+      "relative_path": "final/missing-commit/stdout.json",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/final/missing-commit/trace.jsonl",
+      "relative_path": "final/missing-commit/trace.jsonl",
+      "sha256": "9168ac1282589790f827337e26cb864334479c27b92bf65a98640a9853b4066a"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/final/missing-kit-tree/stderr.txt",
+      "relative_path": "final/missing-kit-tree/stderr.txt",
+      "sha256": "cb6ab37f233b2fcaf7fbeedc0178f2caad1797f02fd1d12cc6529ff09db3f811"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/final/missing-kit-tree/stdout.json",
+      "relative_path": "final/missing-kit-tree/stdout.json",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/final/missing-kit-tree/trace.jsonl",
+      "relative_path": "final/missing-kit-tree/trace.jsonl",
+      "sha256": "f664de27571c2e07c1fa66b49b826f8b8edaf4a6c7a2bbd70c969b0dc2124eb7"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/final/missing-root-tree/stderr.txt",
+      "relative_path": "final/missing-root-tree/stderr.txt",
+      "sha256": "cb6ab37f233b2fcaf7fbeedc0178f2caad1797f02fd1d12cc6529ff09db3f811"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/final/missing-root-tree/stdout.json",
+      "relative_path": "final/missing-root-tree/stdout.json",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/final/missing-root-tree/trace.jsonl",
+      "relative_path": "final/missing-root-tree/trace.jsonl",
+      "sha256": "ee58d4e3b48b3eb50b1f3432118fd37d35e028e24cb3d731f22418aa1d50118b"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12r-20261026/author/final/result.json",
+      "relative_path": "final/result.json",
+      "sha256": "3d2679ee26fb064a791d2b34e0e2f38fe5c49541f8effca4a4a7befd67fafd66"
+    }
+  ],
+  "pre_fix_result": "/workspace/.cloud-setup/t12r-20261026/author/pre-fix/result.json",
+  "final_result": "/workspace/.cloud-setup/t12r-20261026/author/final/result.json",
+  "direct52_receipt": "/workspace/.cloud-setup/t12r-20261026/author/final/complete-six-blobs/stdout.json",
+  "git_version_contract": "Requires Git recognizing global --no-lazy-fetch. Each snapshot Git child additionally forces GIT_NO_LAZY_FETCH=1; unsupported global options fail before repository lookup. Actual local promisor coverage Git2.52.0; external baseline2.55.0.windows.3 is external evidence, not patched platform certification. Unsupported-option rejection tested with explicitly labeled mock only.",
+  "final_command": "python3 -I -B scripts/test_dem_gen2_t12_offline.py --repo . --output /new/scratch/path --check-guard-mutation",
+  "physical_ready": false,
+  "physical_T12": "NOT_RUN",
+  "shared_gate_run": false,
+  "broad13_mutants_run": false,
+  "test_count_scope": "5 real Git cases (positive52 +4missing objects), one mocked compatibility guard, one guard-removal localfetch mutation; do not add nested52 to case counts."
+}

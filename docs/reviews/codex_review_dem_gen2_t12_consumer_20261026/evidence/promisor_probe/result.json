@@ -1,0 +1,92 @@
+{
+  "missing_blob": "55e8793ad35f72723de7195101be1834996b16a2",
+  "source_unchanged": true,
+  "rows": [
+    {
+      "case": "unprotected",
+      "rc": 2,
+      "fetch_processes": 3,
+      "fetch_events": [
+        {
+          "event": "child_start",
+          "sid": "20261026T052617.472183Z-H02c2ab1a-P00001e74",
+          "thread": "main",
+          "time": "2026-10-26T05:26:17.483690Z",
+          "file": "run-command.c",
+          "line": 741,
+          "child_id": 0,
+          "child_class": "?",
+          "use_shell": false,
+          "argv": [
+            "git",
+            "-c",
+            "fetch.negotiationAlgorithm=noop",
+            "fetch",
+            "origin",
+            "--no-tags",
+            "--no-write-fetch-head",
+            "--recurse-submodules=no",
+            "--filter=blob:none",
+            "--stdin"
+          ]
+        },
+        {
+          "event": "child_start",
+          "sid": "20261026T052617.472183Z-H02c2ab1a-P00001e74",
+          "thread": "main",
+          "time": "2026-10-26T05:26:17.679448Z",
+          "file": "run-command.c",
+          "line": 741,
+          "child_id": 1,
+          "child_class": "?",
+          "use_shell": false,
+          "argv": [
+            "git",
+            "-c",
+            "fetch.negotiationAlgorithm=noop",
+            "fetch",
+            "origin",
+            "--no-tags",
+            "--no-write-fetch-head",
+            "--recurse-submodules=no",
+            "--filter=blob:none",
+            "--stdin"
+          ]
+        },
+        {
+          "event": "child_start",
+          "sid": "20261026T052617.472183Z-H02c2ab1a-P00001e74",
+          "thread": "main",
+          "time": "2026-10-26T05:26:17.779407Z",
+          "file": "run-command.c",
+          "line": 741,
+          "child_id": 2,
+          "child_class": "?",
+          "use_shell": false,
+          "argv": [
+            "git",
+            "-c",
+            "fetch.negotiationAlgorithm=noop",
+            "fetch",
+            "origin",
+            "--no-tags",
+            "--no-write-fetch-head",
+            "--recurse-submodules=no",
+            "--filter=blob:none",
+            "--stdin"
+          ]
+        }
+      ],
+      "protocol_allowed": "file only; no external network",
+      "stderr": "T12 preparation source failure: Pinned Git object unavailable: 4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_gates.py; fetch origin codex/unloading-ulpri explicitly, then retry. No fetch was run.\r\n"
+    },
+    {
+      "case": "lazy_fetch_disabled",
+      "rc": 2,
+      "fetch_processes": 0,
+      "fetch_events": [],
+      "protocol_allowed": "file only; no external network",
+      "stderr": "T12 preparation source failure: Pinned Git object unavailable: 4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_gates.py; fetch origin codex/unloading-ulpri explicitly, then retry. No fetch was run.\r\n"
+    }
+  ]
+}
