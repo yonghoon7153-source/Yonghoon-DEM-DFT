@@ -1,0 +1,42 @@
+ibb-master
+yonghoon
+2026-10-26 20:14:00 KST
+
+FILE /home/yonghoon/dem_test/ps45/ps_7_3_r45/restart_ps_7_3_r45/restart_compress_3200000.bin
+81154383 /home/yonghoon/dem_test/ps45/ps_7_3_r45/restart_ps_7_3_r45/restart_compress_3200000.bin
+stat_rc=0
+0aa6e41a2330ae7825a715b8d98da6b708c37cb4093d3ab0f8fe2c2653ca3730  /home/yonghoon/dem_test/ps45/ps_7_3_r45/restart_ps_7_3_r45/restart_compress_3200000.bin
+sha256sum_rc=0
+
+FILE /home/yonghoon/dem_test/ps45/ps_7_3_r45/post_ps_7_3_r45/atom_3200000.liggghts
+21430748 /home/yonghoon/dem_test/ps45/ps_7_3_r45/post_ps_7_3_r45/atom_3200000.liggghts
+stat_rc=0
+2da106f8470a60c7d3b85894025007d6a5decdffb249b22e0a2ce67d08bbdd9e  /home/yonghoon/dem_test/ps45/ps_7_3_r45/post_ps_7_3_r45/atom_3200000.liggghts
+sha256sum_rc=0
+
+FILE /home/yonghoon/dem_test/ps45/ps_7_3_r45/post_ps_7_3_r45/contact_3200000.liggghts
+149687008 /home/yonghoon/dem_test/ps45/ps_7_3_r45/post_ps_7_3_r45/contact_3200000.liggghts
+stat_rc=0
+53ae293b4586d091dfca58ab430c174f36b641dcd24678eb10d10fc3f416e65c  /home/yonghoon/dem_test/ps45/ps_7_3_r45/post_ps_7_3_r45/contact_3200000.liggghts
+sha256sum_rc=0
+
+FILE /home/yonghoon/dem_test/ps45/ps_7_3_r45/post_ps_7_3_r45/mesh_3200000.stl
+349 /home/yonghoon/dem_test/ps45/ps_7_3_r45/post_ps_7_3_r45/mesh_3200000.stl
+stat_rc=0
+c25296a6d4d6b185be3c1c0ff98543dbfdb710c281403111c7fae2b9bde2b820  /home/yonghoon/dem_test/ps45/ps_7_3_r45/post_ps_7_3_r45/mesh_3200000.stl
+sha256sum_rc=0
+
+FILE /home/yonghoon/dem_test/ps45/logs/output_ps_7_3_r45_r8_220537.out
+127049 /home/yonghoon/dem_test/ps45/logs/output_ps_7_3_r45_r8_220537.out
+stat_rc=0
+35e28690eb9b45c989d7526205a1b168b23041cd1cce6afb12a020deb5096c49  /home/yonghoon/dem_test/ps45/logs/output_ps_7_3_r45_r8_220537.out
+sha256sum_rc=0
+
+FILE /home/yonghoon/dem_test/ps45/ps_7_3_r45/input_ps_7_3_r45_r8.liggghts
+5916 /home/yonghoon/dem_test/ps45/ps_7_3_r45/input_ps_7_3_r45_r8.liggghts
+stat_rc=0
+097658aa640f798b53da4c40a9d101632b8faaee6f80f4d1d2667591eef8d9cd  /home/yonghoon/dem_test/ps45/ps_7_3_r45/input_ps_7_3_r45_r8.liggghts
+sha256sum_rc=0
+
+identity_read_rc=0
+2026-10-26 20:14:02 KST
