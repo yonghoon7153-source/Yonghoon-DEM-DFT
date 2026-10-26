@@ -125,7 +125,8 @@ r_port = 2.0 (= 2h) · gap_tol 2.0 · σ_VGCF = 100 S/cm → 축방향 면 g = �
          (`fp_cjunc_graph` = dof 식별 집합 · 쌍별 정확 합산 전도도 · 판 결합) · 소비자 = 봉인 원천에서 다시 조립 (솔브 없음 ·
          `solve_sigma_z(cjunc_graph_only=True)`) 해 대조 → 판정문 반례 (PAR + (0.5, 1.5, 9.5) · c 1 · 아래 끝 ← 주 해 증서 · n_* 그대로) = 거부 ·
          정직한 FLOAT · UFLOAT · PAR c 1 · 등전위 다리 (G 같음) = 받음 · k > 0 원 반례 = 거부 그대로 · 지문 칸 꼴 · 지문 함수 성질 · +∞ 끝 ·
-         ★ 변이 보강 ⑥′ (고립 dof · 같은 n) · ⑧ (원천 주 계만 다름) · ⑨ (X6 꼴 다섯 + 원천 = 위 끝을 지운 기록 거부) · ⑩ (원천 꼴 = 구조화 실패)
+         ★ 변이 보강 ⑥′ (고립 dof · 같은 n) · ⑧ (원천 주 계만 다름) · ⑨ (X6 꼴 다섯 + 원천 = 위 끝을 지운 기록 거부) · ⑩ (원천 꼴 = 구조화 실패) ·
+         ⑪ 남은 한정 꼴 여섯 ((a) (b) (c) (a′) (b′) k 0 · 원천 없는 계약 = 받음) + 원천 = 전부 거부
   KBND  (05 · 한계 기록) k 경계 (90° → 89.99°) σ 뜀 크기 = 생산 단위 R_j 1e2 · 1e4 · 1e6 에서 −0.98 % · −2.1e-4 · −2.1e-6 (± 10 % · ∝ 1/R_j)
   MUT-RCA2 새 보장 변이 (조각 = fid 규칙 · 포트 옮김 · SV 전부 끊음 · 이음매 별칭 끔 · 바닥 = s > D 만 · ★ 10-22 못 가른 다리 지킴 끔 = 2 회차
          변이 J1 → QD2 ④ · '지남' 에 덮임 · 같은 성분 조건 뺌 = 2 회차 변이 J2 → QD2 ⑤ (훅 `_sv_passes`)) 가 위 시험에 옳은 이유로 걸린다 ·
@@ -5612,7 +5613,8 @@ def t_sv_graph_binding():
     원시 간선 개수 검사 → ③ 등전위 다리 · ② FLOAT (아래 끝 지문 = 주 해 지문이 정직) 을 받는다.
     ① Codex 반례 (지금 = 받음 · 거짓 clear) → 거부 · ② 정직한 FLOAT · UFLOAT · PAR c=1 = 대조 통과 · ③ 등전위 다리 (G 같음) = 통과 · ④ k > 0 원 반례
     (SVX 아래 끝 ← 주 해) = 거부 그대로 · ⑤ 증서 지문 칸 꼴 (없음 · hex 아님) = 원천 없이도 거부 · ⑥ 지문 함수 성질 · ⑦ +∞ 끝 (영값 위상 증서)
-    지문 = 다시 조립한 위 끝 · (변이 보강) ⑥′ 고립 dof · ⑧ 원천 주 계만 다름 = 거부 · ⑨ X6 꼴 + 원천 = 위 끝을 지운 기록 거부 · ⑩ 원천 꼴 = 구조화 실패."""
+    지문 = 다시 조립한 위 끝 · (변이 보강) ⑥′ 고립 dof · ⑧ 원천 주 계만 다름 = 거부 · ⑨ X6 꼴 + 원천 = 위 끝을 지운 기록 거부 · ⑩ 원천 꼴 = 구조화 실패 ·
+    ⑪ 남은 한정 꼴 여섯 + 원천 = 전부 거부."""
     import ca_ext_svcf as SVCF
     import run_contract as RCm
     # ── ①′ 판정문 반례 재현 (고치기 전 · 뒤 같음 — 원천 대조 없이는 기록만으로 못 가른다) ──
@@ -5794,6 +5796,35 @@ def t_sv_graph_binding():
             got10[nm] = f'EXC {type(ex).__name__}'
     chk('QG ⑩ 원천 꼴 틀림 (규칙 이름 · 칸 빠짐 · 모르는 칸 · 대문자 · 63 자 · dict 아님) → 구조화 실패 (봉인 원천 대조 불가 · 예외 아님)',
         all(isinstance(v, str) and v.startswith('sv_cf|') and '봉인 원천 대조 불가' in v for v in got10.values()), f'{got10}')
+    #  ⑪ 남은 한정 꼴 여섯 (묶음 A″ · B4 — 끊은 수 칸까지 맞춘 일관 편집이라 원천 없는 계약은 받는다 · QD7 ⑥ ⑥′ 와 같은 편집) — 원천 대조 = 전부 거부 (끝 증서
+    #    지문 = 다른 끝의 계) · 정직한 기록 + 원천 = 받음.  (a) SVX 아래 ← 주 해 + 옛 · 새 칸 0 · (b) QD2 ③ 위 ← 주 해 + 셋 0 · (c) QDX 위 ← 아래 + 대비 0 ·
+    #    (a′) SVX 아래 ← 주 해 + 새 칸만 0 · (b′) QD2 ③ 위 ← 주 해 + 새 칸 · 대비 0 · k 0 경계 = ① 반례
+    e23 = json.loads(json.dumps(_qd3_ev(*_qd3_run([QD2_A3, QD2_B3, QD2_C3], QD2_S3, QD2_N3))))
+    g23 = _qg_graphs([QD2_A3, QD2_B3, QD2_C3], QD2_S3, QD2_N3)
+    eX = json.loads(json.dumps(_qd3_ev(*_qd3_run(QDX_POLYS, QDX_SDCP, QDX_N))))
+    gX = _qg_graphs(QDX_POLYS, QDX_SDCP, QDX_N)
+    la = _qd5_swap(es, 'lower', SVCF)
+    la['solve']['sv_counterfactual'].update({'n_sv_faces_cut': 0, QD7_KEY: 0})
+    lb = _qd5_swap(e23, 'upper', SVCF)
+    lb['solve']['sv_counterfactual']['upper'].update({'n_edges_cut': 0, QD7_KEY: 0, QD7_KEY_LO: 0})
+    lc = json.loads(json.dumps(eX))
+    scx = lc['solve']['sv_counterfactual']
+    scx['upper'].update(G_cut_code=scx['G_cut_code'], sv_counterfactual_ratio=scx['sv_counterfactual_ratio'], conv_cert=dict(scx['conv_cert']))
+    scx['sv_counterfactual_ratio_hi'] = scx['sv_counterfactual_ratio']
+    lo_x, hi_x = SVCF.cert_interval(scx)
+    scx['ratio_cert_interval'] = [SVCF._enc(lo_x), SVCF._enc(hi_x)]
+    scx['upper'][QD7_KEY_LO] = 0
+    la2 = _qd5_swap(es, 'lower', SVCF)
+    la2['solve']['sv_counterfactual'][QD7_KEY] = 0
+    lb2 = _qd5_swap(e23, 'upper', SVCF)
+    lb2['solve']['sv_counterfactual']['upper'].update({QD7_KEY: 0, QD7_KEY_LO: 0})
+    lim = {'(a)': (es, la, gx), '(b)': (e23, lb, g23), '(c)': (eX, lc, gX), "(a′)": (es, la2, gx), "(b′)": (e23, lb2, g23), 'k0': (ev, sw, g)}
+    got11 = {nm: (SVCF.sv_cf_problem(h, True, graphs=gg_), SVCF.sv_cf_problem(a_, True), SVCF.sv_cf_problem(a_, True, graphs=gg_))
+             for nm, (h, a_, gg_) in lim.items()}
+    chk('QG ⑪ 남은 한정 꼴 여섯 ((a) · (b) · (c) · (a′) · (b′) · k 0 — 원천 없는 계약 = 받음 그대로) → 원천 대조 = 전부 거부 (끝 증서 가중 그래프 지문 ≠ 원천 '
+        '그 끝) · 정직한 기록 + 원천 = 받음',
+        all(v[0] is None and v[1] is None and isinstance(v[2], str) and v[2].startswith('sv_cf|') and QG_KEY in v[2] and '끝 증서' in v[2]
+            for v in got11.values()), f'{ {k: (v[0], v[1], (v[2] or "")[:60]) for k, v in got11.items()} }')
 
 
 def main():
