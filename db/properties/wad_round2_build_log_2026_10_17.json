@@ -377,5 +377,38 @@
   "P2": "selftest 시험 이름 정정은 발송 전에는 하지 않는다 (도구 sha 결박 유지) — 파일럿 반송 뒤 검사기를 고칠 때 같이 (handoff P2_남은_것)",
   "⏭": "사용자 업체 발송 (zip + 메일 본문에 MANIFEST sha) → 발송 기록 → 파일럿 반송 검사 → 등록부 봉인 → 해제 파일",
   "by": "agent · 2026-10-22"
+ },
+ "⑥_파일럿_반송_2026_10_26": {
+  "받음": "사용자 업로드 2026-10-26 852a9104-2026-10-26.zip (sha256 61e20e2a…) → RETURN_NOTES.txt · round2_return.tgz (934edb4a… · 598,605 B · 80 구성원 · sha256sum -c OK) · 보관 db/raw/wad_round2_vasp_2026_10_22/pilot_return_2026_10_26/",
+  "업체_메모": "묶음 MANIFEST 714324cc… · 받은 zip dc4047e3… 일치 (업체 확인) · mirae 64 랭크 1 노드 · NCORE 4 · KPAR 2 · 10-23 16:09 → 10-26 14:19 · 누적 70.2 h / 상한 P 117 h · VASP 5.4.4.18Apr17-6-g9f103f2a35 (V5 와 같은 빌드) · POTCAR pp54 · vdw_kernel.bindat sha b3c9452a… · INCAR · POSCAR · KPOINTS 수정 없음 · 손 재실행 · 인프라 중단 없음 (메모의 총에너지는 W 로 집계하지 않았다 — 카드대로 반송 다 온 뒤 한 번)",
+  "check_봉인_전": "tools/wad/build_round2_vasp_package.py --check (도구 sha 80ecbec3da1ef045 · 9ddfbe448 이후 안 바뀜) → P2S_S_A_bound · far OK · CC_S33_AB_optB88 bound · far SETTINGS_UNVERIFIED · V5 a4 SCF_NOT_CONVERGED (a4A NELM 200 · a4B NELM 300) · 나머지 19 MISSING (단계 1–4) · 끝 코드 3 (파일럿 단계 예상) — check_pilot_pre_seal_2026_10_26.txt",
+  "문구_원문_확정": {
+   "재시작": "a4B stdout.log 'the WAVECAR file was read successfully' (ISTART 1) · a4A 'WAVECAR not read' (ISTART 0) — 후보 regex 'the WAVECAR file was read successfully' (글자 규칙 통과)",
+   "커널": "CC optB88 bound · far OUTCAR 'vdW kernel read from vdw_kernel.bindat' (1300 줄) · PBE+D3 · V5 잡에는 없음 — 후보 regex 'vdW kernel read from vdw_kernel.bindat' (글자 규칙 통과)"
+  },
+  "⛔_봉인_멈춤": "--seal_registry → '파일럿 CC_S33_AB_optB88_bound: SETTINGS_UNVERIFIED 해석값을 못 읽음 [AGGAC]' — VASP 5.4.4 OUTCAR 해석값 구역은 GGA = BO · LEXCH 42 · VOSKOWN · AEXX · LUSE_VDW · Zab_VDW · PARAM1 · PARAM2 · PARAM3 를 찍고 AGGAC 는 찍지 않는다 (INCAR 에는 AGGAC = 0.0) · 우리 selftest 픽스처 (빌더 2140 줄) 에 'AGGAC = 0.0000' 줄을 넣어 둔 것이 실물과 달랐다 — 은 쪽 V5 실물 (PBE+D3) 에는 optB88 이 없어 이 경우를 실물로 본 적이 없다 · 검사기는 설계대로 자동 통과 없이 막았다 · 개정 3 파서 적응 정책은 '형식이 다르면 파서만' — 값이 아예 안 찍히는 경우라 검증 근거를 바꾸는 사용자 결정이 필요",
+  "은_a4": "a4A (stageA · LDIPOL F · NELM 200) SCF_NOT_CONVERGED (|dE| 5.5e-5) → a4B (ⓐ WAVECAR 읽음 확인 · ISTART 1 · ICHARG 0 · AMIN 0.01 · NELM 300) SCF_NOT_CONVERGED (dE 1e-3 수준 진동) — 개정 4 'a4 한 번 · 최종 실패면 종료' · 허용 서술 「작은 모델 지정 표본에서 미완료 — ENCUT 점검의 분리 끝점이 사전 재시도 (혼합 변경 · 두 단계 쌍극 보정 + AMIN) 로도 수렴하지 않음」 · 실패는 은 G4 (INCOMPLETE 그대로) 에만 — 탄소 G5_C · δ · C–C 판정에 안 넘긴다 · 은 G5 집계 (V5 쪽 --a4_result) 는 등록부 봉인 뒤",
+  "S_A_far_진단_§3(정보·판정_아님)": {
+   "p_z_eA": 0.746021,
+   "dipole_energy_correction_eV": -0.004773,
+   "E_fermi_eV": -0.5374,
+   "dV_step_from_pz_V": 0.4451,
+   "VASP_진공_준위": "위 3.830 · 아래 3.377 eV (계단 0.453 · p_z 환산과 2 % 안)",
+   "LOCPOT_면평균": "안쪽 간격 (SE↔흑연 · z 13.8–17.8 Å) 폭 0.0035 eV (평평 · 간격에 전기장 없음) · 바깥 진공 계단 자리 = DIPOL z + c/2 = 30.42 Å (흑연 위끝 · SE 아래끝 (다음 칸) 에서 각 5.50 Å) · 계단 양쪽 평탄 0.0027 · 0.0020 eV · 계단은 SE 슬랩 안쪽 · 바깥쪽 면 사이 (흑연 양쪽 진공 준위는 같다) — 그림 s_a_far_locpot_review.png",
+   "참고_bound": "p_z 0.4456 e·Å · ΔV 0.266 V",
+   "⏭": "신호 ⓒ 는 1저자 (사용자) 판단 — 신호면 라벨을 '분리 끝점의 전자 상태 미확인' 으로 줄이고 계속 여부를 정한다"
+  },
+  "파일럿_실측_비용": {
+   "탄소_기본_PBE+D3_Γ3×2_520_398원자": "bound 37 스텝 · 29,604 s (800 s/스텝) · far 32 스텝 · 26,671 s (834 s/스텝) — 묶어 816 s/스텝 · 잡당 7.4–8.2 h (장부 가정: 스텝당 596 s · 121 스텝 · 잡당 22.8 h 중앙 / 28.3 h 장부)",
+   "C–C_optB88_12원자": "27 · 30 스텝 · 52 · 50 s",
+   "은_a4": "ⓐ 200 스텝 77,758 s (389 s/스텝) · ⓑ 300 스텝 118,347 s (394 s/스텝) — 장부 기대 19.3 h 대 실측 54.5 h",
+   "단계_P": "70.2 h / 장부 기대 78 h (0.90 배) · 상한 117 h · 피크 노드 RSS 112.4 GB (P2S)"
+  },
+  "⏭_사용자_결정": [
+   "D1 AGGAC 검증 근거 (봉인을 막는 것)",
+   "D2 S_A far 진단 §3 ⓒ",
+   "D3 해제 — 단계 1–4 · 상한 (파일럿 실측으로 다시 낸 값 확인)"
+  ],
+  "by": "agent · 2026-10-26"
  }
 }

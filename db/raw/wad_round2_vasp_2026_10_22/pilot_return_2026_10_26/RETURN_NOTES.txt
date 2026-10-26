@@ -1,0 +1,38 @@
+W_ad 외주 2차 — 파일럿 (단계 P · 5 잡) 반송
+묶음 MANIFEST.sha256 = 714324cca0d0f05e39966543e3ffa76956fe51109e13f192cad6dc7f8e04cfed (받은 zip sha dc4047e3… 일치)
+실행: mirae 64core.q@n39 1 노드 · 64 랭크 · NCORE 4 · KPAR 2 · SGE 128669 · 2026-10-23 16:09 → 10-26 14:19 KST (누적 70.2 h / 상한 P 117 h)
+VASP vasp.5.4.4.18Apr17-6-g9f103f2a35 (V5 와 같은 빌드) · POTCAR pp54 (C = PAW_PBE C 08Apr2002) · vdw_kernel.bindat sha b3c9452a… size 157108
+
+$ cat run/status.tsv
+job	rung	stage	rc	status	n_elec	dE	deps	why	wall_s
+P2S_S_A_bound	0	P	0	OK	37	-0.32119E-06	0.21142E-07	-	29604
+P2S_S_A_far	0	P	0	OK	32	-0.66437E-06	-0.64577E-07	-	26671
+CC_S33_AB_optB88_bound	0	P	0	OK	27	0.39454E-06	-0.13832E-06	-	52
+CC_S33_AB_optB88_far	0	P	0	OK	30	-0.35574E-06	-0.35798E-07	-	50
+V5_s_outer_A_G4_e70_far_a4	a4A	P	0	SCF_NOT_CONVERGED	200	-0.55333E-04	-0.71133E-05	-	77758
+V5_s_outer_A_G4_e70_far_a4	a4B	P	0	SCF_NOT_CONVERGED	300	-0.17136E-02	0.86777E-05	-	118347
+
+TOTEN (참고 · 판정은 러너 status 기준)
+P2S_S_A_bound          -2824.15192596 eV
+P2S_S_A_far            -2819.94431168 eV
+CC_S33_AB_optB88_bound   -96.19059734 eV
+CC_S33_AB_optB88_far     -96.04054024 eV
+V5_s_outer_A_G4_e70_far_a4  a4A -731.14801446 / a4B -731.23522202 eV — 둘 다 미수렴, 값 없음
+
+은 a4: ⓐ NELM 200 소진 (|dE| 5.5e-5) → ⓑ ⓐ WAVECAR 승계 (WAVECAR.info honoured 1 · ISTART 1 · ICHARG 0) · AMIN 0.01 · NELM 300 소진 (dE 1e-3 수준 진동). 규칙대로 더 돌리지 않음.
+러너 경보 dE_stall/deps_stall 은 ⓐ 120~200 · ⓑ 120~300 스텝에서 20 스텝마다 기록 (중단 아님).
+
+$ tail run/env.txt (잡별 벽시계 · peak RSS)
+job CC_S33_AB_optB88_bound attempt 0 wall_s 52 peak_node_rss_GB 33.3 rank0_GB 0.06
+job CC_S33_AB_optB88_far attempt 0 wall_s 50 peak_node_rss_GB n/a rank0_GB 0.06   (50 s 잡 — 60 s 샘플러에 안 잡힘)
+job P2S_S_A_bound attempt 0 wall_s 29604 peak_node_rss_GB 112.4 rank0_GB 1.35
+job P2S_S_A_far attempt 0 wall_s 26671 peak_node_rss_GB 112.3 rank0_GB 1.35
+job V5_s_outer_A_G4_e70_far_a4 attempt a4A wall_s 77758 peak_node_rss_GB 85.7 rank0_GB 0.97
+job V5_s_outer_A_G4_e70_far_a4 attempt a4B wall_s 118347 peak_node_rss_GB 85.3 rank0_GB 0.97
+
+$ sha256sum -c round2_return.tgz.sha256
+round2_return.tgz: OK   (934edb4a0cdc647cf2d346c2c6d9ebca4f03c77bde637df6cd9472b941d50d0f · 598,605 B · 80 구성원 · POTCAR 본문 0 · WAVECAR/CHGCAR 없음)
+
+참고: LOCPOT.zavg.txt 는 P2S_S_A_far 만 (LVHAR 가 그 INCAR 에만 있음 — 묶음 설계대로).
+참고: INCAR · POSCAR · KPOINTS 수정 없음 · 손 재실행 없음 · 인프라 중단 없음 (run_aborted 없음).
+다음: 단계 1–4 는 해제 파일 (RELEASE_FILE + sha256) 받으면 STAGES="1 2 3 4" 로 같은 폴더에서 이어 감.
