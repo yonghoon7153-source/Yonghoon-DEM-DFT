@@ -1,0 +1,42 @@
+{
+  "status": "RECORDED_RJ_VALUE_MISMATCH_DIAGNOSTIC_NOT_RUN",
+  "job_id": "323957",
+  "node": "node04",
+  "pin": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde",
+  "run_end": "2026-10-26T22:51:37+09:00",
+  "physical_attempts_consumed": 1,
+  "stages": "G0/Ut0/R/UNread/UK rc0",
+  "reader_restore_rc": 2,
+  "reader_kebase_rc": 0,
+  "completion": {
+    "fails": 0,
+    "reader_rc": 2
+  },
+  "g2c": {
+    "n_orig": 562605,
+    "n_test": 562605,
+    "n_mismatch": 545583,
+    "fraction": 0.9697443143946464,
+    "missing": [],
+    "extra": [],
+    "duplicate_conflicts": [],
+    "consistent_duplicates": 0,
+    "discriminating_frac": 1.0
+  },
+  "other_observations": {
+    "G2_atoms": 160417,
+    "G2_n_mismatch": 0,
+    "G3_pressure_relative": 9.18817960049445e-06
+  },
+  "evidence_kind": "User chat manually transcribed; JSON formatting normalized. Not raw-file byte attestation. Actual diagnostic binds server evidence semantically and reports raw hashes.",
+  "intake_sha256": {
+    "restore_verdict.user-relayed.json": "b480568f51209849837c9b3a263ab04b25a52e8b47a2eab96b3f25ec8632155a",
+    "run_manifest.user-relayed.txt": "9f9d9fd1ec0fa75429056b708fcb418805bbb828ecc2d777f976030778fc271f"
+  },
+  "diagnostic_sha256": "46e899b77f0f20821349eea91e1707298966ee47e7a276eeaea596382240e9e6",
+  "oracle_checks": 66,
+  "actual_contact_files_read_here": false,
+  "retry_or_new_simulation": false,
+  "threshold_or_sealed_code_changed": false,
+  "follow_on_arms_authorized": false
+}

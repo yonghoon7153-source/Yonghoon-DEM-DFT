@@ -1,0 +1,28 @@
+kit=/home/yonghoon/ps45_unload_20261009/kit_20261026_221507_ps_7_3_r45_RJ_2kW5
+repo_head=4c29705fa1c4ba94737a858b206fa4f4c5bb2bde
+repo_dirty_here=0
+sums_sha256=bb9f305f476815d7448ee5069ceb8fa3b9f138f3be1dc59703fcc8eec09c03bb
+lmp=/lustre/home/yonghoon/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp_sha256=ee2d77261bac9e7fa4e9311c8709e74bf7583a13225a5bc35a791bef9be60a3f
+np=6
+mpirun=/home/yonghoon/.conda/envs/myenv/bin/mpirun --oversubscribe --bind-to none
+bed=ps_7_3_r45
+job=RJ
+resume=0
+slurm_job=323957 slurm_ntasks=6 slurm_nodes=node04
+allow_other_lmp=0
+gate=ALLOW
+gate_why=GATE bed=ps_7_3_r45 job=RJ ALLOW — 복원 시험 (원 체크포인트 · 결과 0 건)
+grammar_prereq=PASS
+grammar_verdict=/home/yonghoon/ps45_unload_hist_20261013/gram_20261015_030225/grammar_verdict.json
+grammar_verdict_sha256=c19a5aa620bfc58d7593059f5d8c5a51012da7b6774ed2c54902dd7a02efcdbb
+grammar_line=GRAMMAR_PREREQ status=PASS verdict=/home/yonghoon/ps45_unload_hist_20261013/gram_20261015_030225/grammar_verdict.json verdict_sha256=c19a5aa620bfc58d7593059f5d8c5a51012da7b6774ed2c54902dd7a02efcdbb run_dir=/lustre/home/yonghoon/ps45_unload_hist_20261013/gram_20261015_030225 lmp_sha256=ee2d77261bac9e7fa4e9311c8709e74bf7583a13225a5bc35a791bef9be60a3f grammar_deck_sha256=a1f0ee432b977d12a415b876ab3aa47225fec8f83c21cdd92948ff3abce8e6ed producer_deck_sha256=bc42a3ad71d5e02f6f21181bed09109dccfa60ad67a5d4a6b3d47f9c472fd70d reread=PASS reader_sha256=70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c
+start=2026-10-26T22:15:20+09:00
+stage=G0 rc=0
+stage=Ut0 screen=screen.txt rc=0 check=PASS
+stage=R screen=screen.txt rc=0 check=PASS
+stage=UNread screen=screen.txt rc=0 check=PASS
+stage=UK screen=screen.txt rc=0 check=PASS
+reader_restore_rc=2
+reader_kebase_rc=0
+end=2026-10-26T22:51:37+09:00 fails=0 reader_rc=2
