@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "candidate": "3eecce8af503556b678f8f4a02343e6bce3d0b83",
+  "tree": "1d7aa5e05679e69adf7e7782bc1acbfcd08ea9fe",
+  "base": "bffc42cab29da37b45f8a713e30e8572b91e7da3",
+  "checked_tree_equal": true,
+  "sole_parent_verified": true
+}
