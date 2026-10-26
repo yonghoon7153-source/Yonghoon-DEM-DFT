@@ -1890,6 +1890,107 @@ def t_states_payload():
         shutil.rmtree(td, ignore_errors=True)
 
 
+def _sg_load(d, out):
+    p = os.path.join(d, out)
+    try:
+        return json.load(open(p, encoding='utf-8')) if os.path.exists(p) else None
+    except Exception:                                      # noqa: BLE001
+        return None
+
+
+@case('SG payload 조립만 (--step3-cjunc-graph-only) — 봉인 원천 출력 (★ 10-26 B″ · 1저자 Q1 (가) · 시험 먼저)')
+def t_graph_only_payload():
+    """★ 10-26 B″ (1저자 10-26 Q1 (가) — 사슬의 생산 그래프 원천 = 같은 코드 · 같은 킷 입력에서 payload 를 **조립만** 다시 돌린다 · 묶음 B 보고
+    `docs/reviews/rint2_rr_fix_evidence_20261023/REPORT_B.md` §13 결정 1) — payload `--step3-cjunc-graph-only` = 같은 runner 인자 + 이 플래그 →
+    `step3_sigma.solve_sigma_z(cjunc_graph_only=True)` (CG · 증서 · 기록 없음) → 출력 파일 = 봉인 원천 기록 (`run_contract.cjunc_graph_only_record` ·
+    칸 고정 = σ 없음) · 지문 = 실제 SV 런 증서 지문 (주 · 아래 · 위) · 결합 칸 = 그 런 주 증서 결합 · 환경 단위 · 비용 (시간 · 최대 RSS)."""
+    if ARGS.skip_payload:
+        print('    (--skip-payload — 건너뜀)')
+        return
+    import ca_ext_svcf as SVc
+    import carbon_junction as CJm
+    td = tempfile.mkdtemp(prefix='b6_sg_')
+    try:
+        for sub in ('svu', 'dbe'):
+            os.makedirs(os.path.join(td, sub))
+        du = make_fixture_sv_unsplit(os.path.join(td, 'svu'), 6.5)
+        dd = make_fixture(os.path.join(td, 'dbe'), sdcp=True)
+        SVK = OFF + LEAN2 + CJ + ['--step3-rtol', '1e-12']
+        GO = ['--step3-cjunc-graph-only']
+        rc_f, log_f, q_f = run_payload(du, SVK + ['--step3-cjunc-sv-cf'], out='full.json')
+        rc_g, log_g, g = run_payload(du, SVK + ['--step3-cjunc-sv-cf'] + GO, out='g_on.json')
+        su = ((cj_block(q_f).get('evidence') or {}).get('solve') or {}).get('sv_counterfactual') or {}
+        gg = (g or {}).get('cjunc_graphs') if isinstance(g, dict) else None
+        gg = gg if isinstance(gg, dict) else {}
+        prob_fn = getattr(RC, 'cjunc_graph_only_problem', None)
+        prob = prob_fn(g) if (prob_fn is not None and g is not None) else 'cjunc_graph_only_problem 없음 · 출력 없음'
+        chk('SG1 조립만 런 — rc 0 · 출력 = 봉인 원천 기록 (run_contract.cjunc_graph_only_problem 통과 · graph_only True · 규칙 = '
+            'carbon_junction.CJUNC_GRAPH_FP_RULE) · 실제 SV 런 (같은 인자 · 플래그 없음) rc 0',
+            rc_f == 0 and rc_g == 0 and prob is None and isinstance(g, dict) and g.get('graph_only') is True
+            and gg.get('rule') == CJm.CJUNC_GRAPH_FP_RULE, (rc_f, rc_g, prob, sorted(g) if isinstance(g, dict) else g, log_g.strip()[-400:]))
+        main_fp = (s3_of(q_f).get('conv_cert') or {}).get(SVc.GRAPH_KEY)
+        lo_fp = (su.get('conv_cert') or {}).get(SVc.GRAPH_KEY)
+        up_fp = ((su.get('upper') or {}).get('conv_cert') or {}).get(SVc.GRAPH_KEY) if isinstance(su.get('upper'), dict) else None
+        chk('SG2 지문 = 실제 SV 런 증서 지문 — 주 = 주 해 증서 · 아래 = 아래 끝 증서 · 위 = 위 끝 풀이 증서 (못 가른 덩어리 1 · 셋 다 hex64) · '
+            '소비자 대조 (ca_ext_svcf.graph_problem · run_contract.ca_ext_record_ok(graphs=)) 통과',
+            all(SVc._hex64(x) for x in (main_fp, lo_fp, up_fp)) and gg.get('main') == main_fp and gg.get('lower') == lo_fp
+            and gg.get('upper') == up_fp and SVc.graph_problem(su, gg) is None
+            and RC.ca_ext_record_ok(man_of(q_f), graphs=gg) == (True, None),
+            (main_fp, lo_fp, up_fp, gg))
+        bind = (g or {}).get('bind') if isinstance(g, dict) else None
+        want_bind = {k: (su.get('conv_cert_full') or {}).get(k) for k in SVc.BIND_FIELDS}
+        chk('SG3 결합 칸 = 실제 SV 런 주 증서의 결합 (bind_version + 격자 · σ 표 · face 계획 · 접합 원장 · 계획 행 지문 — 같은 입력에서 다시 조립했다는 증거)',
+            isinstance(bind, dict) and bind == want_bind == {k: (s3_of(q_f).get('conv_cert') or {}).get(k) for k in SVc.BIND_FIELDS},
+            (bind, want_bind))
+        keys = getattr(RC, 'CJUNC_GRAPH_ONLY_KEYS', None)
+        chk('SG4 솔브 없음 · σ 없음 — 화면에 CG 줄 없음 · 출력 칸 = 고정 칸 (CJUNC_GRAPH_ONLY_KEYS · mpm_metrics · σ 없음) · .failed 없음 · .part 없음',
+            rc_g == 0 and 'CG running' not in log_g and keys is not None and isinstance(g, dict) and tuple(sorted(g)) == tuple(sorted(keys))
+            and 'mpm_metrics' not in (g or {}) and not os.path.exists(os.path.join(du, 'g_on.json.failed'))
+            and not os.path.exists(os.path.join(du, 'g_on.json.part')), (keys, sorted(g) if isinstance(g, dict) else g))
+        eu = getattr(RC, 'env_unit_now', lambda: None)()
+        cost = (g or {}).get('cost') if isinstance(g, dict) else None
+        chk('SG5 환경 단위 = 이 인터프리터 (run_contract.env_unit_now — 사슬 env_record 와 같은 함수) · 비용 칸 (시간 둘 ≥ 0 · 최대 RSS kB int > 0)',
+            eu is not None and isinstance(g, dict) and g.get('env_unit') == eu and isinstance(cost, dict)
+            and all(isinstance(cost.get(k), float) and cost[k] >= 0.0 for k in ('seconds_step3', 'seconds_assemble'))
+            and type(cost.get('peak_rss_kb')) is int and cost['peak_rss_kb'] > 0, ((g or {}).get('env_unit'), eu, cost))
+        if isinstance(cost, dict):
+            print(f"    보고 SG (픽스처 · 의미 없음) — 조립만 STEP3 {cost.get('seconds_step3')} s · 조립 {cost.get('seconds_assemble')} s · "
+                  f"최대 RSS {cost.get('peak_rss_kb')} kB")
+        rc_o, log_o, go_ = run_payload(du, SVK + GO, out='g_off.json')
+        go_g = (go_ or {}).get('cjunc_graphs') if isinstance(go_, dict) else None
+        go_g = go_g if isinstance(go_g, dict) else {}
+        gb_o = (go_ or {}).get('bind') if isinstance(go_, dict) else None
+        chk('SG6 SV 노브 끔 + 조립만 — rc 0 · 주 지문 = 노브 켠 조립만 주 지문 (노브는 주 계를 안 바꾼다) · 아래 · 위 None · 결합 = 계획 행 지문만 다름 '
+            '(노브 켠 계획은 행 지문에 요청이 들어간다 · SP16)',
+            rc_o == 0 and go_g.get('main') == gg.get('main') and SVc._hex64(go_g.get('main')) and go_g.get('lower') is None
+            and go_g.get('upper') is None and isinstance(gb_o, dict) and isinstance(bind, dict)
+            and {k for k in SVc.BIND_FIELDS if gb_o.get(k) != bind.get(k)} == {'fp_cjunc_rows'},
+            (rc_o, go_g, log_o.strip()[-300:]))
+        rc_b, _lb, q_b = run_payload(dd, SVK + ['--step3-cjunc-sv-cf'], out='b_full.json')
+        rc_bg, log_bg, g_b = run_payload(dd, SVK + ['--step3-cjunc-sv-cf'] + GO, out='b_g.json')
+        sb = ((cj_block(q_b).get('evidence') or {}).get('solve') or {}).get('sv_counterfactual') or {}
+        gbg = (g_b or {}).get('cjunc_graphs') if isinstance(g_b, dict) else None
+        gbg = gbg if isinstance(gbg, dict) else {}
+        chk('SG7 DBE 꼴 (SDCP 점 하나 · 못 가른 덩어리 0) — 조립만 위 끝 None · 아래 끝 = 그 런 아래 끝 증서 지문 · 소비자 대조 통과 (위 끝 풀이 기록 없음 ↔ '
+            '원천 위 끝 없음)',
+            rc_b == 0 and rc_bg == 0 and sb.get('upper') is None and gbg.get('upper') is None
+            and gbg.get('lower') == (sb.get('conv_cert') or {}).get(SVc.GRAPH_KEY) and SVc.graph_problem(sb, gbg) is None,
+            (rc_b, rc_bg, gbg, log_bg.strip()[-300:]))
+        rc_n, log_n, p_n = run_payload(dd, OFF + LEAN2 + ['--step3-rtol', '1e-12'] + GO, out='g_nocj.json')
+        rc_r, log_r, p_r = run_payload(du, SVK + GO + ['--step3-rasterize-only', 'r.json'], out='g_rast.json')
+        chk('SG8 입구 거부 (GPU 전 · 출력 없음) — 접합 없이 조립만 = S2_CJUNC_REFUSED|FLAG_WITHOUT_CJUNC| (그 플래그 이름) · 조립만 + rasterize-only = '
+            'S2_CJUNC_REFUSED|GRAPH_ONLY_RASTERIZE_ONLY| (두 출력 꼴이 겹친다)',
+            rc_n != 0 and 'S2_CJUNC_REFUSED|FLAG_WITHOUT_CJUNC|' in log_n and '--step3-cjunc-graph-only' in log_n and p_n is None
+            and rc_r != 0 and 'S2_CJUNC_REFUSED|GRAPH_ONLY_RASTERIZE_ONLY|' in log_r and p_r is None
+            and not os.path.exists(os.path.join(du, 'r.json')), (rc_n, log_n.strip()[-200:], rc_r, log_r.strip()[-200:]))
+        rc_w, log_w, _pw = run_payload(du, SVK + ['--step3-cjunc-sv-cf'] + GO, out=os.path.join('no_such_dir', 'g_w.json'))
+        chk('SG9 쓰기 실패 = 구조화 종료 (S2_CJUNC_GRAPH_ONLY|WRITE| · rc ≠ 0 · 최종 파일 · .part 없음 — 반쯤 쓰인 원천 파일을 남기지 않는다)',
+            rc_w != 0 and 'S2_CJUNC_GRAPH_ONLY|WRITE|' in log_w and not os.path.exists(os.path.join(du, 'no_such_dir')),
+            (rc_w, log_w.strip()[-200:]))
+    finally:
+        shutil.rmtree(td, ignore_errors=True)
+
+
 # ═════════════════════════ B 묶음 — 끔 비트 동일 (고치기 전 코드 대조) ═════════════════════════
 #: ★ 10-21 (D · 브리프 묶음 5) — `--old-scripts` 대조에서 나와도 되는 칸 (한 곳 · z3 O 묶음도 이 표 · 함수를 쓴다).
 #:   한 줄 = (세대, 연산, 경로 정규식 (전체 일치), 경우 표지, 사유) — 연산 '+' 새 칸 · '-' 없어진 칸 · '~' 값 바뀜 ·

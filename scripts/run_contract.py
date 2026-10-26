@@ -134,6 +134,9 @@ CLI_ACCOUNTING = {
     #    (`protocol_ext` 아님 · p3ca id 그대로) · 추가 솔브 = `solve` · 요청 = 증거 `ca_ext.cjunc.evidence.sv_counterfactual_request` ·
     #    영수증 선택 칸 `sv_counterfactual` (대조 = `_receipt_ext_problem`) · 문턱 = 사슬 계획 (등록 R §5-6 · producer 는 비만 낸다).
     '--step3-cjunc-sv-cf': ('solve', None),
+    #  ★ 2026-10-26 (B″ · 1저자 Q1 (가)) — 조립만 (사슬 SV 끝 그래프 봉인 원천) — 출력 꼴만 바꾼다 (주 해를 풀지 않고 조립한 계의 지문을 쓰고 끝낸다 ·
+    #    규약 id · 물리 칸 그대로 · `--step3-rasterize-only` 와 같은 부류) → mode.  출력 = `cjunc_graph_only_record` · --step3-cjunc 와만.
+    '--step3-cjunc-graph-only': ('mode', None),
     #  ★ `ptfe_zero_dof` = (스탬프 ON) ∧ (σ_PTFE == 0) — 두 옵션이 함께 정한다.
     '--ptfe-stamp': ('protocol', ('ptfe_stamp', 'ptfe_zero_dof')),
     '--sigma-ptfe': ('protocol', ('sigma_ptfe_S_cm', 'ptfe_zero_dof')),
@@ -1415,6 +1418,88 @@ def runner_ca_ext_view(rec):
     if _bad:
         raise ValueError(f'러너 인자 {_bad} 에 생성 스크립트 밖 문자가 있다 ({out})')
     return out
+
+
+#: ★ 10-26 B″ (1저자 Q1 (가) · 묶음 B 보고 §13 결정 1) — 환경 지문의 같음 단위 칸 (python 부 판 · numpy · scipy 판 문자열 정확히 · 사슬
+#   `rint_r_chain.ENV_UNIT_KEYS` 가 이 이름을 쓴다)
+ENV_UNIT_KEYS = ('python_minor', 'numpy', 'scipy')
+
+
+def env_unit_now():
+    """이 프로세스의 환경 지문 같음 단위 → {python_minor · numpy · scipy} (판 문자열 · 못 읽으면 None) — 사슬 (`rint_r_chain.env_record`) 과 payload
+    조립만 출력 (`cjunc_graph_only_record`) 이 **같은 함수**로 잰다 (사본 없음).  numpy · scipy 는 함수 안에서만 부른다 (이 모듈은 numpy 없이 뜬다)."""
+    import sys as _s
+    unit = {'python_minor': '%d.%d' % tuple(_s.version_info[:2]), 'numpy': None, 'scipy': None}
+    try:
+        import numpy as _np_u
+        unit['numpy'] = str(_np_u.__version__)
+    except Exception:                                         # noqa: BLE001 — 미확인 = None (대조하는 쪽이 멈춘다)
+        pass
+    try:
+        import scipy as _sc_u
+        unit['scipy'] = str(_sc_u.__version__)
+    except Exception:                                         # noqa: BLE001
+        pass
+    return unit
+
+
+#: ★ 10-26 B″ (1저자 Q1 (가)) — payload `--step3-cjunc-graph-only` 출력 (조립만 · CG · 증서 · σ 없음) = 사슬 SV 끝 그래프 봉인 원천의 원 자료
+#   (`rint_r_chain.RunnerGraphSource` · 러너 `CJUNC_GRAPH_ONLY=1` 의 옮기기 전 검사가 같은 함수로 본다) — 칸 고정 (σ 칸이 들어올 자리가 없다):
+#   cjunc_graphs = `step3_sigma.solve_sigma_z(cjunc_graph_only=True)` 의 지문 {rule · main · lower · upper} | None (조립 전 조기 반환) · reason = 그 해의 사유 ·
+#   bind = 그 조립의 입력 결합 (`step3_conv_cert.bind_record` — 같은 입력에서 다시 조립했다는 대조 칸) · env_unit = `env_unit_now` · cost = 시간 · 최대 RSS
+CJUNC_GRAPH_ONLY_SCHEMA = 'cjunc-graph-only-v1'
+CJUNC_GRAPH_ONLY_KEYS = ('schema', 'graph_only', 'cjunc_graphs', 'reason', 'bind', 'env_unit', 'cost')
+#: 비용 칸 — STEP3 시작부터 · 조립 호출부터 끝까지 (벽시계 초) · 이 payload 프로세스의 최대 RSS (리눅스 `ru_maxrss` = kB · 못 읽으면 None)
+CJUNC_GRAPH_ONLY_COST_KEYS = ('seconds_step3', 'seconds_assemble', 'peak_rss_kb')
+
+
+def cjunc_graph_only_record(res, *, env_unit, cost):
+    """조립만 해 (`solve_sigma_z(cjunc_graph_only=True)` 의 반환) → 봉인 원천 출력 기록 (칸 = `CJUNC_GRAPH_ONLY_KEYS`)."""
+    r = res if isinstance(res, dict) else {}
+    g = r.get('cjunc_graphs')
+    b = r.get('bind')
+    return {'schema': CJUNC_GRAPH_ONLY_SCHEMA, 'graph_only': True, 'cjunc_graphs': (dict(g) if isinstance(g, dict) else None),
+            'reason': r.get('reason'), 'bind': (dict(b) if isinstance(b, dict) else b), 'env_unit': dict(env_unit or {}),
+            'cost': dict(cost or {})}
+
+
+def cjunc_graph_only_problem(rec):
+    """봉인 원천 출력 기록 → 문제 | None (꼴만 — 지문 ↔ 증서 대조 = `ca_ext_svcf.graph_problem` · 결합 · 환경 대조 = 사슬).
+    칸 집합 = `CJUNC_GRAPH_ONLY_KEYS` 정확히 · schema · graph_only True · cjunc_graphs = None | 원천 꼴 (`ca_ext_svcf.graph_source_problem`) ·
+    reason = None | 글 · bind = 결합 칸 (`ca_ext_svcf.BIND_FIELDS` 정확히 · 판 = 글 · 지문 = 글 | None) · env_unit = 세 칸 비지 않은 글 ·
+    cost = 세 칸 (초 = 유한 ≥ 0 float · 최대 RSS = int ≥ 0 | None)."""
+    import ca_ext_svcf as _sv
+    if not isinstance(rec, dict) or set(rec) != set(CJUNC_GRAPH_ONLY_KEYS):
+        return (f'GRAPH_ONLY|shape| 기록 꼴 {type(rec).__name__} · 칸 {sorted(rec) if isinstance(rec, dict) else None} '
+                f'(= {list(CJUNC_GRAPH_ONLY_KEYS)})')
+    if rec['schema'] != CJUNC_GRAPH_ONLY_SCHEMA or rec['graph_only'] is not True:
+        return f'GRAPH_ONLY|schema| schema {rec["schema"]!r} · graph_only {rec["graph_only"]!r} (= {CJUNC_GRAPH_ONLY_SCHEMA!r} · True)'
+    g = rec['cjunc_graphs']
+    if g is not None:
+        why = _sv.graph_source_problem(g)
+        if why:
+            return f'GRAPH_ONLY|graphs| {why}'
+    if rec['reason'] is not None and not isinstance(rec['reason'], str):
+        return f'GRAPH_ONLY|reason| {rec["reason"]!r} (None 또는 글)'
+    b = rec['bind']
+    if not isinstance(b, dict) or set(b) != set(_sv.BIND_FIELDS):
+        return f'GRAPH_ONLY|bind| 결합 칸 {sorted(b) if isinstance(b, dict) else b!r} (= {list(_sv.BIND_FIELDS)})'
+    if not isinstance(b['bind_version'], str) or not b['bind_version'] \
+            or any(b[k] is not None and not isinstance(b[k], str) for k in _sv.BIND_FIELDS if k != 'bind_version'):
+        return f'GRAPH_ONLY|bind| 결합 값 {b!r} (판 = 비지 않은 글 · 지문 = 글 | None)'
+    u = rec['env_unit']
+    if not isinstance(u, dict) or set(u) != set(ENV_UNIT_KEYS) or any(not isinstance(u[k], str) or not u[k] for k in ENV_UNIT_KEYS):
+        return f'GRAPH_ONLY|env| 환경 단위 {u!r} (= {list(ENV_UNIT_KEYS)} · 비지 않은 글)'
+    c = rec['cost']
+    if not isinstance(c, dict) or set(c) != set(CJUNC_GRAPH_ONLY_COST_KEYS):
+        return f'GRAPH_ONLY|cost| 비용 칸 {sorted(c) if isinstance(c, dict) else c!r} (= {list(CJUNC_GRAPH_ONLY_COST_KEYS)})'
+    for k in ('seconds_step3', 'seconds_assemble'):
+        if type(c[k]) is not float or not math.isfinite(c[k]) or c[k] < 0.0:   # noqa: E721 — bool · int 아님
+            return f'GRAPH_ONLY|cost| {k} = {c[k]!r} (유한 ≥ 0 float)'
+    pk = c['peak_rss_kb']
+    if pk is not None and (type(pk) is not int or pk < 0):                    # noqa: E721
+        return f'GRAPH_ONLY|cost| peak_rss_kb = {pk!r} (int ≥ 0 | None)'
+    return None
 
 
 def protocol_ok(man):

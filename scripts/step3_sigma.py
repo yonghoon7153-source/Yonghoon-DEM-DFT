@@ -2033,9 +2033,15 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
                 'fp_cjunc_registry': (_cjp['registry']['fp']['registry'] if _cjp is not None else None),
                 'fp_cjunc_rows': (_cjp['fp_rows'] if _cjp is not None else None)}
 
+    def _graph_bind():
+        #  ★ 10-26 B″ (1저자 Q1 (가)) — 조립만 해의 입력 결합 (증서 결합 칸과 같은 함수 · 판 · 지문 다섯) — 봉인 원천이 "같은 입력에서 다시 조립했다" 를
+        #    그 런 주 증서의 결합과 대조한다 (`rint_r_chain.RunnerGraphSource`)
+        import step3_conv_cert as _ccg
+        return _ccg.bind_record(**_cert_bind_kw())
+
     def _ret(d):
         if cjunc_graph_only:                               # ★ 10-26 묶음 B6 — 접합 조립 전 조기 반환 = 다시 조립할 계 없음 (지문 없음 · 사유만)
-            return {'graph_only': True, 'cjunc_graphs': None, 'reason': d.get('reason')}
+            return {'graph_only': True, 'cjunc_graphs': None, 'reason': d.get('reason'), 'bind': _graph_bind()}
         if CONV_CERT:
             #  ★ 10-21 (Codex RCA-13 · 1저자 Q7 일부) — 조기 반환 해의 **상태 증서** (CG 없이 낸 σ 0): 두 판을 잇는 성분이 없는 사유 =
             #    VALID_ZERO_TOPOLOGY (σ 0 = 정상 결과 · 바닥 극한 R_j = ∞ 를 증서 없음으로 멈추지 않는다) · 단락 · 얇은 침대 · 모르는 사유 =
@@ -2298,7 +2304,7 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
             _cfg = _cjs.sv_graph_fps() if _sv_on else {'lower': None, 'upper': None}
             return {'graph_only': True, 'reason': _cjb.get('reason'),
                     'cjunc_graphs': {'rule': _cjm.CJUNC_GRAPH_FP_RULE, 'main': _cjs.graph_fp, 'lower': _cfg['lower'],
-                                     'upper': _cfg['upper']}}
+                                     'upper': _cfg['upper']}, 'bind': _graph_bind()}
         if _cjb.get('reason'):
             return _ret({'sigma_eff': 0.0, 'n_dof': int(_cjs.stats['n_plate_reachable_dof']),
                          'n_through_dof': int(_cjs.stats['n_through_dof']),

@@ -195,7 +195,7 @@ CODE_FILES = ('rint_r_chain.py', 'run_contract.py', 'ca_ext_svcf.py', 'sr01_stam
               'rint_cycle_traj.py')
 RUNNER_NAME = 'sdcp_gain_vox015_8arm.sh'     # 등록 R §10 (0) 의 러너 — 한 단계 안 러너 파일 = 사슬 폴더의 이 파일 (★ 10-25 · Q2 (가) ③)
 #: ★ 10-25 묶음 B (RCA2-02 · Q2 (가) ⑤ · Q9 설계 개정 4 Q3 · R4-10) — 환경 지문의 같음 단위 (python 부 판 · numpy · scipy 판 문자열 정확히)
-ENV_UNIT_KEYS = ('python_minor', 'numpy', 'scipy')
+ENV_UNIT_KEYS = RC.ENV_UNIT_KEYS                             # ★ 10-26 B″ — 정본 = run_contract (payload 조립만 출력과 같은 칸 · 같은 이름)
 #: 등록 R §2-1b — S0 단계 1 · 단계 2 · R 런의 census · registry 가 같은 코드여야 하는 일곱 파일 (S0 보고 `code.file_digests` 와 대조)
 S0_SAME_FILES = ('ca_s0_census.py', 'carbon_junction.py', 'ptfe_face_alpha.py', 'step3_sigma.py', 'mpm_webapp_payload.py',
                  'fibre_segment_raster.py', 'sr01_stamp_compare.py')
@@ -882,17 +882,12 @@ def env_record():
     if 'rec' not in _ENV_MEMO:
         import platform
         np_ = None                                            # 기록만 칸 (BLAS · SIMD) 이 읽는 모듈 — import 이름과 갈라 둔다 (규율 경고)
-        unit = {'python_minor': '%d.%d' % tuple(sys.version_info[:2]), 'numpy': None, 'scipy': None}
+        #  ★ 10-26 B″ (1저자 Q1 (가)) — 같음 단위 = `run_contract.env_unit_now` (payload 조립만 출력 · 봉인 원천 대조와 같은 함수 · 사본 없음 · 값 그대로)
+        unit = RC.env_unit_now()
         try:
             import numpy as _np_mod
-            unit['numpy'] = str(_np_mod.__version__)
             np_ = _np_mod
-        except Exception:                                     # noqa: BLE001 — 미확인 = None (대조 함수가 멈춘다)
-            pass
-        try:
-            import scipy as _sc
-            unit['scipy'] = str(_sc.__version__)
-        except Exception:                                     # noqa: BLE001
+        except Exception:                                     # noqa: BLE001 — 기록만 칸 (BLAS · SIMD) 이 None 이 된다
             pass
         ro = {'python': platform.python_version(), 'implementation': platform.python_implementation(), 'executable': sys.executable,
               'platform': _try(platform.platform), 'cupy': _try(_env_cupy), 'gpu': _try(_env_gpu), 'blas': _try(lambda: _env_blas(np_)),

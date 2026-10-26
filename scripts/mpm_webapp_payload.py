@@ -917,9 +917,14 @@ def _cjunc_entry_contract(a):
     _lim = getattr(a, 'step3_cjunc_rj_limit', None)           # ★ Z3 — 극한 런 표지 (inf 바닥 · zero 천장 · 등록 R §3-1)
     _given = [fl for att, _k, fl in CJUNC_CLI if getattr(a, att, None) is not None] \
         + (['--step3-cjunc-rj-limit'] if _lim is not None else []) \
-        + (['--step3-cjunc-sv-cf'] if getattr(a, 'step3_cjunc_sv_cf', False) else [])
+        + (['--step3-cjunc-sv-cf'] if getattr(a, 'step3_cjunc_sv_cf', False) else []) \
+        + (['--step3-cjunc-graph-only'] if getattr(a, 'step3_cjunc_graph_only', False) else [])
     if a._cj_on:
         bad = []
+        #  ★ 10-26 B″ (1저자 Q1 (가)) — 조립만 + rasterize-only = 두 출력 꼴이 겹친다 (어느 쪽도 주 해를 안 푼다 · 하나만)
+        if getattr(a, 'step3_cjunc_graph_only', False) and getattr(a, 'step3_rasterize_only', ''):
+            bad.append(('GRAPH_ONLY_RASTERIZE_ONLY', '--step3-cjunc-graph-only + --step3-rasterize-only — 출력 꼴 둘이 겹친다 (하나만 · 조립만 = 봉인 원천 '
+                                                     '기록 · rasterize-only = 상별 셀 원장)'))
         for att, _k, fl in CJUNC_CLI:
             if getattr(a, att, None) is None:
                 bad.append(('MISSING', f'{fl} 가 없다 — 기본값 없음 (결과 전 선언 · 정량이면 거부 · 숫자 = 등록 R §2-1)'))
@@ -993,6 +998,49 @@ def _cjunc_entry_contract(a):
         if _miss:
             raise SystemExit(f'CA_EXT_EXPECT|INCOMPLETE| 계약 (--expect-physics) 을 선언한 런인데 켠 하위 블록의 칸 {_miss} 이 '
                              f'선언에 없다 — 선언 안 한 축은 검사도 안 된다 (PASL-04 꼴 · 러너가 무조건 선언할 것)')
+
+
+def _cjunc_graph_only_exit(a, s3, sid3, sig3, kw3, t_step3):
+    """★ 10-26 B″ (1저자 Q1 (가) · 묶음 B 보고 §13 결정 1) — `--step3-cjunc-graph-only`: 주 솔브와 **같은 인자** (kw3) 로 접합 계를 조립만 해
+    (`step3_sigma.solve_sigma_z(cjunc_graph_only=True)` · CG · 증서 · σ 없음) 봉인 원천 기록 (`run_contract.cjunc_graph_only_record` · 칸 고정) 을
+    `--out` 에 원자적으로 쓰고 exit 0 (매니페스트 · 게시 · 다른 솔브 없음).  조립 예외 · 기록 꼴 · 쓰기 실패 = 구조화 종료
+    (`S2_CJUNC_GRAPH_ONLY|<코드>|` · rc ≠ 0 · 반쯤 쓰인 파일 없음 — STEP3 의 넓은 except 가 삼켜 일반 출력으로 흐르지 않는다)."""
+    import time as _tg
+    t_go = _tg.time()
+    try:
+        res = s3.solve_sigma_z(sid3, sig3, a.step3_vox, cjunc_graph_only=True, **kw3)
+    except Exception as e:                                       # noqa: BLE001 — 구조화 종료 (SystemExit 는 STEP3 except 를 지난다)
+        raise SystemExit(f'S2_CJUNC_GRAPH_ONLY|ASSEMBLE| {type(e).__name__}: {e}')
+    t_end = _tg.time()
+    try:
+        import resource as _rsg
+        pk = int(_rsg.getrusage(_rsg.RUSAGE_SELF).ru_maxrss)     # 리눅스 = kB (기록만 칸)
+    except Exception:                                            # noqa: BLE001 — 못 읽으면 None
+        pk = None
+    rec = _RC.cjunc_graph_only_record(res, env_unit=_RC.env_unit_now(),
+                                      cost={'seconds_step3': float(t_end - t_step3), 'seconds_assemble': float(t_end - t_go),
+                                            'peak_rss_kb': pk})
+    why = _RC.cjunc_graph_only_problem(rec)
+    if why:
+        raise SystemExit(f'S2_CJUNC_GRAPH_ONLY|RECORD| {why}')
+    part = a.out + '.part'
+    try:
+        with open(part, 'w', encoding='utf-8') as fh:
+            json.dump(rec, fh, allow_nan=False, sort_keys=True)
+            fh.flush()
+            _os.fsync(fh.fileno())
+        _os.replace(part, a.out)
+    except OSError as e:
+        try:
+            _os.remove(part)
+        except OSError:
+            pass
+        raise SystemExit(f'S2_CJUNC_GRAPH_ONLY|WRITE| {a.out} — {type(e).__name__}: {e}')
+    g = rec['cjunc_graphs'] or {}
+    print(f"  STEP3 조립만 (--step3-cjunc-graph-only · 솔브 없음) — 지문 주 {str(g.get('main'))[:12]} · 아래 {str(g.get('lower'))[:12]} · "
+          f"위 {str(g.get('upper'))[:12]} · 사유 {rec['reason']} · 조립 {rec['cost']['seconds_assemble']:.1f} s · 최대 RSS {pk} kB → {a.out}",
+          flush=True)
+    raise SystemExit(0)
 
 
 def _vgcf_bulk_entry_contract(a):
@@ -1539,6 +1587,11 @@ def main():
                     help='S2 SV 반사실 대조 — 같은 침대 · 같은 R_j 에서 SV 융합 면 (SDCP–VGCF) 을 끊은 판을 한 번 더 풀어 단자 G 비를 '
                          '증거 (ca_ext.cjunc.evidence.solve.sv_counterfactual) 에 싣는다 · 주 σ 해 · 규약 id 는 그대로 · 문턱 = 사슬 계획 '
                          '(등록 R 5-6 · producer 는 비만) · --step3-cjunc 와만')
+    #  ★ 2026-10-26 (B″ · 1저자 Q1 (가)) — 조립만 = 사슬 SV 끝 그래프 봉인 원천 (같은 코드 · 같은 킷 입력에서 다시 조립 · 솔브 없음).
+    ap.add_argument('--step3-cjunc-graph-only', action='store_true',
+                    help='S2 조립만 — 같은 인자로 접합 계를 조립해 주 계 · SV 반사실 끝 (--step3-cjunc-sv-cf 일 때) 의 가중 그래프 지문만 --out 에 '
+                         '쓰고 끝낸다 (CG · 증서 · σ · 매니페스트 없음 · run_contract.cjunc_graph_only_record) · 사슬 봉인 원천 전용 · --step3-cjunc 와만 · '
+                         '--step3-rasterize-only 와 동시 = 거부')
     ap.add_argument('--sigma-swcnt', type=float, default=100.0,
                     help='σ_e SWCNT sheath (S/cm) — A14.  VGCF급 lit order ⚠hook: 개별 SWCNT 축방향은 '
                          '1e4-1e5 S/cm급이나 vein-번들 film 유효값은 미앵커.  ⚠ koo2026의 0.20 S/cm은 '
@@ -2431,11 +2484,14 @@ def main():
             _zt3, _zb3 = _ztop + float(_osh[2]), 0.0 + float(_osh[2])
             #  ② B6 — 접합 계획이 있으면 장 (φ 격자) 을 받지 않는다 (cjunc v0 = σ_e 전용 · 장 · je · 분담 진단은 원장을 안 읽는다 →
             #    solve_sigma_z 가 return_field 를 거부한다).  끄면 옛 호출 그대로 (return_field=True · 키워드 없음).
-            _res3 = _s3.solve_sigma_z(sid3, _sig3, a.step3_vox, return_field=(_cj_prep is None),
-                                      z_top_um=_zt3, z_bot_um=_zb3, periodic_xy=a.periodic,
-                                      rint=a._rint_e, pid=(pid3 if (a._rint_e or _fa_e is not None) else None),
-                                      **({'face_alpha': _fa_e} if _fa_e is not None else {}),
-                                      **({'cjunc': _cj_prep['plan']} if _cj_prep is not None else {}))   # ① · ② S1 · ② B6 (기본 None)
+            #  ★ 10-26 B″ (1저자 Q1 (가)) — 주 솔브 인자를 한 번 만든다 (조립만 런이 **같은 인자**로 조립한다 · 사본 없음 · 끈 경로 = 옛 호출과 같은 값)
+            _kw3 = dict(return_field=(_cj_prep is None), z_top_um=_zt3, z_bot_um=_zb3, periodic_xy=a.periodic,
+                        rint=a._rint_e, pid=(pid3 if (a._rint_e or _fa_e is not None) else None),
+                        **({'face_alpha': _fa_e} if _fa_e is not None else {}),
+                        **({'cjunc': _cj_prep['plan']} if _cj_prep is not None else {}))   # ① · ② S1 · ② B6 (기본 None)
+            if getattr(a, 'step3_cjunc_graph_only', False):
+                _cjunc_graph_only_exit(a, _s3, sid3, _sig3, _kw3, _t0)   # 조립만 → 봉인 원천 기록 → exit 0 (CG 없음)
+            _res3 = _s3.solve_sigma_z(sid3, _sig3, a.step3_vox, **_kw3)
             if _fa_prep is not None:                        # ② S1 — 솔브마다 영수증 (요청 채널 ↔ 솔브 기록 · 계획 지문)
                 a._fa_rcpt['electronic_main'] = _pfa.solve_receipt(_res3, _fa_e, requested='electronic' in a._fa_channels)
             if _cj_prep is not None:                        # ② B6 — 주 전자 솔브 영수증 (요청 ↔ 솔브 기록 · 원장 지문 · R_j · 수)
