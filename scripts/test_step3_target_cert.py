@@ -34,6 +34,9 @@ Q7 일부).
 합산 넘침 (★ 10-23 · Codex 재검토 RCA2-08 · 1저자 10-23 Q1–Q8 권고대로):
   T24 유한 중간값의 최종 합 (U · W fsum) · 원장 행 허용 · 판 전류 합 넘침 → 예외 · 경고 대신 NOT_CERTIFIABLE (판정문 5 노드 8e307 꼴 ·
       U 만 · W 만 · 숨은 접지 + 허용 넘침) · 정상 회로 증서 = 기반 (49a1af626) 과 비트 같음
+  T25 ★ 10-26 묶음 B7 (Codex 회차 ① RR1-02 · P3 · 1저자 10-26 Q3 (가)) KCL 결손 진단 합 (`target_kcl_raw`) 넘침 — 독립 노드 3 · gb 8e307 ·
+      gt 1 · φ 0.2 (판정문 탐침 `probe_diagnostic_overflow.py` 꼴) → 경고를 오류로 바꿔도 예외 없이 원장 문제 · NOT_CERTIFIABLE · ok False ·
+      경고 기록 0 · 정상 회로 증서 비트 그대로 (T24b)
 빠른 판 (기본 · 게이트) ↔ 긴 판 (`--long` · 따로): 긴 판만 = T5 표본 1,500 (빠른 300) · T16 무작위 200 (빠른 40) · T17 순열 20
   (빠른 3) + 탐침 순열 (T17b) + OpenBLAS 경로 자식 여섯 (T17c) · T4 접합 탐침 · T14 시간 (간선 > 2²⁰ 계) · T18 변이 표.
 
@@ -1382,6 +1385,36 @@ def t24():
         if not _same(a, c):
             bad.append((nm, sorted(k for k in set(a) | set(c) if not _same(a.get(k), c.get(k)))[:6]))
     chk(f'T24b 정상 회로 {len(systems)} 개 — 증서 dict 전체 = 고치기 전 판 ({RCA208_BASE}) 과 비트 같음 (ⓐ–ⓓ · 구간 · 상태 · 칸)', not bad, bad[:4])
+
+
+@case('T25 ★ 10-26 묶음 B7 (Codex 회차 ① RR1-02 · P3 · 1저자 10-26 Q3 (가)) KCL 결손 진단 합 (`target_kcl_raw` · step3_conv_cert :509) 넘침 — '
+      '독립 노드 3 · gb 8e307 · gt 1 · φ 0.2 (에너지 U · 상한 유한 · 노드 결손 6.4e307 셋의 합 1.92e308 만 넘침 · 판정문 탐침 꼴) → 경고를 오류로 '
+      '바꿔도 예외 없이 원장 문제 (KCL 진단 합 넘침) · certify = NOT_CERTIFIABLE · ok False · 기본 경고 설정에서 RuntimeWarning 기록 0')
+def t25():
+    import warnings
+    N = getattr(CC, 'STATUS_NOT_CERTIFIABLE', '?')
+    L, b, Ab, gb, At, gt = _hand_system(3, [], [(i, 8e307) for i in range(3)], [(i, 1.0) for i in range(3)])
+    phi = np.full(3, 0.2)
+    for how, fn in (('target_bracket (판정문 탐침과 같은 호출)', lambda: CC.target_bracket(L, b, phi, Ab, gb, At, gt)),
+                    ('certify', lambda: _cert_of(L, b, phi, Ab, gb, At, gt))):
+        for mode in ('error', 'always'):
+            try:
+                with warnings.catch_warnings(record=True) as seen:
+                    warnings.simplefilter(mode)                # error = numpy RuntimeWarning (넘침) → 예외 → 시험 실패 · always = 기록
+                    r = fn()
+                err = None
+            except Exception as e:                              # noqa: BLE001 — 예외 · 경고 = 고치기 전 꼴 (증서가 상태로 말해야 한다)
+                r, err, seen = {}, f'{type(e).__name__}: {e}', []
+            nwarn = len([w for w in seen if issubclass(w.category, RuntimeWarning)])
+            why = r.get('target_ledger_problem')
+            ok = (err is None and nwarn == 0 and r.get('target_ledger_ok') is False and isinstance(why, str) and 'KCL' in why
+                  and '넘침' in why and r.get('target_lo') is None and r.get('target_hi') is None and r.get('target_kcl_raw') is None)
+            if how == 'certify':
+                ok = ok and r.get('status') == N and r.get('ok') is False and r.get('pass_d') is False
+            chk(f'T25 [{how} · 경고 {mode}] → 예외 · RuntimeWarning 없이 원장 문제 (KCL 진단 합 넘침 · 구간 · 진단 합 없음)'
+                + (' · NOT_CERTIFIABLE · ok False' if how == 'certify' else ''),
+                ok, err or {'warnings': nwarn, **{k: r.get(k) for k in ('status', 'ok', 'target_ledger_ok', 'target_ledger_problem',
+                                                                          'target_kcl_raw')}})
 
 
 # ═════════════════════════ 증서 ↔ 런 결합 (사전 리뷰 PRE-impl-07 · 1저자 10-21 "권고대로 해") ═════════════════════════

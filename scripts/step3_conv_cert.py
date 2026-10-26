@@ -505,8 +505,15 @@ def target_bracket(L, b, phi, Ab, gb, At, gt, *, _tree=True, _defect_term=True):
     cb = cb.copy()
     ct = ct.copy()
     c[~seen[eu]] = 0.0                                     # 판에 안 닿는 성분 = 흐름 0 (정확 해도 0 · 그 노드 결손 0)
-    d = _node_balance(n, eu, ev, c, Ab, cb, At, ct)
-    rec['target_kcl_raw'] = float(np.abs(d).sum())
+    #  ★ 10-26 묶음 B7 (Codex 회차 ① RR1-02 · 1저자 10-26 Q3 (가)) — 원 KCL 결손 진단 합 (노드 결손 · 그 절댓값 합) 이 넘치면 RuntimeWarning 대신
+    #    구조화된 원장 문제 (NOT_CERTIFIABLE) · 유한이면 옛 식 그대로 (같은 연산 · 비트 같음 — errstate 는 경고만 막는다)
+    with np.errstate(over='ignore', invalid='ignore'):
+        d = _node_balance(n, eu, ev, c, Ab, cb, At, ct)
+        kcl_raw = float(np.abs(d).sum())
+    if not (math.isfinite(kcl_raw) and np.isfinite(d).all()):
+        rec.update(_target_empty('φ: KCL 결손 진단 합 넘침 (비유한)'))
+        return rec
+    rec['target_kcl_raw'] = kcl_raw
     if _tree:
         acc = d.copy()
         for lv in reversed(levels):                        # 깊은 층부터 — 자식 결손을 모은 뒤 부모 간선으로 민다
