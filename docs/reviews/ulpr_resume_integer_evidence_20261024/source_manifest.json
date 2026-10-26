@@ -1,0 +1,43 @@
+{
+  "baseline_pin": "8347d32ea678c0174bd77d4c79cfbd7b0591e4a3",
+  "candidate_diff_sha256": "ccd610c9e7c9b3d1443edba03324a8c0fdf0bed0330f908ca7844586b293efd0",
+  "files": [
+    {
+      "path": "docs/reviews/dem_unloading_ps45_prereg_20261009.md",
+      "baseline_sha256": "69ebe5a144d9e8fb67c2a9c0aa913417fd4f2e8e5b42ee37770382139bbd8f9b",
+      "sha256": "2453fa640f21844691f7b158d7d9fe84caadb3877024a364ee6fa8bffa7f9496",
+      "bytes": 131962
+    },
+    {
+      "path": "docs/data/ps45_unload_20261009/seal_kit.py",
+      "baseline_sha256": "0fc504fafbbb6a650a5b7868f8ce8edcb5cac6525f0c509257776ae45f31d22a",
+      "sha256": "807f1fca5a0e34a368227793382d3773e6c50c9205f2bee0c47701ec5814430a",
+      "bytes": 26995
+    },
+    {
+      "path": "docs/data/ps45_unload_20261009/README.md",
+      "baseline_sha256": "9dda2b3d23d55cd75ff38d9491a808e821683fe82a38e6e49f13893de28e922b",
+      "sha256": "ead310ad38736904fcda7d8175856ffccd1c7d6b4d5c13ea6b1f39edbd28cc2f",
+      "bytes": 66484
+    },
+    {
+      "path": "docs/data/ps45_unload_20261009/active_rules.json",
+      "baseline_sha256": "ba180bf5a375f7d068cd85478da637960cab5a049241a142626f19dedf8b3e7e",
+      "sha256": "8eb0cff450857bf4c23e62c0d5a121ed36bf212dc618be4c53c4d52a47eef42e",
+      "bytes": 13776
+    },
+    {
+      "path": "docs/data/ps45_unload_20261009/SHA256SUMS",
+      "baseline_sha256": "6f75c01e297801f43ff6470dfda371f4520f2da1b29f1b4bafa82c799ed020e8",
+      "sha256": "48be53ecc2853a34a883dc38c2a26398939e682f47db2cff6ae26b01e85a338f",
+      "bytes": 7403
+    },
+    {
+      "path": "docs/data/ps45_unload_20261009/ul_reader.py",
+      "baseline_sha256": "34b46ebcf4530989917493f20d2d953043209e36d89e6b8282a2d629050a078d",
+      "sha256": "7a395a549e8ad3eae820a9e575f094219ca7d47a4b9a07c5bc27623d7018af4b",
+      "bytes": 272761
+    }
+  ],
+  "scope": "Exactly the frozen six-file code/seal/document patch. New request, handoff and evidence packaging are separately listed in package_manifest.json."
+}

@@ -1,0 +1,329 @@
+{
+  "status": "PASS",
+  "note_sha256": "e853797d937226bd88350a8ef1e608088d2487c4e53b82d572fe87c056c53e16",
+  "check_count": 41,
+  "checks": [
+    {
+      "name": "manifest 54 recorded members",
+      "pass": true,
+      "detail": 54
+    },
+    {
+      "name": "all manifest members match",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "13 suite commands rc0 fail0",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "94 tested kit files equal current",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "raw ul_lib_selftest",
+      "pass": true,
+      "detail": {
+        "pass": 24,
+        "fail": 0
+      }
+    },
+    {
+      "name": "raw ul_s3_selftest",
+      "pass": true,
+      "detail": {
+        "pass": 16,
+        "fail": 0
+      }
+    },
+    {
+      "name": "raw ul_observers_selftest",
+      "pass": true,
+      "detail": {
+        "pass": 21,
+        "fail": 0
+      }
+    },
+    {
+      "name": "raw ul_gates_selftest",
+      "pass": true,
+      "detail": {
+        "pass": 202,
+        "fail": 0
+      }
+    },
+    {
+      "name": "raw ul_reader_selftest",
+      "pass": true,
+      "detail": {
+        "pass": 304,
+        "fail": 0
+      }
+    },
+    {
+      "name": "raw seal_kit_selftest",
+      "pass": true,
+      "detail": {
+        "pass": 12,
+        "fail": 0
+      }
+    },
+    {
+      "name": "raw seal_kit_check",
+      "pass": true,
+      "detail": {
+        "pass": 1,
+        "fail": 0
+      }
+    },
+    {
+      "name": "raw make_unload_decks_selftest",
+      "pass": true,
+      "detail": {
+        "pass": 291,
+        "fail": 0
+      }
+    },
+    {
+      "name": "raw make_unload_decks_check",
+      "pass": true,
+      "detail": {
+        "pass": 1,
+        "fail": 0
+      }
+    },
+    {
+      "name": "raw history_make_history_decks_selftest",
+      "pass": true,
+      "detail": {
+        "pass": 172,
+        "fail": 0
+      }
+    },
+    {
+      "name": "raw history_make_history_decks_check",
+      "pass": true,
+      "detail": {
+        "pass": 1,
+        "fail": 0
+      }
+    },
+    {
+      "name": "raw history_read_history_selftest",
+      "pass": true,
+      "detail": {
+        "pass": 56,
+        "fail": 0
+      }
+    },
+    {
+      "name": "raw ul_runner_test_selftest",
+      "pass": true,
+      "detail": {
+        "pass": 38,
+        "fail": 0
+      }
+    },
+    {
+      "name": "scope baseline 94 hashes against pinned Git",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "exact five kit changes",
+      "pass": true,
+      "detail": [
+        "README.md",
+        "SHA256SUMS",
+        "active_rules.json",
+        "seal_kit.py",
+        "ul_reader.py"
+      ]
+    },
+    {
+      "name": "64 production decks unchanged",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "16 history files unchanged",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "author 11 mutations and exact failure counts",
+      "pass": true,
+      "detail": [
+        [
+          "round_event_before_validation",
+          22
+        ],
+        [
+          "truncate_decimal",
+          12
+        ],
+        [
+          "allow_unicode_digits",
+          5
+        ],
+        [
+          "last_state_definition_wins",
+          2
+        ],
+        [
+          "ignore_bad_manifest",
+          7
+        ],
+        [
+          "ignore_ambiguous_event",
+          1
+        ],
+        [
+          "normalize_state_whitespace",
+          4
+        ],
+        [
+          "ignore_unicode_manifest_prefix",
+          2
+        ],
+        [
+          "split_unicode_state_lines",
+          6
+        ],
+        [
+          "split_unicode_manifest_lines",
+          3
+        ],
+        [
+          "ignore_event_csv_structure",
+          3
+        ]
+      ]
+    },
+    {
+      "name": "CLI 2 OK same rho plus8 unidentified null",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "CLI saved verdict normal",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "CLI saved verdict exact_decimal",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "CLI saved verdict fractional_k",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "CLI saved verdict fractional_step",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "CLI saved verdict rounded_decimal_k",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "CLI saved verdict unicode_k",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "CLI saved verdict ambiguous_event",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "CLI saved verdict fractional_state",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "CLI saved verdict duplicate_state",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "CLI saved verdict malformed_manifest",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "four modeled producer resumes limited equality",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "historical red count test-first-final.log",
+      "pass": true,
+      "detail": 44
+    },
+    {
+      "name": "historical red count test-first-r39.log",
+      "pass": true,
+      "detail": 46
+    },
+    {
+      "name": "historical red count test-first-state-space.log",
+      "pass": true,
+      "detail": 4
+    },
+    {
+      "name": "historical red count test-first-manifest-space.log",
+      "pass": true,
+      "detail": 2
+    },
+    {
+      "name": "historical red count test-first-line-separator.log",
+      "pass": true,
+      "detail": 9
+    },
+    {
+      "name": "historical red count test-first-event-separator.log",
+      "pass": true,
+      "detail": 3
+    },
+    {
+      "name": "all note local links resolve",
+      "pass": true,
+      "detail": [
+        "evidence/scope.json",
+        "candidate.diff",
+        "work/docs/data/ps45_unload_20261009/ul_reader.py",
+        "evidence/final-v5-suite/summary.json",
+        "evidence/test-first-final.log",
+        "evidence/test-first-r39.log",
+        "evidence/test-first-state-space.log",
+        "evidence/test-first-manifest-space.log",
+        "evidence/test-first-line-separator.log",
+        "evidence/test-first-event-separator.log",
+        "evidence/mutations-v5/results.json",
+        "evidence/cli-v5/results.json",
+        "evidence/cli-before/results.json",
+        "evidence/deck-probe-v5/deck_probe.json",
+        "../audit/ulpr/final-v5/review.md",
+        "../audit/ulpr/final-v5/result.json",
+        "../audit/ulpr/independent-mutations-v5/result.json"
+      ]
+    }
+  ],
+  "red_counts": {
+    "test-first-final.log": 44,
+    "test-first-r39.log": 46,
+    "test-first-state-space.log": 4,
+    "test-first-manifest-space.log": 2,
+    "test-first-line-separator.log": 9,
+    "test-first-event-separator.log": 3
+  },
+  "scope": "Document claims independently compared to raw log/verdict/manifest and pinned baseline bytes; no new fullgate or physical execution."
+}

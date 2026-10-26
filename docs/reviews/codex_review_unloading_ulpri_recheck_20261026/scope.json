@@ -1,0 +1,23 @@
+{
+  "old_reader": "7a395a549e8ad3eae820a9e575f094219ca7d47a4b9a07c5bc27623d7018af4b",
+  "new_reader": "dfc06b8dbf53a8cab05df297890e1f8ca1d0fa038536c7c13ed8b8677e521723",
+  "kit_count": 94,
+  "changed_kit": [
+    "active_rules.json",
+    "README.md",
+    "seal_kit.py",
+    "SHA256SUMS",
+    "ul_reader.py"
+  ],
+  "changed_ast": [
+    "_resume_auth",
+    "read_run",
+    "selftest"
+  ],
+  "new_ast": [
+    "_resume_marker_tests"
+  ],
+  "decks_same": 64,
+  "history_same": 16,
+  "params_same": true
+}

@@ -1,0 +1,2515 @@
+{
+  "status": "PASS",
+  "base": "8347d32ea678c0174bd77d4c79cfbd7b0591e4a3",
+  "reader_sha256": "7a395a549e8ad3eae820a9e575f094219ca7d47a4b9a07c5bc27623d7018af4b",
+  "reader_unchanged_during_test": true,
+  "cases": [
+    {
+      "case": "baseline reproduces fractional 3.49 acceptance",
+      "pass": true,
+      "expected_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "actual_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded_rows": 5,
+      "csv_bytes_unchanged": true,
+      "problems": []
+    },
+    {
+      "case": "normal",
+      "pass": true,
+      "expected_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "actual_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded_rows": 5,
+      "csv_bytes_unchanged": true,
+      "problems": []
+    },
+    {
+      "case": "event k positive '3'",
+      "pass": true,
+      "expected_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "actual_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded_rows": 5,
+      "csv_bytes_unchanged": true,
+      "problems": []
+    },
+    {
+      "case": "event k positive '3.0'",
+      "pass": true,
+      "expected_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "actual_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded_rows": 5,
+      "csv_bytes_unchanged": true,
+      "problems": []
+    },
+    {
+      "case": "event k positive '3e0'",
+      "pass": true,
+      "expected_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "actual_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded_rows": 5,
+      "csv_bytes_unchanged": true,
+      "problems": []
+    },
+    {
+      "case": "event k positive '3E+00'",
+      "pass": true,
+      "expected_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "actual_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded_rows": 5,
+      "csv_bytes_unchanged": true,
+      "problems": []
+    },
+    {
+      "case": "event k positive '+3'",
+      "pass": true,
+      "expected_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "actual_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded_rows": 5,
+      "csv_bytes_unchanged": true,
+      "problems": []
+    },
+    {
+      "case": "event k positive '0003'",
+      "pass": true,
+      "expected_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "actual_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded_rows": 5,
+      "csv_bytes_unchanged": true,
+      "problems": []
+    },
+    {
+      "case": "event k positive '3.'",
+      "pass": true,
+      "expected_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "actual_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded_rows": 5,
+      "csv_bytes_unchanged": true,
+      "problems": []
+    },
+    {
+      "case": "event k positive ' \\t3\\t '",
+      "pass": true,
+      "expected_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "actual_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded_rows": 5,
+      "csv_bytes_unchanged": true,
+      "problems": []
+    },
+    {
+      "case": "event k invalid '3.49' length=4",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3350000) — 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k None · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event k invalid '3.5' length=3",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3350000) — 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k None · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event k invalid '3.51' length=4",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3350000) — 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k None · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event k invalid '3.0000000000000001' length=18",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3350000) — 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k None · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event k invalid '2.9999999999999999' length=18",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3350000) — 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k None · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event k invalid 'nan' length=3",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3350000) — 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k None · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event k invalid 'NaN' length=3",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3350000) — 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k None · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event k invalid 'inf' length=3",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3350000) — 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k None · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event k invalid '-inf' length=4",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3350000) — 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k None · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event k invalid '1e309' length=5",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3350000) — 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k None · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event k invalid '1e1000000000' length=12",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3350000) — 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k None · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event k invalid '1e-1000000000' length=13",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3350000) — 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k None · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event k invalid '' length=0",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3350000) — 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k None · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event k invalid '-0' length=2",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3350000) — 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k None · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event k invalid '-3' length=2",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3350000) — 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k None · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event k invalid '٣' length=1",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3350000) — 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k None · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event k invalid '３' length=1",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3350000) — 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k None · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event k invalid '3_0' length=3",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3350000) — 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k None · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event k invalid '\\xa03' length=2",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3350000) — 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k None · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event k invalid '3\\u2003' length=2",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3350000) — 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k None · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event k invalid '3\\u200b' length=2",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3350000) — 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k None · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event k invalid '3\\x00' length=2",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3350000) — 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k None · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event k invalid '3\\x0b' length=2",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv:5 열 수 2 ≠ 6",
+        "ul_events.csv:6 열 수 5 ≠ 6",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event k invalid '3\\x0c' length=2",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv:5 열 수 2 ≠ 6",
+        "ul_events.csv:6 열 수 5 ≠ 6",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event k invalid '000000000000000000000000000000000000000000000000000000000000' length=4098",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3350000) — 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k None · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "mixed valid/invalid event k '3.49'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3350000) — 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_events.csv: RESUME (k None · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "mixed valid/invalid event k 'NaN'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3350000) — 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_events.csv: RESUME (k None · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "mixed valid/invalid event k '3.0000000000000001'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3350000) — 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_events.csv: RESUME (k None · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event step positive '3350000'",
+      "pass": true,
+      "expected_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "actual_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded_rows": 5,
+      "csv_bytes_unchanged": true,
+      "problems": []
+    },
+    {
+      "case": "event step positive '3350000.0'",
+      "pass": true,
+      "expected_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "actual_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded_rows": 5,
+      "csv_bytes_unchanged": true,
+      "problems": []
+    },
+    {
+      "case": "event step positive '3350000e0'",
+      "pass": true,
+      "expected_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "actual_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded_rows": 5,
+      "csv_bytes_unchanged": true,
+      "problems": []
+    },
+    {
+      "case": "event step positive '3350000E+00'",
+      "pass": true,
+      "expected_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "actual_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded_rows": 5,
+      "csv_bytes_unchanged": true,
+      "problems": []
+    },
+    {
+      "case": "event step positive '+3350000'",
+      "pass": true,
+      "expected_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "actual_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded_rows": 5,
+      "csv_bytes_unchanged": true,
+      "problems": []
+    },
+    {
+      "case": "event step positive '0003350000'",
+      "pass": true,
+      "expected_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "actual_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded_rows": 5,
+      "csv_bytes_unchanged": true,
+      "problems": []
+    },
+    {
+      "case": "event step positive '3350000.'",
+      "pass": true,
+      "expected_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "actual_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded_rows": 5,
+      "csv_bytes_unchanged": true,
+      "problems": []
+    },
+    {
+      "case": "event step positive ' \\t3350000\\t '",
+      "pass": true,
+      "expected_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "actual_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded_rows": 5,
+      "csv_bytes_unchanged": true,
+      "problems": []
+    },
+    {
+      "case": "event step invalid '3350000.49' length=10",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event step invalid '3350000.5' length=9",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event step invalid '3350000.51' length=10",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event step invalid '3350000.0000000000000001' length=24",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event step invalid '3349999.9999999999999999' length=24",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event step invalid 'nan' length=3",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event step invalid 'NaN' length=3",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event step invalid 'inf' length=3",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event step invalid '-inf' length=4",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event step invalid '1e309' length=5",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event step invalid '1e1000000000' length=12",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event step invalid '1e-1000000000' length=13",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event step invalid '' length=0",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event step invalid '-0' length=2",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event step invalid '-3' length=2",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event step invalid '٣' length=1",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event step invalid '３' length=1",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event step invalid '3_0' length=3",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event step invalid '\\xa03' length=2",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event step invalid '3\\u2003' length=2",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event step invalid '3\\u200b' length=2",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event step invalid '3\\x00' length=2",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event step invalid '3\\x0b' length=2",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv:5 열 수 3 ≠ 6",
+        "ul_events.csv:6 열 수 4 ≠ 6",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event step invalid '3\\x0c' length=2",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv:5 열 수 3 ≠ 6",
+        "ul_events.csv:6 열 수 4 ≠ 6",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "event step invalid '000000000000000000000000000000000000000000000000000000000000' length=4098",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "mixed valid/invalid event step '3.49'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "mixed valid/invalid event step 'NaN'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "mixed valid/invalid event step '3.0000000000000001'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_k positive '3'",
+      "pass": true,
+      "expected_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "actual_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded_rows": 5,
+      "csv_bytes_unchanged": true,
+      "problems": []
+    },
+    {
+      "case": "state ul_k positive '3.0'",
+      "pass": true,
+      "expected_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "actual_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded_rows": 5,
+      "csv_bytes_unchanged": true,
+      "problems": []
+    },
+    {
+      "case": "state ul_k positive '3e0'",
+      "pass": true,
+      "expected_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "actual_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded_rows": 5,
+      "csv_bytes_unchanged": true,
+      "problems": []
+    },
+    {
+      "case": "state ul_k positive '+3'",
+      "pass": true,
+      "expected_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "actual_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded_rows": 5,
+      "csv_bytes_unchanged": true,
+      "problems": []
+    },
+    {
+      "case": "state ul_k positive '\\t3\\t'",
+      "pass": true,
+      "expected_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "actual_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded_rows": 5,
+      "csv_bytes_unchanged": true,
+      "problems": []
+    },
+    {
+      "case": "state ul_k invalid '3.49'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k None · ul_rstep 3350000) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_k invalid '3.0000000000000001'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k None · ul_rstep 3350000) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_k invalid 'nan'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k None · ul_rstep 3350000) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_k invalid 'inf'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k None · ul_rstep 3350000) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_k invalid '1e309'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k None · ul_rstep 3350000) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_k invalid '1e1000000000'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k None · ul_rstep 3350000) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_k invalid '٣'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k None · ul_rstep 3350000) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_k invalid '\\xa03'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k None · ul_rstep 3350000) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_k invalid '3\\u202f'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k None · ul_rstep 3350000) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_k invalid '3\\x85#tail'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k None · ul_rstep 3350000) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_k invalid '3\\u2028#tail'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k None · ul_rstep 3350000) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_k invalid '3\\u2029#tail'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k None · ul_rstep 3350000) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_k invalid '3\\x0b#tail'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k None · ul_rstep 3350000) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_k invalid '3 extra'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k None · ul_rstep 3350000) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_k duplicate 'variable ul_k equal 3\\n'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k None · ul_rstep 3350000) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_k duplicate 'variable ul_k equal 4\\n'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k None · ul_rstep 3350000) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_k duplicate 'variable ul_k equal bad\\n'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k None · ul_rstep 3350000) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_k duplicate 'variable ul_k equal 3\\nvariable ul_k equal 3\\n'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k None · ul_rstep 3350000) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_rstep positive '3350000'",
+      "pass": true,
+      "expected_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "actual_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded_rows": 5,
+      "csv_bytes_unchanged": true,
+      "problems": []
+    },
+    {
+      "case": "state ul_rstep positive '3350000.0'",
+      "pass": true,
+      "expected_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "actual_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded_rows": 5,
+      "csv_bytes_unchanged": true,
+      "problems": []
+    },
+    {
+      "case": "state ul_rstep positive '3350000e0'",
+      "pass": true,
+      "expected_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "actual_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded_rows": 5,
+      "csv_bytes_unchanged": true,
+      "problems": []
+    },
+    {
+      "case": "state ul_rstep positive '+3350000'",
+      "pass": true,
+      "expected_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "actual_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded_rows": 5,
+      "csv_bytes_unchanged": true,
+      "problems": []
+    },
+    {
+      "case": "state ul_rstep positive '\\t3350000\\t'",
+      "pass": true,
+      "expected_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "actual_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded_rows": 5,
+      "csv_bytes_unchanged": true,
+      "problems": []
+    },
+    {
+      "case": "state ul_rstep invalid '3350000.49'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k 3 · ul_rstep None) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_rstep invalid '3350000.0000000000000001'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k 3 · ul_rstep None) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_rstep invalid 'nan'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k 3 · ul_rstep None) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_rstep invalid 'inf'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k 3 · ul_rstep None) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_rstep invalid '1e309'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k 3 · ul_rstep None) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_rstep invalid '1e1000000000'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k 3 · ul_rstep None) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_rstep invalid '٣'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k 3 · ul_rstep None) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_rstep invalid '\\xa03350000'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k 3 · ul_rstep None) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_rstep invalid '3350000\\u202f'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k 3 · ul_rstep None) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_rstep invalid '3350000\\x85#tail'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k 3 · ul_rstep None) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_rstep invalid '3350000\\u2028#tail'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k 3 · ul_rstep None) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_rstep invalid '3350000\\u2029#tail'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k 3 · ul_rstep None) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_rstep invalid '3350000\\x0b#tail'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k 3 · ul_rstep None) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_rstep invalid '3350000 extra'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k 3 · ul_rstep None) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_rstep duplicate 'variable ul_rstep equal 3350000\\n'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k 3 · ul_rstep None) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_rstep duplicate 'variable ul_rstep equal 3350001\\n'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k 3 · ul_rstep None) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_rstep duplicate 'variable ul_rstep equal bad\\n'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k 3 · ul_rstep None) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state ul_rstep duplicate 'variable ul_rstep equal 3350000\\nvariable ul_rstep equal 3350000\\n'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 3 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k 3 · ul_rstep None) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "manifest mixed malformed '3350000.0' length=9",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "manifest mixed malformed '3350000.49' length=10",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "manifest mixed malformed 'nan' length=3",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "manifest mixed malformed '' length=0",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "manifest mixed malformed '3350000\\xa0' length=8",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "manifest mixed malformed '٣' length=1",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "manifest mixed malformed '1e309' length=5",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "manifest mixed malformed '000000000000000000000000000000000000000000000000000000000000' length=4104",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "run_manifest.txt: resume_from 정수 범위/길이 위반 — 승인 없음",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "manifest malformed prefix '\\xa0'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "manifest malformed suffix '\\xa0'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "manifest malformed prefix '\\u2003'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "manifest malformed suffix '\\u2003'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "manifest malformed prefix '\\x85'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "manifest malformed suffix '\\x85'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "manifest malformed prefix '\\u2028'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "manifest malformed suffix '\\u2028'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "manifest malformed prefix '\\u2029'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "manifest malformed suffix '\\u2029'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "manifest malformed prefix '\\x0b'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "manifest malformed suffix '\\x0b'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "manifest malformed prefix '\\x0c'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "manifest malformed suffix '\\x0c'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "state+manifest '\\r\\n' positive",
+      "pass": true,
+      "expected_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "actual_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded_rows": 5,
+      "csv_bytes_unchanged": true,
+      "problems": []
+    },
+    {
+      "case": "state+manifest '\\r' positive",
+      "pass": true,
+      "expected_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "actual_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded_rows": 5,
+      "csv_bytes_unchanged": true,
+      "problems": []
+    },
+    {
+      "case": "mixed event Unicode separator '\\x85'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv:6 열 수 2 ≠ 6",
+        "ul_events.csv:7 열 수 5 ≠ 6",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "mixed event Unicode separator '\\u2028'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv:6 열 수 2 ≠ 6",
+        "ul_events.csv:7 열 수 5 ≠ 6",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "mixed event Unicode separator '\\u2029'",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv:6 열 수 2 ≠ 6",
+        "ul_events.csv:7 열 수 5 ≠ 6",
+        "ul_events.csv: RESUME (k 3 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "large exact identity state 9007199254740993",
+      "pass": true,
+      "expected_auth": [
+        [
+          9007199254740993,
+          3350000
+        ]
+      ],
+      "actual_auth": [
+        [
+          9007199254740993,
+          3350000
+        ]
+      ],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "ul_events.csv: RESUME (k 9007199254740993 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "large exact identity state 9007199254740992",
+      "pass": true,
+      "expected_auth": [],
+      "actual_auth": [],
+      "superseded_rows": 0,
+      "csv_bytes_unchanged": true,
+      "problems": [
+        "RESUME (k 9007199254740993 · step 3350000) ≠ 상태 파일 state_unload_3350000.in (ul_k 9007199254740992 · ul_rstep 3350000) — 상충 · 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 9007199254740993 · step 3350000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 20 째 줄 (k 4 · step 3360000) ≤ 앞 줄 (k 4 · step 3390000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ]
+    },
+    {
+      "case": "normal after all negative attacks",
+      "pass": true,
+      "expected_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "actual_auth": [
+        [
+          3,
+          3350000
+        ]
+      ],
+      "superseded_rows": 5,
+      "csv_bytes_unchanged": true,
+      "problems": []
+    }
+  ],
+  "case_count": 150,
+  "passed": 150,
+  "failed": 0,
+  "canonical_selftest": {
+    "rc": 0,
+    "pass": 304,
+    "fail": 0,
+    "log_sha256": "78a2b504dc5f9e3854af79c647361ce9e1845ad0c65df243485eb1a662fd1e67"
+  },
+  "existing_functions_changed": [
+    "_resume_auth",
+    "_state_vars",
+    "read_run",
+    "selftest"
+  ],
+  "new_functions": [
+    "_resume_integer",
+    "_resume_integer_tests"
+  ],
+  "general_i_unchanged": true,
+  "general_csv_unchanged": true,
+  "kit_manifest": [
+    {
+      "path": "unload_params.json",
+      "match": true
+    },
+    {
+      "path": "ul_lib.py",
+      "match": true
+    },
+    {
+      "path": "ul_s3.py",
+      "match": true
+    },
+    {
+      "path": "ul_observers.py",
+      "match": true
+    },
+    {
+      "path": "ul_gates.py",
+      "match": true
+    },
+    {
+      "path": "ul_reader.py",
+      "match": true
+    },
+    {
+      "path": "ul_runner_test.py",
+      "match": true
+    },
+    {
+      "path": "make_unload_decks.py",
+      "match": true
+    },
+    {
+      "path": "seal_kit.py",
+      "match": true
+    },
+    {
+      "path": "run_unload.sh",
+      "match": true
+    },
+    {
+      "path": "run_unload_ibb.sbatch",
+      "match": true
+    },
+    {
+      "path": "active_rules.json",
+      "match": true
+    },
+    {
+      "path": "decks/ps_0_10_r45/in.G_UB.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_0_10_r45/in.G_UT3.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_0_10_r45/in.G_UVa.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_0_10_r45/in.G_UVb.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_0_10_r45/in.R.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_0_10_r45/in.UC.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_0_10_r45/in.UK.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_0_10_r45/in.UNread.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_0_10_r45/in.U_UB.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_0_10_r45/in.U_UT3.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_0_10_r45/in.U_UVa.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_0_10_r45/in.U_UVb.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_10_0_r45/in.EXT.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_10_0_r45/in.EXT2.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_10_0_r45/in.G_UB.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_10_0_r45/in.G_UT3.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_10_0_r45/in.G_UVa.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_10_0_r45/in.G_UVb.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_10_0_r45/in.R.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_10_0_r45/in.UC.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_10_0_r45/in.UK.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_10_0_r45/in.UNread.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_10_0_r45/in.U_UB.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_10_0_r45/in.U_UT3.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_10_0_r45/in.U_UVa.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_10_0_r45/in.U_UVb.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_3_7_r45/in.G_UB.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_3_7_r45/in.G_UT3.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_3_7_r45/in.G_UVa.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_3_7_r45/in.G_UVb.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_3_7_r45/in.R.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_3_7_r45/in.UC.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_3_7_r45/in.UK.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_3_7_r45/in.UNread.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_3_7_r45/in.U_UB.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_3_7_r45/in.U_UT3.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_3_7_r45/in.U_UVa.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_3_7_r45/in.U_UVb.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_5_5_r45/in.G_UB.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_5_5_r45/in.G_UT3.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_5_5_r45/in.G_UVa.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_5_5_r45/in.G_UVb.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_5_5_r45/in.R.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_5_5_r45/in.UC.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_5_5_r45/in.UK.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_5_5_r45/in.UNread.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_5_5_r45/in.U_UB.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_5_5_r45/in.U_UT3.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_5_5_r45/in.U_UVa.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_5_5_r45/in.U_UVb.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_7_3_r45/in.G_UB.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_7_3_r45/in.G_UT3.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_7_3_r45/in.G_UVa.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_7_3_r45/in.G_UVb.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_7_3_r45/in.R.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_7_3_r45/in.UC.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_7_3_r45/in.UK.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_7_3_r45/in.UNread.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_7_3_r45/in.UT.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_7_3_r45/in.U_UB.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_7_3_r45/in.U_UT3.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_7_3_r45/in.U_UVa.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_7_3_r45/in.U_UVb.liggghts",
+      "match": true
+    },
+    {
+      "path": "decks/ps_7_3_r45/in.Ut0.liggghts",
+      "match": true
+    }
+  ]
+}

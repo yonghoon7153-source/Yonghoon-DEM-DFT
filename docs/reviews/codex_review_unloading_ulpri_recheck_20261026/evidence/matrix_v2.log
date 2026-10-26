@@ -1,0 +1,9 @@
+25 cases, 25 pass; latest=event_U+001C_both_coexist
+50 cases, 50 pass; latest=event_U+0085_prefix_single
+75 cases, 75 pass; latest=event_U+2001_prefix_coexist
+100 cases, 100 pass; latest=event_U+2005_suffix_single
+125 cases, 125 pass; latest=event_U+2009_suffix_coexist
+150 cases, 150 pass; latest=event_U+202F_both_single
+175 cases, 175 pass; latest=manifest_U+000C_unrelated
+200 cases, 200 pass; latest=all_inputs_newline_'\n'
+{"total": 208, "passed": 208, "whitespace_codepoints": 27, "failed": []}

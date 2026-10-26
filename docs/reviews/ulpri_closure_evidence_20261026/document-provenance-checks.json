@@ -1,0 +1,57 @@
+{
+  "status": "PASS",
+  "scope": "New documentation/provenance checks only",
+  "base": "2b4b40ea5e375659bfad8243c1ccb6fe0ef2853f",
+  "all_author_paths_additive": true,
+  "accepted_reader_git_blob_matches_external_sha256": true,
+  "external_report_and_intake_proof_hashes_match_freeze": true,
+  "existing_broad_go_form_null": true,
+  "pinned_document_links_verified": [
+    {
+      "commit": "2b4b40ea5e375659bfad8243c1ccb6fe0ef2853f",
+      "path": "docs/reviews/dem_gen2_t12_consumer_contract_20261024.md"
+    },
+    {
+      "commit": "2b4b40ea5e375659bfad8243c1ccb6fe0ef2853f",
+      "path": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/fixture-results.json"
+    },
+    {
+      "commit": "2b4b40ea5e375659bfad8243c1ccb6fe0ef2853f",
+      "path": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/REPRODUCE.md"
+    },
+    {
+      "commit": "2b4b40ea5e375659bfad8243c1ccb6fe0ef2853f",
+      "path": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/full_gate/result.json"
+    },
+    {
+      "commit": "2b4b40ea5e375659bfad8243c1ccb6fe0ef2853f",
+      "path": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/factual-input-form.blank.json"
+    }
+  ],
+  "new_tree_shared155_executed": false,
+  "consumer52_or_external208_rerun": false,
+  "physical_execution": false,
+  "checked_author_files_sha256": {
+    "docs/reviews/dem_gen2_t12_external_review_packet_20261026.md": "5f48bc1cc7d1b0e435b17dcc2e7ada32ffef9aaf60f0ba1f4b3541ad802c3d55",
+    "docs/reviews/dem_unloading_ulpri_closure_20261026.md": "215c8a8a80e224e28b6e15b41bc17a8eccc6af2048b51fa45f73445ade7feac4",
+    "docs/reviews/ulpri_closure_evidence_20261026/scoped-external-receipt.json": "c17f4a8d8ca85d460be1b898fb7772947094899ce1c11fd544dd3975cef2c1cc",
+    "docs/reviews/ulpri_closure_evidence_20261026/source-observation.json": "2187358425fe6f115df4592b9b4b50719af0226d771d58ea15f5d366de3facf7",
+    "docs/collab/codex_to_claude/20261026-1345_ulpri-closure.md": "eb290d7ad587bd1cc4b4bd6e9d5be6fbcb41b51126eecaa5db770e1184f13917"
+  },
+  "handoff_filename_correction": {
+    "previous": "docs/collab/codex_to_claude/2026-10-26_ulpri-marker-closure-handoff.md",
+    "current": "docs/collab/codex_to_claude/20261026-1345_ulpri-closure.md",
+    "content_sha256_unchanged": "eb290d7ad587bd1cc4b4bd6e9d5be6fbcb41b51126eecaa5db770e1184f13917",
+    "timezone": "Asia/Seoul",
+    "scope": "Filename/provenance map only; prior checks retained, no source test rerun"
+  },
+  "historical_support_metadata_update": {
+    "scope": "Closure-document explanation only; no code/test change",
+    "source_commit": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde",
+    "file_count": 53,
+    "includes_original_nested_gitattributes": true,
+    "import_proof_sha256": "f1a6d5fb2c89baa980425cb1b7263a646b7b3e2cdd31135fb86036b8b993aac1",
+    "standalone_kit": false,
+    "historical_commands_require_corresponding_pinned_checkout": true
+  }
+}

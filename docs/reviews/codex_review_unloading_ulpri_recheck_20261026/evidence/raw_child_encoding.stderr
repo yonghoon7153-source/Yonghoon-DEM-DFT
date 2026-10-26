@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\unloading_ulpri_recheck_20261026\snapshot\docs\data\ps45_unload_20261009\ul_reader.py", line 3932, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\unloading_ulpri_recheck_20261026\snapshot\docs\data\ps45_unload_20261009\ul_reader.py", line 3912, in main
+    print(f'ARM_VERDICT bed={bed} job={job} primary={r["primary_status"]} rho_pct={r["rho_pct"]} bracket_pct={r["bracket_pct"]} '
+UnicodeEncodeError: 'cp949' codec can't encode character '\u2014' in position 232: illegal multibyte sequence

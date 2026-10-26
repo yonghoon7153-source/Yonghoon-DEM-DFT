@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "scope": "Path arguments only; original tools preserved. Compilation and isolated --help checked. Scientific/canonical tests were not rerun for these copies.",
+  "files": [
+    {
+      "name": "attack_ulpr_resume.py",
+      "original": "/workspace/.cloud-setup/nonrint-20261024/audit/attack_ulpr_resume.py",
+      "original_sha256": "65a35823f3e9f2d1ae2f722ac36629d85a2b7960630579e0434c11cd616dfad1",
+      "portable_sha256": "82f3d0ab65d847c15d3e7899595e41ec0ccff6bea046f7ae8d3a34d9e8c55b1b",
+      "original_unchanged": true,
+      "function_AST_unchanged": true,
+      "help_rc": 0
+    },
+    {
+      "name": "independent_mutations.py",
+      "original": "/workspace/.cloud-setup/nonrint-20261024/audit/ulpr/independent_mutations.py",
+      "original_sha256": "818c1be188cc012553de682056302d045e0c77428dc3d7960ea05e41a661fda8",
+      "portable_sha256": "dc100e86cd2faffbbb2c3f4577096fa5eb5da0010c38306ec3475da661c0cc19",
+      "original_unchanged": true,
+      "function_AST_unchanged": true,
+      "help_rc": 0
+    }
+  ]
+}

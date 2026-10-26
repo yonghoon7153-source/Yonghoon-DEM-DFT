@@ -1,0 +1,93 @@
+{
+  "sha": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde",
+  "parents": [
+    "643344fee22a5d1131a59c8cd46bcf6c9a09d65b"
+  ],
+  "files": [
+    {
+      "name": "docs/collab/codex_to_claude/20261026-1015_unloading-ulpri-full-gate.md",
+      "sha": "964a1191f1b98857fec8d14570c6e01278470803",
+      "status": "added"
+    },
+    {
+      "name": "docs/reviews/ulpri_marker_evidence_20261024/full_gate/candidate-review.json",
+      "sha": "dcddb841db5f1071ce8c0c8294fbae2f3c8226f6",
+      "status": "added"
+    },
+    {
+      "name": "docs/reviews/ulpri_marker_evidence_20261024/full_gate/candidate-scope.json",
+      "sha": "be4bdce2c5fd9ba285f30cc5319e326148da84b8",
+      "status": "added"
+    },
+    {
+      "name": "docs/reviews/ulpri_marker_evidence_20261024/full_gate/delivery-import-root.json",
+      "sha": "3f3ca8b1a9f5908df3add9ea53713f17090fa43c",
+      "status": "added"
+    },
+    {
+      "name": "docs/reviews/ulpri_marker_evidence_20261024/full_gate/freeze-verification.json",
+      "sha": "334e62af8d04736d951c48679a5079b47eb163ce",
+      "status": "added"
+    },
+    {
+      "name": "docs/reviews/ulpri_marker_evidence_20261024/full_gate/full-gate.log",
+      "sha": "661b84028ce1aea6f2c4776fd820530a9fff55ca",
+      "status": "added"
+    },
+    {
+      "name": "docs/reviews/ulpri_marker_evidence_20261024/full_gate/helper-validation.json",
+      "sha": "6fdb33f65d09fc5fb04a3d6ba7ff4da29cbdf284",
+      "status": "added"
+    },
+    {
+      "name": "docs/reviews/ulpri_marker_evidence_20261024/full_gate/intake-import-root.json",
+      "sha": "6151a1eda8959fd688eb96b945a1ac3524aae433",
+      "status": "added"
+    },
+    {
+      "name": "docs/reviews/ulpri_marker_evidence_20261024/full_gate/preflight/candidate-1/docrefs.log",
+      "sha": "814cbd4aee680e6a5b6438d913d672b080e33b95",
+      "status": "added"
+    },
+    {
+      "name": "docs/reviews/ulpri_marker_evidence_20261024/full_gate/preflight/candidate-1/ledger.log",
+      "sha": "251c965f78198f1fbbe3e2fa2e042de3ef190eae",
+      "status": "added"
+    },
+    {
+      "name": "docs/reviews/ulpri_marker_evidence_20261024/full_gate/preflight/candidate-1/receipt.json",
+      "sha": "7dbbdef6753a7a1b3c9ed80bdc3a9b5a1bc5baf6",
+      "status": "added"
+    },
+    {
+      "name": "docs/reviews/ulpri_marker_evidence_20261024/full_gate/preflight/candidate-2/docrefs.log",
+      "sha": "8fb8a8e68629ae96ea8fd55ce24e7b9007bade78",
+      "status": "added"
+    },
+    {
+      "name": "docs/reviews/ulpri_marker_evidence_20261024/full_gate/preflight/candidate-2/ledger.log",
+      "sha": "251c965f78198f1fbbe3e2fa2e042de3ef190eae",
+      "status": "added"
+    },
+    {
+      "name": "docs/reviews/ulpri_marker_evidence_20261024/full_gate/preflight/candidate-2/receipt.json",
+      "sha": "3b66d7b164490154691075666046de40e880b549",
+      "status": "added"
+    },
+    {
+      "name": "docs/reviews/ulpri_marker_evidence_20261024/full_gate/prepublish-remote-observation-20261026.json",
+      "sha": "56b29ebdeaf9436d4eeff1e016fdc52e4d3928a3",
+      "status": "added"
+    },
+    {
+      "name": "docs/reviews/ulpri_marker_evidence_20261024/full_gate/result.json",
+      "sha": "f57cc58ce974ca9be1c7f0e045ca10102a1fd1a5",
+      "status": "added"
+    },
+    {
+      "name": "docs/reviews/ulpri_marker_evidence_20261024/full_gate/source-manifest.json",
+      "sha": "125eb738c3ae9afbfe7e54a262f44954f92a3ee0",
+      "status": "added"
+    }
+  ]
+}

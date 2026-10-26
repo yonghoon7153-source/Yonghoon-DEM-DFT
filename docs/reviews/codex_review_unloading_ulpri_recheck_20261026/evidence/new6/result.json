@@ -1,0 +1,193 @@
+{
+  "pin_reader_sha256": "dfc06b8dbf53a8cab05df297890e1f8ca1d0fa038536c7c13ed8b8677e521723",
+  "cases": [
+    {
+      "name": "normal",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "n_superseded_rows": 5,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "csv_unchanged": true,
+      "cli_rc": 0,
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\unloading_ulpri_recheck_20261026\\snapshot\\docs\\data\\ps45_unload_20261009\\ul_reader.py",
+        "arm",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\unloading_ulpri_recheck_20261026\\evidence\\new6\\normal",
+        "ps_7_3_r45",
+        "UT"
+      ]
+    },
+    {
+      "name": "literal_fractional_extra",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [],
+      "n_superseded_rows": 0,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3310000) — 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_events.csv: RESUME (k None · step 3310000) 앞 사건 4 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_unchanged": true,
+      "cli_rc": 0,
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\unloading_ulpri_recheck_20261026\\snapshot\\docs\\data\\ps45_unload_20261009\\ul_reader.py",
+        "arm",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\unloading_ulpri_recheck_20261026\\evidence\\new6\\literal_fractional_extra",
+        "ps_7_3_r45",
+        "UT"
+      ]
+    },
+    {
+      "name": "trailing_space_event",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [],
+      "n_superseded_rows": 0,
+      "problems": [
+        "ul_events.csv:10: RESUME 표지 앞뒤 공백 변형 — 승인 없음 (ULPRI-01)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_unchanged": true,
+      "cli_rc": 0,
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\unloading_ulpri_recheck_20261026\\snapshot\\docs\\data\\ps45_unload_20261009\\ul_reader.py",
+        "arm",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\unloading_ulpri_recheck_20261026\\evidence\\new6\\trailing_space_event",
+        "ps_7_3_r45",
+        "UT"
+      ]
+    },
+    {
+      "name": "nbsp_event",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [],
+      "n_superseded_rows": 0,
+      "problems": [
+        "ul_events.csv:10: RESUME 표지 앞뒤 공백 변형 — 승인 없음 (ULPRI-01)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_unchanged": true,
+      "cli_rc": 0,
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\unloading_ulpri_recheck_20261026\\snapshot\\docs\\data\\ps45_unload_20261009\\ul_reader.py",
+        "arm",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\unloading_ulpri_recheck_20261026\\evidence\\new6\\nbsp_event",
+        "ps_7_3_r45",
+        "UT"
+      ]
+    },
+    {
+      "name": "unicode_embedded_manifest",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [],
+      "n_superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: LF/CRLF/CR 밖 줄 구분자 — 승인 없음 (ULPRI-02)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_unchanged": true,
+      "cli_rc": 0,
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\unloading_ulpri_recheck_20261026\\snapshot\\docs\\data\\ps45_unload_20261009\\ul_reader.py",
+        "arm",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\unloading_ulpri_recheck_20261026\\evidence\\new6\\unicode_embedded_manifest",
+        "ps_7_3_r45",
+        "UT"
+      ]
+    },
+    {
+      "name": "restored_control",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "n_superseded_rows": 5,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "csv_unchanged": true,
+      "cli_rc": 0,
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\unloading_ulpri_recheck_20261026\\snapshot\\docs\\data\\ps45_unload_20261009\\ul_reader.py",
+        "arm",
+        "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\unloading_ulpri_recheck_20261026\\evidence\\new6\\restored_control",
+        "ps_7_3_r45",
+        "UT"
+      ]
+    }
+  ]
+}

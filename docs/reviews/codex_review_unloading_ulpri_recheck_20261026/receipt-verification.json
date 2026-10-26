@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "target": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde",
+  "snapshot_members_equal_original_zip": 528,
+  "source_blobs_equal_git": 524,
+  "reader_sha256": "dfc06b8dbf53a8cab05df297890e1f8ca1d0fa038536c7c13ed8b8677e521723",
+  "matrix": {
+    "pass": 208,
+    "negative": 199,
+    "positive": 9,
+    "raw_verdicts_and_input_hashes_verified": true
+  },
+  "author_cli": {
+    "pass": 43,
+    "raw_verdicts_and_before_after_input_hashes_verified": true
+  },
+  "mutants": {
+    "detected": 4,
+    "raw_sources_verdicts_and_input_hashes_verified": true
+  },
+  "physical_runs": 0,
+  "external_verdict": "GO limited to closure of ULPRI-01/02 marker-boundary integrity; physical execution not authorized",
+  "unclosed": "Actual unloading accuracy, real checkpoint restoration, U qualification, main R/10:0 extension, all event/file grammar safety, existing syntax/restoration prerequisites; no shared155 independent rerun claim",
+  "environment_limit": "Raw Windows selftest311/346 (35 fail cp949); child UTF8 diagnostic346/346 must remain distinguished"
+}

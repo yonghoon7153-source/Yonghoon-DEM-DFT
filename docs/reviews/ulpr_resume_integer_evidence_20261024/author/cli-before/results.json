@@ -1,0 +1,233 @@
+{
+  "source_sha256": "34b46ebcf4530989917493f20d2d953043209e36d89e6b8282a2d629050a078d",
+  "script_sha256": "641fa98de7b510384c15b963c5c53a82b361796808471782bb9a4975137849ed",
+  "cases": [
+    {
+      "name": "normal",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/base/docs/data/ps45_unload_20261009/ul_reader.py",
+        "arm",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/evidence/cli-before/normal",
+        "ps_7_3_r45",
+        "UT"
+      ],
+      "rc": 0,
+      "auth": [
+        [
+          3,
+          3410000
+        ]
+      ],
+      "primary_status": "OK",
+      "rho": 0.20260778734286913,
+      "problems": [],
+      "csv_unchanged": true
+    },
+    {
+      "name": "exact_decimal",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/base/docs/data/ps45_unload_20261009/ul_reader.py",
+        "arm",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/evidence/cli-before/exact_decimal",
+        "ps_7_3_r45",
+        "UT"
+      ],
+      "rc": 0,
+      "auth": [
+        [
+          3,
+          3410000
+        ]
+      ],
+      "primary_status": "OK",
+      "rho": 0.20260778734286913,
+      "problems": [],
+      "csv_unchanged": true
+    },
+    {
+      "name": "fractional_k",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/base/docs/data/ps45_unload_20261009/ul_reader.py",
+        "arm",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/evidence/cli-before/fractional_k",
+        "ps_7_3_r45",
+        "UT"
+      ],
+      "rc": 0,
+      "auth": [
+        [
+          3,
+          3410000
+        ]
+      ],
+      "primary_status": "OK",
+      "rho": 0.20260778734286913,
+      "problems": [],
+      "csv_unchanged": true
+    },
+    {
+      "name": "fractional_step",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/base/docs/data/ps45_unload_20261009/ul_reader.py",
+        "arm",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/evidence/cli-before/fractional_step",
+        "ps_7_3_r45",
+        "UT"
+      ],
+      "rc": 0,
+      "auth": [
+        [
+          3,
+          3410000
+        ]
+      ],
+      "primary_status": "OK",
+      "rho": 0.20260778734286913,
+      "problems": [],
+      "csv_unchanged": true
+    },
+    {
+      "name": "rounded_decimal_k",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/base/docs/data/ps45_unload_20261009/ul_reader.py",
+        "arm",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/evidence/cli-before/rounded_decimal_k",
+        "ps_7_3_r45",
+        "UT"
+      ],
+      "rc": 0,
+      "auth": [
+        [
+          3,
+          3410000
+        ]
+      ],
+      "primary_status": "OK",
+      "rho": 0.20260778734286913,
+      "problems": [],
+      "csv_unchanged": true
+    },
+    {
+      "name": "unicode_k",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/base/docs/data/ps45_unload_20261009/ul_reader.py",
+        "arm",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/evidence/cli-before/unicode_k",
+        "ps_7_3_r45",
+        "UT"
+      ],
+      "rc": 0,
+      "auth": [
+        [
+          3,
+          3410000
+        ]
+      ],
+      "primary_status": "OK",
+      "rho": 0.20260778734286913,
+      "problems": [],
+      "csv_unchanged": true
+    },
+    {
+      "name": "ambiguous_event",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/base/docs/data/ps45_unload_20261009/ul_reader.py",
+        "arm",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/evidence/cli-before/ambiguous_event",
+        "ps_7_3_r45",
+        "UT"
+      ],
+      "rc": 0,
+      "auth": [],
+      "primary_status": "UNIDENTIFIED",
+      "rho": null,
+      "problems": [
+        "ul_events.csv: 같은 경계 step 3410000 의 RESUME 사건 2 줄 (k [3, 3]) — 중복 · 경계 하나에 승인 한 번 (중복 사건으로 늘리지 않는다) · 승인 없음 (ULKRF-01)"
+      ],
+      "csv_unchanged": true
+    },
+    {
+      "name": "fractional_state",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/base/docs/data/ps45_unload_20261009/ul_reader.py",
+        "arm",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/evidence/cli-before/fractional_state",
+        "ps_7_3_r45",
+        "UT"
+      ],
+      "rc": 0,
+      "auth": [
+        [
+          3,
+          3410000
+        ]
+      ],
+      "primary_status": "OK",
+      "rho": 0.20260778734286913,
+      "problems": [],
+      "csv_unchanged": true
+    },
+    {
+      "name": "duplicate_state",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/base/docs/data/ps45_unload_20261009/ul_reader.py",
+        "arm",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/evidence/cli-before/duplicate_state",
+        "ps_7_3_r45",
+        "UT"
+      ],
+      "rc": 0,
+      "auth": [
+        [
+          3,
+          3410000
+        ]
+      ],
+      "primary_status": "OK",
+      "rho": 0.20260778734286913,
+      "problems": [],
+      "csv_unchanged": true
+    },
+    {
+      "name": "malformed_manifest",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python",
+        "-I",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/base/docs/data/ps45_unload_20261009/ul_reader.py",
+        "arm",
+        "/workspace/.cloud-setup/nonrint-20261024/ulpr/evidence/cli-before/malformed_manifest",
+        "ps_7_3_r45",
+        "UT"
+      ],
+      "rc": 0,
+      "auth": [
+        [
+          3,
+          3410000
+        ]
+      ],
+      "primary_status": "OK",
+      "rho": 0.20260778734286913,
+      "problems": [],
+      "csv_unchanged": true
+    }
+  ]
+}

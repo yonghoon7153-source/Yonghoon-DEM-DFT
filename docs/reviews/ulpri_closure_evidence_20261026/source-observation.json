@@ -1,0 +1,16 @@
+{
+  "observed_at_utc": "2026-10-26T04:43:27.634380+00:00",
+  "selected_base": "2b4b40ea5e375659bfad8243c1ccb6fe0ef2853f",
+  "remote_t12": "2b4b40ea5e375659bfad8243c1ccb6fe0ef2853f\trefs/heads/codex/dem-gen2-t12",
+  "claude_source": "dc0a97212d5e3e571185bee7011dd50540b09de2",
+  "claude_center": "93d93bc02f5a68d6551137ab420dbc0eea40b455",
+  "previous_source": "20651fd365b9bc1fb2bf6285abe426bd82312e3f",
+  "new_collab_notes": "",
+  "integrated": false,
+  "fetch": "read-only source observation; no merge/rebase/reset",
+  "existing_note_read": {
+    "commit": "dc0a97212d5e3e571185bee7011dd50540b09de2",
+    "path": "docs/collab/claude_to_codex/20261023-0941_start.md"
+  },
+  "effect": "Read-only context; no integration or authority to alter shared ledgers/CI/CLAUDE"
+}

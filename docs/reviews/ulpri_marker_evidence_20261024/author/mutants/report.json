@@ -1,0 +1,128 @@
+{
+  "scope": "Deliberately modified scratch sources, not approved consumers",
+  "results": [
+    {
+      "mutation": "omit_raw_marker_rejection",
+      "original_reader_sha256": "dfc06b8dbf53a8cab05df297890e1f8ca1d0fa038536c7c13ed8b8677e521723",
+      "mutated_reader_sha256": "47278b38a630994c1ce964b82a56b0174437e332cfaf6fbf9d1fee53a0995588",
+      "probe_rc": 0,
+      "case_count": 42,
+      "failed_cases": [
+        "R40 ULPRI-01 변형 표지 'RESUME ' · k=1 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변",
+        "R40 ULPRI-01 변형 표지 'RESUME ' · k=1.49 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변",
+        "R40 ULPRI-01 변형 표지 ' RESUME' · k=1 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변",
+        "R40 ULPRI-01 변형 표지 ' RESUME' · k=1.49 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변",
+        "R40 ULPRI-01 변형 표지 'RESUME\\t' · k=1 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변",
+        "R40 ULPRI-01 변형 표지 'RESUME\\t' · k=1.49 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변",
+        "R40 ULPRI-01 변형 표지 '\\tRESUME' · k=1 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변",
+        "R40 ULPRI-01 변형 표지 '\\tRESUME' · k=1.49 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변",
+        "R40 ULPRI-01 변형 표지 'RESUME\\xa0' · k=1 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변",
+        "R40 ULPRI-01 변형 표지 'RESUME\\xa0' · k=1.49 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변",
+        "R40 ULPRI-01 변형 표지 '\\xa0RESUME' · k=1 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변",
+        "R40 ULPRI-01 변형 표지 '\\xa0RESUME' · k=1.49 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변",
+        "R40 ULPRI-01 변형 표지 'RESUME\\u2003' · k=1 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변",
+        "R40 ULPRI-01 변형 표지 'RESUME\\u2003' · k=1.49 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변",
+        "R40 ULPRI-01 변형 표지 '\\u2003RESUME' · k=1 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변",
+        "R40 ULPRI-01 변형 표지 '\\u2003RESUME' · k=1.49 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변",
+        "R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\\x0b' → CSV splitlines 전에 변형 표지 거부",
+        "R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\\x0c' → CSV splitlines 전에 변형 표지 거부",
+        "R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\\x1c' → CSV splitlines 전에 변형 표지 거부",
+        "R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\\x1d' → CSV splitlines 전에 변형 표지 거부",
+        "R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\\x1e' → CSV splitlines 전에 변형 표지 거부",
+        "R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\\x85' → CSV splitlines 전에 변형 표지 거부",
+        "R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\\u2028' → CSV splitlines 전에 변형 표지 거부",
+        "R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\\u2029' → CSV splitlines 전에 변형 표지 거부"
+      ],
+      "detected": true
+    },
+    {
+      "mutation": "normalize_event_line_separators",
+      "original_reader_sha256": "dfc06b8dbf53a8cab05df297890e1f8ca1d0fa038536c7c13ed8b8677e521723",
+      "mutated_reader_sha256": "28dfe01b8e65230f6eb971ec79e5c25757ce0a892ef59616c5783f2674b79b3f",
+      "probe_rc": 0,
+      "case_count": 42,
+      "failed_cases": [
+        "R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\\x0b' → CSV splitlines 전에 변형 표지 거부",
+        "R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\\x0c' → CSV splitlines 전에 변형 표지 거부",
+        "R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\\x1c' → CSV splitlines 전에 변형 표지 거부",
+        "R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\\x1d' → CSV splitlines 전에 변형 표지 거부",
+        "R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\\x1e' → CSV splitlines 전에 변형 표지 거부",
+        "R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\\x85' → CSV splitlines 전에 변형 표지 거부",
+        "R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\\u2028' → CSV splitlines 전에 변형 표지 거부",
+        "R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\\u2029' → CSV splitlines 전에 변형 표지 거부"
+      ],
+      "detected": true
+    },
+    {
+      "mutation": "ignore_marker_error_for_auth",
+      "original_reader_sha256": "dfc06b8dbf53a8cab05df297890e1f8ca1d0fa038536c7c13ed8b8677e521723",
+      "mutated_reader_sha256": "379267536f50360c0382e3ae4a4777b0776378d58ccb0be098bf580588a13cee",
+      "probe_rc": 0,
+      "case_count": 42,
+      "failed_cases": [
+        "R40 ULPRI-01 변형 표지 'RESUME ' · k=1 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변",
+        "R40 ULPRI-01 변형 표지 'RESUME ' · k=1.49 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변",
+        "R40 ULPRI-01 변형 표지 ' RESUME' · k=1 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변",
+        "R40 ULPRI-01 변형 표지 ' RESUME' · k=1.49 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변",
+        "R40 ULPRI-01 변형 표지 'RESUME\\t' · k=1 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변",
+        "R40 ULPRI-01 변형 표지 'RESUME\\t' · k=1.49 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변",
+        "R40 ULPRI-01 변형 표지 '\\tRESUME' · k=1 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변",
+        "R40 ULPRI-01 변형 표지 '\\tRESUME' · k=1.49 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변",
+        "R40 ULPRI-01 변형 표지 'RESUME\\xa0' · k=1 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변",
+        "R40 ULPRI-01 변형 표지 'RESUME\\xa0' · k=1.49 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변",
+        "R40 ULPRI-01 변형 표지 '\\xa0RESUME' · k=1 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변",
+        "R40 ULPRI-01 변형 표지 '\\xa0RESUME' · k=1.49 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변",
+        "R40 ULPRI-01 변형 표지 'RESUME\\u2003' · k=1 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변",
+        "R40 ULPRI-01 변형 표지 'RESUME\\u2003' · k=1.49 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변",
+        "R40 ULPRI-01 변형 표지 '\\u2003RESUME' · k=1 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변",
+        "R40 ULPRI-01 변형 표지 '\\u2003RESUME' · k=1.49 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변",
+        "R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\\x0b' → CSV splitlines 전에 변형 표지 거부",
+        "R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\\x0c' → CSV splitlines 전에 변형 표지 거부",
+        "R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\\x1c' → CSV splitlines 전에 변형 표지 거부",
+        "R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\\x1d' → CSV splitlines 전에 변형 표지 거부",
+        "R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\\x1e' → CSV splitlines 전에 변형 표지 거부",
+        "R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\\x85' → CSV splitlines 전에 변형 표지 거부",
+        "R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\\u2028' → CSV splitlines 전에 변형 표지 거부",
+        "R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\\u2029' → CSV splitlines 전에 변형 표지 거부"
+      ],
+      "detected": true
+    },
+    {
+      "mutation": "omit_manifest_separator_rejection",
+      "original_reader_sha256": "dfc06b8dbf53a8cab05df297890e1f8ca1d0fa038536c7c13ed8b8677e521723",
+      "mutated_reader_sha256": "f88529ca7823f6faafa124114d156953b593ec005e060fc59494cb542a901ed6",
+      "probe_rc": 0,
+      "case_count": 42,
+      "failed_cases": [
+        "R40 ULPRI-02 다른 문자 뒤 줄 구분자 '\\x0b' → 숨은 resume_from 무시 없이 승인·행 제외 없음 · CLI 미식별",
+        "R40 ULPRI-02 다른 문자 뒤 줄 구분자 '\\x0c' → 숨은 resume_from 무시 없이 승인·행 제외 없음 · CLI 미식별",
+        "R40 ULPRI-02 다른 문자 뒤 줄 구분자 '\\x1c' → 숨은 resume_from 무시 없이 승인·행 제외 없음 · CLI 미식별",
+        "R40 ULPRI-02 다른 문자 뒤 줄 구분자 '\\x1d' → 숨은 resume_from 무시 없이 승인·행 제외 없음 · CLI 미식별",
+        "R40 ULPRI-02 다른 문자 뒤 줄 구분자 '\\x1e' → 숨은 resume_from 무시 없이 승인·행 제외 없음 · CLI 미식별",
+        "R40 ULPRI-02 다른 문자 뒤 줄 구분자 '\\x85' → 숨은 resume_from 무시 없이 승인·행 제외 없음 · CLI 미식별",
+        "R40 ULPRI-02 다른 문자 뒤 줄 구분자 '\\u2028' → 숨은 resume_from 무시 없이 승인·행 제외 없음 · CLI 미식별",
+        "R40 ULPRI-02 다른 문자 뒤 줄 구분자 '\\u2029' → 숨은 resume_from 무시 없이 승인·행 제외 없음 · CLI 미식별"
+      ],
+      "detected": true
+    },
+    {
+      "mutation": "select_manifest_key_before_separator_check",
+      "original_reader_sha256": "dfc06b8dbf53a8cab05df297890e1f8ca1d0fa038536c7c13ed8b8677e521723",
+      "mutated_reader_sha256": "64723bf5cb873a3752d5cdff03213c4814958e8142447f9b464c4bea7b26286d",
+      "probe_rc": 0,
+      "case_count": 42,
+      "failed_cases": [
+        "R40 ULPRI-02 다른 문자 뒤 줄 구분자 '\\x0b' → 숨은 resume_from 무시 없이 승인·행 제외 없음 · CLI 미식별",
+        "R40 ULPRI-02 다른 문자 뒤 줄 구분자 '\\x0c' → 숨은 resume_from 무시 없이 승인·행 제외 없음 · CLI 미식별",
+        "R40 ULPRI-02 다른 문자 뒤 줄 구분자 '\\x1c' → 숨은 resume_from 무시 없이 승인·행 제외 없음 · CLI 미식별",
+        "R40 ULPRI-02 다른 문자 뒤 줄 구분자 '\\x1d' → 숨은 resume_from 무시 없이 승인·행 제외 없음 · CLI 미식별",
+        "R40 ULPRI-02 다른 문자 뒤 줄 구분자 '\\x1e' → 숨은 resume_from 무시 없이 승인·행 제외 없음 · CLI 미식별",
+        "R40 ULPRI-02 다른 문자 뒤 줄 구분자 '\\x85' → 숨은 resume_from 무시 없이 승인·행 제외 없음 · CLI 미식별",
+        "R40 ULPRI-02 다른 문자 뒤 줄 구분자 '\\u2028' → 숨은 resume_from 무시 없이 승인·행 제외 없음 · CLI 미식별",
+        "R40 ULPRI-02 다른 문자 뒤 줄 구분자 '\\u2029' → 숨은 resume_from 무시 없이 승인·행 제외 없음 · CLI 미식별"
+      ],
+      "detected": true
+    }
+  ],
+  "all_detected": true
+}

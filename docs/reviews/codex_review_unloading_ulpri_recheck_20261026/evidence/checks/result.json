@@ -1,0 +1,70 @@
+[
+  {
+    "name": "seal_selftest",
+    "command": [
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-B",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\unloading_ulpri_recheck_20261026\\snapshot\\docs\\data\\ps45_unload_20261009\\seal_kit.py",
+      "--selftest"
+    ],
+    "rc": 0,
+    "last": [
+      "  ✓ K6 README 의 동시 제출 꼴 (for A in UB UV UT UC) 도 걸린다 (명령 꼴을 사람이 붙여 넣는다)",
+      "  ✓ K7 활성 규칙 목록: 선택 (SELECTION_UNRESOLVED) · 제출 순서 (UB · UT · UC → UV) · UT R_M 멈춤 · UTc · 비단조 합집합 · 분리 · TIMEOUT 세 경우 · 상쇄 진단값 · 물리 창 · S3 총힘 · σ_P — 규칙마다 코드 자리 (실재) · 증인 시험 이름 · 폐기 규칙 0 건",
+      "selftest: PASS (0 실패)"
+    ]
+  },
+  {
+    "name": "seal_check",
+    "command": [
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-B",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\unloading_ulpri_recheck_20261026\\snapshot\\docs\\data\\ps45_unload_20261009\\seal_kit.py",
+      "--check"
+    ],
+    "rc": 0,
+    "last": [
+      "✓ seal — 파일 76 · SHA256SUMS 일치 · 폐기 규칙 0 건 · 활성 규칙 24 (증인 실재 True)"
+    ]
+  },
+  {
+    "name": "deck_check",
+    "command": [
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-B",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\unloading_ulpri_recheck_20261026\\snapshot\\docs\\data\\ps45_unload_20261009\\make_unload_decks.py",
+      "--check"
+    ],
+    "rc": 1,
+    "last": [
+      "                  ^^^^^^^^^",
+      "  File \"<frozen codecs>\", line 322, in decode",
+      "UnicodeDecodeError: 'utf-8' codec can't decode byte 0xc6 in position 537: invalid continuation byte"
+    ]
+  },
+  {
+    "name": "history_deck_check",
+    "command": [
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-B",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\unloading_ulpri_recheck_20261026\\snapshot\\docs\\data\\ps45_unload_20261009\\history_test\\make_history_decks.py",
+      "--check"
+    ],
+    "rc": 0,
+    "last": [
+      "✓ check: 덱 9 · 판 STL = 생성 결과 · SHA256SUMS 일치 (15 파일 · 러너 · 래퍼 · 읽는 쪽 포함)"
+    ]
+  }
+]
