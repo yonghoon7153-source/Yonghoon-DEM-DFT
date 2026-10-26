@@ -4965,6 +4965,38 @@ def t_Y12():
     return y_stopped(r) and '러너 파일' in y_why(r), (r['rc'], stop_code(r), n_calls(r['world']), y_why(r)[-200:])
 
 
+@check('Y13', '★ 10-26 B″ (1저자 Q5 · 묶음 B 보고 결정 5) 저장소 뿌리의 .venv/ (러너가 찾는 venv 자리 `$SCR/../.venv`) — 이 리포 .gitignore 가 '
+              '.venv/ 를 무시한다 (git check-ignore --no-index) · 고정물 clone 뿌리에 .venv/ (bin/activate · pyvenv.cfg · site-packages 의 .py) → '
+              'git 신원 dirty False · 사다리 CALIBRATED (옛 .gitignore = ignore 밖 untracked = dirty → CODE_PIN_MISMATCH · 러너 0 회) · 같은 clone 에 '
+              '.venv 밖 추적 안 된 파일 하나 더 → 여전히 CODE_PIN_MISMATCH (무시 범위 = .venv/ 만)')
+def t_Y13():
+    import subprocess as _sp
+    ign = _sp.run(['git', '-C', str(ROOT), 'check-ignore', '--no-index', '-q', '.venv/bin/activate'], capture_output=True)
+
+    def plant(sd):
+        v = Path(sd).parent / '.venv'
+        (v / 'bin').mkdir(parents=True)
+        (v / 'bin' / 'activate').write_text('# 시험 venv (Y13)\n', encoding='utf-8')
+        (v / 'pyvenv.cfg').write_text('home = /usr\n', encoding='utf-8')
+        (v / 'lib' / 'python3.8' / 'site-packages').mkdir(parents=True)
+        (v / 'lib' / 'python3.8' / 'site-packages' / 'x.py').write_text('x = 1\n', encoding='utf-8')
+
+    def go():
+        a_sd = clone_repo('Y13a')
+        plant(a_sd)
+        ident = RR.git_identity(Path(a_sd) / 'rint_r_chain.py')
+        a = y_ladder('Y13a', a_sd)
+        b_sd = clone_repo('Y13b')
+        plant(b_sd)
+        (Path(b_sd) / 'stray_y13.py').write_text('y = 2\n', encoding='utf-8')
+        b = y_ladder('Y13b', b_sd)
+        return ident, a, b
+    ident, a, b = scen('Y13', go)
+    return (ign.returncode == 0 and ident.get('dirty') is False and a['rc'] == 0 and (a['sum'] or {}).get('status') == 'CALIBRATED'
+            and y_stopped(b),
+            (ign.returncode, ident, a['rc'], stop_code(a), y_why(a)[-160:], b['rc'], stop_code(b)))
+
+
 # ── ★ 10-25 묶음 B (RCA2-03 · 1저자 10-23 Q3 (가) · 판정문 §4 F8) 같은 침대 — S0 보고의 원 입력 (역할 파일 sha256 · 크기 · metrics 상자 · 두께 ·
 #    설정 = 킷 payload 호출부) 을 사슬 요약에 보존 · R 런 직전 (사다리 = SBE · 예측 = SBE · DBE) 과 판정 (--root) 때 S0 와 같은 발견 함수
 #    (`ca_s0_census.kit_input_record`) 로 실제 킷을 다시 해시해 대조 (경로 = 대조 밖 · 기계마다 자기 사본) · 파생 격자 지문 (off 격자 sid) = 같은

@@ -1,6 +1,8 @@
 .env
 __pycache__/
 venv/
+# ★ 10-26 (Rint ② B″ · 1저자 Q5) 러너가 찾는 venv 자리 `$SCR/../.venv` — 무시하지 않으면 저장소 뿌리의 .venv 가 dirty → CODE_PIN_MISMATCH
+.venv/
 *.pyc
 webapp/uploads/
 webapp/results/
