@@ -1,0 +1,123 @@
+{
+  "status": "MATCH_6_OF_6_USER_RELAYED_OBSERVATION",
+  "observation_host": "ibb-master",
+  "observation_user": "yonghoon",
+  "observation_start_kst": "2026-10-26T20:14:00+09:00",
+  "observation_end_kst": "2026-10-26T20:14:02+09:00",
+  "identity_read_rc": 0,
+  "observed": [
+    {
+      "key": "ckpt",
+      "path": "/home/yonghoon/dem_test/ps45/ps_7_3_r45/restart_ps_7_3_r45/restart_compress_3200000.bin",
+      "size": 81154383,
+      "sha256": "0aa6e41a2330ae7825a715b8d98da6b708c37cb4093d3ab0f8fe2c2653ca3730",
+      "stat_rc": 0,
+      "sha256sum_rc": 0,
+      "comparison": {
+        "path": true,
+        "size": true,
+        "sha256": true,
+        "stat_rc": true,
+        "sha256sum_rc": true
+      }
+    },
+    {
+      "key": "atom",
+      "path": "/home/yonghoon/dem_test/ps45/ps_7_3_r45/post_ps_7_3_r45/atom_3200000.liggghts",
+      "size": 21430748,
+      "sha256": "2da106f8470a60c7d3b85894025007d6a5decdffb249b22e0a2ce67d08bbdd9e",
+      "stat_rc": 0,
+      "sha256sum_rc": 0,
+      "comparison": {
+        "path": true,
+        "size": true,
+        "sha256": true,
+        "stat_rc": true,
+        "sha256sum_rc": true
+      }
+    },
+    {
+      "key": "contact",
+      "path": "/home/yonghoon/dem_test/ps45/ps_7_3_r45/post_ps_7_3_r45/contact_3200000.liggghts",
+      "size": 149687008,
+      "sha256": "53ae293b4586d091dfca58ab430c174f36b641dcd24678eb10d10fc3f416e65c",
+      "stat_rc": 0,
+      "sha256sum_rc": 0,
+      "comparison": {
+        "path": true,
+        "size": true,
+        "sha256": true,
+        "stat_rc": true,
+        "sha256sum_rc": true
+      }
+    },
+    {
+      "key": "mesh",
+      "path": "/home/yonghoon/dem_test/ps45/ps_7_3_r45/post_ps_7_3_r45/mesh_3200000.stl",
+      "size": 349,
+      "sha256": "c25296a6d4d6b185be3c1c0ff98543dbfdb710c281403111c7fae2b9bde2b820",
+      "stat_rc": 0,
+      "sha256sum_rc": 0,
+      "comparison": {
+        "path": true,
+        "size": true,
+        "sha256": true,
+        "stat_rc": true,
+        "sha256sum_rc": true
+      }
+    },
+    {
+      "key": "orig_log",
+      "path": "/home/yonghoon/dem_test/ps45/logs/output_ps_7_3_r45_r8_220537.out",
+      "size": 127049,
+      "sha256": "35e28690eb9b45c989d7526205a1b168b23041cd1cce6afb12a020deb5096c49",
+      "stat_rc": 0,
+      "sha256sum_rc": 0,
+      "comparison": {
+        "path": true,
+        "size": true,
+        "sha256": true,
+        "stat_rc": true,
+        "sha256sum_rc": true
+      }
+    },
+    {
+      "key": "last_deck",
+      "path": "/home/yonghoon/dem_test/ps45/ps_7_3_r45/input_ps_7_3_r45_r8.liggghts",
+      "size": 5916,
+      "sha256": "097658aa640f798b53da4c40a9d101632b8faaee6f80f4d1d2667591eef8d9cd",
+      "stat_rc": 0,
+      "sha256sum_rc": 0,
+      "comparison": {
+        "path": true,
+        "size": true,
+        "sha256": true,
+        "stat_rc": true,
+        "sha256sum_rc": true
+      }
+    }
+  ],
+  "reference_pin": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde",
+  "reference_params_sha256": "332ad7c2040eb614ac21b31ccbb226479928d7ed8363f733b960cf4527204aae",
+  "reference_provenance_file_sha256": "f954b6057e1a3ff109a5e5d6dd6598052c70318046e588a349b7658062182670",
+  "intake_kind": "manually transcribed result block from user chat, command/prompt omitted; not original terminal file byte identity",
+  "intake_sha256": "a13f547cf1274c956b781965acde105ea750aa484873d2035fb0ae27a6387f23",
+  "claimed_original_path": "docs/reviews/p1_ps73_input_identity_20261026/ibb_identity_screen.txt",
+  "remote_source_observed": "446b5bf543c39120e0003f3a7e2272264d1e97a8",
+  "claimed_original_in_observed_remote": false,
+  "comparison_recorded_utc": "2026-10-26T11:21:14.702112+00:00",
+  "agent_accessed_ibb": false,
+  "s0_qualification": "NOT_ESTABLISHED_BY_IDENTITY_CHECK",
+  "physical_go": false,
+  "new_calculation_or_copy": false,
+  "latest_original_publication_observation": {
+    "observed_at_utc": "2026-10-26T11:22:03.768622+00:00",
+    "source": "446b5bf543c39120e0003f3a7e2272264d1e97a8",
+    "claimed_path": "docs/reviews/p1_ps73_input_identity_20261026/ibb_identity_screen.txt",
+    "present": false
+  },
+  "record_scope": "user-relayed six source-file observation, limited to stated interval; no assistant remote execution",
+  "working_inputs_staged": "NOT_ESTABLISHED",
+  "physical_restoration": "NOT_ESTABLISHED",
+  "full_suite_rerun": false
+}
