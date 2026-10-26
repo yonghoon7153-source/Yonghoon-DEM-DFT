@@ -1,0 +1,36 @@
+--- base/bffc42
+
++++ review/96f15
+
+@@ -11,6 +11,7 @@
+
+ import hashlib
+ import importlib
+ import json
++import os
+ from pathlib import Path
+ import subprocess
+ import sys
+@@ -32,12 +33,17 @@
+
+     if set(manifest["files_sha256"]) != FILES:
+         raise ValueError("Source manifest must cover the complete six-file import/params closure")
+     verified = {}
++    # The environment guard must override the caller. The explicit option also
++    # fails closed on Git versions that do not support disabling lazy fetch.
++    git_env = dict(os.environ, GIT_NO_LAZY_FETCH="1")
+     for name, expected in sorted(manifest["files_sha256"].items()):
+-        result = subprocess.run(["git", "-C", str(repo), "show", f"{PIN}:{PREFIX}{name}"],
+-                                capture_output=True, check=False)
++        result = subprocess.run(["git", "--no-lazy-fetch", "-C", str(repo), "show", f"{PIN}:{PREFIX}{name}"],
++                                capture_output=True, check=False, env=git_env)
+         if result.returncode:
+-            raise ValueError(f"Pinned Git object unavailable: {PIN}:{PREFIX}{name}; "
+-                             "fetch origin codex/unloading-ulpri explicitly, then retry. No fetch was run.")
++            raise ValueError(f"Pinned Git object could not be read offline: {PIN}:{PREFIX}{name}; "
++                             "Git with --no-lazy-fetch support is required. If objects are missing, "
++                             "fetch origin codex/unloading-ulpri explicitly, then retry. "
++                             "This read forces lazy fetch off.")
+         digest = hashlib.sha256(result.stdout).hexdigest()
+         if digest != expected:
+             raise ValueError(f"Pinned source SHA256 mismatch: {name}")

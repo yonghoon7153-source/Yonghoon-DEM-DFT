@@ -1,0 +1,19 @@
+{
+  "pin": "96f15ed17e03181b6096fb65f71ec7f577f17523",
+  "source_blob_count": 369,
+  "all_remote_matched": true,
+  "base_proof": "Prior external review remote-bound 190 blobs at bffc42cab29d; candidate and final remote change metadata applied, with both current Python files fetched directly.",
+  "modified_paths": [
+    {
+      "path": "scripts/test_dem_gen2_t12_consumer_contract.py",
+      "status": "modified",
+      "oid": "38934cec534b85814b4ee80a3eaa1c250cc415c5"
+    }
+  ],
+  "candidate_change_count": 168,
+  "final_change_count": 12,
+  "shared155": "SUBMITTED_LOG_AUDIT_ONLY",
+  "shared_log_pass_labels": 155,
+  "shared_log_hash_match": true,
+  "shared_receipt_candidate": "3eecce8af503556b678f8f4a02343e6bce3d0b83"
+}

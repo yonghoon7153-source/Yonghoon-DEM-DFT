@@ -1,0 +1,1 @@
+T12 preparation source failure: Pinned Git object could not be read offline: 4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_lib.py; Git with --no-lazy-fetch support is required. If objects are missing, fetch origin codex/unloading-ulpri explicitly, then retry. This read forces lazy fetch off.

@@ -1,0 +1,894 @@
+{
+  "pin": "96f15ed17e03181b6096fb65f71ec7f577f17523",
+  "consumer": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde",
+  "git": "git version 2.55.0.windows.3",
+  "python": "3.12.14",
+  "platform": "win32",
+  "runner_sha256": "cd1bd28429ae90a206e833638b086bd99dc5d6d2123bed6b04fe412b66abcf3b",
+  "cases": [
+    {
+      "case": "complete",
+      "missing": null,
+      "returncode": 0,
+      "fetch_count": 0,
+      "show_count": 6,
+      "shows": [
+        [
+          "git.exe",
+          "--no-lazy-fetch",
+          "-C",
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12r_recheck_20261026\\evidence\\independent_offline\\complete\\repo",
+          "show",
+          "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_gates.py"
+        ],
+        [
+          "git.exe",
+          "--no-lazy-fetch",
+          "-C",
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12r_recheck_20261026\\evidence\\independent_offline\\complete\\repo",
+          "show",
+          "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_lib.py"
+        ],
+        [
+          "git.exe",
+          "--no-lazy-fetch",
+          "-C",
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12r_recheck_20261026\\evidence\\independent_offline\\complete\\repo",
+          "show",
+          "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_observers.py"
+        ],
+        [
+          "git.exe",
+          "--no-lazy-fetch",
+          "-C",
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12r_recheck_20261026\\evidence\\independent_offline\\complete\\repo",
+          "show",
+          "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_reader.py"
+        ],
+        [
+          "git.exe",
+          "--no-lazy-fetch",
+          "-C",
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12r_recheck_20261026\\evidence\\independent_offline\\complete\\repo",
+          "show",
+          "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_s3.py"
+        ],
+        [
+          "git.exe",
+          "--no-lazy-fetch",
+          "-C",
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12r_recheck_20261026\\evidence\\independent_offline\\complete\\repo",
+          "show",
+          "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/unload_params.json"
+        ]
+      ],
+      "env_trace": [
+        {
+          "event": "def_param",
+          "sid": "20261026T063701.101836Z-H02c2ab1a-P000085c0",
+          "thread": "main",
+          "time": "2026-10-26T06:37:01.110860Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "1"
+        },
+        {
+          "event": "def_param",
+          "sid": "20261026T063701.140011Z-H02c2ab1a-P00009d70",
+          "thread": "main",
+          "time": "2026-10-26T06:37:01.148353Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "1"
+        },
+        {
+          "event": "def_param",
+          "sid": "20261026T063701.177183Z-H02c2ab1a-P00001154",
+          "thread": "main",
+          "time": "2026-10-26T06:37:01.185194Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "1"
+        },
+        {
+          "event": "def_param",
+          "sid": "20261026T063701.213775Z-H02c2ab1a-P0000943c",
+          "thread": "main",
+          "time": "2026-10-26T06:37:01.221783Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "1"
+        },
+        {
+          "event": "def_param",
+          "sid": "20261026T063701.251829Z-H02c2ab1a-P00006294",
+          "thread": "main",
+          "time": "2026-10-26T06:37:01.259339Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "1"
+        },
+        {
+          "event": "def_param",
+          "sid": "20261026T063701.289383Z-H02c2ab1a-P0000098c",
+          "thread": "main",
+          "time": "2026-10-26T06:37:01.296887Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "1"
+        }
+      ],
+      "whole_repo_files_unchanged": true,
+      "caller_no_lazy_fetch": "0",
+      "stdout_sha256": "d01cdb9aea3f65b131ed389c99e0ee1e17b668ab7fb946cd1ade9ecc915887b7",
+      "trace_sha256": "56abf619a2de4da6dfb13c7b398cfc502cd8be6a12e7e13be3e479c67362dc14",
+      "pass": true,
+      "exact52": true,
+      "source_hashes_match": true,
+      "status": "PASS",
+      "physical_ready": false,
+      "physical_T12": "NOT_RUN"
+    },
+    {
+      "case": "missing_0_commit",
+      "missing": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde",
+      "returncode": 2,
+      "fetch_count": 0,
+      "show_count": 1,
+      "shows": [
+        [
+          "git.exe",
+          "--no-lazy-fetch",
+          "-C",
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12r_recheck_20261026\\evidence\\independent_offline\\missing_0_commit\\repo",
+          "show",
+          "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_gates.py"
+        ]
+      ],
+      "env_trace": [
+        {
+          "event": "def_param",
+          "sid": "20261026T063702.169873Z-H02c2ab1a-P0000522c",
+          "thread": "main",
+          "time": "2026-10-26T06:37:02.178261Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "1"
+        }
+      ],
+      "whole_repo_files_unchanged": true,
+      "caller_no_lazy_fetch": "0",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "trace_sha256": "c12e34d954adc52e75193333c01e670e8eb3bad2eced9a69cf2e4ba4f82ce996",
+      "pass": true
+    },
+    {
+      "case": "missing_1_tree",
+      "missing": "6f46120958e50a32ddfee1cbdd7f1273cf607e35",
+      "returncode": 2,
+      "fetch_count": 0,
+      "show_count": 1,
+      "shows": [
+        [
+          "git.exe",
+          "--no-lazy-fetch",
+          "-C",
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12r_recheck_20261026\\evidence\\independent_offline\\missing_1_tree\\repo",
+          "show",
+          "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_gates.py"
+        ]
+      ],
+      "env_trace": [
+        {
+          "event": "def_param",
+          "sid": "20261026T063702.524307Z-H02c2ab1a-P000092d8",
+          "thread": "main",
+          "time": "2026-10-26T06:37:02.531816Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "1"
+        }
+      ],
+      "whole_repo_files_unchanged": true,
+      "caller_no_lazy_fetch": "0",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "trace_sha256": "e3eed3677866a6172d4e8addb349b169d0923c6cd187ef183e43181b13bf130d",
+      "pass": true
+    },
+    {
+      "case": "missing_2_tree",
+      "missing": "be929ac4d16a436b021da06995c12329ad26c134",
+      "returncode": 2,
+      "fetch_count": 0,
+      "show_count": 1,
+      "shows": [
+        [
+          "git.exe",
+          "--no-lazy-fetch",
+          "-C",
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12r_recheck_20261026\\evidence\\independent_offline\\missing_2_tree\\repo",
+          "show",
+          "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_gates.py"
+        ]
+      ],
+      "env_trace": [
+        {
+          "event": "def_param",
+          "sid": "20261026T063702.868142Z-H02c2ab1a-P000097a8",
+          "thread": "main",
+          "time": "2026-10-26T06:37:02.876039Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "1"
+        }
+      ],
+      "whole_repo_files_unchanged": true,
+      "caller_no_lazy_fetch": "0",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "trace_sha256": "02e6a3b8ca88cb81d1c391521cde25aaf0fef6af2f6f79a6430af9ce09596d06",
+      "pass": true
+    },
+    {
+      "case": "missing_3_tree",
+      "missing": "d5ec5d84fb8b7c229ff117f98fc252fa954a034f",
+      "returncode": 2,
+      "fetch_count": 0,
+      "show_count": 1,
+      "shows": [
+        [
+          "git.exe",
+          "--no-lazy-fetch",
+          "-C",
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12r_recheck_20261026\\evidence\\independent_offline\\missing_3_tree\\repo",
+          "show",
+          "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_gates.py"
+        ]
+      ],
+      "env_trace": [
+        {
+          "event": "def_param",
+          "sid": "20261026T063703.216000Z-H02c2ab1a-P00008c08",
+          "thread": "main",
+          "time": "2026-10-26T06:37:03.224205Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "1"
+        }
+      ],
+      "whole_repo_files_unchanged": true,
+      "caller_no_lazy_fetch": "0",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "trace_sha256": "299344120883f1431efcf33ce9c38d5ffa8b92f4679f32318b17e17e07bcfe40",
+      "pass": true
+    },
+    {
+      "case": "missing_4_tree",
+      "missing": "af28eb5fdde25f52453320d67faeee3e459bb788",
+      "returncode": 2,
+      "fetch_count": 0,
+      "show_count": 1,
+      "shows": [
+        [
+          "git.exe",
+          "--no-lazy-fetch",
+          "-C",
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12r_recheck_20261026\\evidence\\independent_offline\\missing_4_tree\\repo",
+          "show",
+          "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_gates.py"
+        ]
+      ],
+      "env_trace": [
+        {
+          "event": "def_param",
+          "sid": "20261026T063703.573011Z-H02c2ab1a-P0000800c",
+          "thread": "main",
+          "time": "2026-10-26T06:37:03.581010Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "1"
+        }
+      ],
+      "whole_repo_files_unchanged": true,
+      "caller_no_lazy_fetch": "0",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "trace_sha256": "74793e7b7658063721c88c5bd27b0fdf2d9ef2969a9a5bfce8d0b9d25067a507",
+      "pass": true
+    },
+    {
+      "case": "missing_5_blob",
+      "missing": "f19d35733904b4ebf272648ff9e046429d97e33a",
+      "returncode": 2,
+      "fetch_count": 0,
+      "show_count": 4,
+      "shows": [
+        [
+          "git.exe",
+          "--no-lazy-fetch",
+          "-C",
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12r_recheck_20261026\\evidence\\independent_offline\\missing_5_blob\\repo",
+          "show",
+          "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_gates.py"
+        ],
+        [
+          "git.exe",
+          "--no-lazy-fetch",
+          "-C",
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12r_recheck_20261026\\evidence\\independent_offline\\missing_5_blob\\repo",
+          "show",
+          "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_lib.py"
+        ],
+        [
+          "git.exe",
+          "--no-lazy-fetch",
+          "-C",
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12r_recheck_20261026\\evidence\\independent_offline\\missing_5_blob\\repo",
+          "show",
+          "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_observers.py"
+        ],
+        [
+          "git.exe",
+          "--no-lazy-fetch",
+          "-C",
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12r_recheck_20261026\\evidence\\independent_offline\\missing_5_blob\\repo",
+          "show",
+          "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_reader.py"
+        ]
+      ],
+      "env_trace": [
+        {
+          "event": "def_param",
+          "sid": "20261026T063703.910371Z-H02c2ab1a-P0000943c",
+          "thread": "main",
+          "time": "2026-10-26T06:37:03.917876Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "1"
+        },
+        {
+          "event": "def_param",
+          "sid": "20261026T063703.946891Z-H02c2ab1a-P00002c4c",
+          "thread": "main",
+          "time": "2026-10-26T06:37:03.954968Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "1"
+        },
+        {
+          "event": "def_param",
+          "sid": "20261026T063703.982716Z-H02c2ab1a-P000083e4",
+          "thread": "main",
+          "time": "2026-10-26T06:37:03.990223Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "1"
+        },
+        {
+          "event": "def_param",
+          "sid": "20261026T063704.017282Z-H02c2ab1a-P00001138",
+          "thread": "main",
+          "time": "2026-10-26T06:37:04.025291Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "1"
+        }
+      ],
+      "whole_repo_files_unchanged": true,
+      "caller_no_lazy_fetch": "0",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "trace_sha256": "351cc257c104557d4a0177726643681e6e13f6fad79438c444bad10a35e9a479",
+      "pass": true
+    },
+    {
+      "case": "missing_6_blob",
+      "missing": "55e8793ad35f72723de7195101be1834996b16a2",
+      "returncode": 2,
+      "fetch_count": 0,
+      "show_count": 1,
+      "shows": [
+        [
+          "git.exe",
+          "--no-lazy-fetch",
+          "-C",
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12r_recheck_20261026\\evidence\\independent_offline\\missing_6_blob\\repo",
+          "show",
+          "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_gates.py"
+        ]
+      ],
+      "env_trace": [
+        {
+          "event": "def_param",
+          "sid": "20261026T063704.365138Z-H02c2ab1a-P000031dc",
+          "thread": "main",
+          "time": "2026-10-26T06:37:04.373512Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "1"
+        }
+      ],
+      "whole_repo_files_unchanged": true,
+      "caller_no_lazy_fetch": "0",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "trace_sha256": "2039794a67a20654f5b823a920a336fb88b7a1c5cd9a07aa4a244ddebbe35825",
+      "pass": true
+    },
+    {
+      "case": "missing_7_blob",
+      "missing": "be4991f6227b124d1b299ee0e6873e9695fd9881",
+      "returncode": 2,
+      "fetch_count": 0,
+      "show_count": 2,
+      "shows": [
+        [
+          "git.exe",
+          "--no-lazy-fetch",
+          "-C",
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12r_recheck_20261026\\evidence\\independent_offline\\missing_7_blob\\repo",
+          "show",
+          "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_gates.py"
+        ],
+        [
+          "git.exe",
+          "--no-lazy-fetch",
+          "-C",
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12r_recheck_20261026\\evidence\\independent_offline\\missing_7_blob\\repo",
+          "show",
+          "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_lib.py"
+        ]
+      ],
+      "env_trace": [
+        {
+          "event": "def_param",
+          "sid": "20261026T063704.709839Z-H02c2ab1a-P00000bd8",
+          "thread": "main",
+          "time": "2026-10-26T06:37:04.718343Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "1"
+        },
+        {
+          "event": "def_param",
+          "sid": "20261026T063704.745164Z-H02c2ab1a-P00008c34",
+          "thread": "main",
+          "time": "2026-10-26T06:37:04.753480Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "1"
+        }
+      ],
+      "whole_repo_files_unchanged": true,
+      "caller_no_lazy_fetch": "0",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "trace_sha256": "38109e2e9a0db842bea56cb5da2de7bcb1a2ae6e82003f22d792e2b43a1d765f",
+      "pass": true
+    },
+    {
+      "case": "missing_8_blob",
+      "missing": "8d9ebd558f8468e0b6df42fbfe9fc55656cc6570",
+      "returncode": 2,
+      "fetch_count": 0,
+      "show_count": 3,
+      "shows": [
+        [
+          "git.exe",
+          "--no-lazy-fetch",
+          "-C",
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12r_recheck_20261026\\evidence\\independent_offline\\missing_8_blob\\repo",
+          "show",
+          "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_gates.py"
+        ],
+        [
+          "git.exe",
+          "--no-lazy-fetch",
+          "-C",
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12r_recheck_20261026\\evidence\\independent_offline\\missing_8_blob\\repo",
+          "show",
+          "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_lib.py"
+        ],
+        [
+          "git.exe",
+          "--no-lazy-fetch",
+          "-C",
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12r_recheck_20261026\\evidence\\independent_offline\\missing_8_blob\\repo",
+          "show",
+          "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_observers.py"
+        ]
+      ],
+      "env_trace": [
+        {
+          "event": "def_param",
+          "sid": "20261026T063705.098275Z-H02c2ab1a-P00004d48",
+          "thread": "main",
+          "time": "2026-10-26T06:37:05.106291Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "1"
+        },
+        {
+          "event": "def_param",
+          "sid": "20261026T063705.133878Z-H02c2ab1a-P000085b0",
+          "thread": "main",
+          "time": "2026-10-26T06:37:05.142973Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "1"
+        },
+        {
+          "event": "def_param",
+          "sid": "20261026T063705.169999Z-H02c2ab1a-P00005f48",
+          "thread": "main",
+          "time": "2026-10-26T06:37:05.177308Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "1"
+        }
+      ],
+      "whole_repo_files_unchanged": true,
+      "caller_no_lazy_fetch": "0",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "trace_sha256": "1908c8fb65ef2edd73b239bb5b22d6abcaae75b83a9b2a27e607043ff80224f7",
+      "pass": true
+    },
+    {
+      "case": "missing_9_blob",
+      "missing": "7bccb4da17795905ea70b39b9424a49bec26b79c",
+      "returncode": 2,
+      "fetch_count": 0,
+      "show_count": 5,
+      "shows": [
+        [
+          "git.exe",
+          "--no-lazy-fetch",
+          "-C",
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12r_recheck_20261026\\evidence\\independent_offline\\missing_9_blob\\repo",
+          "show",
+          "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_gates.py"
+        ],
+        [
+          "git.exe",
+          "--no-lazy-fetch",
+          "-C",
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12r_recheck_20261026\\evidence\\independent_offline\\missing_9_blob\\repo",
+          "show",
+          "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_lib.py"
+        ],
+        [
+          "git.exe",
+          "--no-lazy-fetch",
+          "-C",
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12r_recheck_20261026\\evidence\\independent_offline\\missing_9_blob\\repo",
+          "show",
+          "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_observers.py"
+        ],
+        [
+          "git.exe",
+          "--no-lazy-fetch",
+          "-C",
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12r_recheck_20261026\\evidence\\independent_offline\\missing_9_blob\\repo",
+          "show",
+          "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_reader.py"
+        ],
+        [
+          "git.exe",
+          "--no-lazy-fetch",
+          "-C",
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12r_recheck_20261026\\evidence\\independent_offline\\missing_9_blob\\repo",
+          "show",
+          "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_s3.py"
+        ]
+      ],
+      "env_trace": [
+        {
+          "event": "def_param",
+          "sid": "20261026T063705.512158Z-H02c2ab1a-P0000806c",
+          "thread": "main",
+          "time": "2026-10-26T06:37:05.521160Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "1"
+        },
+        {
+          "event": "def_param",
+          "sid": "20261026T063705.549288Z-H02c2ab1a-P00008270",
+          "thread": "main",
+          "time": "2026-10-26T06:37:05.557299Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "1"
+        },
+        {
+          "event": "def_param",
+          "sid": "20261026T063705.583824Z-H02c2ab1a-P000097f8",
+          "thread": "main",
+          "time": "2026-10-26T06:37:05.591830Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "1"
+        },
+        {
+          "event": "def_param",
+          "sid": "20261026T063705.618337Z-H02c2ab1a-P0000826c",
+          "thread": "main",
+          "time": "2026-10-26T06:37:05.626348Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "1"
+        },
+        {
+          "event": "def_param",
+          "sid": "20261026T063705.655876Z-H02c2ab1a-P0000972c",
+          "thread": "main",
+          "time": "2026-10-26T06:37:05.663379Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "1"
+        }
+      ],
+      "whole_repo_files_unchanged": true,
+      "caller_no_lazy_fetch": "0",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "trace_sha256": "3f187ff3300fa514c8e11b356009404382bc95cb359d18dbacec5f0e0adf46c2",
+      "pass": true
+    },
+    {
+      "case": "missing_10_blob",
+      "missing": "6201d1814c56261d2008847e1abae9613c0068d3",
+      "returncode": 2,
+      "fetch_count": 0,
+      "show_count": 6,
+      "shows": [
+        [
+          "git.exe",
+          "--no-lazy-fetch",
+          "-C",
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12r_recheck_20261026\\evidence\\independent_offline\\missing_10_blob\\repo",
+          "show",
+          "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_gates.py"
+        ],
+        [
+          "git.exe",
+          "--no-lazy-fetch",
+          "-C",
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12r_recheck_20261026\\evidence\\independent_offline\\missing_10_blob\\repo",
+          "show",
+          "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_lib.py"
+        ],
+        [
+          "git.exe",
+          "--no-lazy-fetch",
+          "-C",
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12r_recheck_20261026\\evidence\\independent_offline\\missing_10_blob\\repo",
+          "show",
+          "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_observers.py"
+        ],
+        [
+          "git.exe",
+          "--no-lazy-fetch",
+          "-C",
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12r_recheck_20261026\\evidence\\independent_offline\\missing_10_blob\\repo",
+          "show",
+          "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_reader.py"
+        ],
+        [
+          "git.exe",
+          "--no-lazy-fetch",
+          "-C",
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12r_recheck_20261026\\evidence\\independent_offline\\missing_10_blob\\repo",
+          "show",
+          "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_s3.py"
+        ],
+        [
+          "git.exe",
+          "--no-lazy-fetch",
+          "-C",
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12r_recheck_20261026\\evidence\\independent_offline\\missing_10_blob\\repo",
+          "show",
+          "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/unload_params.json"
+        ]
+      ],
+      "env_trace": [
+        {
+          "event": "def_param",
+          "sid": "20261026T063705.999886Z-H02c2ab1a-P00007288",
+          "thread": "main",
+          "time": "2026-10-26T06:37:06.008240Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "1"
+        },
+        {
+          "event": "def_param",
+          "sid": "20261026T063706.036280Z-H02c2ab1a-P000090a4",
+          "thread": "main",
+          "time": "2026-10-26T06:37:06.043788Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "1"
+        },
+        {
+          "event": "def_param",
+          "sid": "20261026T063706.070317Z-H02c2ab1a-P00008860",
+          "thread": "main",
+          "time": "2026-10-26T06:37:06.079329Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "1"
+        },
+        {
+          "event": "def_param",
+          "sid": "20261026T063706.108953Z-H02c2ab1a-P000086e0",
+          "thread": "main",
+          "time": "2026-10-26T06:37:06.116983Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "1"
+        },
+        {
+          "event": "def_param",
+          "sid": "20261026T063706.146094Z-H02c2ab1a-P00006034",
+          "thread": "main",
+          "time": "2026-10-26T06:37:06.153597Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "1"
+        },
+        {
+          "event": "def_param",
+          "sid": "20261026T063706.182130Z-H02c2ab1a-P00008068",
+          "thread": "main",
+          "time": "2026-10-26T06:37:06.189142Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "1"
+        }
+      ],
+      "whole_repo_files_unchanged": true,
+      "caller_no_lazy_fetch": "0",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "trace_sha256": "dbabe881772dd6733af952feb8a03cd0716ade5eb5c2b1af32fd33321d0df10a",
+      "pass": true
+    },
+    {
+      "case": "guards_removed_control",
+      "missing": "55e8793ad35f72723de7195101be1834996b16a2",
+      "returncode": 2,
+      "fetch_count": 3,
+      "show_count": 1,
+      "shows": [
+        [
+          "git.exe",
+          "-C",
+          "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12r_recheck_20261026\\evidence\\independent_offline\\guards_removed_control\\repo",
+          "show",
+          "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_gates.py"
+        ]
+      ],
+      "env_trace": [
+        {
+          "event": "def_param",
+          "sid": "20261026T063706.552369Z-H02c2ab1a-P00006dd0",
+          "thread": "main",
+          "time": "2026-10-26T06:37:06.559875Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "0"
+        },
+        {
+          "event": "def_param",
+          "sid": "20261026T063706.552369Z-H02c2ab1a-P00006dd0/20261026T063706.577046Z-H02c2ab1a-P0000876c",
+          "thread": "main",
+          "time": "2026-10-26T06:37:06.586062Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "0"
+        },
+        {
+          "event": "def_param",
+          "sid": "20261026T063706.552369Z-H02c2ab1a-P00006dd0/20261026T063706.689344Z-H02c2ab1a-P00009bc8",
+          "thread": "main",
+          "time": "2026-10-26T06:37:06.697847Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "0"
+        },
+        {
+          "event": "def_param",
+          "sid": "20261026T063706.552369Z-H02c2ab1a-P00006dd0/20261026T063706.800120Z-H02c2ab1a-P00006a2c",
+          "thread": "main",
+          "time": "2026-10-26T06:37:06.809211Z",
+          "file": "trace2.c",
+          "line": 440,
+          "scope": "command",
+          "param": "GIT_NO_LAZY_FETCH",
+          "value": "0"
+        }
+      ],
+      "whole_repo_files_unchanged": true,
+      "caller_no_lazy_fetch": "0",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "trace_sha256": "33cc731acfc8ed011781365c537d93ad2c405bb31d3551d175797296502607b6",
+      "pass": true
+    }
+  ],
+  "compatibility_mock": {
+    "type": "mock, no real old Git used",
+    "refused": true,
+    "child_calls": 1,
+    "explicit_flag": true,
+    "forced_environment": "1",
+    "output_files": 0,
+    "message": "Pinned Git object could not be read offline: 4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_gates.py; Git with --no-lazy-fetch support is required. If objects are missing, fetch origin codex/unloading-ulpri explicitly, then retry. This read forces lazy fetch off.",
+    "pass": true
+  },
+  "pass": true,
+  "physical_runs": 0
+}

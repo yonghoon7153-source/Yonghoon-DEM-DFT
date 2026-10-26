@@ -1,0 +1,16 @@
+{
+  "schema": "dem_gen2_t12_pinned_consumer_sources_v1",
+  "consumer_pin": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde",
+  "consumer_branch": "codex/unloading-ulpri",
+  "source_prefix": "docs/data/ps45_unload_20261009/",
+  "files_sha256": {
+    "ul_reader.py": "dfc06b8dbf53a8cab05df297890e1f8ca1d0fa038536c7c13ed8b8677e521723",
+    "ul_gates.py": "c8d45a9cf75f0806e612d810942d23adea4b40feaa5f31f7d279eb8386358de6",
+    "ul_lib.py": "23a79392352e01631c6d1f6aaecdb31fc8a53be518ee6f27b815896e161727e6",
+    "ul_observers.py": "77b5dc891421fbecf059bb907ff5f5b6ab6433bf1d2cb9649e66535a1ae5ca74",
+    "ul_s3.py": "030c2688fe5b3e7c30c1ee7f14a60061082f6ce3f8cf2ac8a7a8b89ff353aaa9",
+    "unload_params.json": "332ad7c2040eb614ac21b31ccbb226479928d7ed8363f733b960cf4527204aae"
+  },
+  "delivery": "Exact Git blobs materialized to temporary directory; no source modification or branch merge",
+  "scope": "Synthetic P1 consumer boundary probes; P2 T12 NOT_RUN"
+}
