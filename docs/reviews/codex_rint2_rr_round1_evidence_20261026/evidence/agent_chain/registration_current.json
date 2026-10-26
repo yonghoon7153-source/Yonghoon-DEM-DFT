@@ -1,0 +1,732 @@
+{
+  "meta": {
+    "repo": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rr_round1_review_20261026\\repo",
+    "original": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\registration\\probe_registration_current.py",
+    "original_sha256": "4d9539da53222437ef43ca0c14b6d53a133e7c05029a5f623e738c243dbdf27b",
+    "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+    "source_hashes": {
+      "scripts/rint_r_chain.py": "e94a44295c28c171ba956fed994322eecb7c546e96ff6f52bf15af3c3dd22e03",
+      "scripts/run_contract.py": "59d645e3759f33cade058b3850d05429318e634175f4ad6b55cf7cb330421070",
+      "scripts/ca_ext_svcf.py": "1cc7b54ece122dbc920f907b723af302efbc4b72c6835120c235e9a385d09cfe",
+      "scripts/step3_conv_cert.py": "7a4424fe56263a50a88ffcc2ba0b906e4f4a8856ed98c1a4ef16af51c4d7fbf7"
+    },
+    "adaptation": "arm adds target_lo=1-err,target_hi=1+err,scale=sigma; zero fields None; Stop recorded; no behavior change to production"
+  },
+  "results": {
+    "RCA01": [
+      {
+        "err": 0.0,
+        "end_R": [
+          10000.0,
+          5990349.747387542
+        ],
+        "true_R": [
+          25493.9497121357,
+          5097624.112851077
+        ],
+        "R_ratio": 599.0349747387543,
+        "points": 12,
+        "R0": "64000.0",
+        "verdict": "CONSISTENT_WEAK",
+        "W": 0.7852375308170949
+      },
+      {
+        "err": 0.0001,
+        "end_R": [
+          10000.0,
+          10000000.0
+        ],
+        "true_R": [
+          25493.9497121357,
+          5097624.112851077
+        ],
+        "R_ratio": 1000.0,
+        "points": 12,
+        "R0": "64000.0",
+        "verdict": "CONSISTENT_WEAK",
+        "W": 0.7864872060387711
+      }
+    ],
+    "passive_endpoint_sweep": {
+      "checked_passive_responses": 54,
+      "fail_closed": 0
+    },
+    "certificate_padding": {
+      "A": 1.5972402759714026,
+      "B": 0.036035696431457015,
+      "C": 0.1,
+      "err": 0.0001,
+      "true_hi_R": 22551224.349222243,
+      "reported_hi_R": 1e+16,
+      "padding_factor": 443434903.80578315,
+      "n_runs": 15,
+      "status": "CALIBRATED",
+      "last_step_bound": "x100 holds per extension; no total bound"
+    },
+    "PRE2_impl03": {
+      "overflow_max_ladder_points": "PLAN_INVALID",
+      "overflow_s_min_um": "PLAN_INVALID",
+      "overflow_sv_cf_threshold": "PLAN_INVALID",
+      "overflow_calib_rj_ratio_max": "PLAN_INVALID",
+      "duplicate_top": "PLAN_INVALID",
+      "nan": "PLAN_INVALID",
+      "inf": "PLAN_INVALID"
+    },
+    "SBE_origin_union": {
+      "origin_true_intervals": [
+        [
+          0.8584436801375755,
+          1.1966905615292713
+        ],
+        [
+          0.7516892911010569,
+          1.4885163204747796
+        ]
+      ],
+      "reported_outer": [
+        0.31622776601683794,
+        3.162277660168379
+      ],
+      "pushes": {
+        "lo": 0,
+        "hi": 1
+      }
+    },
+    "RCA02_and_origin_scope": {
+      "prior_counterexample": {
+        "label": "CONSISTENT_WEAK",
+        "W": 0.8362390828158662,
+        "adjusted": 12
+      },
+      "three_origin_blindspot": {
+        "sampled_label": "PASS_INFORMATIVE",
+        "sampled_W": 0.2930476573691437,
+        "eight_mean_label": "CONSISTENT_WEAK",
+        "eight_mean_W": 0.6803855313301495,
+        "adjusted_count": 0,
+        "sampled_origins": [
+          0,
+          1,
+          2
+        ],
+        "hidden_origins": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    "RCA08_09_10_13": {
+      "noop": {
+        "verdict": "PASS_INFORMATIVE",
+        "state": "positive",
+        "flags": [],
+        "blocking_flags": [],
+        "blocking_reasons": {},
+        "sensitivity_incomplete": false,
+        "sentence_allowed": true,
+        "sentence": "SBE 측정 한 점으로 각 법칙의 내부 접합 저항을 보정하였다. 사전에 고정한 시나리오와 보정 허용집합의 계산 결과를 이미 알려진 DBE 측정값과 비교하였다. 모형 종류와 시나리오 방향은 해당 DBE 값 및 기존 빗나감을 알고 선정했으므로, 이 비교는 독립 holdout 검증이나 접합 물성의 식별이 아니다.",
+        "variants": {
+          "FIBRE": {
+            "checked": true,
+            "verdict": "PASS_INFORMATIVE",
+            "grade_changed": false,
+            "flags": [],
+            "flag": null
+          },
+          "UNREG": {
+            "checked": true,
+            "verdict": "PASS_INFORMATIVE",
+            "grade_changed": false,
+            "flags": [],
+            "flag": null
+          },
+          "GRID": {
+            "checked": true,
+            "verdict": "PASS_INFORMATIVE",
+            "grade_changed": false,
+            "flags": [],
+            "flag": null
+          },
+          "SVORDER": {
+            "checked": true,
+            "verdict": "PASS_INFORMATIVE",
+            "grade_changed": false,
+            "flags": [],
+            "flag": null
+          }
+        }
+      },
+      "gap": {
+        "verdict": "GAP_ENVELOPE_ONLY",
+        "state": "positive",
+        "interval_mScm": [
+          3.8,
+          5.4
+        ],
+        "I_law_mScm": {
+          "P0": [
+            3.8,
+            4.0
+          ],
+          "P1": [
+            5.2,
+            5.4
+          ]
+        },
+        "in_law": [],
+        "in_U": false,
+        "in_E": true,
+        "W": 0.35139788683788875,
+        "p": 0.5927669203466482,
+        "p_why": null,
+        "d": 0.0,
+        "d_over_G0": 0.0,
+        "direction": "gap",
+        "d_to_U": 0.10536051565782635,
+        "S": 0.9640965951888705,
+        "S_why": null,
+        "sigma_mid_mScm": 4.52990066116245
+      },
+      "zero_scale_invariance": [
+        {
+          "values": [
+            0.0,
+            0.0
+          ],
+          "label": "FAIL",
+          "state": "extended"
+        },
+        {
+          "values": [
+            0.0,
+            5.0
+          ],
+          "label": "UNINFORMATIVE",
+          "state": "extended"
+        },
+        {
+          "values": [
+            4.68,
+            4.68
+          ],
+          "label": "PASS_INFORMATIVE",
+          "state": "point"
+        }
+      ]
+    },
+    "DBE_R_monotonicity": {
+      "stopped": "R_MONOTONE_VIOLATION",
+      "cause": "σ_DBE(P0, c 0) 의 증서 구간이 R_j 단조와 모순 — R_j_lo (R 작음) 구간의 위끝 < R_j0 (R 큼) 구간의 아래끝 (같은 origin · 같은 최종 추정량 arm0 · 추가 풀이 없음 · 구현 결함 의심 · 판정문 §8 RCA2-09)"
+    },
+    "SV_all3_origin_scope": {
+      "requested_scope": "all3",
+      "adjusted_values": 12,
+      "fetch_counts": {
+        "corner": 12,
+        "origin": 12,
+        "origin8": 12
+      },
+      "sv_enabled_counts": {
+        "corner": 12,
+        "origin": 0,
+        "origin8": 0
+      },
+      "calls": [
+        {
+          "role": "sbe_noop",
+          "law": "P0",
+          "c": "1",
+          "rj": "1.0",
+          "arms": [
+            0
+          ],
+          "sv_cf": false
+        },
+        {
+          "role": "sbe_noop",
+          "law": "P1",
+          "c": "1",
+          "rj": "1.0",
+          "arms": [
+            0
+          ],
+          "sv_cf": false
+        },
+        {
+          "role": "corner",
+          "law": "P0",
+          "c": "0",
+          "rj": "0.5",
+          "arms": [
+            0
+          ],
+          "sv_cf": true
+        },
+        {
+          "role": "corner",
+          "law": "P0",
+          "c": "1",
+          "rj": "0.5",
+          "arms": [
+            0
+          ],
+          "sv_cf": true
+        },
+        {
+          "role": "corner",
+          "law": "P0",
+          "c": "0",
+          "rj": "1.0",
+          "arms": [
+            0
+          ],
+          "sv_cf": true
+        },
+        {
+          "role": "corner",
+          "law": "P0",
+          "c": "1",
+          "rj": "1.0",
+          "arms": [
+            0
+          ],
+          "sv_cf": true
+        },
+        {
+          "role": "corner",
+          "law": "P0",
+          "c": "0",
+          "rj": "2.0",
+          "arms": [
+            0
+          ],
+          "sv_cf": true
+        },
+        {
+          "role": "corner",
+          "law": "P0",
+          "c": "1",
+          "rj": "2.0",
+          "arms": [
+            0
+          ],
+          "sv_cf": true
+        },
+        {
+          "role": "corner",
+          "law": "P1",
+          "c": "0",
+          "rj": "0.5",
+          "arms": [
+            0
+          ],
+          "sv_cf": true
+        },
+        {
+          "role": "corner",
+          "law": "P1",
+          "c": "1",
+          "rj": "0.5",
+          "arms": [
+            0
+          ],
+          "sv_cf": true
+        },
+        {
+          "role": "corner",
+          "law": "P1",
+          "c": "0",
+          "rj": "1.0",
+          "arms": [
+            0
+          ],
+          "sv_cf": true
+        },
+        {
+          "role": "corner",
+          "law": "P1",
+          "c": "1",
+          "rj": "1.0",
+          "arms": [
+            0
+          ],
+          "sv_cf": true
+        },
+        {
+          "role": "corner",
+          "law": "P1",
+          "c": "0",
+          "rj": "2.0",
+          "arms": [
+            0
+          ],
+          "sv_cf": true
+        },
+        {
+          "role": "corner",
+          "law": "P1",
+          "c": "1",
+          "rj": "2.0",
+          "arms": [
+            0
+          ],
+          "sv_cf": true
+        },
+        {
+          "role": "origin",
+          "law": "P0",
+          "c": "0",
+          "rj": "0.5",
+          "arms": [
+            1,
+            2
+          ],
+          "sv_cf": false
+        },
+        {
+          "role": "origin",
+          "law": "P0",
+          "c": "0",
+          "rj": "1.0",
+          "arms": [
+            1,
+            2
+          ],
+          "sv_cf": false
+        },
+        {
+          "role": "origin",
+          "law": "P0",
+          "c": "0",
+          "rj": "2.0",
+          "arms": [
+            1,
+            2
+          ],
+          "sv_cf": false
+        },
+        {
+          "role": "origin8",
+          "law": "P0",
+          "c": "0",
+          "rj": "0.5",
+          "arms": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "sv_cf": false
+        },
+        {
+          "role": "origin8",
+          "law": "P0",
+          "c": "0",
+          "rj": "1.0",
+          "arms": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "sv_cf": false
+        },
+        {
+          "role": "origin8",
+          "law": "P0",
+          "c": "0",
+          "rj": "2.0",
+          "arms": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "sv_cf": false
+        },
+        {
+          "role": "origin",
+          "law": "P0",
+          "c": "1",
+          "rj": "0.5",
+          "arms": [
+            1,
+            2
+          ],
+          "sv_cf": false
+        },
+        {
+          "role": "origin",
+          "law": "P0",
+          "c": "1",
+          "rj": "1.0",
+          "arms": [
+            1,
+            2
+          ],
+          "sv_cf": false
+        },
+        {
+          "role": "origin",
+          "law": "P0",
+          "c": "1",
+          "rj": "2.0",
+          "arms": [
+            1,
+            2
+          ],
+          "sv_cf": false
+        },
+        {
+          "role": "origin8",
+          "law": "P0",
+          "c": "1",
+          "rj": "0.5",
+          "arms": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "sv_cf": false
+        },
+        {
+          "role": "origin8",
+          "law": "P0",
+          "c": "1",
+          "rj": "1.0",
+          "arms": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "sv_cf": false
+        },
+        {
+          "role": "origin8",
+          "law": "P0",
+          "c": "1",
+          "rj": "2.0",
+          "arms": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "sv_cf": false
+        },
+        {
+          "role": "origin",
+          "law": "P1",
+          "c": "0",
+          "rj": "0.5",
+          "arms": [
+            1,
+            2
+          ],
+          "sv_cf": false
+        },
+        {
+          "role": "origin",
+          "law": "P1",
+          "c": "0",
+          "rj": "1.0",
+          "arms": [
+            1,
+            2
+          ],
+          "sv_cf": false
+        },
+        {
+          "role": "origin",
+          "law": "P1",
+          "c": "0",
+          "rj": "2.0",
+          "arms": [
+            1,
+            2
+          ],
+          "sv_cf": false
+        },
+        {
+          "role": "origin8",
+          "law": "P1",
+          "c": "0",
+          "rj": "0.5",
+          "arms": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "sv_cf": false
+        },
+        {
+          "role": "origin8",
+          "law": "P1",
+          "c": "0",
+          "rj": "1.0",
+          "arms": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "sv_cf": false
+        },
+        {
+          "role": "origin8",
+          "law": "P1",
+          "c": "0",
+          "rj": "2.0",
+          "arms": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "sv_cf": false
+        },
+        {
+          "role": "origin",
+          "law": "P1",
+          "c": "1",
+          "rj": "0.5",
+          "arms": [
+            1,
+            2
+          ],
+          "sv_cf": false
+        },
+        {
+          "role": "origin",
+          "law": "P1",
+          "c": "1",
+          "rj": "1.0",
+          "arms": [
+            1,
+            2
+          ],
+          "sv_cf": false
+        },
+        {
+          "role": "origin",
+          "law": "P1",
+          "c": "1",
+          "rj": "2.0",
+          "arms": [
+            1,
+            2
+          ],
+          "sv_cf": false
+        },
+        {
+          "role": "origin8",
+          "law": "P1",
+          "c": "1",
+          "rj": "0.5",
+          "arms": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "sv_cf": false
+        },
+        {
+          "role": "origin8",
+          "law": "P1",
+          "c": "1",
+          "rj": "1.0",
+          "arms": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "sv_cf": false
+        },
+        {
+          "role": "origin8",
+          "law": "P1",
+          "c": "1",
+          "rj": "2.0",
+          "arms": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "sv_cf": false
+        }
+      ],
+      "scope": "all3 covers twelve arm-0 corners; it does not certify SV independence of adjusted eight-origin means"
+    },
+    "time_estimate": {
+      "SBE_arms": 38,
+      "DBE_arms_old": 40,
+      "DBE_arms_if_4_upper_solves": 44,
+      "published_formula_hours": [
+        191.35251059414892,
+        231.4088918182376
+      ],
+      "same_formula_with_upper_hours": [
+        205.80605719650507,
+        248.88804164339155
+      ],
+      "qualification": "arm-equivalent estimate only; upper solve can disconnect early or have different iterations; measure separately"
+    }
+  }
+}

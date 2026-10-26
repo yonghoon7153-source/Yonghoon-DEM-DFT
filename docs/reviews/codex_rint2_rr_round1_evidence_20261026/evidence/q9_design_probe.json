@@ -1,0 +1,79 @@
+{
+  "scope": "Design acceptance probes; not an implemented unit merger or physical solver",
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "time_budget": {
+    "same_as_submitted": true,
+    "recomputed": {
+      "inputs": {
+        "sbe_arm_s": 879.0,
+        "dbe_arm_s": 2578.0,
+        "solve_fraction": 0.800910125142207,
+        "iter_ratio": [
+          6.05,
+          7.37
+        ],
+        "multiplier": {
+          "lo": 5.0446,
+          "hi": 6.1018
+        },
+        "ladder_per_law": 18,
+        "noop": 2,
+        "units": 12,
+        "unit_dbe_solves": {
+          "lo": 4,
+          "hi": 5
+        },
+        "source": "docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md §10-4 (값 그대로)"
+      },
+      "label": "추정 · 합성 침대 반복 비 · 기계 속도 같음 · origin 넘침 없음 · 위끝 = 0 (lo) / 12 (hi)",
+      "old_registration_82_R0_only_one_machine_h": [
+        205.8,
+        248.9
+      ],
+      "all3_one_machine_h": [
+        220.2,
+        318.8
+      ],
+      "all3_no_split_h": {
+        "2": [
+          196.8,
+          290.5
+        ],
+        "3": [
+          196.8,
+          290.5
+        ]
+      },
+      "all3_split_units_h": {
+        "2": [
+          110.1,
+          159.4
+        ],
+        "3": [
+          81.2,
+          115.7
+        ]
+      },
+      "overflow_h": [
+        86.7,
+        104.9
+      ],
+      "overflow_note": "모서리 하나 origin 넘침 = +24 DBE 팔 = 24 × 2,578 s × 배수 (multiplier lo · hi) · 한 기계 — 위 표에 넣지 않았다 (옛 문구 '≈ +87 h (×6.05)' = 아래 배수만 · 설계 개정 3 · 4)"
+    }
+  },
+  "one_ulp_grade_boundary": {
+    "scope": "Actual grade_W at boundary and one ULP above; not measured cross-platform libm difference",
+    "width_at": 0.4539694765685022,
+    "at": "PASS_INFORMATIVE",
+    "width_above": 0.45396947656850223,
+    "above": "CONSISTENT_WEAK",
+    "same_p_lower_log_bound": -0.00020000000066669989
+  },
+  "parent_death": {
+    "platform": "win32",
+    "parent_exited": true,
+    "marker_immediately_after_parent_death": false,
+    "marker_written_later_by_child": true,
+    "meaning": "Parent death and no current marker do not prove whole-group quiescence. Design already requires quiescence; implementation must enforce it."
+  }
+}

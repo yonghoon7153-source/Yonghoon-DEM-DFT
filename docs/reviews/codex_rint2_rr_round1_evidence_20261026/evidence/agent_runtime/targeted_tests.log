@@ -1,0 +1,51 @@
+── t_k1_default_bitid
+  PASS  K1 `_solve_cg` 기본 호출 = 옛 경로 비트 동일 (해 · info)
+  PASS  K1 LAST_BACKEND 기본 = 옛 키 그대로 (rtol 키 없음)
+── t_k2_defaults
+  PASS  K2 기본값 — CG_RTOL 1e-8 · CONV_CERT 끔
+  PASS  K2 증서 끔 → 결과에 conv_cert 키 없음 · 판 전류 기록 키 없음
+── t_k3_knob
+  PASS  K3 CG_RTOL 노브 → CG 에 그 rtol 이 간다 (numeric 노브)
+  PASS  K3 노브를 켜면 LAST_BACKEND 에 rtol 기록 · 끄면 키가 사라진다 (매니페스트 바이트 동일)
+── t_k4_x0
+  PASS  K4 `_solve_cg(x0=…, rtol=…)` — 초기값 · 조임 rtol 을 받는다 (이어 풀기 ⓒ 의 바탕)
+── t_k4b_v112
+  PASS  K4b `_cg_v112` = scipy ≥ 1.12 cg (같은 판 · 해 비트 · info · callback 수 · 초기값 없음 · 정확한 해 · 무작위 · maxiter 소진)
+  PASS  K4c 옛 scipy 길 (`cg` = `_cg_v112`) 로 K4 — 정확한 해에서 rtol 1e-14 이어 풀기 수렴 (info 0 · 최대 차 ≤ 1e-10 · 옛 scipy cg = 30,000 회 미수렴)
+  PASS  K4d 판에 맞는 `cg` (scipy ≥ 1.12 = scipy cg · < 1.12 = `_cg_v112`)
+── t_k5_certify_unit
+  PASS  K5 정확한 해 · rtol 1e-12 → ⓐ ⓑ ⓒ 통과 · ok
+  PASS  K5 판 전류 I_bot = I_top = 0.5 (KCL)
+  PASS  K5 ⓐ rtol 1e-8 > 봉인 상한 → 실패 (지금 생산 술어를 다음 세대에 그대로 쓰지 않는다)
+  PASS  K5 ⓐ info ≠ 0 · 잔차 NaN → 실패
+  PASS  K5 ⓑ 판 전류 불균형 > ε_I → 실패
+  PASS  K5 ⓒ 이어 풀기 |Δσ|/σ > 1e-4 → 실패
+  PASS  K5 ⓒ 재풀이 자체가 미수렴 (info ≠ 0) → 실패
+  PASS  K5 증서 판 이름 · 봉인값 기록
+  PASS  K5 ⓒ 이어 풀기 rtol 바닥 1e-14 (정지 rtol 1e-14 → 1e-16 으로 내려가 maxiter 까지 돌지 않는다)
+── t_k6_solve_cert
+  PASS  K6 증서 켬 · rtol 1e-12 · 정확한 해 → conv_cert.ok · unconverged False
+  PASS  K6 증서 켬 · rtol 1e-8 → ⓐ 실패 → unconverged True (미게시)
+── t_k7_probe
+  PASS  K7 합성 탐침 — rtol 1e-8 에서 생산 술어 (info 0 · 잔차 ≤ 1e-6) 는 통과인데 σ 오차 > 1e-4 인 해가 있다 (거짓 수렴 재현)
+  PASS  K7 증서가 σ 오차 > 1e-4 인 해를 전부 거부한다 (거짓 수렴을 시험이 잡는다)
+  PASS  K7 봉인 정지 rtol 의 해는 전부 σ 오차 ≤ 1e-4 · 증서 통과
+  PASS  K7 탐침 = 시드 셋 이상 × 꼴 둘 (접합 간선 꼴 포함)
+── t_k8_seal
+  PASS  K8a 봉인값이 이 환경에서도 유효 — 봉인 rtol 의 해 전부 σ 오차 ≤ 1e-4 · 봉인 ε_I ∈ [좋은 해 불균형 최대, 나쁜 해 최소)
+  PASS  K8b 봉인 규칙 (설계 §6 절차 3) 의 결과 = 코드 상수 (정지 rtol) — 다르면 봉인이 환경에 걸린다는 정보 (R 개정으로 다시 봉인)
+  PASS  K8b 봉인 규칙의 결과 = 코드 상수 (ε_I · 구간 비지 않음)
+── t_k9_cli
+  PASS  K9 `--step3-rtol` = numeric (규약 · 물리 해시 밖 · CLI 회계)
+  PASS  K9 payload 에 `--step3-rtol` 인자 · CG_RTOL · CONV_CERT 배선
+
+== test_step3_conv_cert: 30/30 PASS
+  PASS  T24a [판정문 꼴 — 독립 노드 5 · gb = gt = 8e307 · p 0.5 (원장 행 허용 :344 · U 최종 합 :476) · target_bracket (판정문 탐침과 같은 호출)] → 예외 · 경고 없이 원장 문제 (넘침 사유 · 구간 없음)
+  PASS  T24a [판정문 꼴 — 독립 노드 5 · gb = gt = 8e307 · p 0.5 (원장 행 허용 :344 · U 최종 합 :476) · certify] → 예외 · 경고 없이 원장 문제 (넘침 사유 · 구간 없음) · NOT_CERTIFIABLE · ok False
+  PASS  T24a [독립 노드 10 · gb = gt = 4e307 · p 0.5 (원장 허용 유한 · U 최종 합 :476 만 넘침) · target_bracket (판정문 탐침과 같은 호출)] → 예외 · 경고 없이 원장 문제 (넘침 사유 · 구간 없음)
+  PASS  T24a [독립 노드 10 · gb = gt = 4e307 · p 0.5 (원장 허용 유한 · U 최종 합 :476 만 넘침) · certify] → 예외 · 경고 없이 원장 문제 (넘침 사유 · 구간 없음) · NOT_CERTIFIABLE · ok False
+  PASS  T24a [독립 노드 5 · gb = gt = 3e307 · p 1 (U 유한 · W 최종 합 :553 만 넘침) · target_bracket (판정문 탐침과 같은 호출)] → 예외 · 경고 없이 원장 문제 (넘침 사유 · 구간 없음)
+  PASS  T24a [독립 노드 5 · gb = gt = 3e307 · p 1 (U 유한 · W 최종 합 :553 만 넘침) · certify] → 예외 · 경고 없이 원장 문제 (넘침 사유 · 구간 없음) · NOT_CERTIFIABLE · ok False
+  PASS  T24c 숨은 접지 항 + 원장 허용 넘침 (노드 1 · gb = gt = 4e307 · 접지 8e307) → 예외 · 경고 없이 NOT_CERTIFIABLE · 원장 문제 = 대조 넘침 (옛 판 = 허용 inf 로 행 합 대조가 비어 원장 통과 · POSITIVE_SOLVED)
+  PASS  T24b 정상 회로 20 개 — 증서 dict 전체 = 고치기 전 판 (49a1af626) 과 비트 같음 (ⓐ–ⓓ · 구간 · 상태 · 칸)
+TARGET_T24 8 PASS; 0 FAIL

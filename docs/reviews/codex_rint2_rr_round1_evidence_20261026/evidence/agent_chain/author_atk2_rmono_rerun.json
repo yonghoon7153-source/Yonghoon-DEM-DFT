@@ -1,0 +1,108 @@
+{
+ "R1 arm1 4.80/4.85/4.40 (no overflow)": [
+  "R_MONOTONE_VIOLATION",
+  "σ_DBE(P0, c 0) origin origin_a1 의 증서 구간이 R_j 단조와 모순 — R_j_lo (R 작음) 구간의 위끝 < R_j0 (R 큼) 구간의 아래끝 (같은 origin 의 세 R · 이미 구한 값 · 추가 풀이 없음 · 구현 결함 의심 · 판정문 §8 RCA2-09 · 10-23 사전 공격 리뷰 C3)",
+  [
+   "adjusted",
+   "pass",
+   "pass",
+   "pass"
+  ]
+ ],
+ "R1c adjusted corner arm0 4.6/4.7/4.4": [
+  "SAME_P_CONSISTENCY",
+  "σ_DBE(c1, P1) < σ_DBE(c0, P1) − τ_mono at R_j_lo — 같은 그래프 · 같은 R_j 에서 Rayleigh 순서 위반 (구현 결함)",
+  []
+ ],
+ "R1d adjusted corner origin8 a3 4.4/4.7/4.4": [
+  "R_MONOTONE_VIOLATION",
+  "σ_DBE(P1, c 1) origin origin8_a3 의 증서 구간이 R_j 단조와 모순 — R_j_lo (R 작음) 구간의 위끝 < R_j0 (R 큼) 구간의 아래끝 (같은 origin 의 세 R · 이미 구한 값 · 추가 풀이 없음 · 구현 결함 의심 · 판정문 §8 RCA2-09 · 10-23 사전 공격 리뷰 C3)",
+  [
+   "pass",
+   "pass",
+   "pass",
+   "adjusted"
+  ]
+ ],
+ "R1e adjusted corner origin8 a0 4.4/4.7/(4.4)": [
+  "R_MONOTONE_VIOLATION",
+  "σ_DBE(P1, c 1) origin origin8_a0 의 증서 구간이 R_j 단조와 모순 — R_j_lo (R 작음) 구간의 위끝 < R_j0 (R 큼) 구간의 아래끝 (같은 origin 의 세 R · 이미 구한 값 · 추가 풀이 없음 · 구현 결함 의심 · 판정문 §8 RCA2-09 · 10-23 사전 공격 리뷰 C3)"
+ ],
+ "N0 monotone default": [
+  "PREDICTED",
+  null,
+  [
+   [
+    "P0",
+    "0",
+    true,
+    "arm0",
+    3
+   ],
+   [
+    "P0",
+    "1",
+    true,
+    "arm0",
+    3
+   ],
+   [
+    "P1",
+    "0",
+    true,
+    "arm0",
+    3
+   ],
+   [
+    "P1",
+    "1",
+    true,
+    "arm0",
+    3
+   ]
+  ]
+ ],
+ "N1 flat 4.7/4.7/4.7": [
+  "PREDICTED",
+  null
+ ],
+ "C4 touch (hi_a == lo_b, R_a<R_b)": null,
+ "C4 1-ulp gap (hi_a < lo_b)": [
+  "a",
+  "b"
+ ],
+ "C4 scale differs a 1e-3 vs b 1.0000000001e-3 (equal code intervals)": [
+  "a",
+  "b"
+ ],
+ "C4 arm_band field forms": {
+  "scale True": "STOP ARM_UNREADABLE",
+  "scale 0": "STOP ARM_UNREADABLE",
+  "scale -1e-3": "STOP ARM_UNREADABLE",
+  "scale NaN": "STOP ARM_UNREADABLE",
+  "scale inf": "STOP ARM_UNREADABLE",
+  "scale \"1e-3\"": "STOP ARM_UNREADABLE",
+  "lo > hi": "STOP ARM_UNREADABLE",
+  "lo 0": "STOP ARM_UNREADABLE",
+  "lo None": "STOP ARM_UNREADABLE",
+  "hi 10**400 int": "STOP ARM_UNREADABLE",
+  "err_rel None": "STOP ARM_UNREADABLE",
+  "sigma NaN": "STOP ARM_UNREADABLE",
+  "sigma True": "STOP ARM_UNREADABLE",
+  "sigma 0 but fields junk": [
+   "band",
+   0.0,
+   0.0
+  ],
+  "sigma outside band (σ 10x)": [
+   "band",
+   0.0009999,
+   0.0010001
+  ],
+  "lo int 1": [
+   "band",
+   0.001,
+   0.001
+  ]
+ }
+}

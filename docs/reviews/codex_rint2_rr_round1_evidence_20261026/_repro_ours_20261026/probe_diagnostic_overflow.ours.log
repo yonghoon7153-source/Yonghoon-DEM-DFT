@@ -1,0 +1,25 @@
+{
+  "default": {
+    "warnings": [
+      "overflow encountered in reduce"
+    ],
+    "ledger_ok": true,
+    "target_U": 1.5360000000000001e+308,
+    "target_kcl_raw": "inf",
+    "target_lo": 0.0,
+    "target_hi": 1.5360000000000033e+308
+  },
+  "warnings_error": {
+    "exception": "overflow encountered in reduce",
+    "type": "RuntimeWarning",
+    "traceback": "Traceback (most recent call last):\n  File \"/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/codex_r1_in/ours/root/evidence/agent_runtime/probe_diagnostic_overflow.py\", line 15, in <module>\n    r=cc.target_bracket(*args)\n      ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/codex_r1_in/ours/root/repo/scripts/step3_conv_cert.py\", line 509, in target_bracket\n    rec['target_kcl_raw'] = float(np.abs(d).sum())\n                                  ^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.11/dist-packages/numpy/_core/_methods.py\", line 49, in _sum\n    return umr_sum(a, axis, dtype, out, keepdims, initial, where)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nRuntimeWarning: overflow encountered in reduce\n"
+  },
+  "certify": {
+    "status": "POSITIVE_SOLVED",
+    "ok": false,
+    "pass_a": true,
+    "pass_b": false,
+    "pass_c": false,
+    "pass_d": false
+  }
+}

@@ -1,0 +1,101 @@
+{
+ "env_ours": "Linux · Python 3.11.17 · numpy 2.4.6 · scipy 1.17.1 · OPENBLAS/OMP/MKL 1 thread",
+ "env_codex": "Windows · Python 3.12.14 · numpy 2.5.3 · scipy 1.16.3",
+ "tree": "git archive 9bec6b764 scripts (= HEAD 20651fd36 scripts tree, same tree id)",
+ "files": {
+  "agent_sv/probe_actual_results.json": {
+   "leaves": 165,
+   "same": 147,
+   "numeric_diff": 11,
+   "max_rel_numeric_diff": 4.936600138916224e-14,
+   "other_diff": [
+    [
+     "/k0_disclosed_limitation_realized/artifact_sha256/k0_actual_evidence.json",
+     "f62c89b0a03d5e6c426648b83fd74af378392679c0291f0f42407b8f6391221c",
+     "d5406e7dd2da1856c1a638a85b4f1c1cc58624193d9fc2a3e5b9c5b1479aa259"
+    ],
+    [
+     "/k0_disclosed_limitation_realized/artifact_sha256/k0_actual_main_result.json",
+     "05c972ba85cfdd860ee0b34d60b64450fbf9c9a49e6ab97527a38a351871bb9a",
+     "f4d23638b42870020612bf176d93fe399ab1d79e0851169c0489d169a0cd5def"
+    ],
+    [
+     "/k0_disclosed_limitation_realized/artifact_sha256/k0_honest_manifest.json",
+     "476f2c98bdb39c5d8539c1e106e0461260c3b4b716b5c66d44025adc15d43e1f",
+     "2d1c275794c28b28bb591a70e16a9e8c91ad54ce91a34e8c16265d4e30f4b431"
+    ],
+    [
+     "/k0_disclosed_limitation_realized/artifact_sha256/k0_swapped_manifest.json",
+     "a21b9713f4340c4e0f1d905fb41b7dc31d5d66994770fced5319463fa92ca5d3",
+     "16601815d442511200cf6e2cec21d057aa287d90852e68f4053349df22a9ac9c"
+    ],
+    [
+     "/runtime/numpy",
+     "2.5.3",
+     "2.4.6"
+    ],
+    [
+     "/runtime/python",
+     "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+     "3.11.17 (main, Oct  1 2026, 15:41:07) [GCC 13.3.0]"
+    ],
+    [
+     "/runtime/scipy",
+     "1.16.3",
+     "1.17.1"
+    ]
+   ],
+   "ours_sha256": "4c7bca6476ae88b27e85a9ec781d31366f468e483c47de359af091d363e0a77a"
+  },
+  "agent_sv/weighted_graph_results.json": {
+   "leaves": 21,
+   "same": 21,
+   "numeric_diff": 0,
+   "max_rel_numeric_diff": 0.0,
+   "other_diff": [],
+   "ours_sha256": "20d95b532433fb2c24019f96c54dd6342d10f6ea94ca9322d25361674bb7fe65"
+  },
+  "agent_sv/k0_honest_manifest.json": {
+   "leaves": 303,
+   "same": 286,
+   "numeric_diff": 17,
+   "max_rel_numeric_diff": 0.02913209930457016,
+   "other_diff": [],
+   "ours_sha256": "2d1c275794c28b28bb591a70e16a9e8c91ad54ce91a34e8c16265d4e30f4b431"
+  },
+  "agent_sv/k0_swapped_manifest.json": {
+   "leaves": 303,
+   "same": 285,
+   "numeric_diff": 18,
+   "max_rel_numeric_diff": 0.02913209930457016,
+   "other_diff": [],
+   "ours_sha256": "16601815d442511200cf6e2cec21d057aa287d90852e68f4053349df22a9ac9c"
+  },
+  "agent_sv/k0_assembled_systems.json": {
+   "leaves": 1251,
+   "same": 1251,
+   "numeric_diff": 0,
+   "max_rel_numeric_diff": 0.0,
+   "other_diff": [],
+   "ours_sha256": "3665f632faa72cfc5431ff088d75b9d0fde8db739fd4a9ca8524a4387a0eadfe"
+  },
+  "agent_runtime/diagnostic_overflow.json": {
+   "leaves": 15,
+   "same": 14,
+   "numeric_diff": 0,
+   "max_rel_numeric_diff": 0.0,
+   "other_diff": [
+    [
+     "/warnings_error/traceback",
+     "Traceback (most recent call last):\n  File \"C:\\Users\\Administrator\\Documents\\Code",
+     "Traceback (most recent call last):\n  File \"/tmp/claude-0/-home-user-Yonghoon-DEM"
+    ]
+   ],
+   "ours_sha256": "b362262968d19b212ebd527f7026762845e8e5cc794d4205788827c7cf8afa45"
+  }
+ },
+ "probe_actual_verdict_like_leaves": {
+  "n": 20,
+  "all_equal": true
+ }
+}

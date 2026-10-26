@@ -1,0 +1,134 @@
+{
+  "environment": {
+    "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+    "numpy": "2.5.3",
+    "scipy": "1.16.3"
+  },
+  "nextafter": {
+    "pairs": 200169,
+    "mismatches": [],
+    "divisions": 4950,
+    "division_bad": []
+  },
+  "overflow": {
+    "original_5x8e307": {
+      "target_bracket": {
+        "status": null,
+        "ok": null,
+        "target_ledger_ok": false,
+        "target_ledger_problem": "원장 대조 넘침 (행 합 · 판 결합 · 허용의 중간값이 비유한 — 원장을 대조할 수 없다)",
+        "target_lo": null,
+        "target_hi": null,
+        "target_kcl_raw": null,
+        "warnings": []
+      },
+      "certify": {
+        "status": "NOT_CERTIFIABLE",
+        "ok": false,
+        "target_ledger_ok": false,
+        "target_ledger_problem": "원장 대조 넘침 (행 합 · 판 결합 · 허용의 중간값이 비유한 — 원장을 대조할 수 없다)",
+        "target_lo": null,
+        "target_hi": null,
+        "target_kcl_raw": null,
+        "warnings": []
+      }
+    },
+    "U_final_only_10x4e307": {
+      "target_bracket": {
+        "status": null,
+        "ok": null,
+        "target_ledger_ok": false,
+        "target_ledger_problem": "φ: 에너지 합 넘침 (비유한)",
+        "target_lo": null,
+        "target_hi": null,
+        "target_kcl_raw": null,
+        "warnings": []
+      },
+      "certify": {
+        "status": "NOT_CERTIFIABLE",
+        "ok": false,
+        "target_ledger_ok": false,
+        "target_ledger_problem": "φ: 에너지 합 넘침 (비유한)",
+        "target_lo": null,
+        "target_hi": null,
+        "target_kcl_raw": null,
+        "warnings": []
+      }
+    },
+    "W_final_only_5x3e307": {
+      "target_bracket": {
+        "status": null,
+        "ok": null,
+        "target_ledger_ok": false,
+        "target_ledger_problem": "φ: 하한 합 넘침 (비유한)",
+        "target_lo": null,
+        "target_hi": null,
+        "target_kcl_raw": null,
+        "warnings": []
+      },
+      "certify": {
+        "status": "NOT_CERTIFIABLE",
+        "ok": false,
+        "target_ledger_ok": false,
+        "target_ledger_problem": "φ: 하한 합 넘침 (비유한)",
+        "target_lo": null,
+        "target_hi": null,
+        "target_kcl_raw": null,
+        "warnings": []
+      }
+    },
+    "hidden_ground": {
+      "target_bracket": {
+        "status": null,
+        "ok": null,
+        "target_ledger_ok": false,
+        "target_ledger_problem": "원장 대조 넘침 (행 합 · 판 결합 · 허용의 중간값이 비유한 — 원장을 대조할 수 없다)",
+        "target_lo": null,
+        "target_hi": null,
+        "target_kcl_raw": null,
+        "warnings": []
+      },
+      "certify": {
+        "status": "NOT_CERTIFIABLE",
+        "ok": false,
+        "target_ledger_ok": false,
+        "target_ledger_problem": "원장 대조 넘침 (행 합 · 판 결합 · 허용의 중간값이 비유한 — 원장을 대조할 수 없다)",
+        "target_lo": null,
+        "target_hi": null,
+        "target_kcl_raw": null,
+        "warnings": []
+      }
+    },
+    "kcl_sum_stress": {
+      "target_bracket": {
+        "status": null,
+        "ok": null,
+        "target_ledger_ok": true,
+        "target_ledger_problem": null,
+        "target_lo": 0.0,
+        "target_hi": 4.0000000000000064e+307,
+        "target_kcl_raw": "inf",
+        "warnings": [
+          "overflow encountered in reduce"
+        ]
+      },
+      "certify": {
+        "status": "POSITIVE_SOLVED",
+        "ok": false,
+        "target_ledger_ok": true,
+        "target_ledger_problem": null,
+        "target_lo": 0.0,
+        "target_hi": 4.0000000000000064e+307,
+        "target_kcl_raw": "inf",
+        "warnings": [
+          "overflow encountered in reduce"
+        ]
+      }
+    }
+  },
+  "cg_selected_native": true,
+  "cg": {
+    "cases": 144,
+    "mismatches": []
+  }
+}

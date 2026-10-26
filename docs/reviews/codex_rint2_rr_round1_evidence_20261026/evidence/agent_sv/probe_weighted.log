@@ -1,0 +1,29 @@
+{
+  "assemblies": [
+    {
+      "counterfactual": false,
+      "n_dof": 23,
+      "n_raw_edges": 22,
+      "n_unique_pairs": 21,
+      "weighted_graph_sha256": "3f3d07295b96538b596513903b892002768b4af1a8097f261b2444d3e39185a1",
+      "exact_assembled_system_current": 19.950248756218915,
+      "exact_current_fraction": "35644925161873369693924817153296380203862305896330/1786690762477941098467814525147842626077060936093",
+      "bottom_couplings": 2,
+      "top_couplings": 2
+    },
+    {
+      "counterfactual": true,
+      "n_dof": 23,
+      "n_raw_edges": 21,
+      "n_unique_pairs": 21,
+      "weighted_graph_sha256": "babdd9ddbd14ff175e9c3482daefaae27edb968cd9bd78ad6f1f0d7adf5b86fe",
+      "exact_assembled_system_current": 19.615384615384624,
+      "exact_current_fraction": "14430843886526736215243157630391230/735690080489597972403487446513383",
+      "bottom_couplings": 2,
+      "top_couplings": 2
+    }
+  ],
+  "exact_assembled_system_ratio": 1.0170715052190031,
+  "ratio_fraction": "2622361786138431538572037760317075854220815933938417227459892694274037466115558439/2578345546681858924072992741525765304070001122191068504244344851318108388961766439",
+  "interpretation": "Only 1 parallel positive-conductance edge is removed; topology counts agree but weighted circuit differs. Exact elimination uses binary64 entries as exact rationals, independent of production solver and certification."
+}

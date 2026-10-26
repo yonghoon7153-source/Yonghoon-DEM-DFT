@@ -1,0 +1,192 @@
+{
+  "X6": [
+    {
+      "name": "QD2_3",
+      "honest_flags": [
+        "SV_UNCHECKED"
+      ],
+      "edited_flags": [],
+      "threshold": 1.2,
+      "without_census_edit": [
+        false,
+        "CAEXT|cjunc| sv_cf| 기록 n_unsplit_bridging_components 0 ≠ 증거 census 1 (기록의 census 사본 = 실제 census · 10-23 RCA2-04)"
+      ],
+      "with_census_edit": [
+        true,
+        null
+      ]
+    },
+    {
+      "name": "QDX",
+      "honest_flags": [
+        "SV_UNCHECKED"
+      ],
+      "edited_flags": [],
+      "threshold": 2.0,
+      "without_census_edit": [
+        false,
+        "CAEXT|cjunc| sv_cf| 기록 n_unsplit_bridging_components 0 ≠ 증거 census 1 (기록의 census 사본 = 실제 census · 10-23 RCA2-04)"
+      ],
+      "with_census_edit": [
+        true,
+        null
+      ]
+    },
+    {
+      "name": "RAIL5",
+      "honest_flags": [
+        "SV_UNCHECKED"
+      ],
+      "edited_flags": [],
+      "threshold": 1.2,
+      "without_census_edit": [
+        false,
+        "CAEXT|cjunc| sv_cf| 기록 n_unsplit_bridging_components 0 ≠ 증거 census 2 (기록의 census 사본 = 실제 census · 10-23 RCA2-04)"
+      ],
+      "with_census_edit": [
+        true,
+        null
+      ]
+    },
+    {
+      "name": "QD2_1",
+      "honest_flags": [
+        "SV_UNCHECKED"
+      ],
+      "edited_flags": [],
+      "threshold": 1.2,
+      "without_census_edit": [
+        false,
+        "CAEXT|cjunc| sv_cf| 기록 n_unsplit_bridging_components 0 ≠ 증거 census 1 (기록의 census 사본 = 실제 census · 10-23 RCA2-04)"
+      ],
+      "with_census_edit": [
+        true,
+        null
+      ]
+    },
+    {
+      "name": "QD4",
+      "honest_flags": [
+        "SV_UNCHECKED"
+      ],
+      "edited_flags": [],
+      "threshold": 1.2,
+      "without_census_edit": [
+        false,
+        "CAEXT|cjunc| sv_cf| 기록 n_unsplit_bridging_components 0 ≠ 증거 census 2 (기록의 census 사본 = 실제 census · 10-23 RCA2-04)"
+      ],
+      "with_census_edit": [
+        true,
+        null
+      ]
+    }
+  ],
+  "X3": {
+    "before": [
+      "SV_UNCHECKED"
+    ],
+    "after": [
+      "SV_DEPENDENT"
+    ],
+    "contract": [
+      true,
+      null
+    ],
+    "interval": [
+      3.1551935325818827,
+      3.155193532582236
+    ]
+  },
+  "X5": [
+    {
+      "value": true,
+      "contract": [
+        true,
+        null
+      ]
+    },
+    {
+      "value": false,
+      "contract": [
+        true,
+        null
+      ]
+    },
+    {
+      "value": -1,
+      "contract": [
+        true,
+        null
+      ]
+    },
+    {
+      "value": 1.0,
+      "contract": [
+        true,
+        null
+      ]
+    },
+    {
+      "value": "1",
+      "contract": [
+        true,
+        null
+      ]
+    },
+    {
+      "value": null,
+      "contract": [
+        true,
+        null
+      ]
+    },
+    {
+      "value": 9223372036854775808,
+      "contract": [
+        true,
+        null
+      ]
+    },
+    {
+      "value": 1000000,
+      "contract": [
+        true,
+        null
+      ]
+    }
+  ],
+  "RCA2_06_F6": [
+    {
+      "case": "one_actual_census0",
+      "contract": [
+        true,
+        null
+      ],
+      "upper_status": "unsplit_census_mismatch",
+      "census": 0,
+      "actual_components": 1,
+      "flags": [
+        "SV_UNCHECKED"
+      ],
+      "reason": {
+        "SV_UNCHECKED": "대조 비를 못 읽음 — 모서리 c1_P0_R_j0 (unsplit_census_mismatch) (§5-6 SV 행)"
+      }
+    },
+    {
+      "case": "two_actual_census1",
+      "contract": [
+        true,
+        null
+      ],
+      "upper_status": "unsplit_census_mismatch",
+      "census": 1,
+      "actual_components": 2,
+      "flags": [
+        "SV_UNCHECKED"
+      ],
+      "reason": {
+        "SV_UNCHECKED": "대조 비를 못 읽음 — 모서리 c1_P0_R_j0 (unsplit_census_mismatch) (§5-6 SV 행)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "oracle": "Fraction exact inequalities and adjacent-float optimality",
+  "seed": 20261026,
+  "counts": {
+    "pairs": 25100,
+    "overflow": 3077,
+    "subnormal_or_zero": 3181
+  },
+  "failures": []
+}

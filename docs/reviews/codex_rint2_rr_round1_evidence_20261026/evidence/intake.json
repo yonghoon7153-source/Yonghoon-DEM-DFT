@@ -1,0 +1,1440 @@
+{
+  "zip_sha256": "a4866ec5f4866190f04a6b32a6728c29896bd5a0e99eedc858cb7ea72b9513b6",
+  "files": [
+    {
+      "path": "PIN.txt",
+      "bytes": 154,
+      "sha256": "a0c6bb9e79763d415338ce027db16785f28f5a4b98c93d3d0e27355cf18d2036"
+    },
+    {
+      "path": "repo/scripts/test_ca_ext_runner.py",
+      "bytes": 47189,
+      "sha256": "928e44445556ec7c934e746229fcae3063b799fdb30c83c100d628db84f59d3e"
+    },
+    {
+      "path": "repo/scripts/rint_r_chain.py",
+      "bytes": 192898,
+      "sha256": "e94a44295c28c171ba956fed994322eecb7c546e96ff6f52bf15af3c3dd22e03"
+    },
+    {
+      "path": "repo/scripts/run_contract.py",
+      "bytes": 170633,
+      "sha256": "59d645e3759f33cade058b3850d05429318e634175f4ad6b55cf7cb330421070"
+    },
+    {
+      "path": "repo/scripts/step3_sigma.py",
+      "bytes": 371969,
+      "sha256": "033baa4f4af6414c0d044ac42719c940a979218bfffdb65cdf6c164a62292d8e"
+    },
+    {
+      "path": "repo/scripts/ca_s0_census.py",
+      "bytes": 103989,
+      "sha256": "4b53b1d81b6691e2add2c0a3ebce057bb89dc0c292595003e77c13c4e813d9a9"
+    },
+    {
+      "path": "repo/scripts/test_ca_s0_census.py",
+      "bytes": 83156,
+      "sha256": "0f0b8b6746449f6a8aa1f9e4c0455a11195b83c3c2d775aa2a1f9e237787c327"
+    },
+    {
+      "path": "repo/scripts/check_kgy_py38.sh",
+      "bytes": 2882,
+      "sha256": "2fd7988a6aec25bace871c15a7c752e82f1facca6a099b3254a89bcf0ea8c2f8"
+    },
+    {
+      "path": "repo/scripts/sdcp_gain_vox015_8arm.sh",
+      "bytes": 74516,
+      "sha256": "8f596830f42a17cfd1f5460ba823a2b83140bd09ca034a861e6cac3bae603129"
+    },
+    {
+      "path": "repo/scripts/setup_kgy_py38.sh",
+      "bytes": 909,
+      "sha256": "608d1e7d7f32a1ec30ad4b32b7de1488cb8e4883f75514c5cf881fb5b5903904"
+    },
+    {
+      "path": "repo/scripts/carbon_junction.py",
+      "bytes": 175291,
+      "sha256": "2ad375313cc06a85c444e0198bb349a8bbce3c5f7bdebc1b7ca0bf69d29ef283"
+    },
+    {
+      "path": "repo/scripts/test_carbon_junction.py",
+      "bytes": 368500,
+      "sha256": "ad17d2583efaf352892796ac61576802ac461727fefe0a37225b11cc7b3108ae"
+    },
+    {
+      "path": "repo/scripts/test_rint_r_chain_e2e.py",
+      "bytes": 32679,
+      "sha256": "48d0d147231749ed1b8286f3635e6d2a0f4ecf165cee52c2608a9e199ef08f9a"
+    },
+    {
+      "path": "repo/scripts/test_ca_ext_b6.py",
+      "bytes": 161604,
+      "sha256": "92f37f5c02f5bc03db0167bf7ce3343630fe244e1d914dd3910ed9d8ade90aa4"
+    },
+    {
+      "path": "repo/scripts/test_step3_conv_cert.py",
+      "bytes": 16485,
+      "sha256": "075ee9c06267dec033b7dfeed59a134a5659553c70e2ba4f6e404bb3ed8bf124"
+    },
+    {
+      "path": "repo/scripts/ptfe_face_alpha.py",
+      "bytes": 56888,
+      "sha256": "c052dbfe772de497b4f63a85b1cc9182c24c324c23464e69498b4e2246b8046e"
+    },
+    {
+      "path": "repo/scripts/check_all.sh",
+      "bytes": 51111,
+      "sha256": "d863a4acdf6bb21819060f09cf04ea1ce4618c33200fedd2a0f2f588b76ce670"
+    },
+    {
+      "path": "repo/scripts/step3_conv_cert.py",
+      "bytes": 54037,
+      "sha256": "7a4424fe56263a50a88ffcc2ba0b906e4f4a8856ed98c1a4ef16af51c4d7fbf7"
+    },
+    {
+      "path": "repo/scripts/ca_ext_svcf.py",
+      "bytes": 64943,
+      "sha256": "1cc7b54ece122dbc920f907b723af302efbc4b72c6835120c235e9a385d09cfe"
+    },
+    {
+      "path": "repo/scripts/mpm_webapp_payload.py",
+      "bytes": 313106,
+      "sha256": "efb7c052524705223b6095657a02dee25f90a1e2bd2af343b2b49a2b21efbc74"
+    },
+    {
+      "path": "repo/scripts/test_step3_target_cert.py",
+      "bytes": 133207,
+      "sha256": "2c36bea2c8de7da0f7750802b4cded5f83955bdc5fe23235f04d16d1b605e44d"
+    },
+    {
+      "path": "repo/scripts/test_rint_r_chain.py",
+      "bytes": 294512,
+      "sha256": "ec8a07b13570ccb761a5edb710b602cc187c50760cd8bb81bf27f0ca43acf9a8"
+    },
+    {
+      "path": "repo/webapp/test_ca_ext_labels.py",
+      "bytes": 36064,
+      "sha256": "8686215d748dd93eca5c2625e90e1e14615a0338877fcf5377afd914d1e30029"
+    },
+    {
+      "path": "repo/webapp/static/explain/rint_overview_20261021.html",
+      "bytes": 95158,
+      "sha256": "01f808c4558d350624891812d7e7893ba2a455c1429caf8825f510db8d7ced46"
+    },
+    {
+      "path": "repo/webapp/templates/mpm_lab.html",
+      "bytes": 38817,
+      "sha256": "94ab0d0dffce10807aec86dc70f99bf5a8e2ad98da34414b2b6aa42197366844"
+    },
+    {
+      "path": "repo/webapp/test_rint_explainer_page.py",
+      "bytes": 17175,
+      "sha256": "b2a303190e71e75a8d84f6a29031633a580a4743774762caab324547467beb77"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rereview_fix_plan_20261022.md",
+      "bytes": 18923,
+      "sha256": "fccf3c033943dde705d65ba0ec6f1d64980c299928ad30d1ad77f5a292e913f8"
+    },
+    {
+      "path": "repo/docs/reviews/codex_rint2_rr_round1_request_20261024.md",
+      "bytes": 24204,
+      "sha256": "c5369370ffd746c8ab73bd4a739c7a8480229d8f73e53aa25a4985266b0563fc"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack3/PREATTACK_Q9R2.md",
+      "bytes": 25626,
+      "sha256": "580338a227365d1ece82e8307e059d3b2f2aa9a82ee33941973318722e923cb8"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack3/probes/lazy_merge_probe.py",
+      "bytes": 4244,
+      "sha256": "0e55639ebfc5bb4475d6779a7be1f3c61bcb188b71315addd68a3baa2f3bb7b5"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack3/probes/order_probe_lib.py",
+      "bytes": 857,
+      "sha256": "0f126aff13347a03c5d24dbbe9fd10cfb257fd50aa99485187da6fbb057bc51e"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack3/probes/ledger_rule_probe.py",
+      "bytes": 4858,
+      "sha256": "e7c4c45aab765555c6a02155912466c2811355372f0d66d6e3af12f7a884399b"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack3/probes/order_probe.py",
+      "bytes": 9817,
+      "sha256": "8fffda3693ba0525155c520664dd8fc72cc44cb3589559e4aeaa8f8d4fd4622e"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack3/README.md",
+      "bytes": 845,
+      "sha256": "317984cf6c1351bb07526eb793f73c0c9fbde502772a45dfe857f9897d06efb4"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack3/logs/ledger_rule_probe.out",
+      "bytes": 792,
+      "sha256": "d1e06a47b08eb7e1f1a55adfeb9d8e3ef7059a261bd45d0efa10823d250ad493"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack3/logs/lazy_merge_probe.out",
+      "bytes": 425,
+      "sha256": "2e0f58a697ec58b4152091e6c187f8eef7694ae8d1bf3b3c078906eb765da5a2"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack3/logs/q9_time_budget_rerun.json",
+      "bytes": 1077,
+      "sha256": "2cd47b8277c6a0dfbad0a22d70d6c69f866efda242392c4c6ea708ac06a2edda"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack3/logs/order_probe.out",
+      "bytes": 4119,
+      "sha256": "527f61ebcb63061fd73169734e477e9636ee3a269cab9399c770801c317c966b"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/BRIEF_A2.md",
+      "bytes": 8905,
+      "sha256": "ed6ff9a36f1aa2a6a25439daae4155e5dd6c02ee5dbaa1f335f9ca4cf81653bc"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/q9_time_budget.json",
+      "bytes": 1215,
+      "sha256": "fd8fd19e678c6f3cfc65dd5de870ee6b4bf313d3755a7a6c05e8a488d6811103"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack4/PREATTACK_Q9R3.md",
+      "bytes": 21598,
+      "sha256": "0f79376eee8f9208ee154ceac0cc5e722f1e793983f9c709d35178fa22cb07a7"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack4/probes/ledger_branch_probe.py",
+      "bytes": 3423,
+      "sha256": "d850cf05afffa3edf90d1b7694c9998dc70d95125a8cf786b821020513f06a4d"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack4/probes/partial_adoption_r3_probe.py",
+      "bytes": 10222,
+      "sha256": "a8295ffe8f4681a1102b83995b33eb7073b855e1c540e18d703b8e1a071f5e4f"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack4/probes/orphan_kill_probe.py",
+      "bytes": 2868,
+      "sha256": "967b3000d458d287ca8acede54b604f204c0ecf1fbe2548f50dc398fe55db47b"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack4/probes/q9r3_lib.py",
+      "bytes": 1272,
+      "sha256": "fd434f39087288574336876f36bd09adc5bf1ad878925e7a3e82ab45bce16630"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack4/probes/knife_and_shadow_probe.py",
+      "bytes": 2918,
+      "sha256": "e01e483ae063449f78ecee333dc2b6c911f457b9ae6d1451d2e9331a33d982dd"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack4/probes/overflow_hours.py",
+      "bytes": 698,
+      "sha256": "e7a5cc436b705f51fdf648ea7601a59e07d833b8669bde525db1e6c376e44d55"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack4/README.md",
+      "bytes": 1924,
+      "sha256": "d215d91b2ea6024278b32ad4a41466d508454f19aadddd4cb90b7a7533ec610d"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack4/logs/overflow_hours.out",
+      "bytes": 350,
+      "sha256": "f411ef553c3c80604ad0a21dc82cc2c6b8ecfd549f033f215e1928cf80cb1b1d"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack4/logs/orphan_kill_probe.out",
+      "bytes": 653,
+      "sha256": "a283775432523189242ee9f12161536dba9dd5337eff2578520a559132479e74"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack4/logs/_repro_main/overflow_hours.out",
+      "bytes": 355,
+      "sha256": "3c9601d03a27d615272d3c3bf8914b27d16487d67b1eac3f1c09dbf66b27b210"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack4/logs/_repro_main/orphan_kill_probe.out",
+      "bytes": 557,
+      "sha256": "01d3b241b90e794b900f8971dfcc1c2baf3abf09cc48c3f3c0a7a5b752dd40f7"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack4/logs/_repro_main/partial_adoption_r3_probe.out",
+      "bytes": 3241,
+      "sha256": "82a7d061d1b0ba0b2995c9c38078ecebac6fbf6d35d500af3258a80e4bd736c2"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack4/logs/_repro_main/ledger_branch_probe.out",
+      "bytes": 765,
+      "sha256": "70b6f1a760efe2c595ef435a19b30d25491340714e8f1fd4a62b69071a730b2d"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack4/logs/_repro_main/knife_and_shadow_probe.out",
+      "bytes": 834,
+      "sha256": "bb2feeaada20baed3abc307ab4c70b27e13069e936a595802770a0b4442e2b86"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack4/logs/q9_time_budget_rerun.txt",
+      "bytes": 1077,
+      "sha256": "2cd47b8277c6a0dfbad0a22d70d6c69f866efda242392c4c6ea708ac06a2edda"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack4/logs/partial_adoption_r3_probe.out",
+      "bytes": 3236,
+      "sha256": "070364ce55f75f434e6ed5a5df0ec8e0f9283f052349ed5a8de18a7cf87ca1cc"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack4/logs/ledger_branch_probe.out",
+      "bytes": 861,
+      "sha256": "b0ef5e84a48ac19d780ae43f24b81ecd306419a0ce07f01a015d85aa17b180c6"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack4/logs/knife_and_shadow_probe.out",
+      "bytes": 829,
+      "sha256": "6c8f39cf1741f3129c26c80028610860ebeb951be79907ff53b762989b75cff4"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/README.md",
+      "bytes": 2350,
+      "sha256": "b593fdd389bb69c42ba6d6c35664f6f876f43c305b7baf7c0e80b97ba699d71a"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/logs/new_prov.out",
+      "bytes": 1321,
+      "sha256": "48f33110e3ff43512922f7470bcb9a2ee760121ff93a5910063dda8e5dd163b6"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/logs/new_reg_each.json",
+      "bytes": 3003,
+      "sha256": "ebbd14e2d49be4b5e6415c5ae15eb59304b3013f720b48ebb64dfbc28ae848a5"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/logs/new_probe_registration_current.err",
+      "bytes": 1812,
+      "sha256": "2673cfaff28d8224cce188fbed2ebcf07f8f89b0d921aa79f8bf948af7cd3436"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/logs/atk_sv.out",
+      "bytes": 5236,
+      "sha256": "62266ef20148f0f0e87ca848cbd5676b4a1da6040900548d54bde187ab7c5fbe"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/logs/old_summary.txt",
+      "bytes": 148,
+      "sha256": "d8323ffd0af8c29b18461883c74fba28af5b287c4bf5ab6b0766133aa4e8a8dd"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/logs/old_probe_certificate.err",
+      "bytes": 255,
+      "sha256": "fca8d039d4550fab74cc04ca8c458e0d0c2b538085759d018e3b9a8d60af6b19"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/logs/old_run_review.out",
+      "bytes": 2939,
+      "sha256": "b1c79ac6f361d1ff830270500fed3b6c58d63897dae8ca976e7173d5f6810861"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/logs/main_recheck_atk_sv.json",
+      "bytes": 5236,
+      "sha256": "62266ef20148f0f0e87ca848cbd5676b4a1da6040900548d54bde187ab7c5fbe"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/logs/bitid_new.json",
+      "bytes": 153712,
+      "sha256": "97e50f4c3a5df4caee88865f1bf0870c3682ef51cb934853ae8eb56d621e228e"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/logs/new_s0.out",
+      "bytes": 1199,
+      "sha256": "4782ac8a84536b79787aa1014787f28a1d9e7f9e171547c5522edb5cc6da4181"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/logs/runmut2.json",
+      "bytes": 2204,
+      "sha256": "6c59e2c96b669bbbd68164125776881a7e3d01fbe08ee62c00288f9586f0a99e"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/logs/bitid_old.json",
+      "bytes": 149762,
+      "sha256": "37d245239700b49e3f7a905e826934217762cf184b025ac74daa553d2c7b1ceb"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/logs/new_summary.txt",
+      "bytes": 148,
+      "sha256": "61751830d51629375303ea1854cdcac9e1fdd120fd595f5611b6efc131a37230"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/logs/mut_M9_t24.log",
+      "bytes": 3716,
+      "sha256": "e898962cde3449b779dee4bb940c49fab4d0fea9aedcfbcc153f8ca6e80caafb"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/logs/old_probe_certificate.out",
+      "bytes": 26434,
+      "sha256": "b125d7e8c1e8460d11aec597969f4ce3e42d4b29d8c485b7977a57d69d3aa774"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/logs/old_reg_each.json",
+      "bytes": 2953,
+      "sha256": "95096668596007ca33932949a4ddbbbbebe30fa641de3efe17df48d652aef7a8"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/logs/new_probe_certificate.out",
+      "bytes": 27123,
+      "sha256": "15fb6cd46c79964fec6ae8b59338285cd59d9714cbecca622c0eb7f97b713f43"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/logs/new_run_review.out",
+      "bytes": 4884,
+      "sha256": "4199a45e056cdbfc4d870699aa132af82a2fb4446222ebe03a933fe0f779af24"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/logs/old_prov.out",
+      "bytes": 1321,
+      "sha256": "48f33110e3ff43512922f7470bcb9a2ee760121ff93a5910063dda8e5dd163b6"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/logs/old_probe_registration_current.out",
+      "bytes": 13547,
+      "sha256": "ca4a65c7f1d2655a2b22507790a55c3432172da7b0c605a3c6cc51ac7adc67e2"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/logs/runmut1.json",
+      "bytes": 5472,
+      "sha256": "b67759188f6d6a07119632b8474c17c1e28b22132be03904ea75efe33409e34a"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/PREATTACK_A.md",
+      "bytes": 18220,
+      "sha256": "77036b6a6d991f10ad89c0c55f100f3ca0e66f8f00fcd21fff95a4de780f83c4"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/tools/atk_q9.py",
+      "bytes": 2885,
+      "sha256": "fbfbaf906b71569876f3274a5bc8a0e2940b2581d68022398b3794a26488ad5d"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/tools/atk_m7.py",
+      "bytes": 1222,
+      "sha256": "275db61d0108125557b4f9f2a23a583102ec6767ddbaeb86d27afe834d2c6da9"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/tools/atk_bits.py",
+      "bytes": 1299,
+      "sha256": "a41bb1259e1d08d47c0de8946c7aa7ec228870ae2ba4207c1b81ac715ad62fc7"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/tools/atk_edges.py",
+      "bytes": 1397,
+      "sha256": "b532dbd474d8e3680b8725852b35438e6d9a0ab68598ef0c636a8393b1a9b3f6"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/tools/reg_each.py",
+      "bytes": 1343,
+      "sha256": "8d69dc4420745604de164ba286ad97313ceda0ff0fe51b90e2a6b594a53573c4"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/tools/run_probes.sh",
+      "bytes": 679,
+      "sha256": "18145969cb8b043eeaa5bf24465fef75093dad0ada57b68f91e2875abb145425"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/tools/mkmut.py",
+      "bytes": 2034,
+      "sha256": "99a9ccc257642fa4be850b2e2c98f09ecf5e9c8776167c7a82cf4e65d95c91ca"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/tools/mkmut9.py",
+      "bytes": 837,
+      "sha256": "91c84892ea73fc80c102518cac4f3dece40f0bab02c0531b85bc0b764e6c7efc"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/tools/atk_rmono2.py",
+      "bytes": 1568,
+      "sha256": "e112e410ac45ee4925b3269a57fe805a45afc955afbde8f479846cff0f4c2882"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/tools/jdiff.py",
+      "bytes": 997,
+      "sha256": "08afb85ba1ea308845d0c6548631f641ffeec1ffd19803c596b35d714bc4cbd6"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/tools/run.py",
+      "bytes": 756,
+      "sha256": "c056ddd0fa8c68cac5434fdce7603e4c9715d251b0b764bc6ef498e9c1c3fcbb"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/tools/runmut.py",
+      "bytes": 1591,
+      "sha256": "e81ed68055b42987220d8d1015417e80ee40781bf1f1e62253932b894917adaf"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/tools/atk_bitid.py",
+      "bytes": 3192,
+      "sha256": "90fd3bbd96f6cb08f9aec8957238377aec251cba287703d1e9dcb77762d0b225"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/tools/atk_overflow.py",
+      "bytes": 2281,
+      "sha256": "03989868fa57f599e611366eed62d97628dc99835b84cbb6ec2333056094a3b8"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/tools/mkmut6.py",
+      "bytes": 1306,
+      "sha256": "99571cffeaddd33fb8ae9f56dc2ac3acd04bf0d8c523b125577dbbcbce31bdaf"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/tools/atk_divdir.py",
+      "bytes": 1270,
+      "sha256": "aec972c6abdf89af20baab5f3341a2da49d331ba1ff7ab7dfd6f01d55bf7acc3"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/tools/py.sh",
+      "bytes": 434,
+      "sha256": "d1fed8517ffb83169b1e3ea0024635cff6ba5d413e36b0c4c224a14d83809b67"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/tools/atk_sv.py",
+      "bytes": 7300,
+      "sha256": "60f8e0895627d3d05838e94aa5bfe27d9fbfeb3061b35a08c523e7285d2119ee"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack/tools/atk_rmono.py",
+      "bytes": 4598,
+      "sha256": "cbceb1d7f2a434746c4c8aa6d5257a80f4f330202197a9b84b6e44e385d1d709"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/REPORT_A3.md",
+      "bytes": 12798,
+      "sha256": "3e5477e38c791c3f1c1adf64456112e162feb6eeff9054c7fbe684cf8f2360f9"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/BRIEF.md",
+      "bytes": 21145,
+      "sha256": "36c82cc0bb76178a91ca1321da51d4b3d9a2f09f1ae967d282c99144707bafa5"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/REPORT_A2.md",
+      "bytes": 13290,
+      "sha256": "62e37774a7ccb144c499e14bc3785be4bdebdf0d14fb742346869765b4a98cc2"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/REPORT_A.md",
+      "bytes": 7460,
+      "sha256": "e8c4b5f2fe93871ebcfebdace27261cffd01751736f383ba5c73b8fcfc38db21"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/BRIEF_A3.md",
+      "bytes": 7220,
+      "sha256": "014af429d2d57472534160fe7797aaed30972673fdb8fa5a0154895800e82343"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/q9_predict_units_design.md",
+      "bytes": 69488,
+      "sha256": "a0abbb470bde2b3751ddf7bd035d985621bb6c56a76fa737bd47941395b3fa98"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/PREATTACK_A2.md",
+      "bytes": 11658,
+      "sha256": "d0f206f0a4f65097974ee20dbd733142e2641f47e3501db856316b6e52b5ff79"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/README.md",
+      "bytes": 1906,
+      "sha256": "feb1904b206f1614a28ac748edcc803c79da8a6f76eb62869f5269f942fd5f6f"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/r2_run_review.out",
+      "bytes": 4884,
+      "sha256": "4199a45e056cdbfc4d870699aa132af82a2fb4446222ebe03a933fe0f779af24"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/atk2_rmono.out",
+      "bytes": 2736,
+      "sha256": "050fa2d5c9c187256908ea0c9726fadd029c1ddb6765adb1dfb695b5c4636678"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C1-_7_-upper-c__lower-c_tcj.log",
+      "bytes": 25554,
+      "sha256": "343d70829196ee7759d706d217c537ddc01ed4e6b16080dbc800966375e3535a"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_c2.err",
+      "bytes": 2089,
+      "sha256": "64a2c418bfa55f05cd1bd0d6d4258b361519725fbb9aab8214ea8e15ff2cefdf"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C4-touch_stop_trc.log",
+      "bytes": 6172,
+      "sha256": "2d3abbd49971165c692597dafc3c31e6804ab88591d129cf102858e6b99c0804"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C5-rule-off_tcj.log",
+      "bytes": 25417,
+      "sha256": "42f3529e105f6a95f2670277f5407113a50fe78db4f7c02c51a222795036f94c"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C1-topo-off_tcj.log",
+      "bytes": 31641,
+      "sha256": "2e719d7448f3346208c11daeb0f4a2b10837b30d1590fdd961404bca27b959ab"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C1-lo-k__0-L__M_tcj.log",
+      "bytes": 25579,
+      "sha256": "1f66842c66385039ca5f14c74ac14b4294048205b7518bf596aeefb82a087e6b"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C1-up-reach_0-U__M_tcj.log",
+      "bytes": 25846,
+      "sha256": "3e0821960d22f959c1301c9eb599eca5743ff1593b688c27eb35903114445c36"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C1-lo__M_tcj.log",
+      "bytes": 25686,
+      "sha256": "40ac5b4e766441135047c0956e3bd292099ffa1c8ed4a737bcba2b7e3f74eebf"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C4-band-collapse-lo_trc.log",
+      "bytes": 8101,
+      "sha256": "35c8935583395aaebea20e770a90fce1af71dc2e2ea8a139648163336a23c48f"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C3-origin8-not-recorded_tcj.log",
+      "bytes": 25417,
+      "sha256": "42f3529e105f6a95f2670277f5407113a50fe78db4f7c02c51a222795036f94c"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/r2_atk_m7.out",
+      "bytes": 414,
+      "sha256": "61bc31ce5e0def0d461c2f1f21e3cf77297d7319daefc0680d3bf21cd0916990"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/atk2_c5.out",
+      "bytes": 2696,
+      "sha256": "9687ae1fd8525deada72fa67abcebb63268aab9c4dda778a6963902dad000261"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_R-readrun-topo-off_tcj.log",
+      "bytes": 25417,
+      "sha256": "42f3529e105f6a95f2670277f5407113a50fe78db4f7c02c51a222795036f94c"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/r2_probe_registration_current.err",
+      "bytes": 2465,
+      "sha256": "bde9dbebe416599d7b767d4d65d5c53940b38cfce918505c5bcb279ac5a36070"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C1-up-ne0npc0-U__L_tcj.log",
+      "bytes": 25875,
+      "sha256": "9357497900705e1eb84d61f645607e3488f7e69e6a049ecef4b269be097476d1"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C2-up-only-round_tcj.log",
+      "bytes": 27013,
+      "sha256": "611432ce2663fa7d4384e3e51ad94937b210c15914a5b8a2927705799bf8045f"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/base_trc.log",
+      "bytes": 5722,
+      "sha256": "b5672624cebf0b5d57dc55fa8f198fe66322ad65949047acf8a3dd2ccaebab6b"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/r2_probe_certificate.out",
+      "bytes": 27131,
+      "sha256": "66a99932cfe756687e806d1c2ed2fa623bfea8cb5e0057e78935e45cb80e47b8"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C2-lo-only-round_tcj.log",
+      "bytes": 26952,
+      "sha256": "1239be3e9265686d44c89ca7dcbe565ce6ce67f00ab2476e7dba0f877ace0d4d"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_R-readrun-topo-off_trc.log",
+      "bytes": 5750,
+      "sha256": "26a9107a0ce583df1c747da6d1c8e784e5839dc475bc41da7406ada42d154c1e"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C2-M1-plain-div_tcj.log",
+      "bytes": 27189,
+      "sha256": "37a146ffa53f95dd68dba24493a1addf3261bc743874709a8cf6d9f166c52f86"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C1-up-plate-diff__npc_tcj.log",
+      "bytes": 25572,
+      "sha256": "6217722f66b4964735c80066d00f3206968d3c16d46fedbb9102f3cce6f3e486"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/atk2_census.out",
+      "bytes": 3136,
+      "sha256": "2ba794da3bc506226b5188d5eeb056018eed3322c234509c64deb4acc1e8b668"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/r2_run_review.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/r2_probe_certificate.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C5-rule-off_trc.log",
+      "bytes": 6041,
+      "sha256": "4859beacf226cb8d62ad6eee86e6ec3ef7c81d43cdb4007d5d00f174821d6188"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/base_b6S.log",
+      "bytes": 29869,
+      "sha256": "1d8cca7da03db94705b12cf0b2795329243c348a2adc324c905872cce6255a99"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C1-up-cut0-U__M_tcj.log",
+      "bytes": 25891,
+      "sha256": "c56e17dacfff8b58e9f217d2ffc99d1aa2863305608f84497bbb6dd8fe601dc9"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C1-up__lo_tcj.log",
+      "bytes": 25545,
+      "sha256": "70fbbbfee77012ec1b79e8e4ef5951960f68c370969fb2f83b2c5822f826dd70"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_P-upper-main-plates-off_tcj.log",
+      "bytes": 25877,
+      "sha256": "3902f36b13520998129120640fe2dd363889ce72af8e2cce6a168e4ad4df13ef"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/bitid_new.json",
+      "bytes": 153760,
+      "sha256": "d3d63d6772f6b4186d7b22566c7dd178d66f700cd94cf560a0d26e485ec2994c"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C3-origin-check-off_trc.log",
+      "bytes": 7451,
+      "sha256": "6fc294efb96035703ce61af01a43977272cfded3d21dd4b71c2a105eb69a53eb"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C1-lo-c__0-L__M_b6S.log",
+      "bytes": 29869,
+      "sha256": "1d8cca7da03db94705b12cf0b2795329243c348a2adc324c905872cce6255a99"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/bitid_new.log",
+      "bytes": 5,
+      "sha256": "da0f379e52e525c4f250e6043e0875ae1c97f3eae125cedfa889b7ed668b0029"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_c2.json",
+      "bytes": 4100,
+      "sha256": "d07913dddbef154be294fe017621a0f74dd374e1ae290bfa7f66ace1a32bb82e"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/r2_atk_rmono2.out",
+      "bytes": 250,
+      "sha256": "138b7a88a4d9cf4323e718ee0f842ece026b456ce2fee35b15341c676fcf21d5"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C1-proj-no-topo_tcj.log",
+      "bytes": 39182,
+      "sha256": "af0d375a0531ef4dbfc33de6a9a88df7eed0ee03d0159817a1819c20f70f788a"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C1-up-reach__0-U__M_tcj.log",
+      "bytes": 25557,
+      "sha256": "3902469f842245a2dfb0a733e3f5ec239880eeea331e9c0c8906df1a313a909a"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C1-lo-c__0-L__M_trc.log",
+      "bytes": 5722,
+      "sha256": "faf7c1741149d1dacc97c142480d3498c36a43c7ba8ca7758d73decda7d1535c"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/new_atk_sv.out",
+      "bytes": 5971,
+      "sha256": "2f56dc1906118e11463f3b4349ba706db9d74b2c712f2ccb9d9bdd7244322967"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C4-no-field-check_trc.log",
+      "bytes": 6003,
+      "sha256": "e0c3f46a3e49d64aed32a2c07b6b85f31c32fbcd769e582a245cd454b35bb945"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/bitid_old.json",
+      "bytes": 153712,
+      "sha256": "97e50f4c3a5df4caee88865f1bf0870c3682ef51cb934853ae8eb56d621e228e"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/bitid_old.log",
+      "bytes": 5,
+      "sha256": "da0f379e52e525c4f250e6043e0875ae1c97f3eae125cedfa889b7ed668b0029"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C4-old-band_tcj.log",
+      "bytes": 25417,
+      "sha256": "42f3529e105f6a95f2670277f5407113a50fe78db4f7c02c51a222795036f94c"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/main_recheck_atk2_census.json",
+      "bytes": 3136,
+      "sha256": "2ba794da3bc506226b5188d5eeb056018eed3322c234509c64deb4acc1e8b668"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C5-kind-prefix_trc.log",
+      "bytes": 6037,
+      "sha256": "bbe1d1998dd176afc98fed3f17d97b9e1ecb282a94561e56d87526316a8ba234"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/r2_probe_registration_current.out",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C4-old-band_trc.log",
+      "bytes": 6996,
+      "sha256": "5009ce3ed6a6df22cb3ddfec0d23c632e443ece59818b8ab9486e2c3b298aa82"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C5-kind-prefix_tcj.log",
+      "bytes": 25417,
+      "sha256": "42f3529e105f6a95f2670277f5407113a50fe78db4f7c02c51a222795036f94c"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2.json",
+      "bytes": 26103,
+      "sha256": "f102e346d37b0adb52d3dc4927ba619adc89e44b492d0dd128cbda04e606570f"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C1-lo-c__0-L__M_tcj.log",
+      "bytes": 25417,
+      "sha256": "42f3529e105f6a95f2670277f5407113a50fe78db4f7c02c51a222795036f94c"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C1-lo-plates__M_tcj.log",
+      "bytes": 25568,
+      "sha256": "2b81d15c5d9a8a7aa31b9c1ef2e2cb0da227c9761e7fd5702dc77683d91509f6"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C1-up__M_tcj.log",
+      "bytes": 25600,
+      "sha256": "f7728e8e59fdb929bacf35830194f603613b90e49621aa79ae50f89c9277a73c"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C4-readrun-no-fields_trc.log",
+      "bytes": 7262,
+      "sha256": "3f0fb837ce961fdeddd2cbb6d8bf9fdb18532446ceda7dc9e2272ec5a5e56b11"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/r2_summary.txt",
+      "bytes": 159,
+      "sha256": "0a7e2e7a3e29569c4c892b9ca3badbddfdc78cc85e8519d7f77b43379fbf9c75"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C5-rule-not-projected_tcj.log",
+      "bytes": 65080,
+      "sha256": "4fd6380c3d4df098ce60cdc8df33cdc739e47b59eff81b85daaa22b4b0061846"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/atk2_sv.out",
+      "bytes": 32299,
+      "sha256": "9ae6ab9b59e6e48fb1e053b49b828a402dcd3d64ab4868be5d60b69255002e36"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C3-origin12-not-recorded_trc.log",
+      "bytes": 8743,
+      "sha256": "42e8ae9b4233864cfcd7b4264df4c72fa6ec77ec67b69b031fd1a4aacf595eb0"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C2-M7-swapped_tcj.log",
+      "bytes": 27874,
+      "sha256": "aefb5e49f2d5d7a3d5db9353b787a8840b5d11cbebdbaad23d1b8d850def13fc"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C4-touch_stop_tcj.log",
+      "bytes": 25417,
+      "sha256": "42f3529e105f6a95f2670277f5407113a50fe78db4f7c02c51a222795036f94c"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C3-origin-check-off_tcj.log",
+      "bytes": 25417,
+      "sha256": "42f3529e105f6a95f2670277f5407113a50fe78db4f7c02c51a222795036f94c"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_P-parallel-filter-off_tcj.log",
+      "bytes": 28300,
+      "sha256": "d237af6e0c29d00b5f63f27bcfeac2a0aa793a67f2cb23cac0f37a7c97583330"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/r2_atk_rmono.out",
+      "bytes": 831,
+      "sha256": "01bfea9389e578a9a76b69a64df46a18ddcbcd8e8066b51767d81ca0fa6853c4"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C3-origin12-not-recorded_tcj.log",
+      "bytes": 25417,
+      "sha256": "42f3529e105f6a95f2670277f5407113a50fe78db4f7c02c51a222795036f94c"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C4-no-field-check_tcj.log",
+      "bytes": 25417,
+      "sha256": "42f3529e105f6a95f2670277f5407113a50fe78db4f7c02c51a222795036f94c"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C3-origin8-not-recorded_trc.log",
+      "bytes": 7313,
+      "sha256": "b021f0fb34ea6a7352ef101c9c05f2ab81e0cb8d30cdeda3983f93326b5ec1c5"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C4-band-collapse-lo_tcj.log",
+      "bytes": 25417,
+      "sha256": "42f3529e105f6a95f2670277f5407113a50fe78db4f7c02c51a222795036f94c"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C4-scale-ignored_trc.log",
+      "bytes": 8613,
+      "sha256": "cfbae639986e62db5ac5209798dbbd058e28daad50c814aa34c8841daffbcb43"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C4-readrun-no-fields_tcj.log",
+      "bytes": 25417,
+      "sha256": "42f3529e105f6a95f2670277f5407113a50fe78db4f7c02c51a222795036f94c"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_P-reach-filter-off_tcj.log",
+      "bytes": 29674,
+      "sha256": "1f659fa28cc10ad89d8212b0d57b6895918ae0ef472eca530806ddf051772d42"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/base_tcj_qd567.log",
+      "bytes": 14802,
+      "sha256": "bfa9a647b3b19808bed2643ace15c2fe658e0d5de27db1501097fba58ce233b8"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C1-ku-in-_k_k_ne__tcj.log",
+      "bytes": 26187,
+      "sha256": "cb0a7b537859542dc3efdb8409fb9fa149c25a8d8b5efd16a3791650531789ce"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/r2_reg_each.json",
+      "bytes": 2694,
+      "sha256": "8fff01ce5e94e64f4d3b87a399eca5481f2844ac96676b289e725e125074084c"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C1-lo-k_0-L__M_tcj.log",
+      "bytes": 26140,
+      "sha256": "dcd5e0bf11cc890c5baa1cfde969a19205441770972d987506f1cf66aa0882da"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/r2_atk_divdir.out",
+      "bytes": 52,
+      "sha256": "e3fa763ad1c26918d550ca0bf9194e490599a2898b0052de6ad55d399bfdda9f"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C1-k__c_tcj.log",
+      "bytes": 25584,
+      "sha256": "e5924b4182d02f2f0da52ef4af86f4c2a697fd35beb2b12a329d37b1d7aaab98"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2_C4-scale-ignored_tcj.log",
+      "bytes": 25417,
+      "sha256": "42f3529e105f6a95f2670277f5407113a50fe78db4f7c02c51a222795036f94c"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/logs/mut2.err",
+      "bytes": 17270,
+      "sha256": "fe515118493015dde9fe2043c76d872a86f9746c390ac7d5b6fda95ece2a6d99"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/tools/atk2_census.py",
+      "bytes": 2173,
+      "sha256": "bdb18536a40a77884fea0a571bc8e5b3e1ae4187a9d2cb796d1eb5715d014537"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/tools/mut2.py",
+      "bytes": 7442,
+      "sha256": "d496a31a3b5d2a0abaf27343f4159e4da5c9c4b9ccec509f6f96bcec88f56d8f"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/tools/atk2_rmono.py",
+      "bytes": 6542,
+      "sha256": "d1d0794108fa75e7a2df4055f94cf6ca42aee4f9d77799cb94a351684b23284d"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/tools/atk2_sv.py",
+      "bytes": 10130,
+      "sha256": "e27bddc85d257c2419f08fe8994c9d1d823805a97fba55a9991553ad69620db2"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/tools/atk2_c5.py",
+      "bytes": 1725,
+      "sha256": "7e82a1e8ecedf942737d95474c0f191e7c6ba30730cb4f00b128816f8e5911f2"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/tools/show.py",
+      "bytes": 395,
+      "sha256": "8e7a0bca216d675cbc86dcadab287443a2a957771747d39287bb6ad14d2cac29"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/probes.sh",
+      "bytes": 822,
+      "sha256": "4cfaae1d35ca1435ddca95fbcfc5e962c6ea09ef77a74f10cd719bee568a0e21"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/r.sh",
+      "bytes": 478,
+      "sha256": "015da0c55eb2417b97343c694714867454895e443982a885f2a6604623d7a042"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/q9_time_budget.py",
+      "bytes": 3948,
+      "sha256": "720519a579faffd6137d78024d4672540e857b55ac4f8d97bf03e0650f08f19e"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/codex_r1_runs_20261024/target_cert_long.log",
+      "bytes": 76875,
+      "sha256": "351362610c08846b0247589a0800705c5e2c347e816bf4b732069ffd800b17c7"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/codex_r1_runs_20261024/s0_census.log",
+      "bytes": 14071,
+      "sha256": "040ca6e2c5556406c528b41c8f88a6cf9d1de2983bc6b3b1ce101756ced2ebab"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/codex_r1_runs_20261024/kgy_py38.log",
+      "bytes": 798,
+      "sha256": "269d529ac150bcb15e64c3f213350c79258d76b4b11f8de3d6096b66ede6f59b"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/codex_r1_runs_20261024/chain.log",
+      "bytes": 47702,
+      "sha256": "619e6021b5da9560d576ccb23e023ef15be3364101a0f53f350ac954b89812d6"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/codex_r1_runs_20261024/env.txt",
+      "bytes": 154,
+      "sha256": "dd712a31e9689ce0df8b9c068f21be1184b900687dbae3c03a923d2e8735fc01"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/codex_r1_runs_20261024/b6.log",
+      "bytes": 45439,
+      "sha256": "902560cc218fcee73bd59d9f8419ff5d5d1980031309589d131fcfe96a34cda4"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/codex_r1_runs_20261024/chain_e2e.log",
+      "bytes": 4296,
+      "sha256": "d9f3ac2a961e54efc008f49724eb1dec8cc706f7dc0b8ec47a4f8a818d3415c9"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/codex_r1_runs_20261024/z1.log",
+      "bytes": 12783,
+      "sha256": "4d79a14abd9d2699d8c2c4efa587618f1d5cf3ee720bd6dce68af4e077c1104f"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/codex_r1_runs_20261024/conv_cert.log",
+      "bytes": 3092,
+      "sha256": "edc75b2654280b8a58e29f1f341b4a746c45b98cb3c5a7739c2a90b41606a8b1"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/codex_r1_runs_20261024/web_cmp.log",
+      "bytes": 2370,
+      "sha256": "ce061e67fe284dc52c6cd761b8aa1e97a80dccd187bec6e93f72572f8f33d803"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/codex_r1_runs_20261024/web_labels.log",
+      "bytes": 9071,
+      "sha256": "c9a7d815b9a62bae156b9eeaf4869d117af2d6ebf8cbd0d0b9f2c8e204479e8b"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/codex_r1_runs_20261024/carbon_junction.log",
+      "bytes": 69320,
+      "sha256": "095d30a56d80626cdd30d4b7ddf39abb5758094402ef624d88a3484eb3320da6"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/codex_r1_runs_20261024/verdict.log",
+      "bytes": 4225,
+      "sha256": "9367bd0a5c8d4fee90c0c982fa69a3eb00988e2fea6bcaa3c8e558dceff77dd3"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/codex_r1_runs_20261024/run_contract.log",
+      "bytes": 10391,
+      "sha256": "6b35a20ca14cb026d59e01d63838a60b293077b646a58300f0215fcd91a05c85"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/codex_r1_runs_20261024/receipts.log",
+      "bytes": 10997,
+      "sha256": "74d6374c2f1de5bfd9d0d901f00f0a3f7ebfad9c834b9e00636b842bdae9a622"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/codex_r1_runs_20261024/rc.txt",
+      "bytes": 429,
+      "sha256": "0c01d4ff7119a07f94c245a92a9aac8ed188d68a2e8f42e4925b183c73f4eb1d"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/codex_r1_runs_20261024/runner.log",
+      "bytes": 16292,
+      "sha256": "47cb5754ebab30ce28dc4a2f28a4c25cf67167bd5e311d5a938b024b0316a807"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/codex_r1_runs_20261024/kgy_py38/ca_ext_runner.log",
+      "bytes": 16292,
+      "sha256": "47cb5754ebab30ce28dc4a2f28a4c25cf67167bd5e311d5a938b024b0316a807"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/codex_r1_runs_20261024/kgy_py38/rint_r_chain.log",
+      "bytes": 47702,
+      "sha256": "3c9a8e948dca13ecb8d36cf3aa8c5b3ad957442fba812e268b01013ee221ff63"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/codex_r1_runs_20261024/kgy_py38/step3_conv_cert.log",
+      "bytes": 3058,
+      "sha256": "e1eb6f89c5f600f03b17739dd53960c469fd4f4db9912ef64acf2e5c6100e856"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/codex_r1_runs_20261024/kgy_py38/step3_target_cert.log",
+      "bytes": 40620,
+      "sha256": "2f61b80a6650c7e07cd0ba34a2be3b0ae2087fe5bd3c83d8dfb0875f733f63a7"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/codex_r1_runs_20261024/kgy_py38/carbon_junction.log",
+      "bytes": 69266,
+      "sha256": "645cc9544e013b57192a741aa93ef8353199e201e607db0454b915ca96212f6b"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/codex_r1_runs_20261024/kgy_py38/ptfe_face_alpha.log",
+      "bytes": 22057,
+      "sha256": "1a6de8744f6ee6ab540d2d072ddcd3af6d96bda9ae95670f97bef69de5ca2cf7"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/codex_r1_runs_20261024/kgy_py38/run_contract.log",
+      "bytes": 10391,
+      "sha256": "6b35a20ca14cb026d59e01d63838a60b293077b646a58300f0215fcd91a05c85"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/codex_r1_runs_20261024/kgy_py38/ca_ext_b6.log",
+      "bytes": 45440,
+      "sha256": "3328e3196044c69c666553ef97ed305f7bf6f626549d9235ad3356b6e0efb2e3"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/codex_r1_runs_20261024/kgy_py38/rint_r_chain_e2e.log",
+      "bytes": 4298,
+      "sha256": "d686fd07a78731d193c83a1cd398f6416881d6f2dd23e59b478762cea888b1cb"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/codex_r1_runs_20261024/kgy_py38/ca_s0_census.log",
+      "bytes": 14071,
+      "sha256": "040ca6e2c5556406c528b41c8f88a6cf9d1de2983bc6b3b1ce101756ced2ebab"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/codex_r1_runs_20261024/kgy_py38/step3_rint.log",
+      "bytes": 8225,
+      "sha256": "2ac5d77f3a3ceaf5be15b074facd832b25ab547aca121e470b5c7634afcff222"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/codex_r1_runs_20261024/z3.log",
+      "bytes": 10604,
+      "sha256": "6745d4ebb437e31ae2bcac40d859f9b757f7a3edbc73571a456cb6ba07478cb9"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/codex_r1_runs_20261024/target_cert.log",
+      "bytes": 40626,
+      "sha256": "096a6043ebf28c2c7e293ed5c43303c59a514ad96e081754f01149208ff5e639"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/codex_r1_runs_20261024/ptfe.log",
+      "bytes": 21967,
+      "sha256": "74587a8c8567007b7b25a7c0432d865779c49865623860bca27f1d71f567ca73"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/codex_r1_runs_20261024/web_explainer.log",
+      "bytes": 5188,
+      "sha256": "e6f22eba02f6becead5578412c4c5b532b83682cc5ae3941117bb2f876dc7aa3"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rr_fix_evidence_20261023/codex_r1_runs_20261024/step3_rint.log",
+      "bytes": 8225,
+      "sha256": "2ac5d77f3a3ceaf5be15b074facd832b25ab547aca121e470b5c7634afcff222"
+    },
+    {
+      "path": "repo/docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md",
+      "bytes": 206661,
+      "sha256": "4aad3106d38345c7c54feb2a9dac8ce831b3b4110f2acb2f180ee8f876425044"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_kgy_commands_20261020.md",
+      "bytes": 71453,
+      "sha256": "669f7f0481a99cb29f5a26f5f98e07383a204b312fc79e82ca03818f4e35bc7c"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/README.md",
+      "bytes": 9935,
+      "sha256": "93610fac7521609b26d1ddb5a2fc4967bc4eba198e306ac17d199abf93ea83b0"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/scan_rpath_after_fix.out",
+      "bytes": 1178,
+      "sha256": "f95939855035c075bd3dd1495ed67f0129a21b72553d798a5bdeb5633c7322f1"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/k4probe_py38.out",
+      "bytes": 299,
+      "sha256": "920cc1232f10766091faa00e9ca6af1f80f3fb62b7e07da3a14be0dd0f95e48e"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/scan_rpath_before_fix.out",
+      "bytes": 2612,
+      "sha256": "c39f0537b6597a875123cdbdba2e6149ce8882678c4413b4cee4747759ee2a59"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/check_nextafter.out",
+      "bytes": 70,
+      "sha256": "db2c03f2a799151c50cf4cbedf998a373f18183223975d99bee720f6af2b08f3"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/patched/ca_ext_runner.log",
+      "bytes": 16292,
+      "sha256": "47cb5754ebab30ce28dc4a2f28a4c25cf67167bd5e311d5a938b024b0316a807"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/patched/rint_r_chain.log",
+      "bytes": 47701,
+      "sha256": "23929299a35618e337c0e53f18187179fffb881ee5bec53c4f016bc6bd1038c2"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/patched/step3_conv_cert.log",
+      "bytes": 2771,
+      "sha256": "019daa890019f7790971f30997367a16290cb85573407ba62618a1244acc1457"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/patched/step3_target_cert.log",
+      "bytes": 40624,
+      "sha256": "1f2939317a283e37dc6dd768d17a77b8140be810aa68fce336bfc8da685c71e3"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/patched/summary.txt",
+      "bytes": 733,
+      "sha256": "be9dd27c94b2fd0824bb12766daaf2054df388ede9890213560f193a8e558d0e"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/patched/carbon_junction.log",
+      "bytes": 68884,
+      "sha256": "5e640f92efeeadd978e0790b386a0aab9b5a603f4bdec8dfea65c2768bb7e002"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/patched/ptfe_face_alpha.log",
+      "bytes": 22130,
+      "sha256": "a01a6543a25d6ac1ce91913a41761d0a57a3868ccf06dc49a13f27381141f23a"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/patched/run_contract.log",
+      "bytes": 10391,
+      "sha256": "6b35a20ca14cb026d59e01d63838a60b293077b646a58300f0215fcd91a05c85"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/patched/ca_ext_b6.log",
+      "bytes": 45441,
+      "sha256": "7517e1bdfd000110685a8bcae7b0ef925bc2c7f74b13f51c479232df11fe9e53"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/patched/rint_r_chain_e2e.log",
+      "bytes": 4299,
+      "sha256": "e2b581f0731f04cf05306ebe6e9a67d1f829039274ea3e594524a14573835449"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/patched/ca_s0_census.log",
+      "bytes": 14071,
+      "sha256": "040ca6e2c5556406c528b41c8f88a6cf9d1de2983bc6b3b1ce101756ced2ebab"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/patched/step3_rint.log",
+      "bytes": 8225,
+      "sha256": "2ac5d77f3a3ceaf5be15b074facd832b25ab547aca121e470b5c7634afcff222"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/stepB/conv_cert_after_py311.out",
+      "bytes": 3092,
+      "sha256": "edc75b2654280b8a58e29f1f341b4a746c45b98cb3c5a7739c2a90b41606a8b1"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/stepB/kgy_step/ca_ext_runner.log",
+      "bytes": 16292,
+      "sha256": "47cb5754ebab30ce28dc4a2f28a4c25cf67167bd5e311d5a938b024b0316a807"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/stepB/kgy_step/rint_r_chain.log",
+      "bytes": 47702,
+      "sha256": "9daa34d5f2bbe220fe9b29a66a57fa9196b82ff21c428daf72ac5a34ed061a39"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/stepB/kgy_step/step3_conv_cert.log",
+      "bytes": 3058,
+      "sha256": "e1eb6f89c5f600f03b17739dd53960c469fd4f4db9912ef64acf2e5c6100e856"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/stepB/kgy_step/step3_target_cert.log",
+      "bytes": 40620,
+      "sha256": "581747f4d1c6a31ffe4771ff7256ab3cf855aff253d3f5194bdfdadd3a95628b"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/stepB/kgy_step/summary.txt",
+      "bytes": 820,
+      "sha256": "979086736e5c2d87fb274778765b47520c4cbf2e46eeb5640055082168015225"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/stepB/kgy_step/carbon_junction.log",
+      "bytes": 69266,
+      "sha256": "645cc9544e013b57192a741aa93ef8353199e201e607db0454b915ca96212f6b"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/stepB/kgy_step/ptfe_face_alpha.log",
+      "bytes": 22130,
+      "sha256": "24e16f45e5648d54c54e6d8930d6ade37a14c30e70f96ce7bf43f2d8dab491d6"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/stepB/kgy_step/run_contract.log",
+      "bytes": 10391,
+      "sha256": "6b35a20ca14cb026d59e01d63838a60b293077b646a58300f0215fcd91a05c85"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/stepB/kgy_step/ca_ext_b6.log",
+      "bytes": 45440,
+      "sha256": "3328e3196044c69c666553ef97ed305f7bf6f626549d9235ad3356b6e0efb2e3"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/stepB/kgy_step/rint_r_chain_e2e.log",
+      "bytes": 4298,
+      "sha256": "4efb6f4f380249776c3d6b242509c41b0be42096390274d71c34689f8c874152"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/stepB/kgy_step/ca_s0_census.log",
+      "bytes": 14071,
+      "sha256": "040ca6e2c5556406c528b41c8f88a6cf9d1de2983bc6b3b1ce101756ced2ebab"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/stepB/kgy_step/step3_rint.log",
+      "bytes": 8225,
+      "sha256": "2ac5d77f3a3ceaf5be15b074facd832b25ab547aca121e470b5c7634afcff222"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/stepB/conv_cert_tests_only_py311.out",
+      "bytes": 3243,
+      "sha256": "1c51cb6ae15cf436e8865ef4c9d571bf3c97a07ba6f161a5539a0ea07b03d3fb"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/stepB/conv_cert_after_py38.out",
+      "bytes": 3058,
+      "sha256": "e1eb6f89c5f600f03b17739dd53960c469fd4f4db9912ef64acf2e5c6100e856"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/unpatched/ca_ext_runner.log",
+      "bytes": 20761,
+      "sha256": "20431619879ee9d7cfed45ba3f4be5257da85efb5b63cd08940033fd088fa60b"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/unpatched/rint_r_chain.log",
+      "bytes": 58270,
+      "sha256": "a49bdfdc7296b5e46b6b8c1c0db79f5ec0a763de6702da6ed1c49b730208831d"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/unpatched/step3_conv_cert.log",
+      "bytes": 2771,
+      "sha256": "019daa890019f7790971f30997367a16290cb85573407ba62618a1244acc1457"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/unpatched/step3_target_cert.log",
+      "bytes": 27460,
+      "sha256": "9725dfad94af5a0f6b92bc091ea8e2ab101297ed21797da91650fe50badb041f"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/unpatched/summary.txt",
+      "bytes": 1490,
+      "sha256": "dbec0f62fcf6565a8dfac2fcfb814214353c4afcab107949deca6b201ffd42a4"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/unpatched/carbon_junction.log",
+      "bytes": 54405,
+      "sha256": "9bdf281c1f0bc37a8ec7556c6dfe95828d0c1ee3f8a71f14451941d4b5fa7c4b"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/unpatched/ptfe_face_alpha.log",
+      "bytes": 23440,
+      "sha256": "9c32e08f27f58fb87015cd1f3090682b5fc32c597ab935587f095cd0b7753936"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/unpatched/run_contract.log",
+      "bytes": 10391,
+      "sha256": "6b35a20ca14cb026d59e01d63838a60b293077b646a58300f0215fcd91a05c85"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/unpatched/ca_ext_b6.log",
+      "bytes": 26853,
+      "sha256": "0645b6425e54e759ac592b8e1fd56b6c906ce57330064b7431d46cae0994d7d8"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/unpatched/rint_r_chain_e2e.log",
+      "bytes": 5130,
+      "sha256": "8d7447ed2d4bc69794fa52956923040c0c1dda63c9a958b719a2d1f156271228"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/unpatched/ca_s0_census.log",
+      "bytes": 7884,
+      "sha256": "193df5832873609f71346d9907608e6e729382bad110d46480f3c97e54bd7685"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/unpatched/step3_rint.log",
+      "bytes": 8225,
+      "sha256": "2ac5d77f3a3ceaf5be15b074facd832b25ab547aca121e470b5c7634afcff222"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/logs/k4probe_py311.out",
+      "bytes": 283,
+      "sha256": "4aa7fd316260c863fe031c6e899f3da31ac2c775a0c525cd0f2db82a98ec8b52"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/tools/k4probe.py",
+      "bytes": 1208,
+      "sha256": "865427820a57e05b56a1561b85f6cfa3d635f95d7919ee1f333b715bf23ab775"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/tools/apply_py38_fix.py",
+      "bytes": 5865,
+      "sha256": "6f4d2ce3de1a9aedd02103e5d2614cc3483f3fe54055987798ec84d02ebcf3bb"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/tools/scan.py",
+      "bytes": 5541,
+      "sha256": "221f07a21d44195a7befd5023d3b267cebab045d15fd831cfbe1866c713fcc82"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/tools/apply_stepB.py",
+      "bytes": 8492,
+      "sha256": "97bfbdd52259dfa17022e19493967bb0abc947a6a7fd0274040483b679eeef69"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/tools/py38_runall.sh",
+      "bytes": 1244,
+      "sha256": "ce7447986d122d8468b9a470a8f232a03b7a7f2655394ef4aa79a164db63b1c9"
+    },
+    {
+      "path": "repo/docs/reviews/rint2_py38_compat_evidence_20261024/tools/check_nextafter.py",
+      "bytes": 1150,
+      "sha256": "e14aa1601a9e00d246cc6e6081b3942cfaa04caae57a6c40eb8081aa55ba8863"
+    },
+    {
+      "path": "repo/docs/reviews/codex_review_rint2_rereview_20261022.md",
+      "bytes": 41797,
+      "sha256": "c8637357c99d6cd668f08f3967eff33bc6a3e0de8823f5932d32418ac3236131"
+    },
+    {
+      "path": "repo/docs/reviews/findings.json",
+      "bytes": 2199548,
+      "sha256": "b6f5bf95225a874a5fcd2a05f0aa851265d4c36be51695b0fbb3051ac9904383"
+    },
+    {
+      "path": "repo/docs/data/rint2_recompaction_vgcf100_20261023/README.md",
+      "bytes": 7838,
+      "sha256": "d48c6f4d6af85fd61f927599571d02beeab3b2a779e87266fff351cefb438aa4"
+    }
+  ]
+}

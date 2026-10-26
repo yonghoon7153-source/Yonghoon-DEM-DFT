@@ -1,0 +1,5043 @@
+{
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "repo": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rr_round1_review_20261026\\repo",
+  "predict": {
+    "prior_4.2_4.7_4.4": {
+      "status": "R_MONOTONE_VIOLATION",
+      "reason": "σ_DBE(P0, c 0) 의 증서 구간이 R_j 단조와 모순 — R_j_lo (R 작음) 구간의 위끝 < R_j0 (R 큼) 구간의 아래끝 (같은 origin · 같은 최종 추정량 arm0 · 추가 풀이 없음 · 구현 결함 의심 · 판정문 §8 RCA2-09)",
+      "adjusted": 0,
+      "checks": {
+        "sbe_noop": [
+          {
+            "law": "P0",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "ok": true
+          }
+        ],
+        "same_p": [
+          {
+            "law": "P0",
+            "rj_role": "R_j_lo",
+            "ok": true
+          },
+          {
+            "law": "P0",
+            "rj_role": "R_j0",
+            "ok": true
+          },
+          {
+            "law": "P0",
+            "rj_role": "R_j_hi",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "rj_role": "R_j_lo",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "rj_role": "R_j0",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "rj_role": "R_j_hi",
+            "ok": true
+          }
+        ],
+        "r_monotone": [
+          {
+            "law": "P0",
+            "c": "0",
+            "ok": false,
+            "estimator": "arm0",
+            "origins": null
+          }
+        ]
+      },
+      "values": {
+        "('0', 'P0', 'R_j_lo')": 0.004200000000000001,
+        "('1', 'P0', 'R_j_lo')": 0.006300000000000001,
+        "('0', 'P0', 'R_j0')": 0.0047,
+        "('1', 'P0', 'R_j0')": 0.007050000000000001,
+        "('0', 'P0', 'R_j_hi')": 0.0044,
+        "('1', 'P0', 'R_j_hi')": 0.006600000000000001,
+        "('0', 'P1', 'R_j_lo')": 0.004200000000000001,
+        "('1', 'P1', 'R_j_lo')": 0.006300000000000001,
+        "('0', 'P1', 'R_j0')": 0.0047,
+        "('1', 'P1', 'R_j0')": 0.007050000000000001,
+        "('0', 'P1', 'R_j_hi')": 0.0044,
+        "('1', 'P1', 'R_j_hi')": 0.006600000000000001
+      },
+      "calls": [
+        [
+          "kit_SBE_vgcf100",
+          "sbe_noop",
+          "P0",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          false
+        ],
+        [
+          "kit_SBE_vgcf100",
+          "sbe_noop",
+          "P1",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "0",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "1",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "0",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "0",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "1",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "0",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "1",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "0",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "0",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "1",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "0",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "0",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "0",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "1",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "1",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "1",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "0",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "0",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "0",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "1",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "1",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "1",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ]
+      ]
+    },
+    "normal": {
+      "status": "PREDICTED",
+      "reason": null,
+      "adjusted": 0,
+      "checks": {
+        "sbe_noop": [
+          {
+            "law": "P0",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "ok": true
+          }
+        ],
+        "same_p": [
+          {
+            "law": "P0",
+            "rj_role": "R_j_lo",
+            "ok": true
+          },
+          {
+            "law": "P0",
+            "rj_role": "R_j0",
+            "ok": true
+          },
+          {
+            "law": "P0",
+            "rj_role": "R_j_hi",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "rj_role": "R_j_lo",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "rj_role": "R_j0",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "rj_role": "R_j_hi",
+            "ok": true
+          }
+        ],
+        "r_monotone": [
+          {
+            "law": "P0",
+            "c": "0",
+            "ok": true,
+            "estimator": "arm0",
+            "origins": [
+              {
+                "origin": "corner_a0",
+                "ok": true
+              },
+              {
+                "origin": "origin_a1",
+                "ok": true
+              },
+              {
+                "origin": "origin_a2",
+                "ok": true
+              }
+            ]
+          },
+          {
+            "law": "P0",
+            "c": "1",
+            "ok": true,
+            "estimator": "arm0",
+            "origins": [
+              {
+                "origin": "corner_a0",
+                "ok": true
+              },
+              {
+                "origin": "origin_a1",
+                "ok": true
+              },
+              {
+                "origin": "origin_a2",
+                "ok": true
+              }
+            ]
+          },
+          {
+            "law": "P1",
+            "c": "0",
+            "ok": true,
+            "estimator": "arm0",
+            "origins": [
+              {
+                "origin": "corner_a0",
+                "ok": true
+              },
+              {
+                "origin": "origin_a1",
+                "ok": true
+              },
+              {
+                "origin": "origin_a2",
+                "ok": true
+              }
+            ]
+          },
+          {
+            "law": "P1",
+            "c": "1",
+            "ok": true,
+            "estimator": "arm0",
+            "origins": [
+              {
+                "origin": "corner_a0",
+                "ok": true
+              },
+              {
+                "origin": "origin_a1",
+                "ok": true
+              },
+              {
+                "origin": "origin_a2",
+                "ok": true
+              }
+            ]
+          }
+        ]
+      },
+      "values": {
+        "('0', 'P0', 'R_j_lo')": 0.005,
+        "('1', 'P0', 'R_j_lo')": 0.0075,
+        "('0', 'P0', 'R_j0')": 0.0047,
+        "('1', 'P0', 'R_j0')": 0.007050000000000001,
+        "('0', 'P0', 'R_j_hi')": 0.0044,
+        "('1', 'P0', 'R_j_hi')": 0.006600000000000001,
+        "('0', 'P1', 'R_j_lo')": 0.005,
+        "('1', 'P1', 'R_j_lo')": 0.0075,
+        "('0', 'P1', 'R_j0')": 0.0047,
+        "('1', 'P1', 'R_j0')": 0.007050000000000001,
+        "('0', 'P1', 'R_j_hi')": 0.0044,
+        "('1', 'P1', 'R_j_hi')": 0.006600000000000001
+      },
+      "calls": [
+        [
+          "kit_SBE_vgcf100",
+          "sbe_noop",
+          "P0",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          false
+        ],
+        [
+          "kit_SBE_vgcf100",
+          "sbe_noop",
+          "P1",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "0",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "1",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "0",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "0",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "1",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "0",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "1",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "0",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "0",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "1",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "0",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "0",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "0",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "1",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "1",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "1",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "0",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "0",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "0",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "1",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "1",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "1",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ]
+      ]
+    },
+    "flat": {
+      "status": "PREDICTED",
+      "reason": null,
+      "adjusted": 0,
+      "checks": {
+        "sbe_noop": [
+          {
+            "law": "P0",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "ok": true
+          }
+        ],
+        "same_p": [
+          {
+            "law": "P0",
+            "rj_role": "R_j_lo",
+            "ok": true
+          },
+          {
+            "law": "P0",
+            "rj_role": "R_j0",
+            "ok": true
+          },
+          {
+            "law": "P0",
+            "rj_role": "R_j_hi",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "rj_role": "R_j_lo",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "rj_role": "R_j0",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "rj_role": "R_j_hi",
+            "ok": true
+          }
+        ],
+        "r_monotone": [
+          {
+            "law": "P0",
+            "c": "0",
+            "ok": true,
+            "estimator": "arm0",
+            "origins": [
+              {
+                "origin": "corner_a0",
+                "ok": true
+              },
+              {
+                "origin": "origin_a1",
+                "ok": true
+              },
+              {
+                "origin": "origin_a2",
+                "ok": true
+              }
+            ]
+          },
+          {
+            "law": "P0",
+            "c": "1",
+            "ok": true,
+            "estimator": "arm0",
+            "origins": [
+              {
+                "origin": "corner_a0",
+                "ok": true
+              },
+              {
+                "origin": "origin_a1",
+                "ok": true
+              },
+              {
+                "origin": "origin_a2",
+                "ok": true
+              }
+            ]
+          },
+          {
+            "law": "P1",
+            "c": "0",
+            "ok": true,
+            "estimator": "arm0",
+            "origins": [
+              {
+                "origin": "corner_a0",
+                "ok": true
+              },
+              {
+                "origin": "origin_a1",
+                "ok": true
+              },
+              {
+                "origin": "origin_a2",
+                "ok": true
+              }
+            ]
+          },
+          {
+            "law": "P1",
+            "c": "1",
+            "ok": true,
+            "estimator": "arm0",
+            "origins": [
+              {
+                "origin": "corner_a0",
+                "ok": true
+              },
+              {
+                "origin": "origin_a1",
+                "ok": true
+              },
+              {
+                "origin": "origin_a2",
+                "ok": true
+              }
+            ]
+          }
+        ]
+      },
+      "values": {
+        "('0', 'P0', 'R_j_lo')": 0.0047,
+        "('1', 'P0', 'R_j_lo')": 0.007050000000000001,
+        "('0', 'P0', 'R_j0')": 0.0047,
+        "('1', 'P0', 'R_j0')": 0.007050000000000001,
+        "('0', 'P0', 'R_j_hi')": 0.0047,
+        "('1', 'P0', 'R_j_hi')": 0.007050000000000001,
+        "('0', 'P1', 'R_j_lo')": 0.0047,
+        "('1', 'P1', 'R_j_lo')": 0.007050000000000001,
+        "('0', 'P1', 'R_j0')": 0.0047,
+        "('1', 'P1', 'R_j0')": 0.007050000000000001,
+        "('0', 'P1', 'R_j_hi')": 0.0047,
+        "('1', 'P1', 'R_j_hi')": 0.007050000000000001
+      },
+      "calls": [
+        [
+          "kit_SBE_vgcf100",
+          "sbe_noop",
+          "P0",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          false
+        ],
+        [
+          "kit_SBE_vgcf100",
+          "sbe_noop",
+          "P1",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "0",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "1",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "0",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "0",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "1",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "0",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "1",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "0",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "0",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "1",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "0",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "0",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "0",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "1",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "1",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "1",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "0",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "0",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "0",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "1",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "1",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "1",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ]
+      ]
+    },
+    "zero_at_hi": {
+      "status": "PREDICTED",
+      "reason": null,
+      "adjusted": 0,
+      "checks": {
+        "sbe_noop": [
+          {
+            "law": "P0",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "ok": true
+          }
+        ],
+        "same_p": [
+          {
+            "law": "P0",
+            "rj_role": "R_j_lo",
+            "ok": true
+          },
+          {
+            "law": "P0",
+            "rj_role": "R_j0",
+            "ok": true
+          },
+          {
+            "law": "P0",
+            "rj_role": "R_j_hi",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "rj_role": "R_j_lo",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "rj_role": "R_j0",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "rj_role": "R_j_hi",
+            "ok": true
+          }
+        ],
+        "r_monotone": [
+          {
+            "law": "P0",
+            "c": "0",
+            "ok": true,
+            "estimator": "arm0",
+            "origins": [
+              {
+                "origin": "corner_a0",
+                "ok": true
+              },
+              {
+                "origin": "origin_a1",
+                "ok": true
+              },
+              {
+                "origin": "origin_a2",
+                "ok": true
+              }
+            ]
+          },
+          {
+            "law": "P0",
+            "c": "1",
+            "ok": true,
+            "estimator": "arm0",
+            "origins": [
+              {
+                "origin": "corner_a0",
+                "ok": true
+              },
+              {
+                "origin": "origin_a1",
+                "ok": true
+              },
+              {
+                "origin": "origin_a2",
+                "ok": true
+              }
+            ]
+          },
+          {
+            "law": "P1",
+            "c": "0",
+            "ok": true,
+            "estimator": "arm0",
+            "origins": [
+              {
+                "origin": "corner_a0",
+                "ok": true
+              },
+              {
+                "origin": "origin_a1",
+                "ok": true
+              },
+              {
+                "origin": "origin_a2",
+                "ok": true
+              }
+            ]
+          },
+          {
+            "law": "P1",
+            "c": "1",
+            "ok": true,
+            "estimator": "arm0",
+            "origins": [
+              {
+                "origin": "corner_a0",
+                "ok": true
+              },
+              {
+                "origin": "origin_a1",
+                "ok": true
+              },
+              {
+                "origin": "origin_a2",
+                "ok": true
+              }
+            ]
+          }
+        ]
+      },
+      "values": {
+        "('0', 'P0', 'R_j_lo')": 0.005,
+        "('1', 'P0', 'R_j_lo')": 0.0075,
+        "('0', 'P0', 'R_j0')": 0.0047,
+        "('1', 'P0', 'R_j0')": 0.007050000000000001,
+        "('0', 'P0', 'R_j_hi')": 0.0,
+        "('1', 'P0', 'R_j_hi')": 0.0,
+        "('0', 'P1', 'R_j_lo')": 0.005,
+        "('1', 'P1', 'R_j_lo')": 0.0075,
+        "('0', 'P1', 'R_j0')": 0.0047,
+        "('1', 'P1', 'R_j0')": 0.007050000000000001,
+        "('0', 'P1', 'R_j_hi')": 0.0,
+        "('1', 'P1', 'R_j_hi')": 0.0
+      },
+      "calls": [
+        [
+          "kit_SBE_vgcf100",
+          "sbe_noop",
+          "P0",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          false
+        ],
+        [
+          "kit_SBE_vgcf100",
+          "sbe_noop",
+          "P1",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "0",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "1",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "0",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "0",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "1",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "0",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "1",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "0",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "0",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "1",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "0",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "0",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "0",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "1",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "1",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "1",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "0",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "0",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "0",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "1",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "1",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "1",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ]
+      ]
+    },
+    "origin1_nonmonotone_no_adjust": {
+      "status": "R_MONOTONE_VIOLATION",
+      "reason": "σ_DBE(P0, c 0) origin origin_a1 의 증서 구간이 R_j 단조와 모순 — R_j_lo (R 작음) 구간의 위끝 < R_j0 (R 큼) 구간의 아래끝 (같은 origin 의 세 R · 이미 구한 값 · 추가 풀이 없음 · 구현 결함 의심 · 판정문 §8 RCA2-09 · 10-23 사전 공격 리뷰 C3)",
+      "adjusted": 0,
+      "checks": {
+        "sbe_noop": [
+          {
+            "law": "P0",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "ok": true
+          }
+        ],
+        "same_p": [
+          {
+            "law": "P0",
+            "rj_role": "R_j_lo",
+            "ok": true
+          },
+          {
+            "law": "P0",
+            "rj_role": "R_j0",
+            "ok": true
+          },
+          {
+            "law": "P0",
+            "rj_role": "R_j_hi",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "rj_role": "R_j_lo",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "rj_role": "R_j0",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "rj_role": "R_j_hi",
+            "ok": true
+          }
+        ],
+        "r_monotone": [
+          {
+            "law": "P0",
+            "c": "0",
+            "ok": true,
+            "estimator": "arm0",
+            "origins": [
+              {
+                "origin": "corner_a0",
+                "ok": true
+              },
+              {
+                "origin": "origin_a1",
+                "ok": false
+              },
+              {
+                "origin": "origin_a2",
+                "ok": true
+              }
+            ]
+          }
+        ]
+      },
+      "values": {
+        "('0', 'P0', 'R_j_lo')": 0.005,
+        "('1', 'P0', 'R_j_lo')": 0.0075,
+        "('0', 'P0', 'R_j0')": 0.0047,
+        "('1', 'P0', 'R_j0')": 0.007050000000000001,
+        "('0', 'P0', 'R_j_hi')": 0.0044,
+        "('1', 'P0', 'R_j_hi')": 0.006600000000000001,
+        "('0', 'P1', 'R_j_lo')": 0.005,
+        "('1', 'P1', 'R_j_lo')": 0.0075,
+        "('0', 'P1', 'R_j0')": 0.0047,
+        "('1', 'P1', 'R_j0')": 0.007050000000000001,
+        "('0', 'P1', 'R_j_hi')": 0.0044,
+        "('1', 'P1', 'R_j_hi')": 0.006600000000000001
+      },
+      "calls": [
+        [
+          "kit_SBE_vgcf100",
+          "sbe_noop",
+          "P0",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          false
+        ],
+        [
+          "kit_SBE_vgcf100",
+          "sbe_noop",
+          "P1",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "0",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "1",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "0",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "0",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "1",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "0",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "1",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "0",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "0",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "1",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "0",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "0",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "0",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "1",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "1",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "1",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "0",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "0",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "0",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "1",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "1",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "1",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ]
+      ]
+    },
+    "corner0_nonmonotone_adjusted_mean_monotone": {
+      "status": "R_MONOTONE_VIOLATION",
+      "reason": "σ_DBE(P0, c 0) origin corner_a0 의 증서 구간이 R_j 단조와 모순 — R_j_lo (R 작음) 구간의 위끝 < R_j0 (R 큼) 구간의 아래끝 (같은 origin 의 세 R · 이미 구한 값 · 추가 풀이 없음 · 구현 결함 의심 · 판정문 §8 RCA2-09 · 10-23 사전 공격 리뷰 C3)",
+      "adjusted": 12,
+      "checks": {
+        "sbe_noop": [
+          {
+            "law": "P0",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "ok": true
+          }
+        ],
+        "same_p": [
+          {
+            "law": "P0",
+            "rj_role": "R_j_lo",
+            "ok": true
+          },
+          {
+            "law": "P0",
+            "rj_role": "R_j0",
+            "ok": true
+          },
+          {
+            "law": "P0",
+            "rj_role": "R_j_hi",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "rj_role": "R_j_lo",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "rj_role": "R_j0",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "rj_role": "R_j_hi",
+            "ok": true
+          }
+        ],
+        "r_monotone": [
+          {
+            "law": "P0",
+            "c": "0",
+            "ok": true,
+            "estimator": "mean8",
+            "origins": [
+              {
+                "origin": "corner_a0",
+                "ok": false
+              },
+              {
+                "origin": "origin_a1",
+                "ok": true
+              },
+              {
+                "origin": "origin_a2",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a0",
+                "ok": false
+              },
+              {
+                "origin": "origin8_a1",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a2",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a3",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a4",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a5",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a6",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a7",
+                "ok": true
+              }
+            ]
+          }
+        ]
+      },
+      "values": {
+        "('0', 'P0', 'R_j_lo')": 0.00495,
+        "('1', 'P0', 'R_j_lo')": 0.007424999999999999,
+        "('0', 'P0', 'R_j0')": 0.0047,
+        "('1', 'P0', 'R_j0')": 0.007050000000000001,
+        "('0', 'P0', 'R_j_hi')": 0.0044,
+        "('1', 'P0', 'R_j_hi')": 0.006600000000000001,
+        "('0', 'P1', 'R_j_lo')": 0.00495,
+        "('1', 'P1', 'R_j_lo')": 0.007424999999999999,
+        "('0', 'P1', 'R_j0')": 0.0047,
+        "('1', 'P1', 'R_j0')": 0.007050000000000001,
+        "('0', 'P1', 'R_j_hi')": 0.0044,
+        "('1', 'P1', 'R_j_hi')": 0.006600000000000001
+      },
+      "calls": [
+        [
+          "kit_SBE_vgcf100",
+          "sbe_noop",
+          "P0",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          false
+        ],
+        [
+          "kit_SBE_vgcf100",
+          "sbe_noop",
+          "P1",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "0",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "1",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "0",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "0",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "1",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "0",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "1",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "0",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "0",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "1",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "0",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "0",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "0",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P0",
+          "0",
+          "0.5",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P0",
+          "0",
+          "1.0",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P0",
+          "0",
+          "2.0",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "1",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "1",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "1",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P0",
+          "1",
+          "0.5",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P0",
+          "1",
+          "1.0",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P0",
+          "1",
+          "2.0",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "0",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "0",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "0",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P1",
+          "0",
+          "0.5",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P1",
+          "0",
+          "1.0",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P1",
+          "0",
+          "2.0",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "1",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "1",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "1",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P1",
+          "1",
+          "0.5",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P1",
+          "1",
+          "1.0",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P1",
+          "1",
+          "2.0",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ]
+      ]
+    },
+    "origin8_3_nonmonotone_mean_monotone": {
+      "status": "R_MONOTONE_VIOLATION",
+      "reason": "σ_DBE(P0, c 0) origin origin8_a3 의 증서 구간이 R_j 단조와 모순 — R_j_lo (R 작음) 구간의 위끝 < R_j0 (R 큼) 구간의 아래끝 (같은 origin 의 세 R · 이미 구한 값 · 추가 풀이 없음 · 구현 결함 의심 · 판정문 §8 RCA2-09 · 10-23 사전 공격 리뷰 C3)",
+      "adjusted": 12,
+      "checks": {
+        "sbe_noop": [
+          {
+            "law": "P0",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "ok": true
+          }
+        ],
+        "same_p": [
+          {
+            "law": "P0",
+            "rj_role": "R_j_lo",
+            "ok": true
+          },
+          {
+            "law": "P0",
+            "rj_role": "R_j0",
+            "ok": true
+          },
+          {
+            "law": "P0",
+            "rj_role": "R_j_hi",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "rj_role": "R_j_lo",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "rj_role": "R_j0",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "rj_role": "R_j_hi",
+            "ok": true
+          }
+        ],
+        "r_monotone": [
+          {
+            "law": "P0",
+            "c": "0",
+            "ok": true,
+            "estimator": "mean8",
+            "origins": [
+              {
+                "origin": "corner_a0",
+                "ok": true
+              },
+              {
+                "origin": "origin_a1",
+                "ok": true
+              },
+              {
+                "origin": "origin_a2",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a0",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a1",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a2",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a3",
+                "ok": false
+              },
+              {
+                "origin": "origin8_a4",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a5",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a6",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a7",
+                "ok": true
+              }
+            ]
+          }
+        ]
+      },
+      "values": {
+        "('0', 'P0', 'R_j_lo')": 0.005025,
+        "('1', 'P0', 'R_j_lo')": 0.0075375,
+        "('0', 'P0', 'R_j0')": 0.0047,
+        "('1', 'P0', 'R_j0')": 0.007050000000000001,
+        "('0', 'P0', 'R_j_hi')": 0.0044,
+        "('1', 'P0', 'R_j_hi')": 0.006600000000000001,
+        "('0', 'P1', 'R_j_lo')": 0.005025,
+        "('1', 'P1', 'R_j_lo')": 0.0075375,
+        "('0', 'P1', 'R_j0')": 0.0047,
+        "('1', 'P1', 'R_j0')": 0.007050000000000001,
+        "('0', 'P1', 'R_j_hi')": 0.0044,
+        "('1', 'P1', 'R_j_hi')": 0.006600000000000001
+      },
+      "calls": [
+        [
+          "kit_SBE_vgcf100",
+          "sbe_noop",
+          "P0",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          false
+        ],
+        [
+          "kit_SBE_vgcf100",
+          "sbe_noop",
+          "P1",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "0",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "1",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "0",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "0",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "1",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "0",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "1",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "0",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "0",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "1",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "0",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "0",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "0",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P0",
+          "0",
+          "0.5",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P0",
+          "0",
+          "1.0",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P0",
+          "0",
+          "2.0",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "1",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "1",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "1",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P0",
+          "1",
+          "0.5",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P0",
+          "1",
+          "1.0",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P0",
+          "1",
+          "2.0",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "0",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "0",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "0",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P1",
+          "0",
+          "0.5",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P1",
+          "0",
+          "1.0",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P1",
+          "0",
+          "2.0",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "1",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "1",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "1",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P1",
+          "1",
+          "0.5",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P1",
+          "1",
+          "1.0",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P1",
+          "1",
+          "2.0",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ]
+      ]
+    },
+    "all_monotone_adjusted": {
+      "status": "PREDICTED",
+      "reason": null,
+      "adjusted": 12,
+      "checks": {
+        "sbe_noop": [
+          {
+            "law": "P0",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "ok": true
+          }
+        ],
+        "same_p": [
+          {
+            "law": "P0",
+            "rj_role": "R_j_lo",
+            "ok": true
+          },
+          {
+            "law": "P0",
+            "rj_role": "R_j0",
+            "ok": true
+          },
+          {
+            "law": "P0",
+            "rj_role": "R_j_hi",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "rj_role": "R_j_lo",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "rj_role": "R_j0",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "rj_role": "R_j_hi",
+            "ok": true
+          }
+        ],
+        "r_monotone": [
+          {
+            "law": "P0",
+            "c": "0",
+            "ok": true,
+            "estimator": "mean8",
+            "origins": [
+              {
+                "origin": "corner_a0",
+                "ok": true
+              },
+              {
+                "origin": "origin_a1",
+                "ok": true
+              },
+              {
+                "origin": "origin_a2",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a0",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a1",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a2",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a3",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a4",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a5",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a6",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a7",
+                "ok": true
+              }
+            ]
+          },
+          {
+            "law": "P0",
+            "c": "1",
+            "ok": true,
+            "estimator": "mean8",
+            "origins": [
+              {
+                "origin": "corner_a0",
+                "ok": true
+              },
+              {
+                "origin": "origin_a1",
+                "ok": true
+              },
+              {
+                "origin": "origin_a2",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a0",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a1",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a2",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a3",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a4",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a5",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a6",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a7",
+                "ok": true
+              }
+            ]
+          },
+          {
+            "law": "P1",
+            "c": "0",
+            "ok": true,
+            "estimator": "mean8",
+            "origins": [
+              {
+                "origin": "corner_a0",
+                "ok": true
+              },
+              {
+                "origin": "origin_a1",
+                "ok": true
+              },
+              {
+                "origin": "origin_a2",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a0",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a1",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a2",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a3",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a4",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a5",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a6",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a7",
+                "ok": true
+              }
+            ]
+          },
+          {
+            "law": "P1",
+            "c": "1",
+            "ok": true,
+            "estimator": "mean8",
+            "origins": [
+              {
+                "origin": "corner_a0",
+                "ok": true
+              },
+              {
+                "origin": "origin_a1",
+                "ok": true
+              },
+              {
+                "origin": "origin_a2",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a0",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a1",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a2",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a3",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a4",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a5",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a6",
+                "ok": true
+              },
+              {
+                "origin": "origin8_a7",
+                "ok": true
+              }
+            ]
+          }
+        ]
+      },
+      "values": {
+        "('0', 'P0', 'R_j_lo')": 0.0051,
+        "('1', 'P0', 'R_j_lo')": 0.0076500000000000005,
+        "('0', 'P0', 'R_j0')": 0.0047,
+        "('1', 'P0', 'R_j0')": 0.007050000000000001,
+        "('0', 'P0', 'R_j_hi')": 0.0044,
+        "('1', 'P0', 'R_j_hi')": 0.006600000000000001,
+        "('0', 'P1', 'R_j_lo')": 0.0051,
+        "('1', 'P1', 'R_j_lo')": 0.0076500000000000005,
+        "('0', 'P1', 'R_j0')": 0.0047,
+        "('1', 'P1', 'R_j0')": 0.007050000000000001,
+        "('0', 'P1', 'R_j_hi')": 0.0044,
+        "('1', 'P1', 'R_j_hi')": 0.006600000000000001
+      },
+      "calls": [
+        [
+          "kit_SBE_vgcf100",
+          "sbe_noop",
+          "P0",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          false
+        ],
+        [
+          "kit_SBE_vgcf100",
+          "sbe_noop",
+          "P1",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "0",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "1",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "0",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "0",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "1",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "0",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "1",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "0",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "0",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "1",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "0",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "0",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "0",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P0",
+          "0",
+          "0.5",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P0",
+          "0",
+          "1.0",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P0",
+          "0",
+          "2.0",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "1",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "1",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "1",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P0",
+          "1",
+          "0.5",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P0",
+          "1",
+          "1.0",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P0",
+          "1",
+          "2.0",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "0",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "0",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "0",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P1",
+          "0",
+          "0.5",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P1",
+          "0",
+          "1.0",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P1",
+          "0",
+          "2.0",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "1",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "1",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "1",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P1",
+          "1",
+          "0.5",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P1",
+          "1",
+          "1.0",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin8",
+          "P1",
+          "1",
+          "2.0",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          false
+        ]
+      ]
+    },
+    "nominal_small_increase_bands_overlap": {
+      "status": "PREDICTED",
+      "reason": null,
+      "adjusted": 0,
+      "checks": {
+        "sbe_noop": [
+          {
+            "law": "P0",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "ok": true
+          }
+        ],
+        "same_p": [
+          {
+            "law": "P0",
+            "rj_role": "R_j_lo",
+            "ok": true
+          },
+          {
+            "law": "P0",
+            "rj_role": "R_j0",
+            "ok": true
+          },
+          {
+            "law": "P0",
+            "rj_role": "R_j_hi",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "rj_role": "R_j_lo",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "rj_role": "R_j0",
+            "ok": true
+          },
+          {
+            "law": "P1",
+            "rj_role": "R_j_hi",
+            "ok": true
+          }
+        ],
+        "r_monotone": [
+          {
+            "law": "P0",
+            "c": "0",
+            "ok": true,
+            "estimator": "arm0",
+            "origins": [
+              {
+                "origin": "corner_a0",
+                "ok": true
+              },
+              {
+                "origin": "origin_a1",
+                "ok": true
+              },
+              {
+                "origin": "origin_a2",
+                "ok": true
+              }
+            ]
+          },
+          {
+            "law": "P0",
+            "c": "1",
+            "ok": true,
+            "estimator": "arm0",
+            "origins": [
+              {
+                "origin": "corner_a0",
+                "ok": true
+              },
+              {
+                "origin": "origin_a1",
+                "ok": true
+              },
+              {
+                "origin": "origin_a2",
+                "ok": true
+              }
+            ]
+          },
+          {
+            "law": "P1",
+            "c": "0",
+            "ok": true,
+            "estimator": "arm0",
+            "origins": [
+              {
+                "origin": "corner_a0",
+                "ok": true
+              },
+              {
+                "origin": "origin_a1",
+                "ok": true
+              },
+              {
+                "origin": "origin_a2",
+                "ok": true
+              }
+            ]
+          },
+          {
+            "law": "P1",
+            "c": "1",
+            "ok": true,
+            "estimator": "arm0",
+            "origins": [
+              {
+                "origin": "corner_a0",
+                "ok": true
+              },
+              {
+                "origin": "origin_a1",
+                "ok": true
+              },
+              {
+                "origin": "origin_a2",
+                "ok": true
+              }
+            ]
+          }
+        ]
+      },
+      "values": {
+        "('0', 'P0', 'R_j_lo')": 0.0046999500000000005,
+        "('1', 'P0', 'R_j_lo')": 0.007049925,
+        "('0', 'P0', 'R_j0')": 0.0047,
+        "('1', 'P0', 'R_j0')": 0.007050000000000001,
+        "('0', 'P0', 'R_j_hi')": 0.0044,
+        "('1', 'P0', 'R_j_hi')": 0.006600000000000001,
+        "('0', 'P1', 'R_j_lo')": 0.0046999500000000005,
+        "('1', 'P1', 'R_j_lo')": 0.007049925,
+        "('0', 'P1', 'R_j0')": 0.0047,
+        "('1', 'P1', 'R_j0')": 0.007050000000000001,
+        "('0', 'P1', 'R_j_hi')": 0.0044,
+        "('1', 'P1', 'R_j_hi')": 0.006600000000000001
+      },
+      "calls": [
+        [
+          "kit_SBE_vgcf100",
+          "sbe_noop",
+          "P0",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          false
+        ],
+        [
+          "kit_SBE_vgcf100",
+          "sbe_noop",
+          "P1",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "0",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "1",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "0",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "0",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P0",
+          "1",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "0",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "1",
+          "0.5",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "0",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "1",
+          "1.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "0",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "corner",
+          "P1",
+          "1",
+          "2.0",
+          [
+            0
+          ],
+          true
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "0",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "0",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "0",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "1",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "1",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P0",
+          "1",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "0",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "0",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "0",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "1",
+          "0.5",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "1",
+          "1.0",
+          [
+            1,
+            2
+          ],
+          false
+        ],
+        [
+          "kit_DBE_sdcp1um_vgcf100",
+          "origin",
+          "P1",
+          "1",
+          "2.0",
+          [
+            1,
+            2
+          ],
+          false
+        ]
+      ]
+    }
+  },
+  "old_field_format": {
+    "status": "ARM_UNREADABLE",
+    "reason": "증서 목표량 구간 [None, None] · scale None — 유한 수 · 0 < 아래 ≤ 위 · scale > 0 이어야 (R 단조 띠 = 그 런 증서 구간 · 10-23 사전 공격 리뷰 C4)",
+    "adjusted": 0,
+    "checks": {
+      "sbe_noop": [
+        {
+          "law": "P0",
+          "ok": true
+        },
+        {
+          "law": "P1",
+          "ok": true
+        }
+      ],
+      "same_p": [
+        {
+          "law": "P0",
+          "rj_role": "R_j_lo",
+          "ok": true
+        },
+        {
+          "law": "P0",
+          "rj_role": "R_j0",
+          "ok": true
+        },
+        {
+          "law": "P0",
+          "rj_role": "R_j_hi",
+          "ok": true
+        },
+        {
+          "law": "P1",
+          "rj_role": "R_j_lo",
+          "ok": true
+        },
+        {
+          "law": "P1",
+          "rj_role": "R_j0",
+          "ok": true
+        },
+        {
+          "law": "P1",
+          "rj_role": "R_j_hi",
+          "ok": true
+        }
+      ],
+      "r_monotone": []
+    },
+    "values": {
+      "('0', 'P0', 'R_j_lo')": 0.005,
+      "('1', 'P0', 'R_j_lo')": 0.0075,
+      "('0', 'P0', 'R_j0')": 0.0047,
+      "('1', 'P0', 'R_j0')": 0.007050000000000001,
+      "('0', 'P0', 'R_j_hi')": 0.0044,
+      "('1', 'P0', 'R_j_hi')": 0.006600000000000001,
+      "('0', 'P1', 'R_j_lo')": 0.005,
+      "('1', 'P1', 'R_j_lo')": 0.0075,
+      "('0', 'P1', 'R_j0')": 0.0047,
+      "('1', 'P1', 'R_j0')": 0.007050000000000001,
+      "('0', 'P1', 'R_j_hi')": 0.0044,
+      "('1', 'P1', 'R_j_hi')": 0.006600000000000001
+    },
+    "calls": [
+      [
+        "kit_SBE_vgcf100",
+        "sbe_noop",
+        "P0",
+        "1",
+        "1.0",
+        [
+          0
+        ],
+        false
+      ],
+      [
+        "kit_SBE_vgcf100",
+        "sbe_noop",
+        "P1",
+        "1",
+        "1.0",
+        [
+          0
+        ],
+        false
+      ],
+      [
+        "kit_DBE_sdcp1um_vgcf100",
+        "corner",
+        "P0",
+        "0",
+        "0.5",
+        [
+          0
+        ],
+        true
+      ],
+      [
+        "kit_DBE_sdcp1um_vgcf100",
+        "corner",
+        "P0",
+        "1",
+        "0.5",
+        [
+          0
+        ],
+        true
+      ],
+      [
+        "kit_DBE_sdcp1um_vgcf100",
+        "corner",
+        "P0",
+        "0",
+        "1.0",
+        [
+          0
+        ],
+        true
+      ],
+      [
+        "kit_DBE_sdcp1um_vgcf100",
+        "corner",
+        "P0",
+        "1",
+        "1.0",
+        [
+          0
+        ],
+        true
+      ],
+      [
+        "kit_DBE_sdcp1um_vgcf100",
+        "corner",
+        "P0",
+        "0",
+        "2.0",
+        [
+          0
+        ],
+        true
+      ],
+      [
+        "kit_DBE_sdcp1um_vgcf100",
+        "corner",
+        "P0",
+        "1",
+        "2.0",
+        [
+          0
+        ],
+        true
+      ],
+      [
+        "kit_DBE_sdcp1um_vgcf100",
+        "corner",
+        "P1",
+        "0",
+        "0.5",
+        [
+          0
+        ],
+        true
+      ],
+      [
+        "kit_DBE_sdcp1um_vgcf100",
+        "corner",
+        "P1",
+        "1",
+        "0.5",
+        [
+          0
+        ],
+        true
+      ],
+      [
+        "kit_DBE_sdcp1um_vgcf100",
+        "corner",
+        "P1",
+        "0",
+        "1.0",
+        [
+          0
+        ],
+        true
+      ],
+      [
+        "kit_DBE_sdcp1um_vgcf100",
+        "corner",
+        "P1",
+        "1",
+        "1.0",
+        [
+          0
+        ],
+        true
+      ],
+      [
+        "kit_DBE_sdcp1um_vgcf100",
+        "corner",
+        "P1",
+        "0",
+        "2.0",
+        [
+          0
+        ],
+        true
+      ],
+      [
+        "kit_DBE_sdcp1um_vgcf100",
+        "corner",
+        "P1",
+        "1",
+        "2.0",
+        [
+          0
+        ],
+        true
+      ],
+      [
+        "kit_DBE_sdcp1um_vgcf100",
+        "origin",
+        "P0",
+        "0",
+        "0.5",
+        [
+          1,
+          2
+        ],
+        false
+      ],
+      [
+        "kit_DBE_sdcp1um_vgcf100",
+        "origin",
+        "P0",
+        "0",
+        "1.0",
+        [
+          1,
+          2
+        ],
+        false
+      ],
+      [
+        "kit_DBE_sdcp1um_vgcf100",
+        "origin",
+        "P0",
+        "0",
+        "2.0",
+        [
+          1,
+          2
+        ],
+        false
+      ],
+      [
+        "kit_DBE_sdcp1um_vgcf100",
+        "origin",
+        "P0",
+        "1",
+        "0.5",
+        [
+          1,
+          2
+        ],
+        false
+      ],
+      [
+        "kit_DBE_sdcp1um_vgcf100",
+        "origin",
+        "P0",
+        "1",
+        "1.0",
+        [
+          1,
+          2
+        ],
+        false
+      ],
+      [
+        "kit_DBE_sdcp1um_vgcf100",
+        "origin",
+        "P0",
+        "1",
+        "2.0",
+        [
+          1,
+          2
+        ],
+        false
+      ],
+      [
+        "kit_DBE_sdcp1um_vgcf100",
+        "origin",
+        "P1",
+        "0",
+        "0.5",
+        [
+          1,
+          2
+        ],
+        false
+      ],
+      [
+        "kit_DBE_sdcp1um_vgcf100",
+        "origin",
+        "P1",
+        "0",
+        "1.0",
+        [
+          1,
+          2
+        ],
+        false
+      ],
+      [
+        "kit_DBE_sdcp1um_vgcf100",
+        "origin",
+        "P1",
+        "0",
+        "2.0",
+        [
+          1,
+          2
+        ],
+        false
+      ],
+      [
+        "kit_DBE_sdcp1um_vgcf100",
+        "origin",
+        "P1",
+        "1",
+        "0.5",
+        [
+          1,
+          2
+        ],
+        false
+      ],
+      [
+        "kit_DBE_sdcp1um_vgcf100",
+        "origin",
+        "P1",
+        "1",
+        "1.0",
+        [
+          1,
+          2
+        ],
+        false
+      ],
+      [
+        "kit_DBE_sdcp1um_vgcf100",
+        "origin",
+        "P1",
+        "1",
+        "2.0",
+        [
+          1,
+          2
+        ],
+        false
+      ]
+    ]
+  },
+  "integer_interval_oracle": {
+    "trials": 5000,
+    "mismatches": []
+  },
+  "C4": {
+    "touch": null,
+    "one_ulp_gap": [
+      "a",
+      "b"
+    ],
+    "touch_endpoint_code_units": 1.4656880073121192,
+    "one_ulp_endpoint_code_units": 1.4656880073121195,
+    "a_err_rel": 2.588422238019952e-05,
+    "b_err_rel": 1.0048255880306897e-05,
+    "mean_exact": true
+  },
+  "resident_direct": {
+    "U17": [
+      true,
+      [
+        [],
+        true
+      ]
+    ],
+    "U17b": [
+      true,
+      []
+    ],
+    "M44": [
+      true,
+      [
+        true,
+        "M44 → 대상 검사 실패 (잡음) · ([('판정문 꼴 4.2 / 4.7 / 4.4 → 멈춤', False, 'PREDICTED', ''), ('이웃은 겹치고 lo ↔ hi 만 모순 → 멈춤', False, 'PREDICTED', ''), ('8 팔 평균 비단조 (arm 0 단조) → 멈춤 · 사유 = 최종 추정량 mean8', False, 'PREDICTED', ('', {'c0_P0': 'adjusted', 'c1_P0': 'pass', 'c0_P1': 'pass', 'c1_P1': 'pass'})), ('arm 0 비단조 · 8 팔 평균 단조 → 멈춤 (origin corner_a0 · 최종 추정량 mean8 은 통과)', False, 'PREDICTED', ('', {'c0_P0': 'adjusted', 'c1_P0': 'pass', 'c0_P1': 'pass', 'c1_P1': 'pass'}, {'law': 'P0', 'c': '0', 'ok': True, 'estimator': 'mean8', 'origins': [{'origin': 'corner_a0', 'ok': True}, {'origin': 'origin_a1', 'ok': True}, {'origin': 'origin_a2', 'ok': True}, {'origin': 'origin8_a0', 'ok': True}, {'origin': 'origin8_a1', 'ok': True}, {'origin': 'origin8_a2', 'ok': True}, {'origin': 'origin8_a3', 'ok': True}, {'origin': 'origin8_a4', 'ok': True}, {'origin': 'origin8_a5', 'ok': True}, {'origin': 'origin8_a6', 'ok': True}, {'origin': 'origin8_a7', 'ok': True}]}))], True)"
+      ]
+    ],
+    "M45": [
+      true,
+      [
+        true,
+        "M45 → 대상 검사 실패 (잡음) · ([('이웃은 겹치고 lo ↔ hi 만 모순 → 멈춤', False, 'PREDICTED', '')], True)"
+      ]
+    ],
+    "M46": [
+      true,
+      [
+        true,
+        "M46 → 대상 검사 실패 (잡음) · ([('증서 띠 안 비단조 (구간 겹침) → 통과', False, 'R_MONOTONE_VIOLATION', 'σ_DBE(P0, c 0) 의 증서 구간이 R_j 단조와 모순 — R_j_lo (R 작음) 구간의 위끝 < R_j0 (R 큼) 구간의 아래끝 (같은 origin · 같은 최종 추정량 arm0 · 추가 풀이 없음 · 구현 결함 의심 · 판정문 §8 RCA2-09)'), ('err_rel 없음 → ARM_UNREADABLE', False, 'PREDICTED', '')], True)"
+      ]
+    ],
+    "M47": [
+      true,
+      [
+        true,
+        "M47 → 대상 검사 실패 (잡음) · ([('8 팔 평균 비단조 (arm 0 단조) → 멈춤 · 사유 = 최종 추정량 mean8', False, 'R_MONOTONE_VIOLATION', ('σ_DBE(P0, c 0) origin origin8_a1 의 증서 구간이 R_j 단조와 모순 — R_j_lo (R 작음) 구간의 위끝 < R_j0 (R 큼) 구간의 아래끝 (같은 origin 의 세 R · 이미 구한 값 · 추가 풀이 없음 · 구현 결함 의심 · 판정문 §8 RCA2-09 · 10-23 사전 공격 리뷰 C3)', {'c0_P0': 'adjusted', 'c1_P0': 'pass', 'c0_P1': 'pass', 'c1_P1': 'pass'})), ('arm 0 비단조 · 8 팔 평균 단조 → 멈춤 (origin corner_a0 · 최종 추정량 mean8 은 통과)', False, 'R_MONOTONE_VIOLATION', ('σ_DBE(P0, c 0) 의 증서 구간이 R_j 단조와 모순 — R_j_lo (R 작음) 구간의 위끝 < R_j0 (R 큼) 구간의 아래끝 (같은 origin · 같은 최종 추정량 arm0 · 추가 풀이 없음 · 구현 결함 의심 · 판정문 §8 RCA2-09)', {'c0_P0': 'adjusted', 'c1_P0': 'pass', 'c0_P1': 'pass', 'c1_P1': 'pass'}, {'law': 'P0', 'c': '0', 'ok': False, 'estimator': 'arm0', 'origins': None}))], True)"
+      ]
+    ],
+    "U19": [
+      true,
+      []
+    ],
+    "M49": [
+      true,
+      [
+        true,
+        "M49 → 대상 검사 실패 (잡음) · [('정상 → 통과 · origins 3 · 다 ok', False, 'PREDICTED', [{'law': 'P0', 'c': '0', 'ok': True, 'estimator': 'arm0', 'origins': []}, {'law': 'P0', 'c': '1', 'ok': True, 'estimator': 'arm0', 'origins': []}, {'law': 'P1', 'c': '0', 'ok': True, 'estimator': 'arm0', 'origins': []}, {'law': 'P1', 'c': '1', 'ok': True, 'estimator': 'arm0', 'origins': []}]), ('R1 arm 1 비단조 (넘침 없음) → 멈춤 · origin_a1', False, 'PREDICTED', ''), ('R1c 넘친 모서리 arm 0 비단조 → 멈춤 · corner_a0 · 최종 추정량 mean8 통과', False, 'PREDICTED', ('', {'law': 'P0', 'c': '0', 'ok': True, 'estimator': 'mean8', 'origins': []})), ('R1d 넘친 모서리 origin 3 비단조 → 멈춤 · origin8_a3', False, 'PREDICTED', ('', {'law': 'P0', 'c': '0', 'ok': True, 'estimator': 'mean8', 'origins': []})), ('넘친 모서리 · 다 단조 → 통과 · origins 11', False, 'PREDICTED', [[]])]"
+      ]
+    ],
+    "U20": [
+      true,
+      []
+    ],
+    "M50": [
+      true,
+      [
+        true,
+        "M50 → 대상 검사 실패 (잡음) · [('R2 맞닿음 → 모순 아님 (옛 띠는 떨어졌다 · err 재현)', False, ('R_j_lo', 'R_j0'), (True, False)), ('예측 — R2 맞닿음 (scale 1e-3) → 통과', False, 'R_MONOTONE_VIOLATION', ''), ('8 팔 평균 띠 = 증서 띠 끝마다 평균', False, (Fraction(11470605208040511275738238901772626029, 5444517870735015415413993718908291383296), Fraction(11471199038803439590305820867744749459, 5444517870735015415413993718908291383296)), (Fraction(175031965824604352203323305547807, 83076749736557242056487941267521536), Fraction(175036606427054431474183460864465, 83076749736557242056487941267521536))), ('못 읽음 → ARM_UNREADABLE', False, ['target_lo 없음', 'scale 없음', '아래 > 위', 'NaN', 'inf', 'scale 0', 'scale 음수', 'bool', '글자', '아래 0'], '')]"
+      ]
+    ]
+  },
+  "all_assertions_pass": true
+}

@@ -1,0 +1,38 @@
+  PASS  SM0 상태 목록에 구조화 실패 이름 (기록 · 문서용 목록 · 이것만으로 끝내지 않는다 = SM1–SM4)
+  PASS  SM1 구조화 실패 받음 · 사슬 SV_UNCHECKED · 사유에 상태 이름 [census 0 · 다시 가른 수 1 (QD2 ⑧ 꼴 · 증서 구간)]
+  PASS  SM1 구조화 실패 받음 · 사슬 SV_UNCHECKED · 사유에 상태 이름 [census 1 · 다시 가른 수 2 (증서 구간)]
+  PASS  SM1 구조화 실패 받음 · 사슬 SV_UNCHECKED · 사유에 상태 이름 [census 2 · 다시 가른 수 0 (원장에서 덩어리가 사라짐)]
+  PASS  SM1 구조화 실패 받음 · 사슬 SV_UNCHECKED · 사유에 상태 이름 [census 0 · 다시 가른 수 1 (진단 기록 · 증서 없는 런)]
+  PASS  SM2 구조화 실패 꼴 거부 [다시 가른 수 = census 수 (1 · 1 — 상태의 정의와 모순)]
+  PASS  SM2 구조화 실패 꼴 거부 [다시 가른 수 = census 수 (0 · 0)]
+  PASS  SM2 구조화 실패 꼴 거부 [다시 가른 수 없음]
+  PASS  SM2 구조화 실패 꼴 거부 [다시 가른 수 bool]
+  PASS  SM2 구조화 실패 꼴 거부 [다시 가른 수 음수]
+  PASS  SM2 구조화 실패 꼴 거부 [다시 가른 수 10^400]
+  PASS  SM2 구조화 실패 꼴 거부 [사유 없음 (None)]
+  PASS  SM2 구조화 실패 꼴 거부 [사유 빈 글]
+  PASS  SM2 구조화 실패 꼴 거부 [사유 공백만]
+  PASS  SM2 구조화 실패 꼴 거부 [사유 글 아님 (수)]
+  PASS  SM2 구조화 실패 꼴 거부 [풀이 칸 — 비 2.0]
+  PASS  SM2 구조화 실패 꼴 거부 [풀이 칸 — inf 표지]
+  PASS  SM2 구조화 실패 꼴 거부 [풀이 칸 — G_cut 1.0]
+  PASS  SM2 구조화 실패 꼴 거부 [풀이 칸 — G_cut 0.0 (관통 없음을 숨김)]
+  PASS  SM2 구조화 실패 꼴 거부 [풀이 칸 — 잔차]
+  PASS  SM2 구조화 실패 꼴 거부 [풀이 칸 — CG info 0]
+  PASS  SM2 구조화 실패 꼴 거부 [풀이 칸 — 증서]
+  PASS  SM2 구조화 실패 꼴 거부 [풀이 칸 — backend]
+  PASS  SM2 구조화 실패 꼴 거부 [풀이 칸 — 제거 셀 수 3 (풀지 않은 끝)]
+  PASS  SM2 구조화 실패 꼴 거부 [풀이 칸 — 끊은 간선 수 6]
+  PASS  SM2 구조화 실패 꼴 거부 [풀이 칸 — 판 결합 끊은 수 0]
+  PASS  SM2 구조화 실패 꼴 거부 [풀이 칸 — SV 면 끊은 수 0]
+  PASS  SM2 구조화 실패 꼴 거부 [풀이 칸 — 판에 닿는 성분에서 끊은 쌍 수 0 (★ 10-23 묶음 A″)]
+  PASS  SM2 구조화 실패 꼴 거부 [위 끝 칸 = 아래 끝 (census 1 · computed 1.25 — 구조화 실패를 위 끝 칸이 숨김)]
+  PASS  SM2 구조화 실패 꼴 거부 [위 끝 칸 = 아래 끝 (census 0 · computed 1.25)]
+  PASS  SM2 구조화 실패 꼴 거부 [위 끝 칸 상태 unconverged (위 끝 풀이 기록 = 구조화 실패)]
+  PASS  SM2 구조화 실패 꼴 거부 [위 끝 칸 상태 = 구조화 실패 · 위 끝 풀이 기록 상태 unconverged]
+  PASS  SM2 거부 사유 = 검증기 자신의 문장 (CAEXT|cjunc| sv_cf| …) — 예외 감싸기 (unverifiable) 로 거부된 꼴 없음
+  PASS  SM3 실제 생산자 → 실제 소비자 → 사슬 [꼴 ① 덩어리 하나 · census 0 (QD2 ⑧) · 증서 끔 (진단)] — 위 끝 = 구조화 실패 (다시 가른 수 1 · census 0 · 사유 · 풀이 칸 없음) · ca_ext_record_ok 받음 · 사슬 SV_UNCHECKED · 사유에 상태 이름
+  PASS  SM3 실제 생산자 → 실제 소비자 → 사슬 [꼴 ① 덩어리 하나 · census 0 (QD2 ⑧) · 증서 켬 (증서 구간)] — 위 끝 = 구조화 실패 (다시 가른 수 1 · census 0 · 사유 · 풀이 칸 없음) · ca_ext_record_ok 받음 · 사슬 SV_UNCHECKED · 사유에 상태 이름
+  PASS  SM3 실제 생산자 → 실제 소비자 → 사슬 [꼴 ② 두 성분 · census 1 (QD4) · 증서 끔 (진단)] — 위 끝 = 구조화 실패 (다시 가른 수 2 · census 1 · 사유 · 풀이 칸 없음) · ca_ext_record_ok 받음 · 사슬 SV_UNCHECKED · 사유에 상태 이름
+  PASS  SM3 실제 생산자 → 실제 소비자 → 사슬 [꼴 ② 두 성분 · census 1 (QD4) · 증서 켬 (증서 구간)] — 위 끝 = 구조화 실패 (다시 가른 수 2 · census 1 · 사유 · 풀이 칸 없음) · ca_ext_record_ok 받음 · 사슬 SV_UNCHECKED · 사유에 상태 이름
+RESIDENT_SM_DIRECT: 37 PASS, 0 FAIL

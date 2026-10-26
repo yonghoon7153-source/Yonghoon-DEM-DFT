@@ -1,0 +1,378 @@
+{
+  "fibre_stamp": "segment",
+  "ptfe_stamp": "off",
+  "component_plan": {
+    "electronic": true,
+    "ionic": false,
+    "thermal": false,
+    "pore": false,
+    "collector": false
+  },
+  "field_requested": false,
+  "periodic_xy": false,
+  "interface_model": null,
+  "sdcp_bridge_um": 0.0,
+  "sigma_vgcf_S_cm": 100.0,
+  "ca_ext_requested": [
+    "cjunc",
+    "sdcp_mod"
+  ],
+  "ca_ext": {
+    "schema": "ca-ext-v1",
+    "cjunc": {
+      "protocol": {
+        "wiring": "b6-cjunc-payload-v1",
+        "model": "r3-carbon-junction-port-v3",
+        "schema": "cjunc-v2",
+        "len_law": "len_scaled_v0",
+        "rules": {
+          "lc": "touch_len_max_v1",
+          "port": "nearest_cell_centre_any_liveness_within_rport_no_relocation_eps_band_tie_lex_ijk_branch_dist_v3",
+          "footprint": "owner_cells_within_D_plus_half_diag_v1",
+          "self": "same_piece_centreline_pairs_d_le_D_floor_s_gt_D_and_halfpi_d_s_ge_s_min_v3",
+          "owner": "nearest_centreline_eps_band_point_dir_lex_v1",
+          "eps_d2_um2": 1e-09,
+          "lpar_rtol": 1e-09,
+          "len_law": "len_scaled_v0",
+          "self_lc": "touch_len_max_junction_pairs_v2",
+          "self_s": "arc_at_closest_points_piece_cyclic_v2",
+          "dist": "ceil_Lc_over_Lpar_equal_split_midpoints_nearest_port_v0",
+          "branch": "membership_cell_fid_traversal_branch_v1",
+          "order": "canonical_first_last_then_point_sequence_lex_v2",
+          "cp": "nearest_pairs_eps_band_lexmin_midpoint_v1",
+          "piece": "piece_is_fibre_closed_path_seam_continuous_v1",
+          "sv_cf": "sdcp_component_owner_groups_same_piece_continuity_or_covered_through_cut_nonpassing_v1"
+        },
+        "R_j_ohm": 1000.0,
+        "unreg_law": "cut",
+        "ptfe_jlaw": "P0",
+        "ptfe_stamp": "off",
+        "r_f_um": 0.075,
+        "tol_ff_um": 0.1,
+        "L_par_um": 0.3,
+        "r_port_um": 0.3,
+        "s_min_um": 3.0,
+        "gap_tol": 2.0,
+        "tol_P_um": 0.1,
+        "tol_sj_um": 0.1,
+        "r_ptfe_um": 0.124,
+        "r_sdcp_um": 0.15,
+        "rj_reference_plane": "model_internal_port_centre",
+        "half_cell_in_edge": false,
+        "quantitative": true,
+        "allow_rj_limits": false,
+        "channel": "electronic"
+      },
+      "evidence": {
+        "counts": {
+          "n_instances": 3,
+          "n_subedges": 3,
+          "n_edge": 0,
+          "n_contract": 2,
+          "n_cut_p1": 0,
+          "n_unrealized": 1,
+          "n_none_inf": 0,
+          "n_long": 0,
+          "n_sdcp_near": 2,
+          "n_contracted_by_c": 2,
+          "n_ptfe_cov": 0,
+          "len_mult_sum_edge": 0.0,
+          "len_mult_max": 1.0
+        },
+        "census": {
+          "n_vgcf_fibres": 4,
+          "n_pieces": 4,
+          "n_segments": 88,
+          "n_positions": 25,
+          "n_live_positions": 24,
+          "n_cross_cells": 0,
+          "n_kway_cells_ge3": 0,
+          "n_instances": 3,
+          "n_instances_distinct": 3,
+          "n_instances_self": 0,
+          "n_realized": 2,
+          "n_unrealized_by_reason": {
+            "covered_SDCP": 1
+          },
+          "n_port_ties": 0,
+          "n_port_displaced": 0,
+          "port_relation": {
+            "same_cell": 0,
+            "face": 2,
+            "edge": 0,
+            "corner": 0,
+            "apart": 0
+          },
+          "n_cut_site_faces": 2,
+          "n_unreg_faces": 0,
+          "n_cut_self_faces": 0,
+          "n_vx_faces_by_sid": {
+            "void": 88,
+            "SDCP": 3
+          },
+          "owner_tie_noncanonical": 0,
+          "n_faces_multi_site": 0,
+          "surface_gap_um": {
+            "min": -0.40000000000000036,
+            "median": 0.0,
+            "max": 0.0
+          },
+          "Lc_um": {
+            "min": 3.650024169000142e-08,
+            "median": 3.650024191534682e-08,
+            "p90": 1.2800000073000493,
+            "p99": 1.5680000007300057,
+            "max": 1.600000000000001
+          },
+          "len_mult": {
+            "sum": 3.0,
+            "max": 1.0,
+            "n_gt1": 0
+          },
+          "n_long_distinct": 0,
+          "n_long_self": 0,
+          "self_dk_min": null,
+          "n_sdcp_bridging_components": 1,
+          "n_sdcp_bridged_fid_pairs": 1,
+          "self_filter": "applied",
+          "n_self_candidates": 0,
+          "n_self_kept": 0,
+          "n_self_filtered": 0,
+          "n_self_s_undefined": 0,
+          "n_self_fused_faces": 0,
+          "n_self_revisits_path_only": 0,
+          "n_self_revisits_path_broken": 0,
+          "self_s_um": null,
+          "n_revisit_pairs": 0,
+          "n_revisit_cells": 0,
+          "n_revisit_fibres": 0,
+          "revisit_s_um": null,
+          "n_subedges": 3,
+          "n_subedges_long": 0,
+          "n_subedges_ptfe_cov": 0,
+          "n_instances_ptfe_partial": 0,
+          "n_subedges_sdcp_near": 3,
+          "n_subedges_unrealized": 1,
+          "subedge_rule": "ceil_Lc_over_Lpar_equal_split_midpoints_nearest_port_v0",
+          "n_sdcp_components_touching": 1,
+          "n_bridging_components": 1,
+          "n_sv_faces_cut_rows": 1,
+          "n_sv_faces_kept_self": 2,
+          "n_unsplit_bridging_components": 0,
+          "sv_cf_rule": "sdcp_component_owner_groups_same_piece_continuity_or_covered_through_cut_nonpassing_v1",
+          "n_instances_same_fid_pieces": 0,
+          "n_piece_cell_meets": 0,
+          "n_ring_pieces": 0,
+          "n_closed_paths_joined": 0,
+          "n_seam_alias": 0,
+          "piece_rule": "piece_is_fibre_closed_path_seam_continuous_v1"
+        },
+        "solve": {
+          "solved": true,
+          "n_extra_dofs": 0,
+          "n_contracted": 2,
+          "n_floating_dropped": 0,
+          "n_through_dof": 23,
+          "n_plate_reachable_dof": 23,
+          "short": false,
+          "tombstones": {
+            "cut_site": 2,
+            "cut_self": 0,
+            "unreg_cut": 0
+          },
+          "n_unreg_fused": 0,
+          "n_junction_edges": 0,
+          "n_self_fused_faces": 0,
+          "n_self_revisits_path_only": 0,
+          "P_total_code": 19.950248756218905,
+          "P_sum_check_code": 19.950248756218905,
+          "dissipation_share": {
+            "other_bulk": 0.0,
+            "vv_axial": 0.8481396012456424,
+            "vv_unreg_fused": 0.0,
+            "va_face": 0.0,
+            "sv_face": 0.052108534633565094,
+            "vx_other": 0.0,
+            "vv_junction": 0.0,
+            "vv_self_fused": 0.0,
+            "sdcp_cell": 0.0,
+            "plate": 0.0997518641207926
+          },
+          "sv_local_dissipation": {
+            "kind": "diagnostic_local_dissipation",
+            "sv_share": 0.052108534633565094,
+            "vv_junction_share": 0.0,
+            "meaning": "SV 면 + SDCP 셀 소산 몫 = 국소 저항 민감도 — 경로 지배 · 우회 크기 보증 아님 (RCA-06 · 반사실 대조 = 선택 노브)"
+          },
+          "sv_counterfactual": {
+            "kind": "counterfactual_cut_sv_bridges_keep_self_v1",
+            "rule": "sdcp_component_owner_groups_same_piece_continuity_or_covered_through_cut_nonpassing_v1",
+            "requested": true,
+            "threshold": null,
+            "status": "computed",
+            "flag": null,
+            "cg_info": 0,
+            "sv_counterfactual_ratio": 1.0170715052190058,
+            "ratio_limit": null,
+            "G_full_code": 19.95024875621891,
+            "G_cut_code": 19.615384615384567,
+            "resid": 2.5105773504745644e-16,
+            "n_sv_faces_cut": 1,
+            "n_reach_pairs_cut": 0,
+            "n_sdcp_components_touching": 1,
+            "n_bridging_components": 1,
+            "n_sv_faces_kept_self": 2,
+            "n_unsplit_bridging_components": 0,
+            "conv_cert": {
+              "version": "conv-cert-v2",
+              "status": "POSITIVE_SOLVED",
+              "ok": true,
+              "pass_a": true,
+              "pass_b": true,
+              "pass_c": true,
+              "pass_d": true,
+              "I_bot": 19.615384615384567,
+              "target_lo": 19.615384615383444,
+              "target_hi": 19.615384615384652,
+              "target_version": "target-cert-v1",
+              "target_fp": "fsum-bfs-defect-margin-v2",
+              "target_tol": 0.0001,
+              "zero_source": null,
+              "zero_graph": null,
+              "reason": null,
+              "n_through_dof": null,
+              "sigma": 9.340659340659316,
+              "bind_version": "cert-bind-v1",
+              "fp_sid": "475274d14debd8e4c2e9117fb4f0f447",
+              "fp_sig": "e1ef58546901bd7844d0b071a69f829a",
+              "fp_face_plan": null,
+              "fp_cjunc_registry": "dbb7fe7e0590d73c220e5e9ced1432ff",
+              "fp_cjunc_rows": "1692a081301cf0dc5bc84fc8e4d038bf",
+              "target_n_edges": 21,
+              "target_n_dof": 23,
+              "target_n_plate_bot": 2,
+              "target_n_plate_top": 2
+            },
+            "backend_last_solve": {
+              "used": null,
+              "requested": null,
+              "precond": null,
+              "fallback_reason": null
+            },
+            "bracket_rule": "lower_keep_unsplit_upper_remove_unsplit_sdcp_cells_v1",
+            "status_hi": "computed",
+            "sv_counterfactual_ratio_hi": 1.0170715052190058,
+            "ratio_limit_hi": null,
+            "upper": null,
+            "standing": "certified_interval",
+            "conv_cert_full": {
+              "version": "conv-cert-v2",
+              "status": "POSITIVE_SOLVED",
+              "ok": true,
+              "pass_a": true,
+              "pass_b": true,
+              "pass_c": true,
+              "pass_d": true,
+              "I_bot": 19.95024875621891,
+              "target_lo": 19.950248756217714,
+              "target_hi": 19.950248756218944,
+              "target_version": "target-cert-v1",
+              "target_fp": "fsum-bfs-defect-margin-v2",
+              "target_tol": 0.0001,
+              "zero_source": null,
+              "zero_graph": null,
+              "reason": null,
+              "n_through_dof": null,
+              "sigma": 9.500118455342339,
+              "bind_version": "cert-bind-v1",
+              "fp_sid": "475274d14debd8e4c2e9117fb4f0f447",
+              "fp_sig": "e1ef58546901bd7844d0b071a69f829a",
+              "fp_face_plan": null,
+              "fp_cjunc_registry": "dbb7fe7e0590d73c220e5e9ced1432ff",
+              "fp_cjunc_rows": "1692a081301cf0dc5bc84fc8e4d038bf",
+              "target_n_edges": 21,
+              "target_n_dof": 23,
+              "target_n_plate_bot": 2,
+              "target_n_plate_top": 2
+            },
+            "ratio_cert_interval": [
+              1.0170715052189403,
+              1.0170715052190658
+            ]
+          },
+          "sv_face_abs_current_over_I": 0.9975062344139618,
+          "I_bot_code": 19.95024875621891
+        },
+        "receipts": {
+          "electronic_main": {
+            "n_instances": 3,
+            "n_junction_edges": 0,
+            "solved": true,
+            "fp_registry": "dbb7fe7e0590d73c220e5e9ced1432ff",
+            "status": "applied"
+          },
+          "electronic_wetted": {
+            "status": "disabled",
+            "why": "review fixture disabled"
+          },
+          "electronic_bare": {
+            "status": "disabled",
+            "why": "review fixture disabled"
+          },
+          "ionic": {
+            "status": "disabled",
+            "why": "review fixture disabled"
+          }
+        },
+        "fp": {
+          "sid": "475274d14debd8e4c2e9117fb4f0f447",
+          "registry": "dbb7fe7e0590d73c220e5e9ced1432ff",
+          "plan_rows": "1692a081301cf0dc5bc84fc8e4d038bf"
+        },
+        "rejections": [],
+        "sdcp_mod_c": 1.0,
+        "status": "mechanism_only — 탄소 접합 R_j v0 (VGCF–VGCF) · 정량 판정 = 등록 R 비준 · Codex GO · S0 문턱 개정 뒤 · payload 미배선 (B6) · 웹앱 표지 = 봉인 파일 (mpm_lab_register) 이라 보류",
+        "qualifiers": [
+          "R_j = 모형 내부 보정값 (재료값 아님 · 포트 = 셀 중심 · 직접 간선에 반셀 · 접근 몫 없음 → 그 몫이 R_j 에 묶인다)",
+          "VGCF–VGCF 만 정량 — VGCF–AM · SDCP–VGCF · SDCP–AM 면 = 옛 융합 (SDCP–VGCF 접촉 저항 0 가정)",
+          "instance = 중심선 기하 근접 (관통 포함 · MPM 은 섬유 접촉 역학을 풀지 않는다) · 중심선 위치 불확도 = MPM 점 간격",
+          "R_j,0 는 모든 VV instance 에 같은 값 · 접합 총 G = max(1, L_c/L_par)/R_j,0 (길이 법칙 v0 — 선 접촉 협착 ∝ 길이의 1차 근사 · 점 접합 L_c/L_par 개 병렬) · 분산판 v0: k = ceil(L_c/L_par) 간선 · 각 G/k · 닿음 구간 k 등분 점의 기하 포트 · 간선마다 PTFE 덮임 · SDCP 근접 (L_c ≤ L_par = 점 접합 하나) · L_c = 닿음 길이 (중심선 기하 근접) · 분산 간선 = 같은 R_j,0 의 균일 분포 근사 (접점 저항 분포 · 전달 길이 미검증) · k 가 바뀌는 L_c/L_par 정수 경계에서 σ 가 계단으로 뛴다 (이산화 오차 · 크기 ∝ h·r′/R_j)",
+          "조각 = 섬유 — 같은 fid 의 끊긴 조각 (생산 끊기 규칙) 은 서로 다른 섬유와 같은 접합 규칙 (중심선 d ≤ D → R_j) · 닫힌 경로의 이음매 = 연속 · 자기 접합 = 같은 조각 중심선 쌍 d ≤ D 가 바닥 (s > D · s > (π/2)·d) 을 넘고 s ≥ s_min (s = 쌍의 경로 호 길이) — s < s_min = 같은 가닥의 연속 (접합 아님 · 면 = 옛 융합) · 같은 셀 재방문 = 가지 (연속 구간) 마다 따로 (합치지 않는다 · RCA-03) · s_min = 등록 문턱 (없으면 정량 거부)",
+          "덮인 접점 (포트로 고른 셀이 SDCP · PTFE · 상자 밖) = 옮기지 않고 미실현 — 덮은 상의 법칙만 (SDCP = SV 융합 · S3 c · PTFE = face_alpha P0/P1 · 같은 접촉을 두 번 세지 않는다) · 접합 + PTFE centerline = 거부",
+          "S3 c ∈ {0, 1} = 시나리오 끝 (재료 예측 아님 · c = 1 = 근접 접합 축약 끝 · 젖음 상한 아님)",
+          "SV_local_dissipation = SV 면 + SDCP 셀 소산 몫 (국소 저항 민감도 진단) — 경로 지배 · 우회 크기 보증 아님 (RCA-06 · 옛 SV_DOMINANT 표지 철회) · 반사실 대조 (서로 다른 섬유 · 접합으로 갈린 가지를 잇는 SV 다리만 끊고 SDCP 를 지나는 섬유의 자기 연속은 남긴 판의 단자 G 비) = 선택 노브 · 문턱 = 등록",
+          "SV 반사실 괄호 (10-22 · 1저자 Q1 (다)) — 못 가른 덩어리 (섬유 둘 이상이 함께 지나는 SDCP 성분 · 셀 단위로 섬유 자기 길과 다리를 못 가른다) 가 있으면 반사실을 두 번 푼다: 아래 끝 = 덩어리를 그대로 둔 판 · 위 끝 = 그 덩어리 SDCP 셀의 면을 전부 끊은 판 (관통 없음 = +∞) → 비 = 괄호 [아래 끝, 위 끝] · 참 비 (다리만 끊은 판) 는 그 사이 = 지금 셀 그래프 안에서만 보장 (섬유 길을 새로 그리는 정의면 밖일 수 있다) · 판정 = 사슬 · 증서 구간 (10-23 · 1저자 Q1 (가) — 아래비 = 주 해 증서 하한 / 아래 끝 증서 상한 > 문턱 = SV_DEPENDENT · 위비 = 주 해 증서 상한 / 위 끝 증서 하한 ≤ 문턱 = 표지 없음 · 걸침 · 못 읽음 · 무증서 (진단 기록) = SV_UNCHECKED · ∞ = 위상이 증명한 0 분모만 · nominal 비 = 기록만 · 판정 아님) · 못 가른 덩어리 0 = 한 번 (위 = 아래)"
+        ],
+        "diagnostics": {
+          "je": "not_computed",
+          "dissipation_share_step3": "not_computed (원장을 안 읽는다 · E2)",
+          "dissipation_share_ledger": "evidence.solve.dissipation_share",
+          "field": "refused",
+          "joule": "refused",
+          "step4_grid": "refused",
+          "phi_profile_electronic": "not_computed"
+        },
+        "label": "탄소 접합 R_j (모형 내부 보정값 · 재료값 아님 · VGCF–VGCF 만 · VGCF–AM · SDCP–VGCF 접점 = 옛 융합 (SDCP–VGCF 접촉 저항 0 가정))",
+        "sv_counterfactual_request": {
+          "threshold": null
+        }
+      }
+    },
+    "sdcp_mod": {
+      "protocol": {
+        "wiring": "b6-cjunc-payload-v1",
+        "model": "r3-carbon-junction-port-v3",
+        "c": 1.0,
+        "tol_sj_um": 0.1,
+        "r_sdcp_um": 0.15,
+        "rule": "R_j' = R_j,0 (1 - c a_j) · c = 1 = 근접 instance 축약 경로 (union-find · 큰 g 대입 아님)"
+      },
+      "evidence": {
+        "n_sdcp_near": 2,
+        "n_contracted_by_c": 2,
+        "s3_discriminating": true,
+        "label": "SDCP 접점 시나리오 c ∈ {0 · 1} — 재료 예측 아님 · 젖음 효과 없음 ↔ 근접 접합 축약 끝 (같은 그래프 · SDCP–VGCF 접촉 저항 0 가정)"
+      }
+    }
+  }
+}

@@ -1,0 +1,307 @@
+{
+  "runtime": {
+    "python": "3.11.17 (main, Oct  1 2026, 15:41:07) [GCC 13.3.0]",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1"
+  },
+  "scope": "Actual producer and ca_ext_record_ok + sv_assess; full read_run not invoked in this probe. read_run full-certificate equality checked verbatim.",
+  "k0_disclosed_limitation_realized": {
+    "geometry": {
+      "polys": [
+        [
+          [
+            1.5,
+            1.5,
+            0.5
+          ],
+          [
+            1.5,
+            1.5,
+            4.9
+          ]
+        ],
+        [
+          [
+            2.5,
+            0.5,
+            4.5
+          ],
+          [
+            2.5,
+            2.5,
+            4.5
+          ]
+        ],
+        [
+          [
+            0.5,
+            1.5,
+            9.5
+          ],
+          [
+            0.5,
+            1.5,
+            5.5
+          ],
+          [
+            2.9,
+            1.5,
+            5.5
+          ]
+        ],
+        [
+          [
+            5.5,
+            1.5,
+            0.5
+          ],
+          [
+            5.5,
+            1.5,
+            9.5
+          ]
+        ]
+      ],
+      "sdcp": [
+        [
+          1.95,
+          1.5,
+          5.05
+        ]
+      ],
+      "shape": [
+        7,
+        3,
+        10
+      ],
+      "h_um": 1.0,
+      "rj_ohm": 1000.0,
+      "sdcp_mod": {
+        "c": 1.0
+      }
+    },
+    "honest": {
+      "problem": null,
+      "run_contract": [
+        true,
+        null
+      ],
+      "flags": [
+        "SV_DEPENDENT"
+      ],
+      "interval": [
+        1.01707150521894,
+        1.017071505219066
+      ],
+      "nominal": 1.0170715052190047,
+      "counts": {
+        "n_sv_faces_cut": 1,
+        "n_reach_pairs_cut": 0,
+        "n_unsplit_bridging_components": 0
+      },
+      "topo_main": [
+        21,
+        23,
+        2,
+        2
+      ],
+      "topo_cut": [
+        21,
+        23,
+        2,
+        2
+      ]
+    },
+    "swapped": {
+      "problem": null,
+      "run_contract": [
+        true,
+        null
+      ],
+      "flags_t1_01": [],
+      "interval": [
+        0.9999999999999382,
+        1.000000000000062
+      ],
+      "all_cut_counts_unchanged": true,
+      "counts_unchanged": {
+        "n_sv_faces_cut": true,
+        "n_reach_pairs_cut": true,
+        "n_sdcp_components_touching": true,
+        "n_bridging_components": true,
+        "n_sv_faces_kept_self": true,
+        "n_unsplit_bridging_components": true
+      },
+      "read_run_full_cert_comparison_equal": true
+    },
+    "G_full": 19.95024875621889,
+    "G_cut": 19.615384615384567,
+    "threshold_note": "1.01 is a legal illustrative threshold; no numeric production threshold is registered in this pin. t=2 honestly clears before and after.",
+    "t2_honest": [],
+    "t2_swapped": [],
+    "artifact_sha256": {
+      "k0_actual_evidence.json": "d5406e7dd2da1856c1a638a85b4f1c1cc58624193d9fc2a3e5b9c5b1479aa259",
+      "k0_honest_manifest.json": "2d1c275794c28b28bb591a70e16a9e8c91ad54ce91a34e8c16265d4e30f4b431",
+      "k0_assembled_systems.json": "ca579b8e70cf0bc8070348c5ec5b3dcf992a638e2a68f8ad5144c41804c7ac61",
+      "k0_swapped_manifest.json": "16601815d442511200cf6e2cec21d057aa287d90852e68f4053349df22a9ac9c",
+      "k0_actual_main_result.json": "f4d23638b42870020612bf176d93fe399ab1d79e0851169c0489d169a0cd5def"
+    }
+  },
+  "RCA2_01_original_counterexample": {
+    "problem": null,
+    "run_contract": [
+      true,
+      null
+    ],
+    "flags": [
+      "SV_DEPENDENT"
+    ],
+    "interval": [
+      10.29125393534377,
+      10.291253935346631
+    ],
+    "nominal": 10.291249475345062,
+    "counts": {
+      "n_sv_faces_cut": 2,
+      "n_reach_pairs_cut": 2,
+      "n_unsplit_bridging_components": 0
+    },
+    "topo_main": [
+      44,
+      44,
+      1,
+      1
+    ],
+    "topo_cut": [
+      42,
+      43,
+      1,
+      1
+    ],
+    "threshold": 10.291251705344868,
+    "hand_circuit_ratio": 10.291253935344674,
+    "solver_calls": 4
+  },
+  "honest_FLOAT": {
+    "FLOAT": {
+      "problem": null,
+      "run_contract": [
+        true,
+        null
+      ],
+      "flags": [],
+      "interval": [
+        0.999999999999931,
+        1.000000000000069
+      ],
+      "nominal": 1.0,
+      "counts": {
+        "n_sv_faces_cut": 2,
+        "n_reach_pairs_cut": 0,
+        "n_unsplit_bridging_components": 0
+      },
+      "topo_main": [
+        11,
+        12,
+        1,
+        1
+      ],
+      "topo_cut": [
+        11,
+        12,
+        1,
+        1
+      ]
+    },
+    "UFLOAT": {
+      "problem": null,
+      "run_contract": [
+        true,
+        null
+      ],
+      "flags": [],
+      "interval": [
+        0.999999999999931,
+        1.000000000000069
+      ],
+      "nominal": 1.0,
+      "counts": {
+        "n_sv_faces_cut": 0,
+        "n_reach_pairs_cut": 0,
+        "n_unsplit_bridging_components": 1
+      },
+      "topo_main": [
+        11,
+        12,
+        1,
+        1
+      ],
+      "topo_cut": [
+        11,
+        12,
+        1,
+        1
+      ]
+    },
+    "PAR": {
+      "problem": null,
+      "run_contract": [
+        true,
+        null
+      ],
+      "flags": [],
+      "interval": [
+        0.9999999999999415,
+        1.0000000000000586
+      ],
+      "nominal": 1.0000000000000067,
+      "counts": {
+        "n_sv_faces_cut": 1,
+        "n_reach_pairs_cut": 0,
+        "n_unsplit_bridging_components": 0
+      },
+      "topo_main": [
+        17,
+        19,
+        2,
+        1
+      ],
+      "topo_cut": [
+        17,
+        19,
+        2,
+        1
+      ]
+    }
+  },
+  "RCA2_04_negative_cases": {
+    "missing_lower_certificate": [
+      false,
+      "CAEXT|cjunc| sv_cf| 아래 끝 증서가 없다 (NoneType) — 증서 구간 기록의 비를 싣는 끝 = 현 증서 필수 (무증서 = 진단 기록만 · 10-23 RCA2-04)"
+    ],
+    "foreign_main_certificate": [
+      false,
+      "CAEXT|cjunc| sv_cf| 아래 끝 증서 게시 판 전류 19.615384615384567 ≠ 그 끝의 G 0.4484304932735439 (정확히 같아야 — 다른 회로의 증서 · 10-23 RCA2-04)"
+    ],
+    "unregistered_bracket_rule": [
+      false,
+      "CAEXT|cjunc| sv_cf| 괄호 규칙 'another_rule' — 등록된 값만 ('lower_keep_unsplit_upper_remove_unsplit_sdcp_cells_v1',) (10-23 RCA2-04 · 위 끝 칸 없는 옛 기록 = 거부)"
+    ],
+    "unsplit_count_10pow400": [
+      false,
+      "CAEXT|cjunc| sv_cf| 못 가른 덩어리 수 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (0 이상 정수 · int64 범위 — 의미 범위 · 괄호 판정 10-22 · 10-23 RCA2-04)"
+    ],
+    "unregistered_kind": [
+      false,
+      "CAEXT|cjunc| sv_cf| 기록 종류 'counterfactual_cut_sv_faces' · requested True — 등록된 반사실 종류 'counterfactual_cut_sv_bridges_keep_self_v1' · requested True 이어야 (이름 대조뿐 · 10-23 사전 공격 리뷰 C5)"
+    ],
+    "unregistered_cut_rule": [
+      false,
+      "CAEXT|cjunc| sv_cf| 기록 규칙 'another_rule' ≠ 등록된 끊기 규칙 'sdcp_component_owner_groups_same_piece_continuity_or_covered_through_cut_nonpassing_v1' (이름 대조뿐 · 10-23 사전 공격 리뷰 C5)"
+    ],
+    "two_unsplit_zero_removed": [
+      false,
+      "CAEXT|cjunc| sv_cf| 위 끝 제거 성분 수 0 ≠ 못 가른 덩어리 수 2 (생산자 정의 = 같다 · 0 이상 정수 · int64 범위 · 10-23 RCA2-04)"
+    ]
+  }
+}

@@ -12332,7 +12332,7 @@
     {
       "id": "RCA-06",
       "severity": "P1",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-21 Rint ② 설계 리뷰 (리뷰 핀 5dc6f7f0b · 독립 양의 저항망 · 정확 기하 · 핀의 실제 판독 함수 · 실침대 런 없음)",
       "opened_in": "docs/reviews/rint_carbon_additive_design_v1_20261020.md",
@@ -12350,7 +12350,11 @@
         "docs/reviews/codex_review_rint2_rereview_20261022.md §2 · §4 RCA2-01"
       ],
       "claimed_fixed_sha": "eb571a458",
-      "partial_note": "부분 (Codex 재검토 10-22 · 핀 0b3012460 · 판정문 §2 · §5 PRE2-impl-01) — 옛 국소 소산 반례 닫힘 (실제 SVX Gfull 4.61491207863014 · Gcut 0.4484304932735439 · 비 10.291253935345182) · 못 가른 덩어리 전부 제거 (원 반례 닫힘) · 남은 것 = RCA2-01 (증서 구간 미전파 → 최종 문턱 보장 안 닫힘) · 닫는 조건 = RCA2-01 검증. ★ 10-23 닫는 조건 RCA2-01 고침 = `df0f6f01c` (묶음 A2) · 검증 = Codex."
+      "partial_note": "부분 (Codex 재검토 10-22 · 핀 0b3012460 · 판정문 §2 · §5 PRE2-impl-01) — 옛 국소 소산 반례 닫힘 (실제 SVX Gfull 4.61491207863014 · Gcut 0.4484304932735439 · 비 10.291253935345182) · 못 가른 덩어리 전부 제거 (원 반례 닫힘) · 남은 것 = RCA2-01 (증서 구간 미전파 → 최종 문턱 보장 안 닫힘) · 닫는 조건 = RCA2-01 검증. ★ 10-23 닫는 조건 RCA2-01 고침 = `df0f6f01c` (묶음 A2) · 검증 = Codex.",
+      "verified_by": "codex",
+      "verified_sha": "9bec6b764",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round1_20261026.md",
+      "verified_scope": "판정문 §2 RCA-06 = 기존 최소 해결 닫힘 — 10-22 원장의 잔여 조건 (RCA2-01 검증) 충족 · 통합 SV 기록 결합은 RCA2-04 · RR1-01 때문에 부분."
     },
     {
       "id": "RCA-07",
@@ -12670,7 +12674,7 @@
     {
       "id": "RCA2-01",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-22 Rint ② 설계·구현 재검토 (검토 핀 0b3012460 · 비교 기준 5dc6f7f0b · 독립 해석 회로 · 실제 생산 함수 호출 · 작은 합성 S0 census 본체 · 실침대 · 생산 · 전체 CLI 실행 없음)",
       "opened_in": "docs/reviews/codex_review_rint2_rereview_20261022.md",
@@ -12689,7 +12693,11 @@
         "docs/reviews/codex_rint2_rereview_evidence_20261022/_repro_ours_20261022/README.md",
         "scripts/test_carbon_junction.py (392/392 · 10-23 A′ 판 `9b920cc3b` · 시험만) — QD6 (사전 공격 리뷰 C2 · 실제 증서 기록 SVX · QD2-3 · 정확 몫 (Fraction) 칼날 — 위 몫 이하 가장 큰 float = SV_UNCHECKED · 이상 가장 작은 float = 표지 없음 · 아래 몫 쪽 = SV_DEPENDENT 아님 · 사슬 구간 끝 = 정확한 방향 반올림 · 리뷰 변이 M7 (방향 맞바꿈) · M1 (그냥 a/b) 상주 잡음 · 글자 변이 --only QD2,QD3,QD4,QD6 = M7 46/53 · M1 49/53)"
       ],
-      "claimed_fixed_sha": "df0f6f01c"
+      "claimed_fixed_sha": "df0f6f01c",
+      "verified_by": "codex",
+      "verified_sha": "9bec6b764",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round1_20261026.md",
+      "verified_scope": "판정문 §2 RCA2-01 = 닫힘 — 옛 nominal 문턱 반례가 실제 생산 함수에서 SV_DEPENDENT (목표량 구간 전파 · 분모 역할 · 방향 반올림 검산) · 전제 = 유효한 해당 그래프의 증서 (그 귀속은 RR1-01)."
     },
     {
       "id": "RCA2-02",
@@ -12724,12 +12732,12 @@
     {
       "id": "RCA2-04",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "open",
       "owner": "claude",
       "found_by": "codex 10-22 Rint ② 설계·구현 재검토 (검토 핀 0b3012460 · 비교 기준 5dc6f7f0b · 독립 해석 회로 · 실제 생산 함수 호출 · 작은 합성 S0 census 본체 · 실침대 · 생산 · 전체 CLI 실행 없음)",
       "opened_in": "docs/reviews/codex_review_rint2_rereview_20261022.md",
       "title": "F3 — SV 기록의 증서 · 규칙 · 제거 수 결합이 불완전하다 (computed 끝 cert None · removed ≠ n_unsplit · 임의 bracket_rule · n_unsplit 10⁴⁰⁰ · 다른 회로 증서 통과)",
-      "note": "판정문 §4 RCA2-04 · 영향 = 옮겨온 기록 · 다른 판본 · 재판정의 계약 (정상 producer 오계산 확인 아님 · RCA2-01 을 보장 구간으로 고치려면 함께 닫아야 함) · 자리 (핀 0b3012460) = scripts/ca_ext_svcf.py:196 · 200 · 259 · 투영 :75–77 · 실제 소비자 scripts/run_contract.py:756.  실제 검증기 음성 입력: ratio/G 불일치 · cert.ok False = 거부 · 통과 = computed 끝 cert None · n_unsplit 2 인데 removed 0 · 임의 비어 있지 않은 bracket_rule · n_unsplit 10⁴⁰⁰ (예외가 아니라 의미 범위 검사 없음) · 다른 실제 회로의 성공 증서를 붙인 정상 G/ratio 기록 (투영이 목표량 숫자를 버려 붙임 검사 불가).  최소 해결 = 등록 R 의 computed 끝마다 현 증서 필수 · 각 G / target / 분자 및 등록 rule / version 결합 · 실제 census 와 제거 수 · 셀 수 일관성 · 진단 전용 무증서 실행은 별도 지위 (R 판정 입력으로 승격 안 함).  재현 = geometry/run_review.py · certificate_removed_from_certified_run · foreign_certificate_accepted. ★ 10-23 묶음 A2 (수정 지시서 `docs/reviews/rint2_rr_fix_evidence_20261023/BRIEF.md` · 1저자 10-23 *\"다 권고대로 해줘\"* = 수정 계획 Q1–Q8 (가) · §3 · Q1 (가)) = claimed_fixed — 시험 먼저 `ad32382f6` · 고침 `df0f6f01c` (`ca_ext_svcf.sv_cf_problem` → `_cert_problem` · `_census_problem` · `_interval_problem` · `_removed_problem` — 증서 구간 기록의 비를 싣는 끝마다 현 증서 · 그 끝 G 와 결합 (게시 판 전류 정확 · 목표량 구간을 `step3_conv_cert.target_judge` 로 다시) · 분자 G_full = 주 해 증서 = 솔브 기록 `I_bot_code` · 결합 칸 = 증거 fp · 등록 괄호 규칙만 · 수 칸 0 이상 정수 · int64 범위 · 제거 성분 = 못 가른 덩어리 수 · 제거 셀 ≥ 성분 · census 일관 (못 가른 ≤ 다리 놓는 ≤ 닿는 성분) · 사슬 read_run 이 기록의 주 해 증서 = 그 런의 step3 주 증서를 대조 (다르면 CA_EXT_RECORD · 새 이름 없음)) · 등록 R `435e73732` · 확인 = Codex 재검토. ★ 10-23 사전 공격 리뷰 (`docs/reviews/rint2_rr_fix_evidence_20261023/preattack/PREATTACK_A.md`) C1 고침 `5182fb1fc` (끝 증서 ↔ 끊은 그래프 — 투영이 증서 위상 수 `CERT_TOPO_KEYS` 를 싣고 `_topo_problem` 이 끝마다 주 해 증서 · 기록의 끊은 수와 대조 · 생산자 보장 관계 + 등록 핵심 조건 (끊었으면 주 해보다 작다 · 같은 수 = 거부) · 사슬 read_run 이 주 해 증서 위상 수도 런의 주 증서와 대조) · C5 고침 `5cf848157` (기록 종류 · 끊기 규칙 = 등록된 생산자 이름 `CJUNC_SV_CF_KIND` · `CJUNC_SV_CF_RULE` 만 · 투영이 규칙을 옮긴다 · 이름 대조뿐 · 옛 이름 고정물 3 곳 고침) · 확인 = Codex. ★ 10-23 묶음 A″ (1저자 Q17 (가)) FLOAT 정상 기록 거짓 거부 고침 `e91a1f65e` · Q18 (가) 일관 편집 = 한정 (Codex 회차 ①) — 생산자 `carbon_junction` 이 끝마다 판에 닿는 성분에서 끊은 쌍 수 `n_reach_pairs_cut` 를 따로 기록한다 (주 해 그래프에서 판에 닿는 성분에 속한 dof 쌍 가운데 그 끝에서 이어 주던 간선이 모두 빠진 쌍 수 · 병렬 간선 = 한 쌍 = 증서 `target_n_edges` 와 같은 셈 · 옛 칸 n_sv_faces_cut · n_edges_cut · n_plate_couplings_cut 그대로) · 검증기 `_topo_problem` ⑥ = 그 수로 판단 (아래 끝 새 칸 > 0 ⇔ 증서 위상 수 ≠ 주 해 · 위 끝 새 칸 + 판 결합 > 0 ⇔ ≠ 주 해) · ⑧ 생산자 보장 관계만 (새 칸 ≤ n_sv_faces_cut · 아래 끝 새 칸 ≤ 위 끝 새 칸 ≤ 아래 끝 + n_edges_cut) · 변이 표 (새 칸 · 새 규칙 한 줄 되돌림 24) 첫 판 22 잡음 → 생존 2 (P8 위 끝 판 결합 다시 셈 · V13 새 칸 꼴 검사) 상주 시험 `d474ea0c5` · Q18 (가) 한정 = (a) · (b) 는 새 칸까지 0 으로 고쳐야 받음 (새 칸이 남으면 ⑧ 이 거부) · (c) 그대로 받음 · 새 칸만 0 으로 고친 (a′) · (b′) 는 정직한 FLOAT · 위 끝 FLOAT 기록과 같은 꼴이라 받음 (가를 수 없다 · 묶음 A″ 보고 결정 필요) · `carbon_junction.py` = S0_SAME_FILES (S0 단계 1 보고는 끝 핀에서 다시 만든다) · 확인 = Codex. · ★ 10-23 2차 사전 공격 (P3 · 같은 문서 §A): X3 (아래 끝 ← 위 끝 증서 · 보수 쪽 UNCHECKED → DEPENDENT) · X5 (새 칸 꼴 · ⑧ 관계 검사가 computed 끝이 있을 때만 · 판정 무영향) — 1저자 10-23 Q21 (가) = 묶음 B 에서 · 한정 경계: k = 0 기록은 새 칸 편집 없이도 (A2 꼴 그대로) 받는다 (13 고정물에서 판정 무변 · 해가 되는 기록 못 찾음 · 원리상 가능 = 추정) — Codex ① 요청서 한정 문장 \"새 칸만 0 으로 맞춘\" → \"k = 0 기록은 새 칸 편집 없이도\" 로 넓힌다.",
+      "note": "판정문 §4 RCA2-04 · 영향 = 옮겨온 기록 · 다른 판본 · 재판정의 계약 (정상 producer 오계산 확인 아님 · RCA2-01 을 보장 구간으로 고치려면 함께 닫아야 함) · 자리 (핀 0b3012460) = scripts/ca_ext_svcf.py:196 · 200 · 259 · 투영 :75–77 · 실제 소비자 scripts/run_contract.py:756.  실제 검증기 음성 입력: ratio/G 불일치 · cert.ok False = 거부 · 통과 = computed 끝 cert None · n_unsplit 2 인데 removed 0 · 임의 비어 있지 않은 bracket_rule · n_unsplit 10⁴⁰⁰ (예외가 아니라 의미 범위 검사 없음) · 다른 실제 회로의 성공 증서를 붙인 정상 G/ratio 기록 (투영이 목표량 숫자를 버려 붙임 검사 불가).  최소 해결 = 등록 R 의 computed 끝마다 현 증서 필수 · 각 G / target / 분자 및 등록 rule / version 결합 · 실제 census 와 제거 수 · 셀 수 일관성 · 진단 전용 무증서 실행은 별도 지위 (R 판정 입력으로 승격 안 함).  재현 = geometry/run_review.py · certificate_removed_from_certified_run · foreign_certificate_accepted. ★ 10-23 묶음 A2 (수정 지시서 `docs/reviews/rint2_rr_fix_evidence_20261023/BRIEF.md` · 1저자 10-23 *\"다 권고대로 해줘\"* = 수정 계획 Q1–Q8 (가) · §3 · Q1 (가)) = claimed_fixed — 시험 먼저 `ad32382f6` · 고침 `df0f6f01c` (`ca_ext_svcf.sv_cf_problem` → `_cert_problem` · `_census_problem` · `_interval_problem` · `_removed_problem` — 증서 구간 기록의 비를 싣는 끝마다 현 증서 · 그 끝 G 와 결합 (게시 판 전류 정확 · 목표량 구간을 `step3_conv_cert.target_judge` 로 다시) · 분자 G_full = 주 해 증서 = 솔브 기록 `I_bot_code` · 결합 칸 = 증거 fp · 등록 괄호 규칙만 · 수 칸 0 이상 정수 · int64 범위 · 제거 성분 = 못 가른 덩어리 수 · 제거 셀 ≥ 성분 · census 일관 (못 가른 ≤ 다리 놓는 ≤ 닿는 성분) · 사슬 read_run 이 기록의 주 해 증서 = 그 런의 step3 주 증서를 대조 (다르면 CA_EXT_RECORD · 새 이름 없음)) · 등록 R `435e73732` · 확인 = Codex 재검토. ★ 10-23 사전 공격 리뷰 (`docs/reviews/rint2_rr_fix_evidence_20261023/preattack/PREATTACK_A.md`) C1 고침 `5182fb1fc` (끝 증서 ↔ 끊은 그래프 — 투영이 증서 위상 수 `CERT_TOPO_KEYS` 를 싣고 `_topo_problem` 이 끝마다 주 해 증서 · 기록의 끊은 수와 대조 · 생산자 보장 관계 + 등록 핵심 조건 (끊었으면 주 해보다 작다 · 같은 수 = 거부) · 사슬 read_run 이 주 해 증서 위상 수도 런의 주 증서와 대조) · C5 고침 `5cf848157` (기록 종류 · 끊기 규칙 = 등록된 생산자 이름 `CJUNC_SV_CF_KIND` · `CJUNC_SV_CF_RULE` 만 · 투영이 규칙을 옮긴다 · 이름 대조뿐 · 옛 이름 고정물 3 곳 고침) · 확인 = Codex. ★ 10-23 묶음 A″ (1저자 Q17 (가)) FLOAT 정상 기록 거짓 거부 고침 `e91a1f65e` · Q18 (가) 일관 편집 = 한정 (Codex 회차 ①) — 생산자 `carbon_junction` 이 끝마다 판에 닿는 성분에서 끊은 쌍 수 `n_reach_pairs_cut` 를 따로 기록한다 (주 해 그래프에서 판에 닿는 성분에 속한 dof 쌍 가운데 그 끝에서 이어 주던 간선이 모두 빠진 쌍 수 · 병렬 간선 = 한 쌍 = 증서 `target_n_edges` 와 같은 셈 · 옛 칸 n_sv_faces_cut · n_edges_cut · n_plate_couplings_cut 그대로) · 검증기 `_topo_problem` ⑥ = 그 수로 판단 (아래 끝 새 칸 > 0 ⇔ 증서 위상 수 ≠ 주 해 · 위 끝 새 칸 + 판 결합 > 0 ⇔ ≠ 주 해) · ⑧ 생산자 보장 관계만 (새 칸 ≤ n_sv_faces_cut · 아래 끝 새 칸 ≤ 위 끝 새 칸 ≤ 아래 끝 + n_edges_cut) · 변이 표 (새 칸 · 새 규칙 한 줄 되돌림 24) 첫 판 22 잡음 → 생존 2 (P8 위 끝 판 결합 다시 셈 · V13 새 칸 꼴 검사) 상주 시험 `d474ea0c5` · Q18 (가) 한정 = (a) · (b) 는 새 칸까지 0 으로 고쳐야 받음 (새 칸이 남으면 ⑧ 이 거부) · (c) 그대로 받음 · 새 칸만 0 으로 고친 (a′) · (b′) 는 정직한 FLOAT · 위 끝 FLOAT 기록과 같은 꼴이라 받음 (가를 수 없다 · 묶음 A″ 보고 결정 필요) · `carbon_junction.py` = S0_SAME_FILES (S0 단계 1 보고는 끝 핀에서 다시 만든다) · 확인 = Codex. · ★ 10-23 2차 사전 공격 (P3 · 같은 문서 §A): X3 (아래 끝 ← 위 끝 증서 · 보수 쪽 UNCHECKED → DEPENDENT) · X5 (새 칸 꼴 · ⑧ 관계 검사가 computed 끝이 있을 때만 · 판정 무영향) — 1저자 10-23 Q21 (가) = 묶음 B 에서 · 한정 경계: k = 0 기록은 새 칸 편집 없이도 (A2 꼴 그대로) 받는다 (13 고정물에서 판정 무변 · 해가 되는 기록 못 찾음 · 원리상 가능 = 추정) — Codex ① 요청서 한정 문장 \"새 칸만 0 으로 맞춘\" → \"k = 0 기록은 새 칸 편집 없이도\" 로 넓힌다. ★ 10-26 Codex 회차 ① (핀 9bec6b764 · 판정문 §2 · §3) = 부분 (재개방) — 옛 F3 의 무증서 · 다른 증서 · 잘못된 rule / kind · 제거 수 오류는 막힘 · 그러나 고유 연결쌍 수가 그대로인 병렬 간선 삭제 (k=0) 에서는 같은 런의 주 증서를 끝 증서로 복사해도 통과 = RR1-01.  닫는 조건 = RR1-01 해결 (끝 가중 그래프 귀속).  우리 트리 재현 = 판정값 차이 0 (docs/reviews/codex_rint2_rr_round1_evidence_20261026/_repro_ours_20261026/README.md).",
       "evidence_tests": [
         "scripts/test_ca_ext_b6.py (424/424 · 10-23 A4 판 · A2 고치기 전 357 PASS / 31 FAIL) — S8n (판정문 F3 다섯 꼴 + 같은 부류 — 끝 증서 없음 · 외부 · 결합 안 된 증서 · 등록 밖 괄호 규칙 · 제거 수 · 10^400 · census · I_bot_code · fp 증거 불일치 · 판정 근거 칸 변조 · 실제 소비자 run_contract.ca_ext_record_ok) · S8q (검증기 상수 = 생산자 상수) · SP15",
         "scripts/test_rint_r_chain.py (231/231 · 10-23 A4 판) — V30 (기록의 주 해 증서 ≠ 그 런의 step3 주 증서 → CA_EXT_RECORD)",
@@ -12768,7 +12776,7 @@
     {
       "id": "RCA2-06",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-22 Rint ② 설계·구현 재검토 (검토 핀 0b3012460 · 비교 기준 5dc6f7f0b · 독립 해석 회로 · 실제 생산 함수 호출 · 작은 합성 S0 census 본체 · 실침대 · 생산 · 전체 CLI 실행 없음)",
       "opened_in": "docs/reviews/codex_review_rint2_rereview_20261022.md",
@@ -12782,7 +12790,11 @@
         "docs/reviews/codex_rint2_rereview_evidence_20261022/geometry/geometry_results.json",
         "docs/reviews/codex_rint2_rereview_evidence_20261022/_repro_ours_20261022/README.md"
       ],
-      "claimed_fixed_sha": "afa5cad8b"
+      "claimed_fixed_sha": "afa5cad8b",
+      "verified_by": "codex",
+      "verified_sha": "9bec6b764",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round1_20261026.md",
+      "verified_scope": "판정문 §2 RCA2-06 = 닫힘 — F4 두 성분 시험이 첫 성분만 제거하는 변이를 잡음 · F6 실제 producer census 불일치가 ca_ext_record_ok 를 거쳐 구조화된 SV_UNCHECKED."
     },
     {
       "id": "RCA2-07",
@@ -12802,7 +12814,7 @@
     {
       "id": "RCA2-08",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-22 Rint ② 설계·구현 재검토 (검토 핀 0b3012460 · 비교 기준 5dc6f7f0b · 독립 해석 회로 · 실제 생산 함수 호출 · 작은 합성 S0 census 본체 · 실침대 · 생산 · 전체 CLI 실행 없음)",
       "opened_in": "docs/reviews/codex_review_rint2_rereview_20261022.md",
@@ -12816,12 +12828,16 @@
         "docs/reviews/codex_rint2_rereview_evidence_20261022/certificate/results.json",
         "docs/reviews/codex_rint2_rereview_evidence_20261022/_repro_ours_20261022/README.md"
       ],
-      "claimed_fixed_sha": "ddbb6cee3"
+      "claimed_fixed_sha": "ddbb6cee3",
+      "verified_by": "codex",
+      "verified_sha": "9bec6b764",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round1_20261026.md",
+      "verified_scope": "판정문 §2 RCA2-08 = 닫힘 — 원 5 노드 · U 만 · W 만 · 허용폭 넘침 모두 구조화 실패 · 정상 20 회로 증서 수정 전과 같음.  모든 진단 합산의 무경고 보장은 아님 (RR1-02)."
     },
     {
       "id": "RCA2-09",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-22 Rint ② 설계·구현 재검토 (검토 핀 0b3012460 · 비교 기준 5dc6f7f0b · 독립 해석 회로 · 실제 생산 함수 호출 · 작은 합성 S0 census 본체 · 실침대 · 생산 · 전체 CLI 실행 없음)",
       "opened_in": "docs/reviews/codex_review_rint2_rereview_20261022.md",
@@ -12837,7 +12853,11 @@
         "scripts/test_rint_r_chain_e2e.py (16/16 · 10-23 A′ 판)",
         "docs/reviews/rint2_rr_fix_evidence_20261023/preattack/PREATTACK_A.md"
       ],
-      "claimed_fixed_sha": "720e401eb"
+      "claimed_fixed_sha": "720e401eb",
+      "verified_by": "codex",
+      "verified_sha": "9bec6b764",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round1_20261026.md",
+      "verified_scope": "판정문 §2 RCA2-09 = 닫힘 — 최종 추정량과 이미 구한 origin 각각에서 증서 구간의 R 순서 모순 검사 · 원 4.2 / 4.7 / 4.4 와 가려지지 않은 origin 반례 검출."
     },
     {
       "id": "SELF-129",
@@ -12889,7 +12909,7 @@
     {
       "id": "SELF-132",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "1저자 10-24 kgy 출력 (S0 시험 FAIL: E1 | E11 | R | R8 | A · 단계 1 폴더에 payload 로그만) → claude 가 Python 3.8.20 · numpy 1.24.4 · scipy 1.10.1 재현 환경에서 같은 5 개 재현",
       "opened_in": "docs/reviews/rint2_py38_compat_evidence_20261024/README.md",
@@ -12901,12 +12921,16 @@
         "docs/reviews/rint2_py38_compat_evidence_20261024/logs/check_nextafter.out (160만 쌍)",
         "scripts/test_carbon_junction.py QD6x"
       ],
-      "claimed_fixed_sha": "89fc47011"
+      "claimed_fixed_sha": "89fc47011",
+      "verified_by": "codex",
+      "verified_sha": "9bec6b764",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round1_20261026.md",
+      "verified_scope": "판정문 §2 · §6 SELF-132 = 해당 수정 닫힘 — R 경로 Python 3.8 호환 (강제 _nextafter 가지 200,169 쌍 불일치 0 · 제출 3.8.20 / NumPy 1.24.4 / SciPy 1.10.1 11 묶음 로그 확인) · 모든 SciPy API · 모든 기계 비트 동일 승인 아님."
     },
     {
       "id": "SELF-133",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "claude 10-24 (SELF-132 의 3.8 재현에서 test_step3_conv_cert K4 만 고친 뒤에도 실패)",
       "opened_in": "docs/reviews/rint2_py38_compat_evidence_20261024/README.md",
@@ -12921,7 +12945,11 @@
         "docs/reviews/rint2_py38_compat_evidence_20261024/logs/stepB/conv_cert_after_py38.out",
         "docs/reviews/rint2_py38_compat_evidence_20261024/logs/stepB/kgy_step/summary.txt"
       ],
-      "claimed_fixed_sha": "c8056df9c"
+      "claimed_fixed_sha": "c8056df9c",
+      "verified_by": "codex",
+      "verified_sha": "9bec6b764",
+      "verified_in": "docs/reviews/codex_review_rint2_rr_round1_20261026.md",
+      "verified_scope": "판정문 §2 · §6 SELF-133 = 해당 수정 닫힘 — _cg_v112 = R 경로 실수 float64 SPD · 명시 전처리기 의미 보존 (144 사례 해 bytes · info · callback 수 같음) · SciPy 공개 API 대체물 아님."
     },
     {
       "id": "SELF-134",
@@ -12938,6 +12966,26 @@
         "docs/reviews/rint2_rr_fix_evidence_20261023/q9_predict_units_design.md 개정 4 결정 Q7 줄"
       ],
       "claimed_fixed_sha": "f4ac30491"
+    },
+    {
+      "id": "RR1-01",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-26 Rint ② 재검토 회차 ① (검토 핀 9bec6b764 · 비교 기준 0b3012460 · Windows Python 3.12.14 / NumPy 2.5.3 / SciPy 1.16.3 · 작은 합성 회로 · 실제 생산 · 계약 · 판정 함수 · 정확 분수 검산 · DEM / GPU / S0 실침대 / R 캠페인 · 전체 게이트 실행 없음)",
+      "opened_in": "docs/reviews/codex_review_rint2_rr_round1_20261026.md",
+      "title": "알려진 k=0 경계가 실제 거짓 clear 를 만든다 — 병렬 간선 하나만 지워 고유 연결쌍 · DOF · 판 결합 수가 같으면, 같은 런의 주 증서를 끝 증서로 복사해도 ca_ext_record_ok = (True, None) · 실제 전도도 1.707 % 차 · 문턱 1.01 에서 SV_DEPENDENT → clear",
+      "note": "판정문 §3 RR1-01 · 영향 = RCA2-04 끝 증서 귀속 · \"위상 수가 같으면 같은 반사실 계를 인증한다\" 는 해석 (정상 producer 오계산 · RCA2-01 구간 산술 오류 아님 · 등록 문턱에서 실침대 오판 주장 아님 · 생산 문턱 미봉인 · 1.01 = 허용 예시).  자리 (핀 9bec6b764) = scripts/ca_ext_svcf.py:641–647 · scripts/carbon_junction.py:2162–2191 · 2387–2404 · 소비자 scripts/run_contract.py:749–760 · scripts/rint_r_chain.py:1441–1446 (주 증서 일치 검사는 이 편집에서 참).  회로 = 상주 PAR 기하 (test_carbon_junction QD7 · c=1) 의 셋째 polyline 앞에 (0.5,1.5,9.5) · 격자 (7,3,10) · h 1 µm · Rj 1,000 Ω · 조립 간선 항 22 ↔ 21 · 고유 쌍 21 ↔ 21 · DOF / 판 결합 23 / 2 / 2 같음 · G 19.95024875621891 ↔ 19.615384615384567 · n_sv_faces_cut 1 · n_reach_pairs_cut 0 · 정직 인증 비 [1.0170715052189403, 1.0170715052190658] · 정확 유리수 소거 비 1.0170715052190031.  최소 해결 = 끝마다 실제로 푼 가중 그래프 정체성 (병렬 항 또는 합산 전도도 · DOF 식별 · 판 결합 정규화 원장 / 지문) 을 증서와 묶고 편집 가능한 SV 기록 밖의 기대 끝 그래프와 대조 · census 외부 결합만으로 안 닫힘 · G_cut != G_full 규칙 · 원시 간선 개수 검사 · 자기 신고 사본 비교 금지.  재현 = evidence/agent_sv/probe_actual.py · probe_weighted.py · 우리 트리 재현 판정값 차이 0 (docs/reviews/codex_rint2_rr_round1_evidence_20261026/_repro_ours_20261026/README.md).  수정 계획 = docs/reviews/rint2_rr1_fix_plan_20261026.md Q1 · Q2 (1저자 비준 대기)."
+    },
+    {
+      "id": "RR1-02",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-26 Rint ② 재검토 회차 ① (검토 핀 9bec6b764 · 비교 기준 0b3012460 · Windows Python 3.12.14 / NumPy 2.5.3 / SciPy 1.16.3 · 작은 합성 회로 · 실제 생산 · 계약 · 판정 함수 · 정확 분수 검산 · DEM / GPU / S0 실침대 / R 캠페인 · 전체 게이트 실행 없음)",
+      "opened_in": "docs/reviews/codex_review_rint2_rr_round1_20261026.md",
+      "title": "step3_conv_cert 의 raw KCL 진단 합이 무보호 NumPy sum — 유한 U 인데 target_kcl_raw = inf · RuntimeWarning (warnings-as-errors 면 예외) · 잘못된 인증은 없음 (비차단)",
+      "note": "판정문 §6 RR1-02 · 자리 (핀 9bec6b764) = scripts/step3_conv_cert.py:509 (비교 핀 :494 와 같음) · 독립 노드 3 · gb 8e307 · gt 1 · phi .2 → U 1.5360000000000001e308 · target_kcl_raw inf · ok False · pass_b / c / d False.  RCA2-08 의 명시 최소 해결은 다시 열지 않음 · \"모든 유한 입력의 모든 중간 넘침을 무경고 NOT_CERTIFIABLE\" 전칭 금지 → 진단 합 보호 또는 표현 축소.  재현 = evidence/agent_runtime/probe_diagnostic_overflow.py · 우리 트리 재현 같음.  수정 계획 = docs/reviews/rint2_rr1_fix_plan_20261026.md Q3."
     }
   ]
 }

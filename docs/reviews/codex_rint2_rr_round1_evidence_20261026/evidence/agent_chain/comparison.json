@@ -1,0 +1,83 @@
+{
+  "pin": "9bec6b7646374daed0d3edbb9647f9f46d302750",
+  "baseline": "0b3012460fb8e8b7d53484b0efe399e2dc506aec",
+  "verified": [
+    {
+      "side": "repo",
+      "path": "scripts/rint_r_chain.py",
+      "sha256": "e94a44295c28c171ba956fed994322eecb7c546e96ff6f52bf15af3c3dd22e03",
+      "git_blob": "7a5cd1b026e11bfbc4d7279977fbb7324222013f"
+    },
+    {
+      "side": "repo",
+      "path": "scripts/run_contract.py",
+      "sha256": "59d645e3759f33cade058b3850d05429318e634175f4ad6b55cf7cb330421070",
+      "git_blob": "06bd2ac368710827a8aa7216f2ce3fbf0b679696"
+    },
+    {
+      "side": "repo",
+      "path": "scripts/ca_ext_svcf.py",
+      "sha256": "1cc7b54ece122dbc920f907b723af302efbc4b72c6835120c235e9a385d09cfe",
+      "git_blob": "f4b1a36094e6048aa8090260750eefa44d81f7aa"
+    },
+    {
+      "side": "repo",
+      "path": "scripts/step3_conv_cert.py",
+      "sha256": "7a4424fe56263a50a88ffcc2ba0b906e4f4a8856ed98c1a4ef16af51c4d7fbf7",
+      "git_blob": "59280914833c69ae015d524939d4ed340c4a13d5"
+    },
+    {
+      "side": "baseline",
+      "path": "scripts/rint_r_chain.py",
+      "sha256": "4ad14bc0f4409d95ef91627c6d9a0d99154a177455b236973900feae90613eb6",
+      "git_blob": "1e5aea3f7be17742b59ad0ea0c219fe27665d537"
+    },
+    {
+      "side": "baseline",
+      "path": "scripts/run_contract.py",
+      "sha256": "59d645e3759f33cade058b3850d05429318e634175f4ad6b55cf7cb330421070",
+      "git_blob": "06bd2ac368710827a8aa7216f2ce3fbf0b679696"
+    },
+    {
+      "side": "baseline",
+      "path": "scripts/ca_ext_svcf.py",
+      "sha256": "e96dc4f22ed9212192ff5425fbcedcbb18e0c2c2d9a1c55caaf8e09b02e0e080",
+      "git_blob": "29aad3bc3744360d002113112b2601c1f16f724d"
+    },
+    {
+      "side": "baseline",
+      "path": "scripts/step3_conv_cert.py",
+      "sha256": "64894f4a908a24e35d08da967a6597d5cda3c9d8370c8d72c22a8b07c9ed23b9",
+      "git_blob": "bfd3fc7afdc74e34a0e6f783711e6bee922c699c"
+    }
+  ],
+  "baseline_adapted_vs_original": {
+    "exact_leaves": 466,
+    "differences": []
+  },
+  "current_vs_baseline_except_DBE_R_monotonicity": {
+    "exact_leaves": 457,
+    "differences": []
+  },
+  "changed_section": {
+    "before": {
+      "R": [
+        0.5,
+        1.0,
+        2.0
+      ],
+      "sigma_mScm": [
+        4.2,
+        4.7,
+        4.4
+      ],
+      "same_p_all_pass": true,
+      "verdict": "PASS_INFORMATIVE",
+      "scope": "missing invariant guard, not a production physical counterexample"
+    },
+    "after": {
+      "stopped": "R_MONOTONE_VIOLATION",
+      "cause": "σ_DBE(P0, c 0) 의 증서 구간이 R_j 단조와 모순 — R_j_lo (R 작음) 구간의 위끝 < R_j0 (R 큼) 구간의 아래끝 (같은 origin · 같은 최종 추정량 arm0 · 추가 풀이 없음 · 구현 결함 의심 · 판정문 §8 RCA2-09)"
+    }
+  }
+}
