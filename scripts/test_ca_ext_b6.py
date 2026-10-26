@@ -1481,6 +1481,21 @@ def t_states():
         chk(f'S8h‴ 증서 구간 기록의 위 끝에 아래 끝 대비 끊은 쌍 수 없음 → 실제 소비자 거부 (위 끝 ↔ 아래 끝을 판단할 수 없다 · 10-25 묶음 B X3 · X5) [{nm}]',
             not got[0] and isinstance(got[1], str) and got[1].startswith('CAEXT|cjunc| sv_cf|') and '묶음 B' in got[1]
             and 'n_reach_pairs_cut_vs_lower' in got[1], got)
+    #  ★ 10-25 묶음 B5 (변이 보강) 진단 기록 (증서 없는 런 · `diagnostic_uncertified` · 사슬 판정 입력 아님) 의 위 끝 아래 끝 대비 끊은 쌍 수 꼴 —
+    #    위상 관계 (⑧ 새 관계 · ⑨) 는 증서 구간 기록만 보므로 진단 기록의 그 칸 꼴은 `_removed_problem` 이 본다 (음수 · int64 밖 = 거부)
+    dg_ok = deep(mm)
+    _sv_put(dg_ok, proj(_sv_raw('computed', 1.2, n_unsplit=1, ratio_hi=3.4, certs=False)))
+    chk('S8h⁗ 정상 — 진단 기록 (증서 없음 · 덩어리 1 · 위 끝 computed · 아래 끝 대비 끊은 쌍 수 6) 받음 (10-25 묶음 B5 대조의 기준)',
+        RC.ca_ext_record_ok(dg_ok) == (True, None), RC.ca_ext_record_ok(dg_ok))
+    for nm, v in (('음수 −1', -1), ('int64 밖 2**63', 2 ** 63)):
+        raw = _sv_raw('computed', 1.2, n_unsplit=1, ratio_hi=3.4, certs=False)
+        raw['upper']['n_reach_pairs_cut_vs_lower'] = v
+        x = deep(mm)
+        _sv_put(x, proj(raw))
+        got = RC.ca_ext_record_ok(x)
+        chk(f'S8h⁗ 진단 기록 (증서 없음) 의 위 끝 아래 끝 대비 끊은 쌍 수 꼴 → 실제 소비자 거부 (꼴 = `_removed_problem` · 10-25 묶음 B5 변이 보강 — '
+            f'그 줄만 끈 검증기 = 받음) [{nm}]',
+            not got[0] and isinstance(got[1], str) and got[1].startswith('CAEXT|cjunc| sv_cf|') and 'n_reach_pairs_cut_vs_lower' in got[1], got)
     #  ── ★ 10-22 (사전 리뷰 2 회차 PRE2-impl-01 · 02 · 1저자 Q1 (다)) 괄호 칸 — 투영 · 검증기 (위 끝 상태 ↔ 비 꼴 · 못 가른 덩어리 수 ↔ 위 끝 기록) ──
     rb = _sv_raw('computed', 1.0, n_unsplit=1, status_hi='no_through_without_sv')
     pb = proj(rb)

@@ -455,6 +455,8 @@ for i in idx:
             ev_['solve']['I_bot_code'] = float(cm['I_bot'])
             nu_ = ev_['solve']['sv_counterfactual']['n_unsplit_bridging_components']
             ev_['census'].update(n_unsplit_bridging_components=nu_, n_bridging_components=nu_ + 1, n_sdcp_components_touching=nu_ + 2)
+            if isinstance(sv_rule().get('ev_census'), dict):   # ★ 10-25 묶음 B5 (변이 보강) — 증거 census 만 바꿈 (기록 사본이 없는 칸)
+                ev_['census'].update(sv_rule()['ev_census'])
         st = {'sigma_e_eff_S_cm': si, 'cg_info': 0, 'unconverged': False, 'cg_resid': 3e-13, 'n_dof': 1234, 'vox_um': vox,
               'status': 'complete', 'manifest': man_i, 'conv_cert': cm, 'cg_iters': 321}
     json.dump({'mpm_metrics': {'step3': st}}, open(os.path.join(out, 'p2_%s_sph_fa_cj%s_c%s_a%d.json' % (kit[4:], tag, c, i)), 'w'))
@@ -4877,6 +4879,31 @@ def t_Y10():
     return all(y_stopped(r) for r in rs), [(r['rc'], stop_code(r), n_calls(r['world'])) for r in rs]
 
 
+@check('Y11', '③ 한 단계 안 사슬 ↔ 러너 HEAD — 러너 = 다른 체크아웃 (깨끗 · HEAD b · 코드 밖 파일 notes.txt 하나만 더해 커밋 · 대조 파일 18 · 러너 파일 '
+              '같음) → 사다리 CODE_PIN_MISMATCH · 러너 0 회 · 사유에 HEAD (★ 10-25 묶음 B5 변이 보강 — HEAD 대조 줄만 끈 사슬 = 받아 돈다)')
+def t_Y11():
+    def go():
+        rsd = clone_repo('Y11', edit=lambda sd: (Path(sd) / 'notes.txt').write_text('다른 판 (시험 · 코드 밖)\n', encoding='utf-8'))
+        return y_ladder('Y11', runner=rsd / 'sdcp_gain_vox015_8arm.sh')
+    r = scen('Y11', go)
+    return y_stopped(r) and 'HEAD' in y_why(r), (r['rc'], stop_code(r), n_calls(r['world']), y_why(r)[-200:])
+
+
+@check('Y12', '③ 러너 파일 = 사슬 폴더의 러너 — 같은 깨끗한 체크아웃 (HEAD 같음 · 사슬 폴더 = 러너 폴더 · 대조 파일 18 같음) 의 추적된 다른 러너 파일 '
+              '(other_runner.sh = 러너 + 주석 한 줄 · 커밋) 로 사다리 → CODE_PIN_MISMATCH · 러너 0 회 · 사유에 러너 파일 (★ 10-25 묶음 B5 변이 보강 — '
+              '러너 sha256 대조 줄만 끈 사슬 = 그 파일로 돈다)')
+def t_Y12():
+    def edit(sd):
+        txt = (Path(sd) / 'sdcp_gain_vox015_8arm.sh').read_text(encoding='utf-8')
+        (Path(sd) / 'other_runner.sh').write_text(txt + '# 다른 러너 (시험)\n', encoding='utf-8')
+
+    def go():
+        rsd = clone_repo('Y12', edit=edit)
+        return y_ladder('Y12', sd=rsd, runner=rsd / 'other_runner.sh')
+    r = scen('Y12', go)
+    return y_stopped(r) and '러너 파일' in y_why(r), (r['rc'], stop_code(r), n_calls(r['world']), y_why(r)[-200:])
+
+
 # ── ★ 10-25 묶음 B (RCA2-03 · 1저자 10-23 Q3 (가) · 판정문 §4 F8) 같은 침대 — S0 보고의 원 입력 (역할 파일 sha256 · 크기 · metrics 상자 · 두께 ·
 #    설정 = 킷 payload 호출부) 을 사슬 요약에 보존 · R 런 직전 (사다리 = SBE · 예측 = SBE · DBE) 과 판정 (--root) 때 S0 와 같은 발견 함수
 #    (`ca_s0_census.kit_input_record`) 로 실제 킷을 다시 해시해 대조 (경로 = 대조 밖 · 기계마다 자기 사본) · 파생 격자 지문 (off 격자 sid) = 같은
@@ -5192,6 +5219,20 @@ def t_Q06():
         return predict('Q06_pred', world('Q06_pred'), lads)
     r = scen('Q06', go)
     return (r['rc'] == 0 and (r['sum'] or {}).get('status') == 'PREDICTED', (r['rc'], stop_code(r), y_why(r)[-160:]))
+
+
+@check('Q07', '증거 census 대조 (기록 사본이 없는 칸) — SV 기록의 census 사본 = 못 가른 덩어리 수만 (가짜 러너 원 기록 꼴 · 다리 · 닿는 성분 사본 없음 = '
+              '기록 계약이 그 칸을 건너뜀) · 증거 census 다리 5 · 닿는 성분 6 (봉인 1 · 2 · 못 가른 0 = 봉인 그대로 · 기록 안 일관) → 예측 '
+              'S0_REPORT_MISMATCH · 사유에 n_bridging_components (★ 10-25 묶음 B5 변이 보강 — 증거 census 대조 줄만 끈 사슬 = 기록 사본 대조가 '
+              '그 칸을 건너뛰어 받는다)')
+def t_Q07():
+    rule = {'status': 'computed', 'ratio': 1.2, 'ev_census': {'n_bridging_components': 5, 'n_sdcp_components_touching': 6}}
+
+    def go():
+        return predict('Q07', world('Q07', dict(PW, sv_cf=[rule])), [s_main('P0')['out'], s_main('P1')['out']])
+    r = scen('Q07', go)
+    return (r['rc'] == 3 and stop_code(r) == 'S0_REPORT_MISMATCH' and 'n_bridging_components' in y_why(r),
+            (r['rc'], stop_code(r), y_why(r)[-200:]))
 
 
 @check('N07', '★ PF2 E (PRE2-impl-03) S0 계획 중복 칸 ("gap_tol" 둘 · 등록 S0 줄 = 그 바이트의 sha256) → S0_PLAN_INVALID · 사유 = 중복 칸 '
