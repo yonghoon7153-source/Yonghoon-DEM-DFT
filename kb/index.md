@@ -1,13 +1,15 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-26 · managed-files: 547
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-26 · managed-files: 549
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 338건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 340건)
 - 2026-10-26 · `kb/reports/weekly_2026_10_25.md` — 주간 정리 2026-10-19 ~ 10-25 (주간보고 초안) · 초안 (2026-10-26 · 도는 계산은 마지막 실측 기준 — kg…
+- 2026-10-26 · `kb/projects/handoff_2026_10_26_return_to_origin.md` — 본 세션 복귀 카드 — 대피 브랜치 claude/evac-2026-10-22 (82 커밋) 를 friendly 로 · fast-forward (2026-10-26) · 발송 대기 — 사용자가 §0 프롬프트를 본 세션 (friendly) …
+- 2026-10-26 · `kb/projects/merge_request_2026_10_26.md` — 머지 요청 — 대피 브랜치 claude/evac-2026-10-22 → claude/friendly-meitner-lldvar (2026-10-26 · fast-forward · 충돌 0) · 최종 — 10-26 실측 (friendly 끝 = 대피 인계 카드 a…
 - 2026-10-26 · `kb/questions/li3nd_pristine_reconstruction_2026_09_02.md` — Li₃Nd pristine 3×3×3 이 0.65 eV 재구성한다 — NEB 기반 구조도 같은가? · open [open]
 - 2026-10-23 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-10-23 · `kb/reviews/li2s1a_DA_prompt_li2s_glass_bmeas_650k_readout_2026_10_19.md` — DA 프롬프트 — li2s B 측정 가능 조건 카드 ① 단계 판독: N_B 5/5 · 골격 이동 2 (이량체 다리 교환) · R 집합 3 → R 불가 · A 650 K 여부 · 모델 검증 (UMA–PBE p1 · p1 · BVSE) · 트랙 마감 제안 · 새 트랙 여부 · 초안 — 발송 전 (사용자가 보낸다 · 발송판 `kb/projects…
@@ -25,8 +27,6 @@
 - 2026-10-20 · `kb/papers/b2o3_bo_lpsc16_methods_2026_10_20.md` — B₂O₃ 원고 (BO-LPSC1.6 · paper #2) Computational Methods — 기록대로 · compact 판 (BML 가이드 반영) · 진행
 - 2026-10-19 · `kb/reviews/li2s1a_CX_prompt_li2s_glass_control_readout_2026_10_14.md` — CX 프롬프트 — li2s 소셀 유리 대조 계 B 600 K 판독: 규칙 적용 갈래 c2 (N_B 1/5) · 결과 전 선택 셋 확인 · 트랙 끝 제안 · 발송됨 (사용자 · 발송일 기록 없음 · 발송판 `kb/project…
 - 2026-10-19 · `kb/reviews/li2s1a_CX_reply_li2s_glass_control_readout_2026_10_19.md` — 회신 CX — 외부 1저자 (li2s 소셀 유리 대조 계 B 600 K 판독): Q-CX-1 c2 확정 · 문장 안에 단서 (경계 4 · 미통과 0 · C1 5/5) · 잣대 비대칭 한 줄 · N_eff 옆 금지 문구 · Q-CX-2 셋 수용 (③ 대조 잡은 상시 절차로) · Q-CX-3a 650 K 두 계 + Tg 거리 한계 결과 전 · 3b 순차 · 3c 문턱 5 + 통과 런도 네 지표 분포 기록 · p90² 포화 예상 · 3d 이 카드로 닫음 + 닫기 전 비용 0 둘 (A T₅₀ 네 시드 · 결정 Li₃PS₄ 1.88 의 상·출처) · 담금질 발견 둘 · 미해결 목록 7 · 수령 (2026-10-19 · 사용자 붙여넣기 'li2S는 이렇게 회…
-- 2026-10-17 · `kb/reviews/codex_CZ_prompt_wad_outsourcing_round2_bundle_2026_10_17.md` — CZ 프롬프트 — W_ad 외주 2차 묶음 리뷰: 탄소 P2′ · C–C · 은 a4 VASP 묶음 (코드 · 러너 사다리 · 판정 계약 · 검사기·집계기 · 봉인) · 발송 승인 여부 · 발송 2026-10-22 (기준 커밋 8d41e4e0 · 묶음 MAN…
-- 2026-10-16 · `kb/seminars/Research_Seminar_2026_10_13_cascade_script_ko.md` — 연구세미나 2026-10-13 — cascade 진행 브리핑 발표 대본 (장별) · 진행
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -444,7 +444,7 @@
 - `kb/reports/weekly_2026_10_04.md` — 주간 정리 2026-09-28 ~ 10-04 (주간보고 초안)  (2026-10-04 · 초안 (2026-10-04 · 도는 계산은 10-04 17:59 실측…)
 - `kb/reports/weekly_2026_10_25.md` — 주간 정리 2026-10-19 ~ 10-25 (주간보고 초안)  (2026-10-26 · 초안 (2026-10-26 · 도는 계산은 마지막 실측 기준 — kg…)
 
-## projects/ (52)
+## projects/ (54)
 - `kb/projects/HANDOFF_2026_08_31_session.md` — 인수인계 — 2026-08-31 세션 (외주 C-12 AR→AV · 폴라론 S0 · nscf 사고)  (2026-09-03 · 활성)
 - `kb/projects/MULTI_CATEGORY_BATCH_PLAN_v22.md` — Multi-Category Multi-Compound Batch Plan — Paper #2 (v4.5.18)
 - `kb/projects/MUST_READ_digital_twin_north_star.md` — 🚨🚨🚨 MUST READ — AI 계산 스크리닝 플랫폼 North Star (구: Digital Twin)
@@ -467,6 +467,7 @@
 - `kb/projects/handoff_2026_10_05_return_to_origin.md` — origin 복귀·통합 카드 — claude/evac-2026-10-02 → claude/friendly-meitner-lldvar (2026-10-05 · no-ff)  (2026-10-05 · 발송 대기 — 사용자가 §0 프롬프트를 origin 세션에 붙여 넣는다)
 - `kb/projects/handoff_2026_10_20_return_to_origin.md` — 본 세션 복귀 카드 — 서브 세션 (10-15 → 10-20) 134 커밋을 본 세션으로 (2026-10-20)  (2026-10-20 · 발송 대기 — 사용자가 §0 프롬프트를 본 세션 (…CTzs) 에 붙…)
 - `kb/projects/handoff_2026_10_22_evacuation.md` — 대피 인계 — 2026-10-22 (friendly 세션 토큰 소진 → 서브 대시보드 세션 · 머지 때 충돌 0 설계 · W_ad 외주 2차 CZ 고침 설계 포함)  (2026-10-22 · 진행)
+- `kb/projects/handoff_2026_10_26_return_to_origin.md` — 본 세션 복귀 카드 — 대피 브랜치 claude/evac-2026-10-22 (82 커밋) 를 friendly 로 · fast-forward (2026-10-26)  (2026-10-26 · 발송 대기 — 사용자가 §0 프롬프트를 본 세션 (friendly) …)
 - `kb/projects/handoff_cei_2026_09_30.md` — CEI (Nd 계면) 인계 카드 — 실험 쪽 1저자에게 작업 양도 (2026-09-30)  (2026-09-30 · 발송 대기 — 외부 리뷰 회신 CM(NO-GO) 이행판 · 사용자가 …)
 - `kb/projects/li2s_glass_bmeas_650k_letter_DA_send_2026_10_19.md` — li2s_glass_bmeas_650k_letter_DA_send_2026_10_19
 - `kb/projects/li2s_glass_control_cost_letter_CS_send_2026_10_05.md` — li2s_glass_control_cost_letter_CS_send_2026_10_05
@@ -478,6 +479,7 @@
 - `kb/projects/li_neb_anode_free.md` — Li Adatom Diffusion on Anode-Free SSB Interphases  (2026-06-01 · setup)
 - `kb/projects/merge_request_2026_09_28.md` — 머지 요청 (최종) — 대피 브랜치 claude/evac-2026-09-28 → claude/friendly-meitner-lldvar  (2026-09-29 · 최종 — 09-29 01:4x KST 실측 (fast-forward …)
 - `kb/projects/merge_request_2026_10_05.md` — 머지 요청 (최종) — 대피 브랜치 claude/evac-2026-10-02 → claude/friendly-meitner-lldvar (2026-10-05)  (2026-10-05 · 최종 — 10-05 밤 실측 (no-ff · 가상 병합 텍스트 충돌 …)
+- `kb/projects/merge_request_2026_10_26.md` — 머지 요청 — 대피 브랜치 claude/evac-2026-10-22 → claude/friendly-meitner-lldvar (2026-10-26 · fast-forward · 충돌 0)  (2026-10-26 · 최종 — 10-26 실측 (friendly 끝 = 대피 인계 카드 a…)
 - `kb/projects/ml_opportunities_from_lab_ppt_2026_07.md` — 랩 ML 파이프라인(TabPFN)과 우리 캠페인의 접점 — 2026-07-28
 - `kb/projects/mlip_next_campaigns_2026_07.md` — MLIP(UMA) 차기 캠페인 후보 제안서 — cascade 확장 7건  (2026-07-27 · proposal)
 - `kb/projects/nd_q2_message_send_2026_10_26.md` — nd_q2_message_send_2026_10_26
