@@ -122,7 +122,7 @@ open(cp, 'w').write(str(n))
 SEEN = ('SIGMA_', 'SDCP_', 'PTFE_', 'CJUNC', 'STEP3_', 'P2_')
 jl('env.jsonl', {k: E[k] for k in sorted(E) if k.startswith(SEEN) or k in (
     'VOX', 'BRIDGE_UM', 'ARMS', 'ARM_LIST', 'KITS', 'OUTDIR', 'LEAN', 'FIBRE_STAMP', 'MPM_PERIODIC_SIGMA', 'EXPECT_BACKEND',
-    'EXPECT_PROTOCOL')})
+    'EXPECT_PROTOCOL', 'MPM_NO_VENV', 'VIRTUAL_ENV')})            # ★ 10-26 B″ (Q4) — 러너 venv 켜기 문 (사슬이 MPM_NO_VENV=1 을 준다)
 kit, out = E['KITS'], E['OUTDIR']
 #  팔 고르기 — 러너 꼴 (ARM_LIST = 정규 목록 · ARMS 와 동시 = 거부 · 0..N−1 접두 = 거부 · 팔 이름 = origin 번호 · OUTDIR 접미사 강제)
 if 'ARM_LIST' in E:
@@ -4995,6 +4995,29 @@ def t_Y13():
     return (ign.returncode == 0 and ident.get('dirty') is False and a['rc'] == 0 and (a['sum'] or {}).get('status') == 'CALIBRATED'
             and y_stopped(b),
             (ign.returncode, ident, a['rc'], stop_code(a), y_why(a)[-160:], b['rc'], stop_code(b)))
+
+
+@check('Y14', '★ 10-26 B″ (1저자 Q4 · 묶음 B 보고 결정 4) 사슬이 러너에 MPM_NO_VENV=1 을 준다 — 부모 셸의 MPM_NO_VENV 없음 · 빈 글자 · "0" '
+              '(VIRTUAL_ENV 없음) 사다리의 러너 env 마다 MPM_NO_VENV = "1" (러너가 $HOME/dem-venv · $SCR/../venv · $SCR/../.venv 를 켜지 않는다 → '
+              'payload = 사슬 프로세스 환경 · 옛 사슬 = 부모 셸 그대로 → 없음 · 빈 글자면 러너가 venv 를 켠다) · dry-run 줄마다 MPM_NO_VENV=1')
+def t_Y14():
+    def go():
+        rs = [ladder(f'Y14_{i}', world(f'Y14_{i}'), law='P0', env={'MPM_NO_VENV': v, 'VIRTUAL_ENV': None})
+              for i, v in enumerate((None, '', '0'))]
+        w = world('Y14_dry')
+        out = Path(TD) / 'runs' / 'Y14_dry'
+        rc, so = call(['--stage', 'ladder', '--law', 'P0', '--target', '1.63', '--runner', FX['runner'], '--root', FX['root'],
+                       '--plan', FX['plan'], '--s0-plan', FX['s0'], '--registration', FX['reg_ok'], '--max-hours', '1', '--out', out,
+                       '--dry-run'] + s0_args(), w, env={'MPM_NO_VENV': None, 'VIRTUAL_ENV': None})
+        return rs, rc, so
+    rs, rc, so = scen('Y14', go)
+    envs = [env_log(r['world']) for r in rs]
+    lines = [x for x in so.splitlines() if 'bash ' in x]
+    return (all(r['rc'] == 0 and (r['sum'] or {}).get('status') == 'CALIBRATED' for r in rs)
+            and all(e and all(x.get('MPM_NO_VENV') == '1' and 'VIRTUAL_ENV' not in x for x in e) for e in envs)
+            and rc == 0 and len(lines) == 5 and all(' MPM_NO_VENV=1 ' in x for x in lines),
+            ([(r['rc'], (r['sum'] or {}).get('status')) for r in rs], [sorted({x.get('MPM_NO_VENV') for x in e}, key=repr) for e in envs],
+             rc, lines[:1]))
 
 
 # ── ★ 10-25 묶음 B (RCA2-03 · 1저자 10-23 Q3 (가) · 판정문 §4 F8) 같은 침대 — S0 보고의 원 입력 (역할 파일 sha256 · 크기 · metrics 상자 · 두께 ·

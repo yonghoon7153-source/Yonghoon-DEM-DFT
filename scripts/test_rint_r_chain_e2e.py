@@ -351,8 +351,9 @@ def s0_args():
 
 
 @contextlib.contextmanager
-def chain_env(ws):
-    """사슬 프로세스 env — 가짜 python3 (PATH 맨 앞) · 그 기록 폴더 · venv 끔 (러너 시험과 같은 꼴) · 러너 축 이름꼴은 걷어낸다."""
+def chain_env(ws, no_venv=True):
+    """사슬 프로세스 env — 가짜 python3 (PATH 맨 앞) · 그 기록 폴더 · venv 끔 (러너 시험과 같은 꼴) · 러너 축 이름꼴은 걷어낸다.
+    ★ 10-26 B″ (Q4) no_venv=False = 사슬 프로세스 env 에 MPM_NO_VENV 를 두지 않는다 (VIRTUAL_ENV 도 없음 — 사슬이 러너에 주는지 보는 시험 E11)."""
     keep = {k: os.environ.get(k) for k in list(os.environ)}
     try:
         for k in list(os.environ):
@@ -361,6 +362,9 @@ def chain_env(ws):
         os.environ.update(PATH=TR.SHIMDIR + os.pathsep + keep.get('PATH', '/usr/bin:/bin'), MPM_NO_VENV='1',
                           PYTHONDONTWRITEBYTECODE='1', PYTHONUTF8='1', PYTHONIOENCODING='utf-8',
                           SHIM_LOG=os.path.join(ws, '_shim'))
+        if not no_venv:
+            os.environ.pop('MPM_NO_VENV', None)
+            os.environ.pop('VIRTUAL_ENV', None)
         yield
     finally:
         os.environ.clear()
@@ -628,6 +632,63 @@ def t_sv_census_dbe():
         stop is not None and stop.code == 'S0_REPORT_MISMATCH' and 'census' in str(stop.cause), (stop and stop.code, stop and str(stop.cause)[:300]))
 
 
+def t_no_venv():
+    """★ 10-26 B″ (1저자 Q4 · 묶음 B 보고 결정 4) — 사슬이 실제 러너에 MPM_NO_VENV=1 을 준다: 사슬 프로세스 env 에 MPM_NO_VENV · VIRTUAL_ENV 가 없고
+    러너가 찾는 venv 자리 (`$SCR/../venv` = 고정물 저장소 뿌리 · .gitignore 의 venv/ = 깨끗함 그대로) 에 미끼 venv (activate = 표지 파일만 씀) 가
+    있어도 러너가 venv 를 켜지 않는다 (러너 로그에 `[p2] venv` 줄 없음 · 표지 파일 없음) · payload 의 실행 인터프리터 (팔 매니페스트 exec_env.python)
+    의 같음 단위 (python 부 판 · numpy · scipy) = 사슬이 단계 요약에 적는 환경 지문 (`env_record` unit) · python 전체 판 같음.
+    ⚠ 판별 = 미끼 (옛 사슬 = 부모 셸 그대로 → 러너가 미끼 · $HOME/dem-venv 를 켠다) · 환경 지문 같음 = 이 시험 틀에서는 구성상 같다 (가짜 python3 심이
+    시험 인터프리터를 부른다 — 확인 칸이지 판별 칸이 아니다)."""
+    import platform
+    import shlex
+    ws = make_root('e11')
+    pp, _sp, _rp = make_plan_and_reg(ws)
+    plan = json.load(open(pp, encoding='utf-8'))
+    sd = code_repo()
+    runner = os.path.join(sd, 'sdcp_gain_vox015_8arm.sh')
+    decoy = os.path.join(CODEREPO['repo'], 'venv')
+    mark = os.path.join(TD, 'e11_decoy_sourced')
+    os.makedirs(os.path.join(decoy, 'bin'))
+    with open(os.path.join(decoy, 'bin', 'activate'), 'w', encoding='utf-8') as f:
+        f.write(f'# 미끼 venv (시험 E11 · 켜면 표지 파일을 쓴다)\necho sourced >> {shlex.quote(mark)}\n')
+    out = os.path.join(TD, 'runs', 'e11')
+    old_bk, old_here = RR.EXPECT_BACKEND, RR.HERE
+    RR.EXPECT_BACKEND, RR.HERE = 'cpu', Path(sd)
+    buf = io.StringIO()
+    rn, stop, dirty = None, None, None
+    try:
+        with chain_env(ws, no_venv=False), contextlib.redirect_stdout(buf), contextlib.redirect_stderr(buf):
+            dirty = _git(CODEREPO['repo'], 'status', '--porcelain', '--untracked-files=normal')
+            rn = RR.Runner(runner, ws, out, plan, None, time.time() + 1800, RR.RealContract(), prefix='V')
+            try:
+                rn.run(SBE_KIT, 'floor', 'P0', '0', 'inf', 1)
+            except RR.Stop as e:
+                stop = e
+    finally:
+        RR.EXPECT_BACKEND, RR.HERE = old_bk, old_here
+        shutil.rmtree(decoy, ignore_errors=True)
+    rec = rn.records[0] if (rn is not None and rn.records) else {}
+    logs = ''.join(open(p, encoding='utf-8', errors='replace').read() for p in sorted(glob.glob(os.path.join(out, 'logs', '*.log'))))
+    ee, unit = {}, None
+    if rec.get('arms_read'):
+        d = json.load(open(os.path.join(out, rec['outdir'], rec['arms_read'][0]['file']), encoding='utf-8'))
+        ee = d['mpm_metrics']['step3']['manifest'].get('exec_env') or {}
+        r = subprocess.run([str(ee.get('python')), '-I', '-c',
+                            'import json, sys, numpy, scipy; print(json.dumps({"python_minor": "%d.%d" % sys.version_info[:2], '
+                            '"numpy": numpy.__version__, "scipy": scipy.__version__}))'], capture_output=True, text=True)
+        unit = json.loads(r.stdout) if r.returncode == 0 else r.stderr[-300:]
+    want = RR.env_record()['unit']
+    chk('E11a 사슬 env 에 MPM_NO_VENV · VIRTUAL_ENV 없음 + 러너 자리의 미끼 venv → 러너 rc 0 · 팔 계약 통과 · 미끼를 켜지 않음 (표지 파일 없음 · 러너 '
+        '로그에 `[p2] venv` 줄 없음) · 고정물 체크아웃 깨끗 (venv/ = ignore 안)',
+        dirty == '' and stop is None and rec.get('rc') == 0 and bool(rec.get('arms_read')) and not os.path.exists(mark)
+        and '[p2] venv' not in logs,
+        (dirty[:200], stop and (stop.code, stop.cause[:300]), rec.get('rc'), os.path.exists(mark),
+         [ln for ln in logs.splitlines() if '[p2] venv' in ln][:2], buf.getvalue()[-400:]))
+    chk('E11b payload 실행 인터프리터 (exec_env.python) 의 같음 단위 (python 부 판 · numpy · scipy) = 사슬 환경 지문 env_record unit · python 전체 판 '
+        '같음 (구성상 같음 = 확인 칸 · 판별 = E11a)',
+        unit == want and ee.get('py_version') == platform.python_version(), (unit, want, ee.get('python'), ee.get('py_version')))
+
+
 def t_prod_form():
     ws = make_root('e6', kit_sh=KIT_SH_PROD)
     out = os.path.join(TD, 'runs', 'e6_P0')
@@ -662,7 +723,8 @@ def main():
     t0 = time.time()
     sel = [x for x in ARGS.only.split(',') if x]
     try:
-        for tag, fn in (('E1', t_ladder), ('E6', t_prod_form), ('E8', t_zero_floor), ('E9', t_short_ceiling), ('E10', t_sv_census_dbe)):
+        for tag, fn in (('E1', t_ladder), ('E6', t_prod_form), ('E8', t_zero_floor), ('E9', t_short_ceiling), ('E10', t_sv_census_dbe),
+                        ('E11', t_no_venv)):
             if sel and tag not in sel:
                 continue
             print(f'\n── {tag}')

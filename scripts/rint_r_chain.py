@@ -207,6 +207,12 @@ ENV_SCRUB_RE = re.compile(r'^(SIGMA_|SDCP_|PTFE_|CJUNC|STEP3_)')
 ENV_SCRUB_NAMES = frozenset({'VOX', 'BRIDGE_UM', 'ARMS', 'ARM_LIST', 'KITS', 'OUTDIR', 'LEAN', 'FIBRE_STAMP', 'MPM_PERIODIC_SIGMA',
                              'P2_EXTRA', 'EXPECT_BACKEND', 'EXPECT_PROTOCOL', 'P2_SCR', 'P2_SELF', 'P2_ENV_GUARD_ONLY'})
 ENV_FORBIDDEN = ('SIGMA_VGCF_OVERRIDE',)   # §10 — 있으면 멈춤 (지워서 넘어가지 않는다)
+#: ★ 10-26 B″ (1저자 Q4 · 묶음 B 보고 결정 4) 러너 실행 환경 — 사슬이 런마다 러너에 준다 (부모 셸 값과 무관 · 물리 축 아님 · ENV_FIXED 밖):
+#   MPM_NO_VENV=1 = 러너가 venv ($HOME/dem-venv · $SCR/../venv · $SCR/../.venv) 를 켜지 않는다 (VIRTUAL_ENV 가 빈 때의 자동 켜기) → payload 는
+#   사슬 프로세스의 PATH 에서 python3 을 찾는다 (단계 요약 환경 지문 = 이 사슬 프로세스 · `env_record`).  ⚠ 한정: PATH 의 python3 = 사슬 인터프리터인지는
+#   런마다 대조하지 않는다 (결정 4 의 '러너가 자기 환경을 기록하고 사슬이 대조' 안은 고르지 않았다 · kgy 명령 = dem-venv 를 켠 뒤 사슬) · 확인 = 시험
+#   (`scripts/test_rint_r_chain.py` Y14 · `scripts/test_rint_r_chain_e2e.py` E11)
+RUNNER_EXEC_ENV = {'MPM_NO_VENV': '1'}
 
 # ═════════════════════════ 판정 이름 · 표지 · 문장 ═════════════════════════
 CALIB_ORDER = ('CALIB_IMPOSSIBLE', 'CALIB_EDGE', 'CALIB_UNIDENTIFIED', 'CALIB_UNCONFIRMED', 'CALIB_NONMONOTONE',
@@ -870,7 +876,8 @@ def env_record():
     멈춤 · 칸 하나라도 미확인 = 멈춤 · `code_dirty_problem`) · record_only = python 전체 판 (패치 판 포함) · 실행 파일 · 플랫폼 · cupy 배포 · GPU
     이름 · 드라이버 (nvidia-smi) · BLAS 계산 경로 (threadpoolctl · numpy 빌드 정보) · OPENBLAS_CORETYPE · CPU 모델 · numpy SIMD = 기록만 (판정 ·
     같음 대조에 쓰지 않는다 · 기계마다 다를 수 있다 · Codex 회차 ① Q-E 답에 따라 나중에 조일 수 있다).  이 사슬 프로세스의 환경이다 (러너 ·
-    payload 는 사슬 env 를 물려받는다 · 러너가 venv 를 따로 켜는 자리 = VIRTUAL_ENV 가 빈 때 · 보고 "결정 필요") · 판정 계산기 프로세스의 환경은
+    payload 는 사슬 env 를 물려받는다 · ~~러너가 venv 를 따로 켜는 자리 = VIRTUAL_ENV 가 빈 때 · 보고 "결정 필요"~~ → ★ 10-26 B″ (1저자 Q4) 사슬이
+    런마다 러너에 MPM_NO_VENV=1 을 준다 (`RUNNER_EXEC_ENV` · 러너가 venv 를 켜지 않는다 · 한정 = 그 상수 주석) · 판정 계산기 프로세스의 환경은
     대조하지 않는다 (R4-11 — 다른 플랫폼의 다시 판정).  한 프로세스 안에서 한 번 잰다 (값을 바꿔 보는 시험 = 이 함수를 바꿔 끼운다)."""
     if 'rec' not in _ENV_MEMO:
         import platform
@@ -2036,6 +2043,7 @@ class Runner:
 
     def env_delta(self, req, outdir):
         d = dict(ENV_FIXED)
+        d.update(RUNNER_EXEC_ENV)                            # ★ 10-26 B″ (Q4) — 러너가 venv 를 켜지 않는다 (payload = 사슬 프로세스 환경)
         d.update(plan_env(self.plan))
         d.update(VARIANT_ENV.get(self.variant) or {})
         d.update({'KITS': req['kit'], 'OUTDIR': str(outdir), 'CJUNC_RJ': req['rj'], 'CJUNC_PTFE_JLAW': req['law'],
