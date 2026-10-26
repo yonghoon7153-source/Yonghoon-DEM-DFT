@@ -10,7 +10,8 @@ Codex 변이 탐침: 실제 producer 에서 **주 전자 솔브의 `rint=` 만**
 
   A  실물 producer — OFF · 전자 ON (집전체 포함) · 이온 ON 이 exit 0 · 계약 통과 · 영수증 상태가 기대대로
   B  AST 변이 — `solve_sigma_z(..., rint=...)` 호출 넷을 AST 로 찾아 **하나씩** `rint=` 를 지우면 producer 가
-     게시를 거부한다 (exit 4 · `.failed` · 사유 `STEP3_INTERFACE` 에 그 솔브 이름)
+     게시를 거부한다 (exit 4 · `.failed` · 사유 `STEP3_INTERFACE` 에 그 솔브 이름).  주 솔브는 10-26 B″ 부터 인자를
+     `_kw3 = dict(..., rint=...)` 로 한 번 만들어 `**_kw3` 로 받는다 → 판독기 · 변이가 그 `dict(...)` 묶음까지 따라간다 (A00 · A0b)
   C  CLI 모순 요청 — 빈 `--step3-rint-e` · 반복 플래그 사이의 같은 쌍 · `--step3-rint-i` + `--no-ion` ·
      `--no-step3` · 이 채널 σ 에서 절연인 상 (`AM_S|SE` 전자) 은 GPU 작업 전에 죽는다
   D  소비자 — 정상 ON 산출물의 영수증을 하나씩 변조하면 `check_arm` 이 거부한다 (원본은 받아들인다)
@@ -57,35 +58,62 @@ def chk(name, cond, why=''):
     return cond
 
 
+def _dict_kw_bindings(tree):
+    """`이름 = dict(...)` 대입 전수 → `{이름: [Call]}` — 솔브에 `**이름` 으로 넘기는 인자 묶음 (10-26 B″ 의 `_kw3`)."""
+    out = {}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Assign) and len(node.targets) == 1 and isinstance(node.targets[0], ast.Name) \
+                and isinstance(node.value, ast.Call) and isinstance(node.value.func, ast.Name) \
+                and node.value.func.id == 'dict':
+            out.setdefault(node.targets[0].id, []).append(node.value)
+    return out
+
+
+def rint_holders(call, binds):
+    """solve_sigma_z 호출 하나 → `rint=` 키워드를 가진 Call 들 — 직접 키워드면 그 호출, `**이름` 이면 그 이름의 `dict(...)` 대입.
+    (B″ 가 주 솔브 인자를 `_kw3 = dict(..., rint=...)` 로 한 번 만들어 `**_kw3` 로 넘긴 뒤로 직접 키워드만 보면 주 솔브가 빠진다.)"""
+    hold = [call] if any(k.arg == 'rint' for k in call.keywords) else []
+    for k in call.keywords:
+        if k.arg is None and isinstance(k.value, ast.Name):
+            hold += [d for d in binds.get(k.value.id, []) if any(kk.arg == 'rint' for kk in d.keywords)]
+    return hold
+
+
 def rint_call_sites(src):
-    """payload 소스 → `[(대입 대상 이름, 줄)]` — `solve_sigma_z(..., rint=...)` 호출 전수 (AST)."""
+    """payload 소스 → `[(대입 대상 이름, 줄, rint 자리 수)]` — rint 를 받는 `solve_sigma_z` 호출 전수 (AST · `**묶음` 포함).
+    rint 자리 수 ≠ 1 (같은 이름 묶음이 둘 · 직접 키워드 + 묶음) 이면 변이가 하나만 지울 수 없다 → A0 가 거부한다."""
     tree = ast.parse(src)
+    binds = _dict_kw_bindings(tree)
     out = []
     for node in ast.walk(tree):
         if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
             c = node.value
             f = c.func
-            if isinstance(f, ast.Attribute) and f.attr == 'solve_sigma_z' \
-                    and any(k.arg == 'rint' for k in c.keywords):
-                tgt = node.targets[0]
-                out.append((tgt.id if isinstance(tgt, ast.Name) else ast.dump(tgt), c.lineno))
+            if isinstance(f, ast.Attribute) and f.attr == 'solve_sigma_z':
+                n = len(rint_holders(c, binds))
+                if n:
+                    tgt = node.targets[0]
+                    out.append((tgt.id if isinstance(tgt, ast.Name) else ast.dump(tgt), c.lineno, n))
     return sorted(out, key=lambda x: x[1])
 
 
 def mutant_child(target):
-    """`target` 에 대입하는 solve_sigma_z 호출 하나에서만 `rint=` 키워드를 지우고 producer 를 돈다."""
+    """`target` 에 대입하는 solve_sigma_z 호출 하나의 `rint=` 만 지우고 (직접 키워드 · 또는 그 호출이 `**` 로 받는 `dict(...)` 묶음)
+    producer 를 돈다."""
     import mpm_webapp_payload as payload
     with open(PAY, encoding='utf-8') as f:
         tree = ast.parse(f.read(), filename=PAY)
+    binds = _dict_kw_bindings(tree)
     hit = 0
     for node in ast.walk(tree):
         if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call) \
                 and isinstance(node.targets[0], ast.Name) and node.targets[0].id == target:
             c = node.value
             if isinstance(c.func, ast.Attribute) and c.func.attr == 'solve_sigma_z':
-                n0 = len(c.keywords)
-                c.keywords = [k for k in c.keywords if k.arg != 'rint']
-                hit += (n0 - len(c.keywords))
+                for h in rint_holders(c, binds):
+                    n0 = len(h.keywords)
+                    h.keywords = [k for k in h.keywords if k.arg != 'rint']
+                    hit += (n0 - len(h.keywords))
     assert hit == 1, f'변이 대상 {target} 의 rint 키워드가 정확히 하나가 아니다 ({hit})'
     exec(compile(tree, PAY, 'exec'), payload.__dict__)
     payload.main()
@@ -318,11 +346,41 @@ def main():
     import sdcp_gain_verdict as SGV
     with open(PAY, encoding='utf-8') as f:
         src = f.read()
+    # A00 — 판독기 자기 점검 (합성 소스): 직접 키워드 · `**묶음` 은 셈 · 매개변수 `**` · rint 없는 호출은 안 셈 ·
+    #        같은 이름 묶음이 둘이면 rint 자리 2 (변이가 하나만 못 지운다 → A0 거부)
+    _syn = ('def f(s, a, kwp):\n'
+            '    kw = dict(z=1, rint=a)\n'
+            '    r1 = s.solve_sigma_z(1, 2, rint=a)\n'
+            '    r2 = s.solve_sigma_z(1, 2, **kw)\n'
+            '    r3 = s.solve_sigma_z(1, 2, **kwp)\n'
+            '    r4 = s.solve_sigma_z(1, 2, z=1)\n')
+    chk('A00 판독기 — 직접 키워드 · **묶음 은 셈 · 매개변수 ** · rint 없는 호출은 안 셈',
+        rint_call_sites(_syn) == [('r1', 3, 1), ('r2', 4, 1)], repr(rint_call_sites(_syn)))
+    _syn2 = _syn + '    kw = dict(rint=a)\n'
+    chk('A00 판독기 — 같은 이름 묶음이 둘이면 rint 자리 2',
+        ('r2', 4, 2) in rint_call_sites(_syn2), repr(rint_call_sites(_syn2)))
     sites = rint_call_sites(src)
     names = [s[0] for s in sites]
-    print('A0 호출 자리 (AST):', sites)
-    chk('A0 rint 를 받는 solve_sigma_z 호출이 정확히 넷 (주 · wetted · bare · 이온)',
-        names == ['_res3', '_res3w', '_res3b', '_res3i'], repr(names))
+    print('A0 호출 자리 (AST · 이름 · 줄 · rint 자리 수):', sites)
+    chk('A0 rint 를 받는 solve_sigma_z 호출이 정확히 넷 (주 · wetted · bare · 이온) · 각 rint 자리 하나 (주 = `**_kw3` 묶음 · B″)',
+        names == ['_res3', '_res3w', '_res3b', '_res3i'] and all(s[2] == 1 for s in sites), repr(sites))
+    # A0b — 조립만 출구 (`--step3-cjunc-graph-only`) 의 solve 는 매개변수 `**kw3` 라 A0 판독기가 못 푼다 → 따로 묶는다:
+    #        호출자가 넘기는 것이 주 솔브의 `_kw3` 그 이름이고, 출구 안 solve 가 그 매개변수를 `**` 로 받는다 (사본 없음 → 주 변이가 같이 지운다)
+    _t = ast.parse(src)
+    _fd = [n for n in ast.walk(_t) if isinstance(n, ast.FunctionDef) and n.name == '_cjunc_graph_only_exit']
+    _okb = False
+    if len(_fd) == 1:
+        _pa = [x.arg for x in _fd[0].args.args]
+        _calls = [n for n in ast.walk(_t) if isinstance(n, ast.Call) and isinstance(n.func, ast.Name)
+                  and n.func.id == '_cjunc_graph_only_exit']
+        _inner = [n for n in ast.walk(_fd[0]) if isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute)
+                  and n.func.attr == 'solve_sigma_z']
+        if len(_calls) == 1 and len(_inner) == 1 and 'kw3' in _pa and _pa.index('kw3') < len(_calls[0].args):
+            _arg = _calls[0].args[_pa.index('kw3')]
+            _okb = (isinstance(_arg, ast.Name) and _arg.id == '_kw3'
+                    and any(k.arg is None and isinstance(k.value, ast.Name) and k.value.id == 'kw3'
+                            for k in _inner[0].keywords))
+    chk('A0b 조립만 출구 solve 의 인자 = 주 솔브의 `_kw3` 그 묶음 (매개변수 **kw3 · 사본 없음)', _okb)
 
     with tempfile.TemporaryDirectory() as d:
         am, se, ph, fid, dia = cmd_._smoke_fixture(d)
