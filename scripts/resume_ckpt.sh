@@ -1,11 +1,249 @@
-# resume_ckpt.sh — 멈춘 LIGGGHTS 런을 최신 체크포인트에서 이어받아 N MPI 로 재제출 (복사 → 재개 덱 → 짧은 시험 → 대조 → 본 제출)
+# resume_ckpt.sh — 멈춘 LIGGGHTS 런을 최신 체크포인트에서 이어받아 N MPI 로 재제출 (복사 → 재개 덱 → 정적 대조 → 짧은 시험 → 대조 → 본 제출)
 # 2026-09-27 pse_r050_a · pse_r075_a (15 → 30 MPI) 건에서 확정한 표준 절차.  사용 전 원 런 폴더를 <root>/<case>.<접미사> 로 옮겨 둔다.
 #   bash resume_ckpt.sh -n 30 -s stop15_0927 pse_r050_a pse_r075_a
 #   -n NP   본 런 MPI 수 (기본 30)          -s SUF  멈춘 폴더 접미사 (필수)      -r ROOT 케이스 루트 (기본 ~/dem_test/lhs)
 #   -x SFX  새 파일 접미사 (기본 r<NP>)      -t N    시험 step (기본 2000)
-NP=30; SUF=""; L=~/dem_test/lhs; SFX=""; TS=2000
-while getopts "n:s:r:x:t:" o; do case $o in n) NP=$OPTARG;; s) SUF=$OPTARG;; r) L=$OPTARG;; x) SFX=$OPTARG;; t) TS=$OPTARG;; *) exit 1;; esac; done
-shift $((OPTIND-1)); CASES="$*"; SFX=${SFX:-r$NP}
+#   -T      시험만 — G0–G3 를 기록하고 본 제출은 하지 않는다 (NP 실측용)
+#   -C <본 덱> <재개 덱> <체크포인트> <S0> <작업 폴더>   재개 덱 정적 대조만 (손 확인용 · 종료 코드 0 = 통과)
+# 2026-10-26 (원장 KG50-02 · KG50-10 · 1저자 Q2 *"50kg 권고대로해"*):
+#   본 제출 = G0 ∧ G1 ∧ G2 ∧ G3 · G0 = 시험이 COMPLETED · ExitCode 0:0 · 마지막 thermo step = 기대 끝 (S0 + 시험 run) · 그 뒤 Loop time · ERROR 0.
+#   G3 = 원 로그의 비교 구간 (S0, 끝] 정규 줄이 시험에 하나라도 없으면 실패 (결손) — 원 로그에 그 구간 줄이 없을 때만 생략.
+#   sacct 조회 실패 · 대기 시간 초과 · 시험 로그 없음 = 제출 안 함.
+#   재개 덱 정적 대조 (재삽입 · 물리 줄 · 재개 지점 상태 · 남은 step · 뒤 순서 · c_/f_ 정의) 실패 = 시험도 내지 않는다.
+#   큐 검사 = 이름 정확 일치 (C · C_ins · C_<SFX> · C_<SFX>t · C_r<N> · C_r<N>t) · squeue 조회 실패 = 그 케이스 건너뜀.
+NP=30; SUF=""; L=~/dem_test/lhs; SFX=""; TS=2000; TONLY=0; CHK=0
+while getopts "n:s:r:x:t:TC" o; do case $o in n) NP=$OPTARG;; s) SUF=$OPTARG;; r) L=$OPTARG;; x) SFX=$OPTARG;; t) TS=$OPTARG;; T) TONLY=1;; C) CHK=1;; *) exit 1;; esac; done
+shift $((OPTIND-1))
+# 재개 덱 정적 대조 — 인자: 본 덱 · 재개 덱 · 체크포인트 경로 · S0 · 작업 폴더.  stdout = 기록 · 종료 코드 0 = 통과
+deckcheck(){ python3 - "$@" <<'PY'
+import os, re, sys
+FWD = {'fix', 'pair_style', 'pair_coeff', 'compute', 'neighbor', 'neigh_modify', 'timestep', 'variable'}
+GLOB = {'pair_style', 'neighbor', 'neigh_modify', 'timestep'}
+SEQ = {'fix', 'unfix', 'run', 'restart', 'write_restart', 'pair_style', 'pair_coeff',
+       'neighbor', 'neigh_modify', 'timestep', 'label', 'jump', 'if'}
+TMPL = re.compile(r'^(particletemplate/|particledistribution/)')
+INS = re.compile(r'^insert/')
+MESH = {'mesh/surface/stress', 'mesh/surface'}
+
+
+def uncomment(s):
+    out, q = [], None
+    for ch in s:
+        if q:
+            out.append(ch)
+            if ch == q:
+                q = None
+        elif ch in '"\'':
+            q = ch
+            out.append(ch)
+        elif ch == '#':
+            break
+        else:
+            out.append(ch)
+    return ''.join(out)
+
+
+def deck(path):
+    # '&' 이어 붙이기 = 원 줄의 마지막 글자일 때 (주석을 지우기 전 · LIGGGHTS 입력 규칙) → 그 뒤 주석 · 공백 정리
+    res, buf = [], ''
+    with open(path, encoding='utf-8', errors='replace') as f:
+        for raw in f:
+            r = raw.rstrip('\n').rstrip()
+            if r.endswith('&'):
+                buf += r[:-1] + ' '
+                continue
+            s = ' '.join(uncomment(buf + r).split())
+            buf = ''
+            if s:
+                res.append(s)
+    s = ' '.join(uncomment(buf).split())
+    if s:
+        res.append(s)
+    return res
+
+
+def num(x):
+    # awk 의 $2+0 과 같은 규칙: 앞의 ASCII 숫자 부분만 (없으면 0)
+    m = re.match(r'[ \t]*[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)([eE][+-]?[0-9]+)?', x)
+    return float(m.group(0)) if m else 0.0
+
+
+def long_runs(L, start=0):
+    # 시험 덱 자르기와 같은 규칙 (awk: $1=="run" && $2+0>1)
+    return [i for i in range(start, len(L)) if L[i].split()[0] == 'run'
+            and len(L[i].split()) > 1 and num(L[i].split()[1]) > 1]
+
+
+def mesh_file(a, b):
+    ta, tb = a.split(), b.split()
+    if (len(ta) != len(tb) or len(ta) < 6 or ta[0] != 'fix' or ta[3] not in MESH
+            or 'file' not in ta or 'file' not in tb or ta.index('file') != tb.index('file')):
+        return None
+    i = ta.index('file')
+    if i + 1 >= len(ta) or ta[:i + 1] != tb[:i + 1] or ta[i + 2:] != tb[i + 2:]:
+        return None
+    return tb[i + 1]
+
+
+def state(L, end):
+    fixes, glob = {}, {}
+    for l in L[:end]:
+        t = l.split()
+        if t[0] == 'fix' and len(t) >= 4:
+            if TMPL.match(t[3]) or INS.match(t[3]):
+                continue
+            fixes[t[1]] = l
+        elif t[0] == 'unfix' and len(t) >= 2:
+            fixes.pop(t[1], None)
+        elif t[0] in GLOB:
+            glob[t[0]] = l
+        elif t[0] == 'pair_coeff':
+            glob[' '.join(['pair_coeff'] + t[1:3])] = l
+    return fixes, glob
+
+
+def same_or_mesh(a, b, W, notes, probs, what):
+    if a == b:
+        return
+    nf = mesh_file(a, b) if (a and b) else None
+    if nf is not None:
+        if os.path.isfile(os.path.join(W, nf)):
+            notes.append('판 메시 파일만 다름 (%s): %s' % (what, nf))
+        else:
+            probs.append('판 메시 파일 %s 가 작업 폴더에 없음 (%s)' % (nf, what))
+        return
+    if a and b:
+        probs.append('%s 다름: 본 덱 [%s] ↔ 재개 덱 [%s]' % (what, a, b))
+    elif a:
+        probs.append('%s 가 재개 덱에 없음: 본 덱 [%s]' % (what, a))
+    else:
+        probs.append('%s 는 재개 덱에만 있음: [%s]' % (what, b))
+
+
+def check(main, res, ckpt, s0, W):
+    M, R = deck(main), deck(res)
+    probs, notes = [], []
+    mset = set(M)
+    # A. 재삽입 금지
+    for l in R:
+        t = l.split()
+        if t[0] == 'fix' and len(t) >= 4 and INS.match(t[3]):
+            probs.append('재개 덱에 삽입 fix (재삽입): [%s]' % l)
+    # B. 재개 덱의 물리 · 변수 줄 = 본 덱 줄 그대로 (판 메시 파일 이름만 예외 · 그 파일이 작업 폴더에 있을 때)
+    mfix = {}
+    for l in M:
+        t = l.split()
+        if t[0] == 'fix' and len(t) >= 2:
+            mfix.setdefault(t[1], []).append(l)
+    for l in R:
+        t = l.split()
+        if t[0] not in FWD or l in mset:
+            continue
+        nf = None
+        if t[0] == 'fix' and len(t) >= 2:
+            for a in mfix.get(t[1], []):
+                nf = mesh_file(a, l)
+                if nf is not None:
+                    break
+        if nf is not None and os.path.isfile(os.path.join(W, nf)):
+            notes.append('판 메시 파일만 다름: %s' % nf)
+        elif nf is not None:
+            probs.append('판 메시 파일 %s 가 작업 폴더에 없음' % nf)
+        else:
+            probs.append('본 덱에 없는 줄: [%s]' % l)
+    # F. 재개 덱에서 쓰는 c_ · f_ 이름이 재개 덱에 정의돼 있다 (compute · fix 는 restart 에 안 남는다)
+    dc = set(l.split()[1] for l in R if l.split()[0] == 'compute' and len(l.split()) > 1)
+    df = set(l.split()[1] for l in R if l.split()[0] == 'fix' and len(l.split()) > 1)
+    for l in R:
+        for kind, name in re.findall(r'\b([cf])_([A-Za-z0-9_]+)', l):
+            if name not in (dc if kind == 'c' else df):
+                probs.append('재개 덱이 %s_%s 를 쓰는데 정의가 없음: [%s]' % (kind, name, l))
+    # 체크포인트 → 본 덱의 자리 (그 파일을 만드는 restart · write_restart 줄 하나)
+    base = os.path.basename(ckpt)
+    hits = []
+    for i, l in enumerate(M):
+        t = l.split()
+        if t[0] == 'write_restart' and len(t) >= 2 and os.path.basename(t[1]) == base:
+            hits.append(('write', i))
+        elif t[0] == 'restart' and len(t) >= 3 and num(t[1]) > 0:
+            for p in t[2:4]:
+                pat = '^' + re.escape(os.path.basename(p)).replace(r'\*', '[0-9]+') + '$'
+                if re.match(pat, base):
+                    hits.append(('restart', i))
+                    break
+    if len(hits) != 1:
+        probs.append('체크포인트 %s 를 만든 restart · write_restart 줄이 본 덱에 %d 개 (1 개여야 · 손으로 확인)'
+                     % (base, len(hits)))
+        return probs, notes
+    kind, ia = hits[0]
+    mr, rr = long_runs(M, ia + 1), long_runs(R)
+    if not mr or not rr:
+        probs.append('긴 run 을 못 찾음 (본 덱 %d · 재개 덱 %d)' % (len(mr), len(rr)))
+        return probs, notes
+    im, ir = mr[0], rr[0]
+    # C. 재개 지점의 상태 (살아 있는 fix · 쌍 · 이웃 · timestep) — 템플릿 · 분포 · 삽입 fix 는 뺀다
+    fm, gm = state(M, im)
+    fr, gr = state(R, ir)
+    for k in sorted(set(fm) | set(fr)):
+        same_or_mesh(fm.get(k), fr.get(k), W, notes, probs, '재개 지점 fix ' + k)
+    for k in sorted(set(gm) | set(gr)):
+        same_or_mesh(gm.get(k), gr.get(k), W, notes, probs, '재개 지점 ' + k)
+    # D. 남은 step — restart 명령이 만든 체크포인트 · 그 run 앞에 반복 · 변수 run 이 없을 때
+    if kind == 'restart':
+        step, known = 0, True
+        for l in M[:im + 1]:
+            t = l.split()
+            if t[0] in ('label', 'jump'):
+                known = False
+            elif t[0] == 'reset_timestep' and len(t) > 1:
+                step = int(num(t[1]))
+            elif t[0] == 'run' and len(t) > 1:
+                if not re.match(r'^[0-9]+$', t[1]):
+                    known = False
+                elif 'upto' in t[2:]:
+                    step = int(t[1])
+                else:
+                    step += int(t[1])
+        if known:
+            t = R[ir].split()
+            if not re.match(r'^[0-9]+$', t[1]):
+                probs.append('재개 덱 첫 긴 run 이 숫자가 아님: [%s]' % R[ir])
+            else:
+                end = int(t[1]) if 'upto' in t[2:] else s0 + int(t[1])
+                if end != step:
+                    probs.append('남은 step 다름: 재개 끝 %d ↔ 본 덱 그 run 끝 %d ([%s])' % (end, step, R[ir]))
+                else:
+                    notes.append('남은 step 같음: 끝 %d' % end)
+        else:
+            notes.append('남은 step 확인 생략 (그 run 앞에 반복 · 변수 run)')
+    else:
+        notes.append('남은 step 확인 해당 없음 (write_restart 체크포인트)')
+    # E. 재개 지점 뒤 순서 (fix · unfix · run · restart · if …) = 본 덱 그대로
+    tm = [l for l in M[im + 1:] if l.split()[0] in SEQ]
+    tr = [l for l in R[ir + 1:] if l.split()[0] in SEQ]
+    if len(tm) != len(tr):
+        probs.append('재개 지점 뒤 순서 줄 수 다름: 본 덱 %d ↔ 재개 덱 %d' % (len(tm), len(tr)))
+    for a, b in zip(tm, tr):
+        if a != b:
+            same_or_mesh(a, b, W, notes, probs, '재개 지점 뒤 줄')
+    return probs, notes
+
+
+try:
+    main, res, ckpt, s0, W = sys.argv[1:6]
+    probs, notes = check(main, res, ckpt, int(s0), W)
+except Exception as e:
+    probs, notes = ['대조 도구 오류: %s: %s' % (type(e).__name__, e)], []
+for n in notes:
+    print('  · ' + n)
+for p in probs:
+    print('  ✗ ' + p)
+print('  재개 덱 정적 대조: %s (문제 %d)' % ('통과' if not probs else '실패', len(probs)))
+sys.exit(1 if probs else 0)
+PY
+}
+if [ $CHK = 1 ]; then [ $# = 5 ] || { echo "사용: bash resume_ckpt.sh -C <본 덱> <재개 덱> <체크포인트> <S0> <작업 폴더>"; exit 2; }; deckcheck "$@"; exit $?; fi
+CASES="$*"; SFX=${SFX:-r$NP}
 [ -n "$SUF" ] && [ -n "$CASES" ] || { echo "사용: bash resume_ckpt.sh -n 30 -s stop15_0927 <케이스…>"; exit 1; }
 cd $L || exit 1; mkdir -p logs; STAMP=$(date +%m%d_%H%M); REP=$L/resume_${SFX}_$STAMP.md
 tl(){ awk -v s="$1" '/^ *Step +Atoms/{n=split($0,h);next} n>0 && NF==n && $1~/^[0-9]+$/ && $1==s {o=""; for(i=1;i<=NF;i++){if(h[i]=="CPU"||h[i]=="pressMPa")continue; o=o" "h[i]"="$i}; r=o} END{print r}' "$2"; }
@@ -15,8 +253,11 @@ same(){ awk -v a="$1" -v b="$2" -v t="$3" 'BEGIN{na=split(a,x," ");nb=split(b,y,
 # 느슨한 역학 확인: 원자 수 같고, 압력 (있으면) 아니면 KE 가 5 % 안
 sane(){ awk -v a="$1" -v b="$2" 'BEGIN{na=split(a,x," ");nb=split(b,y," ");if(na<3||na-nb)exit 1;k="";for(i=1;i<=na;i++){split(x[i],p,"=");split(y[i],q,"=");A[p[1]]=p[2];B[q[1]]=q[2]};if(A["Atoms"]+0<B["Atoms"]+0||A["Atoms"]+0>B["Atoms"]+0)exit 1;k=("pressMPa" in A && A["pressMPa"]+0>1e-6)?"pressMPa":"KinEng";if((k in A)==0)exit 1;d=A[k]-B[k];if(d<0)d=-d;m=A[k];if(m<0)m=-m;exit (d>0.05*m && d>1e-12)}'; }
 sel(){ awk 'NR==9{n=0;split("id type x y z radius vx vy vz",w," ");for(k=1;k<=9;k++)for(i=3;i<=NF;i++)if($i==w[k]){n++;c[n]=i-2};next} NR>9{o=$c[1];for(k=2;k<=n;k++)o=o" "$c[k];print o}' "$1" | sort -n | md5sum | cut -c1-12; }
+# 시험 로그의 마지막 thermo 줄 step · 그 줄 번호 · 마지막 'Loop time of' 줄 번호
+lastrun(){ awk '/^ *Step +Atoms/{q=1;next} /^Loop time of/{q=0;lp=NR;next} q&&$1~/^[0-9]+$/{s=$1;ln=NR} END{print s+0, ln+0, lp+0}' "$1"; }
+rx(){ printf '%s' "$1" | sed 's/[][\.*^$(){}+?|/]/\\&/g'; }
 echo "# LIGGGHTS 체크포인트 재개 기록 — $SFX ($NP MPI) · $(date '+%F %H:%M')" > $REP
-echo "명령: bash resume_ckpt.sh -n $NP -s $SUF -r $L -x $SFX -t $TS $CASES" >> $REP
+echo "명령: bash resume_ckpt.sh -n $NP -s $SUF -r $L -x $SFX -t $TS$([ $TONLY = 1 ] && echo ' -T') $CASES" >> $REP
 for C in $CASES; do
   S=$L/$C.$SUF; W=$L/$C; X=$L/$C.prev_$STAMP; D=$W/input_${C}_$SFX.liggghts; RN=$W/run_${C}_$SFX.sh
   echo; echo "████ $C"
@@ -26,7 +267,8 @@ for C in $CASES; do
   echo "  멈춘 곳: $PH | 로그 마지막 step $LS"
   echo "  restart_$C/ 최신: $(ls $S/restart_$C/ 2>/dev/null | sort -t_ -k3 -n | tail -3 | tr '\n' ' ')"
   ls $S/restart_forced_liggghts_* 2>/dev/null | sed 's#.*/#  (강제 restart, 안 씀: #; s/$/)/'
-  if squeue -u $USER -h -o %j | grep -q "^$C"; then echo "  ⛔ $C 이름 잡이 큐에 있음 — 건너뜀"; continue; fi
+  QL=$(squeue -u $USER -h -o %j 2>/dev/null) || { echo "  ⛔ squeue 조회 실패 — 건너뜀 (돌고 있는지 모른다)"; continue; }
+  if printf '%s\n' "$QL" | grep -qxE "$(rx $C)(_ins|_$(rx $SFX)t?|_r[0-9]+t?)?"; then echo "  ⛔ $C 의 잡 (${C} · ${C}_ins · ${C}_$SFX[t] · ${C}_r<N>[t]) 이 큐에 있음 — 건너뜀"; continue; fi
   if [ -e $W ]; then
     [ -e $X ] && { echo "  ⛔ $X 이미 있음 — 건너뜀"; continue; }
     mv $W $X && echo "  같은 이름의 기존 폴더 → ${X##*/} (보존)"
@@ -57,18 +299,33 @@ for C in $CASES; do
   [ -s $W/$RR ] || { OK=0; echo "  ✗ $RR 없음"; }
   [ -z "$EX" ] || { OK=0; echo "  ✗ 원 덱에 없는 fix/dump ID: $EX"; }
   { grep -qE "^#SBATCH -n $NP\$" $RN && grep -q -- "--oversubscribe --bind-to none -np $NP lmp_mpi" $RN && grep -q -- "-np $NP lmp_mpi -in input_${C}_${SFX}t.liggghts" $W/run_${C}_${SFX}t.sh; } || { OK=0; echo "  ✗ 러너 $NP"; }
+  NT=$(tail -1 $W/input_${C}_${SFX}t.liggghts | awk '$1=="run" && NF==2 && $2~/^[0-9]+$/{print $2}')
+  { [ -n "$NT" ] && [[ "$S0" =~ ^[0-9]+$ ]]; } || { OK=0; echo "  ✗ 시험 덱 끝이 숫자 run 이 아님 또는 S0 모름 (기대 끝 step 을 못 정함)"; }
+  deckcheck $W/input_$C.liggghts $D "$RR" "${S0:-0}" $W > $W/deckcheck_$SFX.txt 2>&1 || { OK=0; echo "  ✗ 재개 덱 정적 대조 실패:"; }
+  cat $W/deckcheck_$SFX.txt
   echo "  $(grep '^processors' $D) | $(grep -c . $W/input_${C}_${SFX}t.liggghts)줄 시험 덱 (마지막: $(tail -1 $W/input_${C}_${SFX}t.liggghts))"
-  if [ $OK = 1 ]; then J=$(sbatch --parsable $W/run_${C}_${SFX}t.sh); echo $J > $W/job_${SFX}t.txt; echo "$M $S0 $RR" > $W/mode_$SFX.txt; echo "  ▶ 시험 job $J ($(tail -1 $W/input_${C}_${SFX}t.liggghts))"
+  if [ $OK = 1 ]; then
+    J=$(sbatch --parsable $W/run_${C}_${SFX}t.sh)
+    if [ -n "$J" ]; then echo $J > $W/job_${SFX}t.txt; EXP=$((10#$S0 + 10#$NT)); echo "$M $S0 $RR $EXP" > $W/mode_$SFX.txt; echo "  ▶ 시험 job $J ($(tail -1 $W/input_${C}_${SFX}t.liggghts) · 기대 끝 step $EXP)"
+    else echo "  ⛔ 시험 제출 실패 (sbatch 출력 없음)"; fi
   else echo "  ⛔ 시험 제출 안 함"; fi
 done
 echo; echo "── 시험 잡 끝날 때까지 대기 (끝나면 대조 → 맞으면 본 제출)"
 for C in $CASES; do
   W=$L/$C; S=$L/$C.$SUF; [ -f $W/job_${SFX}t.txt ] || continue; J=$(cat $W/job_${SFX}t.txt)
+  # 끝 상태 (sacct State · ExitCode) — 조회 실패는 다시 묻고, 끝까지 못 얻으면 TO=1 (제출 안 함)
+  ST=""; EC=""; TO=1; QF=0
   for i in $(seq 360); do
-    sacct -n -X -j $J -o State 2>/dev/null | grep -qE 'COMPLETED|FAILED|CANCELLED|TIMEOUT|OUT_OF|NODE_FAIL' && [ -z "$(squeue -h -j $J 2>/dev/null)" ] && break; sleep 20
+    if Q=$(sacct -n -X -P -j $J -o State,ExitCode 2>/dev/null) && [ -n "$Q" ]; then
+      Q=$(printf '%s\n' "$Q" | head -1); ST=${Q%%|*}; EC=${Q#*|}; ST=${ST%% *}
+      case "$ST" in COMPLETED|FAILED|CANCELLED|TIMEOUT|OUT_OF_MEMORY|NODE_FAIL|PREEMPTED|BOOT_FAIL|DEADLINE) [ -z "$(squeue -h -j $J 2>/dev/null)" ] && { TO=0; break; };; esac
+    else QF=$((QF+1)); fi
+    sleep 20
   done
-  read M S0 RR < $W/mode_$SFX.txt
+  read M S0 RR EXP < $W/mode_$SFX.txt
   T=$(ls logs/output_${C}_${SFX}t_$J.out 2>/dev/null); T=${T:-/dev/null}; E=$(grep -ac ERROR $T)
+  read LTS LTL LPL <<< "$(lastrun $T)"
+  G0=0; [ $TO = 0 ] && [ "$ST" = COMPLETED ] && [ "$EC" = "0:0" ] && [ "$LTS" = "$EXP" ] && [ "$LPL" -gt "$LTL" ] && [ "$E" = 0 ] && [ "$T" != /dev/null ] && G0=1
   F=$(awk '/^ *Step +Atoms/{q=1;next} q&&$1~/^[0-9]+$/{print $1; exit}' $T)
   a=$(tl "$F" $W/log.liggghts.$SUF); b=$(tl "$F" $T)
   G1=0; [ -n "$F" ] && [ "$F" = "$S0" ] && [ "$E" = 0 ] && same "$a" "$b" 1e-6 && G1=1
@@ -89,23 +346,32 @@ for C in $CASES; do
     [ $nc = 0 ] && [ "$M" = compress ] && { G2=0; G2T="$G2T 체크포인트 step 덤프 없음 — 손으로 확인"; }
     [ $nc = 0 ] && [ "$M" = settling ] && G2T="$G2T 체크포인트 step 덤프 없음 (G1 의 KE 일치로 대신)"
   fi
-  # G3: 첫 정규 thermo (setup 줄 뒤) — 원자 수 + 압력 (없으면 KE) 5 % 안.  원 로그에 없으면 생략
-  F2=$(comm -12 <(reg $T | sort -u) <(reg $W/log.liggghts.$SUF | sort -u) | sort -n | awk -v s="$F" '$1~/^[0-9]+$/ && $1+0>s+0{print;exit}')
+  # G3: 원 로그의 비교 구간 (S0, 기대 끝] 정규 thermo 줄 — 시험에 하나라도 없으면 실패 (결손) · 첫 줄은 원자 수 + 압력 (없으면 KE) 5 % 안
+  OW=$(reg $W/log.liggghts.$SUF | sort -un | awk -v s="$S0" -v e="$EXP" '$1+0>s+0 && $1+0<=e+0')
+  F2=$(printf '%s\n' $OW | head -1); MISS=""
+  [ -n "$OW" ] && MISS=$(comm -23 <(printf '%s\n' $OW | sort -u) <(reg $T | sort -u) | sort -n | tr '\n' ' ')
   a2=$(tr2 "$F2" $W/log.liggghts.$SUF); b2=$(tr2 "$F2" $T)
-  if [ -z "$F2" ]; then G3=1; G3T="원 로그에 비교할 정규 줄 없음 → 생략"; elif sane "$a2" "$b2"; then G3=1; G3T="5 % 안"; else G3=0; G3T="5 % 넘음"; fi
+  if [ -z "$F2" ]; then G3=1; G3T="원 로그에 비교 구간 ($S0, $EXP] 정규 줄 없음 → 생략"
+  elif [ -n "$MISS" ]; then G3=0; G3T="원 로그에 있는 비교 줄이 시험에 없음 (결손): $MISS"
+  elif sane "$a2" "$b2"; then G3=1; G3T="5 % 안"; else G3=0; G3T="5 % 넘음"; fi
   [ -f $W/log.liggghts ] && mv $W/log.liggghts $W/log.liggghts.${SFX}t
   { echo; echo "## $C"
     echo "- 멈춘 폴더: ${C}.$SUF (손대지 않음) · 멈춘 곳 $(grep -a '^======' $S/log.liggghts | tail -1)"
     echo "- 작업 폴더: $W (= 멈춘 폴더 cp -a) · 원 로그 → log.liggghts.$SUF · 체크포인트 뒤 덤프 → old_post_after${S0}_$SUF/"
     echo "- 재개: $M 체크포인트 \`read_restart $RR\` (step $S0) · 덱 input_${C}_$SFX.liggghts · 러너 run_${C}_$SFX.sh (#SBATCH -n $NP · mpirun --oversubscribe --bind-to none -np $NP)"
     echo "- 템플릿 재선언: $(cat $W/tp_$SFX.txt)"
+    echo "- 재개 덱 정적 대조: $(tail -1 $W/deckcheck_$SFX.txt | sed 's/^ *재개 덱 정적 대조: //') (deckcheck_$SFX.txt)"
     echo "- 시험: job $J · input_${C}_${SFX}t.liggghts · ${T##*/} · ERROR $E"
+    echo "- G0 시험 정상 종료: $([ $G0 = 1 ] && echo 통과 || echo 실패) — 상태 ${ST:-없음} · ExitCode ${EC:-없음} · 마지막 step $LTS (기대 $EXP) · Loop time $([ "$LPL" -gt "$LTL" ] && echo '끝 step 뒤에 있음' || echo 없음) · 조회 실패 $QF 번 · $([ $TO = 1 ] && echo '끝 상태 못 얻음 (대기 시간 초과 · 조회 실패)' || echo '끝 상태 얻음')"
     echo "- G1 재개 첫 thermo (step $F, setup 줄, CPU·압력 열 제외, 1e-6): $([ $G1 = 1 ] && echo 통과 || echo 실패)"; echo "    원 로그 :$a"; echo "    재개    :$b"
     echo "- G2 체크포인트 상태 덤프 대조: $([ $G2 = 1 ] && echo 통과 || echo 실패) —$G2T"
-    echo "- G3 첫 정규 thermo (step ${F2:--}, 참고용 느슨한 확인): $G3T"; echo "    원 로그 :$a2"; echo "    재개    :$b2"
+    echo "- G3 원 로그 비교 구간 (step ${F2:--} 부터, 느슨한 확인): $G3T"; echo "    원 로그 :$a2"; echo "    재개    :$b2"
   } >> $REP
-  if [ $G1 = 1 ] && [ $G2 = 1 ] && [ $G3 = 1 ]; then
-    JM=$(sbatch --parsable $W/run_${C}_$SFX.sh); echo "- ✅ 본 제출 job $JM (run_${C}_$SFX.sh, 제출 폴더 $L)" >> $REP
-  else echo "- ⛔ 본 제출 안 함 — 위 G1/G2/G3 확인 후 사람이 판단" >> $REP; fi
+  if [ $G0 = 1 ] && [ $G1 = 1 ] && [ $G2 = 1 ] && [ $G3 = 1 ]; then
+    if [ $TONLY = 1 ]; then echo "- 🧪 시험만 (-T) — G0–G3 통과 · 본 제출 안 함" >> $REP
+    else JM=$(sbatch --parsable $W/run_${C}_$SFX.sh)
+      if [ -n "$JM" ]; then echo "- ✅ 본 제출 job $JM (run_${C}_$SFX.sh, 제출 폴더 $L)" >> $REP; else echo "- ⛔ 본 제출 실패 (sbatch 출력 없음)" >> $REP; fi
+    fi
+  else echo "- ⛔ 본 제출 안 함 — 위 G0/G1/G2/G3 확인 후 사람이 판단" >> $REP; fi
 done
 cat $REP; echo; squeue -u $USER -o "%.10i %.20j %.8T %.4C %.10M %R"

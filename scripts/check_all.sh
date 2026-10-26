@@ -271,6 +271,9 @@ run 'step3_conv_cert (STEP3 수렴 증서 A/B/C · 봉인 표 · 10-21 실측 11
 #  ★ 2026-10-20 (Rint ② S0 · 설계 v1 §2 · 등록 R §2-1) — 표현 원장 (raster 만 · 솔브 없음): 기하 원시 · 접합 census 미리보기 · 격자 원시 ·
 #    계획 (식 · 해시 · 개정 커밋 대조) · 스키마 (σ · 전류 칸 없음) · 끝-끝 (payload 실물로 생산 raster 입력을 잡는다).  구현 전 = 0/23 PASS.
 run 'ca_s0_census (Rint ② S0 표현 원장 · 시험 먼저)' python3 scripts/test_ca_s0_census.py
+#  ★ 2026-10-26 (원장 KG50-02 · KG50-10 · 1저자 Q2) — LIGGGHTS 재개 도구 resume_ckpt.sh 를 가짜 SLURM · 가짜 dem_restart.py 로 끝까지 돌린다
+#    (실패한 시험의 본 런 승격 · 재개 덱 정적 대조 · 큐 이름 · -T · -C) · 고치기 전 판 = 7/31 · 실측 ≈ 9 s.
+run 'resume_ckpt (재개 도구 · 가짜 SLURM)' python3 scripts/test_resume_ckpt.py
 #  ★ 2026-10-24 (`SELF-132` · `SELF-133` · 1저자 Q2 (가)) — kgy 실행 환경 판 (Python 3.8 · numpy 1.24.4 · scipy 1.10.1 = kgy `~/dem-venv`) 에서
 #    R 경로 11 묶음 (S0 · S1 · S2/S3 · 계약 · 사슬 · 끝-끝 · 증서).  3.11 에서만 돌던 코드가 kgy 에서 멈춘 일 (08-16 · 08-25 · 10-24 세 번째) 을 막는다.
 #    인터프리터 없음 · 판 다름 = 실패 (건너뛰지 않는다) → `bash scripts/setup_kgy_py38.sh` (컨테이너 재시작 뒤 한 번) · 실측 ≈ 6–7 분.
