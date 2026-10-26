@@ -1,7 +1,7 @@
 # Rint ② 회차 ① (10-26) 뒤 수정 계획 — RR1-01 · RR1-02 · Q9 조건 · ⑥ 정책
 
 - 근거 = Codex 판정문 `docs/reviews/codex_review_rint2_rr_round1_20261026.md` (리뷰 핀 `9bec6b764`) · 반입 `docs/reviews/codex_rint2_rr_round1_evidence_20261026/_README_import.md` · 우리 트리 재현 = 판정값 차이 0 (`docs/reviews/codex_rint2_rr_round1_evidence_20261026/_repro_ours_20261026/README.md`).
-- 상태 = **1저자 비준 대기** (아래 Q1–Q7).  결과 0 건 · 코드 변경 0 건.
+- 상태 = ✅ **1저자 비준 10-26** (*"권고대로해"* = Q1–Q7 모두 (가) · §4).  결과 0 건.
 
 ## 0. 쉽게 말하면
 
@@ -64,3 +64,8 @@
 - 등록 R 판정 캠페인 HOLD 그대로 · R 런 0 건.
 - 범위 밖 = `RCA2-02` · `03` · `05` · `07` · `RCA-11` · `RIMPR-04` · `RINT2-B01` (판정문 §2 끝).
 - 판정문 §9 한정 두 가지 그대로 — 세 origin 표본 W 0.293 (PASS) ↔ 고정 8 평균 W 0.680 (WEAK) · all3 SV 요청 = corner 12 / origin 0 / origin8 0.
+
+## 4. 1저자 결정 (10-26 · *"권고대로해"*)
+
+- Q1 (가) RR1-01 = 묶음 B 의 B6 · Q2 (가) 소비자가 봉인된 원천에서 끝 그래프를 다시 조립해 지문 대조 (솔브 없음 · 원천 없는 문맥 = fail-closed) · Q3 (가) RR1-02 = 묶음 B 의 B7 (진단 합 보호) — 묶음 B 에이전트에 전달 (지시서 덧붙임 `docs/reviews/rint2_rr_fix_evidence_20261023/BRIEF_B.md` 끝).
+- Q4 (가) Q9 설계 개정 5 (`docs/reviews/rint2_rr_fix_evidence_20261023/q9_predict_units_design.md` §10) · Q5 (가) 개발 탐침 사전 원장 `docs/reviews/rint2_dev_probe_ledger_20261026.md` (결과 0 건) · Q6 (가) S0 단계 1 조건부 진행 (kgy 출력 대기) · Q7 (가) 순서 그대로.

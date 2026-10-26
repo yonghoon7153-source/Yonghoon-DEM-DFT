@@ -133,3 +133,9 @@
   - `ca_s0_census.py` · `carbon_junction.py` 가 바뀌면 R 에 쓰는 S0 보고는 끝 핀에서 다시 만든다 (메인이 기록).
 - 보고 = BRIEF §보고 그대로 (마지막 메시지 하나 · 표 위주 · 메인이 `REPORT_B.md` 로 옮긴다 · 결정 필요 목록 포함).
 - 규칙 = BRIEF §규칙 그대로 + 위 kgy 판.
+
+## B6 · B7 (1저자 10-26 *"권고대로해"* · 수정 계획 `docs/reviews/rint2_rr1_fix_plan_20261026.md` Q1 – Q3 (가) · Codex 회차 ① RR1-01 · RR1-02)
+
+- **B6 = RR1-01 (P2)** — 생산자: SV 기록의 주 해 · 각 끝마다 실제로 푼 계의 정규화된 가중 그래프 지문 (DOF 식별 집합 + 쌍별 합산 전도도 (병렬 항 합산 · binary64 정확값 · 쌍 정렬) + 판 결합) 을 증서 결합 칸에.  소비자 (`ca_ext_record_ok` · `sv_cf_problem` · 사슬 `read_run`): SV 기록 밖의 봉인된 원천 (같은 런의 raster · registry · 계획 · 등록 절단 규칙) 에서 끝 그래프를 다시 조립 (솔브 없음) 해 같은 지문을 만들고 대조 · 다르면 구조화 실패 · 원천 없는 문맥 = fail-closed (clear 금지).  금지 = 해시 칸만 새로 만든 사본 비교 · `G_cut != G_full` 규칙 · 원시 간선 개수 검사.  시험 먼저 = Codex 반례 (PAR c=1 + (0.5,1.5,9.5) · 격자 (7,3,10) · 주 증서를 아래 끝으로 복사) → 고치기 전 통과 (FAIL) → 뒤 거부 · 정직 FLOAT · UFLOAT · PAR c=1 · 등전위 간선 삭제 정직 기록 통과 · k>0 반례 거부 유지 · X6 / X3 / X5 결과 불변.  조립 비용 (fixture · SBE 어림 = 추정 표지).
+- **B7 = RR1-02 (P3)** — `scripts/step3_conv_cert.py` raw KCL 진단 합 = 넘치면 RuntimeWarning 없이 구조화 NOT_CERTIFIABLE · 시험 먼저 (노드 3 · gb 8e307 · gt 1 · phi .2 · warnings-as-errors) · 정상 20 회로 증서 비트 그대로.
+- 등록이 정하지 않은 자리 (예: 원천 없는 문맥의 처리 방식) = 고르지 않고 REPORT_B 의 "결정 필요".
