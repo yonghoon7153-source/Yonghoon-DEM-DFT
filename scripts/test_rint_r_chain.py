@@ -580,11 +580,106 @@ def ledger(wpath):
     return [json.loads(x)['sigma'] for x in p.read_text(encoding='utf-8').splitlines()] if p.exists() else []
 
 
+# ═════════════════════════ ★ 10-25 묶음 B (RCA2-02 · 1저자 10-23 Q2 (가) (가-1)) git 고정물 저장소 ═════════════════════════
+#   사슬 · 러너 = 한 핀 작업 트리 (등록 R §10 (0)) — 사슬 폴더 (RR.HERE) = 임시 git 저장소의 scripts (CODE18 + S0 일곱 사본 · 가짜 러너 =
+#   `sdcp_gain_vox015_8arm.sh`) · git 신원 = 진짜 조회 (옛 = 이 리포의 HEAD + dirty False 고정 — 고쳐진 작업 트리에서 시험이 멈추지 않게 ·
+#   엄격한 git 대조 (미확인 = 멈춤 · ignore 밖 untracked = dirty) 뒤에는 그 고정으로 시험할 수 없다 → git 저장소 고정물로 옮겼다 · 검사는 약하게
+#   하지 않는다).  F5 계획 커밋 = 같은 저장소의 떠 있는 커밋 (HEAD 와 무관 · `plan_commit`).
+#: 같은 판 대조 파일 — 옛 12 + Codex 판정문 F1 이 짚은 모듈 6 (사슬 CODE_FILES 와 시험 D14 가 대조 · 고치기 전 판 = 12 → D14 실패가 옳은 이유)
+CODE_NEW6 = ('ca_ext_cjunc.py', 'additives.py', 'se_material.py', 'lens_geometry.py', 'step4_dyn.py', 'rint_cycle_traj.py')
+CODE18 = ('rint_r_chain.py', 'run_contract.py', 'ca_ext_svcf.py', 'sr01_stamp_compare.py', 'step3_conv_cert.py', 'carbon_junction.py',
+          'ca_s0_census.py', 'ptfe_face_alpha.py', 'step3_sigma.py', 'mpm_webapp_payload.py', 'fibre_segment_raster.py',
+          'sdcp_gain_vox015_8arm.sh') + CODE_NEW6
+R_PLAN_REL = 'docs/data/rint2_s0_sbe_x/rint_r_plan.json'          # S0 단계 2 보고의 r_plan.path (리포 상대 · 고정물 커밋 안 자리)
+GIT_CFG = ('-c', 'user.email=t@t', '-c', 'user.name=t', '-c', 'commit.gpgsign=false', '-c', 'init.defaultBranch=main')
+
+
+def git_(repo, *a, inp=None, env=None):
+    """고정물 git (실패 = 예외 — 고정물이 못 서면 시험이 그 자리에서 떨어진다)."""
+    import subprocess
+    r = subprocess.run(['git', '-C', str(repo), *GIT_CFG, *a], input=inp, capture_output=True, env=env)
+    if r.returncode != 0:
+        raise RuntimeError(f'git {a[:2]} rc {r.returncode}: {r.stderr.decode("utf-8", "replace")[:300]}')
+    return r.stdout.decode('utf-8', 'replace').strip()
+
+
+def make_code_repo(path, runner_text, edit=None):
+    """git 고정물 저장소 → scripts 폴더 (CODE18 + S0 일곱 = 이 트리 파일 사본 · 러너 = runner_text · .gitignore = 이 리포 것 · 커밋 하나 ·
+    작업 트리 깨끗).  edit = 커밋 전에 scripts 폴더를 손댐."""
+    path = Path(path)
+    sd = path / 'scripts'
+    sd.mkdir(parents=True)
+    for nm in dict.fromkeys(CODE18 + S0_SAME7):
+        if nm == 'sdcp_gain_vox015_8arm.sh':
+            (sd / nm).write_text(runner_text, encoding='utf-8')
+        else:
+            shutil.copy2(SCRIPTS / nm, sd / nm)
+    shutil.copy2(ROOT / '.gitignore', path / '.gitignore')
+    if edit is not None:
+        edit(sd)
+    git_(path, 'init', '-q')
+    git_(path, 'add', '-A')
+    git_(path, 'commit', '-q', '-m', 'fixture')
+    return sd
+
+
+def clone_repo(tag, edit=None, msg='다른 판 (시험)'):
+    """고정물 저장소의 clone (`--shared` = 떠 있는 F5 계획 커밋도 보인다 · 같은 HEAD · 다른 절대 경로 = 두 기계 꼴) → scripts 폴더.
+    edit = 고쳐서 커밋 (다른 HEAD · 다른 코드)."""
+    dst = Path(TD) / 'clones' / tag
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    git_(dst.parent, 'clone', '-q', '--shared', str(FX['coderepo']), str(dst))
+    if edit is not None:
+        edit(dst / 'scripts')
+        git_(dst, 'add', '-A')
+        git_(dst, 'commit', '-q', '-m', msg)
+    return dst / 'scripts'
+
+
+def append_to(name, text='\n# 다른 판 (시험)\n'):
+    def fn(sd):
+        with open(Path(sd) / name, 'a', encoding='utf-8') as f:
+            f.write(text)
+    return fn
+
+
+@contextlib.contextmanager
+def at_repo(sd=None, runner=None):
+    """사슬 폴더 (RR.HERE) · 러너를 다른 체크아웃으로 (두 기계 꼴 · git 밖 사본 · 다른 판) — 끝나면 고정물로.
+    ⚠ 주 시나리오 (s_main · s_main_predict · main_dirs) 는 이 블록 **밖**에서 먼저 만든다 (scen 캐시가 다른 체크아웃의 결과를 담지 않게)."""
+    old = (RR.HERE, FX['runner'])
+    RR.HERE = Path(sd) if sd is not None else RR.HERE
+    FX['runner'] = Path(runner) if runner is not None else Path(RR.HERE) / 'sdcp_gain_vox015_8arm.sh'
+    try:
+        yield
+    finally:
+        RR.HERE, FX['runner'] = old
+
+
+def plan_commit(pb, rel=R_PLAN_REL):
+    """F5 — 계획 바이트를 rel 자리에 담은 커밋 (고정물 저장소의 떠 있는 커밋 · 작업 트리 · HEAD 그대로) → 40-hex (바이트 · 자리마다 하나)."""
+    key = ('plan_commit', rel, hashlib.sha256(pb).hexdigest())
+    if key not in FX:
+        repo = FX['coderepo']
+        blob = git_(repo, 'hash-object', '-w', '--stdin', inp=pb)
+        idx = Path(TD) / f'_index_{len(FX)}'
+        env = dict(os.environ, GIT_INDEX_FILE=str(idx))
+        git_(repo, 'update-index', '--add', '--cacheinfo', f'100644,{blob},{rel}', env=env)
+        tree = git_(repo, 'write-tree', env=env)
+        FX[key] = git_(repo, 'commit-tree', tree, '-m', 'plan (시험 F5)')
+        idx.unlink()
+    return FX[key]
+
+
 # ═════════════════════════ 고정물 · 단계 호출 ═════════════════════════
 def fixtures():
-    FX['runner'] = Path(TD) / 'runner.sh'
     (Path(TD) / 'fake.py').write_text(FAKE_SRC, encoding='utf-8')
-    FX['runner'].write_text(f'#!/bin/bash\nexec {sys.executable} -I -S {Path(TD) / "fake.py"} "$@"\n', encoding='utf-8')
+    #  ★ 10-25 묶음 B — 러너 = git 고정물 저장소 안 (옛 = TD/runner.sh · git 밖) · 사슬 폴더 = 같은 저장소의 scripts
+    FX['coderepo'] = Path(TD) / 'coderepo'
+    FX['code_sd'] = make_code_repo(FX['coderepo'], f'#!/bin/bash\nexec {sys.executable} -I -S {Path(TD) / "fake.py"} "$@"\n')
+    FX['runner'] = FX['code_sd'] / 'sdcp_gain_vox015_8arm.sh'
+    FX['here_real'] = RR.HERE
+    RR.HERE = FX['code_sd']
     FX['root'] = Path(TD) / 'root'
     for k in (SBE_KIT, DBE_KIT):
         (FX['root'] / k).mkdir(parents=True)
@@ -619,20 +714,21 @@ def fixtures():
     FX['reg_unreg'] = reg_with('⬜', 'reg_unreg.md')
     FX['reg_s0_unreg'] = reg_with(f'`{sha}`', 'reg_s0_unreg.md', s0cell='⬜')
     FX['reg_s0_other'] = reg_with(f'`{sha}`', 'reg_s0_other.md', s0cell='`' + '1' * 64 + '`')
-    #  ★ PF2 D (10-22 · PRE2-design-02 · 08) — S0 단계 1 보고 (가짜 · census · registry 일곱 파일 지문 = 이 트리 · dirty False) ·
-    #    사슬의 git 신원 = 진짜 HEAD · **dirty False** (시험을 고쳐진 작업 트리에서 돌려도 단계가 dirty 로 멈추지 않게 — dirty 판정 자체는 D06 이
-    #    임시 git 저장소로 · 단계별 대조는 D01–D05 가 신원을 바꿔 본다) · 파일 지문 = 실제 파일 (사슬 함수 그대로)
+    #  ★ PF2 D (10-22 · PRE2-design-02 · 08) — S0 단계 1 보고 (가짜 · census · registry 일곱 파일 지문 = 이 트리 = 고정물 사본 · dirty False) ·
+    #    ★ 10-25 묶음 B — 사슬 git 신원 = 고정물 저장소의 진짜 조회 (옛 = 이 리포 HEAD + dirty False 고정 · 시험이 신원을 바꿔 볼 때 = d_identity ·
+    #    at_repo) · 파일 지문 = 고정물 scripts (사슬 함수 그대로)
     FX['s1'] = s0_report(1, 's1_main')
     FX['git_identity_real'] = RR.git_identity
-    RR.git_identity = lambda path, _g=FX['git_identity_real']: dict(_g(path), dirty=False)
 
 
 def plan_set(name, reg_name=None, **over):
-    """계획 한 벌 (기본 계획 + 바꾼 칸) → (계획 경로, sha256, 그 해시를 채운 등록 사본) — 계획마다 등록 사본 하나 (해시가 다르다)."""
+    """계획 한 벌 (기본 계획 + 바꾼 칸) → (계획 경로, sha256, 그 해시를 채운 등록 사본) — 계획마다 등록 사본 하나 (해시가 다르다) ·
+    ★ 10-25 묶음 B (F5) — 계획 바이트를 sha 로 기억한다 (단계 2 보고의 계획 커밋 = 그 바이트를 R_PLAN_REL 에 담은 커밋)."""
     plan = dict(FX['plan_obj'], **over)
     p = Path(TD) / f'{name}.json'
     p.write_text(json.dumps(plan, indent=1, sort_keys=True), encoding='utf-8')
     sha = hashlib.sha256(p.read_bytes()).hexdigest()
+    FX.setdefault('plan_bytes', {})[sha] = p.read_bytes()
     return p, sha, FX['reg_with'](f'`{sha}`', reg_name or f'reg_{name}.md')
 
 
@@ -660,8 +756,11 @@ def s0_report(stage, name, plan_sha=None, s0_sha=None, kit=None, mutate=None, ra
         return p
     pl = {'sha256': s0_sha or FX['s0_sha'], 'source': 'stage1_computed'}
     if stage == 2:
-        pl = {'sha256': s0_sha or FX['s0_sha'], 'source': 'commit:' + 'a' * 40,
-              'r_plan': {'path': 'docs/data/rint2_s0_sbe_x/rint_r_plan.json', 'sha256': plan_sha or FX['plan_sha'],
+        #  ★ 10-25 묶음 B (F5 · 판정문 §9) — 계획 출처 = 그 R 계획 바이트를 R_PLAN_REL 에 담은 고정물 커밋 (옛 = 'commit:' + 'a' * 40 · 커밋 없음 ·
+        #    사슬이 문법 · blob 을 안 봐 통과했다) · 바이트를 모르는 sha (손댄 반례) = 옛 가짜 출처 그대로 (앞 대조가 먼저 멈춘다)
+        pb = (FX.get('plan_bytes') or {}).get(plan_sha or FX['plan_sha'])
+        pl = {'sha256': s0_sha or FX['s0_sha'], 'source': 'commit:' + (plan_commit(pb) if pb is not None else 'a' * 40),
+              'r_plan': {'path': R_PLAN_REL, 'sha256': plan_sha or FX['plan_sha'],
                          's_min_um': 0.6, 'tol_ff_um': 0.05, 'len_law': 'len_scaled_v0', 'unreg_law': 'cut', 'step3_rtol': 1e-12,
                          'checked': 'fixture'}}
     rep = {'schema': S0m.SCHEMA, 'stage': stage, 'tool': S0m.TOOL_VERSION,
@@ -4151,17 +4250,19 @@ def t_D09():
     return c_case('D09', 'CODE_PIN_MISMATCH', s2=s0_report(2, 'D09', mutate=_d_set_digest('step3_sigma.py')))
 
 
-@check('D10', '정상 기록 — 사다리 · 예측 요약 code = git 신원 (dirty False) + 코드 파일 지문 12 (사슬 폴더 = 실제 파일 sha256 · 러너 폴더 · '
-              '러너 sha256) · S0 단계 1 기록 (보고 sha256 · 지문 일곱 · S0 계획 sha256) · 기계 이름표 null · 세 단계 지문 같음')
+@check('D10', '정상 기록 — 사다리 · 예측 요약 code = git 신원 (dirty False) + 코드 파일 지문 18 (★ 10-25 묶음 B · 옛 12 · 사슬 폴더 = 고정물 '
+              'scripts 파일 sha256 · 러너 폴더 · 러너 sha256) · S0 단계 1 기록 (보고 sha256 · 지문 일곱 · S0 계획 sha256) · 기계 이름표 null · '
+              '세 단계 지문 같음')
 def t_D10():
     s, s1, p = s_main('P0')['sum'] or {}, s_main('P1')['sum'] or {}, s_main_predict()['sum'] or {}
     c = s.get('code') or {}
     files = c.get('files') or []
-    want = [{'file': nm, 'sha256': (hashlib.sha256((SCRIPTS / nm).read_bytes()).hexdigest() if (SCRIPTS / nm).is_file() else None)}
+    here = Path(FX['code_sd'])
+    want = [{'file': nm, 'sha256': (hashlib.sha256((here / nm).read_bytes()).hexdigest() if (here / nm).is_file() else None)}
             for nm in getattr(RR, 'CODE_FILES', ())]
     rec1 = (s.get('s0_reports') or {}).get('stage1') or {}
     names1 = {x.get('file') for x in rec1.get('file_digests') or []}
-    ok = (len(files) == 12 and files == want and all(x['sha256'] for x in files)
+    ok = (len(files) == 18 and files == want and all(x['sha256'] for x in files)
           and c.get('runner_sha256') == hashlib.sha256(Path(FX['runner']).read_bytes()).hexdigest()
           and isinstance(c.get('runner_files'), list) and (c.get('chain') or {}).get('dirty') is False
           and rec1.get('sha256') == hashlib.sha256(Path(FX['s1']).read_bytes()).hexdigest() and rec1.get('plan_sha256') == FX['s0_sha']
@@ -4194,32 +4295,45 @@ def t_D11():
             ([(x['sum'] or {}).get('machine') for x in (a, b, p)], v['rc'], (v['v'] or {}).get('verdict'), bad, rv['rc']))
 
 
-@check('D12', '추적 파일 수정 여부 = 실제 git (임시 저장소 · 고정물 신원 아님): 깨끗 → dirty False · 추적 안 된 파일만 → False · 추적 파일 고침 '
-              '→ True · code_files = CODE_FILES 이름마다 sha256 (없는 파일 = null)')
+@check('D12', '추적 파일 수정 여부 = 실제 git (임시 저장소 · 고정물 신원 아님): 깨끗 → dirty False · ★ 10-25 묶음 B (가-1) ignore 밖 추적 안 된 '
+              '파일만 → True (옛 = False · --untracked-files=no) · ignore 안 파일만 (__pycache__/ · *.pyc) → False · 추적 파일 고침 → True · '
+              'index 를 깨뜨림 (status rc ≠ 0 · rev-parse 는 됨) → HEAD 40-hex · dirty None (False 로 바꾸지 않는다) · git 밖 폴더 → HEAD · dirty '
+              'None · 저장소 상대 경로 (rel) 기록 · code_files = CODE_FILES 이름마다 sha256 (없는 파일 = null)')
 def t_D12():
-    import subprocess
     g = FX['git_identity_real']
     d = Path(TD) / 'D12_repo'
     d.mkdir()
-
-    def run(*a):
-        return subprocess.run(['git', '-C', str(d), *a], capture_output=True, text=True)
-    run('init', '-q')
     (d / 'rint_r_chain.py').write_text('x = 1\n', encoding='utf-8')
-    run('add', 'rint_r_chain.py')
-    run('-c', 'user.email=t@t', '-c', 'user.name=t', '-c', 'commit.gpgsign=false', 'commit', '-q', '-m', 'c')
+    (d / '.gitignore').write_text('__pycache__/\n*.pyc\n', encoding='utf-8')
+    git_(d, 'init', '-q')
+    git_(d, 'add', '-A')
+    git_(d, 'commit', '-q', '-m', 'c')
     clean = g(d / 'rint_r_chain.py')
+    (d / '__pycache__').mkdir()
+    (d / '__pycache__' / 'm.cpython-311.pyc').write_bytes(b'\0')
+    (d / 'x.pyc').write_bytes(b'\0')
+    ignored = g(d / 'rint_r_chain.py')
     (d / 'untracked.txt').write_text('u', encoding='utf-8')
     untracked = g(d / 'rint_r_chain.py')
+    (d / 'untracked.txt').unlink()
     (d / 'rint_r_chain.py').write_text('x = 2\n', encoding='utf-8')
     dirty = g(d / 'rint_r_chain.py')
     cf = RR.code_files(d) if hasattr(RR, 'code_files') else None
     want = {'rint_r_chain.py': hashlib.sha256(b'x = 2\n').hexdigest()}
     ok_cf = (isinstance(cf, list) and [x.get('file') for x in cf] == list(getattr(RR, 'CODE_FILES', ()))
              and all(x.get('sha256') == want.get(x.get('file')) for x in cf))
-    return (clean.get('dirty') is False and untracked.get('dirty') is False and dirty.get('dirty') is True
-            and isinstance(clean.get('head'), str) and len(clean['head']) == 40 and ok_cf,
-            (clean, untracked, dirty, 'ok' if ok_cf else cf))
+    (d / '.git' / 'index').write_bytes(b'not an index')
+    broken = g(d / 'rint_r_chain.py')
+    out = Path(TD) / 'D12_nogit'
+    out.mkdir()
+    (out / 'rint_r_chain.py').write_text('x = 1\n', encoding='utf-8')
+    nogit = g(out / 'rint_r_chain.py')
+    h40 = isinstance(clean.get('head'), str) and re.fullmatch(r'[0-9a-f]{40}', clean['head']) is not None
+    return (clean.get('dirty') is False and ignored.get('dirty') is False and untracked.get('dirty') is True and dirty.get('dirty') is True
+            and h40 and clean.get('rel') == 'rint_r_chain.py' and ok_cf
+            and broken.get('head') == clean['head'] and broken.get('dirty') is None
+            and nogit.get('head') is None and nogit.get('dirty') is None,
+            (clean, ignored, untracked, dirty, broken, nogit, 'ok' if ok_cf else cf))
 
 
 @check('D13', '감도 단계 — --after-main 의 주 예측 요약 코드 파일 지문 ≠ 지금 (손댐) → MAIN_NOT_DONE · rc 3 · 러너 0 회')
@@ -4231,16 +4345,18 @@ def t_D13():
     return (r['rc'] == 3 and stop_code(r) == 'MAIN_NOT_DONE' and n_calls(r['world']) == 0, (r['rc'], stop_code(r), n_calls(r['world'])))
 
 
-@check('D14', '같은 판 파일 목록 — 사슬 S0_SAME_FILES = 등록 R §2-1b 일곱 · CODE_FILES (12) ⊇ 일곱 + 사슬 · 러너 · 증서 · 계약 · SV 증거 · '
-              'S0 보고 code.file_digests 가 일곱을 다 싣는다 (ca_s0_census._code_info · 옛 = 다섯)')
+@check('D14', '같은 판 파일 목록 — 사슬 S0_SAME_FILES = 등록 R §2-1b 일곱 · CODE_FILES (★ 10-25 묶음 B = 18 · 옛 12) ⊇ 일곱 + 사슬 · 러너 · '
+              '증서 · 계약 · SV 증거 + 판정문 F1 의 모듈 6 (ca_ext_cjunc · additives · se_material · lens_geometry · step4_dyn · rint_cycle_traj) = '
+              '시험 쪽 목록 그대로 · S0 보고 code.file_digests 가 일곱을 다 싣는다 (ca_s0_census._code_info · 옛 = 다섯)')
 def t_D14():
     import ca_s0_census as S0m
     same = tuple(getattr(RR, 'S0_SAME_FILES', ()))
     code = tuple(getattr(RR, 'CODE_FILES', ()))
     names = {x['file'] for x in S0m._code_info()['file_digests']}
-    need = set(S0_SAME7) | {'rint_r_chain.py', 'sdcp_gain_vox015_8arm.sh', 'step3_conv_cert.py', 'run_contract.py', 'ca_ext_svcf.py'}
-    return (len(same) == 7 and set(same) == set(S0_SAME7) and need <= set(code) and len(set(code)) == len(code) == 12
-            and set(S0_SAME7) <= names, (same, code, sorted(names)))
+    need = (set(S0_SAME7) | {'rint_r_chain.py', 'sdcp_gain_vox015_8arm.sh', 'step3_conv_cert.py', 'run_contract.py', 'ca_ext_svcf.py'}
+            | set(CODE_NEW6))
+    return (len(same) == 7 and set(same) == set(S0_SAME7) and need <= set(code) and len(set(code)) == len(code) == 18
+            and set(code) == set(CODE18) and set(S0_SAME7) <= names, (same, code, sorted(names)))
 
 
 @check('D15', '사다리 — --s0-stage1-report 없음 → 인자 오류 (rc 2) · 러너 0 회 · 출력 폴더 없음 (단계 1 지문 대조 없이 σ 런 없음)')
@@ -4254,21 +4370,12 @@ def t_D15():
 
 
 @check('D16', '러너 폴더의 census · registry 파일 (step3_sigma.py) ≠ S0 보고 지문 (사슬 폴더는 같음) → CODE_PIN_MISMATCH · 러너 0 회 · 사유 = 러너 폴더 '
-              '(러너가 돌리는 코드 = 러너 폴더 · 그 폴더에 있는 파일만 대조)')
+              '(러너가 돌리는 코드 = 러너 폴더) · ★ 10-25 묶음 B — 러너 = git 체크아웃 (고정물 clone + step3_sigma.py 고쳐 커밋 · 옛 = git 밖 폴더)')
 def t_D16():
     def go():
-        d = Path(TD) / 'D16_runner'
-        d.mkdir()
-        r2 = d / 'runner.sh'
-        r2.write_text(Path(FX['runner']).read_text(encoding='utf-8'), encoding='utf-8')
-        r2.chmod(0o755)
-        (d / 'step3_sigma.py').write_text('# 다른 판 (시험 D16)\n', encoding='utf-8')
-        old = FX['runner']
-        FX['runner'] = r2
-        try:
+        sd = clone_repo('D16', edit=lambda d: (d / 'step3_sigma.py').write_text('# 다른 판 (시험 D16)\n', encoding='utf-8'))
+        with at_repo(runner=sd / 'sdcp_gain_vox015_8arm.sh'):
             return ladder('D16', world('D16'))
-        finally:
-            FX['runner'] = old
     r = scen('D16', go)
     why = str(((r['sum'] or {}).get('stop') or {}).get('cause'))
     return (r['rc'] == 3 and stop_code(r) == 'CODE_PIN_MISMATCH' and n_calls(r['world']) == 0 and '러너 폴더' in why,
@@ -4346,6 +4453,329 @@ def t_B12():
         return verdict('B12', lp + [pp])
     r = scen('B12', go)
     return (r['rc'] == 3 and stop_code(r) == 'S0_REPORT_MISMATCH' and (r['v'] or {}).get('verdict') == 'NOT_COMPUTED', (r['rc'], stop_code(r)))
+
+
+# ── ★ 10-25 묶음 B (RCA2-02 · 1저자 10-23 Q2 (가) (가-1) · 판정문 §4 F1 · F2 · §9 F5 · C6 #12 · #13 · #14 · Q9 개정 4 R4-10 · R4-12) 같은 코드 ──
+#    ① git 두 조회 (rev-parse · status) 의 종료코드 · HEAD = 40-hex · dirty = 엄격한 False (조회 실패 · git 밖 = 미확인 = 멈춤 · False 로 바꾸지
+#    않는다) ② ignore 밖 untracked = dirty ③ 한 단계 안 사슬 ↔ 러너 (HEAD · 파일 지문 · 러너 파일) ④ 코드 키 = 저장소 상대 경로 (절대 경로 뺌) ·
+#    대조 파일 18 ⑤ 환경 지문 — 같음 단위 = python 부 판 · numpy · scipy 판 문자열 (나머지 = 기록만 · 판정 프로세스 환경 = 기록만 · R4-11)
+#    ⑥ F5 — 계획 출처 = commit:<40-hex> + 그 커밋의 R 계획 blob sha256 = 계획 sha256.  옛 사슬 = 이 시험들에서 돌거나 (러너 > 0 회) 통과한다.
+def y_ladder(tag, sd=None, runner=None, law='P0', **kw):
+    """사슬 폴더 · 러너를 sd (체크아웃) · runner 로 두고 사다리 하나 (기본 = 고정물)."""
+    with at_repo(sd, runner):
+        return ladder(tag, world(tag), law=law, **kw)
+
+
+def y_stopped(r, code='CODE_PIN_MISMATCH'):
+    return r['rc'] == 3 and stop_code(r) == code and n_calls(r['world']) == 0
+
+
+def y_why(r):
+    return str(((r.get('sum') or r.get('v') or {}).get('stop') or {}).get('cause'))
+
+
+def _cp(cmd, k, rc, out='', err=''):
+    """가짜 git 결과 (text 인자를 따라 str · bytes)."""
+    import subprocess as _sp
+    t = bool(k.get('text') or k.get('universal_newlines') or k.get('encoding'))
+    return _sp.CompletedProcess(cmd, rc, out if t else out.encode(), err if t else err.encode())
+
+
+@contextlib.contextmanager
+def git_patch(fn):
+    """git 조회 바꿔 끼우기 — fn(cmd, kwargs) → CompletedProcess | None (None = 진짜 git) · git 이 아닌 호출 (러너 bash) 은 그대로."""
+    import subprocess as _sp
+    orig = _sp.run
+
+    def run(cmd, *a, **k):
+        if isinstance(cmd, (list, tuple)) and list(cmd[:1]) == ['git']:
+            got = fn(list(cmd), k)
+            if got is not None:
+                return got
+        return orig(cmd, *a, **k)
+    _sp.run = run
+    try:
+        yield
+    finally:
+        _sp.run = orig
+
+
+@contextlib.contextmanager
+def env_as(unit=None, rec=None):
+    """환경 지문 바꿔 끼우기 (⑤) — 사슬에 env_record 가 없으면 (고치기 전 판) 아무것도 안 한다 (옛 사슬 = 환경을 안 봐 통과 → 시험 실패가
+    옳은 이유)."""
+    orig = getattr(RR, 'env_record', None)
+    if orig is None:
+        yield
+        return
+    new = copy.deepcopy(orig())
+    if unit:
+        new['unit'] = dict(new.get('unit') or {}, **unit)
+    if rec:
+        new['record_only'] = dict(new.get('record_only') or {}, **rec)
+    RR.env_record = lambda _n=new: copy.deepcopy(_n)
+    try:
+        yield
+    finally:
+        RR.env_record = orig
+
+
+KGY_UNIT = {'python_minor': '3.8', 'numpy': '1.24.4', 'scipy': '1.10.1'}     # kgy dem-venv 판 (1저자 10-24) — 시험의 같음 단위 값
+
+
+@check('Y01', '판정문 F1 — git 밖 사본 (고정물 scripts 의 사본 · .git 없음) 의 사슬 · 러너로 사다리 → CODE_PIN_MISMATCH · rc 3 · 러너 0 회 · 사유 = '
+              'HEAD 미확인 (옛 사슬 = HEAD · dirty None 을 기록만 하고 돌았다) · 같은 사본의 사슬로 판정 → CODE_PIN_MISMATCH · NOT_COMPUTED')
+def t_Y01():
+    def go():
+        dirs = main_dirs()
+        sd = Path(TD) / 'nogit' / 'scripts'
+        shutil.copytree(FX['code_sd'], sd)
+        a = y_ladder('Y01', sd)
+        with at_repo(sd):
+            v = verdict('Y01v', dirs)
+        return a, v
+    a, v = scen('Y01', go)
+    return (y_stopped(a) and '미확인' in y_why(a) and v['rc'] == 3 and stop_code(v) == 'CODE_PIN_MISMATCH'
+            and (v['v'] or {}).get('verdict') == 'NOT_COMPUTED',
+            (a['rc'], stop_code(a), n_calls(a['world']), y_why(a)[-200:], v['rc'], stop_code(v)))
+
+
+@check('Y02', '판정문 F1 — git status 실패 · rev-parse 는 성공: ① 실제 git (clone 의 .git/index 를 깨뜨림) 의 사다리 → CODE_PIN_MISMATCH · 러너 0 회 · '
+              '사유 = 미확인 (옛 사슬 = status 종료코드를 안 봐 dirty False 로 적고 돌았다) · ② Codex 탐침 꼴 (status 만 rc 128 · 빈 출력) → git 신원 '
+              'HEAD 40-hex · dirty None · code_dirty_problem 이 문제를 낸다 · ③ 판정 프로세스의 status rc 128 → CODE_PIN_MISMATCH')
+def t_Y02():
+    def fail(cmd, k):
+        return _cp(cmd, k, 128, '', 'fatal: cannot read index') if 'status' in cmd else None
+
+    def go():
+        dirs = main_dirs()
+        sd = clone_repo('Y02')
+        (sd.parent / '.git' / 'index').write_bytes(b'not an index')
+        a = y_ladder('Y02', sd)
+        with git_patch(fail):
+            ident = RR.git_identity(Path(RR.HERE) / 'rint_r_chain.py')
+            v = verdict('Y02v', dirs)
+        return a, ident, v
+    a, ident, v = scen('Y02', go)
+    prob = RR.code_dirty_problem({'chain': ident, 'runner': ident})
+    h40 = isinstance(ident.get('head'), str) and re.fullmatch(r'[0-9a-f]{40}', ident['head']) is not None
+    return (y_stopped(a) and '미확인' in y_why(a) and ident.get('dirty') is None and h40 and isinstance(prob, str) and '미확인' in prob
+            and v['rc'] == 3 and stop_code(v) == 'CODE_PIN_MISMATCH',
+            (a['rc'], stop_code(a), n_calls(a['world']), y_why(a)[-160:], ident, prob, v['rc'], stop_code(v)))
+
+
+@check('Y03', '① HEAD 꼴 — rev-parse HEAD 가 rc 0 인데 40 자 소문자 hex 아님 (짧은 sha · 대문자 · 빈 출력) · rc 128 (출력에 40-hex 가 있어도) → '
+              '사다리 CODE_PIN_MISMATCH · 러너 0 회 (옛 사슬 = 종료코드 · HEAD 글자를 안 봐 돌았다)')
+def t_Y03():
+    def go():
+        out = []
+        for i, (rc, txt) in enumerate(((0, 'deadbeef\n'), (0, 'A' * 40 + '\n'), (0, ''), (128, 'a' * 40 + '\n'))):
+            def fn(cmd, k, rc=rc, txt=txt):
+                return _cp(cmd, k, rc, txt) if cmd[-2:] == ['rev-parse', 'HEAD'] else None
+            with git_patch(fn):
+                out.append(y_ladder(f'Y03_{i}'))
+        return out
+    rs = scen('Y03', go)
+    return all(y_stopped(r) for r in rs), [(r['rc'], stop_code(r), n_calls(r['world'])) for r in rs]
+
+
+@check('Y04', '(가-1) — ignore 밖 추적 안 된 파일 = dirty: clone 에 scripts/new_helper.py (추적 안 됨) → 사다리 CODE_PIN_MISMATCH · 러너 0 회 (옛 사슬 = '
+              '--untracked-files=no 라 깨끗으로 돌았다) · 같은 clone 의 사슬로 판정 → CODE_PIN_MISMATCH · ignore 안 파일만 (__pycache__/ · *.pyc · venv/) '
+              '→ 사다리 CALIBRATED (멈추지 않는다)')
+def t_Y04():
+    def go():
+        dirs = main_dirs()
+        a_sd = clone_repo('Y04a')
+        (a_sd / 'new_helper.py').write_text('x = 1\n', encoding='utf-8')
+        a = y_ladder('Y04a', a_sd)
+        with at_repo(a_sd):
+            v = verdict('Y04v', dirs)
+        b_sd = clone_repo('Y04b')
+        (b_sd / '__pycache__').mkdir()
+        (b_sd / '__pycache__' / 'rint_r_chain.cpython-38.pyc').write_bytes(b'\0')
+        (b_sd / 'stray.pyc').write_bytes(b'\0')
+        (b_sd.parent / 'venv').mkdir()
+        (b_sd.parent / 'venv' / 'pyvenv.cfg').write_text('home = /usr\n', encoding='utf-8')
+        b = y_ladder('Y04b', b_sd)
+        return a, v, b
+    a, v, b = scen('Y04', go)
+    return (y_stopped(a) and v['rc'] == 3 and stop_code(v) == 'CODE_PIN_MISMATCH' and b['rc'] == 0
+            and (b['sum'] or {}).get('status') == 'CALIBRATED',
+            (a['rc'], stop_code(a), n_calls(a['world']), v['rc'], stop_code(v), b['rc'], (b['sum'] or {}).get('status'), y_why(b)[-160:]))
+
+
+@check('Y05', '판정문 F2 — 사슬 = 고정물 (깨끗 · HEAD a) · 러너 = 다른 체크아웃 (깨끗 · HEAD b · step3_conv_cert.py · ca_ext_svcf.py · run_contract.py 만 '
+              '고쳐 커밋 = S0 일곱 밖) → 사다리 CODE_PIN_MISMATCH · 러너 0 회 · 사유에 러너 (옛 사슬 = 자기 요약끼리만 비교해 돌았다) · Codex 탐침 꼴 '
+              '(code 기록의 러너 HEAD b · 러너 폴더 지문 셋 손댐) → code_dirty_problem 이 문제를 낸다 · 손대지 않은 기록 = 문제 없음')
+def t_Y05():
+    changed = ('step3_conv_cert.py', 'ca_ext_svcf.py', 'run_contract.py')
+
+    def edit(sd):
+        for nm in changed:
+            append_to(nm)(sd)
+
+    def go():
+        rsd = clone_repo('Y05', edit=edit)
+        return y_ladder('Y05', runner=rsd / 'sdcp_gain_vox015_8arm.sh')
+    r = scen('Y05', go)
+    rec = RR.code_record(str(FX['runner']))
+    mixed = copy.deepcopy(rec)
+    mixed['runner'] = dict(mixed.get('runner') or {}, head='b' * 40)
+    for row in mixed.get('runner_files') or []:
+        if row.get('file') in changed:
+            row['sha256'] = 'f' * 64
+    prob = RR.code_dirty_problem(mixed)
+    return (y_stopped(r) and '러너' in y_why(r) and isinstance(prob, str) and RR.code_dirty_problem(rec) is None,
+            (r['rc'], stop_code(r), n_calls(r['world']), y_why(r)[-200:], prob, RR.code_dirty_problem(rec)))
+
+
+@check('Y06', '판정문 §9 F5 — S0 단계 2 보고의 계획 출처: "commit:" (빈 sha) · 39 자 · 대문자 40 자 · 앞 공백 · 끝 줄바꿈 · 없는 커밋 · R 계획 파일이 '
+              '없는 커밋 · 다른 바이트 (계획 B) 를 같은 자리에 담은 커밋 · R 계획 경로 = 절대 · ".." → S0_REPORT_MISMATCH · 러너 0 회 (옛 사슬 = '
+              'commit: 접두만 봐 돌았다) · 정상 (그 R 계획 바이트를 담은 커밋) = B02 · 세 단계 요약의 출처를 같게 "commit:" 로 손댐 (단계끼리 기록은 '
+              '같음) → 판정 S0_REPORT_MISMATCH · NOT_COMPUTED')
+def t_Y06():
+    pb = FX['plan_bytes'][FX['plan_sha']]
+    good = plan_commit(pb)
+    _pB, shaB, _regB = b_plan_B()
+    other = plan_commit(FX['plan_bytes'][shaB])
+    nofile = plan_commit(pb, rel='docs/data/rint2_s0_sbe_x/other.json')
+
+    def src(v):
+        return lambda r: r['plan'].update(source=v)
+
+    def path(v):
+        return lambda r: r['plan']['r_plan'].update(path=v)
+    cases = (
+        ('commit: 빈 sha', src('commit:')),
+        ('39 자', src('commit:' + good[:39])),
+        ('대문자', src('commit:' + good.upper())),
+        ('앞 공백', src(' commit:' + good)),
+        ('끝 줄바꿈', src('commit:' + good + '\n')),
+        ('없는 커밋', src('commit:' + ('f' * 40 if good != 'f' * 40 else 'e' * 40))),
+        ('파일 없는 커밋', src('commit:' + nofile)),
+        ('다른 바이트', src('commit:' + other)),
+        ('절대 경로', path('/' + R_PLAN_REL)),
+        ('..', path('docs/../' + R_PLAN_REL)),
+    )
+    rs = [(nm, c_case(f'Y06_{i}', 'S0_REPORT_MISMATCH', s2=s0_report(2, f'Y06_{i}', mutate=fn))) for i, (nm, fn) in enumerate(cases)]
+
+    def go():
+        def cut(s):
+            s['s0_reports']['stage2'].update(plan_source='commit:')
+        lp = [b_tamper_copy(s_main(law)['out'], f'Y06_{law}', 'ladder_summary.json', cut) for law in ('P0', 'P1')]
+        pp = b_tamper_copy(s_main_predict()['out'], 'Y06_pred', 'predict_summary.json', cut)
+        return verdict('Y06v', lp + [pp])
+    v = scen('Y06v', go)
+    return (all(x[1][0] for x in rs) and v['rc'] == 3 and stop_code(v) == 'S0_REPORT_MISMATCH'
+            and (v['v'] or {}).get('verdict') == 'NOT_COMPUTED', ([(nm, x[1]) for nm, x in rs if not x[0]], v['rc'], stop_code(v)))
+
+
+@check('Y07', 'C6 #14 · Q9 R4-12 — 같은 코드 · 경로가 다른 두 체크아웃 (clone · 같은 HEAD · 두 기계 꼴): 사다리 P0 = 고정물 · P1 = clone → 예측 PREDICTED '
+              '(옛 코드 키 = 러너 절대 경로 → load_ladders CODE_PIN_MISMATCH) · 그 셋을 clone 의 사슬로 판정 = 주 판정과 같은 이름 · 감도 사다리를 clone '
+              '에서 (--after-main = 고정물 주 예측) → 멈추지 않는다 (check_after_main) · 다른 코드 (clone + step3_conv_cert.py 고쳐 커밋) · 다른 러너 '
+              '파일 (clone + 러너 고쳐 커밋) 의 사다리 P1 → 예측 CODE_PIN_MISMATCH · 러너 0 회')
+def t_Y07():
+    def go():
+        p0, mp = s_main('P0')['out'], s_main_predict()['out']
+        sd = clone_repo('Y07')
+        b = y_ladder('Y07_P1', sd, law='P1')
+        p = predict('Y07_pred', world('Y07_pred'), [p0, b['out']])
+        with at_repo(sd):
+            v = verdict('Y07v', [p0, b['out'], p['out']])
+            fv = ladder('Y07_FIBRE', world('Y07_FIBRE'), law='P0', variant='FIBRE', after=mp)
+        c_sd = clone_repo('Y07c', edit=append_to('step3_conv_cert.py'))
+        c = y_ladder('Y07c_P1', c_sd, law='P1')
+        pc = predict('Y07c_pred', world('Y07c_pred'), [p0, c['out']])
+        r_sd = clone_repo('Y07r', edit=append_to('sdcp_gain_vox015_8arm.sh', '# 다른 러너 (시험 Y07)\n'))
+        r = y_ladder('Y07r_P1', r_sd, law='P1')
+        pr = predict('Y07r_pred', world('Y07r_pred'), [p0, r['out']])
+        return b, p, v, fv, c, pc, r, pr
+    b, p, v, fv, c, pc, r, pr = scen('Y07', go)
+    v0 = s_verdict_main()
+    return ((b['sum'] or {}).get('status') == 'CALIBRATED' and p['rc'] == 0 and (p['sum'] or {}).get('status') == 'PREDICTED'
+            and v['rc'] == 0 and (v['v'] or {}).get('verdict') == (v0['v'] or {}).get('verdict')
+            and fv['rc'] == 0 and stop_code(fv) != 'MAIN_NOT_DONE'
+            and c['rc'] == 0 and y_stopped(pc) and r['rc'] == 0 and y_stopped(pr),
+            ((b['sum'] or {}).get('status'), p['rc'], stop_code(p), y_why(p)[-200:], v['rc'], (v['v'] or {}).get('verdict'),
+             fv['rc'], stop_code(fv), c['rc'], stop_code(pc), r['rc'], stop_code(pr)))
+
+
+@check('Y08', 'Q9 개정 4 R4-10 — 환경 지문 같음 단위 = python 부 판 · numpy · scipy 판 문자열: 사다리 P0 (python 3.8.10) · P1 (3.8.20 · 패치 판만 다름) · '
+              '예측 (3.8.10) → PREDICTED · P1 numpy 1.24.3 (P0 1.24.4) → 예측 CODE_PIN_MISMATCH · 러너 0 회 · 사다리 둘 = 1.24.4 인데 예측 프로세스 '
+              '1.24.3 → CODE_PIN_MISMATCH · 기록만 칸 (cupy · GPU · BLAS 계산 경로 · OPENBLAS_CORETYPE · CPU 모델 · numpy SIMD · python 전체 판) 다름 '
+              '→ PREDICTED · 단위 칸 미확인 (numpy None) 사다리 → CODE_PIN_MISMATCH · 러너 0 회 · 감도 사다리의 환경 ≠ 주 예측 → MAIN_NOT_DONE · '
+              '판정 — 예측 요약의 numpy 손댐 → CODE_PIN_MISMATCH · 판정 프로세스 환경이 단계와 달라도 판정 (기록만 · R4-11)')
+def t_Y08():
+    def go():
+        mp = s_main_predict()['out']
+        with env_as(KGY_UNIT, {'python': '3.8.10'}):
+            a0 = ladder('Y08a_P0', world('Y08a_P0'), law='P0')
+        with env_as(KGY_UNIT, {'python': '3.8.20'}):
+            a1 = ladder('Y08a_P1', world('Y08a_P1'), law='P1')
+        with env_as(KGY_UNIT, {'python': '3.8.10'}):
+            pa = predict('Y08a_pred', world('Y08a_pred'), [a0['out'], a1['out']])
+        with env_as(dict(KGY_UNIT, numpy='1.24.3')):
+            b1 = ladder('Y08b_P1', world('Y08b_P1'), law='P1')
+        with env_as(KGY_UNIT):
+            pb = predict('Y08b_pred', world('Y08b_pred'), [a0['out'], b1['out']])
+        with env_as(dict(KGY_UNIT, numpy='1.24.3')):
+            pc = predict('Y08c_pred', world('Y08c_pred'), [a0['out'], a1['out']])
+        with env_as(KGY_UNIT, {'cupy': 'cupy-cuda11x 12.0.0', 'gpu': ['Other GPU'], 'blas': [{'internal_api': 'other'}],
+                               'openblas_coretype': 'Haswell', 'cpu_model': 'Other CPU', 'numpy_simd': ['SSE2'], 'python': '3.8.20'}):
+            pd = predict('Y08d_pred', world('Y08d_pred'), [a0['out'], a1['out']])
+        with env_as({'numpy': None}):
+            g = ladder('Y08g', world('Y08g'), law='P0')
+        with env_as(dict(KGY_UNIT)):
+            h = ladder('Y08h', world('Y08h'), law='P0', variant='FIBRE', after=mp)
+        v = verdict('Y08v', [a0['out'], a1['out'], pa['out']])
+        t = b_tamper_copy(pa['out'], 'Y08t_pred', 'predict_summary.json', lambda s: s['code']['env']['unit'].update(numpy='1.24.3'))
+        vt = verdict('Y08vt', [a0['out'], a1['out'], t])
+        return a0, a1, pa, b1, pb, pc, pd, g, h, v, vt
+    a0, a1, pa, b1, pb, pc, pd, g, h, v, vt = scen('Y08', go)
+    ok = ((a0['sum'] or {}).get('status') == 'CALIBRATED' and (a1['sum'] or {}).get('status') == 'CALIBRATED'
+          and pa['rc'] == 0 and (pa['sum'] or {}).get('status') == 'PREDICTED' and b1['rc'] == 0 and y_stopped(pb) and y_stopped(pc)
+          and pd['rc'] == 0 and y_stopped(g) and y_stopped(h, 'MAIN_NOT_DONE') and v['rc'] == 0
+          and vt['rc'] == 3 and stop_code(vt) == 'CODE_PIN_MISMATCH')
+    return ok, (pa['rc'], stop_code(pa), y_why(pa)[-160:], stop_code(pb), stop_code(pc), pd['rc'], stop_code(pd), stop_code(g),
+                stop_code(h), v['rc'], stop_code(v), stop_code(vt))
+
+
+@check('Y09', '정상 기록 — 단계 요약 code.env = {unit: python 부 판 · numpy · scipy (이 프로세스 판 그대로) · record_only: python 전체 판 · cupy · GPU · '
+              'BLAS · OPENBLAS_CORETYPE · CPU 모델 · numpy SIMD 칸} · git 신원 rel = scripts/rint_r_chain.py · scripts/sdcp_gain_vox015_8arm.sh (저장소 '
+              '상대) · 코드 키에 절대 경로 글자 없음 (임시 폴더 · 고정물 저장소) · 사슬 HEAD = 러너 HEAD')
+def t_Y09():
+    import platform
+    import numpy
+    import scipy
+    s = s_main('P0')['sum'] or {}
+    c = s.get('code') or {}
+    env = c.get('env') or {}
+    unit = env.get('unit') or {}
+    ro = env.get('record_only') or {}
+    key = RR.code_key(c)
+    want_unit = {'python_minor': '%d.%d' % sys.version_info[:2], 'numpy': numpy.__version__, 'scipy': scipy.__version__}
+    need_ro = {'python', 'cupy', 'gpu', 'blas', 'openblas_coretype', 'cpu_model', 'numpy_simd'}
+    ok = (unit == want_unit and need_ro <= set(ro) and ro.get('python') == platform.python_version()
+          and (c.get('chain') or {}).get('rel') == 'scripts/rint_r_chain.py'
+          and (c.get('runner') or {}).get('rel') == 'scripts/sdcp_gain_vox015_8arm.sh'
+          and str(TD) not in key and str(Path(TD).resolve()) not in key
+          and (c.get('chain') or {}).get('head') == (c.get('runner') or {}).get('head'))
+    return ok, (unit, sorted(ro), (c.get('chain') or {}).get('rel'), (c.get('runner') or {}).get('rel'), key[:300])
+
+
+@check('Y10', '대조 파일 18 — 판정문 F1 의 모듈 6 (ca_ext_cjunc · additives · se_material · lens_geometry · step4_dyn · rint_cycle_traj) 하나의 지금 지문이 '
+              '사다리 기록과 다르다 (같은 HEAD) → 예측 CODE_PIN_MISMATCH · 러너 0 회 (옛 사슬 = 그 모듈을 안 봐 통과) · 봉인 32 의 둘 (se_material · '
+              'lens_geometry) = 읽고 해시만')
+def t_Y10():
+    def go():
+        lads = [s_main('P0')['out'], s_main('P1')['out']]
+        out = []
+        for nm in CODE_NEW6:
+            with d_files(nm):
+                out.append(predict(f'Y10_{nm}', world(f'Y10_{nm}'), lads))
+        return out
+    rs = scen('Y10', go)
+    return all(y_stopped(r) for r in rs), [(r['rc'], stop_code(r), n_calls(r['world'])) for r in rs]
 
 
 @check('N07', '★ PF2 E (PRE2-impl-03) S0 계획 중복 칸 ("gap_tol" 둘 · 등록 S0 줄 = 그 바이트의 sha256) → S0_PLAN_INVALID · 사유 = 중복 칸 '

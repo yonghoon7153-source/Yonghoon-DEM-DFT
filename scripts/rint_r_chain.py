@@ -64,6 +64,13 @@
     멈춤 (`CODE_PIN_MISMATCH` · 옛 = HEAD 만 · 같은 HEAD 의 dirty · 판정 문턱 한 줄을 못 막았다) · 사다리가 `--s0-stage1-report` (S0 단계 1 보고 ·
     그 보고가 만든 S0 계획 = `--s0-plan`) 와 단계 2 보고의 census · registry 일곱 파일 지문 (`S0_SAME_FILES` · 등록 R §2-1b) = 지금 R 런 코드인지
     대조 (다르면 멈춤 · s_min 다시 고르기 금지 문장 `S0_RERUN`) · `--machine` = 기계 이름표 (C · Q3 · 기록만 · 판정에 안 씀)
+★ 10-25 묶음 B (Codex 재검토 RCA2-02 · 판정문 §4 F1 · F2 · §9 F5 · C6 #12 · #13 · #14 · 1저자 10-23 Q2 (가) (가-1) · Q9 설계 개정 4 R4-10 · R4-12):
+  · 같은 코드 — git 두 조회 (rev-parse · status) 의 종료코드 · HEAD 40-hex · dirty 엄격한 False (조회 실패 · git 밖 = 미확인 = 멈춤 · False 로
+    바꾸지 않는다) · ignore 밖 추적 안 된 파일 = dirty · 한 단계 안 사슬 ↔ 러너 (HEAD · 코드 파일 지문 · 러너 파일) · 코드 키 = 저장소 상대
+    경로 (절대 경로 뺌 · 경로만 다른 두 체크아웃 = 같은 키) · 대조 파일 18 (Codex 가 짚은 모듈 6 더함) · 환경 지문 (같음 단위 = python 부 판 ·
+    numpy · scipy 판 · 나머지 = 기록만 · 판정 계산기 프로세스 = 대조 안 함 R4-11) → `CODE_PIN_MISMATCH` (`git_identity` · `code_dirty_problem` ·
+    `code_key` · `env_record` · `code_verdict_problem`)
+  · F5 — S0 단계 2 보고의 계획 출처 = commit:<40-hex> + 그 커밋 안 R 계획 blob sha256 = 계획 sha256 → `S0_REPORT_MISMATCH` (`plan_commit_problem`)
 """
 import argparse
 import glob
@@ -154,9 +161,16 @@ S0_REPORT_SCHEMA = 'ca-s0-census-v2'
 #: ★ PF2 D (10-22 · 사전 리뷰 2 회차 PRE2-design-02 · 08 · 결정 없음) — 같은 판 대조 파일 = 등록 R · kgy 명령이 이름 댄 생산 파일 중 사슬 ·
 #   러너 · payload · 증서 · 접합 · census · registry 쪽 (사슬이 부르는 계약 · SV 증거 · 판독 포함 · 시험 파일 · 재압밀 `mpm3d_compaction.py` 는
 #   R 런이 돌리지 않아 뺐다).  단계 요약에 이름마다 sha256 (사슬 폴더 · 러너 폴더) 을 남기고 다음 단계 · 판정 계산기가 지금 지문과 대조한다.
+#   ★ 10-25 묶음 B (RCA2-02 · 1저자 10-23 Q2 (가) ④ · 판정문 §4 F1) — Codex 가 짚은 모듈 6 을 더했다 (사슬 · payload · 접합 · 증서가 부르는
+#   `ca_ext_cjunc.py` · `additives.py` · `se_material.py` · `lens_geometry.py` · `step4_dyn.py` · `rint_cycle_traj.py` — `se_material.py` ·
+#   `lens_geometry.py` = 봉인 32 파일 → 읽고 해시만 한다 · 고치지 않는다) · 키 = 이 폴더 (저장소 상대 `rel` 폴더) 안 이름 (절대 경로 아님)
 CODE_FILES = ('rint_r_chain.py', 'run_contract.py', 'ca_ext_svcf.py', 'sr01_stamp_compare.py', 'step3_conv_cert.py', 'carbon_junction.py',
               'ca_s0_census.py', 'ptfe_face_alpha.py', 'step3_sigma.py', 'mpm_webapp_payload.py', 'fibre_segment_raster.py',
-              'sdcp_gain_vox015_8arm.sh')
+              'sdcp_gain_vox015_8arm.sh', 'ca_ext_cjunc.py', 'additives.py', 'se_material.py', 'lens_geometry.py', 'step4_dyn.py',
+              'rint_cycle_traj.py')
+RUNNER_NAME = 'sdcp_gain_vox015_8arm.sh'     # 등록 R §10 (0) 의 러너 — 한 단계 안 러너 파일 = 사슬 폴더의 이 파일 (★ 10-25 · Q2 (가) ③)
+#: ★ 10-25 묶음 B (RCA2-02 · Q2 (가) ⑤ · Q9 설계 개정 4 Q3 · R4-10) — 환경 지문의 같음 단위 (python 부 판 · numpy · scipy 판 문자열 정확히)
+ENV_UNIT_KEYS = ('python_minor', 'numpy', 'scipy')
 #: 등록 R §2-1b — S0 단계 1 · 단계 2 · R 런의 census · registry 가 같은 코드여야 하는 일곱 파일 (S0 보고 `code.file_digests` 와 대조)
 S0_SAME_FILES = ('ca_s0_census.py', 'carbon_junction.py', 'ptfe_face_alpha.py', 'step3_sigma.py', 'mpm_webapp_payload.py',
                  'fibre_segment_raster.py', 'sr01_stamp_compare.py')
@@ -259,7 +273,8 @@ STOPS = {
     'S0_PLAN_HASH_MISMATCH': 'S0 계획 해시 ≠ 등록 §2-1 개정값',
     'PLAN_CROSS_MISMATCH': '두 계획 대조 실패 (R 계획 ↔ S0 계획 ↔ 사슬 상수 · 등록 R §2-1 · §10-2 ⑪)',
     'S0_REPORT_MISMATCH': 'S0 단계 보고를 못 읽거나 꼴이 틀렸다 · 단계 2 보고가 봉인한 계획 해시 (R 계획 · S0 계획) ≠ 지금 계획 (★ PF2 B · Q2 — '
-                          'DBE 열람 전 계획 하나 · 바꾸려면 새 등록 · 등록 R §2-1 · §2-1b · §11 ④)',
+                          'DBE 열람 전 계획 하나 · 바꾸려면 새 등록 · 등록 R §2-1 · §2-1b · §11 ④) · (★ 10-25 묶음 B · 판정문 F5) 계획 출처 ≠ '
+                          'commit:<40-hex> · 그 커밋의 R 계획 blob sha256 ≠ 계획 sha256',
     'MAIN_NOT_DONE': '감도 단계인데 주 판정 단계 (사다리 둘 · 예측) 가 끝나지 않았다 · 묶음이 다르다 (--after-main · Q-F)',
     'MAIN_BINDING': '판정 입력의 감도 단계가 묶인 주 예측 ≠ 판정 입력의 주 예측 (Q-F)',
     'KIT_MISSING': '킷 폴더 · 러너가 없다',
@@ -289,7 +304,9 @@ STOPS = {
     'PREDICT_LADDER_MISMATCH': '예측이 쓴 사다리 ≠ 판정 입력 사다리',
     'REPLAY_MISMATCH': '원 팔 JSON 에서 다시 계산한 결정 ≠ 기록',
     'CODE_PIN_MISMATCH': '단계마다 코드 (사슬 · 러너) 가 다르다 · (★ PF2 D — PRE2-design-02 · 08) 코드 파일 지문 (sha256) ≠ 앞 단계 기록 · '
-                         '추적 파일이 고쳐진 트리 (dirty) · R 런 코드의 census · registry 일곱 파일 ≠ S0 단계 1 · 2 보고 (등록 R §2-1b)',
+                         '추적 파일이 고쳐진 트리 (dirty) · R 런 코드의 census · registry 일곱 파일 ≠ S0 단계 1 · 2 보고 (등록 R §2-1b) · '
+                         '(★ 10-25 묶음 B · RCA2-02 · Q2 (가)) git 조회 실패 · git 밖 (미확인) · ignore 밖 추적 안 된 파일 · 한 단계 안 사슬 ↔ 러너 '
+                         '(HEAD · 파일 지문 · 러너 파일) · 저장소 상대 경로 · 환경 지문 같음 단위 (python 부 판 · numpy · scipy 판) 다름 · 미확인',
     **{k: k for k in CALIB_ORDER},
 }
 
@@ -694,15 +711,157 @@ def mask_sigma(text, vals):
     return re.sub(r'[-+]?(?:\d+\.\d*|\.\d+|\d+)(?:[eE][-+]?\d+)?', sub, str(text))
 
 
+_HEX40_RE = re.compile(r'[0-9a-f]{40}')
+
+
+def _hex40(x):
+    return isinstance(x, str) and _HEX40_RE.fullmatch(x) is not None
+
+
 def git_identity(path):
+    """git 신원 → {head, dirty, rel, error}.  ★ 10-25 묶음 B (RCA2-02 · 1저자 10-23 Q2 (가) ① ② · 판정문 F1 · C6 #13) — 엄격: 두 조회
+    (`rev-parse HEAD` · `status`) 의 종료코드를 본다 · head = 40 자 소문자 hex 일 때만 · dirty = status 가 rc 0 일 때만 True | False · 조회 실패 ·
+    git 밖 = None (미확인 — False 로 바꾸지 않는다 · 대조 함수가 멈춘다) · (가-1) untracked = ignore 밖 전부 (`--untracked-files=normal` · 사용자
+    설정 status.showUntrackedFiles 를 덮어쓴다) · rel = 저장소 상대 경로 (`rev-parse --show-prefix` + 파일 이름 · 코드 키의 경로 = 이것 · 절대 경로는
+    키에 없다 · C6 #14) · error = 미확인 사유 (기록 · 판정 칸 아님).  옛 = 종료코드를 안 보고 `--untracked-files=no` (status 실패 = dirty False ·
+    untracked = 깨끗)."""
+    rec = {'head': None, 'dirty': None, 'rel': None, 'error': None}
     try:
-        d = str(Path(path).resolve().parent if Path(path).is_file() else Path(path).resolve())
-        head = subprocess.run(['git', '-C', d, 'rev-parse', 'HEAD'], capture_output=True, text=True).stdout.strip()
-        dirty = subprocess.run(['git', '-C', d, 'status', '--porcelain', '--untracked-files=no'], capture_output=True,
-                               text=True).stdout.strip()
-        return {'head': head or None, 'dirty': bool(dirty) if head else None}
-    except Exception as e:                                    # noqa: BLE001 — 기록용 (판정 칸 아님)
-        return {'head': None, 'dirty': None, 'error': type(e).__name__}
+        p = Path(path).resolve()
+        isf = p.is_file()
+        d = str(p.parent if isf else p)
+        r = subprocess.run(['git', '-C', d, 'rev-parse', 'HEAD'], capture_output=True, text=True)
+        head = (r.stdout or '').strip()
+        if r.returncode != 0 or not _hex40(head):
+            rec['error'] = f'git rev-parse HEAD rc {r.returncode} · 출력 {head[:44]!r} · {(r.stderr or "").strip()[:160]}'
+            return rec
+        rec['head'] = head
+        r = subprocess.run(['git', '-C', d, 'rev-parse', '--show-prefix'], capture_output=True, text=True)
+        if r.returncode != 0:
+            rec['error'] = f'git rev-parse --show-prefix rc {r.returncode} · {(r.stderr or "").strip()[:160]}'
+            return rec
+        pre = (r.stdout or '').strip()
+        rec['rel'] = (pre + p.name) if isf else (pre.rstrip('/') or '.')
+        r = subprocess.run(['git', '-C', d, 'status', '--porcelain', '--untracked-files=normal'], capture_output=True, text=True)
+        if r.returncode != 0:
+            rec['error'] = f'git status rc {r.returncode} · {(r.stderr or "").strip()[:160]}'
+            return rec
+        rec['dirty'] = bool((r.stdout or '').strip())
+        return rec
+    except Exception as e:                                    # noqa: BLE001 — 미확인 = None (판정 = 대조 함수가 멈춘다)
+        rec['error'] = f'{type(e).__name__}: {e}'
+        return rec
+
+
+_ENV_MEMO = {}
+
+
+def _try(fn):
+    try:
+        return fn()
+    except Exception:                                         # noqa: BLE001 — 기록만 칸 (판정 · 같음 대조에 쓰지 않는다)
+        return None
+
+
+def _env_cupy():
+    import importlib.metadata as _md                       # python 3.8 표준
+    got = sorted(f'{d.metadata.get("Name")} {d.version}' for d in _md.distributions()
+                 if str(d.metadata.get('Name') or '').lower().startswith('cupy'))
+    return got or None
+
+
+def _env_gpu():
+    r = subprocess.run(['nvidia-smi', '--query-gpu=name,driver_version', '--format=csv,noheader'], capture_output=True, text=True,
+                       timeout=20)
+    return ([x.strip() for x in (r.stdout or '').splitlines() if x.strip()] or None) if r.returncode == 0 else None
+
+
+def _env_blas(np_):
+    try:
+        import threadpoolctl
+        keep = ('user_api', 'internal_api', 'prefix', 'version', 'architecture', 'threading_layer', 'num_threads')
+        return [{k: x.get(k) for k in keep if k in x} for x in threadpoolctl.threadpool_info()]
+    except Exception:                                         # noqa: BLE001
+        pass
+    if np_ is None:
+        return None
+    try:
+        dep = ((np_.show_config(mode='dicts') or {}).get('Build Dependencies') or {}).get('blas')   # numpy ≥ 1.26
+        return {'build': dep}
+    except Exception:                                         # noqa: BLE001
+        pass
+    cfg = getattr(np_, '__config__', None)
+    for nm in ('blas_opt_info', 'blas_ilp64_opt_info', 'openblas_info'):
+        v = getattr(cfg, nm, None)
+        if isinstance(v, dict) and v:
+            return {nm: {str(k): (v[k] if isinstance(v[k], (str, int)) else str(v[k])) for k in v}}
+    return None
+
+
+def _env_cpu():
+    try:
+        with open('/proc/cpuinfo', encoding='utf-8', errors='replace') as f:
+            for ln in f:
+                if ln.lower().startswith('model name'):
+                    return ln.split(':', 1)[1].strip()
+    except OSError:
+        pass
+    import platform
+    return platform.processor() or None
+
+
+def _env_simd(np_):
+    if np_ is None:
+        return None
+    import importlib
+    for nm in ('numpy._core._multiarray_umath', 'numpy.core._multiarray_umath'):
+        try:
+            mod = importlib.import_module(nm)
+        except Exception:                                     # noqa: BLE001
+            continue
+        feats = getattr(mod, '__cpu_features__', None)
+        if isinstance(feats, dict):
+            return {'features': sorted(k for k, v in feats.items() if v), 'baseline': [str(x) for x in getattr(mod, '__cpu_baseline__', ()) or ()],
+                    'dispatch': [str(x) for x in getattr(mod, '__cpu_dispatch__', ()) or ()]}
+    return None
+
+
+def env_record():
+    """환경 지문 → {'unit': {python_minor · numpy · scipy}, 'record_only': {…}}.  ★ 10-25 묶음 B (RCA2-02 · 1저자 10-23 Q2 (가) ⑤ · Q9 설계 개정 4
+    Q3 · R4-10) — 같음 단위 (unit) = python 부 판 (major.minor) · numpy · scipy 판 문자열 정확히 → 단계끼리 · 지금 코드와 대조 (코드 키 · 다르면
+    멈춤 · 칸 하나라도 미확인 = 멈춤 · `code_dirty_problem`) · record_only = python 전체 판 (패치 판 포함) · 실행 파일 · 플랫폼 · cupy 배포 · GPU
+    이름 · 드라이버 (nvidia-smi) · BLAS 계산 경로 (threadpoolctl · numpy 빌드 정보) · OPENBLAS_CORETYPE · CPU 모델 · numpy SIMD = 기록만 (판정 ·
+    같음 대조에 쓰지 않는다 · 기계마다 다를 수 있다 · Codex 회차 ① Q-E 답에 따라 나중에 조일 수 있다).  이 사슬 프로세스의 환경이다 (러너 ·
+    payload 는 사슬 env 를 물려받는다 · 러너가 venv 를 따로 켜는 자리 = VIRTUAL_ENV 가 빈 때 · 보고 "결정 필요") · 판정 계산기 프로세스의 환경은
+    대조하지 않는다 (R4-11 — 다른 플랫폼의 다시 판정).  한 프로세스 안에서 한 번 잰다 (값을 바꿔 보는 시험 = 이 함수를 바꿔 끼운다)."""
+    if 'rec' not in _ENV_MEMO:
+        import platform
+        np_ = None
+        unit = {'python_minor': '%d.%d' % tuple(sys.version_info[:2]), 'numpy': None, 'scipy': None}
+        try:
+            import numpy as np_
+            unit['numpy'] = str(np_.__version__)
+        except Exception:                                     # noqa: BLE001 — 미확인 = None (대조 함수가 멈춘다)
+            np_ = None
+        try:
+            import scipy as _sc
+            unit['scipy'] = str(_sc.__version__)
+        except Exception:                                     # noqa: BLE001
+            pass
+        ro = {'python': platform.python_version(), 'implementation': platform.python_implementation(), 'executable': sys.executable,
+              'platform': _try(platform.platform), 'cupy': _try(_env_cupy), 'gpu': _try(_env_gpu), 'blas': _try(lambda: _env_blas(np_)),
+              'openblas_coretype': os.environ.get('OPENBLAS_CORETYPE'), 'cpu_model': _try(_env_cpu), 'numpy_simd': _try(lambda: _env_simd(np_))}
+        _ENV_MEMO['rec'] = json.loads(json.dumps({'unit': unit, 'record_only': ro}, default=str))
+    return json.loads(json.dumps(_ENV_MEMO['rec']))
+
+
+def env_unit(env):
+    """환경 지문의 같음 단위 → {python_minor · numpy · scipy} | None (칸 하나라도 없거나 빈 글자 = 미확인 = None)."""
+    u = env.get('unit') if isinstance(env, dict) else None
+    if not isinstance(u, dict):
+        return None
+    out = {k: u.get(k) for k in ENV_UNIT_KEYS}
+    return out if all(isinstance(v, str) and v for v in out.values()) else None
 
 
 def _same(a, b, rel=1e-12):
@@ -983,8 +1142,9 @@ def s0_stage2_problem(rec, plan_sha, s0_sha):
         return f'S0 단계 2 보고 꼴 — schema {r.get("schema")!r} · 단계 {r.get("stage")!r} (= {S0_REPORT_SCHEMA!r} · 2)'
     if r.get('kit') != DBE_KIT:
         return f'S0 단계 2 보고의 킷 {r.get("kit")!r} ≠ {DBE_KIT!r} (R 런 DBE 침대의 보고여야)'
-    if not (isinstance(r.get('plan_source'), str) and r['plan_source'].startswith('commit:')):
-        return f'S0 단계 2 보고의 계획 출처 {r.get("plan_source")!r} (commit:<개정 커밋> 이어야 — 단계 2 의 인자 커밋)'
+    if not (isinstance(r.get('plan_source'), str) and _PLAN_SOURCE_RE.fullmatch(r['plan_source'])):
+        return (f'S0 단계 2 보고의 계획 출처 {r.get("plan_source")!r} — commit:<40 자 소문자 hex> 이어야 (단계 2 의 인자 커밋 전체 sha · '
+                f'★ 10-25 판정문 F5 · 옛 = commit: 접두만)')
     if not (_hex64(r.get('r_plan_sha256')) and _hex64(r.get('plan_sha256'))):
         return f'S0 단계 2 보고의 봉인 계획 해시 꼴 — R 계획 {r.get("r_plan_sha256")!r} · S0 계획 {r.get("plan_sha256")!r} (64 자 소문자 hex)'
     if r['r_plan_sha256'] != plan_sha:
@@ -992,6 +1152,42 @@ def s0_stage2_problem(rec, plan_sha, s0_sha):
                 f'(Q2: 계획 하나 · 바꾸려면 새 등록 · 등록 R §2-1b)')
     if r['plan_sha256'] != s0_sha:
         return f'S0 단계 2 가 봉인한 S0 계획 {r["plan_sha256"][:16]}… ≠ 지금 S0 계획 {str(s0_sha)[:16]}…'
+    return plan_commit_problem(r['plan_source'], r.get('r_plan_path'), r['r_plan_sha256'])
+
+
+_PLAN_SOURCE_RE = re.compile(r'commit:([0-9a-f]{40})')
+
+
+def _repo_rel_ok(p):
+    """리포 상대 ASCII 경로 (S0 단계 2 관문 `verify_plan_commit` 의 경로 규칙과 같은 뜻 — 절대 · .. · 공백 · 역빗금 · 드라이브 문자 거부)."""
+    return (isinstance(p, str) and bool(p) and not p.startswith('/') and '\\' not in p and '..' not in p.split('/') and p.isascii()
+            and re.search(r'\s', p) is None and re.match(r'[A-Za-z]:', p) is None)
+
+
+def plan_commit_problem(src, rel, want):
+    """★ 10-25 묶음 B (판정문 §9 F5 · 1저자 10-23 Q2 (가) ⑥) — S0 단계 2 보고의 계획 출처 → 문제 | None.  문법 = `commit:` + 40 자 소문자 hex ·
+    그 커밋 (이 사슬 저장소 = HERE 의 git) 안 R 계획 파일 (보고의 r_plan.path · 리포 상대) 의 blob sha256 = R 계획 sha256 (= 지금 --plan · 앞 대조가
+    같음을 확인).  커밋이 HEAD 의 조상인지는 S0 단계 2 관문이 그 판에서 확인했다 (여기 = 커밋 존재 · blob).  옛 = `commit:` 접두만 ('commit:' 도
+    통과 · 커밋 · blob 을 안 봤다).  S0 계획의 리포 안 경로는 보고에 없다 (그 blob 대조는 이 함수 밖 · 보고 "결정 필요")."""
+    m = _PLAN_SOURCE_RE.fullmatch(src) if isinstance(src, str) else None
+    if m is None:
+        return f'S0 단계 2 보고의 계획 출처 {src!r} — commit:<40 자 소문자 hex> 이어야 (F5)'
+    if not _repo_rel_ok(rel):
+        return f'S0 단계 2 보고의 R 계획 경로 {rel!r} — 리포 상대 ASCII 경로여야 (절대 · .. · 공백 금지 · F5)'
+    sha = m.group(1)
+    try:
+        r = subprocess.run(['git', '-C', str(HERE), 'cat-file', '-e', f'{sha}^{{commit}}'], capture_output=True)
+        if r.returncode != 0:
+            return (f'S0 단계 2 보고의 계획 출처 커밋 {sha[:12]} 이 이 사슬 저장소에 없다 (git fetch 뒤 · git 밖 사본 = 확인 못 함 · 미확인 = '
+                    f'멈춤 · F5)')
+        r = subprocess.run(['git', '-C', str(HERE), 'show', f'{sha}:{rel}'], capture_output=True)
+        if r.returncode != 0:
+            return f'커밋 {sha[:12]} 에 R 계획 파일 {rel} 이 없다 (F5)'
+        got = hashlib.sha256(r.stdout).hexdigest()
+    except Exception as e:                                    # noqa: BLE001 — 확인 못 함 = 미확인 = 멈춤
+        return f'계획 출처 커밋을 git 으로 확인하지 못했다 ({type(e).__name__}: {e}) — 미확인 = 멈춤 (F5)'
+    if got != want:
+        return f'커밋 {sha[:12]} 의 {rel} blob sha256 {got[:16]}… ≠ R 계획 sha256 {str(want)[:16]}… — 그 커밋이 봉인한 계획이 아니다 (F5)'
     return None
 
 
@@ -1095,10 +1291,11 @@ def code_files(base):
 
 
 def code_record(runner):
-    """단계 요약의 code 칸 — 사슬 · 러너 git 신원 (HEAD · 추적 파일 수정 여부 dirty) · 러너 경로 (옛 칸) + 코드 파일 지문 (사슬 폴더 `files` ·
-    러너 폴더 `runner_files` · 러너 파일 sha256).  운영 = 사슬과 러너가 한 핀 작업 트리 (등록 R §10 (0)) 라 두 폴더 지문이 같다."""
+    """단계 요약의 code 칸 — 사슬 · 러너 git 신원 (HEAD · dirty · 저장소 상대 경로 rel · 미확인 사유) · 러너 경로 (절대 · 기록만 · 키 아님) + 코드
+    파일 지문 (사슬 폴더 `files` · 러너 폴더 `runner_files` · 러너 파일 sha256) + ★ 10-25 묶음 B 환경 지문 (`env` · `env_record`).  운영 = 사슬과
+    러너가 한 핀 작업 트리 (등록 R §10 (0)) 라 두 폴더 지문이 같다 (한 단계 안 대조 = `code_dirty_problem`)."""
     rec = {'chain': git_identity(HERE / 'rint_r_chain.py'), 'runner': None, 'runner_path': None, 'files': code_files(HERE),
-           'runner_files': None, 'runner_sha256': None}
+           'runner_files': None, 'runner_sha256': None, 'env': env_record()}
     if runner:
         rp = Path(runner).resolve()
         rec.update({'runner': git_identity(runner), 'runner_path': str(rp), 'runner_files': code_files(rp.parent),
@@ -1107,23 +1304,76 @@ def code_record(runner):
 
 
 def code_key(rec):
-    """단계끼리 · 지금과 대조하는 코드 칸 (정준 JSON 글) — 사슬 · 러너 HEAD · 러너 경로 (옛 키 그대로) + 코드 파일 지문 (사슬 폴더 · 러너 폴더) ·
-    러너 sha256.  기계 이름표 · dirty 는 키에 없다 (dirty = `code_dirty_problem` 이 따로 멈춘다 · 이름표 = 판정에 쓰지 않는다)."""
+    """단계끼리 · 지금과 대조하는 코드 칸 (정준 JSON 글).  ★ 10-25 묶음 B (RCA2-02 · 1저자 10-23 Q2 (가) ④ ⑤ · C6 #14 · Q9 설계 개정 1 D6 ·
+    개정 4 R4-10 · R4-12) — 사슬 · 러너 HEAD · 저장소 상대 경로 (rel) · 코드 파일 지문 (사슬 폴더 · 러너 폴더 · 이름 = CODE_FILES) · 러너 sha256 ·
+    환경 지문 같음 단위 (`env_unit`).  절대 경로 (러너 경로 · 체크아웃 자리 · 옛 키의 `runner_path`) 는 키에 없다 (기계마다 다르다 · 경로만 다른
+    같은 코드 = 같은 키) · 기계 이름표 · dirty · 환경 기록만 칸도 없다 (dirty · 미확인 = `code_dirty_problem` 이 따로 멈춘다)."""
     r = rec if isinstance(rec, dict) else {}
-    pick = {'chain_head': (r.get('chain') or {}).get('head') if isinstance(r.get('chain'), dict) else None,
-            'runner_head': (r.get('runner') or {}).get('head') if isinstance(r.get('runner'), dict) else None,
-            'runner_path': r.get('runner_path'), 'files': r.get('files'), 'runner_files': r.get('runner_files'),
-            'runner_sha256': r.get('runner_sha256')}
+    ch = r.get('chain') if isinstance(r.get('chain'), dict) else {}
+    ru = r.get('runner') if isinstance(r.get('runner'), dict) else {}
+    pick = {'chain_head': ch.get('head'), 'runner_head': ru.get('head'), 'chain_rel': ch.get('rel'), 'runner_rel': ru.get('rel'),
+            'files': r.get('files'), 'runner_files': r.get('runner_files'), 'runner_sha256': r.get('runner_sha256'),
+            'env_unit': env_unit(r.get('env'))}
     return json.dumps(pick, sort_keys=True, ensure_ascii=False, default=repr)
 
 
+def code_key_diff(a, b):
+    """두 code 기록의 코드 키에서 다른 칸 (멈춤 사유용) — HEAD · 저장소 상대 경로 · 러너 sha256 · 환경 같음 단위 칸 · 다른 파일 이름."""
+    ka, kb = json.loads(code_key(a)), json.loads(code_key(b))
+    out = [k for k in ('chain_head', 'runner_head', 'chain_rel', 'runner_rel', 'runner_sha256') if ka.get(k) != kb.get(k)]
+    if ka.get('env_unit') != kb.get('env_unit'):
+        ea, eb = ka.get('env_unit') or {}, kb.get('env_unit') or {}
+        out += [f'환경 {k} {ea.get(k)!r} ≠ {eb.get(k)!r}' for k in ENV_UNIT_KEYS if ea.get(k) != eb.get(k)] or ['환경 지문 (미확인)']
+    for fk in ('files', 'runner_files'):
+        if ka.get(fk) != kb.get(fk):
+            out += [f'{fk} {n}' for n in code_diff_names(ka.get(fk), kb.get(fk))]
+    return out or ['같음']
+
+
+def _identity_problem(g, nm):
+    """git 신원 하나 → 문제 | None (★ 10-25 · Q2 (가) ① ② — HEAD 40-hex · dirty 엄격한 False · 기록 없음 · 미확인 = 멈춤)."""
+    if not isinstance(g, dict):
+        return f'{nm} git 신원 기록이 없다 (옛 요약 · 꼴) — 미확인 = 멈춤 (RCA2-02 · Q2 (가) ①)'
+    if not _hex40(g.get('head')):
+        return (f'{nm} git HEAD 미확인 (head {g.get("head")!r} · {g.get("error")}) — git 밖 사본 · 조회 실패 = 미확인 = 멈춤 (핀 커밋의 git '
+                f'체크아웃에서 돌릴 것 · RCA2-02 · Q2 (가) ① · C6 #13)')
+    if g.get('dirty') is True:
+        return (f'{nm} 작업 트리에 고쳐진 추적 파일 · ignore 밖 추적 안 된 파일이 있다 (dirty · HEAD {g["head"]}) — 핀 커밋 그대로의 깨끗한 트리에서 '
+                f'돌릴 것 (등록 R §10 (0) · Q2 (가) ② (가-1))')
+    if g.get('dirty') is not False:
+        return (f'{nm} 작업 트리 상태 미확인 (dirty {g.get("dirty")!r} · {g.get("error")}) — git status 실패 = 미확인 = 멈춤 (깨끗함으로 바꾸지 '
+                f'않는다 · RCA2-02 · Q2 (가) ① · C6 #13)')
+    return None
+
+
 def code_dirty_problem(rec):
-    """추적 파일이 고쳐진 트리에서 돈 단계인가 (사슬 · 러너 git 신원 dirty True) → 문제 | None.  dirty None = git 밖 · 모름 → 기록만
-    (등록 문장 = *"추적 파일이 고쳐졌으면 멈춘다"* · 파일 지문 대조는 그대로)."""
+    """같은 코드 관문 (이름은 옛 그대로) — 단계 code 기록 → 문제 | None.  ★ 10-25 묶음 B (RCA2-02 · 1저자 10-23 Q2 (가) ① ② ③ ⑤ · 판정문 F1 ·
+    F2): ① 사슬 · 러너 git 신원 = HEAD 40-hex · dirty 엄격한 False (조회 실패 · git 밖 · 기록 없음 = 미확인 = 멈춤 · 옛 = dirty True 만 멈추고
+    None 은 기록만) ② dirty = 추적 파일 고침 + ignore 밖 추적 안 된 파일 (`git_identity`) ③ 한 단계 안 사슬 ↔ 러너 — HEAD 같음 · 사슬 폴더 ·
+    러너 폴더 코드 파일 지문 같음 · 러너 파일 = 사슬 폴더의 러너 (자기 요약끼리 비교 아님 · 옛 = 단계끼리만) ⑤ 환경 지문 같음 단위 셋이 다
+    있어야 (미확인 = 멈춤 · 단계끼리 · 지금과의 같음 = 코드 키)."""
     r = rec if isinstance(rec, dict) else {}
     for k, nm in (('chain', '사슬'), ('runner', '러너')):
-        if isinstance(r.get(k), dict) and r[k].get('dirty') is True:
-            return f'{nm} 작업 트리에 고쳐진 추적 파일이 있다 (dirty · HEAD {r[k].get("head")}) — 핀 커밋 그대로의 깨끗한 트리에서 돌릴 것 (등록 R §10 (0))'
+        why = _identity_problem(r.get(k), nm)
+        if why:
+            return why
+    ch, ru = r['chain'], r['runner']
+    fa, fr = r.get('files'), r.get('runner_files')
+    bad = []
+    if ch['head'] != ru['head']:
+        bad.append(f'HEAD 사슬 {ch["head"][:12]} ≠ 러너 {ru["head"][:12]}')
+    if not isinstance(fa, list) or fa != fr:
+        bad.append('러너 폴더 코드 파일 지문 ≠ 사슬 폴더 (' + ', '.join(code_diff_names(fa, fr)) + ')')
+    want = _digest_map(fa).get(RUNNER_NAME)
+    if not _hex64(r.get('runner_sha256')) or r.get('runner_sha256') != want:
+        bad.append(f'러너 파일 sha256 {str(r.get("runner_sha256"))[:16]}… ≠ 사슬 폴더의 {RUNNER_NAME} {str(want)[:16]}…')
+    if bad:
+        return ('한 단계 안 사슬 ↔ 러너가 다른 판이다 — ' + ' · '.join(bad) + ' (같은 핀 체크아웃의 사슬 · 러너로 돌릴 것 · RCA2-02 · '
+                'Q2 (가) ③ · 판정문 F2)')
+    if env_unit(r.get('env')) is None:
+        u = r['env'].get('unit') if isinstance(r.get('env'), dict) else None
+        return (f'환경 지문 미확인 — 같음 단위 (python 부 판 · numpy · scipy 판) {u!r} (옛 요약 · 불러오기 실패 = 미확인 = 멈춤 · RCA2-02 · '
+                f'Q2 (가) ⑤)')
     return None
 
 
@@ -1134,11 +1384,14 @@ def code_diff_names(a, b):
 
 
 def code_verdict_problem(rec, label):
-    """판정 계산기 — 지금 사슬 쪽 코드 ↔ 단계 기록 → 문제 | None (추적 파일 수정 여부 · HEAD · 사슬 폴더 코드 파일 지문).  러너 쪽 지금 상태는
-    보지 않는다 (판정은 러너를 돌리지 않는다 · 단계끼리의 러너 지문 대조 = 판정 입력 검사 `code_key`)."""
+    """판정 계산기 — 지금 사슬 쪽 코드 ↔ 단계 기록 → 문제 | None (git 신원 · HEAD · 사슬 폴더 코드 파일 지문).  러너 쪽 지금 상태는 보지 않는다
+    (판정은 러너를 돌리지 않는다 · 단계끼리의 러너 지문 대조 = 판정 입력 검사 `code_key`).  ★ 10-25 묶음 B (RCA2-02 · Q2 (가) ① ②) — 지금 사슬
+    git 신원도 엄격 (HEAD 40-hex · dirty 엄격한 False · 미확인 = 멈춤 · 옛 = dirty True 만) · 판정 프로세스의 환경 지문은 대조하지 않는다 (R4-11 —
+    다른 플랫폼의 다시 판정 · 판정은 풀이를 하지 않는다)."""
     now = git_identity(HERE / 'rint_r_chain.py')
-    if now.get('dirty') is True:
-        return f'지금 사슬 작업 트리에 고쳐진 추적 파일이 있다 (dirty · HEAD {now.get("head")}) — 판정 계산기도 깨끗한 핀 트리에서 (등록 R §10 (0))'
+    why = _identity_problem(now, '지금 사슬')
+    if why:
+        return f'{why} — 판정 계산기도 깨끗한 핀 git 체크아웃에서 (등록 R §10 (0))'
     r = rec if isinstance(rec, dict) else {}
     head = r['chain'].get('head') if isinstance(r.get('chain'), dict) else None
     if now.get('head') != head:
@@ -1983,8 +2236,9 @@ def check_after_main(after_dir, plan_sha, s0_sha, code):
         raise Stop('MAIN_NOT_DONE', f'{d.name}: 변이 {s.get("variant")!r} · 상태 {s.get("status")!r} — 주 예측 (변이 없음 · PREDICTED) 이어야')
     if (s.get('plan') or {}).get('sha256') != plan_sha or (s.get('s0_plan') or {}).get('sha256') != s0_sha:
         raise Stop('MAIN_NOT_DONE', f'{d.name}: 주 예측의 계획 · S0 계획 ≠ 이 감도 단계의 것')
-    if code_key(s.get('code')) != code_key(code):              # ★ PF2 D — HEAD + 코드 파일 지문 (옛 = HEAD 만)
-        raise Stop('MAIN_NOT_DONE', f'{d.name}: 주 예측의 코드 (HEAD · 코드 파일 지문 · 러너) ≠ 지금 코드')
+    if code_key(s.get('code')) != code_key(code):              # ★ PF2 D — HEAD + 코드 파일 지문 (옛 = HEAD 만) · ★ 10-25 상대 경로 · 환경
+        raise Stop('MAIN_NOT_DONE', f'{d.name}: 주 예측의 코드 (HEAD · 저장소 상대 경로 · 코드 파일 지문 · 러너 · 환경 지문) ≠ 지금 코드 '
+                                    f'({", ".join(code_key_diff(s.get("code"), code))})')
     return {'dir': str(d), 'summary_sha256': sha}
 
 
@@ -2013,12 +2267,14 @@ def stage_ladder(a, contract):
         #  ★ PF2 B (10-22 · Q2) — S0 단계 2 보고가 봉인한 계획 해시 = 지금 두 계획 (정확히 · DBE 열람 전 계획 하나) · ★ PF2 D (PRE2-design-08) —
         #    S0 단계 1 보고 꼴 · 두 보고의 census · registry 일곱 파일 지문 = 지금 R 런 코드 (등록 R §2-1b · 다르면 멈춤 · s_min 다시 고르기 금지)
         s['s0_reports'] = {'stage2': read_s0_report(a.s0_stage2_report, 2), 'stage1': read_s0_report(a.s0_stage1_report, 1)}
+        #  ★ PF2 D (PRE2-design-02) · ★ 10-25 묶음 B (RCA2-02 · Q2 (가)) — 같은 코드 관문을 S0 보고 대조 앞에 (git 밖 · 미확인 · dirty · 사슬 ↔
+        #    러너 · 환경 = σ 런 없음 · 예측 · 판정과 같은 순서 · S0 대조의 계획 커밋 확인 (F5) 이 사슬 저장소의 git 을 쓴다)
+        why = code_dirty_problem(s['code'])
+        if why:
+            raise Stop('CODE_PIN_MISMATCH', why)
         got = s0_reports_problem(s['s0_reports'], plan_sha, s['s0_plan']['sha256'], s['code']['files'], s['code']['runner_files'])
         if got:
             raise Stop(*got)
-        why = code_dirty_problem(s['code'])                    # ★ PF2 D (PRE2-design-02) — 추적 파일이 고쳐진 트리면 σ 런 없음
-        if why:
-            raise Stop('CODE_PIN_MISMATCH', why)
         s['constants']['max_ladder_points'] = ladder_cap(plan)
         if a.variant is not None:
             s['after_main'] = check_after_main(a.after_main, plan_sha, s['s0_plan']['sha256'], s['code'])
@@ -2103,8 +2359,8 @@ def load_ladders(dirs, variant, reg_path, contract, sid_reg, now_code=None):
         if why:
             raise Stop('CODE_PIN_MISMATCH', f'{rd.name}: {why}')
         if code is not None and code_key(s.get('code')) != code_key(code):
-            raise Stop('CODE_PIN_MISMATCH', '두 사다리의 코드 (HEAD · 코드 파일 지문 · 러너) 가 다르다 '
-                                            f'({", ".join(code_diff_names((s.get("code") or {}).get("files"), code.get("files")))})')
+            raise Stop('CODE_PIN_MISMATCH', '두 사다리의 코드 (HEAD · 저장소 상대 경로 · 코드 파일 지문 · 러너 · 환경 지문) 가 다르다 '
+                                            f'({", ".join(code_key_diff(s.get("code"), code))})')
         if after is not None and s.get('after_main') != after:
             raise Stop('MAIN_NOT_DONE', '두 변이 사다리의 주 예측 묶음이 다르다')
         if not first and s.get('s0_reports') != s0reps:      # ★ PF2 B — 두 사다리가 같은 단계 2 봉인을 읽었나
@@ -2132,8 +2388,8 @@ def load_ladders(dirs, variant, reg_path, contract, sid_reg, now_code=None):
     if why:
         raise Stop('CODE_PIN_MISMATCH', f'지금 {why}')
     if code_key(code) != code_key(now):
-        raise Stop('CODE_PIN_MISMATCH', f'사다리 코드 (HEAD · 코드 파일 지문 · 러너) ≠ 지금 코드 ({", ".join(code_diff_names(code.get("files"), now.get("files")))}) '
-                                        f'— 같은 핀 작업 트리에서 돌릴 것')
+        raise Stop('CODE_PIN_MISMATCH', f'사다리 코드 (HEAD · 저장소 상대 경로 · 코드 파일 지문 · 러너 · 환경 지문) ≠ 지금 코드 '
+                                        f'({", ".join(code_key_diff(code, now))}) — 같은 핀 커밋 · 같은 환경 판에서 돌릴 것')
     #  ★ PF2 B · D — 사다리 기록의 단계 2 봉인 = 이 계획 · 단계 1 꼴 · 두 보고 지문 = 지금 코드 (같은 함수로 다시)
     got = s0_reports_problem(s0reps, plan_sha, s0rec['sha256'], now.get('files'), now.get('runner_files'))
     if got:
@@ -2449,8 +2705,8 @@ def verdict_compute(dirs, reg_path, contract):
             if why:
                 raise Stop('CODE_PIN_MISMATCH', why)
         elif key != code0:
-            raise Stop('CODE_PIN_MISMATCH', f'{rd.name}: 코드 (HEAD · 코드 파일 지문 · 러너) ≠ 다른 판정 입력 단계 '
-                                            f'({", ".join(code_diff_names(c.get("files"), c0.get("files")))})')
+            raise Stop('CODE_PIN_MISMATCH', f'{rd.name}: 코드 (HEAD · 저장소 상대 경로 · 코드 파일 지문 · 러너 · 환경 지문) ≠ 다른 판정 입력 '
+                                            f'단계 ({", ".join(code_key_diff(c, c0))})')
         #  ★ PF2 B (10-22 · Q2) · D — 단계마다 기록한 S0 단계 2 봉인 = 등록 계획 · S0 계획 · 단계 1 꼴 · 두 보고 지문 = 이 단계 코드 (같은 함수) ·
         #    단계끼리 같은 기록
         got = s0_reports_problem(s.get('s0_reports'), plan_hash, s0_hash, c.get('files'), c.get('runner_files'))

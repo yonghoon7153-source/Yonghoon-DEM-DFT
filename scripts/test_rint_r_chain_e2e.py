@@ -13,7 +13,8 @@
 
 묶음:
   E1  사다리 P0 (SBE 픽스처) — 바닥 (`CJUNC_RJ=inf`) → 천장 (`0`) → 사다리 점 (1e4 · 1e6 · 1e8 · …) 이 실제 러너로 rc 0 · 정본 계약
-      (`ca_ext_record_ok` · `check_arm` · 수렴 증서) 통과 · 등록 결과 이름으로 끝남 (STOPPED 아님)
+      (`ca_ext_record_ok` · `check_arm` · 수렴 증서) 통과 · 등록 결과 이름으로 끝남 (STOPPED 아님) · ★ 10-25 묶음 B (RCA2-02) E1c — 사슬 ·
+      실제 러너 = git 고정물 체크아웃 (진짜 git 신원) · 사다리 뒤 체크아웃 git status 빈칸 · 요약 code = 깨끗 · 저장소 상대 경로 · 환경 지문
   E2  극한 런 기록 — 바닥 · 천장 팔의 protocol 표지 (`rj_limit` inf · zero · R_j null · 0.0 · quantitative False) · 영수증 요청 같은 꼴 ·
       접합 원장 수 (바닥 = 간선 0 · 극한 instance · 천장 = 축약)
   E3  σ 순서 (같은 그래프 · Rayleigh) — 바닥 < 사다리 점 (R_j 가 작을수록 높다) < 천장 · 팔 JSON 에서 직접 (사슬은 화면에 안 쓴다)
@@ -39,20 +40,67 @@ import json
 import os
 import re
 import shutil
+import subprocess
 import sys
 import tempfile
 import time
+from pathlib import Path
 
 import numpy as np
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCRIPTS = os.path.join(ROOT, 'scripts')
 sys.path.insert(0, SCRIPTS)
-RUNNER = os.path.join(SCRIPTS, 'sdcp_gain_vox015_8arm.sh')
 REG_DOC = os.path.join(ROOT, 'docs', 'reviews', 'rint_carbon_additive_registration_R_draft_20261020.md')
 
 import rint_r_chain as RR                                  # noqa: E402
 import test_ca_ext_runner as TR                           # noqa: E402 — 가짜 python3 (규율 관문 둘만 건너뛴다) · 사본 없음
+
+#: ★ 10-25 묶음 B (RCA2-02 · 1저자 10-23 Q2 (가) (가-1)) — 사슬 · 실제 러너 = git 고정물 저장소 (이 리포 scripts/ 사본 · 러너 관문이 읽는 사전등록
+#   문서 · .gitignore · 커밋 하나 · 작업 트리 깨끗) · git 신원 = 진짜 조회 (옛 = 이 리포 HEAD + dirty False 고정 — 엄격한 git 대조 (미확인 = 멈춤 ·
+#   ignore 밖 untracked = dirty) 뒤에는 고쳐진 작업 트리에서 시험할 수 없다 → 고정물로 옮겼다 · 검사는 약하게 하지 않는다) · F5 계획 커밋 = 같은
+#   저장소의 떠 있는 커밋
+CODEREPO = {}
+R_PLAN_REL = 'docs/data/rint2_s0_sbe_x/rint_r_plan.json'
+PREREG_REL = 'docs/reviews/sdcp_gain_prereg_v2_20260816.md'      # 러너 관문 ($SCR/../docs/…) 이 읽는 문서
+GIT_CFG = ('-c', 'user.email=t@t', '-c', 'user.name=t', '-c', 'commit.gpgsign=false', '-c', 'init.defaultBranch=main')
+
+
+def _git(repo, *a, inp=None, env=None):
+    r = subprocess.run(['git', '-C', str(repo), *GIT_CFG, *a], input=inp, capture_output=True, env=env)
+    if r.returncode != 0:
+        raise RuntimeError(f'git {a[:2]} rc {r.returncode}: {r.stderr.decode("utf-8", "replace")[:300]}')
+    return r.stdout.decode('utf-8', 'replace').strip()
+
+
+def code_repo():
+    """git 고정물 저장소 (한 번) → scripts 폴더 (사슬 폴더 = RR.HERE · 러너 = 그 안 실제 러너)."""
+    if 'sd' not in CODEREPO:
+        repo = os.path.join(TD, 'coderepo')
+        shutil.copytree(SCRIPTS, os.path.join(repo, 'scripts'), ignore=shutil.ignore_patterns('__pycache__', '*.pyc'))
+        os.makedirs(os.path.join(repo, os.path.dirname(PREREG_REL)))
+        shutil.copy2(os.path.join(ROOT, PREREG_REL), os.path.join(repo, PREREG_REL))
+        shutil.copy2(os.path.join(ROOT, '.gitignore'), os.path.join(repo, '.gitignore'))
+        _git(repo, 'init', '-q')
+        _git(repo, 'add', '-A')
+        _git(repo, 'commit', '-q', '-m', 'fixture')
+        CODEREPO.update(repo=repo, sd=os.path.join(repo, 'scripts'))
+    return CODEREPO['sd']
+
+
+def plan_commit(pb):
+    """F5 (판정문 §9) — R 계획 바이트를 R_PLAN_REL 에 담은 커밋 (고정물 저장소의 떠 있는 커밋 · 작업 트리 · HEAD 그대로) → 40-hex."""
+    key = hashlib.sha256(pb).hexdigest()
+    if key not in CODEREPO:
+        repo = CODEREPO['repo']
+        blob = _git(repo, 'hash-object', '-w', '--stdin', inp=pb)
+        idx = os.path.join(TD, f'_index_{len(CODEREPO)}')
+        env = dict(os.environ, GIT_INDEX_FILE=idx)
+        _git(repo, 'update-index', '--add', '--cacheinfo', f'100644,{blob},{R_PLAN_REL}', env=env)
+        tree = _git(repo, 'write-tree', env=env)
+        CODEREPO[key] = _git(repo, 'commit-tree', tree, '-m', 'plan (시험 F5)')
+        os.unlink(idx)
+    return CODEREPO[key]
 
 SBE_KIT, DBE_KIT = RR.SBE_KIT, RR.DBE_KIT
 VOX = 0.15
@@ -205,9 +253,11 @@ def make_plan_and_reg():
     digests = [{'file': nm, 'sha256': hashlib.sha256(open(os.path.join(SCRIPTS, nm), 'rb').read()).hexdigest()}
                for nm in getattr(RR, 'S0_SAME_FILES', ())]
     code = {'git_head': 'b' * 40, 'git_dirty': False, 'file_digests': digests}
+    #  ★ 10-25 묶음 B (F5) — 계획 출처 = 이 계획 바이트를 R_PLAN_REL 에 담은 고정물 커밋 (옛 = 'commit:' + 'a' * 40 · 커밋 없음)
+    code_repo()
     s2 = {'schema': S0.SCHEMA, 'stage': 2, 'tool': S0.TOOL_VERSION, 'kit': {'name': DBE_KIT},
-          'plan': {'sha256': s0sha, 'source': 'commit:' + 'a' * 40,
-                   'r_plan': {'path': 'docs/data/rint2_s0_sbe_x/rint_r_plan.json', 'sha256': sha, 's_min_um': 0.6, 'tol_ff_um': 0.05,
+          'plan': {'sha256': s0sha, 'source': 'commit:' + plan_commit(open(pp, 'rb').read()),
+                   'r_plan': {'path': R_PLAN_REL, 'sha256': sha, 's_min_um': 0.6, 'tol_ff_um': 0.05,
                               'len_law': 'len_scaled_v0', 'unreg_law': 'cut', 'step3_rtol': 1e-12, 'checked': 'fixture'}},
           'code': code}
     s1 = {'schema': S0.SCHEMA, 'stage': 1, 'tool': S0.TOOL_VERSION, 'kit': {'name': SBE_KIT},
@@ -246,17 +296,18 @@ def chain_env(ws):
 
 def run_ladder(ws, out, law='P0', max_hours='0.5'):
     pp, sp, rp = make_plan_and_reg()
-    argv = ['--stage', 'ladder', '--law', law, '--target', str(RR.TARGET_SBE_MS), '--runner', RUNNER, '--root', ws, '--plan', pp,
+    #  ★ 10-25 묶음 B — 사슬 폴더 (RR.HERE) · 러너 = git 고정물 저장소의 scripts (옛 = 이 리포 scripts + git 신원 dirty False 고정)
+    sd = code_repo()
+    runner = os.path.join(sd, 'sdcp_gain_vox015_8arm.sh')
+    argv = ['--stage', 'ladder', '--law', law, '--target', str(RR.TARGET_SBE_MS), '--runner', runner, '--root', ws, '--plan', pp,
             '--s0-plan', sp, '--registration', rp, '--max-hours', max_hours, '--out', out] + s0_args()
     buf = io.StringIO()
     t0 = time.time()
     had = hasattr(RR, 'EXPECT_BACKEND')
     old_bk = getattr(RR, 'EXPECT_BACKEND', None)
     RR.EXPECT_BACKEND = 'cpu'                              # GPU 없음 — 사슬이 러너 env · 정본 check_arm 에 같은 값을 넘긴다
-    #  ★ PF2 D — 사슬 git 신원 = 진짜 HEAD · dirty False (고쳐진 작업 트리에서 돌려도 배선 시험이 dirty 로 멈추지 않게 · dirty 판정 자체 =
-    #    가짜 러너 시험 D03 · D04 · D12) · 코드 파일 지문 = 실제 파일 (그대로)
-    old_gi = RR.git_identity
-    RR.git_identity = lambda path, _g=old_gi: dict(_g(path), dirty=False)
+    old_here = RR.HERE
+    RR.HERE = Path(sd)
     try:
         with chain_env(ws), contextlib.redirect_stdout(buf), contextlib.redirect_stderr(buf):
             try:
@@ -264,7 +315,7 @@ def run_ladder(ws, out, law='P0', max_hours='0.5'):
             except SystemExit as e:
                 rc = e.code if isinstance(e.code, int) else 2
     finally:
-        RR.git_identity = old_gi
+        RR.HERE = old_here
         if had:
             RR.EXPECT_BACKEND = old_bk
         else:
@@ -298,7 +349,18 @@ def t_ladder():
     chk('E1b 사다리가 등록 결과 이름으로 끝난다 (STOPPED · 계약 · 러너 멈춤 아님)',
         s.get('status') in RR.REGISTERED_OUTCOMES | {'CALIBRATED'} and stop.get('code') not in (
             'RUNNER_RC', 'ARM_CONTRACT', 'CA_EXT_RECORD', 'MANIFEST_MISMATCH', 'GENERATION', 'SID_GRID', 'RECEIPT_LEAN',
-            'ARM_JSON_COUNT', 'ARM_UNREADABLE', 'TIME_LIMIT'), (s.get('status'), stop))
+            'ARM_JSON_COUNT', 'ARM_UNREADABLE', 'TIME_LIMIT', 'CODE_PIN_MISMATCH'), (s.get('status'), stop))
+    #  ── ★ 10-25 묶음 B (RCA2-02 · Q2 (가) ② (가-1)) — 실제 러너 · payload 가 체크아웃 안에 ignore 밖 파일을 만들지 않는다 (만들면 다음 단계의
+    #     지금 코드 = dirty 로 멈춘다) · 요약 code = 진짜 git 신원 (깨끗 · 저장소 상대 경로 · 사슬 = 러너 HEAD) · 환경 지문 같음 단위 ──
+    st = _git(CODEREPO['repo'], 'status', '--porcelain', '--untracked-files=normal')
+    c = s.get('code') or {}
+    ch, ru, unit = c.get('chain') or {}, c.get('runner') or {}, (c.get('env') or {}).get('unit') or {}
+    chk('E1c 사다리 뒤 고정물 체크아웃 git status 빈칸 (러너 · payload 가 작업 트리 안 ignore 밖 파일을 안 만든다) · 요약 code = 깨끗 · rel = '
+        'scripts/rint_r_chain.py · scripts/sdcp_gain_vox015_8arm.sh · 사슬 HEAD = 러너 HEAD · 환경 지문 단위 셋',
+        st == '' and ch.get('dirty') is False and ru.get('dirty') is False and ch.get('rel') == 'scripts/rint_r_chain.py'
+        and ru.get('rel') == 'scripts/sdcp_gain_vox015_8arm.sh' and ch.get('head') == ru.get('head') and len(str(ch.get('head'))) == 40
+        and sorted(unit) == ['numpy', 'python_minor', 'scipy'] and all(isinstance(v, str) and v for v in unit.values()),
+        (st[:300], ch, ru, unit))
     if len(runs) < 2:
         return
     #  ── E2 극한 런 기록 ──
