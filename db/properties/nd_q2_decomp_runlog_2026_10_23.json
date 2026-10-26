@@ -118,5 +118,12 @@
   "⚠_대칭": "상 탐침만 대칭을 켰다 — 수렴한 에너지를 바꾸지 않는 계산 기법이고 카드 설정 고정 목록 (PP · 컷오프 · smearing · conv_thr · mixing) 밖이다. 본 런은 러너 균일성 때문에 껐다 (그래서 작은 셀이 오래 걸렸다). host 는 본 런과 k 만 다르다",
   "⏭": "kgy: worktree → 입력 복사 · 두 폴더 sha → GPU 검사 프로브 (host k442 · 120 초 · 어림 줄만) → tmux ndq2k (phase → target 차례) → 회수 → --kprobe_read → 판정대로 collect 폴더 → --collect 한 번",
   "by": "agent · 2026-10-26"
+ },
+ "✅_k_탐침_판정_Y_2026_10_26": {
+  "회수": "kgy push 17b2a2b73 → db/raw/nd_q2_decomp_2026_10_23/kprobe_kgy/ (상 5 · host · 입력 SHA256SUMS ✓ · 출력 SHA256SUMS_out ✓ · 상 141 분 · host 78 분 · 실패 0)",
+  "G_k": "--kprobe_read → 상 ΔE(탐침 − 본) Li2S −0.003 · Li3PO4 −0.003 · Li3PS4 −0.000 · LiCl −0.000 · Nd2S3 −0.014 · host −0.279 meV/원자 — 전부 ≤ 1 → 본 값 · k 한계 없음",
+  "collect": "한 번 → Y 보정 전 −22.257 · B 25 −22.259 (B 21.7–32.5 −22.260 ~ −22.259) meV/atom · |Y| > 분해능 2 · G_V · G_상_이완 통과 · 독립 검산 같음",
+  "판독": "db/properties/nd_q2_decomp_readout_2026_10_26.json",
+  "by": "agent · 2026-10-26"
  }
 }

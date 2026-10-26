@@ -1,0 +1,50 @@
+{
+ "kind": "kprobe_decision",
+ "card_gate": "G_k_탐침",
+ "threshold_meV_per_atom": 1.0,
+ "jobs": {
+  "Li2S": {
+   "group": "phase",
+   "n_atoms": 3,
+   "dE_probe_minus_main_meV_per_atom": -0.0025397293181110094,
+   "over_threshold": false,
+   "decision": "본 값을 쓴다"
+  },
+  "Li3PO4": {
+   "group": "phase",
+   "n_atoms": 16,
+   "dE_probe_minus_main_meV_per_atom": -0.003044273853447521,
+   "over_threshold": false,
+   "decision": "본 값을 쓴다"
+  },
+  "Li3PS4": {
+   "group": "phase",
+   "n_atoms": 32,
+   "dE_probe_minus_main_meV_per_atom": -0.0004039189889226691,
+   "over_threshold": false,
+   "decision": "본 값을 쓴다"
+  },
+  "LiCl": {
+   "group": "phase",
+   "n_atoms": 4,
+   "dE_probe_minus_main_meV_per_atom": -6.802849839004921e-05,
+   "over_threshold": false,
+   "decision": "본 값을 쓴다"
+  },
+  "Nd2S3": {
+   "group": "phase",
+   "n_atoms": 20,
+   "dE_probe_minus_main_meV_per_atom": -0.013993455286254175,
+   "over_threshold": false,
+   "decision": "본 값을 쓴다"
+  },
+  "host": {
+   "group": "target",
+   "n_atoms": 62,
+   "dE_probe_minus_main_meV_per_atom": -0.2788881809523915,
+   "over_threshold": false,
+   "decision": "본 값을 쓴다 (k 한계 없음)"
+  }
+ },
+ "⛔": "Y 가 아니다 — 잡마다 k 수렴 차다. Y 는 --collect 로 한 번 낸다"
+}

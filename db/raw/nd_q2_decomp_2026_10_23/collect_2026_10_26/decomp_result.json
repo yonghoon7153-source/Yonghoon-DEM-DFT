@@ -1,0 +1,163 @@
+{
+  "phase_E_eV": {
+    "Li3PS4": -4985.05223046974,
+    "Li2S": -1315.3983757562578,
+    "LiCl": -1287.7504671732502,
+    "Li3PO4": -3648.69080629812,
+    "Nd2S3": -16303.355405746921
+  },
+  "basis": {
+    "Li3PS4": {
+      "Li": 3,
+      "P": 1,
+      "S": 4
+    },
+    "Li2S": {
+      "Li": 2,
+      "S": 1
+    },
+    "LiCl": {
+      "Li": 1,
+      "Cl": 1
+    },
+    "Li3PO4": {
+      "Li": 3,
+      "P": 1,
+      "O": 4
+    },
+    "Nd2S3": {
+      "Nd": 2,
+      "S": 3
+    }
+  },
+  "per_target": {},
+  "phase_pulay_meV_per_atom": {
+    "Li3PS4": 0.005871707004290474,
+    "Li2S": 0.03764241759680504,
+    "LiCl": 0.0452389296550817,
+    "Li3PO4": 0.2733978996932491,
+    "Nd2S3": 0.03255162055603241
+  },
+  "phase_vc_relax": {
+    "Li3PS4": true,
+    "Li2S": true,
+    "LiCl": true,
+    "Li3PO4": true,
+    "Nd2S3": true
+  },
+  "G_phase_pass": true,
+  "pair": {
+    "A": "doped",
+    "B": "host",
+    "Y_raw_meV_per_atom": -22.256606283354493,
+    "Y_corrected_meV_per_atom": {
+      "25.0": -22.25941496067071,
+      "21.7": -22.259842086714187,
+      "32.5": -22.258766804366964
+    },
+    "pair_correction_diff_meV_per_atom": {
+      "25.0": 0.0028086773162150536,
+      "21.7": 0.0032358033596947625,
+      "32.5": 0.002160521012473118
+    },
+    "G_V_pass": true,
+    "Y_report_meV_per_atom": -22.25941496067071,
+    "G_phase_pass": true,
+    "within_resolution": false,
+    "resolution_meV": 2.0
+  },
+  "phase_formula_units_Z": {
+    "Li3PS4": 4,
+    "Li2S": 1,
+    "LiCl": 2,
+    "Li3PO4": 2,
+    "Nd2S3": 4
+  },
+  "phase_E_note": "화학식당(eV/f.u.) 로 정규화된 값이다 — 셀 총에너지가 아니다",
+  "targets": {
+    "host": {
+      "delta_E_decomp_eV_per_atom": -0.02163174855142584,
+      "E_products_eV": -37858.06164124716,
+      "E_target_eV": -37856.72047283697,
+      "n_atoms": 62,
+      "coeffs": {
+        "Li3PS4": 5.000000000000011,
+        "Li2S": 1.9999999999999916,
+        "LiCl": 7.99999999999997,
+        "Li3PO4": 3.3967761947782684e-15,
+        "Nd2S3": -4.6139735307645305e-15
+      },
+      "basis_used": [
+        "Li2S",
+        "Li3PO4",
+        "Li3PS4",
+        "LiCl",
+        "Nd2S3"
+      ],
+      "P_kbar": -0.34,
+      "V_A3": 1216.3821809197627,
+      "volume_correction": {
+        "B_GPa": [
+          25.0,
+          21.7,
+          32.5
+        ],
+        "dE_V_eV": {
+          "25.0": -0.00017552843691555746,
+          "21.7": -0.0002022217015156192,
+          "32.5": -0.0001350218745504288
+        },
+        "delta_E_decomp_corrected_eV_per_atom": {
+          "25.0": -0.02162891744760462,
+          "21.7": -0.021628486911078812,
+          "32.5": -0.02162957077925567
+        },
+        "G_V_P_ok": true
+      },
+      "composition_source": "QE 입력 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/ndq2_collect/in/host.in"
+    },
+    "doped": {
+      "delta_E_decomp_eV_per_atom": -0.04388835483478033,
+      "E_products_eV": -87071.0124928436,
+      "E_target_eV": -87065.74589026342,
+      "n_atoms": 120,
+      "coeffs": {
+        "Li3PS4": 9.25000000000003,
+        "Li2S": 0.9999999999999734,
+        "LiCl": 15.999999999999945,
+        "Li3PO4": 0.7500000000000067,
+        "Nd2S3": 0.9999999999999792
+      },
+      "basis_used": [
+        "Li2S",
+        "Li3PO4",
+        "Li3PS4",
+        "LiCl",
+        "Nd2S3"
+      ],
+      "P_kbar": -0.03,
+      "V_A3": 2395.414819938433,
+      "volume_correction": {
+        "B_GPa": [
+          25.0,
+          21.7,
+          32.5
+        ],
+        "dE_V_eV": {
+          "25.0": -2.6911806004338347e-06,
+          "21.7": -3.1004384797624825e-06,
+          "32.5": -2.070138923410642e-06
+        },
+        "delta_E_decomp_corrected_eV_per_atom": {
+          "25.0": -0.04388833240827533,
+          "21.7": -0.043888328997793,
+          "32.5": -0.043888337583622636
+        },
+        "G_V_P_ok": true
+      },
+      "composition_source": "QE 입력 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d4f5961c-ef3a-5479-873f-4bd1d00ec122/scratchpad/ndq2_collect/in/doped.in"
+    }
+  },
+  "n_targets_scored": 2,
+  "⛔_do_not": "E_above_hull 로 인용 금지. 5상 공통기저 비교다."
+}
