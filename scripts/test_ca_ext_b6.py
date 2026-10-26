@@ -1991,6 +1991,79 @@ def t_graph_only_payload():
         shutil.rmtree(td, ignore_errors=True)
 
 
+@case('SGF 조립만 기록 꼴 — 칸마다 깨 본다 (★ 10-26 B″ 변이 보강 · run_contract.cjunc_graph_only_problem · 합성 · payload 없음)')
+def t_graph_only_record_form():
+    """★ 10-26 B″ 변이 보강 — 봉인 원천 출력 기록의 꼴 검사 (`run_contract.cjunc_graph_only_problem`) 를 칸 안 값마다 깨 본다.  SG · N11 · 사슬 RG10 은
+    실제 출력 (정직) 과 칸 빠짐 (shape) 만 밟아서, 칸 안 값 검사 (env · cost · bind 값 · graphs) 를 끈 변이가 살았다 (B″ 변이 표 C-form-*) →
+    합성 정직 기록 (`cjunc_graph_only_record` · 지문 꼴 = 원천 꼴) = 문제 없음 · 칸 하나씩 틀린 꼴 = 그 칸의 코드 (`GRAPH_ONLY|<칸>|`) 로 거부."""
+    import ca_ext_svcf as SVc
+    rec_fn = getattr(RC, 'cjunc_graph_only_record', None)
+    prob = getattr(RC, 'cjunc_graph_only_problem', None)
+    if rec_fn is None or prob is None:
+        chk('SGF0 run_contract.cjunc_graph_only_record · cjunc_graph_only_problem 이 있다', False)
+        return
+    graphs = {'rule': SVc.GRAPH_FP_RULE, 'main': 'a' * 64, 'lower': 'b' * 64, 'upper': None}
+    bind = {k: ('bind-test-v1' if k == 'bind_version' else 'c' * 64) for k in SVc.BIND_FIELDS}
+    base = rec_fn({'graph_only': True, 'cjunc_graphs': graphs, 'reason': None, 'bind': bind},
+                  env_unit={'python_minor': '3.8', 'numpy': '1.24.4', 'scipy': '1.10.1'},
+                  cost={'seconds_step3': 0.5, 'seconds_assemble': 0.25, 'peak_rss_kb': 1234})
+    early = deep(base)
+    early.update(cjunc_graphs=None, reason='cjunc_electrode_short')
+    no_rss = deep(base)
+    no_rss['cost']['peak_rss_kb'] = None
+    chk('SGF0 정직한 합성 기록 = 문제 없음 · 조기 반환 꼴 (지문 None · 사유 글) = 문제 없음 · 최대 RSS None = 문제 없음',
+        prob(base) is None and prob(early) is None and prob(no_rss) is None, (prob(base), prob(early), prob(no_rss)))
+
+    def put(path, val, drop=False):
+        r = deep(base)
+        cur = r
+        for k in path[:-1]:
+            cur = cur[k]
+        if drop:
+            cur.pop(path[-1])
+        else:
+            cur[path[-1]] = val
+        return r
+    bad = {
+        'schema 다른 판': (put(('schema',), 'cjunc-graph-only-v0'), 'schema'),
+        'graph_only 1 (True 아님)': (put(('graph_only',), 1), 'schema'),
+        'graph_only False': (put(('graph_only',), False), 'schema'),
+        '지문 규칙 다른 이름': (put(('cjunc_graphs', 'rule'), 'other_rule'), 'graphs'),
+        '주 지문 대문자 hex': (put(('cjunc_graphs', 'main'), 'A' * 64), 'graphs'),
+        '아래 지문 63 자': (put(('cjunc_graphs', 'lower'), 'b' * 63), 'graphs'),
+        '지문 칸 하나 더': (put(('cjunc_graphs', 'extra'), None), 'graphs'),
+        '지문 칸 빠짐 (upper)': (put(('cjunc_graphs', 'upper'), None, drop=True), 'graphs'),
+        'reason 숫자': (put(('reason',), 3), 'reason'),
+        '결합 칸 빠짐': (put(('bind', 'fp_sid'), None, drop=True), 'bind'),
+        '결합 칸 하나 더': (put(('bind', 'fp_extra'), 'd' * 64), 'bind'),
+        '결합 판 빈 글': (put(('bind', 'bind_version'), ''), 'bind'),
+        '결합 판 None': (put(('bind', 'bind_version'), None), 'bind'),
+        '결합 지문 숫자': (put(('bind', 'fp_sig'), 7), 'bind'),
+        '결합 None': (put(('bind',), None), 'bind'),
+        '환경 칸 빠짐 (scipy)': (put(('env_unit', 'scipy'), None, drop=True), 'env'),
+        '환경 칸 하나 더': (put(('env_unit', 'blas'), 'x'), 'env'),
+        '환경 numpy 빈 글': (put(('env_unit', 'numpy'), ''), 'env'),
+        '환경 numpy None': (put(('env_unit', 'numpy'), None), 'env'),
+        '환경 python 숫자': (put(('env_unit', 'python_minor'), 3.8), 'env'),
+        '비용 칸 빠짐': (put(('cost', 'seconds_assemble'), None, drop=True), 'cost'),
+        '비용 STEP3 NaN': (put(('cost', 'seconds_step3'), float('nan')), 'cost'),
+        '비용 STEP3 inf': (put(('cost', 'seconds_step3'), float('inf')), 'cost'),
+        '비용 조립 음수': (put(('cost', 'seconds_assemble'), -0.5), 'cost'),
+        '비용 조립 int (float 아님)': (put(('cost', 'seconds_assemble'), 1), 'cost'),
+        '비용 STEP3 True': (put(('cost', 'seconds_step3'), True), 'cost'),
+        '최대 RSS 음수': (put(('cost', 'peak_rss_kb'), -1), 'cost'),
+        '최대 RSS float': (put(('cost', 'peak_rss_kb'), 12.5), 'cost'),
+        '최대 RSS True': (put(('cost', 'peak_rss_kb'), True), 'cost'),
+    }
+    miss = {}
+    for nm, (r, code) in bad.items():
+        got = prob(r)
+        if not (isinstance(got, str) and got.startswith(f'GRAPH_ONLY|{code}|')):
+            miss[nm] = got
+    chk(f'SGF1 칸 안 값이 틀린 꼴 {len(bad)} — 전부 그 칸의 코드 (GRAPH_ONLY|schema|graphs|reason|bind|env|cost|) 로 거부 (예외 아님)', not miss,
+        miss)
+
+
 # ═════════════════════════ B 묶음 — 끔 비트 동일 (고치기 전 코드 대조) ═════════════════════════
 #: ★ 10-21 (D · 브리프 묶음 5) — `--old-scripts` 대조에서 나와도 되는 칸 (한 곳 · z3 O 묶음도 이 표 · 함수를 쓴다).
 #:   한 줄 = (세대, 연산, 경로 정규식 (전체 일치), 경우 표지, 사유) — 연산 '+' 새 칸 · '-' 없어진 칸 · '~' 값 바뀜 ·
