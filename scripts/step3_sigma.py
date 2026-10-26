@@ -1926,7 +1926,7 @@ PLATE_RULE_VERSION = 'p2-occupied-surface-first'
 
 def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, plate_band_um=None,
                   z_bot_um=None, plate_band_bot_um=None, bot_allowed=None, periodic_xy=False,
-                  area_um2=None, rint=None, pid=None, iface=None, face_alpha=None, cjunc=None):
+                  area_um2=None, rint=None, pid=None, iface=None, face_alpha=None, cjunc=None, cjunc_graph_only=False):
     """Effective through-plane (z) σ of the voxel σ-id grid.  Finite volume, harmonic-mean face
     conductance g = (2σaσb/(σa+σb))·vox (cubic voxels: face area vox² / distance vox), collector
     plate φ=1 at the bed bottom, φ=0 plate at the bed top, lateral Neumann.
@@ -1989,6 +1989,11 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
     #  ② 탄소 접합 (2026-10-20 · Rint ② S2/S3 · 기구만 · `carbon_junction`) — None (기본) 이면 아래 어떤 줄도 바뀌지 않는다.
     #    거부 입력 · r1 · ①′ · 주기 · return_field · 다른 격자 · VGCF 절연 채널 → 조립 전 거부 (CG 0).
     _cjp = _cjs = None
+    #  ★ 10-26 묶음 B6 (Codex 회차 ① RR1-01 · 1저자 10-26 Q2 (가)) cjunc_graph_only = 봉인 원천 다시 조립 (솔브 없음) — 같은 입력 (raster · 원장 ·
+    #    계획 · 등록 절단 규칙) 으로 접합 계를 조립해 주 계 · 반사실 끝 그래프 지문만 돌려준다 (`cjunc_graphs` = {rule · main · lower · upper} ·
+    #    CG · 증서 · 기록 없음 · 소비자 `ca_ext_svcf.graph_problem` 대조용).  기본 False = 아래 어떤 줄도 바뀌지 않는다.
+    if cjunc_graph_only and cjunc is None:
+        raise ValueError('solve_sigma_z: cjunc_graph_only 는 접합 계획 (cjunc) 이 있어야 한다 (다시 조립할 접합 계가 없다)')
     if cjunc is not None:
         import carbon_junction as _cjm
         _cjp = _cjm.cjunc_require_quantitative(cjunc, sid, vox, sigma_of_sid=sigma_of_sid, rint=_rint, iface=iface,
@@ -2029,6 +2034,8 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
                 'fp_cjunc_rows': (_cjp['fp_rows'] if _cjp is not None else None)}
 
     def _ret(d):
+        if cjunc_graph_only:                               # ★ 10-26 묶음 B6 — 접합 조립 전 조기 반환 = 다시 조립할 계 없음 (지문 없음 · 사유만)
+            return {'graph_only': True, 'cjunc_graphs': None, 'reason': d.get('reason')}
         if CONV_CERT:
             #  ★ 10-21 (Codex RCA-13 · 1저자 Q7 일부) — 조기 반환 해의 **상태 증서** (CG 없이 낸 σ 0): 두 판을 잇는 성분이 없는 사유 =
             #    VALID_ZERO_TOPOLOGY (σ 0 = 정상 결과 · 바닥 극한 R_j = ∞ 를 증서 없음으로 멈추지 않는다) · 단락 · 얇은 침대 · 모르는 사유 =
@@ -2282,7 +2289,16 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
                             np.concatenate(cols + [np.arange(n_dof)]))),
                           shape=(n_dof, n_dof)).tocsr()
     if _cjs is not None:                                   # ② — 실제 그래프 (멤버십 dof · 접합 · 축약 · 절단) · 가지치기 · 관통 · 단락
-        _cjb = _cjs.build(_Ab, _gb, _At, _gt, _cb, _ct)
+        #  ★ 10-26 묶음 B6 (RR1-01) — 주 계 정규 가중 그래프 지문 = SV 반사실을 켠 증서 런 (주 해 증서 칸) · 봉인 원천 다시 조립 (graph_only) 만
+        #    (지문을 안 셀 때는 옛 호출 꼴 그대로 — 옛 접합 모듈을 끼워 대조하는 시험 (`test_carbon_junction` LEN-BIT) 이 같은 호출을 쓴다)
+        _sv_on = _cjp.get('sv_counterfactual') is not None
+        _cjb = (_cjs.build(_Ab, _gb, _At, _gt, _cb, _ct, graph_fp=True) if (cjunc_graph_only or (CONV_CERT and _sv_on))
+                else _cjs.build(_Ab, _gb, _At, _gt, _cb, _ct))
+        if cjunc_graph_only:                               # ★ 10-26 묶음 B6 — 솔브 없음: 주 계 · 반사실 끝 (SV 노브를 켠 계획만) 그래프 지문
+            _cfg = _cjs.sv_graph_fps() if _sv_on else {'lower': None, 'upper': None}
+            return {'graph_only': True, 'reason': _cjb.get('reason'),
+                    'cjunc_graphs': {'rule': _cjm.CJUNC_GRAPH_FP_RULE, 'main': _cjs.graph_fp, 'lower': _cfg['lower'],
+                                     'upper': _cfg['upper']}}
         if _cjb.get('reason'):
             return _ret({'sigma_eff': 0.0, 'n_dof': int(_cjs.stats['n_plate_reachable_dof']),
                          'n_through_dof': int(_cjs.stats['n_through_dof']),
@@ -2334,6 +2350,9 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
         _cert['resolve_iters'] = _rit[0]
         #  ★ 10-21 (사전 리뷰 PRE-impl-07) — 증서 ↔ 런 결합 칸 (양의 해 · 행렬 그래프 영값 · 증서 못 세움 모두 · 조기 반환 증서와 같은 칸)
         _cert.update(_cc.bind_record(**_cert_bind_kw()))
+        #  ★ 10-26 묶음 B6 (Codex 회차 ① RR1-01) — SV 반사실을 켠 접합 런: 주 해 증서 ↔ 그 증서가 푼 계의 정규 가중 그래프 지문 (끈 런 = 칸 없음)
+        if _cjs is not None and getattr(_cjs, 'graph_fp', None) is not None:
+            _cert[_cjm.CJUNC_GRAPH_KEY] = _cjs.graph_fp
         if not _cert['ok']:
             print(f"  ⚠ STEP3 수렴 증서 실패 [{_cert.get('status')}] (ⓐ {_cert['pass_a']} · ⓑ {_cert['pass_b']} 불균형 "
                   f"{_cert['imbalance']:.2e} · ⓒ {_cert['pass_c']} Δσ {_cert['dsigma_rel']:.2e} · ⓓ {_cert.get('pass_d')} "

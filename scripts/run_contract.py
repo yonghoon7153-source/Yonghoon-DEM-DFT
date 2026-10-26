@@ -722,10 +722,12 @@ def ca_ext_protocol_fields():
     return out
 
 
-def ca_ext_record_ok(man):
+def ca_ext_record_ok(man, graphs=None):
     """다음 세대 블록 `ca_ext` 계약 → `(ok, reason|None)` — producer (게시 전) · `check_arm` · 판정기가 같이 부른다 (설계 v1 §7).
     · 블록 없음 + 기능 끔 = 통과 (옛 세대 · 현 생산 그대로) · 기능 켬 + 블록 없음 = 위반 (`unknown:ca_ext`)
-    · 블록 모양 · 하위 블록 등록 · 요청 ↔ 블록 · 하위 블록 검증기 (그 모듈이 정본 — 여기에 사본을 두지 않는다)"""
+    · 블록 모양 · 하위 블록 등록 · 요청 ↔ 블록 · 하위 블록 검증기 (그 모듈이 정본 — 여기에 사본을 두지 않는다)
+    ★ 10-26 묶음 B6 (Codex 회차 ① RR1-01 · 1저자 10-26 Q2 (가)) graphs = 봉인 원천에서 다시 조립한 SV 반사실 끝 그래프 지문 (`ca_ext_svcf.sv_cf_problem`
+    에 그대로 · None = 원천 없는 문맥 = 꼴만 — 그 통과는 SV 판정 입력이 아니다 (사슬 = 원천 대조 뒤만 · 원천 없음 = `SV_UNCHECKED`))"""
     m = man if isinstance(man, dict) else {}
     if 'ca_ext' not in m:
         if _ca_ext_requested(m):
@@ -753,7 +755,7 @@ def ca_ext_record_ok(man):
             _ev = _cjb['evidence']
             _ms = ((_ev.get('receipts') or {}).get('electronic_main') or {}).get('status') \
                 if isinstance(_ev.get('receipts'), dict) else None
-            prob = _sv.sv_cf_problem(_ev, _ms in ('applied', 'absent_geometry'))
+            prob = _sv.sv_cf_problem(_ev, _ms in ('applied', 'absent_geometry'), graphs=graphs)
         except Exception as e:                                   # noqa: BLE001 — 확인 못 한 것을 통과시키지 않는다
             return False, f'CAEXT|cjunc|unverifiable| {type(e).__name__}: {e}'
         if prob:

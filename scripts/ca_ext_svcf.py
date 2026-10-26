@@ -57,6 +57,15 @@
   (computed 끝이 없어도 · 위 끝 = 상태와 무관 · 옛 판 = computed 끝이 있을 때만).  ⚠ X3 와 같은 위상 꼴 (두 끝 증서 위상 수가 같아진다) 인 위 끝 ←
   아래 끝 증서 (한정 (c)) · 위 끝 ← 주 해 증서 (아래 끝 = 주 해인 기록 · 한정 (b) (b′)) 도 끊은 수 그대로면 거부된다 — 새 칸까지 0 으로 고친 일관
   편집은 받는다 (남은 한정 · `_topo_problem` ⚠).
+★ 10-26 묶음 B6 (Codex 회차 ① RR1-01 · 1저자 10-26 Q1 · Q2 (가) · author 10-23 ratified Q2-Q3 Q20-Q21 (bundle B 10-25)) 끝 증서의 가중 그래프 귀속 —
+  위상 수 넷은 가중 그래프를 정하지 않는다 (판정문 §3: 병렬 간선 하나를 뺀 끝 = 고유 쌍 · dof · 판 결합 수 그대로 · k 0 · census 그대로인데 단자 G 가
+  다르다 → 같은 런의 주 해 증서를 아래 끝 자리에 옮긴 기록이 계약을 지나 문턱 1.01 에서 거짓 clear).  생산자 (`carbon_junction.solved_graph_fp`) 가
+  주 해 · 끝 증서마다 그 증서가 푼 계의 정규 가중 그래프 지문 (`GRAPH_KEY` = dof 식별 집합 · 쌍별 정확 합산 전도도 · 판 결합) 을 싣고 투영이 옮긴다 ·
+  계약 = 증서 구간 기록의 증서마다 지문 꼴 (hex64 · 원천 없는 문맥 = 꼴만) · 원천을 준 소비자 (`sv_cf_problem(graphs=)` · `run_contract.ca_ext_record_ok
+  (graphs=)` · 사슬 `rint_r_chain.read_run`) = SV 기록 밖 봉인 원천에서 솔브 없이 다시 조립한 지문 (`step3_sigma.solve_sigma_z(cjunc_graph_only=True)`)
+  과 대조 (`graph_problem` · 다르면 구조화 실패) · 사슬 판정은 원천 대조를 지난 기록만 받는다 (원천 없음 · 실패 = `SV_UNCHECKED`).  금지 (판정문 §3) =
+  사본끼리 비교 · `G_cut != G_full` 규칙 · 원시 간선 개수 — 정직한 FLOAT (아래 끝 지문 = 주 해) · 등전위 다리 (G 같음) 를 받는다.  ⚠ 한정 = 증서 칸
+  지문까지 원천 값으로 같이 고친 편집 (증서 수는 다른 끝 그대로) 은 못 가린다 (지문 = 그래프 정체성 · 증서 수의 재증명 아님).
 numpy 없이 뜬다 (`numbers` · `fractions` · 원 기록의 numpy 수도 받는다 · 검증기의 증서 대조만 `step3_conv_cert` 를 그 자리에서 부른다)."""
 import math
 import numbers
@@ -109,11 +118,17 @@ COUNT_MAX = 2 ** 63 - 1
 #   원장에서 센 수 — 간선 = L 위 삼각 비대각 쌍 (병렬 간선 = 한 쌍) · dof · 아래 · 위 판 결합 수) — 끝 증서를 그 끝의 끊은 그래프에 묶는다
 #   (`_topo_problem` · 옛 판 = 투영이 버렸다 → 같은 런의 주 해 증서를 끝 자리에 옮겨도 받았다)
 CERT_TOPO_KEYS = ('target_n_edges', 'target_n_dof', 'target_n_plate_bot', 'target_n_plate_top')
+#: ★ 10-26 묶음 B6 (Codex 회차 ① RR1-01 · 1저자 10-26 Q1 · Q2 (가) · author 10-23 ratified Q2-Q3 Q20-Q21 (bundle B 10-25)) 증서가 푼 계의 정규 가중
+#   그래프 지문 칸 (= `carbon_junction.CJUNC_GRAPH_KEY`) · 규칙 (= `carbon_junction.CJUNC_GRAPH_FP_RULE` · 시험 QG 가 대조) · 봉인 원천 꼴의 칸
+#   (`step3_sigma.solve_sigma_z(cjunc_graph_only=True)` 의 `cjunc_graphs` · 사슬 `rint_r_chain.SV_GRAPH_SOURCE` 가 돌려주는 꼴)
+GRAPH_KEY = 'fp_cjunc_graph'
+GRAPH_FP_RULE = 'solved_graph_dof_ids_pair_exact_sum_plates_v1'
+GRAPH_SOURCE_KEYS = ('rule', 'main', 'lower', 'upper')
 #: 증서 투영 칸 (★ 10-23 — 목표량 구간 · 게시 판 전류 · 영값 위상 칸 · 결합 칸까지 · 옛 판 = 판 · 상태 · ok · ⓐ–ⓓ 만 → 다른 회로 증서를 못 가렸다 ·
-#   ★ 10-23 C1 위상 수 넷)
+#   ★ 10-23 C1 위상 수 넷 · ★ 10-26 묶음 B6 가중 그래프 지문)
 CERT_PROJ_KEYS = ('version', 'status', 'ok', 'pass_a', 'pass_b', 'pass_c', 'pass_d', 'I_bot', 'target_lo', 'target_hi',
                   'target_version', 'target_fp', 'target_tol', 'zero_source', 'zero_graph', 'reason', 'n_through_dof', 'sigma',
-                  'bind_version', 'fp_sid', 'fp_sig', 'fp_face_plan', 'fp_cjunc_registry', 'fp_cjunc_rows') + CERT_TOPO_KEYS
+                  'bind_version', 'fp_sid', 'fp_sig', 'fp_face_plan', 'fp_cjunc_registry', 'fp_cjunc_rows') + CERT_TOPO_KEYS + (GRAPH_KEY,)
 _CERT_NUM_KEYS = frozenset(('I_bot', 'target_lo', 'target_hi', 'target_tol', 'n_through_dof', 'sigma') + CERT_TOPO_KEYS)
 #: 증서 결합 칸 (= `step3_conv_cert.BIND_KEYS` + 판 · 끝마다 증서 = 주 해 증서와 같은 런 입력)
 BIND_FIELDS = ('bind_version', 'fp_sid', 'fp_sig', 'fp_face_plan', 'fp_cjunc_registry', 'fp_cjunc_rows')
@@ -237,9 +252,13 @@ def attach_evidence(ev, request):
     return ev
 
 
-def sv_cf_problem(ev, solved):
+def sv_cf_problem(ev, solved, graphs=None):
     """증거의 SV 반사실 요청 ↔ 기록 → 문제 | None.  solved = 주 전자 솔브가 풀렸나 (접합 영수증 applied · absent_geometry).
-    요청 없음 ⟹ 기록 없음 · 요청 + 풀림 ⟹ 기록 (종류 · 문턱 · 상태 ↔ 비 ↔ 표지) · 요청 + 조기 반환 ⟹ 기록 없음 (주 해가 없다)."""
+    요청 없음 ⟹ 기록 없음 · 요청 + 풀림 ⟹ 기록 (종류 · 문턱 · 상태 ↔ 비 ↔ 표지) · 요청 + 조기 반환 ⟹ 기록 없음 (주 해가 없다).
+    ★ 10-26 묶음 B6 (Codex 회차 ① RR1-01 · 1저자 10-26 Q2 (가)) graphs = 봉인 원천 (같은 런의 raster · 원장 · 계획 · 등록 절단 규칙) 에서 다시 조립한
+    끝 그래프 지문 (`GRAPH_SOURCE_KEYS` · `step3_sigma.solve_sigma_z(cjunc_graph_only=True)`) — 주면 기록 검사를 다 지난 뒤 증서 지문과 대조
+    (`graph_problem` · 다르면 구조화 실패) · None (원천 없는 문맥) = 꼴만 (증서 구간 기록의 증서마다 hex64 지문) — 원천 없는 통과는 판정 입력이 아니다
+    (사슬 = 원천 대조 뒤만 · 원천 없음 = `SV_UNCHECKED` · 자기 신고 사본끼리 비교로 대신하지 않는다)."""
     ev = ev if isinstance(ev, dict) else {}
     sol = ev.get('solve') if isinstance(ev.get('solve'), dict) else {}
     has_req, has_rec = 'sv_counterfactual_request' in ev, 'sv_counterfactual' in sol
@@ -296,7 +315,10 @@ def sv_cf_problem(ev, solved):
     why = _census_problem(rec, ev)
     if why:
         return why
-    return _interval_problem(rec)
+    why = _interval_problem(rec)
+    if why or graphs is None:
+        return why
+    return graph_problem(rec, graphs)                # ★ 10-26 묶음 B6 (RR1-01) — 봉인 원천 대조 (원천을 준 소비자만)
 
 
 def _form_problem(st, r_, lim, what):
@@ -468,6 +490,68 @@ def _hex32(v):
     return isinstance(v, str) and len(v) == 32 and all(ch in '0123456789abcdef' for ch in v)
 
 
+def _hex64(v):
+    return isinstance(v, str) and len(v) == 64 and all(ch in '0123456789abcdef' for ch in v)
+
+
+def _fp_short(v):
+    return f'{v[:12]}…' if _hex64(v) else repr(v)
+
+
+def graph_source_problem(g):
+    """★ 10-26 묶음 B6 (RR1-01) 봉인 원천 지문 꼴 → 문제 | None — {'rule' = `GRAPH_FP_RULE`, 'main' · 'lower' · 'upper' = 소문자 hex64 | None}
+    (`step3_sigma.solve_sigma_z(cjunc_graph_only=True)` 의 `cjunc_graphs` 꼴 · None = 그 계를 조립할 수 없었다 (단락 · 덩어리 0 · census 불일치))."""
+    if not isinstance(g, dict) or set(g) != set(GRAPH_SOURCE_KEYS):
+        return f'원천 꼴 {type(g).__name__} · 칸 {sorted(g) if isinstance(g, dict) else None} (= {list(GRAPH_SOURCE_KEYS)})'
+    if g['rule'] != GRAPH_FP_RULE:
+        return f'원천 지문 규칙 {g["rule"]!r} ≠ {GRAPH_FP_RULE!r}'
+    for k in ('main', 'lower', 'upper'):
+        if g[k] is not None and not _hex64(g[k]):
+            return f'원천 {k} 지문 {g[k]!r} (소문자 hex64 · None 이어야)'
+    return None
+
+
+def graph_applicable(rec):
+    """★ 10-26 묶음 B6 — 그래프 귀속 대조가 뜻이 있는 기록인가: 증서 구간 기록 + 비를 싣는 끝이 있다 (그 밖 = 사슬이 이미 판정 입력으로 받지 않는다)."""
+    return (isinstance(rec, dict) and rec.get('standing') == STANDING_CERTIFIED
+            and any(RATIO_STATUSES.get(e.get('status')) for _w, e in _ends(rec)))
+
+
+def graph_problem(rec, graphs):
+    """★ 10-26 묶음 B6 (Codex 회차 ① RR1-01 · 1저자 10-26 Q2 (가)) 증서 지문 ↔ 봉인 원천에서 다시 조립한 기대 끝 그래프 지문 → 문제 | None.
+    graphs = SV 기록 **밖** 원천 (같은 런의 raster · 원장 · 계획 · 등록 절단 규칙 → `solve_sigma_z(cjunc_graph_only=True)` · 솔브 없음) · 원천 꼴이 틀리면
+    대조 불가 (문제).  증서 구간 기록의 비를 싣는 끝이 있을 때만 (`graph_applicable`):
+      · 주 해 증서 (`conv_cert_full`) 지문 = 원천 주 계
+      · 비를 싣는 끝마다 그 끝 증서 지문 = 원천 그 끝 (아래 끝 = 'lower' · 위 끝 풀이 기록 = 'upper' · 원천에 그 끝이 없으면 (None) = 문제)
+      · 위 끝 풀이 기록이 없는 꼴 (못 가른 덩어리 0 · 위 = 아래) 인데 원천에 위 끝 그래프가 있다 = 위 끝을 지운 기록 (문제)
+    판정문 반례 (아래 끝 ← 같은 런의 주 해 증서 · k 0 · 위상 수 · census 그대로) = 아래 끝 증서 지문 = 주 계 ≠ 원천 아래 끝 → 거부.
+    금지 (판정문 §3) = 사본끼리 비교 · `G_cut != G_full` 규칙 · 원시 간선 개수 — 정직한 FLOAT (아래 끝 = 주 계) · 등전위 다리 (G 같음) 는 원천과 같아
+    받는다.  ⚠ 한정: 기록의 증서 칸 지문을 원천 값으로 같이 고친 편집 (증서 수는 주 해 그대로) 은 이 대조로 가리지 못한다 — 지문은 그래프 정체성이지
+    증서 수의 재증명이 아니다 (풀이 증인 · 다시 풀기 없음)."""
+    why = graph_source_problem(graphs)
+    if why:
+        return f'sv_cf| 봉인 원천 대조 불가 — {why} (10-26 RR1-01)'
+    if not graph_applicable(rec):
+        return None
+    full = rec.get('conv_cert_full') if isinstance(rec.get('conv_cert_full'), dict) else {}
+    if graphs['main'] is None or full.get(GRAPH_KEY) != graphs['main']:
+        return (f'sv_cf| 주 해 증서 가중 그래프 지문 ({GRAPH_KEY}) {_fp_short(full.get(GRAPH_KEY))} ≠ 봉인 원천에서 다시 조립한 주 계 '
+                f'{_fp_short(graphs["main"])} — 이 런 주 해가 푼 계의 증서가 아니다 (10-26 RR1-01)')
+    up = rec.get('upper')
+    ends = [('아래 끝', rec, 'lower')] + ([('위 끝', up, 'upper')] if isinstance(up, dict) else [])
+    for w, e, k in ends:
+        if not RATIO_STATUSES.get(e.get('status')):
+            continue
+        cc = e.get('conv_cert') if isinstance(e.get('conv_cert'), dict) else {}
+        if graphs[k] is None or cc.get(GRAPH_KEY) != graphs[k]:
+            return (f'sv_cf| {w} 증서 가중 그래프 지문 ({GRAPH_KEY}) {_fp_short(cc.get(GRAPH_KEY))} ≠ 봉인 원천에서 다시 조립한 {w} 그래프 '
+                    f'{_fp_short(graphs[k])} — 그 끝에서 푼 계의 증서가 아니다 (10-26 RR1-01)')
+    if up is None and graphs['upper'] is not None:
+        return (f'sv_cf| 위 끝 풀이 기록이 없다 (못 가른 덩어리 0 꼴 · 위 = 아래) 인데 봉인 원천에서 다시 조립한 위 끝 그래프가 있다 '
+                f'({_fp_short(graphs["upper"])}) — 위 끝을 지운 기록 ({GRAPH_KEY} · 10-26 RR1-01)')
+    return None
+
+
 def _ends(rec):
     """기록의 끝 [(이름, 끝)] — 아래 끝 = 기록 자신 · 위 끝 = `upper` 풀이 기록 (dict 일 때 · 못 가른 덩어리 0 = 아래 끝 그 자체)."""
     out = [('아래 끝', rec)]
@@ -554,6 +638,10 @@ def _cert_problem(rec, ev):
     for ck, ek in (('fp_sid', 'sid'), ('fp_cjunc_registry', 'registry'), ('fp_cjunc_rows', 'plan_rows')):
         if not (_hex32(full.get(ck)) and full.get(ck) == fp.get(ek)):
             return f'sv_cf| 주 해 증서 {ck} {full.get(ck)!r} ≠ 증거 fp.{ek} {fp.get(ek)!r} — 다른 런 · 다른 계획의 증서 (10-23 RCA2-04)'
+    #  ★ 10-26 묶음 B6 (RR1-01) — 증서 ↔ 그 증서가 푼 가중 그래프: 지문 칸 꼴 (원천 없는 문맥 = 꼴만 · 값 대조 = `graph_problem`)
+    if not _hex64(full.get(GRAPH_KEY)):
+        return (f'sv_cf| 주 해 증서 가중 그래프 지문 {GRAPH_KEY} = {full.get(GRAPH_KEY)!r} (소문자 hex64 이어야 — 지문 없는 증서 = 그 증서가 푼 '
+                f'그래프에 묶을 수 없다 · 10-26 RR1-01)')
     for w, e in ends:
         form = RATIO_STATUSES.get(e.get('status'))
         if form is None:
@@ -565,6 +653,9 @@ def _cert_problem(rec, ev):
         diff = [k for k in BIND_FIELDS if cc.get(k) != full.get(k)]
         if diff:
             return f'sv_cf| {w} 증서 결합 칸 {diff} ≠ 주 해 증서 — 다른 런 · 다른 계획의 증서 (10-23 RCA2-04)'
+        if not _hex64(cc.get(GRAPH_KEY)):
+            return (f'sv_cf| {w} 증서 가중 그래프 지문 {GRAPH_KEY} = {cc.get(GRAPH_KEY)!r} (소문자 hex64 이어야 — 지문 없는 끝 증서 = 그 끝 '
+                    f'그래프에 묶을 수 없다 · 10-26 RR1-01)')
     #  ★ 10-23 (사전 공격 리뷰 C1 · 1저자 Q12 (가)) 끝 증서 ↔ 그 끝의 끊은 그래프 (위의 결합 = 그 끝의 G · 런 단위 결합 칸 — 같은 런의 주 해 증서를
     #    끝 자리에 옮긴 기록을 못 가렸다)
     return _topo_problem(rec)

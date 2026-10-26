@@ -711,10 +711,18 @@ def _fake_pos_cert(G, lo=None, hi=None, topo=None, **over):
          'pass_d': True, 'I_bot': float(G), 'target_lo': float(G if lo is None else lo), 'target_hi': float(G if hi is None else hi),
          'target_version': CC.TARGET_VERSION, 'target_fp': CC.TARGET_FP_RULE, 'target_tol': CC.CERT_TARGET_TOL,
          'bind_version': CC.BIND_VERSION, 'fp_sid': CJ_FP['sid'], 'fp_sig': 'd' * 32, 'fp_face_plan': None,
-         'fp_cjunc_registry': CJ_FP['registry'], 'fp_cjunc_rows': CJ_FP['plan_rows']}
+         'fp_cjunc_registry': CJ_FP['registry'], 'fp_cjunc_rows': CJ_FP['plan_rows'],
+         #  ★ 10-26 묶음 B6 (RR1-01) — 그 증서가 푼 계의 가중 그래프 지문 (가짜 · 증서마다 다르게 = G · 위상)
+         'fp_cjunc_graph': _fake_graph_fp('pos', G, topo)}
     c.update(_topo_kw(topo))
     c.update(over)
     return c
+
+
+def _fake_graph_fp(*key):
+    """★ 10-26 묶음 B6 — 가짜 가중 그래프 지문 (hex64 · 원천 대조 없음 = 계약은 꼴만 본다)."""
+    import hashlib
+    return hashlib.sha256(repr(key).encode('utf-8')).hexdigest()
 
 
 def _fake_zero_cert(**over):
@@ -723,6 +731,7 @@ def _fake_zero_cert(**over):
     c = CC.early_record({'reason': 'no_through_component', 'n_through_dof': 0, 'sigma_eff': 0.0}, zero_graph='cjunc_sv_counterfactual',
                         fp_sid=CJ_FP['sid'], fp_sig='d' * 32, fp_face_plan=None, fp_cjunc_registry=CJ_FP['registry'],
                         fp_cjunc_rows=CJ_FP['plan_rows'])
+    c['fp_cjunc_graph'] = _fake_graph_fp('zero')          # ★ 10-26 묶음 B6 (RR1-01) — 영값 위상 끝 = 그 끝 계 지문
     c.update(over)
     return c
 
@@ -1496,6 +1505,32 @@ def t_states():
         chk(f'S8h⁗ 진단 기록 (증서 없음) 의 위 끝 아래 끝 대비 끊은 쌍 수 꼴 → 실제 소비자 거부 (꼴 = `_removed_problem` · 10-25 묶음 B5 변이 보강 — '
             f'그 줄만 끈 검증기 = 받음) [{nm}]',
             not got[0] and isinstance(got[1], str) and got[1].startswith('CAEXT|cjunc| sv_cf|') and 'n_reach_pairs_cut_vs_lower' in got[1], got)
+    #  ★ 10-26 묶음 B6 (Codex 회차 ① RR1-01 · 1저자 10-26 Q2 (가)) 증서의 가중 그래프 지문 (`fp_cjunc_graph`) — 투영이 옮기고 · 증서 구간 기록의 주 해 증서 ·
+    #    비를 싣는 끝 증서마다 hex64 필수 (원천 없는 계약 = 꼴 · 원천 대조 = 원천이 있는 소비자 · 사슬 — test_carbon_junction QG · test_rint_r_chain RG)
+    rgr = _sv_raw('computed', 1.2, n_unsplit=1, ratio_hi=3.4)
+    pjg = proj(rgr)
+    chk('S8g‴ 투영 — 주 해 · 아래 끝 · 위 끝 증서의 가중 그래프 지문 (fp_cjunc_graph) 을 글자 그대로 옮긴다 (10-26 묶음 B6)',
+        isinstance(pjg, dict) and (pjg.get('conv_cert_full') or {}).get('fp_cjunc_graph') == rgr['conv_cert_full']['fp_cjunc_graph']
+        and (pjg.get('conv_cert') or {}).get('fp_cjunc_graph') == rgr['conv_cert']['fp_cjunc_graph']
+        and ((pjg.get('upper') or {}).get('conv_cert') or {}).get('fp_cjunc_graph') == rgr['upper']['conv_cert']['fp_cjunc_graph'], pjg)
+    c8g = {'주 해 증서 지문 없음': lambda r_: r_['conv_cert_full'].pop('fp_cjunc_graph'),
+           '아래 끝 증서 지문 없음': lambda r_: r_['conv_cert'].pop('fp_cjunc_graph'),
+           '위 끝 증서 지문 없음': lambda r_: r_['upper']['conv_cert'].pop('fp_cjunc_graph'),
+           '아래 끝 지문 대문자': lambda r_: r_['conv_cert'].update(fp_cjunc_graph=r_['conv_cert']['fp_cjunc_graph'].upper()),
+           '위 끝 지문 32 자': lambda r_: r_['upper']['conv_cert'].update(fp_cjunc_graph='a' * 32),
+           '주 해 지문 None': lambda r_: r_['conv_cert_full'].update(fp_cjunc_graph=None)}
+    for nm, fn in c8g.items():
+        raw = _sv_raw('computed', 1.2, n_unsplit=1, ratio_hi=3.4)
+        fn(raw)
+        x = deep(mm)
+        _sv_put(x, proj(raw))
+        got = RC.ca_ext_record_ok(x)
+        chk(f'S8g‴ 증서 구간 기록의 증서 그래프 지문 꼴 → 실제 소비자 거부 (지문 없는 증서 = 끝 그래프에 묶을 수 없다 · 10-26 묶음 B6) [{nm}]',
+            not got[0] and isinstance(got[1], str) and got[1].startswith('CAEXT|cjunc| sv_cf|') and 'fp_cjunc_graph' in got[1], got)
+    x = deep(mm)
+    _sv_put(x, proj(_sv_raw('computed', 1.2, n_unsplit=1, ratio_hi=3.4, certs=False)))
+    chk('S8g‴ 진단 기록 (증서 없음) = 지문 칸 없음 그대로 받음 (증서가 없으면 묶을 증서가 없다 · 판정 입력 아님)',
+        RC.ca_ext_record_ok(x) == (True, None), RC.ca_ext_record_ok(x))
     #  ── ★ 10-22 (사전 리뷰 2 회차 PRE2-impl-01 · 02 · 1저자 Q1 (다)) 괄호 칸 — 투영 · 검증기 (위 끝 상태 ↔ 비 꼴 · 못 가른 덩어리 수 ↔ 위 끝 기록) ──
     rb = _sv_raw('computed', 1.0, n_unsplit=1, status_hi='no_through_without_sv')
     pb = proj(rb)
@@ -1832,14 +1867,21 @@ def t_states_payload():
             and isinstance(sc.get('ratio_cert_interval'), list) and all(isinstance(v, float) and v > 2.0 for v in sc['ratio_cert_interval'])
             #  사슬 read_run 대조 (기록의 주 해 증서 = 이 런의 step3 주 증서 · 판 · 상태 · 게시 판 전류 · 목표량 구간 · 결합 칸) 를 실제 생산자가 지난다
             and all((sx.get('conv_cert_full') or {}).get(k) == (s3_of(qx).get('conv_cert') or {}).get(k)
-                    for sx, qx in ((su, q_u), (sc, q_c)) for k in ('version', 'status', 'I_bot', 'target_lo', 'target_hi') + _SVc.BIND_FIELDS),
+                    for sx, qx in ((su, q_u), (sc, q_c))
+                    for k in ('version', 'status', 'I_bot', 'target_lo', 'target_hi') + _SVc.BIND_FIELDS + (_SVc.GRAPH_KEY,))
+            #  ★ 10-26 묶음 B6 (RR1-01) — 실제 생산자: 주 해 증서 · 비를 싣는 끝 증서마다 가중 그래프 지문 (hex64) · 기록의 주 해 사본 = 이 런 주 증서
+            and all(_SVc._hex64((sx.get('conv_cert_full') or {}).get(_SVc.GRAPH_KEY)) and _SVc._hex64((sx.get('conv_cert') or {}).get(_SVc.GRAPH_KEY))
+                    for sx in (su, sc)),
             (_flags(su), _flags(sc), sc, log_c.strip()[-300:]))
         #  주 증서의 결합 칸 fp_cjunc_rows = 계획 행 지문 — 노브를 켠 계획은 지문에 요청이 들어간다 (`plan_rows_fp` · 10-21 RCA-06 · 노브 끔 = 옛 꼴)
-        #  → 그 칸만 빼고 대조 (증서 수 · 상태 · 판정 칸은 같아야 한다)
-        _cc_main = lambda q: {k: v for k, v in (s3_of(q).get('conv_cert') or {}).items() if k != 'fp_cjunc_rows'}   # noqa: E731
-        chk('SP16 위 끝 풀이는 주 결과를 바꾸지 않는다 — 두 섬유 침대 노브 켬 ↔ 끔: σ 비트 같음 · 주 증서 같음 (계획 행 지문 결합 칸 하나 빼고) · '
-            '매니페스트 backend_last_solve 같음 · p3ca id 같음',
+        #  → 그 칸만 빼고 대조 (증서 수 · 상태 · 판정 칸은 같아야 한다) · ★ 10-26 묶음 B6 (RR1-01) 노브를 켠 런의 주 증서 = 그 증서가 푼 계의 가중
+        #  그래프 지문 칸 (`fp_cjunc_graph` · hex64) 이 더 있다 · 끈 런 = 칸 없음 (옛 바이트)
+        _cc_main = lambda q: {k: v for k, v in (s3_of(q).get('conv_cert') or {}).items() if k not in ('fp_cjunc_rows', 'fp_cjunc_graph')}   # noqa: E731
+        chk('SP16 위 끝 풀이는 주 결과를 바꾸지 않는다 — 두 섬유 침대 노브 켬 ↔ 끔: σ 비트 같음 · 주 증서 같음 (계획 행 지문 결합 칸 · 노브 켠 런의 '
+            '가중 그래프 지문 칸 (10-26 B6 · 끈 런 = 칸 없음) 빼고) · 매니페스트 backend_last_solve 같음 · p3ca id 같음',
             rc_u0 == 0 and s3_of(q_u).get('sigma_e_eff_S_cm') == s3_of(q_u0).get('sigma_e_eff_S_cm')
+            and _SVc._hex64((s3_of(q_u).get('conv_cert') or {}).get('fp_cjunc_graph'))
+            and 'fp_cjunc_graph' not in (s3_of(q_u0).get('conv_cert') or {})
             and bool(_cc_main(q_u)) and _cc_main(q_u) == _cc_main(q_u0)
             and man_of(q_u).get('backend_last_solve') == man_of(q_u0).get('backend_last_solve')
             and man_of(q_u).get('physics_protocol_id') == man_of(q_u0).get('physics_protocol_id'),
@@ -1912,6 +1954,11 @@ OLD_DIFF_ALLOW = (
      'A″ 판에 닿는 성분에서 끊은 쌍 수 (Q17)'),
     ('RR', '+', r'manifest\.ca_ext\.cjunc\.evidence\.solve\.sv_counterfactual\.upper\.n_reach_pairs_cut_vs_lower', 'sv_cf',
      'B 위 끝의 아래 끝 계 대비 끊은 쌍 수 (X3 · Q21)'),
+    #  ★ 10-26 묶음 B6 (Codex 회차 ① RR1-01 · 1저자 10-26 Q1 · Q2 (가)) — 증서가 푼 계의 가중 그래프 지문 (`fp_cjunc_graph`) · SV 반사실을 켠 증서 런만 ·
+    #    새 칸만 (+) · 실측 = 기반 9bec6b764 · 49a1af626 사본 ↔ 묶음 B6 (REPORT_B)
+    ('RR', '+', r'conv_cert\.fp_cjunc_graph', 'sv_cf', 'B6 주 해 증서 ↔ 그 증서가 푼 계의 가중 그래프 지문 (RR1-01)'),
+    ('RR', '+', r'manifest\.ca_ext\.cjunc\.evidence\.solve\.sv_counterfactual\.(conv_cert_full|(upper\.)?conv_cert)\.fp_cjunc_graph', 'sv_cf',
+     'B6 끝 증서 · 기록의 주 해 증서 사본 — 그 증서가 푼 계의 가중 그래프 지문 (RR1-01)'),
 )
 #: 허용이 아니라 이유만 붙이는 칸 (기반 사본의 환경 차이 — 고치는 길: 사본 옆에 docs/ 두기 · 링크)
 OLD_DIFF_HINTS = (

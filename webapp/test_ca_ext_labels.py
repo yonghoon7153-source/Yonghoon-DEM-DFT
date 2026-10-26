@@ -40,6 +40,11 @@
       ∞ · 못 정함 = '—') · nominal 비 = 따로 "nominal [아래, 위] (판정 아님)" · 증서 없는 런 (지위 `diagnostic_uncertified`) = "진단 (판정
       입력 아님 …)" · 지위 칸 없는 옛 기록 = "지위 없음 (옛 기록 · 판정 입력 아님)" · 생산자 한정어에 증서 구간 판정 문장 (사본 없음)
 
+  ★ 2026-10-26 (묶음 B6 · Codex 회차 ① RR1-01 · 1저자 10-26 Q1 · Q2 (가) · 시험 먼저) — 같은 두 행:
+  W17 SV 반사실 그래프 귀속 — 증서 구간 기록의 "(판정 근거)" 뒤에 "그래프 귀속 = 사슬 대조 (봉인 원천 · 없음 = SV_UNCHECKED)" (사슬이 SV 기록 밖
+      봉인 원천에서 다시 조립한 끝 가중 그래프 지문과 증서 지문 (`fp_cjunc_graph`) 을 대조한 뒤만 판정 입력 · 화면은 대조하지 않는다) · 진단 ·
+      옛 기록 = 그 조각 없음 · 두 행 title 에 지문 칸 이름 · 생산자 한정어에 그래프 귀속 문장 (사본 없음)
+
   python3 webapp/test_ca_ext_labels.py
 """
 import os
@@ -413,6 +418,68 @@ def _d_interval(tpl, jinja, js, jinja2):
         chk('W16 JS 행 (node 실행)', False, f'{type(e).__name__}: {e}')
 
 
+def _d_graph(tpl, jinja, js, jinja2):
+    """★ 10-26 묶음 B6 (RR1-01) — W17 SV 반사실 그래프 귀속 (Jinja · JS 두 행 · 화면 = 대조 안 함 · 판정 입력 조건만 표지)."""
+    frag = '그래프 귀속 = 사슬 대조 (봉인 원천 · 없음 = SV_UNCHECKED)'
+    chk('W17a 두 행이 증서 구간 기록에 그래프 귀속 조각 · title 에 지문 칸 이름 (fp_cjunc_graph) · RR1-01 을 싣는다',
+        len(jinja) == 1 and len(js) == 1 and all(frag in ln and 'fp_cjunc_graph' in ln and 'RR1-01' in ln for ln in (jinja[0], js[0])),
+        (len(jinja), len(js)))
+    try:
+        import carbon_junction as CJ
+        quals = list(CJ.CJUNC_QUALIFIERS)
+    except Exception as e:                                  # noqa: BLE001
+        quals = []
+        print(f'  ⚠ carbon_junction 을 못 불러온다 ({type(e).__name__}: {e})')
+    chk('W17b producer 한정어에 그래프 귀속 문장 (가중 그래프 지문 · 봉인 원천 · 원천 없음 = SV_UNCHECKED · RR1-01) — 템플릿 사본 없음',
+        any(all(x in q for x in ('가중 그래프', '봉인 원천', 'SV_UNCHECKED', 'RR1-01')) for q in quals)
+        and not [q for q in quals if q[:24] in tpl], [q[:40] for q in quals if '그래프' in q])
+
+    def sv(standing, ci):
+        r = {'kind': 'counterfactual_cut_sv_bridges_keep_self_v1', 'status': 'computed', 'flag': None, 'sv_counterfactual_ratio': 1.25,
+             'ratio_limit': None, 'n_unsplit_bridging_components': 0, 'bracket_rule': 'b', 'status_hi': 'computed',
+             'sv_counterfactual_ratio_hi': 1.25, 'ratio_limit_hi': None, 'upper': None}
+        if standing is not None:
+            r['standing'] = standing
+            r['ratio_cert_interval'] = ci
+        return r
+    cases = (('증서 구간 기록', _d_meta(sv=sv('certified_interval', [1.2499, 1.2501])),
+              ('(판정 근거) · ' + frag,), ()),
+             ('진단 기록 (증서 없는 런)', _d_meta(sv=sv('diagnostic_uncertified', [None, None])), ('진단 (판정 입력 아님',), ('그래프 귀속',)),
+             ('지위 칸 없는 옛 기록', _d_meta(sv=sv(None, None)), ('지위 없음 (옛 기록',), ('그래프 귀속',)))
+
+    def _check(lbl, outs):
+        for (nm, _m, want, avoid), out in zip(cases, outs):
+            miss = [x for x in want if x not in (out or '')]
+            bad = [x for x in avoid if x in (out or '')]
+            chk(f'{lbl} [{nm}] — 있어야 할 조각 {len(want)} · 없어야 할 조각 {len(avoid)}', out is not None and not miss and not bad,
+                (miss, bad, (out or '')[-400:]))
+    if jinja2 is not None and len(jinja) == 1:
+        env = jinja2.Environment(autoescape=True)
+        row = env.from_string(jinja[0])
+        _check('W17 Jinja', [row.render(it=m) for _nm, m, _w, _a in cases])
+    else:
+        print('  SKIP  W17 Jinja (jinja2 없음)')
+    if shutil.which('node') is None:
+        print('  SKIP  W17 JS (node 없음)')
+        return
+    import json as _json
+    from test_closed_param_labels import js_fn, run_node
+    script = ('const made = [];\n'
+              'const document = {getElementById: (id) => ({style: {}, textContent: "", insertBefore: () => {}, '
+              'firstChild: null, querySelectorAll: () => []}), createElement: (t) => { const o = {dataset: {}, style: {}}; '
+              'made.push(o); return o; }};\n' + js_fn(tpl, 'labAddRow') + '\n'
+              f'const cases = {_json.dumps([m for _nm, m, _w, _a in cases], ensure_ascii=False)};\n'
+              'const out = cases.map(c => { labAddRow(c); return made[made.length - 1].innerHTML; });\n'
+              'console.log(JSON.stringify(out));\n')
+    try:
+        outs = run_node(script)
+        if outs is None:
+            raise RuntimeError('node 실행 실패')
+        _check('W17 JS', outs)
+    except Exception as e:                                  # noqa: BLE001
+        chk('W17 JS 행 (node 실행)', False, f'{type(e).__name__}: {e}')
+
+
 def main():
     try:
         import ptfe_face_alpha as FA
@@ -498,6 +565,7 @@ def main():
     _d_states(tpl, jinja, js, jinja2)
     _d_bracket(tpl, jinja, js, jinja2)
     _d_interval(tpl, jinja, js, jinja2)
+    _d_graph(tpl, jinja, js, jinja2)
     print(f'\n{_ok} PASS · {len(_fail)} FAIL')
     if _fail:
         for n in _fail:

@@ -70,6 +70,9 @@ v3 §5 J2a–J12 · v3.1 (겹치면 뒤가 이긴다) · 1저자 10-20 N1–N18 
     성분 (못 가른 덩어리 — 셀 단위로 섬유 자기 길과 다리를 못 가른다) 은 아래 판이 그대로 둔다 → 위 끝 = 그 덩어리 SDCP 셀의 면 · 판 결합을
     전부 끊은 판을 한 번 더 푼다 (`upper` · `status_hi` · `sv_counterfactual_ratio_hi`) · 참 비 ∈ [아래, 위] (지금 셀 그래프 안에서만) ·
     덩어리 0 = 한 번 (위 = 아래) · 값 봉인 (아래 끝을 보고 건너뛰지 않음) · 판정 = 사슬 (`rint_r_chain.sv_assess`).
+  ★ 10-26 묶음 B6 (Codex 회차 ① RR1-01 · 1저자 10-26 Q1 · Q2 (가)) 증서 ↔ 푼 그래프: 증서 구간 기록의 주 해 · 끝 증서마다 그 증서가 푼 계의 정규 가중
+    그래프 지문 (`solved_graph_fp` · `CJUNC_GRAPH_KEY` · dof 식별 집합 · 쌍별 정확 합산 전도도 · 판 결합) · 봉인 원천 다시 조립 = `sv_graph_fps` +
+    `step3_sigma.solve_sigma_z(cjunc_graph_only=True)` (솔브 없음 · 같은 조립 함수) · 대조 = `ca_ext_svcf.graph_problem` · 조립된 계 (L · b) 는 바뀌지 않는다.
 """
 import hashlib
 import math
@@ -101,6 +104,12 @@ SV_CF_STANDING_CERTIFIED = 'certified_interval'
 SV_CF_STANDING_DIAGNOSTIC = 'diagnostic_uncertified'
 #: +∞ 끝 영값 위상 증서의 그래프 이름표 (`step3_conv_cert.early_record` 의 zero_graph · 끊은 반사실 그래프의 0 · = `ca_ext_svcf.ZERO_GRAPH_SV_CF`)
 SV_CF_ZERO_GRAPH = 'cjunc_sv_counterfactual'
+#: ★ 10-26 묶음 B6 (Codex 회차 ① RR1-01 · 1저자 10-26 Q1 · Q2 (가) · author 10-23 ratified Q2-Q3 Q20-Q21 (bundle B 10-25)) 증서가 푼 계의 정규 가중
+#:   그래프 지문 — 규칙 이름 (= `ca_ext_svcf.GRAPH_FP_RULE` · 시험 QG 가 대조) · 증서 칸 이름 (= `ca_ext_svcf.GRAPH_KEY`).  지문 = `solved_graph_fp`
+#:   (dof 식별 집합 · 쌍별 정확 합산 전도도 · 아래 · 위 판 결합 (정확 합산 전도도)) · SV 반사실을 켠 증서 런의 주 해 증서 · 끝 증서에만 싣는다
+#:   (끈 런 · 증서 없는 런 = 칸 없음 = 옛 바이트) · 소비자 = 봉인 원천에서 다시 조립한 지문과 대조 (`solve_sigma_z(cjunc_graph_only=True)`)
+CJUNC_GRAPH_FP_RULE = 'solved_graph_dof_ids_pair_exact_sum_plates_v1'
+CJUNC_GRAPH_KEY = 'fp_cjunc_graph'
 CJUNC_BRANCH_RULE = 'membership_cell_fid_traversal_branch_v1'                 # 위치 = (셀, fid, 그 셀을 지나는 연속 구간)
 CJUNC_ORDER_RULE = 'canonical_first_last_then_point_sequence_lex_v2'           # 경로 순서 = 기하 정준 (fid 라벨 무관 · 끝점 먼저)
 CJUNC_CP_RULE = 'nearest_pairs_eps_band_lexmin_midpoint_v1'                  # instance 접점 (나란한 접촉 비유일 최근접점)
@@ -150,6 +159,10 @@ CJUNC_QUALIFIERS = (
     '수 있다) · 판정 = 사슬 · 증서 구간 (10-23 · 1저자 Q1 (가) — 아래비 = 주 해 증서 하한 / 아래 끝 증서 상한 > 문턱 = SV_DEPENDENT · 위비 = '
     '주 해 증서 상한 / 위 끝 증서 하한 ≤ 문턱 = 표지 없음 · 걸침 · 못 읽음 · 무증서 (진단 기록) = SV_UNCHECKED · ∞ = 위상이 증명한 0 분모만 · '
     'nominal 비 = 기록만 · 판정 아님) · 못 가른 덩어리 0 = 한 번 (위 = 아래)',
+    'SV 반사실 그래프 귀속 (10-26 · Codex 회차 ① RR1-01 · 1저자 Q2 (가)) — 주 해 · 끝 증서마다 그 증서가 푼 계의 가중 그래프 지문 '
+    '(fp_cjunc_graph = dof 집합 · 쌍별 정확 합산 전도도 · 판 결합) · 판정 입력 = 사슬이 SV 기록 밖 봉인 원천 (같은 런의 raster · 원장 · 계획 · '
+    '등록 절단 규칙) 에서 솔브 없이 다시 조립한 지문과 대조한 뒤만 (다르면 기록 위반) · 원천 없음 · 원천 실패 = SV_UNCHECKED · 지문 = 그래프 '
+    '정체성 (증서 수의 재증명 아님 — 지문 칸까지 원천 값으로 고친 편집은 이 대조로 못 가린다)',
 )
 
 _TINY = 1.0e-24                            # 퇴화 선분 (길이² µm² · 1e-12 µm 미만)
@@ -2195,6 +2208,150 @@ def _reach_pairs_cut(n, U, V, keep0, keep, A_bot, A_top):
     return int(np.count_nonzero(reach[lab[gone[:, 0]]])) if len(gone) else 0
 
 
+# ═════════════════════════ ★ 10-26 묶음 B6 — 푼 계의 정규 가중 그래프 지문 (RR1-01) ═════════════════════════
+#: 같은 지수 무리를 int64 합으로 한 번에 더하는 최대 항 수 (항마다 |N| < 2^53 → 512 항 합 < 2^62 · 넘침 없음 · 그 밖 무리 = 파이썬 정수)
+_GFP_SAME_E_MAX = 512
+#: 쌍 열쇠 a·n + b 가 int64 안에 드는 최대 dof 수 (⌊√(2^63 − 1)⌋)
+_GFP_N_MAX = 3037000499
+
+
+def _gfp_exact_parts(x):
+    """binary64 배열 (유한) → 정확값 정준 (N, E) int64 배열 — x = N · 2^E · N 홀수 (0 → (0, 0))."""
+    x = np.asarray(x, np.float64).reshape(-1)
+    m, e = np.frexp(x)                                       # x = m·2^e · 0.5 ≤ |m| < 1 (비정규 수도 정규화된 m)
+    M = np.ldexp(m, 53).astype(np.int64)                     # 정확 (|m| 의 유효 숫자 ≤ 53 비트 → 정수 · |M| < 2^53)
+    E = e.astype(np.int64) - 53
+    N = np.zeros(len(x), np.int64)
+    EE = np.zeros(len(x), np.int64)
+    nz = M != 0
+    if nz.any():
+        Mn = M[nz]
+        tz = np.frexp((Mn & -Mn).astype(np.float64))[1].astype(np.int64) - 1   # 가장 낮은 1 비트 = 2 의 거듭제곱 (float 로 정확)
+        N[nz] = Mn >> tz
+        EE[nz] = E[nz] + tz
+    return N, EE
+
+
+def _gfp_norm(s, e0):
+    """파이썬 정수 합 s · 2^e0 → 정준 (N 홀수, E) · 0 → (0, 0)."""
+    if s == 0:
+        return 0, 0
+    tz = (s & -s).bit_length() - 1
+    return s >> tz, e0 + tz
+
+
+def _gfp_to_f64(n2, e2):
+    """정준 정확값 n2 · 2^e2 (n2 홀수) → 그 값의 binary64 (정확히 표현될 때만) | None — |n2| < 2^53 · 가장 낮은 비트 2^e2 ≥ 2^-1074 · 가장 높은 비트
+    2^(e2 + bitlen − 1) ≤ 2^1023 이면 정확 (정규 · 비정규 모두)."""
+    if n2 == 0:
+        return 0.0
+    if abs(n2) >= (1 << 53) or e2 < -1074 or e2 + abs(n2).bit_length() - 1 > 1023:
+        return None
+    return math.ldexp(float(n2), e2)
+
+
+def _gfp_sums(key, x):
+    """열쇠별 정확 합 (binary64 를 정확한 값으로 · 병렬 항 합) → (열쇠 int64 정렬, 값 float64, 큰 무리 [(열쇠, N, E)]) — 정확 합이 binary64 로 정확히
+    표현되면 그 binary64 (작은 표 · 한 항 = 그 항 그대로 · 0.5 + 0.5 = 1.0 = 한 항 1.0 과 같은 표현) · 아니면 큰 무리 (정준 N 홀수 · E · 1 + 2⁻⁶⁰) ·
+    합이 정확히 0 인 열쇠는 뺀다 (전도도 0 = 없는 간선).  나뉨 · 표현 = 정확값에만 기대므로 정준이다 (같은 정확값 = 같은 표현 · 다른 값 = 다른 표현)."""
+    key = np.asarray(key, np.int64).reshape(-1)
+    x = np.asarray(x, np.float64).reshape(-1)
+    if len(key) != len(x):
+        raise ValueError('cjunc: 그래프 지문 — 열쇠 · 값 길이가 다르다')
+    if not np.isfinite(x).all():
+        raise ValueError('cjunc: 그래프 지문 — 비유한 전도도 (NaN · ±inf) — 푼 계의 정확값을 정할 수 없다 (거부)')
+    if len(key) == 0:
+        return np.zeros(0, np.int64), np.zeros(0, np.float64), []
+    order = np.argsort(key)                                  # 같은 열쇠 안 순서 무관 (정확 합)
+    k = key[order]
+    v = x[order]
+    del order
+    st = np.flatnonzero(np.r_[True, k[1:] != k[:-1]])
+    cnt = np.diff(np.r_[st, len(k)])
+    gk = k[st]
+    gv = v[st]                                               # 한 항 무리 = 그 binary64 그대로 (정확값과 1:1)
+    multi = np.flatnonzero(cnt > 1)
+    big, drop = [], np.zeros(len(gk), bool)
+    if len(multi):
+        sub = np.repeat(cnt > 1, cnt)                        # 여러 항 무리의 항만 정확 부분으로 (나머지는 binary64 그대로)
+        N, E = _gfp_exact_parts(v[sub])
+        cm = cnt[multi]
+        sm_ = np.r_[0, np.cumsum(cm)[:-1]]                   # 부분 배열 안 무리 시작
+        emin = np.minimum.reduceat(E, sm_)
+        emax = np.maximum.reduceat(E, sm_)
+        S = np.add.reduceat(N, sm_)                          # 같은 지수 · 항 ≤ 512 무리만 쓴다 (그 밖 무리의 합은 버림 — 넘칠 수 있다)
+        for j, g in enumerate(multi.tolist()):
+            if emin[j] == emax[j] and cm[j] <= _GFP_SAME_E_MAX:
+                n2, e2 = _gfp_norm(int(S[j]), int(emin[j]))
+            else:                                            # 파이썬 정수 정확 합
+                a0, a1 = int(sm_[j]), int(sm_[j] + cm[j])
+                e0 = int(emin[j])
+                s = 0
+                for n_, e_ in zip(N[a0:a1].tolist(), E[a0:a1].tolist()):
+                    s += int(n_) << (int(e_) - e0)
+                n2, e2 = _gfp_norm(s, e0)
+            f = _gfp_to_f64(n2, e2)
+            if f is None:
+                big.append((int(gk[g]), n2, e2))
+                drop[g] = True
+            else:
+                gv[g] = f
+    keep = (gv != 0.0) & ~drop
+    return gk[keep], gv[keep], big
+
+
+def _gfp_section(h, tag, keys, vals, big):
+    h.update(tag + b'|' + struct.pack('<q', len(keys)))
+    h.update(np.ascontiguousarray(keys, dtype='<i8'))       # 작은 끝 int64 (이미 그 꼴이면 복사 없음)
+    if vals is not None:
+        h.update(np.ascontiguousarray(vals, dtype='<f8'))   # 작은 끝 binary64
+    h.update(b'|big|' + struct.pack('<q', len(big)))
+    for rec in big:
+        s = ','.join(str(int(v_)) for v_ in rec).encode('ascii')
+        h.update(struct.pack('<q', len(s)) + s)
+
+
+def solved_graph_fp(ids, U, V, G, Ab, gb, At, gt):
+    """★ 10-26 묶음 B6 (Codex 회차 ① RR1-01 · 1저자 10-26 Q1 · Q2 (가)) 푼 계의 **정규 가중 그래프 지문** (`CJUNC_GRAPH_FP_RULE` · sha256 hex64) —
+    증서를 그 증서가 실제로 푼 가중 그래프에 묶는다 (위상 수 넷 = 고유 쌍 · dof · 판 결합 수만으로는 병렬 간선 하나를 뺀 계를 못 가린다 · 판정문 §3).
+    · dof 식별 집합 = `ids` (정렬 · 겹침 제거 · 간선 없는 dof 도) · dof 번호 상한 n
+    · 간선 = 쌍 (min, max) 마다 병렬 항 전도도의 **정확** 합 (binary64 를 정확한 값으로 · 반올림 없음 — 0.5 + 0.5 = 1 = 한 항 1 · 1 + 2⁻⁶⁰ ≠ 1 ·
+      표현 = `_gfp_sums`) · 쌍 정렬 · 방향 · 순서 무관 · 합이 정확히 0 인 쌍은 없는 간선
+    · 판 결합 = 아래 (φ 1) · 위 (φ 0) 각각 dof 마다 정확 합산 전도도 (판 결합 병렬 항도 합)
+    같은 전기 회로 = 같은 지문 · 다른 dof 집합 · 다른 쌍 · 1 ulp 다른 전도도 · 다른 판 결합 = 다른 지문.  비유한 전도도 · 음수 dof = 거부.
+    ⚠ 지문은 그래프의 정체성이지 그 증서의 수 (목표량 구간 · 게시 판 전류) 를 다시 증명하지 않는다 — 소비자 대조 = 증서 칸 지문 ↔ 봉인 원천에서
+    다시 조립한 기대 지문 (`ca_ext_svcf.graph_problem`)."""
+    ids = np.unique(np.asarray(ids, np.int64).reshape(-1))
+    U = np.asarray(U, np.int64).reshape(-1)
+    V = np.asarray(V, np.int64).reshape(-1)
+    G = np.asarray(G, np.float64).reshape(-1)
+    Ab = np.asarray(Ab, np.int64).reshape(-1)
+    At = np.asarray(At, np.int64).reshape(-1)
+    gb = np.asarray(gb, np.float64).reshape(-1)
+    gt = np.asarray(gt, np.float64).reshape(-1)
+    if not (len(U) == len(V) == len(G)) or len(Ab) != len(gb) or len(At) != len(gt):
+        raise ValueError('cjunc: 그래프 지문 — 간선 (U · V · G) · 판 결합 (dof · g) 길이가 다르다')
+    mins = [int(z.min()) for z in (ids, U, V, Ab, At) if len(z)]
+    if mins and min(mins) < 0:
+        raise ValueError('cjunc: 그래프 지문 — 음수 dof 번호 (거부)')
+    n = 1 + max([int(z.max()) for z in (ids, U, V, Ab, At) if len(z)] or [0])
+    if n > _GFP_N_MAX:
+        raise ValueError(f'cjunc: 그래프 지문 — dof 번호 {n} 이 쌍 열쇠 int64 범위 밖 (거부)')
+    key = np.minimum(U, V)                                   # 쌍 열쇠 = min·n + max (n = 이 그래프의 dof 번호 상한 · 지문에 싣는다)
+    key *= n
+    key += np.maximum(U, V)
+    h = hashlib.sha256()
+    h.update(b'cjunc-solved-graph-fp|' + CJUNC_GRAPH_FP_RULE.encode('ascii') + b'\n' + b'n|' + struct.pack('<q', n))
+    _gfp_section(h, b'dof', ids, None, [])
+    ek, ev, ebig = _gfp_sums(key, G)
+    del key
+    _gfp_section(h, b'edge', ek, ev, ebig)
+    for tag, A, g in ((b'plate_bot', Ab, gb), (b'plate_top', At, gt)):
+        pk, pv, pbig = _gfp_sums(A, g)
+        _gfp_section(h, tag, pk, pv, pbig)
+    return h.hexdigest()
+
+
 class CjuncAssembler:
     """`solve_sigma_z` 가 셀 dof 로 만든 면 (couple) · 판 결합을 받아 멤버십 dof · 접합 간선 · 절단 · 축약 · 실제 그래프 가지치기를
     한 계를 만든다 (J1 · J3 · J5 · J6 · J7 · J9 · J11 · J12 · E1 · E3 · E6)."""
@@ -2311,11 +2468,13 @@ class CjuncAssembler:
         out[sel] = self.pos_dof[own[sel]]
         return out
 
-    def build(self, Ab, gb, At, gt, cb=None, ct=None):
+    def build(self, Ab, gb, At, gt, cb=None, ct=None, graph_fp=False):
         """주 계 — 멤버십 dof · 분산 접합 간선 · 축약 · 절단 · 실제 그래프 가지치기 · 관통 · 단락 (J11).  반사실 대조가 같은 판 입력을
-        다시 쓰도록 보관한다 (`sv_counterfactual`)."""
+        다시 쓰도록 보관한다 (`sv_counterfactual`).  ★ 10-26 묶음 B6 (RR1-01) graph_fp = 주 계 (푼 계 = 판에 닿는 성분) 의 정규 가중 그래프 지문
+        (`solved_graph_fp`) 을 `self.graph_fp` 에 둔다 (SV 반사실을 켠 증서 런 · 봉인 원천 다시 조립 · 그 밖 = None)."""
         self._plate_in = (Ab, gb, At, gt, cb, ct)
-        out, st = self._assemble(Ab, gb, At, gt, cb, ct, counterfactual=False)
+        out, st = self._assemble(Ab, gb, At, gt, cb, ct, counterfactual=False, graph_fp=graph_fp)
+        self.graph_fp = st.get('graph_fp')
         self.junction_edge_sub = st['e']
         self.junction_edge_inst = np.asarray(self.reg['subedges']['inst'], np.int64)[st['e']]
         self.n_contracted = st['n_contracted']
@@ -2327,10 +2486,13 @@ class CjuncAssembler:
             self._jsub = st['jsub']
         return out
 
-    def _assemble(self, Ab, gb, At, gt, cb=None, ct=None, counterfactual=False, remove_dofs=None):
+    def _assemble(self, Ab, gb, At, gt, cb=None, ct=None, counterfactual=False, remove_dofs=None, graph_fp=False):
         """계 조립 (부작용 없음) — counterfactual = 반사실 대조 판 (원장이 'sv_cut' 로 표지한 SV 다리 면 간선을 뺀다 · ★ 10-21 Q-D ·
         옛 = SV 면 부류 전부).  ★ 10-22 (1저자 Q1 (다)) remove_dofs = 반사실 위 끝 — 그 dof (못 가른 덩어리 SDCP 셀) 에 닿는 간선 · 판 결합을
-        전부 뺀다 (덩어리를 통째로 뺀 판 · 빼기만 = 부분 그래프 · None = 옛 판 그대로).  → (솔버 입력 | 사유, 상태)."""
+        전부 뺀다 (덩어리를 통째로 뺀 판 · 빼기만 = 부분 그래프 · None = 옛 판 그대로).  → (솔버 입력 | 사유, 상태).
+        ★ 10-26 묶음 B6 (RR1-01) graph_fp = 상태에 `graph_fp` (그 계에서 실제로 푸는 그래프 = 판에 닿는 성분의 dof (축약 대표 번호) · 그 사이 간선 ·
+        판 결합 → `solved_graph_fp`) — 관통 성분이 없는 끝 (+∞ · 영값 위상 증서) 도 그 판에 닿는 성분 그래프 (없으면 빈 그래프) · 단락 = 없음 ·
+        False (기본) = 칸 없음 (옛 판 그대로)."""
         plan, reg = self.plan, self.reg
         sub = reg['subedges']
         #  분산 접합 간선 (간선마다 한 행 · 10-21 RCA-05) · 축약 — 주 계의 간선 목록 (self.E) 은 바꾸지 않는다 (지역 사본)
@@ -2440,6 +2602,10 @@ class CjuncAssembler:
         st = {'e': e, 'n_contracted': n_contracted, 'stats': stats, 'n_sv_edges': n_sv_edges, 'n_cf_edges': n_cf_edges,
               'n_rm_edges': n_rm_edges, 'n_rm_plate': n_rm_plate, 'n_reach_pairs_cut': n_reach_pairs_cut,
               'n_reach_pairs_cut_vs_lower': n_reach_pairs_cut_vs_lower}
+        if graph_fp and not short:                           # ★ 10-26 묶음 B6 (RR1-01) — 푸는 계 (판에 닿는 성분) 의 정규 가중 그래프 지문
+            ek_ = kept[U] & kept[V]
+            bk_, tk_ = kept[Ab2], kept[At2]
+            st['graph_fp'] = solved_graph_fp(np.flatnonzero(kept), U[ek_], V[ek_], G[ek_], Ab2[bk_], gb[bk_], At2[tk_], gt[tk_])
         if short:
             return {'reason': 'cjunc_electrode_short'}, st
         if n_kept == 0:
@@ -2518,18 +2684,22 @@ class CjuncAssembler:
                 'sv_local_dissipation': sld,
                 'sv_face_abs_current_over_I': sv_I, 'junction_current_code': jI, 'I_bot_code': I_bot}
 
-    def _sv_cf_end(self, solve, I_full, out, certify=None, backend=None, certify_zero=None):
+    def _sv_cf_end(self, solve, I_full, out, certify=None, backend=None, certify_zero=None, graph_fp=None):
         """반사실 한 끝 (조립 결과 out) → {상태 · G_cut · 비 · cg_info · 잔차 · 증서 · backend} (★ 10-22 — 아래 끝 · 위 끝이 **같은 함수**:
         상태 · 증서 · 비 규칙 그대로).  비 inf (`no_through_without_sv`) = 위상 (끊은 그래프에 관통 성분 없음 · 가지치기 사유) 에서만 ·
         관통 성분이 있는데 I_cut ≤ 0 · 비유한 = 수치 실패 (`nonpositive_cut_current`) · 증서 실패 = 미수렴 (비 없음).
         ★ 10-23 (Codex 재검토 RCA2-01 · 1저자 Q1 (가)) certify_zero = 영값 위상 증서 함수 (사유 → 증서 · `step3_sigma` 가 증서를 켠 런에서 넘긴다) —
-        +∞ 끝의 0 분모를 위상 증서로 싣는다 (∞ = 위상이 증명한 0 분모만 · 사슬 증서 구간의 +∞)."""
+        +∞ 끝의 0 분모를 위상 증서로 싣는다 (∞ = 위상이 증명한 0 분모만 · 사슬 증서 구간의 +∞).
+        ★ 10-26 묶음 B6 (RR1-01) graph_fp = 그 끝에서 실제로 푼 (· 위상을 증명한) 계의 정규 가중 그래프 지문 (`_assemble(graph_fp=True)`) — 그 끝 증서
+        (양의 해 · 영값 위상) 의 칸 `CJUNC_GRAPH_KEY` 에 싣는다 (증서 ↔ 그 끝 그래프 결합 · None = 칸 없음)."""
         end = {'G_cut_code': None, 'sv_counterfactual_ratio': None, 'cg_info': None, 'resid': None, 'conv_cert': None}
         if out.get('reason'):
             if out['reason'] in ('no_through_component', 'all_floating_dropped'):
                 end.update(status='no_through_without_sv', G_cut_code=0.0, sv_counterfactual_ratio=math.inf)
                 if certify_zero is not None:
                     end['conv_cert'] = certify_zero(out['reason'])
+                    if graph_fp is not None:
+                        end['conv_cert'][CJUNC_GRAPH_KEY] = graph_fp
             else:
                 end.update(status=str(out['reason']))
         else:
@@ -2540,6 +2710,8 @@ class CjuncAssembler:
             cert = None
             if certify is not None:
                 cert = certify(out['L'], out['b'], phi_c, info, resid, out['Ab'], out['gb'], out['At'], out['gt'])
+                if graph_fp is not None:
+                    cert[CJUNC_GRAPH_KEY] = graph_fp
                 end['conv_cert'] = cert
             if bool(info) or not np.isfinite(resid) or resid > 1e-6 or (cert is not None and not cert.get('ok')):
                 end.update(status='unconverged')
@@ -2597,7 +2769,8 @@ class CjuncAssembler:
             certify = certify_zero = None
         thr = request.get('threshold') if isinstance(request, dict) else None
         Ab, gb, At, gt, cb, ct = self._plate_in
-        out, st = self._assemble(Ab, gb, At, gt, cb, ct, counterfactual=True)
+        #  ★ 10-26 묶음 B6 (RR1-01) — 증서 구간 기록은 끝 증서마다 그 끝 계의 정규 가중 그래프 지문을 싣는다 (`_sv_cf_end` · 진단 기록 = 증서 없음 = 안 셈)
+        out, st = self._assemble(Ab, gb, At, gt, cb, ct, counterfactual=True, graph_fp=certified)
         cen = self.reg.get('census') or {}
         n_cen = int(cen.get('n_unsplit_bridging_components', 0))
         rec = {'kind': CJUNC_SV_CF_KIND, 'rule': CJUNC_SV_CF_RULE, 'requested': True, 'threshold': thr,
@@ -2614,7 +2787,7 @@ class CjuncAssembler:
         if not full_ok:
             rec.update(status='nonpositive_full_current', backend_last_solve=None)   # 주 해 단자 전류 ≤ 0 · 비유한 — 비의 분자를 믿을 수 없다
         else:
-            rec.update(self._sv_cf_end(solve, I_full, out, certify, backend, certify_zero))
+            rec.update(self._sv_cf_end(solve, I_full, out, certify, backend, certify_zero, graph_fp=st.get('graph_fp')))
         r_ = rec['sv_counterfactual_ratio']
         if thr is not None and r_ is not None and r_ >= thr:
             rec['flag'] = 'SV_DEPENDENT'
@@ -2631,13 +2804,31 @@ class CjuncAssembler:
         else:
             dofs = self.idx_flat[lins]
             dofs = dofs[dofs >= 0]
-            out_h, st_h = self._assemble(Ab, gb, At, gt, cb, ct, counterfactual=True, remove_dofs=dofs)
+            out_h, st_h = self._assemble(Ab, gb, At, gt, cb, ct, counterfactual=True, remove_dofs=dofs, graph_fp=certified)
             up = {'n_components_removed': int(len(labels)), 'n_cells_removed': int(len(lins)), 'n_edges_cut': int(st_h['n_rm_edges']),
                   'n_plate_couplings_cut': int(st_h['n_rm_plate']), 'n_sv_faces_cut': int(st_h['n_cf_edges']),
                   'n_reach_pairs_cut': int(st_h['n_reach_pairs_cut']),
                   'n_reach_pairs_cut_vs_lower': int(st_h['n_reach_pairs_cut_vs_lower']), 'why': None}
-            up.update(self._sv_cf_end(solve, I_full, out_h, certify, backend, certify_zero))
+            up.update(self._sv_cf_end(solve, I_full, out_h, certify, backend, certify_zero, graph_fp=st_h.get('graph_fp')))
         return _sv_cf_bracket(rec, up)
+
+    def sv_graph_fps(self):
+        """★ 10-26 묶음 B6 (Codex 회차 ① RR1-01 · 1저자 10-26 Q2 (가)) 봉인 원천에서 다시 조립한 반사실 끝 그래프 지문 (솔브 없음) → {'lower', 'upper'} —
+        `sv_counterfactual` 과 같은 조립 (아래 끝 = SV 다리 면 간선 뺌 · 위 끝 = 지문 묶인 원장에서 다시 가른 못 가른 덩어리 셀을 더 뺌 · 같은 판 입력) ·
+        같은 위 끝 판정 (다시 가른 수 ≠ census = 풀지 않음 → None · 덩어리 0 → None (위 = 아래)) · 단락 끝 = None.  주 계 지문 = `build(graph_fp=True)`
+        의 `self.graph_fp` (소비자 = `step3_sigma.solve_sigma_z(cjunc_graph_only=True)` → `ca_ext_svcf.graph_problem`)."""
+        Ab, gb, At, gt, cb, ct = self._plate_in
+        _o, st = self._assemble(Ab, gb, At, gt, cb, ct, counterfactual=True, graph_fp=True)
+        cen = self.reg.get('census') or {}
+        n_cen = int(cen.get('n_unsplit_bridging_components', 0))
+        labels, lins = self._sv_unsplit_cells()
+        up = None
+        if labels and len(labels) == n_cen:
+            dofs = self.idx_flat[lins]
+            dofs = dofs[dofs >= 0]
+            _oh, st_h = self._assemble(Ab, gb, At, gt, cb, ct, counterfactual=True, remove_dofs=dofs, graph_fp=True)
+            up = st_h.get('graph_fp')
+        return {'lower': st.get('graph_fp'), 'upper': up}
 
 
 def _sv_cf_upper_unsolved(status, n_components=None, n_cells=None, why=None):

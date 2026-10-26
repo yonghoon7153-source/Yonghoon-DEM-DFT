@@ -79,6 +79,13 @@
   · X6 (2 차 사전 공격 §A · 1저자 10-23 Q20 (가)) — S0 단계 2 보고 (schema v4) 의 봉인 SV census (R arm 0 와 같은 함수 `carbon_junction._sv_split` ·
     같은 격자 · 같은 문턱 `ca_ext_cjunc.registry_thresholds` · 봉인 s_min) 를 같은 규약 DBE arm 0 의 SV 기록마다 (기록 census 사본 + 증거 census ·
     세 칸) 대조 (`sv_census_problem` · `s0_census_seed`) → `S0_REPORT_MISMATCH` · census 외부 결합만 (끝 증서의 그래프 지문은 이 범위 밖)
+★ 10-26 묶음 B6 (Codex 회차 ① RR1-01 · 1저자 10-26 Q1 · Q2 (가) · author 10-23 ratified Q2-Q3 Q20-Q21 (bundle B 10-25)) 끝 증서의 가중 그래프 귀속:
+  · read_run — SV 기록 밖 봉인 원천 (`SV_GRAPH_SOURCE` · 같은 런의 raster · 원장 · 계획 · 등록 절단 규칙에서 솔브 없이 다시 조립한 끝 그래프 지문 ·
+    `step3_sigma.solve_sigma_z(cjunc_graph_only=True)`) ↔ 증서 지문 (`ca_ext_svcf.graph_problem` · `sv_graph_state`) → 다르면 `CA_EXT_RECORD` · 원천 없음 ·
+    원천 실패 = 미확인 (멈춤 아님) · 기록의 주 해 증서 사본 지문 = 이 런 주 증서 (`_mis`)
+  · 판정 (`sv_assess(require_graph=True)`) — 증서 구간 SV 기록인데 그래프 귀속이 확인되지 않은 모서리 = 판정 입력 아님 → `SV_UNCHECKED` (clear · 의존
+    아님 · 자기 신고 사본끼리 비교로 대신하지 않는다) · 판정은 단계 요약의 대조를 믿지 않고 원 팔을 다시 읽어 대조한다
+  · ⚠ 생산 원천 = 아직 없음 (`SV_GRAPH_SOURCE` None · ⬜ 결정 필요) — 그 전까지 증서 구간 SV 모서리는 늘 `SV_UNCHECKED`
 """
 import argparse
 import glob
@@ -100,6 +107,14 @@ if str(HERE) not in sys.path:
 
 import run_contract as RC                                    # noqa: E402 — 계약 정본 (사본 없음)
 import ca_ext_svcf as SVCF                                   # noqa: E402 — SV 반사실 증거 꼴 (비 · 상태 · numpy 없음)
+
+#: ★ 10-26 묶음 B6 (Codex 회차 ① RR1-01 · 1저자 10-26 Q2 (가)) SV 끝 그래프 봉인 원천 — 호출 가능 (ctx → `ca_ext_svcf.GRAPH_SOURCE_KEYS` 꼴 dict) | None.
+#   ctx = {'req' (런 요청 · 킷 · R_j · 법칙 · c …), 'arm' (팔 번호), 'file' (팔 JSON 경로), 'outdir'} — 원천은 SV 기록을 읽지 않고 같은 런의 raster · 원장 ·
+#   계획 · 등록 절단 규칙에서 솔브 없이 다시 조립한다 (`step3_sigma.solve_sigma_z(cjunc_graph_only=True)` 의 `cjunc_graphs`).  None (기본 · 생산 배선 전) =
+#   원천 없음 → 증서 구간 SV 기록 = 그래프 귀속 미확인 → 판정 `SV_UNCHECKED` (fail-closed · ⬜ 생산 원천 = 결정 필요).
+SV_GRAPH_SOURCE = None
+#: 그래프 귀속 미확인의 종류 (판정 사유 글)
+SV_GRAPH_WHY = {'no_source': '봉인 원천 없음', 'source_failed': '봉인 원천 실패', 'absent': '대조 기록 없음'}
 
 TOOL = 'rint_r_chain'
 SCHEMA = 'rint-r-chain-v2'                                   # ★ 3판 — v1 (2판 규칙) 요약과 섞지 않는다
@@ -654,7 +669,7 @@ def _sv_readable(x):
     return isinstance(x, float) and not isinstance(x, bool) and (x == math.inf or (math.isfinite(x) and x > 0.0))
 
 
-def sv_assess(recs, threshold, scope):
+def sv_assess(recs, threshold, scope, require_graph=False):
     """§5-6 SV 행 (RCA-06 · Q4) — 모서리 런 (arm 0) 의 반사실 기록 → (표지, 모서리별 기록).
     비 > 문턱 (등록 문장 '넘으면') = `SV_DEPENDENT` · 기록을 못 읽음 (없음 · 비를 싣지 않는 상태 · 주 해가 0) · 문턱 없음 = `SV_UNCHECKED` ·
     읽는 칸 = 비 · 상태 (`ca_ext_svcf.chain_view` · 끊는 면의 정의 무관 · PRE-impl-04).  ⚠ producer 의 자기 표지 비교는 ≥ (그 배선의 문턱
@@ -669,9 +684,12 @@ def sv_assess(recs, threshold, scope):
     Gfull_lo / Gcut_lower_hi · 내림) · 위 = 위비 (`ratio_cert_hi` = Gfull_hi / Gcut_upper_lo · 올림) · `ca_ext_svcf.cert_interval` (사슬 꼴이
     기록의 증서에서 다시 센다) · 아래비 > 문턱 → 의존 · 위비 ≤ 문턱 → 표지 없음 · 그 밖 → `SV_UNCHECKED` · +∞ = 위상이 증명한 0 분모만 ·
     nominal 비 (`ratio` · `ratio_hi`) = 기록 · 보고만 (판정에 쓰지 않는다 · 옛 판 = nominal 로 판정 → 판정문 반례 증서 구간 전체가 문턱 위인데
-    표지 없음) · 진단 기록 (증서 없는 런 · 지위 `diagnostic_uncertified`) = R 판정 입력 아님 → `SV_UNCHECKED` (세부 `uncertified`)."""
+    표지 없음) · 진단 기록 (증서 없는 런 · 지위 `diagnostic_uncertified`) = R 판정 입력 아님 → `SV_UNCHECKED` (세부 `uncertified`).
+    ★ 10-26 묶음 B6 (Codex 회차 ① RR1-01 · 1저자 10-26 Q2 (가)) require_graph (판정 `verdict_compute` = True) — 증서 구간 기록인데 끝 그래프 귀속이
+    확인되지 않은 모서리 (read_run `sv_graph` 상태 ≠ verified · 봉인 원천 없음 · 원천 실패 · 대조 기록 없음) = 판정 입력 아님 → `SV_UNCHECKED` (세부
+    `graph_unverified` · 의존 · clear 아님) · False (기본) = 구간 함수만 (원 팔 없는 시험 꼴)."""
     rr_scope = ('R_j_lo', 'R_j0', 'R_j_hi') if scope == 'all3' else ('R_j0',)
-    out, unread, straddle, dep, uncert = {}, [], [], [], []
+    out, unread, straddle, dep, uncert, gun = {}, [], [], [], [], []
     for (c, law, rr), a in sorted(recs.items()):
         if rr not in rr_scope:
             continue
@@ -686,6 +704,12 @@ def sv_assess(recs, threshold, scope):
         #    −∞ · 0 · 음수 + 위 ≤ 문턱 = 표지 없음) · 그 밖 = 못 읽음 (SV_UNCHECKED) · ★ 10-23 — 읽는 값 = 증서 구간 끝 (nominal 아님)
         lo_ok, hi_ok = _sv_readable(lo_c), _sv_readable(hi_c)
         miss = uncert if v.get('standing') == SVCF.STANDING_DIAGNOSTIC else unread
+        if require_graph and v.get('standing') == SVCF.STANDING_CERTIFIED and (lo_ok or hi_ok):
+            gs = a.get('sv_graph') if isinstance(a, dict) and isinstance(a.get('sv_graph'), dict) else {}
+            if gs.get('state') != 'verified':             # ★ 10-26 묶음 B6 — 그래프 귀속 미확인 = 판정 입력 아님 (구간을 보지 않는다)
+                out[key]['graph'] = gs.get('kind') or 'absent'
+                gun.append(key)
+                continue
         if threshold is None:
             if not (lo_ok and hi_ok):
                 miss.append(key)
@@ -700,12 +724,12 @@ def sv_assess(recs, threshold, scope):
         else:
             miss.append(key)
     flags = []
-    if threshold is None or unread or straddle or uncert or not out:
+    if threshold is None or unread or straddle or uncert or gun or not out:
         flags.append('SV_UNCHECKED')
     if dep:
         flags.append('SV_DEPENDENT')
     return flags, {'threshold': threshold, 'scope': scope, 'corners': out, 'unreadable': unread, 'straddle': straddle,
-                   'dependent': dep, 'uncertified': uncert}
+                   'dependent': dep, 'uncertified': uncert, 'graph_unverified': gun}
 
 
 def mask_sigma(text, vals):
@@ -1814,6 +1838,29 @@ def arm_file_shas(outdir):
     return sorted(out, key=lambda x: (x['index'], x['file']))
 
 
+def sv_graph_state(svr, req, arm, path, outdir):
+    """★ 10-26 묶음 B6 (Codex 회차 ① RR1-01 · 1저자 10-26 Q2 (가)) SV 기록 하나의 끝 그래프 귀속 → {'state', 'kind', 'why'} —
+    not_applicable (증서 구간 기록의 비를 싣는 끝이 없다 · `ca_ext_svcf.graph_applicable`) · unverified (kind no_source = `SV_GRAPH_SOURCE` None ·
+    source_failed = 원천 예외 · 꼴 틀림 (`ca_ext_svcf.graph_source_problem`)) · mismatch (원천 지문 ≠ 증서 지문 · `ca_ext_svcf.graph_problem` · 호출자 =
+    CA_EXT_RECORD) · verified.  원천은 SV 기록을 받지 않는다 (ctx = 요청 · 팔 · 파일 · 폴더)."""
+    if not SVCF.graph_applicable(svr):
+        return {'state': 'not_applicable', 'kind': None, 'why': None}
+    src = SV_GRAPH_SOURCE
+    if src is None:
+        return {'state': 'unverified', 'kind': 'no_source', 'why': SV_GRAPH_WHY['no_source']}
+    try:
+        g = src({'req': dict(req), 'arm': int(arm), 'file': str(path), 'outdir': str(outdir)})
+    except Exception as e:                                   # noqa: BLE001 — 원천 실패 = 미확인 (clear 아님 · 멈춤 아님)
+        return {'state': 'unverified', 'kind': 'source_failed', 'why': f'원천 예외 {type(e).__name__}'}
+    why = SVCF.graph_source_problem(g)
+    if why:
+        return {'state': 'unverified', 'kind': 'source_failed', 'why': f'원천 꼴 — {why}'[:300]}
+    prob = SVCF.graph_problem(svr, g)
+    if prob:
+        return {'state': 'mismatch', 'kind': None, 'why': prob}
+    return {'state': 'verified', 'kind': None, 'why': None}
+
+
 def read_run(outdir, req, plan, contract, sid_reg, want_sha=None, s0_grid=None, s0_census=None):
     """런 폴더 하나 → [팔 기록 …] (번호 순).  등록 R §10 멈춤 목록의 팔 쪽 전부 — 어긋나면 Stop (원인 칸 = σ 를 가린 문장).
     ★ 3판 — 해 상태 (§5-0 · `run_contract.next_gen_state` · 정본): positive (증서 ⓐ–ⓓ · σ > 0) · zero (VALID_ZERO_TOPOLOGY · σ = 0) ·
@@ -1939,7 +1986,7 @@ def read_run(outdir, req, plan, contract, sid_reg, want_sha=None, s0_grid=None, 
         if isinstance(svr, dict) and svr.get('standing') == SVCF.STANDING_CERTIFIED and isinstance(svr.get('conv_cert_full'), dict):
             _ccf = svr['conv_cert_full']
             _mis = [k for k in ('version', 'status', 'I_bot', 'target_lo', 'target_hi') + SVCF.BIND_FIELDS + SVCF.CERT_TOPO_KEYS
-                    if _ccf.get(k) != (cert or {}).get(k)]
+                    + (SVCF.GRAPH_KEY,) if _ccf.get(k) != (cert or {}).get(k)]
             if _mis:
                 stop('CA_EXT_RECORD', f'SV 반사실 기록의 주 해 증서 칸 {_mis} ≠ 이 런의 주 증서 (비의 분자 구간이 이 런의 것이 아니다 · '
                                       f'10-23 RCA2-04)')
@@ -1949,6 +1996,11 @@ def read_run(outdir, req, plan, contract, sid_reg, want_sha=None, s0_grid=None, 
             why = sv_census_problem(svr, (ca['cjunc'].get('evidence') or {}).get('census'), cen_want)
             if why:
                 stop('S0_REPORT_MISMATCH', f'{why} — {BED_NEW_S0}')
+        #  ★ 10-26 묶음 B6 (Codex 회차 ① RR1-01 · 1저자 10-26 Q2 (가)) — 끝 증서의 가중 그래프 귀속 (SV 기록 밖 봉인 원천 ↔ 증서 지문) · 다르면 기록 위반 ·
+        #    원천 없음 · 실패 = 미확인 (판정 = SV_UNCHECKED · `sv_assess(require_graph=True)`)
+        sv_graph = sv_graph_state(svr, req, i, p, outdir)
+        if sv_graph['state'] == 'mismatch':
+            stop('CA_EXT_RECORD', f"{sv_graph['why']} (봉인 원천 대조)")
         cf = SVCF.chain_view(svr) if isinstance(svr, dict) else None
         out.append({'file': os.path.basename(p), 'index': i, 'sha256': hashlib.sha256(raw).hexdigest(), 'protocol_id': pid,
                     'state': state, 'cg_info': s3.get('cg_info'), 'cg_resid': s3.get('cg_resid'), 'imbalance': (cert or {}).get('imbalance'),
@@ -1961,7 +2013,7 @@ def read_run(outdir, req, plan, contract, sid_reg, want_sha=None, s0_grid=None, 
                     #    = σ · 값 봉인) · 영값 위상 = 칸 없음 (σ 0 → 띠 [0, 0])
                     **({k: (cert or {}).get(k) for k in ('target_lo', 'target_hi', 'scale')} if reg != 'VALID_ZERO_TOPOLOGY' else
                        {'target_lo': None, 'target_hi': None, 'scale': None}),
-                    'sv_cf': cf, 'sv_cf_status': (cf or {}).get('status'),
+                    'sv_cf': cf, 'sv_cf_status': (cf or {}).get('status'), 'sv_graph': sv_graph,
                     'sv_local': solve.get('sv_local_dissipation'), 'dissipation_share': solve.get('dissipation_share'),
                     'n_sdcp_near': (((ca.get('sdcp_mod') or {}).get('evidence') or {}).get('n_sdcp_near')
                                     if isinstance(ca.get('sdcp_mod'), dict) else None)})
@@ -2857,6 +2909,10 @@ def sv_reasons(flags, det):
         if det.get('uncertified'):                      # ★ 10-23 (RCA2-04 · Q1 (가)) — 증서 없는 런의 진단 기록 = 판정 입력 아님
             parts.append(f'증서 없는 진단 기록 (판정 입력 아님) — 모서리 '
                          f'{SENTENCE_JOIN.join(sv_corner_label(det, k) for k in det["uncertified"])}')
+        if det.get('graph_unverified'):                 # ★ 10-26 묶음 B6 (RR1-01) — 끝 증서의 가중 그래프 귀속 미확인 = 판정 입력 아님
+            parts.append('끝 증서의 가중 그래프 귀속 미확인 (SV 기록 밖 봉인 원천 대조 없음 · 10-26 RR1-01 · 판정 입력 아님) — 모서리 '
+                         + SENTENCE_JOIN.join(f"{k} ({SV_GRAPH_WHY.get(((det.get('corners') or {}).get(k) or {}).get('graph'), '?')})"
+                                              for k in det['graph_unverified']))
         if det.get('straddle'):                         # ★ 10-22 (Q1 (다)) — 괄호가 문턱에 걸침 (비 값 = 판정 결과에만) · ★ 10-23 증서 구간
             parts.append(f'대조 비 증서 구간이 문턱에 걸침 (아래 끝 ≤ 문턱 < 위 끝 · 못 가른 덩어리 · 증서 폭) — 모서리 '
                          f'{SENTENCE_JOIN.join(det["straddle"])}')
@@ -3064,7 +3120,7 @@ def verdict_compute(dirs, reg_path, contract, root):
     main_pred_sha = pred_in[None][2]
     vals = pr.values()
     plan_main = pred_in[None][1]['plan']['content']
-    svf, svd = sv_assess(pr.vals, plan_main['sv_cf_threshold'], plan_main['sv_cf_scope'])
+    svf, svd = sv_assess(pr.vals, plan_main['sv_cf_threshold'], plan_main['sv_cf_scope'], require_graph=True)   # ★ 10-26 묶음 B6
     vres = {}
     for V in VARIANTS:
         vl = main_l if V == 'SVORDER' else ladders_of(V)

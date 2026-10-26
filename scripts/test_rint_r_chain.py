@@ -148,6 +148,11 @@ backend = E.get('EXPECT_BACKEND', 'gpu')
 ctx = {'kit': kit, 'rj': rj, 'law': law, 'c': c, 'arms': arms, 'n': n}
 
 
+def gfp(end_):
+    """★ 10-26 묶음 B6 (RR1-01) — 가짜 가중 그래프 지문 (끝마다 · 시험 프로세스의 가짜 봉인 원천 `fake_graph_source` 와 같은 식 · 팔 = 전역 i)."""
+    return hashlib.sha256(('graph|%s|%s|%s|%s|%s|%d' % (end_, kit, rj, law, c, i)).encode()).hexdigest()
+
+
 def hit(do):
     for f in W.get('faults', []):
         if f.get('do') != do:
@@ -253,6 +258,11 @@ def sv_rule():
     return {'status': 'computed', 'ratio': 1.2}
 
 
+if SVCF:                                       # ★ 10-26 묶음 B6 — 가짜 봉인 원천의 침대 사실 (SV 기록 밖 · 러너 폴더 · 시험 `fake_graph_source` 가 읽는다)
+    with open(os.path.join(out, 'fake_sealed_bed.json'), 'w', encoding='utf-8') as _fsb:
+        json.dump({'n_unsplit': int(sv_rule().get('n_unsplit', 0))}, _fsb)
+
+
 def sv_record(cm):
     """SV 반사실 기록 — 원 기록 (생산자 `carbon_junction.sv_counterfactual` 꼴) → 정본 투영 (`ca_ext_svcf.sv_cf_record`) · 세계 `sv_cf` 규칙.
     ★ 10-22 (사전 리뷰 2 회차 PRE2-impl-01 · 1저자 Q1 (다)) 괄호 칸 — 규칙 'n_unsplit' (기본 0) · 'status_hi' · 'ratio_hi' · 덩어리 0 = 위 = 아래
@@ -277,8 +287,10 @@ def sv_record(cm):
         raw['conv_cert_full'].update(target_lo=GF * (1.0 + rule['full_br'][0]), target_hi=GF * (1.0 + rule['full_br'][1]))
     if not diag and rule.get('full_topo'):         # ★ 10-23 (C1) 기록에 실은 주 해 증서의 위상 수만 바꿈 (끝 ≤ 주 해 그대로 → 기록 계약은 받음)
         raw['conv_cert_full'].update(target_n_edges=raw['conv_cert_full']['target_n_edges'] + int(rule['full_topo']))
+    if not diag and rule.get('full_fp_other'):     # ★ 10-26 묶음 B6 — 기록에 실은 주 해 증서의 그래프 지문만 바꿈 (꼴 맞음 · 이 런 주 증서와 다름)
+        raw['conv_cert_full']['fp_cjunc_graph'] = gfp('other')
 
-    def end(st, r_, br, topo):
+    def end(st, r_, br, topo, which):
         g = GF / r_ if (st == 'computed' and r_) else (0.0 if st == 'no_through_without_sv' else None)
         cc = None
         if not diag and st == 'computed':
@@ -286,6 +298,8 @@ def sv_record(cm):
                       **dict(zip(('target_n_edges', 'target_n_dof', 'target_n_plate_bot', 'target_n_plate_top'), topo)))
         elif not diag and st == 'no_through_without_sv':
             cc = dict(cp_(T['sv_zero']), **bind)
+        if cc is not None:                     # ★ 10-26 묶음 B6 (RR1-01) — 끝 증서 = 그 끝 계의 가중 그래프 지문
+            cc['fp_cjunc_graph'] = gfp(which)
         return {'status': st, 'sv_counterfactual_ratio': (math.inf if st == 'no_through_without_sv' else (r_ if st == 'computed' else None)),
                 'cg_info': (0 if st in ('computed', 'unconverged') else None), 'G_cut_code': g,
                 'resid': (1e-13 if st == 'computed' else None), 'conv_cert': cc}
@@ -295,10 +309,14 @@ def sv_record(cm):
         up = None if not nu else {'status': 'main_unconverged', 'sv_counterfactual_ratio': None, 'cg_info': None, 'G_cut_code': None,
                                   'resid': None, 'conv_cert': None, 'why': None, 'backend_last_solve': None, 'n_components_removed': nu}
     else:
-        raw.update(end(rule['status'], rule.get('ratio'), rule.get('cut_br', [0.0, 0.0]), TOPO_LO))
+        raw.update(end(rule['status'], rule.get('ratio'), rule.get('cut_br', [0.0, 0.0]), (TOPO_MAIN if rule.get('k0') else TOPO_LO), 'lo'))
+        if rule.get('k0'):                     # ★ 10-26 묶음 B6 — 정직한 k 0 꼴 (끊은 쌍 0 · 아래 끝 위상 = 주 해 · 다른 가중 회로 = 다른 지문)
+            raw['n_reach_pairs_cut'] = 0
+        if rule.get('swap_main_lower'):        # ★ 10-26 묶음 B6 — 판정문 RR1-01 꼴: 아래 끝 증서 ← 같은 런의 주 해 증서 (k 0 · G · 비 맞춤 · n_* 그대로)
+            raw.update(conv_cert=cp_(cm), G_cut_code=GF, sv_counterfactual_ratio=1.0, n_reach_pairs_cut=0)
         up = None
         if nu:
-            up = end(rule.get('status_hi', 'computed'), rule.get('ratio_hi'), rule.get('cut_br_hi', [0.0, 0.0]), TOPO_UP)
+            up = end(rule.get('status_hi', 'computed'), rule.get('ratio_hi'), rule.get('cut_br_hi', [0.0, 0.0]), TOPO_UP, 'hi')
             up.update(why=None, backend_last_solve=None, n_components_removed=nu, n_edges_cut=6, n_plate_couplings_cut=0,
                       n_cells_removed=max(3, nu), n_reach_pairs_cut=10, n_reach_pairs_cut_vs_lower=6)
     raw['upper'] = up
@@ -416,7 +434,8 @@ def cert(si, man):
             'target_n_edges': TOPO_MAIN[0], 'target_n_dof': TOPO_MAIN[1], 'target_n_plate_bot': TOPO_MAIN[2], 'target_n_plate_top': TOPO_MAIN[3],
             #  ★ 10-21 (사전 리뷰 PRE-impl-07 · B 픽스처 패치) — 증서 ↔ 런 결합 칸 = 그 팔 매니페스트의 정본 지문 (접합 원장 sid · registry ·
             #    plan_rows · face_alpha 전자 계획) · σ 표 지문 = 킷마다 (가짜)
-            **_bind(man)}
+            #  ★ 10-26 묶음 B6 (RR1-01) — SV 런의 주 해 증서 = 그 계의 가중 그래프 지문 (생산자: SV 요청 때만 조립기가 센다)
+            **_bind(man), **({'fp_cjunc_graph': gfp('main')} if SVCF else {})}
 
 
 def _bind(man):
@@ -885,17 +904,50 @@ def envset(**kv):
                 os.environ[k] = v
 
 
+def fake_graph_source(ctx):
+    """★ 10-26 묶음 B6 (RR1-01) — 가짜 봉인 원천 (사슬 `rint_r_chain.SV_GRAPH_SOURCE` 자리 · SV 기록을 읽지 않는다) — 요청 (킷 · R_j · 법칙 · c) ·
+    팔 번호에서 가짜 러너 `gfp` 와 같은 식으로 끝 그래프 지문을 낸다 (생산 = 봉인 원천에서 다시 조립 · 솔브 없음).  위 끝 = 그 침대의 못 가른 덩어리
+    수 > 0 일 때만 (생산 `carbon_junction.CjuncAssembler.sv_graph_fps` — 덩어리 0 = None) — 가짜 침대 사실 = 가짜 러너가 런 폴더에 남긴
+    `fake_sealed_bed.json` (SV 기록 밖 · 기록을 고친 꼴도 그대로 · 없으면 원천 실패)."""
+    req, i = ctx['req'], int(ctx['arm'])
+    with open(os.path.join(ctx['outdir'], 'fake_sealed_bed.json'), encoding='utf-8') as fh:
+        nu = int(json.load(fh)['n_unsplit'])
+
+    def f(end_):
+        return hashlib.sha256(('graph|%s|%s|%s|%s|%s|%d' % (end_, req['kit'], req['rj'], req['law'], req['c'], i)).encode()).hexdigest()
+    return {'rule': 'solved_graph_dof_ids_pair_exact_sum_plates_v1', 'main': f('main'), 'lower': f('lo'), 'upper': (f('hi') if nu else None)}
+
+
+#: 사슬에 넣는 봉인 원천 — 시험 기본 = 가짜 원천 (그래프 귀속을 보는 RG 줄이 바꾼다 · 생산 기본 = 없음 → SV_UNCHECKED)
+GSRC = [fake_graph_source]
+
+
+@contextlib.contextmanager
+def graph_src(fn):
+    old = GSRC[0]
+    GSRC[0] = fn
+    try:
+        yield
+    finally:
+        GSRC[0] = old
+
+
 def call(argv, wpath=None, env=None, contract=None):
     """사슬 main 을 프로세스 안에서 → (rc, 화면).  SystemExit 는 rc 로.  ★ Z3 — 계약 = 정본 (`RealContract` · main 기본값) ·
-    `contract` 는 사슬 **자신의** 검사층만 보려는 시험 (X09) 에서만 넣는다."""
+    `contract` 는 사슬 **자신의** 검사층만 보려는 시험 (X09) 에서만 넣는다.  ★ 10-26 묶음 B6 — 봉인 원천 = `GSRC[0]` (사슬 모듈 자리에 넣고 되돌린다)."""
     kv = dict(env or {})
     kv['FAKE_WORLD'] = wpath
     buf = io.StringIO()
-    with envset(**kv), contextlib.redirect_stdout(buf), contextlib.redirect_stderr(buf):
-        try:
-            rc = RR.main([str(a) for a in argv], contract=contract)
-        except SystemExit as e:
-            rc = e.code if isinstance(e.code, int) else 2
+    old_src = getattr(RR, 'SV_GRAPH_SOURCE', None)
+    RR.SV_GRAPH_SOURCE = GSRC[0]
+    try:
+        with envset(**kv), contextlib.redirect_stdout(buf), contextlib.redirect_stderr(buf):
+            try:
+                rc = RR.main([str(a) for a in argv], contract=contract)
+            except SystemExit as e:
+                rc = e.code if isinstance(e.code, int) else 2
+    finally:
+        RR.SV_GRAPH_SOURCE = old_src
     return rc, buf.getvalue()
 
 
@@ -5233,6 +5285,95 @@ def t_Q07():
     r = scen('Q07', go)
     return (r['rc'] == 3 and stop_code(r) == 'S0_REPORT_MISMATCH' and 'n_bridging_components' in y_why(r),
             (r['rc'], stop_code(r), y_why(r)[-200:]))
+
+
+# ── ★ 10-26 묶음 B6 (Codex 회차 ① RR1-01 · 1저자 10-26 Q1 · Q2 (가) · 수정 계획 `docs/reviews/rint2_rr1_fix_plan_20261026.md`) 끝 증서의 가중
+#    그래프 귀속 — 사슬 read_run 이 SV 기록 밖 봉인 원천 (`SV_GRAPH_SOURCE` · 생산 = 봉인 raster · 원장 · 계획 · 등록 절단 규칙에서 다시 조립 ·
+#    솔브 없음) 의 끝 그래프 지문과 증서 지문을 대조 (다르면 CA_EXT_RECORD) · 원천 없음 · 원천 실패 = 미확인 = SV_UNCHECKED (clear 금지 · 자기 신고
+#    사본끼리 비교로 대신하지 않는다) · 기록의 주 해 증서 사본 지문 = 이 런 주 증서 (`_mis`) · 판정 = 단계 요약을 믿지 않고 다시 읽어 대조.
+def sv_src_set(tag, rule, src, vsrc='same'):
+    """sv_set 꼴 (주 사다리 · P1 · c 1 · R_j,0 모서리 규칙 하나) 예측 · 판정 — 봉인 원천 src (None = 원천 없음) · vsrc = 판정의 원천 ('same' = src)."""
+    def go():
+        lads = [s_main('P0')['out'], s_main('P1')['out']]
+        m = {'kit_has': 'DBE', 'rj': lad(s_main('P1'))['R_j0'], 'c': '1'}
+        W = dict(PW, sv_cf=[dict(rule, match=m)])
+        with graph_src(src):
+            p = predict(tag, world(tag, W), lads)
+        with graph_src(src if vsrc == 'same' else vsrc):
+            v = verdict(tag + '_v', lads + [p['out']]) if p['rc'] == 0 else None
+        return p, v
+    return scen(tag, go)
+
+
+def _rg_v(v):
+    return ((v or {}).get('v') or {})
+
+
+@check('RG01', '원천 없음 (생산 기본) — 정직한 SV 기록 (비 3.0 > 문턱 2 · V05 꼴) → 예측 PREDICTED · 판정 SV_UNCHECKED (SV_DEPENDENT 아님 · 끝 그래프 미확인 = '
+               '판정 입력 아님) · §7-1 문장 금지 · 사유 = 그래프 귀속 미확인 · 모서리 (옛 사슬 = 기록만 보고 SV_DEPENDENT)')
+def t_RG01():
+    p, v = sv_src_set('RG01', {'status': 'computed', 'ratio': 3.0}, None)
+    vv = _rg_v(v)
+    why = str((vv.get('blocking_reasons') or {}).get('SV_UNCHECKED', ''))
+    return (p['rc'] == 0 and (p['sum'] or {}).get('status') == 'PREDICTED' and 'SV_UNCHECKED' in vv.get('flags', [])
+            and 'SV_DEPENDENT' not in vv.get('flags', ['?']) and vv.get('sentence_allowed') is False and '그래프' in why and 'RR1-01' in why
+            and 'c1_P1_R_j0' in why, (p['rc'], vv.get('flags'), why[-200:]))
+
+
+@check('RG02', '판정문 RR1-01 꼴 (아래 끝 증서 ← 같은 런의 주 해 증서 · k 0 · G · 비 1 · 구간 맞춤 · n_* 그대로 · 기록 계약 통과) — 원천 있음 → 예측 '
+               'CA_EXT_RECORD (증서 지문 ≠ 다시 조립한 아래 끝 · 첫 SV 모서리) · 원천 없음 → 예측 PREDICTED · 판정 SV_UNCHECKED (옛 사슬 = 문턱 2 아래 = 표지 '
+               '없음 = 거짓 clear)')
+def t_RG02():
+    rule = {'status': 'computed', 'ratio': 1.2, 'swap_main_lower': True}
+    p, _v = sv_src_set('RG02', rule, fake_graph_source)
+    p2, v2 = sv_src_set('RG02b', rule, None)
+    vv = _rg_v(v2)
+    return (p['rc'] == 3 and stop_code(p) == 'CA_EXT_RECORD' and 'fp_cjunc_graph' in y_why(p) and 'RR1-01' in y_why(p) and n_calls(p['world']) >= 1
+            and p2['rc'] == 0 and 'SV_UNCHECKED' in vv.get('flags', []) and 'SV_DEPENDENT' not in vv.get('flags', ['?']),
+            (p['rc'], stop_code(p), y_why(p)[-200:], p2['rc'], vv.get('flags')))
+
+
+@check('RG03', '기록에 실은 주 해 증서의 그래프 지문 ≠ 이 런의 주 증서 (지문만 다름 · 꼴 맞음 = 기록 계약 통과) → 예측 CA_EXT_RECORD (주 해 증서 대조 · '
+               '사유에 fp_cjunc_graph)')
+def t_RG03():
+    p, _v = sv_src_set('RG03', {'status': 'computed', 'ratio': 1.2, 'full_fp_other': True}, fake_graph_source)
+    return (p['rc'] == 3 and stop_code(p) == 'CA_EXT_RECORD' and 'fp_cjunc_graph' in y_why(p), (p['rc'], stop_code(p), y_why(p)[-200:]))
+
+
+@check('RG04', '정직한 k 0 꼴 (끊은 쌍 0 · 아래 끝 위상 수 = 주 해 · 아래 끝 지문 = 다시 조립한 아래 끝 ≠ 주 해) · 원천 있음 → 대조 통과 · 판정 = 구간대로 '
+               '(비 1.2 < 문턱 2 = 표지 없음) — 지문이 주 해와 다르다는 이유 · 위상이 같다는 이유로 거부하지 않는다')
+def t_RG04():
+    p, v = sv_src_set('RG04', {'status': 'computed', 'ratio': 1.2, 'k0': True}, fake_graph_source)
+    vv = _rg_v(v)
+    return (p['rc'] == 0 and 'SV_UNCHECKED' not in vv.get('flags', ['?']) and 'SV_DEPENDENT' not in vv.get('flags', ['?']) and vv.get('stop') is None,
+            (p['rc'], stop_code(p), y_why(p)[-160:], vv.get('flags')))
+
+
+@check('RG05', '원천 실패 — 꼴 틀림 ({"rule": 다른 이름}) · 예외 · 지문 대문자 → 미확인 = 판정 SV_UNCHECKED (멈춤 아님 · clear 아님 · 옛 사슬 = 표지 없음)')
+def t_RG05():
+    def bad_form(ctx):
+        return {'rule': 'other_rule', 'main': 'a' * 64, 'lower': 'b' * 64, 'upper': None}
+
+    def boom(ctx):
+        raise RuntimeError('원천 없음 (시험)')
+
+    def upper_hex(ctx):
+        g = fake_graph_source(ctx)
+        return dict(g, lower=g['lower'].upper())
+    out = []
+    for nm, fn in (('꼴', bad_form), ('예외', boom), ('대문자', upper_hex)):
+        p, v = sv_src_set(f'RG05_{nm}', {'status': 'computed', 'ratio': 1.2}, fn)
+        vv = _rg_v(v)
+        out.append((nm, p['rc'], vv.get('flags')))
+    return all(rc == 0 and 'SV_UNCHECKED' in (fl or []) and 'SV_DEPENDENT' not in (fl or ['?']) for _nm, rc, fl in out), out
+
+
+@check('RG06', '판정은 단계 요약의 대조를 믿지 않는다 — 예측 = 원천 있음 (대조 통과 · 비 1.2) · 판정 = 원천 없음 → 판정이 원 팔을 다시 읽어 SV_UNCHECKED '
+               '(옛 사슬 = 표지 없음)')
+def t_RG06():
+    p, v = sv_src_set('RG06', {'status': 'computed', 'ratio': 1.2}, fake_graph_source, vsrc=None)
+    vv = _rg_v(v)
+    return (p['rc'] == 0 and 'SV_UNCHECKED' in vv.get('flags', []) and 'SV_DEPENDENT' not in vv.get('flags', ['?']), (p['rc'], vv.get('flags')))
 
 
 @check('N07', '★ PF2 E (PRE2-impl-03) S0 계획 중복 칸 ("gap_tol" 둘 · 등록 S0 줄 = 그 바이트의 sha256) → S0_PLAN_INVALID · 사유 = 중복 칸 '

@@ -121,6 +121,10 @@ r_port = 2.0 (= 2h) · gap_tol 2.0 · σ_VGCF = 100 S/cm → 축방향 면 g = �
          를 낸다 · 두 끝 computed ⟹ 위 끝 위상 수 ≠ 아래 끝 ⇔ 그 수 + n_plate_couplings_cut > 0 · 아래 끝 새 칸 + 그 수 ≤ 위 끝 새 칸 · X3 (아래 끝 ←
          위 끝 증서 · 끊은 수 그대로) = 거부 · X5 (computed 끝이 없는 기록 · 위 끝 +∞ 의 새 칸 꼴 · ⑦ · ⑧ 관계) = 거부 · 그 칸 꼴 · 관계 위반 = 거부 ·
          k = 0 경계 (아래 끝 ← 주 해 증서 · 끊은 수 그대로) = 받음 그대로 (결과 표)
+  QG     ★ 10-26 묶음 B6 (Codex 회차 ① RR1-01 · 1저자 10-26 Q1 · Q2 (가)) — 주 해 · 끝 증서에 그 끝에서 실제로 푼 가중 그래프 지문
+         (`fp_cjunc_graph` = dof 식별 집합 · 쌍별 정확 합산 전도도 · 판 결합) · 소비자 = 봉인 원천에서 다시 조립 (솔브 없음 ·
+         `solve_sigma_z(cjunc_graph_only=True)`) 해 대조 → 판정문 반례 (PAR + (0.5, 1.5, 9.5) · c 1 · 아래 끝 ← 주 해 증서 · n_* 그대로) = 거부 ·
+         정직한 FLOAT · UFLOAT · PAR c 1 · 등전위 다리 (G 같음) = 받음 · k > 0 원 반례 = 거부 그대로 · 지문 칸 꼴 · 지문 함수 성질 · +∞ 끝
   KBND  (05 · 한계 기록) k 경계 (90° → 89.99°) σ 뜀 크기 = 생산 단위 R_j 1e2 · 1e4 · 1e6 에서 −0.98 % · −2.1e-4 · −2.1e-6 (± 10 % · ∝ 1/R_j)
   MUT-RCA2 새 보장 변이 (조각 = fid 규칙 · 포트 옮김 · SV 전부 끊음 · 이음매 별칭 끔 · 바닥 = s > D 만 · ★ 10-22 못 가른 다리 지킴 끔 = 2 회차
          변이 J1 → QD2 ④ · '지남' 에 덮임 · 같은 성분 조건 뺌 = 2 회차 변이 J2 → QD2 ⑤ (훅 `_sv_passes`)) 가 위 시험에 옳은 이유로 걸린다 ·
@@ -5135,7 +5139,13 @@ def fp_values(cfg):
     used = tuple({'lin': fa['axes'][a]['lin'], 'alpha': fa['axes'][a]['alpha'], 'g': fa['axes'][a]['alpha'] * 2.0}
                  for a in range(3))
     plan0, pbytes, psha = S0.make_plan(0.15, 0.075, 2.0, {'stage': 1, 'kit_name': ''.join(['kit', '_fp'])})
-    return {'cj_objarr': CJ._fp(obj), 'cj_reg_sid': reg['fp']['sid'], 'cj_reg_centreline': reg['fp']['centreline'],
+    #  ★ 10-26 묶음 B6 (RR1-01) — 푼 계의 가중 그래프 지문 (봉인 원천 다시 조립 · 솔브 없음) · 직접 호출 (병렬 · 큰 무리 = 1 + 2^-60)
+    plg = CJ.cjunc_plan(reg, 1.0e3, unreg_law='cut', ptfe_stamp='off', sv_counterfactual={'threshold': None})
+    gg = S3.solve_sigma_z(sid, sig, vox, z_top_um=n[2] * vox, z_bot_um=0.0, cjunc=plg, cjunc_graph_only=True)['cjunc_graphs']
+    gd = CJ.solved_graph_fp(np.arange(4), np.array([0, 1, 1, 2, 2]), np.array([1, 2, 2, 3, 3]),
+                            np.array([1.0, 0.5, 0.5, 1.0, 2.0 ** -60]), np.array([0]), np.array([3.0]), np.array([3]), np.array([4.0]))
+    return {'cj_graph_main': gg['main'], 'cj_graph_lower': gg['lower'], 'cj_graph_upper': gg['upper'], 'cj_graph_direct': gd,
+            'cj_objarr': CJ._fp(obj), 'cj_reg_sid': reg['fp']['sid'], 'cj_reg_centreline': reg['fp']['centreline'],
             'cj_reg_membership': reg['fp']['membership'], 'cj_reg_registry': reg['fp']['registry'],
             'cj_plan_rows': pl['fp_rows'], 'cj_plan_record_registry': pl['record']['fp_registry'],
             'fa_caps': caps['fp'], 'fa_rows': fa['fp_rows'], 'fa_plan': fa['fp_plan'], 'fa_edges': FA.edges_fp(used),
@@ -5216,7 +5226,9 @@ def _fp_children(tmpd, P):
 
 #: 지문 · 해시 함수 목록 (AST — 본문이 `hashlib` 을 쓰는 함수) — 이 표 밖의 함수가 생기면 FP 시험이 그것을 덮지 못한다 → 실패.
 FP_INVENTORY = {
-    'carbon_junction': {'_fp': 'FP-a…h · FP-i (원장 · 계획 · 객체 배열)'},
+    'carbon_junction': {'_fp': 'FP-a…h · FP-i (원장 · 계획 · 객체 배열)',
+                        'solved_graph_fp': '★ 10-26 묶음 B6 (RR1-01) FP-i (주 계 · 반사실 끝 · 직접 호출 — 프로세스 간 같음) · QG ⑥ (정준 정확값 · '
+                                           '병렬 · 순서 · 방향 무관 · 1 ulp · 판 결합) — 고정 dtype 작은 끝 바이트 · 글자 = ASCII 정수'},
     'ptfe_face_alpha': {'_h16': 'FP-i · FP-k (캡슐 · 행 · 계획 · 간선 지문 — 고정 dtype 바이트 · 문자열)',
                         '_path_radius': '두 집단 지름 분류 해시 (점열 float64 바이트 · F-DIA 순열 불변) — 지문 아님'},
     'ca_s0_census': {'_sha256_file': 'FP-i · FP-l', 'make_plan': 'FP-i · FP-l (정준 JSON 바이트)',
@@ -5536,6 +5548,200 @@ def t_piece4():
                 mut is not None and caught, why or 'not caught')
     finally:
         shutil.rmtree(tmpd, ignore_errors=True)
+
+
+# ═════════════════════════ ★ 10-26 QG — 끝 증서의 가중 그래프 귀속 (Codex 회차 ① RR1-01 · 1저자 10-26 Q1 · Q2 (가) · 묶음 B6) ═════════════════════════
+#: Codex RR1-01 반례 (판정문 `docs/reviews/codex_review_rint2_rr_round1_20261026.md` §3 · 탐침 `evidence/agent_sv/probe_actual.py`) — 상주 PAR (c = 1) 의
+#  셋째 polyline 앞에 (0.5, 1.5, 9.5) 를 붙여 막다른 가지를 위 판까지 잇는다 · 끊는 SV 면 하나 = 병렬 간선 하나 → 고유 쌍 수 · dof · 판 결합 그대로
+#  (n_reach_pairs_cut 0) 인데 가중 회로는 다르다 (단자 G 19.950 → 19.615 · 판정문 표)
+QG_PAR_POLYS = [QD7_PAR_POLYS[0], QD7_PAR_POLYS[1], [(0.5, 1.5, 9.5)] + list(QD7_PAR_POLYS[2]), QD7_PAR_POLYS[3]]
+#: 등전위 다리 — 판–판 섬유 둘 (x 1.5 · 3.5 · x 2.5 거울 대칭) 사이 SDCP 셀 (2,1,4) = 다른 섬유를 잇는 다리 (SV 면 둘 다 끊음) · 대칭이라 다리 양끝
+#  전위가 같아 끊어도 단자 G 가 같다 (반올림 안) — 정직한 기록 (그래프는 바뀌었다 · `G_cut != G_full` 규칙이면 거짓 거부)
+QG_EQ_N = (5, 3, 10)
+QG_EQ_POLYS = [[(1.5, 1.5, 0.5), (1.5, 1.5, 9.5)], [(3.5, 1.5, 0.5), (3.5, 1.5, 9.5)]]
+QG_EQ_SDCP = [(2.5, 1.5, 4.5)]
+QG_KEY = 'fp_cjunc_graph'
+QG_RULE = 'solved_graph_dof_ids_pair_exact_sum_plates_v1'
+
+
+def _qg_graphs(polys, sdcp, n, rj=1e3, sdcp_mod=None):
+    """봉인 원천 (같은 입력의 raster · 원장 · 계획 · 등록 절단 규칙) 에서 끝 그래프를 다시 조립 (솔브 없음 · 생산 `solve_sigma_z(cjunc_graph_only=True)`)
+    → 기대 지문 {rule · main · lower · upper}.  런의 원장 · 계획 객체를 넘기지 않는다 (입력에서 다시 만든다 = SV 기록 밖)."""
+    P = cat_rows(rows(polys), rows([[p] for p in sdcp], phase=5, kind=0, fid0=700))
+    sid, _ = bed(P, n, sdcp_sphere_d_um=0.0)
+    reg = registry(sid, P, tol_sj_um=0.1, r_sdcp_um=0.5)
+    pl = (plan(reg, rj, sv_counterfactual={'threshold': None}) if sdcp_mod is None else
+          plan(reg, rj, sv_counterfactual={'threshold': None}, sdcp_mod=sdcp_mod))
+    r = quiet(S3.solve_sigma_z, sid, sig_e(), H, z_top_um=float(n[2]) * H, z_bot_um=0.0, cjunc=pl, cjunc_graph_only=True)
+    return (r or {}).get('cjunc_graphs')
+
+
+def _qg_manifest(reg, pl, r, rec):
+    """실제 소비자 (`run_contract.ca_ext_record_ok`) 용 매니페스트 — 판정문 탐침 `probe_actual.manifest` 와 같은 꼴 (payload 블록 함수 그대로 ·
+    SV 기록 = 주어진 투영)."""
+    import ca_ext_cjunc as CWm
+    import ca_ext_svcf as SVCF
+    import run_contract as RCm
+    a = pl['record']
+    sd = pl.get('sdcp_mod')
+    prot = CWm.cjunc_protocol_record(R_j_ohm=a['R_j_ohm'], len_law=a['len_law'], unreg_law=a['unreg_law'], s_min_um=a['s_min_um'],
+                                     tol_ff_um=a['thresholds']['tol_ff_um'], ptfe_jlaw=a['ptfe_jlaw'], ptfe_stamp=a['ptfe_stamp'])
+    sdp = None if sd is None else CWm.sdcp_mod_protocol_record(c=sd['c'], tol_sj_um=a['thresholds']['tol_sj_um'])
+    prep = {'protocol': prot, 'sdcp_protocol': sdp, 'counts': a['counts'], 'census': reg['census'],
+            'fp': {'sid': reg['fp']['sid'], 'registry': reg['fp']['registry'], 'plan_rows': pl['fp_rows']}, 'plan': pl}
+    rc = {nm: CWm.solve_receipt(r if nm == 'electronic_main' else None, prep, name=nm,
+                                disabled_why=(None if nm == 'electronic_main' else 'QG 고정물 — 끈 솔브')) for nm in CWm.SOLVES}
+    blk = CWm.payload_blocks(prep, rc, r)
+    SVCF.attach_evidence(blk['cjunc']['evidence'], {'threshold': None})
+    blk['cjunc']['evidence']['solve']['sv_counterfactual'] = json.loads(json.dumps(rec))
+    return {'fibre_stamp': 'segment', 'ptfe_stamp': 'off',
+            'component_plan': {'electronic': True, 'ionic': False, 'thermal': False, 'pore': False, 'collector': False},
+            'field_requested': False, 'periodic_xy': False, 'interface_model': None, 'sdcp_bridge_um': 0.0, 'sigma_vgcf_S_cm': 100.0,
+            'ca_ext_requested': sorted(blk), 'ca_ext': {'schema': RCm.CA_EXT_SCHEMA, **blk}}
+
+
+@case('QG')
+def t_sv_graph_binding():
+    """★ 10-26 묶음 B6 (Codex 회차 ① RR1-01 · 1저자 10-26 Q1 · Q2 · Q3 (가) · 수정 계획 `docs/reviews/rint2_rr1_fix_plan_20261026.md`) — 끝 증서를
+    그 끝에서 **실제로 푼 가중 그래프**에 묶는다.  생산자: 주 해 · 끝마다 정규 가중 그래프 지문 (`carbon_junction.solved_graph_fp` = dof 식별 집합 ·
+    쌍별 합산 전도도 (병렬 항 합 · binary64 정확값 · 쌍 정렬) · 아래 · 위 판 결합 (전도도 포함)) 을 그 증서의 결합 칸 `fp_cjunc_graph` 에 싣는다.
+    소비자: SV 기록 밖 봉인 원천 (같은 입력의 raster · 원장 · 계획 · 등록 절단 규칙) 에서 끝 그래프를 다시 조립 (솔브 없음 ·
+    `solve_sigma_z(cjunc_graph_only=True)`) 해 같은 지문을 만들고 증서 지문과 대조 — 다르면 구조화 실패 (`ca_ext_svcf.graph_problem` ·
+    `sv_cf_problem(graphs=)` · `run_contract.ca_ext_record_ok(graphs=)`).  금지 (판정문 §3) = 해시 칸 사본끼리 비교 · `G_cut != G_full` 규칙 ·
+    원시 간선 개수 검사 → ③ 등전위 다리 · ② FLOAT (아래 끝 지문 = 주 해 지문이 정직) 을 받는다.
+    ① Codex 반례 (지금 = 받음 · 거짓 clear) → 거부 · ② 정직한 FLOAT · UFLOAT · PAR c=1 = 대조 통과 · ③ 등전위 다리 (G 같음) = 통과 · ④ k > 0 원 반례
+    (SVX 아래 끝 ← 주 해) = 거부 그대로 · ⑤ 증서 지문 칸 꼴 (없음 · hex 아님) = 원천 없이도 거부 · ⑥ 지문 함수 성질 · ⑦ +∞ 끝 (영값 위상 증서)
+    지문 = 다시 조립한 위 끝."""
+    import ca_ext_svcf as SVCF
+    import run_contract as RCm
+    # ── ①′ 판정문 반례 재현 (고치기 전 · 뒤 같음 — 원천 대조 없이는 기록만으로 못 가른다) ──
+    run = _qd3_run(QG_PAR_POLYS, QD7_PAR_SDCP, QD7_PAR_N, sdcp_mod={'c': 1.0})
+    reg, pl, r, cf = run
+    ev = json.loads(json.dumps(_qd3_ev(reg, pl, r, cf)))
+    s = ev['solve']['sv_counterfactual']
+    sw = _qd5_swap(ev, 'lower', SVCF)
+    ssw = sw['solve']['sv_counterfactual']
+    counts_same = all(ssw.get(k) == s.get(k) for k in s if isinstance(k, str) and k.startswith('n_'))
+    a_h, a_s = _qd3_assess(SVCF.chain_view(s), 1.01)[0], _qd3_assess(SVCF.chain_view(ssw), 1.01)[0]
+    chk('QG ①′ 판정문 반례 재현 — 원천 없는 기록 계약 = 정직 · 반례 둘 다 받음 · n_* 그대로 · 그래프 문 없는 단위 판정 (문턱 1.01) = 정직 '
+        'SV_DEPENDENT · 반례 [] (거짓 clear) → 사슬은 원천 대조 뒤만 판정 입력 (사슬 시험 G 줄)',
+        counts_same and SVCF.sv_cf_problem(ev, True) is None and SVCF.sv_cf_problem(sw, True) is None and a_h == ['SV_DEPENDENT'] and a_s == [],
+        f'{counts_same} · {a_h} · {a_s} · {SVCF.sv_cf_problem(sw, True)}')
+    has = (hasattr(CJ, 'solved_graph_fp') and getattr(SVCF, 'GRAPH_KEY', None) == QG_KEY and hasattr(SVCF, 'graph_problem')
+           and 'graphs' in __import__('inspect').signature(SVCF.sv_cf_problem).parameters)
+    chk('QG 0 생산자 지문 함수 · 소비자 대조 함수 · 계약 인자 (graphs) 가 있다 · 지문 규칙 이름 = 소비자 모듈 (numpy 없음) 의 이름',
+        has and getattr(CJ, 'CJUNC_GRAPH_FP_RULE', None) == QG_RULE and getattr(SVCF, 'GRAPH_FP_RULE', None) == QG_RULE,
+        f'{has} · {getattr(CJ, "CJUNC_GRAPH_FP_RULE", None)} · {getattr(SVCF, "GRAPH_FP_RULE", None)}')
+    if not has:
+        return
+    # ── ① Codex 반례 ──
+    g = _qg_graphs(QG_PAR_POLYS, QD7_PAR_SDCP, QD7_PAR_N, sdcp_mod={'c': 1.0})
+    full_fp, lo_fp = (s.get('conv_cert_full') or {}).get(QG_KEY), (s.get('conv_cert') or {}).get(QG_KEY)
+    chk('QG ① 정직한 기록 — k 0 · 고유 쌍 · 위상 수 같음 (판정문 표 [21,23,2,2]) 인데 주 해 · 아래 끝 증서 지문이 다르다 (병렬 간선 하나 = 다른 가중 '
+        '회로) · 다시 조립한 기대 = 그 둘 · 원천 없는 계약 = 받음 · 원천 대조 = 받음',
+        isinstance(g, dict) and g.get('rule') == QG_RULE and s.get('n_reach_pairs_cut') == 0 and s.get('n_sv_faces_cut') == 1
+        and [(s.get('conv_cert_full') or {}).get(k) for k in SVCF.CERT_TOPO_KEYS] == [21, 23, 2, 2]
+        and [(s.get('conv_cert') or {}).get(k) for k in SVCF.CERT_TOPO_KEYS] == [21, 23, 2, 2]
+        and full_fp == g.get('main') and lo_fp == g.get('lower') and full_fp != lo_fp
+        and SVCF.sv_cf_problem(ev, True) is None and SVCF.sv_cf_problem(ev, True, graphs=g) is None,
+        f"{g} · {full_fp} · {lo_fp} · {s.get('n_reach_pairs_cut')} · {SVCF.sv_cf_problem(ev, True, graphs=g)}")
+    p_sw = SVCF.sv_cf_problem(sw, True, graphs=g)
+    chk('QG ① 판정문 반례 (아래 끝 ← 같은 런의 주 해 증서 · G · 명목비 · 구간 · 위 별칭 맞춤 · census · n_* 그대로) — 원천 대조 = 구조화 실패 '
+        '(아래 끝 증서 지문 = 주 계 ≠ 다시 조립한 아래 끝) · 원천 없는 계약 = 받음 그대로 (판정 입력 = 사슬이 원천 대조 뒤만 · 사슬 시험 G 줄)',
+        counts_same and (ssw.get('conv_cert') or {}).get(QG_KEY) == full_fp and SVCF.sv_cf_problem(sw, True) is None
+        and isinstance(p_sw, str) and p_sw.startswith('sv_cf|') and QG_KEY in p_sw and 'RR1-01' in p_sw,
+        f'{p_sw}')
+    m_h, m_s = _qg_manifest(reg, pl, r, s), _qg_manifest(reg, pl, r, ssw)
+    rc_h, rc_s = RCm.ca_ext_record_ok(m_h, graphs=g), RCm.ca_ext_record_ok(m_s, graphs=g)
+    chk('QG ① 실제 소비자 (`run_contract.ca_ext_record_ok`) — 원천 대조: 정직 = (True, None) · 반례 = 거부 (CAEXT|cjunc| sv_cf| … 지문) · 원천 없음 = 둘 다 '
+        '받음 (판정문 재현 · 판정 입력 아님)',
+        rc_h == (True, None) and rc_s[0] is False and isinstance(rc_s[1], str) and QG_KEY in rc_s[1]
+        and RCm.ca_ext_record_ok(m_h) == (True, None) and RCm.ca_ext_record_ok(m_s) == (True, None),
+        f'{rc_h} · {rc_s} · {RCm.ca_ext_record_ok(m_s)}')
+    # ── ② 정직한 FLOAT · UFLOAT · PAR c=1 ──
+    hon = {'FLOAT': (QD7_FL_POLYS, QD7_FL_SDCP, QD7_FL_N, None), 'UFLOAT': (QD7_UFL_POLYS, QD7_UFL_SDCP, QD7_UFL_N, None),
+           'PARc1': (QD7_PAR_POLYS, QD7_PAR_SDCP, QD7_PAR_N, {'c': 1.0})}
+    for nm, (pp, ss, nn, sm) in hon.items():
+        rr = _qd3_run(pp, ss, nn, sdcp_mod=sm)
+        ee = json.loads(json.dumps(_qd3_ev(*rr)))
+        gg = _qg_graphs(pp, ss, nn, sdcp_mod=sm)
+        rec = ee['solve']['sv_counterfactual']
+        fl = (rec.get('conv_cert') or {}).get(QG_KEY) == (rec.get('conv_cert_full') or {}).get(QG_KEY)
+        chk(f'QG ② 정직한 {nm} — 원천 대조 받음 · 실제 소비자 받음' + (' · 아래 끝 지문 = 주 해 지문 (끊은 다리가 판에 닿지 않는 섬 · 같은 계가 '
+                                                         '정직 — 지문이 같다는 이유로 거부하지 않는다)' if nm == 'FLOAT' else ''),
+            SVCF.sv_cf_problem(ee, True, graphs=gg) is None
+            and RCm.ca_ext_record_ok(_qg_manifest(rr[0], rr[1], rr[2], rec), graphs=gg) == (True, None) and (fl if nm == 'FLOAT' else True),
+            f'{SVCF.sv_cf_problem(ee, True, graphs=gg)} · {fl}')
+    # ── ③ 등전위 다리 (G 같음) ──
+    re_ = _qd3_run(QG_EQ_POLYS, QG_EQ_SDCP, QG_EQ_N)
+    ee = json.loads(json.dumps(_qd3_ev(*re_)))
+    rec = ee['solve']['sv_counterfactual']
+    gg = _qg_graphs(QG_EQ_POLYS, QG_EQ_SDCP, QG_EQ_N)
+    rat = rec.get('sv_counterfactual_ratio')
+    chk('QG ③ 등전위 다리 (거울 대칭 · 다리 SV 면 둘 끊음 · k 2 > 0) — 정직한 단자 G 비 = 1 (반올림 안 · |비 − 1| ≤ 1e-12) · 지문 주 ≠ 아래 (그래프는 '
+        '바뀌었다) · 원천 대조 받음 (`G_cut != G_full` 규칙 없음)',
+        rec.get('status') == 'computed' and isinstance(rat, float) and abs(rat - 1.0) <= 1e-12 and rec.get('n_reach_pairs_cut', 0) > 0
+        and (rec.get('conv_cert') or {}).get(QG_KEY) != (rec.get('conv_cert_full') or {}).get(QG_KEY)
+        and SVCF.sv_cf_problem(ee, True) is None and SVCF.sv_cf_problem(ee, True, graphs=gg) is None,
+        f"{rec.get('status')} · {rat} · {rec.get('n_reach_pairs_cut')} · {SVCF.sv_cf_problem(ee, True, graphs=gg)}")
+    # ── ④ k > 0 원 반례 (SVX 아래 끝 ← 주 해) ──
+    rs = _qd3_svx(cert=True)
+    es = json.loads(json.dumps(_qd3_ev(*rs)))
+    sws = _qd5_swap(es, 'lower', SVCF)
+    P = cat_rows(rows(SVX), rows(SVX_SDCP, phase=5, kind=0, fid0=700))
+    sid_x, _ = bed(P, SVX_N)
+    reg_x = registry(sid_x, P, tol_sj_um=0.1, r_sdcp_um=0.5)
+    gx = (quiet(S3.solve_sigma_z, sid_x, sig_e(), H, z_top_um=float(SVX_N[2]) * H, z_bot_um=0.0,
+                cjunc=plan(reg_x, SVX_RJ, sv_counterfactual={'threshold': None}), cjunc_graph_only=True) or {}).get('cjunc_graphs')
+    p0, p1 = SVCF.sv_cf_problem(sws, True), SVCF.sv_cf_problem(sws, True, graphs=gx)
+    chk('QG ④ k > 0 원 반례 (SVX 아래 끝 ← 주 해 증서 · 끊은 쌍 2) — 원천 없이도 거부 그대로 (위상 관계 · 묶음 A″) · 원천 대조도 거부 · 정직한 SVX = '
+        '원천 대조 받음',
+        isinstance(p0, str) and isinstance(p1, str) and SVCF.sv_cf_problem(es, True, graphs=gx) is None, f'{p0} · {p1}')
+    # ── ⑤ 증서 지문 칸 꼴 (원천 없이) ──
+    bad = {}
+    for nm, fn in (('아래 끝 증서 지문 없음', lambda x: x['conv_cert'].pop(QG_KEY)),
+                   ('주 해 증서 지문 없음', lambda x: x['conv_cert_full'].pop(QG_KEY)),
+                   ('아래 끝 지문 대문자', lambda x: x['conv_cert'].update({QG_KEY: x['conv_cert'][QG_KEY].upper()})),
+                   ('아래 끝 지문 63 자', lambda x: x['conv_cert'].update({QG_KEY: x['conv_cert'][QG_KEY][:63]})),
+                   ('주 해 지문 None', lambda x: x['conv_cert_full'].update({QG_KEY: None}))):
+        e2 = json.loads(json.dumps(ev))
+        fn(e2['solve']['sv_counterfactual'])
+        bad[nm] = SVCF.sv_cf_problem(e2, True)
+    chk('QG ⑤ 증서 구간 기록의 증서 지문 칸 꼴 (없음 · hex64 아님 · None) = 원천 없는 계약도 거부 (지문 없는 증서 = 끝 그래프에 묶을 수 없다)',
+        all(isinstance(v, str) and QG_KEY in v for v in bad.values()), f'{bad}')
+    # ── ⑥ 지문 함수 성질 ──
+    f = CJ.solved_graph_fp
+    ids, U, V, G = np.array([0, 1, 2]), np.array([0, 1]), np.array([1, 2]), np.array([1.0, 2.0])
+    Ab, gb, At, gt = np.array([0]), np.array([3.0]), np.array([2]), np.array([4.0])
+    base = f(ids, U, V, G, Ab, gb, At, gt)
+    same = {'병렬 둘로 나눔 (0.5 + 0.5 = 1.0 정확)': f(ids, np.array([0, 0, 1]), np.array([1, 1, 2]), np.array([0.5, 0.5, 2.0]), Ab, gb, At, gt),
+            '방향 · 순서 바꿈': f(ids[::-1], np.array([2, 1]), np.array([1, 0]), np.array([2.0, 1.0]), Ab, gb, At, gt),
+            '판 결합 병렬 둘 (1.5 + 1.5)': f(ids, U, V, G, np.array([0, 0]), np.array([1.5, 1.5]), At, gt)}
+    diff = {'dof 하나 더 (식별 집합)': f(np.array([0, 1, 2, 3]), U, V, G, Ab, gb, At, gt),
+            '간선 전도도 1 ulp': f(ids, U, V, np.array([1.0, np.nextafter(2.0, 3.0)]), Ab, gb, At, gt),
+            '정확 합이 binary64 로 안 떨어짐 (1 + 2⁻⁶⁰ ≠ 1)': f(ids, np.array([0, 0, 1]), np.array([1, 1, 2]),
+                                                              np.array([1.0, 2.0 ** -60, 2.0]), Ab, gb, At, gt),
+            '위 판 결합 전도도': f(ids, U, V, G, Ab, gb, At, np.array([4.5])),
+            '판 결합 dof 바꿈': f(ids, U, V, G, np.array([1]), gb, At, gt),
+            '쌍 바꿈 (0–2 · 1–2)': f(ids, np.array([0, 1]), np.array([2, 2]), G, Ab, gb, At, gt)}
+    chk('QG ⑥ 지문 함수 — 같은 전기 회로 = 같은 지문 (병렬 항 정확 합 · 방향 · 순서 무관 · 판 결합 병렬 합) · 다른 회로 = 다른 지문 (dof 집합 · 1 ulp · '
+        '반올림해야 같아지는 합 · 판 결합 · 쌍) · hex64',
+        isinstance(base, str) and len(base) == 64 and all(v == base for v in same.values()) and all(v != base for v in diff.values())
+        and len(set(diff.values())) == len(diff),
+        f"{ {k: v == base for k, v in same.items()} } · { {k: v != base for k, v in diff.items()} }")
+    # ── ⑦ +∞ 끝 (영값 위상 증서) 지문 = 다시 조립한 위 끝 ──
+    rq = _qd3_run([QD2_A1, QD2_B1], QD2_S1, QD2_N1)
+    eq = json.loads(json.dumps(_qd3_ev(*rq)))
+    gq = _qg_graphs([QD2_A1, QD2_B1], QD2_S1, QD2_N1)
+    up = eq['solve']['sv_counterfactual'].get('upper') or {}
+    chk('QG ⑦ QD2 ① (덩어리 1 · 위 끝 +∞ = 영값 위상 증서) — 위 끝 증서 지문 = 다시 조립한 위 끝 · 원천 대조 받음 · 위 끝 증서를 아래 끝 증서로 바꾼 '
+        '편집 = 원천 대조 거부',
+        up.get('status') == 'no_through_without_sv' and (up.get('conv_cert') or {}).get(QG_KEY) == (gq or {}).get('upper')
+        and SVCF.sv_cf_problem(eq, True, graphs=gq) is None
+        and isinstance(SVCF.graph_problem(dict(eq['solve']['sv_counterfactual'],
+                                               upper=dict(up, conv_cert=dict(up.get('conv_cert') or {},
+                                                                             **{QG_KEY: (gq or {}).get('lower')}))), gq), str),
+        f"{up.get('status')} · {(up.get('conv_cert') or {}).get(QG_KEY)} · {(gq or {}).get('upper')}")
 
 
 def main():
