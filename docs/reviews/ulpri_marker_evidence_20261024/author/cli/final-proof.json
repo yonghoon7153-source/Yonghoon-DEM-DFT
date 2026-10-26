@@ -1,0 +1,15 @@
+{
+  "observed_at_utc": "2026-10-24T03:25:35.551325+00:00",
+  "status": "PASS",
+  "harness_sha256": "36c32d6dec85511b0736405b39d77de6990a4acb69a9cd08bbc1e381c1cb7f45",
+  "baseline_reader_sha256": "7a395a549e8ad3eae820a9e575f094219ca7d47a4b9a07c5bc27623d7018af4b",
+  "fixed_reader_sha256": "dfc06b8dbf53a8cab05df297890e1f8ca1d0fa038536c7c13ed8b8677e521723",
+  "cases": 43,
+  "positive_cases": 9,
+  "negative_cases": 34,
+  "positive_observations_exactly_preserved": true,
+  "all_input_bytes_unchanged": true,
+  "fixed_result_sha256": "fa8c851035c9b9b0e478e7bfce8bf1fbe84a9316cb1da01964aee99e6c675935",
+  "fixed_stdout_sha256": "1ce95a6b19af52d2559cbbd149b49294e601ddbd97d08e0d92a37731f4eff01c",
+  "scope": "Same 43 actual synthetic arm CLI cases against v2 raw-marker guard; no extra test or physical run"
+}

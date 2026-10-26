@@ -1,0 +1,22 @@
+{
+  "status": "REPRODUCED_EXTERNAL_HOLD",
+  "observed_at_utc": "2026-10-24T03:23:24.073035+00:00",
+  "command": [
+    "python3",
+    "-I",
+    "-B",
+    "/workspace/.cloud-setup/ulpri-20261024/external/repro_boundary.py",
+    "--repo",
+    "/workspace/Yonghoon-DEM-DFT",
+    "--out",
+    "/workspace/.cloud-setup/ulpri-20261024/root-reproduction"
+  ],
+  "exit_code": 0,
+  "pin": "01c1aaf5be8acdf7d1716f34cc86fc77d8e27362",
+  "reader_sha256": "7a395a549e8ad3eae820a9e575f094219ca7d47a4b9a07c5bc27623d7018af4b",
+  "cases": 6,
+  "matches_external_observations": true,
+  "originals_unchanged": true,
+  "working_tree_clean_after": true,
+  "physical_runs": 0
+}

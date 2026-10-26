@@ -1,0 +1,1607 @@
+{
+  "schema": "ulpri_marker_cli_regressions_v1",
+  "synthetic": true,
+  "reader_sha256": "7a395a549e8ad3eae820a9e575f094219ca7d47a4b9a07c5bc27623d7018af4b",
+  "harness_sha256": "36c32d6dec85511b0736405b39d77de6990a4acb69a9cd08bbc1e381c1cb7f45",
+  "case_count": 43,
+  "passed": 26,
+  "positive_count": 9,
+  "negative_count": 34,
+  "status": "FAIL",
+  "physical_runs": 0,
+  "cases": [
+    {
+      "case": "normal_stale_control",
+      "expected": "accept",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "n_superseded_rows": 5,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": 0.20260778734286913,
+      "pass": true
+    },
+    {
+      "case": "literal_fractional",
+      "expected": "reject",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [],
+      "n_superseded_rows": 0,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3310000) — 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_events.csv: RESUME (k None · step 3310000) 앞 사건 4 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "d8fac38fba2a53c7ddce15f5aa94d1267f72fff3ae3e0bd7156b6f31688aef01",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "d8fac38fba2a53c7ddce15f5aa94d1267f72fff3ae3e0bd7156b6f31688aef01",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": null,
+      "pass": true
+    },
+    {
+      "case": "event_trailing_space",
+      "expected": "reject",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "n_superseded_rows": 5,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "8f053fecea999a27191d128e6f3e5cfee2b6027cff47ca496ee67385e7f5d1ba",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "8f053fecea999a27191d128e6f3e5cfee2b6027cff47ca496ee67385e7f5d1ba",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": null,
+      "pass": false
+    },
+    {
+      "case": "event_leading_space",
+      "expected": "reject",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "n_superseded_rows": 5,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "4063316c97b629c86ee702af57b673fea3f154ec2516924df218c45d8e3fdb07",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "4063316c97b629c86ee702af57b673fea3f154ec2516924df218c45d8e3fdb07",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": null,
+      "pass": false
+    },
+    {
+      "case": "event_trailing_tab",
+      "expected": "reject",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "n_superseded_rows": 5,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "e6ed38ddbd39c32b79af1b9f4e0fae04a5547c79f2ccedd33525c1136f722074",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "e6ed38ddbd39c32b79af1b9f4e0fae04a5547c79f2ccedd33525c1136f722074",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": null,
+      "pass": false
+    },
+    {
+      "case": "event_leading_tab",
+      "expected": "reject",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "n_superseded_rows": 5,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "70829353b84dd192a94dd475424f67ef0fa85abe5fb23b9310816fee31d29330",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "70829353b84dd192a94dd475424f67ef0fa85abe5fb23b9310816fee31d29330",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": null,
+      "pass": false
+    },
+    {
+      "case": "event_trailing_nbsp",
+      "expected": "reject",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "n_superseded_rows": 5,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "c99d36d0db9454d58d1df39f597eb60a01a46ca2dc7d458bf859657bf542e08e",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "c99d36d0db9454d58d1df39f597eb60a01a46ca2dc7d458bf859657bf542e08e",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": null,
+      "pass": false
+    },
+    {
+      "case": "event_leading_nbsp",
+      "expected": "reject",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "n_superseded_rows": 5,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "2da8038651ad9e65c499695e1a25fa6382957f382d23e7f981a964086dbe1d06",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "2da8038651ad9e65c499695e1a25fa6382957f382d23e7f981a964086dbe1d06",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": null,
+      "pass": false
+    },
+    {
+      "case": "event_trailing_emspace",
+      "expected": "reject",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "n_superseded_rows": 5,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "4a0edda8e6ea80d06948c33978158609c2357c325cb0d38b0b4162be65b75bfd",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "4a0edda8e6ea80d06948c33978158609c2357c325cb0d38b0b4162be65b75bfd",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": null,
+      "pass": false
+    },
+    {
+      "case": "event_leading_emspace",
+      "expected": "reject",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "n_superseded_rows": 5,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "56ab21ce2ac08dbd640e925881f3c96c9b700c20296e4eef17cda794b566d3a2",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "56ab21ce2ac08dbd640e925881f3c96c9b700c20296e4eef17cda794b566d3a2",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": null,
+      "pass": false
+    },
+    {
+      "case": "event_both_spaces",
+      "expected": "reject",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "n_superseded_rows": 5,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "71a0de9d04cfad81146557a9d47f9570cb02a5938f2ceb0e694cf87ba6056dbe",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "71a0de9d04cfad81146557a9d47f9570cb02a5938f2ceb0e694cf87ba6056dbe",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": null,
+      "pass": false
+    },
+    {
+      "case": "manifest_vt_front",
+      "expected": "reject",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [],
+      "n_superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "98689c43f71377ab134abe1e48cf44ab73759243fd1f6cbab70177acf9e8e925",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "98689c43f71377ab134abe1e48cf44ab73759243fd1f6cbab70177acf9e8e925",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": null,
+      "pass": true
+    },
+    {
+      "case": "manifest_vt_after_key",
+      "expected": "reject",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [],
+      "n_superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "0716605b2db026d429648963c0acfbd03dce7ec33d77c27b0f72eb6ab55a95d3",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "0716605b2db026d429648963c0acfbd03dce7ec33d77c27b0f72eb6ab55a95d3",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": null,
+      "pass": true
+    },
+    {
+      "case": "manifest_vt_embedded",
+      "expected": "reject",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "n_superseded_rows": 5,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "01c5a9ca2e252be6a7de79018757bade69aaf64ad344c8b4e4903882285b9b70",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "01c5a9ca2e252be6a7de79018757bade69aaf64ad344c8b4e4903882285b9b70",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": null,
+      "pass": false
+    },
+    {
+      "case": "manifest_ff_front",
+      "expected": "reject",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [],
+      "n_superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "9e19d2831b50c1f43b1a6555db98af443e67ecfdba9e02963d2f7ed7a2966cf5",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "9e19d2831b50c1f43b1a6555db98af443e67ecfdba9e02963d2f7ed7a2966cf5",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": null,
+      "pass": true
+    },
+    {
+      "case": "manifest_ff_after_key",
+      "expected": "reject",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [],
+      "n_superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "9bf0de68cf59715b234801e4d663e8a66b7500c44dfca0732be255b351b592d1",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "9bf0de68cf59715b234801e4d663e8a66b7500c44dfca0732be255b351b592d1",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": null,
+      "pass": true
+    },
+    {
+      "case": "manifest_ff_embedded",
+      "expected": "reject",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "n_superseded_rows": 5,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "97861691b10d11549b21e74be613e6d4a40e0d8097a524c1d7e4da0ba7670261",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "97861691b10d11549b21e74be613e6d4a40e0d8097a524c1d7e4da0ba7670261",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": null,
+      "pass": false
+    },
+    {
+      "case": "manifest_fs_front",
+      "expected": "reject",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [],
+      "n_superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "f0c4e26467826789a0ef5d3f9be77d72ab6f82a563ee0ef2489821fb4a9d7e9a",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "f0c4e26467826789a0ef5d3f9be77d72ab6f82a563ee0ef2489821fb4a9d7e9a",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": null,
+      "pass": true
+    },
+    {
+      "case": "manifest_fs_after_key",
+      "expected": "reject",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [],
+      "n_superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "3ab96437758159ec9792e2b35d75401b79e1e95643d5a79cccd60fcab3b0b41f",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "3ab96437758159ec9792e2b35d75401b79e1e95643d5a79cccd60fcab3b0b41f",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": null,
+      "pass": true
+    },
+    {
+      "case": "manifest_fs_embedded",
+      "expected": "reject",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "n_superseded_rows": 5,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "e88f3f6e3c7c4808e8ab593ac41c19f6707903559f8ef37b6865a53c677e0648",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "e88f3f6e3c7c4808e8ab593ac41c19f6707903559f8ef37b6865a53c677e0648",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": null,
+      "pass": false
+    },
+    {
+      "case": "manifest_gs_front",
+      "expected": "reject",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [],
+      "n_superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "d56aa8d2a862f04319968901978895f41967452b1e31ecb757ed9e4ea0c14a50",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "d56aa8d2a862f04319968901978895f41967452b1e31ecb757ed9e4ea0c14a50",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": null,
+      "pass": true
+    },
+    {
+      "case": "manifest_gs_after_key",
+      "expected": "reject",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [],
+      "n_superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "087df56e76ca6448d46a7549812afb0888509a4357cd73db44c0872a450032ab",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "087df56e76ca6448d46a7549812afb0888509a4357cd73db44c0872a450032ab",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": null,
+      "pass": true
+    },
+    {
+      "case": "manifest_gs_embedded",
+      "expected": "reject",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "n_superseded_rows": 5,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "db929a7e2fd220ce644b08cadfacd75abb6536df42c7254e38958bca27d12bfc",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "db929a7e2fd220ce644b08cadfacd75abb6536df42c7254e38958bca27d12bfc",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": null,
+      "pass": false
+    },
+    {
+      "case": "manifest_rs_front",
+      "expected": "reject",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [],
+      "n_superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "c84e668aabb23d258fca93299dfdcd21c07729fdd4f59b599c060d5be47c9cbe",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "c84e668aabb23d258fca93299dfdcd21c07729fdd4f59b599c060d5be47c9cbe",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": null,
+      "pass": true
+    },
+    {
+      "case": "manifest_rs_after_key",
+      "expected": "reject",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [],
+      "n_superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "4785b2fdcd035d980c526c3143f92bc3ae2e9fc3db3dba851e6e0b37ae3b99c7",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "4785b2fdcd035d980c526c3143f92bc3ae2e9fc3db3dba851e6e0b37ae3b99c7",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": null,
+      "pass": true
+    },
+    {
+      "case": "manifest_rs_embedded",
+      "expected": "reject",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "n_superseded_rows": 5,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "aadd3b6687b1b372385f429c15fb64bb09fe4854f9fe4cdf86b8204d20065ce0",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "aadd3b6687b1b372385f429c15fb64bb09fe4854f9fe4cdf86b8204d20065ce0",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": null,
+      "pass": false
+    },
+    {
+      "case": "manifest_nel_front",
+      "expected": "reject",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [],
+      "n_superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "f5770106ff4160e70846d5f9bf6fbe74bde0b1c6167e2cf80f113e26727819b0",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "f5770106ff4160e70846d5f9bf6fbe74bde0b1c6167e2cf80f113e26727819b0",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": null,
+      "pass": true
+    },
+    {
+      "case": "manifest_nel_after_key",
+      "expected": "reject",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [],
+      "n_superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "ea33265d3930d367f3de06bfe54738962c89e19a8393053616574cbee9bb2a23",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "ea33265d3930d367f3de06bfe54738962c89e19a8393053616574cbee9bb2a23",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": null,
+      "pass": true
+    },
+    {
+      "case": "manifest_nel_embedded",
+      "expected": "reject",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "n_superseded_rows": 5,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "7be10c82691279a25506591acb346650c9561df39f3bb0f4907babf7afd4db02",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "7be10c82691279a25506591acb346650c9561df39f3bb0f4907babf7afd4db02",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": null,
+      "pass": false
+    },
+    {
+      "case": "manifest_ls_front",
+      "expected": "reject",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [],
+      "n_superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "5933b36d4a33099718b4a780c6e76ad68b480d67eabd59a63558b0e2c66f66d6",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "5933b36d4a33099718b4a780c6e76ad68b480d67eabd59a63558b0e2c66f66d6",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": null,
+      "pass": true
+    },
+    {
+      "case": "manifest_ls_after_key",
+      "expected": "reject",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [],
+      "n_superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "066c920f2c7915ef0d444823356b5d10875a90d5c55fc9c40cacf8c487ba105b",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "066c920f2c7915ef0d444823356b5d10875a90d5c55fc9c40cacf8c487ba105b",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": null,
+      "pass": true
+    },
+    {
+      "case": "manifest_ls_embedded",
+      "expected": "reject",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "n_superseded_rows": 5,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "d85827207c2adaf2bd4aeea1aa10064d4504cfeab068c5ab8f63e33f232ec159",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "d85827207c2adaf2bd4aeea1aa10064d4504cfeab068c5ab8f63e33f232ec159",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": null,
+      "pass": false
+    },
+    {
+      "case": "manifest_ps_front",
+      "expected": "reject",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [],
+      "n_superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "27db6a331240ed3e3a756a57040e975d81f6bf33d90d8b95eafb6b2c427c1641",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "27db6a331240ed3e3a756a57040e975d81f6bf33d90d8b95eafb6b2c427c1641",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": null,
+      "pass": true
+    },
+    {
+      "case": "manifest_ps_after_key",
+      "expected": "reject",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [],
+      "n_superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "c226521c97ac1e0bde91296413573596943c3ec1efd2b5cfb736258b3b3b147a",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "c226521c97ac1e0bde91296413573596943c3ec1efd2b5cfb736258b3b3b147a",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": null,
+      "pass": true
+    },
+    {
+      "case": "manifest_ps_embedded",
+      "expected": "reject",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "n_superseded_rows": 5,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "5ceb969b7bc2df1068bbb800dc1525896df84c114cc7ee45ff4b819edd135179",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "5ceb969b7bc2df1068bbb800dc1525896df84c114cc7ee45ff4b819edd135179",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": null,
+      "pass": false
+    },
+    {
+      "case": "normal_lf_line_endings",
+      "expected": "accept",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "n_superseded_rows": 5,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": 0.20260778734286913,
+      "pass": true
+    },
+    {
+      "case": "normal_crlf_line_endings",
+      "expected": "accept",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "n_superseded_rows": 5,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "ec808fcca54bf4f1915fe25b0929add2d0cc3efb69acdf0d11a3d727c23409c7",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "a2b7aa50c0d5003e259ae566cd24f53a308a93b0f980c8aea5d70bd7c00b1f1c"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "ec808fcca54bf4f1915fe25b0929add2d0cc3efb69acdf0d11a3d727c23409c7",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "a2b7aa50c0d5003e259ae566cd24f53a308a93b0f980c8aea5d70bd7c00b1f1c"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": 0.20260778734286913,
+      "pass": true
+    },
+    {
+      "case": "normal_cr_line_endings",
+      "expected": "accept",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "n_superseded_rows": 5,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "851c277f5bc14d400a1ae69a624355d9ed101d6f446d70953937c1fc7b06453c",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "65356acc2ce7c0e62cedf759c3053378b61544deb1a324cc9667d9eba9a5f090"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "851c277f5bc14d400a1ae69a624355d9ed101d6f446d70953937c1fc7b06453c",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "65356acc2ce7c0e62cedf759c3053378b61544deb1a324cc9667d9eba9a5f090"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": 0.20260778734286913,
+      "pass": true
+    },
+    {
+      "case": "removed_bad_row_control",
+      "expected": "accept",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "n_superseded_rows": 5,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ps_7_3_r45/UT/ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ps_7_3_r45/UT/ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "ps_7_3_r45/UT/run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": 0.20260778734286913,
+      "pass": true
+    },
+    {
+      "case": "normal_k0",
+      "expected": "accept",
+      "boundary": [
+        0,
+        3230000
+      ],
+      "resume_auth": [
+        [
+          0,
+          3230000
+        ]
+      ],
+      "n_superseded_rows": 0,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "7f751653341459e71a2c53f9305da7c5d674d9e79448257f17e3cf15da8329ed",
+        "ps_7_3_r45/UT/ul_windows.csv": "6327d6767da87e4d7a22c7263dd6a7bfabd647d87f0ea2acfeaf2bebfeaaebe6",
+        "ps_7_3_r45/UT/ul_steps.csv": "16db6a7462df24a0224042c7cde9ffbedfee58a094c60861777fd5f3490c0be5",
+        "ps_7_3_r45/UT/run_manifest.txt": "1488a24708913673f6bb24a4b6d2fd96c550a0e2438840e1763931f6192f6fbf",
+        "ps_7_3_r45/UT/restart/state_unload_3230000.in": "955242f31e23c8a64fc48d1af29dee1650c2969be571b9d99f9443f17ad418ed"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "7f751653341459e71a2c53f9305da7c5d674d9e79448257f17e3cf15da8329ed",
+        "ps_7_3_r45/UT/ul_windows.csv": "6327d6767da87e4d7a22c7263dd6a7bfabd647d87f0ea2acfeaf2bebfeaaebe6",
+        "ps_7_3_r45/UT/ul_steps.csv": "16db6a7462df24a0224042c7cde9ffbedfee58a094c60861777fd5f3490c0be5",
+        "ps_7_3_r45/UT/run_manifest.txt": "1488a24708913673f6bb24a4b6d2fd96c550a0e2438840e1763931f6192f6fbf",
+        "ps_7_3_r45/UT/restart/state_unload_3230000.in": "955242f31e23c8a64fc48d1af29dee1650c2969be571b9d99f9443f17ad418ed"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": 0.20260778734286913,
+      "pass": true
+    },
+    {
+      "case": "normal_k1",
+      "expected": "accept",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "n_superseded_rows": 0,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "e93652aa251e3bffd053c35efb891275f72df674b90b25870386b4116232bacd",
+        "ps_7_3_r45/UT/ul_windows.csv": "6327d6767da87e4d7a22c7263dd6a7bfabd647d87f0ea2acfeaf2bebfeaaebe6",
+        "ps_7_3_r45/UT/ul_steps.csv": "16db6a7462df24a0224042c7cde9ffbedfee58a094c60861777fd5f3490c0be5",
+        "ps_7_3_r45/UT/run_manifest.txt": "556e9eb6941ca22b22bb5730b40c076937a4e1f4d19c76dac44eefee194bc7e5",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "bb5251e113562862ddb1dee23ef360e28f03489c6c190b93caa4889e91517b34"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "e93652aa251e3bffd053c35efb891275f72df674b90b25870386b4116232bacd",
+        "ps_7_3_r45/UT/ul_windows.csv": "6327d6767da87e4d7a22c7263dd6a7bfabd647d87f0ea2acfeaf2bebfeaaebe6",
+        "ps_7_3_r45/UT/ul_steps.csv": "16db6a7462df24a0224042c7cde9ffbedfee58a094c60861777fd5f3490c0be5",
+        "ps_7_3_r45/UT/run_manifest.txt": "556e9eb6941ca22b22bb5730b40c076937a4e1f4d19c76dac44eefee194bc7e5",
+        "ps_7_3_r45/UT/restart/state_unload_3310000.in": "bb5251e113562862ddb1dee23ef360e28f03489c6c190b93caa4889e91517b34"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": 0.20260778734286913,
+      "pass": true
+    },
+    {
+      "case": "normal_k2",
+      "expected": "accept",
+      "boundary": [
+        2,
+        3360000
+      ],
+      "resume_auth": [
+        [
+          2,
+          3360000
+        ]
+      ],
+      "n_superseded_rows": 0,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "90fe4c45701c708ac5ee6bf3886378e989af713cc03153945f5e3a1eb4dfea47",
+        "ps_7_3_r45/UT/ul_windows.csv": "b3933b11637150d4d48ec740450f156d8b98985bde7934d2949fb47d41906d2d",
+        "ps_7_3_r45/UT/ul_steps.csv": "16db6a7462df24a0224042c7cde9ffbedfee58a094c60861777fd5f3490c0be5",
+        "ps_7_3_r45/UT/run_manifest.txt": "25d59177d9e490c29eb1fcd1f5338af9f032c1a211cf4429d9980df7bd49d1a0",
+        "ps_7_3_r45/UT/restart/state_unload_3360000.in": "7fa9f994c213a68ef1591c0ea0e043d5b4fc2402584854773416421dd0071d56"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "90fe4c45701c708ac5ee6bf3886378e989af713cc03153945f5e3a1eb4dfea47",
+        "ps_7_3_r45/UT/ul_windows.csv": "b3933b11637150d4d48ec740450f156d8b98985bde7934d2949fb47d41906d2d",
+        "ps_7_3_r45/UT/ul_steps.csv": "16db6a7462df24a0224042c7cde9ffbedfee58a094c60861777fd5f3490c0be5",
+        "ps_7_3_r45/UT/run_manifest.txt": "25d59177d9e490c29eb1fcd1f5338af9f032c1a211cf4429d9980df7bd49d1a0",
+        "ps_7_3_r45/UT/restart/state_unload_3360000.in": "7fa9f994c213a68ef1591c0ea0e043d5b4fc2402584854773416421dd0071d56"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": 0.20260778734286913,
+      "pass": true
+    },
+    {
+      "case": "normal_k3",
+      "expected": "accept",
+      "boundary": [
+        3,
+        3410000
+      ],
+      "resume_auth": [
+        [
+          3,
+          3410000
+        ]
+      ],
+      "n_superseded_rows": 0,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "input_hashes_before": {
+        "ps_7_3_r45/UT/ul_events.csv": "a29d9898f36034ab902f98c97ccb2b21c4eb574d86e66abf5136dd288e71a9ed",
+        "ps_7_3_r45/UT/ul_windows.csv": "b3933b11637150d4d48ec740450f156d8b98985bde7934d2949fb47d41906d2d",
+        "ps_7_3_r45/UT/ul_steps.csv": "16db6a7462df24a0224042c7cde9ffbedfee58a094c60861777fd5f3490c0be5",
+        "ps_7_3_r45/UT/run_manifest.txt": "6d0972b2abda1639e1253b07c478edbe4e83d0674d3df6cfc4a6850d54ce97a5",
+        "ps_7_3_r45/UT/restart/state_unload_3410000.in": "abd874cee6256ea0a88f54a87e2b96488683bdddc5e881c64cce31263d246854"
+      },
+      "input_hashes_after": {
+        "ps_7_3_r45/UT/ul_events.csv": "a29d9898f36034ab902f98c97ccb2b21c4eb574d86e66abf5136dd288e71a9ed",
+        "ps_7_3_r45/UT/ul_windows.csv": "b3933b11637150d4d48ec740450f156d8b98985bde7934d2949fb47d41906d2d",
+        "ps_7_3_r45/UT/ul_steps.csv": "16db6a7462df24a0224042c7cde9ffbedfee58a094c60861777fd5f3490c0be5",
+        "ps_7_3_r45/UT/run_manifest.txt": "6d0972b2abda1639e1253b07c478edbe4e83d0674d3df6cfc4a6850d54ce97a5",
+        "ps_7_3_r45/UT/restart/state_unload_3410000.in": "abd874cee6256ea0a88f54a87e2b96488683bdddc5e881c64cce31263d246854"
+      },
+      "input_bytes_unchanged": true,
+      "cli_rc": 0,
+      "expected_rho": 0.20260778734286913,
+      "pass": true
+    }
+  ]
+}

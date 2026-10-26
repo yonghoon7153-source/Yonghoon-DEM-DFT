@@ -1,0 +1,112 @@
+{
+ "job": "UT",
+ "bed": "ps_7_3_r45",
+ "dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\unloading_ulpr_review_20261024\\evidence\\boundary\\literal_fractional_extra\\ps_7_3_r45\\UT",
+ "problems": [
+  "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+  "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3310000) — 승인 없음 (ULKRF-01)",
+  "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+  "ul_events.csv: RESUME (k None · step 3310000) 앞 사건 4 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+  "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+  "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+ ],
+ "n_superseded_rows": 0,
+ "primary_status": "UNIDENTIFIED",
+ "rho_pct": null,
+ "bracket_um": [
+  0.25,
+  0.25
+ ],
+ "bracket_pct": [
+  0.225119763714296,
+  0.225119763714296
+ ],
+ "union_bracket_um": [
+  0.25,
+  0.25
+ ],
+ "union_bracket_pct": [
+  0.225119763714296,
+  0.225119763714296
+ ],
+ "lower_bound_pct": null,
+ "nonmonotone": false,
+ "cancellation": false,
+ "disposition": "NONE",
+ "rank_eligible": false,
+ "endpoint_states": [
+  "CONTACT",
+  "CONTACT"
+ ],
+ "sigma_P": null,
+ "trajectory_status": "RM_STOP",
+ "separation": {
+  "declared_step": null,
+  "separated_final": false,
+  "recontact_index": [],
+  "missing_index": [],
+  "moved_index": [],
+  "gap_index": [
+   11
+  ],
+  "n_post": 0,
+  "declared_w": null
+ },
+ "s4_status": "NOT_COMPUTED",
+ "why": [
+  "CSV 기록 결손 · 무결성 (ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음 · ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3310000) — 승인 없음 (ULKRF-01) · ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다",
+  "단 기록 k 불연속 ([0, 1, 2, 2, 3, 4]) — 누락 · 중복 · 순서"
+ ],
+ "cancellation_detail": {
+  "tension_N": [
+   0,
+   0
+  ],
+  "threshold_N": 1.25
+ },
+ "eps": {
+  "status": "OK",
+  "C_all_m": 2.1991148575128546e-05,
+  "area_m2": 0.0025000000000000005,
+  "n_s0": 105,
+  "S0": {
+   "status": "OK",
+   "eps_all": 0.9998019743131584,
+   "eps_inside": 0.9998019743131584,
+   "n_inside": 105,
+   "h_m": 0.111052
+  },
+  "endpoints": [
+   {
+    "k": 2,
+    "step": 3360000,
+    "h_m": 0.111302,
+    "status": "OK",
+    "eps_all": 0.9998024191067983,
+    "eps_inside": 0.9998024191067983,
+    "n_inside": 105,
+    "why": []
+   },
+   {
+    "k": 2,
+    "step": 3360000,
+    "h_m": 0.111302,
+    "status": "OK",
+    "eps_all": 0.9998024191067983,
+    "eps_inside": 0.9998024191067983,
+    "n_inside": 105,
+    "why": []
+   }
+  ],
+  "M": null,
+  "why": []
+ },
+ "w_proxy_J": null,
+ "w_proxy": {
+  "status": "NOT_COMPUTED",
+  "n_points": 0,
+  "why": [
+   "주 값 OK 아님 — M (보간 높이) 없음"
+  ]
+ }
+}

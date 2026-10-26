@@ -1,0 +1,13 @@
+{
+  "observed_at_utc": "2026-10-24T03:18:03.762341+00:00",
+  "zip": "/workspace/attachments/e9ae4e59-6dbc-436e-8030-821f1a4c7b8f/codex_unloading_ulpr_integer_review_20261024.zip",
+  "zip_sha256": "530a3eff236e6ffef3823e76305c0e3b2443d43fa989f8360129c26a4031dc20",
+  "members": 1389,
+  "manifest_entries": 1388,
+  "manifest_all_pass": true,
+  "path_safety_pass": true,
+  "review_report_sha256": "34a6bf923969b719760f429813161bd9bf77c057850f450d4cfcb5cca8fff7f8",
+  "pasted_report_same_text": true,
+  "scope": "External evidence intake only; archive scripts not executed",
+  "external_verdict": "Integer correction accepted; integrity closure HOLD; ULPRI-01 and ULPRI-02 P2"
+}

@@ -1,0 +1,28 @@
+{
+  "pinned_zip_source_files_rechecked": 407,
+  "changed_source_files": [],
+  "internal_150": {
+    "total": 150,
+    "passes": 150,
+    "fails": 0
+  },
+  "internal_two_mutants": [
+    {
+      "name": "event_rounding_restored",
+      "pass_recorded": 68,
+      "fail_recorded": 22,
+      "failure_items": 22,
+      "exception": null
+    },
+    {
+      "name": "event_csv_structure_guard_removed",
+      "pass_recorded": 87,
+      "fail_recorded": 3,
+      "failure_items": 3,
+      "exception": null
+    }
+  ],
+  "full_gate_identity_total": 835,
+  "diff_sha256": "ccd610c9e7c9b3d1443edba03324a8c0fdf0bed0330f908ca7844586b293efd0",
+  "reader_sha256": "7a395a549e8ad3eae820a9e575f094219ca7d47a4b9a07c5bc27623d7018af4b"
+}

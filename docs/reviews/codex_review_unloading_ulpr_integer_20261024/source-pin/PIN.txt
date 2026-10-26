@@ -1,0 +1,7 @@
+repository=https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT
+branch=codex/unloading-ulpr
+commit=01c1aaf5be8acdf7d1716f34cc86fc77d8e27362
+parent=8347d32ea678c0174bd77d4c79cfbd7b0591e4a3
+candidate=652d43704034f24d2f4a024092b36ce0ddf558fe
+scope=continuation changes plus explicit reproduction context; full reproduction requires the pinned repository and history
+ratification=presented non-Rint design and policy proposals ratified; no physical or external review evidence inferred

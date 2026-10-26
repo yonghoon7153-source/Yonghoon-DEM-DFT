@@ -1,0 +1,33 @@
+{
+  "observed_at_utc": "2026-10-24T03:20:47.759747+00:00",
+  "harness_sha256": "36c32d6dec85511b0736405b39d77de6990a4acb69a9cd08bbc1e381c1cb7f45",
+  "reader_sha256": "7a395a549e8ad3eae820a9e575f094219ca7d47a4b9a07c5bc27623d7018af4b",
+  "scope": "Tests-first actual synthetic arm CLI against immutable 01c1; no producer/source edits, Git writes, or physical runs",
+  "cases": 43,
+  "positive_cases": 9,
+  "negative_cases": 34,
+  "baseline_pass": 26,
+  "baseline_fail_expected": 17,
+  "baseline_cli_process_rcs_all_zero": true,
+  "input_bytes_unchanged_all": true,
+  "failed_case_names": [
+    "event_trailing_space",
+    "event_leading_space",
+    "event_trailing_tab",
+    "event_leading_tab",
+    "event_trailing_nbsp",
+    "event_leading_nbsp",
+    "event_trailing_emspace",
+    "event_leading_emspace",
+    "event_both_spaces",
+    "manifest_vt_embedded",
+    "manifest_ff_embedded",
+    "manifest_fs_embedded",
+    "manifest_gs_embedded",
+    "manifest_rs_embedded",
+    "manifest_nel_embedded",
+    "manifest_ls_embedded",
+    "manifest_ps_embedded"
+  ],
+  "baseline_result_sha256": "ccb36f968f570fc1cdb57ec17e70872cdb951854d077432bc7c16b58a765893e"
+}

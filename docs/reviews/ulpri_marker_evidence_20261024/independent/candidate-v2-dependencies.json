@@ -1,0 +1,8 @@
+{
+  "pin": "01c1aaf5be8acdf7d1716f34cc86fc77d8e27362",
+  "exact_git_blobs": {
+    "docs/data/ps73_compaction_curve_20261006/raw/ps73_logs.tgz": "1593cb3fb6003d2a6abf8d4f48a41c56e8781b68d56242074dd381c3051e1cb3",
+    "scripts/plane_load_share.py": "a1d95cb9c2f800028d67c44d79330362f9ffee568fc9cccebb943cce064a61ee"
+  },
+  "initial_attempt": "Both probes stopped before any case due to missing r8 archive in minimal snapshot. Original partial output directories retained. Source unchanged; pinned dependency restored for new attempts."
+}

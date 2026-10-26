@@ -1,0 +1,1 @@
+ARM_VERDICT bed=ps_7_3_r45 job=UT primary=OK rho_pct=0.20260778734286913 bracket_pct=[0.18009581097144223, 0.225119763714296] trajectory=RM_STOP cancellation=False nonmonotone=False why=

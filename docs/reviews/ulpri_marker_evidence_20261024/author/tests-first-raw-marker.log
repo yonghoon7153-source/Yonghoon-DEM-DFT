@@ -1,0 +1,43 @@
+PASS R40 중단 없는 실제 arm CLI 양성 기준
+PASS R40 정상 k=0 실제 arm CLI → 중단 없는 주 값과 정확히 같음 · 원 입력 불변
+PASS R40 정상 k=1 실제 arm CLI → 중단 없는 주 값과 정확히 같음 · 원 입력 불변
+PASS R40 정상 k=2 실제 arm CLI → 중단 없는 주 값과 정확히 같음 · 원 입력 불변
+PASS R40 정상 k=3 실제 arm CLI → 중단 없는 주 값과 정확히 같음 · 원 입력 불변
+PASS R40 manifest/state 정상 줄 끝 '\n' → 승인 · 주 값 유지
+PASS R40 manifest/state 정상 줄 끝 '\r\n' → 승인 · 주 값 유지
+PASS R40 manifest/state 정상 줄 끝 '\r' → 승인 · 주 값 유지
+PASS R40 literal RESUME 소수 음성 대조 → 승인·행 제외 없음 · UNIDENTIFIED/null
+PASS R40 ULPRI-01 변형 표지 'RESUME ' · k=1 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변
+PASS R40 ULPRI-01 변형 표지 'RESUME ' · k=1.49 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변
+PASS R40 ULPRI-01 변형 표지 ' RESUME' · k=1 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변
+PASS R40 ULPRI-01 변형 표지 ' RESUME' · k=1.49 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변
+PASS R40 ULPRI-01 변형 표지 'RESUME\t' · k=1 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변
+PASS R40 ULPRI-01 변형 표지 'RESUME\t' · k=1.49 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변
+PASS R40 ULPRI-01 변형 표지 '\tRESUME' · k=1 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변
+PASS R40 ULPRI-01 변형 표지 '\tRESUME' · k=1.49 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변
+PASS R40 ULPRI-01 변형 표지 'RESUME\xa0' · k=1 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변
+PASS R40 ULPRI-01 변형 표지 'RESUME\xa0' · k=1.49 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변
+PASS R40 ULPRI-01 변형 표지 '\xa0RESUME' · k=1 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변
+PASS R40 ULPRI-01 변형 표지 '\xa0RESUME' · k=1.49 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변
+PASS R40 ULPRI-01 변형 표지 'RESUME\u2003' · k=1 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변
+PASS R40 ULPRI-01 변형 표지 'RESUME\u2003' · k=1.49 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변
+PASS R40 ULPRI-01 변형 표지 '\u2003RESUME' · k=1 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변
+PASS R40 ULPRI-01 변형 표지 '\u2003RESUME' · k=1.49 + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변
+FAIL R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\x0b' → CSV splitlines 전에 변형 표지 거부
+PASS R40 ULPRI-02 다른 문자 뒤 줄 구분자 '\x0b' → 숨은 resume_from 무시 없이 승인·행 제외 없음 · CLI 미식별
+FAIL R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\x0c' → CSV splitlines 전에 변형 표지 거부
+PASS R40 ULPRI-02 다른 문자 뒤 줄 구분자 '\x0c' → 숨은 resume_from 무시 없이 승인·행 제외 없음 · CLI 미식별
+FAIL R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\x1c' → CSV splitlines 전에 변형 표지 거부
+PASS R40 ULPRI-02 다른 문자 뒤 줄 구분자 '\x1c' → 숨은 resume_from 무시 없이 승인·행 제외 없음 · CLI 미식별
+FAIL R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\x1d' → CSV splitlines 전에 변형 표지 거부
+PASS R40 ULPRI-02 다른 문자 뒤 줄 구분자 '\x1d' → 숨은 resume_from 무시 없이 승인·행 제외 없음 · CLI 미식별
+FAIL R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\x1e' → CSV splitlines 전에 변형 표지 거부
+PASS R40 ULPRI-02 다른 문자 뒤 줄 구분자 '\x1e' → 숨은 resume_from 무시 없이 승인·행 제외 없음 · CLI 미식별
+FAIL R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\x85' → CSV splitlines 전에 변형 표지 거부
+PASS R40 ULPRI-02 다른 문자 뒤 줄 구분자 '\x85' → 숨은 resume_from 무시 없이 승인·행 제외 없음 · CLI 미식별
+FAIL R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\u2028' → CSV splitlines 전에 변형 표지 거부
+PASS R40 ULPRI-02 다른 문자 뒤 줄 구분자 '\u2028' → 숨은 resume_from 무시 없이 승인·행 제외 없음 · CLI 미식별
+FAIL R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\u2029' → CSV splitlines 전에 변형 표지 거부
+PASS R40 ULPRI-02 다른 문자 뒤 줄 구분자 '\u2029' → 숨은 resume_from 무시 없이 승인·행 제외 없음 · CLI 미식별
+PASS R40 잘못된 추가 기록 없는 복구 대조 → 정상 승인 · 주 값 유지
+passed 34 total 42

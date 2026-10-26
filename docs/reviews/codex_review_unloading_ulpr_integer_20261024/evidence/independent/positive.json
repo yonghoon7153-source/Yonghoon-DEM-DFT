@@ -1,0 +1,74 @@
+[
+  {
+    "kr": 0,
+    "sr": 3230000,
+    "auth": [
+      [
+        0,
+        3230000
+      ]
+    ],
+    "primary": "OK",
+    "rho": 0.20260778734286913,
+    "baseline_primary": "OK",
+    "baseline_rho": 0.20260778734286913,
+    "same": true,
+    "mock_result": "RM_STOP",
+    "cli_rc": 0,
+    "csv_unchanged": true
+  },
+  {
+    "kr": 1,
+    "sr": 3310000,
+    "auth": [
+      [
+        1,
+        3310000
+      ]
+    ],
+    "primary": "OK",
+    "rho": 0.20260778734286913,
+    "baseline_primary": "OK",
+    "baseline_rho": 0.20260778734286913,
+    "same": true,
+    "mock_result": "RM_STOP",
+    "cli_rc": 0,
+    "csv_unchanged": true
+  },
+  {
+    "kr": 2,
+    "sr": 3360000,
+    "auth": [
+      [
+        2,
+        3360000
+      ]
+    ],
+    "primary": "OK",
+    "rho": 0.20260778734286913,
+    "baseline_primary": "OK",
+    "baseline_rho": 0.20260778734286913,
+    "same": true,
+    "mock_result": "RM_STOP",
+    "cli_rc": 0,
+    "csv_unchanged": true
+  },
+  {
+    "kr": 3,
+    "sr": 3410000,
+    "auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "primary": "OK",
+    "rho": 0.20260778734286913,
+    "baseline_primary": "OK",
+    "baseline_rho": 0.20260778734286913,
+    "same": true,
+    "mock_result": "RM_STOP",
+    "cli_rc": 0,
+    "csv_unchanged": true
+  }
+]

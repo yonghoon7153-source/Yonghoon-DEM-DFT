@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "changed_after_tests": [
+    "docs/data/ps45_unload_20261009/README.md"
+  ],
+  "reader_source_unchanged": true,
+  "seal_files_unchanged": true,
+  "registration_unchanged": true,
+  "scope": "One historical README sentence clarified; no changed production or test logic. New wording distinguishes accepted R39 from pending external ULPRI recheck.",
+  "delta_sha256": "4d149786cbaa026ab086afaa042c345acf3fc9fd2b3cfd987482893a50500f3d"
+}

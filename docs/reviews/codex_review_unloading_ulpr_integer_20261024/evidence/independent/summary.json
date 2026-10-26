@@ -1,0 +1,300 @@
+{
+  "r39_pass": 90,
+  "r39_total": 90,
+  "arithmetic_pass": 514,
+  "arithmetic_total": 514,
+  "positive": [
+    {
+      "kr": 0,
+      "sr": 3230000,
+      "auth": [
+        [
+          0,
+          3230000
+        ]
+      ],
+      "primary": "OK",
+      "rho": 0.20260778734286913,
+      "baseline_primary": "OK",
+      "baseline_rho": 0.20260778734286913,
+      "same": true,
+      "mock_result": "RM_STOP",
+      "cli_rc": 0,
+      "csv_unchanged": true
+    },
+    {
+      "kr": 1,
+      "sr": 3310000,
+      "auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "primary": "OK",
+      "rho": 0.20260778734286913,
+      "baseline_primary": "OK",
+      "baseline_rho": 0.20260778734286913,
+      "same": true,
+      "mock_result": "RM_STOP",
+      "cli_rc": 0,
+      "csv_unchanged": true
+    },
+    {
+      "kr": 2,
+      "sr": 3360000,
+      "auth": [
+        [
+          2,
+          3360000
+        ]
+      ],
+      "primary": "OK",
+      "rho": 0.20260778734286913,
+      "baseline_primary": "OK",
+      "baseline_rho": 0.20260778734286913,
+      "same": true,
+      "mock_result": "RM_STOP",
+      "cli_rc": 0,
+      "csv_unchanged": true
+    },
+    {
+      "kr": 3,
+      "sr": 3410000,
+      "auth": [
+        [
+          3,
+          3410000
+        ]
+      ],
+      "primary": "OK",
+      "rho": 0.20260778734286913,
+      "baseline_primary": "OK",
+      "baseline_rho": 0.20260778734286913,
+      "same": true,
+      "mock_result": "RM_STOP",
+      "cli_rc": 0,
+      "csv_unchanged": true
+    }
+  ],
+  "cli_cases": 44,
+  "contract_failures": [],
+  "explore": [
+    {
+      "name": "manifest_4",
+      "expected": "explore",
+      "auth": [
+        [
+          3,
+          3410000
+        ]
+      ],
+      "baseline_auth": [
+        [
+          3,
+          3410000
+        ]
+      ],
+      "dropped": 0,
+      "primary": "OK",
+      "rho": 0.20260778734286913,
+      "problems": [],
+      "why": [],
+      "cli_rc": 0,
+      "csv_unchanged": true,
+      "satisfies": null
+    },
+    {
+      "name": "manifest_5",
+      "expected": "explore",
+      "auth": [
+        [
+          3,
+          3410000
+        ]
+      ],
+      "baseline_auth": [
+        [
+          3,
+          3410000
+        ]
+      ],
+      "dropped": 0,
+      "primary": "OK",
+      "rho": 0.20260778734286913,
+      "problems": [],
+      "why": [],
+      "cli_rc": 0,
+      "csv_unchanged": true,
+      "satisfies": null
+    },
+    {
+      "name": "event_label_0",
+      "expected": "explore",
+      "auth": [
+        [
+          3,
+          3410000
+        ]
+      ],
+      "baseline_auth": [
+        [
+          3,
+          3410000
+        ]
+      ],
+      "dropped": 0,
+      "primary": "OK",
+      "rho": 0.20260778734286913,
+      "problems": [],
+      "why": [],
+      "cli_rc": 0,
+      "csv_unchanged": true,
+      "satisfies": null
+    },
+    {
+      "name": "event_label_1",
+      "expected": "explore",
+      "auth": [
+        [
+          3,
+          3410000
+        ]
+      ],
+      "baseline_auth": [
+        [
+          3,
+          3410000
+        ]
+      ],
+      "dropped": 0,
+      "primary": "OK",
+      "rho": 0.20260778734286913,
+      "problems": [],
+      "why": [],
+      "cli_rc": 0,
+      "csv_unchanged": true,
+      "satisfies": null
+    },
+    {
+      "name": "event_label_2",
+      "expected": "explore",
+      "auth": [
+        [
+          3,
+          3410000
+        ]
+      ],
+      "baseline_auth": [
+        [
+          3,
+          3410000
+        ]
+      ],
+      "dropped": 0,
+      "primary": "OK",
+      "rho": 0.20260778734286913,
+      "problems": [],
+      "why": [],
+      "cli_rc": 0,
+      "csv_unchanged": true,
+      "satisfies": null
+    },
+    {
+      "name": "event_label_3",
+      "expected": "explore",
+      "auth": [
+        [
+          3,
+          3410000
+        ]
+      ],
+      "baseline_auth": [
+        [
+          3,
+          3410000
+        ]
+      ],
+      "dropped": 0,
+      "primary": "OK",
+      "rho": 0.20260778734286913,
+      "problems": [],
+      "why": [],
+      "cli_rc": 0,
+      "csv_unchanged": true,
+      "satisfies": null
+    },
+    {
+      "name": "event_label_4",
+      "expected": "explore",
+      "auth": [
+        [
+          3,
+          3410000
+        ]
+      ],
+      "baseline_auth": [
+        [
+          3,
+          3410000
+        ]
+      ],
+      "dropped": 0,
+      "primary": "OK",
+      "rho": 0.20260778734286913,
+      "problems": [],
+      "why": [],
+      "cli_rc": 0,
+      "csv_unchanged": true,
+      "satisfies": null
+    },
+    {
+      "name": "event_label_5",
+      "expected": "explore",
+      "auth": [
+        [
+          3,
+          3410000
+        ]
+      ],
+      "baseline_auth": [
+        [
+          3,
+          3410000
+        ]
+      ],
+      "dropped": 0,
+      "primary": "OK",
+      "rho": 0.20260778734286913,
+      "problems": [],
+      "why": [],
+      "cli_rc": 0,
+      "csv_unchanged": true,
+      "satisfies": null
+    },
+    {
+      "name": "event_label_6",
+      "expected": "explore",
+      "auth": [
+        [
+          3,
+          3410000
+        ]
+      ],
+      "baseline_auth": [
+        [
+          3,
+          3410000
+        ]
+      ],
+      "dropped": 0,
+      "primary": "OK",
+      "rho": 0.20260778734286913,
+      "problems": [],
+      "why": [],
+      "cli_rc": 0,
+      "csv_unchanged": true,
+      "satisfies": null
+    }
+  ]
+}

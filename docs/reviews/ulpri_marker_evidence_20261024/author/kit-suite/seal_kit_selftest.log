@@ -1,0 +1,15 @@
+✓ SHA256SUMS (76 파일) · active_rules.json (규칙 24 · 폐기 규칙 0 건)
+  ✓ K1 봉인 목록 = 표 · 모듈 · 생성기 · 러너 · 래퍼 · 시험 · active_rules.json + 덱 64 (README · 이력 시험 폴더 제외)
+  ✓ K2 깨끗한 키트 = check rc 0 · 폐기 규칙 0 건
+  ✓ K3 덱 한 줄 고침 → check 실패 (SHA256SUMS)
+✓ SHA256SUMS (76 파일) · active_rules.json (규칙 24 · 폐기 규칙 0 건)
+  ✓ K4 판독기 코드 (시험 밖) 에 옛 b 이름 (band_b) 을 넣으면 폐기 규칙 위반으로 걸린다
+  ✓ K4 판독기 selftest 안의 부재 단언 ("band_b" not in …) 은 걸리지 않는다 (AST · selftest 제외)
+  ✓ K5 러너에 동시 UV 제출 고리 (for A in UB UVa UT UC) 를 넣으면 걸린다
+  ✓ K5 한 줄에 sbatch 둘 (UB 와 UV 를 같이) 도 걸린다
+  ✓ K6 덱 주석이라도 옛 b (δ_num · r_int) 글자가 있으면 걸린다
+  ✓ K6 README 의 동시 제출 꼴 (for A in UB UV UT UC) 도 걸린다 (명령 꼴을 사람이 붙여 넣는다)
+  ✓ K7 활성 규칙 목록: 선택 (SELECTION_UNRESOLVED) · 제출 순서 (UB · UT · UC → UV) · UT R_M 멈춤 · UTc · 비단조 합집합 · 분리 · TIMEOUT 세 경우 · 상쇄 진단값 · 물리 창 · S3 총힘 · σ_P — 규칙마다 코드 자리 (실재) · 증인 시험 이름 · 폐기 규칙 0 건
+selftest: PASS (0 실패)
+
+--- stderr ---
