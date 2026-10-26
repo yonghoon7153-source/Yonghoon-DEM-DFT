@@ -1,6 +1,6 @@
 {
   "scope": "Extracted P1 consumer constants at ULPR pin; not a P2 producer schema or T12 validation",
-  "ulpr_pin": "01c1aaf5be8acdf7d1716f34cc86fc77d8e27362",
+  "ulpr_pin": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde",
   "gen2_design_pin": "962caea2d1857b0e34fe724e38815661936b7183",
   "source_params_sha256": "332ad7c2040eb614ac21b31ccbb226479928d7ed8363f733b960cf4527204aae",
   "params": {
@@ -265,9 +265,10 @@
   "resume_boundary_semantics": {
     "parser": "ul_reader._resume_integer",
     "event_and_state": "ASCII decimal/scientific literal; finite float range, at most 4096 characters, exactly nonnegative integral in Decimal before integer conversion",
-    "manifest": "resume_from=ASCII base-10 integer; raw non-ASCII whitespace rejected",
-    "ambiguity": "Duplicate/malformed event/state evidence never authorizes stale-row deletion",
-    "scope": "RESUME authentication only; observation numeric conversion is not globally changed"
+    "manifest": "resume_from=ASCII base-10 integer; reject non-LF/CRLF/CR line separators before key selection; raw non-ASCII whitespace rejected",
+    "ambiguity": "Duplicate/malformed event/state evidence or ambiguous raw markers/separators never authorize stale-row deletion",
+    "scope": "RESUME authentication only; observation numeric conversion is not globally changed",
+    "event_marker": "Before shared CSV splitlines parsing, reject event cells differing from literal RESUME only by surrounding whitespace; never normalize to authorize"
   },
   "p2_registration": null,
   "physical_ready": false,

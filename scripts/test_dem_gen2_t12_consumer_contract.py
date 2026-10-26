@@ -16,7 +16,7 @@ import subprocess
 import sys
 import tempfile
 
-PIN = "01c1aaf5be8acdf7d1716f34cc86fc77d8e27362"
+PIN = "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde"
 PREFIX = "docs/data/ps45_unload_20261009/"
 FILES = {"ul_reader.py", "ul_gates.py", "ul_lib.py", "ul_observers.py", "ul_s3.py", "unload_params.json"}
 EVIDENCE = "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024"
@@ -37,7 +37,7 @@ def snapshot(repo, manifest, dest):
                                 capture_output=True, check=False)
         if result.returncode:
             raise ValueError(f"Pinned Git object unavailable: {PIN}:{PREFIX}{name}; "
-                             "fetch origin codex/unloading-ulpr explicitly, then retry. No fetch was run.")
+                             "fetch origin codex/unloading-ulpri explicitly, then retry. No fetch was run.")
         digest = hashlib.sha256(result.stdout).hexdigest()
         if digest != expected:
             raise ValueError(f"Pinned source SHA256 mismatch: {name}")
@@ -154,10 +154,12 @@ def run_probes(root, reader, gates, lib, s3, contract):
         d = root / name
         (d / "restart").mkdir(parents=True)
         events = [dict(event="CROSS", k="3", step="120", plate_z=".1", lift="0", detail="old_attempt"),
-                  dict(event="RESUME", k=changes.get("event_k", "2.000e0"),
+                  dict(event=changes.get("event_marker", "RESUME"), k=changes.get("event_k", "2.000e0"),
                        step=changes.get("event_step", "1e2"), plate_z=".1", lift="0", detail="restart")]
         if changes.get("duplicate_event"):
             events.append(events[-1].copy())
+        if "extra_event_marker" in changes:
+            events.append({**events[-1], "event": changes["extra_event_marker"], "k": "2.49"})
         for key, rows in (("events", events), ("windows", []), ("steps", [])):
             cols = P["records"][key + "_cols"]
             if key in ("windows", "steps"):
@@ -186,17 +188,22 @@ def run_probes(root, reader, gates, lib, s3, contract):
         return {"authorized": [list(v) for v in run["resume_auth"]],
                 "remaining_steps": [v["step"] for v in run["steps"]],
                 "remaining_windows": [v["step"] for v in run["windows"]],
+                "n_superseded_rows": run["n_superseded_rows"],
                 "old_event_retained": any(v["event"] == "CROSS" for v in run["events"]),
                 "raw_inputs_unchanged": before == {p: hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs},
                 "has_problems": bool(run["problems"])}
 
     good = {"authorized": [[2, 100]], "remaining_steps": [100], "remaining_windows": [100],
+            "n_superseded_rows": 2,
             "old_event_retained": False, "raw_inputs_unchanged": True, "has_problems": False}
     bad = {"authorized": [], "remaining_steps": [100, 120], "remaining_windows": [100, 120],
+           "n_superseded_rows": 0,
            "old_event_retained": True, "raw_inputs_unchanged": True, "has_problems": True}
     for name, changes, expected in [
         ("resume_exact_scientific", {}, good),
         ("resume_exact_ascii_space", {"event_k": " 2.0 "}, good),
+        ("resume_normal_crlf_manifest", {"manifest": "resume_from=100\r\n"}, good),
+        ("resume_normal_cr_manifest", {"manifest": "resume_from=100\r"}, good),
         ("resume_fractional_k_precision", {"event_k": "2.0000000000000000001"}, bad),
         ("resume_fractional_step_precision", {"event_step": "100.000000000000000001"}, bad),
         ("resume_fractional_state_precision", {"state_k": "2.0000000000000000001"}, bad),
@@ -204,7 +211,16 @@ def run_probes(root, reader, gates, lib, s3, contract):
         ("resume_duplicate_state", {"duplicate_state": True}, bad),
         ("resume_nonascii_space", {"event_k": "\u00a02"}, bad),
         ("resume_nonascii_manifest", {"manifest": "\u00a0resume_from=100\n"}, bad),
-        ("resume_malformed_csv", {"broken_csv": True}, bad)]:
+        ("resume_malformed_csv", {"broken_csv": True}, bad),
+        ("resume_literal_fractional_coexisting", {"extra_event_marker": "RESUME"}, bad),
+        ("resume_marker_leading_ascii_space", {"extra_event_marker": " RESUME"}, bad),
+        ("resume_marker_trailing_ascii_space", {"extra_event_marker": "RESUME "}, bad),
+        ("resume_marker_leading_nbsp", {"extra_event_marker": "\u00a0RESUME"}, bad),
+        ("resume_marker_trailing_nbsp", {"extra_event_marker": "RESUME\u00a0"}, bad),
+        ("resume_manifest_embedded_nel", {"manifest": "resume_from=100\nnote=old\u0085resume_from=100.49\n"}, bad),
+        ("resume_manifest_embedded_ls", {"manifest": "resume_from=100\nnote=old\u2028resume_from=100.49\n"}, bad),
+        ("resume_manifest_embedded_ps", {"manifest": "resume_from=100\nnote=old\u2029resume_from=100.49\n"}, bad),
+        ("resume_single_leading_ls_raw_csv", {"event_marker": "\u2028RESUME"}, bad)]:
         probe(name, "ul_reader.read_run", expected, lambda n=name, c=changes: resume_fixture(n, **c))
 
     for job, expected in [("UB", "PASS"), ("G_UB", "FAIL")]:

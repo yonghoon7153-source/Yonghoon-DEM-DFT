@@ -1,0 +1,10 @@
+{
+  "source": "/workspace/.cloud-setup/t12-20261024/astra-followup",
+  "frozen": "/workspace/.cloud-setup/t12-20261024/astra-independent/frozen",
+  "consumer_pin": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde",
+  "sha256": {
+    "scripts/test_dem_gen2_t12_consumer_contract.py": "465f542e4c8825e2a21d29a1a7be931c96ea23794152eab01d0e04dd9212c216",
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/source-manifest.json": "42c3e766dc19db6b30927816411d1fcdae4c08839e1c0f32a1762bb32bb4a166",
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/p1-consumer-contract.json": "87be885b868a9eec1736fbc063f75dc2262ecf1fd0bb2a6b74a2f002a819772f"
+  }
+}

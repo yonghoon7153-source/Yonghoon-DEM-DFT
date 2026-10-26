@@ -1,0 +1,128 @@
+{
+  "status": "PASS_FROZEN_INDEPENDENT_REVIEW",
+  "consumer_pin": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde",
+  "source_freeze": {
+    "source": "/workspace/.cloud-setup/t12-20261024/astra-followup",
+    "frozen": "/workspace/.cloud-setup/t12-20261024/astra-independent/frozen",
+    "consumer_pin": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde",
+    "sha256": {
+      "scripts/test_dem_gen2_t12_consumer_contract.py": "465f542e4c8825e2a21d29a1a7be931c96ea23794152eab01d0e04dd9212c216",
+      "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/source-manifest.json": "42c3e766dc19db6b30927816411d1fcdae4c08839e1c0f32a1762bb32bb4a166",
+      "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/p1-consumer-contract.json": "87be885b868a9eec1736fbc063f75dc2262ecf1fd0bb2a6b74a2f002a819772f"
+    }
+  },
+  "direct_cases": 52,
+  "direct_passed": 52,
+  "author_receipt_byte_equal": true,
+  "source_rejections": 5,
+  "contract_omissions": 3,
+  "consumer_mutants_detected": 13,
+  "all_mutants_completed_cases": 52,
+  "physical_T12": "NOT_RUN",
+  "physical_ready": false,
+  "external_integrity_closure": "HOLD",
+  "external_recheck": "PENDING",
+  "docs_freeze_review": "PASS",
+  "sha256": {
+    "direct-final.json": "0f577b9cbc238a3cf19346198672ee04b7588820db6f30ceb10596f9ec82f4ac",
+    "loader-final/report.json": "23b8a0ba3104176d1cd7478cef8afb4ed6ef3b565d56b59313b8a9eae3357daa",
+    "mutants-final/report.json": "6846f047894ba2f2c9344832a18e5a4d770aa196e780be4e91e6729580d3106f",
+    "reproduce_loader_checks.py": "4c707e4c7c902aa3ffce595b4b9a5e96842192770ddd6ab2da897947b1fa3437",
+    "reproduce_consumer_mutants.py": "4da2540b8b6ad0a0d55a020c043b45c6ca3c5ace07c11a465cfba8b6149fef9f",
+    "REPRODUCE.md": "cbebd1c9b54df658ca6f64ff16c742bb7b8f70f8926fc08bc5945dccabad0f45",
+    "tests-first-review.json": "b980246058bcd0de6039a4c8bdd7cafe0c4d695f9e3b8dc7d0ac0aaa3d5ec3b1",
+    "source-freeze.json": "c40abc4e407f0c778c2db5be2089e69d1fdad6f79a82bd171a0702472bd03c6c"
+  },
+  "author_delivery_freeze_sha256": "cbe89ff9228520711c58cce0776e292844a44daeb7a0fa84d5936b43c50ebd93",
+  "author_delivery_files": [
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-followup/scripts/test_dem_gen2_t12_consumer_contract.py",
+      "destination": "scripts/test_dem_gen2_t12_consumer_contract.py",
+      "sha256": "465f542e4c8825e2a21d29a1a7be931c96ea23794152eab01d0e04dd9212c216"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-followup/docs/reviews/dem_gen2_t12_consumer_contract_20261024.md",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_20261024.md",
+      "sha256": "d56418a4d9c6300e04300760e7b04079caf5a0a3b633879de231c7c5e1da9c71"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-followup/docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/README.md",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/README.md",
+      "sha256": "58c724a0c8cd29de8682d98df08177e8297f585dd2de7eaa19ccf2172cf9bbcb"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-followup/docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/consumer-publication-proof.json",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/consumer-publication-proof.json",
+      "sha256": "4841111d36b65ba3296c7270e7e5f7ce07102298bd5de3cdda5e2b0949205316"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-followup/docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/external-review-provenance.json",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/external-review-provenance.json",
+      "sha256": "d74ae53d7fd6f13c7c354937dba36bbdb32870a1f52dba4dc0ebe28b82608a7b"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-followup/docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/factual-input-form.blank.json",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/factual-input-form.blank.json",
+      "sha256": "0a890e15f8d34b50e64382be856ab724ec82ecc94775698d76df6c6e8bf4f645"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-followup/docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/fixture-results.json",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/fixture-results.json",
+      "sha256": "0f577b9cbc238a3cf19346198672ee04b7588820db6f30ceb10596f9ec82f4ac"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-followup/docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/README.md",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/README.md",
+      "sha256": "fe08aee7acc5aaf52baa555b2f8fa6c754d9695786e0888a48d70c4f88228026"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-followup/docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/SHA256SUMS",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/SHA256SUMS",
+      "sha256": "6b57dd1dde074dd80b144e7e28aaf0336f4c58d06ce6adfccc2a0012e1c694b0"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-followup/docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/old-41-fixture-results.json",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/old-41-fixture-results.json",
+      "sha256": "cd0e75422dff2c9a44f6a8e751cd51d1903c3a8e4d9d677de308f3cd4f172842"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-followup/docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/pre-fix-fixture-results.json",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/pre-fix-fixture-results.json",
+      "sha256": "5d1be0bbbb86cbd9e25af85045b04bd232dbf164c99480c308f5cbd2e4d382e5"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-followup/docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/pre-fix-reproduction.zip",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/pre-fix-reproduction.zip",
+      "sha256": "8deafffe7a43fa032ed42837c693ce2f7a537e468fe24ed42edaaa542fc29c46"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-followup/docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/pre-fix-script.py",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/pre-fix-script.py",
+      "sha256": "fcf712c90ff8ddf14d62ea56c445536b8af8ba969a0c73de73536d37101e7336"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-followup/docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/pre-fix-zip-replay-receipt.json",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/pre-fix-zip-replay-receipt.json",
+      "sha256": "b988c823573861f1400b231b44e4fd09fa6ef0ee731cf71a1bed79bf98b8eb2c"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-followup/docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/p1-consumer-contract.json",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/p1-consumer-contract.json",
+      "sha256": "87be885b868a9eec1736fbc063f75dc2262ecf1fd0bb2a6b74a2f002a819772f"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-followup/docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/source-manifest.json",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/source-manifest.json",
+      "sha256": "42c3e766dc19db6b30927816411d1fcdae4c08839e1c0f32a1762bb32bb4a166"
+    }
+  ],
+  "historical_original41_byte_equal_to_d6": true,
+  "historical_sha256_manifest_verified": true,
+  "blank_go_and_physical_registration_preserved": true,
+  "scope_limitations": [
+    "Synthetic consumer seam only; no physical/G2 mass or omega equivalence claim",
+    "ULPRI external integrity HOLD; recheck PENDING",
+    "Shared155 and final T12 candidate scope audit remain separate",
+    "Old d6 fullgate interrupted130; not PASS"
+  ]
+}

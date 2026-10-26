@@ -1,0 +1,9 @@
+{
+  "zip_sha256": "8deafffe7a43fa032ed42837c693ce2f7a537e468fe24ed42edaaa542fc29c46",
+  "manifest_verified": true,
+  "rc": 1,
+  "matches_preserved_json_exactly": true,
+  "passed": 44,
+  "case_count": 52,
+  "physical_T12": "NOT_RUN"
+}
