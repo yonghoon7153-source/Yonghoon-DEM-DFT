@@ -13031,12 +13031,18 @@
     {
       "id": "KG50-02",
       "severity": "P1",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-26 kg50 덱 검토 (핀 3056eef12 · 첨부 고정 바이트 · LIGGGHTS 미실행)",
       "opened_in": "docs/reviews/codex_kg50_decks_review_20261026/codex_review_kg50_decks_20261026.md",
       "title": "resume_ckpt.sh 가 FAILED / CANCELLED / TIMEOUT 시험도 G1–G3 PASS 면 본 런으로 승격 — 시험이 step 1 setup 뒤 죽어도 G3 가 \"원 로그에 비교할 줄 없음\" 으로 PASS",
-      "note": "판정문 §3 · 처방 = 정상 종료 상태 · exit 0 · 기대 끝 step · run 완료 기록을 본 제출 조건에 결합 · 원 로그에 있는 비교 줄의 결손 = FAIL · 조회 실패 / 시간 초과 = 제출 금지."
+      "note": "판정문 §3 · 처방 = 정상 종료 상태 · exit 0 · 기대 끝 step · run 완료 기록을 본 제출 조건에 결합 · 원 로그에 있는 비교 줄의 결손 = FAIL · 조회 실패 / 시간 초과 = 제출 금지. ★ 10-26 밤 (1저자 Q2 *\"50kg 권고대로해\"*) = claimed_fixed `d1b34664c` — 본 제출 = G0 (COMPLETED · ExitCode 0:0 · 마지막 thermo step = S0 + 시험 run · 그 뒤 Loop time · ERROR 0) ∧ G1 ∧ G2 ∧ G3 · G3 = 원 로그 (S0, 기대 끝] 정규 줄 결손 = 실패 · sacct 조회 실패 · 대기 시간 초과 = 제출 안 함 · Codex §3 반례 다섯 = 시험 K1–K5 · -T 시험만. 한정: settling 모드 G2 는 여전히 G1 KE 로 대신 (판정문 §3 추가 한계 — step S0 원자 상태 해시 대조 없음) · 실제 ibb SLURM · dem_restart.py 로는 아직 안 돌림 (가짜 SLURM · 가짜 dem_restart.py · 실제 09-27 덱 쌍만) · 확인 = Codex.",
+      "claimed_fixed_sha": "d1b34664c",
+      "evidence_tests": [
+        "scripts/test_resume_ckpt.py (32/32 · d1b34664c · 고치기 전 판 7/31) — K1–K6 · S1–S7 · D (정적 대조 9) · Q1–Q4 · T1 · C1–C4",
+        "scripts/resume_ckpt.sh -C 실제 09-27 재개 덱 쌍 (docs/data/pure_se_r075_20260927/input_pse_r075_a{,_r30}.liggghts) = 통과 (Python 3.11 · 3.8)",
+        "scripts/test_resume_ckpt.py --script <변이> — 변이 여섯 (G0 · 상태 C · 남은 step D · 뒤 순서 E · c_/f_ 정의 F · 재삽입 A 를 하나씩 끔) = 해당 시험만 실패"
+      ]
     },
     {
       "id": "KG50-03",
@@ -13137,12 +13143,18 @@
     {
       "id": "KG50-10",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "claude 10-26 사전 공격 리뷰 (독립 에이전트 · 핀 3056eef12 · LIGGGHTS 3d5c00f 소스 판독 · 미실행)",
       "opened_in": "docs/50kg/preattack_kg50_20261026.md",
       "title": "step 1 settling 재개의 G1–G3 는 자유 낙하만 비교 (첫 바닥 접촉 ≈ 3,500 step · G3 = step 1000) → 재개 덱의 접촉 · 재료 정의를 시험하지 못함",
-      "note": "사전 공격 리뷰 KG50-03 · 처방 = 재개 덱 ↔ 본 덱 정적 대조 + 접촉이 시작된 뒤 체크포인트에서 재개. ★ 10-26 밤 v2 `2a187008d` = 부분 — 삽입 전용 덱 restart 를 step 20001 (첫 접촉 뒤) 로 · 재개 덱 ↔ 본 덱 정적 대조는 resume_ckpt.sh 고침 (KG50-02 와 같이) 에서."
+      "note": "사전 공격 리뷰 KG50-03 · 처방 = 재개 덱 ↔ 본 덱 정적 대조 + 접촉이 시작된 뒤 체크포인트에서 재개. ★ 10-26 밤 v2 `2a187008d` = 부분 — 삽입 전용 덱 restart 를 step 20001 (첫 접촉 뒤) 로 · 재개 덱 ↔ 본 덱 정적 대조는 resume_ckpt.sh 고침 (KG50-02 와 같이) 에서. ★ 10-26 밤 = claimed_fixed `d1b34664c` — 재개 덱 ↔ 본 덱 정적 대조 (재삽입 · 물리 · 변수 줄 그대로 (판 메시 파일 이름만 예외) · 재개 run 의 살아 있는 fix · 쌍 · 이웃 · timestep · 남은 step (step 20001 → 끝 200001) · 뒤 순서 · c_/f_ 정의) 실패 = 시험도 안 냄 + v2 삽입 전용 덱 restart 20001 (`2a187008d`). 한정: after_settling 모드의 실제 dem_restart.py 산출은 대조해 본 적 없음 (실제 산출 = 09-27 압축 모드 쌍 하나) · 확인 = Codex.",
+      "claimed_fixed_sha": "d1b34664c",
+      "evidence_tests": [
+        "scripts/test_resume_ckpt.py (32/32 · d1b34664c · 고치기 전 판 7/31) — D (정적 대조 9) · C1–C4",
+        "scripts/resume_ckpt.sh -C 실제 09-27 재개 덱 쌍 (docs/data/pure_se_r075_20260927/input_pse_r075_a{,_r30}.liggghts) = 통과 (Python 3.11 · 3.8)",
+        "scripts/test_resume_ckpt.py --script <변이> — 변이 여섯 (G0 · 상태 C · 남은 step D · 뒤 순서 E · c_/f_ 정의 F · 재삽입 A 를 하나씩 끔) = 해당 시험만 실패"
+      ]
     },
     {
       "id": "KG50-11",
@@ -13194,7 +13206,7 @@
       "found_by": "claude 10-26 사전 공격 리뷰 (독립 에이전트 · 핀 3056eef12 · LIGGGHTS 3d5c00f 소스 판독 · 미실행)",
       "opened_in": "docs/50kg/preattack_kg50_20261026.md",
       "title": "resume_ckpt.sh 큐 검사가 접두어로 맞춰 kg50_d3_b40 ↔ kg50_d3_b40_s2 가 겹침 → 재개 건너뜀",
-      "note": "사전 공격 리뷰 KG50-10 · 처방 = 시드 1 케이스 이름 _s1. ★ 10-26 밤 v2 (1저자 *\"50kg 권고대로해\"*) = claimed_fixed `2a187008d` — D3 시드 1 = _s1 · 이름 접두어 겹침 0 (selftest N1) · 확인 = Codex.",
+      "note": "사전 공격 리뷰 KG50-10 · 처방 = 시드 1 케이스 이름 _s1. ★ 10-26 밤 v2 (1저자 *\"50kg 권고대로해\"*) = claimed_fixed `2a187008d` — D3 시드 1 = _s1 · 이름 접두어 겹침 0 (selftest N1) · 확인 = Codex. ★ 10-26 밤 `d1b34664c` — 도구 쪽도 이름 정확 일치 (C · C_ins · C_<SFX>[t] · C_r<N>[t]) · squeue 조회 실패 = 건너뜀 (시험 Q1–Q4).",
       "claimed_fixed_sha": "2a187008d",
       "evidence_tests": [
         "scripts/make_se_size_decks.py --selftest (87/87 · 2a187008d) — N1 (이름 접두어 겹침 0) · P1 (_s1 이름)"
@@ -13226,6 +13238,20 @@
       "claimed_fixed_sha": "2a187008d",
       "evidence_tests": [
         "docs/data/kg50_decks_20261026_v2/README.md §5 · 덱 머리 (생성기 header) — 문장 넷 정정"
+      ]
+    },
+    {
+      "id": "SELF-136",
+      "severity": "P3",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "codex 10-26 18:16 쪽지 (codex/nonrint-facts-reply 18c7b83f9) — 정정 요청",
+      "opened_in": "docs/collab/claude_to_codex/20261026-1800_nonrint-facts.md",
+      "title": "Claude 18:00 non-Rint 회신이 7:3 S0 restart 의 sha256 을 \"이 가지에 기록 없음 (미확인)\" 이라 적음 — 실제는 10-09 ibb 읽기 전용 원문 · unload_params.json 에 기록돼 있었다 (해시 없는 10-12 목록만 보고 답함)",
+      "note": "영향 = 런 0 건 · 다음 입력 (P1 7:3 체크포인트 재사용) 의 기준값이 없다고 잘못 알린 것. 정정 = 18:00 쪽지 끝에 정정 절 덧붙임 (원문 그대로) — S0 네 파일 (restart · atom · contact · mesh) = docs/reviews/dem_unloading_ps45_precheck1_20261009/ibb_precheck1_screen.txt L163–170 · docs/data/ps45_unload_20261009/unload_params.json · r8 덱 = unload_params.json r8_sha256 · r8 로그 = docs/data/ps73_compaction_curve_20261006/curve/curve_summary.json · 같은 쪽지 \"실제 복사 · 해시 기록 = 없음\" 중 해시 부분도 철회 (복사 기록 없음은 유지). 교훈 = \"기록 없음\" 은 git grep (해시 · 파일 이름) 으로 저장소 전체를 본 뒤에만 쓴다.",
+      "claimed_fixed_sha": "31f55c641",
+      "evidence_tests": [
+        "docs/collab/claude_to_codex/20261026-1800_nonrint-facts.md 끝 정정 절 (31f55c641) — git grep -F 0aa6e41a2330ae78… 가 가리키는 세 자리 (unload_params.json · ibb_precheck1_screen.txt · precheck1 README) 와 같은 값"
       ]
     }
   ]

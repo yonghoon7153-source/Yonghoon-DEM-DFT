@@ -13,7 +13,8 @@
 | Q4 | KG50-03 · 11 | 마지막 step: `write_restart restart_<case>/restart_end.bin` → atom · contact · mesh 한 장씩 (간격 1 · `run 0`) · `unfix move_press` 바로 뒤 `restart 0` (이완 중 체크포인트 끔) |
 | Q6 | KG50-07 · 08 · 13 · 14 | 정수 구간 (ceil · floor) — AM 948 → 944–952 · 1,481 → 1474–1488 · SE 수 검사 추가 · SELF-70 문장 = "부족 또는 초과" · D3 시드 1 이름 `_s1` |
 | Q7 | KG50-12 | 기준 덱 줄 대조 (선언 자리 밖 변경 = 생성 거부) — 반례 일곱 (판 속도 · 감쇠 · dt · 중력 · 이웃 재구축 · 체적분율 · 목표 압력) 전부 잡음 |
-| — | KG50-02 · 04 | **아직** — 재개 도구 (`scripts/resume_ckpt.sh`) 고침 = 2 단계 전 · D0.7 dt · 감쇠 대조 (Q5) = 결과 전 등록 뒤 |
+| Q2 | KG50-02 · 10 · 14 | 재개 도구 `scripts/resume_ckpt.sh` 고침 (10-26 밤 `d1b34664c`) — 본 제출 = 시험 COMPLETED · ExitCode 0:0 · 기대 끝 step · Loop time (G0) ∧ G1–G3 · 원 로그 비교 줄 결손 = 실패 · 재개 덱 정적 대조 (재삽입 · 물리 줄 · 재개 지점 상태 · 남은 step · 뒤 순서) · 큐 이름 정확 일치 · `-T` 시험만 · 시험 `scripts/test_resume_ckpt.py` 32/32 |
+| — | KG50-04 | **아직** — D0.7 dt · 감쇠 대조 (Q5) = 결과 전 등록 뒤 |
 
 ## 2. 1 단계 — 지금 (hit · D3 칸 비교 여섯 · 각 NP 1 · 재개 없음)
 
@@ -51,7 +52,7 @@ ls ~/simulation/kg50_d3_*/restart_kg50_d3_*/restart_end.bin ~/simulation/kg50_d3
 
 ## 4. 2 단계 — 칸 판정 · 재개 도구 고침 · Q5 등록 뒤 (1저자 승인 뒤)
 
-- D0.7-40 (ibb): `sbatch kg50_d07_b40/run_kg50_d07_b40_insert.sh` (NP 1 · 삽입 + 정착 20,000 + 3,000 step) → 끝나면 고친 `resume_ckpt.sh` 로 step 20001 에서 재개 (NP = 재개 시험 실측) → 정착 끝 (after_settling) 에서 Q5 dt · 감쇠 대조 → 압축.
+- D0.7-40 (ibb): `sbatch kg50_d07_b40/run_kg50_d07_b40_insert.sh` (NP 1 · 삽입 + 정착 20,000 + 3,000 step) → 끝나면 고친 `resume_ckpt.sh` (`d1b34664c` 이후 · ibb 의 사본도 그 판으로) 로 step 20001 에서 재개 — NP 를 정하려면 먼저 `-T` (시험만 · 2,000 step) 로 속도를 보고 같은 명령을 `-T` 없이 (NP = 재개 시험 실측) → 정착 끝 (after_settling) 에서 Q5 dt · 감쇠 대조 → 압축.
 - D1-40 (hit 20 코어): `cd $HOME/simulation/kg50_d1_b40 && setsid nohup mpirun --oversubscribe --bind-to none -np 1 $HOME/LIGGGHTS-PUBLIC/src/lmp_auto -in input_kg50_d1_b40_insert.liggghts > log_kg50_d1_b40_ins.out 2>&1 < /dev/null &` → 끝나면 1저자 `hit_resume.sh` 로 20 코어.
 - D2-40 (ibb): `sbatch kg50_d2_b40/run_kg50_d2_b40_insert.sh` (NP 1) → 재개 NP 4.
 - ⛔ `run_kg50_d07_b40.sh` · `run_kg50_d2_b40.sh` (본 러너) 를 **처음부터 직접 sbatch 하지 않는다** — 고코어 fresh 삽입은 기하적으로 불가능하다 (KG50-01).  재개 도구가 쓰는 러너다.
