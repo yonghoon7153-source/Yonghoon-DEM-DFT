@@ -1,0 +1,153 @@
+{
+  "status": "OBSERVED_IDENTITIES_MATCH_WITH_PREPARATION_GAPS",
+  "reference_pin": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde",
+  "host": "ibb-master",
+  "user": "yonghoon",
+  "observed_start_kst": "2026-10-26T21:42:58+09:00",
+  "observed_end_kst": "2026-10-26T21:43:01+09:00",
+  "matched_files": [
+    {
+      "path": "/lustre/home/yonghoon/LIGGGHTS-PUBLIC/src/lmp_mpi",
+      "size": 9180024,
+      "sha256": "ee2d77261bac9e7fa4e9311c8709e74bf7583a13225a5bc35a791bef9be60a3f",
+      "stat_rc": 0,
+      "sha256sum_rc": 0,
+      "comparison": "MATCH"
+    },
+    {
+      "path": "/home/yonghoon/ps45_unload_hist_20261013/hist_20261014_094731/run_manifest.txt",
+      "size": 531,
+      "sha256": "a2501b490899b8b19710847e3295db9d8c11bad9f97a1b4a303dbe1cd0f13fba",
+      "stat_rc": 0,
+      "sha256sum_rc": 0,
+      "comparison": "MATCH"
+    },
+    {
+      "path": "/home/yonghoon/ps45_unload_hist_20261013/hist_20261014_094731/history_verdict.json",
+      "size": 3851,
+      "sha256": "313158c6696332cf7b7ad60e904e556db9a994bf41fd5bb1fc806f562eb72c55",
+      "stat_rc": 0,
+      "sha256sum_rc": 0,
+      "comparison": "MATCH"
+    },
+    {
+      "path": "/home/yonghoon/ps45_unload_hist_20261013/gram_20261015_030225/run_manifest.txt",
+      "size": 541,
+      "sha256": "61b2af170303aa9a064e472ced438eeafc79b47064ae6c668fad7593303d3474",
+      "stat_rc": 0,
+      "sha256sum_rc": 0,
+      "comparison": "MATCH"
+    },
+    {
+      "path": "/home/yonghoon/ps45_unload_hist_20261013/gram_20261015_030225/grammar_verdict.json",
+      "size": 1021,
+      "sha256": "c19a5aa620bfc58d7593059f5d8c5a51012da7b6774ed2c54902dd7a02efcdbb",
+      "stat_rc": 0,
+      "sha256sum_rc": 0,
+      "comparison": "MATCH"
+    },
+    {
+      "path": "/home/yonghoon/ps45_unload_hist_20261013/kit_20261015_030225/SHA256SUMS",
+      "size": 1344,
+      "sha256": "8ff722d24096c6bd929682842e3b93907951ad29943f180709c914404cdb928d",
+      "stat_rc": 0,
+      "sha256sum_rc": 0,
+      "comparison": "MATCH"
+    },
+    {
+      "path": "/home/yonghoon/ps45_unload_hist_20261013/kit_20261015_030225/history_params.json",
+      "size": 8427,
+      "sha256": "7a5279f0119cbbc37a9c212593e256a03e417dc9a6af4f18a4f01bdc72404ff4",
+      "stat_rc": 0,
+      "sha256sum_rc": 0,
+      "comparison": "MATCH"
+    },
+    {
+      "path": "/home/yonghoon/ps45_unload_hist_20261013/kit_20261015_030225/read_history.py",
+      "size": 79327,
+      "sha256": "70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c",
+      "stat_rc": 0,
+      "sha256sum_rc": 0,
+      "comparison": "MATCH"
+    }
+  ],
+  "missing_staged_files": [
+    "/home/yonghoon/ps45_unload_20261009/ps_7_3_r45/in/restart_compress_3200000.bin",
+    "/home/yonghoon/ps45_unload_20261009/ps_7_3_r45/in/atom_3200000.liggghts",
+    "/home/yonghoon/ps45_unload_20261009/ps_7_3_r45/in/contact_3200000.liggghts",
+    "/home/yonghoon/ps45_unload_20261009/ps_7_3_r45/in/mesh_3200000.stl",
+    "/home/yonghoon/ps45_unload_20261009/ps_7_3_r45/in/output_ps_7_3_r45_r8_220537.out",
+    "/home/yonghoon/ps45_unload_20261009/ps_7_3_r45/in/input_ps_7_3_r45_r8.liggghts"
+  ],
+  "missing_directories": [
+    "/home/yonghoon/ps45_unload_20261009",
+    "/home/yonghoon/ps45_unload_20261009/ps_7_3_r45/in"
+  ],
+  "observed_worktrees": [
+    {
+      "path": "/lustre/home/yonghoon/Yonghoon-DEM-DFT",
+      "head": "063309e5e821e6fd898f23eb7d9a9861ef5b1dbd",
+      "detached": true
+    },
+    {
+      "path": "/lustre/home/yonghoon/ps73_branch_src_3a75391f",
+      "head": "3a75391f35ab529f0e2550023321e55524ebb1ad",
+      "detached": true
+    },
+    {
+      "path": "/lustre/home/yonghoon/unload_src_44a03453",
+      "head": "44a034534155fa5ca7f92f6fd7de513c88e0d1fb",
+      "detached": true
+    },
+    {
+      "path": "/lustre/home/yonghoon/unload_src_68431600",
+      "head": "68431600ef47a75f928d655f977909e236c6414a",
+      "detached": true
+    },
+    {
+      "path": "/lustre/home/yonghoon/unload_src_799459c8",
+      "head": "799459c85878d8c44754afdae973194db7099436",
+      "detached": true
+    },
+    {
+      "path": "/lustre/home/yonghoon/unload_src_a30fe150",
+      "head": "a30fe150e21f66aea2f1c360593e1cd781689b14",
+      "detached": true
+    },
+    {
+      "path": "/lustre/home/yonghoon/unload_src_adbd6124",
+      "head": "adbd61246d6a249484d088737d7e6dc10ec8b1af",
+      "detached": true
+    },
+    {
+      "path": "/lustre/home/yonghoon/unload_src_dfd89b96",
+      "head": "dfd89b9690c41d8bbd959afd81f68cac9b733a35",
+      "detached": true
+    },
+    {
+      "path": "/lustre/home/yonghoon/unload_src_f9edcc41",
+      "head": "f9edcc41674bfef2c72bcb803511050845008d09",
+      "detached": true
+    }
+  ],
+  "accepted_pin_among_listed_heads": false,
+  "accepted_objects_present": "NOT_DETERMINED",
+  "lmp_executable_bit": true,
+  "python_path": "/home/yonghoon/.conda/envs/myenv/bin/python3",
+  "mpirun_path": "/home/yonghoon/.conda/envs/myenv/bin/mpirun",
+  "mpi_behavior": "NOT_TESTED",
+  "grammar_raw_validation": "NOT_RERUN; directory entries observed only",
+  "counts": {
+    "match": 8,
+    "missing": 8,
+    "mismatch": 0,
+    "unknown": 1
+  },
+  "inventory_rc": 2,
+  "unknown_reason": "execution kit path not selected",
+  "intake_kind": "manually transcribed result block from user chat; login/paste-echo omitted; not original terminal-file bytes or attestation of executed script bytes",
+  "intake_sha256": "9ae2861fcdc822e6f427f9461ac157b124fb08468eb4a7f08f1ac45c6d875ea7",
+  "direct_agent_ibb_access": false,
+  "staging_or_preflight_approval": "PENDING",
+  "physical_RJ": "NOT_RUN"
+}
