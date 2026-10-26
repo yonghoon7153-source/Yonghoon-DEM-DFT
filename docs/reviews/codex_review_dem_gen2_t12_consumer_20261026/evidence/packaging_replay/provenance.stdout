@@ -1,0 +1,18 @@
+{
+  "remote_source_blobs_matched": 190,
+  "remote_pin": "bffc42cab29da37b45f8a713e30e8572b91e7da3",
+  "changed_paths": 122,
+  "all_changes_additions": true,
+  "direct_cases_match": 52,
+  "gate_log": {
+    "pass_labels": 155,
+    "fail_labels": 0,
+    "sha256": "f27982bb9f2497c32dcea0a3e50130c6dea2dac16492d1fde3b32750bd8656c3",
+    "receipt_exit_code": 0,
+    "independently_rerun": false,
+    "candidate": "f1da507e8ab8bf812a242b9749d4c320be90fd73"
+  },
+  "scoped_receipt_report_hash_match": true,
+  "generic_go_fields_null": true,
+  "physical_T12": "NOT_RUN"
+}

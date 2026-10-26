@@ -1,0 +1,1142 @@
+{
+  "docs/collab/codex_to_claude/20261024-1210_dem-gen2-t12-consumer.md": {
+    "mode": "100644",
+    "oid": "77d7cce0c3d1e90f11ff149cd80feb73c34c92c1",
+    "sha256": "a325eaa993d81af19c56309af66421fecd1b5158bfc9f252abecf177f0e272c6",
+    "bytes": 3536
+  },
+  "docs/collab/codex_to_claude/20261026-1058_dem-gen2-t12-full-gate.md": {
+    "mode": "100644",
+    "oid": "cef517f6a4caeef0f6034dbd5b8a88c9281daa12",
+    "sha256": "2a6691752cebcf54f06af9cb20b7ead8ff828efa6b4a383a756a8f699c02a8f9",
+    "bytes": 2592
+  },
+  "docs/collab/codex_to_claude/20261026-1345_ulpri-closure.md": {
+    "mode": "100644",
+    "oid": "772ab4dc4b673f80963121c96c156f671ab6274d",
+    "sha256": "eb290d7ad587bd1cc4b4bd6e9d5be6fbcb41b51126eecaa5db770e1184f13917",
+    "bytes": 1942
+  },
+  "docs/reviews/codex_dem_unloading_resume_integer_request_20261024.md": {
+    "mode": "100644",
+    "oid": "a623aa9e22c9263c3666b92f876ed53d7d291fff",
+    "sha256": "d68d44886b8d46b41cec432a4c44f2b51d3450fadd15549598ad53a2b80dc938",
+    "bytes": 4127
+  },
+  "docs/reviews/codex_dem_unloading_ulpri_recheck_request_20261024.md": {
+    "mode": "100644",
+    "oid": "c3e06d988b031f77ba2aa5013c5af922c767197d",
+    "sha256": "1c42976f1bcb328f66678fef7b7e0292fb75e9733d368b438b2368e299909c00",
+    "bytes": 8412
+  },
+  "docs/reviews/codex_review_unloading_ulpr_integer_20261024/.gitattributes": {
+    "mode": "100644",
+    "oid": "f97e2d7592f8a94a45fe4c065fca2a80ae41a1ee",
+    "sha256": "7e1a32ef02364eb577bf71be4ece75275c8ec05bca939ff7ba0b972613922283",
+    "bytes": 245
+  },
+  "docs/reviews/codex_review_unloading_ulpr_integer_20261024/codex_review_unloading_ulpr_integer_20261024.md": {
+    "mode": "100644",
+    "oid": "68631751e9d81aaee2487f344040adc2e21ba825",
+    "sha256": "84cd720707e16f0ce244d4bc239a1b8ed26e13f7dd4750c6d940d2042385c2d3",
+    "bytes": 17047
+  },
+  "docs/reviews/codex_review_unloading_ulpr_integer_20261024/evidence/boundary/result.json": {
+    "mode": "100644",
+    "oid": "10c62decfc8439eddc5ecf6f0271e799b66bde46",
+    "sha256": "f90754bb57e7c61b6c6e0d9cd5df3817fe5f8d462128ed3d0ce0e9421d87ff42",
+    "bytes": 7341
+  },
+  "docs/reviews/codex_review_unloading_ulpr_integer_20261024/evidence/boundary_baseline/result.json": {
+    "mode": "100644",
+    "oid": "2326f2f0ba50d3612afce41e2df7f393cf2e71dc",
+    "sha256": "8eaf8255d51c9fe3cfbffc3c526401abe6f3e85a7be5bc4f193f78ce5eb63e3c",
+    "bytes": 7406
+  },
+  "docs/reviews/codex_review_unloading_ulpr_integer_20261024/evidence/independent/integer_oracle.json": {
+    "mode": "100644",
+    "oid": "1b120ac3fb88ad73d3781ae6ededdd832c693733",
+    "sha256": "9dd6a4c055150d5e16b0ae4a18f64a0d05ec5b88426f1e50653b2f0c71005d5f",
+    "bytes": 75100
+  },
+  "docs/reviews/codex_review_unloading_ulpr_integer_20261024/evidence/mutations_replayed/results.json": {
+    "mode": "100644",
+    "oid": "1fff42d611725ee279843ce1ebe406a2f2d2055d",
+    "sha256": "64ed504ad15b21397a9a7021c8f0c88595ccf91e3213b03c979247a925a06cd8",
+    "bytes": 11340
+  },
+  "docs/reviews/codex_review_unloading_ulpr_integer_20261024/evidence/scope_and_counts.json": {
+    "mode": "100644",
+    "oid": "b2a2a6a59aa9da51a723f869d35d388ac192a202",
+    "sha256": "050f34c4c560109f2f6e25fcbe7da20342ea18d7133bab166052d7bb9867afed",
+    "bytes": 5310
+  },
+  "docs/reviews/codex_review_unloading_ulpr_integer_20261024/evidence/windows_diagnostic/results.json": {
+    "mode": "100644",
+    "oid": "d585a7756bbd95b0521010a1bcebfc804ee2f280",
+    "sha256": "f7aa6091a6f77a71a9cdfe52bbba62e9b9ec9600a56d5ac03ff06e7cdce4a944",
+    "bytes": 46426
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/.gitattributes": {
+    "mode": "100644",
+    "oid": "fa1385d99a319b43c06f5309d1aae9fdd3adea46",
+    "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da",
+    "bytes": 8
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/INTAKE.md": {
+    "mode": "100644",
+    "oid": "8c2273ae11e085fc37f028ab0432df8a7b184f08",
+    "sha256": "274cf364457e7debf034858c56488964d0dfbc1327e493e8b30a7be752b7fa52",
+    "bytes": 1628
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/MANIFEST.sha256": {
+    "mode": "100644",
+    "oid": "604c8691a6dab814f0754f8c940c1229f8af91c8",
+    "sha256": "4877bde4582298af820f62cc0b5381839c0077a787fce1366422a2f7b3f40b69",
+    "bytes": 1837027
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/README.md.diff": {
+    "mode": "100644",
+    "oid": "a6af4966d25475f6c413373230b576a592cae349",
+    "sha256": "9e8435d9b1681851edefe2398a0233f5ae793f917e687d1f0714725409f685a5",
+    "bytes": 5796
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/README_REVIEW.md": {
+    "mode": "100644",
+    "oid": "b112e17b2b6d270968b4d2119b331e31c9d12241",
+    "sha256": "cee19dcafa5b3346e9db3fbcd4c8d6a19d04749d6478fb38b3a851de97d0f982",
+    "bytes": 3067
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/SHA256SUMS.diff": {
+    "mode": "100644",
+    "oid": "c30e3709433e0a6c6cf6c8c5f70e3b63c128de9e",
+    "sha256": "f2cdc6603adb908f77a2dfc2609ca2b27c8880e3a37fb07d4461a8b56b586dca",
+    "bytes": 1452
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/active_rules.json.diff": {
+    "mode": "100644",
+    "oid": "93861fba3592be5e947a37b39c5d698c896e30ed",
+    "sha256": "f4fa87f77a82d3aa498cb417f18bfe169758a9b4142ec8eae27db973091fc584",
+    "bytes": 2921
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/archive-verification.json": {
+    "mode": "100644",
+    "oid": "937c12ba43d3c8ffa11a891efe1c1eeb7a03ccf5",
+    "sha256": "d95f9abf41929f92b9d573db17fe2c9966a66730c2007f05aa13c438d7733713",
+    "bytes": 490
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/codex_review_unloading_ulpri_recheck_20261026.md": {
+    "mode": "100644",
+    "oid": "9953e4c3403a77373e8a68c80e63ab6b131152d6",
+    "sha256": "e317b1b81a76b67bd20f2b48ad97bdf1f487d0868d9bb251e72d5af075eacec8",
+    "bytes": 15921
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/dem_unloading_ps45_prereg_20261009.md.diff": {
+    "mode": "100644",
+    "oid": "a399572458210bce770bbd084852e84e9e2623d9",
+    "sha256": "dff029f0b9bd8a8efccdf7934419b8233c21c5490a0e16d2101a9cfe252ec8c1",
+    "bytes": 1851
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/diagnose_deck_utf8.py": {
+    "mode": "100644",
+    "oid": "1e61c1bf5b78af94c2aaa5118adb3e67b6c87b4c",
+    "sha256": "527da10337af79f3b5d6fa0fab1ad9e89608f6ec6dc7ef4d0af9fb30593557b4",
+    "bytes": 715
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/diagnose_utf8.py": {
+    "mode": "100644",
+    "oid": "e68f20ea949bdb5c4aab791241418253c596c442",
+    "sha256": "1799bb23690ddd1a250c0d3ee6e338697eb9f0751fe0843ac36ee8e402d75fec",
+    "bytes": 1351
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/a43.log": {
+    "mode": "100644",
+    "oid": "5c02dc1ef3efa33b3b57ab7a625913b8c4ebcbb0",
+    "sha256": "0404937e0bcba1478118b05abe1a91c90cedc21cad73a26a81a14617b13d11cd",
+    "bytes": 2679
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/a43/result.json": {
+    "mode": "100644",
+    "oid": "18e6ebe8ba0bff5d462905b46d3280c4d38f07dd",
+    "sha256": "c519ffa8393cf269fc89d2f0480ee4cd75ee3c46d6fe9364d62f23091a5e10ae",
+    "bytes": 101574
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/checks/deck_check.log": {
+    "mode": "100644",
+    "oid": "eb693e042ac72d6d5c88e46e3d02e06ebd5f9f70",
+    "sha256": "83afd046cf78f5e629ee43ef9bda1aad27d432b8cc7581d441a78e26dbb86a21",
+    "bytes": 812
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/checks/deck_check_utf8.log": {
+    "mode": "100644",
+    "oid": "f568e79628088abb783c0a4cb484e051968ce0fb",
+    "sha256": "af95a2306e11a765557aa217187cf7eeb15374780a675eb1bdbf47b4280a9e1e",
+    "bytes": 153
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/checks/history_deck_check.log": {
+    "mode": "100644",
+    "oid": "3d782b415e4c5a9013a918a78301fe101d55c5f2",
+    "sha256": "e71c7b999091eb4a0fbb15732088e27f9bea610fb3cb17c60173f1b2aed54e8e",
+    "bytes": 119
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/checks/result.json": {
+    "mode": "100644",
+    "oid": "5fd0f0061e64ea1ff923f8be1715f6f20bacf76b",
+    "sha256": "5e54deb94459fde758d01da0876a6b577738334522d6bb8d3753be87dcb15bab",
+    "bytes": 2887
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/checks/seal_check.log": {
+    "mode": "100644",
+    "oid": "df611a79fc8c61391efe79e57007ea8ec92069cf",
+    "sha256": "978d7699aeee76e68a46717627ed83951291adcb19f321cd50c63aa0d07780bb",
+    "bytes": 109
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/checks/seal_selftest.log": {
+    "mode": "100644",
+    "oid": "c37556fefd68d725b92f5e87c9d45053fed58b44",
+    "sha256": "c4a1fd6da5389e55985be07dd544fc0fdc75e93569709b120a586cd9d1cf91c6",
+    "bytes": 1396
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/matrix.log": {
+    "mode": "100644",
+    "oid": "fb7b8562ebe030af7c5a5a175d2a0410489eea50",
+    "sha256": "27320828232ae75fe04abf25e83c986226ef915ae3304cbea194396e328d4d3a",
+    "bytes": 4519
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/matrix_v2.log": {
+    "mode": "100644",
+    "oid": "c3550e25880663ab3bcd4b5f836ebf28f7c570c2",
+    "sha256": "6bb4214ecdede5b3aea6fe3cebd72ed08233cc6d98e94be5914f9f698bd72550",
+    "bytes": 511
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/matrix_v2/result.json": {
+    "mode": "100644",
+    "oid": "87357056aca6484f76fb7c11fd07a763aefbd3bf",
+    "sha256": "103d5e0ea51d91e28272ff82928aec77e7806abe6c89eb10bc9c0306e7cf02a6",
+    "bytes": 506982
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/mutants/result.json": {
+    "mode": "100644",
+    "oid": "fe573ac1f250b2edd269385310332c75413348af",
+    "sha256": "736d5d22ad3f731c1d6ef8a3544648cb8594cc6463ed0b4dadfcd3ed1d4843fd",
+    "bytes": 2097
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/new6.log": {
+    "mode": "100644",
+    "oid": "6dd322fc08fecf270ef9abaa733e7af6d9a4ccfe",
+    "sha256": "b3d3263cf8d728d93748199c91ca83a932c7b9913103c1a3ca1f1af053fe6486",
+    "bytes": 1297
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/new6/result.json": {
+    "mode": "100644",
+    "oid": "1eb1a9ce7b54a91582639c2a70153572eefb2d21",
+    "sha256": "7d6d2b3b7691b13074a6678b3d71980038fabdc58ea91b6f693c02e8b52a17dd",
+    "bytes": 9822
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/old6.log": {
+    "mode": "100644",
+    "oid": "4760663c7d35c04537c05ad703eacaf252c8bf6d",
+    "sha256": "d7e1ec5fc6b5bc752604bc2a7299cccd25ec3a83f97c256814a6ab29ab8560f2",
+    "bytes": 1345
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/old6/result.json": {
+    "mode": "100644",
+    "oid": "332b9b1725d5f637a89b430191dfdd75f975c017",
+    "sha256": "4a1279c4bffd2b2a4b2b185e595653a0f6136b1424d2b6284c0f73a8925d1d95",
+    "bytes": 7329
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/raw_child_encoding.stderr": {
+    "mode": "100644",
+    "oid": "8702bf4a339f57a5583e5074f099a20d5928dee7",
+    "sha256": "c3b624bbb59fae7b4849ba8a3bae614cdf172481138534213750c48a3f7bc110",
+    "bytes": 715
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/raw_child_encoding.stdout": {
+    "mode": "100644",
+    "oid": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/reader_selftest.log": {
+    "mode": "100644",
+    "oid": "952915cc62b164ba84f1f7e4d0e875915f4123ec",
+    "sha256": "f169f1823445b090bb037f34f43e4b1d3a740219d8541941b14c75cb71edf0a5",
+    "bytes": 4331
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/reader_selftest_workspace_tmp.log": {
+    "mode": "100644",
+    "oid": "3b22d626928894767610b8e3f6c864edf33c942d",
+    "sha256": "e145a05043255e327dd270b2131350fbc0c18f3cd0ed505f8bc52314f883ba25",
+    "bytes": 81249
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/utf8_diagnostic.log": {
+    "mode": "100644",
+    "oid": "dae0a9a14f79b0fef567519e40bd3c73563b38a9",
+    "sha256": "dfd012fa198e0e6f5aaedd28e126ae57ae9342450f00989b25a5111097fd20ca",
+    "bytes": 35
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/utf8_selftest/reader.log": {
+    "mode": "100644",
+    "oid": "f17a1dfd039b3eea2ffdf678ba454ef360ae28f4",
+    "sha256": "32d5ef6012566d59aa21a5f6f4aec752e212eec87c477f807844e7c0ed55d079",
+    "bytes": 47168
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/evidence/utf8_selftest/result.json": {
+    "mode": "100644",
+    "oid": "a9930db4497845794ac8b94d72ec902bb7193637",
+    "sha256": "03dfb8247dbbca9bc2e15470a01946ec5b719f28c749ae2e383469919a5cc7b0",
+    "bytes": 46805
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/intake.json": {
+    "mode": "100644",
+    "oid": "5c21a32f1c3c109ec04b610f15414054dbc4af34",
+    "sha256": "8981ec93a11571e1f8ebaa257da0bb55d502b69051eeacc4dac82e51dd5ff6b5",
+    "bytes": 427
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/package_review.py": {
+    "mode": "100644",
+    "oid": "4f166c4586897865f2aa469919065b3fd21e7bc5",
+    "sha256": "a1143a09d6683772d225fe197e32eaa6afc5b51f37f374117a70b35c8fac2452",
+    "bytes": 3407
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/probe_independent.py": {
+    "mode": "100644",
+    "oid": "3c2b6eaa9659b1c52b5e26ce0aa0c69024c6df32",
+    "sha256": "ef9873b7608033f7ecee6134801df85c7eb22b4df4ef6e8c1bb4d3a8a0239fa0",
+    "bytes": 5614
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/probe_mutants.py": {
+    "mode": "100644",
+    "oid": "65b945910d6564f96f5f55c5644d97e28e0fb443",
+    "sha256": "5399e0c82c1826546311c143772b6dfd45669f8f50c66fea5e448398d3994088",
+    "bytes": 2988
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/receipt-verification.json": {
+    "mode": "100644",
+    "oid": "375cab576a89f5ea9241d4c1d74bf21f484345fa",
+    "sha256": "890966283ca4db5c62d0032247021c11344881e0a5cea519e5dad415a687e187",
+    "bytes": 1068
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/receipt_audit.json": {
+    "mode": "100644",
+    "oid": "56bb0b831d71ff5b35cc0152258d23bfd349a413",
+    "sha256": "0cd0e45d383b54327d6b90800e92b4968100eddcf96cb98a65e603cd2855cbbd",
+    "bytes": 2359
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/remote_candidate_modified.json": {
+    "mode": "100644",
+    "oid": "ae5ca3223b37d6a58fde36455c37825eb343fc1f",
+    "sha256": "e047fe6c9a913fe5feac55f031f2994f4d3a8d20bf7512b8f9309479c2f00c8d",
+    "bytes": 24639
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/remote_compare_summary.json": {
+    "mode": "100644",
+    "oid": "0f5afa64f3f568d494d9b2b34515b14f07e35584",
+    "sha256": "cb99d4c4e4d24f5da8d5fbb57a278b414a9534e03bb0bc1a14d4499354146bc7",
+    "bytes": 1998
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/remote_files_0.json": {
+    "mode": "100644",
+    "oid": "2c26baf1da69a0b01d5040b61ea35d42ad8af7a6",
+    "sha256": "78ab12449557489b2b74db491f8e786e22bfcc36bceb7386c50026685422b9a6",
+    "bytes": 12028
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/remote_files_120.json": {
+    "mode": "100644",
+    "oid": "1a57e9c912a5e2de02ddd645eb64cc63835c44a2",
+    "sha256": "3250041a7cb558b63a9e913d26979ef243a576d496a5c530a1b2e7e0e440d8f9",
+    "bytes": 12222
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/remote_files_180.json": {
+    "mode": "100644",
+    "oid": "4ccf5c8e783a76b8a40a4a7b5de7a5a505faa52d",
+    "sha256": "d42634affb650f79f1f2a323db3c42004ae75dc664d3cc51baa21aba08efef96",
+    "bytes": 12680
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/remote_files_240.json": {
+    "mode": "100644",
+    "oid": "9da7ec34bb9d7a5b4eabc388d0b3bab4e2c715c3",
+    "sha256": "4dd6479e811ec761e30759f0eb374fcb14a740fb132cfe6893fedb282c066f1c",
+    "bytes": 13051
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/remote_files_300.json": {
+    "mode": "100644",
+    "oid": "cf4586e008ecf18cf3d5f6458b56dc0c15a65a69",
+    "sha256": "258ece6a7f7eb8346b358c65ec31075b9815e2614cc5857c56c31d5f27b955d8",
+    "bytes": 10406
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/remote_files_360.json": {
+    "mode": "100644",
+    "oid": "8b05e585f871c8c940475ef8a8b65b9175b7ad91",
+    "sha256": "b292f3f3e4c6eef279c95e33ae4f5408dae1cf73c464c608e08479c604a8896f",
+    "bytes": 7690
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/remote_files_60.json": {
+    "mode": "100644",
+    "oid": "d76d1bf5074f5a9b7445f2952703c3f28da18f40",
+    "sha256": "1bf4c328fd5aa195bbf23e1a1d1ed5d21d3a85aacb733643c6d7dd7262df8504",
+    "bytes": 12164
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/remote_final_commit.json": {
+    "mode": "100644",
+    "oid": "f01aacf49edaf9b6eb8c047b4e6b1dab9fa97e3e",
+    "sha256": "9b88d2029830c3d5f0171894d2db983a7151e6f4c01a69df9ca0b36e9dea4d1b",
+    "bytes": 3399
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/remote_scope.json": {
+    "mode": "100644",
+    "oid": "a445de5b9378475e41bc1015045eadbc5975113e",
+    "sha256": "8c110df0670dd8f3254ef4d1fb70d78d0f4d79f94d69e0d967b2bd73c3cb8da7",
+    "bytes": 214
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/repro_boundary.py": {
+    "mode": "100644",
+    "oid": "5a72eb6e10629c33263b14baa91a28c766371554",
+    "sha256": "12f013f3485c9a2e2ab8d35320081109e39f6d666ceb30c3fdeec71ad3752049",
+    "bytes": 2895
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/review_result.json": {
+    "mode": "100644",
+    "oid": "9b7545fafbf2b67ad6d137558ef6fb2caa0b7870",
+    "sha256": "ec55bd0f3dd8aadf19cdd2ada31da0ad19c3a5cc92954e1aa4a813b7b0fd11f9",
+    "bytes": 653
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/run_checks.py": {
+    "mode": "100644",
+    "oid": "2949e772d989068700ab17fb34b8c5f54e2e41a4",
+    "sha256": "867011e59864aa5a781252845868c2e120223adc2c61bd37a2b8865bc1148479",
+    "bytes": 1065
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/scope.json": {
+    "mode": "100644",
+    "oid": "32e8deb72989781ce0014afea388864420c0b1a9",
+    "sha256": "c3dc985e177b993dc9999da4fa2c15af544a15686cb136b7040a489535763f85",
+    "bytes": 520
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/seal_kit.py.diff": {
+    "mode": "100644",
+    "oid": "73c13d66fbc8f7a18765b96cb7a62417890b38de",
+    "sha256": "81df6231b9e3776ebe2508dcc7e170ed13cb7f01ad1f99adf12eaff2b915399b",
+    "bytes": 1962
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/snapshot/MANIFEST.sha256": {
+    "mode": "100644",
+    "oid": "d8520f01a4501bdcb5352127cc485e1619d25640",
+    "sha256": "d995e8f38b8f68c68773e035e8f72c78e33ba9a7baffffc751a6c09cdc7747ee",
+    "bytes": 89616
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/snapshot/PIN.txt": {
+    "mode": "100644",
+    "oid": "b6af97f1e276087c3881941fadbb3a5107ab881b",
+    "sha256": "8875541f0cfb3a71416abd9caaf2b816efbbdc2098f5cdbabc1ada2003947c71",
+    "bytes": 280
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/snapshot/REVIEW-README.md": {
+    "mode": "100644",
+    "oid": "df3765e22be357fd04d2511c9dfe304ef5a67fd3",
+    "sha256": "c520b01b5cfc2d157ae942315f387016a4d5af6adbe6d89cf5d58b554087ae19",
+    "bytes": 3076
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/snapshot/SOURCES.json": {
+    "mode": "100644",
+    "oid": "6b7cef10dc21b3cd49cf904ff1387de944d9bd4f",
+    "sha256": "eb489bacea7e298ff1a61e9af736d6a7787a83e6535582a75b95a2ab769712dd",
+    "bytes": 177207
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/source_postcheck.json": {
+    "mode": "100644",
+    "oid": "f06693631ef1bb87eb1361530b5b5b9919a20e3a",
+    "sha256": "7e57be5c71f867eaddae38ad50096ad6c96d569cbd0c0859193eca2daea820ca",
+    "bytes": 109
+  },
+  "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/ul_reader.py.diff": {
+    "mode": "100644",
+    "oid": "a10c77da3ce962da73018d70ff0b55217483593a",
+    "sha256": "45d1d7756b0a22fc05bf00dc4d593675e61ef2af422a1c1c0093b0d34582ae8d",
+    "bytes": 9305
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_20261024.md": {
+    "mode": "100644",
+    "oid": "cf705651cdc05dde65f95009c5035ed205fcab73",
+    "sha256": "d56418a4d9c6300e04300760e7b04079caf5a0a3b633879de231c7c5e1da9c71",
+    "bytes": 12486
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/README.md": {
+    "mode": "100644",
+    "oid": "9d6542617dc72fb93d007af61419e02c49802e2b",
+    "sha256": "58c724a0c8cd29de8682d98df08177e8297f585dd2de7eaa19ccf2172cf9bbcb",
+    "bytes": 1632
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/consumer-publication-proof.json": {
+    "mode": "100644",
+    "oid": "b8c7f947182e3de47e51503d11bfda6c593e4f20",
+    "sha256": "4841111d36b65ba3296c7270e7e5f7ce07102298bd5de3cdda5e2b0949205316",
+    "bytes": 248
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/external-command-review/author-verification.json": {
+    "mode": "100644",
+    "oid": "3616d8b8fc1593da6dca3b13089953aec5b3f6eb",
+    "sha256": "3d8761e3b41c0752d7b69a36de3cffadc249b8716b7d84259e455210e6b429cd",
+    "bytes": 1427
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/external-command-review/root-review.json": {
+    "mode": "100644",
+    "oid": "9b3e048712d0495596ef6bac9027fa6708082877",
+    "sha256": "276da1499ac355a45844db981d4cc94e98d381a560d6a0a5de746c553e015e7e",
+    "bytes": 657
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/external-review-provenance.json": {
+    "mode": "100644",
+    "oid": "924efee20f95a543b622372f6ece55a2e5de54f8",
+    "sha256": "d74ae53d7fd6f13c7c354937dba36bbdb32870a1f52dba4dc0ebe28b82608a7b",
+    "bytes": 769
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/factual-input-form.blank.json": {
+    "mode": "100644",
+    "oid": "ffd7c0b1497548050ecfa0fa277b2f607880cb4a",
+    "sha256": "0a890e15f8d34b50e64382be856ab724ec82ecc94775698d76df6c6e8bf4f645",
+    "bytes": 4930
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/fixture-results.json": {
+    "mode": "100644",
+    "oid": "b975bf1a94d70fed9187b94a0994951f91c1b58e",
+    "sha256": "0f577b9cbc238a3cf19346198672ee04b7588820db6f30ceb10596f9ec82f4ac",
+    "bytes": 24143
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/full_gate/candidate-commit-proof.json": {
+    "mode": "100644",
+    "oid": "270fa326b94908a69224d0b94792f775f9caa8d8",
+    "sha256": "551ecc1376e7ac647813a30f17a7f77b1c7bfa044a81358c805db00c3accd09e",
+    "bytes": 409
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/full_gate/candidate-scope-final.json": {
+    "mode": "100644",
+    "oid": "392419251b66b16df515af3a0d1ce0fc73ff4235",
+    "sha256": "317dae24fd936d517f4e415b4dc436618910898febf0dc7f691d57d95eb53605",
+    "bytes": 25329
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/full_gate/full-gate.log": {
+    "mode": "100644",
+    "oid": "661b84028ce1aea6f2c4776fd820530a9fff55ca",
+    "sha256": "f27982bb9f2497c32dcea0a3e50130c6dea2dac16492d1fde3b32750bd8656c3",
+    "bytes": 7599
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/full_gate/historical-interrupted-gate/cancellation-intent.json": {
+    "mode": "100644",
+    "oid": "114210018f36ea3d0566cbc4da70f4d4e8c552bc",
+    "sha256": "475464288ca848d486e010fed39ae521b27fc9bdcdd927744ec1e4ffc8e657d7",
+    "bytes": 595
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/full_gate/historical-interrupted-gate/full-gate.log": {
+    "mode": "100644",
+    "oid": "912213fce9989db2e516a0861ba1f7a5c9eee369",
+    "sha256": "cc238fed7f49be30600694a0fcd8c33bd2c01fa381288cfdb53ac90fd57eb410",
+    "bytes": 84
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/full_gate/historical-interrupted-gate/result.json": {
+    "mode": "100644",
+    "oid": "22e68d6e83f2fd7d0413a623e910aed78317212c",
+    "sha256": "08e58451df3e8ac5cf6541b9f6aa63d7243da21609a7233a99babdacdd06b385",
+    "bytes": 2188
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/full_gate/historical-interrupted-gate/source-manifest.json": {
+    "mode": "100644",
+    "oid": "07d52a1dc3740c6269b4ce32efec35a4420c53b1",
+    "sha256": "27bddb06dffb5e61c09af9b99f2634f28b2ed771d83dc7507b9140d2664559e3",
+    "bytes": 90582
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/full_gate/import-proof.json": {
+    "mode": "100644",
+    "oid": "6c7876ca6ac7d0787ac0a87607a50b05f783a27c",
+    "sha256": "6300184a67135d919591c08c82a1f7fcebdce9fe8767e9ab5b0cd2d1724cb528",
+    "bytes": 9927
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/full_gate/main-direct52.json": {
+    "mode": "100644",
+    "oid": "b975bf1a94d70fed9187b94a0994951f91c1b58e",
+    "sha256": "0f577b9cbc238a3cf19346198672ee04b7588820db6f30ceb10596f9ec82f4ac",
+    "bytes": 24143
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/full_gate/main-direct52.log": {
+    "mode": "100644",
+    "oid": "b975bf1a94d70fed9187b94a0994951f91c1b58e",
+    "sha256": "0f577b9cbc238a3cf19346198672ee04b7588820db6f30ceb10596f9ec82f4ac",
+    "bytes": 24143
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/full_gate/preflight/candidate-1/docrefs.log": {
+    "mode": "100644",
+    "oid": "2e2c844193ecede5cc50723efd59dc2d9beb6402",
+    "sha256": "1975f0efed7c7218f525591253bd4c5a0f201f47a019cc12a8fec33f8b5b02a0",
+    "bytes": 3706
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/full_gate/preflight/candidate-1/ledger.log": {
+    "mode": "100644",
+    "oid": "251c965f78198f1fbbe3e2fa2e042de3ef190eae",
+    "sha256": "7483b4664c4d3c52e24db54600e4b9c5fa164c0b4fc7746c8682a1b6360e090c",
+    "bytes": 180389
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/full_gate/preflight/candidate-1/receipt.json": {
+    "mode": "100644",
+    "oid": "e5cfa1aefddb754725612cc0024037601795c141",
+    "sha256": "825c762f957386758bfa65df2716c094b8c86685e09328df8c15cbeed6717c47",
+    "bytes": 1555
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/full_gate/preflight/candidate-2/docrefs.log": {
+    "mode": "100644",
+    "oid": "db869568dce5ee98009a57f23b93a43faf77c723",
+    "sha256": "9617ab221a72b40c57873d34e0ffafc51a2b1ac354d32d3384aac7f1fd3bf77d",
+    "bytes": 3323
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/full_gate/preflight/candidate-2/ledger.log": {
+    "mode": "100644",
+    "oid": "251c965f78198f1fbbe3e2fa2e042de3ef190eae",
+    "sha256": "7483b4664c4d3c52e24db54600e4b9c5fa164c0b4fc7746c8682a1b6360e090c",
+    "bytes": 180389
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/full_gate/preflight/candidate-2/receipt.json": {
+    "mode": "100644",
+    "oid": "c31ffa7dcc11fdc26513111f475b5b01a8f6c9ed",
+    "sha256": "d7b8b68cd8eb3087ba8928f150aeaad4f2895a6e743fdde73e818a6bb0b2b9a6",
+    "bytes": 1555
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/full_gate/preflight/candidate-3/docrefs.log": {
+    "mode": "100644",
+    "oid": "239eb6869d2d184c858ce52ed50eb488a9901cdc",
+    "sha256": "4fd27989571b66cc4ad46fb74a5c7489f7cfd3135ff6113054755afd46f68871",
+    "bytes": 3501
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/full_gate/preflight/candidate-3/ledger.log": {
+    "mode": "100644",
+    "oid": "251c965f78198f1fbbe3e2fa2e042de3ef190eae",
+    "sha256": "7483b4664c4d3c52e24db54600e4b9c5fa164c0b4fc7746c8682a1b6360e090c",
+    "bytes": 180389
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/full_gate/preflight/candidate-3/receipt.json": {
+    "mode": "100644",
+    "oid": "631a70c6266b5b0c462d723ad1893d9f2819ee86",
+    "sha256": "d8630edf7f50e6733f12db6b17ea85f705795da761b87bf90b30f315b38a2bf0",
+    "bytes": 1555
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/full_gate/preflight/candidate-4/docrefs.log": {
+    "mode": "100644",
+    "oid": "1f82cadc8d93dd9d83df6a4dc1b86229aff6b648",
+    "sha256": "255c65484bd5bbdd2c9788dde6587d594916f35ac9c692b6e8a43b2ce126f10e",
+    "bytes": 3323
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/full_gate/preflight/candidate-4/ledger.log": {
+    "mode": "100644",
+    "oid": "251c965f78198f1fbbe3e2fa2e042de3ef190eae",
+    "sha256": "7483b4664c4d3c52e24db54600e4b9c5fa164c0b4fc7746c8682a1b6360e090c",
+    "bytes": 180389
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/full_gate/preflight/candidate-4/receipt.json": {
+    "mode": "100644",
+    "oid": "eb271112dd575ea9a648b98cbcfc741bdbdb8a06",
+    "sha256": "83ceb271341e795bc349359ce66b9af796ffafb1c49b9eba764a80e9ae8a4886",
+    "bytes": 1555
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/full_gate/result.json": {
+    "mode": "100644",
+    "oid": "547c8bcd79d94bec2fb603fa4ed2ea75eb10e136",
+    "sha256": "e030cb874b4c5f4cc161ef738efd5f9ebbca04d5111aa3ddf49e04c304ed001d",
+    "bytes": 2400
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/full_gate/source-manifest.json": {
+    "mode": "100644",
+    "oid": "0288c00791d8d14a53d968722259035ef881a05c",
+    "sha256": "825b9327b5ae6c44772b6697048b9d67996fd076a8d02036f1a471c8807c2462",
+    "bytes": 90582
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/README.md": {
+    "mode": "100644",
+    "oid": "576a2aa31cf4ffae2fe3c01f479babcfc10572e6",
+    "sha256": "fe08aee7acc5aaf52baa555b2f8fa6c754d9695786e0888a48d70c4f88228026",
+    "bytes": 654
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/SHA256SUMS": {
+    "mode": "100644",
+    "oid": "cbe64c6130226835c019fe204b9cbe5e347fdd32",
+    "sha256": "6b57dd1dde074dd80b144e7e28aaf0336f4c58d06ce6adfccc2a0012e1c694b0",
+    "bytes": 538
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/old-41-fixture-results.json": {
+    "mode": "100644",
+    "oid": "b588050e3f612f2738132e03d956a8759eece416",
+    "sha256": "cd0e75422dff2c9a44f6a8e751cd51d1903c3a8e4d9d677de308f3cd4f172842",
+    "bytes": 14501
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/pre-fix-fixture-results.json": {
+    "mode": "100644",
+    "oid": "cd2eb455694d42366a340d60bad0500bdbb43f34",
+    "sha256": "5d1be0bbbb86cbd9e25af85045b04bd232dbf164c99480c308f5cbd2e4d382e5",
+    "bytes": 24439
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/pre-fix-reproduction.zip": {
+    "mode": "100644",
+    "oid": "37837a930612cbc87cf9543fd0008ea79a29b348",
+    "sha256": "8deafffe7a43fa032ed42837c693ce2f7a537e468fe24ed42edaaa542fc29c46",
+    "bytes": 12958
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/pre-fix-script.py": {
+    "mode": "100644",
+    "oid": "a0321268dc57748f8b3207d293506ff65b4d03dd",
+    "sha256": "fcf712c90ff8ddf14d62ea56c445536b8af8ba969a0c73de73536d37101e7336",
+    "bytes": 16885
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/pre-fix-zip-replay-receipt.json": {
+    "mode": "100644",
+    "oid": "6396d882125a0bbe6df959740bc346fc158ca5ce",
+    "sha256": "b988c823573861f1400b231b44e4fd09fa6ef0ee731cf71a1bed79bf98b8eb2c",
+    "bytes": 234
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/REPRODUCE.md": {
+    "mode": "100644",
+    "oid": "2594200415ee9857b5aabc2f54a52d8e0d696ca2",
+    "sha256": "cbebd1c9b54df658ca6f64ff16c742bb7b8f70f8926fc08bc5945dccabad0f45",
+    "bytes": 2065
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/author-delivery-freeze.json": {
+    "mode": "100644",
+    "oid": "c01e95de0086bd24e9b875e8eea1bd0f8311be0c",
+    "sha256": "cbe89ff9228520711c58cce0776e292844a44daeb7a0fa84d5936b43c50ebd93",
+    "bytes": 6848
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/direct-final.json": {
+    "mode": "100644",
+    "oid": "b975bf1a94d70fed9187b94a0994951f91c1b58e",
+    "sha256": "0f577b9cbc238a3cf19346198672ee04b7588820db6f30ceb10596f9ec82f4ac",
+    "bytes": 24143
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/final-review-proof.json": {
+    "mode": "100644",
+    "oid": "1760d22b099abd8b0840baf693559d5925d844c7",
+    "sha256": "15c358ccbbe6f98f48f6a46d5867b06797a45b7a061ea1a111d4811ff838d6f8",
+    "bytes": 8362
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/loader-final/report.json": {
+    "mode": "100644",
+    "oid": "481b28063586729910d0ec76f4e0ae82c854fb84",
+    "sha256": "23b8a0ba3104176d1cd7478cef8afb4ed6ef3b565d56b59313b8a9eae3357daa",
+    "bytes": 1913
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/mutants-final/report.json": {
+    "mode": "100644",
+    "oid": "c6f7f598a3a48844f29a616495be12b6822f7c35",
+    "sha256": "6846f047894ba2f2c9344832a18e5a4d770aa196e780be4e91e6729580d3106f",
+    "bytes": 7917
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/reproduce_consumer_mutants.py": {
+    "mode": "100644",
+    "oid": "c3174a410b7f753a909ce02fb884b909337c04c5",
+    "sha256": "4da2540b8b6ad0a0d55a020c043b45c6ca3c5ace07c11a465cfba8b6149fef9f",
+    "bytes": 7013
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/reproduce_loader_checks.py": {
+    "mode": "100644",
+    "oid": "a31649161682f756f45b0ed371646d452a4dd4b9",
+    "sha256": "4c707e4c7c902aa3ffce595b4b9a5e96842192770ddd6ab2da897947b1fa3437",
+    "bytes": 3534
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/review-result.md": {
+    "mode": "100644",
+    "oid": "5126e2cb7fe612c0fc0a88bca9d4f37dc4e3d16f",
+    "sha256": "ec3d97ef1952032e2ffd6d1b65172b47619164f6cc9b6019af8711648757886b",
+    "bytes": 2282
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/source-freeze.json": {
+    "mode": "100644",
+    "oid": "9bef491e45f192c68f2b3daaa6c37bd7086d3249",
+    "sha256": "c40abc4e407f0c778c2db5be2089e69d1fdad6f79a82bd171a0702472bd03c6c",
+    "bytes": 670
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/tests-first-review.json": {
+    "mode": "100644",
+    "oid": "7000ae184f6a790118665b893783ca0c303c139f",
+    "sha256": "b980246058bcd0de6039a4c8bdd7cafe0c4d695f9e3b8dc7d0ac0aaa3d5ec3b1",
+    "bytes": 1583
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent/REPRODUCE.md": {
+    "mode": "100644",
+    "oid": "33afe974376095f432e65be0364d9b4b7f2e3aec",
+    "sha256": "6011e64acb6b08a378b5b9f6532a6f09165c06551e4531645bf59caa7e65d87d",
+    "bytes": 2011
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent/audit_mutants.py": {
+    "mode": "100644",
+    "oid": "9f355026d6e3635cacb52e1a65f3189b3c855711",
+    "sha256": "2ca45a5cb889931be0818bb3542d8408f67bd64bd4ff48ccc5b6c501cceecef2",
+    "bytes": 4083
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent/check_freeze.py": {
+    "mode": "100644",
+    "oid": "82245b977c6b44020afc2d0e075c446296157b1e",
+    "sha256": "da8c57d0a2f8292ab15caed783208875122f10762be660bca789df614c752f39",
+    "bytes": 3007
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent/frozen-v3-run.json": {
+    "mode": "100644",
+    "oid": "b588050e3f612f2738132e03d956a8759eece416",
+    "sha256": "cd0e75422dff2c9a44f6a8e751cd51d1903c3a8e4d9d677de308f3cd4f172842",
+    "bytes": 14501
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent/frozen-v3/freeze-hashes.json": {
+    "mode": "100644",
+    "oid": "e02bd04553ca46649885d80689c81a0d1334588a",
+    "sha256": "e062f8b42a68d8722875ab3bb250f70289ca5457cd51ed680af51ac3082e7d27",
+    "bytes": 1035
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent/loader-observations-v3.json": {
+    "mode": "100644",
+    "oid": "ed936a419bc19748de10dc866549b36b425e8527",
+    "sha256": "a3d391422434726d3ce519de2c1ce6268cd7ff097e832dc0925f5d3e8b4dd7f6",
+    "bytes": 1912
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent/loader-observations.json": {
+    "mode": "100644",
+    "oid": "80706a7cce26aa26e9f568b4c3ccded2402de8e6",
+    "sha256": "fdfa8c96e9ee85f2ca4e0486af50ddaf3716d0c63ccc3aacfac16443127a74c5",
+    "bytes": 1915
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent/mutants-v3/report.json": {
+    "mode": "100644",
+    "oid": "a76db7d2c847249566d09afd4beb14ad9d7af9a7",
+    "sha256": "9cae849dff184b98cfd4654bfc5640d516ba067b350bbc5ecf3b6bee70d802c5",
+    "bytes": 3671
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent/reproduce_consumer_mutants.py": {
+    "mode": "100644",
+    "oid": "34452779b40efed3cbc7673b715e061012131f68",
+    "sha256": "fd9068ed966d528afe23a5da67c1cf115a5af705ac986cc5c7c72e362cd4f068",
+    "bytes": 4439
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent/reproduce_loader_checks.py": {
+    "mode": "100644",
+    "oid": "a31649161682f756f45b0ed371646d452a4dd4b9",
+    "sha256": "4c707e4c7c902aa3ffce595b4b9a5e96842192770ddd6ab2da897947b1fa3437",
+    "bytes": 3534
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent/review-plan.md": {
+    "mode": "100644",
+    "oid": "8937467ba9d8ba7e5c9804d47c968ae3760e8d22",
+    "sha256": "016c99a14267328fb05f8f05ee0188cb7641fabce7f0f6b9b8a97e8e773b37eb",
+    "bytes": 4764
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent/review-result.md": {
+    "mode": "100644",
+    "oid": "fa0d753cdb4397b4245ff3cf6b85d8862d5e212b",
+    "sha256": "4aa71b926d44d76c94d7722ac8068373adcdd139c41150ac27330102927aae99",
+    "bytes": 4663
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/p1-consumer-contract.json": {
+    "mode": "100644",
+    "oid": "087be86764b4e8a18ee435695e0d82b500299165",
+    "sha256": "87be885b868a9eec1736fbc063f75dc2262ecf1fd0bb2a6b74a2f002a819772f",
+    "bytes": 8292
+  },
+  "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/source-manifest.json": {
+    "mode": "100644",
+    "oid": "571d65b3ac8640db5fc5cd331cec35412fe591c7",
+    "sha256": "42c3e766dc19db6b30927816411d1fcdae4c08839e1c0f32a1762bb32bb4a166",
+    "bytes": 950
+  },
+  "docs/reviews/dem_gen2_t12_external_inputs_20261024.md": {
+    "mode": "100644",
+    "oid": "2ce764228012c62a7bef01d22f071e45d0fff62d",
+    "sha256": "d578ff7b9cc0136ff4f27170358d8951c3d73531e4d1d68c286e50dc2df5033b",
+    "bytes": 14407
+  },
+  "docs/reviews/dem_gen2_t12_external_review_packet_20261026.md": {
+    "mode": "100644",
+    "oid": "1b5ae71def22c37836b8799d998f23db731ac06d",
+    "sha256": "5f48bc1cc7d1b0e435b17dcc2e7ada32ffef9aaf60f0ba1f4b3541ad802c3d55",
+    "bytes": 5877
+  },
+  "docs/reviews/dem_unloading_ulpri_closure_20261026.md": {
+    "mode": "100644",
+    "oid": "be6902b35f6167110096691ba05d9aa5d4459721",
+    "sha256": "215c8a8a80e224e28b6e15b41bc17a8eccc6af2048b51fa45f73445ade7feac4",
+    "bytes": 4901
+  },
+  "docs/reviews/ulpr_resume_integer_evidence_20261024/NOTE.md": {
+    "mode": "100644",
+    "oid": "4f77807cac1f40e9eaeb0ef35decc13f0cbdddec",
+    "sha256": "58fec17a1202370fd65a903db5ebcfaf3f0da9024426417785d750e7dec00be6",
+    "bytes": 7655
+  },
+  "docs/reviews/ulpr_resume_integer_evidence_20261024/README.md": {
+    "mode": "100644",
+    "oid": "239912ed9d17f2ccd09ce6f130508741f150575d",
+    "sha256": "d466281fc49d9b52c43f8e43abb015721c91935fffe611301f38d26f6c03f8ff",
+    "bytes": 6708
+  },
+  "docs/reviews/ulpr_resume_integer_evidence_20261024/archive-provenance.json": {
+    "mode": "100644",
+    "oid": "8beab528562acfa8146d8fa9c220193581df4f68",
+    "sha256": "6602ea15991b6ba16795d9b34267b221b75fdfd3229a27815353eb365513de27",
+    "bytes": 337153
+  },
+  "docs/reviews/ulpr_resume_integer_evidence_20261024/author/cli-before/results.json": {
+    "mode": "100644",
+    "oid": "1e108039aee13f9f7491dd4da2c45d229d09f48a",
+    "sha256": "c32efe3ada81143357b4428ed79a1a4f077c53b773eb593dfad231dce9732ff2",
+    "bytes": 6262
+  },
+  "docs/reviews/ulpr_resume_integer_evidence_20261024/author/cli-v5/results.json": {
+    "mode": "100644",
+    "oid": "5d3578188fdca49d0dc7395ee5757a4e8b1376f8",
+    "sha256": "8c901be2f1582fd7f99bbbf13e0cd42d676c32a2dbe681203e7a1222bd381985",
+    "bytes": 7080
+  },
+  "docs/reviews/ulpr_resume_integer_evidence_20261024/author/deck-probe-v5/deck_probe.json": {
+    "mode": "100644",
+    "oid": "94aace07a4b0598ce7b4655365b2789d0f69c37d",
+    "sha256": "1c7d69f29883266f50631172390bae1f77ab966736ffa5582c59d383340e4bc7",
+    "bytes": 3272
+  },
+  "docs/reviews/ulpr_resume_integer_evidence_20261024/author/final-v5-suite/summary.json": {
+    "mode": "100644",
+    "oid": "43f6479fb669565256191cc853c9d2fa25e54f7d",
+    "sha256": "85ae407c9edfe65d8ca71ad9a38ecd7b7aef09039877339bb7d890e87cdf969a",
+    "bytes": 14267
+  },
+  "docs/reviews/ulpr_resume_integer_evidence_20261024/author/mutations-v5/results.json": {
+    "mode": "100644",
+    "oid": "ea1bd1efc4facb69caba8a001dd3ee1fb253c3b7",
+    "sha256": "51f6c849268df831d363c96d4c0cd1bb05581b435bf647bbed33ab5fa47780a9",
+    "bytes": 11158
+  },
+  "docs/reviews/ulpr_resume_integer_evidence_20261024/author/scope.json": {
+    "mode": "100644",
+    "oid": "eb8f29f2be98220f13ef052c9ac2bfc63368fdcd",
+    "sha256": "0070fe64cc3a69a3c692b13cfda49d6ab91b1ae4ebacabb02c0aa33ded977c71",
+    "bytes": 20731
+  },
+  "docs/reviews/ulpr_resume_integer_evidence_20261024/author/test-first-event-separator.log": {
+    "mode": "100644",
+    "oid": "8c9f0d2c548cba5a509382749b50320c0ff4e932",
+    "sha256": "8d0f446bf1eb6086ef151e43c19a9257136296171c4b42fb9e89e00584298931",
+    "bytes": 30006
+  },
+  "docs/reviews/ulpr_resume_integer_evidence_20261024/author/test-first-final.log": {
+    "mode": "100644",
+    "oid": "f3b956c496f753c4b2e0e0569544507a859c3a46",
+    "sha256": "66c0bf043dd3fab2b1ecab712391347e3f937a901a2fc947227d4758f82ef13c",
+    "bytes": 54296
+  },
+  "docs/reviews/ulpr_resume_integer_evidence_20261024/author/test-first-line-separator.log": {
+    "mode": "100644",
+    "oid": "995955c989d000eeb45077e5b2229cf6b146caa8",
+    "sha256": "bfb851ec0bc62dcc19608eefa9c5677fdb82c2571b14746a815a129583d53870",
+    "bytes": 29732
+  },
+  "docs/reviews/ulpr_resume_integer_evidence_20261024/author/test-first-manifest-space.log": {
+    "mode": "100644",
+    "oid": "41b1d81d511eeaf47c8658e7833d598ad30d25fb",
+    "sha256": "8e42ee8a06f1cb3b55bd410986017c11ffff31419c4ba68082f4e4558259c9a0",
+    "bytes": 28501
+  },
+  "docs/reviews/ulpr_resume_integer_evidence_20261024/author/test-first-r39.log": {
+    "mode": "100644",
+    "oid": "bf466506fb0d6a85f541f3fc06f0fc76aef368c3",
+    "sha256": "1f3d02b999e1c2cbfd3d6db2762b6d66a2b18fb2596e87324e652e9985df281b",
+    "bytes": 22571
+  },
+  "docs/reviews/ulpr_resume_integer_evidence_20261024/author/test-first-state-space.log": {
+    "mode": "100644",
+    "oid": "1843cc20399b912ec8a77cf0173c66085bd445ba",
+    "sha256": "d2f8f427bb027b77e8e44b5a3c04de8141f238665a5346a1cb012b7a58444ea3",
+    "bytes": 28301
+  },
+  "docs/reviews/ulpr_resume_integer_evidence_20261024/completion.md": {
+    "mode": "100644",
+    "oid": "da4e64fceb85ca6b3604fe749aa22365d8640efe",
+    "sha256": "e336c5c964dc0e5f9647fbf3b0e9b4829d738ada7b2dde9653dd515bae0ef08e",
+    "bytes": 1127
+  },
+  "docs/reviews/ulpr_resume_integer_evidence_20261024/full_gate/check-all.log": {
+    "mode": "100644",
+    "oid": "661b84028ce1aea6f2c4776fd820530a9fff55ca",
+    "sha256": "f27982bb9f2497c32dcea0a3e50130c6dea2dac16492d1fde3b32750bd8656c3",
+    "bytes": 7599
+  },
+  "docs/reviews/ulpr_resume_integer_evidence_20261024/full_gate_receipt.json": {
+    "mode": "100644",
+    "oid": "bcf9449b36c85c3914334a0801bb5df7e5e64068",
+    "sha256": "34708b9cd0c9fc7ee59ee52ff53a0d2d34c31ea39e2c190c34300bb11f007e1f",
+    "bytes": 19925
+  },
+  "docs/reviews/ulpr_resume_integer_evidence_20261024/history/pre-full-gate-inputs.zip": {
+    "mode": "100644",
+    "oid": "0464d185e2478f7455a4181c6cfe7b0107639e28",
+    "sha256": "0645bf9207c0924f90906e8497b12b9cd85eed97ec425d2eb544ec080231755e",
+    "bytes": 1638488
+  },
+  "docs/reviews/ulpr_resume_integer_evidence_20261024/history/reports-original.zip": {
+    "mode": "100644",
+    "oid": "11ed5848a8c7074d2d504dba28facb634fac7821",
+    "sha256": "e8ddf8966b1c8f6f2dfe81b1efcb6eb9f259849266de88f05d9aa0c0be4cb7cd",
+    "bytes": 12807
+  },
+  "docs/reviews/ulpr_resume_integer_evidence_20261024/independent/ulpr/final-v5/result.json": {
+    "mode": "100644",
+    "oid": "5214d183a35db8692e3d098e95ef113f9383abb3",
+    "sha256": "ab180c794112f2df32df25acf0837cd3573f0ff71a3eb7a987d4dbbf254210e5",
+    "bytes": 120644
+  },
+  "docs/reviews/ulpr_resume_integer_evidence_20261024/independent/ulpr/final-v5/review.md": {
+    "mode": "100644",
+    "oid": "4bb2ed744de533d81f8402968c848667cb8ecc47",
+    "sha256": "c3dde93810cc92099bbce73eecc9a65a943d4a296f2cc3db657d1772ce8d356a",
+    "bytes": 3997
+  },
+  "docs/reviews/ulpr_resume_integer_evidence_20261024/independent/ulpr/independent-mutations-v5/result.json": {
+    "mode": "100644",
+    "oid": "063dc7d2296b0b5c5f7741ced75edcdd373aa7d6",
+    "sha256": "be65eaf0ba2dbb8e26248dc6d66bbd31bb5c272930e1c6cd131acd713897f568",
+    "bytes": 15285
+  },
+  "docs/reviews/ulpr_resume_integer_evidence_20261024/independent/ulpr/note-review.json": {
+    "mode": "100644",
+    "oid": "1965a990ac220192accc2b19e1f2cc0d01ff559c",
+    "sha256": "d5e702571b8ea8c681a4135d34a15d978a127adb7976594539fb1ab096ed871b",
+    "bytes": 7039
+  },
+  "docs/reviews/ulpr_resume_integer_evidence_20261024/independent/ulpr/note-review.md": {
+    "mode": "100644",
+    "oid": "ec78e624d678433819dab8ea1c14f423c907adfa",
+    "sha256": "7c54b6a9c5136670fe82e99a8a8f931bf21a535b181c38da53416a94f3c8cfd2",
+    "bytes": 2161
+  },
+  "docs/reviews/ulpr_resume_integer_evidence_20261024/independent/ulpr/portable/provenance.json": {
+    "mode": "100644",
+    "oid": "a92f5fccac513816fa25e6635e246b8b37c6b710",
+    "sha256": "8664e4400fb494b11730bda8f1ad88fe2c88181a6632ec53e4844947d15bac9c",
+    "bytes": 1051
+  },
+  "docs/reviews/ulpr_resume_integer_evidence_20261024/package_manifest.json": {
+    "mode": "100644",
+    "oid": "b607a4f7dde6f72feb9982e28da898c37a995b71",
+    "sha256": "e37ef1fe062e3bb223567ea8799c19babc33eb94521fe43bf262ba9a1cad6f23",
+    "bytes": 75031
+  },
+  "docs/reviews/ulpr_resume_integer_evidence_20261024/source/candidate.diff": {
+    "mode": "100644",
+    "oid": "849aad11fa20f5f193773066d988f82d667460a4",
+    "sha256": "ccd610c9e7c9b3d1443edba03324a8c0fdf0bed0330f908ca7844586b293efd0",
+    "bytes": 24883
+  },
+  "docs/reviews/ulpr_resume_integer_evidence_20261024/source_manifest.json": {
+    "mode": "100644",
+    "oid": "2a424c751a37dcdb10b93fa8c67041591525850d",
+    "sha256": "fdf17d383c79e7bfbae7b69ca81557f4e82afae3f446f1802c8f27e69996320b",
+    "bytes": 1976
+  },
+  "docs/reviews/ulpri_closure_evidence_20261026/document-provenance-checks.json": {
+    "mode": "100644",
+    "oid": "13dfa65df38730a9c85e2c0b6946780c5b43050d",
+    "sha256": "2458516cc49bb27934d2876ca66511b12ff34eab13dcd546a187ae830e826634",
+    "bytes": 2949
+  },
+  "docs/reviews/ulpri_closure_evidence_20261026/scoped-external-receipt.json": {
+    "mode": "100644",
+    "oid": "45a07af76e06dacbd07c4bf5cd69237d3a3c7bd1",
+    "sha256": "c17f4a8d8ca85d460be1b898fb7772947094899ce1c11fd544dd3975cef2c1cc",
+    "bytes": 3971
+  },
+  "docs/reviews/ulpri_closure_evidence_20261026/source-observation.json": {
+    "mode": "100644",
+    "oid": "9d2e26cd1141e82c3acd71aa70c1b48019abf5fd",
+    "sha256": "2187358425fe6f115df4592b9b4b50719af0226d771d58ea15f5d366de3facf7",
+    "bytes": 770
+  },
+  "docs/reviews/ulpri_marker_evidence_20261024/NOTE.md": {
+    "mode": "100644",
+    "oid": "4af2d1982e5735f6494b7a4bb07eb476446e1f54",
+    "sha256": "117901312db966b98bee8c5fbdc49c63aaa533397f1d0c7f7b6d0a6d0cda7e4f",
+    "bytes": 2361
+  },
+  "docs/reviews/ulpri_marker_evidence_20261024/README.md": {
+    "mode": "100644",
+    "oid": "3d96c4264e8c56ac0e86f42b63cec759e32ad69b",
+    "sha256": "cbaa202726e644f2b2297a9cef60a9685870f20085352ab7ec31a903ce4ea0cc",
+    "bytes": 4041
+  },
+  "docs/reviews/ulpri_marker_evidence_20261024/author/cli/baseline-result.json": {
+    "mode": "100644",
+    "oid": "a12aab68a78e7654b1bb3b793f66fbe5139bc6fc",
+    "sha256": "ccb36f968f570fc1cdb57ec17e70872cdb951854d077432bc7c16b58a765893e",
+    "bytes": 86219
+  },
+  "docs/reviews/ulpri_marker_evidence_20261024/author/cli/final-result.json": {
+    "mode": "100644",
+    "oid": "9abd088b6ef7036c9f6251936cf2ed41527858af",
+    "sha256": "fa8c851035c9b9b0e478e7bfce8bf1fbe84a9316cb1da01964aee99e6c675935",
+    "bytes": 99967
+  },
+  "docs/reviews/ulpri_marker_evidence_20261024/author/doc-only-delta.json": {
+    "mode": "100644",
+    "oid": "795de6896e9af3cf0a1724c35309b95b0d81637f",
+    "sha256": "a4dcd8d8fc1e120c555e50dbef222af523df7418daadd58a18e55e4c21157ab3",
+    "bytes": 1707
+  },
+  "docs/reviews/ulpri_marker_evidence_20261024/author/kit-suite/summary.json": {
+    "mode": "100644",
+    "oid": "80bafbaf2ec67fa7a7ad8f4b73fd9aa289882c82",
+    "sha256": "c77f1e5a325cc78a72f951c70b2b294373c5d749ea1aed5ae8113d8371a56d90",
+    "bytes": 17170
+  },
+  "docs/reviews/ulpri_marker_evidence_20261024/author/mutants/portable-check.json": {
+    "mode": "100644",
+    "oid": "f48373c9c83cdee80192d3fa87afb3bcd3c6b374",
+    "sha256": "d2c41086bfd8fda04839135288efd67db4bed015b8b255fdc12e2b19ac3237b2",
+    "bytes": 1459
+  },
+  "docs/reviews/ulpri_marker_evidence_20261024/author/mutants/report.json": {
+    "mode": "100644",
+    "oid": "343377854ae25e934cffb0aed32f8a5deebd1ee4",
+    "sha256": "42f7bcb3eff93738531939c4b57166478c8e6d7dbf1711c8e8a5b173afd6554e",
+    "bytes": 11771
+  },
+  "docs/reviews/ulpri_marker_evidence_20261024/author/mutate_markers.original-v2.py": {
+    "mode": "100644",
+    "oid": "2847ea67cc8c3374699efec7bdc63f966bae0af4",
+    "sha256": "dd35826b18ba41bc20851fb1636056eeb2a1a6b97cdb3b4655d4b136407bb242",
+    "bytes": 3524
+  },
+  "docs/reviews/ulpri_marker_evidence_20261024/author/r40-fixed.json": {
+    "mode": "100644",
+    "oid": "d51eeabe493dcd4d6c3905530e268d76b29ffe51",
+    "sha256": "19ca8d9847f5e47e61b77303d05a0dc6f78887f90713213483477e91ebe431c8",
+    "bytes": 6618
+  },
+  "docs/reviews/ulpri_marker_evidence_20261024/author/source-freeze.json": {
+    "mode": "100644",
+    "oid": "2d84df249f1b8108b89edc4c2a569d1d6c79230e",
+    "sha256": "d34f6cd2f84784160274260f32af19dee7e1879679e832d5f093cf386a467b4d",
+    "bytes": 711
+  },
+  "docs/reviews/ulpri_marker_evidence_20261024/author/source-scope.json": {
+    "mode": "100644",
+    "oid": "2b282ca51e983f873a14769e772a061ba3f60900",
+    "sha256": "b59555b19856275cf07e47d3a6c4297f973cdfc408a4abf474bfd1ddb51a728f",
+    "bytes": 26943
+  },
+  "docs/reviews/ulpri_marker_evidence_20261024/author/tests-first-raw-marker.json": {
+    "mode": "100644",
+    "oid": "2b05f1181976b74b7a2dfa134e594b2bbd9a6bea",
+    "sha256": "405ad14633a87c5c648e7caae7345038bca49bfec39d2dd6ad15d2dd28d4a846",
+    "bytes": 6626
+  },
+  "docs/reviews/ulpri_marker_evidence_20261024/author/tests-first.json": {
+    "mode": "100644",
+    "oid": "4eb2159126dd93286dc3b59c7e456bd5c9c6ea20",
+    "sha256": "f81753003e36e8fd54051b4060bfceb0b490841a6002893f4f475c18ec54798f",
+    "bytes": 5430
+  },
+  "scripts/test_dem_gen2_t12_consumer_contract.py": {
+    "mode": "100644",
+    "oid": "c6b8dfb0f63956a36cea80140df4b2e656bc779d",
+    "sha256": "465f542e4c8825e2a21d29a1a7be931c96ea23794152eab01d0e04dd9212c216",
+    "bytes": 16886
+  }
+}

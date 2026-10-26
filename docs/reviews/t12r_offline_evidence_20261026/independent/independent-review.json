@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "runner_sha256": "cd1bd28429ae90a206e833638b086bd99dc5d6d2123bed6b04fe412b66abcf3b",
+  "offline_regression_sha256": "b9bf6344c30d1a1c6ae458dd7cc5c0694c805563e872ad4aa2d86af4bb8c4da6",
+  "existing_function_ast_changes": [
+    "snapshot"
+  ],
+  "run_probes_and_main_ast_unchanged": true,
+  "author37_frozen_files_verified": true,
+  "independent_actual_cases": "guarded missingblob and missingcommit rc2/fetch0/wholeDBunchanged with parent0; wholeguardmutation3localfetch; rawtraces retained",
+  "author_positive52": "Verified rawcases/sixhashes/sixguardedreads; not rerun",
+  "release_targeted_loader8_and_mutants13": "Rawresults and frozen source binding inspected; not duplicated",
+  "unsupported_version": "Mock rejection reviewed and independently exercised; realoldGit/platform not certified",
+  "local_fix_verdict": "PASS no blocker",
+  "external_T12R01": "OPEN pending external recheck",
+  "physical_T12": "NOT_RUN"
+}

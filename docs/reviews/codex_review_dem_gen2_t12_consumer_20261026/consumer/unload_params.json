@@ -1,0 +1,496 @@
+{
+ "schema": "ps45_unload_kit_v1",
+ "title": "DEM 언로딩 키트 — 하나의 표 (덱 생성기 · 러너 · 읽는 쪽이 여기서만 읽는다 · 덱 안 상수로 다시 적지 않는다)",
+ "registration": "docs/reviews/dem_unloading_ps45_prereg_20261009.md (§4 · §5 · §12 개정 1 · §13 개정 2) · 계획 docs/reviews/dem_unloading_ulr1_fix_plan_20261012.md",
+ "appendix_draft": "docs/reviews/dem_unloading_kit_section13_appendix_draft_20261013.md (권고 기본값 · 1저자 비준 대기 — choice 표지 C1–C13)",
+ "head_source": {
+  "note": "모델 머리 = 원 덱 글자 (리포 tgz) — r8 (7:3 마지막 조각 · 0:10 · 3:7 · 5:5 의 r6 와 같은 꼴) · r2 (원 덱 꼴 조각 · 10:0 마지막 조각과 같은 생성기 · G0 기준 꼴 시험)",
+  "tgz": "docs/data/ps73_compaction_curve_20261006/raw/ps73_logs.tgz",
+  "r8_suffix": "ps_7_3_r45/input_ps_7_3_r45_r8.liggghts",
+  "r8_sha256": "097658aa640f798b53da4c40a9d101632b8faaee6f80f4d1d2667591eef8d9cd",
+  "r2_suffix": "ps_7_3_r45/input_ps_7_3_r45_r2.liggghts",
+  "r2_sha256": "40e1b7a4238823234cc275ec3f170a06ab25da9597b3bc830431737dfc5f73ef",
+  "r8_log_suffix": "logs/output_ps_7_3_r45_r8_220537.out"
+ },
+ "binary": {
+  "banner_version": "LIGGGHTS-PUBLIC 3.8.0",
+  "banner_git": "3d5c00f",
+  "lmp_sha256": "ee2d77261bac9e7fa4e9311c8709e74bf7583a13225a5bc35a791bef9be60a3f",
+  "lmp_size": 9180024
+ },
+ "units": {
+  "report_MPa_per_Ps": 1000.0,
+  "um_per_deck_m": 1000.0,
+  "W_report_per_W_deck": 1e-06,
+  "note": "Ps = f_top_mesh[3] / A / 1e6 = 덱 MPa (r8 pressMPa 식에서 abs 를 뺀 글자 · A 는 그 식의 글자) · 보고 MPa = 1000 · Ps (REG §12-11)"
+ },
+ "Ps_sign": 1,
+ "plate_fn_compressive_sign": -1,
+ "plate_fn_note": "판 접촉에서 입자가 받는 법선력 fn_z 의 압축 부호 — 이력 시험 SYN (plate_fn_sign) 으로 확인 · 다르면 결과 0 건에서 고친다",
+ "P_meas_report_MPa": 1.0,
+ "ladder_report_MPa": [
+  100.0,
+  30.0,
+  10.0,
+  3.0,
+  1.0
+ ],
+ "protocol": {
+  "v0": 0.01,
+  "dt0": 1e-06,
+  "dz_A": 0.0002,
+  "dz_B": 5e-05,
+  "B_switch_factor": 3.0,
+  "confirm_steps": 2,
+  "lift_cap": 0.016,
+  "guards": {
+   "atoms_lost": 50,
+   "leak_increase": 100,
+   "ke_trans_max": 0.0017
+  },
+  "note": "REG §4-2 (판 속도 0.01 덱 m/s = 0.01 µm / 1,000 step · Δz_A 0.20 µm · Δz_B 0.05 µm · P̄ ≤ 3 P_meas 인 단 다음부터 B · 첫 교차 + B 두 단 → R_M · 들어 올림 상한 16 µm · 가드 = 분기 키트 §7 값)"
+ },
+ "steady": {
+  "S1_rel": 0.005,
+  "S1_abs_factor_of_Pmeas": 0.05,
+  "S2_factor": 10.0,
+  "S3_max": 0.001,
+  "S4_um_per_window": 0.002,
+  "note": "REG §5-2 문턱 그대로 (§13-2 — S1 · S2 · S4 문턱은 그대로) · S3 = 총힘 함수 (K5 · ul_s3.py)"
+ },
+ "windows": {
+  "W0": 5000,
+  "T_W_note": "T_W = dt0 · W0 = 0.005 덱 s · W(dt) = T_W / dt (§13-4)",
+  "k0_min": 3,
+  "general_min": 4,
+  "budget_max": 12,
+  "sep_declare": 2,
+  "post_sep": 4,
+  "gravity_hold_min": 4,
+  "gravity_hold_max": 12,
+  "uk_windows": 3,
+  "uc_steps_dt0": 50000,
+  "ave_nevery_dt0": 100,
+  "ave_nrepeat": 50,
+  "thermo_dt0": 500,
+  "R_steps": 2000,
+  "R_thermo": 1000,
+  "big_every": 1000000000
+ },
+ "arms": {
+  "UB": {
+   "v_factor": 1.0,
+   "dt_factor": 1.0,
+   "hold_factor": 1,
+   "stop": "full",
+   "dev_only": false,
+   "note": "기본 팔 · 튜플 t1"
+  },
+  "UT": {
+   "v_factor": 1.0,
+   "dt_factor": 0.5,
+   "hold_factor": 1,
+   "stop": "RM",
+   "dev_only": true,
+   "note": "dt₀/2 · 첫 교차 + 확인 두 단 → R_M 에서 멈춤 (§13-5 ③) · 행 3 이면 UTc = UT3 덱을 UT 의 R_M (상태 파일) 에서 재개"
+  },
+  "UVa": {
+   "v_factor": 0.5,
+   "dt_factor": 1.0,
+   "hold_factor": 2,
+   "stop": "full",
+   "dev_only": false,
+   "note": "dt* = dt₀ 의 UV · 튜플 t2"
+  },
+  "UVb": {
+   "v_factor": 0.5,
+   "dt_factor": 0.5,
+   "hold_factor": 2,
+   "stop": "full",
+   "dev_only": false,
+   "note": "dt* = dt₀/2 의 UV · 튜플 t4"
+  },
+  "UT3": {
+   "v_factor": 1.0,
+   "dt_factor": 0.5,
+   "hold_factor": 1,
+   "stop": "full",
+   "dev_only": false,
+   "note": "튜플 t3 의 본 런 (7:3 은 UT + UTc — 같은 덱 블록 · UT 의 R_M 재개)"
+  },
+  "UC": {
+   "v_factor": 0.0,
+   "dt_factor": 1.0,
+   "hold_factor": 1,
+   "stop": "uc",
+   "dev_only": false,
+   "note": "무이동 50,000 step × dt₀/dt · 판 압력 표류 · 잡음 바닥 · KE"
+  }
+ },
+ "tuples": {
+  "t1": {
+   "arm": "UB",
+   "row": "δ_dt ≤ 0.10 · δ_v ≤ 0.10"
+  },
+  "t2": {
+   "arm": "UVa",
+   "row": "δ_dt ≤ 0.10 · δ_v > 0.10"
+  },
+  "t3": {
+   "arm": "UT3",
+   "row": "δ_dt > 0.10 · δ_v ≤ 0.10",
+   "dev73": "UT + UTc (UT 의 R_M 에서 같은 덱 재개)"
+  },
+  "t4": {
+   "arm": "UVb",
+   "row": "δ_dt > 0.10 · δ_v > 0.10"
+  }
+ },
+ "selection": {
+  "delta_max_pp": 0.1,
+  "note": "§12-4 결정표 · §13-1 끝점 유효성 — 유효한 δ 둘이 있을 때만 행이 있다 · 아니면 SELECTION_UNRESOLVED (다음 팔 · 본 런 제출 없음)",
+  "uses_pressure_rule_max_1pct_05MPa": false,
+  "pressure_rule_note": "REG:648 의 max(1 %, 0.5 MPa) = 옛 §4-4 UT 다섯 단 압력 비교선 — 개정 §12-4 결정표는 끝점 ρ 차 (0.10 %p) 만 쓴다 → 보고 열로만 (choice C9)"
+ },
+ "g_aux": 9.81e-06,
+ "noise_floor": {
+  "factor": 3.0,
+  "ddof": 1,
+  "min_n": 10,
+  "n_windows": 2,
+  "note": "choice C3"
+ },
+ "s3": {
+  "threshold": 0.001,
+  "set": "s0_ids_inside",
+  "norm_order": "per_particle_then_sum",
+  "denominator": "sum_contact_magnitude_plus_weight",
+  "g": 9.81,
+  "note": "choice C1 · C2 (ul_s3.py)"
+ },
+ "surface": {
+  "grid": 10,
+  "quantile": 0.999,
+  "quantile_method": "nearest_rank",
+  "empty_cell": "not_computed",
+  "exclusion": "s0_fixed",
+  "note": "choice C5"
+ },
+ "ke_rot_base": {
+  "source": "UK",
+  "aggregate": "median_of_window_means",
+  "note": "choice C4 — 침대마다 S0 에서 무이동 3 창 (k = 0 창 미사용 · 순환 방지)"
+ },
+ "separation": {
+  "sep_nmax": 0,
+  "reset_on_move": true,
+  "note": "choice C6 — 영역 개수 (판 아래 중심 · z + r > 판) ≤ sep_nmax 인 창 · 이동하면 연속 계수 초기화"
+ },
+ "dumps": {
+  "atom_every_window": true,
+  "wall_local_every_window": true,
+  "pair_contact_every_window": true,
+  "mesh_every_window": true,
+  "atom_format_float": "%.10g",
+  "restart_every_step_end": true,
+  "note": "§13-3 Q4 (가) 매 창 끝 · 이동 중에는 덤프 주기를 big_every 로 (창 끝만) · 원 형식 G2 덤프는 기본 형식"
+ },
+ "records": {
+  "windows_cols": [
+   "arm",
+   "bed",
+   "k",
+   "w",
+   "phase",
+   "step",
+   "plate_z",
+   "lift",
+   "Ps_avg",
+   "ke_tr_avg",
+   "ke_rot_avg",
+   "ke_tot_avg",
+   "S1",
+   "S2",
+   "ok",
+   "n_contact_geo",
+   "atoms",
+   "leak",
+   "ke_inst"
+  ],
+  "steps_cols": [
+   "arm",
+   "bed",
+   "k",
+   "kind",
+   "dz",
+   "n_move",
+   "step",
+   "plate_z",
+   "lift",
+   "Pbar",
+   "n_windows",
+   "steady",
+   "phase",
+   "modeB",
+   "n_contact_last"
+  ],
+  "events_cols": [
+   "event",
+   "k",
+   "step",
+   "plate_z",
+   "lift",
+   "detail"
+  ],
+  "phases": {
+   "0": "SEARCH",
+   "1": "CONFIRM",
+   "2": "SEPARATE",
+   "3": "POST",
+   "4": "HOLD0"
+  },
+  "thermo_style": "step atoms ke c_ul_erot v_ul_Ps v_pressMPa cpu",
+  "thermo_cols": [
+   "Step",
+   "Atoms",
+   "KinEng",
+   "ul_erot",
+   "ul_Ps",
+   "pressMPa",
+   "CPU"
+  ],
+  "thermo_note": "LIGGGHTS 3d5c00f thermo.cpp — c_ · v_ 열 머리 = ID 앞 8 글자 (접두 없이) · 읽는 쪽은 이 이름만 쓴다 (생성기 selftest 가 덱 thermo_style 과 대조)"
+ },
+ "ut0": {
+  "note": "Ut0 문법 (7:3 · 판정 자료 아님 · REG §3-2) — 짧은 창 · 짧은 이동 · P_meas 크게 (k = 1 에서 교차) · 분리 문턱 크게 (첫 창부터 0 으로 센다) · S2 문턱 크게 → 머리 · k = 0 · A 한 단 · B 단 · R_M · 분리 · 끝을 한 번씩 지나간다",
+  "W": 100,
+  "nA": 400,
+  "nB": 100,
+  "ave_nevery": 10,
+  "ave_nrepeat": 10,
+  "thermo": 10,
+  "P_meas_deck": 1.0,
+  "sep_nmax": 1000000000,
+  "S2max": 1.0,
+  "k0_min": 3,
+  "k0_max": 12,
+  "general_min": 4,
+  "budget_max": 12,
+  "post_sep": 4,
+  "sep_declare": 2
+ },
+ "ext_10_0": {
+  "start_ckpt": "restart_settling_3600000.bin",
+  "start_step": 3600000,
+  "run1": 60000,
+  "s0p": 3650000,
+  "end1": 3660000,
+  "run2": 50000,
+  "s0pp": 3700000,
+  "end2": 3710000,
+  "restart_every": 50000,
+  "atom_every": 5000,
+  "mesh_every": 5000,
+  "contact_every": 10000,
+  "thermo": 1000,
+  "cond_window": 5000,
+  "cond_frac": 0.01,
+  "tail_lines": 25,
+  "compare_step": 3640000,
+  "note": "REG §10 Q11 (가) · §12-11 · CX2 §6 — 원 3,600,000 에서 다시 읽어 60,000 · 끝 3,660,000 은 명시 write_restart (자동 쓰기에 기대지 않는다)"
+ },
+ "beds": {
+  "ps_0_10_r45": {
+   "ps": "0:10",
+   "s0": 3200000,
+   "h0": 0.117208,
+   "atoms": 163348,
+   "g1": "3200000 163348 4.3937936e-07 8973.1083 0.15662662",
+   "ke_base_trans": 5.49e-07,
+   "D_S0": 59.5519,
+   "orig_np": 5,
+   "last_deck": "input_ps_0_10_r45_r6.liggghts",
+   "deck_pattern": "r6",
+   "orig_log": "output_ps_0_10_r45_r6_198527.out",
+   "plate_stl_orig": "plate_ps_0_10_r45_r6.stl",
+   "case": "ps_0_10_r45",
+   "in_files": {
+    "ckpt": {
+     "size": 81026211,
+     "file": "restart_compress_3200000.bin",
+     "sha256": "fb3c3f4c3da75b80a19a6eb21e216795b888b44ef86aca949b3d9ed80ad0727a"
+    },
+    "atom": {
+     "size": 21738360,
+     "file": "atom_3200000.liggghts",
+     "sha256": "b396305190656fa4007061d62a18cd50b91621b027585ee19c621fa0bc4c133d"
+    },
+    "contact": {
+     "size": 147202813,
+     "file": "contact_3200000.liggghts",
+     "sha256": "7430dd36a882408d62768e65371dbe99208c0db8651b7474f1101292a7df6dd8"
+    },
+    "mesh": {
+     "size": 349,
+     "file": "mesh_3200000.stl",
+     "sha256": "9ab7e8a091853fb7454520af75d615116afe20c52e0dceb895c017f7b78ccae7"
+    }
+   }
+  },
+  "ps_3_7_r45": {
+   "ps": "3:7",
+   "s0": 3200000,
+   "h0": 0.114361,
+   "atoms": 162093,
+   "g1": "3200000 162093 3.5843559e-07 9907.9652 0.15801804",
+   "ke_base_trans": 3.45e-07,
+   "D_S0": 54.6457,
+   "orig_np": 4,
+   "last_deck": "input_ps_3_7_r45_r6.liggghts",
+   "deck_pattern": "r6",
+   "orig_log": "output_ps_3_7_r45_r6_198528.out",
+   "plate_stl_orig": "plate_ps_3_7_r45_r6.stl",
+   "case": "ps_3_7_r45",
+   "in_files": {
+    "ckpt": {
+     "size": 81135207,
+     "file": "restart_compress_3200000.bin",
+     "sha256": "8d6d2a3c5425413695c03f3195baed3c8c24fc8593bdd890b1aec1f47e3d74d6"
+    },
+    "atom": {
+     "size": 21745687,
+     "file": "atom_3200000.liggghts",
+     "sha256": "3d4b199372b370122619152da1c93d3f5ee13b0656c38c86bcc8f74f49216877"
+    },
+    "contact": {
+     "size": 148584847,
+     "file": "contact_3200000.liggghts",
+     "sha256": "5bc44e7e354692cf91c36448df7397aec25460cda32a5e474d0de9cbcd3358ea"
+    },
+    "mesh": {
+     "size": 349,
+     "file": "mesh_3200000.stl",
+     "sha256": "3e6fdfc782307323142b5a8132aa9a8c95bb0e86db5ea6c4c332f50b3236fbd1"
+    }
+   }
+  },
+  "ps_5_5_r45": {
+   "ps": "5:5",
+   "s0": 2900000,
+   "h0": 0.112436,
+   "atoms": 161257,
+   "g1": "2900000 161257 1.4585879e-06 7415.8825 0.16245174",
+   "ke_base_trans": 2.33e-07,
+   "D_S0": 52.4134,
+   "orig_np": 5,
+   "last_deck": "input_ps_5_5_r45_r6.liggghts",
+   "deck_pattern": "r6",
+   "orig_log": "output_ps_5_5_r45_r6_198523.out",
+   "plate_stl_orig": "plate_ps_5_5_r45_r6.stl",
+   "case": "ps_5_5_r45",
+   "in_files": {
+    "ckpt": {
+     "size": 81137307,
+     "file": "restart_compress_2900000.bin",
+     "sha256": "ba018f5fd9ef023316d029be6ea52315d1812ef90c1c3c872bcbd9653216fb42"
+    },
+    "atom": {
+     "size": 21450142,
+     "file": "atom_2900000.liggghts",
+     "sha256": "72548a25f0be39714995d44f4e1aa673c858726beb9f921d8db764bb5536784a"
+    },
+    "contact": {
+     "size": 148674925,
+     "file": "contact_2900000.liggghts",
+     "sha256": "9fc5a939cc17bfd29a8815cd765af537a763a34ae6531540c748a5177e791b13"
+    },
+    "mesh": {
+     "size": 349,
+     "file": "mesh_2900000.stl",
+     "sha256": "673146522d602408930ea2fc4f9becbf8e833874f0f5858e7bc138426213fa2b"
+    }
+   }
+  },
+  "ps_7_3_r45": {
+   "ps": "7:3",
+   "s0": 3200000,
+   "h0": 0.111052,
+   "atoms": 160417,
+   "g1": "3200000 160417 1.3419507e-06 2708.2896 0.16576139",
+   "g3": "3201000 160417 1.5111245e-06 2743.4329 0.16542994",
+   "ke_base_trans": 2.04e-07,
+   "D_S0": 48.5117,
+   "orig_np": 24,
+   "last_deck": "input_ps_7_3_r45_r8.liggghts",
+   "deck_pattern": "r8",
+   "orig_log": "output_ps_7_3_r45_r8_220537.out",
+   "plate_stl_orig": "plate_ps_7_3_r45_r8.stl",
+   "case": "ps_7_3_r45",
+   "in_files": {
+    "ckpt": {
+     "size": 81154383,
+     "file": "restart_compress_3200000.bin",
+     "sha256": "0aa6e41a2330ae7825a715b8d98da6b708c37cb4093d3ab0f8fe2c2653ca3730"
+    },
+    "atom": {
+     "size": 21430748,
+     "file": "atom_3200000.liggghts",
+     "sha256": "2da106f8470a60c7d3b85894025007d6a5decdffb249b22e0a2ce67d08bbdd9e"
+    },
+    "contact": {
+     "size": 149687008,
+     "file": "contact_3200000.liggghts",
+     "sha256": "53ae293b4586d091dfca58ab430c174f36b641dcd24678eb10d10fc3f416e65c"
+    },
+    "mesh": {
+     "size": 349,
+     "file": "mesh_3200000.stl",
+     "sha256": "c25296a6d4d6b185be3c1c0ff98543dbfdb710c281403111c7fae2b9bde2b820"
+    }
+   }
+  },
+  "ps_10_0_r45": {
+   "ps": "10:0",
+   "s0": null,
+   "s0_candidates": [
+    3650000,
+    3700000
+   ],
+   "h0": 0.112597,
+   "atoms": 159152,
+   "g1": "3600000 159152 3.5470853e-06 4949.0455 0.17428757",
+   "g1_note": "EXT · R(3,600,000) 의 기준 줄 — S0′ 의 기준 줄은 EXT 런 로그에서",
+   "ke_base_trans": null,
+   "ke_base_note": "S0′ = EXT 런 로그 이완 끝 25 줄 5 창 평균 중앙값 (원 로그 값 9.88e-8 J 는 3,600,000 판 · 참고)",
+   "D_S0": null,
+   "orig_np": 11,
+   "last_deck": "input_ps_10_0_r45_r2.liggghts",
+   "deck_pattern": "r2",
+   "orig_log": "output_ps_10_0_r45_r2_195590.out",
+   "plate_stl_orig": "plate_ps_10_0_r45.stl",
+   "case": "ps_10_0_r45",
+   "in_files": {
+    "ckpt": {
+     "size": 78920211,
+     "file": "restart_settling_3600000.bin",
+     "sha256": "0e76b6981dbf13ab44717dd180a897ddc8fbd4b2f7eb3e6faae154dffcf6ea2c"
+    },
+    "atom": {
+     "size": 21086393,
+     "file": "atom_3600000.liggghts",
+     "sha256": "f302968aec5f6e6daa6af0b5301a6b0d9464e6663071291538b4534720268d96"
+    },
+    "contact": {
+     "size": 143025239,
+     "file": "contact_3600000.liggghts",
+     "sha256": "39e71cdd5be676f791429f565ad9e2b73e05e3101f66e0de7752cced3fc3b4f6"
+    },
+    "mesh": {
+     "size": 349,
+     "file": "mesh_3600000.stl",
+     "sha256": "869454432d1670f6335057f6248248309eb90361259a002c8233721d45de1a89"
+    }
+   }
+  }
+ }
+}

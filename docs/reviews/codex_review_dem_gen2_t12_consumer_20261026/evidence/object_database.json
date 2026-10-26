@@ -1,0 +1,62 @@
+{
+  "status": "PASS",
+  "method": "Exact original commit and four tree objects reconstructed from read-only GitHub API metadata, all SHA1 verified; six blobs from previously verified snapshot. New partial object database only, no shared repo modification or fetch.",
+  "objects": [
+    {
+      "type": "commit",
+      "sha": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde",
+      "bytes": 271
+    },
+    {
+      "type": "tree",
+      "sha": "6f46120958e50a32ddfee1cbdd7f1273cf607e35",
+      "bytes": 1458
+    },
+    {
+      "type": "tree",
+      "sha": "be929ac4d16a436b021da06995c12329ad26c134",
+      "bytes": 13984
+    },
+    {
+      "type": "tree",
+      "sha": "d5ec5d84fb8b7c229ff117f98fc252fa954a034f",
+      "bytes": 15042
+    },
+    {
+      "type": "tree",
+      "sha": "af28eb5fdde25f52453320d67faeee3e459bb788",
+      "bytes": 654
+    },
+    {
+      "type": "blob",
+      "sha": "f19d35733904b4ebf272648ff9e046429d97e33a",
+      "bytes": 279667
+    },
+    {
+      "type": "blob",
+      "sha": "55e8793ad35f72723de7195101be1834996b16a2",
+      "bytes": 44272
+    },
+    {
+      "type": "blob",
+      "sha": "be4991f6227b124d1b299ee0e6873e9695fd9881",
+      "bytes": 29577
+    },
+    {
+      "type": "blob",
+      "sha": "8d9ebd558f8468e0b6df42fbfe9fc55656cc6570",
+      "bytes": 16557
+    },
+    {
+      "type": "blob",
+      "sha": "7bccb4da17795905ea70b39b9424a49bec26b79c",
+      "bytes": 14432
+    },
+    {
+      "type": "blob",
+      "sha": "6201d1814c56261d2008847e1abae9613c0068d3",
+      "bytes": 14566
+    }
+  ],
+  "consumer_pin": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde"
+}

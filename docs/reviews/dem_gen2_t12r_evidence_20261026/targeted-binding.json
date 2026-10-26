@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "runner_sha256": "cd1bd28429ae90a206e833638b086bd99dc5d6d2123bed6b04fe412b66abcf3b",
+  "offline_regression_sha256": "b9bf6344c30d1a1c6ae458dd7cc5c0694c805563e872ad4aa2d86af4bb8c4da6",
+  "loader_cases": 8,
+  "mutant_cases": 13,
+  "direct52_source": "author/final/complete-six-blobs/stdout.json",
+  "direct52_cases_and_consumer_hashes_equal_prior": true,
+  "standalone52_repeated": false,
+  "harnesses_modified": false,
+  "harness_source_pin": "bffc42cab29da37b45f8a713e30e8572b91e7da3",
+  "source_root": "/workspace/Yonghoon-DEM-DFT",
+  "observed_at_utc": "2026-10-26T05:44:31.767253+00:00",
+  "reproduce_loader_checks.py_sha256": "4c707e4c7c902aa3ffce595b4b9a5e96842192770ddd6ab2da897947b1fa3437",
+  "reproduce_consumer_mutants.py_sha256": "4da2540b8b6ad0a0d55a020c043b45c6ca3c5ace07c11a465cfba8b6149fef9f",
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "python": "3.11.17",
+  "mutants_all_completed_and_detected": true,
+  "python_executable": "/workspace/.venvs/yonghoon-dem/bin/python3"
+}

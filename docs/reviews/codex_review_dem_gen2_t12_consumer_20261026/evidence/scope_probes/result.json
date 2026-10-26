@@ -1,0 +1,470 @@
+{
+  "pin": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde",
+  "cases": [
+    {
+      "name": "g2_mass_x2",
+      "actual": "PASS",
+      "expected": "PASS",
+      "pass_": true,
+      "classification": "scope_boundary",
+      "detail": {
+        "status": "PASS",
+        "why": [],
+        "n_atoms": 1,
+        "n_mismatch": 0,
+        "missing": [],
+        "extra": [],
+        "example": [],
+        "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+      }
+    },
+    {
+      "name": "g2_omega_7",
+      "actual": "PASS",
+      "expected": "PASS",
+      "pass_": true,
+      "classification": "scope_boundary",
+      "detail": {
+        "status": "PASS",
+        "why": [],
+        "n_atoms": 1,
+        "n_mismatch": 0,
+        "missing": [],
+        "extra": [],
+        "example": [],
+        "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+      }
+    },
+    {
+      "name": "g2_type2",
+      "actual": "FAIL",
+      "expected": "FAIL",
+      "pass_": true,
+      "classification": "scope_boundary",
+      "detail": {
+        "status": "FAIL",
+        "why": [],
+        "n_atoms": 1,
+        "n_mismatch": 1,
+        "missing": [],
+        "extra": [],
+        "example": [
+          1
+        ],
+        "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+      }
+    },
+    {
+      "name": "g2_x_shift",
+      "actual": "FAIL",
+      "expected": "FAIL",
+      "pass_": true,
+      "classification": "scope_boundary",
+      "detail": {
+        "status": "FAIL",
+        "why": [],
+        "n_atoms": 1,
+        "n_mismatch": 1,
+        "missing": [],
+        "extra": [],
+        "example": [
+          1
+        ],
+        "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+      }
+    },
+    {
+      "name": "g2_mass_nan",
+      "actual": "FAIL",
+      "expected": "FAIL",
+      "pass_": true,
+      "classification": "scope_boundary",
+      "detail": {
+        "status": "FAIL",
+        "why": [
+          "덤프 읽기 실패: ValueError: 비유한 값: 1 1 0.01 0.01 0.1 0.001 nan 0 0 0 0 0 0 0 0 1e-10"
+        ]
+      }
+    },
+    {
+      "name": "g2_radius_negative",
+      "actual": "FAIL",
+      "expected": "FAIL",
+      "pass_": true,
+      "classification": "scope_boundary",
+      "detail": {
+        "status": "FAIL",
+        "why": [],
+        "n_atoms": 1,
+        "n_mismatch": 1,
+        "missing": [],
+        "extra": [],
+        "example": [
+          1
+        ],
+        "note": "omega 는 원 덤프에 없다 — 과거 직접 비교 미확보 (새 덤프에는 출력)"
+      }
+    },
+    {
+      "name": "g2_changed_box",
+      "actual": "PASS",
+      "expected": "PASS",
+      "pass_": true,
+      "classification": "scope_boundary",
+      "detail": null
+    },
+    {
+      "name": "g2_missing_atom",
+      "actual": "FAIL",
+      "expected": "FAIL",
+      "pass_": true,
+      "classification": "scope_boundary",
+      "detail": null
+    },
+    {
+      "name": "g2_wrong_step",
+      "actual": "FAIL",
+      "expected": "FAIL",
+      "pass_": true,
+      "classification": "scope_boundary",
+      "detail": null
+    },
+    {
+      "name": "atom_subset",
+      "actual": true,
+      "expected": true,
+      "pass_": true,
+      "classification": "scope_boundary",
+      "detail": []
+    },
+    {
+      "name": "atom_empty",
+      "actual": true,
+      "expected": true,
+      "pass_": true,
+      "classification": "scope_boundary",
+      "detail": []
+    },
+    {
+      "name": "atom_mass0",
+      "actual": true,
+      "expected": true,
+      "pass_": true,
+      "classification": "scope_boundary",
+      "detail": []
+    },
+    {
+      "name": "atom_newid",
+      "actual": false,
+      "expected": false,
+      "pass_": true,
+      "classification": "scope_boundary",
+      "detail": [
+        "S0 에 없는 원자 ID 1"
+      ]
+    },
+    {
+      "name": "atom_negative_id",
+      "actual": false,
+      "expected": false,
+      "pass_": true,
+      "classification": "scope_boundary",
+      "detail": [
+        "원자 덤프 id 가 유한 · 양의 정확한 정수가 아니다 ([-1]) — 정수로 자르지 않는다"
+      ]
+    },
+    {
+      "name": "atom_duplicate",
+      "actual": false,
+      "expected": false,
+      "pass_": true,
+      "classification": "scope_boundary",
+      "detail": [
+        "원자 ID 중복"
+      ]
+    },
+    {
+      "name": "atom_mass_nan",
+      "actual": false,
+      "expected": false,
+      "pass_": true,
+      "classification": "scope_boundary",
+      "detail": [
+        "비유한 값: 1 1 0.01 0.01 0.1 0.001 nan 0 0 0 0 0 0 0 0 1e-10"
+      ]
+    },
+    {
+      "name": "g2c_force10",
+      "actual": "FAIL",
+      "expected": "FAIL",
+      "pass_": true,
+      "classification": "scope_boundary",
+      "detail": {
+        "status": "FAIL",
+        "why": [],
+        "n_orig": 1,
+        "n_test": 1,
+        "n_mismatch": 1,
+        "missing": [],
+        "extra": [],
+        "n_dup_consistent": 0,
+        "dup_conflicts": [],
+        "discriminating_frac": 1.0,
+        "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+      }
+    },
+    {
+      "name": "g2c_delta23",
+      "actual": "FAIL",
+      "expected": "FAIL",
+      "pass_": true,
+      "classification": "scope_boundary",
+      "detail": {
+        "status": "FAIL",
+        "why": [],
+        "n_orig": 1,
+        "n_test": 1,
+        "n_mismatch": 1,
+        "missing": [],
+        "extra": [],
+        "n_dup_consistent": 0,
+        "dup_conflicts": [],
+        "discriminating_frac": 1.0,
+        "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+      }
+    },
+    {
+      "name": "g2c_torque19",
+      "actual": "PASS",
+      "expected": "PASS",
+      "pass_": true,
+      "classification": "scope_boundary",
+      "detail": {
+        "status": "PASS",
+        "why": [],
+        "n_orig": 1,
+        "n_test": 1,
+        "n_mismatch": 0,
+        "missing": [],
+        "extra": [],
+        "n_dup_consistent": 0,
+        "dup_conflicts": [],
+        "discriminating_frac": 1.0,
+        "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+      }
+    },
+    {
+      "name": "g2c_periodic9",
+      "actual": "PASS",
+      "expected": "PASS",
+      "pass_": true,
+      "classification": "scope_boundary",
+      "detail": {
+        "status": "PASS",
+        "why": [],
+        "n_orig": 1,
+        "n_test": 1,
+        "n_mismatch": 0,
+        "missing": [],
+        "extra": [],
+        "n_dup_consistent": 0,
+        "dup_conflicts": [],
+        "discriminating_frac": 1.0,
+        "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+      }
+    },
+    {
+      "name": "g2c_empty_both",
+      "actual": "PASS",
+      "expected": "PASS",
+      "pass_": true,
+      "classification": "scope_boundary",
+      "detail": {
+        "status": "PASS",
+        "why": [],
+        "n_orig": 0,
+        "n_test": 0,
+        "n_mismatch": 0,
+        "missing": [],
+        "extra": [],
+        "n_dup_consistent": 0,
+        "dup_conflicts": [],
+        "discriminating_frac": null,
+        "note": "초기 접촉 힘 재현 검사 — 숨은 이력 동일성의 단독 증명 아님 (§12-1) · 토크 · 주기 플래그 제외"
+      }
+    },
+    {
+      "name": "g2c_missing_column",
+      "actual": "NOT_COMPUTED",
+      "expected": "NOT_COMPUTED",
+      "pass_": true,
+      "classification": "scope_boundary",
+      "detail": null
+    },
+    {
+      "name": "history_equal",
+      "actual": true,
+      "expected": true,
+      "pass_": true,
+      "classification": "scope_boundary",
+      "detail": null
+    },
+    {
+      "name": "history_delta_change",
+      "actual": false,
+      "expected": false,
+      "pass_": true,
+      "classification": "scope_boundary",
+      "detail": null
+    },
+    {
+      "name": "history_reordered",
+      "actual": true,
+      "expected": true,
+      "pass_": true,
+      "classification": "scope_boundary",
+      "detail": null
+    },
+    {
+      "name": "history_missing_field",
+      "actual": false,
+      "expected": false,
+      "pass_": true,
+      "classification": "scope_boundary",
+      "detail": null
+    },
+    {
+      "name": "history_nan_parser",
+      "actual": false,
+      "expected": false,
+      "pass_": true,
+      "classification": "scope_boundary",
+      "detail": null
+    },
+    {
+      "name": "gravity_UB",
+      "actual": "PASS",
+      "expected": "PASS",
+      "pass_": true,
+      "classification": "scope_boundary",
+      "detail": {
+        "status": "PASS",
+        "R": 1.0193679918450562e-05,
+        "numerator": 1e-10,
+        "denominator": 9.81e-06,
+        "n_valid": 1,
+        "global_norm_diag": 1.0193679918450562e-05,
+        "why": []
+      }
+    },
+    {
+      "name": "gravity_G_UB",
+      "actual": "FAIL",
+      "expected": "FAIL",
+      "pass_": true,
+      "classification": "scope_boundary",
+      "detail": {
+        "status": "FAIL",
+        "R": 10.193679918450561,
+        "numerator": 1e-10,
+        "denominator": 9.81e-12,
+        "n_valid": 1,
+        "global_norm_diag": 10.193679918450561,
+        "why": []
+      }
+    },
+    {
+      "name": "window_UB",
+      "actual": 0.005,
+      "expected": 0.005,
+      "pass_": true,
+      "classification": "scope_boundary",
+      "detail": {
+        "W": 5000,
+        "dt_factor": 1.0
+      }
+    },
+    {
+      "name": "window_UT",
+      "actual": 0.005,
+      "expected": 0.005,
+      "pass_": true,
+      "classification": "scope_boundary",
+      "detail": {
+        "W": 10000,
+        "dt_factor": 0.5
+      }
+    },
+    {
+      "name": "window_G_UT",
+      "actual": 0.005,
+      "expected": 0.005,
+      "pass_": true,
+      "classification": "scope_boundary",
+      "detail": {
+        "W": 10000,
+        "dt_factor": 0.5
+      }
+    },
+    {
+      "name": "window_UTc",
+      "actual": 0.005,
+      "expected": 0.005,
+      "pass_": true,
+      "classification": "scope_boundary",
+      "detail": {
+        "W": 10000,
+        "dt_factor": 0.5
+      }
+    },
+    {
+      "name": "known_rj_no_files",
+      "actual": true,
+      "expected": true,
+      "pass_": true,
+      "classification": "scope_boundary",
+      "detail": null
+    },
+    {
+      "name": "unknown_rj_no_files",
+      "actual": false,
+      "expected": false,
+      "pass_": true,
+      "classification": "scope_boundary",
+      "detail": null
+    }
+  ],
+  "passed": 35,
+  "count": 35,
+  "truth_table": {
+    "count": 729,
+    "passed": 729
+  },
+  "input_hashes": {
+    "af_duplicate.dump": "ae45e9d956b00bca97e2c79996266b5e0214cab19d379ae21787af666d5eb11e",
+    "af_empty.dump": "75b3b844d519838b052105d897c6093805e673b1c82c5f89afdd98db047958ba",
+    "af_mass0.dump": "45a40e77847b0687b68868f26be1e2213377c6ba83b1f4df848b3246f6f3782b",
+    "af_mass_nan.dump": "0c8b274fa14eb65693de027c2ddcbf676fa3035567a577882f006fde3c246f39",
+    "af_negative_id.dump": "c243e2f6262ddc30216e7e2be2cb3608356caa0bfb5ad5d2bf6b5f5f93af7eae",
+    "af_newid.dump": "bac066b07fda42ea1421c81ea31a82dfd325e3e519d854eee8d518d66878a972",
+    "af_subset.dump": "0d13da4722434c37a98d344cb5fb0089351899466f04687737198126b34d3e5e",
+    "base.dump": "0d13da4722434c37a98d344cb5fb0089351899466f04687737198126b34d3e5e",
+    "box_changed.dump": "8bd7a7460886b69eeb2df370c8142c139a8ad5ae30bfe716597bf7b608d8f07a",
+    "contact_base.dump": "47c730915c18948cf82fb4748d7080a2c80d51de06430b452def02ffa711c412",
+    "contact_delta23.dump": "e7a5fe36450c96c510ce11d9404469e0abea2cfa1fd906dcfda304e9796b2af0",
+    "contact_force10.dump": "9db271f7e98c6df80d88a02d71bdf569f81e7a45b7f52cff05cba9ae83532fb3",
+    "contact_periodic9.dump": "2498f4e30a1d6d4f0486f3063a895d54c39f4dcbc7d7e014c5a66e4cb8cb1056",
+    "contact_torque19.dump": "f484fb9698e64892e75746088702a229da4586ea6b1a415b722e1d7c19927a42",
+    "empty_contact.dump": "30b65f4e624bf37a7f20ef751e31bb39d1850fda500f33cbd107fe1b0f97e0cf",
+    "hist_nan.dump": "57cc56af1a1fa48ade5d95e6a4d5311ea8f967ddbc0a0df8e1796eda63a19c87",
+    "mass_nan.dump": "0c8b274fa14eb65693de027c2ddcbf676fa3035567a577882f006fde3c246f39",
+    "mass_x2.dump": "0344b67a28d7afef5acd55cc1a7be1b9329246f981afacf76e4ea5decc66b4f1",
+    "missing_contact_column.dump": "8d66a9b71ea2b4ce09232a8199bcb0e10325a94664cf7fc05fa51d13f2780d8c",
+    "omega_7.dump": "0892de8fabeb4f68dc297ef3f093cecb71955026c33a85f96141ccade4038aff",
+    "radius_negative.dump": "46da74b6f664bc475345c3c41f596b64b8e172b45e4e004926cb051a3271c2b5",
+    "two.dump": "e602380200703a8fbb43e8185a5b388211f9c2e28db1f6687844136e50443919",
+    "type2.dump": "f0a1b29fdd70670edb2b605b8413f0f13d852e23730c95ffb2a9f1ac4f835574",
+    "wrongstep.dump": "288e8195f667944f0f716599c732cb410f8944be01c8b7cddbd8895ce31e0132",
+    "x_shift.dump": "550ab801dfa0e8986601f458f7bcff60337ed50b053cf6781ba029accf8c7b89"
+  }
+}

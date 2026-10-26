@@ -1,0 +1,110 @@
+[
+  {
+    "name": "object_database",
+    "rc": 0,
+    "command": [
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-B",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12_consumer_review_20261026\\build_object_repo.py"
+    ]
+  },
+  {
+    "name": "provenance",
+    "rc": 0,
+    "command": [
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-B",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12_consumer_review_20261026\\audit_provenance.py"
+    ]
+  },
+  {
+    "name": "direct52",
+    "rc": 0,
+    "command": [
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-B",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12_consumer_review_20261026\\snapshot\\scripts\\test_dem_gen2_t12_consumer_contract.py",
+      "--repo",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12_consumer_review_20261026\\object_repo",
+      "--json",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12_consumer_review_20261026\\evidence\\packaging_replay\\direct52.json"
+    ]
+  },
+  {
+    "name": "loader",
+    "rc": 0,
+    "command": [
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-B",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12_consumer_review_20261026\\run_harness_utf8.py",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12_consumer_review_20261026\\snapshot\\docs\\reviews\\dem_gen2_t12_consumer_contract_evidence_20261024\\independent-ulpri\\reproduce_loader_checks.py",
+      "--source",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12_consumer_review_20261026\\snapshot",
+      "--repo",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12_consumer_review_20261026\\object_repo",
+      "--output",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12_consumer_review_20261026\\evidence\\packaging_replay\\loader"
+    ]
+  },
+  {
+    "name": "mutants",
+    "rc": 0,
+    "command": [
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-B",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12_consumer_review_20261026\\run_harness_utf8.py",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12_consumer_review_20261026\\snapshot\\docs\\reviews\\dem_gen2_t12_consumer_contract_evidence_20261024\\independent-ulpri\\reproduce_consumer_mutants.py",
+      "--source",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12_consumer_review_20261026\\snapshot",
+      "--repo",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12_consumer_review_20261026\\object_repo",
+      "--output",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12_consumer_review_20261026\\evidence\\packaging_replay\\mutants"
+    ]
+  },
+  {
+    "name": "scope",
+    "rc": 0,
+    "command": [
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-B",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12_consumer_review_20261026\\probe_scope.py",
+      "--repo",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12_consumer_review_20261026\\object_repo",
+      "--out",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12_consumer_review_20261026\\evidence\\packaging_replay\\scope"
+    ]
+  },
+  {
+    "name": "promisor",
+    "rc": 0,
+    "command": [
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-B",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12_consumer_review_20261026\\probe_promisor.py",
+      "--out",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\t12_consumer_review_20261026\\evidence\\packaging_replay\\promisor"
+    ]
+  }
+]

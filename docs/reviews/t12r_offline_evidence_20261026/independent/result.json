@@ -1,0 +1,43 @@
+{
+  "status": "PASS",
+  "runner_sha256": "cd1bd28429ae90a206e833638b086bd99dc5d6d2123bed6b04fe412b66abcf3b",
+  "positive52_reused_author_raw_receipt_and_six_guarded_reads_verified": true,
+  "positive52_not_rerun": true,
+  "actual_git_cases": [
+    {
+      "case": "guarded-missing-blob",
+      "rc": 2,
+      "fetch_processes": 0,
+      "git_show_count": 1,
+      "all_show_guarded": true,
+      "entire_object_repo_files_unchanged": true,
+      "trace_sha256": "4bf3c3f49f04755a6000f494326911aa7e24fb867bcf7b7fede1c421caaaa44a",
+      "parent_guard": "0"
+    },
+    {
+      "case": "guarded-missing-commit",
+      "rc": 2,
+      "fetch_processes": 0,
+      "git_show_count": 1,
+      "all_show_guarded": true,
+      "entire_object_repo_files_unchanged": true,
+      "trace_sha256": "32a5c2002f59cfe71e681c5c8ecf1f9a4041d762a9d5127f93941a4a9955b9fb",
+      "parent_guard": "0"
+    },
+    {
+      "case": "whole-guard-removed",
+      "rc": 2,
+      "fetch_processes": 3,
+      "git_show_count": 1,
+      "all_show_guarded": false,
+      "entire_object_repo_files_unchanged": true,
+      "trace_sha256": "f11ab62b5e279e04e2d1ede2bc8b608994048bed8df8c32bb1b14868c9112fe4",
+      "parent_guard": "0"
+    }
+  ],
+  "unsupported_option_mock": "PASS explicitly mocked; not real oldGit certification",
+  "environment": "All inherited GIT_* removed for disposable repos; protocol=file only; global/system config disabled; parent guard=0; seed11object IDs/content verified; no alternates",
+  "source_scope": "Only snapshot acquisition/env/error behavior changed; exact consumer pin/hash/cases unchanged",
+  "external_T12R01": "OPEN pending external recheck",
+  "physical_T12": "NOT_RUN"
+}
