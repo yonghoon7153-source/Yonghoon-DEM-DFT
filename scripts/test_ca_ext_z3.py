@@ -28,7 +28,8 @@
   E  CG 반복 수 기록 — 수렴했을 때도 (주 · 보조 · ⓒ 이어 풀기) · 증서 켤 때만 (끔 = 옛 키 그대로) · 독립 셈과 같음
   O  (--old-scripts) 끈 경로 비트 대조 — 새 노브 끔 = 기반 코드와 매니페스트 (code_sha · exec_env 빼고) · step3 값 같음 ·
      face_alpha 만 (접합 끔) 솔브 비트 같음.  ★ 10-21 (D · 브리프 묶음 5): payload 대조는 b6 의 한 표 (`OLD_DIFF_ALLOW` · 켠 노브의
-     새 칸만 · 끈 경우 차이 0) · `--expect-identical` (기반 = 바로 앞 커밋) = 차이 0 · 기반 사본 옆에 docs/ 링크
+     새 칸만 · 끈 경우 차이 0) · `--expect-identical` (기반 = 바로 앞 커밋) = 차이 0 · 기반 사본 옆에 docs/ 링크 · ★ 10-25 묶음 B (결정 11)
+     SV 켬 꼴 셋 (b6 B 와 같은 꼴 · 경우 표지 sv_cf · 허용 행 세대 RR)
 ⚠ PASS 는 배선 · 계약 · 구현의 증거이지 R_j 값 · 판정 (R) 의 물리 검증이 아니다.
 """
 import argparse
@@ -982,17 +983,25 @@ def t_O():
     d = os.path.join(TD, 'op')
     os.makedirs(d)
     B6.make_fixture(d, sdcp=True)
+    du = os.path.join(TD, 'op_svu')                        # ★ 10-25 묶음 B (결정 11) — 못 가른 덩어리 1 (위 끝 풀이 기록)
+    os.makedirs(du)
+    B6.make_fixture_sv_unsplit(du, 6.5)
+    SVF, RT = ['--step3-cjunc-sv-cf'], ['--step3-rtol', '1e-12']
     #  새 기록 칸 (설계 · 브리프 항목 4 · 5) — 증서 켠 런의 반복 수 · face_alpha 런의 sid_off.  이것 말고는 바이트 같아야 한다.
     NEW_S3 = ('cg_iters', 'ion_cg_iters')
-    for nm, extra, allow in (('off LEAN2', B6.OFF + B6.LEAN2, ()), ('centerline LEAN2', ['--ptfe-stamp', 'centerline'] + B6.LEAN2, ()),
-                             ('off LEAN3', B6.OFF + B6.LEAN3, ()),
-                             ('off LEAN2 + 접합 (정량)', B6.OFF + B6.LEAN2 + B6.CJ, ()),
-                             ('off LEAN2 + rtol', B6.OFF + B6.LEAN2 + ['--step3-rtol', '1e-12'], ('iters',)),
-                             ('face_alpha LEAN2 + rtol', ['--ptfe-stamp', 'face_alpha'] + B6.LEAN2 + ['--step3-rtol', '1e-12'],
-                              ('iters', 'sid_off'))):
-        ro = B6.run_payload(d, extra, out=f'old_{len(nm)}_{sum(map(ord, nm)) % 99991}.json',
+    for nm, dd, extra, allow in (('off LEAN2', d, B6.OFF + B6.LEAN2, ()),
+                                 ('centerline LEAN2', d, ['--ptfe-stamp', 'centerline'] + B6.LEAN2, ()),
+                                 ('off LEAN3', d, B6.OFF + B6.LEAN3, ()),
+                                 ('off LEAN2 + 접합 (정량)', d, B6.OFF + B6.LEAN2 + B6.CJ, ()),
+                                 ('off LEAN2 + rtol', d, B6.OFF + B6.LEAN2 + RT, ('iters',)),
+                                 ('face_alpha LEAN2 + rtol', d, ['--ptfe-stamp', 'face_alpha'] + B6.LEAN2 + RT, ('iters', 'sid_off')),
+                                 #  ★ 10-25 묶음 B (결정 11) SV 켬 꼴 셋 (b6 B 와 같은 꼴)
+                                 ('off LEAN2 + 접합 + SV (rtol 없음)', d, B6.OFF + B6.LEAN2 + B6.CJ + SVF, ()),
+                                 ('off LEAN2 + 접합 + SV + rtol', d, B6.OFF + B6.LEAN2 + B6.CJ + SVF + RT, ('iters',)),
+                                 ('두 섬유 덩어리 + 접합 + SV + rtol', du, B6.OFF + B6.LEAN2 + B6.CJ + SVF + RT, ('iters',))):
+        ro = B6.run_payload(dd, extra, out=f'old_{len(nm)}_{sum(map(ord, nm)) % 99991}.json',
                             payload=os.path.join(old, 'mpm_webapp_payload.py'))
-        rn = B6.run_payload(d, extra, out=f'new_{len(nm)}_{sum(map(ord, nm)) % 99991}.json')
+        rn = B6.run_payload(dd, extra, out=f'new_{len(nm)}_{sum(map(ord, nm)) % 99991}.json')
         sn = {k: v for k, v in B6.s3_of(rn[2]).items() if k != 'manifest'}
         if 'iters' not in allow:
             chk(f'O2 [{nm}] 새 기록 칸 없음 (반복 수 · sid_off 는 켠 노브에서만)', not [k for k in sn if k in NEW_S3],

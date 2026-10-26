@@ -20,6 +20,8 @@
      전부를 한 표 `OLD_DIFF_ALLOW` (세대 Z3 · RCA1 — 켠 노브의 새 칸만) 로 판정 · 끈 경우 = 차이 0 · `--expect-identical` (기반 =
      바로 앞 커밋) = 표 없이 차이 0 · B0u = 그 표 · 함수의 합성 단위 시험 (기반 사본 없이).  z3 O 묶음이 같은 표 · 함수를 쓴다.
      ⚠ 기반 사본 옆에 docs/ 가 있어야 한다 (집전체 앵커 CSV — 없으면 대체 값 차이가 이유와 함께 실패).
+     ★ 10-25 묶음 B (결정 11 · 1저자 10-23 *"ㄱ"*) SV 켬 꼴 셋 (접합 + `--step3-cjunc-sv-cf` · rtol 없음 · rtol · 두 섬유 덩어리 침대 + rtol) ·
+     경우 표지 `sv_cf` · 허용 행 = 세대 RR (Rint ② 재검토 묶음 A · A′ · A″ · B 의 SV 새 칸) — σ · n_dof · 기존 칸 값은 표에 없다 (언제나 실패).
 ⚠ PASS 는 배선 · 계약 · 구현의 증거이지 R_j 값 · 판정 (R) 의 물리 검증이 아니다.
 """
 import argparse
@@ -1835,10 +1837,11 @@ def t_states_payload():
 #: ★ 10-21 (D · 브리프 묶음 5) — `--old-scripts` 대조에서 나와도 되는 칸 (한 곳 · z3 O 묶음도 이 표 · 함수를 쓴다).
 #:   한 줄 = (세대, 연산, 경로 정규식 (전체 일치), 경우 표지, 사유) — 연산 '+' 새 칸 · '-' 없어진 칸 · '~' 값 바뀜 ·
 #:   경로 = payload step3 를 {'manifest': 매니페스트 (code_sha · exec_env 빼고), 그 밖 step3 칸} 으로 본 점 경로.
-#:   경우 표지 = 그 칸이 나와도 되는 켠 노브 (face_alpha · rtol · cjunc) — 노브를 다 끈 경우 (off · centerline · LEAN 3) 에는
+#:   경우 표지 = 그 칸이 나와도 되는 켠 노브 (face_alpha · rtol · cjunc · ★ 10-25 sv_cf) — 노브를 다 끈 경우 (off · centerline · LEAN 3) 에는
 #:   어떤 칸도 허용되지 않는다 (끈 경로 비트 같음).  σ · n_dof · CG 결과 칸은 표에 없다 = 언제나 실패.
 #:   세대: Z3 = 기반이 ff9d72afe (Z3) 이전일 때 · RCA1 = 기반 47d23baba ↔ a76f59d0d (Codex RCA 수정 1 회차 — B 증서 v2 · S1 부피 ·
-#:   A 접합 v2) · RCA2 = a76f59d0d 뒤 B 의 증서 ↔ 런 결합 (PRE-impl-07) · A 의 접합 v3 (PRE-impl-01–06 · Q-A–Q-D).  ⚠ 새 칸을 더하는
+#:   A 접합 v2) · RCA2 = a76f59d0d 뒤 B 의 증서 ↔ 런 결합 (PRE-impl-07) · A 의 접합 v3 (PRE-impl-01–06 · Q-A–Q-D) · ★ 10-25 RR = Rint ② 재검토
+#:   묶음 A · A′ · A″ · B 의 SV 반사실 기록 새 칸 (기반 49a1af626 ↔ 묶음 B · sv_cf 경우만 · 결정 11).  ⚠ 새 칸을 더하는
 #:   묶음은 같은 커밋에서 이 표에 한 줄 (세대 표지) 을 올린다 · 바로 앞 기반과는 `--expect-identical`.
 OLD_DIFF_ALLOW = (
     ('Z3', '+', r'manifest\.ca_ext\.ptfe_face\.evidence\.fp\.sid_off', 'face_alpha', 'off 격자 sid 지문 (Z3)'),
@@ -1879,6 +1882,21 @@ OLD_DIFF_ALLOW = (
      'A 접합 v3 원장 입력 지문 (조각 · 덮인 포트 = 옮기지 않음 · Q-A · Q-C)'),
     ('RCA2', '+', r'manifest\.ca_ext\.cjunc\.protocol\.rules\.(piece|sv_cf)', 'cjunc', 'A 접합 규칙 v3 (조각 · SV 반사실 = 다리만)'),
     ('RCA2', '~', r'manifest\.ca_ext\.cjunc\.protocol\.rules\.(self_lc|self_s)', 'cjunc', 'A 자기 접합 규칙 v2 (접합 쌍 · 가장 가까운 점)'),
+    #  ★ 10-25 RR — Rint ② 재검토 묶음 A · A′ · A″ · B 의 SV 반사실 기록 새 칸 (결정 11 · 1저자 10-23 "ㄱ" · `--step3-cjunc-sv-cf` 경우만 · 새 칸만 (+) ·
+    #    σ · n_dof · 비 · 상태 · 옛 수 칸의 값은 표에 없다 = 언제나 실패) · 한정어 한 문장 (`qualifiers` · 묶음 A 판 문장) = 위 RCA1 '~' 행이 이미
+    #    허용 (cjunc 경우) · 실측 = 기반 49a1af626 · 9bec6b764 사본 ↔ 묶음 B (진행 기록 · REPORT_B)
+    ('RR', '+', r'manifest\.ca_ext\.cjunc\.evidence\.solve\.sv_counterfactual\.(standing|conv_cert_full|ratio_cert_interval)', 'sv_cf',
+     'A 증서 구간 기록 — 지위 · 주 해 증서 · 판정 근거 칸 (RCA2-01 · 04)'),
+    ('RR', '+', r'manifest\.ca_ext\.cjunc\.evidence\.solve\.sv_counterfactual\.(upper\.)?conv_cert\.(I_bot|target_(lo|hi|version|fp|tol)|'
+                r'zero_(source|graph)|reason|n_through_dof|sigma|bind_version|fp_(sid|sig|face_plan|cjunc_registry|cjunc_rows))', 'sv_cf',
+     'A 끝 증서 투영 — 목표량 구간 · 게시 판 전류 · 영값 위상 · 결합 칸 (RCA2-01 · 04)'),
+    ('RR', '+', r'manifest\.ca_ext\.cjunc\.evidence\.solve\.sv_counterfactual\.(upper\.)?conv_cert\.target_n_(edges|dof|plate_bot|plate_top)',
+     'sv_cf', 'A′ 증서 위상 수 (사전 공격 리뷰 C1 · Q12)'),
+    ('RR', '+', r'manifest\.ca_ext\.cjunc\.evidence\.solve\.sv_counterfactual\.rule', 'sv_cf', 'A′ 끊기 규칙 투영 (사전 공격 리뷰 C5 · Q14)'),
+    ('RR', '+', r'manifest\.ca_ext\.cjunc\.evidence\.solve\.sv_counterfactual\.(upper\.)?n_reach_pairs_cut', 'sv_cf',
+     'A″ 판에 닿는 성분에서 끊은 쌍 수 (Q17)'),
+    ('RR', '+', r'manifest\.ca_ext\.cjunc\.evidence\.solve\.sv_counterfactual\.upper\.n_reach_pairs_cut_vs_lower', 'sv_cf',
+     'B 위 끝의 아래 끝 계 대비 끊은 쌍 수 (X3 · Q21)'),
 )
 #: 허용이 아니라 이유만 붙이는 칸 (기반 사본의 환경 차이 — 고치는 길: 사본 옆에 docs/ 두기 · 링크)
 OLD_DIFF_HINTS = (
@@ -1969,6 +1987,8 @@ def case_tags(extra):
             tags.add('rtol')
         elif a == '--step3-cjunc':
             tags.add('cjunc')
+        elif a == '--step3-cjunc-sv-cf':                    # ★ 10-25 묶음 B (결정 11) — SV 반사실 기록 칸은 이 노브에서만
+            tags.add('sv_cf')
     return tags
 
 
@@ -2017,8 +2037,12 @@ def t_old_allow_unit():
     off, fa, rt, cj = (f_tags(x) for x in (['--ptfe-stamp', 'off'], ['--ptfe-stamp', 'face_alpha', '--step3-rtol', '1e-12'],
                                            ['--step3-rtol', '1e-12'], ['--step3-cjunc', '--step3-cjunc-rj-ohm', '1e6']))
     chk('B0u-3 경우 표지 — off = 없음 · face_alpha + rtol = 둘 · cjunc', off == set() and fa == {'face_alpha', 'rtol'}
-        and rt == {'rtol'} and 'cjunc' in cj and 'face_alpha' not in cj, (off, fa, rt, cj))
+        and rt == {'rtol'} and 'cjunc' in cj and 'face_alpha' not in cj and 'sv_cf' not in cj, (off, fa, rt, cj))
+    svt = f_tags(['--step3-cjunc', '--step3-cjunc-sv-cf', '--step3-rtol', '1e-12'])
+    chk('B0u-3b 경우 표지 — ★ 10-25 묶음 B (결정 11) 접합 + SV 반사실 + rtol = cjunc · sv_cf · rtol (sv_cf 는 --step3-cjunc-sv-cf 에서만)',
+        svt == {'cjunc', 'sv_cf', 'rtol'}, svt)
     SID = 'manifest.ca_ext.ptfe_face.evidence.fp.sid_off'
+    SVP = 'manifest.ca_ext.cjunc.evidence.solve.sv_counterfactual.'
     cases = (
         ('Z3 sid_off — face_alpha 경우', [('+', SID)], {'face_alpha'}, 0, 1),
         ('Z3 sid_off — 끈 경우 (off) = 실패', [('+', SID)], set(), 1, 0),
@@ -2037,6 +2061,18 @@ def t_old_allow_unit():
                                    ('+', 'manifest.ca_ext.cjunc.evidence.solve.sv_local_dissipation')], {'cjunc'}, 0, 2),
         ('p3ca id 바뀜 — cjunc 만 · face_alpha 는 실패', [('~', 'manifest.physics_protocol_id')], {'face_alpha'}, 1, 0),
         ('접합 칸 — 끈 경우 = 실패', [('+', 'manifest.ca_ext.cjunc.evidence.counts.n_subedges')], set(), 1, 0),
+        #  ★ 10-25 묶음 B (결정 11) — 세대 RR (Rint ② 재검토 묶음 A · A′ · A″ · B 의 SV 새 칸) = sv_cf 경우만 · 새 칸만 (+)
+        ('RR SV 기록 새 칸 — 지위 · 주 해 증서 · 판정 근거 · 규칙 · 끊은 쌍 수 (아래 · 위) · 아래 끝 대비 · 증서 투영 · 위상 수 — sv_cf',
+         [('+', SVP + x) for x in ('standing', 'conv_cert_full', 'ratio_cert_interval', 'rule', 'n_reach_pairs_cut', 'upper.n_reach_pairs_cut',
+                                  'upper.n_reach_pairs_cut_vs_lower', 'conv_cert.target_lo', 'conv_cert.bind_version', 'conv_cert.zero_graph',
+                                  'upper.conv_cert.I_bot', 'upper.conv_cert.target_n_edges', 'conv_cert.target_n_plate_top')],
+         {'cjunc', 'sv_cf', 'rtol'}, 0, 13),
+        ('RR SV 새 칸 — sv_cf 없이 (접합만) = 실패', [('+', SVP + 'standing'), ('+', SVP + 'upper.n_reach_pairs_cut_vs_lower')],
+         {'cjunc', 'rtol'}, 2, 0),
+        ('RR SV 기존 칸 값 바뀜 (~) = 실패 (비 · 상태 · 위 끝 끊은 간선 수)', [('~', SVP + 'sv_counterfactual_ratio'), ('~', SVP + 'status'),
+                                                              ('~', SVP + 'upper.n_edges_cut')], {'cjunc', 'sv_cf', 'rtol'}, 3, 0),
+        ('RR SV 칸 없어짐 (−) = 실패', [('-', SVP + 'n_reach_pairs_cut')], {'cjunc', 'sv_cf'}, 1, 0),
+        ('RR — 아래 끝 자리의 아래 끝 대비 새 칸 (위 끝 칸만 허용) = 실패', [('+', SVP + 'n_reach_pairs_cut_vs_lower')], {'cjunc', 'sv_cf'}, 1, 0),
     )
     for nm, diffs, tags, n_bad, n_seen in cases:
         probs, seen = f_prob(diffs, tags)
@@ -2052,9 +2088,9 @@ def t_old_allow_unit():
             _re.compile(row[2])
         except Exception as e:                              # noqa: BLE001 — 표 결함은 실패로 기록
             bad_rx.append((row[2], f'{type(e).__name__}: {e}'))
-    chk('B0u-7 표 꼴 — (세대, 연산 ∈ {+,−,~}, 정규식, 경우 표지 ∈ {face_alpha, rtol, cjunc}, 사유) · 정규식 컴파일',
-        not bad_rx and all(len(r) == 5 and r[1] in ('+', '-', '~') and r[3] in ('face_alpha', 'rtol', 'cjunc') and r[4] for r in table),
-        bad_rx)
+    chk('B0u-7 표 꼴 — (세대, 연산 ∈ {+,−,~}, 정규식, 경우 표지 ∈ {face_alpha, rtol, cjunc, sv_cf}, 사유) · 정규식 컴파일',
+        not bad_rx and all(len(r) == 5 and r[1] in ('+', '-', '~') and r[3] in ('face_alpha', 'rtol', 'cjunc', 'sv_cf') and r[4]
+                           for r in table), bad_rx)
 
 
 @case('B 끔 비트 동일 — 고치기 전 payload 와 대조 (--old-scripts)')
@@ -2086,17 +2122,24 @@ def t_bitid():
     try:
         os.makedirs(os.path.join(td, 'w'))
         d = make_fixture(os.path.join(td, 'w'), sdcp=True)
+        os.makedirs(os.path.join(td, 'svu'))
+        du = make_fixture_sv_unsplit(os.path.join(td, 'svu'), 6.5)      # ★ 10-25 묶음 B (결정 11) — 못 가른 덩어리 1 (위 끝 풀이 기록이 있다)
+        SVF, RT = ['--step3-cjunc-sv-cf'], ['--step3-rtol', '1e-12']
         #  ★ 10-21 (D · 브리프 묶음 5) — 옛 판은 Z3 새 칸 (sid_off · cg_iters · iters) 을 새 쪽에서만 빼서 Z3 이전 기반에서만 맞았다.
         #    이제 경로 차이 전부를 한 표 (OLD_DIFF_ALLOW) 로 판정한다: 끈 경우 = 차이 0 · 켠 경우 = 그 노브 표지의 칸만 ·
         #    --expect-identical (바로 앞 기반) = 차이 0.  접합 · face_alpha + rtol 경우를 더했다 (A · B 새 칸이 나오는 자리).
-        for nm, extra in (('off LEAN2', OFF + LEAN2), ('centerline LEAN2', ['--ptfe-stamp', 'centerline'] + LEAN2),
-                          ('off LEAN3', OFF + LEAN3), ('face_alpha LEAN2', ['--ptfe-stamp', 'face_alpha'] + LEAN2),
-                          ('off LEAN2 + rtol 1e-12', OFF + LEAN2 + ['--step3-rtol', '1e-12']),
-                          ('off LEAN2 + 접합', OFF + LEAN2 + CJ),
-                          ('face_alpha LEAN2 + rtol', ['--ptfe-stamp', 'face_alpha'] + LEAN2 + ['--step3-rtol', '1e-12'])):
+        for nm, dd, extra in (('off LEAN2', d, OFF + LEAN2), ('centerline LEAN2', d, ['--ptfe-stamp', 'centerline'] + LEAN2),
+                              ('off LEAN3', d, OFF + LEAN3), ('face_alpha LEAN2', d, ['--ptfe-stamp', 'face_alpha'] + LEAN2),
+                              ('off LEAN2 + rtol 1e-12', d, OFF + LEAN2 + RT),
+                              ('off LEAN2 + 접합', d, OFF + LEAN2 + CJ),
+                              ('face_alpha LEAN2 + rtol', d, ['--ptfe-stamp', 'face_alpha'] + LEAN2 + RT),
+                              #  ★ 10-25 묶음 B (결정 11) SV 켬 꼴 셋 — 세대 RR 허용 행 (SV 새 칸만 · σ · 기존 칸 값 = 그대로)
+                              ('off LEAN2 + 접합 + SV (rtol 없음 · 진단 기록)', d, OFF + LEAN2 + CJ + SVF),
+                              ('off LEAN2 + 접합 + SV + rtol (증서 구간 기록)', d, OFF + LEAN2 + CJ + SVF + RT),
+                              ('두 섬유 덩어리 + 접합 + SV + rtol (위 끝 풀이 기록)', du, OFF + LEAN2 + CJ + SVF + RT)):
             tag = f'{len(nm)}_{sum(map(ord, nm)) % 99991}'
-            r_old = run_payload(d, extra, out=f'old_{tag}.json', payload=os.path.join(ARGS.old_scripts, 'mpm_webapp_payload.py'))
-            r_new = run_payload(d, extra, out=f'new_{tag}.json')
+            r_old = run_payload(dd, extra, out=f'old_{tag}.json', payload=os.path.join(ARGS.old_scripts, 'mpm_webapp_payload.py'))
+            r_new = run_payload(dd, extra, out=f'new_{tag}.json')
             diffs = old_tree_diff(payload_tree(r_old[2]), payload_tree(r_new[2]))
             _ident = bool(getattr(ARGS, 'expect_identical', False))
             probs, seen = old_diff_problems(diffs, case_tags(extra), expect_identical=_ident)

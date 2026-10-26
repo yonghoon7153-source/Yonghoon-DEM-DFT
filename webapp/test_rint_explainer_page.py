@@ -20,6 +20,8 @@
      (PF2 H 변이 MF12 · MF13)
   ⑨ (10-23 · Codex 재검토 RCA2-01 · 1저자 10-23 Q1 (가) · author 10-23 ratified Q1-Q8) 쉽게 말하면 상자 ④ (nominal 비 vs 증서 구간) 가
      같은 꼴의 상자로 있고 · 상자 글 = 수정 계획 `docs/reviews/rint2_rereview_fix_plan_20261022.md` §2 원문 그대로 · 핵심 문장 · 머리 줄 10-23
+  ⑩ (10-25 · 묶음 B · 1저자 10-23 Q2 · Q3 (가) · author 10-23 ratified Q2-Q3 Q20-Q21) 쉽게 말하면 상자 ⑤ (같은 코드 · 같은 침대) 가 같은 꼴의
+     상자로 있고 · 상자 글 = 같은 수정 계획 §2 원문 그대로 · 핵심 문장 · 따로 section (10-25) · "지금" = 고치기 전 관문 주석 · 머리 줄 10-25
 
   python3 webapp/test_rint_explainer_page.py
 """
@@ -216,8 +218,8 @@ def main():
     bx.feed(src)
     bx.close()
     boxes = {k: _squash(''.join(v)) for k, v in bx.boxes.items()}
-    chk('상자 넷 — class="hl" 이 정확히 넷 (id easy-1 · easy-2 · easy-3 · ★ 10-23 easy-4)',
-        len(re.findall(r'class="hl"', src)) == 4 and sorted(boxes) == ['easy-1', 'easy-2', 'easy-3', 'easy-4'])
+    chk('상자 다섯 — class="hl" 이 정확히 다섯 (id easy-1 · easy-2 · easy-3 · ★ 10-23 easy-4 · ★ 10-25 easy-5)',
+        len(re.findall(r'class="hl"', src)) == 5 and sorted(boxes) == ['easy-1', 'easy-2', 'easy-3', 'easy-4', 'easy-5'])
     for k, mark in enumerate(BOX_MARKS, 1):
         want, got = plan_box_text(mark), boxes.get(f'easy-{k}', '')
         chk(f'상자 {mark} 머리 = "★ 쉽게 말하면 {mark}"', got.startswith(f'★ 쉽게 말하면 {mark}'))
@@ -242,6 +244,20 @@ def main():
         bool(sec4) and '10-23' in re.sub(r'<[^>]+>', '', sec4.group(1)) and 'id="easy-4"' in sec4.group(2))
     sub4 = re.search(r'<p class="sub">(.*?)</p>', src, re.S)
     chk('머리 줄 (.sub) 에 "10-23 갱신"', bool(sub4) and '10-23 갱신' in sub4.group(1))
+    print('── ⑩ 10-25 결정 상자 ⑤ (묶음 B · Q2 · Q3 — 같은 코드 · 같은 침대)')
+    b5, want5 = boxes.get('easy-5', ''), plan_box_text('⑤', PLAN_1022)
+    chk('상자 ⑤ 머리 = "★ 쉽게 말하면 ⑤"', b5.startswith('★ 쉽게 말하면 ⑤'))
+    chk('상자 ⑤ 글 = 수정 계획 (10-22) §2 원문 그대로 (markdown 표지 뺀 글 · 공백 하나로)', want5 is not None and b5 == want5)
+    for sent in ('같은 코드 · 같은 침대', 'git 조회 실패 = 멈춤', '사슬 ↔ 러너를 서로 대조', 'R 직전에 킷 파일을 다시 해시해 S0 보고와 대조한다'):
+        chk(f'상자 ⑤ 핵심 문장 — "{sent}"', sent in b5)
+    sec5 = re.search(r'<section class="hl-sec" id="decisions-1025"[^>]*>\s*<h2[^>]*>(.*?)</h2>(.*?)</section>', src, re.S)
+    chk('상자 ⑤ 묶음 = 따로 section (id decisions-1025) · 머리에 날짜 10-25 · 상자 ⑤ 가 그 안에',
+        bool(sec5) and '10-25' in re.sub(r'<[^>]+>', '', sec5.group(1)) and 'id="easy-5"' in sec5.group(2))
+    note5 = re.search(r'<p class="note">(.*?)</p>', sec5.group(2), re.S) if sec5 else None
+    nt5 = re.sub(r'<[^>]+>', '', note5.group(1)) if note5 else ''
+    chk('상자 ⑤ 주석 — 원문 출처 (수정 계획 §2) · "지금" = 고치기 전 관문 · 등록 R 에 같은 상자',
+        'rint2_rereview_fix_plan_20261022.md' in nt5 and '고치기 전' in nt5 and '등록 R' in nt5)
+    chk('머리 줄 (.sub) 에 "10-25 갱신"', bool(sub4) and '10-25 갱신' in sub4.group(1))
     hsec = re.search(r'<section class="hl-sec"[^>]*>\s*<h2[^>]*>(.*?)</h2>', src, re.S)
     chk('상자 묶음 머리에 날짜 10-22', bool(hsec) and '10-22' in re.sub(r'<[^>]+>', '', hsec.group(1)))
     sub = re.search(r'<p class="sub">(.*?)</p>', src, re.S)
