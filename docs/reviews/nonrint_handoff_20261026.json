@@ -1,0 +1,467 @@
+{
+  "schema": "nonrint_handoff_index_v1",
+  "scope": "read-only graph/source/provenance observation, not integration or test execution",
+  "observed_at_utc": "2026-10-26T11:03:58.368854+00:00",
+  "source": "446b5bf543c39120e0003f3a7e2272264d1e97a8",
+  "center": "93d93bc02f5a68d6551137ab420dbc0eea40b455",
+  "base": "7799a2ff64ba462b42ce05edd3e63b7c2854d557",
+  "current_local_base": "18c7b83f97f84808d3283d8bbc37725b48bc5924",
+  "ranges": {
+    "codex/unloading-ulpri": [
+      "e491ccd5643e4c395527bc54c5b83d9897e2bf46",
+      "8347d32ea678c0174bd77d4c79cfbd7b0591e4a3",
+      "652d43704034f24d2f4a024092b36ce0ddf558fe",
+      "01c1aaf5be8acdf7d1716f34cc86fc77d8e27362",
+      "643344fee22a5d1131a59c8cd46bcf6c9a09d65b",
+      "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde"
+    ],
+    "codex/lhs214-relaunch": [
+      "e41d091f5ac948b3529eaed3aae03eb380dad9e0",
+      "ffbd438e7522d58eb069561fe58020f4086707ac",
+      "ed6ed401f904d9f818cbdced42d111a7b1efb8d2",
+      "854857e576a2a8aba07ec861dbee39d4bb59efae"
+    ],
+    "codex/t12r01-closure": [
+      "e7131e7d978085e9705b9c833616ec36b1208210",
+      "962caea2d1857b0e34fe724e38815661936b7183",
+      "be6af85342428731030042c8a669f0b830a7e882",
+      "2443a63eaa87d52e385a35f8bab4225efa0d25fe",
+      "d6e692488a56baf11f7206c5cd45c6bc404b92f0",
+      "f1da507e8ab8bf812a242b9749d4c320be90fd73",
+      "2b4b40ea5e375659bfad8243c1ccb6fe0ef2853f",
+      "bffc42cab29da37b45f8a713e30e8572b91e7da3",
+      "3eecce8af503556b678f8f4a02343e6bce3d0b83",
+      "96f15ed17e03181b6096fb65f71ec7f577f17523",
+      "58b6ccb0d754b07b6f1695328267c9aa531a4bb6"
+    ],
+    "codex/mixer-mxd2": [
+      "3ca28d474d4f0a775bad657acc307f1a5c8447ce",
+      "486a57cf58d3e0d93ef79be6aae50968929099c0",
+      "34782a1874435e317f44c9d8f2045d53ceaf4dcc",
+      "045e0b3098e8fe5a64d6eb0da310da776e68f995"
+    ],
+    "codex/mixer-d3-design": [
+      "1c58f45b686307bbbce289f32c03ed3c6c07a057",
+      "d5ab56ba9a9416e5cae2becf3c85b7c54d30d1d2",
+      "9c2f7b47fd4559ee4c08f23e667cdae92badbb04",
+      "e0daf7b234bcc7935259d786e270268372abe2a2"
+    ]
+  },
+  "unique_implementation_and_closure_commits": 29,
+  "center_to_common_count": 64,
+  "overlaps": [
+    {
+      "a": "codex/unloading-ulpri",
+      "b": "codex/lhs214-relaunch",
+      "count": 0,
+      "different": [],
+      "paths": []
+    },
+    {
+      "a": "codex/unloading-ulpri",
+      "b": "codex/t12r01-closure",
+      "count": 53,
+      "different": [],
+      "paths": [
+        "docs/reviews/codex_dem_unloading_resume_integer_request_20261024.md",
+        "docs/reviews/codex_dem_unloading_ulpri_recheck_request_20261024.md",
+        "docs/reviews/codex_review_unloading_ulpr_integer_20261024/.gitattributes",
+        "docs/reviews/codex_review_unloading_ulpr_integer_20261024/codex_review_unloading_ulpr_integer_20261024.md",
+        "docs/reviews/codex_review_unloading_ulpr_integer_20261024/evidence/boundary/result.json",
+        "docs/reviews/codex_review_unloading_ulpr_integer_20261024/evidence/boundary_baseline/result.json",
+        "docs/reviews/codex_review_unloading_ulpr_integer_20261024/evidence/independent/integer_oracle.json",
+        "docs/reviews/codex_review_unloading_ulpr_integer_20261024/evidence/mutations_replayed/results.json",
+        "docs/reviews/codex_review_unloading_ulpr_integer_20261024/evidence/scope_and_counts.json",
+        "docs/reviews/codex_review_unloading_ulpr_integer_20261024/evidence/windows_diagnostic/results.json",
+        "docs/reviews/ulpr_resume_integer_evidence_20261024/NOTE.md",
+        "docs/reviews/ulpr_resume_integer_evidence_20261024/README.md",
+        "docs/reviews/ulpr_resume_integer_evidence_20261024/archive-provenance.json",
+        "docs/reviews/ulpr_resume_integer_evidence_20261024/author/cli-before/results.json",
+        "docs/reviews/ulpr_resume_integer_evidence_20261024/author/cli-v5/results.json",
+        "docs/reviews/ulpr_resume_integer_evidence_20261024/author/deck-probe-v5/deck_probe.json",
+        "docs/reviews/ulpr_resume_integer_evidence_20261024/author/final-v5-suite/summary.json",
+        "docs/reviews/ulpr_resume_integer_evidence_20261024/author/mutations-v5/results.json",
+        "docs/reviews/ulpr_resume_integer_evidence_20261024/author/scope.json",
+        "docs/reviews/ulpr_resume_integer_evidence_20261024/author/test-first-event-separator.log",
+        "docs/reviews/ulpr_resume_integer_evidence_20261024/author/test-first-final.log",
+        "docs/reviews/ulpr_resume_integer_evidence_20261024/author/test-first-line-separator.log",
+        "docs/reviews/ulpr_resume_integer_evidence_20261024/author/test-first-manifest-space.log",
+        "docs/reviews/ulpr_resume_integer_evidence_20261024/author/test-first-r39.log",
+        "docs/reviews/ulpr_resume_integer_evidence_20261024/author/test-first-state-space.log",
+        "docs/reviews/ulpr_resume_integer_evidence_20261024/completion.md",
+        "docs/reviews/ulpr_resume_integer_evidence_20261024/full_gate/check-all.log",
+        "docs/reviews/ulpr_resume_integer_evidence_20261024/full_gate_receipt.json",
+        "docs/reviews/ulpr_resume_integer_evidence_20261024/history/pre-full-gate-inputs.zip",
+        "docs/reviews/ulpr_resume_integer_evidence_20261024/history/reports-original.zip",
+        "docs/reviews/ulpr_resume_integer_evidence_20261024/independent/ulpr/final-v5/result.json",
+        "docs/reviews/ulpr_resume_integer_evidence_20261024/independent/ulpr/final-v5/review.md",
+        "docs/reviews/ulpr_resume_integer_evidence_20261024/independent/ulpr/independent-mutations-v5/result.json",
+        "docs/reviews/ulpr_resume_integer_evidence_20261024/independent/ulpr/note-review.json",
+        "docs/reviews/ulpr_resume_integer_evidence_20261024/independent/ulpr/note-review.md",
+        "docs/reviews/ulpr_resume_integer_evidence_20261024/independent/ulpr/portable/provenance.json",
+        "docs/reviews/ulpr_resume_integer_evidence_20261024/package_manifest.json",
+        "docs/reviews/ulpr_resume_integer_evidence_20261024/source/candidate.diff",
+        "docs/reviews/ulpr_resume_integer_evidence_20261024/source_manifest.json",
+        "docs/reviews/ulpri_marker_evidence_20261024/NOTE.md",
+        "docs/reviews/ulpri_marker_evidence_20261024/README.md",
+        "docs/reviews/ulpri_marker_evidence_20261024/author/cli/baseline-result.json",
+        "docs/reviews/ulpri_marker_evidence_20261024/author/cli/final-result.json",
+        "docs/reviews/ulpri_marker_evidence_20261024/author/doc-only-delta.json",
+        "docs/reviews/ulpri_marker_evidence_20261024/author/kit-suite/summary.json",
+        "docs/reviews/ulpri_marker_evidence_20261024/author/mutants/portable-check.json",
+        "docs/reviews/ulpri_marker_evidence_20261024/author/mutants/report.json",
+        "docs/reviews/ulpri_marker_evidence_20261024/author/mutate_markers.original-v2.py",
+        "docs/reviews/ulpri_marker_evidence_20261024/author/r40-fixed.json",
+        "docs/reviews/ulpri_marker_evidence_20261024/author/source-freeze.json",
+        "docs/reviews/ulpri_marker_evidence_20261024/author/source-scope.json",
+        "docs/reviews/ulpri_marker_evidence_20261024/author/tests-first-raw-marker.json",
+        "docs/reviews/ulpri_marker_evidence_20261024/author/tests-first.json"
+      ]
+    },
+    {
+      "a": "codex/unloading-ulpri",
+      "b": "codex/mixer-mxd2",
+      "count": 0,
+      "different": [],
+      "paths": []
+    },
+    {
+      "a": "codex/unloading-ulpri",
+      "b": "codex/mixer-d3-design",
+      "count": 0,
+      "different": [],
+      "paths": []
+    },
+    {
+      "a": "codex/lhs214-relaunch",
+      "b": "codex/t12r01-closure",
+      "count": 0,
+      "different": [],
+      "paths": []
+    },
+    {
+      "a": "codex/lhs214-relaunch",
+      "b": "codex/mixer-mxd2",
+      "count": 0,
+      "different": [],
+      "paths": []
+    },
+    {
+      "a": "codex/lhs214-relaunch",
+      "b": "codex/mixer-d3-design",
+      "count": 0,
+      "different": [],
+      "paths": []
+    },
+    {
+      "a": "codex/t12r01-closure",
+      "b": "codex/mixer-mxd2",
+      "count": 0,
+      "different": [],
+      "paths": []
+    },
+    {
+      "a": "codex/t12r01-closure",
+      "b": "codex/mixer-d3-design",
+      "count": 0,
+      "different": [],
+      "paths": []
+    },
+    {
+      "a": "codex/mixer-mxd2",
+      "b": "codex/mixer-d3-design",
+      "count": 0,
+      "different": [],
+      "paths": []
+    }
+  ],
+  "source_overlap": {
+    "codex/unloading-ulpri": [],
+    "codex/lhs214-relaunch": [],
+    "codex/t12r01-closure": [],
+    "codex/mixer-mxd2": [],
+    "codex/mixer-d3-design": []
+  },
+  "ulpri_ancestor_of_t12closure": false,
+  "correspondence_commits": [
+    "3fab532fa0409c5300e8f2c3336cd408259a6064",
+    "18c7b83f97f84808d3283d8bbc37725b48bc5924"
+  ],
+  "remote_reply": {
+    "path": "docs/collab/claude_to_codex/20261026-1800_nonrint-facts.md",
+    "introduced_commit": "7fd4c9b4601f6fc63905e5fe20bc5cccf6021bb8",
+    "blob": "dedc1b149fd44e096d905d95c2677b290bc643dc",
+    "sha256": "f5c9ac18caf5147b116800dfedde3028bb92c21eef395f2c8a801f6a8010d0d9"
+  },
+  "integration_performed": false,
+  "submitted_artifacts": [
+    {
+      "pin": "2443a63eaa87d52e385a35f8bab4225efa0d25fe",
+      "zip": "codex-dem-gen2-request-2443a63eaa87.zip",
+      "sha256": "68917168b8722e35fb3af01302cf4857058f22e70e7bfd7dda7fa723ffc55973",
+      "bytes": 2330179
+    },
+    {
+      "pin": "854857e576a2a8aba07ec861dbee39d4bb59efae",
+      "zip": "codex-lhs214-relaunch-854857e576a2.zip",
+      "sha256": "d83c3d270dd88d0c1b5c88b062e70100008047a645b683db1e60595f851583ad",
+      "bytes": 2391724
+    },
+    {
+      "pin": "e0daf7b234bcc7935259d786e270268372abe2a2",
+      "zip": "codex-mixer-d3-design-e0daf7b234bc.zip",
+      "sha256": "1c72d096da35b7a24c2d513ba7ed004588debcf568fac19476d472d0e0e2d331",
+      "bytes": 2373542
+    },
+    {
+      "pin": "045e0b3098e8fe5a64d6eb0da310da776e68f995",
+      "zip": "codex-mixer-mxd2-045e0b3098e8.zip",
+      "sha256": "39a41943eed7f4eb9897f1698e72d44ed32422487466290b74285bece201cac9",
+      "bytes": 5639243
+    },
+    {
+      "pin": "01c1aaf5be8acdf7d1716f34cc86fc77d8e27362",
+      "zip": "codex-unloading-ulpr-01c1aaf5be8a.zip",
+      "sha256": "ca2925b6044b72a7c077058c0a3cfbd00595ccc01aaa75d86daa0111da73f393",
+      "bytes": 4597435
+    },
+    {
+      "pin": "2b4b40ea5e375659bfad8243c1ccb6fe0ef2853f",
+      "zip": "codex-dem-gen2-t12-2b4b40ea5e37.zip",
+      "sha256": "a5c6356e54bc9a985b7d3a5473858e11aed11862051cd528aeb8aabd45924482",
+      "bytes": 403898
+    },
+    {
+      "pin": "96f15ed17e03181b6096fb65f71ec7f577f17523",
+      "zip": "codex-dem-gen2-t12r-96f15ed17e03.zip",
+      "sha256": "fd52dd397e47ee93d91432b4c045c43196b51527d5c52038b4c863d233518bb7",
+      "bytes": 3078303
+    },
+    {
+      "pin": "58b6ccb0d754b07b6f1695328267c9aa531a4bb6",
+      "zip": "codex-t12r01-closure-58b6ccb0d754.zip",
+      "sha256": "d99fdd2b50b02d7c10a9ae34b25372aecfb1b5c31a4983db409e4b616416b543",
+      "bytes": 361945
+    },
+    {
+      "pin": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde",
+      "zip": "codex-unloading-ulpri-4c29705fa1c4.zip",
+      "sha256": "84aa1bf806d9008d17ef6fad9a730d6ce226ffe5bff4852101338aa9a1deb93c",
+      "bytes": 1815505
+    },
+    {
+      "pin": "bffc42cab29da37b45f8a713e30e8572b91e7da3",
+      "zip": "codex-ulpri-closure-bffc42cab29d.zip",
+      "sha256": "125c7652bc83a8fec42be56d7b299785b82bc4e3b98e86b481f9173e6e588220",
+      "bytes": 2440177
+    }
+  ],
+  "p1_current_disk_identity": "USER_OWNED_CHECK_PENDING",
+  "p2_physical": "NOT_RUN",
+  "mixer_external_reviews": "PENDING; no matching new receipt in observed source changes",
+  "ci_wiring": {
+    "method": "Read-only Git source/config inspection at actual pins; no test/CLI execution or new integration",
+    "tracks": [
+      {
+        "name": "ULPRI",
+        "pin": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde",
+        "commands": [
+          "python3 -I docs/data/ps45_unload_20261009/ul_reader.py --selftest",
+          "python3 -I docs/data/ps45_unload_20261009/ul_gates.py --selftest",
+          "python3 -I docs/data/ps45_unload_20261009/ul_runner_test.py --selftest",
+          "python3 -I docs/data/ps45_unload_20261009/make_unload_decks.py --check",
+          "python3 -I docs/data/ps45_unload_20261009/seal_kit.py --check"
+        ],
+        "deps": [
+          "Python standard library; complete sealed kit incl params, sibling modules, decks, SHA256SUMS, history fixtures; runner mock uses Bash and fake mpirun/lmp in writable temporary directory"
+        ],
+        "scope": "Direct kit regressions and generation/seal checks; no actual DEM qualification",
+        "entrypoints": [
+          "docs/data/ps45_unload_20261009/ul_reader.py",
+          "docs/data/ps45_unload_20261009/ul_gates.py",
+          "docs/data/ps45_unload_20261009/ul_runner_test.py"
+        ],
+        "source_hashes": {
+          "docs/data/ps45_unload_20261009/ul_reader.py": "dfc06b8dbf53a8cab05df297890e1f8ca1d0fa038536c7c13ed8b8677e521723",
+          "docs/data/ps45_unload_20261009/ul_gates.py": "c8d45a9cf75f0806e612d810942d23adea4b40feaa5f31f7d279eb8386358de6",
+          "docs/data/ps45_unload_20261009/ul_runner_test.py": "e675cddf557d83a28080ef9c35cc4aa67efe79169926eb0f94448b7dc0680551"
+        },
+        "direct_entrypoints_in_ci_or_check_all": {
+          "docs/data/ps45_unload_20261009/ul_reader.py": false,
+          "docs/data/ps45_unload_20261009/ul_gates.py": false,
+          "docs/data/ps45_unload_20261009/ul_runner_test.py": false
+        },
+        "inventory_rows": [],
+        "fast_driver_wired_both": true,
+        "synthetic_or_static_validation_commands": [
+          "python3 -I docs/data/ps45_unload_20261009/ul_reader.py --selftest",
+          "python3 -I docs/data/ps45_unload_20261009/ul_gates.py --selftest",
+          "python3 -I docs/data/ps45_unload_20261009/ul_runner_test.py --selftest",
+          "python3 -I docs/data/ps45_unload_20261009/make_unload_decks.py --check",
+          "python3 -I docs/data/ps45_unload_20261009/seal_kit.py --check"
+        ],
+        "data_dependent_cli_examples_not_ready_to_run": []
+      },
+      {
+        "name": "LHS214",
+        "pin": "854857e576a2a8aba07ec861dbee39d4bb59efae",
+        "commands": [
+          "python3 scripts/run_network_194_parallel.py --selftest",
+          "python3 scripts/run_network_194_parallel.py preflight-verify --receipt <existing-receipt.json> --expect-set <production194|supp20> --approved-sha <approved-pin>"
+        ],
+        "deps": [
+          "Python; Git; POSIX subprocess/process/resource behavior; writable temporary directories",
+          "Repository siblings lhs_harvest_batch/lhs_webapp_batch and transitive pipeline modules (network_conductivity,tau_flux,webapp/import-observation paths); scientific/web dependencies from existing CI environment, not a stdlib-only assertion"
+        ],
+        "scope": "Synthetic worker/selftest plus existing receipt verification; run/retry/submission excluded",
+        "entrypoints": [
+          "scripts/run_network_194_parallel.py"
+        ],
+        "source_hashes": {
+          "scripts/run_network_194_parallel.py": "3220be53fb89cd16c81f0273c8b9f7444f262c5311d02b2017756fd94fd66ac8"
+        },
+        "direct_entrypoints_in_ci_or_check_all": {
+          "scripts/run_network_194_parallel.py": false
+        },
+        "inventory_rows": [
+          {
+            "path": "scripts/run_network_194_parallel.py",
+            "flag": "--selftest",
+            "class": "fast",
+            "lane_column": "none"
+          }
+        ],
+        "fast_driver_wired_both": true,
+        "synthetic_or_static_validation_commands": [
+          "python3 scripts/run_network_194_parallel.py --selftest"
+        ],
+        "data_dependent_cli_examples_not_ready_to_run": [
+          "python3 scripts/run_network_194_parallel.py preflight-verify --receipt <existing-receipt.json> --expect-set <production194|supp20> --approved-sha <approved-pin>"
+        ]
+      },
+      {
+        "name": "T12R",
+        "pin": "96f15ed17e03181b6096fb65f71ec7f577f17523",
+        "commands": [
+          "python3 -I scripts/test_dem_gen2_t12_consumer_contract.py --repo <object-repository> [--json <new-receipt.json>]",
+          "python3 -I scripts/test_dem_gen2_t12_offline.py --repo <object-repository> --source <pinned-checkout> --output <new-scratch-directory> --check-guard-mutation"
+        ],
+        "deps": [
+          "Python standard library; Git supporting global --no-lazy-fetch (unsupported option fails closed); all required4c commit/tree/sixblob objects already local",
+          "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/source-manifest.json,p1-consumer-contract.json; offline regression also fixture-results.json",
+          "Temporary filesystem; offline mutation intentionally attempts file-transport fetch against empty disposable local remote; not an external-network/physical run"
+        ],
+        "scope": "52 synthetic observations against explicit4c Git snapshot, and offline loader controls; never checkout-current consumer verification",
+        "entrypoints": [
+          "scripts/test_dem_gen2_t12_consumer_contract.py",
+          "scripts/test_dem_gen2_t12_offline.py"
+        ],
+        "source_hashes": {
+          "scripts/test_dem_gen2_t12_consumer_contract.py": "cd1bd28429ae90a206e833638b086bd99dc5d6d2123bed6b04fe412b66abcf3b",
+          "scripts/test_dem_gen2_t12_offline.py": "b9bf6344c30d1a1c6ae458dd7cc5c0694c805563e872ad4aa2d86af4bb8c4da6"
+        },
+        "direct_entrypoints_in_ci_or_check_all": {
+          "scripts/test_dem_gen2_t12_consumer_contract.py": false,
+          "scripts/test_dem_gen2_t12_offline.py": false
+        },
+        "inventory_rows": [],
+        "fast_driver_wired_both": true,
+        "synthetic_or_static_validation_commands": [
+          "python3 -I scripts/test_dem_gen2_t12_consumer_contract.py --repo <object-repository> [--json <new-receipt.json>]",
+          "python3 -I scripts/test_dem_gen2_t12_offline.py --repo <object-repository> --source <pinned-checkout> --output <new-scratch-directory> --check-guard-mutation"
+        ],
+        "data_dependent_cli_examples_not_ready_to_run": []
+      },
+      {
+        "name": "MixerD2",
+        "pin": "045e0b3098e8fe5a64d6eb0da310da776e68f995",
+        "commands": [
+          "python3 -I scripts/test_mixer_d2_consumers.py",
+          "python3 scripts/make_mixer_deck.py --selftest",
+          "python3 scripts/mixer_deck_readback.py --selftest",
+          "python3 scripts/mixer_deck_diff.py --selftest",
+          "python3 -I scripts/mixer_deck_readback.py --d2 <deck> <meta>"
+        ],
+        "deps": [
+          "Python; sibling make_mixer_deck,mixer_deck_readback,mixer_deck_diff,mixer_smoke_blind and its local imports",
+          "numpy appears in smoke import closure; full existing CI environment is available package baseline, not minimal dependency proof; synthetic temp files/subprocesses"
+        ],
+        "scope": "D2 synthetic deck/meta consumer consistency; external review pending, no simulator qualification",
+        "entrypoints": [
+          "scripts/test_mixer_d2_consumers.py"
+        ],
+        "source_hashes": {
+          "scripts/test_mixer_d2_consumers.py": "a5014bf3f5349b6f6569586141d3f4e4447b1c0cc767343a5a487d3ce822c5a9"
+        },
+        "direct_entrypoints_in_ci_or_check_all": {
+          "scripts/test_mixer_d2_consumers.py": false
+        },
+        "inventory_rows": [
+          {
+            "path": "scripts/make_mixer_deck.py",
+            "flag": "--selftest",
+            "class": "fast",
+            "lane_column": "none"
+          },
+          {
+            "path": "scripts/mixer_deck_readback.py",
+            "flag": "--selftest",
+            "class": "fast",
+            "lane_column": "none"
+          },
+          {
+            "path": "scripts/mixer_deck_diff.py",
+            "flag": "--selftest",
+            "class": "fast",
+            "lane_column": "none"
+          }
+        ],
+        "fast_driver_wired_both": true,
+        "synthetic_or_static_validation_commands": [
+          "python3 -I scripts/test_mixer_d2_consumers.py",
+          "python3 scripts/make_mixer_deck.py --selftest",
+          "python3 scripts/mixer_deck_readback.py --selftest",
+          "python3 scripts/mixer_deck_diff.py --selftest"
+        ],
+        "data_dependent_cli_examples_not_ready_to_run": [
+          "python3 -I scripts/mixer_deck_readback.py --d2 <deck> <meta>"
+        ]
+      },
+      {
+        "name": "MixerD3",
+        "pin": "e0daf7b234bcc7935259d786e270268372abe2a2",
+        "commands": [
+          "python3 -I scripts/test_mixer_d3_candidates.py",
+          "python3 -I scripts/mixer_d3_candidates.py --contract <contract.json> --observations <observations.json> --out <new-result.json>"
+        ],
+        "deps": [
+          "Python standard library; sibling mixer_d3_candidates.py; temporary synthetic files; actual CLI requires supplied contract/observation data and bound artifact paths"
+        ],
+        "scope": "Finite-grid decision contract; no physical observations generated; external review pending",
+        "entrypoints": [
+          "scripts/test_mixer_d3_candidates.py"
+        ],
+        "source_hashes": {
+          "scripts/test_mixer_d3_candidates.py": "12155f4e420ea3b15529501562b9fd6758c2767cbfcf4e1c79d6cdd7f4034d4c"
+        },
+        "direct_entrypoints_in_ci_or_check_all": {
+          "scripts/test_mixer_d3_candidates.py": false
+        },
+        "inventory_rows": [],
+        "fast_driver_wired_both": true,
+        "synthetic_or_static_validation_commands": [
+          "python3 -I scripts/test_mixer_d3_candidates.py"
+        ],
+        "data_dependent_cli_examples_not_ready_to_run": [
+          "python3 -I scripts/mixer_d3_candidates.py --contract <contract.json> --observations <observations.json> --out <new-result.json>"
+        ]
+      }
+    ],
+    "ci_packages": "numpy scipy matplotlib flask requests networkx adjustText markdown pandas pillow",
+    "fast_inventory_semantics": "run_fast selects registered klass=fast entrypoints, not lane column. Therefore lane=none alone does NOT mean omitted; LHS selftest and three older mixer selftests run via driver. New direct D2/D3/T12 and ULPRI kit tests absent from these invocation/inventory paths.",
+    "integration_gap": "No test of future integrated checkout-current P2 producer/consumer found in these pinned track entrypoints. T12 explicitly loads six4c Git blobs and rejects module escape; --repo changes object-store location, not consumer version. Integration must retain historical pinned regression separately and add/review current-code boundary verification; past155 PASS is not future integrated-tree PASS.",
+    "fast_name_clarification": "run_fast/--run-fast is repository test-lane terminology, unrelated to assistant model or Fast preference."
+  },
+  "scientific_or_full_suite_rerun": false,
+  "targeted_document_checks": "Required before publication; external preflight receipt records the checked final tree"
+}
