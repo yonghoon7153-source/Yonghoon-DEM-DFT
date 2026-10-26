@@ -1,0 +1,26 @@
+{
+ "kind": "kprobe_inputs",
+ "card_gate": "G_k_탐침",
+ "group": "target",
+ "kspacing_phase": null,
+ "kpoints_target": "4 4 2",
+ "jobs": {
+  "host": {
+   "k_main": [
+    "3",
+    "3",
+    "2"
+   ],
+   "k_probe": [
+    "4",
+    "4",
+    "2"
+   ],
+   "nosym": ".true.",
+   "cell_spliced": false,
+   "group": "target",
+   "main_in_sha256": "0bc040dec744594990466240df95ab734854de59feb2a7a5cf9aff2faf9eccef",
+   "main_out_sha256": "38b423c643114dee034107d99f743e1ec22d7eb5e55502c811daafe37fe518dc"
+  }
+ }
+}

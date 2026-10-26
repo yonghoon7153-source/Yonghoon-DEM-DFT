@@ -41,6 +41,15 @@
     ΔE_V = −P²V/(2B) 어림 (EOS 대신 · CLAUDE.md 2026-10-23 규칙) · --pair A B 로 Y = ΔE_A − ΔE_B ·
     G_V (|P| ≤ 2 GPa · 셀 간 보정 차 ≤ 1 meV/atom) · 분해능 (--resolution_meV) · 상 Pulay 차.
 
+2026-10-26 확장 (Nd Q2 · 카드 §4 G_k_탐침 · 결과 전):
+  · --kprobe --runs <본 런 폴더> — 본 런 (잡마다 scf.in · scf.out) 의 이완 끝 기하로 k 탐침 scf 입력을 쓴다.
+    상 (기저 안) = 최종 셀 + 좌표 · k 간격 --kspacing_phase · --phase_symmetry 면 nosym = .false. ·
+    타깃 (기저 밖) = 좌표만 · k --kpoints · nosym 은 본 입력 그대로. calculation = 'scf' · &IONS · &CELL 을 뺀다.
+    기하는 tools/sei/splice_relaxed.py 가 덮어쓴다 (같은 판정 · 같은 실패). 러너 설정 균일성 검사가
+    nosym 까지 보므로 <out>/phase · <out>/target 두 폴더로 나눠 쓴다.
+  · --kprobe_read --runs <본 런> --probe <탐침 폴더> — 잡마다 |E(탐침) − E(본)| / 원자 를 셈해
+    상은 > GK_MAX_MEV 면 '탐침 값을 쓴다' · 타깃은 > GK_MAX_MEV 면 'k 한계' 로 판정한다 (Y 는 안 셈).
+
   ⛔ 확장이 못 하는 것
     · 압력 어림은 조화 근사다 — |P| 가 크면 (> 2 GPa) 틀어진다 (그래서 G_V 가 EOS 로 넘긴다)
     · 비등방 응력 (모양) 은 안 본다 — P (평균) 만 쓴다
@@ -209,6 +218,10 @@ SANITY_MAX_DE_EV = 2.0
 GV_MAX_P_GPA = 2.0          #: G_V — 이보다 크면 조화 어림을 믿지 않는다 (EOS 로)
 GV_MAX_PAIR_MEV = 1.0       #: G_V — 두 셀의 원자당 보정 차가 이보다 크면 EOS 로
 PULAY_MAX_MEV = 0.5         #: vc-relax 상 — 끝 SCF 와 마지막 BFGS 에너지 차 (원자당)
+GK_MAX_MEV = 1.0            #: G_k 탐침 — 본 k 와 탐침 k 의 원자당 에너지 차 문턱 (카드 §4)
+#: 러너 run_force_check_scf.sh 의 _UNIFORM_KEYS 에서 nosym 을 뺀 것 — 탐침이 본 입력과 같은 설정인지 본다
+_SETTING_KEYS = ("ecutwfc|ecutrho|occupations|smearing|degauss|conv_thr|mixing_mode|mixing_beta|"
+                 "electron_maxstep|diagonalization|nspin")
 EV_PER_J = 1.0 / 1.602176634e-19
 
 
@@ -253,20 +266,104 @@ def volume_correction_eV(p_kbar: float, v_A3: float, b_GPa: float) -> float:
 
 
 def pulay_gap_meV_per_atom(path, nat: int):
-    """vc-relax 출력: 끝 SCF ('!' 마지막) 와 그 앞 BFGS 의 마지막 '!' 의 차 (meV/원자).
+    """vc-relax 출력: 끝 SCF 와 마지막 BFGS 스텝의 에너지 차 (meV/원자).
 
-    끝 SCF 가 없으면 (vc-relax 가 아니거나 안 끝났으면) None — 0 으로 두지 않는다.
+    끝 SCF = 마지막 'End final coordinates' **뒤의** '!' · 마지막 BFGS = 그 **앞의** 마지막 '!'.
+    ⛔ 2026-10-26 — 처음 판은 문구 'A final scf calculation at the relaxed structure' 로 끝 SCF 를 찾았는데,
+      QE 7.4.1 은 'Final scf calculation at the relaxed structure.' 로 찍는다 ('A' 없음 · 대문자 F).
+      그래서 Nd Q2 의 다섯 상 출력이 전부 None 이 됐고, --collect 는 None 만 있으면 Pulay 줄을 안 찍어서
+      **게이트가 조용히 빠졌다** (시험 fixture 가 옛 문구였다). 이제 문구가 아니라 출력 구조로 본다 —
+      러너 run_force_check_scf.sh 의 _fc_ok 와 같은 기준이다 (QE 6.x · 7.x 둘 다).
+    끝 SCF 가 없으면 (relax · 안 끝남 · nstep 소진) None — 0 으로 두지 않는다.
     """
     try:
         txt = Path(path).read_text(errors="ignore")
     except OSError:
         return None
-    if "A final scf calculation at the relaxed structure" not in txt:
+    k = txt.rfind("End final coordinates")
+    if k < 0 or nat < 1 or "bfgs converged" not in txt[:k]:
         return None
-    es = [float(x) for x in re.findall(r"^!\s+total energy\s+=\s+(-?\d+\.\d+)\s+Ry", txt, re.M)]
-    if len(es) < 2 or nat < 1:
+    pat = re.compile(r"^!\s+total energy\s+=\s+(-?\d+\.\d+)\s+Ry", re.M)
+    before = [float(x) for x in pat.findall(txt[:k])]
+    after = [float(x) for x in pat.findall(txt[k:])]
+    if not before or not after:
         return None
-    return abs(es[-1] - es[-2]) * 13.605693122994 * 1000.0 / nat
+    return abs(after[-1] - before[-1]) * 13.605693122994 * 1000.0 / nat
+
+
+def qe_calculation(path) -> str | None:
+    """QE 입력의 calculation 값 ('scf' · 'relax' · 'vc-relax' …). 못 읽으면 None."""
+    try:
+        m = re.search(r"calculation\s*=\s*['\"]([a-z-]+)['\"]", Path(path).read_text(errors="ignore"), re.I)
+    except OSError:
+        return None
+    return m.group(1).lower() if m else None
+
+
+def _setting_lines(txt: str) -> list:
+    return sorted(re.sub(r"\s+", "", ln) for ln in txt.splitlines()
+                  if re.match(rf"^\s*({_SETTING_KEYS})\s*=", ln))
+
+
+def relax_done(out_path) -> tuple:
+    """본 런 출력이 끝났나 → (끝남, 무엇으로 봤나). vc-relax = 끝 SCF 까지 · relax = 'bfgs converged' + 최종 좌표."""
+    try:
+        txt = Path(out_path).read_text(errors="ignore")
+    except OSError:
+        return False, "출력 없음"
+    if "bfgs converged" not in txt or "End final coordinates" not in txt:
+        return False, "'bfgs converged' · 'End final coordinates' 없음"
+    return True, "bfgs converged + 최종 좌표"
+
+
+def make_kprobe_input(main_in, main_out, dest, kpts: str | None, spacing: float | None,
+                      nosym: bool | None, cell_too: bool):
+    """본 입력 · 출력 → 탐침 scf 입력 (dest). → (info|None, why)
+
+    · calculation → 'scf' · &IONS · &CELL 블록을 뺀다 · nosym 은 None 이면 그대로
+    · 기하는 splice_relaxed.py 가 덮어쓴다 (cell_too 면 셀까지 · 아니면 --positions_only)
+    · k 는 kpts 를 그대로 쓰거나, spacing 이면 **덮어쓴 셀**로 셈한다
+    ⛔ 본 입력과 설정 줄 (ecut · smearing · conv_thr · mixing …) 이 하나라도 다르면 거부 · 기하 덮어쓰기가
+      실패하면 거부 (반쪽 입력을 남기지 않는다).
+    """
+    import subprocess
+    src = Path(main_in).read_text()
+    txt = re.sub(r"(calculation\s*=\s*)['\"][a-z-]+['\"]", r"\1'scf'", src, count=1)
+    txt = re.sub(r"^\s*&IONS\b.*?^\s*/\s*\n", "", txt, flags=re.S | re.M | re.I)
+    txt = re.sub(r"^\s*&CELL\b.*?^\s*/\s*\n", "", txt, flags=re.S | re.M | re.I)
+    if nosym is not None:
+        v = ".true." if nosym else ".false."
+        txt, n = re.subn(r"^(\s*nosym\s*=\s*)\S+", rf"\g<1>{v}", txt, count=1, flags=re.M | re.I)
+        if n == 0:
+            txt = re.sub(r"(&SYSTEM[^\n]*\n)", rf"\1    nosym       = {v}\n", txt, count=1, flags=re.I)
+    dest = Path(dest)
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_text(txt)
+    sp = Path(__file__).resolve().parents[1] / "sei" / "splice_relaxed.py"
+    r = subprocess.run([sys.executable, str(sp), "--out", str(main_out), "--targets", str(dest)]
+                       + ([] if cell_too else ["--positions_only"]), capture_output=True, text=True)
+    if r.returncode != 0:
+        dest.unlink(missing_ok=True)
+        return None, f"기하 덮어쓰기 실패 — {(r.stdout + r.stderr).strip()[-300:]}"
+    txt = dest.read_text()
+    if spacing:
+        from ase.io import read
+        kpts = kmesh_from_spacing(read(str(dest), format="espresso-in").cell, spacing)
+    txt, nk = re.subn(r"K_POINTS[^\n]*\n[^\n]*\n", f"K_POINTS automatic\n  {kpts} 0 0 0\n", txt, count=1)
+    if nk != 1:
+        dest.unlink(missing_ok=True)
+        return None, "K_POINTS 블록을 못 찾았다"
+    dest.write_text(txt)
+    if _setting_lines(txt) != _setting_lines(src):
+        dest.unlink(missing_ok=True)
+        return None, "설정 줄이 본 입력과 다르다 — 쓰지 않았다"
+    if re.search(r"^\s*&(IONS|CELL)\b", txt, re.M | re.I) or qe_calculation(dest) != "scf":
+        dest.unlink(missing_ok=True)
+        return None, "calculation 또는 &IONS · &CELL 정리가 안 됐다"
+    km = re.search(r"K_POINTS[^\n]*\n\s*(\d+\s+\d+\s+\d+)", src)
+    ns = re.search(r"^\s*nosym\s*=\s*(\S+)", txt, re.M | re.I)
+    return {"k_main": km.group(1).split() if km else None, "k_probe": kpts.split(),
+            "nosym": ns.group(1) if ns else "(기본 .false.)", "cell_spliced": cell_too}, ""
 
 
 def kmesh_from_spacing(cell, spacing: float) -> str:
@@ -557,30 +654,48 @@ def _selftest() -> int:
                 ok_ = True
             chk(ok_, f"★ [음성] load_basis 가 {why} 를 거부한다")
         # 출력 파서 — 압력은 **마지막** 블록 · Pulay 는 끝 SCF 가 있을 때만
-        so = ("!    total energy              =    -100.00000000 Ry\n"
-              "          total   stress  (Ry/bohr**3)                   (kbar)     P=        9.99\n"
-              "!    total energy              =    -100.00100000 Ry\n"
-              " A final scf calculation at the relaxed structure.\n"
-              "!    total energy              =    -100.00110000 Ry\n"
-              "          total   stress  (Ry/bohr**3)                   (kbar)     P=       -1.25\n")
-        (td / "v.out").write_text(so)
+        #   ⛔ fixture 는 **QE 7.4.1 실제 꼴**이다 (2026-10-26 — 옛 fixture 는 6.x 문구 'A final scf …' 라서
+        #     문구로 찾는 파서가 초록이었고, 실물 7.4.1 출력에서는 None 이 나와 게이트가 조용히 빠졌다)
+        head = ("!    total energy              =    -100.00000000 Ry\n"
+                "          total   stress  (Ry/bohr**3)                   (kbar)     P=        9.99\n"
+                "!    total energy              =    -100.00100000 Ry\n"
+                "     bfgs converged in   2 scf cycles and   1 bfgs steps\n"
+                "Begin final coordinates\nEnd final coordinates\n\n")
+        tail = ("!    total energy              =    -100.00110000 Ry\n"
+                "          total   stress  (Ry/bohr**3)                   (kbar)     P=       -1.25\n")
+        q74 = ("     Final scf calculation at the relaxed structure.\n"
+               "     The G-vectors are recalculated for the final unit cell\n"
+               "     Results may differ from those at the preceding step.\n")
+        want_g = 0.0001 * 13.605693122994 * 1000 / 10
+        (td / "v.out").write_text(head + q74 + tail)
         chk(parse_qe_pressure_kbar(td / "v.out") == -1.25, "압력은 마지막 stress 블록에서 (−1.25 kbar)")
         g = pulay_gap_meV_per_atom(td / "v.out", 10)
-        chk(g is not None and abs(g - 0.0001 * 13.605693122994 * 1000 / 10) < 1e-9,
-            f"Pulay 차 = |끝 SCF − 마지막 BFGS| / 원자 ← {g}")
-        (td / "s.out").write_text(so.replace(" A final scf calculation at the relaxed structure.\n", ""))
+        chk(g is not None and abs(g - want_g) < 1e-9,
+            f"[양성] QE 7.4.1 꼴 — Pulay 차 = |끝 SCF − 마지막 BFGS| / 원자 ← {g}")
+        (td / "v6.out").write_text(head + "     A final scf calculation at the relaxed structure.\n" + tail)
+        g6 = pulay_gap_meV_per_atom(td / "v6.out", 10)
+        chk(g6 is not None and abs(g6 - want_g) < 1e-9, f"[양성] QE 6.x 문구도 같은 값 ← {g6}")
+        (td / "s.out").write_text(head + q74)
         chk(pulay_gap_meV_per_atom(td / "s.out", 10) is None,
-            "★ [음성] 끝 SCF 가 없으면 Pulay 차는 None — 0 으로 두지 않는다")
+            "★ [음성] 'End final coordinates' 뒤에 '!' 가 없으면 (relax · 끝 SCF 없음) Pulay 차는 None — 0 으로 두지 않는다")
+        (td / "n.out").write_text((head + q74 + tail).replace("     bfgs converged in   2 scf cycles and   1 bfgs steps\n",
+                                                             "     The maximum number of steps has been reached.\n"))
+        chk(pulay_gap_meV_per_atom(td / "n.out", 10) is None,
+            "★ [음성] 'bfgs converged' 가 없으면 (nstep 소진) None — 안 끝난 vc-relax 를 쓰지 않는다")
+        real = _P(__file__).resolve().parents[2] / "db/raw/nd_q2_decomp_2026_10_23/run_kgy/Li2S/scf.out"
+        if real.is_file():
+            chk(pulay_gap_meV_per_atom(real, 3) is not None,
+                "★ [회귀] 실물 QE 7.4.1 vc-relax 출력 (Nd Q2 Li2S) 에서 끝 SCF 를 찾는다 — 옛 파서는 None 이었다")
         # --collect 끝까지 — 상 셋 + 타깃 둘 (A: 압력 작음 · B: 압력 큼)
         cd = td / "c"
         (cd / "in").mkdir(parents=True)
 
-        def _qe_in(name, syms_pos, cell):
+        def _qe_in(name, syms_pos, cell, calc="scf"):
             sp = "".join(f" {s} 1.0 {s.lower()}.upf\n" for s in sorted({s for s, _ in syms_pos}))
             ps = "".join(f" {s} {x} {y} {z}\n" for s, (x, y, z) in syms_pos)
             cl = "".join(f" {r[0]} {r[1]} {r[2]}\n" for r in cell)
             (cd / "in" / f"{name}.in").write_text(
-                f"&CONTROL\n calculation='scf'\n/\n&SYSTEM\n ibrav=0\n nat={len(syms_pos)}\n"
+                f"&CONTROL\n calculation='{calc}'\n/\n&SYSTEM\n ibrav=0\n nat={len(syms_pos)}\n"
                 f" ntyp={len(sp.splitlines())}\n ecutwfc=60\n/\n&ELECTRONS\n/\n"
                 f"ATOMIC_SPECIES\n{sp}CELL_PARAMETERS angstrom\n{cl}ATOMIC_POSITIONS angstrom\n{ps}K_POINTS gamma\n")
 
@@ -634,6 +749,31 @@ def _selftest() -> int:
         chk(res2["targets"]["B"].get("volume_correction", "x") is None and "보정 못 함" in rr2.stdout
             and res2["pair"]["G_V_pass"] is None,
             "★ [음성] 압력 줄이 없으면 보정 None · G_V 판정 None (0 으로 두지 않는다)")
+        _qe_out("B", -48.10, 30.0)
+        _qe_in("Li3PS4", [("Li", (0, 0, i)) for i in range(3)] + [("P", (3, 3, 3))]
+               + [("S", (4, 4, i)) for i in range(4)], box, calc="vc-relax")
+        bf = ("!    total energy              =    -30.00000000 Ry\n"
+              "     bfgs converged in   1 scf cycles and   0 bfgs steps\n"
+              "Begin final coordinates\nEnd final coordinates\n\n" + q74)
+        cmd = [sys.executable, me, "--collect", "--out", str(cd), "--basis", str(cd / "basis.json"),
+               "--bulk_modulus_GPa", "25", "--pair", "A", "B"]
+        (cd / "Li3PS4.out").write_text(bf)                           # 끝 SCF 없음
+        r5 = subprocess.run(cmd, capture_output=True, text=True)
+        chk(r5.returncode == 3 and "끝 SCF" in r5.stdout and "Li3PS4" in r5.stdout,
+            f"★ [음성] vc-relax 상인데 끝 SCF 가 없으면 --collect 가 거부 (끝 3) ← rc {r5.returncode}")
+        (cd / "Li3PS4.out").write_text(bf + "!    total energy              =    -30.00000100 Ry\n")
+        r6 = subprocess.run(cmd, capture_output=True, text=True)
+        res6 = json.loads((cd / "decomp_result.json").read_text())
+        g6c = res6.get("phase_pulay_meV_per_atom", {}).get("Li3PS4")
+        chk(r6.returncode == 0 and res6.get("G_phase_pass") is True and res6["pair"].get("G_phase_pass") is True
+            and g6c is not None and abs(g6c - 1e-6 * 13.605693122994 * 1000 / 8) < 1e-9,
+            f"vc-relax 상 · 끝 SCF 차 1e-6 Ry / 8 원자 → G_상_이완 통과 ← rc {r6.returncode} · {g6c}")
+        (cd / "Li3PS4.out").write_text(bf + "!    total energy              =    -30.00100000 Ry\n")
+        r7 = subprocess.run(cmd, capture_output=True, text=True)
+        res7 = json.loads((cd / "decomp_result.json").read_text())
+        chk(res7.get("G_phase_pass") is False and res7["pair"].get("G_phase_pass") is False
+            and "G_상_이완 불통과" in r7.stdout,
+            "★ [음성] 끝 SCF 차 1.7 meV/원자 (> 0.5) → G_상_이완 불통과 · Y 를 결과로 쓰지 않는다고 찍는다")
         # --prepare (MP 없이 --phase_structs) — pseudo_dir 이 이 기계에 없을 때 --pseudo_map 을 쓴다
         try:
             from ase.io import write as _w
@@ -669,6 +809,117 @@ def _selftest() -> int:
                 f"상 k 를 간격 0.25 로 셈한다 ← {kl}")
         except ImportError:
             chk(False, "ase 가 없어 --prepare 시험을 못 했다")
+        # --kprobe · --kprobe_read (2026-10-26 · 카드 §4 G_k) — 합성 본 런 (상 vc-relax 하나 + 타깃 relax 하나)
+        kr = td / "kr"
+        settings = ("&SYSTEM\n    ibrav       = 0\n    nat         = {nat}\n    ntyp        = {nt}\n"
+                    "    ecutwfc     = 70.0\n    ecutrho     = 560.0\n    occupations = 'smearing'\n"
+                    "    smearing    = 'mv'\n    degauss     = 0.01\n    nosym       = .true.\n/\n"
+                    "&ELECTRONS\n    conv_thr     = 1.0d-9\n    mixing_beta  = 0.3\n/\n")
+        (kr / "Li2S").mkdir(parents=True)
+        (kr / "Li2S" / "scf.in").write_text(
+            "&CONTROL\n    calculation = 'vc-relax'\n    prefix      = 'Li2S'\n/\n" + settings.format(nat=3, nt=2)
+            + "&IONS\n    ion_dynamics = 'bfgs'\n/\n&CELL\n    cell_dynamics = 'bfgs'\n    press_conv_thr = 0.5\n/\n"
+            "ATOMIC_SPECIES\n  Li  6.9410  Li.paw.UPF\n  S  32.0650  S.paw.UPF\n"
+            "CELL_PARAMETERS angstrom\n    4.0456138700    0.0000000000    0.0000000000\n"
+            "    2.0228069350    3.5036043853    0.0000000000\n    2.0228069350    1.1678681284    3.3032298926\n"
+            "ATOMIC_POSITIONS crystal\n  Li    0.75 0.75 0.75\n  Li    0.25 0.25 0.25\n  S    0.0 0.0 0.0\n"
+            "K_POINTS automatic\n  8 8 8 0 0 0\n")
+        li2s_out = ("     number of atoms/cell      =            3\n"
+                    "!    total energy              =     -96.68000570 Ry\n"
+                    "     bfgs converged in   5 scf cycles and   4 bfgs steps\n"
+                    "Begin final coordinates\n     new unit-cell volume =    313.02505 a.u.^3 (    46.38553 Ang^3 )\n\n"
+                    "CELL_PARAMETERS (angstrom)\n   4.033039692  -0.000000050  -0.000000041\n"
+                    "   2.016519802   3.492714829  -0.000000019\n   2.016519798   1.164238261   3.292963074\n\n"
+                    "ATOMIC_POSITIONS (crystal)\nLi               0.7500000043        0.7499999487        0.7500000262\n"
+                    "Li               0.2500000223        0.2500000469        0.2499999832\n"
+                    "S               -0.0000000266        0.0000000043       -0.0000000094\nEnd final coordinates\n\n")
+        (kr / "Li2S" / "scf.out").write_text(li2s_out + q74 + "!    total energy              =     -96.67999740 Ry\n")
+        (kr / "host").mkdir()
+        (kr / "host" / "scf.in").write_text(
+            "&CONTROL\n    calculation = 'relax'\n    prefix      = 'host'\n/\n" + settings.format(nat=2, nt=2)
+            + "&IONS\n    ion_dynamics = 'bfgs'\n/\n"
+            "ATOMIC_SPECIES\n  Li  6.9410  Li.paw.UPF\n  S  32.0650  S.paw.UPF\n"
+            "CELL_PARAMETERS angstrom\n    6.0 0.0 0.0\n    0.0 6.0 0.0\n    0.0 0.0 6.0\n"
+            "ATOMIC_POSITIONS crystal\n  Li    0.1 0.1 0.1\n  S    0.5 0.5 0.5\n"
+            "K_POINTS automatic\n  3 3 2 0 0 0\n")
+        (kr / "host" / "scf.out").write_text(
+            "     number of atoms/cell      =            2\n!    total energy              =     -50.00000000 Ry\n"
+            "     bfgs converged in   3 scf cycles and   2 bfgs steps\nBegin final coordinates\n\n"
+            "ATOMIC_POSITIONS (crystal)\nLi               0.1100000000        0.1000000000        0.1000000000\n"
+            "S                0.5000000000        0.5000000000        0.5000000000\nEnd final coordinates\n")
+        (kr / "b.json").write_text(json.dumps({"phases": {"Li2S": {"formula": {"Li": 2, "S": 1}}}}))
+        kcmd = [sys.executable, me, "--kprobe", "--runs", str(kr), "--basis", str(kr / "b.json"),
+                "--kspacing_phase", "0.18", "--kpoints", "4 4 2", "--phase_symmetry"]
+        r8 = subprocess.run(kcmd + ["--out", str(td / "kp")], capture_output=True, text=True)
+        pin = (td / "kp" / "phase" / "Li2S" / "scf.in")
+        tin = (td / "kp" / "target" / "host" / "scf.in")
+        ptx = pin.read_text() if pin.is_file() else ""
+        ttx = tin.read_text() if tin.is_file() else ""
+        from ase.io import read as _rd
+        want_k = kmesh_from_spacing([[4.033039692, -5e-8, -4.1e-8], [2.016519802, 3.492714829, -1.9e-8],
+                                     [2.016519798, 1.164238261, 3.292963074]], 0.18)
+        chk(r8.returncode == 0 and "calculation = 'scf'" in ptx and "&IONS" not in ptx and "&CELL" not in ptx
+            and "nosym       = .false." in ptx and f"  {want_k} 0 0 0" in ptx and "4.033039692" in ptx
+            and "0.7500000043" in ptx and _setting_lines(ptx) == _setting_lines((kr / "Li2S" / "scf.in").read_text()),
+            f"--kprobe 상: scf · &IONS/&CELL 뺌 · 대칭 켬 · 최종 셀 + 좌표 · k {want_k} (간격 0.18 · 덮어쓴 셀) · 설정 같음 ← rc {r8.returncode}")
+        chk(r8.returncode == 0 and "calculation = 'scf'" in ttx and "&IONS" not in ttx and "nosym       = .true." in ttx
+            and "  4 4 2 0 0 0" in ttx and "0.1100000000" in ttx and "    6.0 0.0 0.0" in ttx,
+            "--kprobe 타깃: scf · nosym 그대로 · 좌표만 (셀 그대로) · k 4 4 2")
+        chk((td / "kp" / "phase" / "SHA256SUMS").is_file() and (td / "kp" / "target" / "MANIFEST.json").is_file(),
+            "--kprobe: 폴더마다 SHA256SUMS · MANIFEST.json")
+        (kr / "Li2S" / "scf.out").write_text(li2s_out + q74)                # 끝 SCF 없음
+        r9 = subprocess.run(kcmd + ["--out", str(td / "kp2")], capture_output=True, text=True)
+        chk(r9.returncode == 3 and not (td / "kp2" / "phase").exists() and not (td / "kp2" / "target").exists(),
+            f"★ [음성] vc-relax 끝 SCF 가 없으면 탐침 입력을 하나도 안 쓴다 (끝 3) ← rc {r9.returncode}")
+        (kr / "Li2S" / "scf.out").write_text(li2s_out + q74 + "!    total energy              =     -96.67999740 Ry\n")
+        (td / "kp" / "phase" / "Li2S").mkdir(parents=True, exist_ok=True)       # 앞 시험이 실패해도 여기서 죽지 않게
+        (td / "kp" / "target" / "host").mkdir(parents=True, exist_ok=True)
+        (td / "kp" / "phase" / "Li2S" / "scf.out").write_text("!    total energy              =     -96.68044000 Ry\n")
+        rcmd = [sys.executable, me, "--kprobe_read", "--runs", str(kr), "--basis", str(kr / "b.json"),
+                "--probe", str(td / "kp"), "--out", str(td / "kd")]
+        r10 = subprocess.run(rcmd, capture_output=True, text=True)
+        chk(r10.returncode == 3 and not (td / "kd" / "kprobe_decision.json").exists() and "host" in r10.stdout,
+            f"★ [음성] 탐침 출력이 하나라도 없으면 판정 파일을 안 쓴다 (끝 3) ← rc {r10.returncode}")
+        (td / "kp" / "target" / "host" / "scf.out").write_text("!    total energy              =     -50.00005000 Ry\n")
+        r11 = subprocess.run(rcmd, capture_output=True, text=True)
+        kd = json.loads((td / "kd" / "kprobe_decision.json").read_text()) if (td / "kd" / "kprobe_decision.json").is_file() else {"jobs": {}}
+        dl = kd["jobs"].get("Li2S", {}).get("dE_probe_minus_main_meV_per_atom", 9e9)
+        dh = kd["jobs"].get("host", {}).get("dE_probe_minus_main_meV_per_atom", 9e9)
+        chk(r11.returncode == 0 and abs(dl - (-96.68044 + 96.6799974) * 13.605693122994 * 1000 / 3) < 1e-6
+            and kd["jobs"]["Li2S"]["decision"] == "탐침 값을 쓴다" and kd["jobs"]["Li2S"]["over_threshold"] is True,
+            f"--kprobe_read 상: ΔE = (끝 SCF 대 탐침) / 원자 {dl:+.3f} meV > 1 → '탐침 값을 쓴다'")
+        chk(abs(dh - (-0.00005) * 13.605693122994 * 1000 / 2) < 1e-6 and kd["jobs"]["host"]["over_threshold"] is False
+            and kd["jobs"]["host"]["decision"].startswith("본 값"),
+            f"--kprobe_read 타깃: ΔE {dh:+.3f} meV ≤ 1 → 본 값 (k 한계 없음)")
+        # k 는 **덮어쓴 셀**로 센다 — 이완 전 셀이면 11 11 11 · 0.9 배로 줄어든 셀이면 12 12 12 (위 fixture 는 둘이 같아 못 가른다)
+        sh = li2s_out.replace("   4.033039692  -0.000000050  -0.000000041\n   2.016519802   3.492714829  -0.000000019\n"
+                              "   2.016519798   1.164238261   3.292963074\n",
+                              "   3.641052483   0.000000000   0.000000000\n   1.820526242   3.153243947   0.000000000\n"
+                              "   1.820526242   1.051081316   2.972906903\n")
+        (kr / "Li2S" / "scf.out").write_text(sh + q74 + "!    total energy              =     -96.67999740 Ry\n")
+        r13 = subprocess.run(kcmd + ["--out", str(td / "kp3")], capture_output=True, text=True)
+        p3 = (td / "kp3" / "phase" / "Li2S" / "scf.in")
+        chk(r13.returncode == 0 and p3.is_file() and "  12 12 12 0 0 0" in p3.read_text(),
+            "★ [음성] k 를 이완 전 셀 (11 11 11) 이 아니라 덮어쓴 셀 (0.9 배 → 12 12 12) 로 센다")
+        (kr / "Li2S" / "scf.out").write_text(li2s_out + q74 + "!    total energy              =     -96.67999740 Ry\n")
+        # 설정 줄 가드 — &IONS 의 '/' 가 같은 줄에 있으면 정리 정규식이 &ELECTRONS 까지 먹는다 → 거부해야 한다
+        bad_in = (kr / "Li2S" / "scf.in").read_text().replace("&IONS\n    ion_dynamics = 'bfgs'\n/\n&CELL",
+                                                               "&CELL").replace(
+            "&ELECTRONS\n", "&IONS\n    ion_dynamics = 'bfgs' /\n&ELECTRONS\n")
+        (kr / "Li2S" / "scf.in.good").write_text((kr / "Li2S" / "scf.in").read_text())
+        (kr / "Li2S" / "scf.in").write_text(bad_in)
+        r14 = subprocess.run(kcmd + ["--out", str(td / "kp4")], capture_output=True, text=True)
+        chk(r14.returncode == 3 and not (td / "kp4" / "phase").exists() and "설정 줄" in r14.stdout,
+            f"★ [음성] 정리 정규식이 설정 줄 (conv_thr · mixing_beta) 을 먹으면 거부 · 아무것도 안 남긴다 ← rc {r14.returncode}")
+        (kr / "Li2S" / "scf.in").write_text((kr / "Li2S" / "scf.in.good").read_text())
+        real = _P(__file__).resolve().parents[2] / "db/raw/nd_q2_decomp_2026_10_23/run_kgy"
+        rb = _P(__file__).resolve().parents[2] / "db/inputs/nd_q2_decomp_2026_10_23/basis.json"
+        if real.is_dir() and rb.is_file():
+            r12 = subprocess.run([sys.executable, me, "--kprobe", "--runs", str(real), "--basis", str(rb),
+                                  "--kspacing_phase", "0.18", "--kpoints", "4 4 2", "--phase_symmetry",
+                                  "--out", str(td / "kreal")], capture_output=True, text=True)
+            n_in = len(list((td / "kreal").glob("*/*/scf.in")))
+            chk(r12.returncode == 0 and n_in == 6, f"[회귀] 실물 Nd Q2 본 런 → 탐침 입력 6 (상 5 · 타깃 1) ← rc {r12.returncode} · {n_in}")
 
     print(f"selftest {'PASS' if not n_bad else 'FAIL'} — {n_ok} ok, {n_bad} bad")
     return 1 if n_bad else 0
@@ -734,6 +985,12 @@ def main():
                     help="--collect: Y = ΔE_decomp(A) − ΔE_decomp(B) (meV/atom) 와 G_V · 분해능")
     ap.add_argument("--resolution_meV", type=float, default=2.0,
                     help="--collect --pair: |Y| 가 이 안이면 '구분 못 함' (카드 §4 분해능)")
+    ap.add_argument("--kprobe", action="store_true",
+                    help="본 런 (--runs) 의 이완 끝 기하로 k 탐침 scf 입력을 --out 에 쓴다 (카드 §4 G_k)")
+    ap.add_argument("--kprobe_read", action="store_true",
+                    help="본 런 (--runs) 과 탐침 (--probe) 의 원자당 에너지 차로 G_k 를 판정한다 (Y 는 안 셈)")
+    ap.add_argument("--runs", help="--kprobe · --kprobe_read: 본 런 폴더 (<잡>/scf.in · scf.out)")
+    ap.add_argument("--probe", help="--kprobe_read: 탐침 폴더 (--kprobe 가 쓴 phase/ · target/ 아래 <잡>/scf.out)")
     a = ap.parse_args()
 
     if a.selftest:
@@ -925,6 +1182,100 @@ def main():
         print(f"✓ 설정 기록 → {out/'prepare_provenance.json'}")
         return 0
 
+    if a.kprobe or a.kprobe_read:
+        import hashlib
+        runs = Path(a.runs or "")
+        jobs = sorted(d.name for d in runs.iterdir() if (d / "scf.in").is_file()) if runs.is_dir() else []
+        if not jobs:
+            print(f"⛔ --runs {a.runs}: <잡>/scf.in 이 하나도 없다")
+            return 2
+        if a.kprobe:
+            if not a.kspacing_phase:
+                print("⛔ --kprobe 는 --kspacing_phase 가 필요하다 (상 k 간격)")
+                return 2
+            rows, bad = {}, []
+            for j in jobs:
+                ok_, why = relax_done(runs / j / "scf.out")
+                is_ph = j in basis
+                vc = qe_calculation(runs / j / "scf.in") == "vc-relax"
+                if ok_ and vc and pulay_gap_meV_per_atom(runs / j / "scf.out", 1) is None:
+                    ok_, why = False, "vc-relax 끝 SCF 없음"
+                if not ok_:
+                    bad.append((j, why))
+                    continue
+                grp = "phase" if is_ph else "target"
+                info, why = make_kprobe_input(
+                    runs / j / "scf.in", runs / j / "scf.out", out / grp / j / "scf.in",
+                    None if is_ph else a.kpoints, a.kspacing_phase if is_ph else None,
+                    (False if a.phase_symmetry else None) if is_ph else None, cell_too=vc)
+                if info is None:
+                    bad.append((j, why))
+                    continue
+                info.update({"group": grp, "main_in_sha256": hashlib.sha256((runs / j / "scf.in").read_bytes()).hexdigest(),
+                             "main_out_sha256": hashlib.sha256((runs / j / "scf.out").read_bytes()).hexdigest()})
+                rows[j] = info
+                print(f"  ✓ {j:<8} {grp:<6} k {' '.join(info['k_main'] or ['?'])} → {' '.join(info['k_probe'])} · "
+                      f"nosym {info['nosym']} · {'셀 + 좌표' if vc else '좌표만'}")
+            if bad:
+                print(f"⛔ 탐침 입력을 못 쓴 잡 {len(bad)} — 하나도 남기지 않는다:")
+                for j, why in bad:
+                    print(f"      {j:<8} {why}")
+                import shutil
+                for grp in ("phase", "target"):
+                    shutil.rmtree(out / grp, ignore_errors=True)
+                return 3
+            for grp in ("phase", "target"):
+                gd = out / grp
+                if not gd.is_dir():
+                    continue
+                ins = sorted(gd.glob("*/scf.in"))
+                (gd / "SHA256SUMS").write_text("".join(
+                    f"{hashlib.sha256(f.read_bytes()).hexdigest()}  {f.relative_to(gd)}\n" for f in ins))
+                (gd / "MANIFEST.json").write_text(json.dumps(
+                    {"kind": "kprobe_inputs", "card_gate": "G_k_탐침", "group": grp,
+                     "kspacing_phase": a.kspacing_phase if grp == "phase" else None,
+                     "kpoints_target": a.kpoints if grp == "target" else None,
+                     "jobs": {j: r for j, r in rows.items() if r["group"] == grp}},
+                    indent=1, ensure_ascii=False) + "\n")
+            print(f"✓ 탐침 입력 {len(rows)} → {out}/phase · {out}/target (폴더마다 SHA256SUMS · MANIFEST.json)")
+            return 0
+        # --kprobe_read
+        pr = Path(a.probe or "")
+        res, bad = {}, []
+        for j in jobs:
+            grp = "phase" if j in basis else "target"
+            po = pr / grp / j / "scf.out"
+            pi = pr / grp / j / "scf.in"
+            e0, e1 = parse_qe_total(runs / j / "scf.out"), parse_qe_total(po)
+            if e1 is None or not pi.is_file():
+                bad.append((j, f"탐침 출력 {po} 에 '!' 줄이 없다 (안 돌았거나 수렴 안 함)"))
+                continue
+            if e0 is None:
+                bad.append((j, "본 런 에너지가 없다"))
+                continue
+            from ase.io import read
+            nat = len(read(str(pi), format="espresso-in"))
+            d = (e1 - e0) / nat * 1000.0
+            over = abs(d) > GK_MAX_MEV
+            res[j] = {"group": grp, "n_atoms": nat, "dE_probe_minus_main_meV_per_atom": d,
+                      "over_threshold": over,
+                      "decision": (("탐침 값을 쓴다" if over else "본 값을 쓴다") if grp == "phase"
+                                   else ("k 한계를 Y 에 적는다 · 도핑 k 4 4 1 (gabia) 이 재개 조건" if over
+                                         else "본 값을 쓴다 (k 한계 없음)"))}
+            print(f"  {j:<8} {grp:<6} ΔE(탐침 − 본) {d:+.3f} meV/원자 {'⛔ > ' if over else '≤ '}{GK_MAX_MEV:g} → {res[j]['decision']}")
+        if bad:
+            print(f"⛔ 판정 못 한 잡 {len(bad)} — 판정 파일을 쓰지 않는다:")
+            for j, why in bad:
+                print(f"      {j:<8} {why}")
+            return 3
+        (out).mkdir(parents=True, exist_ok=True)
+        (out / "kprobe_decision.json").write_text(json.dumps(
+            {"kind": "kprobe_decision", "card_gate": "G_k_탐침", "threshold_meV_per_atom": GK_MAX_MEV,
+             "jobs": res, "⛔": "Y 가 아니다 — 잡마다 k 수렴 차다. Y 는 --collect 로 한 번 낸다"},
+            indent=1, ensure_ascii=False) + "\n")
+        print(f"✓ 판정 → {out/'kprobe_decision.json'}")
+        return 0
+
     if a.collect:
         import collections
         from ase.io import read
@@ -953,12 +1304,21 @@ def main():
         print(f"  기저 {len(phase_E)}상 (셀당 → 화학식당, Z = "
               + ", ".join(f"{n}×{phase_Z[n]}" for n in phase_E) + ")")
         # 상 Pulay (vc-relax 끝 SCF 대 마지막 BFGS) — 끝 SCF 가 없으면 None (지어내지 않는다)
-        pulay = {}
+        #   ⛔ 2026-10-26 — 입력이 vc-relax 인 상인데 끝 SCF 를 못 찾으면 **거부**한다. 예전엔 None 만 있으면
+        #     이 줄을 통째로 안 찍어서 G_상_이완 게이트가 조용히 빠졌다 (QE 7.4.1 문구 · pulay_gap 주석).
+        pulay, vcr = {}, {}
         for name in phase_E:
             pc, _, _ = target_composition(name, out, None)
+            vcr[name] = qe_calculation(out / "in" / f"{name}.in") == "vc-relax"
             pulay[name] = pulay_gap_meV_per_atom(out / f"{name}.out", sum(pc.values()) if pc else 0)
+        lost = sorted(n for n in phase_E if vcr[n] and pulay[n] is None)
+        if lost:
+            print(f"⛔ vc-relax 상인데 끝 SCF ('End final coordinates' 뒤의 '!') 를 못 찾았다: {lost} — "
+                  f"Pulay 게이트를 못 건다 (안 끝났거나 nstep 소진). 계산을 확인하고 다시.")
+            return 3
         bad_pulay = {n: v for n, v in pulay.items() if v is not None and v > PULAY_MAX_MEV}
-        if any(v is not None for v in pulay.values()):
+        g_phase = (not bad_pulay) if any(vcr.values()) else None
+        if any(vcr.values()):
             print("  상 Pulay (끝 SCF − 마지막 BFGS, meV/원자): "
                   + ", ".join(f"{n} {'—' if v is None else f'{v:.3f}'}" for n, v in pulay.items())
                   + (f"   ⛔ {PULAY_MAX_MEV} 넘음: {sorted(bad_pulay)} — 끝 구조에서 한 번 더" if bad_pulay else "   ✓"))
@@ -1042,6 +1402,10 @@ def main():
                 pair["G_V_pass"] = None
                 y0 = ya
             pair["Y_report_meV_per_atom"] = y0
+            pair["G_phase_pass"] = g_phase
+            if g_phase is False:
+                print(f"  ⛔ G_상_이완 불통과 (Pulay > {PULAY_MAX_MEV} meV/원자: {sorted(bad_pulay)}) — "
+                      f"이 Y 를 결과로 쓰지 않는다 · 끝 구조에서 한 번 더 (카드 §4)")
             pair["within_resolution"] = bool(abs(y0) <= a.resolution_meV)
             pair["resolution_meV"] = a.resolution_meV
             print(f"\n★ Y = ΔE_decomp({A_}) − ΔE_decomp({B_}) = {ya:+.2f} meV/atom (보정 전)"
@@ -1070,7 +1434,8 @@ def main():
             return 4
         (out / "decomp_result.json").write_text(json.dumps(
             {"phase_E_eV": phase_E, "basis": basis, "per_target": per_target,
-             "phase_pulay_meV_per_atom": pulay, "pair": pair,
+             "phase_pulay_meV_per_atom": pulay, "phase_vc_relax": vcr, "G_phase_pass": g_phase,
+             "pair": pair,
              "phase_formula_units_Z": phase_Z,
              "phase_E_note": "화학식당(eV/f.u.) 로 정규화된 값이다 — 셀 총에너지가 아니다",
              "targets": {k: v for k, v in rows},
