@@ -1,0 +1,54 @@
+{
+  "status": "PASS_LIMITED_TO_UPLOADED_P1_OUTPUT",
+  "upload_path": "/workspace/attachments/e4c39a62-d533-4926-ad1d-5e17cdf360cf/\ubd99\uc5ec\ub123\uc740 \ud14d\uc2a4\ud2b8.txt",
+  "bytes": 19957,
+  "sha256": "b13560113f38eb6f215c6d42d1eb104a5718df5cdd7e7476af2a7240d7c514bf",
+  "pin": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde",
+  "manifest_ok_rounds": [
+    {
+      "line_start": 153,
+      "line_end": 228,
+      "count": 76,
+      "exact_seal_order_and_names": true
+    },
+    {
+      "line_start": 242,
+      "line_end": 317,
+      "count": 76,
+      "exact_seal_order_and_names": true
+    }
+  ],
+  "staged_six_identity_markers": [
+    "/home/yonghoon/ps45_unload_20261009/ps_7_3_r45/in/restart_compress_3200000.bin",
+    "/home/yonghoon/ps45_unload_20261009/ps_7_3_r45/in/atom_3200000.liggghts",
+    "/home/yonghoon/ps45_unload_20261009/ps_7_3_r45/in/contact_3200000.liggghts",
+    "/home/yonghoon/ps45_unload_20261009/ps_7_3_r45/in/mesh_3200000.stl",
+    "/home/yonghoon/ps45_unload_20261009/ps_7_3_r45/in/output_ps_7_3_r45_r8_220537.out",
+    "/home/yonghoon/ps45_unload_20261009/ps_7_3_r45/in/input_ps_7_3_r45_r8.liggghts"
+  ],
+  "checkout_evidence": "Preparing detached HEAD4c29705fa and HEAD is now4c29705fa; full expected pin visible in echoed plan, not independent remote disk query",
+  "grammar": "GRAMMAR_PREREQ status=PASS, reread=PASS, expected verdict/lmp/reader hashes; /lustre resolved run path recorded",
+  "gate": "GATE ps_7_3_r45 RJ ALLOW; preflight-only completion22:00:38",
+  "final_completion_marker": true,
+  "explicit_final_shell_rc": "NOT_PRESENT",
+  "garbled_command_echo": "Not attestation of exact executed script bytes; preserve uploaded bytes unchanged",
+  "physical_RJ": "NOT_RUN according to completion marker; no P1 submission evidence claimed",
+  "independent_ibb_hash_or_execution": false,
+  "unrelated_job": {
+    "job_id": "323925",
+    "track": "separate 50kg",
+    "known_status": "submission reported only",
+    "P1_evidence": false,
+    "status_query_or_management": false
+  },
+  "date_context": {
+    "date": "2026-10-26",
+    "source": "conversation/session context; terminal prints times only",
+    "reported_preflight_start": "22:00:31",
+    "reported_preflight_end": "22:00:38",
+    "timezone": "KST from session context"
+  },
+  "staging_and_preflight_approval": "Already granted earlier; no renewed approval requested",
+  "one_physical_RJ_approval": "PENDING",
+  "uploaded_original_repository_path": "uploaded-terminal.original.txt"
+}
