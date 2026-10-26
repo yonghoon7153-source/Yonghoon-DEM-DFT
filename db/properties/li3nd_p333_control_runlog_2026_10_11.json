@@ -124,5 +124,20 @@
    "읽기": "BFGS 는 건강하다 (거부 · 리셋 0 · 매 스텝 내려감) · 에너지가 10-22 보다 더 빨리 내려간다 — 바닥 근처에서 맴도는 게 아니라 아직 비탈을 내려가는 중 (천천히 진행되는 재배열) · 그래서 수렴은 멀다: 에너지 · 힘 두 조건 다 문턱 밖 · 남은 81 스텝 안 수렴은 어렵다 → 한도에서 D-2026-10-22-li3nd-r2-close-at-run-limit 대로 '미수렴' 으로 닫고 탄성 재개 (새로 할 일 없음)",
    "⚠": "dE 는 진행 판단용 — 진행 중 이완의 에너지 · 기하는 정량 인용하지 않는다"
   }
+ },
+ "r2_기하_진단_2026_10_26": {
+  "요청": "사용자 10-26 '엄청 떨어지는데 지금 원자 상태 cif 로 뽑아서 초반에 비해 어떻게 됐는지 볼 수 있나?'",
+  "원자료": "gabia 추출 e479d738f → db/raw/li3nd_p333_r2_geometry_2026_10_26/ (00_control_relax.in · restart.in · files.txt · positions_by_step.txt = 출력 파일마다 BFGS 스텝 ATOMIC_POSITIONS 309 블록 · 읽기만)",
+  "⚠_출발점": "지금 입력 (00_control_relax.in) 은 원래 rattle 구조가 아니다 — 첫 줄 'carried-from-unconverged … .out.step50 (step 50, Total force 0.040846)' · 지금 이력 (.004 BFGS 0 → 지금) 은 9 월 첫 실행 50 스텝 뒤에서 시작했다",
+  "원래_시작_복원": "rattle 크기는 기록에 없었다 → QE 이완이 좌표 중심 (가중 없음) 을 보존하는 것으로 되풀었다: (carry 중심 − 이상 자리 중심) / (default_rng(2) 정규난수 중심) = 세 축 모두 0.080000 Å · 지금 이력 307 블록 중심 이동 최대 2e-11 Å ⇒ r2 시작 = MP 원시셀 × (3,3,3) + 0.08 Å · 시드 2 (build_dft_inputs.make_control_structures 와 같은 식)",
+  "도구": "tools/figures/fig_li3nd_r2_geometry_2026_10_26.py (selftest 5 — σ 복원 · 다른 시드 거부 · 중심 보존 · 원자 하나 옮기면 거부 · 이상 구조 값) → structures/ (이상 · r2 시작 · 9 월 carry · 지금 BFGS 306 · cif · vasp · xyz) · 그림 docs/figures/li3nd_r2_geometry_2026_10_26/li3nd_r2_geometry.png · CSV db/properties/li3nd_r2_geometry_trend_origin_2026_10_26.csv · li3nd_r2_ndnd_hist_origin_2026_10_26.csv",
+  "읽은_것_진단": {
+   "이상_자리_대비_평균_변위_Å": "r2 시작 Nd 0.11 · Li 사면체 0.14 · 팔면체 0.13 → 9 월 carry 0.53 · 0.48 · 0.21 → 지금 1.37 · 1.28 · 1.08 (최대 Nd 2.35 · Li 3.24) · 1 Å 넘게 움직인 원자 70 / 108",
+   "Nd_Nd": "최단 Nd–Nd 이상 5.19 Å → 지금 3.24 Å · Nd 하나 둘레 4.2 Å 안 Nd 0 → 3.19 · 이어진 Nd 덩어리 가장 큰 것 23 / 27 (나머지 4 개 한 덩어리) · 3.8 Å 안 이웃 중 Nd 비율 Nd 둘레 0 → 0.19 · Li 둘레 0.33 → 0.31 · Nd 이웃이 없는 Li 0",
+   "추이": "Nd 이웃 수 · Nd 비율이 BFGS ≈ 15 (전체 스텝 ≈ 65) 부터 오르기 시작해 지금까지 꾸준히 오른다 (평탄 아님) · 5.19 Å 껍질이 비고 3.3–4.0 Å (닿음) 과 5.5–7 Å 로 갈라졌다",
+   "읽기": "작은 재구성이 아니라 Nd 끼리 붙는 큰 재배열 — Li 는 아직 섞여 있어 'Li 와 Nd 로 갈라졌다' 는 아니다 · Li–Nd 에 안정 정렬상이 없고 mp-976264 가 hull +0.197 eV/atom (theoretical) 인 것과 같은 방향이다 (kb/methodology/li3nd_metal_protocol_note_2026_08_11.md) — 판정 아님 · 진행 중"
+  },
+  "⚠": "진행 중 이완의 에너지 · 기하는 정량 인용하지 않는다 — 위 수치는 진단용 · 셀 고정이라 부피 · 모양 변화는 이 계산에 없다",
+  "by": "agent · 2026-10-26"
  }
 }

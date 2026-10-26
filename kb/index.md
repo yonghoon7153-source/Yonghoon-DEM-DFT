@@ -8,6 +8,7 @@
 
 ## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 338건)
 - 2026-10-26 · `kb/reports/weekly_2026_10_25.md` — 주간 정리 2026-10-19 ~ 10-25 (주간보고 초안) · 초안 (2026-10-26 · 도는 계산은 마지막 실측 기준 — kg…
+- 2026-10-26 · `kb/questions/li3nd_pristine_reconstruction_2026_09_02.md` — Li₃Nd pristine 3×3×3 이 0.65 eV 재구성한다 — NEB 기반 구조도 같은가? · open [open]
 - 2026-10-23 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-10-23 · `kb/reviews/li2s1a_DA_prompt_li2s_glass_bmeas_650k_readout_2026_10_19.md` — DA 프롬프트 — li2s B 측정 가능 조건 카드 ① 단계 판독: N_B 5/5 · 골격 이동 2 (이량체 다리 교환) · R 집합 3 → R 불가 · A 650 K 여부 · 모델 검증 (UMA–PBE p1 · p1 · BVSE) · 트랙 마감 제안 · 새 트랙 여부 · 초안 — 발송 전 (사용자가 보낸다 · 발송판 `kb/projects…
 - 2026-10-22 · `kb/reviews/codex_CZ_reply_wad_outsourcing_round2_bundle_2026_10_17.md` — CZ 회신 — W_ad 외주 2차 묶음 리뷰: NO-GO · 발송 보류 · 구조 봉인·집계 산식은 유지 · 반송 검사 경로의 결함 (판정 순서 · A→B 결박 · 시도별 환경 감사 · optB88 판독 · 인프라 중단 비용) 을 고친 뒤 재봉인 · 수령 2026-10-22 (사용자 붙여넣기 · 원문 보존 · 마크다운…
@@ -20,7 +21,6 @@
 - 2026-10-22 · `kb/reviews/codex_DE_prompt_wad_outsourcing_round2_v5_2026_10_22.md` — DE 프롬프트 — W_ad 외주 2차 묶음 v5 확인: DD 재승인 최소조건 셋 (봉인 필터의 루트 감사 불가 · rc 원문 검증 · 결박 갱신) + 같은 종류 (INCAR 이스케이프 · ENCUT 숫자 꼴) · 발송 승인 여부 · 발송 2026-10-22 (사용자 · 기준 커밋 9ddfbe448 ·…
 - 2026-10-22 · `kb/reviews/codex_DE_reply_wad_outsourcing_round2_v5_2026_10_22.md` — DE 회신 — W_ad 외주 2차 묶음 v5 (9ddfbe448 · MANIFEST 714324cc…): GO · 발송 동의 · P0/P1 없음 · 비차단 P2 1 (selftest 시험 이름의 -0 설명) · 수령 2026-10-22 (사용자 붙여넣기 · 원문 보존 · 마크다운…
 - 2026-10-22 · `kb/projects/handoff_2026_10_22_evacuation.md` — 대피 인계 — 2026-10-22 (friendly 세션 토큰 소진 → 서브 대시보드 세션 · 머지 때 충돌 0 설계 · W_ad 외주 2차 CZ 고침 설계 포함) · 진행
-- 2026-10-22 · `kb/questions/li3nd_pristine_reconstruction_2026_09_02.md` — Li₃Nd pristine 3×3×3 이 0.65 eV 재구성한다 — NEB 기반 구조도 같은가? · open [open]
 - 2026-10-20 · `kb/projects/handoff_2026_10_20_return_to_origin.md` — 본 세션 복귀 카드 — 서브 세션 (10-15 → 10-20) 134 커밋을 본 세션으로 (2026-10-20) · 발송 대기 — 사용자가 §0 프롬프트를 본 세션 (…CTzs) 에 붙…
 - 2026-10-20 · `kb/papers/b2o3_bo_lpsc16_methods_2026_10_20.md` — B₂O₃ 원고 (BO-LPSC1.6 · paper #2) Computational Methods — 기록대로 · compact 판 (BML 가이드 반영) · 진행
 - 2026-10-19 · `kb/reviews/li2s1a_CX_prompt_li2s_glass_control_readout_2026_10_14.md` — CX 프롬프트 — li2s 소셀 유리 대조 계 B 600 K 판독: 규칙 적용 갈래 c2 (N_B 1/5) · 결과 전 선택 셋 확인 · 트랙 끝 제안 · 발송됨 (사용자 · 발송일 기록 없음 · 발송판 `kb/project…
@@ -501,7 +501,7 @@
 - `kb/questions/coating_lineage_sibling_conflicts_2026_09_13.md` — 코팅 계보 #6·#7·#8 digest 가 서로 다른 말을 하는 세 자리 — 우리 값이 문헌의 어느 양인가 [open]  (2026-09-13 · open)
 - `kb/questions/doped_declared_state_feasibility_2026_08_29.md` — doped E_ads 를 '상태 선언' 으로 살릴 수 있나 — NUPDOWN 은 홀 위치를 안 묶는다 [open]  (2026-08-29 · open)
 - `kb/questions/esw_reduction_limit_field_2026_08_28.md` — `reduction_limit_V` 는 환원한계가 아닌 것 같다 — breakpoint 하나 아래를 가리킨다 [open]  (2026-09-13 · open)
-- `kb/questions/li3nd_pristine_reconstruction_2026_09_02.md` — Li₃Nd pristine 3×3×3 이 0.65 eV 재구성한다 — NEB 기반 구조도 같은가? [open]  (2026-10-22 · open)
+- `kb/questions/li3nd_pristine_reconstruction_2026_09_02.md` — Li₃Nd pristine 3×3×3 이 0.65 eV 재구성한다 — NEB 기반 구조도 같은가? [open]  (2026-10-26 · open)
 - `kb/questions/lpsocl_low_beta_mechanism.md` — 저β 런의 정체 — 케이지 절편인가, 진짜 sub-diffusion인가, 느린 전이인가 ⚠disputed [active]  (2026-08-12 · active)
 - `kb/questions/polaron_seed_localized_basis_cannot_express_ring_pi.md` — 폴라론 seed 가 안 먹는 이유 — 국재 기저에 '고리 π' 궤도가 없다 [open]  (2026-09-06 · open)
 - `kb/questions/sdcp_backbone_polaron_estimand_2026_08_31.md` — H-제거 n=6 라디칼 상태지도 — estimand 카드 v2 (회신 S 반영) [open]  (2026-08-31 · open)
