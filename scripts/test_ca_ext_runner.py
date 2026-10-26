@@ -85,7 +85,11 @@ case "${1:-}" in
     echo "[shim] $(basename "$1") 건너뜀 (게이트는 따로 돈다)"; exit 0;;
   */mpm_webapp_payload.py)
     printf '%s\0' "$@" > "$SHIM_LOG/payload_argv.$$"
-    if [ -n "${SHIM_PAYLOAD_EXIT:-}" ]; then exit "$SHIM_PAYLOAD_EXIT"; fi;;
+    if [ -n "${SHIM_PAYLOAD_EXIT:-}" ]; then exit "$SHIM_PAYLOAD_EXIT"; fi
+    if [ -n "${SHIM_PAYLOAD_GARBAGE:-}" ]; then          # ★ 10-26 B″ — payload 대신 꼴이 틀린 JSON 을 --out 에 쓰고 rc 0 (러너의 옮기기 전 검사 시험)
+      _o=""; _n=0; for _a in "$@"; do if [ "$_n" = 1 ]; then _o="$_a"; _n=0; fi; [ "$_a" = "--out" ] && _n=1; done
+      printf '%s' "$SHIM_PAYLOAD_GARBAGE" > "$_o"; exit 0
+    fi;;
 esac
 exec "__REAL__" "$@"
 '''
@@ -105,7 +109,9 @@ NEW_ENV_NAMES = ('CJUNC', 'CJUNC_RJ', 'CJUNC_LEN_LAW', 'CJUNC_UNREG_LAW', 'CJUNC
                  #  ★ Z1 (10-20) — VGCF bulk σ (직경 보존 · 설계 §1-2 #2 · `scripts/test_ca_ext_z1.py` Z1)
                  'SIGMA_FIBRE_BULK',
                  #  ★ 10-21 (D · 등록 R §5-6 SV 행 · Codex RCA-06 · 1저자 Q4) — SV 반사실 대조 노브 (같은 런 안 추가 풀이 · 문턱 = 사슬)
-                 'CJUNC_SV_CF')
+                 'CJUNC_SV_CF',
+                 #  ★ 10-26 B″ (1저자 Q1 (가)) — 조립만 런 (사슬 SV 끝 그래프 봉인 원천 · 출력 = cjgraph_<팔>.json · 팔 · 봉인 없음 · N11)
+                 'CJUNC_GRAPH_ONLY')
 #: ★ Z1 (10-20) — 다음 세대 노브는 `STEP3_RTOL` 필수 (설계 §6 · 팔 시작 전 거부) → 설정부 탐침도 rtol 을 준다
 CJ_RT_ENV = dict(CJ_ENV, STEP3_RTOL='1e-12')
 #: 러너 축 이름꼴 — 부모 셸에서 물려받지 않게 기본 env 에서 걷어낸다
@@ -145,13 +151,16 @@ class Run:
     pass
 
 
-def run_runner(ws, env_over=None, runner=None, payload_exit=None, timeout=1200):
-    """러너를 진짜로 부른다 → rc · 로그 · OUTDIR · 영수증 · 팔 이름 · payload argv (--out 별) · 생성 스크립트."""
+def run_runner(ws, env_over=None, runner=None, payload_exit=None, timeout=1200, payload_garbage=None):
+    """러너를 진짜로 부른다 → rc · 로그 · OUTDIR · 영수증 · 팔 이름 · payload argv (--out 별) · 생성 스크립트.
+    ★ 10-26 B″ — payload_garbage = payload 대신 그 글을 --out 에 쓰고 rc 0 (가짜 python3) · graphs = OUTDIR 의 조립만 출력 이름."""
     env = base_env(**(env_over or {}))
     env['SHIM_LOG'] = os.path.join(ws, '_shim')
     env['P2_SCR'] = SCRIPTS                             # 고치기 전 러너 사본 (리포 밖 경로) 도 같은 scripts/ 를 쓴다
     if payload_exit is not None:
         env['SHIM_PAYLOAD_EXIT'] = str(payload_exit)
+    if payload_garbage is not None:
+        env['SHIM_PAYLOAD_GARBAGE'] = str(payload_garbage)
     for f in glob.glob(os.path.join(ws, '_shim', 'payload_argv.*')):    # 이 호출의 argv 만 본다
         os.remove(f)
     before = set(glob.glob(os.path.join(ws, 'prereg_v2_*')))
@@ -170,6 +179,7 @@ def run_runner(ws, env_over=None, runner=None, payload_exit=None, timeout=1200):
         r.receipt_bytes = open(os.path.join(r.outdir, 'run_receipt.json'), 'rb').read()
         r.receipt = json.loads(r.receipt_bytes)
     r.arms = sorted(os.path.basename(x) for x in glob.glob(os.path.join(r.outdir or '/nonexistent', 'p2_*.json')))
+    r.graphs = sorted(os.path.basename(x) for x in glob.glob(os.path.join(r.outdir or '/nonexistent', 'cjgraph_*.json')))
     r.argv = {}
     for f in glob.glob(os.path.join(ws, '_shim', 'payload_argv.*')):
         toks = open(f, 'rb').read().decode('utf-8').split('\0')
@@ -185,6 +195,7 @@ def reset_ws(ws):
     for d in glob.glob(os.path.join(ws, 'prereg_v2_*')):
         shutil.rmtree(d, ignore_errors=True)
     for f in glob.glob(os.path.join(ws, '_shim', '*')) + glob.glob(os.path.join(ws, 'kit_*', 'run_1', 'p2_*')) \
+            + glob.glob(os.path.join(ws, 'kit_*', 'run_1', 'cjgraph_*')) \
             + glob.glob(os.path.join(ws, 'kit_*', 'run_1', '.peak_rss_*')):
         os.remove(f)
 
@@ -641,6 +652,103 @@ def t_isolation():
                 os.environ.pop(k, None)
             else:
                 os.environ[k] = v
+
+
+# ═════════════════════════ N11 — 조립만 런 (★ 10-26 B″ · 1저자 Q1 (가)) ═════════════════════════
+def _argv_wo(toks, drop=('--step3-cjunc-graph-only',)):
+    """payload argv → (--out 값을 자리표로 · drop 플래그를 뺀) 목록 (조립만 런 ↔ 같은 요청의 생산 런 명령줄 대조)."""
+    out, i = [], 0
+    while i < len(toks):
+        t = toks[i]
+        if t in drop:
+            i += 1
+            continue
+        if t == '--out' and i + 1 < len(toks):
+            out += ['--out', '<OUT>']
+            i += 2
+            continue
+        out.append(t)
+        i += 1
+    return out
+
+
+@case('N11 조립만 런 (CJUNC_GRAPH_ONLY=1) — 출력 = 봉인 원천 기록 · 같은 명령줄 + 플래그 하나 · 팔 · 봉인 없음 · 캐시 없음 · 발사 전 거부')
+def t_graph_only():
+    """★ 10-26 B″ (1저자 10-26 Q1 (가) · 묶음 B 보고 §13 결정 1) — 사슬 봉인 원천 (`rint_r_chain.RunnerGraphSource`) 이 부르는 러너 꼴: 같은 런
+    env + `CJUNC_GRAPH_ONLY=1` → payload 에 `--step3-cjunc-graph-only` 하나 더 (값 · 선언 · 나머지 인자 그대로) → 출력 = `cjgraph_<팔 이름>.json`
+    (팔 JSON 이름꼴 밖 · `run_contract.cjunc_graph_only_problem` 꼴 검사 뒤 OUTDIR 로) · 팔 · 봉인 · 원값 없음 · 이미 있으면 거부 (캐시 없음)."""
+    import ca_ext_svcf as SVc
+    ws = make_ws('n11')
+    env = dict(CJ_RT_ENV, CJUNC_SV_CF='1')
+    rp = run_runner(ws, env)
+    rg = run_runner(ws, dict(env, CJUNC_GRAPH_ONLY='1'))
+    probs = {g: RC.cjunc_graph_only_problem(json.load(open(os.path.join(rg.outdir, g), encoding='utf-8')))
+             for g in rg.graphs} if rg.outdir else {}
+    chk('N11a 조립만 러너 rc 0 · OUTDIR 에 cjgraph_p2_<침대>…_svcf_cjgo_a0.json 둘 (팔 JSON p2_* 없음) · 둘 다 꼴 검사 통과 · 영수증 '
+        'cjunc_graph_only True · OUTDIR = 생산 런과 다름 (태그 _cjgo · digest)',
+        rp.rc == 0 and len(rp.arms) == 2 and rg.rc == 0 and rg.arms == [] and len(rg.graphs) == 2
+        and all(re.match(r'^cjgraph_p2_(SBE|DBE)' + _TAG_RE + r'_rt1em12_svcf_cjgo_a0\.json$', g) for g in rg.graphs)
+        and probs and all(v is None for v in probs.values()) and (rg.receipt or {}).get('cjunc_graph_only') is True
+        and rg.outdir != rp.outdir and '_cjgo' in os.path.basename(rg.outdir or ''),
+        (rp.rc, rp.arms, rg.rc, rg.arms, rg.graphs, probs, rg.log[-700:]))
+    for bed in ('SBE', 'DBE'):
+        pn = next((a for a in rp.arms if a.startswith(f'p2_{bed}_')), None)
+        gn = next((g for g in rg.graphs if g.startswith(f'cjgraph_p2_{bed}_')), None)
+        ptoks, gtoks = rp.argv.get(pn) or [], rg.argv.get(gn) or []
+        chk(f'N11b [{bed}] payload 명령줄 = 생산 런 명령줄 + `--step3-cjunc-graph-only` 하나 (값 · 선언 · 나머지 인자 그대로 · --out 만 다름)',
+            bool(ptoks) and gtoks.count('--step3-cjunc-graph-only') == 1 and '--step3-cjunc-graph-only' not in ptoks
+            and _argv_wo(gtoks) == _argv_wo(ptoks) and opt(gtoks, '--out') == gn, (opt(gtoks, '--out'), gtoks[-10:], ptoks[-10:]))
+        s3, m = manifest_of(os.path.join(rp.outdir, pn)) if (pn and rp.outdir) else ({}, {})
+        rec = json.load(open(os.path.join(rg.outdir, gn), encoding='utf-8')) if (gn and rg.outdir) else {}
+        svr = ((((m.get('ca_ext') or {}).get('cjunc') or {}).get('evidence') or {}).get('solve') or {}).get('sv_counterfactual') or {}
+        gg = rec.get('cjunc_graphs') if isinstance(rec.get('cjunc_graphs'), dict) else None
+        chk(f'N11c [{bed}] 조립만 지문 = 생산 팔 증서 지문 (주 해 · SV 끝 — ca_ext_svcf.graph_problem · ca_ext_record_ok(graphs=) 통과) · 결합 = 생산 팔 주 '
+            f'증서 결합 · 환경 단위 = 이 인터프리터',
+            gg is not None and gg.get('main') == (s3.get('conv_cert') or {}).get(SVc.GRAPH_KEY) and SVc.graph_problem(svr, gg) is None
+            and RC.ca_ext_record_ok(m, graphs=gg) == (True, None)
+            and rec.get('bind') == {k: (s3.get('conv_cert') or {}).get(k) for k in SVc.BIND_FIELDS}
+            and rec.get('env_unit') == RC.env_unit_now(), (gg, (s3.get('conv_cert') or {}).get(SVc.GRAPH_KEY), rec.get('bind')))
+    chk('N11d 봉인 · 원값 없음 — 조립만 끝 줄 · 진단 런 원값 덤프 (생산 봉인 아님 줄) 없음',
+        '조립만 런' in rg.log and '생산 봉인 아님' not in rg.log and '생산 봉인 아님' in rp.log, rg.log[-400:])
+    sha = {g: hashlib.sha256(open(os.path.join(rg.outdir, g), 'rb').read()).hexdigest() for g in rg.graphs} if rg.outdir else {}
+    r2 = run_runner(ws, dict(env, CJUNC_GRAPH_ONLY='1', OUTDIR=rg.outdir or os.path.join(ws, 'none')))
+    after = {g: hashlib.sha256(open(os.path.join(rg.outdir, g), 'rb').read()).hexdigest() for g in rg.graphs} if rg.outdir else {}
+    chk('N11e 캐시 없음 — 같은 조립만 런을 그 OUTDIR 에 다시 → rc ≠ 0 · ABORT (조립만 출력이 이미 있다) · payload 미호출 · 옛 출력 그대로',
+        r2.rc != 0 and '조립만 출력이 이미 있다' in r2.log and not r2.argv and sha and after == sha, (r2.rc, r2.log[-300:]))
+    for nm, over, code in (('CJUNC 없이', {'CJUNC_GRAPH_ONLY': '1', 'STEP3_RTOL': '1e-12'}, 'RUNNER_CA_EXT|FLAG_WITHOUT_CJUNC|'),
+                           ('값 yes', dict(env, CJUNC_GRAPH_ONLY='yes'), 'RUNNER_CA_EXT|VALUE|'),
+                           ('값 " 1"', dict(env, CJUNC_GRAPH_ONLY=' 1'), 'RUNNER_CA_EXT|VALUE|')):
+        rr = run_runner(ws, over)
+        chk(f'N11f 발사 전 거부 [{nm}] → rc 2 · `{code}` · 새 디렉터리 없음 · payload 미호출',
+            rr.rc == 2 and code in rr.log and not rr.new_dirs and not rr.argv, (rr.rc, rr.new_dirs, rr.log.strip()[-260:]))
+    prc = rp.receipt or {}                                  # N11i 재료 — reset_ws 가 생산 OUTDIR 을 지우기 전에 읽는다
+    pn0 = next((a for a in rp.arms if a.startswith('p2_DBE_')), None)
+    _s3, m0 = manifest_of(os.path.join(rp.outdir, pn0)) if (pn0 and rp.outdir) else ({}, {})
+    reset_ws(ws)
+    rf = run_runner(ws, dict(env, CJUNC_GRAPH_ONLY='1'), payload_exit=3)
+    chk('N11g 조립만 payload 실패 (rc 3) → 러너 rc ≠ 0 · OUTDIR 에 조립만 출력 없음', rf.rc != 0 and rf.graphs == [], (rf.rc, rf.graphs))
+    reset_ws(ws)
+    rb = run_runner(ws, dict(env, CJUNC_GRAPH_ONLY='1'), payload_garbage='{"graph_only": true}')
+    fresh = glob.glob(os.path.join(ws, 'kit_*', 'run_1', 'cjgraph_*.json'))
+    chk('N11h payload 가 꼴이 틀린 JSON 을 rc 0 으로 남김 → 러너가 옮기지 않는다 (rc ≠ 0 · OUTDIR 출력 없음 · 진단본은 런 폴더에 남김)',
+        rb.rc != 0 and rb.graphs == [] and '꼴' in rb.log and len(fresh) == 1, (rb.rc, rb.graphs, fresh, rb.log[-300:]))
+    ok0 = RC.receipt_match(prc, m0) if m0 else (None, None)
+    okg = RC.receipt_match(dict(prc, cjunc_graph_only=True), m0) if m0 else (None, None)
+    chk('N11i 조립만 영수증은 팔을 증명하지 않는다 — 생산 영수증 + cjunc_graph_only True ↔ 생산 팔 = receipt_match 거부 '
+        '(RCPT|cjunc_graph_only|) · 생산 영수증 그대로 = 통과',
+        ok0[0] is True and okg[0] is False and 'RCPT|cjunc_graph_only|' in str(okg[1]), (ok0, okg))
+    os.makedirs(os.path.join(TD, '_probe'), exist_ok=True)
+    pb, pg = probe(dict(env)), probe(dict(env, CJUNC_GRAPH_ONLY='1'))
+    try:
+        RC.runner_ca_ext_view({'cjunc_graph_only': True})
+        bad_view = None
+    except ValueError as e:
+        bad_view = str(e)
+    chk('N11j 설정부 — 조립만 팔 태그 = 생산 태그 + `_cjgo` · NG_FLAG 에 `--step3-cjunc-graph-only` 한 번 · NG_DECL 같음 · 접합 요청 없는 영수증의 '
+        '조립만 = 보기 거부 (ValueError)',
+        pg['_rc'] == 0 and pg.get('NG_ATAG') == str(pb.get('NG_ATAG', '')) + '_cjgo'
+        and str(pg.get('NG_FLAG', '')).count('--step3-cjunc-graph-only') == 1 and pg.get('NG_DECL') == pb.get('NG_DECL')
+        and bad_view is not None, (pb.get('NG_ATAG'), pg.get('NG_ATAG'), bad_view, pg['_log'][-200:]))
 
 
 # ═════════════════════════ NB — 끔 경로 (고치기 전 러너와 대조) ═════════════════════════

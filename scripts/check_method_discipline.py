@@ -929,7 +929,9 @@ _RUNNER_AXES = ('LEAN', 'VOX', 'ARMS', 'SIGMA_PTFE', 'PTFE_STAMP', 'FIBRE_STAMP'
                 #  ★ 2026-10-20 (Rint ② Z3) — 팔 고르기 (부모 셸의 ARM_LIST 가 탐침으로 새면 `ARMS=2` 탐침이 "ARMS 와 동시" 로 멈춘다).
                 'ARM_LIST',
                 #  ★ 2026-10-21 (D · 등록 R §5-6) — SV 반사실 대조 노브 (같은 정본 표 · 부모 셸의 CJUNC_SV_CF=1 이 탐침으로 새면 "CJUNC 없이" 로 멈춘다).
-                'CJUNC_SV_CF')
+                'CJUNC_SV_CF',
+                #  ★ 2026-10-26 (B″ · 1저자 Q1 (가)) — 조립만 런 (같은 정본 표 · 부모 셸의 CJUNC_GRAPH_ONLY=1 이 탐침으로 새면 "CJUNC 없이" 로 멈춘다).
+                'CJUNC_GRAPH_ONLY')
 
 
 def _hermetic_env(env):

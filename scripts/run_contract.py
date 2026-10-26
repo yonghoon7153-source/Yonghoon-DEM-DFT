@@ -321,7 +321,9 @@ RECEIPT_OPTIONAL = ('ca_ext_request', 'step3_rtol', 'sigma_vgcf_bulk_S_cm', 'sig
                     #  ★ Z3 (10-20) — 러너 팔 고르기 `ARM_LIST` (있을 때만 · 고른 팔 번호 = origin 일정의 자리 · 진단 런)
                     'arm_list',
                     #  ★ 10-21 (D · 등록 R §5-6) — SV 반사실 대조 노브 `CJUNC_SV_CF` (있을 때만 = True · 끔 = 칸 없음 = 옛 digest)
-                    'sv_counterfactual')
+                    'sv_counterfactual',
+                    #  ★ 10-26 (B″ · 1저자 Q1 (가)) — 조립만 런 `CJUNC_GRAPH_ONLY` (있을 때만 = True · 끔 = 칸 없음 = 옛 digest · 팔 증명 불가)
+                    'cjunc_graph_only')
 
 
 def expected_origins_for(vox):
@@ -418,7 +420,11 @@ def _same_num(a, b):
 
 def _receipt_ext_problem(rec, man):
     """★ 2026-10-20 (Rint ② B6) — 영수증의 다음 세대 요청 (`ca_ext_request`) ↔ 매니페스트 블록 · `step3_rtol` ↔ `backend.rtol`.
-    선언 없는 영수증인데 팔에 접합 · 수정자 기록 · rtol 이 있으면 거부 (러너가 요청하지 않은 실험 · SKIP 캐시 함정)."""
+    선언 없는 영수증인데 팔에 접합 · 수정자 기록 · rtol 이 있으면 거부 (러너가 요청하지 않은 실험 · SKIP 캐시 함정).
+    ★ 10-26 B″ (1저자 Q1 (가)) — 조립만 런의 영수증 (`cjunc_graph_only`) 은 팔을 증명하지 않는다 (그 런은 팔을 내지 않는다 · 봉인 원천 전용) → 거부."""
+    if rec.get('cjunc_graph_only') is not None:
+        return (f'RCPT|cjunc_graph_only|receipt| 조립만 런의 영수증 (cjunc_graph_only = {rec.get("cjunc_graph_only")!r}) 은 팔을 증명하지 '
+                f'않는다 — 조립만 출력은 팔이 아니다 (사슬 SV 끝 그래프 봉인 원천 전용 · 10-26 B″)')
     req = rec.get('ca_ext_request')
     mreq = man.get(CA_EXT_REQUEST_FIELD)
     _blk = man.get('ca_ext') if isinstance(man.get('ca_ext'), dict) else {}
@@ -1143,6 +1149,10 @@ RUNNER_CA_EXT_ENV = (
     #    영수증 선택 칸 (켬 = True) · payload `--step3-cjunc-sv-cf` · 팔 태그 `_svcf` · 선언 칸 아님 (protocol 밖 · 주 σ 그대로) ·
     #    문턱 = 사슬 계획 (producer 는 비만 낸다 — 판정 = 사슬 판정 계산기 · 등록 R §5-7).
     ('CJUNC_SV_CF', None, 'sv_counterfactual'),
+    #  ★ 2026-10-26 (B″ · 1저자 Q1 (가)) — 조립만 런 (비움 · 0 = 끔 · 1 = 켬 · CJUNC=1 과만) · 영수증 선택 칸 (켬 = True · 끔 = 칸 없음 = 옛 digest) ·
+    #    payload `--step3-cjunc-graph-only` · 팔 태그 `_cjgo` · 선언 칸 아님 · 출력 = `cjgraph_<팔 이름>.json` (팔 · 봉인 · 원값 없음 · 캐시 없음) ·
+    #    사슬 SV 끝 그래프 봉인 원천 (`rint_r_chain.RunnerGraphSource`) 전용 — 그 영수증은 팔을 증명하지 않는다 (`_receipt_ext_problem`).
+    ('CJUNC_GRAPH_ONLY', None, 'cjunc_graph_only'),
 )
 #: 러너 수 칸 — ASCII 10 진 (부호 · 공백 · 밑줄 · 유니코드 숫자 · nan · inf 낱말 거부 · 넘침 (1e999) 은 유한성 검사가 잡는다)
 _RUNNER_NUM_RE = r'(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?'
@@ -1236,6 +1246,11 @@ def runner_ca_ext(env, *, ptfe_stamp='off', lean='0', fibre_stamp='segment', per
         _p('VALUE', f'CJUNC_SV_CF={_svcf!r} — 비움 · 0 (끔) · 1 (켬) 만 (등록 R §5-6 SV 반사실 대조 · 문턱 = 사슬 계획)')
     elif _svcf == '1' and not on:
         _p('FLAG_WITHOUT_CJUNC', 'CJUNC_SV_CF=1 은 CJUNC=1 일 때만 뜻이 있다 (SV 반사실 = 접합 원장의 SV 면 · 조용한 no-op 금지)')
+    _go = raw['CJUNC_GRAPH_ONLY']                                # ★ 10-26 B″ (1저자 Q1 (가)) — 조립만 런 (비움 · 0 = 끔 · 1 = 켬)
+    if _go not in ('', '0', '1'):
+        _p('VALUE', f'CJUNC_GRAPH_ONLY={_go!r} — 비움 · 0 (끔) · 1 (켬) 만 (조립만 = 사슬 SV 끝 그래프 봉인 원천 · 팔 · 봉인 없음)')
+    elif _go == '1' and not on:
+        _p('FLAG_WITHOUT_CJUNC', 'CJUNC_GRAPH_ONLY=1 은 CJUNC=1 일 때만 뜻이 있다 (조립할 접합 계가 없다 · 조용한 no-op 금지)')
     c = raw['SDCP_MOD_C']
     if c != '':
         if not on:
@@ -1314,6 +1329,8 @@ def runner_ca_ext(env, *, ptfe_stamp='off', lean='0', fibre_stamp='segment', per
         rec['ca_ext_request'] = req
     if _svcf == '1' and on:
         rec['sv_counterfactual'] = True                          # ★ 10-21 (D) — 선택 칸 (켬일 때만 · 끔 = 칸 없음 = 옛 digest)
+    if _go == '1' and on:
+        rec['cjunc_graph_only'] = True                           # ★ 10-26 B″ — 선택 칸 (켬일 때만 · 끔 = 칸 없음 = 옛 digest)
     return {'receipt': ({} if probs else rec), 'problems': probs}
 
 
@@ -1411,6 +1428,16 @@ def runner_ca_ext_view(rec):
             raise ValueError('--step3-cjunc-sv-cf 가 CLI_ACCOUNTING 에 없다 (payload 플래그 정본)')
         fl.append('--step3-cjunc-sv-cf')
         tg.append('_svcf')
+    #  ★ 2026-10-26 (B″ · 1저자 Q1 (가)) — 조립만 런: payload 플래그 (CLI 회계 정본에 있어야) · 이름 태그 `_cjgo` (OUTDIR · 팔 이름 · 생산 팔과 겹치지 않게) ·
+    #    선언 없음 (출력 꼴만 바꾼다).  접합 요청 없이 켬 = 손으로 바뀐 영수증 = 거부.
+    _go = rec.get('cjunc_graph_only')
+    if _go is not None:
+        if _go is not True or req is None or 'cjunc' not in (req or {}):
+            raise ValueError(f'영수증의 cjunc_graph_only = {_go!r} — True + 접합 요청 (ca_ext_request.cjunc) 과만')
+        if '--step3-cjunc-graph-only' not in CLI_ACCOUNTING:
+            raise ValueError('--step3-cjunc-graph-only 가 CLI_ACCOUNTING 에 없다 (payload 플래그 정본)')
+        fl.append('--step3-cjunc-graph-only')
+        tg.append('_cjgo')
     tag = ''.join(tg)
     out = {'flags': ''.join(' ' + x for x in fl), 'expect': ''.join(',' + x for x in xp), 'tag': tag,
            'arm_tag': ('_fa' if rec.get('ptfe_stamp') == 'face_alpha' else '') + tag, 'vgcf_bulk': vgcf_bulk}

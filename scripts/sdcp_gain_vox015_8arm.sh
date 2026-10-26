@@ -469,7 +469,8 @@ _RCPT_JSON="$(P2_ARM_LIST="$ARM_LIST" python3 - "$SCR" "$VOX" "$BRIDGE_UM" "$FIB
                   "CJUNC_UNREG_LAW=${CJUNC_UNREG_LAW:-}" "CJUNC_S_MIN_UM=${CJUNC_S_MIN_UM:-}" \
                   "CJUNC_TOL_FF_UM=${CJUNC_TOL_FF_UM:-}" "CJUNC_PTFE_JLAW=${CJUNC_PTFE_JLAW:-}" \
                   "SDCP_MOD_C=${SDCP_MOD_C:-}" "STEP3_RTOL=${STEP3_RTOL:-}" \
-                  "SIGMA_FIBRE_BULK=${SIGMA_FIBRE_BULK:-}" "CJUNC_SV_CF=${CJUNC_SV_CF:-}" <<'PYRCPT'
+                  "SIGMA_FIBRE_BULK=${SIGMA_FIBRE_BULK:-}" "CJUNC_SV_CF=${CJUNC_SV_CF:-}" \
+                  "CJUNC_GRAPH_ONLY=${CJUNC_GRAPH_ONLY:-}" <<'PYRCPT'
 import json, os, sys
 sys.path.insert(0, sys.argv[1])
 import run_contract as RC
@@ -574,6 +575,11 @@ _NG_VIEW="$(printf '%s' "$_RCPT_JSON" | python3 -c 'import json, sys; sys.path.i
 if printf '%s' "$NG_TAG$NG_ATAG$NG_FLAG$NG_DECL$NG_VGCF_BULK" | LC_ALL=C grep -q '[^A-Za-z0-9._=,+ -]'; then
   echo "[p2] ABORT — 다음 세대 인자에 허용 밖 문자가 있다 (tag=$NG_TAG flags=$NG_FLAG decl=$NG_DECL bulk=$NG_VGCF_BULK)"; exit 2
 fi
+#  ★ 2026-10-26 (B″ · 1저자 Q1 (가)) — 조립만 런 (`CJUNC_GRAPH_ONLY=1` · 값 · CJUNC=1 짝 = 위 영수증 조립의 발사 전 검사가 이미 봤다 · payload 플래그 ·
+#    `_cjgo` 태그 = 영수증 보기 NG_FLAG · NG_ATAG) — 출력 = `cjgraph_<팔 이름>.json` (팔 · check_arm · 봉인 · 원값 없음 · 캐시 없음) · 사슬 SV 끝 그래프
+#    봉인 원천 (`rint_r_chain.RunnerGraphSource`) 전용.  끔 (기본) = 0 = 옛 경로 그대로.
+CJGO=0
+[ "${CJUNC_GRAPH_ONLY:-}" = "1" ] && CJGO=1
 OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${AS_TAG}${SD_SIG_TAG}${YV_TAG}${PT_TAG}${PS_TAG}${SBRG_TAG}${NG_TAG}${FS_TAG}${SION_TAG}${PB_TAG}${AR_TAG}${LEAN_TAG}${_RCPT_TAG}}"
 #  ★★★ R3-CX-09 — 진단 런(ARMS≠8)은 **사용자가 준 OUTDIR 에도** 접미사를 강제한다.
 #    안 그러면 `ARMS=2 OUTDIR=<생산경로>` 로 2팔 산출물이 8팔 디렉터리에 섞인다.
@@ -697,6 +703,15 @@ run_arm() {   # $1=kit dir  $2="sx sy sz"  $3=tag
   fi
   [ -n "$RUN" ] || { echo "[p2] ABORT — $KIT 압밀 런 없음"; return 1; }
   OUT="$OUTDIR/${TAG}.json"
+  #  ★ 2026-10-26 (B″ · 1저자 Q1 (가)) — 조립만 런: 출력 = 봉인 원천 기록 `cjgraph_<팔 이름>.json` (팔 JSON 이름꼴 p2_* 밖 — 사슬 read_run 이
+  #    팔로 읽지 않는다) · 이미 있으면 거부 (캐시 없음 · 옛 원천 파일을 재사용하지도 지우지도 않는다)
+  if [ "$CJGO" = 1 ]; then
+    OUT="$OUTDIR/cjgraph_${TAG}.json"
+    if [ -e "$OUT" ]; then
+      echo "[p2] ABORT — 조립만 출력이 이미 있다 ($OUT) — 조립만 런은 캐시를 쓰지 않는다 (새 OUTDIR 로 · 옛 파일은 그대로 둔다)"
+      return 1
+    fi
+  fi
   #  ★★ 2026-08-18 (심층 리뷰 ① B2) — `[ -s "$OUT" ]` 는 **파일이 있기만 하면** SKIP 했다.
   #    구 스탬프 게이트가 fail-open 이던 시절 그 조합은 치명적이었다: 쓰레기 JSON 이
   #    영구 캐시된다.  게이트는 이제 fail-closed(SystemExit)지만, 재개 판정 자체를
@@ -867,6 +882,30 @@ PY
   #      (증거 보존 — 지우면 왜 죽었는지 못 본다).
   local FRESH="$RUN/$(basename "$OUT")"
   [ -s "$FRESH" ] || { echo "[p2] ABORT — $TAG 이 산출물을 안 남겼다 ($FRESH)"; return 1; }
+  #  ★ 2026-10-26 (B″ · 1저자 Q1 (가)) — 조립만 출력 = 팔이 아니다 → check_arm 대신 꼴 검사 (`run_contract.cjunc_graph_only_problem` · 칸 고정 ·
+  #    지문 꼴 · 결합 · 환경 단위 · 비용) 뒤에만 OUTDIR 로 옮긴다 (틀리면 옮기지 않고 런 폴더에 진단본을 남긴다 · 지문 ↔ 증서 대조 = 사슬)
+  if [ "$CJGO" = 1 ]; then
+    if ! P2_SCR="$SCR" python3 - "$FRESH" <<'PYGO'
+import json, os, sys
+sys.path.insert(0, os.environ['P2_SCR'])
+import run_contract as RC
+try:
+    rec = json.load(open(sys.argv[1], encoding='utf-8'))
+except Exception as e:                                       # noqa: BLE001 — 못 읽음 = 꼴 실패
+    print(f'     GRAPH_ONLY|read| {type(e).__name__}: {e}')
+    raise SystemExit(1)
+why = RC.cjunc_graph_only_problem(rec)
+if why:
+    print(f'     {why}')
+    raise SystemExit(1)
+PYGO
+    then
+      echo "[p2] ABORT — 갓 만든 조립만 출력 $TAG 의 꼴이 틀렸다.  **옮기지 않는다**: $FRESH"
+      return 1
+    fi
+    mv "$FRESH" "$OUT"
+    return 0
+  fi
   if ! python3 "$SCR/sr01_stamp_compare.py" --check-arm "$FRESH" --stamp "$FIBRE_STAMP" \
        --receipt "$OUTDIR/run_receipt.json" \
        --expect-backend "${EXPECT_BACKEND:-gpu}" >/dev/null 2>&1; then
@@ -904,6 +943,11 @@ for SH in "${SHIFTS[@]}"; do
 done
 
 echo
+#  ★ 2026-10-26 (B″ · 1저자 Q1 (가)) — 조립만 런은 팔이 없다 → 봉인 · 판정기 · 원값 덤프를 돌리지 않는다 (봉인 원천 기록만 · 대조 = 사슬)
+if [ "$CJGO" = 1 ]; then
+  echo "[p2] ★ 조립만 런 (CJUNC_GRAPH_ONLY=1) — 봉인 원천 기록만 냈다 (팔 · 봉인 · 판정 · 원값 없음).  OUTDIR: $OUTDIR"
+  exit 0
+fi
 #  ★★ 2026-08-24 (CDXR2-5) — `--collect-only` 는 **항상 exit 0** 이라 팔이 모자라도·
 #    미수렴이어도·고정인자가 어긋나도 러너가 초록으로 끝났다.  그렇다고 러너가 판정을
 #    돌리면 이 파일 헤더의 규약("결과를 보고 창을 옮길 수 없게")이 깨진다.
