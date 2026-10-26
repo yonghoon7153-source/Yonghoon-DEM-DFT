@@ -1,0 +1,14 @@
+[10-26 15:43:59] GPU 빌드 → 랭크 1 (GPU 하나당 랭크 하나)
+[10-26 15:43:59] MPI 를 바이너리에서 읽었다: /home/kgy/apps/openmpi-4.1.6/lib/libmpi.so.40
+[10-26 15:43:59]   prefix=/home/kgy/apps/openmpi-4.1.6 · mpirun=/home/kgy/apps/openmpi-4.1.6/bin/mpirun
+[10-26 15:43:59]   ⚠ libnvomp + libgomp 동시 링크 — OMP_NUM_THREADS=1 로 고정(libgomp: TODO 회피)
+[10-26 15:43:59] 코어: 물리 8 · 논리 16 → 랭크 1
+[10-26 15:43:59] 설정 균일성 ✓ (1점 동일 · key dd8479b7)
+               occupations = 'smearing'
+               electron_maxstep = 100
+               mixing_mode  = 'plain'
+[10-26 15:43:59] 점 1개 · /home/kgy/apps/openmpi-4.1.6/bin/mpirun --oversubscribe -np 1 · pw.x=/home/kgy/apps/qe-7.4.1-gpu/bin/pw.x · pseudo=/home/kgy/work/pseudo
+[10-26 15:43:59]   VRAM 여유 21083 MiB (문턱 19181)
+[10-26 17:02:07] ✓ host  78분
+[10-26 17:02:07] 끝 — 완료 1 · 건너뜀 0 · 실패 0 · 총 78분
+다음: UMA 힘 (같은 frame.xyz) → 분석

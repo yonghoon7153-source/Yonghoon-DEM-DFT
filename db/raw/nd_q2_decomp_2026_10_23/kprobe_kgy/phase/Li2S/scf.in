@@ -1,0 +1,43 @@
+&CONTROL
+    calculation = 'scf'
+    prefix      = 'Li2S'
+    outdir      = './tmp'
+    pseudo_dir  = '/home/kgy/work/pseudo'
+    tprnfor     = .true.
+    tstress     = .true.
+    etot_conv_thr = 1.0d-6
+    forc_conv_thr = 1.0d-4
+    nstep        = 200
+/
+&SYSTEM
+    ibrav       = 0
+    nat         = 3
+    ntyp        = 2
+    ecutwfc     = 70.0
+    ecutrho     = 560.0
+    occupations = 'smearing'
+    smearing    = 'mv'
+    degauss     = 0.01
+    nosym       = .false.
+/
+&ELECTRONS
+    conv_thr     = 1.0d-9
+    electron_maxstep = 100
+    mixing_mode  = 'plain'
+    mixing_beta  = 0.3
+    mixing_ndim  = 8
+    diagonalization = 'david'
+/
+ATOMIC_SPECIES
+  Li  6.9410  Li.pbe-sl-kjpaw_psl.1.0.0.UPF
+  S  32.0650  S.pbe-nl-kjpaw_psl.1.0.0.UPF
+CELL_PARAMETERS angstrom
+   4.033039692  -0.000000050  -0.000000041
+   2.016519802   3.492714829  -0.000000019
+   2.016519798   1.164238261   3.292963074
+ATOMIC_POSITIONS crystal
+Li               0.7500000043        0.7499999487        0.7500000262
+Li               0.2500000223        0.2500000469        0.2499999832
+S               -0.0000000266        0.0000000043       -0.0000000094
+K_POINTS automatic
+  11 11 11 0 0 0
