@@ -1,0 +1,10 @@
+{
+  "zip": "codex-dem-gen2-t12r-96f15ed17e03.zip",
+  "bytes": 3078303,
+  "sha256": "fd52dd397e47ee93d91432b4c045c43196b51527d5c52038b4c863d233518bb7",
+  "entries": 373,
+  "source_blobs": 369,
+  "source_mismatch": [],
+  "manifest_entries": 372,
+  "manifest_mismatch": []
+}

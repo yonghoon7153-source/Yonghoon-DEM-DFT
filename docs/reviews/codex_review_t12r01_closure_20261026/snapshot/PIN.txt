@@ -1,0 +1,7 @@
+branch=codex/dem-gen2-t12r
+commit=96f15ed17e03181b6096fb65f71ec7f577f17523
+candidate=3eecce8af503556b678f8f4a02343e6bce3d0b83
+base=bffc42cab29da37b45f8a713e30e8572b91e7da3
+consumer=4c29705fa1c4ba94737a858b206fa4f4c5bb2bde
+T12R01=claimed_fixed_pending_external_recheck
+physical_T12=NOT_RUN

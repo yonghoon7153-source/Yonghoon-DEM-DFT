@@ -1,0 +1,1052 @@
+{
+  "schema": "dem_gen2_t12_synthetic_consumer_receipt_v1",
+  "consumer_pin": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde",
+  "source_sha256": {
+    "ul_gates.py": "c8d45a9cf75f0806e612d810942d23adea4b40feaa5f31f7d279eb8386358de6",
+    "ul_lib.py": "23a79392352e01631c6d1f6aaecdb31fc8a53be518ee6f27b815896e161727e6",
+    "ul_observers.py": "77b5dc891421fbecf059bb907ff5f5b6ab6433bf1d2cb9649e66535a1ae5ca74",
+    "ul_reader.py": "dfc06b8dbf53a8cab05df297890e1f8ca1d0fa038536c7c13ed8b8677e521723",
+    "ul_s3.py": "030c2688fe5b3e7c30c1ee7f14a60061082f6ce3f8cf2ac8a7a8b89ff353aaa9",
+    "unload_params.json": "332ad7c2040eb614ac21b31ccbb226479928d7ed8363f733b960cf4527204aae"
+  },
+  "fixture_script_sha256": "cd1bd28429ae90a206e833638b086bd99dc5d6d2123bed6b04fe412b66abcf3b",
+  "python": "3.12.14",
+  "synthetic": true,
+  "status": "PASS",
+  "case_count": 52,
+  "passed": 52,
+  "physical_ready": false,
+  "P2_registration": null,
+  "physical_T12": "NOT_RUN",
+  "research_runs_started": 0,
+  "cases": [
+    {
+      "case": "extracted_p1_contract",
+      "function": "ul_lib.load_params + exact excerpt comparison",
+      "expected": true,
+      "observed": true,
+      "pass": true,
+      "kind": "positive"
+    },
+    {
+      "case": "equal_atom",
+      "function": "ul_gates.g2_compare",
+      "expected": "PASS",
+      "observed": "PASS",
+      "pass": true,
+      "kind": "positive"
+    },
+    {
+      "case": "mass_outside_g2",
+      "function": "ul_gates.g2_compare",
+      "expected": "PASS",
+      "observed": "PASS",
+      "pass": true,
+      "kind": "coverage_boundary"
+    },
+    {
+      "case": "spin_outside_g2",
+      "function": "ul_gates.g2_compare",
+      "expected": "PASS",
+      "observed": "PASS",
+      "pass": true,
+      "kind": "coverage_boundary"
+    },
+    {
+      "case": "phase_type_change",
+      "function": "ul_gates.g2_compare",
+      "expected": "FAIL",
+      "observed": "FAIL",
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "atom_full_positive",
+      "function": "ul_reader._atom_frame",
+      "expected": true,
+      "observed": true,
+      "pass": true,
+      "kind": "positive"
+    },
+    {
+      "case": "atom_wrong_step",
+      "function": "ul_reader._atom_frame",
+      "expected": false,
+      "observed": false,
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "atom_fractional_id",
+      "function": "ul_reader._atom_frame",
+      "expected": false,
+      "observed": false,
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "atom_duplicate_id",
+      "function": "ul_reader._atom_frame",
+      "expected": false,
+      "observed": false,
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "atom_nonfinite_id",
+      "function": "ul_reader._atom_frame",
+      "expected": false,
+      "observed": false,
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "atom_outside_s0_id",
+      "function": "ul_reader._atom_frame",
+      "expected": false,
+      "observed": false,
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "atom_mass_inventory_not_checked",
+      "function": "ul_reader._atom_frame",
+      "expected": true,
+      "observed": true,
+      "pass": true,
+      "kind": "coverage_boundary"
+    },
+    {
+      "case": "s0_positive",
+      "function": "ul_reader._s0_frame",
+      "expected": true,
+      "observed": true,
+      "pass": true,
+      "kind": "positive"
+    },
+    {
+      "case": "s0_filename_is_not_step",
+      "function": "ul_reader._s0_frame",
+      "expected": false,
+      "observed": false,
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "s0_corrupt_first_no_fallback",
+      "function": "ul_reader._s0_frame",
+      "expected": false,
+      "observed": false,
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "s0_absent_first_allows_ext",
+      "function": "ul_reader._s0_frame",
+      "expected": true,
+      "observed": true,
+      "pass": true,
+      "kind": "positive"
+    },
+    {
+      "case": "wall_history_equal",
+      "function": "ul_reader._hist_equal",
+      "expected": true,
+      "observed": true,
+      "pass": true,
+      "kind": "positive"
+    },
+    {
+      "case": "wall_delta_max_changed",
+      "function": "ul_reader._hist_equal",
+      "expected": false,
+      "observed": false,
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "contact_equal",
+      "function": "ul_gates.g2c_compare",
+      "expected": "PASS",
+      "observed": "PASS",
+      "pass": true,
+      "kind": "positive"
+    },
+    {
+      "case": "contact_force_changed",
+      "function": "ul_gates.g2c_compare",
+      "expected": "FAIL",
+      "observed": "FAIL",
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "contact_missing_column",
+      "function": "ul_gates.g2c_compare",
+      "expected": "NOT_COMPUTED",
+      "observed": "NOT_COMPUTED",
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "contact_wrong_step",
+      "function": "ul_gates.g2c_compare",
+      "expected": "FAIL",
+      "observed": "FAIL",
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "restore_missing_observation",
+      "function": "ul_gates.restoration_verdict",
+      "expected": "UNCONFIRMED",
+      "observed": "UNCONFIRMED",
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "restore_observed_mismatch",
+      "function": "ul_gates.restoration_verdict",
+      "expected": "VALUE_MISMATCH",
+      "observed": "VALUE_MISMATCH",
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "resume_exact_scientific",
+      "function": "ul_reader.read_run",
+      "expected": {
+        "authorized": [
+          [
+            2,
+            100
+          ]
+        ],
+        "remaining_steps": [
+          100
+        ],
+        "remaining_windows": [
+          100
+        ],
+        "n_superseded_rows": 2,
+        "old_event_retained": false,
+        "raw_inputs_unchanged": true,
+        "has_problems": false
+      },
+      "observed": {
+        "authorized": [
+          [
+            2,
+            100
+          ]
+        ],
+        "remaining_steps": [
+          100
+        ],
+        "remaining_windows": [
+          100
+        ],
+        "n_superseded_rows": 2,
+        "old_event_retained": false,
+        "raw_inputs_unchanged": true,
+        "has_problems": false
+      },
+      "pass": true,
+      "kind": "positive"
+    },
+    {
+      "case": "resume_exact_ascii_space",
+      "function": "ul_reader.read_run",
+      "expected": {
+        "authorized": [
+          [
+            2,
+            100
+          ]
+        ],
+        "remaining_steps": [
+          100
+        ],
+        "remaining_windows": [
+          100
+        ],
+        "n_superseded_rows": 2,
+        "old_event_retained": false,
+        "raw_inputs_unchanged": true,
+        "has_problems": false
+      },
+      "observed": {
+        "authorized": [
+          [
+            2,
+            100
+          ]
+        ],
+        "remaining_steps": [
+          100
+        ],
+        "remaining_windows": [
+          100
+        ],
+        "n_superseded_rows": 2,
+        "old_event_retained": false,
+        "raw_inputs_unchanged": true,
+        "has_problems": false
+      },
+      "pass": true,
+      "kind": "positive"
+    },
+    {
+      "case": "resume_normal_crlf_manifest",
+      "function": "ul_reader.read_run",
+      "expected": {
+        "authorized": [
+          [
+            2,
+            100
+          ]
+        ],
+        "remaining_steps": [
+          100
+        ],
+        "remaining_windows": [
+          100
+        ],
+        "n_superseded_rows": 2,
+        "old_event_retained": false,
+        "raw_inputs_unchanged": true,
+        "has_problems": false
+      },
+      "observed": {
+        "authorized": [
+          [
+            2,
+            100
+          ]
+        ],
+        "remaining_steps": [
+          100
+        ],
+        "remaining_windows": [
+          100
+        ],
+        "n_superseded_rows": 2,
+        "old_event_retained": false,
+        "raw_inputs_unchanged": true,
+        "has_problems": false
+      },
+      "pass": true,
+      "kind": "positive"
+    },
+    {
+      "case": "resume_normal_cr_manifest",
+      "function": "ul_reader.read_run",
+      "expected": {
+        "authorized": [
+          [
+            2,
+            100
+          ]
+        ],
+        "remaining_steps": [
+          100
+        ],
+        "remaining_windows": [
+          100
+        ],
+        "n_superseded_rows": 2,
+        "old_event_retained": false,
+        "raw_inputs_unchanged": true,
+        "has_problems": false
+      },
+      "observed": {
+        "authorized": [
+          [
+            2,
+            100
+          ]
+        ],
+        "remaining_steps": [
+          100
+        ],
+        "remaining_windows": [
+          100
+        ],
+        "n_superseded_rows": 2,
+        "old_event_retained": false,
+        "raw_inputs_unchanged": true,
+        "has_problems": false
+      },
+      "pass": true,
+      "kind": "positive"
+    },
+    {
+      "case": "resume_fractional_k_precision",
+      "function": "ul_reader.read_run",
+      "expected": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "observed": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "resume_fractional_step_precision",
+      "function": "ul_reader.read_run",
+      "expected": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "observed": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "resume_fractional_state_precision",
+      "function": "ul_reader.read_run",
+      "expected": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "observed": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "resume_duplicate_event",
+      "function": "ul_reader.read_run",
+      "expected": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "observed": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "resume_duplicate_state",
+      "function": "ul_reader.read_run",
+      "expected": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "observed": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "resume_nonascii_space",
+      "function": "ul_reader.read_run",
+      "expected": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "observed": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "resume_nonascii_manifest",
+      "function": "ul_reader.read_run",
+      "expected": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "observed": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "resume_malformed_csv",
+      "function": "ul_reader.read_run",
+      "expected": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "observed": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "resume_literal_fractional_coexisting",
+      "function": "ul_reader.read_run",
+      "expected": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "observed": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "resume_marker_leading_ascii_space",
+      "function": "ul_reader.read_run",
+      "expected": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "observed": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "resume_marker_trailing_ascii_space",
+      "function": "ul_reader.read_run",
+      "expected": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "observed": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "resume_marker_leading_nbsp",
+      "function": "ul_reader.read_run",
+      "expected": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "observed": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "resume_marker_trailing_nbsp",
+      "function": "ul_reader.read_run",
+      "expected": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "observed": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "resume_manifest_embedded_nel",
+      "function": "ul_reader.read_run",
+      "expected": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "observed": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "resume_manifest_embedded_ls",
+      "function": "ul_reader.read_run",
+      "expected": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "observed": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "resume_manifest_embedded_ps",
+      "function": "ul_reader.read_run",
+      "expected": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "observed": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "resume_single_leading_ls_raw_csv",
+      "function": "ul_reader.read_run",
+      "expected": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "observed": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "gravity_UB",
+      "function": "ul_reader._arm_g -> ul_s3.s3_residual",
+      "expected": "PASS",
+      "observed": "PASS",
+      "pass": true,
+      "kind": "coverage_boundary"
+    },
+    {
+      "case": "gravity_G_UB",
+      "function": "ul_reader._arm_g -> ul_s3.s3_residual",
+      "expected": "FAIL",
+      "observed": "FAIL",
+      "pass": true,
+      "kind": "coverage_boundary"
+    },
+    {
+      "case": "window_UB",
+      "function": "ul_reader._arm_wsteps",
+      "expected": 5000,
+      "observed": 5000,
+      "pass": true,
+      "kind": "positive"
+    },
+    {
+      "case": "window_UT",
+      "function": "ul_reader._arm_wsteps",
+      "expected": 10000,
+      "observed": 10000,
+      "pass": true,
+      "kind": "positive"
+    },
+    {
+      "case": "dt_half_unchanged_w_halves_window",
+      "function": "ul_reader._arm_wsteps (actual deck override)",
+      "expected": 0.0025,
+      "observed": 0.0025,
+      "pass": true,
+      "kind": "coverage_boundary"
+    },
+    {
+      "case": "known_p1_rj_gate",
+      "function": "ul_reader.gate",
+      "expected": true,
+      "observed": true,
+      "pass": true,
+      "kind": "positive"
+    },
+    {
+      "case": "unknown_p2_rj_gate",
+      "function": "ul_reader.gate",
+      "expected": false,
+      "observed": false,
+      "pass": true,
+      "kind": "negative"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "archive_sha256": "ac769edf998d83639fdd051a498bc9c989f0275d1b6726bae70042771ec4d8a3",
+  "archive_bytes": 5626235,
+  "members": 2218,
+  "files": 2218,
+  "uncompressed_bytes": 17263753,
+  "manifest_hashes_verified": 2217,
+  "report_sha256": "33c9ed412be21bb76f798f7a76da851a15ed146e1cb27cbe9b882fc0c8164839",
+  "pasted_sha256": "33c9ed412be21bb76f798f7a76da851a15ed146e1cb27cbe9b882fc0c8164839",
+  "pasted_exact_report": true,
+  "pasted_lf_equal": true
+}

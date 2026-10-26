@@ -1,0 +1,78 @@
+{
+  "schema": "t12r01_external_closure_scoped_receipt_v1",
+  "recorded_date": "2026-10-26",
+  "finding": {
+    "id": "T12R-01",
+    "severity": "P2",
+    "external_status": "CLOSED",
+    "scope": "Automatic-fetch prevention during pinned consumer snapshot reads and preservation of52 consumer observations"
+  },
+  "reviewed_pin": "96f15ed17e03181b6096fb65f71ec7f577f17523",
+  "tested_source_candidate": "3eecce8af503556b678f8f4a02343e6bce3d0b83",
+  "comparison_base": "bffc42cab29da37b45f8a713e30e8572b91e7da3",
+  "consumer_pin": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde",
+  "external_report": {
+    "repository_path": "docs/reviews/codex_review_t12r01_closure_20261026/codex_review_t12r01_closure_20261026.md",
+    "raw_sha256": "33c9ed412be21bb76f798f7a76da851a15ed146e1cb27cbe9b882fc0c8164839",
+    "archive_sha256": "ac769edf998d83639fdd051a498bc9c989f0275d1b6726bae70042771ec4d8a3",
+    "archive_bytes": 5626235
+  },
+  "submitted_implementation_zip": {
+    "name": "codex-dem-gen2-t12r-96f15ed17e03.zip",
+    "sha256": "fd52dd397e47ee93d91432b4c045c43196b51527d5c52038b4c863d233518bb7"
+  },
+  "external_observations": {
+    "platform": "Windows",
+    "python": "3.12.14",
+    "git": "2.55.0.windows.3",
+    "missing_object_conditions": 11,
+    "missing_objects": {
+      "commit": 1,
+      "tree": 4,
+      "blob": 6
+    },
+    "missing_returncode": 2,
+    "missing_fetch_children": 0,
+    "whole_repository_file_hashes_unchanged": "Recorded by external harness; scratch repositories/maps not independently rehashed during intake",
+    "complete_object_cases_passed": 52,
+    "complete_cases_equal": true,
+    "six_consumer_hashes_equal": true,
+    "guard_removal_fetch_children": 3,
+    "source_contract_rejections": 8,
+    "consumer_mutants_detected": 13,
+    "unsupported_git": "Explicit mock only, not actual old Git certification"
+  },
+  "external_author_offline_harness_rerun": false,
+  "external_independent_actual_loader_conditions": 13,
+  "new_local_suite_execution": false,
+  "new_full_gate_execution": false,
+  "historical_shared_gate": {
+    "candidate": "3eecce8af503556b678f8f4a02343e6bce3d0b83",
+    "pass": 155,
+    "fail": 0,
+    "exit_code": 0
+  },
+  "accepted_prior_scopes": [
+    "P1 contract/P2 registration separation",
+    "52 observations and bounded interpretation",
+    "ULPRI-01/02 marker-integrity closure"
+  ],
+  "further_recheck_of_closed_fix_requested": false,
+  "broad_P1_GO": null,
+  "generation2_design_GO": null,
+  "physical_execution_GO": false,
+  "physical_T12": "NOT_RUN",
+  "physical_ready": false,
+  "P2_registration": null,
+  "remaining": [
+    "Actual P2 facts and registration",
+    "R-a/S0 binding",
+    "Designated binary and hidden-history qualification",
+    "Actual T10-T13",
+    "Q7-Q9 measured facts and uncertainty",
+    "Future fixed-pin versus integrated-tree CI"
+  ],
+  "new_WSL_or_research_execution": false,
+  "claude_integration": "DEFERRED",
+  "mixer_dispatch": false
+}
