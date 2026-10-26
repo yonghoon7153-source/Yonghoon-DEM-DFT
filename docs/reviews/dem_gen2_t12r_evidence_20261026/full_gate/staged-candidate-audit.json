@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "base": "bffc42cab29da37b45f8a713e30e8572b91e7da3",
+  "checked_tree": "1d7aa5e05679e69adf7e7782bc1acbfcd08ea9fe",
+  "changed_paths": 168,
+  "additions": 167,
+  "only_existing_modified": "scripts/test_dem_gen2_t12_consumer_contract.py",
+  "all_other_existing_blob_modes_unchanged": 13784,
+  "intake108_exact": true,
+  "independent13_exact": true,
+  "author2source35evidence_exact": true,
+  "release8_13_results_bound": true,
+  "preflight_and_targeted_ban": "PASS exacttree and rawloghashes verified",
+  "semantic_review": "Externalacceptedcontract/interpretation andULPRIclosure retained; T12R01claimedfixed/externalOPEN; truthfulGitcapability/platform/mocklimits; A-Dfutureunimplementedcriteria; physicalNOTRUN andmissingP2facts unchanged",
+  "full155": "Not yet run oncandidate; releaserunsaftercommit",
+  "no_repeated_suites": true,
+  "no_blockers": true
+}
