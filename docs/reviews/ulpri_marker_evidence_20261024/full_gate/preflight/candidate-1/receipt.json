@@ -1,0 +1,44 @@
+{
+  "phase": "candidate",
+  "attempt": 1,
+  "status": "FAIL",
+  "head": "01c1aaf5be8acdf7d1716f34cc86fc77d8e27362",
+  "branch_before": "codex/unloading-ulpri",
+  "checked_index_tree_before": "36c2527f923ede26bba6fc86a95414c2b2094b2a",
+  "started_at_utc": "2026-10-26T00:36:39.378223+00:00",
+  "command_runner_sha256": "9e8d01f3503f96bdcab48b2b2822bdb1ba7bdb530df79b31e23d0e5179097b57",
+  "checks": [
+    {
+      "name": "docrefs",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python3",
+        "-I",
+        "scripts/check_doc_refs.py"
+      ],
+      "started_at_utc": "2026-10-26T00:36:39.378620+00:00",
+      "finished_at_utc": "2026-10-26T00:36:40.653627+00:00",
+      "exit_code": 1,
+      "log": "docrefs.log",
+      "log_sha256": "5b8419d113fcd0b22e6472ef2ebd1d3372c724ba86f4f7ed4340e2d4abb68a2a"
+    },
+    {
+      "name": "ledger",
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python3",
+        "-I",
+        "scripts/check_review_findings.py"
+      ],
+      "started_at_utc": "2026-10-26T00:36:40.653976+00:00",
+      "finished_at_utc": "2026-10-26T00:36:58.454220+00:00",
+      "exit_code": 0,
+      "log": "ledger.log",
+      "log_sha256": "7483b4664c4d3c52e24db54600e4b9c5fa164c0b4fc7746c8682a1b6360e090c"
+    }
+  ],
+  "finished_at_utc": "2026-10-26T00:36:58.455226+00:00",
+  "checked_index_tree_after": "36c2527f923ede26bba6fc86a95414c2b2094b2a",
+  "head_after": "01c1aaf5be8acdf7d1716f34cc86fc77d8e27362",
+  "branch_after": "codex/unloading-ulpri",
+  "no_unstaged_changes": true,
+  "no_untracked_files": true
+}

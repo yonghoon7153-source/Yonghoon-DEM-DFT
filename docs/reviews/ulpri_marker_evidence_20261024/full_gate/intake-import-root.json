@@ -1,0 +1,7 @@
+{
+  "status": "PASS",
+  "files": 328,
+  "staged_blob_hashes_match_freeze": true,
+  "external_report_line_endings_only": true,
+  "root_gitattributes_unchanged": true
+}

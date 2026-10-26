@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "candidate": "643344fee22a5d1131a59c8cd46bcf6c9a09d65b",
+  "scope_audit": "candidate-scope.json",
+  "author_files": 48,
+  "author_delta": [
+    "docs/reviews/codex_dem_unloading_ulpri_recheck_request_20261024.md"
+  ],
+  "author_delta_explanation": "Root corrected two documentation link targets after docrefs preflight; production six match delivery freeze",
+  "independent_files": 21,
+  "independent_all_match": true,
+  "production_review": "No concrete blocker in six-file diff; _resume_auth rejects forbidden separators before key filtering; read_run raw marker preflight precedes unchanged public _csv",
+  "packager_original_blocker": "Raw direct suite binds preclarification README; corrected scratch helper validates exact independent patch and original hash",
+  "packager_validation": "helper-validation.json",
+  "external_verdict": "HOLD; pending external recheck",
+  "t12_helper_sha256": "146f2f911531758c9b7e3511fd84626cb7fc731f4e0d73edaaa891fd87b336e7",
+  "t12_helper_review": "No concrete current blocker. Requested lineage, gate source/tree binding,52 cases and physicalfalse, consumer binding and output collision protections present. Final evidence audit must independently verify raw gate155 counts and command, which this helper trusts from receipt."
+}
