@@ -1,0 +1,101 @@
+{
+  "status": "PASS",
+  "original_blocker": "Post-test README SHA differs; original raw receipt preserved",
+  "kit_files": 94,
+  "direct_counts": {
+    "ul_lib_selftest": {
+      "pass_lines": 24,
+      "fail_lines": 0,
+      "rc": 0
+    },
+    "ul_s3_selftest": {
+      "pass_lines": 16,
+      "fail_lines": 0,
+      "rc": 0
+    },
+    "ul_observers_selftest": {
+      "pass_lines": 21,
+      "fail_lines": 0,
+      "rc": 0
+    },
+    "ul_gates_selftest": {
+      "pass_lines": 202,
+      "fail_lines": 0,
+      "rc": 0
+    },
+    "ul_reader_selftest": {
+      "pass_lines": 346,
+      "fail_lines": 0,
+      "rc": 0
+    },
+    "seal_kit_selftest": {
+      "pass_lines": 12,
+      "fail_lines": 0,
+      "rc": 0
+    },
+    "seal_kit_check": {
+      "pass_lines": 1,
+      "fail_lines": 0,
+      "rc": 0
+    },
+    "make_unload_decks_selftest": {
+      "pass_lines": 291,
+      "fail_lines": 0,
+      "rc": 0
+    },
+    "make_unload_decks_check": {
+      "pass_lines": 1,
+      "fail_lines": 0,
+      "rc": 0
+    },
+    "history_make_history_decks_selftest": {
+      "pass_lines": 172,
+      "fail_lines": 0,
+      "rc": 0
+    },
+    "history_make_history_decks_check": {
+      "pass_lines": 1,
+      "fail_lines": 0,
+      "rc": 0
+    },
+    "history_read_history_selftest": {
+      "pass_lines": 56,
+      "fail_lines": 0,
+      "rc": 0
+    },
+    "ul_runner_test_selftest": {
+      "pass_lines": 38,
+      "fail_lines": 0,
+      "rc": 0
+    }
+  },
+  "negative_checks": [
+    {
+      "case": "non_readme_change",
+      "rejected": true,
+      "reason": "Only the reviewed README delta may follow direct tests"
+    },
+    {
+      "case": "unbound_patch",
+      "rejected": true,
+      "reason": "Independent document review is not bound"
+    },
+    {
+      "case": "unbound_review",
+      "rejected": true,
+      "reason": "Independent document review is not bound"
+    },
+    {
+      "case": "unbound_before_hash",
+      "rejected": true,
+      "reason": "Document delta does not connect tested and final README"
+    },
+    {
+      "case": "unbound_final_freeze",
+      "rejected": true,
+      "reason": "Final six files differ from independently reviewed document delta"
+    }
+  ],
+  "helper_sha256": "95b57cc7b9424238fe168e2f2de1382626fa332fac60abacf3a257cdd3318eb7",
+  "scope": "Existing direct evidence validated without re-running scientific or synthetic suites"
+}

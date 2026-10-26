@@ -1,0 +1,15 @@
+{
+  "observed_at_utc": "2026-10-26T00:39:07.166061+00:00",
+  "remote_heads": {
+    "refs/heads/claude/sdcp-dem-manuscript-si-pqwtv8": "9bec6b7646374daed0d3edbb9647f9f46d302750",
+    "refs/heads/claude/stoic-knuth-NObVQ": "93d93bc02f5a68d6551137ab420dbc0eea40b455",
+    "refs/heads/codex/dem-gen2-request": "2443a63eaa87d52e385a35f8bab4225efa0d25fe",
+    "refs/heads/codex/lhs214-relaunch": "854857e576a2a8aba07ec861dbee39d4bb59efae",
+    "refs/heads/codex/mixer-d3-design": "e0daf7b234bcc7935259d786e270268372abe2a2",
+    "refs/heads/codex/mixer-mxd2": "045e0b3098e8fe5a64d6eb0da310da776e68f995",
+    "refs/heads/codex/unloading-ulpr": "01c1aaf5be8acdf7d1716f34cc86fc77d8e27362"
+  },
+  "prior5_unchanged": true,
+  "original_zip_sha256": "ca2925b6044b72a7c077058c0a3cfbd00595ccc01aaa75d86daa0111da73f393",
+  "new_branches_absent": true
+}

@@ -1,0 +1,14 @@
+{
+  "author_delivery": {
+    "count": 48,
+    "mismatches": []
+  },
+  "independent_review": {
+    "count": 21,
+    "mismatches": []
+  },
+  "main_author_delivery": {
+    "count": 48,
+    "mismatches": []
+  }
+}
