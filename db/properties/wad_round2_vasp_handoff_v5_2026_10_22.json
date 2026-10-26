@@ -46,5 +46,12 @@
    "④_PACK_ONLY": "업체 도구가 Linux/GNU 가 아니면 계산 전 PACK_ONLY=1 bash run_all.sh (README 10)"
   },
   "지위": "발송됨 · 파일럿 반송 대기 → 반송 오면 '보낼_때' ⑤ 순서 (sha256sum -c → --check → 재시작 · 커널 문구 확정 → --seal_registry → 해제 파일) · 그때 P2 (selftest 시험 이름 -0) 같이"
+ },
+ "파일럿_반송_처리_2026_10_26": {
+  "⑤_순서": "sha256sum -c ✓ → --check ✓ → 문구 확정 ✓ → (AGGAC 개정 · 사용자 D1) → --seal_registry ✓ → 등록부 커밋 · sha → 해제 파일 ✓ (D3 상한 확인) — 업체 발송은 사용자",
+  "등록부_sha256": "999aa2dae0b137eab7934723d76effecb53bf7d2ddeb8fe687857e467f9ff1b4",
+  "해제_파일_sha256": "d4f757b9794ed4f1a243cffd039b4d01524c1163b75f0b787f20513fe0c8b129",
+  "P2(Codex_DE)": "✅ 고침 (도구 0289eb3eb · 시험 이름만)",
+  "기록": "db/properties/wad_round2_build_log_2026_10_17.json ⑥ · ⑦"
  }
 }

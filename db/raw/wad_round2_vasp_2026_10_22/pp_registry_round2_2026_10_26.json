@@ -1,0 +1,108 @@
+{
+ "schema": "wad_round2_pp_registry/v2",
+ "pp_set": "PBE_54",
+ "titel": {
+  "Li_sv": "PAW_PBE Li_sv 10Sep2004",
+  "P": "PAW_PBE P 06Sep2000",
+  "S": "PAW_PBE S 06Sep2000",
+  "Cl": "PAW_PBE Cl 06Sep2000",
+  "C": "PAW_PBE C 08Apr2002",
+  "Ag": "PAW_PBE Ag 02Apr2005"
+ },
+ "species_sha256": {
+  "Li_sv": "7e51fe1804c037e1dccc81a9c376d94d693a7559600c847f4b41960edb8ab895",
+  "P": "df60c54a93efe35c9e85ae94c010c75e9f6960a95d5595d7cdba4096d109af88",
+  "S": "0fc7481fb0695f01bdc6462160264c5c84044ae9ec85a907d398b887a2bc3132",
+  "Cl": "9f1b6e6ed4247ac726a768b330d26d7667cc3c95a39ff49c1d064c2d9dcce931",
+  "C": "253f7b50bb8d59471dbedb8285d89021f4a42ed1a2c5d38a03a736e69125dd95",
+  "Ag": "6550cfa3543261e132c169e1b98a529204624d72be14e2da2e0242bcb74a174d"
+ },
+ "vasp_version": "vasp.5.4.4.18Apr17-6-g9f103f2a35 (build Aug 19 2022 11:57:46) complex",
+ "kernel_sha256": "b3c9452a98e86a0efb775c5d9bfc1182d331e6949e930b8c172bb5b13f6809a9",
+ "package_manifest_sha256": "714324cca0d0f05e39966543e3ffa76956fe51109e13f192cad6dc7f8e04cfed",
+ "from_pilot": {
+  "P2S_S_A_bound": {
+   "0": "20261023T070914-43487-24920"
+  },
+  "P2S_S_A_far": {
+   "0": "20261023T152238-43487-5617"
+  },
+  "CC_S33_AB_optB88_bound": {
+   "0": "20261023T224835-43487-11741"
+  },
+  "CC_S33_AB_optB88_far": {
+   "0": "20261023T224927-43487-5781"
+  },
+  "V5_s_outer_A_G4_e70_far_a4": {
+   "a4A": "20261023T225018-43487-16384",
+   "a4B": "20261024T202701-43487-29762"
+  }
+ },
+ "from_pilot_sha256": {
+  "P2S_S_A_bound": {
+   "0": {
+    "attempt.json": "07517b2fba1c2c9b3e4620465bfd8e7d7645416f084e79f72253b10e05aecc49",
+    "OUTCAR": "a6ade848b2d19b6170bda76c4e927c33c930a474ed81a994cddbf6bd96cefca1"
+   }
+  },
+  "P2S_S_A_far": {
+   "0": {
+    "attempt.json": "60e5390402c4bf3fd16c6360cf1ff966d5f49fe064771ab447e85cfa70f71800",
+    "OUTCAR": "5947cebd24070e5f79e980765d1fe9ff127547bbb512445f9c9a80a0d0db4565"
+   }
+  },
+  "CC_S33_AB_optB88_bound": {
+   "0": {
+    "attempt.json": "c547a6331bf05b23545d8191598a383909cc36f11cfabb4e736eb1af2e9eb114",
+    "OUTCAR": "de4bcd5cf534bbbb81c96f6f236a37674e89d283fdc34a1c00f9825adee5a91a"
+   }
+  },
+  "CC_S33_AB_optB88_far": {
+   "0": {
+    "attempt.json": "bc3f62105c61c88a555763c982494bc0c18649f522c883788f95c3c8caa93b02",
+    "OUTCAR": "088c9f3ba8ad63a53246b1489dcdd2ecceb69a5b6192559134ec2170fa0249dc"
+   }
+  },
+  "V5_s_outer_A_G4_e70_far_a4": {
+   "a4A": {
+    "attempt.json": "4686986a737f087bafbc51f44f81c1eaefdb16712fe89dd0a4c9b289c3660667",
+    "OUTCAR": "e1c6e94e59e482f7af64033525a031e62f245d0a23dd3103c241cf9c33237f09"
+   },
+   "a4B": {
+    "attempt.json": "dfd54e6f47c14bd64827465cbaabde711d316812130117021df4edd23e1fd888",
+    "OUTCAR": "417d1c85583f55b5e1628f1909b2a201e7ec35ae62a9b9aba3a1e3d7e7d5c427"
+   }
+  }
+ },
+ "restart_read_regex": "the WAVECAR file was read successfully",
+ "restart_read_check": {
+  "regex": "the WAVECAR file was read successfully",
+  "read": [
+   "V5_s_outer_A_G4_e70_far_a4/a4B"
+  ],
+  "not_read": [
+   "P2S_S_A_bound/0",
+   "P2S_S_A_far/0",
+   "CC_S33_AB_optB88_bound/0",
+   "CC_S33_AB_optB88_far/0",
+   "V5_s_outer_A_G4_e70_far_a4/a4A"
+  ],
+  "unknown": []
+ },
+ "kernel_read_regex": "vdW kernel read from vdw_kernel.bindat",
+ "kernel_read_check": {
+  "regex": "vdW kernel read from vdw_kernel.bindat",
+  "optb88": [
+   "CC_S33_AB_optB88_bound/0",
+   "CC_S33_AB_optB88_far/0"
+  ],
+  "not_optb88": [
+   "P2S_S_A_bound/0",
+   "P2S_S_A_far/0",
+   "V5_s_outer_A_G4_e70_far_a4/a4A",
+   "V5_s_outer_A_G4_e70_far_a4/a4B"
+  ]
+ },
+ "v5_registry_sha256": "a279d529d9be6e75274b3ca772f32e92df526cd01f4e62ef1afecb5a38e1d4d1",
+ "⛔": "이 등록부를 봉인 (커밋·해시) 한 뒤 해제 파일을 보낸다 — 이후 모든 잡이 같아야 한다 (공통 환경 고장 = 전체 정지)"
+}

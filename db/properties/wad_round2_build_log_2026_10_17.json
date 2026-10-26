@@ -442,5 +442,44 @@
    "참고(상한_아님)": "파일럿처럼 잡이 32–37 스텝에 수렴하면 단계 1–4 실사용 어림 177 h (≈ 7.4 노드-일) — 상한은 재시도 사다리 (NELM 200 · 300) 에 빠질 때만 걸린다",
    "상태": "제안 — 사용자 (1저자) 확인 전 · 해제 파일은 봉인 뒤 이 값으로 쓴다"
   }
+ },
+ "⑦_사용자_결정_봉인_해제_2026_10_26": {
+  "사용자": "'ㅇㅇ 권고대로 하자' (2026-10-26 · D1 · D2 · D3 셋 다 권고)",
+  "D1_AGGAC": "입력으로만 확인 개정 → db/properties/wad_round2_amendment_aggac_input_only_2026_10_26.json · 결정 D-2026-10-26-wad-round2-aggac-input-only (active) · 도구 0289eb3eb (sha256 9dc2f98dd44232fb…) · selftest 194/194 · 깨기 5/5",
+  "D2_S_A_far_§3ⓒ": "1저자 판단 '신호 없음' — 간격 퍼텐셜 평탄 (0.0035 eV · 넘어간 전하 ≤ 1.5e-3 e/셀 어림) · 쌍극 계단 0.45 eV 가 p_z 환산과 2 % 안 · 라벨 제한 없음 (카드 §3 ⓐ ⓑ 신호는 단계 1–4 뒤 collect 가 따로 본다)",
+  "D3_상한": "확인 — 단계 1 232 · 2 802 · 3 279 · 4 24 h · 전체 1430 h (카드 §4c 규칙대로 파일럿 실측 스텝당 비용으로 다시 낸 값 · ⑥ 의 D3 제안 그대로)",
+  "⚠_정정": "D1 설명의 'INCAR 바이트까지 같다' 는 틀렸다 — 업체 러너가 NCORE · KPAR 두 줄을 더했다 (허용 성능 태그) · 우리 태그는 전부 같다 · 개정 기록에 정정",
+  "봉인_전_검사(새_도구·등록부_없이)": "P2S_S_A bound · far OK · C–C optB88 bound · far KERNEL_UNVERIFIED (AGGAC 입력 표지 · 커널 문구는 봉인 때) · a4 SCF_NOT_CONVERGED",
+  "봉인": {
+   "file": "db/raw/wad_round2_vasp_2026_10_22/pp_registry_round2_2026_10_26.json",
+   "sha256": "999aa2dae0b137eab7934723d76effecb53bf7d2ddeb8fe687857e467f9ff1b4",
+   "명령": "--seal_registry … --restart_read_regex 'the WAVECAR file was read successfully' --kernel_read_regex 'vdW kernel read from vdw_kernel.bindat'",
+   "재시작_문구_대조": "맞음 = a4B 하나 · 안 맞음 = 단 0 넷 + a4A",
+   "커널_문구_대조": "맞음 = C–C optB88 둘 · 안 맞음 = 나머지 넷",
+   "환경": "VASP 5.4.4.18Apr17-6-g9f103f2a35 (V5 등록부와 같음) · PP 6 종 sha V5 와 같음 · 커널 b3c9452a…"
+  },
+  "봉인_뒤_검사(등록부_있음)": "P2S_S_A bound · far OK · C–C optB88 bound · far OK · a4 SCF_NOT_CONVERGED (물리 실패 · 개정 4 종료) · 나머지 19 MISSING (단계 1–4 · 예상)",
+  "은_a4_결과": {
+   "file": "db/raw/wad_round2_vasp_2026_10_22/a4_result_round2_2026_10_26.json",
+   "sha256": "aec74641410695dcdb1a98e738061dfc00b93992a9c4e352b0afaa0cff508d83",
+   "상태": "SCF_NOT_CONVERGED (a4A · a4B) · 공통 환경 고장 0",
+   "⏭": "V5 쪽 collect --a4_result 로 G4 e70 far 에 adopt_a4 → G4 INCOMPLETE 그대로 · 은 G5 · §1b ② 는 한 번에 연다 — 탄소 단계 1–4 반송 뒤 DEM 편지 (회신 10) 준비 때 같이 (라벨은 개정 4 대로 '미완료')"
+  },
+  "해제_파일": {
+   "file": "db/raw/wad_round2_vasp_2026_10_22/release_R2-REL-2026-10-26.tsv",
+   "sha256": "d4f757b9794ed4f1a243cffd039b4d01524c1163b75f0b787f20513fe0c8b129",
+   "release_id": "R2-REL-2026-10-26",
+   "단계": "1 2 3 4",
+   "상한_h": {
+    "1": 232,
+    "2": 802,
+    "3": 279,
+    "4": 24,
+    "전체": 1430
+   },
+   "러너_파싱_확인": "보낸 run_all.sh 의 해제 파일 읽기 줄 (265–288) 을 그대로 돌림 → 단계 · 상한 · 판 · 종 6 · 재시작 문구 읽힘 · 틀린 sha 는 종료 2"
+  },
+  "⏭": "사용자가 업체에 해제 파일 + sha256 (메일 본문) 발송 → 업체 STAGES='1 2 3 4' 실행 (파일럿 속도 어림 실사용 ≈ 177 h) → 반송 → --check · --collect (W 집계 한 번)",
+  "by": "agent · 2026-10-26"
  }
 }

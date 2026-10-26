@@ -9687,6 +9687,79 @@
     "근거_발화": "사용자 2026-10-23 (이 세션): '1번하자' → 카드 제시 뒤 AskUserQuestion '비준 (Recommended)' · 'vc-relax (Recommended)' · 'kgy (Recommended)'",
     "decision_digest": "sha256:08b3ec88dc37e4acd3c0fb0f1de8f0960510e320b2e20e19b650dda8db555072"
    }
+  },
+  {
+   "id": "D-2026-10-26-wad-round2-aggac-input-only",
+   "schema_version": 2,
+   "kind": "policy",
+   "scope": "adhesion.wad_lpscl_agc.p2small_carbon",
+   "slot": "wad_round2_aggac_evidence",
+   "applies_to": {
+    "systems": [
+     "comp1",
+     "graphite"
+    ],
+    "tasks": [
+     "wad_p2small_vasp"
+    ],
+    "methods": [
+     "vasp_optb88_vdw"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "W_ad 외주 2차 — optB88 의 AGGAC 는 VASP 5.4.4 가 해석값을 안 찍으므로 돌린 INCAR 로 확인하고 '입력으로만 확인' 표지를 단다",
+   "statement": "optB88 잡에서 OUTCAR 머리 판이 vasp.5.4.4 이고 OUTCAR 본문 (입력 에코 제외) 에 AGGAC 글자가 없으면, 돌린 INCAR 의 AGGAC 가 0.0 (허용 1e-4) 일 때 AGGAC 결측으로 막지 않고 그 시도에 '입력으로만 확인' 표지를 단다 (settings_input_only · 결과의 δ_XC+vdW · ②′ C–C optB88 행에 라벨). 입력 AGGAC 가 0.0 이 아니면 SETTINGS_MISMATCH · 다른 판 · AGGAC 가 찍혔는데 못 읽음 · 입력에 AGGAC 없음은 결측 그대로 (SETTINGS_UNVERIFIED) · 찍히면 옛 규칙 (해석값 0.0) 그대로. 나머지 optB88 해석값 · INCAR 무결성 (INPUT_MODIFIED) · 판정 문턱 · 기대값 · 상태 순서는 바꾸지 않는다.",
+   "rationale": "파일럿 C–C optB88 두 잡 (VASP 5.4.4.18Apr17-6-g9f103f2a35) 의 OUTCAR 에 AGGAC 줄이 아예 없어 검사기가 봉인을 막았다 — 가짜 OUTCAR 에 넣어 둔 'AGGAC = 0.0000' 가정이 실물과 달랐다. 개정 3 의 '파서만 적응' 밖 (값이 아예 없음) 이라 근거를 바꾸는 사용자 결정으로 올렸다.",
+   "decision_state": "active",
+   "record_kind": "prospective",
+   "results_seen": false,
+   "results_seen_note": "파일럿 반송의 상태·설정 감사만 봤다 — W 집계 0 건 (C–C optB88 쌍 · 탄소 S_A 의 W 를 셈하지 않았다) · 단계 1–4 결과 0 건",
+   "card": "db/properties/wad_p2small_vasp_card_2026_10_15.json",
+   "record": "db/properties/wad_round2_amendment_aggac_input_only_2026_10_26.json",
+   "depends_on": [
+    "D-2026-10-15-wad-p2small-vasp-card"
+   ],
+   "supersedes": [],
+   "amends": null,
+   "evidence": [
+    "db/properties/wad_round2_amendment_aggac_input_only_2026_10_26.json (sha256 04c6dbdac1e534aef7b24c4e8cd31ea7c628b543af32e31aba1cf2228788dc7c)",
+    "tools/wad/build_round2_vasp_package.py @ 0289eb3eb (selftest 194/194 · 깨기 5/5)",
+    "db/raw/wad_round2_vasp_2026_10_22/pilot_return_2026_10_26/round2_return.tgz (파일럿 반송 실물 · C–C optB88 OUTCAR)",
+    "db/properties/wad_round2_build_log_2026_10_17.json ⑥ · ⑦"
+   ],
+   "reopen_criteria": [
+    "① 업체가 AGGAC 해석값 근거 (vasprun.xml <parameters> 등) 를 따로 주면 그 값으로 대조한다 — 0.0 이 아니면 optB88 잡 전부 SETTINGS_MISMATCH",
+    "② VASP 판이 바뀌면 이 개정은 안 걸린다 (등록부 VERSION_MISMATCH 로 이미 전체 정지)"
+   ],
+   "enforcement": "검사기 check_attempt → aggac_input_only (판 · 본문 · 입력 값 세 조건) · 표지 settings_input_only · collect settings_label · selftest 194 (양성 · 음성 다섯 · 실물 회귀) · W 값은 결정 제목/문장·화면에 싣지 않는다",
+   "proposed_by": "claude-session-2026-10-26 (evac)",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-10-26",
+     "state": "proposed",
+     "by": "agent",
+     "note": "파일럿 반송 봉인 멈춤 (AGGAC) → 선택지 ① 입력 일치 (권고) · ② 묶음 새 판 + vasprun.xml"
+    },
+    {
+     "at": "2026-10-26",
+     "state": "active",
+     "by": "사용자 (1저자 · W_ad 트랙)",
+     "note": "비준 — 채팅 'ㅇㅇ 권고대로 하자' (D1 ① · D2 신호 없음 · D3 상한 확인 셋 다 권고)"
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-26T10:51:53Z",
+    "commit": "0289eb3eb8ff7f7bb91b9aa7e176897c48233648",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "채팅 답 (2026-10-26 · 이 세션): 'ㅇㅇ 권고대로 하자' — D1 ① 'AGGAC 하나만 입력 일치로 확인' 권고",
+    "decision_digest": "sha256:8f1b5cef009ff8d32c3fe062ca2c94ec88973b99b93202cb66fd40e0c144b67f"
+   }
   }
  ]
 }
