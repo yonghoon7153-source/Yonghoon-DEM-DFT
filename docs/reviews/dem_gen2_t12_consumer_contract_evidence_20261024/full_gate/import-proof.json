@@ -1,0 +1,154 @@
+{
+  "status": "PASS",
+  "author_files": 16,
+  "independent_files": 11,
+  "staged_blobs_equal_freezes": true,
+  "files": [
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-followup/scripts/test_dem_gen2_t12_consumer_contract.py",
+      "destination": "scripts/test_dem_gen2_t12_consumer_contract.py",
+      "sha256": "465f542e4c8825e2a21d29a1a7be931c96ea23794152eab01d0e04dd9212c216"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-followup/docs/reviews/dem_gen2_t12_consumer_contract_20261024.md",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_20261024.md",
+      "sha256": "d56418a4d9c6300e04300760e7b04079caf5a0a3b633879de231c7c5e1da9c71"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-followup/docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/README.md",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/README.md",
+      "sha256": "58c724a0c8cd29de8682d98df08177e8297f585dd2de7eaa19ccf2172cf9bbcb"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-followup/docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/consumer-publication-proof.json",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/consumer-publication-proof.json",
+      "sha256": "4841111d36b65ba3296c7270e7e5f7ce07102298bd5de3cdda5e2b0949205316"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-followup/docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/external-review-provenance.json",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/external-review-provenance.json",
+      "sha256": "d74ae53d7fd6f13c7c354937dba36bbdb32870a1f52dba4dc0ebe28b82608a7b"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-followup/docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/factual-input-form.blank.json",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/factual-input-form.blank.json",
+      "sha256": "0a890e15f8d34b50e64382be856ab724ec82ecc94775698d76df6c6e8bf4f645"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-followup/docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/fixture-results.json",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/fixture-results.json",
+      "sha256": "0f577b9cbc238a3cf19346198672ee04b7588820db6f30ceb10596f9ec82f4ac"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-followup/docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/README.md",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/README.md",
+      "sha256": "fe08aee7acc5aaf52baa555b2f8fa6c754d9695786e0888a48d70c4f88228026"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-followup/docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/SHA256SUMS",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/SHA256SUMS",
+      "sha256": "6b57dd1dde074dd80b144e7e28aaf0336f4c58d06ce6adfccc2a0012e1c694b0"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-followup/docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/old-41-fixture-results.json",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/old-41-fixture-results.json",
+      "sha256": "cd0e75422dff2c9a44f6a8e751cd51d1903c3a8e4d9d677de308f3cd4f172842"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-followup/docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/pre-fix-fixture-results.json",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/pre-fix-fixture-results.json",
+      "sha256": "5d1be0bbbb86cbd9e25af85045b04bd232dbf164c99480c308f5cbd2e4d382e5"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-followup/docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/pre-fix-reproduction.zip",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/pre-fix-reproduction.zip",
+      "sha256": "8deafffe7a43fa032ed42837c693ce2f7a537e468fe24ed42edaaa542fc29c46"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-followup/docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/pre-fix-script.py",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/pre-fix-script.py",
+      "sha256": "fcf712c90ff8ddf14d62ea56c445536b8af8ba969a0c73de73536d37101e7336"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-followup/docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/pre-fix-zip-replay-receipt.json",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/pre-fix-zip-replay-receipt.json",
+      "sha256": "b988c823573861f1400b231b44e4fd09fa6ef0ee731cf71a1bed79bf98b8eb2c"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-followup/docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/p1-consumer-contract.json",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/p1-consumer-contract.json",
+      "sha256": "87be885b868a9eec1736fbc063f75dc2262ecf1fd0bb2a6b74a2f002a819772f"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-followup/docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/source-manifest.json",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/source-manifest.json",
+      "sha256": "42c3e766dc19db6b30927816411d1fcdae4c08839e1c0f32a1762bb32bb4a166"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-independent/review-result.md",
+      "relative": "review-result.md",
+      "sha256": "ec3d97ef1952032e2ffd6d1b65172b47619164f6cc9b6019af8711648757886b",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/review-result.md"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-independent/final-review-proof.json",
+      "relative": "final-review-proof.json",
+      "sha256": "15c358ccbbe6f98f48f6a46d5867b06797a45b7a061ea1a111d4811ff838d6f8",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/final-review-proof.json"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-independent/author-delivery-freeze.json",
+      "relative": "author-delivery-freeze.json",
+      "sha256": "cbe89ff9228520711c58cce0776e292844a44daeb7a0fa84d5936b43c50ebd93",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/author-delivery-freeze.json"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-independent/source-freeze.json",
+      "relative": "source-freeze.json",
+      "sha256": "c40abc4e407f0c778c2db5be2089e69d1fdad6f79a82bd171a0702472bd03c6c",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/source-freeze.json"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-independent/tests-first-review.json",
+      "relative": "tests-first-review.json",
+      "sha256": "b980246058bcd0de6039a4c8bdd7cafe0c4d695f9e3b8dc7d0ac0aaa3d5ec3b1",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/tests-first-review.json"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-independent/direct-final.json",
+      "relative": "direct-final.json",
+      "sha256": "0f577b9cbc238a3cf19346198672ee04b7588820db6f30ceb10596f9ec82f4ac",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/direct-final.json"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-independent/loader-final/report.json",
+      "relative": "loader-final/report.json",
+      "sha256": "23b8a0ba3104176d1cd7478cef8afb4ed6ef3b565d56b59313b8a9eae3357daa",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/loader-final/report.json"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-independent/mutants-final/report.json",
+      "relative": "mutants-final/report.json",
+      "sha256": "6846f047894ba2f2c9344832a18e5a4d770aa196e780be4e91e6729580d3106f",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/mutants-final/report.json"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-independent/reproduce_loader_checks.py",
+      "relative": "reproduce_loader_checks.py",
+      "sha256": "4c707e4c7c902aa3ffce595b4b9a5e96842192770ddd6ab2da897947b1fa3437",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/reproduce_loader_checks.py"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-independent/reproduce_consumer_mutants.py",
+      "relative": "reproduce_consumer_mutants.py",
+      "sha256": "4da2540b8b6ad0a0d55a020c043b45c6ca3c5ace07c11a465cfba8b6149fef9f",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/reproduce_consumer_mutants.py"
+    },
+    {
+      "source": "/workspace/.cloud-setup/t12-20261024/astra-independent/REPRODUCE.md",
+      "relative": "REPRODUCE.md",
+      "sha256": "cbebd1c9b54df658ca6f64ff16c742bb7b8f70f8926fc08bc5945dccabad0f45",
+      "destination": "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/REPRODUCE.md"
+    }
+  ]
+}

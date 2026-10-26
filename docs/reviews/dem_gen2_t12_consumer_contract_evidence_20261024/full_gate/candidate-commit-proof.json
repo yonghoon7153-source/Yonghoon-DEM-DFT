@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "candidate": "f1da507e8ab8bf812a242b9749d4c320be90fd73",
+  "tree": "d9917dae22ee56bfc0441f0a51fad681661b0acb",
+  "sole_parent": "d6e692488a56baf11f7206c5cd45c6bc404b92f0",
+  "preflight": "candidate-4",
+  "failed_attempt_3": "Missing remote-tracking ref, resolved by actual fetch; no file edits",
+  "main52": "PASS byte-identical author",
+  "import": "27 frozen staged blobs matched"
+}
