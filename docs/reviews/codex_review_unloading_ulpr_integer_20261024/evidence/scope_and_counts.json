@@ -1,0 +1,227 @@
+{
+  "kit_files": 94,
+  "changed_kit_files": [
+    "docs/data/ps45_unload_20261009/README.md",
+    "docs/data/ps45_unload_20261009/SHA256SUMS",
+    "docs/data/ps45_unload_20261009/active_rules.json",
+    "docs/data/ps45_unload_20261009/seal_kit.py",
+    "docs/data/ps45_unload_20261009/ul_reader.py"
+  ],
+  "changed_existing_functions": [
+    "_resume_auth",
+    "_state_vars",
+    "read_run",
+    "selftest"
+  ],
+  "new_functions": [
+    "_resume_integer",
+    "_resume_integer_tests"
+  ],
+  "shared_i_unchanged": true,
+  "shared_csv_unchanged": true,
+  "generated_deck_count": 64,
+  "generated_deck_mismatches": [],
+  "history_unchanged": true,
+  "history_file_count": 16,
+  "params_unchanged": true,
+  "seals": {
+    "kit": {
+      "count": 76,
+      "bad": []
+    },
+    "history": {
+      "count": 15,
+      "bad": []
+    },
+    "evidence": {
+      "count": 310,
+      "bad": []
+    }
+  },
+  "author_suite_recount": [
+    {
+      "name": "ul_lib_selftest",
+      "rc": 0,
+      "recount_ok": 24,
+      "recount_fail": 0,
+      "counts_match": true
+    },
+    {
+      "name": "ul_s3_selftest",
+      "rc": 0,
+      "recount_ok": 16,
+      "recount_fail": 0,
+      "counts_match": true
+    },
+    {
+      "name": "ul_observers_selftest",
+      "rc": 0,
+      "recount_ok": 21,
+      "recount_fail": 0,
+      "counts_match": true
+    },
+    {
+      "name": "ul_gates_selftest",
+      "rc": 0,
+      "recount_ok": 202,
+      "recount_fail": 0,
+      "counts_match": true
+    },
+    {
+      "name": "ul_reader_selftest",
+      "rc": 0,
+      "recount_ok": 304,
+      "recount_fail": 0,
+      "counts_match": true
+    },
+    {
+      "name": "seal_kit_selftest",
+      "rc": 0,
+      "recount_ok": 12,
+      "recount_fail": 0,
+      "counts_match": true
+    },
+    {
+      "name": "seal_kit_check",
+      "rc": 0,
+      "recount_ok": 1,
+      "recount_fail": 0,
+      "counts_match": true
+    },
+    {
+      "name": "make_unload_decks_selftest",
+      "rc": 0,
+      "recount_ok": 291,
+      "recount_fail": 0,
+      "counts_match": true
+    },
+    {
+      "name": "make_unload_decks_check",
+      "rc": 0,
+      "recount_ok": 1,
+      "recount_fail": 0,
+      "counts_match": true
+    },
+    {
+      "name": "history_make_history_decks_selftest",
+      "rc": 0,
+      "recount_ok": 172,
+      "recount_fail": 0,
+      "counts_match": true
+    },
+    {
+      "name": "history_make_history_decks_check",
+      "rc": 0,
+      "recount_ok": 1,
+      "recount_fail": 0,
+      "counts_match": true
+    },
+    {
+      "name": "history_read_history_selftest",
+      "rc": 0,
+      "recount_ok": 56,
+      "recount_fail": 0,
+      "counts_match": true
+    },
+    {
+      "name": "ul_runner_test_selftest",
+      "rc": 0,
+      "recount_ok": 38,
+      "recount_fail": 0,
+      "counts_match": true
+    }
+  ],
+  "mutation_reproduction": [
+    {
+      "name": "round_event_before_validation",
+      "original_failed": 22,
+      "replayed_failed": 22,
+      "same": true,
+      "exception": null
+    },
+    {
+      "name": "truncate_decimal",
+      "original_failed": 12,
+      "replayed_failed": 12,
+      "same": true,
+      "exception": null
+    },
+    {
+      "name": "allow_unicode_digits",
+      "original_failed": 5,
+      "replayed_failed": 5,
+      "same": true,
+      "exception": null
+    },
+    {
+      "name": "last_state_definition_wins",
+      "original_failed": 2,
+      "replayed_failed": 2,
+      "same": true,
+      "exception": null
+    },
+    {
+      "name": "ignore_bad_manifest",
+      "original_failed": 7,
+      "replayed_failed": 7,
+      "same": true,
+      "exception": null
+    },
+    {
+      "name": "ignore_ambiguous_event",
+      "original_failed": 1,
+      "replayed_failed": 1,
+      "same": true,
+      "exception": null
+    },
+    {
+      "name": "normalize_state_whitespace",
+      "original_failed": 4,
+      "replayed_failed": 4,
+      "same": true,
+      "exception": null
+    },
+    {
+      "name": "ignore_unicode_manifest_prefix",
+      "original_failed": 2,
+      "replayed_failed": 2,
+      "same": true,
+      "exception": null
+    },
+    {
+      "name": "split_unicode_state_lines",
+      "original_failed": 6,
+      "replayed_failed": 6,
+      "same": true,
+      "exception": null
+    },
+    {
+      "name": "split_unicode_manifest_lines",
+      "original_failed": 3,
+      "replayed_failed": 3,
+      "same": true,
+      "exception": null
+    },
+    {
+      "name": "ignore_event_csv_structure",
+      "original_failed": 3,
+      "replayed_failed": 3,
+      "same": true,
+      "exception": null
+    }
+  ],
+  "full_gate_evidence": {
+    "status": "PASS",
+    "exit_code": 0,
+    "pass_lane_count": 155,
+    "fail_lane_count": 0,
+    "candidate_head": "652d43704034f24d2f4a024092b36ce0ddf558fe",
+    "recount_lanes": 155,
+    "source_before_after_same": true,
+    "available_identity_count": 100,
+    "identity_mismatches": [],
+    "log_sha256": "f27982bb9f2497c32dcea0a3e50130c6dea2dac16492d1fde3b32750bd8656c3",
+    "receipt_log_sha256": "f27982bb9f2497c32dcea0a3e50130c6dea2dac16492d1fde3b32750bd8656c3"
+  },
+  "source_changed_during_review": []
+}

@@ -1,0 +1,7 @@
+{
+  "original_helper_sha256": "dd35826b18ba41bc20851fb1636056eeb2a1a6b97cdb3b4655d4b136407bb242",
+  "portable_helper_sha256": "1ca1eaa133e4002fdf717c4b2282e3755451db41bf1d17833f3ce7105a19e209",
+  "mutations_and_child_probe_AST_equal": true,
+  "one_mutant_portable_replay_detected": true,
+  "scope": "Do not add the portable replay to the five distinct mutant count."
+}

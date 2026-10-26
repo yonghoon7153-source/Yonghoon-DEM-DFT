@@ -1,0 +1,4 @@
+variable ul_rstep equal 3310000
+variable ul_k equal 1
+variable ul_phase equal 0
+variable ul_modeB equal 1

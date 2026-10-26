@@ -1,0 +1,8 @@
+# Preserve external evidence bytes, including CRLF. The report is the documented LF copy.
+evidence/** -text
+archive/** -text
+source-pin/** -text
+repro_boundary.py -text
+probe_independent.py -text
+diagnose_windows.py -text
+intake-root.json -text

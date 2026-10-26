@@ -1,0 +1,24 @@
+{
+  "scope": "Deliberately modified scratch sources, not approved consumers",
+  "results": [
+    {
+      "mutation": "normalize_event_line_separators",
+      "original_reader_sha256": "dfc06b8dbf53a8cab05df297890e1f8ca1d0fa038536c7c13ed8b8677e521723",
+      "mutated_reader_sha256": "28dfe01b8e65230f6eb971ec79e5c25757ce0a892ef59616c5783f2674b79b3f",
+      "probe_rc": 0,
+      "case_count": 42,
+      "failed_cases": [
+        "R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\\x0b' → CSV splitlines 전에 변형 표지 거부",
+        "R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\\x0c' → CSV splitlines 전에 변형 표지 거부",
+        "R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\\x1c' → CSV splitlines 전에 변형 표지 거부",
+        "R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\\x1d' → CSV splitlines 전에 변형 표지 거부",
+        "R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\\x1e' → CSV splitlines 전에 변형 표지 거부",
+        "R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\\x85' → CSV splitlines 전에 변형 표지 거부",
+        "R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\\u2028' → CSV splitlines 전에 변형 표지 거부",
+        "R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 '\\u2029' → CSV splitlines 전에 변형 표지 거부"
+      ],
+      "detected": true
+    }
+  ],
+  "all_detected": true
+}

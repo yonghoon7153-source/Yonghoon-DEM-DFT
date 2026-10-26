@@ -150,6 +150,11 @@ def _resume_auth(d, events):
     rf, pr = set(), []
     if os.path.isfile(man):
         for ln in open(man, encoding='utf-8', errors='replace').read().split('\n'):
+            # LF/CRLF/CR 은 open() 의 보편 개행으로 읽는다. 나머지 splitlines 구분자는
+            # 키 선별 전에 거부한다: 다른 글 뒤에 숨은 resume_from 도 버려 인증하지 않는다.
+            if any(c in ln for c in '\v\f\x1c\x1d\x1e\u0085\u2028\u2029'):
+                pr.append('run_manifest.txt: LF/CRLF/CR 밖 줄 구분자 — 승인 없음 (ULPRI-02)')
+                continue
             line = ln.strip(' \t\r\n')
             m = re.fullmatch(r'resume_from=([0-9]+)', line)
             if m:
@@ -317,11 +322,23 @@ def read_run(d, P=None):
     R = P['records']
     out = {'dir': d, 'windows': [], 'steps': [], 'events': [], 'summary': None, 'problems': [], 'n_superseded_rows': 0, 'resume_steps': [],
            'resume_auth': []}
-    ev, pr = _csv(os.path.join(d, 'ul_events.csv'), R['events_cols'])
-    out['problems'] += pr
+    event_path = os.path.join(d, 'ul_events.csv')
+    marker_pr = []
+    # 공용 _csv 의 splitlines() 가 Unicode 구분자를 먼저 지우기 전에 원 event 셀을 본다.
+    # LF/CRLF/CR 만 물리 줄 경계로 읽고, RESUME 와 앞뒤 공백만 다른 표지는 정규화 없이 거부한다.
+    if os.path.isfile(event_path):
+        for n, line in enumerate(open(event_path, encoding='utf-8', errors='replace').read().split('\n'), 1):
+            marker = line.split(',', 1)[0]
+            if marker != 'RESUME' and marker.strip() == 'RESUME':
+                marker_pr.append(f'ul_events.csv:{n}: RESUME 표지 앞뒤 공백 변형 — 승인 없음 (ULPRI-01)')
+    ev, pr = _csv(event_path, R['events_cols'])
+    out['problems'] += pr + marker_pr
     events = []
     for r in ev or []:
-        index = _resume_integer if r['event'] == 'RESUME' else _i
+        # 표지의 앞뒤 공백 변형은 정상 사건으로 정규화하지 않는다. 숫자 변환 전에
+        # 잘못된 표지로 기록하고 다른 정상 RESUME 가 있어도 전체 경계 인증을 막는다.
+        bad_marker = r['event'] != 'RESUME' and r['event'].strip() == 'RESUME'
+        index = _resume_integer if r['event'] == 'RESUME' or bad_marker else _i
         e = {'event': r['event'], 'k': index(r['k']), 'step': index(r['step']), 'plate_z': _f(r['plate_z']), 'lift': _f(r['lift']),
              'detail': r['detail']}
         if r['event'] == 'RESUME' and (e['k'] is None or e['step'] is None):
@@ -329,7 +346,7 @@ def read_run(d, P=None):
         events.append(e)
     out['resume_steps'] = [e['step'] for e in events if e['event'] == 'RESUME']
     # 사건 CSV 에 버린/깨진 행이 있으면 남은 RESUME 만 보고 고유 경계를 인증하지 않는다.
-    auth, apr = ([], []) if pr else _resume_auth(d, events)
+    auth, apr = ([], []) if pr or marker_pr else _resume_auth(d, events)
     out['resume_auth'] = auth
     out['problems'] += apr
     kept, used = [], set()
@@ -2731,6 +2748,93 @@ def _resume_integer_tests(chk, P):
             lambda: rr['resume_auth'] == [(3, sr)], str(rr['resume_auth']))
 
 
+def _resume_marker_tests(chk, P):
+    """R40: RESUME 근접 표지와 manifest 줄 구분자가 정상 경계를 숨기지 않는다."""
+    import subprocess
+    import tempfile
+
+    with tempfile.TemporaryDirectory() as parent:
+        sequence = [0]
+
+        def observe(kr=1, marker=None, token='1.49', separator=None, newline='\n', resume=True, replace_marker=False):
+            sequence[0] += 1
+            root = os.path.join(parent, str(sequence[0]))
+            d, _trace = _ut_trace_arm(root, P, 4)
+            _fake_restored(root, B73)
+            _w(os.path.join(root, B73, 'ul_base.in'), 'variable ul_S2max equal 1e-05\n')
+            sr = _hold_resume(d, P, old_nw=2, auth=True, kr=kr) if resume else None
+            ep, mp = os.path.join(d, 'ul_events.csv'), os.path.join(d, 'run_manifest.txt')
+            if marker is not None:
+                def extra(rows):
+                    original = next(r for r in rows if r['event'] == 'RESUME')
+                    row = original if replace_marker else dict(original)
+                    row.update(event=marker, k=token)
+                    if not replace_marker:
+                        rows.append(row)
+                _edit_rows(ep, extra)
+            if separator is not None:
+                with open(mp, 'a', encoding='utf-8') as f:
+                    f.write(f'note=old{separator}resume_from={sr}.49\n')
+            state = os.path.join(d, 'restart', f'state_unload_{sr}.in') if resume else None
+            if resume and newline != '\n':
+                for path in (mp, state):
+                    raw = open(path, 'rb').read()
+                    with open(path, 'wb') as f:
+                        f.write(raw.replace(b'\n', newline.encode('ascii')))
+            inputs = [os.path.join(d, name) for name in ('ul_events.csv', 'ul_windows.csv', 'ul_steps.csv')]
+            inputs += [path for path in (mp, state) if path and os.path.isfile(path)]
+            before = {path: ul_lib.sha256_file(path) for path in inputs}
+            rr = read_run(d, P)
+            call = subprocess.run([sys.executable, '-I', os.path.abspath(__file__), 'arm', root, B73, 'UT'],
+                                  capture_output=True, text=True, timeout=60)
+            verdict = json.load(open(os.path.join(d, 'arm_verdict.json'), encoding='utf-8'))
+            return {'auth': rr['resume_auth'], 'superseded': rr['n_superseded_rows'], 'problems': rr['problems'],
+                    'primary': verdict['primary_status'], 'rho': verdict['rho_pct'], 'rank': verdict['rank_eligible'],
+                    'unchanged': all(ul_lib.sha256_file(path) == h for path, h in before.items()),
+                    'rc': call.returncode, 'boundary': (kr, sr)}
+
+        baseline = observe(resume=False)
+        chk('R40 중단 없는 실제 arm CLI 양성 기준',
+            lambda: baseline['primary'] == 'OK' and baseline['rank'] and baseline['unchanged'] and baseline['rc'] == 0, str(baseline))
+
+        def normal(rr):
+            return (rr['auth'] == [rr['boundary']] and not rr['problems'] and rr['primary'] == 'OK'
+                    and rr['rho'] == baseline['rho'] and rr['rank'] and rr['unchanged'] and rr['rc'] == 0)
+
+        def rejected(rr, reason):
+            return (not rr['auth'] and rr['superseded'] == 0 and any(reason in p for p in rr['problems'])
+                    and rr['primary'] == 'UNIDENTIFIED' and rr['rho'] is None and not rr['rank']
+                    and rr['unchanged'] and rr['rc'] == 0)
+
+        for kr in range(4):
+            rr = observe(kr=kr)
+            chk(f'R40 정상 k={kr} 실제 arm CLI → 중단 없는 주 값과 정확히 같음 · 원 입력 불변',
+                lambda rr=rr: normal(rr), str(rr))
+        for ending in ('\n', '\r\n', '\r'):
+            rr = observe(newline=ending)
+            chk(f'R40 manifest/state 정상 줄 끝 {ending!r} → 승인 · 주 값 유지',
+                lambda rr=rr: normal(rr), str(rr))
+        rr = observe(marker='RESUME')
+        chk('R40 literal RESUME 소수 음성 대조 → 승인·행 제외 없음 · UNIDENTIFIED/null',
+            lambda: rejected(rr, '정수'), str(rr))
+        for marker in ('RESUME ', ' RESUME', 'RESUME\t', '\tRESUME',
+                       'RESUME\u00a0', '\u00a0RESUME', 'RESUME\u2003', '\u2003RESUME'):
+            for token in ('1', '1.49'):
+                rr = observe(marker=marker, token=token)
+                chk(f'R40 ULPRI-01 변형 표지 {marker!r} · k={token} + 정상 표지 → 승인·행 제외 없음 · CLI 미식별 · 원 입력 불변',
+                    lambda rr=rr: rejected(rr, 'RESUME 표지'), str(rr))
+        for separator in ('\v', '\f', '\x1c', '\x1d', '\x1e', '\u0085', '\u2028', '\u2029'):
+            rr = observe(marker=separator + 'RESUME', token='1', replace_marker=True)
+            chk(f'R40 ULPRI-01 유일한 정상 사건 앞 줄 구분자 {separator!r} → CSV splitlines 전에 변형 표지 거부',
+                lambda rr=rr: rejected(rr, 'RESUME 표지'), str(rr))
+            rr = observe(separator=separator)
+            chk(f'R40 ULPRI-02 다른 문자 뒤 줄 구분자 {separator!r} → 숨은 resume_from 무시 없이 승인·행 제외 없음 · CLI 미식별',
+                lambda rr=rr: rejected(rr, '줄 구분자'), str(rr))
+        rr = observe()
+        chk('R40 잘못된 추가 기록 없는 복구 대조 → 정상 승인 · 주 값 유지',
+            lambda: normal(rr), str(rr))
+
+
 def selftest() -> int:
     import tempfile
     fails = []
@@ -2747,6 +2851,7 @@ def selftest() -> int:
     P = ul_lib.load_params()
     _ulpr_resume_tests(chk, P)
     _resume_integer_tests(chk, P)
+    _resume_marker_tests(chk, P)
     import make_unload_decks as mk  # noqa: E402 — 생성된 덱에서 물리 창을 다시 읽는다 (ULR1-04)
     decks = {k: mk.render(B73, k, P) for k in ('U_UB', 'UT', 'U_UVa', 'U_UVb', 'U_UT3')}
     h0um = P['beds'][B73]['h0'] * 1000.0

@@ -1,0 +1,6 @@
+{
+  "scope": "Only two relative evidence links in new request; production six-file freeze unchanged",
+  "before_sha256": "ecf3e40d432b5b380e8f19606c1633111a14ed4a57e8ea82729524f280d06044",
+  "after_sha256": "1c42976f1bcb328f66678fef7b7e0292fb75e9733d368b438b2368e299909c00",
+  "preflight_attempt1": "docrefs failed two relative shorthand paths; ledger passed"
+}

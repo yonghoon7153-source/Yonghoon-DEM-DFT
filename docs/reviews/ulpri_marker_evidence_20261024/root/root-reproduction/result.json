@@ -1,0 +1,193 @@
+{
+  "pin_reader_sha256": "7a395a549e8ad3eae820a9e575f094219ca7d47a4b9a07c5bc27623d7018af4b",
+  "cases": [
+    {
+      "name": "normal",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "n_superseded_rows": 5,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "csv_unchanged": true,
+      "cli_rc": 0,
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python3",
+        "-X",
+        "utf8",
+        "-B",
+        "/workspace/Yonghoon-DEM-DFT/docs/data/ps45_unload_20261009/ul_reader.py",
+        "arm",
+        "/workspace/.cloud-setup/ulpri-20261024/root-reproduction/normal",
+        "ps_7_3_r45",
+        "UT"
+      ]
+    },
+    {
+      "name": "literal_fractional_extra",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [],
+      "n_superseded_rows": 0,
+      "problems": [
+        "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+        "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3310000) — 승인 없음 (ULKRF-01)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_events.csv: RESUME (k None · step 3310000) 앞 사건 4 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_unchanged": true,
+      "cli_rc": 0,
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python3",
+        "-X",
+        "utf8",
+        "-B",
+        "/workspace/Yonghoon-DEM-DFT/docs/data/ps45_unload_20261009/ul_reader.py",
+        "arm",
+        "/workspace/.cloud-setup/ulpri-20261024/root-reproduction/literal_fractional_extra",
+        "ps_7_3_r45",
+        "UT"
+      ]
+    },
+    {
+      "name": "trailing_space_event",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "n_superseded_rows": 5,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "csv_unchanged": true,
+      "cli_rc": 0,
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python3",
+        "-X",
+        "utf8",
+        "-B",
+        "/workspace/Yonghoon-DEM-DFT/docs/data/ps45_unload_20261009/ul_reader.py",
+        "arm",
+        "/workspace/.cloud-setup/ulpri-20261024/root-reproduction/trailing_space_event",
+        "ps_7_3_r45",
+        "UT"
+      ]
+    },
+    {
+      "name": "nbsp_event",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "n_superseded_rows": 5,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "csv_unchanged": true,
+      "cli_rc": 0,
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python3",
+        "-X",
+        "utf8",
+        "-B",
+        "/workspace/Yonghoon-DEM-DFT/docs/data/ps45_unload_20261009/ul_reader.py",
+        "arm",
+        "/workspace/.cloud-setup/ulpri-20261024/root-reproduction/nbsp_event",
+        "ps_7_3_r45",
+        "UT"
+      ]
+    },
+    {
+      "name": "unicode_embedded_manifest",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "n_superseded_rows": 5,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "csv_unchanged": true,
+      "cli_rc": 0,
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python3",
+        "-X",
+        "utf8",
+        "-B",
+        "/workspace/Yonghoon-DEM-DFT/docs/data/ps45_unload_20261009/ul_reader.py",
+        "arm",
+        "/workspace/.cloud-setup/ulpri-20261024/root-reproduction/unicode_embedded_manifest",
+        "ps_7_3_r45",
+        "UT"
+      ]
+    },
+    {
+      "name": "restored_control",
+      "boundary": [
+        1,
+        3310000
+      ],
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "n_superseded_rows": 5,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "csv_unchanged": true,
+      "cli_rc": 0,
+      "command": [
+        "/workspace/.venvs/yonghoon-dem/bin/python3",
+        "-X",
+        "utf8",
+        "-B",
+        "/workspace/Yonghoon-DEM-DFT/docs/data/ps45_unload_20261009/ul_reader.py",
+        "arm",
+        "/workspace/.cloud-setup/ulpri-20261024/root-reproduction/restored_control",
+        "ps_7_3_r45",
+        "UT"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1685 @@
+{
+  "scope": "Synthetic actual arm CLI; no physical qualification or launch",
+  "reader_sha256": "dfc06b8dbf53a8cab05df297890e1f8ca1d0fa038536c7c13ed8b8677e521723",
+  "case_count": 62,
+  "passed": 62,
+  "status": "PASS",
+  "synthetic": true,
+  "physical_runs": 0,
+  "cases": [
+    {
+      "name": "positive_k0_lf",
+      "expected": "accept",
+      "pass": true,
+      "resume_auth": [
+        [
+          0,
+          3230000
+        ]
+      ],
+      "superseded_rows": 0,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "7f751653341459e71a2c53f9305da7c5d674d9e79448257f17e3cf15da8329ed",
+        "ul_windows.csv": "6327d6767da87e4d7a22c7263dd6a7bfabd647d87f0ea2acfeaf2bebfeaaebe6",
+        "ul_steps.csv": "16db6a7462df24a0224042c7cde9ffbedfee58a094c60861777fd5f3490c0be5",
+        "run_manifest.txt": "0f5cba71624ef4b1c80b50cb19ca01632e18ea8c42e2d31eaabdb46884a8498c",
+        "restart/state_unload_3230000.in": "955242f31e23c8a64fc48d1af29dee1650c2969be571b9d99f9443f17ad418ed",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1"
+      },
+      "expected_rho_pct": 0.20260778734286913
+    },
+    {
+      "name": "positive_k0_crlf",
+      "expected": "accept",
+      "pass": true,
+      "resume_auth": [
+        [
+          0,
+          3230000
+        ]
+      ],
+      "superseded_rows": 0,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "0fb578203f70ff75515bbec18b24f0574be7ba5963e1fd84216f929fabbf28c7",
+        "ul_windows.csv": "2c3ae332af53a41ef94e928b1f96aed75f6db0183a62ee747b42e0abff60c06e",
+        "ul_steps.csv": "1b89f7382024c29a0818a0a99893e0052fd55035c98cf51ed8a6981949fd2564",
+        "run_manifest.txt": "6153a5b089a3093a9691e6442b16e8a103125d49a8e49554abf73015b0efb226",
+        "restart/state_unload_3230000.in": "dca69e5128032046a9b4b8314a0d7a48ab1e924176b7ab88c402ceb48a6f7487",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1"
+      },
+      "expected_rho_pct": 0.20260778734286913
+    },
+    {
+      "name": "positive_k0_cr",
+      "expected": "accept",
+      "pass": true,
+      "resume_auth": [
+        [
+          0,
+          3230000
+        ]
+      ],
+      "superseded_rows": 0,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "0ddf95e2a733996b9ec9de021510eb6df290617c7f863a5f548190b4857fec55",
+        "ul_windows.csv": "69eb456c8e7f1527f2c8efc86685361641782f70a2d34e45935d0fab1a0fd5b9",
+        "ul_steps.csv": "8a1978041323ab477f9454adcce362a8b23e6f48f79df1c4a3e908fd9da4d272",
+        "run_manifest.txt": "f50fc2be87f21c49bb577a5cf579ce53174ef90e291526a6d21ad63dde05576d",
+        "restart/state_unload_3230000.in": "474d894e75e29e08e7d9b550b05950f8f4a58b5b5f28e040422f85b21b3fb1f8",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1"
+      },
+      "expected_rho_pct": 0.20260778734286913
+    },
+    {
+      "name": "positive_k1_lf",
+      "expected": "accept",
+      "pass": true,
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "superseded_rows": 0,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "e93652aa251e3bffd053c35efb891275f72df674b90b25870386b4116232bacd",
+        "ul_windows.csv": "6327d6767da87e4d7a22c7263dd6a7bfabd647d87f0ea2acfeaf2bebfeaaebe6",
+        "ul_steps.csv": "16db6a7462df24a0224042c7cde9ffbedfee58a094c60861777fd5f3490c0be5",
+        "run_manifest.txt": "86ea66c9060f41b48d5e7d6e39683cef1a3bfac738a0b11fec1ea5c545b5054c",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "bb5251e113562862ddb1dee23ef360e28f03489c6c190b93caa4889e91517b34"
+      },
+      "expected_rho_pct": 0.20260778734286913
+    },
+    {
+      "name": "positive_k1_crlf",
+      "expected": "accept",
+      "pass": true,
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "superseded_rows": 0,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "f4ffb7daf6848f8052f7ae2baf434426a58b1536ec5de67053041e5f5f609876",
+        "ul_windows.csv": "2c3ae332af53a41ef94e928b1f96aed75f6db0183a62ee747b42e0abff60c06e",
+        "ul_steps.csv": "1b89f7382024c29a0818a0a99893e0052fd55035c98cf51ed8a6981949fd2564",
+        "run_manifest.txt": "9144d1307b66a4df60b0b6b21e4ad5f825e60eb44c62df834bbeec026c2705aa",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "02120bfed5bbfd543e9a212375af83884132d0b2d0409cfff4666038f05b0bae"
+      },
+      "expected_rho_pct": 0.20260778734286913
+    },
+    {
+      "name": "positive_k1_cr",
+      "expected": "accept",
+      "pass": true,
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "superseded_rows": 0,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "2d27b6cb7a7193ff78519bf72aa3eb3d6439ecddc9b65c596815fb3312af5506",
+        "ul_windows.csv": "69eb456c8e7f1527f2c8efc86685361641782f70a2d34e45935d0fab1a0fd5b9",
+        "ul_steps.csv": "8a1978041323ab477f9454adcce362a8b23e6f48f79df1c4a3e908fd9da4d272",
+        "run_manifest.txt": "8562730dd7f1e32867520fad948c498b37c18cc863301102af5697a46819a6f0",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c6828a60d8c5d1e2f52b4b30e7a962294d4c79aa4c5d7ef499e04b17998a4aaa"
+      },
+      "expected_rho_pct": 0.20260778734286913
+    },
+    {
+      "name": "positive_k2_lf",
+      "expected": "accept",
+      "pass": true,
+      "resume_auth": [
+        [
+          2,
+          3360000
+        ]
+      ],
+      "superseded_rows": 0,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "90fe4c45701c708ac5ee6bf3886378e989af713cc03153945f5e3a1eb4dfea47",
+        "ul_windows.csv": "b3933b11637150d4d48ec740450f156d8b98985bde7934d2949fb47d41906d2d",
+        "ul_steps.csv": "16db6a7462df24a0224042c7cde9ffbedfee58a094c60861777fd5f3490c0be5",
+        "run_manifest.txt": "2e1091d157367804067148f9565f1a152f6adb377aca17c1efcb0648dbbd9e2b",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3360000.in": "7fa9f994c213a68ef1591c0ea0e043d5b4fc2402584854773416421dd0071d56"
+      },
+      "expected_rho_pct": 0.20260778734286913
+    },
+    {
+      "name": "positive_k2_crlf",
+      "expected": "accept",
+      "pass": true,
+      "resume_auth": [
+        [
+          2,
+          3360000
+        ]
+      ],
+      "superseded_rows": 0,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "a7916e770adb01c90985345c9d89d3d188ef75a95018fab006debade1b1fdc06",
+        "ul_windows.csv": "0023bf1fad21cf295cf2c4d9fba28fd678987bd533a918c2da4edcd3b4853bc5",
+        "ul_steps.csv": "1b89f7382024c29a0818a0a99893e0052fd55035c98cf51ed8a6981949fd2564",
+        "run_manifest.txt": "1c8d4b5300bb190c68a8f4ec38fe3af425de34dcc36aaab051ca06498611d2c5",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3360000.in": "2db8a61f38b5afd2ca41b2c60ba38b96fed125ebd872154240aa36a6fe1b94db"
+      },
+      "expected_rho_pct": 0.20260778734286913
+    },
+    {
+      "name": "positive_k2_cr",
+      "expected": "accept",
+      "pass": true,
+      "resume_auth": [
+        [
+          2,
+          3360000
+        ]
+      ],
+      "superseded_rows": 0,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "d1fb017b255371469e2004fc1c1f03d26faa0f2bf93a3512e82644ecee20fce6",
+        "ul_windows.csv": "c767452313417a455954b69c6369f1b64f20e34cfa20bbd0e4e9fc06f73519d8",
+        "ul_steps.csv": "8a1978041323ab477f9454adcce362a8b23e6f48f79df1c4a3e908fd9da4d272",
+        "run_manifest.txt": "f2585512a317d5d93586d4cbd8db56ce75518fbc0976be65986dbb6ecb7370db",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3360000.in": "1538b7383aab318815516a41517e0499bfea0c265583e76d9f8634fcae0fcecf"
+      },
+      "expected_rho_pct": 0.20260778734286913
+    },
+    {
+      "name": "positive_k3_lf",
+      "expected": "accept",
+      "pass": true,
+      "resume_auth": [
+        [
+          3,
+          3410000
+        ]
+      ],
+      "superseded_rows": 0,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "a29d9898f36034ab902f98c97ccb2b21c4eb574d86e66abf5136dd288e71a9ed",
+        "ul_windows.csv": "b3933b11637150d4d48ec740450f156d8b98985bde7934d2949fb47d41906d2d",
+        "ul_steps.csv": "16db6a7462df24a0224042c7cde9ffbedfee58a094c60861777fd5f3490c0be5",
+        "run_manifest.txt": "fee6490da4ca2e64b6abe0f474ab41da497f56016f666591d7ba37e4bae15081",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3410000.in": "abd874cee6256ea0a88f54a87e2b96488683bdddc5e881c64cce31263d246854"
+      },
+      "expected_rho_pct": 0.20260778734286913
+    },
+    {
+      "name": "positive_k3_crlf",
+      "expected": "accept",
+      "pass": true,
+      "resume_auth": [
+        [
+          3,
+          3410000
+        ]
+      ],
+      "superseded_rows": 0,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "12ed7cd12c004a021593ee2ac92b77aab8d644ba4c020a6a843e1a7bbf3039ba",
+        "ul_windows.csv": "0023bf1fad21cf295cf2c4d9fba28fd678987bd533a918c2da4edcd3b4853bc5",
+        "ul_steps.csv": "1b89f7382024c29a0818a0a99893e0052fd55035c98cf51ed8a6981949fd2564",
+        "run_manifest.txt": "73495cb3467e20add0c7f32cf740174df2008521b6cc2b1df997f6791cf52878",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3410000.in": "13eb4de94f27470dc9fd83717953b45478234b96dde7479effb06f50c6b0fee5"
+      },
+      "expected_rho_pct": 0.20260778734286913
+    },
+    {
+      "name": "positive_k3_cr",
+      "expected": "accept",
+      "pass": true,
+      "resume_auth": [
+        [
+          3,
+          3410000
+        ]
+      ],
+      "superseded_rows": 0,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "7b17ed92116853ba5566add6ce7c8f6d3c53ba33d0d9d41960b83d7af1aa9c79",
+        "ul_windows.csv": "c767452313417a455954b69c6369f1b64f20e34cfa20bbd0e4e9fc06f73519d8",
+        "ul_steps.csv": "8a1978041323ab477f9454adcce362a8b23e6f48f79df1c4a3e908fd9da4d272",
+        "run_manifest.txt": "4a1f7f1a4a20c10611e4be9ba0d8ddaef2bde0e51e1d8ddaa96271381cc7b3d9",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3410000.in": "4ce7ddf762b7fc63a591c355096b9975242ef91e541ce7cc966b6fd14bcbe1ea"
+      },
+      "expected_rho_pct": 0.20260778734286913
+    },
+    {
+      "name": "event_0020_prefix_1",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "ul_events.csv:10: RESUME 표지 앞뒤 공백 변형 — 승인 없음 (ULPRI-01)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "6811395462c0a384701dbf43951999677b21d4fde711b9f6bfc94760ee79d47d",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "event_0020_prefix_1p49",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "ul_events.csv:10: RESUME 표지 앞뒤 공백 변형 — 승인 없음 (ULPRI-01)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "4063316c97b629c86ee702af57b673fea3f154ec2516924df218c45d8e3fdb07",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "event_0020_suffix_1",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "ul_events.csv:10: RESUME 표지 앞뒤 공백 변형 — 승인 없음 (ULPRI-01)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "dd33945372b465c386fafa790a59daa61de0241804a806a3f108ff19a6875705",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "event_0020_suffix_1p49",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "ul_events.csv:10: RESUME 표지 앞뒤 공백 변형 — 승인 없음 (ULPRI-01)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "8f053fecea999a27191d128e6f3e5cfee2b6027cff47ca496ee67385e7f5d1ba",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "event_0009_prefix_1",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "ul_events.csv:10: RESUME 표지 앞뒤 공백 변형 — 승인 없음 (ULPRI-01)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "01534c227bcb42ec213b6f45436e1966e700a0daae6f92f095e41c5e255fd48b",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "event_0009_prefix_1p49",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "ul_events.csv:10: RESUME 표지 앞뒤 공백 변형 — 승인 없음 (ULPRI-01)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "70829353b84dd192a94dd475424f67ef0fa85abe5fb23b9310816fee31d29330",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "event_0009_suffix_1",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "ul_events.csv:10: RESUME 표지 앞뒤 공백 변형 — 승인 없음 (ULPRI-01)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "2d30286d451e3912ec98594e722cb71dd2aa0c81bcc3a4db38f7f2c894dc8dbf",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "event_0009_suffix_1p49",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "ul_events.csv:10: RESUME 표지 앞뒤 공백 변형 — 승인 없음 (ULPRI-01)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "e6ed38ddbd39c32b79af1b9f4e0fae04a5547c79f2ccedd33525c1136f722074",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "event_00a0_prefix_1",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "ul_events.csv:10: RESUME 표지 앞뒤 공백 변형 — 승인 없음 (ULPRI-01)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "912bcc350c16a05efb5adc62b683b0c2b2c43ab3bf74c86c0e9780b7c8e52575",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "event_00a0_prefix_1p49",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "ul_events.csv:10: RESUME 표지 앞뒤 공백 변형 — 승인 없음 (ULPRI-01)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "2da8038651ad9e65c499695e1a25fa6382957f382d23e7f981a964086dbe1d06",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "event_00a0_suffix_1",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "ul_events.csv:10: RESUME 표지 앞뒤 공백 변형 — 승인 없음 (ULPRI-01)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "917890e072c8fb12df7562906534aebe4cf0f3353d64ddc4d6c1bba47018a330",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "event_00a0_suffix_1p49",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "ul_events.csv:10: RESUME 표지 앞뒤 공백 변형 — 승인 없음 (ULPRI-01)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "c99d36d0db9454d58d1df39f597eb60a01a46ca2dc7d458bf859657bf542e08e",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "event_2003_prefix_1",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "ul_events.csv:10: RESUME 표지 앞뒤 공백 변형 — 승인 없음 (ULPRI-01)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "96d6368b10fceeda7fc224dff43f0a29a14ab25e45972e8fb9b57dfac1b6e19c",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "event_2003_prefix_1p49",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "ul_events.csv:10: RESUME 표지 앞뒤 공백 변형 — 승인 없음 (ULPRI-01)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "56ab21ce2ac08dbd640e925881f3c96c9b700c20296e4eef17cda794b566d3a2",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "event_2003_suffix_1",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "ul_events.csv:10: RESUME 표지 앞뒤 공백 변형 — 승인 없음 (ULPRI-01)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "74d6b0b9b9517de80dca2159d3846fe7e6a918144a8382af2c2627995255cf99",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "event_2003_suffix_1p49",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "ul_events.csv:10: RESUME 표지 앞뒤 공백 변형 — 승인 없음 (ULPRI-01)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "4a0edda8e6ea80d06948c33978158609c2357c325cb0d38b0b4162be65b75bfd",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "event_202f_prefix_1",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "ul_events.csv:10: RESUME 표지 앞뒤 공백 변형 — 승인 없음 (ULPRI-01)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "bf9845913c0ea2c49d8f38f1bb6053315640e0f561283ffa7fce7aee763257dd",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "event_202f_prefix_1p49",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "ul_events.csv:10: RESUME 표지 앞뒤 공백 변형 — 승인 없음 (ULPRI-01)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "3170a028db7ab7ab74980062e7f17a236572b8dcd2e740318893ae44ac171941",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "event_202f_suffix_1",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "ul_events.csv:10: RESUME 표지 앞뒤 공백 변형 — 승인 없음 (ULPRI-01)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "fd8d6218c54a292bd70aa68312a3f00091c1138c1644e0bed947e736ceb1d8bb",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "event_202f_suffix_1p49",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "ul_events.csv:10: RESUME 표지 앞뒤 공백 변형 — 승인 없음 (ULPRI-01)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "8c719d038d37eb6e7bf8a2bd8849408b9dc3c15be3a5104424a4ebeb8472aed5",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "event_001f_prefix_1",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "ul_events.csv:10: RESUME 표지 앞뒤 공백 변형 — 승인 없음 (ULPRI-01)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "cde433a5676c3544562f45473c205713f69a8f2acc706c2060f361ac68c9de6e",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "event_001f_prefix_1p49",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "ul_events.csv:10: RESUME 표지 앞뒤 공백 변형 — 승인 없음 (ULPRI-01)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "edec69de5d02d90d642394143a1ae9900524a8da51b329943f8240950e19c4ac",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "event_001f_suffix_1",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "ul_events.csv:10: RESUME 표지 앞뒤 공백 변형 — 승인 없음 (ULPRI-01)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "e04ef496e01f31bff2ffa7f5b33aa05468cad11b6b76b1675e05f8df0595aa6b",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "event_001f_suffix_1p49",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "ul_events.csv:10: RESUME 표지 앞뒤 공백 변형 — 승인 없음 (ULPRI-01)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "71f679a8b47a8bc259b12f7954c60cb09ac4de06822a41c9ab87646d5cfb4114",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "manifest_000b_prefix",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: LF/CRLF/CR 밖 줄 구분자 — 승인 없음 (ULPRI-02)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "98689c43f71377ab134abe1e48cf44ab73759243fd1f6cbab70177acf9e8e925",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "manifest_000b_after_key",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: LF/CRLF/CR 밖 줄 구분자 — 승인 없음 (ULPRI-02)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "b3da7bdb7c4ea198a47f48bc4ab9ef9e67cb4d28f09a0fe63485da8b74dba5a4",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "manifest_000b_between_text_key",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: LF/CRLF/CR 밖 줄 구분자 — 승인 없음 (ULPRI-02)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "01c5a9ca2e252be6a7de79018757bade69aaf64ad344c8b4e4903882285b9b70",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "manifest_000c_prefix",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: LF/CRLF/CR 밖 줄 구분자 — 승인 없음 (ULPRI-02)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "9e19d2831b50c1f43b1a6555db98af443e67ecfdba9e02963d2f7ed7a2966cf5",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "manifest_000c_after_key",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: LF/CRLF/CR 밖 줄 구분자 — 승인 없음 (ULPRI-02)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "2e8a1558958899db1b898eefa9d584e61da7af37ef0fdf1707953d69332232f6",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "manifest_000c_between_text_key",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: LF/CRLF/CR 밖 줄 구분자 — 승인 없음 (ULPRI-02)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "97861691b10d11549b21e74be613e6d4a40e0d8097a524c1d7e4da0ba7670261",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "manifest_001c_prefix",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: LF/CRLF/CR 밖 줄 구분자 — 승인 없음 (ULPRI-02)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "f0c4e26467826789a0ef5d3f9be77d72ab6f82a563ee0ef2489821fb4a9d7e9a",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "manifest_001c_after_key",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: LF/CRLF/CR 밖 줄 구분자 — 승인 없음 (ULPRI-02)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "46e1160671ed20f557f1075b916f710c7773ffcd405763024f815bce6d571a2e",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "manifest_001c_between_text_key",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: LF/CRLF/CR 밖 줄 구분자 — 승인 없음 (ULPRI-02)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "e88f3f6e3c7c4808e8ab593ac41c19f6707903559f8ef37b6865a53c677e0648",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "manifest_001d_prefix",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: LF/CRLF/CR 밖 줄 구분자 — 승인 없음 (ULPRI-02)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "d56aa8d2a862f04319968901978895f41967452b1e31ecb757ed9e4ea0c14a50",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "manifest_001d_after_key",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: LF/CRLF/CR 밖 줄 구분자 — 승인 없음 (ULPRI-02)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "1a8e491ac0da2d792fad077755927bb3d754bf92876850e9c9b1fe4990e6ca03",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "manifest_001d_between_text_key",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: LF/CRLF/CR 밖 줄 구분자 — 승인 없음 (ULPRI-02)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "db929a7e2fd220ce644b08cadfacd75abb6536df42c7254e38958bca27d12bfc",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "manifest_001e_prefix",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: LF/CRLF/CR 밖 줄 구분자 — 승인 없음 (ULPRI-02)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "c84e668aabb23d258fca93299dfdcd21c07729fdd4f59b599c060d5be47c9cbe",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "manifest_001e_after_key",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: LF/CRLF/CR 밖 줄 구분자 — 승인 없음 (ULPRI-02)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "49eaf24b4fa49b8fd72f3f47a1b5f2ffe5e16a771521e10ca790b61bf20c6dca",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "manifest_001e_between_text_key",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: LF/CRLF/CR 밖 줄 구분자 — 승인 없음 (ULPRI-02)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "aadd3b6687b1b372385f429c15fb64bb09fe4854f9fe4cdf86b8204d20065ce0",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "manifest_0085_prefix",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: LF/CRLF/CR 밖 줄 구분자 — 승인 없음 (ULPRI-02)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "f5770106ff4160e70846d5f9bf6fbe74bde0b1c6167e2cf80f113e26727819b0",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "manifest_0085_after_key",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: LF/CRLF/CR 밖 줄 구분자 — 승인 없음 (ULPRI-02)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "7b5c27f4b9a0e178f7b05827f77051e90610d4d1bdb2354bb38c76ffe3eee2bd",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "manifest_0085_between_text_key",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: LF/CRLF/CR 밖 줄 구분자 — 승인 없음 (ULPRI-02)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "7be10c82691279a25506591acb346650c9561df39f3bb0f4907babf7afd4db02",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "manifest_2028_prefix",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: LF/CRLF/CR 밖 줄 구분자 — 승인 없음 (ULPRI-02)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "5933b36d4a33099718b4a780c6e76ad68b480d67eabd59a63558b0e2c66f66d6",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "manifest_2028_after_key",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: LF/CRLF/CR 밖 줄 구분자 — 승인 없음 (ULPRI-02)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "9ef9f8f4dd21d1a952460a91654c0002e48706363fdfafad56fa99b42c04c2f7",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "manifest_2028_between_text_key",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: LF/CRLF/CR 밖 줄 구분자 — 승인 없음 (ULPRI-02)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "d85827207c2adaf2bd4aeea1aa10064d4504cfeab068c5ab8f63e33f232ec159",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "manifest_2029_prefix",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: LF/CRLF/CR 밖 줄 구분자 — 승인 없음 (ULPRI-02)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "27db6a331240ed3e3a756a57040e975d81f6bf33d90d8b95eafb6b2c427c1641",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "manifest_2029_after_key",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: LF/CRLF/CR 밖 줄 구분자 — 승인 없음 (ULPRI-02)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "66d9e9ff04bf1f7c000dffa7d099909e730de4b5ce45573ea4a77c392595a85d",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "manifest_2029_between_text_key",
+      "expected": "reject",
+      "pass": true,
+      "resume_auth": [],
+      "superseded_rows": 0,
+      "problems": [
+        "run_manifest.txt: LF/CRLF/CR 밖 줄 구분자 — 승인 없음 (ULPRI-02)",
+        "ul_events.csv: RESUME (k 1 · step 3310000) 앞 사건 1 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)",
+        "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+        "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+      ],
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "fb7a81476b47ecf2b79573a9b33b2f604a7300e6298873a5b5eb4d77a46b0bcf",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "5ceb969b7bc2df1068bbb800dc1525896df84c114cc7ee45ff4b819edd135179",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "unchanged_unrelated_event_UNKNOWN",
+      "expected": "accept",
+      "pass": true,
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "superseded_rows": 5,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "d1ccf58b158c56dc16051e9256c58a549b7142d4199b09d5f601e91cf3545a18",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    },
+    {
+      "name": "unchanged_unrelated_event_resume",
+      "expected": "accept",
+      "pass": true,
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "superseded_rows": 5,
+      "problems": [],
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "csv_manifest_state_unchanged": true,
+      "cli_rc": 0,
+      "input_sha256": {
+        "ul_events.csv": "2df04954c83a3954056716f6c90d469756cf7f46f4d0295c1af6a49e4983757a",
+        "ul_windows.csv": "85f85d4de9442e1dabb9431ee9cdb9c657e888915eadd7b32a51363c7224d282",
+        "ul_steps.csv": "14a5b81a162c7d4150588b4e8b39fd6c44be513c0fa1c320f63504ad4db8dadc",
+        "run_manifest.txt": "5446f7a422b719261cd503396232646320239da96e14984f5af697240a850911",
+        "restart/state_RM_3460000.in": "591d6192f67b23e453f356cc18252736cdc7b010996a25dce057d4da47705ae1",
+        "restart/state_unload_3310000.in": "c1fd0402341e20f2234cff6c1369593da184a81860aa0dd41b938d80ba019b28"
+      },
+      "expected_rho_pct": null
+    }
+  ]
+}

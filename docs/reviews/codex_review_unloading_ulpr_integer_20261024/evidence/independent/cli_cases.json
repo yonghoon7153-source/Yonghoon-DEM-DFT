@@ -1,0 +1,1021 @@
+[
+  {
+    "name": "event_k_0",
+    "expected": "accept",
+    "auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "OK",
+    "rho": 0.20260778734286913,
+    "problems": [],
+    "why": [],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": true
+  },
+  {
+    "name": "event_k_1",
+    "expected": "accept",
+    "auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "OK",
+    "rho": 0.20260778734286913,
+    "problems": [],
+    "why": [],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": true
+  },
+  {
+    "name": "event_k_2",
+    "expected": "reject",
+    "auth": [],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "UNIDENTIFIED",
+    "rho": null,
+    "problems": [
+      "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+      "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3410000) — 승인 없음 (ULKRF-01)"
+    ],
+    "why": [
+      "CSV 기록 결손 · 무결성 (ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음 · ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3410000) — 승인 없음 (ULKRF-01)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다"
+    ],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": true
+  },
+  {
+    "name": "event_k_3",
+    "expected": "reject",
+    "auth": [],
+    "baseline_auth": [],
+    "dropped": 0,
+    "primary": "UNIDENTIFIED",
+    "rho": null,
+    "problems": [
+      "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+      "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3410000) — 승인 없음 (ULKRF-01)"
+    ],
+    "why": [
+      "CSV 기록 결손 · 무결성 (ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음 · ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3410000) — 승인 없음 (ULKRF-01)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다"
+    ],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": true
+  },
+  {
+    "name": "event_k_4",
+    "expected": "reject",
+    "auth": [],
+    "baseline_auth": [],
+    "dropped": 0,
+    "primary": "UNIDENTIFIED",
+    "rho": null,
+    "problems": [
+      "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+      "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3410000) — 승인 없음 (ULKRF-01)"
+    ],
+    "why": [
+      "CSV 기록 결손 · 무결성 (ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음 · ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3410000) — 승인 없음 (ULKRF-01)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다"
+    ],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": true
+  },
+  {
+    "name": "event_k_5",
+    "expected": "reject",
+    "auth": [],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "UNIDENTIFIED",
+    "rho": null,
+    "problems": [
+      "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+      "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3410000) — 승인 없음 (ULKRF-01)"
+    ],
+    "why": [
+      "CSV 기록 결손 · 무결성 (ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음 · ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3410000) — 승인 없음 (ULKRF-01)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다"
+    ],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": true
+  },
+  {
+    "name": "event_k_6",
+    "expected": "reject",
+    "auth": [],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "UNIDENTIFIED",
+    "rho": null,
+    "problems": [
+      "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+      "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3410000) — 승인 없음 (ULKRF-01)"
+    ],
+    "why": [
+      "CSV 기록 결손 · 무결성 (ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음 · ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3410000) — 승인 없음 (ULKRF-01)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다"
+    ],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": true
+  },
+  {
+    "name": "event_k_7",
+    "expected": "reject",
+    "auth": [],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "UNIDENTIFIED",
+    "rho": null,
+    "problems": [
+      "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+      "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3410000) — 승인 없음 (ULKRF-01)"
+    ],
+    "why": [
+      "CSV 기록 결손 · 무결성 (ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음 · ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3410000) — 승인 없음 (ULKRF-01)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다"
+    ],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": true
+  },
+  {
+    "name": "event_step_0",
+    "expected": "accept",
+    "auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "OK",
+    "rho": 0.20260778734286913,
+    "problems": [],
+    "why": [],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": true
+  },
+  {
+    "name": "event_step_1",
+    "expected": "accept",
+    "auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "OK",
+    "rho": 0.20260778734286913,
+    "problems": [],
+    "why": [],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": true
+  },
+  {
+    "name": "event_step_2",
+    "expected": "reject",
+    "auth": [],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "UNIDENTIFIED",
+    "rho": null,
+    "problems": [
+      "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+      "ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)"
+    ],
+    "why": [
+      "CSV 기록 결손 · 무결성 (ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음 · ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다"
+    ],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": true
+  },
+  {
+    "name": "event_step_3",
+    "expected": "reject",
+    "auth": [],
+    "baseline_auth": [],
+    "dropped": 0,
+    "primary": "UNIDENTIFIED",
+    "rho": null,
+    "problems": [
+      "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+      "ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)"
+    ],
+    "why": [
+      "CSV 기록 결손 · 무결성 (ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음 · ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다"
+    ],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": true
+  },
+  {
+    "name": "event_step_4",
+    "expected": "reject",
+    "auth": [],
+    "baseline_auth": [],
+    "dropped": 0,
+    "primary": "UNIDENTIFIED",
+    "rho": null,
+    "problems": [
+      "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+      "ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)"
+    ],
+    "why": [
+      "CSV 기록 결손 · 무결성 (ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음 · ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다"
+    ],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": true
+  },
+  {
+    "name": "event_step_5",
+    "expected": "reject",
+    "auth": [],
+    "baseline_auth": [],
+    "dropped": 0,
+    "primary": "UNIDENTIFIED",
+    "rho": null,
+    "problems": [
+      "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+      "ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)"
+    ],
+    "why": [
+      "CSV 기록 결손 · 무결성 (ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음 · ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다"
+    ],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": true
+  },
+  {
+    "name": "event_step_6",
+    "expected": "reject",
+    "auth": [],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "UNIDENTIFIED",
+    "rho": null,
+    "problems": [
+      "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+      "ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)"
+    ],
+    "why": [
+      "CSV 기록 결손 · 무결성 (ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음 · ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다"
+    ],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": true
+  },
+  {
+    "name": "event_step_7",
+    "expected": "reject",
+    "auth": [],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "UNIDENTIFIED",
+    "rho": null,
+    "problems": [
+      "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+      "ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)"
+    ],
+    "why": [
+      "CSV 기록 결손 · 무결성 (ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음 · ul_events.csv: RESUME 사건 k · step 숫자 아님 (3 · None) — 승인 없음 (ULKRF-01)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다"
+    ],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": true
+  },
+  {
+    "name": "state_ul_k_0",
+    "expected": "accept",
+    "auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "OK",
+    "rho": 0.20260778734286913,
+    "problems": [],
+    "why": [],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": true
+  },
+  {
+    "name": "state_ul_k_1",
+    "expected": "accept",
+    "auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "OK",
+    "rho": 0.20260778734286913,
+    "problems": [],
+    "why": [],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": true
+  },
+  {
+    "name": "state_ul_k_2",
+    "expected": "reject",
+    "auth": [],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "UNIDENTIFIED",
+    "rho": null,
+    "problems": [
+      "RESUME (k 3 · step 3410000) ≠ 상태 파일 state_unload_3410000.in (ul_k None · ul_rstep 3410000) — 상충 · 승인 없음 (ULKRF-01)"
+    ],
+    "why": [
+      "CSV 기록 결손 · 무결성 (RESUME (k 3 · step 3410000) ≠ 상태 파일 state_unload_3410000.in (ul_k None · ul_rstep 3410000) — 상충 · 승인 없음 (ULKRF-01)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다"
+    ],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": true
+  },
+  {
+    "name": "state_ul_k_3",
+    "expected": "reject",
+    "auth": [],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "UNIDENTIFIED",
+    "rho": null,
+    "problems": [
+      "RESUME (k 3 · step 3410000) ≠ 상태 파일 state_unload_3410000.in (ul_k None · ul_rstep 3410000) — 상충 · 승인 없음 (ULKRF-01)"
+    ],
+    "why": [
+      "CSV 기록 결손 · 무결성 (RESUME (k 3 · step 3410000) ≠ 상태 파일 state_unload_3410000.in (ul_k None · ul_rstep 3410000) — 상충 · 승인 없음 (ULKRF-01)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다"
+    ],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": true
+  },
+  {
+    "name": "state_duplicate_ul_k",
+    "expected": "reject",
+    "auth": [],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "UNIDENTIFIED",
+    "rho": null,
+    "problems": [
+      "RESUME (k 3 · step 3410000) ≠ 상태 파일 state_unload_3410000.in (ul_k None · ul_rstep 3410000) — 상충 · 승인 없음 (ULKRF-01)"
+    ],
+    "why": [
+      "CSV 기록 결손 · 무결성 (RESUME (k 3 · step 3410000) ≠ 상태 파일 state_unload_3410000.in (ul_k None · ul_rstep 3410000) — 상충 · 승인 없음 (ULKRF-01)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다"
+    ],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": true
+  },
+  {
+    "name": "state_ul_rstep_0",
+    "expected": "accept",
+    "auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "OK",
+    "rho": 0.20260778734286913,
+    "problems": [],
+    "why": [],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": true
+  },
+  {
+    "name": "state_ul_rstep_1",
+    "expected": "accept",
+    "auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "OK",
+    "rho": 0.20260778734286913,
+    "problems": [],
+    "why": [],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": true
+  },
+  {
+    "name": "state_ul_rstep_2",
+    "expected": "reject",
+    "auth": [],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "UNIDENTIFIED",
+    "rho": null,
+    "problems": [
+      "RESUME (k 3 · step 3410000) ≠ 상태 파일 state_unload_3410000.in (ul_k 3 · ul_rstep None) — 상충 · 승인 없음 (ULKRF-01)"
+    ],
+    "why": [
+      "CSV 기록 결손 · 무결성 (RESUME (k 3 · step 3410000) ≠ 상태 파일 state_unload_3410000.in (ul_k 3 · ul_rstep None) — 상충 · 승인 없음 (ULKRF-01)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다"
+    ],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": true
+  },
+  {
+    "name": "state_ul_rstep_3",
+    "expected": "reject",
+    "auth": [],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "UNIDENTIFIED",
+    "rho": null,
+    "problems": [
+      "RESUME (k 3 · step 3410000) ≠ 상태 파일 state_unload_3410000.in (ul_k 3 · ul_rstep None) — 상충 · 승인 없음 (ULKRF-01)"
+    ],
+    "why": [
+      "CSV 기록 결손 · 무결성 (RESUME (k 3 · step 3410000) ≠ 상태 파일 state_unload_3410000.in (ul_k 3 · ul_rstep None) — 상충 · 승인 없음 (ULKRF-01)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다"
+    ],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": true
+  },
+  {
+    "name": "state_duplicate_ul_rstep",
+    "expected": "reject",
+    "auth": [],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "UNIDENTIFIED",
+    "rho": null,
+    "problems": [
+      "RESUME (k 3 · step 3410000) ≠ 상태 파일 state_unload_3410000.in (ul_k 3 · ul_rstep None) — 상충 · 승인 없음 (ULKRF-01)"
+    ],
+    "why": [
+      "CSV 기록 결손 · 무결성 (RESUME (k 3 · step 3410000) ≠ 상태 파일 state_unload_3410000.in (ul_k 3 · ul_rstep None) — 상충 · 승인 없음 (ULKRF-01)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다"
+    ],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": true
+  },
+  {
+    "name": "manifest_0",
+    "expected": "reject",
+    "auth": [],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "UNIDENTIFIED",
+    "rho": null,
+    "problems": [
+      "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음"
+    ],
+    "why": [
+      "CSV 기록 결손 · 무결성 (run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다"
+    ],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": true
+  },
+  {
+    "name": "manifest_1",
+    "expected": "reject",
+    "auth": [],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "UNIDENTIFIED",
+    "rho": null,
+    "problems": [
+      "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음"
+    ],
+    "why": [
+      "CSV 기록 결손 · 무결성 (run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다"
+    ],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": true
+  },
+  {
+    "name": "manifest_2",
+    "expected": "reject",
+    "auth": [],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "UNIDENTIFIED",
+    "rho": null,
+    "problems": [
+      "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음"
+    ],
+    "why": [
+      "CSV 기록 결손 · 무결성 (run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다"
+    ],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": true
+  },
+  {
+    "name": "manifest_3",
+    "expected": "reject",
+    "auth": [],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "UNIDENTIFIED",
+    "rho": null,
+    "problems": [
+      "run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음"
+    ],
+    "why": [
+      "CSV 기록 결손 · 무결성 (run_manifest.txt: resume_from 정확한 ASCII 십진 정수 아님 — 승인 없음) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다"
+    ],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": true
+  },
+  {
+    "name": "manifest_4",
+    "expected": "explore",
+    "auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "OK",
+    "rho": 0.20260778734286913,
+    "problems": [],
+    "why": [],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": null
+  },
+  {
+    "name": "manifest_5",
+    "expected": "explore",
+    "auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "OK",
+    "rho": 0.20260778734286913,
+    "problems": [],
+    "why": [],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": null
+  },
+  {
+    "name": "extra_bad_event_0",
+    "expected": "reject",
+    "auth": [],
+    "baseline_auth": [],
+    "dropped": 0,
+    "primary": "UNIDENTIFIED",
+    "rho": null,
+    "problems": [
+      "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+      "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3410000) — 승인 없음 (ULKRF-01)",
+      "ul_events.csv: RESUME (k None · step 3410000) 앞 사건 2 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)"
+    ],
+    "why": [
+      "CSV 기록 결손 · 무결성 (ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음 · ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3410000) — 승인 없음 (ULKRF-01) · ul_events.csv: RESUME (k None · step 3410000) 앞 사건 2 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다"
+    ],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": true
+  },
+  {
+    "name": "extra_bad_event_1",
+    "expected": "reject",
+    "auth": [],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "UNIDENTIFIED",
+    "rho": null,
+    "problems": [
+      "ul_events.csv:9 열 수 2 ≠ 6",
+      "ul_events.csv:10 열 수 5 ≠ 6"
+    ],
+    "why": [
+      "CSV 기록 결손 · 무결성 (ul_events.csv:9 열 수 2 ≠ 6 · ul_events.csv:10 열 수 5 ≠ 6) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다"
+    ],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": true
+  },
+  {
+    "name": "extra_bad_event_2",
+    "expected": "reject",
+    "auth": [],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "UNIDENTIFIED",
+    "rho": null,
+    "problems": [
+      "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+      "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3410000) — 승인 없음 (ULKRF-01)",
+      "ul_events.csv: RESUME (k None · step 3410000) 앞 사건 2 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)"
+    ],
+    "why": [
+      "CSV 기록 결손 · 무결성 (ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음 · ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3410000) — 승인 없음 (ULKRF-01) · ul_events.csv: RESUME (k None · step 3410000) 앞 사건 2 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다"
+    ],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": true
+  },
+  {
+    "name": "extra_bad_event_3",
+    "expected": "reject",
+    "auth": [],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "UNIDENTIFIED",
+    "rho": null,
+    "problems": [
+      "ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음",
+      "ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3410000) — 승인 없음 (ULKRF-01)",
+      "ul_events.csv: RESUME (k None · step 3410000) 앞 사건 2 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)"
+    ],
+    "why": [
+      "CSV 기록 결손 · 무결성 (ul_events.csv: RESUME k/step 원문이 정확한 비음수 정수 아님 — 승인 없음 · ul_events.csv: RESUME 사건 k · step 숫자 아님 (None · 3410000) — 승인 없음 (ULKRF-01) · ul_events.csv: RESUME (k None · step 3410000) 앞 사건 2 개가 그 step 뒤 — 승인된 이어 돌림 경계 (러너 resume_from + 상태 파일 k · 경계마다 한 번 · 버릴 사건 k > k_r) 가 아니어서 버리지 않는다 (ULKRR-02 · ULKRF-01)) — 버린 줄 · 승인 안 된 중복 · 역행 줄을 정상 기록으로 쓰지 않는다"
+    ],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": true
+  },
+  {
+    "name": "event_label_0",
+    "expected": "explore",
+    "auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "OK",
+    "rho": 0.20260778734286913,
+    "problems": [],
+    "why": [],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": null
+  },
+  {
+    "name": "event_label_1",
+    "expected": "explore",
+    "auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "OK",
+    "rho": 0.20260778734286913,
+    "problems": [],
+    "why": [],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": null
+  },
+  {
+    "name": "event_label_2",
+    "expected": "explore",
+    "auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "OK",
+    "rho": 0.20260778734286913,
+    "problems": [],
+    "why": [],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": null
+  },
+  {
+    "name": "event_label_3",
+    "expected": "explore",
+    "auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "OK",
+    "rho": 0.20260778734286913,
+    "problems": [],
+    "why": [],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": null
+  },
+  {
+    "name": "event_label_4",
+    "expected": "explore",
+    "auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "OK",
+    "rho": 0.20260778734286913,
+    "problems": [],
+    "why": [],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": null
+  },
+  {
+    "name": "event_label_5",
+    "expected": "explore",
+    "auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "OK",
+    "rho": 0.20260778734286913,
+    "problems": [],
+    "why": [],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": null
+  },
+  {
+    "name": "event_label_6",
+    "expected": "explore",
+    "auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "OK",
+    "rho": 0.20260778734286913,
+    "problems": [],
+    "why": [],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": null
+  },
+  {
+    "name": "restored_positive",
+    "expected": "accept",
+    "auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "baseline_auth": [
+      [
+        3,
+        3410000
+      ]
+    ],
+    "dropped": 0,
+    "primary": "OK",
+    "rho": 0.20260778734286913,
+    "problems": [],
+    "why": [],
+    "cli_rc": 0,
+    "csv_unchanged": true,
+    "satisfies": true
+  }
+]

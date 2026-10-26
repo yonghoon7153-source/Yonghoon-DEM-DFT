@@ -1,0 +1,5 @@
+{
+  "status": "VALIDATION_ASSUMPTION_ERROR",
+  "cli_rc": 0,
+  "reason": "Initial root post-check incorrectly expected one run_manifest.txt per fixture; actual fixture has separate RJ and UT manifests. No failed code verdict. Saved six CLI results are reused without rerun."
+}

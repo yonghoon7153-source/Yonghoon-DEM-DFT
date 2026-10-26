@@ -1,0 +1,140 @@
+{
+  "source_reader_sha256": "dfc06b8dbf53a8cab05df297890e1f8ca1d0fa038536c7c13ed8b8677e521723",
+  "scope": "Deliberately altered scratch source; not a certified consumer",
+  "mutants": [
+    {
+      "mutation": "remove_raw_event_scan",
+      "source_verified_sha256": "dfc06b8dbf53a8cab05df297890e1f8ca1d0fa038536c7c13ed8b8677e521723",
+      "mutant_sha256": "e6d99445ba6275788c2245dd86f73b84ac407f37ddf40b6cd9cfd6166815c38a",
+      "fixture_name": "2028_prefix",
+      "observed_read_run": {
+        "auth": [
+          [
+            1,
+            3310000
+          ]
+        ],
+        "dropped": 5,
+        "problems": []
+      },
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "csv_unchanged": true,
+      "cli_rc": 0,
+      "detected": true
+    },
+    {
+      "mutation": "do_not_poison_auth",
+      "source_verified_sha256": "dfc06b8dbf53a8cab05df297890e1f8ca1d0fa038536c7c13ed8b8677e521723",
+      "mutant_sha256": "379267536f50360c0382e3ae4a4777b0776378d58ccb0be098bf580588a13cee",
+      "fixture_name": "00a0_suffix",
+      "observed_read_run": {
+        "auth": [],
+        "dropped": 0,
+        "problems": [
+          "ul_events.csv:6: RESUME 표지 앞뒤 공백 변형 — 승인 없음 (ULPRI-01)",
+          "ul_windows.csv 12 째 줄 (k 2 · step 3330000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)",
+          "ul_steps.csv 4 째 줄 (k 2 · step 3360000) ≤ 앞 줄 (k 2 · step 3360000) — 승인된 이어 돌림 경계 (RESUME 사건 + 러너 resume_from + 상태 파일 k · 경계마다 한 번) 가 아닌 중복 · 역행 (ULKRR-02 · ULKRF-02)"
+        ]
+      },
+      "primary_status": "UNIDENTIFIED",
+      "rho_pct": null,
+      "rank_eligible": false,
+      "csv_unchanged": true,
+      "cli_rc": 0,
+      "detected": false
+    },
+    {
+      "mutation": "normalize_event_instead_of_reject",
+      "source_verified_sha256": "dfc06b8dbf53a8cab05df297890e1f8ca1d0fa038536c7c13ed8b8677e521723",
+      "mutant_sha256": "d336b70e913a1513817dd5314e6fa7c4826477ebebe1dbd7a2b54279fe7021e6",
+      "fixture_name": "00a0_suffix",
+      "observed_read_run": {
+        "auth": [
+          [
+            1,
+            3310000
+          ]
+        ],
+        "dropped": 5,
+        "problems": []
+      },
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "csv_unchanged": true,
+      "cli_rc": 0,
+      "detected": true
+    },
+    {
+      "mutation": "filter_manifest_key_first",
+      "source_verified_sha256": "dfc06b8dbf53a8cab05df297890e1f8ca1d0fa038536c7c13ed8b8677e521723",
+      "mutant_sha256": "b252a47036f28b019510501399cb4c460b2a6b7d3cb1ea8776b5e82f10330965",
+      "fixture_name": "manifest_2028_between_text_key",
+      "observed_read_run": {
+        "auth": [
+          [
+            1,
+            3310000
+          ]
+        ],
+        "dropped": 5,
+        "problems": []
+      },
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "csv_unchanged": true,
+      "cli_rc": 0,
+      "detected": true
+    },
+    {
+      "mutation": "omit_nel_separator",
+      "source_verified_sha256": "dfc06b8dbf53a8cab05df297890e1f8ca1d0fa038536c7c13ed8b8677e521723",
+      "mutant_sha256": "977e0b527273fd656860def3ac102511e5258ad4fcc2f88f26c8f63edf7e2755",
+      "fixture_name": "manifest_0085_between_text_key",
+      "observed_read_run": {
+        "auth": [
+          [
+            1,
+            3310000
+          ]
+        ],
+        "dropped": 5,
+        "problems": []
+      },
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "csv_unchanged": true,
+      "cli_rc": 0,
+      "detected": true
+    },
+    {
+      "mutation": "normalize_manifest_lines",
+      "source_verified_sha256": "dfc06b8dbf53a8cab05df297890e1f8ca1d0fa038536c7c13ed8b8677e521723",
+      "mutant_sha256": "6c77c2db046470c57f3422cea947d6a9feee6021b955ac5e93950154b9c87862",
+      "fixture_name": "manifest_2028_after_key",
+      "observed_read_run": {
+        "auth": [
+          [
+            1,
+            3310000
+          ]
+        ],
+        "dropped": 5,
+        "problems": []
+      },
+      "primary_status": "OK",
+      "rho_pct": 0.20260778734286913,
+      "rank_eligible": true,
+      "csv_unchanged": true,
+      "cli_rc": 0,
+      "detected": true
+    }
+  ],
+  "detected": 5,
+  "count": 6,
+  "physical_runs": 0
+}

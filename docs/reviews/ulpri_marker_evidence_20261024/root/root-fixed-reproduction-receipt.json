@@ -1,0 +1,16 @@
+{
+  "status": "PASS_LOCAL_FIX_EXTERNAL_RECHECK_PENDING",
+  "source_freeze": "author/SOURCE-FREEZE-v3.json",
+  "reader_sha256": "dfc06b8dbf53a8cab05df297890e1f8ca1d0fa038536c7c13ed8b8677e521723",
+  "actual_command_log": "root-fixed-reproduction.log",
+  "exit_code": 0,
+  "cases": 6,
+  "normal_controls_exact": true,
+  "negative_auth_empty_no_superseding_unidentified_null_rank_false": true,
+  "original_csv_and_manifest_pairs_equal": 30,
+  "input_files_unchanged_during_cli": true,
+  "physical_runs": 0,
+  "external_HOLD": "UNCHANGED",
+  "postcheck_attempt1": "root-fixed-validation-attempt1.json",
+  "observed_at_utc": "2026-10-24T03:29:29.764407+00:00"
+}
