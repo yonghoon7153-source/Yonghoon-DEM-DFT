@@ -1,0 +1,309 @@
+{
+  "status": "PASS",
+  "checks": 66,
+  "oracle_pin": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde",
+  "oracle_sha256": {
+    "ul_lib.py": "23a79392352e01631c6d1f6aaecdb31fc8a53be518ee6f27b815896e161727e6",
+    "ul_gates.py": "c8d45a9cf75f0806e612d810942d23adea4b40feaa5f31f7d279eb8386358de6"
+  },
+  "diagnostic_sha256": "46e899b77f0f20821349eea91e1707298966ee47e7a276eeaea596382240e9e6",
+  "scope": "small synthetic fixtures; no actual dump/probe/simulation",
+  "cases": [
+    {
+      "case": "identical",
+      "status": "PASS",
+      "oracle_pair_mismatches": 0
+    },
+    {
+      "case": "single_column_1",
+      "status": "PASS",
+      "oracle_pair_mismatches": 1
+    },
+    {
+      "case": "single_column_2",
+      "status": "PASS",
+      "oracle_pair_mismatches": 1
+    },
+    {
+      "case": "single_column_3",
+      "status": "PASS",
+      "oracle_pair_mismatches": 1
+    },
+    {
+      "case": "single_column_4",
+      "status": "PASS",
+      "oracle_pair_mismatches": 1
+    },
+    {
+      "case": "single_column_5",
+      "status": "PASS",
+      "oracle_pair_mismatches": 1
+    },
+    {
+      "case": "single_column_6",
+      "status": "PASS",
+      "oracle_pair_mismatches": 1
+    },
+    {
+      "case": "single_column_10",
+      "status": "PASS",
+      "oracle_pair_mismatches": 1
+    },
+    {
+      "case": "single_column_11",
+      "status": "PASS",
+      "oracle_pair_mismatches": 1
+    },
+    {
+      "case": "single_column_12",
+      "status": "PASS",
+      "oracle_pair_mismatches": 1
+    },
+    {
+      "case": "single_column_13",
+      "status": "PASS",
+      "oracle_pair_mismatches": 1
+    },
+    {
+      "case": "single_column_14",
+      "status": "PASS",
+      "oracle_pair_mismatches": 1
+    },
+    {
+      "case": "single_column_15",
+      "status": "PASS",
+      "oracle_pair_mismatches": 1
+    },
+    {
+      "case": "single_column_16",
+      "status": "PASS",
+      "oracle_pair_mismatches": 1
+    },
+    {
+      "case": "single_column_17",
+      "status": "PASS",
+      "oracle_pair_mismatches": 1
+    },
+    {
+      "case": "single_column_18",
+      "status": "PASS",
+      "oracle_pair_mismatches": 1
+    },
+    {
+      "case": "single_column_22",
+      "status": "PASS",
+      "oracle_pair_mismatches": 1
+    },
+    {
+      "case": "single_column_23",
+      "status": "PASS",
+      "oracle_pair_mismatches": 1
+    },
+    {
+      "case": "single_column_24",
+      "status": "PASS",
+      "oracle_pair_mismatches": 1
+    },
+    {
+      "case": "single_column_25",
+      "status": "PASS",
+      "oracle_pair_mismatches": 1
+    },
+    {
+      "case": "single_column_26",
+      "status": "PASS",
+      "oracle_pair_mismatches": 1
+    },
+    {
+      "case": "multiple_families_first_vs_any",
+      "status": "PASS",
+      "oracle_pair_mismatches": 1
+    },
+    {
+      "case": "orientation_reversal",
+      "status": "PASS",
+      "oracle_pair_mismatches": 0
+    },
+    {
+      "case": "periodic_images_default_not_header_box",
+      "status": "PASS",
+      "oracle_pair_mismatches": 0
+    },
+    {
+      "case": "full_abs_medians_3",
+      "status": "PASS",
+      "oracle_pair_mismatches": 0
+    },
+    {
+      "case": "full_abs_medians_4",
+      "status": "PASS",
+      "oracle_pair_mismatches": 0
+    },
+    {
+      "case": "strict_threshold_equal",
+      "status": "PASS",
+      "oracle_pair_mismatches": 0
+    },
+    {
+      "case": "strict_threshold_below",
+      "status": "PASS",
+      "oracle_pair_mismatches": 0
+    },
+    {
+      "case": "strict_threshold_above",
+      "status": "PASS",
+      "oracle_pair_mismatches": 1
+    },
+    {
+      "case": "force_zero_sign",
+      "status": "PASS",
+      "oracle_pair_mismatches": 2
+    },
+    {
+      "case": "zero_median_no_tolerance_floor",
+      "status": "PASS",
+      "oracle_pair_mismatches": 1
+    },
+    {
+      "case": "largest_exact_ids",
+      "status": "PASS",
+      "oracle_pair_mismatches": 0
+    },
+    {
+      "case": "missing_column",
+      "status": "REFUSED_AS_REQUIRED"
+    },
+    {
+      "case": "reordered_columns",
+      "status": "REFUSED_AS_REQUIRED"
+    },
+    {
+      "case": "nonfinite",
+      "status": "REFUSED_AS_REQUIRED"
+    },
+    {
+      "case": "wrong_step",
+      "status": "REFUSED_AS_REQUIRED"
+    },
+    {
+      "case": "wrong_count",
+      "status": "REFUSED_AS_REQUIRED"
+    },
+    {
+      "case": "extra_frame",
+      "status": "REFUSED_AS_REQUIRED"
+    },
+    {
+      "case": "bad_bounds",
+      "status": "REFUSED_AS_REQUIRED"
+    },
+    {
+      "case": "tilt_header",
+      "status": "REFUSED_AS_REQUIRED"
+    },
+    {
+      "case": "row_cap",
+      "status": "REFUSED_AS_REQUIRED"
+    },
+    {
+      "case": "line_cap",
+      "status": "REFUSED_AS_REQUIRED"
+    },
+    {
+      "case": "triclinic_record",
+      "status": "REFUSED_AS_REQUIRED"
+    },
+    {
+      "case": "rounded_fraction_id",
+      "status": "REFUSED_AS_REQUIRED"
+    },
+    {
+      "case": "oversized_id",
+      "status": "REFUSED_AS_REQUIRED"
+    },
+    {
+      "case": "original_duplicate",
+      "status": "REFUSED_AS_REQUIRED"
+    },
+    {
+      "case": "test_duplicate",
+      "status": "REFUSED_AS_REQUIRED"
+    },
+    {
+      "case": "missing_pair",
+      "status": "REFUSED_AS_REQUIRED"
+    },
+    {
+      "case": "extra_pair",
+      "status": "REFUSED_AS_REQUIRED"
+    },
+    {
+      "case": "original_hash_refusal",
+      "status": "REFUSED_AS_REQUIRED"
+    },
+    {
+      "case": "original_size_refusal",
+      "status": "REFUSED_AS_REQUIRED"
+    },
+    {
+      "case": "original_change_after_stream_detected",
+      "status": "REFUSED_AS_REQUIRED"
+    },
+    {
+      "case": "binding_semantic_normalized_relay",
+      "status": "PASS"
+    },
+    {
+      "case": "wrong_job",
+      "status": "REFUSED_AS_REQUIRED"
+    },
+    {
+      "case": "wrong_pin",
+      "status": "REFUSED_AS_REQUIRED"
+    },
+    {
+      "case": "wrong_reader_rc",
+      "status": "REFUSED_AS_REQUIRED"
+    },
+    {
+      "case": "duplicate_manifest_field",
+      "status": "REFUSED_AS_REQUIRED"
+    },
+    {
+      "case": "failed_stage",
+      "status": "REFUSED_AS_REQUIRED"
+    },
+    {
+      "case": "wrong_recorded_mismatch",
+      "status": "REFUSED_AS_REQUIRED"
+    },
+    {
+      "case": "duplicate_verdict_field",
+      "status": "REFUSED_AS_REQUIRED"
+    },
+    {
+      "case": "changed_binding_ul_lib.py",
+      "status": "REFUSED_AS_REQUIRED"
+    },
+    {
+      "case": "changed_binding_ul_gates.py",
+      "status": "REFUSED_AS_REQUIRED"
+    },
+    {
+      "case": "changed_binding_ul_reader.py",
+      "status": "REFUSED_AS_REQUIRED"
+    },
+    {
+      "case": "changed_binding_SHA256SUMS",
+      "status": "REFUSED_AS_REQUIRED"
+    },
+    {
+      "case": "file_cap_before_parse",
+      "status": "REFUSED_AS_REQUIRED"
+    },
+    {
+      "case": "parity_discrepancy_suppresses_breakdown_and_rc2",
+      "status": "PASS"
+    }
+  ]
+}
