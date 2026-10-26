@@ -1,0 +1,77 @@
+{
+ "schema": "nd_q2_run_manifest/v1",
+ "card": "db/properties/nd_q2_decomp_estimand_2026_10_23.json",
+ "decision": "D-2026-10-23-nd-q2-decomp-card (active)",
+ "basis": {
+  "file": "db/inputs/nd_q2_decomp_2026_10_23/basis.json",
+  "sha256": "3485bfef1762cb47713eef838753857c40fa5727cfc3f31c9ce84381392798a7"
+ },
+ "tool": {
+  "file": "tools/doping/dft_decomp_check.py",
+  "sha256": "ac170966aef0c56bcbdc9499329eea0e0b56cbd4b9db1f813d8dd17bdf690988"
+ },
+ "command": "dft_decomp_check.py --prepare --basis <basis> --phase_structs db/raw/nd_q2_decomp_2026_10_23/step1b/structs_doped --targets host.xyz (= db/structures/modelc_V0_k663.xyz) --ecutwfc 70 --ecutrho 560 --kpoints '3 3 2' --calculation relax --calculation_phase vc-relax --kspacing_phase 0.25 --smearing mv --degauss 0.01 --conv_thr 1.0d-9 --mixing_beta 0.3 --pseudo_dir /home/kgy/work/pseudo --pseudo_map <PAW psl 여섯>",
+ "host_source": {
+  "file": "db/structures/modelc_V0_k663.xyz",
+  "sha256": "dc0f8c0c12df6ef6a034e78a9b489b09fd8d472b01f1d9b02e8c860f6410a1e6"
+ },
+ "jobs": {
+  "Li2S": {
+   "scf_in_sha256": "6636e127b89eb418a7f885019360584616a577008c399699146b77cead8dc93e",
+   "calc": "vc-relax (비-argyrodite 기준 결정)",
+   "k": [
+    "8",
+    "8",
+    "8"
+   ]
+  },
+  "Li3PO4": {
+   "scf_in_sha256": "3f09083173f921b34ba85af952dcca36323fb844049d4f4184c9c0e6faa6e9dc",
+   "calc": "vc-relax (비-argyrodite 기준 결정)",
+   "k": [
+    "6",
+    "5",
+    "5"
+   ]
+  },
+  "Li3PS4": {
+   "scf_in_sha256": "8b3d5bb5a7a16b2ae43103f6b23d89f801dc7fc22c356f634036f1a36e33f2c3",
+   "calc": "vc-relax (비-argyrodite 기준 결정)",
+   "k": [
+    "5",
+    "4",
+    "2"
+   ]
+  },
+  "LiCl": {
+   "scf_in_sha256": "dd859b1801b069d1652d65cd8631c3919e83311f8db4cbeec6dd485987293ef4",
+   "calc": "vc-relax (비-argyrodite 기준 결정)",
+   "k": [
+    "8",
+    "8",
+    "4"
+   ]
+  },
+  "Nd2S3": {
+   "scf_in_sha256": "2d16da16fce5c3decf6e01b1c33dd565c59e7f5d85da73980207caa5194a10ed",
+   "calc": "vc-relax (비-argyrodite 기준 결정)",
+   "k": [
+    "7",
+    "4",
+    "2"
+   ]
+  },
+  "host": {
+   "scf_in_sha256": "0bc040dec744594990466240df95ab734854de59feb2a7a5cf9aff2faf9eccef",
+   "calc": "relax (고정셀 이온)",
+   "k": [
+    "3",
+    "3",
+    "2"
+   ]
+  }
+ },
+ "doped_reference": "9 월 탐침 (gabia kprobe_k331 · 같은 설정) — E · 힘 · 응력은 db/raw/nd_q2_decomp_2026_10_23/step1/kprobe_k331_extract.txt · 입력 사본 db/raw/nd_q3_bader_2026_10_19/scf_input_copy.in · 새로 안 돈다",
+ "runner": "tools/doping/run_force_check_scf.sh (ldd 런타임 · relax/vc-relax 완료 판정 · 설정 균일성 · VRAM 문턱)",
+ "그_다음": "회수 → G_상_이완 (Pulay) · G_V (host 압력) → k 탐침 입력 (host k 4 4 2 · 상 간격 0.18) → --collect --pair doped host"
+}
