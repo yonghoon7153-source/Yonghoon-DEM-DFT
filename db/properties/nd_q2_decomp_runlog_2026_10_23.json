@@ -44,5 +44,14 @@
   "kgy_PAW": "✅ Li · P · S · Cl 공식 사이트에서 받아 gabia sha256 과 같음 확인 뒤 넣음 (Nd · O 는 원래 같았음)",
   "⏭": "kgy: worktree → 입력 복사 · sha 확인 → GPU 프로브 (host · 120 초 · 어림 줄만) → 들어가면 tmux ndq2 (run_force_check_scf.sh · MIN_FREE_MIB = 어림 × 1.3 + 1024)",
   "by": "agent · 2026-10-23"
+ },
+ "▶_kgy_발사_관측_2026_10_24": {
+  "출처": "사용자 붙여넣기 2026-10-24 11:38:51 KST (watch · run.log 끝 6 줄 · nvidia-smi · tmux ls) — 에너지 값은 안 찍었다",
+  "발사": "tmux ndq2 생성 10-24 02:49:45 KST · worktree ~/wt_ndq2_1023 (HEAD 305629d63) · run root ~/work/runs/nd_q2_decomp_2026_10_23 · 입력 SHA256SUMS ✓ · GPU 검사 프로브 (host · 120 초 · 어림 줄만) 뒤 MIN_FREE_MIB 16345 (= 어림 × 1.3 + 1024) · LOCK /tmp/nd_q2.lock · 러너 tools/doping/run_force_check_scf.sh",
+  "관측_11_38": "✓ host 165 분 (05:35:25) · ✓ Li2S 123 분 (07:39:03) · ✓ Li3PO4 201 분 (11:00:41) · Li3PS4 11:00 부터 · 남음 LiCl · Nd2S3 · VRAM 여유 21,076 MiB (문턱 16,345) · GPU 10,439 / 24,576 MiB · 99 % · 곁의 잡 = cascade v7 cv7main (10-20 19:37 재개)",
+  "회수_블록_이른_실행": "사용자가 회수 블록을 ndq2 가 돌 때 실행 → 가드 '⛔ ndq2 가 아직 돌아요' 로 아무것도 복사 · 삭제 안 함 (설계대로 · 러너가 이 worktree 의 스크립트로 돈다)",
+  "⚠_시간": "작은 셀이 오래 걸린 것은 nosym .true. 통일 때문이다 (Li2S k 8 8 8 을 대칭으로 줄이지 못함) — 값에는 영향 없음 · k 탐침은 대칭을 켜고 새 run root 로 돌린다 (러너 설정 균일성 검사가 run root 단위라서)",
+  "⏭": "ndq2 끝 ('끝 — 완료 6' 줄 · tmux 목록에 ndq2 없음) → 같은 회수 블록 (db/raw/nd_q2_decomp_2026_10_23/run_kgy/ · 입력 해시 대조 · SHA256SUMS_out) → Pulay · G_V · 완료 판정 → k 탐침 입력",
+  "by": "agent · 2026-10-26"
  }
 }
