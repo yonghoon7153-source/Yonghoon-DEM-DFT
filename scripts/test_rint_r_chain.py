@@ -456,6 +456,34 @@ def early_cert(i, man):
 
 
 tag = rj.replace('.', 'p').replace('+', '').replace('-', 'm')
+if E.get('CJUNC_GRAPH_ONLY', '') == '1':
+    #  ★ 10-26 B″ (1저자 Q1 (가)) — 조립만 런 (사슬 `RunnerGraphSource` 가 부르는 꼴 · 러너 `CJUNC_GRAPH_ONLY=1` → payload `--step3-cjunc-graph-only`):
+    #    팔 · 영수증 없이 봉인 원천 기록 `cjgraph_<팔>.json` 만 (`run_contract.cjunc_graph_only_record` 꼴 · 지문 = 이 가짜 `gfp` · 결합 = 그 팔 매니페스트의
+    #    `_bind` · 환경 단위 = 세계 env_unit) · 고장: go_rc (rc 3) · go_bind (결합 다름) · go_fp (아래 끝 지문 다름) · go_none (지문 없음) · go_env (numpy 판
+    #    다름) · go_form (비용 칸 없음) · go_two (출력 둘)
+    if hit('go_rc'):
+        print('[fake] 조립만 실패 (fault go_rc)')
+        sys.exit(3)
+    nu_g = int(sv_rule().get('n_unsplit', 0))
+    for i in idx:
+        man_g = manifest(i, None)
+        b_g = _bind(man_g)
+        if hit('go_bind'):
+            b_g = dict(b_g, fp_sig=hx('other-sig|' + kit))
+        g_g = {'rule': T['graph_rule'], 'main': gfp('main'), 'lower': (gfp('lo') if SVCF else None),
+               'upper': (gfp('hi') if (SVCF and nu_g) else None)}
+        if hit('go_fp'):
+            g_g['lower'] = gfp('other')
+        rec_g = {'schema': T['go_schema'], 'graph_only': True, 'cjunc_graphs': (None if hit('go_none') else g_g), 'reason': None,
+                 'bind': b_g, 'env_unit': (dict(W['env_unit'], numpy='0.0.0') if hit('go_env') else dict(W['env_unit'])),
+                 'cost': {'seconds_step3': 0.5, 'seconds_assemble': 0.25, 'peak_rss_kb': 1234}}
+        if hit('go_form'):
+            rec_g.pop('cost')
+        json.dump(rec_g, open(os.path.join(out, 'cjgraph_p2_%s_sph_fa_cj%s_c%s_cjgo_a%d.json' % (kit[4:], tag, c, i)), 'w'))
+        if hit('go_two'):
+            json.dump(rec_g, open(os.path.join(out, 'cjgraph_p2_%s_dup_a%d.json' % (kit[4:], i)), 'w'))
+    print('[fake] 조립만 런 — 봉인 원천 기록만 (팔 없음)')
+    sys.exit(0)
 for i in idx:
     si = s0 * af[i]
     if is_dbe and hit('dbe_arm_scale') and i == int(hit('dbe_arm_scale').get('arm', -1)):
@@ -553,7 +581,10 @@ def record_templates():
                      'sv_rule': CJ.CJUNC_SV_CF_BRACKET_RULE,
                      'sv_cf_kind': CJ.CJUNC_SV_CF_KIND, 'sv_cf_rule': CJ.CJUNC_SV_CF_RULE,     # ★ 10-23 C5 반사실 종류 · 끊기 규칙 (생산자 상수)
                      'sv_cert': getattr(CJ, 'SV_CF_STANDING_CERTIFIED', 'certified_interval'),
-                     'sv_diag': getattr(CJ, 'SV_CF_STANDING_DIAGNOSTIC', 'diagnostic_uncertified')}
+                     'sv_diag': getattr(CJ, 'SV_CF_STANDING_DIAGNOSTIC', 'diagnostic_uncertified'),
+                     #  ★ 10-26 B″ (Q1 (가)) — 조립만 출력 틀 (지문 규칙 · schema = 정본 상수 · getattr 기본 = 같은 글자 — 고치기 전 판에서도 틀이 먼저 죽지 않게)
+                     'graph_rule': CJ.CJUNC_GRAPH_FP_RULE,
+                     'go_schema': getattr(RCm, 'CJUNC_GRAPH_ONLY_SCHEMA', 'cjunc-graph-only-v1')}
     return FX['tpl']
 
 
@@ -566,6 +597,8 @@ def world(name, base=None, **kw):
     W = copy.deepcopy(base if base is not None else PW)
     W.update(copy.deepcopy(kw))
     W.update({'dir': str(d), 'scripts': str(SCRIPTS), 'model_src': MODEL_SRC, 'tpl': record_templates(),
+              #  ★ 10-26 B″ (Q1 (가)) — 가짜 조립만 출력의 환경 단위 = 이 시험 프로세스에서 사슬이 보는 같음 단위 (원천 대조 · 고장 go_env 가 바꾼다)
+              'env_unit': RR.env_unit(RR.env_record()),
               'cert': {'version': CC.CERT_VERSION, 'rtol_max': CC.CERT_RTOL_MAX, 'eps_I': CC.CERT_EPS_I,
                        'resolve_tol': CC.CERT_RESOLVE_TOL, 'target_tol': CC.CERT_TARGET_TOL,
                        'target_version': CC.TARGET_VERSION, 'target_fp': CC.TARGET_FP_RULE, 'status': CC.STATUS_POSITIVE,
@@ -918,7 +951,8 @@ def fake_graph_source(ctx):
     return {'rule': 'solved_graph_dof_ids_pair_exact_sum_plates_v1', 'main': f('main'), 'lower': f('lo'), 'upper': (f('hi') if nu else None)}
 
 
-#: 사슬에 넣는 봉인 원천 — 시험 기본 = 가짜 원천 (그래프 귀속을 보는 RG 줄이 바꾼다 · 생산 기본 = 없음 → SV_UNCHECKED)
+#: 사슬에 넣는 봉인 원천 — 시험 기본 = 가짜 원천 (그래프 귀속을 보는 RG 줄이 바꾼다 · ~~생산 기본 = 없음 → SV_UNCHECKED~~ → ★ 10-26 B″ (1저자 Q1 (가))
+#:   생산 기본 = 러너 조립만 (`RR.RUNNER_GRAPH_SOURCE` · RG08–RG13) · None = 원천 없음 꼴 (RG01 · RG02b · RG06 · RG07))
 GSRC = [fake_graph_source]
 
 
@@ -992,11 +1026,12 @@ def predict(tag, wpath, ladders, variant=None, extra=(), reg=None, max_hours='2'
             'world': wpath}
 
 
-def verdict(tag, dirs, extra=(), reg=None, root=None):
-    """판정 — ★ 10-25 묶음 B (RCA2-03) --root = 킷 뿌리 (판정이 침대를 다시 해시한다 · 기본 = 고정물 뿌리)."""
+def verdict(tag, dirs, extra=(), reg=None, root=None, wpath=None):
+    """판정 — ★ 10-25 묶음 B (RCA2-03) --root = 킷 뿌리 (판정이 침대를 다시 해시한다 · 기본 = 고정물 뿌리).  ★ 10-26 B″ — wpath = 판정이 부르는
+    가짜 러너 (봉인 원천 조립만 런) 의 세계 (러너 원천을 쓰는 시험만)."""
     out = Path(TD) / 'runs' / tag
     rc, so = call(['--stage', 'verdict', '--runs', *dirs, '--registration', reg or FX['reg_ok'], '--root', root or FX['root'], '--out', out]
-                  + list(extra))
+                  + list(extra), wpath)
     vp, rp = out / 'verdict.json', out / 'verdict_results.json'
     return {'rc': rc, 'out': out, 'so': so, 'v': json.loads(vp.read_text(encoding='utf-8')) if vp.exists() else None,
             'r': json.loads(rp.read_text(encoding='utf-8')) if rp.exists() else None}
@@ -5373,7 +5408,7 @@ def _rg_v(v):
     return ((v or {}).get('v') or {})
 
 
-@check('RG01', '원천 없음 (생산 기본) — 정직한 SV 기록 (비 3.0 > 문턱 2 · V05 꼴) → 예측 PREDICTED · 판정 SV_UNCHECKED (SV_DEPENDENT 아님 · 끝 그래프 미확인 = '
+@check('RG01', '원천 없음 꼴 (SV_GRAPH_SOURCE None · ★ 10-26 B″ 뒤 생산 기본 = 러너 조립만 · RG08) — 정직한 SV 기록 (비 3.0 > 문턱 2 · V05 꼴) → 예측 PREDICTED · 판정 SV_UNCHECKED (SV_DEPENDENT 아님 · 끝 그래프 미확인 = '
                '판정 입력 아님) · §7-1 문장 금지 · 사유 = 그래프 귀속 미확인 · 모서리 (옛 사슬 = 기록만 보고 SV_DEPENDENT)')
 def t_RG01():
     p, v = sv_src_set('RG01', {'status': 'computed', 'ratio': 3.0}, None)
@@ -5446,6 +5481,147 @@ def t_RG07():
     p, _v = sv_src_set('RG07', {'status': 'computed', 'ratio': 1.2, 'full_fp_other': True}, None)
     return (p['rc'] == 3 and stop_code(p) == 'CA_EXT_RECORD' and 'fp_cjunc_graph' in y_why(p) and '주 증서' in y_why(p),
             (p['rc'], stop_code(p), y_why(p)[-200:]))
+
+
+# ── ★ 10-26 B″ (1저자 10-26 Q1 (가) · 묶음 B 보고 §13 결정 1) 생산 봉인 원천 = 러너 조립만 — 사슬의 기본 `SV_GRAPH_SOURCE` = `RR.RUNNER_GRAPH_SOURCE` →
+#    단계 (예측 · 판정 · 다시 판정) 가 러너 · 킷 뿌리로 `RunnerGraphSource` 를 만든다 · 원천 런 = 그 SV 런과 같은 env + `CJUNC_GRAPH_ONLY=1` (가짜 러너
+#    조립만 꼴 = FAKE_SRC) · 원천 런의 환경 단위 ≠ 사슬 · 결합 ≠ 그 런 주 증서 · rc · 꼴 · 지문 없음 = 원천 실패 = 미확인 (SV_UNCHECKED) · 지문 ≠ 증서 =
+#    CA_EXT_RECORD · 판정은 다시 조립한다 (예측의 대조를 믿지 않는다).
+def gsrc_set(tag, rule, faults=None, vfaults=None, verdict_on=True):
+    """sv_src_set 꼴 (주 사다리 · P1 · c 1 · R_j,0 모서리 규칙 하나) 예측 · 판정 — 봉인 원천 = 생산 기본 (러너 조립만) · faults = 가짜 러너 세계 고장
+    (조립만 런만 보는 go_*) · vfaults = 판정 때 세계 고장 (None = 예측 세계 그대로 · 판정이 원천을 다시 부르는지 본다)."""
+    def go():
+        lads = [s_main('P0')['out'], s_main('P1')['out']]
+        m = {'kit_has': 'DBE', 'rj': lad(s_main('P1'))['R_j0'], 'c': '1'}
+        W = dict(PW, sv_cf=[dict(rule, match=m)])
+        if faults:
+            W['faults'] = [dict(f) for f in faults]
+        wp = world(tag, W)
+        with graph_src(getattr(RR, 'RUNNER_GRAPH_SOURCE', None)):
+            p = predict(tag, wp, lads)
+            v, vw = None, None
+            if verdict_on and p['rc'] == 0:
+                vw = wp if vfaults is None else world(tag + '_vw', dict(W, faults=[dict(f) for f in vfaults]))
+                v = verdict(tag + '_v', lads + [p['out']], wpath=vw)
+        return {'p': p, 'v': v, 'w': wp, 'vw': vw}
+    return scen(tag, go)
+
+
+def _go_envs(wpath):
+    """가짜 러너 env 기록 → (조립만 런 env 목록, 그 밖 런 env 목록)."""
+    e = env_log(wpath)
+    return [x for x in e if x.get('CJUNC_GRAPH_ONLY') == '1'], [x for x in e if 'CJUNC_GRAPH_ONLY' not in x]
+
+
+def _go_runs(res, key='p'):
+    s = (res.get(key) or {}).get('sum') or {}
+    return ((s.get('sv_graph_source') or {}).get('runs')) or []
+
+
+@check('RG08', '★ 10-26 B″ (Q1 (가)) 생산 기본 원천 = 러너 조립만 — 사슬 모듈 기본 SV_GRAPH_SOURCE = RUNNER_GRAPH_SOURCE · 정직한 SV 기록 (비 3.0 > 문턱 '
+               '2) → 예측 PREDICTED · 원천 런 = SV 모서리 넷 (요약 sv_graph_source · 상태 ok · rc 0 · 비용 칸) · 판정 SV_DEPENDENT (그래프 귀속 확인 · '
+               'SV_UNCHECKED 아님 · 옛 사슬 = 원천 없음 → SV_UNCHECKED) · 판정도 원천 넷을 다시 부른다 (verdict_graph_src.json) · 원천 런 env = 그 SV 런 '
+               'env + CJUNC_GRAPH_ONLY=1 (OUTDIR 만 다름 · MPM_NO_VENV=1)')
+def t_RG08():
+    r = gsrc_set('RG08', {'status': 'computed', 'ratio': 3.0})
+    p, v = r['p'], r['v'] or {}
+    vv = v.get('v') or {}
+    gos, others = _go_envs(r['w'])
+    runs = _go_runs(r)
+    vsrc = Path(v.get('out') or '/nonexistent') / 'verdict_graph_src.json'
+    vruns = (json.loads(vsrc.read_text(encoding='utf-8')).get('runs') if vsrc.exists() else None) or []
+    same_env = all(any({k: x for k, x in o.items() if k != 'OUTDIR'} == {k: x for k, x in g.items() if k not in ('OUTDIR', 'CJUNC_GRAPH_ONLY')}
+                       for o in others) for g in gos)
+    return (getattr(RR, 'SV_GRAPH_SOURCE', None) == getattr(RR, 'RUNNER_GRAPH_SOURCE', '<없음>')
+            and p['rc'] == 0 and (p['sum'] or {}).get('status') == 'PREDICTED'
+            and len(runs) == 4 and all(x.get('status') == 'ok' and x.get('rc') == 0 and isinstance(x.get('cost'), dict) for x in runs)
+            and 'SV_DEPENDENT' in vv.get('flags', []) and 'SV_UNCHECKED' not in vv.get('flags', ['?'])
+            and len(vruns) == 4 and all(x.get('status') == 'ok' for x in vruns)
+            and len(gos) == 8 and all(g.get('MPM_NO_VENV') == '1' for g in gos) and same_env,
+            (getattr(RR, 'SV_GRAPH_SOURCE', None), p['rc'], [(x.get('status'), x.get('why')) for x in runs], vv.get('flags'), len(vruns),
+             len(gos), same_env))
+
+
+@check('RG09', '★ 10-26 B″ 판정문 RR1-01 꼴 (아래 끝 증서 ← 같은 런의 주 해 증서 · k 0 · 기록 계약 통과) + 생산 기본 원천 (러너 조립만) → 예측 '
+               'CA_EXT_RECORD (증서 지문 ≠ 다시 조립한 아래 끝 · 사유 fp_cjunc_graph · RR1-01) · 원천 런이 돌았다 (옛 사슬 = 원천 없음 → 판정 SV_UNCHECKED)')
+def t_RG09():
+    r = gsrc_set('RG09', {'status': 'computed', 'ratio': 1.2, 'swap_main_lower': True})
+    p = r['p']
+    gos, _o = _go_envs(r['w'])
+    return (p['rc'] == 3 and stop_code(p) == 'CA_EXT_RECORD' and 'fp_cjunc_graph' in y_why(p) and 'RR1-01' in y_why(p) and len(gos) >= 1,
+            (p['rc'], stop_code(p), y_why(p)[-200:], len(gos)))
+
+
+#: 원천 실패 꼴 — (고장, 원천 기록 사유에 있어야 할 글자)
+RG10_CASES = (('go_env', '환경'), ('go_bind', '결합'), ('go_rc', 'rc 3'), ('go_none', '조기 반환'), ('go_two', '2 개'), ('go_form', 'GRAPH_ONLY|'))
+
+
+@check('RG10', '★ 10-26 B″ 원천 실패 여섯 꼴 (러너 조립만) — 원천 런 환경 단위 ≠ 사슬 (numpy 판) · 결합 ≠ 그 런 주 증서 · 러너 rc 3 · 지문 없음 (조립 전 '
+               '조기 반환) · 출력 둘 · 출력 꼴 틀림 (비용 칸 없음) → 예측 PREDICTED (멈춤 아님) · 원천 기록 = failed + 사유 · 판정 SV_UNCHECKED (SV_DEPENDENT '
+               '아님 · 비 3.0 인데 clear · 의존 둘 다 아님) · 사유 = 봉인 원천 실패')
+def t_RG10():
+    out = []
+    for f, word in RG10_CASES:
+        r = gsrc_set(f'RG10_{f}', {'status': 'computed', 'ratio': 3.0}, faults=[{'do': f}])
+        p, vv = r['p'], ((r['v'] or {}).get('v') or {})
+        runs = _go_runs(r)
+        why = str((vv.get('blocking_reasons') or {}).get('SV_UNCHECKED', ''))
+        ok = (p['rc'] == 0 and (p['sum'] or {}).get('status') == 'PREDICTED' and runs
+              and any(x.get('status') == 'failed' and word in str(x.get('why')) for x in runs)
+              and 'SV_UNCHECKED' in vv.get('flags', []) and 'SV_DEPENDENT' not in vv.get('flags', ['?']) and '봉인 원천 실패' in why)
+        out.append((f, ok, p['rc'], [str(x.get('why'))[:80] for x in runs if x.get('status') != 'ok'][:1], vv.get('flags')))
+    return all(x[1] for x in out), [x for x in out if not x[1]] or out[:1]
+
+
+@check('RG11', '★ 10-26 B″ 판정은 원천을 다시 부른다 (예측의 대조를 믿지 않는다) — 예측 = 정직한 원천 (대조 통과 · 비 1.2 · 표지 없음) · 판정 때 원천 '
+               '런의 아래 끝 지문이 다름 (판정 세계 go_fp) → 판정 멈춤 CA_EXT_RECORD (원 팔을 다시 읽고 다시 조립해 대조 · 옛 = 원천 없음 → SV_UNCHECKED)')
+def t_RG11():
+    r = gsrc_set('RG11', {'status': 'computed', 'ratio': 1.2}, vfaults=[{'do': 'go_fp'}])
+    p, v = r['p'], r['v'] or {}
+    vv = v.get('v') or {}
+    return (p['rc'] == 0 and v.get('rc') == 3 and ((vv.get('stop') or {}).get('code')) == 'CA_EXT_RECORD'
+            and 'fp_cjunc_graph' in str((vv.get('stop') or {}).get('cause')),
+            (p['rc'], v.get('rc'), vv.get('stop')))
+
+
+@check('RG12', '★ 10-26 B″ 다시 판정 (--reverify) 도 원천을 다시 부르고 같은 판정 — RG08 판정 폴더를 같은 세계로 다시 판정 → REVERIFY_SAME (rc 0) · 원천 '
+               '런 넷 더 (가짜 러너 조립만 env 기록 8 → 12) · 다시 판정의 원천 폴더 = 임시 (판정 폴더에 아무것도 안 쓴다 · 끝나면 지운다)')
+def t_RG12():
+    r = gsrc_set('RG08', {'status': 'computed', 'ratio': 3.0})
+    v = r['v'] or {}
+    vdir = v.get('out')
+    before = set(os.listdir(vdir)) if vdir and os.path.isdir(vdir) else None
+    tmp_before = {x for x in os.listdir(tempfile.gettempdir()) if x.startswith('rint_graph_src_')}
+    n0 = len(_go_envs(r['w'])[0])
+    with graph_src(getattr(RR, 'RUNNER_GRAPH_SOURCE', None)):
+        rc, so = call(['--stage', 'verdict', '--reverify', vdir, '--root', FX['root']], r['w'])
+    n1 = len(_go_envs(r['w'])[0])
+    after = set(os.listdir(vdir)) if vdir and os.path.isdir(vdir) else None
+    tmp_after = {x for x in os.listdir(tempfile.gettempdir()) if x.startswith('rint_graph_src_')}
+    return (rc == 0 and 'REVERIFY_SAME' in so and n1 - n0 == 4 and before == after and tmp_after <= tmp_before,
+            (rc, so[-300:], n0, n1, sorted((after or set()) ^ (before or set())), sorted(tmp_after - tmp_before)))
+
+
+@check('RG13', '★ 10-26 B″ 원천 env 도장 — 원천 런 env 를 만드는 함수 = SV 런 env 함수 (`runner_env_delta` · 사본 없음) + CJUNC_GRAPH_ONLY=1 · 팔 0 = ARMS 1 '
+               '· 팔 i > 0 = ARM_LIST i (러너 팔 고르기) · 부모 셸의 CJUNC* · 축 이름은 지운다 (RunnerGraphSource 의 env 바탕)')
+def t_RG13():
+    plan = FX['plan_obj']
+    req = {'name': 'P07_corner', 'role': 'corner', 'kit': DBE_KIT, 'law': 'P1', 'c': '1', 'rj': '1000000.0', 'arms': 1, 'arm_list': None,
+           'variant': None, 'sv_cf': True}
+    fn = getattr(RR, 'runner_env_delta', None)
+    cls = getattr(RR, 'RunnerGraphSource', None)
+    if fn is None or cls is None:
+        return False, '사슬에 runner_env_delta · RunnerGraphSource 가 없다'
+    base = fn(plan, None, req, Path(TD) / 'x')
+    rn = RR.Runner(FX['runner'], FX['root'], Path(TD) / 'rg13', plan, None, time.time() + 60, None, dry=True)
+    same = rn.env_delta(req, Path(TD) / 'x') == base
+    gs = cls(FX['runner'], FX['root'], Path(TD) / 'rg13g', parent_env={'CJUNC_GRAPH_ONLY': '1', 'SIGMA_X': '1', 'KEEP_ME': 'y'})
+    d0 = gs.env_delta(req, 0, Path(TD) / 'g0', plan)
+    d3 = gs.env_delta(req, 3, Path(TD) / 'g3', plan)
+    return (same and base.get('MPM_NO_VENV') == '1' and d0 == dict(base, CJUNC_GRAPH_ONLY='1', OUTDIR=str(Path(TD) / 'g0'))
+            and d3.get('ARM_LIST') == '3' and 'ARMS' not in d3 and d0.get('ARMS') == '1' and 'ARM_LIST' not in d0
+            and 'SIGMA_X' not in gs.env_base and 'CJUNC_GRAPH_ONLY' not in gs.env_base and gs.env_base.get('KEEP_ME') == 'y',
+            (same, sorted(set(d0) ^ set(base)), d3.get('ARM_LIST'), sorted(gs.env_base)[:5]))
 
 
 @check('N07', '★ PF2 E (PRE2-impl-03) S0 계획 중복 칸 ("gap_tol" 둘 · 등록 S0 줄 = 그 바이트의 sha256) → S0_PLAN_INVALID · 사유 = 중복 칸 '

@@ -28,6 +28,10 @@
   E9  ★ 4판 (10-21 · 1저자 Q1 · 등록 R 4판 §5-0 ① ② · R4-Q5) 천장 ELECTRODE_SHORT (실물) — 두 층 엇갈림 침대 (`make_bed_thin_cross`) ·
       실제 payload 의 J11 단락 기록 (σ None · 증서 ELECTRODE_SHORT) 이 정본 check_arm 을 지나 러너 rc 0 · 사슬 = NOT_COMPUTED (사유
       ELECTRODE_SHORT · 천장 런) — RUNNER_RC · CA_EXT_RECORD 로 흐려지지 않는다 (3판 = σ +∞ 로 받아 사다리를 계속했다)
+  E10 ★ 10-25 묶음 B (X6) 봉인 SV census (실제 S0 함수) = 실제 DBE SV 런의 census · 바꾼 봉인 = S0_REPORT_MISMATCH
+  E11 ★ 10-26 B″ (Q4) 사슬이 러너에 MPM_NO_VENV=1 (러너 자리 미끼 venv 를 켜지 않음 · payload 환경 단위 = 사슬 환경 지문)
+  E12 ★ 10-26 B″ (Q1 (가)) 생산 봉인 원천 실물 — DBE SV 모서리 + `RunnerGraphSource` (러너 조립만) → 귀속 verified · 주 계 지문 바꾼 꼴 =
+      CA_EXT_RECORD · 환경 단위 다름 = 미확인 · 결합 칸 다름 = 원천 실패 · 비용 보고 (원천 런 초 · STEP3 · 조립 초 · 최대 RSS)
   ★ 3판 — 계획 `rint-r-plan-v2` (결과 전 등록 숫자 넷 = 시험 값) · S0 계획 (`ca_s0_census.make_plan` · 정준 바이트) · 등록 사본 두 줄 · `--s0-plan`
 ⚠ PASS 는 사슬 · 러너 · payload 배선이 실물로 이어진다는 증거이지 R_j 값 · 판정의 물리 검증이 아니다 (픽스처 σ 는 의미 없다).
 """
@@ -689,6 +693,118 @@ def t_no_venv():
         unit == want and ee.get('py_version') == platform.python_version(), (unit, want, ee.get('python'), ee.get('py_version')))
 
 
+def t_graph_source():
+    """★ 10-26 B″ (1저자 10-26 Q1 (가) · 묶음 B 보고 §13 결정 1) — 실물 생산 봉인 원천 (실제 러너 · 실제 payload · 합성 DBE 킷 · SDCP · CPU): 사슬 기본
+    `SV_GRAPH_SOURCE` = `RUNNER_GRAPH_SOURCE` · DBE arm 0 SV 모서리 런 (P1 · c 1 · R_j 1e6) 에 `RunnerGraphSource` (같은 러너 · 같은 env + CJUNC_GRAPH_ONLY=1
+    · 조립만 · CG 없음) → 그 런 SV 기록의 끝 그래프 귀속 = verified (증서 구간 기록 · 비를 싣는 끝 있음 = 대조가 뜻이 있다) · 원천 출력 = 조립만 기록
+    하나 (팔 JSON 없음) · 원천이 돌려준 주 계 지문만 바꾼 꼴 = read_run 멈춤 CA_EXT_RECORD (RR1-01) · 사슬 환경 단위가 다른 꼴 (numpy 판 바꿔 끼움) =
+    원천 실패 → 미확인 (멈춤 아님 · clear 아님) · 결합 칸 하나 (fp_sid) 다른 ctx = GraphSourceError (결합 · 그 칸 이름) · 비용 (원천 런 초 · payload 가
+    잰 STEP3 · 조립 초 · 최대 RSS) 보고.  (사슬 사다리 · 예측을 다 돌리지 않는다 — 단계 배선 = 가짜 러너 시험 RG08–RG13)"""
+    ws = make_root('e12')
+    pp, _sp, _rp = make_plan_and_reg(ws)
+    plan = json.load(open(pp, encoding='utf-8'))
+    cls = getattr(RR, 'RunnerGraphSource', None)
+    if cls is None or getattr(RR, 'SV_GRAPH_SOURCE', None) != getattr(RR, 'RUNNER_GRAPH_SOURCE', '<없음>'):
+        chk('E12 사슬 생산 봉인 원천 (RunnerGraphSource · 기본 SV_GRAPH_SOURCE = RUNNER_GRAPH_SOURCE) 이 있다', False,
+            (cls, getattr(RR, 'SV_GRAPH_SOURCE', None)))
+        return
+    import ca_ext_svcf as SVCF
+    recs = {'stage2': RR.read_s0_report(os.path.join(TD, 's0_stage2.json'), 2), 'stage1': RR.read_s0_report(os.path.join(TD, 's0_stage1.json'), 1)}
+    seed_g, seed_c = RR.s0_grid_seed(recs), RR.s0_census_seed(recs)
+    sd = code_repo()
+    runner = os.path.join(sd, 'sdcp_gain_vox015_8arm.sh')
+    out = os.path.join(TD, 'runs', 'e12')
+
+    class Keep(cls):
+        def __call__(self, ctx):
+            self.last_ctx = json.loads(json.dumps(ctx, default=str))
+            return super().__call__(ctx)
+
+    class TamperMain(cls):
+        def __call__(self, ctx):
+            g = super().__call__(ctx)
+            return dict(g, main=('0' * 64 if g.get('main') != '0' * 64 else '1' * 64))
+
+    def runner_(o, src_cls, prefix):
+        rn_ = RR.Runner(runner, ws, o, plan, None, time.time() + 1800, RR.RealContract(), prefix=prefix)
+        rn_.s0_grid, rn_.s0_census = seed_g, seed_c
+        rn_.graph_src = src_cls(runner, ws, os.path.join(o, 'graph_src'), deadline=rn_.deadline)
+        return rn_
+
+    old_bk, old_here, old_env = RR.EXPECT_BACKEND, RR.HERE, RR.env_record
+    RR.EXPECT_BACKEND, RR.HERE = 'cpu', Path(sd)
+    buf = io.StringIO()
+    rn, arms, stop_t, arms_e, err_b, gs, gs_e, t_sv = None, None, None, None, None, None, None, None
+    try:
+        with chain_env(ws), contextlib.redirect_stdout(buf), contextlib.redirect_stderr(buf):
+            rn = runner_(out, Keep, 'G')
+            t0 = time.time()
+            arms = rn.run(DBE_KIT, 'corner', 'P1', '1', RR.rj_key(1e6), 1, True)
+            t_sv = time.time() - t0
+            gs = rn.graph_src
+            rn_t = runner_(out + '_t', TamperMain, 'G')
+            try:
+                rn_t.run(DBE_KIT, 'corner', 'P1', '1', RR.rj_key(1e6), 1, True)
+            except RR.Stop as e:
+                stop_t = e
+            rec0 = old_env()
+            RR.env_record = lambda: dict(rec0, unit=dict(rec0['unit'], numpy='0.0.0-e12'))
+            try:
+                rn_e = runner_(out + '_e', cls, 'G')
+                arms_e = rn_e.run(DBE_KIT, 'corner', 'P1', '1', RR.rj_key(1e6), 1, True)
+                gs_e = rn_e.graph_src
+            finally:
+                RR.env_record = old_env
+            ctx_b = dict(gs.last_ctx, bind=dict(gs.last_ctx['bind'], fp_sid='0' * 64))
+            gs_b = cls(runner, ws, os.path.join(out + '_b', 'graph_src'))
+            try:
+                gs_b(ctx_b)
+            except RR.GraphSourceError as e:
+                err_b = e
+    except RR.Stop as e:
+        chk('E12 실물 DBE SV 모서리 + 봉인 원천 런이 사슬 read_run 을 지난다', False, f'{e.code}: {e.cause} · {buf.getvalue()[-900:]}')
+        return
+    finally:
+        RR.EXPECT_BACKEND, RR.HERE, RR.env_record = old_bk, old_here, old_env
+    a0 = (arms or [{}])[0]
+    svr_file = os.path.join(out, rn.records[0]['outdir'], rn.records[0]['arms_read'][0]['file'])
+    d = json.load(open(svr_file, encoding='utf-8'))
+    svr = ((d['mpm_metrics']['step3']['manifest']['ca_ext']['cjunc']['evidence'].get('solve') or {}).get('sv_counterfactual') or {})
+    runs = gs.public()['runs']
+    g0 = runs[0] if runs else {}
+    gdir = os.path.join(out, 'graph_src')
+    gdirs = sorted(x for x in os.listdir(gdir) if x != 'logs') if os.path.isdir(gdir) else []
+    gjson = sorted(os.path.basename(x) for x in glob.glob(os.path.join(gdir, '*', '*.json')))
+    gfiles = [x for x in gjson if x.startswith('cjgraph_')]       # 러너 영수증 (run_receipt.json · 조립만 표지 = 팔 증명 불가) 은 따로
+    grcpt = [json.load(open(x, encoding='utf-8')) for x in glob.glob(os.path.join(gdir, '*', 'run_receipt.json'))]
+    cost = g0.get('cost') or {}
+    print(f'    보고 E12 — SV 런 {t_sv and round(t_sv, 1)} s (그 안 원천 런 {g0.get("seconds")} s) · 원천 payload STEP3 {cost.get("seconds_step3")} s · '
+          f'조립 {cost.get("seconds_assemble")} s · 최대 RSS {cost.get("peak_rss_kb")} kB · SV 상태 {svr.get("status")} · 증서 구간 '
+          f'{svr.get("standing")} · 귀속 {a0.get("sv_graph")}')
+    chk('E12a 생산 기본 원천 (러너 조립만 · 실제 payload) — DBE arm 0 SV 모서리 (P1 · c 1 · R_j 1e6) 의 SV 기록 = 증서 구간 · 비를 싣는 끝 있음 '
+        '(graph_applicable) · 끝 그래프 귀속 verified · 원천 런 하나 (상태 ok · rc 0 · 환경 단위 = 사슬 · 비용 칸 셋) · 원천 폴더 = 조립만 출력 하나 '
+        '(cjgraph_p2_…_a0.json · 팔 JSON p2_* 없음 · 러너 영수증 cjunc_graph_only True = 팔 증명 불가 · N11i)',
+        SVCF.graph_applicable(svr) and (a0.get('sv_graph') or {}).get('state') == 'verified' and len(runs) == 1 and g0.get('status') == 'ok'
+        and g0.get('rc') == 0 and g0.get('env_unit') == RR.env_unit(old_env())
+        and set(cost) == {'seconds_step3', 'seconds_assemble', 'peak_rss_kb'} and len(gdirs) == 1 and len(gfiles) == 1
+        and gfiles[0].startswith('cjgraph_p2_') and gfiles[0].endswith('_a0.json') and not glob.glob(os.path.join(gdir, '*', 'p2_*.json'))
+        and len(grcpt) == 1 and grcpt[0].get('cjunc_graph_only') is True,
+        (svr.get('standing'), svr.get('status'), a0.get('sv_graph'), runs, gdirs, gjson, [r.get('cjunc_graph_only') for r in grcpt],
+         buf.getvalue()[-500:]))
+    chk('E12b 원천이 돌려준 주 계 지문만 바꾼 꼴 (같은 실제 원천 런 · 반환 dict 의 main 만) → read_run 멈춤 CA_EXT_RECORD (사유 fp_cjunc_graph · RR1-01)',
+        stop_t is not None and stop_t.code == 'CA_EXT_RECORD' and 'fp_cjunc_graph' in str(stop_t.cause) and 'RR1-01' in str(stop_t.cause),
+        (stop_t and stop_t.code, stop_t and str(stop_t.cause)[-300:]))
+    ge = (gs_e.public()['runs'] if gs_e is not None else [])
+    sg_e = (arms_e[0].get('sv_graph') or {}) if arms_e else {}
+    chk('E12c 사슬 환경 단위가 원천 런과 다른 꼴 (사슬 env_record 의 numpy 판을 바꿔 끼움) → 원천 실패 (사유 환경 단위) → 그 SV 기록 귀속 = unverified '
+        '(source_failed · 런 멈춤 아님 · verified 아님)',
+        (sg_e.get('state'), sg_e.get('kind')) == ('unverified', 'source_failed')
+        and len(ge) == 1 and ge[0].get('status') == 'failed' and '환경 단위' in str(ge[0].get('why')),
+        (sg_e, ge))
+    chk('E12d 같은 실제 원천 런 ctx 의 결합 칸 하나 (fp_sid) 만 다르게 → GraphSourceError (원천 조립 결합 ≠ 그 런 주 증서 결합 · 칸 fp_sid)',
+        err_b is not None and '결합' in str(err_b) and 'fp_sid' in str(err_b), (err_b and str(err_b)[:300]))
+
+
 def t_prod_form():
     ws = make_root('e6', kit_sh=KIT_SH_PROD)
     out = os.path.join(TD, 'runs', 'e6_P0')
@@ -724,7 +840,7 @@ def main():
     sel = [x for x in ARGS.only.split(',') if x]
     try:
         for tag, fn in (('E1', t_ladder), ('E6', t_prod_form), ('E8', t_zero_floor), ('E9', t_short_ceiling), ('E10', t_sv_census_dbe),
-                        ('E11', t_no_venv)):
+                        ('E11', t_no_venv), ('E12', t_graph_source)):
             if sel and tag not in sel:
                 continue
             print(f'\n── {tag}')

@@ -85,7 +85,14 @@
     원천 실패 = 미확인 (멈춤 아님) · 기록의 주 해 증서 사본 지문 = 이 런 주 증서 (`_mis`)
   · 판정 (`sv_assess(require_graph=True)`) — 증서 구간 SV 기록인데 그래프 귀속이 확인되지 않은 모서리 = 판정 입력 아님 → `SV_UNCHECKED` (clear · 의존
     아님 · 자기 신고 사본끼리 비교로 대신하지 않는다) · 판정은 단계 요약의 대조를 믿지 않고 원 팔을 다시 읽어 대조한다
-  · ⚠ 생산 원천 = 아직 없음 (`SV_GRAPH_SOURCE` None · ⬜ 결정 필요) — 그 전까지 증서 구간 SV 모서리는 늘 `SV_UNCHECKED`
+  · ~~⚠ 생산 원천 = 아직 없음 (`SV_GRAPH_SOURCE` None · ⬜ 결정 필요) — 그 전까지 증서 구간 SV 모서리는 늘 `SV_UNCHECKED`~~
+★ 10-26 B″ (1저자 10-26 Q1 (가) · 묶음 B 보고 §13 결정 1) 생산 봉인 원천 = 러너 조립만 (`RunnerGraphSource` · 기본 `SV_GRAPH_SOURCE` =
+  `RUNNER_GRAPH_SOURCE`): SV 기록을 실은 런마다 같은 러너 · 같은 킷 · 같은 런 env (`runner_env_delta` · 사본 없음) + `CJUNC_GRAPH_ONLY=1` → payload
+  `--step3-cjunc-graph-only` (같은 인자로 조립만 · 솔브 없음) → `cjgraph_<팔>.json` (`run_contract.cjunc_graph_only_problem`) → 환경 단위 = 사슬 ·
+  결합 = 그 런 주 증서 결합 · 지문 → `ca_ext_svcf.graph_problem`.  예측 · 판정 · 다시 판정이 **각자 다시 조립한다** (단계 요약 · 생산자 옆 파일을 믿지
+  않는다) · 원천 실패 (러너 rc · 출력 꼴 · 환경 · 결합 · 지문 없음 · 시간) = 미확인 (`SV_UNCHECKED`) · 원천 런 기록 (rc · 시간 · 최대 RSS) = 요약
+  `sv_graph_source` · 판정 `verdict_graph_src.json` (판정 JSON 밖 — 다시 판정 바이트 대조 무관) · ⚠ 한정 (Q2) = 증서 칸 지문까지 원천 값으로 고친
+  편집은 여전히 못 가린다 · ⚠ 한정 = 같은 러너 · payload · 킷이라 그 코드 · 킷 자체의 결함은 원천도 같이 갖는다 (코드 · 침대 대조 = 단계 관문)
 """
 import argparse
 import glob
@@ -95,8 +102,10 @@ import math
 import os
 import re
 import shlex
+import shutil
 import subprocess
 import sys
+import tempfile
 import time
 from fractions import Fraction
 from pathlib import Path
@@ -108,11 +117,19 @@ if str(HERE) not in sys.path:
 import run_contract as RC                                    # noqa: E402 — 계약 정본 (사본 없음)
 import ca_ext_svcf as SVCF                                   # noqa: E402 — SV 반사실 증거 꼴 (비 · 상태 · numpy 없음)
 
-#: ★ 10-26 묶음 B6 (Codex 회차 ① RR1-01 · 1저자 10-26 Q2 (가)) SV 끝 그래프 봉인 원천 — 호출 가능 (ctx → `ca_ext_svcf.GRAPH_SOURCE_KEYS` 꼴 dict) | None.
-#   ctx = {'req' (런 요청 · 킷 · R_j · 법칙 · c …), 'arm' (팔 번호), 'file' (팔 JSON 경로), 'outdir'} — 원천은 SV 기록을 읽지 않고 같은 런의 raster · 원장 ·
-#   계획 · 등록 절단 규칙에서 솔브 없이 다시 조립한다 (`step3_sigma.solve_sigma_z(cjunc_graph_only=True)` 의 `cjunc_graphs`).  None (기본 · 생산 배선 전) =
-#   원천 없음 → 증서 구간 SV 기록 = 그래프 귀속 미확인 → 판정 `SV_UNCHECKED` (fail-closed · ⬜ 생산 원천 = 결정 필요).
-SV_GRAPH_SOURCE = None
+#: ★ 10-26 묶음 B6 (Codex 회차 ① RR1-01 · 1저자 10-26 Q2 (가)) SV 끝 그래프 봉인 원천 — `RUNNER_GRAPH_SOURCE` (생산 기본) | 호출 가능 (ctx →
+#   `ca_ext_svcf.GRAPH_SOURCE_KEYS` 꼴 dict · 시험 · 대체 원천) | None (원천 없음 → 증서 구간 SV 기록 = 그래프 귀속 미확인 → 판정 `SV_UNCHECKED`).
+#   ctx = {'req' (런 요청 · 킷 · R_j · 법칙 · c …), 'arm' (팔 번호), 'file' (팔 JSON 경로), 'outdir', ★ 10-26 B″ 'plan' (R 런 계획 · 런 env),
+#   'bind' (그 런 주 증서의 결합 칸 — 입력 정체성 · 지문 칸은 주지 않는다)} — 원천은 SV 기록의 지문을 읽지 않고 같은 런의 raster · 원장 · 계획 · 등록
+#   절단 규칙에서 솔브 없이 다시 조립한다 (`step3_sigma.solve_sigma_z(cjunc_graph_only=True)` 의 `cjunc_graphs`).
+#   ~~None (기본 · 생산 배선 전)~~ → ★ 10-26 B″ (1저자 Q1 (가)) 기본 = `RUNNER_GRAPH_SOURCE` — 단계 (사다리 · 예측 · 판정 · 다시 판정) 가 러너 · 킷
+#   뿌리로 `RunnerGraphSource` 를 만들어 read_run 에 넘긴다 (단계가 원천을 안 넘긴 자리 = 원천 없음 = 미확인).
+RUNNER_GRAPH_SOURCE = 'runner'
+SV_GRAPH_SOURCE = RUNNER_GRAPH_SOURCE
+#: ★ 10-26 B″ (Q1 (가)) 원천 런 — 러너 env 표지 (조립만) · 출력 이름 앞자리 (러너 `cjgraph_<팔 이름>.json` · 팔 JSON p2_* 밖) · 단계 폴더 안 자리
+GRAPH_ONLY_ENV = {'CJUNC_GRAPH_ONLY': '1'}
+GRAPH_ONLY_PREFIX = 'cjgraph_'
+GRAPH_SRC_DIR = 'graph_src'
 #: 그래프 귀속 미확인의 종류 (판정 사유 글)
 SV_GRAPH_WHY = {'no_source': '봉인 원천 없음', 'source_failed': '봉인 원천 실패', 'absent': '대조 기록 없음'}
 
@@ -1841,20 +1858,26 @@ def arm_file_shas(outdir):
     return sorted(out, key=lambda x: (x['index'], x['file']))
 
 
-def sv_graph_state(svr, req, arm, path, outdir):
+def sv_graph_state(svr, req, arm, path, outdir, graph_src=None, plan=None):
     """★ 10-26 묶음 B6 (Codex 회차 ① RR1-01 · 1저자 10-26 Q2 (가)) SV 기록 하나의 끝 그래프 귀속 → {'state', 'kind', 'why'} —
-    not_applicable (증서 구간 기록의 비를 싣는 끝이 없다 · `ca_ext_svcf.graph_applicable`) · unverified (kind no_source = `SV_GRAPH_SOURCE` None ·
+    not_applicable (증서 구간 기록의 비를 싣는 끝이 없다 · `ca_ext_svcf.graph_applicable`) · unverified (kind no_source = 원천 없음 ·
     source_failed = 원천 예외 · 꼴 틀림 (`ca_ext_svcf.graph_source_problem`)) · mismatch (원천 지문 ≠ 증서 지문 · `ca_ext_svcf.graph_problem` · 호출자 =
-    CA_EXT_RECORD) · verified.  원천은 SV 기록을 받지 않는다 (ctx = 요청 · 팔 · 파일 · 폴더)."""
+    CA_EXT_RECORD) · verified.  원천은 SV 기록의 지문을 받지 않는다 (ctx = 요청 · 팔 · 파일 · 폴더 · 계획 · 그 런 주 증서의 결합 칸).
+    ★ 10-26 B″ (1저자 Q1 (가)) 원천 = `SV_GRAPH_SOURCE` — `RUNNER_GRAPH_SOURCE` (생산 기본) 이면 단계가 넘긴 graph_src (`RunnerGraphSource` · 없으면
+    원천 없음) · 호출 가능 = 그것 (시험 · 대체 원천) · None = 원천 없음."""
     if not SVCF.graph_applicable(svr):
         return {'state': 'not_applicable', 'kind': None, 'why': None}
     src = SV_GRAPH_SOURCE
+    if isinstance(src, str) and src == RUNNER_GRAPH_SOURCE:
+        src = graph_src
     if src is None:
         return {'state': 'unverified', 'kind': 'no_source', 'why': SV_GRAPH_WHY['no_source']}
+    full = svr.get('conv_cert_full') if isinstance(svr.get('conv_cert_full'), dict) else {}
     try:
-        g = src({'req': dict(req), 'arm': int(arm), 'file': str(path), 'outdir': str(outdir)})
+        g = src({'req': dict(req), 'arm': int(arm), 'file': str(path), 'outdir': str(outdir), 'plan': plan,
+                 'bind': {k: full.get(k) for k in SVCF.BIND_FIELDS}})
     except Exception as e:                                   # noqa: BLE001 — 원천 실패 = 미확인 (clear 아님 · 멈춤 아님)
-        return {'state': 'unverified', 'kind': 'source_failed', 'why': f'원천 예외 {type(e).__name__}'}
+        return {'state': 'unverified', 'kind': 'source_failed', 'why': f'원천 예외 {type(e).__name__}: {e}'[:300]}
     why = SVCF.graph_source_problem(g)
     if why:
         return {'state': 'unverified', 'kind': 'source_failed', 'why': f'원천 꼴 — {why}'[:300]}
@@ -1864,7 +1887,7 @@ def sv_graph_state(svr, req, arm, path, outdir):
     return {'state': 'verified', 'kind': None, 'why': None}
 
 
-def read_run(outdir, req, plan, contract, sid_reg, want_sha=None, s0_grid=None, s0_census=None):
+def read_run(outdir, req, plan, contract, sid_reg, want_sha=None, s0_grid=None, s0_census=None, graph_src=None):
     """런 폴더 하나 → [팔 기록 …] (번호 순).  등록 R §10 멈춤 목록의 팔 쪽 전부 — 어긋나면 Stop (원인 칸 = σ 를 가린 문장).
     ★ 3판 — 해 상태 (§5-0 · `run_contract.next_gen_state` · 정본): positive (증서 ⓐ–ⓓ · σ > 0) · zero (VALID_ZERO_TOPOLOGY · σ = 0) ·
     ~~short (ELECTRODE_SHORT · σ = +∞)~~ · 그 밖 = NOT_COMPUTED.  팔 기록의 σ = 확장 실수 (0 그대로).
@@ -2001,7 +2024,8 @@ def read_run(outdir, req, plan, contract, sid_reg, want_sha=None, s0_grid=None, 
                 stop('S0_REPORT_MISMATCH', f'{why} — {BED_NEW_S0}')
         #  ★ 10-26 묶음 B6 (Codex 회차 ① RR1-01 · 1저자 10-26 Q2 (가)) — 끝 증서의 가중 그래프 귀속 (SV 기록 밖 봉인 원천 ↔ 증서 지문) · 다르면 기록 위반 ·
         #    원천 없음 · 실패 = 미확인 (판정 = SV_UNCHECKED · `sv_assess(require_graph=True)`)
-        sv_graph = sv_graph_state(svr, req, i, p, outdir)
+        #    ★ 10-26 B″ (1저자 Q1 (가)) — 생산 원천 = 단계가 넘긴 graph_src (`RunnerGraphSource` · 러너 조립만 · 계획 = 이 런 계획)
+        sv_graph = sv_graph_state(svr, req, i, p, outdir, graph_src=graph_src, plan=plan)
         if sv_graph['state'] == 'mismatch':
             stop('CA_EXT_RECORD', f"{sv_graph['why']} (봉인 원천 대조)")
         cf = SVCF.chain_view(svr) if isinstance(svr, dict) else None
@@ -2024,6 +2048,26 @@ def read_run(outdir, req, plan, contract, sid_reg, want_sha=None, s0_grid=None, 
 
 
 # ═════════════════════════ 러너 (런마다 새 폴더 · env 를 사슬이 정한다) ═════════════════════════
+def runner_env_delta(plan, variant, req, outdir):
+    """런 하나의 러너 env (사슬이 정하는 칸 전부 · 부모 셸 값과 무관) — `Runner` (생산 팔) 와 `RunnerGraphSource` (봉인 원천 조립만 런) 가 **같은 함수**를
+    쓴다 (★ 10-26 B″ · 1저자 Q1 (가) — 원천 런 = 같은 env + `GRAPH_ONLY_ENV` · 사본 없음)."""
+    d = dict(ENV_FIXED)
+    d.update(RUNNER_EXEC_ENV)                                # ★ 10-26 B″ (Q4) — 러너가 venv 를 켜지 않는다 (payload = 사슬 프로세스 환경)
+    d.update(plan_env(plan))
+    d.update(VARIANT_ENV.get(variant) or {})
+    d.update({'KITS': req['kit'], 'OUTDIR': str(outdir), 'CJUNC_RJ': req['rj'], 'CJUNC_PTFE_JLAW': req['law'],
+              'EXPECT_BACKEND': EXPECT_BACKEND})
+    if req.get('arm_list') is not None:                      # ★ Z3 — 팔 고르기 (러너: ARMS 와 동시 = 거부 · 팔 수 = 목록 길이)
+        d['ARM_LIST'] = ','.join(str(i) for i in req['arm_list'])
+    else:
+        d['ARMS'] = str(req['arms'])
+    if req['c'] != '':
+        d['SDCP_MOD_C'] = req['c']
+    if req.get('sv_cf'):                                      # ★ 3판 — SV 반사실 대조 (같은 런 안 추가 풀이 · 주 σ · 규약 id 그대로)
+        d['CJUNC_SV_CF'] = '1'
+    return d
+
+
 class Runner:
     def __init__(self, runner, root, out, plan, variant, deadline, contract, dry=False, parent_env=None, prefix='R'):
         self.runner, self.root, self.out = Path(runner), Path(root), Path(out)
@@ -2035,23 +2079,10 @@ class Runner:
         self.dry_lines = []
         self.s0_grid = None                  # ★ 10-25 묶음 B (RCA2-03) — S0 off 격자 지문 (`s0_grid_seed` · 단계가 정한다)
         self.s0_census = None                # ★ 10-25 묶음 B (X6) — S0 단계 2 봉인 SV census (`s0_census_seed`)
+        self.graph_src = None                # ★ 10-26 B″ (Q1 (가)) — SV 끝 그래프 봉인 원천 (`RunnerGraphSource` · 단계가 정한다 · 없음 = 미확인)
 
     def env_delta(self, req, outdir):
-        d = dict(ENV_FIXED)
-        d.update(RUNNER_EXEC_ENV)                            # ★ 10-26 B″ (Q4) — 러너가 venv 를 켜지 않는다 (payload = 사슬 프로세스 환경)
-        d.update(plan_env(self.plan))
-        d.update(VARIANT_ENV.get(self.variant) or {})
-        d.update({'KITS': req['kit'], 'OUTDIR': str(outdir), 'CJUNC_RJ': req['rj'], 'CJUNC_PTFE_JLAW': req['law'],
-                  'EXPECT_BACKEND': EXPECT_BACKEND})
-        if req.get('arm_list') is not None:                  # ★ Z3 — 팔 고르기 (러너: ARMS 와 동시 = 거부 · 팔 수 = 목록 길이)
-            d['ARM_LIST'] = ','.join(str(i) for i in req['arm_list'])
-        else:
-            d['ARMS'] = str(req['arms'])
-        if req['c'] != '':
-            d['SDCP_MOD_C'] = req['c']
-        if req.get('sv_cf'):                                  # ★ 3판 — SV 반사실 대조 (같은 런 안 추가 풀이 · 주 σ · 규약 id 그대로)
-            d['CJUNC_SV_CF'] = '1'
-        return d
+        return runner_env_delta(self.plan, self.variant, req, outdir)
 
     def run(self, kit, role, law, c, rj, arms, sv_cf=False):
         """런 하나 → 팔 기록 목록.  `arms` = 팔 수 (ARMS · 0..N−1) 또는 팔 번호 튜플 (ARM_LIST · 예 ORIGIN_ARMS) · sv_cf = SV 반사실 켬.
@@ -2099,7 +2130,8 @@ class Runner:
         if r.returncode != 0:
             raise Stop('RUNNER_RC', f'rc {r.returncode} (로그 {logp})', name)
         try:
-            arms_ = read_run(outdir, req, self.plan, self.contract, self.sid_reg, s0_grid=self.s0_grid, s0_census=self.s0_census)
+            arms_ = read_run(outdir, req, self.plan, self.contract, self.sid_reg, s0_grid=self.s0_grid, s0_census=self.s0_census,
+                             graph_src=self.graph_src)
         except Stop:
             #  읽기가 멈춰도 팔 파일 sha256 은 남긴다 — 등록 결과 (NOT_COMPUTED) 로 끝난 사다리를 판정이 원 팔에서 다시 계산할 수 있게.
             rec['arms_read'] = arm_file_shas(outdir)
@@ -2114,11 +2146,135 @@ class Runner:
         return arms_
 
 
-class Replay:
-    """판정 단계의 fetch — 기록된 런을 순서대로 대조해 원 팔 JSON 을 다시 읽는다 (sha256 대조 · 같은 계약)."""
+class GraphSourceError(Exception):
+    """★ 10-26 B″ — 봉인 원천 런 실패 (사유 = 메시지) · `sv_graph_state` 가 잡아 미확인 (source_failed · 판정 `SV_UNCHECKED`) 으로 둔다 (멈춤 · clear 아님)."""
 
-    def __init__(self, stage_dir, summary, plan, contract, sid_reg, cert_reg=None):
+
+class RunnerGraphSource:
+    """★ 10-26 B″ (1저자 10-26 Q1 (가) · 묶음 B 보고 §13 결정 1) SV 끝 그래프 **생산 봉인 원천** — 같은 러너 · 같은 킷 뿌리 · 같은 런 env
+    (`runner_env_delta` · 사본 없음) + `CJUNC_GRAPH_ONLY=1` 로 payload 를 **조립만** 다시 돌려 (`--step3-cjunc-graph-only` →
+    `step3_sigma.solve_sigma_z(cjunc_graph_only=True)` · CG 없음) 그 팔의 주 계 · SV 끝 가중 그래프 지문 (`carbon_junction.solved_graph_fp`) 을 돌려준다
+    (`sv_graph_state` → `ca_ext_svcf.graph_problem` 이 증서 지문과 대조).
+      · 원천 런 = 팔 하나 (팔 0 = ARMS 1 · 팔 i > 0 = ARM_LIST i) · 새 폴더 `<out>/G<n>_<런>_a<i>_arm1[_arml<i>]` (비지 않았으면 실패) · 로그 `<out>/logs`
+      · 출력 = 그 폴더의 `cjgraph_p2_<킷>_…_a<i>.json` 정확히 하나 → `run_contract.cjunc_graph_only_problem` (꼴) → 환경 단위 = 이 사슬 프로세스
+        (`env_record` 같음 단위 — 다르면 payload 가 다른 인터프리터 · 라이브러리로 돌았다 = 실패) → 결합 = ctx 'bind' (그 런 주 증서의 결합 —
+        다르면 같은 입력에서 다시 조립하지 않았다 = 실패) → 지문 (None = 접합 조립 전 조기 반환 = 실패)
+      · 실패 = `GraphSourceError` (사유 → 미확인) · 시간 상한 = 단계 deadline (None = 무제한 — 판정 · 다시 판정)
+      · out None = 런마다 임시 폴더 (읽은 뒤 지운다 · 다시 판정 — 판정 폴더에 아무것도 쓰지 않는다)
+      · `records` (`public`) = 원천 런마다 이름 · 런 · 팔 · rc · 초 · 상태 · 사유 · 출력 이름 · sha256 · 비용 (payload 가 잰 초 · 최대 RSS kB) · 환경 단위
+        (σ · 비 없음 = 값 봉인) — 단계 요약 `sv_graph_source` · 판정 `verdict_graph_src.json` (판정 JSON 밖 · 다시 판정 바이트 대조 무관)
+    ⚠ 한정: 원천은 그 런과 같은 코드 · 킷이다 (그 코드 · 킷 자체의 결함은 원천도 같이 갖는다 — 코드 · 침대 대조 = 단계 관문) · 증서 칸 지문까지 원천 값으로
+    고친 편집은 이 대조로 못 가린다 (1저자 Q2 = 한정 · Codex 회차 ② 질문) · 비용 = 원천 런마다 러너 관문 + payload 의 CG 밖 부분 + 지문 (픽스처 실측 ·
+    실침대 = 추정 · REPORT_B2)."""
+
+    kind = 'runner_graph_only'
+
+    def __init__(self, runner, root, out, deadline=None, parent_env=None):
+        self.runner, self.root = Path(runner), Path(root)
+        self.out = None if out is None else Path(out)
+        self.deadline = deadline
+        parent = dict(os.environ if parent_env is None else parent_env)
+        self.env_base = {k: v for k, v in parent.items() if not (ENV_SCRUB_RE.match(k) or k in ENV_SCRUB_NAMES)}
+        self.records, self.n = [], 0
+
+    def env_delta(self, req, arm, outdir, plan):
+        """원천 런 env = 그 런의 env (`runner_env_delta` — 같은 계획 · 변이 · 킷 · R_j · 법칙 · c · SV) + `GRAPH_ONLY_ENV` · 팔 하나 · 이 폴더."""
+        arm = int(arm)
+        greq = dict(req, arms=1, arm_list=(None if arm == 0 else [arm]))
+        d = runner_env_delta(plan, req.get('variant'), greq, outdir)
+        d.update(GRAPH_ONLY_ENV)
+        return d
+
+    def public(self):
+        return {'kind': self.kind, 'runs': [dict(r) for r in self.records]}
+
+    def __call__(self, ctx):
+        req, arm = dict(ctx.get('req') or {}), int(ctx.get('arm'))
+        self.n += 1
+        name = f'G{self.n:02d}_{req.get("name")}_a{arm}'
+        rec = {'name': name, 'run': req.get('name'), 'arm': arm, 'rc': None, 'seconds': None, 'status': 'failed', 'why': None,
+               'graph_file': None, 'graph_sha256': None, 'cost': None, 'env_unit': None}
+        self.records.append(rec)
+        tmp = None
+        try:
+            base = self.out
+            if base is None:
+                tmp = Path(tempfile.mkdtemp(prefix='rint_graph_src_'))
+                base = tmp
+            g = self._run(ctx, req, arm, base, name, rec)
+        except GraphSourceError as e:
+            rec['why'] = str(e)[:300]
+            print(f'  {name}: 봉인 원천 (조립만) → 실패 · {rec["why"]}')
+            raise
+        finally:
+            if tmp is not None:
+                shutil.rmtree(tmp, ignore_errors=True)
+        rec['status'] = 'ok'
+        print(f'  {name}: 봉인 원천 (조립만) · 런 {req.get("name")} 팔 {arm} → rc 0 · {rec["seconds"]:.1f} s · payload 최대 RSS '
+              f'{(rec["cost"] or {}).get("peak_rss_kb")} kB (지문 대조는 다음)')
+        return g
+
+    def _run(self, ctx, req, arm, base, name, rec):
+        plan = ctx.get('plan')
+        if not isinstance(plan, dict):
+            raise GraphSourceError('R 런 계획이 없다 (원천 env 를 만들 수 없다)')
+        outdir = base / (f'{name}_arm1' + ('' if arm == 0 else f'_arml{arm}'))
+        if outdir.exists() and any(outdir.iterdir()):
+            raise GraphSourceError(f'원천 폴더가 비지 않았다 ({outdir.name})')
+        delta = self.env_delta(req, arm, outdir, plan)
+        timeout = None
+        if self.deadline is not None:
+            timeout = self.deadline - time.time()
+            if timeout <= 0:
+                raise GraphSourceError('시간 상한 (--max-hours) 을 넘었다')
+        (base / 'logs').mkdir(parents=True, exist_ok=True)
+        logp = base / 'logs' / f'{name}.log'
+        t0 = time.time()
+        with open(logp, 'w', encoding='utf-8') as lf:
+            try:
+                r = subprocess.run(['bash', str(self.runner)], cwd=str(self.root), env=dict(self.env_base, **delta), stdout=lf,
+                                   stderr=subprocess.STDOUT, timeout=timeout)
+            except subprocess.TimeoutExpired:
+                rec['seconds'] = round(time.time() - t0, 3)
+                raise GraphSourceError('시간 상한 안에 끝나지 않았다')
+        rec['rc'], rec['seconds'] = r.returncode, round(time.time() - t0, 3)
+        if r.returncode != 0:
+            raise GraphSourceError(f'러너 rc {r.returncode} (로그 {logp.name})')
+        files = sorted(glob.glob(str(outdir / f'{GRAPH_ONLY_PREFIX}*.json')))
+        names = [os.path.basename(f) for f in files]
+        pref = f'{GRAPH_ONLY_PREFIX}p2_{str(req.get("kit"))[len("kit_"):]}_'
+        if len(files) != 1 or not names[0].startswith(pref) or not names[0].endswith(f'_a{arm}.json'):
+            raise GraphSourceError(f'원천 출력 {len(files)} 개 {names[:3]} (= {pref}…_a{arm}.json 하나)')
+        raw = Path(files[0]).read_bytes()
+        rec['graph_file'], rec['graph_sha256'] = names[0], hashlib.sha256(raw).hexdigest()
+        try:
+            grec = json.loads(raw.decode('utf-8'))
+        except (UnicodeDecodeError, ValueError) as e:
+            raise GraphSourceError(f'원천 출력 JSON 을 못 읽는다 ({type(e).__name__})')
+        why = RC.cjunc_graph_only_problem(grec)
+        if why:
+            raise GraphSourceError(why)
+        rec['cost'], rec['env_unit'] = dict(grec['cost']), dict(grec['env_unit'])
+        want_u = env_unit(env_record())
+        if want_u is None or grec['env_unit'] != want_u:
+            raise GraphSourceError(f'원천 런 환경 단위 {grec["env_unit"]} ≠ 사슬 {want_u} — payload 가 사슬과 다른 인터프리터 · 라이브러리로 돌았다 '
+                                   f'(러너 env MPM_NO_VENV · PATH 의 python3)')
+        want_b = ctx.get('bind')
+        if not isinstance(want_b, dict) or grec['bind'] != want_b:
+            diff = sorted(k for k in SVCF.BIND_FIELDS if not isinstance(want_b, dict) or grec['bind'].get(k) != want_b.get(k))
+            raise GraphSourceError(f'원천 조립 결합 ≠ 그 런 주 증서 결합 (칸 {diff}) — 같은 입력에서 다시 조립하지 않았다')
+        if grec['cjunc_graphs'] is None:
+            raise GraphSourceError(f'원천 조립이 접합 조립 전에 조기 반환했다 — 지문 없음 (사유 {grec["reason"]})')
+        return dict(grec['cjunc_graphs'])
+
+
+class Replay:
+    """판정 단계의 fetch — 기록된 런을 순서대로 대조해 원 팔 JSON 을 다시 읽는다 (sha256 대조 · 같은 계약).  ★ 10-26 B″ — graph_src = 판정의 봉인 원천
+    (`RunnerGraphSource` · 원천을 다시 부른다 · 단계 요약의 대조를 믿지 않는다)."""
+
+    def __init__(self, stage_dir, summary, plan, contract, sid_reg, cert_reg=None, graph_src=None):
         self.dir, self.plan, self.contract, self.sid_reg = Path(stage_dir), plan, contract, sid_reg
+        self.graph_src = graph_src
         self.recs = list(summary.get('runs') or [])
         self.variant = summary.get('variant')
         self.i = 0
@@ -2138,7 +2294,8 @@ class Replay:
         self.i += 1
         req = {k: r.get(k) for k in REQ_KEYS}
         arms_ = read_run(self.dir / r['outdir'], req, self.plan, self.contract, self.sid_reg,
-                         want_sha=[a.get('sha256') for a in r.get('arms_read') or []], s0_grid=self.s0_grid, s0_census=self.s0_census)
+                         want_sha=[a.get('sha256') for a in r.get('arms_read') or []], s0_grid=self.s0_grid, s0_census=self.s0_census,
+                         graph_src=self.graph_src)
         self.cert_reg[f'{self.dir.name}/{r["name"]}'] = [a['dsigma_rel'] for a in arms_]   # §8 수렴 증서 ⓒ 값 (판정 결과로만)
         return arms_
 
@@ -2563,7 +2720,7 @@ def stage_ladder(a, contract):
         return 3
     s = summary_base('ladder', a)
     s.update({'law': a.law, 'variant': a.variant, 'kit': a.kit or SBE_KIT, 'runs': [], 'ladder': None, 'env_scrubbed': [],
-              'after_main': None, 'bed': None})
+              'after_main': None, 'bed': None, 'sv_graph_source': None})
     ran = False
     try:
         if not _same(a.target, TARGET_SBE_MS) or a.law not in LAWS or (a.kit or SBE_KIT) != SBE_KIT or a.variant == 'SVORDER':
@@ -2599,6 +2756,8 @@ def stage_ladder(a, contract):
         rn = Runner(a.runner, a.root, out, plan, a.variant, time.time() + a.max_hours * 3600.0, contract, dry=a.dry_run, prefix='L')
         rn.s0_grid = s0_grid_seed(s['s0_reports'])
         rn.s0_census = s0_census_seed(s['s0_reports'])
+        #  ★ 10-26 B″ (Q1 (가)) — 봉인 원천 (사다리 = SBE · SV 런 없음 → 부르지 않는다 · 같은 배선)
+        rn.graph_src = RunnerGraphSource(a.runner, a.root, out / GRAPH_SRC_DIR, deadline=rn.deadline)
         s['env_scrubbed'] = rn.scrubbed
         if a.dry_run:
             print(f'dry-run — 사다리 {a.law} · 첫 런 (바닥 · 천장 · 1e4 · 1e6 · 1e8) 의 env (러너를 부르지 않는다 · 다음 점은 σ 로 정해진다)')
@@ -2619,6 +2778,7 @@ def stage_ladder(a, contract):
             finally:
                 s['ladder'], s['flags'] = lad.st, list(lad.flags)
                 s['runs'] = rn.records
+                s['sv_graph_source'] = rn.graph_src.public()
         except Stop as e:
             s['status'] = e.code if e.code in REGISTERED_OUTCOMES else 'STOPPED'
             raise
@@ -2724,7 +2884,7 @@ def stage_predict(a, contract):
         return 3
     s = summary_base('predict', a)
     s.update({'variant': a.variant, 'kit': a.kit or DBE_KIT, 'runs': [], 'ladders': {}, 'checks': None, 'origin': None,
-              'env_scrubbed': [], 'after_main': None, 'sv_cf': None, 'bed': None})
+              'env_scrubbed': [], 'after_main': None, 'sv_cf': None, 'bed': None, 'sv_graph_source': None})
     ran = False
     try:
         if (a.kit or DBE_KIT) != DBE_KIT:
@@ -2754,6 +2914,8 @@ def stage_predict(a, contract):
         rn.sid_reg = sid_reg
         rn.s0_grid = s0_grid_seed(s0reps)
         rn.s0_census = s0_census_seed(s0reps)
+        #  ★ 10-26 B″ (1저자 Q1 (가)) — SV 끝 그래프 생산 봉인 원천 (SV 모서리 런마다 같은 러너 · 같은 env 로 조립만 · 같은 시간 상한)
+        rn.graph_src = RunnerGraphSource(a.runner, a.root, out / GRAPH_SRC_DIR, deadline=rn.deadline)
         s['env_scrubbed'] = rn.scrubbed
         pr = Predict(rn.run, lads, a.variant, sv_scope=scope)
         if a.dry_run:
@@ -2776,6 +2938,7 @@ def stage_predict(a, contract):
                 s['status'] = 'PREDICTED'
             finally:
                 s['checks'], s['origin'], s['runs'] = pr.checks, pr.origin, rn.records
+                s['sv_graph_source'] = rn.graph_src.public()
         except Stop as e:
             #  ★ 4판 (Q1) — NOT_COMPUTED (풀이 · 증서 실패 · 단락 ELECTRODE_SHORT) = 예측 단계의 등록 결과 (사다리와 같은 뜻 · 판정이 원 팔에서
             #    다시 계산해 이름 · 사유를 남긴다) · 그 밖 멈춤 (계약 · 기록 · 일관 검사 …) = STOPPED (판정 입력 아님)
@@ -2800,9 +2963,9 @@ def stage_predict(a, contract):
 
 
 # ═════════════════════════ (5) 판정 단계 ═════════════════════════
-def _replay_ladder(d, s, contract, sid_reg, cert_reg):
+def _replay_ladder(d, s, contract, sid_reg, cert_reg, graph_src=None):
     plan = s['plan']['content']
-    rp = Replay(d, s, plan, contract, sid_reg, cert_reg)
+    rp = Replay(d, s, plan, contract, sid_reg, cert_reg, graph_src=graph_src)
     lad = Ladder(lambda role, rj, arms: rp.run(SBE_KIT, role, s['law'], LADDER_C, rj, arms), max_points=ladder_cap(plan),
                  ratio_max=plan['calib_rj_ratio_max'])
     status, stop = 'CALIBRATED', None
@@ -2820,10 +2983,12 @@ def _replay_ladder(d, s, contract, sid_reg, cert_reg):
     return {'status': status, 'stop': stop, 'st': lad.st, 'sealed': lad.sealed, 'flags': lad.flags, 'pts': lad.pts}
 
 
-def _replay_predict(d, s, lads, contract, sid_reg, cert_reg):
+def _replay_predict(d, s, lads, contract, sid_reg, cert_reg, graph_src=None):
     """예측 단계 다시 계산 → (Predict, 상태 PREDICTED | NOT_COMPUTED, 멈춤 기록 | None) · ★ 4판 (Q1) — NOT_COMPUTED (단락 · 증서 실패) = 등록
-    결과 (사다리 `_replay_ladder` 와 같은 꼴) · 다시 계산한 상태 · 검사 · origin 결정 ≠ 요약 = REPLAY_MISMATCH."""
-    rp = Replay(d, s, s['plan']['content'], contract, sid_reg, cert_reg)
+    결과 (사다리 `_replay_ladder` 와 같은 꼴) · 다시 계산한 상태 · 검사 · origin 결정 ≠ 요약 = REPLAY_MISMATCH.
+    ★ 10-26 B″ (Q1 (가)) — graph_src = 판정의 봉인 원천 (SV 모서리 런마다 조립만 런을 **다시** 돌린다 · 단계 요약의 `sv_graph` 를 믿지 않는다 —
+    다시 계산한 `sv_graph` 가 요약과 다르면 아래 REPLAY_MISMATCH (그 런의 SV 판정 · 상태가 갈린다))."""
+    rp = Replay(d, s, s['plan']['content'], contract, sid_reg, cert_reg, graph_src=graph_src)
     pr = Predict(rp.run, lads, s.get('variant'), sv_scope=(s.get('sv_cf') or {}).get('scope'))
     status, stop = 'PREDICTED', None
     try:
@@ -2980,9 +3145,22 @@ PUB_FROM_ASSEMBLE = ('verdict', 'state', 'flags', 'blocking_flags', 'blocking_re
                      'sentence')
 
 
-def verdict_compute(dirs, reg_path, contract, root):
+def default_graph_src(root, out=None):
+    """★ 10-26 B″ (1저자 Q1 (가)) 판정 · 다시 판정의 봉인 원천 — 생산 기본 (`SV_GRAPH_SOURCE` = `RUNNER_GRAPH_SOURCE`) 이고 킷 뿌리가 있으면 이 사슬
+    폴더의 러너 (`HERE / RUNNER_NAME` · 단계 코드 대조가 묶는 그 파일 · ★ 10-25 Q2 (가) ③) 로 `RunnerGraphSource` (시간 상한 없음 · out None = 임시
+    폴더) · 아니면 None (시험이 넣은 함수 · None 원천 = `sv_graph_state` 가 모듈 값을 그대로 쓴다)."""
+    if isinstance(SV_GRAPH_SOURCE, str) and SV_GRAPH_SOURCE == RUNNER_GRAPH_SOURCE and root:
+        return RunnerGraphSource(HERE / RUNNER_NAME, root, out)
+    return None
+
+
+def verdict_compute(dirs, reg_path, contract, root, graph_src=None):
     """판정 계산기 (§5 · 설계 §7) — 원 팔 JSON 전부에서.  → (공개 dict, 결과 dict | None).  입력 계약 실패 = Stop.  ★ 10-25 묶음 B
-    (RCA2-03) — root = 킷 뿌리 (SBE · DBE 킷을 S0 와 같은 발견 함수로 다시 해시해 단계 기록의 S0 원 입력과 대조 · 경로 = 대조 밖)."""
+    (RCA2-03) — root = 킷 뿌리 (SBE · DBE 킷을 S0 와 같은 발견 함수로 다시 해시해 단계 기록의 S0 원 입력과 대조 · 경로 = 대조 밖).
+    ★ 10-26 B″ (1저자 Q1 (가)) — graph_src = 판정의 봉인 원천 (None = `default_graph_src(root)` · 임시 폴더) · SV 모서리 런마다 조립만 런을 **다시**
+    돌린다 (단계 요약의 `sv_graph` · 원천 기록을 믿지 않는다 — 다시 읽은 원 팔 · 다시 조립한 지문으로 SV 판정)."""
+    if graph_src is None:
+        graph_src = default_graph_src(root)
     pub = {'tool': TOOL, 'schema': SCHEMA, 'stage': 'verdict', 'verdict': None, 'state': None, 'stop': None, 'flags': [],
            'blocking_flags': [], 'blocking_reasons': {}, 'sensitivity_incomplete': None, 'qualifiers': list(QUALIFIERS),
            'report_category': {REPORT_CATEGORY: list(ASSUMED_UNVALIDATED)},
@@ -3067,7 +3245,8 @@ def verdict_compute(dirs, reg_path, contract, root):
             rd, s, h = lad_in[(variant, law)]
             #  ★ RI (§5-6 ③) — 멈춘 감도 변이 사다리 = 그 법칙 NOT_COMPUTED (다시 계산 없음 · 표지 없음) → 변이 판정 NOT_COMPUTED → <V>_UNCHECKED
             out[law] = (rd, s, h, ({'status': 'NOT_COMPUTED', 'stop': s.get('stop'), 'st': None, 'sealed': None, 'flags': [], 'pts': None}
-                                   if variant_stage_stopped(s) else _replay_ladder(rd, s, contract, sid_reg, cert_reg)))
+                                   if variant_stage_stopped(s) else _replay_ladder(rd, s, contract, sid_reg, cert_reg,
+                                                                                   graph_src=graph_src)))
         return out
     main_l = ladders_of(None)
     if main_l is None:
@@ -3102,7 +3281,7 @@ def verdict_compute(dirs, reg_path, contract, root):
             return None, 'STOPPED', s.get('stop')             # ★ RI (§5-6 ③) — 멈춘 감도 변이 예측 = 값 없음 → 그 변이 판정 NOT_COMPUTED
         lin = {law: {'R_j0': lads[law][3]['st']['R_j0'], 'R_j_lo': lads[law][3]['st']['R_j_lo'], 'R_j_hi': lads[law][3]['st']['R_j_hi'],
                      'r0_sigma': lads[law][3]['pts'][lads[law][3]['st']['R_j0']][1]} for law in LAWS}
-        return _replay_predict(rd, s, lin, contract, sid_reg, cert_reg)
+        return _replay_predict(rd, s, lin, contract, sid_reg, cert_reg, graph_src=graph_src)
     if any(st != 'CALIBRATED' for st in statuses.values()):
         P, PJ = assemble({'statuses': statuses, 'vals': None, 'flags': m_flags}, {}, None)
         pub.update({k: P[k] for k in PUB_FROM_ASSEMBLE})
@@ -3214,14 +3393,19 @@ def stage_verdict(a, contract):
         print_stop(e)
         return 3
     rc_ = 0
+    #  ★ 10-26 B″ (1저자 Q1 (가)) — 판정의 봉인 원천 (원천 런 폴더 = <판정>/graph_src · 기록 = verdict_graph_src.json · 판정 JSON 밖 = 다시 판정 바이트
+    #    대조 무관)
+    gsrc = default_graph_src(a.root, out / GRAPH_SRC_DIR)
     try:
-        pub, res = verdict_compute(a.runs, a.registration, contract, a.root)
+        pub, res = verdict_compute(a.runs, a.registration, contract, a.root, graph_src=gsrc)
     except Stop as e:
         print_stop(e)
         pub, res, rc_ = _stopped_pub(e, a.runs, a.registration), None, 3
     pub['input_dirs'] = [str(Path(d).resolve()) for d in a.runs]
     out.mkdir(parents=True, exist_ok=True)
     write_json(out / 'verdict.json', pub)
+    if gsrc is not None:
+        write_json(out / 'verdict_graph_src.json', gsrc.public())
     if res is not None:
         write_json(out / 'verdict_results.json', res)
         try:
@@ -3247,7 +3431,8 @@ def stage_verdict(a, contract):
 
 def reverify(vdir, contract, root):
     """다시 판정 (읽기 전용) — 같은 입력 (판정 JSON 에 적힌 폴더 · 등록) 으로 다시 계산해 두 JSON 을 바이트 대조.  ★ 10-25 묶음 B (RCA2-03) —
-    root = 그 기계의 킷 뿌리 (킷을 다시 해시 · 같은 침대가 아니면 다른 판정 = REVERIFY_DIFF)."""
+    root = 그 기계의 킷 뿌리 (킷을 다시 해시 · 같은 침대가 아니면 다른 판정 = REVERIFY_DIFF).  ★ 10-26 B″ (Q1 (가)) — 봉인 원천도 다시 부른다
+    (`verdict_compute` 기본 = 임시 폴더 · 판정 폴더에 아무것도 쓰지 않는다)."""
     vdir = Path(vdir)
     try:
         old_pub = (vdir / 'verdict.json').read_bytes()
