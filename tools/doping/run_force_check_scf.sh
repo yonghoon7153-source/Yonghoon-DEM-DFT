@@ -343,9 +343,16 @@ for i in "${INS[@]}"; do
 done
 
 echo "[$(ts)] 끝 — 완료 $done_n · 건너뜀 $skip_n · 실패 $fail_n · 총 $(( ($(date +%s)-t0)/60 ))분"
+# 힘 검산 (frame.xyz 가 있는 폴더) 전용 끝 문구 — 다른 잡 (Nd Q2 · k 탐침 2026-10-26) 에 'UMA 힘' 이 찍혀 헷갈렸다
+fc=0; ls "$ROOT"/*/frame.xyz >/dev/null 2>&1 && fc=1
 if [ "$fail_n" -gt 0 ]; then
-  echo "⛔ 실패한 점이 있다. 카드 §8 무효 조건: **19점으로 판정하지 않는다** —"
-  echo "   그 점을 다시 돌리거나, 규칙에 미리 적은 대체(실패 프레임의 +1 ps)를 쓴다."
+  if [ "$fc" = 1 ]; then
+    echo "⛔ 실패한 점이 있다. 카드 §8 무효 조건: **19점으로 판정하지 않는다** —"
+    echo "   그 점을 다시 돌리거나, 규칙에 미리 적은 대체(실패 프레임의 +1 ps)를 쓴다."
+  else
+    echo "⛔ 실패한 잡이 있다 — 그 잡을 다시 돌리거나 카드에 미리 적은 대체를 쓴다 (빼고 판정하지 않는다)."
+  fi
   exit 1
 fi
-echo "다음: UMA 힘 (같은 frame.xyz) → 분석"
+[ "$fc" = 1 ] && echo "다음: UMA 힘 (같은 frame.xyz) → 분석"
+exit 0
