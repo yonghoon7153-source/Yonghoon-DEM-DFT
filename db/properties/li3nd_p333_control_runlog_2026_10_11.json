@@ -1,110 +1,119 @@
 {
-  "kind": "runlog",
-  "date": "2026-10-11",
-  "system": "li3nd_mp-976264_p333 (pristine 3×3×3 · 대칭 끔 · rattle 시드 r0–r3)",
-  "decision": "D-2026-10-11-gabia-elastic-pause-li3nd-r2",
-  "track": "SEI NEB (Li₃Nd) · 탄성 (우리 DFT) — 둘 다 1저자 = 사용자",
-  "왜": "Li₃Nd P0-2 control (회신 I · kb/open_items.md ⏭-4): pristine 셀이 공공 없이도 Nd 재배열을 하는지 → 하면 Li₃Nd NEB 끝점부터 다시. 사용자 10-09 'li3Nd, li2s 관련해서 논문에 넣어야' · 10-11 '13m bfgs 뜨면 잠정 stop하고 li3nd 로 넘어가자' · '대신 resume 잘 걸려야돼'.",
-  "기록상_상태": {
-    "r0": "수렴 (무섭동 · bfgs 0 · 08-30)",
-    "r1": "09-06 GPU OOM (겹쳐 걸음) — 그 뒤 기록 없음",
-    "r2": "09-10 23:04 EXIT 통제 정지 · step 40 · |F| 0.032609 · E −14652.33022106 Ry · .bfgs sha 3feb4c36 · 박제 PAUSED_0910_2304/",
-    "r3": "09-06 nstep 소진 (|F| 0.042) → 09-10 EXIT 통제 정지"
+ "kind": "runlog",
+ "date": "2026-10-11",
+ "system": "li3nd_mp-976264_p333 (pristine 3×3×3 · 대칭 끔 · rattle 시드 r0–r3)",
+ "decision": "D-2026-10-11-gabia-elastic-pause-li3nd-r2",
+ "track": "SEI NEB (Li₃Nd) · 탄성 (우리 DFT) — 둘 다 1저자 = 사용자",
+ "왜": "Li₃Nd P0-2 control (회신 I · kb/open_items.md ⏭-4): pristine 셀이 공공 없이도 Nd 재배열을 하는지 → 하면 Li₃Nd NEB 끝점부터 다시. 사용자 10-09 'li3Nd, li2s 관련해서 논문에 넣어야' · 10-11 '13m bfgs 뜨면 잠정 stop하고 li3nd 로 넘어가자' · '대신 resume 잘 걸려야돼'.",
+ "기록상_상태": {
+  "r0": "수렴 (무섭동 · bfgs 0 · 08-30)",
+  "r1": "09-06 GPU OOM (겹쳐 걸음) — 그 뒤 기록 없음",
+  "r2": "09-10 23:04 EXIT 통제 정지 · step 40 · |F| 0.032609 · E −14652.33022106 Ry · .bfgs sha 3feb4c36 · 박제 PAUSED_0910_2304/",
+  "r3": "09-06 nstep 소진 (|F| 0.042) → 09-10 EXIT 통제 정지"
+ },
+ "⛔_판정_결함_2026_10_11": {
+  "관측": "gabia 판정만 실행 (사용자 붙여넣기 10-11): restart_qe_relax.sh 가 r0·r1·r2·r3 전부 '✅ 수렴 — 건드리지 않는다' · '다시 걸 것이 없다'",
+  "원인": "그 드라이버에 '사람이 세움' 갈래가 없었다 — EXIT 로 세운 relax 도 QE 가 JOB DONE 을 찍어 마지막 'JOB DONE → conv' 로 떨어진다 (09-10 EXIT 의 r2·r3 가 수렴으로 보였다 · --run 으로도 안 걸렸다)",
+  "고침": "tools/sei/restart_qe_relax.sh @e6941d4 + 표시 정정 — stopped 갈래 (탄성 러너 _out_state 와 같은 문자열) · save 있으면 restart · selftest 28 · 깨기 3/3",
+  "⚠": "r1·r3 의 진짜 상태는 아직 모른다 — 확인 블록 (마커 개수) 결과로 적는다"
+ },
+ "도구": {
+  "정지": "tools/elastic/pause_relax_at_bfgs.sh (sha256 2cc1c477bd22b8610af18f416003e136aa0a939e5b2c88680a01f1275f2248d0) · selftest 19 · 깨기 5/5 (얼림·좀비·EXIT 정리·창 셸 거부·시간 초과 복귀)",
+  "r2_대기": "db/inputs/li3nd_p333_control_2026_10_11/run_r2_after_pause_gabia.sh (sha256 23b58ebc94f52551d1ccfbcc577eb4b2b57bbf1d8030e4953190c8ccbe9b624d) · selftest 13 · 깨기 5/5 (판정 확인·GPU 대기·정지 실패·상한 둘)",
+  "드라이버": "tools/sei/restart_qe_relax.sh (sha256 b9ebbc4196e259467fc21d3a35bc363a9def36e01a947c6b33d518845c0c91d2)"
+ },
+ "계획": [
+  "① 블록이 r2 의 .out 을 직접 본다 — 'bfgs converged in' 0 · 'Program stopped by user request' 1 일 때만 진행 (아니면 아무것도 안 함)",
+  "② tmux stop13m: 탄성 러너 bash 만 얼림 → 13_m 의 다음 BFGS 줄 직후 strain_13_m.EXIT → pw.x 저장·정지 확인 → 남은 EXIT 정리 → 얼린 러너 종료 (12_p 안 뜸)",
+  "③ tmux li3nd_r2: 정지 로그 '✅ 러너' → 새 판정이 r2 '사람이 세움 → restart' → GPU 계산 프로세스 0 개 × 2 (li2s 대조 seed5 UMA 끝 · gabia GPU pw.x↔UMA 동시 금지) → restart_qe_relax.sh --run r2 (restart · nstep 200)",
+  "④ 탄성 재개 (r2 뒤 · 사용자 결정): 러너를 새로 띄운다 → 13_m stopped + .bfgs → restart_mode='restart' · 새 .out 에서 'Atomic positions and unit cell read from directory' · 'initial density is read from file' · 첫 SCF 뒤 'number of bfgs steps' 가 멈춘 번호 다음부터"
+ ],
+ "탄성_13_m_정지_전": {
+  "관측_10_11_14:18": "BFGS 166 · Total force 0.005415 · P −0.32 kbar · GPU pw.x 41,374 MiB · 러너 TAGS 순서상 13_m 뒤에 12_p · 12_m 이 남음",
+  "⚠_게이트": "D-2026-09-11-elastic-conv-threshold 60 BFGS 를 이미 넘었다 (규칙상 modelc_2x = 측정 불가) — 이 정지는 게이트 판정 (① 닫기 / ③ 개정) 을 하지 않는다 · 미결"
+ },
+ "단계": {
+  "확인": {
+   "at": "2026-10-11 19:05 (gabia · 붙여넣기 블록의 자체 확인 통과 → tmux 두 개가 떴다)",
+   "r2": "watch 19:06: 'number of bfgs steps' 40 줄 · Total force 0.032609 · .out 갱신 23:04 (= PAUSED_0910_2304) — EXIT 로 선 그대로다. 옛 드라이버의 '수렴' 은 틀린 판정이었다 (확인됨)",
+   "selftest_gabia": "정지 도구 · r2 대기 둘 다 통과 (&& 사슬이라 실패면 tmux 가 안 떴다)",
+   "r1_r3": "아직 마커 확인 안 함 — r2 뒤 따로"
   },
-  "⛔_판정_결함_2026_10_11": {
-    "관측": "gabia 판정만 실행 (사용자 붙여넣기 10-11): restart_qe_relax.sh 가 r0·r1·r2·r3 전부 '✅ 수렴 — 건드리지 않는다' · '다시 걸 것이 없다'",
-    "원인": "그 드라이버에 '사람이 세움' 갈래가 없었다 — EXIT 로 세운 relax 도 QE 가 JOB DONE 을 찍어 마지막 'JOB DONE → conv' 로 떨어진다 (09-10 EXIT 의 r2·r3 가 수렴으로 보였다 · --run 으로도 안 걸렸다)",
-    "고침": "tools/sei/restart_qe_relax.sh @e6941d4 + 표시 정정 — stopped 갈래 (탄성 러너 _out_state 와 같은 문자열) · save 있으면 restart · selftest 28 · 깨기 3/3",
-    "⚠": "r1·r3 의 진짜 상태는 아직 모른다 — 확인 블록 (마커 개수) 결과로 적는다"
+  "정지": {
+   "시작": "2026-10-11 19:05:43 · tmux stop13m",
+   "대상": "pw.x 2655011 · cwd /data/work/runs/elastic_modelc_2x · prefix strain_13_m · .bfgs ./tmp_strain_13_m/strain_13_m.bfgs",
+   "러너": "463447 — 창 셸 아님 (거부 안 걸림) · 19:05:44 얼림 (T)",
+   "대기": "BFGS 줄 170 개에서 다음 줄 (상한 14,400 s) — 14:18 watch 의 166 뒤로 4 스텝 · 스텝당 ≈ 70 분",
+   "GPU_19:06": "탄성 pw.x 41,374 MiB + li2s 대조 seed5 UMA 2,880 MiB (아직 진행)",
+   "끝": {
+    "at": "2026-10-11 19:35:49",
+    "결과": "✅ — BFGS 줄 170 → 171 뒤 EXIT · 상태 stopped · 마지막 Total force 0.006027 · .bfgs fa1dc8cc (19:34:56 저장) · 러너 463447 종료 · 12_p 안 뜸 (19:41 GPU 에 탄성 pw.x 없음)",
+    "재개_조건": "strain_13_m = stopped + tmp_strain_13_m/strain_13_m.bfgs → 러너를 새로 띄우면 restart_mode='restart' (BFGS 171 다음부터)",
+    "tmux": "el_mc2x_1001 창은 남아 있다 (러너만 끝났다 · 창 셸은 살아 있음) — 재개 때 새 세션으로 띄운다"
+   }
   },
-  "도구": {
-    "정지": "tools/elastic/pause_relax_at_bfgs.sh (sha256 2cc1c477bd22b8610af18f416003e136aa0a939e5b2c88680a01f1275f2248d0) · selftest 19 · 깨기 5/5 (얼림·좀비·EXIT 정리·창 셸 거부·시간 초과 복귀)",
-    "r2_대기": "db/inputs/li3nd_p333_control_2026_10_11/run_r2_after_pause_gabia.sh (sha256 23b58ebc94f52551d1ccfbcc577eb4b2b57bbf1d8030e4953190c8ccbe9b624d) · selftest 13 · 깨기 5/5 (판정 확인·GPU 대기·정지 실패·상한 둘)",
-    "드라이버": "tools/sei/restart_qe_relax.sh (sha256 b9ebbc4196e259467fc21d3a35bc363a9def36e01a947c6b33d518845c0c91d2)"
+  "r2_재개": {
+   "대기_시작": "2026-10-11 19:05:43 · tmux li3nd_r2 · ① 정지 로그 대기",
+   "재개": {
+    "at": "2026-10-11 19:4x (seed5 19:39:47 끝 → GPU 0 개 × 2 회 뒤)",
+    "판정": "'⏸ li3nd_mp-976264_p333_r2 사람이 세움(EXIT·max_seconds) → nstep 200 · restart (BFGS 이력 승계)'",
+    "실행": "'▶ li3nd_mp-976264_p333_r2 mode=restart nstep=200 (GPU 여유 49139 MiB)' · pw.x 3384461 · -in 00_control_relax.restart.in",
+    "관측_20:02": "새 .out 에 BFGS 줄 0 (첫 SCF 중 · 새 파일이라 0 부터 센다) · VRAM 25,338 MiB (09-10 실측 37.7 GB 까지 오를 수 있다)",
+    "⏭_확인": "첫 SCF 뒤 'number of bfgs steps' 값이 41 근처에서 이어지는지 · 'read from directory' 줄 · 옛 .out 은 .out.NNN 으로 보관"
+   },
+   "✅_이력_승계_확인_2026_10_12": {
+    "at": "2026-10-12 08:58 (gabia watch · 사용자 붙여넣기)",
+    "BFGS": "'number of bfgs steps = 49' — 40 에서 이어짐 (처음부터였다면 한 자리 수) · 재개 뒤 ≈ 13 h 에 9 스텝 (≈ 1.4 h/스텝)",
+    "힘": "Total force 0.032609 → 0.026421",
+    "VRAM": "37,222 MiB (09 월 실측 37.7 GB 와 같음)",
+    "SCF_반복_누계": 352,
+    "⚠": "watch 의 'read from file' 두 줄은 의사퍼텐셜 줄이다 (grep 이 잘못 잡음) — 승계 판정 근거는 BFGS 번호"
+   }
   },
-  "계획": [
-    "① 블록이 r2 의 .out 을 직접 본다 — 'bfgs converged in' 0 · 'Program stopped by user request' 1 일 때만 진행 (아니면 아무것도 안 함)",
-    "② tmux stop13m: 탄성 러너 bash 만 얼림 → 13_m 의 다음 BFGS 줄 직후 strain_13_m.EXIT → pw.x 저장·정지 확인 → 남은 EXIT 정리 → 얼린 러너 종료 (12_p 안 뜸)",
-    "③ tmux li3nd_r2: 정지 로그 '✅ 러너' → 새 판정이 r2 '사람이 세움 → restart' → GPU 계산 프로세스 0 개 × 2 (li2s 대조 seed5 UMA 끝 · gabia GPU pw.x↔UMA 동시 금지) → restart_qe_relax.sh --run r2 (restart · nstep 200)",
-    "④ 탄성 재개 (r2 뒤 · 사용자 결정): 러너를 새로 띄운다 → 13_m stopped + .bfgs → restart_mode='restart' · 새 .out 에서 'Atomic positions and unit cell read from directory' · 'initial density is read from file' · 첫 SCF 뒤 'number of bfgs steps' 가 멈춘 번호 다음부터"
-  ],
-  "탄성_13_m_정지_전": {
-    "관측_10_11_14:18": "BFGS 166 · Total force 0.005415 · P −0.32 kbar · GPU pw.x 41,374 MiB · 러너 TAGS 순서상 13_m 뒤에 12_p · 12_m 이 남음",
-    "⚠_게이트": "D-2026-09-11-elastic-conv-threshold 60 BFGS 를 이미 넘었다 (규칙상 modelc_2x = 측정 불가) — 이 정지는 게이트 판정 (① 닫기 / ③ 개정) 을 하지 않는다 · 미결"
+  "r2_관측_2026_10_22_0915": {
+   "출처": "사용자 붙여넣기 2026-10-22 09:15 (gabia · 읽기 블록 — restart.in 설정 줄 · .out 파일별 BFGS·에너지 범위 · 현재 .out 스텝별 dE·max|F|·Total) · 사용자 질문 '이거 왜 안끝나지 오히려 F는 올라가긴 하는데'",
+   "설정_실측": "00_control_relax.restart.in — nstep 200 · restart_mode 'restart' · degauss 0.02 · conv_thr 1.0d-8 · etot_conv_thr·forc_conv_thr 줄 없음 ⇒ QE 기본 (연속 두 스텝 에너지 차 < 1e-4 Ry 와 힘 성분 최대 < 1e-3 Ry/bohr 가 둘 다 맞아야 끝) · nspin 줄 없음",
+   "파일별_이력": ".out.step50 (= .out.step50_done 같은 범위) BFGS 0→49 · .000 · .001 · .003 BFGS 줄 0 (09-06 OOM) · .002 0→1 · .004 0→39 (09-06 from_scratch → 09-10 EXIT) · .005 40→177 (10-11 → 10-19 ELF 정지) · .006 178→181 (→ 10-19 떼어내기 정지) · .007 182→186 (10-20 03:42 → S 빈자리 정지) · 현재 .out 187→223 (10-20 12:34 재개 · SCF 37 번째) — 전 파일 거부 0 · 리셋 0",
+   "스텝당_하강_mRy": {
+    "0–39": -5.22,
+    "40–177": -1.82,
+    "178–186": -0.45,
+    "187–198": -0.37,
+    "199–223": -0.3
+   },
+   "최근_25_스텝_199_223": "dE −0.11 ~ −0.70 mRy (합 −7.52 · 전부 문턱 0.1 mRy 보다 큼 · 가장 가까운 것 203 의 −0.11) · max|F| 0.0014–0.0033 Ry/bohr (문턱의 1.4–3.3 배) · Total force 0.0076–0.0095 (199–217) → 0.0101–0.0123 (218–223) · 같은 때 dE 도 커짐 (221–223 = −0.56 · −0.70 · −0.43)",
+   "읽기": "수치 문제가 아니다 (거부·리셋 0 · SCF 잡음 ≪ 힘 문턱) — 아주 평평한 바닥으로 천천히 내려가는 중 · 218 부터 힘이 오른 것은 더 가파른 비탈로 넘어간 것 (에너지 하강도 같이 커졌다) · 끝나는 시점은 못 박는다 — 묶는 조건은 힘 쪽이다 (에너지 차는 가끔 문턱 근처까지 온다)",
+   "한도": "이번 실행 SCF 200 번 중 37 번 사용 · 스텝당 ≈ 1.21 h → 남은 163 번 ≈ 197 h → BFGS ≈ 386 · ≈ 10-30 저녁 · 드라이버 머리말 원칙 '늘린 값도 소진하면 그건 보고할 사실이다' (tools/sei/restart_qe_relax.sh)",
+   "⚠": "진행 중 이완의 에너지·기하는 정량 인용하지 않는다 (kb/questions/li3nd_pristine_reconstruction_2026_09_02.md '아직 말하면 안 되는 것') — 위 하강률은 진행 판단용",
+   "by": "agent · 2026-10-22"
   },
-  "단계": {
-    "확인": {
-      "at": "2026-10-11 19:05 (gabia · 붙여넣기 블록의 자체 확인 통과 → tmux 두 개가 떴다)",
-      "r2": "watch 19:06: 'number of bfgs steps' 40 줄 · Total force 0.032609 · .out 갱신 23:04 (= PAUSED_0910_2304) — EXIT 로 선 그대로다. 옛 드라이버의 '수렴' 은 틀린 판정이었다 (확인됨)",
-      "selftest_gabia": "정지 도구 · r2 대기 둘 다 통과 (&& 사슬이라 실패면 tmux 가 안 떴다)",
-      "r1_r3": "아직 마커 확인 안 함 — r2 뒤 따로"
-    },
-    "정지": {
-      "시작": "2026-10-11 19:05:43 · tmux stop13m",
-      "대상": "pw.x 2655011 · cwd /data/work/runs/elastic_modelc_2x · prefix strain_13_m · .bfgs ./tmp_strain_13_m/strain_13_m.bfgs",
-      "러너": "463447 — 창 셸 아님 (거부 안 걸림) · 19:05:44 얼림 (T)",
-      "대기": "BFGS 줄 170 개에서 다음 줄 (상한 14,400 s) — 14:18 watch 의 166 뒤로 4 스텝 · 스텝당 ≈ 70 분",
-      "GPU_19:06": "탄성 pw.x 41,374 MiB + li2s 대조 seed5 UMA 2,880 MiB (아직 진행)",
-      "끝": {
-        "at": "2026-10-11 19:35:49",
-        "결과": "✅ — BFGS 줄 170 → 171 뒤 EXIT · 상태 stopped · 마지막 Total force 0.006027 · .bfgs fa1dc8cc (19:34:56 저장) · 러너 463447 종료 · 12_p 안 뜸 (19:41 GPU 에 탄성 pw.x 없음)",
-        "재개_조건": "strain_13_m = stopped + tmp_strain_13_m/strain_13_m.bfgs → 러너를 새로 띄우면 restart_mode='restart' (BFGS 171 다음부터)",
-        "tmux": "el_mc2x_1001 창은 남아 있다 (러너만 끝났다 · 창 셸은 살아 있음) — 재개 때 새 세션으로 띄운다"
-      }
-    },
-    "r2_재개": {
-      "대기_시작": "2026-10-11 19:05:43 · tmux li3nd_r2 · ① 정지 로그 대기",
-      "재개": {
-        "at": "2026-10-11 19:4x (seed5 19:39:47 끝 → GPU 0 개 × 2 회 뒤)",
-        "판정": "'⏸ li3nd_mp-976264_p333_r2 사람이 세움(EXIT·max_seconds) → nstep 200 · restart (BFGS 이력 승계)'",
-        "실행": "'▶ li3nd_mp-976264_p333_r2 mode=restart nstep=200 (GPU 여유 49139 MiB)' · pw.x 3384461 · -in 00_control_relax.restart.in",
-        "관측_20:02": "새 .out 에 BFGS 줄 0 (첫 SCF 중 · 새 파일이라 0 부터 센다) · VRAM 25,338 MiB (09-10 실측 37.7 GB 까지 오를 수 있다)",
-        "⏭_확인": "첫 SCF 뒤 'number of bfgs steps' 값이 41 근처에서 이어지는지 · 'read from directory' 줄 · 옛 .out 은 .out.NNN 으로 보관"
-      },
-      "✅_이력_승계_확인_2026_10_12": {
-        "at": "2026-10-12 08:58 (gabia watch · 사용자 붙여넣기)",
-        "BFGS": "'number of bfgs steps = 49' — 40 에서 이어짐 (처음부터였다면 한 자리 수) · 재개 뒤 ≈ 13 h 에 9 스텝 (≈ 1.4 h/스텝)",
-        "힘": "Total force 0.032609 → 0.026421",
-        "VRAM": "37,222 MiB (09 월 실측 37.7 GB 와 같음)",
-        "SCF_반복_누계": 352,
-        "⚠": "watch 의 'read from file' 두 줄은 의사퍼텐셜 줄이다 (grep 이 잘못 잡음) — 승계 판정 근거는 BFGS 번호"
-      }
-    },
-    "r2_관측_2026_10_22_0915": {
-      "출처": "사용자 붙여넣기 2026-10-22 09:15 (gabia · 읽기 블록 — restart.in 설정 줄 · .out 파일별 BFGS·에너지 범위 · 현재 .out 스텝별 dE·max|F|·Total) · 사용자 질문 '이거 왜 안끝나지 오히려 F는 올라가긴 하는데'",
-      "설정_실측": "00_control_relax.restart.in — nstep 200 · restart_mode 'restart' · degauss 0.02 · conv_thr 1.0d-8 · etot_conv_thr·forc_conv_thr 줄 없음 ⇒ QE 기본 (연속 두 스텝 에너지 차 < 1e-4 Ry 와 힘 성분 최대 < 1e-3 Ry/bohr 가 둘 다 맞아야 끝) · nspin 줄 없음",
-      "파일별_이력": ".out.step50 (= .out.step50_done 같은 범위) BFGS 0→49 · .000 · .001 · .003 BFGS 줄 0 (09-06 OOM) · .002 0→1 · .004 0→39 (09-06 from_scratch → 09-10 EXIT) · .005 40→177 (10-11 → 10-19 ELF 정지) · .006 178→181 (→ 10-19 떼어내기 정지) · .007 182→186 (10-20 03:42 → S 빈자리 정지) · 현재 .out 187→223 (10-20 12:34 재개 · SCF 37 번째) — 전 파일 거부 0 · 리셋 0",
-      "스텝당_하강_mRy": {
-        "0–39": -5.22,
-        "40–177": -1.82,
-        "178–186": -0.45,
-        "187–198": -0.37,
-        "199–223": -0.3
-      },
-      "최근_25_스텝_199_223": "dE −0.11 ~ −0.70 mRy (합 −7.52 · 전부 문턱 0.1 mRy 보다 큼 · 가장 가까운 것 203 의 −0.11) · max|F| 0.0014–0.0033 Ry/bohr (문턱의 1.4–3.3 배) · Total force 0.0076–0.0095 (199–217) → 0.0101–0.0123 (218–223) · 같은 때 dE 도 커짐 (221–223 = −0.56 · −0.70 · −0.43)",
-      "읽기": "수치 문제가 아니다 (거부·리셋 0 · SCF 잡음 ≪ 힘 문턱) — 아주 평평한 바닥으로 천천히 내려가는 중 · 218 부터 힘이 오른 것은 더 가파른 비탈로 넘어간 것 (에너지 하강도 같이 커졌다) · 끝나는 시점은 못 박는다 — 묶는 조건은 힘 쪽이다 (에너지 차는 가끔 문턱 근처까지 온다)",
-      "한도": "이번 실행 SCF 200 번 중 37 번 사용 · 스텝당 ≈ 1.21 h → 남은 163 번 ≈ 197 h → BFGS ≈ 386 · ≈ 10-30 저녁 · 드라이버 머리말 원칙 '늘린 값도 소진하면 그건 보고할 사실이다' (tools/sei/restart_qe_relax.sh)",
-      "⚠": "진행 중 이완의 에너지·기하는 정량 인용하지 않는다 (kb/questions/li3nd_pristine_reconstruction_2026_09_02.md '아직 말하면 안 되는 것') — 위 하강률은 진행 판단용",
-      "by": "agent · 2026-10-22"
-    },
-    "r2_끝": null,
-    "탄성_재개": null,
-    "마감_규칙_2026_10_22": {
-      "결정": "D-2026-10-22-li3nd-r2-close-at-run-limit (active · 사용자 10-22 '권고대로하자')",
-      "규칙": "지금 실행 (restart.in nstep 200 · 10-20 12:34 재개 · BFGS 187 부터) 이 QE 기본 수렴 (연속 두 스텝 dE < 1e-4 Ry 와 힘 성분 최대 < 1e-3 Ry/bohr) 에 못 닿고 SCF 200 번을 다 쓰면 (≈ BFGS 386 · ≈ 10-30 저녁 어림) nstep 을 늘리지 않고 '미수렴' 으로 닫는다 · 다른 잡 때문의 EXIT 정지 + 이력 승계는 같은 실행으로 센다",
-      "닫을_때_남길_것": "마지막 BFGS 번호 · 마지막 dE · 힘 성분 최대 · Total force · 거부 · 리셋 수 → 이 런로그 '단계.r2_끝' · '결과' (마지막 기하·에너지는 수렴한 바닥으로 인용하지 않는다)",
-      "그_뒤": "탄성 modelc_2x 재개 순서 그대로 ('단계.탄성_재개')",
-      "by": "agent · 2026-10-22 (대피 세션 claude/evac-2026-10-22)"
-    },
-    "r2_정지_li2s_k222_2026_10_23": {
-      "결정": "D-2026-10-23-gabia-li2s-k222-pause-li3nd (사용자 · li2s k 2×2×2 대조 + Γ 기계 대조 두 잡)",
-      "정지": "16:24:27 pause_relax_at_bfgs.sh 대기 시작 — 'BFGS 줄 63 개에서 다음 줄' · 이번 실행 (10-20 12:34 · restart.in nstep 200) SCF 63 개 사용",
-      "재개_규칙": "두 잡 뒤 성공 · 실패 상관없이 restart_qe_relax.sh --run --nstep (200 − 쓴 SCF) — D-2026-10-22 마감 규칙 (EXIT 정지는 새 한도를 주지 않는다 · 같은 실행으로 센다) · 남은 게 0 이하면 다시 걸지 않는다",
-      "한도_영향": "BFGS 끝 번호 (≈ 386) 는 그대로 · 날짜만 3–4 h 밀림 (≈ 10-30 저녁 → 밤)",
-      "by": "agent · 2026-10-23",
-      "정지_확인": "16:33:43 BFGS 줄 64 직후 EXIT · 마지막 Total force 0.0075 · 판정 '사람이 세움 → restart (BFGS 이력 승계)' · 재개 예상 nstep 136 (= 200 − 64)",
-      "재개": "17:32:29 tmux li3nd_r2_res_10231732 · restart_qe_relax.sh --run --nstep 136 (= 200 − 64 · D-2026-10-22 같은 실행) · 정지 ≈ 59 분"
-    }
+  "r2_끝": null,
+  "탄성_재개": null,
+  "마감_규칙_2026_10_22": {
+   "결정": "D-2026-10-22-li3nd-r2-close-at-run-limit (active · 사용자 10-22 '권고대로하자')",
+   "규칙": "지금 실행 (restart.in nstep 200 · 10-20 12:34 재개 · BFGS 187 부터) 이 QE 기본 수렴 (연속 두 스텝 dE < 1e-4 Ry 와 힘 성분 최대 < 1e-3 Ry/bohr) 에 못 닿고 SCF 200 번을 다 쓰면 (≈ BFGS 386 · ≈ 10-30 저녁 어림) nstep 을 늘리지 않고 '미수렴' 으로 닫는다 · 다른 잡 때문의 EXIT 정지 + 이력 승계는 같은 실행으로 센다",
+   "닫을_때_남길_것": "마지막 BFGS 번호 · 마지막 dE · 힘 성분 최대 · Total force · 거부 · 리셋 수 → 이 런로그 '단계.r2_끝' · '결과' (마지막 기하·에너지는 수렴한 바닥으로 인용하지 않는다)",
+   "그_뒤": "탄성 modelc_2x 재개 순서 그대로 ('단계.탄성_재개')",
+   "by": "agent · 2026-10-22 (대피 세션 claude/evac-2026-10-22)"
   },
-  "결과": null
+  "r2_정지_li2s_k222_2026_10_23": {
+   "결정": "D-2026-10-23-gabia-li2s-k222-pause-li3nd (사용자 · li2s k 2×2×2 대조 + Γ 기계 대조 두 잡)",
+   "정지": "16:24:27 pause_relax_at_bfgs.sh 대기 시작 — 'BFGS 줄 63 개에서 다음 줄' · 이번 실행 (10-20 12:34 · restart.in nstep 200) SCF 63 개 사용",
+   "재개_규칙": "두 잡 뒤 성공 · 실패 상관없이 restart_qe_relax.sh --run --nstep (200 − 쓴 SCF) — D-2026-10-22 마감 규칙 (EXIT 정지는 새 한도를 주지 않는다 · 같은 실행으로 센다) · 남은 게 0 이하면 다시 걸지 않는다",
+   "한도_영향": "BFGS 끝 번호 (≈ 386) 는 그대로 · 날짜만 3–4 h 밀림 (≈ 10-30 저녁 → 밤)",
+   "by": "agent · 2026-10-23",
+   "정지_확인": "16:33:43 BFGS 줄 64 직후 EXIT · 마지막 Total force 0.0075 · 판정 '사람이 세움 → restart (BFGS 이력 승계)' · 재개 예상 nstep 136 (= 200 − 64)",
+   "재개": "17:32:29 tmux li3nd_r2_res_10231732 · restart_qe_relax.sh --run --nstep 136 (= 200 − 64 · D-2026-10-22 같은 실행) · 정지 ≈ 59 분"
+  }
+ },
+ "결과": null,
+ "r2_관측_2026_10_26_1443": {
+  "출처": "사용자 붙여넣기 2026-10-26 14:43:19 (gabia watch_qe_relax.sh · 읽기만) · 사용자 질문 '요거 괜찮은거 맞아??'",
+  "상태": "run · PID 2866237 · 조용 0 분 (출력이 계속 써짐) · CPU 99.9 % (GPU 1 랭크) · GPU 37,228 MiB (r2 원래 크기 · 곁의 GPU 잡 없음 · 합계 37,244 / 49,140) · 살아있음 1 · 죽음/오류 0",
+  "진행": "BFGS 305 (10-23 16:33 BFGS 251 에서 EXIT → 17:32 재개 · 이번 파일 SCF 55 · 이번 실행 한도 136 = 200 − 64 중 55) — 남은 81 · 스텝당 ≈ 1.26 h (17:32 → 14:43 · 69.2 h / 55) → 한도 ≈ BFGS 386 · ≈ 10-30 밤 (10-22 어림과 같다)",
+  "힘": "Total force 0.0135 Ry/bohr — 10-23 정지 때 0.0075 보다 크다 · 10-22 읽기에서도 218–223 에 힘이 오르며 에너지 하강이 같이 커졌다 (더 가파른 비탈로 넘어감) · 'Total force' 는 전 원자 힘의 크기라 QE 문턱 (성분 최대 1e-3 Ry/bohr) 과 직접 비교하는 값이 아니다",
+  "읽기": "프로세스는 정상 · 수렴 쪽으로 가는지는 이 화면만으로 못 가린다 (스텝별 에너지 차 · 성분 최대 · 거부 · 리셋 수가 없다) → 읽기 블록 · 한도 안 미수렴이면 D-2026-10-22-li3nd-r2-close-at-run-limit 대로 닫고 탄성 재개",
+  "⚠": "진행 중 이완의 에너지 · 기하는 정량 인용하지 않는다 (E_Ry 는 기록하지 않았다)",
+  "by": "agent · 2026-10-26"
+ }
 }
