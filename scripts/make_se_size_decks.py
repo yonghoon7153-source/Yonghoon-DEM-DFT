@@ -57,6 +57,7 @@
 from __future__ import annotations
 
 import argparse
+import difflib
 import hashlib
 import json
 import math
@@ -85,26 +86,29 @@ PRESET_KG50Y4 = dict(
     maxattempt=3000,                # D0.7 · 50 µm (예상 ≈ 49 만 개) 가 int32 상한 3,38x 아래 — 모든 덱 같은 값
     atom_dump_every=50000,          # ⑫ 1저자 10-26 Q3 권고대로
     compress_restart_every=200000,  # ⑪ 1저자 10-26 Q4 권고대로
-    insert_restart=True,            # ⑬ 1저자 10-26 Q1 권고대로 (모든 덱 · 삽입 전용 덱과 짝)
-    am_gate_tol=0.005,              # ⑭ 1저자 10-26 Q1 — 삽입 직후 활물질 수 ±0.5 %
-    insert_extra_steps=2000,        # ⑬ 삽입 전용 덱의 끝 run — 재개 시험 G3 의 비교 줄 (thermo 1000)
+    insert_restart=False,           # ⑬ 본 덱에는 step 1 체크포인트 없음 (10-26 밤 Q1 — 삽입 전용 덱만 · KG50-10)
+    am_gate_tol=0.005,              # ⑭ 삽입 직후 활물질 수 ±0.5 % (정수 구간 = ceil · floor · KG50-08)
+    se_gate_tol=0.005,              # ⑭ 삽입 직후 SE 수 ±0.5 % (KG50-13)
+    end_frames=True,                # ⑯ 끝 step 의 restart · atom · contact · mesh + 이완 중 체크포인트 끔 (KG50-03 · 11)
+    insert_settle_steps=20000,      # ⑬ 삽입 전용 덱 = 정착 20,000 step 뒤 restart_settling_20001 (첫 바닥 접촉 ≈ 3,500 뒤)
+    insert_tail_steps=3000,         # ⑬ 그 뒤 3,000 step = 재개 시험 G3 의 비교 줄 (21,000 · 22,000 · 23,000)
+    #: 삽입 전용 덱을 만드는 케이스 (NP 1 삽입 → 코어 늘려 재개) — D3 칸 비교는 처음부터 끝까지 NP 1 (재개 없음)
+    insert_cases=('kg50_d07_b40', 'kg50_d1_b40', 'kg50_d2_b40', 'kg50_d07_b50', 'kg50_d1_b50', 'kg50_d2_b50'),
     #: (케이스, r_SE µm, 영역 µm, 시드 슬롯) — 슬롯이 시드를 정한다 (바꾸면 다른 침대)
     cases=[('kg50_d07_b40', 0.35, 40, 0), ('kg50_d1_b40', 0.5, 40, 1), ('kg50_d2_b40', 1.0, 40, 2),
-           ('kg50_d3_b40', 1.5, 40, 3),
-           ('kg50_d3_b50', 1.5, 50, 4),                                   # Q5 칸 비교 — 시드 1 짝
+           ('kg50_d3_b40_s1', 1.5, 40, 3),
+           ('kg50_d3_b50_s1', 1.5, 50, 4),                                # 칸 비교 시드 1 짝 (이름 _s1 · KG50-14)
            ('kg50_d3_b40_s2', 1.5, 40, 5), ('kg50_d3_b40_s3', 1.5, 40, 6),
            ('kg50_d3_b50_s2', 1.5, 50, 7), ('kg50_d3_b50_s3', 1.5, 50, 8)],
     #: 40×40 이 D3 칸 비교에서 불합격일 때만 (`--fallback50`) — D0.7-50 은 1저자 10-26 철회 (미리 돌리지 않는다)
     fallback50=[('kg50_d07_b50', 0.35, 50, 9), ('kg50_d1_b50', 0.5, 50, 10), ('kg50_d2_b50', 1.0, 50, 11)],
-    #: ⑮ 속도 시험 (1저자 10-26 Q2) — 본 덱 kg50_d07_b40 와 같은 시드 · skin 둘 × 코어 둘 · 정착 20,000 step 만
-    speed=dict(base='kg50_d07_b40', steps=20000, skins_um=(2.0, 0.5), nps=(28, 56)),
 )
 
 #: 시드 — make_ps_sweep 의 20M–53M 대역 · LHS 의 5 자리와 겹치지 않는 8 자리 대역.  바꾸면 다른 침대가 된다.
 #: 슬롯 16 개 (0–15) → 최대 ≈ 18.9 M · 한 슬롯 안 다섯 시드 간격 100,000 < 슬롯 간격 500,000 (겹침 없음)
 SEED_BASE, SEED_STEP, SEED_SUB = 11_000_000, 500_000, 100_000
 DECK_KW = ('r_am_um', 'am_mass', 'loading_mah_cm2', 'cap_mah_g', 'dens_gen', 'maxattempt', 'atom_dump_every',
-           'compress_restart_every', 'insert_restart', 'am_gate_tol')
+           'compress_restart_every', 'insert_restart', 'am_gate_tol', 'se_gate_tol', 'end_frames')
 
 RE_REGION = re.compile(r'^([ \t]*region[ \t]+(reg_box|reg_mix)[ \t]+block)((?:[ \t]+\S+){6})([ \t]+units[ \t]+box[ \t]*)$', re.M)
 RE_VERTEX = re.compile(r'^([ \t]*print[ \t]+"vertex[ \t]+)(\S+)([ \t]+)(\S+)([ \t]+\$\{plate_z\}".*)$', re.M)
@@ -155,9 +159,22 @@ def _sub_exact(text, pattern, repl, n_expect, what, flags=re.M):
     return new
 
 
+def int_band(n_plan: int, tol) -> tuple:
+    """계획 수 ±tol 안의 정수 구간 (lower = ceil · upper = floor · 정수 산술 — KG50-08)."""
+    tp = round(float(tol) * 1_000_000)
+    if not (0 < tp < 50_000) or int(n_plan) <= 0:
+        _die(f'개수 검사 허용폭 {tol} — (0, 0.05) · 계획 수 {n_plan}')
+    n = int(n_plan)
+    lo = -((-n * (1_000_000 - tp)) // 1_000_000)
+    hi = (n * (1_000_000 + tp)) // 1_000_000
+    if not (lo <= n <= hi):
+        _die(f'정수 구간 {lo}–{hi} 이 계획 {n} 을 안 품는다')
+    return lo, hi
+
+
 def make_deck(text: str, case: str, r_se_um: float, box_um: float, idx: int, *, r_am_um, am_mass,
               loading_mah_cm2, cap_mah_g, dens_gen, maxattempt, atom_dump_every=None, insert_restart=False,
-              compress_restart_every=50000, am_gate_tol=None, skin_um=None):
+              compress_restart_every=50000, am_gate_tol=None, skin_um=None, se_gate_tol=None, end_frames=False):
     """템플릿 → 덱 한 장.  돌려주는 것 = (덱 텍스트, 기록 dict)."""
     if TAG_OLD not in text:
         _die(f'템플릿에 태그 {TAG_OLD} 가 없다')
@@ -288,21 +305,26 @@ def make_deck(text: str, case: str, r_se_um: float, box_um: float, idx: int, *, 
     if not m_un:
         _die('unfix ins_mix 를 못 찾았다')
     n_am_plan = cnt.get('pts1', 0)
-    am_gate = None
+    n_se_plan = cnt.get('pts3', 0)
+    am_gate = se_gate = None
     gate_txt = PS.insert_gate(n_tot)
-    if am_gate_tol is not None:
-        tol = float(am_gate_tol)
-        if not (0 < tol < 0.05) or n_am_plan <= 0:
-            _die(f'활물질 수 검사 허용폭 {am_gate_tol} — (0, 0.05) · 계획 수 {n_am_plan}')
-        lo, hi = math.floor(n_am_plan * (1 - tol)), math.ceil(n_am_plan * (1 + tol))
-        am_gate = (lo, hi)
-        gate_txt += (f'\n# ⑭ 삽입 직후 활물질 수 — 계획 {n_am_plan:,} ±{tol * 100:g} % (SELF-70: NP 가 크면 소수 상이 체계적으로 '
-                     f'부족 → 삽입은 NP 1)\n'
-                     f'group g_am_ins type 1\n'
-                     f'variable n_am_ins equal count(g_am_ins)\n'
-                     f'print "====== AM ${{n_am_ins}} / {n_am_plan} (gate {lo}-{hi}) ======"\n'
-                     f'if "${{n_am_ins}} < {lo} || ${{n_am_ins}} > {hi}" then &\n'
-                     f'    "print \'FATAL: AM count off plan (SELF-70) - insert at NP 1. aborting.\'" &\n'
+    for tag, grp, atype, n_plan, tol_in in (('AM', 'g_am_ins', 1, n_am_plan, am_gate_tol),
+                                            ('SE', 'g_se_ins', 3, n_se_plan, se_gate_tol)):
+        if tol_in is None:
+            continue
+        lo, hi = int_band(n_plan, tol_in)
+        if tag == 'AM':
+            am_gate = (lo, hi)
+        else:
+            se_gate = (lo, hi)
+        var = 'n_am_ins' if tag == 'AM' else 'n_se_ins'
+        gate_txt += (f'\n# ⑭ 삽입 직후 {tag} 수 — 계획 {n_plan:,} · 정수 구간 {lo}–{hi} (±{float(tol_in) * 100:g} % 안 · ceil/floor) · '
+                     f'상별 수는 MPI 랭크 · 시드에 따라 흔들린다 (부족 또는 초과 · SELF-70 · KG50-07) → 삽입은 NP 1\n'
+                     f'group {grp} type {atype}\n'
+                     f'variable {var} equal count({grp})\n'
+                     f'print "====== {tag} ${{{var}}} / {n_plan} (gate {lo}-{hi}) ======"\n'
+                     f'if "${{{var}}} < {lo} || ${{{var}}} > {hi}" then &\n'
+                     f'    "print \'FATAL: {tag} count off plan (SELF-70) - insert at NP 1. aborting.\'" &\n'
                      f'    "quit 1"\n')
     out = out[:m_un.end()] + gate_txt + out[m_un.end():]
 
@@ -337,7 +359,32 @@ def make_deck(text: str, case: str, r_se_um: float, box_um: float, idx: int, *, 
             _die('Phase 1 의 restart … restart_settling_*.bin 줄이 정확히 하나가 아니다')
         out = rx.sub(lambda m: m.group(1) + '\n' + ir + '   # 삽입 직후 (step 1) — 재개 스크립트의 settling 모드 = 남은 200,000', out, count=1)
 
-    # ── ⑮ (속도 시험 덱만) 이웃 skin ──
+    # ── ⑯ 끝 상태 · 이완 중 체크포인트 (KG50-03 · 11) ──
+    if end_frames:
+        m_um = re.search(r'^unfix[ \t]+move_press[ \t]*$', out, re.M)
+        if not m_um or len(re.findall(r'^unfix[ \t]+move_press[ \t]*$', out, re.M)) != 1:
+            _die('unfix move_press 줄이 정확히 하나가 아니다')
+        out = (out[:m_um.end()] + '\nrestart 0   # ⑯ 이완 중 체크포인트 끔 (이름이 restart_compress_* 라 재개하면 압축을 다시 탄다 · KG50-11)'
+               + out[m_um.end():])
+        da = re.search(r'^dump[ \t]+dmp_atom[ \t]+all[ \t]+custom[ \t]+\d+[ \t]+(\S+)atom_\*\.liggghts(.*)$', out, re.M)
+        dc = re.search(r'^dump[ \t]+dmp_contact[ \t]+all[ \t]+local[ \t]+\d+[ \t]+(\S+)contact_\*\.liggghts[ \t]*&\n((?:[ \t]+.*&\n)*[ \t]+.*)$', out, re.M)
+        dm = re.search(r'^dump[ \t]+dmp_mesh[ \t]+all[ \t]+mesh/stl[ \t]+\d+[ \t]+(\S+)mesh_\*\.stl[ \t]+(\S+)[ \t]*$', out, re.M)
+        fin = list(re.finditer(r'^print "====== Simulation Finished!.*$', out, re.M))
+        if not (da and dc and dm) or len(fin) != 1:
+            _die('끝 상태 출력을 만들 dmp_atom · dmp_contact · dmp_mesh · Finished 줄을 못 찾았다')
+        cols = dc.group(2)
+        end_blk = ('# ⑯ 끝 상태 (마지막 step) — 최종 restart 먼저 · atom · contact · mesh 한 장씩 (출력만 · 물리 같음 · KG50-03)\n'
+                   f'write_restart restart_{case}/restart_end.bin\n'
+                   f'dump dmp_atom_end all custom 1 {da.group(1)}atom_end_*.liggghts{da.group(2)}\n'
+                   f'dump dmp_contact_end all local 1 {dc.group(1)}contact_end_*.liggghts &\n{cols}\n'
+                   f'dump dmp_mesh_end all mesh/stl 1 {dm.group(1)}mesh_end_*.stl {dm.group(2)}\n'
+                   'run 0\n'
+                   'undump dmp_atom_end\n'
+                   'undump dmp_contact_end\n'
+                   'undump dmp_mesh_end\n')
+        out = out[:fin[0].start()] + end_blk + out[fin[0].start():]
+
+    # ── ⑮ 이웃 skin (본 덱 = 템플릿 그대로 · 1저자 10-26 밤 Q3 (나)) ──
     mn = list(RE_NEIGHBOR.finditer(out))
     if len(mn) != 1:
         _die('neighbor … bin 줄이 정확히 하나가 아니다')
@@ -395,6 +442,7 @@ def make_deck(text: str, case: str, r_se_um: float, box_um: float, idx: int, *, 
                seeds=seeds, atom_dump_every=int(atom_dump_every) if atom_dump_every else dump_old,
                atom_dump_every_template=dump_old, insert_restart=bool(insert_restart), area_sim=area,
                compress_restart_every=cre, am_gate=list(am_gate) if am_gate else None, n_am_plan=n_am_plan,
+               se_gate=list(se_gate) if se_gate else None, n_se_plan=n_se_plan, end_frames=bool(end_frames),
                skin_um=float(skin_um) if skin_um is not None else skin_old, skin_um_template=skin_old,
                **ADD.dens_record(dens_gen))
     head = [
@@ -414,16 +462,20 @@ def make_deck(text: str, case: str, r_se_um: float, box_um: float, idx: int, *, 
          else f'#   ⑫ atom 덤프 간격 그대로 ({dump_old:,})'),
         (f'#   ⑬ 삽입 직후 체크포인트 {ir} (NP 1 삽입 → 재개 스크립트로 코어 변경)' if insert_restart
          else '#   ⑬ 삽입 직후 체크포인트 없음 (첫 체크포인트 = step 50,000)'),
-        (f'#   ⑭ 삽입 직후 활물질 수 {am_gate[0]}–{am_gate[1]} (계획 {n_am_plan:,}) 밖이면 quit 1 — 삽입은 NP 1 (SELF-70)'
-         if am_gate else '#   ⑭ 활물질 수 검사 없음'),
+        (f'#   ⑭ 삽입 직후 정수 구간 — AM {am_gate[0]}–{am_gate[1]} (계획 {n_am_plan:,})'
+         + (f' · SE {se_gate[0]}–{se_gate[1]} (계획 {n_se_plan:,})' if se_gate else '') + ' 밖이면 quit 1 — 삽입은 NP 1'
+         if am_gate else '#   ⑭ 개수 검사 없음'),
+        ('#   ⑯ 끝 상태 = 최종 restart_end · atom · contact · mesh 한 장씩 (run 0) · 이완 중 체크포인트 끔 (restart 0)'
+         if end_frames else '#   ⑯ 끝 상태 출력 없음'),
+        '#   ⑬ (D0.7 · D1 · D2) 삽입 전용 덱 = 이 덱의 정착 run 앞까지 그대로 + run 20000 + write_restart restart_settling_20001 + run 3000 (NP 1)',
         (f'#   ⑮ 이웃 skin {skin_old:g} → {float(skin_um):g} µm (속도 시험 · 물리 같음 · 궤적만 다름)'
          if skin_um is not None else f'#   ⑮ 이웃 skin 그대로 ({skin_old:g} µm)'),
         '#   그대로: 재료 property/global 전부 (E_SE 0.135e7 = 1.35 GPa 연화값) · 접촉법칙 · dt · 이웃 · 벽 · 중력 · 감쇠 ·',
         '#     정착 200,000 · 안정화 200,000 · 판 속도 0.01 · 목표 0.30 (300 MPa) · 이완 100,000 · 접촉 · mesh 덤프',
         '#   예상 입자 수 (질량분율 규약): ' + ' · '.join(f'{k} {v:,}' for k, v in rec['counts_pred'].items())
         + f' (합 {n_tot:,}) · 예상 면용량 {load_pred:.3f} mAh/cm²',
-        '#   ⚠ 상별 수는 MPI 랭크 수 NP 만큼 흔들린다 (소수 상 = 활물질이 체계적으로 부족 · 원장 SELF-70) — 삽입은 NP 1 ·',
-        '#     런 뒤 덤프로 실현 조성을 센다.',
+        '#   ⚠ 상별 수는 MPI 랭크 · 시드에 따라 흔들린다 (부족 또는 초과 · SELF-70 · KG50-07) — 삽입은 NP 1 · 런 뒤 덤프로 실현 조성을 센다.',
+        '#   ⚠ 감쇠 fix damp all viscous 0.5 = 모든 입자에 같은 γ — γ/m 이 SE 크기에 따라 다르다 (D0.7 ↔ D3 ≈ 79 배 · KG50-04 · 대조 = 등록 뒤).',
         '#   ⚠ 언로딩 없음 — 끝 상태 = 판 고정 이완 (가압 상태) · 실험 (하중 제거) 과 바로 비교하지 않는다.',
     ]
     return '\n'.join(head) + '\n' + out, rec
@@ -506,6 +558,32 @@ def roundtrip(deck: str, rec: dict) -> list:
             bad.append('활물질 수 검사 (자리 · 문턱)')
     elif i_grp >= 0 or 'g_am_ins' in body:
         bad.append('활물질 수 검사가 요청 없이 있다')
+    gs = rec.get('se_gate')
+    if gs:
+        lo, hi = gs
+        want_if = f'if "${{n_se_ins}} < {lo} || ${{n_se_ins}} > {hi}" then'
+        i_sg = body.find('group g_se_ins type 3')
+        if (body.count('group g_se_ins type 3') != 1 or body.count(want_if) != 1
+                or 'variable n_se_ins equal count(g_se_ins)' not in body or not (0 <= i_gate < i_sg < i_set)):
+            bad.append('SE 수 검사 (자리 · 문턱)')
+    elif 'g_se_ins' in body:
+        bad.append('SE 수 검사가 요청 없이 있다')
+    if rec.get('end_frames'):
+        i_um = body.find('unfix move_press')
+        i_r0 = body.find('restart 0')
+        i_p4 = body.find('PHASE 4: RELAXATION')
+        i_last = body.rfind('run 100000')
+        i_end = body.find(f'write_restart restart_{case}/restart_end.bin')
+        i_r00 = body.find('run 0\n')
+        if not (0 <= i_um < i_r0 < i_p4 < i_last < i_end < i_r00) or body.count('restart 0') != 1:
+            bad.append('끝 상태 · 이완 체크포인트 자리')
+        for nm in ('dmp_atom_end all custom 1 ', 'dmp_contact_end all local 1 ', 'dmp_mesh_end all mesh/stl 1 '):
+            if body.count('dump ' + nm) != 1:
+                bad.append(f'끝 상태 덤프 {nm.split()[0]}')
+        if body.count('undump dmp_') != 3:
+            bad.append('끝 상태 undump')
+    elif 'restart_end.bin' in body or 'restart 0' in body:
+        bad.append('끝 상태 출력이 요청 없이 있다')
     mn = RE_NEIGHBOR.findall(body)
     if len(mn) != 1 or abs(float(mn[0][1]) * UM_PER_SIM - rec['skin_um']) > 1e-9:
         bad.append(f'이웃 skin {mn}')
@@ -513,28 +591,37 @@ def roundtrip(deck: str, rec: dict) -> list:
 
 
 def _insert_cut(prod: str, case: str) -> int:
-    rx = re.compile(rf'^write_restart[ \t]+restart_{re.escape(case)}/restart_settling_1\.bin\b[^\n]*$', re.M)
-    ms = list(rx.finditer(prod))                     # 실행 줄만 (머리 주석 '#   ⑬ …' 는 줄머리가 # 라 안 맞는다)
-    if len(ms) != 1:
-        _die(f'{case}: step 1 체크포인트 실행 줄이 정확히 하나가 아니다 ({len(ms)}) — 삽입 전용 덱을 만들 수 없다')
-    return ms[0].end() + 1
+    """본 덱의 정착 run (`restart 50000 …restart_settling_*` 뒤 첫 `run 200000`) 줄의 시작 위치."""
+    m = re.search(rf'^restart[ \t]+50000[ \t]+restart_{re.escape(case)}/restart_settling_\*\.bin[^\n]*$', prod, re.M)
+    if not m:
+        _die(f'{case}: 정착 체크포인트 줄을 못 찾았다 — 삽입 전용 덱을 만들 수 없다')
+    r = re.compile(r'^run[ \t]+200000[ \t]*$', re.M).search(prod, m.end())
+    if not r:
+        _die(f'{case}: 정착 run 200000 줄을 못 찾았다')
+    return r.start()
 
 
-def insert_deck(prod: str, rec: dict, extra_steps: int = 2000) -> str:
-    """⑬ 삽입 전용 덱 = 본 덱의 step 1 체크포인트 줄까지 바이트 그대로 + `run <extra>` (정착의 첫 부분) — 끝.
+def insert_tail(case: str, settle_steps: int, tail_steps: int) -> list:
+    return [f'run {int(settle_steps)}', f'write_restart restart_{case}/restart_settling_{int(settle_steps) + 1}.bin',
+            f'run {int(tail_steps)}']
 
-    NP 1 로 돌려 상별 수를 계획대로 넣고 (SELF-70), 그 폴더를 `resume_ckpt.sh` (settling 모드) 가 이어받는다.
-    끝 run 은 재개 시험 G3 (첫 정규 줄 = step 1000) 의 비교 줄을 원 로그에 남기려는 것 — 결과로 쓰지 않는다.
+
+def insert_deck(prod: str, rec: dict, settle_steps: int = 20000, tail_steps: int = 3000) -> str:
+    """⑬ 삽입 전용 덱 = 본 덱의 정착 run 줄 앞까지 바이트 그대로 + `run S` + `write_restart …settling_<S+1>` + `run T` — 끝.
+
+    NP 1 로 돌려 상별 수를 계획대로 넣고 (SELF-70 · KG50-01 · 09), `resume_ckpt.sh` (settling 모드) 가 step S+1 에서
+    코어를 늘려 이어받는다.  재개 체크포인트가 첫 바닥 접촉 (≈ 3,500 step) 뒤라 재개 시험의 비교 줄 (S+1,000 …) 이
+    접촉 · 재료 정의를 지난다 (KG50-10).  끝 run T 는 그 비교 줄을 원 로그에 남기려는 것 — 결과로 쓰지 않는다.
     """
-    n = int(extra_steps)
-    if not (1000 <= n <= 10000):
-        _die('삽입 전용 덱 끝 run 은 1,000–10,000 (thermo 1,000 줄이 원 로그에 있어야 G3 를 비교한다)')
+    if not (5000 <= int(settle_steps) <= 199000) or not (1000 <= int(tail_steps) <= 10000):
+        _die('삽입 전용 덱: 정착 5,000–199,000 step · 끝 run 1,000–10,000 step')
     cut = _insert_cut(prod, rec['case'])
-    return (prod[:cut] + f'run {n}\n'
-            + f'# ⑬ 삽입 전용 덱 끝 — NP 1 로 돌린 뒤 resume_ckpt.sh (settling 모드) 로 본 덱 ({rec["case"]}) 을 이어받는다\n')
+    return (prod[:cut] + '\n'.join(insert_tail(rec['case'], settle_steps, tail_steps)) + '\n'
+            + f'# ⑬ 삽입 전용 덱 끝 — NP 1 로 돌린 뒤 resume_ckpt.sh (settling 모드 · step {int(settle_steps) + 1}) 로 '
+            + f'본 덱 ({rec["case"]}) 을 이어받는다\n')
 
 
-def insert_check(prod: str, ins: str, rec: dict) -> list:
+def insert_check(prod: str, ins: str, rec: dict, settle_steps: int = 20000, tail_steps: int = 3000) -> list:
     bad = []
     try:
         cut = _insert_cut(prod, rec['case'])
@@ -542,51 +629,51 @@ def insert_check(prod: str, ins: str, rec: dict) -> list:
         return [str(e)]
     if not ins.startswith(prod[:cut]):
         bad.append('삽입 전용 덱 앞부분 ≠ 본 덱')
-    tail = [ln for ln in ins[cut:].split('\n') if ln.strip() and not ln.lstrip().startswith('#')]
-    if len(tail) != 1 or not re.fullmatch(r'run \d+', tail[0].strip()):
+    tail = [ln.strip() for ln in ins[cut:].split('\n') if ln.strip() and not ln.lstrip().startswith('#')]
+    if tail != insert_tail(rec['case'], settle_steps, tail_steps):
         bad.append(f'삽입 전용 덱 끝 실행 줄 {tail}')
-    if 'run 200000' in ins or 'fix move_press' in ins:
+    if 'fix move_press' in ins or ins.count('run 200000') != prod[:cut].count('run 200000'):
         bad.append('삽입 전용 덱에 정착 본 run 또는 압축')
     return bad
 
 
-def speed_decks(text: str, cfg: dict) -> dict:
-    """⑮ 속도 시험 덱 (1저자 10-26 Q2) — 본 D0.7-40 과 같은 시드 · skin 둘 × 코어 둘.  결과 = 시간만.
+#: 기준 덱 대비 바뀌어도 되는 실행 줄 (선언 자리 ①–⑯) — 그 밖의 변경 = 문제 (KG50-12)
+DECLARED_LINE_PATTERNS = [re.compile(p) for p in (
+    r'^variable\s+r_(AM_P|SE)\s+equal\s+',
+    r'^fix\s+pts[123]\s+all\s+particletemplate/sphere\s+\d+\s+atom_type\s+[123]\s+density\s+constant\s+\d+\s+radius\s+constant\s+\$\{r_\w+\}',
+    r'^fix\s+pdd_mix\s+all\s+particledistribution/discrete\s+\d+\s+\d+\s+',
+    r'^fix\s+ins_mix\s+all\s+insert/pack\s+seed\s+\d+\s+distributiontemplate\s+pdd_mix\s+&$',
+    r'^\s+maxattempt\s+\d+\s+insert_every\s+once\s+overlapcheck\s+yes\s+all_in\s+no\s+&$',
+    r'^region\s+(reg_box|reg_mix)\s+block\s+',
+    r'^print\s+"vertex\s+',
+    r'abs\(f_top_mesh\[3\]\)\s*/\s*[0-9.]+\s*/\s*1000000',
+    r'^processors \* \* 1$',
+    r'^variable n_ins equal count\(all\)$', r'^print "====== INSERTED ', r'^if "\$\{n_ins\} < \d+" then &$',
+    r"^\s+\"print 'FATAL: (partial insertion|AM count off plan|SE count off plan)", r'^\s+"quit 1"$',
+    r'^group g_(am|se)_ins type [13]$', r'^variable n_(am|se)_ins equal count\(g_(am|se)_ins\)$',
+    r'^print "====== (AM|SE) \$\{n_(am|se)_ins\}', r'^if "\$\{n_(am|se)_ins\} < \d+ \|\| \$\{n_(am|se)_ins\} > \d+" then &$',
+    r'^restart \d+ restart_\S+/restart_compress_\*\.bin$',
+    r'^dump\s+dmp_atom\s+all\s+custom\s+\d+\s+',
+    r'^write_restart restart_\S+/restart_settling_1\.bin',
+    r'^restart 0\b', r'^write_restart restart_\S+/restart_end\.bin$', r'^dump dmp_(atom|contact|mesh)_end ',
+    r'^run 0$', r'^undump dmp_(atom|contact|mesh)_end$', r'^\s+(c_cpl\[\d+\]\s*)+&?$',
+    r'^print "====== INSERTING PARTICLES \(', r'^print "====== Simulation Finished! \(',
+    r'^neighbor\s+[0-9.eE+-]+\s+bin$',
+)]
 
-    본 덱과 다른 점: skin · 활물질 수 검사 없음 (NP 28 · 56 삽입이라 SELF-70 으로 걸린다 · 구조를 쓰지 않으니 무관) ·
-    step 1 체크포인트 뒤 `run <steps>` 에서 끝 (정착의 첫 부분 = 낙하 중 → 작은 skin 이 재구축을 더 하니 이득의 하한).
-    """
-    sp = cfg['speed']
-    base = next(c for c in cfg['cases'] if c[0] == sp['base'])
-    kw = {k: cfg[k] for k in DECK_KW if k in cfg}
-    kw['am_gate_tol'] = None
-    kw['insert_restart'] = True
-    out = {}
-    for skin in sp['skins_um']:
-        for np_ in sp['nps']:
-            name = f'kg50_spd_{sp["base"][5:]}_sk{int(round(skin * 10)):02d}_np{np_}'
-            d, r = make_deck(text, name, base[1], base[2], base[3], skin_um=skin, **kw)
-            cut = _insert_cut(d, name)
-            d = (d[:cut].replace('# ===== SE 입도 비교 생성본', '# ===== ⚠ 속도 시험 전용 (결과 = 시간만 · 구조 쓰지 않음) · SE 입도 비교 생성본', 1)
-                 + f'run {int(sp["steps"])}\n')
-            r = dict(r, speed_test=dict(base=sp['base'], skin_um=skin, ntasks=np_, steps=int(sp['steps'])))
-            out[name] = (d, r)
-    return out
 
-
-def speed_check(deck: str, rec: dict) -> list:
+def template_diff(deck: str, text: str, case: str) -> list:
+    """기준 덱 (태그만 케이스명으로) 과 실행 줄을 줄 단위로 대조 — 선언 자리 밖의 변경 목록 (빈 목록 = 통과 · KG50-12)."""
+    def exe(t):
+        return [ln.rstrip() for ln in t.split('\n') if ln.strip() and not ln.lstrip().startswith('#')]
+    base = exe(text.replace(TAG_OLD, case).replace(TAG_OLD.upper(), case.upper()))
+    new = exe(deck)
     bad = []
-    st = rec.get('speed_test') or {}
-    lines = [ln for ln in deck.split('\n') if ln.strip() and not ln.lstrip().startswith('#')]
-    if not lines or lines[-1].strip() != f'run {st.get("steps")}':
-        bad.append('속도 시험 덱 끝 run')
-    if 'run 200000' in deck or 'g_am_ins' in deck or 'fix move_press' in deck:
-        bad.append('속도 시험 덱에 정착 본 run · 활물질 검사 · 압축')
-    mn = RE_NEIGHBOR.findall(deck)
-    if len(mn) != 1 or abs(float(mn[0][1]) * UM_PER_SIM - float(st.get('skin_um', -1))) > 1e-9:
-        bad.append(f'속도 시험 skin {mn}')
-    if '속도 시험 전용' not in deck:
-        bad.append('속도 시험 머리 표지')
+    for op, i1, i2, j1, j2 in difflib.SequenceMatcher(a=base, b=new, autojunk=False).get_opcodes():
+        if op == 'equal':
+            continue
+        bad += ['+ ' + ln for ln in new[j1:j2] if not any(r.search(ln) for r in DECLARED_LINE_PATTERNS)]
+        bad += ['- ' + ln for ln in base[i1:i2] if not any(r.search(ln) for r in DECLARED_LINE_PATTERNS)]
     return bad
 
 
@@ -605,8 +692,8 @@ def _write(path, txt):
 
 
 def build(out_dir, cases, cfg, template_path=None, expect_sha=TEMPLATE_SHA256, runner_text=None, runner_case=None,
-          ntasks=None, with_speed=True):
-    """본 덱 (+ 삽입 전용 덱 · 러너) · 속도 시험 덱 · manifest.json.  cases = (케이스, r_SE µm, 영역 µm, 시드 슬롯)."""
+          ntasks=None):
+    """본 덱 (+ 삽입 전용 덱 · 러너) · manifest.json.  cases = (케이스, r_SE µm, 영역 µm, 시드 슬롯)."""
     text, sha = load_template(template_path, expect_sha)
     if os.path.exists(out_dir) and os.listdir(out_dir):
         _die(f'{out_dir} 가 비어 있지 않다 — 덮어쓰지 않는다')
@@ -618,44 +705,33 @@ def build(out_dir, cases, cfg, template_path=None, expect_sha=TEMPLATE_SHA256, r
     recs = []
     for case, r_se, box, slot in cases:
         deck, rec = make_deck(text, case, r_se, box, slot, **kw)
-        bad = roundtrip(deck, rec)
+        bad = roundtrip(deck, rec) + template_diff(deck, text, case)
         if bad:
-            _die(f'{case} 왕복검사 실패: {bad}')
+            _die(f'{case} 왕복 · 기준 덱 대조 실패: {bad}')
         cdir = os.path.join(out_dir, case)
         os.makedirs(cdir)
         rec['seed_slot'] = slot
         rec['deck_sha256'] = _write(os.path.join(cdir, f'input_{case}.liggghts'), deck)
-        if cfg.get('insert_restart'):
-            ins = insert_deck(deck, rec, cfg.get('insert_extra_steps', 2000))
-            bad = insert_check(deck, ins, rec)
+        do_ins = case in cfg.get('insert_cases', ())
+        st, tt = cfg.get('insert_settle_steps', 20000), cfg.get('insert_tail_steps', 3000)
+        if do_ins:
+            ins = insert_deck(deck, rec, st, tt)
+            bad = insert_check(deck, ins, rec, st, tt)
             if bad:
                 _die(f'{case} 삽입 전용 덱 검사 실패: {bad}')
             rec['insert_deck_sha256'] = _write(os.path.join(cdir, f'input_{case}_insert.liggghts'), ins)
         if runner_text is not None:
-            if cfg.get('insert_restart'):
+            if do_ins:
                 rt = render_ibb_runner(runner_text, runner_case, case, 1, deck='insert')
                 rec['ibb_runner_insert'] = dict(ntasks=1, sha256=_write(os.path.join(cdir, f'run_{case}_insert.sh'), rt))
             if ntasks and case in ntasks:
                 rt = render_ibb_runner(runner_text, runner_case, case, int(ntasks[case]))
                 rec['ibb_runner'] = dict(ntasks=int(ntasks[case]), sha256=_write(os.path.join(cdir, f'run_{case}.sh'), rt))
         recs.append(rec)
-    spd = []
-    if with_speed and cfg.get('speed'):
-        for name, (d, r) in speed_decks(text, cfg).items():
-            bad = speed_check(d, r)
-            if bad:
-                _die(f'{name} 속도 시험 덱 검사 실패: {bad}')
-            cdir = os.path.join(out_dir, 'speed', name)
-            os.makedirs(cdir)
-            r['deck_sha256'] = _write(os.path.join(cdir, f'input_{name}.liggghts'), d)
-            if runner_text is not None:
-                rt = render_ibb_runner(runner_text, runner_case, name, r['speed_test']['ntasks'])
-                r['ibb_runner'] = dict(ntasks=r['speed_test']['ntasks'], sha256=_write(os.path.join(cdir, f'run_{name}.sh'), rt))
-            spd.append(r)
     me = open(os.path.abspath(__file__), 'rb').read()
     man = dict(generator='scripts/make_se_size_decks.py', generator_sha256=hashlib.sha256(me).hexdigest(),
                template='docs/data/phase_a_6mah/in.real_4.liggghts', template_sha256=sha,
-               config={k: v for k, v in cfg.items() if k not in ('cases', 'fallback50')}, cases=recs, speed_tests=spd)
+               config={k: v for k, v in cfg.items() if k not in ('cases', 'fallback50')}, cases=recs)
     _write(os.path.join(out_dir, 'manifest.json'), json.dumps(man, ensure_ascii=False, indent=2) + '\n')
     return man
 
@@ -726,7 +802,7 @@ def _selftest() -> int:
     kw = {k: cfg[k] for k in DECK_KW if k in cfg}
     names = [c[0] for c in cfg['cases']]
     chk('P1 본 케이스 9 = 40×40 넷 + D3 칸 비교 다섯', names == [
-        'kg50_d07_b40', 'kg50_d1_b40', 'kg50_d2_b40', 'kg50_d3_b40', 'kg50_d3_b50',
+        'kg50_d07_b40', 'kg50_d1_b40', 'kg50_d2_b40', 'kg50_d3_b40_s1', 'kg50_d3_b50_s1',
         'kg50_d3_b40_s2', 'kg50_d3_b40_s3', 'kg50_d3_b50_s2', 'kg50_d3_b50_s3'])
     chk('P2 대비 50×50 셋 (D0.7 · D1 · D2) 은 따로 · 본 목록에 D0.7-50 없음',
         [c[0] for c in cfg.get('fallback50', [])] == ['kg50_d07_b50', 'kg50_d1_b50', 'kg50_d2_b50']
@@ -735,8 +811,8 @@ def _selftest() -> int:
     chk('P3 시드 슬롯 12 개 서로 다름 · 0–15', len(set(slots)) == len(slots) == 12 and all(0 <= s <= 15 for s in slots))
     decks = {c[0]: make_deck(text, c[0], c[1], c[2], c[3], **kw) for c in cfg['cases']}
     fb = {c[0]: make_deck(text, c[0], c[1], c[2], c[3], **kw) for c in cfg.get('fallback50', [])}
-    d50, r50 = decks['kg50_d3_b50']
-    d40, r40 = decks['kg50_d3_b40']
+    d50, r50 = decks['kg50_d3_b50_s1']
+    d40, r40 = decks['kg50_d3_b40_s1']
     d07, r07 = fb['kg50_d07_b50']
     p07, q07 = decks['kg50_d07_b40']
 
@@ -773,7 +849,7 @@ def _selftest() -> int:
     chk('D2 면적 하나만 되돌리면 잡는다', roundtrip(d40.replace('/0.0016/', '/0.0025/', 1), r40) != [])
     chk('D3 SE 밀도를 2000 으로 되돌리면 잡는다', roundtrip(re.sub(r'(atom_type 3 density constant )1640', r'\g<1>2000', d50), r50) != [])
     chk('D4 restart_compress 를 지우면 잡는다',
-        roundtrip(d50.replace('restart 200000 restart_kg50_d3_b50/restart_compress_*.bin\n', ''), r50) != [])
+        roundtrip(d50.replace('restart 200000 restart_kg50_d3_b50_s1/restart_compress_*.bin\n', ''), r50) != [])
     chk('D5 분포에 pts2 를 되살리면 잡는다', roundtrip(d50.replace(' 2 pts1 0.85 pts3 0.15', ' 3 pts1 0.6 pts2 0.25 pts3 0.15'), r50) != [])
     chk('D6 maxattempt 를 10000 으로 되돌리면 잡는다', roundtrip(d50.replace('maxattempt 3000', 'maxattempt 10000'), r50) != [])
     chk('D7 reg_mix 위끝을 0.30 으로 되돌리면 잡는다',
@@ -795,18 +871,18 @@ def _selftest() -> int:
         and '6 mAh/cm²' not in d50)
     chk('F5 atom 덤프 간격 = 50,000 (Q3) · 지정 없으면 템플릿 5,000', r50['atom_dump_every'] == 50000
         and 'dump dmp_atom all custom 50000 ' in d50
-        and 'dump dmp_atom all custom 5000 ' in make_deck(text, 'kg50_d3_b50', 1.5, 50, 4, **dict(kw, atom_dump_every=None))[0])
+        and 'dump dmp_atom all custom 5000 ' in make_deck(text, 'kg50_d3_b50_s1', 1.5, 50, 4, **dict(kw, atom_dump_every=None))[0])
     chk('F7 접촉 덤프 10,000 의 배수 아니면 거부',
         raises(lambda: make_deck(text, 'kg50_d07_b50', 0.35, 50, 9, **dict(kw, atom_dump_every=25000))))
-    chk('F8 모든 본 덱에 step 1 체크포인트 (Q1) · Phase 1 restart 뒤 · run 200000 앞',
-        all(f'write_restart restart_{c}/restart_settling_1.bin' in d and roundtrip(d, r) == [] for c, (d, r) in decks.items()))
-    d_no, r_no = make_deck(text, 'kg50_d07_b50', 0.35, 50, 9, **dict(kw, insert_restart=False))
-    chk('F9 insert_restart 끔 = 체크포인트 없음 · 있는데 끔으로 기록하면 왕복이 잡는다',
-        'restart_settling_1.bin' not in d_no and roundtrip(d07, dict(r07, insert_restart=False)) != [])
+    chk('F8 본 덱에는 step 1 체크포인트 없음 (삽입 전용 덱만 · KG50-10)',
+        all('restart_settling_1.bin' not in d and roundtrip(d, r) == [] for d, r in decks.values()))
+    d_ir, r_ir = make_deck(text, 'kg50_d07_b50', 0.35, 50, 9, **dict(kw, insert_restart=True))
+    chk('F9 insert_restart 켬 = step 1 체크포인트 · 끔으로 기록하면 왕복이 잡는다',
+        'write_restart restart_kg50_d07_b50/restart_settling_1.bin' in d_ir and roundtrip(d_ir, dict(r_ir, insert_restart=False)) != [])
     # 재개 스크립트가 읽는 표지 (a6_resume.sh · hit_resume.sh 의 덱 마커)
-    marks = ['PHASE 1: SETTLING', 'write_restart restart_kg50_d3_b50/restart_after_settling.bin', 'PHASE 2: STABILIZE',
+    marks = ['PHASE 1: SETTLING', 'write_restart restart_kg50_d3_b50_s1/restart_after_settling.bin', 'PHASE 2: STABILIZE',
              'PHASE 3: COMPRESSION', 'label loop_press', 'PHASE 4: RELAXATION', 'variable pressMPa', 'fix top_mesh',
-             'dump dmp_mesh', 'unfix move_press', 'restart 50000 restart_kg50_d3_b50/restart_settling_*.bin',
+             'dump dmp_mesh', 'unfix move_press', 'restart 50000 restart_kg50_d3_b50_s1/restart_settling_*.bin',
              'variable press_speed equal 0.01', 'variable dt      equal 1.0e-6']
     chk('G1 재개 스크립트 덱 마커 13 개 그대로', all(m in d50 for m in marks))
     def _exe(d):                                       # 실행 줄만 (머리 주석에도 같은 문자열이 있다)
@@ -822,39 +898,74 @@ def _selftest() -> int:
     def _gate_ok(d, lo, hi):
         d = _exe(d)
         i_cnt, i_grp = d.find('count(all)'), d.find('group g_am_ins type 1')
-        i_ir, i_run = d.find('write_restart restart_'), d.find('run 200000')
-        return (0 <= i_cnt < i_grp < i_ir < i_run and 'variable n_am_ins equal count(g_am_ins)' in d
+        i_run = d.find('run 200000')
+        return (0 <= i_cnt < i_grp < i_run and 'variable n_am_ins equal count(g_am_ins)' in d
                 and f'if "${{n_am_ins}} < {lo} || ${{n_am_ins}} > {hi}" then' in d)
-    chk('I1 활물질 수 검사 40×40 = 943–953 (948 ±0.5 %) · 삽입 검사 뒤 · step 1 체크포인트 앞', _gate_ok(d40, 943, 953)
-        and _gate_ok(p07, 943, 953))
-    chk('I2 활물질 수 검사 50×50 = 1473–1489 (1,481 ±0.5 %)', _gate_ok(d50, 1473, 1489))
+    chk('I1 활물질 정수 구간 40×40 = 944–952 (948 · ceil/floor · KG50-08)', _gate_ok(d40, 944, 952) and _gate_ok(p07, 944, 952))
+    chk('I2 활물질 정수 구간 50×50 = 1474–1488 (1,481)', _gate_ok(d50, 1474, 1488))
+    chk('I2b 정수 구간 = 손 산술 (948·0.995 = 943.26 → 944 · 948·1.005 = 952.74 → 952 · 1481 → 1474–1488)',
+        int_band(948, 0.005) == (944, 952) and int_band(1481, 0.005) == (1474, 1488) and int_band(200, 0.005) == (199, 201))
+    n_se40 = r40['counts_pred']['SE']
+    lo_se, hi_se = -((-n_se40 * 995) // 1000), (n_se40 * 1005) // 1000
+    chk('I2c SE 수 검사 = 계획 SE ±0.5 % 정수 구간 · 삽입 검사 뒤 (KG50-13)', r40['se_gate'] == [lo_se, hi_se]
+        and f'if "${{n_se_ins}} < {lo_se} || ${{n_se_ins}} > {hi_se}" then' in d40 and 'group g_se_ins type 3' in d40)
     chk('I3 반례: 검사 문턱을 바꾸거나 검사를 지우면 왕복이 잡는다',
-        roundtrip(d40.replace('< 943 ||', '< 900 ||'), r40) != []
+        roundtrip(d40.replace('< 944 ||', '< 900 ||'), r40) != []
         and roundtrip(d40.replace('group g_am_ins type 1\n', ''), r40) != [])
-    # ⑬ 삽입 전용 덱 (Q1)
-    ins = insert_deck(p07, q07, cfg['insert_extra_steps'])
+    # ⑬ 삽입 전용 덱 (Q1 · KG50-01 · 09 · 10)
+    st, tt = cfg['insert_settle_steps'], cfg['insert_tail_steps']
+    ins = insert_deck(p07, q07, st, tt)
     _ln = p07.split('\n')
-    _k = [i for i, ln in enumerate(_ln) if ln.startswith('write_restart restart_kg50_d07_b40/restart_settling_1.bin')]
-    cut = len('\n'.join(_ln[:_k[0] + 1])) + 1 if len(_k) == 1 else -1
-    chk('I4 삽입 전용 덱 = 본 덱의 step 1 체크포인트 줄까지 그대로 + run 2000', ins.startswith(p07[:cut])
-        and ins[cut:].strip().split('\n')[0] == 'run 2000' and insert_check(p07, ins, q07) == [])
-    chk('I5 삽입 전용 덱에 정착 200,000 · 압축 없음 · 두 삽입 검사 있음', 'run 200000' not in ins and 'fix move_press' not in ins
-        and 'group g_am_ins type 1' in ins and 'count(all)' in ins)
+    _k = [i for i, ln in enumerate(_ln) if ln.strip() == 'run 200000']
+    cut = len('\n'.join(_ln[:_k[0]])) + 1 if _k else -1
+    chk('I4 삽입 전용 덱 = 본 덱의 정착 run 앞까지 그대로 + run 20000 · write_restart …settling_20001 · run 3000',
+        cut > 0 and ins.startswith(p07[:cut]) and [ln for ln in ins[cut:].split('\n') if ln.strip() and not ln.startswith('#')]
+        == ['run 20000', 'write_restart restart_kg50_d07_b40/restart_settling_20001.bin', 'run 3000']
+        and insert_check(p07, ins, q07, st, tt) == [])
+    _exe_ins = '\n'.join(ln for ln in ins.split('\n') if not ln.lstrip().startswith('#'))
+    chk('I5 삽입 전용 덱 = 압축 없음 · 정착 본 run 없음 · 세 삽입 검사 있음 · 끝 상태 출력 없음', 'fix move_press' not in ins
+        and ins.count('run 200000') == 0 and 'group g_am_ins type 1' in ins and 'group g_se_ins type 3' in ins
+        and 'count(all)' in ins and 'restart_end' not in _exe_ins)
     chk('I6 반례: 삽입 전용 덱에 줄을 더하거나 앞부분을 바꾸면 잡는다',
-        insert_check(p07, ins + 'run 200000\n', q07) != [] and insert_check(p07, ins.replace('maxattempt 3000', 'maxattempt 2000'), q07) != [])
-    # ⑮ 속도 시험 덱 (Q2)
-    sp = speed_decks(text, cfg)
-    chk('J1 속도 시험 덱 4 = skin 2 · 0.5 µm × 코어 28 · 56', sorted(sp) == sorted([
-        'kg50_spd_d07_b40_sk20_np28', 'kg50_spd_d07_b40_sk20_np56', 'kg50_spd_d07_b40_sk05_np28', 'kg50_spd_d07_b40_sk05_np56']))
-    chk('J2 속도 시험 덱: skin 줄 · 활물질 검사 없음 · 정착 20,000 에서 끝 · 시드 = 본 D0.7-40 · 머리 표지',
-        all(('neighbor        0.002 bin' if '_sk20_' in n else 'neighbor        0.0005 bin') in d
-            and 'g_am_ins' not in d and d.rstrip().split('\n')[-1].startswith('run 20000') and 'run 200000' not in d
-            and r['seeds'] == q07['seeds'] and '속도 시험 전용' in d and speed_check(d, r) == []
-            for n, (d, r) in sp.items()))
-    chk('J3 본 덱 skin 은 템플릿 그대로 (0.002) · 바꾸면 왕복이 잡는다', all('neighbor        0.002 bin' in d for d, _ in decks.values())
-        and roundtrip(d40.replace('neighbor        0.002 bin', 'neighbor        0.0005 bin'), r40) != [])
-    dsp, rsp = sp['kg50_spd_d07_b40_sk05_np56']
-    chk('J4 반례: 속도 시험 덱에 정착 200,000 을 붙이면 잡는다', speed_check(dsp + 'run 200000\n', rsp) != [])
+        insert_check(p07, ins + 'run 200000\n', q07, st, tt) != []
+        and insert_check(p07, ins.replace('maxattempt 3000', 'maxattempt 2000'), q07, st, tt) != [])
+    chk('I7 삽입 전용 덱을 만드는 케이스 = D0.7 · D1 · D2 (40 · 50) · D3 칸 비교는 없음 (처음부터 끝까지 NP 1)',
+        set(cfg['insert_cases']) == {'kg50_d07_b40', 'kg50_d1_b40', 'kg50_d2_b40', 'kg50_d07_b50', 'kg50_d1_b50', 'kg50_d2_b50'}
+        and not any(c.startswith('kg50_d3') for c in cfg['insert_cases']))
+    # ⑯ 끝 상태 (Q4 · KG50-03 · 11)
+    body40 = '\n'.join(ln for ln in d40.split('\n') if not ln.lstrip().startswith('#'))
+    chk('L1 restart 0 = unfix move_press 바로 뒤 · 이완 앞', body40.find('unfix move_press') < body40.find('restart 0')
+        < body40.find('PHASE 4: RELAXATION') and body40.count('restart 0') == 1)
+    i_last = body40.rfind('run 100000')
+    tail40 = body40[i_last:]
+    chk('L2 끝 상태 = 마지막 run 100000 뒤 · restart_end 먼저 · 덤프 셋 간격 1 · run 0 · undump 셋',
+        tail40.find('write_restart restart_kg50_d3_b40_s1/restart_end.bin') < tail40.find('dump dmp_atom_end all custom 1 ')
+        < tail40.find('run 0\n') and 'dump dmp_contact_end all local 1 post_kg50_d3_b40_s1/contact_end_*.liggghts &' in tail40
+        and 'dump dmp_mesh_end all mesh/stl 1 post_kg50_d3_b40_s1/mesh_end_*.stl top_mesh' in tail40
+        and tail40.count('undump dmp_') == 3 and tail40.count('c_cpl[26]') == 1)
+    chk('L3 반례: 끝 상태 덤프를 지우거나 restart 0 을 지우면 왕복이 잡는다',
+        roundtrip(d40.replace('undump dmp_mesh_end\n', ''), r40) != [] and roundtrip(d40.replace('restart 0   #', '#', 1), r40) != [])
+    # 기준 덱 줄 대조 (Q7 · KG50-12)
+    chk('M1 본 덱 아홉 · 대비 셋 = 기준 덱 대비 선언 자리 밖 변경 0', all(template_diff(d, text, c) == []
+        for c, (d, r) in list(decks.items()) + list(fb.items())))
+    muts = [('variable press_speed equal 0.01', 'variable press_speed equal 0.02'),
+            ('fix damp all viscous 0.5', 'fix damp all viscous 0.4'),
+            ('variable dt      equal 1.0e-6', 'variable dt      equal 2.0e-6'),
+            ('fix gravi all gravity 9.81 vector 0.0 0.0 -1.0', 'fix gravi all gravity 9.8 vector 0.0 0.0 -1.0'),
+            ('neigh_modify    delay 0 check yes', 'neigh_modify    delay 10 check yes'),
+            ('volumefraction_region 0.321', 'volumefraction_region 0.33'),
+            ('variable target_press equal 0.30', 'variable target_press equal 0.31')]
+    caught = [old for old, new in muts                       # 실행 줄 (줄머리) 만 바꾼다 — 머리 주석에도 같은 문자열이 있다
+              if re.search(r'^([ \t]*)' + re.escape(old), d40, re.M)
+              and template_diff(re.sub(r'^([ \t]*)' + re.escape(old), lambda m, n=new: m.group(1) + n, d40, count=1, flags=re.M),
+                                text, 'kg50_d3_b40_s1') != []]
+    chk(f'M2 반례 일곱 (판 속도 · 감쇠 · dt · 중력 · 이웃 재구축 · 체적분율 · 목표 압력) = 기준 덱 대조가 전부 잡는다 ({len(caught)}/7)',
+        len(caught) == 7)
+    chk('M3 반례: 선언 밖 줄을 하나 더하면 잡는다', template_diff(d40 + 'fix extra all viscous 0.1\n', text, 'kg50_d3_b40_s1') != [])
+    # 이름 (KG50-14)
+    allnames = [c[0] for c in cfg['cases']] + [c[0] for c in cfg['fallback50']]
+    chk('N1 케이스 이름 중 다른 이름의 접두어인 것 없음 (resume_ckpt.sh 큐 접두어 대조 겹침 방지)',
+        not any(a != b and b.startswith(a) for a in allnames for b in allnames))
     # 러너
     rt0 = open(os.path.join(ROOT, 'docs', 'data', 'pure_se_r075_20260927', 'run_pse_r075_a_r30.sh'), encoding='utf-8').read()
     rt = render_ibb_runner(rt0, 'pse_r075_a', 'kg50_d07_b40', 30)
@@ -887,7 +998,6 @@ def main(argv=None):
     ap.add_argument('--preset', choices=['kg50y4'])
     ap.add_argument('--only', help='케이스명 쉼표 목록 (프리셋 안에서)')
     ap.add_argument('--fallback50', action='store_true', help='50×50 의 D0.7 · D1 · D2 도 (40×40 불합격일 때만)')
-    ap.add_argument('--no-speed', action='store_true', help='속도 시험 덱을 만들지 않는다')
     ap.add_argument('--out')
     ap.add_argument('--ibb-runner', help='ibb 러너 원형 (예: docs/data/pure_se_r075_20260927/run_pse_r075_a_r30.sh)')
     ap.add_argument('--ntasks', help='case:N 쉼표 목록 — 본 덱 ibb 러너 코어 수 (삽입 러너는 늘 1)')
@@ -917,15 +1027,13 @@ def main(argv=None):
         if not m:
             ap.error('러너 원형에 --job-name 이 없다')
         rc = re.sub(r'_r\d+t?$', '', m.group(1))
-    man = build(a.out, cases, cfg, runner_text=rt, runner_case=rc, ntasks=nt, with_speed=not a.no_speed)
+    man = build(a.out, cases, cfg, runner_text=rt, runner_case=rc, ntasks=nt)
     for r in man['cases']:
         g = r.get('am_gate') or ['-', '-']
+        h = r.get('se_gate') or ['-', '-']
         print(f"{r['case']:16s} SE r {r['r_se_um']:<4g} 영역 {r['box_um']:g}  입자 {r['n_total_pred']:>8,}  "
-              f"AM {r['counts_pred']['AM_P']:>5,} (검사 {g[0]}–{g[1]})  면용량 {r['loading_pred_mah_cm2']:.3f}  "
-              f"시드 슬롯 {r['seed_slot']}")
-    for r in man['speed_tests']:
-        st = r['speed_test']
-        print(f"{r['case']:28s} 속도 시험 skin {st['skin_um']:g} µm · NP {st['ntasks']} · {st['steps']:,} step")
+              f"AM {r['counts_pred']['AM_P']:>5,} ({g[0]}–{g[1]})  SE ({h[0]}–{h[1]})  면용량 {r['loading_pred_mah_cm2']:.3f}  "
+              f"시드 슬롯 {r['seed_slot']}  삽입 덱 {'예' if r.get('insert_deck_sha256') else '-'}")
     print(f'→ {a.out}/manifest.json')
     return 0
 

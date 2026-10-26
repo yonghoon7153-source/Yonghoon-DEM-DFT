@@ -1,3 +1,5 @@
+> ⛔ **10-26 밤 — 이 판은 쓰지 않는다.**  Codex 검토 = HOLD (`docs/reviews/codex_kg50_decks_review_20261026/codex_review_kg50_decks_20261026.md`) · 수정판 = `docs/data/kg50_decks_20261026_v2/README.md`.  아래 1 단계 명령 (속도 시험 · D3 NP 3) 을 돌리지 않는다 — 고코어 삽입 불가 (KG50-01) · 이음매 (KG50-09).
+
 # 50kg/batch 4차년도 — SE 입도 비교 DEM 덱 (10-26)
 
 - 생성기 `scripts/make_se_size_decks.py` (selftest 81/81) · 기준 덱 `docs/data/phase_a_6mah/in.real_4.liggghts` (sha256 고정) · 계획 `docs/50kg/dem_plan_20261026.md` · 자체 검토 · Codex 요청 `docs/50kg/codex_kg50_decks_request_20261026.md`.
