@@ -874,13 +874,14 @@ def env_record():
     대조하지 않는다 (R4-11 — 다른 플랫폼의 다시 판정).  한 프로세스 안에서 한 번 잰다 (값을 바꿔 보는 시험 = 이 함수를 바꿔 끼운다)."""
     if 'rec' not in _ENV_MEMO:
         import platform
-        np_ = None
+        np_ = None                                            # 기록만 칸 (BLAS · SIMD) 이 읽는 모듈 — import 이름과 갈라 둔다 (규율 경고)
         unit = {'python_minor': '%d.%d' % tuple(sys.version_info[:2]), 'numpy': None, 'scipy': None}
         try:
-            import numpy as np_
-            unit['numpy'] = str(np_.__version__)
+            import numpy as _np_mod
+            unit['numpy'] = str(_np_mod.__version__)
+            np_ = _np_mod
         except Exception:                                     # noqa: BLE001 — 미확인 = None (대조 함수가 멈춘다)
-            np_ = None
+            pass
         try:
             import scipy as _sc
             unit['scipy'] = str(_sc.__version__)

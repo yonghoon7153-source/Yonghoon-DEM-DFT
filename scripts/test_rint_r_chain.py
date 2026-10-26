@@ -4676,6 +4676,12 @@ def env_as(unit=None, rec=None):
 KGY_UNIT = {'python_minor': '3.8', 'numpy': '1.24.4', 'scipy': '1.10.1'}     # kgy dem-venv 판 (1저자 10-24) — 시험의 같음 단위 값
 
 
+def host_unit():
+    """이 프로세스의 같음 단위 (사슬 env_record 그대로 · 바꿔 끼우기 밖에서 부른다 · 고치기 전 판 = 빈 dict)."""
+    er = getattr(RR, 'env_record', None)
+    return dict((er() or {}).get('unit') or {}) if er else {}
+
+
 @check('Y01', '판정문 F1 — git 밖 사본 (고정물 scripts 의 사본 · .git 없음) 의 사슬 · 러너로 사다리 → CODE_PIN_MISMATCH · rc 3 · 러너 0 회 · 사유 = '
               'HEAD 미확인 (옛 사슬 = HEAD · dirty None 을 기록만 하고 돌았다) · 같은 사본의 사슬로 판정 → CODE_PIN_MISMATCH · NOT_COMPUTED')
 def t_Y01():
@@ -4878,7 +4884,10 @@ def t_Y08():
             pd = predict('Y08d_pred', world('Y08d_pred'), [a0['out'], a1['out']])
         with env_as({'numpy': None}):
             g = ladder('Y08g', world('Y08g'), law='P0')
-        with env_as(dict(KGY_UNIT)):
+        #  ★ 10-26 (kgy 판 단계 `scripts/check_kgy_py38.sh` 에서 잡힘) — h 의 단위는 주 예측 (이 프로세스 환경 그대로) 과 **늘** 달라야 한다.
+        #    옛 판 = KGY_UNIT 그대로 → 호스트가 kgy 판 (python 3.8 · numpy 1.24.4 · scipy 1.10.1) 이면 단위가 같아 멈추지 않았다 (호스트 의존 ·
+        #    사슬 동작은 옳다) → numpy 칸 = 이 프로세스의 numpy 판 + 꼬리표 (어떤 호스트에서도 다르다)
+        with env_as(dict(KGY_UNIT, numpy=str(host_unit().get('numpy')) + '+y08h')):
             h = ladder('Y08h', world('Y08h'), law='P0', variant='FIBRE', after=mp)
         v = verdict('Y08v', [a0['out'], a1['out'], pa['out']])
         t = b_tamper_copy(pa['out'], 'Y08t_pred', 'predict_summary.json', lambda s: s['code']['env']['unit'].update(numpy='1.24.3'))
