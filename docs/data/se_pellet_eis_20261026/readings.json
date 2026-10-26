@@ -1,0 +1,190 @@
+{
+ "261026_SE_big_sym_01_C02.mpr": {
+  "Cp_uF_last": 3.1097,
+  "Cs_uF_last": 3.622,
+  "R_fit": {
+   "1000Hz": {
+    "L_uH": 0.5329,
+    "Q": 2.997e-06,
+    "R_ohm": 25.134,
+    "alpha": 0.8248,
+    "npts": 39,
+    "rel_rms": 0.02
+   },
+   "100Hz": {
+    "L_uH": 0.5308,
+    "Q": 2.449e-06,
+    "R_ohm": 25.364,
+    "alpha": 0.8439,
+    "npts": 49,
+    "rel_rms": 0.0223
+   },
+   "10Hz": {
+    "L_uH": 0.5299,
+    "Q": 2.289e-06,
+    "R_ohm": 25.46,
+    "alpha": 0.8509,
+    "npts": 59,
+    "rel_rms": 0.022
+   }
+  },
+  "R_lin_extrap_ohm": 27.892,
+  "R_zero_cross_ohm": 25.158,
+  "duration_s": 837.9,
+  "ewe_mV": -54.46,
+  "f_max_Hz": 7000018.5,
+  "f_min_Hz": 0.012606680393218994,
+  "n": 88,
+  "nIm_monotone_after_cross": true,
+  "phase_deg_at": {
+   "0.1Hz": -73.98,
+   "10000Hz": -42.62,
+   "1000Hz": -70.78,
+   "100Hz": -76.28,
+   "10Hz": -77.06,
+   "1Hz": -76.62
+  },
+  "phase_deg_last": -67.91
+ },
+ "261026_SE_big_sym_02_C02.mpr": {
+  "Cp_uF_last": 2.8059,
+  "Cs_uF_last": 3.11,
+  "R_fit": {
+   "1000Hz": {
+    "L_uH": 0.5185,
+    "Q": 2.916e-06,
+    "R_ohm": 27.494,
+    "alpha": 0.8236,
+    "npts": 39,
+    "rel_rms": 0.0206
+   },
+   "100Hz": {
+    "L_uH": 0.5164,
+    "Q": 2.381e-06,
+    "R_ohm": 27.739,
+    "alpha": 0.8428,
+    "npts": 49,
+    "rel_rms": 0.0226
+   },
+   "10Hz": {
+    "L_uH": 0.5156,
+    "Q": 2.236e-06,
+    "R_ohm": 27.835,
+    "alpha": 0.8493,
+    "npts": 59,
+    "rel_rms": 0.0219
+   }
+  },
+  "R_lin_extrap_ohm": 30.599,
+  "R_zero_cross_ohm": 27.511,
+  "duration_s": 538.2,
+  "ewe_mV": -53.26,
+  "f_max_Hz": 7000018.5,
+  "f_min_Hz": 0.020016208291053772,
+  "n": 86,
+  "nIm_monotone_after_cross": true,
+  "phase_deg_at": {
+   "0.1Hz": -75.25,
+   "10000Hz": -41.29,
+   "1000Hz": -70.53,
+   "100Hz": -76.1,
+   "10Hz": -76.93,
+   "1Hz": -76.68
+  },
+  "phase_deg_last": -71.78
+ },
+ "261026_SE_small_sym_01_C01.mpr": {
+  "Cp_uF_last": 5.7724,
+  "Cs_uF_last": 9.1528,
+  "R_fit": {
+   "1000Hz": {
+    "L_uH": 0.3009,
+    "Q": 4.623e-06,
+    "R_ohm": 38.403,
+    "alpha": 0.7854,
+    "npts": 39,
+    "rel_rms": 0.0248
+   },
+   "100Hz": {
+    "L_uH": 0.298,
+    "Q": 3.458e-06,
+    "R_ohm": 38.855,
+    "alpha": 0.8139,
+    "npts": 49,
+    "rel_rms": 0.0278
+   },
+   "10Hz": {
+    "L_uH": 0.297,
+    "Q": 3.144e-06,
+    "R_ohm": 39.042,
+    "alpha": 0.824,
+    "npts": 59,
+    "rel_rms": 0.0274
+   }
+  },
+  "R_lin_extrap_ohm": 42.543,
+  "R_zero_cross_ohm": 39.124,
+  "duration_s": 834.8,
+  "ewe_mV": -319.74,
+  "f_max_Hz": 7000018.5,
+  "f_min_Hz": 0.012606680393218994,
+  "n": 88,
+  "nIm_monotone_after_cross": true,
+  "phase_deg_at": {
+   "0.1Hz": -64.66,
+   "10000Hz": -32.08,
+   "1000Hz": -64.52,
+   "100Hz": -73.79,
+   "10Hz": -74.21,
+   "1Hz": -71.14
+  },
+  "phase_deg_last": -52.57
+ },
+ "261026_SE_small_sym_02_C01.mpr": {
+  "Cp_uF_last": 5.2702,
+  "Cs_uF_last": 7.6525,
+  "R_fit": {
+   "1000Hz": {
+    "L_uH": 0.2747,
+    "Q": 4.548e-06,
+    "R_ohm": 41.321,
+    "alpha": 0.7826,
+    "npts": 39,
+    "rel_rms": 0.0271
+   },
+   "100Hz": {
+    "L_uH": 0.2718,
+    "Q": 3.439e-06,
+    "R_ohm": 41.787,
+    "alpha": 0.8101,
+    "npts": 49,
+    "rel_rms": 0.0291
+   },
+   "10Hz": {
+    "L_uH": 0.2707,
+    "Q": 3.131e-06,
+    "R_ohm": 41.987,
+    "alpha": 0.8201,
+    "npts": 59,
+    "rel_rms": 0.0285
+   }
+  },
+  "R_lin_extrap_ohm": 45.656,
+  "R_zero_cross_ohm": 42.122,
+  "duration_s": 668.0,
+  "ewe_mV": -312.15,
+  "f_max_Hz": 7000018.5,
+  "f_min_Hz": 0.015877410769462585,
+  "n": 87,
+  "nIm_monotone_after_cross": true,
+  "phase_deg_at": {
+   "0.1Hz": -65.78,
+   "10000Hz": -31.44,
+   "1000Hz": -64.16,
+   "100Hz": -73.53,
+   "10Hz": -73.73,
+   "1Hz": -71.41
+  },
+  "phase_deg_last": -56.09
+ }
+}
