@@ -1002,6 +1002,30 @@ def far_diag(out_text, area):
 
 OPTB88_ECHO = {"PARAM1": (r"PARAM1\s*=\s*(\S+)", 0.1833333333, 1e-3), "PARAM2": (r"PARAM2\s*=\s*(\S+)", 0.22, 1e-3),
                "ZAB_VDW": (r"(?i)Zab_vdW\s*=\s*(\S+)", -0.8491, 1e-3), "AGGAC": (r"AGGAC\s*=\s*(\S+)", 0.0, 1e-4)}
+# 2026-10-26 개정 (D-2026-10-26-wad-round2-aggac-input-only · 사용자 결정 D1 · 파일럿 반송 뒤 · 단계 1–4 전): VASP 5.4.4 OUTCAR 는 AGGAC 해석값을
+#   아예 찍지 않는다 (파일럿 C–C optB88 실물 — 'Exchange correlation treatment' · 'vdW DFT' 구역은 GGA · LEXCH · AEXX · LUSE_VDW · Zab_VDW ·
+#   PARAM1–3 뿐). 그때까지 selftest 가짜 OUTCAR 에 'AGGAC = 0.0000' 줄을 넣어 두어 이 결측이 시험에서 안 보였다.
+#   그 판 · OUTCAR 본문에 AGGAC 글자가 없을 때만 · 돌린 INCAR 의 AGGAC 가 0.0 이면 결측으로 막지 않고 '입력으로만 확인' 표지를 단다
+#   (우리 INCAR 태그가 돌린 INCAR 에 전부 같은 값으로 있는지는 INPUT_MODIFIED 가 먼저 본다 — 업체가 더한 것은 성능 태그 NCORE · KPAR 뿐이어야 한다).
+#   찍혔으면 (다른 판 · 다른 꼴) 옛 규칙 그대로 해석값이 맞아야 한다.
+AGGAC_INPUT_ONLY_VERSION_RE = re.compile(r"^vasp\.5\.4\.4\b")
+AGGAC_INPUT_ONLY_LABEL = "AGGAC 는 입력으로만 확인 (VASP 5.4.4 OUTCAR 는 해석값을 안 찍는다 · 2026-10-26 개정)"
+
+
+def aggac_input_only(o, ran):
+    """AGGAC 결측을 돌린 INCAR 로 대신해도 되나 → (된다, 모순 이유|None).
+    ⛔ 못 하는 것: VASP 가 철자 맞는 이 태그를 실제로 적용했는지는 확인하지 못한다 — 그래서 통과가 아니라 '입력으로만 확인' 표지다.
+    실물로 본 판 (5.4.4) 밖 · AGGAC 가 찍혔는데 못 읽은 경우 · 입력에 AGGAC 가 없는 경우는 대신하지 않는다 (결측 그대로)."""
+    if re.search(r"\bAGGAC\b", o.get("_body") or ""):
+        return False, None
+    if not AGGAC_INPUT_ONLY_VERSION_RE.match(o.get("version") or ""):
+        return False, None
+    v = V._tok_float(ran.get("AGGAC")) if ran.get("AGGAC") is not None else None
+    if v is None:
+        return False, None
+    if abs(v - OPTB88_ECHO["AGGAC"][1]) > OPTB88_ECHO["AGGAC"][2]:
+        return False, f"AGGAC (입력) {v} ≠ {OPTB88_ECHO['AGGAC'][1]}"
+    return True, None
 # vdW 커널 상태 (CZ Q-CZ-5) — 준비 (복사본 sha · 등록부 대조) · 읽기 (등록부 kernel_read_regex) · 부재 · 재생성을 가른다
 KERNEL_LINE_RE = re.compile(r"(?i)vdw.*kernel|kernel.*vdw")          # vdW 커널을 말하는 줄 — ⚠ 카드 §2.4 의 (?i)kernel|vdw_kernel 에서 좁혔다:
 #                                                                     MPI·OS 경고 ('kernel module … not loaded') 가 커널 부재로 잡혀 전체 정지가 되는 오탐
@@ -1284,6 +1308,12 @@ def check_attempt(job, pkgdir, attdir, rung, registry=None, a_ref=None):
         if kst:
             conflicts.append(("KERNEL_NOT_READ", f"vdW 커널 {kst} — {kln[:120]!r} (커널 줄에 부재·재생성 표지)"))
     missing, bad, src = audit_r2(o, job, rung) if o else ([], [], {})
+    if o and job["method"] == "optb88" and "AGGAC" in missing:      # 2026-10-26 개정 D1 — aggac_input_only 주석
+        ok_in, why_in = aggac_input_only(o, ran)
+        if ok_in:
+            missing.remove("AGGAC"); r["settings_input_only"] = ["AGGAC"]
+        elif why_in:
+            bad.append(why_in)
     if bad:
         conflicts.append(("SETTINGS_MISMATCH", "; ".join(bad)))
     ref = fin(job.get("d3_2body_eV_ref"))
@@ -1734,6 +1764,7 @@ def collect(out, ret, manifest_sha256, uma=None, registry=None):
     # δ_XC+vdW (정보 · 라벨 규칙)
     reg_max = max([abs(g3[f"dW_{t}"]) for t in ("i", "ii") if g3.get(f"dW_{t}") is not None]
                   + [abs(v["dW"]) for v in g4.values() if isinstance(v, dict) and v.get("dW") is not None] or [0.0])
+    ai = lambda n: any("AGGAC" in (a.get("settings_input_only") or []) for a in ((res.get(n) or {}).get("attempts") or {}).values())   # 2026-10-26 개정 D1
     dd = {}
     for k, (b, f) in DELTA_PAIRS.items():
         wo, wr = W(b, f), smp[k]["W_J_m2"]
@@ -1747,13 +1778,18 @@ def collect(out, ret, manifest_sha256, uma=None, registry=None):
             x["label"] = "함수 선택 (XC+vdW) 민감" if x["pct"] > DELTA_PCT_LABEL else "백분율 표기 가능"
         else:
             x["label"] = "절대 차이만 (해석 보류)"
+        if ai(b) or ai(f):
+            x["settings_label"] = AGGAC_INPUT_ONLY_LABEL
         dd[k] = x
     rec["delta_XC_vdW"] = dd
     # ②′ C–C (정보 · 실험 값은 나란히만)
     cc = {m: {"W_J_m2": W(*p), "status": {"bound": res[p[0]]["status"], "far": res[p[1]]["status"]}} for m, p in CC_PAIRS.items()}
+    if any(ai(n) for n in CC_PAIRS["optb88"]):
+        cc["optb88"]["settings_label"] = AGGAC_INPUT_ONLY_LABEL
     cc["optb88_minus_pbed3_J_m2"] = (cc["optb88"]["W_J_m2"] - cc["pbed3"]["W_J_m2"]) if None not in (cc["optb88"]["W_J_m2"], cc["pbed3"]["W_J_m2"]) else None
     cc["⛔"] = "같은 VASP 안의 두 방법 차이만 — 실험 흑연 값으로 판정·보정하지 않는다 · LPSCl–C 방향을 정하지 않는다 · QE 값과 섞지 않는다"
     rec["CC_control"] = cc
+    rec["settings_input_only"] = {n: ["AGGAC"] for n in sorted(J) if ai(n)} or None
     # far 진단 + 전하이동 신호 (정보 · 판정 아님)
     fd = {}
     for n, j in J.items():
@@ -2137,7 +2173,7 @@ out += [" Dimension of arrays:", f"   k-points           NKPTS =      4   k-poin
         f"   LDIPOL =      {'T' if ldip else 'F'}    correct potential (dipole corrections)", "   IDIPOL =      3    1-x, 2-y, 3-z, 4-all directions"]
 out.append(f"   GGA     =    {gga}    GGA type")             # 5.4.4 실물 꼴 (V5 반송 OUTCAR — PE)
 if gga == "BO":
-    out += ["   PARAM1  =  0.1833", "   PARAM2  =  0.2200", "   Zab_vdW = -0.8491", "   AGGAC   =  0.0000", "   LUSE_VDW =      T"]
+    out += ["   PARAM1  =  0.1833", "   PARAM2  =  0.2200", "   Zab_vdW = -0.8491", "   LUSE_VDW =      T"]     # 5.4.4 실물은 AGGAC 를 안 찍는다 (2026-10-26 파일럿 반송 · 이 줄이 결측을 가렸다)
     if os.path.isfile("vdw_kernel.bindat"):
         out.append(" vdW kernel read from vdw_kernel.bindat")
 dz = float(iv(inc, "DIPOL").split()[2])
@@ -2799,6 +2835,54 @@ def _selftest():
         ck("등록부 커널 문구: 파일럿 optB88 두 잡 (전자 스텝 ≥ 1) 에 맞고 optB88 아닌 시도에는 안 맞는다 → 봉인 · 해제 파일에 한 줄 · 러너가 env.txt 에 기록",
            reg.get("kernel_read_regex") == KREG and sorted(kchk.get("optb88", [])) == ["CC_S33_AB_optB88_bound/0", "CC_S33_AB_optB88_far/0"] and len(kchk.get("not_optb88", [])) >= 5
            and f"kernel_read_regex\t{KREG}" in release_text(reg, ["1"], {"1": 170}, 1080, "R4") and f"KERNEL_READ_RE {KREG}" in open(os.path.join(p7, "run", "env.txt")).read(), kchk)
+        # ── 2026-10-26 개정 D1 (AGGAC 입력으로만) — 가짜 OUTCAR 를 5.4.4 실물 꼴 (AGGAC 줄 없음) 로 바꿨다 ──
+        r50 = resolve_job(J[OB], p7, os.path.join(p7, "run"), reg7); a50 = (r50.get("attempts") or {}).get("0") or {}
+        ck("D1 양성: 5.4.4 꼴 OUTCAR (AGGAC 줄 없음) + 돌린 INCAR AGGAC = 0.0 → OK · 시도에 settings_input_only = ['AGGAC'] 표지",
+           r50["status"] == "OK" and a50.get("settings_input_only") == ["AGGAC"], (r50["status"], r50.get("why"), a50.get("settings_input_only")))
+        a51c = check_attempt(J[OB], p7, os.path.join(p7, "run", OB), "0")
+        t51 = os.path.join(T, "t51"); shutil.copytree(p7, t51)
+        sw = outcar_edit(os.path.join(t51, "run", OB), " vasp.5.4.4.18Apr17", " vasp.6.4.2.18Apr17")
+        a51 = check_attempt(J[OB], t51, os.path.join(t51, "run", OB), "0")          # 등록부 없이 — 판 대조 (VERSION_MISMATCH) 가 먼저 막지 않게
+        ck("⛔음성 D1: 실물로 안 본 판 (6.4.2) 이 AGGAC 를 안 찍으면 입력으로 대신하지 않는다 → SETTINGS_UNVERIFIED (AGGAC) · 같은 시도 5.4.4 대조는 커널 확인 대기만 남는다",
+           sw and a51["status"] == "SETTINGS_UNVERIFIED" and "AGGAC" in a51.get("why", "") and not a51.get("settings_input_only")
+           and a51c["status"] == "KERNEL_UNVERIFIED" and a51c.get("settings_input_only") == ["AGGAC"], (sw, a51["status"], a51.get("why"), a51c["status"]))
+        for lab_, val_, want_ in (("0.0000", "0.0000", "OK"), ("1.0000", "1.0000", "SETTINGS_MISMATCH"), ("못 읽는 '******'", "******", "SETTINGS_UNVERIFIED")):
+            t52 = os.path.join(T, f"t52_{want_}"); shutil.copytree(p7, t52)
+            sw = outcar_edit(os.path.join(t52, "run", OB), "   Zab_vdW = -0.8491\n", f"   Zab_vdW = -0.8491\n   AGGAC   =  {val_}\n")
+            r52 = resolve_job(J[OB], t52, os.path.join(t52, "run"), reg7); a52 = (r52.get("attempts") or {}).get("0") or {}
+            ck(f"{'D1 양성' if want_ == 'OK' else '⛔음성 D1'}: OUTCAR 에 AGGAC 가 찍히면 옛 규칙 그대로 ({lab_} → {want_}) · 입력 표지 없음",
+               sw and r52["status"] == want_ and not a52.get("settings_input_only") and (want_ == "OK" or "AGGAC" in r52.get("why", "")), (sw, r52["status"], r52.get("why")))
+        t53 = os.path.join(T, "t53"); shutil.copytree(p7, t53)
+        pin_ = os.path.join(t53, "jobs", OB, J[OB]["rungs"]["0"]["incar"]); rin_ = os.path.join(t53, "run", OB, "INCAR")
+        sw = all("AGGAC = 0.0" in open(x_).read() for x_ in (pin_, rin_))
+        for x_ in (pin_, rin_):
+            t__ = open(x_).read(); open(x_, "w").write(t__.replace("AGGAC = 0.0", "AGGAC = 0.5"))      # 먼저 읽는다 (open(x, "w") 가 먼저 비운다)
+        aj_ = os.path.join(t53, "run", OB, "attempt.json"); a__ = json.load(open(aj_)); a__["sha256"]["INCAR"] = _sha(rin_); json.dump(a__, open(aj_, "w"))
+        a53 = check_attempt(J[OB], t53, os.path.join(t53, "run", OB), "0")
+        ck("⛔음성 D1: 묶음 · 돌린 INCAR 가 같이 AGGAC 0.5 (입력 일치는 통과) 면 입력으로 대신하지 않고 모순 → SETTINGS_MISMATCH 'AGGAC (입력) 0.5'",
+           sw and a53["status"] == "SETTINGS_MISMATCH" and "AGGAC (입력) 0.5" in a53.get("why", "") and not a53.get("settings_input_only"), (sw, a53["status"], a53.get("why")))
+        h0_ = {"_body": " GGA = BO\n", "version": "vasp.5.4.4.18Apr17-6-g9f103f2a35 (build Aug 19 2022 11:57:46) complex"}
+        hs_ = (aggac_input_only(h0_, {"AGGAC": "0.0"}), aggac_input_only(h0_, {}), aggac_input_only({**h0_, "_body": " AGGAC = ******\n"}, {"AGGAC": "0.0"}),
+               aggac_input_only({**h0_, "version": None}, {"AGGAC": "0.0"}))
+        ck("⛔음성 D1 (도우미): 입력에 AGGAC 없음 · 본문에 AGGAC 글자 · 판 미상 → 대신 못 함 (모순 아님) · 0.0 이면 대신함",
+           hs_ == ((True, None), (False, None), (False, None), (False, None)), hs_)
+        RPK, RTG = os.path.join(REPO, "db", "inputs", "wad_round2_vasp_v5_2026_10_22"), os.path.join(REPO, "db", "raw", "wad_round2_vasp_2026_10_22", "pilot_return_2026_10_26", "round2_return.tgz")
+        rr_, rd_ = {}, os.path.join(T, "real_ret")
+        if os.path.isfile(RTG) and os.path.isfile(os.path.join(RPK, "jobs.json")):
+            import tarfile
+            with tarfile.open(RTG) as tf_:
+                for m_ in tf_.getmembers():
+                    if m_.isfile() and re.fullmatch(r"run/CC_S33_AB_optB88_(bound|far)/[A-Za-z0-9_.]+", m_.name):
+                        os.makedirs(os.path.join(rd_, os.path.dirname(m_.name)), exist_ok=True)
+                        open(os.path.join(rd_, m_.name), "wb").write(tf_.extractfile(m_).read())
+            JR_ = {j["dir"]: j for j in json.load(open(os.path.join(RPK, "jobs.json"), encoding="utf-8"))["jobs"]}
+            for n_ in CC_PAIRS["optb88"]:
+                at_ = os.path.join(rd_, "run", n_)
+                body_ = V._strip_incar_echo(open(os.path.join(at_, "OUTCAR"), errors="replace").read())[0] if os.path.isfile(os.path.join(at_, "OUTCAR")) else ""
+                x_ = check_attempt(JR_[n_], RPK, at_, "0")
+                rr_[n_] = (x_["status"], x_.get("settings_input_only"), "AGGAC" in body_, x_.get("why", "")[:80])
+        ck("D1 실물 회귀: 파일럿 반송 (VASP 5.4.4) C–C optB88 두 잡 — OUTCAR 에 AGGAC 없음 · 등록부 없이 SETTINGS_UNVERIFIED (AGGAC) → KERNEL_UNVERIFIED (AGGAC 입력 표지 · 커널 문구는 봉인 때)",
+           len(rr_) == 2 and all(v_[0] == "KERNEL_UNVERIFIED" and v_[1] == ["AGGAC"] and not v_[2] for v_ in rr_.values()), rr_ or "실물 반송 · 묶음이 레포에 없다")
         for rx_, why_ in (("NO SUCH KERNEL PHRASE", "안 맞음"), ("read", "optB88 아닌 시도에 맞음"), ("(?i)vdw kernel", "(?")):
             try:
                 seal_registry(PKG, PKG, msha, v5_registry=v5r, kernel_read_regex=rx_); msg_ = "(봉인됨)"
@@ -3419,8 +3503,9 @@ def _selftest():
                 open(os.path.join(d_, f_), "w", newline="").write(t_)
             open(os.path.join(d_, "attempt.json"), "w").write('{"job": "x", "attempt": "0", "rc": ' + rv_ + ', "elapsed_s": 1}\n')
             rcj[lab_] = (subprocess.run(["bash", jt, d_, ""], capture_output=True, text=True).stdout.split() or ["(없음)"])[0]
-        ck("⛔음성 DC (같은 종류 · 러너 judge 의 rc): attempt.json 의 rc 를 전체 값으로 — 0.5 · 1e3 · -0 은 SCF_UNVERIFIED (rc_unknown · 승격 없음 · 검사기는 "
-           "ATTEMPT_MISMATCH) · 0 은 OK · -1 은 RUN_FAILED (지금까지는 접두부 0 · 1 로 읽어 OK · RUN_FAILED → 다음 단)",
+        ck("⛔음성 DC (같은 종류 · 러너 judge 의 rc): attempt.json 의 rc 를 전체 값으로 — 0.5 · 1e3 · -0 은 러너 SCF_UNVERIFIED (rc_unknown · 승격 없음) · "
+           "검사기는 0.5 · 1e3 를 ATTEMPT_MISMATCH 로 · -0 은 파이썬이 정수 0 으로 받아 OK (Codex DE P2 정정) · 0 은 OK · -1 은 RUN_FAILED "
+           "(지금까지는 접두부 0 · 1 로 읽어 OK · RUN_FAILED → 다음 단)",
            rcj == {"0.5": "SCF_UNVERIFIED", "1e3": "SCF_UNVERIFIED", "-0": "SCF_UNVERIFIED", "0": "OK", "-1": "RUN_FAILED", "\\060": "SCF_UNVERIFIED", "\\061": "SCF_UNVERIFIED"}, rcj)
         ck("⛔음성 DD P1-2 (Codex): attempt.json 의 rc 가 따옴표 없는 \\060 · \\061 (awk -v 는 0 · 1 로 풀어 OK · RUN_FAILED → 다음 단이었다) → 둘 다 SCF_UNVERIFIED (rc_unknown · 승격 없음) "
            "— 이 시험은 PATH 의 awk 로 돈다 (gawk · mawk 둘 다 돌린다)",
