@@ -149,5 +149,16 @@
   "싣지_않은_것": "Q1 · Q2 값 (자리 판정은 허용 서술 없음 · 분해는 시작 전) · S 빈자리 v2 (마감 결정 D-2026-10-20-nd-s-vacancy-closed 가 proposed — 비준 전) · PS₄ 안 P · S 자리 전하 · Li–X 중점 ELF · Pauling 이온성 % 의 절대 해석",
   "그대로_가져온_금지": "카드 §5 (묘사 → 안정성 인과 · x 를 실험 조성으로 · 4f · 이온전도) · 이 runlog ⛔_읽지_않는_것 셋 (ELF 로 이온성 순서 · Li–S 0.93 공유 · 0.5 = 결합 없음)",
   "⏭": "1저자에게 보낼지 · 언제 = 사용자 결정 (CEI 트랙 · 통지는 사용자를 통해) · Nd@P Bader (그림 3a 확인 · Q1 뒤) 를 할지 = 사용자 결정 · 1저자의 'Pauling' 이 전기음성도 척도가 아니라 Pauling 규칙 (정전 원자가 규칙) 을 뜻했으면 다시 맞춘다"
+ },
+ "✅_1저자_설명_페이지_갱신_2026_10_26": {
+  "사용자": "'관련해서 html 갱신해서 만들어봐' (Nd Q1 · Q2 · Q3 · Li₃Nd 결정 기록 설명 뒤)",
+  "산출": "db/properties/cei_figs/cei_nd_electronegativity.html (sha256 fcdd096f71899198…) · Origin CSV 8 개 (fig8_site_energy · fig9_decomp_difference 추가) · 생성기 tools/figures/build_nd_electronegativity_page.py (selftest 41 · 음성 16 · 깨기 9/9 빨강) · Artifact https://claude.ai/artifact/EDFtoGaz6jVUqnysLjZQXq (비공개 — 1저자가 열려면 사용자가 Share 메뉴에서 공유해야 한다 · 정본은 저장소 파일)",
+  "옛_링크": "https://claude.ai/artifact/AxbmymBfkKeKtALwSBRAn1 — 2026-10-26 이 계정에서 읽기가 'artifact not found' (지워졌거나 이 계정 것이 아님) · 같은 자리 갱신을 못 해서 새 링크로 냈다 · 위 10-20 항목은 고치지 않는다",
+  "더한_것": "제목 'Nd in LPSCl1.6' · 배경 (세 질문 · 셀이 달라 숫자를 서로 견주지 않음) · Q1 자리 (그림 8 · 잠정 — 카드 D-2026-10-14-ndo-site-stability-estimand proposed · 1저자 동의 전 · 하한 쪽 읽기 · Rietveld 반박 근거로 안 씀) · Q2 분해 (그림 9 · Y 보정_B25 · '불안정' 아님) · S 빈자리 (구분 안 됨 · D-2026-10-20-nd-s-vacancy-closed active) · 원고 Fig. 3g Li₃Nd (HZ-li3nd-neb-si-conditional SI 문장 + 홉 수 검산 줄을 결속 블록 안에만) · 원고 예문 · 금지 · 계산 조건 · 남은 것",
+  "검사": "⑦ Q1 원자료 ΔG ↔ runlog 글자 ↔ 카드 §5 문장 · ⑧ Q2 판독 Y ↔ 원자료 (1e-3) · 분해능 밖 · G_V · 상 이완 · 생성물 다섯 (원자료 basis 에서 이름) · ⑨ S 빈자리 확정값 ↔ 허용 문장 · 문턱 · 결정 active · ⑩ Li₃Nd CONDITIONAL + 결정 active · 나머지 NEB BLOCKED 항목 있음 · SI 문장 안 장벽 = sei_neb.json · ⑪ 만든 페이지 (단독 · Artifact 본문) 에 Li₂S 장벽 없음 · Li₃Nd 장벽은 data-claim 결속 블록 안에만 — 하나라도 어긋나면 아무것도 쓰지 않는다",
+  "깨기_교훈": "⑧ Y 대조를 끈 변이가 처음엔 초록이었다 — 음성 입력 (Y −20) 이 허용 문장 반올림 대조에 먼저 걸려서 Y 대조를 재지 못했다 · 음성 입력을 −22.4 (반올림 22 그대로) 로 바꿔 원자료 대조만 잡게 했다 · Q1 '잠정' 표지 시험은 처음에 한쪽만 봤다 (proposed 면 늘 통과) → 원장 사본에서 Q1 카드를 active 로 바꿔 표지 일곱이 전부 빠지는지까지 보게 고침 (칩을 늘 붙이는 변이 = 빨강)",
+  "화면_확인": "Playwright 1100 px 밝음 · 400 px 어두움 — 가로 넘침 없음 · 그림 9 값 글자가 행 이름과 겹쳐 축을 −40 까지 넓히고 분해능 글자를 선 왼쪽에 붙였다",
+  "싣지_않은_것": "Li₂S 장벽 (BLOCKED) · Q1 과 Q2 를 한 표에 · 분해 에너지 절대값 (두 셀의 차 Y 만) · 목표 조성 (x = 0.02) 으로 옮긴 크기",
+  "⏭": "1저자에게 보낼지 · 언제 = 사용자 결정 (공유는 사용자가 Share 메뉴에서) · Q1 카드를 비준하면 생성기를 다시 돌려 같은 파일로 다시 낸다 ('잠정' 표지가 빠진다) · Q2 메시지 초안 kb/projects/nd_q2_message_send_2026_10_26.md 와 같이 보낼지 = 사용자 결정"
  }
 }

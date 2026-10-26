@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Electrons Around Nd</title>
+<title>Nd in LPSCl1.6</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Pauling electronegativity expectations set beside DFT Bader charges and bond-midpoint ELF for Nd in Nd/O-doped LPSCl1.6, written for the experimental first author.">
+<meta name="description" content="Site preference, decomposition and electron distribution of Nd in Nd/O-doped LPSCl1.6, with the citation range for the Li3Nd barrier, written for the experimental first author.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+KR:wght@400;600;700&display=swap">
@@ -135,30 +135,134 @@ svg .curve-ref{stroke:var(--c-ref-strong);stroke-width:2;fill:none;stroke-lineca
 svg .curve-nd{stroke:var(--c-nd);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
 #tip{position:fixed;z-index:30;pointer-events:none;background:var(--ink);color:var(--bg);padding:6px 10px;border-radius:6px;font:12px/1.45 var(--font-mono);max-width:300px;box-shadow:0 4px 14px rgba(0,0,0,.2)}
 #tip strong{display:block;font-weight:600}
+.claim-mark{display:inline-block;font:600 .74rem/1.5 var(--font-mono);letter-spacing:.03em;color:var(--warn);background:var(--warn-soft);padding:1px 8px;border-radius:999px}
+.bound{border-color:var(--warn)}
+.caution{background:var(--warn-soft);border-color:transparent}
+.caution .qhead{color:var(--warn)}
+table.qs td:first-child{font-weight:600}
 @media (max-width:560px){h1{font-size:1.72rem}.card{padding:16px}figure{padding:12px}dl.meth{grid-template-columns:1fr;gap:2px 0}dl.meth dd{margin-bottom:8px}}
 </style>
 </head>
 <body>
 <div class="wrap">
 <header>
-<p class="eyebrow">CEI · Nd/O 공도핑 LPSCl1.6 · 전자 배치 설명 · 2026-10-20</p>
-<h1>Nd 옆 전자는 어디에 있나</h1>
-<p class="sub">Pauling 전기음성도로 본 기대와 DFT 계산 (Bader 전하 · ELF) 을 나란히 놓았어요. 계산 모델은 LPSCl1.6 에 Nd₂O₃ 를 넣은 120 원자 셀 (Li₄₈Nd₂P₁₀O₃S₄₁Cl₁₆) 이고, Nd 는 Li 자리에 있어요.</p>
-<nav class="toc" aria-label="Sections"><a href="#summary">요약</a><a href="#q">질문</a><a href="#concepts">개념</a><a href="#pauling">Pauling 으로 보면</a><a href="#replace">무엇을 대신하나</a><a href="#bader">Bader 전하</a><a href="#density">밀도</a><a href="#elf">ELF</a><a href="#table">한 표로</a><a href="#write">원고에 옮길 때</a><a href="#open">아직 답하지 않은 것</a><a href="#methods">계산 조건</a></nav>
+<p class="eyebrow">CEI · Nd/O 공도핑 LPSCl1.6 · 계산 결과 설명 · 2026-10-26 갱신 (처음 2026-10-20)</p>
+<h1>Nd 를 넣으면 무엇이 달라지나</h1>
+<p class="sub">자리 (Q1) · 분해 (Q2) · 전자 배치 (Q3) 계산 결과를 처음 보는 사람도 읽을 수 있게 풀었어요. 전자 배치는 Pauling 전기음성도로 본 기대와 DFT (Bader 전하 · ELF) 를 나란히 놓았어요. 원고 Fig. 3g 의 Li₃Nd 장벽을 쓸 수 있는 범위도 같이 적었어요.</p>
+<nav class="toc" aria-label="Sections"><a href="#summary">요약</a><a href="#bg">배경</a><a href="#site">Q1 자리</a><a href="#decomp">Q2 분해</a><a href="#q">Q3 전자 배치</a><a href="#concepts">개념</a><a href="#pauling">Pauling 으로 보면</a><a href="#replace">무엇을 대신하나</a><a href="#bader">Bader 전하</a><a href="#density">밀도</a><a href="#elf">ELF</a><a href="#table">한 표로</a><a href="#svac">S 빈자리</a><a href="#li3nd">Fig. 3g 장벽</a><a href="#write">원고에 옮길 때</a><a href="#open">남은 것</a><a href="#methods">계산 조건</a></nav>
 </header>
 
 <section id="summary" class="card answer">
 <h2>요약</h2>
 <ol class="sum">
-<li><b>전기음성도로 보면 방향은 Nd 가 무엇을 대신하느냐로 정해져요.</b> Nd 가 P 자리에 들어가면 (Rietveld 모델) S 의 결합 상대가 P (χ 2.19) 에서 Nd (1.14) 로 바뀌어 S 가 전자를 더 받아요. Li 자리에 들어가면 (이번 DFT 모델) 상대가 Li (0.98) 에서 Nd 로 바뀌어 아주 조금 덜 받아요.</li>
-<li><b>이번에 계산한 Li 자리 모델은 전기음성도가 말하는 방향 그대로 나왔어요.</b> Nd 와 닿은 S²⁻ · Cl⁻ · PS₄ 단위는 Li 만 이웃한 같은 종류보다 0.08–0.22 e 덜 음전하이고, Nd 는 형식 전하 +3 가운데 65 % 만 내줬어요 (Li 는 88 %).</li>
-<li><b>Nd–음이온 결합은 주로 이온 결합이고, Li–음이온보다 공유성이 조금 더 있어요.</b> Nd–S 결합 가운데에는 P–S 같은 공유 전자쌍이 없어요 (결합 중점 ELF 0.47, P–S 0.94).</li>
-<li><b>이 페이지는 전자가 어디 있는지 보여 주는 묘사예요.</b> 이 물질이 안정한지, 곧 Nd 가 어느 자리에서 에너지가 낮은지와 분해되기 쉬운지는 에너지 계산이 따로 답하고, 아직 진행 중이에요.</li>
+<li><b>Q1 자리 (잠정).</b> 이 계산 조건에서는 Nd 가 Li 자리에 있을 때 에너지가 낮아요. P 자리 (Rietveld 4b) 모델이 Nd 하나당 0.49 eV 높아요. 농도와 4f 처리 같은 조건이 실험과 달라서, Rietveld 결과를 반박하는 근거로는 쓰지 않아요.</li>
+<li><b>Q2 분해.</b> 같은 조건에서 견주면 Nd₂O₃ 를 넣은 셀이 넣기 전보다 분해 생성물 쪽으로 원자당 22 meV 더 기울어 있어요. '불안정하다' 는 뜻은 아니에요.</li>
+<li><b>Q3 전자 배치.</b> 방향은 Nd 가 무엇을 대신하느냐로 정해지고, 이번 Li 자리 모델은 전기음성도가 말하는 방향 그대로 나왔어요. Nd 와 닿은 S²⁻ · Cl⁻ · PS₄ 단위는 Li 만 이웃한 같은 종류보다 0.08–0.22 e 덜 음전하이고, Nd 는 형식 전하 +3 가운데 65 % 만 내줬어요 (Li 는 88 %). Nd–음이온 결합은 주로 이온 결합이고, Li–음이온보다 공유성이 조금 더 있어요.</li>
+<li><b>Nd 옆 S 가 더 단단히 붙잡혀 있는지는</b> 이 계산으로 구분되지 않아요.</li>
+<li><b>원고 Fig. 3g 의 Li₃Nd 장벽은</b> 본문에서 빼고, SI 에 단서 문장과 함께만 써 주세요. Li₂S 와 순위를 매기지 않아요.</li>
 </ol>
 </section>
 
+<section id="bg">
+<h2>배경 — 무엇을 물었나</h2>
+<p>실험에서는 LPSCl1.6 에 Nd₂O₃ 를 조금 넣었어요. Nd 는 P 자리에, O 는 S 자리에 들어간다고 보고, Rietveld 정련도 Nd 를 P 자리 (4b) 에 두었어요. 목표 조성은 x = 0.02 예요. 계산으로는 세 가지를 물었어요.</p>
+<div class="tablewrap"><table class="qs">
+<thead><tr><th>질문</th><th>계산 셀</th><th>짧은 답</th></tr></thead>
+<tbody>
+<tr><td>Q1. Nd 는 어느 자리에서 에너지가 낮을까</td><td>Rietveld 셀 (5 화학식 단위 · Nd/(Nd+P) 0.40)</td><td>Li 자리 (잠정)</td></tr>
+<tr><td>Q2. Nd 를 넣으면 분해 쪽으로 더 기울까</td><td>9 월 셀 (10 화학식 단위 · Nd 는 Li 자리)</td><td>더 기울어요</td></tr>
+<tr><td>Q3. Nd 옆 전자는 어디에 있나</td><td>Q2 와 같은 셀</td><td>음이온 쪽 전자가 조금 적고, 주로 이온 결합이에요</td></tr>
+</tbody></table></div>
+<p class="note">Q1 과 Q2 · Q3 는 계산 셀과 설정이 달라서 숫자를 서로 견주지 않아요. 전자 배치 (Q3) 로 자리나 분해 (Q1 · Q2) 를 설명하지도 않아요. 세 질문 모두 실험 조성보다 Nd 가 10–20 배 많은 셀에서 계산했어요.</p>
+</section>
+
+<section id="site">
+<h2>Q1. Nd 는 어느 자리에서 에너지가 더 낮을까 <span class="chip chip-part">△ 잠정</span></h2>
+<p>같은 양의 Nd · O 를 넣되, Nd 를 P 자리 (Rietveld 4b) 에 둔 모델과 Li 자리에 둔 모델을 만들어 어느 쪽 에너지가 낮은지 견줬어요.</p>
+<ul class="nb">
+<li><b>조성을 맞춘 방법.</b> 두 모델은 Li 수가 달라요. Nd 가 P 자리에 들어가면 전하를 맞추려고 Nd 하나당 Li 2 개를 더 넣고, Li 자리에 들어가면 Nd 하나당 Li 3 개 몫을 빼요 (Nd 하나 + 빈자리 둘). 이 차이를 Li₂S · Li₃PS₄ 로 메워서 (Nd 2 개당 Li₂S 8 개 − Li₃PS₄ 2 개) 같은 원자들끼리 견줬어요.</li>
+<li><b>배치 고르기.</b> 모델마다 후보 배치 10 개를 만들어 기계학습 퍼텐셜로 고르고, 가장 낮은 셀을 DFT 로 다시 계산했어요.</li>
+<li><b>DFT.</b> 셀 모양은 그대로 두고 부피를 바꿔 가며 에너지를 재서 가장 낮은 부피를 찾은 뒤, 그 부피에서 원자 위치를 이완했어요.</li>
+</ul>
+<figure><div class="legend"><span><i class="sw sw-nd"></i>Nd on the P site</span><span><i class="sw sw-ref"></i>Reference: Nd on a Li site</span></div><div class="chart"><svg viewBox="0 0 640 146" role="img" aria-label="Site energy per Nd. The P-site model is 0.49 eV per Nd above the Li-site model." xmlns="http://www.w3.org/2000/svg">
+<title>Site energy per Nd. The P-site model is 0.49 eV per Nd above the Li-site model.</title>
+<line class="ax0" x1="178.0" y1="34" x2="178.0" y2="68"/>
+<line class="ax0" x1="178.0" y1="68" x2="178.0" y2="102"/>
+<text class="tk" x="178.0" y="120" text-anchor="middle">0.0</text>
+<line class="ax" x1="310.0" y1="34" x2="310.0" y2="68"/>
+<line class="ax" x1="310.0" y1="68" x2="310.0" y2="102"/>
+<text class="tk" x="310.0" y="120" text-anchor="middle">0.2</text>
+<line class="ax" x1="442.0" y1="34" x2="442.0" y2="68"/>
+<line class="ax" x1="442.0" y1="68" x2="442.0" y2="102"/>
+<text class="tk" x="442.0" y="120" text-anchor="middle">0.4</text>
+<line class="ax" x1="574.0" y1="34" x2="574.0" y2="68"/>
+<line class="ax" x1="574.0" y1="68" x2="574.0" y2="102"/>
+<text class="tk" x="574.0" y="120" text-anchor="middle">0.6</text>
+<text class="tk" x="376.0" y="140" text-anchor="middle">Energy relative to the Li-site model (eV per Nd)</text>
+<text class="lb" x="166" y="55.5" text-anchor="end">Nd on a Li site</text>
+<g class="hit" tabindex="0" role="img" aria-label="Nd on a Li site, 0 eV per Nd (reference)" data-v="0 eV per Nd (reference)" data-l="Nd on a Li site">
+<rect class="hitbox" x="178" y="34" width="396" height="34"/>
+<path class="mk ref" d="M178.0,45.0H178.0Q178.0,45.0 178.0,45.0V57.0Q178.0,57.0 178.0,57.0H178.0Z"/>
+</g>
+<text class="val" x="185.0" y="55.5">0 (reference)</text>
+<text class="lb" x="166" y="89.5" text-anchor="end">Nd on the P site (4b)</text>
+<g class="hit" tabindex="0" role="img" aria-label="Nd on the P site (Rietveld 4b), +0.490 eV per Nd" data-v="+0.490 eV per Nd" data-l="Nd on the P site (Rietveld 4b)">
+<rect class="hitbox" x="178" y="68" width="396" height="34"/>
+<path class="mk nd" d="M178.0,79.0H497.4Q501.4,79.0 501.4,83.0V87.0Q501.4,91.0 497.4,91.0H178.0Z"/>
+</g>
+<text class="val" x="508.4" y="89.5">+0.49</text>
+</svg></div><figcaption><b>Fig. 8. Site energy (Q1, provisional).</b> Energy of the model with Nd on the P site (Rietveld 4b) relative to the model with Nd on a Li site, per Nd, after balancing the composition difference with Li₂S and Li₃PS₄ (8 Li₂S − 2 Li₃PS₄ per 2 Nd). Lowest candidate of each model, volume fitted at fixed cell shape, then ions relaxed; frozen-4f PBE; Nd/(Nd+P) = 0.40.</figcaption><details class="tv"><summary>Table view</summary><div class="tablewrap"><table><thead><tr><th>Model</th><th>Nd site</th><th>Lowest cell</th><th class="n">Energy relative to the Li-site model (eV per Nd)</th></tr></thead><tbody><tr><td>M_Li</td><td>Li</td><td>MLi_04</td><td class="n">0 (reference)</td></tr><tr><td>M_P</td><td>P (4b)</td><td>MP_07</td><td class="n">+0.490</td></tr></tbody></table></div></details></figure>
+<p>Nd 가 P 자리에 있는 모델이 Nd 하나당 0.49 eV 높아요. 이 계산 조건에서는 Li 자리가 더 안정해요. Li 자리 모델 쪽은 O 배치를 덜 훑었는데, 더 훑으면 Li 자리 쪽 에너지가 내려갈 수만 있어요. 그래서 이 차이는 '적어도 이만큼' 으로 읽어요.</p>
+<div class="card caution">
+<p class="qhead">Rietveld 결과 (4b) 와 반대 방향이에요</p>
+<p style="margin:0">조건이 실험과 달라서 이 결과를 Rietveld 정련을 반박하는 근거로 쓰지 않아요. 계산 셀은 Nd 농도가 목표의 약 20 배 (Nd/(Nd+P) 0.40 대 0.02) 이고, Nd 의 4f 전자를 핵심부에 고정한 단순화 계산이에요. 모델마다 후보 10 개 안에서 가장 낮은 것끼리 견줬고, 조성은 Li₂S · Li₃PS₄ 한 가지로만 맞췄어요.</p>
+</div>
+<p class="note">잠정이에요. 이 결과를 원고 문장으로 옮기기 전에 1저자 동의를 받기로 했어요.</p>
+</section>
+
+<section id="decomp">
+<h2>Q2. Nd 를 넣으면 분해 쪽으로 더 기울까</h2>
+<p>Nd₂O₃ 를 넣은 셀과 넣기 전 LPSCl1.6 셀이 각각 분해 생성물로 쪼개진다고 할 때 에너지가 원자당 얼마나 내려가는지 구해서, 두 셀을 견줬어요. 더 많이 내려갈수록 분해 쪽으로 더 기운 거예요.</p>
+<ul class="nb">
+<li><b>생성물은 정해진 대로.</b> Materials Project 상도가 두 조성에 대해 고른 생성물 다섯 (Li₃PS₄ · Li₂S · LiCl · Li₃PO₄ · Nd₂S₃) 을 썼어요. 결과를 보고 고른 게 아니에요.</li>
+<li><b>모두 같은 조건으로.</b> 두 셀과 생성물 다섯을 같은 DFT 설정으로 직접 계산했어요.</li>
+<li><b>미리 정한 점검.</b> 계산 전에 정한 점검 여섯 (골격 · 생성물 집합 · 힘 · 생성물 이완 · 부피 · k 점) 을 모두 통과했어요.</li>
+</ul>
+<figure><div class="legend"><span><i class="sw sw-nd"></i>Doped minus undoped</span></div><div class="chart"><svg viewBox="0 0 640 112" role="img" aria-label="Decomposition driving force difference Y = -22.3 meV per atom, far outside the plus or minus 2 meV resolution." xmlns="http://www.w3.org/2000/svg">
+<title>Decomposition driving force difference Y = -22.3 meV per atom, far outside the plus or minus 2 meV resolution.</title>
+<line class="ax" x1="178.0" y1="34" x2="178.0" y2="68"/>
+<text class="tk" x="178.0" y="86" text-anchor="middle">−40</text>
+<line class="ax" x1="266.0" y1="34" x2="266.0" y2="68"/>
+<text class="tk" x="266.0" y="86" text-anchor="middle">−30</text>
+<line class="ax" x1="354.0" y1="34" x2="354.0" y2="68"/>
+<text class="tk" x="354.0" y="86" text-anchor="middle">−20</text>
+<line class="ax" x1="442.0" y1="34" x2="442.0" y2="68"/>
+<text class="tk" x="442.0" y="86" text-anchor="middle">−10</text>
+<line class="ax0" x1="530.0" y1="34" x2="530.0" y2="68"/>
+<text class="tk" x="530.0" y="86" text-anchor="middle">0</text>
+<text class="tk" x="376.0" y="106" text-anchor="middle">Y = ΔE_decomp(doped) − ΔE_decomp(undoped)  (meV/atom)</text>
+<line class="refline" x1="512.4" y1="34" x2="512.4" y2="68"/>
+<text class="tk" x="506.4" y="24" text-anchor="end">±2 meV/atom resolution</text>
+<line class="refline" x1="547.6" y1="34" x2="547.6" y2="68"/>
+<text class="tk" x="553.6" y="24"></text>
+<text class="lb" x="166" y="49.0" text-anchor="end">Doped − undoped</text>
+<text class="lb2" x="166" y="63.0" text-anchor="end">Y, B = 25 GPa</text>
+<g class="hit" tabindex="0" role="img" aria-label="Nd₂O₃@LPSCl1.6 minus LPSCl1.6, Y = −22.26 meV/atom" data-v="Y = −22.26 meV/atom" data-l="Nd₂O₃@LPSCl1.6 minus LPSCl1.6">
+<rect class="hitbox" x="178" y="34" width="396" height="34"/>
+<path class="mk nd" d="M530.0,45.0H338.1Q334.1,45.0 334.1,49.0V53.0Q334.1,57.0 338.1,57.0H530.0Z"/>
+</g>
+<text class="val" x="327.1" y="55.5" text-anchor="end">−22.3 meV/atom</text>
+</svg></div><figcaption><b>Fig. 9. Decomposition driving force (Q2).</b> Difference between the Nd₂O₃-doped cell and undoped LPSCl1.6 in the energy released per atom on splitting into the same five products (closed system, 0 K, frozen-4f PBE). A negative Y means the doped cell leans further toward the products. The thin lines mark ±2 meV/atom, the resolution set before the calculation. Correcting for the computed cell pressures changes Y by 0.002 meV/atom.</figcaption><details class="tv"><summary>Table view</summary><div class="tablewrap"><table><thead><tr><th>Quantity</th><th class="n">Value (meV/atom)</th></tr></thead><tbody><tr><td>Y, pressure-corrected (B = 25 GPa)</td><td class="n">−22.26</td></tr><tr><td>Y, uncorrected</td><td class="n">−22.26</td></tr><tr><td>Resolution set before the calculation</td><td class="n">±2</td></tr></tbody></table></div></details></figure>
+<p>도핑 셀이 원자당 22 meV 더 내려가요. 같은 조건에서 견주면 도핑 셀 쪽이 분해 생성물 쪽으로 더 기울어 있어요. 이 계산의 분해능 (원자당 2 meV) 의 약 11 배예요.</p>
+<div class="card caution">
+<p class="qhead">'불안정하다' 는 뜻은 아니에요</p>
+<p style="margin:0">0 K 에너지 비교라 온도 · 무질서 효과와 분해 속도가 들어 있지 않고, 생성물 다섯 밖의 다른 분해 경로도 보지 못해요. 그래서 '분해된다' · '불안정하다' 가 아니라 '같은 조건에서 견주면 도핑 셀이 더 기운다' 까지만 말해요. Li 가 드나드는 전기화학 조건 (전압 · 계면 반응) 의 얘기도 아니에요.</p>
+</div>
+<p class="note">이 셀은 Nd 를 Li 자리에 둔 9 월 모델로, 아래 전자 배치 (Q3) 와 같은 셀이에요. Nd · O 배치는 하나만 봤어요.</p>
+</section>
+
 <section id="q">
-<h2>1저자가 정리한 질문</h2>
+<h2>Q3. 전자 배치 — 1저자가 정리한 질문</h2>
 <div class="card quote">
 <p class="qlabel">1저자 카톡 요지 · 2026-10-14</p>
 <p class="qhead">Nd/O 치환에 의해 전해질 격자 구조 내에서 전자 배치가 바뀐다</p>
@@ -418,7 +522,7 @@ svg .curve-nd{stroke:var(--c-nd);stroke-width:2;fill:none;stroke-linecap:round;s
 <text class="hd" x="150" y="222" text-anchor="middle">S expected to lose a little</text>
 <rect class="pill-ok" x="70" y="232" width="160" height="24" rx="12"/><text class="lb2 pilltxt" x="150" y="248.5" text-anchor="middle">Computed, see Fig. 4</text>
 </svg></div><figcaption><b>Fig. 3. What Nd replaces sets the direction (schematic, not data).</b> (a) Nd on the P site, as in the Rietveld model. The S partner changes from P to Nd and Δχ rises from 0.39 to 1.44, so electronegativity predicts more electrons on S. Not computed yet. (b) Nd on a Li site, as in the DFT model on this page. The partner changes from Li to Nd and Δχ falls slightly from 1.60 to 1.44, so electronegativity predicts slightly fewer electrons on S. Computed in Fig. 4.</figcaption></figure>
-<p>1저자의 Rietveld 정련은 Nd 를 P 자리 (4b) 에 두었고 (그림 3a), 이 페이지의 DFT 모델은 Nd 를 Li 자리에 둔 모델이에요 (그림 3b). 이 모델에서 Nd 하나는 Li 셋의 몫을 맡아요. 한 자리에는 Nd 가 앉고, 두 자리는 전하를 맞추려고 비워 뒀어요. Nd 가 실제로 어느 자리에서 에너지가 낮은지는 지금 따로 계산하고 있어요.</p>
+<p>1저자의 Rietveld 정련은 Nd 를 P 자리 (4b) 에 두었고 (그림 3a), 이 페이지의 DFT 모델은 Nd 를 Li 자리에 둔 모델이에요 (그림 3b). 이 모델에서 Nd 하나는 Li 셋의 몫을 맡아요. 한 자리에는 Nd 가 앉고, 두 자리는 전하를 맞추려고 비워 뒀어요. 자리별 에너지는 위 Q1 에서 따로 견줬어요 (잠정).</p>
 </section>
 
 <section id="bader">
@@ -777,25 +881,64 @@ svg .curve-nd{stroke:var(--c-nd);stroke-width:2;fill:none;stroke-linecap:round;s
 <tbody><tr><td>Li–S → Nd–S</td><td>이번 모델</td><td>Δχ 1.60 → 1.44, S 쪽 전자가 조금 준다</td><td>자유 S²⁻ −1.69 → −1.47 e (덜 음)</td><td><span class="chip chip-ok">✓ 같은 방향</span></td></tr><tr><td>Li–Cl → Nd–Cl</td><td>이번 모델</td><td>Δχ 2.18 → 2.02, Cl 쪽 전자가 조금 준다</td><td>Cl⁻ −0.91 → −0.83 e (덜 음)</td><td><span class="chip chip-ok">✓ 같은 방향</span></td></tr><tr><td>Li → Nd (양이온 쪽)</td><td>이번 모델</td><td>χ 0.98 → 1.14, Nd 가 전자를 덜 내준다</td><td>형식 전하 가운데 내준 몫 Li 88 %, Nd 65 %</td><td><span class="chip chip-ok">✓ 같은 방향</span> 형식 전하 +3 영향도 섞임</td></tr><tr><td>P–S → Nd–S</td><td>Rietveld 모델</td><td>Δχ 0.39 → 1.44, S 쪽 전자가 는다</td><td>아직 계산하지 않았어요</td><td><span class="chip chip-open">○ 계산 전</span></td></tr><tr><td>P–S → P–O</td><td>두 모델 공통</td><td>Δχ 0.39 → 1.25, O 쪽 전자가 더 많다</td><td>P 에 붙은 O 는 −1.90 ~ −1.85 e 로 자유 S²⁻ 보다 더 음이에요. PS₄ 안 S 와의 직접 비교는 못 해요.</td><td><span class="chip chip-part">△ 방향만</span></td></tr><tr><td>결합 성격</td><td>이번 모델</td><td>Nd–S 는 P–S 보다 훨씬 이온성이고 Li–S 보다 조금 덜</td><td>중점 ELF P–S 0.94, Nd–S 0.47. Bader 와 합치면 주로 이온 결합이고 Li–음이온보다 공유성이 조금 더 있어요.</td><td><span class="chip chip-ok">✓ 같은 방향</span></td></tr></tbody></table></div>
 </section>
 
+<section id="svac">
+<h2>Nd 옆 S 는 더 단단히 붙잡혀 있나</h2>
+<p>Q2 · Q3 와 같은 셀에서 Nd 옆의 자유 S 와 Nd 에서 먼 자유 S 를 하나씩 빼 보고, 빼는 데 드는 에너지를 견줬어요. 빈자리는 전하를 띠지 않게 두고 격자는 고정했어요.</p>
+<p>이 표본으로는 <b>구분되지 않아요</b>. 두 쪽 차이가 −0.11 eV 로 미리 정한 문턱 0.3 eV 안이고, Nd 옆 2 개 · 먼 쪽 2 개라 흩어짐과 겹쳐요. 네 계산 모두 전자가 부분적으로 차는 금속성 상태로 나왔다는 점도 같이 적어 둬요.</p>
+</section>
+
+<section id="li3nd">
+<h2>원고 Fig. 3g — Li₃Nd 장벽은 이렇게만 써 주세요</h2>
+<p>원고 Fig. 3g 에는 우리가 계산한 Li 이동 장벽 두 개 (Li₂S · Li₃Nd) 가 들어가 있어요. Li₃Nd 계산을 다시 점검했고, 그 결과에 맞춰 쓸 수 있는 범위를 정했어요.</p>
+<ul class="nb">
+<li><b>점검에서 본 것.</b> 장벽 계산 (NEB) 의 출발 · 도착 구조, 곧 Li 하나를 뺀 Li₃Nd 를 이완하면 격자가 셀당 1 eV 넘게 내려가며 크게 재배열해요. 그래서 이 장벽은 '재배열된 작은 셀 (2 × 2 × 2) 위의 값' 이에요.</li>
+<li><b>큰 셀로 확인하지 못하는 이유.</b> 3 × 3 × 3 셀에서는 장벽 계산이 수렴하지 않았고, 셀 자체도 이완하면서 크게 재배열했어요. 셀 크기를 키워 값을 확인하는 보통의 방법이 막혀 있어서, 같은 방식으로 다시 돌리지는 않기로 했어요.</li>
+<li><b>Li₃Nd 는 이론 구조예요.</b> Materials Project 에서 Li–Nd 에는 안정한 화합물이 없어요.</li>
+</ul>
+<!--claim:HZ-li3nd-neb-si-conditional-->
+<div class="card bound" data-claim="HZ-li3nd-neb-si-conditional">
+<p class="qlabel"><span class="claim-mark">조건부 인용 · SI 에만 · 단서와 함께</span></p>
+<p>SI 에 쓸 수 있는 문장이에요. 뜻을 줄이지 않는 다듬기만 해 주세요.</p>
+<p lang="en">For a hypothetical ordered Li3Nd model (BiF3-type, Materials Project mp-976264, E_hull = 0.197 eV/atom) in a 2x2x2 supercell, the neutral-vacancy nearest-neighbour c-&gt;c CI-NEB barrier is 0.229 eV. Both vacancy endpoints relaxed by about 1.4 eV per cell from the ideal lattice, so the barrier refers to this locally reconstructed 2x2x2 model. A larger-cell check was not possible (the 3x3x3 CI-NEB did not converge and the 3x3x3 cells reconstructed substantially on relaxation); the value is therefore not converged with respect to cell size and is not compared with other phases.</p>
+<p class="note" style="margin:0">같이 적는 차수 검산 한 줄: 298 K 에서 ν₀ = 10¹³ s⁻¹ 를 가정하면 Γ ≈ 1.3 × 10⁹ s⁻¹ (평균 대기 ≈ 0.7 ns) 예요. 확산계수나 전도도는 아니에요.</p>
+</div>
+<!--/claim-->
+<h3 style="margin-top:18px">이렇게는 쓰지 않아요</h3>
+<ul class="dont">
+<li><b>본문이나 그림에 장벽 숫자를 싣는 것.</b> 특히 Li₂S 장벽과 나란히 놓고 "Li–Nd 합금이 Li₂S 보다 Li 이동을 돕는다" 고 순위를 매기는 문장이요. 두 계산은 셀 크기와 빈자리 전하가 다르고, 둘 다 셀 크기 수렴을 확인하지 못했어요.</li>
+<li><b>Li₂S 장벽 숫자.</b> 아직 인용하지 않는 값이에요.</li>
+<li><b>이 장벽을 수렴된 Li₃Nd 의 물성으로 쓰거나, 실험 · 문헌 값과 나란히 놓는 문장.</b></li>
+</ul>
+</section>
+
 <section id="write">
 <h2>원고에 옮길 때</h2>
 <h3>이렇게 쓸 수 있어요 (예)</h3>
 <ol class="ex">
-<li>같은 셀 · 같은 설정에서 Nd 와 닿은 자유 S²⁻ 의 Bader 전하는 Li 만 이웃한 자유 S²⁻ 보다 0.22 e 덜 음이다 (각 2 개).
+<li>(Q1 · 잠정, 1저자 동의 전) Li₃PS₄/Li₂S 교환 기준 · Nd/(Nd+P) 0.40 셀 · frozen-4f PBE 에서 Nd@4b 모델이 Nd@Li 모델보다 0.49 eV/Nd 높다. 다른 저장소와 x = 0.02 에서의 크기는 확인하지 않았다.
+<span class="en" lang="en">With the Li₃PS₄/Li₂S exchange as the reference, in a cell with Nd/(Nd+P) = 0.40 and with frozen-4f PBE, the Nd@4b model is 0.49 eV per Nd higher in energy than the Nd@Li model. Other reservoirs and the magnitude at x = 0.02 were not examined.</span></li>
+<li>(Q2) 우리 스크리닝 최저 모델 (Nd@Li) 에서 — MP hull 이 고른 같은 상 기저 · 닫힌계 · 0 K · frozen-4f PBE · Nd₂O₃@LPSCl1.6 (Nd@Li · 10 f.u. 셀 · 배치 하나 · Nd/(Nd+P) 0.2 명목) 에서 도핑 셀의 분해 구동력이 도핑 전 LPSCl1.6 보다 22 meV/atom 크다.
+<span class="en" lang="en">For our lowest-energy screening model (Nd on a Li site), with the same set of decomposition products selected by the Materials Project hull, in a closed system at 0 K and with frozen-4f PBE, the decomposition driving force of the Nd₂O₃@LPSCl1.6 cell (Nd on a Li site, 10 formula units, one configuration, nominal Nd/(Nd+P) = 0.2) is 22 meV/atom larger than that of undoped LPSCl1.6.</span></li>
+<li>(S 빈자리) 같은 셀 · 얼린 격자 · 중성 (닫힌 껍질) 에서 Nd 옆 · 먼 자유 S 의 빈자리 에너지는 이 표본 (n 2 대 2) 으로 구분되지 않는다 (차 −0.11 eV · 넷 다 부분 점유 (금속성)).
+<span class="en" lang="en">In the same cell, with a frozen lattice and neutral (closed-shell) vacancies, the vacancy energies of free S next to Nd and far from Nd cannot be distinguished with this sample (n = 2 vs 2; difference −0.11 eV; all four partially occupied, metallic).</span></li>
+<li>(Q3) 같은 셀 · 같은 설정에서 Nd 와 닿은 자유 S²⁻ 의 Bader 전하는 Li 만 이웃한 자유 S²⁻ 보다 0.22 e 덜 음이다 (각 2 개).
 <span class="en" lang="en">In the same cell and with the same settings, free S²⁻ in contact with Nd carries a Bader charge 0.22 e less negative than free S²⁻ coordinated only by Li (two sites each).</span></li>
-<li>Pauling 전기음성도 차는 Nd–S (1.44) 가 Li–S (1.60) 보다 조금 작고 P–S (0.39) 보다 훨씬 크다. Li 자리 모델의 Bader 전하는 Nd 가 Li 를 대신할 때 기대되는 방향을 따른다.
+<li>(Q3) Pauling 전기음성도 차는 Nd–S (1.44) 가 Li–S (1.60) 보다 조금 작고 P–S (0.39) 보다 훨씬 크다. Li 자리 모델의 Bader 전하는 Nd 가 Li 를 대신할 때 기대되는 방향을 따른다.
 <span class="en" lang="en">The Pauling electronegativity difference is slightly smaller for Nd–S (1.44) than for Li–S (1.60) and much larger than for P–S (0.39). The Bader charges of the Li-site model follow the direction expected when Nd replaces Li.</span></li>
-<li>결합 중점 ELF 는 P–S 0.94, Nd–S 0.47 로, Nd–S 에는 P–S 와 같은 공유 전자쌍이 없다.
+<li>(Q3) 결합 중점 ELF 는 P–S 0.94, Nd–S 0.47 로, Nd–S 에는 P–S 와 같은 공유 전자쌍이 없다.
 <span class="en" lang="en">The ELF at the bond midpoint is 0.94 for P–S but 0.47 for Nd–S, so Nd–S has no shared electron pair of the P–S type.</span></li>
 </ol>
 <h3 style="margin-top:22px">이렇게는 쓰지 않아요</h3>
 <ul class="dont">
+<li><b>"Nd 는 Li 자리에 있다" 처럼 조건 없이 쓰는 문장.</b> Q1 은 Li₂S · Li₃PS₄ 로 조성을 맞춘 한 가지 조건과 높은 Nd 농도에서 나온 결과예요.</li>
+<li><b>"Nd₂O₃ 를 넣으면 분해된다 · 불안정하다", 또는 상도 위 거리 (E_above_hull) 라고 부르는 문장.</b> Q2 는 0 K 에서 같은 생성물로 견준 상대 비교예요.</li>
+<li><b>Q1 과 Q2 숫자를 한 표에 놓거나 서로 견주는 문장.</b> 셀과 계산 설정이 달라요.</li>
 <li><b>"전자 배치가 바뀌어서 안정하다."</b> Bader · ELF 는 묘사예요. 안정성은 에너지 계산 (자리 · 분해) 이 답하고, 둘을 원인과 결과로 잇지 않아요.</li>
 <li><b>"Nd 옆 S 는 전자를 더 받는다."</b> 이번 Li 자리 모델에서는 반대로 나왔어요. 이 문장은 P 자리 모델에서만 시험할 수 있고, 아직 계산하지 않았어요.</li>
 <li><b>ELF 중점 값으로 Nd–S · Nd–Cl · Nd–O 의 이온성 순서를 매기는 문장.</b> 결합 길이가 달라서 중점이 음이온에서 떨어진 거리가 달라요.</li>
 <li><b>"Li–S 는 공유 결합이다 (ELF 0.93)."</b> Li 가 작아서 중점이 S 껍질 안에 들어가 생긴 값이에요.</li>
 <li><b>"ELF 가 0.5 근처라 결합이 없다."</b> 0.5 는 균일 전자기체의 값이라 결합이 있고 없음을 가르는 문턱이 아니에요.</li>
-<li><b>이 셀의 숫자를 실험 조성으로 옮기는 문장.</b> 이 셀은 화학식 단위당 Nd 0.2 개로, 목표 조성 (0.02) 의 10 배예요.</li>
+<li><b>계산 셀의 숫자를 실험 조성으로 옮기는 문장.</b> Q2 · Q3 셀은 화학식 단위당 Nd 0.2 개로 목표 조성 (0.02) 의 10 배, Q1 셀은 약 20 배예요.</li>
 <li><b>Nd 4f 전자에 관한 문장.</b> 계산에서 4f 전자는 핵심부에 얼려 뒀어요.</li>
 <li><b>이 결과로 이온 전도도 변화를 설명하는 문장.</b></li>
 <li><b>Pauling 이온성 % 를 절대 이온성으로 쓰는 문장.</b></li>
@@ -803,13 +946,13 @@ svg .curve-nd{stroke:var(--c-nd);stroke-width:2;fill:none;stroke-linecap:round;s
 </section>
 
 <section id="open">
-<h2>아직 답하지 않은 것 (안정성)</h2>
-<p>안정성은 두 가지 에너지 계산으로 보고 있어요.</p>
+<h2>아직 남은 것</h2>
 <ul class="nb">
-<li><b>자리.</b> Nd 가 P 자리 (Rietveld 4b) 와 Li 자리 가운데 어디에서 에너지가 낮은지 견줘요. 두 모델은 같은 조성 균형으로 만들었어요. DFT 이완 (셀 모양은 고정하고 부피를 바꿔 가며 맞추는 방식) 이 진행 중이라 숫자는 아직 없어요.</li>
-<li><b>분해.</b> Nd/O 를 넣은 셀이 넣기 전보다 분해되기 쉬운지 봐요. 같은 분해 생성물을 기준으로, Li 가 드나들지 않는 닫힌 계에서 견줘요. 아직 시작 전이에요.</li>
+<li><b>Q1 은 잠정이에요.</b> 원고 문장으로 옮기기 전에 1저자 동의를 받기로 했어요.</li>
+<li><b>Nd 가 P 자리에 든 모델의 전자 배치</b> (그림 3a) 는 아직 계산하지 않았어요.</li>
+<li><b>목표 조성 (x = 0.02) 에서의 크기는</b> 세 질문 모두 확인하지 않았어요.</li>
 </ul>
-<p>그림 3a (Nd 가 P 자리) 의 전기음성도 기대도 아직 계산으로 확인하지 않았어요. 안정성을 다른 뜻으로 생각하셨다면 알려 주세요.</p>
+<p>안정성을 다른 뜻으로 생각하셨다면 알려 주세요.</p>
 </section>
 
 <section id="methods">
@@ -821,12 +964,16 @@ svg .curve-nd{stroke:var(--c-nd);stroke-width:2;fill:none;stroke-linecap:round;s
 <dt>이웃 판정</dt><dd>결과 전에 정한 거리 하나 (각도 안 봄): S–P 2.4 Å, O–P 1.9 Å, Nd–S · Nd–Cl 3.3 Å, Nd–O 2.9 Å. 3.0–3.6 Å 사이에 애매한 원자는 없었어요.</dd>
 <dt>ELF</dt><dd>같은 구조로 노름 보존 PP SCF 를 새로 돌림 (Li · P · S · Cl · O 는 SG15, Nd 는 PseudoDojo 4f 핵심부 PP 를 UPF 로 옮김) · 80 / 320 Ry · k 3 × 3 × 1 · pp.x ELF (plot_num 8) · 결합 중점 값 (최소 이미지). 호스트 LPSCl1.6 은 같은 규약 · 같은 도구로 낸 표예요.</dd>
 <dt>전기음성도</dt><dd>Pauling 척도. Nd · P · S · O 는 1저자 메시지의 값과 같고, Li 0.98 · Cl 3.16 는 같은 표준 표의 값이에요. 이온성 % 식은 L. Pauling, <i>The Nature of the Chemical Bond</i> (3rd ed., 1960) 의 어림식이에요.</dd>
-<dt>자료</dt><dd><code>db/raw/nd_q3_bader_2026_10_19/</code> · <code>db/raw/nd_q3_elf_2026_10_19/</code> · 기록 <code>db/properties/nd_q3_bader_elf_runlog_2026_10_19.json</code> · 그림 숫자 <code>db/properties/cei_figs/cei_nd_en_*.csv</code> · 생성기 <code>tools/figures/build_nd_electronegativity_page.py</code></dd>
+<dt>Q1 자리</dt><dd>Quantum ESPRESSO PBE · GBRV USPP (Li · S · Cl) · pslibrary (P · O) · Nd 는 4f 를 핵심부에 둔 PAW · 52 / 520 Ry · mv smearing 0.01 Ry · k 2 × 2 × 1 · Rietveld 셀 (5 화학식 단위). 셀 모양을 고정하고 부피를 바꿔 가며 에너지를 잰 뒤 (EOS) 가장 낮은 부피에서 원자 이완. 조성 차는 Li₂S · Li₃PS₄ 로 맞춤. 가장 낮은 셀 MLi_04 · MP_07.</dd>
+<dt>Q2 분해</dt><dd>PBE · PAW (pslibrary) · 70 / 560 Ry · mv smearing 0.01 Ry. 생성물 다섯은 셀까지 이완, 도핑 전 LPSCl1.6 셀은 셀을 고정하고 원자 이완, 도핑 셀은 9 월 구조 그대로. 생성물 집합은 Materials Project 상도 (GGA/GGA+U) 로 결과 보기 전에 정함. 부피 효과는 계산된 압력으로 어림해 보정. k 를 한 단계 올린 점검에서 원자당 1 meV 안.</dd>
+<dt>S 빈자리</dt><dd>Q2 와 같은 도핑 셀 · 격자 고정 · 중성 빈자리 SCF 넷 (Nd 옆 2 · 먼 쪽 2).</dd>
+<dt>Li₃Nd 장벽</dt><dd>PBE · Li₃Nd (Materials Project mp-976264 · BiF₃ 형) 2 × 2 × 2 셀 · 중성 빈자리 · 가장 가까운 c → c 경로 CI-NEB · 출발 · 도착 구조 이완.</dd>
+<dt>자료</dt><dd><code>db/raw/nd_q3_bader_2026_10_19/</code> · <code>db/raw/nd_q3_elf_2026_10_19/</code> · 기록 <code>db/properties/nd_q3_bader_elf_runlog_2026_10_19.json</code> · Q1 <code>db/properties/ndo_site_dft_v0_readout_2026_10_23.json</code> · Q2 <code>db/properties/nd_q2_decomp_readout_2026_10_26.json</code> · S 빈자리 <code>db/properties/nd_s_vacancy_closed_2026_10_20.json</code> · Li₃Nd 인용 범위 <code>db/properties/citation_hazards.json</code> · 그림 숫자 <code>db/properties/cei_figs/cei_nd_en_*.csv</code> · 생성기 <code>tools/figures/build_nd_electronegativity_page.py</code></dd>
 </dl>
 </details>
 </section>
 
-<footer>2026-10-20 · 숫자는 원자료 파일에서 생성기가 뽑았어요 (손으로 옮기지 않았어요). 한계: Nd 두 개 · 이웃 음이온 종류마다 두 개 · 구조 하나.</footer>
+<footer>2026-10-26 갱신 (처음 2026-10-20) · 숫자는 원자료 파일에서 생성기가 뽑았어요 (손으로 옮기지 않았어요). 한계: Q3 · S 빈자리는 Nd 두 개 · 구조 하나, Q1 은 모델마다 후보 10 개, Q2 는 Nd · O 배치 하나.</footer>
 </div>
 <div id="tip" role="tooltip" hidden></div>
 <script>
