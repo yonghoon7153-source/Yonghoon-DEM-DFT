@@ -1,0 +1,44 @@
+PASS normal_stale_control: OK, auth=[(1, 3310000)], removed=5
+PASS literal_fractional: UNIDENTIFIED, auth=[], removed=0
+PASS event_trailing_space: UNIDENTIFIED, auth=[], removed=0
+PASS event_leading_space: UNIDENTIFIED, auth=[], removed=0
+PASS event_trailing_tab: UNIDENTIFIED, auth=[], removed=0
+PASS event_leading_tab: UNIDENTIFIED, auth=[], removed=0
+PASS event_trailing_nbsp: UNIDENTIFIED, auth=[], removed=0
+PASS event_leading_nbsp: UNIDENTIFIED, auth=[], removed=0
+PASS event_trailing_emspace: UNIDENTIFIED, auth=[], removed=0
+PASS event_leading_emspace: UNIDENTIFIED, auth=[], removed=0
+PASS event_both_spaces: UNIDENTIFIED, auth=[], removed=0
+PASS manifest_vt_front: UNIDENTIFIED, auth=[], removed=0
+PASS manifest_vt_after_key: UNIDENTIFIED, auth=[], removed=0
+PASS manifest_vt_embedded: UNIDENTIFIED, auth=[], removed=0
+PASS manifest_ff_front: UNIDENTIFIED, auth=[], removed=0
+PASS manifest_ff_after_key: UNIDENTIFIED, auth=[], removed=0
+PASS manifest_ff_embedded: UNIDENTIFIED, auth=[], removed=0
+PASS manifest_fs_front: UNIDENTIFIED, auth=[], removed=0
+PASS manifest_fs_after_key: UNIDENTIFIED, auth=[], removed=0
+PASS manifest_fs_embedded: UNIDENTIFIED, auth=[], removed=0
+PASS manifest_gs_front: UNIDENTIFIED, auth=[], removed=0
+PASS manifest_gs_after_key: UNIDENTIFIED, auth=[], removed=0
+PASS manifest_gs_embedded: UNIDENTIFIED, auth=[], removed=0
+PASS manifest_rs_front: UNIDENTIFIED, auth=[], removed=0
+PASS manifest_rs_after_key: UNIDENTIFIED, auth=[], removed=0
+PASS manifest_rs_embedded: UNIDENTIFIED, auth=[], removed=0
+PASS manifest_nel_front: UNIDENTIFIED, auth=[], removed=0
+PASS manifest_nel_after_key: UNIDENTIFIED, auth=[], removed=0
+PASS manifest_nel_embedded: UNIDENTIFIED, auth=[], removed=0
+PASS manifest_ls_front: UNIDENTIFIED, auth=[], removed=0
+PASS manifest_ls_after_key: UNIDENTIFIED, auth=[], removed=0
+PASS manifest_ls_embedded: UNIDENTIFIED, auth=[], removed=0
+PASS manifest_ps_front: UNIDENTIFIED, auth=[], removed=0
+PASS manifest_ps_after_key: UNIDENTIFIED, auth=[], removed=0
+PASS manifest_ps_embedded: UNIDENTIFIED, auth=[], removed=0
+PASS normal_lf_line_endings: OK, auth=[(1, 3310000)], removed=5
+PASS normal_crlf_line_endings: OK, auth=[(1, 3310000)], removed=5
+PASS normal_cr_line_endings: OK, auth=[(1, 3310000)], removed=5
+PASS removed_bad_row_control: OK, auth=[(1, 3310000)], removed=5
+PASS normal_k0: OK, auth=[(0, 3230000)], removed=0
+PASS normal_k1: OK, auth=[(1, 3310000)], removed=0
+PASS normal_k2: OK, auth=[(2, 3360000)], removed=0
+PASS normal_k3: OK, auth=[(3, 3410000)], removed=0
+{"status": "PASS", "case_count": 43, "passed": 43, "positive_count": 9, "negative_count": 34}

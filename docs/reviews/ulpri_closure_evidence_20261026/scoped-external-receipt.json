@@ -1,0 +1,105 @@
+{
+  "schema": "ulpri_scoped_external_closure_v1",
+  "external_report_date": "2026-10-26",
+  "record_kind": "External verdict intake; not a new simulation/test receipt",
+  "reviewer_identity": null,
+  "reviewer_identity_status": "Not asserted by this intake",
+  "accepted_consumer_commit": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde",
+  "accepted_code_candidate": "643344fee22a5d1131a59c8cd46bcf6c9a09d65b",
+  "compared_consumer_commit": "01c1aaf5be8acdf7d1716f34cc86fc77d8e27362",
+  "reader_sha256": "dfc06b8dbf53a8cab05df297890e1f8ca1d0fa038536c7c13ed8b8677e521723",
+  "verdict": {
+    "status": "GO_SCOPED",
+    "scope": "ULPRI-01/02 resume marker and manifest line-boundary integrity only",
+    "findings": {
+      "ULPRI-01": "CLOSED",
+      "ULPRI-02": "CLOSED"
+    },
+    "previous_hold_lifted": "Only these two Q2/Q3 marker integrity boundaries",
+    "exact_integer_correction": "Prior acceptance retained"
+  },
+  "not_authorized_or_certified": [
+    "General CSV/manifest grammar safety",
+    "All event names or Unicode combinations",
+    "Actual checkpoint restoration",
+    "Main R or 10:0 extension or U execution",
+    "P2 producer/interface registration",
+    "Physical T12 qualification",
+    "G2 mass/omega or complete S0 mass/phase inventory",
+    "Claude integration"
+  ],
+  "external_report": {
+    "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/codex_review_unloading_ulpri_recheck_20261026.md",
+    "sha256": "e317b1b81a76b67bd20f2b48ad97bdf1f487d0868d9bb251e72d5af075eacec8"
+  },
+  "intake_proofs": [
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/archive-verification.json",
+      "sha256": "d95f9abf41929f92b9d573db17fe2c9966a66730c2007f05aa13c438d7733713"
+    },
+    {
+      "path": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/receipt-verification.json",
+      "sha256": "890966283ca4db5c62d0032247021c11344881e0a5cea519e5dad415a687e187"
+    }
+  ],
+  "received_external_review_archive": {
+    "sha256": "21ca7a2798ed0d99849b5450248ca1ae3a36c1520a93c0ee881944c68e7552fa",
+    "role": "New external closure evidence archive"
+  },
+  "reviewed_submission_archive": {
+    "name": "codex-unloading-ulpri-4c29705fa1c4.zip",
+    "sha256": "84aa1bf806d9008d17ef6fad9a730d6ce226ffe5bff4852101338aa9a1deb93c",
+    "bytes": 1815505,
+    "role": "Previously published ULPRI review submission, not the newly received archive"
+  },
+  "external_observations": {
+    "independent_matrix": {
+      "passed": 208,
+      "total": 208,
+      "negative": 199,
+      "positive": 9
+    },
+    "portable_cli_replay": {
+      "passed": 43,
+      "total": 43
+    },
+    "mutants": {
+      "detected": 4,
+      "total": 4
+    },
+    "environment": "Windows Python 3.12.14",
+    "reader_original_command": {
+      "passed": 311,
+      "failed": 35,
+      "qualification": "Original failures preserved; child cp949 encoding issue and two existing grammar reread positives"
+    },
+    "reader_utf8_diagnostic": {
+      "passed": 346,
+      "total": 346,
+      "qualification": "Child -X utf8 added; not unmodified Linux replay"
+    },
+    "shared155_and_kit13": "Submitted log audit, not independent new execution counts",
+    "sum_counts": false,
+    "rerun_in_this_document_work": false
+  },
+  "t12_existing_evidence": {
+    "final_commit": "2b4b40ea5e375659bfad8243c1ccb6fe0ef2853f",
+    "tested_code_candidate": "f1da507e8ab8bf812a242b9749d4c320be90fd73",
+    "direct_cases": 52,
+    "independent_source_rejections": 5,
+    "independent_contract_omissions": 3,
+    "independent_mutants": 13,
+    "shared_gate_pass_labels": 155,
+    "shared_gate_fail_labels": 0,
+    "new_document_tree_gate_claim": false
+  },
+  "physical_ready": false,
+  "physical_T12": "NOT_RUN",
+  "physical_runs_started_in_this_work": 0,
+  "broad_go_form_updated": false,
+  "historical_hold_records_modified": false,
+  "p2_registration": null,
+  "actual_ra_s0": null,
+  "actual_qualification": null,
+  "Q7_Q8_Q9_measurements": null
+}

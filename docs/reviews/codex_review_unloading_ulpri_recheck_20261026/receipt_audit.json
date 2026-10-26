@@ -1,0 +1,106 @@
+{
+  "gate_receipt_rc": 0,
+  "gate_log_sha_match": true,
+  "gate_label_count_including_summary": 156,
+  "gate_fail_labels": 0,
+  "gate_source_manifest_total": 836,
+  "gate_source_manifest_in_bundle": 95,
+  "gate_source_hash_mismatch": [],
+  "kit13_logs": [
+    {
+      "name": "ul_lib_selftest",
+      "hash_ok": true,
+      "pass_lines": 24,
+      "fail_lines": 0,
+      "rc_recorded": 0
+    },
+    {
+      "name": "ul_s3_selftest",
+      "hash_ok": true,
+      "pass_lines": 16,
+      "fail_lines": 0,
+      "rc_recorded": 0
+    },
+    {
+      "name": "ul_observers_selftest",
+      "hash_ok": true,
+      "pass_lines": 21,
+      "fail_lines": 0,
+      "rc_recorded": 0
+    },
+    {
+      "name": "ul_gates_selftest",
+      "hash_ok": true,
+      "pass_lines": 202,
+      "fail_lines": 0,
+      "rc_recorded": 0
+    },
+    {
+      "name": "ul_reader_selftest",
+      "hash_ok": true,
+      "pass_lines": 346,
+      "fail_lines": 0,
+      "rc_recorded": 0
+    },
+    {
+      "name": "seal_kit_selftest",
+      "hash_ok": true,
+      "pass_lines": 12,
+      "fail_lines": 0,
+      "rc_recorded": 0
+    },
+    {
+      "name": "seal_kit_check",
+      "hash_ok": true,
+      "pass_lines": 1,
+      "fail_lines": 0,
+      "rc_recorded": 0
+    },
+    {
+      "name": "make_unload_decks_selftest",
+      "hash_ok": true,
+      "pass_lines": 291,
+      "fail_lines": 0,
+      "rc_recorded": 0
+    },
+    {
+      "name": "make_unload_decks_check",
+      "hash_ok": true,
+      "pass_lines": 1,
+      "fail_lines": 0,
+      "rc_recorded": 0
+    },
+    {
+      "name": "history_make_history_decks_selftest",
+      "hash_ok": true,
+      "pass_lines": 172,
+      "fail_lines": 0,
+      "rc_recorded": 0
+    },
+    {
+      "name": "history_make_history_decks_check",
+      "hash_ok": true,
+      "pass_lines": 1,
+      "fail_lines": 0,
+      "rc_recorded": 0
+    },
+    {
+      "name": "history_read_history_selftest",
+      "hash_ok": true,
+      "pass_lines": 56,
+      "fail_lines": 0,
+      "rc_recorded": 0
+    },
+    {
+      "name": "ul_runner_test_selftest",
+      "hash_ok": true,
+      "pass_lines": 38,
+      "fail_lines": 0,
+      "rc_recorded": 0
+    }
+  ],
+  "kit_suite_source_diff": [
+    "README.md"
+  ],
+  "readme_reverse_delta_matches_tested": true
+}

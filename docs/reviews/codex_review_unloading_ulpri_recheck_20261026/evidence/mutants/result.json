@@ -1,0 +1,88 @@
+[
+  {
+    "mutation": "raw_scan_removed",
+    "fixture_label": "event_U+2028_prefix_single",
+    "reader_sha256": "e6d99445ba6275788c2245dd86f73b84ac407f37ddf40b6cd9cfd6166815c38a",
+    "read_run": {
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "n_superseded_rows": 5,
+      "problems": []
+    },
+    "primary": "OK",
+    "rho": 0.20260778734286913,
+    "rank": true,
+    "rc": 0,
+    "inputs_unchanged": true,
+    "detected": true
+  },
+  {
+    "mutation": "auth_poison_removed",
+    "fixture_label": "event_U+00A0_suffix_coexist",
+    "reader_sha256": "379267536f50360c0382e3ae4a4777b0776378d58ccb0be098bf580588a13cee",
+    "read_run": {
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "n_superseded_rows": 5,
+      "problems": [
+        "ul_events.csv:10: RESUME 표지 앞뒤 공백 변형 — 승인 없음 (ULPRI-01)"
+      ]
+    },
+    "primary": "UNIDENTIFIED",
+    "rho": null,
+    "rank": false,
+    "rc": 0,
+    "inputs_unchanged": true,
+    "detected": true
+  },
+  {
+    "mutation": "manifest_guard_removed",
+    "fixture_label": "manifest_U+2028_hidden",
+    "reader_sha256": "7c6afdc9617ffe7850e4f51e017d5f1a56e2f9284b199819a0dfebc85a3b2792",
+    "read_run": {
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "n_superseded_rows": 5,
+      "problems": []
+    },
+    "primary": "OK",
+    "rho": 0.20260778734286913,
+    "rank": true,
+    "rc": 0,
+    "inputs_unchanged": true,
+    "detected": true
+  },
+  {
+    "mutation": "nel_omitted",
+    "fixture_label": "manifest_U+0085_hidden",
+    "reader_sha256": "977e0b527273fd656860def3ac102511e5258ad4fcc2f88f26c8f63edf7e2755",
+    "read_run": {
+      "resume_auth": [
+        [
+          1,
+          3310000
+        ]
+      ],
+      "n_superseded_rows": 5,
+      "problems": []
+    },
+    "primary": "OK",
+    "rho": 0.20260778734286913,
+    "rank": true,
+    "rc": 0,
+    "inputs_unchanged": true,
+    "detected": true
+  }
+]

@@ -1,0 +1,29 @@
+{
+  "pin": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde",
+  "findings": {
+    "ULPRI-01": "closed",
+    "ULPRI-02": "closed"
+  },
+  "new_P1": 0,
+  "new_P2": 0,
+  "scope": "resume marker integrity only; physical execution not authorized by this verdict",
+  "independent_matrix": {
+    "pass": 208,
+    "total": 208
+  },
+  "author_cli_rerun": {
+    "pass": 43,
+    "total": 43
+  },
+  "mutants_detected": 4,
+  "reader_selftest_raw_windows": {
+    "pass": 311,
+    "fail": 35,
+    "cause": "child cp949 console output"
+  },
+  "reader_selftest_child_utf8_adapted": {
+    "pass": 346,
+    "fail": 0
+  },
+  "source_postcheck": "pass"
+}
