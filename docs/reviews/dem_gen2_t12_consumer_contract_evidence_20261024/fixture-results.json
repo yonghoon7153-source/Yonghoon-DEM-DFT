@@ -1,20 +1,20 @@
 {
   "schema": "dem_gen2_t12_synthetic_consumer_receipt_v1",
-  "consumer_pin": "01c1aaf5be8acdf7d1716f34cc86fc77d8e27362",
+  "consumer_pin": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde",
   "source_sha256": {
     "ul_gates.py": "c8d45a9cf75f0806e612d810942d23adea4b40feaa5f31f7d279eb8386358de6",
     "ul_lib.py": "23a79392352e01631c6d1f6aaecdb31fc8a53be518ee6f27b815896e161727e6",
     "ul_observers.py": "77b5dc891421fbecf059bb907ff5f5b6ab6433bf1d2cb9649e66535a1ae5ca74",
-    "ul_reader.py": "7a395a549e8ad3eae820a9e575f094219ca7d47a4b9a07c5bc27623d7018af4b",
+    "ul_reader.py": "dfc06b8dbf53a8cab05df297890e1f8ca1d0fa038536c7c13ed8b8677e521723",
     "ul_s3.py": "030c2688fe5b3e7c30c1ee7f14a60061082f6ce3f8cf2ac8a7a8b89ff353aaa9",
     "unload_params.json": "332ad7c2040eb614ac21b31ccbb226479928d7ed8363f733b960cf4527204aae"
   },
-  "fixture_script_sha256": "71ee1e16efe3f9b1527da50af5f4fe8ac63ff9752e92d0fc7dad614483a8826f",
+  "fixture_script_sha256": "465f542e4c8825e2a21d29a1a7be931c96ea23794152eab01d0e04dd9212c216",
   "python": "3.11.17",
   "synthetic": true,
   "status": "PASS",
-  "case_count": 41,
-  "passed": 41,
+  "case_count": 52,
+  "passed": 52,
   "physical_ready": false,
   "P2_registration": null,
   "physical_T12": "NOT_RUN",
@@ -228,6 +228,7 @@
         "remaining_windows": [
           100
         ],
+        "n_superseded_rows": 2,
         "old_event_retained": false,
         "raw_inputs_unchanged": true,
         "has_problems": false
@@ -245,6 +246,7 @@
         "remaining_windows": [
           100
         ],
+        "n_superseded_rows": 2,
         "old_event_retained": false,
         "raw_inputs_unchanged": true,
         "has_problems": false
@@ -268,6 +270,7 @@
         "remaining_windows": [
           100
         ],
+        "n_superseded_rows": 2,
         "old_event_retained": false,
         "raw_inputs_unchanged": true,
         "has_problems": false
@@ -285,6 +288,91 @@
         "remaining_windows": [
           100
         ],
+        "n_superseded_rows": 2,
+        "old_event_retained": false,
+        "raw_inputs_unchanged": true,
+        "has_problems": false
+      },
+      "pass": true,
+      "kind": "positive"
+    },
+    {
+      "case": "resume_normal_crlf_manifest",
+      "function": "ul_reader.read_run",
+      "expected": {
+        "authorized": [
+          [
+            2,
+            100
+          ]
+        ],
+        "remaining_steps": [
+          100
+        ],
+        "remaining_windows": [
+          100
+        ],
+        "n_superseded_rows": 2,
+        "old_event_retained": false,
+        "raw_inputs_unchanged": true,
+        "has_problems": false
+      },
+      "observed": {
+        "authorized": [
+          [
+            2,
+            100
+          ]
+        ],
+        "remaining_steps": [
+          100
+        ],
+        "remaining_windows": [
+          100
+        ],
+        "n_superseded_rows": 2,
+        "old_event_retained": false,
+        "raw_inputs_unchanged": true,
+        "has_problems": false
+      },
+      "pass": true,
+      "kind": "positive"
+    },
+    {
+      "case": "resume_normal_cr_manifest",
+      "function": "ul_reader.read_run",
+      "expected": {
+        "authorized": [
+          [
+            2,
+            100
+          ]
+        ],
+        "remaining_steps": [
+          100
+        ],
+        "remaining_windows": [
+          100
+        ],
+        "n_superseded_rows": 2,
+        "old_event_retained": false,
+        "raw_inputs_unchanged": true,
+        "has_problems": false
+      },
+      "observed": {
+        "authorized": [
+          [
+            2,
+            100
+          ]
+        ],
+        "remaining_steps": [
+          100
+        ],
+        "remaining_windows": [
+          100
+        ],
+        "n_superseded_rows": 2,
         "old_event_retained": false,
         "raw_inputs_unchanged": true,
         "has_problems": false
@@ -305,6 +393,7 @@
           100,
           120
         ],
+        "n_superseded_rows": 0,
         "old_event_retained": true,
         "raw_inputs_unchanged": true,
         "has_problems": true
@@ -319,6 +408,7 @@
           100,
           120
         ],
+        "n_superseded_rows": 0,
         "old_event_retained": true,
         "raw_inputs_unchanged": true,
         "has_problems": true
@@ -339,6 +429,7 @@
           100,
           120
         ],
+        "n_superseded_rows": 0,
         "old_event_retained": true,
         "raw_inputs_unchanged": true,
         "has_problems": true
@@ -353,6 +444,7 @@
           100,
           120
         ],
+        "n_superseded_rows": 0,
         "old_event_retained": true,
         "raw_inputs_unchanged": true,
         "has_problems": true
@@ -373,6 +465,7 @@
           100,
           120
         ],
+        "n_superseded_rows": 0,
         "old_event_retained": true,
         "raw_inputs_unchanged": true,
         "has_problems": true
@@ -387,6 +480,7 @@
           100,
           120
         ],
+        "n_superseded_rows": 0,
         "old_event_retained": true,
         "raw_inputs_unchanged": true,
         "has_problems": true
@@ -407,6 +501,7 @@
           100,
           120
         ],
+        "n_superseded_rows": 0,
         "old_event_retained": true,
         "raw_inputs_unchanged": true,
         "has_problems": true
@@ -421,6 +516,7 @@
           100,
           120
         ],
+        "n_superseded_rows": 0,
         "old_event_retained": true,
         "raw_inputs_unchanged": true,
         "has_problems": true
@@ -441,6 +537,7 @@
           100,
           120
         ],
+        "n_superseded_rows": 0,
         "old_event_retained": true,
         "raw_inputs_unchanged": true,
         "has_problems": true
@@ -455,6 +552,7 @@
           100,
           120
         ],
+        "n_superseded_rows": 0,
         "old_event_retained": true,
         "raw_inputs_unchanged": true,
         "has_problems": true
@@ -475,6 +573,7 @@
           100,
           120
         ],
+        "n_superseded_rows": 0,
         "old_event_retained": true,
         "raw_inputs_unchanged": true,
         "has_problems": true
@@ -489,6 +588,7 @@
           100,
           120
         ],
+        "n_superseded_rows": 0,
         "old_event_retained": true,
         "raw_inputs_unchanged": true,
         "has_problems": true
@@ -509,6 +609,7 @@
           100,
           120
         ],
+        "n_superseded_rows": 0,
         "old_event_retained": true,
         "raw_inputs_unchanged": true,
         "has_problems": true
@@ -523,6 +624,7 @@
           100,
           120
         ],
+        "n_superseded_rows": 0,
         "old_event_retained": true,
         "raw_inputs_unchanged": true,
         "has_problems": true
@@ -543,6 +645,7 @@
           100,
           120
         ],
+        "n_superseded_rows": 0,
         "old_event_retained": true,
         "raw_inputs_unchanged": true,
         "has_problems": true
@@ -557,6 +660,331 @@
           100,
           120
         ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "resume_literal_fractional_coexisting",
+      "function": "ul_reader.read_run",
+      "expected": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "observed": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "resume_marker_leading_ascii_space",
+      "function": "ul_reader.read_run",
+      "expected": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "observed": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "resume_marker_trailing_ascii_space",
+      "function": "ul_reader.read_run",
+      "expected": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "observed": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "resume_marker_leading_nbsp",
+      "function": "ul_reader.read_run",
+      "expected": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "observed": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "resume_marker_trailing_nbsp",
+      "function": "ul_reader.read_run",
+      "expected": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "observed": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "resume_manifest_embedded_nel",
+      "function": "ul_reader.read_run",
+      "expected": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "observed": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "resume_manifest_embedded_ls",
+      "function": "ul_reader.read_run",
+      "expected": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "observed": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "resume_manifest_embedded_ps",
+      "function": "ul_reader.read_run",
+      "expected": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "observed": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "pass": true,
+      "kind": "negative"
+    },
+    {
+      "case": "resume_single_leading_ls_raw_csv",
+      "function": "ul_reader.read_run",
+      "expected": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
+        "old_event_retained": true,
+        "raw_inputs_unchanged": true,
+        "has_problems": true
+      },
+      "observed": {
+        "authorized": [],
+        "remaining_steps": [
+          100,
+          120
+        ],
+        "remaining_windows": [
+          100,
+          120
+        ],
+        "n_superseded_rows": 0,
         "old_event_retained": true,
         "raw_inputs_unchanged": true,
         "has_problems": true

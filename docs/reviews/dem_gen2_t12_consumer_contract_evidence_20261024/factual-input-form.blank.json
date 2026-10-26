@@ -3,7 +3,7 @@
   "scope": "Blank evidence collection form; not a validated producer schema, registration, launch command, or T12 result. Null means not supplied to this task. No automatic classifier is provided.",
   "reference_pins": {
     "dem_gen2_design": "962caea2d1857b0e34fe724e38815661936b7183",
-    "ulpr_consumer": "01c1aaf5be8acdf7d1716f34cc86fc77d8e27362",
+    "ulpr_consumer": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde",
     "dem_preparation_base": "2443a63eaa87d52e385a35f8bab4225efa0d25fe",
     "historical_ulpr_consumer": "8347d32ea678c0174bd77d4c79cfbd7b0591e4a3"
   },
@@ -123,5 +123,21 @@
       "measurement_time",
       "source_record"
     ]
+  },
+  "external_review_received": {
+    "reviewed_commit": "01c1aaf5be8acdf7d1716f34cc86fc77d8e27362",
+    "report_path": "docs/reviews/codex_review_unloading_ulpr_integer_20261024/codex_review_unloading_ulpr_integer_20261024.md",
+    "report_original_sha256": "34a6bf923969b719760f429813161bd9bf77c057850f450d4cfcb5cca8fff7f8",
+    "report_committed_lf_sha256": "84cd720707e16f0ce244d4bc239a1b8ed26e13f7dd4750c6d940d2042385c2d3",
+    "archive_sha256": "530a3eff236e6ffef3823e76305c0e3b2443d43fa989f8360129c26a4031dc20",
+    "integer_correction": "ACCEPTED",
+    "integrity_closure": "HOLD",
+    "findings": {
+      "ULPRI-01": "P2 OPEN",
+      "ULPRI-02": "P2 OPEN"
+    },
+    "corrected_consumer_external_recheck": "PENDING",
+    "physical_go": false,
+    "report_repository_commit": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde"
   }
 }
