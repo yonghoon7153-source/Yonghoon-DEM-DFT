@@ -1,0 +1,610 @@
+{
+  "status": "PASS",
+  "recorded_at_utc": "2026-10-26T01:19:10.553926+00:00",
+  "scope": "Exact pinned Git blobs/modes and current local prior refs; no remote freshness, physical execution or external verdict claim",
+  "audit_sha256": "694581641db4c47b46681a852f3a4e1df610f7212840120d98382e117c73248f",
+  "base": "2443a63eaa87d52e385a35f8bab4225efa0d25fe",
+  "previous_candidate": "d6e692488a56baf11f7206c5cd45c6bc404b92f0",
+  "candidate": "f1da507e8ab8bf812a242b9749d4c320be90fd73",
+  "final": null,
+  "target": "f1da507e8ab8bf812a242b9749d4c320be90fd73",
+  "target_tree": "d9917dae22ee56bfc0441f0a51fad681661b0acb",
+  "successor_changes": [
+    "docs/reviews/dem_gen2_t12_consumer_contract_20261024.md",
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/README.md",
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/consumer-publication-proof.json",
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/external-review-provenance.json",
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/factual-input-form.blank.json",
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/fixture-results.json",
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/README.md",
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/SHA256SUMS",
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/old-41-fixture-results.json",
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/pre-fix-fixture-results.json",
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/pre-fix-reproduction.zip",
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/pre-fix-script.py",
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/pre-fix-zip-replay-receipt.json",
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/REPRODUCE.md",
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/author-delivery-freeze.json",
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/direct-final.json",
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/final-review-proof.json",
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/loader-final/report.json",
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/mutants-final/report.json",
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/reproduce_consumer_mutants.py",
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/reproduce_loader_checks.py",
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/review-result.md",
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/source-freeze.json",
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/tests-first-review.json",
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/p1-consumer-contract.json",
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/source-manifest.json",
+    "scripts/test_dem_gen2_t12_consumer_contract.py"
+  ],
+  "final_changes": [],
+  "candidate_tree": "d9917dae22ee56bfc0441f0a51fad681661b0acb",
+  "commits_since_base": [
+    "d6e692488a56baf11f7206c5cd45c6bc404b92f0",
+    "f1da507e8ab8bf812a242b9749d4c320be90fd73"
+  ],
+  "current_branch": "codex/dem-gen2-t12",
+  "current_head": "f1da507e8ab8bf812a242b9749d4c320be90fd73",
+  "current_status": "",
+  "protected": {
+    "sealed32": {
+      "count": 32,
+      "changed": []
+    },
+    "shared": {
+      "count": 152,
+      "changed": []
+    },
+    "claude": {
+      "count": 2384,
+      "changed": []
+    },
+    "old_t12": {
+      "count": 8,
+      "changed": []
+    },
+    "unloading_kit": {
+      "count": 94,
+      "changed": []
+    }
+  },
+  "prior_tracks": {
+    "codex/unloading-ulpr": {
+      "expected_local_pin": "01c1aaf5be8acdf7d1716f34cc86fc77d8e27362",
+      "actual_local_pin": "01c1aaf5be8acdf7d1716f34cc86fc77d8e27362",
+      "new_path_overlap_with_prior_track": []
+    },
+    "codex/lhs214-relaunch": {
+      "expected_local_pin": "854857e576a2a8aba07ec861dbee39d4bb59efae",
+      "actual_local_pin": "854857e576a2a8aba07ec861dbee39d4bb59efae",
+      "new_path_overlap_with_prior_track": []
+    },
+    "codex/dem-gen2-request": {
+      "expected_local_pin": "2443a63eaa87d52e385a35f8bab4225efa0d25fe",
+      "actual_local_pin": "2443a63eaa87d52e385a35f8bab4225efa0d25fe",
+      "new_path_overlap_with_prior_track": []
+    },
+    "codex/mixer-mxd2": {
+      "expected_local_pin": "045e0b3098e8fe5a64d6eb0da310da776e68f995",
+      "actual_local_pin": "045e0b3098e8fe5a64d6eb0da310da776e68f995",
+      "new_path_overlap_with_prior_track": []
+    },
+    "codex/mixer-d3-design": {
+      "expected_local_pin": "e0daf7b234bcc7935259d786e270268372abe2a2",
+      "actual_local_pin": "e0daf7b234bcc7935259d786e270268372abe2a2",
+      "new_path_overlap_with_prior_track": []
+    }
+  },
+  "new_paths": {
+    "docs/collab/codex_to_claude/20261024-1210_dem-gen2-t12-consumer.md": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "77d7cce0c3d1e90f11ff149cd80feb73c34c92c1",
+      "bytes": 3536,
+      "sha256": "a325eaa993d81af19c56309af66421fecd1b5158bfc9f252abecf177f0e272c6"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_20261024.md": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "cf705651cdc05dde65f95009c5035ed205fcab73",
+      "bytes": 12486,
+      "sha256": "d56418a4d9c6300e04300760e7b04079caf5a0a3b633879de231c7c5e1da9c71"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/README.md": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "9d6542617dc72fb93d007af61419e02c49802e2b",
+      "bytes": 1632,
+      "sha256": "58c724a0c8cd29de8682d98df08177e8297f585dd2de7eaa19ccf2172cf9bbcb"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/consumer-publication-proof.json": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "b8c7f947182e3de47e51503d11bfda6c593e4f20",
+      "bytes": 248,
+      "sha256": "4841111d36b65ba3296c7270e7e5f7ce07102298bd5de3cdda5e2b0949205316"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/external-command-review/author-verification.json": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "3616d8b8fc1593da6dca3b13089953aec5b3f6eb",
+      "bytes": 1427,
+      "sha256": "3d8761e3b41c0752d7b69a36de3cffadc249b8716b7d84259e455210e6b429cd"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/external-command-review/root-review.json": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "9b3e048712d0495596ef6bac9027fa6708082877",
+      "bytes": 657,
+      "sha256": "276da1499ac355a45844db981d4cc94e98d381a560d6a0a5de746c553e015e7e"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/external-review-provenance.json": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "924efee20f95a543b622372f6ece55a2e5de54f8",
+      "bytes": 769,
+      "sha256": "d74ae53d7fd6f13c7c354937dba36bbdb32870a1f52dba4dc0ebe28b82608a7b"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/factual-input-form.blank.json": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "ffd7c0b1497548050ecfa0fa277b2f607880cb4a",
+      "bytes": 4930,
+      "sha256": "0a890e15f8d34b50e64382be856ab724ec82ecc94775698d76df6c6e8bf4f645"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/fixture-results.json": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "b975bf1a94d70fed9187b94a0994951f91c1b58e",
+      "bytes": 24143,
+      "sha256": "0f577b9cbc238a3cf19346198672ee04b7588820db6f30ceb10596f9ec82f4ac"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/README.md": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "576a2aa31cf4ffae2fe3c01f479babcfc10572e6",
+      "bytes": 654,
+      "sha256": "fe08aee7acc5aaf52baa555b2f8fa6c754d9695786e0888a48d70c4f88228026"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/SHA256SUMS": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "cbe64c6130226835c019fe204b9cbe5e347fdd32",
+      "bytes": 538,
+      "sha256": "6b57dd1dde074dd80b144e7e28aaf0336f4c58d06ce6adfccc2a0012e1c694b0"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/old-41-fixture-results.json": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "b588050e3f612f2738132e03d956a8759eece416",
+      "bytes": 14501,
+      "sha256": "cd0e75422dff2c9a44f6a8e751cd51d1903c3a8e4d9d677de308f3cd4f172842"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/pre-fix-fixture-results.json": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "cd2eb455694d42366a340d60bad0500bdbb43f34",
+      "bytes": 24439,
+      "sha256": "5d1be0bbbb86cbd9e25af85045b04bd232dbf164c99480c308f5cbd2e4d382e5"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/pre-fix-reproduction.zip": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "37837a930612cbc87cf9543fd0008ea79a29b348",
+      "bytes": 12958,
+      "sha256": "8deafffe7a43fa032ed42837c693ce2f7a537e468fe24ed42edaaa542fc29c46"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/pre-fix-script.py": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "a0321268dc57748f8b3207d293506ff65b4d03dd",
+      "bytes": 16885,
+      "sha256": "fcf712c90ff8ddf14d62ea56c445536b8af8ba969a0c73de73536d37101e7336"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/pre-fix-zip-replay-receipt.json": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "6396d882125a0bbe6df959740bc346fc158ca5ce",
+      "bytes": 234,
+      "sha256": "b988c823573861f1400b231b44e4fd09fa6ef0ee731cf71a1bed79bf98b8eb2c"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/REPRODUCE.md": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "2594200415ee9857b5aabc2f54a52d8e0d696ca2",
+      "bytes": 2065,
+      "sha256": "cbebd1c9b54df658ca6f64ff16c742bb7b8f70f8926fc08bc5945dccabad0f45"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/author-delivery-freeze.json": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "c01e95de0086bd24e9b875e8eea1bd0f8311be0c",
+      "bytes": 6848,
+      "sha256": "cbe89ff9228520711c58cce0776e292844a44daeb7a0fa84d5936b43c50ebd93"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/direct-final.json": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "b975bf1a94d70fed9187b94a0994951f91c1b58e",
+      "bytes": 24143,
+      "sha256": "0f577b9cbc238a3cf19346198672ee04b7588820db6f30ceb10596f9ec82f4ac"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/final-review-proof.json": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "1760d22b099abd8b0840baf693559d5925d844c7",
+      "bytes": 8362,
+      "sha256": "15c358ccbbe6f98f48f6a46d5867b06797a45b7a061ea1a111d4811ff838d6f8"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/loader-final/report.json": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "481b28063586729910d0ec76f4e0ae82c854fb84",
+      "bytes": 1913,
+      "sha256": "23b8a0ba3104176d1cd7478cef8afb4ed6ef3b565d56b59313b8a9eae3357daa"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/mutants-final/report.json": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "c6f7f598a3a48844f29a616495be12b6822f7c35",
+      "bytes": 7917,
+      "sha256": "6846f047894ba2f2c9344832a18e5a4d770aa196e780be4e91e6729580d3106f"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/reproduce_consumer_mutants.py": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "c3174a410b7f753a909ce02fb884b909337c04c5",
+      "bytes": 7013,
+      "sha256": "4da2540b8b6ad0a0d55a020c043b45c6ca3c5ace07c11a465cfba8b6149fef9f"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/reproduce_loader_checks.py": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "a31649161682f756f45b0ed371646d452a4dd4b9",
+      "bytes": 3534,
+      "sha256": "4c707e4c7c902aa3ffce595b4b9a5e96842192770ddd6ab2da897947b1fa3437"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/review-result.md": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "5126e2cb7fe612c0fc0a88bca9d4f37dc4e3d16f",
+      "bytes": 2282,
+      "sha256": "ec3d97ef1952032e2ffd6d1b65172b47619164f6cc9b6019af8711648757886b"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/source-freeze.json": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "9bef491e45f192c68f2b3daaa6c37bd7086d3249",
+      "bytes": 670,
+      "sha256": "c40abc4e407f0c778c2db5be2089e69d1fdad6f79a82bd171a0702472bd03c6c"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/tests-first-review.json": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "7000ae184f6a790118665b893783ca0c303c139f",
+      "bytes": 1583,
+      "sha256": "b980246058bcd0de6039a4c8bdd7cafe0c4d695f9e3b8dc7d0ac0aaa3d5ec3b1"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent/REPRODUCE.md": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "33afe974376095f432e65be0364d9b4b7f2e3aec",
+      "bytes": 2011,
+      "sha256": "6011e64acb6b08a378b5b9f6532a6f09165c06551e4531645bf59caa7e65d87d"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent/audit_mutants.py": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "9f355026d6e3635cacb52e1a65f3189b3c855711",
+      "bytes": 4083,
+      "sha256": "2ca45a5cb889931be0818bb3542d8408f67bd64bd4ff48ccc5b6c501cceecef2"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent/check_freeze.py": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "82245b977c6b44020afc2d0e075c446296157b1e",
+      "bytes": 3007,
+      "sha256": "da8c57d0a2f8292ab15caed783208875122f10762be660bca789df614c752f39"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent/frozen-v3-run.json": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "b588050e3f612f2738132e03d956a8759eece416",
+      "bytes": 14501,
+      "sha256": "cd0e75422dff2c9a44f6a8e751cd51d1903c3a8e4d9d677de308f3cd4f172842"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent/frozen-v3/freeze-hashes.json": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "e02bd04553ca46649885d80689c81a0d1334588a",
+      "bytes": 1035,
+      "sha256": "e062f8b42a68d8722875ab3bb250f70289ca5457cd51ed680af51ac3082e7d27"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent/loader-observations-v3.json": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "ed936a419bc19748de10dc866549b36b425e8527",
+      "bytes": 1912,
+      "sha256": "a3d391422434726d3ce519de2c1ce6268cd7ff097e832dc0925f5d3e8b4dd7f6"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent/loader-observations.json": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "80706a7cce26aa26e9f568b4c3ccded2402de8e6",
+      "bytes": 1915,
+      "sha256": "fdfa8c96e9ee85f2ca4e0486af50ddaf3716d0c63ccc3aacfac16443127a74c5"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent/mutants-v3/report.json": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "a76db7d2c847249566d09afd4beb14ad9d7af9a7",
+      "bytes": 3671,
+      "sha256": "9cae849dff184b98cfd4654bfc5640d516ba067b350bbc5ecf3b6bee70d802c5"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent/reproduce_consumer_mutants.py": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "34452779b40efed3cbc7673b715e061012131f68",
+      "bytes": 4439,
+      "sha256": "fd9068ed966d528afe23a5da67c1cf115a5af705ac986cc5c7c72e362cd4f068"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent/reproduce_loader_checks.py": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "a31649161682f756f45b0ed371646d452a4dd4b9",
+      "bytes": 3534,
+      "sha256": "4c707e4c7c902aa3ffce595b4b9a5e96842192770ddd6ab2da897947b1fa3437"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent/review-plan.md": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "8937467ba9d8ba7e5c9804d47c968ae3760e8d22",
+      "bytes": 4764,
+      "sha256": "016c99a14267328fb05f8f05ee0188cb7641fabce7f0f6b9b8a97e8e773b37eb"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent/review-result.md": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "fa0d753cdb4397b4245ff3cf6b85d8862d5e212b",
+      "bytes": 4663,
+      "sha256": "4aa71b926d44d76c94d7722ac8068373adcdd139c41150ac27330102927aae99"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/p1-consumer-contract.json": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "087be86764b4e8a18ee435695e0d82b500299165",
+      "bytes": 8292,
+      "sha256": "87be885b868a9eec1736fbc063f75dc2262ecf1fd0bb2a6b74a2f002a819772f"
+    },
+    "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/source-manifest.json": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "571d65b3ac8640db5fc5cd331cec35412fe591c7",
+      "bytes": 950,
+      "sha256": "42c3e766dc19db6b30927816411d1fcdae4c08839e1c0f32a1762bb32bb4a166"
+    },
+    "docs/reviews/dem_gen2_t12_external_inputs_20261024.md": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "2ce764228012c62a7bef01d22f071e45d0fff62d",
+      "bytes": 14407,
+      "sha256": "d578ff7b9cc0136ff4f27170358d8951c3d73531e4d1d68c286e50dc2df5033b"
+    },
+    "scripts/test_dem_gen2_t12_consumer_contract.py": {
+      "mode": "100644",
+      "type": "blob",
+      "oid": "c6b8dfb0f63956a36cea80140df4b2e656bc779d",
+      "bytes": 16886,
+      "sha256": "465f542e4c8825e2a21d29a1a7be931c96ea23794152eab01d0e04dd9212c216"
+    }
+  },
+  "checks": [
+    {
+      "name": "exact_candidate_argument",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "exact_final_argument",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "exact_successor_history",
+      "pass": true,
+      "detail": [
+        "d6e692488a56baf11f7206c5cd45c6bc404b92f0",
+        "f1da507e8ab8bf812a242b9749d4c320be90fd73"
+      ]
+    },
+    {
+      "name": "single_parent_d6e692488a56baf11f7206c5cd45c6bc404b92f0",
+      "pass": true,
+      "detail": [
+        "2443a63eaa87d52e385a35f8bab4225efa0d25fe"
+      ]
+    },
+    {
+      "name": "single_parent_f1da507e8ab8bf812a242b9749d4c320be90fd73",
+      "pass": true,
+      "detail": [
+        "d6e692488a56baf11f7206c5cd45c6bc404b92f0"
+      ]
+    },
+    {
+      "name": "successor_nonempty",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "successor_only_owned_paths",
+      "pass": true,
+      "detail": [
+        "docs/reviews/dem_gen2_t12_consumer_contract_20261024.md",
+        "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/README.md",
+        "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/consumer-publication-proof.json",
+        "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/external-review-provenance.json",
+        "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/factual-input-form.blank.json",
+        "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/fixture-results.json",
+        "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/README.md",
+        "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/SHA256SUMS",
+        "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/old-41-fixture-results.json",
+        "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/pre-fix-fixture-results.json",
+        "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/pre-fix-reproduction.zip",
+        "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/pre-fix-script.py",
+        "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/historical/pre-fix-zip-replay-receipt.json",
+        "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/REPRODUCE.md",
+        "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/author-delivery-freeze.json",
+        "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/direct-final.json",
+        "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/final-review-proof.json",
+        "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/loader-final/report.json",
+        "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/mutants-final/report.json",
+        "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/reproduce_consumer_mutants.py",
+        "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/reproduce_loader_checks.py",
+        "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/review-result.md",
+        "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/source-freeze.json",
+        "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/independent-ulpri/tests-first-review.json",
+        "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/p1-consumer-contract.json",
+        "docs/reviews/dem_gen2_t12_consumer_contract_evidence_20261024/source-manifest.json",
+        "scripts/test_dem_gen2_t12_consumer_contract.py"
+      ]
+    },
+    {
+      "name": "successor_no_deletions_or_mode_changes",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "all_base_entries_preserved",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "old_readiness_inventory_exact8",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "old_readiness_recorded_hashes_match_base",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "dem_base_ancestor",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "no_merge_commits_since_base",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "new_work_nonempty",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "new_work_only_owned_paths",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "existing_paths_unchanged",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "new_paths_regular_files",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "sealed32_list_unchanged",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "sealed32_blob_modes_unchanged",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "shared_blob_modes_unchanged",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "claude_blob_modes_unchanged",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "old_t12_blob_modes_unchanged",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "unloading_kit_blob_modes_unchanged",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "no_new_protected_paths",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "codex/unloading-ulpr_local_pin_unchanged",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "codex/unloading-ulpr_new_path_disjoint",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "codex/lhs214-relaunch_local_pin_unchanged",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "codex/lhs214-relaunch_new_path_disjoint",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "codex/dem-gen2-request_local_pin_unchanged",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "codex/dem-gen2-request_new_path_disjoint",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "codex/mixer-mxd2_local_pin_unchanged",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "codex/mixer-mxd2_new_path_disjoint",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "codex/mixer-d3-design_local_pin_unchanged",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "codex/mixer-d3-design_new_path_disjoint",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "failed_checks": []
+}

@@ -1,0 +1,2 @@
+── selftest (검사기가 맞나) ──
+  ✓ run_contract          --selftest

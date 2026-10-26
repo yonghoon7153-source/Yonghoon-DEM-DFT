@@ -1,0 +1,56 @@
+{
+  "status": "PASS",
+  "candidate": "f1da507e8ab8bf812a242b9749d4c320be90fd73",
+  "tree": "d9917dae22ee56bfc0441f0a51fad681661b0acb",
+  "branch": "codex/dem-gen2-t12",
+  "cwd": "/workspace/Yonghoon-DEM-DFT",
+  "status_before": "",
+  "shared_gate_baseline": "2443a63eaa87d52e385a35f8bab4225efa0d25fe",
+  "shared_gate_sha256": {
+    "scripts/check_all.sh": "0fbefe4e35cbb5d17427fa4724407d7d0fd5efb183bd37a05d19f05b80fcfda0",
+    "scripts/check_selftest_inventory.py": "65a25e9e3e5caa3dcafad310db55ecce007f6896cd347b630dd80c28e47b0566",
+    "docs/reviews/selftest_inventory.tsv": "90710f5cbf428711e4253c82a5349cead2033d9daf84c306252c20e981b36448",
+    ".github/workflows/discipline.yml": "42438f5f409c59017c1c0ab0cc498d3e593eb816fa0d7ef368c1b5176c4b94ec"
+  },
+  "started_at_utc": "2026-10-26T01:19:26.199380+00:00",
+  "command": [
+    "nice",
+    "-n",
+    "10",
+    "bash",
+    "scripts/check_all.sh"
+  ],
+  "runner_sha256": "59a5894484e22101f1c61e4016a96b2ed92ca11b38b5d7bf444c5e6d0428757d",
+  "source_manifest_sha256": "825b9327b5ae6c44772b6697048b9d67996fd076a8d02036f1a471c8807c2462",
+  "source_manifest_scope": "Tracked scripts, webapp, .github, shared policy/ledger/inventory files and P1 unloading kit; entire repository cleanliness separately checked by Git",
+  "python_executable": "/workspace/.venvs/yonghoon-dem/bin/python3",
+  "python_version": "3.11.17 (main, Oct  3 2026, 01:05:36) [Clang 22.1.3 ]",
+  "versions": {
+    "numpy": "2.4.6",
+    "pandas": "2.3.3",
+    "pytz": "2026.5",
+    "scipy": "1.17.1"
+  },
+  "environment": {
+    "TMPDIR": "/var/tmp/codex-nonrint-20261023",
+    "OPENBLAS_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "MPLBACKEND": "Agg"
+  },
+  "actual_temp_parent": "/var/tmp/codex-nonrint-20261023",
+  "runner_pid": 183314,
+  "gate_policy": "Unmodified check_all.sh; fast driver default 180 seconds, workers 6, TSV per-entry overrides unchanged",
+  "new_t12_suite_in_shared_gate": false,
+  "exit_code": 0,
+  "finished_at_utc": "2026-10-26T01:57:40.248831+00:00",
+  "head_after": "f1da507e8ab8bf812a242b9749d4c320be90fd73",
+  "tree_after": "d9917dae22ee56bfc0441f0a51fad681661b0acb",
+  "branch_after": "codex/dem-gen2-t12",
+  "status_after": "",
+  "source_unchanged": true,
+  "log_sha256": "f27982bb9f2497c32dcea0a3e50130c6dea2dac16492d1fde3b32750bd8656c3",
+  "pass_labels": 155,
+  "fail_labels": 0
+}
