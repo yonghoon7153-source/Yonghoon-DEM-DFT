@@ -71,6 +71,11 @@
     numpy · scipy 판 · 나머지 = 기록만 · 판정 계산기 프로세스 = 대조 안 함 R4-11) → `CODE_PIN_MISMATCH` (`git_identity` · `code_dirty_problem` ·
     `code_key` · `env_record` · `code_verdict_problem`)
   · F5 — S0 단계 2 보고의 계획 출처 = commit:<40-hex> + 그 커밋 안 R 계획 blob sha256 = 계획 sha256 → `S0_REPORT_MISMATCH` (`plan_commit_problem`)
+  · 같은 침대 (RCA2-03 · 판정문 §4 F8 · 1저자 10-23 Q3 (가)) — S0 보고 (schema v3) 의 원 입력 (역할 파일 sha256 · 크기 · metrics 상자 · 두께 ·
+    설정 = 킷 run_mpm.sh 의 payload 호출부) · 파생 칸 (규약 · off 격자 지문) 을 단계 요약에 보존 · R 직전 (사다리 = SBE · 예측 = SBE · DBE) ·
+    판정 (`--root` 필수 · 다시 판정 포함) 에 S0 와 같은 발견 함수 (`ca_s0_census.kit_input_record`) 로 킷을 다시 해시해 대조 (경로 = 대조 밖 ·
+    기계마다 자기 사본) · 같은 규약 arm 0 의 sid 지문 = S0 off 격자 지문 (`s0_grid_seed` · read_run) · 다르거나 못 읽음 = `S0_REPORT_MISMATCH`
+    (재압밀 · 재생성 침대 = 새 S0) · 단계끼리 S0 기록 대조 = 경로 뺀 칸 (`s0_records_key`)
 """
 import argparse
 import glob
@@ -157,7 +162,8 @@ PLAN_UNREG_MAIN = 'cut'              # 설계 §1-2 #12 — 주 cut · 감도 fu
 S0_PLAN_SCHEMA = 'ca-cjunc-plan-v1'  # §2-1 · §10-2 ⑪ — S0 단계 1 계획 (`scripts/ca_s0_census.py` · 정본 = 그 모듈)
 #: ★ PF2 B (10-22 · 사전 리뷰 2 회차 PRE2-design-01 · 1저자 Q2 권고대로) — S0 단계 보고 (`ca_s0_census` · `s0_stage<n>_<킷>.json`) 의 schema
 #   (= ca_s0_census.SCHEMA · 시험 B09 가 대조 · 이 모듈은 numpy 없이 뜬다)
-S0_REPORT_SCHEMA = 'ca-s0-census-v2'
+#   ★ 10-25 묶음 B (RCA2-03 · Q3 (가)) — v3 = 같은 침대 칸 (inputs.settings_sha256 · raster.sid_off_fp) · v2 보고 = 멈춤 (새 S0)
+S0_REPORT_SCHEMA = 'ca-s0-census-v3'
 #: ★ PF2 D (10-22 · 사전 리뷰 2 회차 PRE2-design-02 · 08 · 결정 없음) — 같은 판 대조 파일 = 등록 R · kgy 명령이 이름 댄 생산 파일 중 사슬 ·
 #   러너 · payload · 증서 · 접합 · census · registry 쪽 (사슬이 부르는 계약 · SV 증거 · 판독 포함 · 시험 파일 · 재압밀 `mpm3d_compaction.py` 는
 #   R 런이 돌리지 않아 뺐다).  단계 요약에 이름마다 sha256 (사슬 폴더 · 러너 폴더) 을 남기고 다음 단계 · 판정 계산기가 지금 지문과 대조한다.
@@ -274,7 +280,9 @@ STOPS = {
     'PLAN_CROSS_MISMATCH': '두 계획 대조 실패 (R 계획 ↔ S0 계획 ↔ 사슬 상수 · 등록 R §2-1 · §10-2 ⑪)',
     'S0_REPORT_MISMATCH': 'S0 단계 보고를 못 읽거나 꼴이 틀렸다 · 단계 2 보고가 봉인한 계획 해시 (R 계획 · S0 계획) ≠ 지금 계획 (★ PF2 B · Q2 — '
                           'DBE 열람 전 계획 하나 · 바꾸려면 새 등록 · 등록 R §2-1 · §2-1b · §11 ④) · (★ 10-25 묶음 B · 판정문 F5) 계획 출처 ≠ '
-                          'commit:<40-hex> · 그 커밋의 R 계획 blob sha256 ≠ 계획 sha256',
+                          'commit:<40-hex> · 그 커밋의 R 계획 blob sha256 ≠ 계획 sha256 · (★ 10-25 묶음 B · RCA2-03 · Q3 (가)) S0 보고의 같은 '
+                          '침대 칸 (원 입력 · 설정 · off 격자 지문) 꼴이 틀렸다 · S0 보고의 원 입력 ≠ 지금 킷 (R 직전 · 판정 때 S0 와 같은 발견 함수로 '
+                          '다시 해시 · 경로 = 대조 밖) · 같은 규약 arm 0 의 sid 지문 ≠ S0 off 격자 지문 · 킷을 못 읽음 — 재압밀 · 재생성 침대 = 새 S0',
     'MAIN_NOT_DONE': '감도 단계인데 주 판정 단계 (사다리 둘 · 예측) 가 끝나지 않았다 · 묶음이 다르다 (--after-main · Q-F)',
     'MAIN_BINDING': '판정 입력의 감도 단계가 묶인 주 예측 ≠ 판정 입력의 주 예측 (Q-F)',
     'KIT_MISSING': '킷 폴더 · 러너가 없다',
@@ -1127,9 +1135,172 @@ def s0_report_record(rep, sha, path):
     rr = pl.get('r_plan') if isinstance(pl.get('r_plan'), dict) else {}
     kit = rp.get('kit') if isinstance(rp.get('kit'), dict) else {}
     code = rp.get('code') if isinstance(rp.get('code'), dict) else {}
+    #  ★ 10-25 묶음 B (RCA2-03 · Q3 (가)) — 같은 침대 칸 (S0 보고 그대로 · 원 입력 = 역할별 path · sha256 · bytes · metrics 상자 · 두께 ·
+    #    설정 sha256 / 파생 = 규약 · off 격자 지문) — 꼴 검사 = `s0_bed_record_problem` · 대조 = `bed_problem` (원 입력) · read_run (파생)
+    inp = rp.get('inputs') if isinstance(rp.get('inputs'), dict) else None
+    ras = rp.get('raster') if isinstance(rp.get('raster'), dict) else None
+    met = (inp or {}).get('metrics')
     return {'path': path, 'sha256': sha, 'schema': rp.get('schema'), 'stage': rp.get('stage'), 'kit': kit.get('name'),
             'plan_sha256': pl.get('sha256'), 'plan_source': pl.get('source'), 'r_plan_sha256': rr.get('sha256'), 'r_plan_path': rr.get('path'),
-            'git_head': code.get('git_head'), 'git_dirty': code.get('git_dirty'), 'file_digests': code.get('file_digests')}
+            'git_head': code.get('git_head'), 'git_dirty': code.get('git_dirty'), 'file_digests': code.get('file_digests'),
+            'inputs': (None if inp is None else
+                       {'files': inp.get('files'), 'settings_sha256': inp.get('settings_sha256'),
+                        'metrics': ({k: met.get(k) for k in BED_METRICS} if isinstance(met, dict) else met)}),
+            'raster': (None if ras is None else {'convention': ras.get('convention'), 'sid_off_fp': ras.get('sid_off_fp')})}
+
+
+# ═════════════════════════ ★ 10-25 묶음 B (RCA2-03 · 1저자 10-23 Q3 (가)) 같은 침대 — S0 → R ═════════════════════════
+#: 원 입력 기록의 metrics 칸 (S0 보고 inputs.metrics 중 대조하는 것 · `ca_s0_census.kit_input_record` 와 같은 이름)
+BED_METRICS = ('um_box_um', 'thickness_um')
+#: 파생 격자 지문을 대조하는 규약 = R 주 런 arm 0 (사슬 고정값 · `ENV_FIXED` · `MAN_FIXED` · 러너 기본 선분 스탬프 · origin 0 · S0 가 잡은
+#  payload 입력은 PTFE centerline 으로 찍은 뒤 PTFE 행을 뺀 off 격자 = face_alpha 의 sid 격자) — 다르면 대조 안 함 (기록만)
+S0_GRID_CONVENTION = {'vox_um': VOX_MAIN, 'bridge_um': MAN_FIXED['bridge_um'], 'sdcp_sphere_d_um': MAN_FIXED['sdcp_sphere_d_um'],
+                      'fibre_stamp': 'segment', 'ptfe_stamp_captured': 'centerline', 'origin_shift_um': [0.0, 0.0, 0.0]}
+#: 킷 ↔ 그 킷의 S0 단계 보고 (단계 1 = SBE 새 침대 · 단계 2 = DBE 새 침대)
+BED_STAGE = {SBE_KIT: 'stage1', DBE_KIT: 'stage2'}
+BED_NEW_S0 = '재압밀 · 재생성 침대 = 새 S0 (등록 R §2-1 · §11 · 같은 침대가 아니면 S0 단계 1 · 2 를 그 침대로 다시)'
+
+
+def _hex32(x):
+    return isinstance(x, str) and re.fullmatch(r'[0-9a-f]{32}', x) is not None
+
+
+def _pos_or_none(x):
+    if x is None:
+        return True
+    if isinstance(x, bool) or not isinstance(x, (int, float)):
+        return False
+    try:
+        return math.isfinite(float(x)) and float(x) > 0
+    except OverflowError:
+        return False
+
+
+def s0_bed_record_problem(rec, label):
+    """S0 보고 기록의 같은 침대 칸 → 꼴 문제 | None.  원 입력 = 역할 (`ca_s0_census.KIT_ROLES` 전부 + 선택 `KIT_ROLES_OPTIONAL`) 마다
+    path (문자열 · 기록만) · sha256 (64 자 소문자 hex) · bytes (정수 ≥ 0 · bool 아님) · metrics (um_box_um · thickness_um = 유한 양수 또는 null) ·
+    settings_sha256 (64 hex) · 파생 = 규약 (dict) · sid_off_fp (32 자 소문자 hex).  옛 꼴 (칸 없음) = 멈춤."""
+    import ca_s0_census as _s0
+    r = rec if isinstance(rec, dict) else {}
+    inp = r.get('inputs')
+    if not isinstance(inp, dict):
+        return f'{label} 보고에 원 입력 (inputs) 이 없다 (옛 꼴 · {S0_REPORT_SCHEMA} 이전) — {BED_NEW_S0}'
+    fs = inp.get('files')
+    if not isinstance(fs, dict):
+        return f'{label} 보고의 원 입력 파일 (inputs.files) 꼴 {type(fs).__name__} (역할별 dict 이어야)'
+    miss = [k for k in _s0.KIT_ROLES if k not in fs]
+    extra = sorted(str(k) for k in fs if k not in _s0.KIT_ROLES + _s0.KIT_ROLES_OPTIONAL)
+    if miss or extra:
+        return f'{label} 보고의 원 입력 역할 — 없음 {miss} · 모르는 역할 {extra} (= {list(_s0.KIT_ROLES)} + 선택 {list(_s0.KIT_ROLES_OPTIONAL)})'
+    for k in sorted(fs):
+        x = fs[k]
+        if not isinstance(x, dict) or not _hex64(x.get('sha256')) or type(x.get('bytes')) is not int or x['bytes'] < 0 \
+                or not isinstance(x.get('path'), str):          # noqa: E721 — bool 제외
+            return (f'{label} 보고의 원 입력 역할 {k} 꼴 — sha256 {(x or {}).get("sha256") if isinstance(x, dict) else x!r} (64 자 소문자 hex) · '
+                    f'bytes {(x or {}).get("bytes") if isinstance(x, dict) else None!r} (정수 ≥ 0) · path (문자열)')
+    met = inp.get('metrics')
+    if not isinstance(met, dict) or any(k not in met or not _pos_or_none(met[k]) for k in BED_METRICS):
+        return f'{label} 보고의 원 입력 metrics 꼴 {met!r} ({list(BED_METRICS)} = 유한 양수 또는 null)'
+    if not _hex64(inp.get('settings_sha256')):
+        return f'{label} 보고의 설정 지문 (inputs.settings_sha256) 꼴 {inp.get("settings_sha256")!r} (64 자 소문자 hex · payload 호출부)'
+    ras = r.get('raster')
+    if not isinstance(ras, dict) or not isinstance(ras.get('convention'), dict) or not _hex32(ras.get('sid_off_fp')):
+        return (f'{label} 보고의 파생 격자 칸 (raster.convention · raster.sid_off_fp) 꼴 — sid_off_fp '
+                f'{(ras or {}).get("sid_off_fp") if isinstance(ras, dict) else None!r} (32 자 소문자 hex · `carbon_junction._grid_fp`)')
+    return None
+
+
+def bed_view(inp):
+    """원 입력 기록 (S0 보고 inputs · `ca_s0_census.kit_input_record`) → 경로 뺀 지문 {files: {역할: {sha256, bytes}} · metrics · settings_sha256}
+    (경로 = 기계마다 다르다 · 대조 밖)."""
+    i = inp if isinstance(inp, dict) else {}
+    fs = i.get('files') if isinstance(i.get('files'), dict) else {}
+    met = i.get('metrics') if isinstance(i.get('metrics'), dict) else {}
+    return {'files': {str(k): ({'sha256': x.get('sha256'), 'bytes': x.get('bytes')} if isinstance(x, dict) else x) for k, x in sorted(fs.items())},
+            'metrics': {k: met.get(k) for k in BED_METRICS}, 'settings_sha256': i.get('settings_sha256')}
+
+
+def _bed_diff(want, got):
+    out = [f'역할 {k}' for k in sorted(set(want['files']) | set(got['files'])) if want['files'].get(k) != got['files'].get(k)]
+    out += [f'metrics {k}' for k in BED_METRICS if want['metrics'].get(k) != got['metrics'].get(k)]
+    if want['settings_sha256'] != got['settings_sha256']:
+        out.append('설정 (킷 run_mpm.sh 의 payload 호출부)')
+    return out
+
+
+def s0_records_key(recs):
+    """단계끼리 대조할 S0 보고 기록 키 — 경로 문자열 (보고 경로 · 원 입력 파일 경로) 을 뺀 사본 (기계마다 다른 자리 · 대조 밖) · 그 밖 칸 그대로."""
+    if not isinstance(recs, dict):
+        return recs
+    out = {}
+    for k, r in recs.items():
+        if not isinstance(r, dict):
+            out[k] = r
+            continue
+        r2 = {kk: vv for kk, vv in r.items() if kk != 'path'}
+        inp = r2.get('inputs')
+        if isinstance(inp, dict) and isinstance(inp.get('files'), dict):
+            r2['inputs'] = dict(inp, files={f: ({kk: vv for kk, vv in x.items() if kk != 'path'} if isinstance(x, dict) else x)
+                                            for f, x in inp['files'].items()})
+        out[k] = r2
+    return out
+
+
+def s0_same_convention(rec):
+    """S0 보고 기록의 파생 칸 규약 = R 주 런 arm 0 규약 (`S0_GRID_CONVENTION`) 인가 — 같을 때만 off 격자 지문을 대조한다."""
+    conv = ((rec or {}).get('raster') or {}).get('convention') if isinstance(rec, dict) else None
+    if not isinstance(conv, dict):
+        return False
+    for k, want in S0_GRID_CONVENTION.items():
+        got = conv.get(k)
+        if isinstance(want, list):
+            if not (isinstance(got, list) and len(got) == len(want) and all(_same(a, b) for a, b in zip(got, want))):
+                return False
+        elif isinstance(want, float):
+            if not _same(got, want):
+                return False
+        elif got != want:
+            return False
+    return True
+
+
+def s0_grid_seed(recs):
+    """S0 보고 기록 (단계 1 · 2) → {sid 대조 무리 키: off 격자 지문} — 같은 규약 · 주 래스터 (vox 0.15 · 양보 없음 · FIBRE · UNREG 변이도
+    같은 래스터) · arm 0 (origin 0) 만 (GRID · SVORDER · origin 팔 = 키가 달라 대조 안 함)."""
+    out = {}
+    for kit, st in BED_STAGE.items():
+        r = (recs or {}).get(st) if isinstance(recs, dict) else None
+        if isinstance(r, dict) and s0_same_convention(r) and _hex32((r.get('raster') or {}).get('sid_off_fp')):
+            out[sid_group(kit, None, 0)] = r['raster']['sid_off_fp']
+    return out
+
+
+def kit_bed(root, kit):
+    """지금 킷 (root/<킷>) → 경로 뺀 원 입력 지문 (`bed_view` · S0 와 같은 발견 함수 `ca_s0_census.kit_input_record` · 기계마다 자기 사본) ·
+    킷 폴더 없음 = Stop KIT_MISSING · 못 읽음 = Stop S0_REPORT_MISMATCH (확인 못 함 = 멈춤)."""
+    kp = Path(root) / kit
+    if not kp.is_dir():
+        raise Stop('KIT_MISSING', f'{kp}')
+    import ca_s0_census as _s0
+    try:
+        rec = _s0.kit_input_record(str(kp), vox=VOX_MAIN, bridge_um=MAN_FIXED['bridge_um'], sdcp_sphere_d=MAN_FIXED['sdcp_sphere_d_um'])
+    except Exception as e:                                    # noqa: BLE001 — S0Error · OSError · 그 밖 = 확인 못 함 = 멈춤
+        raise Stop('S0_REPORT_MISMATCH', f'{kit}: S0 발견 함수가 킷을 읽지 못했다 ({type(e).__name__}: {e}) — 확인 못 함 = 멈춤 · {BED_NEW_S0}')
+    return bed_view(rec)
+
+
+def bed_problem(recs, root, kits):
+    """R 직전 (사다리 = SBE · 예측 = SBE · DBE) · 판정 (둘 다) — S0 보고 기록의 원 입력 (경로 뺀 지문) = 지금 킷 (`kit_bed`) → {킷: 지문} ·
+    다르면 Stop S0_REPORT_MISMATCH (사유 = 다른 칸 · 새 S0)."""
+    out = {}
+    for kit in kits:
+        st = BED_STAGE[kit]
+        got = kit_bed(root, kit)
+        out[kit] = got
+        want = bed_view(((recs or {}).get(st) or {}).get('inputs') if isinstance(recs, dict) else None)
+        if got != want:
+            raise Stop('S0_REPORT_MISMATCH', f'S0 단계 {st[-1]} 보고의 침대 ≠ 지금 킷 {kit} ({" · ".join(_bed_diff(want, got))}) — {BED_NEW_S0}')
+    return out
 
 
 def s0_stage2_problem(rec, plan_sha, s0_sha):
@@ -1152,6 +1323,9 @@ def s0_stage2_problem(rec, plan_sha, s0_sha):
                 f'(Q2: 계획 하나 · 바꾸려면 새 등록 · 등록 R §2-1b)')
     if r['plan_sha256'] != s0_sha:
         return f'S0 단계 2 가 봉인한 S0 계획 {r["plan_sha256"][:16]}… ≠ 지금 S0 계획 {str(s0_sha)[:16]}…'
+    why = s0_bed_record_problem(r, 'S0 단계 2')               # ★ 10-25 묶음 B (RCA2-03) — 같은 침대 칸 꼴
+    if why:
+        return why
     return plan_commit_problem(r['plan_source'], r.get('r_plan_path'), r['r_plan_sha256'])
 
 
@@ -1206,7 +1380,7 @@ def s0_stage1_problem(rec, s0_sha):
         return f'S0 단계 1 보고의 계획 해시 꼴 {r.get("plan_sha256")!r} (64 자 소문자 hex)'
     if r['plan_sha256'] != s0_sha:
         return f'S0 단계 1 보고가 만든 S0 계획 {r["plan_sha256"][:16]}… ≠ 지금 S0 계획 {str(s0_sha)[:16]}… (이 등록의 단계 1 보고가 아니다)'
-    return None
+    return s0_bed_record_problem(r, 'S0 단계 1')              # ★ 10-25 묶음 B (RCA2-03) — 같은 침대 칸 꼴
 
 
 def _digest_map(lst):
@@ -1573,7 +1747,7 @@ def arm_file_shas(outdir):
     return sorted(out, key=lambda x: (x['index'], x['file']))
 
 
-def read_run(outdir, req, plan, contract, sid_reg, want_sha=None):
+def read_run(outdir, req, plan, contract, sid_reg, want_sha=None, s0_grid=None):
     """런 폴더 하나 → [팔 기록 …] (번호 순).  등록 R §10 멈춤 목록의 팔 쪽 전부 — 어긋나면 Stop (원인 칸 = σ 를 가린 문장).
     ★ 3판 — 해 상태 (§5-0 · `run_contract.next_gen_state` · 정본): positive (증서 ⓐ–ⓓ · σ > 0) · zero (VALID_ZERO_TOPOLOGY · σ = 0) ·
     ~~short (ELECTRODE_SHORT · σ = +∞)~~ · 그 밖 = NOT_COMPUTED.  팔 기록의 σ = 확장 실수 (0 그대로).
@@ -1665,6 +1839,10 @@ def read_run(outdir, req, plan, contract, sid_reg, want_sha=None):
         key = sid_group(req['kit'], req['variant'], i)
         if sid_reg.setdefault(key, sid) != sid:
             stop('SID_GRID', f'{key} 의 sid 지문이 앞 런과 다르다')
+        #  ★ 10-25 묶음 B (RCA2-03 · Q3 (가)) — 같은 규약 arm 0 의 sid 지문 = S0 단계 보고의 off 격자 지문 (`s0_grid_seed` · 파생 격자 지문)
+        want = (s0_grid or {}).get(key)
+        if want is not None and want != sid:
+            stop('S0_REPORT_MISMATCH', f'{key} 의 sid 지문 {sid} ≠ S0 단계 보고의 off 격자 지문 {want} (같은 규약 · arm 0) — {BED_NEW_S0}')
         reg, reg_why = registration_state(state)          # ★ 4판 (Q1) — 이 등록의 풀이 상태 셋 (§5-0)
         if reg == 'NOT_COMPUTED':
             stop('NOT_COMPUTED', f'해 상태 (§5-0 · 4판) {state} → {reg} (사유 {reg_why}) — 단락 (J11 · 판–판 0 저항 축약) = 생산자 미게시 · '
@@ -1727,6 +1905,7 @@ class Runner:
         self.env_base = {k: v for k, v in parent.items() if k not in self.scrubbed}
         self.records, self.keys, self.sid_reg, self.n = [], set(), {}, 0
         self.dry_lines = []
+        self.s0_grid = None                  # ★ 10-25 묶음 B (RCA2-03) — S0 off 격자 지문 (`s0_grid_seed` · 단계가 정한다)
 
     def env_delta(self, req, outdir):
         d = dict(ENV_FIXED)
@@ -1790,7 +1969,7 @@ class Runner:
         if r.returncode != 0:
             raise Stop('RUNNER_RC', f'rc {r.returncode} (로그 {logp})', name)
         try:
-            arms_ = read_run(outdir, req, self.plan, self.contract, self.sid_reg)
+            arms_ = read_run(outdir, req, self.plan, self.contract, self.sid_reg, s0_grid=self.s0_grid)
         except Stop:
             #  읽기가 멈춰도 팔 파일 sha256 은 남긴다 — 등록 결과 (NOT_COMPUTED) 로 끝난 사다리를 판정이 원 팔에서 다시 계산할 수 있게.
             rec['arms_read'] = arm_file_shas(outdir)
@@ -1814,6 +1993,7 @@ class Replay:
         self.variant = summary.get('variant')
         self.i = 0
         self.cert_reg = {} if cert_reg is None else cert_reg
+        self.s0_grid = s0_grid_seed(summary.get('s0_reports'))   # ★ 10-25 묶음 B (RCA2-03) — 원 단계와 같은 파생 격자 지문 대조
 
     def run(self, kit, role, law, c, rj, arms, sv_cf=False):
         if self.i >= len(self.recs):
@@ -1827,7 +2007,7 @@ class Replay:
         self.i += 1
         req = {k: r.get(k) for k in REQ_KEYS}
         arms_ = read_run(self.dir / r['outdir'], req, self.plan, self.contract, self.sid_reg,
-                         want_sha=[a.get('sha256') for a in r.get('arms_read') or []])
+                         want_sha=[a.get('sha256') for a in r.get('arms_read') or []], s0_grid=self.s0_grid)
         self.cert_reg[f'{self.dir.name}/{r["name"]}'] = [a['dsigma_rel'] for a in arms_]   # §8 수렴 증서 ⓒ 값 (판정 결과로만)
         return arms_
 
@@ -2252,7 +2432,7 @@ def stage_ladder(a, contract):
         return 3
     s = summary_base('ladder', a)
     s.update({'law': a.law, 'variant': a.variant, 'kit': a.kit or SBE_KIT, 'runs': [], 'ladder': None, 'env_scrubbed': [],
-              'after_main': None})
+              'after_main': None, 'bed': None})
     ran = False
     try:
         if not _same(a.target, TARGET_SBE_MS) or a.law not in LAWS or (a.kit or SBE_KIT) != SBE_KIT or a.variant == 'SVORDER':
@@ -2281,7 +2461,11 @@ def stage_ladder(a, contract):
         for p in (Path(a.root) / SBE_KIT, Path(a.runner)):
             if not p.exists():
                 raise Stop('KIT_MISSING', f'{p}')
+        #  ★ 10-25 묶음 B (RCA2-03 · Q3 (가) · 판정문 §4 F8) — R 런 직전 SBE 킷을 S0 와 같은 발견 함수로 다시 해시 = S0 단계 1 보고의 원 입력 ·
+        #    설정 (경로 = 대조 밖) · 다르면 멈춤 (새 S0) · 파생 격자 지문 (off 격자 sid) 은 첫 arm 0 런을 읽을 때 (read_run · 같은 규약만)
+        s['bed'] = bed_problem(s['s0_reports'], a.root, (SBE_KIT,))
         rn = Runner(a.runner, a.root, out, plan, a.variant, time.time() + a.max_hours * 3600.0, contract, dry=a.dry_run, prefix='L')
+        rn.s0_grid = s0_grid_seed(s['s0_reports'])
         s['env_scrubbed'] = rn.scrubbed
         if a.dry_run:
             print(f'dry-run — 사다리 {a.law} · 첫 런 (바닥 · 천장 · 1e4 · 1e6 · 1e8) 의 env (러너를 부르지 않는다 · 다음 점은 σ 로 정해진다)')
@@ -2363,8 +2547,9 @@ def load_ladders(dirs, variant, reg_path, contract, sid_reg, now_code=None):
                                             f'({", ".join(code_key_diff(s.get("code"), code))})')
         if after is not None and s.get('after_main') != after:
             raise Stop('MAIN_NOT_DONE', '두 변이 사다리의 주 예측 묶음이 다르다')
-        if not first and s.get('s0_reports') != s0reps:      # ★ PF2 B — 두 사다리가 같은 단계 2 봉인을 읽었나
-            raise Stop('S0_REPORT_MISMATCH', '두 사다리의 S0 단계 보고 기록이 다르다')
+        #  ★ PF2 B — 두 사다리가 같은 단계 2 봉인을 읽었나 · ★ 10-25 묶음 B (RCA2-03) — 경로 문자열 (보고 · 원 입력 파일) = 대조 밖
+        if not first and s0_records_key(s.get('s0_reports')) != s0_records_key(s0reps):
+            raise Stop('S0_REPORT_MISMATCH', '두 사다리의 S0 단계 보고 기록이 다르다 (경로 뺀 칸)')
         first, s0reps = False, s.get('s0_reports')
         plan, plan_sha, code, s0, after = s['plan']['content'], s['plan']['sha256'], s.get('code') or {}, s.get('s0_plan'), s.get('after_main')
         L = s['ladder']
@@ -2406,7 +2591,7 @@ def stage_predict(a, contract):
         return 3
     s = summary_base('predict', a)
     s.update({'variant': a.variant, 'kit': a.kit or DBE_KIT, 'runs': [], 'ladders': {}, 'checks': None, 'origin': None,
-              'env_scrubbed': [], 'after_main': None, 'sv_cf': None})
+              'env_scrubbed': [], 'after_main': None, 'sv_cf': None, 'bed': None})
     ran = False
     try:
         if (a.kit or DBE_KIT) != DBE_KIT:
@@ -2430,8 +2615,11 @@ def stage_predict(a, contract):
         for p in (Path(a.root) / SBE_KIT, Path(a.root) / DBE_KIT, Path(a.runner)):
             if not p.exists():
                 raise Stop('KIT_MISSING', f'{p}')
+        #  ★ 10-25 묶음 B (RCA2-03 · Q3 (가) · 판정문 §4 F8) — R 런 직전 SBE · DBE 킷 다시 해시 = S0 단계 1 · 2 보고의 원 입력 · 설정
+        s['bed'] = bed_problem(s0reps, a.root, (SBE_KIT, DBE_KIT))
         rn = Runner(a.runner, a.root, out, plan, a.variant, time.time() + a.max_hours * 3600.0, contract, dry=a.dry_run, prefix='P')
         rn.sid_reg = sid_reg
+        rn.s0_grid = s0_grid_seed(s0reps)
         s['env_scrubbed'] = rn.scrubbed
         pr = Predict(rn.run, lads, a.variant, sv_scope=scope)
         if a.dry_run:
@@ -2654,13 +2842,14 @@ PUB_FROM_ASSEMBLE = ('verdict', 'state', 'flags', 'blocking_flags', 'blocking_re
                      'sentence')
 
 
-def verdict_compute(dirs, reg_path, contract):
-    """판정 계산기 (§5 · 설계 §7) — 원 팔 JSON 전부에서.  → (공개 dict, 결과 dict | None).  입력 계약 실패 = Stop."""
+def verdict_compute(dirs, reg_path, contract, root):
+    """판정 계산기 (§5 · 설계 §7) — 원 팔 JSON 전부에서.  → (공개 dict, 결과 dict | None).  입력 계약 실패 = Stop.  ★ 10-25 묶음 B
+    (RCA2-03) — root = 킷 뿌리 (SBE · DBE 킷을 S0 와 같은 발견 함수로 다시 해시해 단계 기록의 S0 원 입력과 대조 · 경로 = 대조 밖)."""
     pub = {'tool': TOOL, 'schema': SCHEMA, 'stage': 'verdict', 'verdict': None, 'state': None, 'stop': None, 'flags': [],
            'blocking_flags': [], 'blocking_reasons': {}, 'sensitivity_incomplete': None, 'qualifiers': list(QUALIFIERS),
            'report_category': {REPORT_CATEGORY: list(ASSUMED_UNVALIDATED)},
            'verdict_note': VERDICT_NOTE, 'sentence_allowed': False, 'sentence': None, 'calib': {}, 'variants': {},
-           'inputs': [], 'arms': [], 'registration': None, 'grid_sentence': GRID_SENTENCE, 'reasons': []}
+           'inputs': [], 'arms': [], 'registration': None, 'grid_sentence': GRID_SENTENCE, 'reasons': [], 'bed': None}
     stages, seen = [], set()
     for d in dirs:
         rd = Path(d).resolve()
@@ -2712,12 +2901,15 @@ def verdict_compute(dirs, reg_path, contract):
         got = s0_reports_problem(s.get('s0_reports'), plan_hash, s0_hash, c.get('files'), c.get('runner_files'))
         if got:
             raise Stop(got[0], f'{rd.name}: {got[1]}')
-        if not s0r_first and s.get('s0_reports') != s0r0:
-            raise Stop('S0_REPORT_MISMATCH', f'{rd.name}: S0 단계 보고 기록 ≠ 다른 판정 입력 단계의 기록')
+        if not s0r_first and s0_records_key(s.get('s0_reports')) != s0_records_key(s0r0):   # ★ 10-25 묶음 B — 경로 = 대조 밖
+            raise Stop('S0_REPORT_MISMATCH', f'{rd.name}: S0 단계 보고 기록 ≠ 다른 판정 입력 단계의 기록 (경로 뺀 칸)')
         s0r_first, s0r0 = False, s.get('s0_reports')
         for r in s.get('runs') or []:
             for x in r.get('arms_read') or []:
                 pub['arms'].append({'path': str(rd / r['outdir'] / x['file']), 'sha256': x['sha256']})
+    #  ★ 10-25 묶음 B (RCA2-03 · Q3 (가)) — 판정 때 킷 다시 해시 (SBE · DBE · 판정 기계의 자기 사본) = 단계 기록의 S0 원 입력 · 설정 (단계끼리 같은
+    #    기록이어도 킷과 대조 · 기록만 같게 손댄 꼴을 잡는다) · 공개 칸 = 경로 뺀 지문
+    pub['bed'] = bed_problem(s0r0, root, (SBE_KIT, DBE_KIT))
     lad_in, pred_in = {}, {}
     for rd, s, h in stages:
         k = (s.get('variant'), s.get('law')) if s.get('stage') == 'ladder' else s.get('variant')
@@ -2876,7 +3068,7 @@ def _stopped_pub(e, dirs, reg):
 
 def stage_verdict(a, contract):
     if a.reverify:
-        return reverify(a.reverify, contract)
+        return reverify(a.reverify, contract, a.root)
     out = Path(a.out)
     try:
         outdir_empty_or_stop(out)
@@ -2885,7 +3077,7 @@ def stage_verdict(a, contract):
         return 3
     rc_ = 0
     try:
-        pub, res = verdict_compute(a.runs, a.registration, contract)
+        pub, res = verdict_compute(a.runs, a.registration, contract, a.root)
     except Stop as e:
         print_stop(e)
         pub, res, rc_ = _stopped_pub(e, a.runs, a.registration), None, 3
@@ -2915,8 +3107,9 @@ def stage_verdict(a, contract):
     return rc_
 
 
-def reverify(vdir, contract):
-    """다시 판정 (읽기 전용) — 같은 입력 (판정 JSON 에 적힌 폴더 · 등록) 으로 다시 계산해 두 JSON 을 바이트 대조."""
+def reverify(vdir, contract, root):
+    """다시 판정 (읽기 전용) — 같은 입력 (판정 JSON 에 적힌 폴더 · 등록) 으로 다시 계산해 두 JSON 을 바이트 대조.  ★ 10-25 묶음 B (RCA2-03) —
+    root = 그 기계의 킷 뿌리 (킷을 다시 해시 · 같은 침대가 아니면 다른 판정 = REVERIFY_DIFF)."""
     vdir = Path(vdir)
     try:
         old_pub = (vdir / 'verdict.json').read_bytes()
@@ -2929,7 +3122,7 @@ def reverify(vdir, contract):
     dirs = pub0.get('input_dirs') or []
     reg = (pub0.get('registration') or {}).get('path') if isinstance(pub0.get('registration'), dict) else pub0.get('registration')
     try:
-        pub, res = verdict_compute(dirs, reg, contract)
+        pub, res = verdict_compute(dirs, reg, contract, root)
     except Stop as e:
         pub, res = _stopped_pub(e, dirs, reg), None
     pub['input_dirs'] = dirs
@@ -2957,7 +3150,8 @@ def main(argv=None, contract=None):
     ap.add_argument('--after-main', default=None, help='ladder · predict 의 --variant — 끝난 주 예측 폴더 (Q-F · 판정이 묶음을 대조한다)')
     ap.add_argument('--kit', default=None, help=f'ladder = {SBE_KIT} · predict = {DBE_KIT} (등록 · 다르면 멈춤)')
     ap.add_argument('--runner')
-    ap.add_argument('--root', help='킷 폴더가 있는 곳 = 러너 작업 폴더')
+    ap.add_argument('--root', help='킷 폴더가 있는 곳 = 러너 작업 폴더 · ★ 10-25 묶음 B (RCA2-03) — 판정 · 다시 판정도 필수 (킷을 S0 와 같은 '
+                                   '발견 함수로 다시 해시해 S0 보고의 원 입력과 대조 · 기계마다 자기 사본 · 경로 = 대조 밖)')
     ap.add_argument('--plan', help='ladder — R 런 계획 파일 (rint-r-plan-v2 · 등록 §2-1 개정 커밋의 대상 · sha256 = 그 칸)')
     ap.add_argument('--s0-plan', help='ladder — S0 단계 1 계획 (ca-cjunc-plan-v1 · 정준 바이트 · sha256 = 등록 §2-1 S0 계획 해시 칸) · '
                                       '두 계획 대조 (§2-1 · §10-2 ⑪)')
@@ -2994,9 +3188,12 @@ def main(argv=None, contract=None):
             ap.error('--stage predict 는 --ladders · --runner · --root · --max-hours · --out 이 필요하다')
         return stage_predict(a, contract)
     if a.reverify:
+        if not a.root:
+            ap.error('--reverify 는 --root (킷 뿌리 — 침대를 다시 해시할 곳 · ★ 10-25 묶음 B · RCA2-03) 가 필요하다')
         return stage_verdict(a, contract)
-    if not (a.runs and a.out):
-        ap.error('--stage verdict 는 --runs · --out 이 필요하다 (또는 --reverify <판정 폴더>)')
+    if not (a.runs and a.out and a.root):
+        ap.error('--stage verdict 는 --runs · --root · --out 이 필요하다 (또는 --reverify <판정 폴더> --root <킷 뿌리>) — --root = 킷을 다시 '
+                 '해시할 곳 (★ 10-25 묶음 B · RCA2-03)')
     return stage_verdict(a, contract)
 
 

@@ -469,7 +469,7 @@ python3 ~/dem-ca1/scripts/<사다리 사슬> --stage predict --ladders ~/sdcp/ca
 python3 ~/dem-ca1/scripts/<사다리 사슬> --stage verdict --runs ~/sdcp/ca1_ladder_P0 ~/sdcp/ca1_ladder_P1 ~/sdcp/ca1_predict <origin · 감도 · 격자 폴더> --out ~/sdcp/ca1_verdict
 ```
 
-- (10-21) **실제 명령** — 사슬 CLI = `scripts/rint_r_chain.py` 머리 (Z2 보고 꼴: `--stage ladder` (`--law` · `--target` · `--runner` · `--root` · `--plan` · `--max-hours` · `--out` · [`--variant FIBRE|UNREG|GRID`] · [`--dry-run`] · (10-22 · PRE2-design-01 · Q2) `--s0-stage2-report` 필수 · (10-22 · PF2 D · PRE2-design-08) `--s0-stage1-report` 필수 · [`--machine`]) · `predict` (`--ladders` 둘 · `--kit` · `--runner` · `--root` · `--max-hours` · `--out` · [`--variant …|SVORDER`] · [`--machine`]) · `verdict` (`--runs` · `--out` · [`--show-results`]) · `--reverify`) · 사슬이 런마다 러너 env 를 정한다 (`CJUNC=1` · `CJUNC_RJ` (`inf` · `0` 극한) · 계획의 `CJUNC_LEN_LAW` · `CJUNC_UNREG_LAW` · `CJUNC_S_MIN_UM` · `CJUNC_TOL_FF_UM` · `STEP3_RTOL` · `P2_EXTRA` · `CJUNC_PTFE_JLAW` · `SDCP_MOD_C` · `ARM_LIST` · `SIGMA_FIBRE_BULK` · `PTFE_STAMP=face_alpha` · 부모 셸의 같은 이름꼴 env 는 지운다 · `SIGMA_VGCF_OVERRIDE` 가 있으면 멈춘다).
+- (10-21) **실제 명령** — 사슬 CLI = `scripts/rint_r_chain.py` 머리 (Z2 보고 꼴: `--stage ladder` (`--law` · `--target` · `--runner` · `--root` · `--plan` · `--max-hours` · `--out` · [`--variant FIBRE|UNREG|GRID`] · [`--dry-run`] · (10-22 · PRE2-design-01 · Q2) `--s0-stage2-report` 필수 · (10-22 · PF2 D · PRE2-design-08) `--s0-stage1-report` 필수 · [`--machine`]) · `predict` (`--ladders` 둘 · `--kit` · `--runner` · `--root` · `--max-hours` · `--out` · [`--variant …|SVORDER`] · [`--machine`]) · `verdict` (`--runs` · `--out` · [`--show-results`] · (10-25 · 묶음 B · RCA2-03 · Q3 (가)) `--root` 필수 = 킷을 S0 와 같은 발견 함수로 다시 해시 · 기계마다 자기 킷 사본) · `--reverify` (+ `--root`)) · 사슬이 런마다 러너 env 를 정한다 (`CJUNC=1` · `CJUNC_RJ` (`inf` · `0` 극한) · 계획의 `CJUNC_LEN_LAW` · `CJUNC_UNREG_LAW` · `CJUNC_S_MIN_UM` · `CJUNC_TOL_FF_UM` · `STEP3_RTOL` · `P2_EXTRA` · `CJUNC_PTFE_JLAW` · `SDCP_MOD_C` · `ARM_LIST` · `SIGMA_FIBRE_BULK` · `PTFE_STAMP=face_alpha` · 부모 셸의 같은 이름꼴 env 는 지운다 · `SIGMA_VGCF_OVERRIDE` 가 있으면 멈춘다).
 - ⚠ 이 CLI 는 지금 코드 그대로 · ~~등록 R 3판 규칙 (실제 역상 끝 · origin 세 R · 상태 분기 · 법칙별 구간 · 차단 표지 닫힌 집합 · 같은 판정 함수 · §5-3 문장) 은 아직 사슬에 없다 → 메인 통합 (시험 먼저) 뒤 CLI 가 바뀌면 이 블록을 다시 고친다.  (10-21 · 개정 2) 4판 규칙 (끝 origin = 세 origin 합집합 · 보호 띠 · 이름 우선순위 · 결정표 · 변이 표지) 도 아직 사슬에 없다 (등록 R §10-3).~~ → (10-22 · 사전 리뷰 2 회차 PRE2-design-04 · 지금 동작) 3판 · 4판 규칙은 사슬에 들어갔다 (메인 통합 · 등록 R §10-1 머리 · §10-3 4판 행 · 시험 `scripts/test_rint_r_chain.py`) · 바뀐 CLI = 아래 블록 (사다리 `--s0-plan` · `--s0-stage2-report` · `--s0-stage1-report` 필수 · 감도 단계 `--after-main` 필수 · 사다리 · 예측 [`--machine`]).
 - **(10-21 · 사전 리뷰 PRE-design-06 · 1저자 Q-F 권고대로) 순서 = 주 판정 먼저** — ① (3) 사다리 P0 · P1 → (4) 주 예측 → (5) **주 판정** (감도 폴더 없이 · 그 판 = `*_UNCHECKED` 표지 (지금 사슬 = 변이 폴더가 없으면 `<V>_UNCHECKED` · `scripts/rint_r_chain.py` ~~1298–1303 행 · 코드 읽기 · 시험 전~~ → (10-22 · PRE2-design-04) `assemble` (줄 번호는 판마다 바뀐다) · 시험 V02) · 결과 문장 한정어 *"감도 미완료"* · 10-31 판정 = 이것) → ② 감도 (FIBRE · UNREG · GRID 사다리 + 예측 · SVORDER 예측) → (5) **전체 판정** (새 `--out` · 같은 주 판정 런 + 감도 폴더 · 두 기록을 나란히) · 시간 = 등록 R §10-4 (① 78 팔 ~~≈ 56 h · ×1.7–2 = 95–112 h~~ → (10-22 · PRE2-design-03 · Q3) ≈ 191–231 h [추정 · 합성 침대 반복 비] · ② 264 팔 · ×1.7–2 = 392–462 h [우리 산술 · 옛 어림]) · 주 판정을 본 뒤 감도를 빼거나 바꾸지 않는다.
 
@@ -511,9 +511,11 @@ python3 ~/dem-ca1/scripts/rint_r_chain.py --stage ladder --law P1 --target 1.63 
 python3 ~/dem-ca1/scripts/rint_r_chain.py --stage predict --ladders ~/sdcp/ca1_ladder_P0 ~/sdcp/ca1_ladder_P1 --kit kit_DBE_sdcp1um_vgcf100 \
     --runner ~/dem-ca1/scripts/sdcp_gain_vox015_8arm.sh --root ~/sdcp --max-hours <등록 R §10 시간 상한> --out ~/sdcp/ca1_predict
 # (5a) (10-21 · Q-F) 주 판정 — 감도 폴더 없이 · 값 열람 = 주 판정 런이 다 끝난 뒤 · 감도 런 전 (등록 R §4-1 · 열람 기록에 순서 · 시각) · 10-31 판정 = 이것
+#     (10-25 · 묶음 B · RCA2-03 · Q3 (가)) --root = 킷 뿌리 (판정 · 다시 판정이 SBE · DBE 킷을 다시 해시해 S0 보고의 원 입력과 대조 · 다르면
+#     S0_REPORT_MISMATCH · 재압밀 · 재생성 침대 = 새 S0) · 사다리 · 예측도 R 직전에 같은 대조 (사다리 = SBE · 예측 = SBE · DBE)
 python3 ~/dem-ca1/scripts/rint_r_chain.py --stage verdict --runs ~/sdcp/ca1_ladder_P0 ~/sdcp/ca1_ladder_P1 ~/sdcp/ca1_predict \
-    --out ~/sdcp/ca1_verdict_main [--show-results]
-python3 ~/dem-ca1/scripts/rint_r_chain.py --stage verdict --reverify ~/sdcp/ca1_verdict_main
+    --root ~/sdcp --out ~/sdcp/ca1_verdict_main [--show-results]
+python3 ~/dem-ca1/scripts/rint_r_chain.py --stage verdict --reverify ~/sdcp/ca1_verdict_main --root ~/sdcp
 # 감도 (필수 · 등록 R §5-6 · (10-21 · Q-F) 주 판정 뒤): FIBRE · UNREG · GRID = 사다리 둘 (--variant <이름> --law P0 · P1) + 예측 (--variant <이름> --ladders <그 변이 사다리 둘>) ·
 #   SVORDER = 예측만 (--variant SVORDER --ladders ~/sdcp/ca1_ladder_P0 ~/sdcp/ca1_ladder_P1) · 출력 폴더는 런마다 새로 (예 ~/sdcp/ca1_ladder_P0_FIBRE)
 #   (10-22 · 사전 리뷰 2 회차 PRE2-design-05) 감도 단계마다 (사다리 · 예측) --after-main ~/sdcp/ca1_predict (끝난 주 예측 · 없으면 MAIN_NOT_DONE · 등록 R §10-1)
@@ -526,8 +528,8 @@ python3 ~/dem-ca1/scripts/rint_r_chain.py --stage ladder --variant FIBRE --after
 # (5) (전체) 판정 — 원 팔 JSON 전부에서 · 값은 --show-results 로 한 번 (판정에 쓰는 런이 다 끝난 뒤 · 열람 기록) · 다시 판정 = 읽기 전용 바이트 대조
 #     (10-21 · Q-F) 주 판정 (5a) 뒤 두 번째 열람 — 같은 주 판정 런 + 감도 폴더 · 주 판정 숫자는 바뀌지 않는다
 python3 ~/dem-ca1/scripts/rint_r_chain.py --stage verdict --runs ~/sdcp/ca1_ladder_P0 ~/sdcp/ca1_ladder_P1 ~/sdcp/ca1_predict <감도 폴더 전부> \
-    --out ~/sdcp/ca1_verdict [--show-results]
-python3 ~/dem-ca1/scripts/rint_r_chain.py --stage verdict --reverify ~/sdcp/ca1_verdict
+    --root ~/sdcp --out ~/sdcp/ca1_verdict [--show-results]
+python3 ~/dem-ca1/scripts/rint_r_chain.py --stage verdict --reverify ~/sdcp/ca1_verdict --root ~/sdcp
 ```
 
 ## 4. 미리 보이는 쟁점 (S0 단계 1 숫자 **전에** 1저자 · Codex 가 볼 것)

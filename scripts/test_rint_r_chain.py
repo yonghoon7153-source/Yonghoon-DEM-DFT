@@ -671,6 +671,50 @@ def plan_commit(pb, rel=R_PLAN_REL):
     return FX[key]
 
 
+# ═════════════════════════ ★ 10-25 묶음 B (RCA2-03 · 1저자 10-23 Q3 (가)) S0 꼴 킷 · S0 보고의 같은 침대 칸 ═════════════════════════
+def make_kits(root):
+    """S0 꼴 킷 둘 (SBE = 섬유 하나 · PTFE · DBE = 섬유 둘 · PTFE · SDCP 하나) — `test_ca_s0_census.write_kit` 꼴 · latest_run = 상대 링크 (킷 뿌리를
+    통째로 옮긴 사본이 제 파일을 가리키게 = 경로만 다른 같은 사본) → 뿌리 경로."""
+    import test_ca_s0_census as T
+    root = Path(root)
+    root.mkdir(parents=True, exist_ok=True)
+    T.write_kit(str(root), SBE_KIT, vgcf=[T.F1], ptfe=[T.P1], vol={'VGCF': 0.04, 'PTFE': 0.1})
+    T.write_kit(str(root), DBE_KIT, vgcf=[T.F1, T.F2], ptfe=[T.P1], sdcp=T.S1, vol={'VGCF': 0.04, 'PTFE': 0.1, 'SDCP': T.V_SDCP1})
+    for k in (SBE_KIT, DBE_KIT):
+        lr = root / k / 'latest_run'
+        tgt = os.path.basename(os.readlink(lr))
+        lr.unlink()
+        os.symlink(tgt, lr)
+    return root
+
+
+def hx(s):
+    """가짜 러너의 지문 식 (FAKE_SRC 의 hx 와 같은 식 — 시험 프로세스 쪽 사본 · S0 보고의 off 격자 지문 = 가짜 러너 arm 0 sid 지문)."""
+    return hashlib.blake2b(s.encode(), digest_size=16).hexdigest()
+
+
+#: S0 보고의 파생 칸 규약 (사슬 고정값과 같다 — 같은 규약일 때만 off 격자 지문을 대조한다)
+S0_CONV = {'vox_um': 0.15, 'bridge_um': 0.48, 'sdcp_sphere_d_um': 0.30, 'ptfe_stamp_captured': 'centerline', 'fibre_stamp': 'segment',
+           'origin_shift_um': [0.0, 0.0, 0.0], 'fid_gap_tol': 2.0, 'off_grid': 'fixture (test_rint_r_chain)'}
+
+
+def s0_bed_fields(kit, root=None):
+    """S0 보고의 inputs · raster 칸 (가짜 보고) — inputs = `ca_s0_census.kit_input_record` (S0 와 같은 함수 · 고정물 킷) · raster = 규약 S0_CONV ·
+    off 격자 지문 = 가짜 러너의 arm 0 (origin 0 · 래스터 vox 0.15 · 양보 없음) sid 지문 식 그대로.  고치기 전 판 (함수 없음) = inputs 없음."""
+    import ca_s0_census as S0m
+    out = {'raster': {'convention': copy.deepcopy(S0_CONV), 'grid_shape': [10, 10, 10], 'box_lo_um': [0.0, 0.0, 0.0],
+                      'box_hi_um': [1.5, 1.5, 1.5], 'cells_by_sid': {'prod': {'0': 900, '3': 100}, 'off': {'0': 900, '3': 100},
+                                                                     'nosdcp': None, 'off_nosdcp': None},
+                      'sid_off_fp': hx('sid|%s|%r|%s|%d' % (kit, 0.15, False, 0))}}
+    f = getattr(S0m, 'kit_input_record', None)
+    if callable(f) and (Path(root or FX['root']) / kit).is_dir():     # 고정물 뿌리에 없는 킷 이름 (B04 옛 kit_DBE) = 원 입력 칸 없음
+        key = ('bed', str(root or FX['root']), kit)
+        if key not in FX:
+            FX[key] = f(str(Path(root or FX['root']) / kit))
+        out['inputs'] = copy.deepcopy(FX[key])
+    return out
+
+
 # ═════════════════════════ 고정물 · 단계 호출 ═════════════════════════
 def fixtures():
     (Path(TD) / 'fake.py').write_text(FAKE_SRC, encoding='utf-8')
@@ -680,9 +724,9 @@ def fixtures():
     FX['runner'] = FX['code_sd'] / 'sdcp_gain_vox015_8arm.sh'
     FX['here_real'] = RR.HERE
     RR.HERE = FX['code_sd']
-    FX['root'] = Path(TD) / 'root'
-    for k in (SBE_KIT, DBE_KIT):
-        (FX['root'] / k).mkdir(parents=True)
+    #  ★ 10-25 묶음 B (RCA2-03) — 킷 = S0 꼴 (사슬이 R 직전 · 판정 때 S0 와 같은 발견 함수로 킷 파일을 다시 해시한다 · 가짜 러너는 킷을 읽지 않는다 ·
+    #    옛 = 빈 폴더)
+    FX['root'] = make_kits(Path(TD) / 'root')
     #  ★ 3판 — R 런 계획 v2 (결과 전 등록 숫자 넷 = 시험 값 · 등록 숫자가 아니다) · S0 단계 1 계획 (정본 함수 make_plan · 정준 바이트)
     plan = {'schema': 'rint-r-plan-v2', 'len_law': 'len_scaled_v0', 'unreg_law': 'cut', 's_min_um': 0.6, 'tol_ff_um': 0.05,
             'step3_rtol': 1e-12, 'p2_extra': '--step3-maxiter 60000', 'max_ladder_points': 16, 'calib_rj_ratio_max': 'none',
@@ -763,11 +807,15 @@ def s0_report(stage, name, plan_sha=None, s0_sha=None, kit=None, mutate=None, ra
               'r_plan': {'path': R_PLAN_REL, 'sha256': plan_sha or FX['plan_sha'],
                          's_min_um': 0.6, 'tol_ff_um': 0.05, 'len_law': 'len_scaled_v0', 'unreg_law': 'cut', 'step3_rtol': 1e-12,
                          'checked': 'fixture'}}
+    kn = kit or (SBE_KIT if stage == 1 else DBE_KIT)
     rep = {'schema': S0m.SCHEMA, 'stage': stage, 'tool': S0m.TOOL_VERSION,
-           'kit': {'name': kit or (SBE_KIT if stage == 1 else DBE_KIT)}, 'plan': pl,
+           'kit': {'name': kn}, 'plan': pl,
            'code': {'git_head': 'b' * 40, 'git_dirty': False,
                     'file_digests': [{'file': nm, 'sha256': hashlib.sha256((SCRIPTS / nm).read_bytes()).hexdigest()}
                                      for nm in S0_SAME7]}}
+    #  ★ 10-25 묶음 B (RCA2-03 · Q3 (가)) — 원 입력 (S0 와 같은 함수 `kit_input_record` 로 고정물 킷을 해시 · 역할 7 · metrics · 설정) · 파생 칸
+    #    (규약 = 사슬 고정값 · off 격자 지문 = 가짜 러너의 arm 0 sid 지문 식) — 고치기 전 판 (함수 없음) = 원 입력 칸 없음
+    rep.update(s0_bed_fields(kn))
     if mutate is not None:
         mutate(rep)
     p.write_text(json.dumps(rep, ensure_ascii=False, indent=1), encoding='utf-8')
@@ -845,12 +893,12 @@ def pass_contract():
 
 
 def ladder(tag, wpath, law='P0', variant=None, extra=(), reg=None, max_hours='2', env=None, prefill=False, contract=None,
-           plan=None, s0=None, after=None, s2=None, s1=None):
+           plan=None, s0=None, after=None, s2=None, s1=None, root=None):
     out = Path(TD) / 'runs' / tag
     if prefill:
         out.mkdir(parents=True)
         (out / 'old.txt').write_text('x')
-    argv = ['--stage', 'ladder', '--law', law, '--target', '1.63', '--runner', FX['runner'], '--root', FX['root'],
+    argv = ['--stage', 'ladder', '--law', law, '--target', '1.63', '--runner', FX['runner'], '--root', root or FX['root'],
             '--plan', plan or FX['plan'], '--s0-plan', s0 or FX['s0'], '--registration', reg or FX['reg_ok'], '--max-hours', max_hours,
             '--out', out] + s0_args(plan or FX['plan'], s2, s1)
     if variant:
@@ -862,9 +910,9 @@ def ladder(tag, wpath, law='P0', variant=None, extra=(), reg=None, max_hours='2'
             'world': wpath}
 
 
-def predict(tag, wpath, ladders, variant=None, extra=(), reg=None, max_hours='2', after=None):
+def predict(tag, wpath, ladders, variant=None, extra=(), reg=None, max_hours='2', after=None, root=None):
     out = Path(TD) / 'runs' / tag
-    argv = ['--stage', 'predict', '--ladders', *ladders, '--kit', DBE_KIT, '--runner', FX['runner'], '--root', FX['root'],
+    argv = ['--stage', 'predict', '--ladders', *ladders, '--kit', DBE_KIT, '--runner', FX['runner'], '--root', root or FX['root'],
             '--registration', reg or FX['reg_ok'], '--max-hours', max_hours, '--out', out]
     if variant:
         argv += ['--variant', variant, '--after-main', after if after is not None else s_main_predict()['out']]
@@ -874,9 +922,11 @@ def predict(tag, wpath, ladders, variant=None, extra=(), reg=None, max_hours='2'
             'world': wpath}
 
 
-def verdict(tag, dirs, extra=(), reg=None):
+def verdict(tag, dirs, extra=(), reg=None, root=None):
+    """판정 — ★ 10-25 묶음 B (RCA2-03) --root = 킷 뿌리 (판정이 침대를 다시 해시한다 · 기본 = 고정물 뿌리)."""
     out = Path(TD) / 'runs' / tag
-    rc, so = call(['--stage', 'verdict', '--runs', *dirs, '--registration', reg or FX['reg_ok'], '--out', out] + list(extra))
+    rc, so = call(['--stage', 'verdict', '--runs', *dirs, '--registration', reg or FX['reg_ok'], '--root', root or FX['root'], '--out', out]
+                  + list(extra))
     vp, rp = out / 'verdict.json', out / 'verdict_results.json'
     return {'rc': rc, 'out': out, 'so': so, 'v': json.loads(vp.read_text(encoding='utf-8')) if vp.exists() else None,
             'r': json.loads(rp.read_text(encoding='utf-8')) if rp.exists() else None}
@@ -1761,7 +1811,7 @@ def t_V09():
 def t_V10():
     v = s_verdict_main()
     before = {p: p.read_bytes() for p in Path(v['out']).iterdir() if p.is_file()}
-    rc, so = call(['--stage', 'verdict', '--reverify', v['out'], '--registration', FX['reg_ok']])
+    rc, so = call(['--stage', 'verdict', '--reverify', v['out'], '--registration', FX['reg_ok'], '--root', FX['root']])
     after = {p: p.read_bytes() for p in Path(v['out']).iterdir() if p.is_file()}
     return rc == 0 and 'REVERIFY_SAME' in so and before == after, (rc, so[-300:])
 
@@ -1784,7 +1834,7 @@ def t_V11():
         d['mpm_metrics']['step3']['sigma_e_eff_S_cm'] *= 1.01
         d['mpm_metrics']['step3']['conv_cert']['sigma'] *= 1.01
         p.write_text(json.dumps(d), encoding='utf-8')
-        rc, so = call(['--stage', 'verdict', '--reverify', v['out'], '--registration', FX['reg_ok']])
+        rc, so = call(['--stage', 'verdict', '--reverify', v['out'], '--registration', FX['reg_ok'], '--root', FX['root']])
         return {'v': v, 'rc': rc, 'so': so}
     r = scen('V11', go)
     return r['v']['rc'] == 0 and r['rc'] == 1 and 'REVERIFY_DIFF' in r['so'], (r['v']['rc'], r['rc'], r['so'][-300:])
@@ -3606,7 +3656,7 @@ def eval_V22(tag):
                'INPUT_STAGE_STOPPED 로 판정 전체 거부)')
 def t_V21():
     ok, why = eval_V21('V21_v')
-    rc, so = call(['--stage', 'verdict', '--reverify', Path(TD) / 'runs' / 'V21_v', '--registration', FX['reg_ok']])
+    rc, so = call(['--stage', 'verdict', '--reverify', Path(TD) / 'runs' / 'V21_v', '--registration', FX['reg_ok'], '--root', FX['root']])
     return ok and rc == 0 and 'REVERIFY_SAME' in so, (why, rc, so[-200:])
 
 
@@ -4422,26 +4472,39 @@ def t_D19():
     return (r['rc'] == 3 and stop_code(r) == 'CODE_PIN_MISMATCH' and n_calls(r['world']) == 0, (r['rc'], stop_code(r), n_calls(r['world'])))
 
 
-@check('B10', '예측 — 두 사다리의 단계 2 기록이 경로만 다르다 (각각은 봉인 해시 대조 통과) → S0_REPORT_MISMATCH (두 사다리 기록 다름) · 러너 0 회 · '
-              '어느 순서로 넘겨도')
+@check('B10', '예측 — 두 사다리의 단계 2 기록이 경로만 다르다 (보고 경로 · 원 입력 파일 경로 · 두 기계 꼴) → ★ 10-25 묶음 B (RCA2-03 · Q3 (가) · '
+              '경로 문자열 = 대조 밖) PREDICTED · 어느 순서로 넘겨도 (옛 = S0_REPORT_MISMATCH · 경로만 다른 같은 기록을 막았다) · 경로 아닌 칸 '
+              '(봉인 R 계획 sha256) 이 다르면 그대로 멈춤 = B05')
 def t_B10():
+    def moved(s):
+        r2 = s['s0_reports']['stage2']
+        r2.update(path='/elsewhere/s0_stage2_kit_DBE_sdcp1um_vgcf100.json')
+        for x in ((r2.get('inputs') or {}).get('files') or {}).values():
+            x['path'] = '/elsewhere/' + os.path.basename(x['path'])
+
     def go():
-        x = b_tamper_copy(s_main('P1')['out'], 'B10_P1', 'ladder_summary.json',
-                          lambda s: s['s0_reports']['stage2'].update(path='/elsewhere/s0_stage2_kit_DBE_sdcp1um_vgcf100.json'))
+        x = b_tamper_copy(s_main('P1')['out'], 'B10_P1', 'ladder_summary.json', moved)
         return predict('B10a', world('B10a'), [s_main('P0')['out'], x]), predict('B10b', world('B10b'), [x, s_main('P0')['out']])
     rs = scen('B10', go)
-    return (all(r['rc'] == 3 and stop_code(r) == 'S0_REPORT_MISMATCH' and n_calls(r['world']) == 0 for r in rs),
-            [(r['rc'], stop_code(r), n_calls(r['world'])) for r in rs])
+    return (all(r['rc'] == 0 and (r['sum'] or {}).get('status') == 'PREDICTED' for r in rs),
+            [(r['rc'], stop_code(r), y_why(r)[-160:]) for r in rs])
 
 
-@check('B11', '판정 — 예측 요약의 단계 2 기록이 경로만 다르다 (봉인 해시 대조 통과) → S0_REPORT_MISMATCH (단계끼리 기록 다름) · NOT_COMPUTED · rc 3')
+@check('B11', '판정 — 예측 요약의 단계 2 기록이 경로만 다르다 (보고 경로 · 원 입력 파일 경로) → ★ 10-25 묶음 B (RCA2-03 · Q3 (가) · 경로 = 대조 밖) '
+              '판정 = 주 판정과 같은 이름 (옛 = S0_REPORT_MISMATCH · NOT_COMPUTED)')
 def t_B11():
+    def moved(s):
+        r2 = s['s0_reports']['stage2']
+        r2.update(path='/elsewhere/s0_stage2_kit_DBE_sdcp1um_vgcf100.json')
+        for x in ((r2.get('inputs') or {}).get('files') or {}).values():
+            x['path'] = '/elsewhere/' + os.path.basename(x['path'])
+
     def go():
-        d = b_tamper_copy(s_main_predict()['out'], 'B11_pred', 'predict_summary.json',
-                          lambda s: s['s0_reports']['stage2'].update(path='/elsewhere/s0_stage2_kit_DBE_sdcp1um_vgcf100.json'))
+        d = b_tamper_copy(s_main_predict()['out'], 'B11_pred', 'predict_summary.json', moved)
         return verdict('B11', [s_main('P0')['out'], s_main('P1')['out'], d])
     r = scen('B11', go)
-    return (r['rc'] == 3 and stop_code(r) == 'S0_REPORT_MISMATCH' and (r['v'] or {}).get('verdict') == 'NOT_COMPUTED', (r['rc'], stop_code(r)))
+    v0 = s_verdict_main()
+    return (r['rc'] == 0 and (r['v'] or {}).get('verdict') == (v0['v'] or {}).get('verdict'), (r['rc'], stop_code(r), y_why(r)[-160:]))
 
 
 @check('B12', '판정 — 세 단계 요약의 단계 2 봉인 R 계획 sha256 을 같게 손댐 (단계끼리 기록은 같음) → S0_REPORT_MISMATCH (단계마다 같은 함수로 '
@@ -4776,6 +4839,219 @@ def t_Y10():
         return out
     rs = scen('Y10', go)
     return all(y_stopped(r) for r in rs), [(r['rc'], stop_code(r), n_calls(r['world'])) for r in rs]
+
+
+# ── ★ 10-25 묶음 B (RCA2-03 · 1저자 10-23 Q3 (가) · 판정문 §4 F8) 같은 침대 — S0 보고의 원 입력 (역할 파일 sha256 · 크기 · metrics 상자 · 두께 ·
+#    설정 = 킷 payload 호출부) 을 사슬 요약에 보존 · R 런 직전 (사다리 = SBE · 예측 = SBE · DBE) 과 판정 (--root) 때 S0 와 같은 발견 함수
+#    (`ca_s0_census.kit_input_record`) 로 실제 킷을 다시 해시해 대조 (경로 = 대조 밖 · 기계마다 자기 사본) · 파생 격자 지문 (off 격자 sid) = 같은
+#    규약 (vox 0.15 · 브리지 0.48 · SDCP 구 0.30 · origin 0 · 선분 스탬프) 의 arm 0 만 · 재압밀 · 재생성 침대 = 새 S0.  옛 사슬 = 침대를 안 봐 돈다.
+def w_root(tag, edit=None):
+    """킷 뿌리 사본 (상대 latest_run = 경로만 다른 같은 사본) → 경로 · edit(뿌리) = 사본을 손댐."""
+    dst = Path(TD) / 'roots' / tag
+    shutil.copytree(FX['root'], dst, symlinks=True)
+    if edit is not None:
+        edit(dst)
+    return dst
+
+
+def w_move_fibre(kit, fid, dz=0.04):
+    """판정문 F8 꼴 — 킷 run 폴더 se_dump.npy 의 VGCF 경로 하나 (fid) 를 z 로 dz (상자 단위 · probe 와 같은 꼴) 옮김 (점 수 · 상 · fid 그대로)."""
+    def fn(root):
+        import numpy as np
+        rd = Path(os.path.realpath(Path(root) / kit / 'latest_run'))
+        x, ph, fi = np.load(rd / 'se_dump.npy'), np.load(rd / 'phase.npy'), np.load(rd / 'fibre.npy')
+        m = (ph == 2) & (fi == fid)
+        assert m.any(), (kit, fid)
+        x[m, 2] += dz
+        np.save(rd / 'se_dump.npy', x)
+    return fn
+
+
+@check('W01', '판정문 F8 — 예측 직전 DBE 킷의 섬유 한 가닥 (fid 1) 을 z 로 0.04 옮긴 킷 뿌리 사본 (점 수 · 상 · fid 같음) → 예측 S0_REPORT_MISMATCH · '
+              'rc 3 · 러너 0 회 · 사유 = S0 단계 2 보고의 침대 ≠ 지금 킷 (역할 se) · 새 S0 (옛 사슬 = 침대를 안 봐 돌았다) · 판정 (--root 그 사본) → '
+              'S0_REPORT_MISMATCH · NOT_COMPUTED')
+def t_W01():
+    def go():
+        lads, dirs = [s_main('P0')['out'], s_main('P1')['out']], main_dirs()
+        root = w_root('W01', w_move_fibre(DBE_KIT, 1))
+        return predict('W01', world('W01'), lads, root=root), verdict('W01v', dirs, root=root)
+    p, v = scen('W01', go)
+    why = y_why(p)
+    return (y_stopped(p, 'S0_REPORT_MISMATCH') and 'se' in why and '새 S0' in why and v['rc'] == 3 and stop_code(v) == 'S0_REPORT_MISMATCH'
+            and (v['v'] or {}).get('verdict') == 'NOT_COMPUTED', (p['rc'], stop_code(p), n_calls(p['world']), why[-220:], v['rc'], stop_code(v)))
+
+
+@check('W02', '사다리 직전 SBE 킷의 섬유 (fid 0) 를 z 로 0.04 옮긴 사본 → 사다리 S0_REPORT_MISMATCH · rc 3 · 러너 0 회 (사다리 = SBE 침대만 다시 해시 · '
+              'DBE 만 옮긴 사본 = 사다리 CALIBRATED)')
+def t_W02():
+    def go():
+        a = ladder('W02a', world('W02a'), root=w_root('W02a', w_move_fibre(SBE_KIT, 0)))
+        b = ladder('W02b', world('W02b'), root=w_root('W02b', w_move_fibre(DBE_KIT, 1)))
+        return a, b
+    a, b = scen('W02', go)
+    return (y_stopped(a, 'S0_REPORT_MISMATCH') and (b['sum'] or {}).get('status') == 'CALIBRATED',
+            (a['rc'], stop_code(a), n_calls(a['world']), y_why(a)[-160:], b['rc'], (b['sum'] or {}).get('status')))
+
+
+@check('W03', '다시 판정 · 판정 인자 — 주 판정을 --root 원 뿌리로 다시 → REVERIFY_SAME (rc 0) · --root 를 섬유 옮긴 사본으로 → REVERIFY_DIFF (rc 1 · '
+              '같은 침대가 아니다) · 판정 · 다시 판정에 --root 없음 → 인자 오류 rc 2 (침대를 다시 해시할 곳이 없다)')
+def t_W03():
+    v = s_verdict_main()
+    root = scen('W03_root', lambda: w_root('W03', w_move_fibre(DBE_KIT, 1)))
+    rc1, so1 = call(['--stage', 'verdict', '--reverify', v['out'], '--registration', FX['reg_ok'], '--root', FX['root']])
+    rc2, so2 = call(['--stage', 'verdict', '--reverify', v['out'], '--registration', FX['reg_ok'], '--root', root])
+    rc3, _so3 = call(['--stage', 'verdict', '--reverify', v['out'], '--registration', FX['reg_ok']])
+    rc4, _so4 = call(['--stage', 'verdict', '--runs', *main_dirs(), '--registration', FX['reg_ok'], '--out', Path(TD) / 'runs' / 'W03_noroot'])
+    return (rc1 == 0 and 'REVERIFY_SAME' in so1 and rc2 == 1 and 'REVERIFY_DIFF' in so2 and rc3 == 2 and rc4 == 2,
+            (rc1, rc2, rc3, rc4, so2[-200:]))
+
+
+@check('W04', '경로만 다른 같은 사본 (킷 뿌리 통째 사본 · 상대 latest_run · 두 기계 꼴) — 사다리 P0 (--root 사본) CALIBRATED · 예측 (--root 사본 · '
+              '사다리 = 원 뿌리) PREDICTED · 판정 (--root 사본) = 주 판정과 같은 이름 (경로 = 대조 밖 · 기계마다 자기 사본을 해시)')
+def t_W04():
+    def go():
+        lads, dirs = [s_main('P0')['out'], s_main('P1')['out']], main_dirs()
+        root = w_root('W04')
+        a = ladder('W04_P0', world('W04_P0'), law='P0', root=root)
+        p = predict('W04_pred', world('W04_pred'), lads, root=root)
+        return a, p, verdict('W04v', dirs, root=root)
+    a, p, v = scen('W04', go)
+    v0 = s_verdict_main()
+    return ((a['sum'] or {}).get('status') == 'CALIBRATED' and p['rc'] == 0 and (p['sum'] or {}).get('status') == 'PREDICTED'
+            and v['rc'] == 0 and (v['v'] or {}).get('verdict') == (v0['v'] or {}).get('verdict'),
+            ((a['sum'] or {}).get('status'), y_why(a)[-160:], p['rc'], stop_code(p), y_why(p)[-160:], v['rc'], stop_code(v)))
+
+
+@check('W05', 'S0 보고의 같은 침대 칸 꼴 — 단계 1: inputs 없음 (옛 꼴) · 역할 se 없음 · 모르는 역할 · sha256 대문자 · bytes bool · settings_sha256 없음 · '
+              'raster.sid_off_fp 없음 · 옛 schema (ca-s0-census-v2) · 단계 2: inputs 없음 → S0_REPORT_MISMATCH · 러너 0 회 (옛 사슬 = 그 칸을 안 봐 '
+              '돌았다)')
+def t_W05():
+    def drop_inputs(r):
+        r.pop('inputs', None)
+
+    def files(fn):
+        return lambda r: fn(r['inputs']['files'])
+
+    def upper_se(fs):
+        fs['se']['sha256'] = fs['se']['sha256'].upper()
+
+    def bool_bytes(fs):
+        fs['phase']['bytes'] = True
+    cases1 = (
+        ('inputs 없음', drop_inputs),
+        ('se 없음', files(lambda fs: fs.pop('se'))),
+        ('모르는 역할', files(lambda fs: fs.update(extra={'path': '/x', 'sha256': '0' * 64, 'bytes': 1}))),
+        ('sha256 대문자', files(upper_se)),
+        ('bytes bool', files(bool_bytes)),
+        ('settings 없음', lambda r: r['inputs'].pop('settings_sha256')),
+        ('sid_off_fp 없음', lambda r: r['raster'].pop('sid_off_fp')),
+        ('옛 schema', lambda r: r.update(schema='ca-s0-census-v2')),
+    )
+    rs = [(nm, c_case(f'W05_{i}', 'S0_REPORT_MISMATCH', s1=s0_report(1, f'W05_{i}', mutate=fn))) for i, (nm, fn) in enumerate(cases1)]
+    rs.append(('단계 2 inputs 없음', c_case('W05_s2', 'S0_REPORT_MISMATCH', s2=s0_report(2, 'W05_s2', mutate=drop_inputs))))
+    return all(x[1][0] for x in rs), [(nm, x[1]) for nm, x in rs if not x[0]]
+
+
+@check('W06', '설정 = 킷 run_mpm.sh 의 payload 호출부 — DBE 킷 payload 줄 --n-vox 48 → 64 (원 입력 파일은 같음) → 예측 S0_REPORT_MISMATCH · 러너 0 회 · '
+              '사유 = 설정 · payload 호출부 밖 주석만 바꿈 → 예측 PREDICTED')
+def t_W06():
+    def edit(new):
+        def fn(root):
+            p = Path(root) / DBE_KIT / 'run_mpm.sh'
+            p.write_text(new(p.read_text(encoding='utf-8')), encoding='utf-8')
+        return fn
+
+    def go():
+        lads = [s_main('P0')['out'], s_main('P1')['out']]
+        a = predict('W06a', world('W06a'), lads, root=w_root('W06a', edit(lambda t: t.replace('--n-vox 48', '--n-vox 64'))))
+        b = predict('W06b', world('W06b'), lads,
+                    root=w_root('W06b', edit(lambda t: t.replace('set -uo pipefail\n', 'set -uo pipefail\n# 주석 (시험 W06)\n'))))
+        return a, b
+    a, b = scen('W06', go)
+    return (y_stopped(a, 'S0_REPORT_MISMATCH') and '설정' in y_why(a) and b['rc'] == 0 and (b['sum'] or {}).get('status') == 'PREDICTED',
+            (a['rc'], stop_code(a), y_why(a)[-160:], b['rc'], stop_code(b), y_why(b)[-160:]))
+
+
+@check('W07', '파생 격자 지문 (같은 규약 · arm 0) — S0 단계 1 보고의 off 격자 지문 ≠ R SBE arm 0 sid 지문 → 사다리 S0_REPORT_MISMATCH (첫 런을 읽은 뒤 · '
+              '러너 1 회) · 규약이 다른 S0 보고 (vox 0.1) 의 다른 지문 = 대조 안 함 → CALIBRATED · S0 단계 2 보고의 다른 지문 → 사다리 둘 CALIBRATED '
+              '(DBE 를 안 돌림) · 예측 S0_REPORT_MISMATCH (첫 DBE arm 0 뒤) · 감도 GRID (vox 0.125) · origin 팔 = 대조 안 함 (V 시험 그대로)')
+def t_W07():
+    other = hx('another grid (시험 W07)')
+
+    def fp(r):
+        r['raster']['sid_off_fp'] = other
+
+    def conv(r):
+        r['raster']['convention']['vox_um'] = 0.1
+        r['raster']['sid_off_fp'] = other
+
+    def go():
+        a = ladder('W07a', world('W07a'), s1=s0_report(1, 'W07a', mutate=fp))
+        b = ladder('W07b', world('W07b'), s1=s0_report(1, 'W07b', mutate=conv))
+        s2 = s0_report(2, 'W07c', mutate=fp)
+        c0 = ladder('W07c_P0', world('W07c_P0'), law='P0', s2=s2)
+        c1 = ladder('W07c_P1', world('W07c_P1'), law='P1', s2=s2)
+        pc = predict('W07c_pred', world('W07c_pred'), [c0['out'], c1['out']])
+        return a, b, c0, c1, pc
+    a, b, c0, c1, pc = scen('W07', go)
+    return (a['rc'] == 3 and stop_code(a) == 'S0_REPORT_MISMATCH' and n_calls(a['world']) == 1
+            and (b['sum'] or {}).get('status') == 'CALIBRATED' and (c0['sum'] or {}).get('status') == 'CALIBRATED'
+            and (c1['sum'] or {}).get('status') == 'CALIBRATED' and pc['rc'] == 3 and stop_code(pc) == 'S0_REPORT_MISMATCH'
+            and n_calls(pc['world']) >= 1,
+            (a['rc'], stop_code(a), n_calls(a['world']), (b['sum'] or {}).get('status'), (c0['sum'] or {}).get('status'),
+             pc['rc'], stop_code(pc), n_calls(pc['world']), y_why(pc)[-160:]))
+
+
+@check('W08', '정상 기록 — 사다리 요약의 S0 단계 1 · 2 기록 = 원 입력 (역할 7 sha256 · 크기 · metrics 상자 · 두께 · 설정 sha256 · S0 보고 그대로) · '
+              '파생 칸 (규약 · off 격자 지문) · 예측 요약 = 같은 기록 · 예측 · 사다리 요약의 침대 다시 해시 결과 (경로 없는 지문) = 그 기록')
+def t_W08():
+    s, p = s_main('P0')['sum'] or {}, s_main_predict()['sum'] or {}
+    r1 = (s.get('s0_reports') or {}).get('stage1') or {}
+    r2 = (s.get('s0_reports') or {}).get('stage2') or {}
+    want1, want2 = s0_bed_fields(SBE_KIT), s0_bed_fields(DBE_KIT)
+    ok = (r1.get('inputs', {}).get('files') == (want1.get('inputs') or {}).get('files')
+          and r1.get('inputs', {}).get('settings_sha256') == (want1.get('inputs') or {}).get('settings_sha256')
+          and r2.get('inputs', {}).get('files') == (want2.get('inputs') or {}).get('files')
+          and (r1.get('raster') or {}).get('sid_off_fp') == want1['raster']['sid_off_fp']
+          and (r2.get('raster') or {}).get('convention') == S0_CONV
+          and (p.get('s0_reports') or {}).get('stage1') == r1 and (p.get('s0_reports') or {}).get('stage2') == r2
+          and set((s.get('bed') or {})) == {SBE_KIT} and set((p.get('bed') or {})) == {SBE_KIT, DBE_KIT})
+    return ok, (sorted((r1.get('inputs') or {}).get('files') or {}), sorted(s.get('bed') or {}), sorted(p.get('bed') or {}))
+
+
+@check('W09', '판정 — 세 단계 요약의 단계 2 기록 원 입력 (역할 se sha256) 을 같게 손댐 (단계끼리 기록 같음 · 꼴 맞음) → 판정이 킷을 다시 해시해 '
+              'S0_REPORT_MISMATCH · NOT_COMPUTED (기록끼리 같음만으로는 못 잡는 꼴)')
+def t_W09():
+    def cut(s):
+        s['s0_reports']['stage2']['inputs']['files']['se']['sha256'] = '0' * 64
+
+    def go():
+        lp = [b_tamper_copy(s_main(law)['out'], f'W09_{law}', 'ladder_summary.json', cut) for law in ('P0', 'P1')]
+        pp = b_tamper_copy(s_main_predict()['out'], 'W09_pred', 'predict_summary.json', cut)
+        return verdict('W09', lp + [pp])
+    r = scen('W09', go)
+    return (r['rc'] == 3 and stop_code(r) == 'S0_REPORT_MISMATCH' and (r['v'] or {}).get('verdict') == 'NOT_COMPUTED',
+            (r['rc'], stop_code(r), y_why(r)[-160:]))
+
+
+@check('W10', 'S0 발견 함수가 킷을 못 읽음 (DBE 킷 run 폴더의 fibre_kind.npy 지움 · latest_run 끊음) → 예측 S0_REPORT_MISMATCH · 러너 0 회 (확인 못 함 = '
+              '멈춤 · KIT_MISSING 은 킷 폴더 자체가 없을 때)')
+def t_W10():
+    def rm_kind(root):
+        os.remove(os.path.realpath(Path(root) / DBE_KIT / 'latest_run') + '/fibre_kind.npy')
+
+    def rm_link(root):
+        (Path(root) / DBE_KIT / 'latest_run').unlink()
+        for d in (Path(root) / DBE_KIT).glob('run_*'):
+            if d.is_dir():                     # run_mpm.sh 도 run_* 꼴 (파일)
+                (d / 'se_dump.npy').unlink()
+
+    def go():
+        lads = [s_main('P0')['out'], s_main('P1')['out']]
+        return (predict('W10a', world('W10a'), lads, root=w_root('W10a', rm_kind)),
+                predict('W10b', world('W10b'), lads, root=w_root('W10b', rm_link)))
+    rs = scen('W10', go)
+    return all(y_stopped(r, 'S0_REPORT_MISMATCH') for r in rs), [(r['rc'], stop_code(r), y_why(r)[-120:]) for r in rs]
 
 
 @check('N07', '★ PF2 E (PRE2-impl-03) S0 계획 중복 칸 ("gap_tol" 둘 · 등록 S0 줄 = 그 바이트의 sha256) → S0_PLAN_INVALID · 사유 = 중복 칸 '

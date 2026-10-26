@@ -112,7 +112,7 @@ Z_J = 0.78                                                 # µm — 접합 (섬
 
 KIT_SH = r'''#!/usr/bin/env bash
 # 시험 킷 (Rint ② Z3 사슬 끝-끝) — 생산 킷의 payload 호출부 꼴 (python3 … mpm_webapp_payload … --out mpm_payload.json) · 생산 단위 1.5 µm 상자
-python3 "$SCR/mpm_webapp_payload.py" --scaffold am.csv --se se.npy --phase phase.npy --fibre fibre.npy \
+python3 "$SCR/mpm_webapp_payload.py" --scaffold am.csv --se se_dump.npy --phase phase.npy --fibre fibre.npy \
   --fibre-dia fibre_dia.npy --metrics-json box.json --n-vox 24 "${PSIG[@]}" \
   --out mpm_payload.json
 '''
@@ -165,7 +165,7 @@ def make_bed(d, sdcp=False, am_floating=False):
     if sdcp:
         blocks.append((_box(np.array([[FX_XY, FX_XY + 0.2, Z_J]])), 5, -1, 0))
     pts = np.vstack([b[0] for b in blocks])
-    np.save(os.path.join(d, 'se.npy'), pts)
+    np.save(os.path.join(d, 'se_dump.npy'), pts)       # ★ 10-25 묶음 B — S0 발견 함수 (find_run_dir) 이름 · 옛 se.npy
     np.save(os.path.join(d, 'phase.npy'), np.concatenate([np.full(len(b[0]), b[1], np.int32) for b in blocks]))
     np.save(os.path.join(d, 'fibre.npy'), np.concatenate([np.full(len(b[0]), b[2], np.int32) for b in blocks]))
     np.save(os.path.join(d, 'fibre_kind.npy'), np.concatenate([np.full(len(b[0]), b[3], np.int8) for b in blocks]))
@@ -196,7 +196,7 @@ def make_bed_thin_cross(d, sdcp=False):
     if sdcp:
         blocks.append((_box(np.array([[0.30, 1.30, 0.225]])), 5, -1, 0))
     pts = np.vstack([b[0] for b in blocks])
-    np.save(os.path.join(d, 'se.npy'), pts)
+    np.save(os.path.join(d, 'se_dump.npy'), pts)       # ★ 10-25 묶음 B — S0 발견 함수 이름 · 옛 se.npy
     np.save(os.path.join(d, 'phase.npy'), np.concatenate([np.full(len(b[0]), b[1], np.int32) for b in blocks]))
     np.save(os.path.join(d, 'fibre.npy'), np.concatenate([np.full(len(b[0]), b[2], np.int32) for b in blocks]))
     np.save(os.path.join(d, 'fibre_kind.npy'), np.concatenate([np.full(len(b[0]), b[3], np.int8) for b in blocks]))
@@ -223,7 +223,7 @@ def make_root(name, kit_sh=KIT_SH, am_floating=False, thin_cross=False):
     return ws
 
 
-def make_plan_and_reg():
+def make_plan_and_reg(ws=None):
     """★ 3판 — R 런 계획 v2 (결과 전 등록 숫자 넷 = 시험 값 · 등록 숫자 아님) · S0 단계 1 계획 (정본 make_plan · 정준 바이트) ·
     등록 사본 (| 계획 해시 | · | S0 계획 해시 | 두 줄)."""
     import ca_s0_census as S0
@@ -262,10 +262,52 @@ def make_plan_and_reg():
           'code': code}
     s1 = {'schema': S0.SCHEMA, 'stage': 1, 'tool': S0.TOOL_VERSION, 'kit': {'name': SBE_KIT},
           'plan': {'sha256': s0sha, 'source': 'stage1_computed'}, 'code': code}
+    #  ★ 10-25 묶음 B (RCA2-03 · Q3 (가)) — 같은 침대 칸 = 실제 S0 함수 (원 입력 = kit_input_record · off 격자 지문 = 가로챈 입력의 off 격자 ·
+    #    carbon_junction._grid_fp) 로 이 킷에서 (가짜 보고의 그 칸만 진짜 · 실제 러너 arm 0 sid 지문과 같아야 사다리가 돈다)
+    if ws is not None:
+        s1.update(s0_bed(ws, SBE_KIT))
+        s2.update(s0_bed(ws, DBE_KIT))
     for nm, rep in (('s0_stage2.json', s2), ('s0_stage1.json', s1)):
         with open(os.path.join(TD, nm), 'w', encoding='utf-8') as f:
             json.dump(rep, f, ensure_ascii=False, indent=1)
     return pp, sp, rp
+
+
+def s0_bed(ws, kit):
+    """S0 보고의 inputs · raster 칸 — census_kit 과 같은 S0 함수 (kit_input_record · resolve_payload_argv · capture_raster_inputs ·
+    _check_captured · _raster (PTFE 행 뺌 = off 격자) · carbon_junction._grid_fp) · 규약 = 사슬 고정값 (vox 0.15 · 브리지 0.48 · SDCP 구 0.30 ·
+    origin 0 · 선분 스탬프).  고치기 전 판 (kit_input_record 없음) = 칸 없음.  (validate_kit_arrays 는 부르지 않는다 — 이 픽스처 metrics 에
+    thickness_um 이 없다 · 사슬 대조 칸은 파일 지문 · 설정 · 격자 지문)."""
+    import ca_s0_census as S0
+    import carbon_junction as CJ
+    key = ('bed', ws, kit)
+    if key in CODEREPO:
+        return CODEREPO[key]
+    out = {}
+    f = getattr(S0, 'kit_input_record', None)
+    if not callable(f):
+        CODEREPO[key] = out
+        return out
+    kp = os.path.join(ws, kit)
+    out['inputs'] = f(kp, vox=VOX, bridge_um=0.48, sdcp_sphere_d=0.30)
+    rd = S0.find_run_dir(kp)
+    with tempfile.TemporaryDirectory(dir=TD) as td:
+        argv = S0.resolve_payload_argv(kp, rd, td, vox=VOX, bridge_um=0.48, sdcp_sphere_d=0.30)
+        kw = S0.capture_raster_inputs(argv, rd, log_path=os.path.join(td, 'cap.log'))
+        S0._check_captured(kw, VOX, 0.48, 0.30)
+        st = S0._s3_state()
+        try:
+            off, _pid = S0._raster(kw, drop=(S0.PTFE,), with_pid=True)
+        finally:
+            S0._s3_restore(st)
+    out['raster'] = {'convention': {'vox_um': VOX, 'bridge_um': 0.48, 'sdcp_sphere_d_um': 0.30, 'ptfe_stamp_captured': 'centerline',
+                                    'fibre_stamp': 'segment', 'origin_shift_um': [0.0, 0.0, 0.0], 'fid_gap_tol': float(kw['fid_gap_tol']),
+                                    'off_grid': 'captured inputs minus PTFE rows (test_rint_r_chain_e2e)'},
+                     'grid_shape': [int(x) for x in off.shape], 'box_lo_um': [float(x) for x in kw['box_lo']],
+                     'box_hi_um': [float(x) for x in kw['box_hi']], 'cells_by_sid': {'off': S0._hist(off)},
+                     'sid_off_fp': CJ._grid_fp(off)}
+    CODEREPO[key] = out
+    return out
 
 
 def s0_args():
@@ -295,7 +337,7 @@ def chain_env(ws):
 
 
 def run_ladder(ws, out, law='P0', max_hours='0.5'):
-    pp, sp, rp = make_plan_and_reg()
+    pp, sp, rp = make_plan_and_reg(ws)
     #  ★ 10-25 묶음 B — 사슬 폴더 (RR.HERE) · 러너 = git 고정물 저장소의 scripts (옛 = 이 리포 scripts + git 신원 dirty False 고정)
     sd = code_repo()
     runner = os.path.join(sd, 'sdcp_gain_vox015_8arm.sh')
@@ -361,6 +403,16 @@ def t_ladder():
         and ru.get('rel') == 'scripts/sdcp_gain_vox015_8arm.sh' and ch.get('head') == ru.get('head') and len(str(ch.get('head'))) == 40
         and sorted(unit) == ['numpy', 'python_minor', 'scipy'] and all(isinstance(v, str) and v for v in unit.values()),
         (st[:300], ch, ru, unit))
+    #  ── ★ 10-25 묶음 B (RCA2-03 · Q3 (가)) — 같은 침대 (실물): 사다리 요약의 침대 다시 해시 (SBE · 경로 없는 지문) = S0 단계 1 기록의 원 입력 ·
+    #     실제 러너 arm 0 의 sid 지문 = S0 함수로 낸 off 격자 지문 (같은 규약 · 파생 격자 지문 대조가 실물에서 성립) ──
+    rec1 = (s.get('s0_reports') or {}).get('stage1') or {}
+    want = {r: {'sha256': x.get('sha256'), 'bytes': x.get('bytes')} for r, x in ((rec1.get('inputs') or {}).get('files') or {}).items()}
+    bed = ((s.get('bed') or {}).get(SBE_KIT) or {})
+    a0 = [a for x in runs for a in (x.get('arms_read') or []) if a.get('index') == 0]
+    chk('E1d 같은 침대 (실물) — 요약 bed (SBE · 경로 없음) = S0 단계 1 기록 원 입력 · 설정 · arm 0 sid 지문 (런마다) = S0 off 격자 지문',
+        bool(want) and bed.get('files') == want and bed.get('settings_sha256') == (rec1.get('inputs') or {}).get('settings_sha256')
+        and a0 and all(a.get('sid_fp') == (rec1.get('raster') or {}).get('sid_off_fp') for a in a0),
+        (sorted(want), bed, [a.get('sid_fp') for a in a0][:3], (rec1.get('raster') or {}).get('sid_off_fp')))
     if len(runs) < 2:
         return
     #  ── E2 극한 런 기록 ──

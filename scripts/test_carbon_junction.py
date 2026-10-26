@@ -4987,7 +4987,9 @@ FP_INVENTORY = {
     'ca_s0_census': {'_sha256_file': 'FP-i · FP-l', 'make_plan': 'FP-i · FP-l (정준 JSON 바이트)',
                      'verify_plan_commit': '커밋 안 계획 파일 바이트 sha256 (L3 시험)',
                      'validate_kit_arrays': '정확 중복 경로 = 점열 float64 바이트 sha256 (S0-5i)',
-                     'census_kit': 'payload argv sha256 (NUL 결합 UTF-8 · 기록만)'},
+                     'census_kit': 'payload argv sha256 (NUL 결합 UTF-8 · 기록만)',
+                     'kit_settings_sha256': '★ 10-25 묶음 B (RCA2-03) 킷 run_mpm.sh 의 payload 호출부 문자열 (UTF-8) sha256 = 같은 침대 설정 '
+                                            '지문 (test_ca_s0_census B4 · 사슬 W06)'},
     'step3_conv_cert': {},
 }
 

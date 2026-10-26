@@ -32,6 +32,7 @@ import hashlib
 import json
 import math
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -688,6 +689,73 @@ def t_e2e_stage1():
         and rep['inputs']['counts']['points_by_phase'] == {'1': 324, '2': 14, '4': 15})
 
 
+def t_e2e_bed():
+    """★ 10-25 묶음 B (RCA2-03 · 1저자 10-23 Q3 (가) · 판정문 §4 F8) 같은 침대 — 보고 = 원 입력 지문 (역할 파일 sha256 · 크기 · metrics 상자 ·
+    두께 · 설정 = 킷 run_mpm.sh 의 payload 호출부 sha256) + 파생 격자 지문 (off 격자 sid · `carbon_junction._grid_fp` = R 런 접합 원장의 fp.sid 와
+    같은 함수) · 사슬이 R 직전 · 판정 때 부르는 `kit_input_record` = census_kit 과 같은 발견 함수 (find_run_dir · resolve_payload_argv ·
+    kit_input_paths · kit_files_record · 사본 없음)."""
+    rep, kitA, tmp = STATE['repA'], STATE['kitA'], STATE['tmp']
+    inp, ras = rep.get('inputs') or {}, rep.get('raster') or {}
+    h64 = lambda x: isinstance(x, str) and re.fullmatch(r'[0-9a-f]{64}', x) is not None      # noqa: E731
+    h32 = lambda x: isinstance(x, str) and re.fullmatch(r'[0-9a-f]{32}', x) is not None      # noqa: E731
+    chk('B0 SCHEMA = ca-s0-census-v3 (원 입력 설정 지문 · off 격자 지문 칸 · 사슬 S0_REPORT_SCHEMA 와 같아야)', S0.SCHEMA == 'ca-s0-census-v3',
+        S0.SCHEMA)
+    chk('B1 보고 inputs.settings_sha256 = 64 hex · raster.sid_off_fp = 32 hex · 역할 파일 7 (fibre_dia 포함) sha256 · bytes',
+        h64(inp.get('settings_sha256')) and h32(ras.get('sid_off_fp'))
+        and sorted(inp.get('files') or {}) == ['fibre', 'fibre_dia', 'fibre_kind', 'metrics_json', 'phase', 'scaffold', 'se']
+        and all(h64(x.get('sha256')) and type(x.get('bytes')) is int for x in (inp.get('files') or {}).values()),
+        str((inp.get('settings_sha256'), ras.get('sid_off_fp'))))
+    if not callable(getattr(S0, 'kit_input_record', None)) or not callable(getattr(S0, 'kit_input_paths', None)):
+        chk('B2 kit_input_record · kit_input_paths 가 있다 (같은 침대 다시 해시 · 사슬이 부른다)', False)
+        return
+    rec = S0.kit_input_record(kitA, vox=VOX, bridge_um=0.48, sdcp_sphere_d=0.30)
+    met = inp.get('metrics') or {}
+    chk('B2 kit_input_record = 보고의 원 입력 (역할 7 의 path · sha256 · bytes · metrics 상자 · 두께 · 설정 sha256 그대로)',
+        rec.get('files') == inp.get('files') and rec.get('metrics') == {'um_box_um': met.get('um_box_um'), 'thickness_um': met.get('thickness_um')}
+        and rec.get('settings_sha256') == inp.get('settings_sha256'), str(rec)[:300])
+    orig = S0.kit_input_paths
+
+    def boom(*_a, **_k):
+        raise S0.S0Error('kit_input_paths 바꿔 끼움 (시험 B3)')
+    S0.kit_input_paths = boom
+    try:
+        r1 = raises(lambda: S0.kit_input_record(kitA), S0.S0Error)
+        rd = S0.find_run_dir(kitA)
+        with tempfile.TemporaryDirectory(dir=tmp) as td:
+            argv = S0.resolve_payload_argv(kitA, rd, td, vox=VOX, bridge_um=0.48, sdcp_sphere_d=0.30)
+            r2 = raises(lambda: S0.validate_kit_arrays(rd, argv, stage=1), S0.S0Error)
+    finally:
+        S0.kit_input_paths = orig
+    chk('B3 같은 발견 함수 — kit_input_paths 를 터지게 하면 kit_input_record · validate_kit_arrays 둘 다 거부 (사본 없음)', r1 and r2, str((r1, r2)))
+    k2 = os.path.join(tmp, 'kit_A_settings')
+    shutil.copytree(kitA, k2, symlinks=True)
+    rp = os.path.join(k2, 'run_mpm.sh')
+    base = S0.kit_settings_sha256(k2)
+    with open(rp, encoding='utf-8') as f:
+        txt = f.read()
+    with open(rp, 'w', encoding='utf-8') as f:
+        f.write(txt.replace('set -uo pipefail\n', 'set -uo pipefail\n# 주석만 (payload 호출부 밖 · 시험 B4)\n'))
+    same = S0.kit_settings_sha256(k2)
+    with open(rp, 'w', encoding='utf-8') as f:
+        f.write(txt.replace('--n-vox 48', '--n-vox 64'))
+    other = S0.kit_settings_sha256(k2)
+    chk('B4 설정 지문 = payload 호출부 (러너 · S0 와 같은 추출 함수) — 그 밖 주석 = 같음 · --n-vox 48 → 64 = 다름 · 원 킷 = 보고 값',
+        base == inp.get('settings_sha256') and same == base and other != base, str((base[:12], same[:12], other[:12])))
+    import carbon_junction as CJ
+    rd = S0.find_run_dir(kitA)
+    with tempfile.TemporaryDirectory(dir=tmp) as td:
+        argv = S0.resolve_payload_argv(kitA, rd, td, vox=VOX, bridge_um=0.48, sdcp_sphere_d=0.30)
+        kw = S0.capture_raster_inputs(argv, rd, log_path=os.path.join(td, 'cap.log'))
+        S0._check_captured(kw, VOX, 0.48, 0.30)
+        st = S0._s3_state()
+        try:
+            off, _pid = S0._raster(kw, drop=(S0.PTFE,), with_pid=True)
+        finally:
+            S0._s3_restore(st)
+    chk('B5 raster.sid_off_fp = off 격자 (PTFE 행 뺀 가로챈 입력) 의 carbon_junction._grid_fp (R 런 접합 원장 fp.sid 와 같은 함수 · 같은 규약이면 '
+        '같은 값)', ras.get('sid_off_fp') == CJ._grid_fp(off), str((ras.get('sid_off_fp'), CJ._grid_fp(off))))
+
+
 def t_e2e_reject_stage():
     tmp = STATE['tmp']
     kitB = write_kit(tmp, 'kit_B', vgcf=[F1, F2], ptfe=[P1], sdcp=S1,
@@ -764,6 +832,14 @@ def t_e2e_stage2():
         and zj is not None and len(zj['Lc']) == 1 and close(zj['Lc'][0], lc2, 1e-9) and float(zj['mult'][0]) == 1.0
         and jc.get('n_sdcp_near') == 0 and S0.schema_forbidden_keys({k: 0 for k in zj.files}) == [],
         str({k: jc.get(k) for k in ('function', 'grid', 'n_long', 'n_sdcp_near')}))
+    #  ★ 10-25 묶음 B (RCA2-03) — 단계 2 보고도 같은 침대 칸 (원 입력 설정 지문 · off 격자 지문 · 같은 함수)
+    ri, rr = rep.get('inputs') or {}, rep.get('raster') or {}
+    rec = S0.kit_input_record(STATE['kitB']) if callable(getattr(S0, 'kit_input_record', None)) else None
+    chk('E7o 단계 2 보고 — inputs.settings_sha256 (64 hex) · raster.sid_off_fp (32 hex) · kit_input_record = 보고 원 입력 (같은 침대 칸)',
+        isinstance(ri.get('settings_sha256'), str) and re.fullmatch(r'[0-9a-f]{64}', ri['settings_sha256']) is not None
+        and isinstance(rr.get('sid_off_fp'), str) and re.fullmatch(r'[0-9a-f]{32}', rr['sid_off_fp']) is not None
+        and rec is not None and rec.get('files') == ri.get('files') and rec.get('settings_sha256') == ri.get('settings_sha256'),
+        str((ri.get('settings_sha256'), rr.get('sid_off_fp'))))
 
 
 def t_e2e_payload_crosscheck():
@@ -1250,6 +1326,7 @@ def main():
         print('── E 끝-끝 (payload 실물)')
         run('E1', t_e2e_stage1)
         if 'kitA' in STATE:
+            print('── B 같은 침대 — 원 입력 · 설정 · 파생 격자 지문 (10-25 묶음 B · RCA2-03)'); run('B', t_e2e_bed)
             run('E6', t_e2e_reject_stage)
             if 'planA' in STATE and 'kitB' in STATE:
                 run('E7', t_e2e_stage2)

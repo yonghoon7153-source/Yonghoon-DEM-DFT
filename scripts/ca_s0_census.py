@@ -81,9 +81,16 @@ from fibre_segment_raster import cell_of, n_components_6face, segment_cells   # 
 SCRIPTS = os.path.dirname(os.path.abspath(s3.__file__))
 ROOT = os.path.dirname(SCRIPTS)
 
-SCHEMA = 'ca-s0-census-v2'                       # v2 (10-20 2 일 차) = junction_census 블록 (cjunc_registry 같은 함수) 추가
+SCHEMA = 'ca-s0-census-v3'                       # v2 (10-20 2 일 차) = junction_census 블록 (cjunc_registry 같은 함수) 추가 ·
+#  ★ v3 (10-25 묶음 B · RCA2-03 · 1저자 10-23 Q3 (가)) = 같은 침대 칸 — inputs.settings_sha256 (킷 run_mpm.sh 의 payload 호출부 ·
+#  `kit_settings_sha256`) · raster.sid_off_fp (off 격자의 `carbon_junction._grid_fp` = R 런 접합 원장 fp.sid 와 같은 함수) · 사슬
+#  (`rint_r_chain.S0_REPORT_SCHEMA`) 이 이 schema 를 요구하고, R 직전 · 판정 때 `kit_input_record` 로 킷을 다시 해시해 대조한다
 PLAN_SCHEMA = 'ca-cjunc-plan-v1'
 TOOL_VERSION = 's0-b3-registry-v1'               # 옛 s0-b0-preview-v1 = 미리보기 census 만
+#: ★ 10-25 묶음 B (RCA2-03) — 원 입력 역할 = payload 호출의 입력 파일 (`kit_input_paths` · 이 모듈 · 사슬이 같은 이름을 쓴다) ·
+#  fibre_dia 는 payload 호출에 --fibre-dia 가 있을 때만 (옛 `validate_kit_arrays` 와 같은 규칙)
+KIT_ROLES = ('se', 'phase', 'fibre', 'fibre_kind', 'metrics_json', 'scaffold')
+KIT_ROLES_OPTIONAL = ('fibre_dia',)
 #: 접합 census (판정 · 보고 판) 의 격자 — off (= 잡은 생산 입력에서 PTFE 행을 뺀 raster = ptfe_stamp off · face_alpha 의 sid 격자 ·
 #  다음 세대 판정 격자).  원장에는 PTFE 행을 포함한 전 상 입력을 준다 (P-junc 덮임 판정 · PTFE 는 셀을 찍지 않는다).
 JUNCTION_GRID = 'off'
@@ -1073,9 +1080,10 @@ def _argv_opt(argv, flag):
     return v
 
 
-def validate_kit_arrays(run_dir, argv, *, stage):
-    """S0-5 — 가로채기 **전에** 입력 계약: 길이 정확 일치 · float64 유한 · kind 파일 · 경로 fid 한 블록 · 상 하나 · 중복 경로 없음 ·
-    VGCF Ø 균일 · metrics 척도 · 단계 1 = SDCP 없음.  → 입력 기록 (sha256 · 점 수 · metrics)."""
+def kit_input_paths(run_dir, argv):
+    """★ 10-25 묶음 B (RCA2-03 · 1저자 10-23 Q3 (가)) — payload argv → 원 입력 역할별 경로 {역할: 경로} (`KIT_ROLES` + 호출에 있으면
+    fibre_dia) · 파일이 없으면 거부.  `validate_kit_arrays` (S0 보고) 와 `kit_input_record` (사슬이 R 직전 · 판정 때 다시 해시) 가 이 함수 하나를
+    부른다 (사본 없음 · 옛 = validate_kit_arrays 안 path_of)."""
     def path_of(flag, required=True):
         v = _argv_opt(argv, flag)
         if v is None:
@@ -1093,6 +1101,66 @@ def validate_kit_arrays(run_dir, argv, *, stage):
         if not os.path.isfile(p):
             raise S0Error(f'{k} 파일 없음: {p}' + (' — fibre_kind 없이는 경로 · 그룹을 phase 로 추측해야 한다 (S0 = 거부)'
                                                   if k == 'fibre_kind' else ''))
+    return files
+
+
+def kit_files_record(files):
+    """원 입력 경로 {역할: 경로} → {역할: {path, sha256, bytes}} (S0 보고 inputs.files · `kit_input_record` 같은 함수 · 경로는 기록만 —
+    사슬은 sha256 · bytes 만 대조한다)."""
+    return {k: {'path': p, 'sha256': _sha256_file(p), 'bytes': int(os.path.getsize(p))} for k, p in files.items()}
+
+
+#: 설정 지문의 고정 인자 — `sr01_stamp_compare.extract_payload_cmd` (러너 · S0 의 payload 호출 추출 함수) 를 이 인자로 불러 킷마다
+#  같은 꼴의 호출부 문자열을 만든다 (출력 · 스탬프 · 덧붙임 플래그 = 상수 · 그 밖은 킷 run_mpm.sh 의 payload 호출부 그대로)
+SETTINGS_EXTRACT = {'out_name': 's0_settings.json', 'stamp': 'segment', 'extra_flags': '', 'tag': 's0settings'}
+
+
+def kit_settings_sha256(kit):
+    """★ 10-25 묶음 B (RCA2-03) — 킷 설정 지문 = 킷 run_mpm.sh 의 payload 호출부 (러너 · S0 가 쓰는 추출 함수 `extract_payload_cmd` ·
+    고정 인자 `SETTINGS_EXTRACT`) 의 utf-8 sha256 (호출부 밖 줄 = 대조 밖 · --n-vox 같은 호출 인자 = 대조 안)."""
+    import sr01_stamp_compare as sc
+    rp = os.path.join(os.path.abspath(kit), 'run_mpm.sh')
+    try:
+        with open(rp, encoding='utf-8') as f:
+            body = sc.extract_payload_cmd(f.read(), SETTINGS_EXTRACT['out_name'], SETTINGS_EXTRACT['stamp'],
+                                          extra_flags=SETTINGS_EXTRACT['extra_flags'], tag=SETTINGS_EXTRACT['tag'])
+    except SystemExit as e:
+        raise S0Error(f'run_mpm.sh payload 호출 추출 실패 (설정 지문): {e}')
+    except (OSError, UnicodeDecodeError) as e:
+        raise S0Error(f'{rp}: {type(e).__name__}: {e}')
+    return hashlib.sha256(body.encode('utf-8')).hexdigest()
+
+
+def kit_input_record(kit, *, vox=0.15, bridge_um=0.48, sdcp_sphere_d=0.30, scripts_dir=SCRIPTS):
+    """★ 10-25 묶음 B (RCA2-03 · 1저자 10-23 Q3 (가)) — 킷 → 원 입력 기록 {files (역할별 path · sha256 · bytes) · metrics (um_box_um ·
+    thickness_um) · settings_sha256} — census_kit 과 같은 발견 함수 (find_run_dir · resolve_payload_argv · kit_input_paths ·
+    kit_files_record · kit_settings_sha256 · 사본 없음).  사슬이 R 직전 · 판정 때 기계마다 자기 킷 사본에 이 함수를 불러 S0 보고 기록과
+    대조한다 (경로 = 대조 밖).  읽지 못하면 S0Error (확인 못 함 = 거부).  metrics 값 = 유한 양수면 float · 아니면 None (값 검사는 S0
+    보고 쪽 `validate_kit_arrays` · 이 함수는 기록 대조용 — metrics 파일 자체는 sha256 으로 대조된다)."""
+    kit = os.path.abspath(kit)
+    run_dir = find_run_dir(kit)
+    with tempfile.TemporaryDirectory() as td:
+        argv = resolve_payload_argv(kit, run_dir, td, vox=vox, bridge_um=bridge_um, sdcp_sphere_d=sdcp_sphere_d,
+                                    scripts_dir=scripts_dir)
+    files = kit_input_paths(run_dir, argv)
+    try:
+        with open(files['metrics_json'], encoding='utf-8') as fj:
+            met = json.load(fj)
+    except (OSError, UnicodeDecodeError, ValueError) as e:
+        raise S0Error(f'{files["metrics_json"]}: {type(e).__name__}: {e}')
+    met = met if isinstance(met, dict) else {}
+    return {'files': kit_files_record(files),
+            'metrics': {k: (float(met.get(k)) if _num_ok(met.get(k)) else None) for k in ('um_box_um', 'thickness_um')},
+            'settings_sha256': kit_settings_sha256(kit)}
+
+
+def validate_kit_arrays(run_dir, argv, *, stage):
+    """S0-5 — 가로채기 **전에** 입력 계약: 길이 정확 일치 · float64 유한 · kind 파일 · 경로 fid 한 블록 · 상 하나 · 중복 경로 없음 ·
+    VGCF Ø 균일 · metrics 척도 · 단계 1 = SDCP 없음.  → 입력 기록 (sha256 · 점 수 · metrics).  ★ 10-25 묶음 B — 경로 · 파일 기록 =
+    `kit_input_paths` · `kit_files_record` (사슬의 다시 해시 `kit_input_record` 와 같은 함수)."""
+    files = kit_input_paths(run_dir, argv)
+    p_se, p_ph, p_fi, p_met = files['se'], files['phase'], files['fibre'], files['metrics_json']
+    p_kind, p_dia = files['fibre_kind'], files.get('fibre_dia')
     se = np.load(p_se, mmap_mode='r')
     if se.ndim != 2 or se.shape[1] != 3 or not np.issubdtype(se.dtype, np.floating):
         raise S0Error(f'se_dump 모양 · 형이 (N,3) 실수가 아니다: {se.shape} {se.dtype}')
@@ -1159,7 +1227,7 @@ def validate_kit_arrays(run_dir, argv, *, stage):
     counts = {'points_by_phase': _hist(PH), 'fids_by_phase': {}}
     for ph in PATH_PHASES:
         counts['fids_by_phase'][str(ph)] = int(sum(1 for _, a, _b in blocks if int(PH[a]) == ph))
-    files_rec = {k: {'path': p, 'sha256': _sha256_file(p), 'bytes': int(os.path.getsize(p))} for k, p in files.items()}
+    files_rec = kit_files_record(files)
     return {'files': files_rec, 'counts': counts, 'n_points': N, 'n_sdcp_points': n5, 'vgcf_rel_dia': dia_rec,
             'metrics': {'um_box_um': float(umb), 'thickness_um': float(th), 'E_anchor': met.get('E_anchor'),
                         'porosity_settled_pct': met.get('porosity_settled_pct'),
@@ -1369,6 +1437,7 @@ def census_kit(kit, out_dir, *, stage, plan=None, plan_sha=None, plan_source=Non
     finally:
         _s3_restore(st)
     shape = prod.shape
+    sid_off_fp = cj._grid_fp(off)          # ★ 10-25 묶음 B (RCA2-03) — 파생 격자 지문 (R 런 접합 원장 fp.sid 와 같은 함수 · 같은 규약이면 같은 값)
     lo = np.asarray(kw['box_lo'], np.float64); hi = np.asarray(kw['box_hi'], np.float64); vx = float(kw['vox'])
     v_fids = sorted(f for f, r in tab.items() if r['phase'] == VGCF)
     p_fids = sorted(f for f, r in tab.items() if r['phase'] == PTFE)
@@ -1587,7 +1656,10 @@ def census_kit(kit, out_dir, *, stage, plan=None, plan_sha=None, plan_source=Non
         'code': _code_info(),
         'inputs': {'files': info['files'], 'counts': info['counts'], 'metrics': info['metrics'],
                    'payload_argv_sha256': hashlib.sha256('\0'.join(argv).encode('utf-8')).hexdigest(),
-                   'vgcf_rel_dia': info['vgcf_rel_dia']},
+                   'vgcf_rel_dia': info['vgcf_rel_dia'],
+                   #  ★ 10-25 묶음 B (RCA2-03) — 설정 지문 (킷 run_mpm.sh 의 payload 호출부 · 사슬 대조 · payload_argv_sha256 은 경로가 들어가
+                   #    기록만)
+                   'settings_sha256': kit_settings_sha256(kit)},
         'raster': {'convention': {'vox_um': vx, 'bridge_um': float(kw['bridge_um']), 'sdcp_sphere_d_um': float(sdcp_sphere_d),
                                   'ptfe_stamp_captured': 'centerline', 'fibre_stamp': 'segment',
                                   'origin_shift_um': [0.0, 0.0, 0.0], 'fid_gap_tol': float(kw['fid_gap_tol']),
@@ -1595,7 +1667,8 @@ def census_kit(kit, out_dir, *, stage, plan=None, plan_sha=None, plan_source=Non
                    'grid_shape': [int(x) for x in shape], 'box_lo_um': lo.tolist(), 'box_hi_um': hi.tolist(),
                    'cells_by_sid': {'prod': _hist(prod), 'off': _hist(off),
                                     'nosdcp': _hist(nos) if has_sdcp else None,
-                                    'off_nosdcp': _hist(off_nos) if has_sdcp else None}},
+                                    'off_nosdcp': _hist(off_nos) if has_sdcp else None},
+                   'sid_off_fp': sid_off_fp},
         'ledger': ledger,
         'threshold_inputs': {'u_um': spc['u_um'], 'spacing_median_um': spc['median_um'], 'n_spacings': spc['n'],
                              'spacing_p10_um': spc.get('p10_um'), 'spacing_p90_um': spc.get('p90_um'),
