@@ -1,0 +1,200 @@
+{
+  "reference_pin": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde",
+  "accepted_kit_manifest_sha256": "bb9f305f476815d7448ee5069ceb8fa3b9f138f3be1dc59703fcc8eec09c03bb",
+  "fixed_file_checks": [
+    {
+      "path": "/lustre/home/yonghoon/LIGGGHTS-PUBLIC/src/lmp_mpi",
+      "size": 9180024,
+      "sha256": "ee2d77261bac9e7fa4e9311c8709e74bf7583a13225a5bc35a791bef9be60a3f"
+    },
+    {
+      "path": "/home/yonghoon/ps45_unload_hist_20261013/hist_20261014_094731/run_manifest.txt",
+      "size": 531,
+      "sha256": "a2501b490899b8b19710847e3295db9d8c11bad9f97a1b4a303dbe1cd0f13fba",
+      "source": "exact archived bytes"
+    },
+    {
+      "path": "/home/yonghoon/ps45_unload_hist_20261013/hist_20261014_094731/history_verdict.json",
+      "size": 3851,
+      "sha256": "313158c6696332cf7b7ad60e904e556db9a994bf41fd5bb1fc806f562eb72c55",
+      "source": "exact archived bytes"
+    },
+    {
+      "path": "/home/yonghoon/ps45_unload_hist_20261013/gram_20261015_030225/run_manifest.txt",
+      "size": 541,
+      "sha256": "61b2af170303aa9a064e472ced438eeafc79b47064ae6c668fad7593303d3474",
+      "source": "exact archived bytes"
+    },
+    {
+      "path": "/home/yonghoon/ps45_unload_hist_20261013/gram_20261015_030225/grammar_verdict.json",
+      "size": 1021,
+      "sha256": "c19a5aa620bfc58d7593059f5d8c5a51012da7b6774ed2c54902dd7a02efcdbb",
+      "source": "exact archived bytes"
+    },
+    {
+      "path": "/home/yonghoon/ps45_unload_hist_20261013/kit_20261015_030225/SHA256SUMS",
+      "size": 1344,
+      "sha256": "8ff722d24096c6bd929682842e3b93907951ad29943f180709c914404cdb928d",
+      "source": "exact archived bytes"
+    },
+    {
+      "path": "/home/yonghoon/ps45_unload_hist_20261013/kit_20261015_030225/history_params.json",
+      "size": 8427,
+      "sha256": "7a5279f0119cbbc37a9c212593e256a03e417dc9a6af4f18a4f01bdc72404ff4",
+      "source": "archived kit seal; source file not in archive",
+      "size_provenance": "historical manifest repo_head Git blob; hash equals archived seal",
+      "git_path": "docs/data/ps45_unload_20261009/history_test/history_params.json"
+    },
+    {
+      "path": "/home/yonghoon/ps45_unload_hist_20261013/kit_20261015_030225/read_history.py",
+      "size": 79327,
+      "sha256": "70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c",
+      "source": "archived kit seal; source file not in archive",
+      "size_provenance": "historical manifest repo_head Git blob; hash equals archived seal",
+      "git_path": "docs/data/ps45_unload_20261009/history_test/read_history.py"
+    }
+  ],
+  "staged_file_checks": [
+    {
+      "key": "ckpt",
+      "source": "/home/yonghoon/dem_test/ps45/ps_7_3_r45/restart_ps_7_3_r45/restart_compress_3200000.bin",
+      "size": 81154383,
+      "file": "restart_compress_3200000.bin",
+      "sha256": "0aa6e41a2330ae7825a715b8d98da6b708c37cb4093d3ab0f8fe2c2653ca3730",
+      "provenance": "historical ibb precheck1 screen and params"
+    },
+    {
+      "key": "atom",
+      "source": "/home/yonghoon/dem_test/ps45/ps_7_3_r45/post_ps_7_3_r45/atom_3200000.liggghts",
+      "size": 21430748,
+      "file": "atom_3200000.liggghts",
+      "sha256": "2da106f8470a60c7d3b85894025007d6a5decdffb249b22e0a2ce67d08bbdd9e",
+      "provenance": "historical ibb precheck1 screen and params"
+    },
+    {
+      "key": "contact",
+      "source": "/home/yonghoon/dem_test/ps45/ps_7_3_r45/post_ps_7_3_r45/contact_3200000.liggghts",
+      "size": 149687008,
+      "file": "contact_3200000.liggghts",
+      "sha256": "53ae293b4586d091dfca58ab430c174f36b641dcd24678eb10d10fc3f416e65c",
+      "provenance": "historical ibb precheck1 screen and params"
+    },
+    {
+      "key": "mesh",
+      "source": "/home/yonghoon/dem_test/ps45/ps_7_3_r45/post_ps_7_3_r45/mesh_3200000.stl",
+      "size": 349,
+      "file": "mesh_3200000.stl",
+      "sha256": "c25296a6d4d6b185be3c1c0ff98543dbfdb710c281403111c7fae2b9bde2b820",
+      "provenance": "historical ibb precheck1 screen and params"
+    },
+    {
+      "key": "orig_log",
+      "file": "output_ps_7_3_r45_r8_220537.out",
+      "source": "/home/yonghoon/dem_test/ps45/logs/output_ps_7_3_r45_r8_220537.out",
+      "size": 127049,
+      "sha256": "35e28690eb9b45c989d7526205a1b168b23041cd1cce6afb12a020deb5096c49",
+      "provenance": "existing archived copy in ps73_logs.tgz; current source disk not read"
+    },
+    {
+      "key": "last_deck",
+      "file": "input_ps_7_3_r45_r8.liggghts",
+      "source": "/home/yonghoon/dem_test/ps45/ps_7_3_r45/input_ps_7_3_r45_r8.liggghts",
+      "size": 5916,
+      "sha256": "097658aa640f798b53da4c40a9d101632b8faaee6f80f4d1d2667591eef8d9cd",
+      "provenance": "existing archived copy in ps73_logs.tgz; current source disk not read"
+    }
+  ],
+  "historical_source_records": [
+    {
+      "archive": "docs/reviews/dem_unloading_history_test_20261014/hist_20261014_094731.report.tgz",
+      "archive_sha256": "be0acbd7841d0922604eee8aa31524fcddbe179a8240f937b317432dbebb0ca0",
+      "run_dir": "/home/yonghoon/ps45_unload_hist_20261013/hist_20261014_094731",
+      "kit": "/home/yonghoon/ps45_unload_hist_20261013/kit_20261014_094731",
+      "historical_repo_head": "f9edcc41674bfef2c72bcb803511050845008d09",
+      "lmp": "/lustre/home/yonghoon/LIGGGHTS-PUBLIC/src/lmp_mpi",
+      "lmp_sha256": "ee2d77261bac9e7fa4e9311c8709e74bf7583a13225a5bc35a791bef9be60a3f",
+      "files": [
+        {
+          "path": "/home/yonghoon/ps45_unload_hist_20261013/hist_20261014_094731/run_manifest.txt",
+          "size": 531,
+          "sha256": "a2501b490899b8b19710847e3295db9d8c11bad9f97a1b4a303dbe1cd0f13fba",
+          "source": "exact archived bytes"
+        },
+        {
+          "path": "/home/yonghoon/ps45_unload_hist_20261013/hist_20261014_094731/history_verdict.json",
+          "size": 3851,
+          "sha256": "313158c6696332cf7b7ad60e904e556db9a994bf41fd5bb1fc806f562eb72c55",
+          "source": "exact archived bytes"
+        },
+        {
+          "path": "/home/yonghoon/ps45_unload_hist_20261013/kit_20261014_094731/SHA256SUMS",
+          "size": 1253,
+          "sha256": "241277b20aaccb8d1ab73c79fb9e0758138a3bed64751add98f7849b44697bf6",
+          "source": "exact archived bytes"
+        },
+        {
+          "path": "/home/yonghoon/ps45_unload_hist_20261013/kit_20261014_094731/history_params.json",
+          "size": 7549,
+          "sha256": "e7da62be2ebe6f0b4acfe934a26921d1b8d3542807162d9f0ec223b678572cb0",
+          "source": "archived kit seal; source file not in archive",
+          "size_provenance": "historical manifest repo_head Git blob; hash equals archived seal",
+          "git_path": "docs/data/ps45_unload_20261009/history_test/history_params.json"
+        },
+        {
+          "path": "/home/yonghoon/ps45_unload_hist_20261013/kit_20261014_094731/read_history.py",
+          "size": 55985,
+          "sha256": "c5cc318821a369ae53f09a9c15e453a0eb0270a64d8f100d37fb3fc491c8b453",
+          "source": "archived kit seal; source file not in archive",
+          "size_provenance": "historical manifest repo_head Git blob; hash equals archived seal",
+          "git_path": "docs/data/ps45_unload_20261009/history_test/read_history.py"
+        }
+      ]
+    },
+    {
+      "archive": "docs/reviews/dem_unloading_grammar_fixture_runs_20261015/raw/gram_20261015_030225.report.tgz",
+      "archive_sha256": "f47a4cea6a4c2de1b3300bab8d6b620fcb98106ee418691a3d05da46f7c677fc",
+      "run_dir": "/home/yonghoon/ps45_unload_hist_20261013/gram_20261015_030225",
+      "kit": "/home/yonghoon/ps45_unload_hist_20261013/kit_20261015_030225",
+      "historical_repo_head": "799459c85878d8c44754afdae973194db7099436",
+      "lmp": "/lustre/home/yonghoon/LIGGGHTS-PUBLIC/src/lmp_mpi",
+      "lmp_sha256": "ee2d77261bac9e7fa4e9311c8709e74bf7583a13225a5bc35a791bef9be60a3f",
+      "files": [
+        {
+          "path": "/home/yonghoon/ps45_unload_hist_20261013/gram_20261015_030225/run_manifest.txt",
+          "size": 541,
+          "sha256": "61b2af170303aa9a064e472ced438eeafc79b47064ae6c668fad7593303d3474",
+          "source": "exact archived bytes"
+        },
+        {
+          "path": "/home/yonghoon/ps45_unload_hist_20261013/gram_20261015_030225/grammar_verdict.json",
+          "size": 1021,
+          "sha256": "c19a5aa620bfc58d7593059f5d8c5a51012da7b6774ed2c54902dd7a02efcdbb",
+          "source": "exact archived bytes"
+        },
+        {
+          "path": "/home/yonghoon/ps45_unload_hist_20261013/kit_20261015_030225/SHA256SUMS",
+          "size": 1344,
+          "sha256": "8ff722d24096c6bd929682842e3b93907951ad29943f180709c914404cdb928d",
+          "source": "exact archived bytes"
+        },
+        {
+          "path": "/home/yonghoon/ps45_unload_hist_20261013/kit_20261015_030225/history_params.json",
+          "size": 8427,
+          "sha256": "7a5279f0119cbbc37a9c212593e256a03e417dc9a6af4f18a4f01bdc72404ff4",
+          "source": "archived kit seal; source file not in archive",
+          "size_provenance": "historical manifest repo_head Git blob; hash equals archived seal",
+          "git_path": "docs/data/ps45_unload_20261009/history_test/history_params.json"
+        },
+        {
+          "path": "/home/yonghoon/ps45_unload_hist_20261013/kit_20261015_030225/read_history.py",
+          "size": 79327,
+          "sha256": "70f741a9b8308fe33683de0f22872e2c44ce674dd6223cfce8c00e1a725b696c",
+          "source": "archived kit seal; source file not in archive",
+          "size_provenance": "historical manifest repo_head Git blob; hash equals archived seal",
+          "git_path": "docs/data/ps45_unload_20261009/history_test/read_history.py"
+        }
+      ]
+    }
+  ],
+  "scope": "read-only path/byte inventory; no execution qualification; primary grammar selected explicitly, no newest selection"
+}
