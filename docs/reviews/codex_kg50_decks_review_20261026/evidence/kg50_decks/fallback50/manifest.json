@@ -1,0 +1,220 @@
+{
+  "generator": "scripts/make_se_size_decks.py",
+  "generator_sha256": "8f4b0eed536de83679316ff840e870bfecc26a8afc4adfa619dc6837f6ac64bb",
+  "template": "docs/data/phase_a_6mah/in.real_4.liggghts",
+  "template_sha256": "900ae9c8f1fde02e83ac86dcee7cca55a10df9ac73e59f15a1ae1516903bfda7",
+  "config": {
+    "r_am_um": 3.0,
+    "am_mass": 0.85,
+    "loading_mah_cm2": 6.5,
+    "cap_mah_g": 200.0,
+    "dens_gen": "lab20261014",
+    "maxattempt": 3000,
+    "atom_dump_every": 50000,
+    "compress_restart_every": 200000,
+    "insert_restart": true,
+    "am_gate_tol": 0.005,
+    "insert_extra_steps": 2000,
+    "speed": {
+      "base": "kg50_d07_b40",
+      "steps": 20000,
+      "skins_um": [
+        2.0,
+        0.5
+      ],
+      "nps": [
+        28,
+        56
+      ]
+    }
+  },
+  "cases": [
+    {
+      "case": "kg50_d07_b50",
+      "r_am_um": 3.0,
+      "r_se_um": 0.35,
+      "d50_se_um": 0.7,
+      "box_um": 50,
+      "am_mass": 0.85,
+      "loading_target_mah_cm2": 6.5,
+      "cap_mah_g": 200.0,
+      "loading_pred_mah_cm2": 6.4989,
+      "solid_thickness_um": 101.9816,
+      "volumefraction": 0.321,
+      "reg_mix_z_top": 0.3227,
+      "insert_height_um": 317.7,
+      "counts_pred": {
+        "AM_P": 1481,
+        "SE": 486810
+      },
+      "n_total_pred": 488291,
+      "maxattempt": 3000,
+      "maxattempt_template": 15000,
+      "int32_product": 1464873000,
+      "seeds": [
+        15500011,
+        15600001,
+        15700019,
+        15800017,
+        15900013
+      ],
+      "atom_dump_every": 50000,
+      "atom_dump_every_template": 5000,
+      "insert_restart": true,
+      "area_sim": 0.0025000000000000005,
+      "compress_restart_every": 200000,
+      "am_gate": [
+        1473,
+        1489
+      ],
+      "n_am_plan": 1481,
+      "skin_um": 2.0,
+      "skin_um_template": 2.0,
+      "dens_gen": "lab20261014",
+      "dens_g_cm3": {
+        "AM": 4.85,
+        "SE": 1.64,
+        "VGCF": 2.0,
+        "SuperP": 1.9,
+        "PTFE": 2.2,
+        "SDCP": 1.3,
+        "SWCNT": 1.35
+      },
+      "dens_carried_from_gen1": [
+        "VGCF",
+        "SuperP",
+        "PTFE",
+        "SDCP",
+        "SWCNT"
+      ],
+      "seed_slot": 9,
+      "deck_sha256": "5adab2c9a5b626d3df52496643abd620c4db119e21ad0bea82b0493c41aae757",
+      "insert_deck_sha256": "746ddc3dd6a873522d37be7a64340735a7dbc151b331a4a781e827dde95ca284"
+    },
+    {
+      "case": "kg50_d1_b50",
+      "r_am_um": 3.0,
+      "r_se_um": 0.5,
+      "d50_se_um": 1.0,
+      "box_um": 50,
+      "am_mass": 0.85,
+      "loading_target_mah_cm2": 6.5,
+      "cap_mah_g": 200.0,
+      "loading_pred_mah_cm2": 6.4989,
+      "solid_thickness_um": 101.9816,
+      "volumefraction": 0.321,
+      "reg_mix_z_top": 0.3227,
+      "insert_height_um": 317.7,
+      "counts_pred": {
+        "AM_P": 1481,
+        "SE": 166976
+      },
+      "n_total_pred": 168457,
+      "maxattempt": 3000,
+      "maxattempt_template": 15000,
+      "int32_product": 505371000,
+      "seeds": [
+        16000057,
+        16100027,
+        16200013,
+        16300003,
+        16400017
+      ],
+      "atom_dump_every": 50000,
+      "atom_dump_every_template": 5000,
+      "insert_restart": true,
+      "area_sim": 0.0025000000000000005,
+      "compress_restart_every": 200000,
+      "am_gate": [
+        1473,
+        1489
+      ],
+      "n_am_plan": 1481,
+      "skin_um": 2.0,
+      "skin_um_template": 2.0,
+      "dens_gen": "lab20261014",
+      "dens_g_cm3": {
+        "AM": 4.85,
+        "SE": 1.64,
+        "VGCF": 2.0,
+        "SuperP": 1.9,
+        "PTFE": 2.2,
+        "SDCP": 1.3,
+        "SWCNT": 1.35
+      },
+      "dens_carried_from_gen1": [
+        "VGCF",
+        "SuperP",
+        "PTFE",
+        "SDCP",
+        "SWCNT"
+      ],
+      "seed_slot": 10,
+      "deck_sha256": "99061fd8d5baabfe9f9e4c8cdf7c2533d2f9005678f9ccd35d3a3b01d0e56662",
+      "insert_deck_sha256": "3fa20f53f05045951c0e3ae33944f0cf75540a3941e47d881e27299e1fb5329a"
+    },
+    {
+      "case": "kg50_d2_b50",
+      "r_am_um": 3.0,
+      "r_se_um": 1.0,
+      "d50_se_um": 2.0,
+      "box_um": 50,
+      "am_mass": 0.85,
+      "loading_target_mah_cm2": 6.5,
+      "cap_mah_g": 200.0,
+      "loading_pred_mah_cm2": 6.4989,
+      "solid_thickness_um": 101.9816,
+      "volumefraction": 0.321,
+      "reg_mix_z_top": 0.3227,
+      "insert_height_um": 317.7,
+      "counts_pred": {
+        "AM_P": 1481,
+        "SE": 20872
+      },
+      "n_total_pred": 22353,
+      "maxattempt": 3000,
+      "maxattempt_template": 15000,
+      "int32_product": 67059000,
+      "seeds": [
+        16500007,
+        16600009,
+        16700003,
+        16800023,
+        16900021
+      ],
+      "atom_dump_every": 50000,
+      "atom_dump_every_template": 5000,
+      "insert_restart": true,
+      "area_sim": 0.0025000000000000005,
+      "compress_restart_every": 200000,
+      "am_gate": [
+        1473,
+        1489
+      ],
+      "n_am_plan": 1481,
+      "skin_um": 2.0,
+      "skin_um_template": 2.0,
+      "dens_gen": "lab20261014",
+      "dens_g_cm3": {
+        "AM": 4.85,
+        "SE": 1.64,
+        "VGCF": 2.0,
+        "SuperP": 1.9,
+        "PTFE": 2.2,
+        "SDCP": 1.3,
+        "SWCNT": 1.35
+      },
+      "dens_carried_from_gen1": [
+        "VGCF",
+        "SuperP",
+        "PTFE",
+        "SDCP",
+        "SWCNT"
+      ],
+      "seed_slot": 11,
+      "deck_sha256": "081cb0767ced1ae585bd20e45798aa6de59e62f82e337f0dcfd28cd76b82cf6a",
+      "insert_deck_sha256": "cbdcf07273cdd6112df249f515db578d4669a8c965884b6e3e0c92029c6527d6"
+    }
+  ],
+  "speed_tests": []
+}

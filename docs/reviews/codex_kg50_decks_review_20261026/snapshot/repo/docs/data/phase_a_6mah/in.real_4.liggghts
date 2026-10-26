@@ -1,0 +1,199 @@
+
+# ============================================================
+# Real Condition 4: 후막전극 복합양극 (Bimodal)
+# AM:SE = 81.6:18.4 (80:18 → 정규화)
+# P:S = 7:3 (AM_P r=6μm, AM_S r=2μm)
+# 면용량 = 6 mAh/cm², RVE = 50×50 μm
+# SE: LPSCl (r=0.5μm)
+# Scale: r×1000, E×0.001, P×0.001
+# ============================================================
+
+# --- 1. General Settings ---
+atom_style      granular
+atom_modify     map array sort 0 0
+boundary        p p f
+newton          off
+soft_particles  yes
+communicate     single vel yes
+units           si
+
+# --- 2. Variables & Domain ---
+variable target_press equal 0.30          # 300 MPa × 0.001
+variable r_AM_P  equal 6.0e-3            # AM_P r=6μm → Sim 6mm
+variable r_AM_S  equal 2.0e-3            # AM_S r=2μm → Sim 2mm
+variable r_SE    equal 0.5e-3            # SE r=0.5μm → Sim 0.5mm
+variable dt      equal 1.0e-6
+variable plate_margin equal 0.003
+timestep        ${dt}
+
+# RVE: 50×50 μm → Sim 0.05×0.05 m
+region reg_box block 0.0 0.05 0.0 0.05 -0.01 1.0 units box
+create_box      3 reg_box
+
+neighbor        0.002 bin
+neigh_modify    delay 0 check yes
+
+# --- 3. Material Properties (Type 1:AM_P, 2:AM_S, 3:SE) ---
+# AM: E=140 GPa → Sim 1.4e8 Pa, ν=0.25
+# SE: E=1.35 GPa → Sim 0.135e7 Pa (소성변형 보정), ν=0.30
+fix m1 all property/global youngsModulus peratomtype 1.4e8 1.4e8 0.135e7
+fix m2 all property/global poissonsRatio peratomtype 0.25 0.25 0.30
+
+fix m3 all property/global coefficientRestitution peratomtypepair 3 &
+    0.3 0.3 0.3 &
+    0.3 0.3 0.3 &
+    0.3 0.3 0.3
+
+fix m4 all property/global coefficientFriction peratomtypepair 3 &
+    0.5 0.5 0.5 &
+    0.5 0.5 0.5 &
+    0.5 0.5 0.5
+
+fix m5 all property/global coefficientRollingFriction peratomtypepair 3 &
+    0.2 0.2 0.1 &
+    0.2 0.2 0.1 &
+    0.1 0.1 0.1
+
+fix m6 all property/global coefficientMaxElasticStiffness peratomtypepair 3 &
+    1.5 1.5 3.0 &
+    1.5 1.5 3.0 &
+    3.0 3.0 5.0
+
+fix m7 all property/global coefficientAdhesionStiffness peratomtypepair 3 &
+    1.0e5 1.0e5 2.0e5 &
+    1.0e5 1.0e5 2.0e5 &
+    2.0e5 2.0e5 1.0e6
+
+fix m8 all property/global coefficientPlasticityDepth peratomtypepair 3 &
+    0.05 0.05 0.01 &
+    0.05 0.05 0.01 &
+    0.01 0.01 0.005
+
+fix m9 all property/global characteristicVelocity scalar 2.0
+
+# --- 4. Contact Model ---
+pair_style      gran model hooke/hysteresis tangential history rolling_friction cdt
+pair_coeff      * *
+
+compute strs all stress/atom
+compute ke   all ke/atom
+compute cpl all pair/gran/local pos id force force_normal force_tangential torque contactArea delta contactPoint
+
+# --- 5. Wall (Bottom) ---
+fix zwall_bot all wall/gran model hooke/hysteresis tangential history rolling_friction cdt primitive type 1 zplane 0.0
+
+# --- 6. Templates & Distribution ---
+# Type 1: AM_P (NCM811, ρ=4800 kg/m³, r=6μm)
+# Type 2: AM_S (NCM811, ρ=4800 kg/m³, r=2μm)
+# Type 3: SE   (LPSCl,  ρ=2000 kg/m³, r=0.5μm)
+fix pts1 all particletemplate/sphere 15485863 atom_type 1 density constant 4800 radius constant ${r_AM_P}
+fix pts2 all particletemplate/sphere 15485867 atom_type 2 density constant 4800 radius constant ${r_AM_S}
+fix pts3 all particletemplate/sphere 32452843 atom_type 3 density constant 2000 radius constant ${r_SE}
+
+# 질량비: AM_P:0.5712, AM_S:0.2448, SE:0.184
+# AM:SE = 81.6:18.4, P:S = 7:3
+fix pdd_mix all particledistribution/discrete 49979687 3 pts1 0.5712 pts2 0.2448 pts3 0.184
+
+# --- 7. Particle Insertion ---
+region reg_mix block 0.0 0.05 0.0 0.05 0.005 0.30 units box
+
+print "====== INSERTING PARTICLES (REAL_4: P:S=7:3, 81.6:18.4, 6mAh) ====="
+fix ins_mix all insert/pack seed 80363 distributiontemplate pdd_mix &
+    maxattempt 15000 insert_every once overlapcheck yes all_in no &
+    vel constant 0.0 0.0 -0.5 &
+    region reg_mix &
+    volumefraction_region 0.321
+run 1
+unfix ins_mix
+
+# --- 8. Output ---
+shell mkdir post_real_4
+thermo_style    custom step atoms ke cpu
+thermo          1000
+
+# --- 9. Phase 1: Settling ---
+print "====== PHASE 1: SETTLING ======"
+fix integr all nve/sphere
+fix gravi all gravity 98.1 vector 0.0 0.0 -1.0
+fix damp all viscous 1.0e-5
+
+compute zmax all reduce max z
+shell mkdir restart_real_4
+restart 50000 restart_real_4/restart_settling_*.bin
+
+run 200000
+
+# --- Settling 완료: z_max 기반 동적 plate 생성 ---
+write_restart restart_real_4/restart_after_settling.bin
+print "====== RESTART SAVED ======"
+thermo_style    custom step atoms c_zmax
+thermo          1
+run 1
+variable z_max equal c_zmax
+variable plate_z equal ${z_max}+${r_AM_P}+${plate_margin}
+print "====== SETTLING COMPLETE ======"
+print "====== Z_MAX (center): ${z_max} ======"
+print "====== PLATE HEIGHT: ${plate_z} ======"
+
+# 동적 plate STL (RVE 50×50 μm → Sim 0.05×0.05 m)
+print "solid plate" file plate_real_4.stl screen no
+print "facet normal 0 0 -1" append plate_real_4.stl screen no
+print "outer loop" append plate_real_4.stl screen no
+print "vertex 0.0 0.0 ${plate_z}" append plate_real_4.stl screen no
+print "vertex 0.05 0.05 ${plate_z}" append plate_real_4.stl screen no
+print "vertex 0.05 0.0 ${plate_z}" append plate_real_4.stl screen no
+print "endloop" append plate_real_4.stl screen no
+print "endfacet" append plate_real_4.stl screen no
+print "facet normal 0 0 -1" append plate_real_4.stl screen no
+print "outer loop" append plate_real_4.stl screen no
+print "vertex 0.0 0.0 ${plate_z}" append plate_real_4.stl screen no
+print "vertex 0.0 0.05 ${plate_z}" append plate_real_4.stl screen no
+print "vertex 0.05 0.05 ${plate_z}" append plate_real_4.stl screen no
+print "endloop" append plate_real_4.stl screen no
+print "endfacet" append plate_real_4.stl screen no
+print "endsolid plate" append plate_real_4.stl screen no
+
+# --- 10. Phase 2: Stabilize ---
+fix top_mesh all mesh/surface/stress file plate_real_4.stl type 1 scale 1.0 reference_point 0 0 0
+fix zwall_top all wall/gran model hooke/hysteresis tangential history rolling_friction cdt mesh n_meshes 1 meshes top_mesh
+
+dump dmp_mesh all mesh/stl 5000 post_real_4/mesh_*.stl top_mesh
+
+print "====== PHASE 2: STABILIZE ======"
+fix gravi all gravity 9.81 vector 0.0 0.0 -1.0
+unfix damp
+fix damp all viscous 0.5
+# RVE 면적: 0.05 × 0.05 = 0.0025 m²
+variable pressMPa equal abs(f_top_mesh[3])/0.0025/1000000
+thermo_style    custom step atoms ke cpu v_pressMPa
+thermo 1000
+run 200000
+
+# --- 11. Phase 3: Compression ---
+print "====== PHASE 3: COMPRESSION (Speed 0.01) ======"
+dump dmp_atom all custom 5000 post_real_4/atom_*.liggghts id type x y z radius vx vy vz c_strs[1] c_strs[2] c_strs[3] c_ke
+fix_modify      zwall_top energy yes
+
+variable press_speed equal 0.01
+fix move_press all move/mesh mesh top_mesh linear 0.0 0.0 -${press_speed}
+
+label loop_press
+    run 5000
+    variable current_press equal "abs(f_top_mesh[3]) / 0.0025 / 1000000"
+    print "Current Pressure: ${current_press} MPa (Target: ${target_press})"
+    if "${current_press} < ${target_press}" then "jump SELF loop_press"
+
+unfix move_press
+
+# --- 12. Phase 4: Relaxation ---
+print "====== PHASE 4: RELAXATION ======"
+unfix damp
+fix damp all viscous 1.0e-5
+dump dmp_contact all local 10000 post_real_4/contact_*.liggghts &
+    c_cpl[1] c_cpl[2] c_cpl[3] c_cpl[4] c_cpl[5] c_cpl[6] c_cpl[7] c_cpl[8] &
+    c_cpl[9] c_cpl[10] c_cpl[11] c_cpl[12] c_cpl[13] c_cpl[14] c_cpl[15] c_cpl[16] &
+    c_cpl[17] c_cpl[18] c_cpl[19] c_cpl[20] c_cpl[21] c_cpl[22] c_cpl[23] c_cpl[24] &
+    c_cpl[25] c_cpl[26]
+
+run 100000
+print "====== Simulation Finished! (REAL_4: P:S=7:3, 81.6:18.4, 6mAh/cm2) ======"

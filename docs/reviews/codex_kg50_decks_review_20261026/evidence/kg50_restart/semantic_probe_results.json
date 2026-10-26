@@ -1,0 +1,133 @@
+{
+  "method": "SOURCE-GUARDED PYTHON SEMANTIC REPRODUCTION; not executed Bash, AWK or LIGGGHTS.",
+  "shell_execution_limit": "Exact extracted-source Bash harness was prepared but Git Bash failed before script execution with NtCreateDirectoryObject0xC0000022 in sandbox. No actual scheduler or simulation command executed.",
+  "source_sha256": "bf82948ef8aa4ec6f3ed9f0cf3da85d8ee7bd9371bf04af56b49e69e3fef2780",
+  "source_assertions": {
+    "status_list_has_failed": "COMPLETED|FAILED|CANCELLED|TIMEOUT|OUT_OF|NODE_FAIL",
+    "no_error_token_is_only_error_gate": "[ \"$E\" = 0 ]",
+    "settling_no_dump_fallback": "[ $nc = 0 ] && [ \"$M\" = settling ] && G2T=",
+    "no_shared_regular_row_passes": "if [ -z \"$F2\" ]; then G3=1;",
+    "main_submit_predicate": "if [ $G1 = 1 ] && [ $G2 = 1 ] && [ $G3 = 1 ]; then"
+  },
+  "gate_cases": [
+    {
+      "case": "nominal_completed",
+      "state": "COMPLETED",
+      "wait_breaks": true,
+      "G1": true,
+      "G2": true,
+      "G3": true,
+      "F": 1,
+      "F2": 1000,
+      "original_regular_steps": [
+        1000,
+        2000,
+        2001
+      ],
+      "trial_regular_steps": [
+        1000,
+        2000,
+        2001
+      ],
+      "loop_footer_present": true,
+      "final_step": 2001,
+      "would_take_source_main_submission_branch": true
+    },
+    {
+      "case": "failed_setup_only",
+      "state": "FAILED",
+      "wait_breaks": true,
+      "G1": true,
+      "G2": true,
+      "G3": true,
+      "F": 1,
+      "F2": null,
+      "original_regular_steps": [
+        1000,
+        2000,
+        2001
+      ],
+      "trial_regular_steps": [],
+      "loop_footer_present": false,
+      "final_step": 1,
+      "would_take_source_main_submission_branch": true
+    },
+    {
+      "case": "failed_after_first_regular",
+      "state": "FAILED",
+      "wait_breaks": true,
+      "G1": true,
+      "G2": true,
+      "G3": true,
+      "F": 1,
+      "F2": 1000,
+      "original_regular_steps": [
+        1000,
+        2000,
+        2001
+      ],
+      "trial_regular_steps": [
+        1000
+      ],
+      "loop_footer_present": false,
+      "final_step": 1000,
+      "would_take_source_main_submission_branch": true
+    },
+    {
+      "case": "wrong_first_regular_rejected",
+      "state": "COMPLETED",
+      "wait_breaks": true,
+      "G1": true,
+      "G2": true,
+      "G3": false,
+      "F": 1,
+      "F2": 1000,
+      "original_regular_steps": [
+        1000,
+        2000,
+        2001
+      ],
+      "trial_regular_steps": [
+        1000,
+        2000,
+        2001
+      ],
+      "loop_footer_present": true,
+      "final_step": 2001,
+      "would_take_source_main_submission_branch": false
+    },
+    {
+      "case": "liggghts_ERROR_rejected",
+      "state": "FAILED",
+      "wait_breaks": true,
+      "G1": false,
+      "G2": true,
+      "G3": true,
+      "F": 1,
+      "F2": null,
+      "original_regular_steps": [
+        1000,
+        2000,
+        2001
+      ],
+      "trial_regular_steps": [],
+      "loop_footer_present": false,
+      "final_step": 1,
+      "would_take_source_main_submission_branch": false
+    }
+  ],
+  "two_template_rounding": {
+    "N": 312506,
+    "AM_number_fraction": 0.003033546734740726,
+    "expected_AM": 948.0015558868853,
+    "NP1_AM_floor": 948,
+    "NP1_AM_ceil": 949,
+    "NP56_local_sizes": [
+      5580,
+      5581
+    ],
+    "NP56_all_local_floors_AM": 896,
+    "NP56_all_local_ceils_AM": 952,
+    "explanation": "With two templates and total inserted, each local AM is floor(n_local*p) or ceil(n_local*p), selected by random remainder. E[N_AM]=sum(n_local*p) under uniform remainders. This is an algorithmic counterexample to a compulsory downward bias, not a reproduction of a specific PRNG seed or physical insertion."
+  }
+}

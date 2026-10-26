@@ -1,0 +1,204 @@
+{
+  "kind": "algebraic source-backed counterexamples; no physical simulation",
+  "assertions_passed": true,
+  "drag": [
+    {
+      "SE_D_real_um": 0.7,
+      "SE_r_deck_m": 0.00035,
+      "mass_deck_kg": 2.945347832495551e-07,
+      "drag_time_s": 5.890695664991102e-07,
+      "alpha_dt_gamma_over_m": 1.6975923674738178,
+      "drag_only_halfstep_multiplier": -0.6975923674738178,
+      "multiplier_dt_half": 0.1512038162630911,
+      "drag_only_absolute_stability_limit_dt_s": 1.1781391329982203e-06,
+      "pure_drag_continuum_factor_at_dt": 0.18312388875270752
+    },
+    {
+      "SE_D_real_um": 1.0,
+      "SE_r_deck_m": 0.0005,
+      "mass_deck_kg": 8.587019919812101e-07,
+      "drag_time_s": 1.7174039839624202e-06,
+      "alpha_dt_gamma_over_m": 0.5822741820435196,
+      "drag_only_halfstep_multiplier": 0.41772581795648045,
+      "multiplier_dt_half": 0.7088629089782402,
+      "drag_only_absolute_stability_limit_dt_s": 3.4348079679248405e-06,
+      "pure_drag_continuum_factor_at_dt": 0.5586265025273048
+    },
+    {
+      "SE_D_real_um": 2.0,
+      "SE_r_deck_m": 0.001,
+      "mass_deck_kg": 6.869615935849681e-06,
+      "drag_time_s": 1.3739231871699362e-05,
+      "alpha_dt_gamma_over_m": 0.07278427275543994,
+      "drag_only_halfstep_multiplier": 0.92721572724456,
+      "multiplier_dt_half": 0.96360786362228,
+      "drag_only_absolute_stability_limit_dt_s": 2.7478463743398724e-05,
+      "pure_drag_continuum_factor_at_dt": 0.9298013918839456
+    },
+    {
+      "SE_D_real_um": 3.0,
+      "SE_r_deck_m": 0.0015,
+      "mass_deck_kg": 2.3184953783492673e-05,
+      "drag_time_s": 4.6369907566985346e-05,
+      "alpha_dt_gamma_over_m": 0.021565710446056277,
+      "drag_only_halfstep_multiplier": 0.9784342895539437,
+      "multiplier_dt_half": 0.9892171447769719,
+      "drag_only_absolute_stability_limit_dt_s": 9.273981513397069e-05,
+      "pure_drag_continuum_factor_at_dt": 0.9786651668315781
+    }
+  ],
+  "sampling": [
+    {
+      "compression_loops": 1010,
+      "compression_end": 5450002,
+      "final_step": 5550002,
+      "atom_step": 5550000,
+      "contact_step": 5550000,
+      "last_common_step": 5550000,
+      "atom_age_steps": 2,
+      "relaxation_steps_at_last_common": 99998,
+      "legacy_atom_age_steps": 2,
+      "legacy_last_common_age_steps": 2
+    },
+    {
+      "compression_loops": 1011,
+      "compression_end": 5455002,
+      "final_step": 5555002,
+      "atom_step": 5550000,
+      "contact_step": 5550000,
+      "last_common_step": 5550000,
+      "atom_age_steps": 5002,
+      "relaxation_steps_at_last_common": 94998,
+      "legacy_atom_age_steps": 2,
+      "legacy_last_common_age_steps": 5002
+    },
+    {
+      "compression_loops": 1012,
+      "compression_end": 5460002,
+      "final_step": 5560002,
+      "atom_step": 5550000,
+      "contact_step": 5560000,
+      "last_common_step": 5550000,
+      "atom_age_steps": 10002,
+      "relaxation_steps_at_last_common": 89998,
+      "legacy_atom_age_steps": 2,
+      "legacy_last_common_age_steps": 2
+    },
+    {
+      "compression_loops": 1013,
+      "compression_end": 5465002,
+      "final_step": 5565002,
+      "atom_step": 5550000,
+      "contact_step": 5560000,
+      "last_common_step": 5550000,
+      "atom_age_steps": 15002,
+      "relaxation_steps_at_last_common": 84998,
+      "legacy_atom_age_steps": 2,
+      "legacy_last_common_age_steps": 5002
+    },
+    {
+      "compression_loops": 1014,
+      "compression_end": 5470002,
+      "final_step": 5570002,
+      "atom_step": 5550000,
+      "contact_step": 5570000,
+      "last_common_step": 5550000,
+      "atom_age_steps": 20002,
+      "relaxation_steps_at_last_common": 79998,
+      "legacy_atom_age_steps": 2,
+      "legacy_last_common_age_steps": 2
+    },
+    {
+      "compression_loops": 1015,
+      "compression_end": 5475002,
+      "final_step": 5575002,
+      "atom_step": 5550000,
+      "contact_step": 5570000,
+      "last_common_step": 5550000,
+      "atom_age_steps": 25002,
+      "relaxation_steps_at_last_common": 74998,
+      "legacy_atom_age_steps": 2,
+      "legacy_last_common_age_steps": 5002
+    },
+    {
+      "compression_loops": 1016,
+      "compression_end": 5480002,
+      "final_step": 5580002,
+      "atom_step": 5550000,
+      "contact_step": 5580000,
+      "last_common_step": 5550000,
+      "atom_age_steps": 30002,
+      "relaxation_steps_at_last_common": 69998,
+      "legacy_atom_age_steps": 2,
+      "legacy_last_common_age_steps": 2
+    },
+    {
+      "compression_loops": 1017,
+      "compression_end": 5485002,
+      "final_step": 5585002,
+      "atom_step": 5550000,
+      "contact_step": 5580000,
+      "last_common_step": 5550000,
+      "atom_age_steps": 35002,
+      "relaxation_steps_at_last_common": 64998,
+      "legacy_atom_age_steps": 2,
+      "legacy_last_common_age_steps": 5002
+    },
+    {
+      "compression_loops": 1018,
+      "compression_end": 5490002,
+      "final_step": 5590002,
+      "atom_step": 5550000,
+      "contact_step": 5590000,
+      "last_common_step": 5550000,
+      "atom_age_steps": 40002,
+      "relaxation_steps_at_last_common": 59998,
+      "legacy_atom_age_steps": 2,
+      "legacy_last_common_age_steps": 2
+    },
+    {
+      "compression_loops": 1019,
+      "compression_end": 5495002,
+      "final_step": 5595002,
+      "atom_step": 5550000,
+      "contact_step": 5590000,
+      "last_common_step": 5550000,
+      "atom_age_steps": 45002,
+      "relaxation_steps_at_last_common": 54998,
+      "legacy_atom_age_steps": 2,
+      "legacy_last_common_age_steps": 5002
+    },
+    {
+      "compression_loops": 1020,
+      "compression_end": 5500002,
+      "final_step": 5600002,
+      "atom_step": 5600000,
+      "contact_step": 5600000,
+      "last_common_step": 5600000,
+      "atom_age_steps": 2,
+      "relaxation_steps_at_last_common": 99998,
+      "legacy_atom_age_steps": 2,
+      "legacy_last_common_age_steps": 2
+    }
+  ],
+  "critical_diameter_real_um_for_alpha_2": 0.6627745844739044,
+  "source_pin": "3d5c00f20519e6bb6eb6756f51f1ad36564e649d",
+  "sources": [
+    {
+      "path": "snapshot\\repo\\docs\\data\\kg50_decks_20261026\\kg50_d07_b40\\input_kg50_d07_b40.liggghts",
+      "sha256": "7f2cc45c20d6dd3c854c9b494afc9a23c8f0e651ebc41a7b966ab1162280bd36"
+    },
+    {
+      "path": "evidence\\root\\sources\\fix_nve.cpp",
+      "sha256": "61e6fc8e76e62442f545bdf304eba172837ceee4728f204caca6d8d940982499"
+    },
+    {
+      "path": "evidence\\root\\sources\\fix_nve_sphere.cpp",
+      "sha256": "a5eb62c8614892119b55000148e441b2309fee762db84c28ce40c5e75eb997a4"
+    },
+    {
+      "path": "evidence\\root\\sources\\fix_viscous.cpp",
+      "sha256": "5b441f1849d2269d84a9abc2787c069b76e75a245f75fc00cc2e717a4169c445"
+    }
+  ]
+}

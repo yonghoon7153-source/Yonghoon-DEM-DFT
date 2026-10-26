@@ -1,0 +1,6 @@
+Step Atoms KinEng CPU
+1 312506 0.116 0
+1000 312506 0.14 1
+2000 312506 0.17 2
+2001 312506 0.17003 2.001
+Loop time of 2.001 on 1 procs for 2000 steps with 312506 atoms

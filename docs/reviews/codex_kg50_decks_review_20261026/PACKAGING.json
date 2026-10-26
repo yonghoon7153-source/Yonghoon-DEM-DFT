@@ -1,0 +1,9 @@
+{
+  "input_snapshot_files_verified": 51,
+  "snapshot_mismatches": [],
+  "payload_files_excluding_manifest_and_packaging": 182,
+  "physical_simulation_runs": 0,
+  "production_edits": 0,
+  "git_mutations": 0,
+  "report": "codex_review_kg50_decks_20261026.md"
+}

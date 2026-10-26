@@ -1,0 +1,44 @@
+[
+  {
+    "case": "kg50_d07_b50",
+    "parsed_counts": [
+      1481,
+      486810
+    ],
+    "manifest_match": true,
+    "total": 488291,
+    "maxattempt": 3000,
+    "int32_product": 1464873000,
+    "margin_product": 1904334900.0,
+    "safe": true,
+    "max_allowed": 3383
+  },
+  {
+    "case": "kg50_d1_b50",
+    "parsed_counts": [
+      1481,
+      166976
+    ],
+    "manifest_match": true,
+    "total": 168457,
+    "maxattempt": 3000,
+    "int32_product": 505371000,
+    "margin_product": 656982300.0,
+    "safe": true,
+    "max_allowed": 9806
+  },
+  {
+    "case": "kg50_d2_b50",
+    "parsed_counts": [
+      1481,
+      20872
+    ],
+    "manifest_match": true,
+    "total": 22353,
+    "maxattempt": 3000,
+    "int32_product": 67059000,
+    "margin_product": 87176700.0,
+    "safe": true,
+    "max_allowed": 73901
+  }
+]

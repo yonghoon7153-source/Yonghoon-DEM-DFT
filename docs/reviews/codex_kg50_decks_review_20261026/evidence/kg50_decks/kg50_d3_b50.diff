@@ -1,0 +1,208 @@
+--- 
++++ 
+@@ -1,10 +1,26 @@
++# ===== SE 입도 비교 생성본 (make_se_size_decks.py · 50kg/batch 4차년도) =====
++#   kg50_d3_b50: mono AM D6, AM:SE=85:15 wt%, SE D50 3um, 6.5mAh/cm2, 50x50um
++#   기준 덱 docs/data/phase_a_6mah/in.real_4.liggghts (sha256 900ae9c8f1fde02e…) — 바꾼 자리 = 아래뿐
++#   ① 조성 단일 활물질 (AM_P 자리 · pts2 정의만) · 질량분율 AM 0.85 · SE 0.15
++#   ② r_AM_P 3 µm · r_SE 1.5 µm   ③ 진밀도 세대 lab20261014: AM 4.85 · SE 1.64 g/cm³
++#   ④ 영역 50×50 µm (reg_box · reg_mix · 판 꼭짓점 · 압력 면적 0.0025)
++#   ⑤ 삽입 위끝 z 0.322700 (높이 317.7 µm · volumefraction 0.321 그대로) = 고체 두께 101.98 µm = 6.5 mAh/cm² @ 200 mAh/g
++#   ⑥ 시드 (큰 소수 · 케이스마다 독립): 13000027, 13100023, 13200001, 13300039, 13400027
++#   ⑦ 태그 real_4 → kg50_d3_b50   ⑧ maxattempt 15,000 → 3,000 (예상 7,665 × 3,000 = 2.3e+07 < 2^31/1.3 · 원장 PS-01)
++#   ⑨ processors * * 1 (x·y 분할)   ⑩ 삽입 자기검사 (99 %)   ⑪ restart 200000 restart_kg50_d3_b50/restart_compress_*.bin (간격 200,000)
++#   ⑫ atom 덤프 간격 5,000 → 50,000
++#   ⑬ 삽입 직후 체크포인트 write_restart restart_kg50_d3_b50/restart_settling_1.bin (NP 1 삽입 → 재개 스크립트로 코어 변경)
++#   ⑭ 삽입 직후 활물질 수 1473–1489 (계획 1,481) 밖이면 quit 1 — 삽입은 NP 1 (SELF-70)
++#   ⑮ 이웃 skin 그대로 (2 µm)
++#   그대로: 재료 property/global 전부 (E_SE 0.135e7 = 1.35 GPa 연화값) · 접촉법칙 · dt · 이웃 · 벽 · 중력 · 감쇠 ·
++#     정착 200,000 · 안정화 200,000 · 판 속도 0.01 · 목표 0.30 (300 MPa) · 이완 100,000 · 접촉 · mesh 덤프
++#   예상 입자 수 (질량분율 규약): AM_P 1,481 · SE 6,184 (합 7,665) · 예상 면용량 6.499 mAh/cm²
++#   ⚠ 상별 수는 MPI 랭크 수 NP 만큼 흔들린다 (소수 상 = 활물질이 체계적으로 부족 · 원장 SELF-70) — 삽입은 NP 1 ·
++#     런 뒤 덤프로 실현 조성을 센다.
++#   ⚠ 언로딩 없음 — 끝 상태 = 판 고정 이완 (가압 상태) · 실험 (하중 제거) 과 바로 비교하지 않는다.
+ 
+ # ============================================================
+-# Real Condition 4: 후막전극 복합양극 (Bimodal)
+-# AM:SE = 81.6:18.4 (80:18 → 정규화)
+-# P:S = 7:3 (AM_P r=6μm, AM_S r=2μm)
+-# 면용량 = 6 mAh/cm², RVE = 50×50 μm
+-# SE: LPSCl (r=0.5μm)
++# kg50_d3_b50: SE 입도 비교 (50kg/batch 4차년도 · make_se_size_decks.py)
+ # Scale: r×1000, E×0.001, P×0.001
+ # ============================================================
+ 
+@@ -19,14 +35,15 @@
+ 
+ # --- 2. Variables & Domain ---
+ variable target_press equal 0.30          # 300 MPa × 0.001
+-variable r_AM_P  equal 6.0e-3            # AM_P r=6μm → Sim 6mm
++variable r_AM_P  equal 3e-3            # AM_P r=3μm → Sim 3mm
+ variable r_AM_S  equal 2.0e-3            # AM_S r=2μm → Sim 2mm
+-variable r_SE    equal 0.5e-3            # SE r=0.5μm → Sim 0.5mm
++variable r_SE    equal 1.5e-3            # SE r=1.5μm → Sim 1.5mm
+ variable dt      equal 1.0e-6
+ variable plate_margin equal 0.003
+ timestep        ${dt}
+ 
+ # RVE: 50×50 μm → Sim 0.05×0.05 m
++processors * * 1
+ region reg_box block 0.0 0.05 0.0 0.05 -0.01 1.0 units box
+ create_box      3 reg_box
+ 
+@@ -83,31 +100,47 @@
+ fix zwall_bot all wall/gran model hooke/hysteresis tangential history rolling_friction cdt primitive type 1 zplane 0.0
+ 
+ # --- 6. Templates & Distribution ---
+-# Type 1: AM_P (NCM811, ρ=4800 kg/m³, r=6μm)
+-# Type 2: AM_S (NCM811, ρ=4800 kg/m³, r=2μm)
+-# Type 3: SE   (LPSCl,  ρ=2000 kg/m³, r=0.5μm)
+-fix pts1 all particletemplate/sphere 15485863 atom_type 1 density constant 4800 radius constant ${r_AM_P}
+-fix pts2 all particletemplate/sphere 15485867 atom_type 2 density constant 4800 radius constant ${r_AM_S}
+-fix pts3 all particletemplate/sphere 32452843 atom_type 3 density constant 2000 radius constant ${r_SE}
+-
+-# 질량비: AM_P:0.5712, AM_S:0.2448, SE:0.184
++# Type 1: AM   (NCM811, ρ=4850 kg/m³, r=3μm) — 단일 활물질
++# Type 2: AM_S (정의만 · 분포 가중 0 · ρ=4850 kg/m³)
++# Type 3: SE   (LPSCl,  ρ=1640 kg/m³, r=1.5μm)
++fix pts1 all particletemplate/sphere 13000027 atom_type 1 density constant 4850 radius constant ${r_AM_P}
++fix pts2 all particletemplate/sphere 13100023 atom_type 2 density constant 4850 radius constant ${r_AM_S}   # (이 케이스 질량분율 0 — 분포에서 제외)
++fix pts3 all particletemplate/sphere 13200001 atom_type 3 density constant 1640 radius constant ${r_SE}
++
++# 질량비: AM_P:0.85, SE:0.15
+ # AM:SE = 81.6:18.4, P:S = 7:3
+-fix pdd_mix all particledistribution/discrete 49979687 3 pts1 0.5712 pts2 0.2448 pts3 0.184
++fix pdd_mix all particledistribution/discrete 13300039 2 pts1 0.85 pts3 0.15
+ 
+ # --- 7. Particle Insertion ---
+-region reg_mix block 0.0 0.05 0.0 0.05 0.005 0.30 units box
+-
+-print "====== INSERTING PARTICLES (REAL_4: P:S=7:3, 81.6:18.4, 6mAh) ====="
+-fix ins_mix all insert/pack seed 80363 distributiontemplate pdd_mix &
+-    maxattempt 15000 insert_every once overlapcheck yes all_in no &
++region reg_mix block 0.0 0.05 0.0 0.05 0.005 0.322700 units box
++
++print "====== INSERTING PARTICLES (KG50_D3_B50: mono AM D6, AM:SE=85:15 wt%, SE D50 3um, 6.5mAh/cm2, 50x50um) ====="
++fix ins_mix all insert/pack seed 13400027 distributiontemplate pdd_mix &
++    maxattempt 3000 insert_every once overlapcheck yes all_in no &
+     vel constant 0.0 0.0 -0.5 &
+     region reg_mix &
+     volumefraction_region 0.321
+ run 1
+ unfix ins_mix
+ 
++# ── 삽입 자기검사 (원장 `PS-01` · 감사 GAP high) ──
++#   부분 삽입 침대는 조성이 달라 **다른 물건**이다 — 완주시키지 않는다.
++variable n_ins equal count(all)
++print "====== INSERTED ${n_ins} / 7665 (floor 7588 = 99%) ======"
++if "${n_ins} < 7588" then &
++    "print 'FATAL: partial insertion - bed composition differs (PS-01). aborting.'" &
++    "quit 1"
++
++# ⑭ 삽입 직후 활물질 수 — 계획 1,481 ±0.5 % (SELF-70: NP 가 크면 소수 상이 체계적으로 부족 → 삽입은 NP 1)
++group g_am_ins type 1
++variable n_am_ins equal count(g_am_ins)
++print "====== AM ${n_am_ins} / 1481 (gate 1473-1489) ======"
++if "${n_am_ins} < 1473 || ${n_am_ins} > 1489" then &
++    "print 'FATAL: AM count off plan (SELF-70) - insert at NP 1. aborting.'" &
++    "quit 1"
++
+ # --- 8. Output ---
+-shell mkdir post_real_4
++shell mkdir post_kg50_d3_b50
+ thermo_style    custom step atoms ke cpu
+ thermo          1000
+ 
+@@ -118,13 +151,14 @@
+ fix damp all viscous 1.0e-5
+ 
+ compute zmax all reduce max z
+-shell mkdir restart_real_4
+-restart 50000 restart_real_4/restart_settling_*.bin
++shell mkdir restart_kg50_d3_b50
++restart 50000 restart_kg50_d3_b50/restart_settling_*.bin
++write_restart restart_kg50_d3_b50/restart_settling_1.bin   # 삽입 직후 (step 1) — 재개 스크립트의 settling 모드 = 남은 200,000
+ 
+ run 200000
+ 
+ # --- Settling 완료: z_max 기반 동적 plate 생성 ---
+-write_restart restart_real_4/restart_after_settling.bin
++write_restart restart_kg50_d3_b50/restart_after_settling.bin
+ print "====== RESTART SAVED ======"
+ thermo_style    custom step atoms c_zmax
+ thermo          1
+@@ -136,28 +170,28 @@
+ print "====== PLATE HEIGHT: ${plate_z} ======"
+ 
+ # 동적 plate STL (RVE 50×50 μm → Sim 0.05×0.05 m)
+-print "solid plate" file plate_real_4.stl screen no
+-print "facet normal 0 0 -1" append plate_real_4.stl screen no
+-print "outer loop" append plate_real_4.stl screen no
+-print "vertex 0.0 0.0 ${plate_z}" append plate_real_4.stl screen no
+-print "vertex 0.05 0.05 ${plate_z}" append plate_real_4.stl screen no
+-print "vertex 0.05 0.0 ${plate_z}" append plate_real_4.stl screen no
+-print "endloop" append plate_real_4.stl screen no
+-print "endfacet" append plate_real_4.stl screen no
+-print "facet normal 0 0 -1" append plate_real_4.stl screen no
+-print "outer loop" append plate_real_4.stl screen no
+-print "vertex 0.0 0.0 ${plate_z}" append plate_real_4.stl screen no
+-print "vertex 0.0 0.05 ${plate_z}" append plate_real_4.stl screen no
+-print "vertex 0.05 0.05 ${plate_z}" append plate_real_4.stl screen no
+-print "endloop" append plate_real_4.stl screen no
+-print "endfacet" append plate_real_4.stl screen no
+-print "endsolid plate" append plate_real_4.stl screen no
++print "solid plate" file plate_kg50_d3_b50.stl screen no
++print "facet normal 0 0 -1" append plate_kg50_d3_b50.stl screen no
++print "outer loop" append plate_kg50_d3_b50.stl screen no
++print "vertex 0.0 0.0 ${plate_z}" append plate_kg50_d3_b50.stl screen no
++print "vertex 0.05 0.05 ${plate_z}" append plate_kg50_d3_b50.stl screen no
++print "vertex 0.05 0.0 ${plate_z}" append plate_kg50_d3_b50.stl screen no
++print "endloop" append plate_kg50_d3_b50.stl screen no
++print "endfacet" append plate_kg50_d3_b50.stl screen no
++print "facet normal 0 0 -1" append plate_kg50_d3_b50.stl screen no
++print "outer loop" append plate_kg50_d3_b50.stl screen no
++print "vertex 0.0 0.0 ${plate_z}" append plate_kg50_d3_b50.stl screen no
++print "vertex 0.0 0.05 ${plate_z}" append plate_kg50_d3_b50.stl screen no
++print "vertex 0.05 0.05 ${plate_z}" append plate_kg50_d3_b50.stl screen no
++print "endloop" append plate_kg50_d3_b50.stl screen no
++print "endfacet" append plate_kg50_d3_b50.stl screen no
++print "endsolid plate" append plate_kg50_d3_b50.stl screen no
+ 
+ # --- 10. Phase 2: Stabilize ---
+-fix top_mesh all mesh/surface/stress file plate_real_4.stl type 1 scale 1.0 reference_point 0 0 0
++fix top_mesh all mesh/surface/stress file plate_kg50_d3_b50.stl type 1 scale 1.0 reference_point 0 0 0
+ fix zwall_top all wall/gran model hooke/hysteresis tangential history rolling_friction cdt mesh n_meshes 1 meshes top_mesh
+ 
+-dump dmp_mesh all mesh/stl 5000 post_real_4/mesh_*.stl top_mesh
++dump dmp_mesh all mesh/stl 5000 post_kg50_d3_b50/mesh_*.stl top_mesh
+ 
+ print "====== PHASE 2: STABILIZE ======"
+ fix gravi all gravity 9.81 vector 0.0 0.0 -1.0
+@@ -171,11 +205,12 @@
+ 
+ # --- 11. Phase 3: Compression ---
+ print "====== PHASE 3: COMPRESSION (Speed 0.01) ======"
+-dump dmp_atom all custom 5000 post_real_4/atom_*.liggghts id type x y z radius vx vy vz c_strs[1] c_strs[2] c_strs[3] c_ke
++dump dmp_atom all custom 50000 post_kg50_d3_b50/atom_*.liggghts id type x y z radius vx vy vz c_strs[1] c_strs[2] c_strs[3] c_ke
+ fix_modify      zwall_top energy yes
+ 
+ variable press_speed equal 0.01
+ fix move_press all move/mesh mesh top_mesh linear 0.0 0.0 -${press_speed}
++restart 200000 restart_kg50_d3_b50/restart_compress_*.bin
+ 
+ label loop_press
+     run 5000
+@@ -189,11 +224,11 @@
+ print "====== PHASE 4: RELAXATION ======"
+ unfix damp
+ fix damp all viscous 1.0e-5
+-dump dmp_contact all local 10000 post_real_4/contact_*.liggghts &
++dump dmp_contact all local 10000 post_kg50_d3_b50/contact_*.liggghts &
+     c_cpl[1] c_cpl[2] c_cpl[3] c_cpl[4] c_cpl[5] c_cpl[6] c_cpl[7] c_cpl[8] &
+     c_cpl[9] c_cpl[10] c_cpl[11] c_cpl[12] c_cpl[13] c_cpl[14] c_cpl[15] c_cpl[16] &
+     c_cpl[17] c_cpl[18] c_cpl[19] c_cpl[20] c_cpl[21] c_cpl[22] c_cpl[23] c_cpl[24] &
+     c_cpl[25] c_cpl[26]
+ 
+ run 100000
+-print "====== Simulation Finished! (REAL_4: P:S=7:3, 81.6:18.4, 6mAh/cm2) ======"
++print "====== Simulation Finished! (KG50_D3_B50: mono AM D6, AM:SE=85:15 wt%, SE D50 3um, 6.5mAh/cm2, 50x50um) ======"

@@ -13012,6 +13012,166 @@
       "evidence_tests": [
         "scripts/test_step3_target_cert.py (빠른 판 264/264 · T25 고치기 전 0/4 → 4/4)"
       ]
+    },
+    {
+      "id": "KG50-01",
+      "severity": "P1",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-26 kg50 덱 검토 (핀 3056eef12 · 첨부 고정 바이트 · LIGGGHTS 미실행)",
+      "opened_in": "docs/reviews/codex_kg50_decks_review_20261026/codex_review_kg50_decks_20261026.md",
+      "title": "NP 28 · 56 의 fresh 삽입은 기하적으로 불가능 — insert/pack 기본 check_dist_from_subdomain_border 가 모든 subdomain 면 (주기면 포함) 에서 반지름 이상을 요구하는데 칸 폭 5.71 · 5 µm < AM 지름 6 µm → 속도 시험 덱 넷 · 직행 run_kg50_d07_b40.sh = 삽입 0 → 99 % 검사 정지",
+      "note": "판정문 §2 · 사전 공격 리뷰 KG50-01 과 같은 결론 (독립).  처방 = NP 1 삽입 · 같은 checkpoint 에서 NP/skin 비교 · overlap/border 검사를 끄는 처방 금지."
+    },
+    {
+      "id": "KG50-02",
+      "severity": "P1",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-26 kg50 덱 검토 (핀 3056eef12 · 첨부 고정 바이트 · LIGGGHTS 미실행)",
+      "opened_in": "docs/reviews/codex_kg50_decks_review_20261026/codex_review_kg50_decks_20261026.md",
+      "title": "resume_ckpt.sh 가 FAILED / CANCELLED / TIMEOUT 시험도 G1–G3 PASS 면 본 런으로 승격 — 시험이 step 1 setup 뒤 죽어도 G3 가 \"원 로그에 비교할 줄 없음\" 으로 PASS",
+      "note": "판정문 §3 · 처방 = 정상 종료 상태 · exit 0 · 기대 끝 step · run 완료 기록을 본 제출 조건에 결합 · 원 로그에 있는 비교 줄의 결손 = FAIL · 조회 실패 / 시간 초과 = 제출 금지."
+    },
+    {
+      "id": "KG50-03",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-26 kg50 덱 검토 (핀 3056eef12 · 첨부 고정 바이트 · LIGGGHTS 미실행)",
+      "opened_in": "docs/reviews/codex_kg50_decks_review_20261026/codex_review_kg50_decks_20261026.md",
+      "title": "이완 종료 상태를 저장하지 않음 — atom 50,000 · contact 10,000 · mesh 5,000 격자라 마지막 공통 프레임이 이완 끝보다 최대 45,002 step 앞 (k=1019 예)",
+      "note": "판정문 §4 · 처방 = 끝 step 의 atom · contact · mesh 동기 저장 + 최종 restart · 이완 길이를 출력 격자에 맞춰 늘리지 않는다."
+    },
+    {
+      "id": "KG50-04",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-26 kg50 덱 검토 (핀 3056eef12 · 첨부 고정 바이트 · LIGGGHTS 미실행)",
+      "opened_in": "docs/reviews/codex_kg50_decks_review_20261026/codex_review_kg50_decks_20261026.md",
+      "title": "D0.7 의 viscous 시간척도 m/γ = 0.589 µs < dt 1 µs — fix viscous 0.5 에서 순수 drag 속도 배율 q = 1 − γdt/m = −0.698 (부호 교대) · \"Rayleigh 1.5 %\" 만으로 dt 자격화 불성립",
+      "note": "판정문 §5 · 발산 단정 아님 (안정 경계 2m/γ = 1.18 µs > dt) · 처방 = 같은 상태 · 같은 물리시간의 dt ↔ dt/2 대조를 결과 전에 등록.  관련 = DEMP-01 (압축 중 감쇠 저항 = 목표 판 힘의 57.9 % · `docs/data/ps73_damping_branch_20261007/README.md`)."
+    },
+    {
+      "id": "KG50-05",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-26 kg50 덱 검토 (핀 3056eef12 · 첨부 고정 바이트 · LIGGGHTS 미실행)",
+      "opened_in": "docs/reviews/codex_kg50_decks_review_20261026/codex_review_kg50_decks_20261026.md",
+      "title": "D3 칸 비교의 합격 범위 — 시드 3 평균 차의 점추정 통과는 모집단 차 · 다른 SE 크기의 유한크기 오차를 보증하지 않음",
+      "note": "판정문 §6 · 처방 = \"D3 등록 지표 평균 차 기준 통과 · 타 입경은 그 영역을 채택한 탐색 비교\" 로 이름 한정 · 구간 기준 · 경계 / 미식별 처리 결과 전 고정."
+    },
+    {
+      "id": "KG50-06",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-26 kg50 덱 검토 (핀 3056eef12 · 첨부 고정 바이트 · LIGGGHTS 미실행)",
+      "opened_in": "docs/reviews/codex_kg50_decks_review_20261026/codex_review_kg50_decks_20261026.md",
+      "title": "첫 20,000 settling step 의 시간은 압축 throughput · skin 이득의 하한이 아님 (top mesh · 압축 · I/O 없음 · 중력 98.1 · 감쇠 1e−5 로 다름)",
+      "note": "판정문 §7 · 처방 = 압축 대표 구간 · 같은 출력 cadence 의 별도 측정 · 1.5–3 일 = 추정."
+    },
+    {
+      "id": "KG50-07",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-26 kg50 덱 검토 (핀 3056eef12 · 첨부 고정 바이트 · LIGGGHTS 미실행)",
+      "opened_in": "docs/reviews/codex_kg50_decks_review_20261026/codex_review_kg50_decks_20261026.md",
+      "title": "SELF-70 \"소수 상이 체계적으로 부족\" 단정 — 정확 개수 모드는 floor 뒤 잔여 가중 배분 · 고정 시드에서 부족 또는 초과 가능 (가상 균등 배분 계산 = pdd seed 11300017 → AM 952 · 계획 948)",
+      "note": "판정문 §8 · 처방 = \"rank · 시드에 따른 상별 수 변동 · NP 1 로 변동 축소\" 로 정정."
+    },
+    {
+      "id": "KG50-08",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-26 kg50 덱 검토 (핀 3056eef12 · 첨부 고정 바이트 · LIGGGHTS 미실행)",
+      "opened_in": "docs/reviews/codex_kg50_decks_review_20261026/codex_review_kg50_decks_20261026.md",
+      "title": "정수 경계가 1 입자 넓음 — ±0.5 % 표기인데 943–953 (= ±0.527 %) · 1473–1489 · 총수 99 % 하한 floor = 98.98 %",
+      "note": "판정문 §8 · 처방 = lower = ceil · upper = floor 또는 실제 정수 구간을 정본으로 표기."
+    },
+    {
+      "id": "KG50-09",
+      "severity": "P1",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude 10-26 사전 공격 리뷰 (독립 에이전트 · 핀 3056eef12 · LIGGGHTS 3d5c00f 소스 판독 · 미실행)",
+      "opened_in": "docs/50kg/preattack_kg50_20261026.md",
+      "title": "삽입 이음매 — 같은 border 규칙 때문에 서브도메인 면 (주기면 포함) 근처에 활물질 없는 띠가 생기고 압밀 뒤에도 남음 (real_14 최종 덤프: 주기면 3 µm 안 SE 밀도 1.32–1.36 배 · 면 2 µm 안 AM_P 0/36 · 기대 5.8) · NP 가 다르면 이음매 면 수가 달라 SE 크기 비교에 섞임",
+      "note": "사전 공격 리뷰 KG50-02 · kg50 침대에 남는 크기 = 미측정 · 처방 = 비교 침대 전부 NP 1 삽입."
+    },
+    {
+      "id": "KG50-10",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude 10-26 사전 공격 리뷰 (독립 에이전트 · 핀 3056eef12 · LIGGGHTS 3d5c00f 소스 판독 · 미실행)",
+      "opened_in": "docs/50kg/preattack_kg50_20261026.md",
+      "title": "step 1 settling 재개의 G1–G3 는 자유 낙하만 비교 (첫 바닥 접촉 ≈ 3,500 step · G3 = step 1000) → 재개 덱의 접촉 · 재료 정의를 시험하지 못함",
+      "note": "사전 공격 리뷰 KG50-03 · 처방 = 재개 덱 ↔ 본 덱 정적 대조 + 접촉이 시작된 뒤 체크포인트에서 재개."
+    },
+    {
+      "id": "KG50-11",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude 10-26 사전 공격 리뷰 (독립 에이전트 · 핀 3056eef12 · LIGGGHTS 3d5c00f 소스 판독 · 미실행)",
+      "opened_in": "docs/50kg/preattack_kg50_20261026.md",
+      "title": "이완 중 체크포인트도 restart_compress_* 이름 → 그 파일로 재개하면 압축 루프를 다시 탐",
+      "note": "사전 공격 리뷰 KG50-05."
+    },
+    {
+      "id": "KG50-12",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude 10-26 사전 공격 리뷰 (독립 에이전트 · 핀 3056eef12 · LIGGGHTS 3d5c00f 소스 판독 · 미실행)",
+      "opened_in": "docs/50kg/preattack_kg50_20261026.md",
+      "title": "왕복 검사가 약함 — 덱 변이 23 개 중 21 개 생존 (지금 덱은 기준 덱과 따로 대조해 깨끗)",
+      "note": "사전 공격 리뷰 KG50-06 · 처방 = 기준 덱 줄 대조 (선언 밖 변경 거부)."
+    },
+    {
+      "id": "KG50-13",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude 10-26 사전 공격 리뷰 (독립 에이전트 · 핀 3056eef12 · LIGGGHTS 3d5c00f 소스 판독 · 미실행)",
+      "opened_in": "docs/50kg/preattack_kg50_20261026.md",
+      "title": "SE 가 최대 1 % 빠진 침대도 두 삽입 검사를 통과",
+      "note": "사전 공격 리뷰 KG50-07 · 처방 = SE 수 검사."
+    },
+    {
+      "id": "KG50-14",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude 10-26 사전 공격 리뷰 (독립 에이전트 · 핀 3056eef12 · LIGGGHTS 3d5c00f 소스 판독 · 미실행)",
+      "opened_in": "docs/50kg/preattack_kg50_20261026.md",
+      "title": "resume_ckpt.sh 큐 검사가 접두어로 맞춰 kg50_d3_b40 ↔ kg50_d3_b40_s2 가 겹침 → 재개 건너뜀",
+      "note": "사전 공격 리뷰 KG50-10 · 처방 = 시드 1 케이스 이름 _s1."
+    },
+    {
+      "id": "KG50-15",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude 10-26 사전 공격 리뷰 (독립 에이전트 · 핀 3056eef12 · LIGGGHTS 3d5c00f 소스 판독 · 미실행)",
+      "opened_in": "docs/50kg/preattack_kg50_20261026.md",
+      "title": "hit · ibb 의 LIGGGHTS 빌드 신원 미확인 — 본 비교 넷이 두 기계에 나뉘면 빌드가 섞일 수 있음",
+      "note": "사전 공격 리뷰 KG50-12 · 처방 = 로그 첫 줄 (판 · 커밋) 대조 · 다르면 본 비교 넷은 한 기계."
+    },
+    {
+      "id": "SELF-135",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-26 kg50 덱 검토 + claude 사전 공격 리뷰 (같은 날)",
+      "opened_in": "docs/50kg/codex_kg50_decks_request_20261026.md",
+      "title": "kg50 Codex 요청서 · README · 덱 머리에 근거 없는 확신 문장 넷 — \"dt 1e-6 = Rayleigh 1.5 % 라 문제 없음\" (감쇠 시간척도 미검토 · KG50-04) · \"settling 20,000 step 시간 = 작은 skin 이득의 하한\" (KG50-06) · \"SELF-70 = 소수 상 체계적 부족\" (KG50-07) · NP 28 · 56 속도 시험이 삽입 가능하다는 암묵 전제 (KG50-01)",
+      "note": "영향 = 런 0 건 (발사 전 발견) · 처분 = kg50 고칠 계획 (docs/50kg/kg50_fix_plan_20261026.md) 에서 문장 정정 · 사전 공격 리뷰를 요청서 발송 전에 돌리지 않은 순서 (에이전트 하나씩 규칙 · Rint 묶음 B 대기) 도 기록."
     }
   ]
 }

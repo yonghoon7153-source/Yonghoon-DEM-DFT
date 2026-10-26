@@ -1,0 +1,376 @@
+{
+  "scope": "static assertions + deterministic arithmetic; no physical simulation",
+  "source_hash_verification": [
+    {
+      "path": "src/neighbor.cpp",
+      "git_blob": "27ad15b425a14bf244df33a12433ed144fc5d63d",
+      "verified": true
+    },
+    {
+      "path": "src/fix_neighlist_mesh.cpp",
+      "git_blob": "ec75c2b74e8aa8ca0b505df2061345149865518c",
+      "verified": true
+    },
+    {
+      "path": "src/fix_mesh_surface.cpp",
+      "git_blob": "81773ca01a64c6877750da22a5ab42808bbb14a8",
+      "verified": true
+    },
+    {
+      "path": "src/comm.cpp",
+      "git_blob": "1717f9d5ff51bef9fb63571bdf34f5327f6db41d",
+      "verified": true
+    },
+    {
+      "path": "src/pair_gran.cpp",
+      "git_blob": "f5cf0bde8a9837b830b8df8f8caddc1309848265",
+      "verified": true
+    },
+    {
+      "path": "src/fix_contact_history.cpp",
+      "git_blob": "a6ef2f618ac516d85ab50d1982e60873f964222a",
+      "verified": true
+    },
+    {
+      "path": "src/normal_model_hooke_hysteresis.h",
+      "git_blob": "3921ff5c767324e8825e76ff7528563e92e8efd7",
+      "verified": true
+    },
+    {
+      "path": "src/fix_insert_pack.cpp",
+      "git_blob": "224a132824a0024b403c3b972b70c6712f1793bf",
+      "verified": true
+    },
+    {
+      "path": "src/fix_insert.cpp",
+      "git_blob": "21e0b92007df263588032bc3ae4d0ce3532496fb",
+      "verified": true
+    },
+    {
+      "path": "src/fix_particledistribution_discrete.cpp",
+      "git_blob": "d161bf47c2a566e97273e71e13a8bb9dcf3e0b60",
+      "verified": true
+    },
+    {
+      "path": "src/fix_mesh.cpp",
+      "git_blob": "cf7049af0312feeccf93e93a708df98ded56c99c",
+      "verified": true
+    },
+    {
+      "path": "src/multi_node_mesh.h",
+      "git_blob": "a2b28d0baeb60673493f2003416fb4933819ff50",
+      "verified": true
+    },
+    {
+      "path": "src/multi_node_mesh_I.h",
+      "git_blob": "610329e65396dc5a76b17dffe50961ec4b86ed11",
+      "verified": true
+    },
+    {
+      "path": "src/pair_gran_proxy.h",
+      "git_blob": "a2c0988ca074aef8f0d0d960227d2e3d42fa125c",
+      "verified": true
+    },
+    {
+      "path": "src/neigh_gran.cpp",
+      "git_blob": "7dc35bf9c46384ae2ea2be9a0aa3371900d21d5f",
+      "verified": true
+    },
+    {
+      "path": "doc/fix_check_timestep_gran.txt",
+      "git_blob": "a60a9cebc591e86eef488cdfbca4c2e069c80525",
+      "verified": true
+    },
+    {
+      "path": "doc/fix_insert_pack.txt",
+      "git_blob": "26f27fd3e8cb078524183470493084235bb46dd6",
+      "verified": true
+    },
+    {
+      "path": "doc/fix_wall_gran.txt",
+      "git_blob": "2d7176eced531269d1ea15e3e76d6ad4338ee83e",
+      "verified": true
+    },
+    {
+      "path": "doc/neigh_modify.txt",
+      "git_blob": "60d45ecdd1c3336ee716c4e8e52eec565ba989b7",
+      "verified": true
+    },
+    {
+      "path": "src/domain.cpp",
+      "git_blob": "e5cd3ce39069b8ed039dc4a882902a06c77afc82",
+      "verified": true
+    },
+    {
+      "path": "src/domain.h",
+      "git_blob": "b2970581abedba0f8ed343409ba7859c5fd4387a",
+      "verified": true
+    },
+    {
+      "path": "src/domain_I.h",
+      "git_blob": "b3dbcbdece51f9d70392b113f0fd1fe9183ae11a",
+      "verified": true
+    },
+    {
+      "path": "src/procmap.cpp",
+      "git_blob": "abfe8ae8ad3c22faa761510305469bfabc1c1b15",
+      "verified": true
+    },
+    {
+      "path": "src/region_block.cpp",
+      "git_blob": "39bdc9d5fbfc128cbfbcd5fb6f71cc86fd1c071d",
+      "verified": true
+    }
+  ],
+  "source_assertions": "passed",
+  "am_number_fraction": 0.0030335467347407255,
+  "max_local_insert_target_that_can_floor_am_to_zero": 329,
+  "speed_fixture_impossibility": [
+    {
+      "np": 28,
+      "all_integer_factor_pairs": [
+        [
+          1,
+          28
+        ],
+        [
+          2,
+          14
+        ],
+        [
+          4,
+          7
+        ],
+        [
+          7,
+          4
+        ],
+        [
+          14,
+          2
+        ],
+        [
+          28,
+          1
+        ]
+      ],
+      "every_factorization_has_width_lt_am_diameter": true,
+      "automatic_grid": [
+        4,
+        7,
+        1
+      ],
+      "local_xy_um": [
+        10.0,
+        5.714285714285714
+      ],
+      "largest_possible_distance_to_nearest_xy_face_um": 2.857142857142857,
+      "required_clearance_um": 3,
+      "expected_target_each_rank": 11160.92857142857,
+      "am_floor_near_uniform_target": 33,
+      "geometric_am_insertion_capacity": 0,
+      "usual_uniform_case_total_inserted_prediction": 0,
+      "rigorous_upper_total_if_arbitrary_allocation": 9212,
+      "total_gate": 309380
+    },
+    {
+      "np": 56,
+      "all_integer_factor_pairs": [
+        [
+          1,
+          56
+        ],
+        [
+          2,
+          28
+        ],
+        [
+          4,
+          14
+        ],
+        [
+          7,
+          8
+        ],
+        [
+          8,
+          7
+        ],
+        [
+          14,
+          4
+        ],
+        [
+          28,
+          2
+        ],
+        [
+          56,
+          1
+        ]
+      ],
+      "every_factorization_has_width_lt_am_diameter": true,
+      "automatic_grid": [
+        7,
+        8,
+        1
+      ],
+      "local_xy_um": [
+        5.714285714285714,
+        5.0
+      ],
+      "largest_possible_distance_to_nearest_xy_face_um": 2.5,
+      "required_clearance_um": 3,
+      "expected_target_each_rank": 5580.464285714285,
+      "am_floor_near_uniform_target": 16,
+      "geometric_am_insertion_capacity": 0,
+      "usual_uniform_case_total_inserted_prediction": 0,
+      "rigorous_upper_total_if_arbitrary_allocation": 18424,
+      "total_gate": 309380
+    }
+  ],
+  "insertion_arithmetic": {
+    "solid_phase_se_volume_fraction": 0.3429177468772095,
+    "initial_se_volume_fraction": 0.11007659674758426,
+    "initial_am_volume_fraction": 0.21092340325241574,
+    "maxtry_np1_40": 937518000,
+    "int32_max": 2147483647,
+    "meaning": "finite trial cap and low average fraction are not a guarantee of completing random sequential insertion"
+  },
+  "neighbor_candidates_heuristic": [
+    {
+      "se_radius_um": 0.35,
+      "skin_um": 2,
+      "candidate_count_at_se_volfrac_030": 137.7236151603499,
+      "candidate_count_at_initial_se_volfrac": 50.53382282875106
+    },
+    {
+      "se_radius_um": 0.5,
+      "skin_um": 2,
+      "candidate_count_at_se_volfrac_030": 64.8,
+      "candidate_count_at_initial_se_volfrac": 23.7765448974782
+    },
+    {
+      "se_radius_um": 1,
+      "skin_um": 2,
+      "candidate_count_at_se_volfrac_030": 19.2,
+      "candidate_count_at_initial_se_volfrac": 7.0449021918453925
+    },
+    {
+      "se_radius_um": 1.5,
+      "skin_um": 2,
+      "candidate_count_at_se_volfrac_030": 11.111111111111112,
+      "candidate_count_at_initial_se_volfrac": 4.076910990651269
+    },
+    {
+      "se_radius_um": 0.35,
+      "skin_um": 0.5,
+      "candidate_count_at_se_volfrac_030": 12.090962099125367,
+      "candidate_count_at_initial_se_volfrac": 4.436439864252494
+    },
+    {
+      "se_radius_um": 0.5,
+      "skin_um": 0.5,
+      "candidate_count_at_se_volfrac_030": 8.1,
+      "candidate_count_at_initial_se_volfrac": 2.972068112184775
+    },
+    {
+      "se_radius_um": 1,
+      "skin_um": 0.5,
+      "candidate_count_at_se_volfrac_030": 4.6875,
+      "candidate_count_at_initial_se_volfrac": 1.719946824181004
+    },
+    {
+      "se_radius_um": 1.5,
+      "skin_um": 0.5,
+      "candidate_count_at_se_volfrac_030": 3.811111111111112,
+      "candidate_count_at_initial_se_volfrac": 1.3983804697933855
+    }
+  ],
+  "ghost_halo_uniform_density_heuristic": [
+    {
+      "np": 28,
+      "skin_um": 2,
+      "halo_um": 8,
+      "uniform_xy_ghost_owned_ratio": 8.879999999999999,
+      "mesh_only_steps_half_skin": 100000.00000000001
+    },
+    {
+      "np": 56,
+      "skin_um": 2,
+      "halo_um": 8,
+      "uniform_xy_ghost_owned_ratio": 14.959999999999999,
+      "mesh_only_steps_half_skin": 100000.00000000001
+    },
+    {
+      "np": 28,
+      "skin_um": 0.5,
+      "halo_um": 6.5,
+      "uniform_xy_ghost_owned_ratio": 6.5325,
+      "mesh_only_steps_half_skin": 25000.000000000004
+    },
+    {
+      "np": 56,
+      "skin_um": 0.5,
+      "halo_um": 6.5,
+      "uniform_xy_ghost_owned_ratio": 10.790000000000001,
+      "mesh_only_steps_half_skin": 25000.000000000004
+    }
+  ],
+  "benchmark_phase_gap": {
+    "benchmark_steps": 20000,
+    "benchmark_seconds": 0.02,
+    "settling_fraction": 0.1,
+    "total_5M_fraction": 0.004,
+    "total_7M_fraction": 0.002857142857142857,
+    "benchmark_gravity": 98.1,
+    "compression_gravity": 9.81,
+    "benchmark_gamma": 1e-05,
+    "compression_gamma": 0.5,
+    "gamma_ratio": 49999.99999999999,
+    "benchmark_mesh": false,
+    "benchmark_atom_dump": false,
+    "total_steps_if_plate_travel_50_60um": [
+      5500000,
+      6500000
+    ],
+    "elapsed_from_neighbor_count_alone": "not identifiable"
+  },
+  "area_pilot_uncertainty": {
+    "assumption": "independent normal outcomes; observed SD .31 percentage points in both groups; illustrative, not measured KG50 scatter",
+    "n_each": 3,
+    "df": 4,
+    "se_difference_pp": 0.2531139400875951,
+    "halfwidth_90_pp": 0.5396001397502158,
+    "halfwidth_95_pp": 0.7027569600135326,
+    "illustrative_40": [
+      19.69,
+      20,
+      20.31
+    ],
+    "illustrative_50": [
+      20.09,
+      20.4,
+      20.71
+    ],
+    "illustrative_sd40": 0.3099999999999987,
+    "illustrative_sd50": 0.3100000000000005,
+    "illustrative_mean_difference_pp": -0.3999999999999986,
+    "readme_mean_gate_pass": true,
+    "illustrative_90_ci": [
+      -0.9396001397502144,
+      0.13960013975021723
+    ],
+    "conclusion": "mean-only gate may pass while uncertainty crosses tolerance; D3-only evidence cannot establish finite-size equivalence of other diameters",
+    "length_per_AM_diameter": [
+      6.666666666666667,
+      8.333333333333334
+    ],
+    "am_to_se_diameter_ratios": {
+      "0.7": 8.571428571428571,
+      "1": 6.0,
+      "2": 3.0,
+      "3": 2.0
+    }
+  }
+}

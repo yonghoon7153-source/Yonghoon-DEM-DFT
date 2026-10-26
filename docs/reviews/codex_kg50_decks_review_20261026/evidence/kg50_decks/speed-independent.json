@@ -1,0 +1,54 @@
+[
+  {
+    "case": "kg50_spd_d07_b40_sk20_np28",
+    "seeds_equal": true,
+    "skin_line": [
+      "neighbor        0.002 bin"
+    ],
+    "last_command": "run 20000",
+    "no_am_gate": true,
+    "total_gate": true,
+    "no_full_settling": true,
+    "best_min_subdomain_um": 5.714285714285714,
+    "am_diameter_um": 6
+  },
+  {
+    "case": "kg50_spd_d07_b40_sk20_np56",
+    "seeds_equal": true,
+    "skin_line": [
+      "neighbor        0.002 bin"
+    ],
+    "last_command": "run 20000",
+    "no_am_gate": true,
+    "total_gate": true,
+    "no_full_settling": true,
+    "best_min_subdomain_um": 5.0,
+    "am_diameter_um": 6
+  },
+  {
+    "case": "kg50_spd_d07_b40_sk05_np28",
+    "seeds_equal": true,
+    "skin_line": [
+      "neighbor        0.0005 bin"
+    ],
+    "last_command": "run 20000",
+    "no_am_gate": true,
+    "total_gate": true,
+    "no_full_settling": true,
+    "best_min_subdomain_um": 5.714285714285714,
+    "am_diameter_um": 6
+  },
+  {
+    "case": "kg50_spd_d07_b40_sk05_np56",
+    "seeds_equal": true,
+    "skin_line": [
+      "neighbor        0.0005 bin"
+    ],
+    "last_command": "run 20000",
+    "no_am_gate": true,
+    "total_gate": true,
+    "no_full_settling": true,
+    "best_min_subdomain_um": 5.0,
+    "am_diameter_um": 6
+  }
+]

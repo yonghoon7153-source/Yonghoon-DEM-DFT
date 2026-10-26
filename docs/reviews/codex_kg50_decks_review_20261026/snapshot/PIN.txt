@@ -1,0 +1,3 @@
+review pin = 3056eef12 (branch claude/sdcp-dem-manuscript-si-pqwtv8 · push after full gate)
+repo/ = git archive of that commit (exact bytes) + findings excerpt (SELF-70, PS-01)
+selftest: cd repo && python3 scripts/make_se_size_decks.py --selftest  (expect 81/81)
