@@ -76,6 +76,9 @@
     판정 (`--root` 필수 · 다시 판정 포함) 에 S0 와 같은 발견 함수 (`ca_s0_census.kit_input_record`) 로 킷을 다시 해시해 대조 (경로 = 대조 밖 ·
     기계마다 자기 사본) · 같은 규약 arm 0 의 sid 지문 = S0 off 격자 지문 (`s0_grid_seed` · read_run) · 다르거나 못 읽음 = `S0_REPORT_MISMATCH`
     (재압밀 · 재생성 침대 = 새 S0) · 단계끼리 S0 기록 대조 = 경로 뺀 칸 (`s0_records_key`)
+  · X6 (2 차 사전 공격 §A · 1저자 10-23 Q20 (가)) — S0 단계 2 보고 (schema v4) 의 봉인 SV census (R arm 0 와 같은 함수 `carbon_junction._sv_split` ·
+    같은 격자 · 같은 문턱 `ca_ext_cjunc.registry_thresholds` · 봉인 s_min) 를 같은 규약 DBE arm 0 의 SV 기록마다 (기록 census 사본 + 증거 census ·
+    세 칸) 대조 (`sv_census_problem` · `s0_census_seed`) → `S0_REPORT_MISMATCH` · census 외부 결합만 (끝 증서의 그래프 지문은 이 범위 밖)
 """
 import argparse
 import glob
@@ -162,8 +165,9 @@ PLAN_UNREG_MAIN = 'cut'              # 설계 §1-2 #12 — 주 cut · 감도 fu
 S0_PLAN_SCHEMA = 'ca-cjunc-plan-v1'  # §2-1 · §10-2 ⑪ — S0 단계 1 계획 (`scripts/ca_s0_census.py` · 정본 = 그 모듈)
 #: ★ PF2 B (10-22 · 사전 리뷰 2 회차 PRE2-design-01 · 1저자 Q2 권고대로) — S0 단계 보고 (`ca_s0_census` · `s0_stage<n>_<킷>.json`) 의 schema
 #   (= ca_s0_census.SCHEMA · 시험 B09 가 대조 · 이 모듈은 numpy 없이 뜬다)
-#   ★ 10-25 묶음 B (RCA2-03 · Q3 (가)) — v3 = 같은 침대 칸 (inputs.settings_sha256 · raster.sid_off_fp) · v2 보고 = 멈춤 (새 S0)
-S0_REPORT_SCHEMA = 'ca-s0-census-v3'
+#   ★ 10-25 묶음 B (RCA2-03 · Q3 (가)) — v3 = 같은 침대 칸 (inputs.settings_sha256 · raster.sid_off_fp) · v2 보고 = 멈춤 (새 S0) ·
+#   ★ v4 (X6 · Q20 (가)) = 단계 2 봉인 SV census (`sv_census` · 단계 1 = null) · v3 보고 = 멈춤
+S0_REPORT_SCHEMA = 'ca-s0-census-v4'
 #: ★ PF2 D (10-22 · 사전 리뷰 2 회차 PRE2-design-02 · 08 · 결정 없음) — 같은 판 대조 파일 = 등록 R · kgy 명령이 이름 댄 생산 파일 중 사슬 ·
 #   러너 · payload · 증서 · 접합 · census · registry 쪽 (사슬이 부르는 계약 · SV 증거 · 판독 포함 · 시험 파일 · 재압밀 `mpm3d_compaction.py` 는
 #   R 런이 돌리지 않아 뺐다).  단계 요약에 이름마다 sha256 (사슬 폴더 · 러너 폴더) 을 남기고 다음 단계 · 판정 계산기가 지금 지문과 대조한다.
@@ -282,7 +286,9 @@ STOPS = {
                           'DBE 열람 전 계획 하나 · 바꾸려면 새 등록 · 등록 R §2-1 · §2-1b · §11 ④) · (★ 10-25 묶음 B · 판정문 F5) 계획 출처 ≠ '
                           'commit:<40-hex> · 그 커밋의 R 계획 blob sha256 ≠ 계획 sha256 · (★ 10-25 묶음 B · RCA2-03 · Q3 (가)) S0 보고의 같은 '
                           '침대 칸 (원 입력 · 설정 · off 격자 지문) 꼴이 틀렸다 · S0 보고의 원 입력 ≠ 지금 킷 (R 직전 · 판정 때 S0 와 같은 발견 함수로 '
-                          '다시 해시 · 경로 = 대조 밖) · 같은 규약 arm 0 의 sid 지문 ≠ S0 off 격자 지문 · 킷을 못 읽음 — 재압밀 · 재생성 침대 = 새 S0',
+                          '다시 해시 · 경로 = 대조 밖) · 같은 규약 arm 0 의 sid 지문 ≠ S0 off 격자 지문 · 킷을 못 읽음 — 재압밀 · 재생성 침대 = 새 S0 · '
+                          '(★ X6 · Q20 (가)) S0 단계 2 봉인 SV census 꼴 · s_min · tol_ff ≠ R 계획 · 같은 규약 DBE arm 0 SV 기록의 census 사본 · 증거 census '
+                          '≠ 봉인 census',
     'MAIN_NOT_DONE': '감도 단계인데 주 판정 단계 (사다리 둘 · 예측) 가 끝나지 않았다 · 묶음이 다르다 (--after-main · Q-F)',
     'MAIN_BINDING': '판정 입력의 감도 단계가 묶인 주 예측 ≠ 판정 입력의 주 예측 (Q-F)',
     'KIT_MISSING': '킷 폴더 · 러너가 없다',
@@ -1146,7 +1152,10 @@ def s0_report_record(rep, sha, path):
             'inputs': (None if inp is None else
                        {'files': inp.get('files'), 'settings_sha256': inp.get('settings_sha256'),
                         'metrics': ({k: met.get(k) for k in BED_METRICS} if isinstance(met, dict) else met)}),
-            'raster': (None if ras is None else {'convention': ras.get('convention'), 'sid_off_fp': ras.get('sid_off_fp')})}
+            'raster': (None if ras is None else {'convention': ras.get('convention'), 'sid_off_fp': ras.get('sid_off_fp')}),
+            #  ★ 10-25 묶음 B (X6 · Q20 (가)) — 단계 2 봉인 SV census (census 세 칸 · 봉인 s_min · tol_ff · 지문 = 기록만) · 단계 1 = null
+            'sv_census': ({k: rp['sv_census'].get(k) for k in ('census', 's_min_um', 'tol_ff_um', 'fp')}
+                          if isinstance(rp.get('sv_census'), dict) else rp.get('sv_census'))}
 
 
 # ═════════════════════════ ★ 10-25 묶음 B (RCA2-03 · 1저자 10-23 Q3 (가)) 같은 침대 — S0 → R ═════════════════════════
@@ -1275,6 +1284,64 @@ def s0_grid_seed(recs):
     return out
 
 
+def _cnt(x):
+    """0 이상 정수 · int64 범위 · bool 아님 (census 칸)."""
+    return type(x) is int and 0 <= x < 2 ** 63                 # noqa: E721 — bool 제외
+
+
+def s0_sv_census_problem(rec, stage, plan=None):
+    """★ 10-25 묶음 B (X6 · 1저자 10-23 Q20 (가)) S0 보고 기록의 봉인 SV census → 꼴 문제 | None.  단계 1 = null (s_min 봉인 전) · 단계 2 = dict ·
+    census 칸 = `ca_ext_svcf.CENSUS_KEYS` 정확히 · 0 이상 정수 · 못 가른 ≤ 다리 ≤ 닿는 (생산자 정의) · s_min · tol_ff = R 계획 (plan 이 있을 때 ·
+    사슬 단계는 늘 넘긴다 · 같은 float)."""
+    r = rec if isinstance(rec, dict) else {}
+    sv = r.get('sv_census')
+    if stage == 1:
+        return None if sv is None else f'S0 단계 1 보고의 봉인 SV census = null 이어야 (s_min 봉인 전 · {type(sv).__name__})'
+    if not isinstance(sv, dict):
+        return f'S0 단계 2 보고에 봉인 SV census (sv_census) 가 없다 (옛 꼴 · {S0_REPORT_SCHEMA} 이전) — {BED_NEW_S0}'
+    cen = sv.get('census')
+    if not isinstance(cen, dict) or sorted(cen) != sorted(SVCF.CENSUS_KEYS) or not all(_cnt(cen[k]) for k in SVCF.CENSUS_KEYS):
+        return f'S0 단계 2 봉인 SV census 꼴 {cen!r} (칸 = {list(SVCF.CENSUS_KEYS)} · 0 이상 정수)'
+    nu, nb, nt = (cen[k] for k in SVCF.CENSUS_KEYS)
+    if not nu <= nb <= nt:
+        return f'S0 단계 2 봉인 SV census 못 가른 {nu} ≤ 다리 {nb} ≤ 닿는 {nt} 가 아니다 (생산자 정의 · `carbon_junction._sv_split`)'
+    if plan is not None:
+        for k in ('s_min_um', 'tol_ff_um'):
+            a, b = sv.get(k), plan.get(k)
+            if not (_num(a) and _num(b) and float(a) == float(b)):
+                return f'S0 단계 2 봉인 SV census 의 {k} {a!r} ≠ R 계획 {b!r} (봉인 s_min · tol_ff 로 낸 census 여야 · R arm 0 와 같은 문턱)'
+    return None
+
+
+def s0_census_seed(recs):
+    """S0 보고 기록 → {sid 대조 무리 키: 봉인 SV census} — 단계 2 (DBE) · 같은 규약 · 주 래스터 · arm 0 (`s0_grid_seed` 와 같은 키 규칙 · GRID ·
+    SVORDER · origin 팔 = 키가 달라 대조 안 함)."""
+    r = (recs or {}).get('stage2') if isinstance(recs, dict) else None
+    if not (isinstance(r, dict) and s0_same_convention(r) and isinstance(r.get('sv_census'), dict)):
+        return {}
+    cen = r['sv_census'].get('census')
+    if not (isinstance(cen, dict) and all(_cnt(cen.get(k)) for k in SVCF.CENSUS_KEYS)):
+        return {}
+    return {sid_group(DBE_KIT, None, 0): {k: cen[k] for k in SVCF.CENSUS_KEYS}}
+
+
+def sv_census_problem(svr, ev_census, sealed):
+    """★ 10-25 묶음 B (X6 · Q20 (가) · 2 차 사전 공격 §A) — SV 기록의 census 사본 · 증거 census (세 칸) = S0 단계 2 봉인 census → 문제 | None.
+    기록 안 일관 (사본 = 증거) 은 기록 계약 (`ca_ext_svcf._census_problem`) 의 몫 · 이 함수 = 기록 밖 (S0 단계 2 · 같은 함수 · 같은 격자 · 봉인
+    s_min) 과의 결합 — 기록 · 증거를 같이 고친 꼴을 잡는다.  기록 사본의 다리 · 닿는 칸이 없으면 (None) 기록 계약처럼 건너뛴다."""
+    for k in SVCF.CENSUS_KEYS:
+        w = sealed.get(k) if isinstance(sealed, dict) else None
+        e = ev_census.get(k) if isinstance(ev_census, dict) else None
+        if not (_cnt(e) and _cnt(w) and e == w):
+            return f'증거 census {k} {e!r} ≠ S0 단계 2 봉인 SV census {w!r} (같은 함수 · 같은 격자 · 봉인 s_min — 10-25 X6)'
+        v = svr.get(k) if isinstance(svr, dict) else None
+        if v is None and k != 'n_unsplit_bridging_components':
+            continue
+        if not (_cnt(v) and v == w):
+            return f'SV 기록의 census 사본 {k} {v!r} ≠ S0 단계 2 봉인 SV census {w!r} (10-25 X6)'
+    return None
+
+
 def kit_bed(root, kit):
     """지금 킷 (root/<킷>) → 경로 뺀 원 입력 지문 (`bed_view` · S0 와 같은 발견 함수 `ca_s0_census.kit_input_record` · 기계마다 자기 사본) ·
     킷 폴더 없음 = Stop KIT_MISSING · 못 읽음 = Stop S0_REPORT_MISMATCH (확인 못 함 = 멈춤)."""
@@ -1303,7 +1370,7 @@ def bed_problem(recs, root, kits):
     return out
 
 
-def s0_stage2_problem(rec, plan_sha, s0_sha):
+def s0_stage2_problem(rec, plan_sha, s0_sha, plan=None):
     """★ PF2 B (10-22 · 사전 리뷰 2 회차 PRE2-design-01 · 탐침 E · 1저자 Q2 권고대로 · 등록 R §2-1 · §2-1b · §11 ④) — 단계 2 기록 → 문제 | None.
     단계 2 (DBE 열람) 의 인자 커밋이 봉인한 계획 해시 = 지금 쓰는 두 계획의 sha256 (**정확히**): `r_plan_sha256` = R 계획 (`--plan`) ·
     `plan_sha256` = S0 계획 (`--s0-plan`) · 꼴 = 이 도구의 S0 보고 (schema · 단계 2 · DBE 새 침대 · source commit:<sha>).  DBE 를 본 뒤 계획을
@@ -1323,7 +1390,7 @@ def s0_stage2_problem(rec, plan_sha, s0_sha):
                 f'(Q2: 계획 하나 · 바꾸려면 새 등록 · 등록 R §2-1b)')
     if r['plan_sha256'] != s0_sha:
         return f'S0 단계 2 가 봉인한 S0 계획 {r["plan_sha256"][:16]}… ≠ 지금 S0 계획 {str(s0_sha)[:16]}…'
-    why = s0_bed_record_problem(r, 'S0 단계 2')               # ★ 10-25 묶음 B (RCA2-03) — 같은 침대 칸 꼴
+    why = s0_bed_record_problem(r, 'S0 단계 2') or s0_sv_census_problem(r, 2, plan)   # ★ 10-25 묶음 B (RCA2-03 · X6) — 같은 침대 · 봉인 census
     if why:
         return why
     return plan_commit_problem(r['plan_source'], r.get('r_plan_path'), r['r_plan_sha256'])
@@ -1380,7 +1447,7 @@ def s0_stage1_problem(rec, s0_sha):
         return f'S0 단계 1 보고의 계획 해시 꼴 {r.get("plan_sha256")!r} (64 자 소문자 hex)'
     if r['plan_sha256'] != s0_sha:
         return f'S0 단계 1 보고가 만든 S0 계획 {r["plan_sha256"][:16]}… ≠ 지금 S0 계획 {str(s0_sha)[:16]}… (이 등록의 단계 1 보고가 아니다)'
-    return s0_bed_record_problem(r, 'S0 단계 1')              # ★ 10-25 묶음 B (RCA2-03) — 같은 침대 칸 꼴
+    return s0_bed_record_problem(r, 'S0 단계 1') or s0_sv_census_problem(r, 1)   # ★ 10-25 묶음 B (RCA2-03 · X6) — 같은 침대 칸 · 봉인 census null
 
 
 def _digest_map(lst):
@@ -1428,13 +1495,13 @@ def read_s0_report(path, stage):
     return s0_report_record(rep, hashlib.sha256(raw).hexdigest(), str(Path(path).resolve()))
 
 
-def s0_reports_problem(recs, plan_sha, s0_sha, files, runner_files=None):
+def s0_reports_problem(recs, plan_sha, s0_sha, files, runner_files=None, plan=None):
     """사다리 · 예측 · 판정 (같은 함수) — 단계 요약의 S0 보고 기록 → (멈춤 이름, 문제) | None.  단계 2 = 봉인 계획 해시 (PF2 B) · 단계 1 = 꼴 ·
     S0 계획 (PF2 D) → S0_REPORT_MISMATCH · 두 보고의 census · registry 일곱 파일 지문 = 지금 코드 (`files` · `runner_files`) → CODE_PIN_MISMATCH.
     기록 없음 = 그 보고 없이 돈 단계 · 옛 요약 = 대조 불가 → 멈춤."""
     if not isinstance(recs, dict) or not isinstance(recs.get('stage2'), dict):
         return 'S0_REPORT_MISMATCH', 'S0 단계 2 보고 기록이 없다 (--s0-stage2-report 없이 돈 단계 · 옛 요약 — 봉인 계획 해시를 대조할 수 없다)'
-    why = s0_stage2_problem(recs['stage2'], plan_sha, s0_sha)
+    why = s0_stage2_problem(recs['stage2'], plan_sha, s0_sha, plan)
     if why:
         return 'S0_REPORT_MISMATCH', why
     if not isinstance(recs.get('stage1'), dict):
@@ -1747,7 +1814,7 @@ def arm_file_shas(outdir):
     return sorted(out, key=lambda x: (x['index'], x['file']))
 
 
-def read_run(outdir, req, plan, contract, sid_reg, want_sha=None, s0_grid=None):
+def read_run(outdir, req, plan, contract, sid_reg, want_sha=None, s0_grid=None, s0_census=None):
     """런 폴더 하나 → [팔 기록 …] (번호 순).  등록 R §10 멈춤 목록의 팔 쪽 전부 — 어긋나면 Stop (원인 칸 = σ 를 가린 문장).
     ★ 3판 — 해 상태 (§5-0 · `run_contract.next_gen_state` · 정본): positive (증서 ⓐ–ⓓ · σ > 0) · zero (VALID_ZERO_TOPOLOGY · σ = 0) ·
     ~~short (ELECTRODE_SHORT · σ = +∞)~~ · 그 밖 = NOT_COMPUTED.  팔 기록의 σ = 확장 실수 (0 그대로).
@@ -1876,6 +1943,12 @@ def read_run(outdir, req, plan, contract, sid_reg, want_sha=None, s0_grid=None):
             if _mis:
                 stop('CA_EXT_RECORD', f'SV 반사실 기록의 주 해 증서 칸 {_mis} ≠ 이 런의 주 증서 (비의 분자 구간이 이 런의 것이 아니다 · '
                                       f'10-23 RCA2-04)')
+        #  ★ 10-25 묶음 B (X6 · Q20 (가)) — 같은 규약 DBE arm 0 의 SV 기록 = S0 단계 2 봉인 census (기록 사본 · 증거 census · 세 칸 · `s0_census_seed`)
+        cen_want = (s0_census or {}).get(key)
+        if cen_want is not None and isinstance(svr, dict):
+            why = sv_census_problem(svr, (ca['cjunc'].get('evidence') or {}).get('census'), cen_want)
+            if why:
+                stop('S0_REPORT_MISMATCH', f'{why} — {BED_NEW_S0}')
         cf = SVCF.chain_view(svr) if isinstance(svr, dict) else None
         out.append({'file': os.path.basename(p), 'index': i, 'sha256': hashlib.sha256(raw).hexdigest(), 'protocol_id': pid,
                     'state': state, 'cg_info': s3.get('cg_info'), 'cg_resid': s3.get('cg_resid'), 'imbalance': (cert or {}).get('imbalance'),
@@ -1906,6 +1979,7 @@ class Runner:
         self.records, self.keys, self.sid_reg, self.n = [], set(), {}, 0
         self.dry_lines = []
         self.s0_grid = None                  # ★ 10-25 묶음 B (RCA2-03) — S0 off 격자 지문 (`s0_grid_seed` · 단계가 정한다)
+        self.s0_census = None                # ★ 10-25 묶음 B (X6) — S0 단계 2 봉인 SV census (`s0_census_seed`)
 
     def env_delta(self, req, outdir):
         d = dict(ENV_FIXED)
@@ -1969,7 +2043,7 @@ class Runner:
         if r.returncode != 0:
             raise Stop('RUNNER_RC', f'rc {r.returncode} (로그 {logp})', name)
         try:
-            arms_ = read_run(outdir, req, self.plan, self.contract, self.sid_reg, s0_grid=self.s0_grid)
+            arms_ = read_run(outdir, req, self.plan, self.contract, self.sid_reg, s0_grid=self.s0_grid, s0_census=self.s0_census)
         except Stop:
             #  읽기가 멈춰도 팔 파일 sha256 은 남긴다 — 등록 결과 (NOT_COMPUTED) 로 끝난 사다리를 판정이 원 팔에서 다시 계산할 수 있게.
             rec['arms_read'] = arm_file_shas(outdir)
@@ -1994,6 +2068,7 @@ class Replay:
         self.i = 0
         self.cert_reg = {} if cert_reg is None else cert_reg
         self.s0_grid = s0_grid_seed(summary.get('s0_reports'))   # ★ 10-25 묶음 B (RCA2-03) — 원 단계와 같은 파생 격자 지문 대조
+        self.s0_census = s0_census_seed(summary.get('s0_reports'))   # ★ 10-25 묶음 B (X6) — 원 단계와 같은 봉인 SV census 대조
 
     def run(self, kit, role, law, c, rj, arms, sv_cf=False):
         if self.i >= len(self.recs):
@@ -2007,7 +2082,7 @@ class Replay:
         self.i += 1
         req = {k: r.get(k) for k in REQ_KEYS}
         arms_ = read_run(self.dir / r['outdir'], req, self.plan, self.contract, self.sid_reg,
-                         want_sha=[a.get('sha256') for a in r.get('arms_read') or []], s0_grid=self.s0_grid)
+                         want_sha=[a.get('sha256') for a in r.get('arms_read') or []], s0_grid=self.s0_grid, s0_census=self.s0_census)
         self.cert_reg[f'{self.dir.name}/{r["name"]}'] = [a['dsigma_rel'] for a in arms_]   # §8 수렴 증서 ⓒ 값 (판정 결과로만)
         return arms_
 
@@ -2452,7 +2527,8 @@ def stage_ladder(a, contract):
         why = code_dirty_problem(s['code'])
         if why:
             raise Stop('CODE_PIN_MISMATCH', why)
-        got = s0_reports_problem(s['s0_reports'], plan_sha, s['s0_plan']['sha256'], s['code']['files'], s['code']['runner_files'])
+        got = s0_reports_problem(s['s0_reports'], plan_sha, s['s0_plan']['sha256'], s['code']['files'], s['code']['runner_files'],
+                                 plan=plan)
         if got:
             raise Stop(*got)
         s['constants']['max_ladder_points'] = ladder_cap(plan)
@@ -2466,6 +2542,7 @@ def stage_ladder(a, contract):
         s['bed'] = bed_problem(s['s0_reports'], a.root, (SBE_KIT,))
         rn = Runner(a.runner, a.root, out, plan, a.variant, time.time() + a.max_hours * 3600.0, contract, dry=a.dry_run, prefix='L')
         rn.s0_grid = s0_grid_seed(s['s0_reports'])
+        rn.s0_census = s0_census_seed(s['s0_reports'])
         s['env_scrubbed'] = rn.scrubbed
         if a.dry_run:
             print(f'dry-run — 사다리 {a.law} · 첫 런 (바닥 · 천장 · 1e4 · 1e6 · 1e8) 의 env (러너를 부르지 않는다 · 다음 점은 σ 로 정해진다)')
@@ -2576,7 +2653,7 @@ def load_ladders(dirs, variant, reg_path, contract, sid_reg, now_code=None):
         raise Stop('CODE_PIN_MISMATCH', f'사다리 코드 (HEAD · 저장소 상대 경로 · 코드 파일 지문 · 러너 · 환경 지문) ≠ 지금 코드 '
                                         f'({", ".join(code_key_diff(code, now))}) — 같은 핀 커밋 · 같은 환경 판에서 돌릴 것')
     #  ★ PF2 B · D — 사다리 기록의 단계 2 봉인 = 이 계획 · 단계 1 꼴 · 두 보고 지문 = 지금 코드 (같은 함수로 다시)
-    got = s0_reports_problem(s0reps, plan_sha, s0rec['sha256'], now.get('files'), now.get('runner_files'))
+    got = s0_reports_problem(s0reps, plan_sha, s0rec['sha256'], now.get('files'), now.get('runner_files'), plan=plan)
     if got:
         raise Stop(*got)
     return out, plan, plan_sha, code, s0rec, after, s0reps
@@ -2620,6 +2697,7 @@ def stage_predict(a, contract):
         rn = Runner(a.runner, a.root, out, plan, a.variant, time.time() + a.max_hours * 3600.0, contract, dry=a.dry_run, prefix='P')
         rn.sid_reg = sid_reg
         rn.s0_grid = s0_grid_seed(s0reps)
+        rn.s0_census = s0_census_seed(s0reps)
         s['env_scrubbed'] = rn.scrubbed
         pr = Predict(rn.run, lads, a.variant, sv_scope=scope)
         if a.dry_run:
@@ -2898,7 +2976,7 @@ def verdict_compute(dirs, reg_path, contract, root):
                                             f'단계 ({", ".join(code_key_diff(c, c0))})')
         #  ★ PF2 B (10-22 · Q2) · D — 단계마다 기록한 S0 단계 2 봉인 = 등록 계획 · S0 계획 · 단계 1 꼴 · 두 보고 지문 = 이 단계 코드 (같은 함수) ·
         #    단계끼리 같은 기록
-        got = s0_reports_problem(s.get('s0_reports'), plan_hash, s0_hash, c.get('files'), c.get('runner_files'))
+        got = s0_reports_problem(s.get('s0_reports'), plan_hash, s0_hash, c.get('files'), c.get('runner_files'), plan=plan)
         if got:
             raise Stop(got[0], f'{rd.name}: {got[1]}')
         if not s0r_first and s0_records_key(s.get('s0_reports')) != s0_records_key(s0r0):   # ★ 10-25 묶음 B — 경로 = 대조 밖

@@ -81,10 +81,11 @@ from fibre_segment_raster import cell_of, n_components_6face, segment_cells   # 
 SCRIPTS = os.path.dirname(os.path.abspath(s3.__file__))
 ROOT = os.path.dirname(SCRIPTS)
 
-SCHEMA = 'ca-s0-census-v3'                       # v2 (10-20 2 일 차) = junction_census 블록 (cjunc_registry 같은 함수) 추가 ·
+SCHEMA = 'ca-s0-census-v4'                       # v2 (10-20 2 일 차) = junction_census 블록 (cjunc_registry 같은 함수) 추가 ·
 #  ★ v3 (10-25 묶음 B · RCA2-03 · 1저자 10-23 Q3 (가)) = 같은 침대 칸 — inputs.settings_sha256 (킷 run_mpm.sh 의 payload 호출부 ·
 #  `kit_settings_sha256`) · raster.sid_off_fp (off 격자의 `carbon_junction._grid_fp` = R 런 접합 원장 fp.sid 와 같은 함수) · 사슬
-#  (`rint_r_chain.S0_REPORT_SCHEMA`) 이 이 schema 를 요구하고, R 직전 · 판정 때 `kit_input_record` 로 킷을 다시 해시해 대조한다
+#  (`rint_r_chain.S0_REPORT_SCHEMA`) 이 이 schema 를 요구하고, R 직전 · 판정 때 `kit_input_record` 로 킷을 다시 해시해 대조한다 ·
+#  ★ v4 (10-25 묶음 B · X6 · 1저자 10-23 Q20 (가)) = 단계 2 보고의 봉인 SV census (`sv_census_sealed` · 단계 1 = null · 단계 1 뜻 그대로)
 PLAN_SCHEMA = 'ca-cjunc-plan-v1'
 TOOL_VERSION = 's0-b3-registry-v1'               # 옛 s0-b0-preview-v1 = 미리보기 census 만
 #: ★ 10-25 묶음 B (RCA2-03) — 원 입력 역할 = payload 호출의 입력 파일 (`kit_input_paths` · 이 모듈 · 사슬이 같은 이름을 쓴다) ·
@@ -1410,6 +1411,26 @@ def _snap(d):
     return out
 
 
+def sv_census_sealed(kw, sid, *, s_min_um, tol_ff_um):
+    """★ 10-25 묶음 B (X6 · 1저자 10-23 Q20 (가)) 단계 2 (s_min 봉인 뒤 · DBE) 봉인 SV census — 가로챈 입력 + off 격자 (`sid`) + R 계획의
+    봉인 s_min · tol_ff → 블록.  원장 = `carbon_junction.cjunc_registry` (안의 `_sv_split` · 사본 없음) · 문턱 = `ca_ext_cjunc.registry_thresholds`
+    (payload 가 R 런 원장에 넘기는 값과 같은 함수) → census 세 칸 (`ca_ext_svcf.CENSUS_KEYS`).  사슬 (`rint_r_chain.sv_census_problem`) 이 같은
+    규약 DBE arm 0 의 SV 기록마다 (기록 census 사본 · 증거 census) 이 값과 대조한다.  지문 (sid · registry) = 기록만 (지금 대조 안 함)."""
+    import ca_ext_cjunc as CX
+    import ca_ext_svcf as SVCF
+    th = CX.registry_thresholds(s_min_um=s_min_um, tol_ff_um=tol_ff_um)
+    try:
+        reg = cj.cjunc_registry(sid, tuple(float(x) for x in kw['box_lo']), float(kw['vox']), kw['add_pts'], kw['add_phase'],
+                                kw['add_fid'], kw['add_kind'], **th)
+    except (ValueError, TypeError) as e:
+        raise S0Error(f'봉인 SV census — 접합 원장 (carbon_junction.cjunc_registry) 이 입력을 거부했다: {e}') from e
+    return {'status': 'sealed', 'function': 'carbon_junction.cjunc_registry (_sv_split) · 문턱 = ca_ext_cjunc.registry_thresholds',
+            'grid': JUNCTION_GRID, 's_min_um': th['s_min_um'], 'tol_ff_um': th['tol_ff_um'], 'thresholds': th,
+            'census_keys': list(SVCF.CENSUS_KEYS), 'census': {k: int(reg['census'][k]) for k in SVCF.CENSUS_KEYS},
+            'fp': {'sid': reg['fp']['sid'], 'registry': reg['fp']['registry']},
+            'fp_use': 'record_only — 사슬 대조 = census 세 칸 · 지문은 기록만 (끝 증서 그래프 지문을 붙일 자리 · 지금 대조 안 함)'}
+
+
 def census_kit(kit, out_dir, *, stage, plan=None, plan_sha=None, plan_source=None, vox=0.15, bridge_um=0.48,
                sdcp_sphere_d=0.30, scripts_dir=SCRIPTS, plan_extra=None):
     """킷 하나 → 보고 dict · 인스턴스 배열 dict · (단계 1) (계획, 바이트, sha256)."""
@@ -1647,6 +1668,11 @@ def census_kit(kit, out_dir, *, stage, plan=None, plan_sha=None, plan_source=Non
     junction, jarrays = junction_census(kw, off, tol_ff=tol_ff, L_par=L_par, r_port=r_port, tol_P=tol_P, tol_sj=tol_sj,
                                         r_ptfe=r_P, r_sdcp=r_s)
     junction['arrays_file'] = f's0_junctions_{kname}.npz'
+    #  ★ 10-25 묶음 B (X6 · Q20 (가)) — 단계 2 = 봉인 SV census (R 계획의 s_min · tol_ff · 단계 2 관문이 커밋에서 읽은 값) · 단계 1 = null
+    sv_sealed = None
+    if stage == 2:
+        rpl = (plan_extra or {}).get('r_plan') or {}
+        sv_sealed = sv_census_sealed(kw, off, s_min_um=rpl.get('s_min_um'), tol_ff_um=rpl.get('tol_ff_um'))
     rep = {
         'schema': SCHEMA, 'stage': int(stage), 'tool': TOOL_VERSION,
         'kit': {'path': kit, 'name': kname, 'run_dir': run_dir, 'run_dir_name': os.path.basename(run_dir),
@@ -1678,6 +1704,7 @@ def census_kit(kit, out_dir, *, stage, plan=None, plan_sha=None, plan_source=Non
                             'tol_sj_um': tol_sj, 'tol_fs_um': TOL_FS_PREVIEW_UM, 'r_f_um': R_F_UM},
         'plan': dict({'sha256': plan_sha, 'source': plan_source}, **(plan_extra or {})),
         'junction_census': junction,
+        'sv_census': sv_sealed,
         'census_preview': census,
         'notes': list(NOTES),
         'elapsed_s': round(time.time() - t0, 1),

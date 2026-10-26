@@ -789,7 +789,7 @@ def chain_has(opt):
     return callable(main) and opt in getattr(getattr(main, '__code__', None), 'co_consts', ())
 
 
-def s0_report(stage, name, plan_sha=None, s0_sha=None, kit=None, mutate=None, raw=None):
+def s0_report(stage, name, plan_sha=None, s0_sha=None, kit=None, mutate=None, raw=None, sv_nu=0):
     """S0 단계 보고 (가짜) → 경로 — 꼴 = `ca_s0_census.census_kit` 보고의 판정 칸 (schema · stage · kit · plan · code).  단계 2 의 plan =
     {sha256 (S0 계획) · source 'commit:<sha>' · r_plan {path · sha256 (R 계획) · s_min · tol_ff · 법칙 · rtol}} (`verify_plan_commit` 의 결합 기록 꼴).
     mutate = 손댄 dict · raw = 그대로 쓸 바이트 (깨진 JSON 반례)."""
@@ -816,10 +816,25 @@ def s0_report(stage, name, plan_sha=None, s0_sha=None, kit=None, mutate=None, ra
     #  ★ 10-25 묶음 B (RCA2-03 · Q3 (가)) — 원 입력 (S0 와 같은 함수 `kit_input_record` 로 고정물 킷을 해시 · 역할 7 · metrics · 설정) · 파생 칸
     #    (규약 = 사슬 고정값 · off 격자 지문 = 가짜 러너의 arm 0 sid 지문 식) — 고치기 전 판 (함수 없음) = 원 입력 칸 없음
     rep.update(s0_bed_fields(kn))
+    #  ★ 10-25 묶음 B (X6 · Q20 (가)) — 단계 2 = 봉인 SV census (가짜 러너의 SV 런 census 식 = 못 가른 nu · 다리 nu + 1 · 닿는 nu + 2 · 봉인 s_min ·
+    #    tol_ff = 그 계획) · 단계 1 = null (s_min 봉인 전)
+    rep['sv_census'] = s0_sv_block(plan_sha or FX['plan_sha'], kn, sv_nu) if stage == 2 else None
     if mutate is not None:
         mutate(rep)
     p.write_text(json.dumps(rep, ensure_ascii=False, indent=1), encoding='utf-8')
     return p
+
+
+def s0_sv_block(plan_sha, kit, nu=0):
+    """S0 단계 2 봉인 SV census (가짜 보고) — census = 가짜 러너의 SV 런 census 식 (nu · nu + 1 · nu + 2) · s_min · tol_ff = 그 계획 바이트의 값 ·
+    지문 = 가짜 러너 arm 0 의 sid · registry 식."""
+    pb = (FX.get('plan_bytes') or {}).get(plan_sha)
+    po = json.loads(pb.decode('utf-8')) if pb is not None else FX['plan_obj']
+    sid = hx('sid|%s|%r|%s|%d' % (kit, 0.15, False, 0))
+    return {'status': 'sealed', 'census': {'n_unsplit_bridging_components': nu, 'n_bridging_components': nu + 1,
+                                            'n_sdcp_components_touching': nu + 2},
+            's_min_um': po['s_min_um'], 'tol_ff_um': po['tol_ff_um'], 'thresholds': {'fixture': True},
+            'fp': {'sid': sid, 'registry': hx('reg|' + sid)}}
 
 
 #: 등록 R §2-1b — S0 단계 1 · 2 · R 런의 census · registry 일곱 파일 (시험 쪽 목록 · 사슬 · S0 상수와 시험 D 가 대조)
@@ -1649,13 +1664,33 @@ def t_V04():
 
 
 def sv_set(tag, rule, extra_world=None):
-    """주 사다리 + SV 반사실 규칙 하나 (P1 · c 1 · R_j,0 모서리) 를 넣은 예측 → 판정."""
+    """주 사다리 + SV 반사실 규칙 하나 (P1 · c 1 · R_j,0 모서리) 를 넣은 예측 → 판정.
+    ★ 10-25 묶음 B (X6) — 규칙의 못 가른 덩어리 수 nu > 0 이면 모든 SV 모서리가 같은 nu (census = 침대 · 격자 · 봉인 s_min 의 양 · 모서리마다 같다 ·
+    옛 고정물 = 한 모서리만 nu 1 = 정직한 생산자에게 없는 꼴 → 사슬이 S0 봉인 census 와 대조해 멈춘다) · 다른 모서리 = 위 끝 1.3 (문턱 2 아래) ·
+    사다리 = 봉인 nu 인 S0 단계 2 보고로 돈 사다리 둘 (`s_main_nu`)."""
+    nu = int(rule.get('n_unsplit', 0))
+
     def go():
-        m = {'kit_has': 'DBE', 'rj': lad(s_main('P1'))['R_j0'], 'c': '1'}
-        W = dict(PW, sv_cf=[dict(rule, match=m)], **(extra_world or {}))
-        p = predict(tag, world(tag, W), [s_main('P0')['out'], s_main('P1')['out']])
-        return verdict(tag + '_v', [s_main('P0')['out'], s_main('P1')['out'], p['out']])
+        lads = [s_main_nu(nu, 'P0')['out'], s_main_nu(nu, 'P1')['out']]
+        m = {'kit_has': 'DBE', 'rj': lad(s_main_nu(nu, 'P1'))['R_j0'], 'c': '1'}
+        rules = [dict(rule, match=m)]
+        if nu:
+            rules.append({'status': 'computed', 'ratio': 1.2, 'n_unsplit': nu, 'status_hi': 'computed', 'ratio_hi': 1.3})
+        W = dict(PW, sv_cf=rules, **(extra_world or {}))
+        p = predict(tag, world(tag, W), lads)
+        return verdict(tag + '_v', lads + [p['out']])
     return scen(tag, go)
+
+
+def s_main_nu(nu, law):
+    """주 사다리 (법칙 law) — nu = 0 이면 주 사다리 그대로 · nu > 0 이면 봉인 census nu 인 S0 단계 2 보고로 돈 사다리 (X6 · 같은 계획)."""
+    if not nu:
+        return s_main(law)
+
+    def go():
+        s2 = FX.setdefault(('s2_nu', nu), s0_report(2, f's2_nu{nu}', sv_nu=nu))
+        return ladder(f'main_nu{nu}_{law}', world(f'main_nu{nu}_{law}'), law=law, s2=s2)
+    return scen(f'main_nu{nu}_{law}', go)
 
 
 @check('V05', 'SV_DEPENDENT (3판 · RCA-06) — 한 모서리의 반사실 비 3.0 > 계획 문턱 2.0 → 차단 표지 · §7-1 문장 금지 (판정 이름은 그대로) · '
@@ -5052,6 +5087,110 @@ def t_W10():
                 predict('W10b', world('W10b'), lads, root=w_root('W10b', rm_link)))
     rs = scen('W10', go)
     return all(y_stopped(r, 'S0_REPORT_MISMATCH') for r in rs), [(r['rc'], stop_code(r), y_why(r)[-120:]) for r in rs]
+
+
+# ── ★ 10-25 묶음 B (X6 · 1저자 10-23 Q20 (가)) SV census 외부 결합 — S0 단계 2 보고 (schema v4) 의 봉인 SV census (R arm 0 와 같은 함수 ·
+#    같은 격자 · 봉인 s_min) 를 사슬이 SV 기록마다 (기록 census 사본 + 증거 census · 세 칸) 대조 · 다르면 S0_REPORT_MISMATCH.  옛 사슬 = 기록 안
+#    일관 (기록 사본 = 증거 census) 만 봐 기록 · census 를 같이 0 으로 고친 꼴 (2 차 사전 공격 §A) 을 받았다.
+@check('Q01', '정상 — 주 예측 (S0 단계 2 봉인 census = 가짜 러너 SV 런 census · nu 0) PREDICTED · 예측 요약의 S0 단계 2 기록 = 봉인 census · s_min · '
+              'tol_ff (S0 보고 그대로) · 단계 1 기록 = null')
+def t_Q01():
+    p = s_main_predict()
+    r2 = ((p['sum'] or {}).get('s0_reports') or {}).get('stage2') or {}
+    r1 = ((p['sum'] or {}).get('s0_reports') or {}).get('stage1') or {}
+    sv = r2.get('sv_census') or {}
+    return (p['rc'] == 0 and (p['sum'] or {}).get('status') == 'PREDICTED'
+            and sv.get('census') == {'n_unsplit_bridging_components': 0, 'n_bridging_components': 1, 'n_sdcp_components_touching': 2}
+            and sv.get('s_min_um') == 0.6 and sv.get('tol_ff_um') == 0.05 and 'sv_census' in r1 and r1.get('sv_census') is None,
+            (p['rc'], (p['sum'] or {}).get('status'), sv, r1.get('sv_census', 'MISSING')))
+
+
+@check('Q02', '판정문 2 차 사전 공격 §A 꼴 — S0 봉인 census nu 1 (사다리 = 그 보고) · SV 런 기록 = nu 0 (기록 사본 = 증거 census = 0 · 위 끝 없음 · 기록 '
+              '안 일관 = 계약 통과) → 예측 S0_REPORT_MISMATCH (첫 SV 모서리 뒤 · 옛 사슬 = 받아 PREDICTED)')
+def t_Q02():
+    def go():
+        lads = [s_main_nu(1, 'P0')['out'], s_main_nu(1, 'P1')['out']]
+        return predict('Q02', world('Q02'), lads)
+    r = scen('Q02', go)
+    return (r['rc'] == 3 and stop_code(r) == 'S0_REPORT_MISMATCH' and n_calls(r['world']) >= 1 and 'census' in y_why(r),
+            (r['rc'], stop_code(r), n_calls(r['world']), y_why(r)[-200:]))
+
+
+@check('Q03', '반대 — S0 봉인 nu 0 (주 사다리) · 모든 SV 모서리 nu 1 (위 끝 있음 · 기록 안 일관) → 예측 S0_REPORT_MISMATCH · 같은 꼴 정직한 짝 (봉인 nu 1 '
+              '사다리 · 모든 모서리 nu 1) → PREDICTED')
+def t_Q03():
+    rule = {'status': 'computed', 'ratio': 1.2, 'n_unsplit': 1, 'status_hi': 'computed', 'ratio_hi': 1.3}
+
+    def go():
+        a = predict('Q03a', world('Q03a', dict(PW, sv_cf=[rule])), [s_main('P0')['out'], s_main('P1')['out']])
+        b = predict('Q03b', world('Q03b', dict(PW, sv_cf=[rule])), [s_main_nu(1, 'P0')['out'], s_main_nu(1, 'P1')['out']])
+        return a, b
+    a, b = scen('Q03', go)
+    return (a['rc'] == 3 and stop_code(a) == 'S0_REPORT_MISMATCH' and b['rc'] == 0 and (b['sum'] or {}).get('status') == 'PREDICTED',
+            (a['rc'], stop_code(a), y_why(a)[-160:], b['rc'], stop_code(b), y_why(b)[-160:]))
+
+
+@check('Q04', 'S0 단계 2 봉인 census 꼴 — 없음 (v3 꼴) · null · census 칸 없음 · 모르는 칸 · bool · 음수 · 못 가른 > 다리 · s_min ≠ R 계획 · tol_ff ≠ R '
+              '계획 · 단계 1 에 봉인 census (null 아님) · 옛 schema (ca-s0-census-v3) → S0_REPORT_MISMATCH · 러너 0 회')
+def t_Q04():
+    def sv(fn):
+        return lambda r: fn(r['sv_census'])
+
+    def cen(fn):
+        return lambda r: fn(r['sv_census']['census'])
+    cases2 = (
+        ('없음', lambda r: r.pop('sv_census')),
+        ('null', lambda r: r.update(sv_census=None)),
+        ('census 칸 없음', cen(lambda c: c.pop('n_bridging_components'))),
+        ('모르는 칸', cen(lambda c: c.update(n_extra=1))),
+        ('bool', cen(lambda c: c.update(n_unsplit_bridging_components=False))),
+        ('음수', cen(lambda c: c.update(n_unsplit_bridging_components=-1))),
+        ('못 가른 > 다리', cen(lambda c: c.update(n_unsplit_bridging_components=5))),
+        ('s_min', sv(lambda s: s.update(s_min_um=0.61))),
+        ('tol_ff', sv(lambda s: s.update(tol_ff_um=0.06))),
+        ('옛 schema', lambda r: r.update(schema='ca-s0-census-v3')),
+    )
+    rs = [(nm, c_case(f'Q04_{i}', 'S0_REPORT_MISMATCH', s2=s0_report(2, f'Q04_{i}', mutate=fn))) for i, (nm, fn) in enumerate(cases2)]
+    rs.append(('단계 1 봉인 census', c_case('Q04_s1', 'S0_REPORT_MISMATCH',
+                                         s1=s0_report(1, 'Q04_s1', mutate=lambda r: r.update(sv_census=s0_sv_block(FX['plan_sha'], DBE_KIT))))))
+    return all(x[1][0] for x in rs), [(nm, x[1]) for nm, x in rs if not x[0]]
+
+
+@check('Q05', '판정 — 세 단계 요약의 단계 2 봉인 census 를 같게 nu 1 로 손댐 (단계끼리 같음 · 꼴 맞음) → 원 팔 다시 읽기 (기록 nu 0) 가 S0_REPORT_MISMATCH · '
+              'NOT_COMPUTED (같음 대조만으로는 못 잡는 꼴)')
+def t_Q05():
+    def cut(s):
+        s['s0_reports']['stage2']['sv_census']['census'].update(n_unsplit_bridging_components=1, n_bridging_components=2,
+                                                                n_sdcp_components_touching=3)
+
+    def go():
+        lp = [b_tamper_copy(s_main(law)['out'], f'Q05_{law}', 'ladder_summary.json', cut) for law in ('P0', 'P1')]
+        shas = {law: hashlib.sha256((d / 'ladder_summary.json').read_bytes()).hexdigest() for law, d in zip(('P0', 'P1'), lp)}
+
+        def cut_p(s):                          # 예측 요약의 사다리 sha256 도 손댄 사본으로 (PREDICT_LADDER_MISMATCH 앞에서 멈추지 않게)
+            cut(s)
+            for law in ('P0', 'P1'):
+                s['ladders'][law]['summary_sha256'] = shas[law]
+        pp = b_tamper_copy(s_main_predict()['out'], 'Q05_pred', 'predict_summary.json', cut_p)
+        return verdict('Q05', lp + [pp])
+    r = scen('Q05', go)
+    return (r['rc'] == 3 and stop_code(r) == 'S0_REPORT_MISMATCH' and (r['v'] or {}).get('verdict') == 'NOT_COMPUTED',
+            (r['rc'], stop_code(r), y_why(r)[-200:]))
+
+
+@check('Q06', '대조 범위 — 같은 규약 · 주 래스터 · arm 0 의 SV 기록만 (S0 봉인 = origin 0 · vox 0.15 · 양보 없음): S0 단계 2 규약이 다르면 (vox 0.1) 봉인 '
+              'census 가 달라도 대조 안 함 → PREDICTED (규약 다른 S0 보고 = 기록만 · 파생 격자 지문과 같은 규칙)')
+def t_Q06():
+    def conv(r):
+        r['raster']['convention']['vox_um'] = 0.1
+        r['sv_census']['census'].update(n_unsplit_bridging_components=1, n_bridging_components=2, n_sdcp_components_touching=3)
+
+    def go():
+        s2 = s0_report(2, 'Q06', mutate=conv)
+        lads = [ladder(f'Q06_{law}', world(f'Q06_{law}'), law=law, s2=s2)['out'] for law in ('P0', 'P1')]
+        return predict('Q06_pred', world('Q06_pred'), lads)
+    r = scen('Q06', go)
+    return (r['rc'] == 0 and (r['sum'] or {}).get('status') == 'PREDICTED', (r['rc'], stop_code(r), y_why(r)[-160:]))
 
 
 @check('N07', '★ PF2 E (PRE2-impl-03) S0 계획 중복 칸 ("gap_tol" 둘 · 등록 S0 줄 = 그 바이트의 sha256) → S0_PLAN_INVALID · 사유 = 중복 칸 '

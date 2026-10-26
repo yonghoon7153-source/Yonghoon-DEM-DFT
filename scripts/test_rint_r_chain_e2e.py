@@ -267,6 +267,12 @@ def make_plan_and_reg(ws=None):
     if ws is not None:
         s1.update(s0_bed(ws, SBE_KIT))
         s2.update(s0_bed(ws, DBE_KIT))
+        #  ★ 10-25 묶음 B (X6 · Q20 (가)) — 단계 2 봉인 SV census = 실제 S0 함수 (`sv_census_sealed` · 같은 격자 · R 계획의 s_min · tol_ff) ·
+        #    단계 1 = null · 고치기 전 판 (함수 없음) = 칸 없음
+        sv = s0_sv(ws, DBE_KIT, plan['s_min_um'], plan['tol_ff_um'])
+        if sv is not None:
+            s2['sv_census'] = sv
+            s1['sv_census'] = None
     for nm, rep in (('s0_stage2.json', s2), ('s0_stage1.json', s1)):
         with open(os.path.join(TD, nm), 'w', encoding='utf-8') as f:
             json.dump(rep, f, ensure_ascii=False, indent=1)
@@ -308,6 +314,31 @@ def s0_bed(ws, kit):
                      'sid_off_fp': CJ._grid_fp(off)}
     CODEREPO[key] = out
     return out
+
+
+def s0_sv(ws, kit, s_min_um, tol_ff_um):
+    """S0 단계 2 봉인 SV census 블록 — 실제 S0 함수 (`ca_s0_census.sv_census_sealed` · 가로챈 입력 · off 격자 · 봉인 s_min · tol_ff) → dict |
+    None (고치기 전 판)."""
+    import ca_s0_census as S0
+    f = getattr(S0, 'sv_census_sealed', None)
+    if not callable(f):
+        return None
+    key = ('sv', ws, kit, s_min_um, tol_ff_um)
+    if key in CODEREPO:
+        return CODEREPO[key]
+    kp = os.path.join(ws, kit)
+    rd = S0.find_run_dir(kp)
+    with tempfile.TemporaryDirectory(dir=TD) as td:
+        argv = S0.resolve_payload_argv(kp, rd, td, vox=VOX, bridge_um=0.48, sdcp_sphere_d=0.30)
+        kw = S0.capture_raster_inputs(argv, rd, log_path=os.path.join(td, 'cap.log'))
+        S0._check_captured(kw, VOX, 0.48, 0.30)
+        st = S0._s3_state()
+        try:
+            off, _pid = S0._raster(kw, drop=(S0.PTFE,), with_pid=True)
+        finally:
+            S0._s3_restore(st)
+    CODEREPO[key] = json.loads(json.dumps(f(kw, off, s_min_um=s_min_um, tol_ff_um=tol_ff_um)))
+    return CODEREPO[key]
 
 
 def s0_args():
@@ -544,6 +575,59 @@ def t_short_ceiling():
             (s3.get('sigma_e_eff_S_cm'), s3.get('reason'), cc.get('status'), cnt))
 
 
+def t_sv_census_dbe():
+    """★ 10-25 묶음 B (X6 · 1저자 10-23 Q20 (가)) — 실물 (실제 러너 · payload · 합성 DBE 킷 · SDCP 있음 · CPU): S0 단계 2 봉인 SV census (실제 S0
+    함수) = DBE arm 0 SV 런의 증거 census · 기록 census 사본 (모서리 둘 · 법칙 · c 다름 = 같은 census) · 사슬 read_run (S0 off 격자 지문 · 봉인 census
+    대조) 통과 · 봉인 census 를 바꾼 기록이면 read_run 이 S0_REPORT_MISMATCH.  (사슬 사다리 · 예측을 다 돌리지 않는다 — 사슬 Runner 로 모서리 런만)"""
+    ws = make_root('e10')
+    pp, _sp, _rp = make_plan_and_reg(ws)
+    plan = json.load(open(pp, encoding='utf-8'))
+    if not callable(getattr(RR, 's0_census_seed', None)):
+        chk('E10 사슬 s0_census_seed · S0 sv_census_sealed 가 있다 (봉인 SV census 대조)', False)
+        return
+    recs = {'stage2': RR.read_s0_report(os.path.join(TD, 's0_stage2.json'), 2), 'stage1': RR.read_s0_report(os.path.join(TD, 's0_stage1.json'), 1)}
+    seed_g, seed_c = RR.s0_grid_seed(recs), RR.s0_census_seed(recs)
+    key = RR.sid_group(DBE_KIT, None, 0)
+    sd = code_repo()
+    runner = os.path.join(sd, 'sdcp_gain_vox015_8arm.sh')
+    out = os.path.join(TD, 'runs', 'e10')
+    old_bk, old_here = RR.EXPECT_BACKEND, RR.HERE
+    RR.EXPECT_BACKEND, RR.HERE = 'cpu', Path(sd)
+    buf = io.StringIO()
+    res, stop = [], None
+    try:
+        with chain_env(ws), contextlib.redirect_stdout(buf), contextlib.redirect_stderr(buf):
+            rn = RR.Runner(runner, ws, out, plan, None, time.time() + 1800, RR.RealContract(), prefix='Q')
+            rn.s0_grid, rn.s0_census = seed_g, seed_c
+            for law, c in (('P0', '0'), ('P1', '1')):
+                res.append(rn.run(DBE_KIT, 'corner', law, c, RR.rj_key(1e6), 1, True))
+            bad = {k: {kk: (vv + 1 if kk == 'n_unsplit_bridging_components' else vv) for kk, vv in v.items()} for k, v in seed_c.items()}
+            rn2 = RR.Runner(runner, ws, out + '_b', plan, None, time.time() + 1800, RR.RealContract(), prefix='Q')
+            rn2.s0_grid, rn2.s0_census = seed_g, bad
+            try:
+                rn2.run(DBE_KIT, 'corner', 'P0', '1', RR.rj_key(1e6), 1, True)
+            except RR.Stop as e:
+                stop = e
+    except RR.Stop as e:
+        chk('E10 실물 DBE SV 모서리 둘이 사슬 read_run 을 지난다', False, f'{e.code}: {e.cause} · {buf.getvalue()[-600:]}')
+        return
+    finally:
+        RR.EXPECT_BACKEND, RR.HERE = old_bk, old_here
+    sealed = (recs['stage2'].get('sv_census') or {}).get('census')
+    evs = []
+    for r in rn.records:
+        d = json.load(open(os.path.join(out, r['outdir'], r['arms_read'][0]['file']), encoding='utf-8'))
+        ev = d['mpm_metrics']['step3']['manifest']['ca_ext']['cjunc']['evidence']
+        svr = (ev.get('solve') or {}).get('sv_counterfactual') or {}
+        evs.append(({k: ev['census'].get(k) for k in sealed or {}}, {k: svr.get(k) for k in sealed or {}}))
+    chk('E10a 봉인 SV census (실제 S0 함수 · off 격자 · 봉인 s_min 0.6) = 실제 DBE arm 0 SV 런 (P0 c 0 · P1 c 1) 의 증거 census = 기록 census 사본 · '
+        '사슬 대조 무리 키 = 주 래스터 origin 0 · read_run 통과 (러너 rc 0 · 둘)',
+        bool(sealed) and key in seed_c and key in seed_g and len(res) == 2 and all(e == sealed and s == sealed for e, s in evs),
+        (sealed, evs, sorted(seed_c)))
+    chk('E10b 봉인 census 의 못 가른 수를 +1 한 대조 → 같은 실제 런 꼴 (P0 c 1) 의 read_run = S0_REPORT_MISMATCH (사유 census)',
+        stop is not None and stop.code == 'S0_REPORT_MISMATCH' and 'census' in str(stop.cause), (stop and stop.code, stop and str(stop.cause)[:300]))
+
+
 def t_prod_form():
     ws = make_root('e6', kit_sh=KIT_SH_PROD)
     out = os.path.join(TD, 'runs', 'e6_P0')
@@ -578,7 +662,7 @@ def main():
     t0 = time.time()
     sel = [x for x in ARGS.only.split(',') if x]
     try:
-        for tag, fn in (('E1', t_ladder), ('E6', t_prod_form), ('E8', t_zero_floor), ('E9', t_short_ceiling)):
+        for tag, fn in (('E1', t_ladder), ('E6', t_prod_form), ('E8', t_zero_floor), ('E9', t_short_ceiling), ('E10', t_sv_census_dbe)):
             if sel and tag not in sel:
                 continue
             print(f'\n── {tag}')

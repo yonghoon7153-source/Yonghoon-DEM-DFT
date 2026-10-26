@@ -698,8 +698,8 @@ def t_e2e_bed():
     inp, ras = rep.get('inputs') or {}, rep.get('raster') or {}
     h64 = lambda x: isinstance(x, str) and re.fullmatch(r'[0-9a-f]{64}', x) is not None      # noqa: E731
     h32 = lambda x: isinstance(x, str) and re.fullmatch(r'[0-9a-f]{32}', x) is not None      # noqa: E731
-    chk('B0 SCHEMA = ca-s0-census-v3 (원 입력 설정 지문 · off 격자 지문 칸 · 사슬 S0_REPORT_SCHEMA 와 같아야)', S0.SCHEMA == 'ca-s0-census-v3',
-        S0.SCHEMA)
+    chk('B0 SCHEMA = ca-s0-census-v4 (v3 = 원 입력 설정 지문 · off 격자 지문 칸 · ★ v4 (X6) = 단계 2 봉인 SV census · 사슬 S0_REPORT_SCHEMA 와 '
+        '같아야)', S0.SCHEMA == 'ca-s0-census-v4', S0.SCHEMA)
     chk('B1 보고 inputs.settings_sha256 = 64 hex · raster.sid_off_fp = 32 hex · 역할 파일 7 (fibre_dia 포함) sha256 · bytes',
         h64(inp.get('settings_sha256')) and h32(ras.get('sid_off_fp'))
         and sorted(inp.get('files') or {}) == ['fibre', 'fibre_dia', 'fibre_kind', 'metrics_json', 'phase', 'scaffold', 'se']
@@ -840,6 +840,60 @@ def t_e2e_stage2():
         and isinstance(rr.get('sid_off_fp'), str) and re.fullmatch(r'[0-9a-f]{32}', rr['sid_off_fp']) is not None
         and rec is not None and rec.get('files') == ri.get('files') and rec.get('settings_sha256') == ri.get('settings_sha256'),
         str((ri.get('settings_sha256'), rr.get('sid_off_fp'))))
+    t_e2e_sv_sealed(rep)
+
+
+def t_e2e_sv_sealed(rep):
+    """★ 10-25 묶음 B (X6 · 1저자 10-23 Q20 (가)) — 단계 2 보고의 봉인 SV census = R arm 0 와 같은 함수 (`carbon_junction.cjunc_registry` 안
+    `_sv_split` · 사본 없음) · 같은 격자 (off · 가로챈 입력) · 같은 문턱 (`ca_ext_cjunc.registry_thresholds` = payload 가 원장에 넘기는 값 · 봉인
+    s_min · tol_ff = 단계 2 가 커밋에서 읽은 R 계획) — 사슬이 SV 기록마다 (기록 census 사본 + 증거 census) 이것과 대조한다.  단계 1 = 없음 (null ·
+    s_min 봉인 전 · 단계 1 뜻 그대로)."""
+    import carbon_junction as CJm
+    import ca_ext_cjunc as CX
+    import ca_ext_svcf as SVCF
+    svc = rep.get('sv_census')
+    rpr = (rep.get('plan') or {}).get('r_plan') or {}
+    f_th = getattr(CX, 'registry_thresholds', None)
+    if not callable(f_th) or not callable(getattr(S0, 'sv_census_sealed', None)):
+        chk('E7x0 ca_ext_cjunc.registry_thresholds · ca_s0_census.sv_census_sealed 가 있다 (봉인 SV census · 같은 함수)', False)
+        return
+    kitB, tmp = STATE['kitB'], STATE['tmp']
+    rd = S0.find_run_dir(kitB)
+    with tempfile.TemporaryDirectory(dir=tmp) as td:
+        argv = S0.resolve_payload_argv(kitB, rd, td, vox=VOX, bridge_um=0.48, sdcp_sphere_d=0.30)
+        kw = S0.capture_raster_inputs(argv, rd, log_path=os.path.join(td, 'cap.log'))
+        S0._check_captured(kw, VOX, 0.48, 0.30)
+        st = S0._s3_state()
+        try:
+            off, _pid = S0._raster(kw, drop=(S0.PTFE,), with_pid=True)
+        finally:
+            S0._s3_restore(st)
+    th = f_th(s_min_um=rpr.get('s_min_um'), tol_ff_um=rpr.get('tol_ff_um'))
+    reg = CJm.cjunc_registry(off, tuple(float(x) for x in kw['box_lo']), float(kw['vox']), kw['add_pts'], kw['add_phase'],
+                             kw['add_fid'], kw['add_kind'], **th)
+    want = {k: int(reg['census'][k]) for k in SVCF.CENSUS_KEYS}
+    ok = (isinstance(svc, dict) and svc.get('status') == 'sealed' and svc.get('census') == want
+          and all(type(svc['census'][k]) is int for k in SVCF.CENSUS_KEYS) and svc.get('s_min_um') == rpr.get('s_min_um') == 0.6
+          and svc.get('tol_ff_um') == rpr.get('tol_ff_um') and svc.get('thresholds') == th
+          and (svc.get('fp') or {}).get('sid') == (rep.get('raster') or {}).get('sid_off_fp')
+          and (svc.get('fp') or {}).get('registry') == reg['fp']['registry'])
+    chk('E7x1 단계 2 봉인 SV census — census 세 칸 = 원장 (off 격자 · registry_thresholds (봉인 s_min 0.6 · tol_ff = R 계획)) · 정수 · 문턱 기록 = '
+        'registry_thresholds · 지문 sid = off 격자 지문 · registry = 같은 원장 (기록만)', ok, str((svc, want))[:400])
+    chk('E7x2 단계 1 보고 sv_census = null (s_min 봉인 전 · 단계 1 뜻 그대로)',
+        'sv_census' in STATE['repA'] and STATE['repA'].get('sv_census') is None, str(STATE['repA'].get('sv_census', 'MISSING'))[:120])
+    orig = CX.registry_thresholds
+
+    def boom(**_k):
+        raise RuntimeError('registry_thresholds 바꿔 끼움 (시험 E7x3)')
+    CX.registry_thresholds = boom
+    try:
+        r3 = raises(lambda: S0.sv_census_sealed(kw, off, s_min_um=0.6, tol_ff_um=rpr.get('tol_ff_um')), Exception)
+    finally:
+        CX.registry_thresholds = orig
+    chk('E7x3 같은 함수 — ca_ext_cjunc.registry_thresholds 를 터지게 하면 sv_census_sealed 도 터진다 (문턱 사본 없음)', r3)
+    bad = [raises(lambda v=v: S0.sv_census_sealed(kw, off, s_min_um=v, tol_ff_um=rpr.get('tol_ff_um')), Exception)
+           for v in (None, float('nan'), True, '0.6')]
+    chk('E7x4 봉인 s_min 이 없거나 (None) · NaN · bool · 문자열 → 거부 (기본값 없음)', all(bad), str(bad))
 
 
 def t_e2e_payload_crosscheck():

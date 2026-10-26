@@ -37,6 +37,10 @@ R_F_UM = CJ.VGCF_R_UM
 L_PAR_UM = 0.30
 R_PORT_UM = 0.30
 GAP_TOL = 2.0                                  # 폴리라인 끊기 = 선분 스탬프와 같은 규칙 (설계 §1-2 #25)
+#: ★ 10-25 묶음 B (X6 · 1저자 10-23 Q20 (가)) — 원장 문턱 칸 (protocol 의 같은 이름 칸 · payload_prepare 가 `cjunc_registry` 에 넘기는 이름 인자) ·
+#  값 = `registry_thresholds` 한 곳 (S0 단계 2 봉인 SV census `ca_s0_census.sv_census_sealed` 가 같은 함수 · 같은 문턱으로 원장을 만든다)
+REGISTRY_THRESHOLD_KEYS = ('r_f_um', 'tol_ff_um', 'L_par_um', 'r_port_um', 's_min_um', 'gap_tol', 'tol_P_um', 'tol_sj_um', 'r_ptfe_um',
+                           'r_sdcp_um')
 #: 원장이 읽는 MPM phase — VGCF (중심선 · 멤버십) · PTFE (P-junc 덮임) · SDCP (S3 근접)
 ADD_PHASES = (2, 4, 5)
 CHANNEL = 'electronic'
@@ -144,6 +148,16 @@ def rj_limit_value(R_j_ohm, rj_limit):
     return 0.0, 'zero'
 
 
+def registry_thresholds(*, s_min_um, tol_ff_um):
+    """원장 문턱 — 선언 둘 (s_min · tol_ff · `_num` 검사 · 기본값 없음) + 이 코드의 상수 → {이름: float} (`REGISTRY_THRESHOLD_KEYS`).
+    `cjunc_protocol_record` 의 원장 문턱 칸 = 이 값 · payload_prepare 가 원장에 넘기는 값 = 그 칸 · ★ 10-25 묶음 B (X6) S0 단계 2 봉인 SV census 가
+    같은 값을 쓴다 (사본 없음)."""
+    s = _num(s_min_um, 's_min_um')
+    t = _num(tol_ff_um, 'tol_ff_um')
+    return {'r_f_um': float(R_F_UM), 'tol_ff_um': t, 'L_par_um': float(L_PAR_UM), 'r_port_um': float(R_PORT_UM), 's_min_um': s,
+            'gap_tol': float(GAP_TOL), 'tol_P_um': t, 'tol_sj_um': t, 'r_ptfe_um': float(CJ.PTFE_R_UM), 'r_sdcp_um': float(CJ.SDCP_R_UM)}
+
+
 def cjunc_protocol_record(*, R_j_ohm, len_law, unreg_law, s_min_um, tol_ff_um, ptfe_jlaw, ptfe_stamp, rj_limit=None):
     """`ca_ext.cjunc.protocol` — 물리 칸 (p3ca id 에 들어간다).  선언 값 여섯 + 이 코드의 상수 (모델 판 · 규칙 판 · 고정 문턱).
     정량 (R_j 유한 > 0 · s_min 등록 · tol_ff 유한 ≥ 0) 또는 ★ Z3 극한 런 (`rj_limit` — `rj_limit_value`) · ptfe_stamp = off · face_alpha
@@ -153,8 +167,7 @@ def cjunc_protocol_record(*, R_j_ohm, len_law, unreg_law, s_min_um, tol_ff_um, p
         raise ValueError(f'접합 길이 법칙 {len_law!r} ≠ 이 코드의 {CJ.CJUNC_LEN_LAW!r} (선언 필수 · 옛 판 · 다른 판 섞임 거부)')
     if unreg_law not in CJ.UNREG_LAWS:
         raise ValueError(f'미등록 VV 면 법칙 {unreg_law!r} ∉ {CJ.UNREG_LAWS} (선언 필수 · 자동 fallback 없음 · v2 §3-6)')
-    s = _num(s_min_um, 's_min_um')
-    t = _num(tol_ff_um, 'tol_ff_um')
+    th = registry_thresholds(s_min_um=s_min_um, tol_ff_um=tol_ff_um)     # ★ 10-25 묶음 B (X6) — 원장 문턱 한 곳 (값 · 검사 순서 그대로)
     if ptfe_jlaw not in CJ.PTFE_JLAWS:
         raise ValueError(f'PTFE–접합 법칙 {ptfe_jlaw!r} ∉ {CJ.PTFE_JLAWS}')
     if ptfe_stamp not in ('off', 'face_alpha'):
@@ -165,9 +178,9 @@ def cjunc_protocol_record(*, R_j_ohm, len_law, unreg_law, s_min_um, tol_ff_um, p
         raise ValueError(f'PTFE–접합 법칙 P1 (덮인 접합 절단) 은 face_alpha 에서만 ({ptfe_stamp} — off 는 PTFE 표현이 없다 · 설계 §4-1)')
     out = {'wiring': WIRING_VERSION, 'model': CJ.CJUNC_MODEL_VERSION, 'schema': CJ.CJUNC_SCHEMA, 'len_law': CJ.CJUNC_LEN_LAW,
            'rules': canonical_rules(), 'R_j_ohm': R, 'unreg_law': str(unreg_law), 'ptfe_jlaw': str(ptfe_jlaw),
-           'ptfe_stamp': str(ptfe_stamp), 'r_f_um': float(R_F_UM), 'tol_ff_um': t, 'L_par_um': float(L_PAR_UM),
-           'r_port_um': float(R_PORT_UM), 's_min_um': s, 'gap_tol': float(GAP_TOL), 'tol_P_um': t, 'tol_sj_um': t,
-           'r_ptfe_um': float(CJ.PTFE_R_UM), 'r_sdcp_um': float(CJ.SDCP_R_UM), 'rj_reference_plane': CJ.RJ_REFERENCE_PLANE,
+           'ptfe_stamp': str(ptfe_stamp), 'r_f_um': th['r_f_um'], 'tol_ff_um': th['tol_ff_um'], 'L_par_um': th['L_par_um'],
+           'r_port_um': th['r_port_um'], 's_min_um': th['s_min_um'], 'gap_tol': th['gap_tol'], 'tol_P_um': th['tol_P_um'],
+           'tol_sj_um': th['tol_sj_um'], 'r_ptfe_um': th['r_ptfe_um'], 'r_sdcp_um': th['r_sdcp_um'], 'rj_reference_plane': CJ.RJ_REFERENCE_PLANE,
            'half_cell_in_edge': False, 'quantitative': True, 'allow_rj_limits': False, 'channel': CHANNEL}
     if lim is not None:                                       # ★ Z3 — 극한 런 = 사다리 진단 (판정 값 아님) · 정량 런은 이 칸이 없다
         out.update(rj_limit=lim, quantitative=False, allow_rj_limits=True)
@@ -210,14 +223,11 @@ def payload_prepare(sid, *, lo, vox, pts, phase, fid, kind, cjunc, sdcp_mod=None
                                  **{k: cjunc.get(k) for k in REQUEST_KEYS_CJUNC})
     lim = prot.get('rj_limit')
     sdp = None if sdcp_mod is None else sdcp_mod_protocol_record(c=sdcp_mod.get('c'), tol_sj_um=prot['tol_ff_um'])
-    reg = CJ.cjunc_registry(sid, lo, vox, pts, phase, fid, kind, r_f_um=prot['r_f_um'], tol_ff_um=prot['tol_ff_um'],
-                            L_par_um=prot['L_par_um'], r_port_um=prot['r_port_um'], s_min_um=prot['s_min_um'],
-                            gap_tol=prot['gap_tol'], tol_P_um=prot['tol_P_um'], tol_sj_um=prot['tol_sj_um'],
-                            r_ptfe_um=prot['r_ptfe_um'], r_sdcp_um=prot['r_sdcp_um'])
+    reg = CJ.cjunc_registry(sid, lo, vox, pts, phase, fid, kind, **{k: prot[k] for k in REGISTRY_THRESHOLD_KEYS})
     if _jsonable(reg['rules']) != prot['rules']:
         raise ValueError('원장 규칙 판 ≠ protocol 정본 (carbon_junction 이 이 배선 뒤 바뀌었다 · 다른 판 섞임 거부)')
     _thr = _jsonable(reg['thresholds'])
-    for k in ('r_f_um', 'tol_ff_um', 'L_par_um', 'r_port_um', 's_min_um', 'gap_tol', 'tol_P_um', 'tol_sj_um', 'r_ptfe_um', 'r_sdcp_um'):
+    for k in REGISTRY_THRESHOLD_KEYS:
         if _thr.get(k) != prot[k]:
             raise ValueError(f'원장 문턱 {k} = {_thr.get(k)!r} ≠ protocol {prot[k]!r}')
     if lim is not None and reg['rejections']:                 # ★ Z3 — 극한 런도 정량 런과 같은 그래프여야 한다 (사다리의 바닥 · 천장 · 점)

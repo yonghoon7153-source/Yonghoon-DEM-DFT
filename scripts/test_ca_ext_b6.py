@@ -1833,6 +1833,59 @@ OLD_DIFF_HINTS = (
 )
 
 
+@case('Q 원장 문턱 한 곳 — registry_thresholds = 접합 protocol 의 원장 문턱 칸 = payload_prepare 가 cjunc_registry 에 넘기는 값 '
+      '(★ 10-25 묶음 B X6 · 1저자 Q20 (가) · S0 단계 2 봉인 SV census 가 같은 함수 · 같은 문턱을 쓴다)')
+def t_registry_thresholds():
+    import inspect
+    keys, f = getattr(CW, 'REGISTRY_THRESHOLD_KEYS', None), getattr(CW, 'registry_thresholds', None)
+    if keys is None or not callable(f):
+        chk('Q0 ca_ext_cjunc.REGISTRY_THRESHOLD_KEYS · registry_thresholds 가 있다', False)
+        return
+    params = set(inspect.signature(CW.CJ.cjunc_registry).parameters)
+    chk('Q0 문턱 키 = cjunc_registry 의 이름 인자 (r_f · tol_ff · L_par · r_port · s_min · gap_tol · tol_P · tol_sj · r_ptfe · r_sdcp)',
+        set(keys) <= params and len(keys) == 10 and len(set(keys)) == 10, f'{keys} ⊄ {sorted(params)}')
+    th = f(s_min_um=CJ_REQ['s_min_um'], tol_ff_um=CJ_REQ['tol_ff_um'])
+    prots = [CW.cjunc_protocol_record(ptfe_stamp='face_alpha', **CJ_REQ),
+             CW.cjunc_protocol_record(ptfe_stamp='off', rj_limit='inf', **dict(CJ_REQ, R_j_ohm=None)),
+             CW.cjunc_protocol_record(ptfe_stamp='off', rj_limit='zero', **dict(CJ_REQ, R_j_ohm=0.0))]
+    chk('Q1 protocol 의 원장 문턱 칸 = registry_thresholds (정량 · 바닥 · 천장 · 값 · 형 같음)',
+        all({k: pr[k] for k in keys} == th and all(type(pr[k]) is type(th[k]) for k in keys) for pr in prots),
+        str([{k: pr[k] for k in keys} for pr in prots[:1]]))
+    cap = {}
+
+    class _Cap(Exception):
+        pass
+
+    def spy(*a, **k):
+        cap.update(k)
+        raise _Cap()
+    real = CW.CJ.cjunc_registry
+    CW.CJ.cjunc_registry = spy
+    try:
+        try:
+            CW.payload_prepare(np.zeros((2, 2, 2), np.int8), lo=(0.0, 0.0, 0.0), vox=0.15, pts=np.zeros((0, 3)),
+                               phase=np.zeros(0, np.int64), fid=np.zeros(0, np.int64), kind=np.zeros(0, np.int64),
+                               cjunc=dict(CJ_REQ), ptfe_stamp='face_alpha')
+        except _Cap:
+            pass
+    finally:
+        CW.CJ.cjunc_registry = real
+    chk('Q2 payload_prepare → cjunc_registry 의 문턱 인자 = registry_thresholds (같은 값 · 그 밖 이름 인자 없음)',
+        set(cap) == set(keys) and {k: cap[k] for k in keys} == th, str(cap))
+    bad = [raises_any(lambda v=v: f(s_min_um=v, tol_ff_um=0.5)) for v in (None, float('nan'), float('inf'), True, '0.5', -1.0)]
+    bad += [raises_any(lambda v=v: f(s_min_um=0.5, tol_ff_um=v)) for v in (None, float('nan'), True, -0.1)]
+    chk('Q3 registry_thresholds 거부 — s_min · tol_ff 없음 (None) · NaN · ±inf · bool · 문자열 · 음수 (기본값 없음 · protocol 과 같은 검사)',
+        all(bad), str(bad))
+
+
+def raises_any(fn):
+    try:
+        fn()
+    except Exception:                                       # noqa: BLE001
+        return True
+    return False
+
+
 def old_tree_diff(a, b, p=''):
     """두 JSON 꼴 값의 차이 → [(연산, 점 경로)] (경로 순).  양쪽 다 dict 일 때만 내려간다 · 목록 · 값은 통째로 JSON 바이트 비교
     (1 ↔ 1.0 도 다름 · NaN 끼리 같음).  '+' = 새 쪽에만 · '-' = 옛 쪽에만 · '~' = 값 다름."""

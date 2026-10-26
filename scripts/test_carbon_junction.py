@@ -4342,6 +4342,53 @@ def t_sv_divdir_knife():
         all(ok for _n, ok, _d in base) and all(caught.values()), caught)
 
 
+@case('QX6')
+def t_sv_census_external():
+    """★ 10-25 묶음 B (X6 · 1저자 10-23 Q20 (가) · 2 차 사전 공격 §A · `docs/reviews/rint2_rr_fix_evidence_20261023/preattack2/tools/atk2_census.py`)
+    — 생산자 기록 다섯 (QD2-3 · QDX · RAIL5 · QD2-1 · QD4) 의 반사실 기록에서 못 가른 덩어리 수를 0 으로 · 위 끝을 지우고 (증거 census 까지 0 으로 고친
+    꼴 · 안 고친 꼴) → 사슬 `rint_r_chain.sv_census_problem` (기록 census 사본 · 증거 census ↔ S0 단계 2 봉인 census) 이 잡는다 · 정직한 기록 = None ·
+    봉인 census = 같은 원장 함수의 census (이 고정물 = 생산자 원장 `reg['census']` · S0 단계 2 가 같은 함수로 낸다).  ⓘ 기록 계약
+    (`ca_ext_svcf.sv_cf_problem`) 결과는 참고로 보고만 (census 까지 고친 꼴 = 기록 안 일관 → 계약이 못 보는 자리 = 외부 결합의 몫)."""
+    import ca_ext_svcf as SVCF
+    import rint_r_chain as RRC
+    f = getattr(RRC, 'sv_census_problem', None)
+    if not callable(f):
+        chk('QX6 ① 사슬 sv_census_problem 이 있다 (기록 · 증거 census ↔ S0 봉인 census)', False)
+        return
+    runs = {'QD2-3': lambda: _qd3_run([QD2_A3, QD2_B3, QD2_C3], QD2_S3, QD2_N3),
+            'QDX': lambda: _qd3_run(QDX_POLYS, QDX_SDCP, QDX_N),
+            'RAIL5': lambda: _qd3_run(QD5_RAIL5, QD4_SDCP, QD5_RAIL5_N),
+            'QD2-1': lambda: _qd3_run([QD2_A1, QD2_B1], QD2_S1, QD2_N1),
+            'QD4': lambda: _qd3_run(QD4_POLYS, QD4_SDCP, QD4_N)}
+    honest_bad, attack_ok, contract = [], [], {}
+    for nm, mk in runs.items():
+        reg, pl, r, cf = mk()
+        base = json.loads(json.dumps(_qd3_ev(reg, pl, r, cf)))
+        sealed = {k: int(reg['census'][k]) for k in SVCF.CENSUS_KEYS}
+        if f(base['solve']['sv_counterfactual'], base['census'], sealed) is not None or sealed['n_unsplit_bridging_components'] == 0:
+            honest_bad.append(nm)
+        for census_too in (False, True):
+            e = json.loads(json.dumps(base))
+            s = e['solve']['sv_counterfactual']
+            s['n_unsplit_bridging_components'] = 0
+            if census_too:
+                e['census']['n_unsplit_bridging_components'] = 0
+            s['upper'] = None
+            s['status_hi'], s['sv_counterfactual_ratio_hi'], s['ratio_limit_hi'] = s['status'], s['sv_counterfactual_ratio'], s['ratio_limit']
+            lo, hi = SVCF.cert_interval(s)
+            s['ratio_cert_interval'] = [SVCF._enc(lo), SVCF._enc(hi)]
+            got = f(s, e['census'], sealed)
+            if got is None:
+                attack_ok.append(f'{nm} census_edit={census_too}')
+            try:
+                contract[f'{nm} census_edit={census_too}'] = (SVCF.sv_cf_problem(e, True) or 'None')[:80]
+            except Exception as ex:                          # noqa: BLE001
+                contract[f'{nm} census_edit={census_too}'] = f'EXC {type(ex).__name__}'
+    chk('QX6 ① 정직한 생산자 기록 다섯 (못 가른 덩어리 > 0) — 봉인 census (같은 원장) 와 대조 = 문제 없음', not honest_bad, honest_bad)
+    chk('QX6 ② 못 가른 수 0 · 위 끝 지움 (증거 census 까지 고침 · 안 고침) 열 꼴 전부 → sv_census_problem 이 잡는다 (봉인 census 의 못 가른 수 ≠ 0)',
+        not attack_ok, f'놓침 {attack_ok} · 계약 (참고) {contract}')
+
+
 @case('QD6x')
 def t_nextafter_py38():
     """★ 10-24 (`SELF-132` · kgy dem-venv = Python 3.8.10 · `math.nextafter` 는 3.9+) — `ca_ext_svcf._nextafter` 의 3.8 가지 (IEEE 754 비트 한 칸)
