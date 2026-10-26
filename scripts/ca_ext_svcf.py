@@ -51,6 +51,12 @@
   (FLOAT) · 끊는 면 옆에 같은 두 dof 를 잇는 간선이 남는 정상 기록 (S3 c = 1 축약) 을 거부했다 (거짓 거부) · 새 칸 ↔ 옛 칸 = 생산자 보장 관계만 (⑧) ·
   끊은 수 칸까지 같이 고친 일관 편집 · 위 끝 ← 아래 끝 증서 = 받는다 (Q18 (가) · 한정 · Codex 회차 ①) · 새 칸만 0 으로 고친 바꿔 끼우기 = 정직한
   FLOAT 기록과 같은 꼴이라 받는다 (가를 수 없다 · `_topo_problem` ⚠).
+★ 10-25 묶음 B (X3 · X5 · 1저자 10-23 Q21 (가) · author 10-23 ratified Q2-Q3 Q20-Q21) X3 — 생산자가 위 끝에 아래 끝 계 대비 판에 닿는 성분에서 끊은
+  쌍 수 (`n_reach_pairs_cut_vs_lower`) 를 낸다 → 두 끝 computed 면 위 끝 위상 수 ≠ 아래 끝 ⇔ 그 수 + `n_plate_couplings_cut` > 0 (`_topo_problem` ⑨ ·
+  옛 판 = 위 끝 ≤ 아래 끝 만 → 아래 끝 ← 위 끝 증서 (끊은 수 그대로) 를 받았다) · X5 — 수 칸 꼴 · ⑦ · ⑧ 관계를 비를 싣는 끝이 있는 기록 전부에서
+  (computed 끝이 없어도 · 위 끝 = 상태와 무관 · 옛 판 = computed 끝이 있을 때만).  ⚠ X3 와 같은 위상 꼴 (두 끝 증서 위상 수가 같아진다) 인 위 끝 ←
+  아래 끝 증서 (한정 (c)) · 위 끝 ← 주 해 증서 (아래 끝 = 주 해인 기록 · 한정 (b) (b′)) 도 끊은 수 그대로면 거부된다 — 새 칸까지 0 으로 고친 일관
+  편집은 받는다 (남은 한정 · `_topo_problem` ⚠).
 numpy 없이 뜬다 (`numbers` · `fractions` · 원 기록의 numpy 수도 받는다 · 검증기의 증서 대조만 `step3_conv_cert` 를 그 자리에서 부른다)."""
 import math
 import numbers
@@ -92,9 +98,11 @@ BRACKET_RULES = ('lower_keep_unsplit_upper_remove_unsplit_sdcp_cells_v1',)
 #: 위 끝 구조화 실패 (= `carbon_junction.SV_CF_UNSPLIT_MISMATCH` · 다시 가른 수 ≠ census 수 = 그 상태의 정의 · 제거 수 대조 밖 · 꼴 = `_mismatch_problem`)
 UNSPLIT_MISMATCH = 'unsplit_census_mismatch'
 #: ★ 10-23 (RCA2-06 F6) 구조화 실패 끝의 풀이 칸 — 풀지 않은 끝 = 전부 없다 (생산자 `carbon_junction._sv_cf_upper_unsolved` 정의: 비 · 표지 (투영) ·
-#   G_cut · 잔차 · CG · 증서 · backend 는 None · 제거 셀 · 끊은 간선 · 판 결합 · SV 면 수 · ★ 10-23 묶음 A″ 판에 닿는 성분에서 끊은 쌍 수는 푼 끝만 싣는다)
+#   G_cut · 잔차 · CG · 증서 · backend 는 None · 제거 셀 · 끊은 간선 · 판 결합 · SV 면 수 · ★ 10-23 묶음 A″ 판에 닿는 성분에서 끊은 쌍 수 · ★ 10-25
+#   묶음 B 아래 끝 계 대비 끊은 쌍 수는 푼 끝만 싣는다)
 MISMATCH_EMPTY_KEYS = ('sv_counterfactual_ratio', 'ratio_limit', 'G_cut_code', 'resid', 'cg_info', 'conv_cert', 'backend_last_solve',
-                       'n_cells_removed', 'n_edges_cut', 'n_plate_couplings_cut', 'n_sv_faces_cut', 'n_reach_pairs_cut')
+                       'n_cells_removed', 'n_edges_cut', 'n_plate_couplings_cut', 'n_sv_faces_cut', 'n_reach_pairs_cut',
+                       'n_reach_pairs_cut_vs_lower')
 #: 수 칸의 의미 범위 (0 이상 · int64 — 10**400 같은 값 = 거부 · RCA2-04)
 COUNT_MAX = 2 ** 63 - 1
 #: ★ 10-23 (사전 공격 리뷰 C1 · 1저자 Q12 (가) · author 10-23 ratified Q12-Q16) 증서 자신의 위상 수 (`step3_conv_cert.target_bracket` 이 그 풀이의
@@ -375,8 +383,8 @@ def _count_ok(v):
 def _removed_problem(up, nu):
     """★ 10-23 (Codex 재검토 RCA2-04 · 생산자 정의 `carbon_junction.sv_counterfactual`) 위 끝 풀이 기록의 제거 수 → 문제 | None —
     제거 성분 수 = 못 가른 덩어리 수 (지문 묶인 원장에서 다시 가른 수 = census 수 · 다르면 `unsplit_census_mismatch` 꼴) · 제거 셀 수 = 그 성분의
-    SDCP 셀 수 ≥ 성분 수 (성분마다 셀 ≥ 1 · 비를 싣는 끝은 필수) · 끊은 간선 · 판 결합 · SV 면 수 · ★ 10-23 묶음 A″ 판에 닿는 성분에서 끊은 쌍 수 = 0 이상
-    정수 (있으면) · 전부 int64 범위."""
+    SDCP 셀 수 ≥ 성분 수 (성분마다 셀 ≥ 1 · 비를 싣는 끝은 필수) · 끊은 간선 · 판 결합 · SV 면 수 · ★ 10-23 묶음 A″ 판에 닿는 성분에서 끊은 쌍 수 ·
+    ★ 10-25 묶음 B 아래 끝 계 대비 끊은 쌍 수 = 0 이상 정수 (있으면 · 필수 여부 · 관계 = `_topo_problem` X5) · 전부 int64 범위."""
     nc = up.get('n_components_removed')
     if not _count_ok(nc) or int(nc) != nu:
         return f'sv_cf| 위 끝 제거 성분 수 {nc!r} ≠ 못 가른 덩어리 수 {nu} (생산자 정의 = 같다 · 0 이상 정수 · int64 범위 · 10-23 RCA2-04)'
@@ -385,9 +393,9 @@ def _removed_problem(up, nu):
     if (ncell is not None or need) and (not _count_ok(ncell) or int(ncell) < nu):
         return (f'sv_cf| 위 끝 제거 셀 수 {ncell!r} (0 이상 정수 · int64 범위 · 제거 성분 수 {nu} 이상 — 성분마다 SDCP 셀 ≥ 1 · 비를 싣는 끝은 '
                 f'필수 · 10-23 RCA2-04)')
-    for k in ('n_edges_cut', 'n_plate_couplings_cut', 'n_sv_faces_cut', 'n_reach_pairs_cut'):     # ★ 10-23 묶음 A″ — 새 칸도 같은 꼴
+    for k in ('n_edges_cut', 'n_plate_couplings_cut', 'n_sv_faces_cut', 'n_reach_pairs_cut', 'n_reach_pairs_cut_vs_lower'):   # ★ A″ · B 새 칸도 같은 꼴
         if up.get(k) is not None and not _count_ok(up.get(k)):
-            src = '10-23 사전 공격 리뷰 C1 · 묶음 A″' if k == 'n_reach_pairs_cut' else '10-23 RCA2-04'
+            src = {'n_reach_pairs_cut': '10-23 사전 공격 리뷰 C1 · 묶음 A″', 'n_reach_pairs_cut_vs_lower': '10-25 묶음 B · X3'}.get(k, '10-23 RCA2-04')
             return f'sv_cf| 위 끝 {k} {up.get(k)!r} (0 이상 정수 · int64 범위 · {src})'
     return None
 
@@ -590,25 +598,35 @@ def _topo_problem(rec):
       ⑦ 끊은 수의 독립 출처 — 위 끝 풀이 기록의 `n_sv_faces_cut` (있으면 · 위 끝 상태와 무관) = 아래 끝 (같은 원장 · 같은 끊을 면 표 · 같은 조립에서
          떠 있는 성분을 버리기 전에 센 수)
       ⑧ (★ 10-23 묶음 A″) 새 칸 ↔ 옛 칸 (생산자 보장 · 등식 없음): 아래 끝 `n_reach_pairs_cut` ≤ `n_sv_faces_cut` (빠진 쌍마다 끊은 다리 면 ≥ 1) ·
-         위 끝 `n_reach_pairs_cut` ≥ 아래 끝 (위 끝 = 아래 끝 계에서 더 뺀 계) · 위 끝 − 아래 끝 ≤ `n_edges_cut` (위 끝에서만 빠진 쌍마다 더 뺀 간선 ≥ 1)
+         위 끝 `n_reach_pairs_cut` ≥ 아래 끝 (위 끝 = 아래 끝 계에서 더 뺀 계) · 위 끝 − 아래 끝 ≤ `n_edges_cut` (위 끝에서만 빠진 쌍마다 더 뺀 간선 ≥ 1) ·
+         ★ 10-25 묶음 B (X3) 아래 끝 `n_reach_pairs_cut` + 위 끝 `n_reach_pairs_cut_vs_lower` ≤ 위 끝 `n_reach_pairs_cut` (아래 끝의 판에 닿는 성분 ⊆ 주
+         계의 판에 닿는 성분 · 아래 끝에서 이미 빠진 쌍과 겹치지 않는다 — 생산자 보장 · ⑧ 의 위 끝 − 아래 끝 ≤ n_edges_cut 과 함께 그 수 ≤ n_edges_cut)
+      ⑨ (★ 10-25 묶음 B · X3 · 1저자 10-23 Q21 (가)) 두 끝 computed: 위 끝 증서 위상 수 ≠ 아래 끝 ⇔ 위 끝 `n_reach_pairs_cut_vs_lower` (아래 끝 그래프의
+         판에 닿는 성분 안 dof 쌍 중 위 끝 그래프에 간선이 하나도 남지 않은 쌍 · `carbon_junction._reach_pairs_cut` 같은 함수) + `n_plate_couplings_cut`
+         > 0 — 모든 정직한 기록에서 정확히 성립 (⑥ 과 같은 셈: 빠진 쌍이 있으면 증서 간선 쌍 수가 준다 · 판 결합을 빼면 판 결합 합이 준다 · 둘 다
+         없으면 아래 끝의 판에 닿는 성분마다 연결이 그대로라 같은 계)
+    X5 (★ 10-25 묶음 B · 1저자 10-23 Q21 (가)) — 수 칸 꼴 · ⑦ · ⑧ 관계는 비를 싣는 끝이 있는 기록 전부에서 본다 (computed 끝이 없어도 · 위 끝 풀이 기록 =
+      상태와 무관 · 구조화 실패 끝 (`UNSPLIT_MISMATCH`) = 풀이 칸 없음이 그 꼴의 정의 → `_mismatch_problem`) · 증서 위상 수 대조 (①–⑥ · ⑨) 는 computed
+      끝이 있을 때만 (옛 판 = 수 칸 꼴 · 관계도 computed 끝이 있을 때만 → 두 끝 +∞ 기록의 새 칸 꼴 · 위 끝 +∞ 의 ⑧ 관계를 안 봤다).
     ⚠ 한정 — ~~⑥ 거짓 거부~~ (★ 10-23 묶음 A″ 고침 — 끊은 간선이 판에 닿지 않는 성분에만 있는 꼴 (FLOAT) · 같은 두 dof 를 잇는 끊지 않은 병렬
       간선이 남는 꼴 (S3 c = 1 축약) = 판에 닿는 성분에서 끊은 쌍 0 → 같은 계로 받는다) · 끊은 수 칸까지 같이 고친 일관 편집 ((a) 아래 끝 ← 주 해
       증서 + n_sv_faces_cut · n_reach_pairs_cut 0 · (b) 위 끝 ← 주 해 증서 + n_edges_cut · n_reach_pairs_cut 0) · 위 끝 ← 아래 끝 증서 (c) 는 받는다
       (1저자 Q18 (가) — 고치지 않는다 · Codex 회차 ① 한정 · 새 칸만 남긴 (a) · (b) 꼴은 ⑧ 이 거부) · 새 칸만 0 으로 고친 바꿔 끼우기 ((a′) 아래 끝 ←
       주 해 증서 + n_reach_pairs_cut 0 · (b′) 위 끝 ← 주 해 증서 + 위 끝 n_reach_pairs_cut 0 · 옛 칸 그대로) = 정직한 FLOAT · 위 끝 FLOAT 기록과 같은 꼴 →
       받는다 (가를 수 없다 · 위 끝 풀이 기록이 있으면 ⑧ 위 끝 ≤ 아래 끝 + n_edges_cut 이 아래 끝 편집을 잡는다) · 증서 수 자체를 지어 낸 편집 (위상
-      수까지 고친 위조) 은 이 대조 밖 (봉인이 아니다)."""
+      수까지 고친 위조) 은 이 대조 밖 (봉인이 아니다).
+    ⚠ ★ 10-25 묶음 B (X3) 뒤 — 위 끝 ← 아래 끝 증서 (c) 는 아래 끝 ← 위 끝 증서 (X3) 와 같은 위상 꼴 (두 끝 증서 위상 수가 같아진다 · 위상 수만으로 둘을
+      가를 수 없다) → 끊은 수 그대로면 ⑨ 가 둘 다 거부한다 (정직한 위 끝 ≠ 아래 끝 기록) · 위 끝 `n_reach_pairs_cut_vs_lower` 까지 0 으로 고친 일관
+      편집은 받는다 (남은 한정) · (b) · (b′) 도 아래 끝 = 주 해인 기록 (k = 0) 에서는 같은 꼴 → 그 칸까지 0 으로 고친 편집만 받는다 · (a) · (a′) · k = 0
+      경계 (아래 끝 ← 주 해 증서 · 끊은 수 그대로 · 아래 끝 = 주 해인 기록) = 위상 수가 안 바뀌어 그대로 받는다."""
     lo_c = RATIO_STATUSES.get(rec.get('status')) == 'finite'
     up = rec.get('upper') if isinstance(rec.get('upper'), dict) else None
     up_c = up is not None and RATIO_STATUSES.get(up.get('status')) == 'finite'
-    if not (lo_c or up_c):
-        return None
     tag = '(10-23 사전 공격 리뷰 C1)'
     tag2 = '(10-23 사전 공격 리뷰 C1 · 묶음 A″)'
-    M = _topo_of(rec.get('conv_cert_full'))
-    if M is None:
-        got = {k: (rec.get('conv_cert_full') or {}).get(k) for k in CERT_TOPO_KEYS} if isinstance(rec.get('conv_cert_full'), dict) else None
-        return f'sv_cf| 주 해 증서 위상 수 {got!r} (간선 · dof · 판 결합 = 0 이상 정수 · int64 — 끝 증서를 끊은 그래프에 묶을 수 없다) {tag}'
+    tag3 = '(10-25 묶음 B · X3)'
+    #  ── ★ 10-25 묶음 B (X5) 수 칸 꼴 · ⑦ · ⑧ = 비를 싣는 끝이 있는 기록 전부 (computed 끝이 없어도 · 위 끝 풀이 기록 = 상태와 무관 · 구조화 실패 끝은
+    #     풀이 칸 없음이 정의 → `_mismatch_problem`) ──
     c = rec.get('n_sv_faces_cut')
     if not _count_ok(c):
         return f'sv_cf| 끊은 SV 다리 면 수 n_sv_faces_cut {c!r} (0 이상 정수 · int64 — 비를 싣는 끝의 끊은 그래프를 대조할 수 없다) {tag}'
@@ -625,6 +643,38 @@ def _topo_problem(rec):
     if k > c:
         return (f'sv_cf| 아래 끝 n_reach_pairs_cut {k} > n_sv_faces_cut {c} (판에 닿는 성분에서 빠진 쌍마다 끊은 다리 면 ≥ 1 — 생산자 보장 · 새 칸 ↔ 옛 칸 '
                 f'모순) {tag2}')
+    upr = up if (up is not None and up.get('status') != UNSPLIT_MISMATCH) else None
+    ne = npc = ku = kul = None
+    #  옮긴 ⑧ · 새 관계 (아래 끝 새 칸 + kul ≤ 위 끝 새 칸) 의 위반 = computed 끝이 없으면 바로 · 있으면 옛 자리 (⑧) · 옛 규칙 뒤 (새 관계) — 옛 판이 거부하던
+    #  기록의 사유는 그대로 둔다
+    rel8 = late = None
+    if upr is not None:
+        ne, npc = upr.get('n_edges_cut'), upr.get('n_plate_couplings_cut')
+        if not (_count_ok(ne) and _count_ok(npc)):
+            return f'sv_cf| 위 끝 n_edges_cut {ne!r} · n_plate_couplings_cut {npc!r} (0 이상 정수 · int64 — 위 끝 끊은 그래프를 대조할 수 없다) {tag}'
+        ne, npc = int(ne), int(npc)
+        ku = upr.get('n_reach_pairs_cut')
+        if not _count_ok(ku):
+            return (f'sv_cf| 위 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut {ku!r} (0 이상 정수 · int64 — 위 끝 끊은 그래프를 주 해에 대조할 수 없다) '
+                    f'{tag2}')
+        ku = int(ku)
+        kul = upr.get('n_reach_pairs_cut_vs_lower')
+        if not _count_ok(kul):
+            return (f'sv_cf| 위 끝 아래 끝 계 대비 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut_vs_lower {kul!r} (0 이상 정수 · int64 — 위 끝 끊은 그래프를 '
+                    f'아래 끝에 대조할 수 없다 · 위 끝 상태와 무관 · X5) {tag3}')
+        kul = int(kul)
+        if not k <= ku <= k + ne:
+            rel8 = (f'sv_cf| 위 끝 n_reach_pairs_cut {ku} ∉ [아래 끝 {k}, 아래 끝 + n_edges_cut {k + ne}] (위 끝 = 아래 끝 계에서 더 뺀 계 · 위 끝에서만 빠진 쌍마다 '
+                    f'더 뺀 간선 ≥ 1 — 생산자 보장 · 새 칸 ↔ 옛 칸 모순) {tag2}')
+        if k + kul > ku:
+            late = (f'sv_cf| 위 끝 n_reach_pairs_cut_vs_lower {kul} + 아래 끝 n_reach_pairs_cut {k} > 위 끝 n_reach_pairs_cut {ku} (아래 끝의 판에 닿는 성분 ⊆ 주 '
+                    f'계의 판에 닿는 성분 · 아래 끝에서 이미 빠진 쌍과 겹치지 않는다 — 생산자 보장 · 새 칸 ↔ 새 칸 모순) {tag3}')
+    if not (lo_c or up_c):
+        return rel8 or late
+    M = _topo_of(rec.get('conv_cert_full'))
+    if M is None:
+        got = {k_: (rec.get('conv_cert_full') or {}).get(k_) for k_ in CERT_TOPO_KEYS} if isinstance(rec.get('conv_cert_full'), dict) else None
+        return f'sv_cf| 주 해 증서 위상 수 {got!r} (간선 · dof · 판 결합 = 0 이상 정수 · int64 — 끝 증서를 끊은 그래프에 묶을 수 없다) {tag}'
     names = ('간선', 'dof', '아래 판 결합', '위 판 결합')
     L = None
     if lo_c:
@@ -648,15 +698,6 @@ def _topo_problem(rec):
         U = _topo_of(up.get('conv_cert'))
         if U is None:
             return f'sv_cf| 위 끝 증서 위상 수 없음 · 꼴 (간선 · dof · 판 결합 = 0 이상 정수 · int64) {tag}'
-        ne, npc = up.get('n_edges_cut'), up.get('n_plate_couplings_cut')
-        if not (_count_ok(ne) and _count_ok(npc)):
-            return f'sv_cf| 위 끝 n_edges_cut {ne!r} · n_plate_couplings_cut {npc!r} (0 이상 정수 · int64 — 위 끝 끊은 그래프를 대조할 수 없다) {tag}'
-        ne, npc = int(ne), int(npc)
-        ku = up.get('n_reach_pairs_cut')
-        if not _count_ok(ku):
-            return (f'sv_cf| 위 끝 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut {ku!r} (0 이상 정수 · int64 — 위 끝 끊은 그래프를 주 해에 대조할 수 없다) '
-                    f'{tag2}')
-        ku = int(ku)
         big = [names[i] for i in range(4) if U[i] > M[i]]
         if big:
             return f'sv_cf| 위 끝 증서 {big} {U} > 주 해 {M} (더 뺀 부분 그래프 — 주 해보다 클 수 없다) {tag}'
@@ -672,9 +713,8 @@ def _topo_problem(rec):
         cut_up = c + ne + npc
         if cut_up == 0 and U != M:
             return f'sv_cf| 위 끝이 끊은 것 0 인데 위 끝 증서 위상 수 {U} ≠ 주 해 {M} (끊은 것 없음 = 같은 계) {tag}'
-        if not k <= ku <= k + ne:
-            return (f'sv_cf| 위 끝 n_reach_pairs_cut {ku} ∉ [아래 끝 {k}, 아래 끝 + n_edges_cut {k + ne}] (위 끝 = 아래 끝 계에서 더 뺀 계 · 위 끝에서만 빠진 쌍마다 '
-                    f'더 뺀 간선 ≥ 1 — 생산자 보장 · 새 칸 ↔ 옛 칸 모순) {tag2}')
+        if rel8:                                           # ⑧ 옛 자리
+            return rel8
         reach_up = ku + npc
         if reach_up == 0 and U != M:
             return (f'sv_cf| 위 끝이 판에 닿는 성분에서 끊은 것 0 (n_reach_pairs_cut 0 · 판 결합 0 · 옛 칸 다리 면 {c} · 간선 {ne}) 인데 위 끝 증서 위상 수 {U} ≠ '
@@ -682,7 +722,13 @@ def _topo_problem(rec):
         if reach_up > 0 and U == M:
             return (f'sv_cf| 위 끝이 판에 닿는 성분에서 끊은 것 {reach_up} (n_reach_pairs_cut {ku} · 판 결합 {npc} · 옛 칸 다리 면 {c} · 간선 {ne}) 인데 위 끝 증서 '
                     f'위상 수 = 주 해 {M} (끊었으면 주 해보다 작다 — 주 해 증서를 끝 자리에 옮긴 기록 · 같은 수 = 거부) {tag2}')
-    return None
+        if L is not None:                                  # ⑨ (★ 10-25 묶음 B · X3) 위 끝 ≠ 아래 끝 ⇔ 아래 끝 계 대비 끊은 쌍 + 판 결합 > 0 (옛 규칙 뒤)
+            reach_lo = kul + npc
+            if (U != L) != (reach_lo > 0):
+                return (f'sv_cf| 위 끝이 아래 끝 계 대비 판에 닿는 성분에서 끊은 것 {reach_lo} (n_reach_pairs_cut_vs_lower {kul} · 판 결합 {npc}) 인데 위 끝 증서 '
+                        f'위상 수 {U} {"=" if U == L else "≠"} 아래 끝 {L} (끊었으면 아래 끝보다 작다 · 안 끊었으면 같은 계 — 아래 끝 ← 위 끝 증서 · 위 끝 ← 아래 끝 '
+                        f'증서를 옮긴 기록) {tag3}')
+    return rel8 or late
 
 
 def _census_problem(rec, ev):
