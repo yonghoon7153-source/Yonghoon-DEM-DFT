@@ -9760,6 +9760,144 @@
     "근거_발화": "채팅 답 (2026-10-26 · 이 세션): 'ㅇㅇ 권고대로 하자' — D1 ① 'AGGAC 하나만 입력 일치로 확인' 권고",
     "decision_digest": "sha256:8f1b5cef009ff8d32c3fe062ca2c94ec88973b99b93202cb66fd40e0c144b67f"
    }
+  },
+  {
+   "id": "D-2026-10-26-li3nd-neb-si-conditional",
+   "schema_version": 2,
+   "kind": "policy",
+   "scope": "sei.li3nd.neb",
+   "slot": "li3nd_neb_v2ccpath_citation",
+   "applies_to": {
+    "systems": [
+     "li3nd"
+    ],
+    "tasks": [
+     "sei_neb"
+    ],
+    "methods": [
+     "qe_pbe_cineb"
+    ],
+    "use_cases": [
+     "manuscript_si"
+    ]
+   },
+   "title": "Li₃Nd 2×2×2 NEB 장벽 0.229 eV — 본문 금지 · SI 에 단서 문장으로만 (재배열된 2×2×2 · 큰 셀 확인 불가 · 상끼리 비교 금지)",
+   "statement": "sei_neb.json v2_ccpath/li3nd (0.229 eV) 하나만 BLOCKED (HZ-sei-neb-retracted) 에서 CONDITIONAL 로 연다: SI 에 아래 단서 문장 그대로 (뜻을 줄이지 않는 한 문장 다듬기만) · 홉 수 검산 한 줄 동반 · 본문 · 그림 비교 · Li₂S (0.305) 나 다른 상과의 순위 · '수렴된 Li₃Nd 물성' · 실험 · 문헌 값과 나란히 두기는 금지. SI 문장: \"For a hypothetical ordered Li3Nd model (BiF3-type, Materials Project mp-976264, E_hull = 0.197 eV/atom) in a 2x2x2 supercell, the neutral-vacancy nearest-neighbour c->c CI-NEB barrier is 0.229 eV. Both vacancy endpoints relaxed by about 1.4 eV per cell from the ideal lattice, so the barrier refers to this locally reconstructed 2x2x2 model. A larger-cell check was not possible (the 3x3x3 CI-NEB did not converge and the 3x3x3 cells reconstructed substantially on relaxation); the value is therefore not converged with respect to cell size and is not compared with other phases.\" · 홉 수 검산 (ν₀ 1e13 s⁻¹ 가정 · 298 K): Γ ≈ 1.3e9 s⁻¹ · 평균 대기 ≈ 7e-10 s (tools/sei/collect_neb 의 hop_check · 차수 검산 — 확산계수·전도도 아님). 3×3×3 전체 NEB 는 같은 방식으로 다시 하지 않는다 (사용자 ①). sei_neb.json 의 다른 값 (Li₂S 0.305 포함) 은 BLOCKED 그대로.",
+   "rationale": "끝점 결정 실험 (10-26 · 카드 09-02 결과 전 규칙) — 두 셀 끝점 모두 0.6 eV 급을 넘는 재배열 → '재구성된 격자 위 장벽' 갈래: 2×2×2 CI-NEB 는 그 끝점 사이에서 수렴 (앞 · 뒤 대칭) 했으므로 상태를 밝히면 값이 남는다 · 셀 수렴은 3×3×3 이 재배열하고 NEB 가 수렴하지 않아 막혔다. NdO 원고 (CEI · 1저자 = 실험 쪽) Fig. 3g 가 이 값을 Li₂S 와 순위로 쓰고 있어 우리 쪽 허용 범위를 먼저 정한다 (사용자 '우선 해보고').",
+   "decision_state": "active",
+   "record_kind": "prospective",
+   "results_seen": true,
+   "results_seen_note": "값 (0.229) · 끝점 이완 (−1.38 / −2.68 eV/셀) · r2 진단을 본 뒤의 인용 범위 결정이다 — 값을 바꾸지 않는다",
+   "card": "kb/questions/li3nd_pristine_reconstruction_2026_09_02.md",
+   "record": "db/properties/li3nd_p333_control_runlog_2026_10_11.json",
+   "depends_on": [],
+   "supersedes": [],
+   "amends": null,
+   "evidence": [
+    "db/properties/sei_neb.json (sha256 17ec6b004b1ec0652b5db36183585bea2e60f0325233215c9985e347f46e30f9) results v2_ccpath/li3nd",
+    "db/properties/li3nd_p333_control_runlog_2026_10_11.json 결정_실험_NEB_끝점_2026_10_26 · r2_기하_진단_2026_10_26",
+    "db/properties/citation_hazards.json HZ-li3nd-neb-si-conditional"
+   ],
+   "reopen_criteria": [
+    "① 사용자가 '보고하지 않음' 으로 바꾸면 CONDITIONAL 항목을 내리고 BLOCKED 로 되돌린다 (사용자 '우선')",
+    "② 다른 셀 (≥ 3×3×3) 에서 같은 상태 정의로 수렴한 장벽이 생기면 셀 수렴 축을 다시 본다 — '더 해 보자' 는 사유가 아니다"
+   ],
+   "enforcement": "citation_hazards.json HZ-li3nd-neb-si-conditional (CONDITIONAL · SI 문장 · 금지 목록) · sei_neb.json 의 값·플래그는 그대로 (citable false · scientific_status provisional_single_cell) · 원고는 고치지 않고 1저자에게 어긋나는 곳만 짚는다",
+   "proposed_by": "claude-session-2026-10-26 (evac)",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-10-26",
+     "state": "proposed",
+     "by": "agent",
+     "note": "② 권고 (SI + 단서 · 순위 문장 금지) / 다른 길 = 보고하지 않음"
+    },
+    {
+     "at": "2026-10-26",
+     "state": "active",
+     "by": "사용자 (1저자 · SEI 트랙)",
+     "note": "비준 — '단서 붙여 인용 쪽으로 우선 해보고' (① 권고 '다시 안 함' 도 이의 없음)"
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-26T11:10:22Z",
+    "commit": "496244e3628f7639c163969918ac90c2e4846bdd",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "채팅 답 (2026-10-26 · 이 세션): '단서 붙여 인용 쪽으로 우선 해보고 · 그럼 R2 멈추고 영률 돌리자 (+ '어차피 r2는 수렴하나 안하나 결과는 똑같은거잖아')'",
+    "decision_digest": "sha256:fdc9aba540b0a006c982c5035c77f40c498941bb85dde4e36234a4abe3f80588"
+   }
+  },
+  {
+   "id": "D-2026-10-26-li3nd-r2-stop-now",
+   "schema_version": 2,
+   "kind": "policy",
+   "scope": "sei.li3nd.p0_2_control",
+   "slot": "li3nd_r2_early_stop",
+   "applies_to": {
+    "systems": [
+     "li3nd"
+    ],
+    "tasks": [
+     "li3nd_p0_2_control"
+    ],
+    "methods": [
+     "qe_pbe_relax"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "Li₃Nd P0-2 control r2 — 한도 (≈ 10-30) 를 기다리지 않고 지금 다음 BFGS 스텝 직후 EXIT 로 세워 '미수렴' 으로 닫고, 탄성 modelc_2x 를 재개한다",
+   "statement": "gabia r2 (sei_control/li3nd_mp-976264_p333_r2) 를 pause_relax_at_bfgs.sh --no_runner 로 다음 BFGS 줄 직후 EXIT 정지한다 · 다시 걸지 않는다 · D-2026-10-22-li3nd-r2-close-at-run-limit 의 닫는 방식 (미수렴 · 마지막 BFGS 번호 · 에너지 차 · 힘 성분 최대 · 거부 · 리셋 수를 런로그에 · 기하·에너지 정량 인용 금지) 을 그대로 따르되 시점만 사용자가 앞당겼다. 정지 확인 뒤 탄성 modelc_2x (SYS=modelc_2x · strain_13_m stopped + .bfgs → restart · 그 뒤 12_p · 12_m) 를 같은 러너로 재개한다 (D-2026-10-11-gabia-elastic-pause-li3nd-r2 순서).",
+   "rationale": "r2 가 답하려던 질문 (공공 없이도 3×3×3 이 재배열하나) 은 이미 '한다' 로 나왔다 (이상 격자 대비 크게 내려감 · Nd–Nd 닿음 · 아직 비탈) — 수렴해도 그 답과 ①② 결정은 바뀌지 않는다 (사용자 '어차피 r2는 수렴하나 안하나 결과는 똑같은거잖아'). 탄성이 ≈ 4 일 빨라진다.",
+   "decision_state": "active",
+   "record_kind": "prospective",
+   "results_seen": true,
+   "results_seen_note": "r2 진행 중 진단 (10-26) 을 본 뒤 — 정지 시점만 바꾼다 · 값 판정 아님",
+   "card": "kb/questions/li3nd_pristine_reconstruction_2026_09_02.md",
+   "record": "db/properties/li3nd_p333_control_runlog_2026_10_11.json",
+   "depends_on": [
+    "D-2026-10-22-li3nd-r2-close-at-run-limit",
+    "D-2026-10-11-gabia-elastic-pause-li3nd-r2"
+   ],
+   "supersedes": [],
+   "amends": null,
+   "evidence": [
+    "db/properties/li3nd_p333_control_runlog_2026_10_11.json r2_관측_2026_10_26_1443 · r2_기하_진단_2026_10_26"
+   ],
+   "reopen_criteria": [
+    "r2 를 다시 여는 것은 새 카드 (D-2026-10-22 와 같다)"
+   ],
+   "enforcement": "gabia 블록 (pause_relax_at_bfgs.sh · restart_qe_relax.sh 판정 · 탄성 러너 SYS=modelc_2x) · 닫는 숫자는 정지 로그에서 런로그로",
+   "proposed_by": "claude-session-2026-10-26 (evac)",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-10-26",
+     "state": "proposed",
+     "by": "agent",
+     "note": "③ 한도까지 / 지금 세움 — 둘 다 가능"
+    },
+    {
+     "at": "2026-10-26",
+     "state": "active",
+     "by": "사용자 (1저자 · SEI 트랙 · 탄성 = 우리 DFT)",
+     "note": "비준 — '그럼 R2 멈추고 영률 돌리자'"
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-26T11:10:22Z",
+    "commit": "496244e3628f7639c163969918ac90c2e4846bdd",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "채팅 답 (2026-10-26 · 이 세션): '단서 붙여 인용 쪽으로 우선 해보고 · 그럼 R2 멈추고 영률 돌리자 (+ '어차피 r2는 수렴하나 안하나 결과는 똑같은거잖아')'",
+    "decision_digest": "sha256:702fe662db44eb59ab2184c24adb17a805fcc693cd0a27df79df171c2417531b"
+   }
   }
  ]
 }

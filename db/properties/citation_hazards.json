@@ -668,6 +668,19 @@
    "id": "HZ-nd-site-cfg23-mislabeled",
    "binding_scope": "partial",
    "binding_scope_why": "값이 canonical_registry 에 없고 화면(webapp)에도 없다 (2026-10-14 rg 확인) — kb 문서 세 곳에 정정 줄을 달아 결속 대신 표지로 남긴다."
+  },
+  {
+   "file": "db/properties/sei_neb.json",
+   "source_path": "db/properties/sei_neb.json",
+   "level": "CONDITIONAL",
+   "added": "2026-10-26",
+   "what": "Li₃Nd 2×2×2 중성 공공 c→c CI-NEB 장벽 **0.229 eV** (results v2_ccpath/li3nd) — HZ-sei-neb-retracted (파일 전체 BLOCKED) 의 예외 하나",
+   "why": "끝점 결정 실험 (2026-10-26): 두 끝점이 이상 격자 대비 셀당 ≈ 1.4 eV 내려간 재배열 끝점 — 장벽은 '재구성된 2×2×2 모델 위' 값이다 · 3×3×3 NEB 미수렴 + 3×3×3 셀 재배열로 셀 수렴 확인 불가 · Li₃Nd 는 MP 이론 구조 (hull +0.197 eV/atom)",
+   "fix": "SI 에만 · 이 문장 그대로 (뜻을 줄이지 않는 다듬기만): \"For a hypothetical ordered Li3Nd model (BiF3-type, Materials Project mp-976264, E_hull = 0.197 eV/atom) in a 2x2x2 supercell, the neutral-vacancy nearest-neighbour c->c CI-NEB barrier is 0.229 eV. Both vacancy endpoints relaxed by about 1.4 eV per cell from the ideal lattice, so the barrier refers to this locally reconstructed 2x2x2 model. A larger-cell check was not possible (the 3x3x3 CI-NEB did not converge and the 3x3x3 cells reconstructed substantially on relaxation); the value is therefore not converged with respect to cell size and is not compared with other phases.\" + 홉 수 검산 (ν₀ 1e13 s⁻¹ 가정 · 298 K): Γ ≈ 1.3e9 s⁻¹ · 평균 대기 ≈ 7e-10 s (tools/sei/collect_neb 의 hop_check · 차수 검산 — 확산계수·전도도 아님). ⛔ 본문 · 그림 비교 · Li₂S (0.305 · BLOCKED 그대로) 나 다른 상과의 순위 ('Li–Nd 합금이 Li₂S 보다 Li 이동을 돕는다') · '수렴된 Li₃Nd 물성' · 실험 · 문헌 값과 나란히",
+   "id": "HZ-li3nd-neb-si-conditional",
+   "decision": "D-2026-10-26-li3nd-neb-si-conditional",
+   "binding_scope": "partial",
+   "binding_scope_why": "sei_neb.json 은 canonical_registry 에 등록 0 건이라 숫자 결속 자리가 없다 (HZ-sei-neb-retracted 와 같은 사정) — 화면은 id 로만 이름을 댄다"
   }
  ],
  "_history": [
@@ -722,7 +735,7 @@
    "why": "CEI 트랙 1저자의 Nd 안정성 질문에 답하다 원장과 대조해 발견 · 세 kb 문서에 정정 줄"
   }
  ],
- "updated": "2026-10-14",
+ "updated": "2026-10-26",
  "_schema_note": {
   "claim": "화면 결속용 claim id (`<metric>@<system>`, canonical_registry 파생). 이 위험이 **어느 정본 주장**에 대한 것인지 이름을 대면, /governance 표에서 근접성 없이 결속이 성립한다 (회신 BG ②).",
   "id": "안정 hazard 식별자. 화면·handoff 가 `data-claim=\"<id>\"` 로 이 위험을 선언한다 (회신 BG ②).",
