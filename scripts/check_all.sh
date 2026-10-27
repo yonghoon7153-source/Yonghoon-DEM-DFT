@@ -278,6 +278,9 @@ run 'ca_ext_verdict (Rint ② B6 판정기 소비자 검사 · 시험 먼저)' p
 #    (고치기 전 17/86 · `--old-scripts DIR` = 끔 경로 ZB) · 10-20 실측 42 s.
 run 'ca_ext_z1 (Rint ② Z1 러너 · 판정기 굳히기 · 시험 먼저)' python3 scripts/test_ca_ext_z1.py
 run 'rint_r_chain (Rint ② R 런 사슬 · 사다리 · 예측 · 판정 · 가짜 러너 · 시험 먼저)' python3 scripts/test_rint_r_chain.py
+#  ★ 2026-10-27 (Rint ② 묶음 C2b · author 10-27 approved bundle C) — 첫 풀이 끝 표지 감싸개 (scripts/rint_first_result.py) 단위 시험 F01–F08 ·
+#    실제 러너 · payload 경로는 ca_ext_runner N12 · rint_r_chain_e2e E1u · E13 이 본다.
+run 'rint_first_result (Rint ② 첫 풀이 끝 표지 감싸개 · 묶음 C2b · 시험 먼저)' python3 scripts/test_rint_first_result.py
 run 'ca_ext_z3 (Rint ② Z3 face_alpha + 탄소 접합 한 런 · 극한 런 · ARM_LIST · sid_off · CG 반복 수 · 시험 먼저)' python3 scripts/test_ca_ext_z3.py
 run 'rint_r_chain_e2e (Rint ② R 사슬 · 실제 러너 끝-끝 · 픽스처 킷 · CPU)' python3 scripts/test_rint_r_chain_e2e.py
 run 'step3_target_cert (STEP3 목표량 증서 ⓓ · RCA-07 · 13 · 해 상태 · 빠른 판 · 시험 먼저)' python3 scripts/test_step3_target_cert.py

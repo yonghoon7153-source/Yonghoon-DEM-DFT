@@ -672,6 +672,8 @@ CODE_NEW6 = ('ca_ext_cjunc.py', 'additives.py', 'se_material.py', 'lens_geometry
 CODE18 = ('rint_r_chain.py', 'run_contract.py', 'ca_ext_svcf.py', 'sr01_stamp_compare.py', 'step3_conv_cert.py', 'carbon_junction.py',
           'ca_s0_census.py', 'ptfe_face_alpha.py', 'step3_sigma.py', 'mpm_webapp_payload.py', 'fibre_segment_raster.py',
           'sdcp_gain_vox015_8arm.sh') + CODE_NEW6
+#: ★ 10-27 묶음 C2b — 같은 판 대조 파일 + 첫 풀이 끝 표지 감싸개 (러너 시도 꼴이 부른다 · 19 · 이름은 옛 그대로 CODE18)
+CODE18 = CODE18 + ('rint_first_result.py',)
 R_PLAN_REL = 'docs/data/rint2_s0_sbe_x/rint_r_plan.json'          # S0 단계 2 보고의 r_plan.path (리포 상대 · 고정물 커밋 안 자리)
 GIT_CFG = ('-c', 'user.email=t@t', '-c', 'user.name=t', '-c', 'commit.gpgsign=false', '-c', 'init.defaultBranch=main')
 
@@ -4520,7 +4522,7 @@ def t_D09():
     return c_case('D09', 'CODE_PIN_MISMATCH', s2=s0_report(2, 'D09', mutate=_d_set_digest('step3_sigma.py')))
 
 
-@check('D10', '정상 기록 — 사다리 · 예측 요약 code = git 신원 (dirty False) + 코드 파일 지문 18 (★ 10-25 묶음 B · 옛 12 · 사슬 폴더 = 고정물 '
+@check('D10', '정상 기록 — 사다리 · 예측 요약 code = git 신원 (dirty False) + 코드 파일 지문 19 (★ 10-27 묶음 C2b = + 감싸개 · 10-25 묶음 B 18 · 옛 12 · 사슬 폴더 = 고정물 '
               'scripts 파일 sha256 · 러너 폴더 · 러너 sha256) · S0 단계 1 기록 (보고 sha256 · 지문 일곱 · S0 계획 sha256) · 기계 이름표 '
               '(★ 10-27 묶음 C1 — 필수 · 옛 = null) · 세 단계 지문 같음')
 def t_D10():
@@ -4532,7 +4534,7 @@ def t_D10():
             for nm in getattr(RR, 'CODE_FILES', ())]
     rec1 = (s.get('s0_reports') or {}).get('stage1') or {}
     names1 = {x.get('file') for x in rec1.get('file_digests') or []}
-    ok = (len(files) == 18 and files == want and all(x['sha256'] for x in files)
+    ok = (len(files) == len(CODE18) == 19 and files == want and all(x['sha256'] for x in files)     # ★ 10-27 묶음 C2b — + 감싸개 (19)
           and c.get('runner_sha256') == hashlib.sha256(Path(FX['runner']).read_bytes()).hexdigest()
           and isinstance(c.get('runner_files'), list) and (c.get('chain') or {}).get('dirty') is False
           and rec1.get('sha256') == hashlib.sha256(Path(FX['s1']).read_bytes()).hexdigest() and rec1.get('plan_sha256') == FX['s0_sha']
@@ -4615,7 +4617,7 @@ def t_D13():
     return (r['rc'] == 3 and stop_code(r) == 'MAIN_NOT_DONE' and n_calls(r['world']) == 0, (r['rc'], stop_code(r), n_calls(r['world'])))
 
 
-@check('D14', '같은 판 파일 목록 — 사슬 S0_SAME_FILES = 등록 R §2-1b 일곱 · CODE_FILES (★ 10-25 묶음 B = 18 · 옛 12) ⊇ 일곱 + 사슬 · 러너 · '
+@check('D14', '같은 판 파일 목록 — 사슬 S0_SAME_FILES = 등록 R §2-1b 일곱 · CODE_FILES (★ 10-27 묶음 C2b = 19 (+ 감싸개) · 10-25 묶음 B = 18 · 옛 12) ⊇ 일곱 + 사슬 · 러너 · '
               '증서 · 계약 · SV 증거 + 판정문 F1 의 모듈 6 (ca_ext_cjunc · additives · se_material · lens_geometry · step4_dyn · rint_cycle_traj) = '
               '시험 쪽 목록 그대로 · S0 보고 code.file_digests 가 일곱을 다 싣는다 (ca_s0_census._code_info · 옛 = 다섯)')
 def t_D14():
@@ -4625,7 +4627,7 @@ def t_D14():
     names = {x['file'] for x in S0m._code_info()['file_digests']}
     need = (set(S0_SAME7) | {'rint_r_chain.py', 'sdcp_gain_vox015_8arm.sh', 'step3_conv_cert.py', 'run_contract.py', 'ca_ext_svcf.py'}
             | set(CODE_NEW6))
-    return (len(same) == 7 and set(same) == set(S0_SAME7) and need <= set(code) and len(set(code)) == len(code) == 18
+    return (len(same) == 7 and set(same) == set(S0_SAME7) and need <= set(code) and len(set(code)) == len(code) == 19
             and set(code) == set(CODE18) and set(S0_SAME7) <= names, (same, code, sorted(names)))
 
 
@@ -6708,7 +6710,7 @@ def gr_wait_file(path, t_end):
     return Path(path).exists()
 
 
-@check('GR01', '★ 10-27 묶음 C2b (R4-02 ⓑ) 그룹 기록 — 주 사다리 P0 · 주 예측 (봉인 원천 런 포함) 의 런마다 groups/<런>.launch.json · .end.json (표지 32 hex · '
+@check('GR01', '★ 10-27 묶음 C2b (R4-02 ⓑ) 그룹 기록 — 주 사다리 P0 · 주 예측의 런마다 (봉인 원천 러너 런 = 실물 e2e E12g · 이 틀의 원천 = 가짜 함수) groups/<런>.launch.json · .end.json (표지 32 hex · '
                'pid = pgid (새 세션) · 호스트 칸 · 끝 = 확인 True · 원인 None · rc = 런 rc · by chain) · 러너 env P2_ATTEMPT=1 (런마다)')
 def t_GR01():
     bad = []
@@ -6723,9 +6725,6 @@ def t_GR01():
                   and er.get('by') == 'chain')
             if not ok:
                 bad.append((res['out'].name, nm, lr, er))
-        g = [nm for nm in recs if nm.startswith('G')]
-        if res is s_main_predict() and not g:
-            bad.append(('graph_src', '봉인 원천 런 그룹 기록 없음'))
         if not all(e.get('P2_ATTEMPT') == '1' for e in env_log(res['world'])):
             bad.append(('env', 'P2_ATTEMPT ≠ 1'))
     return not bad, bad[:4]
@@ -6973,6 +6972,141 @@ def t_GR10():
     r, (lr, er) = scen('GR10', go)
     return (r['rc'] == 3 and (r['sum'] or {}).get('status') == 'STOPPED' and stop_code(r) == 'GROUP_UNCONFIRMED' and isinstance(er, dict)
             and er.get('confirmed') is False and 'GROUP_UNCONFIRMED' in getattr(RR, 'STOPS', {}), (r['rc'], stop_code(r), er))
+
+
+@check('GR11', '★ 10-27 묶음 C2b (구현과 함께 · 변이로 검증) — /proc 를 못 읽음 (그룹 표지 프로세스를 셀 수 없음 = group_members None) → 사슬 = 그 런의 팔을 '
+               '읽지 않고 GROUP_UNCONFIRMED (끝 기록 확인 False · left None) · recover = 미확인 rc 3 · 사유 /proc')
+def t_GR11():
+    if not hasattr(RR, 'group_members'):
+        return False, '사슬에 group_members 가 없다'
+
+    def go():
+        old = RR.group_members
+        RR.group_members = lambda token: None
+        try:
+            r = ladder('GR11', world('GR11'))
+            out, _tok = gr_fake_launch('GR11_rec')
+            rc, so = call(['--stage', 'recover', '--out', str(out)])
+        finally:
+            RR.group_members = old
+        return r, gr_records(r['out']).get('L01_floor', (None, None)), rc, so, gr_records(out).get('L01_floor', (None, None))
+    r, (lr, er), rc, so, (lr2, er2) = scen('GR11', go)
+    return (r['rc'] == 3 and stop_code(r) == 'GROUP_UNCONFIRMED' and isinstance(er, dict) and er.get('confirmed') is False and er.get('left') is None
+            and rc == 3 and isinstance(er2, dict) and er2.get('confirmed') is False and '/proc' in str(er2.get('why')),
+            (r['rc'], stop_code(r), er, rc, er2, so[-200:]))
+
+
+@check('GR12', '★ 10-27 묶음 C2b (구현과 함께 · 변이로 검증) — 러너가 rc 0 으로 끝난 뒤 정리 (그룹 종료 확인) 중 SIGTERM → 정리 · 끝 기록을 끊지 않는다 '
+               '(끝 기록 원인 None · 확인 True) · 그 뒤 사다리 STOPPED (RUNNER_RC · 사유 "정리 중" · SIGTERM · 그 런의 팔을 읽지 않음) · 시험의 지킴 처리기 '
+               '불리지 않음 · 사슬이 처리기를 되돌린다')
+def t_GR12():
+    import signal as _sig
+    if not hasattr(RR, 'group_settle'):
+        return False, '사슬에 group_settle 가 없다'
+
+    def go():
+        hit_, fired = [], []
+
+        def guard(signum, frame):
+            hit_.append(signum)
+        old_h = _sig.signal(_sig.SIGTERM, guard)
+        old_gs = RR.group_settle
+
+        def gs(token, limit=None):                         # 첫 정리 때 이 프로세스에 SIGTERM (주 스레드 · 처리기는 다음 바이트코드 경계에서)
+            if not fired:
+                fired.append(1)
+                os.kill(os.getpid(), _sig.SIGTERM)
+            return old_gs(token, limit)
+        RR.group_settle = gs
+        err = None
+        try:
+            try:
+                r = ladder('GR12', world('GR12'))
+            except BaseException as e:                      # noqa: BLE001 — 신호가 사슬 밖으로 새면 (변이) 이 검사만 떨어진다
+                r, err = {'rc': None, 'sum': None, 'out': Path(TD) / 'runs' / 'GR12'}, type(e).__name__
+            restored = _sig.getsignal(_sig.SIGTERM) is guard
+        finally:
+            RR.group_settle = old_gs
+            _sig.signal(_sig.SIGTERM, old_h)
+        return r, gr_records(r['out']).get('L01_floor', (None, None)), hit_, restored, err, len(fired)
+    r, (lr, er), hit_, restored, err, n_fired = scen('GR12', go)
+    runs = (r.get('sum') or {}).get('runs') or []
+    return (r['rc'] == 3 and (r['sum'] or {}).get('status') == 'STOPPED' and stop_code(r) == 'RUNNER_RC' and '정리 중' in y_why(r)
+            and 'SIGTERM' in y_why(r) and isinstance(er, dict) and er.get('cause') is None and er.get('confirmed') is True and not hit_ and restored
+            and err is None and n_fired == 1 and len(runs) == 1 and runs[0].get('arms_read') == [],
+            (r['rc'], stop_code(r), y_why(r)[-160:], er, hit_, restored, err, n_fired, [x.get('arms_read') for x in runs]))
+
+
+@check('GR13', '★ 10-27 묶음 C2b (구현과 함께 · 변이로 검증) — 그룹 함수 단위: ⓐ 러너를 못 띄움 (없는 작업 폴더 · Popen 예외) → 시작 기록이 Popen 전에 있다 '
+               '(pid None · 표지) · 끝 기록 원인 exception · 확인 True · 예외를 다시 올린다 ⓑ recover — 시작 기록 꼴 틀림 (표지 없음 · JSON 아님) → 미확인 · '
+               'rc 3 · 사유 꼴')
+def t_GR13():
+    if not callable(getattr(RR, 'run_in_group', None)):
+        return False, '사슬에 run_in_group 이 없다'
+    g = Path(TD) / 'runs' / 'GR13' / 'groups'
+    raised = None
+    with open(Path(TD) / 'gr13.log', 'w', encoding='utf-8') as lf:
+        try:
+            RR.run_in_group(['bash', '-c', 'exit 0'], str(Path(TD) / 'no_such_dir_gr13'), dict(os.environ), lf, 5.0, g, 'X01_floor')
+        except BaseException as e:                         # noqa: BLE001
+            raised = type(e).__name__
+    lp, ep = g / 'X01_floor.launch.json', g / 'X01_floor.end.json'
+    lr = json.loads(lp.read_text(encoding='utf-8')) if lp.exists() else {}
+    er = json.loads(ep.read_text(encoding='utf-8')) if ep.exists() else {}
+    a_ok = (raised == 'FileNotFoundError' and lr.get('pid') is None and re.fullmatch(r'[0-9a-f]{32}', str(lr.get('token'))) is not None
+            and er.get('cause') == 'exception' and er.get('confirmed') is True and er.get('token') == lr.get('token'))
+    b_out = []
+    for nm, body in (('notoken', json.dumps({'schema': 'rint-r-group-v1', 'name': 'L01_floor', 'pid': 1})), ('notjson', '{not json')):
+        out = Path(TD) / 'runs' / f'GR13_{nm}'
+        (out / 'groups').mkdir(parents=True)
+        (out / 'groups' / 'L01_floor.launch.json').write_text(body, encoding='utf-8')
+        rc, so = call(['--stage', 'recover', '--out', str(out)])
+        e2 = gr_records_raw(out)
+        b_out.append((nm, rc == 3 and isinstance(e2, dict) and e2.get('confirmed') is False and '꼴' in str(e2.get('why')), rc, e2))
+    return a_ok and all(x[1] for x in b_out), (raised, lr, er, [x for x in b_out if not x[1]])
+
+
+def gr_records_raw(out):
+    """끝 기록 하나 (L01_floor · 시작 기록 꼴이 틀려도 읽는다)."""
+    ep = Path(out) / 'groups' / 'L01_floor.end.json'
+    try:
+        return json.loads(ep.read_text(encoding='utf-8'))
+    except (OSError, ValueError):
+        return None
+
+
+@check('GR14', '★ 10-27 묶음 C2b (구현과 함께 · 변이로 검증) — 봉인 원천 러너 런 (`RunnerGraphSource._run`) 이 그룹 결과를 가른다 (run_in_group 대역): '
+               '종료 미확인 → 원천 실패 (미확인 사유) · 시간 초과 → 원천 실패 (시간) · 신호 (기다림 중 · 정리 중) → 멈춤 RUNNER_RC · rc 3 → 원천 실패 (rc)')
+def t_GR14():
+    cls = getattr(RR, 'RunnerGraphSource', None)
+    if cls is None or not hasattr(RR, 'run_in_group'):
+        return False, '사슬에 RunnerGraphSource · run_in_group 이 없다'
+    plan = FX['plan_obj']
+    req = {'name': 'P07_corner', 'role': 'corner', 'kit': DBE_KIT, 'law': 'P1', 'c': '1', 'rj': '1000000.0', 'arms': 1, 'arm_list': None,
+           'variant': None, 'sv_cf': True}
+    cases = (('unconfirmed', (0, None, {'confirmed': False, 'left': [4242], 'signal': None}), 'GraphSourceError', '미확인'),
+             ('timeout', (None, 'timeout', {'confirmed': True, 'left': [], 'signal': None}), 'GraphSourceError', '시간'),
+             ('signal', (None, 'signal', {'confirmed': True, 'left': [], 'signal': 'SIGTERM'}), 'Stop', 'SIGTERM'),
+             ('signal_after', (0, 'signal_after', {'confirmed': True, 'left': [], 'signal': None, 'signal_after': 'SIGHUP'}), 'Stop', 'SIGHUP'),
+             ('rc3', (3, None, {'confirmed': True, 'left': [], 'signal': None}), 'GraphSourceError', 'rc 3'))
+    old = RR.run_in_group
+    out = []
+    try:
+        for nm, ret, want_t, word in cases:
+            RR.run_in_group = (lambda *a, _r=ret, **k: _r)
+            gs = cls(FX['runner'], FX['root'], Path(TD) / f'GR14_{nm}')
+            got_t, msg = None, ''
+            try:
+                gs._run({'plan': plan, 'req': req, 'arm': 0, 'bind': {}}, req, 0, Path(TD) / f'GR14_{nm}', f'G01_{nm}', {})
+            except RR.Stop as e:
+                got_t, msg = 'Stop', f'{e.code} {e.cause}'
+            except RR.GraphSourceError as e:
+                got_t, msg = 'GraphSourceError', str(e)
+            ok = got_t == want_t and word in msg and (want_t != 'Stop' or msg.startswith('RUNNER_RC'))
+            out.append((nm, ok, got_t, msg[:120]))
+    finally:
+        RR.run_in_group = old
+    return all(x[1] for x in out), [x for x in out if not x[1]]
 
 
 def doc_tool_commands(path, tool):

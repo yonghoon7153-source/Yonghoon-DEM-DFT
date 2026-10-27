@@ -621,6 +621,22 @@ fi
 #    규칙 L 이 이 지점까지를 서브셸에서 **실제로 실행해** 조립 결과를 검사한다.
 #    그 아래는 mkdir·venv·게이트라 실행하면 안 된다.  ⚠ 이 표지를 옮기면 규칙 L 이
 #    다른 것을 재게 되므로, 옮길 때는 규칙 L 의 기대값도 같이 본다.
+#  ★ 2026-10-27 묶음 C2b (Q9 설계 개정 4 Q2 · R4-02 ⓐ ⓒ · author 10-27 approved bundle C) — 시도 꼴 (사슬 `rint_r_chain.py` 가 런마다 `P2_ATTEMPT=1`):
+#    payload 를 처음부터 `$OUTDIR/.unchecked/<팔>` 에 쓰고 (킷 런 폴더 `$RUN` 에 payload 를 남기지 않는다) 검사 통과 뒤 `$OUTDIR` 로 옮긴다 · 킷 payload
+#    줄을 감싸개 (`rint_first_result.py` · 같은 프로세스 · 첫 σ 직후 `.unchecked/<팔>.first_result.json`) 로 바꾼다 · 값 = 빈 값 | 1 (그 밖 = 거부) ·
+#    OUTDIR 은 생성 스크립트에 박히므로 [A-Za-z0-9._/+-] 만 · 끔 (기본 · 값 없음) = 옛 경로 그대로 (생성 스크립트 · argv 바이트 같음)
+ATT=0
+case "${P2_ATTEMPT-}" in
+  '') ;;
+  1) ATT=1 ;;
+  *) echo "[p2] ABORT — P2_ATTEMPT=$(printf '%q' "${P2_ATTEMPT-}") (빈 값 또는 1 · 사슬 시도 꼴)"; exit 2;;
+esac
+if [ "$ATT" = 1 ]; then
+  case "$OUTDIR" in
+    *[!A-Za-z0-9._/+-]*) echo "[p2] ABORT — P2_ATTEMPT 의 OUTDIR 에 허용 밖 글자 ($(printf '%q' "$OUTDIR") · 영문 · 숫자 · . _ / + - 만 · 생성 스크립트에 박힌다)"; exit 2;;
+  esac
+  [ -f "$SCR/rint_first_result.py" ] || { echo "[p2] ABORT — P2_ATTEMPT 인데 감싸개가 없다 ($SCR/rint_first_result.py)"; exit 2; }
+fi
 #  ⚠ 이름 규약이 바뀌었다 — 2026-08-16/17 판별 런은 `prereg_v2_vox015[_sph]` 에 있다.
 #    그 팔들을 다시 돌리고 싶지 않으면 `OUTDIR=` 로 옛 경로를 명시할 것.
 _LEGACY="$PWD/prereg_v2_vox${VOX/./}${SD_TAG}"
@@ -778,6 +794,19 @@ PY
   #    payload 가 적용값과 대조해 다르면 **exit 4** 로 죽는다 = 요청↔적용 end-to-end 봉인.
   #    ⚠ 첫 팔의 payload 가 찍은 id 를 읽어 나머지 팔에 넘기는 것이 표준 용법이다
   #      (규약이 도중에 조용히 바뀌는 것을 그때 잡는다).
+  #  ★ 2026-10-27 묶음 C2b — 시도 꼴: payload --out = `$OUTDIR/.unchecked/<팔>` (절대) · 표지 = 그 경로 + `.first_result.json` · 옛 파일 = 거부
+  local ON UNC="" MARK=""
+  ON="$(basename "$OUT")"
+  if [ "$ATT" = 1 ]; then
+    mkdir -p "$OUTDIR/.unchecked"
+    UNC="$OUTDIR/.unchecked/$(basename "$OUT")"
+    MARK="$UNC.first_result.json"
+    if [ -e "$UNC" ] || [ -e "$MARK" ] || [ -e "$UNC.part" ] || [ -e "$UNC.failed" ]; then
+      echo "[p2] ABORT — 시도 꼴 .unchecked/ 에 이 팔의 옛 파일이 있다 ($UNC*) — 새 OUTDIR 로 (시도 폴더는 시도마다 새로)"
+      return 1
+    fi
+    ON="$UNC"
+  fi
   local EP_FLAG=""
   [ -n "${EXPECT_PROTOCOL:-}" ] && EP_FLAG=" --expect-protocol $EXPECT_PROTOCOL"
   #  ★★★ 2026-08-25 (Codex 재리뷰 조건 4) — **기대값을 러너 자신의 설정에서 만든다.**
@@ -814,7 +843,19 @@ PY
   ( cd "$RUN" && P2_SCR="$SCR" python3 "$SCR/sr01_stamp_compare.py" \
       --extract-payload "$KIT/run_mpm.sh" --stamp "$FIBRE_STAMP" \
       --extra-flags "--sigma-vgcf $SIGMA${AS_FLAG}${SD_SIG_FLAG} --step3-vox $VOX --step3-bridge-um $BRIDGE_UM --step3-origin-shift $SH$SD_FLAG$YV_FLAG$PT_FLAG$PS_FLAG$SBRG_FLAG$RQG_FLAG$EP_FLAG$XP_FLAG$FS_FLAG$SION_FLAG$PB_FLAG$NG_FLAG$LEAN_FLAGS${P2_EXTRA:+ $P2_EXTRA}" \
-      --tag "$TAG" --out-name "$(basename "$OUT")" > "$SHF.body" ) || return 1
+      --tag "$TAG" --out-name "$ON" > "$SHF.body" ) || return 1
+  #  ★ 2026-10-27 묶음 C2b — 시도 꼴: 킷 payload 줄 `python3 "$SCR/mpm_webapp_payload.py"` → 감싸개 (`rint_first_result.py <표지> <payload> …` · 같은
+  #    프로세스 · 첫 σ 직후 표지) · 그 꼴이 없으면 (킷 줄이 다르다) 끼울 수 없으니 돌기 전에 선다
+  if [ "$ATT" = 1 ]; then
+    local _PB _PAT='python3 "$SCR/mpm_webapp_payload.py"'
+    _PB="$(cat "$SHF.body")"
+    case "$_PB" in
+      *"$_PAT"*) ;;
+      *) echo "[p2] ABORT — 시도 꼴: 킷 payload 줄에 \`$_PAT\` 가 없다 — 감싸개 (첫 풀이 끝 표지) 를 끼울 수 없다 ($KIT/run_mpm.sh)"
+         rm -f "$SHF.body"; return 1;;
+    esac
+    printf '%s\n' "${_PB/"$_PAT"/python3 \"\$SCR/rint_first_result.py\" $MARK \"\$SCR/mpm_webapp_payload.py\"}" > "$SHF.body"
+  fi
   { echo 'set -uo pipefail'; echo "KIT=\"$KIT\""; echo "SCR=\"$SCR\"";
     #  ★ R4-CX-03 — `:+` 는 값 `0` 도 nonempty 라 켰다.  `= 1` 만 켠다.
     echo "PSIG=($([ "$PERIODIC_ON" = 1 ] && echo --periodic))"; cat "$SHF.body"; } > "$SHF.part" \
@@ -840,7 +881,7 @@ PY
     echo "     파일을 남겨 둔다: $SHF"
     return 1
   fi
-  _ON="$(basename "$OUT")"
+  _ON="$ON"
   if ! grep -q -- "--out $_ON" "$SHF"; then
     echo "[p2] ABORT — 생성된 $TAG.sh 에서 \`--out $_ON\` 토큰이 온전하지 않다 (줄바꿈에 잘렸나?)."
     echo "     파일을 남겨 둔다: $SHF"
@@ -881,6 +922,7 @@ PY
   #    ⇒ 옮기기 **전에** 같은 검사기를 건다.  실패하면 옮기지 않고 $RUN 에 남겨 둔다
   #      (증거 보존 — 지우면 왜 죽었는지 못 본다).
   local FRESH="$RUN/$(basename "$OUT")"
+  [ "$ATT" = 1 ] && FRESH="$UNC"                    # ★ 2026-10-27 묶음 C2b — 시도 꼴 = payload 가 처음부터 .unchecked/ 에 (킷 런 폴더 아님)
   [ -s "$FRESH" ] || { echo "[p2] ABORT — $TAG 이 산출물을 안 남겼다 ($FRESH)"; return 1; }
   #  ★ 2026-10-26 (B″ · 1저자 Q1 (가)) — 조립만 출력 = 팔이 아니다 → check_arm 대신 꼴 검사 (`run_contract.cjunc_graph_only_problem` · 칸 고정 ·
   #    지문 꼴 · 결합 · 환경 단위 · 비용) 뒤에만 OUTDIR 로 옮긴다 (틀리면 옮기지 않고 런 폴더에 진단본을 남긴다 · 지문 ↔ 증서 대조 = 사슬)

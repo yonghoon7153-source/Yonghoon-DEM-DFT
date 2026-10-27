@@ -590,6 +590,11 @@ def t_zero_floor():
         s.get('status') in RR.REGISTERED_OUTCOMES | {'CALIBRATED'} and stop.get('run') != (runs[0].get('name') if runs else None)
         and stop.get('code') not in ('RUNNER_RC', 'ARM_CONTRACT', 'CA_EXT_RECORD', 'MANIFEST_MISMATCH', 'GENERATION', 'SID_GRID',
                                      'RECEIPT_LEAN', 'ARM_JSON_COUNT', 'ARM_UNREADABLE', 'TIME_LIMIT'), (s.get('status'), stop))
+    #  ★ 10-27 묶음 C2b (R4-02 ⓒ) — CG 없는 조기 반환 해 (σ 0) 도 첫 풀이 끝 표지 (감싸개 solve_return 자리 · 결과 전 · 뒤 판정의 입력)
+    mk = []
+    if runs and runs[0].get('arms_read'):
+        mk = [json.load(open(x, encoding='utf-8')) for x in glob.glob(os.path.join(out, runs[0]['outdir'], '.unchecked', '*.first_result.json'))]
+    chk('E8u 바닥 조기 반환 해 (σ 0 · CG 없음) → 표지 하나 (kind solve_return · 진짜 감싸개)', len(mk) == 1 and mk[0].get('kind') == 'solve_return', mk)
 
 
 def t_short_ceiling():
@@ -816,7 +821,8 @@ def t_graph_source():
     runs = gs.public()['runs']
     g0 = runs[0] if runs else {}
     gdir = os.path.join(out, 'graph_src')
-    gdirs = sorted(x for x in os.listdir(gdir) if x != 'logs') if os.path.isdir(gdir) else []
+    #  ★ 10-27 묶음 C2b — 원천 폴더의 groups/ (러너 프로세스 그룹 기록) 는 원천 런 폴더가 아니다
+    gdirs = sorted(x for x in os.listdir(gdir) if x not in ('logs', 'groups')) if os.path.isdir(gdir) else []
     gjson = sorted(os.path.basename(x) for x in glob.glob(os.path.join(gdir, '*', '*.json')))
     gfiles = [x for x in gjson if x.startswith('cjgraph_')]       # 러너 영수증 (run_receipt.json · 조립만 표지 = 팔 증명 불가) 은 따로
     grcpt = [json.load(open(x, encoding='utf-8')) for x in glob.glob(os.path.join(gdir, '*', 'run_receipt.json'))]
@@ -834,6 +840,10 @@ def t_graph_source():
         and len(grcpt) == 1 and grcpt[0].get('cjunc_graph_only') is True,
         (svr.get('standing'), svr.get('status'), a0.get('sv_graph'), runs, gdirs, gjson, [r.get('cjunc_graph_only') for r in grcpt],
          buf.getvalue()[-500:]))
+    gends = [json.load(open(x, encoding='utf-8')) for x in glob.glob(os.path.join(gdir, 'groups', '*.end.json'))]
+    chk('E12g ★ 10-27 묶음 C2b — 원천 런 (러너 조립만) 도 러너 프로세스 그룹 · 끝 기록 확인 True · 원인 None · rc 0 (원천 런마다)',
+        len(gends) == len(runs) >= 1 and all(e.get('confirmed') is True and e.get('cause') is None and e.get('rc') == 0 for e in gends),
+        (len(gends), len(runs), gends[:1]))
     chk('E12b 원천이 돌려준 주 계 지문만 바꾼 꼴 (같은 실제 원천 런 · 반환 dict 의 main 만) → read_run 멈춤 CA_EXT_RECORD (사유 fp_cjunc_graph · RR1-01)',
         stop_t is not None and stop_t.code == 'CA_EXT_RECORD' and 'fp_cjunc_graph' in str(stop_t.cause) and 'RR1-01' in str(stop_t.cause),
         (stop_t and stop_t.code, stop_t and str(stop_t.cause)[-300:]))
@@ -1043,7 +1053,7 @@ def t_runner_kill():
     b = e13_runner_kill('e13c', 'after', 12, when_marker=True)
     er = b['end'] or {}
     marks = [f for f in b['files_late'] if f.endswith('.first_result.json')]
-    pays = [f for f in b['files_late'] if os.path.basename(f).startswith('p2_')]
+    pays = [f for f in b['files_late'] if os.path.basename(f).startswith('p2_') and not f.endswith('.first_result.json')]   # 표지 이름도 p2_ 로 시작한다
     chk('E13c 실물 러너만 SIGKILL (표지 뒤 · 증서 풀이 중) → 사슬 = 그룹을 죽이고 확인 · RUNNER_RC · 표지 하나 (.unchecked/ · 결과 뒤 판정의 입력) · '
         '팔 payload 없음 (지연이 끝날 시간 뒤에도 = payload 프로세스가 죽었다) · 표지 프로세스 0',
         b['stop'] is not None and b['stop'].code == 'RUNNER_RC' and er.get('confirmed') is True and b['seen'].get('marks_at_kill') == 1
@@ -1158,7 +1168,7 @@ def t_parent_kill():
     b = e13_parent_kill('e13f', 'after', 12, when_marker=True)
     er = b.get('end') or {}
     marks = [f for f in b.get('files_late') or [] if f.endswith('.first_result.json')]
-    pays = [f for f in b.get('files_late') or [] if os.path.basename(f).startswith('p2_')]
+    pays = [f for f in b.get('files_late') or [] if os.path.basename(f).startswith('p2_') and not f.endswith('.first_result.json')]
     chk('E13f 실물 사슬 부모 SIGKILL (표지 뒤) → recover 가 그룹을 죽이고 확인 · 표지 하나 (결과 뒤 판정의 입력) · 팔 payload 없음 (지연 끝 뒤에도) · 표지 프로세스 0',
         bool(b.get('alive_after_parent')) and b.get('recover_rc') == 0 and er.get('by') == 'recover' and er.get('confirmed') is True
         and len(marks) == 1 and pays == [] and b.get('alive_after_recover') == [], b)

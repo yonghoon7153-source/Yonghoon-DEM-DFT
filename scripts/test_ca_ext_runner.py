@@ -162,12 +162,13 @@ class Run:
     pass
 
 
-def run_runner(ws, env_over=None, runner=None, payload_exit=None, timeout=1200, payload_garbage=None):
+def run_runner(ws, env_over=None, runner=None, payload_exit=None, timeout=1200, payload_garbage=None, scr=None):
     """러너를 진짜로 부른다 → rc · 로그 · OUTDIR · 영수증 · 팔 이름 · payload argv (--out 별) · 생성 스크립트.
-    ★ 10-26 B″ — payload_garbage = payload 대신 그 글을 --out 에 쓰고 rc 0 (가짜 python3) · graphs = OUTDIR 의 조립만 출력 이름."""
+    ★ 10-26 B″ — payload_garbage = payload 대신 그 글을 --out 에 쓰고 rc 0 (가짜 python3) · graphs = OUTDIR 의 조립만 출력 이름.
+    ★ 10-27 묶음 C2b — scr = 러너의 scripts 폴더 (기본 = 이 리포 scripts/ · N12g = 감싸개 하나만 뺀 링크 폴더)."""
     env = base_env(**(env_over or {}))
     env['SHIM_LOG'] = os.path.join(ws, '_shim')
-    env['P2_SCR'] = SCRIPTS                             # 고치기 전 러너 사본 (리포 밖 경로) 도 같은 scripts/ 를 쓴다
+    env['P2_SCR'] = scr or SCRIPTS                      # 고치기 전 러너 사본 (리포 밖 경로) 도 같은 scripts/ 를 쓴다
     if payload_exit is not None:
         env['SHIM_PAYLOAD_EXIT'] = str(payload_exit)
     if payload_garbage is not None:
@@ -807,6 +808,31 @@ def t_attempt():
     chk('N12e 킷 payload 줄이 `python3 "$SCR/mpm_webapp_payload.py"` 꼴이 아님 (따옴표 없음) → 시도 꼴 = ABORT (감싸개를 못 끼운다 · payload 미호출) · '
         '끔 꼴 (P2_ATTEMPT 없음) = 그대로 돈다',
         r5.rc != 0 and '감싸개' in r5.log and not r5.argv and r6.rc == 0 and len(r6.arms) == 2, (r5.rc, r5.log[-300:], r6.rc, r6.arms))
+    od7 = os.path.join(ws, 'att7_outdir_arm1')
+    os.makedirs(os.path.join(od7, '.unchecked'))
+    r0 = run_runner(ws, dict(CJ_RT_ENV, P2_ATTEMPT='1', OUTDIR=os.path.join(ws, 'att7a_outdir_arm1')))
+    arm0 = sorted(r0.arms)[0] if r0.arms else 'p2_none.json'
+    for nm in (arm0, arm0 + '.first_result.json', arm0 + '.part'):
+        open(os.path.join(od7, '.unchecked', nm), 'w', encoding='utf-8').write('{}')
+    r7 = run_runner(ws, dict(CJ_RT_ENV, P2_ATTEMPT='1', OUTDIR=od7))
+    chk('N12f 시도 꼴 .unchecked/ 에 그 팔의 옛 파일 (payload · 표지 · .part) → ABORT (새 OUTDIR 로 · 옛 파일 그대로) · 그 팔 payload 미호출',
+        r0.rc == 0 and r7.rc != 0 and '옛 파일' in r7.log and os.path.join(od7, '.unchecked', arm0) not in r7.argv,
+        (r0.rc, r7.rc, r7.log[-300:], sorted(r7.argv)))
+    froot = os.path.join(ws, '_repo_nowrap')               # 이 리포 꼴 링크 폴더 (scripts/ = 감싸개 하나만 뺀 링크 · 그 밖 = 리포 최상위 링크)
+    farm = os.path.join(froot, 'scripts')
+    os.makedirs(farm)
+    for nm in os.listdir(ROOT):
+        if nm != 'scripts' and not nm.startswith('.'):    # .git 은 잇지 않는다 (링크 폴더에서 git 이 이 작업 트리를 건드리지 않게)
+            os.symlink(os.path.join(ROOT, nm), os.path.join(froot, nm))
+    for nm in os.listdir(SCRIPTS):
+        if nm != 'rint_first_result.py':
+            os.symlink(os.path.join(SCRIPTS, nm), os.path.join(farm, nm))
+    r8 = run_runner(ws, dict(CJ_RT_ENV, P2_ATTEMPT='1', OUTDIR=os.path.join(ws, 'att8_outdir_arm1')), scr=farm)
+    r9 = run_runner(ws, dict(CJ_RT_ENV, OUTDIR=os.path.join(ws, 'off9_outdir_arm1')), scr=farm)
+    chk('N12g (구현과 함께 · 변이로 검증) 시도 꼴인데 감싸개 파일이 없다 → 돌기 전 ABORT (rc 2 · 사유 감싸개) · payload 미호출 · 같은 링크 폴더의 끔 꼴 = 그대로 '
+        '돈다 (팔 둘 — 폴더 자체는 멀쩡하다)',
+        r8.rc == 2 and '감싸개가 없다' in r8.log and not r8.argv and r9.rc == 0 and len(r9.arms) == 2,
+        (r8.rc, r8.log[-300:], r9.rc, r9.arms, r9.log[-300:]))
 
 
 # ═════════════════════════ NB — 끔 경로 (고치기 전 러너와 대조) ═════════════════════════

@@ -103,6 +103,13 @@
     런 기록마다 기계 이름 (판정 = 단계 기계 · 런 기계 · 허용 목록 대조) · 환경 지문 같음 단위 = 계획 봉인 판 (다르면 `CODE_PIN_MISMATCH` · 판정도)
   · 문서 숫자 — 등록 R 의 계획 숫자 블록 (`plan_doc_block` · 표지 `PLAN_DOC_BEGIN` · `PLAN_DOC_END`) = 계획 JSON 에서 생성 · 사다리 · 예측 · 판정이
     정확히 대조 (`plan_doc_problem` → `PLAN_DOC_MISMATCH`) · 생성 · 대조 CLI `--stage plan-doc` · 블록이 없는 등록 (봉인 전) = R 진입 거부
+★ 10-27 묶음 C2a (Q9 설계 §2-1 · §2 · 개정 3 질문 4 · 개정 4 R4-06 · 개정 5 ①): SBE c 1 no-op = 사다리 단계 끝 (`ladder_noop` · 같은 사슬 부모가
+  동결한 실행 환경 · 런마다 새 러너 자식) · 예측은 사다리 요약의 no-op 기록 · 런을 다시 읽어 (`noop_check`) 첫머리에서 옛 이름으로 · 예측 순서 = 모서리 →
+  same_p → W0 → origin 표본 전부 → (넘침이 있으면) 이른 단조 (`checks['r_monotone_early']`) → 넘침 origin8 → 끝 단조 (그대로)
+★ 10-27 묶음 C2b (Q9 설계 개정 4 Q2 · R4-02 ⓐ ⓑ ⓒ · Codex 회차 ① ② · 개정 5 ②): 러너 = 새 프로세스 그룹 (`run_in_group` · env 그룹 표지 ·
+  `<단계>/groups/<런>.launch.json` · `.end.json`) · 시간 초과 · 신호 · 예외 · 스스로 끝난 뒤에도 그룹 전체를 죽이고 종료를 확인한 뒤에만 팔을 읽는다
+  (확인 못 함 = `GROUP_UNCONFIRMED`) · 러너 시도 꼴 P2_ATTEMPT=1 (payload = 런 폴더 안 `.unchecked/` · 감싸개 `rint_first_result.py` = 첫 풀이 끝 표지) ·
+  사슬 부모가 죽은 뒤 = `--stage recover --out <폴더>` (끝 기록 없는 그룹 · 호스트 규칙 · 미확인 = rc 3)
 """
 import argparse
 import glob
@@ -113,6 +120,7 @@ import os
 import re
 import shlex
 import shutil
+import signal
 import subprocess
 import sys
 import tempfile
@@ -234,7 +242,8 @@ S0_REPORT_SCHEMA = 'ca-s0-census-v4'
 CODE_FILES = ('rint_r_chain.py', 'run_contract.py', 'ca_ext_svcf.py', 'sr01_stamp_compare.py', 'step3_conv_cert.py', 'carbon_junction.py',
               'ca_s0_census.py', 'ptfe_face_alpha.py', 'step3_sigma.py', 'mpm_webapp_payload.py', 'fibre_segment_raster.py',
               'sdcp_gain_vox015_8arm.sh', 'ca_ext_cjunc.py', 'additives.py', 'se_material.py', 'lens_geometry.py', 'step4_dyn.py',
-              'rint_cycle_traj.py')
+              'rint_cycle_traj.py',
+              'rint_first_result.py')      # ★ 10-27 묶음 C2b — payload 프로세스 안 첫 풀이 끝 표지 감싸개 (러너 시도 꼴이 부른다)
 RUNNER_NAME = 'sdcp_gain_vox015_8arm.sh'     # 등록 R §10 (0) 의 러너 — 한 단계 안 러너 파일 = 사슬 폴더의 이 파일 (★ 10-25 · Q2 (가) ③)
 #: ★ 10-25 묶음 B (RCA2-02 · Q2 (가) ⑤ · Q9 설계 개정 4 Q3 · R4-10) — 환경 지문의 같음 단위 (python 부 판 · numpy · scipy 판 문자열 정확히)
 ENV_UNIT_KEYS = RC.ENV_UNIT_KEYS                             # ★ 10-26 B″ — 정본 = run_contract (payload 조립만 출력과 같은 칸 · 같은 이름)
@@ -247,7 +256,8 @@ MACHINE_RE = re.compile(r'[A-Za-z0-9_-]+')
 #: 러너가 읽는 env (부모 셸에서 물려받으면 지운다 — 사슬이 런마다 정확히 정한다 · 지운 이름은 요약에)
 ENV_SCRUB_RE = re.compile(r'^(SIGMA_|SDCP_|PTFE_|CJUNC|STEP3_)')
 ENV_SCRUB_NAMES = frozenset({'VOX', 'BRIDGE_UM', 'ARMS', 'ARM_LIST', 'KITS', 'OUTDIR', 'LEAN', 'FIBRE_STAMP', 'MPM_PERIODIC_SIGMA',
-                             'P2_EXTRA', 'EXPECT_BACKEND', 'EXPECT_PROTOCOL', 'P2_SCR', 'P2_SELF', 'P2_ENV_GUARD_ONLY'})
+                             'P2_EXTRA', 'EXPECT_BACKEND', 'EXPECT_PROTOCOL', 'P2_SCR', 'P2_SELF', 'P2_ENV_GUARD_ONLY',
+                             'P2_ATTEMPT', 'RINT_RUN_TOKEN'})   # ★ 10-27 묶음 C2b — 시도 꼴 · 그룹 표지 = 사슬이 런마다 정한다
 ENV_FORBIDDEN = ('SIGMA_VGCF_OVERRIDE',)   # §10 — 있으면 멈춤 (지워서 넘어가지 않는다)
 #: ★ 10-26 B″ (1저자 Q4 · 묶음 B 보고 결정 4) 러너 실행 환경 — 사슬이 런마다 러너에 준다 (부모 셸 값과 무관 · 물리 축 아님 · ENV_FIXED 밖):
 #   MPM_NO_VENV=1 = 러너가 venv ($HOME/dem-venv · $SCR/../venv · $SCR/../.venv) 를 켜지 않는다 (VIRTUAL_ENV 가 빈 때의 자동 켜기) → payload 는
@@ -255,6 +265,20 @@ ENV_FORBIDDEN = ('SIGMA_VGCF_OVERRIDE',)   # §10 — 있으면 멈춤 (지워�
 #   런마다 대조하지 않는다 (결정 4 의 '러너가 자기 환경을 기록하고 사슬이 대조' 안은 고르지 않았다 · kgy 명령 = dem-venv 를 켠 뒤 사슬) · 확인 = 시험
 #   (`scripts/test_rint_r_chain.py` Y14 · `scripts/test_rint_r_chain_e2e.py` E11)
 RUNNER_EXEC_ENV = {'MPM_NO_VENV': '1'}
+#: ★ 10-27 묶음 C2b (Q9 설계 개정 4 Q2 · R4-02 ⓐ ⓒ · author 10-27 approved bundle C) 러너 시도 꼴 — 사슬이 런마다 P2_ATTEMPT=1 을 준다: 러너가 payload 를
+#   처음부터 런 폴더 안 `.unchecked/` 에 쓰고 (킷 런 폴더 `$RUN` 에 payload 를 남기지 않는다) 검사 통과 뒤 런 폴더로 옮긴다 · 킷 payload 줄을 감싸개
+#   (`rint_first_result.py`) 로 바꿔 payload 프로세스가 첫 σ 직후 `.unchecked/<팔>.first_result.json` (첫 풀이 끝 표지) 을 쓴다
+ATTEMPT_ENV = {'P2_ATTEMPT': '1'}
+UNCHECKED_DIR = '.unchecked'
+FIRST_RESULT_SUFFIX = '.first_result.json'
+#: ★ 10-27 묶음 C2b (R4-02 ⓑ · Codex 회차 ① ② · Q9 개정 5 ②) 러너 프로세스 그룹 — 런마다 새 세션 · env 그룹 표지 (`GROUP_TOKEN_ENV`) · 시작 · 끝 기록
+#   (`<단계>/groups/<런>.launch.json` · `.end.json`) · 끝 기록 = 그룹 (표지) 이 다 끝났음을 확인한 뒤 · 대기 상한 = 구현 상수 (넘으면 미확인 · 결과 · 판정
+#   숫자 아님 · 보고 "결정 필요")
+GROUPS_DIR = 'groups'
+GROUP_TOKEN_ENV = 'RINT_RUN_TOKEN'
+GROUP_SCHEMA = 'rint-r-group-v1'
+GROUP_GONE_WAIT_S = 30.0
+GROUP_POLL_S = 0.05
 
 # ═════════════════════════ 판정 이름 · 표지 · 문장 ═════════════════════════
 CALIB_ORDER = ('CALIB_IMPOSSIBLE', 'CALIB_EDGE', 'CALIB_UNIDENTIFIED', 'CALIB_UNCONFIRMED', 'CALIB_NONMONOTONE',
@@ -374,6 +398,8 @@ STOPS = {
     'MACHINE_NOT_ALLOWED': '기계 이름표가 계획의 허용 목록 (exec_policy.allowed_machines) 밖 · 빈 이름 · 런 기록의 기계 ≠ 단계 기계 (★ 10-27 묶음 C1a · '
                            'C6 #15 · Q11 · Q9 §3-4)',
     'PLAN_DOC_MISMATCH': '등록 R 의 계획 숫자 블록 ≠ 계획 JSON 에서 생성한 블록 (없음 · 둘 · 값 다름 · 표지 하나만 · ★ 10-27 묶음 C1a · 판정문 C6 #30)',
+    'GROUP_UNCONFIRMED': '러너 프로세스 그룹이 다 끝났는지 확인하지 못했다 (그룹 표지 프로세스가 대기 상한 안에 남음 · /proc 를 못 읽음 · ★ 10-27 묶음 C2b · '
+                         'Codex 회차 ① ② — 그 런의 팔을 읽지 않는다 · 사람이 보고 --stage recover)',
     'DUPLICATE_RUN': '같은 킷 · 같은 계획 두 번',
     'INPUT_SHA_MISMATCH': '판정 입력 sha256 ≠ 런 산출',
     'INPUT_MISSING': '판정 입력이 모자란다',
@@ -2029,6 +2055,8 @@ def sv_graph_state(svr, req, arm, path, outdir, graph_src=None, plan=None):
     try:
         g = src({'req': dict(req), 'arm': int(arm), 'file': str(path), 'outdir': str(outdir), 'plan': plan,
                  'bind': {k: full.get(k) for k in SVCF.BIND_FIELDS}})
+    except Stop:                                             # ★ 10-27 묶음 C2b — 원천 런 중 사슬이 받은 신호 = 단계 멈춤 (미확인으로 삼키지 않는다)
+        raise
     except Exception as e:                                   # noqa: BLE001 — 원천 실패 = 미확인 (clear 아님 · 멈춤 아님)
         return {'state': 'unverified', 'kind': 'source_failed', 'why': f'원천 예외 {type(e).__name__}: {e}'[:300]}
     why = SVCF.graph_source_problem(g)
@@ -2206,6 +2234,7 @@ def runner_env_delta(plan, variant, req, outdir):
     쓴다 (★ 10-26 B″ · 1저자 Q1 (가) — 원천 런 = 같은 env + `GRAPH_ONLY_ENV` · 사본 없음)."""
     d = dict(ENV_FIXED)
     d.update(RUNNER_EXEC_ENV)                                # ★ 10-26 B″ (Q4) — 러너가 venv 를 켜지 않는다 (payload = 사슬 프로세스 환경)
+    d.update(ATTEMPT_ENV)                                    # ★ 10-27 묶음 C2b — 러너 시도 꼴 (payload = 런 폴더 안 .unchecked/ · 첫 풀이 끝 표지)
     d.update(plan_env(plan))
     d.update(VARIANT_ENV.get(variant) or {})
     d.update({'KITS': req['kit'], 'OUTDIR': str(outdir), 'CJUNC_RJ': req['rj'], 'CJUNC_PTFE_JLAW': req['law'],
@@ -2219,6 +2248,202 @@ def runner_env_delta(plan, variant, req, outdir):
     if req.get('sv_cf'):                                      # ★ 3판 — SV 반사실 대조 (같은 런 안 추가 풀이 · 주 σ · 규약 id 그대로)
         d['CJUNC_SV_CF'] = '1'
     return d
+
+
+# ═════════════════════════ ★ 10-27 묶음 C2b 러너 프로세스 그룹 (Q9 개정 4 Q2 · R4-02 ⓑ · Codex 회차 ① ② · 개정 5 ②) ═════════════════════════
+def _utc():
+    return time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
+
+
+def write_json_atomic(path, obj):
+    """정준 JSON → 원자적 쓰기 (같은 폴더 임시 파일 → fsync → os.replace) — 그룹 · 시도 기록 (반쯤 쓰인 기록을 남기지 않는다)."""
+    path = Path(path)
+    tmp = path.with_name(f'{path.name}.tmp.{os.getpid()}')
+    with open(tmp, 'wb') as f:
+        f.write(canon_bytes(obj))
+        f.flush()
+        os.fsync(f.fileno())
+    os.replace(tmp, path)
+
+
+def host_ident():
+    """이 프로세스가 보는 호스트 · 부팅 · pid 이름공간 (그룹 기록 · recover 의 대조 칸) — 못 읽은 칸 = None."""
+    def rd(p):
+        try:
+            v = Path(p).read_text(encoding='ascii').strip()
+        except (OSError, UnicodeDecodeError):
+            return None
+        return v or None
+    try:
+        ns = os.readlink('/proc/self/ns/pid')
+    except OSError:
+        ns = None
+    return {'machine_id': rd('/etc/machine-id'), 'boot_id': rd('/proc/sys/kernel/random/boot_id'), 'pidns': ns}
+
+
+def group_members(token):
+    """/proc 에서 env 그룹 표지 (`RINT_RUN_TOKEN=token`) 를 가진 살아 있는 프로세스 pid 목록 (zombie · dead · 이 프로세스 뺌) | None (/proc 를 못
+    읽음 = 확인 불가).  러너 · bash 부분 셸 · payload · 그 자식은 env 를 물려받는다 (setsid 로 그룹을 벗어나도 표지는 남는다) — env 를 지운 자식은 못
+    찾는다 (한정 · 러너 · payload 는 env 를 지우지 않는다)."""
+    try:
+        names = os.listdir('/proc')
+    except OSError:
+        return None
+    me, out = os.getpid(), []
+    needle = f'{GROUP_TOKEN_ENV}={token}'.encode('ascii')
+    for e in names:
+        if not e.isdigit() or int(e) == me:
+            continue
+        try:
+            st = Path('/proc', e, 'stat').read_bytes()
+            fl = st[st.rfind(b')') + 2:].split()
+            if not fl or fl[0] in (b'Z', b'X', b'x'):
+                continue
+            env = Path('/proc', e, 'environ').read_bytes()
+        except OSError:
+            continue
+        if needle in env.split(b'\0'):
+            out.append(int(e))
+    return sorted(out)
+
+
+def group_kill_pids(pids):
+    for pid in pids:
+        try:
+            os.kill(int(pid), signal.SIGKILL)
+        except (ProcessLookupError, PermissionError, OSError):
+            pass
+
+
+def group_settle(token, limit=None):
+    """그룹 (표지 프로세스) 이 다 끝날 때까지 SIGKILL 하고 기다린다 (대기 상한 `GROUP_GONE_WAIT_S`) → (확인 bool, 남은 pid 목록 | None (못 읽음),
+    죽인 프로세스 수)."""
+    limit = GROUP_GONE_WAIT_S if limit is None else limit
+    t_end = time.time() + limit
+    killed = set()
+    while True:
+        m = group_members(token)
+        if m is None:
+            return False, None, len(killed)
+        if not m:
+            return True, [], len(killed)
+        killed |= set(m)
+        group_kill_pids(m)
+        if time.time() >= t_end:
+            m = group_members(token)
+            return m == [], m, len(killed)
+        time.sleep(GROUP_POLL_S)
+
+
+class ChainSignal(BaseException):
+    """사슬이 러너를 기다리는 동안 받은 SIGTERM · SIGHUP (러너 그룹을 죽이고 확인한 뒤 그 런을 멈춘다 · BaseException = 넓은 except 가 삼키지 않게)."""
+
+    def __init__(self, signum):
+        super().__init__(signum)
+        self.signum = signum
+
+
+def _raise_chain_signal(signum, frame):
+    raise ChainSignal(signum)
+
+
+def _signal_handlers(fn):
+    """주 스레드에서만 SIGTERM · SIGHUP 처리기를 fn 으로 → 옛 처리기 dict (되돌리기) | None (다른 스레드 · 못 걺)."""
+    import threading
+    if threading.current_thread() is not threading.main_thread():
+        return None
+    old = {}
+    for s in (signal.SIGTERM, signal.SIGHUP):
+        try:
+            old[s] = signal.signal(s, fn)
+        except (ValueError, OSError):
+            pass
+    return old
+
+
+def _signal_restore(old):
+    for s, h in (old or {}).items():
+        try:
+            signal.signal(s, h)
+        except (ValueError, OSError):
+            pass
+
+
+def signal_name(signum):
+    try:
+        return signal.Signals(signum).name
+    except (ValueError, TypeError):
+        return str(signum)
+
+
+def run_in_group(argv, cwd, env, logf, timeout, gdir, name, by='chain'):
+    """러너를 새 세션 (프로세스 그룹 · env 그룹 표지) 으로 띄우고 끝까지 → (rc, 원인, 끝 기록).  원인 = None (스스로 끝남) · 'timeout' · 'signal' (SIGTERM ·
+    SIGHUP — 사슬이 받음) · 'exception' (그 밖 · 기록 뒤 다시 올린다) · 'signal_after' (러너가 스스로 끝난 뒤 정리 중 받은 신호 — 정리 · 끝 기록을 끊지 않고
+    미뤘다 · 디스크 끝 기록의 원인은 None 그대로 · 돌려주는 dict 에 `signal_after` · 부르는 쪽 = 그 런을 멈춤).  멈출 때 그룹 전체를 SIGKILL (지도자 회수 전 = 그룹 번호가 이 그룹 것) · 스스로
+    끝났어도 남은 표지 프로세스를 죽인다 · 끝 기록 (`<name>.end.json`) = 표지 프로세스가 0 임을 확인한 뒤 (대기 상한 안에 못 하면 confirmed False) ·
+    시작 기록 (`<name>.launch.json`) = Popen 전 (표지 · 호스트) 과 뒤 (pid · pgid).  ⚠ 한정: 사슬 부모 자신이 SIGKILL 되면 이 함수는 끝 기록을 못 쓴다 →
+    `--stage recover` (Codex ② · 끝 기록 없는 시작 기록 = 미확인 · 부모 사망 + 지금 표지 없음을 종료 증거로 쓰지 않는다).  ⚠ 한정: 처리기를 거는 · 바꾸는
+    몇 바이트코드 사이 (기다림 처리기 → 미룸) 에 신호가 두 번 겹치면 이 함수가 끝 기록 없이 빠질 수 있다 — 그 경우도 recover 몫 (시작 기록 · 끝 기록 없음 =
+    미확인).  처리기 = 주 스레드에서만 (다른 스레드에서 부르면 신호 처리 없음 · 기본 동작)."""
+    gdir = Path(gdir)
+    gdir.mkdir(parents=True, exist_ok=True)
+    token = os.urandom(16).hex()
+    launch = {'schema': GROUP_SCHEMA, 'name': name, 'token': token, 'pid': None, 'pgid': None, 'argv': [str(a) for a in argv],
+              'host': host_ident(), 'started_utc': _utc(), 'by': by, 'chain_pid': os.getpid()}
+    write_json_atomic(gdir / f'{name}.launch.json', launch)
+    rc, cause, exc, p, sig = None, None, None, None, None
+    pending = []
+
+    def _defer(signum, frame):                             # 정리 중 신호 = 미룬다 (정리 · 끝 기록을 끊지 않는다 · 끝난 뒤 그 런을 멈춘다)
+        pending.append(signum)
+    old = _signal_handlers(_raise_chain_signal)
+    try:
+        try:
+            try:
+                p = subprocess.Popen(argv, cwd=cwd, env=dict(env, **{GROUP_TOKEN_ENV: token}), stdout=logf, stderr=subprocess.STDOUT,
+                                     stdin=subprocess.DEVNULL, start_new_session=True)
+                try:
+                    pg = os.getpgid(p.pid)                 # 실제 그룹 번호 (새 세션 = pid · 기록 = 잰 값)
+                except OSError:
+                    pg = None
+                launch.update(pid=p.pid, pgid=pg)
+                write_json_atomic(gdir / f'{name}.launch.json', launch)
+                rc = p.wait(timeout=timeout)
+            except subprocess.TimeoutExpired:
+                cause = 'timeout'
+            except ChainSignal as e:
+                cause, sig = 'signal', e.signum
+            except BaseException as e:                     # noqa: BLE001 — KeyboardInterrupt 포함 · 그룹을 죽인 뒤 다시 올린다
+                cause, exc = 'exception', e
+            finally:
+                if old is not None:                        # 원 처리기로 되돌리지 않고 바로 미룸으로 (사이에 원 처리기 = 기본 종료가 끼지 않게)
+                    _signal_handlers(_defer)
+        except ChainSignal as e:                           # 미룸으로 바꾸기 직전에 온 신호 — 그 런을 멈춘 것으로 (그룹은 아래에서 죽이고 확인)
+            if cause is None:
+                cause, sig = 'signal', e.signum
+            if old is not None:
+                _signal_handlers(_defer)
+        if p is not None and rc is None:
+            try:
+                os.killpg(p.pid, signal.SIGKILL)
+            except (ProcessLookupError, PermissionError, OSError):
+                pass
+            try:
+                rc = p.wait(timeout=GROUP_GONE_WAIT_S)
+            except subprocess.TimeoutExpired:
+                rc = None
+        confirmed, left, n_killed = group_settle(token)
+        end = {'schema': GROUP_SCHEMA, 'name': name, 'token': token, 'rc': rc, 'cause': cause, 'signal': (signal_name(sig) if sig else None),
+               'confirmed': bool(confirmed), 'left': left, 'left_after_exit': (n_killed if cause is None else None), 'killed': n_killed,
+               'by': by, 'ended_utc': _utc()}
+        write_json_atomic(gdir / f'{name}.end.json', end)
+    finally:
+        _signal_restore(old)
+    if exc is not None:
+        raise exc
+    if pending and cause is None:                          # 정리 중 받은 신호 — 그 런은 스스로 끝났다 (끝 기록 그대로 · 원인 None) · 사슬은 멈춘다
+        return rc, 'signal_after', dict(end, signal_after=signal_name(pending[0]))
+    return rc, cause, end
 
 
 class Runner:
@@ -2273,16 +2498,23 @@ class Runner:
         self.records.append(rec)
         t0 = time.time()
         logp = self.out / 'logs' / f'{name}.log'
+        #  ★ 10-27 묶음 C2b (R4-02 ⓑ · Codex ②) — 러너 = 새 프로세스 그룹 · 멈출 때 · 끝난 뒤 그룹 전체를 죽이고 종료를 확인한 뒤에만 팔을 읽는다
         with open(logp, 'w', encoding='utf-8') as lf:
-            try:
-                r = subprocess.run(['bash', str(self.runner)], cwd=str(self.root), env=dict(self.env_base, **delta),
-                                   stdout=lf, stderr=subprocess.STDOUT, timeout=left)
-            except subprocess.TimeoutExpired:
-                rec['seconds'] = round(time.time() - t0, 3)
-                raise Stop('TIME_LIMIT', f'{name}: 시간 상한 안에 끝나지 않았다', name)
-        rec['rc'], rec['seconds'] = r.returncode, round(time.time() - t0, 3)
-        if r.returncode != 0:
-            raise Stop('RUNNER_RC', f'rc {r.returncode} (로그 {logp})', name)
+            rc, cause, end = run_in_group(['bash', str(self.runner)], str(self.root), dict(self.env_base, **delta), lf, left,
+                                          self.out / GROUPS_DIR, name)
+        rec['rc'], rec['seconds'] = (rc if cause is None else None), round(time.time() - t0, 3)
+        if not end['confirmed']:
+            raise Stop('GROUP_UNCONFIRMED', f'{name}: 러너 그룹 종료 미확인 (남은 표지 프로세스 {end["left"]} · 원인 {cause}) — 그 런의 팔을 읽지 '
+                                            f'않는다', name)
+        if cause == 'timeout':
+            raise Stop('TIME_LIMIT', f'{name}: 시간 상한 안에 끝나지 않았다 (러너 그룹을 죽이고 종료를 확인했다)', name)
+        if cause == 'signal':
+            raise Stop('RUNNER_RC', f'{name}: 사슬이 신호 {end.get("signal")} 를 받았다 — 러너 그룹을 죽이고 종료를 확인했다 (로그 {logp})', name)
+        if cause == 'signal_after':
+            raise Stop('RUNNER_RC', f'{name}: 사슬이 신호 {end.get("signal_after")} 를 받았다 (러너가 끝난 뒤 정리 중 · 그룹 종료는 확인했다) — 그 런의 팔을 '
+                                    f'읽지 않는다 (로그 {logp})', name)
+        if rc != 0:
+            raise Stop('RUNNER_RC', f'rc {rc} (로그 {logp})', name)
         try:
             arms_ = read_run(outdir, req, self.plan, self.contract, self.sid_reg, s0_grid=self.s0_grid, s0_census=self.s0_census,
                              graph_src=self.graph_src)
@@ -2384,16 +2616,20 @@ class RunnerGraphSource:
         (base / 'logs').mkdir(parents=True, exist_ok=True)
         logp = base / 'logs' / f'{name}.log'
         t0 = time.time()
+        #  ★ 10-27 묶음 C2b — 원천 런도 새 프로세스 그룹 · 종료 확인 뒤에만 출력을 읽는다 (사슬이 받은 신호 = 단계 멈춤 · 미확인 = 원천 실패)
         with open(logp, 'w', encoding='utf-8') as lf:
-            try:
-                r = subprocess.run(['bash', str(self.runner)], cwd=str(self.root), env=dict(self.env_base, **delta), stdout=lf,
-                                   stderr=subprocess.STDOUT, timeout=timeout)
-            except subprocess.TimeoutExpired:
-                rec['seconds'] = round(time.time() - t0, 3)
-                raise GraphSourceError('시간 상한 안에 끝나지 않았다')
-        rec['rc'], rec['seconds'] = r.returncode, round(time.time() - t0, 3)
-        if r.returncode != 0:
-            raise GraphSourceError(f'러너 rc {r.returncode} (로그 {logp.name})')
+            rc, cause, end = run_in_group(['bash', str(self.runner)], str(self.root), dict(self.env_base, **delta), lf, timeout,
+                                          base / GROUPS_DIR, name)
+        rec['rc'], rec['seconds'] = (rc if cause is None else None), round(time.time() - t0, 3)
+        if cause in ('signal', 'signal_after'):
+            raise Stop('RUNNER_RC', f'{name}: 사슬이 신호 {end.get("signal") or end.get("signal_after")} 를 받았다 — 원천 러너 그룹 '
+                                    f'{"을 죽였다" if cause == "signal" else "은 끝난 뒤 (정리 중)"} (종료 확인 {end["confirmed"]})', name)
+        if not end['confirmed']:
+            raise GraphSourceError(f'러너 그룹 종료 미확인 (남은 표지 프로세스 {end["left"]})')
+        if cause == 'timeout':
+            raise GraphSourceError('시간 상한 안에 끝나지 않았다')
+        if rc != 0:
+            raise GraphSourceError(f'러너 rc {rc} (로그 {logp.name})')
         files = sorted(glob.glob(str(outdir / f'{GRAPH_ONLY_PREFIX}*.json')))
         names = [os.path.basename(f) for f in files]
         pref = f'{GRAPH_ONLY_PREFIX}p2_{str(req.get("kit"))[len("kit_"):]}_'
@@ -3786,6 +4022,64 @@ def reverify(vdir, contract, root):
     return 1
 
 
+def recover_group(lp, me):
+    """시작 기록 하나 (끝 기록 없음 · 또는 끝 기록 미확인) → 끝 기록 dict (by recover · 원인 parent_dead).  호스트 규칙: 같은 부팅 (boot_id) · 같은 pid
+    이름공간 = /proc 의 env 표지로 찾아 SIGKILL · 다 끝날 때까지 (`group_settle`) · 같은 기계 (machine_id) · 다른 부팅 = 그 부팅의 프로세스는 없다 (확인 ·
+    재부팅) · 그 밖 (다른 기계 · 다른 이름공간 · 기계를 모르는 다른 부팅) = 미확인 (여기서 그 프로세스를 볼 수 없다)."""
+    nm = lp.name[:-len('.launch.json')]
+    try:
+        L = json.loads(lp.read_text(encoding='utf-8'))
+    except (OSError, UnicodeDecodeError, ValueError):
+        L = None
+    tok = (L or {}).get('token') if isinstance(L, dict) else None
+    confirmed, left, killed, why = False, None, 0, None
+    if not (isinstance(tok, str) and re.fullmatch(r'[0-9a-f]{32}', tok)):
+        why = '시작 기록 꼴 (그룹 표지) 을 못 읽는다'
+    else:
+        h = L.get('host') if isinstance(L.get('host'), dict) else {}
+        same_boot = h.get('boot_id') is not None and h.get('boot_id') == me.get('boot_id')
+        same_ns = h.get('pidns') is not None and h.get('pidns') == me.get('pidns')
+        same_machine = h.get('machine_id') is not None and h.get('machine_id') == me.get('machine_id')
+        other_machine = h.get('machine_id') is not None and me.get('machine_id') is not None and not same_machine
+        if other_machine:
+            why = '다른 기계 (machine_id) — 여기서 그 프로세스를 볼 수 없다'
+        elif same_boot and same_ns:
+            confirmed, left, killed = group_settle(tok)
+            why = None if confirmed else ('/proc 를 못 읽는다' if left is None else '표지 프로세스가 대기 상한 안에 남았다')
+        elif same_machine and h.get('boot_id') is not None and me.get('boot_id') is not None and not same_boot:
+            confirmed, left, why = True, [], '재부팅 — 그 부팅의 프로세스는 없다'
+        else:
+            why = '다른 기계 · pid 이름공간 · (기계를 모르는) 다른 부팅 — 여기서 그 프로세스를 볼 수 없다'
+    return {'schema': GROUP_SCHEMA, 'name': nm, 'token': tok, 'rc': None, 'cause': 'parent_dead', 'signal': None, 'confirmed': bool(confirmed),
+            'left': left, 'left_after_exit': None, 'killed': killed, 'by': 'recover', 'why': why, 'host': me, 'ended_utc': _utc()}
+
+
+def stage_recover(a):
+    """★ 10-27 묶음 C2b (Codex 회차 ① ② · Q9 개정 5 ② · author 10-27 approved bundle C) — 사슬 부모가 죽은 뒤 (SIGKILL · 정전 · 컨테이너 재시작) 단계 ·
+    시도 폴더 아래 `groups/*.launch.json` 중 끝 기록이 없거나 미확인인 것마다 그룹 종료를 확인한다 (`recover_group`) → 끝 기록 (by recover) · 하나라도
+    미확인 = rc 3 (다음 시도를 시작 · 채택하기 전에 사람이 본다 · "부모 사망 + 지금 표지 없음" 을 종료 증거로 쓰지 않는다)."""
+    root = Path(a.out)
+    me = host_ident()
+    todo = []
+    for lp in sorted(root.rglob(f'{GROUPS_DIR}/*.launch.json')):
+        ep = lp.with_name(lp.name[:-len('.launch.json')] + '.end.json')
+        try:
+            e = json.loads(ep.read_text(encoding='utf-8')) if ep.exists() else None
+        except (OSError, UnicodeDecodeError, ValueError):
+            e = None
+        if not (isinstance(e, dict) and e.get('confirmed') is True):
+            todo.append((lp, ep))
+    n_bad = 0
+    for lp, ep in todo:
+        end = recover_group(lp, me)
+        write_json_atomic(ep, end)
+        n_bad += 0 if end['confirmed'] else 1
+        print(f'  recover {lp.parent.parent.name}/{end["name"]}: 종료 {"확인" if end["confirmed"] else "미확인"} · 죽인 프로세스 {end["killed"]}'
+              + (f' · {end["why"]}' if end['why'] else ''))
+    print(f'recover — 그룹 기록 {len(todo)} 개 정리 · 미확인 {n_bad}' + (' (다음 시도 전에 사람이 본다)' if n_bad else ''))
+    return 0 if n_bad == 0 else 3
+
+
 def stage_plan_doc(a):
     """★ 10-27 묶음 C1a (판정문 C6 #30) — 계획 JSON → 계획 숫자 블록 (화면 · 등록 R 에 그대로 붙인다) · `--check-doc` = 등록의 블록과 정확 대조."""
     try:
@@ -3811,7 +4105,7 @@ def main(argv=None, contract=None):
     except (AttributeError, ValueError):
         pass
     ap = argparse.ArgumentParser(description=__doc__.split('\n')[0])
-    ap.add_argument('--stage', choices=('ladder', 'predict', 'verdict', 'plan-doc'), default='ladder')
+    ap.add_argument('--stage', choices=('ladder', 'predict', 'verdict', 'plan-doc', 'recover'), default='ladder')
     ap.add_argument('--law', choices=LAWS, help='ladder — PTFE–접합 법칙 끝')
     ap.add_argument('--target', type=float, default=TARGET_SBE_MS, help='ladder — 등록 표적 (1.63 이 아니면 멈춤)')
     ap.add_argument('--variant', choices=VARIANTS, default=None, help='감도 (등록 R §5-6 · 필수 · 주 판정 단계 뒤에만 — --after-main)')
@@ -3837,7 +4131,7 @@ def main(argv=None, contract=None):
     ap.add_argument('--ladders', nargs='+', help='predict — 사다리 폴더 둘 (P0 · P1)')
     ap.add_argument('--runs', nargs='+', help='verdict — 사다리 · 예측 · 감도 폴더 전부')
     ap.add_argument('--reverify', help='verdict — 판정 폴더를 같은 입력으로 다시 판정 (읽기 전용 · 바이트 대조)')
-    ap.add_argument('--out', help='새 출력 폴더 (없거나 비어 있어야)')
+    ap.add_argument('--out', help='새 출력 폴더 (없거나 비어 있어야) · recover = 정리할 단계 · 시도 폴더')
     ap.add_argument('--max-hours', type=float, help='ladder · predict — 시간 상한 (등록 §10 · 숫자 탐침 뒤의 값 · 기본값 없음 · ★ 10-27 묶음 C1a = '
                                                     '계획 exec_policy.max_hours 와 같아야 · 다르면 NOT_REGISTERED)')
     ap.add_argument('--dry-run', action='store_true', help='ladder · predict — 런 env 만 찍는다 (러너 · 출력 폴더 없음)')
@@ -3848,10 +4142,14 @@ def main(argv=None, contract=None):
         ap.error('--show-results 는 --stage verdict 에서만 (등록 R §4-1 — 판정에 쓰는 런이 다 끝난 뒤 한 번)')
     if a.after_main and not a.variant:
         ap.error('--after-main 은 --variant (감도 단계) 와만')
-    if a.machine is not None and (a.stage in ('verdict', 'plan-doc') or not MACHINE_RE.fullmatch(a.machine)):
+    if a.machine is not None and (a.stage in ('verdict', 'plan-doc', 'recover') or not MACHINE_RE.fullmatch(a.machine)):
         ap.error('--machine 은 ladder · predict 에서만 · 영문 · 숫자 · _ · - 로 된 짧은 이름 (IP · 주소 · 경로 · 띄어쓰기 금지 · 등록 R §10-4 문장 3)')
     if a.check_doc and a.stage != 'plan-doc':
         ap.error('--check-doc 은 --stage plan-doc 에서만')
+    if a.stage == 'recover':
+        if not a.out:
+            ap.error('--stage recover 는 --out (단계 · 시도 폴더 — 그 아래 groups/ 의 끝 기록 없는 러너 그룹) 이 필요하다')
+        return stage_recover(a)
     if a.stage == 'plan-doc':
         if not a.plan:
             ap.error('--stage plan-doc 는 --plan 이 필요하다 (--check-doc 이면 --registration 의 블록과 대조)')
