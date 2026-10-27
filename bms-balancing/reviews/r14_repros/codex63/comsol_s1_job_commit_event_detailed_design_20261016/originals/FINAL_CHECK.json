@@ -1,0 +1,62 @@
+{
+  "kind": "DOCUMENT_DESIGN_FINAL_CHECK",
+  "observed_utc": "2026-10-16T08:08:59.7406230+00:00",
+  "archive": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\comsol_s1_event_detailed_design_20261016\\COMSOL_S1_JOB_COMMIT_EVENT_DETAILED_DESIGN_20261016.zip",
+    "bytes": 599846,
+    "sha256": "ea8ab14cae57a377cfb66990dce6fa93820aa7597e724860b725acf52d8b36e6"
+  },
+  "records": [
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\comsol_s1_event_detailed_design_20261016\\DELIVERY_RECEIPT.json",
+      "bytes": 1279,
+      "sha256": "ba53ae2e99c9bd79971a9ecd6e609a3860997fe34767afc006c67b99e48fd68c"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\comsol_s1_event_detailed_design_20261016\\SELECTED_INPUTS_POST_PACKAGE.json",
+      "bytes": 3687,
+      "sha256": "0212e6f3e1f544c28c77c6953f4c9a22cb77b8e7be7a0ede6fefec090c6a7334"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\comsol_s1_event_detailed_design_20261016\\PACKAGE_TOOL_RETURN.json",
+      "bytes": 1815,
+      "sha256": "1b8d0d94c0e151b8ede2070abfbfa3cda7be662a4afec805951289ff662f8147"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\comsol_s1_event_detailed_design_20261016\\USER_DIRECTION_SELECTION.json",
+      "bytes": 1946,
+      "sha256": "578db9bb4de7347f235ad4613bd7001143373c7ba3f52fbabffd957070d3ff22"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\comsol_s1_event_detailed_design_20261016\\DETAILED_DESIGN_KO.md",
+      "bytes": 24029,
+      "sha256": "454a2744423e54f5fb413fc97238e2fce0b2874e9ac12292ea3ffc27be73c610"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\comsol_s1_event_detailed_design_20261016\\PROTOCOL_DRAFT.json",
+      "bytes": 12859,
+      "sha256": "84295d5d232ca3a7a5f8d7db0919732ab5ba2ec73a6e8e1cd360d585c0d7d08d"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\comsol_s1_event_detailed_design_20261016\\PARENT_EVIDENCE_FIELDS.json",
+      "bytes": 8615,
+      "sha256": "ee266f53b78f31f135f9cf89571ff2665ab04e1d025e77cba2eb76b98158a40d"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\comsol_s1_event_detailed_design_20261016\\REVIEW_REQUEST_KO.txt",
+      "bytes": 2061,
+      "sha256": "5423c96d3ff4f92443dc8e853f3aea332627b79140811cf69f6954df29f42d89"
+    }
+  ],
+  "selected_local_inputs": 10,
+  "selected_all_match": true,
+  "direction_selected": true,
+  "operational_risk_accepted": false,
+  "contract_adopted": false,
+  "native_ready": false,
+  "target_tests": 0,
+  "COMSOL": 0,
+  "elapsed_claim": null,
+  "numeric_work_budget": null,
+  "boundary": "After listed readback and hashes, before this check write and tool return"
+}

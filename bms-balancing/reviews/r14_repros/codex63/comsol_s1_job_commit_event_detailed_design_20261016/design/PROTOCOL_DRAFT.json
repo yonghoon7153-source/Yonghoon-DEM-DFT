@@ -1,0 +1,154 @@
+{
+  "kind": "INACTIVE_LOGICAL_PROTOCOL_DESCRIPTION",
+  "document_date": "2026-10-16",
+  "revision": "CONDITIONAL_DIRECTION_DETAIL_DRAFT_1",
+  "direction_selected": true,
+  "detailed_protocol_adopted": false,
+  "contract_adopted": false,
+  "implementation_authorized": false,
+  "execution_authorized": false,
+  "native_ready": false,
+  "real_instance_created": false,
+  "runtime_argv": null,
+  "runtime_cwd": null,
+  "runtime_approval_path": null,
+  "roles": [
+    {"id": "launcher_supervisor", "responsibility": "Own run/clock/Job/root configuration binding, consume one-time in-memory resume eligibility, inhibit future dispatch and request owned-target stop independently of blocked query"},
+    {"id": "single_reader_query", "responsibility": "Only designated completion-port receiver and class 13 query caller; pre-register in-flight calls and handle-use rights, publish observations and classification"},
+    {"id": "independent_monitor", "responsibility": "Observe registered progress/deadline state without waiting for reader/query return or their lock/queue; latch stop inhibition on expiry or publication failure"},
+    {"id": "serialized_state_owner", "responsibility": "Serialize state versions, reservation lifecycle, pending classification, monotone latches and operation eligibility"},
+    {"id": "Parent_verifier", "responsibility": "Check completed evidence and independently trusted expected contract/authority; emit only a bounded-scope decision after all required axes"}
+  ],
+  "deployment": {
+    "role_names_do_not_determine_thread_or_process_count": true,
+    "actual_thread_process_topology": "OPEN",
+    "additional_worker_process_adopted": false,
+    "monitor_additional_completion_port_read_or_class13_query": false
+  },
+  "state": {
+    "binding": ["run_id", "clock_id", "clock_origin_ref", "mode_revision", "contract_ref", "source_manifest_ref", "owned_job_id", "held_root_id", "port_id", "key_generation", "reader_generation", "supervisor_generation", "monitor_generation"],
+    "separate_counters": ["state_version", "reader_progress_seq", "event_receive_seq", "event_applied_seq", "control_observation_seq", "resource_cursor"],
+    "tracked_work": ["receive_reservations", "query_reservations", "pending_packets", "returned_unpublished_results", "handle_users"],
+    "sticky_fields": ["violation_latch", "stop_latch", "error_latch", "expiry_latch", "supervisor_dispatch_inhibit"],
+    "initial_origins_immutable": true,
+    "event_updates_resource_cursor": false,
+    "first_observed_error_equals_first_stop_cause": false,
+    "source_cross_occurrence_order": "UNDETERMINED"
+  },
+  "serialization_rules": [
+    "Critical state transition sections do not wait for OS calls, query, writer/readback or target termination",
+    "Reserve a receive before entering the wait; retain reservation until timeout/error/packet result is published",
+    "Publish received notification and pending classification before query entry; query deadline starts at dequeue/observation, not API entry",
+    "Reserve query and its handle-use rights before entry; retain until return has been validated and published",
+    "If reader stops between dequeue and publication, preserve unknown packet details rather than inventing them; independently detected reader failure inhibits dispatch",
+    "Normal queue saturation or target-held locks cannot be prerequisites for expiry publication or dispatch inhibition",
+    "Both coherent state-owner eligibility and independent supervisor inhibition state must permit dispatch; missing, stale or unreachable required state blocks it",
+    "The production synchronization primitive, visibility and failure behavior are not selected here"
+  ],
+  "startup": {
+    "precedence": ["bind_exact_run_clock_owned_identity_configuration", "register_monitor_and_reader_start", "observe_reader_ready", "obtain_separate_new_mode_other_resource_sample_and_assessment", "serialize_eligibility_then_recheck_at_one_time_dispatch_consumption"],
+    "eligibility_requires": ["future adopted contract and operational risk terms plus explicit run authority", "verified owned identity/configuration/support/effectiveness", "bound reader readiness and independent monitor", "valid new-mode other-resource assessment under original origins", "no known pending/query/unpublished classification", "no violation/stop/error/expiry/inhibit", "valid numeric deadlines and remaining superior budget", "not previously consumed for this run"],
+    "inflight_receive_wait_alone_is_not_pending_notification": true,
+    "receive_wait_does_not_prove_OS_event_absence": true,
+    "eligibility_is_exportable_token_or_file": false,
+    "state_permission_is_atomic_with_OS_event_occurrence_or_resume_call": false,
+    "late_observed_event": "Revoke unconsumed eligibility; once dispatch entered, latch stop and use independently verified owned-target stop path",
+    "R8_pre_resume_check": "Fake receipt verification only",
+    "R8_sample_order": ["sample_once", "collect_owned_sample_returns_raw", "ResourceSession.decide", "accepted_result_updates_cursor_and_sample_ok"],
+    "R8_full_sample_reusable_as_event_other_resource_sample": false,
+    "current_zero_null_substitution_or_forced_sample_ok": false,
+    "PID_not_yet_reported_gap": "Keep official NOTIFICATION_LIMIT non-sending condition explicit; no message is not membership/identity/current-safety proof",
+    "new_mode_resource_projection_assessor": "OPEN_DESIGN_NOT_IMPLEMENTED"
+  },
+  "normal_final_precedence": [
+    "F0 register immutable final start and block new owned admission",
+    "F1 verify owned Job/root termination while reader remains active",
+    "F2 finish managed classification and start provisional writer only while normal eligibility holds",
+    "F3 guarded provisional readback; reader continues observation",
+    "F4 request receive admission closure",
+    "F5 process every already reserved receive result and required query; commit managed cutoff only when predicates hold",
+    "F6 verify reader actual exit then safe dependent handle cleanup",
+    "F7 complete separate closure evidence tied to provisional bytes and post-writer observations",
+    "F8 Parent verifies all required axes and latest state/version under the original final deadline"
+  ],
+  "cutoff": {
+    "request_effect": "Atomically prohibit new receive reservations, not discard existing receives or their returned packets",
+    "allow_after_request": "Only classification and queries needed for already admitted work; no new ordinary receive",
+    "commit_predicates": ["receive_reservations=0", "query_reservations=0", "pending_packets=0", "returned_unpublished_results=0", "reader acknowledged no new receive", "state version and last applied sequence captured consistently"],
+    "commit_is_normal_success": false,
+    "cutoff_then_reader_exit_is_separate_observation": true,
+    "new_receive_after_cutoff": "Protocol error, retain evidence, block normal acceptance",
+    "sentinel_or_queue_empty_replaces_commit_predicates": false,
+    "proves_all_past_OS_events": false,
+    "unreceived_queued_or_in_transit_events": "Excluded/uncertain under explicitly selected finite scope, never recorded as absent"
+  },
+  "blocked_query": {
+    "on_expiry": ["UNRESOLVED_NOTIFICATION", "STOP_REQUIRED", "supervisor_dispatch_inhibit"],
+    "expiry_proves_cancellation": false,
+    "keep_reservation_until_return_and_publication": true,
+    "keep_handle_use_right_until_return_and_publication": true,
+    "close_in_use_handles": false,
+    "force_thread_termination": false,
+    "automatic_query_retry_or_engine_replacement": false,
+    "late_success_clears_failure": false,
+    "owned_target_stop": "Independent, verified and already authorized ownership-bound path only; requests and actual exits are separate facts",
+    "if_query_return_unproven": {"query_reservation": "RETAINED", "handle_use": "RETAINED", "cutoff": "UNRESOLVED", "safe_handle_cleanup": "UNRESOLVED"},
+    "if_return_observed_but_validation_or_publication_unproven": {"query_reservation": "RETAINED", "cutoff": "UNRESOLVED", "safe_handle_cleanup": "UNRESOLVED"},
+    "if_only_safe_handle_release_unproven_after_publication": {"cutoff": "Preserve independently satisfied commit predicates if established; do not infer them from query return alone", "cleanup": "UNRESOLVED"},
+    "independent_exit_facts": "Preserve actual reader and owned-native exit observations on their own axes; neither erase confirmed exits nor infer query return/publication/safe handle release from exits",
+    "if_any_required_return_publication_or_cleanup_unresolved": {"coverage": "FINAL_COVERAGE_INCOMPLETE", "normal_acceptance": "REJECT"},
+    "bounded_normal_rejection_implies_bounded_physical_cleanup": false,
+    "separate_query_worker_process": "Alternative requiring separate lifecycle/resource/ownership design and approval, not selected"
+  },
+  "failure_path": {
+    "normal_final_calls_started_after_error": 0,
+    "new_normal_output_after_violation_or_stop": false,
+    "already_inflight_success_acceptable": false,
+    "separate_activities": ["independent monitor", "owned-target stop and confirmed cleanup", "failure evidence preservation"],
+    "proof_of_all_errors_persisted_when_evidence_IO_fails": false,
+    "rewrite_old_output_or_automatic_reseal": false
+  },
+  "evidence_object_separation": {
+    "P": "Immutable provisional file with only pre-write facts; no own write-completion, readback, finish-time or full-record hash in its body",
+    "C": "Later closure object references completed P bytes and separate post-write/readback records; no rewrite of P or certification of C's own future storage",
+    "R": "Parent reads completed P/C and linked records; its own later storage/delivery is checked by the consumer, not recursively self-certified"
+  },
+  "deadlines": [
+    {"id": "reader_progress", "duration_seconds": null, "start": "Initial: earlier bound monitor registration or reader start request; repeated: prior validated processing-step completion", "expiry": "Block resume or latch monitoring error and STOP_REQUIRED"},
+    {"id": "query_completion", "duration_seconds": null, "start": "Notification dequeue/observation through publication of validated classification", "expiry": "UNRESOLVED_NOTIFICATION and STOP_REQUIRED; prior OS delivery delay excluded"},
+    {"id": "final_synchronization", "duration_seconds": null, "start": "First final entry starting new-owned-admission block through required final acceptance evidence and verification", "expiry": "FINAL_COVERAGE_INCOMPLETE; reject normal result"}
+  ],
+  "deadline_common": {
+    "effective_boundary": "minimum of immutable_start + adopted_duration and all applicable superior absolute deadlines",
+    "at_or_after_effective_boundary": "Proposed expiry rule; completion recorded at equality does not establish before-deadline completion",
+    "completion_vs_expiry": "Require validated completion timestamp and publication before effective boundary; later publication or unresolved ordering is not accepted",
+    "detection_time_is_deadline_time": false,
+    "unused_phase_time_or_reserve_transferred": false,
+    "existing_6s_1s_limits_reused": false,
+    "suspend_clock_domain": "OPEN",
+    "all_monitor_execution_and_clock_stall_immediately_detectable": false,
+    "same_clock_reading_alone_proves_stall": false
+  },
+  "remaining_decisions": [
+    {"id": "D1", "topic": "Deployment and synchronization implementation", "needed": "Actual role identities, caller paths, lock/queue graph, independent stop-inhibit visibility, bounded failure handling"},
+    {"id": "D2", "topic": "New-mode resource projection and policy", "needed": "Preserve required other resources and origins; specify assessor/control integration without current substitution"},
+    {"id": "D3", "topic": "Blocked-call physical lifecycle", "needed": "Evidence for return/cleanup method or explicit unresolved containment procedure; no undocumented cancellation claim"},
+    {"id": "D4", "topic": "Three numeric deadlines and clock semantics", "needed": "Explicit values with separate authorized evidence, superior budget/stop obligations and suspend handling"},
+    {"id": "D5", "topic": "Stored byte schema and Parent implementation", "needed": "Strict types/enums/encoding/identity trust and append/durability protocol; descriptive field map is not a completed runtime schema"}
+  ],
+  "retained": {
+    "JOB_CURRENT_COMMIT": "OPEN",
+    "approved": false,
+    "usable": false,
+    "overall": "INCOMPLETE",
+    "normal_gate": "INCOMPLETE",
+    "existing_open_groups": 9,
+    "installed_t0_coefficient_raw": "OPEN",
+    "effective_policy_and_actual_core": "UNVERIFIED",
+    "prior_DOC_R1_N1_N2_N3": "CLOSED",
+    "review_topics_not_cases": 16,
+    "new_test_case_count": null,
+    "prior_106_cases_validate_new_event_mode": false,
+    "current_contract_satisfied_or_replaced": false
+  }
+}

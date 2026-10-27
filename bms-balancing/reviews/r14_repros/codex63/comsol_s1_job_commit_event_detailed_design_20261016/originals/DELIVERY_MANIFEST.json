@@ -1,0 +1,44 @@
+{
+  "kind": "INACTIVE_DOCUMENT_BUNDLE_MANIFEST",
+  "payload_count": 7,
+  "files": [
+    {
+      "path": "COMSOL_S1_JOB_COMMIT_EVENT_DETAILED_DESIGN_20261016.zip",
+      "bytes": 599846,
+      "sha256": "ea8ab14cae57a377cfb66990dce6fa93820aa7597e724860b725acf52d8b36e6"
+    },
+    {
+      "path": "DELIVERY_RECEIPT.json",
+      "bytes": 1279,
+      "sha256": "ba53ae2e99c9bd79971a9ecd6e609a3860997fe34767afc006c67b99e48fd68c"
+    },
+    {
+      "path": "SELECTED_INPUTS_POST_PACKAGE.json",
+      "bytes": 3687,
+      "sha256": "0212e6f3e1f544c28c77c6953f4c9a22cb77b8e7be7a0ede6fefec090c6a7334"
+    },
+    {
+      "path": "PACKAGE_TOOL_RETURN.json",
+      "bytes": 1815,
+      "sha256": "1b8d0d94c0e151b8ede2070abfbfa3cda7be662a4afec805951289ff662f8147"
+    },
+    {
+      "path": "FINAL_CHECK.json",
+      "bytes": 3311,
+      "sha256": "8ce30a53354007d28059b2e33a706c65ce918a5f985bf04c28530955f25d1cbd"
+    },
+    {
+      "path": "FINAL_CHECK_TOOL_RETURN.json",
+      "bytes": 1405,
+      "sha256": "7df4573d5fd9f60d7385daf6e941748740322e1b177d6dce25d4345577a6c0de"
+    },
+    {
+      "path": "DELIVERY_INDEX.md",
+      "bytes": 1506,
+      "sha256": "1cf1f761e54efc1166a9736a12dbad5546341bf4768e2740118573077e355b52"
+    }
+  ],
+  "contract_adopted": false,
+  "native_ready": false,
+  "elapsed_claim": null
+}

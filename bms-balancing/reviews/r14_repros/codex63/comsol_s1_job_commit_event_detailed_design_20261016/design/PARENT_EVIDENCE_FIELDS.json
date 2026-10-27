@@ -1,0 +1,89 @@
+{
+  "kind": "DESCRIPTIVE_PARENT_EVIDENCE_FIELD_MAP",
+  "revision": "DRAFT_1",
+  "executable_schema": false,
+  "produces_runtime_receipt": false,
+  "contract_adopted": false,
+  "value_examples_are_runtime_observations": false,
+  "common_required_header_fields": ["schema_id", "schema_revision", "kind", "object_id", "run_id", "producer_id", "producer_generation", "contract_mode", "contract_revision", "source_manifest_ref", "contract_ref", "clock_id", "clock_origin_ref", "owned_job_id", "held_root_id", "port_id", "completion_key_generation", "reader_id", "reader_generation", "control_observation_sequence", "observed_monotonic_time", "payload", "evidence_refs"],
+  "reference_required_fields": ["object_id", "kind", "run_id", "schema_revision", "byte_length", "sha256", "producer_id", "producer_generation"],
+  "strict_interpretation": [
+    "Expected identities, contract and authority come from trusted external inputs, not self-asserted approved flags",
+    "Reject unknown revision/enum, duplicate keys, wrong exact types, missing required fields and cross-run/clock/Job references",
+    "Unknown required evidence is not made optional to allow acceptance",
+    "No coercion of null, empty string, false, numeric zero, omitted field or summary PASS into valid evidence",
+    "Source event time and source sequence may be null when not available; receive/observation time is separate",
+    "First cause reference may be null only if that class has no observed cause up to the linked ledger boundary",
+    "Current and sampled maximum are expressly null for the notification mode; not valid legacy current samples"
+  ],
+  "ledger": {
+    "body_required_fields": ["ledger_id", "run_id", "producer_id", "producer_generation", "sequence", "previous_record_sha256", "observed_monotonic_time", "source_id", "source_sequence", "source_event_time", "payload_ref"],
+    "hash_preimage": "Exact completed stored bytes of the prior record; record body does not contain its own full-record hash",
+    "self_identity_location": "External index or next record reference, not a self-referential byte hash",
+    "genesis": "First record has previous_record_sha256=null and a required externally expected genesis/run-start reference",
+    "continuity": "Contiguous sequence within one ledger, one previous hash, no forks, gaps, changed object IDs or reordered records",
+    "separate_supervisor_and_Parent_ledgers": true,
+    "cross_ledger_order_is_physical_occurrence_order": false,
+    "hash_proves_OS_truth_delivery_completeness_or_storage_durability": false,
+    "byte_encoding_and_durability_protocol": "OPEN_BEFORE_IMPLEMENTATION"
+  },
+  "required_axes": [
+    {"id": "event", "fields": ["observation_start_ref", "cutoff_request_ref", "cutoff_commit_ref", "last_applied_seq", "pending_refs", "receive_reservation_refs", "query_reservation_refs", "returned_unpublished_refs", "boundary_resolution_ref"]},
+    {"id": "latches", "fields": ["violation_latched", "stop_latched", "error_latched", "expiry_latched", "dispatch_inhibit", "first_violation_ref", "first_stop_cause_ref", "first_observed_error_ref", "subsequent_cause_refs"]},
+    {"id": "current_measurement", "fields": ["measurement_kind", "current_commit_bytes", "sampled_maximum_bytes"], "fixed_new_mode_meaning": "NOT_MEASURED_BY_NOTIFICATION, null, null; raw JobMemory stays event evidence"},
+    {"id": "cap", "fields": ["required_setting_ref", "setting_ref", "readback_ref", "owned_job_binding_ref", "support_and_effectiveness_basis_refs"]},
+    {"id": "other_resources", "fields": ["external_required_resource_ids", "per_resource_sample_units_owner_clock_cursor_refs", "new_mode_assessment_ref"]},
+    {"id": "termination", "fields": ["root_signal_ref", "exit_query_ref", "native_exit_code", "final_job_membership_ref", "termination_method", "actual_termination_confirmed"]},
+    {"id": "cleanup", "fields": ["external_required_obligations", "reader_exit_ref", "remaining_query_handle_users", "per_handle_result_refs", "failed_or_unresolved_obligations"]},
+    {"id": "coverage", "fields": ["selected_scope_ref", "excluded_scope_and_residuals_ref", "start_cutoff_sequence_refs", "post_writer_event_refs", "closure_status"]},
+    {"id": "timing", "fields": ["three_adopted_durations", "immutable_starts", "superior_absolute_deadlines", "completion_and_expiry_refs", "independent_monitor_ref", "clock_domain_and_suspend_basis"]},
+    {"id": "policy_authority", "fields": ["direction_selection_ref", "operational_risk_and_exact_contract_adoption_ref", "implementation_acceptance_ref", "validation_acceptance_ref", "required_OS_observation_acceptance_ref", "one_run_authorization_ref"]},
+    {"id": "evidence_IO", "fields": ["writer_ref", "readback_ref", "all_record_failures", "preservation_completeness", "verification_boundary_refs"]}
+  ],
+  "noncyclic_evidence_objects": [
+    {
+      "id": "P",
+      "kind": "NORMAL_PROVISIONAL",
+      "required": ["common_header", "provisional_payload", "pre_write_state_version", "pre_write_ledger_head", "pre_write_observation_time"],
+      "body_cannot_contain_own_post_write_facts": ["write_completion_ref", "readback_ref", "writer_finish", "own_completed_byte_length_or_sha256"],
+      "post_write_identity_and_readback_location": "Separate post-write/readback records and C reference completed P; P is never rewritten to include them",
+      "can_claim_final_acceptance": false
+    },
+    {
+      "id": "C",
+      "kind": "CLOSURE_EVIDENCE",
+      "required": ["common_header", "P_external_id_byte_length_and_sha256", "P_write_completion_ref", "P_readback_ref", "P_writer_start_finish_and_readback_times", "P_ledger_heads_at_write_and_readback", "final_supervisor_ledger_head", "cutoff_and_last_applied_seq", "post_writer_causes", "final_latches", "termination_cleanup_coverage_timing_IO_axes", "closure_observed_at"],
+      "may_overwrite_P": false,
+      "can_observe_own_future_storage_or_Parent_decision": false
+    },
+    {
+      "id": "R",
+      "kind": "PARENT_DECISION_RECORD",
+      "required": ["common_header", "read_and_verified_P_C_id_hashes", "verified_supervisor_ledger_head", "trusted_expected_authority_refs", "Parent_local_cause_ledger_head", "decision_boundary_state_version_and_latches", "all_axis_results", "all_blocking_reasons", "bounded_scope_result"],
+      "primary_display_reason": "Optional and not a replacement for all causes",
+      "can_certify_own_future_delivery": false,
+      "not_a_runtime_approval_or_release_token": true
+    }
+  ],
+  "acceptance_rules": [
+    "Verify external expectations, structure, exact stored identities and raw evidence references first; unbound material cannot prove a violation in this run",
+    "Any null or unadopted required duration prevents event_channel_bound and normal acceptance",
+    "Any violation/stop/error/expiry/inhibit, unresolved notification, cap/resource/clock/budget/authority/evidence_IO defect blocks normal acceptance; retain all simultaneous causes",
+    "Normal native outcome, confirmed owned termination, required cleanup, selected-scope closure and preservation must each satisfy the adopted contract; forced termination is not normal completion",
+    "Verify P and C and actual completed storage readback; then recheck latest shared latch/version and Parent-local causes at the decision boundary",
+    "A relevant change after the verified snapshot rejects that snapshot; any recheck stays within the original final and superior deadlines, no automatic reseal",
+    "Later or failed record delivery is disclosed as unaccepted/preservation-incomplete; no recursive claim that a record certified its own future write",
+    "Only a future separately adopted and verified implementation can produce bounded-scope acceptance; no current-measurement PASS or all-historical-events guarantee",
+    "After first error no new normal final writer/readback/clock call; failure verification and evidence preservation remain separate",
+    "First observed cause follows supervisor observation/serialization order; source timestamps or later success never rewrite latches or first references"
+  ],
+  "null_required_current_state": {
+    "reader_duration": null,
+    "query_duration": null,
+    "final_duration": null,
+    "operational_contract_ref": null,
+    "runtime_evidence_instance": null,
+    "actual_parent_result": "NOT_PRODUCED"
+  },
+  "remaining_schema_work": ["Exact types/ranges/enums", "Raw-byte encoding and field canonicalization if used", "Trusted genesis and authority provisioning", "Atomic durable append/read protocol", "Safe file/handle identity and path handling", "Actual Parent consumer and schema migration"]
+}

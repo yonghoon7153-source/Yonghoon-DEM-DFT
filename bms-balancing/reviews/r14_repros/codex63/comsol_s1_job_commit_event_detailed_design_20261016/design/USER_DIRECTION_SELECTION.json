@@ -1,0 +1,31 @@
+{
+  "kind": "USER_CONDITIONAL_DESIGN_DIRECTION_RECORD",
+  "record_date": "2026-10-16",
+  "source": "Direct user message in this conversation, interpreted with the immediately preceding two-option question",
+  "user_message": "1번가자",
+  "selected_option": 1,
+  "option_text": "유한 관측 방식을 조건부 설계 방향으로 선택 — 현재값·최대값 미측정, 시작 공백, 알림 지연·미수신 불확실성을 남긴 채 세부 설계를 진행합니다.",
+  "question_boundary": "1번을 선택해도 계약 채택이나 구현·시험·COMSOL 실행 승인은 아닙니다. 세 기한 null, JOB_CURRENT_COMMIT=OPEN, native_ready=false는 유지합니다.",
+  "direction_selected": true,
+  "direction": "MANAGED_EVENTS_AND_EXPLICIT_FINITE_OBSERVATION_WINDOW",
+  "conditional_design_risk_scope": "The listed uncertainties remain accepted as limitations of the direction being developed in documents, not as permission to expose a production run to those risks",
+  "operational_risk_accepted": false,
+  "full_policy_terms_adopted": false,
+  "contract_adopted": false,
+  "implementation_authorized": false,
+  "fixture_or_test_authorized": false,
+  "OS_observation_authorized": false,
+  "COMSOL_or_native_execution_authorized": false,
+  "numeric_deadlines_authorized": false,
+  "authorized_this_turn": ["Record conditional direction", "Develop inactive detailed design documents", "Read official references and existing source text", "Perform own document/ZIP identity checks"],
+  "runtime_credential": false,
+  "state_change": {
+    "before": "Direction selection pending",
+    "after": "Option 1 selected for conditional document design; detailed protocol, operational risk and contract adoption remain pending"
+  },
+  "reference_review": {
+    "bytes": 278205,
+    "sha256": "807719fb34943b20a80f8f6be45bac0f95e5c772865bdfe644604f228ca1e53e",
+    "decision": "DOCUMENT_PROPOSAL_ACCEPTED_FOR_USER_CHOICE_NOT_ADOPTED"
+  }
+}

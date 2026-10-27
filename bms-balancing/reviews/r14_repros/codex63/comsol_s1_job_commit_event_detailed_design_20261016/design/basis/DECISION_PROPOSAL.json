@@ -1,0 +1,154 @@
+{
+  "kind": "UNADOPTED_EVENT_POLICY_DECISION_PROPOSAL",
+  "document_date": "2026-10-16",
+  "document_revision": "Q1_Q4_PROPOSAL_20261016",
+  "status": "DRAFT_FOR_DOCUMENT_REVIEW_NOT_CONTRACT_ADOPTION",
+  "scope": "COMSOL S1 only; not REIL C4E/E1",
+  "basis": {
+    "DOC_R1_N1_N2_N3": "CLOSED_DOCUMENT_FINDINGS",
+    "review_zip_sha256": "ca828a967d73db812d1c8abbd81cb9047104952e5a61b299e12d474ab1270ddb",
+    "provider_bytes": 38370,
+    "provider_sha256": "81cc751200358d0328235bfe05fa4a84cb71608d51663117303ad3889c03d33a",
+    "R8_code_manifest_sha256": "bc6ba4a077908a9ba2f08679c7127dfbe18001eeaffd712e7a83813b8e962ec8",
+    "selected_local_inputs": 12,
+    "all_basis_files_are_reference_only": true
+  },
+  "decisions": [
+    {
+      "id": "Q1",
+      "recommended": "MANAGED_EVENTS_AND_EXPLICIT_FINITE_OBSERVATION_WINDOW",
+      "selected": null,
+      "adopted": false,
+      "alternative": "REQUIRE_ALL_PAST_OS_EVENTS_AND_REMAIN_UNRESOLVED_WITH_CURRENT_EVIDENCE",
+      "proposed_window_start": "Supervisor-observed readiness of run/Job/port/key-generation-bound single reader, before resume",
+      "required_boundaries": ["window_start", "receive_cutoff_requested", "receive_cutoff_committed", "last_applied_sequence", "reader_exit", "cleanup_observation", "parent_acceptance_observation"],
+      "residual_risk_acceptance": null,
+      "residuals": ["initial_current_commit_gap", "current_and_maximum_not_measured", "delivery_delay_bound_unknown", "unreceived_past_events_not_proven_absent", "overshoot_bound_unknown", "post_window_exclusions"],
+      "rules": ["managed_pending_zero_is_not_global_OS_absence", "queue_empty_Job_empty_rc0_are_not_coverage_proof", "observed_violation_or_error_before_acceptance_blocks_normal_acceptance", "unknown_source_time_stays_null"]
+    },
+    {
+      "id": "Q2",
+      "recommended": "SINGLE_RESPONSIBLE_LAUNCHER_SUPERVISOR_WITH_INDEPENDENT_MONITOR",
+      "selected": null,
+      "adopted": false,
+      "precedence": ["bind_run_clock_owned_identity_configuration", "register_independent_monitor_then_observe_reader_ready", "collect_and_assess_first_other_resource_sample_under_separate_new_mode_design", "serialized_pre_resume_recheck_and_one_time_resume_permission"],
+      "existing_call_order": ["sample_once", "collect_owned_sample_returns_raw", "ResourceSession.decide", "update_cursor_and_sample_ok_only_if_accepted"],
+      "implementation_gaps": ["pre_resume_check_is_fake_receipt_only", "old_full_sample_requires_current_commit", "new_mode_projection_and_assessor_not_implemented", "old_call_post_return_clock_is_not_independent_blocked_query_monitor", "production_launcher_scheduler_binding_OPEN"],
+      "prohibited_shortcuts": ["substitute_zero_or_null_current_for_old_valid_sample", "force_sample_ok_true", "event_sequence_updates_resource_cursor", "thread_alive_as_progress_proof"]
+    },
+    {
+      "id": "Q3",
+      "recommended": "PROVISIONAL_OUTPUT_THEN_SEPARATE_BOUNDARY_AND_CLEANUP_EVIDENCE",
+      "selected": null,
+      "adopted": false,
+      "proposed_order": ["start_final_deadline_and_block_new_owned_admission", "verify_owned_Job_and_root_exit_while_reader_active", "resolve_managed_packets_and_queries_within_bounds", "start_provisional_writer_then_guarded_readback_only_if_normal_conditions_hold", "bind_receive_cutoff_and_last_applied_sequence_and_resolve_boundary_races", "confirm_reader_exit_and_no_query_handle_users", "close_dependent_handles_and_record_cleanup_errors", "Parent_checks_provisional_hash_and_post_writer_evidence_before_any_acceptance"],
+      "receive_cutoff_equals_acceptance": false,
+      "new_normal_final_calls_after_error_latch": false,
+      "inflight_success_after_failure_is_acceptable": false,
+      "failure_preservation_and_owned_cleanup_are_separate": true,
+      "unresolved_items": ["cutoff_atomicity_and_packet_ownership", "blocked_query_safe_lifecycle", "post_writer_evidence_format_and_durable_binding", "handle_dependency_and_exit_protocol", "finite_final_deadline"]
+    },
+    {
+      "id": "Q4",
+      "recommended": "BINDING_FIRST_MULTI_AXIS_PARENT_DECISION",
+      "selected": null,
+      "adopted": false,
+      "axes": ["mode_revision_manifest_run_clock_ownership", "memory_violation", "unresolved_notification", "monitoring", "current_and_maximum_measurement", "cap_and_other_resources", "native_exit", "cleanup", "final_coverage", "authorization", "budget_clock", "evidence_IO_preservation"],
+      "sticky_stop_causes": ["MEMORY_VIOLATION_OBSERVED", "UNRESOLVED_NOTIFICATION", "monitoring_error", "budget_or_policy_failure"],
+      "sticky_stop_causes_scope": "Non-exhaustive representative causes; all blocking causes on every axis, including cap, binding and evidence I/O failures, must also be retained",
+      "first_observed_error_separate_from_first_stop_cause": true,
+      "source_cross_order": "UNDETERMINED",
+      "later_success_clears_latches": false,
+      "reporting_priority_equals_occurrence_order": false,
+      "single_representative_reason_required": false,
+      "detailed_reporting_priority": "OPEN",
+      "conditional_acceptance_now": false,
+      "unknown_mode_old_manifest_or_summary_PASS": "REJECT_NORMAL_ACCEPTANCE"
+    }
+  ],
+  "deadlines": [
+    {
+      "id": "reader_progress",
+      "duration_seconds": null,
+      "initial_start": "Earlier bound observation of monitor registration and reader start request",
+      "initial_completion": "Bound reader readiness",
+      "repeated_start": "Previous validated processing-step completion",
+      "repeated_completion": "Next bounded wait or packet-processing completion",
+      "expiry": "Block pre-resume; while running latch monitoring error and STOP_REQUIRED",
+      "forbidden_reset": ["thread_alive", "unrelated_heartbeat", "wait_reentry", "reader_restart_erases_expiry"]
+    },
+    {
+      "id": "query_completion",
+      "duration_seconds": null,
+      "start": "Notification dequeue/observation",
+      "completion": "Validated classification committed to shared state",
+      "includes": ["post_observation_queue_or_lock_wait", "pre_API_wait", "synchronous_call", "validation", "classification_publication"],
+      "excludes": ["OS_delivery_delay_before_dequeue"],
+      "expiry": "UNRESOLVED_NOTIFICATION and STOP_REQUIRED without waiting for blocked query return",
+      "forbidden_reset": ["API_entry", "requery", "later_packet"],
+      "expiry_proves_API_cancellation_or_return": false
+    },
+    {
+      "id": "final_synchronization",
+      "duration_seconds": null,
+      "start": "First final entry starting new-owned-admission block",
+      "completion": "Required exit, managed event handling, provisional writer/readback, cutoff, reader exit, cleanup and final acceptance evidence completed",
+      "expiry": "FINAL_COVERAGE_INCOMPLETE; no normal acceptance",
+      "forbidden_reset": ["Job_empty", "writer_success", "new_error", "recheck", "reseal"]
+    }
+  ],
+  "deadline_common_proposal": {
+    "effective_deadline": "minimum of immutable_start_plus_adopted_duration and every applicable superior absolute deadline",
+    "existing_phase_overall_reserve_not_extended": true,
+    "existing_6s_gap_and_1s_transaction_not_repurposed": true,
+    "null_duration_permits_event_channel_bound": false,
+    "independent_monitor_must_not_wait_on_target_return_or_its_blocking_lock_queue": true,
+    "clock_suspend_resume_semantics": "OPEN",
+    "deadline_numeric_selection_is_OS_latency_proof": false,
+    "numeric_selection_prerequisites": ["call_and_lock_graph", "clock_and_monitor_independence", "separately_approved_validation_and_if_needed_local_observation_basis", "conservative_upper_budget_and_stop_cleanup_relation", "explicit_residual_risk_choice_and_executable_expiry_path"]
+  },
+  "retained": {
+    "contract_adopted": false,
+    "JOB_CURRENT_COMMIT": "OPEN",
+    "Q1_Q4": "RECOMMENDATIONS_WRITTEN_SELECTION_AND_ADOPTION_OPEN",
+    "native_ready": false,
+    "approved": false,
+    "usable": false,
+    "overall": "INCOMPLETE",
+    "normal_gate": "INCOMPLETE",
+    "effective_policy": "UNVERIFIED",
+    "actual_core": "UNVERIFIED",
+    "existing_open_groups": 9,
+    "installed_t0_coefficient_raw": "OPEN",
+    "prior_review_topics": 16,
+    "actual_test_case_count": null,
+    "old_106_cases_validate_new_event_mode": false,
+    "existing_current_contract_satisfied_or_replaced": false
+  },
+  "runtime": {
+    "execution_authorized": false,
+    "implementation_authorized": false,
+    "argv": null,
+    "cwd": null,
+    "approval_path": null,
+    "release_path": null,
+    "token_path": null
+  },
+  "work_record": {
+    "scope": "New inactive document proposal, selected local basis copies and document-data package only",
+    "official_web_document_reading": true,
+    "self_authored_document_data_utility": true,
+    "received_program_execution": 0,
+    "target_imports": 0,
+    "target_functional_tests": 0,
+    "COMSOL_JVM_compile_solve": 0,
+    "target_OS_Job_experiments": 0,
+    "CIM": 0,
+    "existing_code_or_contract_changes": 0,
+    "external_transmission": 0,
+    "authorized_numeric_budget_seconds": null,
+    "budget_compliance_claim": false,
+    "whole_work_elapsed_claim": null,
+    "origin_scope": "Selected-input BEFORE follows source reading and data-utility authoring; precedes basis copies and proposal documents"
+  }
+}

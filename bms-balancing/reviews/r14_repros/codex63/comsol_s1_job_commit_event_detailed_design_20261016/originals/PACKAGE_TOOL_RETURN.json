@@ -1,0 +1,11 @@
+{
+  "kind": "ACTUAL_PACKAGE_TOOL_RETURN_TRANSCRIPTION",
+  "provenance": "Observed exec_command response 0331c8 copied after its return; not an independent OS audit or whole-work elapsed measurement",
+  "tool_result": {
+    "chunk_id": "0331c8",
+    "wall_time_seconds": 0.7751608,
+    "exit_code": 0,
+    "original_token_count": 323,
+    "output": "{\r\n  \"kind\": \"DETAILED_DESIGN_PACKAGE_RETURN\",\r\n  \"package\": {\r\n    \"archive\": {\r\n      \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\comsol_s1_event_detailed_design_20261016\\\\COMSOL_S1_JOB_COMMIT_EVENT_DETAILED_DESIGN_20261016.zip\",\r\n      \"bytes\": 599846,\r\n      \"sha256\": \"ea8ab14cae57a377cfb66990dce6fa93820aa7597e724860b725acf52d8b36e6\"\r\n    },\r\n    \"manifest\": {\r\n      \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\comsol_s1_event_detailed_design_20261016\\\\PACKAGE_MANIFEST.json\",\r\n      \"bytes\": 4015,\r\n      \"sha256\": \"49c7817eb949e3d92765b6021e1ed22a9a9cb7f81851f2fb6c484da5565396c7\"\r\n    },\r\n    \"payload_count\": 23,\r\n    \"entries\": 24,\r\n    \"exact_set_size_sha_safe_paths\": true,\r\n    \"crc_independently_recomputed\": false\r\n  },\r\n  \"receipt\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\comsol_s1_event_detailed_design_20261016\\\\DELIVERY_RECEIPT.json\",\r\n    \"bytes\": 1279,\r\n    \"sha256\": \"ba53ae2e99c9bd79971a9ecd6e609a3860997fe34767afc006c67b99e48fd68c\"\r\n  },\r\n  \"selected_local_inputs\": 10,\r\n  \"contract_adopted\": false,\r\n  \"native_ready\": false,\r\n  \"target_tests\": 0\r\n}\r\n"
+  }
+}

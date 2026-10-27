@@ -1,0 +1,69 @@
+{
+  "kind": "SELECTED_LOCAL_INPUT_PRESERVATION",
+  "observed_utc": "2026-10-16T08:08:25.1813925+00:00",
+  "count": 10,
+  "all_match": true,
+  "scope": "Selected local input bytes only, not remote or historical machine preservation",
+  "files": [
+    {
+      "path": "C:\\Users\\Administrator\\Downloads\\COMSOL_S1_JOB_COMMIT_EVENT_DECISION_REVIEW_DELIVERY_20261016.zip",
+      "bytes": 278205,
+      "sha256": "807719fb34943b20a80f8f6be45bac0f95e5c772865bdfe644604f228ca1e53e",
+      "matches_before": true
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\comsol_s1_event_decision_proposal_20261016\\DECISION_PROPOSAL_KO.md",
+      "bytes": 21647,
+      "sha256": "db172936e7f34b20cf0dfaebc3f1be27fd5d93cca2d8d566d847612c8e01e57f",
+      "matches_before": true
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\comsol_s1_event_decision_proposal_20261016\\DECISION_PROPOSAL.json",
+      "bytes": 9274,
+      "sha256": "2bb354eadc4aa5c1e551ca28ef6ecbfbb5914ea2e9be8a8c8cb8d5bb2eb24d89",
+      "matches_before": true
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\comsol_s1_event_decision_proposal_20261016\\COMSOL_S1_JOB_COMMIT_EVENT_DECISION_DELIVERY_20261016.zip",
+      "bytes": 240477,
+      "sha256": "05039252b1079fd4414d9c75a7ceb622e106fcff0b1dc02f5aa867c924e20b5b",
+      "matches_before": true
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\comsol_s1_event_decision_proposal_20261016\\basis\\os_provider.py.inactive.txt",
+      "bytes": 38370,
+      "sha256": "81cc751200358d0328235bfe05fa4a84cb71608d51663117303ad3889c03d33a",
+      "matches_before": true
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\comsol_s1_event_decision_proposal_20261016\\basis\\PROVIDER_CONTRACT.json",
+      "bytes": 43669,
+      "sha256": "8ed140ac93b0c8541438838f0498acc1fd6a3879806b0e0cd8d76cc7b553f737",
+      "matches_before": true
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\comsol_s1_event_decision_proposal_20261016\\basis\\RESOURCE_CONTRACT.json",
+      "bytes": 7175,
+      "sha256": "e45837427b1b8a69d53b10119ce7ab072bacb869bcdd53c863366c7bd04c67c1",
+      "matches_before": true
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\comsol_s1_event_decision_proposal_20261016\\basis\\resource_connection.py.inactive.txt",
+      "bytes": 10846,
+      "sha256": "f45e6531383d03daa2e968437c6188be0229c144c6956647b0b0f81fae795816",
+      "matches_before": true
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\comsol_s1_event_decision_proposal_20261016\\basis\\control.py.inactive.txt",
+      "bytes": 18304,
+      "sha256": "8ec75e57336c4ffa33e61d513076fb1facd1cf90430b1e1ce1c15f9bb57ac00d",
+      "matches_before": true
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\comsol_s1_event_decision_proposal_20261016\\basis\\R8_CODE_MANIFEST.json",
+      "bytes": 2364,
+      "sha256": "bc6ba4a077908a9ba2f08679c7127dfbe18001eeaffd712e7a83813b8e962ec8",
+      "matches_before": true
+    }
+  ]
+}

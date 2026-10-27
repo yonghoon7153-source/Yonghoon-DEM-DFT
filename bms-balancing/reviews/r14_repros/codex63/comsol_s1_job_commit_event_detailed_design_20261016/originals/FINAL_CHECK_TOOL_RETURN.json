@@ -1,0 +1,11 @@
+{
+  "kind": "ACTUAL_FINAL_CHECK_TOOL_RETURN_TRANSCRIPTION",
+  "provenance": "Actual exec_command response preserved after return; its internal boundary precedes this transcription. No independent OS audit or whole-work elapsed claim.",
+  "tool_result": {
+    "chunk_id": "2333ae",
+    "wall_time_seconds": 0.6122253,
+    "exit_code": 0,
+    "original_token_count": 225,
+    "output": "{\r\n  \"kind\": \"DETAILED_DESIGN_FINAL_CHECK_RETURN\",\r\n  \"archive\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\comsol_s1_event_detailed_design_20261016\\\\COMSOL_S1_JOB_COMMIT_EVENT_DETAILED_DESIGN_20261016.zip\",\r\n    \"bytes\": 599846,\r\n    \"sha256\": \"ea8ab14cae57a377cfb66990dce6fa93820aa7597e724860b725acf52d8b36e6\"\r\n  },\r\n  \"final_check\": {\r\n    \"path\": \"C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-14-gate-code-review-9qkx05-2\\\\outputs\\\\comsol_s1_event_detailed_design_20261016\\\\FINAL_CHECK.json\",\r\n    \"bytes\": 3311,\r\n    \"sha256\": \"8ce30a53354007d28059b2e33a706c65ce918a5f985bf04c28530955f25d1cbd\"\r\n  },\r\n  \"selected_all_match\": true,\r\n  \"contract_adopted\": false,\r\n  \"native_ready\": false,\r\n  \"target_tests\": 0,\r\n  \"boundary\": \"After check write/read/hash, before tool return and later serialization\"\r\n}\r\n"
+  }
+}

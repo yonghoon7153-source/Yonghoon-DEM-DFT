@@ -1,0 +1,30 @@
+{
+  "kind": "CONDITIONAL_DIRECTION_DOCUMENT_DESIGN_RECEIPT",
+  "recipient": null,
+  "package": {
+    "archive": {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\comsol_s1_event_detailed_design_20261016\\COMSOL_S1_JOB_COMMIT_EVENT_DETAILED_DESIGN_20261016.zip",
+      "bytes": 599846,
+      "sha256": "ea8ab14cae57a377cfb66990dce6fa93820aa7597e724860b725acf52d8b36e6"
+    },
+    "manifest": {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\comsol_s1_event_detailed_design_20261016\\PACKAGE_MANIFEST.json",
+      "bytes": 4015,
+      "sha256": "49c7817eb949e3d92765b6021e1ed22a9a9cb7f81851f2fb6c484da5565396c7"
+    },
+    "payload_count": 23,
+    "entries": 24,
+    "exact_set_size_sha_safe_paths": true,
+    "crc_independently_recomputed": false
+  },
+  "selected_local_inputs": 10,
+  "all_selected_unchanged": true,
+  "conditional_direction_selected": true,
+  "contract_adopted": false,
+  "native_ready": false,
+  "target_tests": 0,
+  "COMSOL": 0,
+  "numeric_work_budget": null,
+  "elapsed_claim": null,
+  "boundary": "After ZIP readback and selected-input preservation, before receipt write and tool return"
+}

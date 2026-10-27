@@ -1,0 +1,17 @@
+{
+  "kind": "JSON_FILE_CONSISTENCY_NOT_FUNCTIONAL_TEST",
+  "checks": {
+    "exact_user_quote": true,
+    "conditional_design_selected": true,
+    "no_contract_adoption": true,
+    "three_null_deadlines": true,
+    "no_operational_permission": true,
+    "cutoff_not_OS_barrier": true,
+    "blocked_query_not_closed": true,
+    "descriptive_schema_only": true,
+    "gates_retained": true
+  },
+  "basis_copies": 10,
+  "target_tests": 0,
+  "received_program_execution": 0
+}

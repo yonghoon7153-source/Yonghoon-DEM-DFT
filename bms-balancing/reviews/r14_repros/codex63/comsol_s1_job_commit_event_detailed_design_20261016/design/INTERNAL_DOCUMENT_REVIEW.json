@@ -1,0 +1,36 @@
+{
+  "kind": "READ_ONLY_INTERNAL_DOCUMENT_REVIEW_NOT_FUNCTIONAL_ACCEPTANCE",
+  "date": "2026-10-16",
+  "reviewed_documents": [
+    "USER_DIRECTION_SELECTION.json",
+    "DETAILED_DESIGN_KO.md",
+    "PROTOCOL_DRAFT.json",
+    "PARENT_EVIDENCE_FIELDS.json"
+  ],
+  "areas": [
+    {
+      "id": "startup_deadlines_authority",
+      "finding": "No blocking document inconsistency found in the reviewed scope",
+      "scope": "Conditional choice vs adoption; new-mode initial sample; PID startup gap; independent monitor and three null deadlines; clock limitations"
+    },
+    {
+      "id": "query_cutoff_cleanup",
+      "initial_finding": "Combined unresolved-query/release condition overwrote independently observed reader exit",
+      "correction": "Split non-return, unproven validation/publication, and post-publication handle release evidence. Preserve separately established cutoff and exit facts; keep unresolved cleanup/coverage and normal rejection",
+      "readback": "Finding resolved in text; no remaining blocking inconsistency found in this scope"
+    },
+    {
+      "id": "provisional_closure_parent",
+      "initial_finding": "P was both immutable file and holder of its own post-write/readback evidence, leaving a causal/hash cycle",
+      "correction": "P contains only pre-write facts. Separate post-write/readback records and C reference completed P bytes; no rewrite or self-future-storage claim",
+      "readback": "Finding resolved in text; no remaining blocking inconsistency found in this scope"
+    }
+  ],
+  "scope_limitation": "Internal source-text consistency review, not independent external acceptance or proof of implementation behavior. Existing OPEN implementation decisions remain OPEN.",
+  "new_contract_adopted": false,
+  "target_execution": 0,
+  "functional_tests": 0,
+  "OS_Job_experiments": 0,
+  "COMSOL": 0,
+  "external_transmission": 0
+}

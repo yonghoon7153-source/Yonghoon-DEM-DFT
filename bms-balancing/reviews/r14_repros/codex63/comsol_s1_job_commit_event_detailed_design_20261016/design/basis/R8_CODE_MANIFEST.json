@@ -1,0 +1,76 @@
+{
+  "kind": "R7_OFFLINE_CANDIDATE_SEAL",
+  "files": [
+    {
+      "path": "candidate/os_provider.py.inactive.txt",
+      "bytes": 38370,
+      "sha256": "81cc751200358d0328235bfe05fa4a84cb71608d51663117303ad3889c03d33a"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "reference/RESOURCE_CONTRACT.json",
+      "bytes": 7175,
+      "sha256": "e45837427b1b8a69d53b10119ce7ab072bacb869bcdd53c863366c7bd04c67c1"
+    },
+    {
+      "path": "reference/RESOURCE_CLOCK_CONTRACT.json",
+      "bytes": 2589,
+      "sha256": "781a54aabeb60a516274e230da25b3b11b8b79c1eb61846ed5061e22e9402fb3"
+    },
+    {
+      "path": "reference/OFFICIAL_API_MATRIX.json",
+      "bytes": 101286,
+      "sha256": "df2b3d03112fa0aa8b807ff4f060375cc885bb582ab84f8171a93054563a69e2"
+    },
+    {
+      "path": "reference/resource_connection.py.inactive.txt",
+      "bytes": 10846,
+      "sha256": "f45e6531383d03daa2e968437c6188be0229c144c6956647b0b0f81fae795816"
+    },
+    {
+      "path": "reference/control.py.inactive.txt",
+      "bytes": 18304,
+      "sha256": "8ec75e57336c4ffa33e61d513076fb1facd1cf90430b1e1ce1c15f9bb57ac00d"
+    },
+    {
+      "path": "reference/Parent.ps1.inactive.txt",
+      "bytes": 25787,
+      "sha256": "e9f8d366ca9931b84ded5753a560369b72fea8737a77075bc2b80ec771bc56ff"
+    },
+    {
+      "path": "reference/R1_os_provider.py.inactive.txt",
+      "bytes": 37348,
+      "sha256": "3a00bcd66b9bc240805a8b6ab13f077489f81c391c83410a3e812988ae2e6e9f"
+    },
+    {
+      "path": "reference/consumer.py.inactive.txt",
+      "bytes": 27987,
+      "sha256": "0cb1aa3cc4593dcb041115baf208c4dd09186fcc75055ddcde53c68086cc6b79"
+    },
+    {
+      "path": "reference/winjob.py",
+      "bytes": 15851,
+      "sha256": "2f0bb76d1ff11b12402f79e15f03d6d3fa281644fa9db8c218f1f2213819fc65"
+    }
+  ],
+  "provider_contract": {
+    "path": "contracts/PROVIDER_CONTRACT.json",
+    "bytes": 43669,
+    "sha256": "8ed140ac93b0c8541438838f0498acc1fd6a3879806b0e0cd8d76cc7b553f737"
+  },
+  "function_spans": {
+    "path": "evidence/FUNCTION_SPANS.json",
+    "bytes": 14666,
+    "sha256": "2162ce62fa3f2ce69d2b0dcd974ab3daef32becf024bf72e9c53316978eee9db"
+  },
+  "approved": false,
+  "usable": false,
+  "native_ready": false,
+  "overall": "INCOMPLETE",
+  "normal_gate": "INCOMPLETE",
+  "native_argv": null,
+  "native_cwd": null,
+  "functional_tests": "NOT_RUN",
+  "self_excluded": true
+}

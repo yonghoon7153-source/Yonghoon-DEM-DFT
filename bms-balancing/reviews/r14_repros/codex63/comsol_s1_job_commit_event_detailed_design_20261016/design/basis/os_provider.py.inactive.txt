@@ -1,0 +1,641 @@
+"""Inactive S1 OS-B coordinator; FAKE_TEST_ONLY seams, no Win32 implementation.
+
+This file is source text for separately approved future changed-branch tests.
+It is NOT a complete OS provider, launcher, ABI binding, scheduler or walker.
+No candidate code was imported/called for preparation. Native remains blocked.
+"""
+from copy import deepcopy
+from math import isfinite
+from types import MappingProxyType
+
+
+U64_MAX = 18446744073709551615
+LIMITS = {
+    'sample_interval_s': 5, 'maximum_sample_gap_s': 6,
+    'maximum_sampling_duration_s': 1, 'rss_early_stop_bytes': 8589934592,
+    'commit_early_stop_bytes': 10737418240,
+    'future_job_commit_enforced_limit_bytes': 12884901888,
+    'host_commit_reserve_bytes': 2147483648,
+    'host_ram_reserve_bytes': 2147483648,
+    'output_early_stop_bytes': 5368709120,
+    'output_declared_monitored_ceiling_bytes': 6442450944,
+    'volume_free_at_start_bytes': 17179869184,
+    'volume_free_reserve_bytes': 8589934592,
+    'native_wall_limit_s': 7200, 'overall_wall_limit_s': 9000,
+    'stop_reserve_s': 120, 'cooperative_wait_s': 15,
+    'force_verify_reserve_s': 90,
+}
+
+
+class ProviderError(ValueError):
+    def __init__(self, reason, operation=None, detail=None):
+        self.reason, self.stage = reason, 'inactive_os_provider'
+        self.operation, self.detail = operation, deepcopy(detail)
+        super().__init__(reason)
+
+
+def require(condition, reason, operation=None, detail=None):
+    if not condition:
+        raise ProviderError(reason, operation, detail)
+
+
+def uint(value, positive=False):
+    return type(value) is int and (1 if positive else 0) <= value <= U64_MAX
+
+
+def seconds(value):
+    try:
+        return type(value) in (int, float) and isfinite(value) and value >= 0
+    except OverflowError:
+        return False
+
+
+def sha256_text(value):
+    return type(value) is str and len(value) == 64 and all(c in '0123456789abcdef' for c in value)
+
+
+def token(value):
+    return type(value) is str and bool(value) and value != 'NULL'
+
+
+def canonical_path(path):
+    """Lexical conservative Windows subset only; DOES NOT resolve filesystem paths."""
+    require(type(path) is str and len(path) >= 4, 'OUTPUT_PATH_SCHEMA')
+    path = path.replace('\\', '/')
+    require(path[0].isascii() and path[0].isalpha() and path[1:3] == ':/'
+            and not path.endswith('/'), 'OUTPUT_PATH_FORM')
+    parts = path[3:].split('/')
+    require(all(p and p not in ('.', '..') and not p.endswith((' ', '.'))
+                and not any(c in p for c in ':<>"|?*\x00') for p in parts),
+            'OUTPUT_PATH_COMPONENT')
+    return path.casefold()
+
+
+def under(path, root):
+    return path == root or path.startswith(root + '/')
+
+
+def canonical_output_roots(specs, umbrella, originals):
+    """Predeclare body/wrapper/temp/final roots; overlap counts once, no traversal."""
+    require(type(specs) is list and len(specs) == 4, 'OUTPUT_ROOT_CATEGORIES')
+    require({x.get('category') for x in specs if type(x) is dict}
+            == {'body', 'wrapper', 'temp', 'final'}, 'OUTPUT_ROOT_CATEGORIES')
+    umbrella = canonical_path(umbrella)
+    require(type(originals) is list, 'OUTPUT_ORIGINALS_SCHEMA')
+    excluded = tuple(canonical_path(p) for p in originals)
+    roots = []
+    for spec in specs:
+        require(type(spec) is dict and spec.get('exclusive_new') is True
+                and token(spec.get('root_identity')), 'OUTPUT_ROOT_OWNERSHIP')
+        path = canonical_path(spec.get('path'))
+        require(under(path, umbrella), 'OUTPUT_ROOT_OUTSIDE_UMBRELLA')
+        require(not any(under(path, p) or under(p, path) for p in excluded),
+                'OUTPUT_ORIGINAL_OVERLAP')
+        roots.append((spec['category'], path, spec['root_identity']))
+    identity_by_path = {}
+    for _, path, identity in roots:
+        require(path not in identity_by_path or identity_by_path[path] == identity,
+                'OUTPUT_ROOT_IDENTITY_CONFLICT')
+        identity_by_path[path] = identity
+    minimal = tuple(p for p in sorted(identity_by_path)
+                    if not any(p != q and under(p, q) for q in identity_by_path))
+    return {'umbrella': umbrella, 'declared': tuple(roots), 'walk_roots': minimal,
+            'originals': excluded, 'logical_bytes_baseline': 0}
+
+
+def measure_output_entries(plan, receipt, max_entries, max_depth):
+    """Validate supplied bounded metadata; native handle-safe acquisition is OPEN."""
+    require(type(receipt) is dict and receipt.get('status') == 'COMPLETE'
+            and receipt.get('unknown_entries') == []
+            and receipt.get('permission_errors') == []
+            and receipt.get('walk_timed_out') is False, 'OUTPUT_WALK_INCOMPLETE')
+    expected = {p: identity for _, p, identity in plan['declared']}
+    roots = receipt.get('root_observations')
+    require(type(roots) is list and len(roots) == len(expected), 'OUTPUT_ROOT_OBSERVATIONS')
+    observed = {}
+    for root in roots:
+        require(type(root) is dict, 'OUTPUT_ROOT_OBSERVATIONS')
+        path = canonical_path(root.get('path'))
+        require(path not in observed and path in expected
+                and root.get('identity_before') == root.get('identity_after') == expected[path]
+                and root.get('reparse') is False, 'OUTPUT_ROOT_REPLACED_OR_REPARSE')
+        observed[path] = root['identity_after']
+    require(set(observed) == set(expected), 'OUTPUT_ROOT_OBSERVATIONS')
+    entries = receipt.get('entries')
+    require(type(entries) is list and len(entries) <= max_entries, 'OUTPUT_ENTRY_BOUND')
+    seen, total = {}, 0
+    for item in entries:
+        require(type(item) is dict, 'OUTPUT_ENTRY_SCHEMA')
+        path = canonical_path(item.get('path'))
+        matches = [p for p in plan['walk_roots'] if under(path, p)]
+        require(len(matches) == 1, 'OUTPUT_ENTRY_OUT_OF_SCOPE')
+        require(path.count('/') - matches[0].count('/') <= max_depth, 'OUTPUT_DEPTH_BOUND')
+        require(not any(under(path, p) for p in plan['originals']), 'OUTPUT_ORIGINAL_ENTRY')
+        require(item.get('reparse') is False, 'OUTPUT_REPARSE')
+        require(item.get('known_owned') is True and item.get('original') is False,
+                'OUTPUT_UNKNOWN_FILE')
+        require(item.get('kind') in ('file', 'directory')
+                and token(item.get('identity_before'))
+                and item['identity_before'] == item.get('identity_after')
+                and item.get('link_count') == 1, 'OUTPUT_REPLACED_OR_LINKED')
+        require(uint(item.get('logical_bytes')), 'OUTPUT_SIZE_INVALID')
+        require(item['kind'] == 'file' or item['logical_bytes'] == 0, 'OUTPUT_DIRECTORY_SIZE')
+        signature = (item['identity_after'], item['kind'], item['logical_bytes'])
+        if path in seen:
+            require(seen[path] == signature, 'OUTPUT_DUPLICATE_CONFLICT')
+            continue
+        require(not any(v[0] == signature[0] for v in seen.values()), 'OUTPUT_IDENTITY_ALIAS')
+        seen[path] = signature
+        require(total <= U64_MAX - item['logical_bytes'], 'OUTPUT_SIZE_OVERFLOW')
+        total += item['logical_bytes']
+    return total
+
+
+def checked_host_counters(data):
+    require(type(data) is dict and data.get('source') == 'GetPerformanceInfo'
+            and data.get('unit') == 'pages', 'HOST_SOURCE_OR_UNIT')
+    names = ('page_size', 'commit_limit_pages', 'commit_total_pages',
+             'physical_total_pages', 'physical_available_pages')
+    require(all(uint(data.get(k), k in ('page_size', 'physical_total_pages')) for k in names),
+            'HOST_COUNTER_RANGE')
+    page = data['page_size']
+    require(data['commit_total_pages'] <= data['commit_limit_pages']
+            and data['physical_available_pages'] <= data['physical_total_pages'], 'HOST_COUNTER_ORDER')
+    require(all(data[k] <= U64_MAX // page for k in names if k != 'page_size'),
+            'HOST_BYTE_OVERFLOW')
+    return {'host_commit_limit_bytes': data['commit_limit_pages'] * page,
+            'host_commit_total_bytes': data['commit_total_pages'] * page,
+            'host_available_ram_bytes': data['physical_available_pages'] * page}
+
+
+def checked_disk_counters(data, volume_id):
+    require(type(data) is dict and data.get('source') == 'GetDiskFreeSpaceExW'
+            and data.get('unit') == 'bytes' and data.get('volume_id') == volume_id,
+            'DISK_SOURCE_OR_SCOPE')
+    fields = ('caller_available_bytes', 'volume_free_bytes', 'caller_total_bytes')
+    require(all(uint(data.get(k)) for k in fields), 'DISK_COUNTER_RANGE')
+    # Quota-limited caller_total need not equal whole-volume total/free.
+    require(data['caller_available_bytes'] <= data['volume_free_bytes']
+            and data['caller_available_bytes'] <= data['caller_total_bytes'], 'DISK_COUNTER_ORDER')
+    return {k: data[k] for k in fields}
+
+
+class DisabledOSSeam:
+    kind = 'DISABLED_NO_REAL_OS_IMPLEMENTATION'
+
+    def __getattr__(self, name):
+        raise ProviderError('OS_PROVIDER_OPEN:' + name)
+
+
+class ProviderCoordinator:
+    """Owned synthetic state for future tests; supplied dependencies are not imported.
+
+    resource_module must be the accepted resource_connection, control must be the
+    unchanged accepted control. Their identity pinning is a future harness duty.
+    No fake class is supplied here; no tests were run during this preparation.
+    """
+    def __init__(self, resource_module, control, start_record, anchors, contract,
+                 bounds, output_roots, originals, capabilities, seam=None):
+        require(type(contract) is dict and contract.get('proposal_limits') == LIMITS,
+                'RESOURCE_CONTRACT_LIMITS_CHANGED')
+        require(type(bounds) is dict, 'BOUNDS_SCHEMA')
+        caps = {'max_members': 4096, 'max_membership_attempts': 3,
+                'max_retained_members': 4096, 'max_output_entries': 100000,
+                'max_output_depth': 64}
+        require(set(bounds) == set(caps) | {'pointer_bytes'}, 'BOUNDS_SCHEMA')
+        require(all(uint(bounds[k], True) and bounds[k] <= cap for k, cap in caps.items())
+                and bounds['pointer_bytes'] in (4, 8), 'BOUNDS_RANGE')
+        require(type(anchors) is dict and all(token(anchors.get(k)) for k in
+                ('job_identity', 'job_token', 'root_token', 'owned_output_root', 'volume_id')),
+                'OWNERSHIP_TOKEN_SCHEMA')
+        require(uint(anchors.get('root_pid'), True)
+                and uint(anchors.get('root_creation_filetime'), True), 'ROOT_IDENTITY_SCHEMA')
+        require(anchors.get('fixture_scope') == 'FAKE_TEST_ONLY'
+                and sha256_text(anchors.get('accepted_commit_mapping_sha256')),
+                'SYNTHETIC_MAPPING_BINDING_REQUIRED')
+        require(type(capabilities) is dict and capabilities.get('force_only_explicitly_approved') is False,
+                'FORCE_ONLY_NOT_ADOPTED')
+        self._session = resource_module.ResourceSession(deepcopy(start_record), deepcopy(anchors))
+        self._control = control
+        self._anchors = MappingProxyType(deepcopy(anchors))
+        self._contract, self._bounds = deepcopy(contract), MappingProxyType(deepcopy(bounds))
+        self._capabilities = MappingProxyType(deepcopy(capabilities))
+        self._output = canonical_output_roots(output_roots, anchors['owned_output_root'], originals)
+        self._seam = seam if seam is not None else DisabledOSSeam()
+        self._cursor = self._session.clock.native_origin_s
+        self._last_clock = self._cursor
+        self._retained = {anchors['root_pid']: (anchors['root_creation_filetime'], anchors['root_token'])}
+        self._trace, self._failures = [], []
+        self._prepared = self._sample_ok = self._closed = False
+        self._terminal = self._stop_state = self._final_phase = None
+        self._cooperative_attempts = self._force_attempts = 0
+        self._force_succeeded = self._cooperative_failed = False
+
+    def snapshot(self):
+        return deepcopy({'cursor_s': self._cursor, 'last_clock_s': self._last_clock,
+                         'trace': self._trace, 'failures': self._failures,
+                         'retained': self._retained, 'terminal': self._terminal,
+                         'stop_state': self._stop_state, 'final_phase': self._final_phase,
+                         'evidence_scope': 'FAKE_TEST_ONLY', 'approved': False,
+                         'usable': False, 'native_ready': False})
+
+    def native_gate(self):
+        raise ProviderError('JOB_CURRENT_COMMIT_PUBLIC_CONTRACT_OPEN')
+
+    def _require_fake(self):
+        require(getattr(self._seam, 'kind', None) == 'FAKE_OS_SEAM_ONLY',
+                'OS_PROVIDER_OPEN_NO_REAL_BINDING')
+        require(not self._closed, 'OWNED_HANDLES_ALREADY_CLOSED')
+
+    def _now(self, operation):
+        self._require_fake()
+        value = self._seam.clock()
+        require(type(value) is dict and value.get('query_success') is True,
+                'CLOCK_QUERY_FAILURE', operation, value)
+        clock = self._session.clock
+        require(value.get('run_id') == clock.run_id and value.get('clock_id') == clock.clock_id
+                and value.get('clock_origin') == clock.clock_origin and value.get('clock_unit') == 'seconds',
+                'CLOCK_DOMAIN_MISMATCH', operation)
+        now = value.get('monotonic_s')
+        require(seconds(now) and now >= self._last_clock, 'CLOCK_REVERSED_OR_INVALID', operation)
+        self._last_clock = now
+        return now
+
+    def _call(self, operation, *args, allow_more_data=False):
+        request = self._now(operation + ':request')
+        value, failure = None, None
+        try:
+            value = getattr(self._seam, operation)(*deepcopy(args))
+        except Exception as exc:
+            failure = {'exception_type': type(exc).__name__, 'message': str(exc),
+                       'error_code': getattr(exc, 'winerror', None)}
+        try:
+            arrival = self._now(operation + ':arrival')
+        except Exception as exc:
+            self._trace.append({'operation': operation, 'request_s': request, 'arrival_s': None,
+                                'observed_s': None, 'failure': failure or str(exc)})
+            raise
+        entry = {'operation': operation, 'request_s': request, 'arrival_s': arrival,
+                 'observed_s': value.get('observed_s') if type(value) is dict else None,
+                 'query_success': value.get('query_success') if type(value) is dict else None,
+                 'error_code': value.get('error_code') if type(value) is dict else None,
+                 'failure': failure}
+        self._trace.append(entry)
+        require(failure is None, 'SEAM_EXCEPTION:' + operation, operation, entry)
+        require(type(value) is dict, 'QUERY_VALUE_MISSING:' + operation, operation, entry)
+        require(value.get('run_id') == self._session.clock.run_id, 'QUERY_RUN_MISMATCH:' + operation)
+        require(type(value.get('query_success')) is bool, 'QUERY_SUCCESS_TYPE:' + operation)
+        require(seconds(entry['observed_s']) and request <= entry['observed_s'] <= arrival,
+                'QUERY_OBSERVATION_TIME:' + operation)
+        more = allow_more_data and value['query_success'] is False and value.get('error_code') == 234
+        require(value['query_success'] is True or more, 'QUERY_FAILED:' + operation, operation, entry)
+        require(more or value.get('error_code') is None, 'QUERY_SUCCESS_WITH_ERROR:' + operation)
+        return deepcopy(value)
+
+    def _job_call(self, operation, *args, **kwargs):
+        value = self._call(operation, self._anchors['job_token'], *args, **kwargs)
+        require(value.get('job_token') == self._anchors['job_token'], 'OTHER_OR_NULL_JOB:' + operation)
+        return value
+
+    def _failure(self, exc, status='STOP_REQUIRED'):
+        record = {'reason': getattr(exc, 'reason', 'UNEXPECTED_PROVIDER_EXCEPTION'),
+                  'operation': getattr(exc, 'operation', None),
+                  'detail': deepcopy(getattr(exc, 'detail', str(exc))),
+                  'last_clock_s': self._last_clock, 'cursor_unchanged_s': self._cursor}
+        self._failures.append(record)
+        return self._failure_result(status)
+
+    def _failure_result(self, status):
+        """Return the existing latch without recording a new event."""
+        return {'status': status, 'first_error': deepcopy(self._failures[0]),
+                'followup_errors': deepcopy(self._failures[1:]),
+                'evidence_scope': 'FAKE_TEST_ONLY', 'approved': False,
+                'usable': False, 'native_ready': False}
+
+    def pre_resume_check(self):
+        """Checks only fake receipts. No create/set/assign/resume is implemented."""
+        try:
+            require(not self._prepared and not self._failures, 'PRE_RESUME_REUSE_OR_FAILURE')
+            data = self._job_call('pre_resume_receipts', self._anchors['root_token'])
+            require(data.get('root_token') == self._anchors['root_token']
+                    and data.get('root_pid') == self._anchors['root_pid']
+                    and data.get('root_creation_filetime') == self._anchors['root_creation_filetime'],
+                    'PRE_RESUME_ROOT_IDENTITY')
+            require(data.get('exclusive_unnamed_job') is True and data.get('ambient_job') is False
+                    and data.get('existing_named_job') is False, 'PRE_RESUME_JOB_OWNERSHIP')
+            require(data.get('root_created_suspended') is True and data.get('resume_calls') == 0
+                    and data.get('breakaway_flags') == [] and data.get('privilege_relaxed') is False,
+                    'PRE_RESUME_START_ORDER')
+            require(data.get('limit_set_succeeded') is True
+                    and data.get('readback_succeeded') is True
+                    and data.get('job_memory_limit_bytes') == LIMITS['future_job_commit_enforced_limit_bytes']
+                    and data.get('limit_flags') == ['JOB_MEMORY', 'KILL_ON_JOB_CLOSE'], 'JOB_CAP_READBACK_MISMATCH')
+            order = data.get('operation_order')
+            require(order == ['create_owned_job', 'set_limits', 'readback_limits',
+                              'create_suspended_root', 'assign_root', 'verify_owned_root'],
+                    'PRE_RESUME_OPERATION_ORDER')
+            require(data.get('assigned_before_resume') is True and data.get('in_owned_job') is True
+                    and data.get('held_job_and_root_handles') is True
+                    and self._anchors.get('assigned_before_resume') is True
+                    and self._anchors.get('held_job_and_root_handles') is True,
+                    'PRE_RESUME_ASSIGNMENT_UNVERIFIED')
+            require(self._capabilities.get('cooperative_stop') == 'SUPPORTED_VERIFIED'
+                    and self._capabilities.get('evidence_scope') == 'FAKE_TEST_ONLY',
+                    'COOPERATIVE_METHOD_UNVERIFIED')
+            self._prepared = True
+            return {'status': 'FAKE_PRE_RESUME_RECEIPTS_ACCEPTED', 'execute_now': False,
+                    'resume_calls': 0, 'native_ready': False, 'production_launcher_binding': 'OPEN'}
+        except Exception as exc:
+            return self._failure(exc)
+
+    def bounded_membership(self, active=True):
+        capacity = min(16, self._bounds['max_members'])
+        for attempt in range(self._bounds['max_membership_attempts']):
+            value = self._job_call('job_members', capacity, allow_more_data=True)
+            assigned, count = value.get('assigned_count'), value.get('returned_count')
+            pids, length = value.get('pids'), value.get('returned_bytes')
+            require(uint(assigned) and uint(count) and count <= capacity
+                    and type(pids) is list and len(pids) == count, 'MEMBERSHIP_COUNT')
+            require(value.get('pointer_bytes') == self._bounds['pointer_bytes']
+                    and uint(length) and 8 + count * self._bounds['pointer_bytes'] <= length
+                    <= 8 + capacity * self._bounds['pointer_bytes'], 'MEMBERSHIP_LENGTH')
+            require(all(uint(pid, True) for pid in pids) and len(pids) == len(set(pids)),
+                    'MEMBERSHIP_PID_OR_DUPLICATE')
+            if value['query_success'] is False:
+                needed = value.get('required_capacity')
+                require(uint(needed, True) and capacity < needed <= self._bounds['max_members'],
+                        'MEMBERSHIP_CAPACITY_BOUND')
+                capacity = needed
+                continue
+            require(assigned == count and assigned <= self._bounds['max_members'], 'MEMBERSHIP_RACE')
+            require(bool(pids) or not active, 'ACTIVE_JOB_EMPTY_TERMINAL_CHECK_REQUIRED')
+            return tuple(sorted(pids))
+        raise ProviderError('MEMBERSHIP_ATTEMPT_BOUND')
+
+    def _identity(self, pid, retain=False):
+        if pid not in self._retained:
+            require(retain and len(self._retained) < self._bounds['max_retained_members'],
+                    'RETAINED_MEMBER_BOUND')
+            value = self._job_call('retain_member', pid)
+            require(value.get('pid') == pid and uint(value.get('creation_filetime'), True)
+                    and token(value.get('member_token')) and value.get('retained') is True
+                    and value.get('in_owned_job') is True, 'MEMBER_RETAIN_FAILURE')
+            require(value['member_token'] not in [item[1] for item in self._retained.values()],
+                    'MEMBER_HANDLE_ALIAS')
+            self._retained[pid] = (value['creation_filetime'], value['member_token'])
+        created, handle = self._retained[pid]
+        value = self._job_call('process_identity', handle)
+        require(value.get('member_token') == handle and value.get('pid') == pid
+                and value.get('creation_filetime') == created and value.get('in_owned_job') is True,
+                'PID_REUSE_OR_MEMBER_IDENTITY')
+        return {'pid': pid, 'creation_filetime': created}
+
+    def _root_state(self):
+        value = self._job_call('root_state', self._anchors['root_token'])
+        require(value.get('root_token') == self._anchors['root_token']
+                and value.get('pid') == self._anchors['root_pid']
+                and value.get('creation_filetime') == self._anchors['root_creation_filetime']
+                and type(value.get('signaled')) is bool, 'ROOT_HELD_IDENTITY')
+        return value
+
+    def _output_bytes(self):
+        receipt = self._call('output_walk', deepcopy(self._output), dict(self._bounds))
+        return measure_output_entries(self._output, receipt, self._bounds['max_output_entries'],
+                                      self._bounds['max_output_depth'])
+
+    def _transaction_valid(self, start, end, trace_start, arrival_gap=True):
+        require(seconds(start) and seconds(end) and self._cursor <= start <= end, 'TRANSACTION_CLOCK_ORDER')
+        if arrival_gap:
+            reason = 'FIRST_SAMPLE_ARRIVAL_LATE' if not self._sample_ok else 'SAMPLE_ARRIVAL_GAP'
+            require(end - self._cursor <= LIMITS['maximum_sample_gap_s'], reason)
+        require(end - start <= LIMITS['maximum_sampling_duration_s'], 'SAMPLING_TRANSACTION_TOO_SLOW')
+        for entry in self._trace[trace_start:]:
+            require(seconds(entry.get('observed_s'))
+                    and start <= entry['request_s'] <= entry['observed_s'] <= entry['arrival_s'] <= end
+                    and end - entry['observed_s'] <= LIMITS['maximum_sampling_duration_s'],
+                    'COUNTER_STALE_AT_TRANSACTION_END', entry['operation'])
+
+    def collect_owned_sample(self):
+        require(self._prepared and not self._closed, 'PRE_RESUME_RECEIPTS_REQUIRED')
+        require(not self._failures and self._terminal is None, 'LATCHED_MONITOR_FAILURE_OR_TERMINAL')
+        start, trace_start = self._now('sample:start'), len(self._trace)
+        before = self.bounded_membership()
+        pairs = [self._identity(pid, retain=True) for pid in before]
+        root = self._root_state()
+        require(self._anchors['root_pid'] in before or root['signaled'] is True, 'ROOT_MISSING_NOT_SIGNALED')
+        counters = []
+        for pair in pairs:
+            handle = self._retained[pair['pid']][1]
+            value = self._job_call('process_rss', handle)
+            require(value.get('member_token') == handle and value.get('pid') == pair['pid']
+                    and value.get('creation_filetime') == pair['creation_filetime']
+                    and uint(value.get('working_set_bytes')), 'RSS_HELD_IDENTITY_OR_RANGE')
+            counters.append(dict(pair, query_success=True, working_set_bytes=value['working_set_bytes']))
+        require(sum(p['working_set_bytes'] for p in counters) <= U64_MAX, 'RSS_SUM_OVERFLOW')
+        commit = self._job_call('job_commit')
+        require(commit.get('mapping_scope') == 'FAKE_TEST_ONLY' and commit.get('synthetic') is True
+                and commit.get('mapping_sha256') == self._anchors['accepted_commit_mapping_sha256']
+                and uint(commit.get('current_job_commit_bytes')), 'JOB_CURRENT_COMMIT_MAPPING_OPEN')
+        host = checked_host_counters(self._call('host_counters'))
+        disk = checked_disk_counters(self._call('disk_space', self._output['umbrella']), self._anchors['volume_id'])
+        output = self._output_bytes()
+        after = self.bounded_membership()
+        require(before == after, 'MEMBERSHIP_BOOKEND_CHURN')
+        after_pairs = [self._identity(pid) for pid in after]
+        require(pairs == after_pairs, 'MEMBERSHIP_IDENTITY_CHURN')
+        end = self._now('sample:arrival')
+        self._transaction_valid(start, end, trace_start)
+        clock = self._session.clock
+        raw = {k: getattr(clock, k) for k in ('run_id', 'clock_id', 'clock_origin', 'clock_unit',
+                                             'overall_origin_s', 'native_origin_s')}
+        raw.update(errors=[], query_success=True, evidence_scope='FAKE_TEST_ONLY',
+                   job_identity=self._anchors['job_identity'], members_before=pairs, members_after=after_pairs,
+                   held_root_signaled=root['signaled'], membership_source='QUERY_PRIVATE_HELD_JOB',
+                   member_times_source='HELD_MEMBER_PROCESS_HANDLES', process_counters=counters,
+                   job_commit_source='REVIEWED_JOB_ACCOUNTING_TOTAL',
+                   job_commit_counter_mapping_sha256=commit['mapping_sha256'],
+                   job_private_commit_bytes=commit['current_job_commit_bytes'],
+                   output_walk_status='COMPLETE_NO_REPARSE_NO_UNKNOWN_FILE',
+                   output_root=self._anchors['owned_output_root'], owned_output_growth_bytes=output,
+                   volume_free_bytes=disk['caller_available_bytes'], disk_raw=disk,
+                   disk_projection='CONSERVATIVE_CALLER_AVAILABLE_NOT_RAW_VOLUME_FREE',
+                   sample_start_s=start, sample_end_s=end, **host)
+        return raw
+
+    def sample_once(self):
+        if self._failures:
+            return {'status': 'LATCHED_MONITOR_FAILURE', 'first_error': deepcopy(self._failures[0]),
+                    'cursor_unchanged_s': self._cursor, 'native_ready': False}
+        try:
+            raw = self.collect_owned_sample()
+            # Exact unchanged dependency, with prior cursor; no local threshold copy.
+            decision = self._session.decide(self._control, raw, self._cursor, deepcopy(self._contract))
+            require(type(decision) is dict, 'RESOURCE_DECISION_SCHEMA')
+            require(decision.get('status') == 'CONTINUE_WITHIN_SAMPLED_LIMITS',
+                    'RESOURCE_DECISION_STOP', detail=decision)
+            # Arrival gap/freshness was checked above BEFORE either cursor change.
+            self._cursor = raw['sample_end_s']
+            self._sample_ok = True
+            return {'status': 'FAKE_SAMPLE_ACCEPTED', 'raw': deepcopy(raw),
+                    'resource_decision': deepcopy(decision), 'evidence_scope': 'FAKE_TEST_ONLY',
+                    'approved': False, 'usable': False, 'native_ready': False}
+        except Exception as exc:
+            return self._failure(exc)
+
+    def terminal_observation(self):
+        """Latch each direct terminal failure once; preserve prior observations."""
+        try:
+            return self._terminal_observation()
+        except Exception as exc:
+            return self._failure(exc)
+
+    def _terminal_observation(self):
+        """Separate non-sample route; empty membership never creates zero counters."""
+        start, trace_start = self._now('terminal:start'), len(self._trace)
+        require(self._prepared, 'TERMINAL_OWNERSHIP_UNPREPARED')
+        members = self.bounded_membership(active=False)
+        root = self._root_state()
+        require(members == () and root['signaled'] is True, 'TERMINATION_UNCONFIRMED')
+        require(root.get('exit_query_succeeded') is True and type(root.get('exit_code')) is int,
+                'TERMINAL_EXIT_QUERY_FAILURE')
+        end = self._now('terminal:arrival')
+        self._transaction_valid(start, end, trace_start, arrival_gap=self._terminal is None)
+        require(self._sample_ok, 'TERMINAL_WITHOUT_VALID_MONITOR_SAMPLE')
+        result = {'status': 'FAKE_TERMINATION_OBSERVED', 'observed_s': end,
+                  'job_empty': True, 'held_root_signaled': True, 'child_rc': root['exit_code'],
+                  'monitor_failure_preserved': bool(self._failures), 'native_ready': False}
+        self._terminal = deepcopy(result)
+        return deepcopy(result)
+
+    def stop_step(self):
+        """No sleeps or loops: at most one synthetic action per external tick."""
+        try:
+            require(self._prepared and not self._closed, 'STOP_OWNERSHIP_UNPREPARED')
+            value = self._job_call('stop_observation', self._anchors['root_token'], deepcopy(self._retained))
+            now = self._now('stop:event')
+            if self._stop_state is None:
+                self._stop_state = {'status': 'STOP_REQUESTED', 'last_monotonic_s': now,
+                    'cleanup_deadline_s': min(now + LIMITS['stop_reserve_s'],
+                        self._session.clock.native_origin_s + LIMITS['native_wall_limit_s']),
+                    'overall_deadline_s': self._session.clock.overall_origin_s + LIMITS['overall_wall_limit_s']}
+            remaining = value.get('remaining_members')
+            require(type(remaining) is list and all(type(p) is dict and
+                    (p.get('creation_filetime'), p.get('member_token')) == self._retained.get(p.get('pid'))
+                    for p in remaining), 'STOP_UNKNOWN_MEMBER')
+            event = {'monotonic_s': now, 'ownership_verified': value.get('ownership_verified') is True,
+                     'job_empty': value.get('job_empty') is True, 'root_signaled': value.get('root_signaled') is True,
+                     'exit_query_succeeded': value.get('exit_query_succeeded') is True,
+                     'remaining_members': remaining, 'unattributed_processes': value.get('unattributed_processes'),
+                     'handle_errors': value.get('handle_errors'), 'force_attempts': self._force_attempts,
+                     'force_call_succeeded': self._force_succeeded,
+                     'cooperative_request_failed': self._cooperative_failed}
+            require(not event['job_empty'] or remaining == [], 'STOP_EMPTY_MEMBERS_CONTRADICTION')
+            capabilities = dict(self._capabilities, cooperative_wait_s=LIMITS['cooperative_wait_s'],
+                                force_verify_reserve_s=LIMITS['force_verify_reserve_s'])
+            out = self._control.advance_stop(deepcopy(self._stop_state), event, capabilities)
+            require(type(out) is dict, 'STOP_DECISION_SCHEMA')
+            self._stop_state = deepcopy(out)
+            if out.get('status') == 'UNRESOLVED' or out.get('error'):
+                return self._failure(
+                    ProviderError('STOP_CONTROL_UNRESOLVED_OR_ERROR',
+                                  operation='advance_stop', detail=out), 'UNRESOLVED')
+            action = out.get('next_action')
+            if action == 'REQUEST_COOPERATIVE_ONCE':
+                require(self._cooperative_attempts == 0, 'COOPERATIVE_ATTEMPT_COUNT')
+                self._cooperative_attempts += 1
+                result = self._job_call('cooperative_request', self._anchors['root_token'])
+                self._cooperative_failed = result.get('request_accepted') is not True
+            elif action == 'FORCE_OWNED_JOB_ONCE':
+                require(self._force_attempts == 0, 'FORCE_ATTEMPT_COUNT')
+                self._force_attempts += 1
+                result = self._job_call('force_job')
+                self._force_succeeded = result.get('termination_request_accepted') is True
+            elif action == 'CLOSE_OWNED_HANDLES_AND_RECORD':
+                require(value.get('root_token') == self._anchors['root_token']
+                        and type(value.get('exit_code')) is int, 'STOP_EXIT_IDENTITY')
+                result = self._job_call('close_owned', deepcopy(self._retained))
+                require(result.get('all_closed') is True and result.get('handle_errors') == [], 'OWNED_CLOSE_FAILURE')
+                # Last post-close clock query is read before disabling token use.
+                now = self._now('stop:post_close')
+                self._closed = True
+            else:
+                now = self._now('stop:no_action')
+            if not self._closed:
+                now = self._now('stop:post_action')
+            require(now <= min(out['cleanup_deadline_s'], out['overall_deadline_s']), 'STOP_ACTION_RETURNED_LATE')
+            return {'status': 'FAKE_STOP_STEP', 'transition': deepcopy(out),
+                    'termination_request_is_confirmation': False,
+                    'monitor_failure_preserved': bool(self._failures), 'native_ready': False}
+        except Exception as exc:
+            return self._failure(exc, 'UNRESOLVED')
+
+    def bind_final_phase(self, phase_name, independent_start_record):
+        require(self._final_phase is None, 'FINAL_PHASE_ALREADY_BOUND')
+        require(phase_name in self._contract['phase_limits_s'], 'FINAL_PHASE_NAME')
+        require(type(independent_start_record) is dict
+                and independent_start_record.get('run_id') == self._session.clock.run_id
+                and independent_start_record.get('clock_id') == self._session.clock.clock_id
+                and independent_start_record.get('clock_origin') == self._session.clock.clock_origin
+                and independent_start_record.get('captured_independently') is True,
+                'FINAL_PHASE_START_BINDING')
+        start = independent_start_record.get('monotonic_s')
+        require(seconds(start) and self._session.clock.overall_origin_s <= start <= self._last_clock,
+                'FINAL_PHASE_START_ORDER')
+        self._final_phase = {'phase': phase_name, 'start_s': start,
+                            'limit_s': self._contract['phase_limits_s'][phase_name]}
+
+    def _final_budget(self, now):
+        require(self._final_phase is not None, 'FINAL_PHASE_UNBOUND')
+        require(self._final_phase['start_s'] <= now
+                <= self._final_phase['start_s'] + self._final_phase['limit_s'], 'FINAL_PHASE_DEADLINE')
+        require(now <= self._session.clock.overall_origin_s + LIMITS['overall_wall_limit_s'],
+                'FINAL_OVERALL_DEADLINE')
+
+    def final_write_budget(self, decision):
+        """Synthetic writer/hash/remeasure boundary; unchanged Parent stays external."""
+        if self._failures:
+            return self._failure_result('INCOMPLETE')
+        try:
+            require(self._stop_state is None or
+                    (self._stop_state.get('status') != 'UNRESOLVED' and not self._stop_state.get('error')),
+                    'FINAL_STOP_CONTROL_UNRESOLVED_OR_ERROR',
+                    operation='advance_stop', detail=self._stop_state)
+            require(self._terminal is not None, 'FINAL_MONITOR_OR_TERMINAL_INCOMPLETE')
+            require(type(decision) is dict and decision.get('overall') == 'INCOMPLETE'
+                    and decision.get('normal_gate') == 'INCOMPLETE', 'FINAL_DECISION_SCHEMA')
+            require(not decision.get('errors') and not decision.get('record_errors') and not decision.get('reason'),
+                    'FINAL_PRIOR_FAILURE')
+            pre = self._now('final:pre_write')
+            self._final_budget(pre)
+            write = self._call('final_write', deepcopy(decision))
+            self._final_budget(self._last_clock)
+            require(token(write.get('record_token')) and uint(write.get('bytes'))
+                    and sha256_text(write.get('sha256')), 'FINAL_WRITE_RECEIPT')
+            reread = self._call('final_readback_hash', write['record_token'])
+            self._final_budget(self._last_clock)
+            require(reread.get('byte_equal') is True and reread.get('sha256') == write['sha256']
+                    and reread.get('bytes') == write['bytes'], 'FINAL_READBACK_HASH_MISMATCH')
+            start, trace_start = self._now('final:resource_start'), len(self._trace)
+            terminal = self._terminal_observation()
+            host = checked_host_counters(self._call('host_counters'))
+            disk = checked_disk_counters(self._call('disk_space', self._output['umbrella']), self._anchors['volume_id'])
+            output = self._output_bytes()
+            post = self._now('final:after_hash_and_output')
+            self._transaction_valid(start, post, trace_start, arrival_gap=False)
+            self._final_budget(post)
+            require(host['host_commit_limit_bytes'] - host['host_commit_total_bytes'] >= LIMITS['host_commit_reserve_bytes']
+                    and host['host_available_ram_bytes'] >= LIMITS['host_ram_reserve_bytes']
+                    and disk['caller_available_bytes'] >= LIMITS['volume_free_reserve_bytes']
+                    and output <= LIMITS['output_early_stop_bytes'], 'FINAL_RESOURCE_RESERVE_OR_OUTPUT')
+            return {'status': 'FAKE_FINAL_BOUNDARY_CHECKED', 'overall': 'INCOMPLETE',
+                    'normal_gate': 'INCOMPLETE', 'pre_write_s': pre, 'post_required_operations_s': post,
+                    'record_sha256': write['sha256'], 'output_logical_bytes': output,
+                    'child_rc': terminal['child_rc'], 'evidence_scope': 'FAKE_TEST_ONLY',
+                    'approved': False, 'usable': False, 'native_ready': False,
+                    'external_process_return_capture': 'OPEN'}
+        except Exception as exc:
+            return self._failure(exc, 'INCOMPLETE')
+
+
+if __name__ == '__main__':
+    raise SystemExit('OFFLINE_INACTIVE_FAKE_SEAM_COORDINATOR_ONLY')

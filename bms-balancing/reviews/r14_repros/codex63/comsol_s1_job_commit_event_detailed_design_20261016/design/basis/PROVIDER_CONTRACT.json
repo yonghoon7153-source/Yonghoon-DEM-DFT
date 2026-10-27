@@ -1,0 +1,957 @@
+{
+  "schema": "S1_OS_B_R4_FAKE_PROVIDER_CONTRACT_V1",
+  "candidate": {
+    "file": "candidate/os_provider.py.inactive.txt",
+    "bytes": 38370,
+    "sha256": "81cc751200358d0328235bfe05fa4a84cb71608d51663117303ad3889c03d33a"
+  },
+  "status": "INACTIVE_UNTESTED_FAKE_SEAM_COORDINATOR",
+  "approved": false,
+  "usable": false,
+  "native_ready": false,
+  "overall": "INCOMPLETE",
+  "normal_gate": "INCOMPLETE",
+  "preparation_scope": "R4 user-authorized offline N1/N2 correction, unfinished contract/design/validation-plan completion and static sealing only. No authorization/release/runtime token is created by this artifact.",
+  "runtime_execution": "NOT_RUN",
+  "references": [
+    {
+      "file": "reference/RESOURCE_CONTRACT.json",
+      "bytes": 7175,
+      "sha256": "e45837427b1b8a69d53b10119ce7ab072bacb869bcdd53c863366c7bd04c67c1"
+    },
+    {
+      "file": "reference/RESOURCE_CLOCK_CONTRACT.json",
+      "bytes": 2589,
+      "sha256": "781a54aabeb60a516274e230da25b3b11b8b79c1eb61846ed5061e22e9402fb3"
+    },
+    {
+      "file": "reference/OFFICIAL_API_MATRIX.json",
+      "bytes": 101286,
+      "sha256": "df2b3d03112fa0aa8b807ff4f060375cc885bb582ab84f8171a93054563a69e2"
+    },
+    {
+      "file": "reference/resource_connection.py.inactive.txt",
+      "bytes": 10846,
+      "sha256": "f45e6531383d03daa2e968437c6188be0229c144c6956647b0b0f81fae795816"
+    },
+    {
+      "file": "reference/control.py.inactive.txt",
+      "bytes": 18304,
+      "sha256": "8ec75e57336c4ffa33e61d513076fb1facd1cf90430b1e1ce1c15f9bb57ac00d"
+    },
+    {
+      "file": "reference/Parent.ps1.inactive.txt",
+      "bytes": 25787,
+      "sha256": "e9f8d366ca9931b84ded5753a560369b72fea8737a77075bc2b80ec771bc56ff"
+    },
+    {
+      "file": "reference/R1_os_provider.py.inactive.txt",
+      "bytes": 37348,
+      "sha256": "3a00bcd66b9bc240805a8b6ab13f077489f81c391c83410a3e812988ae2e6e9f"
+    }
+  ],
+  "official_evidence": {
+    "file": "reference/OFFICIAL_API_MATRIX.json",
+    "sha256": "df2b3d03112fa0aa8b807ff4f060375cc885bb582ab84f8171a93054563a69e2",
+    "categories": 7,
+    "rows": 21,
+    "documents": 36,
+    "manifest_sha256": "8ce680e44907fa710e64ccfedc5ec7c57b83ceba22629e105d721c0389e81253",
+    "limit": "Reuses frozen local textual evidence; no fresh official-document query or expansion. Copy hash is identity, not authenticity/target-OS proof."
+  },
+  "native_boundary": {
+    "entry": "ProviderCoordinator.native_gate",
+    "always_raises": "JOB_CURRENT_COMMIT_PUBLIC_CONTRACT_OPEN",
+    "default_dependency": "DisabledOSSeam",
+    "default_access_raises": "OS_PROVIDER_OPEN:<operation>",
+    "fake_dependency_required_kind": "FAKE_OS_SEAM_ONLY",
+    "actual_native_implementation": false,
+    "native_argv": null,
+    "native_cwd": null,
+    "native_approval_path": null,
+    "native_release_token": null,
+    "force_only_explicitly_approved": false,
+    "scope_warning": "A caller-controlled kind string or receipt proves no real OS property. All FAKE_* acceptance, and inherited projection labels such as MEASURED/VERIFIED_PRIVATE_JOB/REVIEWED_JOB_ACCOUNTING_TOTAL, remain fixture-only."
+  },
+  "unchanged_limits": {
+    "sample_interval_s": 5,
+    "maximum_sample_gap_s": 6,
+    "maximum_sampling_duration_s": 1,
+    "rss_early_stop_bytes": 8589934592,
+    "commit_early_stop_bytes": 10737418240,
+    "future_job_commit_enforced_limit_bytes": 12884901888,
+    "host_commit_reserve_bytes": 2147483648,
+    "host_ram_reserve_bytes": 2147483648,
+    "output_early_stop_bytes": 5368709120,
+    "output_declared_monitored_ceiling_bytes": 6442450944,
+    "volume_free_at_start_bytes": 17179869184,
+    "volume_free_reserve_bytes": 8589934592,
+    "native_wall_limit_s": 7200,
+    "overall_wall_limit_s": 9000,
+    "stop_reserve_s": 120,
+    "cooperative_wait_s": 15,
+    "force_verify_reserve_s": 90
+  },
+  "unchanged_native_phase_limits_s": {
+    "preflight_and_direct_input": 300,
+    "native_compile_plus_batch": 7200,
+    "owned_cleanup_total": 120,
+    "analysis": 600,
+    "preservation": 180,
+    "local_delivery": 600
+  },
+  "budget_separation": "These 9000s overall/7200s native proposals are unchanged source contracts. R4 offline preparation has its separate 2400s budget; it does not create a native run budget or share phase time.",
+  "construction": {
+    "method": "ProviderCoordinator(resource_module,control,start_record,anchors,contract,bounds,output_roots,originals,capabilities,seam=None)",
+    "dependencies": "Inject the unchanged accepted resource_connection and control only in a separately approved future harness. Code documents identity pinning as harness duty; it does not verify module hashes itself.",
+    "contract_check": "proposal_limits must equal source LIMITS exactly; phase binding later names a phase from unchanged contract.phase_limits_s.",
+    "start_record_fields": [
+      "run_id",
+      "clock_id",
+      "clock_origin",
+      "clock_unit",
+      "overall_origin_s",
+      "native_origin_s"
+    ],
+    "clock_identity": "One ResourceSession is constructed, snapshotted and retained. Actual independent clock capture is still OPEN; input fields establish internal consistency only.",
+    "anchor_fields": [
+      "run_id",
+      "job_identity",
+      "job_token",
+      "root_token",
+      "root_pid",
+      "root_creation_filetime",
+      "owned_output_root",
+      "volume_id",
+      "fixture_scope='FAKE_TEST_ONLY'",
+      "accepted_commit_mapping_sha256",
+      "assigned_before_resume=true",
+      "held_job_and_root_handles=true"
+    ],
+    "anchors_restriction": "ResourceSession accepts scalar anchor values only and run_id must match start_record. Provider copies anchors/capabilities/bounds; fake root handle is seeded in retained map.",
+    "bounds": {
+      "exact_keys": [
+        "max_members",
+        "max_membership_attempts",
+        "max_retained_members",
+        "max_output_entries",
+        "max_output_depth",
+        "pointer_bytes"
+      ],
+      "maximums": {
+        "max_members": 4096,
+        "max_membership_attempts": 3,
+        "max_retained_members": 4096,
+        "max_output_entries": 100000,
+        "max_output_depth": 64
+      },
+      "pointer_bytes": [
+        4,
+        8
+      ],
+      "meaning": "Positive supplied finite fixture bounds; pointer_bytes is not actual adapter architecture evidence."
+    },
+    "capabilities": "force_only_explicitly_approved must be false at construction. pre_resume_check requires cooperative_stop='SUPPORTED_VERIFIED' and evidence_scope='FAKE_TEST_ONLY'; actual COMSOL stop remains OPEN.",
+    "outputs": "Exactly body/wrapper/temp/final categories, exclusive_new=true and root_identity tokens; all under lexical umbrella, no overlap with originals; overlapping roots count once. Logical-byte baseline0 is a fixture/ownership declaration, not actual filesystem verification."
+  },
+  "common_seam_protocol": {
+    "operations_count": 16,
+    "clock_seam_count": 1,
+    "request_arrival": "_call records request via _now, invokes one supplied operation, then arrival via _now; trace includes operation/request/arrival/observed/query_success/error_code/failure.",
+    "envelope": [
+      "dict",
+      "run_id equals fixed session run_id",
+      "query_success is actual bool",
+      "observed_s finite nonnegative and request<=observed_s<=arrival",
+      "successful receipt error_code is None"
+    ],
+    "job_operations": "_job_call prepends the explicit owned job_token and requires the same token in result; no NULL ambient/default Job.",
+    "normalization": "Successful error_code=None is this fake protocol, not a claim that Win32 GetLastError automatically clears on success. Native error capture/translation remains OPEN.",
+    "failure": "Exceptions are captured with exception_type/message and winerror if supplied, followed by arrival clock where possible. No false query becomes zero/complete. Only membership fake error234 may request bounded larger capacity.",
+    "time_limit": "Entire active sampling transaction <=1s, every observed counter fresh at end, first/subsequent arrival gap<=6s BEFORE updating cursor. This is a checked receipt contract, not real-time scheduling guarantee."
+  },
+  "seams": [
+    {
+      "name": "clock",
+      "arguments": [],
+      "caller": [
+        "_now"
+      ],
+      "receipt_fields_and_conditions": [
+        "query_success=true",
+        "run_id, clock_id, clock_origin equal the one ResourceSession.clock context",
+        "clock_unit='seconds'",
+        "monotonic_s finite nonnegative and >= prior _last_clock"
+      ],
+      "call_count_contract": "One per _now. Normal _call uses one request and one arrival clock, plus explicit transaction/action clocks. Early failure can shorten this; final prior-failure fast return uses zero.",
+      "scope_limit": "Synthetic clock receipt only; not a measured QPC binding."
+    },
+    {
+      "name": "pre_resume_receipts",
+      "arguments": [
+        "job_token",
+        "root_token"
+      ],
+      "caller": [
+        "pre_resume_check"
+      ],
+      "receipt_fields_and_conditions": [
+        "common operation envelope plus exact job_token",
+        "root_token/root_pid/root_creation_filetime match anchors",
+        "exclusive_unnamed_job=true; ambient_job=false; existing_named_job=false",
+        "root_created_suspended=true; resume_calls=0; breakaway_flags=[]; privilege_relaxed=false",
+        "limit_set_succeeded/readback_succeeded=true; job_memory_limit_bytes=12884901888; limit_flags=['JOB_MEMORY','KILL_ON_JOB_CLOSE']",
+        "operation_order=['create_owned_job','set_limits','readback_limits','create_suspended_root','assign_root','verify_owned_root']",
+        "assigned_before_resume/in_owned_job/held_job_and_root_handles=true, corresponding anchors true"
+      ],
+      "call_count_contract": "One receipt call per successful fresh pre_resume_check; no create/set/assign/resume operation is implemented.",
+      "scope_limit": "Cooperative capability must separately be fake SUPPORTED_VERIFIED. No actual cap/startup-disk enforcement."
+    },
+    {
+      "name": "job_members",
+      "arguments": [
+        "job_token",
+        "capacity"
+      ],
+      "caller": [
+        "bounded_membership"
+      ],
+      "receipt_fields_and_conditions": [
+        "assigned_count/returned_count unsigned; returned_count<=capacity",
+        "pids list length==returned_count; each positive integer; unique",
+        "pointer_bytes matches bound; returned_bytes between 8+count*pointer_bytes and 8+capacity*pointer_bytes",
+        "false query allowed only fake error_code=234 with increasing required_capacity<=max_members",
+        "success requires assigned_count==returned_count<=max_members",
+        "empty success allowed only active=false"
+      ],
+      "call_count_contract": "Initial capacity min(16,max_members); at most max_membership_attempts<=3 each membership acquisition. Active sample acquires two bookends; terminal acquires one non-active list.",
+      "scope_limit": "Raw Win32 buffer/layout/error code binding is OPEN; pointer_bytes is a fixture declaration."
+    },
+    {
+      "name": "retain_member",
+      "arguments": [
+        "job_token",
+        "pid"
+      ],
+      "caller": [
+        "_identity(retain=true)"
+      ],
+      "receipt_fields_and_conditions": [
+        "pid exact; positive creation_filetime; nonempty member_token not literal NULL",
+        "retained=true; in_owned_job=true",
+        "member_token not already retained for another entry"
+      ],
+      "call_count_contract": "At most once per newly seen PID while retained map size<max_retained_members; existing root is seeded by anchors.",
+      "scope_limit": "No OpenProcess call or real handle retention."
+    },
+    {
+      "name": "process_identity",
+      "arguments": [
+        "job_token",
+        "member_token"
+      ],
+      "caller": [
+        "_identity"
+      ],
+      "receipt_fields_and_conditions": [
+        "member_token/pid/creation_filetime exactly match retained pair",
+        "in_owned_job=true"
+      ],
+      "call_count_contract": "One per member per identity pass; successful sample has two identity passes, including members already retained.",
+      "scope_limit": "Retained same-token consistency only; no actual GetProcessTimes."
+    },
+    {
+      "name": "root_state",
+      "arguments": [
+        "job_token",
+        "root_token"
+      ],
+      "caller": [
+        "_root_state"
+      ],
+      "receipt_fields_and_conditions": [
+        "root_token/pid/creation_filetime exact; signaled must be bool",
+        "terminal route additionally requires signaled=true, exit_query_succeeded=true, exit_code type int"
+      ],
+      "call_count_contract": "One per normal sample; one per terminal acquisition, including final internal terminal re-observation.",
+      "scope_limit": "Returned integer is synthetic; actual exit query/range/ABI mapping remains OPEN."
+    },
+    {
+      "name": "process_rss",
+      "arguments": [
+        "job_token",
+        "member_token"
+      ],
+      "caller": [
+        "collect_owned_sample"
+      ],
+      "receipt_fields_and_conditions": [
+        "member_token/pid/creation_filetime match identity",
+        "working_set_bytes uint<=U64_MAX"
+      ],
+      "call_count_contract": "Once per unique member in accepted sample; sum must fit U64.",
+      "scope_limit": "Not native RSS evidence or distinct-resident-physical-memory measurement."
+    },
+    {
+      "name": "job_commit",
+      "arguments": [
+        "job_token"
+      ],
+      "caller": [
+        "collect_owned_sample"
+      ],
+      "receipt_fields_and_conditions": [
+        "mapping_scope='FAKE_TEST_ONLY'; synthetic=true",
+        "mapping_sha256==anchors.accepted_commit_mapping_sha256",
+        "current_job_commit_bytes uint"
+      ],
+      "call_count_contract": "One per attempted complete sample after member counters.",
+      "scope_limit": "No public current Job commit API chosen. Fake SHA is fixture binding, not approved runtime token."
+    },
+    {
+      "name": "host_counters",
+      "arguments": [],
+      "caller": [
+        "collect_owned_sample",
+        "final_write_budget"
+      ],
+      "receipt_fields_and_conditions": [
+        "source='GetPerformanceInfo'; unit='pages'",
+        "page_size and physical_total_pages positive uint",
+        "commit_limit_pages,commit_total_pages,physical_available_pages uint",
+        "commit_total<=commit_limit; physical_available<=physical_total; all products fit U64"
+      ],
+      "call_count_contract": "One in accepted sample; one after internal terminal in successful final tail.",
+      "scope_limit": "No real host query."
+    },
+    {
+      "name": "disk_space",
+      "arguments": [
+        "normalized output umbrella path"
+      ],
+      "caller": [
+        "collect_owned_sample",
+        "final_write_budget"
+      ],
+      "receipt_fields_and_conditions": [
+        "source='GetDiskFreeSpaceExW'; unit='bytes'; volume_id==anchor",
+        "caller_available_bytes,volume_free_bytes,caller_total_bytes uint",
+        "caller_available<=volume_free and <=caller_total"
+      ],
+      "call_count_contract": "One in accepted sample; one after host query in successful final tail.",
+      "scope_limit": "Caller quota meaning retained; no equality of caller total and whole-volume free is required."
+    },
+    {
+      "name": "output_walk",
+      "arguments": [
+        "copy of output plan",
+        "copy of bounds"
+      ],
+      "caller": [
+        "_output_bytes"
+      ],
+      "receipt_fields_and_conditions": [
+        "status='COMPLETE'; unknown_entries=[]; permission_errors=[]; walk_timed_out=false",
+        "root_observations exactly each unique declared path; identity_before==identity_after==declared identity; reparse=false",
+        "entries list <=max_output_entries; each path under exactly one normalized walk root; depth<=max_output_depth; not original",
+        "each entry reparse=false; known_owned=true; original=false; kind file/directory; identity_before==identity_after nonempty; link_count==1",
+        "logical_bytes uint, directory logical_bytes=0; duplicate same path must have same identity/kind/size; distinct path identity alias rejected"
+      ],
+      "call_count_contract": "One per accepted sample and one in successful final tail.",
+      "scope_limit": "Only validates supplied synthetic metadata. Actual walk completeness/no-follow/race guarantees OPEN."
+    },
+    {
+      "name": "stop_observation",
+      "arguments": [
+        "job_token",
+        "root_token",
+        "copy of retained map"
+      ],
+      "caller": [
+        "stop_step"
+      ],
+      "receipt_fields_and_conditions": [
+        "remaining_members is list; every pid maps to exact retained (creation_filetime,member_token)",
+        "ownership_verified/job_empty/root_signaled/exit_query_succeeded feed unchanged control as boolean predicates",
+        "unattributed_processes and handle_errors retained for unchanged control",
+        "job_empty=true requires remaining_members=[]",
+        "close action additionally requires root_token match and exit_code type int"
+      ],
+      "call_count_contract": "One per stop_step before one unchanged control.advance_stop call; no action is dispatched if returned UNRESOLVED or error is truthy.",
+      "scope_limit": "No actual stop/exit/ownership query; fake missing/false values cannot authorize unknown-process force."
+    },
+    {
+      "name": "cooperative_request",
+      "arguments": [
+        "job_token",
+        "root_token"
+      ],
+      "caller": [
+        "stop_step action REQUEST_COOPERATIVE_ONCE"
+      ],
+      "receipt_fields_and_conditions": [
+        "request_accepted true marks accepted request; other value sets cooperative_request_failed",
+        "common envelope/job_token still required"
+      ],
+      "call_count_contract": "At most one per coordinator; increment attempt before seam call.",
+      "scope_limit": "Accepted request is not stop/exit confirmation and not verified COMSOL capability."
+    },
+    {
+      "name": "force_job",
+      "arguments": [
+        "job_token"
+      ],
+      "caller": [
+        "stop_step action FORCE_OWNED_JOB_ONCE"
+      ],
+      "receipt_fields_and_conditions": [
+        "termination_request_accepted true records force request success",
+        "common envelope/job_token still required"
+      ],
+      "call_count_contract": "At most one per coordinator; increment attempt before seam call.",
+      "scope_limit": "No actual TerminateJobObject; never implies graceful or completed termination."
+    },
+    {
+      "name": "close_owned",
+      "arguments": [
+        "job_token",
+        "copy of retained map"
+      ],
+      "caller": [
+        "stop_step action CLOSE_OWNED_HANDLES_AND_RECORD"
+      ],
+      "receipt_fields_and_conditions": [
+        "all_closed=true; handle_errors=[]",
+        "common envelope/job_token"
+      ],
+      "call_count_contract": "Only after unchanged control verifies termination; then one post-close clock read occurs before _closed=true. Further seam calls are refused.",
+      "scope_limit": "Synthetic closure only; actual handles/Parent lifecycle integration OPEN."
+    },
+    {
+      "name": "final_write",
+      "arguments": [
+        "deepcopy of decision"
+      ],
+      "caller": [
+        "final_write_budget"
+      ],
+      "receipt_fields_and_conditions": [
+        "record_token nonempty; bytes uint; sha256 lowercase 64 hex",
+        "common operation envelope"
+      ],
+      "call_count_contract": "Zero on existing failure or bad final stop-state preflight. One if flow reaches writer. No retry inside method.",
+      "scope_limit": "Fake writer receipt; does not modify actual Parent or write a real runtime record."
+    },
+    {
+      "name": "final_readback_hash",
+      "arguments": [
+        "record_token"
+      ],
+      "caller": [
+        "final_write_budget"
+      ],
+      "receipt_fields_and_conditions": [
+        "byte_equal=true; sha256==write.sha256; bytes==write.bytes",
+        "common operation envelope"
+      ],
+      "call_count_contract": "Zero when blocked before writer. One after accepted writer receipt if flow reaches readback.",
+      "scope_limit": "Synthetic readback/hash equality, not actual runtime persistence proof."
+    }
+  ],
+  "flow_contracts": {
+    "pre_resume": {
+      "method": "pre_resume_check",
+      "accepted_status": "FAKE_PRE_RESUME_RECEIPTS_ACCEPTED",
+      "execute_now": false,
+      "resume_calls": 0,
+      "production_launcher_binding": "OPEN",
+      "checks": "Receipt-only start order/cap/identity/cooperative fake capability. Startup disk16GiB check, creation, cap setting and resume are not implemented."
+    },
+    "sample": {
+      "entry": "sample_once",
+      "sequence": [
+        "collect_owned_sample checks prepared/no latched failure/no terminal",
+        "clock start; bounded membership before; identity/retain each member; root_state",
+        "one RSS per member; synthetic current commit; host; disk; output",
+        "bounded membership after; identical identity bookends",
+        "end clock; entire transaction/gap/freshness checked",
+        "same ResourceSession.decide(unchanged_control,raw,prior_cursor,unchanged_contract)",
+        "cursor changes only if decision status CONTINUE_WITHIN_SAMPLED_LIMITS"
+      ],
+      "accepted_status": "FAKE_SAMPLE_ACCEPTED",
+      "failure": "STOP_REQUIRED, cursor unchanged; later sample_once returns LATCHED_MONITOR_FAILURE.",
+      "aggregation": "Unique member WorkingSetSize sum, no root/Job double-add; shared physical pages can be counted multiple times. Root can exit while retained owned children remain. Empty active Job routes to terminal observation; it is never a complete zero sample.",
+      "disk_projection": "raw.disk_raw keeps three quota/volume values; raw.volume_free_bytes uses caller_available_bytes with disk_projection='CONSERVATIVE_CALLER_AVAILABLE_NOT_RAW_VOLUME_FREE'. This is explicitly conservative legacy projection, not renaming the raw volume counter.",
+      "scheduler": "No sleep/timer/scheduler or compile/batch launcher implemented. sample_interval_s=5 is preserved contract, with production scheduling OPEN."
+    },
+    "terminal": {
+      "public_entry": "terminal_observation",
+      "internal_entry": "_terminal_observation",
+      "sequence": "Checks prepared ownership, bounded active=false membership empty, retained root signaled and successful exit query, valid transaction and prior valid sample.",
+      "accepted_status": "FAKE_TERMINATION_OBSERVED",
+      "failure_public": "Public wrapper catches helper exception once through _failure; default returned status STOP_REQUIRED.",
+      "failure_internal": "Internal helper raises. Final outer catch owns this new failure once; no error dict is indexed as a terminal result.",
+      "existing_failure": "A later successful public observation may record physical-state fixture evidence, with monitor_failure_preserved=true. It does not clear prior failures or restore final eligibility.",
+      "previous_terminal": "A failed attempt does not erase an earlier _terminal observation; preserved observation is not proof that a later query succeeded."
+    },
+    "stop": {
+      "entry": "stop_step",
+      "control": "Unchanged control.advance_stop once per reached step; existing bounded cleanup/overall deadlines and reserve logic.",
+      "n2": "After dict check and saving full out, UNRESOLVED status OR truthy error causes one latch before action lookup/dispatch. Returned transition is preserved in detail.",
+      "wrapper_reason": "STOP_CONTROL_UNRESOLVED_OR_ERROR",
+      "operation": "advance_stop",
+      "return_status": "UNRESOLVED",
+      "actions": "At most one fake cooperative/force/close action per step, with at-most-once cooperative and force attempts. No unknown PID or process-name kill.",
+      "request_vs_result": "Request receipt != Job-empty/root-signaled/exit-query proof. All failures and unresolved ownership remain incomplete. Last-handle/close receipt never means graceful success."
+    },
+    "final": {
+      "entry": "final_write_budget",
+      "initial_existing_failure": "Before try/clock/writer: return _failure_result('INCOMPLETE'), no append or dependency call.",
+      "defensive_stop_guard": "If no prior failure, saved _stop_state must be None or neither status UNRESOLVED nor truthy error. Otherwise outer catch latches FINAL_STOP_CONTROL_UNRESOLVED_OR_ERROR, operation advance_stop, detail full state, before writer.",
+      "remaining_preconditions": "Existing terminal observation; decision overall/normal_gate both INCOMPLETE and no prior decision errors/reason; bound independent final phase.",
+      "sequence": [
+        "pre-write clock + final phase/overall budget",
+        "one fake final_write and budget check",
+        "one final_readback_hash matching bytes/hash + budget check",
+        "fresh private terminal observation, host, disk and output",
+        "post-required-operations clock, full resource-tail transaction/freshness, final phase/overall deadline and reserves"
+      ],
+      "accepted_status": "FAKE_FINAL_BOUNDARY_CHECKED",
+      "gates": "overall INCOMPLETE; normal_gate INCOMPLETE; approved/usable/native_ready false",
+      "failure_status": "INCOMPLETE",
+      "external_process_return_capture": "OPEN",
+      "lifecycle": "Closed coordinator refuses further seam calls. No complete production handoff among stop close, final writer, child rc and Parent.S1FinalReturn is implemented."
+    }
+  },
+  "failure_latch": {
+    "append_owner": "_failure(exc,status='STOP_REQUIRED') alone appends a new failure record.",
+    "record_fields": [
+      "reason",
+      "operation",
+      "detail",
+      "last_clock_s",
+      "cursor_unchanged_s"
+    ],
+    "first": "_failures[0] remains first_error; subsequent independently encountered failures remain ordered followup_errors.",
+    "read_only_result": "_failure_result(status) returns deep copies of existing first/followup errors without clock/query/append; it is internal and only called with nonempty latch.",
+    "n1_once": "Public terminal wrapper OR final outer catch owns a given helper exception, never both.",
+    "n2_once": "Returned bad control transition is latched by a direct return through _failure, not latched and then thrown into outer catch again.",
+    "idempotence": "Repeated final entry after any existing latch returns same error sequence without adding guard-error duplicates. This is final-entry idempotence, not global deduplication of new independent failing public operations.",
+    "no_reset": "No error list, cursor, clock origin, previous terminal or accepted control state is cleared to regain success.",
+    "original_reason": "Terminal helper reason is retained. For N2, wrapper reason is explicit and original control.error/status/next_action/deadlines remain unmodified in record.detail.",
+    "final_guard_reason": "FINAL_STOP_CONTROL_UNRESOLVED_OR_ERROR is separate from a reached stop_step failure; subsequent final entries do not append again."
+  },
+  "future_validation_call_count_contract": [
+    {
+      "case": "N1 public terminal failure, then final",
+      "scope": "Count final attempt separately from already attempted terminal query",
+      "counts": {
+        "final_write": 0,
+        "final_readback_hash": 0,
+        "final_clock": 0
+      },
+      "new_failure_records": "One on public terminal failure; final adds0; no FAKE_FINAL_BOUNDARY_CHECKED"
+    },
+    {
+      "case": "N1 internal terminal failure after good write/readback",
+      "preconditions": "Valid prior terminal, no previous latch, writer+readback accepted; only final internal terminal fails",
+      "counts": {
+        "final_write": 1,
+        "final_readback_hash": 1,
+        "subsequent_host_counters": 0,
+        "subsequent_disk_space": 0,
+        "subsequent_output_walk": 0
+      },
+      "new_failure_records": "One final outer-catch record retaining original reason, no public-wrapper duplicate"
+    },
+    {
+      "case": "N2 returned UNRESOLVED or truthy error",
+      "counts": {
+        "advance_stop": 1,
+        "cooperative_request": 0,
+        "force_job": 0,
+        "close_owned": 0
+      },
+      "new_failure_records": "One STOP_CONTROL_UNRESOLVED_OR_ERROR; existing first preserved if this is a followup"
+    },
+    {
+      "case": "Defensive final bad stop state with empty failure latch",
+      "counts": {
+        "final_write": 0,
+        "final_readback_hash": 0,
+        "final_clock": 0
+      },
+      "new_failure_records": "One FINAL_STOP_CONTROL_UNRESOLVED_OR_ERROR; second final adds0"
+    },
+    {
+      "case": "Repeated final on existing failure",
+      "counts": {
+        "all_dependency_calls": 0,
+        "additional_failure_records": 0
+      },
+      "new_failure_records": "First/followup snapshots unchanged"
+    },
+    {
+      "case": "Same-branch positive controls",
+      "counts": "Bound separately in changed-branch plan; successful fake outcome only",
+      "new_failure_records": "None when all branch prerequisites and receipts are valid; gates stay INCOMPLETE"
+    }
+  ],
+  "api_correspondence": [
+    {
+      "matrix_row": "rss",
+      "category": 1,
+      "source_evidence_grade": "OFFICIAL_DOC_TEXT_VERIFIED_BINDING_OPEN",
+      "candidate_functions": [
+        "ProviderCoordinator.collect_owned_sample",
+        "ProviderCoordinator._identity"
+      ],
+      "seams": [
+        "process_rss",
+        "retain_member",
+        "process_identity"
+      ],
+      "implemented_scope": "Checks synthetic retained-token PID/creation matches, unsigned working_set_bytes, one counter per unique membership pair and U64 aggregate overflow.",
+      "native_remaining": "GetProcessMemoryInfo/K32 export, process rights, actual retained HANDLE and ABI OPEN; shared pages may be counted by multiple members."
+    },
+    {
+      "matrix_row": "host_commit_ram",
+      "category": 2,
+      "source_evidence_grade": "OFFICIAL_DOC_TEXT_VERIFIED_BINDING_OPEN",
+      "candidate_functions": [
+        "checked_host_counters",
+        "ProviderCoordinator.collect_owned_sample"
+      ],
+      "seams": [
+        "host_counters"
+      ],
+      "implemented_scope": "Checks GetPerformanceInfo/pages labels, positive page_size/physical_total, order/range and checked page-to-byte multiplication.",
+      "native_remaining": "Actual query/binding OPEN. Host commit available is limit-total, distinct from physical available RAM."
+    },
+    {
+      "matrix_row": "legacy_ram",
+      "category": 2,
+      "source_evidence_grade": "OFFICIAL_DOC_TEXT_VERIFIED_BINDING_OPEN",
+      "candidate_functions": [],
+      "seams": [],
+      "implemented_scope": "Not selected by coordinator; GetPerformanceInfo is the synthetic host source.",
+      "native_remaining": "No GlobalMemoryStatusEx implementation. Its process-constrained pagefile fields are not accepted as host commit."
+    },
+    {
+      "matrix_row": "membership",
+      "category": 3,
+      "source_evidence_grade": "OFFICIAL_DOC_TEXT_VERIFIED_BINDING_OPEN",
+      "candidate_functions": [
+        "ProviderCoordinator.bounded_membership",
+        "ProviderCoordinator.collect_owned_sample"
+      ],
+      "seams": [
+        "job_members"
+      ],
+      "implemented_scope": "Finite count/capacity/returned-length protocol, unique PIDs, before/after membership and identity bookends; active empty Job rejected.",
+      "native_remaining": "Actual QueryInformationJobObject class3 binding/races OPEN; numeric 234 is fake-seam protocol, not established native short-buffer proof."
+    },
+    {
+      "matrix_row": "job_cap",
+      "category": 3,
+      "source_evidence_grade": "OFFICIAL_DOC_MAPPING_PARTIAL_ABI_AND_UNIT_OPEN",
+      "candidate_functions": [
+        "ProviderCoordinator.pre_resume_check"
+      ],
+      "seams": [
+        "pre_resume_receipts"
+      ],
+      "implemented_scope": "Requires synthetic exact cap 12884901888, exact flags ['JOB_MEMORY','KILL_ON_JOB_CLOSE'], successful set/readback receipt and order.",
+      "native_remaining": "No Set/QueryInformationJobObject call. Copied JobMemoryLimit base-unit wording and selected-bitness nested ABI OPEN; hard cap preserved, not demonstrated."
+    },
+    {
+      "matrix_row": "current_job_commit",
+      "category": 3,
+      "source_evidence_grade": "OPEN_PUBLIC_SUPPORTED_CURRENT_COUNTER_UNRESOLVED",
+      "candidate_functions": [
+        "ProviderCoordinator.native_gate",
+        "ProviderCoordinator.collect_owned_sample"
+      ],
+      "seams": [
+        "job_commit"
+      ],
+      "implemented_scope": "Native gate always raises; fake sample accepts only synthetic FAKE_TEST_ONLY counter with fixture mapping SHA.",
+      "native_remaining": "Supported exact current Job commit remains OPEN. No class28, peak, notification-time, member-sum, host-commit or zero replacement."
+    },
+    {
+      "matrix_row": "create_job",
+      "category": 3,
+      "source_evidence_grade": "OFFICIAL_DOC_TEXT_VERIFIED_BINDING_OPEN",
+      "candidate_functions": [
+        "ProviderCoordinator.pre_resume_check"
+      ],
+      "seams": [
+        "pre_resume_receipts"
+      ],
+      "implemented_scope": "Checks fresh unnamed exclusive Job receipt; ambient/existing named markers rejected.",
+      "native_remaining": "CreateJobObjectW and handle ownership implementation OPEN."
+    },
+    {
+      "matrix_row": "assign_owned",
+      "category": 3,
+      "source_evidence_grade": "OFFICIAL_DOC_TEXT_VERIFIED_BINDING_OPEN",
+      "candidate_functions": [
+        "ProviderCoordinator.pre_resume_check",
+        "ProviderCoordinator._identity"
+      ],
+      "seams": [
+        "pre_resume_receipts",
+        "retain_member",
+        "process_identity"
+      ],
+      "implemented_scope": "Checks assigned-before-resume, held tokens, in_owned_job and identity receipts.",
+      "native_remaining": "Actual AssignProcessToJobObject/IsProcessInJob/rights proof OPEN."
+    },
+    {
+      "matrix_row": "nested_breakaway",
+      "category": 3,
+      "source_evidence_grade": "OFFICIAL_DOC_TEXT_VERIFIED_TARGET_UNVERIFIED",
+      "candidate_functions": [
+        "ProviderCoordinator.pre_resume_check"
+      ],
+      "seams": [
+        "pre_resume_receipts"
+      ],
+      "implemented_scope": "Requires empty breakaway flags and no privilege relaxation.",
+      "native_remaining": "Nested Job availability/ambient constraints UNVERIFIED; no bypass or alternate launcher."
+    },
+    {
+      "matrix_row": "create_suspended",
+      "category": 4,
+      "source_evidence_grade": "OFFICIAL_DOC_CALL_AND_FLAG_VERIFIED_STRUCTURE_BINDING_OPEN",
+      "candidate_functions": [
+        "ProviderCoordinator.pre_resume_check"
+      ],
+      "seams": [
+        "pre_resume_receipts"
+      ],
+      "implemented_scope": "Requires root_created_suspended, resume_calls=0 and strict operation_order receipt.",
+      "native_remaining": "CreateProcessW, structures, argv/cwd and production launcher OPEN; no child created."
+    },
+    {
+      "matrix_row": "open_member",
+      "category": 4,
+      "source_evidence_grade": "OFFICIAL_DOC_TEXT_VERIFIED_BINDING_OPEN",
+      "candidate_functions": [
+        "ProviderCoordinator._identity"
+      ],
+      "seams": [
+        "retain_member"
+      ],
+      "implemented_scope": "Adds a bounded unique retained fake token for a PID and creation-time pair.",
+      "native_remaining": "OpenProcess rights, DACL handling and retained native HANDLE OPEN."
+    },
+    {
+      "matrix_row": "identity",
+      "category": 4,
+      "source_evidence_grade": "OFFICIAL_DOC_SEMANTICS_VERIFIED_STRUCTURE_BINDING_OPEN",
+      "candidate_functions": [
+        "ProviderCoordinator._identity",
+        "ProviderCoordinator._root_state"
+      ],
+      "seams": [
+        "process_identity",
+        "root_state"
+      ],
+      "implemented_scope": "Validates same retained token with PID/creation; reused identity rejected; root exit and child presence remain distinct.",
+      "native_remaining": "GetProcessTimes/FILETIME native layout and actual identity acquisition OPEN."
+    },
+    {
+      "matrix_row": "resume",
+      "category": 4,
+      "source_evidence_grade": "OFFICIAL_DOC_TEXT_VERIFIED_BINDING_OPEN",
+      "candidate_functions": [
+        "ProviderCoordinator.pre_resume_check"
+      ],
+      "seams": [
+        "pre_resume_receipts"
+      ],
+      "implemented_scope": "Returns execute_now=false and resume_calls=0 after fake receipt checks.",
+      "native_remaining": "No ResumeThread seam or implementation. Successful fake precheck never authorizes resume."
+    },
+    {
+      "matrix_row": "wait_exit",
+      "category": 4,
+      "source_evidence_grade": "OFFICIAL_DOC_TEXT_VERIFIED_BINDING_OPEN",
+      "candidate_functions": [
+        "ProviderCoordinator._terminal_observation",
+        "ProviderCoordinator.stop_step"
+      ],
+      "seams": [
+        "job_members",
+        "root_state",
+        "stop_observation"
+      ],
+      "implemented_scope": "Separates empty Job, root signaled and successful exit query; no fabricated zero sample.",
+      "native_remaining": "WaitForSingleObject/GetExitCodeProcess and real exit confirmation OPEN."
+    },
+    {
+      "matrix_row": "handles_errors",
+      "category": 4,
+      "source_evidence_grade": "OFFICIAL_DOC_TEXT_VERIFIED_BINDING_OPEN",
+      "candidate_functions": [
+        "ProviderCoordinator._call",
+        "ProviderCoordinator._failure",
+        "ProviderCoordinator._failure_result",
+        "ProviderCoordinator.stop_step"
+      ],
+      "seams": [
+        "close_owned"
+      ],
+      "implemented_scope": "Records normalized synthetic errors/trace; closes only retained-token set through fake receipt and prevents later seam calls after closed.",
+      "native_remaining": "CloseHandle, same-thread GetLastError preservation, actual exactly-once handles and ABI OPEN."
+    },
+    {
+      "matrix_row": "clock",
+      "category": 5,
+      "source_evidence_grade": "OFFICIAL_QPC_SEMANTICS_VERIFIED_WRAPPER_BINDING_OPEN",
+      "candidate_functions": [
+        "ProviderCoordinator._now",
+        "ProviderCoordinator._transaction_valid",
+        "ProviderCoordinator._final_budget"
+      ],
+      "seams": [
+        "clock"
+      ],
+      "implemented_scope": "Checks fixed run/clock/origin/unit, nondecreasing seconds, full transaction duration/freshness/gap before cursor update.",
+      "native_remaining": "Actual runtime wrapper->QPC/QPF binding and independently acquired start provenance OPEN. No clock/scheduler/native probe."
+    },
+    {
+      "matrix_row": "disk",
+      "category": 6,
+      "source_evidence_grade": "OFFICIAL_DOC_TEXT_VERIFIED_BINDING_OPEN",
+      "candidate_functions": [
+        "checked_disk_counters",
+        "ProviderCoordinator.collect_owned_sample",
+        "ProviderCoordinator.final_write_budget"
+      ],
+      "seams": [
+        "disk_space"
+      ],
+      "implemented_scope": "Keeps caller-available, volume-free and caller-total raw bytes and volume identity. Legacy volume_free_bytes projection is explicitly conservative caller_available.",
+      "native_remaining": "Actual GetDiskFreeSpaceExW binding, volume identification, startup 16GiB query and production approval of projection OPEN."
+    },
+    {
+      "matrix_row": "output_metadata_walk",
+      "category": 6,
+      "source_evidence_grade": "OPEN_UNDERLYING_API_AND_WRAPPER_CONTRACT_MISSING",
+      "candidate_functions": [
+        "canonical_path",
+        "canonical_output_roots",
+        "measure_output_entries",
+        "ProviderCoordinator._output_bytes"
+      ],
+      "seams": [
+        "output_walk"
+      ],
+      "implemented_scope": "Validates supplied bounded metadata, four root categories, overlap once, exact/descendant scope, identities, no reparse/unknown/link aliases and checked logical-byte sum.",
+      "native_remaining": "No filesystem enumeration/walker, no-follow handle, replacement-race prevention or actual root identity implementation. Metadata acquisition OPEN."
+    },
+    {
+      "matrix_row": "forced_stop",
+      "category": 7,
+      "source_evidence_grade": "OFFICIAL_FORCE_SEMANTICS_VERIFIED_BINDING_OPEN",
+      "candidate_functions": [
+        "ProviderCoordinator.stop_step"
+      ],
+      "seams": [
+        "force_job",
+        "stop_observation",
+        "close_owned"
+      ],
+      "implemented_scope": "Dispatches at most one synthetic action per tick from unchanged control; request acceptance never equals termination confirmation.",
+      "native_remaining": "Actual TerminateJobObject/kill-on-close and verified termination OPEN; force-only approval false."
+    },
+    {
+      "matrix_row": "cooperative_stop",
+      "category": 7,
+      "source_evidence_grade": "OPEN_UNVERIFIED_COOPERATIVE_API",
+      "candidate_functions": [
+        "ProviderCoordinator.pre_resume_check",
+        "ProviderCoordinator.stop_step"
+      ],
+      "seams": [
+        "cooperative_request"
+      ],
+      "implemented_scope": "Requires fake capability SUPPORTED_VERIFIED scoped FAKE_TEST_ONLY; at-most-once request attempt.",
+      "native_remaining": "No verified COMSOL cooperative callable; actual support OPEN. No force-only adoption."
+    },
+    {
+      "matrix_row": "final_boundary",
+      "category": 4,
+      "source_evidence_grade": "PROJECT_SOURCE_REFERENCE_PRODUCTION_CONNECTION_OPEN",
+      "candidate_functions": [
+        "ProviderCoordinator.final_write_budget",
+        "ProviderCoordinator.bind_final_phase"
+      ],
+      "seams": [
+        "final_write",
+        "final_readback_hash"
+      ],
+      "implemented_scope": "Checks fake writer/readback/hash/post-resource boundary and returns only INCOMPLETE gates with native=false.",
+      "native_remaining": "Parent.S1FinalReturn and real child rc/writer/external return capture integration OPEN; Parent source unchanged."
+    }
+  ],
+  "open_items": [
+    {
+      "key": "current_job_commit",
+      "status": "OPEN",
+      "detail": "Exact public supported current counter unavailable; native_gate always rejects."
+    },
+    {
+      "key": "cap_unit_and_abi",
+      "status": "OPEN",
+      "detail": "12GiB required; documentation mapping partial, copied field wording/base unit and complete selected architecture binding not closed."
+    },
+    {
+      "key": "os_identity",
+      "status": "UNVERIFIED",
+      "detail": "Previous failed CIM identification retained; no CIM retry/probe this work."
+    },
+    {
+      "key": "native_abi_and_exports",
+      "status": "OPEN",
+      "detail": "Win32 structs/packing/offsets/rights/exports/calling convention/adapter bitness unverified."
+    },
+    {
+      "key": "clock_wrapper",
+      "status": "OPEN",
+      "detail": "QPC/QPF textual evidence does not prove actual runtime wrapper or independent acquisition."
+    },
+    {
+      "key": "metadata_walk",
+      "status": "OPEN",
+      "detail": "No underlying enumeration/no-follow/identity/race-safe collector exists."
+    },
+    {
+      "key": "cooperative_comsol_stop",
+      "status": "OPEN_UNVERIFIED",
+      "detail": "No supported callable verified and force-only policy not adopted."
+    },
+    {
+      "key": "parent_and_launcher_integration",
+      "status": "OPEN",
+      "detail": "Actual compile/batch, owned lifecycle, child rc, writer and Parent return capture not connected."
+    },
+    {
+      "key": "scheduler_and_start_disk",
+      "status": "OPEN",
+      "detail": "No actual periodic sampler or startup disk reserve observation."
+    }
+  ],
+  "validation_status": {
+    "candidate_import": "NOT_RUN",
+    "candidate_function_call": "NOT_RUN",
+    "ast": "NOT_RUN",
+    "functional_test": "NOT_RUN",
+    "native": "NOT_RUN",
+    "network": "NOT_RUN",
+    "cim": "NOT_RUN",
+    "meaning": "This contract describes source and proposed future seam validation, not observed behavior."
+  }
+}

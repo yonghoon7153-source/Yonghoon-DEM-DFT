@@ -1,0 +1,35 @@
+{
+  "kind": "DOCUMENT_WORK_OBSERVATIONS",
+  "date": "2026-10-16",
+  "first_composition_error": {
+    "surface": "functions.exec JavaScript source parsing",
+    "observed_output": "Script failed\nWall time 0.0 seconds\nOutput:\nScript error:\nSyntaxError: missing ) after argument list",
+    "cause": "A PowerShell newline backtick was embedded inside the JavaScript raw-template delimiter",
+    "boundary": "The orchestration source did not parse; its nested apply_patch and exec_command calls did not run",
+    "handling": "Replaced the problematic embedded newline expression with [char]10 and issued the authoring/capture call",
+    "target_code_or_functional_test_failure": false,
+    "target_execution": 0
+  },
+  "subsequent_capture_return": {
+    "chunk_id": "6e584d",
+    "exit_code": 0,
+    "selected_inputs": 10,
+    "exact_copies": true
+  },
+  "scope": {
+    "official_web_reading": true,
+    "own_data_utility_used": true,
+    "received_program_execution": 0,
+    "candidate_imports_or_calls": 0,
+    "functional_tests": 0,
+    "target_OS_Job_experiments": 0,
+    "CIM": 0,
+    "COMSOL_JVM_compile_solve": 0,
+    "existing_code_contract_archive_modified": false,
+    "new_runtime_authorization_or_token_created": false,
+    "external_transmission": 0,
+    "numeric_authorized_work_budget": null,
+    "whole_work_elapsed_claim": null
+  },
+  "source_note": "Human choice is directly quoted in USER_DIRECTION_SELECTION.json. The previous reviewer acceptance is supporting evidence, not a substitute for the user's message."
+}
