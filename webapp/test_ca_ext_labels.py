@@ -41,9 +41,10 @@
       입력 아님 …)" · 지위 칸 없는 옛 기록 = "지위 없음 (옛 기록 · 판정 입력 아님)" · 생산자 한정어에 증서 구간 판정 문장 (사본 없음)
 
   ★ 2026-10-26 (묶음 B6 · Codex 회차 ① RR1-01 · 1저자 10-26 Q1 · Q2 (가) · 시험 먼저) — 같은 두 행:
-  W17 SV 반사실 그래프 귀속 — 증서 구간 기록의 "(판정 근거)" 뒤에 "그래프 귀속 = 사슬 대조 (봉인 원천 · 없음 = SV_UNCHECKED)" (사슬이 SV 기록 밖
+  W17 SV 반사실 그래프 귀속 — 증서 구간 기록의 "(판정 근거)" 뒤에 "그래프 귀속 = 사슬 대조 (봉인 원천 · 없음 · 실패 = SV_UNCHECKED)" (사슬이 SV 기록 밖
       봉인 원천에서 다시 조립한 끝 가중 그래프 지문과 증서 지문 (`fp_cjunc_graph`) 을 대조한 뒤만 판정 입력 · 화면은 대조하지 않는다) · 진단 ·
-      옛 기록 = 그 조각 없음 · 두 행 title 에 지문 칸 이름 · 생산자 한정어에 그래프 귀속 문장 (사본 없음)
+      옛 기록 = 그 조각 없음 · 두 행 title 에 지문 칸 이름 · 생산자 한정어에 그래프 귀속 문장 (사본 없음) ·
+      ★ 10-27 (묶음 C3 · 묶음 B″ 보고 §12 결정 3) "없음" → "없음 · 실패" (화면 조각 · title 둘 다 · 옛 문구 없음 = W17c)
 
   python3 webapp/test_ca_ext_labels.py
 """
@@ -420,10 +421,17 @@ def _d_interval(tpl, jinja, js, jinja2):
 
 def _d_graph(tpl, jinja, js, jinja2):
     """★ 10-26 묶음 B6 (RR1-01) — W17 SV 반사실 그래프 귀속 (Jinja · JS 두 행 · 화면 = 대조 안 함 · 판정 입력 조건만 표지)."""
-    frag = '그래프 귀속 = 사슬 대조 (봉인 원천 · 없음 = SV_UNCHECKED)'
+    #  ★ 10-27 (묶음 C3 · 묶음 B″ 보고 §12 결정 3 · author 10-27 approved bundle C) — "없음" → "없음 · 실패" (원천 실패도 SV_UNCHECKED)
+    frag = '그래프 귀속 = 사슬 대조 (봉인 원천 · 없음 · 실패 = SV_UNCHECKED)'
     chk('W17a 두 행이 증서 구간 기록에 그래프 귀속 조각 · title 에 지문 칸 이름 (fp_cjunc_graph) · RR1-01 을 싣는다',
         len(jinja) == 1 and len(js) == 1 and all(frag in ln and 'fp_cjunc_graph' in ln and 'RR1-01' in ln for ln in (jinja[0], js[0])),
         (len(jinja), len(js)))
+    old_frag, old_tip, tip = '(봉인 원천 · 없음 = SV_UNCHECKED)', '(원천 없음 = SV_UNCHECKED', '(원천 없음 · 실패 = SV_UNCHECKED'
+    chk('W17c 두 행에 옛 조각 "(봉인 원천 · 없음 = SV_UNCHECKED)" · 옛 title "(원천 없음 = SV_UNCHECKED" 없음 · title = "(원천 없음 · 실패 = '
+        'SV_UNCHECKED" (원천 실패도 SV_UNCHECKED · 등록 R §5-6 SV 행 · 생산자 한정어와 같은 뜻)',
+        len(jinja) == 1 and len(js) == 1
+        and all(old_frag not in ln and old_tip not in ln and tip in ln for ln in (jinja[0], js[0])),
+        [(old_frag in ln, old_tip in ln, tip in ln) for ln in jinja + js])
     try:
         import carbon_junction as CJ
         quals = list(CJ.CJUNC_QUALIFIERS)
