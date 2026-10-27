@@ -1,0 +1,242 @@
+{
+ "schema": "kg50_d3_cell_verdict/v1",
+ "registration": "docs/data/kg50_decks_20261026_v2/README.md §3",
+ "mode": "hertz",
+ "code_sha": "e65e92b7b60681a38d50cbce60e776c1e489c248",
+ "cases": {
+  "kg50_d3_b40_s1": {
+   "values": {
+    "porosity": 18.908097087513575,
+    "coverage_hertz": 19.186286935042247,
+    "coverage_physics": 53.353,
+    "sigma_ion": 0.059279,
+    "tau2": 14.073153523840102
+   },
+   "notes": {},
+   "am_phase": "AM_P",
+   "coverage_key": "coverage_AM_P_mean",
+   "coverage_physics_key": "coverage_AM_P_mean_physics_union",
+   "code_sha": "e65e92b7b60681a38d50cbce60e776c1e489c248",
+   "network_run_id": "20261027T073443-371d3386",
+   "ion_net_electrode_hertz": "dirichlet_exact",
+   "ion_net_area_rule_hertz": "hertz_ccpl22",
+   "f_ion_hertz": 0.018904307238533837,
+   "case_id": "261027_073324_314f2d",
+   "name": "kg50_d3_b40_s1"
+  },
+  "kg50_d3_b40_s2": {
+   "values": {
+    "porosity": 18.76590101089849,
+    "coverage_hertz": 19.521285041997775,
+    "coverage_physics": 53.681,
+    "sigma_ion": 0.060487,
+    "tau2": 13.80455253107104
+   },
+   "notes": {},
+   "am_phase": "AM_P",
+   "coverage_key": "coverage_AM_P_mean",
+   "coverage_physics_key": "coverage_AM_P_mean_physics_union",
+   "code_sha": "e65e92b7b60681a38d50cbce60e776c1e489c248",
+   "network_run_id": "20261027T073433-c92e2e4a",
+   "ion_net_electrode_hertz": "dirichlet_exact",
+   "ion_net_area_rule_hertz": "hertz_ccpl22",
+   "f_ion_hertz": 0.019275333202573245,
+   "case_id": "261027_073324_0621c7",
+   "name": "kg50_d3_b40_s2"
+  },
+  "kg50_d3_b40_s3": {
+   "values": {
+    "porosity": 19.181218184448312,
+    "coverage_hertz": 19.11098191344169,
+    "coverage_physics": 52.711,
+    "sigma_ion": 0.053258,
+    "tau2": 15.61147108598138
+   },
+   "notes": {},
+   "am_phase": "AM_P",
+   "coverage_key": "coverage_AM_P_mean",
+   "coverage_physics_key": "coverage_AM_P_mean_physics_union",
+   "code_sha": "e65e92b7b60681a38d50cbce60e776c1e489c248",
+   "network_run_id": "20261027T073454-2a78023d",
+   "ion_net_electrode_hertz": "dirichlet_exact",
+   "ion_net_area_rule_hertz": "hertz_ccpl22",
+   "f_ion_hertz": 0.016981620093841316,
+   "case_id": "261027_073324_397845",
+   "name": "kg50_d3_b40_s3"
+  },
+  "kg50_d3_b50_s1": {
+   "values": {
+    "porosity": 18.957556465917914,
+    "coverage_hertz": 19.06718094934206,
+    "coverage_physics": 52.632,
+    "sigma_ion": 0.061154,
+    "tau2": 13.628269849908339
+   },
+   "notes": {},
+   "am_phase": "AM_P",
+   "coverage_key": "coverage_AM_P_mean",
+   "coverage_physics_key": "coverage_AM_P_mean_physics_union",
+   "code_sha": "e65e92b7b60681a38d50cbce60e776c1e489c248",
+   "network_run_id": "20261027T073536-7e38e07b",
+   "ion_net_electrode_hertz": "dirichlet_exact",
+   "ion_net_area_rule_hertz": "hertz_ccpl22",
+   "f_ion_hertz": 0.019512549042712064,
+   "case_id": "261027_073324_a3974a",
+   "name": "kg50_d3_b50_s1"
+  },
+  "kg50_d3_b50_s2": {
+   "values": {
+    "porosity": 18.869766906436926,
+    "coverage_hertz": 19.1670442814425,
+    "coverage_physics": 53.232,
+    "sigma_ion": 0.062054,
+    "tau2": 13.4526077196508
+   },
+   "notes": {},
+   "am_phase": "AM_P",
+   "coverage_key": "coverage_AM_P_mean",
+   "coverage_physics_key": "coverage_AM_P_mean_physics_union",
+   "code_sha": "e65e92b7b60681a38d50cbce60e776c1e489c248",
+   "network_run_id": "20261027T073507-accf7929",
+   "ion_net_electrode_hertz": "dirichlet_exact",
+   "ion_net_area_rule_hertz": "hertz_ccpl22",
+   "f_ion_hertz": 0.019787505124959033,
+   "case_id": "261027_073324_745a16",
+   "name": "kg50_d3_b50_s2"
+  },
+  "kg50_d3_b50_s3": {
+   "values": {
+    "porosity": 19.01152187244959,
+    "coverage_hertz": 19.035670518026706,
+    "coverage_physics": 52.568,
+    "sigma_ion": 0.062519,
+    "tau2": 13.329220336096576
+   },
+   "notes": {},
+   "am_phase": "AM_P",
+   "coverage_key": "coverage_AM_P_mean",
+   "coverage_physics_key": "coverage_AM_P_mean_physics_union",
+   "code_sha": "e65e92b7b60681a38d50cbce60e776c1e489c248",
+   "network_run_id": "20261027T073521-d422f8c4",
+   "ion_net_electrode_hertz": "dirichlet_exact",
+   "ion_net_area_rule_hertz": "hertz_ccpl22",
+   "f_ion_hertz": 0.019948411988709946,
+   "case_id": "261027_073324_a36c27",
+   "name": "kg50_d3_b50_s3"
+  }
+ },
+ "indicators": {
+  "porosity": {
+   "kind": "abs",
+   "threshold": 0.5,
+   "v40": [
+    18.908097087513575,
+    18.76590101089849,
+    19.181218184448312
+   ],
+   "v50": [
+    18.957556465917914,
+    18.869766906436926,
+    19.01152187244959
+   ],
+   "m40": 18.951738760953457,
+   "s40": 0.21106997751179254,
+   "m50": 18.946281748268145,
+   "s50": 0.07154688701036772,
+   "delta": 0.005457012685312179,
+   "se": 0.1286720540077279,
+   "result": "통과",
+   "why": "④ |Δ| 0.005457 ≤ 문턱 0.5 · SE_Δ 0.1287 ≤ 문턱"
+  },
+  "coverage_physics": {
+   "kind": "abs",
+   "threshold": 1.0,
+   "v40": [
+    53.353,
+    53.681,
+    52.711
+   ],
+   "v50": [
+    52.632,
+    53.232,
+    52.568
+   ],
+   "m40": 53.248333333333335,
+   "s40": 0.4933977435430093,
+   "m50": 52.81066666666666,
+   "s50": 0.36628586286305664,
+   "delta": 0.4376666666666722,
+   "se": 0.35478005706196203,
+   "result": "통과",
+   "why": "④ |Δ| 0.4377 ≤ 문턱 1 · SE_Δ 0.3548 ≤ 문턱"
+  },
+  "coverage_hertz": {
+   "kind": "abs",
+   "threshold": 1.0,
+   "v40": [
+    19.186286935042247,
+    19.521285041997775,
+    19.11098191344169
+   ],
+   "v50": [
+    19.06718094934206,
+    19.1670442814425,
+    19.035670518026706
+   ],
+   "m40": 19.272851296827238,
+   "s40": 0.21841979277107562,
+   "m50": 19.089965249603754,
+   "s50": 0.0685865123936085,
+   "delta": 0.18288604722348367,
+   "se": 0.1321757864316535,
+   "result": "통과",
+   "why": "④ |Δ| 0.1829 ≤ 문턱 1 · SE_Δ 0.1322 ≤ 문턱"
+  },
+  "tau2": {
+   "kind": "rel",
+   "threshold": 5.0,
+   "v40": [
+    14.073153523840102,
+    13.80455253107104,
+    15.61147108598138
+   ],
+   "v50": [
+    13.628269849908339,
+    13.4526077196508,
+    13.329220336096576
+   ],
+   "m40": 14.496392380297507,
+   "s40": 0.9749805194112069,
+   "m50": 13.470032635218573,
+   "s50": 0.15028430952588145,
+   "delta": 7.619578755848207,
+   "se": 4.228298251259612,
+   "result": "불합격",
+   "why": "③ |Δ| 7.62 > 문턱 5"
+  },
+  "sigma_ion": {
+   "kind": "rel",
+   "threshold": 5.0,
+   "v40": [
+    0.059279,
+    0.060487,
+    0.053258
+   ],
+   "v50": [
+    0.061154,
+    0.062054,
+    0.062519
+   ],
+   "m40": 0.05767466666666667,
+   "s40": 0.0038723409371248974,
+   "m50": 0.061909,
+   "s50": 0.0006939560504815869,
+   "delta": -6.839608672944687,
+   "se": 3.668794221537043,
+   "result": "불합격",
+   "why": "③ |Δ| 6.84 > 문턱 5"
+  }
+ },
+ "overall": "불합격",
+ "overall_why": "하나 이상 불합격 → 50×50 (--fallback50)"
+}

@@ -1,7 +1,7 @@
 # 50kg/batch 4차년도 — SE 입도 비교 DEM 덱 v3 (50×50 · 10-27)
 
-- 왜: D3 칸 판정 = **불합격** (수송 지표 차 > 문턱 5 % · 판정 기록 = 별도 커밋) → 등록 (`docs/data/kg50_decks_20261026_v2/README.md` §3) 대로 비교 덱 D0.7 · D1 · D2 = **50×50** (`--fallback50`) · 1저자 10-27 *"50 50으로 하자"*.
-- 이 폴더 = 새 덱 셋 (D0.7 · D1 · D2 의 50×50).  본 비교의 D3 자리 = v2 `kg50_d3_b50_s1` (hit 칸 비교에서 압밀 끝 · 여기 다시 만들지 않았다 — ⬜ 1저자 확인).  v2 의 40×40 비교 셋 (`kg50_d07_b40` · `kg50_d1_b40` · `kg50_d2_b40`) 은 쓰지 않는다.
+- 왜: D3 칸 판정 = **불합격** (수송 지표 차 > 문턱 5 % · 판정 기록 = `docs/data/kg50_d3_cell_verdict_20261027/`) → 등록 (`docs/data/kg50_decks_20261026_v2/README.md` §3) 대로 비교 덱 D0.7 · D1 · D2 = **50×50** (`--fallback50`) · 1저자 10-27 *"50 50으로 하자"*.
+- 이 폴더 = 새 덱 셋 (D0.7 · D1 · D2 의 50×50).  본 비교의 D3 자리 = v2 `kg50_d3_b50_s1` (hit 칸 비교에서 압밀 끝 · 여기 다시 만들지 않았다 · 등록 §3 "본 비교 (D0.7 · D1 · D2 · D3 시드 1)" 그대로 · 새 결정 아님).  v2 의 40×40 비교 셋 (`kg50_d07_b40` · `kg50_d1_b40` · `kg50_d2_b40`) 은 쓰지 않는다.
 - 다시 만들기: `python3 scripts/make_se_size_decks.py --preset kg50y4 --fallback50 --only kg50_d07_b50,kg50_d1_b50,kg50_d2_b50 --out <빈 폴더> --ibb-runner docs/data/pure_se_r075_20260927/run_pse_r075_a_r30.sh --ntasks kg50_d07_b50:56,kg50_d2_b50:4` (같은 바이트 · `manifest.json` sha256 · 생성기 sha256 `00d16e07…`).
 
 ## 1. v2 → v3 바뀐 것
@@ -52,6 +52,7 @@ grep -hE "INSERTED|====== (AM|SE)|FATAL" ~/simulation/kg50_d1_b50/log.liggghts
 
 - ⛔ `run_kg50_d07_b50.sh` · `run_kg50_d2_b50.sh` (본 러너) 를 처음부터 직접 sbatch 하지 않는다 — 고코어 fresh 삽입은 기하적으로 불가능하다 (KG50-01) · 재개 도구가 쓰는 러너다.
 - 재개 시험 `-T` 뒤 `plan_r<NP>.txt` 에 계획 줄이 있는지부터 본다 — `dem_restart.py` 의 실제 이름 목록은 리포에 없다 (이 덱이 그 도구를 지나는지 = 미확인).
+- 계획에 *"덱 검증 실패"* 가 나오면 같은 명령에 `-c` (작업 사본 덱의 줄 전체 주석만 빼기 · 원본 그대로 · `docs/resume_ckpt_procedure_20260927.md` 끝 절) — v3 덱은 주석에도 다른 케이스명이 없어 필요 없을 것으로 본다 (추정).  `-c` 를 쓰려면 ibb 사본 `~/dem_test/scripts/resume_ckpt.sh` 를 이 판으로 바꾼다 (sha256 이 바뀐다 · 재개 도구 Codex 재확인 대상).
 - ibb QOS `cpu-60` = 사용자당 60 CPU — D0.7 56 + D2 4 = 60 (다른 ibb 잡이 돌면 대기).
 - D0.7 압축 전 정착 끝 (after_settling) 에서 Q5 dt · 감쇠 대조 (KG50-04 · 결과 전 등록 뒤) — v2 README §4 와 같은 순서.
 - 한계 = v2 README §5 와 같다 (언로딩 없음 · gen-1 프로토콜 · 단분산 SE · 본 비교 시드 하나 · 감쇠 γ/m 크기 의존).

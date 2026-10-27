@@ -13227,6 +13227,21 @@
       ]
     },
     {
+      "id": "KG50-16",
+      "severity": "P2",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "ibb dem_restart.py 10-27 (kg50_d07_b40 재개 시험 -T 의 plan_r56.txt · 1저자 붙여 줌 · 진행 기록 10-27 오후 2 줄)",
+      "opened_in": "docs/session_20260923_progress.md",
+      "title": "덱 생성기가 덱 머리 주석 두 줄 (3 · 9 행) 에 기준 덱 케이스 이름 real_4 를 적음 → ibb dem_restart.py 덱 검사가 '다른 케이스명 혼입' 으로 거부 → D0.7-40 재개 덱 못 만듦 (시험 미제출 · 반나절)",
+      "note": "물리 줄에는 없음 · v2 덱 12 파일 전부 같은 두 줄 · D3 칸 여섯은 재개 없이 끝까지 돌아 영향 없음. 처방 (1저자 10-27 Q3 (가) *\"권고대로해\"*) = ① 재개 도구 `-c` (작업 사본 덱의 줄 전체 주석만 빼기 · 원본 그대로 · 비주석 줄 sha256 · LIGGGHTS 명령 전후 같음) `722507144` (test_resume_ckpt 고치기 전 33/41 → 41/41) ② 생성기 머리 주석 = 기준 덱 sha256 전체 + 폴더 · build 쓰기 전 생성 파일 어느 줄에든 다른 케이스명이면 멈춤 `c158eb343` (selftest 고치기 전 103/118 → 118/118) · 새 덱 v3 `ea3f14acd` = 주석 포함 다른 케이스명 0 · v2 대비 덱마다 3 · 9 행만 다름. 한계 = dem_restart.py 의 실제 이름 목록 · 검사 범위는 리포에 없음 (v3 덱이 그 도구를 지나는지 = ibb -T 시험으로 확인) · 확인 = Codex.",
+      "claimed_fixed_sha": "c158eb343",
+      "evidence_tests": [
+        "scripts/make_se_size_decks.py --selftest (118/118 · c158eb343 · 고치기 전 8d5eb3ed9 = 103/118) — R1 (생성 파일 어느 줄에도 다른 케이스명 없음) · R2 (v2 대비 주석만) · R3–R5",
+        "scripts/test_resume_ckpt.py (41/41 · 722507144 · 고치기 전 eb552de93 = 33/41) — N1–N6b (-c)"
+      ]
+    },
+    {
       "id": "SELF-135",
       "severity": "P3",
       "status": "claimed_fixed",
