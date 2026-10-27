@@ -22,6 +22,9 @@
      같은 꼴의 상자로 있고 · 상자 글 = 수정 계획 `docs/reviews/rint2_rereview_fix_plan_20261022.md` §2 원문 그대로 · 핵심 문장 · 머리 줄 10-23
   ⑩ (10-25 · 묶음 B · 1저자 10-23 Q2 · Q3 (가) · author 10-23 ratified Q2-Q3 Q20-Q21) 쉽게 말하면 상자 ⑤ (같은 코드 · 같은 침대) 가 같은 꼴의
      상자로 있고 · 상자 글 = 같은 수정 계획 §2 원문 그대로 · 핵심 문장 · 따로 section (10-25) · "지금" = 고치기 전 관문 주석 · 머리 줄 10-25
+  ⑪ (10-27 · 묶음 C3 · 1저자 10-23 Q4 (가) · author 10-27 approved bundle C) 쉽게 말하면 상자 ⑥ (재시도 봉인) 이 같은 꼴의 상자로 있고 ·
+     상자 글 = 같은 수정 계획 §2 원문 그대로 · 핵심 문장 · 따로 section (10-27) · "빠진 것" = 고치기 전 사슬 주석 · 1저자 원문 (10-27) ·
+     등록 R 에 같은 상자 · 머리 줄 10-27
 
   python3 webapp/test_rint_explainer_page.py
 """
@@ -218,8 +221,9 @@ def main():
     bx.feed(src)
     bx.close()
     boxes = {k: _squash(''.join(v)) for k, v in bx.boxes.items()}
-    chk('상자 다섯 — class="hl" 이 정확히 다섯 (id easy-1 · easy-2 · easy-3 · ★ 10-23 easy-4 · ★ 10-25 easy-5)',
-        len(re.findall(r'class="hl"', src)) == 5 and sorted(boxes) == ['easy-1', 'easy-2', 'easy-3', 'easy-4', 'easy-5'])
+    chk('상자 여섯 — class="hl" 이 정확히 여섯 (id easy-1 · easy-2 · easy-3 · ★ 10-23 easy-4 · ★ 10-25 easy-5 · ★ 10-27 easy-6)',
+        len(re.findall(r'class="hl"', src)) == 6
+        and sorted(boxes) == ['easy-1', 'easy-2', 'easy-3', 'easy-4', 'easy-5', 'easy-6'])
     for k, mark in enumerate(BOX_MARKS, 1):
         want, got = plan_box_text(mark), boxes.get(f'easy-{k}', '')
         chk(f'상자 {mark} 머리 = "★ 쉽게 말하면 {mark}"', got.startswith(f'★ 쉽게 말하면 {mark}'))
@@ -258,6 +262,22 @@ def main():
     chk('상자 ⑤ 주석 — 원문 출처 (수정 계획 §2) · "지금" = 고치기 전 관문 · 등록 R 에 같은 상자',
         'rint2_rereview_fix_plan_20261022.md' in nt5 and '고치기 전' in nt5 and '등록 R' in nt5)
     chk('머리 줄 (.sub) 에 "10-25 갱신"', bool(sub4) and '10-25 갱신' in sub4.group(1))
+    print('── ⑪ 10-27 결정 상자 ⑥ (묶음 C · Q4 — 재시도 봉인)')
+    b6, want6 = boxes.get('easy-6', ''), plan_box_text('⑥', PLAN_1022)
+    chk('상자 ⑥ 머리 = "★ 쉽게 말하면 ⑥"', b6.startswith('★ 쉽게 말하면 ⑥'))
+    chk('상자 ⑥ 글 = 수정 계획 (10-22) §2 원문 그대로 (markdown 표지 뺀 글 · 공백 하나로)', want6 is not None and b6 == want6)
+    for sent in ('재시도 봉인', '같은 등록의 답이 아니라 새 시도다', '결과 전 멈춤만 재시도', '처음 완주한 시도를 채택',
+                 '계획 해시 안에 넣어 사슬이 확인하게 한다'):
+        chk(f'상자 ⑥ 핵심 문장 — "{sent}"', sent in b6)
+    sec6 = re.search(r'<section class="hl-sec" id="decisions-1027"[^>]*>\s*<h2[^>]*>(.*?)</h2>(.*?)</section>', src, re.S)
+    chk('상자 ⑥ 묶음 = 따로 section (id decisions-1027) · 머리에 날짜 10-27 · 상자 ⑥ 이 그 안에',
+        bool(sec6) and '10-27' in re.sub(r'<[^>]+>', '', sec6.group(1)) and 'id="easy-6"' in sec6.group(2))
+    note_b6 = re.search(r'<p class="note">(.*?)</p>', sec6.group(2), re.S) if sec6 else None
+    nt_b6 = re.sub(r'<[^>]+>', '', note_b6.group(1)) if note_b6 else ''
+    chk('상자 ⑥ 주석 — 원문 출처 (수정 계획 §2) · "빠진 것" = 고치기 전 사슬 · 등록 R 에 같은 상자 · 1저자 10-27 원문',
+        'rint2_rereview_fix_plan_20261022.md' in nt_b6 and '고치기 전' in nt_b6 and '등록 R' in nt_b6
+        and '10-27' in nt_b6 and 'Rint는 권고대로 해도돼' in nt_b6)
+    chk('머리 줄 (.sub) 에 "10-27 갱신"', bool(sub4) and '10-27 갱신' in sub4.group(1))
     hsec = re.search(r'<section class="hl-sec"[^>]*>\s*<h2[^>]*>(.*?)</h2>', src, re.S)
     chk('상자 묶음 머리에 날짜 10-22', bool(hsec) and '10-22' in re.sub(r'<[^>]+>', '', hsec.group(1)))
     sub = re.search(r'<p class="sub">(.*?)</p>', src, re.S)
