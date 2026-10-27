@@ -7109,6 +7109,665 @@ def t_GR14():
     return all(x[1] for x in out), [x for x in out if not x[1]]
 
 
+# ── ★ 10-27 묶음 C1b (RCA2-05 · Q4 (가) · Q9 설계 §3-2 · §3-4 · §3-5 · author 10-27 approved bundle C) 시도 원장 · 시도 폴더 ──
+#    원장 = 실행 트리와 다른 git 저장소의 덧붙이기만 하는 파일 (`rint_r_attempts.jsonl` · 첫 줄 = 머리 (계획 sha256)) · 항목 (대상 · 기계 · 계획 · 코드 ·
+#    침대 · 환경) = 시도 전에 커밋 (`--stage ledger --add`) · 시도 = `--ledger <저장소> --attempt <n> --out <바탕>` → 시도 폴더 <바탕>/attempt_<n> ·
+#    풀기 전 대조 (어긋남 = 거부 기록 + 결과 줄 · 풀이 없음) · 끝 = 결과 줄 (완주 · 멈춤 · 결과 전 · 뒤 = 첫 풀이 끝 표지 · payload · 폴더 요약 sha) ·
+#    채택 = 원장 차례로 처음 결과 전이 아닌 시도 · 예측 (사다리 입력) · 판정 (--ledger) = 채택 시도만 (원장 · 폴더 · 규칙이 정한다)
+LEDGER_NAME = 'rint_r_attempts.jsonl'
+
+
+def chain_c1b():
+    """사슬에 시도 원장 (`--ledger`) 이 있나 (고치기 전 판 = 없음 → 시험이 기다리지 않고 실패)."""
+    return chain_has('--ledger')
+
+
+def led_new(tag, plan=None):
+    """원장 git 저장소 (사슬 고정물 저장소 밖 · 빈 저장소) + `--init` → (경로, rc, 화면)."""
+    d = Path(TD) / 'ledgers' / tag
+    d.mkdir(parents=True)
+    git_(d, 'init', '-q')
+    rc, so = call(['--stage', 'ledger', '--ledger', str(d), '--init', '--plan', str(plan or FX['plan'])])
+    return d, rc, so
+
+
+def led_add(d, target, machine=MACH, resume=None, plan=None, root=None, runner=None):
+    """원장 항목 하나 (`--add`) → (rc, 항목 번호 | None, 화면)."""
+    argv = ['--stage', 'ledger', '--ledger', str(d), '--add', '--target', target, '--machine', machine, '--plan', str(plan or FX['plan']),
+            '--runner', str(runner or FX['runner']), '--root', str(root or FX['root'])]
+    if resume is not None:
+        argv += ['--resume', str(resume)]
+    rc, so = call(argv)
+    m = re.search(r'ATTEMPT_ADDED n=(\d+)', so)
+    return rc, (int(m.group(1)) if m else None), so
+
+
+def led_raw(d):
+    p = Path(d) / LEDGER_NAME
+    return p.read_bytes() if p.exists() else b''
+
+
+def led_lines(d):
+    return [json.loads(x) for x in led_raw(d).decode('utf-8').splitlines()]
+
+
+def led_result(d, n):
+    r = [x for x in led_lines(d) if x.get('kind') == 'result' and x.get('n') == n]
+    return r[0] if len(r) == 1 else (None if not r else r)
+
+
+def led_hand(d, obj, msg='hand (시험)'):
+    """원장에 줄 하나를 손으로 덧붙이고 커밋 (`--add` · 풀기 전 대조를 거치지 않은 꼴 — 사람의 손 · 구현 결함 흉내) → 그 커밋."""
+    with open(Path(d) / LEDGER_NAME, 'a', encoding='utf-8') as f:
+        f.write(json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False) + '\n')
+    git_(d, 'add', LEDGER_NAME)
+    git_(d, 'commit', '-q', '-m', msg)
+    return git_(d, 'rev-parse', 'HEAD')
+
+
+def led_entry_like(d, n, **over):
+    """원장 항목 n 을 본뜬 새 항목 (번호 = 다음 · 칸 = over)."""
+    lines = led_lines(d)
+    e = [x for x in lines if x.get('kind') == 'entry' and x.get('n') == n][0]
+    return dict(e, n=1 + max(x['n'] for x in lines if x.get('kind') == 'entry'), **over)
+
+
+def lad_att(tag, wpath, d, n, law='P0', base=None, machine=MACH, **kw):
+    """사다리 시도 (원장 항목 n) → {'rc', 'base', 'out' (= <바탕>/attempt_<n>), 'so', 'sum', 'world'}."""
+    base = Path(base) if base is not None else Path(TD) / 'runs' / tag
+    rc, so = call(ladder_argv(base, law=law, machine=machine, **kw) + ['--ledger', str(d), '--attempt', str(n)], wpath)
+    out = base / f'attempt_{n}'
+    sp = out / 'ladder_summary.json'
+    return {'rc': rc, 'base': base, 'out': out, 'so': so, 'sum': json.loads(sp.read_text(encoding='utf-8')) if sp.exists() else None,
+            'world': wpath}
+
+
+def pred_att(tag, wpath, d, n, ladders, base=None, machine=MACH, **kw):
+    """예측 시도 (원장 항목 n) → lad_att 꼴."""
+    base = Path(base) if base is not None else Path(TD) / 'runs' / tag
+    rc, so = call(predict_argv(base, [str(x) for x in ladders], machine=machine, **kw) + ['--ledger', str(d), '--attempt', str(n)], wpath)
+    out = base / f'attempt_{n}'
+    sp = out / 'predict_summary.json'
+    return {'rc': rc, 'base': base, 'out': out, 'so': so, 'sum': json.loads(sp.read_text(encoding='utf-8')) if sp.exists() else None,
+            'world': wpath}
+
+
+def tree_digest(p):
+    """시험 쪽 독립 폴더 요약 — `sha256sum` 꼴 줄 (`<sha256>  <상대 경로>`) 을 상대 경로 (POSIX · 바이트 차례) 로 늘어놓은 글의 sha256 · 파일 하나
+    (거부 기록) = 그 이름 한 줄 (`cd 폴더 && find . -type f -printf '%P\\n' | LC_ALL=C sort | xargs sha256sum | sha256sum` 과 같은 값)."""
+    p = Path(p)
+    if p.is_file():
+        rows = [(p.name, hashlib.sha256(p.read_bytes()).hexdigest())]
+    else:
+        rows = sorted((f.relative_to(p).as_posix(), hashlib.sha256(f.read_bytes()).hexdigest()) for f in p.rglob('*') if f.is_file())
+    return hashlib.sha256(''.join(f'{h}  {r}\n' for r, h in rows).encode('utf-8')).hexdigest()
+
+
+def ver_led(tag, dirs, d, extra=()):
+    return verdict(tag, dirs, extra=['--ledger', str(d)] + list(extra))
+
+
+LEDGER_STOPS = ('ATTEMPT_LEDGER_MISMATCH', 'ATTEMPT_ORDER_MISMATCH', 'ATTEMPT_AFTER_ADOPTED', 'RESUME_NOT_ALLOWED', 'ATTEMPT_LIMIT')
+
+
+def s_led_main():
+    """원장 캠페인 (주) — 원장 하나 · 사다리 P0 · P1 · 예측 (시도 하나씩 · 다 완주) · 원장 판정."""
+    def go():
+        d, rc0, so0 = led_new('LM')
+        rc1, n1, s1 = led_add(d, 'ladder:P0')
+        l0 = lad_att('LM_P0', world('LM_P0'), d, n1, law='P0')
+        rc2, n2, s2 = led_add(d, 'ladder:P1')
+        l1 = lad_att('LM_P1', world('LM_P1'), d, n2, law='P1')
+        rc3, n3, s3 = led_add(d, 'predict')
+        p = pred_att('LM_pred', world('LM_pred'), d, n3, [l0['out'], l1['out']])
+        v = ver_led('LM_v', [l0['out'], l1['out'], p['out']], d)
+        return {'d': d, 'l0': l0, 'l1': l1, 'p': p, 'v': v, 'ns': (n1, n2, n3), 'rcs': (rc0, rc1, rc2, rc3), 'so': (so0, s1, s2, s3)}
+    return scen('LM', go)
+
+
+@check('AL01', '★ 10-27 묶음 C1b — 원장 캠페인 (주): --init · --add 셋 (rc 0 · 번호 1 · 2 · 3) · 시도 폴더 <바탕>/attempt_<n> · 원장 줄 = 머리 · (항목 · 결과 줄) '
+               '× 3 (결과 = completed · 결과 뒤 · by chain · 폴더 이름 · 폴더 요약 sha = 시험 쪽 독립 계산) · attempt.json 의 시작 커밋 = 자기 항목이 있고 결과 줄은 '
+               '없는 커밋 · 원장 작업 트리 깨끗 · 단계 요약 attempt 칸 · 판정 (--ledger) rc 0 · 원장 칸 채택 = 1 · 2 · 3 · 판정 = 원장 없는 주 판정과 같은 판정 · '
+               '상태 · 표지')
+def t_AL01():
+    if not chain_c1b():
+        return False, '사슬에 --ledger (시도 원장) 가 없다'
+    r = s_led_main()
+    d, ns = r['d'], r['ns']
+    kinds = [x.get('kind') for x in led_lines(d)]
+    bad = []
+    if r['rcs'] != (0, 0, 0, 0) or ns != (1, 2, 3):
+        bad.append(('rcs', r['rcs'], ns, [s[-160:] for s in r['so']]))
+    if kinds != ['header', 'entry', 'result', 'entry', 'result', 'entry', 'result']:
+        bad.append(('kinds', kinds))
+    for n, res, tgt in ((1, r['l0'], 'ladder:P0'), (2, r['l1'], 'ladder:P1'), (3, r['p'], 'predict')):
+        rl = led_result(d, n) or {}
+        ap = res['out'] / 'attempt.json'
+        att = json.loads(ap.read_text(encoding='utf-8')) if ap.exists() else {}
+        c0 = att.get('ledger_commit')
+        start = [json.loads(x) for x in git_(d, 'show', f'{c0}:{LEDGER_NAME}').splitlines()] if c0 else []
+        ok = (res['rc'] == 0 and rl.get('status') == 'completed' and rl.get('side') == 'post' and rl.get('by') == 'chain'
+              and rl.get('folder') == f'attempt_{n}' and rl.get('folder_sha256') == tree_digest(res['out'])
+              and att.get('n') == n and att.get('target') == tgt and att.get('machine') == MACH
+              and any(x.get('kind') == 'entry' and x.get('n') == n for x in start)
+              and not any(x.get('kind') == 'result' and x.get('n') == n for x in start)
+              and ((res['sum'] or {}).get('attempt') or {}).get('n') == n)
+        if not ok:
+            bad.append((n, res['rc'], rl, att, res['so'][-200:]))
+    clean = git_(d, 'status', '--porcelain') == ''
+    v = r['v']
+    vv = v.get('v') or {}
+    adopted = {t: (x or {}).get('effective') for t, x in ((vv.get('ledger') or {}).get('targets') or {}).items()}
+    base = s_verdict_main().get('v') or {}
+    same = all(vv.get(k) == base.get(k) for k in ('verdict', 'state', 'flags', 'blocking_flags'))
+    return (not bad and clean and v['rc'] == 0 and adopted == {'ladder:P0': 1, 'ladder:P1': 2, 'predict': 3} and same,
+            (bad[:3], clean, v['rc'], adopted, vv.get('verdict'), base.get('verdict'), v['so'][-300:]))
+
+
+@check('AL02', '★ 10-27 묶음 C1b (Q9 R4-13) — 이미 결과 줄이 있는 항목 번호로 다시 실행 · 원장에 없는 번호 (99) → rc 3 · 화면 ATTEMPT_LEDGER_MISMATCH · '
+               '시도 폴더 · 거부 기록을 만들지 않는다 (원장 · 바탕 폴더 바이트 그대로 · 러너 0 회 · 그 항목의 둘째 결과가 생기지 않는다)')
+def t_AL02():
+    if not chain_c1b():
+        return False, '사슬에 --ledger 가 없다'
+    r = s_led_main()
+    d, base = r['d'], r['l0']['base']
+    raw0, dig0 = led_raw(d), tree_digest(base)
+    a = lad_att('AL02_a', world('AL02_a'), d, 1, base=base)
+    b = lad_att('AL02_b', world('AL02_b'), d, 99, base=base)
+    return (a['rc'] == 3 and 'ATTEMPT_LEDGER_MISMATCH' in a['so'] and b['rc'] == 3 and 'ATTEMPT_LEDGER_MISMATCH' in b['so']
+            and led_raw(d) == raw0 and tree_digest(base) == dig0 and not (base / 'attempt_99').exists()
+            and not (base / 'attempt_99.rejected.json').exists() and n_calls(a['world']) == 0 and n_calls(b['world']) == 0,
+            (a['rc'], a['so'][-200:], b['rc'], b['so'][-200:], led_raw(d) == raw0, tree_digest(base) == dig0))
+
+
+def s_al04():
+    """기계 이름 오타 (항목 kgy · --machine gabia) → 풀기 전 거부 · 다른 기계 새 시도 → 완주 (채택 2)."""
+    def go():
+        d, _rc, _so = led_new('AL04')
+        rc1, n1, _s1 = led_add(d, 'ladder:P0', machine='kgy')
+        a = lad_att('AL04_P0', world('AL04_a'), d, n1, machine='gabia')
+        rc2, n2, s2 = led_add(d, 'ladder:P0', machine='gabia')
+        b = lad_att('AL04_P0', world('AL04_b'), d, n2, machine='gabia')
+        return {'d': d, 'a': a, 'b': b, 'ns': (n1, n2), 'rcs': (rc1, rc2), 's2': s2}
+    return scen('AL04', go)
+
+
+@check('AL04', '★ 10-27 묶음 C1b (C1 · Q9 §3-2 · §3-5) — 항목 기계 (kgy) ≠ --machine (gabia) → 풀기 전 거부: 시도 폴더 attempt_1 = attempt.json + rejected.json '
+               '(사유 MACHINE_NOT_ALLOWED · 러너 0 회) · 결과 줄 rejected · 결과 전 · 폴더 요약 sha · 다른 기계 새 항목 (rc 0 · 앞 시도 = 결과 전) → 완주 (결과 줄 '
+               'completed · 결과 뒤) · 판정 (--ledger · 사다리 하나 입력) — 거부된 attempt_1 = ATTEMPT_LEDGER_MISMATCH (채택 아님) · attempt_2 = 원장 대조 통과 '
+               '(멈춤이 원장 이름이 아님)')
+def t_AL04():
+    if not chain_c1b():
+        return False, '사슬에 --ledger 가 없다'
+    r = s_al04()
+    d, a, b = r['d'], r['a'], r['b']
+    rj = a['out'] / 'rejected.json'
+    rec = json.loads(rj.read_text(encoding='utf-8')) if rj.exists() else {}
+    r1, r2 = led_result(d, 1) or {}, led_result(d, 2) or {}
+    v1 = ver_led('AL04_v1', [a['out']], d)
+    v2 = ver_led('AL04_v2', [b['out']], d)
+    return (r['rcs'] == (0, 0) and r['ns'] == (1, 2) and a['rc'] == 3 and rec.get('code') == 'MACHINE_NOT_ALLOWED' and n_calls(a['world']) == 0
+            and sorted(x.name for x in a['out'].iterdir()) == ['attempt.json', 'rejected.json']
+            and r1.get('status') == 'rejected' and r1.get('side') == 'pre' and r1.get('folder') == 'attempt_1'
+            and r1.get('folder_sha256') == tree_digest(a['out'])
+            and b['rc'] == 0 and (b['sum'] or {}).get('status') == 'CALIBRATED' and r2.get('status') == 'completed' and r2.get('side') == 'post'
+            and stop_code(v1) == 'ATTEMPT_LEDGER_MISMATCH' and stop_code(v2) not in LEDGER_STOPS,
+            (r['rcs'], r['ns'], a['rc'], rec, r1, b['rc'], r2, stop_code(v1), stop_code(v2), a['so'][-200:]))
+
+
+def s_al05():
+    """결과 뒤 멈춤 (바닥 런 증서 실패 = 사다리 NOT_COMPUTED) → 새 시도 · 재실행 거부 · 대조를 건너뛴 손 항목 = 풀기 전 거부."""
+    def go():
+        d, _rc, _so = led_new('AL05')
+        rc1, n1, _s1 = led_add(d, 'ladder:P0')
+        a = lad_att('AL05_P0', world('AL05_a', dict(PW, faults=[{'do': 'certfail', 'match': {'rj': 'inf'}}])), d, n1)
+        raw_a = led_raw(d)
+        rc2, n2, s2 = led_add(d, 'ladder:P0', machine='gabia')
+        rc3, n3, s3 = led_add(d, 'ladder:P0', resume=n1)
+        raw_b = led_raw(d)
+        led_hand(d, led_entry_like(d, n1, resume_of=None))
+        h = lad_att('AL05_P0', world('AL05_h'), d, 2)
+        return {'d': d, 'a': a, 'h': h, 'rc2': rc2, 's2': s2, 'rc3': rc3, 's3': s3, 'same': raw_a == raw_b}
+    return scen('AL05', go)
+
+
+@check('AL05', '★ 10-27 묶음 C1b (C1 "결과 뒤 멈춤은 재시도가 아니다" · Q9 §3-2 R4-03) — 바닥 런 증서 실패 (사다리 NOT_COMPUTED · 표지 있음 = 결과 뒤 · 재실행 자격 '
+               '없음) → 새 항목 --add = rc 3 ATTEMPT_AFTER_ADOPTED · 재실행 항목 (--resume 1) = rc 3 RESUME_NOT_ALLOWED (원장 무변경) · 대조를 건너뛴 손 항목 '
+               '(번호 2) 실행 = 풀기 전 거부 (rejected.json 사유 ATTEMPT_AFTER_ADOPTED · 결과 줄 rejected · 러너 0 회)')
+def t_AL05():
+    if not chain_c1b():
+        return False, '사슬에 --ledger 가 없다'
+    r = s_al05()
+    d, a, h = r['d'], r['a'], r['h']
+    r1, r2 = led_result(d, 1) or {}, led_result(d, 2) or {}
+    rj = h['out'] / 'rejected.json'
+    rec = json.loads(rj.read_text(encoding='utf-8')) if rj.exists() else {}
+    return ((a['sum'] or {}).get('status') == 'NOT_COMPUTED' and r1.get('status') == 'stopped' and r1.get('side') == 'post'
+            and r1.get('resume_ok') is False and r['rc2'] == 3 and 'ATTEMPT_AFTER_ADOPTED' in r['s2'] and r['rc3'] == 3
+            and 'RESUME_NOT_ALLOWED' in r['s3'] and r['same'] and h['rc'] == 3 and rec.get('code') == 'ATTEMPT_AFTER_ADOPTED'
+            and r2.get('status') == 'rejected' and n_calls(h['world']) == 0,
+            ((a['sum'] or {}).get('status'), r1, r['rc2'], r['s2'][-160:], r['rc3'], r['s3'][-160:], r['same'], h['rc'], rec, r2))
+
+
+@check('AL06', '★ 10-27 묶음 C1b (Q9 §3-5 차례 · 개정 3 질문 3) — 같은 대상 항목 k 의 결과 줄 전에 k+1 --add = rc 3 ATTEMPT_ORDER_MISMATCH (원장 무변경) · 손으로 '
+               '덧붙인 k+1 (차례 위반 원장) 실행 = 화면 · rc 3 ATTEMPT_ORDER_MISMATCH (원장 꼴 자체가 틀려 결과 줄을 쓰지 않는다 · 시도 폴더 없음 · 러너 0 회)')
+def t_AL06():
+    if not chain_c1b():
+        return False, '사슬에 --ledger 가 없다'
+
+    def go():
+        d, _rc, _so = led_new('AL06')
+        rc1, n1, _s1 = led_add(d, 'ladder:P0')
+        raw_a = led_raw(d)
+        rc2, n2, s2 = led_add(d, 'ladder:P0', machine='gabia')
+        same = led_raw(d) == raw_a
+        led_hand(d, led_entry_like(d, n1, machine='gabia'))
+        raw_b = led_raw(d)
+        h = lad_att('AL06_P0', world('AL06_h'), d, 2, machine='gabia')
+        return d, rc2, s2, same, h, led_raw(d) == raw_b
+    d, rc2, s2, same, h, same2 = scen('AL06', go)
+    return (rc2 == 3 and 'ATTEMPT_ORDER_MISMATCH' in s2 and same and h['rc'] == 3 and 'ATTEMPT_ORDER_MISMATCH' in h['so'] and same2
+            and not h['out'].exists() and n_calls(h['world']) == 0, (rc2, s2[-160:], same, h['rc'], h['so'][-200:], same2))
+
+
+@check('AL07', '★ 10-27 묶음 C1b (Q9 §3-5 "시도 폴더를 만들 수 없으면 옆 자리") — 시도 폴더 attempt_1 이 이미 있다 (옛 파일) → 그 옆 attempt_1.rejected.json '
+               '(사유 OUTDIR_NOT_EMPTY) · 결과 줄 rejected · 폴더 이름 = 그 파일 · 요약 sha = 그 파일 하나 · 옛 폴더 그대로 · 러너 0 회 → 새 항목 · 새 폴더 '
+               '(attempt_2) 완주')
+def t_AL07():
+    if not chain_c1b():
+        return False, '사슬에 --ledger 가 없다'
+
+    def go():
+        d, _rc, _so = led_new('AL07')
+        rc1, n1, _s1 = led_add(d, 'ladder:P0')
+        base = Path(TD) / 'runs' / 'AL07_P0'
+        (base / 'attempt_1').mkdir(parents=True)
+        (base / 'attempt_1' / 'old.txt').write_text('old', encoding='utf-8')
+        a = lad_att('AL07_P0', world('AL07_a'), d, n1, base=base)
+        rc2, n2, _s2 = led_add(d, 'ladder:P0')
+        b = lad_att('AL07_P0', world('AL07_b'), d, n2, base=base)
+        return d, base, a, b, rc2
+    d, base, a, b, rc2 = scen('AL07', go)
+    side = base / 'attempt_1.rejected.json'
+    rec = json.loads(side.read_text(encoding='utf-8')) if side.exists() else {}
+    r1, r2 = led_result(d, 1) or {}, led_result(d, 2) or {}
+    return (a['rc'] == 3 and rec.get('code') == 'OUTDIR_NOT_EMPTY' and r1.get('status') == 'rejected' and r1.get('side') == 'pre'
+            and r1.get('folder') == 'attempt_1.rejected.json' and r1.get('folder_sha256') == tree_digest(side)
+            and sorted(x.name for x in (base / 'attempt_1').iterdir()) == ['old.txt'] and n_calls(a['world']) == 0
+            and rc2 == 0 and b['rc'] == 0 and r2.get('status') == 'completed',
+            (a['rc'], rec, r1, rc2, b['rc'], r2, a['so'][-200:]))
+
+
+@check('AL08', '★ 10-27 묶음 C1b (C1 최대 시도 수 · 계획 exec_policy.max_attempts = 3 시험 값) — 같은 대상 세 항목 (다 풀기 전 거부) 뒤 넷째 --add = rc 3 '
+               'ATTEMPT_LIMIT · 손으로 덧붙인 넷째 항목 실행 = 풀기 전 거부 (사유 ATTEMPT_LIMIT · 러너 0 회) · 다른 대상 (ladder:P1) 은 따로 센다')
+def t_AL08():
+    if not chain_c1b():
+        return False, '사슬에 --ledger 가 없다'
+
+    def go():
+        d, _rc, _so = led_new('AL08')
+        for i in range(3):
+            _rc, n, _s = led_add(d, 'ladder:P0')
+            lad_att('AL08_P0', world(f'AL08_{i}'), d, n, machine='gabia')
+        rc4, n4, s4 = led_add(d, 'ladder:P0')
+        led_hand(d, led_entry_like(d, 3))
+        h = lad_att('AL08_P0', world('AL08_h'), d, 4)
+        rc5, n5, _s5 = led_add(d, 'ladder:P1')
+        return d, rc4, s4, h, rc5, n5
+    d, rc4, s4, h, rc5, n5 = scen('AL08', go)
+    rj = h['out'] / 'rejected.json'
+    rec = json.loads(rj.read_text(encoding='utf-8')) if rj.exists() else {}
+    res = [led_result(d, k) or {} for k in (1, 2, 3)]
+    return (all(x.get('status') == 'rejected' for x in res) and rc4 == 3 and 'ATTEMPT_LIMIT' in s4 and h['rc'] == 3 and rec.get('code') == 'ATTEMPT_LIMIT'
+            and n_calls(h['world']) == 0 and rc5 == 0 and n5 == 5, ([x.get('status') for x in res], rc4, s4[-160:], h['rc'], rec, rc5, n5))
+
+
+@check('AL09', '★ 10-27 묶음 C1b (C1 "동일 설정 요건" · Q9 §3-2) — 항목에 커밋한 지문 ≠ 지금 → 풀기 전 거부 (러너 0 회 · 결과 줄 rejected): 환경 지문 (기록만 칸 '
+               'OPENBLAS_CORETYPE 하나) = CODE_PIN_MISMATCH · 침대 (킷 metrics 파일 한 바이트) = S0_REPORT_MISMATCH · 코드 (사슬 한 줄 다른 커밋) = '
+               'CODE_PIN_MISMATCH · 계획 (다른 계획 --plan) = PLAN_HASH_MISMATCH · 원장 머리와 다른 계획으로 --add = rc 3 ATTEMPT_LEDGER_MISMATCH')
+def t_AL09():
+    if not chain_c1b():
+        return False, '사슬에 --ledger 가 없다'
+
+    def go():
+        out = {}
+        d, _rc, _so = led_new('AL09')
+        old = RR.env_record
+
+        def env2():
+            e = old()
+            e['record_only']['openblas_coretype'] = 'Fixture-other'
+            return e
+        RR.env_record = env2
+        try:
+            _rc, n, _s = led_add(d, 'ladder:P0')
+        finally:
+            RR.env_record = old
+        out['env'] = lad_att('AL09_P0', world('AL09_env'), d, n)
+        root2 = Path(TD) / 'AL09_root'
+        shutil.copytree(FX['root'], root2, symlinks=True)
+        _rc, n, _s = led_add(d, 'ladder:P0', root=root2)
+        mp = root2 / SBE_KIT / 'run_fx_20261020_000000_1' / 'mpm_metrics.json'
+        mp.write_text(mp.read_text(encoding='utf-8') + ' ', encoding='utf-8')
+        out['bed'] = lad_att('AL09_P0', world('AL09_bed'), d, n, root=str(root2))
+        sd = clone_repo('AL09_code', edit=append_to('rint_r_chain.py'))
+        with at_repo(sd):
+            _rc, n, _s = led_add(d, 'ladder:P0')
+        out['code'] = lad_att('AL09_P0', world('AL09_code'), d, n)
+        p2, _sha2, reg2 = plan_set('AL09_plan2', max_ladder_points=15)
+        out['add_plan'] = led_add(d, 'ladder:P1', plan=p2)
+        return d, out, p2, reg2
+    d, out, p2, reg2 = scen('AL09', go)
+    got = {}
+    for k in ('env', 'bed', 'code'):
+        rj = out[k]['out'] / 'rejected.json'
+        got[k] = (out[k]['rc'], (json.loads(rj.read_text(encoding='utf-8')) if rj.exists() else {}).get('code'), n_calls(out[k]['world']))
+    want = {'env': (3, 'CODE_PIN_MISMATCH', 0), 'bed': (3, 'S0_REPORT_MISMATCH', 0), 'code': (3, 'CODE_PIN_MISMATCH', 0)}
+    return (got == want and out['add_plan'][0] == 3 and 'ATTEMPT_LEDGER_MISMATCH' in out['add_plan'][2]
+            and all((led_result(d, k) or {}).get('status') == 'rejected' for k in (1, 2, 3)), (got, out['add_plan'][0], out['add_plan'][2][-160:]))
+
+
+@check('AL09b', '★ 10-27 묶음 C1b — 계획 다름: 항목 (원장 머리 계획) 으로 다른 계획 (--plan · 그 등록 사본) 실행 → 풀기 전 거부 PLAN_HASH_MISMATCH (러너 0 회)')
+def t_AL09b():
+    if not chain_c1b():
+        return False, '사슬에 --ledger 가 없다'
+
+    def go():
+        d, _rc, _so = led_new('AL09b')
+        _rc, n, _s = led_add(d, 'ladder:P0')
+        p2, _sha2, reg2 = plan_set('AL09b_plan2', max_ladder_points=15)
+        return d, lad_att('AL09b_P0', world('AL09b'), d, n, plan=p2, reg=reg2)
+    d, a = scen('AL09b', go)
+    rj = a['out'] / 'rejected.json'
+    rec = json.loads(rj.read_text(encoding='utf-8')) if rj.exists() else {}
+    return (a['rc'] == 3 and rec.get('code') == 'PLAN_HASH_MISMATCH' and n_calls(a['world']) == 0
+            and (led_result(d, 1) or {}).get('status') == 'rejected', (a['rc'], rec, a['so'][-200:]))
+
+
+def s_al10():
+    """결과 전 멈춤 (러너 rc 2 · payload 전) → 다른 기계 새 시도 완주 (채택 2) · 예측 입력 대조 (채택 아닌 사다리 · 원장 밖 사다리 = 멈춤 · 결과 전) · 원장 판정."""
+    def go():
+        d, _rc, _so = led_new('AL10')
+        _rc1, n1, _s1 = led_add(d, 'ladder:P0')
+        a = lad_att('AL10_P0', world('AL10_a', dict(PW, faults=[{'do': 'rc2', 'match': {'rj': 'inf'}}])), d, n1)
+        rc2, n2, _s2 = led_add(d, 'ladder:P0', machine='m1')
+        b = lad_att('AL10_P0', world('AL10_b'), d, n2, machine='m1')
+        _rc3, n3, _s3 = led_add(d, 'ladder:P1')
+        c = lad_att('AL10_P1', world('AL10_c'), d, n3, law='P1')
+        _r, n4, _s = led_add(d, 'predict')
+        p4 = pred_att('AL10_pred', world('AL10_p4'), d, n4, [a['out'], c['out']])
+        _r, n5, _s = led_add(d, 'predict')
+        p5 = pred_att('AL10_pred', world('AL10_p5'), d, n5, [s_main('P0')['out'], c['out']])
+        _r, n6, _s = led_add(d, 'predict')
+        p6 = pred_att('AL10_pred', world('AL10_p6'), d, n6, [b['out'], c['out']])
+        v = ver_led('AL10_v', [b['out'], c['out'], p6['out']], d)
+        vbad = ver_led('AL10_vbad', [a['out'], c['out'], p6['out']], d)
+        return {'d': d, 'a': a, 'b': b, 'c': c, 'p4': p4, 'p5': p5, 'p6': p6, 'v': v, 'vbad': vbad, 'rc2': rc2, 'ns': (n1, n2, n3, n4, n5, n6)}
+    return scen('AL10', go)
+
+
+@check('AL10', '★ 10-27 묶음 C1b (C1 "결과 전 멈춤의 재시도 · 처음 완주 채택 → 통과") — 러너 rc 2 (payload 전 · 표지 없음) = 사다리 STOPPED · 결과 줄 stopped · '
+               '결과 전 → 다른 기계 (m1) 새 항목 rc 0 → 완주 (채택 2) · 판정 (--ledger) rc 0 · 원장 칸 사다리 P0 채택 = 2 · 멈춘 attempt_1 을 넣은 판정 = '
+               'ATTEMPT_LEDGER_MISMATCH')
+def t_AL10():
+    if not chain_c1b():
+        return False, '사슬에 --ledger 가 없다'
+    r = s_al10()
+    d = r['d']
+    r1, r2 = led_result(d, 1) or {}, led_result(d, 2) or {}
+    vv = (r['v'].get('v') or {})
+    adopted = {t: (x or {}).get('effective') for t, x in ((vv.get('ledger') or {}).get('targets') or {}).items()}
+    return ((r['a']['sum'] or {}).get('status') == 'STOPPED' and stop_code(r['a']) == 'RUNNER_RC' and r1.get('status') == 'stopped'
+            and r1.get('side') == 'pre' and r['rc2'] == 0 and (r['b']['sum'] or {}).get('status') == 'CALIBRATED' and r2.get('status') == 'completed'
+            and r['v']['rc'] == 0 and adopted == {'ladder:P0': 2, 'ladder:P1': 3, 'predict': 6}
+            and stop_code(r['vbad']) == 'ATTEMPT_LEDGER_MISMATCH',
+            ((r['a']['sum'] or {}).get('status'), r1, r['rc2'], r2, r['v']['rc'], adopted, stop_code(r['vbad']), r['v']['so'][-300:]))
+
+
+@check('AL11', '★ 10-27 묶음 C1b (Q9 §3-5 "예측 · 판정은 채택된 사다리 폴더 하나를 읽는다") — 원장 예측의 사다리 입력: 채택 아닌 사다리 (멈춘 attempt_1) · 원장 밖 '
+               '사다리 (원장 없는 주 사다리) = 예측 멈춤 ATTEMPT_LEDGER_MISMATCH (러너 0 회 · 결과 줄 stopped · 결과 전 → 다음 예측 항목 허용) · 채택 사다리 = '
+               'PREDICTED (예측 셋째 시도 · 최대 3)')
+def t_AL11():
+    if not chain_c1b():
+        return False, '사슬에 --ledger 가 없다'
+    r = s_al10()
+    d = r['d']
+    res = [led_result(d, k) or {} for k in (4, 5, 6)]
+    return (stop_code(r['p4']) == 'ATTEMPT_LEDGER_MISMATCH' and stop_code(r['p5']) == 'ATTEMPT_LEDGER_MISMATCH'
+            and n_calls(r['p4']['world']) == 0 and n_calls(r['p5']['world']) == 0
+            and [x.get('status') for x in res] == ['stopped', 'stopped', 'completed'] and [x.get('side') for x in res] == ['pre', 'pre', 'post']
+            and (r['p6']['sum'] or {}).get('status') == 'PREDICTED',
+            (stop_code(r['p4']), stop_code(r['p5']), [(x.get('status'), x.get('side')) for x in res], (r['p6']['sum'] or {}).get('status')))
+
+
+def led_clone(d, tag):
+    """원장 저장소 clone (같은 커밋 · 같은 파일 · 손대는 반례용) → 경로."""
+    dst = Path(TD) / 'ledgers' / tag
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    git_(dst.parent, 'clone', '-q', str(d), str(dst))
+    return dst
+
+
+@check('AL12', '★ 10-27 묶음 C1b (Q9 §3-4 · §3-5 판정의 원장 대조 · 사다리 하나 입력 · 사본에서) — 시도 폴더 파일 하나 바뀜 · 원장에 없는 시도 폴더 (attempt_9) · '
+               '같은 항목 결과 줄 둘 · 커밋된 결과 줄을 제자리에서 고친 역사 (덧붙이기만 아님) · 결과 줄의 결과 전 · 뒤 ≠ 폴더 (결과 뒤 폴더를 결과 전이라 적음) · '
+               '거부된 시도의 폴더 (거부 기록) 가 사라짐 (= 엄격 결과 뒤 · 그 시도가 채택 · 폴더 없음) → 다 ATTEMPT_LEDGER_MISMATCH · 고치지 않은 사본 · 거부 '
+               '기록을 되돌린 사본 = 원장 대조 통과')
+def t_AL12():
+    if not chain_c1b():
+        return False, '사슬에 --ledger 가 없다'
+    r = s_led_main()
+    d, src = r['d'], r['l0']['out']
+    got = {}
+
+    def copy_base(tag, from_dir=src):
+        b = Path(TD) / 'runs' / tag
+        shutil.copytree(from_dir, b / from_dir.name, symlinks=True)
+        return b / from_dir.name
+    got['ok'] = stop_code(ver_led('AL12_ok', [copy_base('AL12_ok')], d))
+    x = copy_base('AL12_mod')
+    with open(next(iter(sorted((x / 'logs').glob('*.log')))), 'a', encoding='utf-8') as f:
+        f.write('x')
+    got['mod'] = stop_code(ver_led('AL12_mod', [x], d))
+    x = copy_base('AL12_extra')
+    (x.parent / 'attempt_9').mkdir()
+    (x.parent / 'attempt_9' / 'attempt.json').write_text('{}', encoding='utf-8')
+    got['extra'] = stop_code(ver_led('AL12_extra', [x], d))
+    d2 = led_clone(d, 'AL12_dup')
+    led_hand(d2, led_result(d, 1))
+    got['dup'] = stop_code(ver_led('AL12_dup', [copy_base('AL12_dupb')], d2))
+    d3 = led_clone(d, 'AL12_rewrite')                           # 이미 커밋된 결과 줄을 제자리에서 고침 (덧붙이기만이 아닌 역사)
+    lines = led_raw(d3).decode('utf-8').splitlines()
+    for i, ln in enumerate(lines):
+        o = json.loads(ln)
+        if o.get('kind') == 'result' and o.get('n') == 1:
+            lines[i] = json.dumps(dict(o, by='recover'), sort_keys=True, separators=(',', ':'), ensure_ascii=False)
+    (d3 / LEDGER_NAME).write_text('\n'.join(lines) + '\n', encoding='utf-8')
+    git_(d3, 'commit', '-q', '-am', '결과 줄 제자리 고침 (시험)')
+    got['rewrite'] = stop_code(ver_led('AL12_rewrite', [copy_base('AL12_rewriteb')], d3))
+    d4 = led_clone(d, 'AL12_side')                              # 처음부터 거짓 결과 줄 (결과 뒤 폴더를 결과 전이라) 을 덧붙인 역사
+    r1 = led_result(d, 1)
+    first = [ln for ln in git_(d4, 'log', '--format=%H', '--reverse').splitlines()]
+    git_(d4, 'reset', '-q', '--hard', first[1])                 # 머리 · 항목 1 까지
+    led_hand(d4, dict(r1, side='pre'), msg='거짓 결과 전 (시험)')
+    got['side'] = stop_code(ver_led('AL12_side', [copy_base('AL12_sideb')], d4))
+    r4 = s_al04()
+    x = copy_base('AL12_gone', r4['b']['out'])
+    got['gone'] = stop_code(ver_led('AL12_gone', [x], r4['d']))
+    shutil.copytree(r4['a']['out'], x.parent / 'attempt_1', symlinks=True)
+    got['gone_back'] = stop_code(ver_led('AL12_gone_back', [x], r4['d']))
+    want = {'mod': 'ATTEMPT_LEDGER_MISMATCH', 'extra': 'ATTEMPT_LEDGER_MISMATCH', 'dup': 'ATTEMPT_LEDGER_MISMATCH',
+            'rewrite': 'ATTEMPT_LEDGER_MISMATCH', 'side': 'ATTEMPT_LEDGER_MISMATCH', 'gone': 'ATTEMPT_LEDGER_MISMATCH'}
+    return ({k: got[k] for k in want} == want and got['ok'] not in LEDGER_STOPS and got['gone_back'] not in LEDGER_STOPS, got)
+
+
+@check('AL12b', '★ 10-27 묶음 C1b (Q9 §3-5 R4-07 · 개정 3) — 곁가지 원장 커밋에서 시작한 시도 (앞 시도 결과 줄 자리표를 곁가지에 두고 시작 · 본가지에는 같은 줄을 '
+                '나중에 덧붙임) → 판정 ATTEMPT_ORDER_MISMATCH (시작 커밋이 원장 커밋의 조상이 아님)')
+def t_AL12b():
+    if not chain_c1b():
+        return False, '사슬에 --ledger 가 없다'
+
+    def go():
+        d, _rc, _so = led_new('AL12b')
+        _rc1, n1, _s1 = led_add(d, 'ladder:P0')
+        a = lad_att('AL12b_P0', world('AL12b_a', dict(PW, faults=[{'do': 'rc2', 'match': {'rj': 'inf'}}])), d, n1)
+        main = git_(d, 'rev-parse', '--abbrev-ref', 'HEAD')
+        r1 = led_result(d, 1)
+        git_(d, 'checkout', '-q', '-b', 'side', 'HEAD~1')            # 결과 줄 1 앞 커밋 (항목 1 만)
+        led_hand(d, r1, msg='곁가지 자리표 (시험)')
+        _rc2, n2, s2 = led_add(d, 'ladder:P0', machine='gabia')
+        b = lad_att('AL12b_P0', world('AL12b_b'), d, n2, machine='gabia')
+        side_lines = led_lines(d)
+        git_(d, 'checkout', '-q', main)
+        for o in side_lines[3:]:                                      # 본가지 = 머리 · 항목 1 · 결과 1 · (곁가지의 항목 2 · 결과 2 를 손으로)
+            led_hand(d, o, msg='본가지에 옮김 (시험)')
+        return d, a, b, n2, s2
+    d, a, b, n2, s2 = scen('AL12b', go)
+    v = ver_led('AL12b_v', [b['out']], d)
+    return (n2 == 2 and b['rc'] == 0 and stop_code(v) == 'ATTEMPT_ORDER_MISMATCH', (n2, s2[-160:], b['rc'], stop_code(v), (v.get('v') or {}).get('stop')))
+
+
+@check('AL12c', '★ 10-27 묶음 C1b (Q9 §3-4 ATTEMPT_AFTER_ADOPTED = 풀기 전 대조를 거치지 않고 돈 흔적) — 채택 (완주 attempt_1) 뒤 손으로 만든 항목 · 결과 줄 · 시도 '
+                '폴더 (표지 있음) → 판정 ATTEMPT_AFTER_ADOPTED · 같은 꼴인데 거부 기록만 있는 폴더 (결과 전) = 원장 대조 통과')
+def t_AL12c():
+    if not chain_c1b():
+        return False, '사슬에 --ledger 가 없다'
+    r = s_led_main()
+    out = {}
+    for nm, files in (('trace', {'L01_floor_arm1/.unchecked/p2_x.json.first_result.json': '{}'}), ('rej', {'rejected.json': '{"code":"X"}'})):
+        d = led_clone(r['d'], f'AL12c_{nm}')
+        e = led_entry_like(d, 1)
+        c0 = led_hand(d, e)
+        base = Path(TD) / 'runs' / f'AL12c_{nm}'
+        shutil.copytree(r['l0']['out'], base / 'attempt_1', symlinks=True)
+        fd = base / f'attempt_{e["n"]}'
+        fd.mkdir()
+        (fd / 'attempt.json').write_text(json.dumps({'schema': 'rint-r-attempt-v1', 'n': e['n'], 'target': 'ladder:P0', 'machine': MACH,
+                                                     'resume_of': None, 'ledger_commit': c0}), encoding='utf-8')
+        for rel, body in files.items():
+            (fd / rel).parent.mkdir(parents=True, exist_ok=True)
+            (fd / rel).write_text(body, encoding='utf-8')
+        res = dict(led_result(d, 1), n=e['n'], folder=fd.name, folder_sha256=tree_digest(fd),
+                   status=('completed' if nm == 'trace' else 'rejected'), side=('post' if nm == 'trace' else 'pre'))
+        led_hand(d, res)
+        out[nm] = stop_code(ver_led(f'AL12c_{nm}_v', [base / 'attempt_1'], d))
+    return out['trace'] == 'ATTEMPT_AFTER_ADOPTED' and out['rej'] not in LEDGER_STOPS, out
+
+
+@check('AL13', '★ 10-27 묶음 C1b (Q9 개정 5 ② · "확인 못 한 호스트 = 미확인 · 다음 시도 채택을 막는다") — 그룹 종료 미확인 (표지 프로세스가 늘 살아 있는 꼴) → '
+               '사다리 STOPPED GROUP_UNCONFIRMED · 결과 줄 쓰지 않음 · 같은 대상 새 --add = rc 3 ATTEMPT_ORDER_MISMATCH · --stage recover --ledger (진짜 '
+               '확인) → 끝 기록 확인 · 결과 줄 (by recover · stopped · 멈춤 GROUP_UNCONFIRMED) · 그 뒤 --add 는 원장 규칙대로 (결과 뒤 → ATTEMPT_AFTER_ADOPTED)')
+def t_AL13():
+    if not chain_c1b():
+        return False, '사슬에 --ledger 가 없다'
+
+    def go():
+        d, _rc, _so = led_new('AL13')
+        _rc1, n1, _s1 = led_add(d, 'ladder:P0')
+        old = (RR.group_members, RR.GROUP_GONE_WAIT_S)
+        RR.group_members, RR.GROUP_GONE_WAIT_S = (lambda token: [999996]), 0.2
+        try:
+            a = lad_att('AL13_P0', world('AL13_a'), d, n1)
+        finally:
+            RR.group_members, RR.GROUP_GONE_WAIT_S = old
+        res0 = led_result(d, 1)
+        rc2, _n2, s2 = led_add(d, 'ladder:P0', machine='gabia')
+        rc3, so3 = call(['--stage', 'recover', '--out', str(a['out']), '--ledger', str(d)])
+        rc4, _n4, s4 = led_add(d, 'ladder:P0', machine='gabia')
+        return d, a, res0, rc2, s2, rc3, so3, rc4, s4
+    d, a, res0, rc2, s2, rc3, so3, rc4, s4 = scen('AL13', go)
+    r1 = led_result(d, 1) or {}
+    return (stop_code(a) == 'GROUP_UNCONFIRMED' and res0 is None and rc2 == 3 and 'ATTEMPT_ORDER_MISMATCH' in s2 and rc3 == 0
+            and r1.get('by') == 'recover' and r1.get('status') == 'stopped' and (r1.get('stop') or {}).get('code') == 'GROUP_UNCONFIRMED'
+            and r1.get('folder_sha256') == tree_digest(a['out']) and rc4 == 3 and 'ATTEMPT_AFTER_ADOPTED' in s4,
+            (stop_code(a), res0, rc2, s2[-120:], rc3, so3[-200:], r1, rc4, s4[-120:]))
+
+
+@check('AL14', '★ 10-27 묶음 C1b (Q9 §3-5 "원인 기록 없음 = 사슬 부모까지 죽은 꼴" · 개정 5 ②) — 원장 시도 중 사슬 부모 SIGKILL (바닥 런 · 표지 전) → 단계 요약 · '
+               '결과 줄 없음 · --stage recover --ledger → 그룹을 죽이고 확인 · 결과 줄 (by recover · interrupted · 원인 parent_dead · 결과 전) → 다른 기계 새 '
+               '항목 허용 (rc 0)')
+def t_AL14():
+    if not chain_c1b():
+        return False, '사슬에 --ledger 가 없다'
+    import signal as _sig
+
+    def go():
+        d, _rc, _so = led_new('AL14')
+        _rc1, n1, _s1 = led_add(d, 'ladder:P0')
+        base = Path(TD) / 'runs' / 'AL14_P0'
+        out = base / f'attempt_{n1}'
+        w = world('AL14', dict(PW, faults=[{'do': 'sleep', 's': 30, 'match': {'rj': 'inf'}}]))
+        pr = gr_spawn_chain('AL14', ladder_argv(base) + ['--ledger', str(d), '--attempt', str(n1)], w)
+        lp = out / 'groups' / 'L01_floor.launch.json'
+        t0 = time.time()
+        while time.time() < t0 + 30:
+            try:
+                if lp.exists() and json.loads(lp.read_text(encoding='utf-8')).get('pid'):
+                    break
+            except ValueError:
+                pass
+            time.sleep(0.05)
+        time.sleep(0.3)
+        os.kill(pr.pid, _sig.SIGKILL)
+        pr.wait()
+        res0, has_sum = led_result(d, 1), (out / 'ladder_summary.json').exists()
+        rc3, so3 = call(['--stage', 'recover', '--out', str(out), '--ledger', str(d)], w)
+        rc4, n4, s4 = led_add(d, 'ladder:P0', machine='gabia')
+        return d, out, res0, has_sum, rc3, so3, rc4, n4, s4
+    d, out, res0, has_sum, rc3, so3, rc4, n4, s4 = scen('AL14', go)
+    r1 = led_result(d, 1) or {}
+    return (res0 is None and has_sum is False and rc3 == 0 and r1.get('by') == 'recover' and r1.get('status') == 'interrupted'
+            and r1.get('cause') == 'parent_dead' and r1.get('side') == 'pre' and r1.get('folder_sha256') == tree_digest(out)
+            and rc4 == 0 and n4 == 2, (res0, has_sum, rc3, so3[-200:], r1, rc4, n4, s4[-160:]))
+
+
+@check('AL15', '★ 10-27 묶음 C1b — 원장 판정 다시 판정 (--reverify) = REVERIFY_SAME (원장 커밋 · 폴더 · 판정 바이트 같음 · rc 0)')
+def t_AL15():
+    if not chain_c1b():
+        return False, '사슬에 --ledger 가 없다'
+    r = s_led_main()
+    rc, so = call(['--stage', 'verdict', '--reverify', str(r['v']['out']), '--root', FX['root']])
+    return rc == 0 and 'REVERIFY_SAME' in so, (rc, so[-300:])
+
+
+@check('AL16', '★ 10-27 묶음 C1b — 원장 단계 입력 오류: git 저장소 아님 · 두 번 --init · 사슬 고정물 저장소 안 (실행 트리와 같은 체크아웃) = rc 3 · --init 전 --add · '
+               '모르는 대상 (ladder:P2) = NOT_REGISTERED · 허용 밖 기계 = MACHINE_NOT_ALLOWED · --attempt 만 (--ledger 없음) = rc 2 · 원장 작업 트리에 커밋 안 한 '
+               '고침 → 시도 실행 = 화면 · rc 3 ATTEMPT_LEDGER_MISMATCH (폴더 없음)')
+def t_AL16():
+    if not chain_c1b():
+        return False, '사슬에 --ledger 가 없다'
+    got = {}
+    nogit = Path(TD) / 'ledgers' / 'AL16_nogit'
+    nogit.mkdir(parents=True)
+    got['nogit'] = call(['--stage', 'ledger', '--ledger', str(nogit), '--init', '--plan', str(FX['plan'])])[0]
+    d, rc0, _so = led_new('AL16')
+    got['twice'] = call(['--stage', 'ledger', '--ledger', str(d), '--init', '--plan', str(FX['plan'])])[0]
+    inside = FX['coderepo'] / 'ledger_AL16'
+    inside.mkdir()
+    try:
+        got['inside'] = call(['--stage', 'ledger', '--ledger', str(inside), '--init', '--plan', str(FX['plan'])])[0]
+    finally:
+        shutil.rmtree(inside, ignore_errors=True)               # 고정물 저장소를 더럽히지 않는다 (다음 시험의 코드 대조)
+    e = Path(TD) / 'ledgers' / 'AL16_empty'
+    e.mkdir(parents=True)
+    git_(e, 'init', '-q')
+    got['add_noinit'] = led_add(e, 'ladder:P0')[0]
+    rc_t, _n, so_t = led_add(d, 'ladder:P2')
+    rc_m, _n, so_m = led_add(d, 'ladder:P0', machine='zz')
+    got['target'] = (rc_t, 'NOT_REGISTERED' in so_t)
+    got['machine'] = (rc_m, 'MACHINE_NOT_ALLOWED' in so_m)
+    base = Path(TD) / 'runs' / 'AL16_x'
+    got['attempt_only'] = call(ladder_argv(base) + ['--attempt', '1'], world('AL16_x'))[0]
+    _rc, n, _s = led_add(d, 'ladder:P0')
+    with open(d / LEDGER_NAME, 'a', encoding='utf-8') as f:
+        f.write('\n')
+    w = world('AL16_dirty')
+    a = lad_att('AL16_dirty', w, d, n)
+    got['dirty'] = (a['rc'], 'ATTEMPT_LEDGER_MISMATCH' in a['so'], a['out'].exists(), n_calls(w))
+    want = {'nogit': 3, 'twice': 3, 'inside': 3, 'add_noinit': 3, 'target': (3, True), 'machine': (3, True), 'attempt_only': 2,
+            'dirty': (3, True, False, 0)}
+    return rc0 == 0 and got == want, got
+
+
 def doc_tool_commands(path, tool):
     """문서의 ```bash 블록에서 `python3 …/<tool>` 명령 → [(첫 줄 번호, 인자 목록)].  `\\` 이음 · 주석 줄 (`#` 시작) 은 뺀다 · `&&` · `|` ·
     `;` (앞뒤 빈칸) 로 가른 조각 중 그 도구를 python 으로 부르는 것만 · 자리표 `<…>` = 낱말 '1' (수 · 경로 어느 자리든 argparse 를 지난다) ·

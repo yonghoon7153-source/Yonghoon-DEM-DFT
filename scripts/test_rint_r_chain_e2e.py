@@ -32,6 +32,8 @@
   E11 ★ 10-26 B″ (Q4) 사슬이 러너에 MPM_NO_VENV=1 (러너 자리 미끼 venv 를 켜지 않음 · payload 환경 단위 = 사슬 환경 지문)
   E12 ★ 10-26 B″ (Q1 (가)) 생산 봉인 원천 실물 — DBE SV 모서리 + `RunnerGraphSource` (러너 조립만) → 귀속 verified · 주 계 지문 바꾼 꼴 =
       CA_EXT_RECORD · 환경 단위 다름 = 미확인 · 결합 칸 다름 = 원천 실패 · 비용 보고 (원천 런 초 · STEP3 · 조립 초 · 최대 RSS)
+  E13 ★ 10-27 묶음 C2b 실물 kill — 러너만 SIGKILL (표지 앞 · 뒤) · 시간 초과 · 사슬 부모 SIGKILL (표지 앞 · 뒤) + --stage recover
+  E14 ★ 10-27 묶음 C1b 실물 원장 시도 — --init · --add · 사다리 시도 → 결과 줄 · 폴더 요약 sha (독립 계산) · 런마다 표지
   ★ 3판 — 계획 `rint-r-plan-v2` (결과 전 등록 숫자 넷 = 시험 값) · S0 계획 (`ca_s0_census.make_plan` · 정준 바이트) · 등록 사본 두 줄 · `--s0-plan`
 ⚠ PASS 는 사슬 · 러너 · payload 배선이 실물로 이어진다는 증거이지 R_j 값 · 판정의 물리 검증이 아니다 (픽스처 σ 는 의미 없다).
 """
@@ -1174,6 +1176,68 @@ def t_parent_kill():
         and len(marks) == 1 and pays == [] and b.get('alive_after_recover') == [], b)
 
 
+def e2e_call(ws, sd, argv):
+    """사슬 main 을 프로세스 안에서 (실물 러너 · 고정물 저장소 사슬 폴더 · CPU) → (rc, 화면)."""
+    buf = io.StringIO()
+    old_bk, old_here = getattr(RR, 'EXPECT_BACKEND', None), RR.HERE
+    RR.EXPECT_BACKEND, RR.HERE = 'cpu', Path(sd)
+    try:
+        with chain_env(ws), contextlib.redirect_stdout(buf), contextlib.redirect_stderr(buf):
+            try:
+                rc = RR.main([str(a) for a in argv])
+            except SystemExit as e:
+                rc = e.code if isinstance(e.code, int) else 2
+    finally:
+        RR.EXPECT_BACKEND, RR.HERE = old_bk, old_here
+    return rc, buf.getvalue()
+
+
+def tree_digest(p):
+    """시험 쪽 독립 폴더 요약 (`sha256sum` 꼴 줄을 상대 경로 차례로 · 그 글의 sha256) — 사슬 함수와 따로."""
+    rows = sorted((os.path.relpath(os.path.join(r, f), p).replace(os.sep, '/'), hashlib.sha256(open(os.path.join(r, f), 'rb').read()).hexdigest())
+                  for r, _ds, fs in os.walk(p) for f in fs)
+    return hashlib.sha256(''.join(f'{h}  {rel}\n' for rel, h in rows).encode('utf-8')).hexdigest()
+
+
+def t_ledger():
+    """★ 10-27 묶음 C1b — 실물 러너 · payload 의 원장 시도 (사다리 P0) → 결과 줄 (completed · 결과 뒤 · 폴더 요약 sha = 독립 계산) · 런마다 표지 ·
+    .unchecked 에 payload 없음 (검사 통과 뒤 옮김) · 킷 런 폴더에 payload 없음."""
+    if '--ledger' not in RR.main.__code__.co_consts:
+        chk('E14 사슬에 시도 원장 (--ledger) 이 있다', False, '고치기 전 판 — --ledger 없음 (기다리지 않는다)')
+        return
+    ws = make_root('e14')
+    pp, sp, rp = make_plan_and_reg(ws)
+    sd = code_repo()
+    runner = os.path.join(sd, 'sdcp_gain_vox015_8arm.sh')
+    led = os.path.join(TD, 'ledger_e14')
+    os.makedirs(led)
+    subprocess.run(['git', 'init', '-q', led], check=True, capture_output=True)
+    rc0, so0 = e2e_call(ws, sd, ['--stage', 'ledger', '--ledger', led, '--init', '--plan', pp])
+    rc1, so1 = e2e_call(ws, sd, ['--stage', 'ledger', '--ledger', led, '--add', '--target', 'ladder:P0', '--machine', E2E_MACH, '--plan', pp,
+                                 '--runner', runner, '--root', ws])
+    m = re.search(r'ATTEMPT_ADDED n=(\d+)', so1)
+    n = int(m.group(1)) if m else None
+    base = os.path.join(TD, 'runs', 'e14')
+    argv = ['--stage', 'ladder', '--law', 'P0', '--target', str(RR.TARGET_SBE_MS), '--runner', runner, '--root', ws, '--plan', pp,
+            '--s0-plan', sp, '--registration', rp, '--max-hours', E2E_MAXH, '--out', base, '--machine', E2E_MACH] + s0_args() \
+        + ['--ledger', led, '--attempt', str(n)]
+    rc2, so2 = e2e_call(ws, sd, argv)
+    folder = os.path.join(base, f'attempt_{n}')
+    lines = [json.loads(x) for x in open(os.path.join(led, 'rint_r_attempts.jsonl'), encoding='utf-8').read().splitlines()]
+    res = [x for x in lines if x.get('kind') == 'result' and x.get('n') == n]
+    s = json.load(open(os.path.join(folder, 'ladder_summary.json'), encoding='utf-8')) if os.path.exists(os.path.join(folder, 'ladder_summary.json')) else {}
+    runs = s.get('runs') or []
+    marks = [os.path.join(folder, r['outdir']) for r in runs if not glob.glob(os.path.join(folder, r['outdir'], '.unchecked', '*' + '.first_result.json'))]
+    left = glob.glob(os.path.join(folder, '*', '.unchecked', 'p2_*.json'))
+    r1 = res[0] if len(res) == 1 else {}
+    chk('E14 ★ 10-27 묶음 C1b 실물 원장 시도 (사다리 P0 · 실물 러너 · payload) → --init · --add rc 0 · 사다리 CALIBRATED · 결과 줄 하나 (completed · 결과 뒤 · '
+        'by chain · 폴더 요약 sha = 독립 계산) · 런마다 .unchecked/ 에 표지 · .unchecked/ 에 payload 없음 · 킷 런 폴더에 payload 없음',
+        rc0 == 0 and rc1 == 0 and rc2 == 0 and s.get('status') == 'CALIBRATED' and r1.get('status') == 'completed' and r1.get('side') == 'post'
+        and r1.get('by') == 'chain' and r1.get('folder_sha256') == tree_digest(folder) and runs and marks == [] and left == []
+        and e13_kit_payloads(ws) == [],
+        (rc0, rc1, rc2, s.get('status'), r1, len(runs), marks[:3], left[:3], e13_kit_payloads(ws)[:3], so2[-400:]))
+
+
 def t_prod_form():
     ws = make_root('e6', kit_sh=KIT_SH_PROD)
     out = os.path.join(TD, 'runs', 'e6_P0')
@@ -1210,7 +1274,7 @@ def main():
     try:
         for tag, fn in (('E1', t_ladder), ('E6', t_prod_form), ('E8', t_zero_floor), ('E9', t_short_ceiling), ('E10', t_sv_census_dbe),
                         ('E11', t_no_venv), ('E12', t_graph_source), ('E13', t_runner_kill), ('E13t', t_timeout_kill),
-                        ('E13p', t_parent_kill)):
+                        ('E13p', t_parent_kill), ('E14', t_ledger)):
             if sel and tag not in sel:
                 continue
             print(f'\n── {tag}')
