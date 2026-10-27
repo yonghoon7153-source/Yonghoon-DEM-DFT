@@ -1,0 +1,38 @@
+{
+ "material_id": "mp-aaaaabok",
+ "ordering": "Unknown",
+ "magmoms": [
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0
+ ],
+ "symbols": [
+  "Ni",
+  "Ni",
+  "Ni",
+  "Ni",
+  "Ni",
+  "Ni",
+  "S",
+  "S",
+  "S",
+  "S",
+  "S",
+  "S",
+  "S",
+  "S"
+ ],
+ "aligned_from": "materials.magnetism.magmoms (길이 일치)",
+ "sum_muB": 0.0
+}

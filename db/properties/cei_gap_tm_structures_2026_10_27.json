@@ -1,0 +1,1422 @@
+{
+ "Li2SO4": {
+  "formula": "Li2SO4",
+  "label": "Li2SO4",
+  "rule": "observed_lowest_e_hull",
+  "pick": {
+   "material_id": "mp-aaaaagtg",
+   "formula": "Li2SO4",
+   "spacegroup": "P2_1/c",
+   "spacegroup_number": 14,
+   "e_above_hull": 0.0,
+   "theoretical": false,
+   "nsites": 28,
+   "band_gap_MP_eV": 6.0232,
+   "ordering": "NM",
+   "total_magnetization": 0.0,
+   "origins": {
+    "structure": "aaagadfb",
+    "dos": "aaadseub",
+    "electronic_structure": "aaadseub",
+    "magnetism": "aaagadfb",
+    "energy": "aaagadfb"
+   },
+   "es_task": "aaadseub",
+   "es_calc_type": "GGA NSCF Uniform",
+   "es_functional": "GGA"
+  },
+  "hull_entry": {
+   "material_id": "mp-aaaaagtg",
+   "formula": "Li2SO4",
+   "spacegroup": "P2_1/c",
+   "spacegroup_number": 14,
+   "e_above_hull": 0.0,
+   "theoretical": false,
+   "nsites": 28,
+   "band_gap_MP_eV": 6.0232,
+   "ordering": "NM",
+   "total_magnetization": 0.0,
+   "origins": {
+    "structure": "aaagadfb",
+    "dos": "aaadseub",
+    "electronic_structure": "aaadseub",
+    "magnetism": "aaagadfb",
+    "energy": "aaagadfb"
+   },
+   "es_task": "aaadseub",
+   "es_calc_type": "GGA NSCF Uniform",
+   "es_functional": "GGA"
+  },
+  "same_as_hull": true,
+  "n_candidates": 4,
+  "candidates": [
+   {
+    "material_id": "mp-aaaaagtg",
+    "formula": "Li2SO4",
+    "spacegroup": "P2_1/c",
+    "spacegroup_number": 14,
+    "e_above_hull": 0.0,
+    "theoretical": false,
+    "nsites": 28,
+    "band_gap_MP_eV": 6.0232,
+    "ordering": "NM",
+    "total_magnetization": 0.0,
+    "origins": {
+     "structure": "aaagadfb",
+     "dos": "aaadseub",
+     "electronic_structure": "aaadseub",
+     "magnetism": "aaagadfb",
+     "energy": "aaagadfb"
+    },
+    "es_task": "aaadseub",
+    "es_calc_type": "GGA NSCF Uniform",
+    "es_functional": "GGA"
+   },
+   {
+    "material_id": "mp-aaabfuag",
+    "formula": "Li2SO4",
+    "spacegroup": "Cmcm",
+    "spacegroup_number": 63,
+    "e_above_hull": 0.0549,
+    "theoretical": false,
+    "nsites": 14,
+    "band_gap_MP_eV": 5.9904,
+    "ordering": "NM",
+    "total_magnetization": 0.0002508,
+    "origins": {
+     "structure": "aaadxeux",
+     "setyawan_curtarolo": "aaabvysl",
+     "dos": "aaadrloi",
+     "electronic_structure": "aaabvysl",
+     "magnetism": "aaadxeux",
+     "energy": "aaadxeux"
+    }
+   },
+   {
+    "material_id": "mp-aaabmnbv",
+    "formula": "Li2SO4",
+    "spacegroup": "P1",
+    "spacegroup_number": 1,
+    "e_above_hull": 0.1076,
+    "theoretical": true,
+    "nsites": 14,
+    "band_gap_MP_eV": 5.55,
+    "ordering": "NM",
+    "total_magnetization": 0.0001605,
+    "origins": {
+     "structure": "aaadxqel",
+     "setyawan_curtarolo": "aaabqjav",
+     "electronic_structure": "aaabqjav",
+     "magnetism": "aaadxqel",
+     "dielectric": "aaaclpit",
+     "piezoelectric": "aaaclpit",
+     "energy": "aaadxqel"
+    }
+   },
+   {
+    "material_id": "mp-aaacroqa",
+    "formula": "Li2SO4",
+    "spacegroup": "F-43m",
+    "spacegroup_number": 216,
+    "e_above_hull": 0.2676,
+    "theoretical": true,
+    "nsites": 7,
+    "band_gap_MP_eV": 3.9196,
+    "ordering": "NM",
+    "total_magnetization": 6.33e-05,
+    "origins": {
+     "structure": "aaadyqdl",
+     "electronic_structure": "aaadyqdl",
+     "magnetism": "aaadyqdl",
+     "energy": "aaadyqdl"
+    }
+   }
+  ],
+  "files": [
+   "db/structures/cei_gap_tm/Li2SO4_mp-aaaaagtg.vasp",
+   "db/structures/cei_gap_tm/Li2SO4_mp-aaaaagtg.cif",
+   "db/structures/cei_gap_tm/Li2SO4_mp-aaaaagtg.magmom.json"
+  ],
+  "nsites_written": 28,
+  "source": "Materials Project (mp_api · use_document_model=False)",
+  "fetched": "2026-10-27",
+  "magnetism": {
+   "ordering_summary": "NM",
+   "ordering_magnetism_doc": "NM",
+   "aligned_from": "structure.site_properties['magmom']",
+   "total_magnetization": 0.0
+  }
+ },
+ "SCl": {
+  "formula": "SCl",
+  "label": "SCl",
+  "rule": "observed_lowest_e_hull",
+  "pick": {
+   "material_id": "mp-aaaabpoq",
+   "formula": "SCl",
+   "spacegroup": "Fdd2",
+   "spacegroup_number": 43,
+   "e_above_hull": 0.0,
+   "theoretical": false,
+   "nsites": 16,
+   "band_gap_MP_eV": 2.8804,
+   "ordering": "Unknown",
+   "total_magnetization": 0.0,
+   "origins": {
+    "structure": "aaaeldnx",
+    "setyawan_curtarolo": "aaadnmns",
+    "hinuma": "aaaetmpb",
+    "latimer_munro": "aaafbokz",
+    "dos": "aaadteco",
+    "electronic_structure": "aaafbokz",
+    "magnetism": "aaaeldnx",
+    "dielectric": "aaacmwwh",
+    "piezoelectric": "aaacmwwh",
+    "energy": "aaaeldnx"
+   },
+   "es_task": "aaafbokz",
+   "es_calc_type": "GGA NSCF Line",
+   "es_functional": "GGA"
+  },
+  "hull_entry": {
+   "material_id": "mp-aaaabpoq",
+   "formula": "SCl",
+   "spacegroup": "Fdd2",
+   "spacegroup_number": 43,
+   "e_above_hull": 0.0,
+   "theoretical": false,
+   "nsites": 16,
+   "band_gap_MP_eV": 2.8804,
+   "ordering": "Unknown",
+   "total_magnetization": 0.0,
+   "origins": {
+    "structure": "aaaeldnx",
+    "setyawan_curtarolo": "aaadnmns",
+    "hinuma": "aaaetmpb",
+    "latimer_munro": "aaafbokz",
+    "dos": "aaadteco",
+    "electronic_structure": "aaafbokz",
+    "magnetism": "aaaeldnx",
+    "dielectric": "aaacmwwh",
+    "piezoelectric": "aaacmwwh",
+    "energy": "aaaeldnx"
+   },
+   "es_task": "aaafbokz",
+   "es_calc_type": "GGA NSCF Line",
+   "es_functional": "GGA"
+  },
+  "same_as_hull": true,
+  "n_candidates": 1,
+  "candidates": [
+   {
+    "material_id": "mp-aaaabpoq",
+    "formula": "SCl",
+    "spacegroup": "Fdd2",
+    "spacegroup_number": 43,
+    "e_above_hull": 0.0,
+    "theoretical": false,
+    "nsites": 16,
+    "band_gap_MP_eV": 2.8804,
+    "ordering": "Unknown",
+    "total_magnetization": 0.0,
+    "origins": {
+     "structure": "aaaeldnx",
+     "setyawan_curtarolo": "aaadnmns",
+     "hinuma": "aaaetmpb",
+     "latimer_munro": "aaafbokz",
+     "dos": "aaadteco",
+     "electronic_structure": "aaafbokz",
+     "magnetism": "aaaeldnx",
+     "dielectric": "aaacmwwh",
+     "piezoelectric": "aaacmwwh",
+     "energy": "aaaeldnx"
+    },
+    "es_task": "aaafbokz",
+    "es_calc_type": "GGA NSCF Line",
+    "es_functional": "GGA"
+   }
+  ],
+  "files": [
+   "db/structures/cei_gap_tm/SCl_mp-aaaabpoq.vasp",
+   "db/structures/cei_gap_tm/SCl_mp-aaaabpoq.cif",
+   "db/structures/cei_gap_tm/SCl_mp-aaaabpoq.magmom.json"
+  ],
+  "nsites_written": 16,
+  "source": "Materials Project (mp_api · use_document_model=False)",
+  "fetched": "2026-10-27",
+  "magnetism": {
+   "ordering_summary": "Unknown",
+   "ordering_magnetism_doc": "Unknown",
+   "aligned_from": "materials.magnetism.magmoms (길이 일치)",
+   "total_magnetization": 0.0
+  }
+ },
+ "SO2": {
+  "formula": "SO2",
+  "label": "SO2",
+  "rule": "observed_lowest_e_hull",
+  "pick": {
+   "material_id": "mp-aaaabpak",
+   "formula": "SO2",
+   "spacegroup": "Aea2",
+   "spacegroup_number": 41,
+   "e_above_hull": 0.0,
+   "theoretical": false,
+   "nsites": 6,
+   "band_gap_MP_eV": 3.1539,
+   "ordering": "Unknown",
+   "total_magnetization": 0.0,
+   "origins": {
+    "structure": "aaaelilm",
+    "setyawan_curtarolo": "aaabwgcq",
+    "hinuma": "aaaeuusk",
+    "latimer_munro": "aaafbyhm",
+    "dos": "aaadsmmn",
+    "electronic_structure": "aaafbyhm",
+    "magnetism": "aaaelilm",
+    "dielectric": "aaacmysx",
+    "piezoelectric": "aaacmysx",
+    "energy": "aaaelilm",
+    "absorption": "aaagbmqn"
+   },
+   "es_task": "aaafbyhm",
+   "es_calc_type": "GGA NSCF Line",
+   "es_functional": "GGA"
+  },
+  "hull_entry": {
+   "material_id": "mp-aaaabpak",
+   "formula": "SO2",
+   "spacegroup": "Aea2",
+   "spacegroup_number": 41,
+   "e_above_hull": 0.0,
+   "theoretical": false,
+   "nsites": 6,
+   "band_gap_MP_eV": 3.1539,
+   "ordering": "Unknown",
+   "total_magnetization": 0.0,
+   "origins": {
+    "structure": "aaaelilm",
+    "setyawan_curtarolo": "aaabwgcq",
+    "hinuma": "aaaeuusk",
+    "latimer_munro": "aaafbyhm",
+    "dos": "aaadsmmn",
+    "electronic_structure": "aaafbyhm",
+    "magnetism": "aaaelilm",
+    "dielectric": "aaacmysx",
+    "piezoelectric": "aaacmysx",
+    "energy": "aaaelilm",
+    "absorption": "aaagbmqn"
+   },
+   "es_task": "aaafbyhm",
+   "es_calc_type": "GGA NSCF Line",
+   "es_functional": "GGA"
+  },
+  "same_as_hull": true,
+  "n_candidates": 1,
+  "candidates": [
+   {
+    "material_id": "mp-aaaabpak",
+    "formula": "SO2",
+    "spacegroup": "Aea2",
+    "spacegroup_number": 41,
+    "e_above_hull": 0.0,
+    "theoretical": false,
+    "nsites": 6,
+    "band_gap_MP_eV": 3.1539,
+    "ordering": "Unknown",
+    "total_magnetization": 0.0,
+    "origins": {
+     "structure": "aaaelilm",
+     "setyawan_curtarolo": "aaabwgcq",
+     "hinuma": "aaaeuusk",
+     "latimer_munro": "aaafbyhm",
+     "dos": "aaadsmmn",
+     "electronic_structure": "aaafbyhm",
+     "magnetism": "aaaelilm",
+     "dielectric": "aaacmysx",
+     "piezoelectric": "aaacmysx",
+     "energy": "aaaelilm",
+     "absorption": "aaagbmqn"
+    },
+    "es_task": "aaafbyhm",
+    "es_calc_type": "GGA NSCF Line",
+    "es_functional": "GGA"
+   }
+  ],
+  "files": [
+   "db/structures/cei_gap_tm/SO2_mp-aaaabpak.vasp",
+   "db/structures/cei_gap_tm/SO2_mp-aaaabpak.cif",
+   "db/structures/cei_gap_tm/SO2_mp-aaaabpak.magmom.json"
+  ],
+  "nsites_written": 6,
+  "source": "Materials Project (mp_api · use_document_model=False)",
+  "fetched": "2026-10-27",
+  "magnetism": {
+   "ordering_summary": "Unknown",
+   "ordering_magnetism_doc": "Unknown",
+   "aligned_from": "materials.magnetism.magmoms (길이 일치)",
+   "total_magnetization": 0.0
+  }
+ },
+ "CoS2": {
+  "formula": "CoS2",
+  "label": "CoS2",
+  "rule": "observed_lowest_e_hull",
+  "pick": {
+   "material_id": "mp-aaaaadbq",
+   "formula": "CoS2",
+   "spacegroup": "Pa-3",
+   "spacegroup_number": 205,
+   "e_above_hull": 0.0,
+   "theoretical": false,
+   "nsites": 12,
+   "band_gap_MP_eV": 0.0,
+   "ordering": "Unknown",
+   "total_magnetization": 4.0000004,
+   "origins": {
+    "structure": "aaaemnwc",
+    "setyawan_curtarolo": "aaadmiax",
+    "hinuma": "aaaeuttz",
+    "latimer_munro": "aaafcbbr",
+    "dos": "aaadsbjt",
+    "electronic_structure": "aaafcbbr",
+    "magnetism": "aaaemnwc",
+    "energy": "aaaemnwc"
+   },
+   "es_task": "aaafcbbr",
+   "es_calc_type": "GGA NSCF Line",
+   "es_functional": "GGA"
+  },
+  "hull_entry": {
+   "material_id": "mp-aaaaadbq",
+   "formula": "CoS2",
+   "spacegroup": "Pa-3",
+   "spacegroup_number": 205,
+   "e_above_hull": 0.0,
+   "theoretical": false,
+   "nsites": 12,
+   "band_gap_MP_eV": 0.0,
+   "ordering": "Unknown",
+   "total_magnetization": 4.0000004,
+   "origins": {
+    "structure": "aaaemnwc",
+    "setyawan_curtarolo": "aaadmiax",
+    "hinuma": "aaaeuttz",
+    "latimer_munro": "aaafcbbr",
+    "dos": "aaadsbjt",
+    "electronic_structure": "aaafcbbr",
+    "magnetism": "aaaemnwc",
+    "energy": "aaaemnwc"
+   },
+   "es_task": "aaafcbbr",
+   "es_calc_type": "GGA NSCF Line",
+   "es_functional": "GGA"
+  },
+  "same_as_hull": true,
+  "n_candidates": 5,
+  "candidates": [
+   {
+    "material_id": "mp-aaaaadbq",
+    "formula": "CoS2",
+    "spacegroup": "Pa-3",
+    "spacegroup_number": 205,
+    "e_above_hull": 0.0,
+    "theoretical": false,
+    "nsites": 12,
+    "band_gap_MP_eV": 0.0,
+    "ordering": "Unknown",
+    "total_magnetization": 4.0000004,
+    "origins": {
+     "structure": "aaaemnwc",
+     "setyawan_curtarolo": "aaadmiax",
+     "hinuma": "aaaeuttz",
+     "latimer_munro": "aaafcbbr",
+     "dos": "aaadsbjt",
+     "electronic_structure": "aaafcbbr",
+     "magnetism": "aaaemnwc",
+     "energy": "aaaemnwc"
+    },
+    "es_task": "aaafcbbr",
+    "es_calc_type": "GGA NSCF Line",
+    "es_functional": "GGA"
+   },
+   {
+    "material_id": "mp-aaabwjmf",
+    "formula": "CoS2",
+    "spacegroup": "Pbca",
+    "spacegroup_number": 61,
+    "e_above_hull": 0.0019,
+    "theoretical": true,
+    "nsites": 12,
+    "band_gap_MP_eV": 0.0,
+    "ordering": "FM",
+    "total_magnetization": 4.0121774,
+    "origins": {
+     "structure": "aaadxtph",
+     "setyawan_curtarolo": "aaadmkgy",
+     "hinuma": "aaaeumdb",
+     "latimer_munro": "aaafxgky",
+     "dos": "aaadrzil",
+     "electronic_structure": "aaafxgky",
+     "magnetism": "aaadxtph",
+     "energy": "aaadxtph"
+    }
+   },
+   {
+    "material_id": "mp-aaadbdgn",
+    "formula": "CoS2",
+    "spacegroup": "Fd-3m",
+    "spacegroup_number": 227,
+    "e_above_hull": 0.0985,
+    "theoretical": true,
+    "nsites": 12,
+    "band_gap_MP_eV": 0.0,
+    "ordering": "NM",
+    "total_magnetization": 0.0005963,
+    "origins": {
+     "structure": "aaadbdgn",
+     "dos": "aaadvbvl",
+     "electronic_structure": "aaadvbvl",
+     "magnetism": "aaadbdgn",
+     "energy": "aaadbdgn"
+    }
+   },
+   {
+    "material_id": "mp-aaadazay",
+    "formula": "CoS2",
+    "spacegroup": "R-3m",
+    "spacegroup_number": 166,
+    "e_above_hull": 0.1185,
+    "theoretical": true,
+    "nsites": 3,
+    "band_gap_MP_eV": 0.0,
+    "ordering": "FM",
+    "total_magnetization": 0.3546297,
+    "origins": {
+     "structure": "aaadxkyh",
+     "setyawan_curtarolo": "aaadnroe",
+     "hinuma": "aaaetsgi",
+     "latimer_munro": "aaafxcfy",
+     "dos": "aaadtkbp",
+     "electronic_structure": "aaafxcfy",
+     "magnetism": "aaadxkyh",
+     "energy": "aaadxkyh"
+    }
+   },
+   {
+    "material_id": "mp-aaachhpa",
+    "formula": "CoS2",
+    "spacegroup": "I-42d",
+    "spacegroup_number": 122,
+    "e_above_hull": 0.3174,
+    "theoretical": true,
+    "nsites": 6,
+    "band_gap_MP_eV": 0.0,
+    "ordering": "NM",
+    "total_magnetization": 1.94e-05,
+    "origins": {
+     "structure": "aaadbsas",
+     "setyawan_curtarolo": "aaachhpo",
+     "hinuma": "aaaesomp",
+     "latimer_munro": "aaafbiyh",
+     "dos": "aaadtocx",
+     "electronic_structure": "aaafbiyh",
+     "magnetism": "aaadbsas",
+     "energy": "aaadbsas"
+    }
+   }
+  ],
+  "files": [
+   "db/structures/cei_gap_tm/CoS2_mp-aaaaadbq.vasp",
+   "db/structures/cei_gap_tm/CoS2_mp-aaaaadbq.cif",
+   "db/structures/cei_gap_tm/CoS2_mp-aaaaadbq.magmom.json"
+  ],
+  "nsites_written": 12,
+  "source": "Materials Project (mp_api · use_document_model=False)",
+  "fetched": "2026-10-27",
+  "magnetism": {
+   "ordering_summary": "Unknown",
+   "ordering_magnetism_doc": "Unknown",
+   "aligned_from": "materials.magnetism.magmoms (길이 일치)",
+   "total_magnetization": 4.0000004
+  }
+ },
+ "NiS2": {
+  "formula": "NiS2",
+  "label": "NiS2",
+  "rule": "observed_lowest_e_hull",
+  "pick": {
+   "material_id": "mp-aaaaadju",
+   "formula": "NiS2",
+   "spacegroup": "Pa-3",
+   "spacegroup_number": 205,
+   "e_above_hull": 0.0152,
+   "theoretical": false,
+   "nsites": 12,
+   "band_gap_MP_eV": 0.0,
+   "ordering": "Unknown",
+   "total_magnetization": 1.48e-05,
+   "origins": {
+    "structure": "aaaelbzh",
+    "setyawan_curtarolo": "aaadmpjd",
+    "hinuma": "aaaeuntj",
+    "latimer_munro": "aaafwxve",
+    "dos": "aaadqxub",
+    "electronic_structure": "aaafwxve",
+    "magnetism": "aaaelbzh",
+    "energy": "aaaelbzh"
+   },
+   "es_task": "aaafwxve",
+   "es_calc_type": "GGA NSCF Line",
+   "es_functional": "GGA"
+  },
+  "hull_entry": {
+   "material_id": "mp-aaacpdqk",
+   "formula": "NiS2",
+   "spacegroup": "P2_1/c",
+   "spacegroup_number": 14,
+   "e_above_hull": 0.0,
+   "theoretical": true,
+   "nsites": 6,
+   "band_gap_MP_eV": 0.2404,
+   "ordering": "Unknown",
+   "total_magnetization": 0.0,
+   "origins": {
+    "structure": "aaadived",
+    "setyawan_curtarolo": "aaadolir",
+    "hinuma": "aaaeqlbt",
+    "latimer_munro": "aaafbkvu",
+    "dos": "aaadwalo",
+    "electronic_structure": "aaafbkvu",
+    "magnetism": "aaadived",
+    "energy": "aaadblvl"
+   },
+   "es_task": "aaafbkvu",
+   "es_calc_type": "GGA NSCF Line",
+   "es_functional": "GGA"
+  },
+  "same_as_hull": false,
+  "n_candidates": 14,
+  "candidates": [
+   {
+    "material_id": "mp-aaacpdqk",
+    "formula": "NiS2",
+    "spacegroup": "P2_1/c",
+    "spacegroup_number": 14,
+    "e_above_hull": 0.0,
+    "theoretical": true,
+    "nsites": 6,
+    "band_gap_MP_eV": 0.2404,
+    "ordering": "Unknown",
+    "total_magnetization": 0.0,
+    "origins": {
+     "structure": "aaadived",
+     "setyawan_curtarolo": "aaadolir",
+     "hinuma": "aaaeqlbt",
+     "latimer_munro": "aaafbkvu",
+     "dos": "aaadwalo",
+     "electronic_structure": "aaafbkvu",
+     "magnetism": "aaadived",
+     "energy": "aaadblvl"
+    },
+    "es_task": "aaafbkvu",
+    "es_calc_type": "GGA NSCF Line",
+    "es_functional": "GGA"
+   },
+   {
+    "material_id": "mp-aaaaadju",
+    "formula": "NiS2",
+    "spacegroup": "Pa-3",
+    "spacegroup_number": 205,
+    "e_above_hull": 0.0152,
+    "theoretical": false,
+    "nsites": 12,
+    "band_gap_MP_eV": 0.0,
+    "ordering": "Unknown",
+    "total_magnetization": 1.48e-05,
+    "origins": {
+     "structure": "aaaelbzh",
+     "setyawan_curtarolo": "aaadmpjd",
+     "hinuma": "aaaeuntj",
+     "latimer_munro": "aaafwxve",
+     "dos": "aaadqxub",
+     "electronic_structure": "aaafwxve",
+     "magnetism": "aaaelbzh",
+     "energy": "aaaelbzh"
+    },
+    "es_task": "aaafwxve",
+    "es_calc_type": "GGA NSCF Line",
+    "es_functional": "GGA"
+   },
+   {
+    "material_id": "mp-aaabwiad",
+    "formula": "NiS2",
+    "spacegroup": "Pnnm",
+    "spacegroup_number": 58,
+    "e_above_hull": 0.0213,
+    "theoretical": true,
+    "nsites": 6,
+    "band_gap_MP_eV": 0.0,
+    "ordering": "Unknown",
+    "total_magnetization": 2.3e-05,
+    "origins": {
+     "structure": "aaaelbxr",
+     "setyawan_curtarolo": "aaadonsi",
+     "hinuma": "aaaesnzi",
+     "latimer_munro": "aaafbizd",
+     "dos": "aaadwefc",
+     "electronic_structure": "aaafbizd",
+     "magnetism": "aaaelbxr",
+     "energy": "aaaelbxr"
+    }
+   },
+   {
+    "material_id": "mp-aaabwjpj",
+    "formula": "NiS2",
+    "spacegroup": "P2_1/c",
+    "spacegroup_number": 14,
+    "e_above_hull": 0.0217,
+    "theoretical": true,
+    "nsites": 6,
+    "band_gap_MP_eV": 0.0,
+    "ordering": "NM",
+    "total_magnetization": 0.0001595,
+    "origins": {
+     "structure": "aaadcfxk",
+     "setyawan_curtarolo": "aaadomjk",
+     "hinuma": "aaaesogk",
+     "latimer_munro": "aaafbjft",
+     "dos": "aaadvzcl",
+     "electronic_structure": "aaafbjft",
+     "magnetism": "aaadcfxk",
+     "energy": "aaadcfxk"
+    }
+   },
+   {
+    "material_id": "mp-aaadcicf",
+    "formula": "NiS2",
+    "spacegroup": "R-3m",
+    "spacegroup_number": 166,
+    "e_above_hull": 0.035,
+    "theoretical": true,
+    "nsites": 3,
+    "band_gap_MP_eV": 0.5086,
+    "ordering": "Unknown",
+    "total_magnetization": 0.0,
+    "origins": {
+     "structure": "aaaeltfn",
+     "setyawan_curtarolo": "aaadnptp",
+     "hinuma": "aaaeohsy",
+     "latimer_munro": "aaafsido",
+     "dos": "aaadtquy",
+     "electronic_structure": "aaafsido",
+     "magnetism": "aaaeltfn",
+     "energy": "aaaeltfn"
+    }
+   },
+   {
+    "material_id": "mp-aaadefhr",
+    "formula": "NiS2",
+    "spacegroup": "Fd-3m",
+    "spacegroup_number": 227,
+    "e_above_hull": 0.0438,
+    "theoretical": true,
+    "nsites": 12,
+    "band_gap_MP_eV": 0.0,
+    "ordering": "Unknown",
+    "total_magnetization": 8e-07,
+    "origins": {
+     "structure": "aaaemkyp",
+     "dos": "aaadvffz",
+     "electronic_structure": "aaadvffz",
+     "magnetism": "aaaemkyp",
+     "energy": "aaaemkyp"
+    }
+   },
+   {
+    "material_id": "mp-aaackupv",
+    "formula": "NiS2",
+    "spacegroup": "Pnma",
+    "spacegroup_number": 62,
+    "e_above_hull": 0.0602,
+    "theoretical": true,
+    "nsites": 12,
+    "band_gap_MP_eV": 0.0,
+    "ordering": "NM",
+    "total_magnetization": 0.123276,
+    "origins": {
+     "structure": "aaaeafvb",
+     "dos": "aaadvgkd",
+     "electronic_structure": "aaadvgkd",
+     "magnetism": "aaaeafvb",
+     "energy": "aaaeafvb"
+    }
+   },
+   {
+    "material_id": "mp-aaabwjmy",
+    "formula": "NiS2",
+    "spacegroup": "Pbcn",
+    "spacegroup_number": 60,
+    "e_above_hull": 0.0969,
+    "theoretical": true,
+    "nsites": 12,
+    "band_gap_MP_eV": 0.0,
+    "ordering": "NM",
+    "total_magnetization": 0.0024028,
+    "origins": {
+     "structure": "aaadatdj",
+     "setyawan_curtarolo": "aaabxotr",
+     "hinuma": "aaaepmlb",
+     "dos": "aaadvbvs",
+     "electronic_structure": "aaaepmlb",
+     "magnetism": "aaadatdj",
+     "energy": "aaadatdj"
+    }
+   },
+   {
+    "material_id": "mp-aaabwiax",
+    "formula": "NiS2",
+    "spacegroup": "P6_3/mmc",
+    "spacegroup_number": 194,
+    "e_above_hull": 0.1919,
+    "theoretical": true,
+    "nsites": 6,
+    "band_gap_MP_eV": 0.0,
+    "ordering": "NM",
+    "total_magnetization": 0.0046529,
+    "origins": {
+     "structure": "aaadbzbp",
+     "setyawan_curtarolo": "aaadoosc",
+     "hinuma": "aaaepqex",
+     "latimer_munro": "aaafblth",
+     "dos": "aaadwbxj",
+     "electronic_structure": "aaafblth",
+     "magnetism": "aaadbzbp",
+     "energy": "aaadbzbp"
+    }
+   },
+   {
+    "material_id": "mp-aaabwibk",
+    "formula": "NiS2",
+    "spacegroup": "P4/nmm",
+    "spacegroup_number": 129,
+    "e_above_hull": 0.3056,
+    "theoretical": true,
+    "nsites": 6,
+    "band_gap_MP_eV": 0.0,
+    "ordering": "NM",
+    "total_magnetization": 0.1848436,
+    "origins": {
+     "structure": "aaadboeu",
+     "setyawan_curtarolo": "aaadoksx",
+     "hinuma": "aaaespxu",
+     "latimer_munro": "aaafbkcq",
+     "dos": "aaadwenp",
+     "electronic_structure": "aaafbkcq",
+     "magnetism": "aaadboeu",
+     "energy": "aaadboeu"
+    }
+   },
+   {
+    "material_id": "mp-aaachhpj",
+    "formula": "NiS2",
+    "spacegroup": "I-42d",
+    "spacegroup_number": 122,
+    "e_above_hull": 0.3804,
+    "theoretical": true,
+    "nsites": 6,
+    "band_gap_MP_eV": 0.0,
+    "ordering": "NM",
+    "total_magnetization": 0.0002079,
+    "origins": {
+     "structure": "aaadcgrk",
+     "setyawan_curtarolo": "aaachhpq",
+     "hinuma": "aaaepqym",
+     "latimer_munro": "aaafbkzl",
+     "dos": "aaadwghb",
+     "electronic_structure": "aaafbkzl",
+     "magnetism": "aaadcgrk",
+     "energy": "aaadcgrk"
+    }
+   },
+   {
+    "material_id": "mp-aaabwhzx",
+    "formula": "NiS2",
+    "spacegroup": "Fm-3m",
+    "spacegroup_number": 225,
+    "e_above_hull": 0.4673,
+    "theoretical": true,
+    "nsites": 3,
+    "band_gap_MP_eV": 0.0,
+    "ordering": "FM",
+    "total_magnetization": 0.5714737,
+    "origins": {
+     "structure": "aaadydxg",
+     "setyawan_curtarolo": "aaadnsgu",
+     "hinuma": "aaaeojky",
+     "latimer_munro": "aaafckit",
+     "dos": "aaadwnuu",
+     "electronic_structure": "aaafckit",
+     "magnetism": "aaadydxg",
+     "energy": "aaadydxg"
+    }
+   },
+   {
+    "material_id": "mp-aaackgmj",
+    "formula": "NiS2",
+    "spacegroup": "I4/mmm",
+    "spacegroup_number": 139,
+    "e_above_hull": 0.576,
+    "theoretical": true,
+    "nsites": 3,
+    "band_gap_MP_eV": 0.0,
+    "ordering": "NM",
+    "total_magnetization": 0.0039602,
+    "origins": {
+     "structure": "aaadcwoq",
+     "setyawan_curtarolo": "aaadpezq",
+     "hinuma": "aaaetspq",
+     "latimer_munro": "aaafwvgt",
+     "dos": "aaadrhed",
+     "electronic_structure": "aaafwvgt",
+     "magnetism": "aaadcwoq",
+     "energy": "aaadcwoq"
+    }
+   },
+   {
+    "material_id": "mp-aaabwiat",
+    "formula": "NiS2",
+    "spacegroup": "P6/mmm",
+    "spacegroup_number": 191,
+    "e_above_hull": 1.104,
+    "theoretical": true,
+    "nsites": 3,
+    "band_gap_MP_eV": 0.0,
+    "ordering": "NM",
+    "total_magnetization": 0.0002832,
+    "origins": {
+     "structure": "aaaddffw",
+     "setyawan_curtarolo": "aaadnrxj",
+     "hinuma": "aaaetqhm",
+     "latimer_munro": "aaafsibp",
+     "dos": "aaadwmrj",
+     "electronic_structure": "aaafsibp",
+     "magnetism": "aaaddffw",
+     "energy": "aaaddffw"
+    }
+   }
+  ],
+  "files": [
+   "db/structures/cei_gap_tm/NiS2_mp-aaaaadju.vasp",
+   "db/structures/cei_gap_tm/NiS2_mp-aaaaadju.cif",
+   "db/structures/cei_gap_tm/NiS2_mp-aaaaadju.magmom.json"
+  ],
+  "nsites_written": 12,
+  "source": "Materials Project (mp_api · use_document_model=False)",
+  "fetched": "2026-10-27",
+  "note": "E_hull 최저(반응 원장 hull 상)는 mp-aaacpdqk P2_1/c (theoretical=True) — 고른 관측 다형과 **다르다**",
+  "magnetism": {
+   "ordering_summary": "Unknown",
+   "ordering_magnetism_doc": "Unknown",
+   "aligned_from": "materials.magnetism.magmoms (길이 일치)",
+   "total_magnetization": 1.48e-05
+  }
+ },
+ "NiP2O6": {
+  "formula": "NiP2O6",
+  "label": "NiP2O6",
+  "rule": "observed_lowest_e_hull",
+  "pick": {
+   "material_id": "mp-aaaabchz",
+   "formula": "Ni(PO3)2",
+   "spacegroup": "C2/c",
+   "spacegroup_number": 15,
+   "e_above_hull": 0.0,
+   "theoretical": false,
+   "nsites": 36,
+   "band_gap_MP_eV": 1.4863,
+   "ordering": "FM",
+   "total_magnetization": 8.0,
+   "origins": {
+    "structure": "aaafzxlv",
+    "setyawan_curtarolo": "aaadpeax",
+    "hinuma": "aaaeqiyb",
+    "latimer_munro": "aaafbhma",
+    "dos": "aaadvwgo",
+    "electronic_structure": "aaafbhma",
+    "magnetism": "aaafzxlv",
+    "energy": "aaafzxlv"
+   },
+   "es_task": "aaafbhma",
+   "es_calc_type": "GGA+U NSCF Line",
+   "es_functional": "GGA+U"
+  },
+  "hull_entry": {
+   "material_id": "mp-aaaabchz",
+   "formula": "Ni(PO3)2",
+   "spacegroup": "C2/c",
+   "spacegroup_number": 15,
+   "e_above_hull": 0.0,
+   "theoretical": false,
+   "nsites": 36,
+   "band_gap_MP_eV": 1.4863,
+   "ordering": "FM",
+   "total_magnetization": 8.0,
+   "origins": {
+    "structure": "aaafzxlv",
+    "setyawan_curtarolo": "aaadpeax",
+    "hinuma": "aaaeqiyb",
+    "latimer_munro": "aaafbhma",
+    "dos": "aaadvwgo",
+    "electronic_structure": "aaafbhma",
+    "magnetism": "aaafzxlv",
+    "energy": "aaafzxlv"
+   },
+   "es_task": "aaafbhma",
+   "es_calc_type": "GGA+U NSCF Line",
+   "es_functional": "GGA+U"
+  },
+  "same_as_hull": true,
+  "n_candidates": 1,
+  "candidates": [
+   {
+    "material_id": "mp-aaaabchz",
+    "formula": "Ni(PO3)2",
+    "spacegroup": "C2/c",
+    "spacegroup_number": 15,
+    "e_above_hull": 0.0,
+    "theoretical": false,
+    "nsites": 36,
+    "band_gap_MP_eV": 1.4863,
+    "ordering": "FM",
+    "total_magnetization": 8.0,
+    "origins": {
+     "structure": "aaafzxlv",
+     "setyawan_curtarolo": "aaadpeax",
+     "hinuma": "aaaeqiyb",
+     "latimer_munro": "aaafbhma",
+     "dos": "aaadvwgo",
+     "electronic_structure": "aaafbhma",
+     "magnetism": "aaafzxlv",
+     "energy": "aaafzxlv"
+    },
+    "es_task": "aaafbhma",
+    "es_calc_type": "GGA+U NSCF Line",
+    "es_functional": "GGA+U"
+   }
+  ],
+  "files": [
+   "db/structures/cei_gap_tm/NiP2O6_mp-aaaabchz.vasp",
+   "db/structures/cei_gap_tm/NiP2O6_mp-aaaabchz.cif",
+   "db/structures/cei_gap_tm/NiP2O6_mp-aaaabchz.magmom.json"
+  ],
+  "nsites_written": 36,
+  "source": "Materials Project (mp_api · use_document_model=False)",
+  "fetched": "2026-10-27",
+  "magnetism": {
+   "ordering_summary": "FM",
+   "ordering_magnetism_doc": "FM",
+   "aligned_from": "structure.site_properties['magmom']",
+   "total_magnetization": 8.0
+  }
+ },
+ "MnP2O6": {
+  "formula": "MnP2O6",
+  "label": "MnP2O6",
+  "rule": "observed_lowest_e_hull",
+  "pick": {
+   "material_id": "mp-aaabevzn",
+   "formula": "Mn(PO3)2",
+   "spacegroup": "C2/c",
+   "spacegroup_number": 15,
+   "e_above_hull": 0.0,
+   "theoretical": false,
+   "nsites": 36,
+   "band_gap_MP_eV": 2.1631,
+   "ordering": "Unknown",
+   "total_magnetization": 0.0,
+   "origins": {
+    "structure": "aaaevnup",
+    "setyawan_curtarolo": "aaabvxoc",
+    "dos": "aaadvbul",
+    "electronic_structure": "aaabvxoc",
+    "magnetism": "aaaevnup",
+    "energy": "aaaevnup"
+   },
+   "es_task": "aaabvxoc",
+   "es_calc_type": "GGA NSCF Line",
+   "es_functional": "GGA"
+  },
+  "hull_entry": {
+   "material_id": "mp-aaabevzn",
+   "formula": "Mn(PO3)2",
+   "spacegroup": "C2/c",
+   "spacegroup_number": 15,
+   "e_above_hull": 0.0,
+   "theoretical": false,
+   "nsites": 36,
+   "band_gap_MP_eV": 2.1631,
+   "ordering": "Unknown",
+   "total_magnetization": 0.0,
+   "origins": {
+    "structure": "aaaevnup",
+    "setyawan_curtarolo": "aaabvxoc",
+    "dos": "aaadvbul",
+    "electronic_structure": "aaabvxoc",
+    "magnetism": "aaaevnup",
+    "energy": "aaaevnup"
+   },
+   "es_task": "aaabvxoc",
+   "es_calc_type": "GGA NSCF Line",
+   "es_functional": "GGA"
+  },
+  "same_as_hull": true,
+  "n_candidates": 1,
+  "candidates": [
+   {
+    "material_id": "mp-aaabevzn",
+    "formula": "Mn(PO3)2",
+    "spacegroup": "C2/c",
+    "spacegroup_number": 15,
+    "e_above_hull": 0.0,
+    "theoretical": false,
+    "nsites": 36,
+    "band_gap_MP_eV": 2.1631,
+    "ordering": "Unknown",
+    "total_magnetization": 0.0,
+    "origins": {
+     "structure": "aaaevnup",
+     "setyawan_curtarolo": "aaabvxoc",
+     "dos": "aaadvbul",
+     "electronic_structure": "aaabvxoc",
+     "magnetism": "aaaevnup",
+     "energy": "aaaevnup"
+    },
+    "es_task": "aaabvxoc",
+    "es_calc_type": "GGA NSCF Line",
+    "es_functional": "GGA"
+   }
+  ],
+  "files": [
+   "db/structures/cei_gap_tm/MnP2O6_mp-aaabevzn.vasp",
+   "db/structures/cei_gap_tm/MnP2O6_mp-aaabevzn.cif",
+   "db/structures/cei_gap_tm/MnP2O6_mp-aaabevzn.magmom.json"
+  ],
+  "nsites_written": 36,
+  "source": "Materials Project (mp_api · use_document_model=False)",
+  "fetched": "2026-10-27",
+  "magnetism": {
+   "ordering_summary": "Unknown",
+   "ordering_magnetism_doc": "Unknown",
+   "aligned_from": "materials.magnetism.magmoms (길이 일치)",
+   "total_magnetization": 0.0
+  }
+ },
+ "MnS2": {
+  "formula": "MnS2",
+  "label": "MnS2",
+  "rule": "observed_lowest_e_hull",
+  "pick": {
+   "material_id": "mp-aaacfzcu",
+   "formula": "MnS2",
+   "spacegroup": "Pnnm",
+   "spacegroup_number": 58,
+   "e_above_hull": 0.0331,
+   "theoretical": false,
+   "nsites": 6,
+   "band_gap_MP_eV": 0.0,
+   "ordering": "FM",
+   "total_magnetization": 1.9687531,
+   "origins": {
+    "structure": "aaafavgo",
+    "setyawan_curtarolo": "aaadmsfz",
+    "hinuma": "aaaeutyw",
+    "latimer_munro": "aaafwwvc",
+    "dos": "aaadsmdy",
+    "electronic_structure": "aaafwwvc",
+    "magnetism": "aaafavgo",
+    "energy": "aaafavgo"
+   },
+   "es_task": "aaafwwvc",
+   "es_calc_type": "GGA NSCF Line",
+   "es_functional": "GGA"
+  },
+  "hull_entry": {
+   "material_id": "mp-aaadcxpl",
+   "formula": "MnS2",
+   "spacegroup": "R-3m",
+   "spacegroup_number": 166,
+   "e_above_hull": 0.0,
+   "theoretical": true,
+   "nsites": 3,
+   "band_gap_MP_eV": 0.0,
+   "ordering": "Unknown",
+   "total_magnetization": 2.9995695,
+   "origins": {
+    "structure": "aaaellbl",
+    "setyawan_curtarolo": "aaadnsne",
+    "hinuma": "aaaetszj",
+    "latimer_munro": "aaafxcpe",
+    "dos": "aaadusmr",
+    "electronic_structure": "aaafxcpe",
+    "magnetism": "aaaellbl",
+    "energy": "aaaellbl"
+   },
+   "es_task": "aaafxcpe",
+   "es_calc_type": "GGA NSCF Line",
+   "es_functional": "GGA"
+  },
+  "same_as_hull": false,
+  "n_candidates": 6,
+  "candidates": [
+   {
+    "material_id": "mp-aaadcxpl",
+    "formula": "MnS2",
+    "spacegroup": "R-3m",
+    "spacegroup_number": 166,
+    "e_above_hull": 0.0,
+    "theoretical": true,
+    "nsites": 3,
+    "band_gap_MP_eV": 0.0,
+    "ordering": "Unknown",
+    "total_magnetization": 2.9995695,
+    "origins": {
+     "structure": "aaaellbl",
+     "setyawan_curtarolo": "aaadnsne",
+     "hinuma": "aaaetszj",
+     "latimer_munro": "aaafxcpe",
+     "dos": "aaadusmr",
+     "electronic_structure": "aaafxcpe",
+     "magnetism": "aaaellbl",
+     "energy": "aaaellbl"
+    },
+    "es_task": "aaafxcpe",
+    "es_calc_type": "GGA NSCF Line",
+    "es_functional": "GGA"
+   },
+   {
+    "material_id": "mp-aaadawjk",
+    "formula": "MnS2",
+    "spacegroup": "Fd-3m",
+    "spacegroup_number": 227,
+    "e_above_hull": 0.0016,
+    "theoretical": true,
+    "nsites": 12,
+    "band_gap_MP_eV": 0.0,
+    "ordering": "Unknown",
+    "total_magnetization": 11.9953575,
+    "origins": {
+     "structure": "aaaekxfk",
+     "dos": "aaadvcsi",
+     "electronic_structure": "aaadvcsi",
+     "magnetism": "aaaekxfk",
+     "energy": "aaaekxfk"
+    }
+   },
+   {
+    "material_id": "mp-aaacfzcu",
+    "formula": "MnS2",
+    "spacegroup": "Pnnm",
+    "spacegroup_number": 58,
+    "e_above_hull": 0.0331,
+    "theoretical": false,
+    "nsites": 6,
+    "band_gap_MP_eV": 0.0,
+    "ordering": "FM",
+    "total_magnetization": 1.9687531,
+    "origins": {
+     "structure": "aaafavgo",
+     "setyawan_curtarolo": "aaadmsfz",
+     "hinuma": "aaaeutyw",
+     "latimer_munro": "aaafwwvc",
+     "dos": "aaadsmdy",
+     "electronic_structure": "aaafwwvc",
+     "magnetism": "aaafavgo",
+     "energy": "aaafavgo"
+    },
+    "es_task": "aaafwwvc",
+    "es_calc_type": "GGA NSCF Line",
+    "es_functional": "GGA"
+   },
+   {
+    "material_id": "mp-aaaaacdz",
+    "formula": "MnS2",
+    "spacegroup": "Pa-3",
+    "spacegroup_number": 205,
+    "e_above_hull": 0.1106,
+    "theoretical": false,
+    "nsites": 12,
+    "band_gap_MP_eV": 0.0,
+    "ordering": "FM",
+    "total_magnetization": 4.0159753,
+    "origins": {
+     "structure": "aaaeznzc",
+     "setyawan_curtarolo": "aaadmqep",
+     "hinuma": "aaaesnki",
+     "latimer_munro": "aaafjgth",
+     "dos": "aaadsbgn",
+     "electronic_structure": "aaafjgth",
+     "magnetism": "aaaeznzc",
+     "energy": "aaaeznzc"
+    }
+   },
+   {
+    "material_id": "mp-aaackiih",
+    "formula": "MnS2",
+    "spacegroup": "P2_1/c",
+    "spacegroup_number": 14,
+    "e_above_hull": 0.3017,
+    "theoretical": false,
+    "nsites": 12,
+    "band_gap_MP_eV": 0.0,
+    "ordering": "FM",
+    "total_magnetization": 7.9916603,
+    "origins": {
+     "structure": "aaadxdfr",
+     "setyawan_curtarolo": "aaadnmsz",
+     "hinuma": "aaaetpqv",
+     "latimer_munro": "aaafcfnr",
+     "dos": "aaadrjst",
+     "electronic_structure": "aaafcfnr",
+     "magnetism": "aaadxdfr",
+     "energy": "aaadxdfr"
+    }
+   },
+   {
+    "material_id": "mp-aaadbmzr",
+    "formula": "MnS2",
+    "spacegroup": "I-42d",
+    "spacegroup_number": 122,
+    "e_above_hull": 0.3085,
+    "theoretical": true,
+    "nsites": 6,
+    "band_gap_MP_eV": 0.0,
+    "ordering": "FM",
+    "total_magnetization": 0.1439548,
+    "origins": {
+     "structure": "aaadbmzr",
+     "setyawan_curtarolo": "aaadokmc",
+     "hinuma": "aaaesqal",
+     "latimer_munro": "aaafblmh",
+     "dos": "aaadvtwj",
+     "electronic_structure": "aaafblmh",
+     "magnetism": "aaadbmzr",
+     "energy": "aaadbmzr"
+    }
+   }
+  ],
+  "files": [
+   "db/structures/cei_gap_tm/MnS2_mp-aaacfzcu.vasp",
+   "db/structures/cei_gap_tm/MnS2_mp-aaacfzcu.cif",
+   "db/structures/cei_gap_tm/MnS2_mp-aaacfzcu.magmom.json"
+  ],
+  "nsites_written": 6,
+  "source": "Materials Project (mp_api · use_document_model=False)",
+  "fetched": "2026-10-27",
+  "note": "E_hull 최저(반응 원장 hull 상)는 mp-aaadcxpl R-3m (theoretical=True) — 고른 관측 다형과 **다르다**",
+  "magnetism": {
+   "ordering_summary": "FM",
+   "ordering_magnetism_doc": "FM",
+   "aligned_from": "structure.site_properties['magmom']",
+   "total_magnetization": 1.9687531
+  }
+ },
+ "Ni3S4": {
+  "formula": "Ni3S4",
+  "label": "Ni3S4",
+  "rule": "observed_lowest_e_hull",
+  "pick": {
+   "material_id": "mp-aaaaabok",
+   "formula": "Ni3S4",
+   "spacegroup": "Fd-3m",
+   "spacegroup_number": 227,
+   "e_above_hull": 0.0,
+   "theoretical": false,
+   "nsites": 14,
+   "band_gap_MP_eV": 0.0,
+   "ordering": "Unknown",
+   "total_magnetization": 0.0001155,
+   "origins": {
+    "structure": "aaaemrta",
+    "setyawan_curtarolo": "aaadnbvx",
+    "hinuma": "aaaetxcu",
+    "latimer_munro": "aaafimzz",
+    "dos": "aaadsxmd",
+    "electronic_structure": "aaafimzz",
+    "magnetism": "aaaemrta",
+    "energy": "aaaemrta"
+   },
+   "es_task": "aaafimzz",
+   "es_calc_type": "GGA NSCF Line",
+   "es_functional": "GGA"
+  },
+  "hull_entry": {
+   "material_id": "mp-aaaaabok",
+   "formula": "Ni3S4",
+   "spacegroup": "Fd-3m",
+   "spacegroup_number": 227,
+   "e_above_hull": 0.0,
+   "theoretical": false,
+   "nsites": 14,
+   "band_gap_MP_eV": 0.0,
+   "ordering": "Unknown",
+   "total_magnetization": 0.0001155,
+   "origins": {
+    "structure": "aaaemrta",
+    "setyawan_curtarolo": "aaadnbvx",
+    "hinuma": "aaaetxcu",
+    "latimer_munro": "aaafimzz",
+    "dos": "aaadsxmd",
+    "electronic_structure": "aaafimzz",
+    "magnetism": "aaaemrta",
+    "energy": "aaaemrta"
+   },
+   "es_task": "aaafimzz",
+   "es_calc_type": "GGA NSCF Line",
+   "es_functional": "GGA"
+  },
+  "same_as_hull": true,
+  "n_candidates": 1,
+  "candidates": [
+   {
+    "material_id": "mp-aaaaabok",
+    "formula": "Ni3S4",
+    "spacegroup": "Fd-3m",
+    "spacegroup_number": 227,
+    "e_above_hull": 0.0,
+    "theoretical": false,
+    "nsites": 14,
+    "band_gap_MP_eV": 0.0,
+    "ordering": "Unknown",
+    "total_magnetization": 0.0001155,
+    "origins": {
+     "structure": "aaaemrta",
+     "setyawan_curtarolo": "aaadnbvx",
+     "hinuma": "aaaetxcu",
+     "latimer_munro": "aaafimzz",
+     "dos": "aaadsxmd",
+     "electronic_structure": "aaafimzz",
+     "magnetism": "aaaemrta",
+     "energy": "aaaemrta"
+    },
+    "es_task": "aaafimzz",
+    "es_calc_type": "GGA NSCF Line",
+    "es_functional": "GGA"
+   }
+  ],
+  "files": [
+   "db/structures/cei_gap_tm/Ni3S4_mp-aaaaabok.vasp",
+   "db/structures/cei_gap_tm/Ni3S4_mp-aaaaabok.cif",
+   "db/structures/cei_gap_tm/Ni3S4_mp-aaaaabok.magmom.json"
+  ],
+  "nsites_written": 14,
+  "source": "Materials Project (mp_api · use_document_model=False)",
+  "fetched": "2026-10-27",
+  "magnetism": {
+   "ordering_summary": "Unknown",
+   "ordering_magnetism_doc": "Unknown",
+   "aligned_from": "materials.magnetism.magmoms (길이 일치)",
+   "total_magnetization": 0.0001155
+  }
+ }
+}

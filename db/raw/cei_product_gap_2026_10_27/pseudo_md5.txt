@@ -1,0 +1,8 @@
+daecd58dfbed9f74c5ea20c0112c952a  Cl.pbe-nl-kjpaw_psl.1.0.0.UPF
+5f91765df6ddd3222702df6e7b74a16d  Co_pbe_v1.2.uspp.F.UPF
+4449e4b2026dd225cbf03a6cd6c9364f  Li.pbe-sl-kjpaw_psl.1.0.0.UPF
+82ef2b46521d7a7d9e736dc3972e4928  mn_pbe_v1.5.uspp.F.UPF
+1ee80287db30b12d2bc1f57a5b5d6409  ni_pbe_v1.4.uspp.F.UPF
+0234752ac141de4415c5fc33072bef88  O.pbe-n-kjpaw_psl.0.1.UPF
+06b8cad1975795032ee26009bb7624c7  P.pbe-n-kjpaw_psl.1.0.0.UPF
+a0db168fa6a42edaf368e88c1856b871  S.pbe-nl-kjpaw_psl.1.0.0.UPF
