@@ -1,0 +1,36 @@
+{
+  "kind": "PRIMARY_SOURCE_TRACE_NOT_EXECUTION",
+  "source": {
+    "repository": "git/git",
+    "ref": "v2.43.0",
+    "path": "commit.c",
+    "git_blob_sha1": "8405d7c3fceab23c6eafd16e36d76c7172c44923",
+    "url": "https://github.com/git/git/blob/v2.43.0/commit.c"
+  },
+  "line_basis": "Original connector text, 1844 source lines. Web renderers collapse blanks; their display line numbers differ.",
+  "functions": [
+    {
+      "name": "verify_utf8",
+      "lines": "1578–1609",
+      "finding": "Invalid bytes are treated as Latin-1 and replaced by valid UTF-8 bytes."
+    },
+    {
+      "name": "commit_tree_extended",
+      "lines": "1632–1677",
+      "finding": "Absent commit encoding uses UTF-8; verification/conversion precedes object write."
+    }
+  ],
+  "inference": {
+    "input_bytes_hex": "ff fe",
+    "stored_bytes_hex": "c3 bf c3 be",
+    "characters": "ÿþ",
+    "intended_utf8_decoder_replacement": false,
+    "fixture_effect": "The prescribed U+FFFD assertions do not follow from this producer."
+  },
+  "limits": [
+    "Source code reading, not installed executable identity remeasurement.",
+    "No commit fixture, Git process, or target decoder run.",
+    "Git wrapper errors=replace design is not rejected; input producer must be corrected."
+  ],
+  "target_tests": 0
+}

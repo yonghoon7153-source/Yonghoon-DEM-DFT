@@ -1,0 +1,11 @@
+REIL C4-E E1 v4 사전 검토 전달 목록
+1. REIL_C4E_E1_V4_ULTRA_REVIEW_20261021.zip — 상세 검토·짧은 회신·판정·정적 식별 및 근거 source 사본.
+2. DELIVERY_RECEIPT.json — ZIP/manifest 식별과 읽기 검증.
+3. PACKAGE_TOOL_RETURN.json — 포장 도구 반환 이후 직렬화한 원반환.
+4. FINAL_CHECK.json — ZIP/필수 기록/선택 입력 최종 대조.
+5. FINAL_CHECK_TOOL_RETURN.json — 최종 확인 도구 반환 이후 직렬화한 원반환.
+
+Claude에게는 CODEX_REPLY_KO.txt와 ZIP을 전달하면 된다. 외부 발송은 하지 않았다.
+ZIP은 미래의 영수증/도구 반환/최종 확인을 포함하지 않는다. 위 ZIP 밖 파일을 필요하면 함께 전달한다.
+현재 판정 CHANGES_REQUIRED_NO_EXECUTION: V4-01 P2 한 건 + V4-N1 비차단 P3 문구.
+원 후보·과거 기록·현행 계약은 변경하지 않았다. 받은 프로그램/시험 실행0; 실행 승인이 아니다.
