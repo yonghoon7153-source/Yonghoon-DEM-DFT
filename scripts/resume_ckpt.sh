@@ -10,11 +10,25 @@
 # 2026-10-27 (ibb kg50_d2_b50 r4 · 1저자 Q1 (가) "권고대로 해줘" · 원장 KG50-17): dem_restart.py 의 settling 잔여 = 본 덱 그 run 길이 − 체크포인트 step
 #   (200000 − 20001 = 179999) 인데 본 덱 정착 run 은 삽입 run 1 뒤 step 1 에서 시작해 끝 200001 → 재개 덱 첫 긴 run 이 1 step 짧다 (정적 대조 "남은 step 다름").
 #   그 꼴 하나만 (문제가 그 하나 · 한 줄짜리 숫자 run · 맞는 값 = 원래 + 1) 그 줄의 숫자를 고치고 다시 대조해 통과할 때만 바꾼다 (기록 fixrun_<SFX>.txt · 보고).
+# 2026-10-28 (Codex 재확인 요청서 docs/reviews/codex_kg50_resume_tool_recheck_request_20261027.md §4-1 · §4-2 · 1저자 "50kg 권고대로 해" ④ ⑤ ·
+#   원장 KG50-18 · KG50-19):
+#   KG50-18 — G0 기대 끝 = S0 + 시험 덱 read_restart 뒤 모든 run 합 (예전 = 마지막 run 만 → after_settling 재개 (판 높이 run 1 + 시험 run)
+#     는 정상 시험도 끝 S0 + 2001 ≠ 기대 S0 + 2000 으로 G0 실패).  합을 못 정하면 시험을 내지 않는다 — read_restart ≠ 1 개 · jump · next ·
+#     include · print/quit 말고 다른 명령이 든 if · step 을 바꾸는 명령 (reset_timestep · minimize · read_data …) · 명령 이름에 변수 ·
+#     run 수가 숫자 아님 · pre/post 말고 다른 run 꼬리 (upto · every · start · stop) · read_restart 앞 run · 마지막 명령이 run 아님.
+#     run 이 둘 이상이면 그 합을 stdout · 보고에 한 줄 (하나면 예전 그대로 · 줄 없음).
+#   KG50-19 — 정적 대조가 첫 긴 run 길이를 settling 꼴 (restart 명령 체크포인트 · 그 앞 반복 없음) 에서만 봤다.
+#     write_restart 체크포인트 = 본 덱 그 줄 뒤 첫 긴 run 까지의 run · label 줄 이 재개 덱 read_restart 뒤 첫 긴 run 까지와 글자 같아야
+#     (그 사이 변수 run · 흐름 줄이면 정할 수 없음 = 거부).
+#     반복 안 restart 체크포인트 (그 run 앞에 label · jump · include · next · run 이 든 if · step 을 바꾸는 명령 · 변수 run = 남은 step 을 못 셈)
+#     = 체크포인트 뒤 루프 머리 label 부터 첫 긴 run 까지가 같아야 · 본 덱 그 run 뒤 첫 흐름 줄이 그 label 로 돌아가는 jump 여야 ·
+#     아니면 (루프 머리 없음 · 체크포인트 줄과 루프 머리 사이나 루프 머리 뒤에 변수 run · 흐름 줄) 정할 수 없음 = 거부 (예전 = 확인 생략 · 통과).
+#     settling 꼴은 재개 덱 첫 긴 run 앞에 run (run 0 말고) 이 없어야 — KG50-18 로 G0 이 그 run 까지 세면 예전 G0 이 우연히 막던 어긋남이 열린다.
 # 2026-10-26 (원장 KG50-02 · KG50-10 · 1저자 Q2 *"50kg 권고대로해"*):
-#   본 제출 = G0 ∧ G1 ∧ G2 ∧ G3 · G0 = 시험이 COMPLETED · ExitCode 0:0 · 마지막 thermo step = 기대 끝 (S0 + 시험 run) · 그 뒤 Loop time · ERROR 0.
+#   본 제출 = G0 ∧ G1 ∧ G2 ∧ G3 · G0 = 시험이 COMPLETED · ExitCode 0:0 · 마지막 thermo step = 기대 끝 (S0 + 시험 덱 read_restart 뒤 run 합 · 10-28) · 그 뒤 Loop time · ERROR 0.
 #   G3 = 원 로그의 비교 구간 (S0, 끝] 정규 줄이 시험에 하나라도 없으면 실패 (결손) — 원 로그에 그 구간 줄이 없을 때만 생략.
 #   sacct 조회 실패 · 대기 시간 초과 · 시험 로그 없음 = 제출 안 함.
-#   재개 덱 정적 대조 (재삽입 · 물리 줄 · 재개 지점 상태 · 남은 step · 뒤 순서 · c_/f_ 정의) 실패 = 시험도 내지 않는다.
+#   재개 덱 정적 대조 (재삽입 · 물리 줄 · 재개 지점 상태 · 남은 step · 첫 긴 run (10-28) · 뒤 순서 · c_/f_ 정의) 실패 = 시험도 내지 않는다.
 #   큐 검사 = 이름 정확 일치 (C · C_ins · C_<SFX> · C_<SFX>t · C_r<N> · C_r<N>t) · squeue 조회 실패 = 그 케이스 건너뜀.
 NP=30; SUF=""; L=~/dem_test/lhs; SFX=""; TS=2000; TONLY=0; CHK=0; STRIP=0
 while getopts "n:s:r:x:t:TCc" o; do case $o in n) NP=$OPTARG;; s) SUF=$OPTARG;; r) L=$OPTARG;; x) SFX=$OPTARG;; t) TS=$OPTARG;; T) TONLY=1;; C) CHK=1;; c) STRIP=1;; *) exit 1;; esac; done
@@ -78,6 +92,128 @@ def long_runs(L, start=0):
     # 시험 덱 자르기와 같은 규칙 (awk: $1=="run" && $2+0>1)
     return [i for i in range(start, len(L)) if L[i].split()[0] == 'run'
             and len(L[i].split()) > 1 and num(L[i].split()[1]) > 1]
+
+
+# 10-28 (KG50-18 · 19): 실행 순서 · step 을 바꾸는 명령 — 시험 덱 run 합 (--trial-steps) 과 첫 긴 run 대조 (check D) 가 같이 쓴다
+FLOWC = {'jump', 'next', 'include'}
+STEPC = {'minimize', 'rerun', 'reset_timestep', 'read_restart', 'read_data', 'read_dump', 'clear',
+         'partition', 'python', 'temper', 'prd', 'tad', 'neb'}
+IFOK = {'print', 'quit'}
+
+
+def words(s):
+    # LIGGGHTS 입력 줄의 낱말 — " · ' 로 시작하면 같은 따옴표까지 한 낱말 (따옴표는 뺀다 · 닫는 따옴표 뒤는 공백이어야) · 못 읽으면 None
+    out, i, n = [], 0, len(s)
+    while True:
+        while i < n and s[i] in ' \t':
+            i += 1
+        if i >= n:
+            return out
+        if s[i] in '"\'':
+            j = s.find(s[i], i + 1)
+            if j < 0 or (j + 1 < n and s[j + 1] not in ' \t'):
+                return None
+            out.append(s[i + 1:j])
+            i = j + 1
+        else:
+            j = i
+            while j < n and s[j] not in ' \t':
+                j += 1
+            out.append(s[i:j])
+            i = j
+
+
+def if_cmds(w):
+    # if 의 then · elif · else 명령 (낱말 목록에서) — if 꼴이 아니면 None
+    if len(w) < 4 or w[0] != 'if' or w[2] != 'then':
+        return None
+    out, i = [], 3
+    while i < len(w):
+        if w[i] == 'elif':
+            i += 2
+        elif w[i] == 'else':
+            i += 1
+        else:
+            out.append(w[i])
+            i += 1
+    return out
+
+
+def if_ok(w):
+    # print · quit 만 든 if = 실행 순서 · step 을 안 바꾼다 (quit 이 돌면 시험이 일찍 끝나 G0 이 거부한다)
+    cs = if_cmds(w)
+    return cs is not None and all((words(c) or [''])[0] in IFOK for c in cs)
+
+
+def run_n(w):
+    # [run N] · [run N pre yes|no post yes|no] → (N, '') · 그 밖 (변수 · upto · every · start · stop · 모르는 꼬리) → (None, 이유)
+    if len(w) < 2:
+        return None, 'run 수 없음'
+    if not re.match(r'^[0-9]+$', w[1]):
+        return None, 'run 수가 숫자가 아님'
+    rest = w[2:]
+    for k in ('upto', 'every', 'start', 'stop'):
+        if k in rest:
+            return None, 'run 꼬리 %s' % k
+    if len(rest) % 2 or any(a not in ('pre', 'post') or b not in ('yes', 'no') for a, b in zip(rest[0::2], rest[1::2])):
+        return None, 'run 꼬리를 못 읽음 (pre · post yes|no 만)'
+    return int(w[1]), ''
+
+
+def ctl(l):
+    # 실행 순서 줄 = run · label · jump · next · include · print/quit 말고 다른 명령이 든 if · 못 읽는 줄
+    w = words(l)
+    if not w:
+        return w is None
+    return w[0] in ('run', 'label') or w[0] in FLOWC or (w[0] == 'if' and not if_ok(w))
+
+
+def plain(lst):
+    # 실행 순서 줄 목록의 run 이 다 숫자 run (꼬리 pre · post 만) 이고 흐름 줄이 label 뿐이면 '' · 아니면 그 줄과 이유
+    for l in lst:
+        w = words(l) or ['']
+        if w[0] == 'run':
+            n, why = run_n(w)
+            if n is None:
+                return '%s [%s]' % (why, l)
+        elif w[0] != 'label':
+            return '흐름 명령 [%s]' % l
+    return ''
+
+
+def jump_to(l):
+    # [jump SELF X] · 또는 print · quit 과 [jump SELF X] 하나만 든 if → X · 아니면 None
+    w = words(l) or ['']
+    if w[0] == 'jump':
+        return w[2] if len(w) == 3 and w[1] == 'SELF' else None
+    cs = if_cmds(w) if w[0] == 'if' else None
+    if cs is None:
+        return None
+    js = []
+    for c in cs:
+        cw = words(c) or ['']
+        if len(cw) == 3 and cw[:2] == ['jump', 'SELF']:
+            js.append(cw[2])
+        elif cw[0] not in IFOK:
+            return None
+    return js[0] if len(js) == 1 else None
+
+
+def fmt(lst):
+    return ' '.join('[%s]' % l for l in lst) if lst else '(없음)'
+
+
+def sched_cmp(ml, R, ir, what, kind, mwhere, probs, notes):
+    # 10-28 (KG50-19): 본 덱 실행 순서 줄 ml ↔ 재개 덱 read_restart 뒤 ~ 첫 긴 run 의 실행 순서 줄 — 글자 같아야 (deck() 정리 뒤)
+    rs = [i for i, l in enumerate(R) if l.split()[0] == 'read_restart']
+    if len(rs) != 1:
+        probs.append('재개 덱에 read_restart 가 %d 개 (1 개여야 · %s 대조 못 함 · %s · 10-28 KG50-19)' % (len(rs), what, kind))
+        return
+    rl = [l for l in R[rs[0] + 1:ir + 1] if ctl(l)]
+    if rl != ml:
+        probs.append('%s 다름 (%s · 10-28 KG50-19): %s %s ↔ 재개 덱 read_restart 뒤 %s' % (what, kind, mwhere, fmt(ml), fmt(rl)))
+    else:
+        notes.append('%s 같음 (%s · 10-28 KG50-19): %s %s = 재개 덱 read_restart 뒤' % (what, kind, mwhere, fmt(ml)))
 
 
 def mesh_file(a, b):
@@ -210,7 +346,14 @@ def check(main, res, ckpt, s0, W):
                     step = int(t[1])
                 else:
                     step += int(t[1])
+            elif ctl(l) or t[0] in STEPC:
+                known = False  # 10-28 (KG50-19): include · next · print/quit 말고 다른 명령이 든 if · step 을 바꾸는 명령 = 남은 step 을 못 센다
         if known:
+            # 10-28 (KG50-18): 체크포인트 = 본 덱 그 run 도중 → 재개 덱 첫 긴 run 앞에 run (run 0 말고) 이 없어야
+            #   (G0 이 시험 덱 run 합을 보면 그 run 으로 생긴 어긋남을 예전 G0 (마지막 run 만) 처럼 우연히 막지 못한다)
+            pre = [l for l in R[:ir] if l.split()[0] == 'run' and run_n(words(l) or [''])[0] != 0]
+            if pre:
+                probs.append('재개 덱 첫 긴 run 앞에 run 이 있음 (restart 체크포인트 = 본 덱 그 run 도중 · 10-28 KG50-18): %s' % fmt(pre))
             t = R[ir].split()
             if not re.match(r'^[0-9]+$', t[1]):
                 probs.append('재개 덱 첫 긴 run 이 숫자가 아님: [%s]' % R[ir])
@@ -221,9 +364,34 @@ def check(main, res, ckpt, s0, W):
                 else:
                     notes.append('남은 step 같음: 끝 %d' % end)
         else:
-            notes.append('남은 step 확인 생략 (그 run 앞에 반복 · 변수 run)')
+            # 10-28 (KG50-19): 남은 step 을 못 센다 (그 run 앞에 반복 · 흐름 · 변수 run) — 체크포인트 뒤 루프 (label … 첫 긴 run … 그 label 로
+            # 돌아가는 jump) 안이면 루프 머리 label 부터 첫 긴 run 까지를 재개 덱과 대조 · 아니면 정할 수 없음 = 거부 (예전 = 확인 생략 · 통과)
+            labs = [i for i in range(ia + 1, im) if M[i].split()[0] == 'label']
+            ml = [l for l in M[labs[-1]:im + 1] if ctl(l)] if labs else []
+            lw = (words(M[labs[-1]]) or []) if labs else []
+            back = [l for l in M[im + 1:] if ctl(l) and l.split()[0] != 'run']
+            # 루프 머리 뒤 (label ~ 첫 긴 run) · 체크포인트 줄과 루프 머리 사이 = 숫자 run · label 만 (변수 run · 흐름 줄이면 체크포인트 자리를 못 정한다)
+            why = ''
+            if labs:
+                b1, b2 = plain(ml), plain([l for l in M[ia + 1:labs[-1]] if ctl(l)])
+                why = ('루프 머리 뒤 ' + b1) if b1 else ('체크포인트 줄과 루프 머리 사이 ' + b2) if b2 else ''
+            if not labs:
+                probs.append('남은 step 을 정할 수 없음 (그 run 앞에 반복 · 흐름 · 변수 run · 체크포인트 뒤 루프 머리 label 없음 · 10-28 KG50-19) — 손으로 확인')
+            elif len(lw) != 2 or why or not back or jump_to(back[0]) != lw[1]:
+                probs.append('루프 몸 run 을 정할 수 없음 (반복 안 restart 체크포인트 · 10-28 KG50-19): 본 덱 %s 뒤 첫 흐름 줄 %s '
+                             '(그 label 로 돌아가는 jump 여야)%s — 손으로 확인'
+                             % (fmt(ml), '[%s]' % back[0] if back else '없음', ' · ' + why if why else ''))
+            else:
+                sched_cmp(ml, R, ir, '루프 몸 run', '반복 안 restart 체크포인트', '본 덱', probs, notes)
     else:
-        notes.append('남은 step 확인 해당 없음 (write_restart 체크포인트)')
+        # 10-28 (KG50-19): write_restart 체크포인트 = 그 뒤 run 을 처음부터 다시 — 본 덱 그 줄 뒤 첫 긴 run 까지의 실행 순서 줄 (run · label)
+        # = 재개 덱 read_restart 뒤 첫 긴 run 까지 (글자 같아야) · run 수가 변수 · 흐름 줄이면 정할 수 없음 = 거부 (예전 = 해당 없음 · 통과)
+        ml = [l for l in M[ia + 1:im + 1] if ctl(l)]
+        bad = plain(ml)
+        if bad:
+            probs.append('첫 긴 run 길이를 정할 수 없음 (write_restart 체크포인트 · 10-28 KG50-19): 본 덱 그 뒤 %s — 손으로 확인' % bad)
+        else:
+            sched_cmp(ml, R, ir, '첫 긴 run', 'write_restart 체크포인트', '본 덱 그 뒤', probs, notes)
     # E. 재개 지점 뒤 순서 (fix · unfix · run · restart · if …) = 본 덱 그대로
     tm = [l for l in M[im + 1:] if l.split()[0] in SEQ]
     tr = [l for l in R[ir + 1:] if l.split()[0] in SEQ]
@@ -233,6 +401,48 @@ def check(main, res, ckpt, s0, W):
         if a != b:
             same_or_mesh(a, b, W, notes, probs, '재개 지점 뒤 줄')
     return probs, notes
+
+
+def trial_steps(path):
+    # 10-28 (KG50-18): 시험 덱 (재개 덱을 첫 긴 run 에서 자른 것) 의 read_restart 뒤 모든 run 합 = 시험이 갈 step 수 (G0 기대 끝 = S0 + 합).
+    # 통과 = 'N 개수 [run …] [run …]' 한 줄 · 0.  못 정하면 이유 한 줄 · 1 — read_restart ≠ 1 개 · 따옴표 · 명령 이름에 변수 · jump · next ·
+    # include · step 을 바꾸는 명령 · print/quit 말고 다른 명령이 든 if · read_restart 앞 run · run 수 · 꼬리 · 마지막 명령이 run 아님.
+    # label 은 혼자서는 아무것도 안 한다 (jump · next 가 있으면 그쪽에서 거부).
+    L = deck(path)
+    rs = [i for i, l in enumerate(L) if l.split()[0] == 'read_restart']
+    if len(rs) != 1:
+        print('시험 덱에 read_restart 가 %d 개 (1 개여야)' % len(rs))
+        return 1
+    runs, tot = [], 0
+    for i, l in enumerate(L):
+        w = words(l)
+        if not w:
+            print('따옴표를 못 읽음: [%s]' % l)
+            return 1
+        if '$' in w[0]:
+            print('명령 이름에 변수: [%s]' % l)
+            return 1
+        if w[0] in FLOWC:
+            print('흐름 명령 (jump · next · include): [%s]' % l)
+            return 1
+        if w[0] in STEPC and i != rs[0]:
+            print('step 을 바꾸는 명령: [%s]' % l)
+            return 1
+        if w[0] == 'if' and not if_ok(w):
+            print('print · quit 말고 다른 명령이 든 if: [%s]' % l)
+            return 1
+        if w[0] == 'run':
+            n, why = run_n(w)
+            if i < rs[0] or n is None:
+                print('%s: [%s]' % ('read_restart 앞에 run' if i < rs[0] else why, l))
+                return 1
+            runs.append(l)
+            tot += n
+    if not runs or (words(L[-1]) or [''])[0] != 'run':
+        print('시험 덱 마지막 명령이 run 이 아님')
+        return 1
+    print('%d %d %s' % (tot, len(runs), fmt(runs)))
+    return 0
 
 
 def deck_spans(path):
@@ -395,6 +605,12 @@ def strip_comments(W):
 
 if len(sys.argv) == 3 and sys.argv[1] == '--strip-comments':
     sys.exit(strip_comments(sys.argv[2]))
+if len(sys.argv) == 3 and sys.argv[1] == '--trial-steps':
+    try:
+        sys.exit(trial_steps(sys.argv[2]))
+    except Exception as e:
+        print('도구 오류: %s: %s' % (type(e).__name__, e))
+        sys.exit(1)
 if len(sys.argv) == 7 and sys.argv[1] == '--fix-run':
     try:
         sys.exit(fix_run(*sys.argv[2:7]))
@@ -416,6 +632,7 @@ PY
 }
 # -c 주석 줄 빼기 — 인자: 작업 폴더 · stdout = 기록 · 종료 코드 0 = 통과 (실패면 어느 덱도 안 바꾼다)
 stripc(){ deckcheck --strip-comments "$1"; }
+# (10-28 KG50-18) deckcheck --trial-steps <시험 덱> — stdout 'N 개수 [run …] …' · 종료 코드 0 / 못 정하면 이유 한 줄 · 1
 if [ $CHK = 1 ]; then [ $# = 5 ] || { echo "사용: bash resume_ckpt.sh -C <본 덱> <재개 덱> <체크포인트> <S0> <작업 폴더>"; exit 2; }; deckcheck "$@"; exit $?; fi
 CASES="$*"; SFX=${SFX:-r$NP}
 [ -n "$SUF" ] && [ -n "$CASES" ] || { echo "사용: bash resume_ckpt.sh -n 30 -s stop15_0927 <케이스…>"; exit 1; }
@@ -482,12 +699,18 @@ for C in $CASES; do
   { grep -qE "^#SBATCH -n $NP\$" $RN && grep -q -- "--oversubscribe --bind-to none -np $NP lmp_mpi" $RN && grep -q -- "-np $NP lmp_mpi -in input_${C}_${SFX}t.liggghts" $W/run_${C}_${SFX}t.sh; } || { OK=0; echo "  ✗ 러너 $NP"; }
   NT=$(tail -1 $W/input_${C}_${SFX}t.liggghts | awk '$1=="run" && NF==2 && $2~/^[0-9]+$/{print $2}')
   { [ -n "$NT" ] && [[ "$S0" =~ ^[0-9]+$ ]]; } || { OK=0; echo "  ✗ 시험 덱 끝이 숫자 run 이 아님 또는 S0 모름 (기대 끝 step 을 못 정함)"; }
+  # 10-28 (KG50-18): 기대 끝 step = S0 + 시험 덱 read_restart 뒤 모든 run 합 (after_settling = 판 높이 run 1 + 시험 run) — 못 정하면 시험 안 냄
+  TSR=$(deckcheck --trial-steps $W/input_${C}_${SFX}t.liggghts 2>&1); TSC=$?; TRE='^([0-9]+) ([0-9]+) (.+)$'
+  if [ $TSC = 0 ] && [[ "$TSR" != *$'\n'* ]] && [[ "$TSR" =~ $TRE ]]; then NT=${BASH_REMATCH[1]}; TNR=${BASH_REMATCH[2]}; TDS=${BASH_REMATCH[3]}
+  else OK=0; TNR=""; TDS=""; echo "  ✗ 시험 기대 끝 step 을 못 정함 (10-28 KG50-18) — $(printf '%s' "$TSR" | tr '\n' ' ')"; fi
   deckcheck $W/input_$C.liggghts $D "$RR" "${S0:-0}" $W > $W/deckcheck_$SFX.txt 2>&1 || { OK=0; echo "  ✗ 재개 덱 정적 대조 실패:"; }
   cat $W/deckcheck_$SFX.txt
   echo "  $(grep '^processors' $D) | $(grep -c . $W/input_${C}_${SFX}t.liggghts)줄 시험 덱 (마지막: $(tail -1 $W/input_${C}_${SFX}t.liggghts))"
   if [ $OK = 1 ]; then
     J=$(sbatch --parsable $W/run_${C}_${SFX}t.sh)
-    if [ -n "$J" ]; then echo $J > $W/job_${SFX}t.txt; EXP=$((10#$S0 + 10#$NT)); echo "$M $S0 $RR $EXP" > $W/mode_$SFX.txt; echo "  ▶ 시험 job $J ($(tail -1 $W/input_${C}_${SFX}t.liggghts) · 기대 끝 step $EXP)"
+    if [ -n "$J" ]; then echo $J > $W/job_${SFX}t.txt; EXP=$((10#$S0 + 10#$NT)); echo "$M $S0 $RR $EXP$([ "$TNR" = 1 ] || echo " $NT $TDS")" > $W/mode_$SFX.txt
+      [ "$TNR" = 1 ] || echo "  · 시험 기대 끝 step = S0 + 시험 덱 read_restart 뒤 run 합 $NT ($TDS · 10-28 KG50-18)"
+      echo "  ▶ 시험 job $J ($(tail -1 $W/input_${C}_${SFX}t.liggghts) · 기대 끝 step $EXP)"
     else echo "  ⛔ 시험 제출 실패 (sbatch 출력 없음)"; fi
   else echo "  ⛔ 시험 제출 안 함"; fi
 done
@@ -503,7 +726,7 @@ for C in $CASES; do
     else QF=$((QF+1)); fi
     sleep 20
   done
-  read M S0 RR EXP < $W/mode_$SFX.txt
+  read M S0 RR EXP TNT TDS < $W/mode_$SFX.txt
   T=$(ls logs/output_${C}_${SFX}t_$J.out 2>/dev/null); T=${T:-/dev/null}; E=$(grep -ac ERROR $T)
   read LTS LTL LPL <<< "$(lastrun $T)"
   G0=0; [ $TO = 0 ] && [ "$ST" = COMPLETED ] && [ "$EC" = "0:0" ] && [ "$LTS" = "$EXP" ] && [ "$LPL" -gt "$LTL" ] && [ "$E" = 0 ] && [ "$T" != /dev/null ] && G0=1
@@ -545,6 +768,7 @@ for C in $CASES; do
     echo "- 첫 긴 run (10-27 · 1저자 Q1 (가)): $(tail -1 $W/fixrun_$SFX.txt 2>/dev/null | sed 's/^ *· //') (fixrun_$SFX.txt)"
     echo "- 재개 덱 정적 대조: $(tail -1 $W/deckcheck_$SFX.txt | sed 's/^ *재개 덱 정적 대조: //') (deckcheck_$SFX.txt)"
     echo "- 시험: job $J · input_${C}_${SFX}t.liggghts · ${T##*/} · ERROR $E"
+    [ -z "$TDS" ] || echo "- 시험 기대 끝 step (10-28 · KG50-18): S0 $S0 + 시험 덱 read_restart 뒤 run 합 $TNT ($TDS) = $EXP"
     echo "- G0 시험 정상 종료: $([ $G0 = 1 ] && echo 통과 || echo 실패) — 상태 ${ST:-없음} · ExitCode ${EC:-없음} · 마지막 step $LTS (기대 $EXP) · Loop time $([ "$LPL" -gt "$LTL" ] && echo '끝 step 뒤에 있음' || echo 없음) · 조회 실패 $QF 번 · $([ $TO = 1 ] && echo '끝 상태 못 얻음 (대기 시간 초과 · 조회 실패)' || echo '끝 상태 얻음')"
     echo "- G1 재개 첫 thermo (step $F, setup 줄, CPU·압력 열 제외, 1e-6): $([ $G1 = 1 ] && echo 통과 || echo 실패)"; echo "    원 로그 :$a"; echo "    재개    :$b"
     echo "- G2 체크포인트 상태 덤프 대조: $([ $G2 = 1 ] && echo 통과 || echo 실패) —$G2T"
