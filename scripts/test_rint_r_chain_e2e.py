@@ -938,10 +938,12 @@ def e13_alive(token):
 
 
 def e13_cmdlines(pids):
+    """프로세스 명령줄 — 전체 (자르지 않는다).  ★ 10-27 kgy 판 1 회차 — 옛 판은 160 자로 자른 뒤 감싸개 이름을 찾았다: 시험 심이 진짜 인터프리터 절대 경로로
+    exec 하므로 (이 컨테이너 3.11 = 22 자 · uv 3.8 = 74 자) 3.8 에서는 이름이 잘려 죽이는 손이 '표지 앞 · payload 떠 있음' 창을 못 봤다 (E13b · E13e)."""
     out = []
     for p in pids:
         try:
-            out.append(open(f'/proc/{p}/cmdline', 'rb').read().replace(b'\0', b' ').decode('utf-8', 'replace')[:160])
+            out.append(open(f'/proc/{p}/cmdline', 'rb').read().replace(b'\0', b' ').decode('utf-8', 'replace'))
         except OSError:
             pass
     return out
@@ -994,16 +996,21 @@ def e13_runner_kill(tag, mode, secs, when_marker):
             seen['err'] = 'launch 기록 없음'
             return
         seen['token'] = j['token']
+        seen['saw_window'] = False                       # ★ 10-27 kgy 판 1 회차 — 죽일 창을 실제로 봤는지 (검사 칸 · 못 보면 실패 이유가 남는다)
         while time.time() < t_end:
             marks = glob.glob(os.path.join(out, 'K01_floor_arm1', '.unchecked', '*.first_result.json'))
             pay = [c for c in e13_cmdlines(e13_alive(j['token'])) if 'rint_first_result.py' in c]
             if (when_marker and marks) or (not when_marker and pay and not marks):
+                seen['saw_window'] = True
                 break
             time.sleep(0.05)
         time.sleep(0.3)
         seen['marks_at_kill'] = len(glob.glob(os.path.join(out, 'K01_floor_arm1', '.unchecked', '*.first_result.json')))
         seen['alive_at_kill'] = e13_cmdlines(e13_alive(j['token']))
-        os.kill(int(j['pid']), signal.SIGKILL)
+        try:
+            os.kill(int(j['pid']), signal.SIGKILL)
+        except ProcessLookupError:                       # 러너가 이미 끝났다 (창을 놓친 꼴) — 실 예외 대신 기록 (검사가 실패를 보고한다)
+            seen['kill_err'] = 'ProcessLookupError'
     th = threading.Thread(target=killer)
     old_bk, old_here = RR.EXPECT_BACKEND, RR.HERE
     RR.EXPECT_BACKEND, RR.HERE = 'cpu', Path(sd)
@@ -1049,6 +1056,7 @@ def t_runner_kill():
     chk('E13b 실물 러너만 SIGKILL (표지 앞 · payload 프로세스가 떠 있음) → 사슬 = 러너 rc −9 · 그룹 (payload) 을 죽이고 종료 확인 (끝 기록 확인 True · rc −9) · '
         'RUNNER_RC · 돌아온 뒤 표지 프로세스 0 · 표지 · 팔 payload 없음 (지연이 끝날 시간 뒤에도) · 킷 런 폴더에 payload 없음',
         a['stop'] is not None and a['stop'].code == 'RUNNER_RC' and er.get('confirmed') is True and er.get('rc') == -9
+        and a['seen'].get('saw_window') is True
         and a['seen'].get('marks_at_kill') == 0 and any('rint_first_result.py' in c for c in a['seen'].get('alive_at_kill') or [])
         and a['alive_after'] == [] and a['files_ret'] == [] and a['files_late'] == [] and a['kit_payloads'] == [],
         (a['stop'] and (a['stop'].code, a['stop'].cause[:200]), a['seen'], er, a['alive_after'], a['files_ret'], a['files_late'],
@@ -1059,7 +1067,8 @@ def t_runner_kill():
     pays = [f for f in b['files_late'] if os.path.basename(f).startswith('p2_') and not f.endswith('.first_result.json')]   # 표지 이름도 p2_ 로 시작한다
     chk('E13c 실물 러너만 SIGKILL (표지 뒤 · 증서 풀이 중) → 사슬 = 그룹을 죽이고 확인 · RUNNER_RC · 표지 하나 (.unchecked/ · 결과 뒤 판정의 입력) · '
         '팔 payload 없음 (지연이 끝날 시간 뒤에도 = payload 프로세스가 죽었다) · 표지 프로세스 0',
-        b['stop'] is not None and b['stop'].code == 'RUNNER_RC' and er.get('confirmed') is True and b['seen'].get('marks_at_kill') == 1
+        b['stop'] is not None and b['stop'].code == 'RUNNER_RC' and er.get('confirmed') is True and b['seen'].get('saw_window') is True
+        and b['seen'].get('marks_at_kill') == 1
         and len(marks) == 1 and '.unchecked' in marks[0] and pays == [] and b['alive_after'] == [] and b['kit_payloads'] == [],
         (b['stop'] and (b['stop'].code, b['stop'].cause[:200]), b['seen'], er, b['files_late'], b['alive_after']))
 
@@ -1128,11 +1137,12 @@ def e13_parent_kill(tag, mode, secs, when_marker):
     log = open(os.path.join(TD, f'{tag}_driver.log'), 'w', encoding='utf-8')
     pr = subprocess.Popen([sys.executable, '-I', drv, cfg], cwd=ws, stdout=log, stderr=subprocess.STDOUT, start_new_session=True)
     j = e13_launch(out, 'K01_floor', time.time() + 120)
-    seen = {'token': (j or {}).get('token')}
+    seen = {'token': (j or {}).get('token'), 'saw_window': False}     # ★ 10-27 kgy 판 1 회차 — 죽일 창을 실제로 봤는지 (검사 칸)
     while j is not None and time.time() < t0 + 120:
         marks = glob.glob(os.path.join(out, 'K01_floor_arm1', '.unchecked', '*.first_result.json'))
         pay = [c for c in e13_cmdlines(e13_alive(j['token'])) if 'rint_first_result.py' in c]
         if (when_marker and marks) or (not when_marker and pay and not marks):
+            seen['saw_window'] = True
             break
         time.sleep(0.05)
     time.sleep(0.3)
@@ -1165,7 +1175,8 @@ def t_parent_kill():
     er = a.get('end') or {}
     chk('E13e 실물 사슬 부모 SIGKILL (따로 프로세스 · 표지 앞) → 러너 그룹은 살아 있다 (payload 프로세스 · 끝 기록 없음 — 부모 사망 + 지금 표지 없음 ≠ 종료 증거) · '
         '--stage recover → 그룹을 죽이고 확인 (끝 기록 by recover · 원인 parent_dead · rc 0) · 표지 프로세스 0 · 표지 · 팔 payload 없음 (지연 끝 뒤에도)',
-        any('rint_first_result.py' in c for c in a.get('alive_after_parent') or []) and a.get('end_before') is False and a.get('recover_rc') == 0
+        a.get('saw_window') is True
+        and any('rint_first_result.py' in c for c in a.get('alive_after_parent') or []) and a.get('end_before') is False and a.get('recover_rc') == 0
         and er.get('by') == 'recover' and er.get('cause') == 'parent_dead' and er.get('confirmed') is True and a.get('alive_after_recover') == []
         and a.get('files_late') == [] and a.get('kit_payloads') == [], a)
     b = e13_parent_kill('e13f', 'after', 12, when_marker=True)
@@ -1173,7 +1184,8 @@ def t_parent_kill():
     marks = [f for f in b.get('files_late') or [] if f.endswith('.first_result.json')]
     pays = [f for f in b.get('files_late') or [] if os.path.basename(f).startswith('p2_') and not f.endswith('.first_result.json')]
     chk('E13f 실물 사슬 부모 SIGKILL (표지 뒤) → recover 가 그룹을 죽이고 확인 · 표지 하나 (결과 뒤 판정의 입력) · 팔 payload 없음 (지연 끝 뒤에도) · 표지 프로세스 0',
-        bool(b.get('alive_after_parent')) and b.get('recover_rc') == 0 and er.get('by') == 'recover' and er.get('confirmed') is True
+        b.get('saw_window') is True
+        and bool(b.get('alive_after_parent')) and b.get('recover_rc') == 0 and er.get('by') == 'recover' and er.get('confirmed') is True
         and len(marks) == 1 and pays == [] and b.get('alive_after_recover') == [], b)
 
 
