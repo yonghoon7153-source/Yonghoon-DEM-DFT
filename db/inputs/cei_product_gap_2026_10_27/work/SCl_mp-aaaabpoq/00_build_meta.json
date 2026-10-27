@@ -1,0 +1,39 @@
+{
+ "tag": "SCl_mp-aaaabpoq",
+ "structure": "db/structures/cei_gap_tm/SCl_mp-aaaabpoq.vasp",
+ "structure_sha256": "820681e10c46fe94b577bae2533ad13ec5b0c7b2c83c368e76a3fbe8aadec2d4",
+ "species": [
+  "Cl",
+  "S"
+ ],
+ "nspin": 1,
+ "tm_state": null,
+ "tm_moment_rule": null,
+ "magmom_sidecar": null,
+ "starting_magnetization": null,
+ "tot_magnetization_initial": null,
+ "hubbard": null,
+ "hubbard_policy": null,
+ "ecut_wfc_rho": [
+  60.0,
+  480.0
+ ],
+ "cell_policy": "fixed",
+ "pseudo": {
+  "Cl": "Cl.pbe-nl-kjpaw_psl.1.0.0.UPF",
+  "S": "S.pbe-nl-kjpaw_psl.1.0.0.UPF"
+ },
+ "pseudo_dir_written": "/home/kgy/work/runs/cei_gap_1027/pseudo",
+ "k_scf": [
+  5,
+  3,
+  2
+ ],
+ "k_gap": [
+  10,
+  5,
+  4
+ ],
+ "nbnd_gap": 78,
+ "gap_step": "03_nscf_gap.in"
+}

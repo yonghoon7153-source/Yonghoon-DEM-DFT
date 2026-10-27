@@ -1,0 +1,6 @@
+&DOS
+  prefix = 'Li2SO4_mp-aaaaagtg'
+  outdir = './tmp'
+  fildos = 'Li2SO4_mp-aaaaagtg.dos'
+  degauss = 0.007
+/

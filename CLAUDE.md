@@ -98,7 +98,7 @@
 - ⛔ **argyrodite 셀의 DFT 이완은 고정셀 + EOS 가 기본이다 — vc-relax 를 쓰지 않는다** (사용자 2026-10-15 *"이 사항은 기본인데"*):
   등방 스케일 부피 격자 → BM3 → V₀ 에서 **이온만** relax (정본 `kb/methodology/computational_methods_canonical.md` §3-1 —
   정적 스냅숏 셀은 cubic 이 아니라 vc-relax 셀 뒤틀림은 배치 선택의 인공물 · 유한 기저 Pulay 함정).
-  예외는 **사용자 허락**으로만: 2026-09 새 Nd PP 결합 세기 보기 1 회 · 2026-10-15 비-argyrodite 기준상 Li₂S·Li₃PS₄ vc-relax 2 잡 · 2026-10-19 그 9 월 Nd 구조 (새 vc-relax 아님) 를 분해 · Bader · ELF 에 재사용 (`D-2026-10-19-nd-q23-ppswap-structure`) · 2026-10-23 Nd Q2 분해 생성물 (비-argyrodite 기준 결정 · MP 엔트리 구조에서 시작) vc-relax (`D-2026-10-23-nd-q2-decomp-card`).
+  예외는 **사용자 허락**으로만: 2026-09 새 Nd PP 결합 세기 보기 1 회 · 2026-10-15 비-argyrodite 기준상 Li₂S·Li₃PS₄ vc-relax 2 잡 · 2026-10-19 그 9 월 Nd 구조 (새 vc-relax 아님) 를 분해 · Bader · ELF 에 재사용 (`D-2026-10-19-nd-q23-ppswap-structure`) · 2026-10-23 Nd Q2 분해 생성물 (비-argyrodite 기준 결정 · MP 엔트리 구조에서 시작) vc-relax (`D-2026-10-23-nd-q2-decomp-card`) · 2026-10-27 CEI 생성물 띠틈 결정 9 + 대조 잡 P₂O₅ 1 vc-relax (MP 엔트리 구조 · 9월 CEI 띠틈과 같은 체인 · 분자결정 SO₂·S₂Cl₂ 는 MP 셀 고정 · `D-2026-10-27-cei-product-gaps` + 개정 1).
   ⚠ 2026-10-14 Nd 자리 카드 G3 에 내가 'vc-relax' 를 적었다 (10-15 결과 전 개정) — **카드·입력에 이완 방식을 적을 때 이 줄부터 본다.**
   ⭐ **EOS 는 조건부다 — 압력 어림이 먼저** (사용자 2026-10-23 *'앞으로 이런 경우가 있으면 eos까지 갈 필요가 없는거넹'* → 규칙으로 비준):
   기준 셀에서 **이온 이완** (tstress) → 셀마다 ΔE_V ≈ −P²V/(2B) (B = 우리 DFT B₀ 21.7–32.5 GPa 범위 전체로) →

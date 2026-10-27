@@ -28,6 +28,8 @@ WORK=${WORK:-/data/work/runs/sei_dft}
 #   실제로 쓰는 mpirun 의 트리에서 유도한다 — 사본이 있는 한 또 갈라진다.
 # shellcheck disable=SC1090
 . "$(dirname "$0")/qe_env.sh"
+# ⛔ QE_FROM_LDD=1 로 불렀는데 바이너리 링크를 못 읽었으면 **시작하지 않는다** (2026-10-27 · kgy)
+if [ -n "${QE_ENV_ERROR:-}" ]; then echo "⛔ QE 환경: $QE_ENV_ERROR — 시작하지 않는다"; exit 2; fi
 QE=${QE:-$PW}                                   # 이 스크립트는 pw.x 를 QE 로 부른다
 [ -x "$QE" ] || QE=$(command -v pw.x || echo "$QE")
 DOSX=${DOSX:-/data/apps/qe-7.4.1-gpu/bin/dos.x}

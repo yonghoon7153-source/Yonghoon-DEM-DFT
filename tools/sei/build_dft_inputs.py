@@ -79,6 +79,10 @@ OPEN_SHELL_TM = ("V", "Cr", "Mn", "Fe", "Co", "Ni", "Cu")
 MP_U_3D = {"Co": 3.32, "Mn": 3.9, "Ni": 6.2}
 MP_U_ANIONS = ("O", "F")
 MAG_THR = 0.1           # μB — 이보다 작은 자리 모멘트는 '모멘트 없음'
+MAG_TOTAL_TOL = 0.5     # μB — 자리 모멘트 합이 MP 총 모멘트와 이 안에서 맞아야 자리 값을 믿는다
+#: 2+ 이온 고스핀 홀전자 수 (d 전자 수에서 센 값) — MP 가 자리 모멘트를 안 줄 때의 강자성 시작값
+#:   (카드 개정 1 A4-c). 표에 없는 원소는 추측하지 않고 멈춘다.
+HS_SEED_2PLUS = {"Mn": 5.0, "Co": 3.0, "Ni": 2.0}
 
 
 def el_of(label):
@@ -118,6 +122,60 @@ def species_from_magmoms(symbols, magmoms, thr=MAG_THR):
         ms = [m for l_, m in zip(labels, magmoms) if l_ == lab]
         mean[lab] = sum(ms) / len(ms)
     return labels, mean
+
+
+def resolve_tm_moments(symbols, site_m, total=None, ordering=None):
+    """MP 상태 → 자리별 씨앗 모멘트와 쓴 규칙 (카드 개정 1 A4 · 결과 전).
+
+    (a)  TM 자리에 |m| > MAG_THR 가 있고 Σ 가 MP 총 모멘트와 MAG_TOTAL_TOL 안 → 그대로
+    (nm) ordering 'NM' · TM 자리 모멘트 0 · |총| ≤ TOL → 비자성
+    (b)  TM 자리 모멘트가 다 0 인데 |총| > TOL → MP 가 자리 값만 안 준 것 — 총 모멘트를
+         TM 자리에 같은 부호로 나눈다 (2026-10-27 CoS2: 문서 자리값 전부 0 · 요약 총 4.0 μB)
+    (c)  TM 자리 모멘트 다 0 · |총| ≤ TOL (또는 없음) · ordering 이 NM 아님 → MP 관례의
+         강자성 시작 (2+ 이온 고스핀 Mn 5 · Co 3 · Ni 2 μB) — SCF 가 찾은 상태가 그 상태
+    ⛔ 자리 모멘트가 있는데 총 모멘트와 TOL 넘게 어긋나면 어느 쪽도 믿지 않는다 (ValueError).
+    ⛔ 못 하는 것: 반강자성 배치를 만들지 않는다 ((b) · (c) 는 강자성 시작뿐) · 바닥상태 판정 안 함.
+    ⚠ 옛 경로는 (b) 를 못 봤다 — 자리값 0 을 '비자성' 으로 읽어 CoS2 를 nspin 1 로 만들 뻔했다
+      (조용히 틀린 경로 · 2026-10-27 gabia 조회에서 잡음).
+    """
+    tm = [i for i, s_ in enumerate(symbols) if s_ in OPEN_SHELL_TM]
+    if len(site_m) != len(symbols):
+        raise ValueError(f"자리 수 {len(symbols)} ≠ 모멘트 수 {len(site_m)}")
+    if not tm:
+        return [float(x) for x in site_m], "no_tm"
+    if any(abs(site_m[i]) > MAG_THR for i in tm):
+        ssum = sum(site_m)
+        if total is not None and abs(ssum - total) > MAG_TOTAL_TOL:
+            raise ValueError(f"자리 모멘트 합 {ssum:.2f} ≠ MP 총 {total:.2f} μB — 어느 쪽도 믿지 않는다")
+        return [float(x) for x in site_m], "a_mp_sites"
+    if str(ordering) == "NM" and (total is None or abs(total) <= MAG_TOTAL_TOL):
+        return [0.0] * len(symbols), "nm_mp"
+    out = [0.0] * len(symbols)
+    if total is not None and abs(total) > MAG_TOTAL_TOL:
+        for i in tm:
+            out[i] = total / len(tm)
+        return out, "b_mp_total_split"
+    miss = sorted({symbols[i] for i in tm if symbols[i] not in HS_SEED_2PLUS})
+    if miss:
+        raise ValueError(f"고스핀 시작값 표에 없는 원소 {miss} — 추측하지 않는다")
+    for i in tm:
+        out[i] = HS_SEED_2PLUS[symbols[i]]
+    return out, "c_fm_highspin_start"
+
+
+def prov_record(prov, structure_path):
+    """fetch_sei_structures --pick 의 출처 기록에서 이 구조 파일의 (MP 총 모멘트, ordering).
+
+    파일 이름(basename)으로 찾는다. 없으면 None — 총 모멘트를 모르면 TM 상태를 못 정한다.
+    """
+    b = os.path.basename(structure_path)
+    for rec in (prov or {}).values():
+        if any(os.path.basename(x) == b for x in rec.get("files", [])):
+            pick = rec.get("pick", {})
+            mag = rec.get("magnetism", {})
+            return (pick.get("total_magnetization"),
+                    mag.get("ordering_magnetism_doc") or pick.get("ordering"))
+    return None
 
 
 def ecut_for(elements, ecut_min):
@@ -336,11 +394,32 @@ def _selftest_tm():
     except ValueError:
         pass
 
+    # ①b MP 상태 → 씨앗 (카드 개정 1 A4)
+    m, r = resolve_tm_moments(["Ni", "Ni", "O"], [2.0, 2.0, 0.0], 4.0, "FM")
+    chk(r == "a_mp_sites" and m == [2.0, 2.0, 0.0], "(a) 자리 모멘트가 총과 맞으면 그대로")
+    try:
+        resolve_tm_moments(["Co", "O"], [3.0, 0.0], 1.0, "FM")
+        chk(False, "[음성] 자리 합 3 ≠ 총 1 을 통과시켰다")
+    except ValueError:
+        pass
+    m, r = resolve_tm_moments(["Ni", "S"], [0.0, 0.0], 0.0, "NM")
+    chk(r == "nm_mp" and m == [0.0, 0.0], "(nm) MP 가 NM 이라 하면 비자성")
+    m, r = resolve_tm_moments(["Co", "Co", "S"], [0.0, 0.0, 0.0], 4.0, "Unknown")
+    chk(r == "b_mp_total_split" and m == [2.0, 2.0, 0.0],
+        "[음성] (b) 자리값 0 · 총 4 → 비자성으로 읽지 않고 나눈다 (CoS2 사례)")
+    m, r = resolve_tm_moments(["Mn", "P", "O"], [0.0, 0.0, 0.0], 0.0, "Unknown")
+    chk(r == "c_fm_highspin_start" and m == [5.0, 0.0, 0.0], "(c) 모름 → 고스핀 강자성 시작")
+    try:
+        resolve_tm_moments(["Fe", "S"], [0.0, 0.0], 0.0, "Unknown")
+        chk(False, "[음성] 표에 없는 Fe 시작값을 지어냈다")
+    except ValueError:
+        pass
+
     # ② main() 통합 — 갭 게이트는 '절연체' 로 고정해 03 까지 만들게 한다
     with tempfile.TemporaryDirectory() as T:
         pp, st, w = (os.path.join(T, x) for x in ("pp", "st", "w"))
         os.makedirs(pp); os.makedirs(st)
-        for el, z in (("Mn", 15), ("O", 6), ("Co", 17), ("S", 6), ("Ni", 18)):
+        for el, z in (("Mn", 15), ("O", 6), ("Co", 17), ("S", 6), ("Ni", 18), ("Fe", 16)):
             open(os.path.join(pp, f"{el.lower()}_stub.UPF"), "w").write(
                 f'<PP_HEADER z_valence="{z}.0"/>\n')
 
@@ -354,11 +433,25 @@ def _selftest_tm():
                                                           [0, .5, 0]], cell=[4.4] * 3, pbc=True),
             [4.6, -4.6, 0.0, 0.0])
         put("CoS2_mp-2", Atoms("CoS2", scaled_positions=[[0, 0, 0], [.3, .3, .3], [.7, .7, .7]],
-                               cell=[5.5] * 3, pbc=True), [0.9, 0.0, 0.0])
+                               cell=[5.5] * 3, pbc=True), [0.0, 0.0, 0.0])     # 자리값 0 · 총 0.9
         put("MnS2_mp-3", Atoms("MnS2", scaled_positions=[[0, 0, 0], [.3, .3, .3], [.7, .7, .7]],
                                cell=[6.1] * 3, pbc=True))                       # 모멘트 파일 없음
         put("NiS2_mp-4", Atoms("NiS2", scaled_positions=[[0, 0, 0], [.3, .3, .3], [.7, .7, .7]],
                                cell=[5.7] * 3, pbc=True), [1.0, 0.0, 0.0], syms=["S", "Ni", "S"])
+        tri = lambda f, c: Atoms(f, scaled_positions=[[0, 0, 0], [.3, .3, .3], [.7, .7, .7]],
+                                 cell=[c] * 3, pbc=True)
+        put("NiS2_mp-5", tri("NiS2", 5.7), [0.0, 0.0, 0.0])               # (c) 모름 → 고스핀 시작
+        put("FeS2_mp-6", tri("FeS2", 5.4), [0.0, 0.0, 0.0])               # (c) 표에 없음 → 거부
+        put("CoO2_mp-7", tri("CoO2", 4.9), [3.0, 0.0, 0.0])               # 자리 3 ≠ 총 1 → 거부
+        put("NiS2_mp-8", tri("NiS2", 5.6), [0.0, 0.0, 0.0])               # 출처 기록 없음 → 거부
+        prov = {k: {"files": [f"x/{k}.vasp"], "pick": {"total_magnetization": t, "ordering": o},
+                    "magnetism": {"ordering_magnetism_doc": o}}
+                for k, t, o in (("MnO_mp-1", 0.0, "AFM"), ("CoS2_mp-2", 0.9, "Unknown"),
+                                ("MnS2_mp-3", 0.0, "Unknown"), ("NiS2_mp-4", 0.0, "Unknown"),
+                                ("NiS2_mp-5", 0.0, "Unknown"), ("FeS2_mp-6", 0.0, "Unknown"),
+                                ("CoO2_mp-7", 1.0, "FM"))}
+        provp = os.path.join(T, "prov.json")
+        json.dump(prov, open(provp, "w"))
 
         def run(extra, work, pattern="*.vasp"):
             old_argv, old_get = sys.argv, EC.get
@@ -374,7 +467,7 @@ def _selftest_tm():
         def rd(tag, fn):          # 없으면 "" — 시험이 죽지 않고 ⛔ 로 보고하게
             q = os.path.join(w, tag, fn)
             return open(q).read() if os.path.isfile(q) else ""
-        run(["--tm_state", "mp", "--hubbard", "mp", "--ecut_min", "Mn=65,780",
+        run(["--tm_state", "mp", "--tm_prov", provp, "--hubbard", "mp", "--ecut_min", "Mn=65,780",
              "--fixed_cell", "CoS2_mp-2", "--pseudo_dir_run", "/remote/pp"], w)
         v = rd("MnO_mp-1", "01_vcrelax.in")
         chk("Mn1" in v and "Mn2" in v and "ntyp            = 3" in v, "MnO: 종 Mn1/Mn2/O")
@@ -396,13 +489,24 @@ def _selftest_tm():
         chk(not os.path.isdir(os.path.join(w, "NiS2_mp-4")), "[음성] 원소 순서가 다르면 안 만든다")
         meta = json.load(open(os.path.join(w, "MnO_mp-1", "00_build_meta.json")))
         chk(meta["species"] == ["Mn1", "Mn2", "O"] and meta["hubbard"]
-            and meta["cell_policy"] == "vc-relax", "메타가 종·U·셀 정책을 적는다")
+            and meta["cell_policy"] == "vc-relax" and meta["tm_moment_rule"] == "a_mp_sites",
+            "메타가 종·U·셀 정책·상태 규칙을 적는다")
+        chk("starting_magnetization(1) = 0.0529" in r and json.load(open(os.path.join(
+            w, "CoS2_mp-2", "00_build_meta.json")))["tm_moment_rule"] == "b_mp_total_split",
+            "CoS2: (b) 총 0.9 → Co 0.9/17")
+        n5 = rd("NiS2_mp-5", "01_vcrelax.in")
+        chk("starting_magnetization(1) = 0.1111" in n5 and "nspin           = 2" in n5,
+            "NiS2: (c) 고스핀 Ni 2/18 · nspin 2")
+        chk("HUBBARD" not in n5, "[음성] NiS2: 황화물 U 없음")
+        for t_, why_ in (("FeS2_mp-6", "표에 없는 시작값"), ("CoO2_mp-7", "자리·총 불일치"),
+                         ("NiS2_mp-8", "출처 기록 없음")):
+            chk(not os.path.isdir(os.path.join(w, t_)), f"[음성] {why_} → 안 만든다")
         # 음성: --tm_state 없이는 TM 상을 안 만든다
         w2 = w + "_nostate"
         run([], w2, "MnO_mp-1.vasp")
         chk(not os.path.isdir(os.path.join(w2, "MnO_mp-1")), "[음성] --tm_state 없으면 TM 상 안 만든다")
 
-    print("\n".join("⛔ " + b for b in bad) if bad else "✓ TM 경로 selftest 통과 (25)")
+    print("\n".join("⛔ " + b for b in bad) if bad else "✓ TM 경로 selftest 통과 (37)")
     return 1 if bad else 0
 
 
@@ -452,6 +556,9 @@ def main():
     ap.add_argument("--tm_state", choices=("mp",), default=None,
                     help="열린 껍질 TM 상의 자성 상태 — 'mp' = 구조 옆 <base>.magmom.json 의 MP 배치. "
                          "안 주면 TM 상은 입력을 만들지 않는다")
+    ap.add_argument("--tm_prov", default=None,
+                    help="fetch_sei_structures --pick 출처 기록 (MP 총 모멘트 · ordering) — "
+                         "--tm_state mp 에 필요. 없으면 TM 상 입력을 안 만든다")
     ap.add_argument("--hubbard", choices=("none", "mp"), default="none",
                     help="TM 3d U — 'mp' = MP 규약 (O·F 가 있는 계만 · Co 3.32 · Mn 3.9 · Ni 6.2 eV)")
     ap.add_argument("--ecut_min", action="append", default=[], metavar="El=wfc,rho",
@@ -470,6 +577,7 @@ def main():
         ecut_min = parse_ecut_min(a.ecut_min)
     except ValueError as e:
         sys.exit(f"⛔ {e}")
+    tm_prov = json.load(open(a.tm_prov)) if a.tm_prov else None
     pool = find_pseudos(a.pseudo_dir)
     files = sorted(glob.glob(a.pattern))
     if not files:
@@ -505,7 +613,7 @@ def main():
         #   (CEI 생성물 갭 카드). 선언이 없거나 자리 대응이 안 되면 입력을 만들지 않는다.
         syms = at.get_chemical_symbols()
         tm_open = [e for e in els if e in OPEN_SHELL_TM]
-        labels, lab_mag, side = syms, {}, None
+        labels, lab_mag, side, mags, tm_rule = syms, {}, None, None, None
         if tm_open:
             side = magmom_sidecar(f)
             why = None
@@ -517,10 +625,18 @@ def main():
                 why = "magmom.json 의 원소 순서가 구조와 다르다 — 자리 대응을 모른다"
             elif "Nd" in els:
                 why = "Nd + TM 동시 — 이 경로는 둘을 같이 다루지 않는다"
+            elif prov_record(tm_prov, f) is None:
+                why = "--tm_prov 에 이 구조 기록이 없다 — MP 총 모멘트를 모르면 상태를 못 정한다"
+            if not why:
+                try:
+                    mp_total, mp_ord = prov_record(tm_prov, f)
+                    mags, tm_rule = resolve_tm_moments(syms, side["magmoms"], mp_total, mp_ord)
+                except ValueError as e:
+                    why = str(e)
             if why:
                 print(f"\n⏭  {tag} — {why}")
                 skipped.append(tag); continue
-            labels, lab_mag = species_from_magmoms(syms, side["magmoms"])
+            labels, lab_mag = species_from_magmoms(syms, mags)
         spc = sorted(set(labels))
         tm_spin = bool(tm_open) and any(abs(v) > MAG_THR for v in lab_mag.values())
         ecw, ecr = ecut_for(els, ecut_min)
@@ -585,7 +701,7 @@ def main():
         #   여유를 그만큼 더 준다 — 안 그러면 CBM 을 못 본다.
         pad = (3 * n_nd) // 2 if spinpol else 0
         # TM: MP 모멘트 합을 정수로 — 03(fixed) 의 tot_magnetization 시작값 (02 뒤 sync 가 고친다)
-        M0 = int(round(sum(side["magmoms"]))) if tm_spin else 0
+        M0 = int(round(sum(mags))) if tm_spin else 0
         if tm_spin:
             pad = (abs(M0) + 1) // 2 + 4
         try:
@@ -771,6 +887,7 @@ def main():
             print(note)
         if tm_open or fixed_cell or (ecw, ecr) != (ECUTWFC, ECUTRHO):
             print(f"  ★ 종 {'/'.join(spc)} · nspin {2 if tm_spin else 1}"
+                  + (f" · 상태 규칙 {tm_rule}" if tm_rule else "")
                   + (f" · 씨앗 " + ", ".join(f"{k} {v:+.3f}" for k, v in tm_seed.items())
                      + f" · tot_mag(03 시작) {M0}" if tm_spin else "")
                   + f" · U {'; '.join(x.strip() for x in hub_tm) if hub_tm else '없음'}"
@@ -781,6 +898,7 @@ def main():
                    "structure_sha256": hashlib.sha256(open(f, "rb").read()).hexdigest(),
                    "species": spc, "nspin": 2 if (tm_spin or spinpol) else 1,
                    "tm_state": (a.tm_state if tm_open else None),
+                   "tm_moment_rule": tm_rule,
                    "magmom_sidecar": (os.path.splitext(f)[0] + ".magmom.json") if side else None,
                    "starting_magnetization": tm_seed or None,
                    "tot_magnetization_initial": M0 if tm_spin else None,

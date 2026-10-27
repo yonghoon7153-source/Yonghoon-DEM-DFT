@@ -10011,7 +10011,7 @@
    "title": "CEI 생성물 11 종 띠틈 — 관측 다형 (E_hull 최저) · TM 은 X(MP 자성 배치 · MP U 규약) · 분자결정 고정셀 · kgy 대조 잡 3 종 통과 뒤 판독",
    "statement": "카드 db/properties/cei_product_gap_card_2026_10_27.json 이 정의다: 09-19 CEI 판별종 갭과 같은 생성기·PP·컷오프로 fixed-occ nscf 고유값 갭을 낸다. 열린 껍질 TM 6 종은 MP 엔트리의 자성 배치를 씨앗으로 옮기고 U 는 MP 규약 (O·F 계만 Co 3.32 · Mn 3.9 · Ni 6.2 eV) — 보고량은 E_g(PBE[+U]; MP 자성 배치) 다. 다형은 관측 중 E_hull 최저 (반응 원장 hull 상은 같이 기록). SO2 · S2Cl2 는 MP 셀 고정 + 이온 이완. LiCl · Li3PO4 는 기존 값 (6.2603 · 5.9121 eV) 을 쓰고 kgy 에서 대조 잡 (LiCl · Li2S · Li3PO4 β · |Δ| ≤ 0.02 eV) 으로만 다시 돈다. 판독은 카드 §7 (R1–R6) 만.",
    "rationale": "1저자 (실험 쪽 · 박재현) 10-27 요청 — CEI 생성물 갭을 NdP5O14 아래에 그림으로. 사용자 '이렇게도 들어왔는데 kgy에서 진행하자'. TM 화합물은 허용 상태가 여럿이라 선택 규칙 없이는 스칼라 갭이 없다 (회신 N 기준) → 상태를 선언한다. MP 비교는 GGA/GGA+U 출처만 (09-30 NdP5O14 r2SCAN 참조 교훈).",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "estimand",
    "results_seen": false,
    "results_seen_note": "우리 계산 0 건 · MP 구조·자성·갭 출처 재조회 0 건 (2026-10-27 작성 시점). 원장 hull 엔트리 id 와 옛 MP 갭만 cascade_product_gaps.json 에서 봤다.",
@@ -10036,13 +10036,97 @@
     "견적": "합 어림 15–30 GPU-h · 벽시계 3–5 일"
    },
    "proposed_by": "claude-session-2026-10-27 (friendly)",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-10-27",
      "state": "proposed",
      "by": "agent",
      "note": "사용자 '이렇게도 들어왔는데 kgy에서 진행하자' (실행 승인) · 트랙 CEI — 1저자 = 실험 쪽 (요청자) · 결정은 사용자. 카드 §9 의 세 가지 (vc-relax 허락 · TM 상태 · 다형) 는 사용자 결정 대기."
+    },
+    {
+     "at": "2026-10-27",
+     "state": "active",
+     "by": "사용자 (CEI 계산 담당 · 1저자는 실험 쪽 박재현)",
+     "note": "비준 — '권고대로해 ㅇㅇ' (권고 셋: ① 결정 7 + 대조 3 vc-relax 허락 · 분자결정 2 고정셀 ② TM = MP 자성 배치 + MP U 규약 ③ 관측 다형). vc-relax 허락은 CLAUDE.md 이완 규칙 예외 목록에 올림."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-27T13:55:41Z",
+    "commit": "2b536604b078060f394bd38b53bd4c9801c3e22e",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "채팅 답 (2026-10-27 · 이 세션): '권고대로해 ㅇㅇ' — 직전 권고: 카드 §9 ① vc-relax 허락 (결정 7 + 대조 3 · 분자결정 2 는 MP 셀 고정) ② TM 6 종 = MP 자성 배치 + MP U 규약 ③ 관측 다형. 실행 승인은 앞서 '이렇게도 들어왔는데 kgy에서 진행하자'.",
+    "decision_digest": "sha256:dcc79e9b96c13679f3123251dcac7bf631e780004d303ad5ea7850b383eb965d"
+   }
+  },
+  {
+   "id": "D-2026-10-27-cei-product-gaps-amend1",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "cei.gap.product_phases_11",
+   "slot": "cei_product_gap_amend1_pp_control_tm_unknown",
+   "applies_to": {
+    "systems": [
+     "Li2SO4",
+     "S2Cl2",
+     "SO2",
+     "CoS2",
+     "NiS2",
+     "Ni(PO3)2",
+     "Mn(PO3)2",
+     "MnS2",
+     "Ni3S4",
+     "LiCl",
+     "Li3PO4",
+     "P2O5"
+    ],
+    "tasks": [
+     "fixed_occupation_nscf_gap"
+    ],
+    "methods": [
+     "qe-7.4.1-pbe-paw-psl + gbrv-uspp-3d"
+    ],
+    "use_cases": [
+     "figure_for_first_author"
+    ]
+   },
+   "title": "CEI 생성물 갭 개정 1 (결과 전) — PP 세트 = 09-19 CEI PAW psl + GBRV Co·Ni·Mn · LiCl·Li3PO4 다시 잼 · 대조 잡 = P2O5 하나 · MP 자성 'Unknown' 처리 규칙 · Mn 90/1080",
+   "statement": "카드 §12 (개정 1) 이 정의다. ① PP 는 09-19 CEI 갭 세트 (PAW psl Li sl · P n · S nl · Cl nl · O n 0.1) + GBRV USPP Co 1.2 · Ni 1.4 · Mn 1.5 (md5 기록) — 08 SEI 갭은 GBRV 세트였으므로 LiCl · Li3PO4 β 를 이 세트로 다시 잰다 (08 값과의 차는 PP 세트 차이로만). ② 대조 잡은 09-19 P2O5 (5.186 eV) 하나 · |Δ| ≤ 0.02 eV · 옛 3 종은 취소. ③ TM 상태: MP 자리 모멘트가 MP 총 모멘트와 0.5 μB 안이면 그대로 · MP 가 NM 이면 비자성 · 자리값 0 인데 |총| > 0.5 면 총을 TM 자리에 나눔 · 자리값 0 · |총| ≤ 0.5 · NM 아님이면 2+ 고스핀 강자성 시작 (Mn 5 · Co 3 · Ni 2 μB) — 반강자성은 안 본다. ④ MP 대조는 근사가 같을 때만 (MnP2O6 은 MP 가 GGA 출처라 대조 없음). ⑤ Mn 화합물 컷오프 90/1080 Ry (GBRV 파일에 권장값 없음) · 나머지 60/480. ⑥ MnS2 는 규칙대로 Pnnm (MP '관측') — 상온 광물 hauerite 아님 · 둘 다 MP GGA 갭 0.",
+   "rationale": "gabia 조회 (b44d899c) 가 카드 전제 둘을 깼다: 09-19 CEI 갭과 08 SEI 갭의 PP 세트가 달랐고 (그래서 옛 대조 잡은 기계 차이를 못 가른다), MP 자성 정보가 'Unknown' 인 TM 넷은 'MP 자성 배치' 를 옮길 수 없다 (CoS2 자리값 0 · 요약 총 4.0 μB — 그대로면 비자성으로 둔갑). 계산 0 건 · 결과 전 개정.",
+   "decision_state": "proposed",
+   "record_kind": "estimand",
+   "results_seen": false,
+   "results_seen_note": "우리 계산 0 건. 본 것은 MP 후보 표 · 자성 · 갭 출처 꼬리표 · gabia PP 파일 이름과 md5 뿐.",
+   "card": "db/properties/cei_product_gap_card_2026_10_27.json",
+   "record": "db/properties/cei_product_gap_runlog_2026_10_27.json",
+   "depends_on": [
+    "D-2026-10-27-cei-product-gaps"
+   ],
+   "evidence": [
+    "db/raw/cei_product_gap_2026_10_27/gabia_pp_survey.log (09-19 · 08 PP 세트)",
+    "db/raw/cei_product_gap_2026_10_27/gabia_fetch.log · db/properties/cei_gap_tm_structures_2026_10_27.json (CoS2 total_magnetization 4.0 · 자리값 0)",
+    "db/raw/cei_product_gap_2026_10_27/pseudo_md5.txt"
+   ],
+   "reopen_criteria": [
+    "PP · 컷오프 · 구조 출처 · 상태 규칙이 바뀌는 경우만",
+    "'반강자성을 하나 더 보자' 는 재개 사유가 아니다 (새 카드)"
+   ],
+   "enforcement": "① build_dft_inputs.py --tm_state mp --tm_prov (resolve_tm_moments · 자리·총 불일치면 입력 안 만듦) --ecut_min Mn=90,1080 ② run_kgy.sh — 결정 active + 개정 1 active (proposed 면 '잠정 실행' 표시) · PP md5 · ldd MPI · 입력의 pseudo_dir ③ extract_gap.py --control_gate (P2O5 |Δ| ≤ 0.02 eV 통과해야 11 종)",
+   "cost_cap": {
+    "machine": "kgy GPU · Nd Q3′ (ndq3p) 뒤 · cascade v7 옆 · SEI_MIN_FREE_MIB 8000",
+    "견적": "대조 1 + 11 종 · 어림 20–30 GPU-h · 벽시계 3–5 일"
+   },
+   "proposed_by": "claude-session-2026-10-27 (friendly)",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-10-27",
+     "state": "proposed",
+     "by": "agent",
+     "note": "gabia 조회 결과로 결과 전 개정 — 사용자 비준 대기 (트랙 CEI · 결정은 사용자)."
     }
    ]
   }

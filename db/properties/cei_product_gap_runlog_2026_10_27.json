@@ -5,18 +5,73 @@
  "date": "2026-10-27",
  "system": "CEI 생성물 11 종 (원고 조성 nd_p_002_asused · 반응 최소점 Nd 없는 생성물)",
  "card": "db/properties/cei_product_gap_card_2026_10_27.json",
- "decision": "D-2026-10-27-cei-product-gaps (proposed)",
+ "decision": "D-2026-10-27-cei-product-gaps (active · 사용자 비준 10-27 '권고대로해 ㅇㅇ') + 개정 1 D-2026-10-27-cei-product-gaps-amend1 (proposed)",
  "citable": false,
- "status": "계획 — 우리 계산 0 건",
+ "status": "입력 생성 끝 · kgy 실행 대기 — 우리 계산 0 건",
  "단계": [
-  {"step": "① gabia 조회 (검사용 · MP API · PP 파일 복사 · QE 안 돈다)",
-   "state": "블록 전달 대기",
+  {
+   "step": "① gabia 조회 (검사용 · MP API · PP 파일 복사 · QE 안 돈다)",
+   "state": "✅ 끝 (사용자 gabia · push b44d899c) — 문제 0 건 · PP 조사에서 09-19 (PAW psl) 와 08 (GBRV) 세트가 다른 것 확인 → 개정 1",
    "하는_일": "fetch_sei_structures.py --pick (관측 다형 · hull 상 · MP 자성 · 갭 출처 꼬리표) · 09-19 CEI 갭 런의 PP 파일 이름·md5 · TM PP 유무 · SSSP json · pymatgen MP U 대조 → repo 로 push",
-   "산출": ["db/structures/cei_gap_tm/*.{vasp,cif,magmom.json}", "db/properties/cei_gap_tm_structures_2026_10_27.json", "db/inputs/cei_product_gap_2026_10_27/pseudo/ (Nd 제외)", "db/raw/cei_product_gap_2026_10_27/{gabia_fetch.log,gabia_pp_survey.log,pseudo_md5.txt}"]},
-  {"step": "② 이 세션 — 다형 확인 · 레지스트리 'declared' 등록 (카드 R1) · 입력 생성 (build_dft_inputs) · kgy 러너", "state": "①  뒤"},
-  {"step": "③ kgy — 대조 잡 3 종 (통과해야 다음) → 새 9 종 · Nd Q3′ 뒤 · cascade 옆", "state": "② 뒤"},
-  {"step": "④ 판독 — 카드 §7 R1–R6 · 그림용 CSV (Origin) · 1저자 송부는 사용자를 통해", "state": "③ 뒤"}
+   "산출": [
+    "db/structures/cei_gap_tm/*.{vasp,cif,magmom.json}",
+    "db/properties/cei_gap_tm_structures_2026_10_27.json",
+    "db/inputs/cei_product_gap_2026_10_27/pseudo/ (Nd 제외)",
+    "db/raw/cei_product_gap_2026_10_27/{gabia_fetch.log,gabia_pp_survey.log,pseudo_md5.txt}"
+   ]
+  },
+  {
+   "step": "② 이 세션 — 다형 확인 · 레지스트리 'declared' 등록 (카드 R1) · 입력 생성 (build_dft_inputs) · kgy 러너",
+   "state": "✅ 끝 — 다형 확인 · 레지스트리 9 종 declared + li3po4 measured · 입력 12 (대조 P2O5 + 11 종) · run_kgy.sh (가짜 환경 거부 7 · 게이트 멈춤/통과)"
+  },
+  {
+   "step": "③ kgy — 대조 잡 P2O5 (|Δ| ≤ 0.02 eV 통과해야 다음) → 11 종 (닫힌 껍질 → TM 절연체 → TM 금속) · Nd Q3′ (ndq3p) 뒤 · cascade 옆",
+   "state": "② 뒤"
+  },
+  {
+   "step": "④ 판독 — 카드 §7 R1–R6 · 그림용 CSV (Origin) · 1저자 송부는 사용자를 통해",
+   "state": "③ 뒤"
+  }
  ],
  "gabia_블록_①": "cd /data/work && git -C /data/work/repo worktree remove --force /data/work/wt_ceigap 2>/dev/null; git -C /data/work/repo fetch -q origin claude/friendly-meitner-lldvar && git -C /data/work/repo worktree add --detach /data/work/wt_ceigap FETCH_HEAD && cd /data/work/wt_ceigap && git log --oneline -1\ncd /data/work/wt_ceigap && P=/data/apps/miniforge3/envs/uma/bin/python && R=db/raw/cei_product_gap_2026_10_27 && mkdir -p $R && : \"${MP_API_KEY:?MP_API_KEY 없음 — export 후 다시}\" && $P tools/sei/fetch_sei_structures.py --selftest && $P tools/sei/fetch_sei_structures.py --pick Li2SO4 SCl SO2 CoS2 NiS2 NiP2O6 MnP2O6 MnS2 Ni3S4 --with_magnetism --with_es_origin --outdir db/structures/cei_gap_tm --prov db/properties/cei_gap_tm_structures_2026_10_27.json --prefix \"\" 2>&1 | tee $R/gabia_fetch.log | tail -80\n(블록 본문 전체는 이 세션 답변 · 아래 PP 조사·복사 · MP U 대조 · 커밋 줄 포함)",
- "⚠": "MP 갭은 우리 표에 섞지 않는다 — 출처 계산 꼬리표 (GGA · GGA+U · r2SCAN) 와 같이 곁에만 (카드 R5)."
+ "⚠": "MP 갭은 우리 표에 섞지 않는다 — 출처 계산 꼬리표 (GGA · GGA+U · r2SCAN) 와 같이 곁에만 (카드 R5).",
+ "①_gabia_결과": {
+  "다형": {
+   "Li2SO4": "P2_1/c mp-aaaaagtg 28",
+   "SCl": "Fdd2 mp-aaaabpoq 16",
+   "SO2": "Aea2 mp-aaaabpak 6",
+   "CoS2": "Pa-3 mp-aaaaadbq 12",
+   "NiS2": "Pa-3 mp-aaaaadju 12 (hull 상 P2_1/c 예측과 다름)",
+   "NiP2O6": "C2/c mp-aaaabchz 36",
+   "MnP2O6": "C2/c mp-aaabevzn 36",
+   "MnS2": "Pnnm mp-aaacfzcu 6 (hull 상 R-3m 예측 · 상온 광물 hauerite Pa-3 아님)",
+   "Ni3S4": "Fd-3m mp-aaaaabok 14"
+  },
+  "MP_자성": {
+   "NiP2O6": "FM Σ7.876 (자리 일치)",
+   "MnS2": "FM Σ1.969 (저스핀)",
+   "CoS2": "Unknown · 자리값 0 · 요약 총 4.0 μB ← 불일치",
+   "NiS2": "Unknown · 총 ≈ 0",
+   "Ni3S4": "Unknown · 총 ≈ 0",
+   "MnP2O6": "Unknown · 총 0 (Mn²⁺ 인데)",
+   "Li2SO4·SCl·SO2": "비자성"
+  },
+  "갭_출처": "전부 GGA · NiP2O6 만 GGA+U · MnP2O6 은 GGA (U 없음)",
+  "PP": "09-19 CEI = PAW psl (Li sl · P n · S nl · Cl nl · O n 0.1 · Nd spdn) · 08 SEI = GBRV (li · s · cl v1.4) + P rrkjus psl + O psl 0.1 · Co · Ni · Mn = GBRV (gabia /data/work/pseudo) · SSSP json 없음",
+  "MP_U_대조": "pymatgen MPRelaxSet LDAUU: O·F 계 Co 3.32 · Mn 3.9 · Ni 6.2 — MP_U_3D 와 같다"
+ },
+ "입력": {
+  "폴더": "db/inputs/cei_product_gap_2026_10_27/work (12 상 · pseudo_dir = /home/kgy/work/runs/cei_gap_1027/pseudo)",
+  "명령": "build_dft_inputs.py --pattern 'db/structures/cei_gap_tm/*.vasp' --tm_state mp --tm_prov db/properties/cei_gap_tm_structures_2026_10_27.json --hubbard mp --ecut_min Mn=90,1080 --fixed_cell SCl_mp-aaaabpoq SO2_mp-aaaabpak (+ licl · li3po4 · P2O5 를 같은 PP 로 하나씩)",
+  "상태_규칙": {
+   "NiP2O6": "a (U Ni 6.2 · 60/480)",
+   "MnP2O6": "c 고스핀 Mn 5 (U Mn 3.9 · 90/1080)",
+   "MnS2": "a 저스핀 (U 없음 · 90/1080)",
+   "CoS2": "b Co +1",
+   "NiS2": "c Ni 2",
+   "Ni3S4": "c Ni 2"
+  },
+  "갭_단계": "금속 선언 넷 (CoS2 · NiS2 · MnS2 · Ni3S4) 은 03 없음 → 04 DOS 로 확인 (R3)",
+  "kgy_실행기": "db/inputs/cei_product_gap_2026_10_27/run_kgy.sh (DRY_RUN=1 점검만)"
+ }
 }

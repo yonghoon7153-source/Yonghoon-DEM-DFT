@@ -345,6 +345,166 @@
     "⚠_MP_바닥상_아님": "우리 표적 Fdd2 는 MP 바닥상이 아니다 (바닥상 Pnma 4.853 eV, 우리 쪽 E_hull +0.0108 eV/atom = 11 meV/atom). 차가 작아 MP 만으로 어느 쪽이 진짜 바닥상인지 못 가른다 — 재현 판정은 **같은 공간군 값**으로만 한다."
    },
    "promote_when": "우리 fixed-occ nscf 값이 나오고 MP 참조와 대조되면 evidence: measured 로 승격 + gap_eV 기재."
+  },
+  "li3po4": {
+   "class": "insulator",
+   "evidence": "measured",
+   "gap_eV": 5.9121,
+   "source": "sei_electronic.json:li3po4_mp-13725",
+   "note": "β (Pmn2_1). 2026-10-27 등록 — 08 SEI 갭 체인 (GBRV USPP 세트 · build_dft_inputs) 이 잰 값이 sei_electronic.json 에 있었는데 레지스트리에 빠져 있었다 (08-11 미등록 차단 게이트 뒤 갭 단계가 막혔던 태그). CEI 생성물 갭 카드 개정 1 이 이 상을 09-19 PAW psl 세트로 다시 잰다."
+  },
+  "li2so4": {
+   "class": "insulator",
+   "evidence": "declared",
+   "basis": "닫힌 껍질 황산염 — 비자성",
+   "declared_2026_10_27": {
+    "formula": "Li2SO4",
+    "material_id": "mp-aaaaagtg",
+    "n_atoms": 28,
+    "spacegroup": "P2_1/c",
+    "structure": "db/structures/cei_gap_tm/Li2SO4_mp-aaaaagtg.vasp",
+    "mp_gap_eV": 6.0232,
+    "mp_gap_source": "aaadseub = GGA NSCF Uniform → GGA",
+    "rule": "CEI 생성물 갭 카드 R1 — 고른 엔트리의 MP 갭 > 0 → insulator · = 0 → metal (결과 전 선언)",
+    "why_declared_not_measured": "우리 fixed-occ nscf 를 아직 안 돌렸다. 이 선언은 갭 단계 입력을 만들지 말지만 정한다 — 갭 값 주장이 아니다. 우리 결과가 나오면 measured 로 바꾼다 (카드 R2 · R3).",
+    "scope": "D-2026-10-27-cei-product-gaps (+ 개정 1)"
+   }
+  },
+  "scl": {
+   "class": "insulator",
+   "evidence": "declared",
+   "basis": "S₂Cl₂ 분자결정 — 닫힌 껍질",
+   "declared_2026_10_27": {
+    "formula": "SCl",
+    "material_id": "mp-aaaabpoq",
+    "n_atoms": 16,
+    "spacegroup": "Fdd2",
+    "structure": "db/structures/cei_gap_tm/SCl_mp-aaaabpoq.vasp",
+    "mp_gap_eV": 2.8804,
+    "mp_gap_source": "aaafbokz = GGA NSCF Line → GGA",
+    "rule": "CEI 생성물 갭 카드 R1 — 고른 엔트리의 MP 갭 > 0 → insulator · = 0 → metal (결과 전 선언)",
+    "why_declared_not_measured": "우리 fixed-occ nscf 를 아직 안 돌렸다. 이 선언은 갭 단계 입력을 만들지 말지만 정한다 — 갭 값 주장이 아니다. 우리 결과가 나오면 measured 로 바꾼다 (카드 R2 · R3).",
+    "scope": "D-2026-10-27-cei-product-gaps (+ 개정 1)"
+   }
+  },
+  "so2": {
+   "class": "insulator",
+   "evidence": "declared",
+   "basis": "SO₂ 분자결정 — 닫힌 껍질",
+   "declared_2026_10_27": {
+    "formula": "SO2",
+    "material_id": "mp-aaaabpak",
+    "n_atoms": 6,
+    "spacegroup": "Aea2",
+    "structure": "db/structures/cei_gap_tm/SO2_mp-aaaabpak.vasp",
+    "mp_gap_eV": 3.1539,
+    "mp_gap_source": "aaafbyhm = GGA NSCF Line → GGA",
+    "rule": "CEI 생성물 갭 카드 R1 — 고른 엔트리의 MP 갭 > 0 → insulator · = 0 → metal (결과 전 선언)",
+    "why_declared_not_measured": "우리 fixed-occ nscf 를 아직 안 돌렸다. 이 선언은 갭 단계 입력을 만들지 말지만 정한다 — 갭 값 주장이 아니다. 우리 결과가 나오면 measured 로 바꾼다 (카드 R2 · R3).",
+    "scope": "D-2026-10-27-cei-product-gaps (+ 개정 1)"
+   }
+  },
+  "cos2": {
+   "class": "metal",
+   "evidence": "declared",
+   "basis": "황철석형 Co 황화물 — MP GGA 갭 0 (실험으로도 금속)",
+   "declared_2026_10_27": {
+    "formula": "CoS2",
+    "material_id": "mp-aaaaadbq",
+    "n_atoms": 12,
+    "spacegroup": "Pa-3",
+    "structure": "db/structures/cei_gap_tm/CoS2_mp-aaaaadbq.vasp",
+    "mp_gap_eV": 0.0,
+    "mp_gap_source": "aaafcbbr = GGA NSCF Line → GGA",
+    "rule": "CEI 생성물 갭 카드 R1 — 고른 엔트리의 MP 갭 > 0 → insulator · = 0 → metal (결과 전 선언)",
+    "why_declared_not_measured": "우리 fixed-occ nscf 를 아직 안 돌렸다. 이 선언은 갭 단계 입력을 만들지 말지만 정한다 — 갭 값 주장이 아니다. 우리 결과가 나오면 measured 로 바꾼다 (카드 R2 · R3).",
+    "scope": "D-2026-10-27-cei-product-gaps (+ 개정 1)"
+   }
+  },
+  "nis2": {
+   "class": "metal",
+   "evidence": "declared",
+   "basis": "황철석형 Ni 황화물 — MP GGA 갭 0 (실험은 Mott 반도체 — PBE 상태의 금속이다)",
+   "declared_2026_10_27": {
+    "formula": "NiS2",
+    "material_id": "mp-aaaaadju",
+    "n_atoms": 12,
+    "spacegroup": "Pa-3",
+    "structure": "db/structures/cei_gap_tm/NiS2_mp-aaaaadju.vasp",
+    "mp_gap_eV": 0.0,
+    "mp_gap_source": "aaafwxve = GGA NSCF Line → GGA",
+    "rule": "CEI 생성물 갭 카드 R1 — 고른 엔트리의 MP 갭 > 0 → insulator · = 0 → metal (결과 전 선언)",
+    "why_declared_not_measured": "우리 fixed-occ nscf 를 아직 안 돌렸다. 이 선언은 갭 단계 입력을 만들지 말지만 정한다 — 갭 값 주장이 아니다. 우리 결과가 나오면 measured 로 바꾼다 (카드 R2 · R3).",
+    "scope": "D-2026-10-27-cei-product-gaps (+ 개정 1)"
+   }
+  },
+  "nip2o6": {
+   "class": "insulator",
+   "evidence": "declared",
+   "basis": "Ni²⁺ 메타인산염 — MP GGA+U FM 갭 1.486",
+   "declared_2026_10_27": {
+    "formula": "NiP2O6",
+    "material_id": "mp-aaaabchz",
+    "n_atoms": 36,
+    "spacegroup": "C2/c",
+    "structure": "db/structures/cei_gap_tm/NiP2O6_mp-aaaabchz.vasp",
+    "mp_gap_eV": 1.4863,
+    "mp_gap_source": "aaafbhma = GGA+U NSCF Line → GGA+U",
+    "rule": "CEI 생성물 갭 카드 R1 — 고른 엔트리의 MP 갭 > 0 → insulator · = 0 → metal (결과 전 선언)",
+    "why_declared_not_measured": "우리 fixed-occ nscf 를 아직 안 돌렸다. 이 선언은 갭 단계 입력을 만들지 말지만 정한다 — 갭 값 주장이 아니다. 우리 결과가 나오면 measured 로 바꾼다 (카드 R2 · R3).",
+    "scope": "D-2026-10-27-cei-product-gaps (+ 개정 1)"
+   }
+  },
+  "mnp2o6": {
+   "class": "insulator",
+   "evidence": "declared",
+   "basis": "Mn²⁺ 메타인산염 — MP 갭 2.163 (GGA · U 없음 출처)",
+   "declared_2026_10_27": {
+    "formula": "MnP2O6",
+    "material_id": "mp-aaabevzn",
+    "n_atoms": 36,
+    "spacegroup": "C2/c",
+    "structure": "db/structures/cei_gap_tm/MnP2O6_mp-aaabevzn.vasp",
+    "mp_gap_eV": 2.1631,
+    "mp_gap_source": "aaabvxoc = GGA NSCF Line → GGA",
+    "rule": "CEI 생성물 갭 카드 R1 — 고른 엔트리의 MP 갭 > 0 → insulator · = 0 → metal (결과 전 선언)",
+    "why_declared_not_measured": "우리 fixed-occ nscf 를 아직 안 돌렸다. 이 선언은 갭 단계 입력을 만들지 말지만 정한다 — 갭 값 주장이 아니다. 우리 결과가 나오면 measured 로 바꾼다 (카드 R2 · R3).",
+    "scope": "D-2026-10-27-cei-product-gaps (+ 개정 1)"
+   }
+  },
+  "mns2": {
+   "class": "metal",
+   "evidence": "declared",
+   "basis": "Pnnm MnS₂ (MP '관측' · 저스핀 FM) — MP GGA 갭 0",
+   "declared_2026_10_27": {
+    "formula": "MnS2",
+    "material_id": "mp-aaacfzcu",
+    "n_atoms": 6,
+    "spacegroup": "Pnnm",
+    "structure": "db/structures/cei_gap_tm/MnS2_mp-aaacfzcu.vasp",
+    "mp_gap_eV": 0.0,
+    "mp_gap_source": "aaafwwvc = GGA NSCF Line → GGA",
+    "rule": "CEI 생성물 갭 카드 R1 — 고른 엔트리의 MP 갭 > 0 → insulator · = 0 → metal (결과 전 선언)",
+    "why_declared_not_measured": "우리 fixed-occ nscf 를 아직 안 돌렸다. 이 선언은 갭 단계 입력을 만들지 말지만 정한다 — 갭 값 주장이 아니다. 우리 결과가 나오면 measured 로 바꾼다 (카드 R2 · R3).",
+    "scope": "D-2026-10-27-cei-product-gaps (+ 개정 1)"
+   }
+  },
+  "ni3s4": {
+   "class": "metal",
+   "evidence": "declared",
+   "basis": "스피넬 Ni₃S₄ — MP GGA 갭 0 (실험으로도 금속)",
+   "declared_2026_10_27": {
+    "formula": "Ni3S4",
+    "material_id": "mp-aaaaabok",
+    "n_atoms": 14,
+    "spacegroup": "Fd-3m",
+    "structure": "db/structures/cei_gap_tm/Ni3S4_mp-aaaaabok.vasp",
+    "mp_gap_eV": 0.0,
+    "mp_gap_source": "aaafimzz = GGA NSCF Line → GGA",
+    "rule": "CEI 생성물 갭 카드 R1 — 고른 엔트리의 MP 갭 > 0 → insulator · = 0 → metal (결과 전 선언)",
+    "why_declared_not_measured": "우리 fixed-occ nscf 를 아직 안 돌렸다. 이 선언은 갭 단계 입력을 만들지 말지만 정한다 — 갭 값 주장이 아니다. 우리 결과가 나오면 measured 로 바꾼다 (카드 R2 · R3).",
+    "scope": "D-2026-10-27-cei-product-gaps (+ 개정 1)"
+   }
   }
  },
  "provenance": {
@@ -363,6 +523,7 @@
  "_history": {
   "2026-09-01": "li_metal / li_metal_bcc 를 declared → **measured** 로 승격. E_F 0.9437 eV 에서 DOS 0.48–1.06 states/eV (0 이 아님). 이 규칙(‘DOS 로 E_F 상태를 확인하기 전엔 NEB 을 안 건다’)은 Li3Nd 함정에서 나온 것이라 Li 금속처럼 자명해 보여도 예외를 두지 않았고, 실측 1잡으로 닫았다.",
   "2026-09-17": "§C 판별종 9상 등록 (insulator/declared) + nd2o3 다형 경고. 선언의 범위는 **03 갭 입력 생성 게이트**이지 갭 값이 아니다 — 미등록이면 build_dft_inputs 가 03 을 아예 안 만들어 캠페인이 조용히 비어 버린다. evidence=declared 를 고른 이유: 우리 nscf 를 아직 안 돌렸다. 7상은 MP 참조갭조차 없어 must_confirm 으로 남겼다.",
-  "2026-09-17-b": "§C 9상의 must_confirm 해소 — MP 참조갭을 **공간군까지 맞춰** 채웠다 (db/properties/cei_gap_targets_matched_2026_09_17.json). ⚠ 조성만 맞추면 안 된다: P₂O₅ 는 MP 바닥상이 Pnma(4.853)인데 우리 표적은 Fdd2(5.202) 다. Nd₂O₃ 도 같은 형태(P-3m1 실측 vs Ia-3 표적). 이 값들은 MP PBE 이고 **우리 db 갭 표에 안 들어간다** — 검증 표적이다."
+  "2026-09-17-b": "§C 9상의 must_confirm 해소 — MP 참조갭을 **공간군까지 맞춰** 채웠다 (db/properties/cei_gap_targets_matched_2026_09_17.json). ⚠ 조성만 맞추면 안 된다: P₂O₅ 는 MP 바닥상이 Pnma(4.853)인데 우리 표적은 Fdd2(5.202) 다. Nd₂O₃ 도 같은 형태(P-3m1 실측 vs Ia-3 표적). 이 값들은 MP PBE 이고 **우리 db 갭 표에 안 들어간다** — 검증 표적이다.",
+  "2026-10-27": "CEI 생성물 11 종 갭 카드 (D-2026-10-27-cei-product-gaps) — 9 종 declared 등록 (MP 갭 > 0 → insulator: li2so4 · scl · so2 · nip2o6 · mnp2o6 / = 0 → metal: cos2 · nis2 · mns2 · ni3s4) · li3po4 (β) 를 measured 로 등록 (sei_electronic.json 값이 있었는데 레지스트리에 빠져 있었다). 금속 선언 넷은 03 을 안 만들고 04 DOS 로 확인한다 (R3: E_F ± 0.05 eV 상태 0 이면 절연체로 다시 등록하고 03 만)."
  }
 }

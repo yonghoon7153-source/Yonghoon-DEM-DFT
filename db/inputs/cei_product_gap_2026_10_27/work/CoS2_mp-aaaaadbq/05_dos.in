@@ -1,0 +1,6 @@
+&DOS
+  prefix = 'CoS2_mp-aaaaadbq'
+  outdir = './tmp'
+  fildos = 'CoS2_mp-aaaaadbq.dos'
+  degauss = 0.007
+/

@@ -3,13 +3,25 @@
  "kind": "estimand",
  "id": "cei_product_gap_card_2026_10_27",
  "제목": "CEI 생성물 11 종 띠틈 — fixed-occ nscf 고유값 (PBE · TM 은 선언한 상태 X(MP 자성 배치 · MP U 규약)) · kgy",
- "status": "proposed — 사용자 '이렇게도 들어왔는데 kgy에서 진행하자' (10-27 · 실행 승인) · 비준 = 사용자 (결정 D-2026-10-27-cei-product-gaps) · §9 결정 셋은 사용자 몫",
+ "status": "active — 사용자 비준 10-27 '권고대로해 ㅇㅇ' (§9 셋 다 권고대로 · 결정 D-2026-10-27-cei-product-gaps) · 실행 승인 '이렇게도 들어왔는데 kgy에서 진행하자' · 개정 1 (PP 세트 · 대조 잡 · TM 'Unknown' 처리 · Mn 컷오프) proposed",
  "written_on": "2026-10-27",
  "트랙": "CEI · 1저자 = 실험 쪽 (박재현 · 요청자) · 결정은 '사용자' (계산 담당) · 1저자 통지는 사용자를 통해",
  "⚠_결과_보기_전에_썼다": "우리 계산 0 건 · MP 구조·자성·갭 출처 조회도 0 건 (이 카드 뒤 gabia 블록). 고르는 규칙 · 상태 선언 · 판독 규칙 · 대조 잡 문턱은 이 파일이 정본이다. 구조 조회 결과는 규칙을 적용한 **기록**으로만 덧붙이고 규칙은 안 바꾼다.",
  "1_무엇을_원하는가": {
   "요청": "박재현 (KakaoTalk 10-27): 'CEI 파일의 생성물들 띠틈이 계산이 안 돼 있다 · NdP5O14 가 최종 산물이라 그보다 낮은 애들을 그림에 넣으려 한다 · 오래 걸리면 일단 논문값으로 교수님께 보낸다'. 사용자 답 '이번 주는 안 되고 다음 주'.",
-  "11_종": ["Li2SO4", "SCl (= S2Cl2 분자결정)", "CoS2", "LiCl", "NiS2", "Ni(PO3)2", "SO2 (분자결정)", "Mn(PO3)2", "MnS2", "Ni3S4", "Li3PO4"],
+  "11_종": [
+   "Li2SO4",
+   "SCl (= S2Cl2 분자결정)",
+   "CoS2",
+   "LiCl",
+   "NiS2",
+   "Ni(PO3)2",
+   "SO2 (분자결정)",
+   "Mn(PO3)2",
+   "MnS2",
+   "Ni3S4",
+   "Li3PO4"
+  ],
   "출처_대조": "목록과 '첫 등장' 전압이 db/properties/cei_figs/cei_x_scan_panels_x002.csv 의 원고 조성 (electrolyte = nd_p_002_asused) **반응 에너지 최소점 (is_minimum = 1) 24 칸** 의 Nd 없는 생성물과 정확히 같다 (NiS2 3.5 V 까지 — 전체 스캔에선 2.5 V). 표의 '칸수/367' 은 우리 파일에서 재현 못 했다 (그쪽 집계) — 목록 확인에는 영향 없다.",
   "그림_쪽_주의": "그림의 NdP5O14 값은 우리 5.393 eV 면 HZ-cei-gap-ndp5o14-unreproduced (CONDITIONAL) 조건과 같이 실린다 — '비교 참조가 r2SCAN 이라 같은 근사 비교가 아니었음'. MP 6.336 은 r2SCAN 값이라 PBE 축에 같이 놓지 않는다."
  },
@@ -48,10 +60,28 @@
   "기계": "kgy GPU (3090 24 GB) · cascade v7 UMA 옆 · Nd Q3′ (tmux ndq3p) 가 끝난 뒤 한 번에 하나 · run_sei_dft.sh SEI_MIN_FREE_MIB 로 VRAM 이 모자라면 기다린다 (selftest 14) · MPI 는 kgy pw.x 의 ldd 에서 유도. 겹친 시간은 cascade 런로그에 적는다."
  },
  "6_대조_잡_결과_전_문턱": {
-  "무엇": "LiCl (mp-22905) · Li2S (mp-1153) · Li3PO4 β (mp-13725) 를 kgy 에서 같은 생성기로 다시 — Li · Cl · S · P · O PP 를 전부 지난다.",
-  "기준값": {"licl_mp-22905": 6.2603, "li2s_mp-1153": 3.4379, "li3po4_mp-13725": 5.9121},
-  "통과": "셋 다 |Δ| ≤ 0.02 eV · 03 의 k 점 수 (nk) 가 기록과 같다 (licl 35 · li2s 595 · li3po4 100)",
-  "실패하면": "새 9 종 값을 읽지 않는다 — kgy PP 사본 · 바이너리 · 생성기 차이를 먼저 본다. 러너는 대조 잡이 통과해야 다음 상으로 간다."
+  "개정": "개정 1 A3 — 대조 잡을 09-19 P2O5 하나로 바꿨다 (옛 3 종은 PP 세트가 달라 취소). 옛 기준값 (licl 6.2603 · li2s 3.4379 · li3po4 5.9121 · nk 35/595/100) 은 '옛_계획' 에 남긴다.",
+  "기준값": {
+   "P2O5_mp-aaaaadqi": 5.186
+  },
+  "tol_eV": 0.02,
+  "기준_nk": {},
+  "통과": "|Δ| ≤ 0.02 eV",
+  "실패하면": "11 종 값을 읽지 않는다 — kgy 바이너리 · 생성기 차이를 먼저 본다. 러너는 통과해야 다음으로 간다.",
+  "판정_도구": "tools/sei/extract_gap.py --control_gate <이 카드> --work <작업폴더>",
+  "옛_계획": {
+   "기준값": {
+    "licl_mp-22905": 6.2603,
+    "li2s_mp-1153": 3.4379,
+    "li3po4_mp-13725": 5.9121
+   },
+   "기준_nk": {
+    "licl_mp-22905": 35,
+    "li2s_mp-1153": 595,
+    "li3po4_mp-13725": 100
+   },
+   "취소_이유": "08 SEI 값은 GBRV 세트 · 이번 계산은 09-19 PAW psl 세트"
+  }
  },
  "7_판독_규칙_결과_전": {
   "R1_금속_절연체_선언": "고른 엔트리의 MP 갭으로 레지스트리 (sei_electronic_class.json) 에 'declared' 로 등록한다 — MP 갭 > 0 → insulator · = 0 → metal. 우리 결과로 'measured' 로 바꾼다.",
@@ -62,15 +92,58 @@
   "R6_순위": "두 상의 차가 0.10 eV 보다 작으면 그 둘의 순서는 말하지 않는다 (09-19 근접쌍 규칙)."
  },
  "8_허용_서술_금지_서술": {
-  "허용": ["'PBE 띠틈 (fixed-occupation nscf 고유값 · Ni·Mn 메타인산염은 MP 규약 +U · TM 은 MP 자성 배치) X eV'", "'09-19 CEI 판별종 갭 (같은 생성기 · 같은 PP · 같은 컷오프) 과 같은 축'", "'CoS2 · Ni3S4 는 이 방법에서 금속' (R2/R3 로 확인된 것만)"],
-  "금지": ["실험 갭과 나란히 · 실험 전기전도 성질로 옮기기", "PBE 갭으로 'CEI 가 전자 절연층이다' 단정", "MP 숫자를 우리 갭 표에 섞기 (MP 는 곁에만 · 출처 계산 꼬리표와 같이)", "r2SCAN 출처 MP 갭과의 차를 재현율로 쓰기", "이 TM 화합물의 바닥 자성 상태 주장", "0.10 eV 안 근접쌍의 순서", "NdP5O14 5.393 을 CONDITIONAL 조건 없이 · '축합될수록 갭이 넓어진다'"]
+  "허용": [
+   "'PBE 띠틈 (fixed-occupation nscf 고유값 · Ni·Mn 메타인산염은 MP 규약 +U · TM 은 MP 자성 배치) X eV'",
+   "'09-19 CEI 판별종 갭 (같은 생성기 · 같은 PP · 같은 컷오프) 과 같은 축'",
+   "'CoS2 · Ni3S4 는 이 방법에서 금속' (R2/R3 로 확인된 것만)"
+  ],
+  "금지": [
+   "실험 갭과 나란히 · 실험 전기전도 성질로 옮기기",
+   "PBE 갭으로 'CEI 가 전자 절연층이다' 단정",
+   "MP 숫자를 우리 갭 표에 섞기 (MP 는 곁에만 · 출처 계산 꼬리표와 같이)",
+   "r2SCAN 출처 MP 갭과의 차를 재현율로 쓰기",
+   "이 TM 화합물의 바닥 자성 상태 주장",
+   "0.10 eV 안 근접쌍의 순서",
+   "NdP5O14 5.393 을 CONDITIONAL 조건 없이 · '축합될수록 갭이 넓어진다'"
+  ]
  },
  "9_사용자가_정할_것": {
-  "①_vc_relax_허락": "결정 7 종 + 대조 잡 3 종 vc-relax (09-19 와 같은 프로토콜) · 분자결정 2 종은 고정셀 — 권고: 허락 (MP 정렬 결정 · 이 규칙이 막으려는 argyrodite 스냅숏 셀이 아니다).",
-  "②_TM_상태": "X(MP 자성 배치 · MP U 규약) — 권고. 대안: 전부 순수 PBE (U 0) — 그림 안 근사가 한 가지가 되지만 Mn²⁺·Ni²⁺ 산화물에서 PBE 의 자기상호작용 오차로 갭이 크게 작아지거나 닫힐 수 있고 MP 대조가 없어진다.",
-  "③_다형": "관측 다형 (NiS2 · MnS2 는 pyrite 꼴이 될 것) — 권고. 대안: 반응 원장 hull 엔트리 (P2_1/c · R-3m) — 열역학과는 맞지만 실험 보고가 없는 예측 구조일 수 있다."
+  "결정": "사용자 10-27 '권고대로해 ㅇㅇ' — 셋 다 권고대로",
+  "①_vc_relax_허락": "✅ 허락 — 결정 7 종 + 대조 잡 3 종 vc-relax (09-19 와 같은 프로토콜) · 분자결정 SO2 · S2Cl2 는 MP 셀 고정 + 이온 이완. CLAUDE.md 이완 규칙의 예외 목록에 올렸다.",
+  "②_TM_상태": "✅ X(MP 자성 배치 · MP U 규약) — O·F 계만 U (Co 3.32 · Mn 3.9 · Ni 6.2 eV) · 황화물 U 0",
+  "③_다형": "✅ 관측 다형 (theoretical = False 중 E_hull 최저) · 반응 원장 hull 엔트리는 같이 기록하고 MP 값만 곁에"
  },
  "10_비용": "작은 셀 (조회 뒤 원자수 확정) · 대조 잡 3 종은 수 분–1 h · 새 9 종 체인 어림 0.5–3 h 씩 (TM 스핀분극 2 배) · 합 어림 15–30 GPU-h · cascade 옆이라 벽시계로 3–5 일 — '다음 주' 와 맞다.",
  "11_재개_조건": "PP · 컷오프 · 구조 출처 · 상태 선언이 바뀔 때만. '다른 자성 배치 하나 더' · '다른 U 하나 더' 는 재개 사유가 아니다 (민감도가 필요하면 새 카드).",
- "연결": ["db/properties/cei_gap_results_2026_09_19.json", "db/properties/cei_gap_ndp5o14_reference_check_2026_09_30.json", "db/properties/cascade_product_gaps.json", "db/properties/sei_electronic.json", "db/properties/sei_electronic_class.json", "db/properties/cei_product_gap_runlog_2026_10_27.json"]
+ "연결": [
+  "db/properties/cei_gap_results_2026_09_19.json",
+  "db/properties/cei_gap_ndp5o14_reference_check_2026_09_30.json",
+  "db/properties/cascade_product_gaps.json",
+  "db/properties/sei_electronic.json",
+  "db/properties/sei_electronic_class.json",
+  "db/properties/cei_product_gap_runlog_2026_10_27.json"
+ ],
+ "12_개정_1_2026_10_27_결과_전": {
+  "왜": "gabia 조회 (b44d899c) 에서 카드 전제 둘이 틀렸다: ① 09-19 CEI 갭은 **PAW psl 세트**였고 08 SEI 갭 (LiCl · Li2S · Li3PO4) 은 **GBRV 세트**였다 — §4·§6 의 '같은 PP' 전제가 거짓 ② MP 자성이 'Unknown' 인 TM 넷 (CoS2 · NiS2 · Ni3S4 · MnP2O6) 은 'MP 자성 배치' 를 그대로 옮길 수 없다 — CoS2 는 문서 자리값이 전부 0 인데 요약 총 모멘트는 4.0 μB 였다 (그대로 옮기면 강자성이 비자성으로 둔갑 · 조용히 틀린 경로). 우리 계산은 0 건이다.",
+  "A1_PP_세트": "09-19 CEI 세트 그대로 — PAW psl: Li sl 1.0.0 · P n 1.0.0 · S nl 1.0.0 · Cl nl 1.0.0 · O n 0.1 (md5 = Q2 kgy 기록과 같다) + GBRV USPP: Co 1.2 · Ni 1.4 · Mn 1.5 (gabia /data/work/pseudo · 3D 원자파동함수 있음). md5 = db/raw/cei_product_gap_2026_10_27/pseudo_md5.txt · 08 SEI 세트 = li/s/cl GBRV v1.4 · P rrkjus psl · O psl 0.1.",
+  "A2_LiCl_Li3PO4": "A1 세트로 **다시 잰다** — 11 종 전부 09-19 CEI 축 (같은 세트). 08 GBRV 값 (LiCl 6.2603 · Li3PO4 β 5.9121) 과의 차는 'PP 세트 차이' 로만 기록 (게이트 아님).",
+  "A3_대조_잡": "09-19 P2O5 (mp-aaaaadqi · Fdd2 · 14 원자 · 5.186 eV · 같은 세트) 하나를 kgy 에서 다시 — |Δ| ≤ 0.02 eV 면 통과 · nk 는 09-19 기록이 repo 에 없어 안 본다 (이번 값은 남긴다). 옛 대조 잡 3 종은 세트가 달라 기계 차이를 못 가르므로 취소. P2O5 는 09-19 에 부피 +9.42 % 에도 갭 −0.016 이라 이완 경로 차이에 둔하다.",
+  "A4_TM_상태": "tools/sei/build_dft_inputs.resolve_tm_moments (결과 전 · selftest 37 · 깨기 6/6): (a) TM 자리 모멘트가 MP 총 모멘트와 0.5 μB 안 → 그대로 (NiP2O6 FM Σ 7.88 · MnS2 FM 1.97 저스핀) · (nm) MP 가 NM → 비자성 · (b) 자리값 0 · |총| > 0.5 → 총을 TM 자리에 같은 부호로 (CoS2 4.0 → Co 마다 +1) · (c) 자리값 0 · |총| ≤ 0.5 · NM 아님 → MP 관례의 강자성 시작 (2+ 고스핀 Mn 5 · Co 3 · Ni 2 μB) — SCF 가 찾은 상태 (NiS2 · Ni3S4 · MnP2O6). 반강자성은 안 본다 (한계 · 허용 서술에 같이).",
+  "A5_R5_정밀화": "MP 대조는 근사가 같을 때만: 닫힌 껍질 · P2O5 (GGA ↔ GGA) · NiP2O6 (GGA+U ↔ GGA+U) 는 견준다 · MnP2O6 은 MP 갭이 GGA (U 없음) 출처라 우리 GGA+U 와 견주지 않는다 · LiCl · Li3PO4 는 이번에 출처 꼬리표를 안 받아 MP 대조 없음 (08 GBRV 값이 곁 비교).",
+  "A6_컷오프": "Mn 화합물 (MnP2O6 · MnS2) 90/1080 Ry — GBRV 파일에 권장값이 없다 (0.0) · 넉넉히 · 나머지 60/480 (psl 파일 권장 최대 Li 50/325).",
+  "A7_다형_규칙_적용_기록": "NiS2 → Pa-3 mp-aaaaadju (관측 · hull 상은 예측 P2_1/c 0.240 GGA) · MnS2 → **Pnnm** mp-aaacfzcu (MP '관측' · 저스핀 FM · E_hull 0.033) — 상온 광물 hauerite (Pa-3 mp-aaaaacdz · E_hull 0.111) 가 아니다. 둘 다 MP GGA 갭 0. §4 의 'pyrite 꼴이 될 것' 예상은 MnS2 에서 틀렸고 규칙을 그대로 따른다. LiCl 은 암염 mp-22905 · Li3PO4 β mp-13725 (08 구조 그대로).",
+  "A8_R1_등록": "9 종 declared (insulator: Li2SO4 · SCl · SO2 · NiP2O6 · MnP2O6 / metal: CoS2 · NiS2 · MnS2 · Ni3S4) · li3po4 (β) measured 등록 (빠져 있었다).",
+  "A9_MP_곁값_출처_꼬리표": {
+   "Li2SO4": "6.023 GGA",
+   "SCl": "2.880 GGA",
+   "SO2": "3.154 GGA",
+   "NiP2O6": "1.486 GGA+U",
+   "MnP2O6": "2.163 GGA (U 없음 · 대조 안 함)",
+   "CoS2": "0 GGA",
+   "NiS2": "0 GGA",
+   "MnS2": "0 GGA",
+   "Ni3S4": "0 GGA"
+  },
+  "결정": "D-2026-10-27-cei-product-gaps-amend1 (proposed · 비준 = 사용자)"
+ }
 }

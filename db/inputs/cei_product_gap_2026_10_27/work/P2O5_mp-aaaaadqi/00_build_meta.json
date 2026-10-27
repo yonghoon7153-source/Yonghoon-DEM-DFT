@@ -1,0 +1,39 @@
+{
+ "tag": "P2O5_mp-aaaaadqi",
+ "structure": "db/structures/cei_gap_targets/P2O5_mp-aaaaadqi.cif",
+ "structure_sha256": "3eac291450741db9c9e5628089679dce96171be394b910726b0bb6b89849fc9c",
+ "species": [
+  "O",
+  "P"
+ ],
+ "nspin": 1,
+ "tm_state": null,
+ "tm_moment_rule": null,
+ "magmom_sidecar": null,
+ "starting_magnetization": null,
+ "tot_magnetization_initial": null,
+ "hubbard": null,
+ "hubbard_policy": null,
+ "ecut_wfc_rho": [
+  60.0,
+  480.0
+ ],
+ "cell_policy": "vc-relax",
+ "pseudo": {
+  "O": "O.pbe-n-kjpaw_psl.0.1.UPF",
+  "P": "P.pbe-n-kjpaw_psl.1.0.0.UPF"
+ },
+ "pseudo_dir_written": "/home/kgy/work/runs/cei_gap_1027/pseudo",
+ "k_scf": [
+  5,
+  5,
+  3
+ ],
+ "k_gap": [
+  10,
+  10,
+  6
+ ],
+ "nbnd_gap": 62,
+ "gap_step": "03_nscf_gap.in"
+}

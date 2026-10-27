@@ -9,6 +9,14 @@
   gap = CBM − VBM   (≤ 0 이면 금속/반금속)
 
   python3 extract_gap.py --nscf 03_nscf_gap.out --tag li2o --json gap.json
+
+--control_gate (2026-10-27 · CEI 생성물 갭 카드 개정 1) — 대조 잡 판정
+  다른 기계에서 다시 돈 기준 상의 gap.json 을 카드에 적힌 기준값과 견준다. 카드의
+  `6_대조_잡_결과_전_문턱` 에서 기준값 · tol_eV · (있으면) 기준_nk 를 읽는다.
+  통과 0 · 실패 3 · 입력 문제 2. 판정은 <work>/control_gate.json 에 남긴다.
+  ⛔ 못 하는 것: 왜 어긋났는지는 모른다 (PP · 바이너리 · 생성기 · 이완 경로) — 멈출 뿐이다.
+  python3 extract_gap.py --control_gate db/properties/cei_product_gap_card_2026_10_27.json --work <작업폴더>
+  python3 extract_gap.py --selftest
 """
 import argparse, json, os, re, sys
 
@@ -16,12 +24,92 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import electronic_class as EC          # noqa: E402  (금속/절연체 단일 출처)
 
 
+def control_gate(card_path, work):
+    """카드 §6 의 대조 잡 → (통과 bool, 줄 목록). 갭이 숫자가 아니거나 파일이 없으면 실패."""
+    c = json.load(open(card_path, encoding="utf-8"))["6_대조_잡_결과_전_문턱"]
+    ref, tol, nk_ref = c["기준값"], float(c["tol_eV"]), c.get("기준_nk") or {}
+    rows, ok = [], bool(ref)
+    for tag, g0 in ref.items():
+        p = os.path.join(work, tag, "gap.json")
+        row = {"tag": tag, "ref_eV": g0}
+        if not os.path.isfile(p):
+            row["verdict"] = "실패 — gap.json 없음"; ok = False; rows.append(row); continue
+        g = json.load(open(p))
+        gap = g.get("gap")
+        if not isinstance(gap, (int, float)) or isinstance(gap, bool):
+            row["verdict"] = f"실패 — 갭이 숫자가 아니다 ({g.get('verdict')})"; ok = False
+            rows.append(row); continue
+        d = gap - g0
+        row.update({"gap_eV": round(gap, 4), "delta_eV": round(d, 4), "nk": g.get("nk")})
+        bad = []
+        if abs(d) > tol:
+            bad.append(f"|Δ| {abs(d):.4f} > {tol}")
+        if tag in nk_ref and g.get("nk") != nk_ref[tag]:
+            bad.append(f"nk {g.get('nk')} ≠ {nk_ref[tag]}")
+        row["verdict"] = "통과" if not bad else "실패 — " + " · ".join(bad)
+        ok = ok and not bad
+        rows.append(row)
+    return ok, rows
+
+
+def _selftest():
+    import tempfile
+    bad = []
+    with tempfile.TemporaryDirectory() as T:
+        card = os.path.join(T, "card.json")
+        json.dump({"6_대조_잡_결과_전_문턱": {"기준값": {"a": 5.186, "b": 3.0}, "tol_eV": 0.02,
+                                           "기준_nk": {"b": 10}}}, open(card, "w"))
+
+        def put(tag, **g):
+            os.makedirs(os.path.join(T, tag), exist_ok=True)
+            json.dump(g, open(os.path.join(T, tag, "gap.json"), "w"))
+        put("a", gap=5.19, nk=7); put("b", gap=3.01, nk=10)
+        ok, rows = control_gate(card, T)
+        if not ok:
+            bad.append("둘 다 문턱 안인데 실패했다")
+        put("a", gap=5.21, nk=7)
+        if control_gate(card, T)[0]:
+            bad.append("[음성] |Δ| 0.024 > 0.02 를 통과시켰다")
+        put("a", gap=5.19, nk=7); put("b", gap=3.0, nk=11)
+        if control_gate(card, T)[0]:
+            bad.append("[음성] nk 11 ≠ 10 을 통과시켰다")
+        put("b", gap=None, verdict="NOT_APPLICABLE(metal)", nk=10)
+        if control_gate(card, T)[0]:
+            bad.append("[음성] 갭 None 을 통과시켰다")
+        os.remove(os.path.join(T, "b", "gap.json"))
+        if control_gate(card, T)[0]:
+            bad.append("[음성] gap.json 없음을 통과시켰다")
+        json.dump({"6_대조_잡_결과_전_문턱": {"기준값": {}, "tol_eV": 0.02}}, open(card, "w"))
+        if control_gate(card, T)[0]:
+            bad.append("[음성] 기준값이 비었는데 통과시켰다")
+    print("\n".join("⛔ " + b for b in bad) if bad else "✓ selftest 통과 (6 · 음성 5)")
+    return 1 if bad else 0
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--nscf", required=True)
-    ap.add_argument("--tag", required=True)
-    ap.add_argument("--json", required=True)
+    ap.add_argument("--nscf")
+    ap.add_argument("--tag")
+    ap.add_argument("--json")
+    ap.add_argument("--control_gate", metavar="CARD")
+    ap.add_argument("--work")
+    ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
+    if a.selftest:
+        return _selftest()
+    if a.control_gate:
+        if not a.work:
+            sys.exit("⛔ --control_gate 에는 --work 가 필요하다")
+        ok, rows = control_gate(a.control_gate, a.work)
+        for r in rows:
+            print(f"  {r['tag']:22s} 기준 {r['ref_eV']:.4f} · 지금 {r.get('gap_eV', '—')} · "
+                  f"Δ {r.get('delta_eV', '—')} · nk {r.get('nk', '—')} → {r['verdict']}")
+        json.dump({"card": a.control_gate, "pass": ok, "rows": rows},
+                  open(os.path.join(a.work, "control_gate.json"), "w"), ensure_ascii=False, indent=1)
+        print(f"  대조 잡 {'✅ 통과' if ok else '⛔ 실패 — 새 상 값을 읽지 않는다'}")
+        return 0 if ok else 3
+    if not (a.nscf and a.tag and a.json):
+        sys.exit("⛔ --nscf · --tag · --json 셋이 다 필요하다 (또는 --control_gate · --selftest)")
     # ★★ 2026-08-11 — 금속으로 선언된 상은 **갭을 db 에 쓰지 않는다.**
     #   fixed-occ nscf 는 금속에서도 숫자를 내는데, 그건 갭이 아니라
     #   'nelec/2 번째 밴드와 그 다음 밴드의 차' 다. 판정만 남기고 값은 null 로 둔다.

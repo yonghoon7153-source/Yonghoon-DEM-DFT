@@ -322,9 +322,18 @@ def do_pick(formulas, outdir, prov_path, prefix, with_mag, with_es):
                                     "ordering_magnetism_doc": dord, "aligned_from": how,
                                     "total_magnetization": pick.get("total_magnetization")}
                 if mags is not None:
+                    tot = pick.get("total_magnetization")
                     side = {"material_id": mid, "ordering": dord or pick.get("ordering"),
                             "magmoms": mags, "symbols": at.get_chemical_symbols(),
-                            "aligned_from": how, "sum_muB": round(sum(mags), 3)}
+                            "aligned_from": how, "sum_muB": round(sum(mags), 3),
+                            "total_magnetization_summary": tot}
+                    # ⚠ 2026-10-27 CoS2: 문서 자리값은 전부 0 인데 요약 총 모멘트는 4.0 μB 였다.
+                    #   자리값만 믿으면 강자성 계가 비자성으로 둔갑한다 — 어긋나면 적어 둔다
+                    #   (build_dft_inputs.resolve_tm_moments 가 총 모멘트 쪽 규칙으로 처리).
+                    if tot is not None and abs(sum(mags) - float(tot)) > 0.5:
+                        side["site_vs_total_mismatch"] = True
+                        print(f"  ⚠ 자리 모멘트 합 {sum(mags):.2f} ≠ 요약 총 {float(tot):.2f} μB "
+                              f"— 자리값을 그대로 쓰지 않는다")
                     json.dump(side, open(os.path.join(outdir, base + ".magmom.json"), "w"),
                               ensure_ascii=False, indent=1)
                     rec["files"].append(f"{outdir}/{base}.magmom.json")

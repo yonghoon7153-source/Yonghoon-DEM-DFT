@@ -1,0 +1,7 @@
+&PROJWFC
+  prefix = 'SO2_mp-aaaabpak'
+  outdir = './tmp'
+  filpdos = 'SO2_mp-aaaabpak'
+  degauss = 0.007
+  ngauss = 0
+/

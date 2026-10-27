@@ -1,0 +1,7 @@
+&PROJWFC
+  prefix = 'P2O5_mp-aaaaadqi'
+  outdir = './tmp'
+  filpdos = 'P2O5_mp-aaaaadqi'
+  degauss = 0.007
+  ngauss = 0
+/

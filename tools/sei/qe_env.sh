@@ -32,7 +32,35 @@
 #
 #   자가시험:  bash tools/sei/qe_env.sh --selftest
 
+# ── (선택) QE_FROM_LDD=1 — MPI·라이브러리 경로를 **pw.x 의 실제 링크**(ldd)에서 읽는다 ──
+#   2026-10-27 · CLAUDE.md 'QE-GPU 런타임은 추측하지 말고 ldd 로 바이너리에게 묻는다' (kgy 의 pw.x 는
+#   ~/apps/openmpi-4.1.6 으로 빌드 · 09-08 세 번 틀림). run_force_check_scf.sh 의 같은 블록과 쌍둥이다.
+#   PW 가 실행파일이어야 한다. 못 읽거나 'not found' 가 하나라도 있으면 QE_ENV_ERROR 를 채운다 —
+#   부르는 쪽(run_sei_dft.sh)이 그걸 보고 **시작하지 않는다** (fail-closed).
+_qe_env_from_ldd() {
+  local pw="${PW:-}" out libmpi mdir pfx extra
+  if [ -z "$pw" ] || [ ! -x "$pw" ]; then QE_ENV_ERROR="QE_FROM_LDD=1 인데 PW 가 실행파일이 아니다 ($pw)"; return 1; fi
+  command -v ldd >/dev/null 2>&1 || { QE_ENV_ERROR="ldd 가 없다"; return 1; }
+  out=$(ldd "$pw" 2>&1) || { QE_ENV_ERROR="ldd 실패: $pw"; return 1; }
+  if echo "$out" | grep -q "not found"; then
+    QE_ENV_ERROR="ldd: 못 찾는 라이브러리 — $(echo "$out" | grep 'not found' | head -3 | tr -s ' \t\n' ' ')"; return 1
+  fi
+  libmpi=$(echo "$out" | awk '/libmpi\.so/ {print $3; exit}')
+  if [ -z "$libmpi" ] || [ ! -f "$libmpi" ]; then QE_ENV_ERROR="ldd 에 libmpi 가 없다 ($pw)"; return 1; fi
+  mdir=$(dirname "$libmpi"); pfx=$(dirname "$mdir")
+  [ -x "$pfx/bin/mpirun" ] || { QE_ENV_ERROR="$pfx/bin/mpirun 이 없다"; return 1; }
+  extra=$(echo "$out" | awk '$3 ~ /^\// {print $3}' | xargs -r -n1 dirname | sort -u | tr '\n' ':' | sed 's/:$//')
+  export LD_LIBRARY_PATH="$mdir${extra:+:$extra}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+  MPIRUN="$pfx/bin/mpirun"
+  # libnvomp + libgomp 동시 링크면 OpenMP 런타임이 둘이다 → `libgomp: TODO` 즉사 회피
+  if echo "$out" | grep -q libnvomp && echo "$out" | grep -q libgomp; then export OMP_NUM_THREADS=1; fi
+  QE_LDD_MPI="$libmpi"
+  return 0
+}
+
 _qe_env_apply() {
+  QE_ENV_ERROR=""
+  if [ "${QE_FROM_LDD:-0}" = 1 ]; then _qe_env_from_ldd || true; fi
   # 기본값은 gabia. **존재할 때만** 쓴다.
   QE_H_MPI="${QE_H_MPI:-/data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi}"
 
@@ -201,6 +229,41 @@ if [ "${BASH_SOURCE[0]:-$0}" = "$0" ] && [ "${1:-}" = "--selftest" ]; then
     [ "$QE_NVHPC_LIB" = "/explicit/path" ]
   ) && _ok "⑧ 손으로 준 QE_NVHPC_LIB 가 자동탐색을 이긴다" || _no "⑧ 오버라이드가 무시됐다"
 
-  rm -rf "$_T" "$_T2" "$_T3" "$_T4"
-  [ "$_fail" = 0 ] && echo "PASS (8/8)" || { echo "FAIL"; exit 1; }
+  # ⑨ QE_FROM_LDD=1 양성 — 가짜 ldd 가 가리키는 libmpi 트리의 mpirun 을 쓴다 (kgy 꼴)
+  _T5=$(mktemp -d); mkdir -p "$_T5/fakebin" "$_T5/ompi/lib" "$_T5/ompi/bin" "$_T5/ompi/share/openmpi" "$_T5/nv"
+  : > "$_T5/ompi/lib/libmpi.so.40"; : > "$_T5/nv/libnvomp.so"; : > "$_T5/nv/libgomp.so.1"
+  printf '#!/bin/sh\necho "mpirun (Open MPI) 4.1.6"\n' > "$_T5/ompi/bin/mpirun"; chmod +x "$_T5/ompi/bin/mpirun"
+  printf '#!/bin/sh\n' > "$_T5/pw.x"; chmod +x "$_T5/pw.x"
+  printf '#!/bin/sh\necho "\tlibmpi.so.40 => %s/ompi/lib/libmpi.so.40 (0x1)"\necho "\tlibnvomp.so => %s/nv/libnvomp.so (0x2)"\necho "\tlibgomp.so.1 => %s/nv/libgomp.so.1 (0x3)"\n' "$_T5" "$_T5" "$_T5" > "$_T5/fakebin/ldd"
+  chmod +x "$_T5/fakebin/ldd"
+  ( PATH="$_T5/fakebin:$PATH" QE_FROM_LDD=1 PW="$_T5/pw.x" MPIRUN=/nonexistent/x QE_H_MPI=/nonexistent/h
+    unset OMP_NUM_THREADS
+    . "$0" _sourced >/dev/null 2>&1
+    [ -z "$QE_ENV_ERROR" ] || { echo "ERR=$QE_ENV_ERROR"; exit 1; }
+    [ "$MPIRUN" = "$_T5/ompi/bin/mpirun" ] || { echo "MPIRUN=$MPIRUN"; exit 1; }
+    [ "$OPAL_PREFIX" = "$_T5/ompi" ] || { echo "OPAL=$OPAL_PREFIX"; exit 1; }
+    [ "$OMP_NUM_THREADS" = 1 ] || exit 1
+    case ":$LD_LIBRARY_PATH:" in *":$_T5/ompi/lib:"*) : ;; *) exit 1 ;; esac
+  ) && _ok "⑨ QE_FROM_LDD=1 → libmpi 트리의 mpirun · OPAL_PREFIX · OMP 1 (libnvomp+libgomp)" \
+    || _no "⑨ ldd 유도 실패"
+  # ⑩ 음성 — 'not found' 가 하나라도 있으면 QE_ENV_ERROR (부르는 쪽이 멈춘다)
+  printf '#!/bin/sh\necho "\tlibmpi.so.40 => %s/ompi/lib/libmpi.so.40 (0x1)"\necho "\tlibscalapack.so => not found"\n' "$_T5" > "$_T5/fakebin/ldd"
+  ( PATH="$_T5/fakebin:$PATH" QE_FROM_LDD=1 PW="$_T5/pw.x"
+    . "$0" _sourced >/dev/null 2>&1
+    case "$QE_ENV_ERROR" in *"not found"*|*"못 찾는"*) : ;; *) exit 1 ;; esac
+  ) && _ok "⑩ ⛔음성: ldd 'not found' → QE_ENV_ERROR (시작하지 않게)" || _no "⑩ not found 를 통과시켰다"
+  # ⑪ 음성 — libmpi 가 링크에 없으면 QE_ENV_ERROR
+  printf '#!/bin/sh\necho "\tlibc.so.6 => /lib/libc.so.6 (0x1)"\n' > "$_T5/fakebin/ldd"
+  ( PATH="$_T5/fakebin:$PATH" QE_FROM_LDD=1 PW="$_T5/pw.x"
+    . "$0" _sourced >/dev/null 2>&1
+    case "$QE_ENV_ERROR" in *libmpi*) : ;; *) exit 1 ;; esac
+  ) && _ok "⑪ ⛔음성: libmpi 없음 → QE_ENV_ERROR" || _no "⑪ libmpi 없이 통과"
+  # ⑫ 꺼져 있으면 (기본) QE_ENV_ERROR 는 비어 있다 — 옛 경로 그대로
+  ( MPIRUN="$_T/bin/mpirun"; unset QE_FROM_LDD
+    . "$0" _sourced >/dev/null 2>&1
+    [ -z "$QE_ENV_ERROR" ]
+  ) && _ok "⑫ QE_FROM_LDD 없으면 옛 경로 그대로 (오류 없음)" || _no "⑫ 기본 경로가 오류를 냈다"
+
+  rm -rf "$_T" "$_T2" "$_T3" "$_T4" "$_T5"
+  [ "$_fail" = 0 ] && echo "PASS (12/12)" || { echo "FAIL"; exit 1; }
 fi

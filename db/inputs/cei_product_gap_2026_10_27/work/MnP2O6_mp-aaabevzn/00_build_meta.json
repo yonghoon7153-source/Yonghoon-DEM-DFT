@@ -1,0 +1,45 @@
+{
+ "tag": "MnP2O6_mp-aaabevzn",
+ "structure": "db/structures/cei_gap_tm/MnP2O6_mp-aaabevzn.vasp",
+ "structure_sha256": "34ee7e3712750a863b078f862341c1aa396cd047fda2b629a95c4b115dc95684",
+ "species": [
+  "Mn",
+  "O",
+  "P"
+ ],
+ "nspin": 2,
+ "tm_state": "mp",
+ "tm_moment_rule": "c_fm_highspin_start",
+ "magmom_sidecar": "db/structures/cei_gap_tm/MnP2O6_mp-aaabevzn.magmom.json",
+ "starting_magnetization": {
+  "Mn": 0.3333333333333333
+ },
+ "tot_magnetization_initial": 20,
+ "hubbard": [
+  "  U Mn-3d 3.9"
+ ],
+ "hubbard_policy": "mp",
+ "ecut_wfc_rho": [
+  90.0,
+  1080.0
+ ],
+ "cell_policy": "vc-relax",
+ "pseudo": {
+  "Mn": "mn_pbe_v1.5.uspp.F.UPF",
+  "O": "O.pbe-n-kjpaw_psl.0.1.UPF",
+  "P": "P.pbe-n-kjpaw_psl.1.0.0.UPF"
+ },
+ "pseudo_dir_written": "/home/kgy/work/runs/cei_gap_1027/pseudo",
+ "k_scf": [
+  4,
+  4,
+  3
+ ],
+ "k_gap": [
+  7,
+  7,
+  5
+ ],
+ "nbnd_gap": 186,
+ "gap_step": "03_nscf_gap.in"
+}

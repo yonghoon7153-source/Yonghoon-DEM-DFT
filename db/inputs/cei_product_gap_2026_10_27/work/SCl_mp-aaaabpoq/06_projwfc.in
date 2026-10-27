@@ -1,0 +1,7 @@
+&PROJWFC
+  prefix = 'SCl_mp-aaaabpoq'
+  outdir = './tmp'
+  filpdos = 'SCl_mp-aaaabpoq'
+  degauss = 0.007
+  ngauss = 0
+/

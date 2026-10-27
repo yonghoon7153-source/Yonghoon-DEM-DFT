@@ -1,0 +1,7 @@
+&PROJWFC
+  prefix = 'CoS2_mp-aaaaadbq'
+  outdir = './tmp'
+  filpdos = 'CoS2_mp-aaaaadbq'
+  degauss = 0.007
+  ngauss = 0
+/

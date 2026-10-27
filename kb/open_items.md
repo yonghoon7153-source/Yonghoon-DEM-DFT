@@ -20,7 +20,10 @@
 - **카드 · 결정 (proposed)**: `db/properties/cei_product_gap_card_2026_10_27.json` · `D-2026-10-27-cei-product-gaps` · 런로그 `cei_product_gap_runlog_2026_10_27.json`. TM 6 종은 허용 상태가 여럿 → **X(MP 자성 배치 · MP U 규약)** 로 선언 · 분자결정 SO₂ · S₂Cl₂ 는 MP 셀 고정 · LiCl · Li₃PO₄ 는 기존 값 (6.2603 · 5.9121) + kgy 대조 잡 3 종 (LiCl · Li₂S · Li₃PO₄ β · |Δ| ≤ 0.02 eV 통과해야 다음) · MP 대조는 GGA/GGA+U 출처만 (09-30 r2SCAN 교훈).
 - **도구 (결과 전)**: `fetch_sei_structures.py --pick` (관측 다형 · hull 상 · MP 자성 · 갭 출처 꼬리표 · selftest 20 · 깨기 5/5) · `build_dft_inputs.py` TM 경로 (`--tm_state mp --hubbard mp --ecut_min --fixed_cell --pseudo_dir_run` · selftest TM 25 · 깨기 8/8 · 옛 입력 바이트 동일) · `run_sei_dft.sh` (`SEI_MIN_FREE_MIB` VRAM 대기 · 01_relax.in 고정셀 · selftest 14 · 가짜 pw.x e2e).
 - ⏭ **다음**: ① gabia 조회 블록 (검사용 · MP API · PP 복사 · QE 안 돈다) → push ② 여기서 다형 확인 · 레지스트리 'declared' 등록 · 입력 생성 · kgy 러너 ③ kgy (Nd Q3′ ndq3p 뒤 · cascade 옆) ④ 판독 R1–R6 · Origin CSV.
-- 🔔 **사용자 결정 셋 (카드 §9)**: ① vc-relax 허락 (결정 7 + 대조 3 · 권고 허락) ② TM 상태 = MP 배치 + MP U (권고) ③ 다형 = 관측 다형 (권고 · NiS₂ · MnS₂ 는 원장 hull 엔트리와 다를 것). 그리고 박재현에게 그동안 MP 값을 줄지 (출처 계산 꼬리표와 같이만).
+- ✅ **사용자 결정 셋 (카드 §9) — 10-27 '권고대로해 ㅇㅇ'**: ① vc-relax 허락 ② TM = MP 자성 배치 + MP U ③ 관측 다형 → `D-2026-10-27-cei-product-gaps` **비준 active** · CLAUDE.md 이완 예외 줄에 올림.
+- ✅ gabia 조회 (b44d899c · 문제 0): 다형 9 · MP 자성 · 갭 출처 (전부 GGA · NiP₂O₆ 만 GGA+U) · PP 복사. ⚠ **09-19 CEI 갭은 PAW psl 세트 · 08 SEI 갭 (LiCl · Li₂S · Li₃PO₄) 은 GBRV 세트였다** → 카드 '같은 PP' 전제 거짓 · CoS₂ MP 자리 모멘트 0 인데 요약 총 4.0 μB (그대로 옮기면 비자성 둔갑) · MnS₂ 규칙 결과 = Pnnm (hauerite 아님).
+- 🔔 **개정 1 비준 대기** (`D-2026-10-27-cei-product-gaps-amend1` · 카드 §12): PP = 09-19 PAW psl + GBRV Co·Ni·Mn · LiCl·Li₃PO₄ 다시 잼 · 대조 잡 = P₂O₅ (5.186) 하나 · TM 'Unknown' 처리 (a/nm/b/c) · MnP₂O₆ MP 대조 없음 · Mn 90/1080. 입력 12 · run_kgy.sh 준비 끝 (개정 1 proposed 면 '잠정 실행').
+- 🔔 박재현에게 그동안 MP 값을 줄지 (출처 꼬리표와 같이만 · 금속 넷은 '금속').
 - (그대로) Li₂S 4×4×4 러너 (gabia · 탄성 13_m 뒤) · Nd Q3′ kgy 실행 출력 대기.
 
 ### ⏭-NOW-z26. 2026-10-27 낮 — 웹앱 최신화 · litdb 9 편 병합 · NdO Intro 2–5문단 · site-analysis 1.11.0

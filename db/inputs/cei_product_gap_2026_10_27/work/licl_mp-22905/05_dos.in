@@ -1,0 +1,6 @@
+&DOS
+  prefix = 'licl_mp-22905'
+  outdir = './tmp'
+  fildos = 'licl_mp-22905.dos'
+  degauss = 0.007
+/
