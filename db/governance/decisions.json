@@ -9915,6 +9915,66 @@
     "근거_발화": "채팅 답 (2026-10-26 · 이 세션): '단서 붙여 인용 쪽으로 우선 해보고 · 그럼 R2 멈추고 영률 돌리자 (+ '어차피 r2는 수렴하나 안하나 결과는 똑같은거잖아')'",
     "decision_digest": "sha256:702fe662db44eb59ab2184c24adb17a805fcc693cd0a27df79df171c2417531b"
    }
+  },
+  {
+   "id": "D-2026-10-27-nd-q3p-same-cell",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "cei.nd.q3.same_cell_ndp_vs_ndli",
+   "slot": "nd_q3p_same_cell_bader_elf",
+   "applies_to": {
+    "systems": [
+     "ndo_lpscl16"
+    ],
+    "tasks": [
+     "bader",
+     "elf"
+    ],
+    "methods": [
+     "qe-7.4.1-pbe-paw-psl",
+     "qe-7.4.1-pbe-nc-sg15"
+    ],
+    "use_cases": [
+     "diagnostic"
+    ]
+   },
+   "title": "Nd Q3′ — Nd@P (MP_07) 와 같은 셀 Nd@Li (MLi_04) 의 Bader · ELF · 자리 분류는 이완 전 원래 역할 (PX4 · NdT · free) + Nd 이웃 3.3/2.9 Å (Q3 그대로)",
+   "statement": "카드 db/properties/nd_q3p_same_cell_card_2026_10_27.json 이 정의다: Q1 V₀ 이온 이완 끝 기하 두 모델에 Q3 와 같은 Bader SCF (PAW psl · 70/560 · k 3 3 1) 와 ELF SCF (NC · 80/320 · k 3 3 1) 를 돌려, 원래 역할 · Nd 이웃 분류별 Bader net 과 결합 중점 ELF 를 같은 셀 안에서 견준다 (C1–C5 · 판독 규칙은 카드 §5). 120 원자 Q3 와 같은 표에 두지 않고, x = 0.02 로 크기를 옮기지 않는다.",
+   "rationale": "사용자 10-27 'P 에 들어가 있는 Nd 도 이거 봐줄 수 있나' → 권고 (kgy · cascade 옆 · 같은 셀 두 모델) 승인 '권고대로 해'. 원고가 Nd@P 를 전제하므로 Nd@P 에서 전기음성도 예상 (Nd 에 붙은 S 가 더 음전하) 이 나오는지 본다. 같은 셀 Nd@Li 를 같이 돌려야 자리 사이 비교가 셀 차이와 섞이지 않는다.",
+   "decision_state": "proposed",
+   "record_kind": "estimand",
+   "results_seen": false,
+   "results_seen_note": "SCF · Bader · ELF 0 건 (2026-10-27 작성 시점) · 역할 개수만 구조에서 셈",
+   "card": "db/properties/nd_q3p_same_cell_card_2026_10_27.json",
+   "record": "db/properties/nd_q3p_runlog_2026_10_27.json",
+   "depends_on": [
+    "D-2026-10-14-ndo-site-stability-estimand",
+    "D-2026-10-19-nd-q23-ppswap-structure"
+   ],
+   "evidence": [
+    "db/inputs/nd_q3p_2026_10_27/roles_manifest.json (역할 개수 · 원본 sha256)",
+    "db/raw/ndo_site_eos_v0_2026_10_23/{MP_07,MLi_04}/scf.out ('bfgs converged')",
+    "db/raw/nd_q3_bader_2026_10_19/scf_input_copy.in · db/raw/nd_q3_elf_2026_10_19/scf.in (Q3 설정)"
+   ],
+   "reopen_criteria": [
+    "PP · ecut · 구조 출처가 바뀌는 경우만",
+    "'다른 모델을 하나 더 봤다' 는 재개 사유가 아니다"
+   ],
+   "enforcement": "① 입력은 make_inputs.py 만 만든다 (원자 순서 · 이완 수렴 확인) ② run_force_check_scf.sh 의 설정 균일성 · 완료 판정 (수렴 + 힘 + 응력) ③ 판독은 카드 §5 규칙만 · 문턱 근처 Cl (3.16 Å) 은 뺀 값도 같이",
+   "cost_cap": {
+    "machine": "kgy GPU · cascade v7 옆 (MIN_FREE_MIB 양보)",
+    "견적": "SCF 넷 어림 3–6 h · 후처리 CPU 몇 분"
+   },
+   "proposed_by": "claude-session-2026-10-27 (friendly)",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-10-27",
+     "state": "proposed",
+     "by": "agent",
+     "note": "사용자 '권고대로 해' (실행 승인) · 트랙 CEI — 1저자 = 실험 쪽 · 결정은 사용자. 비준 = 사용자."
+    }
+   ]
   }
  ]
 }

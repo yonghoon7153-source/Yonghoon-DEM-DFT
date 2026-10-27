@@ -1,0 +1,27 @@
+{
+ "schema": "runlog/v1",
+ "record_kind": "runlog",
+ "date": "2026-10-27",
+ "track": "CEI/Nd — 1저자 = 실험 쪽 · 결정은 '사용자' · 1저자 통지는 사용자를 통해",
+ "decision": "D-2026-10-27-nd-q3p-same-cell (proposed · 사용자 실행 승인 10-27 '권고대로 해' · 비준 = 사용자)",
+ "card": "db/properties/nd_q3p_same_cell_card_2026_10_27.json",
+ "results_seen": false,
+ "입력": {
+  "폴더": "db/inputs/nd_q3p_2026_10_27/",
+  "생성기": "make_inputs.py (selftest 22 · 깨기 4/4 빨강: 역할 반경 · 원자 순서 · 미수렴 · Nd@Li 에 NdT)",
+  "역할_개수": {
+   "MP_07": "S_NdT 8 · S_PX4 9 · O_PX4 3 · S_free 2 · Cl 8 · P 3 · Li 31 · Nd 2",
+   "MLi_04": "S_PX4 17 · O_PX4 3 · S_free 2 · Cl 8 · P 5 · Li 21 · Nd 2"
+  },
+  "SHA256SUMS": "db/inputs/nd_q3p_2026_10_27/SHA256SUMS (scf.in 넷 · 스크립트 셋 · roles_manifest)"
+ },
+ "실행_계획_결과_전": {
+  "기계": "kgy GPU · cascade v7 옆 (사용자 권고 승인) · tmux ndq3p · R=/home/kgy/work/runs/nd_q3p_1027",
+  "순서": "setup_pseudo_kgy.sh (PAW MD5 = Q2 kgy 기록 · NC MD5 = Q3 ELF 기록 · 둘 다 selftest 9) → run_force_check_scf.sh DRY_RUN (설정 균일성 · pseudo) → Bader 루트 (MP_07 · MLi_04) → NC 가 맞으면 ELF 루트",
+  "양보": "MIN_FREE_MIB 16000 — 점 시작 전에 VRAM 여유가 모자라면 이 잡이 물러난다 (cascade 를 죽이지 않는다)",
+  "거부_경로_시험": "run_kgy.sh — tmux 있음 2 · 옛 입력 2 · PAW 불일치 3 · 어느 경우도 tmux 를 안 띄움 (가짜 tmux)",
+  "cascade_기록": "겹친 시간은 발사 시각 · 끝 시각을 cascade_v7_main_runlog 에 적는다 (사용자 붙여넣기 뒤)",
+  "후처리": "SCF 끝난 뒤 다음 블록 — pp.x plot_num 17 → bader → bader_summary_zval.py (원래 역할 입력) · pp.x plot_num 8 → sample_elf_bonds.py"
+ },
+ "⏭": "사용자: 아래 kgy 블록 실행 → 출력 붙여넣기 (PAW · NC ✓ · DRY_RUN 균일성 ✓ · tmux ndq3p 시작) · 비준 여부"
+}

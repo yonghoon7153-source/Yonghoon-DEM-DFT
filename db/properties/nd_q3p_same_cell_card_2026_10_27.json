@@ -1,0 +1,47 @@
+{
+ "schema": "estimand_card/v1",
+ "kind": "estimand",
+ "id": "nd_q3p_same_cell_card_2026_10_27",
+ "제목": "Nd Q3′ — Nd@P 모델 (MP_07) 과 같은 셀의 Nd@Li 모델 (MLi_04) 의 전자 배치 (Bader · ELF)",
+ "status": "proposed — 사용자 실행 승인 10-27 '권고대로 해' · 비준 = 사용자 (결정 D-2026-10-27-nd-q3p-same-cell)",
+ "written_on": "2026-10-27",
+ "트랙": "CEI/Nd · 1저자 = 실험 쪽 · 결정은 '사용자' (계산 담당) · 1저자 통지는 사용자를 통해",
+ "⚠_결과_보기_전에_썼다": "SCF 넷도 Bader · ELF 도 아직 0 건이다. 자리 분류 · 문턱 · 비교 · 허용 서술은 이 파일이 정본이다.",
+ "1_무엇을_원하는가": "사용자 10-27 'P 에 들어가 있는 Nd 도 이거 봐줄 수 있나' — 원고는 Nd³⁺ 가 P⁵⁺ 자리에 들어간다고 쓴다. Q3 (Nd@Li · 120 원자) 와 같은 방법으로 Nd@P 를 보고, 같은 셀의 Nd@Li 와 견준다.",
+ "1b_전기음성도_예상_결과_전": "Pauling Δχ: P–S 0.39 → Nd–S 1.44 · Li–S 1.60 → Nd–S 1.44. Nd@P 는 Nd 에 붙은 S (원래 PS₄ 사면체 S) 가 남은 PS₄ 의 S 보다 **더 음전하** · Nd@Li 는 Nd 이웃 음이온이 Li 만 이웃한 같은 종류보다 **덜 음전하** (Q3 120 원자에서 이 방향이 나왔다).",
+ "2_재는_양": {
+  "Bader": "AE 가전자 (pp.x plot_num 17) → bader → net = ZVAL − N (bader_summary_zval.py · ZVAL 은 UPF z_valence) · 자리 분류별 평균 · 범위 · n",
+  "ELF": "pp.x plot_num 8 → sample_elf_bonds.py (Q3 와 같은 결합 목록 · Nd–S · Cl–Nd 3.3 Å) → 결합 중점 ELF 평균 ± 표준편차 · n",
+  "구조": "Q1 V₀ 이온 이완 끝 기하 그대로 (db/raw/ndo_site_eos_v0_2026_10_23/<모델>/scf.out · 고정셀) — 새 이완 없음"
+ },
+ "3_설정_Q3_와_같게": {
+  "Bader_SCF": "PAW psl 세트 (Li sl · P n · S nl · Cl nl · O n 0.1 · Nd spdn · MD5 = Q2 kgy 기록 4449e4b2 · 06b8cad1 · a0db168f · daecd58d · 0234752a · af9d8c60) · 70/560 Ry · mv 0.01 · nosym · conv 1e-9 · β 0.3 · tprnfor · tstress · k 3 3 1",
+  "ELF_SCF": "NC 세트 (SG15 1.2 Li P S Cl · SG15 1.0 O · Nd3plus 변환 UPF · MD5 = Q3 ELF 기록 c91dd4ce · 0688a67b · f9d02029 · 0f993535 · 2e7c0b1a · 465d92ca) · 80/320 Ry · mv 0.01 · nosym · conv 1e-10 · β 0.3 · maxstep 200 · k 3 3 1",
+  "다른_점": "구조가 Q1 의 SSSP/GBRV 52/520 이완 기하다 (Q3 는 kjpaw 이완 기하) — PP 세트가 다른 기하 위의 단일점이라 힘이 0 이 아니다. 전하 분할 비교에는 같은 기하·같은 설정이면 충분하다고 보고, 최대 힘을 기록에 남긴다.",
+  "기계": "kgy GPU · cascade v7 옆 (사용자 10-27 권고 승인) · run_force_check_scf.sh (MIN_FREE_MIB 양보 가드) · 겹친 시간은 cascade 런로그에 적는다",
+  "입력": "db/inputs/nd_q3p_2026_10_27/ (make_inputs.py · selftest 22 · 깨기 4/4 빨강) · roles_manifest.json"
+ },
+ "4_자리_분류_결과_전": {
+  "원래_역할": "이완 전 후보 xyz (원자 순서·원소 열이 이완 끝과 같음을 확인) 에서 — S·O 가 P 에서 2.4 Å 안이면 PX4 · 아니고 Nd@P 모델에서 Nd 에서 2.4 Å 안이면 NdT (Nd 가 들어간 4b 사면체 S) · 둘 다 아니면 free. Nd@Li 모델에는 NdT 가 없다.",
+  "개수": {"MP_07": "S_NdT 8 · S_PX4 9 · O_PX4 3 (P 하나에 O 셋 — PO₃S) · S_free 2 · Cl 8 · P 3 · Li 31 · Nd 2",
+           "MLi_04": "S_PX4 17 · O_PX4 3 (P 셋에 하나씩) · S_free 2 · Cl 8 · P 5 · Li 21 · Nd 2"},
+  "Nd_이웃": "이완 끝 기하에서 Q3 문턱 그대로 — S · Cl 은 Nd 에서 3.3 Å 안 · O 는 2.9 Å 안",
+  "문턱_가까운_원자": "MP_07 의 Nd(21) 옆 Cl 하나가 3.16 Å (문턱 안 · 여유 0.14 Å) · 그다음 음이온 3.58 Å — 규칙대로 Nd 이웃으로 넣고, 그 Cl 을 뺀 값도 한 줄 같이 낸다",
+  "도구": "bader_summary_zval.py 에 원래 역할 입력을 더한다 (결과 전 · selftest)"
+ },
+ "5_비교_결과_전": {
+  "C1_NdP_전기음성도": "MP_07 안에서 평균 q(S_NdT) − 평균 q(S_PX4 · Nd 이웃 아님) — 예상: 음수 (S_NdT 가 더 음전하)",
+  "C2_Nd_내준_전하": "q(Nd) / 3 — MP_07 대 MLi_04 (같은 셀)",
+  "C3_Nd_이웃_음이온": "두 모델 각각 — Cl (Nd 이웃) − Cl (아님) · S_free (Nd 이웃) − S_free (아님) · S_PX4 (Nd 이웃) − S_PX4 (아님)",
+  "C4_원소_평균": "Li · P · S · Cl · O · Nd — MP_07 대 MLi_04",
+  "C5_ELF": "Nd–S · Cl–Nd 결합 중점 ELF — MP_07 대 MLi_04 · P–S · Li–S · P–O 는 기준으로 같이",
+  "판독_규칙": "차이가 두 분류 중 더 넓은 쪽의 범위 (최대 − 최소) 보다 작으면 '구분 안 됨' 으로 적는다 · n 이 2 이하인 분류는 값만 적고 방향을 말하지 않는다"
+ },
+ "6_허용_서술_금지_서술": {
+  "허용": "'같은 66 · 58 원자 셀 (Nd/(Nd+P) 0.40 · frozen-4f PBE · Bader AE 가전자 · Q1 V₀ 기하) 에서 Nd@P 모델의 Nd 에 붙은 S (원래 PS₄ 사면체 S) 는 남은 PS₄ 의 S 보다 X e 더/덜 음전하이고, Nd 는 형식 전하 +3 의 Y % 를 내준다 (같은 셀 Nd@Li 모델 Z %).' · ELF 는 '결합 중점 ELF 가 A (Nd@P) 대 B (Nd@Li)' 꼴",
+  "금지": ["x = 0.02 로 크기 옮기기", "120 원자 Q3 숫자와 같은 표 · 같은 축", "자리 선호 · 'Nd 는 P 자리에 있다' 의 근거 (자리는 Q1 몫)", "전기화학 (전압 · 계면 반응) 서술", "총에너지 인용 (ELF NC 변환 UPF 는 밀도 · ELF 전용)"]
+ },
+ "7_비용": "GPU SCF 넷 (kgy · 66/58 원자 · Q1 이완이 모델당 2 h 안쪽) — 어림 3–6 h · CPU 후처리 몇 분",
+ "8_재개_조건": "PP · ecut · 구조 출처가 바뀔 때만. '다른 모델 하나 더' 는 재개 사유가 아니다.",
+ "연결": ["db/properties/ndo_lpscl16_site_stability_estimand_2026_10_14.json §2 Q3", "db/properties/nd_q3_bader_elf_runlog_2026_10_19.json", "db/properties/ndo_site_eos_fit_2026_10_23.json", "db/inputs/nd_q3p_2026_10_27/roles_manifest.json"]
+}
