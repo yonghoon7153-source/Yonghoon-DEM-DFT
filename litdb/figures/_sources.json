@@ -162,6 +162,13 @@
    "c197a5ce-62._The_cohesive-adhesive_balances_in_dry_powder_inhaler_formulations_II_influence_on_fine_particle_delivery_characteristics.pdf"
   ]
  },
+ "beutl2024_round_robin_coin_cell_sulfide_assb": {
+  "figures": 17,
+  "generated": "2026-10-14",
+  "pdfs": [
+   "main.pdf"
+  ]
+ },
  "bielefeld2019_microstructural_modeling_composite_cathode": {
   "figures": 11,
   "generated": "2026-08-05",
@@ -209,6 +216,14 @@
   "generated": "2026-08-05",
   "pdfs": [
    "DEM 논문/22. Mechanical instability of electrode-electrolyte interfaces in solid-state batteries.pdf"
+  ]
+ },
+ "burov2026_li_llzo_charge_transfer_mlmd": {
+  "figures": 95,
+  "generated": "2026-10-27",
+  "pdfs": [
+   "6914e5bd-1._Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf"
   ]
  },
  "cao2026_dual_binder_18um_sulfide_electrolyte_film": {
@@ -1339,6 +1354,14 @@
    "3. Tortuosity of battery electrodes validation of impedance-derived values and critical comparison with 3D tomography.pdf"
   ]
  },
+ "larson2025_hot_pressing_argyrodite_low_stack_pressure_conductivity": {
+  "figures": 13,
+  "generated": "2026-10-14",
+  "pdfs": [
+   "ae5c00020.pdf",
+   "ae5c00020_si_001.pdf"
+  ]
+ },
  "lawrence2008_single_vgcnf_elastic_modulus_morphology": {
   "figures": 8,
   "generated": "2026-09-26",
@@ -1775,6 +1798,14 @@
    "9. Sup) Mechanistic_origin_superionic_Li6PS5X_SI.pdf"
   ]
  },
+ "meng2026_phase_inversion_binder_ultrathick_zn_iodine": {
+  "figures": 44,
+  "generated": "2026-10-27",
+  "pdfs": [
+   "1ed4f473-10._Phase_Inversion-Engineered_Ultrathick_Electrodes_With_Intrinsic_Hydrogel_Interphase_for_High_Areal_Capacity_Aqueous_Zinc_Iodine_Batteries_at_RoomSubzero_Temperatures.pdf",
+   "e3da243c-10._Sup2_Phase_Inversion-Engineered_Ultrathick_Electrodes_With_Intrinsic_Hydrogel_Interphase_for_High_Areal_Capacity_Aqueous_Zinc_Iodine_Batteries_at_RoomSubzero_Temperatures.pdf"
+  ]
+ },
  "meng2026_pvdf_li2zrf6_phase_ordering": {
   "figures": 6,
   "generated": "2026-09-15",
@@ -2093,6 +2124,14 @@
   "pdfs": [
    "71. Park2024_SevenNet_Parallel_GNN_MD.pdf",
    "71. Sup) Park2024_SevenNet_Parallel_GNN_MD.pdf"
+  ]
+ },
+ "park2026_llzo_li13si4_dopant_interface_thermal_battery": {
+  "figures": 33,
+  "generated": "2026-10-27",
+  "pdfs": [
+   "262d0451-13._Dopant-controlled_early-stage_stability_of_LLZOLi13Si4_interfaces_for_thermal_batteries.pdf",
+   "20d15ce1-13._Sup_Dopant-controlled_early-stage_stability_of_LLZOLi13Si4_interfaces_for_thermal_batteries.pdf"
   ]
  },
  "park2026_ml_framework_stable_interfaces_assb": {
@@ -2579,6 +2618,13 @@
    "01. Sup) Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf"
   ]
  },
+ "tron2023_lpscl_ccd_ambient_pressure": {
+  "figures": 19,
+  "generated": "2026-10-14",
+  "pdfs": [
+   "1.Critical_Current_Density_Measurements_of_Argyrodite_Li6PS5Cl_Solid_Electrolyte_at_Ambient_Pressure.pdf"
+  ]
+ },
  "tu2026_diffusion_descriptor_ml_li_sse_interface": {
   "figures": 7,
   "generated": "2026-08-28",
@@ -2660,6 +2706,14 @@
   "generated": "2026-08-05",
   "pdfs": [
    "DFT 먹인 논문/29. InfoMat - 2022 - Wang - Improving thermal stability of sulfide solid electrolytes  An intrinsic theoretical paradigm.pdf"
+  ]
+ },
+ "wang2024_hot_pressed_lpscl_pressure_invariant_conductivity": {
+  "figures": 27,
+  "generated": "2026-10-14",
+  "pdfs": [
+   "3._Chemical_and_Electrochemical_Characterization_of_Hot-Pressed_Li6PS5Cl_Solid_State_Electrolyte_Operating_Pressure-Invariant_High_Ionic_Conductivity.pdf",
+   "3._Sup_Chemical_and_Electrochemical_Characterization_of_Hot-Pressed_Li6PS5Cl_Solid_State_Electrolyte_Operating_Pressure-Invariant_High_Ionic_Conductivity.pdf"
   ]
  },
  "wang2025_ai_ecosystems_electrolyte_interface_ssb": {

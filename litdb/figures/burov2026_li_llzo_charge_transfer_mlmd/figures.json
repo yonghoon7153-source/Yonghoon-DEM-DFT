@@ -1,0 +1,1954 @@
+{
+ "slug": "burov2026_li_llzo_charge_transfer_mlmd",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-27",
+ "sources": [
+  "6914e5bd-1._Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+  "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "FIG. 1. Schematic illustration of Li-ion self-diffusion study in the metallic Li anode, Li7La3Zr2O12 (LLZO) electrolyte, and supercells with Li/LLZO interfaces. The study includes four stages: (a) initial generation of the training conﬁgurations, using the ab initio molecular dynamics (AIMD) simulations; (b) training of MLIPs, using molecular dynamics (MD) simulations and active learning; (c) large-scale MD simulations with MLIPs; and (d) validation of MTPs. Common computational approaches for predicting inter- face resistance include molecular dynamics (MD), density functional theory (DFT), and ab initio molecular dynamics (AIMD). Classical MD is fast, but its interatomic poten- tials are often too limited to describe electrode, electrolyte, and interface regions with the same accuracy [19,20]. DFT- based methods commonly estimate migration barriers from the minimum-energy path using nu",
+   "rotated_deg": 0,
+   "bbox": [
+    44.0,
+    64.2,
+    564.2,
+    307.3
+   ],
+   "w": 2168,
+   "h": 1014,
+   "dpi": 300,
+   "src": "6914e5bd-1._Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.636
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "FIG. 2. Mean occupancy of Li sites over simulation time for the bulk phases: (a) t-LLZO and (b) Ga-LLZO. The Ga-LLZO values were normalized in order to compare with reference c-LLZO occu- pancies by Awaka et al. [46].",
+   "rotated_deg": 0,
+   "bbox": [
+    307.1,
+    64.9,
+    564.2,
+    175.3
+   ],
+   "w": 1072,
+   "h": 461,
+   "dpi": 300,
+   "src": "6914e5bd-1._Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.826
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "FIG. 3. Comparison of migration pathways and activation ener- gies obtained with the DFT-NEB and MTP-NEB approaches: [(a) and (b)] bulk t-LLZO and [(c) and (d)] supercell with Li/t-LLZO interface.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.0,
+    65.3,
+    301.2,
+    314.3
+   ],
+   "w": 1072,
+   "h": 1039,
+   "dpi": 300,
+   "src": "6914e5bd-1._Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.893
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "FIG. 4. Li-ion diffusion study in both the low-temperature vacancy-mediated regime and the high-temperature Frenkel-defect-mediated regime. The ﬁgure presents the crystal structure, the mean-squared displacement (MSD) as a function of temperature, diffusion coefﬁcients with Arrhenius ﬁts, and the Li-ion probability density map for the low-temperature regime at an isosurface level of 5 × 10−4 r−3 Bohr. The following bulk phases were analyzed: [(a)–(d)] tetragonal LLZO (t-LLZO) without vacancies, [(e)–(h)] Ga-doped LLZO (Ga-LLZO), and [(i)–(l)] body-centered cubic lithium (Li metal). To avoid trajectories with poor statistics, we included only those for which MSD exceeded the squared typical jump length in the bulk phases, that is, MSD > 9 Å2 (dotted lines on plots).",
+   "rotated_deg": 0,
+   "bbox": [
+    44.0,
+    64.3,
+    564.2,
+    420.3
+   ],
+   "w": 2168,
+   "h": 1484,
+   "dpi": 300,
+   "src": "6914e5bd-1._Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.736
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "FIG. 5. (a) Self-part [4πr2Gs(r,t)] and (b) distinct part [4πr2Gd(r,t)] of the radial one-dimensional van Hove correlation function for Ga-doped LLZO at T = 700 K, shown for lag times t ranging from 2 to 1000 ps. Circles mark the local maxima (peak positions) for each curve. In the self part, the ﬁrst peak (0 < r ⩽ 1.8 Å) corresponds to ion rattling, the second peak (1.8 < r ⩽4 Å) arises from single-ion jumps, and the third peak (4 < r ⩽6 Å) is attributed to cooperative jump events. In the distinct part, the ﬁrst peak (0 < r ⩽1.5 Å) reﬂects cooperative hopping events, while the second peak (1.5 < r ⩽4 Å) originates from single-ion jumps.",
+   "rotated_deg": 0,
+   "bbox": [
+    307.1,
+    64.9,
+    564.2,
+    359.3
+   ],
+   "w": 1072,
+   "h": 1227,
+   "dpi": 300,
+   "src": "6914e5bd-1._Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.905
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "FIG. 6. Ratio of cooperative hops (ηnorm), calculated using Eq. (7), for the considered bulk phases: t-LLZO (without vacancies), t-LLZO (with 1.8% vacancies), c-LLZO, Ga-LLZO, and Li metal.",
+   "rotated_deg": 0,
+   "bbox": [
+    307.1,
+    564.3,
+    564.1,
+    718.5
+   ],
+   "w": 1072,
+   "h": 643,
+   "dpi": 300,
+   "src": "6914e5bd-1._Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.924
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "FIG. 7. (a) Crystal structure of a supercell with Li/Ga-LLZO interface. (b) The mean-squared displacement in the direction perpendicular to the interface plane (MSDZ) as a function of temperature. To avoid trajectories with poor statistics, we included only those for which the MSDZ exceeded the squared half-size of the supercell, that is, MSDZ > 100 Å2 (dotted lines on plots). (c) Exchange-current of Li+ in the z direction as a function of temperature and its Arrhenius ﬁt. Minimal residence time between Li+ jumps across the interface was set to 2.8 ns.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.0,
+    64.6,
+    564.2,
+    199.3
+   ],
+   "w": 2168,
+   "h": 562,
+   "dpi": 300,
+   "src": "6914e5bd-1._Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.771
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 7,
+   "file": "fig_8.png",
+   "caption": "FIG. 8. Activation energy of charge transfer for the Li/Ga-LLZO interface as a function of the minimal residence time tresidence. The converged value is (167 ± 18) meV.",
+   "rotated_deg": 0,
+   "bbox": [
+    307.1,
+    573.1,
+    564.2,
+    718.5
+   ],
+   "w": 1072,
+   "h": 607,
+   "dpi": 300,
+   "src": "6914e5bd-1._Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.965
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 4,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Crystal structures of (a) tetragonal (sg. 142) and (b) cubic (sg. 230) Li7La3Zr2O12 (LLZO) phases; (c) Ga-doped LLZO with the conventional cell Ga2Li50La24Zr16O96 (four vacancies per conventional cell). Separate polyhedra show different Wyckoff positions of Li in t-LLZO. The fill percentage of Li corresponds to the occupation numbers. Ga, Li, La, Zr, and O are shown as pink, green, gray, blue, and orange spheres, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    295.0,
+    552.7,
+    467.1
+   ],
+   "w": 2111,
+   "h": 718,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.566
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 6,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Total energy of four configurations of Ga-LLZO. Blue dashed line is the configuration, where both Ga are located in tetrahedral position and close to each other (Li1, nearest neighbors); orange dashed line is the configuration, where both Ga are located in tetrahedral position and separated from each other (Li1, separated); pink dotted line is the configuration, where both Ga are located in octahedral positions (Li2); green solid line is the configuration, where two Ga are located both in tetrahedral (Li1) and octahedral positions (Li3). The inset shows the last 330 snapshots (∼1.5 ps).",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    194.2,
+    552.7,
+    377.4
+   ],
+   "w": 2111,
+   "h": 764,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.911
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 7,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. The AIMD-relaxed crystal structures for Li(100)/t-LLZO(100) and Li(100)/Ga-LLZO(100) interface supercells. Ga, Li, La, Zr, and O are shown as pink, green, gray, blue, and orange spheres, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    80.4,
+    552.7,
+    225.1
+   ],
+   "w": 2111,
+   "h": 603,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.667
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 10,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Calculated training and validation errors with their distribution, obtained with the DFT method and predicted with MTP for t-LLZO: (a), (b) energies (meV/atom); (c), (d) forces, (eV/Å); (e), (f) stresses (GPa).",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    80.4,
+    552.7,
+    351.0
+   ],
+   "w": 2111,
+   "h": 1128,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.891
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 11,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Calculated training and validation errors with their distribution, obtained with the DFT method and predicted with MTP for c-LLZO: (a), (b) energies (meV/atom); (c), (d) forces, (eV/Å); (e), (f) stresses (GPa).",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    80.4,
+    552.7,
+    368.5
+   ],
+   "w": 2111,
+   "h": 1201,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 12,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Calculated training and validation errors with their distribution, obtained with the DFT method and predicted with MTP for Ga- LLZO: (a), (b) energies (meV/atom); (c), (d) forces, (eV/Å); (e), (f) stresses (GPa).",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    80.4,
+    552.7,
+    366.6
+   ],
+   "w": 2111,
+   "h": 1193,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.884
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 13,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Calculated training and validation errors with their distribution, obtained with the DFT method and predicted with MTP for bcc Li: (a), (b) energies (meV/atom); (c), (d) forces, (eV/Å); (e), (f) stresses (GPa).",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    80.4,
+    552.7,
+    363.8
+   ],
+   "w": 2111,
+   "h": 1181,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.865
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 14,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Calculated training and validation errors with their distribution, obtained with the DFT method and predicted with MTP for the Li/t-LLZO: (a), (b) energies (meV/atom); (c), (d) forces, (eV/Å); (e), (f) stresses (GPa).",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    432.6,
+    552.7,
+    700.0
+   ],
+   "w": 2111,
+   "h": 1115,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.874
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 15,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Calculated training and validation errors with their distribution, obtained with the DFT method and predicted with MTP for the Li/Ga-LLZO: (a), (b) energies (meV/atom); (c), (d) forces, (eV/Å); (e), (f) stresses (GPa).",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    296.3,
+    552.7,
+    568.8
+   ],
+   "w": 2111,
+   "h": 1137,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.877
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 16,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. Bond length distributions in LLZO systems (t-LLZO, c-LLZO, and Ga-LLZO): (a) Zr–O bond lengths in ZrO6 octahedra; (b) La–O bond lengths in LaO8 polyhedra.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    80.4,
+    552.7,
+    245.6
+   ],
+   "w": 2111,
+   "h": 689,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.941
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 16,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. Average number of atoms within a 6.3 Å cut-off sphere around Li atoms in t-LLZO, c-LLZO, and Ga-LLZO. The contributions of Ga, Li, La, Zr, and O are shown in pink, green, gray, blue, and orange, respectively. The values above each bar indicate the mean total number of atoms and the corresponding standard deviation.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    503.1,
+    552.7,
+    689.9
+   ],
+   "w": 2111,
+   "h": 779,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.749
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 17,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. Assessment of the MTP transferability from c-LLZO to t-LLZO structures, with the model trained on c-LLZO configurations and validated on t-LLZO data. Calculated training and validation errors with their distribution, obtained with the DFT method and predicted with MTP for t-LLZO: (a), (b) energies (meV/atom); (c), (d) forces, (eV/Å); (e), (f) stresses (GPa).",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    390.2,
+    552.7,
+    689.9
+   ],
+   "w": 2111,
+   "h": 1250,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.887
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 18,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. Assessment of the MTP transferability from Ga-LLZO to c-LLZO structures, with the model trained on Ga-LLZO configurations and validated on c-LLZO data. Calculated training and validation errors with their distribution, obtained with the DFT method and predicted with MTP for c-LLZO: (a), (b) energies (meV/atom); (c), (d) forces, (eV/Å); (e), (f) stresses (GPa).",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    390.2,
+    552.7,
+    689.9
+   ],
+   "w": 2111,
+   "h": 1250,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.907
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 19,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. Assessment of the MTP transferability from Li/Ga-LLZO to Li/t-LLZO structures, with the model trained on Li/Ga-LLZO con- figurations and validated on Li/t-LLZO data. Calculated training and validation errors with their distribution, obtained with the DFT method and predicted with MTP for Li/t-LLZO: (a), (b) energies (meV/atom); (c), (d) forces, (eV/Å); (e), (f) stresses (GPa).",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    390.2,
+    552.7,
+    689.9
+   ],
+   "w": 2111,
+   "h": 1250,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.882
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 20,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. Number of training configurations and relative timings across the active-learning stages for (a) bulk t-LLZO and (b) supercell with the Li/t-LLZO interface. Data are shown for MTP levels 10 and 20. All timings are normalized to the total duration of each active-learning stage. MLMD, DFT, and MTP retraining stages are indicated in green, blue, and pink, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    259.8,
+    571.3,
+    458.7
+   ],
+   "w": 2188,
+   "h": 830,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.872
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 20,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. Computational timing comparison of the MLMD, DFT, and retraining stages in (a) bulk t-LLZO and (b) the Li/t-LLZO interface supercell, normalized to the total time for each case. Diagonal hatching denotes MTP level 10, and solid fill denotes MTP level 20. Green, blue, and pink represent the MLMD, DFT, and retraining stages, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    508.7,
+    552.7,
+    702.2
+   ],
+   "w": 2111,
+   "h": 807,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 22,
+   "file": "fig_S18.png",
+   "caption": "Figure S18. Mean occupancy of Li sites over simulation time for (a) t-LLZO; (b) c-LLZO; (c) Ga-LLZO.",
+   "rotated_deg": 0,
+   "bbox": [
+    71.2,
+    235.6,
+    528.0,
+    356.6
+   ],
+   "w": 1905,
+   "h": 505,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.874
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 23,
+   "file": "fig_S19.png",
+   "caption": "Figure S19. Vacancy formation energies 𝐸f for Li atoms at 𝜇Li = 0 eV, computed with DFT and MTP methods, for the three unique sites in t-LLZO: tetrahedral Li(1) and octahedral Li(2) and Li(3). Relative energies are reported with respect to the lowest-energy vacancy configuration obtained with each method.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    283.1,
+    552.7,
+    432.6
+   ],
+   "w": 2111,
+   "h": 624,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.945
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 24,
+   "file": "fig_S21.png",
+   "caption": "Figure S21. Vacancy formation energies at 𝜇Li = 0 (𝐸vac−𝐸0) are shown as a function of the 𝑧-coordinate for Li atoms in a supercell containing Li/t-LLZO interfaces. Red crosses indicate vacancy sites for which atoms moved, on average, by more than 2 Å during structural optimization. The peak positions, shapes, and heights are similar to those obtained in our previous DFT-obtained calculations [11]. The data were fitted using the piecewise cubic Hermite interpolating polynomial (PCHIP) method [19]. The gray hatched region denotes the LLZO slab. (a) Single-point (unrelaxed) calculations; (b) fully relaxed structures.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    517.1,
+    552.7,
+    669.5
+   ],
+   "w": 2111,
+   "h": 636,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.794
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 25,
+   "file": "fig_S22.png",
+   "caption": "Figure S22. Vacancy formation energies at 𝜇Li = 0 (𝐸vac −𝐸0) are shown as a function of the 𝑧-coordinate for Li atoms in a supercell containing Li/Ga-LLZO interfaces. The data were fitted using the piecewise cubic Hermite interpolating polynomial (PCHIP) method [19]. The gray hatched region denotes the LLZO slab. (a) Single-point (unrelaxed) calculations; (b) fully relaxed structures.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    75.6,
+    552.7,
+    245.1
+   ],
+   "w": 2111,
+   "h": 707,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.807
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 25,
+   "file": "fig_S23.png",
+   "caption": "Figure S23. Mean relative coordinate shifts with standard deviations for all Li atoms in Li/t-LLZO (green) and Li/Ga-LLZO (pink) interface supercells, as obtained from MTP calculations.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    455.1,
+    552.7,
+    611.4
+   ],
+   "w": 2111,
+   "h": 652,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.965
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 26,
+   "file": "fig_S24.png",
+   "caption": "Figure S24. The energy profiles and corresponding reaction coordinates for the unique Li single-ion diffusion events in the bulk phases: (a)–(c) t-LLZO; (d),(e) bcc Li.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    216.6,
+    552.7,
+    566.2
+   ],
+   "w": 2111,
+   "h": 1458,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.955
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": 27,
+   "file": "fig_S25.png",
+   "caption": "Figure S25. The energy profiles and corresponding reaction coordinates for the unique Li single-ion diffusion events in Li/t-LLZO: (a)-(i) paths with MTPs low extrapolation grades (< 30); (j),(k) paths with MTPs high extrapolation grades (> 30).",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    81.0,
+    552.7,
+    580.8
+   ],
+   "w": 2111,
+   "h": 2084,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "fS27",
+   "kind": "figure",
+   "label": "S27",
+   "page": 28,
+   "file": "fig_S27.png",
+   "caption": "Figure S27. MSD of La, Zr, and O atoms in the t-LLZO with additional 1.8% vacancies at various temperatures. Dotted lines indicate trajectories where the total MSD remains below 9 Å2.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    566.1,
+    552.7,
+    701.8
+   ],
+   "w": 2111,
+   "h": 566,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "fS28",
+   "kind": "figure",
+   "label": "S28",
+   "page": 28,
+   "file": "fig_S28.png",
+   "caption": "Figure S28. MSD of La, Zr, and O atoms in the c-LLZO at various temperatures. Dotted lines indicate trajectories where the total MSD remains below 9 Å2.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    566.1,
+    552.7,
+    701.8
+   ],
+   "w": 2111,
+   "h": 566,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "fS29",
+   "kind": "figure",
+   "label": "S29",
+   "page": 29,
+   "file": "fig_S29.png",
+   "caption": "Figure S29. MSD of La, Zr, Ga and O atoms in the Ga-LLZO at various temperatures. Dotted lines indicate trajectories where the total MSD remains below 9 Å2.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    80.2,
+    552.7,
+    207.3
+   ],
+   "w": 2111,
+   "h": 530,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.891
+  },
+  {
+   "key": "fS30",
+   "kind": "figure",
+   "label": "S30",
+   "page": 29,
+   "file": "fig_S30.png",
+   "caption": "Figure S30. MSD of La, Zr, and O atoms in the supercell with Li/t-LLZO interface at various temperatures. Dotted lines indicate trajectories where the total MSD remains below 20 Å2.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    253.3,
+    552.7,
+    424.1
+   ],
+   "w": 2111,
+   "h": 712,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "fS31",
+   "kind": "figure",
+   "label": "S31",
+   "page": 29,
+   "file": "fig_S31.png",
+   "caption": "Figure S31. MSD of La, Zr, Ga, and O atoms in the supercell with Li/Ga-LLZO interface at various temperatures. Dotted lines indicate trajectories where the total MSD remains below 20 Å2.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    476.0,
+    552.7,
+    594.3
+   ],
+   "w": 2111,
+   "h": 494,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.891
+  },
+  {
+   "key": "fS32",
+   "kind": "figure",
+   "label": "S32",
+   "page": 30,
+   "file": "fig_S32.png",
+   "caption": "Figure S32. MSD of bcc Li as a function of temperature: with 0.2% vacancies (a) and without vacancies (b). To avoid trajectories with poor statistics, we included only those for which the MSD exceeded the squared typical bulk jump length, that is, 𝑀𝑆𝐷> 9 Å2 (dotted lines in the plots).",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    118.3,
+    552.7,
+    269.4
+   ],
+   "w": 2111,
+   "h": 631,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.931
+  },
+  {
+   "key": "fS33",
+   "kind": "figure",
+   "label": "S33",
+   "page": 30,
+   "file": "fig_S33.png",
+   "caption": "Figure S33. RDFs for Li–Li distances in bcc Li: (a) structure with 0.2% vacancies at low temperature (𝑇= 300 K), shown in blue; (b) structure with 0.2% vacancies at high temperature (𝑇= 450 K), shown in green; and (c) vacancy-free structure at high temperature (𝑇= 450 K).",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    343.6,
+    552.7,
+    501.1
+   ],
+   "w": 2111,
+   "h": 658,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.962
+  },
+  {
+   "key": "fS34",
+   "kind": "figure",
+   "label": "S34",
+   "page": 30,
+   "file": "fig_S34.png",
+   "caption": "Figure S34. Number of interstitials in bcc Li, calculated using the Wigner–Seitz method as implemented in the OVITO software package [23]. (a) Structure with 0.2% vacancies at low temperature (𝑇= 300 K); (b) structure with 0.2% vacancies at high temperature (𝑇= 450 K); and (c) vacancy-free structure at high temperature (𝑇= 450 K).",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    562.7,
+    552.7,
+    689.9
+   ],
+   "w": 2111,
+   "h": 531,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "fS35",
+   "kind": "figure",
+   "label": "S35",
+   "page": 32,
+   "file": "fig_S35.png",
+   "caption": "Figure S35. Li-ion diffusion study at both low-temperature (vacancy-mediated) and high-temperature (Frenkel defect-mediated) regimes for t-LLZO with vacancies (55/56). (a) mean-squared displacement (MSD) over temperature; (b) diffusion coefficients and their Arrhenius fit; (c) ionic conductivities and their Arrhenius fit; (d) Li-ion probability density map (low-temperature regime at the isosurface level of 5·10−4 𝑟−3 Bohr). To avoid trajectories with poor statistics, we included only those for which the MSD exceeded the squared typical jump length in the bulk phases, that is, 𝑀𝑆𝐷> 9 Å2 (dotted lines on plot).",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    80.4,
+    552.7,
+    323.8
+   ],
+   "w": 2111,
+   "h": 1016,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.882
+  },
+  {
+   "key": "fS36",
+   "kind": "figure",
+   "label": "S36",
+   "page": 32,
+   "file": "fig_S36.png",
+   "caption": "Figure S36. Li-ion diffusion study at both low-temperature (vacancy-mediated) and high-temperature (Frenkel defect-mediated) regimes for c-LLZO. (a) mean-squared displacement (MSD) over temperature; (b) diffusion coefficients and their Arrhenius fit; (c) ionic conductivities and their Arrhenius fit; (d) Li-ion probability density map (low-temperature regime at the isosurface level of 5 · 10−4 𝑟−3 Bohr).",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    554.2,
+    552.7,
+    687.9
+   ],
+   "w": 2111,
+   "h": 558,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.787
+  },
+  {
+   "key": "fS37",
+   "kind": "figure",
+   "label": "S37",
+   "page": 33,
+   "file": "fig_S37.png",
+   "caption": "Figure S37. Li-ion diffusion study at both low-temperature (vacancy-mediated) and high-temperature (Frenkel defect-mediated) regimes for Li/t-LLZO. (a) crystal structure; (b) mean-squared displacement (MSD) over temperature. To avoid trajectories with poor statistics, we included only those for which the MSD exceeded the squared typical jump length in the bulk phases, that is, 𝑀𝑆𝐷𝑍> 100 Å2 (dotted lines on plot).",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    80.4,
+    552.7,
+    332.3
+   ],
+   "w": 2111,
+   "h": 1051,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.892
+  },
+  {
+   "key": "fS38",
+   "kind": "figure",
+   "label": "S38",
+   "page": 33,
+   "file": "fig_S38.png",
+   "caption": "Figure S38. Li-ion diffusion study at both low-temperature (vacancy-mediated) and high-temperature (Frenkel defect-mediated) regimes for Li/Ga-LLZO. (a) crystal structure; (b) mean-squared displacement (MSD) over temperature. To avoid trajectories with poor statistics, we included only those for which the MSD exceeded the squared typical jump length in the bulk phases, that is, 𝑀𝑆𝐷𝑍> 100 Å2 (dotted lines on plot).",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    544.5,
+    552.7,
+    677.1
+   ],
+   "w": 2111,
+   "h": 554,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.735
+  },
+  {
+   "key": "fS39",
+   "kind": "figure",
+   "label": "S39",
+   "page": 35,
+   "file": "fig_S39.png",
+   "caption": "Figure S39. Mean-squared displacements (MSD) at 𝑇= 1000 K along the 𝑥, 𝑦, and 𝑧directions, as well as the total MSD, for (a) t-LLZO without vacancies, (b) t-LLZO with 1.8% vacancies, (c) c-LLZO, and (d) Ga-LLZO.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    80.4,
+    552.7,
+    208.3
+   ],
+   "w": 2111,
+   "h": 533,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.917
+  },
+  {
+   "key": "fS40",
+   "kind": "figure",
+   "label": "S40",
+   "page": 35,
+   "file": "fig_S40.png",
+   "caption": "Figure S40. Mean-squared displacements (MSD) at 𝑇= 400 K along the 𝑥, 𝑦, and 𝑧directions, as well as the total MSD, for (a) Li metal, (b) Li/t-LLZO interface supercell, and (c) Li/Ga-LLZO interface supercell.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    285.2,
+    552.7,
+    426.2
+   ],
+   "w": 2111,
+   "h": 589,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.935
+  },
+  {
+   "key": "fS41",
+   "kind": "figure",
+   "label": "S41",
+   "page": 35,
+   "file": "fig_S41.png",
+   "caption": "Figure S41. Diffusion anisotropy factor (𝐴aniso) as a function of temperature for the bulk phases (t-LLZO with and without vacancies, c-LLZO, Ga-LLZO, and bcc Li) and interface supercells (Li/t-LLZO and Li/Ga-LLZO). For the bulk phases, trajectories were included only if the total MSD exceeded 9 Å2; for the interface supercells, the corresponding threshold was 100 Å2.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    503.4,
+    552.7,
+    689.9
+   ],
+   "w": 2111,
+   "h": 778,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.95
+  },
+  {
+   "key": "fS43",
+   "kind": "figure",
+   "label": "S43",
+   "page": 37,
+   "file": "fig_S43.png",
+   "caption": "Figure S43. Average current density, with error margins, as a function of temperature for the Li/Ga-LLZO interface supercell.",
+   "rotated_deg": 0,
+   "bbox": [
+    74.5,
+    80.4,
+    524.8,
+    258.5
+   ],
+   "w": 1877,
+   "h": 743,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.978
+  },
+  {
+   "key": "fS44",
+   "kind": "figure",
+   "label": "S44",
+   "page": 42,
+   "file": "fig_S44.png",
+   "caption": "Figure S44. Averaged lithium vacancy formation energies without relaxation at each timestep during MLMD simulations, shown at 0%, 25%, 50%, and 100% progress along the trajectory. The gray shaded area corresponds to the LLZO region. The bars represent the standard deviation within each data bin, and the filled squares denote the averaged values within each bin.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    260.0,
+    552.7,
+    387.6
+   ],
+   "w": 2111,
+   "h": 533,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.824
+  },
+  {
+   "key": "fS46",
+   "kind": "figure",
+   "label": "S46",
+   "page": 43,
+   "file": "fig_S46.png",
+   "caption": "Figure S46. (a) Vacancy formation energies, calculated with MTP and averaged over 200 snapshots for all Li within structure. Black circles are values averaged among data bin. Red shaded area is standard deviation error. (b) Relative chemical potentials of lithium in supercell with Li/Ga-LLZO interface.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    533.5,
+    552.7,
+    691.6
+   ],
+   "w": 2111,
+   "h": 660,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.736
+  },
+  {
+   "key": "fS47",
+   "kind": "figure",
+   "label": "S47",
+   "page": 44,
+   "file": "fig_S47.png",
+   "caption": "Figure S47. One-dimensional potential of mean force (PMF, Δ𝐹(𝑧)) across the supercell containing Li(100)/Ga-LLZO(100) interface, averaged over the full MLMD trajectory at 𝑇= 450 K and computed from Eq. (S14). The raw PMF profile is shown in gray, with the smoothed profile overlaid as a blue solid line. The green and pink markers denote the bulk Li metal and bulk LLZO regions, respectively, while the shaded area highlights the LLZO region.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    460.4,
+    552.7,
+    628.9
+   ],
+   "w": 2111,
+   "h": 703,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.879
+  },
+  {
+   "key": "fS48",
+   "kind": "figure",
+   "label": "S48",
+   "page": 46,
+   "file": "fig_S48.png",
+   "caption": "Figure S48. Li-ion probability density for the low-temperature and high-temperature regimes. Isosurface level was of 5 · 10−4 𝑟−3 Bohr. (a), (b) t-LLZO without vacancies; (c), (d) t-LLZO with one vacancy per conventional cell (1/56); (e), (f) c-LLZO without non-intrinsic vacancies; (g), (h) Ga-LLZO without non-intrinsic vacancies; (i), (j) bcc Li with one vacancy in the simulation cell (0.2%, 1/432).",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    242.6,
+    552.7,
+    446.0
+   ],
+   "w": 2111,
+   "h": 849,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.566
+  },
+  {
+   "key": "fS49",
+   "kind": "figure",
+   "label": "S49",
+   "page": 47,
+   "file": "fig_S49.png",
+   "caption": "Figure S49. Analysis of the diffusion mechanism for t-LLZO at 400 K (low-𝑇regime, vacancy mechanism) and 1000 K (high-𝑇regime, interstitial mechanism). Here, we present the radial distribution functions (RDFs) for Li–Li and Li–O distances, evaluated up to a cut-off radius of 7 Å. Mean Voronoi volumes, calculated with the poly-disperse tessellation method. Number of interstitials, calculated with the Wigner– Seitz method. All values were averaged over simulation time and standard deviation energies were visualized. (a) RDFs for Li–Li distances; (b) RDFs for Li–O distances; (c) mean Voronoi volumes for the low-temperature regime; (d) mean Voronoi volumes for the high-temperature regime; (e) number of interstitials for the low-temperature regime; (f) number of interstitials for the high-temperature regime.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    268.7,
+    552.7,
+    579.7
+   ],
+   "w": 2111,
+   "h": 1297,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.8
+  },
+  {
+   "key": "fS50",
+   "kind": "figure",
+   "label": "S50",
+   "page": 49,
+   "file": "fig_S50.png",
+   "caption": "Figure S50. Percent of cooperative jumps at low temperature (vacancy-mediated) and high temperature (Frenkel defect-mediated): (a) bcc Li with only low temperature regime at temperature in 250–450 K; (b) t-LLZO without and with 1.8% vacancies, c-LLZO, Ga-LLZO at low temperature (𝑇= 600 K) and high-temperature (𝑇= 1000 K) regimes.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    123.1,
+    552.7,
+    261.5
+   ],
+   "w": 2111,
+   "h": 578,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.904
+  },
+  {
+   "key": "fS51",
+   "kind": "figure",
+   "label": "S51",
+   "page": 49,
+   "file": "fig_S51.png",
+   "caption": "Figure S51. Percent of cooperative jumps as a function of temperature for bulk phases: bcc Li, t-LLZO without and with 1.8% vacancies, c-LLZO, Ga-LLZO.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    332.0,
+    552.7,
+    508.0
+   ],
+   "w": 2111,
+   "h": 734,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.959
+  },
+  {
+   "key": "fS52",
+   "kind": "figure",
+   "label": "S52",
+   "page": 50,
+   "file": "fig_S52.png",
+   "caption": "Figure S52. Schematic illustration of different migration mechanisms in the distinct part of the radial one-dimensional van Hove correlation function (𝐺d). Green represents cooperative jumps and blue represents single-ion jumps to nearest-neighbor (NN) positions.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    432.4,
+    552.7,
+    625.0
+   ],
+   "w": 2111,
+   "h": 804,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.928
+  },
+  {
+   "key": "fS53",
+   "kind": "figure",
+   "label": "S53",
+   "page": 51,
+   "file": "fig_S53.png",
+   "caption": "Figure S53. Schematic illustration of different migration mechanisms in the self part of the radial one-dimensional van Hove correlation function (𝐺s). Red highlights ion rattling, blue represents single-ion jumps to nearest-neighbor (NN) positions, and green denotes cooperative jumps along with a portion of single-ion jumps beyond the NN coordination shell of Li.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    126.8,
+    552.7,
+    274.7
+   ],
+   "w": 2111,
+   "h": 617,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.899
+  },
+  {
+   "key": "fS54",
+   "kind": "figure",
+   "label": "S54",
+   "page": 51,
+   "file": "fig_S54.png",
+   "caption": "Figure S54. Self part of the radial one-dimensional van Hove correlation function (𝐺s(𝑟, 𝑡)) at different lag times for various temperatures for t-LLZO without vacancies: (a) 𝑇= 300 K, (b) 𝑇= 400 K, (c) 𝑇= 500 K, (d) 𝑇= 600 K, (e) 𝑇= 700 K, (f) 𝑇= 800 K, (g) 𝑇= 900 K, (h) 𝑇= 1000 K, (i) 𝑇= 1100 K, (j) 𝑇= 1200 K, (k) 𝑇= 1300 K.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.2,
+    450.8,
+    552.7,
+    689.9
+   ],
+   "w": 2112,
+   "h": 997,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.862
+  },
+  {
+   "key": "fS55",
+   "kind": "figure",
+   "label": "S55",
+   "page": 52,
+   "file": "fig_S55.png",
+   "caption": "Figure S55. Self part of the radial one-dimensional van Hove correlation function (𝐺s(𝑟, 𝑡)) at different lag times for various temperatures for t-LLZO with 1.8% vacancies: (a) 𝑇= 300 K, (b) 𝑇= 400 K, (c) 𝑇= 500 K, (d) 𝑇= 600 K, (e) 𝑇= 700 K, (f) 𝑇= 800 K, (g) 𝑇= 1000 K, (h) 𝑇= 1100 K, (i) 𝑇= 1200 K, (j) 𝑇= 1300 K.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.2,
+    99.7,
+    552.7,
+    584.1
+   ],
+   "w": 2112,
+   "h": 2019,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.884
+  },
+  {
+   "key": "fS56",
+   "kind": "figure",
+   "label": "S56",
+   "page": 53,
+   "file": "fig_S56.png",
+   "caption": "Figure S56. Self part of the radial one-dimensional van Hove correlation function (𝐺s(𝑟, 𝑡)) at different lag times for various temperatures for c-LLZO: (a) 𝑇= 400 K, (b) 𝑇= 550 K, (c) 𝑇= 850 K, (d) 𝑇= 1000 K, (e) 𝑇= 1150 K, (f) 𝑇= 1300 K.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    79.9,
+    552.7,
+    338.7
+   ],
+   "w": 2111,
+   "h": 1080,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.886
+  },
+  {
+   "key": "fS57",
+   "kind": "figure",
+   "label": "S57",
+   "page": 54,
+   "file": "fig_S57.png",
+   "caption": "Figure S57. Self part of radial one-dimensional van Hove correlation function (𝐺s(𝑟, 𝑡)) at different lag times for various temperatures for Ga-LLZO: (a) 𝑇= 300 K, (b) 𝑇= 400 K, (c) 𝑇= 550 K, (d) 𝑇= 700 K, (e) 𝑇= 850 K, (f) 𝑇= 975 K, (g) 𝑇= 1000 K, (h) 𝑇= 1150 K, (i) 𝑇= 1300 K.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.2,
+    79.9,
+    552.7,
+    461.4
+   ],
+   "w": 2112,
+   "h": 1591,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.907
+  },
+  {
+   "key": "fS58",
+   "kind": "figure",
+   "label": "S58",
+   "page": 55,
+   "file": "fig_S58.png",
+   "caption": "Figure S58. Self part of the radial one-dimensional van Hove correlation function (𝐺s(𝑟, 𝑡)) at different lag times for various temperatures for Li metal: (a) 𝑇= 200 K, (b) 𝑇= 300 K, (c) 𝑇= 350 K, (d) 𝑇= 375 K, (e) 𝑇= 400 K, (f) 𝑇= 450 K.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    79.9,
+    552.7,
+    461.4
+   ],
+   "w": 2111,
+   "h": 1591,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.878
+  },
+  {
+   "key": "fS59",
+   "kind": "figure",
+   "label": "S59",
+   "page": 56,
+   "file": "fig_S59.png",
+   "caption": "Figure S59. Temperature dependence of the normalized ratio 𝜂norm between cooperative and single-ion hops, extracted from the self part of the radial one-dimensional van Hove correlation function (𝐺s(𝑟, 𝑡)), for the bulk phases investigated: (a) vacancy-free tetragonal LLZO (t- LLZO), (b) t-LLZO containing 1.8% vacancies, (c) cubic LLZO (c-LLZO), (d) Ga-doped LLZO, and (e) pristine Li metal. The ratio provides a quantitative measure of the prevalence of cooperative ionic motion across different compositions and defect concentrations.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    192.8,
+    552.7,
+    356.2
+   ],
+   "w": 2111,
+   "h": 682,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.929
+  },
+  {
+   "key": "fS60",
+   "kind": "figure",
+   "label": "S60",
+   "page": 57,
+   "file": "fig_S60.png",
+   "caption": "Figure S60. Distinct part of the radial one-dimensional van Hove correlation function (𝐺d(𝑟, 𝑡)) at different lag times for various temperatures for t-LLZO without vacancies: (a) 𝑇= 300 K, (b) 𝑇= 400 K, (c) 𝑇= 500 K, (d) 𝑇= 600 K, (e) 𝑇= 700 K, (f) 𝑇= 800 K, (g) 𝑇= 900 K, (h) 𝑇= 1000 K, (i) 𝑇= 1100 K, (j) 𝑇= 1200 K, (k) 𝑇= 1300 K.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.2,
+    460.4,
+    552.7,
+    689.9
+   ],
+   "w": 2112,
+   "h": 957,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.904
+  },
+  {
+   "key": "fS61",
+   "kind": "figure",
+   "label": "S61",
+   "page": 58,
+   "file": "fig_S61.png",
+   "caption": "Figure S61. Distinct part of the radial one-dimensional van Hove correlation function (𝐺d(𝑟, 𝑡)) at different lag times for various temperatures for t-LLZO with 1.8% vacancies: (a) 𝑇= 300 K, (b) 𝑇= 400 K, (c) 𝑇= 500 K, (d) 𝑇= 600 K, (e) 𝑇= 700 K, (f) 𝑇= 800 K, (g) 𝑇= 1000 K, (h) 𝑇= 1100 K, (i) 𝑇= 1200 K, (j) 𝑇= 1300 K.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    99.6,
+    552.7,
+    583.7
+   ],
+   "w": 2111,
+   "h": 2017,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "fS62",
+   "kind": "figure",
+   "label": "S62",
+   "page": 59,
+   "file": "fig_S62.png",
+   "caption": "Figure S62. Distinct part of the radial one-dimensional van Hove correlation function (𝐺d(𝑟, 𝑡)) at different lag times for various temperatures for c-LLZO: (a) 𝑇= 400 K, (b) 𝑇= 550 K, (c) 𝑇= 850 K, (d) 𝑇= 1000 K, (e) 𝑇= 1150 K, (f) 𝑇= 1300 K.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    97.5,
+    552.7,
+    338.5
+   ],
+   "w": 2111,
+   "h": 1005,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.89
+  },
+  {
+   "key": "fS63",
+   "kind": "figure",
+   "label": "S63",
+   "page": 60,
+   "file": "fig_S63.png",
+   "caption": "Figure S63. Distinct part of the radial one-dimensional van Hove correlation function (𝐺d(𝑟, 𝑡)) at different lag times for various temperatures for Ga-LLZO: (a) 𝑇= 300 K, (b) 𝑇= 400 K, (c) 𝑇= 550 K, (d) 𝑇= 700 K, (e) 𝑇= 850 K, (f) 𝑇= 975 K, (g) 𝑇= 1000 K, (h) 𝑇= 1150 K, (i) 𝑇= 1300 K.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.2,
+    97.5,
+    552.7,
+    461.1
+   ],
+   "w": 2112,
+   "h": 1516,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.895
+  },
+  {
+   "key": "fS64",
+   "kind": "figure",
+   "label": "S64",
+   "page": 61,
+   "file": "fig_S64.png",
+   "caption": "Figure S64. Distinct part of the radial one-dimensional van Hove correlation function (𝐺d(𝑟, 𝑡)) at different lag times for various temperatures for Li metal: (a) 𝑇= 200 K, (b) 𝑇= 300 K, (c) 𝑇= 350 K, (d) 𝑇= 375 K, (e) 𝑇= 400 K, (f) 𝑇= 450 K.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    97.5,
+    552.7,
+    461.1
+   ],
+   "w": 2111,
+   "h": 1516,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "fS65",
+   "kind": "figure",
+   "label": "S65",
+   "page": 62,
+   "file": "fig_S65.png",
+   "caption": "Figure S65. Temperature dependence of the normalized ratio 𝜂norm between cooperative and single-ion hops, extracted from the distinct part of the radial one-dimensional van Hove correlation function (𝐺d(𝑟, 𝑡)), for the bulk phases investigated: (a) vacancy-free tetragonal LLZO (t- LLZO), (b) t-LLZO containing 1.8% vacancies, (c) cubic LLZO (c-LLZO), (d) Ga-doped LLZO, and (e) pristine Li metal. The ratio provides a quantitative measure of the prevalence of cooperative ionic motion across different compositions and defect concentrations.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    99.0,
+    552.7,
+    356.1
+   ],
+   "w": 2111,
+   "h": 1072,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.918
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 4,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Sites, occupancy values, fractional coordinates for tetragonal Li7La3Zr2O12 (space group 𝐼41/𝑎𝑐𝑑, No. 142). The experimental data for atomic positions is taken from the work by Awaka et al. [1] Atom Site 𝑔 𝑥 𝑦 𝑧 La(1) 8𝑏 1 0 1/4 1/8 La(2) 16𝑒 1 0.12716(5) 0 1/4 Zr 16𝑐 1 0 0 0 Li(1) 8𝑎 1 0 1/4 3/8 Li(2) 16 𝑓 1 0.1813(13) 0.4313(13) 1/8 Li(3) 32𝑔 1 0.0796(12) 0.0863(11) 0.8099(12) O(1) 32𝑔 1 −0.0335(3) 0.0546(3) 0.1528(3) O(2) 32𝑔 1 0.0534(3) 0.8525(3) 0.5366(4) O(3) 32𝑔 1 0.1499(3) 0.0273(3) 0.4454(3)",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    58.3,
+    551.7,
+    735.0
+   ],
+   "w": 2101,
+   "h": 2821,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.835
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 5,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Sites, occupancy values, fractional coordinates for cubic Li7La3Zr2O12 (space group 𝐼𝑎3𝑑, No. 230). The experimental data for atomic positions is taken from the work by Awaka et al. [4] Atom Site 𝑔 𝑥 𝑦 𝑧 Li(1) 24𝑑 0.94(7) 3/8 0 1/4 Li(2) 96ℎ 0.349 0.0959(15) 0.6922(14) 0.5731(15) La 24𝑐 1 1/8 0 1/4 Zr 16𝑎 1 0 0 0 O 96ℎ 1 −0.03163(18) 0.0538(2) 0.1501(2)",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    58.3,
+    551.7,
+    744.7
+   ],
+   "w": 2101,
+   "h": 2861,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.926
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 7,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Lattice constants of the bulk phases t-LLZO, c-LLZO, Ga-LLZO, and bcc Li are reported, together with data for supercells containing Li/t-LLZO and Li/Ga-LLZO interfaces. The results are compared with available calculated and experimental values, and relative deviations from literature data are provided. 𝑎(Å) Δ𝑎(%) 𝑏(Å) Δ𝑏(%) 𝑐(Å) Δ𝑐(%) Bulk phase: t-LLZO Our work 13.236 0 13.236 0 12.701 0 Canepa, 2018 (calculations) [12] 13.204 0.24 13.204 0.24 12.704 −0.02 Gao, 2020 (calculations) [13] 13.205 0.23 13.205 0.23 12.675 0.21 Awaka, 2009 (experiment) [1] 13.134 0.78 13.134 0.78 12.663 0.30 Bulk phase: c-LLZO Our work 13.098 0 13.098 0 13.098 0 Awaka, 2011 (experiment) [4] 12.983 0.89 12.983 0.89 12.983 0.89 Bulk phase: Ga-LLZO Our work 13.069 0 13.069 0 13.069 0 Timusheva, 2025 (experiment) [8] 12.974 0.73 12.974 0.73 12.974 0.73 Chen, 2020 (experiment) [14] 12.977 0.71 12.977 0.71",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    58.3,
+    551.7,
+    728.6
+   ],
+   "w": 2101,
+   "h": 2794,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.78
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 8,
+   "file": "tab_S4.png",
+   "caption": "Table S4. The lattice-matched superlattices for LLZO and Li metal. ℎand 𝑘represent the lengths of vectors of created superlattice in the interface plane. 𝛾is the angle between two surface vectors. 𝜀𝑥and 𝜀𝑦are lattice mismatches in 𝑥(ℎ) and 𝑦(𝑘) directions. ℎ(Å) 𝑘(Å) 𝛾(deg) 𝜀𝑥(%) 𝜀𝑦(%) Li(100)/t-LLZO(100) supercell LLZO(100) 13.236 12.701 90 3.6 7.9 4 × 4 Li(100) 13.707 13.707 90 Li(100)/Ga-LLZO(100) supercell LLZO(100) 13.069 13.069 90 4.9 4.9 4 × 4 Li(100) 13.707 13.707 90",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    58.3,
+    551.7,
+    738.6
+   ],
+   "w": 2101,
+   "h": 2836,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.862
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 8,
+   "file": "tab_S5.png",
+   "caption": "Table S5. Number of atoms and vacancies (𝑁vac) in the structures used for training and MLMD calculations, including bulk t-LLZO, c-LLZO, Ga-LLZO, bcc Li, and supercells with Li/t-LLZO and Li/Ga-LLZO interfaces. Structure Atoms (training) 𝑁vac (training) Atoms (MLMD) 𝑁vac (MLMD) Bulk phases t-LLZO (without vac) 192 0 1536 0 t-LLZO (with vac) 190 2 1528 8 c-LLZO 192 0 1536 0 Ga-LLZO 188 0 1504 0 bcc Li 52 2 431 1 Supercells with interfaces Li/t-LLZO 297 3 1188 12 Li/Ga-LLZO 286 3 1144 12",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    58.3,
+    551.7,
+    738.6
+   ],
+   "w": 2101,
+   "h": 2836,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.862
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 8,
+   "file": "tab_S6.png",
+   "caption": "Table S6. Number of configurations generated after two active learning stages (10th- and 20th- levels MTPs) and at the validation stage for t-LLZO, c-LLZO, Ga-LLZO, bcc Li, Li/t-LLZO, and Li/Ga-LLZO systems. Structure Active learning stage 1 Active learning stage 2 (MTP level 20) Validation (MTP level 10) Bulk phases t-LLZO 677 1209 3000 c-LLZO 570 1339 2000 Ga-LLZO 847 1595 4000 bcc Li 163 302 6000 Supercells with interfaces Li/t-LLZO 1320 1664 6000 Li/Ga-LLZO 1246 1641 6000",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    58.3,
+    551.7,
+    739.3
+   ],
+   "w": 2101,
+   "h": 2839,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.864
+  },
+  {
+   "key": "tS7",
+   "kind": "table",
+   "label": "S7",
+   "page": 9,
+   "file": "tab_S7.png",
+   "caption": "Table S7. Training and validation errors for the t-LLZO. MaxAE, MAE and RMSE errors for energies (meV/atom), forces (eV/Å), and stresses (GPa) are provided. Train errors MaxAE MAE RMSE Errors in energies (meV/atom) 2.03 0.40 0.51 Errors in forces (eV/Å) 1.28 0.05 0.07 Errors in stresses (GPa) 0.43 0.08 0.10 Validation errors MaxAE MAE RMSE Errors in energies (meV/atom) 2.04 0.36 0.48 Errors in forces (eV/Å) 1.28 0.05 0.07 Errors in stresses (GPa) 0.43 0.08 0.11",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    610.9,
+    551.7,
+    741.6
+   ],
+   "w": 2101,
+   "h": 546,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.92
+  },
+  {
+   "key": "tS8",
+   "kind": "table",
+   "label": "S8",
+   "page": 10,
+   "file": "tab_S8.png",
+   "caption": "Table S8. Training and validation errors for the c-LLZO. MaxAE, MAE and RMSE errors for energies (meV/atom), forces (eV/Å), and stresses (GPa) are provided. Train errors MaxAE MAE RMSE Errors in energies (meV/atom) 30.73 3.08 5.39 Errors in forces (eV/Å) 0.47 0.03 0.05 Errors in stresses (GPa) 1.12 0.10 0.14 Validation errors MaxAE MAE RMSE Errors in energies (meV/atom) 2.81 0.53 0.66 Errors in forces (eV/Å) 0.49 0.04 0.05 Errors in stresses (GPa) 0.91 0.09 0.13",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    58.3,
+    551.7,
+    739.3
+   ],
+   "w": 2101,
+   "h": 2839,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.936
+  },
+  {
+   "key": "tS9",
+   "kind": "table",
+   "label": "S9",
+   "page": 11,
+   "file": "tab_S9.png",
+   "caption": "Table S9. Training and validation errors for the Ga-LLZO. MaxAE, MAE and RMSE errors for energies (meV/atom), forces (eV/Å), and stresses (GPa) are provided. Train errors MaxAE MAE RMSE Errors in energies (meV/atom) 10.50 0.83 1.28 Errors in forces (eV/Å) 0.58 0.04 0.06 Errors in stresses (GPa) 0.65 0.09 0.12 Validation errors MaxAE MAE RMSE Errors in energies (meV/atom) 2.34 0.51 0.65 Errors in forces (eV/Å) 0.60 0.05 0.06 Errors in stresses (GPa) 0.52 0.09 0.12",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    58.3,
+    551.7,
+    739.3
+   ],
+   "w": 2101,
+   "h": 2839,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "tS10",
+   "kind": "table",
+   "label": "S10",
+   "page": 12,
+   "file": "tab_S10.png",
+   "caption": "Table S10. Training and validation errors for the bcc Li. MaxAE, MAE and RMSE errors for energies (meV/atom), forces (eV/Å), and stresses (GPa) are provided. Train errors MaxAE MAE RMSE Errors in energies (meV/atom) 2.59 0.47 0.65 Errors in forces (eV/Å) 0.05 0.01 0.01 Errors in stresses (GPa) 0.12 0.02 0.03 Validation errors MaxAE MAE RMSE Errors in energies (meV/atom) 2.91 0.37 0.53 Errors in forces (eV/Å) 0.04 0.01 0.01 Errors in stresses (GPa) 0.12 0.02 0.03",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    58.3,
+    551.7,
+    739.3
+   ],
+   "w": 2101,
+   "h": 2839,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.928
+  },
+  {
+   "key": "tS11",
+   "kind": "table",
+   "label": "S11",
+   "page": 14,
+   "file": "tab_S11.png",
+   "caption": "Table S11. Training and validation errors for the Li/t-LLZO. MaxAE, MAE and RMSE errors for energies (meV/atom), forces (eV/Å), and stresses (GPa) are provided. Train errors MaxAE MAE RMSE Errors in energies (meV/atom) 6.93 0.75 1.03 Errors in forces (eV/Å) 0.83 0.04 0.06 Errors in stresses (GPa) 3.44 0.55 0.79 Validation errors MaxAE MAE RMSE Errors in energies (meV/atom) 6.03 0.98 1.23 Errors in forces (eV/Å) 0.70 0.04 0.06 Errors in stresses (GPa) 2.34 0.62 0.88",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    58.3,
+    551.7,
+    740.6
+   ],
+   "w": 2101,
+   "h": 2844,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.928
+  },
+  {
+   "key": "tS12",
+   "kind": "table",
+   "label": "S12",
+   "page": 15,
+   "file": "tab_S12.png",
+   "caption": "Table S12. Training and validation errors for the Li/Ga-LLZO. MaxAE, MAE and RMSE errors for energies (meV/atom), forces (eV/Å), and stresses (GPa) are provided. Train errors MaxAE MAE RMSE Errors in energies (meV/atom) 9.69 1.54 2.04 Errors in forces (eV/Å) 1.32 0.05 0.07 Errors in stresses (GPa) 1.69 0.34 0.48 Validation errors MaxAE MAE RMSE Errors in energies (meV/atom) 5.88 3.07 3.27 Errors in forces (eV/Å) 0.51 0.04 0.05 Errors in stresses (GPa) 2.10 0.47 0.66",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    135.5,
+    551.7,
+    266.2
+   ],
+   "w": 2101,
+   "h": 546,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.92
+  },
+  {
+   "key": "tS13",
+   "kind": "table",
+   "label": "S13",
+   "page": 16,
+   "file": "tab_S13.png",
+   "caption": "Table S13. Bond length statistics for Zr–O and La–O bonds in the three LLZO phases investigated (t-LLZO, c-LLZO, and Ga-LLZO). For each structure, we report the minimum, maximum, mean, and standard deviation of the bond distances (units of Å). Bond Structure Count Min Mean Max Std Zr–O t-LLZO 96 2.126 2.133 2.138 0.006 Zr–O c-LLZO 96 2.030 2.030 2.030 0.000 Zr–O Ga-LLZO 96 2.063 2.134 2.288 0.038 La–O t-LLZO 192 2.470 2.572 2.649 0.063 La–O c-LLZO 192 2.552 2.601 2.651 0.050 La–O Ga-LLZO 192 2.362 2.571 3.101 0.106",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    340.2,
+    551.7,
+    688.9
+   ],
+   "w": 2101,
+   "h": 1454,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.834
+  },
+  {
+   "key": "tS14",
+   "kind": "table",
+   "label": "S14",
+   "page": 17,
+   "file": "tab_S14.png",
+   "caption": "Table S14. Average number of atoms within a 6.3 Å cut-off sphere around Li atoms in t-LLZO, c-LLZO, and Ga-LLZO. The mean total number of atoms and the corresponding standard deviation are provided. Structure Li La Zr O Ga Total t-LLZO 24.57 ± 0.90 13.43 ± 0.49 7.43 ± 0.90 42.86 ± 0.64 — 88.29 c-LLZO 24.43 ± 1.45 12.29 ± 0.70 8.00 ± 0.00 44.00 ± 0.00 — 88.71 Ga-LLZO 22.28 ± 1.58 13.66 ± 0.51 7.62 ± 0.49 43.48 ± 1.50 1.00 ± 0.53 88.04",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    58.3,
+    551.7,
+    740.6
+   ],
+   "w": 2101,
+   "h": 2844,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.915
+  },
+  {
+   "key": "tS15",
+   "kind": "table",
+   "label": "S15",
+   "page": 18,
+   "file": "tab_S15.png",
+   "caption": "Table S15. Assessment of the MTP transferability from c-LLZO to t-LLZO structures, with the model trained on c-LLZO configurations and validated on t-LLZO data. Training and validation errors for the t-LLZO. MaxAE, MAE and RMSE errors for energies (meV/atom), forces (eV/Å), and stresses (GPa) are provided. Train errors MaxAE MAE RMSE Errors in energies (meV/atom) 77.18 38.37 42.85 Errors in forces (eV/Å) 4.06 0.07 0.11 Errors in stresses (GPa) 0.78 0.12 0.17 Validation errors MaxAE MAE RMSE Errors in energies (meV/atom) 27.66 16.87 20.22 Errors in forces (eV/Å) 1.81 0.05 0.08 Errors in stresses (GPa) 0.47 0.08 0.10",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    58.3,
+    551.7,
+    740.6
+   ],
+   "w": 2101,
+   "h": 2844,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.918
+  },
+  {
+   "key": "tS16",
+   "kind": "table",
+   "label": "S16",
+   "page": 19,
+   "file": "tab_S16.png",
+   "caption": "Table S16. Assessment of the MTP transferability from Ga-LLZO to c-LLZO structures, with the model trained on Ga-LLZO configurations and validated on c-LLZO data. Training and validation errors for the c-LLZO. MaxAE, MAE and RMSE errors for energies (meV/atom), forces (eV/Å), and stresses (GPa) are provided. Train errors MaxAE MAE RMSE Errors in energies (meV/atom) 368.65 354.87 354.91 Errors in forces (eV/Å) 0.47 0.04 0.05 Errors in stresses (GPa) 0.89 0.13 0.21 Validation errors MaxAE MAE RMSE Errors in energies (meV/atom) 356.62 354.90 354.90 Errors in forces (eV/Å) 0.47 0.04 0.06 Errors in stresses (GPa) 0.89 0.09 0.13",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    58.3,
+    551.7,
+    740.6
+   ],
+   "w": 2101,
+   "h": 2844,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.904
+  },
+  {
+   "key": "tS17",
+   "kind": "table",
+   "label": "S17",
+   "page": 20,
+   "file": "tab_S17.png",
+   "caption": "Table S17. Assessment of the MTP transferability from Li/Ga-LLZO to Li/t-LLZO structures, with the model trained on Li/Ga-LLZO con- figurations and validated on Li/t-LLZO data. Training and validation errors for the Li/t-LLZO interface. MaxAE, MAE and RMSE errors for energies (meV/atom), forces (eV/Å), and stresses (GPa) are provided. Train errors MaxAE MAE RMSE Errors in energies (meV/atom) 355.72 347.14 347.15 Errors in forces (eV/Å) 2.08 0.05 0.08 Errors in stresses (GPa) 3.15 0.62 0.90 Validation errors MaxAE MAE RMSE Errors in energies (meV/atom) 350.14 345.57 345.59 Errors in forces (eV/Å) 0.73 0.04 0.06 Errors in stresses (GPa) 2.19 0.83 1.12",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    87.9,
+    570.3,
+    434.3
+   ],
+   "w": 2179,
+   "h": 1444,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.891
+  },
+  {
+   "key": "tS18",
+   "kind": "table",
+   "label": "S18",
+   "page": 21,
+   "file": "tab_S18.png",
+   "caption": "Table S18. The normalized training timings for MTPs on the t-LLZO and Li/t-LLZO supercells are presented for the machine-learning molecular dynamics (MLMD), DFT calculations, and retraining stages. MTP level 10 MTP level 20 Timings MLMD DFT Retrain MLMD DFT Retrain t-LLZO 1.2 42.4 4.6 5.5 22.6 23.6 Li/t-LLZO 5.3 34.1 10.0 9.8 16.1 24.5",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    87.9,
+    551.7,
+    177.7
+   ],
+   "w": 2101,
+   "h": 375,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.911
+  },
+  {
+   "key": "tS19",
+   "kind": "table",
+   "label": "S19",
+   "page": 22,
+   "file": "tab_S19.png",
+   "caption": "Table S19. Mean occupancy of Li sites nearest to their equilibrium positions, over all simulation time for t-LLZO, c-LLZO, and Ga-LLZO. All data were calculated at 𝑇= 700 K, where the low-temperature vacancy-mediated regime is dominant. The normalization of occupancies for Ga-LLZO accounts for the presence of Ga dopants and associated vacancies. Specifically, the normalized occupation factors are 24 23 × 96 90 for the 24𝑑site and 96 95 × 96 90 for the 96ℎsite. Reference values for comparison were taken from the works [1, 4]. Wyckoff positions Occupation Reference value t-LLZO 8𝑎 0.824 ± 0.046 1 (Awaka, 2009 [1]) 16 𝑓 1.073 ± 0.030 1 (Awaka, 2009 [1]) 32𝑔 1.007 ± 0.018 1 (Awaka, 2009 [1]) c-LLZO 24𝑑 0.963 ± 0.020 0.94(7) (Awaka, 2011 [4]) 96ℎ 0.343 ± 0.005 0.349 (Awaka, 2011 [4]) Ga-LLZO 23\u0001𝑑 0.908 ± 0.005 — 24𝑑(normalized) 1.010 ± 0.006 — 95\u0001ℎ 0.307 ± 0.032 — 96ℎ(normalized) 0.331 ± 0.03",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    58.3,
+    551.7,
+    744.7
+   ],
+   "w": 2101,
+   "h": 2861,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.917
+  },
+  {
+   "key": "tS20",
+   "kind": "table",
+   "label": "S20",
+   "page": 23,
+   "file": "tab_S20.png",
+   "caption": "Table S20. Vacancy formation energies (𝐸f) for Li atoms, calculated with DFT and MTP methods, for three unique sites in t-LLZO: tetrahedral Li(1), octahedral Li(2) and Li(3). We also provide relative energies, which are normalized to the lowest energy (DFT – DFT(min) and MTP – MTP(min)). The difference between the minimum relative energies obtained from DFT and the MTP (ΔDFT−MTP min ) is also provided. Position DFT MTP DFT – DFT(min) MTP – MTP(min) Δmin(DFT – MTP) (eV) (eV) (eV) (eV) (eV) Li(1) 6.86 5.70 0.55 0.52 0.02 Li(2) 6.31 5.17 0 0 0 Li(3) 6.40 5.26 0.09 0.09 0.01",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    501.8,
+    551.7,
+    619.6
+   ],
+   "w": 2101,
+   "h": 492,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.906
+  },
+  {
+   "key": "tS21",
+   "kind": "table",
+   "label": "S21",
+   "page": 31,
+   "file": "tab_S21.png",
+   "caption": "Table S21. Li self-diffusion parameters in bcc Li metal. 𝐶vac denotes the equilibrium vacancy concentration (values in brackets correspond to the ratio of unoccupied to total sites), 𝐸a is the self-diffusion activation energy, 𝐷Li (300 K) is the Li diffusion coefficient, and 𝐷vac (300 K) is the vacancy diffusion coefficient at room temperature. Experimental data were obtained by NMR; Sergeev et al. used modified embedded atom method (MEAM) molecular dynamics [29]. Work Method 𝐶vac 𝐸a (meV) 𝐷Li(300 K) (cm2/s) 𝐷vac(300 K) (cm2/s) Current work MLMD 2.3 × 10−3 \u0004 1 432 \u0005 50 ± 10 3.3 × 10−7 1.5 × 10−4 Sergeev, 2023 [29] MD 2.4 × 10−4 \u0004 1 4096 \u0005 44 †6.9 × 10−8 2.8 × 10−4 Yang, 2021 [30] AIMD 7.8 × 10−3 \u0004 1 128 \u0005 45 ± 23 †4.7 × 10−7 6.1 × 10−5 Lodding, 1970 [26] NMR §2.0 × 10−7 558 ± 1 (5.9 ± 2.9) × 10−11 †(3.0 ± 1.5) × 10−4 Messer, 1975 [27] NMR §2.0 × 10−7 521 ± 13 (5.7 ± 0.2) × 10−11 †(2.9 ± ",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    58.3,
+    551.7,
+    744.2
+   ],
+   "w": 2101,
+   "h": 2859,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.936
+  },
+  {
+   "key": "tS22",
+   "kind": "table",
+   "label": "S22",
+   "page": 34,
+   "file": "tab_S22.png",
+   "caption": "Table S22. For each structure, the table lists activation energies (𝐸a), pre-exponential factors (𝐷0), room-temperature diffusivities (𝐷(300 K)), and ionic conductivities (𝜎(300 K)), covering both low-temperature (vacancy-mediated) and high-temperature (Frenkel defect-mediated) regimes. Structure low-𝑇limit (vacancy-mediated) 𝑛vac 𝐸a (meV) 𝐷0 Li (cm2/s) 𝐷Li(300 K) (cm2/s) 𝜎(300 K) (mS/cm) bcc-Li 1 432 (2.3 × 10−3) 50 ± 10 (2.33 ± 0.28) × 10−6 (3.33 ± 0.40) × 10−7 — t-LLZO (no vac) 0 — 0 0 0 t-LLZO (with vac) 1 56 (0.018) 116 ± 12 (1.34 ± 0.18) × 10−5 (1.53 ± 0.21) × 10−7 23.41 ± 0.73 c-LLZO 120−56 120 (0.53) 243 ± 33 (1.11 ± 0.42) × 10−4 (9.23 ± 3.56) × 10−9 1.44 ± 0.13 Ga-LLZO 118−50 118 (0.58) 200 ± 55 (1.91 ± 1.23) × 10−5 (8.21 ± 5.28) × 10−9 1.14 ± 0.17 Structure high-𝑇limit (Frenkel defect-mediated) 𝑛vac 𝐸a (meV) 𝐷0 Li (cm2/s) 𝐷Li(300 K) (cm2/s) 𝜎(300 K) (mS/cm) bcc-Li 1 432 (2.3 × ",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    58.3,
+    551.7,
+    744.7
+   ],
+   "w": 2101,
+   "h": 2861,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.93
+  },
+  {
+   "key": "tS23",
+   "kind": "table",
+   "label": "S23",
+   "page": 38,
+   "file": "tab_S23.png",
+   "caption": "Table S23. Concentration of oxidizing and reducing species were derived from Table S3. Parameter Value and Units Reference work 𝑧 1 — 𝛽 0.5 — 𝐸a 0.37 eV Krauskopf, 2019 [5] 𝑅ct 0.08 Ω cm2 Krauskopf, 2020 [31] 𝐶Li+ oxy 38.0 mmol cm−3 Timusheva, 2025 [8] 𝐶Li0 red 76.6 mmol cm−3 Feder, 1970 [15]",
+   "rotated_deg": 0,
+   "bbox": [
+    57.2,
+    58.3,
+    551.7,
+    741.8
+   ],
+   "w": 2061,
+   "h": 2849,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.955
+  },
+  {
+   "key": "tS24",
+   "kind": "table",
+   "label": "S24",
+   "page": 39,
+   "file": "tab_S24.png",
+   "caption": "Table S24. Parameters used to calculate the charge-transfer resistance at 300 K. Molar concentrations were derived from Table S3. Here, 𝑧is the number of electrons transferred, 𝛽is the symmetry factor, 𝑅is the gas constant, 𝑇is the absolute temperature, 𝐹is the Faraday constant, and 𝑘00 is the reaction rate constant. 𝐶Li+ oxy and 𝐶Li0 red are the concentrations of the oxidized and reduced species, respectively. 𝐸a is the activation energy for charge transfer, and 𝑗0(300 K) is the exchange current density at 300 K. The values in parentheses are experimental values reported by Krauskopf et al. [5, 31]. Parameter Value Units Kinetic metrics 𝑗0(300 K) 2572 (0.3) A cm−2 𝑘00 339 (102) cm s−1 Other values 𝑧 1 dimensionless 𝛽 0.5 dimensionless 𝑅 8.314 J mol−1 K−1 𝑇 300 K 𝐹 96485 C mol−1 𝑘B 8.617 × 10−5 eV K−1 𝐶Li+ oxy 37.3 (38.0) mmol cm−3 𝐶Li0 red 68.2 (76.6) mmol cm−3 𝐸a 167 (370) meV Intermed",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    58.3,
+    551.7,
+    745.0
+   ],
+   "w": 2101,
+   "h": 2863,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "tS25",
+   "kind": "table",
+   "label": "S25",
+   "page": 41,
+   "file": "tab_S25.png",
+   "caption": "Table S25. Parameters used to evaluate the sequential response times. The table includes: temperature (𝑇); bulk-region (Li and LLZO) and effective activation energies (𝐸𝑖a); diffusion coefficients at 300 K (𝐷𝑖(300 K)); thicknesses of the Li region (𝑙Li), LLZO region (𝑙LLZO), and interface supercell (𝐿). Intermediate calculations list the response times (𝜏𝑗) for the Li, LLZO, and effective regions, and the derived charge- transfer time (𝜏ct). Because 𝜏ct < 0, Eq. (S12) is not used to report a charge-transfer activation energy. The reference data are given in Table S22 and Figure S38. Parameter Value Units 𝑇 300 K 𝑙Li 15 Å 𝐸Li a 50 meV 𝐷Li(300 K) 3.3 × 10−7 cm2 s−1 𝑙LLZO 13.3 Å 𝐸LLZO a 200 meV 𝐷LLZO(300 K) 8.2 × 10−9 cm2 s−1 𝐿 28.3 Å 𝐸eﬀ a 72 meV 𝐷eﬀ(300 K) 7.0 × 10−8 cm2 s−1 Intermediate calculations 𝜏Li 3.41 × 10−8 s 𝜏LLZO 1.08 × 10−6 s 𝜏eﬀ 5.72 × 10−7 s 𝜏ct −5.41 × 10−7 s",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    58.3,
+    551.7,
+    726.6
+   ],
+   "w": 2101,
+   "h": 2786,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.942
+  },
+  {
+   "key": "tS26",
+   "kind": "table",
+   "label": "S26",
+   "page": 48,
+   "file": "tab_S26.png",
+   "caption": "Table S26. Highest peaks for Li–O and Li–Li radial distribution functions (RDFs) for the low-temperature and high-temperature regimes of diffusion. Peak positions are in units of Å, intensities and their standard deviations are provided. Diffusion mechanism Peak Position (Å) Intensity ± 𝜎std 1 2.992 4.584 ± 0.613 2 6.177 1.526 ± 0.166 3 3.587 1.165 ± 0.263 4 4.357 1.064 ± 0.198 5 4.742 1.031 ± 0.174 Li–O Low-temperature regime (vacancy mechanism) 1 2.502 3.539 ± 0.492 2 6.072 1.521 ± 0.137 3 4.847 1.311 ± 0.167 Li–Li 1 3.027 3.335 ± 0.548 2 6.247 1.297 ± 0.158 3 4.567 0.974 ± 0.193 Li–O High-temperature regime (Frenkel defect mechanism) 1 2.502 2.268 ± 0.425 2 6.212 1.346 ± 0.129 3 5.092 1.091 ± 0.144 Li–Li",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    58.3,
+    551.7,
+    744.7
+   ],
+   "w": 2101,
+   "h": 2861,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.926
+  },
+  {
+   "key": "tS27",
+   "kind": "table",
+   "label": "S27",
+   "page": 48,
+   "file": "tab_S27.png",
+   "caption": "Table S27. Mean Voronoi volumes and the mean number of interstitials during the simulation for the low-temperature and high-temperature regimes. The values were averaged over simulation time. Calculated value low-𝑇 high-𝑇 Mean Voronoi volume (Å3) 14.96 ± 1.04 15.50 ± 1.30 Mean number of interstitials 0.03 ± 0.16 6.59 ± 2.09",
+   "rotated_deg": 0,
+   "bbox": [
+    47.5,
+    58.3,
+    551.7,
+    744.7
+   ],
+   "w": 2101,
+   "h": 2861,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.926
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "fS2",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p5 그래픽 없음(img0/draw0)"
+   ],
+   "near_miss": []
+  },
+  {
+   "key": "fS20",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p24 그래픽 없음(img0/draw2)"
+   ],
+   "near_miss": []
+  },
+  {
+   "key": "fS26",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p28 영역 없음"
+   ],
+   "near_miss": []
+  },
+  {
+   "key": "fS42",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p36 그래픽 없음(img0/draw5)"
+   ],
+   "near_miss": []
+  },
+  {
+   "key": "fS45",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p42 그래픽 없음(img0/draw0)"
+   ],
+   "near_miss": []
+  }
+ ]
+}
