@@ -4708,3 +4708,48 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
   사용자가 실행 PC 의 지정 경로 (바탕화면) 에 두고 다시 보낸다.
 - 승인 범위 (§95) 변경 없음. 다음 실행은 새 R 폴더 · 새 3,600 s 원점 (실행 측 규칙).
 - 유지: OPEN 4 · `native_ready / approved / usable = false`.
+
+## 98. Job commit event 조건부 방향 세부 설계 — 전달 묶음 수신 · 보존 · 이 저장소의 문서 검토 회신 (2026-10-27 · 실행 0)
+
+- **수신 (사용자 · 2026-10-27):** 송신 측 Codex 가 2026-10-16 에 만든 전달 묶음
+  `COMSOL_S1_JOB_COMMIT_EVENT_DETAILED_DESIGN_DELIVERY_20261016.zip` 과 검토 요청문.
+  - 요청문은 사용자 메시지에 붙인 본문이다. `design/REVIEW_REQUEST_KO.txt` 와 내용이 같다 (눈으로 대조).
+  - 요청: 문서 검토만. 대조할 축 — 예약 / 게시 틈 · cutoff 일관성 · 독립 차단 경로 · 사용 중 handle 정리 금지 · 후기 증거 결속 / 자기 해시 순환 · Parent 필수 축
+    누락 · 미구현을 완료로 주장하는 위치.
+  - 금지: 세 기한 숫자 채우기 · 새 시험 · OS 관측.
+- **이 원장이 받지 못한 단계:** §97 (2026-10-14) 뒤 송신 측에서 진행된 것들이다 — OS B 준비 결과 · R8 후보 · DOC_R1 (N1–N3 종결) · 106 사례 · 16 주제 ·
+  결정 제안 Q1–Q4 · 결정 검토 (`DOCUMENT_PROPOSAL_ACCEPTED_FOR_USER_CHOICE_NOT_ADOPTED`) · 사용자 선택 "1번가자" (2026-10-16).
+  - 이 저장소는 그 원본을 받지 않았다. 묶음의 basis 사본과 `USER_DIRECTION_SELECTION.json` 의 인용으로만 안다.
+  - 선택의 범위 (기록 원문): 조건부 문서 설계 방향이다. 운영 위험 수용 · 계약 · 구현 · 시험 · OS 관측 · COMSOL 승인은 아니다.
+  - 설계 문서는 남은 OPEN 을 "기존 9 묶음" 으로 센다. 이 원장의 "OPEN 4" (§90–§97) 와 묶는 방식이 다르다. 그 대응은 받지 못한 단계에서 정해진 것이라 여기서
+    맞추지 않는다.
+- **보존:** `reviews/r14_repros/codex63/comsol_s1_job_commit_event_detailed_design_20261016/` — 규칙 커밋 `eea21e36` → 보존 커밋 `9472f6fc` (blob 33/33).
+  - 묶음: 605,715 B · sha256 `66fc053154476fa7d022f91ad1c28a08ae68340d6f4220bfc4472c4456ceb957` (업로드 원파일과 바이트 동일).
+  - `originals/` = 묶음 구성원 8. `DELIVERY_MANIFEST` 7/7 · 영수증 · `FINAL_CHECK` 8 기록 · 도구 반환 전사 둘의 식별이 실제 파일과 일치.
+  - `design/` = 내부 설계 ZIP (599,846 B · `ea8ab14c…`) 구성원 24. `PACKAGE_MANIFEST` 23/23 · `BASIS_SPEC` 10/10 · 선택 입력 BEFORE / AFTER / POST 각 10 행 =
+    basis 사본.
+  - basis 의 중첩 ZIP 둘은 바이트 그대로 두었다. 읽기용으로만 scratchpad 에서 안전 추출했다 (결정 검토 전달 7/7 · 결정 검토 14/14).
+  - basis 의 `RESOURCE_CONTRACT.json` · `resource_connection.py.inactive.txt` 는 §92 보존본과 바이트 동일하다.
+  - 안전 추출 (경로 이탈 · 링크 0) · 비밀 검사 56 파일 0 건. CRLF 파일 11 은 바이트 그대로 두었다.
+  - `*.inactive.txt` · `tools/document_bundle.ps1` 등 동봉 코드와 도구는 실행하지 않았다.
+- **이 저장소의 문서 검토:** `docs/COMSOL_S1_JOB_COMMIT_EVENT_DESIGN_REVIEW_20261027.md` (26,736 B · sha256
+  `fdbcf3e2c6b2e3bb36b8a375fd203f44f6ac803780f10e12d107f768e75990e2`).
+  - 판정: `DESIGN_DIRECTION_ACCEPTABLE_DOCUMENT_CORRECTIONS_BEFORE_D1_D5` · P1 0 · P2 5 · P3 5.
+  - 수용한 뼈대: 예약을 게시까지 유지 · cutoff 요청 / 확정 분리 · 막힌 query 의 handle / thread 비정리 · P → C → R 비순환 (자기 해시 없음) · 최초 오류 / 중지 원인
+    분리 · 세 기한 null 이 네 문서에서 일치.
+  - P2 다섯:
+    - JC-01 감시자 자신의 정체 — 실행 중 stale 이면 STOP_REQUIRED.
+    - JC-02 reader 기한의 F4 이후 · final 초과의 중지 연결 · 대기 timeout 관계.
+    - JC-03 handle 사용권 장부의 범위 · Job 의 `KILL_ON_JOB_CLOSE` · 프로세스 종료.
+    - JC-04 실패 경로의 증거 객체 (P 없는 실행은 C 필수 필드를 못 채움).
+    - JC-05 Parent 필드의 축 넷 + 술어 필드 둘.
+  - P3 다섯: JC-06 – JC-10.
+  - 미구현을 완료로 주장하는 위치: 0.
+  - R8 서술 넷은 basis 텍스트와 맞는다: `pre_resume_check` 는 fake 만 · `sample_once` 순서 · current commit 필수 · `_call` 은 반환 뒤에만 시계 확인.
+  - API 의미에 기댄 두 지적 (`KILL_ON_JOB_CLOSE` · 대기 호출 반환 조합) 은 공식 문서의 일반 의미를 쓴 것이다. 이번에 원문을 다시 열지 않았다 (네트워크 0).
+- **발송문:** `docs/COMSOL_S1_JOB_COMMIT_EVENT_DESIGN_REVIEW_SEND_20261027.md` (4,252 B · sha256 `134a639f579fcf4f1a63c842704b6b2cb5ffee81eacbea95e36853d33d515879`)
+  · 상세 검토를 첨부한다. 발송은 사용자 몫이다.
+- **다음:** 사용자가 발송문과 상세 검토를 송신 측 Codex 에 보낸다 → 정정본 · 회신을 받는다 → D1–D5 를 결정한다.
+  - D1–D5 결정 · 구현 · fixture · 시험 · OS 관측 · native 실행은 각각 별도 승인이다.
+  - 이 절은 어느 것의 승인도 아니다.
+- **유지:** 계약 미채택 · 세 기한 null · `JOB_CURRENT_COMMIT=OPEN` · `native_ready / approved / usable = false` · 전체 · 정상 gate INCOMPLETE.
