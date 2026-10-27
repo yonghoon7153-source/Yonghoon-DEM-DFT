@@ -7869,7 +7869,7 @@
    "title": "Li₂S V_Li⁻ c→c CI-NEB 장벽 셀 수렴 — 판정은 4×4×4 · 09-01 카드 C1 |ΔEa| ≤ 30 meV (C2 · C3 그대로) · 2×2×2 는 대조 기록만",
    "statement": "판정 카드는 db/properties/li2s_cellconv_card_2026_09_01.json 이다: |Ea(4×4×4) − Ea(3×3×3 = 0.305025 eV)| ≤ 30 meV 면 cell_convergence_status = converged (absolute_citable 승격은 사용자 비준) · 30 meV 초과면 미수렴 확정 (5×5×5 자동 확대 없음) · 경로 미수렴은 no-value. 같은 규약 (q −1 jellium · gaussian 0.005 · ecut 60/480 · 이미지 7 · path_thr 0.05 · kdens 0.04 · 끝점 이완 필수). 4×4×4 는 gabia 단독 + 메모리 손잡이 재프로브를 통과해야 던진다 (09-01 카드 §3b · QE 추정 45.15 GB). 2×2×2 (10-09 카드 · kgy) 는 ΔEa 를 기록만 하고 3×3×3 의 지위를 바꾸지 않는다. 인용위험 HZ-sei-neb-retracted 해제는 통과해도 별도 결정이다.",
    "rationale": "원고 편입 후보 (사용자 2026-10-09) 인데 3×3×3 하나뿐이라 citable=false 다. 문턱은 09-01 카드의 사전등록값 30 meV 를 쓴다 — 10-09 에 같은 보고량 카드를 못 보고 0.05 eV 를 새로 정했다가 철회했다 (2026-10-11 · 2×2×2 는 어느 문턱으로도 판정하지 않으므로 결과를 보고 고른 문턱이 아니다).",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "estimand",
    "results_seen": true,
    "results_seen_note": "3×3×3 값과 2×2×2 대조 값 (10-10) 은 봤다 · 판정 셀 4×4×4 는 0 건 · 문턱 30 meV 는 09-01 사전등록",
@@ -7893,11 +7893,12 @@
    ],
    "enforcement": "① 4×4×4 게이트: 09-01 카드 C3 (경로 0.05 eV/Å 미도달·힘 역주행 = no-value) + 10-09 카드 G1–G5 (같은 기계에서 같은 플래그로 만든 기준 payload 와 diff) ② 2×2×2 값은 원고·화면에 싣지 않는다 ③ 4×4×4 는 메모리 재프로브 통과 전 NEB 금지 (09-01 카드 §3b)",
    "cost_cap": {
-    "machine": "gabia A6000 48 GB 단독 (탄성 뒤 · 1저자 09-23) · 메모리 손잡이 재프로브 통과가 조건",
-    "견적": "재프로브의 SCF 반복 시간으로 낸다 (09-23 P1 은 벽시계를 못 쟀다)"
+    "machine": "gabia A6000 48 GB 단독 · 순서 (사용자 2026-10-27): 탄성 modelc_2x 13_m 이 끝나면 12_p 앞에 끼워 넣는다 — 탄성 러너 bash 만 얼려 13_m 은 끝까지 돌게 두고, Li₂S 가 끝나거나 멈추면 러너를 풀어 12_p 로 잇는다 (탄성을 지금 세우지 않는다)",
+    "조건": "메모리 손잡이 재프로브 (CPU 검사 · 기록 안 함) → GPU 단일 SCF 실측 (P1 · 통과 기준은 실행 기록에 결과 전에 적는다) 통과 뒤에만 NEB",
+    "견적": "재프로브의 SCF 반복 시간으로 낸다 (09-23 P1 은 벽시계를 못 쟀다) · 어림 1–3 주 (Li₃Nd cc333 7.2 h/반복 외삽 · 실측 아님)"
    },
    "proposed_by": "claude-session-2026-10-09 (friendly)",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-10-09",
@@ -7910,11 +7911,27 @@
      "state": "proposed",
      "by": "agent",
      "note": "09-01 카드 발견 → 문턱 0.05 eV 철회 · 30 meV (09-01 C1) 로 정렬 · 비준 전 수정."
+    },
+    {
+     "at": "2026-10-27",
+     "state": "active",
+     "by": "사용자 (1저자 · SEI 트랙)",
+     "note": "비준 — '권고대로 하자 · li2S 진행' (권고 = 지금 메모리 재프로브 · 13_m 뒤 12_p 앞에 끼워 넣기 · 탄성 지금 안 세움). 순서는 cost_cap 에 반영."
     }
    ],
    "cards_extra": [
     "db/properties/li2s_neb_cellconv_estimand_2026_10_09.json (2×2×2 대조 런 설계·게이트)"
-   ]
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-27T07:12:51Z",
+    "commit": "f38cbdf73a4188e496b6b437236e4379334c5915",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "채팅 답 (2026-10-27 · 이 세션): '권고대로 하자 / li2S 진행' — 직전 권고: 지금 메모리 재프로브 (검사용) → 탄성 13_m 이 끝나면 12_p 앞에 Li₂S 4×4×4 (GPU 단일 SCF 실측 → NEB) · 탄성은 지금 세우지 않음 · 카드 결정 비준.",
+    "decision_digest": "sha256:b7b35418a1778defba727536315f2dfa1276fcf15de2fc5a4978c42e4f7d49d6"
+   }
   },
   {
    "id": "D-2026-10-11-gabia-elastic-pause-li3nd-r2",

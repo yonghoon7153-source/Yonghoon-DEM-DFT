@@ -517,6 +517,30 @@ def _ase_version() -> str:
         raise RuntimeError(f"⛔ ASE 판을 못 읽는다 — λ₁ 정본이 ASE 다: {exc!r}") from exc
 
 
+#: 메모리 손잡이 (2026-10-27 · li2s_cellconv_card_2026_09_01 §3b) — 대각화 방식만 바꾼다.
+#:   QE 7.4.1 diago_david_ndim 기본값이 이미 2 라 그건 손잡이가 아니다 (카드 §3b 단서).
+#:   ⛔ 물리 불변 (같은 conv_thr 로 같은 바닥상태) 이라 **지문(protocol_payload)·끝점 서명에
+#:     넣지 않는다** — ci 단계를 지문에서 뺀 것과 같은 이유다. 대신 meta.json ·
+#:     probe_meta.json 의 electrons_knobs 에 남긴다. 안 주면 줄 자체를 안 써서 옛 입력과 같다.
+#:   ⛔ 못 하는 것: GPU 빌드가 그 방식을 지원하는지는 모른다 — GPU 단일 SCF 가 답한다.
+DIAG_KNOBS = ("david", "ppcg", "paro", "cg")
+
+
+def _electrons_knob_lines(a) -> list:
+    """&ELECTRONS 에 넣을 손잡이 줄. 없으면 [] · 모르는 값이면 멈춘다 (조용히 기본값으로 안 돈다)."""
+    dg = getattr(a, "diagonalization", None)
+    if not dg:
+        return []
+    if dg not in DIAG_KNOBS:
+        raise ValueError(f"⛔ diagonalization={dg!r} — 아는 값: {', '.join(DIAG_KNOBS)}")
+    return [f"    diagonalization = '{dg}'"]
+
+
+def _electrons_knobs_meta(a):
+    dg = getattr(a, "diagonalization", None)
+    return {"diagonalization": dg} if dg else None
+
+
 def protocol_hash(tag, a, q, kpts, nat, cell, smear=None, degauss=None,
                   ecls=None, pps=None, hop=None, endpoints=None) -> str:
     """입력 규약 지문. 원재료는 protocol_payload() 참조."""
@@ -532,6 +556,7 @@ def build(tag, path, disp, a, pool):
     #   차단이 전부 여기서 갈린다. 미등록 상은 추측하지 않고 막는다 (Li₃Nd 함정의 입구).
     ecls = EC.get(tag)
     why_blocked = EC.blocked_reason(tag)
+    _knob = _electrons_knob_lines(a)      # 모르는 손잡이 값은 파일을 쓰기 전에 멈춘다
     # ⚠ --plan(비용 산정)은 입력을 안 만드니 게이트를 걸지 않는다 — 막으면 li3nd 비용을
     #   재 볼 수조차 없다. 다만 사유는 찍어서 "계획엔 있지만 지금은 못 돈다" 를 보이게 한다.
     if why_blocked and not a.ignore_electronic_class and not a.plan:
@@ -688,7 +713,7 @@ def build(tag, path, disp, a, pool):
                "    occupations     = 'smearing'", f"    smearing        = '{smear}'",
                f"    degauss         = {degauss}", "/",
                "&ELECTRONS", "    conv_thr        = 1.0d-8",
-               "    mixing_beta     = 0.3", "    electron_maxstep = 200", "/",
+               "    mixing_beta     = 0.3", "    electron_maxstep = 200", *_knob, "/",
                "&IONS", "    ion_dynamics    = 'bfgs'", "/", "", "ATOMIC_SPECIES"]
         for e in els:
             rel.append(f"  {e:3s} {atomic_masses[atomic_numbers[e]]:8.3f}  {pool[e]}")
@@ -783,7 +808,7 @@ def build(tag, path, disp, a, pool):
                "    occupations     = 'smearing'", f"    smearing        = '{smear}'",
                f"    degauss         = {degauss}", "/",
                "&ELECTRONS", "    conv_thr        = 1.0d-8", "    mixing_beta     = 0.3",
-               f"    electron_maxstep = {int(a.scf_probe_steps)}", "/",
+               f"    electron_maxstep = {int(a.scf_probe_steps)}", *_knob, "/",
                "", "ATOMIC_SPECIES"]
         for _e in els:
             _pb.append(f"  {_e:3s} {atomic_masses[atomic_numbers[_e]]:8.3f}  {pool[_e]}")
@@ -809,6 +834,8 @@ def build(tag, path, disp, a, pool):
             "⛔_금지": "electron_maxstep 을 잘랐고 disk_io='none' 이다 — "
                       "여기서 나온 에너지·힘·전하밀도를 값으로 인용하지 않는다.",
             "카드": "db/properties/li2s_cellconv_card_2026_09_01.json §3_던지기_전_선행.P1"}
+        if _electrons_knobs_meta(a):
+            info["scf_probe"]["electrons_knobs"] = _electrons_knobs_meta(a)
         with open(os.path.join(_pd, "probe_meta.json"), "w", encoding="utf-8") as _f:
             json.dump(info["scf_probe"], _f, ensure_ascii=False, indent=1)
         print(f"   ⏱ scf_probe: {os.path.join(_pd, 'scf_probe.in')}  "
@@ -877,7 +904,7 @@ def build(tag, path, disp, a, pool):
             "    occupations     = 'smearing'", f"    smearing        = '{smear}'",
             f"    degauss         = {degauss}", "/",
             "&ELECTRONS", "    conv_thr        = 1.0d-8",
-            "    mixing_beta     = 0.3", "    electron_maxstep = 200", "/",
+            "    mixing_beta     = 0.3", "    electron_maxstep = 200", *_knob, "/",
             "", "ATOMIC_SPECIES"]
     for e in els:
         body.append(f"  {e:3s} {atomic_masses[atomic_numbers[e]]:8.3f}  {pool[e]}")
@@ -955,7 +982,8 @@ def build(tag, path, disp, a, pool):
              "geometry_source": info["geometry_source"],
              "_note": ("endpoints_symmetry_equivalent=false 면 정·역 장벽이 다른 게 정상이다 "
                        "— 그 차이는 두 Li 자리의 에너지 차다. 장거리 수송에 걸리는 유효 장벽은 "
-                       "max(정, 역) 이다(가장 낮은 자리에서 안장점까지).")},
+                       "max(정, 역) 이다(가장 낮은 자리에서 안장점까지).")}
+            | ({"electrons_knobs": _electrons_knobs_meta(a)} if _electrons_knobs_meta(a) else {}),
             open(os.path.join(d, "meta.json"), "w"), ensure_ascii=False, indent=2)
 
     # 사람이 눈으로 검산할 수 있게 두 끝 이미지를 구조 파일로도 남긴다
@@ -1466,6 +1494,67 @@ def _selftest():
                        encoding="utf-8").read()
             ck("probe_neutral_q0", float(_sections(_q0)["tot_charge"]), 0.0)
             neg += 1
+
+        # ── 메모리 손잡이 (2026-10-27): 네 입력 모두 &ELECTRONS 안에 한 줄 · 그 줄 말고는 같다 ·
+        #    지문·끝점 서명은 그대로 · meta 둘에 기록. 본문 경로(build)로 만든다. ──
+        with _tf.TemporaryDirectory() as _r5:
+            _pdir5 = os.path.join(_r5, "pseudo")
+            _pool5 = _fake_pseudo(_pdir5)
+            _w0, _w1 = os.path.join(_r5, "w0"), os.path.join(_r5, "w1")
+            build("li2s", _STRUCT, "Li2S", _probe_ns(_w0, _pdir5), dict(_pool5))
+            build("li2s", _STRUCT, "Li2S", _probe_ns(_w1, _pdir5, diagonalization="ppcg"),
+                  dict(_pool5))
+            _kl = "    diagonalization = 'ppcg'"
+            for _f in ("ep_initial/relax.in", "ep_final/relax.in",
+                       "scf_probe/scf_probe.in", "neb.in"):
+                _t0 = open(os.path.join(_w0, "li2s", _f), encoding="utf-8").read()
+                _t1 = open(os.path.join(_w1, "li2s", _f), encoding="utf-8").read()
+                ck(f"knob_off_absent:{_f}", "diagonalization" in _t0, False)
+                ck(f"knob_on_once:{_f}", _t1.splitlines().count(_kl), 1)
+                _e = _t1.index("&ELECTRONS")
+                # find (index 아님) — 줄이 없으면 예외로 죽지 말고 ✗ 로 보고한다 (깨기 m1 에서 죽었다)
+                ck(f"knob_inside_electrons:{_f}",
+                   _e < _t1.find(_kl) < _t1.find("\n/", _e), True)
+                _l0, _l1 = _t0.splitlines(), _t1.splitlines()
+                ck(f"knob_only_added_line:{_f}",
+                   ([x for x in _l1 if x not in _l0], [x for x in _l0 if x not in _l1]),
+                   ([_kl], []))
+            _m0 = json.load(open(os.path.join(_w0, "li2s", "meta.json"), encoding="utf-8"))
+            _m1 = json.load(open(os.path.join(_w1, "li2s", "meta.json"), encoding="utf-8"))
+            ck("knob_hash_invariant", _m1["protocol_hash"], _m0["protocol_hash"])
+            ck("knob_payload_invariant", _m1["protocol_payload"], _m0["protocol_payload"])
+            ck("knob_meta_recorded", _m1.get("electrons_knobs"), {"diagonalization": "ppcg"})
+            ck("knob_meta_absent_when_off", "electrons_knobs" in _m0, False)
+            _pm1 = json.load(open(os.path.join(_w1, "li2s", "scf_probe", "probe_meta.json"),
+                                  encoding="utf-8"))
+            ck("knob_probe_meta_recorded", _pm1.get("electrons_knobs"),
+               {"diagonalization": "ppcg"})
+            for _ep in ("ep_initial", "ep_final"):
+                ck(f"knob_ep_sig_invariant:{_ep}",
+                   open(os.path.join(_w1, "li2s", _ep, ".ep_hash")).read(),
+                   open(os.path.join(_w0, "li2s", _ep, ".ep_hash")).read())
+            # 음성 ①: 모르는 값은 build 가 **파일을 쓰기 전에** 멈춘다
+            _w2 = os.path.join(_r5, "w2")
+            try:
+                build("li2s", _STRUCT, "Li2S", _probe_ns(_w2, _pdir5, diagonalization="davidson"),
+                      dict(_pool5))
+                ck("knob_bad_value_raises", "no raise", "raise")
+            except ValueError:
+                ck("knob_bad_value_raises", "raise", "raise")
+            ck("knob_bad_value_wrote_nothing",
+               os.path.exists(os.path.join(_w2, "li2s", "ep_initial", "relax.in")), False)
+            neg += 1
+            # 음성 ②: 진짜 파서가 모르는 값을 거부한다
+            import contextlib as _cl
+            import io as _io
+            try:
+                with _cl.redirect_stderr(_io.StringIO()):
+                    _parser().parse_args(["--diagonalization", "davidson"])
+                ck("knob_parser_rejects", "accepted", "rejected")
+            except SystemExit:
+                ck("knob_parser_rejects", "rejected", "rejected")
+            ck("knob_parser_default_none", _parser().parse_args([]).diagonalization, None)
+            neg += 1
     else:
         print("   ⚠ scf_probe 시험 건너뜀 — 구조 파일이 없다:", _STRUCT)
 
@@ -1478,7 +1567,9 @@ def _selftest():
     return 0
 
 
-def main():
+def _parser():
+    # ⚠ 2026-10-27 — main() 안에 있던 인자 정의를 뺐다: selftest 가 '모르는 손잡이 값을
+    #   argparse 가 거부하는가' 를 **진짜 파서로** 시험하려면 파서를 따로 불러야 한다.
     ap = argparse.ArgumentParser()
     ap.add_argument("--selftest", action="store_true",
                     help="λ₁ exact · 해시 회귀 검사 (음성 경로 포함). 파일 I/O 없음")
@@ -1549,6 +1640,16 @@ def main():
     ap.add_argument("--verify_endpoints", action="store_true",
                     help="이미 만든 neb.in 의 끝점이 **수렴한** relax.out 좌표와 같은지 "
                          "대조만 한다 (입력을 만들지 않는다). NEB 을 며칠 태우기 전에 이걸 먼저")
+    ap.add_argument("--diagonalization", choices=DIAG_KNOBS, default=None,
+                    help="메모리 손잡이 (2026-10-27 · 09-01 카드 §3b) — relax.in · neb.in · "
+                         "scf_probe.in 의 &ELECTRONS 에 같이 실린다. 물리 불변이라 지문에 "
+                         "안 넣고 meta.json 의 electrons_knobs 에 남긴다. 안 주면 줄을 안 쓴다 "
+                         "(QE 기본 david). ⛔ GPU 빌드 지원 여부는 GPU 단일 SCF 가 답한다")
+    return ap
+
+
+def main():
+    ap = _parser()
     a = ap.parse_args()
     if a.selftest:
         return _selftest()
