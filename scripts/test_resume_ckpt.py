@@ -184,7 +184,35 @@ def res_variant(kind):
         return mutate(g, 'reference_point 0 0 0', 'reference_point 0 0 0 scale 2.0')
     if kind == 'compute_missing':
         return re.sub(r'\ncompute\s+zmax\b[^\n]*\n', '\n', g, count=1)
+    # 10-27 ibb kg50_d2_b50 r4 — 실제 dem_restart.py 의 settling 잔여 = 200000 − 20001 = 179999 (본 덱 정착 run 은 삽입 run 1 뒤
+    # step 1 에서 시작 → 끝 200001 · 맞는 남은 step 180000).  F 꼴 = 고칠 수 있는 꼴 하나 + 고치면 안 되는 꼴들.
+    if kind == 'steps_ibb':
+        return mutate(g, 'run 180000\n', 'run 179999\n')
+    if kind == 'steps_ibb_comment':
+        return mutate(g, 'run 180000\n', '  run   179999   # settling 잔여\n')
+    if kind == 'steps_minus2':
+        return mutate(g, 'run 180000\n', 'run 179998\n')
+    if kind == 'steps_plus1':
+        return mutate(g, 'run 180000\n', 'run 180001\n')
+    if kind == 'steps_ibb_extra':
+        return mutate(g, 'run 180000\n', 'fix extra all viscous 0.1\nrun 179999\n')
+    if kind == 'steps_ibb_amp':
+        return mutate(g, 'run 180000\n', 'run &\n179999\n')
+    if kind == 'steps_ibb_upto':
+        return mutate(g, 'run 180000\n', 'run 200000 upto\n')
     raise ValueError(kind)
+
+
+def with_tmpl(text):
+    """도구가 settling 재개 덱에 하는 일 (read_restart 바로 뒤에 본 덱의 fix pts* · pdd_mix 줄) 을 시험 쪽에서 따로 계산."""
+    tl = [l if l.endswith('\n') else l + '\n' for l in open(MAIN, encoding='utf-8')
+          if len(l.split()) >= 2 and l.split()[0] == 'fix' and re.match(r'^(pts[0-9]+|pdd_mix)$', l.split()[1])]
+    out = []
+    for l in text.splitlines(keepends=True):
+        out.append(l)
+        if l.split()[:1] == ['read_restart']:
+            out.extend(tl)
+    return ''.join(out)
 
 
 def tree_sha(d):
@@ -419,6 +447,47 @@ def main():
         chk('%s · -c → 빼면 LIGGGHTS 명령이 바뀜 → ⛔ 건너뜀 (dem_restart.py · 시험 · 본 제출 안 함) · 작업 사본 덱 둘 다 그대로' % tag,
             '⛔ 주석 줄 빼기' in r['out'] and r['plan'] == '' and not r['trial'] and not r['main']
             and r['w_decks'].get(nm) == bad and r['w_decks'].get(ni) == ib, r['out'])
+    # ── F: 재개 덱 첫 긴 run 의 1 step 짧음 고침 (10-27 ibb kg50_d2_b50 r4 · 1저자 Q1 (가) "권고대로 해줘") ──
+    #    dem_restart.py 가 run 179999 (끝 200000) 를 내는데 본 덱 정착 run 끝은 200001 → 도구가 그 한 줄만 180000 으로 고치고
+    #    정적 대조를 처음부터 다시 통과할 때만 시험을 낸다.  그 밖의 차이 · 다른 문제가 같이 있으면 고치지 않는다 (정적 대조가 거부).
+    nr = 'input_%s_%s.liggghts' % (C, SFX)
+    r = run_case(script, 'steps_ibb', 'ok', extra=('-T',))
+    wd = r['w_decks'].get(nr, b'')
+    chk('F1 dem_restart.py 의 run 179999 (끝 200000 ↔ 본 덱 200001) → 재개 덱 그 줄만 run 180000 · 정적 대조 통과 · 시험 냄 (-T · 본 제출 안 함)',
+        r['trial'] and not r['main'] and b'\nrun 180000\n' in wd and b'179999' not in wd
+        and '남은 step 같음: 끝 200001' in r['out'], r['out'])
+    g = with_tmpl(res_variant('good')).encode()
+    chk('F1b 고친 재개 덱 = 정상 재개 덱 (run 180000) 과 바이트 같음 — 다른 줄은 손대지 않음',
+        wd == g, r['out'])
+    chk('F1c 기록 = stdout · 보고 둘 다 고친 줄 (옛 run 179999 → 새 run 180000 · 본 덱 그 run 끝 200001 · 체크포인트 step 20001)',
+        all(any(('run 179999' in l and 'run 180000' in l and '200001' in l and '20001' in l) for l in t.splitlines())
+            for t in (r['out'], r['rep'])), r['out'] + r['rep'])
+    chk('F1d 멈춘 폴더 (원본) 의 모든 파일 sha256 그대로', r['s_before'] == r['s_after'], r['out'])
+    r = run_case(script, 'steps_ibb', 'ok')
+    chk('F2 같은 꼴 · -T 없음 · 시험 정상 → 본 제출', r['trial'] and r['main'], r['out'] + r['rep'])
+    r = run_case(script, 'steps_ibb_comment', 'ok', extra=('-T',))
+    wd = r['w_decks'].get(nr, b'')
+    chk('F3 앞 공백 · 뒤 주석이 있는 run 줄 → 숫자만 바뀜 (공백 · 주석 그대로) · 시험 냄',
+        r['trial'] and b'\n  run   180000   # settling \xec\x9e\x94\xec\x97\xac\n' in wd and b'179999' not in wd, r['out'])
+    for kind, label in (('steps_minus2', '2 step 짧음 (run 179998)'), ('steps_plus1', '1 step 김 (run 180001)'),
+                        ('steps_ibb_extra', '1 step 짧음 + 본 덱에 없는 fix'), ('steps_ibb_amp', '1 step 짧음 · run 줄이 & 로 이어짐'),
+                        ('steps_ibb_upto', 'run 200000 upto (끝 200000)'), ('steps_wrong', '남은 정착 step 200000 (끝 220001)')):
+        r = run_case(script, kind, 'ok', extra=('-T',))
+        orig = with_tmpl(res_variant(kind)).encode()
+        chk('F4 %s → 고치지 않음 (재개 덱 바이트 그대로) · 정적 대조 실패 · 시험 · 본 제출 안 함' % label,
+            not r['trial'] and not r['main'] and r['w_decks'].get(nr) == orig and '재개 덱 정적 대조: 실패' in r['out'], r['out'])
+    r = run_case(script, 'good', 'ok', extra=('-T',))
+    chk('F5 정상 재개 덱 (run 180000) → 고칠 것 없음 · 재개 덱 바이트 그대로 · 시험 냄',
+        r['trial'] and r['w_decks'].get(nr) == with_tmpl(res_variant('good')).encode() and '고칠 것 없음' in r['out'], r['out'])
+    tmp = tempfile.mkdtemp(prefix='rckf_')
+    try:
+        bad = os.path.join(tmp, 'res_ibb.liggghts')
+        with open(bad, 'w', encoding='utf-8') as f:
+            f.write(res_variant('steps_ibb'))
+        rc, out = deckcheck_only(script, MAIN, bad, CKPT, 20001)
+        chk('F6 -C (정적 대조만) 는 고치지 않는다 — run 179999 → 실패 · 남은 step 다름', rc != 0 and '남은 step 다름' in out, out)
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
     print('%d PASS · %d FAIL' % (ok, fail))
     return 0 if fail == 0 else 1
 
