@@ -481,5 +481,11 @@
   },
   "⏭": "사용자가 업체에 해제 파일 + sha256 (메일 본문) 발송 → 업체 STAGES='1 2 3 4' 실행 (파일럿 속도 어림 실사용 ≈ 177 h) → 반송 → --check · --collect (W 집계 한 번)",
   "by": "agent · 2026-10-26"
+ },
+ "⑧_해제_파일_발송_2026_10_27": {
+  "사용자": "'wad는 보냈어' (2026-10-27 09:3x KST 확인 · 발송 시각은 미상 — 10-26 해제 파일 생성 뒤)",
+  "보낸_것": "단계 1–4 해제 파일 db/raw/wad_round2_vasp_2026_10_22/release_R2-REL-2026-10-26.tsv (sha256 앞 16 d4f757b9794ed4f1 · 클라우드 대조 10-27) + 메일 (업체가 RELEASE_SHA256 로 확인)",
+  "⏭": "단계 1–4 반송 (round2_return.tgz + .sha256) → sha 대조 → --check (등록부 pp_registry_round2_2026_10_26.json · sha 999aa2da…) → --collect (UMA ④ = db/raw/wad_p2small_uma_sp_2026_10_17 · 등록부) · 은 V5 G5 집계는 DEM 회신 10 과 같이 · ⛔ W 값은 결과 기록에만",
+  "by": "agent · 2026-10-27"
  }
 }
