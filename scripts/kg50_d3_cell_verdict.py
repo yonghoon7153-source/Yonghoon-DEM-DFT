@@ -7,13 +7,16 @@
   • 수송 tortuosity = `tau_flux.case_row` 그대로 (인계 열 `tau2_ion_hertz` · 세대 · 상태 검사 포함)
   • σ_ion = 솔버의 Hertz σ FULL (`dual['hertzian']['sigma_full_mScm']` · 상태 computed 만)
   • porosity = 웹앱 `porosity` (ε_sphere — `porosity_spheresum` 과 같은 값이어야 한다)
-  • AM coverage = 웹앱 `coverage_<AM>_mean` (Hertz 계열 = LIGGGHTS 접촉 면적) — <AM> = meta type_map 의 유일한 AM 상
+  • AM coverage = 둘 다 판정 (1저자 10-27 *"am coverage는 physics로 봤잖아 / 같이 봐"*) — <AM> = meta type_map 의 유일한 AM 상
+      Physics = 웹앱 `coverage_<AM>_mean_physics_union` (합집합 cap · 웹앱 표 Physics 열 · `coverage_status_physics_union` = ok 만)
+      Hertz   = 웹앱 `coverage_<AM>_mean` (Hertz 계열 = LIGGGHTS 접촉 면적)
 
-지표 넷 (모두 Hertz 계열 · 문턱 = 등록 §3)
-  porosity   절대 차 %p   문턱 0.5
-  coverage   절대 차 %p   문턱 1
-  tau2       상대 차 %    문턱 5   (분모 = 50×50 평균)
-  sigma_ion  상대 차 %    문턱 5   (분모 = 50×50 평균)
+지표 다섯 (문턱 = 등록 §3 · σ_ion · 수송 tortuosity = Hertz · coverage = Physics · Hertz 둘 다)
+  porosity          절대 차 %p   문턱 0.5
+  coverage_physics  절대 차 %p   문턱 1
+  coverage_hertz    절대 차 %p   문턱 1
+  tau2              상대 차 %    문턱 5   (분모 = 50×50 평균)
+  sigma_ion         상대 차 %    문턱 5   (분모 = 50×50 평균)
   Δ = 평균(40) − 평균(50) · SE_Δ = √(s40²/3 + s50²/3) (s = 시드 3 의 표본 표준편차) · 상대 지표는 둘 다 평균(50) 으로 나눈다.
 
 지표마다 판정 — 위에서부터 먼저 걸리는 것 (결과 전 명확화 · 1저자 10-27)
@@ -56,7 +59,8 @@ NAMES = B40 + B50
 #: (키, 표시 이름, 종류, 문턱) — 종류 abs = 절대 차 (단위 그대로) · rel = 상대 차 % (분모 = 50×50 평균)
 INDICATORS = (
     ('porosity', 'porosity ε_sphere (%)', 'abs', 0.5),
-    ('coverage', 'AM coverage Hertz (%)', 'abs', 1.0),
+    ('coverage_physics', 'AM coverage Physics (%)', 'abs', 1.0),
+    ('coverage_hertz', 'AM coverage Hertz (%)', 'abs', 1.0),
     ('tau2', '수송 tortuosity Hertz', 'rel', 5.0),
     ('sigma_ion', 'σ_ion Hertz (mS/cm)', 'rel', 5.0),
 )
@@ -149,14 +153,19 @@ def extract(results_dir, meta, case_row_fn=None):
         vals['porosity'], notes['porosity'] = None, f'porosity {p!r} ≠ porosity_spheresum {ps!r} (ε_sphere 아님)'
     else:
         vals['porosity'] = float(p)
-    # AM coverage — Hertz 계열 (meta type_map 의 유일한 AM 상)
+    # AM coverage — Physics (합집합 cap · 상태 ok 만) · Hertz 계열 둘 다 (meta type_map 의 유일한 AM 상)
     am = am_phase(meta)
     ck = f'coverage_{am}_mean'
-    c = fm.get(ck)
-    if not _finite(c) or not 0.0 <= float(c) <= 100.0:
-        vals['coverage'], notes['coverage'] = None, f'{ck} 비유한 · 범위 밖 ({c!r})'
-    else:
-        vals['coverage'] = float(c)
+    pk = f'coverage_{am}_mean_physics_union'
+    pst = fm.get('coverage_status_physics_union')
+    for key, src, extra in (('coverage_hertz', ck, None), ('coverage_physics', pk, pst)):
+        c = fm.get(src)
+        if key == 'coverage_physics' and extra != 'ok':
+            vals[key], notes[key] = None, f'coverage_status_physics_union {extra!r} (ok 아님)'
+        elif not _finite(c) or not 0.0 <= float(c) <= 100.0:
+            vals[key], notes[key] = None, f'{src} 비유한 · 범위 밖 ({c!r})'
+        else:
+            vals[key] = float(c)
     # σ_ion — 솔버 Hertz σ FULL · computed 만
     h = dual.get('hertzian') if isinstance(dual.get('hertzian'), dict) else {}
     s, st = h.get('sigma_full_mScm'), h.get('sigma_full_status')
@@ -172,7 +181,7 @@ def extract(results_dir, meta, case_row_fn=None):
                                              f'값 {t!r}')
     else:
         vals['tau2'] = float(t)
-    return {'values': vals, 'notes': notes, 'am_phase': am, 'coverage_key': ck,
+    return {'values': vals, 'notes': notes, 'am_phase': am, 'coverage_key': ck, 'coverage_physics_key': pk,
             'code_sha': prov.get('code_sha'), 'network_run_id': prov.get('network_run_id') or fm.get('network_run_id'),
             'ion_net_electrode_hertz': row.get('ion_net_electrode_hertz'),
             'ion_net_area_rule_hertz': row.get('ion_net_area_rule_hertz'),
@@ -241,13 +250,14 @@ def _fmt(x, nd=4):
 
 def report(out):
     lines = [f'# 50kg D3 칸 판정 — {out["registration"]} · 판정 모드 Hertz · 망 코드 판 {out["code_sha"]}', '',
-             '| 케이스 | 웹앱 id | porosity % | coverage % | 수송 tortuosity | σ_ion mS/cm | 메모 |', '|---|---|---|---|---|---|---|']
+             '| 케이스 | 웹앱 id | porosity % | coverage Physics % | coverage Hertz % | 수송 tortuosity | σ_ion mS/cm | 메모 |',
+             '|---|---|---|---|---|---|---|---|']
     for n in NAMES:
         c = out['cases'][n]
         v = c['values']
         memo = ' · '.join(f'{k}: {w}' for k, w in c['notes'].items()) or '-'
-        lines.append(f'| {n} | {c["case_id"]} | {_fmt(v["porosity"])} | {_fmt(v["coverage"])} | {_fmt(v["tau2"])} | '
-                     f'{_fmt(v["sigma_ion"])} | {memo} |')
+        lines.append(f'| {n} | {c["case_id"]} | {_fmt(v["porosity"])} | {_fmt(v["coverage_physics"])} | '
+                     f'{_fmt(v["coverage_hertz"])} | {_fmt(v["tau2"])} | {_fmt(v["sigma_ion"])} | {memo} |')
     lines += ['', '| 지표 | 평균 40 (s) | 평균 50 (s) | Δ | SE_Δ | 문턱 | 판정 | 근거 |', '|---|---|---|---|---|---|---|---|']
     for key, lab, kind, thr in INDICATORS:
         r = out['indicators'][key]
@@ -270,14 +280,15 @@ def _tree_digest(root):
     return h.hexdigest()
 
 
-def _mk(root, cid, name, *, por=10.0, cov=50.0, sig=0.1, sig_status='computed', sha='abc', tm='1:AM_P,3:SE',
-        spheresum='same'):
+def _mk(root, cid, name, *, por=10.0, cov=50.0, covp=60.0, covp_status='ok', sig=0.1, sig_status='computed', sha='abc',
+        tm='1:AM_P,3:SE', spheresum='same'):
     up, rs = os.path.join(root, 'uploads', cid), os.path.join(root, 'results', cid)
     os.makedirs(up, exist_ok=True)
     os.makedirs(rs, exist_ok=True)
     with open(os.path.join(up, 'meta.json'), 'w') as f:
         json.dump({'name': name, 'type_map': tm}, f)
-    fm = {'porosity': por, 'coverage_AM_P_mean': cov, 'network_run_id': 'run-' + cid}
+    fm = {'porosity': por, 'coverage_AM_P_mean': cov, 'coverage_AM_P_mean_physics_union': covp,
+          'coverage_status_physics_union': covp_status, 'network_run_id': 'run-' + cid}
     if spheresum == 'same':
         fm['porosity_spheresum'] = por
     elif spheresum is not None:
@@ -326,11 +337,14 @@ def registration_check():
     if not m:
         return False, '§3 문턱 문장을 못 찾음'
     reg = tuple(float(x) for x in m.groups())
-    ours = tuple(t for *_x, t in INDICATORS)
-    if reg != ours:
-        return False, f'문턱 다름 — 등록 {reg} ↔ 판독기 {ours}'
+    thr = {k: t for k, _l, _k, t in INDICATORS}
+    ours = (thr['porosity'], thr['coverage_physics'], thr['tau2'], thr['sigma_ion'])
+    if reg != ours or thr['coverage_hertz'] != thr['coverage_physics']:
+        return False, f'문턱 다름 — 등록 {reg} ↔ 판독기 {ours} · coverage 두 문턱 {thr["coverage_physics"]} / {thr["coverage_hertz"]}'
     if '판정 모드 = Hertz' not in txt:
         return False, '§3 에 "판정 모드 = Hertz" 줄 없음'
+    if 'AM coverage = Physics · Hertz 둘 다 판정' not in txt:
+        return False, '§3 에 "AM coverage = Physics · Hertz 둘 다 판정" 줄 없음'
     if 'SE_Δ = √(s40²/3 + s50²/3)' not in txt:
         return False, '§3 의 SE_Δ 식이 판독기와 다름'
     return True, f'등록 문턱 {reg} = 판독기 · 모드 Hertz · SE_Δ 식 같음'
@@ -356,10 +370,10 @@ def selftest():
     print('kg50_d3_cell_verdict selftest')
     # ① 통과 — 여섯 거의 같다
     with tempfile.TemporaryDirectory() as r:
-        fn = _bed(r, {n: dict(por=10 + j, cov=50 + j, sig=0.1 * (1 + j / 100)) for n, j in jit.items()})
+        fn = _bed(r, {n: dict(por=10 + j, cov=50 + j, covp=60 + j, sig=0.1 * (1 + j / 100)) for n, j in jit.items()})
         before = _tree_digest(r)
         out = go(r, fn)
-        chk('① 거의 같은 여섯 → 전체 통과 · 지표 넷 통과', out['overall'] == PASS
+        chk('① 거의 같은 여섯 → 전체 통과 · 지표 다섯 통과', out['overall'] == PASS
             and all(out['indicators'][k]['result'] == PASS for k, *_ in INDICATORS), str(out['overall']))
         chk('①b 읽기만 — 입력 트리 바이트 그대로', _tree_digest(r) == before)
         chk('①c 보고 표에 여섯 줄 + 지표 넷 + 전체', report(out).count('| kg50_d3_') == 6 and '**전체: 통과**' in report(out))
@@ -422,7 +436,7 @@ def selftest():
     with tempfile.TemporaryDirectory() as r:
         fn = _bed(r, {'kg50_d3_b40_s1': dict(cov=float('nan')), 'kg50_d3_b40_s2': dict(spheresum=11.0)})
         out = go(r, fn)
-        chk('⑥ coverage NaN → 판정 불가', out['indicators']['coverage']['result'] == UNDECIDED)
+        chk('⑥ coverage (Hertz) NaN → 판정 불가', out['indicators']['coverage_hertz']['result'] == UNDECIDED)
         chk('⑥b porosity ≠ porosity_spheresum → porosity 판정 불가 (ε_sphere 아님)',
             out['indicators']['porosity']['result'] == UNDECIDED)
     with tempfile.TemporaryDirectory() as r:
@@ -430,8 +444,26 @@ def selftest():
         out = go(r, fn)
         cc = out['cases']['kg50_d3_b50_s1']
         chk('⑥c coverage 150 % (범위 밖) → 그 값 빈칸 · 사유 · 판정 불가 (① — 산포 탓 ② 가 아니다)',
-            cc['values']['coverage'] is None and '범위' in cc['notes'].get('coverage', '')
-            and out['indicators']['coverage']['why'].startswith('①'))
+            cc['values']['coverage_hertz'] is None and '범위' in cc['notes'].get('coverage_hertz', '')
+            and out['indicators']['coverage_hertz']['why'].startswith('①'))
+    with tempfile.TemporaryDirectory() as r:
+        fn = _bed(r, {'kg50_d3_b40_s2': dict(covp_status='blank: 시험')})
+        out = go(r, fn)
+        chk('⑥d Physics coverage 상태 blank → coverage Physics 판정 불가 · Hertz 는 그대로 통과',
+            out['indicators']['coverage_physics']['result'] == UNDECIDED
+            and out['indicators']['coverage_hertz']['result'] == PASS)
+    with tempfile.TemporaryDirectory() as r:
+        fn = _bed(r, {'kg50_d3_b50_s3': dict(covp=150.0)})
+        out = go(r, fn)
+        cc = out['cases']['kg50_d3_b50_s3']
+        chk('⑥e Physics coverage 150 % → 그 값 빈칸 · 사유 (①)', cc['values']['coverage_physics'] is None
+            and '범위' in cc['notes'].get('coverage_physics', ''))
+    with tempfile.TemporaryDirectory() as r:
+        fn = _bed(r, {n: dict(covp=(61.5 if n in B40 else 60.0)) for n in NAMES})
+        out = go(r, fn)
+        chk('⑥f Physics 만 1.5 %p 차 → coverage Physics 불합격 · 전체 불합격 (둘 다 판정)',
+            out['indicators']['coverage_physics']['result'] == FAIL and out['overall'] == FAIL
+            and out['indicators']['coverage_hertz']['result'] == PASS)
     # ⑦ 입력 거부 — 이름 없음 · 중복 · 판 다름 · AM 상 둘
     with tempfile.TemporaryDirectory() as r:
         fn = _bed(r, {})

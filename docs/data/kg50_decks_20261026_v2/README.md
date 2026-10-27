@@ -49,8 +49,9 @@ ls ~/simulation/kg50_d3_*/restart_kg50_d3_*/restart_end.bin ~/simulation/kg50_d3
   - |Δ| > 문턱 → 불합격 → 50×50 (`--fallback50`).
   - SE_Δ > 문턱 · 지표 비유한 · 비관통 → **판정 불가** (1저자 결정).
 - 본 비교 (D0.7 · D1 · D2 · D3 시드 1) 는 시드 하나 — D3 의 산포를 그 셋의 오차막대로 쓰지 않는다.
-- ★ 10-27 (결과 전 — hit 여섯 압밀 끝 · 지표 값 열람 전) **판정 모드 = Hertz** (1저자 *"이종기술때처럼 hertz로 하는게 맞는듯"*) — σ_ion = 솔버 Hertz σ FULL (`network_conductivity_dual.json` `hertzian.sigma_full_mScm` · 상태 computed) · 수송 tortuosity = `tau2_ion_hertz` (`tau_flux.case_row` · 상태 OK) · AM coverage 도 같은 Hertz 계열 `coverage_<AM>_mean` (LIGGGHTS 접촉 면적 · **Claude 해석 · ⬜ 1저자 확인**) · porosity = 웹앱 `porosity` (ε_sphere = `porosity_spheresum`).
-- ★ 10-27 판정 순서 (지표마다 · 위에서 먼저 걸리는 것 · **Claude 명확화 · ⬜ 1저자 확인 · 결과 전**): ① 여섯 값 중 비유한 · 상태 미달 (비관통 · 풀이 실패) → 판정 불가 ② SE_Δ = √(s40²/3 + s50²/3) > 문턱 → 판정 불가 ③ |Δ| > 문턱 → 불합격 ④ 그 밖 → 통과 (|Δ| = 문턱 은 통과).  전체 = 하나라도 불합격 → 불합격 · 아니고 하나라도 판정 불가 → 판정 불가 · 넷 다 통과 → 통과.  여섯의 망 코드 판 (`network_provenance.json` `code_sha`) 이 같아야 한다 (다르면 판정 없음).
+- ★ 10-27 (결과 전 — hit 여섯 압밀 끝 · 지표 값 열람 전) **판정 모드 = Hertz** (1저자 *"이종기술때처럼 hertz로 하는게 맞는듯"*) — σ_ion = 솔버 Hertz σ FULL (`network_conductivity_dual.json` `hertzian.sigma_full_mScm` · 상태 computed) · 수송 tortuosity = `tau2_ion_hertz` (`tau_flux.case_row` · 상태 OK) · porosity = 웹앱 `porosity` (ε_sphere = `porosity_spheresum`).
+- ★ 10-27 (결과 전) **AM coverage = Physics · Hertz 둘 다 판정** (1저자 *"am coverage는 physics로 봤잖아 / 같이 봐"*) — Physics = `coverage_<AM>_mean_physics_union` (합집합 cap · 웹앱 표 Physics 열 · `coverage_status_physics_union` = ok 만) · Hertz = `coverage_<AM>_mean` (LIGGGHTS 접촉 면적) · 둘 다 문턱 1 %p · 지표 다섯.
+- ★ 10-27 판정 순서 (지표마다 · 위에서 먼저 걸리는 것 · ✅ **1저자 10-27 권고대로 · 결과 전**): ① 여섯 값 중 비유한 · 상태 미달 (비관통 · 풀이 실패) → 판정 불가 ② SE_Δ = √(s40²/3 + s50²/3) > 문턱 → 판정 불가 ③ |Δ| > 문턱 → 불합격 ④ 그 밖 → 통과 (|Δ| = 문턱 은 통과).  전체 = 하나라도 불합격 → 불합격 · 아니고 하나라도 판정 불가 → 판정 불가 · 넷 다 통과 → 통과.  여섯의 망 코드 판 (`network_provenance.json` `code_sha`) 이 같아야 한다 (다르면 판정 없음).
 - 판독기 `scripts/kg50_d3_cell_verdict.py` (읽기 전용 · 값 새로 계산 안 함 · selftest 첫 항목 = 이 절의 문턱 · 모드 · SE_Δ 식 대조 · 게이트 상주) — WSL: `python3 scripts/kg50_d3_cell_verdict.py --json <판정 기록.json>` (웹앱 케이스 이름 = 침대 이름 `kg50_d3_b40_s1` …).
 
 ## 4. 2 단계 — 칸 판정 · 재개 도구 고침 · Q5 등록 뒤 (1저자 승인 뒤)
