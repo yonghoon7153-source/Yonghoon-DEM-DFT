@@ -2094,3 +2094,57 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
     l.144). 그래서 디코딩이 실행 환경의 locale 인코딩에 기댄다. 회신이 말한 "Python 디코딩 환경" 의 한 갈래다.
 - **다음:** 정정 범위안 v5 `docs/REIL_C4E_E1_REVISION_SCOPE_v5_20261027.md` → 사용자 범위 채택 → 비활성 초안 v5 · 승인 요청 v5 · 사전 검토 발송문 v5
   (정적 봉인까지 · Git fixture 포함 실행 0). 그 전에는 초안 작성 · 실행 0.
+
+## §81 C4-E · E1 정정 범위 v5 채택 (사용자 결정) — 비활성 초안 다섯 · 승인 요청 v5 (E1-0 한정) · 사전 검토 발송문 v5 (2026-10-27 KST · 정적 검사만 · Git fixture 포함 실행 0 · 덧붙임 — 위 §0–§80 은 그대로)
+
+- **사용자 (2026-10-27):** "reil은 권고대로" — 범위안 v5 (`ab1c8164`) 의 권장 셋을 그대로 채택했다.
+  1. 범위대로 비활성 초안 · 승인 요청 v5 · 사전 검토 발송문 v5 까지 쓰고 멈춘다 (정적 검사만 · Git fixture 포함 실행 0).
+  2. V4-01 = A — blob 입력 (`hash-object -w --no-filters` + `cat-file blob`) · fixture 자기 확인 · 정확한 대체 문자열 기대.
+  3. S6 포함 — 두 git wrapper 에 `encoding="utf-8"` + AST 확인.
+
+  이 채택은 launcher · 실행기 복사 · 시험 · Git fixture · driver · 탐침 · 읽기 경로 · fetch · run 승인이 아니다.
+- **고정한 초안 다섯 (docs · `.py.txt`):**
+
+  | 초안 | sha256 | bytes | 복사할 곳 (E1-0 승인 뒤) |
+  |---|---|---:|---|
+  | `REIL_C4E1_LAUNCHER_DRAFT_v5_20261027.py.txt` — launcher v5 | `2269d775f1701e2f657d386f42bc950d26a6b56bd37323611dd6ab4cc1a75396` | 51,957 | `scripts/reil_c4e1_launch.py` (GREEN 직전) |
+  | `REIL_C4E1_LAUNCHER_SKELETON_DRAFT_v5_20261027.py.txt` — RED 골격 (함수 35) | `e6f72de2245a41a4a80e0bb7adcc7734991f0b95fb1c1764ea6bfda579849182` | 13,646 | 같은 곳 (RED 둘) |
+  | `REIL_C4E1_LAUNCHER_CONTROLS_DRAFT_v5_20261027.py.txt` — launcher 대조 27 | `4720585c86f555bb0f9cfea3e12aab5b283f8ee4243a3ef257f77849759b777d` | 51,121 | `tests/test_reil_c4e1_launch.py` |
+  | `REIL_C4E1_RUNNER_CONTROLS_DRAFT_v3_20261027.py.txt` — 외곽 실행기 대조 11 | `ae42d8e8c0fb0c680d324348d2e1edc8f11865bd6bedea7cb0becf9b00fe6042` | 36,478 | `tests/test_reil_c4e1_runner.py` |
+  | `REIL_C4E1_STEP_RUNNER_DRAFT_v5_20261027.py.txt` — E1-0 외곽 실행기 v5 (봉인 표 포함) | `f6070f9776baa7dfc9b5e26ac5e6f378dd2969e7628566e5baa3c02685814a2a` | 36,189 | `<E0>/00_step_runner.py` |
+
+- **정정 대응 (요청서 v5 §2 · §6 · §8):**
+  - V4-01 — l27 · r11 의 Git 부분은 커밋 메시지를 쓰지 않는다. 정해진 바이트 `b"fixture \xff\xfe not utf-8\n"` 를 tmp 파일에 쓰고
+    `hash-object -w --no-filters` 로 blob 을 만든 뒤, wrapper 가 `cat-file blob <sha>` 를 부른다. fixture 자기 확인 (wrapper 없이 같은 명령의 stdout 바이트 =
+    그 바이트 · 엄격 UTF-8 디코딩 = `UnicodeDecodeError`) 을 먼저 하고, 기대는 `out == 그 바이트.decode("utf-8", "replace")` (U+FFFD 둘 · 정확한 문자열) ·
+    rc 0 · `error` 없음이다. U+FFFD 검사는 남겼다.
+  - S6 — launcher `git_run` (v5 l.385) · 실행기 `git` (v5 l.146) 에 `encoding="utf-8"`. l27 · r11 이 시험할 파일의 AST 에서 그 함수의 `subprocess.run` 호출
+    하나의 상수 키워드 (`text=True` · `encoding="utf-8"` · `errors="replace"`) 를 확인한다.
+  - V4-N1 — 요청서 §8 의 18 의 문구를 회신대로 좁혔다.
+  - 회신의 주의 다섯 → 요청서 §8 의 2 (가짜 시계) · 19 (`GIT_CONFIG_KEY / VALUE` 내용 · 설정 원천) · 20 (`first_error=null`) · 22 (lstat 비원자) · 24 (v4 를
+    실행하지 않았으므로 관측으로 기록하지 않음).
+- **총수 · RED 선언 · 예산 (바뀌지 않음):** launcher 대조 27 · 외곽 실행기 대조 11 · GREEN 65 (E0 21 + N1 6 + 27 + 11 · 건너뜀 0) · driver 8 회 · RED-L 27
+  실패 (모두 NotImplementedError) · RED-R 11 실패 (v2 실행기 바이트 — r1 AssertionError + r2–r11 AttributeError) · RED-L / RED-R 120 s · GREEN 600 s ·
+  정리 ≤ 15 s (공통 기한) + 기록 · E1-0 ≤ 2 h. 새 대조는 없고, 고친 대조는 l14 (승인 문구의 요청서 경로) · l27 · r11 (Git 부분) 셋이다.
+- **정적 검사 (실행 0):**
+  - v4 와 같은 것: AST 파싱 다섯 · 이름 검사 (`__file__` 외 미해결 0) · ruff `--isolated` pyflakes 규칙 (골격의 미사용 import 11 외 0) · 골격의 import ·
+    상수 61 문 (+ `if __name__` 블록) = 고정 구현 (AST 동일) · 함수 35 의 이름 · 순서 · 서명 동일 · 골격 본문 모두 NotImplementedError · `L.*` 39
+    (`__file__` 포함) · `R.*` 16 이 대상에 있음 (r2–r11 첫 줄의 이름은 v2 에 없음) · 봉인 표 = 초안 넷 · HEAD 의 기존 열하나 (불일치 0) · 비밀 검사 0 건.
+  - v5 에서 더한 것: 두 wrapper 의 `subprocess.run` 상수 키워드 (AST — v4 에는 `encoding` 이 없었다) · l27 · r11 의 Git 부분에 `commit` · `log` 없음 ·
+    `--no-filters` · `cat-file blob` · 자기 확인 · 정확한 대체 문자열 기대 있음 · RED 첫 줄 불변 (l27 = `L.proc_members` · r11 = `R.observe`) · v4 대비
+    diff 가 머리말 · `REQUEST` · git wrapper · l14 문구 · l27 / r11 의 Git 부분 · 봉인 표 자리에만 있음.
+  - 골격은 `make_skeleton_v5.py` (v4 의 정적 변환과 같고 머리 docstring 만 다름), 봉인 표는 `fill_runner_v3.py` (같은 정적 치환) 로 만들었다. 봉인 표는
+    초안 넷 확정 뒤 한 번 채웠다. 도구는 스크래치패드에 있고 저장소에 넣지 않았다.
+- **밝힌 것 (요청서 v5 §8 — 26):**
+  - 고친 것: 1 · 2 · 6 · 17 · 18 · 19 · 20.
+  - 새로 넣은 것: 22 (lstat) · 23 (S6) · 24 (v4 미실행) · 25 (l14 의 `§80` 은 형식 예시) · 26 (S6 은 시험 대상 wrapper 둘에만 · fixture 도우미 `_git` 은
+    `text=True` 만 · 그 출력은 `rev-parse HEAD` · `hash-object` 의 객체 이름뿐).
+  - **6 은 v4 의 틀린 전제를 바로잡는다** — v4 는 "커밋 메시지가 바이트 그대로 출력된다" 고 적었다 (§80). blob · `cat-file blob` 이 바이트를 그대로
+    다룬다는 것은 Git 의 공개 의미에 기댄 설계 판단이다 (실행 0). 틀리면 GREEN 에서 자기 확인이 먼저 멈춘다.
+- **문서:**
+  - 승인 요청 v5 `docs/REIL_C4E_E1_APPROVAL_REQUEST_v5_20261027.md` (`18db9f15cff07a0336d52bbc014f23759f82dc7fe24d0408870b3c0f746d5d69` · 41,974 B · E1-0
+    한정 · 밝힐 것 26).
+  - 사전 검토 발송문 v5 `docs/REIL_C4E_E1_PREREVIEW_SEND_v5_20261027.md` (`cf266a2ea4fe1246b473c296b1ca7005791417de31a30b0a0a18c35f960ff942` · 9,351 B ·
+    질문 4).
+- **다음:** 사전 검토 발송 (사용자 결정) → 수용 → 사용자의 E1-0 한정 승인 → E1-0 → 결과 검토 → E1-1–3 승인 요청 (FUTURE-01 정정 · E1-0b 포함). 이 기록은
+  어느 단계의 실행 승인도 아니다.
