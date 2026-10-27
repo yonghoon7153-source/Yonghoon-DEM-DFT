@@ -9199,6 +9199,118 @@ def t_UM22():
     return (not bad and r['m']['rc'] == 0 and same and v1['rc'] == 0 and v2['rc'] == 0 and res_bytes(v1) == res_bytes(v2),
             (bad[:3], r['m']['rc'], diff, v1['rc'], v2['rc'], res_bytes(v1) == res_bytes(v2), r['m']['so'][-300:], v2['so'][-300:]))
 
+
+# ── ★ 10-27 묶음 C2e (Q9 설계 개정 5 ③ · Codex 회차 ① §7 ③ · author 10-27 approved bundle C) 다시 판정 — 등급이 다르면 REVERIFY_DIFF + 보고 ──
+#    판정 = 판정 프로세스 환경 지문 옆 파일 (`verdict_env.json` · 판정 JSON 밖 = 다시 판정 바이트 대조 무관) · 다시 판정 = 바이트 대조 그대로 (구조 같아도 등급이
+#    다르면 DIFF · 약화하지 않는다 · 원 판정을 덮지 않는다) + 보고 (원 판정 · 다시 계산 판정 · 다른 공개 칸 · 다른 결과 칸 이름 (값 = 봉인) · 원 · 지금 환경 ·
+#    다른 환경 칸) · `--out <새 폴더>` = 보고 파일 (`reverify_report.json`) · 없으면 화면만 (판정 폴더에 아무것도 쓰지 않는다)
+def chain_c2e():
+    """사슬에 다시 판정 보고 (`REVERIFY_SCHEMA`) 가 있나 (고치기 전 판 = 없음)."""
+    return getattr(RR, 'REVERIFY_SCHEMA', None) is not None
+
+
+@contextlib.contextmanager
+def judge_flip():
+    """다시 판정만 등급을 뒤집는 꼴 (구조 · 입력 같음 · 경계가 옮겨진 흉내) — 판정 함수의 x 를 옮긴다: 원 이름이 FAIL 이면 구간 가운데 (안) · 아니면 구간 위 끝 × 1e6 (밖)."""
+    orig = RR.judge
+
+    def flip(vals, x=None, ref=None):
+        r0 = orig(vals) if x is None else orig(vals, x=x, ref=ref)
+        lo, hi = r0['interval_mScm']
+        x2 = math.sqrt(lo * hi) if r0['verdict'] == 'FAIL' else hi * 1e6
+        return orig(vals, x=x2) if ref is None else orig(vals, x=x2, ref=ref)
+    RR.judge = flip
+    try:
+        yield
+    finally:
+        RR.judge = orig
+
+
+def rv_call(vdir, out=None, flip=False):
+    argv = ['--stage', 'verdict', '--reverify', str(vdir), '--root', FX['root']] + (['--out', str(out)] if out is not None else [])
+    if not flip:
+        return call(argv)
+    with judge_flip():
+        return call(argv)
+
+
+def dir_digest(p):
+    p = Path(p)
+    return {f.relative_to(p).as_posix(): hashlib.sha256(f.read_bytes()).hexdigest() for f in sorted(p.rglob('*')) if f.is_file()}
+
+
+@check('RV01', '★ 10-27 묶음 C2e (Q9 개정 5 ③) — 판정이 판정 프로세스 환경 지문을 옆 파일 verdict_env.json (schema rint-r-verdict-env-v1 · env = 사슬 env_record) '
+               '에 남긴다 (판정 JSON 밖) · 같은 입력 다시 판정 = REVERIFY_SAME rc 0 · --out <새 폴더> = reverify_report.json (result REVERIFY_SAME · grade_differ '
+               'False · 원 환경 = 옆 파일 · 다른 환경 칸 없음) · 판정 폴더 바이트 그대로')
+def t_RV01():
+    if not chain_c2e():
+        return False, '사슬에 다시 판정 보고 (REVERIFY_SCHEMA) 가 없다'
+    v = s_verdict_main()
+    ve = u_json(v['out'] / 'verdict_env.json') or {}
+    before = dir_digest(v['out'])
+    out = Path(TD) / 'runs' / 'RV01_rep'
+    rc, so = scen('RV01', lambda: rv_call(v['out'], out=out))
+    rep = u_json(out / 'reverify_report.json') or {}
+    return (ve.get('schema') == 'rint-r-verdict-env-v1' and ve.get('env') == RR.env_record() and rc == 0 and 'REVERIFY_SAME' in so
+            and rep.get('schema') == RR.REVERIFY_SCHEMA and rep.get('result') == 'REVERIFY_SAME' and rep.get('grade_differ') is False
+            and rep.get('env_original') == ve.get('env') and rep.get('env_fields_differ') == [] and dir_digest(v['out']) == before,
+            (sorted(ve), rc, so[-200:], {k: rep.get(k) for k in ('result', 'grade_differ', 'env_fields_differ')}))
+
+
+@check('RV02', '★ 10-27 묶음 C2e (Codex 회차 ① ③ — 구조 비교만으로 약화하지 않는다 · 원 판정을 덮지 않는다) — 주 판정을 다시 판정할 때만 등급이 뒤집히는 꼴 (판정 '
+               '함수의 문턱 x 를 옮김) → rc 1 REVERIFY_DIFF · 보고 = 원 판정 이름 (저장본) · 다시 계산 이름 (다름) · grade_differ True · 다른 공개 칸에 verdict · '
+               '결과 다름 + 다른 결과 칸 이름 · 보고 파일에 σ 값 없음 (결과 JSON 의 값 글자가 보고에 없다) · 판정 폴더 바이트 그대로 · --out 없으면 아무것도 안 쓴다')
+def t_RV02():
+    if not chain_c2e():
+        return False, '사슬에 다시 판정 보고 (REVERIFY_SCHEMA) 가 없다'
+    v = s_verdict_main()
+    before = dir_digest(v['out'])
+    out = Path(TD) / 'runs' / 'RV02_rep'
+    rc, so = scen('RV02', lambda: rv_call(v['out'], out=out, flip=True))
+    rc2, so2 = scen('RV02b', lambda: rv_call(v['out'], flip=True))
+    rep = u_json(out / 'reverify_report.json') or {}
+    o, n = rep.get('original') or {}, rep.get('recomputed') or {}
+    res_txt = (v['out'] / 'verdict_results.json').read_text(encoding='utf-8')
+    leak = [x for x in re.findall(r'\d\.\d{6,}', res_txt) if x in (out / 'reverify_report.json').read_text(encoding='utf-8')] \
+        if (out / 'reverify_report.json').exists() else ['no report']
+    return (rc == 1 and 'REVERIFY_DIFF' in so and rep.get('result') == 'REVERIFY_DIFF' and o.get('verdict') == (v.get('v') or {}).get('verdict')
+            and n.get('verdict') not in (None, o.get('verdict')) and rep.get('grade_differ') is True and 'verdict' in (rep.get('public_keys_differ') or [])
+            and rep.get('results_differ') is True and bool(rep.get('results_keys_differ')) and not leak and dir_digest(v['out']) == before
+            and rc2 == 1 and 'REVERIFY_DIFF' in so2,
+            (rc, so[-300:], o, n, rep.get('grade_differ'), rep.get('public_keys_differ'), rep.get('results_keys_differ'), leak[:3], rc2))
+
+
+@check('RV03', '★ 10-27 묶음 C2e (Codex 회차 ① ③ "넘침 목록 · 시도 sha · 원장 접두가 같아도 최종 등급이 다르면 REVERIFY_DIFF") — 합친 예측 (C2d · 원장 판정) 을 '
+               '다시 판정할 때만 등급이 뒤집히는 꼴 → rc 1 REVERIFY_DIFF (원장 · 사본 · 합친 런 대조는 그대로 통과 = 멈춤 없음 · grade_differ True) · 뒤집지 않은 '
+               '다시 판정 = REVERIFY_SAME')
+def t_RV03():
+    if not chain_c2e() or not chain_c2d():
+        return False, '사슬에 다시 판정 보고 · 합치기가 없다'
+    r = s_units_main()
+    vm = r['v_m']
+    out = Path(TD) / 'runs' / 'RV03_rep'
+    rc, so = scen('RV03', lambda: rv_call(vm['out'], out=out, flip=True))
+    rc0, so0 = scen('RV03_same', lambda: rv_call(vm['out']))
+    rep = u_json(out / 'reverify_report.json') or {}
+    return (vm['rc'] == 0 and rc == 1 and rep.get('result') == 'REVERIFY_DIFF' and rep.get('grade_differ') is True
+            and (rep.get('recomputed') or {}).get('stop_code') is None and rc0 == 0 and 'REVERIFY_SAME' in so0,
+            (vm['rc'], rc, so[-200:], {k: rep.get(k) for k in ('result', 'grade_differ', 'recomputed')}, rc0))
+
+
+@check('RV04', '★ 10-27 묶음 C2e (인자 꼴) — 다시 판정 --out 이 이미 있고 비지 않음 → rc 3 OUTDIR_NOT_EMPTY (다시 계산 전 · 그 폴더 바이트 그대로)')
+def t_RV04():
+    if not chain_c2e():
+        return False, '사슬에 다시 판정 보고 (REVERIFY_SCHEMA) 가 없다'
+    v = s_verdict_main()
+    out = Path(TD) / 'runs' / 'RV04_rep'
+    if not out.exists():
+        out.mkdir(parents=True)
+        (out / 'old.txt').write_text('x', encoding='utf-8')
+    before = dir_digest(out)
+    rc, so = scen('RV04', lambda: rv_call(v['out'], out=out))
+    return rc == 3 and 'OUTDIR_NOT_EMPTY' in so and dir_digest(out) == before, (rc, so[-200:])
+
+
 def doc_tool_commands(path, tool):
     """문서의 ```bash 블록에서 `python3 …/<tool>` 명령 → [(첫 줄 번호, 인자 목록)].  `\\` 이음 · 주석 줄 (`#` 시작) 은 뺀다 · `&&` · `|` ·
     `;` (앞뒤 빈칸) 로 가른 조각 중 그 도구를 python 으로 부르는 것만 · 자리표 `<…>` = 낱말 '1' (수 · 경로 어느 자리든 argparse 를 지난다) ·
