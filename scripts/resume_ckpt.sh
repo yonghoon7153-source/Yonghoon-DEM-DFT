@@ -4,6 +4,8 @@
 #   -n NP   본 런 MPI 수 (기본 30)          -s SUF  멈춘 폴더 접미사 (필수)      -r ROOT 케이스 루트 (기본 ~/dem_test/lhs)
 #   -x SFX  새 파일 접미사 (기본 r<NP>)      -t N    시험 step (기본 2000)
 #   -T      시험만 — G0–G3 를 기록하고 본 제출은 하지 않는다 (NP 실측용)
+#   -c      작업 사본의 맨 위 input*.liggghts 에서 줄 전체 주석 (첫 공백 아닌 글자 #) 만 빼고 dem_restart.py — 멈춘 폴더 그대로 · 인라인 주석은 안 뺀다
+#           비주석 줄 sha256 · LIGGGHTS 명령 (& 이어 붙이기 → 주석 제거) 전후 같아야 (아니면 ⛔ 건너뜀) · 10-27 ibb: 덱 검사가 머리 주석의 다른 케이스 이름 (real_4) 도 거부
 #   -C <본 덱> <재개 덱> <체크포인트> <S0> <작업 폴더>   재개 덱 정적 대조만 (손 확인용 · 종료 코드 0 = 통과)
 # 2026-10-26 (원장 KG50-02 · KG50-10 · 1저자 Q2 *"50kg 권고대로해"*):
 #   본 제출 = G0 ∧ G1 ∧ G2 ∧ G3 · G0 = 시험이 COMPLETED · ExitCode 0:0 · 마지막 thermo step = 기대 끝 (S0 + 시험 run) · 그 뒤 Loop time · ERROR 0.
@@ -11,10 +13,11 @@
 #   sacct 조회 실패 · 대기 시간 초과 · 시험 로그 없음 = 제출 안 함.
 #   재개 덱 정적 대조 (재삽입 · 물리 줄 · 재개 지점 상태 · 남은 step · 뒤 순서 · c_/f_ 정의) 실패 = 시험도 내지 않는다.
 #   큐 검사 = 이름 정확 일치 (C · C_ins · C_<SFX> · C_<SFX>t · C_r<N> · C_r<N>t) · squeue 조회 실패 = 그 케이스 건너뜀.
-NP=30; SUF=""; L=~/dem_test/lhs; SFX=""; TS=2000; TONLY=0; CHK=0
-while getopts "n:s:r:x:t:TC" o; do case $o in n) NP=$OPTARG;; s) SUF=$OPTARG;; r) L=$OPTARG;; x) SFX=$OPTARG;; t) TS=$OPTARG;; T) TONLY=1;; C) CHK=1;; *) exit 1;; esac; done
+NP=30; SUF=""; L=~/dem_test/lhs; SFX=""; TS=2000; TONLY=0; CHK=0; STRIP=0
+while getopts "n:s:r:x:t:TCc" o; do case $o in n) NP=$OPTARG;; s) SUF=$OPTARG;; r) L=$OPTARG;; x) SFX=$OPTARG;; t) TS=$OPTARG;; T) TONLY=1;; C) CHK=1;; c) STRIP=1;; *) exit 1;; esac; done
 shift $((OPTIND-1))
 # 재개 덱 정적 대조 — 인자: 본 덱 · 재개 덱 · 체크포인트 경로 · S0 · 작업 폴더.  stdout = 기록 · 종료 코드 0 = 통과
+#   (-c 주석 줄 빼기도 이 파이썬이 한다 — 인자 --strip-comments <작업 폴더> 둘뿐일 때 · LIGGGHTS 줄 규칙 deck() 를 같이 쓰려고)
 deckcheck(){ python3 - "$@" <<'PY'
 import os, re, sys
 FWD = {'fix', 'pair_style', 'pair_coeff', 'compute', 'neighbor', 'neigh_modify', 'timestep', 'variable'}
@@ -229,6 +232,84 @@ def check(main, res, ckpt, s0, W):
     return probs, notes
 
 
+def strip_comments(W):
+    # -c (10-27 ibb · dem_restart.py 덱 검사가 머리 주석의 다른 케이스 이름도 거부): 작업 폴더 W 의 맨 위 input*.liggghts 에서
+    # 줄 전체 주석 (첫 공백 아닌 글자 '#') 만 뺀다 — 인라인 주석 · 빈 줄 · 나머지 바이트 (줄 끝 포함) 그대로.
+    # 덱마다 검사: 비주석 줄 sha256 = 원 파일 ↔ 다시 읽은 새 파일 · 새 파일에 줄 전체 주석 0 · LIGGGHTS 명령 (deck()) 같음
+    # ('&' 로 이어진 명령 안의 주석 줄 · '&' 로 끝나는 주석 줄은 빼면 명령이 바뀐다).  하나라도 실패 = 어느 덱도 안 바꾼다.
+    # 쓰기 = 임시 파일 → 검사 → 전부 통과 뒤 os.replace (새 inode — 멈춘 폴더 · 링크 대상 파일은 안 건드린다).
+    import fnmatch, hashlib, shutil
+
+    def lines(b):
+        parts = b.split(b'\n')
+        return [x + b'\n' for x in parts[:-1]] + ([parts[-1]] if parts[-1] else [])
+
+    def body(b):
+        return [x for x in lines(b) if not x.lstrip().startswith(b'#')]
+
+    names, recs, probs, tmps, done, total = [], [], [], [], [], 0
+    try:
+        names = sorted(n for n in os.listdir(W)
+                       if fnmatch.fnmatchcase(n, 'input*.liggghts') and os.path.isfile(os.path.join(W, n)))
+        if not names:
+            probs.append('작업 폴더에 input*.liggghts 없음')
+        for name in names:
+            p = os.path.join(W, name)
+            with open(p, 'rb') as f:
+                old = f.read()
+            keep = body(old)
+            n = len(lines(old)) - len(keep)
+            h0 = hashlib.sha256(b''.join(keep)).hexdigest()
+            if n == 0:
+                recs.append('%s: 줄 전체 주석 0 줄 뺌 (파일 그대로) · 남은 줄 %d · 비주석 줄 sha256 전 %s = 후 %s'
+                            % (name, len(keep), h0, h0))
+                continue
+            t = p + '.cstrip'
+            tmps.append((t, p))
+            with open(t, 'wb') as f:
+                f.write(b''.join(keep))
+            with open(t, 'rb') as f:
+                new = f.read()
+            h1 = hashlib.sha256(b''.join(body(new))).hexdigest()
+            left = len(lines(new)) - len(body(new))
+            dm, dn = deck(p), deck(t)
+            if h1 != h0:
+                probs.append('%s: 비주석 줄 sha256 다름 — 전 %s · 후 %s' % (name, h0, h1))
+            if left:
+                probs.append('%s: 새 파일에 줄 전체 주석 %d 줄 남음' % (name, left))
+            if dm != dn:
+                i = next(j for j in range(max(len(dm), len(dn)))
+                         if j >= len(dm) or j >= len(dn) or dm[j] != dn[j])
+                probs.append('%s: 주석 줄을 빼면 LIGGGHTS 명령이 바뀐다 (예: & 이어 붙이기 안의 주석 줄 · & 로 끝나는 주석 줄) — '
+                             '%d 번째 명령 전 [%s] ↔ 후 [%s] · 손으로 봐야 함'
+                             % (name, i + 1, dm[i][:120] if i < len(dm) else '없음', dn[i][:120] if i < len(dn) else '없음'))
+            total += n
+            recs.append('%s: 줄 전체 주석 %d 줄 뺌 · 남은 줄 %d · 비주석 줄 sha256 전 %s = 후 %s · LIGGGHTS 명령 %d 개 같음'
+                        % (name, n, len(keep), h0, h1, len(dn)))
+        if not probs:
+            for t, p in tmps:
+                shutil.copystat(p, t)
+                os.replace(t, p)
+                done.append(os.path.basename(p))
+    except Exception as e:
+        probs.append('도구 오류: %s: %s' % (type(e).__name__, e))
+    finally:
+        for t, _ in tmps:
+            if os.path.exists(t):
+                os.remove(t)
+    if probs:
+        for q in probs:
+            print('  ✗ ' + q)
+        print('  주석 줄 빼기 (-c): 실패 — %s' % ('이미 바꾼 덱 %s (작업 폴더만)' % ' '.join(done) if done else '어느 덱도 안 바꿈'))
+        return 1
+    for r in recs:
+        print('  · ' + r)
+    print('  주석 줄 빼기 (-c): 통과 (덱 %d · 뺀 줄 %d)' % (len(names), total))
+    return 0
+
+
+if len(sys.argv) == 3 and sys.argv[1] == '--strip-comments':
+    sys.exit(strip_comments(sys.argv[2]))
 try:
     main, res, ckpt, s0, W = sys.argv[1:6]
     probs, notes = check(main, res, ckpt, int(s0), W)
@@ -242,6 +323,8 @@ print('  재개 덱 정적 대조: %s (문제 %d)' % ('통과' if not probs else
 sys.exit(1 if probs else 0)
 PY
 }
+# -c 주석 줄 빼기 — 인자: 작업 폴더 · stdout = 기록 · 종료 코드 0 = 통과 (실패면 어느 덱도 안 바꾼다)
+stripc(){ deckcheck --strip-comments "$1"; }
 if [ $CHK = 1 ]; then [ $# = 5 ] || { echo "사용: bash resume_ckpt.sh -C <본 덱> <재개 덱> <체크포인트> <S0> <작업 폴더>"; exit 2; }; deckcheck "$@"; exit $?; fi
 CASES="$*"; SFX=${SFX:-r$NP}
 [ -n "$SUF" ] && [ -n "$CASES" ] || { echo "사용: bash resume_ckpt.sh -n 30 -s stop15_0927 <케이스…>"; exit 1; }
@@ -257,7 +340,7 @@ sel(){ awk 'NR==9{n=0;split("id type x y z radius vx vy vz",w," ");for(k=1;k<=9;
 lastrun(){ awk '/^ *Step +Atoms/{q=1;next} /^Loop time of/{q=0;lp=NR;next} q&&$1~/^[0-9]+$/{s=$1;ln=NR} END{print s+0, ln+0, lp+0}' "$1"; }
 rx(){ printf '%s' "$1" | sed 's/[][\.*^$(){}+?|/]/\\&/g'; }
 echo "# LIGGGHTS 체크포인트 재개 기록 — $SFX ($NP MPI) · $(date '+%F %H:%M')" > $REP
-echo "명령: bash resume_ckpt.sh -n $NP -s $SUF -r $L -x $SFX -t $TS$([ $TONLY = 1 ] && echo ' -T') $CASES" >> $REP
+echo "명령: bash resume_ckpt.sh -n $NP -s $SUF -r $L -x $SFX -t $TS$([ $TONLY = 1 ] && echo ' -T')$([ $STRIP = 1 ] && echo ' -c') $CASES" >> $REP
 for C in $CASES; do
   S=$L/$C.$SUF; W=$L/$C; X=$L/$C.prev_$STAMP; D=$W/input_${C}_$SFX.liggghts; RN=$W/run_${C}_$SFX.sh
   echo; echo "████ $C"
@@ -275,6 +358,10 @@ for C in $CASES; do
   fi
   echo "  복사 중 ($(du -sh $S | cut -f1)) …"; cp -a $S $W || { echo "  ⛔ 복사 실패"; continue; }
   mv $W/log.liggghts $W/log.liggghts.$SUF
+  if [ $STRIP = 1 ]; then
+    stripc $W > $W/strip_$SFX.txt 2>&1; SOK=$?; cat $W/strip_$SFX.txt
+    [ $SOK = 0 ] || { echo "  ⛔ 주석 줄 빼기 (-c) 실패 — 재개 덱 만들지 않고 건너뜀 (기록 strip_$SFX.txt)"; continue; }
+  fi
   python3 ~/dem_test/dem_restart.py --case-list $C --root $L --suffix $SFX --skip-sacct --no-relax-detect > $W/plan_$SFX.txt 2>&1
   P=$(grep -E "^ +$C +(compress|after_settling|settling) " $W/plan_$SFX.txt | sed 's/^ *//')
   [ -n "$P" ] || { echo "  ⛔ 재개 덱 못 만듦 (체크포인트 없음 → 처음부터밖에 없음 · 보고 후 승인):"; grep -A3 '제외' $W/plan_$SFX.txt; continue; }
@@ -358,6 +445,7 @@ for C in $CASES; do
   { echo; echo "## $C"
     echo "- 멈춘 폴더: ${C}.$SUF (손대지 않음) · 멈춘 곳 $(grep -a '^======' $S/log.liggghts | tail -1)"
     echo "- 작업 폴더: $W (= 멈춘 폴더 cp -a) · 원 로그 → log.liggghts.$SUF · 체크포인트 뒤 덤프 → old_post_after${S0}_$SUF/"
+    [ $STRIP = 1 ] && { echo "- 주석 줄 빼기 (-c · 작업 폴더 덱만): $(tail -1 $W/strip_$SFX.txt | sed 's/^ *주석 줄 빼기 (-c): //') (strip_$SFX.txt)"; sed -n 's/^  · /    /p' $W/strip_$SFX.txt; }
     echo "- 재개: $M 체크포인트 \`read_restart $RR\` (step $S0) · 덱 input_${C}_$SFX.liggghts · 러너 run_${C}_$SFX.sh (#SBATCH -n $NP · mpirun --oversubscribe --bind-to none -np $NP)"
     echo "- 템플릿 재선언: $(cat $W/tp_$SFX.txt)"
     echo "- 재개 덱 정적 대조: $(tail -1 $W/deckcheck_$SFX.txt | sed 's/^ *재개 덱 정적 대조: //') (deckcheck_$SFX.txt)"
