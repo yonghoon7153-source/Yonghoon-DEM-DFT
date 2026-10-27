@@ -26,7 +26,9 @@
   ⑤ 삽입 영역 위끝 (reg_mix z1) — volumefraction 은 템플릿 값 그대로 두고 높이로 면용량을 맞춘다
      (고체 두께 = (L / C) / ρ_AM + (L / C)·(1−w)/w / ρ_SE · 높이 = 고체 두께 / volumefraction)
   ⑥ 시드 다섯 (템플릿 셋 · 분포 · 삽입) = 8 자리 소수 · 케이스마다 독립
-  ⑦ 태그 `real_4` → 케이스명 (출력 폴더 · 판 STL · print)
+  ⑦ 태그 `real_4` → 케이스명 (출력 폴더 · 판 STL · print) — 덱 머리 주석에도 기준 덱 파일 이름 · 태그를 쓰지 않는다
+     (기준 덱 = sha256 전체 · 폴더 · 경로 전체는 manifest.json · 10-27 ibb `dem_restart.py` 가 v2 덱을 머리 주석 두 줄 때문에
+     "다른 케이스명 혼입: ['real_4']" 로 거부) · build 가 생성 파일 어느 줄에든 (주석 포함) 다른 케이스명이 있으면 쓰지 않고 멈춘다
   ⑧ `maxattempt` = int32 상한 아래 (`ninsert_this_local × maxattempt` 가 int 곱셈 · 1 proc 최악 · 여유 1.3 · 원장 `PS-01`)
   ⑨ `processors * * 1` (x · y 분할 · `PS-01` 둘째 원인 · a6 · hit 재개 스크립트와 같은 분할)
   ⑩ 삽입 자기검사 (`count(all)` < 99 % 면 `quit 1` · `make_ps_sweep_decks.insert_gate` 그대로)
@@ -271,6 +273,7 @@ def make_deck(text: str, case: str, r_se_um: float, box_um: float, idx: int, *, 
                          lambda m: f'{m.group(1)}   # (이 케이스 질량분율 0 — 분포에서 제외)', 1, f'{n} 표지')
 
     # ── ⑦ 태그 ──
+    n_tag_lo, n_tag_up = out.count(TAG_OLD), out.count(TAG_OLD.upper())       # 머리 ⑦ 줄에 적는다 (태그 이름은 안 적는다)
     out = out.replace(TAG_OLD, case).replace(TAG_OLD.upper(), case.upper())
     if TAG_OLD in out or TAG_OLD.upper() in out:
         _die('태그가 남았다')
@@ -445,17 +448,25 @@ def make_deck(text: str, case: str, r_se_um: float, box_um: float, idx: int, *, 
                se_gate=list(se_gate) if se_gate else None, n_se_plan=n_se_plan, end_frames=bool(end_frames),
                skin_um=float(skin_um) if skin_um is not None else skin_old, skin_um_template=skin_old,
                **ADD.dens_record(dens_gen))
+    #   머리 주석에 기준 덱 파일 이름 · 태그를 쓰지 않는다 — ibb dem_restart.py 가 덱 어느 줄에든 (주석 포함) 다른
+    #   케이스명이 있으면 재개 계획을 내지 않는다 (10-27 "다른 케이스명 혼입: ['real_4']").  기준 덱 신원 = 실제로 바꾼
+    #   텍스트의 sha256 전체 + 폴더 (경로 전체는 manifest.json "template").
+    tpl_sha = hashlib.sha256(text.encode('utf-8')).hexdigest()
+    tpl_dir = os.path.relpath(os.path.dirname(TEMPLATE), ROOT).replace(os.sep, '/')
+    tpl_desc = (f'phase_a 6 mAh 템플릿 ({tpl_dir}/ · sha256 {tpl_sha} · 파일 경로 = manifest.json "template")'
+                if tpl_sha == TEMPLATE_SHA256 else f'고정 템플릿과 다른 텍스트 (sha256 {tpl_sha})')
     head = [
         '# ===== SE 입도 비교 생성본 (make_se_size_decks.py · 50kg/batch 4차년도) =====',
         f'#   {case}: {desc}',
-        f'#   기준 덱 docs/data/phase_a_6mah/in.real_4.liggghts (sha256 {TEMPLATE_SHA256[:16]}…) — 바꾼 자리 = 아래뿐',
+        f'#   기준 덱 = {tpl_desc} — 바꾼 자리 = 아래뿐',
         f'#   ① 조성 단일 활물질 (AM_P 자리 · pts2 정의만) · 질량분율 AM {PS.fmt_frac(am_mass)} · SE {PS.fmt_frac(1 - am_mass)}',
         f'#   ② r_AM_P {r_am_um:g} µm · r_SE {r_se_um:g} µm   ③ 진밀도 세대 {dens_gen}: AM {rho_am:g} · SE {rho_se:g} g/cm³',
         f'#   ④ 영역 {box_um:g}×{box_um:g} µm (reg_box · reg_mix · 판 꼭짓점 · 압력 면적 {_fmt_sim(area)})',
         f'#   ⑤ 삽입 위끝 z {z_top:.6f} (높이 {(z_top - z0_mix) * UM_PER_SIM:.1f} µm · volumefraction {vf:g} 그대로) '
         f'= 고체 두께 {t_solid_um:.2f} µm = {loading_mah_cm2:g} mAh/cm² @ {cap_mah_g:g} mAh/g',
         '#   ⑥ 시드 (큰 소수 · 케이스마다 독립): ' + ', '.join(str(s) for s in seeds),
-        f'#   ⑦ 태그 {TAG_OLD} → {case}   ⑧ maxattempt {att_old:,} → {att:,} (예상 {n_tot:,} × {att:,} = '
+        f'#   ⑦ 태그 = 기준 덱의 케이스 태그 (소문자 {n_tag_lo} 곳 · 대문자 {n_tag_up} 곳) → {case} · {case.upper()}'
+        f'   ⑧ maxattempt {att_old:,} → {att:,} (예상 {n_tot:,} × {att:,} = '
         f'{n_tot * att:.3g} < 2^31/1.3 · 원장 PS-01)',
         f'#   ⑨ {PS.PROC_GRID} (x·y 분할)   ⑩ 삽입 자기검사 (99 %)   ⑪ {rc} (간격 {cre:,})',
         (f'#   ⑫ atom 덤프 간격 {dump_old:,} → {int(atom_dump_every):,}' if atom_dump_every
@@ -478,7 +489,10 @@ def make_deck(text: str, case: str, r_se_um: float, box_um: float, idx: int, *, 
         '#   ⚠ 감쇠 fix damp all viscous 0.5 = 모든 입자에 같은 γ — γ/m 이 SE 크기에 따라 다르다 (D0.7 ↔ D3 ≈ 79 배 · KG50-04 · 대조 = 등록 뒤).',
         '#   ⚠ 언로딩 없음 — 끝 상태 = 판 고정 이완 (가압 상태) · 실험 (하중 제거) 과 바로 비교하지 않는다.',
     ]
-    return '\n'.join(head) + '\n' + out, rec
+    full = '\n'.join(head) + '\n' + out
+    if TAG_OLD.lower() in full.lower():
+        _die(f'{case}: 기준 덱 태그가 덱에 남았다 (주석 포함 — ibb dem_restart.py 가 "다른 케이스명 혼입" 으로 거부한다)')
+    return full, rec
 
 
 def roundtrip(deck: str, rec: dict) -> list:
@@ -520,8 +534,8 @@ def roundtrip(deck: str, rec: dict) -> list:
     ma = PS.RE_MAXATT.findall(body)
     if [int(x[1]) for x in ma] != [rec['maxattempt']]:
         bad.append(f'maxattempt {ma}')
-    if TAG_OLD in body or TAG_OLD.upper() in body:
-        bad.append('옛 태그')
+    if TAG_OLD.lower() in deck.lower():                    # 주석 줄 포함 (dem_restart.py "다른 케이스명 혼입" · 10-27)
+        bad.append('옛 태그 (주석 포함)')
     if body.count('processors * * 1') != 1 or body.find('processors * * 1') > body.find('region reg_box'):
         bad.append('processors')
     case = rec['case']
@@ -752,6 +766,15 @@ def build(out_dir, cases, cfg, template_path=None, expect_sha=TEMPLATE_SHA256, r
     os.makedirs(out_dir, exist_ok=True)
     kw = {k: cfg[k] for k in DECK_KW if k in cfg}
     recs = []
+    fnames = foreign_name_list(cfg, cases, runner_case)
+
+    def _put(case, path, txt):
+        """쓰기 전 검사 — 생성 파일 어느 줄에도 (주석 포함) 다른 케이스명이 있으면 쓰지 않고 멈춘다 (10-27)."""
+        hits = foreign_name_lines(txt, case, fnames)
+        if hits:
+            _die(f'{case}: {os.path.basename(path)} 에 다른 케이스명 {sorted({h[1] for h in hits})} ({len(hits)} 줄 · 첫 줄 '
+                 f'{hits[0][0]} 행) — ibb dem_restart.py 가 "다른 케이스명 혼입" 으로 거부한다 · 쓰지 않는다')
+        return _write(path, txt)
     for case, r_se, box, slot in cases:
         deck, rec = make_deck(text, case, r_se, box, slot, **kw)
         bad = roundtrip(deck, rec) + template_diff(deck, text, case)
@@ -760,7 +783,7 @@ def build(out_dir, cases, cfg, template_path=None, expect_sha=TEMPLATE_SHA256, r
         cdir = os.path.join(out_dir, case)
         os.makedirs(cdir)
         rec['seed_slot'] = slot
-        rec['deck_sha256'] = _write(os.path.join(cdir, f'input_{case}.liggghts'), deck)
+        rec['deck_sha256'] = _put(case, os.path.join(cdir, f'input_{case}.liggghts'), deck)
         do_ins = case in cfg.get('insert_cases', ())
         st, tt = cfg.get('insert_settle_steps', 20000), cfg.get('insert_tail_steps', 3000)
         if do_ins:
@@ -768,14 +791,15 @@ def build(out_dir, cases, cfg, template_path=None, expect_sha=TEMPLATE_SHA256, r
             bad = insert_check(deck, ins, rec, st, tt)
             if bad:
                 _die(f'{case} 삽입 전용 덱 검사 실패: {bad}')
-            rec['insert_deck_sha256'] = _write(os.path.join(cdir, f'input_{case}_insert.liggghts'), ins)
+            rec['insert_deck_sha256'] = _put(case, os.path.join(cdir, f'input_{case}_insert.liggghts'), ins)
         if runner_text is not None:
             if do_ins:
                 rt = render_ibb_runner(runner_text, runner_case, case, 1, deck='insert')
-                rec['ibb_runner_insert'] = dict(ntasks=1, sha256=_write(os.path.join(cdir, f'run_{case}_insert.sh'), rt))
+                rec['ibb_runner_insert'] = dict(ntasks=1, sha256=_put(case, os.path.join(cdir, f'run_{case}_insert.sh'), rt))
             if ntasks and case in ntasks:
                 rt = render_ibb_runner(runner_text, runner_case, case, int(ntasks[case]))
-                rec['ibb_runner'] = dict(ntasks=int(ntasks[case]), sha256=_write(os.path.join(cdir, f'run_{case}.sh'), rt))
+                rec['ibb_runner'] = dict(ntasks=int(ntasks[case]),
+                                         sha256=_put(case, os.path.join(cdir, f'run_{case}.sh'), rt))
         recs.append(rec)
     me = open(os.path.abspath(__file__), 'rb').read()
     man = dict(generator='scripts/make_se_size_decks.py', generator_sha256=hashlib.sha256(me).hexdigest(),
