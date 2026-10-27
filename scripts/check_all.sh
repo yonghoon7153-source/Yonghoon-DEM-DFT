@@ -184,6 +184,12 @@ run 'webapp: png_transparent_export' python3 webapp/test_png_transparent_export.
 #  ★ 2026-09-22 — 믹서 런처·생성기 회귀 (LIGGGHTS 없이 가짜 실행파일로).  같은 날 사고 둘을 재현해 막는다:
 #    배너 없는 완주 런을 "죽음" 으로 읽고 재발사(E0_s49979687) · 실행 중 덱 제자리 덮어쓰기(E0_s32452843).
 run 'mixer launcher (완주 판정 · 덮어쓰기 가드)' bash dem_scripts/mixer_20260921/test_launcher.sh
+#  ★ 2026-10-27 (non-Rint 통합 · 대응표 `docs/collab/claude_to_codex/20261027-0220_nonrint-merge-sha-map.md` §6 2) — 믹서 D2 소비자 ·
+#    D3 유한 격자 후보 판독기 직접 시험 (합성 덱 · 합성 계약만 · 시뮬레이터 없음).  Codex 가지에서 반입된 뒤 이 파일 · CI · 등재 어디에도 없었다
+#    (통합 때는 손으로만 돌림 · 13 · 28 unittest OK).  unittest 라 `--selftest` 플래그가 없어 등재 (`selftest_inventory.tsv`) 대상이 아니고
+#    드라이버 (`--run-fast`) 도 못 돈다 → 이름으로 건다 (CI 에도 같이).  실측 (10-27 · 컨테이너 · 두 번) D2 1.47 · 1.27 s · D3 0.42 · 0.40 s.
+run 'mixer D2 소비자 (합성 덱 · 결속 검증 · unittest)' python3 scripts/test_mixer_d2_consumers.py
+run 'mixer D3 후보 판독기 (합성 계약 · unittest)'      python3 scripts/test_mixer_d3_candidates.py
 run 'webapp: launcher (포트 선점)' python3 scripts/test_webapp_launcher.py
 run 'webapp: temp_pressure'       python3 webapp/test_temp_pressure_wiring.py
 #  ★ v3 (2026-09-09) — 화면이 원장을 따라가는가 + **원장을 보여 주는 페이지가 금지값을
