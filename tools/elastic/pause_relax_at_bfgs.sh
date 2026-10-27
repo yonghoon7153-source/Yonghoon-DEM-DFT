@@ -40,16 +40,33 @@
 #   --no_runner  러너를 얼리지도 죽이지도 않는다 (②③⑥ 생략). pw.x 가 끝난 뒤 **다음 잡을 안 띄우는** 드라이버일 때만 쓴다
 #                (restart_qe_relax.sh 는 끝난 잡을 판정·출력만 하고 다시 걸지 않는다 — '▶ … mode=' 다음 줄들).
 #   bash tools/elastic/pause_relax_at_bfgs.sh --in 00_control_relax.restart.in --out 00_control_relax.out --no_runner
+#
+# 2026-10-27 보탬 (Li₂S 4×4×4 를 탄성 13_m 과 12_p 사이에 끼운다 · 사용자 '권고대로 하자 · li2S 진행' ·
+#   결정 D-2026-10-09-li2s-neb-cellconv active)
+#   --hold FILE     러너만 얼리고 (①②③ 그대로) **EXIT 를 만들지 않는다** — 지금 점 (13_m) 은 끝까지 돌게 두고,
+#                   그 pw.x 가 끝나면 러너를 얼린 채 FILE 에 러너 PID · 시작 시각 · 명령줄 · 끝난 점의 상태를 적고 끝난다 (0).
+#                   기다리는 동안 누가 러너를 풀면 (T 아님) 10 · --hold_timeout 을 넘으면 러너를 풀고 6.
+#                   러너를 죽이지 않는다 — 풀면 러너가 끝난 점을 판정하고 다음 점 (12_p) 을 이어 띄운다.
+#   --release FILE  FILE 의 러너를 kill -CONT 로 푼다. PID · 시작 시각 · 명령줄이 FILE 과 다르면 **안 건드린다** (11 · PID 재사용 방지).
+#                   이미 풀려 있으면 0 (기록만) · CONT 뒤에도 T 면 12.
+#   bash tools/elastic/pause_relax_at_bfgs.sh --in strain_13_m.in --runner run_elastic_relaxedion_gabia.sh --hold /data/work/runs/x/elastic_hold.txt
+#   bash tools/elastic/pause_relax_at_bfgs.sh --release /data/work/runs/x/elastic_hold.txt
+#   ⛔ 못 하는 것: 붙든 동안 탄성 점을 바꾸거나 판정하지 않는다 · 러너가 얼어 있는 사이 그 자식 pw.x 가 끝나면 좀비가 되지만
+#     GPU 는 놓는다 (좀비는 메모리를 안 잡는다) · 이 도구가 SIGKILL 로 죽으면 러너는 언 채 남는다 — 그때는 --release 로 푼다.
 # =============================================================================
 set -uo pipefail
 
 IN=""; RUNNER_PAT=""; POLL=20; TIMEOUT=14400; EXIT_WAIT=7200; SELFTEST=0; PANE_PIDS_OVERRIDE=""; OUTF=""; NO_RUNNER=0
+HOLD=""; RELEASE=""; HOLD_TIMEOUT=1209600
 while [ $# -gt 0 ]; do
   case "$1" in
     --in) IN="$2"; shift ;;
     --runner) RUNNER_PAT="$2"; shift ;;
     --out) OUTF="$2"; shift ;;
     --no_runner) NO_RUNNER=1 ;;
+    --hold) HOLD="$2"; shift ;;
+    --release) RELEASE="$2"; shift ;;
+    --hold_timeout) HOLD_TIMEOUT="$2"; shift ;;
     --poll) POLL="$2"; shift ;;
     --timeout) TIMEOUT="$2"; shift ;;
     --exit_wait) EXIT_WAIT="$2"; shift ;;
@@ -87,9 +104,67 @@ inkey(){   # $1 = .in · $2 = 키 → 값 (따옴표 제거)
   grep -aiE "^[[:space:]]*$2[[:space:]]*=" "$1" | head -1 | sed -E "s/^[^=]*=[[:space:]]*//; s/[\"',]//g; s/[[:space:]]+$//"
 }
 nbfgs(){ grep -ac "number of bfgs steps" "$1" 2>/dev/null || true; }
+starttime(){   # /proc/PID/stat 22 번째 칸 — comm 에 빈칸이 있어도 ') ' 뒤에서 센다 (tmux: server 같은 이름에 칸이 밀렸다)
+  sed -E 's/^.*\) //' "/proc/$1/stat" 2>/dev/null | awk '{print $20}'; }
+cmdline(){ tr '\0' ' ' < "/proc/$1/cmdline" 2>/dev/null | sed 's/ $//'; }
+out_state(){   # 끝난 relax 의 상태 — 아래 EXIT 경로와 같은 낱말
+  if grep -aq "bfgs converged" "$1"; then echo done
+  elif grep -aqi "maximum number of steps has been reached" "$1"; then echo exhausted
+  elif grep -aqE "Program stopped by user request|Maximum CPU time exceeded" "$1"; then echo stopped
+  else echo other; fi; }
+
+hold_wait(){   # main 의 P · R · C · OUT · IN 을 쓴다 — 러너는 이미 T
+  local t0 st; t0=$(date +%s)
+  say "붙듦: 러너 $R 얼린 채 pw.x $P 가 스스로 끝나기를 기다린다 (최대 ${HOLD_TIMEOUT} s · EXIT 안 만듦) — 다음 점을 못 띄운다"
+  while alive "$P"; do
+    case "$(pstat "$R")" in
+      T*) ;;
+      *) say "⛔ 러너 $R 가 붙든 사이 풀렸다 ($(pstat "$R")) — 누가 CONT 했다. 붙듦을 그만둔다 (아무것도 안 바꿈)"; return 10 ;;
+    esac
+    if [ $(( $(date +%s) - t0 )) -gt "$HOLD_TIMEOUT" ]; then
+      kill -CONT "$R" 2>/dev/null
+      say "⛔ ${HOLD_TIMEOUT} s 가 지나도 pw.x 가 안 끝났다 — 러너를 풀고 끝낸다 (상태 $(pstat "$R"))"; return 6
+    fi
+    sleep "$POLL"
+  done
+  st=$(out_state "$OUT")
+  { echo "runner_pid=$R"; echo "runner_start=$(starttime "$R")"; echo "runner_cmd=$(cmdline "$R")"
+    echo "pw_pid=$P"; echo "pw_in=$C/$IN"; echo "pw_out=$OUT"; echo "pw_state=$st"
+    echo "pw_bfgs_lines=$(nbfgs "$OUT")"; echo "held_at=$(ts)"; } > "$HOLD"
+  say "✅ 붙듦 — pw.x 끝 (상태 $st · BFGS 줄 $(nbfgs "$OUT") · 마지막 $(grep -a 'Total force' "$OUT" | tail -1 | tr -s ' ')) · 러너 $R 얼린 채"
+  say "   풀기: bash $0 --release $HOLD"
+  return 0
+}
+
+release_main(){
+  local R ST0 CM0 s
+  [ -f "$RELEASE" ] || { say "⛔ 붙듦 파일이 없다: $RELEASE"; return 2; }
+  R=$(sed -n 's/^runner_pid=//p' "$RELEASE" | head -1); ST0=$(sed -n 's/^runner_start=//p' "$RELEASE" | head -1)
+  CM0=$(sed -n 's/^runner_cmd=//p' "$RELEASE" | head -1)
+  [ -n "$R" ] && [ -n "$ST0" ] || { say "⛔ 붙듦 파일에 runner_pid · runner_start 가 없다 — 안 건드린다"; return 2; }
+  if grep -q '^released_at=' "$RELEASE"; then say "이미 푼 기록이 있다 ($(sed -n 's/^released_at=//p' "$RELEASE" | tail -1)) — 상태만 본다: $(pstat "$R")"; fi
+  kill -0 "$R" 2>/dev/null || { say "⛔ 러너 $R 가 없다 — 풀 것이 없다 (사람이 본다)"; return 11; }
+  if [ "$(starttime "$R")" != "$ST0" ] || [ "$(cmdline "$R")" != "$CM0" ]; then
+    say "⛔ PID $R 는 붙든 러너가 아니다 (시작 시각 $ST0 → $(starttime "$R") · 명령줄 '$(cmdline "$R" | cut -c1-60)') — 안 건드린다"; return 11
+  fi
+  s=$(pstat "$R")
+  case "$s" in
+    T*) kill -CONT "$R"; sleep 1; s=$(pstat "$R")
+        case "$s" in T*) say "⛔ CONT 뒤에도 러너 $R 가 T 다"; return 12 ;; esac
+        echo "released_at=$(ts)" >> "$RELEASE"; say "✅ 러너 $R 풀림 ($s) — 끝난 점을 판정하고 다음 점을 띄운다" ;;
+    *)  echo "released_at=$(ts) (이미 풀려 있었다 · $s)" >> "$RELEASE"; say "러너 $R 는 이미 풀려 있다 ($s) — 기록만 했다" ;;
+  esac
+  return 0
+}
 
 main(){
+  [ -n "$RELEASE" ] && { release_main; return $?; }
   [ -n "$IN" ] && { [ -n "$RUNNER_PAT" ] || [ "$NO_RUNNER" = 1 ]; } || { echo "⛔ --in 과 (--runner 또는 --no_runner) 가 필요하다"; return 2; }
+  if [ -n "$HOLD" ]; then
+    [ "$NO_RUNNER" = 1 ] && { echo "⛔ --hold 는 러너를 얼려야 뜻이 있다 — --no_runner 와 같이 못 쓴다"; return 2; }
+    if [ -f "$HOLD" ] && ! grep -q '^released_at=' "$HOLD"; then
+      echo "⛔ 붙듦 파일 $HOLD 가 이미 있고 아직 안 풀렸다 — 그 러너부터 --release 로 풀거나 파일을 치운다"; return 2; fi
+  fi
   local pids n P C OUT PFX ODIR BFGS R n0 t0 tE ended=0
   pids=$(find_pw "$IN"); n=$(echo "$pids" | grep -c . || true)
   [ "$n" = 1 ] || { say "⛔ '$IN' 을 돌리는 pw.x 가 ${n} 개다 (하나여야 한다) — 아무것도 안 했다"; return 3; }
@@ -114,6 +189,7 @@ main(){
       *)  kill -CONT "$R" 2>/dev/null; say "⛔ 러너 상태가 T 가 아니다 ($(pstat "$R")) — CONT 로 되돌리고 멈춘다"; return 5 ;;
     esac
   fi
+  if [ -n "$HOLD" ]; then hold_wait; return $?; fi
   n0=$(nbfgs "$OUT"); t0=$(date +%s); say "BFGS 줄 ${n0} 개에서 다음 줄을 기다린다 (최대 ${TIMEOUT} s)"
   while :; do
     if ! alive "$P"; then ended=1; say "pw.x 가 스스로 끝났다 — EXIT 를 만들지 않는다"; break; fi
@@ -247,6 +323,46 @@ EOF
   ( cd "$T/i" && IN=$XN.restart.in OUTF=$XN.out NO_RUNNER=1 POLL=0.3 TIMEOUT=2 EXIT_WAIT=5 main ) > "$T/i.log" 2>&1; rci=$?
   ck "⛔음성: --no_runner 시간 초과 → rc 6 · EXIT 안 만듦" "$rci:$([ -e "$T/i/fk.EXIT" ] && echo yes || echo no)" "6:no"
   cleanup
+  # ── 2026-10-27 보탬: --hold · --release (지금 점은 끝까지 · 다음 점만 막는다 · 풀면 다음 점) ──
+  yn(){ [ -e "$1" ] && echo yes || echo no; }
+  st1(){ pstat "$1" | cut -c1; }
+  mkjob ha; env STEP=1 CONV_AT=3 "$T/bin/fake_elastic_runner.sh" "$T/ha" "$T/bin" "$XN" & rpa=$!; disown $rpa; sleep 1.5
+  ( cd "$T/ha" && IN=$XN.in RUNNER_PAT=fake_elastic_runner.sh POLL=0.3 HOLD="$T/ha/hold.txt" HOLD_TIMEOUT=30 main ) > "$T/ha.log" 2>&1; rca=$?
+  ck "양성(hold): 지금 점이 스스로 끝날 때까지 붙듦 → rc 0" "$rca" 0
+  ck "양성(hold): EXIT 를 안 만들었다 — 점이 스스로 수렴했다" "$(grep -c 'bfgs converged' "$T/ha/$XN.out"):$(grep -c 'Program stopped' "$T/ha/$XN.out")" "1:0"
+  ck "⛔음성(hold): 붙든 동안 다음 점을 못 띄웠다" "$(yn "$T/ha/next_point_started")" no
+  ck "양성(hold): 러너는 언 채 (T) · 죽이지 않았다" "$(st1 $rpa)" T
+  ck "양성(hold): 붙듦 파일 runner_pid · pw_state" "$(sed -n 's/^runner_pid=//p' "$T/ha/hold.txt"):$(sed -n 's/^pw_state=//p' "$T/ha/hold.txt")" "$rpa:done"
+  ( RELEASE="$T/ha/hold.txt" main ) > "$T/ha_rel.log" 2>&1; rcr=$?; sleep 1.5
+  ck "양성(release): rc 0 · 풀린 러너가 다음 점을 띄웠다" "$rcr:$(yn "$T/ha/next_point_started")" "0:yes"
+  ck "양성(release): 붙듦 파일에 released_at 한 줄" "$(grep -c '^released_at=' "$T/ha/hold.txt")" 1
+  cleanup
+  mkjob hb; env STEP=1 CONV_AT=40 "$T/bin/fake_elastic_runner.sh" "$T/hb" "$T/bin" "$XN" & rpb2=$!; disown $rpb2; sleep 1.5
+  ( cd "$T/hb" && IN=$XN.in RUNNER_PAT=fake_elastic_runner.sh POLL=0.3 HOLD="$T/hb/hold.txt" HOLD_TIMEOUT=30 main ) > "$T/hb.log" 2>&1 & hp=$!
+  sleep 2; kill -CONT $rpb2; wait $hp; rchb=$?
+  ck "⛔음성(hold): 붙든 사이 누가 풀면 rc 10 · 붙듦 파일 안 씀" "$rchb:$(yn "$T/hb/hold.txt")" "10:no"
+  cleanup
+  mkjob hc; env STEP=30 "$T/bin/fake_elastic_runner.sh" "$T/hc" "$T/bin" "$XN" & rpc=$!; disown $rpc; sleep 1.5
+  ( cd "$T/hc" && IN=$XN.in RUNNER_PAT=fake_elastic_runner.sh POLL=0.3 HOLD="$T/hc/hold.txt" HOLD_TIMEOUT=2 main ) > "$T/hc.log" 2>&1; rchc=$?
+  ck "⛔음성(hold): 시간 초과면 rc 6 · 러너를 풀었다 (T 아님)" "$rchc:$(st1 $rpc)" "6:S"
+  ck "⛔음성(hold): 시간 초과면 EXIT 도 붙듦 파일도 없다" "$(yn "$T/hc/fk.EXIT"):$(yn "$T/hc/hold.txt")" "no:no"
+  cleanup
+  mkjob hd; env STEP=1 CONV_AT=2 "$T/bin/fake_elastic_runner.sh" "$T/hd" "$T/bin" "$XN" & rpd=$!; disown $rpd; sleep 1.5
+  ( cd "$T/hd" && IN=$XN.in RUNNER_PAT=fake_elastic_runner.sh POLL=0.3 HOLD="$T/hd/hold.txt" HOLD_TIMEOUT=30 main ) > "$T/hd.log" 2>&1
+  sed -i 's/^runner_start=.*/runner_start=1/' "$T/hd/hold.txt"
+  ( RELEASE="$T/hd/hold.txt" main ) > "$T/hd_rel.log" 2>&1; rcd=$?
+  ck "⛔음성(release): 시작 시각이 다르면 안 건드린다 rc 11 · 러너 언 채" "$rcd:$(st1 $rpd)" "11:T"
+  kill -CONT $rpd 2>/dev/null; cleanup
+  ( IN=x.in NO_RUNNER=1 HOLD="$T/x_hold.txt" main ) > /dev/null 2>&1
+  ck "⛔음성(hold): --hold + --no_runner → rc 2" "$?" 2
+  mkjob he; env STEP=1 CONV_AT=40 "$T/bin/fake_elastic_runner.sh" "$T/he" "$T/bin" "$XN" & rpe=$!; disown $rpe; sleep 1.5
+  echo "runner_pid=1" > "$T/he/hold.txt"
+  ( cd "$T/he" && IN=$XN.in RUNNER_PAT=fake_elastic_runner.sh POLL=0.3 HOLD="$T/he/hold.txt" main ) > "$T/he.log" 2>&1; rce=$?
+  ck "⛔음성(hold): 안 푼 붙듦 파일이 있으면 rc 2 · 러너 안 얼림" "$rce:$(st1 $rpe)" "2:S"
+  cleanup
+  printf "runner_pid=999999\nrunner_start=1\nrunner_cmd=x\n" > "$T/gone.txt"
+  ( RELEASE="$T/gone.txt" main ) > /dev/null 2>&1
+  ck "⛔음성(release): 러너가 없으면 rc 11" "$?" 11
   rm -rf "$T"
   echo "  selftest: ⭕ $ok · ⛔ $bad"; [ "$bad" = 0 ] && exit 0 || exit 1
 fi
