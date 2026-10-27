@@ -25,7 +25,7 @@
   #   … --variant FIBRE --after-main ~/sdcp/ca1_predict
   # (5) 판정 — 원 팔 JSON 전부에서 (값은 --show-results 로 한 번) · 다시 판정 (읽기 전용 · 바이트 대조)
   python3 scripts/rint_r_chain.py --stage verdict --runs <사다리 · 예측 · 감도 폴더 …> --out ~/sdcp/ca1_verdict [--show-results]
-  python3 scripts/rint_r_chain.py --stage verdict --reverify ~/sdcp/ca1_verdict
+  python3 scripts/rint_r_chain.py --stage verdict --reverify ~/sdcp/ca1_verdict [--out <새 보고 폴더 · ★ C2e reverify_report.json>]
 
 값 봉인: 사슬은 σ 를 읽어 점을 고르지만 화면 · 로그 · 공개 요약에는 σ 를 쓰지 않는다 (반복 수 · 잔차 · 판 전류 불균형 · 시간 · 상태만 ·
   σ 가 든 멈춤 사유는 그 수를 가린다).  σ 는 팔 JSON 에만 있고, 판정 결과 (`verdict_results.json`) 는 `--show-results` 로 연다.
@@ -132,6 +132,9 @@
     `UNIT_PROVENANCE_MISMATCH` · 요청되지 않은 시도 · 대조 결과 = `merge.unused_runs` (기록만) · 원장 사본 = `ledger/ledger.bundle`
   · 판정 = 합친 예측은 원장 판정만 (`merged_ledger_check` = 같은 대조를 다시) · ⚠ 한정: 이전 사슬과 모든 멈춤 우선순위가 같다고 쓰지 않는다 (Codex Q-I) ·
     원장은 원장 안 시도끼리만 (그림자 런 · 모든 사본 일관 편집 = 못 막는다 · Q-D) · 기계마다 비트 차 = 칼날 (판정 보장 아님 · Q-G)
+★ 10-27 묶음 C2e (Q9 설계 개정 5 ③ · Codex 회차 ① ③): 판정 = 판정 프로세스 환경 옆 파일 (`verdict_env.json` · 판정 JSON 밖) · 다시 판정 = 바이트 대조 그대로
+  (구조 대조가 같아도 최종 등급이 다르면 REVERIFY_DIFF · 약화 · 덮어쓰기 · 유리한 쪽 고르기 없음) + 보고 (원 · 다시 계산 등급 · 다른 공개 칸 · 다른 결과 칸 이름 =
+  값 봉인 · 원 · 지금 환경 · 다른 환경 칸 · `--out <새 폴더>` = `reverify_report.json`)
 """
 import argparse
 import glob
@@ -5680,9 +5683,47 @@ def _stopped_pub(e, dirs, reg):
             'ledger': getattr(e, 'ledger', None)}                # ★ 10-27 묶음 C1b — 원장 대조를 지난 뒤의 멈춤이면 그 원장 칸 (채택 시도)
 
 
+#: ★ 10-27 묶음 C2e (Q9 설계 개정 5 ③ · Codex 회차 ① §7 ③ · author 10-27 approved bundle C) — 판정 프로세스 환경 옆 파일 (판정 JSON 밖 = 다시 판정 바이트 대조
+#   무관 · 다른 플랫폼 다시 판정 = 환경 차이를 보고만) · 다시 판정 보고 (원 판정 · 다시 계산 판정 · 다른 공개 칸 · 다른 결과 칸 이름 (값 = 봉인 · 등록 R §4-1) ·
+#   원 · 지금 환경 · 다른 환경 칸 · 등급 다름) — 구조 대조가 같아도 바이트가 다르면 REVERIFY_DIFF 그대로 (약화하지 않는다 · 원 판정을 덮지 않는다)
+VERDICT_ENV_SCHEMA = 'rint-r-verdict-env-v1'
+VERDICT_ENV_FILE = 'verdict_env.json'
+REVERIFY_SCHEMA = 'rint-r-reverify-v1'
+REVERIFY_REPORT = 'reverify_report.json'
+
+
+def verdict_grade_view(p):
+    """판정 공개 기록 → 등급 칸 (이름 · 상태 · 표지 · 차단 표지 · §7-1 문장 허용 · 멈춤 이름) — 값 없음."""
+    p = p if isinstance(p, dict) else {}
+    st = p.get('stop') if isinstance(p.get('stop'), dict) else None
+    return {'verdict': p.get('verdict'), 'state': p.get('state'), 'flags': p.get('flags'), 'blocking_flags': p.get('blocking_flags'),
+            'sentence_allowed': p.get('sentence_allowed'), 'stop_code': (st or {}).get('code')}
+
+
+def reverify_report(vdir, pub0, pub, old_res, res, same, lin):
+    """다시 판정 보고 (REVERIFY_SCHEMA) — 결과 JSON 은 칸 이름만 (값 = 봉인 · 화면 · 보고에 σ 없음)."""
+    try:
+        r0 = json.loads(old_res.decode('utf-8')) if old_res is not None else None
+    except (UnicodeDecodeError, ValueError):
+        r0 = None
+    r1 = json.loads(canon_bytes(res).decode('utf-8')) if res is not None else None
+    rkeys = sorted(k for k in set(r0 or {}) | set(r1 or {}) if (r0 or {}).get(k) != (r1 or {}).get(k)) \
+        if isinstance(r0, dict) or isinstance(r1, dict) else []
+    env0 = (read_summary(vdir, VERDICT_ENV_FILE)[0] or {}).get('env')
+    env1 = env_record()
+    g0, g1 = verdict_grade_view(pub0), verdict_grade_view(pub)
+    pc = _clean(pub)
+    return {'schema': REVERIFY_SCHEMA, 'verdict_dir': str(Path(vdir).resolve()), 'result': 'REVERIFY_SAME' if same else 'REVERIFY_DIFF',
+            'original': g0, 'recomputed': g1, 'grade_differ': g0 != g1,
+            'public_keys_differ': sorted(k for k in set(pc) | set(pub0) if pc.get(k) != pub0.get(k)),
+            'results_differ': (old_res is None) != (res is None) or (r0 != r1), 'results_keys_differ': rkeys,
+            'env_original': env0, 'env_now': env1, 'env_fields_differ': (_env_diff(env0, env1) if env0 is not None else None),
+            'ledger_input': lin, 'utc': _utc()}
+
+
 def stage_verdict(a, contract):
     if a.reverify:
-        return reverify(a.reverify, contract, a.root)
+        return reverify(a.reverify, contract, a.root, out=a.out)
     out = Path(a.out)
     try:
         outdir_empty_or_stop(out)
@@ -5703,6 +5744,8 @@ def stage_verdict(a, contract):
     pub['ledger_input'] = lin
     out.mkdir(parents=True, exist_ok=True)
     write_json(out / 'verdict.json', pub)
+    #  ★ 10-27 묶음 C2e — 판정 프로세스 환경 (판정 JSON 밖 · 다시 판정이 보고에 원 환경으로 싣는다 · 바이트 대조 무관)
+    write_json(out / VERDICT_ENV_FILE, {'schema': VERDICT_ENV_SCHEMA, 'env': env_record(), 'utc': _utc()})
     if gsrc is not None:
         write_json(out / 'verdict_graph_src.json', gsrc.public())
     if res is not None:
@@ -5728,11 +5771,19 @@ def stage_verdict(a, contract):
     return rc_
 
 
-def reverify(vdir, contract, root):
+def reverify(vdir, contract, root, out=None):
     """다시 판정 (읽기 전용) — 같은 입력 (판정 JSON 에 적힌 폴더 · 등록) 으로 다시 계산해 두 JSON 을 바이트 대조.  ★ 10-25 묶음 B (RCA2-03) —
     root = 그 기계의 킷 뿌리 (킷을 다시 해시 · 같은 침대가 아니면 다른 판정 = REVERIFY_DIFF).  ★ 10-26 B″ (Q1 (가)) — 봉인 원천도 다시 부른다
-    (`verdict_compute` 기본 = 임시 폴더 · 판정 폴더에 아무것도 쓰지 않는다)."""
+    (`verdict_compute` 기본 = 임시 폴더 · 판정 폴더에 아무것도 쓰지 않는다).
+    ★ 10-27 묶음 C2e (Q9 개정 5 ③ · Codex 회차 ① ③) — 바이트 대조 그대로 (구조 같아도 등급 다르면 REVERIFY_DIFF · 약화 · 덮어쓰기 없음) + 보고 (`reverify_report`
+    · 다르면 화면에 원 · 다시 계산 등급 · 다른 결과 칸 이름 · 다른 환경 칸) · out = 새 폴더 (보고 `reverify_report.json` · 비지 않았으면 rc 3 · 없으면 화면만)."""
     vdir = Path(vdir)
+    if out is not None:
+        try:
+            outdir_empty_or_stop(out)
+        except Stop as e:
+            print_stop(e)
+            return 3
     try:
         old_pub = (vdir / 'verdict.json').read_bytes()
         pub0 = json.loads(old_pub.decode('utf-8'))
@@ -5751,12 +5802,23 @@ def reverify(vdir, contract, root):
     pub['input_dirs'] = dirs
     pub['ledger_input'] = lin
     new_pub, new_res = canon_bytes(_clean(pub)), (canon_bytes(res) if res is not None else None)
-    if new_pub == old_pub and new_res == old_res:
+    same = new_pub == old_pub and new_res == old_res
+    rep = reverify_report(vdir, pub0, pub, old_res, res, same, lin)
+    if out is not None:
+        Path(out).mkdir(parents=True, exist_ok=True)
+        write_json(Path(out) / REVERIFY_REPORT, rep)
+    if same:
         print(f'REVERIFY_SAME — 판정 JSON · 결과 JSON 바이트 같음 ({len(dirs)} 입력 · 판정 {pub["verdict"]})')
+        if out is not None:
+            print(f'다시 판정 보고 → {Path(out) / REVERIFY_REPORT}')
         return 0
     keys = sorted(k for k in set(pub) | set(pub0) if _clean(pub).get(k) != pub0.get(k))
     print(f'REVERIFY_DIFF — 다시 계산한 판정이 저장본과 다르다 (공개 칸 {keys} · 결과 {"같음" if new_res == old_res else "다름"})'
           + (f' · 멈춤 {pub["stop"]["code"]}' if pub.get('stop') else ''))
+    g0, g1 = rep['original'], rep['recomputed']
+    print(f'  원 판정 {g0["verdict"]} ({g0["state"]}) → 다시 계산 {g1["verdict"]} ({g1["state"]}) · 등급 다름 {rep["grade_differ"]} · 다른 결과 칸 '
+          f'{rep["results_keys_differ"]} (값 = 봉인) · 다른 환경 칸 {(rep["env_fields_differ"] or [])[:6] if rep["env_original"] is not None else "원 환경 기록 없음"}'
+          f' — 원 판정을 덮지 않는다 · 유리한 쪽을 고르지 않는다' + (f' · 보고 → {Path(out) / REVERIFY_REPORT}' if out is not None else ''))
     return 1
 
 
@@ -5977,7 +6039,8 @@ def main(argv=None, contract=None):
     ap.add_argument('--ladders', nargs='+', help='predict — 사다리 폴더 둘 (P0 · P1)')
     ap.add_argument('--runs', nargs='+', help='verdict — 사다리 · 예측 · 감도 폴더 전부')
     ap.add_argument('--reverify', help='verdict — 판정 폴더를 같은 입력으로 다시 판정 (읽기 전용 · 바이트 대조)')
-    ap.add_argument('--out', help='새 출력 폴더 (없거나 비어 있어야) · recover = 정리할 단계 · 시도 폴더')
+    ap.add_argument('--out', help='새 출력 폴더 (없거나 비어 있어야) · recover = 정리할 단계 · 시도 폴더 · ★ 10-27 묶음 C2e verdict --reverify = 보고 폴더 '
+                                  '(선택 · reverify_report.json)')
     ap.add_argument('--max-hours', type=float, help='ladder · predict — 시간 상한 (등록 §10 · 숫자 탐침 뒤의 값 · 기본값 없음 · ★ 10-27 묶음 C1a = '
                                                     '계획 exec_policy.max_hours 와 같아야 · 다르면 NOT_REGISTERED)')
     ap.add_argument('--dry-run', action='store_true', help='ladder · predict — 런 env 만 찍는다 (러너 · 출력 폴더 없음)')
