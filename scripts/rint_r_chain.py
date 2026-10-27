@@ -110,6 +110,10 @@
   `<단계>/groups/<런>.launch.json` · `.end.json`) · 시간 초과 · 신호 · 예외 · 스스로 끝난 뒤에도 그룹 전체를 죽이고 종료를 확인한 뒤에만 팔을 읽는다
   (확인 못 함 = `GROUP_UNCONFIRMED`) · 러너 시도 꼴 P2_ATTEMPT=1 (payload = 런 폴더 안 `.unchecked/` · 감싸개 `rint_first_result.py` = 첫 풀이 끝 표지) ·
   사슬 부모가 죽은 뒤 = `--stage recover --out <폴더>` (끝 기록 없는 그룹 · 호스트 규칙 · 미확인 = rc 3)
+★ 10-27 묶음 C1b (RCA2-05 · Q4 (가) · Q9 설계 §3-2 · §3-4 · §3-5): 시도 원장 (`--stage ledger --init · --add` · 실행 트리와 다른 git 저장소 · 덧붙이기만 ·
+  항목 = 시도 전에 커밋) · 시도 꼴 (`--ledger · --attempt n` · 폴더 <--out>/attempt_<n> · 풀기 전 대조 = 거부 기록 + 결과 줄 · 끝 = 그룹 확인 뒤 결과 줄) ·
+  채택 (`adoption` · 처음 결과 전이 아닌 시도 + 재실행 사슬) · 원장 예측 (사다리 입력 = 채택 시도) · 원장 판정 (`ledger_verdict_check` · 판정 칸 ledger) ·
+  `--stage recover --ledger` = 결과 줄 확정 · 한정 = 원장 안 시도끼리만 (그림자 런 · 모든 사본 일관 편집은 못 막는다 · Codex Q-D)
 """
 import argparse
 import glob
@@ -400,6 +404,15 @@ STOPS = {
     'PLAN_DOC_MISMATCH': '등록 R 의 계획 숫자 블록 ≠ 계획 JSON 에서 생성한 블록 (없음 · 둘 · 값 다름 · 표지 하나만 · ★ 10-27 묶음 C1a · 판정문 C6 #30)',
     'GROUP_UNCONFIRMED': '러너 프로세스 그룹이 다 끝났는지 확인하지 못했다 (그룹 표지 프로세스가 대기 상한 안에 남음 · /proc 를 못 읽음 · ★ 10-27 묶음 C2b · '
                          'Codex 회차 ① ② — 그 런의 팔을 읽지 않는다 · 사람이 보고 --stage recover)',
+    #  ★ 10-27 묶음 C1b (RCA2-05 · Q4 (가) · Q9 설계 §3-2 · §3-4 · §3-5 · §7 의 이름 · author 10-27 approved bundle C) — 시도 원장 · 시도 폴더
+    'ATTEMPT_LEDGER_MISMATCH': '시도 원장 · 시도 폴더 대조 실패 (원장 꼴 · 같은 항목 결과 줄 둘 · 덧붙이기만이 아닌 역사 · 커밋 안 한 고침 · 폴더 요약 sha ≠ '
+                               '결과 줄 · 원장에 없는 시도 폴더 · 결과 줄 없는 시도 · 채택 아닌 시도 입력 · 결과 전 · 뒤 기록 ≠ 폴더 · Q9 §3-5)',
+    'ATTEMPT_ORDER_MISMATCH': '같은 대상 시도 차례 위반 (앞 항목 결과 줄 전에 다음 항목 · 시작 커밋이 원장 커밋의 조상이 아님 · 시작 커밋의 원장이 바이트 접두가 '
+                              '아님 · 시작 커밋에 같은 대상 앞 결과 줄이 없음 · Q9 §3-5 개정 3 · R4-07)',
+    'ATTEMPT_AFTER_ADOPTED': '채택된 시도 (결과 전이 아닌 첫 시도) 뒤 같은 대상의 새 시도 (풀기 전 거부 · 대조를 거치지 않고 돈 흔적 · Q9 §3-4 · R4-03)',
+    'RESUME_NOT_ALLOWED': '재실행 자격 없음 (원 시도가 채택 · 재실행 사슬 끝이 아님 · 완주 · 자원 · 인프라 원인이 아님 · 검사 실패 흔적 · 기계 · 환경 지문 다름 · '
+                          'Q9 §3-5 개정 4 · R4-08)',
+    'ATTEMPT_LIMIT': '같은 대상 시도 수 > 계획 exec_policy.max_attempts (★ 10-27 묶음 C1b · C1 · 이름 = 구현 때 · 결정 필요)',
     'DUPLICATE_RUN': '같은 킷 · 같은 계획 두 번',
     'INPUT_SHA_MISMATCH': '판정 입력 sha256 ≠ 런 산출',
     'INPUT_MISSING': '판정 입력이 모자란다',
@@ -891,12 +904,27 @@ def _env_gpu():
     return ([x.strip() for x in (r.stdout or '').splitlines() if x.strip()] or None) if r.returncode == 0 else None
 
 
+#: ★ 10-27 묶음 C1b — BLAS 기록 = 새 인터프리터 (같은 python · 같은 env) 에서 numpy · scipy.linalg 를 실은 뒤의 threadpool 목록 (정렬).  옛 = 이 프로세스의
+#:   지금 목록 → 무엇을 먼저 import 했는지에 따라 달랐다 (scipy.linalg 를 실으면 BLAS 한 벌 더 · 실측) — 원장 항목 (--add 프로세스) ↔ 시도 (다른 프로세스)
+#:   의 환경 지문 대조 (Q9 §3-2 · 재실행 = 모든 칸) 가 import 차례로 갈리지 않게.
+_BLAS_PROBE = ('import json\n'
+               'try:\n'
+               '    import numpy, scipy.linalg, threadpoolctl\n'
+               '    keep = ("user_api", "internal_api", "prefix", "version", "architecture", "threading_layer", "num_threads")\n'
+               '    out = sorted(({k: x.get(k) for k in keep if k in x} for x in threadpoolctl.threadpool_info()),\n'
+               '                 key=lambda d: json.dumps(d, sort_keys=True))\n'
+               'except Exception:\n'
+               '    out = None\n'
+               'print(json.dumps(out))\n')
+
+
 def _env_blas(np_):
     try:
-        import threadpoolctl
-        keep = ('user_api', 'internal_api', 'prefix', 'version', 'architecture', 'threading_layer', 'num_threads')
-        return [{k: x.get(k) for k in keep if k in x} for x in threadpoolctl.threadpool_info()]
-    except Exception:                                         # noqa: BLE001
+        r = subprocess.run([sys.executable, '-I', '-c', _BLAS_PROBE], capture_output=True, text=True, timeout=120)
+        got = json.loads(r.stdout) if r.returncode == 0 else None
+        if isinstance(got, list):
+            return got
+    except Exception:                                         # noqa: BLE001 — 기록 칸 (아래 numpy 빌드 정보로)
         pass
     if np_ is None:
         return None
@@ -2446,6 +2474,764 @@ def run_in_group(argv, cwd, env, logf, timeout, gdir, name, by='chain'):
     return rc, cause, end
 
 
+# ═════════════════════════ (2c) ★ 10-27 묶음 C1b 시도 원장 · 시도 폴더 ═════════════════════════
+#   RCA2-05 · Q4 (가) · Q9 설계 §3-2 · §3-4 · §3-5 (개정 1–5) · author 10-27 approved bundle C.
+#   원장 = 실행 트리와 다른 git 저장소의 덧붙이기만 하는 파일 (`LEDGER_FILE`) — 첫 줄 = 머리 (schema · 계획 sha256) · 항목 줄 (시도 **전에** 커밋 ·
+#   `--stage ledger --add` · 대상 · 기계 · 재실행이면 원 시도 · 계획 · 코드 키 · 환경 · 침대 지문) · 결과 줄 (시도 끝 · 그룹 종료를 확인한 뒤 · 사슬 또는
+#   `--stage recover`).  한 줄 = 정준 JSON (키 차례 · 빈칸 없는 구분자 · ensure_ascii False).  시도 폴더 = <--out>/attempt_<n> (`attempt.json` = 항목 ·
+#   시작 커밋) · 풀기 전 거부 = 그 안 `rejected.json` (폴더를 만들 수 없으면 옆 attempt_<n>.rejected.json) · 결과 전 · 뒤 = 첫 풀이 끝 표지 · 팔 payload 유무
+#   (원인 무관) · 채택 = 원장 차례로 처음 결과 전이 아닌 시도 + 그 재실행 사슬 · 예측 (사다리 입력) · 판정 (--ledger) 은 채택 시도만 읽는다.
+#   ⚠ 한정 (Codex 회차 ① Q-D): 원장은 원장 안 시도끼리 결과를 본 뒤 고르는 길만 막는다 — 원장 밖 그림자 런 · 모든 사본 (폴더 · 결과 줄 · 원장) 을 함께 고친 손은
+#   막지 못한다.  다음 시도 번호는 원장이 정한다 (같은 대상 다음 항목 · 시도 폴더에 덧쓰지 않는다 — 폴더 요약 sha 를 바꾸지 않게).
+LEDGER_FILE = 'rint_r_attempts.jsonl'
+LEDGER_SCHEMA = 'rint-r-ledger-v1'
+ATTEMPT_SCHEMA = 'rint-r-attempt-v1'
+REJECTED_SCHEMA = 'rint-r-rejected-v1'
+ATTEMPT_FILE = 'attempt.json'
+REJECTED_FILE = 'rejected.json'
+REJECTED_SIDE = '.rejected.json'
+ATTEMPT_DIR_RE = re.compile(r'attempt_([1-9][0-9]{0,8})')
+ATTEMPT_SIDE_RE = re.compile(r'attempt_([1-9][0-9]{0,8})\.rejected\.json')
+TARGET_RE = re.compile(r'ladder:(P0|P1)(?::(FIBRE|UNREG|GRID))?|predict(?::(FIBRE|UNREG|GRID|SVORDER))?')
+LEDGER_GIT_CFG = ('-c', 'user.name=rint-r-chain', '-c', 'user.email=rint-r-chain@localhost', '-c', 'commit.gpgsign=false',
+                  '-c', 'core.autocrlf=false')
+HEADER_KEYS = frozenset({'kind', 'schema', 'plan_sha256', 'utc'})
+ENTRY_KEYS = frozenset({'kind', 'n', 'target', 'machine', 'resume_of', 'plan_sha256', 'code_key_sha256', 'env', 'bed', 'utc'})
+RESULT_KEYS = frozenset({'kind', 'n', 'status', 'stop', 'side', 'cause', 'resume_ok', 'folder', 'folder_sha256', 'by', 'utc'})
+ATTEMPT_KEYS = frozenset({'schema', 'n', 'target', 'machine', 'resume_of', 'ledger_commit'})
+RESULT_STATUSES = ('completed', 'stopped', 'rejected', 'interrupted')
+DONE_STATUSES = ('CALIBRATED', 'PREDICTED')
+#: 재실행 자격 원인 (Q9 §3-5 개정 4 — 자원 · 인프라 = 시간 초과 · 사슬이 받은 신호 · 사슬 부모 사망 (원인 기록 없음) · 그룹 종료 미확인 · 자원 낱말).
+#:   그 밖 원인 (gate = 런 전 관문 · check = 팔을 읽은 뒤 검사 · 수치 · 물리 · runner_rc = 낱말 없는 러너 rc) = 재실행 불가 (보수 쪽).
+RESUME_CAUSES = frozenset({'timeout', 'signal', 'parent_dead', 'group_unconfirmed', 'resource'})
+#: 러너 rc ≠ 0 인 런 로그의 자원 · 인프라 낱말 (정확한 글자 · CUDA 메모리 · 호스트 메모리 · 디스크 부족 · GPU 오류) — ⬜ 결정 필요 (구현 상수 · 빠진 낱말 =
+#:   재실행 불가 쪽).  검사 실패 흔적 (.unchecked/ 의 팔 payload) 이 있으면 낱말과 무관하게 재실행 불가.
+RESOURCE_WORDS = ('OutOfMemoryError', 'CUDA_ERROR_OUT_OF_MEMORY', 'cudaErrorMemoryAllocation', 'MemoryError', 'No space left on device',
+                  'CUDARuntimeError', 'CUDADriverError', 'CUDA_ERROR_LAUNCH_FAILED', 'CUDA_ERROR_ILLEGAL_ADDRESS', 'cudaErrorLaunchFailure')
+
+
+def ledger_line(obj):
+    """원장 한 줄 (정준 JSON + 줄바꿈)."""
+    return json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=False, allow_nan=False) + '\n'
+
+
+def ledger_git(repo, *args, check=True):
+    """원장 저장소 git (env 의 GIT_* 를 걷어낸다 · 고정 신원 · 실패 = Stop ATTEMPT_LEDGER_MISMATCH)."""
+    env = {k: v for k, v in os.environ.items() if not k.startswith('GIT_')}
+    try:
+        p = subprocess.run(['git', '-C', str(repo), *LEDGER_GIT_CFG, *args], capture_output=True, timeout=120, env=env)
+    except (OSError, subprocess.TimeoutExpired) as e:
+        raise Stop('ATTEMPT_LEDGER_MISMATCH', f'원장 git {" ".join(args[:2])} 실행 실패 ({type(e).__name__})')
+    if check and p.returncode != 0:
+        raise Stop('ATTEMPT_LEDGER_MISMATCH', f'원장 git {" ".join(args[:2])} rc {p.returncode} · '
+                                              f'{p.stderr.decode("utf-8", "replace").strip()[:200]}')
+    return p
+
+
+def _git_top(path):
+    try:
+        p = subprocess.run(['git', '-C', str(path), 'rev-parse', '--show-toplevel'], capture_output=True, timeout=60,
+                           env={k: v for k, v in os.environ.items() if not k.startswith('GIT_')})
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    return os.path.realpath(p.stdout.decode('utf-8', 'replace').strip()) if p.returncode == 0 else None
+
+
+def ledger_repo_problem(repo):
+    """원장 저장소 꼴 — git 작업 트리의 꼭대기 (하위 폴더 아님) · 사슬 체크아웃과 다른 저장소 (Q9 §3-5 개정 3 — 원장 커밋이 실행 트리의 HEAD 를
+    바꾸지 않게) → 사유 | None."""
+    top = _git_top(repo)
+    if top is None:
+        return f'{repo} 가 git 작업 트리가 아니다 (원장 = 따로 만든 git 저장소)'
+    if top != os.path.realpath(str(repo)):
+        return f'{repo} 는 git 저장소 {top} 의 하위 폴더다 — 원장 = 그 저장소의 꼭대기'
+    me = _git_top(HERE)
+    if me is not None and me == top:
+        return f'원장 저장소 = 사슬 체크아웃 ({top}) — 실행 트리와 다른 체크아웃에 둔다 (Q9 §3-5)'
+    return None
+
+
+def ledger_head(repo):
+    out = ledger_git(repo, 'rev-parse', '--verify', 'HEAD').stdout.decode('ascii', 'replace').strip()
+    if not _hex40(out):
+        raise Stop('ATTEMPT_LEDGER_MISMATCH', f'원장 HEAD {out[:44]!r}')
+    return out
+
+
+def ledger_blob(repo, commit):
+    p = ledger_git(repo, 'show', f'{commit}:{LEDGER_FILE}', check=False)
+    if p.returncode != 0:
+        raise Stop('ATTEMPT_LEDGER_MISMATCH', f'원장 커밋 {str(commit)[:12]} 에 {LEDGER_FILE} 이 없다')
+    return p.stdout
+
+
+def ledger_is_ancestor(repo, a, b):
+    return _hex40(a) and _hex40(b) and ledger_git(repo, 'merge-base', '--is-ancestor', a, b, check=False).returncode == 0
+
+
+def ledger_history_problem(repo, commit):
+    """원장 파일 역사 (첫 부모 차례 · 그 커밋까지) = 덧붙이기만 (판마다 앞 판의 바이트를 그대로 앞에 둔다) → 사유 | None (줄 지우기 · 바꾸기 =
+    사유 · Q9 §3-5 개정 3)."""
+    p = ledger_git(repo, 'log', '--first-parent', '--format=%H', commit, '--', LEDGER_FILE, check=False)
+    if p.returncode != 0:
+        return '원장 역사를 못 읽는다'
+    prev = b''
+    for c in [x for x in p.stdout.decode('ascii', 'replace').split() if x][::-1]:
+        q = ledger_git(repo, 'show', f'{c}:{LEDGER_FILE}', check=False)
+        if q.returncode != 0:
+            return f'커밋 {c[:12]} 에서 원장 파일이 없어졌다'
+        if not q.stdout.startswith(prev):
+            return f'커밋 {c[:12]} 이 앞 판의 줄을 바꿨다 · 지웠다 (덧붙이기만이 아니다)'
+        prev = q.stdout
+    return None
+
+
+def ledger_now(repo):
+    """원장 = HEAD 커밋의 파일 (작업 파일 바이트 = HEAD blob · 커밋 안 한 고침 없음) → (HEAD sha, 바이트)."""
+    head = ledger_head(repo)
+    raw = ledger_blob(repo, head)
+    lp = Path(repo) / LEDGER_FILE
+    try:
+        cur = lp.read_bytes() if not lp.is_symlink() else None
+    except OSError:
+        cur = None
+    if cur != raw:
+        raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{lp} 작업 파일 ≠ HEAD (커밋하지 않은 고침 · 링크 · 못 읽음 — 원장은 커밋된 판만 읽는다)')
+    return head, raw
+
+
+def _entry_problem(e, st):
+    if set(e) != ENTRY_KEYS:
+        return f'칸 {sorted(set(e) ^ ENTRY_KEYS)}'
+    if not (isinstance(e['target'], str) and TARGET_RE.fullmatch(e['target'])):
+        return f'대상 {e["target"]!r}'
+    if not (isinstance(e['machine'], str) and e['machine'] and e['machine'] == e['machine'].strip()):
+        return f'기계 {e["machine"]!r}'
+    if e['plan_sha256'] != st['header']['plan_sha256']:
+        return '계획 sha256 ≠ 원장 머리'
+    if not _hex64(e['code_key_sha256']) or not isinstance(e['env'], dict) or not isinstance(e['bed'], dict) or not isinstance(e['utc'], str):
+        return '지문 칸 꼴 (code_key_sha256 · env · bed · utc)'
+    r = e['resume_of']
+    if r is not None and (type(r) is not int or r not in st['entries'] or st['entries'][r]['target'] != e['target']):
+        return f'resume_of {r!r} (같은 대상의 앞 항목이어야)'
+    prev = [k for k, x in st['entries'].items() if x['target'] == e['target']]
+    if prev and prev[-1] not in st['results']:
+        raise Stop('ATTEMPT_ORDER_MISMATCH', f'원장: 항목 {e["n"]} ({e["target"]}) 이 같은 대상 앞 항목 {prev[-1]} 의 결과 줄 전에 있다 (Q9 §3-5 차례)')
+    return None
+
+
+def _result_problem(r):
+    if set(r) != RESULT_KEYS:
+        return f'칸 {sorted(set(r) ^ RESULT_KEYS)}'
+    n = r['n']
+    if r['status'] not in RESULT_STATUSES or r['side'] not in ('pre', 'post') or type(r['resume_ok']) is not bool \
+            or r['by'] not in ('chain', 'recover'):
+        return f'status {r["status"]!r} · side {r["side"]!r} · resume_ok {r["resume_ok"]!r} · by {r["by"]!r}'
+    if r['folder'] not in (f'attempt_{n}', f'attempt_{n}{REJECTED_SIDE}') or not _hex64(r['folder_sha256']):
+        return f'폴더 {r["folder"]!r} · 요약 sha'
+    if r['stop'] is not None and not (isinstance(r['stop'], dict) and isinstance(r['stop'].get('code'), str)):
+        return 'stop 꼴'
+    if r['cause'] is not None and not isinstance(r['cause'], str):
+        return 'cause 꼴'
+    if r['status'] == 'completed' and (r['stop'] is not None or r['side'] != 'post' or r['resume_ok']):
+        return '완주인데 멈춤 · 결과 전 · 재실행 자격'
+    if r['status'] != 'completed' and r['stop'] is None and r['status'] != 'interrupted':
+        return '멈춤 · 거부인데 멈춤 기록 없음'
+    if r['status'] == 'rejected' and (r['side'] != 'pre' or r['resume_ok']):
+        return '거부인데 결과 뒤 · 재실행 자격'
+    if r['resume_ok'] and r['side'] != 'post':
+        return '결과 전인데 재실행 자격'
+    return None
+
+
+def ledger_parse(raw):
+    """원장 바이트 → 상태 {'header', 'entries' {n: 항목}, 'results' {n: 결과 줄}} · 꼴 · 차례 · 같은 항목 결과 줄 둘 = Stop."""
+    def bad(why):
+        raise Stop('ATTEMPT_LEDGER_MISMATCH', f'원장: {why}')
+    try:
+        txt = raw.decode('utf-8')
+    except UnicodeDecodeError:
+        bad('utf-8 이 아니다')
+    if not txt.endswith('\n'):
+        bad('비었거나 끝 줄바꿈이 없다 (덧붙이다 끊긴 꼴)')
+    st = {'header': None, 'entries': {}, 'results': {}}
+    for i, ln in enumerate(txt[:-1].split('\n')):
+        try:
+            obj = _json_strict(ln.encode('utf-8'))
+        except Exception as e:                                # noqa: BLE001 — 꼴 틀림 = 멈춤
+            bad(f'{i + 1} 째 줄 JSON 이 아니다 ({type(e).__name__})')
+        if not isinstance(obj, dict) or ledger_line(obj) != ln + '\n':
+            bad(f'{i + 1} 째 줄이 정준 JSON 한 줄이 아니다')
+        kind = obj.get('kind')
+        if i == 0:
+            if set(obj) != HEADER_KEYS or kind != 'header' or obj.get('schema') != LEDGER_SCHEMA or not _hex64(obj.get('plan_sha256')):
+                bad(f'첫 줄 = 머리 ({sorted(HEADER_KEYS)} · schema {LEDGER_SCHEMA}) 가 아니다')
+            st['header'] = obj
+            continue
+        n = obj.get('n')
+        if kind == 'entry':
+            if type(n) is not int or n != len(st['entries']) + 1:
+                bad(f'{i + 1} 째 줄 항목 번호 {n!r} (차례 = {len(st["entries"]) + 1})')
+            why = _entry_problem(obj, st)
+            if why:
+                bad(f'항목 {n}: {why}')
+            st['entries'][n] = obj
+        elif kind == 'result':
+            if type(n) is not int or n not in st['entries']:
+                bad(f'{i + 1} 째 줄 결과 줄의 항목 {n!r} 이 앞에 없다')
+            if n in st['results']:
+                bad(f'항목 {n} 의 결과 줄이 둘 (Q9 §3-5)')
+            why = _result_problem(obj)
+            if why:
+                bad(f'결과 줄 {n}: {why}')
+            st['results'][n] = obj
+        else:
+            bad(f'{i + 1} 째 줄 kind {kind!r}')
+    if st['header'] is None:
+        bad('머리 줄이 없다')
+    return st
+
+
+def ledger_append(repo, obj, msg, expect=None):
+    """원장에 줄 하나를 덧붙이고 커밋 → 새 HEAD.  덧붙이기 전 = 작업 파일 = HEAD (`ledger_now`) · expect = 읽어 둔 HEAD 바이트 (그 사이 다른 손이 커밋했으면
+    멈춤) · 덧붙인 뒤 원장 꼴을 다시 읽는다 (꼴이 틀리면 덧붙이지 않는다 — 커밋 전)."""
+    _head, raw = ledger_now(repo)
+    if expect is not None and raw != expect:
+        raise Stop('ATTEMPT_LEDGER_MISMATCH', '원장이 읽은 뒤 바뀌었다 (다른 손이 커밋했다) — 다시 시작')
+    new = raw + ledger_line(obj).encode('utf-8')
+    ledger_parse(new)
+    lp = Path(repo) / LEDGER_FILE
+    with open(lp, 'ab') as f:
+        f.write(ledger_line(obj).encode('utf-8'))
+        f.flush()
+        os.fsync(f.fileno())
+    ledger_git(repo, 'add', '--', LEDGER_FILE)
+    ledger_git(repo, 'commit', '-q', '-m', msg, '--', LEDGER_FILE)
+    return ledger_head(repo)
+
+
+def folder_digest(path):
+    """시도 폴더 (또는 거부 기록 파일 하나) 요약 = `sha256sum` 꼴 줄 (`<sha256>  <상대 경로>\\n`) 을 상대 경로 (POSIX · UTF-8 바이트) 차례로 이은 글의
+    sha256 · 파일 하나 = 그 이름 한 줄 · 링크 · 특수 파일 · 못 읽음 = None (`cd 폴더 && find . -type f -printf '%P\\n' | LC_ALL=C sort | xargs sha256sum |
+    sha256sum` 과 같은 값 · 빈 폴더는 줄이 없다)."""
+    p = Path(path)
+    rows = []
+    try:
+        if p.is_symlink():
+            return None
+        if p.is_file():
+            rows.append((p.name, sha256_file(p)))
+        elif p.is_dir():
+            for root, dirs, files in os.walk(p):
+                if any((Path(root) / nm).is_symlink() for nm in dirs):
+                    return None
+                for nm in files:
+                    fp = Path(root) / nm
+                    if fp.is_symlink() or not fp.is_file():
+                        return None
+                    rows.append((fp.relative_to(p).as_posix(), sha256_file(fp)))
+        else:
+            return None
+    except OSError:
+        return None
+    rows.sort(key=lambda x: x[0].encode('utf-8'))
+    return hashlib.sha256(''.join(f'{h}  {r}\n' for r, h in rows).encode('utf-8')).hexdigest()
+
+
+def result_trace_name(nm):
+    """결과 흔적 파일 이름 — 팔 payload (`p2_*.json*` · 쓰는 중 · 검사 실패본 포함) · 첫 풀이 끝 표지."""
+    return (nm.startswith('p2_') and '.json' in nm) or nm.endswith(FIRST_RESULT_SUFFIX)
+
+
+def folder_side(path):
+    """결과 전 · 뒤 (Q9 §3-5 개정 4 · Q2) — 시도 폴더 (안 .unchecked/ 포함) 에 팔 payload 또는 첫 풀이 끝 표지가 하나라도 있으면 'post' · 거부 기록
+    파일 하나 · 흔적 없는 폴더 = 'pre' (원인 무관)."""
+    p = Path(path)
+    if not p.is_dir():
+        return 'pre'
+    for _root, _dirs, files in os.walk(p):
+        if any(result_trace_name(nm) for nm in files):
+            return 'post'
+    return 'pre'
+
+
+def target_of(stage, law=None, variant=None):
+    """단계 → 원장 대상 이름 (ladder:<법칙>[:<변이>] · predict[:<변이>])."""
+    if stage == 'ladder':
+        return f'ladder:{law}' + (f':{variant}' if variant else '')
+    return 'predict' + (f':{variant}' if variant else '')
+
+
+def target_kits(target):
+    return (SBE_KIT,) if str(target).startswith('ladder:') else (SBE_KIT, DBE_KIT)
+
+
+def read_attempt(d):
+    """시도 폴더의 attempt.json → dict | None (꼴 · 폴더 이름 = attempt_<n> · 시작 커밋 40-hex)."""
+    p = Path(d) / ATTEMPT_FILE
+    try:
+        a = _json_strict(p.read_bytes()) if not p.is_symlink() else None
+    except Exception:                                         # noqa: BLE001 — 못 읽음 = 시도 폴더 아님
+        return None
+    if not isinstance(a, dict) or set(a) != ATTEMPT_KEYS or a.get('schema') != ATTEMPT_SCHEMA:
+        return None
+    n = a.get('n')
+    if type(n) is not int or n < 1 or Path(d).name != f'attempt_{n}' or not _hex40(a.get('ledger_commit')):
+        return None
+    if not (isinstance(a.get('target'), str) and TARGET_RE.fullmatch(a['target'])):
+        return None
+    return a
+
+
+def adoption(st, target, sides=None, upto=None):
+    """같은 대상 시도 (원장 차례) → {'attempts', 'adopted', 'chain', 'effective', 'problems'} — Q9 §3-5: 채택 = 처음 결과 전이 아닌 시도 (거부 · 결과 전
+    멈춤 = 건너뜀) · 그 재실행 사슬 (원 시도를 가리키는 재실행 · 앞 사슬 끝이 재실행 자격으로 멈췄을 때만 · 거부된 재실행 = 건너뜀) · 채택 뒤 돈 새 시도 =
+    ATTEMPT_AFTER_ADOPTED · 자격 없이 돈 재실행 = RESUME_NOT_ALLOWED · 결과 줄 없는 시도 = ATTEMPT_LEDGER_MISMATCH (recover 먼저).  sides = {n: 'pre' |
+    'post'} (판정 = 폴더에서 · 없으면 결과 줄) · upto = 이 번호 앞만 (풀기 전 대조)."""
+    ns = [k for k, e in st['entries'].items() if e['target'] == target and (upto is None or k < upto)]
+    out = {'attempts': ns, 'adopted': None, 'chain': [], 'effective': None, 'problems': []}
+    last = None
+    for k in ns:
+        e, r = st['entries'][k], st['results'].get(k)
+        if r is None:
+            out['problems'].append(('ATTEMPT_LEDGER_MISMATCH', f'항목 {k} ({target}) 의 결과 줄이 없다 (시도 중 · 사슬 부모 사망 = --stage recover 먼저)'))
+            break
+        side = (sides or {}).get(k, r['side'])
+        ran = r['status'] != 'rejected'
+        if out['adopted'] is None:
+            if e['resume_of'] is not None:
+                if ran:
+                    out['problems'].append(('RESUME_NOT_ALLOWED', f'항목 {k}: 채택 전 시도의 재실행이 돌았다 (원 시도 {e["resume_of"]})'))
+                continue
+            if not ran or side == 'pre':
+                continue
+            out['adopted'], out['chain'], last = k, [k], r
+            continue
+        if not ran:
+            continue                                          # 거부 기록만 = 기록만 (Q9 §3-4 R4-03)
+        if e['resume_of'] == out['adopted'] and last['status'] != 'completed' and last['resume_ok']:
+            out['chain'].append(k)
+            last = r
+            continue
+        if e['resume_of'] is not None:
+            out['problems'].append(('RESUME_NOT_ALLOWED', f'항목 {k}: 재실행 자격 없는 재실행이 돌았다 (원 시도 {e["resume_of"]} · 사슬 끝 '
+                                                          f'attempt_{out["chain"][-1]})'))
+        else:
+            out['problems'].append(('ATTEMPT_AFTER_ADOPTED', f'항목 {k}: 채택 (attempt_{out["adopted"]}) 뒤 같은 대상 시도가 돌았다 (풀기 전 대조를 거치지 '
+                                                             f'않은 흔적)'))
+    out['effective'] = out['chain'][-1] if out['chain'] else None
+    return out
+
+
+def attempt_limit_problem(st, target, n, plan):
+    k = sum(1 for x, e in st['entries'].items() if e['target'] == target and x <= n)
+    mx = ((plan or {}).get('exec_policy') or {}).get('max_attempts')
+    if type(mx) is not int:
+        return ('PLAN_NUMBER_UNREGISTERED', 'exec_policy.max_attempts 가 없다 (봉인 전 계획)')
+    if k > mx:
+        return ('ATTEMPT_LIMIT', f'{target} 의 {k} 째 시도 > 최대 시도 수 {mx} (계획 exec_policy.max_attempts)')
+    return None
+
+
+def attempt_order_problem(st, e, plan):
+    """새 항목 e (아직 원장 밖 · 또는 원장의 그 번호) 의 차례 · 채택 · 재실행 · 최대 수 (원장 st 의 앞 항목들로) → (멈춤, 사유) | None."""
+    n, target = e['n'], e['target']
+    prev = [k for k, x in st['entries'].items() if x['target'] == target and k < n]
+    if prev and prev[-1] not in st['results']:
+        return ('ATTEMPT_ORDER_MISMATCH', f'같은 대상 ({target}) 앞 항목 {prev[-1]} 의 결과 줄이 아직 없다 (차례로만 · 그룹 미확인 · 시도 중 = recover · 끝 먼저)')
+    ent = dict(st['entries'])
+    ent[n] = e
+    lim = attempt_limit_problem(dict(st, entries=ent), target, n, plan)
+    if lim:
+        return lim
+    ad = adoption(st, target, upto=n)
+    if ad['problems']:
+        return ad['problems'][0]
+    if e['resume_of'] is None:
+        if ad['adopted'] is not None:
+            return ('ATTEMPT_AFTER_ADOPTED', f'{target} 은 이미 채택 시도 attempt_{ad["adopted"]} 가 있다 (결과 뒤 멈춤 · 완주 = 같은 등록의 재시도가 아니다 · '
+                                             f'재실행은 --resume)')
+        return None
+    k = e['resume_of']
+    last = st['results'].get(ad['effective']) if ad['effective'] is not None else None
+    if ad['adopted'] != k or last is None:
+        return ('RESUME_NOT_ALLOWED', f'원 시도 {k} 가 {target} 의 채택 시도가 아니다 (채택 = {ad["adopted"]})')
+    if last['status'] == 'completed' or not last['resume_ok']:
+        return ('RESUME_NOT_ALLOWED', f'재실행 사슬 끝 attempt_{ad["effective"]} = {last["status"]} · 원인 {last["cause"]} · 재실행 자격 {last["resume_ok"]} '
+                                      f'(자원 · 인프라 원인 · 결과 뒤 · 검사 실패 흔적 없음 일 때만)')
+    o = st['entries'][k]
+    if e['machine'] != o['machine'] or e['env'] != o['env']:
+        return ('RESUME_NOT_ALLOWED', f'재실행 기계 · 환경 지문 ≠ 원 시도 {k} (같은 기계 · 환경 지문의 모든 칸이 같아야 · Q9 R4-08 (d))')
+    return None
+
+
+def code_key_sha(code):
+    return hashlib.sha256(code_key(code).encode('utf-8')).hexdigest()
+
+
+def _env_diff(a, b, pre=''):
+    if not (isinstance(a, dict) and isinstance(b, dict)):
+        return [pre.rstrip('.') or '(전체)'] if a != b else []
+    out = []
+    for k in sorted(set(a) | set(b)):
+        out += _env_diff(a.get(k), b.get(k), f'{pre}{k}.') if isinstance(a.get(k), dict) and isinstance(b.get(k), dict) else \
+            ([f'{pre}{k}'] if a.get(k) != b.get(k) else [])
+    return out
+
+
+class Attempt:
+    """시도 꼴 단계의 원장 손잡이 — 저장소 · 번호 · 항목 · 시도 폴더 · 시작 커밋 · 그 커밋의 원장 상태."""
+
+    def __init__(self, repo, n, entry, folder, head, st):
+        self.repo, self.n, self.entry, self.folder, self.head, self.st = Path(repo), n, entry, Path(folder), head, st
+
+    def public(self):
+        return {'n': self.n, 'target': self.entry['target'], 'machine': self.entry['machine'], 'resume_of': self.entry['resume_of'],
+                'ledger': str(self.repo.resolve()), 'ledger_commit': self.head}
+
+
+def _write_new_json(path, obj):
+    """새 파일 (있으면 실패) 에 정준 JSON (원자적 · 같은 폴더 임시 → replace)."""
+    path = Path(path)
+    if path.exists() or path.is_symlink():
+        raise FileExistsError(str(path))
+    write_json_atomic(path, obj)
+
+
+def attempt_reject(repo, raw, n, where, stop, head):
+    """풀기 전 거부 — 거부 기록 (where = 시도 폴더 안 rejected.json 또는 옆 attempt_<n>.rejected.json) + 결과 줄 (rejected · 결과 전) + 커밋 → rc 3."""
+    rec = {'schema': REJECTED_SCHEMA, 'n': n, 'code': stop.code, 'cause': stop.cause, 'ledger_commit': head, 'utc': _utc()}
+    folder = where.parent if where.name == REJECTED_FILE else where
+    try:
+        _write_new_json(where, rec)
+        res = {'kind': 'result', 'n': n, 'status': 'rejected', 'stop': {'code': stop.code, 'run': None, 'reason': None}, 'side': 'pre',
+               'cause': 'presolve', 'resume_ok': False, 'folder': folder.name, 'folder_sha256': folder_digest(folder), 'by': 'chain', 'utc': _utc()}
+        if res['folder_sha256'] is None:
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{folder} 요약 sha 를 못 셈')
+        ledger_append(repo, res, f'rint-r attempt {n} rejected {stop.code}', expect=raw)
+    except (OSError, Stop) as e:
+        print_stop(stop)
+        print_stop(e if isinstance(e, Stop) else Stop('ATTEMPT_LEDGER_MISMATCH', f'거부 기록을 못 썼다 ({type(e).__name__}: {e})'))
+        return 3
+    print_stop(stop)
+    print(f'ATTEMPT_REJECTED n={n} code={stop.code} — 풀기 전 거부 (결과 전 · 거부 기록 {where.name} · 원장 결과 줄 커밋)')
+    return 3
+
+
+def attempt_open(a, stage):
+    """★ 10-27 묶음 C1b — 시도 꼴 입구 (--ledger · --attempt) → None (시도 꼴 아님) | int (rc · 화면만 거부 또는 거부 기록을 쓴 거부) | Attempt.
+    화면만 (원장 · 폴더 무변경): 원장 꼴 · 저장소 · 커밋 안 한 고침 · 원장에 없는 번호 · 이미 결과 줄이 있는 번호 (Q9 R4-13).  그 밖 풀기 전 대조 실패 =
+    거부 기록 + 결과 줄 (결과 전 · 다음 시도 가능)."""
+    if a.ledger is None and a.attempt is None:
+        return None
+    if a.ledger is None or a.attempt is None or getattr(a, 'dry_run', False):
+        print('인자 오류: 시도 꼴 = --ledger <원장 저장소> 와 --attempt <항목 번호> 둘 다 (--dry-run 없이) — ★ 10-27 묶음 C1b', file=sys.stderr)
+        return 2
+    repo, n = Path(a.ledger), int(a.attempt)
+    target = target_of(stage, getattr(a, 'law', None), a.variant)
+    base = Path(a.out)
+    try:
+        why = ledger_repo_problem(repo)
+        if why:
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', why)
+        head, raw = ledger_now(repo)
+        st = ledger_parse(raw)
+        if n not in st['entries']:
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'원장에 항목 {n} 이 없다 (--stage ledger --add 먼저)')
+        if n in st['results']:
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'항목 {n} 은 이미 결과 줄이 있다 (Q9 R4-13 · 시도 폴더 · 거부 기록을 만들지 않는다)')
+    except Stop as e:
+        print_stop(e)
+        return 3
+    e = st['entries'][n]
+    folder = base / f'attempt_{n}'
+    try:
+        base.mkdir(parents=True, exist_ok=True)
+        folder.mkdir()
+    except FileExistsError:
+        return attempt_reject(repo, raw, n, base / f'attempt_{n}{REJECTED_SIDE}',
+                              Stop('OUTDIR_NOT_EMPTY', f'{folder} 가 이미 있다 — 시도 폴더는 시도마다 새로'), head)
+    except OSError as ex:
+        print_stop(Stop('ATTEMPT_LEDGER_MISMATCH', f'시도 폴더를 못 만든다 ({type(ex).__name__}: {ex})'))
+        return 3
+    write_json_atomic(folder / ATTEMPT_FILE, {'schema': ATTEMPT_SCHEMA, 'n': n, 'target': e['target'], 'machine': e['machine'],
+                                              'resume_of': e['resume_of'], 'ledger_commit': head})
+    try:
+        prob = attempt_presolve_problem(st, e, n, target, a, stage)
+    except Stop as ex:
+        prob = (ex.code, ex.cause)
+    if prob:
+        return attempt_reject(repo, raw, n, folder / REJECTED_FILE, Stop(*prob), head)
+    return Attempt(repo, n, e, folder, head, st)
+
+
+def attempt_plan(a, stage, e):
+    """풀기 전 대조의 계획 — 사다리 = --plan · 예측 = 첫 사다리 요약의 계획 (그 sha256 = 항목 계획이어야 · 단계가 다시 대조한다)."""
+    if stage == 'ladder':
+        return load_plan(a.plan)
+    s, _sha = read_summary(Path((a.ladders or [None])[0] or '/nonexistent'), 'ladder_summary.json')
+    plan = ((s or {}).get('plan') or {}).get('content')
+    sha = ((s or {}).get('plan') or {}).get('sha256')
+    if not isinstance(plan, dict) or not _hex64(sha):
+        raise Stop('LADDER_SET', '첫 사다리 폴더의 요약 · 계획을 못 읽는다 (예측 시도의 계획 대조)')
+    return plan, sha
+
+
+def attempt_presolve_problem(st, e, n, target, a, stage):
+    """풀기 전 대조 (Q9 §3-2 · C1 동일 설정 요건) → (멈춤, 사유) | None — 대상 · 기계 · 계획 · 코드 키 · 환경 지문 (모든 칸) · 침대 · 차례 · 채택 ·
+    재실행 · 최대 시도 수."""
+    if e['target'] != target:
+        return ('ATTEMPT_LEDGER_MISMATCH', f'항목 {n} 대상 {e["target"]} ≠ 이 단계 {target}')
+    if a.machine != e['machine']:
+        return ('MACHINE_NOT_ALLOWED', f'--machine {a.machine!r} ≠ 항목 {n} 의 기계 {e["machine"]!r}')
+    plan, plan_sha = attempt_plan(a, stage, e)
+    if plan_sha != e['plan_sha256']:
+        return ('PLAN_HASH_MISMATCH', f'계획 sha256 ≠ 항목 {n} (원장 머리) 의 계획')
+    code = code_record(a.runner)
+    if code_key_sha(code) != e['code_key_sha256']:
+        return ('CODE_PIN_MISMATCH', f'코드 키 (HEAD · 저장소 상대 경로 · 코드 파일 지문 · 러너 · 환경 단위) ≠ 항목 {n}')
+    if code['env'] != e['env']:
+        return ('CODE_PIN_MISMATCH', f'환경 지문 ≠ 항목 {n} (칸 {", ".join(_env_diff(e["env"], code["env"])[:6])} — 같은 셸 · venv 에서 --add 한 뒤 돌린다)')
+    bed = {k: kit_bed(a.root, k) for k in target_kits(target)}
+    if bed != e['bed']:
+        return ('S0_REPORT_MISMATCH', f'침대 (킷 원 입력 지문) ≠ 항목 {n} ({", ".join(k for k in bed if bed[k] != e["bed"].get(k))})')
+    prob = attempt_order_problem(st, e, plan)
+    if prob:
+        return prob
+    if e['resume_of'] is not None:
+        return ('RESUME_NOT_ALLOWED', '재실행 실행은 이 판에 아직 없다 (★ 10-27 묶음 C1b 다음 커밋)')
+    return None
+
+
+def attempt_groups_problem(folder):
+    """시도 폴더의 그룹 기록 — 시작 기록마다 끝 기록 · 확인 True (아니면 사유 · 결과 줄을 쓰지 않는다 · recover 먼저)."""
+    for lp in sorted(Path(folder).rglob(f'{GROUPS_DIR}/*.launch.json')):
+        ep = lp.with_name(lp.name[:-len('.launch.json')] + '.end.json')
+        try:
+            er = json.loads(ep.read_text(encoding='utf-8')) if ep.exists() else None
+        except (OSError, UnicodeDecodeError, ValueError):
+            er = None
+        if not (isinstance(er, dict) and er.get('confirmed') is True):
+            return f'그룹 {lp.parent.parent.name}/{lp.name[:-len(".launch.json")]} 종료 미확인'
+    return None
+
+
+def _stopped_run(s, folder):
+    run = (s.get('stop') or {}).get('run')
+    rr = [r for r in (s.get('runs') or []) if r.get('name') == run] if run else []
+    return (rr[-1] if rr else None), (Path(folder) / rr[-1]['outdir'] if rr and rr[-1].get('outdir') else None)
+
+
+def check_trace(folder, od=None):
+    """검사 실패 흔적 (Q9 §3-5 재실행 자격) — 멈춘 런 폴더 (없으면 시도 폴더 전부) 의 .unchecked/ 에 팔 payload (표지 아님) 가 있음."""
+    roots = [od] if od is not None else [p for p in Path(folder).rglob(UNCHECKED_DIR) if p.is_dir()]
+    for r in roots:
+        u = Path(r) / UNCHECKED_DIR if od is not None else Path(r)
+        if u.is_dir() and any(result_trace_name(p.name) and not p.name.endswith(FIRST_RESULT_SUFFIX) for p in u.iterdir()):
+            return True
+    return False
+
+
+def stop_cause(s, folder):
+    """멈춘 단계 요약 → 원인 이름 (기록 · 재실행 자격) — timeout · signal · group_unconfirmed · resource (러너 rc · 그 런 로그에 자원 낱말) · runner_rc ·
+    gate (런 없이 멈춤) · check (팔을 읽은 뒤의 멈춤 · 등록 결과)."""
+    code = (s.get('stop') or {}).get('code') or s.get('status')
+    if code == 'TIME_LIMIT':
+        return 'timeout'
+    if code == 'GROUP_UNCONFIRMED':
+        return 'group_unconfirmed'
+    if code == 'RUNNER_RC':
+        rr, _od = _stopped_run(s, folder)
+        gc = (rr or {}).get('group_cause')
+        if gc in ('signal', 'signal_after'):
+            return 'signal'
+        if gc == 'timeout':
+            return 'timeout'
+        run = (s.get('stop') or {}).get('run')
+        lp = Path(folder) / 'logs' / f'{run}.log' if run else None
+        try:
+            txt = lp.read_text(encoding='utf-8', errors='replace') if lp is not None and lp.is_file() else ''
+        except OSError:
+            txt = ''
+        return 'resource' if any(w in txt for w in RESOURCE_WORDS) else 'runner_rc'
+    return 'gate' if not s.get('runs') else 'check'
+
+
+def attempt_result_line(n, folder, s, by):
+    """단계 요약 (없으면 None = 사슬 부모 사망) → 결과 줄."""
+    folder = Path(folder)
+    side = folder_side(folder)
+    if s is None:
+        status, stop, cause = 'interrupted', None, 'parent_dead'
+        trace = check_trace(folder)
+    else:
+        done = s.get('status') in DONE_STATUSES
+        status = 'completed' if done else 'stopped'
+        sr = s.get('stop') or {}
+        stop = None if done else {'code': sr.get('code') or s.get('status'), 'run': sr.get('run'), 'reason': sr.get('reason')}
+        cause = None if done else stop_cause(s, folder)
+        _rr, od = _stopped_run(s, folder)
+        trace = False if done else (check_trace(folder, od) if od is not None else check_trace(folder))
+    resume_ok = status != 'completed' and side == 'post' and cause in RESUME_CAUSES and not trace
+    dg = folder_digest(folder)
+    if dg is None:
+        raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{folder} 요약 sha 를 못 셈 (링크 · 특수 파일)')
+    return {'kind': 'result', 'n': n, 'status': status, 'stop': stop, 'side': side, 'cause': cause, 'resume_ok': bool(resume_ok),
+            'folder': folder.name, 'folder_sha256': dg, 'by': by, 'utc': _utc()}
+
+
+def attempt_close(att, s):
+    """단계 끝 — 시도 폴더의 그룹이 다 확인됐으면 결과 줄 (사슬) + 커밋 → None (rc 그대로) | 3 (결과 줄을 못 씀 · 미확인 = recover)."""
+    why = attempt_groups_problem(att.folder)
+    if why:
+        print(f'ATTEMPT_OPEN n={att.n} — 결과 줄을 쓰지 않았다 ({why}) — 사람이 보고 --stage recover --out {att.folder} --ledger {att.repo}')
+        return 3
+    try:
+        res = attempt_result_line(att.n, att.folder, s, 'chain')
+        ledger_append(att.repo, res, f'rint-r attempt {att.n} result {res["status"]}')
+    except Stop as e:
+        print_stop(e)
+        return 3
+    print(f'ATTEMPT_RESULT n={att.n} status={res["status"]} side={res["side"]} cause={res["cause"]} resume_ok={res["resume_ok"]}')
+    return None
+
+
+def ledger_inputs_check(dirs, repo, commit, st, want_prefix=None):
+    """예측의 사다리 입력 (원장 시도) — 폴더마다 attempt.json · 이 원장의 시작 커밋 (조상) · 항목 · 결과 줄 · 폴더 요약 sha · 채택 (effective) 이어야 →
+    {폴더: 번호} · 아니면 Stop ATTEMPT_LEDGER_MISMATCH (원장 판정의 대조 = `ledger_verdict_check`)."""
+    out = {}
+    for d in dirs:
+        a = read_attempt(d)
+        if a is None:
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{Path(d).name}: 원장 시도 폴더가 아니다 (attempt.json · 원장 꼴 단계의 입력 = 원장 시도만)')
+        if want_prefix is not None and not a['target'].startswith(want_prefix):
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{Path(d).name}: 대상 {a["target"]} (사다리여야)')
+        if not ledger_is_ancestor(repo, a['ledger_commit'], commit):
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{Path(d).name}: 시작 커밋 {a["ledger_commit"][:12]} 이 이 원장 ({repo}) 의 조상이 아니다 (다른 원장의 시도)')
+        n = a['n']
+        e, r = st['entries'].get(n), st['results'].get(n)
+        if e is None or e['target'] != a['target'] or r is None:
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{Path(d).name}: 원장 항목 · 결과 줄 ≠ 시도 폴더')
+        if folder_digest(d) != r['folder_sha256'] or r['folder'] != Path(d).name:
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{Path(d).name}: 폴더 요약 sha ≠ 원장 결과 줄')
+        ad = adoption(st, a['target'])
+        if ad['problems']:
+            raise Stop(*ad['problems'][0])
+        if ad['effective'] != n:
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{Path(d).name}: {a["target"]} 의 채택 시도가 아니다 (채택 = attempt_{ad["effective"]})')
+        out[str(Path(d).resolve())] = n
+    return out
+
+
+def ledger_input(path, attempt_dirs):
+    """판정의 원장 입력 기록 → {'path', 'commit' (지금 HEAD · 못 읽음 = None → 판정 멈춤), 'attempt_dirs'} | None (원장 없는 판정)."""
+    if not path:
+        return None
+    try:
+        commit = ledger_head(Path(path))
+    except Stop:
+        commit = None
+    return {'path': str(Path(path).resolve()), 'commit': commit, 'attempt_dirs': [str(Path(x).resolve()) for x in (attempt_dirs or [])]}
+
+
+def _attempt_folders(bases):
+    """바탕 폴더들 → {n: [경로 …]} (attempt_<n> 폴더 · attempt_<n>.rejected.json 파일)."""
+    found = {}
+    for b in sorted({Path(x).resolve() for x in bases}):
+        if not b.is_dir():
+            continue
+        for p in sorted(b.iterdir()):
+            m = ATTEMPT_DIR_RE.fullmatch(p.name) if p.is_dir() else ATTEMPT_SIDE_RE.fullmatch(p.name)
+            if m:
+                found.setdefault(int(m.group(1)), [])
+                if p not in found[int(m.group(1))]:
+                    found[int(m.group(1))].append(p)
+    return found
+
+
+def ledger_verdict_check(dirs, repo, attempt_dirs=(), commit=None):
+    """★ 10-27 묶음 C1b — 판정 입력 ↔ 원장 (Q9 §3-4 · §3-5): 원장 (commit · 없으면 HEAD) = HEAD 의 조상 · 바이트 접두 · 역사 덧붙이기만 · 입력마다 원장 시도
+    폴더 · 입력 대상의 시도 전부 = 폴더 (입력의 부모 폴더 · attempt_dirs 에서 찾음 · 없으면 엄격 결과 뒤) 요약 sha = 결과 줄 · 원장에 없는 시도 폴더 = 멈춤 ·
+    결과 줄의 결과 전 · 뒤 = 폴더 · 시작 커밋 = 조상 · 바이트 접두 · 같은 대상 앞 결과 줄 있음 · 채택 (재실행 사슬 끝) = 입력 · 최대 시도 수 → 공개 기록."""
+    repo = Path(repo)
+    why = ledger_repo_problem(repo)
+    if why:
+        raise Stop('ATTEMPT_LEDGER_MISMATCH', why)
+    head = ledger_head(repo)
+    commit = commit or head
+    if not ledger_is_ancestor(repo, commit, head):
+        raise Stop('ATTEMPT_LEDGER_MISMATCH', f'원장 커밋 {commit[:12]} 이 지금 HEAD 의 조상이 아니다 (역사가 바뀌었다)')
+    raw, raw_head = ledger_blob(repo, commit), ledger_blob(repo, head)
+    if not raw_head.startswith(raw):
+        raise Stop('ATTEMPT_LEDGER_MISMATCH', '원장 HEAD 가 그 커밋 원장의 바이트 이어 붙임이 아니다')
+    why = ledger_history_problem(repo, head)
+    if why:
+        raise Stop('ATTEMPT_LEDGER_MISMATCH', f'원장 역사: {why}')
+    st = ledger_parse(raw)
+    want = {}
+    for d in dirs:
+        a = read_attempt(d)
+        if a is None:
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{Path(d).name}: 원장 시도 폴더가 아니다 (원장 판정의 입력 = 원장 시도만)')
+        if a['n'] not in st['entries'] or st['entries'][a['n']]['target'] != a['target']:
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{Path(d).name}: 원장 항목 ≠ 시도 폴더')
+        if a['target'] in want:
+            raise Stop('DUPLICATE_RUN', f'같은 대상 {a["target"]} 입력 둘')
+        want[a['target']] = (a['n'], Path(d).resolve())
+    found = _attempt_folders([Path(d).resolve().parent for d in dirs] + [Path(x) for x in attempt_dirs])
+    for k in sorted(found):
+        if k not in st['entries']:
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'원장에 없는 시도 폴더 {[p.name for p in found[k]]} (항목 {k})')
+    pub = {'path': str(repo.resolve()), 'commit': commit, 'sha256': hashlib.sha256(raw).hexdigest(),
+           'attempt_dirs': [str(Path(x).resolve()) for x in attempt_dirs], 'targets': {}}
+    for target, (n_in, d_in) in sorted(want.items()):
+        ns = [k for k, e in st['entries'].items() if e['target'] == target]
+        sides = {}
+        for k in ns:
+            r = st['results'].get(k)
+            if r is None:
+                raise Stop('ATTEMPT_LEDGER_MISMATCH', f'항목 {k} ({target}) 의 결과 줄이 없다 (시도 중 · --stage recover 먼저)')
+            paths = found.get(k) or []
+            hit = [p for p in paths if p.name == r['folder']]
+            extra = [p for p in paths if p.name != r['folder']]
+            if extra:
+                raise Stop('ATTEMPT_LEDGER_MISMATCH', f'원장에 없는 시도 폴더 {[p.name for p in extra]} (항목 {k} 의 결과 줄 폴더 = {r["folder"]})')
+            if not hit:                                       # 폴더 없는 시도 (거부 기록 없음 · 소실) = 엄격 결과 뒤 → 이 대상은 판정할 수 없다 (Q9 §3-5 개정 3)
+                raise Stop('ATTEMPT_LEDGER_MISMATCH', f'항목 {k} ({target}) 의 시도 폴더 · 거부 기록 {r["folder"]} 이 없다 (엄격 — 결과 뒤로 본다 · 그 대상 '
+                                                      f'판정 없음 · 다른 곳에 둔 시도 = --attempt-dirs)')
+            p = hit[0]
+            if folder_digest(p) != r['folder_sha256']:
+                raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{p.name}: 폴더 요약 sha ≠ 원장 결과 줄 {k}')
+            sides[k] = folder_side(p)
+            if sides[k] != r['side']:
+                raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{p.name}: 결과 줄 {k} 의 결과 {r["side"]} ≠ 폴더 ({sides[k]} — 표지 · payload 유무)')
+            if p.is_dir():
+                a = read_attempt(p)
+                if a is None or a['n'] != k or a['target'] != target:
+                    raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{p.name}: attempt.json ≠ 원장 항목 {k}')
+                c0 = a['ledger_commit']
+                if not ledger_is_ancestor(repo, c0, commit):
+                    raise Stop('ATTEMPT_ORDER_MISMATCH', f'{p.name}: 시작 커밋 {c0[:12]} 이 원장 커밋 {commit[:12]} 의 조상이 아니다 (곁가지에서 시작 · R4-07)')
+                raw0 = ledger_blob(repo, c0)
+                if not raw.startswith(raw0):
+                    raise Stop('ATTEMPT_ORDER_MISMATCH', f'{p.name}: 시작 커밋의 원장이 원장의 바이트 접두가 아니다 (R4-07)')
+                st0 = ledger_parse(raw0)
+                if k not in st0['entries'] or any(j not in st0['results'] for j in ns if j < k):
+                    raise Stop('ATTEMPT_ORDER_MISMATCH', f'{p.name}: 시작 커밋에 자기 항목 · 같은 대상 앞 결과 줄이 없다 (차례로만)')
+        ad = adoption(st, target, sides=sides)
+        if ad['problems']:
+            raise Stop(*ad['problems'][0])
+        lim = attempt_limit_problem(st, target, max(ns), (read_summary(d_in, 'ladder_summary.json')[0]
+                                                         or read_summary(d_in, 'predict_summary.json')[0] or {}).get('plan', {}).get('content'))
+        if lim and lim[0] == 'ATTEMPT_LIMIT':
+            raise Stop(*lim)
+        if ad['effective'] is None or ad['effective'] != n_in:
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{d_in.name}: {target} 의 채택 시도가 아니다 (채택 = attempt_{ad["effective"]} · 원장 · 폴더 · 규칙이 '
+                                                  f'정한다)')
+        pub['targets'][target] = {'attempts': ad['attempts'], 'adopted': ad['adopted'], 'chain': ad['chain'], 'effective': ad['effective']}
+    return pub
+
+
 class Runner:
     def __init__(self, runner, root, out, plan, variant, deadline, contract, dry=False, parent_env=None, prefix='R', machine=None):
         self.runner, self.root, self.out = Path(runner), Path(root), Path(out)
@@ -2503,6 +3289,7 @@ class Runner:
             rc, cause, end = run_in_group(['bash', str(self.runner)], str(self.root), dict(self.env_base, **delta), lf, left,
                                           self.out / GROUPS_DIR, name)
         rec['rc'], rec['seconds'] = (rc if cause is None else None), round(time.time() - t0, 3)
+        rec['group_cause'] = cause           # ★ 10-27 묶음 C1b — 그룹 원인 (None · timeout · signal · signal_after · 원장 결과 줄의 원인 · 재실행 자격)
         if not end['confirmed']:
             raise Stop('GROUP_UNCONFIRMED', f'{name}: 러너 그룹 종료 미확인 (남은 표지 프로세스 {end["left"]} · 원인 {cause}) — 그 런의 팔을 읽지 '
                                             f'않는다', name)
@@ -3159,7 +3946,7 @@ class Predict:
 def summary_base(stage, a):
     #  ★ PF2 D (10-22 · PRE2-design-02) — code = git 신원 + 코드 파일 지문 (`code_record`) · machine = 기계 이름표 (등록 R §10-4 문장 3 · 기록만 ·
     #    판정에는 쓰지 않는다 · 없으면 null)
-    return {'tool': TOOL, 'schema': SCHEMA, 'stage': stage, 'status': None, 'stop': None, 'flags': [],
+    return {'tool': TOOL, 'schema': SCHEMA, 'stage': stage, 'status': None, 'stop': None, 'flags': [], 'attempt': None,
             'machine': getattr(a, 'machine', None), 'code': code_record(getattr(a, 'runner', None)),
             'constants': {'target_sbe_mScm': TARGET_SBE_MS, 'confirm_tol': CONFIRM_TOL, 'e_min': E_MIN, 'tau_mono': TAU_MONO,
                           'neighbor_log10_max': NEIGHBOR_LOG10_MAX, 'origin_sbe_max': ORIGIN_SBE_MAX,
@@ -3240,13 +4027,19 @@ def stage_ladder(a, contract):
     rc_m = machine_missing_rc(a)
     if rc_m is not None:
         return rc_m
-    out = Path(a.out)
-    try:
-        outdir_empty_or_stop(out)
-    except Stop as e:
-        print_stop(e)
-        return 3
+    #  ★ 10-27 묶음 C1b (RCA2-05 · Q9 §3-5) — 시도 꼴 (--ledger · --attempt): 풀기 전 대조 · 시도 폴더 <--out>/attempt_<n> (빈 폴더 요구를 대신한다)
+    att = attempt_open(a, 'ladder')
+    if isinstance(att, int):
+        return att
+    out = att.folder if att is not None else Path(a.out)
+    if att is None:
+        try:
+            outdir_empty_or_stop(out)
+        except Stop as e:
+            print_stop(e)
+            return 3
     s = summary_base('ladder', a)
+    s['attempt'] = att.public() if att is not None else None
     s.update({'law': a.law, 'variant': a.variant, 'kit': a.kit or SBE_KIT, 'runs': [], 'ladder': None, 'env_scrubbed': [],
               'after_main': None, 'bed': None, 'sv_graph_source': None, 'noop': None})
     ran = False
@@ -3326,6 +4119,10 @@ def stage_ladder(a, contract):
         return 3
     out.mkdir(parents=True, exist_ok=True)
     write_json(out / 'ladder_summary.json', s)
+    if att is not None:
+        rc_a = attempt_close(att, s)                      # ★ 10-27 묶음 C1b — 결과 줄 (그룹 종료 확인 뒤) · 못 쓰면 rc 3
+        if rc_a is not None:
+            return rc_a
     L = s.get('ladder') or {}
     if s['status'] == 'CALIBRATED':
         e_lo, e_hi = (L.get('ends') or {}).get('lo') or {}, (L.get('ends') or {}).get('hi') or {}
@@ -3419,13 +4216,18 @@ def stage_predict(a, contract):
     rc_m = machine_missing_rc(a)
     if rc_m is not None:
         return rc_m
-    out = Path(a.out)
-    try:
-        outdir_empty_or_stop(out)
-    except Stop as e:
-        print_stop(e)
-        return 3
+    att = attempt_open(a, 'predict')                     # ★ 10-27 묶음 C1b — 시도 꼴 (stage_ladder 와 같은 입구)
+    if isinstance(att, int):
+        return att
+    out = att.folder if att is not None else Path(a.out)
+    if att is None:
+        try:
+            outdir_empty_or_stop(out)
+        except Stop as e:
+            print_stop(e)
+            return 3
     s = summary_base('predict', a)
+    s['attempt'] = att.public() if att is not None else None
     s.update({'variant': a.variant, 'kit': a.kit or DBE_KIT, 'runs': [], 'ladders': {}, 'checks': None, 'origin': None,
               'env_scrubbed': [], 'after_main': None, 'sv_cf': None, 'bed': None, 'sv_graph_source': None})
     ran = False
@@ -3433,6 +4235,9 @@ def stage_predict(a, contract):
         if (a.kit or DBE_KIT) != DBE_KIT:
             raise Stop('NOT_REGISTERED', f'--kit {a.kit} (등록 {DBE_KIT})')
         env_forbidden_or_stop()
+        if att is not None:
+            #  ★ 10-27 묶음 C1b (Q9 §3-5) — 원장 꼴 예측의 사다리 입력 = 같은 원장의 채택 사다리 시도만 (원장 · 폴더 · 규칙이 정한다 · 사다리 요약 읽기 전)
+            ledger_inputs_check(a.ladders, att.repo, att.head, att.st, want_prefix='ladder:')
         sid_reg = {}
         #  ★ PF2 D (10-22 · PRE2-design-02) — 지금 코드 (`s['code']`) 를 넘겨 사다리 기록 · S0 보고 지문과 대조 (load_ladders 안 · 옛 = HEAD 만)
         lads, plan, plan_sha, code, s0rec, lad_after, s0reps = load_ladders(a.ladders, a.variant, a.registration, contract, sid_reg,
@@ -3497,6 +4302,10 @@ def stage_predict(a, contract):
         return 3
     out.mkdir(parents=True, exist_ok=True)
     write_json(out / 'predict_summary.json', s)
+    if att is not None:
+        rc_a = attempt_close(att, s)                      # ★ 10-27 묶음 C1b — 결과 줄 (그룹 종료 확인 뒤) · 못 쓰면 rc 3
+        if rc_a is not None:
+            return rc_a
     if s['status'] == 'PREDICTED':
         n_adj = sum(1 for o in (s['origin'] or []) if o['status'] == 'adjusted')
         print(f'예측 = PREDICTED · 런 {len(s["runs"])} · 같은 P 일관 통과 · origin 규칙이 옮긴 모서리 {n_adj}')
@@ -3704,18 +4513,24 @@ def default_graph_src(root, out=None):
     return None
 
 
-def verdict_compute(dirs, reg_path, contract, root, graph_src=None):
+def verdict_compute(dirs, reg_path, contract, root, graph_src=None, ledger=None):
     """판정 계산기 (§5 · 설계 §7) — 원 팔 JSON 전부에서.  → (공개 dict, 결과 dict | None).  입력 계약 실패 = Stop.  ★ 10-25 묶음 B
     (RCA2-03) — root = 킷 뿌리 (SBE · DBE 킷을 S0 와 같은 발견 함수로 다시 해시해 단계 기록의 S0 원 입력과 대조 · 경로 = 대조 밖).
     ★ 10-26 B″ (1저자 Q1 (가)) — graph_src = 판정의 봉인 원천 (None = `default_graph_src(root)` · 임시 폴더) · SV 모서리 런마다 조립만 런을 **다시**
-    돌린다 (단계 요약의 `sv_graph` · 원천 기록을 믿지 않는다 — 다시 읽은 원 팔 · 다시 조립한 지문으로 SV 판정)."""
+    돌린다 (단계 요약의 `sv_graph` · 원천 기록을 믿지 않는다 — 다시 읽은 원 팔 · 다시 조립한 지문으로 SV 판정).
+    ★ 10-27 묶음 C1b — ledger = {'path', 'commit', 'attempt_dirs'} (원장 판정 · 입력 = 그 원장의 채택 시도만 · `ledger_verdict_check` · 판정 칸 ledger) ·
+    None = 원장 없는 판정 (옛 꼴 · ledger 칸 null)."""
     if graph_src is None:
         graph_src = default_graph_src(root)
     pub = {'tool': TOOL, 'schema': SCHEMA, 'stage': 'verdict', 'verdict': None, 'state': None, 'stop': None, 'flags': [],
            'blocking_flags': [], 'blocking_reasons': {}, 'sensitivity_incomplete': None, 'qualifiers': list(QUALIFIERS),
            'report_category': {REPORT_CATEGORY: list(ASSUMED_UNVALIDATED)},
            'verdict_note': VERDICT_NOTE, 'sentence_allowed': False, 'sentence': None, 'calib': {}, 'variants': {},
-           'inputs': [], 'arms': [], 'registration': None, 'grid_sentence': GRID_SENTENCE, 'reasons': [], 'bed': None}
+           'inputs': [], 'arms': [], 'registration': None, 'grid_sentence': GRID_SENTENCE, 'reasons': [], 'bed': None, 'ledger': None}
+    if ledger is not None:
+        if not ledger.get('commit'):
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'원장 {ledger.get("path")} 의 HEAD 를 못 읽는다')
+        pub['ledger'] = ledger_verdict_check(dirs, ledger['path'], ledger.get('attempt_dirs') or (), ledger['commit'])
     stages, seen = [], set()
     for d in dirs:
         rd = Path(d).resolve()
@@ -3959,12 +4774,14 @@ def stage_verdict(a, contract):
     #  ★ 10-26 B″ (1저자 Q1 (가)) — 판정의 봉인 원천 (원천 런 폴더 = <판정>/graph_src · 기록 = verdict_graph_src.json · 판정 JSON 밖 = 다시 판정 바이트
     #    대조 무관)
     gsrc = default_graph_src(a.root, out / GRAPH_SRC_DIR)
+    lin = ledger_input(a.ledger, a.attempt_dirs)                # ★ 10-27 묶음 C1b — 원장 판정 입력 (경로 · 지금 HEAD · 시도 바탕 폴더 · 다시 판정이 같은 값으로)
     try:
-        pub, res = verdict_compute(a.runs, a.registration, contract, a.root, graph_src=gsrc)
+        pub, res = verdict_compute(a.runs, a.registration, contract, a.root, graph_src=gsrc, ledger=lin)
     except Stop as e:
         print_stop(e)
         pub, res, rc_ = _stopped_pub(e, a.runs, a.registration), None, 3
     pub['input_dirs'] = [str(Path(d).resolve()) for d in a.runs]
+    pub['ledger_input'] = lin
     out.mkdir(parents=True, exist_ok=True)
     write_json(out / 'verdict.json', pub)
     if gsrc is not None:
@@ -4007,11 +4824,13 @@ def reverify(vdir, contract, root):
     old_res = rp.read_bytes() if rp.exists() else None
     dirs = pub0.get('input_dirs') or []
     reg = (pub0.get('registration') or {}).get('path') if isinstance(pub0.get('registration'), dict) else pub0.get('registration')
+    lin = pub0.get('ledger_input') if isinstance(pub0.get('ledger_input'), dict) else None   # ★ 10-27 묶음 C1b — 같은 원장 커밋으로 다시
     try:
-        pub, res = verdict_compute(dirs, reg, contract, root)
+        pub, res = verdict_compute(dirs, reg, contract, root, ledger=lin)
     except Stop as e:
         pub, res = _stopped_pub(e, dirs, reg), None
     pub['input_dirs'] = dirs
+    pub['ledger_input'] = lin
     new_pub, new_res = canon_bytes(_clean(pub)), (canon_bytes(res) if res is not None else None)
     if new_pub == old_pub and new_res == old_res:
         print(f'REVERIFY_SAME — 판정 JSON · 결과 JSON 바이트 같음 ({len(dirs)} 입력 · 판정 {pub["verdict"]})')
@@ -4077,7 +4896,115 @@ def stage_recover(a):
         print(f'  recover {lp.parent.parent.name}/{end["name"]}: 종료 {"확인" if end["confirmed"] else "미확인"} · 죽인 프로세스 {end["killed"]}'
               + (f' · {end["why"]}' if end['why'] else ''))
     print(f'recover — 그룹 기록 {len(todo)} 개 정리 · 미확인 {n_bad}' + (' (다음 시도 전에 사람이 본다)' if n_bad else ''))
+    if getattr(a, 'ledger', None):
+        n_bad += recover_ledger(root, Path(a.ledger))
     return 0 if n_bad == 0 else 3
+
+
+def recover_ledger(root, repo):
+    """★ 10-27 묶음 C1b (Q9 개정 5 ② · "supervisor / recovery 가 종료를 확인한 뒤 표지 · payload · 폴더 해시를 확정") — root (시도 폴더 · 또는 그 바탕)
+    아래 시도 폴더마다: 원장 항목에 결과 줄이 없고 그 폴더의 그룹이 다 확인됐으면 결과 줄 (by recover · 단계 요약 있음 = 그 상태 · 거부 기록 = rejected ·
+    없음 = interrupted · 원인 parent_dead) → 못 쓴 수 (미확인 · 원장 불일치)."""
+    root = Path(root)
+    folders = [root] if read_attempt(root) is not None else [p for p in sorted(root.iterdir()) if p.is_dir() and read_attempt(p) is not None] \
+        if root.is_dir() else []
+    bad = 0
+    for f in folders:
+        a = read_attempt(f)
+        n = a['n']
+        try:
+            why = ledger_repo_problem(repo)
+            if why:
+                raise Stop('ATTEMPT_LEDGER_MISMATCH', why)
+            head, raw = ledger_now(repo)
+            st = ledger_parse(raw)
+            e = st['entries'].get(n)
+            if e is None or e['target'] != a['target'] or not ledger_is_ancestor(repo, a['ledger_commit'], head):
+                raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{f.name}: 이 원장의 항목 {n} ({a["target"]}) 시도가 아니다')
+            if n in st['results']:
+                continue
+            why = attempt_groups_problem(f)
+            if why:
+                print(f'  recover {f.name}: {why} — 결과 줄을 쓰지 않는다 (미확인 · 다음 시도 채택을 막는다)')
+                bad += 1
+                continue
+            rj = f / REJECTED_FILE
+            if rj.is_file():
+                rec = _json_strict(rj.read_bytes())
+                res = {'kind': 'result', 'n': n, 'status': 'rejected', 'stop': {'code': str(rec.get('code')), 'run': None, 'reason': None},
+                       'side': 'pre', 'cause': 'presolve', 'resume_ok': False, 'folder': f.name, 'folder_sha256': folder_digest(f),
+                       'by': 'recover', 'utc': _utc()}
+            else:
+                s = None
+                for nm in ('ladder_summary.json', 'predict_summary.json'):
+                    s = s or read_summary(f, nm)[0]
+                res = attempt_result_line(n, f, s, 'recover')
+            ledger_append(repo, res, f'rint-r attempt {n} result {res["status"]} (recover)', expect=raw)
+        except (Stop, OSError, ValueError) as ex:
+            print_stop(ex if isinstance(ex, Stop) else Stop('ATTEMPT_LEDGER_MISMATCH', f'{f.name}: {type(ex).__name__}: {ex}'))
+            bad += 1
+            continue
+        print(f'  recover {f.name}: 결과 줄 {res["status"]} · 결과 {res["side"]} · 원인 {res["cause"]} · 재실행 자격 {res["resume_ok"]}')
+    return bad
+
+
+def stage_ledger(a):
+    """★ 10-27 묶음 C1b (RCA2-05 · Q9 §3-5) — 시도 원장: --init (머리 = 계획 sha256 · 한 번) · --add (항목 = 대상 · 기계 · 재실행이면 원 시도 · 계획 ·
+    코드 키 · 환경 · 침대 지문 — 시도 **전에** 커밋 · 차례 · 채택 · 재실행 자격 · 최대 시도 수를 먼저 본다 · 화면 ATTEMPT_ADDED n=<번호>)."""
+    if bool(a.init) == bool(a.add) or not a.ledger:
+        print('인자 오류: --stage ledger 는 --ledger <원장 git 저장소> 와 --init 또는 --add 하나', file=sys.stderr)
+        return 2
+    repo = Path(a.ledger)
+    try:
+        why = ledger_repo_problem(repo)
+        if why:
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', why)
+        lp = repo / LEDGER_FILE
+        if a.init:
+            if lp.exists() or lp.is_symlink():
+                raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{lp} 가 이미 있다 (원장은 한 번만 시작한다)')
+            plan, plan_sha = load_plan(a.plan)
+            require_plan_numbers(plan)                        # 봉인 전 계획 = 원장 없음 (C1 — 봉인 전 계획이면 R 진입 거부)
+            head = {'kind': 'header', 'schema': LEDGER_SCHEMA, 'plan_sha256': plan_sha, 'utc': _utc()}
+            ledger_parse(ledger_line(head).encode('utf-8'))
+            with open(lp, 'xb') as f:
+                f.write(ledger_line(head).encode('utf-8'))
+                f.flush()
+                os.fsync(f.fileno())
+            ledger_git(repo, 'add', '--', LEDGER_FILE)
+            ledger_git(repo, 'commit', '-q', '-m', f'rint-r ledger init (plan {plan_sha[:12]})', '--', LEDGER_FILE)
+            print(f'LEDGER_INIT — {lp} · 계획 sha256 {plan_sha} · 커밋 {ledger_head(repo)}')
+            return 0
+        if not (a.ledger_target and TARGET_RE.fullmatch(a.ledger_target)):
+            raise Stop('NOT_REGISTERED', f'--ledger-target {a.ledger_target!r} (ladder:P0 · ladder:P1 · ladder:<법칙>:<FIBRE|UNREG|GRID> · predict · '
+                                         f'predict:<변이>)')
+        head, raw = ledger_now(repo)
+        st = ledger_parse(raw)
+        plan, plan_sha = load_plan(a.plan)
+        if plan_sha != st['header']['plan_sha256']:
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'--plan sha256 {plan_sha[:12]} ≠ 원장 머리의 계획 {st["header"]["plan_sha256"][:12]}')
+        require_plan_numbers(plan)
+        if a.machine not in (plan['exec_policy'].get('allowed_machines') or ()):
+            raise Stop('MACHINE_NOT_ALLOWED', f'--machine {a.machine!r} ∉ 계획 허용 목록 {plan["exec_policy"].get("allowed_machines")}')
+        code = code_record(a.runner)
+        why = code_dirty_problem(code) or env_seal_problem(code, plan)
+        if why:
+            raise Stop('CODE_PIN_MISMATCH', why)
+        e = {'kind': 'entry', 'n': len(st['entries']) + 1, 'target': a.ledger_target, 'machine': a.machine, 'resume_of': a.resume,
+             'plan_sha256': plan_sha, 'code_key_sha256': code_key_sha(code), 'env': code['env'],
+             'bed': {k: kit_bed(a.root, k) for k in target_kits(a.ledger_target)}, 'utc': _utc()}
+        if a.resume is not None and (a.resume not in st['entries'] or st['entries'][a.resume]['target'] != a.ledger_target):
+            raise Stop('RESUME_NOT_ALLOWED', f'--resume {a.resume} = 같은 대상 ({a.ledger_target}) 의 원장 항목이어야')
+        prob = attempt_order_problem(st, e, plan)
+        if prob:
+            raise Stop(*prob)
+        c = ledger_append(repo, e, f'rint-r attempt {e["n"]} entry {e["target"]} {e["machine"]}', expect=raw)
+    except Stop as ex:
+        print_stop(ex)
+        return 3
+    print(f'ATTEMPT_ADDED n={e["n"]} target={e["target"]} machine={e["machine"]}' + (f' resume_of={e["resume_of"]}' if e['resume_of'] else '')
+          + f' commit={c} — 이 번호로 --ledger {repo} --attempt {e["n"]} (풀기 전 대조 = 이 항목의 지문)')
+    return 0
 
 
 def stage_plan_doc(a):
@@ -4105,7 +5032,7 @@ def main(argv=None, contract=None):
     except (AttributeError, ValueError):
         pass
     ap = argparse.ArgumentParser(description=__doc__.split('\n')[0])
-    ap.add_argument('--stage', choices=('ladder', 'predict', 'verdict', 'plan-doc', 'recover'), default='ladder')
+    ap.add_argument('--stage', choices=('ladder', 'predict', 'verdict', 'plan-doc', 'recover', 'ledger'), default='ladder')
     ap.add_argument('--law', choices=LAWS, help='ladder — PTFE–접합 법칙 끝')
     ap.add_argument('--target', type=float, default=TARGET_SBE_MS, help='ladder — 등록 표적 (1.63 이 아니면 멈춤)')
     ap.add_argument('--variant', choices=VARIANTS, default=None, help='감도 (등록 R §5-6 · 필수 · 주 판정 단계 뒤에만 — --after-main)')
@@ -4136,6 +5063,20 @@ def main(argv=None, contract=None):
                                                     '계획 exec_policy.max_hours 와 같아야 · 다르면 NOT_REGISTERED)')
     ap.add_argument('--dry-run', action='store_true', help='ladder · predict — 런 env 만 찍는다 (러너 · 출력 폴더 없음)')
     ap.add_argument('--show-results', action='store_true', help='verdict 만 — 판정에 쓰는 런이 다 끝난 뒤 값을 연다 (열람 기록)')
+    #  ★ 10-27 묶음 C1b (RCA2-05 · Q4 (가) · Q9 설계 §3-2 · §3-5 · author 10-27 approved bundle C) — 시도 원장 · 시도 폴더
+    ap.add_argument('--ledger', default=None, help='시도 원장 git 저장소 (실행 트리와 다른 체크아웃 · 파일 rint_r_attempts.jsonl) — ledger (--init · --add) · '
+                                                   'ladder · predict (--attempt 와 함께 = 시도 꼴 · --out = 시도 폴더의 바탕) · verdict (원장 판정 · 채택 시도만) · '
+                                                   'recover (결과 줄 확정)')
+    ap.add_argument('--attempt', type=int, default=None, help='ladder · predict — 원장 항목 번호 (시도 폴더 = <--out>/attempt_<n> · 풀기 전 대조 = 그 항목 · '
+                                                             '끝 = 결과 줄)')
+    ap.add_argument('--init', action='store_true', help='ledger — 원장 시작 (머리 줄 = --plan sha256 · 한 번)')
+    ap.add_argument('--add', action='store_true', help='ledger — 항목 하나 (--ledger-target · --machine · --plan · --runner · --root · 재실행 = --resume) · '
+                                                       '시도 전에 커밋')
+    ap.add_argument('--ledger-target', default=None, help='ledger --add — 대상 (ladder:P0 · ladder:P1 · ladder:<법칙>:<FIBRE|UNREG|GRID> · predict · '
+                                                          'predict:<변이>)')
+    ap.add_argument('--resume', type=int, default=None, help='ledger --add — 재실행 항목의 원 시도 번호 (같은 대상 · 채택 시도 · 재실행 자격 · 같은 기계 · '
+                                                            '환경 지문)')
+    ap.add_argument('--attempt-dirs', nargs='+', default=None, help='verdict — 시도 폴더 바탕 (입력 폴더의 부모 밖에 둔 다른 시도 · 거부 기록)')
     a = ap.parse_args(argv)
     contract = RealContract() if contract is None else contract
     if a.show_results and a.stage != 'verdict':
@@ -4143,9 +5084,24 @@ def main(argv=None, contract=None):
     if a.after_main and not a.variant:
         ap.error('--after-main 은 --variant (감도 단계) 와만')
     if a.machine is not None and (a.stage in ('verdict', 'plan-doc', 'recover') or not MACHINE_RE.fullmatch(a.machine)):
-        ap.error('--machine 은 ladder · predict 에서만 · 영문 · 숫자 · _ · - 로 된 짧은 이름 (IP · 주소 · 경로 · 띄어쓰기 금지 · 등록 R §10-4 문장 3)')
+        ap.error('--machine 은 ladder · predict · ledger 에서만 · 영문 · 숫자 · _ · - 로 된 짧은 이름 (IP · 주소 · 경로 · 띄어쓰기 금지 · 등록 R §10-4 '
+                 '문장 3)')
     if a.check_doc and a.stage != 'plan-doc':
         ap.error('--check-doc 은 --stage plan-doc 에서만')
+    if (a.init or a.add or a.ledger_target or a.resume is not None) and a.stage != 'ledger':
+        ap.error('--init · --add · --ledger-target · --resume 은 --stage ledger 에서만')
+    if a.attempt is not None and a.stage not in ('ladder', 'predict'):
+        ap.error('--attempt 는 ladder · predict 에서만 (--ledger 와 함께)')
+    if a.attempt_dirs and not (a.stage == 'verdict' and a.ledger):
+        ap.error('--attempt-dirs 는 --stage verdict --ledger 에서만')
+    if a.ledger and a.stage == 'plan-doc':
+        ap.error('--ledger 는 plan-doc 에 쓰지 않는다')
+    if a.stage == 'ledger':
+        if a.add and not (a.ledger_target and a.machine and a.plan and a.runner and a.root):
+            ap.error('--stage ledger --add 는 --ledger-target · --machine · --plan · --runner · --root 가 필요하다')
+        if a.init and not a.plan:
+            ap.error('--stage ledger --init 은 --plan 이 필요하다')
+        return stage_ledger(a)
     if a.stage == 'recover':
         if not a.out:
             ap.error('--stage recover 는 --out (단계 · 시도 폴더 — 그 아래 groups/ 의 끝 기록 없는 러너 그룹) 이 필요하다')

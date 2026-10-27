@@ -1213,7 +1213,7 @@ def t_ledger():
     os.makedirs(led)
     subprocess.run(['git', 'init', '-q', led], check=True, capture_output=True)
     rc0, so0 = e2e_call(ws, sd, ['--stage', 'ledger', '--ledger', led, '--init', '--plan', pp])
-    rc1, so1 = e2e_call(ws, sd, ['--stage', 'ledger', '--ledger', led, '--add', '--target', 'ladder:P0', '--machine', E2E_MACH, '--plan', pp,
+    rc1, so1 = e2e_call(ws, sd, ['--stage', 'ledger', '--ledger', led, '--add', '--ledger-target', 'ladder:P0', '--machine', E2E_MACH, '--plan', pp,
                                  '--runner', runner, '--root', ws])
     m = re.search(r'ATTEMPT_ADDED n=(\d+)', so1)
     n = int(m.group(1)) if m else None
@@ -1228,7 +1228,7 @@ def t_ledger():
     s = json.load(open(os.path.join(folder, 'ladder_summary.json'), encoding='utf-8')) if os.path.exists(os.path.join(folder, 'ladder_summary.json')) else {}
     runs = s.get('runs') or []
     marks = [os.path.join(folder, r['outdir']) for r in runs if not glob.glob(os.path.join(folder, r['outdir'], '.unchecked', '*' + '.first_result.json'))]
-    left = glob.glob(os.path.join(folder, '*', '.unchecked', 'p2_*.json'))
+    left = [x for x in glob.glob(os.path.join(folder, '*', '.unchecked', 'p2_*.json*')) if not x.endswith('.first_result.json')]   # 표지 이름도 p2_ 로 시작한다
     r1 = res[0] if len(res) == 1 else {}
     chk('E14 ★ 10-27 묶음 C1b 실물 원장 시도 (사다리 P0 · 실물 러너 · payload) → --init · --add rc 0 · 사다리 CALIBRATED · 결과 줄 하나 (completed · 결과 뒤 · '
         'by chain · 폴더 요약 sha = 독립 계산) · 런마다 .unchecked/ 에 표지 · .unchecked/ 에 payload 없음 · 킷 런 폴더에 payload 없음',
