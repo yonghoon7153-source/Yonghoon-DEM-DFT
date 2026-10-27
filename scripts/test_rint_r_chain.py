@@ -8262,6 +8262,658 @@ def t_RS06():
     return stop_code(v) == 'RESUME_NOT_ALLOWED', (stop_code(v), ((v.get('v') or {}).get('stop') or {}).get('cause'))
 
 
+# ── ★ 10-27 묶음 C2d (Q9 설계 §3-1 – §3-5 · §4 · §8 · 개정 1–5 · Codex 회차 ① Q-A · Q-B · Q-D · Q-G · Q-I · Q-L · author 10-27 approved bundle C)
+#    12 단위 · 넘침 점 · 합치기 — 단위 = (c · 법칙 · R) 12 (이름 <법칙>_c<c>_<R 역할> · 원장 대상 unit[:<변이>]:<이름>) · 단위 시도 = `--stage predict --unit
+#    <이름> --ledger --attempt` (모서리 arm 0 + origin 표본 arm 1 · 2 · 런 이름 U01_corner · U02_origin · unit_summary.json · 상태 UNIT_DONE) · 넘침 점 =
+#    `--point <이름> --expand <결정 기록>` (origin8 · U01_origin8 · point_summary.json · POINT_DONE) · 합치기 = `--merge <시도 폴더 · 바탕 …> --ledger`
+#    (첫 합치기 = 넘침 있으면 EXPANSION_NEEDED · expansion.json · merge_summary.json · rc 4 · 끝 합치기 = --expand) = 한 기계 사슬과 같은 요청 순서 · 같은
+#    판정 함수 · 런 이름 = 사슬 차례 · 런 폴더 = units/<대상 ':' → '-'>/attempt_<n>/… (모든 시도 사본) · 원장 사본 ledger/ledger.bundle
+UNIT_LIST = [(law, c, rr) for law in ('P0', 'P1') for c in ('0', '1') for rr in ('R_j_lo', 'R_j0', 'R_j_hi')]
+UNIT_MACHS = ('kgy', 'gabia', 'm1')
+UNIT_RUN_KEYS = ('name', 'role', 'kit', 'law', 'c', 'rj', 'arms', 'arm_list', 'variant', 'sv_cf', 'rc', 'arms_read')
+
+
+def chain_c2d():
+    """사슬에 단위 합치기 (`--merge`) 가 있나 (고치기 전 판 = 없음 → 시험이 기다리지 않고 실패)."""
+    return chain_has('--merge')
+
+
+def uname(law, c, rr):
+    return f'{law}_c{c}_{rr}'
+
+
+def u_json(p):
+    p = Path(p)
+    return json.loads(p.read_text(encoding='utf-8')) if p.exists() else None
+
+
+def unit_att(wpath, d, n, name, ladders, base, machine=MACH, kind='unit', expand=None, extra=()):
+    """단위 (kind unit) · 넘침 점 (kind point · expand = 결정 기록) 시도 → lad_att 꼴 (요약 = <kind>_summary.json)."""
+    argv = predict_argv(base, [str(x) for x in ladders], machine=machine) + ['--ledger', str(d), '--attempt', str(n), f'--{kind}', name]
+    if expand is not None:
+        argv += ['--expand', str(expand)]
+    rc, so = call(argv + list(extra), wpath)
+    out = Path(base) / f'attempt_{n}'
+    return {'rc': rc, 'base': Path(base), 'out': out, 'so': so, 'sum': u_json(out / f'{kind}_summary.json'), 'world': wpath}
+
+
+def merge_run(tag, d, ladders, paths, expand=None, machine=MACH):
+    """합치기 → {'rc', 'out' (= runs/<tag>/pred · 폴더 이름 pred = 한 기계 비교 예측과 같은 이름 = 증서 칸 키 같게), 'so', 'sum' (predict_summary),
+    'msum' (merge_summary), 'dec' (expansion.json), 'dec_path'}."""
+    out = Path(TD) / 'runs' / tag / 'pred'
+    argv = predict_argv(out, [str(x) for x in ladders], machine=machine) + ['--ledger', str(d), '--merge', *[str(p) for p in paths]]
+    if expand is not None:
+        argv += ['--expand', str(expand)]
+    rc, so = call(argv)
+    return {'rc': rc, 'out': out, 'so': so, 'sum': u_json(out / 'predict_summary.json'), 'msum': u_json(out / 'merge_summary.json'),
+            'dec': u_json(out / 'expansion.json'), 'dec_path': out / 'expansion.json'}
+
+
+def one_shot(tag, lads, W):
+    """한 기계 비교 예측 (원장 밖 · 같은 사다리 시도 폴더 · 세계 꼴 W · 폴더 이름 pred)."""
+    out = Path(TD) / 'runs' / tag / 'pred'
+    rc, so = call(predict_argv(out, [str(x) for x in lads]), world(tag, W))
+    return {'rc': rc, 'out': out, 'so': so, 'sum': u_json(out / 'predict_summary.json')}
+
+
+def proj_runs(s):
+    return [{k: r.get(k) for k in UNIT_RUN_KEYS} for r in (s or {}).get('runs') or []]
+
+
+def res_bytes(v):
+    p = Path(v['out']) / 'verdict_results.json'
+    return p.read_bytes() if p.exists() else None
+
+
+def s_units(tag, W=None, plans=None, one_W=None, verdicts=True):
+    """단위 캠페인 (주 · 원장 하나): 사다리 P0 · P1 시도 → 12 단위 시도 (차례 = 법칙 → c → R · 기계 = UNIT_MACHS 돌아가며 · 세계 꼴 W) → 한 기계 비교
+    예측 (원장 밖 · 같은 사다리 · 세계 꼴 one_W (없으면 W) · 폴더 이름 pred) → 합치기 (첫) → 판정 둘 (비교 = 원장 없음 · 합침 = 원장).
+    plans = {단위 이름: [{'W' · 'machine' · 'resume' (True = 그 단위 첫 시도를 원 시도로)} …]} (그 단위만 시도 여럿)."""
+    def go():
+        Wd = W if W is not None else PW
+        d, _rc, _so = led_new(tag)
+        _r, n1, _s = led_add(d, 'ladder:P0')
+        l0 = lad_att(f'{tag}_P0', world(f'{tag}_P0'), d, n1, law='P0')
+        _r, n2, _s = led_add(d, 'ladder:P1', machine='gabia')        # 사다리 두 기계 (Q9 §3-1 '2 대 · 지금 사슬' 꼴 · 비교 예측 = 한 기계)
+        l1 = lad_att(f'{tag}_P1', world(f'{tag}_P1'), d, n2, law='P1', machine='gabia')
+        lads = [l0['out'], l1['out']]
+        base = Path(TD) / 'runs' / f'{tag}_units'
+        units, adds = {}, {}
+        for i, (law, c, rr) in enumerate(UNIT_LIST):
+            nm = uname(law, c, rr)
+            seq = (plans or {}).get(nm) or [{'W': Wd, 'machine': UNIT_MACHS[i % len(UNIT_MACHS)]}]
+            units[nm], adds[nm] = [], []
+            first = None
+            for j, p in enumerate(seq):
+                ra, n, sa = led_add(d, f'unit:{nm}', machine=p['machine'], resume=(first if p.get('resume') else None))
+                adds[nm].append((ra, n, sa))
+                units[nm].append(unit_att(world(f'{tag}_u{i}_{j}', p['W']), d, n, nm, lads, base, machine=p['machine']) if n else None)
+                if first is None:
+                    first = n
+        one = one_shot(f'{tag}_one', lads, one_W if one_W is not None else Wd)
+        m = merge_run(f'{tag}_m', d, lads, [base])
+        out = {'d': d, 'l0': l0, 'l1': l1, 'lads': lads, 'base': base, 'units': units, 'adds': adds, 'one': one, 'm': m}
+        if verdicts:
+            out['v_one'] = verdict(f'{tag}_v_one', [l0['out'], l1['out'], one['out']])
+            out['v_m'] = ver_led(f'{tag}_v_m', [l0['out'], l1['out'], m['out']], d) if m['sum'] is not None else None
+        return out
+    return scen(tag, go)
+
+
+def same_as_one(m, one):
+    """합친 예측 ↔ 한 기계 비교 예측 — 상태 · 검사 · origin · 멈춤 (이름 · 런 · 사유) · 런 (요청 칸 · rc · 팔 기록) 같음 → (같음, 다른 칸)."""
+    ms, os_ = m.get('sum') or {}, one.get('sum') or {}
+    st = lambda s: {k: (s.get('stop') or {}).get(k) for k in ('code', 'run', 'reason')} if s.get('stop') else None   # noqa: E731
+    diff = [k for k, a, b in (('status', ms.get('status'), os_.get('status')), ('checks', ms.get('checks'), os_.get('checks')),
+                              ('origin', ms.get('origin'), os_.get('origin')), ('stop', st(ms), st(os_)), ('runs', proj_runs(ms), proj_runs(os_)))
+            if a != b]
+    return not diff and bool(ms), diff
+
+
+def s_units_fault():
+    return s_units('UMF', W=dict(PW, faults=um_faults()))
+
+
+def s_units_over():
+    """넘침 캠페인 (모든 모서리 넘침 · DBE origin 팔 흔들림): 12 단위 → 첫 합치기 (EXPANSION_NEEDED · 결정 기록) → 넘침 점 11 (결정 기록 인용) →
+    중간 합치기 (끝 점 없음 → EXPANSION_NEEDED · 빠진 점) → 끝 점 → 끝 합치기 (--expand) → 판정 둘."""
+    def go():
+        Wo = dict(PW, arm_factor_dbe=DBE_ORIGIN_ARMS)
+        r = s_units('UMO', W=Wo, verdicts=False)
+        d, lads, m1 = r['d'], r['lads'], r['m']
+        pbase = Path(TD) / 'runs' / 'UMO_points'
+        pts, adds = {}, {}
+        names = [uname(law, c, rr) for (law, c, rr) in UNIT_LIST]
+        mid = None
+        for i, nm in enumerate(names):
+            if i == len(names) - 1:
+                mid = merge_run('UMO_mid', d, lads, [r['base'], pbase], expand=m1['dec_path'])
+            mach = UNIT_MACHS[(i + 1) % len(UNIT_MACHS)]
+            adds[nm] = led_add(d, f'point:{nm}', machine=mach)
+            pts[nm] = unit_att(world(f'UMO_p{i}', Wo), d, adds[nm][1], nm, lads, pbase, machine=mach, kind='point', expand=m1['dec_path']) \
+                if adds[nm][1] else None
+        m2 = merge_run('UMO_m2', d, lads, [r['base'], pbase], expand=m1['dec_path'])
+        v_one = verdict('UMO_v_one', [r['l0']['out'], r['l1']['out'], r['one']['out']])
+        v_m = ver_led('UMO_v_m', [r['l0']['out'], r['l1']['out'], m2['out']], d) if m2['sum'] is not None else None
+        return dict(r, pbase=pbase, pts=pts, padds=adds, mid=mid, m2=m2, v_one=v_one, v_m=v_m)
+    return scen('UMO', go)
+
+
+def led_reset_before(d, tag, msg_part):
+    """원장 clone → 메시지에 msg_part 가 든 첫 커밋의 부모로 되돌림 → 경로."""
+    d2 = led_clone(d, tag)
+    rows = [x.split(' ', 1) for x in git_(d2, 'log', '--format=%H %s', '--reverse').splitlines()]
+    hit = [i for i, (_h, s) in enumerate(rows) if msg_part in s]
+    git_(d2, 'reset', '-q', '--hard', rows[hit[0] - 1][0])
+    return d2
+
+
+def led_reset_after(d, tag, msg_part):
+    """원장 clone → 메시지에 msg_part 가 든 마지막 커밋으로 되돌림 → 경로."""
+    d2 = led_clone(d, tag)
+    rows = [x.split(' ', 1) for x in git_(d2, 'log', '--format=%H %s', '--reverse').splitlines()]
+    hit = [i for i, (_h, s) in enumerate(rows) if msg_part in s]
+    git_(d2, 'reset', '-q', '--hard', rows[hit[-1]][0])
+    return d2
+
+
+def forged_decision(tag, d, lads, points):
+    """결정 기록 꼴 (넘침 캠페인의 첫 합치기 결정 기록을 틀로 · 원장 = d 의 HEAD · 사다리 = lads 요약 · 점 = points) → 경로."""
+    tpl = dict(s_units_over()['m']['dec'] or {})
+    head = git_(d, 'rev-parse', 'HEAD')
+    raw = git_(d, 'show', f'HEAD:{LEDGER_NAME}') + '\n'
+    lad_sha = {json.loads((Path(x) / 'ladder_summary.json').read_text(encoding='utf-8'))['law']:
+               hashlib.sha256((Path(x) / 'ladder_summary.json').read_bytes()).hexdigest() for x in lads}
+    ov = [[c, law, rr] for (law, c, rr) in UNIT_LIST if uname(law, c, rr) in points]
+    dec = dict(tpl, points=[uname(law, c, rr) for c, law, rr in ov], overflow=ov, ladders=lad_sha,
+               ledger=dict(tpl.get('ledger') or {}, path=str(Path(d).resolve()), commit=head, sha256=hashlib.sha256(raw.encode('utf-8')).hexdigest()))
+    p = Path(TD) / 'runs' / tag / 'expansion.json'
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(dec, ensure_ascii=False, sort_keys=True, indent=1), encoding='utf-8')
+    return p
+
+
+@check('UM01', '★ 10-27 묶음 C2d (Q9 §3-1 · §3-2 · §4 양성 · 세 기계 나눔 · 넘침 없음) — 원장 사다리 둘 + 12 단위 시도 (기계 kgy · gabia · m1 돌아가며 · 단위마다 '
+               '런 = 모서리 · origin · UNIT_DONE · 결과 줄 completed) → 합치기 rc 0 PREDICTED = 한 기계 비교 예측 (같은 사다리 · 세계) 과 상태 · 검사 · origin · '
+               '런 (요청 칸 · rc · 팔 기록) 같음 · 런 폴더 = units/unit-<단위>/attempt_<n>/… · merge.units 기계 = 그 단위 시도 기계 · unused_runs 비었다 · 판정 '
+               '(합침 = 원장 · 비교 = 원장 없음) 둘 다 rc 0 · 판정 결과 JSON 바이트 같음 (증서 칸 키 포함) · 판정 이름 · 상태 · 표지 같음')
+def t_UM01():
+    if not chain_c2d():
+        return False, '사슬에 --merge (단위 합치기) 가 없다'
+    r = s_units_main()
+    m, d = r['m'], r['d']
+    bad = []
+    for nm, atts in r['units'].items():
+        a = atts[-1] or {}
+        s = a.get('sum') or {}
+        rl = led_result(d, (r['adds'][nm][-1] or (None, None))[1]) or {}
+        if a.get('rc') != 0 or s.get('status') != 'UNIT_DONE' or [x.get('role') for x in s.get('runs') or []] != ['corner', 'origin'] \
+                or rl.get('status') != 'completed':
+            bad.append((nm, a.get('rc'), s.get('status'), rl.get('status'), (a.get('so') or '')[-160:]))
+    same, diff = same_as_one(m, r['one'])
+    ms = m['sum'] or {}
+    mg = ms.get('merge') or {}
+    outs = [x.get('outdir') for x in ms.get('runs') or []]
+    out_ok = len(outs) == 24 and all(isinstance(o, str) and o.startswith('units/unit-') and (m['out'] / o).is_dir() for o in outs)
+    mach = {t: (u or {}).get('machine') for t, u in (mg.get('units') or {}).items()}
+    want_mach = {f'unit:{uname(*u)}': UNIT_MACHS[i % 3] for i, u in enumerate(UNIT_LIST)}
+    v1, v2 = r['v_one'], r['v_m'] or {'rc': None, 'out': Path('/nonexistent')}
+    vv1, vv2 = v1.get('v') or {}, v2.get('v') or {}
+    ver_same = (v1['rc'] == 0 and v2['rc'] == 0 and res_bytes(v1) is not None and res_bytes(v1) == res_bytes(v2)
+                and all(vv1.get(k) == vv2.get(k) for k in ('verdict', 'state', 'flags', 'blocking_flags')))
+    return (not bad and m['rc'] == 0 and same and out_ok and mach == want_mach and mg.get('unused_runs') == [] and ver_same,
+            (bad[:3], m['rc'], ms.get('status'), diff, outs[:2], mach == want_mach, mg.get('unused_runs'), v1['rc'], v2.get('rc'), ver_same,
+             m['so'][-300:]))
+
+
+@check('UM02', '★ 10-27 묶음 C2d (Q9 §3-2 폴더 · 개정 3 P3 런 이름 · R4-07 원장 사본) — 합친 런 이름 = 사슬 차례 (P01_corner … P12_corner · P13_origin … '
+               'P24_origin · 단위 안 이름 U01_corner · U02_origin 이 아님) · 런마다 source = {대상 · 시도 · 단위 안 런 · 단위 안 폴더} · outdir = units/<대상 ":" → '
+               '"-">/attempt_<n>/<단위 안 폴더> · 대상 = 그 런 요청 (법칙 · c · R) 의 단위 · 시도 = 그 단위 채택 · 시도 폴더 사본 요약 = 원장 결과 줄 · 원장 사본 '
+               'ledger/ledger.bundle (git bundle 검사 통과) · 그 묶음에서 clone 한 원장으로 판정 rc 0 · 결과 바이트 = 원 원장 판정')
+def t_UM02():
+    if not chain_c2d():
+        return False, '사슬에 --merge 가 없다'
+    r = s_units_main()
+    m, d = r['m'], r['d']
+    ms = m['sum'] or {}
+    runs = ms.get('runs') or []
+    names_ok = [x.get('name') for x in runs] == [f'P{i:02d}_corner' for i in range(1, 13)] + [f'P{i:02d}_origin' for i in range(13, 25)]
+    L = {law: lad(s_main(law)) for law in ('P0', 'P1')}
+    bad = []
+    for x in runs:
+        src = x.get('source') or {}
+        rr = [k for k in ('R_j_lo', 'R_j0', 'R_j_hi') if L[x.get('law')][k] == x.get('rj')]
+        tgt = f'unit:{uname(x.get("law"), x.get("c"), rr[0])}' if len(rr) == 1 else None
+        n = ((r['adds'].get(tgt[5:] if tgt else '') or [(None, None, None)])[-1])[1]
+        tdir = (tgt or '').replace(':', '-')
+        want_run = 'U01_corner' if x.get('role') == 'corner' else 'U02_origin'
+        ok = (src.get('target') == tgt and src.get('attempt') == n and src.get('run') == want_run
+              and x.get('outdir') == f'units/{tdir}/attempt_{n}/{src.get("outdir")}')
+        cp = m['out'] / 'units' / tdir / f'attempt_{n}'
+        ok = ok and cp.is_dir() and tree_digest(cp) == (led_result(d, n) or {}).get('folder_sha256')
+        if not ok:
+            bad.append((x.get('name'), src, x.get('outdir'), tgt, n))
+    bp = m['out'] / 'ledger' / 'ledger.bundle'
+    vb, clone_ok = None, False
+    if bp.is_file():
+        git_(d, 'bundle', 'verify', str(bp))
+        dst = Path(TD) / 'ledgers' / 'UM02_bundle'
+        git_(dst.parent, 'clone', '-q', str(bp), str(dst))
+        clone_ok = git_(dst, 'rev-parse', 'HEAD') == ((ms.get('merge') or {}).get('ledger') or {}).get('commit')
+        vb = ver_led('UM02_vb', [r['l0']['out'], r['l1']['out'], m['out']], dst)
+    rv = call(['--stage', 'verdict', '--reverify', str((r['v_m'] or {'out': '/x'})['out']), '--root', FX['root']])
+    return (names_ok and not bad and clone_ok and vb is not None and vb['rc'] == 0 and res_bytes(vb) == res_bytes(r['v_m'] or {'out': '/x'})
+            and rv[0] == 0 and 'REVERIFY_SAME' in rv[1],
+            (names_ok, bad[:3], bp.is_file(), clone_ok, (vb or {}).get('rc'), (vb or {}).get('so', '')[-200:], rv[0], rv[1][-200:]))
+
+
+@check('UM03', '★ 10-27 묶음 C2d (Q9 §3-2 첫 · 끝 합치기 · 넘침 · Q-B · §8 양성 넘침 있는 꼴) — 모든 모서리 넘침 세계: 첫 합치기 = rc 4 · merge_summary 상태 '
+               'EXPANSION_NEEDED (멈춤 아님 · predict_summary 없음 · 판정 입력 아님 = 판정 INPUT_NOT_STAGE) · 런 24 (모서리 · origin 표본) · 이른 단조 기록 4 · '
+               '결정 기록 expansion.json (schema rint-r-expansion-v1 · 점 12 = 법칙 → c → R · overflow · 시도 sha 집합 = 단위 12 의 [대상 · 번호 · 폴더 요약 sha] · '
+               '원장 커밋 = 그때 HEAD · 사다리 요약 sha) · 넘침 점 시도 (결정 기록 인용 · POINT_DONE · 런 = origin8 8 팔) · 끝 점 전 중간 합치기 = rc 4 '
+               'EXPANSION_NEEDED (빠진 점 = 끝 점) · 끝 합치기 rc 0 PREDICTED = 한 기계 비교 예측 (런 36 · 같은 순서) · 판정 결과 바이트 같음')
+def t_UM03():
+    if not chain_c2d():
+        return False, '사슬에 --merge 가 없다'
+    r = s_units_over()
+    m1, mid, m2, d = r['m'], r['mid'], r['m2'], r['d']
+    ms1, dec = m1['msum'] or {}, m1['dec'] or {}
+    names = [uname(law, c, rr) for (law, c, rr) in UNIT_LIST]
+    want_att = sorted([[f'unit:{nm}', r['adds'][nm][-1][1], (led_result(d, r['adds'][nm][-1][1]) or {}).get('folder_sha256')] for nm in names])
+    lad_sha = {law: hashlib.sha256((Path(x) / 'ladder_summary.json').read_bytes()).hexdigest() for law, x in zip(('P0', 'P1'), r['lads'])}
+    first_ok = (m1['rc'] == 4 and m1['sum'] is None and ms1.get('status') == 'EXPANSION_NEEDED' and len(ms1.get('runs') or []) == 24
+                and len((ms1.get('checks') or {}).get('r_monotone_early') or []) == 4 and dec.get('schema') == 'rint-r-expansion-v1'
+                and dec.get('points') == names and dec.get('overflow') == [[c, law, rr] for (law, c, rr) in UNIT_LIST]
+                and dec.get('attempts') == want_att and dec.get('ladders') == lad_sha
+                and isinstance(dec.get('ledger'), dict) and len(str(dec['ledger'].get('commit'))) == 40)
+    vx = verdict('UM03_vx', [r['l0']['out'], r['l1']['out'], m1['out']])
+    pt_ok = all((p or {}).get('rc') == 0 and ((p or {}).get('sum') or {}).get('status') == 'POINT_DONE'
+                and [(x.get('role'), x.get('arms')) for x in ((p or {}).get('sum') or {}).get('runs') or []] == [('origin8', 8)] for p in r['pts'].values())
+    mms = (mid or {}).get('msum') or {}
+    mid_ok = (mid or {}).get('rc') == 4 and (mid or {}).get('sum') is None and mms.get('status') == 'EXPANSION_NEEDED' \
+        and (mms.get('merge') or {}).get('missing_points') == [names[-1]]
+    same, diff = same_as_one(m2, r['one'])
+    v1, v2 = r['v_one'], r['v_m'] or {'rc': None, 'out': Path('/nonexistent')}
+    return (first_ok and stop_code(vx) == 'INPUT_NOT_STAGE' and pt_ok and mid_ok and m2['rc'] == 0 and same
+            and len((m2['sum'] or {}).get('runs') or []) == 36 and v1['rc'] == 0 and v2['rc'] == 0 and res_bytes(v1) == res_bytes(v2),
+            (first_ok, m1['rc'], ms1.get('status'), sorted(dec), stop_code(vx), pt_ok, mid_ok, (mid or {}).get('rc'), mms.get('merge', {}).get('missing_points'),
+             m2['rc'], diff, v1['rc'], v2.get('rc'), m2['so'][-300:]))
+
+
+def s_units_main():
+    return s_units('UMA')
+
+
+def um_nc_world():
+    L0 = lad(s_main('P0'))
+    return dict(PW, faults=[{'do': 'certfail', 'match': {'kit_has': 'DBE', 'law': 'P0', 'c': '0', 'rj': L0['R_j_lo'], 'arms': '1'}}])
+
+
+def s_units_nc():
+    """첫 단위 (P0 · c 0 · R_j,lo) 모서리 증서 실패 캠페인 (그 단위 둘째 항목 = --add 거부 · 비교 예측 = 같은 고장 세계)."""
+    Wf = um_nc_world()
+    return s_units('UMN', W=Wf, plans={'P0_c0_R_j_lo': [{'W': Wf, 'machine': 'kgy'}, {'W': PW, 'machine': 'gabia'}]})
+
+
+def um_faults():
+    L0, L1 = lad(s_main('P0')), lad(s_main('P1'))
+    return [{'do': 'certfail', 'match': {'kit_has': 'DBE', 'law': 'P0', 'c': '0', 'rj': L0['R_j0'], 'arms': '2'}},
+            {'do': 'tamper_caext', 'match': {'kit_has': 'DBE', 'law': 'P1', 'c': '1', 'rj': L1['R_j_hi'], 'arms': '1'}}]
+
+
+@check('UM04', '★ 10-27 묶음 C2d (Q9 §3-2 부분 채택 · 개정 3 P2 첫째 · 탐침 lazy_merge 꼴) — 단위 (P0 · c 0 · R_j,0) origin 런 = 증서 실패 (그 단위 NOT_COMPUTED '
+               '· 멈춘 런 U02_origin) · 단위 (P1 · c 1 · R_j,hi) 모서리 런 = 기록 변조 (그 단위 STOPPED CA_EXT_RECORD · U01_corner) → 합치기 = 한 기계 사슬과 같은 '
+               '멈춤 (STOPPED · CA_EXT_RECORD · 런 P12_corner · 런 12 · 개정 2 규칙 = NOT_COMPUTED 런 5 가 아니다) · 요청되지 않은 (P0 · c 0 · R_j,0) origin 런 '
+               '= unused_runs (not_requested · 멈춤 아님) · 판정 둘 = 같은 판정 (INPUT_STAGE_STOPPED)')
+def t_UM04():
+    if not chain_c2d():
+        return False, '사슬에 --merge 가 없다'
+    r = s_units_fault()
+    m = r['m']
+    ms = m['sum'] or {}
+    same, diff = same_as_one(m, r['one'])
+    u1 = (r['units']['P0_c0_R_j0'][-1] or {}).get('sum') or {}
+    u2 = (r['units']['P1_c1_R_j_hi'][-1] or {}).get('sum') or {}
+    un = [(x.get('target'), x.get('run'), x.get('why')) for x in (ms.get('merge') or {}).get('unused_runs') or []]
+    return (same and ms.get('status') == 'STOPPED' and stop_code(m) == 'CA_EXT_RECORD' and (ms.get('stop') or {}).get('run') == 'P12_corner'
+            and len(ms.get('runs') or []) == 12 and u1.get('status') == 'NOT_COMPUTED' and (u1.get('stop') or {}).get('run') == 'U02_origin'
+            and u2.get('status') == 'STOPPED' and (u2.get('stop') or {}).get('code') == 'CA_EXT_RECORD'
+            and ('unit:P0_c0_R_j0', 'U02_origin', 'not_requested') in un and stop_code(r['v_one']) == 'INPUT_STAGE_STOPPED'
+            and stop_code(r['v_m'] or {}) == 'INPUT_STAGE_STOPPED',
+            (diff, ms.get('status'), stop_code(m), (ms.get('stop') or {}).get('run'), len(ms.get('runs') or []), u1.get('status'), u2.get('status'), un[:4],
+             stop_code(r['v_one']), stop_code(r['v_m'] or {})))
+
+
+@check('UM05', '★ 10-27 묶음 C2d (Q9 §3-2 UNIT_MISSING · §8 음성 단위 빠짐) — 원장 clone 을 끝 단위 (P1 · c 1 · R_j,hi) 항목 앞으로 되돌리고 그 단위 폴더를 뺀 '
+               '합치기 → STOPPED UNIT_MISSING (런 P12_corner · 런 기록 11 · 앞 단위 런은 그대로 읽음) · rc 3')
+def t_UM05():
+    if not chain_c2d():
+        return False, '사슬에 --merge 가 없다'
+    r = s_units_main()
+    d2 = scen('UM05_led', lambda: led_reset_before(r['d'], 'UM05', 'entry unit:P1_c1_R_j_hi '))
+    paths = [r['units'][uname(*u)][-1]['out'] for u in UNIT_LIST[:-1]]
+    m = scen('UM05', lambda: merge_run('UM05', d2, r['lads'], paths))
+    ms = m['sum'] or {}
+    return (m['rc'] == 3 and ms.get('status') == 'STOPPED' and stop_code(m) == 'UNIT_MISSING' and (ms.get('stop') or {}).get('run') == 'P12_corner'
+            and len(ms.get('runs') or []) == 11,
+            (m['rc'], ms.get('status'), stop_code(m), (ms.get('stop') or {}).get('run'), len(ms.get('runs') or []), m['so'][-300:]))
+
+
+@check('UM06', '★ 10-27 묶음 C2d (Q9 §3-2 UNIT_EXTRA · "다시 계산이 끝까지 갔는데 남는 런") — 넘침 없는 캠페인 원장 clone 에 넘침 점 하나 (P0 · c 0 · R_j,0 · 그 '
+               '원장 HEAD 를 인용한 결정 기록 꼴) 시도 → POINT_DONE · 그 점 폴더까지 넣은 합치기 (결정 기록 없음 · 넘침 없음 → 끝까지) → STOPPED UNIT_EXTRA (채택된 '
+               '점 시도가 요청되지 않았다) · rc 3')
+def t_UM06():
+    if not chain_c2d():
+        return False, '사슬에 --merge 가 없다'
+    r = s_units_main()
+
+    def go():
+        d2 = led_clone(r['d'], 'UM06')
+        dec = forged_decision('UM06_dec', d2, r['lads'], ['P0_c0_R_j0'])
+        ra, n, sa = led_add(d2, 'point:P0_c0_R_j0')
+        pb = Path(TD) / 'runs' / 'UM06_pt'
+        p = unit_att(world('UM06_p'), d2, n, 'P0_c0_R_j0', r['lads'], pb, kind='point', expand=dec)
+        m = merge_run('UM06', d2, r['lads'], [r['base'], pb])
+        return p, m
+    p, m = scen('UM06', go)
+    ms = m['sum'] or {}
+    return (p['rc'] == 0 and (p['sum'] or {}).get('status') == 'POINT_DONE' and m['rc'] == 3 and ms.get('status') == 'STOPPED'
+            and stop_code(m) == 'UNIT_EXTRA',
+            (p['rc'], (p['sum'] or {}).get('status'), p['so'][-200:], m['rc'], ms.get('status'), stop_code(m), m['so'][-300:]))
+
+
+@check('UM07', '★ 10-27 묶음 C2d (Q9 §3-2 끝 합치기 결정 기록 대조 · 개정 4 Q4 · §8 음성) — 넘침 캠페인 끝 합치기의 결정 기록을 바꾼 사본: (a) 넘침 목록에서 끝 점 뺌 '
+               '→ UNIT_PROVENANCE_MISMATCH (넘침 목록 · 런 이름 없음 · 넘침 런 요청 0) · (b) 같은 내용 다른 바이트 (점 시도가 인용한 sha ≠) → '
+               'UNIT_PROVENANCE_MISMATCH (첫 넘침 런 P25_origin8) · (c) 시도 sha 집합 한 줄 뺌 → UNIT_PROVENANCE_MISMATCH (런 이름 없음) · (d) 원장 커밋 = 없는 '
+               '커밋 → ATTEMPT_LEDGER_MISMATCH (원장 접두 · §3-5)')
+def t_UM07():
+    if not chain_c2d():
+        return False, '사슬에 --merge 가 없다'
+    r = s_units_over()
+    dec = dict(r['m']['dec'] or {})
+    got = {}
+    cases = {'a': dict(dec, points=(dec.get('points') or [])[:-1], overflow=(dec.get('overflow') or [])[:-1]),
+             'b': dec,
+             'c': dict(dec, attempts=(dec.get('attempts') or [])[1:]),
+             'd': dict(dec, ledger=dict(dec.get('ledger') or {}, commit='f' * 40))}
+    for k, obj in cases.items():
+        p = Path(TD) / 'runs' / f'UM07_{k}' / 'expansion.json'
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(json.dumps(obj, ensure_ascii=False, sort_keys=True, indent=(2 if k == 'b' else 1)), encoding='utf-8')
+        m = scen(f'UM07_{k}', lambda p=p, k=k: merge_run(f'UM07_m{k}', r['d'], r['lads'], [r['base'], r['pbase']], expand=p))
+        ms = m['sum'] or {}
+        got[k] = (m['rc'], stop_code(m), (ms.get('stop') or {}).get('run'), [x.get('role') for x in ms.get('runs') or []].count('origin8'))
+    want = {'a': (3, 'UNIT_PROVENANCE_MISMATCH', None, 0), 'b': (3, 'UNIT_PROVENANCE_MISMATCH', 'P25_origin8', 0),
+            'c': (3, 'UNIT_PROVENANCE_MISMATCH', None, 0), 'd': (3, 'ATTEMPT_LEDGER_MISMATCH', None, 0)}
+    return got == want, got
+
+
+@check('UM08', '★ 10-27 묶음 C2d (Q9 §3-4 "판정 · 다시 판정이 같은 대조를 다시 한다") — 합친 예측 사본으로 원장 판정: (a) 단위 시도 사본의 팔 파일 한 바이트 바꿈 → '
+               'ATTEMPT_LEDGER_MISMATCH (사본 요약 ≠ 원장 결과 줄) · (b) 합친 요약의 첫 런 source 대상을 다른 단위로 → UNIT_PROVENANCE_MISMATCH · (c) 원장 없이 '
+               '판정 (합친 예측) → ATTEMPT_LEDGER_MISMATCH · 손대지 않은 사본 = rc 0 (같은 결과 바이트)')
+def t_UM08():
+    if not chain_c2d():
+        return False, '사슬에 --merge 가 없다'
+    r = s_units_main()
+    m = r['m']
+    got = {}
+
+    def cp(tag):
+        dst = Path(TD) / 'runs' / tag / 'pred'
+        if not dst.exists():
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copytree(m['out'], dst, symlinks=True)
+        return dst
+    x = cp('UM08_ok')
+    v = scen('UM08_ok_v', lambda: ver_led('UM08_ok_v', [r['l0']['out'], r['l1']['out'], x], r['d']))
+    got['ok'] = (v['rc'], res_bytes(v) == res_bytes(r['v_m'] or {'out': '/x'}))
+    x = cp('UM08_a')
+    arm = sorted(p for p in (x / 'units').rglob('p2_*_a0.json') if '.unchecked' not in p.parts)
+    if arm and not (x / 'tampered.txt').exists():
+        arm[0].write_bytes(arm[0].read_bytes() + b' ')
+        (x / 'tampered.txt').write_text(str(arm[0]), encoding='utf-8')
+    got['a'] = stop_code(scen('UM08_a_v', lambda: ver_led('UM08_a_v', [r['l0']['out'], r['l1']['out'], x], r['d'])))
+    x = cp('UM08_b')
+    s = json.loads((x / 'predict_summary.json').read_text(encoding='utf-8'))
+    s['runs'][0]['source']['target'] = 'unit:P1_c1_R_j_hi'
+    (x / 'predict_summary.json').write_text(json.dumps(s, ensure_ascii=False), encoding='utf-8')
+    got['b'] = stop_code(scen('UM08_b_v', lambda: ver_led('UM08_b_v', [r['l0']['out'], r['l1']['out'], x], r['d'])))
+    got['c'] = stop_code(scen('UM08_c_v', lambda: verdict('UM08_c_v', [r['l0']['out'], r['l1']['out'], m['out']])))
+    want = {'ok': (0, True), 'a': 'ATTEMPT_LEDGER_MISMATCH', 'b': 'UNIT_PROVENANCE_MISMATCH', 'c': 'ATTEMPT_LEDGER_MISMATCH'}
+    return got == want, got
+
+
+def s_units_retry():
+    """재시도 · 재실행 캠페인: 단위 (P0 · c 1 · R_j,0) 첫 시도 = 러너 rc 2 (표지 앞 · 결과 전) → 다른 기계 새 시도 · 단위 (P1 · c 0 · R_j,hi) 첫 시도 =
+    origin 런 표지 뒤 GPU 메모리 부족 (결과 뒤 · 자원 · 재실행 자격) → 같은 기계 재실행 (--resume) · 나머지 = 한 번."""
+    f_pre = dict(PW, faults=[{'do': 'rc2', 'match': {'kit_has': 'DBE', 'arms': '1'}}])
+    f_oom = dict(PW, faults=[{'do': 'oom_after_mark', 'match': {'kit_has': 'DBE', 'arms': '2'}}])
+    return s_units('UMR', plans={'P0_c1_R_j0': [{'W': f_pre, 'machine': 'kgy'}, {'W': PW, 'machine': 'gabia'}],
+                                 'P1_c0_R_j_hi': [{'W': f_oom, 'machine': 'kgy'}, {'W': PW, 'machine': 'kgy', 'resume': True}]})
+
+
+@check('UM09', '★ 10-27 묶음 C2d (Q9 §3-5 결과 전 멈춤 뒤 새 시도 · 재실행 · §8 양성) — 단위 (P0 · c 1 · R_j,0) 결과 전 (rc 2 · 표지 없음) → 다른 기계 시도 채택 · '
+               '단위 (P1 · c 0 · R_j,hi) 결과 뒤 자원 멈춤 → 같은 기계 재실행 (모서리 복사 · origin 부터) 채택 사슬 [원 · 재실행] → 합치기 rc 0 PREDICTED = 한 기계 '
+               '비교 예측 (끊김 없는 세계) 과 같음 · merge.units = 채택 · 사슬 · effective · unused_runs = 결과 전 시도 런 (not_adopted) · 재실행이 대신한 원 시도 '
+               '런 둘 (replaced_by_resume · UNIT_EXTRA 아님) · 판정 결과 바이트 같음')
+def t_UM09():
+    if not chain_c2d():
+        return False, '사슬에 --merge 가 없다'
+    r = s_units_retry()
+    m = r['m']
+    ms = m['sum'] or {}
+    same, diff = same_as_one(m, r['one'])
+    units = (ms.get('merge') or {}).get('units') or {}
+    a_pre = [x[1] for x in r['adds']['P0_c1_R_j0']]
+    a_res = [x[1] for x in r['adds']['P1_c0_R_j_hi']]
+    u_pre, u_res = units.get('unit:P0_c1_R_j0') or {}, units.get('unit:P1_c0_R_j_hi') or {}
+    un = sorted((x.get('target'), x.get('attempt'), x.get('run'), x.get('why')) for x in (ms.get('merge') or {}).get('unused_runs') or [])
+    want_un = sorted([('unit:P0_c1_R_j0', a_pre[0], 'U01_corner', 'not_adopted'),
+                      ('unit:P1_c0_R_j_hi', a_res[0], 'U01_corner', 'replaced_by_resume'),
+                      ('unit:P1_c0_R_j_hi', a_res[0], 'U02_origin', 'replaced_by_resume')])
+    v1, v2 = r['v_one'], r['v_m'] or {'rc': None, 'out': Path('/nonexistent')}
+    cps = []                                                    # 모든 시도 사본 (결과 전 시도 포함 · 바이트 그대로 = 원장 결과 줄 요약)
+    for nm, adds in r['adds'].items():
+        for _ra, n, _sa in adds:
+            if n:
+                cp = m['out'] / 'units' / f'unit-{nm}' / f'attempt_{n}'
+                cps.append((nm, n, cp.is_dir() and tree_digest(cp) == (led_result(r['d'], n) or {}).get('folder_sha256')))
+    return (m['rc'] == 0 and same and u_pre.get('attempt') == a_pre[1] and u_pre.get('adopted') == a_pre[1]
+            and u_res.get('adopted') == a_res[0] and u_res.get('chain') == a_res and u_res.get('attempt') == a_res[1] and un == want_un
+            and v1['rc'] == 0 and v2['rc'] == 0 and res_bytes(v1) == res_bytes(v2) and len(cps) == 14 and all(x[2] for x in cps),
+            (m['rc'], diff, u_pre, u_res, a_pre, a_res, un, v1['rc'], v2.get('rc'), [x for x in cps if not x[2]][:3], len(cps), m['so'][-300:]))
+
+
+@check('UM10', '★ 10-27 묶음 C2d (Q9 §3-5 채택 = 처음 결과 전이 아닌 시도 · Q4 "뒤 시도를 채택하지 않는다") — 첫 단위 (P0 · c 0 · R_j,lo) 모서리 증서 실패 (결과 '
+               '뒤 · 검사 · 재실행 자격 없음) → 같은 단위 새 항목 --add = rc 3 ATTEMPT_AFTER_ADOPTED (원장 무변경) → 합치기 = 그 단위 멈춤이 결과 (NOT_COMPUTED · 런 '
+               'P01_corner · 런 1 = 한 기계 비교 예측과 같음) · 요청되지 않은 단위 런 = unused_runs (not_requested · 22) · 원장 판정 rc 0 NOT_COMPUTED = 비교 판정 '
+               '과 같은 결과 바이트')
+def t_UM10():
+    if not chain_c2d():
+        return False, '사슬에 --merge 가 없다'
+    r = s_units_nc()
+    m = r['m']
+    ms = m['sum'] or {}
+    same, diff = same_as_one(m, r['one'])
+    add2 = r['adds']['P0_c0_R_j_lo'][1]
+    un = [x for x in (ms.get('merge') or {}).get('unused_runs') or [] if x.get('why') == 'not_requested']
+    v1, v2 = r['v_one'], r['v_m'] or {'rc': None, 'out': Path('/nonexistent')}
+    return (add2[0] == 3 and add2[1] is None and 'ATTEMPT_AFTER_ADOPTED' in add2[2] and same and ms.get('status') == 'NOT_COMPUTED'
+            and (ms.get('stop') or {}).get('run') == 'P01_corner' and len(ms.get('runs') or []) == 1 and len(un) == 22
+            and v1['rc'] == 0 and v2['rc'] == 0 and (v2.get('v') or {}).get('verdict') == 'NOT_COMPUTED' and res_bytes(v1) == res_bytes(v2),
+            (add2[0], add2[2][-160:], diff, ms.get('status'), (ms.get('stop') or {}).get('run'), len(un), v1['rc'], v2.get('rc')))
+
+
+@check('UM11', '★ 10-27 묶음 C2d (Q9 §3-2 "대조 시점 = 그 단위가 처음 요청될 때" · 개정 2) — 끝 단위 (P1 · c 1 · R_j,hi) 폴더를 뺀 합치기: 다시 계산이 첫 런에서 '
+               '끝나는 캠페인 (UM10) = 그 단위는 요청되지 않는다 → 결과 = 같은 NOT_COMPUTED · 그 단위 대조 실패는 unused_runs 에 기록만 (check_failed:'
+               'ATTEMPT_LEDGER_MISMATCH) · 끝까지 가는 캠페인 (UM01) = 그 단위가 요청될 때 (P12_corner) ATTEMPT_LEDGER_MISMATCH (엄격 — 폴더 없는 시도)')
+def t_UM11():
+    if not chain_c2d():
+        return False, '사슬에 --merge 가 없다'
+    rn = s_units_nc()
+    ra = s_units_main()
+    keep = lambda r: [a['out'] for u in UNIT_LIST[:-1] for a in r['units'][uname(*u)] if a is not None]   # noqa: E731
+    mn = scen('UM11_n', lambda: merge_run('UM11_n', rn['d'], rn['lads'], keep(rn)))
+    ma = scen('UM11_a', lambda: merge_run('UM11_a', ra['d'], ra['lads'], keep(ra)))
+    sn, sa = mn['sum'] or {}, ma['sum'] or {}
+    un = [(x.get('target'), x.get('why')) for x in (sn.get('merge') or {}).get('unused_runs') or [] if x.get('run') is None]
+    return (sn.get('status') == 'NOT_COMPUTED' and (sn.get('stop') or {}).get('run') == 'P01_corner'
+            and ('unit:P1_c1_R_j_hi', 'check_failed:ATTEMPT_LEDGER_MISMATCH') in un
+            and sa.get('status') == 'STOPPED' and stop_code(ma) == 'ATTEMPT_LEDGER_MISMATCH' and (sa.get('stop') or {}).get('run') == 'P12_corner',
+            (sn.get('status'), (sn.get('stop') or {}).get('run'), un, sa.get('status'), stop_code(ma), (sa.get('stop') or {}).get('run')))
+
+
+@check('UM12', '★ 10-27 묶음 C2d (Q9 §3-2 넘침 실행 풀기 전 대조 · §8 음성 결정 기록에 없는 origin8) — 넘침 없는 캠페인 원장 clone · 점 하나만 든 결정 기록 꼴: '
+               '(a) 결정 기록에 없는 점 (P1 · c 1 · R_j,hi) 시도 → 풀기 전 거부 (rc 3 · rejected.json UNIT_PROVENANCE_MISMATCH · 결과 줄 rejected · 결과 전 · '
+               '러너 0 회) · (b) 결정 기록의 원장 커밋 = 이 원장에 없는 커밋 → 풀기 전 거부 (UNIT_PROVENANCE_MISMATCH · 러너 0 회) · (c) 결정 기록의 사다리 '
+               '요약 sha 하나 다름 → 풀기 전 거부 (같은 이름)')
+def t_UM12():
+    if not chain_c2d():
+        return False, '사슬에 --merge 가 없다'
+    r = s_units_main()
+    got = {}
+
+    def go():
+        d2 = led_clone(r['d'], 'UM12')
+        dec = forged_decision('UM12_dec', d2, r['lads'], ['P0_c0_R_j0'])
+        obj = json.loads(dec.read_text(encoding='utf-8'))
+        bad_b = Path(TD) / 'runs' / 'UM12_b' / 'expansion.json'
+        bad_b.parent.mkdir(parents=True, exist_ok=True)
+        bad_b.write_text(json.dumps(dict(obj, ledger=dict(obj['ledger'], commit='e' * 40)), ensure_ascii=False), encoding='utf-8')
+        bad_c = Path(TD) / 'runs' / 'UM12_c' / 'expansion.json'
+        bad_c.parent.mkdir(parents=True, exist_ok=True)
+        bad_c.write_text(json.dumps(dict(obj, ladders=dict(obj['ladders'], P0='0' * 64)), ensure_ascii=False), encoding='utf-8')
+        out = {}
+        for k, nm, dp in (('a', 'P1_c1_R_j_hi', dec), ('b', 'P0_c0_R_j0', bad_b), ('c', 'P0_c0_R_j0', bad_c)):
+            _ra, n, _sa = led_add(d2, f'point:{nm}')
+            w = world(f'UM12_{k}')
+            p = unit_att(w, d2, n, nm, r['lads'], Path(TD) / 'runs' / f'UM12_{k}_pt', kind='point', expand=dp)
+            rj = u_json(p['out'] / 'rejected.json') or {}
+            out[k] = (p['rc'], rj.get('code'), (led_result(d2, n) or {}).get('status'), (led_result(d2, n) or {}).get('side'), n_calls(w))
+        return out
+    got = scen('UM12', go)
+    want = {k: (3, 'UNIT_PROVENANCE_MISMATCH', 'rejected', 'pre', 0) for k in ('a', 'b', 'c')}
+    return got == want, got
+
+
+@check('UM13', '★ 10-27 묶음 C2d (인자 꼴 · 이름 = 구현 때 정하는 꼴) — 인자 오류 rc 2 (러너 · 출력 폴더 없음): --unit 인데 --attempt 없음 · --unit 이름 꼴 틀림 '
+               '(P0_c2_R_j0) · --merge 인데 --attempt · --expand 인데 --point · --merge 없음 · --unit 과 --merge 같이 · --point 인데 --expand 없음 · '
+               '--ledger-target unit:P0_c0_R_jx = rc 3 NOT_REGISTERED (원장 무변경) · unit:FIBRE:P0_c0_R_j0 = rc 0 (변이 대상 꼴)')
+def t_UM13():
+    if not chain_c2d():
+        return False, '사슬에 --merge 가 없다'
+    r = s_units_main()
+    base = Path(TD) / 'runs' / 'UM13'
+    lads = [str(x) for x in r['lads']]
+    pa = predict_argv(base, lads)
+    d = str(r['d'])
+    cases = {'unit_no_attempt': pa + ['--ledger', d, '--unit', 'P0_c0_R_j0'],
+             'unit_bad_name': pa + ['--ledger', d, '--attempt', '1', '--unit', 'P0_c2_R_j0'],
+             'merge_attempt': pa + ['--ledger', d, '--attempt', '1', '--merge', str(r['base'])],
+             'expand_alone': pa + ['--ledger', d, '--attempt', '1', '--expand', str(base / 'x.json')],
+             'unit_merge': pa + ['--ledger', d, '--attempt', '1', '--unit', 'P0_c0_R_j0', '--merge', str(r['base'])],
+             'point_no_expand': pa + ['--ledger', d, '--attempt', '1', '--point', 'P0_c0_R_j0']}
+    got = {k: call(v, world(f'UM13_{k}'))[0] for k, v in cases.items()}
+    d2 = scen('UM13_led', lambda: led_clone(r['d'], 'UM13'))
+    raw = led_raw(d2)
+    rb = led_add(d2, 'unit:P0_c0_R_jx')
+    got['bad_target'] = (rb[0], 'NOT_REGISTERED' in rb[2], led_raw(d2) == raw)
+    got['variant_target'] = led_add(d2, 'unit:FIBRE:P0_c0_R_j0')[0]
+    want = dict({k: 2 for k in cases}, bad_target=(3, True, True), variant_target=0)
+    return got == want and not base.exists(), (got, base.exists())
+
+
+@check('UM14', '★ 10-27 묶음 C2d (합치기 입구 대조 · 원장 · 폴더) — (a) 사다리 시도 폴더를 --merge 에 넣음 → ATTEMPT_LEDGER_MISMATCH (합칠 대상이 아님 · 다시 계산 전) · '
+               '(b) 원장에 없는 시도 폴더 (attempt_99) → ATTEMPT_LEDGER_MISMATCH · (c) 같은 항목 폴더 둘 (두 바탕에 같은 단위 시도 사본) → ATTEMPT_LEDGER_MISMATCH '
+               '(한 항목 폴더 둘 · Q9 §3-5) · 같은 꼴 원장 판정 (사다리 시도 사본 둘) → ATTEMPT_LEDGER_MISMATCH')
+def t_UM14():
+    if not chain_c2d():
+        return False, '사슬에 --merge 가 없다'
+    r = s_units_main()
+    got = {}
+    got['a'] = stop_code(scen('UM14_a', lambda: merge_run('UM14_a', r['d'], r['lads'], [r['base'], r['l0']['out']])))
+    xb = Path(TD) / 'runs' / 'UM14_b_extra'
+    if not xb.exists():
+        (xb / 'attempt_99').mkdir(parents=True)
+        (xb / 'attempt_99' / 'attempt.json').write_text(json.dumps({'schema': 'rint-r-attempt-v1', 'n': 99, 'target': 'unit:P0_c0_R_j0',
+                                                                    'machine': MACH, 'resume_of': None, 'ledger_commit': 'a' * 40}),
+                                                        encoding='utf-8')
+    got['b'] = stop_code(scen('UM14_b', lambda: merge_run('UM14_b', r['d'], r['lads'], [r['base'], xb])))
+    xc = Path(TD) / 'runs' / 'UM14_c_dup'
+    first = r['units'][uname(*UNIT_LIST[0])][-1]['out']
+    if not xc.exists():
+        xc.mkdir(parents=True)
+        shutil.copytree(first, xc / first.name, symlinks=True)
+    got['c'] = stop_code(scen('UM14_c', lambda: merge_run('UM14_c', r['d'], r['lads'], [r['base'], xc])))
+    lc = Path(TD) / 'runs' / 'UM14_lc'
+    if not lc.exists():
+        lc.mkdir(parents=True)
+        shutil.copytree(r['l0']['out'], lc / r['l0']['out'].name, symlinks=True)
+    got['v'] = stop_code(scen('UM14_v', lambda: ver_led('UM14_v', [r['l0']['out'], r['l1']['out'], r['m']['out']], r['d'], extra=['--attempt-dirs', str(lc)])))
+    want = {'a': 'ATTEMPT_LEDGER_MISMATCH', 'b': 'ATTEMPT_LEDGER_MISMATCH', 'c': 'ATTEMPT_LEDGER_MISMATCH', 'v': 'ATTEMPT_LEDGER_MISMATCH'}
+    return got == want, got
+
+
+@check('UM15', '★ 10-27 묶음 C2d (출처 대조 · 단위 요약 ↔ 합치기 · Q9 §3-3 · §3-4 "위 출처 칸이 모든 채택 폴더에서 같다") — 원장 clone (사다리 둘 결과 줄까지) 에 첫 '
+               '단위 (P0 · c 0 · R_j,lo) 시도 하나 · 그 시도 요약의 P0 사다리 요약 sha 를 결과 줄을 쓰기 전에 바꾼 꼴 (원장 결과 줄 · 폴더 요약 = 바뀐 폴더와 맞음 = 단위 '
+               '단계 결함 흉내) → 합치기 UNIT_PROVENANCE_MISMATCH (그 단위 첫 요청 P01_corner) · 바꾸지 않은 같은 꼴 = 그 런을 읽고 다음 단위에서 UNIT_MISSING (P02)')
+def t_UM15():
+    if not chain_c2d():
+        return False, '사슬에 --merge 가 없다'
+    r = s_units_main()
+    out = {}
+    for k, tamper in (('bad', True), ('ok', False)):
+        def go(k=k, tamper=tamper):
+            d2 = led_reset_after(r['d'], f'UM15_{k}', 'rint-r attempt 2 result completed')
+            _ra, n, _sa = led_add(d2, 'unit:P0_c0_R_j_lo')
+            old = RR.attempt_close
+
+            def close(att, s):
+                if tamper:
+                    p = Path(att.folder) / 'unit_summary.json'
+                    j = json.loads(p.read_text(encoding='utf-8'))
+                    j['ladders']['P0']['summary_sha256'] = '0' * 64
+                    p.write_text(json.dumps(j, ensure_ascii=False), encoding='utf-8')
+                return old(att, s)
+            RR.attempt_close = close
+            try:
+                u = unit_att(world(f'UM15_{k}_u'), d2, n, 'P0_c0_R_j_lo', r['lads'], Path(TD) / 'runs' / f'UM15_{k}_u')
+            finally:
+                RR.attempt_close = old
+            m = merge_run(f'UM15_{k}', d2, r['lads'], [u['out']])
+            return u, m
+        u, m = scen(f'UM15_{k}', go)
+        out[k] = (u['rc'], stop_code(m), ((m['sum'] or {}).get('stop') or {}).get('run'))
+    want = {'bad': (0, 'UNIT_PROVENANCE_MISMATCH', 'P01_corner'), 'ok': (0, 'UNIT_MISSING', 'P02_corner')}
+    return out == want, out
+
+
+@check('UM16', '★ 10-27 묶음 C2d (Q9 개정 5 ② supervisor / recovery · 단위 요약 이름) — 단위 시도 끝에서 사슬 부모가 결과 줄 전에 죽은 꼴 (결과 줄 쓰기를 건너뜀) → '
+               '원장에 결과 줄 없음 · --stage recover --out <그 시도 폴더> --ledger = rc 0 · 결과 줄 by recover · completed (unit_summary.json 의 UNIT_DONE) · '
+               '폴더 요약 sha = 시험 쪽 독립 계산')
+def t_UM16():
+    if not chain_c2d():
+        return False, '사슬에 --merge 가 없다'
+    r = s_units_main()
+
+    def go():
+        d2 = led_reset_after(r['d'], 'UM16', 'rint-r attempt 2 result completed')
+        _ra, n, _sa = led_add(d2, 'unit:P0_c0_R_j_lo')
+        old = RR.attempt_close
+        RR.attempt_close = lambda att, s: None
+        try:
+            u = unit_att(world('UM16_u'), d2, n, 'P0_c0_R_j_lo', r['lads'], Path(TD) / 'runs' / 'UM16_u')
+        finally:
+            RR.attempt_close = old
+        before = led_result(d2, n)
+        rc, so = call(['--stage', 'recover', '--out', str(u['out']), '--ledger', str(d2)])
+        return d2, n, u, before, rc, so
+    d2, n, u, before, rc, so = scen('UM16', go)
+    rl = led_result(d2, n) or {}
+    return (before is None and rc == 0 and rl.get('by') == 'recover' and rl.get('status') == 'completed' and rl.get('folder_sha256') == tree_digest(u['out']),
+            (before, rc, rl, so[-300:]))
+
+
 def doc_tool_commands(path, tool):
     """문서의 ```bash 블록에서 `python3 …/<tool>` 명령 → [(첫 줄 번호, 인자 목록)].  `\\` 이음 · 주석 줄 (`#` 시작) 은 뺀다 · `&&` · `|` ·
     `;` (앞뒤 빈칸) 로 가른 조각 중 그 도구를 python 으로 부르는 것만 · 자리표 `<…>` = 낱말 '1' (수 · 경로 어느 자리든 argparse 를 지난다) ·
