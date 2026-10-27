@@ -1701,7 +1701,7 @@ def t_P02():
 @check('P03', 'SBE c no-op 위반 (c1 비트 다름) → SAME_P_CONSISTENCY · 모서리 런 없음 · ★ 10-27 묶음 C2a (Q9 §2-1) — no-op = 사다리 끝 런 → 고장 = '
                '사다리 세계 (sbe_c_dep) · 예측 첫머리가 사다리 기록에서 같은 이름으로 낸다 (옛 = 예측 세계의 고장 · 예측 no-op 런)')
 def t_P03():
-    r = s_noop_world('NP03', [{'do': 'sbe_c_dep'}])['p']
+    r = scen('P03', lambda: s_noop_world('NP03', [{'do': 'sbe_c_dep'}])['p'])     # SCEN['P03'] = 멈춘 주 예측 (V23 · F02 가 읽는다)
     return (r['rc'] == 3 and stop_code(r) == 'SAME_P_CONSISTENCY' and 'corner' not in roles(r), (r['rc'], stop_code(r), roles(r)))
 
 
@@ -2353,8 +2353,14 @@ def rca02_fetch(kit, role, law, c, rj, arms, sv_cf=False):
              **cert_iv((a0 if i == 0 else oth) * 1e-3, 0.0)} for i in _arms_of(arms)]
 
 
+def noop_ok(law, rj='1.0'):
+    """★ 10-27 묶음 C2a — Predict 단위 시험의 사다리 dict 에 싣는 사다리 끝 no-op 기록 (통과 꼴 · `rint_r_chain.ladder_noop` 의 칸 · 옛 = 예측이
+    fetch 로 no-op 런을 요청했다)."""
+    return {'law': law, 'rj': rj, 'status': 'done', 'ok': True, 'stop': None}
+
+
 def eval_U02():
-    lads = {law: {'R_j_lo': '0.5', 'R_j0': '1.0', 'R_j_hi': '2.0', 'r0_sigma': 1.63e-3} for law in ('P0', 'P1')}
+    lads = {law: {'R_j_lo': '0.5', 'R_j0': '1.0', 'R_j_hi': '2.0', 'r0_sigma': 1.63e-3, 'noop': noop_ok(law)} for law in ('P0', 'P1')}
     pr = RR.Predict(rca02_fetch, lads, None, sv_scope=None)
     pr.run()
     J = RR.judge({k: v * 1e3 for k, v in pr.values().items()})
@@ -3102,7 +3108,7 @@ def u13_fetch(spec):
     return fetch
 
 
-U13_LADS = {law: {'R_j_lo': '0.5', 'R_j0': '1.0', 'R_j_hi': '2.0', 'r0_sigma': 1.63e-3} for law in ('P0', 'P1')}
+U13_LADS = {law: {'R_j_lo': '0.5', 'R_j0': '1.0', 'R_j_hi': '2.0', 'r0_sigma': 1.63e-3, 'noop': noop_ok(law)} for law in ('P0', 'P1')}
 
 
 def run_U13(spec):
@@ -3151,7 +3157,7 @@ def t_U13b():
 
 
 #  ★ 10-23 (Codex 재검토 RCA2-09 · 판정문 §8 · 1저자 Q8 (가)) DBE R 단조 방어 검사 ─────────────────────────────────────
-U17_LADS = {law: {'R_j_lo': '0.5', 'R_j0': '1.0', 'R_j_hi': '2.0', 'r0_sigma': 1.63e-3} for law in ('P0', 'P1')}
+U17_LADS = {law: {'R_j_lo': '0.5', 'R_j0': '1.0', 'R_j_hi': '2.0', 'r0_sigma': 1.63e-3, 'noop': noop_ok(law)} for law in ('P0', 'P1')}
 
 
 def u17_fetch(sig, err=1e-4, o12=None, o8=None, only=None):
@@ -3242,11 +3248,15 @@ def eval_U17():
     #     (가)) 같은 모서리의 이미 구한 origin 마다 (arm 0 = 모서리 런) 세 R 단조도 본다 → 멈춤 · 사유에 origin 이름 (corner_a0) · 최종 추정량은 통과
     st, why, pr = run_U17({'R_j_lo': 4.2, 'R_j0': 4.7, 'R_j_hi': 4.4}, o12={'R_j_lo': 6.0}, o8={'R_j_lo': 5.6, 'R_j0': 4.7, 'R_j_hi': 4.4},
                           only=('0', 'P0'))
+    #     ★ 10-27 묶음 C2a (Q9 §2 · 우선순위 ⓐ) — 새 순서: 이른 단조 검사 (넘침 런 전 · 이미 있는 점) 가 corner_a0 를 먼저 잡는다 → 8 팔 런 없음 ·
+    #     끝 검사 기록 없음 · 이른 검사 기록 = 넘친 모서리 (최종 추정량 칸 건너뜀 · estimator None) 의 origins 에 corner_a0 ok False
     org = {f'c{o["c"]}_{o["law"]}': o['status'] for o in pr.origin}
-    rm = {(x.get('c'), x.get('law')): x for x in (pr.checks.get('r_monotone') or [])}
-    cases.append(('arm 0 비단조 · 8 팔 평균 단조 → 멈춤 (origin corner_a0 · 최종 추정량 mean8 은 통과)',
+    ea = {(x.get('c'), x.get('law')): x for x in (pr.checks.get('r_monotone_early') or [])}
+    e00 = ea.get(('0', 'P0')) or {}
+    cases.append(('arm 0 비단조 · 넘친 모서리 → 이른 검사에서 멈춤 (origin corner_a0 · 8 팔 런 전)',
                   st == 'R_MONOTONE_VIOLATION' and org.get('c0_P0') == 'adjusted' and 'corner_a0' in why and '최종 추정량' not in why
-                  and (rm.get(('0', 'P0')) or {}).get('estimator') == 'mean8', st, (why, org, rm.get(('0', 'P0')))))
+                  and '이른 검사' in why and not pr.adj and pr.checks.get('r_monotone') == [] and e00.get('estimator') is None
+                  and [o['origin'] for o in e00.get('origins') or [] if o.get('ok') is False] == ['corner_a0'], st, (why, org, e00)))
 
     #  ⑨ 팔의 증서 보장 오차가 없다 (err_rel 없음) → 띠를 잴 수 없음 = ARM_UNREADABLE (0 으로 두지 않는다)
     def _no_err(kit, role, law, c, rj, arms, sv_cf=False):
@@ -3261,7 +3271,7 @@ def eval_U17():
 @check('U17', '★ 10-23 (Codex 재검토 RCA2-09 · 1저자 Q8 (가)) DBE R 단조 방어 검사 (예측 · 이미 구한 값 · 증서 구간끼리 · 같은 최종 추정량) — '
               '판정문 꼴 4.2 / 4.7 / 4.4 → R_MONOTONE_VIOLATION (문장에 σ 없음) · 정상 단조 · 증서 띠 안 비단조 · 평탄 · 영값 위상 → 통과 · '
               '이웃 겹침 + lo ↔ hi 모순 → 멈춤 · 8 팔 평균 비단조 → 멈춤 (사유 = 최종 추정량 mean8) · arm 0 만 비단조 (최종 추정량 단조) → '
-              '★ 10-23 C3 멈춤 (origin corner_a0) · err_rel 없음 → ARM_UNREADABLE · STOPS 에 이름 (PREDICT_OUTCOMES 밖 = STOPPED)')
+              '★ 10-23 C3 멈춤 (origin corner_a0 · ★ 10-27 묶음 C2a = 이른 검사 · 8 팔 런 전) · err_rel 없음 → ARM_UNREADABLE · STOPS 에 이름 (PREDICT_OUTCOMES 밖 = STOPPED)')
 def t_U17():
     return eval_U17()
 
@@ -3381,13 +3391,16 @@ def eval_U19():
     cases.append(('R1 arm 1 비단조 (넘침 없음) → 멈춤 · origin_a1', st == 'R_MONOTONE_VIOLATION' and not pr.adj and 'origin_a1' in why
                   and '최종 추정량' not in why and not re.search(r'4\.8|4\.85', why), st, why))
     #  ③ R1c — 넘친 모서리의 arm 0 비단조 · 8 팔 평균 단조 (최종 추정량 통과) → 멈춤 · corner_a0 (모서리 런 arm 0 이 앞)
+    #     ★ 10-27 묶음 C2a (Q9 §2 · 우선순위 ⓐ) — 새 순서: 이른 단조 검사 (넘침 런 전) 가 잡는다 → 8 팔 런 없음 (adj 0 · 옛 = 12 런 뒤 끝 검사) ·
+    #     이른 검사 기록 첫 모서리 = estimator None (최종 추정량 칸 건너뜀) · origins 셋 중 corner_a0 만 ok False (origin8 = 아직 없다)
     r1c = {0.5: 4.6, 1.0: 4.7, 2.0: 4.4}
     st, why, pr = run_U19(lambda R, i: r1c[R] if i == 0 else B[R])
-    rm = pr.checks.get('r_monotone') or []
-    first = rm[0] if rm else {}
-    cases.append(('R1c 넘친 모서리 arm 0 비단조 → 멈춤 · corner_a0 · 최종 추정량 mean8 통과', st == 'R_MONOTONE_VIOLATION' and len(pr.adj) == 12
-                  and 'corner_a0' in why and '최종 추정량' not in why and first.get('estimator') == 'mean8' and first.get('ok') is True
-                  and [o['origin'] for o in first.get('origins') or [] if o.get('ok') is False] == ['corner_a0', 'origin8_a0'],
+    ea = pr.checks.get('r_monotone_early') or []
+    first = ea[0] if ea else {}
+    cases.append(('R1c 넘친 모서리 arm 0 비단조 → 이른 검사에서 멈춤 · corner_a0 · 8 팔 런 전', st == 'R_MONOTONE_VIOLATION' and len(pr.adj) == 0
+                  and 'corner_a0' in why and '최종 추정량' not in why and '이른 검사' in why and first.get('estimator') is None
+                  and first.get('ok') is None and pr.checks.get('r_monotone') == []
+                  and [o['origin'] for o in first.get('origins') or [] if o.get('ok') is False] == ['corner_a0'],
                   st, (why, first)))
     #  ④ R1d — 넘친 모서리의 origin 3 비단조 (arm 1 · 2 를 R_j,lo 에서 ×1.08 로 넘침) → 멈춤 · origin8_a3
     r1d = {0.5: 4.4, 1.0: 4.7, 2.0: 4.4}
@@ -3416,7 +3429,7 @@ def eval_U19():
 
 @check('U19', '★ 10-23 (사전 공격 리뷰 C3 · 1저자 Q13 (가)) R 단조 검사 = 최종 추정량 + 같은 모서리의 이미 구한 origin 마다 — 리뷰 R1 (넘침 없는 '
               '모서리 arm 1) · R1c (넘친 모서리 arm 0) · R1d (넘친 모서리 origin 3) → R_MONOTONE_VIOLATION (사유 = origin 이름 · σ 없음) · 정상 · '
-              '띠 안 비단조 · 평탄 → 통과 · 검사 기록 origins (3 · 11)')
+              '띠 안 비단조 · 평탄 → 통과 · 검사 기록 origins (3 · 11) · ★ 10-27 묶음 C2a — R1c = 이른 검사에서 (8 팔 런 전 · 이른 기록 origins 3)')
 def t_U19():
     return eval_U19()
 
@@ -6519,6 +6532,34 @@ def t_NP07():
     return (p['rc'] == 3 and stop_code(p) == 'REPLAY_MISMATCH' and n_calls(p['world']) == 0
             and q['rc'] == 3 and stop_code(q) == 'LADDER_SET' and n_calls(q['world']) == 0,
             [(x['rc'], stop_code(x), n_calls(x['world'])) for x in (p, q)])
+
+
+@check('NP08', '★ 10-27 묶음 C2a — 사다리 끝 no-op 런 기록 꼴 (예측이 다시 읽기 전): P0 요약 사본에서 no-op 런 rc 1 · no-op 런이 마지막 런이 아님 · '
+               'no-op 런 둘 · no-op 런 c 0 · noop 기록 rj ≠ R_j,0 · noop status done 인데 ok None → 예측 LADDER_SET (러너 0 회)')
+def t_NP08():
+    def m_rc(s):
+        s['runs'][-1]['rc'] = 1
+
+    def m_notlast(s):
+        s['runs'].insert(0, s['runs'].pop())
+
+    def m_two(s):
+        s['runs'].append(copy.deepcopy(s['runs'][-1]))
+
+    def m_c0(s):
+        s['runs'][-1]['c'] = '0'
+
+    def m_rj(s):
+        s['noop']['rj'] = s['ladder']['R_j_lo']
+
+    def m_ok(s):
+        s['noop']['ok'] = None
+    out = []
+    for nm, fn in (('rc', m_rc), ('notlast', m_notlast), ('two', m_two), ('c0', m_c0), ('rj', m_rj), ('ok', m_ok)):
+        d = scen(f'NP08_{nm}_lad', lambda fn=fn, nm=nm: b_tamper_copy(s_main('P0')['out'], f'NP08_{nm}_lad', 'ladder_summary.json', fn))
+        r = scen(f'NP08_{nm}', lambda d=d, nm=nm: predict(f'NP08_{nm}', world(f'NP08_{nm}'), [d, s_main('P1')['out']]))
+        out.append((nm, r['rc'] == 3 and stop_code(r) == 'LADDER_SET' and n_calls(r['world']) == 0, stop_code(r), y_why(r)[-100:]))
+    return all(x[1] for x in out), [x for x in out if not x[1]]
 
 
 @check('OR01', '★ 10-27 묶음 C2a (Q9 §2 새 순서 · R4-06 (a)) 넘침 없는 예측의 요청 순서 = 모서리 (법칙 → R → c · arm 0) 12 → origin 표본 (법칙 → c → R · '

@@ -2680,6 +2680,75 @@ class Ladder:
         self.st['origin'] = o
 
 
+NOOP_C = '1'                         # §4-1 SBE no-op = c 1 (사다리 = c 0 · SBE 에 SDCP 없음 → 비트 같아야)
+
+
+def ladder_noop(fetch, lad, law):
+    """★ 10-27 묶음 C2a (Q9 설계 §2-1 · 개정 3 질문 4 · 개정 4 R4-06 (d) · 개정 5 ① · author 10-27 approved bundle C) SBE c 1 no-op = 사다리 단계 끝 —
+    보정이 끝난 사다리 (CALIBRATED) 의 R_j,0 에서 SBE c 1 arm 0 한 런 (`fetch('sbe_noop', R_j,0, 1)` · 같은 사슬 부모가 동결한 실행 환경 · 런마다 새 러너
+    자식 — 같은 solver 프로세스라는 뜻이 아니다 · 개정 5 ①) → 사다리 R_j,0 확인 팔 (arm 0) 과 float 같음 · SDCP 근접 0 을 대조해 기록만 한다:
+    {law · rj · status ('done' | 'NOT_COMPUTED') · ok (bool | None) · stop (NOT_COMPUTED 의 멈춤 기록 | None)} (σ 없음 = 값 봉인).
+    등록 결과 NOT_COMPUTED (증서 실패 · 단락) = 기록 (사다리 상태는 보정 결과만 · CALIBRATED 그대로) · 그 밖 멈춤 (러너 · 계약 · 자원 · 시간) = 사다리 시도의
+    멈춤 (위로 올린다).  판정 = 예측 첫머리가 이 기록을 읽어 옛 자리 · 옛 이름 (`SAME_P_CONSISTENCY` · `NOT_COMPUTED`) 으로 낸다 (`Predict.run`)."""
+    k0 = lad.st['R_j0']
+    rec = {'law': law, 'rj': k0, 'status': None, 'ok': None, 'stop': None}
+    try:
+        r = fetch('sbe_noop', k0, 1)[0]
+    except Stop as e:
+        if e.code != 'NOT_COMPUTED':
+            raise
+        rec.update(status='NOT_COMPUTED', stop=e.record())
+        return rec
+    rec.update(status='done', ok=bool(r['sigma'] == lad.pts[k0][1] and r['n_sdcp_near'] == 0))
+    return rec
+
+
+def noop_record_problem(rec, law, k0):
+    """사다리 요약의 no-op 기록 꼴 → 문제 | None (예측 · 판정이 다시 읽기 전 · 칸 집합 · 법칙 · R_j,0 · 상태 ↔ ok · 멈춤 기록)."""
+    if not isinstance(rec, dict) or set(rec) != {'law', 'rj', 'status', 'ok', 'stop'}:
+        return f'no-op 기록 꼴 {sorted(rec) if isinstance(rec, dict) else type(rec).__name__}'
+    if rec['law'] != law or rec['rj'] != k0:
+        return f'no-op 기록 법칙 · R_j {rec["law"]!r} · {rec["rj"]!r} ≠ 사다리 {law!r} · R_j,0 {k0!r}'
+    if rec['status'] == 'done' and isinstance(rec['ok'], bool) and rec['stop'] is None:
+        return None
+    if rec['status'] == 'NOT_COMPUTED' and rec['ok'] is None and isinstance(rec['stop'], dict) and rec['stop'].get('code') == 'NOT_COMPUTED':
+        return None
+    return f'no-op 기록 상태 {rec["status"]!r} · ok {rec["ok"]!r} · 멈춤 {rec["stop"]!r} (done + bool · NOT_COMPUTED + 멈춤 기록)'
+
+
+def noop_check(rd, s, law, k0, r0_arm, plan, contract, sid_reg):
+    """★ 10-27 묶음 C2a — 예측 단계가 사다리 끝 no-op 을 다시 대조: 요약 기록 꼴 (`noop_record_problem`) · no-op 런 기록 하나 (SBE · c 1 · R_j,0 · arm 0 ·
+    rc 0) · 그 팔을 원 팔에서 다시 읽어 (`read_run` · 기록 sha256) 같은 대조 (R_j,0 확인 팔 σ 와 float 같음 · SDCP 근접 0) → 기록과 다르면
+    REPLAY_MISMATCH · 꼴 · 런 기록 문제 = LADDER_SET → 기록 (Predict 가 읽는다)."""
+    nr = s.get('noop')
+    why = noop_record_problem(nr, law, k0)
+    if why:
+        raise Stop('LADDER_SET', f'{Path(rd).name}: {why} (★ 10-27 묶음 C2a — 사다리 끝 no-op 기록)')
+    runs = [x for x in s.get('runs') or [] if x.get('role') == 'sbe_noop']
+    x = runs[0] if len(runs) == 1 else {}
+    if not (x.get('kit') == SBE_KIT and x.get('law') == law and x.get('c') == NOOP_C and x.get('rj') == k0 and x.get('arms') == 1
+            and x.get('arm_list') is None and x.get('rc') == 0 and runs[-1] is (s.get('runs') or [None])[-1]):
+        raise Stop('LADDER_SET', f'{Path(rd).name}: 사다리 끝 no-op 런 기록 {len(runs)} 개 · 꼴 (SBE · c {NOOP_C} · R_j,0 · arm 0 · rc 0 · 마지막 런 하나여야)')
+    req = {k: x.get(k) for k in REQ_KEYS}
+    try:
+        na = read_run(Path(rd) / x['outdir'], req, plan, contract, sid_reg, want_sha=[a['sha256'] for a in x.get('arms_read') or []])[0]
+        again = {'status': 'done', 'ok': bool(na['sigma'] == r0_arm['sigma'] and na['n_sdcp_near'] == 0), 'stop': None}
+    except Stop as e:
+        if e.code != 'NOT_COMPUTED':
+            raise
+        again = {'status': 'NOT_COMPUTED', 'ok': None, 'stop': e.record()}
+    if noop_key(again) != noop_key(nr):
+        raise Stop('REPLAY_MISMATCH', f'{Path(rd).name}: 사다리 끝 no-op 을 원 팔에서 다시 읽은 대조 (상태 {again["status"]} · ok {again["ok"]}) ≠ 요약 '
+                                      f'기록 (상태 {nr["status"]} · ok {nr["ok"]})')
+    return dict(nr)
+
+
+def noop_key(rec):
+    """no-op 기록의 대조 칸 — 상태 · ok · 멈춤 이름 · 구조화 사유 (멈춤 원인 글 · 런 이름 = 경로 · 폴더가 들 수 있어 대조 밖 · 기록은 그대로 남는다)."""
+    st = rec.get('stop') or {}
+    return (rec.get('status'), rec.get('ok'), st.get('code'), st.get('reason'))
+
+
 # ═════════════════════════ 예측 (§4-1 · §4-2) ═════════════════════════
 RJ_ROLES = ('R_j_lo', 'R_j0', 'R_j_hi')
 #: §4-2 3판 (RCA-02) — DBE origin 을 점검하는 R (세 R 모두 · 2판 = R_j,0 만) · 넘으면 그 모서리 세 R 전부 8 팔 평균 (RJ_ROLES)
@@ -2691,8 +2760,9 @@ class Predict:
     ★ 3판 — 주 판정 · 감도 변이가 같은 판정 함수 (네 모서리 × 세 R · DBE origin 세 R · §5-6 · RCA-09) · sv_scope (주 판정만) = SV 반사실을
     켤 모서리 런 ('R_j0' · 'all3')."""
 
-    def __init__(self, fetch, ladders, variant, sv_scope=None):
+    def __init__(self, fetch, ladders, variant, sv_scope=None, expand_hook=None):
         self.fetch, self.ladders, self.variant, self.sv_scope = fetch, ladders, variant, sv_scope
+        self.expand_hook = expand_hook       # ★ 10-27 묶음 C2 — 넘침 목록 [(c, 법칙, 역할)] 을 받는 자리 (단위 첫 합치기 · 한 기계 사슬 = None)
         self.main = variant is None
         self.checks = {'sbe_noop': [], 'same_p': [], 'r_monotone': []}     # ★ 10-23 r_monotone = RCA2-09 (모서리마다 ok · 최종 추정량 이름 ·
         #                                                                     ★ 10-23 C3 origins = 이미 구한 origin 마다 ok)
@@ -2707,14 +2777,23 @@ class Predict:
         return self.main and (self.sv_scope == 'all3' or (self.sv_scope == 'R_j0' and rr == 'R_j0'))
 
     def run(self):
+        """★ 10-27 묶음 C2a (Q9 설계 §2 · 개정 2 Q24 (나) · 개정 3 · 개정 4 R4-06 · author 10-27 approved bundle C) 순서 = no-op 기록 (사다리 끝 런 ·
+        첫머리 · 옛 자리 · 옛 이름) → 모서리 (법칙 → R → c) + same_p → W0 → ① origin 표본 전부 (법칙 → c → R) → ② 넘침이 있으면 이른 단조 검사 (이미
+        있는 점 · `checks['r_monotone_early']` · 넘침 없으면 끝 검사와 같은 점이라 건너뜀) → ③ 넘침 origin8 (법칙 → c → R) → ④ 끝 단조 (그대로).
+        이 순서가 바꾸는 멈춤 우선순위 둘 (ⓐ 이른 단조 > 넘침 런의 멈춤 · ⓑ origin 표본 멈춤 > 앞 모서리 origin8 멈춤 · NOT_COMPUTED ↔ STOPPED 양쪽) =
+        등록 개정 몫 (결과 0 건 · Q9 §7) · 이전 사슬과 모든 멈춤 우선순위가 같다고 쓰지 않는다 (Codex Q-I)."""
         if self.variant != 'SVORDER':        # SBE c 1 no-op — 주 · FIBRE · UNREG · GRID (SVORDER = 주 사다리 · SDCP 0 침대 양보 = no-op)
             for law in LAWS:
-                r = self.fetch(SBE_KIT, 'sbe_noop', law, '1', self.ladders[law]['R_j0'], 1)[0]
-                ok = r['sigma'] == self.ladders[law]['r0_sigma'] and r['n_sdcp_near'] == 0
+                nr = self.ladders[law].get('noop') or {}
+                if nr.get('status') == 'NOT_COMPUTED':     # ★ 10-27 묶음 C2a — 사다리 끝 no-op 런의 등록 결과 (옛 = 예측 첫 런의 NOT_COMPUTED)
+                    st = nr.get('stop') or {}
+                    raise Stop('NOT_COMPUTED', f'SBE c 1 no-op (사다리 {law} 끝 런) = NOT_COMPUTED — {st.get("cause")}', st.get('run'),
+                               st.get('reason'))
+                ok = nr.get('status') == 'done' and nr.get('ok') is True
                 self.checks['sbe_noop'].append({'law': law, 'ok': ok})
                 if not ok:
-                    raise Stop('SAME_P_CONSISTENCY', f'SBE c 1 ↔ c 0 (사다리 R_j,0 확인 팔) 비트 다름 또는 SDCP 근접 '
-                                                     f'{r["n_sdcp_near"]!r} ≠ 0 ({law}) — S3 이 SBE 에서 no-op 이 아니다')
+                    raise Stop('SAME_P_CONSISTENCY', f'SBE c 1 ↔ c 0 (사다리 R_j,0 확인 팔) 비트 다름 또는 SDCP 근접 ≠ 0 ({law} · 사다리 끝 no-op 런 '
+                                                     f'기록) — S3 이 SBE 에서 no-op 이 아니다')
         for law in LAWS:
             for rr in RJ_ROLES:
                 for c in CS:
@@ -2729,7 +2808,8 @@ class Predict:
         W_pos = w_pos_of([v['sigma'] for v in self.vals.values()])     # ★ 4판 (Q2-3 · §4-2 ②) — W ∈ {+∞, 0} 일 때 문턱의 W
         self.sealed['W0'] = W0
         self.sealed['W_pos'] = W_pos
-        for law in LAWS:
+        over_corners, sos = [], {}
+        for law in LAWS:                             # ★ 10-27 묶음 C2a ① — origin 표본 전부 먼저 (옛 = 모서리마다 표본 → 넘치면 바로 origin8)
             for c in CS:
                 ent = {'c': c, 'law': law, 'status': 'pass', 'arm_list': list(ORIGIN_ARMS), 'per_R': {}, 'states_differ': []}
                 so = {}
@@ -2746,18 +2826,58 @@ class Predict:
                         ent['states_differ'].append(rr)
                     so[rr] = {'spread': sp, 'arms': vv, 'states': sts}
                     over = over or not ok
-                if over:                             # 한 R 이라도 넘으면 그 모서리 세 R 전부 같은 8 origin 집합의 평균
+                if over:                             # 한 R 이라도 넘으면 그 모서리 세 R 전부 같은 8 origin 집합의 평균 (③ 에서)
                     ent['status'] = 'adjusted'
-                    for rr in RJ_ROLES:
-                        r8 = self.fetch(DBE_KIT, 'origin8', law, c, self.ladders[law][rr], 8)
-                        m8 = mean_ext([x['sigma'] for x in r8])
-                        self.adj[(c, law, rr)] = m8
-                        self.adj_band[(c, law, rr)] = mean_band(r8)
-                        self.org[(c, law, rr)].update((f'origin8_a{i}', x) for i, x in enumerate(r8))
-                        so[rr]['mean8'] = m8
+                    over_corners.append((c, law))
                 self.origin.append(ent)
                 self.sealed['origin'][f'c{c}_{law}'] = so
-        self._r_monotone()
+                sos[(c, law)] = so
+        if over_corners:                             # ★ 10-27 묶음 C2a ② — 이른 단조 (넘침 런 전 · 이미 있는 점만 · 넘침 없으면 ④ 와 같은 점)
+            self._r_monotone_early(set(over_corners))
+            if self.expand_hook is not None:         # ★ 10-27 묶음 C2 — 단위 합치기의 첫 합치기 = 여기서 넘침 목록을 내고 멈춘다 (한 기계 사슬 = None)
+                self.expand_hook([(c, law, rr) for law in LAWS for c in CS if (c, law) in over_corners for rr in RJ_ROLES])
+        for law in LAWS:                             # ③ 넘침 origin8 (법칙 → c → R)
+            for c in CS:
+                if (c, law) not in over_corners:
+                    continue
+                for rr in RJ_ROLES:
+                    r8 = self.fetch(DBE_KIT, 'origin8', law, c, self.ladders[law][rr], 8)
+                    m8 = mean_ext([x['sigma'] for x in r8])
+                    self.adj[(c, law, rr)] = m8
+                    self.adj_band[(c, law, rr)] = mean_band(r8)
+                    self.org[(c, law, rr)].update((f'origin8_a{i}', x) for i, x in enumerate(r8))
+                    sos[(c, law)][rr]['mean8'] = m8
+        self._r_monotone()                           # ④ 끝 단조 (그대로)
+
+    def _r_monotone_early(self, over):
+        """★ 10-27 묶음 C2a (Q9 설계 §3-2 이른 단조 · 개정 2 Q24 (나) · 개정 3 P3) — 넘침 런을 요청하기 **전에** 이미 있는 점으로 같은 판정 함수
+        (`r_monotone_problem`) 를 끝 검사와 같은 순서 (법칙 → c → 최종 추정량 → origin) 로: 넘침이 없는 모서리 = 최종 추정량 (arm 0) + origin 셋 ·
+        넘친 모서리 = origin 셋 (corner_a0 · origin_a1 · origin_a2) 만 (8 팔 평균 · origin8 = 아직 없다 → 건너뜀 · 기록 ok · estimator = None).
+        모순 = 멈춤 `R_MONOTONE_VIOLATION` (넘침 런 없이) · 기록 = `checks['r_monotone_early']` (넘침이 있을 때만 · 끝 검사 기록은 그대로)."""
+        out = self.checks.setdefault('r_monotone_early', [])
+        for law in LAWS:
+            for c in CS:
+                ent = {'law': law, 'c': c, 'ok': None, 'estimator': None, 'origins': None}
+                out.append(ent)
+                if (c, law) not in over:
+                    pts, est = [], set()
+                    for rr in RJ_ROLES:
+                        b, e = final_band(self, (c, law, rr))
+                        pts.append((rj_float(self.ladders[law][rr]), rr, b))
+                        est.add(e)
+                    bad = r_monotone_problem(pts)
+                    ent.update(ok=bad is None, estimator='+'.join(sorted(est)))
+                    if bad is not None:
+                        raise Stop('R_MONOTONE_VIOLATION', f'σ_DBE({law}, c {c}) 의 증서 구간이 R_j 단조와 모순 — {bad[0]} (R 작음) 구간의 위끝 < '
+                                                           f'{bad[1]} (R 큼) 구간의 아래끝 (이른 검사 · 넘침 런 전 · 같은 origin · 최종 추정량 '
+                                                           f'{ent["estimator"]} · 추가 풀이 없음 · 구현 결함 의심 · 판정문 §8 RCA2-09)')
+                org = [(n, r_monotone_problem(p)) for n, p in origin_points(self, law, c)]
+                ent['origins'] = [{'origin': n, 'ok': b is None} for n, b in org]
+                for n, b in org:
+                    if b is not None:
+                        raise Stop('R_MONOTONE_VIOLATION', f'σ_DBE({law}, c {c}) origin {n} 의 증서 구간이 R_j 단조와 모순 — {b[0]} (R 작음) 구간의 '
+                                                           f'위끝 < {b[1]} (R 큼) 구간의 아래끝 (이른 검사 · 넘침 런 전 · 같은 origin 의 세 R · 이미 '
+                                                           f'구한 값 · 추가 풀이 없음 · 구현 결함 의심 · 판정문 §8 RCA2-09)')
 
     def _r_monotone(self):
         """★ 10-23 (Codex 재검토 RCA2-09 · 판정문 §8 · 1저자 Q8 (가) · author 10-23 ratified Q1-Q8) DBE R 단조 방어 검사 — 이미 구한 값으로 (추가
@@ -2892,7 +3012,7 @@ def stage_ladder(a, contract):
         return 3
     s = summary_base('ladder', a)
     s.update({'law': a.law, 'variant': a.variant, 'kit': a.kit or SBE_KIT, 'runs': [], 'ladder': None, 'env_scrubbed': [],
-              'after_main': None, 'bed': None, 'sv_graph_source': None})
+              'after_main': None, 'bed': None, 'sv_graph_source': None, 'noop': None})
     ran = False
     try:
         if not _same(a.target, TARGET_SBE_MS) or a.law not in LAWS or (a.kit or SBE_KIT) != SBE_KIT or a.variant == 'SVORDER':
@@ -2935,7 +3055,8 @@ def stage_ladder(a, contract):
         rn.graph_src = RunnerGraphSource(a.runner, a.root, out / GRAPH_SRC_DIR, deadline=rn.deadline)
         s['env_scrubbed'] = rn.scrubbed
         if a.dry_run:
-            print(f'dry-run — 사다리 {a.law} · 첫 런 (바닥 · 천장 · 1e4 · 1e6 · 1e8) 의 env (러너를 부르지 않는다 · 다음 점은 σ 로 정해진다)')
+            print(f'dry-run — 사다리 {a.law} · 첫 런 (바닥 · 천장 · 1e4 · 1e6 · 1e8) 의 env (러너를 부르지 않는다 · 다음 점은 σ 로 정해진다 · '
+                  f'끝 no-op = R_j,0 에서 SBE c {NOOP_C})')
             for role, rj in (('floor', 'inf'), ('ceiling', '0')) + tuple(('point', rj_key(10.0 ** e)) for e in LADDER_START_LOG10):
                 rn.run(SBE_KIT, role, a.law, LADDER_C, rj, 1)
             return 0
@@ -2949,6 +3070,9 @@ def stage_ladder(a, contract):
             try:
                 lad.run()
                 lad.origin()                   # §3-3 — 주 · 감도 변이 같게 (같은 판정 함수 · §5-6 3판)
+                #  ★ 10-27 묶음 C2a (Q9 §2-1 · R4-06 (d) · 개정 5 ①) — SBE c 1 no-op = 사다리 단계 끝 (같은 사슬 부모의 동결 환경 · 기록만 · 기술 멈춤 =
+                #    사다리 멈춤)
+                s['noop'] = ladder_noop(lambda role, rj, arms: rn.run(SBE_KIT, role, a.law, NOOP_C, rj, arms), lad, a.law)
                 s['status'] = 'CALIBRATED'
             finally:
                 s['ladder'], s['flags'] = lad.st, list(lad.flags)
@@ -2972,7 +3096,8 @@ def stage_ladder(a, contract):
         print(f'보정 = CALIBRATED · R_j,0 = {disp_rj(L["R_j0"])} · R_j,lo {disp_rj(L["R_j_lo"])} ({e_lo.get("source")}) · R_j,hi '
               f'{disp_rj(L["R_j_hi"])} ({e_hi.get("source")}) · 역상 R 비 {L["R_ratio"]:.4g} · 런 {L["n_runs"]} · ×100 {L["n_ext"]} · '
               f'반씩 {L["n_bisect"]} · 확인 {len(L["confirms"])} · 국소 e ≥ e_min {L["local_e_ge_emin"]} · origin {(L["origin"] or {}).get("status")}'
-              + (f' · 표지 {s["flags"]}' if s['flags'] else ''))
+              + (f' · 표지 {s["flags"]}' if s['flags'] else '')
+              + f' · no-op {(s.get("noop") or {}).get("status")} {(s.get("noop") or {}).get("ok")}')
     else:
         print(f'보정 = {s["status"]}' + (f' (사유 {(s.get("stop") or {}).get("reason")})' if (s.get('stop') or {}).get('reason') else ''))
     print(f'요약 → {out / "ladder_summary.json"}')
@@ -3029,8 +3154,11 @@ def load_ladders(dirs, variant, reg_path, contract, sid_reg, now_code=None):
         r = r0run[-1]
         req = {k: r.get(k) for k in REQ_KEYS}
         arm = read_run(rd / r['outdir'], req, plan, contract, sid_reg, want_sha=[x['sha256'] for x in r['arms_read']])[0]
+        #  ★ 10-27 묶음 C2a (Q9 §2-1 · R4-06 (c) (d)) — 사다리 끝 no-op 기록 꼴 · 그 런을 원 팔에서 다시 읽어 다시 대조 (요약 기록을 믿지 않는다 ·
+        #    NOT_COMPUTED 기록 = 다시 읽기도 같은 멈춤 · 판정이 예측 첫머리에서 옛 자리 · 옛 이름으로 낸다)
+        nr = noop_check(rd, s, law, L['R_j0'], arm, plan, contract, sid_reg)
         out[law] = {'dir': str(rd), 'summary_sha256': sha, 'variant': s.get('variant'), 'R_j0': L['R_j0'], 'R_j_lo': L['R_j_lo'],
-                    'R_j_hi': L['R_j_hi'], 'r0_sigma': arm['sigma']}
+                    'R_j_hi': L['R_j_hi'], 'r0_sigma': arm['sigma'], 'noop': nr}
     if sorted(out) != sorted(LAWS):
         raise Stop('LADDER_SET', f'사다리 법칙 {sorted(out)} ≠ {list(LAWS)}')
     check_plan_registered(plan_sha, reg_path)
@@ -3101,10 +3229,8 @@ def stage_predict(a, contract):
         s['env_scrubbed'] = rn.scrubbed
         pr = Predict(rn.run, lads, a.variant, sv_scope=scope)
         if a.dry_run:
-            print('dry-run — 예측 런의 env (러너를 부르지 않는다 · origin 런은 arm 0 값으로 정해진다)')
-            if a.variant != 'SVORDER':
-                for law in LAWS:
-                    rn.run(SBE_KIT, 'sbe_noop', law, '1', lads[law]['R_j0'], 1)
+            print('dry-run — 예측 런의 env (러너를 부르지 않는다 · origin 런은 arm 0 값으로 정해진다 · ★ 10-27 묶음 C2a — SBE no-op = 사다리 끝 런 · '
+                  '예측은 그 기록을 읽는다)')
             for law in LAWS:
                 for rr in RJ_ROLES:
                     for c in CS:
@@ -3150,10 +3276,12 @@ def _replay_ladder(d, s, contract, sid_reg, cert_reg, graph_src=None):
     rp = Replay(d, s, plan, contract, sid_reg, cert_reg, graph_src=graph_src)
     lad = Ladder(lambda role, rj, arms: rp.run(SBE_KIT, role, s['law'], LADDER_C, rj, arms), max_points=ladder_cap(plan),
                  ratio_max=plan['calib_rj_ratio_max'])
-    status, stop = 'CALIBRATED', None
+    status, stop, noop = 'CALIBRATED', None, None
     try:
         lad.run()
         lad.origin()
+        #  ★ 10-27 묶음 C2a (Q9 §7 · R4-06 (c)) — 사다리 끝 no-op 런을 원 팔에서 다시 읽어 같은 대조 (기록 = 남김없이 읽는다 · rp.done)
+        noop = ladder_noop(lambda role, rj, arms: rp.run(SBE_KIT, role, s['law'], NOOP_C, rj, arms), lad, s['law'])
     except Stop as e:
         if e.code not in REGISTERED_OUTCOMES:
             raise
@@ -3162,7 +3290,11 @@ def _replay_ladder(d, s, contract, sid_reg, cert_reg, graph_src=None):
     if status != s.get('status') or lad.st != s.get('ladder') or lad.flags != s.get('flags'):
         diff = [k for k in set(lad.st) | set(s.get('ladder') or {}) if lad.st.get(k) != (s.get('ladder') or {}).get(k)]
         raise Stop('REPLAY_MISMATCH', f'{Path(d).name}: 원 팔에서 다시 계산한 사다리 ≠ 요약 (상태 {status} ↔ {s.get("status")} · 칸 {sorted(diff)})')
-    return {'status': status, 'stop': stop, 'st': lad.st, 'sealed': lad.sealed, 'flags': lad.flags, 'pts': lad.pts}
+    if (noop is None) != (s.get('noop') is None) or (noop is not None and (noop_record_problem(s.get('noop'), s['law'], lad.st['R_j0'])
+                                                                         or noop_key(noop) != noop_key(s['noop']))):
+        raise Stop('REPLAY_MISMATCH', f'{Path(d).name}: 원 팔에서 다시 계산한 사다리 끝 no-op ({noop_key(noop) if noop else None}) ≠ 요약 기록 '
+                                      f'({noop_key(s["noop"]) if isinstance(s.get("noop"), dict) else s.get("noop")})')
+    return {'status': status, 'stop': stop, 'st': lad.st, 'sealed': lad.sealed, 'flags': lad.flags, 'pts': lad.pts, 'noop': noop}
 
 
 def _replay_predict(d, s, lads, contract, sid_reg, cert_reg, graph_src=None):
@@ -3474,7 +3606,8 @@ def verdict_compute(dirs, reg_path, contract, root, graph_src=None):
         if variant_stage_stopped(s):
             return None, 'STOPPED', s.get('stop')             # ★ RI (§5-6 ③) — 멈춘 감도 변이 예측 = 값 없음 → 그 변이 판정 NOT_COMPUTED
         lin = {law: {'R_j0': lads[law][3]['st']['R_j0'], 'R_j_lo': lads[law][3]['st']['R_j_lo'], 'R_j_hi': lads[law][3]['st']['R_j_hi'],
-                     'r0_sigma': lads[law][3]['pts'][lads[law][3]['st']['R_j0']][1]} for law in LAWS}
+                     'r0_sigma': lads[law][3]['pts'][lads[law][3]['st']['R_j0']][1],
+                     'noop': lads[law][3].get('noop')} for law in LAWS}    # ★ 10-27 묶음 C2a — 다시 계산한 사다리 끝 no-op 기록
         return _replay_predict(rd, s, lin, contract, sid_reg, cert_reg, graph_src=graph_src)
     if any(st != 'CALIBRATED' for st in statuses.values()):
         P, PJ = assemble({'statuses': statuses, 'vals': None, 'flags': m_flags}, {}, None)
