@@ -169,6 +169,25 @@ jobs:
       - name: 믹서 D3 후보 판독기 (합성 계약) (regression)
         run: python scripts/test_mixer_d3_candidates.py
 
+      # ★ 2026-10-27 (non-Rint 통합 대응표 §6 3) — 언로딩 키트 (ULPRI) 직접 검사 다섯 (check_all.sh 에도 같이).
+      #   키트는 scripts/ · webapp/ 밖이라 등재 드라이버가 안 돈다 → 이름으로 건다.  꼴 = 키트 README · 인계 색인 §6 그대로 `-I`
+      #   (봉인 키트 · 표준 라이브러리 + 같은 폴더 모듈 · 러너 모의 = bash + 가짜 mpirun · lmp · 임시 폴더 · LIGGGHTS 없음).
+      #   ⚠ 이 다섯은 경로가 scripts/ · webapp/ 밖이라 `check_selftest_inventory` 의 CI 의존 폐포가 원래 보지 않는다 (`-I` 와 무관).
+      - name: 언로딩 키트 판독기 (ULPRI ul_reader) (selftest)
+        run: python -I docs/data/ps45_unload_20261009/ul_reader.py --selftest
+
+      - name: 언로딩 키트 관문 (ULPRI ul_gates) (selftest)
+        run: python -I docs/data/ps45_unload_20261009/ul_gates.py --selftest
+
+      - name: 언로딩 키트 러너 모의 (ULPRI ul_runner_test · 가짜 mpirun · lmp) (selftest)
+        run: python -I docs/data/ps45_unload_20261009/ul_runner_test.py --selftest
+
+      - name: 언로딩 키트 덱 = 생성 결과 (ULPRI make_unload_decks --check)
+        run: python -I docs/data/ps45_unload_20261009/make_unload_decks.py --check
+
+      - name: 언로딩 키트 봉인 · 활성 규칙 (ULPRI seal_kit --check)
+        run: python -I docs/data/ps45_unload_20261009/seal_kit.py --check
+
       # ★★ 2026-08-31 — LHS 확장 제출 도구 셋.  설계 봉인이 CI 에서 매번 재검증된다.
       - name: LHS 확장 설계 생성기 (LHS 점유 · 소수 seed · 절대 칸) (selftest)
         run: python scripts/lhs_ext_design.py --selftest

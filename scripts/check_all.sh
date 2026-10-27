@@ -190,6 +190,17 @@ run 'mixer launcher (완주 판정 · 덮어쓰기 가드)' bash dem_scripts/mix
 #    드라이버 (`--run-fast`) 도 못 돈다 → 이름으로 건다 (CI 에도 같이).  실측 (10-27 · 컨테이너 · 두 번) D2 1.47 · 1.27 s · D3 0.42 · 0.40 s.
 run 'mixer D2 소비자 (합성 덱 · 결속 검증 · unittest)' python3 scripts/test_mixer_d2_consumers.py
 run 'mixer D3 후보 판독기 (합성 계약 · unittest)'      python3 scripts/test_mixer_d3_candidates.py
+#  ★ 2026-10-27 (non-Rint 통합 · 같은 대응표 §6 3) — 언로딩 키트 (ULPRI · `docs/data/ps45_unload_20261009/`) 직접 검사 다섯.  통합 뒤 이 트리의
+#    키트 폴더 = 수용 핀 4c29705fa 와 같다 (`git diff` 0) 인데 이 파일 · CI 어디에도 없었다 (통합 때도 돌리지 않음).  키트는 `scripts/` · `webapp/`
+#    밖이라 등재 (`selftest_inventory.tsv`) 가 보지 않는다 → 이름으로 건다 (CI 에도 같이).  꼴 = 키트 README · 인계 색인 §6 그대로 `python3 -I`
+#    (봉인 키트 · 표준 라이브러리 + 같은 폴더 모듈 · 러너 모의 = bash + 가짜 mpirun · lmp · 임시 폴더 · LIGGGHTS 없음 · 물리 실행 아님).
+#    실측 (10-27 · 컨테이너 · 두 번) ul_reader 14.44 · 15.54 s · ul_gates 0.27 · 0.13 s · ul_runner_test 42.20 · 39.94 s ·
+#    make_unload_decks --check 1.69 · 1.73 s · seal_kit --check 1.13 · 1.16 s.
+run 'ULPRI ul_reader         --selftest (언로딩 판독기)'      python3 -I docs/data/ps45_unload_20261009/ul_reader.py --selftest
+run 'ULPRI ul_gates          --selftest (관문)'               python3 -I docs/data/ps45_unload_20261009/ul_gates.py --selftest
+run 'ULPRI ul_runner_test    --selftest (러너 모의 · 가짜 lmp)' python3 -I docs/data/ps45_unload_20261009/ul_runner_test.py --selftest
+run 'ULPRI make_unload_decks --check (덱 = 생성 결과)'        python3 -I docs/data/ps45_unload_20261009/make_unload_decks.py --check
+run 'ULPRI seal_kit          --check (봉인 · 활성 규칙)'      python3 -I docs/data/ps45_unload_20261009/seal_kit.py --check
 run 'webapp: launcher (포트 선점)' python3 scripts/test_webapp_launcher.py
 run 'webapp: temp_pressure'       python3 webapp/test_temp_pressure_wiring.py
 #  ★ v3 (2026-09-09) — 화면이 원장을 따라가는가 + **원장을 보여 주는 페이지가 금지값을
