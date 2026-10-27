@@ -668,6 +668,14 @@
    "bad428e6-64._On_the_Hausner_ratio_and_its_relationship_to_some_properties_of_metal_powders.pdf"
   ]
  },
+ "guan2026_feco_vs_in2s3_li2s_electrocrystallization": {
+  "figures": 29,
+  "generated": "2026-10-27",
+  "pdfs": [
+   "b5209dff-4._FeCo_codoping_and_sulfur-vacancy_engineering_regulating_Li2S_electrocrystallization_in_practical_lithium-sulfur_pouch_cells.pdf",
+   "940e56ed-4._Sup_FeCo_codoping_and_sulfur-vacancy_engineering_regulating_Li2S_electrocrystallization_in_practical_lithium-sulfur_pouch_cells.pdf"
+  ]
+ },
  "guo2025_kinetic_cathode_se_interface": {
   "figures": 7,
   "generated": "2026-09-22",
@@ -2785,6 +2793,13 @@
    "118. LiRichMn_Cathodes_HighEnergy_SolidState_REVIEW.pdf"
   ]
  },
+ "wang2026_umlff_review_softening_forgetting_longrange": {
+  "figures": 11,
+  "generated": "2026-10-27",
+  "pdfs": [
+   "d17ba3fc-15._Universal_machine_learning_force_fields_for_materials_simulation_From_model_construction_to_complex-system_applications.pdf"
+  ]
+ },
  "wei2023_linbo3_coating_cutoff_voltage_lco_argyrodite": {
   "figures": 15,
   "generated": "2026-09-22",
@@ -2903,6 +2918,14 @@
   "pdfs": [
    "57. NdO_LPSCl1.7 Xu2026 NanoEnergy high-air-stability superionic.pdf",
    "57. Sup) NdO_LPSCl1.7 Xu2026 NanoEnergy high-air-stability superionic.pdf"
+  ]
+ },
+ "xu2026_offstoich_composite_lpsc_highvoltage": {
+  "figures": 30,
+  "generated": "2026-10-27",
+  "pdfs": [
+   "1e22aa66-11._Locally_off-stoichiometric_composite-phase_reconstruction_of_argyrodite_sulfide_electrolytes_for_high-voltage_all-solid-state_lithium_batteries.pdf",
+   "153f9230-11._Sup_Locally_off-stoichiometric_composite-phase_reconstruction_of_argyrodite_sulfide_electrolytes_for_high-voltage_all-solid-state_lithium_batteries.pdf"
   ]
  },
  "xu2026_xlsdft_linear_scaling_100m_atoms": {

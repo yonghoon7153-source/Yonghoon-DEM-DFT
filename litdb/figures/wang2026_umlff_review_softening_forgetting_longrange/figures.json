@@ -1,0 +1,239 @@
+{
+ "slug": "wang2026_umlff_review_softening_forgetting_longrange",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-27",
+ "sources": [
+  "d17ba3fc-15._Universal_machine_learning_force_fields_for_materials_simulation_From_model_construction_to_complex-system_applications.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 6,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Framework of this review on uMLFFs. The review is organized around dataset construction, model development, training and fine-tuning, benchmark evaluation, physics enhancement, and applications in materials discovery. 2. Foundation of uMLFFs: Data, Strategies and Benchmarks The performance of uMLFFs depends on three coupled factors: model architecture (determining representational upper bound), training data coverage (defining applicability limits), and benchmark testing (assessing real-task reliability). Starting from early data- construction strategies for MLFFs, this chapter discusses the development of large-scale datasets and standardized benchmark platforms, and then analyzes the representative systematic problem (i.e., PES softening) revealed by these datasets and benchmarks. 2.1 Data-Construction Strategies from Specialized to Universal Models High-quality reference dat",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    69.9,
+    533.4,
+    334.5
+   ],
+   "w": 1953,
+   "h": 1103,
+   "dpi": 300,
+   "src": "d17ba3fc-15._Universal_machine_learning_force_fields_for_materials_simulation_From_model_construction_to_complex-system_applications.pdf",
+   "blank": 0.88
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 7,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Strategy for the creation of machine learning force fields, including DFT reference calculations, atomic-environment fingerprinting, representative clustering/sampling, and machine-learning regression for force-field construction. Adapted from Ref.8: Huan et al., npj Computational Materials 2017, 3, 37. Huan et al. constructed the six elemental models discussed above from bulk DFT-MD configurations sampled at 300 and 600 K.8 Their reported force accuracy in those bulk tests does not by itself establish accuracy for surfaces, point defects, migration transition states or strongly compressed structures. Earlier AGNI studies on Al did investigate point-defect diffusion and surface adatoms,22,23 so this limitation concerns the scope of the specific training sets and validation rather than the AGNI approach as a whole. When extending MLFFs to new tasks, off-equilibrium configuration",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    125.6,
+    533.4,
+    248.0
+   ],
+   "w": 1953,
+   "h": 511,
+   "dpi": 300,
+   "src": "d17ba3fc-15._Universal_machine_learning_force_fields_for_materials_simulation_From_model_construction_to_complex-system_applications.pdf",
+   "blank": 0.725
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 8,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Distribution comparison between MP-ALOE and MatPES. The panels show (a) cohesive energy, (b) interatomic force magnitude, and (c) pressure distributions, showing broader marginal ranges of force magnitude and pressure in MP-ALOE; these one-dimensional distributions do not establish coverage of particular defects, surfaces or transition pathways. Adapted from Ref.24: Kuner et al., npj Computational Materials 2025, 11, 352. The data construction of uMLFFs has evolved into a combined paradigm: universal databases, large-scale pretraining, active-learning supplementation and downstream fine-tuning. M3GNet and CHGNet pretrain on Materials Project (MP)27 relaxation trajectories using energy, force, and stress data.13,14 MACE-MP-0 trains an 89-element foundation model on MPtrj.15 OMat24 further expands open data by providing over 110 million DFT calculations together with pretrained m",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    71.3,
+    536.4,
+    225.3
+   ],
+   "w": 1965,
+   "h": 642,
+   "dpi": 300,
+   "src": "d17ba3fc-15._Universal_machine_learning_force_fields_for_materials_simulation_From_model_construction_to_complex-system_applications.pdf",
+   "blank": 0.857
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 14,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Schematic PES and force-regression diagnostics. (a) DFT and uMLFF potential- energy surfaces with near-equilibrium training points (yellow) and candidate off-equilibrium configurations (red); the surface difference is illustrative. (b) Predicted versus DFT forces for high-energy states of mp-973966; slopes below one show force underprediction in the tested M3GNet, CHGNet and MACE-MP-0 models, and cMAE is the MAE after linear force rescaling. (c) Force-regression slopes for 1000 WBM compounds; percentages give fractions above and below one. The force slopes do not directly measure PES curvature. Adapted from Ref.19. In the evaluated studies, systematic underprediction can affect downstream quantities. Underestimated migration barriers may produce overestimated diffusion coefficients, while errors in phonon frequencies, surface energies, defect energies, or mixing energies can pr",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    72.6,
+    533.4,
+    396.4
+   ],
+   "w": 1953,
+   "h": 1350,
+   "dpi": 300,
+   "src": "d17ba3fc-15._Universal_machine_learning_force_fields_for_materials_simulation_From_model_construction_to_complex-system_applications.pdf",
+   "blank": 0.814
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 16,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Training behavior and stability-plasticity analysis of fine-tuned MLIPs. (a) total-loss curves for Li6PS5Cl fine-tuning (dashed) and the sampled MPtrj set, sMPtrj (solid), over epochs; the plotted total loss numerically adds energy RMSE (eV/atom), force RMSE (eV/Å) and 0.01 × stress RMSE (kbar) in the source study; (b) mean absolute distance (MAD) of model parameters from SevenNet-0 over epochs; (c) loss-retention ratio of pretrained SevenNet-0 after random and Fisher-information-matrix (FIM)-aware Gaussian parameter perturbations on sMPtrj. Adapted from Ref.20: Kim et al., npj Computational Materials 2026, 12, 26. 3.2 Representative uMLFFs Architecture Lineages and Accuracy-Efficiency Trade-Offs Architectural innovation represents another key route to improving the upper capability limit of uMLFFs. Current uMLFFs span several overlapping technical approaches. One widely used r",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    124.2,
+    536.8,
+    341.6
+   ],
+   "w": 1967,
+   "h": 907,
+   "dpi": 300,
+   "src": "d17ba3fc-15._Universal_machine_learning_force_fields_for_materials_simulation_From_model_construction_to_complex-system_applications.pdf",
+   "blank": 0.852
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 22,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Benchmarking of the polarizable long-range foundation model. (a) Interaction energies for Na-Na and Na-Cl dimers; (b) electric-field response of water; (c-e) predicted bulk moduli compared with DFT reference values under Reuss, Voigt and Voigt–Reuss–Hill",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    409.9,
+    533.4,
+    689.4
+   ],
+   "w": 1953,
+   "h": 1166,
+   "dpi": 300,
+   "src": "d17ba3fc-15._Universal_machine_learning_force_fields_for_materials_simulation_From_model_construction_to_complex-system_applications.pdf",
+   "blank": 0.858
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 25,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Electrolyte transport. (a) Li⁺–FAN coordination lifetime (blue upward triangles) and Li⁺–FSI⁻ lifetime (pink downward triangles) in ps versus 10³/T (K⁻¹); right axis, conductivity σ (mS cm⁻¹; black circles, experiment; crosses, MLMD). (b) σ versus coordination-weighted mean lifetime (ps); circles and crosses denote experiment and MLMD, respectively, and symbol colors distinguish the electrolyte formulations identified in the panel legend. Light blue, gray and light pink shading identify rapid ligand exchange, transition and ligand retention regions. (c) schematic association of shorter coordination lifetimes with faster transport across weakly to strongly solvated structures. (d) c-LLZO Li diffusivity D (cm² s⁻¹) versus 1000/T (K⁻¹): gray solid, AIMD; red dashed, polarizable model; blue dash-dotted, variant without long-range interactions; error bars and Arrhenius activation en",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    69.2,
+    533.4,
+    395.2
+   ],
+   "w": 1953,
+   "h": 1359,
+   "dpi": 300,
+   "src": "d17ba3fc-15._Universal_machine_learning_force_fields_for_materials_simulation_From_model_construction_to_complex-system_applications.pdf",
+   "blank": 0.831
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 27,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Violin plots of phonon-property errors relative to the PBE reference data. The compared quantities include (a) maximum phonon frequency, (b) vibrational entropy, (c) Helmholtz free energy, (d) heat capacity, (e) phonon density of states and (f) average sound velocity. Adapted from Ref. 63: Loew et al., npj Computational Materials 2025, 11, 178. Phonon frequencies depend on the force-constant matrix, i.e., the second derivative of the PES with respect to atomic displacement. Two distinct error mechanisms should be separated. An inaccurate but conservative potential can yield an incorrect Hessian and therefore incorrect phonon frequencies, whereas a direct-force model may additionally exhibit non-integrability or energy-force inconsistency.74 The reported dynamical-stability confusion matrices quantify classification outcomes but do not, by themselves, identify which mechanism pr",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    69.9,
+    533.4,
+    334.5
+   ],
+   "w": 1953,
+   "h": 1103,
+   "dpi": 300,
+   "src": "d17ba3fc-15._Universal_machine_learning_force_fields_for_materials_simulation_From_model_construction_to_complex-system_applications.pdf",
+   "blank": 0.841
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 29,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Source-study benchmark of static point-defect formation energies in unary systems. SRME is the dimensionless symmetric relative mean error; ΔE is mean absolute formation- energy error in eV for the source study’s self-interstitial and vacancy test sets. (a) Accuracy for self-interstitial formation energies, shown as ESIA-SRME and ΔESIA. (b) Accuracy for vacancy formation energies, shown as Evac-SRME and ΔEvac. GRACE models are highlighted in red. Adapted from Ref.49: Lysogorskiy et al., npj Computational Materials 2026, 12, 114. Related systems, including catalytic reactions, alloys, two-dimensional materials, amorphous phases, and high-entropy materials, provide natural test cases for transferability under chemical disorder, low-dimensional coordination, and complex reaction pathways. Their reliability should be established through dedicated property-level benchmarks rather th",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    143.6,
+    533.4,
+    470.9
+   ],
+   "w": 1953,
+   "h": 1365,
+   "dpi": 300,
+   "src": "d17ba3fc-15._Universal_machine_learning_force_fields_for_materials_simulation_From_model_construction_to_complex-system_applications.pdf",
+   "blank": 0.837
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 9,
+   "file": "tab_1.png",
+   "caption": "Table 1. Selected Matbench Discovery results for stability classification and energy-above-hull regression on the WBM candidate set. MAE and RMSE are in eV/atom. Values and model variants are reproduced from Ref.36 Model F1 DAF† Precision MAE RMSE Supervised Main implication labels‡ eqV2 S 0.815 5.042 0.771 0.036 0.085 EFS Highest F1 in this subset",
+   "rotated_deg": 0,
+   "bbox": [
+    3.0,
+    5.8,
+    532.4,
+    769.8
+   ],
+   "w": 2075,
+   "h": 2994,
+   "dpi": 282,
+   "src": "d17ba3fc-15._Universal_machine_learning_force_fields_for_materials_simulation_From_model_construction_to_complex-system_applications.pdf",
+   "blank": 0.868
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 12,
+   "file": "tab_3.png",
+   "caption": "Table 3, the BaTiO3 force-component MAE ranged from 0.033909 eV/Å (Orb-v3) to 0.054900 eV/Å (CHGNet 0.3.0). SevenNet-0 and MatterSim-1M had similar point estimates (0.039086 and 0.039935 eV/Å); the paired 95% interval for their difference included zero. The BaTiO3 all-pair projection slopes ranged from 1.0262 to 1.0813, and thus the Li6PS5Cl high-force attenuation is not a general result across these test configurations.",
+   "rotated_deg": 0,
+   "bbox": [
+    3.0,
+    5.8,
+    532.4,
+    769.8
+   ],
+   "w": 2075,
+   "h": 2994,
+   "dpi": 282,
+   "src": "d17ba3fc-15._Universal_machine_learning_force_fields_for_materials_simulation_From_model_construction_to_complex-system_applications.pdf",
+   "blank": 0.888
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "t2",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  }
+ ]
+}
