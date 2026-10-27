@@ -1194,3 +1194,21 @@ DFT 쪽은 사용자가 다른 대시보드에서 진행한다 (09-23) — 이 �
 - **10-26 밤 (이종기술 ① SE 펠릿 EIS 반입)**: 1저자 측정 4 개 (소립 #01 · #02 = C01 · 대립 #01 · #02 = C02 · PEIS 7 MHz → 0.01–0.02 Hz) → `docs/data/se_pellet_eis_20261026/` (원자료 + 자체 판독기 · galvani 는 소스만 읽음 (자동 승인 규칙이 외부 코드 실행을 막음)) · 반원 없음 · 블로킹 꼬리만 · 절편 R (R + L + CPE · 100 Hz 창) 소립 38.86 · 41.79 Ω · 대립 25.36 · 27.74 Ω (0 교차와 1.8 % 안 · 직선 외삽은 +10 % = 주 값 아님) · R 비 소립/대립 1.52 · 같은 종류 차 7.3 · 8.9 % · σ 는 두께 · 지름 뒤 (1저자 다음 측정) · 소립 "부서짐" = EIS 로 판정 불가 (관찰 6 · README §4) · 평균 Ewe 소립 −0.31 V ↔ 대립 −0.05 V = 전극 · 지그 구성 확인 요청.
 - **10-27 새벽 (이종기술 ① · 50kg)**: [이종기술] SE 펠릿 = 0.1 g · 10pi (⌀10 mm) 확인 (1저자) → `docs/data/se_pellet_eis_20261026/README.md` §3 (밀도 = 1.2732 / L[mm] g/cm³ · 두께 측정 = 다음).  [50kg] ibb 323818 (D0.7-40 삽입 + 정착 앞) COMPLETED 0:0 · 4:39:54 · 삽입 312506 / AM 948 / SE 311558 = 계획 수 그대로 (게이트 안) · `restart_settling_20001.bin` 있음 · ⚠ 끝 step 23001 원자 수 **312,504 = 2 개 잃음** (`boundary p p f` · 덱에 lost 규칙 없음 · LIGGGHTS 가 조용히 지움 · D3 런들은 0 개 — 언제 · 어디서인지 미확인) → Q5 dt 대조의 관측량 후보 · 마지막 3,000 step CPU 3315 s ≈ 1.1 s/step (NP 1 실측) · 323925 (D3-40 s1 ibb) 압축 중 (step 3.585 M · 0.192/0.3 · 원자 4906 그대로).  다음 = ibb `resume_ckpt.sh` 를 `d1b34664c` 판 (sha256 `eaa12220…`) 으로 바꾼 뒤 D0.7 재개 시험 `-T` (NP = 1저자 결정).
 - **10-27 새벽 (다섯 번째 복귀 병합 인계 · Codex 통합 준비)**: 1저자 *"이제 원래 메인브랜치 토큰 복귀됐어 관련해서 충돌되지 않게 예전처럼 프롬프트 주고 codex에서도 이제 같이 머지해야되니까 준비해야된다고도 같이 알려줘야돼"* → 인계 `docs/handoff_merge_to_stoic_knuth_20261027.md` (단계 A stoic FF · B Codex `cherry-pick -x` = 통합 계획 쪽지 뒤 · C pqwtv8 FF · §9 본 세션 · §10 Codex 프롬프트) · Codex 요청 쪽지 `docs/collab/claude_to_codex/20261026-1735_merge-prep.md` · 확인 (git) = stoic `93d93bc02` ⊂ pqwtv8 (뒤처짐 0 · 앞섬 118 = 이 커밋 포함) · Codex 가지 17 = 기준 `7799a2ff6` · 주 사슬 18 (가지 12 개가 앞부분) + 갈래 4 · 고유 36 · 이쪽에 패치 같은 것 0 · 우리 쪽 ∩ Codex 파일 0 · Codex 끼리 53 파일 (ULPR · ULPRI 요청서 · 판정 · 증거) = blob 53/53 같음 · 공유 기록을 건드린 Codex 커밋 0 · 원장 805 → 839.  [50kg] D0.7 잃은 원자 2 개 = thermo 줄 기준 step 9,000 · 16,000 에서 하나씩 줄어 보임 (체크포인트 20,001 전 · 1저자 ibb awk) · 재개 도구 `eaa12220…` 로 교체 · 재개 시험 `-T` NP 56 발사 (1저자 · 결과 대기).  ⛔ 이 커밋 뒤로 pqwtv8 커밋 · push 멈춤 (단계 C 까지).
+
+### 2026-10-27 — non-Rint 반입 준비와 P1 RJ 관찰
+
+- ULPRI-01/02 CLOSED는 표지 무결성, T12R-01 CLOSED는 오프라인 객체 조회의 자동 fetch 차단만 뜻한다. 기존 ULPR-01–04 원장 항목과 이름이 다르므로 번호만 보고 일괄 종결하지 않는다.
+- P1 RJ 323957: 사용자가 전달한 복원 JSON/manifest에 G0·Ut0·R·UNread·UK rc=0, reader_restore_rc=2, kebase rc=0, 종료 fails=0/reader_rc=2가 기록됐다. G2c는 원본/시험 562605쌍 가운데 545583쌍 값 불일치, missing/extra/duplicate conflict 없음이다. 다른 개별 PASS가 전체 복원 성공을 대신하지 않는다.
+- 입력은 사용자 채팅에서 옮긴 JSON/manifest다. 원격 원본 파일의 바이트 동일성이나 현재 디스크의 독립 재해시는 주장하지 않는다.
+- 읽기 전용 수치 진단 도구는 전체 원본 20열 중앙값, 기존 방향/PBC/허용폭을 그대로 재현하고 기록된 불일치 수가 다르면 세부 해석을 중단한다. 합성 oracle 66건 통과는 실제 덤프 진단이나 물리 복원 성공이 아니다. 실제 덤프 진단 NOT_RUN, 원인 미판정. 새로운 RJ나 UB/UT/UC는 실행하지 않는다.
+- D2/D3 구현·설계 증거와 외부 리뷰 대기는 구분한다. 실제 P2 생산자/등록/R-a/S0 및 아직 채워지지 않은 실험 조건을 소프트웨어 시험으로 대체하지 않는다. Q7 관련 SE 펠릿 EIS 네 개와 각 0.1 g·지름 10 mm는 현재 알려져 있다(`docs/data/se_pellet_eis_20261026/README.md`). 두께는 미측정이고 성형 압력·측정 중 가압·온도·전극 재질·D50 등은 추가 확인 대상이므로 σ 계산과 모델 입력 자격은 미확정이다. Q8/Q9의 남은 조건도 별개다. 별도 50 kg 세대 1 작업도 P2 자격으로 합치지 않는다.
+
+증거 선택자(메일에는 Codex 원시 SHA를 쓰지 않는다):
+
+| 용도 | 고정 가지 위치와 제목 선택자 |
+|---|---|
+| ULPRI 범위 종결 | `codex/ulpri-closure`의 동결 tip; `<<sha:Record scoped ULPRI closure and prepare T12 external review handoff>>` |
+| T12R-01 범위 종결 | `codex/t12r01-closure`의 동결 tip; `<<sha:Record external T12R-01 closure and scoped handoff>>` |
+| RJ 실패 전달 기록·진단 | `codex/p1-g2c-diagnosis`의 동결 tip; `<<sha:Add bounded read-only G2c breakdown for recorded RJ failure>>`; `docs/reviews/codex_p1_g2c_diagnosis_20261027/{diagnostic-receipt.json,restore_verdict.user-relayed.json,run_manifest.user-relayed.txt,oracle-results.json,README.md}` |
+
+제목 선택자는 원본 증거 위치 설명이다. 메인 반입 뒤에는 실제 새 커밋 대응표를 별도로 기록한다. 제목만으로 이동하는 가지의 미래 tip을 선택하지 않는다.

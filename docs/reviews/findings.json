@@ -12536,7 +12536,7 @@
       "found_by": "메인 세션 10-21 사전 공격 리뷰 (독립 에이전트 · 리뷰 핀 92e6cda4d · 키트 docs/data/ps45_unload_20261009/ · Codex 재확인 2 발송 전)",
       "opened_in": "docs/reviews/codex_dem_unloading_kit_fix_recheck2_request_20261015.md",
       "title": "이어 돌린 새 시도가 단 k_r+1 줄을 다시 쓰기 전에 끝나면 (TIMEOUT · GUARD · 이동 중 TIMEOUT) 옛 시도의 그 단 줄이 남아 정상 관측으로 쓰인다 — primary OK · ρ 0.2026077873428664 % · UVa ALLOW (같은 꼴 fresh 런 = UNIDENTIFIED · 거부) · 교차 전 단은 LOWER_BOUND 0.2251 → 0.2701 %",
-      "note": "수정 전 판 eaecfba2a 에도 있음 (이번 수정이 만든 것 아님) · Codex 재확인 Q2 의 네 경우 (짧음 · 같음 · 김 · 무승인) 밖의 다섯째 경우.  고칠 후보: ① 단 줄 ↔ 그 단 창 기록 대조 (창 수 · 마지막 창 step) ② 되감기에서 버린 옛 사건 구간의 창 · 단 줄도 정리.  ✅ 1저자 10-21 *\"권고대로\"* = 고친 뒤 발송 (시험 먼저 · 판독기만 · 덱 · 봉인 규칙 · 실행 2 영향 없음 추정).  탐침 = 스크래치 prereview_unload/probe_resume_unfinished.py (반입 예정).  사전 리뷰 판정문 = 스크래치 prereview_unload/REVIEW.md (고칠 때 반입).",
+      "note": "수정 전 판 eaecfba2a 에도 있음 (이번 수정이 만든 것 아님) · Codex 재확인 Q2 의 네 경우 (짧음 · 같음 · 김 · 무승인) 밖의 다섯째 경우.  고칠 후보: ① 단 줄 ↔ 그 단 창 기록 대조 (창 수 · 마지막 창 step) ② 되감기에서 버린 옛 사건 구간의 창 · 단 줄도 정리.  ✅ 1저자 10-21 *\"권고대로\"* = 고친 뒤 발송 (시험 먼저 · 판독기만 · 덱 · 봉인 규칙 · 실행 2 영향 없음 추정).  탐침 = 스크래치 prereview_unload/probe_resume_unfinished.py (반입 예정).  사전 리뷰 판정문 = 스크래치 prereview_unload/REVIEW.md (고칠 때 반입).\n2026-10-27 반입 준비 보충: R37 및 tail-scope 재현에서 RESUME 뒤 새 단 행 이전 종료의 옛 관측 채택을 차단하는 수정과 양성 재개 보존을 제시했다. 근거: docs/reviews/codex_dem_unloading_ulpr_recheck_request_20261023.md §2 및 docs/reviews/dem_unloading_ulpr_fix_evidence_20261023/. 이후 ULPRI-01/02 외부 종결은 표지 인식 경계의 별도 지적이다. 원 ULPR 항목의 상태는 대응 증거·메인 반입 SHA를 확인한 뒤 별도로 결정하며 이번 note 추가로 바꾸지 않는다. 실제 RJ 323957의 G2c VALUE_MISMATCH를 이 코드 수정으로 종결됐다고 하지 않는다.",
       "evidence_tests": [
         "docs/data/ps45_unload_20261009/ul_runner_test.py"
       ]
@@ -12549,7 +12549,7 @@
       "found_by": "메인 세션 10-21 사전 공격 리뷰 (독립 에이전트 · 리뷰 핀 92e6cda4d · 키트 docs/data/ps45_unload_20261009/ · Codex 재확인 2 발송 전)",
       "opened_in": "docs/reviews/codex_dem_unloading_kit_fix_recheck2_request_20261015.md",
       "title": "ULKRF 수정이 더한 사유 줄 · 조건 6 개 (resume_from 밖 RESUME · k/step 숫자 아님 · 상태 파일 불일치 · 되감기 k>k_r · kit 판독기 목록 대조 · 재판독 rc) 를 하나씩 꺼도 자체시험 182/182 그대로 — 시험이 그 줄을 지키지 않는다",
-      "note": "동작은 사전 리뷰 탐침으로 맞다고 확인 · 시험 보강 (변이 6 이 각각 옳은 이유로 실패).  사전 리뷰 판정문 = 스크래치 prereview_unload/REVIEW.md (고칠 때 반입).",
+      "note": "동작은 사전 리뷰 탐침으로 맞다고 확인 · 시험 보강 (변이 6 이 각각 옳은 이유로 실패).  사전 리뷰 판정문 = 스크래치 prereview_unload/REVIEW.md (고칠 때 반입).\n2026-10-27 반입 준비 보충: R38의 여섯 사유/조건 제거 변이가 각각 검출되는 증거를 제시했다. 근거: docs/reviews/codex_dem_unloading_ulpr_recheck_request_20261023.md §2 및 docs/reviews/dem_unloading_ulpr_fix_evidence_20261023/. 이후 ULPRI-01/02 외부 종결은 표지 인식 경계의 별도 지적이다. 원 ULPR 항목의 상태는 대응 증거·메인 반입 SHA를 확인한 뒤 별도로 결정하며 이번 note 추가로 바꾸지 않는다. 실제 RJ 323957의 G2c VALUE_MISMATCH를 이 코드 수정으로 종결됐다고 하지 않는다.",
       "evidence_tests": [
         "docs/data/ps45_unload_20261009/ul_runner_test.py"
       ]
@@ -12562,7 +12562,7 @@
       "found_by": "메인 세션 10-21 사전 공격 리뷰 (독립 에이전트 · 리뷰 핀 92e6cda4d · 키트 docs/data/ps45_unload_20261009/ · Codex 재확인 2 발송 전)",
       "opened_in": "docs/reviews/codex_dem_unloading_kit_fix_recheck2_request_20261015.md",
       "title": "G2 원자 비교 파서 (_dump_tokens) 가 같은 ID 두 줄 · 다른 TIMESTEP · 잘린 덧줄에도 PASS — README 의 \"모든 경로에서 … ID 고유\" 와 어긋남 (G2c 를 고친 자리 바로 옆)",
-      "note": "거부로 고치고 시험 먼저.  사전 리뷰 판정문 = 스크래치 prereview_unload/REVIEW.md (고칠 때 반입).",
+      "note": "거부로 고치고 시험 먼저.  사전 리뷰 판정문 = 스크래치 prereview_unload/REVIEW.md (고칠 때 반입).\n2026-10-27 반입 준비 보충: G2 덤프 구조·행 수·유한 값·ID/열 고유성·헤더·시점 검사와 복원 호출 시점 결합을 제시했다. 근거: docs/reviews/codex_dem_unloading_ulpr_recheck_request_20261023.md §2 및 docs/reviews/dem_unloading_ulpr_fix_evidence_20261023/. 이후 ULPRI-01/02 외부 종결은 표지 인식 경계의 별도 지적이다. 원 ULPR 항목의 상태는 대응 증거·메인 반입 SHA를 확인한 뒤 별도로 결정하며 이번 note 추가로 바꾸지 않는다. 실제 RJ 323957의 G2c VALUE_MISMATCH를 이 코드 수정으로 종결됐다고 하지 않는다.",
       "evidence_tests": [
         "docs/data/ps45_unload_20261009/ul_runner_test.py"
       ]
@@ -12575,7 +12575,7 @@
       "found_by": "메인 세션 10-21 사전 공격 리뷰 (독립 에이전트 · 리뷰 핀 92e6cda4d · 키트 docs/data/ps45_unload_20261009/ · Codex 재확인 2 발송 전)",
       "opened_in": "docs/reviews/codex_dem_unloading_kit_fix_recheck2_request_20261015.md",
       "title": "G2c 열 결손이 VALUE_MISMATCH 로 분류된다 — 등록 §14-10 은 관측 결손 = UNCONFIRMED",
-      "note": "✅ 1저자 10-21 [언로딩] Q2 *\"권고대로\"* = 등록 §14-10 대로 UNCONFIRMED 로 바꾼다 (시험 먼저 · 요청서 Q3 에 반영).  사전 리뷰 판정문 = 스크래치 prereview_unload/REVIEW.md (고칠 때 반입).",
+      "note": "✅ 1저자 10-21 [언로딩] Q2 *\"권고대로\"* = 등록 §14-10 대로 UNCONFIRMED 로 바꾼다 (시험 먼저 · 요청서 Q3 에 반영).  사전 리뷰 판정문 = 스크래치 prereview_unload/REVIEW.md (고칠 때 반입).\n2026-10-27 반입 준비 보충: G2c 필수 열 결손을 NOT_COMPUTED/UNCONFIRMED로 구분하는 수정과 구조·시점·값 오류 분류 회귀를 제시했다. 근거: docs/reviews/codex_dem_unloading_ulpr_recheck_request_20261023.md §2 및 docs/reviews/dem_unloading_ulpr_fix_evidence_20261023/. 이후 ULPRI-01/02 외부 종결은 표지 인식 경계의 별도 지적이다. 원 ULPR 항목의 상태는 대응 증거·메인 반입 SHA를 확인한 뒤 별도로 결정하며 이번 note 추가로 바꾸지 않는다. 실제 RJ 323957의 G2c VALUE_MISMATCH를 이 코드 수정으로 종결됐다고 하지 않는다.",
       "evidence_tests": [
         "docs/data/ps45_unload_20261009/ul_runner_test.py"
       ]
@@ -12588,7 +12588,7 @@
       "found_by": "메인 세션 10-21 믹서 D2 사전 공격 리뷰 (독립 에이전트 · 기반 a76f59d0d · 판정문 스크래치 prereview_mixer_d2/REVIEW.md · 고칠 때 반입)",
       "opened_in": "docs/hetero_thesis.md",
       "title": "덱 되읽기 (REG_DENSITY = gen1 전용) · 덱 비교 (D2 허용목록 · 셀 이름 없음) · 스모크 (gen1 계획 수) 가 lab 세대 · D2 규칙을 모른다 — lab 덱 표 E 되읽기 rc 1 · 같은 ρ 세계 코팅 ↔ 비코팅 짝 (CED 7 원소 다름) 비교 A·B·U·E·EB 전부 rc 1 · S1 계획 산출물 미구현",
-      "note": "✅ 1저자 10-21 [믹서] Q1 *\"권고대로 해줘\"* = 고친다 (시험 먼저 · Codex 는 D3 요청서와 같은 회차).  변이 24 중 16 포착 · 8 생존 (M04 · M06 · M13 · M15 · M16 · M18 외).",
+      "note": "✅ 1저자 10-21 [믹서] Q1 *\"권고대로 해줘\"* = 고친다 (시험 먼저 · Codex 는 D3 요청서와 같은 회차).  변이 24 중 16 포착 · 8 생존 (M04 · M06 · M13 · M15 · M16 · M18 외).\n2026-10-27 반입 준비 보충: 후속 lab/D2 readback·diff·smoke 소비자 수정과 독립 행렬/생명주기/변이 근거는 docs/reviews/codex_mixer_d2_consumers_request_20261024.md 및 docs/reviews/codex_review_mxd2_consumers_independent_20261024.md에 있다. 초기 생성기 패키지의 소비자 미지원 관찰과 후속 수정은 서로 다른 시점이다. 이 증거만으로 S1/등록 코호트/실제 관측 또는 MXD2 전체 종결을 선언하지 않는다. 외부 리뷰 대기, 기존 open 유지.",
       "evidence_tests": [
         "scripts/make_mixer_deck.py (--selftest)"
       ]
@@ -12601,7 +12601,7 @@
       "found_by": "메인 세션 10-21 믹서 D2 사전 공격 리뷰 (독립 에이전트 · 기반 a76f59d0d · 판정문 스크래치 prereview_mixer_d2/REVIEW.md · 고칠 때 반입)",
       "opened_in": "docs/hetero_thesis.md",
       "title": "절대 수준에 gen1 ρ_SE 를 쓰는 변이 (M04) · meta 의 bo_se 를 상수로 기록하는 변이 (M16) 가 셀프테스트 143/143 통과 — 덱 Bo 가 선언과 ×1.2195 · ×2.354 어긋나도 diff --allow E 1/1 PASS",
-      "note": "✅ 1저자 10-21 [믹서] Q1 *\"권고대로 해줘\"* = 고친다 (시험 먼저 · Codex 는 D3 요청서와 같은 회차).  변이 24 중 16 포착 · 8 생존 (M04 · M06 · M13 · M15 · M16 · M18 외).",
+      "note": "✅ 1저자 10-21 [믹서] Q1 *\"권고대로 해줘\"* = 고친다 (시험 먼저 · Codex 는 D3 요청서와 같은 회차).  변이 24 중 16 포착 · 8 생존 (M04 · M06 · M13 · M15 · M16 · M18 외).\n2026-10-27 반입 준비 보충: 생성기 수정과 시험 먼저/변이·양성·회귀 근거를 docs/reviews/codex_mixer_d2_fix_request_20261023.md 및 docs/reviews/mixer_d2_fix_evidence_20261023/에 보존했다. 요청서의 claimed_fixed 제안은 공유 원장 자동 전환이 아니다. 후속 소비자 독립 리뷰도 외부 MXD2 전체 종결이 아니다. 메인 반입 SHA와 해당 ID별 근거를 연결하기 전 기존 open을 유지하며 외부 리뷰는 대기한다.",
       "evidence_tests": [
         "scripts/make_mixer_deck.py (--selftest)"
       ]
@@ -12614,7 +12614,7 @@
       "found_by": "메인 세션 10-21 믹서 D2 사전 공격 리뷰 (독립 에이전트 · 기반 a76f59d0d · 판정문 스크래치 prereview_mixer_d2/REVIEW.md · 고칠 때 반입)",
       "opened_in": "docs/hetero_thesis.md",
       "title": "혼합쌍 천장 검사를 빼는 변이 (M06) 가 산다 — γ_AM 10 · Bo 800 에서 HEAD 는 거부 · 변이 판은 AM_P–SE 1.418 % 덱을 씀",
-      "note": "✅ 1저자 10-21 [믹서] Q1 *\"권고대로 해줘\"* = 고친다 (시험 먼저 · Codex 는 D3 요청서와 같은 회차).  변이 24 중 16 포착 · 8 생존 (M04 · M06 · M13 · M15 · M16 · M18 외).",
+      "note": "✅ 1저자 10-21 [믹서] Q1 *\"권고대로 해줘\"* = 고친다 (시험 먼저 · Codex 는 D3 요청서와 같은 회차).  변이 24 중 16 포착 · 8 생존 (M04 · M06 · M13 · M15 · M16 · M18 외).\n2026-10-27 반입 준비 보충: 생성기 수정과 시험 먼저/변이·양성·회귀 근거를 docs/reviews/codex_mixer_d2_fix_request_20261023.md 및 docs/reviews/mixer_d2_fix_evidence_20261023/에 보존했다. 요청서의 claimed_fixed 제안은 공유 원장 자동 전환이 아니다. 후속 소비자 독립 리뷰도 외부 MXD2 전체 종결이 아니다. 메인 반입 SHA와 해당 ID별 근거를 연결하기 전 기존 open을 유지하며 외부 리뷰는 대기한다.",
       "evidence_tests": [
         "scripts/make_mixer_deck.py (--selftest)"
       ]
@@ -12627,7 +12627,7 @@
       "found_by": "메인 세션 10-21 믹서 D2 사전 공격 리뷰 (독립 에이전트 · 기반 a76f59d0d · 판정문 스크래치 prereview_mixer_d2/REVIEW.md · 고칠 때 반입)",
       "opened_in": "docs/hetero_thesis.md",
       "title": "극단 입력 수용 — γ 1e-200 곱 언더플로로 AM_P–AM_P CED 0 · Bo 1e-310 수용 · '0_3' 이 3.0 으로 읽힘 · 팔 이름 'GM\\n' 이 덱에 주석 아닌 줄을 만듦 (라이브러리 경로)",
-      "note": "✅ 1저자 10-21 [믹서] Q1 *\"권고대로 해줘\"* = 고친다 (시험 먼저 · Codex 는 D3 요청서와 같은 회차).  변이 24 중 16 포착 · 8 생존 (M04 · M06 · M13 · M15 · M16 · M18 외).",
+      "note": "✅ 1저자 10-21 [믹서] Q1 *\"권고대로 해줘\"* = 고친다 (시험 먼저 · Codex 는 D3 요청서와 같은 회차).  변이 24 중 16 포착 · 8 생존 (M04 · M06 · M13 · M15 · M16 · M18 외).\n2026-10-27 반입 준비 보충: 생성기 수정과 시험 먼저/변이·양성·회귀 근거를 docs/reviews/codex_mixer_d2_fix_request_20261023.md 및 docs/reviews/mixer_d2_fix_evidence_20261023/에 보존했다. 요청서의 claimed_fixed 제안은 공유 원장 자동 전환이 아니다. 후속 소비자 독립 리뷰도 외부 MXD2 전체 종결이 아니다. 메인 반입 SHA와 해당 ID별 근거를 연결하기 전 기존 open을 유지하며 외부 리뷰는 대기한다.",
       "evidence_tests": [
         "scripts/make_mixer_deck.py (--selftest)"
       ]
@@ -12640,7 +12640,7 @@
       "found_by": "메인 세션 10-21 믹서 D2 사전 공격 리뷰 (독립 에이전트 · 기반 a76f59d0d · 판정문 스크래치 prereview_mixer_d2/REVIEW.md · 고칠 때 반입)",
       "opened_in": "docs/hetero_thesis.md",
       "title": "벽을 비코팅 NCM 에 묶는 결정 (D2 Q2) 을 코드가 강제하지 않음 · ρ ↔ 팔 γ 어긋남 수용 · 도움말 · 주석이 열린 질문처럼 읽힘",
-      "note": "✅ 1저자 10-21 [믹서] Q1 *\"권고대로 해줘\"* = 고친다 (시험 먼저 · Codex 는 D3 요청서와 같은 회차).  변이 24 중 16 포착 · 8 생존 (M04 · M06 · M13 · M15 · M16 · M18 외).",
+      "note": "✅ 1저자 10-21 [믹서] Q1 *\"권고대로 해줘\"* = 고친다 (시험 먼저 · Codex 는 D3 요청서와 같은 회차).  변이 24 중 16 포착 · 8 생존 (M04 · M06 · M13 · M15 · M16 · M18 외).\n2026-10-27 반입 준비 보충: 생성기 수정과 시험 먼저/변이·양성·회귀 근거를 docs/reviews/codex_mixer_d2_fix_request_20261023.md 및 docs/reviews/mixer_d2_fix_evidence_20261023/에 보존했다. 요청서의 claimed_fixed 제안은 공유 원장 자동 전환이 아니다. 후속 소비자 독립 리뷰도 외부 MXD2 전체 종결이 아니다. 메인 반입 SHA와 해당 ID별 근거를 연결하기 전 기존 open을 유지하며 외부 리뷰는 대기한다.",
       "evidence_tests": [
         "scripts/make_mixer_deck.py (--selftest)"
       ]
@@ -12653,7 +12653,7 @@
       "found_by": "메인 세션 10-21 믹서 D2 사전 공격 리뷰 (독립 에이전트 · 기반 a76f59d0d · 판정문 스크래치 prereview_mixer_d2/REVIEW.md · 고칠 때 반입)",
       "opened_in": "docs/hetero_thesis.md",
       "title": "D2 덱 9/9 의 옛 벽 주석 (\"÷ 1.842\") · registered / schema 옛 값 · /mixer devlog 에 --dens-gen 필수 누락 · 변이 M13 · M15 · M18 생존",
-      "note": "✅ 1저자 10-21 [믹서] Q1 *\"권고대로 해줘\"* = 고친다 (시험 먼저 · Codex 는 D3 요청서와 같은 회차).  변이 24 중 16 포착 · 8 생존 (M04 · M06 · M13 · M15 · M16 · M18 외).",
+      "note": "✅ 1저자 10-21 [믹서] Q1 *\"권고대로 해줘\"* = 고친다 (시험 먼저 · Codex 는 D3 요청서와 같은 회차).  변이 24 중 16 포착 · 8 생존 (M04 · M06 · M13 · M15 · M16 · M18 외).\n2026-10-27 반입 준비 보충: 생성기 수정과 시험 먼저/변이·양성·회귀 근거를 docs/reviews/codex_mixer_d2_fix_request_20261023.md 및 docs/reviews/mixer_d2_fix_evidence_20261023/에 보존했다. 요청서의 claimed_fixed 제안은 공유 원장 자동 전환이 아니다. 후속 소비자 독립 리뷰도 외부 MXD2 전체 종결이 아니다. 메인 반입 SHA와 해당 ID별 근거를 연결하기 전 기존 open을 유지하며 외부 리뷰는 대기한다.",
       "evidence_tests": [
         "scripts/make_mixer_deck.py (--selftest)"
       ]
@@ -12666,7 +12666,7 @@
       "found_by": "메인 세션 10-21 믹서 D2 사전 공격 리뷰 (독립 에이전트 · 기반 a76f59d0d · 판정문 스크래치 prereview_mixer_d2/REVIEW.md · 고칠 때 반입)",
       "opened_in": "docs/hetero_thesis.md",
       "title": "D3 설계 문서 (docs/reviews/mixer_d3_se_flowability_anchor_design_20261015.md) 의 천장 수치 = gen1 값 — lab 세대에서는 637.32 → 0.733 % · 850 수용 · 상한 ≈ 1.01×10³ (문서 · 정정 표지로)",
-      "note": "✅ 1저자 10-21 [믹서] Q1 *\"권고대로 해줘\"* = 고친다 (시험 먼저 · Codex 는 D3 요청서와 같은 회차).  변이 24 중 16 포착 · 8 생존 (M04 · M06 · M13 · M15 · M16 · M18 외).",
+      "note": "✅ 1저자 10-21 [믹서] Q1 *\"권고대로 해줘\"* = 고친다 (시험 먼저 · Codex 는 D3 요청서와 같은 회차).  변이 24 중 16 포착 · 8 생존 (M04 · M06 · M13 · M15 · M16 · M18 외).\n2026-10-27 반입 준비 보충: D3 세대 구분과 수치 정책은 docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261023.md 및 docs/reviews/codex_mixer_d3_design_v2_request_20261023.md에 개정 근거가 있다. 후속 candidate reader의 합성 시험은 설계의 외부 수용이나 실제 유동성 측정이 아니다. D3 외부 리뷰 대기, 기존 open 유지.",
       "evidence_tests": [
         "scripts/make_mixer_deck.py (--selftest)"
       ]
@@ -13253,6 +13253,48 @@
       "evidence_tests": [
         "docs/collab/claude_to_codex/20261026-1800_nonrint-facts.md 끝 정정 절 (31f55c641) — git grep -F 0aa6e41a2330ae78… 가 가리키는 세 자리 (unload_params.json · ibb_precheck1_screen.txt · precheck1 README) 와 같은 값"
       ]
+    },
+    {
+      "id": "ULPRI-01",
+      "severity": "P2",
+      "status": "claimed_fixed",
+      "owner": "codex",
+      "opened_in": "docs/reviews/codex_review_unloading_ulpr_integer_20261024/codex_review_unloading_ulpr_integer_20261024.md",
+      "title": "변형 RESUME 표지가 정수·모호성 검사를 우회",
+      "evidence_tests": [
+        "docs/reviews/ulpri_marker_evidence_20261024/"
+      ],
+      "verification_note": "외부 보고서는 이 지적을 범위 한정 CLOSED로 판정했다. 이 status는 메인 수정 반입 SHA 확인 뒤의 구현 상태이며 외부 종결을 재개방하지 않는다. verified 전환에는 원장의 독립 검증자/조상 SHA 조건을 별도로 충족해야 한다. 실제 물리 GO가 아니다. 검증 원문: docs/reviews/codex_review_unloading_ulpri_recheck_20261026/codex_review_unloading_ulpri_recheck_20261026.md",
+      "verified_in": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/codex_review_unloading_ulpri_recheck_20261026.md",
+      "claimed_fixed_sha": "916637c062901cf9551ebc8e3c7ff87fdc1ff39f"
+    },
+    {
+      "id": "ULPRI-02",
+      "severity": "P2",
+      "status": "claimed_fixed",
+      "owner": "codex",
+      "opened_in": "docs/reviews/codex_review_unloading_ulpr_integer_20261024/codex_review_unloading_ulpr_integer_20261024.md",
+      "title": "Unicode 줄 구분자가 잘못된 resume_from 키를 숨김",
+      "evidence_tests": [
+        "docs/reviews/ulpri_marker_evidence_20261024/"
+      ],
+      "verification_note": "외부 보고서는 이 지적을 범위 한정 CLOSED로 판정했다. 이 status는 메인 수정 반입 SHA 확인 뒤의 구현 상태이며 외부 종결을 재개방하지 않는다. verified 전환에는 원장의 독립 검증자/조상 SHA 조건을 별도로 충족해야 한다. 실제 물리 GO가 아니다. 검증 원문: docs/reviews/codex_review_unloading_ulpri_recheck_20261026/codex_review_unloading_ulpri_recheck_20261026.md",
+      "verified_in": "docs/reviews/codex_review_unloading_ulpri_recheck_20261026/codex_review_unloading_ulpri_recheck_20261026.md",
+      "claimed_fixed_sha": "916637c062901cf9551ebc8e3c7ff87fdc1ff39f"
+    },
+    {
+      "id": "T12R-01",
+      "severity": "P2",
+      "status": "claimed_fixed",
+      "owner": "codex",
+      "opened_in": "docs/reviews/codex_review_dem_gen2_t12_consumer_20261026/codex_review_dem_gen2_t12_consumer_20261026.original.txt",
+      "title": "고정 소비자 snapshot git show가 누락 객체를 자동 fetch",
+      "evidence_tests": [
+        "docs/reviews/t12r_offline_evidence_20261026/"
+      ],
+      "verification_note": "외부 보고서는 이 지적을 범위 한정 CLOSED로 판정했다. 이 status는 메인 수정 반입 SHA 확인 뒤의 구현 상태이며 외부 종결을 재개방하지 않는다. verified 전환에는 원장의 독립 검증자/조상 SHA 조건을 별도로 충족해야 한다. 실제 물리 GO가 아니다. 검증 원문: docs/reviews/codex_review_t12r01_closure_20261026/codex_review_t12r01_closure_20261026.md",
+      "verified_in": "docs/reviews/codex_review_t12r01_closure_20261026/codex_review_t12r01_closure_20261026.md",
+      "claimed_fixed_sha": "16c8d5171e1073a10a329fd9bb2b63a40ecf751c"
     }
   ]
 }
