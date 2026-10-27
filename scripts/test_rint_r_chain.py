@@ -209,6 +209,8 @@ if is_dbe and hit('dbe_r_scale'):                # ★ 10-23 (RCA2-09 · Q8) —
     s0 = s0 * float(hit('dbe_r_scale').get('f', 1.0))
 if not is_dbe and c == '1' and hit('sbe_c_dep'):
     s0 = s0 * (1.0 + 1e-12)
+if hit('sigma_scale'):                         # ★ 10-27 묶음 C1b-2 — 맞는 런의 σ 를 배수로 (재실행이 결정적이지 않은 꼴 · RS02)
+    s0 = s0 * float(hit('sigma_scale').get('f', 1.0))
 af = W.get('arm_factor_dbe' if is_dbe else 'arm_factor') or [1.0] * 8
 os.makedirs(out, exist_ok=True)
 H = float(f'{vox / 2:.6f}')
@@ -8037,6 +8039,201 @@ def t_AL12d():
     a, b, v_side, v_main, rc, so = scen('AL12d', go)
     return (a['rc'] == 0 and b['rc'] == 0 and stop_code(v_side) not in LEDGER_STOPS and stop_code(v_main) == 'ATTEMPT_ORDER_MISMATCH'
             and rc == 1 and 'REVERIFY_DIFF' in so, (a['rc'], b['rc'], stop_code(v_side), stop_code(v_main), rc, so[-240:]))
+
+
+# ── ★ 10-27 묶음 C1b-2 (Q9 §3-5 개정 3 · 4 재실행 · 개정 5 ① · Codex 회차 ① Q-J · author 10-27 approved bundle C) 멈춘 런부터 재실행 ──
+#    재실행 항목 (--add --resume <원 시도>) = 같은 대상 · 채택 시도 · 재실행 사슬 끝이 재실행 자격 (자원 · 인프라 원인 · 결과 뒤 · 검사 실패 흔적 없음) 으로 멈춤 ·
+#    같은 기계 · 환경 지문 모든 칸 · 실행 = 같은 바탕 폴더의 사슬 끝 시도 폴더에서 끝난 런 (끝 기록 확인 · 원인 None · rc 0) 을 통째로 복사 (팔 = read_run 대조) ·
+#    처음 끝나지 않은 런부터 새로 · 그 런의 남은 payload ↔ 새 payload 바이트 대조 (다르면 RESUME_MISMATCH · 없으면 결정성 가정) · 요약 = 온전한 단계 요약 + resume 칸
+def chain_c1b2():
+    """사슬에 재실행 실행이 있나 (고치기 전 판 = 재실행 항목을 풀기 전 거부 · ResumeRunner 없음)."""
+    return getattr(RR, 'ResumeRunner', None) is not None
+
+
+def s_resume_lad(tag, fault, w2=None, law='P0'):
+    """사다리 시도 1 (고장 = 자원 · 인프라 멈춤) → 재실행 항목 → 재실행 시도 (세계 w2 · 없으면 고장 없는 세계) → {'d', 'a', 'b', 'add', 'world_b'}."""
+    def go():
+        d, _rc, _so = led_new(tag)
+        _r, n1, _s = led_add(d, f'ladder:{law}')
+        base = Path(TD) / 'runs' / f'{tag}_lad'
+        a = lad_att(tag, world(f'{tag}_a', dict(PW, faults=[fault])), d, n1, law=law, base=base)
+        add = led_add(d, f'ladder:{law}', resume=n1)
+        wb = world(f'{tag}_b', w2 if w2 is not None else PW)
+        b = lad_att(tag, wb, d, add[1], law=law, base=base) if add[1] else None
+        return {'d': d, 'a': a, 'b': b, 'add': add, 'world_b': wb, 'base': base}
+    return scen(tag, go)
+
+
+@check('RS01', '★ 10-27 묶음 C1b-2 — 사다리 재실행: 천장 런 (둘째) 첫 풀이 끝 표지 뒤 GPU 메모리 부족 (결과 뒤 · resource · 재실행 자격) → --add --resume 1 (rc 0) → '
+               '재실행 시도 = 바닥 런 복사 (러너 0 회) · 천장 런부터 새로 · 끝까지 · CALIBRATED · 사다리 칸 = 끊김 없는 주 사다리와 같다 · resume 칸 (원 시도 · 복사 '
+               '런 · 새로 돈 런 · 남은 payload 없음 = 결정성 가정) · 원장 채택 사슬 [1, 2] · 판정 (사다리 하나 · 원장) = 재실행 시도 통과 · 원 시도 = ATTEMPT_LEDGER_MISMATCH')
+def t_RS01():
+    if not chain_c1b2():
+        return False, '사슬에 재실행 실행 (ResumeRunner) 이 없다'
+    r = s_resume_lad('RS01', {'do': 'oom_after_mark', 'match': {'rj': '0'}})
+    a, b, d = r['a'], r['b'] or {}, r['d']
+    rs = (b.get('sum') or {}).get('resume') or {}
+    va = ver_led('RS01_va', [a['out']], d)
+    vb = ver_led('RS01_vb', [b['out']], d)
+    main = lad(s_main('P0'))
+    return (stop_code(a) == 'RUNNER_RC' and (led_result(d, 1) or {}).get('resume_ok') is True and r['add'][0] == 0 and b.get('rc') == 0
+            and (b.get('sum') or {}).get('status') == 'CALIBRATED' and (b.get('sum') or {}).get('ladder') == main
+            and rs.get('from') == 1 and rs.get('copied') == ['L01_floor'] and rs.get('rerun') == 'L02_ceiling' and rs.get('determinism') == 'assumed'
+            and n_calls(r['world_b']) == len((b.get('sum') or {}).get('runs') or []) - 1
+            and (led_result(d, 2) or {}).get('status') == 'completed' and stop_code(va) == 'ATTEMPT_LEDGER_MISMATCH' and stop_code(vb) not in LEDGER_STOPS,
+            (stop_code(a), led_result(d, 1), r['add'][0], r['add'][2][-160:], b.get('rc'), rs, stop_code(va), stop_code(vb)))
+
+
+def s_resume_left(tag, w2):
+    """천장 런의 러너는 끝났는데 (payload = OUTDIR) 그룹 종료 미확인 (둘째 정리 = 미확인) → recover → 재실행 (남은 payload 대조)."""
+    def go():
+        d, _rc, _so = led_new(tag)
+        _r, n1, _s = led_add(d, 'ladder:P0')
+        base = Path(TD) / 'runs' / f'{tag}_lad'
+        old = RR.group_settle
+        calls = []
+
+        def gs(token, limit=None):
+            calls.append(1)
+            if len(calls) == 2:
+                return False, [999993], 0
+            return old(token, limit)
+        RR.group_settle = gs
+        try:
+            a = lad_att(tag, world(f'{tag}_a'), d, n1, base=base)
+        finally:
+            RR.group_settle = old
+        rc_rec, so_rec = call(['--stage', 'recover', '--out', str(a['out']), '--ledger', str(d)])
+        add = led_add(d, 'ladder:P0', resume=n1)
+        wb = world(f'{tag}_b', w2)
+        b = lad_att(tag, wb, d, add[1], base=base) if add[1] else None
+        return {'d': d, 'a': a, 'b': b, 'add': add, 'rec': (rc_rec, so_rec), 'world_b': wb}
+    return scen(tag, go)
+
+
+@check('RS02', '★ 10-27 묶음 C1b-2 (Q-J · Q9 R4-08 (a)) — 천장 런의 payload 는 남았는데 (OUTDIR) 그룹 미확인 → recover (결과 줄 · group_unconfirmed · 자격 True) → '
+               '재실행 = 천장 런부터 새로 · 새 payload = 남은 payload 바이트 같음 (resume 칸 compared · 같음) → CALIBRATED · 같은 판에서 천장 σ 만 1e-12 다른 세계 = '
+               'RESUME_MISMATCH (결정성 위반 = 멈춤 · 결과 줄 stopped · 재실행 자격 없음)')
+def t_RS02():
+    if not chain_c1b2():
+        return False, '사슬에 재실행 실행 (ResumeRunner) 이 없다'
+    ok_ = s_resume_left('RS02', PW)
+    bad = s_resume_left('RS02x', dict(PW, faults=[{'do': 'sigma_scale', 'f': 1.0 + 1e-12, 'match': {'rj': '0'}}]))
+    rs = ((ok_['b'] or {}).get('sum') or {}).get('resume') or {}
+    rb = led_result(bad['d'], 2) or {}
+    return (stop_code(ok_['a']) == 'GROUP_UNCONFIRMED' and ok_['rec'][0] == 0 and (led_result(ok_['d'], 1) or {}).get('resume_ok') is True
+            and (ok_['b'] or {}).get('rc') == 0 and rs.get('rerun') == 'L02_ceiling' and rs.get('determinism') == 'compared'
+            and rs.get('compared') and all(x.get('same') for x in rs.get('compared'))
+            and stop_code(bad['b'] or {}) == 'RESUME_MISMATCH' and rb.get('status') == 'stopped' and rb.get('resume_ok') is False,
+            (stop_code(ok_['a']), ok_['rec'], (ok_['b'] or {}).get('rc'), rs, stop_code(bad['b'] or {}), rb))
+
+
+@check('RS03', '★ 10-27 묶음 C1b-2 (Q9 §3-5 재실행 자격 · R4-08 (c) (d)) — 재실행 거부 (--add = rc 3 RESUME_NOT_ALLOWED · 원장 무변경): 다른 기계 · 환경 지문 한 칸 다름 · '
+               '결과 전 원 시도 (러너 rc 2) · 완주한 사슬 끝 (RS01 재실행 뒤 또 재실행) · 재실행을 가리키는 재실행 (원 시도가 아님) · 손으로 덧붙인 재실행 항목 · 원천 '
+               '폴더가 바뀜 = 풀기 전 거부 (RESUME_NOT_ALLOWED · 러너 0 회)')
+def t_RS03():
+    if not chain_c1b2():
+        return False, '사슬에 재실행 실행 (ResumeRunner) 이 없다'
+    got = {}
+
+    def oom_one(tag):
+        d, _rc, _so = led_new(tag)
+        _r, n1, _s = led_add(d, 'ladder:P0')
+        a = lad_att(tag, world(f'{tag}_a', dict(PW, faults=[{'do': 'oom_after_mark', 'match': {'rj': '0'}}])), d, n1)
+        return d, a
+    d, a = oom_one('RS03m')
+    raw = led_raw(d)
+    got['machine'] = (led_add(d, 'ladder:P0', machine='gabia', resume=1)[0], led_raw(d) == raw)
+    old = RR.env_record
+
+    def env2():
+        e = old()
+        e['record_only']['cpu_model'] = 'other cpu (시험)'
+        return e
+    RR.env_record = env2
+    try:
+        got['env'] = (led_add(d, 'ladder:P0', resume=1)[0], led_raw(d) == raw)
+    finally:
+        RR.env_record = old
+    d2, _rc, _so = led_new('RS03pre')
+    _r, n1, _s = led_add(d2, 'ladder:P0')
+    lad_att('RS03pre', world('RS03pre_a', dict(PW, faults=[{'do': 'rc2', 'match': {'rj': 'inf'}}])), d2, n1)
+    got['pre'] = (led_add(d2, 'ladder:P0', resume=1)[0],)
+    r1 = s_resume_lad('RS01', {'do': 'oom_after_mark', 'match': {'rj': '0'}})
+    got['done'] = (led_add(led_clone(r1['d'], 'RS03done'), 'ladder:P0', resume=1)[0],)
+    d4, a4 = oom_one('RS03chain')
+    _r, n2, _s = led_add(d4, 'ladder:P0', resume=1)
+    lad_att('RS03chain', world('RS03chain_b', dict(PW, faults=[{'do': 'oom_after_mark', 'match': {'rj': '1000000.0'}}])), d4, n2,
+            base=a4['base'])
+    got['to_resume'] = (led_add(d4, 'ladder:P0', resume=2)[0],)
+    d5, a5 = oom_one('RS03src')
+    _r, n2, _s = led_add(d5, 'ladder:P0', resume=1)
+    with open(next(iter(sorted((a5['out'] / 'logs').glob('*.log')))), 'a', encoding='utf-8') as f:
+        f.write('x')
+    w = world('RS03src_b')
+    b5 = lad_att('RS03src', w, d5, n2, base=a5['base'])
+    rj = b5['out'] / 'rejected.json'
+    got['src'] = (b5['rc'], (json.loads(rj.read_text(encoding='utf-8')) if rj.exists() else {}).get('code'), n_calls(w))
+    want = {'machine': (3, True), 'env': (3, True), 'pre': (3,), 'done': (3,), 'to_resume': (3,), 'src': (3, 'RESUME_NOT_ALLOWED', 0)}
+    return got == want, got
+
+
+@check('RS04', '★ 10-27 묶음 C1b-2 (Q9 §3-5 R4-03 (c) 재실행 사슬) — 원 시도 OOM (천장) → 재실행 1 OOM (점 1e6 · 자격) → 재실행 2 (원 시도를 가리킴) → 완주 · 채택 사슬 '
+               '[1, 2, 3] · effective 3 · 재실행 2 = 재실행 1 의 끝난 런까지 복사 · 판정 (사다리 하나) = attempt_3 통과 · attempt_2 = ATTEMPT_LEDGER_MISMATCH')
+def t_RS04():
+    if not chain_c1b2():
+        return False, '사슬에 재실행 실행 (ResumeRunner) 이 없다'
+
+    def go():
+        d, _rc, _so = led_new('RS04')
+        _r, n1, _s = led_add(d, 'ladder:P0')
+        base = Path(TD) / 'runs' / 'RS04_lad'
+        a = lad_att('RS04', world('RS04_a', dict(PW, faults=[{'do': 'oom_after_mark', 'match': {'rj': '0'}}])), d, n1, base=base)
+        _r, n2, _s = led_add(d, 'ladder:P0', resume=n1)
+        b = lad_att('RS04', world('RS04_b', dict(PW, faults=[{'do': 'oom_after_mark', 'match': {'rj': '1000000.0'}}])), d, n2, base=base)
+        _r, n3, s3 = led_add(d, 'ladder:P0', resume=n1)
+        c = lad_att('RS04', world('RS04_c'), d, n3, base=base)
+        v3 = ver_led('RS04_v3', [c['out']], d)
+        v2 = ver_led('RS04_v2', [b['out']], d)
+        return d, a, b, c, (n1, n2, n3), s3, v3, v2
+    d, a, b, c, ns, s3, v3, v2 = scen('RS04', go)
+    lg = ((v3.get('v') or {}).get('ledger') or {}).get('targets', {}).get('ladder:P0') or {}
+    rb, rc_ = ((b.get('sum') or {}).get('resume') or {}), ((c.get('sum') or {}).get('resume') or {})
+    return (ns == (1, 2, 3) and stop_code(b) == 'RUNNER_RC' and c['rc'] == 0 and (c['sum'] or {}).get('ladder') == lad(s_main('P0'))
+            and rb.get('from') == 1 and rc_.get('from') == 2 and len(rc_.get('copied') or []) > len(rb.get('copied') or [])
+            and lg.get('chain') == [1, 2, 3] and lg.get('effective') == 3 and stop_code(v2) == 'ATTEMPT_LEDGER_MISMATCH',
+            (ns, stop_code(b), c['rc'], rb, rc_, lg, stop_code(v2), s3[-160:]))
+
+
+@check('RS05', '★ 10-27 묶음 C1b-2 — 예측 재실행: 주 사다리 둘 (원장) · 예측 시도 = DBE 다섯째 런 표지 뒤 OOM → 재실행 → PREDICTED · 검사 · origin · 런 요청 = 끊김 없는 주 '
+               '예측과 같다 · 원장 판정 (사다리 둘 + 재실행 예측) rc 0 · 판정 = 원장 없는 주 판정과 같은 판정')
+def t_RS05():
+    if not chain_c1b2():
+        return False, '사슬에 재실행 실행 (ResumeRunner) 이 없다'
+
+    def go():
+        d, _rc, _so = led_new('RS05')
+        _r, n1, _s = led_add(d, 'ladder:P0')
+        l0 = lad_att('RS05_P0', world('RS05_P0'), d, n1)
+        _r, n2, _s = led_add(d, 'ladder:P1')
+        l1 = lad_att('RS05_P1', world('RS05_P1'), d, n2, law='P1')
+        _r, n3, _s = led_add(d, 'predict')
+        base = Path(TD) / 'runs' / 'RS05_pred'
+        p = pred_att('RS05_pred', world('RS05_pa', dict(PW, faults=[{'do': 'oom_after_mark', 'match': {'kit_has': 'DBE', 'min_n': 5}}])), d, n3,
+                     [l0['out'], l1['out']], base=base)
+        _r, n4, s4 = led_add(d, 'predict', resume=n3)
+        q = pred_att('RS05_pred', world('RS05_pb'), d, n4, [l0['out'], l1['out']], base=base)
+        v = ver_led('RS05_v', [l0['out'], l1['out'], q['out']], d)
+        return d, p, q, v, s4
+    d, p, q, v, s4 = scen('RS05', go)
+    m = s_main_predict()['sum'] or {}
+    qs = q['sum'] or {}
+    base = s_verdict_main().get('v') or {}
+    vv = v.get('v') or {}
+    return (stop_code(p) == 'RUNNER_RC' and q['rc'] == 0 and qs.get('status') == 'PREDICTED' and qs.get('checks') == m.get('checks')
+            and qs.get('origin') == m.get('origin') and pred_seq(q) == pred_seq(s_main_predict()) and v['rc'] == 0
+            and all(vv.get(k) == base.get(k) for k in ('verdict', 'state', 'flags', 'blocking_flags')),
+            (stop_code(p), q['rc'], qs.get('status'), v['rc'], vv.get('verdict'), s4[-160:]))
 
 
 def doc_tool_commands(path, tool):

@@ -34,6 +34,7 @@
       CA_EXT_RECORD · 환경 단위 다름 = 미확인 · 결합 칸 다름 = 원천 실패 · 비용 보고 (원천 런 초 · STEP3 · 조립 초 · 최대 RSS)
   E13 ★ 10-27 묶음 C2b 실물 kill — 러너만 SIGKILL (표지 앞 · 뒤) · 시간 초과 · 사슬 부모 SIGKILL (표지 앞 · 뒤) + --stage recover
   E14 ★ 10-27 묶음 C1b 실물 원장 시도 — --init · --add · 사다리 시도 → 결과 줄 · 폴더 요약 sha (독립 계산) · 런마다 표지
+  E15 ★ 10-27 묶음 C1b-2 실물 재실행 — 바닥 런 표지 뒤 사슬 부모 SIGKILL → recover --ledger → --add --resume → 재실행 시도 → CALIBRATED
   ★ 3판 — 계획 `rint-r-plan-v2` (결과 전 등록 숫자 넷 = 시험 값) · S0 계획 (`ca_s0_census.make_plan` · 정준 바이트) · 등록 사본 두 줄 · `--s0-plan`
 ⚠ PASS 는 사슬 · 러너 · payload 배선이 실물로 이어진다는 증거이지 R_j 값 · 판정의 물리 검증이 아니다 (픽스처 σ 는 의미 없다).
 """
@@ -1199,6 +1200,9 @@ def tree_digest(p):
     return hashlib.sha256(''.join(f'{h}  {rel}\n' for rel, h in rows).encode('utf-8')).hexdigest()
 
 
+E14_LADDER = {}                                            # E14 의 끊김 없는 실물 원장 사다리 칸 (E15 재실행과 대조)
+
+
 def t_ledger():
     """★ 10-27 묶음 C1b — 실물 러너 · payload 의 원장 시도 (사다리 P0) → 결과 줄 (completed · 결과 뒤 · 폴더 요약 sha = 독립 계산) · 런마다 표지 ·
     .unchecked 에 payload 없음 (검사 통과 뒤 옮김) · 킷 런 폴더에 payload 없음."""
@@ -1230,12 +1234,84 @@ def t_ledger():
     marks = [os.path.join(folder, r['outdir']) for r in runs if not glob.glob(os.path.join(folder, r['outdir'], '.unchecked', '*' + '.first_result.json'))]
     left = [x for x in glob.glob(os.path.join(folder, '*', '.unchecked', 'p2_*.json*')) if not x.endswith('.first_result.json')]   # 표지 이름도 p2_ 로 시작한다
     r1 = res[0] if len(res) == 1 else {}
+    E14_LADDER['ladder'] = s.get('ladder')
     chk('E14 ★ 10-27 묶음 C1b 실물 원장 시도 (사다리 P0 · 실물 러너 · payload) → --init · --add rc 0 · 사다리 CALIBRATED · 결과 줄 하나 (completed · 결과 뒤 · '
         'by chain · 폴더 요약 sha = 독립 계산) · 런마다 .unchecked/ 에 표지 · .unchecked/ 에 payload 없음 · 킷 런 폴더에 payload 없음',
         rc0 == 0 and rc1 == 0 and rc2 == 0 and s.get('status') == 'CALIBRATED' and r1.get('status') == 'completed' and r1.get('side') == 'post'
         and r1.get('by') == 'chain' and r1.get('folder_sha256') == tree_digest(folder) and runs and marks == [] and left == []
         and e13_kit_payloads(ws) == [],
         (rc0, rc1, rc2, s.get('status'), r1, len(runs), marks[:3], left[:3], e13_kit_payloads(ws)[:3], so2[-400:]))
+
+STAGE_DRIVER = r'''
+import json, os, sys
+from pathlib import Path
+cfg = json.load(open(sys.argv[1], encoding='utf-8'))
+sys.path.insert(0, cfg['scripts'])
+import rint_r_chain as RR
+RR.HERE = Path(cfg['here'])
+RR.EXPECT_BACKEND = 'cpu'
+os.environ.clear()
+os.environ.update(cfg['env'])
+sys.exit(RR.main(cfg['argv']))
+'''
+
+
+def t_resume_real():
+    """★ 10-27 묶음 C1b-2 실물 재실행 — 원장 사다리 시도 (사슬 = 따로 프로세스 · 실물 러너 · payload) 의 바닥 런 첫 풀이 끝 표지 뒤 사슬 부모 SIGKILL →
+    --stage recover --ledger (그룹을 죽이고 확인 · 결과 줄 interrupted · parent_dead · 결과 뒤 · 재실행 자격) → --add --resume 1 → 재실행 시도 (실물 · 프로세스
+    안) = 바닥 런부터 새로 (남은 payload 없음 = 결정성 가정) → CALIBRATED · 사다리 칸 = 끊김 없는 실물 원장 사다리 (E14) 와 같다."""
+    if getattr(RR, 'ResumeRunner', None) is None:
+        chk('E15 사슬에 재실행 실행 (ResumeRunner) 이 있다', False, '고치기 전 판 — 재실행 없음 (기다리지 않는다)')
+        return
+    ws = make_root('e15')
+    pp, sp, rp = make_plan_and_reg(ws)
+    sd = code_repo()
+    runner = os.path.join(sd, 'sdcp_gain_vox015_8arm.sh')
+    led = os.path.join(TD, 'ledger_e15')
+    os.makedirs(led)
+    subprocess.run(['git', 'init', '-q', led], check=True, capture_output=True)
+    e2e_call(ws, sd, ['--stage', 'ledger', '--ledger', led, '--init', '--plan', pp])
+    rc1, so1 = e2e_call(ws, sd, ['--stage', 'ledger', '--ledger', led, '--add', '--ledger-target', 'ladder:P0', '--machine', E2E_MACH, '--plan', pp,
+                                 '--runner', runner, '--root', ws])
+    base = os.path.join(TD, 'runs', 'e15')
+    lad_argv = ['--stage', 'ladder', '--law', 'P0', '--target', str(RR.TARGET_SBE_MS), '--runner', runner, '--root', ws, '--plan', pp,
+                '--s0-plan', sp, '--registration', rp, '--max-hours', E2E_MAXH, '--out', base, '--machine', E2E_MACH] + s0_args() + ['--ledger', led]
+    drv = os.path.join(TD, 'e15_stage_driver.py')
+    with open(drv, 'w', encoding='utf-8') as f:
+        f.write(STAGE_DRIVER)
+    cfg = os.path.join(TD, 'e15_cfg.json')
+    with open(cfg, 'w', encoding='utf-8') as f:
+        json.dump({'scripts': SCRIPTS, 'here': sd, 'env': e13_env(ws, 'after', 30), 'argv': [str(x) for x in lad_argv + ['--attempt', '1']]}, f)
+    log = open(os.path.join(TD, 'e15_driver.log'), 'w', encoding='utf-8')
+    pr = subprocess.Popen([sys.executable, '-I', drv, cfg], cwd=ws, stdout=log, stderr=subprocess.STDOUT, start_new_session=True)
+    folder = os.path.join(base, 'attempt_1')
+    t0 = time.time()
+    while time.time() < t0 + 120 and not glob.glob(os.path.join(folder, 'L01_floor_arm1', '.unchecked', '*.first_result.json')):
+        time.sleep(0.05)
+    time.sleep(0.3)
+    os.kill(pr.pid, signal.SIGKILL)
+    pr.wait()
+    res0 = [json.loads(x) for x in open(os.path.join(led, 'rint_r_attempts.jsonl'), encoding='utf-8').read().splitlines() if '"result"' in x]
+    rc3, so3 = e2e_call(ws, sd, ['--stage', 'recover', '--out', folder, '--ledger', led])
+    lines = [json.loads(x) for x in open(os.path.join(led, 'rint_r_attempts.jsonl'), encoding='utf-8').read().splitlines()]
+    r1 = ([x for x in lines if x.get('kind') == 'result' and x.get('n') == 1] or [{}])[0]
+    rc4, so4 = e2e_call(ws, sd, ['--stage', 'ledger', '--ledger', led, '--add', '--ledger-target', 'ladder:P0', '--machine', E2E_MACH, '--plan', pp,
+                                 '--runner', runner, '--root', ws, '--resume', '1'])
+    rc5, so5 = e2e_call(ws, sd, lad_argv + ['--attempt', '2'])
+    s = json.load(open(os.path.join(base, 'attempt_2', 'ladder_summary.json'), encoding='utf-8')) \
+        if os.path.exists(os.path.join(base, 'attempt_2', 'ladder_summary.json')) else {}
+    rs = s.get('resume') or {}
+    lines = [json.loads(x) for x in open(os.path.join(led, 'rint_r_attempts.jsonl'), encoding='utf-8').read().splitlines()]
+    r2 = ([x for x in lines if x.get('kind') == 'result' and x.get('n') == 2] or [{}])[0]
+    ref = E14_LADDER.get('ladder')
+    chk('E15 ★ 10-27 묶음 C1b-2 실물 재실행 — 바닥 런 표지 뒤 사슬 부모 SIGKILL → 결과 줄 없음 · recover --ledger rc 0 (interrupted · parent_dead · 결과 뒤 · '
+        '재실행 자격) · --add --resume 1 rc 0 · 재실행 시도 rc 0 · CALIBRATED · resume 칸 (원 시도 1 · 복사 0 · 새로 = 바닥 · 결정성 가정) · 결과 줄 completed · '
+        '사다리 칸 = 끊김 없는 실물 원장 사다리 (E14)',
+        res0 == [] and rc1 == 0 and rc3 == 0 and r1.get('status') == 'interrupted' and r1.get('cause') == 'parent_dead' and r1.get('side') == 'post'
+        and r1.get('resume_ok') is True and rc4 == 0 and rc5 == 0 and s.get('status') == 'CALIBRATED' and rs.get('from') == 1
+        and rs.get('copied') == [] and rs.get('rerun') == 'L01_floor' and rs.get('determinism') == 'assumed' and r2.get('status') == 'completed'
+        and (ref is None or s.get('ladder') == ref),
+        (res0, rc1, rc3, r1, rc4, so4[-200:], rc5, s.get('status'), rs, r2, ref is None, so5[-300:]))
 
 
 def t_prod_form():
@@ -1274,7 +1350,7 @@ def main():
     try:
         for tag, fn in (('E1', t_ladder), ('E6', t_prod_form), ('E8', t_zero_floor), ('E9', t_short_ceiling), ('E10', t_sv_census_dbe),
                         ('E11', t_no_venv), ('E12', t_graph_source), ('E13', t_runner_kill), ('E13t', t_timeout_kill),
-                        ('E13p', t_parent_kill), ('E14', t_ledger)):
+                        ('E13p', t_parent_kill), ('E14', t_ledger), ('E15', t_resume_real)):
             if sel and tag not in sel:
                 continue
             print(f'\n── {tag}')
