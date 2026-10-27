@@ -45,7 +45,8 @@
 #   결정 D-2026-10-09-li2s-neb-cellconv active)
 #   --hold FILE     러너만 얼리고 (①②③ 그대로) **EXIT 를 만들지 않는다** — 지금 점 (13_m) 은 끝까지 돌게 두고,
 #                   그 pw.x 가 끝나면 러너를 얼린 채 FILE 에 러너 PID · 시작 시각 · 명령줄 · 끝난 점의 상태를 적고 끝난다 (0).
-#                   기다리는 동안 누가 러너를 풀면 (T 아님) 10 · --hold_timeout 을 넘으면 러너를 풀고 6.
+#                   기다리는 동안 누가 러너를 풀면 (T 아님) 10 · --hold_timeout 을 넘으면 러너를 풀고 6 ·
+#                   기다리는 동안 이 도구가 HUP · INT · TERM 으로 꺼지면 러너를 풀고 13.
 #                   러너를 죽이지 않는다 — 풀면 러너가 끝난 점을 판정하고 다음 점 (12_p) 을 이어 띄운다.
 #   --release FILE  FILE 의 러너를 kill -CONT 로 푼다. PID · 시작 시각 · 명령줄이 FILE 과 다르면 **안 건드린다** (11 · PID 재사용 방지).
 #                   이미 풀려 있으면 0 (기록만) · CONT 뒤에도 T 면 12.
@@ -115,18 +116,22 @@ out_state(){   # 끝난 relax 의 상태 — 아래 EXIT 경로와 같은 낱말
 
 hold_wait(){   # main 의 P · R · C · OUT · IN 을 쓴다 — 러너는 이미 T
   local t0 st; t0=$(date +%s)
+  # 기다리는 도중 이 도구가 신호로 꺼지면 (tmux 세션 종료 · Ctrl-C) 러너를 풀고 나간다 — 언 채 남기지 않는다.
+  #   붙듦이 끝난 뒤 (파일을 쓴 뒤) 에는 일부러 얼린 채 두므로 trap 을 걷는다.
+  trap 'kill -CONT "$R" 2>/dev/null; say "⛔ 신호로 꺼짐 — 러너 $R 를 풀었다 ($(pstat "$R"))"; exit 13' HUP INT TERM
   say "붙듦: 러너 $R 얼린 채 pw.x $P 가 스스로 끝나기를 기다린다 (최대 ${HOLD_TIMEOUT} s · EXIT 안 만듦) — 다음 점을 못 띄운다"
   while alive "$P"; do
     case "$(pstat "$R")" in
       T*) ;;
-      *) say "⛔ 러너 $R 가 붙든 사이 풀렸다 ($(pstat "$R")) — 누가 CONT 했다. 붙듦을 그만둔다 (아무것도 안 바꿈)"; return 10 ;;
+      *) trap - HUP INT TERM; say "⛔ 러너 $R 가 붙든 사이 풀렸다 ($(pstat "$R")) — 누가 CONT 했다. 붙듦을 그만둔다 (아무것도 안 바꿈)"; return 10 ;;
     esac
     if [ $(( $(date +%s) - t0 )) -gt "$HOLD_TIMEOUT" ]; then
-      kill -CONT "$R" 2>/dev/null
+      kill -CONT "$R" 2>/dev/null; trap - HUP INT TERM
       say "⛔ ${HOLD_TIMEOUT} s 가 지나도 pw.x 가 안 끝났다 — 러너를 풀고 끝낸다 (상태 $(pstat "$R"))"; return 6
     fi
     sleep "$POLL"
   done
+  trap - HUP INT TERM
   st=$(out_state "$OUT")
   { echo "runner_pid=$R"; echo "runner_start=$(starttime "$R")"; echo "runner_cmd=$(cmdline "$R")"
     echo "pw_pid=$P"; echo "pw_in=$C/$IN"; echo "pw_out=$OUT"; echo "pw_state=$st"
@@ -359,6 +364,11 @@ EOF
   echo "runner_pid=1" > "$T/he/hold.txt"
   ( cd "$T/he" && IN=$XN.in RUNNER_PAT=fake_elastic_runner.sh POLL=0.3 HOLD="$T/he/hold.txt" main ) > "$T/he.log" 2>&1; rce=$?
   ck "⛔음성(hold): 안 푼 붙듦 파일이 있으면 rc 2 · 러너 안 얼림" "$rce:$(st1 $rpe)" "2:S"
+  cleanup
+  mkjob hf; env STEP=1 CONV_AT=40 "$T/bin/fake_elastic_runner.sh" "$T/hf" "$T/bin" "$XN" & rpf2=$!; disown $rpf2; sleep 1.5
+  ( cd "$T/hf" && IN=$XN.in RUNNER_PAT=fake_elastic_runner.sh POLL=0.3 HOLD="$T/hf/hold.txt" HOLD_TIMEOUT=30 main ) > "$T/hf.log" 2>&1 & hp2=$!
+  sleep 2; pre=$(st1 $rpf2); kill -TERM $hp2; wait $hp2; rchf=$?; sleep 0.5
+  ck "⛔음성(hold): 기다리다 TERM 으로 꺼지면 rc 13 · 러너를 풀었다 (전제: 그 전엔 T)" "$rchf:$pre:$(st1 $rpf2)" "13:T:S"
   cleanup
   printf "runner_pid=999999\nrunner_start=1\nrunner_cmd=x\n" > "$T/gone.txt"
   ( RELEASE="$T/gone.txt" main ) > /dev/null 2>&1
