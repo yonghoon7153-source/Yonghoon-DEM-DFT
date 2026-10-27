@@ -10,10 +10,12 @@
   # (3) 보정 사다리 — 법칙 끝마다 (SBE arm 0 · LEAN 2 · 값 봉인)
   python3 scripts/rint_r_chain.py --stage ladder --law P0 --target 1.63 --runner ~/dem-ca1/scripts/sdcp_gain_vox015_8arm.sh \\
       --root ~/sdcp --plan ~/sdcp/ca1_plan.json --s0-plan <리포 S0 계획> --s0-stage2-report <S0 단계 2 보고 (DBE 새 침대)> \\
-      --s0-stage1-report <S0 단계 1 보고 (SBE 새 침대)> [--machine <짧은 이름표>] --max-hours H --out ~/sdcp/ca1_ladder_P0
+      --s0-stage1-report <S0 단계 1 보고 (SBE 새 침대)> --machine <짧은 이름표> --max-hours H --out ~/sdcp/ca1_ladder_P0
   # (4) 예측 — 네 모서리 × {R_j,lo · R_j,0 · R_j,hi} (DBE arm 0 · R_j · 계획 · S0 계획은 사다리 요약에서 읽는다)
   python3 scripts/rint_r_chain.py --stage predict --ladders ~/sdcp/ca1_ladder_P0 ~/sdcp/ca1_ladder_P1 --kit kit_DBE_sdcp1um_vgcf100 \\
-      --runner … --root ~/sdcp --max-hours H --out ~/sdcp/ca1_predict
+      --runner … --root ~/sdcp --machine <짧은 이름표> --max-hours H --out ~/sdcp/ca1_predict
+  # (0) 계획 숫자 블록 (등록 R 에 붙이는 표 · 계획 JSON 에서 생성) · 대조
+  python3 scripts/rint_r_chain.py --stage plan-doc --plan ~/sdcp/ca1_plan.json [--registration <등록 R> --check-doc]
   # 감도 (등록 R §5-6 · 필수 · ★ 주 판정 단계 뒤에만 — Q-F): --variant FIBRE | UNREG | GRID (사다리 둘 + 예측) · SVORDER (예측만 · 주 사다리)
   #   … --variant FIBRE --after-main ~/sdcp/ca1_predict
   # (5) 판정 — 원 팔 JSON 전부에서 (값은 --show-results 로 한 번) · 다시 판정 (읽기 전용 · 바이트 대조)
@@ -93,6 +95,14 @@
   않는다) · 원천 실패 (러너 rc · 출력 꼴 · 환경 · 결합 · 지문 없음 · 시간) = 미확인 (`SV_UNCHECKED`) · 원천 런 기록 (rc · 시간 · 최대 RSS) = 요약
   `sv_graph_source` · 판정 `verdict_graph_src.json` (판정 JSON 밖 — 다시 판정 바이트 대조 무관) · ⚠ 한정 (Q2) = 증서 칸 지문까지 원천 값으로 고친
   편집은 여전히 못 가린다 · ⚠ 한정 = 같은 러너 · payload · 킷이라 그 코드 · 킷 자체의 결함은 원천도 같이 갖는다 (코드 · 침대 대조 = 단계 관문)
+★ 10-27 묶음 C1a (Codex 재검토 RCA2-05 · 판정문 C6 #15 · #30 · 수정 계획 Q4 (가) · Q9 설계 개정 4 Q3 · author 10-27 approved bundle C):
+  · 계획 `rint-r-plan-v3` = v2 칸 + 실행 정책 `exec_policy` (같은 계획 sha256 봉인 안) — 값 칸 넷 (시간 상한 `max_hours` · 최대 시도 수
+    `max_attempts` · 허용 기계 `allowed_machines` · 판 `env_unit` = python 부 판 · numpy · scipy) = null 이면 ⬜ (`PLAN_NUMBER_UNREGISTERED` · 숫자를
+    사슬이 고르지 않는다) · 규칙 칸 넷 = 이 사슬이 구현한 규칙 이름 (`EXEC_POLICY_RULES` · 다르면 PLAN_INVALID) · 옛 v2 계획 = PLAN_INVALID
+  · `--max-hours` = 계획 값 (다르면 NOT_REGISTERED) · `--machine` = 사다리 · 예측 필수 (없음 = 인자 오류 rc 2 · 목록 밖 = `MACHINE_NOT_ALLOWED`) ·
+    런 기록마다 기계 이름 (판정 = 단계 기계 · 런 기계 · 허용 목록 대조) · 환경 지문 같음 단위 = 계획 봉인 판 (다르면 `CODE_PIN_MISMATCH` · 판정도)
+  · 문서 숫자 — 등록 R 의 계획 숫자 블록 (`plan_doc_block` · 표지 `PLAN_DOC_BEGIN` · `PLAN_DOC_END`) = 계획 JSON 에서 생성 · 사다리 · 예측 · 판정이
+    정확히 대조 (`plan_doc_problem` → `PLAN_DOC_MISMATCH`) · 생성 · 대조 CLI `--stage plan-doc` · 블록이 없는 등록 (봉인 전) = R 진입 거부
 """
 import argparse
 import glob
@@ -186,9 +196,24 @@ LEAN2_PLAN = {'electronic': True, 'ionic': False, 'thermal': False, 'pore': Fals
 LEAN2_RECEIPTS = {'electronic_main': ('applied', 'absent_geometry'), 'electronic_wetted': ('disabled',),
                   'electronic_bare': ('disabled',), 'ionic': ('disabled',)}   # 설계 §7 LEAN 표 (LEAN 2 · 양의 해)
 #: ★ 3판 — R 런 계획 v2 = v1 칸 일곱 + 결과 전 등록 숫자 넷 (등록 R §3-2 점 수 상한 · §3-2b 역상 폭 상한 · §5-6 SV 반사실 문턱 · 범위)
-PLAN_SCHEMA = 'rint-r-plan-v2'
+#: ★ 10-27 묶음 C1a (RCA2-05 · author 10-27 approved bundle C) — v3 = v2 칸 + 실행 정책 `exec_policy` (같은 sha256 봉인 안 · v2 계획 = PLAN_INVALID)
+PLAN_SCHEMA = 'rint-r-plan-v3'
 PLAN_KEYS = ('schema', 'len_law', 'unreg_law', 's_min_um', 'tol_ff_um', 'step3_rtol', 'p2_extra',
-             'max_ladder_points', 'calib_rj_ratio_max', 'sv_cf_threshold', 'sv_cf_scope')
+             'max_ladder_points', 'calib_rj_ratio_max', 'sv_cf_threshold', 'sv_cf_scope', 'exec_policy')
+#: ★ 10-27 묶음 C1a — 실행 정책 값 칸 (⬜ = null · 숫자 · 목록 = 봉인 때 1저자 · 사슬은 고르지 않는다 · 기본값 없음):
+#   max_hours = 단계 · 시도 하나하나의 시간 상한 (`--max-hours` 가 같아야) · max_attempts = 같은 대상 최대 시도 수 · allowed_machines = 허용 기계
+#   이름표 (`MACHINE_RE`) · env_unit = 환경 지문 같음 단위 ({python_minor · numpy · scipy} 판 문자열 · 풀기 전 대조 · Q9 개정 4 Q3)
+EXEC_POLICY_VALUE_KEYS = ('max_hours', 'max_attempts', 'allowed_machines', 'env_unit')
+#: ★ 10-27 묶음 C1a — 실행 정책 규칙 칸 = 이 사슬이 구현한 규칙의 이름 (BRIEF 묶음 C C1 · Q9 §3-5 · 바뀌면 이름을 바꾼다 · 다른 이름 = PLAN_INVALID):
+#   retry_rule = 결과 전 멈춤 (첫 풀이 끝 표지 · 팔 payload 없음) 만 새 시도 · same_config = 계획 · 코드 · 침대 · 환경 지문 같음 ·
+#   adoption = 원장 차례로 처음 결과 전이 아닌 시도 (+ 재실행 사슬) · attempt_dir = 시도 폴더 꼴 `attempt_<n>` (실패 시도 · 원 사유 보존)
+EXEC_POLICY_RULES = {'retry_rule': 'pre_result_only_v1', 'same_config': 'plan_code_bed_env_v1', 'adoption': 'first_not_pre_result_v1',
+                     'attempt_dir': 'attempt_<n>'}
+EXEC_POLICY_KEYS = EXEC_POLICY_VALUE_KEYS + tuple(EXEC_POLICY_RULES)
+#: ★ 10-27 묶음 C1a (판정문 C6 #30) — 등록 R 의 계획 숫자 블록 표지 (블록 = `plan_doc_block` · 정확 대조 = `plan_doc_problem`)
+PLAN_DOC_BEGIN = '<!-- rint-r-plan-doc:begin v1 -->'
+PLAN_DOC_END = '<!-- rint-r-plan-doc:end -->'
+ENV_UNIT_VALUE_RE = re.compile(r'[A-Za-z0-9._+-]+')   # 판 문자열 (표 · 경로 글자 없음)
 #: 결과 전 등록 숫자 (⬜) — 하나라도 null 이면 사슬이 멈춘다 (σ 런 전 · ★ Q-G: SV 문턱이 ⬜ 인 채로 DBE 단계에 가지 않는다)
 PLAN_REGISTERED_NUMBERS = ('max_ladder_points', 'calib_rj_ratio_max', 'sv_cf_threshold', 'sv_cf_scope')
 PLAN_NO_CAP = 'none'                 # calib_rj_ratio_max = 'none' — "상한을 두지 않기로" 를 등록한 값 (§3-2b ④ · 실제 양끝을 그대로 전파)
@@ -346,6 +371,9 @@ STOPS = {
                             '1저자 Q13 (가)) σ(R_j,lo) ≥ σ(R_j,0) ≥ σ(R_j,hi) 와 증서 구간이 모순 '
                             '(★ 10-23 · Codex 재검토 RCA2-09 · 판정문 §8 · 1저자 Q8 (가) · 추가 풀이 없음 · 새 숫자 없음 · 구현 결함 의심)',
     'TIME_LIMIT': '시간 상한',
+    'MACHINE_NOT_ALLOWED': '기계 이름표가 계획의 허용 목록 (exec_policy.allowed_machines) 밖 · 빈 이름 · 런 기록의 기계 ≠ 단계 기계 (★ 10-27 묶음 C1a · '
+                           'C6 #15 · Q11 · Q9 §3-4)',
+    'PLAN_DOC_MISMATCH': '등록 R 의 계획 숫자 블록 ≠ 계획 JSON 에서 생성한 블록 (없음 · 둘 · 값 다름 · 표지 하나만 · ★ 10-27 묶음 C1a · 판정문 C6 #30)',
     'DUPLICATE_RUN': '같은 킷 · 같은 계획 두 번',
     'INPUT_SHA_MISMATCH': '판정 입력 sha256 ≠ 런 산출',
     'INPUT_MISSING': '판정 입력이 모자란다',
@@ -1022,17 +1050,35 @@ def _show(v):
     return repr(v)
 
 
-def load_plan(path):
-    """R 런 계획 파일 (`rint-r-plan-v2` · 등록 §2-1 개정 커밋의 대상) → (dict, sha256).  사슬은 이 값을 러너 env 로 편다.
-    결과 전 등록 숫자 넷은 null 이어도 꼴 검사는 지난다 (null = ⬜ · `require_plan_numbers` 가 멈춘다)."""
-    try:
-        raw = Path(path).read_bytes()
-        obj = _json_strict(raw)                               # ★ PF2 E — 중복 칸 거부 (옛 = 마지막 값)
-    except (OSError, UnicodeDecodeError, ValueError) as e:
-        raise Stop('PLAN_INVALID', f'{path}: {type(e).__name__}: {e}')
-    bad = []
+def exec_policy_problems(ep):
+    """★ 10-27 묶음 C1a (RCA2-05 · author 10-27 approved bundle C) — 계획 `exec_policy` 칸 꼴 → 문제 목록 (값 칸 null = ⬜ · 꼴 검사는 지난다 ·
+    `require_plan_numbers` 가 멈춘다).  값은 고치지 않는다 (사슬이 숫자를 고르지 않는다)."""
+    if not isinstance(ep, dict) or set(ep) != set(EXEC_POLICY_KEYS):
+        return [f'exec_policy 칸 {sorted(ep) if isinstance(ep, dict) else type(ep).__name__} ≠ {sorted(EXEC_POLICY_KEYS)}']
+    bad = [f'exec_policy.{k} {ep[k]!r} ≠ 이 사슬의 규칙 {v!r}' for k, v in EXEC_POLICY_RULES.items() if ep[k] != v]
+    mh = ep['max_hours']
+    if mh is not None and not (type(mh) in (int, float) and _num(mh) and mh > 0):     # noqa: E721 — bool · 문자열 제외 · 10**400 넘침 = 유한 아님
+        bad.append(f'exec_policy.max_hours {_show(mh)} (유한 > 0 · null = ⬜)')
+    ma = ep['max_attempts']
+    if ma is not None and not (type(ma) is int and _num(ma) and ma >= 1):            # noqa: E721
+        bad.append(f'exec_policy.max_attempts {_show(ma)} (정수 ≥ 1 · 유한 · null = ⬜)')
+    am = ep['allowed_machines']
+    if am is not None and not (isinstance(am, list) and am and all(isinstance(m, str) and MACHINE_RE.fullmatch(m) for m in am)
+                               and len(set(am)) == len(am)):
+        bad.append(f'exec_policy.allowed_machines {am!r} (비지 않은 목록 · 이름표 = 영문 · 숫자 · _ · - · 중복 없음 · null = ⬜)')
+    eu = ep['env_unit']
+    if eu is not None and not (isinstance(eu, dict) and set(eu) == set(ENV_UNIT_KEYS)
+                               and all(isinstance(eu[k], str) and ENV_UNIT_VALUE_RE.fullmatch(eu[k]) for k in ENV_UNIT_KEYS)):
+        bad.append(f'exec_policy.env_unit {eu!r} (칸 = {sorted(ENV_UNIT_KEYS)} · 판 문자열 · null = ⬜)')
+    return bad
+
+
+def plan_form_problems(obj):
+    """R 런 계획 dict 꼴 → 문제 목록 (`load_plan` · 단계 요약의 계획 기록 (예측 · 판정) 이 같은 함수).  결과 전 등록 숫자 · 실행 정책 값 칸 null =
+    꼴은 지난다 (`require_plan_numbers`)."""
     if not isinstance(obj, dict) or set(obj) != set(PLAN_KEYS):
-        raise Stop('PLAN_INVALID', f'칸 {sorted(obj) if isinstance(obj, dict) else type(obj).__name__} ≠ {sorted(PLAN_KEYS)}')
+        return [f'칸 {sorted(obj) if isinstance(obj, dict) else type(obj).__name__} ≠ {sorted(PLAN_KEYS)}']
+    bad = []
     if obj['schema'] != PLAN_SCHEMA:
         bad.append(f'schema {obj["schema"]!r} ≠ {PLAN_SCHEMA!r}')
     if not (isinstance(obj['len_law'], str) and re.fullmatch(r'[A-Za-z0-9_]+', obj['len_law'])):
@@ -1056,16 +1102,123 @@ def load_plan(path):
         bad.append(f'sv_cf_threshold {_show(th)} (유한 ≥ 1 · 비 G_full/G_cut ≥ 1 · null = ⬜)')
     if obj['sv_cf_scope'] is not None and obj['sv_cf_scope'] not in SV_CF_SCOPES:
         bad.append(f'sv_cf_scope {obj["sv_cf_scope"]!r} ∉ {SV_CF_SCOPES} (null = ⬜)')
+    bad += exec_policy_problems(obj['exec_policy'])          # ★ 10-27 묶음 C1a
+    return bad
+
+
+def load_plan(path):
+    """R 런 계획 파일 (`rint-r-plan-v3` · 등록 §2-1 개정 커밋의 대상) → (dict, sha256).  사슬은 이 값을 러너 env 로 편다.
+    결과 전 등록 숫자 넷 · 실행 정책 값 칸 넷은 null 이어도 꼴 검사는 지난다 (null = ⬜ · `require_plan_numbers` 가 멈춘다)."""
+    try:
+        raw = Path(path).read_bytes()
+        obj = _json_strict(raw)                               # ★ PF2 E — 중복 칸 거부 (옛 = 마지막 값)
+    except (OSError, UnicodeDecodeError, ValueError) as e:
+        raise Stop('PLAN_INVALID', f'{path}: {type(e).__name__}: {e}')
+    bad = plan_form_problems(obj)
     if bad:
         raise Stop('PLAN_INVALID', ' · '.join(bad))
     return obj, hashlib.sha256(raw).hexdigest()
 
 
+def plan_record_or_stop(plan, where):
+    """★ 10-27 묶음 C1a — 단계 요약에 기록된 계획 (예측 · 판정 · 사슬이 다시 읽는 자리) = 같은 꼴 검사 (`plan_form_problems` · 실행 정책 칸을 쓰기 전)."""
+    bad = plan_form_problems(plan)
+    if bad:
+        raise Stop('PLAN_INVALID', f'{where}: ' + ' · '.join(bad))
+    return plan
+
+
 def require_plan_numbers(plan):
-    """결과 전 등록 숫자 넷 (⬜) 이 다 있어야 σ 런을 돈다 — 등록 R §3-2 · §3-2b · §5-6 (★ Q-G: SV 문턱이 ⬜ 인 채로는 못 간다)."""
+    """결과 전 등록 숫자 넷 (⬜) 이 다 있어야 σ 런을 돈다 — 등록 R §3-2 · §3-2b · §5-6 (★ Q-G: SV 문턱이 ⬜ 인 채로는 못 간다).
+    ★ 10-27 묶음 C1a (RCA2-05 · 판정문 §4 "DBE 단계 2 열람 전에 … 봉인") — 실행 정책 값 칸 넷 (`exec_policy.<칸>`) 도 (봉인 전 계획 = R 진입 거부 ·
+    S0 단계 2 관문 `ca_s0_census.verify_plan_commit` 도 이 함수)."""
     miss = [k for k in PLAN_REGISTERED_NUMBERS if plan.get(k) is None]
+    ep = plan.get('exec_policy') if isinstance(plan.get('exec_policy'), dict) else {}
+    miss += [f'exec_policy.{k}' for k in EXEC_POLICY_VALUE_KEYS if ep.get(k) is None]
     if miss:
         raise Stop('PLAN_NUMBER_UNREGISTERED', f'R 계획 칸 {miss} = null (⬜ 결과 전 등록 · 1저자 · §10 개정 · 숫자를 사슬이 고르지 않는다)')
+
+
+def exec_check_or_stop(plan, max_hours, machine, code):
+    """★ 10-27 묶음 C1a (RCA2-05 · C6 #15 · Q11 · Q9 개정 4 Q3 · author 10-27 approved bundle C) — 사다리 · 예측 단계 진입 대조 (러너 전):
+    `--max-hours` = 계획 exec_policy.max_hours (정확히 · 다르면 NOT_REGISTERED) · `--machine` ∈ allowed_machines (밖 = MACHINE_NOT_ALLOWED) ·
+    환경 지문 같음 단위 = 계획 봉인 판 (다르면 CODE_PIN_MISMATCH · 바른 판의 venv 로 다시).  require_plan_numbers 뒤에 부른다."""
+    ep = plan['exec_policy']
+    if not (_num(max_hours) and float(max_hours) == float(ep['max_hours'])):
+        raise Stop('NOT_REGISTERED', f'--max-hours {_show(max_hours)} ≠ 계획 exec_policy.max_hours {_show(ep["max_hours"])} (RCA2-05 · 시간 상한 = 계획 '
+                                     f'봉인 값 · 결과를 본 뒤 늘리지 않는다)')
+    if machine not in ep['allowed_machines']:
+        raise Stop('MACHINE_NOT_ALLOWED', f'--machine {machine!r} ∉ 계획 exec_policy.allowed_machines {ep["allowed_machines"]} (C6 #15 · Q11)')
+    why = env_seal_problem(code, plan)
+    if why:
+        raise Stop('CODE_PIN_MISMATCH', why)
+
+
+def env_seal_problem(code, plan):
+    """★ 10-27 묶음 C1a (Q9 개정 4 Q3 · R4-10) — 단계 code 기록의 환경 지문 같음 단위 ↔ 계획 봉인 판 → 문제 | None (판정도 같은 함수)."""
+    want = (plan.get('exec_policy') or {}).get('env_unit') if isinstance(plan, dict) else None
+    got = env_unit((code or {}).get('env') if isinstance(code, dict) else None)
+    if got != want:
+        g, w = got or {}, want or {}
+        diff = [f'{k} {g.get(k)!r} ≠ {w.get(k)!r}' for k in ENV_UNIT_KEYS if g.get(k) != w.get(k)] or ['미확인']
+        return (f'환경 지문 같음 단위 ≠ 계획 봉인 판 (exec_policy.env_unit · ' + ' · '.join(diff) + ') — 계획에 봉인한 python 부 판 · numpy · scipy 판의 '
+                f'venv 로 다시 (Q9 개정 4 Q3 · R4-10)')
+    return None
+
+
+def plan_doc_block(plan):
+    """★ 10-27 묶음 C1a (판정문 C6 #30) — 계획 JSON → 등록 R 에 붙이는 계획 숫자 블록 (표지 둘 사이 · 칸 = 계획 칸 이름순 · exec_policy = 칸마다 한 줄 ·
+    값 = 정준 JSON 글자 · 사람이 옮겨 적지 않는다 · 대조 = `plan_doc_problem`)."""
+    rows = []
+    for k in sorted(plan):
+        if k == 'exec_policy' and isinstance(plan[k], dict):
+            rows += [(f'exec_policy.{kk}', plan[k][kk]) for kk in sorted(plan[k])]
+        else:
+            rows.append((k, plan[k]))
+    lines = [PLAN_DOC_BEGIN, '| R 계획 칸 | 값 |', '|---|---|']
+    lines += [f'| `{k}` | `{json.dumps(v, ensure_ascii=False, sort_keys=True, separators=(",", ":"))}` |' for k, v in rows]
+    return '\n'.join(lines + [PLAN_DOC_END])
+
+
+def plan_doc_problem(reg_path, plan):
+    """★ 10-27 묶음 C1a (판정문 C6 #30) — 등록 R 문서의 계획 숫자 블록 = `plan_doc_block(plan)` (정확히 · 표지 각 하나 · 순서) → 문제 | None."""
+    try:
+        text = Path(reg_path).read_bytes().decode('utf-8')
+    except (OSError, UnicodeDecodeError) as e:
+        return f'등록 문서를 못 읽는다 ({type(e).__name__})'
+    nb, ne = text.count(PLAN_DOC_BEGIN), text.count(PLAN_DOC_END)
+    if nb != 1 or ne != 1:
+        return (f'계획 숫자 블록 표지 시작 {nb} · 끝 {ne} 개 (각 1 이어야 · 봉인 때 `--stage plan-doc --plan <계획>` 출력을 그대로 붙인다 · 봉인 전 = '
+                f'R 진입 없음)')
+    i, j = text.index(PLAN_DOC_BEGIN), text.index(PLAN_DOC_END)
+    if j < i:
+        return '계획 숫자 블록 끝 표지가 시작 표지 앞에 있다'
+    got, want = text[i:j + len(PLAN_DOC_END)], plan_doc_block(plan)
+    if got != want:
+        gl, wl = got.splitlines(), want.splitlines()
+        k = next((n for n, (x, y) in enumerate(zip(gl, wl)) if x != y), min(len(gl), len(wl)))
+        return (f'계획 숫자 블록 ≠ 계획 JSON 에서 생성한 블록 (줄 {k + 1}: 문서 {(gl[k] if k < len(gl) else "<없음>")[:80]!r} · 생성 '
+                f'{(wl[k] if k < len(wl) else "<없음>")[:80]!r}) — 사람이 옮겨 적지 않는다 (`--stage plan-doc`)')
+    return None
+
+
+def plan_doc_or_stop(reg_path, plan):
+    why = plan_doc_problem(reg_path, plan)
+    if why:
+        raise Stop('PLAN_DOC_MISMATCH', why)
+
+
+def stage_machine_problem(s, plan):
+    """★ 10-27 묶음 C1a (C6 #15 · Q11 · Q9 §3-4) — 단계 요약의 기계 이름표 ∈ 계획 허용 목록 (빈 이름 · 없음 = 문제) · 런 기록마다 기계 = 단계 기계
+    (한 기계 단계 · 칸 없음 · 빈 · 다른 기계 = 문제) → 문제 | None (판정이 단계마다 부른다)."""
+    allowed = ((plan or {}).get('exec_policy') or {}).get('allowed_machines') or []
+    m = s.get('machine')
+    if not (isinstance(m, str) and m in allowed):
+        return f'단계 기계 {m!r} ∉ 계획 exec_policy.allowed_machines {allowed}'
+    for r in s.get('runs') or []:
+        if r.get('machine') != m:
+            return f'런 {r.get("name")} 기계 {r.get("machine")!r} ≠ 단계 기계 {m!r} (팔마다 기계 이름 · 한 기계 단계)'
+    return None
 
 
 def ladder_cap(plan):
@@ -2069,9 +2222,10 @@ def runner_env_delta(plan, variant, req, outdir):
 
 
 class Runner:
-    def __init__(self, runner, root, out, plan, variant, deadline, contract, dry=False, parent_env=None, prefix='R'):
+    def __init__(self, runner, root, out, plan, variant, deadline, contract, dry=False, parent_env=None, prefix='R', machine=None):
         self.runner, self.root, self.out = Path(runner), Path(root), Path(out)
         self.plan, self.variant, self.deadline, self.contract, self.dry, self.prefix = plan, variant, deadline, contract, dry, prefix
+        self.machine = machine               # ★ 10-27 묶음 C1a (C6 #15 · Q11) — 런 기록마다 기계 이름표 (단계 `--machine` · 판정이 대조)
         parent = dict(os.environ if parent_env is None else parent_env)
         self.scrubbed = sorted(k for k in parent if ENV_SCRUB_RE.match(k) or k in ENV_SCRUB_NAMES)
         self.env_base = {k: v for k, v in parent.items() if k not in self.scrubbed}
@@ -2115,7 +2269,7 @@ class Runner:
         if left <= 0:
             raise Stop('TIME_LIMIT', '시간 상한 (--max-hours) 을 넘었다', name)
         (self.out / 'logs').mkdir(parents=True, exist_ok=True)
-        rec = dict(req, outdir=outdir.name, rc=None, seconds=None, arms_read=[])
+        rec = dict(req, outdir=outdir.name, rc=None, seconds=None, arms_read=[], machine=self.machine)
         self.records.append(rec)
         t0 = time.time()
         logp = self.out / 'logs' / f'{name}.log'
@@ -2325,7 +2479,9 @@ def end_origin_push(lad, side, X, end):
     """★ Q-E (사전 리뷰 PRE-design-01 · 1저자 10-21 권고대로) — 끝에서 arm 1 · 2 도 돌려 세 origin 의 SBE 가 모두 띠 밖이어야 끝이다 ·
     하나라도 띠 안 (lo: σ < T⁺ · hi: σ > T⁻) 이면 끝을 다음 **바깥 실측 이웃** 으로 (없으면 같은 쪽 ×100 새 점 · 사다리 셈) → 세 origin
     허용집합의 합집합을 바깥에서 감싼다 (W = 그 끝들로).  → (끝 키, 민 횟수, 본 끝 목록).  origin 팔 런은 점 수에 안 센다 (§10-2 ③ 셈 그대로).
-    ★ 4판 (Q2-2 · ③″) — 띠 밖 판정 = 판독 보호 띠 (팔마다 그 런 증서의 보장 오차)."""
+    ★ 4판 (Q2-2 · ③″) — 띠 밖 판정 = 판독 보호 띠 (팔마다 그 런 증서의 보장 오차).
+    ★ 10-27 묶음 C (RCA2-07 · Q7 (가)) — 각 연장 단계 비 ≤ 100 · 총 팽창 상계 없음 (밀 때마다 다음 실측 점 또는 같은 쪽 ×100 한 칸 · 끝내는 것은 점 수
+    상한 · 판정문 반례 = 보수 끝 / 참 위끝 비 443,434,903.8)."""
     lo = side == 'lo'
     pushes, seen = 0, []
     while True:
@@ -2401,7 +2557,8 @@ class Ladder:
         return finR, [x for x in finR if 0.0 < x[2] < math.inf]
 
     def _bracket_to(self, X, role):
-        """§3-2 사다리 규칙 — X 를 끼는 양의 유한 이웃 둘 (같은 쪽 ×100 · 로그 중점 · 이웃 비 ≤ 10^0.5) → ((Ra, ka, sa), (Rb, kb, sb))."""
+        """§3-2 사다리 규칙 — X 를 끼는 양의 유한 이웃 둘 (같은 쪽 ×100 · 로그 중점 · 이웃 비 ≤ 10^0.5) → ((Ra, ka, sa), (Rb, kb, sb)).
+        ★ 10-27 묶음 C (RCA2-07 · Q7 (가)) — 각 연장 단계 비 ≤ 100 · 총 팽창 상계 없음 (×100 연장을 되풀이할 수 있다 · 끝내는 것은 점 수 상한)."""
         while True:
             finR, fin = self._fin()
             br = None
@@ -2428,7 +2585,8 @@ class Ladder:
         """§3-2b ③ 바깥 실측 이웃 — lo: σ ≥ T⁺ 인 가장 큰 유한 R · hi: σ ≤ T⁻ 인 가장 작은 유한 R (3판 = 끼는 이웃이 늘 하나 있다).
         ★ 4판 (Q2-2 · ③″) — '바깥' = 판독 보호 띠 (`outside_band` · 그 점의 e) · 띠에 걸친 점만 남아 바깥 실측 점이 하나도 없으면 (모호 = 보수 쪽 ·
         끝을 바깥으로) 사다리 규칙 그대로 같은 쪽 ×100 새 점을 돈다 (③′ 의 '없으면 바깥 ×100 연장' 과 같은 꼴 · 점 수 상한이 끝낸다 =
-        CALIB_LADDER_EXHAUSTED · ③″ 반례의 '사다리가 먼저 소진된다')."""
+        CALIB_LADDER_EXHAUSTED · ③″ 반례의 '사다리가 먼저 소진된다').
+        ★ 10-27 묶음 C (RCA2-07 · Q7 (가)) — 각 연장 단계 비 ≤ 100 · 총 팽창 상계 없음 (×100 을 되풀이할 수 있다 · 끝내는 것은 점 수 상한)."""
         while True:
             finR, _fin = self._fin()
             pool = [(R, k) for R, k, s in finR if outside_band(s, X, lo, self.err[k])]
@@ -2439,7 +2597,8 @@ class Ladder:
             self._get('end_point', rj_key(10.0 ** (math.log10(edge) + (-LADDER_EXT_LOG10 if lo else LADDER_EXT_LOG10))))
 
     def _next_out(self, end, lo):
-        """끝을 한 칸 바깥으로 — 다음 실측 유한 점 (lo = 더 작은 R · hi = 더 큰 R) · 없으면 같은 쪽 ×100 새 점 (사다리 셈 · 상한이 끝낸다)."""
+        """끝을 한 칸 바깥으로 — 다음 실측 유한 점 (lo = 더 작은 R · hi = 더 큰 R) · 없으면 같은 쪽 ×100 새 점 (사다리 셈 · 상한이 끝낸다).
+        ★ 10-27 묶음 C (RCA2-07 · Q7 (가)) — 각 연장 단계 비 ≤ 100 · 총 팽창 상계 없음 (한 번에 한 칸 · 여러 번 밀 수 있다)."""
         R = rj_float(end)
         finR, _fin = self._fin()
         cand = [(r, k) for r, k, _s in finR if (r < R if lo else r > R)]
@@ -2711,7 +2870,20 @@ def check_after_main(after_dir, plan_sha, s0_sha, code):
 
 
 # ═════════════════════════ (3) 사다리 단계 ═════════════════════════
+def machine_missing_rc(a):
+    """★ 10-27 묶음 C1a (C6 #15 · Q11) — 사다리 · 예측 = `--machine` 필수 (없음 = 인자 오류 rc 2 · 러너 · 출력 폴더 없음).  argparse 가 아니라 단계
+    입구에서 본다 (문서 명령 꼴 대조 시험 K01 = 인자 해석만 · 등록 문서의 `[--machine]` 표기 개정 = 문서 몫)."""
+    if getattr(a, 'machine', None) is None:
+        print(f'인자 오류: --stage {a.stage} 는 --machine <짧은 이름표> 가 필요하다 (★ 10-27 묶음 C1a · 계획 exec_policy.allowed_machines 안 · 빈 이름 금지 · '
+              f'런 기록마다 기계 · C6 #15) — 러너 · 출력 폴더 없음', file=sys.stderr)
+        return 2
+    return None
+
+
 def stage_ladder(a, contract):
+    rc_m = machine_missing_rc(a)
+    if rc_m is not None:
+        return rc_m
     out = Path(a.out)
     try:
         outdir_empty_or_stop(out)
@@ -2730,6 +2902,7 @@ def stage_ladder(a, contract):
         plan, plan_sha = load_plan(a.plan)
         s['plan'] = {'path': str(Path(a.plan).resolve()), 'sha256': plan_sha, 'content': plan}
         s['registration'] = check_plan_registered(plan_sha, a.registration)
+        plan_doc_or_stop(a.registration, plan)              # ★ 10-27 묶음 C1a (C6 #30) — 등록의 계획 숫자 블록 = 계획 JSON (정확히)
         s['s0_plan'] = load_s0_plan(a.s0_plan, a.registration, plan)
         require_plan_numbers(plan)
         #  ★ PF2 B (10-22 · Q2) — S0 단계 2 보고가 봉인한 계획 해시 = 지금 두 계획 (정확히 · DBE 열람 전 계획 하나) · ★ PF2 D (PRE2-design-08) —
@@ -2740,6 +2913,7 @@ def stage_ladder(a, contract):
         why = code_dirty_problem(s['code'])
         if why:
             raise Stop('CODE_PIN_MISMATCH', why)
+        exec_check_or_stop(plan, a.max_hours, a.machine, s['code'])   # ★ 10-27 묶음 C1a — 시간 상한 · 기계 · 계획 봉인 판 (러너 전)
         got = s0_reports_problem(s['s0_reports'], plan_sha, s['s0_plan']['sha256'], s['code']['files'], s['code']['runner_files'],
                                  plan=plan)
         if got:
@@ -2753,7 +2927,8 @@ def stage_ladder(a, contract):
         #  ★ 10-25 묶음 B (RCA2-03 · Q3 (가) · 판정문 §4 F8) — R 런 직전 SBE 킷을 S0 와 같은 발견 함수로 다시 해시 = S0 단계 1 보고의 원 입력 ·
         #    설정 (경로 = 대조 밖) · 다르면 멈춤 (새 S0) · 파생 격자 지문 (off 격자 sid) 은 첫 arm 0 런을 읽을 때 (read_run · 같은 규약만)
         s['bed'] = bed_problem(s['s0_reports'], a.root, (SBE_KIT,))
-        rn = Runner(a.runner, a.root, out, plan, a.variant, time.time() + a.max_hours * 3600.0, contract, dry=a.dry_run, prefix='L')
+        rn = Runner(a.runner, a.root, out, plan, a.variant, time.time() + a.max_hours * 3600.0, contract, dry=a.dry_run, prefix='L',
+                    machine=a.machine)
         rn.s0_grid = s0_grid_seed(s['s0_reports'])
         rn.s0_census = s0_census_seed(s['s0_reports'])
         #  ★ 10-26 B″ (Q1 (가)) — 봉인 원천 (사다리 = SBE · SV 런 없음 → 부르지 않는다 · 같은 배선)
@@ -2823,6 +2998,7 @@ def load_ladders(dirs, variant, reg_path, contract, sid_reg, now_code=None):
             raise Stop('LADDER_SET', f'{rd}: 이 사슬 (3판) 의 ladder_summary.json 이 없다')
         if s.get('status') != 'CALIBRATED':
             raise Stop('LADDER_NOT_CALIBRATED', f'{rd.name}: 사다리 상태 {s.get("status")} — 예측하지 않는다 (판정 = 그 이름)')
+        plan_record_or_stop((s.get('plan') or {}).get('content'), rd.name)   # ★ 10-27 묶음 C1a — 기록된 계획 꼴 (실행 정책 칸을 쓰기 전)
         if s.get('variant') != want_var:
             raise Stop('LADDER_SET', f'{rd.name}: 사다리 변이 {s.get("variant")!r} ≠ {want_var!r}')
         law = s.get('law')
@@ -2876,6 +3052,9 @@ def load_ladders(dirs, variant, reg_path, contract, sid_reg, now_code=None):
 
 
 def stage_predict(a, contract):
+    rc_m = machine_missing_rc(a)
+    if rc_m is not None:
+        return rc_m
     out = Path(a.out)
     try:
         outdir_empty_or_stop(out)
@@ -2899,6 +3078,8 @@ def stage_predict(a, contract):
         s['s0_plan'] = s0rec
         s['s0_reports'] = s0reps                             # ★ PF2 B — 사다리가 읽은 단계 2 봉인 (판정이 다시 대조)
         s['registration'] = check_plan_registered(plan_sha, a.registration)
+        plan_doc_or_stop(a.registration, plan)              # ★ 10-27 묶음 C1a (C6 #30)
+        exec_check_or_stop(plan, a.max_hours, a.machine, s['code'])   # ★ 10-27 묶음 C1a — 시간 상한 · 기계 · 계획 봉인 판 (러너 전)
         if a.variant is not None:
             s['after_main'] = check_after_main(a.after_main, plan_sha, s0rec['sha256'], s['code'])
             if a.variant != 'SVORDER' and lad_after != s['after_main']:
@@ -2910,7 +3091,8 @@ def stage_predict(a, contract):
                 raise Stop('KIT_MISSING', f'{p}')
         #  ★ 10-25 묶음 B (RCA2-03 · Q3 (가) · 판정문 §4 F8) — R 런 직전 SBE · DBE 킷 다시 해시 = S0 단계 1 · 2 보고의 원 입력 · 설정
         s['bed'] = bed_problem(s0reps, a.root, (SBE_KIT, DBE_KIT))
-        rn = Runner(a.runner, a.root, out, plan, a.variant, time.time() + a.max_hours * 3600.0, contract, dry=a.dry_run, prefix='P')
+        rn = Runner(a.runner, a.root, out, plan, a.variant, time.time() + a.max_hours * 3600.0, contract, dry=a.dry_run, prefix='P',
+                    machine=a.machine)
         rn.sid_reg = sid_reg
         rn.s0_grid = s0_grid_seed(s0reps)
         rn.s0_census = s0_census_seed(s0reps)
@@ -3194,9 +3376,21 @@ def verdict_compute(dirs, reg_path, contract, root, graph_src=None):
             raise Stop('INPUT_STAGE_STOPPED', f'{rd.name}: {(s.get("stop") or {}).get("code")} — 멈춘 주 판정 단계는 판정 입력이 아니다')
         if (s.get('plan') or {}).get('sha256') != plan_hash:
             raise Stop('PLAN_HASH_MISMATCH', f'{rd.name}: 계획 sha256 ≠ 등록 §2-1 개정값')
-        plan = (s.get('plan') or {}).get('content')
+        plan = plan_record_or_stop((s.get('plan') or {}).get('content'), rd.name)   # ★ 10-27 묶음 C1a — 기록 계획 꼴
         recheck_s0_record(s.get('s0_plan'), reg_path, plan)
         require_plan_numbers(plan)
+        #  ★ 10-27 묶음 C1a (C6 #30 · Q9 개정 4 Q3 · C6 #15) — 등록의 계획 숫자 블록 = 그 계획 · 단계 환경 같음 단위 = 계획 봉인 판 (코드 키 대조 앞 ·
+        #    단계끼리 대조가 사유를 덮지 않게) · 단계 · 런 기록의 기계 = 허용 목록 · 런 기계 = 단계 기계
+        try:
+            plan_doc_or_stop(reg_path, plan)
+        except Stop as e:
+            raise Stop(e.code, f'{rd.name}: {e.cause}')
+        why = env_seal_problem(s.get('code'), plan)
+        if why:
+            raise Stop('CODE_PIN_MISMATCH', f'{rd.name}: {why}')
+        why = stage_machine_problem(s, plan)
+        if why:
+            raise Stop('MACHINE_NOT_ALLOWED', f'{rd.name}: {why}')
         #  ★ PF2 D (10-22 · PRE2-design-02 · 탐침 C) — 단계 코드 = HEAD + 코드 파일 지문 (`code_key` · 옛 = HEAD · 러너 HEAD · 경로) · 단계마다
         #    dirty 기록 = 멈춤 · 첫 단계 ↔ 지금 사슬 쪽 (dirty · HEAD · 사슬 폴더 지문 · `code_verdict_problem`) · 단계끼리 같은 키
         c = s.get('code') if isinstance(s.get('code'), dict) else {}
@@ -3459,6 +3653,24 @@ def reverify(vdir, contract, root):
     return 1
 
 
+def stage_plan_doc(a):
+    """★ 10-27 묶음 C1a (판정문 C6 #30) — 계획 JSON → 계획 숫자 블록 (화면 · 등록 R 에 그대로 붙인다) · `--check-doc` = 등록의 블록과 정확 대조."""
+    try:
+        plan, _sha = load_plan(a.plan)
+    except Stop as e:
+        print_stop(e)
+        return 3
+    if not a.check_doc:
+        print(plan_doc_block(plan))
+        return 0
+    why = plan_doc_problem(a.registration, plan)
+    if why:
+        print_stop(Stop('PLAN_DOC_MISMATCH', why))
+        return 3
+    print(f'PLAN_DOC_SAME — 등록 {a.registration} 의 계획 숫자 블록 = 계획 {a.plan} 에서 생성한 블록 (정확히)')
+    return 0
+
+
 # ═════════════════════════ CLI ═════════════════════════
 def main(argv=None, contract=None):
     try:                                   # ★ SELF-122 — 화면을 파일로 돌려도 줄마다 바로 쓴다
@@ -3466,7 +3678,7 @@ def main(argv=None, contract=None):
     except (AttributeError, ValueError):
         pass
     ap = argparse.ArgumentParser(description=__doc__.split('\n')[0])
-    ap.add_argument('--stage', choices=('ladder', 'predict', 'verdict'), default='ladder')
+    ap.add_argument('--stage', choices=('ladder', 'predict', 'verdict', 'plan-doc'), default='ladder')
     ap.add_argument('--law', choices=LAWS, help='ladder — PTFE–접합 법칙 끝')
     ap.add_argument('--target', type=float, default=TARGET_SBE_MS, help='ladder — 등록 표적 (1.63 이 아니면 멈춤)')
     ap.add_argument('--variant', choices=VARIANTS, default=None, help='감도 (등록 R §5-6 · 필수 · 주 판정 단계 뒤에만 — --after-main)')
@@ -3475,21 +3687,26 @@ def main(argv=None, contract=None):
     ap.add_argument('--runner')
     ap.add_argument('--root', help='킷 폴더가 있는 곳 = 러너 작업 폴더 · ★ 10-25 묶음 B (RCA2-03) — 판정 · 다시 판정도 필수 (킷을 S0 와 같은 '
                                    '발견 함수로 다시 해시해 S0 보고의 원 입력과 대조 · 기계마다 자기 사본 · 경로 = 대조 밖)')
-    ap.add_argument('--plan', help='ladder — R 런 계획 파일 (rint-r-plan-v2 · 등록 §2-1 개정 커밋의 대상 · sha256 = 그 칸)')
+    ap.add_argument('--plan', help='ladder · plan-doc — R 런 계획 파일 (rint-r-plan-v3 · 실행 정책 칸 포함 · 등록 §2-1 개정 커밋의 대상 · sha256 = '
+                                   '그 칸)')
     ap.add_argument('--s0-plan', help='ladder — S0 단계 1 계획 (ca-cjunc-plan-v1 · 정준 바이트 · sha256 = 등록 §2-1 S0 계획 해시 칸) · '
                                       '두 계획 대조 (§2-1 · §10-2 ⑪)')
     ap.add_argument('--s0-stage2-report', help='ladder — S0 단계 2 보고 (s0_stage2_<DBE 킷>.json · ca_s0_census) · 그 보고가 봉인한 계획 '
                                                '해시 (R 계획 · S0 계획) = 지금 계획이어야 돈다 (★ PF2 B · Q2 · 등록 R §2-1b · §11 ④)')
     ap.add_argument('--s0-stage1-report', help='ladder — S0 단계 1 보고 (s0_stage1_<SBE 킷>.json · 그 보고가 만든 S0 계획 = --s0-plan) · '
                                                'census · registry 일곱 파일 지문 = 지금 R 런 코드여야 돈다 (★ PF2 D · 등록 R §2-1b)')
-    ap.add_argument('--machine', default=None, help='ladder · predict — 기계 이름표 (실행자가 넣는 짧은 이름 · 영문 · 숫자 · _ · - 만 · IP · 주소 '
-                                                    '금지 · 단계 요약에 기록만 · 판정에 안 쓴다 · 등록 R §10-4 문장 3)')
+    ap.add_argument('--machine', default=None, help='ladder · predict — 기계 이름표 (★ 10-27 묶음 C1a = 필수 · 계획 exec_policy.allowed_machines 안 · '
+                                                    '실행자가 넣는 짧은 이름 · 영문 · 숫자 · _ · - 만 · IP · 주소 금지 · 단계 요약 · 런 기록마다 · '
+                                                    '판정이 허용 목록 · 단계 ↔ 런 대조 · 등록 R §10-4 문장 3)')
+    ap.add_argument('--check-doc', action='store_true', help='plan-doc — 등록 R (--registration) 의 계획 숫자 블록이 --plan 에서 생성한 블록과 '
+                                                             '정확히 같은지 (같음 rc 0 · 다름 rc 3 PLAN_DOC_MISMATCH)')
     ap.add_argument('--registration', default=str(REGISTRATION_DEFAULT), help='등록 R 문서 (§2-1 계획 해시 · S0 계획 해시를 읽는다)')
     ap.add_argument('--ladders', nargs='+', help='predict — 사다리 폴더 둘 (P0 · P1)')
     ap.add_argument('--runs', nargs='+', help='verdict — 사다리 · 예측 · 감도 폴더 전부')
     ap.add_argument('--reverify', help='verdict — 판정 폴더를 같은 입력으로 다시 판정 (읽기 전용 · 바이트 대조)')
     ap.add_argument('--out', help='새 출력 폴더 (없거나 비어 있어야)')
-    ap.add_argument('--max-hours', type=float, help='ladder · predict — 시간 상한 (등록 §10 · 숫자 탐침 뒤의 값 · 기본값 없음)')
+    ap.add_argument('--max-hours', type=float, help='ladder · predict — 시간 상한 (등록 §10 · 숫자 탐침 뒤의 값 · 기본값 없음 · ★ 10-27 묶음 C1a = '
+                                                    '계획 exec_policy.max_hours 와 같아야 · 다르면 NOT_REGISTERED)')
     ap.add_argument('--dry-run', action='store_true', help='ladder · predict — 런 env 만 찍는다 (러너 · 출력 폴더 없음)')
     ap.add_argument('--show-results', action='store_true', help='verdict 만 — 판정에 쓰는 런이 다 끝난 뒤 값을 연다 (열람 기록)')
     a = ap.parse_args(argv)
@@ -3498,8 +3715,14 @@ def main(argv=None, contract=None):
         ap.error('--show-results 는 --stage verdict 에서만 (등록 R §4-1 — 판정에 쓰는 런이 다 끝난 뒤 한 번)')
     if a.after_main and not a.variant:
         ap.error('--after-main 은 --variant (감도 단계) 와만')
-    if a.machine is not None and (a.stage == 'verdict' or not MACHINE_RE.fullmatch(a.machine)):
+    if a.machine is not None and (a.stage in ('verdict', 'plan-doc') or not MACHINE_RE.fullmatch(a.machine)):
         ap.error('--machine 은 ladder · predict 에서만 · 영문 · 숫자 · _ · - 로 된 짧은 이름 (IP · 주소 · 경로 · 띄어쓰기 금지 · 등록 R §10-4 문장 3)')
+    if a.check_doc and a.stage != 'plan-doc':
+        ap.error('--check-doc 은 --stage plan-doc 에서만')
+    if a.stage == 'plan-doc':
+        if not a.plan:
+            ap.error('--stage plan-doc 는 --plan 이 필요하다 (--check-doc 이면 --registration 의 블록과 대조)')
+        return stage_plan_doc(a)
     if a.stage == 'ladder':
         if not (a.law and a.runner and a.root and a.plan and a.s0_plan and a.s0_stage2_report and a.s0_stage1_report and a.out
                 and a.max_hours is not None):

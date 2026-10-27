@@ -4960,43 +4960,62 @@ def t_Y07():
               '예측 (3.8.10) → PREDICTED · P1 numpy 1.24.3 (P0 1.24.4) → 예측 CODE_PIN_MISMATCH · 러너 0 회 · 사다리 둘 = 1.24.4 인데 예측 프로세스 '
               '1.24.3 → CODE_PIN_MISMATCH · 기록만 칸 (cupy · GPU · BLAS 계산 경로 · OPENBLAS_CORETYPE · CPU 모델 · numpy SIMD · python 전체 판) 다름 '
               '→ PREDICTED · 단위 칸 미확인 (numpy None) 사다리 → CODE_PIN_MISMATCH · 러너 0 회 · 감도 사다리의 환경 ≠ 주 예측 → MAIN_NOT_DONE · '
-              '판정 — 예측 요약의 numpy 손댐 → CODE_PIN_MISMATCH · 판정 프로세스 환경이 단계와 달라도 판정 (기록만 · R4-11)')
+              '판정 — 예측 요약의 numpy 손댐 → CODE_PIN_MISMATCH · 판정 프로세스 환경이 단계와 달라도 판정 (기록만 · R4-11) · ★ 10-27 묶음 C1a = '
+              '계획 봉인 판 (KGY) — 봉인 판과 다른 단계 (b1 numpy 1.24.3 · h) = 입구 CODE_PIN_MISMATCH (계획 봉인 · 러너 0 회) · 단계끼리 대조는 손댄 '
+              '기록 (사다리 사본 b1t · 주 예측 사본 hm) 으로')
 def t_Y08():
+    #  ★ 10-27 묶음 C1a (Q9 개정 4 Q3 · author 10-27 approved bundle C) — 계획이 판을 봉인한다 (exec_policy.env_unit): 이 시험의 단계 = KGY_UNIT 으로
+    #    봉인한 계획 · 정직한 단계는 늘 봉인 판이라 단계끼리 판 차이 (옛 b1 · h 꼴) 는 단계 입구 (계획 봉인) 가 먼저 거부한다 → 단계끼리 대조 경로
+    #    (load_ladders · check_after_main · 판정) 는 손댄 기록 (b1t · mpt · t) 으로 그대로 시험 · 고치기 전 판 = 옛 꼴 그대로
+    c1 = chain_c1()
+
     def go():
         mp = s_main_predict()['out']
+        kp, _ks, kreg = plan_set('Y08_plan', exec_policy=exec_policy(env_unit=dict(KGY_UNIT))) if c1 else (None, None, None)
         with env_as(KGY_UNIT, {'python': '3.8.10'}):
-            a0 = ladder('Y08a_P0', world('Y08a_P0'), law='P0')
+            a0 = ladder('Y08a_P0', world('Y08a_P0'), law='P0', plan=kp, reg=kreg)
         with env_as(KGY_UNIT, {'python': '3.8.20'}):
-            a1 = ladder('Y08a_P1', world('Y08a_P1'), law='P1')
+            a1 = ladder('Y08a_P1', world('Y08a_P1'), law='P1', plan=kp, reg=kreg)
         with env_as(KGY_UNIT, {'python': '3.8.10'}):
-            pa = predict('Y08a_pred', world('Y08a_pred'), [a0['out'], a1['out']])
+            pa = predict('Y08a_pred', world('Y08a_pred'), [a0['out'], a1['out']], reg=kreg)
         with env_as(dict(KGY_UNIT, numpy='1.24.3')):
-            b1 = ladder('Y08b_P1', world('Y08b_P1'), law='P1')
+            b1 = ladder('Y08b_P1', world('Y08b_P1'), law='P1', plan=kp, reg=kreg)
+        b1t = (b_tamper_copy(a1['out'], 'Y08b_P1t', 'ladder_summary.json', lambda s: s['code']['env']['unit'].update(numpy='1.24.3'))
+               if c1 else b1['out'])
         with env_as(KGY_UNIT):
-            pb = predict('Y08b_pred', world('Y08b_pred'), [a0['out'], b1['out']])
+            pb = predict('Y08b_pred', world('Y08b_pred'), [a0['out'], b1t], reg=kreg)
         with env_as(dict(KGY_UNIT, numpy='1.24.3')):
-            pc = predict('Y08c_pred', world('Y08c_pred'), [a0['out'], a1['out']])
+            pc = predict('Y08c_pred', world('Y08c_pred'), [a0['out'], a1['out']], reg=kreg)
         with env_as(KGY_UNIT, {'cupy': 'cupy-cuda11x 12.0.0', 'gpu': ['Other GPU'], 'blas': [{'internal_api': 'other'}],
                                'openblas_coretype': 'Haswell', 'cpu_model': 'Other CPU', 'numpy_simd': ['SSE2'], 'python': '3.8.20'}):
-            pd = predict('Y08d_pred', world('Y08d_pred'), [a0['out'], a1['out']])
+            pd = predict('Y08d_pred', world('Y08d_pred'), [a0['out'], a1['out']], reg=kreg)
         with env_as({'numpy': None}):
             g = ladder('Y08g', world('Y08g'), law='P0')
         #  ★ 10-26 (kgy 판 단계 `scripts/check_kgy_py38.sh` 에서 잡힘) — h 의 단위는 주 예측 (이 프로세스 환경 그대로) 과 **늘** 달라야 한다.
         #    옛 판 = KGY_UNIT 그대로 → 호스트가 kgy 판 (python 3.8 · numpy 1.24.4 · scipy 1.10.1) 이면 단위가 같아 멈추지 않았다 (호스트 의존 ·
         #    사슬 동작은 옳다) → numpy 칸 = 이 프로세스의 numpy 판 + 꼬리표 (어떤 호스트에서도 다르다)
+        #  ★ 10-27 묶음 C1a — h (환경 ≠ 계획 봉인) = 입구 CODE_PIN_MISMATCH (계획 봉인) · 주 예측과의 대조 (MAIN_NOT_DONE) = hm (주 예측 사본의 판만 손댐)
         with env_as(dict(KGY_UNIT, numpy=str(host_unit().get('numpy')) + '+y08h')):
             h = ladder('Y08h', world('Y08h'), law='P0', variant='FIBRE', after=mp)
-        v = verdict('Y08v', [a0['out'], a1['out'], pa['out']])
+        hm = None
+        if c1:
+            mpt = b_tamper_copy(mp, 'Y08h_main', 'predict_summary.json',
+                                lambda s: s['code']['env']['unit'].update(numpy=str(host_unit().get('numpy')) + '+y08h'))
+            hm = ladder('Y08hm', world('Y08hm'), law='P0', variant='FIBRE', after=str(mpt))
+        v = verdict('Y08v', [a0['out'], a1['out'], pa['out']], reg=kreg)
         t = b_tamper_copy(pa['out'], 'Y08t_pred', 'predict_summary.json', lambda s: s['code']['env']['unit'].update(numpy='1.24.3'))
-        vt = verdict('Y08vt', [a0['out'], a1['out'], t])
-        return a0, a1, pa, b1, pb, pc, pd, g, h, v, vt
-    a0, a1, pa, b1, pb, pc, pd, g, h, v, vt = scen('Y08', go)
+        vt = verdict('Y08vt', [a0['out'], a1['out'], t], reg=kreg)
+        return a0, a1, pa, b1, pb, pc, pd, g, h, hm, v, vt
+    a0, a1, pa, b1, pb, pc, pd, g, h, hm, v, vt = scen('Y08', go)
+    seal = (lambda r: y_stopped(r) and '계획 봉인' in y_why(r)) if c1 else None
     ok = ((a0['sum'] or {}).get('status') == 'CALIBRATED' and (a1['sum'] or {}).get('status') == 'CALIBRATED'
-          and pa['rc'] == 0 and (pa['sum'] or {}).get('status') == 'PREDICTED' and b1['rc'] == 0 and y_stopped(pb) and y_stopped(pc)
-          and pd['rc'] == 0 and y_stopped(g) and y_stopped(h, 'MAIN_NOT_DONE') and v['rc'] == 0
+          and pa['rc'] == 0 and (pa['sum'] or {}).get('status') == 'PREDICTED'
+          and (seal(b1) if c1 else b1['rc'] == 0) and y_stopped(pb) and y_stopped(pc)
+          and pd['rc'] == 0 and y_stopped(g)
+          and (seal(h) and y_stopped(hm, 'MAIN_NOT_DONE') if c1 else y_stopped(h, 'MAIN_NOT_DONE')) and v['rc'] == 0
           and vt['rc'] == 3 and stop_code(vt) == 'CODE_PIN_MISMATCH')
-    return ok, (pa['rc'], stop_code(pa), y_why(pa)[-160:], stop_code(pb), stop_code(pc), pd['rc'], stop_code(pd), stop_code(g),
-                stop_code(h), v['rc'], stop_code(v), stop_code(vt))
+    return ok, (pa['rc'], stop_code(pa), y_why(pa)[-160:], stop_code(b1), y_why(b1)[-120:], stop_code(pb), stop_code(pc), pd['rc'],
+                stop_code(pd), stop_code(g), stop_code(h), (stop_code(hm) if hm else None), v['rc'], stop_code(v), stop_code(vt))
 
 
 @check('Y09', '정상 기록 — 단계 요약 code.env = {unit: python 부 판 · numpy · scipy (이 프로세스 판 그대로) · record_only: python 전체 판 · cupy · GPU · '
@@ -6361,6 +6380,19 @@ def t_EP11():
     p, reg, s2 = ep_raw_plan('EP11', old)
     r = scen('EP11', lambda: ladder('EP11', world('EP11'), plan=p, reg=reg, s2=s2))
     return r['rc'] == 3 and ep_stop(r)[0] == 'PLAN_INVALID' and n_calls(r['world']) == 0, (r['rc'], ep_stop(r))
+
+
+@check('EP12', '★ 10-27 묶음 C1a — 단계 요약에 기록된 계획의 실행 정책 칸 꼴 (사다리 요약 사본 P0 의 allowed_machines = 문자열 "kgy") → 예측 '
+               'PLAN_INVALID (러너 0 회 · 꼴 검사가 없으면 문자열 안 글자 대조 "kgy" in "kgy" 로 지난다) · 판정 PLAN_INVALID (NOT_COMPUTED · rc 3)')
+def t_EP12():
+    def bad(s):
+        s['plan']['content']['exec_policy']['allowed_machines'] = MACH
+    d0 = scen('EP12_lad', lambda: ep_tamper_runs(s_main('P0')['out'], 'EP12_lad', 'ladder_summary.json', bad))
+    pr = scen('EP12_pred', lambda: predict('EP12_pred', world('EP12_pred'), [d0, s_main('P1')['out']]))
+    vr = scen('EP12_ver', lambda: verdict('EP12_ver', [d0, s_main('P1')['out'], s_main_predict()['out']]))
+    return (pr['rc'] == 3 and ep_stop(pr)[0] == 'PLAN_INVALID' and n_calls(pr['world']) == 0
+            and vr['rc'] == 3 and ep_stop(vr)[0] == 'PLAN_INVALID' and (vr['v'] or {}).get('verdict') == 'NOT_COMPUTED',
+            ((pr['rc'], ep_stop(pr)), (vr['rc'], ep_stop(vr))))
 
 
 def doc_tool_commands(path, tool):
