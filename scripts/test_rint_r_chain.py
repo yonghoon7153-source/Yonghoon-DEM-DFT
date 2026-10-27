@@ -8228,12 +8228,38 @@ def t_RS05():
     d, p, q, v, s4 = scen('RS05', go)
     m = s_main_predict()['sum'] or {}
     qs = q['sum'] or {}
+    rq = qs.get('resume') or {}
     base = s_verdict_main().get('v') or {}
     vv = v.get('v') or {}
+    runs = qs.get('runs') or []
     return (stop_code(p) == 'RUNNER_RC' and q['rc'] == 0 and qs.get('status') == 'PREDICTED' and qs.get('checks') == m.get('checks')
             and qs.get('origin') == m.get('origin') and pred_seq(q) == pred_seq(s_main_predict()) and v['rc'] == 0
-            and all(vv.get(k) == base.get(k) for k in ('verdict', 'state', 'flags', 'blocking_flags')),
-            (stop_code(p), q['rc'], qs.get('status'), v['rc'], vv.get('verdict'), s4[-160:]))
+            and all(vv.get(k) == base.get(k) for k in ('verdict', 'state', 'flags', 'blocking_flags'))
+            and rq.get('from') == 3 and rq.get('copied') == [x['name'] for x in runs[:4]] and rq.get('rerun') == runs[4]['name']
+            and n_calls(q['world']) == len(runs) - 4,
+            (stop_code(p), q['rc'], qs.get('status'), v['rc'], vv.get('verdict'), rq, n_calls(q['world']), len(runs), s4[-160:]))
+
+
+@check('RS06', '★ 10-27 묶음 C1b-2 (구현과 함께 · 변이로 검증) — 완주한 재실행 사슬 (RS01 · [1, 2]) 뒤 풀기 전 대조를 거치지 않고 돈 재실행 흔적 (손 항목 resume_of 1 · '
+               '결과 줄 · 표지 있는 폴더) → 판정 RESUME_NOT_ALLOWED (자격 없는 재실행 · 사슬에 넣지 않는다)')
+def t_RS06():
+    if not chain_c1b2():
+        return False, '사슬에 재실행 실행 (ResumeRunner) 이 없다'
+    r = s_resume_lad('RS01', {'do': 'oom_after_mark', 'match': {'rj': '0'}})
+    d = led_clone(r['d'], 'RS06')
+    e = led_entry_like(d, 1, resume_of=1)
+    c0 = led_hand(d, e)
+    base = Path(TD) / 'runs' / 'RS06'
+    shutil.copytree(r['b']['out'], base / r['b']['out'].name, symlinks=True)
+    shutil.copytree(r['a']['out'], base / r['a']['out'].name, symlinks=True)
+    fd = base / f'attempt_{e["n"]}'
+    (fd / 'L01_floor_arm1' / '.unchecked').mkdir(parents=True)
+    (fd / 'L01_floor_arm1' / '.unchecked' / 'p2_x.json.first_result.json').write_text('{}', encoding='utf-8')
+    (fd / 'attempt.json').write_text(json.dumps({'schema': 'rint-r-attempt-v1', 'n': e['n'], 'target': 'ladder:P0', 'machine': MACH, 'resume_of': 1,
+                                                 'ledger_commit': c0}), encoding='utf-8')
+    led_hand(d, dict(led_result(d, 2), n=e['n'], folder=fd.name, folder_sha256=tree_digest(fd)))
+    v = ver_led('RS06_v', [base / r['b']['out'].name], d)
+    return stop_code(v) == 'RESUME_NOT_ALLOWED', (stop_code(v), ((v.get('v') or {}).get('stop') or {}).get('cause'))
 
 
 def doc_tool_commands(path, tool):

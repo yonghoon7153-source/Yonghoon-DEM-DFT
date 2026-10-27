@@ -113,7 +113,9 @@
 ★ 10-27 묶음 C1b (RCA2-05 · Q4 (가) · Q9 설계 §3-2 · §3-4 · §3-5): 시도 원장 (`--stage ledger --init · --add` · 실행 트리와 다른 git 저장소 · 덧붙이기만 ·
   항목 = 시도 전에 커밋) · 시도 꼴 (`--ledger · --attempt n` · 폴더 <--out>/attempt_<n> · 풀기 전 대조 = 거부 기록 + 결과 줄 · 끝 = 그룹 확인 뒤 결과 줄) ·
   채택 (`adoption` · 처음 결과 전이 아닌 시도 + 재실행 사슬) · 원장 예측 (사다리 입력 = 채택 시도) · 원장 판정 (`ledger_verdict_check` · 판정 칸 ledger) ·
-  `--stage recover --ledger` = 결과 줄 확정 · 한정 = 원장 안 시도끼리만 (그림자 런 · 모든 사본 일관 편집은 못 막는다 · Codex Q-D)
+  `--stage recover --ledger` = 결과 줄 확정 · 한정 = 원장 안 시도끼리만 (그림자 런 · 모든 사본 일관 편집은 못 막는다 · Codex Q-D) · ★ C1b-2 재실행
+  (`--add --resume <원 시도>` · `ResumeRunner` = 사슬 끝 시도 폴더의 끝난 런 복사 · 멈춘 런부터 새로 · 남은 payload 바이트 대조 = RESUME_MISMATCH · 없으면
+  결정성 가정 = Codex Q-J 한정)
 """
 import argparse
 import glob
@@ -413,6 +415,7 @@ STOPS = {
     'RESUME_NOT_ALLOWED': '재실행 자격 없음 (원 시도가 채택 · 재실행 사슬 끝이 아님 · 완주 · 자원 · 인프라 원인이 아님 · 검사 실패 흔적 · 기계 · 환경 지문 다름 · '
                           'Q9 §3-5 개정 4 · R4-08)',
     'ATTEMPT_LIMIT': '같은 대상 시도 수 > 계획 exec_policy.max_attempts (★ 10-27 묶음 C1b · C1 · 이름 = 구현 때 · 결정 필요)',
+    'RESUME_MISMATCH': '재실행 payload ≠ 원 시도에 남은 payload (바이트 · 결정적 재실행이 아니다 · Q9 §3-5 · ★ 10-27 묶음 C1b-2)',
     'DUPLICATE_RUN': '같은 킷 · 같은 계획 두 번',
     'INPUT_SHA_MISMATCH': '판정 입력 sha256 ≠ 런 산출',
     'INPUT_MISSING': '판정 입력이 모자란다',
@@ -2884,6 +2887,13 @@ class Attempt:
 
     def __init__(self, repo, n, entry, folder, head, st):
         self.repo, self.n, self.entry, self.folder, self.head, self.st = Path(repo), n, entry, Path(folder), head, st
+        self.resume_src, self.resume_eff = None, None           # ★ 10-27 묶음 C1b-2 — 재실행 원천 (사슬 끝 시도 폴더 · 번호)
+
+    def runner_cls(self):
+        return Runner if self.resume_src is None else ResumeRunner
+
+    def runner_kw(self):
+        return {} if self.resume_src is None else {'src': self.resume_src, 'src_n': self.resume_eff}
 
     def public(self):
         return {'n': self.n, 'target': self.entry['target'], 'machine': self.entry['machine'], 'resume_of': self.entry['resume_of'],
@@ -2962,7 +2972,10 @@ def attempt_open(a, stage):
         prob = (ex.code, ex.cause)
     if prob:
         return attempt_reject(repo, raw, n, folder / REJECTED_FILE, Stop(*prob), head)
-    return Attempt(repo, n, e, folder, head, st)
+    att = Attempt(repo, n, e, folder, head, st)
+    if e['resume_of'] is not None:
+        att.resume_src, att.resume_eff = resume_source(st, e, n, base)
+    return att
 
 
 def attempt_plan(a, stage, e):
@@ -2998,9 +3011,18 @@ def attempt_presolve_problem(st, e, n, target, a, stage):
     prob = attempt_order_problem(st, e, plan)
     if prob:
         return prob
-    if e['resume_of'] is not None:
-        return ('RESUME_NOT_ALLOWED', '재실행 실행은 이 판에 아직 없다 (★ 10-27 묶음 C1b 다음 커밋)')
+    if e['resume_of'] is not None:                         # ★ 10-27 묶음 C1b-2 — 재실행 원천 = 같은 바탕의 사슬 끝 시도 폴더 (결과 줄과 같은 폴더)
+        src, eff = resume_source(st, e, n, a.out)
+        r = st['results'].get(eff)
+        if read_attempt(src) is None or r is None or r['folder'] != src.name or folder_digest(src) != r['folder_sha256']:
+            return ('RESUME_NOT_ALLOWED', f'재실행 원천 {src} (재실행 사슬 끝 attempt_{eff}) 가 없거나 원장 결과 줄과 다르다 (같은 기계 · 같은 바탕 폴더에서)')
     return None
+
+
+def resume_source(st, e, n, base):
+    """재실행 항목 → (원천 폴더 = <바탕>/attempt_<사슬 끝>, 사슬 끝 번호)."""
+    eff = adoption(st, e['target'], upto=n)['effective']
+    return Path(base) / f'attempt_{eff}', eff
 
 
 def attempt_groups_problem(folder):
@@ -3251,7 +3273,16 @@ class Runner:
 
     def run(self, kit, role, law, c, rj, arms, sv_cf=False):
         """런 하나 → 팔 기록 목록.  `arms` = 팔 수 (ARMS · 0..N−1) 또는 팔 번호 튜플 (ARM_LIST · 예 ORIGIN_ARMS) · sv_cf = SV 반사실 켬.
-        같은 킷 · 같은 계획 두 번 · 출력 폴더 있음 · 시간 · rc · 팔 계약 = Stop."""
+        같은 킷 · 같은 계획 두 번 · 출력 폴더 있음 · 시간 · rc · 팔 계약 = Stop.  ★ 10-27 묶음 C1b-2 — 요청 (`_prepare`) · 실행 (`_execute`) 을 나눴다
+        (재실행 `ResumeRunner` 가 같은 요청 · 이름 · 폴더로 복사하거나 새로 돈다 · 동작 그대로)."""
+        name, req, outdir, delta = self._prepare(kit, role, law, c, rj, arms, sv_cf)
+        if self.dry:
+            self.dry_lines.append('  env ' + ' '.join(f'{k}={shlex.quote(delta[k])}' for k in sorted(delta)) + f' bash {self.runner}')
+            print(self.dry_lines[-1])
+            return None
+        return self._execute(name, req, outdir, delta)
+
+    def _prepare(self, kit, role, law, c, rj, arms, sv_cf):
         self.n += 1
         name = f'{self.prefix}{self.n:02d}_{role}'
         al = None if isinstance(arms, int) else sorted(int(i) for i in arms)
@@ -3269,11 +3300,10 @@ class Runner:
         if al is not None:
             sfx += '_arml' + '-'.join(str(i) for i in al)
         outdir = self.out / f'{name}{sfx}'
-        delta = self.env_delta(req, outdir)
-        if self.dry:
-            self.dry_lines.append('  env ' + ' '.join(f'{k}={shlex.quote(delta[k])}' for k in sorted(delta)) + f' bash {self.runner}')
-            print(self.dry_lines[-1])
-            return None
+        return name, req, outdir, self.env_delta(req, outdir)
+
+    def _execute(self, name, req, outdir, delta):
+        role, rj, law, c, sv_cf = req['role'], req['rj'], req['law'], req['c'], req['sv_cf']
         if outdir.exists() and any(outdir.iterdir()):
             raise Stop('OUTDIR_NOT_EMPTY', f'{outdir} — 러너 SKIP 캐시가 옛 팔을 재사용한다', name)
         left = self.deadline - time.time()
@@ -3316,6 +3346,87 @@ class Runner:
               f'{rec["seconds"]:.1f} s · 상태 {a0["state"]} · cg_info {a0["cg_info"]} · CG 반복 {a0["cg_iters"]} · 이어 풀기 '
               f'{a0["resolve_iters"]} · 잔차 {_e(a0["cg_resid"])} · 판 전류 불균형 {_e(a0["imbalance"])} · 증서 ⓐⓑⓒⓓ {ok} · '
               f'판독 보장 오차 e {_e(a0["err_rel"])}')
+        return arms_
+
+
+def resume_leftovers(run_dir):
+    """원 시도의 멈춘 런 폴더에 남은 완성 payload (`p2_*.json` · 런 폴더 · 그 .unchecked/ · 표지 · 쓰는 중 파일 뺌) → [(이름, 바이트)] (재실행의 같은 이름
+    payload 와 바이트 대조 · Q9 §3-5 R4-08 (a))."""
+    out = []
+    for d in (Path(run_dir), Path(run_dir) / UNCHECKED_DIR):
+        if d.is_dir():
+            for p in sorted(d.iterdir()):
+                if p.is_file() and not p.is_symlink() and p.name.startswith('p2_') and p.name.endswith('.json') \
+                        and not p.name.endswith(FIRST_RESULT_SUFFIX):
+                    out.append((p.name, p.read_bytes()))
+    return out
+
+
+class ResumeRunner(Runner):
+    """★ 10-27 묶음 C1b-2 (Q9 §3-5 개정 3 · 4 · R4-03 (c) · R4-08 · 개정 5 ① · Codex 회차 ① Q-J) 멈춘 런부터 재실행 — 같은 판정 함수가 같은 요청을 같은
+    차례로 다시 낸다 (같은 이름 · 폴더).  원천 = 같은 바탕 폴더의 재실행 사슬 끝 시도 폴더 (`src`):
+      · 원천에서 끝난 런 (끝 기록 확인 True · 원인 None · rc 0 · 런 폴더 있음) = 통째로 복사 (런 폴더 · 로그 · 그룹 기록 · 러너 0 회 · 팔 = read_run 이
+        다시 대조)
+      · 처음 끝나지 않은 런부터 새로 (그 뒤는 다 새로) · 그 런의 남은 payload ↔ 새 payload 바이트 대조 (다르면 RESUME_MISMATCH · 결정성 위반 = 멈춤) ·
+        남은 payload 가 없으면 결정성 가정 (Q-J 한정 · `resume['determinism']` = assumed)
+      · 새 프로세스 + 원 시도 환경 지문 모든 칸 = 풀기 전 대조 (개정 5 ① — "같은 프로세스" 가 아니다)."""
+
+    def __init__(self, *a, src=None, src_n=None, **k):
+        super().__init__(*a, **k)
+        self.src, self.src_n, self.copying = Path(src), src_n, True
+        self.resume = {'from': src_n, 'copied': [], 'rerun': None, 'compared': [], 'determinism': None}
+
+    def _src_done(self, name, outdir_name):
+        """원천의 그 런이 러너 쪽에서 끝났나 = 끝 기록 rc 0 · 런 폴더 있음.  (재실행 = 원천 결과 줄이 있어야 = 원천의 그룹 끝 기록이 다 확인됐다 · recover 가
+        다시 쓴 끝 기록 = rc None · 시간 초과 · 신호 = rc ≠ 0 — 그래서 rc 0 하나로 가른다 · 복사한 팔은 read_run 이 다시 대조한다.)"""
+        ep = self.src / GROUPS_DIR / f'{name}.end.json'
+        try:
+            er = json.loads(ep.read_text(encoding='utf-8')) if ep.is_file() else None
+        except (OSError, UnicodeDecodeError, ValueError):
+            er = None
+        return isinstance(er, dict) and er.get('rc') == 0 and (self.src / outdir_name).is_dir()
+
+    def run(self, kit, role, law, c, rj, arms, sv_cf=False):
+        name, req, outdir, delta = self._prepare(kit, role, law, c, rj, arms, sv_cf)
+        if self.copying and self._src_done(name, outdir.name):
+            return self._copy(name, req, outdir)
+        if not self.copying:
+            return self._execute(name, req, outdir, delta)
+        self.copying = False
+        self.resume['rerun'] = name
+        left = resume_leftovers(self.src / outdir.name)
+        arms_ = self._execute(name, req, outdir, delta)
+        self.resume['compared'] = [{'file': nm, 'same': (outdir / nm).is_file() and (outdir / nm).read_bytes() == raw} for nm, raw in left]
+        self.resume['determinism'] = 'compared' if left else 'assumed'
+        bad = [x['file'] for x in self.resume['compared'] if not x['same']]
+        if bad:
+            raise Stop('RESUME_MISMATCH', f'{name}: 재실행 payload ≠ 원 시도 attempt_{self.src_n} 에 남은 payload ({bad[:3]}) — 결정적 재실행이 아니다', name)
+        return arms_
+
+    def _copy(self, name, req, outdir):
+        if outdir.exists():
+            raise Stop('OUTDIR_NOT_EMPTY', f'{outdir} — 재실행 복사 자리가 이미 있다', name)
+        try:
+            shutil.copytree(self.src / outdir.name, outdir, symlinks=True)
+            for sub, files in (('logs', (f'{name}.log',)), (GROUPS_DIR, (f'{name}.launch.json', f'{name}.end.json'))):
+                (self.out / sub).mkdir(parents=True, exist_ok=True)
+                for f in files:
+                    if (self.src / sub / f).is_file():
+                        shutil.copy2(self.src / sub / f, self.out / sub / f)
+        except OSError as e:
+            raise Stop('RESUME_NOT_ALLOWED', f'{name}: 원 시도 런 폴더를 복사하지 못했다 ({type(e).__name__}: {e})', name)
+        rec = dict(req, outdir=outdir.name, rc=0, seconds=None, arms_read=[], machine=self.machine, group_cause=None, copied_from=self.src_n)
+        self.records.append(rec)
+        try:
+            arms_ = read_run(outdir, req, self.plan, self.contract, self.sid_reg, s0_grid=self.s0_grid, s0_census=self.s0_census,
+                             graph_src=self.graph_src)
+        except Stop:
+            rec['arms_read'] = arm_file_shas(outdir)
+            raise
+        rec['arms_read'] = [{k: a[k] for k in ARM_PUBLIC} for a in arms_]
+        self.resume['copied'].append(name)
+        print(f'  {name}: {req["role"]} · R_j {disp_rj(req["rj"])} · {req["law"]} · c {req["c"] or "-"} → 원 시도 attempt_{self.src_n} 에서 복사 '
+              f'(러너 0 회 · 팔 {len(arms_)} 다시 대조)')
         return arms_
 
 
@@ -3946,7 +4057,7 @@ class Predict:
 def summary_base(stage, a):
     #  ★ PF2 D (10-22 · PRE2-design-02) — code = git 신원 + 코드 파일 지문 (`code_record`) · machine = 기계 이름표 (등록 R §10-4 문장 3 · 기록만 ·
     #    판정에는 쓰지 않는다 · 없으면 null)
-    return {'tool': TOOL, 'schema': SCHEMA, 'stage': stage, 'status': None, 'stop': None, 'flags': [], 'attempt': None,
+    return {'tool': TOOL, 'schema': SCHEMA, 'stage': stage, 'status': None, 'stop': None, 'flags': [], 'attempt': None, 'resume': None,
             'machine': getattr(a, 'machine', None), 'code': code_record(getattr(a, 'runner', None)),
             'constants': {'target_sbe_mScm': TARGET_SBE_MS, 'confirm_tol': CONFIRM_TOL, 'e_min': E_MIN, 'tau_mono': TAU_MONO,
                           'neighbor_log10_max': NEIGHBOR_LOG10_MAX, 'origin_sbe_max': ORIGIN_SBE_MAX,
@@ -4076,8 +4187,10 @@ def stage_ladder(a, contract):
         #  ★ 10-25 묶음 B (RCA2-03 · Q3 (가) · 판정문 §4 F8) — R 런 직전 SBE 킷을 S0 와 같은 발견 함수로 다시 해시 = S0 단계 1 보고의 원 입력 ·
         #    설정 (경로 = 대조 밖) · 다르면 멈춤 (새 S0) · 파생 격자 지문 (off 격자 sid) 은 첫 arm 0 런을 읽을 때 (read_run · 같은 규약만)
         s['bed'] = bed_problem(s['s0_reports'], a.root, (SBE_KIT,))
-        rn = Runner(a.runner, a.root, out, plan, a.variant, time.time() + a.max_hours * 3600.0, contract, dry=a.dry_run, prefix='L',
-                    machine=a.machine)
+        rcls, rkw = (att.runner_cls(), att.runner_kw()) if att is not None else (Runner, {})   # ★ 10-27 묶음 C1b-2 — 재실행 = ResumeRunner
+        rn = rcls(a.runner, a.root, out, plan, a.variant, time.time() + a.max_hours * 3600.0, contract, dry=a.dry_run, prefix='L',
+                  machine=a.machine, **rkw)
+        s['resume'] = getattr(rn, 'resume', None)
         rn.s0_grid = s0_grid_seed(s['s0_reports'])
         rn.s0_census = s0_census_seed(s['s0_reports'])
         #  ★ 10-26 B″ (Q1 (가)) — 봉인 원천 (사다리 = SBE · SV 런 없음 → 부르지 않는다 · 같은 배선)
@@ -4260,8 +4373,10 @@ def stage_predict(a, contract):
                 raise Stop('KIT_MISSING', f'{p}')
         #  ★ 10-25 묶음 B (RCA2-03 · Q3 (가) · 판정문 §4 F8) — R 런 직전 SBE · DBE 킷 다시 해시 = S0 단계 1 · 2 보고의 원 입력 · 설정
         s['bed'] = bed_problem(s0reps, a.root, (SBE_KIT, DBE_KIT))
-        rn = Runner(a.runner, a.root, out, plan, a.variant, time.time() + a.max_hours * 3600.0, contract, dry=a.dry_run, prefix='P',
-                    machine=a.machine)
+        rcls, rkw = (att.runner_cls(), att.runner_kw()) if att is not None else (Runner, {})   # ★ 10-27 묶음 C1b-2 — 재실행 = ResumeRunner
+        rn = rcls(a.runner, a.root, out, plan, a.variant, time.time() + a.max_hours * 3600.0, contract, dry=a.dry_run, prefix='P',
+                  machine=a.machine, **rkw)
+        s['resume'] = getattr(rn, 'resume', None)
         rn.sid_reg = sid_reg
         rn.s0_grid = s0_grid_seed(s0reps)
         rn.s0_census = s0_census_seed(s0reps)
@@ -4518,8 +4633,23 @@ def verdict_compute(dirs, reg_path, contract, root, graph_src=None, ledger=None)
     (RCA2-03) — root = 킷 뿌리 (SBE · DBE 킷을 S0 와 같은 발견 함수로 다시 해시해 단계 기록의 S0 원 입력과 대조 · 경로 = 대조 밖).
     ★ 10-26 B″ (1저자 Q1 (가)) — graph_src = 판정의 봉인 원천 (None = `default_graph_src(root)` · 임시 폴더) · SV 모서리 런마다 조립만 런을 **다시**
     돌린다 (단계 요약의 `sv_graph` · 원천 기록을 믿지 않는다 — 다시 읽은 원 팔 · 다시 조립한 지문으로 SV 판정).
-    ★ 10-27 묶음 C1b — ledger = {'path', 'commit', 'attempt_dirs'} (원장 판정 · 입력 = 그 원장의 채택 시도만 · `ledger_verdict_check` · 판정 칸 ledger) ·
-    None = 원장 없는 판정 (옛 꼴 · ledger 칸 null)."""
+    ★ 10-27 묶음 C1b — ledger = {'path', 'commit', 'attempt_dirs'} (원장 판정 · 입력 = 그 원장의 채택 시도만 · `ledger_verdict_check` · 판정 칸 ledger ·
+    뒤에서 멈춰도 멈춤 기록에 원장 칸을 싣는다) · None = 원장 없는 판정 (옛 꼴 · ledger 칸 null)."""
+    lpub = None
+    if ledger is not None:
+        if not ledger.get('commit'):
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'원장 {ledger.get("path")} 의 HEAD 를 못 읽는다')
+        lpub = ledger_verdict_check(dirs, ledger['path'], ledger.get('attempt_dirs') or (), ledger['commit'])
+    try:
+        pub, res = _verdict_compute(dirs, reg_path, contract, root, graph_src)
+    except Stop as e:
+        e.ledger = lpub
+        raise
+    pub['ledger'] = lpub
+    return pub, res
+
+
+def _verdict_compute(dirs, reg_path, contract, root, graph_src):
     if graph_src is None:
         graph_src = default_graph_src(root)
     pub = {'tool': TOOL, 'schema': SCHEMA, 'stage': 'verdict', 'verdict': None, 'state': None, 'stop': None, 'flags': [],
@@ -4527,10 +4657,6 @@ def verdict_compute(dirs, reg_path, contract, root, graph_src=None, ledger=None)
            'report_category': {REPORT_CATEGORY: list(ASSUMED_UNVALIDATED)},
            'verdict_note': VERDICT_NOTE, 'sentence_allowed': False, 'sentence': None, 'calib': {}, 'variants': {},
            'inputs': [], 'arms': [], 'registration': None, 'grid_sentence': GRID_SENTENCE, 'reasons': [], 'bed': None, 'ledger': None}
-    if ledger is not None:
-        if not ledger.get('commit'):
-            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'원장 {ledger.get("path")} 의 HEAD 를 못 읽는다')
-        pub['ledger'] = ledger_verdict_check(dirs, ledger['path'], ledger.get('attempt_dirs') or (), ledger['commit'])
     stages, seen = [], set()
     for d in dirs:
         rd = Path(d).resolve()
@@ -4758,7 +4884,8 @@ def _stopped_pub(e, dirs, reg):
             'report_category': {REPORT_CATEGORY: list(ASSUMED_UNVALIDATED)},
             'verdict_note': VERDICT_NOTE, 'sentence_allowed': False, 'sentence': decide_sentence('calib', 'NOT_COMPUTED', []),
             'calib': {}, 'variants': {}, 'grid_sentence': GRID_SENTENCE, 'inputs': [str(Path(d).resolve()) for d in dirs], 'arms': [],
-            'registration': (str(Path(reg).resolve()) if reg else None), 'reasons': [_why('verdict', None, None, rec)]}
+            'registration': (str(Path(reg).resolve()) if reg else None), 'reasons': [_why('verdict', None, None, rec)],
+            'ledger': getattr(e, 'ledger', None)}                # ★ 10-27 묶음 C1b — 원장 대조를 지난 뒤의 멈춤이면 그 원장 칸 (채택 시도)
 
 
 def stage_verdict(a, contract):
