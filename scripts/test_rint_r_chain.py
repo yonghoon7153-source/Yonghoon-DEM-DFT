@@ -1653,13 +1653,13 @@ def t_S27():
 
 
 # ── P 예측 ──
-@check('P01', '예측 — SBE c no-op 런 둘 · 모서리 12 런 (arm 0) · origin = 네 모서리 × 세 R = 12 (ARM_LIST=1,2 · §4-2 3판 · RCA-02) · '
-               '상태 PREDICTED')
+@check('P01', '예측 — 모서리 12 런 (arm 0) · origin = 네 모서리 × 세 R = 12 (ARM_LIST=1,2 · §4-2 3판 · RCA-02) · 상태 PREDICTED · ★ 10-27 묶음 '
+               'C2a (Q9 §2-1 · R4-06 (a)) = SBE c no-op 런은 예측에 없다 (사다리 끝 · 옛 = 예측 첫 두 런)')
 def t_P01():
     r = s_main_predict()
     rl = roles(r)
     ev = [e for e in env_log(r['world']) if 'ARM_LIST' in e]
-    return (r['rc'] == 0 and r['sum']['status'] == 'PREDICTED' and rl.count('sbe_noop') == 2 and rl.count('corner') == 12
+    return (r['rc'] == 0 and r['sum']['status'] == 'PREDICTED' and rl.count('sbe_noop') == 0 and rl.count('corner') == 12
             and rl.count('origin') == 12 and 'origin3' not in rl and 'origin8' not in rl and len(ev) == 12
             and all(e.get('ARM_LIST') == '1,2' and 'ARMS' not in e and 'DBE' in e.get('KITS', '') for e in ev)
             and all(set(o.get('per_R', {})) == {'R_j_lo', 'R_j0', 'R_j_hi'} for o in r['sum'].get('origin', [])),
@@ -1698,10 +1698,10 @@ def t_P02():
     return got == want, (sorted(got), sorted(want))
 
 
-@check('P03', 'SBE c no-op 위반 (c1 비트 다름) → SAME_P_CONSISTENCY · 모서리 런 없음')
+@check('P03', 'SBE c no-op 위반 (c1 비트 다름) → SAME_P_CONSISTENCY · 모서리 런 없음 · ★ 10-27 묶음 C2a (Q9 §2-1) — no-op = 사다리 끝 런 → 고장 = '
+               '사다리 세계 (sbe_c_dep) · 예측 첫머리가 사다리 기록에서 같은 이름으로 낸다 (옛 = 예측 세계의 고장 · 예측 no-op 런)')
 def t_P03():
-    r = scen('P03', lambda: predict('P03', world('P03', dict(PW, faults=[{'do': 'sbe_c_dep'}])),
-                                    [s_main('P0')['out'], s_main('P1')['out']]))
+    r = s_noop_world('NP03', [{'do': 'sbe_c_dep'}])['p']
     return (r['rc'] == 3 and stop_code(r) == 'SAME_P_CONSISTENCY' and 'corner' not in roles(r), (r['rc'], stop_code(r), roles(r)))
 
 
@@ -2053,7 +2053,7 @@ def t_V13():
 
 
 @check('V14', '3판 — 감도 변이 = 주 판정과 같은 판정 함수 (§5-6 · RCA-09): 변이 사다리도 SBE origin (§3-3) · 끝 origin · 변이 예측도 네 모서리 × 세 R + '
-               'DBE origin 세 R (§10 런 수 표 3판) · 변이 예측에는 SV 반사실 없음')
+               'DBE origin 세 R (§10 런 수 표 3판) · 변이 예측에는 SV 반사실 없음 · ★ 10-27 묶음 C2a — SBE c no-op = 변이 사다리마다 끝 런 하나 (예측 0)')
 def t_V14():
     vs = s_variant_set('FIBRE')
     lads, pr = vs['ladders'], vs['pred']
@@ -2061,8 +2061,9 @@ def t_V14():
     rl = roles(pr)
     ev = [e for e in env_log(pr['world']) if e.get('CJUNC_SV_CF') == '1']
     return (not bad and all(o['sum']['status'] == 'CALIBRATED' for o in lads) and pr['sum']['status'] == 'PREDICTED'
-            and rl.count('corner') == 12 and rl.count('origin') == 12 and rl.count('sbe_noop') == 2 and not ev,
-            (bad, rl, len(ev)))
+            and rl.count('corner') == 12 and rl.count('origin') == 12 and rl.count('sbe_noop') == 0
+            and all(roles(o).count('sbe_noop') == 1 and roles(o)[-1] == 'sbe_noop' for o in lads) and not ev,
+            (bad, rl, [roles(o)[-2:] for o in lads], len(ev)))
 
 
 @check('V15', '판정 코드 ≠ 단계 코드 (지금 사슬 HEAD 가 다르다) → CODE_PIN_MISMATCH · 판정 NOT_COMPUTED')
@@ -6393,6 +6394,219 @@ def t_EP12():
     return (pr['rc'] == 3 and ep_stop(pr)[0] == 'PLAN_INVALID' and n_calls(pr['world']) == 0
             and vr['rc'] == 3 and ep_stop(vr)[0] == 'PLAN_INVALID' and (vr['v'] or {}).get('verdict') == 'NOT_COMPUTED',
             ((pr['rc'], ep_stop(pr)), (vr['rc'], ep_stop(vr))))
+
+
+# ── ★ 10-27 묶음 C2a (Q9 설계 §2-1 · §2 새 순서 · 개정 3 질문 4 · 개정 4 R4-06 · 개정 5 ① · author 10-27 approved bundle C) ──
+#    no-op = 사다리 단계 끝 (같은 사슬 부모의 동결 환경 · 예측은 사다리 요약의 no-op 기록을 다시 읽어 첫머리에서 같은 이름으로) · 새 예측 순서 =
+#    모서리 → same_p → W0 → ① origin 표본 전부 → ② 이른 단조 (넘침 있을 때만 · 이미 있는 점) → ③ 넘침 origin8 → ④ 끝 단조 (그대로)
+def lad_noop(res):
+    return (res.get('sum') or {}).get('noop')
+
+
+def pred_seq(r):
+    return [(x.get('role'), x.get('law'), x.get('c'), x.get('rj'), x.get('arm_list'), x.get('arms')) for x in (r.get('sum') or {}).get('runs') or []]
+
+
+def s_noop_world(tag, faults):
+    """no-op 고장 세계 — 사다리 둘 (고장 = SBE c 1 = 사다리 끝 no-op 런만) · 예측 (고장 없는 세계) · 판정."""
+    def go():
+        l0 = ladder(f'{tag}_P0', world(f'{tag}_P0', dict(PW, faults=faults)), law='P0')
+        l1 = ladder(f'{tag}_P1', world(f'{tag}_P1', dict(PW, faults=faults)), law='P1')
+        p = predict(f'{tag}_pred', world(f'{tag}_pred'), [l0['out'], l1['out']])
+        v = verdict(f'{tag}_v', [l0['out'], l1['out'], p['out']])
+        return {'l0': l0, 'l1': l1, 'p': p, 'v': v}
+    return scen(tag, go)
+
+
+@check('NP01', '★ 10-27 묶음 C2a (Q9 §2-1 · 개정 3 질문 4 · 개정 4 R4-06 (d) · 개정 5 ①) no-op = 사다리 단계 끝 — 주 사다리 P0 · P1 의 마지막 런 = '
+              'SBE c 1 · R_j,0 · arm 0 (role sbe_noop · 같은 사슬 부모 · 같은 러너 · 사다리당 하나) · 러너 env = SBE 킷 · SDCP_MOD_C 1 · 요약 noop = '
+              '{law · rj = R_j,0 · status done · ok True · stop None} · 사다리 상태 CALIBRATED 그대로')
+def t_NP01():
+    bad = []
+    for law in ('P0', 'P1'):
+        r = s_main(law)
+        runs = (r['sum'] or {}).get('runs') or []
+        last = runs[-1] if runs else {}
+        L = lad(r)
+        ev = env_log(r['world'])
+        ok = ((r['sum'] or {}).get('status') == 'CALIBRATED' and last.get('role') == 'sbe_noop' and last.get('c') == '1'
+              and last.get('kit') == SBE_KIT and last.get('rj') == L.get('R_j0') and last.get('arms') == 1 and last.get('arm_list') is None
+              and sum(1 for x in runs if x.get('role') == 'sbe_noop') == 1 and ev and ev[-1].get('SDCP_MOD_C') == '1'
+              and SBE_KIT in ev[-1].get('KITS', '') and lad_noop(r) == {'law': law, 'rj': L.get('R_j0'), 'status': 'done', 'ok': True, 'stop': None})
+        if not ok:
+            bad.append((law, (r['sum'] or {}).get('status'), last.get('role'), lad_noop(r), (ev[-1] if ev else {}).get('SDCP_MOD_C')))
+    return not bad, bad
+
+
+@check('NP02', '★ 10-27 묶음 C2a (R4-06 (a) 좁힌 문장) 예측은 no-op 런을 요청하지 않는다 — 주 예측 런 = DBE 만 24 (모서리 12 · origin 12 · 옛 = no-op 2 + '
+              '24) · 첫 런 이름 P01_corner (두 칸 당겨짐) · checks.sbe_noop = [{P0 · True} · {P1 · True}] (옛과 같은 꼴 · 사다리 기록에서) · 넘침 없음 = '
+              'checks 에 r_monotone_early 칸 없음 (이른 검사 = 끝 검사와 같은 점 · 한 번만)')
+def t_NP02():
+    r = s_main_predict()
+    runs = (r['sum'] or {}).get('runs') or []
+    ch = (r['sum'] or {}).get('checks') or {}
+    ev = env_log(r['world'])
+    ok = ((r['sum'] or {}).get('status') == 'PREDICTED' and len(runs) == 24 and all(x.get('kit') == DBE_KIT for x in runs)
+          and bool(runs) and runs[0].get('name') == 'P01_corner' and ch.get('sbe_noop') == [{'law': 'P0', 'ok': True}, {'law': 'P1', 'ok': True}]
+          and 'r_monotone_early' not in ch and bool(ev) and all('DBE' in e.get('KITS', '') for e in ev))
+    return ok, (len(runs), runs[0].get('name') if runs else None, ch.get('sbe_noop'), sorted(ch))
+
+
+@check('NP03', '★ 10-27 묶음 C2a — no-op 비트 다름 (사다리 세계 sbe_c_dep = SBE c 1 만) → 사다리 CALIBRATED · noop {status done · ok False} (기록만 · 사다리 '
+              '상태 = 보정 결과만) · 예측 = 첫머리 SAME_P_CONSISTENCY (STOPPED · 러너 0 회 · checks.sbe_noop = [{P0 · False}] 옛 꼴) · 판정 = NOT_COMPUTED '
+              '(INPUT_STAGE_STOPPED)')
+def t_NP03():
+    sc = s_noop_world('NP03', [{'do': 'sbe_c_dep'}])
+    l0, p, v = sc['l0'], sc['p'], sc['v']
+    nr = lad_noop(l0) or {}
+    return (l0['rc'] == 0 and (l0['sum'] or {}).get('status') == 'CALIBRATED' and nr.get('status') == 'done' and nr.get('ok') is False
+            and p['rc'] == 3 and (p['sum'] or {}).get('status') == 'STOPPED' and stop_code(p) == 'SAME_P_CONSISTENCY' and n_calls(p['world']) == 0
+            and ((p['sum'] or {}).get('checks') or {}).get('sbe_noop') == [{'law': 'P0', 'ok': False}]
+            and v['rc'] == 3 and (v['v'] or {}).get('verdict') == 'NOT_COMPUTED' and stop_code(v) == 'INPUT_STAGE_STOPPED',
+            ((l0['sum'] or {}).get('status'), nr, p['rc'], stop_code(p), ((p['sum'] or {}).get('checks') or {}).get('sbe_noop'), v['rc'],
+             stop_code(v)))
+
+
+@check('NP04', '★ 10-27 묶음 C2a (R4-06 (d)) — no-op 런 수렴 증서 실패 (사다리 세계 certfail · SBE c 1 만) → 사다리 CALIBRATED (no-op 때문에 NOT_COMPUTED '
+              '로 보고되지 않는다) · noop {status NOT_COMPUTED · ok None · 멈춤 기록 = 그 사다리 no-op 런} · 예측 = 첫머리 NOT_COMPUTED (예측 상태 '
+              'NOT_COMPUTED = 등록 결과 · 러너 0 회) · 판정 = NOT_COMPUTED (rc 0 · 사유 예측 NOT_COMPUTED 하나)')
+def t_NP04():
+    sc = s_noop_world('NP04', [{'do': 'certfail', 'match': {'c': '1', 'kit_has': 'SBE'}}])
+    l0, p, v = sc['l0'], sc['p'], sc['v']
+    nr = lad_noop(l0) or {}
+    st = nr.get('stop') or {}
+    why = [w for w in ((v['v'] or {}).get('reasons') or []) if w.get('stage') == 'predict']
+    return (l0['rc'] == 0 and (l0['sum'] or {}).get('status') == 'CALIBRATED' and nr.get('status') == 'NOT_COMPUTED' and nr.get('ok') is None
+            and st.get('code') == 'NOT_COMPUTED' and str(st.get('run')).endswith('_sbe_noop')
+            and p['rc'] == 3 and (p['sum'] or {}).get('status') == 'NOT_COMPUTED' and stop_code(p) == 'NOT_COMPUTED' and n_calls(p['world']) == 0
+            and v['rc'] == 0 and (v['v'] or {}).get('verdict') == 'NOT_COMPUTED' and len(why) == 1 and why[0].get('code') == 'NOT_COMPUTED',
+            ((l0['sum'] or {}).get('status'), nr, p['rc'], (p['sum'] or {}).get('status'), stop_code(p), v['rc'], (v['v'] or {}).get('verdict'), why))
+
+
+@check('NP05', '★ 10-27 묶음 C2a (R4-06 (d) "기술 멈춤 = 사다리 시도의 멈춤") — no-op 런 러너 rc ≠ 0 (사다리 세계 rc2 · SBE c 1 만) → 사다리 STOPPED '
+              '(RUNNER_RC · 멈춘 런 = 사다리 끝 no-op) · 그 사다리로 예측 = LADDER_NOT_CALIBRATED (러너 0 회)')
+def t_NP05():
+    def go():
+        l0 = ladder('NP05_P0', world('NP05_P0', dict(PW, faults=[{'do': 'rc2', 'match': {'c': '1', 'kit_has': 'SBE'}}])), law='P0')
+        p = predict('NP05_pred', world('NP05_pred'), [l0['out'], s_main('P1')['out']])
+        return l0, p
+    l0, p = scen('NP05', go)
+    st = (l0['sum'] or {}).get('stop') or {}
+    return (l0['rc'] == 3 and (l0['sum'] or {}).get('status') == 'STOPPED' and st.get('code') == 'RUNNER_RC' and str(st.get('run')).endswith('_sbe_noop')
+            and p['rc'] == 3 and stop_code(p) == 'LADDER_NOT_CALIBRATED' and n_calls(p['world']) == 0,
+            ((l0['sum'] or {}).get('status'), st, p['rc'], stop_code(p)))
+
+
+@check('NP06', '★ 10-27 묶음 C2a (R4-06 (c)) 판정 = 사다리 no-op 을 원 팔에서 다시 읽어 다시 대조 — 주 사다리 P0 요약 사본의 noop.ok 만 False → 판정 '
+              'REPLAY_MISMATCH (NOT_COMPUTED · rc 3) · 손대지 않은 주 묶음 = 판정 rc 0 (no-op 런까지 다 읽음 · rp.done)')
+def t_NP06():
+    d0 = scen('NP06_lad', lambda: b_tamper_copy(s_main('P0')['out'], 'NP06_lad', 'ladder_summary.json',
+                                               lambda s: s.setdefault('noop', {}).update(ok=False)))
+    v = scen('NP06_v', lambda: verdict('NP06_v', [d0, s_main('P1')['out'], s_main_predict()['out']]))
+    v0 = s_verdict_main()
+    return (v['rc'] == 3 and stop_code(v) == 'REPLAY_MISMATCH' and (v['v'] or {}).get('verdict') == 'NOT_COMPUTED' and v0['rc'] == 0,
+            (v['rc'], stop_code(v), v0['rc']))
+
+
+@check('NP07', '★ 10-27 묶음 C2a — 예측은 사다리 no-op 런을 다시 읽어 다시 대조한다 (요약 기록을 믿지 않는다): P0 요약 사본 noop.ok = False (실제 = 같음) '
+              '→ 예측 REPLAY_MISMATCH (STOPPED · 러너 0 회) · noop 칸 없음 → LADDER_SET (러너 0 회)')
+def t_NP07():
+    d0 = scen('NP07_lad', lambda: b_tamper_copy(s_main('P0')['out'], 'NP07_lad', 'ladder_summary.json',
+                                               lambda s: s.setdefault('noop', {}).update(ok=False)))
+    d1 = scen('NP07_lad2', lambda: b_tamper_copy(s_main('P0')['out'], 'NP07_lad2', 'ladder_summary.json', lambda s: s.pop('noop', None)))
+    p = scen('NP07_p', lambda: predict('NP07_p', world('NP07_p'), [d0, s_main('P1')['out']]))
+    q = scen('NP07_q', lambda: predict('NP07_q', world('NP07_q'), [d1, s_main('P1')['out']]))
+    return (p['rc'] == 3 and stop_code(p) == 'REPLAY_MISMATCH' and n_calls(p['world']) == 0
+            and q['rc'] == 3 and stop_code(q) == 'LADDER_SET' and n_calls(q['world']) == 0,
+            [(x['rc'], stop_code(x), n_calls(x['world'])) for x in (p, q)])
+
+
+@check('OR01', '★ 10-27 묶음 C2a (Q9 §2 새 순서 · R4-06 (a)) 넘침 없는 예측의 요청 순서 = 모서리 (법칙 → R → c · arm 0) 12 → origin 표본 (법칙 → c → R · '
+              '팔 1 · 2) 12 = 옛 순서에서 no-op 두 런만 뺀 꼴 · origin8 없음 · checks.r_monotone = 모서리 넷 (옛 꼴)')
+def t_OR01():
+    r = s_main_predict()
+    L = {law: lad(s_main(law)) for law in ('P0', 'P1')}
+    want = [('corner', law, c, L[law][rr], None, 1) for law in ('P0', 'P1') for rr in ('R_j_lo', 'R_j0', 'R_j_hi') for c in ('0', '1')]
+    want += [('origin', law, c, L[law][rr], [1, 2], 2) for law in ('P0', 'P1') for c in ('0', '1') for rr in ('R_j_lo', 'R_j0', 'R_j_hi')]
+    got = pred_seq(r)
+    ch = (r['sum'] or {}).get('checks') or {}
+    return got == want and len(ch.get('r_monotone') or []) == 4, (got[:3], len(got), len(want))
+
+
+@check('OR02', '★ 10-27 묶음 C2a (Q9 §2 우선순위 ⓑ · 개정 3 P3) — 모든 모서리 넘침 (DBE origin 팔 흔들림) + 뒤 모서리 (P1 · c 1 · R_j,hi) origin 표본 런 = '
+              '러너 기각 표지 → 예측 STOPPED REJECTED_MARKER · origin8 런 0 (옛 순서 = 앞 모서리 origin8 아홉 런을 먼저 돌았다) · origin 표본 12 런 다 '
+              '요청')
+def t_OR02():
+    L1 = lad(s_main('P1'))
+    f = [{'do': 'rejected', 'match': {'kit_has': 'DBE', 'law': 'P1', 'c': '1', 'rj': L1['R_j_hi'], 'arms': '2'}}]
+    r = scen('OR02', lambda: predict('OR02', world('OR02', dict(PW, arm_factor_dbe=DBE_ORIGIN_ARMS, faults=f)),
+                                    [s_main('P0')['out'], s_main('P1')['out']]))
+    rl = roles(r)
+    return (r['rc'] == 3 and (r['sum'] or {}).get('status') == 'STOPPED' and stop_code(r) == 'REJECTED_MARKER' and rl.count('origin8') == 0
+            and rl.count('origin') == 12, (r['rc'], stop_code(r), rl.count('origin'), rl.count('origin8')))
+
+
+@check('OR03', '★ 10-27 묶음 C2a (Q9 §3-2 이른 단조 · Q24 (나) · 우선순위 ⓐ) — 모든 모서리 넘침 + (P0 · c 0) origin 표본 arm 1 의 R_j,lo 값만 ×0.5 (이미 '
+              '있는 점의 단조 모순) → 예측 STOPPED R_MONOTONE_VIOLATION · origin8 런 0 (옛 = 넘침 12 런 뒤 끝 검사에서) · 사유 origin origin_a1 · '
+              'checks.r_monotone_early 칸 (첫 모서리 origins 에 origin_a1 ok False) · checks.r_monotone = 비었다')
+def t_OR03():
+    L0 = lad(s_main('P0'))
+    f = [{'do': 'dbe_arm_scale', 'arm': 1, 'f': 0.5, 'match': {'kit_has': 'DBE', 'law': 'P0', 'c': '0', 'rj': L0['R_j_lo'], 'arms': '2'}}]
+    r = scen('OR03', lambda: predict('OR03', world('OR03', dict(PW, arm_factor_dbe=DBE_ORIGIN_ARMS, faults=f)),
+                                    [s_main('P0')['out'], s_main('P1')['out']]))
+    ch = (r['sum'] or {}).get('checks') or {}
+    early = ch.get('r_monotone_early') or []
+    o0 = {o.get('origin'): o.get('ok') for o in ((early[0] if early else {}).get('origins') or [])}
+    return (r['rc'] == 3 and stop_code(r) == 'R_MONOTONE_VIOLATION' and roles(r).count('origin8') == 0 and 'origin_a1' in y_why(r)
+            and o0.get('origin_a1') is False and ch.get('r_monotone') == [],
+            (r['rc'], stop_code(r), roles(r).count('origin8'), y_why(r)[-160:], early[:1], ch.get('r_monotone')))
+
+
+@check('OR04', '★ 10-27 묶음 C2a — 넘침 + 이른 단조 통과 + origin8 런 (P0 · c 0 · R_j,lo) 의 팔 5 만 ×0.01 (8 팔 평균 · origin8_a5 의 단조 모순 = 이른 검사엔 '
+              '없는 점) → origin8 12 런 뒤 끝 단조 R_MONOTONE_VIOLATION (최종 추정량 mean8 · 옛과 같은 멈춤) · checks.r_monotone_early = 모서리 넷 '
+              '(넘친 모서리 = 최종 추정량 칸 건너뜀 · origin 셋 ok) · checks.r_monotone 첫 모서리 ok False (mean8)')
+def t_OR04():
+    L0 = lad(s_main('P0'))
+    f = [{'do': 'dbe_arm_scale', 'arm': 5, 'f': 0.01, 'match': {'kit_has': 'DBE', 'law': 'P0', 'c': '0', 'rj': L0['R_j_lo'], 'arms': '8'}}]
+    r = scen('OR04', lambda: predict('OR04', world('OR04', dict(PW, arm_factor_dbe=DBE_ORIGIN_ARMS, faults=f)),
+                                    [s_main('P0')['out'], s_main('P1')['out']]))
+    ch = (r['sum'] or {}).get('checks') or {}
+    early = ch.get('r_monotone_early') or []
+    fin = ch.get('r_monotone') or []
+    early_ok = (len(early) == 4 and all(e.get('ok') is None and e.get('estimator') is None
+                                        and [o.get('origin') for o in e.get('origins') or []] == ['corner_a0', 'origin_a1', 'origin_a2']
+                                        and all(o.get('ok') is True for o in e.get('origins') or []) for e in early))
+    return (r['rc'] == 3 and stop_code(r) == 'R_MONOTONE_VIOLATION' and roles(r).count('origin8') == 12 and early_ok
+            and bool(fin) and fin[0].get('ok') is False and fin[0].get('estimator') == 'mean8',
+            (r['rc'], stop_code(r), roles(r).count('origin8'), early, fin[:1]))
+
+
+@check('OR05', '★ 10-27 묶음 C2a (우선순위 ⓑ NOT_COMPUTED 쪽) — 넘침 + 첫 넘침 모서리 (P0 · c 0 · R_j,lo) origin8 런 증서 실패 → 예측 NOT_COMPUTED · origin '
+              '표본 12 런 다 요청한 뒤 (옛 = 그 모서리 origin 셋 뒤 바로) · origin8 런 1 · 이른 단조 기록 있음')
+def t_OR05():
+    L0 = lad(s_main('P0'))
+    f = [{'do': 'certfail', 'match': {'kit_has': 'DBE', 'law': 'P0', 'c': '0', 'rj': L0['R_j_lo'], 'arms': '8'}}]
+    r = scen('OR05', lambda: predict('OR05', world('OR05', dict(PW, arm_factor_dbe=DBE_ORIGIN_ARMS, faults=f)),
+                                    [s_main('P0')['out'], s_main('P1')['out']]))
+    rl = roles(r)
+    ch = (r['sum'] or {}).get('checks') or {}
+    return ((r['sum'] or {}).get('status') == 'NOT_COMPUTED' and stop_code(r) == 'NOT_COMPUTED' and rl.count('origin') == 12
+            and rl.count('origin8') == 1 and len(ch.get('r_monotone_early') or []) == 4,
+            ((r['sum'] or {}).get('status'), stop_code(r), rl.count('origin'), rl.count('origin8'), len(ch.get('r_monotone_early') or [])))
+
+
+@check('OR06', '★ 10-27 묶음 C2a — 넘침 있는 주 예측 (P05 세계 · 네 모서리 넘침) 의 판정 = 다시 계산이 같은 새 순서 · 같은 이른 · 끝 검사 기록 (REPLAY 통과 · '
+              'rc 0) · 예측 요청 순서 = 모서리 12 → origin 12 → origin8 12 (법칙 → c → R)')
+def t_OR06():
+    sc = s_origin_dbe()
+    p, v = sc['pred'], sc['ver']
+    L = {law: lad(s_main(law)) for law in ('P0', 'P1')}
+    seq = pred_seq(p)
+    want8 = [('origin8', law, c, L[law][rr], None, 8) for law in ('P0', 'P1') for c in ('0', '1') for rr in ('R_j_lo', 'R_j0', 'R_j_hi')]
+    return (v['rc'] == 0 and (p['sum'] or {}).get('status') == 'PREDICTED' and seq[24:] == want8
+            and [x[0] for x in seq[:24]] == ['corner'] * 12 + ['origin'] * 12
+            and len(((p['sum'] or {}).get('checks') or {}).get('r_monotone_early') or []) == 4,
+            (v['rc'], (p['sum'] or {}).get('status'), seq[24:27]))
 
 
 def doc_tool_commands(path, tool):
