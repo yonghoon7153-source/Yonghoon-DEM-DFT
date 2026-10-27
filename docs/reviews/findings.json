@@ -13242,6 +13242,20 @@
       ]
     },
     {
+      "id": "KG50-17",
+      "severity": "P3",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "resume_ckpt.sh 정적 대조 (KG50-10) · ibb 10-27 21:10 kg50_d2_b50 r4 -T (1저자 붙여 줌)",
+      "opened_in": "docs/resume_ckpt_procedure_20260927.md",
+      "title": "dem_restart.py 의 settling 잔여 = 본 덱 그 run 길이 − 체크포인트 step → 정착 run 이 삽입 run 1 뒤 step 1 에서 시작하는 덱 (50kg v2 · v3) 이면 재개 덱 첫 긴 run 이 1 step 짧음 (run 179999 ↔ 맞는 180000) → 정적 대조 거부 · 재개 시험 못 냄",
+      "note": "정적 대조가 설계대로 막음 (시험 · 본 제출 0 · 원본 그대로) · 원인 = 계산 꼴에서 추정 (dem_restart.py 소스는 리포에 없음) · 같은 덱 구조의 D0.7-50 도 같은 꼴. 처방 (1저자 10-27 Q1 (가) *\"권고대로 해줘\"*) = 그 꼴 하나만 재개 덱 첫 긴 run 한 줄의 숫자를 본 덱 일정으로 (원래 + 1 · 문제가 그 하나 · 한 줄 숫자 run) · 다시 대조 통과 때만 · 기록 fixrun_<SFX>.txt · -C 는 고치지 않음 `67ba17809` (시험 먼저 `22c702d36` = 49/55 → 55/55). 한계 = 다른 차이 · 다른 단계 (after_settling · compress) 는 손대지 않음 · 실제 ibb 재실행 확인 = 1저자.  같은 날 관찰: ibb ~/dem_test/scripts/resume_ckpt.sh = 09-27 판 (bf82948e · -T 없음) 이었음 → 1저자가 메인 판으로 교체 (옛 판 보관) · 재개 전 도구 sha256 대조 줄 = 절차 문서 · v3 README.",
+      "claimed_fixed_sha": "67ba17809",
+      "evidence_tests": [
+        "scripts/test_resume_ckpt.py (55/55 · 67ba17809 · 고치기 전 22c702d36 = 49/55) — F1–F6"
+      ]
+    },
+    {
       "id": "SELF-135",
       "severity": "P3",
       "status": "claimed_fixed",
