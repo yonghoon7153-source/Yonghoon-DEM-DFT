@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 224편 · 생성 2026-10-27
+> digest 227편 · 생성 2026-10-27
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -74,7 +74,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `zunker2024_mdr_contact_model_partI` | 층(2.75) 발견 — 점착 탄소성 입자의 역학적으로 유도된 접촉모델, Part I: 차원축소법(MDR) — Zunker & Kamrin (J. Mech. Phys. Solids 2024) | contact-mechanics theory (MDR) + FEM(Abaqus) 검증 | 2026-08-25 | — |
 | `zunker2025_dem_large_deformation_compaction` | 실험검증된 대변형 압밀 DEM (Experimentally validated DEM for large deformation powder compaction: mechanically-derived contact model and screening of non-physical contacts) — Zunker, Dunatun | DEM (LAMMPS, MDR 접촉모델 다체 확장) + MPFEM(Abaqus) 검증 + 제약 tableti | 2026-08-25 | — |
 
-## 복합양극 미세구조 · percolation (47편)
+## 복합양극 미세구조 · percolation (49편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -123,10 +123,12 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `thorat2009_quantifying_tortuosity_porous_liion` | 다공 LIB 재료의 tortuosity 정량 — 분리막 (AC 임피던스 ↔ 분극-중단 일치 · Li 전극 계면저항 분리) + LiFePO₄ 활물질 막 τ = 1.8 ε^−0.53 (일반화 Bruggeman τ = γε^(1−α), α 1.53 · γ 1.8) — Thorat (J. Power Sources 2009) | exp (liquid-LIB tortuosity 측정 — polarization-interrupt (rest | 2026-10-03 | 🖼 12 |
 | `tjaden2018_tortuosity_review_calculation_approaches` | Tortuosity in electrochemical devices: a review of calculation approaches — τ·κ(=τ²)·N_M·Bruggeman 정의와 기하/flux/실험/상관식 계산법 분류 (우리 τ 명명 정본) — Tjaden (Int. Mater. Rev. 2018) | review (tortuosity 정의·계산법 — geometric vs flux-based · porosi | 2026-10-02 | 🖼 15 |
 | `vijay2025_hybrid_cgmd_dl_slurry_microstructure` | CGMD 슬러리 궤적의 앞 절반을 보고 평형 미세구조를 예측하는 딥러닝 surrogate(Slurry-NN)를 ARTISTIC CGMD/DEM 제조 사슬에 끼워 넣다 — NMC-111 / LFP / ASSB(NMC-622+argyrodite) 3계 — Vijay / Galvez-Aranda / Zanotto / Le-Di | CGMD(LAMMPS, LJ + granular-Hertz) + DEM 압연 + 지도학습 DL 시간-surr | 2026-09-11 | 🖼 12 |
+| `wang2027_ncm811_effective_bulk_modulus_mapper_dfs_gnn` | NCM811 양극 유효 체적탄성률 K — BIB-SEM 재구성 · 복셀 FE 라벨 1000 개 + Mapper-DFS 그래프 GIN 대리모델: 3D CNN 대비 시간 −81.92 % · 그러나 CBD-기공 분율 φ 이차식 (R² 0.905) 이 GNN (0.880) 보다 낫다 · 입자 E 140 GPa = de Vasco | FEM + ML surrogate (Abaqus voxel FE homogenization C3D8R 80³ | 2026-10-27 | 🖼 31 |
 | `yoo2026_porosity_gradient_dry_electrode` | Yoo 2026 (Energy Storage Materials, ENSM 105331) — Porosity-구배 건식 흑연 전극 + 변형성 Primer Layer | MPM | 2026-07-28 | 🖼 7 |
 | `zhang2026_dryprocess_electrode_architecture_cell_level` | 건식(dry-process) 후막 NMC811 전극 — VGCF–PTFE 전단 커플링이 CBD 도전망 percolation 연결성을 17.1 → 61.2 % 로 올려 99 wt% 활물질 · >5 mAh cm⁻² · 4.70 V 를 연다 — CGMD(LAMMPS) + PFIB-SEM 3D + COMSOL 전자전류 + Tau | exp 주도 + CGMD (LAMMPS, Martini-3 유래 LJ 12-6; VGCF+PTFE 2성분 전 | 2026-08-19 | 🖼 42 |
+| `zhou2026_gyroid_structural_electrolyte_stiffness_ionic_tradeoff` | 자이로이드 (gyroid) 구조 전해질의 미세구조 해상 (microstructure-resolved) FEM 주기 단위셀 균질화 — 공극률 0.2 → 0.9 에서 정규화 강성 0.599 → 0.0328 (×1/18) · 이온전도 0.0872 → 0.574 (×6.6) · 공극률 60 % 고정에서 축 늘림 (a:b:c) 만 | FEM (COMSOL periodic unit-cell homogenization · linear elast | 2026-10-27 | 🖼 17 |
 
-## 공정 — 캘린더링 · 압축 · 건식전극 (48편)
+## 공정 — 캘린더링 · 압축 · 건식전극 (49편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -176,6 +178,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `sun2026_dem_extrusion_recirculation_dry_electrode` | 트윈스크류 압출(extrusion) + 재순환(recirculation) 무용매 공정을 DEM 으로 — 3D 프린팅용 필라멘트 미세구조 — Sun / Vigneaux / Franco (Batteries & Supercaps 2026) | DEM (LIGGGHTS: Hertz + SJKR 점착 + CDT 구름마찰; 트윈스크류 압출기 STL + 재 | 2026-09-19 | 🖼 10 |
 | `wang2026_dryprocess_thick_cathode_failure_ncm94` | 건식 후막 양극(NCM94 80 wt%, 6.5 mAh cm⁻²)의 실패 기전 — in-situ 압력 + 3전극 EIS/DRT — Wang & Wang (J. Mater. Chem. A 2026) | exp (실험 전용 — 시뮬레이션 0) | 2026-08-19 | 🖼 26 |
 | `wet_processing_resolved_am_ssb_cathode_manufacturing` | ASSB 양극을 습식공정(슬러리→건조→압연)으로 — 실제 형상(resolved, multisphere) AM 입자를 nano-CT에서 추출해 DEM 제조 시뮬 + GeoDict로 σ_ionic·σ_e 산출 — Weitze / Franco (Energy Storage Materials 2024) | DEM (LAMMPS, multisphere resolved-AM; wet-process slurry→dry | 2026-06-26 | 🖼 8 |
+| `wolf2026_extruder_vs_batch_mixing_core_shell_dry_sulfide_cathode` | 건식 황화물 양극의 혼합 공정 비교 — 연속 트윈스크류 압출 (≈300 kJ/kg · 100 °C 혼련 · 수 분) vs 고전단 배치 메카노퓨전 (Picoline Nobilta 3000 rpm 45 min · 총 7,140 kJ/kg): 소립 NCM85 (D50 3.8 µm) 82 wt% · LPSCl 15.5 · C65 | exp (트윈스크류 압출 혼합 vs 고전단 배치 mixer 메카노퓨전 · SEM/EDX · XRD/Rietv | 2026-10-27 | 🖼 17 |
 | `xu2023_realistic_am_shape_cgmd_calendering` | XCT 로 뜬 실제 3D 형상의 NMC 2차입자로 LIB 전극 제조(슬러리→건조→압연)를 다시 돌리다 — Franco 그룹 ARTISTIC 의 "구(球) 근사 탈출" 1호 — Xu (J. Power Sources 2023) | CGMD/DEM (LAMMPS, Lennard-Jones + JKR; 슬러리·건조·압연) + µ-XCT 실험 | 2026-09-11 | 🖼 7 |
 | `zhang2026_xct_dem_cathode_calendering_peel_calibration` | X-CT 실구조(Ebner 2013)를 초기형상으로 쓴 DEM 으로 NMC111 양극 캘린더링 — 박리(실은 수직 인장) 시험으로 입자–집전체 bond 강도 보정 · 30/60/200 MPa 가압–제하 · 힘사슬·응력텐서·집전체 매립·체적에너지밀도 — Zhang·Gao·Xiao·Ding (JOM 2026) | DEM (Hertz–Mindlin + linear parallel bond · 코드 미명시 · X-CT 초기 | 2026-09-26 | 🖼 13 |
 

@@ -2822,6 +2822,13 @@
    "d17ba3fc-15._Universal_machine_learning_force_fields_for_materials_simulation_From_model_construction_to_complex-system_applications.pdf"
   ]
  },
+ "wang2027_ncm811_effective_bulk_modulus_mapper_dfs_gnn": {
+  "figures": 31,
+  "generated": "2026-10-27",
+  "pdfs": [
+   "b999dbe2-16._Accelerating_NCM811_cathode_effective_bulk-modulus_prediction_for_lithium-ion_batteries_A_geometry-reduction-based_graph_neural_network.pdf"
+  ]
+ },
  "wei2023_linbo3_coating_cutoff_voltage_lco_argyrodite": {
   "figures": 15,
   "generated": "2026-09-22",
@@ -2865,6 +2872,13 @@
   "pdfs": [
    "f4f7edc6-98._Batch_active_learning_for_accelerating_the_development_of_interatomic_potentials.pdf",
    "0b34a0f3-98._Sup_Batch_active_learning_for_accelerating_the_development_of_interatomic_potentials.pdf"
+  ]
+ },
+ "wolf2026_extruder_vs_batch_mixing_core_shell_dry_sulfide_cathode": {
+  "figures": 17,
+  "generated": "2026-10-27",
+  "pdfs": [
+   "06d030c6-2._Microstructure_Evolution_in_Dry_Coated_Sulfidic_All_Solid_State_Battery_Cathodes_Investigating_Core_Shell_Particle_Morphology.pdf"
   ]
  },
  "wu2026_asslsb_li2s_reaction_mechanisms_engineering_review": {
@@ -3084,6 +3098,13 @@
   "pdfs": [
    "5cc7c283-106._Machine_learning_prediction_of_activation_energy_in_cubic_Liargyrodites_with_hierarchically_encoding_crystal_structurebased_HECS_descriptors.pdf",
    "e0f1efc4-106._Sup_Machine_learning_prediction_of_activation_energy_in_cubic_Liargyrodites_with_hierarchically_encoding_crystal_structurebased_HECS_descriptors.docx"
+  ]
+ },
+ "zhou2026_gyroid_structural_electrolyte_stiffness_ionic_tradeoff": {
+  "figures": 17,
+  "generated": "2026-10-27",
+  "pdfs": [
+   "a46c93b2-3._Microstructure-resolved_modeling_of_gyroid_structural_electrolytes_Mechanical_and_transport_behavior.pdf"
   ]
  },
  "zhou2026_high_entropy_lgps_multicationic": {
