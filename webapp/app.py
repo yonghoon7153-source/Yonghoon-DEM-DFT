@@ -963,7 +963,8 @@ def _kb_evidence_docs():
     seen = {}
     for did, d in _C.decisions().items():
         for ref in (d.get("record"), d.get("card")):
-            head = str(ref or "").partition("#")[0]
+            # 경로 뒤 설명(`kb/open_items.md ⏭-4 (…)`)까지 경로로 읽지 않는다 — D.ledger_doc_ref.
+            head = D.ledger_doc_ref(ref)[0]
             if not head.startswith("kb/"):
                 continue
             row = seen.setdefault(head, {"path": head,
@@ -1143,7 +1144,10 @@ def governance_page():
             if not ref or ref in seen:
                 continue
             seen.add(ref)
-            head, _, frag = str(ref).partition("#")
+            # 경로 = 첫 공백·`#` 앞 (D.ledger_doc_ref). 조각 배지는 `#절` 일 때만 —
+            #   공백 뒤 설명은 링크 글자(원장 ref 그대로)에 이미 보인다.
+            head, rest = D.ledger_doc_ref(ref)
+            frag = rest[1:] if rest.startswith("#") else ""
             url = None
             if D.safe_repo_path(head) is not None:
                 url = "/api/file/" + head

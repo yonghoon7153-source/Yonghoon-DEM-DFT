@@ -2286,6 +2286,10 @@ CASCADE_CARD_LINEAGE = [
     ("v4", "cascade_rebuild_estimand_card_v4_2026_09_13.json"),
     ("v5", "cascade_rebuild_estimand_card_v5_Eprime_2026_09_13.json"),
     ("v6", "cascade_estimand_card_v6_10parents_2026_09_19.json"),
+    #: 2026-10-27 — v7 (10-01 · 개정 CP 와 10-03 비준) 이 26 일 동안 계보에 없었다 (화면은 v6 를 말단으로만 그렸다).
+    #  ⚠ v7 은 v6 를 `supersedes` 하지 **않는다** — v6 는 마감됐고 (cascade_d_rel_closed_2026_10_01.json),
+    #    v7 은 그 마감의 재개 조건 ① 로 열린 새 카드다 (`reopens`). 그래서 말단이 v6 · v7 **둘**이다 (그래프 사실).
+    ("v7", "cascade_estimand_card_v7_probe_2026_10_01.json"),
 ]
 
 
@@ -4752,7 +4756,8 @@ def dashboard_highlights() -> list:
                     "표면 O 와 1.83 Å 수소결합한다(MLIP 기하, DFT 미확인). "
                     "이후 본류는 **중성 C-12 외주 VASP**(사전 고정 네 잡 직접 대입의 조각 대비 D, "
                     "adsorption/binding energy 로 부르지 않는 고정기하 차등에너지)로 옮겨갔다 — "
-                    "VASP 0잡 · v19 재생성 대기. "
+                    "VASP 0잡 · v19 재생성 대기 (08-28 당시 — ⏩ 09-30 C-12 는 1단계로 닫고 2단계 보류: "
+                    "'SDCP/PTFE C-12' 카드). "
                     "출처: db/properties/sdcp_doped_closed_2026_08_28.json · sdcp_neutral_closed_2026_08_28.json · "
                     "sdcp_c12_claim_prereg_2026_08_31.json"})
     # SEI 분해상 갭 (2026-08-07 gabia) — 협업 요청 3종 중 "band gap" 축.
@@ -5328,6 +5333,10 @@ def dashboard_highlights() -> list:
     # 2026-09-24 — 원장에서 **파생**하는 카드 (기록이 없거나 조건이 풀리면 카드도 사라진다)
     hi += _adhesion_card() + _b2o3_eventrate_card() + _nd_icohp_c1_card()
     hi += _cascade_closed_card() + _seminar_0923_card()
+    # 2026-10-27 — 10-06 뒤 마감 · 정책 (문장은 결정 제목 · 마감 파일의 허용 서술에서 읽는다)
+    hi += (_li2s_glass_track_card() + _cascade_v6_v7_card() + _esw_funnel_card()
+           + _sdcp_c12_closed_card() + _nd_svac_closed_card() + _li3nd_r2_neb_card()
+           + _citation_checks_card())
 
     # ── 최신순 정렬 (1저자 요청 2026-08-20) ────────────────────────────────
     #   대시보드는 훑는 화면이라 **새로 안 것이 위**에 있어야 한다. 날짜가 없는 카드는
@@ -5697,7 +5706,12 @@ def _nd_icohp_c1_card() -> list:
         "t": "Nd ICOHP 원인 판정 — **C1: PP 가 원인** (6월 Nd–S 값은 영구 비인용)",
         "v": str(r.get("★_판정")),
         "n": "⚠ 인용 불가 — " + str(r.get("why_not_citable") or "원인 규명 측정")
-             + (f" · 한계: {lim[0]}" if lim else ""),
+             + (f" · 한계: {lim[0]}" if lim else "")
+             # 2026-10-27 — 09-24 마감이 화면에 없었다 (dense-k 재개 조건이 발화했는데 1저자가 닫았다)
+             + "".join(f"\n🔒 {c.get('date')} 닫음 — dense-k 재개 안 함 · 재개는 이것만: "
+                       f"{(c.get('재개_조건_이것들만') or ['마감 파일 참조'])[0]}"
+                       for c in [_load_json(DB / "properties" / "nd_icohp_pp_swap_closed_2026_09_24.json")]
+                       if c),
     }]
 
 
@@ -5740,6 +5754,224 @@ def _seminar_0923_card() -> list:
              "Liu: '추출 장벽' 은 계산이 아니다 · Zhang: 800 K 단일 궤적 AIMD",
         "n": "살아남은 한 줄 — 양이온–S 가 센 S 자리에서 Li–S 가 약하다: 우리 comp1 사이트별 ICOHP 에 "
              "이미 있다 (`litdb/comparison_vs_ours.md` §J-44~46)",
+    }]
+
+
+# ── 2026-10-27 — 대시보드가 10-06 에서 20 일 멈춰 있었다 (daily_refresh ⛔ dashboard) ──────────
+#   그 사이 마감 여섯 · 정책 몇이 원장에만 있었다. 아래 카드는 **문장을 원장에서 읽는다**
+#   (결정 제목 · 마감 파일의 허용 서술) — 손으로 옮긴 요약은 또 낡는다.
+
+#: 화면 규율 — 점착 W · 수송 절대값 단위가 원장 문자열에 섞여 오면 카드에 옮기지 않는다
+#: (CLAUDE.md: 점착 W 값 · li2s 절대 수송값은 화면·표에 안 싣는다).
+_CARD_UNIT_BAN = re.compile(r"J\s*/\s*m²|J\s*m⁻²|J/m2|cm²\s*/\s*s|cm2/s|S\s*/\s*cm|S\s*cm⁻¹")
+
+
+def _ledger_lines(ids) -> list:
+    """결정 id 들 → [(id, 제목, 상태)] — 결정 원장에서 **실시간**으로.
+
+    ⛔ 못 하는 것: 판정하지 않는다 · 원장에 없는 id 는 조용히 메우지 않고 **빠진다**
+      (호출부가 개수로 "다 있나" 를 본다) · 제목에 화면 금지 단위가 있으면 제목 대신
+      '원장에서 본다' 를 넣는다 (값을 옮기지 않는다).
+    """
+    try:
+        import canonical as _C
+        decs = _C.decisions() or {}
+    except Exception:                                            # noqa: BLE001
+        return []
+    out = []
+    for i in ids:
+        d = decs.get(i)
+        if not d:
+            continue
+        t = str(d.get("title") or "")
+        if _CARD_UNIT_BAN.search(t):
+            t = "(제목에 화면 금지 단위가 있다 — 결정 원장에서 본다)"
+        out.append((i, t, _C.decision_state(d)))
+    return out
+
+
+def _after_dash(title: str) -> str:
+    """'주제 — 결론' 꼴 제목의 결론 쪽 (없으면 통째로)."""
+    return title.split(" — ", 1)[1] if " — " in title else title
+
+
+def _li2s_glass_track_card() -> list:
+    """li2s 소셀 유리 MD — 외부 1저자 판정으로 닫힌 카드 셋 (09-30 · 10-05 · 10-19).
+
+    ⛔ 못 하는 것: 게이트 통과 수는 **결정 제목의 괄호**에서만 읽는다 (D · σ · Ea 는 애초에
+      원장에 없다) · 셋 중 하나라도 active 가 아니면 카드를 만들지 않는다 · 트랙이 닫혔다고
+      쓰지 않는다 (마지막 카드 = B 측정 가능 조건이 남아 있다).
+    """
+    ids = ("D-2026-09-30-lpscl-smallcell-glass-closed",
+           "D-2026-10-05-lpscl-smallcell-glass-md-v2-closed",
+           "D-2026-10-19-lpscl-smallcell-glass-control-closed")
+    rows = [r for r in _ledger_lines(ids) if r[2] == "active"]
+    if len(rows) != len(ids):
+        return []
+    steps = []
+    for i, t, _s in rows:
+        m = re.search(r"닫는다[^(]*\(([^()]*)\)", t)
+        steps.append(f"{i[7:12]} {m.group(1) if m else '원장 제목 참조'}")
+    clo = _load_json(DB / "properties" / "lpscl_smallcell_glass_control_li3ps4_closed_2026_10_19.json")
+    allow = [s for s in ((clo or {}).get("2_허용_서술_이대로만") or []) if str(s).startswith("「")]
+    nxt = _ledger_lines(("D-2026-10-14-lpscl-smallcell-glass-control-bmeasurable",))
+    return [{
+        "key": "li2s_glass_track",
+        "axis": "closure",
+        "d": "2026-10-19",
+        "t": "li2s 소셀 유리 MD — 카드 셋 **마감** (외부 1저자 판정) · 트랙은 아직 안 닫혔다",
+        "v": " → ".join(steps),
+        "n": "v1 (09-30) → v2 (10-05) → 대조 계 a-Li₃PS₄ (10-19) — 판정은 전부 외부 1저자 회신 (CN · CQ · CX) 이고 "
+             "사용자는 카드 저자 · 실행 · 비준이다. 보고량은 게이트 통과 수 — **D · σ · Ea 는 내지 않는다.**\n"
+             + (f"허용 서술 (대조 계 · 이대로만): {allow[0].split(' — ')[0]}\n" if allow else "")
+             + "⛔ '확산하지 않는다' 로 읽지 않는다 — 경계는 미통과가 아니다.\n"
+             + (f"⏭ 다음 = B 측정 가능 조건 카드 (650 K · 트랙 마지막 카드 · {nxt[0][2]})\n" if nxt else "")
+             + "출처: db/properties/lpscl_smallcell_glass_md_closed_2026_09_30.json · "
+               "…_md_v2_closed_2026_10_05.json · …_control_li3ps4_closed_2026_10_19.json",
+    }]
+
+
+def _cascade_v6_v7_card() -> list:
+    """cascade D_rel — v6 **방법상 무효 마감** (10-01) 과 v7 본 라운드 (10-07 상한) 의 지금.
+
+    ⛔ 못 하는 것: 진행 숫자는 v7 런로그의 **최신 `관측_*` 줄**에서 옮길 뿐 계산하지 않는다 ·
+      중간 집계를 하지 않는다 (카드: 40 런 뒤 한 번) · 상한을 판정하지 않는다 (사용자 결정).
+    """
+    ids = ("D-2026-10-01-cascade-d-rel-closed", "D-2026-10-07-cascade-v7-main-round-cap",
+           "D-2026-10-15-cascade-objective-scope")
+    rows = {i: (t, s) for i, t, s in _ledger_lines(ids)}
+    if ids[0] not in rows or rows[ids[0]][1] != "active":
+        return []
+    log = _load_json(DB / "properties" / "cascade_v7_main_runlog_2026_10_07.json") or {}
+    obs_k = max((k for k in log if k.startswith("관측_")), default=None)
+    obs = log.get(obs_k) or {}
+    segs = [s for s in str(obs.get("상태") or "").split(" · ")
+            if s.startswith(("끝난 런", "누적"))]
+    # 키 `관측_2026_10_27_0931` → "2026-10-27 09:31" (꼴이 다르면 키를 그대로 보인다)
+    m = re.fullmatch(r"관측_(\d{4})_(\d{2})_(\d{2})_(\d{2})(\d{2})", obs_k or "")
+    when = f"{m[1]}-{m[2]}-{m[3]} {m[4]}:{m[5]}" if m else (obs_k or "")
+    return [{
+        "key": "cascade_v6_v7",
+        "axis": "screening",
+        "d": "2026-10-07",
+        "t": "cascade D_rel — v6 **방법상 무효로 닫음** → v7 본 라운드 (T* = 1000 K) 진행",
+        "v": (" · ".join(segs) + f"  ({when} 관측)") if segs else "진행 기록이 런로그에 없다",
+        "n": f"v6 마감 (10-01): {_after_dash(rows[ids[0]][0])}\n"
+             + (f"v7 상한 (10-07): {_after_dash(rows[ids[1]][0])}\n" if ids[1] in rows else "")
+             + (f"목적 범위 (10-15): {_after_dash(rows[ids[2]][0])}\n" if ids[2] in rows else "")
+             + (f"판독: {obs['판독']}\n" if obs.get("판독") else "")
+             + "⚠ 상한 게이트로 40 런을 다 못 띄울 수 있다 — 어림과 재비준 여부는 런로그 최신 관측 줄 "
+               "(상한은 사용자 결정 · 코드로 올리지 않는다).\n"
+             + "출처: db/properties/cascade_d_rel_closed_2026_10_01.json · "
+               "cascade_v7_main_runlog_2026_10_07.json",
+    }]
+
+
+def _esw_funnel_card() -> list:
+    """ESW 깔때기 G2 — OCV 빈칸의 뜻을 고친 결정 둘 (10-01 · 트랙 ESW · 사용자 = 1저자)."""
+    ids = ("D-2026-10-01-cascade-esw-no-stable-window",
+           "D-2026-10-01-cascade-funnel-esw-corrected-window")
+    rows = [r for r in _ledger_lines(ids) if r[2] == "active"]
+    if len(rows) != len(ids):
+        return []
+    return [{
+        "key": "esw_funnel_g2",
+        "axis": "screening",
+        "d": "2026-10-01",
+        "t": "ESW 깔때기 G2 — OCV 빈칸은 결측이 아니라 **'안정창 없음'**",
+        "v": _after_dash(rows[0][1]),
+        "n": f"{_after_dash(rows[1][1])}\n"
+             "출처: 결정 원장 " + " · ".join(i for i, _t, _s in rows),
+    }]
+
+
+def _sdcp_c12_closed_card() -> list:
+    """SDCP/PTFE C-12 — 1단계로 닫고 2단계 보류 (09-30 · 1저자 = 사용자).
+
+    ⛔ 못 하는 것: 게이트 밖 값을 옮기지 않는다 (citable false · HOLD `HZ-sdcp-c12-eads-ungated-hold`) —
+      재개 조건의 **이름**만 싣는다. 결정이 active 가 아니면 카드를 만들지 않는다.
+    """
+    clo = _load_json(DB / "properties" / "sdcp_c12_closed_2026_09_30.json")
+    rows = [r for r in _ledger_lines(("D-2026-09-30-sdcp-c12-close-hold-stage2",)) if r[2] == "active"]
+    if not clo or not rows:
+        return []
+    reopen = [re.sub(r"^\d+_", "", k).replace("_", " ")
+              for k in (clo.get("재개_조건_이것들만") or {}) if k[:1].isdigit()]
+    return [{
+        "key": "sdcp_c12_closed",
+        "axis": "closure",
+        "d": str(clo.get("date") or "") or None,
+        "t": "SDCP/PTFE C-12 — **1단계로 닫음 · 2단계 (7잡) 보류**",
+        "v": "게이트 밖 값은 citable false — 원고 · SI · 슬라이드 · 화면에 싣지 않는다",
+        "n": (f"↻ 다시 여는 조건 {len(reopen)}건만: " + " · ".join(reopen) + "\n" if reopen else "")
+             + "수행측은 v42 작업 폴더 (1단계 결과 포함) 를 보관한다 — 재개하면 `run_staged.sh 2` 그대로 · 새 번들 · 검토 없음.\n"
+             + "출처: db/properties/sdcp_c12_closed_2026_09_30.json · 결정 D-2026-09-30-sdcp-c12-close-hold-stage2",
+    }]
+
+
+def _nd_svac_closed_card() -> list:
+    """Nd 옆 · 먼 S 빈자리 (중성 · 얼린 격자) — 구분 안 됨 (10-20 · CEI · 1저자 = 실험 쪽).
+
+    ⛔ 못 하는 것: 허용 서술 **한 문장**만 옮긴다 (이대로만) · 절대 빈자리 형성 에너지가 아니다 ·
+      송부 여부는 사용자 결정이라 카드가 정하지 않는다.
+    """
+    clo = _load_json(DB / "properties" / "nd_s_vacancy_closed_2026_10_20.json")
+    rows = [r for r in _ledger_lines(("D-2026-10-20-nd-s-vacancy-closed",)) if r[2] == "active"]
+    allow = (clo or {}).get("2_허용_서술(이대로만)") or []
+    if not clo or not rows or not allow:
+        return []
+    ban = clo.get("3_금지_서술") or []
+    return [{
+        "key": "nd_svac_closed",
+        "axis": "closure",
+        "d": str(clo.get("date") or "") or None,
+        "t": "Nd 옆 · 먼 S 빈자리 — **구분 안 됨** (CEI · 실험 쪽 1저자)",
+        "v": str(allow[0]),
+        "n": (f"⛔ 금지 서술 {len(ban)}건 — 특히 {ban[0]}\n" if ban else "")
+             + "↻ 재개는 새 카드로만 (이완 판 · 다른 자리 · Cl · Nd@P) — '자리를 하나 더 봤다' 는 재개 사유가 아니다.\n"
+             + "출처: db/properties/nd_s_vacancy_closed_2026_10_20.json",
+    }]
+
+
+def _li3nd_r2_neb_card() -> list:
+    """Li₃Nd P0-2 control r2 마감 + NEB 장벽 인용 범위 (둘 다 10-26 · Nd 원고 Fig. 3g).
+
+    ⛔ 못 하는 것: 장벽 **숫자를 옮기지 않는다** (CONDITIONAL `HZ-li3nd-neb-si-conditional` —
+      SI 단서 문장과 같이만) · r2 마감 숫자 (마지막 BFGS 스텝 · 힘) 는 런로그 몫이다.
+    """
+    ids = ("D-2026-10-26-li3nd-r2-stop-now", "D-2026-10-26-li3nd-neb-si-conditional")
+    rows = {i: t for i, t, s in _ledger_lines(ids) if s == "active"}
+    if len(rows) != len(ids):
+        return []
+    return [{
+        "key": "li3nd_r2_neb",
+        "axis": "neb",
+        "d": "2026-10-26",
+        "t": "Li₃Nd P0-2 r2 **'미수렴' 으로 닫음** · 2×2×2 NEB 장벽은 **SI 단서 문장으로만**",
+        "v": _after_dash(rows[ids[1]]),
+        "n": f"r2 (10-26): {_after_dash(rows[ids[0]])}\n"
+             "r2 의 마지막 기하 · 에너지는 수렴한 바닥 구조로 인용하지 않는다 · 질문 카드 (P0-2) 는 열린 채다 · "
+             "장벽은 본문 · Li₂S 와의 순위에 안 쓴다.\n"
+             "출처: db/properties/li3nd_p333_control_runlog_2026_10_11.json · "
+             "kb/questions/li3nd_pristine_reconstruction_2026_09_02.md",
+    }]
+
+
+def _citation_checks_card() -> list:
+    """인용 검산 규칙 셋 (09-27 · 10-05) — 장벽 홉 수 · 짧은 MD 관측창 · 흡착 자리 배위수."""
+    ids = ("D-2026-09-27-barrier-hop-count", "D-2026-10-05-md-observation-window",
+           "D-2026-10-05-adsorption-site-coordination")
+    rows = [r for r in _ledger_lines(ids) if r[2] == "active"]
+    if len(rows) != len(ids):
+        return []
+    return [{
+        "key": "citation_checks",
+        "axis": "method",
+        "d": "2026-10-05",
+        "t": "인용 검산 규칙 셋 — 장벽 · 짧은 MD 의 '무반응' · 화학결합 규모 흡착",
+        "v": "Γ = ν₀·exp(−Ea/kT) 홉 수 · Ea_max ≈ kT·ln(ν₀·t·n) 관측창 · 결합 자리 배위수",
+        "n": "\n".join(f"· {_after_dash(t) if i.endswith('coordination') else t}" for i, t, _s in rows)
+             + "\n구현: `tools/sei/collect_neb.py` (`hop_check` · `observation_window`) — ν₀ 10¹³ s⁻¹ 는 **가정**이다.",
     }]
 
 
@@ -5899,6 +6131,25 @@ def safe_kb_doc(rel: str) -> Path | None:
     p = (ROOT / rel).resolve()
     base = (ROOT / _KB_DOC_ROOT).resolve()
     return p if p.is_relative_to(base) and p.is_file() else None
+
+
+def ledger_doc_ref(ref) -> tuple[str, str]:
+    """결정 원장의 `record`·`card` 문자열 → (경로, 나머지).
+
+    원장은 경로 뒤에 조각(`…md#절`)만 붙이는 게 아니라 **공백 뒤 설명**도 붙인다
+    (`kb/open_items.md ⏭-4 (Li₃Nd P0-2 control · 회신 I)` · `…json (§1a …) — …`).
+    종전 두 호출부는 `#` 로만 잘라서 설명까지 경로로 읽었고, 멀쩡히 있는 파일이
+    `/kb` 목록에 "⛔ 파일 없음" 으로 · 판정 원장에 죽은 문자열로 나왔다 (2026-10-27 실측 2건).
+    ⇒ 경로 = 첫 공백·`#` 앞까지. 나머지는 앞뒤 공백을 걷어 그대로 준다 (`#절` 이면 `#` 째로).
+
+    ⛔ 못 하는 것
+      · 경로가 있는지 · 열어도 되는지 안 본다 — 호출부가 `safe_repo_path`·`safe_kb_doc` 로 본다.
+      · 공백이 든 경로는 잘린다 (원장 248 건 중 0 건 · 2026-10-27 — 생기면 원장 쪽을 고친다).
+      · 나머지가 조각인지 산문인지 가르지 않는다 (`#` 로 시작하는지는 호출부가 본다).
+    """
+    s = str(ref or "").strip()
+    path = re.match(r"[^\s#]*", s).group(0)
+    return path, s[len(path):].strip()
 
 
 # 파일명 → 개념 자동 연결 규칙 (2026-08-05)

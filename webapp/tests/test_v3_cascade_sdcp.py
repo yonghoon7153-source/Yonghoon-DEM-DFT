@@ -450,7 +450,12 @@ def test_cascade_card_lineage_reaches_the_page():
         assert c.get("date"), f"{c['ver']}: date 가 비었다"
         assert c["record"].startswith("db/properties/")
     tips = [c["ver"] for c in ok if c["tip"]]
-    assert tips == ["v6"], f"말단이 {tips} — v6 하나여야 한다 (나머지는 전부 대체됨)"
+    # 2026-10-27 — v7 (10-01) 은 v6 를 supersedes 하지 않고 v6 **마감**의 재개 조건으로 열렸다 →
+    #   말단 둘 (v6 = 마감된 줄기의 끝 · v7 = 새 줄기). 종전 기대 ["v6"] 는 v7 이 계보에 없던 때의 것이다.
+    assert tips == ["v6", "v7"], f"말단이 {tips} — v6 (마감) · v7 (재개로 연 새 카드) 둘이어야 한다"
+    v7 = D._load_json(D.DB / "properties" / "cascade_estimand_card_v7_probe_2026_10_01.json") or {}
+    assert "v6_10parents" not in str(v7.get("supersedes") or "") and v7.get("reopens"), \
+        "전제가 바뀌었다 — v7 카드가 v6 를 supersedes 하면 말단은 v7 하나다"
     html = A.app.test_client().get("/cascade").get_data(as_text=True)
     assert "카드 계보" in html, "계보가 화면에 안 나간다"
     assert 'data-card="v6"' in html and 'data-tip="yes"' in html, "v6 말단 표식이 화면에 없다"

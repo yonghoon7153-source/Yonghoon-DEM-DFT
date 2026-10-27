@@ -1,7 +1,7 @@
 {
  "schema": "adhesion_pipeline/1",
  "title": "점착 파이프라인 — DFT → DEM (→ COMSOL)",
- "updated": "2026-10-05",
+ "updated": "2026-10-27",
  "purpose": "Ag–C 인터레이어·SE 계면의 점착일(W)을 DFT 에서 재서 DEM(JKR 접촉)으로 넘기는 흐름을 **한 곳에 누적**한다. 새 사실은 `log` 에 한 줄씩 덧붙이고, 상태가 바뀌면 해당 항목만 고친다.",
  "⛔_이_원장이_하지_않는_것": [
   "판정 전 물리값(W·γ)은 싣지 않는다 — 결과는 판정이 끝난 뒤 기록 파일에 따로 남기고 여기서는 경로만 건다 (인용 방지).",
@@ -18,7 +18,7 @@
    "consumes": "DEM 요청서의 계면 목록 (P1 · P2 · P3 선택)",
    "produces": "고정기하 **W_sep** (헤드라인) · W_ad · D3 끈 값 · (요청) E(d) 곡선",
    "state": "run",
-   "state_text": "SE|SE 대조 끝 (경보 유지 · 진단 조건부 GO) · 파이프라인 v4: 벌크 수치 민감도 → A′ 사전등록 · P1·P2 계면은 입력 전"
+   "state_text": "P1b Ag|흑연 3층 마감 (10-06 · k9) · V5 VASP 반송 G3 PASS · G4 INCOMPLETE (10-15) · 외주 2차 (탄소 P2′ · 은 a4) 단계 1–4 진행 (10-27 해제) · ⚠ 2026-10-27 전 문구 'SE|SE 대조 끝 · P1·P2 계면은 입력 전' 은 09-25 상태였다"
   },
   {
    "key": "dem",
@@ -29,7 +29,7 @@
    "consumes": "W (J/m²) → JKR pull-off `F = 1.5πR*·w` 의 **w = W**",
    "produces": "G_c,eff(P) **띠** — DFT 값 둘로 돌리는 민감도 시나리오",
    "state": "wait",
-   "state_text": "DFT 값 대기 · 계면 면적 가중(혼합)은 DEM 쪽 모델 가정"
+   "state_text": "DEM 9차 수령 (10-06 · 새 요청 없음 · 박리 시험은 질문 ② 기하부터) · 회신 10 은 외주 2차 반송 뒤 · 계면 면적 가중(혼합)은 DEM 쪽 모델 가정"
   },
   {
    "key": "comsol",
@@ -1156,12 +1156,16 @@
    "state": "V2 계산 ✅ · DEM 전달 ✅ (회신 7 · 8)"
   },
   {
-   "text": "DEM 5차 회신 (V2 두 값·라벨 수령 · SE 쌍 보류 · 소모델 질문) → 회신 6 (프로브 3 변형 불합격 · 없음) 발송 ✅ → **DEM 6차 확인 수령 (09-26 밤 · 열린 질문 0)**: SE 쌍 보류 유지 · Ag–C 값으로 질문 ② 기하 · C–C 는 DEM 문헌 카드 · 벤젠 조각 참고 대기. ⏭ 남은 인계 = V4_s_outer_A 9 잡 (gabia · 탄성 뒤 GPU 시험) 결과(eV/조각 · 참고) → ✅ 회신 7 (벤젠 참고 · 3체 열) → DEM 7차 (짝 원칙 ①–④) → 회신 8 (C–C 0.332 · 둘 다 시나리오 · 짝 ② = 2체) → **DEM 8차 수령 (09-30 · 열린 질문 0 · 새 요청 없음 · DEM 박리 시험은 질문 ② 기하부터 · SE 쌍 보류 그대로)** → **10-01 SE 쌍 전체 계면 UMA+D3 예측** (1저자 결정 · 카드 봉인 → gabia 계산 → 게이트 통과 · 결과 기록) → **회신 9 초안** (라벨 네 문장 · 방법 섞인 비 · 탄소 DFT 경로 없음 · V5 비교 계획 · 사용자 검토·발송 대기)",
-   "state": "회신 9 초안 (SE 쌍 예측 · 발송 대기)"
+   "text": "DEM 5차 회신 (V2 두 값·라벨 수령 · SE 쌍 보류 · 소모델 질문) → 회신 6 (프로브 3 변형 불합격 · 없음) 발송 ✅ → **DEM 6차 확인 수령 (09-26 밤 · 열린 질문 0)**: SE 쌍 보류 유지 · Ag–C 값으로 질문 ② 기하 · C–C 는 DEM 문헌 카드 · 벤젠 조각 참고 대기. ⏭ 남은 인계 = V4_s_outer_A 9 잡 (gabia · 탄성 뒤 GPU 시험) 결과(eV/조각 · 참고) → ✅ 회신 7 (벤젠 참고 · 3체 열) → DEM 7차 (짝 원칙 ①–④) → 회신 8 (C–C 0.332 · 둘 다 시나리오 · 짝 ② = 2체) → **DEM 8차 수령 (09-30 · 열린 질문 0 · 새 요청 없음 · DEM 박리 시험은 질문 ② 기하부터 · SE 쌍 보류 그대로)** → **10-01 SE 쌍 전체 계면 UMA+D3 예측** (1저자 결정 · 카드 봉인 → gabia 계산 → 게이트 통과 · 결과 기록) → **회신 9 초안** (라벨 네 문장 · 방법 섞인 비 · 탄소 DFT 경로 없음 · V5 비교 계획 · 사용자 검토·발송 대기) → ✅ **회신 9 발송 · DEM 9차 수령 (10-06)** — SE 쌍 = 별도 칸 'UMA+D3 예측 · 미검증' (보류 그대로) · Ag–C 행 기본 = 흑연 3층 (P1b) · 새 요청 없음 → ⏭ **회신 10** (V5 은 라벨 · LPSCl|Ag 재합의 · Ag|흑연 라벨 · CU 덧붙임) — 외주 2차 단계 1–4 반송 뒤.",
+   "state": "회신 9 발송 · DEM 9차 수령 (10-06 · 새 요청 없음) · 회신 10 은 외주 2차 반송 뒤"
   },
   {
-   "state": "외주 발송 (09-30) · 파일럿 2 잡 반송 대기",
-   "text": "**V5 VASP 외주** (1저자 '준비는 해둬볼게' · 업체·예산 미정): CE → v2 → CF → v3 → CG → v4 → CI → v5 → CJ → **v6 → Codex CK GO** (09-27 · 기술 검토 · MANIFEST 8118bbc0… · 개정 v6.1 digest 8a1554e9… · 문구 정리만) → ✅ **1저자 비준 = 발송 (09-30 · \"이거 외주 보냈엉\" · 개정 v6.1 ratified · 결정 active · ⚠ 비준 기록이 발송 뒤)** → ⏭ 업체 → 파일럿 2 잡 → --seal_pp (schema v3 · 파일럿 결속) → 16 잡 → --collect (등록부 필수 · PILOT_NOT_SEALED 게이트). 결과 전 D3 만 예측 G3(ii) +0.00954 (경계선). GO ≠ 실행·인용 승인. · 배포 zip `wad_aprime_v5_vasp_2026_09_27_v6_f4441c426.zip` (sha256 5b7cad0b897cb54c… · 기록 db/properties/wad_aprime_v5_vasp_handoff_v6_2026_09_27.json) 을 1저자가 보관하다 **09-30 업체에 발송** (업로드 사본 sha 대조 일치). ⏭ 반송 오면 `python3 tools/wad/build_v5_vasp_package.py --check --out db/inputs/wad_aprime_v5_vasp_2026_09_27 --manifest_sha256 8118bbc0… --ret <반송 폴더>`."
+   "state": "반송 검사 ✅ (10-15 · G3 PASS · G4 INCOMPLETE) · e70 은 외주 2차 a4 → 미수렴 (10-26 · 종료 · 라벨 '미완료')",
+   "text": "**V5 VASP 외주** (1저자 '준비는 해둬볼게' · 업체·예산 미정): CE → v2 → CF → v3 → CG → v4 → CI → v5 → CJ → **v6 → Codex CK GO** (09-27 · 기술 검토 · MANIFEST 8118bbc0… · 개정 v6.1 digest 8a1554e9… · 문구 정리만) → ✅ **1저자 비준 = 발송 (09-30 · \"이거 외주 보냈엉\" · 개정 v6.1 ratified · 결정 active · ⚠ 비준 기록이 발송 뒤)** → ⏭ 업체 → 파일럿 2 잡 → --seal_pp (schema v3 · 파일럿 결속) → 16 잡 → --collect (등록부 필수 · PILOT_NOT_SEALED 게이트). 결과 전 D3 만 예측 G3(ii) +0.00954 (경계선). GO ≠ 실행·인용 승인. · 배포 zip `wad_aprime_v5_vasp_2026_09_27_v6_f4441c426.zip` (sha256 5b7cad0b897cb54c… · 기록 db/properties/wad_aprime_v5_vasp_handoff_v6_2026_09_27.json) 을 1저자가 보관하다 **09-30 업체에 발송** (업로드 사본 sha 대조 일치). ⏭ 반송 오면 `python3 tools/wad/build_v5_vasp_package.py --check --out db/inputs/wad_aprime_v5_vasp_2026_09_27 --manifest_sha256 8118bbc0… --ret <반송 폴더>`. → ✅ **반송 (10-15)**: OK 17/18 · G3 PASS · G4 INCOMPLETE (e70 far 미수렴) · 결과 기록 `db/properties/wad_aprime_v5_vasp_result_2026_10_15.json` · UMA 단일점 12 (kgy 10-15) → e70 far 한 잡은 개정 4 (a4) 로 외주 2차에 실었고 10-26 파일럿에서 두 단계 다 미수렴 → 개정 4 대로 종료 · 은 G5 · §1b ② 는 외주 2차 단계 1–4 반송 뒤 한 번에."
+  },
+  {
+   "state": "단계 1–4 진행 (10-27 해제 발송) · 반송 대기",
+   "text": "**외주 2차** (탄소 작은 모델 P2′ + 은 a4 · 카드 `db/properties/wad_p2small_vasp_card_2026_10_15.json` · 개정 4 `db/properties/wad_aprime_pilot_prereg_v5_amendment_4_e70_rerun_2026_10_15.json`) — 비준 10-17 → 빌드 ①–⑤ (10-17 ~ 22) → Codex CZ · DB · DC · DD NO-GO → **DE GO** (v5 · MANIFEST 714324cc…) → 발송 10-23 → 파일럿 반송 10-26 (탄소 OK · 은 a4 미수렴 → 종료) → 등록부 봉인 (999aa2da…) → 단계 1–4 해제 (R2-REL-2026-10-26) 발송 10-27. ⏭ 반송 오면 `python3 tools/wad/build_round2_vasp_package.py --check` → `--collect` · 기록 `db/properties/wad_round2_build_log_2026_10_17.json`. GO ≠ 실행·인용 승인."
   }
  ],
  "log": [
@@ -1589,6 +1593,51 @@
    "date": "2026-10-06",
    "stage": "dem",
    "text": "회신 9 발송 (1저자) → DEM 9차 수령 · SE 쌍 = 별도 칸 'UMA+D3 예측 · 미검증' (보류 그대로) · Ag–C 행 기본 = 흑연 3층 (P1b) · 그래핀 1장은 이력·민감도 · 산술 전부 일치 · 새 요청 없음 · DEM 박리 시험 0 건 (질문 ② 기하부터). W 값은 결과 기록·마감 카드·회신 문서에만."
+  },
+  {
+   "date": "2026-10-08",
+   "stage": "dft",
+   "text": "Codex **CU** 회신 보관 — P1b k9 마감 사후 감사 **조건부 GO · 값 유지** · P1 '기판만' 정정 (셀 c · 영상 간격도 다름) → 마감 카드 보충 2c · P2 라벨 좁히기 (다음 DEM 편지) · 회신 `kb/reviews/codex_CU_reply_wad_agc_graphite_k9_closure_2026_10_08.md`. W 값은 마감 카드·결과 기록에만."
+  },
+  {
+   "date": "2026-10-15",
+   "stage": "dft",
+   "text": "V5 VASP 외주 **반송 검사** — 18 잡 중 OK 17 (G3_c2_far_i 는 사전 재시도 r1 채택) · **G3 PASS · G4 INCOMPLETE** (e70 ENCUT 650 far 가 r1 까지 미수렴 · k · SIGMA 는 PASS) · 은 쪽 라벨 = '작은 모델 지정 표본에서 미완료' · 결과 기록 `db/properties/wad_aprime_v5_vasp_result_2026_10_15.json` (citable false). W 값은 결과 기록에만."
+  },
+  {
+   "date": "2026-10-15",
+   "stage": "dft",
+   "text": "V5 UMA 단일점 12 구조 (kgy · G5 표본 9 + G3 셋 · `db/raw/…/uma_energies_v5_2026_10_15`) — G5 오차표 · §1b ② 는 은 a4 결과와 한 번에 연다 · 같은 날 사용자 **'지금 다시 연다'** — G4_e70_far 한 잡을 개정 4 (두 단계 쌍극 보정 a4) 로 · 탄소 작은 모델 (P2′) 외주와 한 묶음 (LPSCl 이 Ag–C 층의 Ag 와 직접 닿는다). W 값은 결과 기록에만."
+  },
+  {
+   "date": "2026-10-17",
+   "stage": "dft",
+   "text": "외주 2차 **비준** (사용자 · W_ad 1저자) — 탄소 작은 모델 P2′ VASP 카드 v2 (Codex CY 조건부 GO 반영 · 점검 범위 선택 2 + 80 % 발동 규칙 · 단계 누적 상한 1.5 배 · 전자 스텝 ≥ 1 뒤 충돌 = 실행 실패) + V5 개정 4 v2 · 결정 `D-2026-10-15-wad-p2small-vasp-card` · `D-2026-10-15-wad-aprime-v5-e70-a4-rerun` active · 빌드 ① 빌더 플래그 (`--build P2S`) → ⑤ 묶음."
+  },
+  {
+   "date": "2026-10-21",
+   "stage": "dft",
+   "text": "P2′ 부모 둘 (S_A · Li_A) UMA+D3 이완 (kgy) — 첫 시도는 `dftd3` 모듈이 없어 러너가 시작을 거부 (계산 0) → kgy uma env 에 simple-dftd3 설치 (D3 구현 그대로) → 둘 다 수렴 · 회수 · 봉인 (p05 마스크 기준 고침 뒤). W 값은 결과 기록에만."
+  },
+  {
+   "date": "2026-10-22",
+   "stage": "dft",
+   "text": "P2′ 봉인 구조 9 개 UMA 단일점 (kgy · rc 0) → VASP 묶음 v1 (24 잡) → Codex **CZ NO-GO** (발송 해제조건 7) → 고침 · 자체 검토 → v2 → DB NO-GO → v3 → DC NO-GO → v4 → DD NO-GO → v5 → **Codex DE GO** (MANIFEST 714324cc… · 배포 zip dc4047e3…) · 기록 `db/properties/wad_round2_build_log_2026_10_17.json`. GO ≠ 실행·인용 승인."
+  },
+  {
+   "date": "2026-10-23",
+   "stage": "dft",
+   "text": "외주 2차 묶음 v5 **업체 발송** (사용자) — 파일럿 단계 P (탄소 P2S_S_A bound·far · C–C optB88 둘 · 은 a4) 먼저."
+  },
+  {
+   "date": "2026-10-26",
+   "stage": "dft",
+   "text": "파일럿 반송 검사 — 탄소 P2S_S_A bound·far **OK** · 은 a4 두 단계 다 **SCF_NOT_CONVERGED** → 개정 4 '한 번 · 최종 실패면 종료' (은 G4 INCOMPLETE 그대로 · 라벨 '미완료' · 탄소 판정에 안 넘긴다) · 등록부 봉인이 AGGAC 미출력 (VASP 5.4.4) 으로 멈춤 → 사용자 '권고대로' — D1 입력으로만 확인 (`D-2026-10-26-wad-round2-aggac-input-only`) · D2 S_A far 진단 '신호 없음' · D3 단계 1–4 상한 (파일럿 실측 스텝당 비용으로 다시 냄) → 등록부 봉인 (999aa2da…) · 해제 파일 R2-REL-2026-10-26. W 값은 결과 기록에만."
+  },
+  {
+   "date": "2026-10-27",
+   "stage": "dft",
+   "text": "단계 1–4 **해제 파일 발송** (사용자 'wad는 보냈어' · sha256 d4f757b9…) → ⏭ 반송 → `--check` (등록부) → `--collect` (W 집계 한 번) · 은 V5 G5 집계와 DEM 회신 10 은 그 뒤 같이. W 값은 결과 기록에만."
   }
  ],
  "related_decisions": [

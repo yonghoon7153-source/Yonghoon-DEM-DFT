@@ -1,0 +1,403 @@
+{
+ "slug": "luo2026_lis_separator_crystal_engineering_review",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-27",
+ "sources": [
+  "c54c1ba8-14._Tailoring_Lithium_Sulfur_Battery_Separators_via_Crystal_Engineering_From_Fundamental_Modulation_to_Multidimensional_Synergy.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "FIGURE 1 (a) Schematic diagram of a Li–S cell with its charge/discharge operations. (b) Illustration of the shuttle mechanism occurring in a Li–S cell. Reproduced with permission [ 18 ]. Copyright 2014, American Chemical Society. (c) The dual effect of the VC-based separator on sulfur and lithium evolution. (d) The relationship between VC spheres and electrochemical activity. Reproduced with permission [ 37 ]. Copyright 2026, Wiley-VCH.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.1,
+    568.1,
+    373.3
+   ],
+   "w": 2170,
+   "h": 1410,
+   "dpi": 300,
+   "src": "c54c1ba8-14._Tailoring_Lithium_Sulfur_Battery_Separators_via_Crystal_Engineering_From_Fundamental_Modulation_to_Multidimensional_Synergy.pdf",
+   "blank": 0.572,
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "FIGURE 2 From lattice science to the design of Li–S battery separators. This timeline delineates the evolution of lattice engineering from fundamental solid-state physics to functional separator design. We bridge classical crystallography (Bragg, Bloch) with emerging nano-lattice strategies, highlighting a paradigm shift from passive physical barriers to dynamic catalytic membranes. Key advances include defect-rich 2D frameworks (MXene/MOF) and single-atom catalysts (SACs) that leverage lattice strain and coordination environments to achieve selective ion sieving and accelerate redox kinetics, thereby suppressing the shuttle effect at its origin.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.1,
+    568.1,
+    322.0
+   ],
+   "w": 2170,
+   "h": 1196,
+   "dpi": 300,
+   "src": "c54c1ba8-14._Tailoring_Lithium_Sulfur_Battery_Separators_via_Crystal_Engineering_From_Fundamental_Modulation_to_Multidimensional_Synergy.pdf",
+   "blank": 0.118,
+   "manual_crop": "tool reported f2 as a number gap with a near-miss caption on p5 (caption block 'FIGURE 2 \\nFrom lattice science…' at y 328.9 was not anchored) — the raster (xref 221, bbox 59.9,41.1,551.9,316.3 pt) sits above it; hand crop at 300 dpi with the same x-span/top margin the tool uses for full-width figures (2026-10-27, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "FIGURE 3 (a–c) The electronic band structure of Li2 S. (b) Phonon dispersion and the density of phonon states of Li2 S. (c1 ) Raman and (c2 ) IR spectra of Li2 S. Reproduced with permission [ 54 ]. Copyright 2023, The Royal Society of Chemistry. (d–f) The band structures of the cubic Li2 S (c-Li2 S), orthorhombic Li2 S (o-Li2 S), hexagonal Li2 S2 (h-Li2 S2 ) and tetragonal Li2 S2 (t-Li2 S2 ) calculated by DFT (black solid line) and DFT-D (blue solid line). (e) Optical properties of cubic Li2 S and tetragonal Li2 S2 absorption coefficient. (f) The splitting conditions of optical and acoustic phonons at G point (The unit is cm− 1 ). Reproduced with permission [ 55 ]. Copyright 2025, Elsevier Ltd. (g,h) Phonon dispersion curves and their projected density of states for Li2 S at pressures of zero, 10 GPa. (h) Lattice parameter versus temperature at zero pressure; Bulk modulus versus temperat",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.4,
+    568.2,
+    651.5
+   ],
+   "w": 2170,
+   "h": 2568,
+   "dpi": 300,
+   "src": "c54c1ba8-14._Tailoring_Lithium_Sulfur_Battery_Separators_via_Crystal_Engineering_From_Fundamental_Modulation_to_Multidimensional_Synergy.pdf",
+   "blank": 0.868,
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 9,
+   "file": "fig_4.png",
+   "caption": "FIGURE 4 Conceptual framework mapping each crystal-engineering strategy to the specific separator function it is designed to improve. The six strategies surveyed in Sections 3 and 4 are mapped against the three functional objectives established above: undisturbed Li+ transport, polysulfide blocking, and interfacial chemical/mechanical stability.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.7,
+    568.0,
+    372.3
+   ],
+   "w": 2169,
+   "h": 1404,
+   "dpi": 300,
+   "src": "c54c1ba8-14._Tailoring_Lithium_Sulfur_Battery_Separators_via_Crystal_Engineering_From_Fundamental_Modulation_to_Multidimensional_Synergy.pdf",
+   "blank": 0.486,
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 10,
+   "file": "fig_5.png",
+   "caption": "FIGURE 5 (a,b) Schematic illustration of the synthetic procedure for the Sb2 Se3-x /rGO microspheres. (b) EPR spectra of Sb2 Se3 , Sb2 Se3 /rGO and Sb2 Se3 − x /rGO. Reproduced with permission [ 78 ]. Copyright 2020, Wiley-VCH. (c1 ) HAADF-STEM images with atomic-resolution CeO2 (111) planes. (c2 ) Thermal intensity map of a region in (c1 ). Reproduced with permission [ 79 ]. Copyright 2026, Wiley-VCH. (e) Stress–strain curves of PP separators. (e1 ) Schematics of the working diagram of LSBs using TiO2-x @NMC-modified separator, and (e2 ) fabrication process of TiOSb2 Se3 @NMC composite. Reproduced with permission [ 80 ]. Copyright 2024, Wiley-VCH. (f) Scheme of the cobalt-doped mesoporous carbon SC-Co. Reproduced with permission [ 81 ]. Copyright 2019, Wiley-VCH. (g) Cation migration mechanisms and associated energy profiles. Reproduced with permission [ 84 ]. Copyright 2019, Nature Por",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.3,
+    568.2,
+    626.0
+   ],
+   "w": 2170,
+   "h": 2462,
+   "dpi": 300,
+   "src": "c54c1ba8-14._Tailoring_Lithium_Sulfur_Battery_Separators_via_Crystal_Engineering_From_Fundamental_Modulation_to_Multidimensional_Synergy.pdf",
+   "blank": 0.629,
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 14,
+   "file": "fig_6.png",
+   "caption": "FIGURE 6 (a) Schematic diagram of the synthesis of sheet SVO material and the SVO/AB separator. Reproduced with permission [ 95 ]. Copyright 2021, Elsevier Ltd. (b,c) XPS survey spectrum, high-resolution spectra of (b) Li 1s. (c) Schematic illustration of the functional merits of the T-NSCC as a sulfur host and interlayer. Reproduced with permission [ 96 ]. Copyright 2025, American Chemical Society. (d) Schematics of polysulfide permeation by PP and MOF-modified separators, polysulfide permeation test with Fe-ZIF-8/PP separator at different times. Reproduced with permission [ 101 ]. Copyright 2024, Wiley-VCH. (e) Schematic illustration of the synthesis of Ni-ZIF-8-C composite. Reproduced with permission [ 102 ]. Copyright 2025, Elsevier Ltd. (f,g) Charge diagrams of MXene and PSN-MXene. (f) Schematic depiction of the negatively charged nanochannels in PSN/MXene membrane facilitating the ",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.4,
+    568.2,
+    638.7
+   ],
+   "w": 2170,
+   "h": 2515,
+   "dpi": 300,
+   "src": "c54c1ba8-14._Tailoring_Lithium_Sulfur_Battery_Separators_via_Crystal_Engineering_From_Fundamental_Modulation_to_Multidimensional_Synergy.pdf",
+   "blank": 0.688,
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 16,
+   "file": "fig_7.png",
+   "caption": "FIGURE 7 (a1 ) Comparison of capacity decay rate between this work and previously reported studies with various SACs. (a2 ) The free energy plots of LiPSs/S8 conversion reactions on intrinsic CoN4 and Co-N3 Cl1 . Reproduced with permission [ 105 ]. Copyright 2024, Wiley-VCH. (b,c) Schematic synthesis of MSA/N-Ti3 C2 Tx . (c) Scheme of the Li–S batteries with MSA/N-Ti3 C2 Tx /PP. Reproduced with permission [ 106 ]. Copyright 2023, Wiley-VCH. (d) The charge density difference of Li2 S adsorption on Fe − NC and Fe − NSxC. (e) Long-term cycling performance of the Li–S batteries based on the Fe − NC@GO and Fe − NSC@GO modified separators at 3 C. Reproduced with permission [ 108 ]. Copyright 2023, Wiley-VCH. (f1 ) Combined polyhedral structure of POM with ball-and-stick structure of crown ether (CCDC No.2366133). (f2 ) 3D stacking diagram of {KPW-CR6} complex. (Color code: WO6, dark green octa",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.4,
+    568.2,
+    651.5
+   ],
+   "w": 2170,
+   "h": 2568,
+   "dpi": 300,
+   "src": "c54c1ba8-14._Tailoring_Lithium_Sulfur_Battery_Separators_via_Crystal_Engineering_From_Fundamental_Modulation_to_Multidimensional_Synergy.pdf",
+   "blank": 0.73,
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 18,
+   "file": "fig_8.png",
+   "caption": "FIGURE 8 (a1 ) J1 and (a2 ) A1g peak maps of MWCE MoS2 . Reproduced with permission [ 112 ]. Copyright 2025, Yang, Z. (b) Schematic illustration of the fabrication process of the TiN/2H-MoS2 . (c) Schematic illustration of the band structures of F-Co@NC and H-Co@NC. Reproduced with permission [ 118 ]. Copyright 2026, Wiley-VCH. (d) Schematic illustration of the phase-engineered cobalt-carbon composites (F- Co@NC and H- Co@NC) showing the modulation of interfacial potential gradients and their influence on adsorption, shuttling, and conversion behavior of LiPSs. Reproduced with permission [ 117 ]. Copyright 2021, Wiley-VCH. (e1 ) Theoretical insights of the lattice strain and charge localization synergic regulation through P substitution in CoSe2 /MXene. (e2 ) Schematic illustration of the d-orbital up-shift upon P doping in CoSe2 . (e3 ) Schematic illustration of P-MoSe2 /MXene modified ",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.4,
+    568.2,
+    594.3
+   ],
+   "w": 2170,
+   "h": 2330,
+   "dpi": 300,
+   "src": "c54c1ba8-14._Tailoring_Lithium_Sulfur_Battery_Separators_via_Crystal_Engineering_From_Fundamental_Modulation_to_Multidimensional_Synergy.pdf",
+   "blank": 0.522,
+   "viewed": true
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 19,
+   "file": "fig_9.png",
+   "caption": "FIGURE 9 (a) Synthesis schematic illustration of the La2 Ce2 O7 /rGO. (b) HRTEM image of La2 Ce2 O7 (b1 ) and (b2 ) CeO2 . Reproduced with permission [ 120 ]. Copyright 2025, Elsevier Ltd. (c) Schematic illustration of cathode microstructure evolution during charging. Reproduced with permission [ 123 ]. Copyright 2024, Nature Portfolio. (d) Electronic effect biaxially strained 2D catalyst in LSBs. Reproduced with permission [ 125 ]. Copyright 2025, Nature Portfolio.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.0,
+    568.1,
+    347.3
+   ],
+   "w": 2170,
+   "h": 1302,
+   "dpi": 300,
+   "src": "c54c1ba8-14._Tailoring_Lithium_Sulfur_Battery_Separators_via_Crystal_Engineering_From_Fundamental_Modulation_to_Multidimensional_Synergy.pdf",
+   "blank": 0.428,
+   "viewed": true
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 21,
+   "file": "fig_10.png",
+   "caption": "FIGURE 10 (a) Schematic for preparation of Ti3 C2 composite via in-situ UV oxidation and the mechanism of the coated separator in lithium– sulfur battery. Reproduced with permission [ 130 ]. Copyright 2024, Springer. (b) Schematic illustration of the rapid LiPSs redox conversions on the CoMoS2 /Ti3 C2 Tx . Reproduced with permission [ 131 ]. Copyright 2026, Elsevier Ltd. (c) Optimized geometries of electron distribution at the heterointerface of (c1 ) MoS2 @NCO and (c2 ) MoS2 -Edge@NCO. (d) The Gibbs free energy of the reduction of LiPSs and dissociation energy of Li2 S for different models. Reproduced with permission [ 39 ]. Copyright 2022, Wiley-VCH. (e1 ) Synthetic schematic of CoB/Co-CoP@HNC. (e2 ) The electric- spin- dipole coupling effects onCoB/Co-CoP. (e3 ) The mechanism of action between the BIEF and spin. Reproduced with permission [ 132 ]. Copyright 2026, Wiley-VCH.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.6,
+    568.1,
+    562.3
+   ],
+   "w": 2170,
+   "h": 2195,
+   "dpi": 300,
+   "src": "c54c1ba8-14._Tailoring_Lithium_Sulfur_Battery_Separators_via_Crystal_Engineering_From_Fundamental_Modulation_to_Multidimensional_Synergy.pdf",
+   "blank": 0.379,
+   "viewed": true
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 23,
+   "file": "fig_11.png",
+   "caption": "FIGURE 11 (a) Reasonable design of polarization electric field induced by crystal facet engineering for cathode and anode electrode regulation. (b) Average planar electron density difference Δρ (z) for ZnTe-ZnO, (c) Cycling performance at 1 C. Reproduced with permission [ 134 ]. Copyright 2025, American Chemical Society. (d) The effect of lattice facet engineering on the catalytic decomposition of Li2 S. Reproduced with permission [ 137 ]. Copyright 2022, Springer Nature. (e1 ) Fe 2p and (e2 ) Ce 3d XPS spectra of L − Fe − Ce NPs, L − Fe − Ce/C − Li2 Sx , H − Fe − Ce NPs, and H − Fe − Ce/C − Li2 Sx . (f) Optical photograph and corresponding UV − vis spectra of a bare Li2 Sx solution and the Li2 Sx solutions containing different materials after static adsorption tests. Reproduced with permission [ 138 ]. Copyright 2025, American Chemical Society.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.1,
+    568.6,
+    492.7
+   ],
+   "w": 2172,
+   "h": 1907,
+   "dpi": 300,
+   "src": "c54c1ba8-14._Tailoring_Lithium_Sulfur_Battery_Separators_via_Crystal_Engineering_From_Fundamental_Modulation_to_Multidimensional_Synergy.pdf",
+   "blank": 0.716,
+   "viewed": true
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 24,
+   "file": "fig_12.png",
+   "caption": "FIGURE 12 (a) Comparison of the effectiveness of PP and CF@ICOF separators in screening Li+ ions and LiPSs and inhibiting Li dendrites. (b) Schematic diagram of the directional arrangement of ICOFs in the CS layer based on multiple interactions. Reproduced with permission [ 141 ]. Copyright 2026, Wiley-VCH. (c) XRD patterns of ANFs/ β-FeOOH after different reaction times. (d) Structural match between PPTA and β-FeOOH, with the top showing the calculation of δ, which is the coincidence lattice mismatch. The purple, red, blue, gray, and white spheres represent the Fe, O, N, C, and H atoms, respectively. Reproduced with permission [ 142 ]. Copyright 2024, American Chemical Society. (e) The synthesis route of TiO-NFs through hydrothermal treatment combined with the magnesiothermic reduction reaction. (f) The differential charge densities of TiO (001), TiO (111), and TiO2 (101) also confirm t",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.3,
+    568.2,
+    645.3
+   ],
+   "w": 2170,
+   "h": 2542,
+   "dpi": 300,
+   "src": "c54c1ba8-14._Tailoring_Lithium_Sulfur_Battery_Separators_via_Crystal_Engineering_From_Fundamental_Modulation_to_Multidimensional_Synergy.pdf",
+   "blank": 0.502,
+   "viewed": true
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 26,
+   "file": "fig_13.png",
+   "caption": "FIGURE 13 (a) Schematic illustration of the fabrication process for the δ-Bi2 O3 -Ovs/Bi@CNFs. Reproduced with permission [ 145 ]. Copyright 2026, Wiley-VCH. (b1 ) Schematic illustration of electrons tunneling and interaction with LiPSs in different materials. (b2 ) Electron interactions of the catalyst with the LiPSs (yellow for the electrons of sulfur and purple/rose for the outer electrons of the metal in the catalyst). (b3 ) Tip effects of star-like structures. (c) Scenarios for 3d orbital electron arrangements and d-p orbital interactions in Fe3 N/Fe and Fe3 N interacting with LiPSs. Reproduced with permission [ 146 ]. Copyright 2025, Wiley-VCH.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.1,
+    568.2,
+    458.3
+   ],
+   "w": 2170,
+   "h": 1764,
+   "dpi": 300,
+   "src": "c54c1ba8-14._Tailoring_Lithium_Sulfur_Battery_Separators_via_Crystal_Engineering_From_Fundamental_Modulation_to_Multidimensional_Synergy.pdf",
+   "blank": 0.535,
+   "viewed": true
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 28,
+   "file": "fig_14.png",
+   "caption": "FIGURE 14 (a1 ) XRD patterns of HEO, MEO, and LEO samples obtained via annealing at 850◦C. (a2 ) Nyquist plots of symmetric batteries of HEO, MEO, LEO, and AC as working and counter electrodes. (a3 ) Comparison of Tafel slope values of typical Li–S batteries with MS-HEO, MS-MEO, MS-LEO, and Celgard separators. Reproduced with permission [ 155 ]. Copyright 2025, Wiley-VCH. (b) Schematic illustration of high-entropy oxides (HEOs) preparation. Reproduced with permission [ 157 ]. Copyright 2026, Wiley-VCH. (c) Schematic illustration of SA-Fe/HEO@NC synthesis. (d1 ) Li+ transference number under the three systems. (d2 ) CV curves. Reproduced with permission [ 158 ]. Copyright 2025, Elsevier Ltd. (e) XRD pattern. Reproduced with permission [ 159 ]. Copyright 2024, American Chemical Society.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.4,
+    568.1,
+    664.2
+   ],
+   "w": 2170,
+   "h": 2621,
+   "dpi": 300,
+   "src": "c54c1ba8-14._Tailoring_Lithium_Sulfur_Battery_Separators_via_Crystal_Engineering_From_Fundamental_Modulation_to_Multidimensional_Synergy.pdf",
+   "blank": 0.842,
+   "viewed": true
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 30,
+   "file": "fig_15.png",
+   "caption": "FIGURE 15 (a) Li+ -respiration-effect-induced cascade electrocatalysis mechanism for polysulfide conversion. (b) Schematic illustration of stepwise lithiation of Lix TNO with the sulfur species during discharge. Reproduced with permission [ 161 ]. Copyright 2026, Wiley-VCH. (c) High lattice matching ratios between O active sites in the PW cluster and Li atoms in LPSs and Li2 S. Reproduced with permission [ 163 ]. Copyright 2025, Elsevier Ltd.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.3,
+    568.2,
+    456.3
+   ],
+   "w": 2170,
+   "h": 1755,
+   "dpi": 300,
+   "src": "c54c1ba8-14._Tailoring_Lithium_Sulfur_Battery_Separators_via_Crystal_Engineering_From_Fundamental_Modulation_to_Multidimensional_Synergy.pdf",
+   "blank": 0.712,
+   "viewed": true
+  },
+  {
+   "key": "f16",
+   "kind": "figure",
+   "label": "16",
+   "page": 36,
+   "file": "fig_16.png",
+   "caption": "FIGURE 16 (a) XRD and Rietveld refinement patterns. (b) Corresponding STEM elemental mapping images. (c) HAADF-STEM image of Na0.95 LNCFM at the [010] zone axis. Reproduced with permission [ 176 ]. Copyright 2024, Springer Nature. (d) Calculated XANES spectra of (d1 ) the bulk S and Li2 S, (d2 ) the bulk (cubic) Li2 S3 and Li2 S3 molecule. Reproduced with permission [ 69 ]. Copyright 2021, Michigan Technological University. (e) FTIR spectra of hBNNs, LA, PEO, hBNN − PEO, hBNN − PEO − LA solution, and hBNN − PEO − LA-coated sponge. Reproduced with permission [ 182 ]. Copyright 2022, American Chemical Society. (f) SEM images of carbonized MF. (g) Transmission electron microscopy (TEM) and (h1 , h2 ) HR-TEM images of MoS2 @CF-NRGO. Reproduced with permission [ 39 ]. Copyright 2022 Wiley-VCH.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.6,
+    568.3,
+    583.3
+   ],
+   "w": 2170,
+   "h": 2283,
+   "dpi": 300,
+   "src": "c54c1ba8-14._Tailoring_Lithium_Sulfur_Battery_Separators_via_Crystal_Engineering_From_Fundamental_Modulation_to_Multidimensional_Synergy.pdf",
+   "blank": 0.589,
+   "viewed": true
+  },
+  {
+   "key": "f17",
+   "kind": "figure",
+   "label": "17",
+   "page": 38,
+   "file": "fig_17.png",
+   "caption": "FIGURE 17 Schematic illustration of the multidimensional synergy in “Lattice Leap” engineering for LSBs. This figure encapsulates the transformative journey from atomic-scale lattice manipulation (encompassing defects, strain, and interfacial dynamics) to macroscopic battery performance. By effectively mitigating intrinsic electrochemical challenges, notably the polysulfide shuttle and Li dendrite growth, this strategy unlocks high-energy-density storage ( > 450 Wh kg− 1 ) with exceptional stability. Crucially, preserving these functions throughout prolonged cycling—against both the structural evolution of the coating itself and the continuously evolving, polysulfide-containing electrolyte—remains a critical open challenge, and addressing it is a prerequisite for practical LSBs in demanding energy-storage applications.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.3,
+    568.0,
+    323.3
+   ],
+   "w": 2169,
+   "h": 1200,
+   "dpi": 300,
+   "src": "c54c1ba8-14._Tailoring_Lithium_Sulfur_Battery_Separators_via_Crystal_Engineering_From_Fundamental_Modulation_to_Multidimensional_Synergy.pdf",
+   "blank": 0.144,
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 34,
+   "file": "tab_1.png",
+   "caption": "TABLE 1 Separator-specific mass-transport metrics for Li–S batteries. Material/coating tLi+ σ (mS cm− 1 ) LiPS rejection Rct ( Ω) Refs. Janus LCL–TCL (V2 O5 /Al2 O3 ) — — H-cell: colorless, 12 h — [ 22 ] V2 C MXene spheres — — H-cell: 6.0 h — [ 37 ] Janus PIM-1 (LCPIM-PEP-APIM) 0.65 3.15 — — [ 64 ] PH/P/PH electrospun trilayer — 0.11–0.39(a) — — [ 66 ] TPE covalent organic polymer@PP 0.71 0.81 — — [ 67 ] APAN/Co-G electrospun bilayer 0.72 1.73 Self-discharge: 2% 56.29 [ 68 ] MoS2-x -500@Celgard — — H-cell: no change, 3 h — [ 75 ] TiO2-x @NMC@PP — — Adsorption: 6 h — [ 80 ] HNT@NC@Celgard 2325 — — — 201.5 [ 91 ] SVO/AB (N-doped VO2 ) — — — 16.93 [ 95 ] Fe-ZIF-8/PP — — H-cell: negligible, 24 h — [ 101 ] Ni-ZIF-8-C@PP — — H-cell: no permeation, 24 h — [ 102 ] PSN/MXene 2D nanochannel 0.70 1.48 H-cell: blocked, 12 h 38.6 [ 103 ] Cu SA/N–Ti3 C2 Tx @PP — — — — [ 106 ] Fe1 /NG@Celgard 2400 — — ",
+   "rotated_deg": 0,
+   "bbox": [
+    48.6,
+    12.3,
+    606.2,
+    788.8
+   ],
+   "w": 2154,
+   "h": 2999,
+   "dpi": 278,
+   "src": "c54c1ba8-14._Tailoring_Lithium_Sulfur_Battery_Separators_via_Crystal_Engineering_From_Fundamental_Modulation_to_Multidimensional_Synergy.pdf",
+   "blank": 0.93
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "f2",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": [
+    {
+     "page": 5,
+     "text": "FIGURE 2 From lattice science to the design of Li–S battery separators. This timeline deli"
+    }
+   ],
+   "resolved": "manual_crop fig_2.png (2026-10-27, litdb-curator) - see figures[f2].manual_crop"
+  }
+ ]
+}

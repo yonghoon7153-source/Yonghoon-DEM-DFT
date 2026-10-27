@@ -14,7 +14,7 @@
    "label": "1",
    "page": 2,
    "file": "fig_1.png",
-   "caption": "FIG. 1. Schematic illustration of Li-ion self-diffusion study in the metallic Li anode, Li7La3Zr2O12 (LLZO) electrolyte, and supercells with Li/LLZO interfaces. The study includes four stages: (a) initial generation of the training conﬁgurations, using the ab initio molecular dynamics (AIMD) simulations; (b) training of MLIPs, using molecular dynamics (MD) simulations and active learning; (c) large-scale MD simulations with MLIPs; and (d) validation of MTPs. Common computational approaches for predicting inter- face resistance include molecular dynamics (MD), density functional theory (DFT), and ab initio molecular dynamics (AIMD). Classical MD is fast, but its interatomic poten- tials are often too limited to describe electrode, electrolyte, and interface regions with the same accuracy [19,20]. DFT- based methods commonly estimate migration barriers from the minimum-energy path using nu",
+   "caption": "FIG. 1. Schematic illustration of Li-ion self-diffusion study in the metallic Li anode, Li7La3Zr2O12 (LLZO) electrolyte, and supercells with Li/LLZO interfaces. The study includes four stages: (a) initial generation of the training conﬁgurations, using the ab initio molecular dynamics (AIMD) simulations; (b) training of MLIPs, using molecular dynamics (MD) simulations and active learning; (c) large-scale MD simulations with MLIPs; and (d) validation of MTPs.",
    "rotated_deg": 0,
    "bbox": [
     44.0,
@@ -26,7 +26,9 @@
    "h": 1014,
    "dpi": 300,
    "src": "6914e5bd-1._Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
-   "blank": 0.636
+   "blank": 0.636,
+   "caption_fix": "auto caption ran into body text; trimmed at end of caption (2026-10-27)",
+   "viewed": true
   },
   {
    "key": "f2",
@@ -46,7 +48,8 @@
    "h": 461,
    "dpi": 300,
    "src": "6914e5bd-1._Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
-   "blank": 0.826
+   "blank": 0.826,
+   "viewed": true
   },
   {
    "key": "f3",
@@ -66,7 +69,8 @@
    "h": 1039,
    "dpi": 300,
    "src": "6914e5bd-1._Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
-   "blank": 0.893
+   "blank": 0.893,
+   "viewed": true
   },
   {
    "key": "f4",
@@ -86,7 +90,8 @@
    "h": 1484,
    "dpi": 300,
    "src": "6914e5bd-1._Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
-   "blank": 0.736
+   "blank": 0.736,
+   "viewed": true
   },
   {
    "key": "f5",
@@ -106,7 +111,8 @@
    "h": 1227,
    "dpi": 300,
    "src": "6914e5bd-1._Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
-   "blank": 0.905
+   "blank": 0.905,
+   "viewed": true
   },
   {
    "key": "f6",
@@ -126,7 +132,8 @@
    "h": 643,
    "dpi": 300,
    "src": "6914e5bd-1._Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
-   "blank": 0.924
+   "blank": 0.924,
+   "viewed": true
   },
   {
    "key": "f7",
@@ -146,7 +153,8 @@
    "h": 562,
    "dpi": 300,
    "src": "6914e5bd-1._Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
-   "blank": 0.771
+   "blank": 0.771,
+   "viewed": true
   },
   {
    "key": "f8",
@@ -166,7 +174,8 @@
    "h": 607,
    "dpi": 300,
    "src": "6914e5bd-1._Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
-   "blank": 0.965
+   "blank": 0.965,
+   "viewed": true
   },
   {
    "key": "fS1",
@@ -566,7 +575,8 @@
    "h": 707,
    "dpi": 300,
    "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
-   "blank": 0.807
+   "blank": 0.807,
+   "viewed": true
   },
   {
    "key": "fS23",
@@ -637,16 +647,17 @@
    "caption": "Figure S27. MSD of La, Zr, and O atoms in the t-LLZO with additional 1.8% vacancies at various temperatures. Dotted lines indicate trajectories where the total MSD remains below 9 Å2.",
    "rotated_deg": 0,
    "bbox": [
-    46.5,
-    566.1,
-    552.7,
-    701.8
+    52.5,
+    350.0,
+    546.7,
+    518.0
    ],
-   "w": 2111,
-   "h": 566,
+   "w": 2060,
+   "h": 701,
    "dpi": 300,
    "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
-   "blank": 0.919
+   "blank": 0.911,
+   "recrop": "auto bbox [46.5,566.1,552.7,701.8] was the region BELOW the S27 caption = Figure S28's plot (byte-identical to fig_S28.png); clip = between S26 caption (ends y347) and S27 caption (y521) on SI p.28 (2026-10-27)"
   },
   {
    "key": "fS28",
@@ -746,7 +757,8 @@
    "h": 631,
    "dpi": 300,
    "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
-   "blank": 0.931
+   "blank": 0.931,
+   "viewed": true
   },
   {
    "key": "fS33",
@@ -766,7 +778,8 @@
    "h": 658,
    "dpi": 300,
    "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
-   "blank": 0.962
+   "blank": 0.962,
+   "viewed": true
   },
   {
    "key": "fS34",
@@ -806,7 +819,8 @@
    "h": 1016,
    "dpi": 300,
    "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
-   "blank": 0.882
+   "blank": 0.882,
+   "viewed": true
   },
   {
    "key": "fS36",
@@ -826,7 +840,8 @@
    "h": 558,
    "dpi": 300,
    "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
-   "blank": 0.787
+   "blank": 0.787,
+   "viewed": true
   },
   {
    "key": "fS37",
@@ -846,7 +861,8 @@
    "h": 1051,
    "dpi": 300,
    "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
-   "blank": 0.892
+   "blank": 0.892,
+   "viewed": true
   },
   {
    "key": "fS38",
@@ -866,7 +882,8 @@
    "h": 554,
    "dpi": 300,
    "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
-   "blank": 0.735
+   "blank": 0.735,
+   "viewed": true
   },
   {
    "key": "fS39",
@@ -946,7 +963,8 @@
    "h": 743,
    "dpi": 300,
    "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
-   "blank": 0.978
+   "blank": 0.978,
+   "viewed": true
   },
   {
    "key": "fS44",
@@ -1006,7 +1024,8 @@
    "h": 703,
    "dpi": 300,
    "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
-   "blank": 0.879
+   "blank": 0.879,
+   "viewed": true
   },
   {
    "key": "fS48",
@@ -1438,15 +1457,16 @@
    "rotated_deg": 0,
    "bbox": [
     47.5,
-    58.3,
+    90.0,
     551.7,
-    738.6
+    222.0
    ],
-   "w": 2101,
-   "h": 2836,
+   "w": 2102,
+   "h": 550,
    "dpi": 300,
    "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
-   "blank": 0.862
+   "blank": 0.751,
+   "recrop": "auto crop was the whole page p.8 (Tables S4-S6 together; byte-identical to tab_S5.png); clip = Table S4 caption + body only (2026-10-27)"
   },
   {
    "key": "tS5",
@@ -1458,15 +1478,16 @@
    "rotated_deg": 0,
    "bbox": [
     47.5,
-    58.3,
+    374.0,
     551.7,
-    738.6
+    520.0
    ],
-   "w": 2101,
-   "h": 2836,
+   "w": 2102,
+   "h": 609,
    "dpi": 300,
    "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
-   "blank": 0.862
+   "blank": 0.793,
+   "recrop": "auto crop was the whole page p.8 (byte-identical to tab_S4.png); clip = Table S5 caption + body only (2026-10-27)"
   },
   {
    "key": "tS6",
@@ -1478,15 +1499,16 @@
    "rotated_deg": 0,
    "bbox": [
     47.5,
-    58.3,
+    592.0,
     551.7,
     739.3
    ],
-   "w": 2101,
-   "h": 2839,
+   "w": 2102,
+   "h": 615,
    "dpi": 300,
    "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
-   "blank": 0.864
+   "blank": 0.822,
+   "recrop": "auto crop was nearly the whole page p.8 (Tables S4-S6); clip = Table S6 caption + body only (2026-10-27)"
   },
   {
    "key": "tS7",
@@ -1878,15 +1900,16 @@
    "rotated_deg": 0,
    "bbox": [
     47.5,
-    58.3,
+    165.0,
     551.7,
-    744.7
+    437.0
    ],
-   "w": 2101,
-   "h": 2861,
+   "w": 2102,
+   "h": 1134,
    "dpi": 300,
    "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
-   "blank": 0.926
+   "blank": 0.948,
+   "recrop": "auto crop was the whole page p.48 (byte-identical to tab_S27.png); clip = Table S26 caption + body only (2026-10-27)"
   },
   {
    "key": "tS27",
@@ -1898,57 +1921,128 @@
    "rotated_deg": 0,
    "bbox": [
     47.5,
-    58.3,
+    459.5,
     551.7,
-    744.7
+    537.0
    ],
-   "w": 2101,
-   "h": 2861,
+   "w": 2102,
+   "h": 324,
    "dpi": 300,
    "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
-   "blank": 0.926
-  }
- ],
- "missing_labels": [
+   "blank": 0.911,
+   "recrop": "auto crop was the whole page p.48 (byte-identical to tab_S26.png); clip = Table S27 caption + body only (2026-10-27)"
+  },
   {
    "key": "fS2",
-   "why": "번호 공백 — 이 번호가 추출되지 않았다",
-   "skipped": [
-    "p5 그래픽 없음(img0/draw0)"
+   "kind": "figure",
+   "label": "S2",
+   "page": 5,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. AIMD trajectories for stoichiometric t-LLZO and c-LLZO were obtained at 1000 K using the NVT ensemble. The average energy difference per atom between c-LLZO and t-LLZO is 11 meV/atom.",
+   "rotated_deg": 0,
+   "bbox": [
+    52.5,
+    405.0,
+    546.7,
+    598.0
    ],
-   "near_miss": []
+   "w": 2060,
+   "h": 805,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.949,
+   "manual_crop": "extractor skipped (p5 graphic not detected: img0/draw0 - matplotlib plot embedded as glyph text); clip = region between the S2 body paragraph (ends y402) and the caption (y602) on SI p.5 (2026-10-27)",
+   "viewed": true
   },
   {
    "key": "fS20",
-   "why": "번호 공백 — 이 번호가 추출되지 않았다",
-   "skipped": [
-    "p24 그래픽 없음(img0/draw2)"
+   "kind": "figure",
+   "label": "S20",
+   "page": 24,
+   "file": "fig_S20.png",
+   "caption": "Figure S20. Effect of isotropic strain on the Li vacancy formation energy (𝐸vac) in a 3 × 3 × 3 bcc Li supercell. The vertical dashed lines in blue and pink indicate the maximum in-plane strains in Li/t-LLZO and Li/Ga-LLZO supercells, respectively (see Table S4).",
+   "rotated_deg": 0,
+   "bbox": [
+    52.5,
+    80.0,
+    546.7,
+    228.0
    ],
-   "near_miss": []
+   "w": 2060,
+   "h": 617,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.975,
+   "manual_crop": "extractor skipped (p24 graphic not detected: img0/draw2 - plot drawn as glyph text); clip = from page header to the caption top (y231) on SI p.24 (2026-10-27)",
+   "viewed": true
   },
   {
    "key": "fS26",
-   "why": "번호 공백 — 이 번호가 추출되지 않았다",
-   "skipped": [
-    "p28 영역 없음"
+   "kind": "figure",
+   "label": "S26",
+   "page": 28,
+   "file": "fig_S26.png",
+   "caption": "Figure S26. MSD of La, Zr, and O atoms in the t-LLZO at various temperatures. Dotted lines indicate trajectories where the total MSD remains below 9 Å2.",
+   "rotated_deg": 0,
+   "bbox": [
+    52.5,
+    157.0,
+    546.7,
+    322.0
    ],
-   "near_miss": []
+   "w": 2060,
+   "h": 688,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.905,
+   "manual_crop": "extractor skipped (p28 region not found); clip = between subsection title 'S13.1. Bulk phases' (ends y154) and the caption (y326) on SI p.28 (2026-10-27)",
+   "viewed": true
   },
   {
    "key": "fS42",
-   "why": "번호 공백 — 이 번호가 추출되지 않았다",
-   "skipped": [
-    "p36 그래픽 없음(img0/draw5)"
+   "kind": "figure",
+   "label": "S42",
+   "page": 36,
+   "file": "fig_S42.png",
+   "caption": "Figure S42. Number of jumps across the Li/Ga-LLZO interface at 400 K. Green denotes the total number of crossings (𝑁Σ), blue denotes the number of interfacial crossings (𝑁int, counted once), and gray denotes the number of full transits (𝑁transit, counted twice).",
+   "rotated_deg": 0,
+   "bbox": [
+    52.5,
+    306.0,
+    546.7,
+    506.0
    ],
-   "near_miss": []
+   "w": 2060,
+   "h": 834,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.974,
+   "manual_crop": "extractor skipped (p36 graphic not detected: img0/draw5 - plot drawn as glyph text); clip = between the S17.1 paragraph (ends y303) and the caption (y510) on SI p.36 (2026-10-27)",
+   "viewed": true
   },
   {
    "key": "fS45",
-   "why": "번호 공백 — 이 번호가 추출되지 않았다",
-   "skipped": [
-    "p42 그래픽 없음(img0/draw0)"
+   "kind": "figure",
+   "label": "S45",
+   "page": 42,
+   "file": "fig_S45.png",
+   "caption": "Figure S45. Averaged lithium vacancy formation energies with relaxation at each timestep during MLMD simulations, shown at 0%, 25%, 50%, and 100% progress along the trajectory. The gray shaded area corresponds to the LLZO region. The bars represent the standard deviation within each data bin, and the filled squares denote the averaged values within each bin.",
+   "rotated_deg": 0,
+   "bbox": [
+    52.5,
+    438.0,
+    546.7,
+    700.0
    ],
-   "near_miss": []
+   "w": 2060,
+   "h": 1092,
+   "dpi": 300,
+   "src": "86f15a57-1._Sup_Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
+   "blank": 0.907,
+   "manual_crop": "extractor skipped (p42 graphic not detected: img0/draw0); clip = between the Figure S44 caption (ends y434) and the S45 caption (y704) on SI p.42 (2026-10-27)",
+   "viewed": true
   }
- ]
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": "fS2 fS20 fS26 fS42 fS45 were real figures the detector missed (plots drawn as glyph text); hand-cropped, see manual_crop (2026-10-27)"
 }

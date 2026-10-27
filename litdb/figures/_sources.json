@@ -219,7 +219,7 @@
   ]
  },
  "burov2026_li_llzo_charge_transfer_mlmd": {
-  "figures": 95,
+  "figures": 100,
   "generated": "2026-10-27",
   "pdfs": [
    "6914e5bd-1._Charge-transfer_mechanisms_at_LiGa-doped_Li_7_La_3_Zr_2_O_12_LLZO_interfaces_from_machine_learning_assisted_molecular_dynamics.pdf",
@@ -744,6 +744,13 @@
   "pdfs": [
    "102._Halogen_chemistry_of_solid_electrolytes_in_allsolidstate_batteries.pdf",
    "102._Sup_Halogen_chemistry_of_solid_electrolytes_in_allsolidstate_batteries.pdf"
+  ]
+ },
+ "he2026_cryo4dstem_chloride_migration_moisture_argyrodite": {
+  "figures": 44,
+  "generated": "2026-10-27",
+  "pdfs": [
+   "c406c6e8-12._Visualizing_surface-reaction-driven_chloride_migration_and_cascading_failure_in_sulfide_solid_electrolytes.pdf"
   ]
  },
  "heck2026_densification_sulfide_se_binder_scalable": {
@@ -1712,6 +1719,13 @@
    "72. Sup) Luo2022_CryoTEM_Li_Dendrite_Sulfide_Interphase.pdf"
   ]
  },
+ "luo2026_lis_separator_crystal_engineering_review": {
+  "figures": 18,
+  "generated": "2026-10-27",
+  "pdfs": [
+   "c54c1ba8-14._Tailoring_Lithium_Sulfur_Battery_Separators_via_Crystal_Engineering_From_Fundamental_Modulation_to_Multidimensional_Synergy.pdf"
+  ]
+ },
  "lynch2026_greenkubo_mlip_conductivity_thesis": {
   "figures": 20,
   "generated": "2026-09-22",
@@ -2140,6 +2154,14 @@
   "pdfs": [
    "262d0451-13._Dopant-controlled_early-stage_stability_of_LLZOLi13Si4_interfaces_for_thermal_batteries.pdf",
    "20d15ce1-13._Sup_Dopant-controlled_early-stage_stability_of_LLZOLi13Si4_interfaces_for_thermal_batteries.pdf"
+  ]
+ },
+ "park2026_mattergen_fluoride_ion_electrolyte": {
+  "figures": 17,
+  "generated": "2026-10-27",
+  "pdfs": [
+   "a8a0ec62-3._Generative_Inverse_Design_of_Solid-State_Fluoride-Ion_Electrolyte_Candidates_in_Data-Sparse_Chemical_Space.pdf",
+   "a7a43323-3._Sup_Generative_Inverse_Design_of_Solid-State_Fluoride-Ion_Electrolyte_Candidates_in_Data-Sparse_Chemical_Space.pdf"
   ]
  },
  "park2026_ml_framework_stable_interfaces_assb": {
@@ -2794,7 +2816,7 @@
   ]
  },
  "wang2026_umlff_review_softening_forgetting_longrange": {
-  "figures": 11,
+  "figures": 14,
   "generated": "2026-10-27",
   "pdfs": [
    "d17ba3fc-15._Universal_machine_learning_force_fields_for_materials_simulation_From_model_construction_to_complex-system_applications.pdf"

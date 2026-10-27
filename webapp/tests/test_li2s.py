@@ -888,6 +888,26 @@ def test_brief_v2_numbers_follow_the_runlog(client):
     assert "1.23σ" in seg and "1.85σ" not in seg, "실행 기록을 바꿨는데 near-miss 가 안 바뀐다"
 
 
+def test_brief_control_count_follows_the_closure(client):
+    """⛔음성 (2026-10-27) — 대조 계 마감 기록을 바꾸면 요약 절의 통과 수가 따라 바뀐다."""
+    real = D._load_json
+    CTRL = "lpscl_smallcell_glass_control_li3ps4_closed_2026_10_19.json"
+
+    def fake(p):
+        d = real(p)
+        if d and Path(p).name == CTRL:
+            d = _deep(d)
+            d["1_확정"]["B_600K"]["N"] = "3/5 (시험)"
+        return d
+
+    with patch.object(D, "_load_json", side_effect=fake):
+        seg = _brief_html(client)
+    # ⚠ 문맥까지 본다 — v1 줄에도 '550 K 는 구조 5개 중 1개만' 이 정당하게 있다
+    who = "a-Li₃PS₄ 는 600 K 에서 구조 5개 중 "
+    assert who + "3개만" in seg and who + "1개만" not in seg, "마감 기록을 바꿨는데 통과 수가 안 바뀐다"
+    assert "3/5 만 기준 통과" in seg, "타임라인 줄이 마감 기록을 안 따라간다"
+
+
 def test_brief_v2_runlog_missing_is_dash_and_announced(client):
     """⛔음성 — v2 실행 기록이 없으면 그 자리는 `—` 이고 이름이 경고에 뜬다 (0 이 아니다)."""
     real = D._load_json

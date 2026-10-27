@@ -930,6 +930,11 @@
 
 > 2026-10-13 추가 — `pan2026_thesis_rate_capable_energy_dense_cathode_composites` — 액체 LIB 습식 NCM811: 두께 감소 0/20/40 % → μCT 거대 기공 38/35/30 % 이나 같은 두께에서 적재 ×1.51 이면 질량 수지 기공 ≈6.5 % [카드 산술] — CT 기공 ≠ 총 기공 (압축 앵커로 쓰지 않는다).
 
+> 2026-10-14 추가 — **"LPSCl 진밀도 1.64" 계보 대조 4 편 (묶음 10-14b)** (`tron2023_lpscl_ccd_ambient_pressure` · `beutl2024_round_robin_coin_cell_sulfide_assb` · `wang2024_hot_pressed_lpscl_pressure_invariant_conductivity` · `larson2025_hot_pressing_argyrodite_low_stack_pressure_conductivity`) — 비교표 등재 2026-10-27:
+> · **1.64 는 결정학 밀도가 아니다** — 결정학 산술 (Z = 4 · a ≈ 9.86 Å) 은 **1.86** [우리 산술].  Tron 2023 은 *"crystallographic density of 1.64"* 를 Doux 2020 에 귀속 (Doux 정본 카드는 TD **1.860**) · Beutl 2024 는 같은 1.64 를 Zhou 2019 · Tron 2023 에 귀속 (측정 없음) · Wang 2024 는 인용 없이 쓰고 자기 펠릿 1.66 · 1.69 가 그 값을 넘는다 (101–103 %) · Larson 2025 는 1.83 (XRD 계산 주장 · 인용원 Ohno SI 와 자기 XRD 판독은 1.86) 을 쓰고, 문헌의 1.63 을 *DFT 유래 · SEM 잔류 공극과 안 맞음* 으로 지목한다 — 그 펠릿에 1.64 를 대면 공극이 음수 (−6.6 %) 다.
+> · **같은 조건 외부 점 (300–360 MPa · 냉간 · 다이 밖)** 의 공극, 1.64 기준 → 1.86 기준: Larson 300 MPa 2.4 → 14.0 % · Wang 300 MPa 13.5 → 23.8 % · Beutl 360 MPa 2.4–9.1 → 14.0–19.9 % · Tron 360 MPa ≈2–9 → 14–20 % [카드 산술].  **진밀도 선택이 공극을 ≈11 %p 옮긴다 — 세대 2 표적 창 (ε_union 10–13 % · 1.64 기준) 폭 3 %p 의 ≈4 배.**  1.64 기준 10–13 % = 겉보기 밀도 1.43–1.48 g/cm³ = 결정학 기준 21–23 % 다.
+> · ⛔ 공극 % 를 나란히 놓을 때 **진밀도 값을 같이 적는다** (1.64 / 1.86 표지 없는 공극끼리는 비교하지 않는다) · 네 편 모두 **다압력 Heckel 점 없음** (성형압 하나) · σ 는 같은 밀도에서 접촉 상태만으로 ×36–96 (Larson) · 냉간 펠릿은 스택압 0 → 8 MPa 에 ≈20 배 (Wang) — DEM 망 (다이 안 접촉) σ 를 하중 제거 펠릿의 저압 EIS 와 직접 비교하지 않는다.  CL-94 (순수 SE 300 MPa 공극 표적) 는 **후보 보류 그대로** — 이 묶음은 분모의 근거이지 표적 값을 새로 정하지 않는다.
+
 ## B. 전달 삼중항 — σ_ionic은 교차검증, σ_e/σ_thermal은 우리만
 
 > ⭐ **2026-10-09 추가 — [Miss26] σ(ε) 두 영역: ε > 0.17–0.2 = 계면 접촉 지배 · ε < 0.17 = 공극 지배 (MWBH σ₀(1 − ε)^1.5).**  (`papers/miss2026_insitu_conductivity_porosity_pressure_compaction.md` §3-5 · §7-4 · §7-5 — 단일상 펠릿)
@@ -3793,6 +3798,7 @@
 > 2026-10-13 추가 — `kissel2026_mechanofusion_derived_cathode_composite_microstructures_scalable` — 5–162 nm SE(+CB) 껍질과 그 형성 (형상 소성) 은 우리 DEM 구 · STEP3 복셀 (0.15–0.4 µm) 해상도 밖.
 > 2026-10-13 추가 — `kang2026_multiscale_inverse_design_ptfe_fibrillation_dry_electrode` — 입경 → PTFE 형태 (섬유 vs 막) 의존을 우리 모델이 못 낸다 (DEM 강체 구 · MPM SE J2 · STEP3 centerline 고정 스탬프) · 단일 'PLP' 대신 DEM 상별 접촉 압력 분포를 바인더 기준에 겹치는 일은 후보 과제.
 > 2026-10-13 추가 — `kim2012_lno_lco_surface_energy_morphology_dft` — 면별 γ 차 (LNO (003) ↔ (012) ≈6 배) 를 담을 자리가 없다 — AM 은 면 없는 구 · 쌍당 CED 하나.
+> 2026-10-27 추가 — `meng2026_phase_inversion_binder_ultrathick_zn_iodine` — ⛔ 수계 액체 · 전환 (Zn–I₂) 후막 — 상전환 (NIPS · 바인더 PES–PVP 가 기공 형성제 겸) 1.5 mm 자립 활성탄 양극 · 0.7 → 2.0 mm 에 면적 용량 +11 % · CE 86 → 99 % (`figure-read`) = 두께가 용량이 아니라 가둠 · CE 를 산다 · 후막을 가능하게 한 것은 기공을 채운 액체 σ 67.79 mS/cm (20 °C) 와 고상 확산 없는 전환 반응 → 황화물 ASSB 후막 설계 근거로 옮기지 않는다 · 기공률 · τ · σ_e 미측정이라 §J 에 넣을 값 0 · PES vs PES–PVP 대조가 화학과 미세구조를 같이 바꾼다 (PVP 이득이 전류와 함께 1.03 → 1.25 배 — 수송 효과 꼴 [우리 산술]) · 우리 공정 목록에 없는 경로 (습식 상전환).
 
 
 ## G. AM 입자 **내부**(sub-particle) 미세구조 — 우리 축 **아래 한 칸**, 접점은 방법론뿐 (2026-08-25 신설)

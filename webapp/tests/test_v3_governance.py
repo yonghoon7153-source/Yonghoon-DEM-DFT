@@ -217,26 +217,86 @@ def test_kb_route_renders_and_refuses():
         assert c.get("/kb?path=" + bad).status_code == 404, f"열리면 안 되는 경로: {bad}"
 
 
+def _ledger_kb_paths():
+    return {p for d in C.decisions().values() for r in (d.get("record"), d.get("card"))
+            for p in (D.ledger_doc_ref(r)[0],) if p.startswith("kb/")}
+
+
+def test_ledger_doc_ref_cuts_path_at_space_or_fragment():
+    """[음성 포함] 원장 ref 의 경로는 첫 공백·`#` 앞까지다.
+
+    ⛔ 2026-10-27: `#` 로만 자르던 두 호출부가 `kb/open_items.md ⏭-4 (…)` 를 통째로 경로로 읽어
+      멀쩡한 파일이 `/kb` 에 "⛔ 파일 없음" 으로 · 판정 원장에 죽은 문자열로 나왔다.
+    """
+    f = D.ledger_doc_ref
+    assert f("kb/a.md") == ("kb/a.md", "")
+    assert f("kb/a.md#절-2") == ("kb/a.md", "#절-2")
+    assert f("kb/open_items.md ⏭-4 (Li₃Nd P0-2 control · 회신 I)") == \
+        ("kb/open_items.md", "⏭-4 (Li₃Nd P0-2 control · 회신 I)")
+    assert f("db/x.json (§1a · §5) — 다음 단계") == ("db/x.json", "(§1a · §5) — 다음 단계")
+    assert f("  kb/a.md\t#x ") == ("kb/a.md", "#x")
+    # [음성] 빈 값·None·경로 없는 산문은 빈 경로 — 호출부의 startswith 거름이 받는다
+    for bad in (None, "", "   ", "#절만"):
+        assert f(bad)[0] == "", f"⛔ 경로가 없는데 경로가 나왔다: {bad!r} → {f(bad)!r}"
+
+
+def test_kb_index_never_marks_an_existing_file_missing():
+    """[음성] "⛔ 파일 없음" 은 저장소에 정말 없는 경로에만 붙어야 한다.
+
+    이 배지가 있는 파일에 붙으면 원장이 멀쩡한데 화면이 근거가 사라졌다고 말한다
+    (2026-10-27 `kb/open_items.md ⏭-4 (…)` — 설명까지 경로로 읽었다).
+    """
+    rows = A._kb_evidence_docs()
+    assert rows, "전제: 원장이 kb 문서를 근거로 든다"
+    wrong = [r["path"] for r in rows if not r["ok"] and (D.ROOT / r["path"]).is_file()]
+    assert not wrong, f"⛔ 있는 파일을 '파일 없음' 으로 그렸다: {wrong}"
+    # 고정 사례: 원장 card `kb/open_items.md ⏭-4 (…)` → 열리는 행이어야 한다
+    ref = "kb/open_items.md ⏭-4"
+    if any(str(d.get("card") or "").startswith(ref) for d in C.decisions().values()):
+        row = [r for r in rows if r["path"] == "kb/open_items.md"]
+        assert row and row[0]["ok"], "⛔ kb/open_items.md 가 열리는 행으로 안 나왔다"
+
+
+def test_governance_links_every_openable_ledger_ref(gov_html):
+    """[음성] 원장 ref 의 경로가 열리면 판정 원장에서 **링크**여야 한다 — 뒤에 설명이 붙어도.
+
+    2026-10-27 실측: `db/properties/wad_aprime_pilot_prereg_v5_2026_09_25.json (§1a …) — …`
+    가 통째로 경로로 읽혀 `/api/file` 화이트리스트에서 떨어졌다 (있는 파일인데 회색 문자열).
+    """
+    missing = []
+    for d in C.decisions().values():
+        for r in (d.get("record"), d.get("card")):
+            p = D.ledger_doc_ref(r)[0]
+            if D.safe_repo_path(p) is not None:
+                href = f'href="/api/file/{p}"'
+            elif D.safe_kb_doc(p) is not None:
+                href = f'href="/kb?path={p}"'
+            else:
+                continue
+            if href not in gov_html:
+                missing.append(f"{d.get('id')}: {p}")
+    assert not missing, "⛔ 열리는 근거가 링크가 아니다:\n  " + "\n  ".join(missing)
+
+
 def test_kb_index_lists_only_ledger_referenced_docs():
     """/kb 는 kb **색인이 아니다** — 원장이 이름 댄 근거 문서만 편다."""
     A.app.config["TESTING"] = True
     h = A.app.test_client().get("/kb").get_data(as_text=True)
-    refs = {str(r or "").partition("#")[0]
-            for d in C.decisions().values() for r in (d.get("record"), d.get("card"))
-            if str(r or "").startswith("kb/")}
+    refs = _ledger_kb_paths()
     assert refs, "전제: 원장이 kb 문서를 근거로 든다"
     for r in refs:
         assert r in h, f"원장이 이름 댄 {r} 이 목록에 없다"
     # [음성] 원장이 안 가리킨 kb 문서를 목록에 세우면 안 된다
-    assert "kb/open_items.md" not in refs, "전제가 바뀌었다 — 다른 비참조 문서를 골라라"
-    assert "kb/open_items.md" not in h, "원장이 이름 대지 않은 문서가 목록에 있다"
+    #   ⚠ 종전 음성 예는 kb/open_items.md 였는데 2026-10-11 결정 card 가 그 문서를 가리키게 됐다
+    #     (`⏭-4` 절). 그때부터 이 시험은 파싱 버그 덕에 통과·실패가 갈렸다 — 실물 비참조 문서로 바꾼다.
+    assert D.safe_kb_doc("kb/SCHEMA.md") is not None, "전제: 음성 예 문서가 실재한다"
+    assert "kb/SCHEMA.md" not in refs, "전제가 바뀌었다 — 다른 비참조 문서를 골라라"
+    assert "kb/SCHEMA.md" not in h, "원장이 이름 대지 않은 문서가 목록에 있다"
 
 
 def test_governance_evidence_links_reach_kb(gov_html):
     """결정의 kb 근거가 **링크**여야 한다 (종전에는 회색 문자열로 끝났다)."""
-    kb_refs = {str(r or "").partition("#")[0]
-               for d in C.decisions().values() for r in (d.get("record"), d.get("card"))
-               if str(r or "").startswith("kb/")}
+    kb_refs = _ledger_kb_paths()
     assert kb_refs, "전제: kb 근거가 원장에 있다"
     for r in sorted(kb_refs):
         if D.safe_kb_doc(r) is None:

@@ -25,7 +25,8 @@
    "h": 1103,
    "dpi": 300,
    "src": "d17ba3fc-15._Universal_machine_learning_force_fields_for_materials_simulation_From_model_construction_to_complex-system_applications.pdf",
-   "blank": 0.88
+   "blank": 0.88,
+   "viewed": true
   },
   {
    "key": "f2",
@@ -45,7 +46,8 @@
    "h": 511,
    "dpi": 300,
    "src": "d17ba3fc-15._Universal_machine_learning_force_fields_for_materials_simulation_From_model_construction_to_complex-system_applications.pdf",
-   "blank": 0.725
+   "blank": 0.725,
+   "viewed": true
   },
   {
    "key": "f3",
@@ -65,7 +67,8 @@
    "h": 642,
    "dpi": 300,
    "src": "d17ba3fc-15._Universal_machine_learning_force_fields_for_materials_simulation_From_model_construction_to_complex-system_applications.pdf",
-   "blank": 0.857
+   "blank": 0.857,
+   "viewed": true
   },
   {
    "key": "f4",
@@ -85,7 +88,8 @@
    "h": 1350,
    "dpi": 300,
    "src": "d17ba3fc-15._Universal_machine_learning_force_fields_for_materials_simulation_From_model_construction_to_complex-system_applications.pdf",
-   "blank": 0.814
+   "blank": 0.814,
+   "viewed": true
   },
   {
    "key": "f5",
@@ -105,7 +109,8 @@
    "h": 907,
    "dpi": 300,
    "src": "d17ba3fc-15._Universal_machine_learning_force_fields_for_materials_simulation_From_model_construction_to_complex-system_applications.pdf",
-   "blank": 0.852
+   "blank": 0.852,
+   "viewed": true
   },
   {
    "key": "f6",
@@ -119,13 +124,15 @@
     64.8,
     409.9,
     533.4,
-    689.4
+    706.0
    ],
    "w": 1953,
-   "h": 1166,
+   "h": 1235,
    "dpi": 300,
    "src": "d17ba3fc-15._Universal_machine_learning_force_fields_for_materials_simulation_From_model_construction_to_complex-system_applications.pdf",
-   "blank": 0.858
+   "blank": 0.858,
+   "recrop": "auto crop ended at y 689.4 and cut the bottom 13.8 pt of the embedded image (image rect bottom 703.2; caption line starts 708.6) - x-axis tick labels/titles were lost; re-rendered with bottom y 706.0, same x/top, 300 dpi (2026-10-27, litdb-curator)",
+   "viewed": true
   },
   {
    "key": "f7",
@@ -139,13 +146,15 @@
     64.8,
     69.2,
     533.4,
-    395.2
+    412.0
    ],
    "w": 1953,
-   "h": 1359,
+   "h": 1429,
    "dpi": 300,
    "src": "d17ba3fc-15._Universal_machine_learning_force_fields_for_materials_simulation_From_model_construction_to_complex-system_applications.pdf",
-   "blank": 0.831
+   "blank": 0.831,
+   "recrop": "auto crop ended at y 395.2 and cut the bottom 14.5 pt of the embedded image (image rect bottom 409.7; caption line starts 414.5) - x-axis tick labels/titles were lost; re-rendered with bottom y 412.0, same x/top, 300 dpi (2026-10-27, litdb-curator)",
+   "viewed": true
   },
   {
    "key": "f8",
@@ -165,7 +174,8 @@
    "h": 1103,
    "dpi": 300,
    "src": "d17ba3fc-15._Universal_machine_learning_force_fields_for_materials_simulation_From_model_construction_to_complex-system_applications.pdf",
-   "blank": 0.841
+   "blank": 0.841,
+   "viewed": true
   },
   {
    "key": "f9",
@@ -179,13 +189,15 @@
     64.8,
     143.6,
     533.4,
-    470.9
+    486.0
    ],
    "w": 1953,
-   "h": 1365,
+   "h": 1427,
    "dpi": 300,
    "src": "d17ba3fc-15._Universal_machine_learning_force_fields_for_materials_simulation_From_model_construction_to_complex-system_applications.pdf",
-   "blank": 0.837
+   "blank": 0.837,
+   "recrop": "auto crop ended at y 470.9 and cut the bottom 14.6 pt of the embedded image (image rect bottom 485.5; caption line starts 486.3) - x-axis tick labels/titles were lost; re-rendered with bottom y 486.0, same x/top, 300 dpi (2026-10-27, litdb-curator)",
+   "viewed": true
   },
   {
    "key": "t1",
@@ -193,19 +205,53 @@
    "label": "1",
    "page": 9,
    "file": "tab_1.png",
-   "caption": "Table 1. Selected Matbench Discovery results for stability classification and energy-above-hull regression on the WBM candidate set. MAE and RMSE are in eV/atom. Values and model variants are reproduced from Ref.36 Model F1 DAF† Precision MAE RMSE Supervised Main implication labels‡ eqV2 S 0.815 5.042 0.771 0.036 0.085 EFS Highest F1 in this subset",
+   "caption": "Table 1. Selected Matbench Discovery results for stability classification and energy-above-hull regression on the WBM candidate set. MAE and RMSE are in eV/atom. Values and model variants are reproduced from Ref.36",
    "rotated_deg": 0,
    "bbox": [
-    3.0,
-    5.8,
-    532.4,
-    769.8
+    64.0,
+    625.0,
+    534.0,
+    758.0
    ],
-   "w": 2075,
-   "h": 2994,
-   "dpi": 282,
+   "w": 1959,
+   "h": 2553,
+   "dpi": 300,
    "src": "d17ba3fc-15._Universal_machine_learning_force_fields_for_materials_simulation_From_model_construction_to_complex-system_applications.pdf",
-   "blank": 0.868
+   "blank": 0.884,
+   "pages": [
+    9,
+    10
+   ],
+   "recrop": "auto crop fell back to the whole p.9 (text table, no graphics) and missed the p.10 continuation - re-rendered as a 2-piece vertical stack: p.9 clip y 625-758 (caption to eqV2 S row) + p.10 clip y 68-545 (repeated header to footnote §), x 64-534, 300 dpi (2026-10-27, litdb-curator)",
+   "viewed": false,
+   "note": "text table - values taken from the PDF text layer, not from this image"
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 11,
+   "file": "tab_2.png",
+   "caption": "Table 2. Frozen-checkpoint force comparison on fixed Li6PS5Cl AIMD configurations. MAE is over Cartesian force components (eV/Å); the high-force subset includes the upper 10% of reference force-vector magnitudes (5,195 atom–frame pairs). The pooled set has 999 distinct configurations, and each temperature-specific set has 500 frames. Slopes are zero-intercept force projections on the pooled or high-force sets. Brackets give 95% bootstrap confidence intervals.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.0,
+    535.0,
+    534.0,
+    758.0
+   ],
+   "w": 1959,
+   "h": 2103,
+   "dpi": 300,
+   "src": "d17ba3fc-15._Universal_machine_learning_force_fields_for_materials_simulation_From_model_construction_to_complex-system_applications.pdf",
+   "blank": 0.885,
+   "pages": [
+    11,
+    12
+   ],
+   "manual_crop": "missed by the extractor: the 'Table 2.' caption line (p.11 y 537.8) sits inside the same text block as the preceding body paragraph, so no caption anchor was found (missing_labels t2) - hand-cropped as a 2-piece vertical stack: p.11 clip y 535-758 (caption to MatterSim-1M first row) + p.12 clip y 68-347 (MatterSim-1M continuation to CHGNet 0.3.0), x 64-534, 300 dpi; crop viewed (2026-10-27, litdb-curator)",
+   "viewed": true,
+   "note": "text table - values taken from the PDF text layer, not from this image"
   },
   {
    "key": "t3",
@@ -213,19 +259,81 @@
    "label": "3",
    "page": 12,
    "file": "tab_3.png",
-   "caption": "Table 3, the BaTiO3 force-component MAE ranged from 0.033909 eV/Å (Orb-v3) to 0.054900 eV/Å (CHGNet 0.3.0). SevenNet-0 and MatterSim-1M had similar point estimates (0.039086 and 0.039935 eV/Å); the paired 95% interval for their difference included zero. The BaTiO3 all-pair projection slopes ranged from 1.0262 to 1.0813, and thus the Li6PS5Cl high-force attenuation is not a general result across these test configurations.",
+   "caption": "Table 3. Frozen-checkpoint force comparison on the PET-MAD BaTiO3 test split (146 periodic 40-atom configurations; PBEsol reference). MAE, RMSE and upper-decile MAE refer to Cartesian force components in eV/Å. The upper decile comprises 584 atom–frame pairs chosen by reference force-vector magnitude; the projection slope uses all 5,840 pairs. Brackets give 95% frame-bootstrap confidence intervals.",
    "rotated_deg": 0,
    "bbox": [
-    3.0,
-    5.8,
-    532.4,
-    769.8
+    64.0,
+    597.0,
+    534.0,
+    761.0
    ],
-   "w": 2075,
-   "h": 2994,
-   "dpi": 282,
+   "w": 1959,
+   "h": 1311,
+   "dpi": 300,
    "src": "d17ba3fc-15._Universal_machine_learning_force_fields_for_materials_simulation_From_model_construction_to_complex-system_applications.pdf",
-   "blank": 0.888
+   "blank": 0.869,
+   "pages": [
+    12,
+    13
+   ],
+   "recrop": "auto crop anchored on the body sentence 'As summarized in Table 3, the BaTiO3 ...' (wrong caption) and fell back to the whole p.12 - re-rendered from the real caption: p.12 clip y 597-761 (caption to Orb-v3 row) + p.13 clip y 68-216 (MatterSim-1M to CHGNet 0.3.0), x 64-534, 300 dpi (2026-10-27, litdb-curator)",
+   "viewed": false,
+   "note": "text table - values taken from the PDF text layer, not from this image"
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 19,
+   "file": "tab_4.png",
+   "caption": "Table 4. Published results for selected uMLFF checkpoints in materials discovery, thermal conductivity and MD timing. The timing example uses a 1024-atom W-bcc supercell on one NVIDIA A100 80-GB GPU, with ASE and LAMMPS distinguished. Values from Ref.49.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.0,
+    660.0,
+    534.0,
+    718.0
+   ],
+   "w": 1215,
+   "h": 3013,
+   "dpi": 186,
+   "src": "d17ba3fc-15._Universal_machine_learning_force_fields_for_materials_simulation_From_model_construction_to_complex-system_applications.pdf",
+   "blank": 0.887,
+   "pages": [
+    19,
+    20,
+    21
+   ],
+   "manual_crop": "not extracted and not flagged (text table spanning 3 pages; caption line p.19 y 663.4 inside a body block) - hand-cropped as a 3-piece vertical stack: p.19 clip y 660-718 (caption) + p.20 clip y 68-749 (header to GRACE-2L-OMAT) + p.21 clip y 68-490 (GRACE-1L-OMAT-L/OMAT rows + footnotes), x 64-534, 186 dpi to keep the long side <= 3000 px (2026-10-27, litdb-curator)",
+   "viewed": false,
+   "note": "text table - values taken from the PDF text layer, not from this image"
+  },
+  {
+   "key": "t5",
+   "kind": "table",
+   "label": "5",
+   "page": 27,
+   "file": "tab_5.png",
+   "caption": "Table 5. Normalized confusion matrix for predicted dynamical stability using PBE data as the reference.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.0,
+    675.0,
+    534.0,
+    754.0
+   ],
+   "w": 1959,
+   "h": 1324,
+   "dpi": 300,
+   "src": "d17ba3fc-15._Universal_machine_learning_force_fields_for_materials_simulation_From_model_construction_to_complex-system_applications.pdf",
+   "blank": 0.88,
+   "pages": [
+    27,
+    28
+   ],
+   "manual_crop": "not extracted and not flagged (text table; caption line p.27 y 677.4 inside a body block) - hand-cropped as a 2-piece vertical stack: p.27 clip y 675-754 (caption, header, M3GNet row) + p.28 clip y 68-304 (CHGNet to PBEsol rows + footnotes), x 64-534, 300 dpi (2026-10-27, litdb-curator)",
+   "viewed": false,
+   "note": "text table - values taken from the PDF text layer, not from this image"
   }
  ],
  "missing_labels": [
@@ -233,7 +341,12 @@
    "key": "t2",
    "why": "번호 공백 — 이 번호가 추출되지 않았다",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop tab_2.png (2026-10-27, litdb-curator) - see figures[t2].manual_crop"
   }
+ ],
+ "not_cropped": [
+  "Box 1 (PDF p.17-18, qualitative comparison of uMLFF families) and Box 2 (PDF p.30, design dimensions / validation gaps) - text boxes, not Figure/Table; the webapp reference regex does not link 'Box', so they are summarized in the digest only (2026-10-27, litdb-curator)",
+  "Unnumbered graphical abstract on PDF p.3 under the Abstract ('uMLFFs Ecosystem', pathways A-F: GNN / equivariant / ACE-GRACE-NEP / physics-enhanced / domain-oriented / data-platform) - viewed via a page render, not cropped because it has no Figure number for the webapp to link (2026-10-27, litdb-curator)"
  ]
 }
