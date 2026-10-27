@@ -1,0 +1,704 @@
+{
+  "diagnostic_status": "COMPLETE_NUMERIC_BREAKDOWN_NOT_A_VERDICT",
+  "provenance": {
+    "original": {
+      "path": "/home/yonghoon/ps45_unload_20261009/ps_7_3_r45/in/contact_3200000.liggghts",
+      "bytes": 149687008,
+      "sha256": "53ae293b4586d091dfca58ab430c174f36b641dcd24678eb10d10fc3f416e65c",
+      "step": 3200000,
+      "rows": 562605,
+      "blank_lines": 0,
+      "header_bounds": [
+        [
+          0.0,
+          0.05
+        ],
+        [
+          0.0,
+          0.05
+        ],
+        [
+          -0.01,
+          1.0
+        ]
+      ],
+      "comparison_box": [
+        0.05,
+        0.05
+      ],
+      "stat_signature": [
+        743766374,
+        162129878206941877,
+        149687008,
+        1793019630000000000,
+        1793019630000000000
+      ],
+      "stat_before_after_stable": true
+    },
+    "test": {
+      "path": "/home/yonghoon/ps45_unload_20261009/ps_7_3_r45/RJ/R/g2/contact_3200000.liggghts",
+      "bytes": 149729924,
+      "sha256": "193e6e6ca2e6833d3204fd26615b61b5de32f6e65d931fcdbd560c215365951f",
+      "step": 3200000,
+      "rows": 562605,
+      "blank_lines": 0,
+      "header_bounds": [
+        [
+          0.0,
+          0.05
+        ],
+        [
+          0.0,
+          0.05
+        ],
+        [
+          -0.01,
+          1.0
+        ]
+      ],
+      "comparison_box": [
+        0.05,
+        0.05
+      ],
+      "stat_signature": [
+        743766374,
+        162129877653386780,
+        149729924,
+        1793020953000000000,
+        1793020953000000000
+      ],
+      "stat_before_after_stable": true
+    }
+  },
+  "n_orig": 562605,
+  "n_test": 562605,
+  "reproduced_pair_mismatches": 545583,
+  "mismatch_fraction": 0.9697443143946464,
+  "original_abs_medians": [
+    0.0247321,
+    0.0245592,
+    0.0564657,
+    0.025105,
+    0.0245749,
+    0.0563838,
+    0.013748,
+    0.0138367,
+    0.0167749,
+    0.0139444,
+    0.0139777,
+    0.0143423,
+    0.00309277,
+    0.0031097,
+    0.00336706,
+    8.59757e-08,
+    5.14745e-05,
+    0.0249336,
+    0.0245715,
+    0.0563857
+  ],
+  "components": [
+    {
+      "column": "c_cpl[1]",
+      "family": "positions",
+      "first_fail": 0,
+      "any_fail": 0,
+      "max_abs_delta": 0.0,
+      "zero_threshold_fail": 0,
+      "examples": []
+    },
+    {
+      "column": "c_cpl[2]",
+      "family": "positions",
+      "first_fail": 0,
+      "any_fail": 0,
+      "max_abs_delta": 0.0,
+      "zero_threshold_fail": 0,
+      "examples": []
+    },
+    {
+      "column": "c_cpl[3]",
+      "family": "positions",
+      "first_fail": 0,
+      "any_fail": 0,
+      "max_abs_delta": 0.0,
+      "zero_threshold_fail": 0,
+      "examples": []
+    },
+    {
+      "column": "c_cpl[4]",
+      "family": "positions",
+      "first_fail": 0,
+      "any_fail": 0,
+      "max_abs_delta": 0.0,
+      "zero_threshold_fail": 0,
+      "examples": []
+    },
+    {
+      "column": "c_cpl[5]",
+      "family": "positions",
+      "first_fail": 0,
+      "any_fail": 0,
+      "max_abs_delta": 0.0,
+      "zero_threshold_fail": 0,
+      "examples": []
+    },
+    {
+      "column": "c_cpl[6]",
+      "family": "positions",
+      "first_fail": 0,
+      "any_fail": 0,
+      "max_abs_delta": 0.0,
+      "zero_threshold_fail": 0,
+      "examples": []
+    },
+    {
+      "column": "c_cpl[10]",
+      "family": "total_force",
+      "first_fail": 303528,
+      "any_fail": 303528,
+      "max_abs_delta": 0.01649999999999885,
+      "zero_threshold_fail": 0,
+      "examples": [
+        {
+          "pair": [
+            8,
+            5895
+          ],
+          "original": 0.0949841,
+          "test": 0.0949813,
+          "abs_delta": 2.799999999997249e-06,
+          "threshold": 9.498410000000001e-07
+        },
+        {
+          "pair": [
+            8,
+            21165
+          ],
+          "original": -0.0293034,
+          "test": -0.0293037,
+          "abs_delta": 2.9999999999821836e-07,
+          "threshold": 2.9303400000000003e-07
+        },
+        {
+          "pair": [
+            8,
+            41006
+          ],
+          "original": -0.00359463,
+          "test": -0.00359422,
+          "abs_delta": 4.100000000001672e-07,
+          "threshold": 1.3748e-07
+        }
+      ]
+    },
+    {
+      "column": "c_cpl[11]",
+      "family": "total_force",
+      "first_fail": 99686,
+      "any_fail": 300475,
+      "max_abs_delta": 0.02068000000000003,
+      "zero_threshold_fail": 0,
+      "examples": [
+        {
+          "pair": [
+            8,
+            5895
+          ],
+          "original": 0.171844,
+          "test": 0.171846,
+          "abs_delta": 2.000000000002e-06,
+          "threshold": 1.7184400000000002e-06
+        },
+        {
+          "pair": [
+            8,
+            18352
+          ],
+          "original": 0.107761,
+          "test": 0.107757,
+          "abs_delta": 3.9999999999901226e-06,
+          "threshold": 1.0776100000000001e-06
+        },
+        {
+          "pair": [
+            8,
+            21165
+          ],
+          "original": 0.0831241,
+          "test": 0.0831226,
+          "abs_delta": 1.5000000000015001e-06,
+          "threshold": 8.312410000000002e-07
+        }
+      ]
+    },
+    {
+      "column": "c_cpl[12]",
+      "family": "total_force",
+      "first_fail": 44068,
+      "any_fail": 284670,
+      "max_abs_delta": 0.023631199999999998,
+      "zero_threshold_fail": 0,
+      "examples": [
+        {
+          "pair": [
+            8,
+            18352
+          ],
+          "original": 0.237582,
+          "test": 0.237585,
+          "abs_delta": 3.0000000000030003e-06,
+          "threshold": 2.37582e-06
+        },
+        {
+          "pair": [
+            8,
+            21165
+          ],
+          "original": 0.0896843,
+          "test": 0.089686,
+          "abs_delta": 1.7000000000072513e-06,
+          "threshold": 8.968430000000001e-07
+        },
+        {
+          "pair": [
+            8,
+            41006
+          ],
+          "original": 0.0917999,
+          "test": 0.0917982,
+          "abs_delta": 1.7000000000072513e-06,
+          "threshold": 9.179990000000001e-07
+        }
+      ]
+    },
+    {
+      "column": "c_cpl[13]",
+      "family": "normal_force",
+      "first_fail": 0,
+      "any_fail": 2056,
+      "max_abs_delta": 9.999999999976694e-05,
+      "zero_threshold_fail": 0,
+      "examples": [
+        {
+          "pair": [
+            258,
+            40782
+          ],
+          "original": -0.00872035,
+          "test": -0.00872019,
+          "abs_delta": 1.6000000000078451e-07,
+          "threshold": 1.3944400000000001e-07
+        },
+        {
+          "pair": [
+            380,
+            490
+          ],
+          "original": -0.0951178,
+          "test": -0.095114,
+          "abs_delta": 3.7999999999982492e-06,
+          "threshold": 9.511780000000001e-07
+        },
+        {
+          "pair": [
+            456,
+            20075
+          ],
+          "original": -0.028339,
+          "test": -0.0283394,
+          "abs_delta": 4.000000000010939e-07,
+          "threshold": 2.8339e-07
+        }
+      ]
+    },
+    {
+      "column": "c_cpl[14]",
+      "family": "normal_force",
+      "first_fail": 1,
+      "any_fail": 1811,
+      "max_abs_delta": 7.00000000000145e-05,
+      "zero_threshold_fail": 0,
+      "examples": [
+        {
+          "pair": [
+            380,
+            490
+          ],
+          "original": 0.0342258,
+          "test": 0.0342245,
+          "abs_delta": 1.300000000002688e-06,
+          "threshold": 3.4225800000000005e-07
+        },
+        {
+          "pair": [
+            35,
+            441
+          ],
+          "original": -0.287545,
+          "test": -0.287548,
+          "abs_delta": 3.000000000030756e-06,
+          "threshold": 2.87545e-06
+        },
+        {
+          "pair": [
+            456,
+            20075
+          ],
+          "original": -0.0211131,
+          "test": -0.0211134,
+          "abs_delta": 3.000000000016878e-07,
+          "threshold": 2.11131e-07
+        }
+      ]
+    },
+    {
+      "column": "c_cpl[15]",
+      "family": "normal_force",
+      "first_fail": 0,
+      "any_fail": 1217,
+      "max_abs_delta": 0.0001220000000000665,
+      "zero_threshold_fail": 0,
+      "examples": [
+        {
+          "pair": [
+            35,
+            441
+          ],
+          "original": -0.14306,
+          "test": -0.143062,
+          "abs_delta": 2.000000000002e-06,
+          "threshold": 1.4306000000000001e-06
+        },
+        {
+          "pair": [
+            482,
+            488
+          ],
+          "original": 0.153094,
+          "test": 0.153091,
+          "abs_delta": 3.0000000000030003e-06,
+          "threshold": 1.5309400000000003e-06
+        },
+        {
+          "pair": [
+            113,
+            627
+          ],
+          "original": 0.25324,
+          "test": 0.253244,
+          "abs_delta": 4.000000000004e-06,
+          "threshold": 2.5324000000000005e-06
+        }
+      ]
+    },
+    {
+      "column": "c_cpl[16]",
+      "family": "tangent_force",
+      "first_fail": 65441,
+      "any_fail": 472136,
+      "max_abs_delta": 0.01654,
+      "zero_threshold_fail": 0,
+      "examples": [
+        {
+          "pair": [
+            8,
+            5895
+          ],
+          "original": 0.0258278,
+          "test": 0.025825,
+          "abs_delta": 2.8000000000007186e-06,
+          "threshold": 2.5827800000000006e-07
+        },
+        {
+          "pair": [
+            8,
+            18352
+          ],
+          "original": 0.00674855,
+          "test": 0.00674829,
+          "abs_delta": 2.6000000000019063e-07,
+          "threshold": 6.74855e-08
+        },
+        {
+          "pair": [
+            8,
+            21165
+          ],
+          "original": 0.0054216,
+          "test": 0.00542128,
+          "abs_delta": 3.2000000000070167e-07,
+          "threshold": 5.421600000000001e-08
+        }
+      ]
+    },
+    {
+      "column": "c_cpl[17]",
+      "family": "tangent_force",
+      "first_fail": 24390,
+      "any_fail": 471323,
+      "max_abs_delta": 0.020685999999999982,
+      "zero_threshold_fail": 0,
+      "examples": [
+        {
+          "pair": [
+            8,
+            5895
+          ],
+          "original": -0.00661048,
+          "test": -0.0066091,
+          "abs_delta": 1.380000000000478e-06,
+          "threshold": 6.610480000000001e-08
+        },
+        {
+          "pair": [
+            8,
+            18352
+          ],
+          "original": -0.0420777,
+          "test": -0.0420824,
+          "abs_delta": 4.699999999996374e-06,
+          "threshold": 4.2077700000000006e-07
+        },
+        {
+          "pair": [
+            8,
+            21165
+          ],
+          "original": -0.00958837,
+          "test": -0.00958988,
+          "abs_delta": 1.509999999999706e-06,
+          "threshold": 9.588370000000001e-08
+        }
+      ]
+    },
+    {
+      "column": "c_cpl[18]",
+      "family": "tangent_force",
+      "first_fail": 8469,
+      "any_fail": 471113,
+      "max_abs_delta": 0.02363060000000001,
+      "zero_threshold_fail": 0,
+      "examples": [
+        {
+          "pair": [
+            8,
+            5895
+          ],
+          "original": -0.00434592,
+          "test": -0.00434631,
+          "abs_delta": 3.9000000000028595e-07,
+          "threshold": 4.34592e-08
+        },
+        {
+          "pair": [
+            8,
+            18352
+          ],
+          "original": 0.0382612,
+          "test": 0.0382644,
+          "abs_delta": 3.1999999999948736e-06,
+          "threshold": 3.8261200000000006e-07
+        },
+        {
+          "pair": [
+            8,
+            21165
+          ],
+          "original": 0.0142874,
+          "test": 0.0142891,
+          "abs_delta": 1.7000000000003124e-06,
+          "threshold": 1.42874e-07
+        }
+      ]
+    },
+    {
+      "column": "c_cpl[22]",
+      "family": "area",
+      "first_fail": 0,
+      "any_fail": 0,
+      "max_abs_delta": 0.0,
+      "zero_threshold_fail": 0,
+      "examples": []
+    },
+    {
+      "column": "c_cpl[23]",
+      "family": "delta",
+      "first_fail": 0,
+      "any_fail": 0,
+      "max_abs_delta": 0.0,
+      "zero_threshold_fail": 0,
+      "examples": []
+    },
+    {
+      "column": "c_cpl[24]",
+      "family": "contact_point",
+      "first_fail": 0,
+      "any_fail": 0,
+      "max_abs_delta": 0.0,
+      "zero_threshold_fail": 0,
+      "examples": []
+    },
+    {
+      "column": "c_cpl[25]",
+      "family": "contact_point",
+      "first_fail": 0,
+      "any_fail": 0,
+      "max_abs_delta": 0.0,
+      "zero_threshold_fail": 0,
+      "examples": []
+    },
+    {
+      "column": "c_cpl[26]",
+      "family": "contact_point",
+      "first_fail": 0,
+      "any_fail": 0,
+      "max_abs_delta": 0.0,
+      "zero_threshold_fail": 0,
+      "examples": []
+    }
+  ],
+  "families": {
+    "positions": {
+      "first_fail": 0,
+      "any_fail": 0
+    },
+    "total_force": {
+      "first_fail": 447282,
+      "any_fail": 447282
+    },
+    "normal_force": {
+      "first_fail": 1,
+      "any_fail": 3295
+    },
+    "tangent_force": {
+      "first_fail": 98300,
+      "any_fail": 544890
+    },
+    "area": {
+      "first_fail": 0,
+      "any_fail": 0
+    },
+    "delta": {
+      "first_fail": 0,
+      "any_fail": 0
+    },
+    "contact_point": {
+      "first_fail": 0,
+      "any_fail": 0
+    }
+  },
+  "orientation": {
+    "original_reversed": 131854,
+    "test_reversed": 109001,
+    "pair_orientation_changed": 22853
+  },
+  "force_zero_sign": [
+    {
+      "column": "c_cpl[10]",
+      "original_zero": 0,
+      "test_zero": 0,
+      "nonzero_to_zero": 0,
+      "nonzero_sign_flip": 162
+    },
+    {
+      "column": "c_cpl[11]",
+      "original_zero": 0,
+      "test_zero": 0,
+      "nonzero_to_zero": 0,
+      "nonzero_sign_flip": 173
+    },
+    {
+      "column": "c_cpl[12]",
+      "original_zero": 0,
+      "test_zero": 0,
+      "nonzero_to_zero": 0,
+      "nonzero_sign_flip": 272
+    },
+    {
+      "column": "c_cpl[13]",
+      "original_zero": 0,
+      "test_zero": 0,
+      "nonzero_to_zero": 0,
+      "nonzero_sign_flip": 1
+    },
+    {
+      "column": "c_cpl[14]",
+      "original_zero": 0,
+      "test_zero": 0,
+      "nonzero_to_zero": 0,
+      "nonzero_sign_flip": 1
+    },
+    {
+      "column": "c_cpl[15]",
+      "original_zero": 0,
+      "test_zero": 0,
+      "nonzero_to_zero": 0,
+      "nonzero_sign_flip": 1
+    },
+    {
+      "column": "c_cpl[16]",
+      "original_zero": 0,
+      "test_zero": 0,
+      "nonzero_to_zero": 0,
+      "nonzero_sign_flip": 327
+    },
+    {
+      "column": "c_cpl[17]",
+      "original_zero": 0,
+      "test_zero": 0,
+      "nonzero_to_zero": 0,
+      "nonzero_sign_flip": 277
+    },
+    {
+      "column": "c_cpl[18]",
+      "original_zero": 0,
+      "test_zero": 0,
+      "nonzero_to_zero": 0,
+      "nonzero_sign_flip": 337
+    }
+  ],
+  "discriminating_frac": 1.0,
+  "duplicate_policy": "Refuse all duplicates; recorded run had none",
+  "tolerance": {
+    "relative": 1e-05,
+    "box": [
+      0.05,
+      0.05
+    ],
+    "comparison": "strict delta > rel*max(abs(original), full_original_abs_median); no floor"
+  },
+  "limitations": "No threshold changes, new acceptance verdict or cause inference. Stat stability is not atomic snapshot proof.",
+  "job_binding": {
+    "job_id": "323957",
+    "accepted_pin": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde",
+    "module_sha256": {
+      "SHA256SUMS": "bb9f305f476815d7448ee5069ceb8fa3b9f138f3be1dc59703fcc8eec09c03bb",
+      "ul_gates.py": "c8d45a9cf75f0806e612d810942d23adea4b40feaa5f31f7d279eb8386358de6",
+      "ul_lib.py": "23a79392352e01631c6d1f6aaecdb31fc8a53be518ee6f27b815896e161727e6",
+      "ul_reader.py": "dfc06b8dbf53a8cab05df297890e1f8ca1d0fa038536c7c13ed8b8677e521723"
+    },
+    "manifest_sha256": "f8d035470ab0a1a8b0c3e4e94f1af8a5440e3a607e9011317d758a541b55c136",
+    "verdict_sha256": "b605e7e0dcdc668272be9154f4cd6dec8933718a6ede6355715f355c5e75c106",
+    "recorded_gate": {
+      "status": "FAIL",
+      "n_orig": 562605,
+      "n_test": 562605,
+      "n_mismatch": 545583,
+      "missing": [],
+      "extra": [],
+      "n_dup_consistent": 0,
+      "dup_conflicts": [],
+      "why": [],
+      "discriminating_frac": 1.0
+    },
+    "restore_status": "VALUE_MISMATCH"
+  },
+  "diagnostic_sha256": "46e899b77f0f20821349eea91e1707298966ee47e7a276eeaea596382240e9e6",
+  "limits": {
+    "max_rows": 600000,
+    "max_line_bytes": 8192,
+    "max_file_bytes": 536870912
+  },
+  "operational_scope": "Existing two contact files only; no rerun/retry, code or tolerance changes, or follow-on arms",
+  "recorded_gate_match": true
+}
