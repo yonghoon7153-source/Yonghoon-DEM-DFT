@@ -1,0 +1,42 @@
+# wolf2026_extruder_vs_batch_mixing_core_shell_dry_sulfide_cathode — figure readings (판독) · 2026-10-27
+# source: Advanced Science 2026, e78248 (doi 10.1002/advs.78248), main PDF only (SI .docx not available).
+# method A (Fig 2d, 5b-d, 6d — vector bar charts): bar = top edge of the coloured fill path; y-axis calibrated by least squares on the
+#   centres of the outlined tick-label glyph groups (+0.48 pt label->tick offset, measured on Fig 2d right axis / Fig 5d / Fig 6d where the
+#   tick marks themselves are separate paths: label-centre + 0.48 = tick within 0.05 pt). Label-fit residuals <= 0.0064 axis units.
+#   Error bars = dark vertical paths inside the bar's x-range (low/high ends); text says they are SD; n per sample is not stated.
+#   Precision ~ +-0.1 pt: Fig 2d left +-0.001, right +-0.012; Fig 5b +-0.04 N/cm2; Fig 5c +-0.003 mS/cm; Fig 5d +-0.00003 mS/cm; Fig 6d +-0.2 mAh/g.
+# method B (Fig 2c PSD): curves are exported as filled outlines of a 1.86 pt line; peak = top edge (1200 dpi raster, colour-classified)
+#   + half line width (0.93 pt); x log axis fitted on label centres (0.01/0.1/1/10). Precision ~ +-0.1 vol%, size +-3 %.
+#   Pristine-NCM peak cross-checked on the vector outline (top edge 28.59 vol% -> centreline 28.36). Overlapping premix/batch regions are
+#   pre-flattened colour fills, so per-curve outlines are incomplete; readings are only taken where the curve top is unambiguous.
+# method C (Fig 4e calender gap, native 300 dpi raster): frame = longest dark runs (0-80 s, 0-250 um); per column mean row of blue/green pixels,
+#   legend box excluded. Precision ~ +-1 um. The paper's '6 vs 43 um gap variance' definition is not stated; it is NOT reproduced by an SD over 20-78 s.
+figure,panel,series,x,x_unit,y,y_unit,y_err_low,y_err_high,method,note
+Fig 2d,left (Li1s:Ni3p),pristine NCM,,,0.1923,ratio,,,A,dark-grey fill (same colour as bar outlines)
+Fig 2d,left (Li1s:Ni3p),premix,,,0.5003,ratio,,,A,text p.7: 'Li/Ni 0.5' shared by premix and batch
+Fig 2d,left (Li1s:Ni3p),batch (after MF),,,0.4639,ratio,,,A,
+Fig 2d,left (Li1s:Ni3p),extruder,,,1.2062,ratio,,,A,text p.7: 1.2
+Fig 2d,right (S total:Ni3p),pristine NCM,,,0,ratio,,,A,no bar drawn
+Fig 2d,right (S total:Ni3p),premix,,,8.012,ratio,,,A,text p.7: 'S/Ni 8.1' shared by premix and batch
+Fig 2d,right (S total:Ni3p),batch (after MF),,,8.212,ratio,,,A,
+Fig 2d,right (S total:Ni3p),extruder,,,13.807,ratio,,,A,text p.7: 13.8
+Fig 2c,primary peak,pristine NCM,4.12,um,28.35,vol%,,,B,text p.6 says primary peak 'at 3.8 um matching the D50' (mode vs D50)
+Fig 2c,primary peak,premix,4.21,um,16.73,vol%,,,B,
+Fig 2c,primary peak,batch (after MF),3.95,um,16.78,vol%,,,B,
+Fig 2c,secondary peak (SE),premix,0.313,um,7.09,vol%,,,B,text p.6: secondary peak at 0.3 um associated with the SE
+Fig 2c,secondary peak (SE),batch (after MF),0.310,um,7.92,vol%,,,B,free-SE peak not reduced after MF (+0.83 vol% abs)
+Fig 4e,gap 20-78 s mean,extruder,,s,125.9,um,,,C,SD 5.3 um over 20-78 s (our statistic)
+Fig 4e,gap 20-78 s mean,batch,,s,127.0,um,,,C,SD 7.0 um over 20-78 s (our statistic)
+Fig 4e,start-up overshoot,batch,9.0,s,190.5,um,,,C,extruder shows a plateau ~85 um at 5-9 s instead
+Fig 5b,tensile strength,extruder,,,29.395,N/cm2,24.091,34.738,A,text p.9: 29.4 (three samples per configuration; p.16)
+Fig 5b,tensile strength,batch,,,9.349,N/cm2,8.787,9.914,A,text p.9: 9.3
+Fig 5c,sigma_electronic (24 MPa 25 C),extruder,,,0.3568,mS/cm,0.3177,0.3958,A,text p.9: 0.35
+Fig 5c,sigma_electronic (24 MPa 25 C),batch,,,1.7234,mS/cm,1.1901,2.2567,A,text p.9: 1.72
+Fig 5d,sigma_ionic (12 MPa 25 C),extruder,,,0.021954,mS/cm,0.017353,0.026527,A,text p.9-10: 0.022
+Fig 5d,sigma_ionic (12 MPa 25 C),batch,,,0.0071902,mS/cm,0.0048826,0.0094993,A,text p.10: 0.007
+Fig 6d,charge capacity,extruder,0.1,C,161.74,mAh/g_NCM,,,A,SD bar smaller than the bar outline (not resolved); text p.12: 162
+Fig 6d,charge capacity,batch,0.1,C,141.75,mAh/g_NCM,139.39,143.92,A,text p.12: 142; printed label '+12 %' = (161.7-141.8)/161.7 (extruder base)
+Fig 6d,charge capacity,extruder,0.5,C,71.48,mAh/g_NCM,70.18,72.80,A,text p.12: 72
+Fig 6d,charge capacity,batch,0.5,C,34.79,mAh/g_NCM,31.76,37.82,A,text p.12: 35; printed '+106 %' = 71.48/34.79-1 (batch base)
+Fig 6d,charge capacity,extruder,1,C,18.09,mAh/g_NCM,16.63,19.56,A,text p.12: 18
+Fig 6d,charge capacity,batch,1,C,8.52,mAh/g_NCM,6.72,10.53,A,text p.12: 9; printed '+112 %' = 18.09/8.52-1 (batch base)

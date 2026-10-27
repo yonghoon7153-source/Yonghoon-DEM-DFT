@@ -929,6 +929,7 @@
 > 2026-10-13 추가 — `kim2023_mechanofusion_ncm811_lpscl_core_shell_intimate_contact` — 300 MPa 양극의 계산 기공 36.6–42.4 % (측정법 미확인 — 우리 ps45 union 16.5–20.6 % 보다 큼).
 
 > 2026-10-13 추가 — `pan2026_thesis_rate_capable_energy_dense_cathode_composites` — 액체 LIB 습식 NCM811: 두께 감소 0/20/40 % → μCT 거대 기공 38/35/30 % 이나 같은 두께에서 적재 ×1.51 이면 질량 수지 기공 ≈6.5 % [카드 산술] — CT 기공 ≠ 총 기공 (압축 앵커로 쓰지 않는다).
+> 2026-10-27 추가 — `wolf2026_extruder_vs_batch_mixing_core_shell_dry_sulfide_cathode` — NCM85 3.8 µm 82 wt% + C65 2 · PTFE 0.5 건식 막: 683 MPa 공극 16.1 / 16.3 % · 800 MPa 12.6 ± 3.0 / 10.8 ± 2.4 % (압출 / 배치 — 혼합 공정이 압밀 뒤 공극을 오차 안에서 안 바꿈) · 캘린더 닙 ≈126 µm = 공극 ≈52 % [판독 · 카드 산술].
 
 ## B. 전달 삼중항 — σ_ionic은 교차검증, σ_e/σ_thermal은 우리만
 
@@ -1948,6 +1949,8 @@
 > 2026-10-13 추가 — `pan2026_thesis_rate_capable_energy_dense_cathode_composites` — 액체 LIB LMR FIB 단면 탄소 접촉 분율 η: CB 11.5–13.4 % · SWCNT+그래핀 19.9–25.7 % · 6.3–9.5 접촉/입자 · 154–313 nm/점 (STEP3 브리지 0.24 µm 와 같은 자릿수) · Holm 산술 1.9× ↔ EIS R2 ≈20–27× (R2 = 전하 전달 — Holm 검증에 쓰지 않는다).
 > 2026-10-13 추가 — `lee2026_li_underlayer_primer_free_dry_prelithiated_thick_anode` — 집전체 계면 저항 (그림 2f, 측정법 · 압력 미기재) 맨 Cu 0.0084 · SBR 프라이머 0.046 · Li/Cu 0.021 Ω cm² [판독] — `nam2026_primer_layer_dry_electrode_collector` (도전성 프라이머 32 → 16–20 mΩ cm²) 와 방향 반대 · 우리 R_int 앵커 (집전체 접촉 3.5–18.5 Ω cm²) 보다 2–3 자릿수 작다 = 같은 이름 다른 양.
 > 2026-10-13 추가 — `kissel2026_mechanofusion_derived_cathode_composite_microstructures_scalable` — CB–LIC 매트릭스 σ_e 943.7 → 같은 CB 를 껍질에 둔 복합체 1.83 mS/cm (×1/514) · σ_ion ×1/5.7 · 무탄소 전부-코팅 80:20:0 σ_e 0.034 mS/cm (우리 ps45 Hertz 인자 끔 0.375–0.467 의 1/11–1/14) — 껍질 망은 접촉 지배 · STEP3 (CONTACT_FREE) 밖.
+> 2026-10-27 추가 — `zhou2026_gyroid_structural_electrolyte_stiffness_ionic_tradeoff` — 설계 자이로이드 (고분자 골격 + 액체 · 연속체 FEM 주기 균질화 · 실험 없음): 공극 0.2 → 0.9 에 κ̄ 0.0872 → 0.574 · Ē 0.599 → 0.0328 · 공극 60 % 에서 축 늘림만으로 κ̄ 0.105–0.559 (방향차 ≤ 4.0) · Ē 0.0125–0.348 (≤ 20.5) — 한 방향 안에서는 Ē · κ̄ 가 같이 움직인다 (18 점 R² 0.991 직선 [카드 산술]).  ★ 우리 STEP3 부류 (조화평균 면) 복셀 FV 로 다시 풀면 시트형 고체에서 표 I ±1.1 % (N 64 · 128 · 1 차 Richardson) · 해상도 오차 ≈ −0.28/(d_h/dx) (덜 풀린 매끈한 채널 = σ 낮음 — STEP3 σ_ion 이 vox 0.4 → 0.25 에서 +27 % 오른 것과 같은 방향 [추정]) · 이 기하엔 접촉 목이 없어 가짜 상호연결 (σ↑) 인공물은 재지 않았다.
+> 2026-10-27 추가 — `wolf2026_extruder_vs_batch_mixing_core_shell_dry_sulfide_cathode` — 같은 조성 · 같은 공극 (16.1 / 16.3 %) · φ_SE 25.8 vol% 에서 압출 혼합 ↔ 배치 MF: σ_ion 0.022 ↔ 0.0072 mS/cm (×3.05 판독) · σ_e 0.357 ↔ 1.72 (×1/4.8, C65 2 wt% 있음) — 혼합 공정이 이온 · 전자 경로를 반대로 움직인다 (공정 교락 · 껍질 효과 단독 아님).
 
 
 ## C. 역학 / morphology — MPM 고유 (문헌 DEM은 형상 못 바꿈)
@@ -2558,6 +2561,9 @@
 
 > 2026-10-13 추가 — `kim2026_pregranulation_ptfe_dry_nca_cathode_crack_delithiation` — PTFE 건식 쌍봉 NCA (1–3 + 8–10 µm) 캘린더링에서 큰 2차 입자 균열 (SEM 정성) · 선과립화로 억제 주장 — "과립이 응력 흡수" 는 힘 측정 0 · GIDE 가 더 다공 (0.333 vs 0.305) → 같은 밀도에서 DEM 힘 사슬 · Auerbach 로 가를 수 있는 가설 (논문에 DEM 없음).
 > 2026-10-13 추가 — `kang2026_multiscale_inverse_design_ptfe_fibrillation_dry_electrode` — PTFE 를 Arruda–Boyce 계열 2D FEM 으로 두 세라믹 입자 사이에서 늘림 · '섬유화 · 막' 은 구성식이 아니라 응력–변형 위 사후 구간 (P_lm < 45 MPa) · 같은 PLP 에서 P_lm ∝ d^0.73 [카드 산술] 인데 길이척도 원천 미기재 = CL-64 부류 — 바인더 대변형 상은 우리 MPM (SE J2) 에도 없다.
+> 2026-10-27 추가 — `zhou2026_gyroid_structural_electrolyte_stiffness_ionic_tradeoff` — 선형 탄성 주기 균질화 (단위 변형 6 → C_eff) 로 설계 자이로이드의 이방 E · G · ν: 매끈한 시트 구조는 공극 20 % 에서도 Ē 0.599 (국소 n 1.1 → 2.0) ↔ 냉간압착 LPSCl 펠릿 (공극 13 %) E/E_dense ≈ 0.21 (`song2025_porous_argyrodite_modulus_fracture_toughness`) — 펠릿의 약함은 공극 부피보다 입자 목 쪽 (frame [2] 연화 정당화와 같은 방향 · 기하 다름 [추정]) · 이방 늘림에서 ν > 0.5 (1.43) 는 정치성 양수 = 오류 아님 [카드 산술].
+> 2026-10-27 추가 — `wang2027_ncm811_effective_bulk_modulus_mapper_dfs_gnn` — 액체 LIB NCM811 재구성 부피의 복셀 FE (복셀 면 공유 = 완전 결합 · CBD-기공 강성 ≈ 0 · 선형 탄성) 유효 체적탄성률 K ≈ 15–16 GPa = 치밀 NCM K 116.7 의 ≈0.13 · Hashin–Shtrikman 상한의 ≈0.27–0.32 · 창 안 국소 K ∝ φ_s^≈6 [판독 · 우리 산술] — 접촉 법칙이 없어 같은 기하의 접촉망보다 단단한 쪽 (STEP3 σ 의 CF 가지 `CL-81` 의 역학판) · 거친 재사상 (10³ · 20³) 이 K 를 2–3 배 키움 = 목이 굵어지는 격자 효과 (우리 d_h/dx 규칙과 같은 부류) · 값 이전 금지 (액체 LIB · 2 상 · 작은 변형).
+> 2026-10-27 추가 — `wolf2026_extruder_vs_batch_mixing_core_shell_dry_sulfide_cathode` — 압출 100 °C 혼련에서 LPSCl 이 NCM 위에 납작하게 눌린 층 (SEM 입자 하나 · 정성) · 같은 배치 MF 는 8.7 µm NCM 은 입히고 3.8 µm 는 못 입힘 — 혼합 중 SE 형상 소성은 우리 MPM (압축만) · DEM (강체 구) 밖.
 
 ## D. 패킹 / Furnas dip — DEM·기하 소유, 소성 MPM 불가
 > ★ **할라이드 cross-check (Varkey ↔ Kim 2025):** Varkey 2026 (할라이드 Li₃YBrCl₆) = 할라이드 *압밀/σ* (E=10.58 →
@@ -2701,6 +2707,7 @@
 > 2026-10-13 추가 — `otani2023_ionic_conductivity_path_resistance_separation_model` — 경로 · 접촉 분해 모형 (τ_all = τ_macro · τ_micro) 이 ps45 다섯 침대에서 우리 Hertz tau2 의 0.94–1.02 배 [카드 산술] — 모형 대 모형의 일치이고 실험 앵커가 아니다.
 
 > 2026-10-13 추가 — `gandla2026_layered_cathode_degradation_diagnostics_review` — 그림 5h (Park 2025 ACS Nano 재수록): XCT NCM–NCM 배위수 최빈 ≈4.5 · ≈5.5 · ≈5–6.5 (NCM : SE 70:30 · 80:20 · 85:15, 판독 ±0.5) — DEM AM–AM CN 과 같은 양 (접촉 판정 · CT 분해능 · 질량/부피 기준 미기재 → 모양 · 방향만).
+> 2026-10-27 추가 — `zhou2026_gyroid_structural_electrolyte_stiffness_ionic_tradeoff` — 원문 식 (1) 은 고체가 등위면의 어느 쪽인지 적지 않는다 → 우리 독립 복셀 FV 재현이 판정: **시트형 (−s ≤ F ≤ s) 만** 표 I 8 점 −0.3 … +1.1 % · 표 II 18 점 0.0 … +2.1 % 로 맞고 네트워크형 (F ≥ t) 은 +15 … +45 % (`litdb/figures/zhou2026_…/ours_voxel_fv_reproduction.csv`) — 같은 기하 · 같은 방정식의 **해법 검증 (verification)** 이지 물리 검증이 아니다.
 
 ## F. 우리가 아직 못 하는 것 / 흡수할 것 (정직 목록 → 향후)
 
@@ -3793,6 +3800,9 @@
 > 2026-10-13 추가 — `kissel2026_mechanofusion_derived_cathode_composite_microstructures_scalable` — 5–162 nm SE(+CB) 껍질과 그 형성 (형상 소성) 은 우리 DEM 구 · STEP3 복셀 (0.15–0.4 µm) 해상도 밖.
 > 2026-10-13 추가 — `kang2026_multiscale_inverse_design_ptfe_fibrillation_dry_electrode` — 입경 → PTFE 형태 (섬유 vs 막) 의존을 우리 모델이 못 낸다 (DEM 강체 구 · MPM SE J2 · STEP3 centerline 고정 스탬프) · 단일 'PLP' 대신 DEM 상별 접촉 압력 분포를 바인더 기준에 겹치는 일은 후보 과제.
 > 2026-10-13 추가 — `kim2012_lno_lco_surface_energy_morphology_dft` — 면별 γ 차 (LNO (003) ↔ (012) ≈6 배) 를 담을 자리가 없다 — AM 은 면 없는 구 · 쌍당 CED 하나.
+> 2026-10-27 추가 — `zhou2026_gyroid_structural_electrolyte_stiffness_ionic_tradeoff` — ① σ 를 z 로만 푼다 (`solve_sigma_z`) — 설계 이방성에서 방향차가 κ ≤ 4.0 · E ≤ 20.5 (공극 60 %) 라 압밀 (z) 이 만든 면내 σ_x · σ_y 와 강성 이방이 미측정 ② 복셀 격자 선형 탄성 주기 균질화 (C_eff · 단위 변형 6) 가 없다 — 압밀 침대의 이방 탄성 텐서 기준값 [제안 · 접촉 완전 결합이라 상한 쪽].
+> 2026-10-27 추가 — `wang2027_ncm811_effective_bulk_modulus_mapper_dfs_gnn` — ① 압축된 침대의 **선형 탄성 균질화 판독** (K · E · G) 이 없다 — 복셀 FE 한 번으로 나오는 양이고 정본 `song2025_porous_argyrodite_modulus_fracture_toughness` (다공 LPSCl 펠릿 벌크 E 4.7 GPa) 가 frame[4] 표적이 된다 (제안 · 미실행 · 가장 작은 길 = 스칼라 Moulinec–Suquet 균질화기 `scripts/fft_homogenize.py` 에 4 차 Green 연산자를 넣는 확장 · 복셀 완전 결합 판은 실측보다 단단하게 나올 것 — 그 차가 접촉 유연성의 정량값) ② 구조 예측기 중첩 CV 의 바깥 폴드가 무작위 순열 (`scripts/ml_design_structure.py:273–278`) — 설계점 (시드 가족) 묶음 폴드가 없다 (이 논문은 공간 묶음 분할로 누수 −0.007 을 따로 쟀다) ③ 이 논문의 교훈 = φ 이차식 (3 매개변수) R² 0.905 > GIN GNN 0.880 · 혼합 0.917 — 대리모델의 몫은 조성 잔차 분산의 ≈13 % [우리 산술] = 우리 "법칙이 σ · ML 은 구조 입력" 분업의 외부 확인.
+> 2026-10-27 추가 — 혼합 중 껍질 형성 (SE 전단 소성) · 공정 온도 (100 °C 혼련 · 5 °C 냉각) · 크기별 피복 (같은 MF 에서 8.7 µm 만 입혀짐) 을 담을 자리가 없다 (`wolf2026_extruder_vs_batch_mixing_core_shell_dry_sulfide_cathode`) — 첫 대리 후보 = 믹서 DEM 의 쌍 · 크기별 사건당 소산 에너지 분포 (제안 · 미등록).
 
 
 ## G. AM 입자 **내부**(sub-particle) 미세구조 — 우리 축 **아래 한 칸**, 접점은 방법론뿐 (2026-08-25 신설)
@@ -4001,6 +4011,14 @@ Faraday FutureCat; 2026-09-26 추가; 원장 **SELF-51** 뿌리 감사 — [Sedl
   뒤집히는 지표는 "기하 미결정" 으로 표시. ② K_P 0.3 → 0.10 교체는 A · Lawn 배수를 **이 분할 하중으로 함께 재보정**하는 사전등록 뒤에. ③ H_AM "3–6 GPa" 를
   *"입자 스케일 파괴 제한 접촉압"* 으로 재명명·재등록 (런 전) 할 때 H_f 3.6 ± 0.9 가 그 부류의 첫 실측 — *"압입 경도"* 라벨의 출처는 **아니다**.
   ④ A10 poly 입계 열화의 **SOC 곡선 모양** (입경 보정: pristine → 3 사이클 ×0.49 → 3.9 V ×0.29 → 4.3 V ×0.12) — 크기 전이 금지.
+
+**[Wang27-GNN]** `papers/wang2027_ncm811_effective_bulk_modulus_mapper_dfs_gnn.md` — **J. Wang, C. He\*, X. Yang, L. Yang, H. Chen (베이징이공대),
+*J. Energy Storage* 183 (2027) 125194** (2026-10-27 추가).  ⚠ 원장 `CL-90` 이 철회한 "Wang 2020" 서지와 **무관** — 1저자 성만 같다 (연도 · 저널 · 논문 번호를 함께 적을 것).
+- **NCM 입력 출처 사슬에 주는 것**: NCM811 복셀 FE 의 입자 **E 140 GPa · ν 0.30** — 근거 *"Vasconcelos et al. [25,26] … 138.73 ± 18.78 GPa (NCM 입자) · 1.78 ± 0.35 GPa (CB/PVDF)"* (p.4) · **ν 는 출처 없음**.
+  [Sedl26] 이 [26] (*Extreme Mech. Lett.* 9, 2016) 을 **NMC532 이차입자 139 GPa · H 8.9** 로 전하므로 138.73 은 NMC532 grid 압입값으로 보인다 (2차 대 2차 · de Vasconcelos 원전 미열람).
+- **판정 (비준 대기, 이 항목이 코드를 바꾸지 않는다)**: ① 새 측정이 아니라 **사용례** — 우리 E_AM 140 · ν_AM 0.25 (`input_real_14.liggghts` 29–30 행) 의 출처로 쓰지 않는다 ([Sedl26] · [Xu17-NMC] · [Sharma23] 그대로)
+  ② ν 는 "문헌 관행 0.25–0.30" 으로만 (그들 0.30 무출처 · [Xu17-NMC] 0.3 가정 · [Sharma23] VRH 0.253) ③ [25] 의 연도 표기 (이 논문 2018 ↔ [Sedl26] · [Stallard22] 2019) = 원전 확인 전 미정
+  ④ de Vasconcelos 2016 EML 원전 = 확보 1 순위 (G 축 "NMC532 이차입자 E" 의 1차 근거) ⑤ 두-상 K 라벨은 E_AM 에 정비례 → 압입 산포 ±13.5 % 가 그대로 계통 불확도 (우리 산술).
 
 ---
 
@@ -4331,6 +4349,7 @@ Faraday FutureCat; 2026-09-26 추가; 원장 **SELF-51** 뿌리 감사 — [Sedl
 > 2026-10-13 추가 — `kawaguchi2023_doe_electrode_fabrication_dry_coated_ncm_lps` — 같은 Xs 비교인데 껍질 몫이 Xs 와 함께 53 → 14 % 로 움직이는 교락 설계 · 코팅 이점 180 MPa ×3.2–3.6 → 360 MPa ×1.09–1.21 [카드 산술] → 300 MPa 단일 수준이면 차이가 작게 나올 수 있다.
 > 2026-10-13 추가 — `kawaguchi2017_dry_coating_parametric_na2so4_model_se` — 코팅 형태가 SE 비율에 걸린다 (V1 코팅 상태 · V3 SE 함량 교락) → 코팅 뒤 순조성 측정 필수 (게스트 30 wt% 투입 → 순 ≈20 wt%).
 > 2026-10-13 추가 — `lee2024_shear_force_dry_process_cathode_coverage` — 건식이 2D 피복을 두 배로 올리지만 바인더 · SE 함량 · 성형이 함께 다른 결합 효과 (전단 단독 효과 아님).
+> 2026-10-27 추가 — `wolf2026_extruder_vs_batch_mixing_core_shell_dry_sulfide_cathode` — ★ 같은 Picoline Nobilta MF (3000 rpm 45 min · 50 g · 총 7,140 kJ/kg) 가 8.7 µm NCM 은 입히고 3.8 µm 는 못 입힘 (운동에너지 ∝ D³ ≈12 배) = 우리 PC 9 · SC 4 µm 와 같은 크기비 ((9/4)³ ≈ 11.4) → V1 코팅 팔은 크기별 피복 확인 필수 · 총 비에너지 (SME) 는 지배 변수 아님 (껍질 모양은 ≈300 kJ/kg 압출 쪽) · 전력 ΔP/Δt (0.1 · 2.3 → 평탄 · 19.5 W/min) = 공정 중 상태 지표.
 
 ### H-10. `johnson1971_jkr_surface_energy_contact_elastic_solids` — JKR 원전: γ = 두 표면 합 (= W) · SJKR CED ↔ W 대응식
 > 떼는 힘 (3/2)πWR\* — 탄성률 무관 · 같은 물질이면 3πγ_sR\* (원문 p.304·306) ⇒ HB-02 "2 배 모호" 의 원전 쪽 닫힘 (EDEM/Hare 규약 [미확인]).
@@ -4598,6 +4617,8 @@ Faraday FutureCat; 2026-09-26 추가; 원장 **SELF-51** 뿌리 감사 — [Sedl
 > 2026-10-13 추가 — `kim2026_pregranulation_ptfe_dry_nca_cathode_crack_delithiation` — τ = R_ion·A·k·ε/(2d) (Landesfeind 대칭셀식) = 우리 tau2 (수송 tortuosity) · 본문 "18.6 % 경로 길이 감소" 는 tau2 를 길이로 읽은 오용 (√ 비 −9.7 %).
 > 2026-10-13 추가 — `pan2026_thesis_rate_capable_energy_dense_cathode_composites` — μCT 0.5 µm + OpenPNM 기공상 τ 1.10–1.35 · τ = 2.17 − 2.48ε (R² 0.89, 9 점) = 기하 τ (τ_geo 부류) · 수송 tortuosity (tau2) 아님.
 > 2026-10-13 추가 — `kissel2026_mechanofusion_derived_cathode_composite_microstructures_scalable` — 전부-코팅 80:20:0 의 DC σ_ion 0.018 / LIC 0.743 mS/cm → 수송 tortuosity ≈11–13 (φ_LIC 0.314 · 공극 0–10 % 가정 · 카드 산술 · LIC|LPSCl 계면 미보정 → 상한 쪽).
+> 2026-10-27 추가 — `zhou2026_gyroid_structural_electrolyte_stiffness_ionic_tradeoff` — 원문 'tortuosity' τ_i = ε/κ̄_i (Eq 19 · κ̄ = V_cell 정규화 Eq 16–18) = 우리 tau2 (수송 tortuosity · 'factor' 낱말 없음 = Thorat 꼴) · 등방 (1:1:1) 시트 자이로이드 1.57 (ε 0.9) → 2.29 (ε 0.2) · 이방 (공극 60 %) 1.07–5.70 · 매끈한 연속 채널 기준선 (φ ≈ 0.3) = 1.80 (네트워크형 · 카드 재현) – 2.14 (시트형) · 등방 연속체 HS 하한 (3−φ)/2 ≈ 1.35 → 우리 ps45 CF 7:3 1.282 · 10:0 1.247 은 그 아래 (원기둥 bulk 과전도 ↔ 압밀 z 접촉 이방성 미분리 [추정]) · 눌린 (4:4:1) 기하만으로 z tau2 5.70 = 협착 없이 우리 FULL (5.0–7.2) 크기.
+> 2026-10-27 추가 — `wolf2026_extruder_vs_batch_mixing_core_shell_dry_sulfide_cathode` — 원문 "electrochemical tortuosity" τ_ionic 14.6 / 39.6 (식 S7 · SI 미입수 → 정의 미확인) = 대표 스펙트럼 하나의 그림 안 값 · tau2 꼴이라면 함의 σ₀ ≈1.1–1.2 mS/cm · τ 비 2.71 ↔ σ 평균 비 3.05 [카드 산술].
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

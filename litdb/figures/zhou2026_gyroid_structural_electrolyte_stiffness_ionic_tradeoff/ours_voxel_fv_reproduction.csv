@@ -1,0 +1,46 @@
+# zhou2026 gyroid — OUR independent voxel finite-volume reproduction of Tables I-II (kappa_bar) [우리 산술 — 논문 값 아님] · 2026-10-27
+# method: gyroid level set of paper Eq.(1) sampled at cell centres of an N^3 grid per unit cell (N = 64, 128); two solid definitions —
+#   sheet: solid = {|F| < s}, s = quantile(|F|, 1-eps)  (two liquid labyrinths separated by a wall)   network: solid = {F >= t}, t = quantile(F, eps).
+#   steady conduction in the liquid only (solid 0; liquid-solid faces insulating = harmonic-mean face rule of a CONTACT_FREE voxel FV, same class as our STEP3),
+#   periodic unit cell, unit macroscopic gradient, kappa_bar = volume-averaged current density (V_cell normalisation = paper Eq.16-18).
+#   anisotropic a:b:c = non-cubic voxels (a/N, b/N, c/N) on the same grid = the paper's affine stretch.  CG rtol 1e-10, Jacobi; all solves cg_info 0.
+#   extrap = 2*kappa(128) - kappa(64) (first-order Richardson, assumes error ~ 1/N).  tau2_extrap = eps/extrap.
+#   d_h = V_liquid/S_interface from the co-area formula on a 256^3 grid (nodal gyroid F=0 area 3.091 per cell — equals the commonly quoted ≈3.09; no source card checked); dh/dx = d_h*N.
+# checks before use: all-liquid = 1, slab 0.5/0.5/0, rod = area fraction, insulating wall 0 / 15/16 (exact);  insulating sphere phi 0.1/0.3 vs Maxwell -0.7/-2.2 % at N 48.
+# dh_over_dx is left blank for stretched cells (a:b:c != 1:1:1): d_h was computed for the 1:1:1 cell only.
+# hand-off: the paper does not say which side of Eq.(1) is solid; ONLY the sheet definition reproduces its Table I (see rel_err columns).
+mode,kind,abc,eps,dir,kappa_N64,kappa_N128,kappa_extrap,kappa_paper,rel_err_N64,rel_err_N128,rel_err_extrap,dh_over_dx_N64,dh_over_dx_N128,tau2_extrap
+table1,network,1:1:1,0.9,x,0.8237,0.8289,0.8341,0.5740,+0.4350,+0.4441,+0.4531,29.52,59.04,1.079
+table1,network,1:1:1,0.8,x,0.6727,0.6784,0.6841,0.4870,+0.3813,+0.3930,+0.4047,20.23,40.46,1.169
+table1,network,1:1:1,0.7,x,0.5395,0.5459,0.5523,0.4060,+0.3288,+0.3446,+0.3603,15.79,31.58,1.267
+table1,network,1:1:1,0.6,x,0.4237,0.4295,0.4353,0.3320,+0.2762,+0.2937,+0.3111,12.60,25.20,1.378
+table1,network,1:1:1,0.5,x,0.3224,0.3275,0.3326,0.2640,+0.2212,+0.2405,+0.2598,10.35,20.71,1.503
+table1,network,1:1:1,0.4,x,0.2341,0.2388,0.2435,0.1990,+0.1764,+0.2000,+0.2236,8.40,16.80,1.643
+table1,network,1:1:1,0.3,x,0.1584,0.1625,0.1666,0.1400,+0.1314,+0.1607,+0.1900,6.77,13.54,1.801
+table1,network,1:1:1,0.2,x,0.0941,0.0970,0.0999,0.0872,+0.0791,+0.1124,+0.1456,5.06,10.12,2.002
+table1,sheet,1:1:1,0.9,x,0.5541,0.5633,0.5725,0.5740,-0.0347,-0.0186,-0.0026,9.39,18.77,1.572
+table1,sheet,1:1:1,0.8,x,0.4684,0.4776,0.4868,0.4870,-0.0382,-0.0193,-0.0004,8.40,16.80,1.643
+table1,sheet,1:1:1,0.7,x,0.3908,0.3986,0.4064,0.4060,-0.0374,-0.0182,+0.0010,7.57,15.14,1.722
+table1,sheet,1:1:1,0.6,x,0.3169,0.3249,0.3329,0.3320,-0.0455,-0.0214,+0.0027,6.77,13.54,1.802
+table1,sheet,1:1:1,0.5,x,0.2499,0.2568,0.2637,0.2640,-0.0534,-0.0273,-0.0011,5.89,11.78,1.896
+table1,sheet,1:1:1,0.4,x,0.1881,0.1940,0.1999,0.1990,-0.0548,-0.0251,+0.0045,5.06,10.12,2.001
+table1,sheet,1:1:1,0.3,x,0.1311,0.1363,0.1415,0.1400,-0.0636,-0.0264,+0.0107,4.19,8.39,2.120
+table1,sheet,1:1:1,0.2,x,0.0798,0.0835,0.0872,0.0872,-0.0849,-0.0424,+0.0000,3.28,6.56,2.294
+table2,sheet,1:1:1,0.6,x,0.3169,0.3249,0.3329,0.3320,-0.0455,-0.0214,+0.0027,6.77,13.54,1.802
+table2,sheet,1:1:1,0.6,y,0.3169,0.3249,0.3329,0.3320,-0.0455,-0.0214,+0.0027,6.77,13.54,1.802
+table2,sheet,1:1:1,0.6,z,0.3169,0.3249,0.3329,0.3320,-0.0455,-0.0214,+0.0027,6.77,13.54,1.802
+table2,sheet,2:1:1,0.6,x,0.4594,0.4697,0.4800,0.4800,-0.0429,-0.0215,+0.0000,,,1.250
+table2,sheet,2:1:1,0.6,y,0.2282,0.2350,0.2418,0.2410,-0.0531,-0.0249,+0.0033,,,2.481
+table2,sheet,2:1:1,0.6,z,0.2282,0.2350,0.2418,0.2410,-0.0531,-0.0249,+0.0033,,,2.481
+table2,sheet,2:2:1,0.6,x,0.3746,0.3836,0.3926,0.3920,-0.0444,-0.0214,+0.0015,,,1.528
+table2,sheet,2:2:1,0.6,y,0.3746,0.3836,0.3926,0.3920,-0.0444,-0.0214,+0.0015,,,1.528
+table2,sheet,2:2:1,0.6,z,0.1784,0.1842,0.1900,0.1890,-0.0561,-0.0254,+0.0053,,,3.158
+table2,sheet,4:1:1,0.6,x,0.5374,0.5484,0.5594,0.5590,-0.0386,-0.0190,+0.0007,,,1.073
+table2,sheet,4:1:1,0.6,y,0.1545,0.1614,0.1683,0.1660,-0.0693,-0.0277,+0.0139,,,3.565
+table2,sheet,4:1:1,0.6,z,0.1545,0.1614,0.1683,0.1660,-0.0693,-0.0277,+0.0139,,,3.565
+table2,sheet,4:2:1,0.6,x,0.4959,0.5065,0.5171,0.5170,-0.0408,-0.0203,+0.0002,,,1.160
+table2,sheet,4:2:1,0.6,y,0.2589,0.2665,0.2741,0.2730,-0.0516,-0.0238,+0.0040,,,2.189
+table2,sheet,4:2:1,0.6,z,0.1257,0.1313,0.1369,0.1350,-0.0689,-0.0274,+0.0141,,,4.383
+table2,sheet,4:4:1,0.6,x,0.3986,0.4079,0.4172,0.4170,-0.0441,-0.0218,+0.0005,,,1.438
+table2,sheet,4:4:1,0.6,y,0.3987,0.4080,0.4173,0.4170,-0.0439,-0.0216,+0.0007,,,1.438
+table2,sheet,4:4:1,0.6,z,0.0966,0.1019,0.1072,0.1050,-0.0800,-0.0295,+0.0210,,,5.597
