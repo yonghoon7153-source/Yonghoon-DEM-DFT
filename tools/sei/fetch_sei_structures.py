@@ -281,6 +281,9 @@ def do_pick(formulas, outdir, prov_path, prefix, with_mag, with_es):
                 bad += 1; continue
             mid = pick["material_id"]
             st = m.get_structure_by_material_id(mid)
+            if isinstance(st, dict):          # use_document_model=False 면 dict 로 올 수 있다
+                from pymatgen.core import Structure
+                st = Structure.from_dict(st)
             at = AseAtomsAdaptor.get_atoms(st)
             base = f"{prefix}{lab}_{mid}"
             write(os.path.join(outdir, base + ".vasp"), at, format="vasp", direct=True)
