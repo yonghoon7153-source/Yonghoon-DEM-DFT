@@ -80,6 +80,31 @@ _mem_preflight() {  # $1 = 대상 이름, $2 = 대상 폴더
   return 0
 }
 
+# ── VRAM 양보 (2026-10-27 · kgy 에서 cascade UMA 옆) ─────────────────────────
+#  SEI_MIN_FREE_MIB > 0 이면 pw.x 를 띄우기 전에 GPU 여유를 본다. 모자라면 **기다린다**
+#  (SEI_VRAM_POLL_S 간격 · 최대 SEI_VRAM_WAIT_S). 시간이 다 되면 그 단계를 띄우지 않는다.
+#  fail-closed: nvidia-smi 를 못 읽으면 통과시키지 않는다 (모르는 것을 여유로 읽지 않는다).
+#  ⛔ 못 하는 것: 이미 돈 pw.x 가 나중에 커지는 것은 못 막는다 — 시작 시점만 본다.
+_vram_free() {
+  ${SEI_NVSMI:-nvidia-smi} --query-gpu=memory.free --format=csv,noheader,nounits \
+    -i "${CUDA_VISIBLE_DEVICES:-0}" 2>/dev/null | head -1 | tr -dc '0-9'
+}
+_vram_wait() {  # $1 = 무엇을 띄우려는가
+  local need=${SEI_MIN_FREE_MIB:-0}; [ "$need" -gt 0 ] 2>/dev/null || return 0
+  local waited=0 max=${SEI_VRAM_WAIT_S:-21600} poll=${SEI_VRAM_POLL_S:-120} free
+  while :; do
+    free=$(_vram_free)
+    if [ -z "$free" ]; then
+      ts "  ⛔ GPU 여유를 못 읽었다 — $1 을 띄우지 않는다 (SEI_MIN_FREE_MIB=0 이면 검사 끔)"
+      return 1
+    fi
+    [ "$free" -ge "$need" ] && { ts "  ✓ VRAM 여유 ${free} MiB ≥ ${need} — $1"; return 0; }
+    [ "$waited" -ge "$max" ] && { ts "  ⛔ VRAM 여유 ${free} MiB < ${need} — ${max}s 기다렸다. $1 을 띄우지 않는다"; return 1; }
+    [ "$waited" = 0 ] && ts "  ⏳ VRAM 여유 ${free} MiB < ${need} — 기다린다 (최대 ${max}s)"
+    sleep "$poll"; waited=$((waited + poll))
+  done
+}
+
 # ── --selftest (2026-09-18) — **음성 경로 포함**. 양성만 있는 시험은 아무것도 보증 못 한다.
 if [ "${1:-}" = "--selftest" ]; then
   _T=$(mktemp -d); trap 'rm -rf "$_T"' EXIT
@@ -109,6 +134,20 @@ if [ "${1:-}" = "--selftest" ]; then
   case "$(SEI_MEMINFO=$_T/mem50 _mem_preflight small "$_T/small" 2>&1)" in
     *"밖**이다"*) _chk 0 1 "[음성] 12 원자엔 경고를 안 낸다";;
     *)            _chk 1 1 "[음성] 12 원자엔 경고를 안 낸다";; esac
+  # VRAM 양보 (2026-10-27)
+  printf '#!/bin/sh\necho 20000\n' > "$_T/nv20k"; printf '#!/bin/sh\necho 3000\n' > "$_T/nv3k"
+  printf '#!/bin/sh\nexit 9\n' > "$_T/nvbad"; chmod +x "$_T"/nv*
+  SEI_NVSMI=$_T/nv20k SEI_MIN_FREE_MIB=16000 _vram_wait x >/dev/null 2>&1
+  _chk "$?" "0" "VRAM 20000 ≥ 16000 → 띄운다"
+  SEI_NVSMI=$_T/nv3k SEI_MIN_FREE_MIB=16000 SEI_VRAM_WAIT_S=0 _vram_wait x >/dev/null 2>&1
+  _chk "$?" "1" "[음성] VRAM 3000 < 16000 · 기다림 0 → 안 띄운다"
+  SEI_NVSMI=$_T/nvbad SEI_MIN_FREE_MIB=16000 _vram_wait x >/dev/null 2>&1
+  _chk "$?" "1" "[음성] nvidia-smi 실패 → 안 띄운다 (fail-closed)"
+  SEI_NVSMI=$_T/nvbad SEI_MIN_FREE_MIB=0 _vram_wait x >/dev/null 2>&1
+  _chk "$?" "0" "SEI_MIN_FREE_MIB=0 이면 검사 끔"
+  _st=$(date +%s); SEI_NVSMI=$_T/nv3k SEI_MIN_FREE_MIB=16000 SEI_VRAM_WAIT_S=2 SEI_VRAM_POLL_S=1 \
+    _vram_wait x >/dev/null 2>&1; _rc=$?; _el=$(( $(date +%s) - _st ))
+  _chk "$_rc:$([ "$_el" -ge 2 ] && echo waited)" "1:waited" "[음성] 모자라면 정말 기다린 뒤 거부"
   echo "selftest $([ "$_fail" = 0 ] && echo PASS || echo FAIL)  ($_ok/$((_ok+_fail)))"
   [ "$_fail" = 0 ]; exit $?
 fi
@@ -145,6 +184,8 @@ for t in "${TARGETS[@]}"; do
       fi
       ts "  ✓ $in 이미 완료"; return 0
     fi
+    # GPU 를 쓰는 pw.x 만 VRAM 을 기다린다 (dos.x · projwfc.x 는 안 본다)
+    if [ "$exe" = "$QE" ]; then _vram_wait "$in" || return 1; fi
     ts "  ▶ $in"
     $MPIRUN $MPI_NP $MPI_OVERSUB "$exe" -in "$in" > "$out" 2>&1
     if grep -aq "JOB DONE" "$out"; then
@@ -163,11 +204,25 @@ for t in "${TARGETS[@]}"; do
     continue
   fi
 
+  # ★ 2026-10-27 — 고정셀 태그(분자결정)는 01_relax.in 이다 (build_dft_inputs --fixed_cell).
+  #   셀이 안 변하니 relax 출력엔 CELL_PARAMETERS 가 없다 → 좌표만 승계한다.
+  #   둘 다 있으면 어느 쪽인지 모른다 — 멈춘다 (생성기는 반대쪽을 지운다).
+  if [ -f 01_relax.in ] && [ -f 01_vcrelax.in ]; then
+    ts "  ⛔ 01_relax.in 과 01_vcrelax.in 이 둘 다 있다 — 셀 정책을 모른다. 이 상은 멈춘다"; continue
+  fi
+  _gtargets=""; for _x in 02_scf.in 03_nscf_gap.in 04_nscf_dos.in; do [ -f "$_x" ] && _gtargets="$_gtargets $_x"; done
+  if [ -f 01_relax.in ]; then
+    run 01_relax.in 01_relax.out || continue
+    # shellcheck disable=SC2086
+    python3 "$REPO/tools/sei/splice_relaxed.py" --out 01_relax.out --positions_only \
+        --targets $_gtargets || { ts "  ✗ 기하 승계 실패"; continue; }
+  else
   run 01_vcrelax.in 01_vcrelax.out || continue
   # ⚠ vc-relax 의 최종 좌표·셀을 scf 이후 입력에 반영해야 한다.
   #   QE 는 vc-relax 뒤 'Begin final coordinates' 블록을 찍는다 — 그걸 스플라이스한다.
   python3 "$REPO/tools/sei/splice_relaxed.py" --out 01_vcrelax.out \
       --targets 02_scf.in 03_nscf_gap.in 04_nscf_dos.in || { ts "  ✗ 기하 승계 실패"; continue; }
+  fi
 
   run 02_scf.in 02_scf.out || continue
   # ⚠ 스핀분극 계는 scf 가 **자기 모멘트를 스스로 찾는데**(smearing), 03 은 fixed 라

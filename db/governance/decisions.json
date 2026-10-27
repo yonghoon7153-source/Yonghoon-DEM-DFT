@@ -9975,6 +9975,76 @@
      "note": "사용자 '권고대로 해' (실행 승인) · 트랙 CEI — 1저자 = 실험 쪽 · 결정은 사용자. 비준 = 사용자."
     }
    ]
+  },
+  {
+   "id": "D-2026-10-27-cei-product-gaps",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "cei.gap.product_phases_11",
+   "slot": "cei_product_gap_tm_state",
+   "applies_to": {
+    "systems": [
+     "Li2SO4",
+     "S2Cl2",
+     "SO2",
+     "CoS2",
+     "NiS2",
+     "Ni(PO3)2",
+     "Mn(PO3)2",
+     "MnS2",
+     "Ni3S4",
+     "LiCl",
+     "Li3PO4"
+    ],
+    "tasks": [
+     "fixed_occupation_nscf_gap"
+    ],
+    "methods": [
+     "qe-7.4.1-pbe-uspp-sssp-efficiency",
+     "MP summary band_gap (GGA/GGA+U only)"
+    ],
+    "use_cases": [
+     "figure_for_first_author",
+     "citation_condition"
+    ]
+   },
+   "title": "CEI 생성물 11 종 띠틈 — 관측 다형 (E_hull 최저) · TM 은 X(MP 자성 배치 · MP U 규약) · 분자결정 고정셀 · kgy 대조 잡 3 종 통과 뒤 판독",
+   "statement": "카드 db/properties/cei_product_gap_card_2026_10_27.json 이 정의다: 09-19 CEI 판별종 갭과 같은 생성기·PP·컷오프로 fixed-occ nscf 고유값 갭을 낸다. 열린 껍질 TM 6 종은 MP 엔트리의 자성 배치를 씨앗으로 옮기고 U 는 MP 규약 (O·F 계만 Co 3.32 · Mn 3.9 · Ni 6.2 eV) — 보고량은 E_g(PBE[+U]; MP 자성 배치) 다. 다형은 관측 중 E_hull 최저 (반응 원장 hull 상은 같이 기록). SO2 · S2Cl2 는 MP 셀 고정 + 이온 이완. LiCl · Li3PO4 는 기존 값 (6.2603 · 5.9121 eV) 을 쓰고 kgy 에서 대조 잡 (LiCl · Li2S · Li3PO4 β · |Δ| ≤ 0.02 eV) 으로만 다시 돈다. 판독은 카드 §7 (R1–R6) 만.",
+   "rationale": "1저자 (실험 쪽 · 박재현) 10-27 요청 — CEI 생성물 갭을 NdP5O14 아래에 그림으로. 사용자 '이렇게도 들어왔는데 kgy에서 진행하자'. TM 화합물은 허용 상태가 여럿이라 선택 규칙 없이는 스칼라 갭이 없다 (회신 N 기준) → 상태를 선언한다. MP 비교는 GGA/GGA+U 출처만 (09-30 NdP5O14 r2SCAN 참조 교훈).",
+   "decision_state": "proposed",
+   "record_kind": "estimand",
+   "results_seen": false,
+   "results_seen_note": "우리 계산 0 건 · MP 구조·자성·갭 출처 재조회 0 건 (2026-10-27 작성 시점). 원장 hull 엔트리 id 와 옛 MP 갭만 cascade_product_gaps.json 에서 봤다.",
+   "card": "db/properties/cei_product_gap_card_2026_10_27.json",
+   "record": "db/properties/cei_product_gap_runlog_2026_10_27.json",
+   "depends_on": [
+    "D-2026-09-16-cathode-cei-gap-target",
+    "D-2026-09-30-cei-ndp5o14-reference-mismatch"
+   ],
+   "evidence": [
+    "db/properties/cei_figs/cei_x_scan_panels_x002.csv (nd_p_002_asused · is_minimum=1 — 11 종 · 첫 등장 전압 일치)",
+    "db/properties/cascade_product_gaps.json (원장 hull 엔트리 · 옛 MP 갭)",
+    "db/properties/sei_electronic.json (LiCl 6.2603 · Li2S 3.4379 · Li3PO4 β 5.9121 · 같은 생성기)"
+   ],
+   "reopen_criteria": [
+    "PP · 컷오프 · 구조 출처 · 상태 선언이 바뀌는 경우만",
+    "'다른 자성 배치 · 다른 U 를 하나 더' 는 재개 사유가 아니다 (민감도는 새 카드)"
+   ],
+   "enforcement": "① 입력은 build_dft_inputs.py 만 (--tm_state mp 없거나 자리 대응이 안 되면 TM 상 입력을 안 만든다 · --hubbard mp · --fixed_cell) ② 구조는 fetch_sei_structures.py --pick (규칙 · hull 상 · 자성 · 갭 출처 꼬리표) ③ kgy 러너는 대조 잡 3 종이 통과해야 다음 상으로 간다 ④ 판독은 카드 §7 R1–R6 만",
+   "cost_cap": {
+    "machine": "kgy GPU · cascade v7 옆 · Nd Q3′ (ndq3p) 뒤 · 한 번에 하나 (SEI_MIN_FREE_MIB 대기)",
+    "견적": "합 어림 15–30 GPU-h · 벽시계 3–5 일"
+   },
+   "proposed_by": "claude-session-2026-10-27 (friendly)",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-10-27",
+     "state": "proposed",
+     "by": "agent",
+     "note": "사용자 '이렇게도 들어왔는데 kgy에서 진행하자' (실행 승인) · 트랙 CEI — 1저자 = 실험 쪽 (요청자) · 결정은 사용자. 카드 §9 의 세 가지 (vc-relax 허락 · TM 상태 · 다형) 는 사용자 결정 대기."
+    }
+   ]
   }
  ]
 }

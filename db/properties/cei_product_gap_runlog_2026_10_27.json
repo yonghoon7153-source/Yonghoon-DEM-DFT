@@ -1,0 +1,22 @@
+{
+ "schema": "result_record/v1",
+ "record_kind": "runlog",
+ "id": "cei_product_gap_runlog_2026_10_27",
+ "date": "2026-10-27",
+ "system": "CEI 생성물 11 종 (원고 조성 nd_p_002_asused · 반응 최소점 Nd 없는 생성물)",
+ "card": "db/properties/cei_product_gap_card_2026_10_27.json",
+ "decision": "D-2026-10-27-cei-product-gaps (proposed)",
+ "citable": false,
+ "status": "계획 — 우리 계산 0 건",
+ "단계": [
+  {"step": "① gabia 조회 (검사용 · MP API · PP 파일 복사 · QE 안 돈다)",
+   "state": "블록 전달 대기",
+   "하는_일": "fetch_sei_structures.py --pick (관측 다형 · hull 상 · MP 자성 · 갭 출처 꼬리표) · 09-19 CEI 갭 런의 PP 파일 이름·md5 · TM PP 유무 · SSSP json · pymatgen MP U 대조 → repo 로 push",
+   "산출": ["db/structures/cei_gap_tm/*.{vasp,cif,magmom.json}", "db/properties/cei_gap_tm_structures_2026_10_27.json", "db/inputs/cei_product_gap_2026_10_27/pseudo/ (Nd 제외)", "db/raw/cei_product_gap_2026_10_27/{gabia_fetch.log,gabia_pp_survey.log,pseudo_md5.txt}"]},
+  {"step": "② 이 세션 — 다형 확인 · 레지스트리 'declared' 등록 (카드 R1) · 입력 생성 (build_dft_inputs) · kgy 러너", "state": "①  뒤"},
+  {"step": "③ kgy — 대조 잡 3 종 (통과해야 다음) → 새 9 종 · Nd Q3′ 뒤 · cascade 옆", "state": "② 뒤"},
+  {"step": "④ 판독 — 카드 §7 R1–R6 · 그림용 CSV (Origin) · 1저자 송부는 사용자를 통해", "state": "③ 뒤"}
+ ],
+ "gabia_블록_①": "cd /data/work && git -C /data/work/repo worktree remove --force /data/work/wt_ceigap 2>/dev/null; git -C /data/work/repo fetch -q origin claude/friendly-meitner-lldvar && git -C /data/work/repo worktree add --detach /data/work/wt_ceigap FETCH_HEAD && cd /data/work/wt_ceigap && git log --oneline -1\ncd /data/work/wt_ceigap && P=/data/apps/miniforge3/envs/uma/bin/python && R=db/raw/cei_product_gap_2026_10_27 && mkdir -p $R && : \"${MP_API_KEY:?MP_API_KEY 없음 — export 후 다시}\" && $P tools/sei/fetch_sei_structures.py --selftest && $P tools/sei/fetch_sei_structures.py --pick Li2SO4 SCl SO2 CoS2 NiS2 NiP2O6 MnP2O6 MnS2 Ni3S4 --with_magnetism --with_es_origin --outdir db/structures/cei_gap_tm --prov db/properties/cei_gap_tm_structures_2026_10_27.json --prefix \"\" 2>&1 | tee $R/gabia_fetch.log | tail -80\n(블록 본문 전체는 이 세션 답변 · 아래 PP 조사·복사 · MP U 대조 · 커밋 줄 포함)",
+ "⚠": "MP 갭은 우리 표에 섞지 않는다 — 출처 계산 꼬리표 (GGA · GGA+U · r2SCAN) 와 같이 곁에만 (카드 R5)."
+}

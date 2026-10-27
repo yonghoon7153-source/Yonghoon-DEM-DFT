@@ -28,6 +28,7 @@ import argparse
 import glob
 import json
 import os
+import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -66,6 +67,90 @@ def zval(path):
 #:   bulk(여기) → endpoint → NEB 가 서로 다른 PP 로 돌면 기하를 승계할 수 없다
 #:   (Codex 재리뷰: "open-4f+U bulk 좌표를 frozen-4f NEB 가 승계할 수 있다").
 PP_PIN = {"Nd": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF"}
+
+# ── 열린 껍질 전이금속 (2026-10-27 · CEI 생성물 갭 카드) ───────────────────────
+#: 이 원소가 들어간 상은 **자성 상태를 선언해야** 갭이 정의된다 (자성 배치 · U 가 여럿이면
+#:   스칼라 갭이 없다 — CLAUDE.md 보고량 규율). 선언 없이 오면 입력을 **안 만든다**.
+OPEN_SHELL_TM = ("V", "Cr", "Mn", "Fe", "Co", "Ni", "Cu")
+#: MP 의 GGA+U 규약 — U 는 **O·F 가 있는 계에서만** 3d 에 건다 (pymatgen MPRelaxSet).
+#:   숫자는 기억값이라 gabia 블록에서 pymatgen 설정으로 대조한다. 표에 없는 원소는 추측하지
+#:   않고 멈춘다. ⚠ VASP(PAW 사영)의 U 를 QE ortho-atomic 사영에 같은 숫자로 건다 —
+#:   **같은 상태가 아니다**. MP 갭과의 대조는 '같은 자릿수·같은 순위' 로만 한다.
+MP_U_3D = {"Co": 3.32, "Mn": 3.9, "Ni": 6.2}
+MP_U_ANIONS = ("O", "F")
+MAG_THR = 0.1           # μB — 이보다 작은 자리 모멘트는 '모멘트 없음'
+
+
+def el_of(label):
+    """종 라벨 → 원소 (`Mn1` → `Mn`)."""
+    return re.sub(r"\d+$", "", label)
+
+
+def magmom_sidecar(path):
+    """구조 파일 옆 `<base>.magmom.json` (fetch_sei_structures --pick --with_magnetism) 또는 None."""
+    p = os.path.splitext(path)[0] + ".magmom.json"
+    return json.load(open(p)) if os.path.isfile(p) else None
+
+
+def species_from_magmoms(symbols, magmoms, thr=MAG_THR):
+    """자리별 MP 모멘트 → (자리별 종 라벨, {라벨: 평균 모멘트 μB}).
+
+    QE 는 씨앗 모멘트를 **종** 단위로 준다. 한 원소에 + 와 − 가 같이 있으면(반강자성)
+    `El1`(+) · `El2`(−) · `El3`(|m|≤thr) 로 나눈다 — 안 나누면 평균이 0 이 돼 강자성·비자성
+    씨앗으로 둔갑한다. 부호가 하나뿐인 원소는 라벨을 원소 그대로 둔다(옛 입력과 같은 꼴).
+    ⛔ 못 하는 것: MP 배치가 바닥상태인지 모른다 — 'MP 가 계산한 상태' 를 옮길 뿐이다.
+    """
+    if len(symbols) != len(magmoms):
+        raise ValueError(f"자리 수 {len(symbols)} ≠ 모멘트 수 {len(magmoms)}")
+    split = set()
+    for e in set(symbols):
+        ms = [m for s, m in zip(symbols, magmoms) if s == e]
+        if any(m > thr for m in ms) and any(m < -thr for m in ms):
+            split.add(e)
+    labels = []
+    for s, m in zip(symbols, magmoms):
+        if s in split:
+            labels.append(s + ("1" if m > thr else "2" if m < -thr else "3"))
+        else:
+            labels.append(s)
+    mean = {}
+    for lab in sorted(set(labels)):
+        ms = [m for l_, m in zip(labels, magmoms) if l_ == lab]
+        mean[lab] = sum(ms) / len(ms)
+    return labels, mean
+
+
+def ecut_for(elements, ecut_min):
+    """이 상의 (ecutwfc, ecutrho) — 기본 60/480 과 원소별 바닥값(--ecut_min) 중 큰 것."""
+    w, r = ECUTWFC, ECUTRHO
+    for e in elements:
+        if e in ecut_min:
+            w, r = max(w, ecut_min[e][0]), max(r, ecut_min[e][1])
+    return w, r
+
+
+def parse_ecut_min(items):
+    """['Mn=65,780'] → {'Mn': (65.0, 780.0)}. 틀린 꼴은 멈춘다."""
+    out = {}
+    for it in items or []:
+        m = re.fullmatch(r"([A-Z][a-z]?)=(\d+(?:\.\d+)?),(\d+(?:\.\d+)?)", it.strip())
+        if not m:
+            raise ValueError(f"--ecut_min '{it}': 'El=wfc,rho' 꼴이어야 한다 (예 Mn=65,780)")
+        out[m.group(1)] = (float(m.group(2)), float(m.group(3)))
+    return out
+
+
+def hubbard_mp_lines(species, elements):
+    """MP 규약 U 줄 (QE HUBBARD 카드 본문). O·F 가 없으면 [] (MP 는 황화물에 U 를 안 건다).
+
+    표(MP_U_3D)에 없는 열린 껍질 TM 이 O·F 와 같이 오면 **멈춘다** — U 를 추측하지 않는다.
+    """
+    if not any(a in elements for a in MP_U_ANIONS):
+        return []
+    miss = sorted(e for e in elements if e in OPEN_SHELL_TM and e not in MP_U_3D)
+    if miss:
+        raise ValueError(f"MP U 표에 없는 원소 {miss} — 추측하지 않는다")
+    return [f"  U {s}-3d {MP_U_3D[el_of(s)]}" for s in species if el_of(s) in MP_U_3D]
 
 
 def tag_of(path):
@@ -210,6 +295,114 @@ def selftest():
 
     print("\n".join("⛔ " + b for b in bad) if bad
           else "✓ selftest 통과 (태그 유도 5 · 음성 3 · 게이트 2 · PP 핀 1)")
+    return max(1 if bad else 0, _selftest_tm())
+
+
+def _selftest_tm():
+    """2026-10-27 TM 경로 — 가짜 UPF·구조로 main() 을 실제로 돌려 입력 글자를 본다. 음성 포함."""
+    import contextlib
+    import io
+    import tempfile
+    from ase import Atoms
+    from ase.io import write
+    bad = []
+
+    def chk(c, m):
+        if not c:
+            bad.append(m)
+
+    # ① 순수 함수
+    lab, mean = species_from_magmoms(["Mn", "Mn", "O", "O"], [4.6, -4.6, 0.0, 0.01])
+    chk(lab == ["Mn1", "Mn2", "O", "O"] and abs(mean["Mn1"] - 4.6) < 1e-9, "AFM 은 Mn1/Mn2 로 나뉜다")
+    lab, mean = species_from_magmoms(["Ni", "Ni", "S"], [2.0, 1.9, 0.0])
+    chk(lab == ["Ni", "Ni", "S"], "[음성] 부호가 하나면 나누지 않는다 (옛 입력 꼴)")
+    lab, _ = species_from_magmoms(["Mn", "Mn", "Mn"], [4.0, -4.0, 0.0])
+    chk(lab == ["Mn1", "Mn2", "Mn3"], "+ · − · 0 자리 셋")
+    try:
+        species_from_magmoms(["Mn"], [1.0, 2.0]); chk(False, "[음성] 길이 불일치를 통과시켰다")
+    except ValueError:
+        pass
+    chk(hubbard_mp_lines(["Co", "S"], ["Co", "S"]) == [], "[음성] 황화물엔 U 없음 (MP 규약)")
+    chk(hubbard_mp_lines(["Mn1", "Mn2", "O", "P"], ["Mn", "O", "P"])
+        == ["  U Mn1-3d 3.9", "  U Mn2-3d 3.9"], "O 가 있으면 종마다 U")
+    try:
+        hubbard_mp_lines(["Cu", "O"], ["Cu", "O"]); chk(False, "[음성] 표에 없는 Cu 에 U 를 지어냈다")
+    except ValueError:
+        pass
+    chk(ecut_for(["Mn", "S"], {"Mn": (65.0, 780.0)}) == (65.0, 780.0), "Mn 바닥값")
+    chk(ecut_for(["Li", "S"], {"Mn": (65.0, 780.0)}) == (ECUTWFC, ECUTRHO), "[음성] Mn 없으면 기본")
+    try:
+        parse_ecut_min(["Mn:65"]); chk(False, "[음성] 틀린 --ecut_min 꼴을 받았다")
+    except ValueError:
+        pass
+
+    # ② main() 통합 — 갭 게이트는 '절연체' 로 고정해 03 까지 만들게 한다
+    with tempfile.TemporaryDirectory() as T:
+        pp, st, w = (os.path.join(T, x) for x in ("pp", "st", "w"))
+        os.makedirs(pp); os.makedirs(st)
+        for el, z in (("Mn", 15), ("O", 6), ("Co", 17), ("S", 6), ("Ni", 18)):
+            open(os.path.join(pp, f"{el.lower()}_stub.UPF"), "w").write(
+                f'<PP_HEADER z_valence="{z}.0"/>\n')
+
+        def put(name, at, mags=None, syms=None):
+            write(os.path.join(st, name + ".vasp"), at, format="vasp", direct=True)
+            if mags is not None:
+                json.dump({"symbols": syms or at.get_chemical_symbols(), "magmoms": mags},
+                          open(os.path.join(st, name + ".magmom.json"), "w"))
+
+        put("MnO_mp-1", Atoms("Mn2O2", scaled_positions=[[0, 0, 0], [.5, .5, 0], [.5, 0, 0],
+                                                          [0, .5, 0]], cell=[4.4] * 3, pbc=True),
+            [4.6, -4.6, 0.0, 0.0])
+        put("CoS2_mp-2", Atoms("CoS2", scaled_positions=[[0, 0, 0], [.3, .3, .3], [.7, .7, .7]],
+                               cell=[5.5] * 3, pbc=True), [0.9, 0.0, 0.0])
+        put("MnS2_mp-3", Atoms("MnS2", scaled_positions=[[0, 0, 0], [.3, .3, .3], [.7, .7, .7]],
+                               cell=[6.1] * 3, pbc=True))                       # 모멘트 파일 없음
+        put("NiS2_mp-4", Atoms("NiS2", scaled_positions=[[0, 0, 0], [.3, .3, .3], [.7, .7, .7]],
+                               cell=[5.7] * 3, pbc=True), [1.0, 0.0, 0.0], syms=["S", "Ni", "S"])
+
+        def run(extra, work, pattern="*.vasp"):
+            old_argv, old_get = sys.argv, EC.get
+            sys.argv = ["x", "--pattern", os.path.join(st, pattern), "--pseudo_dir", pp,
+                        "--work", work] + extra
+            EC.get = lambda tag, reg=None: {"class": "insulator"}
+            try:
+                with contextlib.redirect_stdout(io.StringIO()):
+                    main()
+            finally:
+                sys.argv, EC.get = old_argv, old_get
+
+        def rd(tag, fn):          # 없으면 "" — 시험이 죽지 않고 ⛔ 로 보고하게
+            q = os.path.join(w, tag, fn)
+            return open(q).read() if os.path.isfile(q) else ""
+        run(["--tm_state", "mp", "--hubbard", "mp", "--ecut_min", "Mn=65,780",
+             "--fixed_cell", "CoS2_mp-2", "--pseudo_dir_run", "/remote/pp"], w)
+        v = rd("MnO_mp-1", "01_vcrelax.in")
+        chk("Mn1" in v and "Mn2" in v and "ntyp            = 3" in v, "MnO: 종 Mn1/Mn2/O")
+        chk("starting_magnetization(1) = 0.3067" in v and
+            "starting_magnetization(2) = -0.3067" in v, "MnO: 씨앗 ±4.6/15")
+        chk("U Mn1-3d 3.9" in v and "U Mn2-3d 3.9" in v, "MnO: MP U 두 종")
+        chk("ecutwfc         = 65.0" in v and "ecutrho         = 780.0" in v, "MnO: Mn 컷오프 바닥")
+        chk("pseudo_dir      = '/remote/pp'" in v, "--pseudo_dir_run 이 입력에 적힌다")
+        g = rd("MnO_mp-1", "03_nscf_gap.in")
+        chk("tot_magnetization = 0" in g and "nspin           = 2" in g, "MnO: AFM tot_mag 0")
+        c = os.listdir(os.path.join(w, "CoS2_mp-2"))
+        chk("01_relax.in" in c and "01_vcrelax.in" not in c, "CoS2: 고정셀이면 01_relax.in 만")
+        r = rd("CoS2_mp-2", "01_relax.in")
+        chk("calculation     = 'relax'" in r and "&CELL" not in r, "CoS2: relax · &CELL 없음")
+        chk("HUBBARD" not in r, "[음성] CoS2: 황화물에 U 가 붙지 않는다")
+        chk("tot_magnetization = 1" in rd("CoS2_mp-2", "03_nscf_gap.in"), "CoS2: Σ0.9 → 1")
+        chk("ecutwfc         = 60.0" in r, "[음성] CoS2: Mn 바닥값이 새지 않는다")
+        chk(not os.path.isdir(os.path.join(w, "MnS2_mp-3")), "[음성] 모멘트 파일 없으면 안 만든다")
+        chk(not os.path.isdir(os.path.join(w, "NiS2_mp-4")), "[음성] 원소 순서가 다르면 안 만든다")
+        meta = json.load(open(os.path.join(w, "MnO_mp-1", "00_build_meta.json")))
+        chk(meta["species"] == ["Mn1", "Mn2", "O"] and meta["hubbard"]
+            and meta["cell_policy"] == "vc-relax", "메타가 종·U·셀 정책을 적는다")
+        # 음성: --tm_state 없이는 TM 상을 안 만든다
+        w2 = w + "_nostate"
+        run([], w2, "MnO_mp-1.vasp")
+        chk(not os.path.isdir(os.path.join(w2, "MnO_mp-1")), "[음성] --tm_state 없으면 TM 상 안 만든다")
+
+    print("\n".join("⛔ " + b for b in bad) if bad else "✓ TM 경로 selftest 통과 (25)")
     return 1 if bad else 0
 
 
@@ -252,6 +445,19 @@ def main():
     ap.add_argument("--diagnose_undetermined", action="store_true",
                     help="⚠ electronic_class=undetermined 상도 갭 단계를 만든다 (진단 전용). "
                          "그 숫자는 갭이 아니다 — db 에 넣지 말 것")
+    # ── 2026-10-27 CEI 생성물 갭 카드 (cei_product_gap_card_2026_10_27.json) ────────
+    ap.add_argument("--pseudo_dir_run", default=None,
+                    help="입력에 **적을** pseudo_dir (기본 = --pseudo_dir) — 여기서 만들고 다른 "
+                         "기계에서 돌릴 때. z_valence 는 --pseudo_dir 에서 읽는다")
+    ap.add_argument("--tm_state", choices=("mp",), default=None,
+                    help="열린 껍질 TM 상의 자성 상태 — 'mp' = 구조 옆 <base>.magmom.json 의 MP 배치. "
+                         "안 주면 TM 상은 입력을 만들지 않는다")
+    ap.add_argument("--hubbard", choices=("none", "mp"), default="none",
+                    help="TM 3d U — 'mp' = MP 규약 (O·F 가 있는 계만 · Co 3.32 · Mn 3.9 · Ni 6.2 eV)")
+    ap.add_argument("--ecut_min", action="append", default=[], metavar="El=wfc,rho",
+                    help="원소별 컷오프 바닥값 — 그 원소가 든 상만 올린다 (예 Mn=65,780)")
+    ap.add_argument("--fixed_cell", nargs="*", default=[], metavar="TAG",
+                    help="이 태그들은 vc-relax 대신 **고정셀 relax** (01_relax.in) — 분자결정 등")
     ap.add_argument("--selftest", action="store_true",
                     help="태그 유도·게이트 자체시험 (음성 경로 포함)")
     a = ap.parse_args()
@@ -260,6 +466,10 @@ def main():
 
     from ase.io import read
 
+    try:
+        ecut_min = parse_ecut_min(a.ecut_min)
+    except ValueError as e:
+        sys.exit(f"⛔ {e}")
     pool = find_pseudos(a.pseudo_dir)
     files = sorted(glob.glob(a.pattern))
     if not files:
@@ -291,6 +501,30 @@ def main():
         if any(e in missing for e in els):
             print(f"\n⏭  {tag} — pseudo 없음({','.join(e for e in els if e in missing)})")
             skipped.append(tag); continue
+        # ★ 2026-10-27 — 열린 껍질 TM 은 **자성 상태를 선언해야** 갭이 정의된다
+        #   (CEI 생성물 갭 카드). 선언이 없거나 자리 대응이 안 되면 입력을 만들지 않는다.
+        syms = at.get_chemical_symbols()
+        tm_open = [e for e in els if e in OPEN_SHELL_TM]
+        labels, lab_mag, side = syms, {}, None
+        if tm_open:
+            side = magmom_sidecar(f)
+            why = None
+            if a.tm_state != "mp":
+                why = f"열린 껍질 TM {tm_open} — 자성 상태 미선언 (--tm_state mp)"
+            elif side is None:
+                why = "자성 배치 파일 <base>.magmom.json 없음 — 상태를 지어내지 않는다"
+            elif side.get("symbols") != syms:
+                why = "magmom.json 의 원소 순서가 구조와 다르다 — 자리 대응을 모른다"
+            elif "Nd" in els:
+                why = "Nd + TM 동시 — 이 경로는 둘을 같이 다루지 않는다"
+            if why:
+                print(f"\n⏭  {tag} — {why}")
+                skipped.append(tag); continue
+            labels, lab_mag = species_from_magmoms(syms, side["magmoms"])
+        spc = sorted(set(labels))
+        tm_spin = bool(tm_open) and any(abs(v) > MAG_THR for v in lab_mag.values())
+        ecw, ecr = ecut_for(els, ecut_min)
+        fixed_cell = tag in a.fixed_cell
 
         # ★★ 2026-08-11 — **금속에는 fixed-occ 갭 단계(03)를 만들지 않는다.**
         #   금속엔 VBM/CBM 이 없는데 occupations='fixed' 는 nelec/2 번째까지 채우므로
@@ -323,7 +557,7 @@ def main():
         cell = at.cell.array
         k_scf, k_nscf = kmesh(cell, KDENS_SCF), kmesh(cell, KDENS_NSCF)
         has_nd = "Nd" in els
-        nat, ntyp = len(at), len(els)
+        nat, ntyp = len(at), len(spc)
 
         # ⚠⚠ occupations='fixed' 인 nscf 는 QE 가 **nbnd = nelec/2 로 딱 맞춘다** —
         #   전도대가 없어 CBM 을 못 본다. nbnd 를 명시해야 갭이 나온다 (2026-08-06).
@@ -350,6 +584,20 @@ def main():
         # ⚠ nspin=2 + tot_magnetization 이면 다수스핀 점유가 (nelec+M)/2 로 늘어난다.
         #   여유를 그만큼 더 준다 — 안 그러면 CBM 을 못 본다.
         pad = (3 * n_nd) // 2 if spinpol else 0
+        # TM: MP 모멘트 합을 정수로 — 03(fixed) 의 tot_magnetization 시작값 (02 뒤 sync 가 고친다)
+        M0 = int(round(sum(side["magmoms"]))) if tm_spin else 0
+        if tm_spin:
+            pad = (abs(M0) + 1) // 2 + 4
+        try:
+            hub_tm = hubbard_mp_lines(spc, els) if (tm_open and a.hubbard == "mp") else []
+        except ValueError as e:
+            print(f"\n⏭  {tag} — {e}")
+            skipped.append(tag); continue
+        tm_seed = {}
+        for lab in spc:
+            mm = lab_mag.get(lab, 0.0)
+            if tm_spin and abs(mm) > MAG_THR:
+                tm_seed[lab] = max(-1.0, min(1.0, mm / zs[el_of(lab)]))
         nbnd = int(nelec / 2 * 1.35) + 8 + pad      # 점유 + 넉넉한 빈 상태 (CBM 용)
         nbnd_dos = int(nelec / 2 * 1.60) + 12 + pad  # DOS 용은 더 여유 (&ELECTRONS 주석)
 
@@ -360,9 +608,12 @@ def main():
             hub = ""
             if has_nd and a.nd_u > 0:
                 hub = f"\nHUBBARD (ortho-atomic)\n  U Nd-4f {a.nd_u}\n"
+            if hub_tm:
+                hub = "\nHUBBARD (ortho-atomic)\n" + "\n".join(hub_tm) + "\n"
             L = [f"&CONTROL", f"    calculation     = '{calc}'",
                  f"    prefix          = '{tag}'", "    outdir          = './tmp'",
-                 f"    pseudo_dir      = '{a.pseudo_dir}'", "    tprnfor         = .true.",
+                 f"    pseudo_dir      = '{a.pseudo_dir_run or a.pseudo_dir}'",
+                 "    tprnfor         = .true.",
                  # ⚠ projwfc.x 는 **파동함수 파일**이 있어야 돈다. nscf 의 disk_io 기본값이
                  #   낮으면 끝나고 지워져 projwfc 가 MPI_ABORT 로 죽는다(실측 2026-08-06:
                  #   dos.x 는 됐는데 projwfc.x 만 실패). nscf 에서만 남긴다.
@@ -376,8 +627,8 @@ def main():
                  ("    verbosity       = 'high'" if verbose else ""),
                  "    tstress         = .true." if calc == "vc-relax" else "", "/",
                  "&SYSTEM", "    ibrav           = 0", f"    nat             = {nat}",
-                 f"    ntyp            = {ntyp}", f"    ecutwfc         = {ECUTWFC}",
-                 f"    ecutrho         = {ECUTRHO}",
+                 f"    ntyp            = {ntyp}", f"    ecutwfc         = {ecw}",
+                 f"    ecutrho         = {ecr}",
                  # ⚠ DOS 용 nscf 는 밴드를 더 준다. 제일 위 몇 밴드는 Davidson 이 항상
                  #   제일 늦게 수렴하는데, 여유 밴드가 그 실패를 흡수한다(어차피 안 쓴다).
                  (f"    nbnd            = {nbnd_dos if dos else nbnd}"
@@ -387,13 +638,17 @@ def main():
                  ("    nosym           = .true." if nosym else ""),
                  # ★ Nd 4f³ 는 스핀분극 없이는 분수 점유가 되어 갭이 정의되지 않는다
                  #   (위 --nd_spin 주석 참조). 씨앗 모멘트를 Nd 종에만 준다.
-                 ("    nspin           = 2" if spinpol else ""),
-                 (f"    starting_magnetization({els.index('Nd') + 1}) = {a.nd_mag}"
+                 ("    nspin           = 2" if (spinpol or tm_spin) else ""),
+                 (f"    starting_magnetization({spc.index('Nd') + 1}) = {a.nd_mag}"
                   if spinpol else ""),
+                 # TM — MP 자리 모멘트의 종 평균 ÷ z_valence (QE 씨앗은 원자가 전자 편극 비율)
+                 *[f"    starting_magnetization({spc.index(lab) + 1}) = {v:.4f}"
+                   for lab, v in tm_seed.items()],
                  # ⚠ QE 는 `occupations='fixed'` + `nspin=2` 조합에서 tot_magnetization 을
                  #   **요구한다**(없으면 read_namelists 에서 즉사). Nd³⁺ = 4f³ 이므로
                  #   홀전자 3개 × Nd 개수. 이 값이 곧 ↑/↓ 점유 밴드 수를 가른다.
                  (f"    tot_magnetization = {3 * n_nd}" if (spinpol and fixed) else ""),
+                 (f"    tot_magnetization = {M0}" if (tm_spin and fixed) else ""),
                  ("    noinv           = .true." if nosym else ""),
                  occ.rstrip(), "/",
                  # ⚠⚠ DOS 용 nscf 만 문턱을 푼다 (2026-08-07 licl 04 단독 실패).
@@ -417,13 +672,14 @@ def main():
             L = [x for x in L if x != ""]
             body = "\n".join(L) + "\n\nATOMIC_SPECIES\n"
             from ase.data import atomic_masses, atomic_numbers
-            for e in els:
-                body += f"  {e:3s} {atomic_masses[atomic_numbers[e]]:8.3f}  {pool[e]}\n"
+            for e in spc:
+                body += (f"  {e:3s} {atomic_masses[atomic_numbers[el_of(e)]]:8.3f}  "
+                         f"{pool[el_of(e)]}\n")
             body += "\nCELL_PARAMETERS angstrom\n"
             for v in cell:
                 body += "  %16.10f %16.10f %16.10f\n" % tuple(v)
             body += "\nATOMIC_POSITIONS angstrom\n"
-            for s_, p in zip(at.get_chemical_symbols(), at.positions):
+            for s_, p in zip(labels, at.positions):
                 body += f"  {s_:3s} %16.10f %16.10f %16.10f\n" % tuple(p)
             body += hub
             body += f"\nK_POINTS automatic\n  {kpts[0]} {kpts[1]} {kpts[2]} 0 0 0\n"
@@ -448,7 +704,14 @@ def main():
                       ensure_ascii=False, indent=1)
             print(f"\n{tag}: control relax 입력 {cin} ({nat}원자, nosym, 셀 고정)")
             continue
-        open(os.path.join(d, "01_vcrelax.in"), "w").write(block("vc-relax", k_scf, False))
+        # ★ 2026-10-27 — 고정셀 태그(분자결정: PBE 에 분산력이 없어 분자 사이 부피가 정의되지
+        #   않는다)는 01_relax.in. 반대쪽 파일이 남아 있으면 러너가 헷갈리므로 지운다.
+        rname, oname = (("01_relax.in", "01_vcrelax.in") if fixed_cell
+                        else ("01_vcrelax.in", "01_relax.in"))
+        if os.path.isfile(os.path.join(d, oname)):
+            os.remove(os.path.join(d, oname))
+        open(os.path.join(d, rname), "w").write(
+            block("relax" if fixed_cell else "vc-relax", k_scf, False))
         open(os.path.join(d, "02_scf.in"), "w").write(block("scf", k_scf, False))
         # ★ 갭의 정본 — fixed occupations + 조밀 k. nbnd 를 넉넉히 줘 CBM 을 잡는다
         gap_in = os.path.join(d, "03_nscf_gap.in")
@@ -506,6 +769,28 @@ def main():
             print(f"     04~06 (DOS/PDOS) 는 그대로 돈다. 사유: 03_GAP_NOT_APPLICABLE.json")
         if note:
             print(note)
+        if tm_open or fixed_cell or (ecw, ecr) != (ECUTWFC, ECUTRHO):
+            print(f"  ★ 종 {'/'.join(spc)} · nspin {2 if tm_spin else 1}"
+                  + (f" · 씨앗 " + ", ".join(f"{k} {v:+.3f}" for k, v in tm_seed.items())
+                     + f" · tot_mag(03 시작) {M0}" if tm_spin else "")
+                  + f" · U {'; '.join(x.strip() for x in hub_tm) if hub_tm else '없음'}"
+                  + f" · ecut {ecw:g}/{ecr:g} · {'고정셀 relax' if fixed_cell else 'vc-relax'}")
+        # 입력의 출처를 옆에 남긴다 — 어느 구조·모멘트·규약으로 만들었는지 (2026-10-27)
+        import hashlib
+        json.dump({"tag": tag, "structure": f,
+                   "structure_sha256": hashlib.sha256(open(f, "rb").read()).hexdigest(),
+                   "species": spc, "nspin": 2 if (tm_spin or spinpol) else 1,
+                   "tm_state": (a.tm_state if tm_open else None),
+                   "magmom_sidecar": (os.path.splitext(f)[0] + ".magmom.json") if side else None,
+                   "starting_magnetization": tm_seed or None,
+                   "tot_magnetization_initial": M0 if tm_spin else None,
+                   "hubbard": hub_tm or None, "hubbard_policy": a.hubbard if tm_open else None,
+                   "ecut_wfc_rho": [ecw, ecr], "cell_policy": "fixed" if fixed_cell else "vc-relax",
+                   "pseudo": {e: pool[e] for e in els},
+                   "pseudo_dir_written": a.pseudo_dir_run or a.pseudo_dir,
+                   "k_scf": k_scf, "k_gap": k_nscf, "nbnd_gap": nbnd,
+                   "gap_step": "skipped: " + skip_reason if skip_gap else "03_nscf_gap.in"},
+                  open(os.path.join(d, "00_build_meta.json"), "w"), ensure_ascii=False, indent=1)
         made.append(tag)
 
     print(f"\n생성 {len(made)}개 · 건너뜀 {len(skipped)}개 → {a.work}")

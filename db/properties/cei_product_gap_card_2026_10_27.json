@@ -1,0 +1,76 @@
+{
+ "schema": "estimand_card/v1",
+ "kind": "estimand",
+ "id": "cei_product_gap_card_2026_10_27",
+ "제목": "CEI 생성물 11 종 띠틈 — fixed-occ nscf 고유값 (PBE · TM 은 선언한 상태 X(MP 자성 배치 · MP U 규약)) · kgy",
+ "status": "proposed — 사용자 '이렇게도 들어왔는데 kgy에서 진행하자' (10-27 · 실행 승인) · 비준 = 사용자 (결정 D-2026-10-27-cei-product-gaps) · §9 결정 셋은 사용자 몫",
+ "written_on": "2026-10-27",
+ "트랙": "CEI · 1저자 = 실험 쪽 (박재현 · 요청자) · 결정은 '사용자' (계산 담당) · 1저자 통지는 사용자를 통해",
+ "⚠_결과_보기_전에_썼다": "우리 계산 0 건 · MP 구조·자성·갭 출처 조회도 0 건 (이 카드 뒤 gabia 블록). 고르는 규칙 · 상태 선언 · 판독 규칙 · 대조 잡 문턱은 이 파일이 정본이다. 구조 조회 결과는 규칙을 적용한 **기록**으로만 덧붙이고 규칙은 안 바꾼다.",
+ "1_무엇을_원하는가": {
+  "요청": "박재현 (KakaoTalk 10-27): 'CEI 파일의 생성물들 띠틈이 계산이 안 돼 있다 · NdP5O14 가 최종 산물이라 그보다 낮은 애들을 그림에 넣으려 한다 · 오래 걸리면 일단 논문값으로 교수님께 보낸다'. 사용자 답 '이번 주는 안 되고 다음 주'.",
+  "11_종": ["Li2SO4", "SCl (= S2Cl2 분자결정)", "CoS2", "LiCl", "NiS2", "Ni(PO3)2", "SO2 (분자결정)", "Mn(PO3)2", "MnS2", "Ni3S4", "Li3PO4"],
+  "출처_대조": "목록과 '첫 등장' 전압이 db/properties/cei_figs/cei_x_scan_panels_x002.csv 의 원고 조성 (electrolyte = nd_p_002_asused) **반응 에너지 최소점 (is_minimum = 1) 24 칸** 의 Nd 없는 생성물과 정확히 같다 (NiS2 3.5 V 까지 — 전체 스캔에선 2.5 V). 표의 '칸수/367' 은 우리 파일에서 재현 못 했다 (그쪽 집계) — 목록 확인에는 영향 없다.",
+  "그림_쪽_주의": "그림의 NdP5O14 값은 우리 5.393 eV 면 HZ-cei-gap-ndp5o14-unreproduced (CONDITIONAL) 조건과 같이 실린다 — '비교 참조가 r2SCAN 이라 같은 근사 비교가 아니었음'. MP 6.336 은 r2SCAN 값이라 PBE 축에 같이 놓지 않는다."
+ },
+ "2_재는_양": {
+  "정의": "E_g = CBM − VBM — 03 단계 (occupations = 'fixed' nscf · 조밀 k) 고유값. ⛔ DOS 문턱 판독 아님 (CLAUDE.md 규율).",
+  "금속": "E_F 에 상태가 있으면 갭이 없다 — '이 방법에서 금속' 으로 적고 숫자를 내지 않는다 (04 nscf DOS 가 근거). fixed-occ 숫자를 금속에 쓰지 않는다 (build_dft_inputs 게이트).",
+  "근사": "PBE. TM 산화물 계열 (Ni(PO3)2 · Mn(PO3)2) 만 +U (§3 규약). 넓은 갭 절연체에서 PBE 는 30–50 % 과소 — 실험값과 나란히 놓지 않는다."
+ },
+ "3_스칼라가_정의되나_상태_선언": {
+  "닫힌_껍질_5": "Li2SO4 · LiCl · Li3PO4 · SO2 · S2Cl2 — 비자성 · 허용 상태 하나 → 스칼라 갭이 정의된다.",
+  "열린_껍질_TM_6": "CoS2 · NiS2 · MnS2 · Ni3S4 · Ni(PO3)2 · Mn(PO3)2 — 자성 배치 (FM · AFM · NM) · 스핀 상태 · U 가 여럿이라 **선택 규칙 없이는 스칼라 갭이 정의되지 않는다** (회신 N 판정 기준).",
+  "선언": "X(MP 상태) = ① MP 엔트리가 계산한 자성 배치를 그대로 옮긴다 — 자리별 MP 모멘트 (구조 site_properties['magmom'] 우선 · 없으면 magnetism 문서를 길이가 맞을 때만) 를 씨앗으로 (종 평균 ÷ z_valence · 한 원소에 + − 가 같이 있으면 종을 El1/El2 로 나눈다) ② U = MP 규약: O·F 가 있는 계의 3d 에만 (Co 3.32 · Mn 3.9 · Ni 6.2 eV) · 황화물 U 0 — 숫자는 gabia 블록에서 pymatgen MPRelaxSet 설정으로 대조 ③ HUBBARD (ortho-atomic) 사영. 보고량 = E_g(PBE[+U]; MP 자성 배치).",
+  "⚠_같은_상태가_아니다": "VASP (PAW 사영) 의 U 를 QE ortho-atomic 사영에 같은 숫자로 건다 — MP 와 같은 숫자 · 다른 사영. MP 배치가 바닥상태인지도 보지 않는다 ('MP 가 계산한 상태' 를 옮길 뿐).",
+  "구현": "tools/sei/build_dft_inputs.py --tm_state mp --hubbard mp (선언 없거나 자리 대응이 안 되면 그 상은 입력을 **안 만든다** · selftest TM 25 · 깨기 8/8 빨강)"
+ },
+ "4_구조_다형": {
+  "규칙": "MP 후보 중 **실험 관측 (theoretical = False) 의 E_hull 최저** — 동률이면 원자수 · mp-id 로 결정론으로 끊는다 · 관측 다형이 없으면 고르지 않는다. fetch_sei_structures.py --pick (selftest 20 · 깨기 5/5 빨강).",
+  "반응_원장_hull_상_같이_기록": "E_hull 최저 엔트리 (반응 원장이 쓴 hull 상) 를 같이 남긴다. 고른 관측 다형과 다르면 갭은 관측 다형으로 내고 hull 상은 MP 값만 곁에 적는다 (우리 표에 섞지 않는다).",
+  "미리_보이는_어긋남": {
+   "NiS2": "원장 엔트리 mp-1180046 P2_1/c (MP 다형 14) — 관측 광물은 pyrite (vaesite) 꼴",
+   "MnS2": "원장 엔트리 mp-1422029 R-3m (다형 6) — 관측 광물은 pyrite (hauerite) 꼴",
+   "LiCl": "MP E_hull 최저 꼴은 P6_3mc (mp-1185319) — 우리 기록은 암염 mp-22905 (fetch_sei_structures 2026-08-06 판단)",
+   "근거": "db/properties/cascade_product_gaps.json (MP 조회값 · 출처 계산 꼬리표 없음 — 이번에 다시 받는다)"
+  },
+  "LiCl_Li3PO4": "새로 안 돌린다 — 같은 생성기 (build_dft_inputs) · gabia /data/work/pseudo · 60/480 로 이미 잰 값이 있다: LiCl 암염 mp-22905 6.2603 · Li3PO4 β mp-13725 5.9121 eV (db/properties/sei_electronic.json). 대신 §6 대조 잡으로 kgy 에서 다시 돌려 기계 차이를 본다."
+ },
+ "5_설정_09_19_CEI_갭과_같게": {
+  "체인": "build_dft_inputs.py → run_sei_dft.sh: 01 이완 → 02 scf (mv 0.01 Ry) → sync_magnetization (02 수렴 모멘트를 03 tot_magnetization 에) → 03 nscf fixed (k 간격 0.15 Å⁻¹ · nbnd 여유) → 04 nscf DOS (nosym) → 05 dos.x → 06 projwfc.x",
+  "컷오프": "60/480 Ry (09-19 와 같다) — 원소 PP 의 권장값이 더 높으면 그 원소가 든 상만 올린다 (--ecut_min). Mn GBRV 는 SSSP 권장이 60/480 보다 높을 수 있어 gabia 블록에서 SSSP json 으로 확인한 값으로 정한다 (기억값으로 정하지 않는다).",
+  "PP": "Li · P · S · Cl · O = 09-19 CEI 갭 런의 02_scf.in 이 쓴 파일 그대로 (gabia /data/work/pseudo · md5 를 기록하고 repo db/inputs/cei_product_gap_2026_10_27/pseudo/ 로 옮겨 kgy 에서 md5 대조) · Co · Ni · Mn = SSSP efficiency 의 GBRV 파일 (gabia 에 있으면 그것 · 없으면 다음 단계에서 정한다).",
+  "셀_정책": {
+   "결정_7_종": "vc-relax (09-19 CEI 갭 · 08 SEI 갭과 같다) — ⚠ CLAUDE.md 이완 규칙상 사용자 허락이 필요하다 (§9 ①). 규칙의 이유 (스냅숏 셀 뒤틀림 · argyrodite Pulay) 는 MP 정렬 결정에는 해당이 약하다.",
+   "분자결정_2_종": "SO2 · S2Cl2 는 **MP 셀 고정 + 이온만 이완** (01_relax.in · --fixed_cell) — PBE 에 분산력이 없어 분자 사이 부피가 정의되지 않는다 (vc-relax 하면 분자가 벌어진다).",
+   "대조_잡_3_종": "옛 값과 같은 체인이라 vc-relax."
+  },
+  "기계": "kgy GPU (3090 24 GB) · cascade v7 UMA 옆 · Nd Q3′ (tmux ndq3p) 가 끝난 뒤 한 번에 하나 · run_sei_dft.sh SEI_MIN_FREE_MIB 로 VRAM 이 모자라면 기다린다 (selftest 14) · MPI 는 kgy pw.x 의 ldd 에서 유도. 겹친 시간은 cascade 런로그에 적는다."
+ },
+ "6_대조_잡_결과_전_문턱": {
+  "무엇": "LiCl (mp-22905) · Li2S (mp-1153) · Li3PO4 β (mp-13725) 를 kgy 에서 같은 생성기로 다시 — Li · Cl · S · P · O PP 를 전부 지난다.",
+  "기준값": {"licl_mp-22905": 6.2603, "li2s_mp-1153": 3.4379, "li3po4_mp-13725": 5.9121},
+  "통과": "셋 다 |Δ| ≤ 0.02 eV · 03 의 k 점 수 (nk) 가 기록과 같다 (licl 35 · li2s 595 · li3po4 100)",
+  "실패하면": "새 9 종 값을 읽지 않는다 — kgy PP 사본 · 바이너리 · 생성기 차이를 먼저 본다. 러너는 대조 잡이 통과해야 다음 상으로 간다."
+ },
+ "7_판독_규칙_결과_전": {
+  "R1_금속_절연체_선언": "고른 엔트리의 MP 갭으로 레지스트리 (sei_electronic_class.json) 에 'declared' 로 등록한다 — MP 갭 > 0 → insulator · = 0 → metal. 우리 결과로 'measured' 로 바꾼다.",
+  "R2_선언_절연체가_겹치면": "03 갭 ≤ 0.02 eV (extract_gap '금속/반금속') → '이 방법에서 금속' · 숫자 안 냄 · 04 DOS 로 확인.",
+  "R3_선언_금속이_열려_있으면": "04 DOS 에서 E_F ± 0.05 eV 상태 0 → 절연체로 다시 등록하고 03 만 돈다 (02 재사용 · 재개가 아니라 이 규칙의 두 번째 단계).",
+  "R4_모멘트": "sync_magnetization 이 정수에서 0.2 μB 넘게 벗어났다고 하면 그 갭은 '의심' — 인용하지 않는다.",
+  "R5_MP_대조": "MP 갭의 출처 계산이 GGA · GGA+U 일 때만 견준다 (fetch --with_es_origin 꼬리표). r2SCAN · unknown 이면 'MP 대조 없음' (09-30 NdP5O14 교훈). 닫힌 껍질은 09-19 와 같이 '같은 자릿수 · 같은 순위' + Δ 기록 · TM+U 는 Δ 만 기록하고 재현이라 말하지 않는다 (사영 차이).",
+  "R6_순위": "두 상의 차가 0.10 eV 보다 작으면 그 둘의 순서는 말하지 않는다 (09-19 근접쌍 규칙)."
+ },
+ "8_허용_서술_금지_서술": {
+  "허용": ["'PBE 띠틈 (fixed-occupation nscf 고유값 · Ni·Mn 메타인산염은 MP 규약 +U · TM 은 MP 자성 배치) X eV'", "'09-19 CEI 판별종 갭 (같은 생성기 · 같은 PP · 같은 컷오프) 과 같은 축'", "'CoS2 · Ni3S4 는 이 방법에서 금속' (R2/R3 로 확인된 것만)"],
+  "금지": ["실험 갭과 나란히 · 실험 전기전도 성질로 옮기기", "PBE 갭으로 'CEI 가 전자 절연층이다' 단정", "MP 숫자를 우리 갭 표에 섞기 (MP 는 곁에만 · 출처 계산 꼬리표와 같이)", "r2SCAN 출처 MP 갭과의 차를 재현율로 쓰기", "이 TM 화합물의 바닥 자성 상태 주장", "0.10 eV 안 근접쌍의 순서", "NdP5O14 5.393 을 CONDITIONAL 조건 없이 · '축합될수록 갭이 넓어진다'"]
+ },
+ "9_사용자가_정할_것": {
+  "①_vc_relax_허락": "결정 7 종 + 대조 잡 3 종 vc-relax (09-19 와 같은 프로토콜) · 분자결정 2 종은 고정셀 — 권고: 허락 (MP 정렬 결정 · 이 규칙이 막으려는 argyrodite 스냅숏 셀이 아니다).",
+  "②_TM_상태": "X(MP 자성 배치 · MP U 규약) — 권고. 대안: 전부 순수 PBE (U 0) — 그림 안 근사가 한 가지가 되지만 Mn²⁺·Ni²⁺ 산화물에서 PBE 의 자기상호작용 오차로 갭이 크게 작아지거나 닫힐 수 있고 MP 대조가 없어진다.",
+  "③_다형": "관측 다형 (NiS2 · MnS2 는 pyrite 꼴이 될 것) — 권고. 대안: 반응 원장 hull 엔트리 (P2_1/c · R-3m) — 열역학과는 맞지만 실험 보고가 없는 예측 구조일 수 있다."
+ },
+ "10_비용": "작은 셀 (조회 뒤 원자수 확정) · 대조 잡 3 종은 수 분–1 h · 새 9 종 체인 어림 0.5–3 h 씩 (TM 스핀분극 2 배) · 합 어림 15–30 GPU-h · cascade 옆이라 벽시계로 3–5 일 — '다음 주' 와 맞다.",
+ "11_재개_조건": "PP · 컷오프 · 구조 출처 · 상태 선언이 바뀔 때만. '다른 자성 배치 하나 더' · '다른 U 하나 더' 는 재개 사유가 아니다 (민감도가 필요하면 새 카드).",
+ "연결": ["db/properties/cei_gap_results_2026_09_19.json", "db/properties/cei_gap_ndp5o14_reference_check_2026_09_30.json", "db/properties/cascade_product_gaps.json", "db/properties/sei_electronic.json", "db/properties/sei_electronic_class.json", "db/properties/cei_product_gap_runlog_2026_10_27.json"]
+}
