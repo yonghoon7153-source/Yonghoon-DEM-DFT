@@ -1,0 +1,38 @@
+{
+  "status": "PASS",
+  "git_version": "git version 2.53.0",
+  "cases": [
+    {
+      "case": "complete-six-blobs",
+      "returncode": 0,
+      "fetch_processes": 0,
+      "pass": true
+    },
+    {
+      "case": "missing-commit",
+      "returncode": 2,
+      "fetch_processes": 0,
+      "pass": true
+    },
+    {
+      "case": "missing-root-tree",
+      "returncode": 2,
+      "fetch_processes": 0,
+      "pass": true
+    },
+    {
+      "case": "missing-kit-tree",
+      "returncode": 2,
+      "fetch_processes": 0,
+      "pass": true
+    },
+    {
+      "case": "missing-blob",
+      "returncode": 2,
+      "fetch_processes": 0,
+      "pass": true
+    }
+  ],
+  "compatibility_guard_pass": true,
+  "mutation_detected": true
+}

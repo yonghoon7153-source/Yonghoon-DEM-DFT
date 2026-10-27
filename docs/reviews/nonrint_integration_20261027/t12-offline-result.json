@@ -1,0 +1,169 @@
+{
+  "status": "PASS",
+  "git_version": "git version 2.53.0",
+  "runner_sha256": "cd1bd28429ae90a206e833638b086bd99dc5d6d2123bed6b04fe412b66abcf3b",
+  "harness_sha256": "b9bf6344c30d1a1c6ae458dd7cc5c0694c805563e872ad4aa2d86af4bb8c4da6",
+  "consumer_pin": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde",
+  "objects": [
+    {
+      "kind": "commit",
+      "revision": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde",
+      "oid": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde",
+      "sha256": "3e81f3dccfaee74a11fcb8195e4fe45dac651a60cb44af93fd40e50318680c6b"
+    },
+    {
+      "kind": "tree",
+      "revision": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde^{tree}",
+      "oid": "6f46120958e50a32ddfee1cbdd7f1273cf607e35",
+      "sha256": "bc74bdca3f0b6511bca5ea2fec25c25a638425d3115d90709ce4ee1f42656848"
+    },
+    {
+      "kind": "tree",
+      "revision": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs",
+      "oid": "be929ac4d16a436b021da06995c12329ad26c134",
+      "sha256": "278ef1f161f1d6096cfac7d14a649e3db0b71882396876a6028926b1dfe9c4d7"
+    },
+    {
+      "kind": "tree",
+      "revision": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data",
+      "oid": "d5ec5d84fb8b7c229ff117f98fc252fa954a034f",
+      "sha256": "a7fec19567731dda5175151bfeadc89c3ec3e51a4e662c45b1cb12e3870af0bd"
+    },
+    {
+      "kind": "tree",
+      "revision": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009",
+      "oid": "af28eb5fdde25f52453320d67faeee3e459bb788",
+      "sha256": "8df4ae1d6e52dc7d0716482f170ee0d6a74712fe2886a122e33a8bdb36519f31"
+    },
+    {
+      "kind": "blob",
+      "revision": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_gates.py",
+      "oid": "55e8793ad35f72723de7195101be1834996b16a2",
+      "sha256": "c8d45a9cf75f0806e612d810942d23adea4b40feaa5f31f7d279eb8386358de6"
+    },
+    {
+      "kind": "blob",
+      "revision": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_lib.py",
+      "oid": "be4991f6227b124d1b299ee0e6873e9695fd9881",
+      "sha256": "23a79392352e01631c6d1f6aaecdb31fc8a53be518ee6f27b815896e161727e6"
+    },
+    {
+      "kind": "blob",
+      "revision": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_observers.py",
+      "oid": "8d9ebd558f8468e0b6df42fbfe9fc55656cc6570",
+      "sha256": "77b5dc891421fbecf059bb907ff5f5b6ab6433bf1d2cb9649e66535a1ae5ca74"
+    },
+    {
+      "kind": "blob",
+      "revision": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_reader.py",
+      "oid": "f19d35733904b4ebf272648ff9e046429d97e33a",
+      "sha256": "dfc06b8dbf53a8cab05df297890e1f8ca1d0fa038536c7c13ed8b8677e521723"
+    },
+    {
+      "kind": "blob",
+      "revision": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_s3.py",
+      "oid": "7bccb4da17795905ea70b39b9424a49bec26b79c",
+      "sha256": "030c2688fe5b3e7c30c1ee7f14a60061082f6ce3f8cf2ac8a7a8b89ff353aaa9"
+    },
+    {
+      "kind": "blob",
+      "revision": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/unload_params.json",
+      "oid": "6201d1814c56261d2008847e1abae9613c0068d3",
+      "sha256": "332ad7c2040eb614ac21b31ccbb226479928d7ed8363f733b960cf4527204aae"
+    }
+  ],
+  "cases": [
+    {
+      "case": "complete-six-blobs",
+      "returncode": 0,
+      "fetch_processes": 0,
+      "parent_GIT_NO_LAZY_FETCH": "0",
+      "transport": "file only; empty local bare remote",
+      "git_show_reads": 6,
+      "all_reads_explicitly_guarded": true,
+      "objects_unchanged": true,
+      "missing_revision": null,
+      "trace": "complete-six-blobs/trace.jsonl",
+      "trace_sha256": "0a68e9d284de00e1df14c2a370c586acfb6cf005b58b32c9b8163f79438eb036",
+      "case_count": 52,
+      "pass": true
+    },
+    {
+      "case": "missing-commit",
+      "returncode": 2,
+      "fetch_processes": 0,
+      "parent_GIT_NO_LAZY_FETCH": "0",
+      "transport": "file only; empty local bare remote",
+      "git_show_reads": 1,
+      "all_reads_explicitly_guarded": true,
+      "objects_unchanged": true,
+      "missing_revision": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde",
+      "trace": "missing-commit/trace.jsonl",
+      "trace_sha256": "6b3378670cf7dddccb6c1f96ffcd2bda4ea3115f2fb23498411494c7bd40b8d5",
+      "pass": true
+    },
+    {
+      "case": "missing-root-tree",
+      "returncode": 2,
+      "fetch_processes": 0,
+      "parent_GIT_NO_LAZY_FETCH": "0",
+      "transport": "file only; empty local bare remote",
+      "git_show_reads": 1,
+      "all_reads_explicitly_guarded": true,
+      "objects_unchanged": true,
+      "missing_revision": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde^{tree}",
+      "trace": "missing-root-tree/trace.jsonl",
+      "trace_sha256": "8275666b733302bab2a0470daec51c30be65de9e5892cfafa986d729d3c78be9",
+      "pass": true
+    },
+    {
+      "case": "missing-kit-tree",
+      "returncode": 2,
+      "fetch_processes": 0,
+      "parent_GIT_NO_LAZY_FETCH": "0",
+      "transport": "file only; empty local bare remote",
+      "git_show_reads": 1,
+      "all_reads_explicitly_guarded": true,
+      "objects_unchanged": true,
+      "missing_revision": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009",
+      "trace": "missing-kit-tree/trace.jsonl",
+      "trace_sha256": "b03404324c91e493a26dc7bf7520616483e29ecc6e524e871fb53206f71e1fee",
+      "pass": true
+    },
+    {
+      "case": "missing-blob",
+      "returncode": 2,
+      "fetch_processes": 0,
+      "parent_GIT_NO_LAZY_FETCH": "0",
+      "transport": "file only; empty local bare remote",
+      "git_show_reads": 1,
+      "all_reads_explicitly_guarded": true,
+      "objects_unchanged": true,
+      "missing_revision": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_gates.py",
+      "trace": "missing-blob/trace.jsonl",
+      "trace_sha256": "1a1fa01e6d2fd98dee9cd7c7fc2608578f3c9bf1452ef272cdb349fc9de3b726",
+      "pass": true
+    }
+  ],
+  "compatibility_guard": {
+    "kind": "mocked unsupported-option response; not a real old Git execution",
+    "pass": true
+  },
+  "guard_removal_mutation": {
+    "case": "guard-removal-local-fetch",
+    "returncode": 2,
+    "fetch_processes": 3,
+    "parent_GIT_NO_LAZY_FETCH": "0",
+    "transport": "file only; empty local bare remote",
+    "git_show_reads": 1,
+    "all_reads_explicitly_guarded": false,
+    "objects_unchanged": true,
+    "missing_revision": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde:docs/data/ps45_unload_20261009/ul_gates.py",
+    "trace": "guard-removal-local-fetch/trace.jsonl",
+    "trace_sha256": "85490cee757ca39b6095d81a3d54a2788d97f0d21e243a3df9e048fa8fbaefb0",
+    "pass": true,
+    "detected": true
+  },
+  "physical_ready": false,
+  "physical_T12": "NOT_RUN"
+}
