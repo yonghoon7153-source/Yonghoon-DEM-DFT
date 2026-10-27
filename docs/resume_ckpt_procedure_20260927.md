@@ -325,3 +325,47 @@ echo "(step·z: 이번 런 mesh 덤프 · P: 로그의 정규 thermo, 늦게 써
 - 고침 = `dem_restart.py` 뒤 · 시험 덱을 만들기 전에 그 꼴 하나만: 정적 대조 문제가 그 `남은 step 다름` 하나 · 재개 덱 첫 긴 run 이 원 줄 한 줄짜리 숫자 run (`upto` 없음 · `&` 이어 붙임 아님) · 맞는 값 = 원래 + 1 일 때만 그 줄의 숫자를 바꾼다 (앞 공백 · 뒤 주석 · 나머지 바이트 그대로) → 다시 읽어 명령이 그 하나만 다르고 정적 대조 문제 0 일 때만 바꾼다 (임시 파일 → `os.replace`).  그 밖 (2 step 이상 차이 · 길어짐 · 다른 문제가 같이 있음 · `upto`) = 그대로 두고 정적 대조가 거부한다.  기록 = `<작업 폴더>/fixrun_<SFX>.txt` · stdout · 보고 줄.  `-C` (정적 대조만) 는 고치지 않는다.
 - 시험 = `scripts/test_resume_ckpt.py` F1–F6 (고치기 전 49 PASS · 6 FAIL → 고친 뒤 55 PASS · 0 FAIL) · 변이 7 중 4 잡힘 · 3 생존 = 겹친 가드 (문제 여러 개 허용 → 다시 대조가 잡음 · 다시 대조 빼기 → 앞 조건이 이미 보장 · `&` 줄 검사 빼기 → 원 줄 정규식이 거부).
 - ⚠ 10-27 같은 날 ibb `~/dem_test/scripts/resume_ckpt.sh` 가 09-27 판 (sha256 `bf82948e…` = `1b8ef7f67` · `-T` 없음 · KG50-02 고침 전) 이었다 — D2-50 첫 `-T` 시험이 `illegal option -- T` 로 멈췄다 (아무것도 안 함).  1저자가 옛 판을 `resume_ckpt.sh.bf82948e_0927` 로 보관하고 메인 판으로 바꿨다.  ⇒ **재개 전에 `sha256sum ~/dem_test/scripts/resume_ckpt.sh` 를 리포 판과 대조한다** (기대 값 = 그때의 README).
+
+## 2026-10-28 개정 3 — G0 기대 끝 = 시험 덱 run 합 · write_restart · 루프 체크포인트 첫 긴 run 대조 (원장 KG50-18 · KG50-19 · 1저자 *"50kg 권고대로 해"* ④ ⑤)
+
+- 왜 (Codex 재확인 요청서 `docs/reviews/codex_kg50_resume_tool_recheck_request_20261027.md` §4-1 · §4-2 · Q2 · Q3 · 둘 다 합성으로 본 것):
+  - **KG50-18** — G0 기대 끝이 S0 + 시험 덱 **마지막** run 이었다.  after_settling 재개 덱은 체크포인트 (write_restart · step 200001) 뒤 첫 긴 run (안정화 `run 200000`) 앞에 판 높이 `run 1` 이 있어 시험 = `run 1` + `run 2000` → 끝 202002 ↔ 기대 202001 → 정상 시험도 G0 실패 (닫힌 실패 · after_settling 재개가 늘 막힘).  거꾸로 1 step 짧게 끝난 시험 (202001) 은 G0 을 지난다 (합성 시험 A3 · 고치기 전 판).
+  - **KG50-19** — 정적 대조 D (남은 step) 는 restart 명령 체크포인트 · 그 run 앞 반복 없음 (= settling 꼴) 에서만 돌고 E (뒤 순서) 는 첫 긴 run **다음** 줄부터 본다 → write_restart · 압축 루프 체크포인트 재개 덱의 첫 긴 run 길이는 아무도 안 봤다 (`-C` 합성: 안정화 run 199999 · 100000 · 400000 · 09-27 r075 쌍 루프 `run 5000` → `run 4000` = 통과 · 노트 "남은 step 확인 해당 없음" · "확인 생략").
+- 고침 (시험 덱 · 정적 대조 · G0 의 기대 끝만 · **G1–G3 그대로**):
+  - **G0 기대 끝 = S0 + 시험 덱 read_restart 뒤 모든 run 합** (`deckcheck --trial-steps`).  run 꼴 = `run N` · 꼬리 `pre yes|no` · `post yes|no` 만.  합을 못 정하면 **시험을 내지 않는다**: read_restart ≠ 1 개 · 따옴표를 못 읽음 · 명령 이름에 변수 · `jump` · `next` · `include` · step 을 바꾸는 명령 (`reset_timestep` · `minimize` · `rerun` · `read_data` · `read_dump` · `clear` …) · `print` · `quit` 말고 다른 명령이 든 `if` · read_restart 앞 run · run 수가 숫자 아님 · 꼬리 `upto` · `every` · `start` · `stop` (그 밖 꼬리도) · 마지막 명령이 run 아님.  `label` 혼자는 지나간다 (압축 재개 시험 덱 = `label loop_press` 뒤 `run 2000` · 루프 jump 는 잘려 나가 없다) · `print` · `quit` 만 든 `if` (덱의 삽입 자기검사 꼴) 도 지나간다.
+  - **정적 대조 첫 긴 run** (D 를 넓힘):
+    - write_restart 체크포인트 (after_settling): 본 덱 그 줄 뒤 첫 긴 run 까지의 run · label 줄 = 재개 덱 read_restart 뒤 첫 긴 run 까지 — **글자 같아야** (`deck()` 정리 뒤 · v2 · v3 덱 = `[run 1] [run 200000]`).  그 사이 run 수가 변수 · 흐름 줄이면 정할 수 없음 = 거부.
+    - 반복 안 restart 체크포인트 (압축 루프 — 그 run 앞에 label · jump · include · next · run 이 든 if · step 을 바꾸는 명령 · 변수 run 이 있어 남은 step 을 못 셈): 체크포인트 줄 뒤 루프 머리 `label X` 부터 첫 긴 run 까지 = 재개 덱 read_restart 뒤 첫 긴 run 까지 (r075 쌍 = `[label loop_press] [run 5000]`) · 본 덱 그 run 뒤 첫 흐름 줄이 `X` 로 돌아가는 jump (`jump SELF X` 또는 print · quit 과 그것만 든 if) 여야 · 루프 머리 없음 · 체크포인트 줄과 머리 사이나 머리 뒤에 변수 run · 흐름 줄 = 정할 수 없음 = 거부 (예전 = "확인 생략" 노트 · 통과).
+    - settling 꼴 (그대로 + 한 줄): 재개 덱 첫 긴 run 앞에 run (`run 0` 말고) 이 있으면 거부 — G0 이 시험 덱 run 합을 보게 되면 그 run 으로 생긴 1 step 어긋남을 예전 G0 (마지막 run 만) 처럼 **우연히** 막지 못한다.  남은 step 셈도 label · jump 말고 include · next · run 이 든 if · step 을 바꾸는 명령이 있으면 "못 셈" 쪽 (위 루프 대조 · 루프 머리 없으면 거부) 으로 간다.
+  - 그대로: `-C` 는 정적 대조만 (고치지 않음) · `--fix-run` (KG50-17) 은 정적 대조 문제가 `남은 step 다름` 하나일 때만 (새 문제 문구는 그 꼴이 아니라 고침이 안 돈다).
+- 새로 보이는 줄 (run 이 하나뿐인 settling · 압축 재개 = 예전과 같은 줄 · 새 줄 없음):
+
+```
+# stdout (시험을 낼 때 · 시험 덱 run 이 둘 이상)
+  · 시험 기대 끝 step = S0 + 시험 덱 read_restart 뒤 run 합 2001 ([run 1] [run 2000] · 10-28 KG50-18)
+  ▶ 시험 job <J> (run 2000 · 기대 끝 step 202002)
+# 보고 케이스 절 (같은 경우 · G0 줄 앞)
+- 시험 기대 끝 step (10-28 · KG50-18): S0 200001 + 시험 덱 read_restart 뒤 run 합 2001 ([run 1] [run 2000]) = 202002
+- G0 시험 정상 종료: 통과 — 상태 COMPLETED · ExitCode 0:0 · 마지막 step 202002 (기대 202002) · …
+# stdout (시험 전 거부 · 이유는 위 목록 중 하나 · 그 뒤 "⛔ 시험 제출 안 함")
+  ✗ 시험 기대 끝 step 을 못 정함 (10-28 KG50-18) — 흐름 명령 (jump · next · include): [jump SELF skip1]
+# 정적 대조 (stdout · <작업 폴더>/deckcheck_<SFX>.txt · 보고에는 마지막 "재개 덱 정적 대조: …" 줄)
+  · 첫 긴 run 같음 (write_restart 체크포인트 · 10-28 KG50-19): 본 덱 그 뒤 [run 1] [run 200000] = 재개 덱 read_restart 뒤
+  ✗ 첫 긴 run 다름 (write_restart 체크포인트 · 10-28 KG50-19): 본 덱 그 뒤 [run 1] [run 200000] ↔ 재개 덱 read_restart 뒤 [run 1] [run 199999]
+  · 루프 몸 run 같음 (반복 안 restart 체크포인트 · 10-28 KG50-19): 본 덱 [label loop_press] [run 5000] = 재개 덱 read_restart 뒤
+  ✗ 루프 몸 run 다름 (반복 안 restart 체크포인트 · 10-28 KG50-19): 본 덱 [label loop_press] [run 5000] ↔ 재개 덱 read_restart 뒤 [label loop_press] [run 4000]
+  ✗ 루프 몸 run 을 정할 수 없음 (반복 안 restart 체크포인트 · 10-28 KG50-19): 본 덱 [label loop_press] [run 5000] 뒤 첫 흐름 줄 없음 (그 label 로 돌아가는 jump 여야) — 손으로 확인
+  ✗ 남은 step 을 정할 수 없음 (그 run 앞에 반복 · 흐름 · 변수 run · 체크포인트 뒤 루프 머리 label 없음 · 10-28 KG50-19) — 손으로 확인
+  ✗ 첫 긴 run 길이를 정할 수 없음 (write_restart 체크포인트 · 10-28 KG50-19): 본 덱 그 뒤 run 수가 숫자가 아님 [run ${n1}] — 손으로 확인
+  ✗ 재개 덱 첫 긴 run 앞에 run 이 있음 (restart 체크포인트 = 본 덱 그 run 도중 · 10-28 KG50-18): [run 1]
+```
+
+- 시험 = `scripts/test_resume_ckpt.py` 에 32 개 더함 (A 6 = after_settling 가짜 SLURM 장면 · P 13 = 시험 덱 run 합 거부 · 지나감 · W 13 = `-C` 첫 긴 run 대조) — 시험 먼저 커밋에서 고치기 전 판 (도구 sha256 `65f73b37…` = 10-27 개정 2 판) = 87 중 57 PASS · 30 FAIL (옛 55 전부 통과 · 새 32 중 지키는 시험 2 통과) → 고친 판 87 PASS · 0 FAIL.  Python 3.11.15 · 3.8.20 (시험 파일 · 도구 안 `python3` 둘 다) 판정 같음.  돌연변이 아홉 (고친 판에서 한 조각씩 끔 — D 의 흐름 셈 · 루프 머리 앞 대조 · 시험 덱 if 거부 · settling 앞 run · G0 합 · write 대조 · 루프 대조 · run 꼬리 이유 · 루프 jump 확인) = 아홉 다 잡힘.
+- **settling 길 바이트 같음** = `python3 scripts/test_resume_ckpt.py --compare-old <고치기 전 판>` (장면마다 같은 입력으로 옛 판도 돌려 stdout · 보고 · 작업 폴더 모든 파일 · 시험 · 본 제출 여부를 바이트 대조 · 임시 경로 · 보고 머리 날짜 시각만 맞춤): settling 묶음 장면 45 (K 6 · S 7 · D 9 · Q 4 · T 1 · N 7 · F 11) **다름 0** — F 의 `-T` 장면 = ibb D2-50 `-T` 꼴 (dem_restart.py `run 179999` → 고침 `run 180000` · 기대 끝 22001) 포함 · Python 3.8 에서도 다름 0.  대조 도구 자체 = 같은 판끼리 장면 79 다름 0.  실제 09-27 r075 압축 쌍 (`-C`) = 판정 (종료 코드) 같음 · 노트 한 줄만 "남은 step 확인 생략" → "루프 몸 run 같음 ([label loop_press] [run 5000])".
+- 이 개정 판 `scripts/resume_ckpt.sh` sha256 = `e59c43e6…` (10-27 개정 2 판 `65f73b37…` 에서 바뀜) — ibb 사본을 바꿀 때 대조한다.
+- 한계:
+  - after_settling · 압축 재개 덱 · 원 로그 · 시험 로그는 **합성**이다 (요청서 §4 의 구성 · 실제 dem_restart.py 산출 · ibb 시험 아님).  실제 dem_restart.py 가 after_settling 재개 덱의 판 높이 `run 1` · 안정화 run 을 어떻게 내는지 모른다 (소스가 리포에 없다).  글자 대조라 같은 뜻의 다른 표기 (`run 1 pre no` · 덧붙인 `run 0`) 도 거부한다 (닫힌 실패 · 손으로 본다).
+  - 정적 대조는 체크포인트가 체크포인트 줄 뒤 **첫 긴 run** 에서 나왔다고 본다 (예전과 같은 가정) — 이완 run 중에 쓰인 `restart_compress_*` (`restart 0` 없는 덱 · KG50-11) · 루프 몸의 둘째 긴 run 도중 체크포인트는 가리지 못한다.  뒤에서 jump 하는 label 이 (루프 머리 말고) 재개 덱 첫 긴 run 앞에 있는지도 보지 않는다.
+  - `&` 로 나뉜 run (시험 덱 자르기 awk 가 못 보는 꼴) 은 시험이 그 run 을 통째로 돈다 — 합은 맞게 세지만 시험이 1 시간을 넘기면 G0 (TIMEOUT) 이 막는다 (닫힌 실패).
+  - 시험 전 거부 이유는 stdout (nohup 기록) 에만 나온다 — 보고 .md 의 케이스 절은 시험을 낸 케이스만 생긴다 (다른 시험 전 거부와 같은 자리 · 시험 N1 이 그 꼴을 지킨다).
+  - settling 꼴의 새 거부는 그런 줄이 있는 덱에서만 결과가 바뀐다 — 본 덱 쪽 (include · next · run 이 든 if · step 을 바꾸는 명령) 은 v2 · v3 본 덱 · 09-27 r075 본 덱에 없다 (v2 · v3 의 삽입 자기검사 `if` 는 print · quit 만이라 지나간다 · 가짜 SLURM settling 장면이 모두 v2 본 덱으로 돈다).  재개 덱 쪽 (첫 긴 run 앞 run) 은 ibb D2-50 `-T` 가 기대 끝 22001 = S0 + 2000 으로 G0 을 지났으니 그 재개 덱에는 0 아닌 run 이 없었다 (추정 · 메인 세션 전달 · 그 덱은 리포에 없다).
