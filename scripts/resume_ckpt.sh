@@ -6,7 +6,10 @@
 #   -T      시험만 — G0–G3 를 기록하고 본 제출은 하지 않는다 (NP 실측용)
 #   -c      작업 사본의 맨 위 input*.liggghts 에서 줄 전체 주석 (첫 공백 아닌 글자 #) 만 빼고 dem_restart.py — 멈춘 폴더 그대로 · 인라인 주석은 안 뺀다
 #           비주석 줄 sha256 · LIGGGHTS 명령 (& 이어 붙이기 → 주석 제거) 전후 같아야 (아니면 ⛔ 건너뜀) · 10-27 ibb: 덱 검사가 머리 주석의 다른 케이스 이름 (real_4) 도 거부
-#   -C <본 덱> <재개 덱> <체크포인트> <S0> <작업 폴더>   재개 덱 정적 대조만 (손 확인용 · 종료 코드 0 = 통과)
+#   -C <본 덱> <재개 덱> <체크포인트> <S0> <작업 폴더>   재개 덱 정적 대조만 (손 확인용 · 종료 코드 0 = 통과 · 아래 첫 긴 run 고침은 하지 않는다)
+# 2026-10-27 (ibb kg50_d2_b50 r4 · 1저자 Q1 (가) "권고대로 해줘" · 원장 KG50-17): dem_restart.py 의 settling 잔여 = 본 덱 그 run 길이 − 체크포인트 step
+#   (200000 − 20001 = 179999) 인데 본 덱 정착 run 은 삽입 run 1 뒤 step 1 에서 시작해 끝 200001 → 재개 덱 첫 긴 run 이 1 step 짧다 (정적 대조 "남은 step 다름").
+#   그 꼴 하나만 (문제가 그 하나 · 한 줄짜리 숫자 run · 맞는 값 = 원래 + 1) 그 줄의 숫자를 고치고 다시 대조해 통과할 때만 바꾼다 (기록 fixrun_<SFX>.txt · 보고).
 # 2026-10-26 (원장 KG50-02 · KG50-10 · 1저자 Q2 *"50kg 권고대로해"*):
 #   본 제출 = G0 ∧ G1 ∧ G2 ∧ G3 · G0 = 시험이 COMPLETED · ExitCode 0:0 · 마지막 thermo step = 기대 끝 (S0 + 시험 run) · 그 뒤 Loop time · ERROR 0.
 #   G3 = 원 로그의 비교 구간 (S0, 끝] 정규 줄이 시험에 하나라도 없으면 실패 (결손) — 원 로그에 그 구간 줄이 없을 때만 생략.
@@ -232,6 +235,88 @@ def check(main, res, ckpt, s0, W):
     return probs, notes
 
 
+def deck_spans(path):
+    # deck() 와 같은 규칙으로 명령을 만들고, 명령마다 그 명령을 이룬 원 줄 번호 (처음 · 끝) 를 함께 낸다
+    res, buf, b0 = [], '', None
+    with open(path, encoding='utf-8', errors='replace') as f:
+        raw = f.read().split('\n')
+    for i, line in enumerate(raw):
+        r = line.rstrip()
+        if b0 is None:
+            b0 = i
+        if r.endswith('&'):
+            buf += r[:-1] + ' '
+            continue
+        s = ' '.join(uncomment(buf + r).split())
+        buf = ''
+        if s:
+            res.append((s, b0, i))
+        b0 = None
+    return res, raw
+
+
+def fix_run(main, res, ckpt, s0, W):
+    # 10-27 ibb kg50_d2_b50 r4 (1저자 Q1 (가) "권고대로 해줘"): dem_restart.py 의 settling 잔여 = 본 덱 그 run 길이 − 체크포인트 step
+    # (200000 − 20001 = 179999) 인데 본 덱 정착 run 은 삽입 run 1 뒤 step 1 에서 시작해 끝이 200001 → 재개 끝 200000 = 1 step 짧다.
+    # 고치는 꼴은 하나뿐: 정적 대조 문제가 그 '남은 step 다름' 하나 · 재개 덱 첫 긴 run 이 한 줄짜리 숫자 run (upto 없음) · 맞는 값 = 원래 + 1.
+    # 그 줄의 숫자만 바꾸고 (앞 공백 · 뒤 주석 그대로) 다시 읽어 명령이 그 하나만 다르고 정적 대조 문제 0 일 때만 바꾼다 (임시 파일 → os.replace).
+    # 그 밖 = 그대로 둔다 (뒤의 정적 대조가 거부).  종료 코드 0 = 고칠 것 없음 또는 고침 · 1 = 고치지 않음.
+    import shutil
+    s0 = int(s0)
+    probs, _ = check(main, res, ckpt, s0, W)
+    if not probs:
+        print('  · 첫 긴 run 고칠 것 없음 (정적 대조 통과)')
+        return 0
+    rem = [p for p in probs if p.startswith('남은 step 다름')]
+    if len(probs) != 1 or len(rem) != 1:
+        print('  · 첫 긴 run 그대로 — 정적 대조 문제 %d 개 (남은 step 다름 하나뿐일 때만 고친다)' % len(probs))
+        return 1
+    m = re.match(r'^남은 step 다름: 재개 끝 ([0-9]+) ↔ 본 덱 그 run 끝 ([0-9]+) \(\[run ([0-9]+)\]\)$', rem[0])
+    if not m:
+        print('  · 첫 긴 run 그대로 — 숫자 한 개짜리 run 이 아님 (upto · 다른 꼴): %s' % rem[0])
+        return 1
+    end, want, n0 = (int(x) for x in m.groups())
+    n1 = want - s0
+    if n1 != n0 + 1:
+        print('  · 첫 긴 run 그대로 — 차이 %+d step (dem_restart.py 의 1 step 짧음 꼴만 고친다)' % (n1 - n0))
+        return 1
+    R = deck(res)
+    ir = long_runs(R)[0]
+    spans, raw = deck_spans(res)
+    if [s for s, _, _ in spans] != R or spans[ir][0] != 'run %d' % n0 or spans[ir][1] != spans[ir][2]:
+        print('  · 첫 긴 run 그대로 — 그 run 이 원 줄 하나가 아님 (& 이어 붙이기 · 손으로 봐야 함)')
+        return 1
+    k = spans[ir][1]
+    with open(res, 'rb') as f:
+        rawb = f.read().split(b'\n')
+    try:
+        line = rawb[k].decode('utf-8')
+    except (IndexError, UnicodeDecodeError):
+        line = None
+    mm = re.match(r'^(\s*run\s+)([0-9]+)(\s*(#.*)?)$', line) if line is not None else None
+    if not mm or int(mm.group(2)) != n0 or len(rawb) != len(raw):
+        print('  · 첫 긴 run 그대로 — 원 줄을 못 읽음: [%s]' % raw[k])
+        return 1
+    rawb[k] = (mm.group(1) + str(n1) + mm.group(3)).encode('utf-8')
+    t = res + '.fixrun'
+    try:
+        with open(t, 'wb') as f:
+            f.write(b'\n'.join(rawb))
+        R2 = deck(t)
+        p2, _ = check(main, t, ckpt, s0, W)
+        if len(R2) != len(R) or [i for i in range(len(R)) if R[i] != R2[i]] != [ir] or R2[ir] != 'run %d' % n1 or p2:
+            print('  · 첫 긴 run 그대로 — 고친 덱 다시 대조 실패 (문제 %d)' % len(p2))
+            return 1
+        shutil.copystat(res, t)
+        os.replace(t, res)
+    finally:
+        if os.path.exists(t):
+            os.remove(t)
+    print('  · 재개 덱 첫 긴 run 고침 (1저자 10-27 Q1 (가)): [run %d] → [run %d] — 본 덱 그 run 끝 %d − 체크포인트 step %d '
+          '(dem_restart.py 잔여는 끝 %d = 1 step 짧음 · 원 줄 %d · 다시 대조 통과)' % (n0, n1, want, s0, end, k + 1))
+    return 0
+
+
 def strip_comments(W):
     # -c (10-27 ibb · dem_restart.py 덱 검사가 머리 주석의 다른 케이스 이름도 거부): 작업 폴더 W 의 맨 위 input*.liggghts 에서
     # 줄 전체 주석 (첫 공백 아닌 글자 '#') 만 뺀다 — 인라인 주석 · 빈 줄 · 나머지 바이트 (줄 끝 포함) 그대로.
@@ -310,6 +395,12 @@ def strip_comments(W):
 
 if len(sys.argv) == 3 and sys.argv[1] == '--strip-comments':
     sys.exit(strip_comments(sys.argv[2]))
+if len(sys.argv) == 7 and sys.argv[1] == '--fix-run':
+    try:
+        sys.exit(fix_run(*sys.argv[2:7]))
+    except Exception as e:
+        print('  · 첫 긴 run 그대로 — 도구 오류: %s: %s' % (type(e).__name__, e))
+        sys.exit(1)
 try:
     main, res, ckpt, s0, W = sys.argv[1:6]
     probs, notes = check(main, res, ckpt, int(s0), W)
@@ -378,6 +469,9 @@ for C in $CASES; do
   echo "  계획: $P"
   echo "  read_restart $RR (step $S0) · 뒤 덤프 $(ls $O | wc -l)개 → ${O##*/} · 템플릿 재선언: $TP"
   echo "$TP" > $W/tp_$SFX.txt
+  # 10-27 (1저자 Q1 (가)): dem_restart.py 의 settling 잔여가 1 step 짧은 꼴 (본 덱 정착 run 이 삽입 run 1 뒤 step 1 에서 시작) 만
+  # 재개 덱 첫 긴 run 한 줄을 본 덱 일정으로 고친다 — 시험 덱은 고친 덱에서 만들고, 아래 정적 대조가 처음부터 다시 판정한다
+  deckcheck --fix-run $W/input_$C.liggghts $D "$RR" "${S0:-0}" $W > $W/fixrun_$SFX.txt 2>&1; cat $W/fixrun_$SFX.txt
   sed -i "s/^#SBATCH -n .*/#SBATCH -n $NP/; s/mpirun \(--oversubscribe \)\{0,1\}\(--bind-to none \)\{0,1\}-np [0-9]*/mpirun --oversubscribe --bind-to none -np $NP/" $RN
   awk -v t=$TS '{if($1=="run" && $2+0>1){n=$2+0; if(n>t)n=t; print "run " n; exit} print}' $D > $W/input_${C}_${SFX}t.liggghts
   sed -e "s/${C}_$SFX/${C}_${SFX}t/g" -e "s/^#SBATCH --time=.*/#SBATCH --time=01:00:00/" $RN > $W/run_${C}_${SFX}t.sh
@@ -448,6 +542,7 @@ for C in $CASES; do
     [ $STRIP = 1 ] && { echo "- 주석 줄 빼기 (-c · 작업 폴더 덱만): $(tail -1 $W/strip_$SFX.txt | sed 's/^ *주석 줄 빼기 (-c): //') (strip_$SFX.txt)"; sed -n 's/^  · /    /p' $W/strip_$SFX.txt; }
     echo "- 재개: $M 체크포인트 \`read_restart $RR\` (step $S0) · 덱 input_${C}_$SFX.liggghts · 러너 run_${C}_$SFX.sh (#SBATCH -n $NP · mpirun --oversubscribe --bind-to none -np $NP)"
     echo "- 템플릿 재선언: $(cat $W/tp_$SFX.txt)"
+    echo "- 첫 긴 run (10-27 · 1저자 Q1 (가)): $(tail -1 $W/fixrun_$SFX.txt 2>/dev/null | sed 's/^ *· //') (fixrun_$SFX.txt)"
     echo "- 재개 덱 정적 대조: $(tail -1 $W/deckcheck_$SFX.txt | sed 's/^ *재개 덱 정적 대조: //') (deckcheck_$SFX.txt)"
     echo "- 시험: job $J · input_${C}_${SFX}t.liggghts · ${T##*/} · ERROR $E"
     echo "- G0 시험 정상 종료: $([ $G0 = 1 ] && echo 통과 || echo 실패) — 상태 ${ST:-없음} · ExitCode ${EC:-없음} · 마지막 step $LTS (기대 $EXP) · Loop time $([ "$LPL" -gt "$LTL" ] && echo '끝 step 뒤에 있음' || echo 없음) · 조회 실패 $QF 번 · $([ $TO = 1 ] && echo '끝 상태 못 얻음 (대기 시간 초과 · 조회 실패)' || echo '끝 상태 얻음')"
