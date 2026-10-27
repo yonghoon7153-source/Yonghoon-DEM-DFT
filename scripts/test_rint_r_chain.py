@@ -181,6 +181,15 @@ def hit(do):
 if hit('rc2'):
     print('[fake] ABORT (fault rc2)')
     sys.exit(2)
+#  ★ 10-27 묶음 C2b (Q9 개정 4 R4-02 ⓑ · Codex ②) — 고아 자식: 러너보다 오래 살아 늦게 파일을 쓰는 프로세스 (같은 그룹 · setsid = 그룹 밖 ·
+#    env 그대로 = 사슬의 그룹 표지 RINT_RUN_TOKEN 을 물려받는다) · 사슬이 그룹을 죽이면 그 파일은 생기지 않아야 한다
+_orph = hit('orphan')
+if _orph:
+    import subprocess as _sp
+    _code = ('import os, time\n' + ('os.setsid()\n' if _orph.get('setsid') else '')
+             + 'time.sleep(%r)\nopen(%r, "w").write("late")\n' % (float(_orph.get('s', 3.0)), os.path.join(WD, _orph.get('file', 'late.txt'))))
+    _sp.Popen([sys.executable, '-I', '-S', '-c', _code], stdout=_sp.DEVNULL, stderr=_sp.DEVNULL, close_fds=True)
+    jl('orphans.jsonl', {'file': _orph.get('file', 'late.txt'), 'n': n})
 if hit('sleep'):
     time.sleep(float(hit('sleep').get('s', 1.0)))
 is_dbe = 'DBE' in kit
@@ -514,7 +523,17 @@ for i in idx:
                 ev_['census'].update(sv_rule()['ev_census'])
         st = {'sigma_e_eff_S_cm': si, 'cg_info': 0, 'unconverged': False, 'cg_resid': 3e-13, 'n_dof': 1234, 'vox_um': vox,
               'status': 'complete', 'manifest': man_i, 'conv_cert': cm, 'cg_iters': 321}
-    json.dump({'mpm_metrics': {'step3': st}}, open(os.path.join(out, 'p2_%s_sph_fa_cj%s_c%s_a%d.json' % (kit[4:], tag, c, i)), 'w'))
+    _an = 'p2_%s_sph_fa_cj%s_c%s_a%d.json' % (kit[4:], tag, c, i)
+    if E.get('P2_ATTEMPT', '') == '1':
+        #  ★ 10-27 묶음 C2b — 러너 시도 꼴 흉내 (진짜 = `scripts/rint_first_result.py` 감싸개 · 첫 σ 직후 · `.unchecked/<팔>.first_result.json`)
+        os.makedirs(os.path.join(out, '.unchecked'), exist_ok=True)
+        if not hit('nomark'):
+            open(os.path.join(out, '.unchecked', _an + '.first_result.json'), 'w').write('{"schema": "rint-first-result-v1", "fake": true}\n')
+        if hit('unchecked_fail'):                  # 검사 실패 꼴 — payload 가 .unchecked/ 에 남고 러너 rc 1 (옮기지 않는다)
+            json.dump({'mpm_metrics': {'step3': st}}, open(os.path.join(out, '.unchecked', _an), 'w'))
+            print('[fake] ABORT — 검사 실패 (fault unchecked_fail) · payload 를 .unchecked/ 에 남긴다')
+            sys.exit(1)
+    json.dump({'mpm_metrics': {'step3': st}}, open(os.path.join(out, _an), 'w'))
     jl('ledger.jsonl', {'sigma': (si if not REASON else 0.0)})
 cj_req = {'R_j_ohm': Rv, 'len_law': E['CJUNC_LEN_LAW'], 'unreg_law': unreg, 's_min_um': s_min, 'tol_ff_um': tol_ff, 'ptfe_jlaw': law}
 if lim:
@@ -6648,6 +6667,312 @@ def t_OR06():
             and [x[0] for x in seq[:24]] == ['corner'] * 12 + ['origin'] * 12
             and len(((p['sum'] or {}).get('checks') or {}).get('r_monotone_early') or []) == 4,
             (v['rc'], (p['sum'] or {}).get('status'), seq[24:27]))
+
+
+# ── ★ 10-27 묶음 C2b (Q9 설계 개정 4 Q2 · R4-02 ⓑ · Codex 회차 ① ② · 개정 5 ② · author 10-27 approved bundle C) 러너 프로세스 그룹 ──
+#    사슬 = 러너를 새 세션 (프로세스 그룹) 으로 · 런마다 그룹 표지 (env RINT_RUN_TOKEN) · 시작 · 끝 기록 (`<단계>/groups/<런>.launch|end.json`) ·
+#    멈출 때 (시간 초과 · 신호 · 예외) 와 러너가 끝난 뒤에도 그룹 전체를 죽이고 종료를 확인한 뒤에만 팔을 읽는다 · 사슬 부모가 죽으면 = `--stage
+#    recover` 가 확인 · 러너 env P2_ATTEMPT=1 (러너 = payload 를 시도 폴더 안 .unchecked/ 에 · 첫 풀이 끝 표지)
+def gr_records(out):
+    """단계 폴더의 그룹 기록 → {런 이름: (시작 기록, 끝 기록 | None)} (graph_src 아래 포함)."""
+    got = {}
+    for p in sorted(Path(out).rglob('groups/*.launch.json')):
+        nm = p.name[:-len('.launch.json')]
+        e = p.with_name(nm + '.end.json')
+        got[nm] = (json.loads(p.read_text(encoding='utf-8')), json.loads(e.read_text(encoding='utf-8')) if e.exists() else None)
+    return got
+
+
+def gr_alive(token):
+    """시험 쪽 독립 대조 — /proc 의 살아 있는 프로세스 (zombie 뺌) 중 environ 에 RINT_RUN_TOKEN=token 이 있는 pid 목록."""
+    out, needle = [], f'RINT_RUN_TOKEN={token}'.encode()
+    for e in os.listdir('/proc'):
+        if not e.isdigit():
+            continue
+        try:
+            st = Path('/proc', e, 'stat').read_bytes()
+            if st[st.rfind(b')') + 2:].split()[0] in (b'Z', b'X'):
+                continue
+            if needle in Path('/proc', e, 'environ').read_bytes().split(b'\0'):
+                out.append(int(e))
+        except (OSError, IndexError):
+            continue
+    return out
+
+
+def gr_wait_file(path, t_end):
+    while time.time() < t_end:
+        if Path(path).exists():
+            return True
+        time.sleep(0.05)
+    return Path(path).exists()
+
+
+@check('GR01', '★ 10-27 묶음 C2b (R4-02 ⓑ) 그룹 기록 — 주 사다리 P0 · 주 예측 (봉인 원천 런 포함) 의 런마다 groups/<런>.launch.json · .end.json (표지 32 hex · '
+               'pid = pgid (새 세션) · 호스트 칸 · 끝 = 확인 True · 원인 None · rc = 런 rc · by chain) · 러너 env P2_ATTEMPT=1 (런마다)')
+def t_GR01():
+    bad = []
+    for res in (s_main('P0'), s_main_predict()):
+        runs = [x['name'] for x in (res['sum'] or {}).get('runs') or []]
+        recs = gr_records(res['out'])
+        for nm in runs:
+            lr, er = recs.get(nm, (None, None))
+            ok = (isinstance(lr, dict) and isinstance(er, dict) and re.fullmatch(r'[0-9a-f]{32}', str(lr.get('token')))
+                  and isinstance(lr.get('pid'), int) and lr.get('pgid') == lr.get('pid') and isinstance(lr.get('host'), dict)
+                  and er.get('token') == lr.get('token') and er.get('confirmed') is True and er.get('cause') is None and er.get('rc') == 0
+                  and er.get('by') == 'chain')
+            if not ok:
+                bad.append((res['out'].name, nm, lr, er))
+        g = [nm for nm in recs if nm.startswith('G')]
+        if res is s_main_predict() and not g:
+            bad.append(('graph_src', '봉인 원천 런 그룹 기록 없음'))
+        if not all(e.get('P2_ATTEMPT') == '1' for e in env_log(res['world'])):
+            bad.append(('env', 'P2_ATTEMPT ≠ 1'))
+    return not bad, bad[:4]
+
+
+def gr_plan(tag, hours):
+    """시간 상한을 작게 봉인한 계획 (등록 사본 · 단계 2 보고 · 이 계획) → (계획 경로, 등록)."""
+    p, _sha, reg = plan_set(tag, exec_policy=exec_policy(max_hours=float(hours)))
+    return p, reg
+
+
+@check('GR02', '★ 10-27 묶음 C2b — 시간 초과 (바닥 런 30 s · 계획 상한 0.0005 h) + 그 런이 띄운 고아 (4 s 뒤 파일) → TIME_LIMIT · 끝 기록 원인 timeout · '
+               '확인 True · 사슬이 돌아온 뒤 표지 프로세스 0 · 고아의 늦은 파일 없음 (그룹 전체를 죽였다 · 옛 = bash 하나만 죽여 고아가 남았다)')
+def t_GR02():
+    def go():
+        p, reg = gr_plan('GR02', 0.0005)
+        t0 = time.time()
+        r = ladder('GR02', world('GR02', dict(PW, faults=[{'do': 'orphan', 's': 4.0, 'file': 'late_gr02.txt', 'match': {'rj': 'inf'}},
+                                                         {'do': 'sleep', 's': 30, 'match': {'rj': 'inf'}}])), plan=p, reg=reg,
+                   max_hours='0.0005')
+        rec = gr_records(r['out']).get('L01_floor', (None, None))
+        alive = gr_alive((rec[0] or {}).get('token')) if rec[0] else None
+        late = gr_wait_file(Path(r['world']).parent / 'late_gr02.txt', t0 + 5.5)
+        return r, rec, alive, late
+    r, (lr, er), alive, late = scen('GR02', go)
+    return (r['rc'] == 3 and stop_code(r) == 'TIME_LIMIT' and isinstance(er, dict) and er.get('cause') == 'timeout' and er.get('confirmed') is True
+            and alive == [] and late is False, (r['rc'], stop_code(r), er, alive, late))
+
+
+@check('GR03', '★ 10-27 묶음 C2b — 러너는 rc 0 으로 끝났는데 고아 자식이 남음 (바닥 런 · 2 s 뒤 파일) → 사슬이 팔을 읽기 전에 그 그룹을 죽인다 (끝 기록 left_after_exit ≥ 1 · '
+               '확인 True) · 사다리 CALIBRATED · 늦은 파일 없음')
+def t_GR03():
+    def go():
+        t0 = time.time()
+        r = ladder('GR03', world('GR03', dict(PW, faults=[{'do': 'orphan', 's': 2.0, 'file': 'late_gr03.txt', 'match': {'rj': 'inf'}}])))
+        late = gr_wait_file(Path(r['world']).parent / 'late_gr03.txt', t0 + 3.5)
+        return r, gr_records(r['out']).get('L01_floor', (None, None)), late
+    r, (lr, er), late = scen('GR03', go)
+    return ((r['sum'] or {}).get('status') == 'CALIBRATED' and isinstance(er, dict) and er.get('confirmed') is True and er.get('cause') is None
+            and (er.get('left_after_exit') or 0) >= 1 and late is False, ((r['sum'] or {}).get('status'), er, late))
+
+
+@check('GR04', '★ 10-27 묶음 C2b — 고아가 setsid 로 그룹을 벗어남 (pgid 다름 · env 표지 그대로) → 표지로 찾아 죽인다 (left_after_exit ≥ 1 · 확인 True · 늦은 파일 없음)')
+def t_GR04():
+    def go():
+        t0 = time.time()
+        r = ladder('GR04', world('GR04', dict(PW, faults=[{'do': 'orphan', 's': 2.0, 'setsid': True, 'file': 'late_gr04.txt',
+                                                         'match': {'rj': 'inf'}}])))
+        late = gr_wait_file(Path(r['world']).parent / 'late_gr04.txt', t0 + 3.5)
+        return r, gr_records(r['out']).get('L01_floor', (None, None)), late
+    r, (lr, er), late = scen('GR04', go)
+    return ((r['sum'] or {}).get('status') == 'CALIBRATED' and isinstance(er, dict) and er.get('confirmed') is True
+            and (er.get('left_after_exit') or 0) >= 1 and late is False, ((r['sum'] or {}).get('status'), er, late))
+
+
+@check('GR05', '★ 10-27 묶음 C2b — 사슬이 기다리는 중 SIGTERM (바닥 런 6 s · 고아 3 s 뒤 파일) → 그룹을 죽이고 확인 · 사다리 STOPPED (RUNNER_RC · 사유 SIGTERM) · '
+               '끝 기록 원인 signal · 확인 True · 늦은 파일 없음 · 사슬이 SIGTERM 처리기를 되돌린다 (시험의 지킴 처리기가 불리지 않음)')
+def t_GR05():
+    import signal as _sig
+    import threading
+
+    def go():
+        hit_ = []
+
+        def guard(signum, frame):                          # 사슬이 처리기를 안 걸면 (고치기 전 판) 시험 프로세스가 죽지 않게 받아 둔다
+            hit_.append(signum)
+        old = _sig.signal(_sig.SIGTERM, guard)
+        lp = Path(TD) / 'runs' / 'GR05' / 'groups' / 'L01_floor.launch.json'
+
+        def fire():                                        # 바닥 런 시작 기록 (pid) 이 생기면 0.3 s 뒤 · 없으면 (고치기 전 판) 8 s 뒤
+            t_end = time.time() + 8.0
+            while time.time() < t_end:
+                try:
+                    if lp.exists() and json.loads(lp.read_text(encoding='utf-8')).get('pid'):
+                        break
+                except ValueError:
+                    pass
+                time.sleep(0.05)
+            time.sleep(0.3)
+            os.kill(os.getpid(), _sig.SIGTERM)
+        try:
+            t0 = time.time()
+            th = threading.Thread(target=fire)
+            th.start()
+            r = ladder('GR05', world('GR05', dict(PW, faults=[{'do': 'orphan', 's': 3.0, 'file': 'late_gr05.txt', 'match': {'rj': 'inf'}},
+                                                             {'do': 'sleep', 's': 6, 'match': {'rj': 'inf'}}])))
+            th.join()
+            restored = _sig.getsignal(_sig.SIGTERM) is guard
+        finally:
+            _sig.signal(_sig.SIGTERM, old)
+        late = gr_wait_file(Path(r['world']).parent / 'late_gr05.txt', t0 + 4.5)
+        return r, gr_records(r['out']).get('L01_floor', (None, None)), late, hit_, restored
+    r, (lr, er), late, hit_, restored = scen('GR05', go)
+    return (r['rc'] == 3 and (r['sum'] or {}).get('status') == 'STOPPED' and stop_code(r) == 'RUNNER_RC' and 'SIGTERM' in y_why(r)
+            and isinstance(er, dict) and er.get('cause') == 'signal' and er.get('confirmed') is True and late is False and not hit_ and restored,
+            (r['rc'], stop_code(r), y_why(r)[-120:], er, late, hit_, restored))
+
+
+GR_DRIVER = r'''
+import json, os, sys
+from pathlib import Path
+cfg = json.load(open(sys.argv[1], encoding='utf-8'))
+sys.path.insert(0, cfg['scripts'])
+import rint_r_chain as RR
+RR.HERE = Path(cfg['here'])
+os.environ.update(cfg['env'])
+sys.exit(RR.main(cfg['argv']))
+'''
+
+
+def gr_spawn_chain(tag, argv, wpath):
+    """사슬을 따로 프로세스로 (부모 SIGKILL 시험) → Popen.  env = 이 시험 프로세스 env + 가짜 세계 (call() 과 같은 꼴 · SV 원천 없음 = 사다리)."""
+    drv = Path(TD) / 'gr_driver.py'
+    if not drv.exists():
+        drv.write_text(GR_DRIVER, encoding='utf-8')
+    cfg = Path(TD) / f'{tag}_cfg.json'
+    cfg.write_text(json.dumps({'scripts': str(SCRIPTS), 'here': str(RR.HERE), 'env': {'FAKE_WORLD': str(wpath)},
+                               'argv': [str(a) for a in argv]}), encoding='utf-8')
+    log = open(Path(TD) / f'{tag}_chain.log', 'w', encoding='utf-8')
+    import subprocess as _sp
+    return _sp.Popen([sys.executable, '-I', str(drv), str(cfg)], stdout=log, stderr=_sp.STDOUT, start_new_session=True)
+
+
+@check('GR06', '★ 10-27 묶음 C2b (Codex ② · 개정 5 ②) 사슬 부모 SIGKILL — 바닥 런 (30 s · 고아 6 s 뒤 파일) 도중 사슬 프로세스를 SIGKILL → 러너 그룹은 살아 있다 '
+               '(끝 기록 없음 · 표지 프로세스 > 0 = "부모 사망 + 지금 표지 없음" 은 종료 증거가 아니다) · --stage recover → 그룹을 죽이고 확인 (끝 기록 by recover · '
+               '확인 True · 원인 parent_dead · rc 0) · 표지 프로세스 0 · 늦은 파일 없음')
+def t_GR06():
+    import signal as _sig
+
+    def go():
+        out = Path(TD) / 'runs' / 'GR06'
+        w = world('GR06', dict(PW, faults=[{'do': 'orphan', 's': 6.0, 'file': 'late_gr06.txt', 'match': {'rj': 'inf'}},
+                                           {'do': 'sleep', 's': 30, 'match': {'rj': 'inf'}}]))
+        t0 = time.time()
+        pr = gr_spawn_chain('GR06', ladder_argv(out), w)
+        lp = out / 'groups' / 'L01_floor.launch.json'
+        tok = None
+        while time.time() < t0 + 20 and tok is None:
+            if lp.exists():
+                try:
+                    j = json.loads(lp.read_text(encoding='utf-8'))
+                    tok = j.get('token') if j.get('pid') else None
+                except ValueError:
+                    pass
+            time.sleep(0.05)
+        time.sleep(0.5)
+        os.kill(pr.pid, _sig.SIGKILL)
+        pr.wait()
+        before = gr_alive(tok) if tok else None
+        end_before = (out / 'groups' / 'L01_floor.end.json').exists()
+        rc, so = call(['--stage', 'recover', '--out', str(out)], w)
+        rec = gr_records(out).get('L01_floor', (None, None))
+        after = gr_alive(tok) if tok else None
+        late = gr_wait_file(Path(w).parent / 'late_gr06.txt', t0 + 7.5)
+        return tok, before, end_before, rc, so, rec, after, late
+    tok, before, end_before, rc, so, (lr, er), after, late = scen('GR06', go)
+    return (tok is not None and bool(before) and end_before is False and rc == 0 and isinstance(er, dict) and er.get('by') == 'recover'
+            and er.get('confirmed') is True and er.get('cause') == 'parent_dead' and after == [] and late is False,
+            (tok, before, end_before, rc, so[-300:], er, after, late))
+
+
+def gr_fake_launch(tag, host=None, token=None):
+    """끝 기록 없는 시작 기록 하나 (단계 폴더 모양) → (단계 폴더, 표지)."""
+    out = Path(TD) / 'runs' / tag
+    g = out / 'groups'
+    g.mkdir(parents=True)
+    tok = token or hashlib.sha256(tag.encode()).hexdigest()[:32]
+    rec = {'schema': 'rint-r-group-v1', 'name': 'L01_floor', 'token': tok, 'pid': 999999, 'pgid': 999999,
+           'host': host if host is not None else RR.host_ident(), 'started_utc': '2026-10-27T00:00:00Z', 'by': 'chain', 'chain_pid': 1}
+    (g / 'L01_floor.launch.json').write_text(json.dumps(rec), encoding='utf-8')
+    return out, tok
+
+
+@check('GR07', '★ 10-27 묶음 C2b — recover 가 종료를 확인 못 함 (표지 프로세스가 늘 살아 있는 꼴 · 대기 상한 0.2 s 로 줄여) → 끝 기록 확인 False · rc 3 · 화면에 '
+               '미확인 (다음 시도 채택을 막는 근거 · Codex ②)')
+def t_GR07():
+    if not callable(getattr(RR, 'host_ident', None)):
+        return False, '사슬에 host_ident (그룹 기록 호스트 칸) 가 없다'
+
+    def go():
+        out, tok = gr_fake_launch('GR07')
+        old = (RR.group_members, RR.GROUP_GONE_WAIT_S)
+        RR.group_members, RR.GROUP_GONE_WAIT_S = (lambda token: [999998]), 0.2
+        try:
+            rc, so = call(['--stage', 'recover', '--out', str(out)])
+        finally:
+            RR.group_members, RR.GROUP_GONE_WAIT_S = old
+        return rc, so, gr_records(out).get('L01_floor', (None, None))
+    rc, so, (lr, er) = scen('GR07', go)
+    return (rc == 3 and isinstance(er, dict) and er.get('confirmed') is False and er.get('by') == 'recover' and '미확인' in so,
+            (rc, er, so[-200:]))
+
+
+@check('GR08', '★ 10-27 묶음 C2b — recover 의 호스트 규칙: 시작 기록의 machine_id 다름 (다른 기계) → 미확인 (rc 3) · 같은 기계 · boot_id 다름 (재부팅 = 그 부팅의 '
+               '프로세스는 없다) → 확인 True · 같은 기계 · 같은 부팅 · pid 이름공간 다름 (컨테이너 재시작 · 다른 컨테이너) → 미확인 · machine_id 모름 + boot_id '
+               '다름 → 미확인 (재부팅과 다른 기계를 못 가른다)')
+def t_GR08():
+    if not callable(getattr(RR, 'host_ident', None)):
+        return False, '사슬에 host_ident 가 없다'
+    me = {'machine_id': 'm' * 32, 'boot_id': 'b' * 36, 'pidns': 'pid:[4026531836]'}
+    cases = (('other_machine', dict(me, machine_id='x' * 32), 3, False), ('reboot', dict(me, boot_id='c' * 36), 0, True),
+             ('other_pidns', dict(me, pidns='pid:[1]'), 3, False), ('unknown_machine_reboot', dict(me, machine_id=None, boot_id='c' * 36), 3, False))
+    out = []
+    old = RR.host_ident
+    try:
+        RR.host_ident = lambda: dict(me, machine_id=me['machine_id'])
+        for nm, host, want_rc, want_conf in cases:
+            if nm == 'unknown_machine_reboot':
+                RR.host_ident = lambda: dict(me, machine_id=None)
+            d, _tok = gr_fake_launch(f'GR08_{nm}', host=host)
+            rc, so = call(['--stage', 'recover', '--out', str(d)])
+            er = gr_records(d).get('L01_floor', (None, None))[1] or {}
+            out.append((nm, rc == want_rc and er.get('confirmed') is want_conf, rc, er.get('confirmed'), er.get('why')))
+    finally:
+        RR.host_ident = old
+    return all(x[1] for x in out), [x for x in out if not x[1]]
+
+
+@check('GR09', '★ 10-27 묶음 C2b — recover 는 끝 기록이 있는 런을 다시 쓰지 않는다 (주 사다리 P0 폴더 · 끝 기록 바이트 그대로 · rc 0) · 그룹 기록 없는 폴더 = rc 0')
+def t_GR09():
+    out = s_main('P0')['out']
+    before = {p.name: p.read_bytes() for p in Path(out).rglob('groups/*.end.json')}
+    rc, so = call(['--stage', 'recover', '--out', str(out)])
+    after = {p.name: p.read_bytes() for p in Path(out).rglob('groups/*.end.json')}
+    empty = Path(TD) / 'runs' / 'GR09_empty'
+    empty.mkdir(parents=True, exist_ok=True)
+    rc2, so2 = call(['--stage', 'recover', '--out', str(empty)])
+    return rc == 0 and bool(before) and before == after and rc2 == 0, (rc, len(before), before == after, rc2, so[-160:])
+
+
+@check('GR10', '★ 10-27 묶음 C2b — 사슬 안에서 그룹 종료를 확인 못 함 (표지 프로세스가 늘 살아 있는 꼴 · 대기 상한 0.2 s) → 그 런의 팔을 읽지 않고 멈춤 GROUP_UNCONFIRMED '
+               '(사다리 STOPPED · 끝 기록 확인 False)')
+def t_GR10():
+    if not hasattr(RR, 'group_members'):
+        return False, '사슬에 group_members (그룹 종료 확인) 가 없다'
+
+    def go():
+        old = (RR.group_members, RR.GROUP_GONE_WAIT_S)
+        RR.group_members, RR.GROUP_GONE_WAIT_S = (lambda token: [999997]), 0.2
+        try:
+            r = ladder('GR10', world('GR10'))
+        finally:
+            RR.group_members, RR.GROUP_GONE_WAIT_S = old
+        return r, gr_records(r['out']).get('L01_floor', (None, None))
+    r, (lr, er) = scen('GR10', go)
+    return (r['rc'] == 3 and (r['sum'] or {}).get('status') == 'STOPPED' and stop_code(r) == 'GROUP_UNCONFIRMED' and isinstance(er, dict)
+            and er.get('confirmed') is False and 'GROUP_UNCONFIRMED' in getattr(RR, 'STOPS', {}), (r['rc'], stop_code(r), er))
 
 
 def doc_tool_commands(path, tool):

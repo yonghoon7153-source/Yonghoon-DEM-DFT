@@ -90,6 +90,17 @@ case "${1:-}" in
       _o=""; _n=0; for _a in "$@"; do if [ "$_n" = 1 ]; then _o="$_a"; _n=0; fi; [ "$_a" = "--out" ] && _n=1; done
       printf '%s' "$SHIM_PAYLOAD_GARBAGE" > "$_o"; exit 0
     fi;;
+  */rint_first_result.py)
+    #  ★ 10-27 묶음 C2b — 러너 시도 꼴 (P2_ATTEMPT=1) 의 감싸개 `rint_first_result.py <표지> <payload> <payload 인자 …>` — payload argv (셋째부터) 를
+    #    payload 줄과 같은 자리에 · 표지 경로 따로 · 실패 · 꼴 틀린 JSON 꼴은 payload 줄과 같게 · SHIM_DELAY_DRIVER = 시험 지연 구동기 (생산 코드에 지연 없음)
+    printf '%s\0' "${@:3}" > "$SHIM_LOG/payload_argv.$$"
+    printf '%s' "$2" > "$SHIM_LOG/wrapper_mark.$$"
+    if [ -n "${SHIM_PAYLOAD_EXIT:-}" ]; then exit "$SHIM_PAYLOAD_EXIT"; fi
+    if [ -n "${SHIM_PAYLOAD_GARBAGE:-}" ]; then
+      _o=""; _n=0; for _a in "$@"; do if [ "$_n" = 1 ]; then _o="$_a"; _n=0; fi; [ "$_a" = "--out" ] && _n=1; done
+      printf '%s' "$SHIM_PAYLOAD_GARBAGE" > "$_o"; exit 0
+    fi
+    if [ -n "${SHIM_DELAY_DRIVER:-}" ]; then exec "__REAL__" "$SHIM_DELAY_DRIVER" "$@"; fi;;
 esac
 exec "__REAL__" "$@"
 '''
@@ -161,7 +172,7 @@ def run_runner(ws, env_over=None, runner=None, payload_exit=None, timeout=1200, 
         env['SHIM_PAYLOAD_EXIT'] = str(payload_exit)
     if payload_garbage is not None:
         env['SHIM_PAYLOAD_GARBAGE'] = str(payload_garbage)
-    for f in glob.glob(os.path.join(ws, '_shim', 'payload_argv.*')):    # 이 호출의 argv 만 본다
+    for f in glob.glob(os.path.join(ws, '_shim', 'payload_argv.*')) + glob.glob(os.path.join(ws, '_shim', 'wrapper_mark.*')):   # 이 호출만
         os.remove(f)
     before = set(glob.glob(os.path.join(ws, 'prereg_v2_*')))
     p = subprocess.run(['bash', runner or RUNNER], cwd=ws, env=env, capture_output=True, text=True, encoding='utf-8',
@@ -749,6 +760,53 @@ def t_graph_only():
         pg['_rc'] == 0 and pg.get('NG_ATAG') == str(pb.get('NG_ATAG', '')) + '_cjgo'
         and str(pg.get('NG_FLAG', '')).count('--step3-cjunc-graph-only') == 1 and pg.get('NG_DECL') == pb.get('NG_DECL')
         and bad_view is not None, (pb.get('NG_ATAG'), pg.get('NG_ATAG'), bad_view, pg['_log'][-200:]))
+
+
+# ═════════════════════════ N12 — 시도 꼴 (★ 10-27 묶음 C2b · Q9 개정 4 Q2 · R4-02 ⓐ ⓒ · author 10-27 approved bundle C) ═════════════════════════
+@case('N12 시도 꼴 (P2_ATTEMPT=1) — payload --out = OUTDIR/.unchecked/<팔> · 감싸개 = 첫 풀이 끝 표지 · 검사 통과 뒤 OUTDIR · 실패본 = .unchecked/ · '
+      '킷 런 폴더에 payload 없음 · OUTDIR 글자 · 킷 payload 줄 꼴 · 값 거부')
+def t_attempt():
+    ws = make_ws('n12')
+    od = os.path.join(ws, 'att_outdir_arm1')
+    r = run_runner(ws, dict(CJ_RT_ENV, P2_ATTEMPT='1', OUTDIR=od))
+    unc = os.path.join(od, '.unchecked')
+    marks = sorted(os.path.basename(x) for x in glob.glob(os.path.join(unc, '*.first_result.json')))
+    left = sorted(os.path.basename(x) for x in glob.glob(os.path.join(unc, 'p2_*')) if not x.endswith('.first_result.json'))
+    kitp = glob.glob(os.path.join(ws, 'kit_*', 'run_1', 'p2_*.json*'))
+    wm = sorted(open(f, encoding='utf-8').read() for f in glob.glob(os.path.join(ws, '_shim', 'wrapper_mark.*')))
+    outs = sorted(r.argv)
+    mk = [json.load(open(os.path.join(unc, m), encoding='utf-8')) for m in marks]
+    chk('N12a rc 0 · 팔 둘 OUTDIR · payload --out = OUTDIR/.unchecked/<팔> (절대) · 감싸개 표지 자리 = 그 팔 + .first_result.json · 표지 둘 (팔마다 · 진짜 '
+        'payload 의 첫 σ 직후 · schema rint-first-result-v1 · σ 칸 없음) · .unchecked/ 에 payload 없음 (검사 뒤 옮김) · 킷 런 폴더에 payload 없음',
+        r.rc == 0 and len(r.arms) == 2 and outs == sorted(os.path.join(unc, a) for a in r.arms)
+        and wm == sorted(o + '.first_result.json' for o in outs) and marks == sorted(a + '.first_result.json' for a in r.arms) and left == []
+        and kitp == [] and all(m.get('schema') == 'rint-first-result-v1' and m.get('kind') in ('cg_solution', 'solve_return')
+                               and not any('sigma' in k for k in m) for m in mk),
+        (r.rc, r.arms, outs, wm, marks, left, kitp, mk, r.log[-500:]))
+    od2 = os.path.join(ws, 'att2_outdir_arm1')
+    rb = run_runner(ws, dict(CJ_RT_ENV, P2_ATTEMPT='1', OUTDIR=od2), payload_garbage='{"mpm_metrics": {}}')
+    bad = glob.glob(os.path.join(od2, '.unchecked', 'p2_*.json'))
+    chk('N12b 검사 실패 (payload 가 꼴 틀린 JSON 을 rc 0) → 러너 rc ≠ 0 · OUTDIR 팔 없음 · 그 payload = OUTDIR/.unchecked/ (시도 폴더 안 · 옛 = 킷 런 '
+        '폴더 $RUN) · 킷 런 폴더에 payload 없음',
+        rb.rc != 0 and rb.arms == [] and len(bad) == 1 and glob.glob(os.path.join(ws, 'kit_*', 'run_1', 'p2_*.json*')) == [],
+        (rb.rc, rb.arms, bad, glob.glob(os.path.join(ws, 'kit_*', 'run_1', 'p2_*')), rb.log[-400:]))
+    od3 = os.path.join(ws, 'att 3_arm1')
+    r3 = run_runner(ws, dict(CJ_RT_ENV, P2_ATTEMPT='1', OUTDIR=od3))
+    chk('N12c P2_ATTEMPT 의 OUTDIR 에 허용 밖 글자 (띄어쓰기) → ABORT · payload 미호출 (생성 스크립트에 박히는 경로)',
+        r3.rc != 0 and 'P2_ATTEMPT' in r3.log and not r3.argv, (r3.rc, r3.log[-300:]))
+    for nm, val in (('yes', 'yes'), ('0', '0'), (' 1', ' 1')):
+        rv = run_runner(ws, dict(CJ_RT_ENV, P2_ATTEMPT=val, OUTDIR=os.path.join(ws, f'att_v{nm.strip()}_arm1')))
+        chk(f'N12d P2_ATTEMPT 값 {val!r} (1 · 빈 값 밖) → rc 2 · ABORT · payload 미호출', rv.rc == 2 and 'P2_ATTEMPT' in rv.log and not rv.argv,
+            (rv.rc, rv.log[-200:]))
+    ws5 = make_ws('n12e')
+    for kit in ('kit_SBE', 'kit_DBE'):
+        kp = os.path.join(ws5, kit, 'run_mpm.sh')
+        open(kp, 'w', encoding='utf-8').write(KIT_SH.replace('python3 "$SCR/mpm_webapp_payload.py"', 'python3 $SCR/mpm_webapp_payload.py'))
+    r5 = run_runner(ws5, dict(CJ_RT_ENV, P2_ATTEMPT='1', OUTDIR=os.path.join(ws5, 'att5_arm1')))
+    r6 = run_runner(ws5, dict(CJ_RT_ENV, OUTDIR=os.path.join(ws5, 'off6_arm1')))
+    chk('N12e 킷 payload 줄이 `python3 "$SCR/mpm_webapp_payload.py"` 꼴이 아님 (따옴표 없음) → 시도 꼴 = ABORT (감싸개를 못 끼운다 · payload 미호출) · '
+        '끔 꼴 (P2_ATTEMPT 없음) = 그대로 돈다',
+        r5.rc != 0 and '감싸개' in r5.log and not r5.argv and r6.rc == 0 and len(r6.arms) == 2, (r5.rc, r5.log[-300:], r6.rc, r6.arms))
 
 
 # ═════════════════════════ NB — 끔 경로 (고치기 전 러너와 대조) ═════════════════════════

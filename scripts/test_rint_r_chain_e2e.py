@@ -44,6 +44,7 @@ import json
 import os
 import re
 import shutil
+import signal
 import subprocess
 import sys
 import tempfile
@@ -477,6 +478,23 @@ def t_ladder():
     chk('E1m 실물 사다리 — 요약 machine · 런 기록 machine (런마다) = --machine kgy · 계획 실행 정책 봉인 (v3)',
         chain_c1() and s.get('machine') == E2E_MACH and bool(runs) and all(x.get('machine') == E2E_MACH for x in runs),
         (chain_c1(), s.get('machine'), [x.get('machine') for x in runs][:4]))
+    #  ── ★ 10-27 묶음 C2b (R4-02 ⓐ ⓑ ⓒ) — 실물 그룹 기록 · 시도 꼴 (payload = 런 폴더 안 .unchecked/ → 검사 뒤 옮김 · 감싸개 표지 팔마다) ──
+    gbad, ubad = [], []
+    for x in runs:
+        lp, ep = (os.path.join(out, 'groups', f'{x["name"]}.{k}.json') for k in ('launch', 'end'))
+        er = json.load(open(ep, encoding='utf-8')) if os.path.exists(ep) else {}
+        if not (os.path.exists(lp) and er.get('confirmed') is True and er.get('cause') is None and er.get('rc') == 0):
+            gbad.append((x['name'], er))
+        unc = os.path.join(out, x['outdir'], '.unchecked')
+        marks = sorted(os.path.basename(m) for m in glob.glob(os.path.join(unc, '*.first_result.json')))
+        left = [m for m in glob.glob(os.path.join(unc, 'p2_*')) if not m.endswith('.first_result.json')]
+        want = sorted(a['file'] + '.first_result.json' for a in x.get('arms_read') or [])
+        if not (marks == want and not left):
+            ubad.append((x['name'], marks, want, left))
+    kitp = glob.glob(os.path.join(ws, SBE_KIT, '*', 'p2_*.json*'))
+    chk('E1g 실물 그룹 기록 — 런마다 groups/<런>.launch.json · .end.json (확인 True · 원인 None · rc 0)', bool(runs) and not gbad, gbad[:3])
+    chk('E1u 실물 시도 꼴 — 런마다 .unchecked/ 의 첫 풀이 끝 표지 = 그 런의 팔마다 하나 (진짜 감싸개 · 진짜 payload) · .unchecked/ 에 payload 남지 않음 · '
+        '킷 런 폴더에 payload 없음', bool(runs) and not ubad and kitp == [], (ubad[:3], kitp[:3]))
     if len(runs) < 2:
         return
     #  ── E2 극한 런 기록 ──
@@ -830,6 +848,322 @@ def t_graph_source():
         err_b is not None and '결합' in str(err_b) and 'fp_sid' in str(err_b), (err_b and str(err_b)[:300]))
 
 
+#  ═════════════ ★ 10-27 묶음 C2b (Q9 설계 개정 4 Q2 · R4-02 ⓐ ⓑ ⓒ · Codex 회차 ① ② · 개정 5 ② · author 10-27 approved bundle C) 실경로 ═════════════
+#  실제 러너 · 실제 payload (감싸개 `rint_first_result.py` 가 같은 프로세스에서 첫 σ 직후 표지) · 실제 프로세스 그룹 — 러너만 죽이기 · 시간 초과 · 사슬 부모
+#  죽이기 (따로 프로세스) + recover · 표지 앞 · 뒤.  지연 = 시험 심 (가짜 python3) 이 감싸개 대신 지연 구동기를 부른다 (생산 코드에 지연 없음).
+DELAY_DRIVER = r'''
+import os, runpy, sys, time
+mode, secs = os.environ.get('E2E_DELAY_MODE', ''), float(os.environ.get('E2E_DELAY_S', '0'))
+wrapper = sys.argv[1]
+sys.path.insert(0, os.path.dirname(os.path.abspath(wrapper)))
+import step3_sigma as S3
+if mode == 'before':                                 # 첫 CG 앞 (표지 앞)
+    _o = S3._solve_cg
+    def _slow(*a, **k):
+        time.sleep(secs)
+        return _o(*a, **k)
+    S3._solve_cg = _slow
+elif mode == 'after':                                # 증서 (주 CG · 표지 뒤)
+    import step3_conv_cert as CC
+    _c = CC.certify
+    def _slowc(*a, **k):
+        time.sleep(secs)
+        return _c(*a, **k)
+    CC.certify = _slowc
+sys.argv = [wrapper] + sys.argv[2:]
+runpy.run_path(wrapper, run_name='__main__')
+'''
+
+RUN_DRIVER = r'''
+import json, os, sys, time
+from pathlib import Path
+cfg = json.load(open(sys.argv[1], encoding='utf-8'))
+sys.path.insert(0, cfg['scripts'])
+import rint_r_chain as RR
+RR.HERE = Path(cfg['here'])
+RR.EXPECT_BACKEND = 'cpu'
+os.environ.clear()
+os.environ.update(cfg['env'])
+plan = json.load(open(cfg['plan'], encoding='utf-8'))
+rn = RR.Runner(cfg['runner'], cfg['ws'], cfg['out'], plan, None, time.time() + 1800, RR.RealContract(), prefix='K', machine='kgy')
+try:
+    rn.run(RR.SBE_KIT, 'floor', 'P0', '0', 'inf', 1)
+    print('RUN DONE')
+except RR.Stop as e:
+    print('STOP', e.code, e.cause)
+'''
+
+
+def e13_env(ws, mode, secs):
+    """사슬 프로세스 env (chain_env 꼴 · 따로 프로세스용 dict) + 지연 구동기."""
+    drv = os.path.join(TD, 'e13_delay_driver.py')
+    if not os.path.exists(drv):
+        with open(drv, 'w', encoding='utf-8') as f:
+            f.write(DELAY_DRIVER)
+    env = {k: v for k, v in os.environ.items() if not (k.startswith(TR._AXIS_PREFIX) or k in TR._AXIS_EXACT)}
+    env.update(PATH=TR.SHIMDIR + os.pathsep + os.environ.get('PATH', '/usr/bin:/bin'), MPM_NO_VENV='1', PYTHONDONTWRITEBYTECODE='1',
+               PYTHONUTF8='1', PYTHONIOENCODING='utf-8', SHIM_LOG=os.path.join(ws, '_shim'), SHIM_DELAY_DRIVER=drv,
+               E2E_DELAY_MODE=mode, E2E_DELAY_S=str(secs))
+    return env
+
+
+def e13_alive(token):
+    """시험 쪽 독립 대조 — 살아 있는 (zombie 뺌) 프로세스 중 environ 에 RINT_RUN_TOKEN=token."""
+    out, needle = [], f'RINT_RUN_TOKEN={token}'.encode()
+    for e in os.listdir('/proc'):
+        if not e.isdigit():
+            continue
+        try:
+            st = open(f'/proc/{e}/stat', 'rb').read()
+            if st[st.rfind(b')') + 2:].split()[0] in (b'Z', b'X'):
+                continue
+            if needle in open(f'/proc/{e}/environ', 'rb').read().split(b'\0'):
+                out.append(int(e))
+        except (OSError, IndexError):
+            continue
+    return out
+
+
+def e13_cmdlines(pids):
+    out = []
+    for p in pids:
+        try:
+            out.append(open(f'/proc/{p}/cmdline', 'rb').read().replace(b'\0', b' ').decode('utf-8', 'replace')[:160])
+        except OSError:
+            pass
+    return out
+
+
+def e13_launch(out, name, t_end):
+    lp = os.path.join(out, 'groups', f'{name}.launch.json')
+    while time.time() < t_end:
+        if os.path.exists(lp):
+            try:
+                j = json.load(open(lp, encoding='utf-8'))
+                if j.get('pid'):
+                    return j
+            except ValueError:
+                pass
+        time.sleep(0.05)
+    return None
+
+
+def e13_files(out):
+    """런 폴더 (· .unchecked) 의 팔 payload · 표지 이름 (시도 폴더 판정의 입력과 같은 꼴)."""
+    got = []
+    for p in sorted(glob.glob(os.path.join(out, '**', '*'), recursive=True) + glob.glob(os.path.join(out, '**', '.*'), recursive=True)
+                    + glob.glob(os.path.join(out, '**', '.unchecked', '*'), recursive=True)):
+        b = os.path.basename(p)
+        if (b.startswith('p2_') and '.json' in b) or b.endswith('.first_result.json'):
+            got.append(os.path.relpath(p, out))
+    return sorted(set(got))
+
+
+def e13_kit_payloads(ws):
+    return sorted(glob.glob(os.path.join(ws, SBE_KIT, '*', 'p2_*.json*')))
+
+
+def e13_runner_kill(tag, mode, secs, when_marker):
+    """러너 (bash) 하나만 SIGKILL — 사슬은 이 프로세스 · 죽이는 손 = 실 (표지 앞 = payload 프로세스가 뜨면 · 뒤 = 표지가 생기면)."""
+    import threading
+    ws = make_root(tag)
+    pp, _sp, _rp = make_plan_and_reg(ws)
+    plan = json.load(open(pp, encoding='utf-8'))
+    sd = code_repo()
+    runner = os.path.join(sd, 'sdcp_gain_vox015_8arm.sh')
+    out = os.path.join(TD, 'runs', tag)
+    seen = {}
+
+    def killer():
+        t_end = time.time() + 120
+        j = e13_launch(out, 'K01_floor', t_end)
+        if j is None:
+            seen['err'] = 'launch 기록 없음'
+            return
+        seen['token'] = j['token']
+        while time.time() < t_end:
+            marks = glob.glob(os.path.join(out, 'K01_floor_arm1', '.unchecked', '*.first_result.json'))
+            pay = [c for c in e13_cmdlines(e13_alive(j['token'])) if 'rint_first_result.py' in c]
+            if (when_marker and marks) or (not when_marker and pay and not marks):
+                break
+            time.sleep(0.05)
+        time.sleep(0.3)
+        seen['marks_at_kill'] = len(glob.glob(os.path.join(out, 'K01_floor_arm1', '.unchecked', '*.first_result.json')))
+        seen['alive_at_kill'] = e13_cmdlines(e13_alive(j['token']))
+        os.kill(int(j['pid']), signal.SIGKILL)
+    th = threading.Thread(target=killer)
+    old_bk, old_here = RR.EXPECT_BACKEND, RR.HERE
+    RR.EXPECT_BACKEND, RR.HERE = 'cpu', Path(sd)
+    buf = io.StringIO()
+    stop = None
+    keep = {k: os.environ.get(k) for k in ('SHIM_DELAY_DRIVER', 'E2E_DELAY_MODE', 'E2E_DELAY_S')}
+    t0 = time.time()
+    try:
+        with chain_env(ws), contextlib.redirect_stdout(buf), contextlib.redirect_stderr(buf):
+            os.environ.update({k: v for k, v in e13_env(ws, mode, secs).items() if k.startswith(('SHIM_DELAY', 'E2E_DELAY'))})
+            rn = RR.Runner(runner, ws, out, plan, None, time.time() + 1800, RR.RealContract(), prefix='K', machine='kgy')
+            th.start()
+            try:
+                rn.run(SBE_KIT, 'floor', 'P0', '0', 'inf', 1)
+            except RR.Stop as e:
+                stop = e
+            th.join()
+    finally:
+        RR.EXPECT_BACKEND, RR.HERE = old_bk, old_here
+        for k, v in keep.items():
+            if v is None:
+                os.environ.pop(k, None)
+            else:
+                os.environ[k] = v
+    t_ret = time.time()
+    tok = seen.get('token')
+    alive_after = e13_alive(tok) if tok else None
+    files_ret = e13_files(out)
+    time.sleep(max(0.0, t0 + secs + 6.0 - time.time()))           # 지연이 끝났을 시간까지 — 살아 있었다면 이제 썼다
+    files_late = e13_files(out)
+    endp = os.path.join(out, 'groups', 'K01_floor.end.json')
+    er = json.load(open(endp, encoding='utf-8')) if os.path.exists(endp) else None
+    return {'stop': stop, 'seen': seen, 'alive_after': alive_after, 'files_ret': files_ret, 'files_late': files_late, 'end': er,
+            'kit_payloads': e13_kit_payloads(ws), 'so': buf.getvalue(), 'secs_ret': t_ret - t0}
+
+
+def t_runner_kill():
+    if not callable(getattr(RR, 'host_ident', None)):
+        chk('E13b/E13c 사슬에 러너 프로세스 그룹 (그룹 기록 · host_ident · recover) 이 있다', False, '고치기 전 판 — 그룹 기록 없음 (기다리지 않는다)')
+        return
+    a = e13_runner_kill('e13b', 'before', 12, when_marker=False)
+    er = a['end'] or {}
+    chk('E13b 실물 러너만 SIGKILL (표지 앞 · payload 프로세스가 떠 있음) → 사슬 = 러너 rc −9 · 그룹 (payload) 을 죽이고 종료 확인 (끝 기록 확인 True · rc −9) · '
+        'RUNNER_RC · 돌아온 뒤 표지 프로세스 0 · 표지 · 팔 payload 없음 (지연이 끝날 시간 뒤에도) · 킷 런 폴더에 payload 없음',
+        a['stop'] is not None and a['stop'].code == 'RUNNER_RC' and er.get('confirmed') is True and er.get('rc') == -9
+        and a['seen'].get('marks_at_kill') == 0 and any('rint_first_result.py' in c for c in a['seen'].get('alive_at_kill') or [])
+        and a['alive_after'] == [] and a['files_ret'] == [] and a['files_late'] == [] and a['kit_payloads'] == [],
+        (a['stop'] and (a['stop'].code, a['stop'].cause[:200]), a['seen'], er, a['alive_after'], a['files_ret'], a['files_late'],
+         a['kit_payloads'], a['so'][-600:]))
+    b = e13_runner_kill('e13c', 'after', 12, when_marker=True)
+    er = b['end'] or {}
+    marks = [f for f in b['files_late'] if f.endswith('.first_result.json')]
+    pays = [f for f in b['files_late'] if os.path.basename(f).startswith('p2_')]
+    chk('E13c 실물 러너만 SIGKILL (표지 뒤 · 증서 풀이 중) → 사슬 = 그룹을 죽이고 확인 · RUNNER_RC · 표지 하나 (.unchecked/ · 결과 뒤 판정의 입력) · '
+        '팔 payload 없음 (지연이 끝날 시간 뒤에도 = payload 프로세스가 죽었다) · 표지 프로세스 0',
+        b['stop'] is not None and b['stop'].code == 'RUNNER_RC' and er.get('confirmed') is True and b['seen'].get('marks_at_kill') == 1
+        and len(marks) == 1 and '.unchecked' in marks[0] and pays == [] and b['alive_after'] == [] and b['kit_payloads'] == [],
+        (b['stop'] and (b['stop'].code, b['stop'].cause[:200]), b['seen'], er, b['files_late'], b['alive_after']))
+
+
+def t_timeout_kill():
+    """시간 초과 — 러너 deadline 6 s · 표지 앞 지연 20 s → TIME_LIMIT · 그룹 죽임 · 확인 · 표지 · payload 없음."""
+    if not callable(getattr(RR, 'host_ident', None)):
+        chk('E13d 사슬에 러너 프로세스 그룹 (그룹 기록 · host_ident · recover) 이 있다', False, '고치기 전 판 — 그룹 기록 없음 (기다리지 않는다)')
+        return
+    ws = make_root('e13d')
+    pp, _sp, _rp = make_plan_and_reg(ws)
+    plan = json.load(open(pp, encoding='utf-8'))
+    sd = code_repo()
+    runner = os.path.join(sd, 'sdcp_gain_vox015_8arm.sh')
+    out = os.path.join(TD, 'runs', 'e13d')
+    old_bk, old_here = RR.EXPECT_BACKEND, RR.HERE
+    RR.EXPECT_BACKEND, RR.HERE = 'cpu', Path(sd)
+    buf = io.StringIO()
+    stop = None
+    keep = {k: os.environ.get(k) for k in ('SHIM_DELAY_DRIVER', 'E2E_DELAY_MODE', 'E2E_DELAY_S')}
+    t0 = time.time()
+    try:
+        with chain_env(ws), contextlib.redirect_stdout(buf), contextlib.redirect_stderr(buf):
+            os.environ.update({k: v for k, v in e13_env(ws, 'before', 20).items() if k.startswith(('SHIM_DELAY', 'E2E_DELAY'))})
+            rn = RR.Runner(runner, ws, out, plan, None, time.time() + 6.0, RR.RealContract(), prefix='K', machine='kgy')
+            try:
+                rn.run(SBE_KIT, 'floor', 'P0', '0', 'inf', 1)
+            except RR.Stop as e:
+                stop = e
+    finally:
+        RR.EXPECT_BACKEND, RR.HERE = old_bk, old_here
+        for k, v in keep.items():
+            if v is None:
+                os.environ.pop(k, None)
+            else:
+                os.environ[k] = v
+    endp = os.path.join(out, 'groups', 'K01_floor.end.json')
+    er = json.load(open(endp, encoding='utf-8')) if os.path.exists(endp) else {}
+    lp = os.path.join(out, 'groups', 'K01_floor.launch.json')
+    tok = json.load(open(lp, encoding='utf-8')).get('token') if os.path.exists(lp) else None
+    alive = e13_alive(tok) if tok else None
+    time.sleep(max(0.0, t0 + 26.0 - time.time()))
+    files = e13_files(out)
+    chk('E13d 실물 시간 초과 (deadline 6 s · 표지 앞 지연 20 s) → TIME_LIMIT · 끝 기록 원인 timeout · 확인 True · 표지 프로세스 0 · 표지 · 팔 payload 없음 '
+        '(지연이 끝날 시간 뒤에도) · 킷 런 폴더에 payload 없음',
+        stop is not None and stop.code == 'TIME_LIMIT' and er.get('cause') == 'timeout' and er.get('confirmed') is True and alive == []
+        and files == [] and e13_kit_payloads(ws) == [],
+        (stop and (stop.code, stop.cause[:200]), er, alive, files, buf.getvalue()[-500:]))
+
+
+def e13_parent_kill(tag, mode, secs, when_marker):
+    """사슬 부모를 따로 프로세스로 · 그 프로세스를 SIGKILL → 그룹이 살아 있는지 · recover → 그룹 종료 확인 · 지연 뒤 파일."""
+    ws = make_root(tag)
+    pp, _sp, _rp = make_plan_and_reg(ws)
+    sd = code_repo()
+    runner = os.path.join(sd, 'sdcp_gain_vox015_8arm.sh')
+    out = os.path.join(TD, 'runs', tag)
+    drv = os.path.join(TD, 'e13_run_driver.py')
+    if not os.path.exists(drv):
+        with open(drv, 'w', encoding='utf-8') as f:
+            f.write(RUN_DRIVER)
+    cfg = os.path.join(TD, f'{tag}_cfg.json')
+    with open(cfg, 'w', encoding='utf-8') as f:
+        json.dump({'scripts': SCRIPTS, 'here': sd, 'env': e13_env(ws, mode, secs), 'plan': pp, 'runner': runner, 'ws': ws, 'out': out}, f)
+    t0 = time.time()
+    log = open(os.path.join(TD, f'{tag}_driver.log'), 'w', encoding='utf-8')
+    pr = subprocess.Popen([sys.executable, '-I', drv, cfg], cwd=ws, stdout=log, stderr=subprocess.STDOUT, start_new_session=True)
+    j = e13_launch(out, 'K01_floor', time.time() + 120)
+    seen = {'token': (j or {}).get('token')}
+    while j is not None and time.time() < t0 + 120:
+        marks = glob.glob(os.path.join(out, 'K01_floor_arm1', '.unchecked', '*.first_result.json'))
+        pay = [c for c in e13_cmdlines(e13_alive(j['token'])) if 'rint_first_result.py' in c]
+        if (when_marker and marks) or (not when_marker and pay and not marks):
+            break
+        time.sleep(0.05)
+    time.sleep(0.3)
+    os.kill(pr.pid, signal.SIGKILL)
+    pr.wait()
+    tok = seen['token']
+    seen['alive_after_parent'] = e13_cmdlines(e13_alive(tok)) if tok else None
+    seen['end_before'] = os.path.exists(os.path.join(out, 'groups', 'K01_floor.end.json'))
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf), contextlib.redirect_stderr(buf):
+        try:
+            rc = RR.main(['--stage', 'recover', '--out', out])
+        except SystemExit as e:
+            rc = e.code
+    seen['recover_rc'], seen['recover_so'] = rc, buf.getvalue()[-400:]
+    seen['alive_after_recover'] = e13_alive(tok) if tok else None
+    time.sleep(max(0.0, t0 + secs + 6.0 - time.time()))
+    seen['files_late'] = e13_files(out)
+    endp = os.path.join(out, 'groups', 'K01_floor.end.json')
+    seen['end'] = json.load(open(endp, encoding='utf-8')) if os.path.exists(endp) else None
+    seen['kit_payloads'] = e13_kit_payloads(ws)
+    return seen
+
+
+def t_parent_kill():
+    if not callable(getattr(RR, 'host_ident', None)):
+        chk('E13e/E13f 사슬에 러너 프로세스 그룹 (그룹 기록 · host_ident · recover) 이 있다', False, '고치기 전 판 — 그룹 기록 없음 (기다리지 않는다)')
+        return
+    a = e13_parent_kill('e13e', 'before', 12, when_marker=False)
+    er = a.get('end') or {}
+    chk('E13e 실물 사슬 부모 SIGKILL (따로 프로세스 · 표지 앞) → 러너 그룹은 살아 있다 (payload 프로세스 · 끝 기록 없음 — 부모 사망 + 지금 표지 없음 ≠ 종료 증거) · '
+        '--stage recover → 그룹을 죽이고 확인 (끝 기록 by recover · 원인 parent_dead · rc 0) · 표지 프로세스 0 · 표지 · 팔 payload 없음 (지연 끝 뒤에도)',
+        any('rint_first_result.py' in c for c in a.get('alive_after_parent') or []) and a.get('end_before') is False and a.get('recover_rc') == 0
+        and er.get('by') == 'recover' and er.get('cause') == 'parent_dead' and er.get('confirmed') is True and a.get('alive_after_recover') == []
+        and a.get('files_late') == [] and a.get('kit_payloads') == [], a)
+    b = e13_parent_kill('e13f', 'after', 12, when_marker=True)
+    er = b.get('end') or {}
+    marks = [f for f in b.get('files_late') or [] if f.endswith('.first_result.json')]
+    pays = [f for f in b.get('files_late') or [] if os.path.basename(f).startswith('p2_')]
+    chk('E13f 실물 사슬 부모 SIGKILL (표지 뒤) → recover 가 그룹을 죽이고 확인 · 표지 하나 (결과 뒤 판정의 입력) · 팔 payload 없음 (지연 끝 뒤에도) · 표지 프로세스 0',
+        bool(b.get('alive_after_parent')) and b.get('recover_rc') == 0 and er.get('by') == 'recover' and er.get('confirmed') is True
+        and len(marks) == 1 and pays == [] and b.get('alive_after_recover') == [], b)
+
+
 def t_prod_form():
     ws = make_root('e6', kit_sh=KIT_SH_PROD)
     out = os.path.join(TD, 'runs', 'e6_P0')
@@ -865,7 +1199,8 @@ def main():
     sel = [x for x in ARGS.only.split(',') if x]
     try:
         for tag, fn in (('E1', t_ladder), ('E6', t_prod_form), ('E8', t_zero_floor), ('E9', t_short_ceiling), ('E10', t_sv_census_dbe),
-                        ('E11', t_no_venv), ('E12', t_graph_source)):
+                        ('E11', t_no_venv), ('E12', t_graph_source), ('E13', t_runner_kill), ('E13t', t_timeout_kill),
+                        ('E13p', t_parent_kill)):
             if sel and tag not in sel:
                 continue
             print(f'\n── {tag}')
