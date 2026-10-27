@@ -677,6 +677,55 @@ def template_diff(deck: str, text: str, case: str) -> list:
     return bad
 
 
+#: 생성 파일 (덱 · 삽입 덱 · 러너) 의 어느 줄에도 — 줄 전체 주석 포함 — 다른 케이스명을 쓰지 않는다 (10-27).
+#:   ibb `dem_restart.py` 가 v2 덱을 "덱 검증 실패: 다른 케이스명 혼입: ['real_4']" 로 거부했다 (`plan_r56.txt`) —
+#:   덱 머리 주석 두 줄 (3 · 9 행) 의 기준 덱 태그 때문 · 실행 줄에는 없다.  그 도구의 실제 이름 목록은 리포에 없다
+#:   (미확인) → 여기서는 기준 덱 태그 · 프리셋의 다른 케이스 · 러너 원형 케이스 + 기준 덱 계열 이름 `real_<N>` 을 본다.
+FOREIGN_NAME_PATTERNS = (re.compile(r'(?<![a-z0-9])real_\d+(?![0-9])', re.I),)
+
+
+def foreign_name_list(cfg: dict, cases=(), runner_case=None) -> list:
+    """다른 케이스명 후보 = 기준 덱 태그 + 프리셋 케이스 전부 (본 · 대비 50×50) + 이번 케이스 + 러너 원형 케이스."""
+    names = {TAG_OLD}
+    for key in ('cases', 'fallback50'):
+        names |= {c[0] for c in cfg.get(key, ())}
+    names |= {c[0] for c in cases}
+    if runner_case:
+        names.add(runner_case)
+    return sorted(names)
+
+
+def foreign_name_lines(text: str, own: str, names, patterns=FOREIGN_NAME_PATTERNS) -> list:
+    """text 의 줄 가운데 자기 케이스 (own) 가 아닌 이름을 담은 줄 → [(줄 번호, 이름, 줄)] · 빈 목록 = 통과.
+
+    대소문자를 가리지 않는다 (print 의 대문자 태그도).  자기 이름 안에 통째로 든 다른 이름은 세지 않는다 —
+    거꾸로 다른 이름 안에 자기 이름이 들어 있으면 그 다른 이름은 센다 (덮는 쪽만 면제).
+    """
+    own_l = own.lower()
+    foreign = sorted({n.lower() for n in names if n and n.lower() != own_l})
+    hits = []
+    for i, ln in enumerate(text.split('\n'), 1):
+        low = ln.lower()
+        cover = [(m.start(), m.end()) for m in re.finditer(re.escape(own_l), low)] if own_l else []
+
+        def _covered(a, b, cover=cover):
+            return any(s <= a and b <= e for s, e in cover)
+        found = set()
+        for n in foreign:
+            j = low.find(n)
+            while j >= 0:
+                if not _covered(j, j + len(n)):
+                    found.add(n)
+                    break
+                j = low.find(n, j + 1)
+        for rx in patterns:
+            for m in rx.finditer(low):
+                if m.group(0) != own_l and not _covered(m.start(), m.end()):
+                    found.add(m.group(0))
+        hits += [(i, n, ln) for n in sorted(found)]
+    return hits
+
+
 def load_template(path=None, expect=TEMPLATE_SHA256):
     raw = open(path or TEMPLATE, 'rb').read()
     sha = hashlib.sha256(raw).hexdigest()
@@ -986,6 +1035,106 @@ def _selftest() -> int:
     hi = hit_command('kg50_d1_b40', 1, tag='ins', deck='insert')
     chk('H7 hit 삽입 명령 = -np 1 · input_<case>_insert · log_<case>_ins.out',
         '-np 1 ' in hi and 'lmp_auto -in input_kg50_d1_b40_insert.liggghts > log_kg50_d1_b40_ins.out' in hi)
+
+    # ── R: 생성 파일의 다른 케이스명 (10-27 ibb dem_restart.py "다른 케이스명 혼입: ['real_4']") · v2 대비 주석만 ──
+    import tempfile
+    rt_case = re.sub(r'_r\d+t?$', '', re.search(r'^#SBATCH\s+--job-name=(\S+)$', rt0, re.M).group(1))
+    all12 = list(cfg['cases']) + list(cfg['fallback50'])
+    nt12 = {'kg50_d07_b40': 56, 'kg50_d2_b40': 4, 'kg50_d07_b50': 56, 'kg50_d2_b50': 4}   # v2 · v3 (50×50) 같은 NP 뜻
+    fnames = foreign_name_list(cfg, all12, rt_case)
+    files, texts, man_g, build_err = {}, {}, None, None
+    with tempfile.TemporaryDirectory() as td:
+        gen = os.path.join(td, 'gen')
+        try:
+            man_g = build(gen, all12, cfg, runner_text=rt0, runner_case=rt_case, ntasks=nt12)
+        except SystemExit as e:
+            build_err = str(e)
+        for c, *_ in all12:
+            cd = os.path.join(gen, c)
+            files[c] = sorted(os.listdir(cd)) if os.path.isdir(cd) else []
+            for f in files[c]:
+                with open(os.path.join(cd, f), encoding='utf-8') as fh:
+                    texts[(c, f)] = fh.read()
+    chk('R0 12 케이스 build (v2 러너 원형 · NP 56 · 4) 성공' + (f' — {build_err[:160]}' if build_err else ''), build_err is None)
+    n_files = sum(len(v) for v in files.values())
+    chk(f'R1a 생성 파일 = 본 덱 12 + 삽입 덱 6 + 삽입 러너 6 + 본 러너 4 = 28 ({n_files} · 빈 검사로 초록 방지)', n_files == 28
+        and all(f'input_{c}.liggghts' in files[c] for c, *_ in all12))
+    for c, *_ in all12:
+        hits = [(f, h) for f in files[c] for h in foreign_name_lines(texts[(c, f)], c, fnames)]
+        chk(f'R1 {c} 생성 파일 {len(files[c])} 개 (덱 · 삽입 덱 · 러너) 어느 줄에도 (주석 포함) 다른 케이스명 없음 — 위반 {len(hits)} 줄'
+            + (f' (예: {hits[0][0]} {hits[0][1][0]} 행 {hits[0][1][1]!r})' if hits else ''), files[c] and not hits)
+    base = '\n'.join(ln for ln in d40.split('\n') if not ln.lstrip().startswith('#'))      # 실행 줄만 (옛 · 새 같음)
+    nb = len(base.split('\n'))
+    chk('R1b 반례: 깨끗한 덱 (실행 줄) 에 기준 덱 파일 이름 주석 한 줄을 넣으면 잡는다 (줄 번호 · 이름 real_4)',
+        foreign_name_lines(base, 'kg50_d3_b40_s1', fnames) == []
+        and [h[:2] for h in foreign_name_lines(base + '\n#   기준 덱 docs/data/phase_a_6mah/in.real_4.liggghts', 'kg50_d3_b40_s1', fnames)]
+        == [(nb + 1, 'real_4')])
+    inj = [('#   kg50_d2_b40 과 같은 시드', 'kg50_d2_b40'), ('print "====== X (REAL_4) ======"', 'real_4'),
+           ('#   러너 원형 pse_r075_a', 'pse_r075_a'), ('#   real_14 스캐폴드', 'real_14'), ('#   ⑦ 태그 real_4 → kg50_d3_b40_s1', 'real_4')]
+    chk('R1c 반례 다섯: 다른 생성 케이스 · 대문자 REAL_4 · 러너 원형 케이스 · 같은 계열 real_14 · v2 의 ⑦ 줄 = 전부 잡는다',
+        all([h[1] for h in foreign_name_lines(base + '\n' + ln, 'kg50_d3_b40_s1', fnames)] == [nm] for ln, nm in inj))
+    chk('R1d 자기 이름 (소문자 · 대문자) 은 안 잡는다 · 자기 이름 안의 짧은 이름은 면제 · 다른 이름 안의 자기 이름은 면제 안 함',
+        foreign_name_lines(base + '\n# kg50_d3_b40_s1 · KG50_D3_B40_S1', 'kg50_d3_b40_s1', fnames) == []
+        and foreign_name_lines('abc_long x', 'abc_long', ['abc'], patterns=()) == []
+        and [h[1] for h in foreign_name_lines('abc_long', 'abc', ['abc_long'], patterns=())] == ['abc_long'])
+    # v2 대비 = 주석만 바뀐다 (커밋된 v2 와 실행 줄 바이트 같음 · 러너 · 기록 그대로)
+    V2 = os.path.join(ROOT, 'docs', 'data', 'kg50_decks_20261026_v2')
+    v2_cases = [c[0] for c in cfg['cases']]
+    v2_files = {c: (sorted(os.listdir(os.path.join(V2, c))) if os.path.isdir(os.path.join(V2, c)) else None) for c in v2_cases}
+
+    def _nc(t):
+        return [ln for ln in t.split('\n') if not ln.lstrip().startswith('#')]
+    chk('R2a v2 아홉 케이스 파일 목록 = 재생성 파일 목록 (17 개)', all(v2_files[c] == files.get(c) for c in v2_cases)
+        and sum(len(v2_files[c] or []) for c in v2_cases) == 17)
+    for c in v2_cases:
+        same = []
+        for f in (v2_files[c] or []):
+            with open(os.path.join(V2, c, f), encoding='utf-8') as fh:
+                old = fh.read()
+            new = texts.get((c, f))
+            same.append(new is not None and (_nc(new) == _nc(old) if f.endswith('.liggghts') else new == old))
+        chk(f'R2 {c} 재생성 = 커밋된 v2 (덱 · 삽입 덱 = 주석 아닌 줄 바이트 같음 · 러너 = 파일 전체 같음 · {len(same)} 파일)',
+            bool(same) and all(same))
+    try:
+        with open(os.path.join(V2, 'manifest.json'), encoding='utf-8') as fh:
+            man_v2 = json.load(fh)
+    except (OSError, ValueError):
+        man_v2 = None
+
+    def _strip(m, keep):
+        m = json.loads(json.dumps(m))
+        m.pop('generator_sha256', None)
+        m['cases'] = [{k: v for k, v in r.items() if k not in ('deck_sha256', 'insert_deck_sha256')}
+                      for r in m['cases'] if r['case'] in keep]
+        return m
+    chk('R2b manifest = v2 (생성기 · 덱 sha256 값만 다를 수 있음 · 러너 sha256 · 기록 · 설정 같음)',
+        man_g is not None and man_v2 is not None and _strip(man_g, set(v2_cases)) == _strip(man_v2, set(v2_cases)))
+    tdir = os.path.relpath(os.path.dirname(TEMPLATE), ROOT).replace(os.sep, '/') + '/'
+    decks_g = [(c, f) for (c, f) in texts if f.endswith('.liggghts')]
+
+    def _head_ok(c, t):
+        cm = [ln for ln in t.split('\n') if ln.lstrip().startswith('#')]
+        return (any('기준 덱' in ln and TEMPLATE_SHA256 in ln and tdir in ln for ln in cm)
+                and any(ln.startswith('#   ⑦ 태그') and f'→ {c}' in ln for ln in cm))
+    chk(f'R3 덱 머리 = 기준 덱 sha256 64 자 전체 · 폴더 {tdir} · ⑦ 태그 바꿈 줄 (→ 케이스명) ({len(decks_g)} 덱) · '
+        'manifest template 경로 · sha256 그대로', len(decks_g) == 18 and all(_head_ok(c, texts[(c, f)]) for c, f in decks_g)
+        and man_g is not None and man_g['template'] == 'docs/data/phase_a_6mah/in.real_4.liggghts'
+        and man_g['template_sha256'] == TEMPLATE_SHA256)
+    chk('R4 반례: 왕복검사가 주석 줄의 기준 덱 태그도 잡는다 (머리 주석 · 대문자)',
+        roundtrip(d40 + '#   기준 덱 in.real_4.liggghts\n', r40) != [] and roundtrip(d40 + '# REAL_4\n', r40) != [])
+    with tempfile.TemporaryDirectory() as td:
+        out5 = os.path.join(td, 'g')
+        bad_rt = rt0.rstrip('\n') + '\n# 원형 메모: real_4 덱에서 옮김\n'
+        r5 = raises(lambda: build(out5, [cfg['cases'][0]], cfg, runner_text=bad_rt, runner_case=rt_case,
+                                  ntasks={'kg50_d07_b40': 56}), '다른 케이스명')
+        leaked = []
+        for dp, _dn, fs in os.walk(out5):
+            for f in fs:
+                with open(os.path.join(dp, f), encoding='utf-8') as fh:
+                    if f != 'manifest.json' and 'real_4' in fh.read().lower():
+                        leaked.append(f)
+    chk(f'R5 반례: 생성 파일에 다른 케이스명이 들어가면 build 가 거부 · 그 파일을 쓰지 않는다 (러너 원형 주석의 기준 덱 태그 · '
+        f'쓴 위반 파일 {len(leaked)})', r5 and not leaked)
 
     print(f'make_se_size_decks selftest: {ok}/{ok + len(fail)} PASS')
     for f in fail:
