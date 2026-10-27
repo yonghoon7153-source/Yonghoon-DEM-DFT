@@ -319,6 +319,15 @@ def r_plan_bytes(tol_ff, **over):
     obj = {'schema': _rrc.PLAN_SCHEMA, 'len_law': _cj.CJUNC_LEN_LAW, 'unreg_law': 'cut', 's_min_um': 0.6,
            'tol_ff_um': float(tol_ff), 'step3_rtol': 1e-12, 'p2_extra': '',
            'max_ladder_points': 16, 'calib_rj_ratio_max': 'none', 'sv_cf_threshold': 2.0, 'sv_cf_scope': 'R_j0'}
+    #  ★ 10-27 묶음 C1 (RCA2-05 · author 10-27 approved bundle C) — 사슬 계획에 실행 정책 칸이 있으면 (v3) 시험 값으로 봉인한 칸 (등록 숫자 아님 ·
+    #    값 칸 넷 + 규칙 칸 넷 = 사슬 이름 글자) · ep = 그 칸을 바꾼 dict (null = ⬜ 반례 L3ep)
+    if 'exec_policy' in getattr(_rrc, 'PLAN_KEYS', ()):
+        obj['exec_policy'] = {'max_hours': 2.0, 'max_attempts': 3, 'allowed_machines': ['gabia', 'kgy', 'v100'],
+                              'env_unit': _rrc.env_unit(_rrc.env_record()), 'retry_rule': 'pre_result_only_v1',
+                              'same_config': 'plan_code_bed_env_v1', 'adoption': 'first_not_pre_result_v1', 'attempt_dir': 'attempt_<n>'}
+    ep = over.pop('ep', None)
+    if ep is not None and isinstance(obj.get('exec_policy'), dict):
+        obj['exec_policy'].update(ep)
     obj.update(over)
     return (json.dumps(obj, sort_keys=True) + '\n').encode('utf-8')
 
@@ -448,6 +457,21 @@ def t_plan_commit():
             why = str(e)
         chk('L3w Q-G 거부 사유 = 사슬 require_plan_numbers 의 PLAN_NUMBER_UNREGISTERED (sv_cf_threshold · 단계 2 전 등록)',
             'PLAN_NUMBER_UNREGISTERED' in why and 'sv_cf_threshold' in why, why)
+    #  ★ 10-27 묶음 C1 (RCA2-05 · 판정문 §4 "DBE 단계 2 열람 전에 … 시간상한 · 최대 시도 수 … 봉인" · author 10-27 approved bundle C) — 실행 정책 값 칸
+    #    (시간 상한 · 최대 시도 수 · 허용 기계 · 판) 이 null (⬜) 인 R 계획 = 단계 2 관문 거부 (사슬 require_plan_numbers 와 같은 함수 · 사본 없음) ·
+    #    고치기 전 판 (실행 정책 칸 없음) = 실패 (옳은 이유: 칸이 없다)
+    import rint_r_chain as _rrc_ep
+    has_ep = 'exec_policy' in getattr(_rrc_ep, 'PLAN_KEYS', ())
+    for k in ('max_hours', 'max_attempts', 'allowed_machines', 'env_unit'):
+        with tempfile.TemporaryDirectory() as d:
+            repo, sha, prel, rrel = make_plan_repo(d, b, h, r_plan=r_plan_bytes(tol, ep={k: None}))
+            try:
+                _vpc(repo, sha, prel, rrel)
+                why = 'no error'
+            except S0.S0Error as e:
+                why = str(e)
+            chk(f'L3ep R 런 계획 실행 정책 {k} = null (⬜ · 단계 2 = DBE 열람 전 봉인) → 거부 · 사유 PLAN_NUMBER_UNREGISTERED exec_policy.{k}',
+                has_ep and 'PLAN_NUMBER_UNREGISTERED' in why and f'exec_policy.{k}' in why, why[-200:])
     #  ★ PF2 E (10-22 · 사전 리뷰 2 회차 PRE2-impl-03 · 결정 없음) — 계획 넘침 (정수 10**400) = 구조화 거부 (S0Error) · 중복 칸 = 거부 (사슬 ·
     #    S0 둘 다).  옛 관문 = 잡히지 않은 OverflowError (`_num` · `_num_ok` 의 float 바꿈) · R 계획 중복 칸 = 마지막 값으로 받음.
     big = dict(p, values_um=dict(p['values_um'], u=10 ** 400))

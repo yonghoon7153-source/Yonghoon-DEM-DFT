@@ -234,6 +234,13 @@ def make_plan_and_reg(ws=None):
     plan = {'schema': 'rint-r-plan-v2', 'len_law': 'len_scaled_v0', 'unreg_law': 'cut', 's_min_um': 0.6, 'tol_ff_um': 0.05,
             'step3_rtol': 1e-12, 'p2_extra': '--step3-maxiter 60000', 'max_ladder_points': 12, 'calib_rj_ratio_max': 'none',
             'sv_cf_threshold': 2.0, 'sv_cf_scope': 'R_j0'}
+    #  ★ 10-27 묶음 C1 (RCA2-05 · author 10-27 approved bundle C) — 사슬 계획 v3 (실행 정책 칸) 이면 시험 값으로 봉인 (등록 숫자 아님 · 시간 상한 =
+    #    run_ladder 의 --max-hours · 판 = 이 프로세스 환경 같음 단위 · 규칙 칸 = 사슬 이름) · 고치기 전 판 = v2 그대로
+    if chain_c1():
+        plan['schema'] = RR.PLAN_SCHEMA
+        plan['exec_policy'] = {'max_hours': float(E2E_MAXH), 'max_attempts': 3, 'allowed_machines': ['gabia', E2E_MACH, 'v100'],
+                               'env_unit': RR.env_unit(RR.env_record()), 'retry_rule': 'pre_result_only_v1',
+                               'same_config': 'plan_code_bed_env_v1', 'adoption': 'first_not_pre_result_v1', 'attempt_dir': 'attempt_<n>'}
     pp = os.path.join(TD, 'plan.json')
     with open(pp, 'w', encoding='utf-8') as f:
         json.dump(plan, f, indent=1, sort_keys=True)
@@ -249,6 +256,9 @@ def make_plan_and_reg(ws=None):
             cells[-2] = f' `{sha if ln.startswith("| 계획 해시 |") else s0sha}` '
             ln = '|'.join(cells)
         out.append(ln)
+    #  ★ 10-27 묶음 C1 (판정문 C6 #30) — 등록 사본에 계획 숫자 블록 (사슬 생성기 · 정확 대조 = 사슬이 본다 · 생성기 꼴 자체 = test_rint_r_chain EP06)
+    if callable(getattr(RR, 'plan_doc_block', None)):
+        out += ['', RR.plan_doc_block(plan)]
     rp = os.path.join(TD, 'reg_ok.md')
     with open(rp, 'w', encoding='utf-8') as f:
         f.write('\n'.join(out) + '\n')
@@ -375,13 +385,23 @@ def chain_env(ws, no_venv=True):
         os.environ.update({k: v for k, v in keep.items() if v is not None})
 
 
-def run_ladder(ws, out, law='P0', max_hours='0.5'):
+def chain_c1():
+    """★ 10-27 묶음 C1 — 사슬 계획에 실행 정책 칸이 있나 (있으면 v3 계획 · --machine · 숫자 블록)."""
+    return 'exec_policy' in (getattr(RR, 'PLAN_KEYS', ()) or ())
+
+
+E2E_MAXH, E2E_MACH = '0.5', 'kgy'                          # 시험 값 (등록 숫자 아님) — 계획 exec_policy.max_hours = --max-hours
+
+
+def run_ladder(ws, out, law='P0', max_hours=E2E_MAXH):
     pp, sp, rp = make_plan_and_reg(ws)
     #  ★ 10-25 묶음 B — 사슬 폴더 (RR.HERE) · 러너 = git 고정물 저장소의 scripts (옛 = 이 리포 scripts + git 신원 dirty False 고정)
     sd = code_repo()
     runner = os.path.join(sd, 'sdcp_gain_vox015_8arm.sh')
     argv = ['--stage', 'ladder', '--law', law, '--target', str(RR.TARGET_SBE_MS), '--runner', runner, '--root', ws, '--plan', pp,
             '--s0-plan', sp, '--registration', rp, '--max-hours', max_hours, '--out', out] + s0_args()
+    if chain_c1():
+        argv += ['--machine', E2E_MACH]
     buf = io.StringIO()
     t0 = time.time()
     had = hasattr(RR, 'EXPECT_BACKEND')
@@ -452,6 +472,11 @@ def t_ladder():
         bool(want) and bed.get('files') == want and bed.get('settings_sha256') == (rec1.get('inputs') or {}).get('settings_sha256')
         and a0 and all(a.get('sid_fp') == (rec1.get('raster') or {}).get('sid_off_fp') for a in a0),
         (sorted(want), bed, [a.get('sid_fp') for a in a0][:3], (rec1.get('raster') or {}).get('sid_off_fp')))
+    #  ── ★ 10-27 묶음 C1 (판정문 C6 #15 · Q11 · author 10-27 approved bundle C) — 실물 사다리 요약 · 런 기록마다 기계 이름 = --machine (계획 허용
+    #     목록 안 · 빈 이름 없음) · 계획 = v3 (실행 정책 칸) ──
+    chk('E1m 실물 사다리 — 요약 machine · 런 기록 machine (런마다) = --machine kgy · 계획 실행 정책 봉인 (v3)',
+        chain_c1() and s.get('machine') == E2E_MACH and bool(runs) and all(x.get('machine') == E2E_MACH for x in runs),
+        (chain_c1(), s.get('machine'), [x.get('machine') for x in runs][:4]))
     if len(runs) < 2:
         return
     #  ── E2 극한 런 기록 ──

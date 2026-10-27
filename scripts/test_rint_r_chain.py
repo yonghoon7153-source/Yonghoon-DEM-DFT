@@ -42,6 +42,14 @@ REG_DOC = ROOT / 'docs' / 'reviews' / 'rint_carbon_additive_registration_R_draft
 SBE_KIT = 'kit_SBE_vgcf100'
 DBE_KIT = 'kit_DBE_sdcp1um_vgcf100'
 T_S = 1.63e-3                                            # 표적 S/cm (등록 R §0)
+#: ★ 10-27 묶음 C1 (RCA2-05 · BRIEF 묶음 C · author 10-27 approved bundle C) — R 계획 실행 정책 칸의 **시험 값** (등록 숫자가 아니다 · 값 = 봉인 때
+#   1저자) · 기계 이름표 · 시간 상한 (사다리 · 예측의 --max-hours = 계획 값).  규칙 칸 넷 = 사슬이 구현한 규칙 이름 — 시험은 글자로 적는다 (사슬 상수를
+#   바꾸면 시험이 잡는다 · 사본 금지의 짝).  문서 숫자 블록 표지 = 같은 뜻 (사슬 생성기와 따로 조립해 대조한다).
+MACH, MAXH = 'kgy', '2'
+EXEC_RULES = {'retry_rule': 'pre_result_only_v1', 'same_config': 'plan_code_bed_env_v1', 'adoption': 'first_not_pre_result_v1',
+              'attempt_dir': 'attempt_<n>'}
+EXEC_MACHINES = ['gabia', 'kgy', 'm1', 'm2', 'm3', 'v100']
+PLAN_DOC_BEGIN, PLAN_DOC_END = '<!-- rint-r-plan-doc:begin v1 -->', '<!-- rint-r-plan-doc:end -->'
 
 def _nextafter(x, toward):
     """math.nextafter (3.9+) — kgy dem-venv = Python 3.8.10 (10-24) 이면 SV 모듈의 같은 함수 (`ca_ext_svcf._nextafter`)."""
@@ -770,6 +778,36 @@ def s0_bed_fields(kit, root=None):
     return out
 
 
+# ═════════════════════════ ★ 10-27 묶음 C1 (RCA2-05 · author 10-27 approved bundle C) 실행 정책 칸 · 문서 숫자 블록 ═════════════════════════
+def chain_c1():
+    """사슬에 R 계획 실행 정책 칸이 있나 (고치기 전 판 = 없음 → 계획 v2 그대로 · 반례가 그 판에서 돈다 = 옳은 이유의 실패)."""
+    return 'exec_policy' in (getattr(RR, 'PLAN_KEYS', ()) or ())
+
+
+def exec_policy(**over):
+    """실행 정책 칸 (시험 값) — 시간 상한 = MAXH · 최대 시도 수 3 · 허용 기계 = EXEC_MACHINES · 판 = 이 시험 프로세스의 같음 단위 (사슬 env_record) ·
+    규칙 넷 = EXEC_RULES (글자)."""
+    ep = {'max_hours': float(MAXH), 'max_attempts': 3, 'allowed_machines': list(EXEC_MACHINES),
+          'env_unit': RR.env_unit(RR.env_record()), **EXEC_RULES}
+    ep.update(over)
+    return ep
+
+
+def doc_block(plan):
+    """★ 10-27 묶음 C1 (C6 #30) 등록 문서의 계획 숫자 블록 — 사슬 생성기 (`rint_r_chain.plan_doc_block`) 와 **따로** 조립한 기대값: 표지 두 줄 사이
+    머리 두 줄 + 칸마다 한 줄 (칸 이름 사전 순 · exec_policy 는 하위 칸 `exec_policy.<칸>` 사전 순) · 값 = 정준 JSON (sort_keys · 빈칸 없는 구분자 ·
+    ensure_ascii False) 을 백틱으로."""
+    rows = []
+    for k in sorted(plan):
+        if k == 'exec_policy' and isinstance(plan[k], dict):
+            rows += [(f'exec_policy.{kk}', plan[k][kk]) for kk in sorted(plan[k])]
+        else:
+            rows.append((k, plan[k]))
+    lines = [PLAN_DOC_BEGIN, '| R 계획 칸 | 값 |', '|---|---|']
+    lines += [f'| `{k}` | `{json.dumps(v, ensure_ascii=False, sort_keys=True, separators=(",", ":"))}` |' for k, v in rows]
+    return '\n'.join(lines + [PLAN_DOC_END])
+
+
 # ═════════════════════════ 고정물 · 단계 호출 ═════════════════════════
 def fixtures():
     (Path(TD) / 'fake.py').write_text(FAKE_SRC, encoding='utf-8')
@@ -783,9 +821,12 @@ def fixtures():
     #    옛 = 빈 폴더)
     FX['root'] = make_kits(Path(TD) / 'root')
     #  ★ 3판 — R 런 계획 v2 (결과 전 등록 숫자 넷 = 시험 값 · 등록 숫자가 아니다) · S0 단계 1 계획 (정본 함수 make_plan · 정준 바이트)
-    plan = {'schema': 'rint-r-plan-v2', 'len_law': 'len_scaled_v0', 'unreg_law': 'cut', 's_min_um': 0.6, 'tol_ff_um': 0.05,
-            'step3_rtol': 1e-12, 'p2_extra': '--step3-maxiter 60000', 'max_ladder_points': 16, 'calib_rj_ratio_max': 'none',
-            'sv_cf_threshold': 2.0, 'sv_cf_scope': 'R_j0'}
+    #  ★ 10-27 묶음 C1 — 사슬에 실행 정책 칸이 있으면 v3 = v2 칸 + exec_policy (시험 값) · 없으면 (고치기 전 판) v2 그대로 (반례가 그 판에서 돈다)
+    plan = {'schema': ('rint-r-plan-v3' if chain_c1() else 'rint-r-plan-v2'), 'len_law': 'len_scaled_v0', 'unreg_law': 'cut',
+            's_min_um': 0.6, 'tol_ff_um': 0.05, 'step3_rtol': 1e-12, 'p2_extra': '--step3-maxiter 60000', 'max_ladder_points': 16,
+            'calib_rj_ratio_max': 'none', 'sv_cf_threshold': 2.0, 'sv_cf_scope': 'R_j0'}
+    if chain_c1():
+        plan['exec_policy'] = exec_policy()
     FX['plan_obj'] = plan
     import ca_s0_census as S0m
     s0p, s0b, s0sha = S0m.make_plan(0.05, S0m.R_F_UM, S0m.GAP_TOL_PRODUCTION, {'fixture': 'test_rint_r_chain', 'kit': SBE_KIT})
@@ -795,7 +836,9 @@ def fixtures():
     text = REG_DOC.read_text(encoding='utf-8')
     FX['reg_text'] = text
 
-    def reg_with(cell, name, s0cell=f'`{s0sha}`'):
+    def reg_with(cell, name, s0cell=f'`{s0sha}`', plan=None, block=True):
+        """등록 사본 — 해시 두 줄 + ★ 10-27 묶음 C1 (C6 #30) 계획 숫자 블록 (그 계획을 이 시험이 **따로** 조립한 블록 · `doc_block` ·
+        block False = 블록 없음 꼴 · 고치기 전 판 = 블록이 있어도 읽지 않는다)."""
         out = []
         for ln in text.splitlines():
             if ln.startswith('| 계획 해시 |') or ln.startswith('| S0 계획 해시 |'):
@@ -803,6 +846,8 @@ def fixtures():
                 cells[-2] = f' {cell if ln.startswith("| 계획 해시 |") else s0cell} '
                 ln = '|'.join(cells)
             out.append(ln)
+        if block:
+            out += ['', doc_block(plan if plan is not None else FX['plan_obj'])]
         p = Path(TD) / name
         p.write_text('\n'.join(out) + '\n', encoding='utf-8')
         return p
@@ -828,7 +873,7 @@ def plan_set(name, reg_name=None, **over):
     p.write_text(json.dumps(plan, indent=1, sort_keys=True), encoding='utf-8')
     sha = hashlib.sha256(p.read_bytes()).hexdigest()
     FX.setdefault('plan_bytes', {})[sha] = p.read_bytes()
-    return p, sha, FX['reg_with'](f'`{sha}`', reg_name or f'reg_{name}.md')
+    return p, sha, FX['reg_with'](f'`{sha}`', reg_name or f'reg_{name}.md', plan=plan)
 
 
 # ═════════════════════════ ★ PF2 B (10-22 · 사전 리뷰 2 회차 PRE2-design-01 · 1저자 Q2 권고대로) S0 단계 2 보고 ═════════════════════════
@@ -996,15 +1041,21 @@ def pass_contract():
     return PassContract()
 
 
-def ladder(tag, wpath, law='P0', variant=None, extra=(), reg=None, max_hours='2', env=None, prefill=False, contract=None,
-           plan=None, s0=None, after=None, s2=None, s1=None, root=None):
+def ladder_argv(out, law='P0', reg=None, max_hours=MAXH, plan=None, s0=None, s2=None, s1=None, root=None, machine=MACH):
+    """사다리 인자 — ★ 10-27 묶음 C1 기계 이름표 (machine None = --machine 없음 꼴) · --max-hours (기본 = 계획 실행 정책 값)."""
+    argv = ['--stage', 'ladder', '--law', law, '--target', '1.63', '--runner', FX['runner'], '--root', root or FX['root'],
+            '--plan', plan or FX['plan'], '--s0-plan', s0 or FX['s0'], '--registration', reg or FX['reg_ok'], '--max-hours', max_hours,
+            '--out', out] + s0_args(plan or FX['plan'], s2, s1)
+    return argv + (['--machine', machine] if machine is not None else [])
+
+
+def ladder(tag, wpath, law='P0', variant=None, extra=(), reg=None, max_hours=MAXH, env=None, prefill=False, contract=None,
+           plan=None, s0=None, after=None, s2=None, s1=None, root=None, machine=MACH):
     out = Path(TD) / 'runs' / tag
     if prefill:
         out.mkdir(parents=True)
         (out / 'old.txt').write_text('x')
-    argv = ['--stage', 'ladder', '--law', law, '--target', '1.63', '--runner', FX['runner'], '--root', root or FX['root'],
-            '--plan', plan or FX['plan'], '--s0-plan', s0 or FX['s0'], '--registration', reg or FX['reg_ok'], '--max-hours', max_hours,
-            '--out', out] + s0_args(plan or FX['plan'], s2, s1)
+    argv = ladder_argv(out, law=law, reg=reg, max_hours=max_hours, plan=plan, s0=s0, s2=s2, s1=s1, root=root, machine=machine)
     if variant:
         argv += ['--variant', variant]
         argv += ['--after-main', after if after is not None else s_main_predict()['out']]   # ★ Q-F — 감도 = 주 판정 단계 뒤
@@ -1014,10 +1065,15 @@ def ladder(tag, wpath, law='P0', variant=None, extra=(), reg=None, max_hours='2'
             'world': wpath}
 
 
-def predict(tag, wpath, ladders, variant=None, extra=(), reg=None, max_hours='2', after=None, root=None):
-    out = Path(TD) / 'runs' / tag
+def predict_argv(out, ladders, reg=None, max_hours=MAXH, root=None, machine=MACH):
     argv = ['--stage', 'predict', '--ladders', *ladders, '--kit', DBE_KIT, '--runner', FX['runner'], '--root', root or FX['root'],
             '--registration', reg or FX['reg_ok'], '--max-hours', max_hours, '--out', out]
+    return argv + (['--machine', machine] if machine is not None else [])
+
+
+def predict(tag, wpath, ladders, variant=None, extra=(), reg=None, max_hours=MAXH, after=None, root=None, machine=MACH):
+    out = Path(TD) / 'runs' / tag
+    argv = predict_argv(out, ladders, reg=reg, max_hours=max_hours, root=root, machine=machine)
     if variant:
         argv += ['--variant', variant, '--after-main', after if after is not None else s_main_predict()['out']]
     rc, so = call(argv + list(extra), wpath)
@@ -1487,10 +1543,15 @@ def t_S16():
     return r['rc'] == 3 and stop_code(r) == 'PLAN_HASH_UNREGISTERED' and n_calls(r['world']) == 0, (r['rc'], stop_code(r))
 
 
-@check('S17', '시간 상한 — 첫 런이 상한 안에 안 끝남 → TIME_LIMIT')
+@check('S17', '시간 상한 — 첫 런이 상한 안에 안 끝남 → TIME_LIMIT · ★ 10-27 묶음 C1 — 상한 = 계획 실행 정책 max_hours 0.0001 (--max-hours 같은 값)')
 def t_S17():
-    r = scen('S17', lambda: ladder('S17', world('S17', dict(PW, faults=[{'do': 'sleep', 's': 3.0, 'match': {'n': 1}}])),
-                                   max_hours='0.0001'))
+    def go():
+        kw = {}
+        if chain_c1():                                  # ★ 10-27 묶음 C1 — --max-hours = 계획 값이어야 돈다 → 그 상한을 봉인한 계획 한 벌
+            p, _sha, reg = plan_set('plan_S17', exec_policy=exec_policy(max_hours=0.0001))
+            kw = {'plan': p, 'reg': reg}
+        return ladder('S17', world('S17', dict(PW, faults=[{'do': 'sleep', 's': 3.0, 'match': {'n': 1}}])), max_hours='0.0001', **kw)
+    r = scen('S17', go)
     return r['rc'] == 3 and stop_code(r) == 'TIME_LIMIT', (r['rc'], stop_code(r))
 
 
@@ -1505,8 +1566,8 @@ def t_S19():
         w = world('S19')
         out = Path(TD) / 'runs' / 'S19'
         rc, so = call(['--stage', 'ladder', '--law', 'P0', '--target', '1.64', '--runner', FX['runner'], '--root', FX['root'],
-                       '--plan', FX['plan'], '--s0-plan', FX['s0'], '--registration', FX['reg_ok'], '--max-hours', '1', '--out', out]
-                      + s0_args(), w)
+                       '--plan', FX['plan'], '--s0-plan', FX['s0'], '--registration', FX['reg_ok'], '--max-hours', MAXH, '--out', out,
+                       '--machine', MACH] + s0_args(), w)
         sp = out / 'ladder_summary.json'
         return {'rc': rc, 'so': so, 'world': w, 'sum': json.loads(sp.read_text()) if sp.exists() else None}
     r = scen('S19', go)
@@ -1974,8 +2035,8 @@ def t_V12():
     w = world('V12')
     out = Path(TD) / 'runs' / 'V12_lad'
     rc1, _so = call(['--stage', 'ladder', '--law', 'P0', '--target', '1.63', '--runner', FX['runner'], '--root', FX['root'],
-                     '--plan', FX['plan'], '--registration', FX['reg_ok'], '--max-hours', '1', '--out', out, '--show-results']
-                    + s0_args(), w)
+                     '--plan', FX['plan'], '--registration', FX['reg_ok'], '--max-hours', MAXH, '--out', out, '--show-results',
+                     '--machine', MACH] + s0_args(), w)
     v = s_show()
     views = Path(v['out']) / 'views.jsonl'
     return (rc1 == 2 and n_calls(w) == 0 and v['rc'] == 0 and views.exists() and len(views.read_text().splitlines()) == 1,
@@ -2099,8 +2160,8 @@ def t_X04():
     w = world('X04')
     out = Path(TD) / 'runs' / 'X04'
     rc, so = call(['--stage', 'ladder', '--law', 'P0', '--target', '1.63', '--runner', FX['runner'], '--root', FX['root'],
-                   '--plan', FX['plan'], '--s0-plan', FX['s0'], '--registration', FX['reg_ok'], '--max-hours', '1', '--out', out,
-                   '--dry-run'] + s0_args(), w)
+                   '--plan', FX['plan'], '--s0-plan', FX['s0'], '--registration', FX['reg_ok'], '--max-hours', MAXH, '--out', out,
+                   '--dry-run', '--machine', MACH] + s0_args(), w)
     lines = [x for x in so.splitlines() if 'bash ' in x]
     rjs = [re.search(r'CJUNC_RJ=(\S+)', x).group(1) for x in lines if 'CJUNC_RJ=' in x]
     return (rc == 0 and not out.exists() and n_calls(w) == 0 and rjs == ['inf', '0', '10000.0', '1000000.0', '100000000.0']
@@ -2183,8 +2244,8 @@ def t_X08():
     w = world('X08')
     out = Path(TD) / 'runs' / 'X08'
     rc, so = call(['--stage', 'ladder', '--law', 'P0', '--target', '1.63', '--runner', FX['runner'], '--root', FX['root'],
-                   '--plan', FX['plan'], '--s0-plan', FX['s0'], '--registration', FX['reg_ok'], '--max-hours', '1', '--out', out,
-                   '--dry-run'] + s0_args(), w, env={'EXPECT_BACKEND': 'cpu'})
+                   '--plan', FX['plan'], '--s0-plan', FX['s0'], '--registration', FX['reg_ok'], '--max-hours', MAXH, '--out', out,
+                   '--dry-run', '--machine', MACH] + s0_args(), w, env={'EXPECT_BACKEND': 'cpu'})
     lines = [x for x in so.splitlines() if 'bash ' in x]
     return (rc == 0 and getattr(RR, 'EXPECT_BACKEND', None) == 'gpu' and len(lines) == 5
             and all('EXPECT_BACKEND=gpu' in x and 'EXPECT_BACKEND=cpu' not in x for x in lines), (rc, lines[:1]))
@@ -3998,7 +4059,7 @@ def t_C08():
     w = world('C08')
     out = Path(TD) / 'runs' / 'C08'
     rc, _so = call(['--stage', 'ladder', '--law', 'P0', '--runner', FX['runner'], '--root', FX['root'], '--plan', FX['plan'],
-                    '--registration', FX['reg_ok'], '--max-hours', '1', '--out', out] + s0_args(), w)
+                    '--registration', FX['reg_ok'], '--max-hours', MAXH, '--out', out, '--machine', MACH] + s0_args(), w)
     return rc == 2 and n_calls(w) == 0 and not out.exists(), (rc, n_calls(w))
 
 
@@ -4122,8 +4183,8 @@ def t_F03():
 def t_F04():
     w = world('F04')
     rc, _so = call(['--stage', 'ladder', '--law', 'P0', '--runner', FX['runner'], '--root', FX['root'], '--plan', FX['plan'],
-                    '--s0-plan', FX['s0'], '--registration', FX['reg_ok'], '--max-hours', '1', '--out', Path(TD) / 'runs' / 'F04',
-                    '--after-main', str(s_main_predict()['out'])] + s0_args(), w)
+                    '--s0-plan', FX['s0'], '--registration', FX['reg_ok'], '--max-hours', MAXH, '--out', Path(TD) / 'runs' / 'F04',
+                    '--after-main', str(s_main_predict()['out']), '--machine', MACH] + s0_args(), w)
     return rc == 2 and n_calls(w) == 0, rc
 
 
@@ -4227,7 +4288,8 @@ def t_B07():
     w = world('B07')
     out = Path(TD) / 'runs' / 'B07'
     rc, _so = call(['--stage', 'ladder', '--law', 'P0', '--target', '1.63', '--runner', FX['runner'], '--root', FX['root'],
-                    '--plan', FX['plan'], '--s0-plan', FX['s0'], '--registration', FX['reg_ok'], '--max-hours', '1', '--out', out], w)
+                    '--plan', FX['plan'], '--s0-plan', FX['s0'], '--registration', FX['reg_ok'], '--max-hours', MAXH, '--out', out,
+                    '--machine', MACH], w)
     return rc == 2 and n_calls(w) == 0 and not out.exists() and chain_has(S0_STAGE2_OPT), (rc, n_calls(w), chain_has(S0_STAGE2_OPT))
 
 
@@ -4237,8 +4299,8 @@ def t_B08():
     w = world('B08')
     out = Path(TD) / 'runs' / 'B08'
     rc, so = call(['--stage', 'ladder', '--law', 'P0', '--target', '1.63', '--runner', FX['runner'], '--root', FX['root'],
-                   '--plan', pB, '--s0-plan', FX['s0'], '--registration', regB, '--max-hours', '1', '--out', out, '--dry-run']
-                  + s0_args(FX['plan']), w)
+                   '--plan', pB, '--s0-plan', FX['s0'], '--registration', regB, '--max-hours', MAXH, '--out', out, '--dry-run',
+                   '--machine', MACH] + s0_args(FX['plan']), w)
     return (rc == 3 and 'S0_REPORT_MISMATCH' in so and 'CJUNC_RJ=' not in so and n_calls(w) == 0, (rc, so[-300:]))
 
 
@@ -4426,8 +4488,8 @@ def t_D09():
 
 
 @check('D10', '정상 기록 — 사다리 · 예측 요약 code = git 신원 (dirty False) + 코드 파일 지문 18 (★ 10-25 묶음 B · 옛 12 · 사슬 폴더 = 고정물 '
-              'scripts 파일 sha256 · 러너 폴더 · 러너 sha256) · S0 단계 1 기록 (보고 sha256 · 지문 일곱 · S0 계획 sha256) · 기계 이름표 null · '
-              '세 단계 지문 같음')
+              'scripts 파일 sha256 · 러너 폴더 · 러너 sha256) · S0 단계 1 기록 (보고 sha256 · 지문 일곱 · S0 계획 sha256) · 기계 이름표 '
+              '(★ 10-27 묶음 C1 — 필수 · 옛 = null) · 세 단계 지문 같음')
 def t_D10():
     s, s1, p = s_main('P0')['sum'] or {}, s_main('P1')['sum'] or {}, s_main_predict()['sum'] or {}
     c = s.get('code') or {}
@@ -4441,7 +4503,7 @@ def t_D10():
           and c.get('runner_sha256') == hashlib.sha256(Path(FX['runner']).read_bytes()).hexdigest()
           and isinstance(c.get('runner_files'), list) and (c.get('chain') or {}).get('dirty') is False
           and rec1.get('sha256') == hashlib.sha256(Path(FX['s1']).read_bytes()).hexdigest() and rec1.get('plan_sha256') == FX['s0_sha']
-          and set(S0_SAME7) <= names1 and 'machine' in s and s.get('machine') is None
+          and set(S0_SAME7) <= names1 and s.get('machine') == MACH          # ★ 10-27 묶음 C1 — 기계 이름표 필수 (시험 기본 = MACH · 옛 = 없음 null)
           and (p.get('code') or {}).get('files') == files and (s1.get('code') or {}).get('files') == files
           and (p.get('s0_reports') or {}).get('stage1') == rec1)
     return ok, (len(files), c.get('runner_sha256'), rec1.get('plan_sha256'), s.get('machine', 'absent'))
@@ -4539,8 +4601,8 @@ def t_D15():
     w = world('D15')
     out = Path(TD) / 'runs' / 'D15'
     rc, _so = call(['--stage', 'ladder', '--law', 'P0', '--target', '1.63', '--runner', FX['runner'], '--root', FX['root'],
-                    '--plan', FX['plan'], '--s0-plan', FX['s0'], '--registration', FX['reg_ok'], '--max-hours', '1', '--out', out,
-                    S0_STAGE2_OPT, s0_stage2_for(FX['plan'])], w)
+                    '--plan', FX['plan'], '--s0-plan', FX['s0'], '--registration', FX['reg_ok'], '--max-hours', MAXH, '--out', out,
+                    S0_STAGE2_OPT, s0_stage2_for(FX['plan']), '--machine', MACH], w)
     return rc == 2 and n_calls(w) == 0 and not out.exists() and chain_has(S0_STAGE1_OPT), (rc, n_calls(w), chain_has(S0_STAGE1_OPT))
 
 
@@ -5042,8 +5104,8 @@ def t_Y14():
         w = world('Y14_dry')
         out = Path(TD) / 'runs' / 'Y14_dry'
         rc, so = call(['--stage', 'ladder', '--law', 'P0', '--target', '1.63', '--runner', FX['runner'], '--root', FX['root'],
-                       '--plan', FX['plan'], '--s0-plan', FX['s0'], '--registration', FX['reg_ok'], '--max-hours', '1', '--out', out,
-                       '--dry-run'] + s0_args(), w, env={'MPM_NO_VENV': None, 'VIRTUAL_ENV': None})
+                       '--plan', FX['plan'], '--s0-plan', FX['s0'], '--registration', FX['reg_ok'], '--max-hours', MAXH, '--out', out,
+                       '--dry-run', '--machine', MACH] + s0_args(), w, env={'MPM_NO_VENV': None, 'VIRTUAL_ENV': None})
         return rs, rc, so
     rs, rc, so = scen('Y14', go)
     envs = [env_log(r['world']) for r in rs]
@@ -6090,6 +6152,215 @@ def t_M26():
 # ── K 문서 명령 = 실제 인자 계약 (★ PF2 F · 10-22 · 사전 리뷰 2 회차 PRE2-design-05 · 결정 없음) ──
 KGY_DOC = ROOT / 'docs' / 'reviews' / 'rint2_kgy_commands_20261020.md'
 _K_SPLIT = re.compile(r'\s(?:&&|\|\|?|;)\s')
+
+
+# ── ★ 10-27 묶음 C1 (RCA2-05 · 수정 계획 Q4 (가) · 판정문 C6 #15 · #30 · author 10-27 approved bundle C) R 계획 실행 정책 칸 = 계획 봉인 안 ──
+#    시간 상한 (--max-hours = 계획 값) · 최대 시도 수 · 허용 기계 · 판 (python 부 판 · numpy · scipy) = 값 칸 (null = ⬜ = σ 런 없음) · 규칙 칸 넷 =
+#    사슬이 구현한 이름 (그 밖 = 꼴 틀림) · 팔마다 기계 이름 (런 기록) · 문서 숫자 블록 = 계획 JSON 에서 생성 · 정확 대조.  시도 · 채택 · 재시도 = C1b.
+def ep_stop(r):
+    st = ((r.get('sum') or r.get('v') or {}).get('stop') or {})
+    return st.get('code'), str(st.get('cause'))
+
+
+def ep_raw_plan(tag, obj):
+    """계획 dict 를 그대로 (정렬 · 들여쓰기 1) 쓴 파일 + 그 해시 · 그 계획의 숫자 블록을 실은 등록 사본 · 단계 2 보고 (그 계획 봉인) → (경로, 등록, 단계 2)."""
+    p = Path(TD) / f'{tag}.json'
+    p.write_text(json.dumps(obj, indent=1, sort_keys=True), encoding='utf-8')
+    sha = hashlib.sha256(p.read_bytes()).hexdigest()
+    FX.setdefault('plan_bytes', {})[sha] = p.read_bytes()
+    return p, FX['reg_with'](f'`{sha}`', f'reg_{tag}.md', plan=obj), (s0_stage2_for(p) if chain_has(S0_STAGE2_OPT) else None)
+
+
+@check('EP01', '★ 10-27 묶음 C1 (RCA2-05) --max-hours ≠ 계획 exec_policy.max_hours (사다리 3 · 예측 2.5 · 계획 2) → NOT_REGISTERED · 러너 0 회 · 사유에 '
+               'max_hours (옛 = --max-hours 를 계획과 대조 안 함 · 결과를 본 뒤 시간을 늘려도 같은 등록) · 같은 값 = 돈다')
+def t_EP01():
+    def go():
+        a = ladder('EP01_lad', world('EP01_lad'), max_hours='3')
+        b = predict('EP01_pred', world('EP01_pred'), [s_main('P0')['out'], s_main('P1')['out']], max_hours='2.5')
+        return a, b
+    a, b = scen('EP01', go)
+    (ca, wa), (cb, wb) = ep_stop(a), ep_stop(b)
+    return (a['rc'] == 3 and ca == 'NOT_REGISTERED' and n_calls(a['world']) == 0 and 'max_hours' in wa
+            and b['rc'] == 3 and cb == 'NOT_REGISTERED' and n_calls(b['world']) == 0 and 'max_hours' in wb and s_main('P0')['rc'] == 0,
+            (a['rc'], ca, wa[-160:], n_calls(a['world']), b['rc'], cb, wb[-160:], n_calls(b['world'])))
+
+
+@check('EP02', '★ 10-27 묶음 C1 (C6 #15 · Q11) 기계 이름표 — 사다리 · 예측 · dry-run 에 --machine 없음 → 인자 오류 rc 2 · 러너 0 회 · 출력 폴더 없음 · '
+               '빈 이름 → rc 2 · 계획 허용 목록 밖 (zz) → MACHINE_NOT_ALLOWED (rc 3 · 러너 0 회) · 목록 안 = 돈다')
+def t_EP02():
+    lads = [s_main('P0')['out'], s_main('P1')['out']]
+
+    def go():
+        out = {}
+        for nm, argv_fn in (('lad', lambda o: ladder_argv(o, machine=None)), ('pred', lambda o: predict_argv(o, lads, machine=None)),
+                            ('dry', lambda o: ladder_argv(o, machine=None) + ['--dry-run']),
+                            ('empty', lambda o: ladder_argv(o, machine=''))):
+            w = world(f'EP02_{nm}')
+            o = Path(TD) / 'runs' / f'EP02_{nm}'
+            rc, so = call(argv_fn(o), w)
+            out[nm] = (rc, n_calls(w), o.exists(), so[-200:])
+        out['lad_zz'] = ladder('EP02_lzz', world('EP02_lzz'), machine='zz')
+        out['pred_zz'] = predict('EP02_pzz', world('EP02_pzz'), lads, machine='zz')
+        return out
+    r = scen('EP02', go)
+    bad = [k for k in ('lad', 'pred', 'dry', 'empty') if not (r[k][0] == 2 and r[k][1] == 0 and not r[k][2])]
+    zz = [(k, r[k]['rc'], ep_stop(r[k])[0], n_calls(r[k]['world'])) for k in ('lad_zz', 'pred_zz')]
+    return (not bad and all(rc == 3 and c == 'MACHINE_NOT_ALLOWED' and n == 0 for _k, rc, c, n in zz) and s_main('P1')['rc'] == 0,
+            (bad, {k: r[k] for k in bad}, zz))
+
+
+@check('EP03', '★ 10-27 묶음 C1 (봉인 전 계획 = R 진입 거부) 실행 정책 값 칸 넷 (max_hours · max_attempts · allowed_machines · env_unit) 중 하나라도 null '
+               '(⬜) → PLAN_NUMBER_UNREGISTERED · 러너 0 회 · 사유에 exec_policy.<칸> (숫자를 사슬이 고르지 않는다)')
+def t_EP03():
+    if not chain_c1():
+        return False, '사슬에 R 계획 실행 정책 칸 (PLAN_KEYS exec_policy) 이 없다'
+    out = []
+    for k in ('max_hours', 'max_attempts', 'allowed_machines', 'env_unit'):
+        p, _sha, reg = plan_set(f'EP03_{k}', exec_policy=exec_policy(**{k: None}))
+        r = scen(f'EP03_{k}', lambda p=p, reg=reg, k=k: ladder(f'EP03_{k}', world(f'EP03_{k}'), plan=p, reg=reg))
+        c, why = ep_stop(r)
+        out.append((k, r['rc'] == 3 and c == 'PLAN_NUMBER_UNREGISTERED' and n_calls(r['world']) == 0 and f'exec_policy.{k}' in why, c,
+                    why[-120:]))
+    return all(x[1] for x in out), [x for x in out if not x[1]]
+
+
+EP04_BAD = (('retry_rule', 'any_v1'), ('same_config', None), ('adoption', 'last_completed_v1'), ('attempt_dir', 'try_<n>'),
+            ('max_hours', 0), ('max_hours', -1.0), ('max_hours', True), ('max_hours', '2'), ('max_hours', 10 ** 400),
+            ('max_attempts', 0), ('max_attempts', 1.5), ('max_attempts', True), ('max_attempts', 10 ** 400),
+            ('allowed_machines', []), ('allowed_machines', ['k gy']), ('allowed_machines', ['kgy', 'kgy']), ('allowed_machines', 'kgy'),
+            ('allowed_machines', [1]), ('allowed_machines', ['10.0.0.1']),
+            ('env_unit', {'python_minor': '3.8', 'numpy': '1.24.4'}), ('env_unit', {'python_minor': '3.8', 'numpy': '1.24.4', 'scipy': '1.10.1', 'x': '1'}),
+            ('env_unit', {'python_minor': '3.8', 'numpy': '', 'scipy': '1.10.1'}), ('env_unit', '3.8/1.24.4/1.10.1'),
+            ('env_unit', {'python_minor': '3.8', 'numpy': '1.24|4', 'scipy': '1.10.1'}))
+
+
+@check('EP04', '★ 10-27 묶음 C1 실행 정책 칸 꼴 — 규칙 칸 넷이 사슬 이름이 아님 · 값 칸 꼴 틀림 (시간 0 · 음수 · bool · 문자열 · 10**400 · 시도 수 0 · 1.5 · '
+               'bool · 기계 목록 빈 · 띄어쓰기 · 중복 · 문자열 · 수 · IP · 판 칸 모자람 · 남음 · 빈 글자 · 문자열 · 표 글자 |) · exec_policy 칸 하나 '
+               '빠짐 · 하나 더 → PLAN_INVALID (rc 3 · 러너 0 회 · 값을 고치지 않는다)')
+def t_EP04():
+    if not chain_c1():
+        return False, '사슬에 R 계획 실행 정책 칸 (PLAN_KEYS exec_policy) 이 없다'
+    cases = [(f'{k}={v!r}'[:40], dict(FX['plan_obj'], exec_policy=exec_policy(**{k: v}))) for k, v in EP04_BAD]
+    ep_miss = {kk: vv for kk, vv in exec_policy().items() if kk != 'adoption'}
+    cases += [('칸 빠짐 adoption', dict(FX['plan_obj'], exec_policy=ep_miss)),
+              ('칸 더 extra', dict(FX['plan_obj'], exec_policy=dict(exec_policy(), extra=1)))]
+    out = []
+    for i, (nm, obj) in enumerate(cases):
+        def one(i=i, obj=obj):
+            p, reg, s2 = ep_raw_plan(f'EP04_{i}', obj)
+            r = scen(f'EP04_{i}', lambda: ladder(f'EP04_{i}', world(f'EP04_{i}'), plan=p, reg=reg, s2=s2))
+            return r['rc'] == 3 and ep_stop(r)[0] == 'PLAN_INVALID' and n_calls(r['world']) == 0, (ep_stop(r)[0], n_calls(r['world']))
+        ok, why = _n_safe(f'EP04_{i}', one)
+        out.append((nm, ok, why))
+    return all(x[1] for x in out), [x for x in out if not x[1]]
+
+
+@check('EP05', '★ 10-27 묶음 C1 (Q9 개정 4 Q3 · R4-10) 판 봉인 — 계획 exec_policy.env_unit (numpy 0.0.0) ≠ 지금 사슬 환경 지문 같음 단위 → CODE_PIN_MISMATCH '
+               '(rc 3 · 러너 0 회 · 사유 = 계획 봉인 판) · 같은 판 = 돈다')
+def t_EP05():
+    if not chain_c1():
+        return False, '사슬에 R 계획 실행 정책 칸 (PLAN_KEYS exec_policy) 이 없다'
+    unit = dict(RR.env_unit(RR.env_record()), numpy='0.0.0')
+    p, _sha, reg = plan_set('EP05', exec_policy=exec_policy(env_unit=unit))
+    r = scen('EP05', lambda: ladder('EP05', world('EP05'), plan=p, reg=reg))
+    c, why = ep_stop(r)
+    return (r['rc'] == 3 and c == 'CODE_PIN_MISMATCH' and n_calls(r['world']) == 0 and '계획 봉인' in why and s_main('P0')['rc'] == 0,
+            (r['rc'], c, why[-160:], n_calls(r['world'])))
+
+
+@check('EP06', '★ 10-27 묶음 C1 (판정문 C6 #30) 문서 숫자 = 계획 JSON 에서 생성 · 정확 대조 — 생성기 (`--stage plan-doc` · plan_doc_block) = 이 시험이 따로 '
+               '조립한 블록 · --check-doc (같음 rc 0 · 다름 rc 3) · 등록 사본에 블록 없음 · 값 하나 다름 (s_min 0.61) · 블록 둘 · 다른 계획의 블록 · 표지 '
+               '하나만 → 사다리 PLAN_DOC_MISMATCH (러너 0 회) · 예측 · 판정도 같은 대조 (블록 없는 등록 = PLAN_DOC_MISMATCH · 판정 NOT_COMPUTED)')
+def t_EP06():
+    gen = getattr(RR, 'plan_doc_block', None)
+    if not callable(gen):
+        return False, '사슬에 문서 숫자 생성기 plan_doc_block 이 없다'
+    want = doc_block(FX['plan_obj'])
+    rc_g, so_g = call(['--stage', 'plan-doc', '--plan', FX['plan']], world('EP06_gen'))
+    rc_c, so_c = call(['--stage', 'plan-doc', '--plan', FX['plan'], '--registration', FX['reg_ok'], '--check-doc'], world('EP06_chk'))
+    text = FX['reg_text']
+    nob = FX['reg_with'](f'`{FX["plan_sha"]}`', 'reg_EP06_none.md', block=False)
+    rc_n, so_n = call(['--stage', 'plan-doc', '--plan', FX['plan'], '--registration', nob, '--check-doc'], world('EP06_chkn'))
+    one = Path(TD) / 'reg_EP06_one.md'
+    one.write_text(Path(FX['reg_ok']).read_text(encoding='utf-8').replace(want, want.replace('| `s_min_um` | `0.6` |', '| `s_min_um` | `0.61` |')),
+                   encoding='utf-8')
+    two = Path(TD) / 'reg_EP06_two.md'
+    two.write_text(Path(FX['reg_ok']).read_text(encoding='utf-8') + '\n' + want + '\n', encoding='utf-8')
+    oth = FX['reg_with'](f'`{FX["plan_sha"]}`', 'reg_EP06_oth.md', plan=dict(FX['plan_obj'], max_ladder_points=17))
+    half = Path(TD) / 'reg_EP06_half.md'
+    half.write_text(Path(FX['reg_ok']).read_text(encoding='utf-8').replace(PLAN_DOC_END, '', 1), encoding='utf-8')
+    lad = [(nm, scen(f'EP06_{nm}', lambda reg=reg, nm=nm: ladder(f'EP06_{nm}', world(f'EP06_{nm}'), reg=reg)))
+           for nm, reg in (('none', nob), ('one', one), ('two', two), ('oth', oth), ('half', half))]
+    pr = scen('EP06_pred', lambda: predict('EP06_pred', world('EP06_pred'), [s_main('P0')['out'], s_main('P1')['out']], reg=nob))
+    vr = scen('EP06_ver', lambda: verdict('EP06_ver', main_dirs(), reg=nob))
+    bad_l = [(nm, r['rc'], ep_stop(r)[0], n_calls(r['world'])) for nm, r in lad
+             if not (r['rc'] == 3 and ep_stop(r)[0] == 'PLAN_DOC_MISMATCH' and n_calls(r['world']) == 0)]
+    return (gen(FX['plan_obj']) == want and rc_g == 0 and want in so_g and rc_c == 0 and rc_n == 3 and 'PLAN_DOC_MISMATCH' in so_n
+            and PLAN_DOC_BEGIN not in text and not bad_l and one.read_text(encoding='utf-8') != Path(FX['reg_ok']).read_text(encoding='utf-8')
+            and pr['rc'] == 3 and ep_stop(pr)[0] == 'PLAN_DOC_MISMATCH' and n_calls(pr['world']) == 0
+            and vr['rc'] == 3 and (vr['v'] or {}).get('verdict') == 'NOT_COMPUTED' and ep_stop(vr)[0] == 'PLAN_DOC_MISMATCH',
+            (gen(FX['plan_obj']) == want, rc_g, rc_c, rc_n, so_n[-160:], bad_l, (pr['rc'], ep_stop(pr)[0]), (vr['rc'], ep_stop(vr)[0])))
+
+
+def ep_tamper_runs(src, tag, name, fn):
+    return b_tamper_copy(src, tag, name, fn)
+
+
+@check('EP07', '★ 10-27 묶음 C1 (C6 #15 · Q11) 팔마다 기계 이름 — 사다리 · 예측 런 기록마다 machine = 단계 기계 (팔 = 그 런의 기계) · 판정 = 런 기록 '
+               'machine 빈 글자 · 목록 밖 · 칸 없음 · 단계 기계 ≠ 런 기계 · 단계 기계 목록 밖 (예측 요약 사본만 손댐) → MACHINE_NOT_ALLOWED (판정 '
+               'NOT_COMPUTED · rc 3) · 손대지 않은 묶음 = 판정')
+def t_EP07():
+    def go():
+        out = {}
+        for nm, fn in (('empty', lambda s: s['runs'][0].update(machine='')), ('zz', lambda s: s['runs'][1].update(machine='zz')),
+                       ('absent', lambda s: s['runs'][2].pop('machine', None)), ('mix', lambda s: s['runs'][3].update(machine='gabia')),
+                       ('stage', lambda s: [s.update(machine='zz')] + [x.update(machine='zz') for x in s['runs']])):
+            d = ep_tamper_runs(s_main_predict()['out'], f'EP07_{nm}_pred', 'predict_summary.json', fn)
+            out[nm] = verdict(f'EP07_{nm}', [s_main('P0')['out'], s_main('P1')['out'], d])
+        return out
+    runs = [(x, s['sum'].get('machine')) for s in (s_main('P0'), s_main('P1'), s_main_predict()) for x in (s['sum'] or {}).get('runs', [])]
+    rec_ok = bool(runs) and all(x.get('machine') == m == MACH for x, m in runs)
+    r = scen('EP07', go)
+    bad = [(nm, v['rc'], ep_stop(v)[0]) for nm, v in r.items()
+           if not (v['rc'] == 3 and ep_stop(v)[0] == 'MACHINE_NOT_ALLOWED' and (v['v'] or {}).get('verdict') == 'NOT_COMPUTED')]
+    v0 = s_verdict_main()
+    return rec_ok and not bad and v0['rc'] == 0, (rec_ok, [(x.get('name'), x.get('machine')) for x, _m in runs[:3]], bad, v0['rc'])
+
+
+@check('EP08', '★ 10-27 묶음 C1 (Q9 개정 4 Q3) 판정 — 예측 요약 사본의 환경 같음 단위 (numpy) 만 계획 봉인 판과 다르게 → 판정 CODE_PIN_MISMATCH (사유 = '
+               '계획 봉인 판 · NOT_COMPUTED · rc 3)')
+def t_EP08():
+    if not chain_c1():
+        return False, '사슬에 R 계획 실행 정책 칸 (PLAN_KEYS exec_policy) 이 없다'
+
+    def set_u(s):
+        s['code']['env']['unit']['numpy'] = '0.0.0'
+    r = scen('EP08', lambda: verdict('EP08', [s_main('P0')['out'], s_main('P1')['out'],
+                                              ep_tamper_runs(s_main_predict()['out'], 'EP08_pred', 'predict_summary.json', set_u)]))
+    c, why = ep_stop(r)
+    return (r['rc'] == 3 and c == 'CODE_PIN_MISMATCH' and '계획 봉인' in why and (r['v'] or {}).get('verdict') == 'NOT_COMPUTED',
+            (r['rc'], c, why[-200:]))
+
+
+@check('EP10', '★ 10-27 묶음 C (RCA2-07 · Q7 (가)) 구현 주석 — 연장 단계 함수 셋 (`Ladder._outer_neighbor` · `Ladder._next_out` · `end_origin_push`) 의 '
+               '문장 = "각 연장 단계 비 ≤ 100 · 총 팽창 상계 없음" (판정문 반례 비 443,434,903.8 · 총 ×100 상계로 읽히는 문장 없음)')
+def t_EP10():
+    import inspect
+    want = '각 연장 단계 비 ≤ 100 · 총 팽창 상계 없음'
+    fns = [RR.Ladder._outer_neighbor, RR.Ladder._next_out, RR.end_origin_push]
+    docs = [inspect.getdoc(f) or '' for f in fns]
+    return all(want in d for d in docs), [d[-200:] for d in docs if want not in d]
+
+
+@check('EP11', '★ 10-27 묶음 C1 (봉인 전 계획 = R 진입 거부) 옛 계획 rint-r-plan-v2 (실행 정책 칸 없음 · 숫자 블록은 그 계획) → PLAN_INVALID · 러너 0 회')
+def t_EP11():
+    if not chain_c1():
+        return False, '사슬에 R 계획 실행 정책 칸 (PLAN_KEYS exec_policy) 이 없다'
+    old = {k: v for k, v in FX['plan_obj'].items() if k != 'exec_policy'}
+    old['schema'] = 'rint-r-plan-v2'
+    p, reg, s2 = ep_raw_plan('EP11', old)
+    r = scen('EP11', lambda: ladder('EP11', world('EP11'), plan=p, reg=reg, s2=s2))
+    return r['rc'] == 3 and ep_stop(r)[0] == 'PLAN_INVALID' and n_calls(r['world']) == 0, (r['rc'], ep_stop(r))
 
 
 def doc_tool_commands(path, tool):
