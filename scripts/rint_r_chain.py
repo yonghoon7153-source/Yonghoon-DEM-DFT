@@ -14,6 +14,11 @@
   # (4) 예측 — 네 모서리 × {R_j,lo · R_j,0 · R_j,hi} (DBE arm 0 · R_j · 계획 · S0 계획은 사다리 요약에서 읽는다)
   python3 scripts/rint_r_chain.py --stage predict --ladders ~/sdcp/ca1_ladder_P0 ~/sdcp/ca1_ladder_P1 --kit kit_DBE_sdcp1um_vgcf100 \\
       --runner … --root ~/sdcp --machine <짧은 이름표> --max-hours H --out ~/sdcp/ca1_predict
+  # (4b) ★ 10-27 묶음 C2d — 예측을 12 단위로 (원장 시도만 · 단위 = <법칙>_c<c>_<R 역할> · 넘침 점 = 같은 이름 · 끝 = 합치기)
+  #   … --stage predict … --ledger <원장> --attempt <n> --unit P0_c0_R_j0 --out ~/sdcp/ca1_units
+  #   … --stage predict … --ledger <원장> --merge ~/sdcp/ca1_units --out ~/sdcp/ca1_merge1            (넘침 있으면 rc 4 · expansion.json)
+  #   … --stage predict … --ledger <원장> --attempt <n> --point P0_c0_R_j0 --expand ~/sdcp/ca1_merge1/expansion.json --out ~/sdcp/ca1_points
+  #   … --stage predict … --ledger <원장> --merge ~/sdcp/ca1_units ~/sdcp/ca1_points --expand ~/sdcp/ca1_merge1/expansion.json --out ~/sdcp/ca1_predict
   # (0) 계획 숫자 블록 (등록 R 에 붙이는 표 · 계획 JSON 에서 생성) · 대조
   python3 scripts/rint_r_chain.py --stage plan-doc --plan ~/sdcp/ca1_plan.json [--registration <등록 R> --check-doc]
   # 감도 (등록 R §5-6 · 필수 · ★ 주 판정 단계 뒤에만 — Q-F): --variant FIBRE | UNREG | GRID (사다리 둘 + 예측) · SVORDER (예측만 · 주 사다리)
@@ -116,6 +121,17 @@
   `--stage recover --ledger` = 결과 줄 확정 · 한정 = 원장 안 시도끼리만 (그림자 런 · 모든 사본 일관 편집은 못 막는다 · Codex Q-D) · ★ C1b-2 재실행
   (`--add --resume <원 시도>` · `ResumeRunner` = 사슬 끝 시도 폴더의 끝난 런 복사 · 멈춘 런부터 새로 · 남은 payload 바이트 대조 = RESUME_MISMATCH · 없으면
   결정성 가정 = Codex Q-J 한정)
+★ 10-27 묶음 C2d (Q9 설계 §3-1 – §3-5 · §4 · 개정 1–5 · Codex 회차 ① Q-A · Q-B · Q-D · Q-I · Q-L · author 10-27 approved bundle C) 12 단위 · 합치기:
+  · 단위 = (c · 법칙 · R) 12 (`UNIT_RE` · 원장 대상 unit[:<변이>]:<이름>) · 단위 시도 (`--unit`) = 모서리 arm 0 (SV 반사실 = 예측과 같은 범위) + origin 표본
+    (런 이름 U01_corner · U02_origin · `unit_summary.json` · UNIT_DONE) · 넘침 점 (`--point --expand <결정 기록>`) = origin8 (U01_origin8 ·
+    `point_summary.json` · POINT_DONE · 풀기 전 대조 = 결정 기록의 점 · 사다리 · 계획 · 원장 조상) · 시도 하나 = 단위 · 점 하나 (CLI 단수)
+  · 합치기 (`--merge <시도 폴더 · 바탕 …> --ledger`) = 같은 판정 함수 (`Predict`) · 같은 요청 순서 · fetch = `MergeFetch` (대상을 처음 요청할 때 그 대상의
+    원장 대조 · 채택 · 출처 → 시도 폴더 사본 `units/<대상>/attempt_<n>` → 같은 `read_run`) · 런 이름 = 사슬 차례 · 부분 채택 (멈춤 = 그 런 요청 때) ·
+    첫 합치기 넘침 = `EXPANSION_NEEDED` (rc 4 · `merge_summary.json` · 결정 기록 `expansion.json`) · 끝 합치기 (`--expand`) = 결정 기록 구조 칸 대조
+    (넘침 목록 · 단위 시도 sha 집합 · 원장 접두) · 끝까지 간 뒤 남는 채택 런 = `UNIT_EXTRA` · 요청됐는데 없음 = `UNIT_MISSING` · 출처 다름 =
+    `UNIT_PROVENANCE_MISMATCH` · 요청되지 않은 시도 · 대조 결과 = `merge.unused_runs` (기록만) · 원장 사본 = `ledger/ledger.bundle`
+  · 판정 = 합친 예측은 원장 판정만 (`merged_ledger_check` = 같은 대조를 다시) · ⚠ 한정: 이전 사슬과 모든 멈춤 우선순위가 같다고 쓰지 않는다 (Codex Q-I) ·
+    원장은 원장 안 시도끼리만 (그림자 런 · 모든 사본 일관 편집 = 못 막는다 · Q-D) · 기계마다 비트 차 = 칼날 (판정 보장 아님 · Q-G)
 """
 import argparse
 import glob
@@ -416,6 +432,11 @@ STOPS = {
                           'Q9 §3-5 개정 4 · R4-08)',
     'ATTEMPT_LIMIT': '같은 대상 시도 수 > 계획 exec_policy.max_attempts (★ 10-27 묶음 C1b · C1 · 이름 = 구현 때 · 결정 필요)',
     'RESUME_MISMATCH': '재실행 payload ≠ 원 시도에 남은 payload (바이트 · 결정적 재실행이 아니다 · Q9 §3-5 · ★ 10-27 묶음 C1b-2)',
+    #  ★ 10-27 묶음 C2d (Q9 설계 §3-2 · §3-4 · §7 의 이름) — 12 단위 · 넘침 점 · 합치기
+    'UNIT_MISSING': '합치기 다시 계산이 요청한 단위의 채택 시도가 없다 · 그 시도에 요청한 런이 없다 (넘침 점이 없으면 상태 EXPANSION_NEEDED · Q9 §3-2)',
+    'UNIT_EXTRA': '합치기 다시 계산이 끝까지 갔는데 채택된 단위 · 넘침 점 시도의 런이 남았다 (요청되지 않은 채택 런 · Q9 §3-2)',
+    'UNIT_PROVENANCE_MISMATCH': '단위 · 넘침 점 시도의 출처 ≠ 합치기 (계획 · S0 · 코드 · 사다리 · 침대 · SV 범위 · 기계 · 요청) · 결정 기록 (꼴 · 점 · 사다리 · '
+                                '원장 조상) · 끝 합치기 다시 센 넘침 목록 · 단위 시도 sha 집합 ≠ 결정 기록 · 점 시도가 인용한 결정 기록 sha ≠ (Q9 §3-2 · §3-4)',
     'DUPLICATE_RUN': '같은 킷 · 같은 계획 두 번',
     'INPUT_SHA_MISMATCH': '판정 입력 sha256 ≠ 런 산출',
     'INPUT_MISSING': '판정 입력이 모자란다',
@@ -1218,8 +1239,8 @@ def env_seal_problem(code, plan):
     if got != want:
         g, w = got or {}, want or {}
         diff = [f'{k} {g.get(k)!r} ≠ {w.get(k)!r}' for k in ENV_UNIT_KEYS if g.get(k) != w.get(k)] or ['미확인']
-        return (f'환경 지문 같음 단위 ≠ 계획 봉인 판 (exec_policy.env_unit · ' + ' · '.join(diff) + ') — 계획에 봉인한 python 부 판 · numpy · scipy 판의 '
-                f'venv 로 다시 (Q9 개정 4 Q3 · R4-10)')
+        return ('환경 지문 같음 단위 ≠ 계획 봉인 판 (exec_policy.env_unit · ' + ' · '.join(diff) + ') — 계획에 봉인한 python 부 판 · numpy · scipy 판의 '
+                'venv 로 다시 (Q9 개정 4 Q3 · R4-10)')
     return None
 
 
@@ -1272,8 +1293,14 @@ def stage_machine_problem(s, plan):
     m = s.get('machine')
     if not (isinstance(m, str) and m in allowed):
         return f'단계 기계 {m!r} ∉ 계획 exec_policy.allowed_machines {allowed}'
+    mg = s.get('merge') if isinstance(s.get('merge'), dict) else None
     for r in s.get('runs') or []:
-        if r.get('machine') != m:
+        if mg is not None:                                    # ★ 10-27 묶음 C2d — 합친 예측: 런 기계 = 그 런 단위 시도의 기계 (허용 목록 안 · 합치기 기계와 다를 수 있다)
+            src = r.get('source') if isinstance(r.get('source'), dict) else {}
+            um = ((mg.get('units') or {}).get(src.get('target')) or {}).get('machine')
+            if not (isinstance(r.get('machine'), str) and r.get('machine') in allowed and r.get('machine') == um):
+                return f'합친 런 {r.get("name")} 기계 {r.get("machine")!r} ≠ 그 단위 시도 기계 {um!r} · 허용 목록 {allowed}'
+        elif r.get('machine') != m:
             return f'런 {r.get("name")} 기계 {r.get("machine")!r} ≠ 단계 기계 {m!r} (팔마다 기계 이름 · 한 기계 단계)'
     return None
 
@@ -2495,7 +2522,10 @@ REJECTED_FILE = 'rejected.json'
 REJECTED_SIDE = '.rejected.json'
 ATTEMPT_DIR_RE = re.compile(r'attempt_([1-9][0-9]{0,8})')
 ATTEMPT_SIDE_RE = re.compile(r'attempt_([1-9][0-9]{0,8})\.rejected\.json')
-TARGET_RE = re.compile(r'ladder:(P0|P1)(?::(FIBRE|UNREG|GRID))?|predict(?::(FIBRE|UNREG|GRID|SVORDER))?')
+#: ★ 10-27 묶음 C2d (Q9 §3-1) — 단위 · 넘침 점 대상 = unit[:<변이>]:<이름> · point[:<변이>]:<이름> (이름 = `UNIT_RE` · 무리 4 = 종류 · 5 = 변이 · 6–8 = 이름)
+UNIT_RE = re.compile(r'(P0|P1)_c(0|1)_(R_j_lo|R_j0|R_j_hi)')
+TARGET_RE = re.compile(r'ladder:(P0|P1)(?::(FIBRE|UNREG|GRID))?|predict(?::(FIBRE|UNREG|GRID|SVORDER))?'
+                       r'|(unit|point)(?::(FIBRE|UNREG|GRID|SVORDER))?:(P0|P1)_c(0|1)_(R_j_lo|R_j0|R_j_hi)')
 LEDGER_GIT_CFG = ('-c', 'user.name=rint-r-chain', '-c', 'user.email=rint-r-chain@localhost', '-c', 'commit.gpgsign=false',
                   '-c', 'core.autocrlf=false')
 HEADER_KEYS = frozenset({'kind', 'schema', 'plan_sha256', 'utc'})
@@ -2503,7 +2533,21 @@ ENTRY_KEYS = frozenset({'kind', 'n', 'target', 'machine', 'resume_of', 'plan_sha
 RESULT_KEYS = frozenset({'kind', 'n', 'status', 'stop', 'side', 'cause', 'resume_ok', 'folder', 'folder_sha256', 'by', 'utc'})
 ATTEMPT_KEYS = frozenset({'schema', 'n', 'target', 'machine', 'resume_of', 'ledger_commit'})
 RESULT_STATUSES = ('completed', 'stopped', 'rejected', 'interrupted')
-DONE_STATUSES = ('CALIBRATED', 'PREDICTED')
+#: ★ 10-27 묶음 C2d — 단위 · 넘침 점 시도의 완주 상태 (요약 이름 · 런 이름 앞자리 U · 결과 줄 completed)
+UNIT_SUMMARY = {'unit': 'unit_summary.json', 'point': 'point_summary.json'}
+UNIT_DONE = {'unit': 'UNIT_DONE', 'point': 'POINT_DONE'}
+UNIT_PREFIX = 'U'
+DONE_STATUSES = ('CALIBRATED', 'PREDICTED', 'UNIT_DONE', 'POINT_DONE')
+#: ★ 10-27 묶음 C2d (Q9 §3-2 · §3-4) — 합치기 · 결정 기록 · 사본 자리 · 첫 합치기 넘침 (멈춤 아님 · 판정 입력 아님) 종료 코드
+MERGE_SCHEMA = 'rint-r-merge-v1'
+EXPANSION_SCHEMA = 'rint-r-expansion-v1'
+EXPANSION_FILE = 'expansion.json'
+MERGE_SUMMARY = 'merge_summary.json'
+UNITS_DIR = 'units'
+LEDGER_COPY_DIR = 'ledger'
+LEDGER_BUNDLE = 'ledger.bundle'
+EXPANSION_KEYS = frozenset({'schema', 'variant', 'points', 'overflow', 'attempts', 'ledger', 'ladders', 'plan_sha256', 'machine', 'env', 'utc'})
+RC_EXPANSION_NEEDED = 4
 #: 재실행 자격 원인 (Q9 §3-5 개정 4 — 자원 · 인프라 = 시간 초과 · 사슬이 받은 신호 · 사슬 부모 사망 (원인 기록 없음) · 그룹 종료 미확인 · 자원 낱말).
 #:   그 밖 원인 (gate = 런 전 관문 · check = 팔을 읽은 뒤 검사 · 수치 · 물리 · runner_rc = 낱말 없는 러너 rc) = 재실행 불가 (보수 쪽).
 RESUME_CAUSES = frozenset({'timeout', 'signal', 'parent_dead', 'group_unconfirmed', 'resource'})
@@ -2758,11 +2802,41 @@ def folder_side(path):
     return 'pre'
 
 
-def target_of(stage, law=None, variant=None):
-    """단계 → 원장 대상 이름 (ladder:<법칙>[:<변이>] · predict[:<변이>])."""
+def target_of(stage, law=None, variant=None, unit=None, point=None):
+    """단계 → 원장 대상 이름 (ladder:<법칙>[:<변이>] · predict[:<변이>] · ★ 10-27 묶음 C2d unit[:<변이>]:<이름> · point[:<변이>]:<이름>)."""
     if stage == 'ladder':
         return f'ladder:{law}' + (f':{variant}' if variant else '')
+    if unit or point:
+        return unit_target('unit' if unit else 'point', variant, unit or point)
     return 'predict' + (f':{variant}' if variant else '')
+
+
+def unit_name(c, law, rr):
+    """★ 10-27 묶음 C2d (Q9 §3-1) — 단위 · 넘침 점 이름 <법칙>_c<c>_<R 역할> (예 P0_c0_R_j0)."""
+    return f'{law}_c{c}_{rr}'
+
+
+def unit_parse(name):
+    """단위 이름 → (c, 법칙, R 역할) · 꼴 틀림 = None."""
+    m = UNIT_RE.fullmatch(str(name))
+    return (m.group(2), m.group(1), m.group(3)) if m else None
+
+
+def unit_target(kind, variant, name):
+    return f'{kind}' + (f':{variant}' if variant else '') + f':{name}'
+
+
+def target_parts(target):
+    """원장 대상 → (종류 unit | point, 변이 | None, 이름) · 단위 · 넘침 점 대상이 아니면 None."""
+    m = TARGET_RE.fullmatch(str(target))
+    if not m or not m.group(4):
+        return None
+    return m.group(4), m.group(5), f'{m.group(6)}_c{m.group(7)}_{m.group(8)}'
+
+
+def target_dir(target):
+    """합친 예측 안 시도 사본 자리 이름 (대상의 ':' → '-' · 예 unit-P0_c0_R_j0)."""
+    return str(target).replace(':', '-')
 
 
 def target_kits(target):
@@ -2938,7 +3012,7 @@ def attempt_open(a, stage):
         print('인자 오류: 시도 꼴 = --ledger <원장 저장소> 와 --attempt <항목 번호> 둘 다 (--dry-run 없이) — ★ 10-27 묶음 C1b', file=sys.stderr)
         return 2
     repo, n = Path(a.ledger), int(a.attempt)
-    target = target_of(stage, getattr(a, 'law', None), a.variant)
+    target = target_of(stage, getattr(a, 'law', None), a.variant, getattr(a, 'unit', None), getattr(a, 'point', None))
     base = Path(a.out)
     try:
         why = ledger_repo_problem(repo)
@@ -2968,6 +3042,8 @@ def attempt_open(a, stage):
                                               'resume_of': e['resume_of'], 'ledger_commit': head})
     try:
         prob = attempt_presolve_problem(st, e, n, target, a, stage)
+        if not prob and getattr(a, 'point', None):           # ★ 10-27 묶음 C2d — 넘침 점 = 결정 기록 (점 · 변이 · 사다리 · 계획 · 원장 조상)
+            prob = expansion_presolve_problem(a, e, repo, head)
     except Stop as ex:
         prob = (ex.code, ex.cause)
     if prob:
@@ -3023,6 +3099,77 @@ def resume_source(st, e, n, base):
     """재실행 항목 → (원천 폴더 = <바탕>/attempt_<사슬 끝>, 사슬 끝 번호)."""
     eff = adoption(st, e['target'], upto=n)['effective']
     return Path(base) / f'attempt_{eff}', eff
+
+
+def expansion_form_problem(d):
+    """★ 10-27 묶음 C2d (Q9 §3-2 결정 기록 꼴) → 사유 | None — 칸 · schema · 변이 · 점 (단위 이름 · 중복 없음) · 넘침 목록 = 점 · 시도 sha 집합 ([대상 · 번호 ·
+    폴더 요약 sha] 차례) · 원장 (경로 · 커밋 · sha256) · 사다리 (법칙마다 요약 sha) · 계획 sha."""
+    if not isinstance(d, dict) or set(d) != EXPANSION_KEYS or d.get('schema') != EXPANSION_SCHEMA:
+        return f'칸 · schema (= {sorted(EXPANSION_KEYS)} · {EXPANSION_SCHEMA})'
+    if d['variant'] is not None and d['variant'] not in VARIANTS:
+        return f'변이 {d["variant"]!r}'
+    pts = d['points']
+    if not (isinstance(pts, list) and pts and all(isinstance(p, str) and UNIT_RE.fullmatch(p) for p in pts) and len(set(pts)) == len(pts)):
+        return f'점 {pts!r}'
+    if d['overflow'] != [list(unit_parse(p)) for p in pts]:
+        return '넘침 목록 ≠ 점'
+    at = d['attempts']
+    if not (isinstance(at, list) and all(isinstance(x, list) and len(x) == 3 and isinstance(x[0], str) and type(x[1]) is int and _hex64(x[2])
+                                         for x in at) and at == sorted(at)):
+        return '시도 sha 집합 꼴'
+    L = d['ledger']
+    if not (isinstance(L, dict) and set(L) == {'path', 'commit', 'sha256'} and _hex40(L.get('commit')) and _hex64(L.get('sha256'))):
+        return '원장 칸'
+    if not (isinstance(d['ladders'], dict) and sorted(d['ladders']) == sorted(LAWS) and all(_hex64(v) for v in d['ladders'].values())):
+        return '사다리 칸'
+    if not _hex64(d['plan_sha256']):
+        return '계획 sha'
+    return None
+
+
+def read_expansion(path):
+    """결정 기록 (expansion.json) → (dict, sha256 (파일 바이트)) · 못 읽음 · 꼴 틀림 = Stop UNIT_PROVENANCE_MISMATCH."""
+    try:
+        raw = Path(path).read_bytes()
+        d = _json_strict(raw)
+    except Exception as e:                                    # noqa: BLE001 — 못 읽음 = 출처 없음
+        raise Stop('UNIT_PROVENANCE_MISMATCH', f'결정 기록 {path} 를 못 읽는다 ({type(e).__name__})')
+    why = expansion_form_problem(d)
+    if why:
+        raise Stop('UNIT_PROVENANCE_MISMATCH', f'결정 기록 {Path(path).name} 꼴 — {why}')
+    return d, hashlib.sha256(raw).hexdigest()
+
+
+def ladders_sha_of(dirs):
+    """사다리 폴더들 → {법칙: 요약 sha256} (결정 기록 · 단위 출처 대조)."""
+    out = {}
+    for d in dirs or []:
+        s, sha = read_summary(Path(d), 'ladder_summary.json')
+        out[(s or {}).get('law')] = sha
+    return out
+
+
+def expansion_presolve_problem(a, e, repo, head):
+    """★ 10-27 묶음 C2d (Q9 §3-2 넘침 실행 · 풀기 전 대조) — 결정 기록 꼴 · 같은 변이 · 이 점이 그 넘침 목록 안 · 같은 사다리 (요약 sha) · 같은 계획 ·
+    결정 기록의 원장 커밋 = 이 원장 HEAD 의 조상 · 그 커밋 원장 sha256 → (UNIT_PROVENANCE_MISMATCH, 사유) | None (거부 = 결과 전)."""
+    try:
+        dec, _sha = read_expansion(a.expand)
+    except Stop as ex:
+        return (ex.code, ex.cause)
+    why = None
+    if dec['variant'] != a.variant:
+        why = f'결정 기록 변이 {dec["variant"]!r} ≠ {a.variant!r}'
+    elif a.point not in dec['points']:
+        why = f'점 {a.point} 이 결정 기록의 넘침 목록 {dec["points"]} 에 없다 (결정 기록이 요구한 origin8 런만)'
+    elif dec['ladders'] != ladders_sha_of(a.ladders):
+        why = '결정 기록의 사다리 요약 sha ≠ 이 시도의 사다리'
+    elif dec['plan_sha256'] != e['plan_sha256']:
+        why = '결정 기록의 계획 sha256 ≠ 원장 항목'
+    elif not ledger_is_ancestor(repo, dec['ledger']['commit'], head):
+        why = f'결정 기록의 원장 커밋 {dec["ledger"]["commit"][:12]} 이 이 원장 HEAD 의 조상이 아니다 (다른 원장 · 다른 가지의 첫 합치기)'
+    elif hashlib.sha256(ledger_blob(repo, dec['ledger']['commit'])).hexdigest() != dec['ledger']['sha256']:
+        why = '결정 기록의 원장 sha256 ≠ 그 커밋의 원장'
+    return ('UNIT_PROVENANCE_MISMATCH', why) if why else None
 
 
 def attempt_groups_problem(folder):
@@ -3171,6 +3318,54 @@ def _attempt_folders(bases):
     return found
 
 
+def target_ledger_problem(repo, st, raw, commit, target, found):
+    """★ 10-27 묶음 C2d — 대상 하나의 원장 · 시도 폴더 대조 (판정 `ledger_verdict_check` · 합치기 `MergeFetch` · 합친 예측 판정 `merged_ledger_check` 가 같은
+    함수 · C1b 판정 고리 그대로 + 한 항목 폴더 둘 = 멈춤): 그 대상 항목마다 결과 줄 · 폴더 (found {n: [경로]} · 없으면 엄격 결과 뒤 · 결과 줄과 다른 이름 ·
+    같은 이름 둘) · 요약 sha = 결과 줄 · 결과 전 · 뒤 = 폴더 · attempt.json · 시작 커밋 (조상 · 바이트 접두 · 같은 대상 앞 결과 줄) → 채택 (폴더의 결과 전 ·
+    뒤) → (항목 번호 목록, 채택, {n: 경로}) · 실패 = Stop."""
+    ns = [k for k, e in st['entries'].items() if e['target'] == target]
+    sides, paths = {}, {}
+    for k in ns:
+        r = st['results'].get(k)
+        if r is None:
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'항목 {k} ({target}) 의 결과 줄이 없다 (시도 중 · --stage recover 먼저)')
+        cand = found.get(k) or []
+        hit = [p for p in cand if p.name == r['folder']]
+        extra = [p for p in cand if p.name != r['folder']]
+        if extra:
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'원장에 없는 시도 폴더 {[p.name for p in extra]} (항목 {k} 의 결과 줄 폴더 = {r["folder"]})')
+        if not hit:                                           # 폴더 없는 시도 (거부 기록 없음 · 소실) = 엄격 결과 뒤 → 이 대상은 판정할 수 없다 (Q9 §3-5 개정 3)
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'항목 {k} ({target}) 의 시도 폴더 · 거부 기록 {r["folder"]} 이 없다 (엄격 — 결과 뒤로 본다 · 그 대상 '
+                                                  f'판정 없음 · 다른 곳에 둔 시도 = 판정 --attempt-dirs · 합치기 --merge 경로)')
+        if len(hit) > 1:                                      # ★ 10-27 묶음 C2d — 한 항목 = 폴더 하나 (Q9 §3-5 "막는 것: 한 항목에 폴더 둘")
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'항목 {k} ({target}) 의 시도 폴더 · 거부 기록이 둘 ({[str(p) for p in hit][:2]}) — 한 항목 = 폴더 하나 '
+                                                  f'(Q9 §3-5)')
+        p = hit[0]
+        if folder_digest(p) != r['folder_sha256']:
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{p.name}: 폴더 요약 sha ≠ 원장 결과 줄 {k}')
+        sides[k] = folder_side(p)
+        if sides[k] != r['side']:
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{p.name}: 결과 줄 {k} 의 결과 {r["side"]} ≠ 폴더 ({sides[k]} — 표지 · payload 유무)')
+        if p.is_dir():
+            a = read_attempt(p)
+            if a is None or a['n'] != k or a['target'] != target:
+                raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{p.name}: attempt.json ≠ 원장 항목 {k}')
+            c0 = a['ledger_commit']
+            if not ledger_is_ancestor(repo, c0, commit):
+                raise Stop('ATTEMPT_ORDER_MISMATCH', f'{p.name}: 시작 커밋 {c0[:12]} 이 원장 커밋 {commit[:12]} 의 조상이 아니다 (곁가지에서 시작 · R4-07)')
+            raw0 = ledger_blob(repo, c0)
+            if not raw.startswith(raw0):
+                raise Stop('ATTEMPT_ORDER_MISMATCH', f'{p.name}: 시작 커밋의 원장이 원장의 바이트 접두가 아니다 (R4-07)')
+            st0 = ledger_parse(raw0)
+            if k not in st0['entries'] or any(j not in st0['results'] for j in ns if j < k):
+                raise Stop('ATTEMPT_ORDER_MISMATCH', f'{p.name}: 시작 커밋에 자기 항목 · 같은 대상 앞 결과 줄이 없다 (차례로만)')
+        paths[k] = p
+    ad = adoption(st, target, sides=sides)
+    if ad['problems']:
+        raise Stop(*ad['problems'][0])
+    return ns, ad, paths
+
+
 def ledger_verdict_check(dirs, repo, attempt_dirs=(), commit=None):
     """★ 10-27 묶음 C1b — 판정 입력 ↔ 원장 (Q9 §3-4 · §3-5): 원장 (commit · 없으면 HEAD) = HEAD 의 조상 · 바이트 접두 · 역사 덧붙이기만 · 입력마다 원장 시도
     폴더 · 입력 대상의 시도 전부 = 폴더 (입력의 부모 폴더 · attempt_dirs 에서 찾음 · 없으면 엄격 결과 뒤) 요약 sha = 결과 줄 · 원장에 없는 시도 폴더 = 멈춤 ·
@@ -3190,59 +3385,29 @@ def ledger_verdict_check(dirs, repo, attempt_dirs=(), commit=None):
     if why:
         raise Stop('ATTEMPT_LEDGER_MISMATCH', f'원장 역사: {why}')
     st = ledger_parse(raw)
-    want = {}
+    want, merged = {}, []
     for d in dirs:
         a = read_attempt(d)
         if a is None:
-            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{Path(d).name}: 원장 시도 폴더가 아니다 (원장 판정의 입력 = 원장 시도만)')
+            sm, _sha = read_summary(Path(d), 'predict_summary.json')
+            if isinstance(sm, dict) and isinstance(sm.get('merge'), dict):   # ★ 10-27 묶음 C2d — 합친 예측 (같은 대조를 아래 `merged_ledger_check` 에서 다시)
+                merged.append((Path(d).resolve(), sm))
+                continue
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{Path(d).name}: 원장 시도 폴더가 아니다 (원장 판정의 입력 = 원장 시도 · 합친 예측만)')
         if a['n'] not in st['entries'] or st['entries'][a['n']]['target'] != a['target']:
             raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{Path(d).name}: 원장 항목 ≠ 시도 폴더')
         if a['target'] in want:
             raise Stop('DUPLICATE_RUN', f'같은 대상 {a["target"]} 입력 둘')
         want[a['target']] = (a['n'], Path(d).resolve())
-    found = _attempt_folders([Path(d).resolve().parent for d in dirs] + [Path(x) for x in attempt_dirs])
+    mdirs = {x for x, _s in merged}
+    found = _attempt_folders([Path(d).resolve().parent for d in dirs if Path(d).resolve() not in mdirs] + [Path(x) for x in attempt_dirs])
     for k in sorted(found):
         if k not in st['entries']:
             raise Stop('ATTEMPT_LEDGER_MISMATCH', f'원장에 없는 시도 폴더 {[p.name for p in found[k]]} (항목 {k})')
     pub = {'path': str(repo.resolve()), 'commit': commit, 'sha256': hashlib.sha256(raw).hexdigest(),
            'attempt_dirs': [str(Path(x).resolve()) for x in attempt_dirs], 'targets': {}}
     for target, (n_in, d_in) in sorted(want.items()):
-        ns = [k for k, e in st['entries'].items() if e['target'] == target]
-        sides = {}
-        for k in ns:
-            r = st['results'].get(k)
-            if r is None:
-                raise Stop('ATTEMPT_LEDGER_MISMATCH', f'항목 {k} ({target}) 의 결과 줄이 없다 (시도 중 · --stage recover 먼저)')
-            paths = found.get(k) or []
-            hit = [p for p in paths if p.name == r['folder']]
-            extra = [p for p in paths if p.name != r['folder']]
-            if extra:
-                raise Stop('ATTEMPT_LEDGER_MISMATCH', f'원장에 없는 시도 폴더 {[p.name for p in extra]} (항목 {k} 의 결과 줄 폴더 = {r["folder"]})')
-            if not hit:                                       # 폴더 없는 시도 (거부 기록 없음 · 소실) = 엄격 결과 뒤 → 이 대상은 판정할 수 없다 (Q9 §3-5 개정 3)
-                raise Stop('ATTEMPT_LEDGER_MISMATCH', f'항목 {k} ({target}) 의 시도 폴더 · 거부 기록 {r["folder"]} 이 없다 (엄격 — 결과 뒤로 본다 · 그 대상 '
-                                                      f'판정 없음 · 다른 곳에 둔 시도 = --attempt-dirs)')
-            p = hit[0]
-            if folder_digest(p) != r['folder_sha256']:
-                raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{p.name}: 폴더 요약 sha ≠ 원장 결과 줄 {k}')
-            sides[k] = folder_side(p)
-            if sides[k] != r['side']:
-                raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{p.name}: 결과 줄 {k} 의 결과 {r["side"]} ≠ 폴더 ({sides[k]} — 표지 · payload 유무)')
-            if p.is_dir():
-                a = read_attempt(p)
-                if a is None or a['n'] != k or a['target'] != target:
-                    raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{p.name}: attempt.json ≠ 원장 항목 {k}')
-                c0 = a['ledger_commit']
-                if not ledger_is_ancestor(repo, c0, commit):
-                    raise Stop('ATTEMPT_ORDER_MISMATCH', f'{p.name}: 시작 커밋 {c0[:12]} 이 원장 커밋 {commit[:12]} 의 조상이 아니다 (곁가지에서 시작 · R4-07)')
-                raw0 = ledger_blob(repo, c0)
-                if not raw.startswith(raw0):
-                    raise Stop('ATTEMPT_ORDER_MISMATCH', f'{p.name}: 시작 커밋의 원장이 원장의 바이트 접두가 아니다 (R4-07)')
-                st0 = ledger_parse(raw0)
-                if k not in st0['entries'] or any(j not in st0['results'] for j in ns if j < k):
-                    raise Stop('ATTEMPT_ORDER_MISMATCH', f'{p.name}: 시작 커밋에 자기 항목 · 같은 대상 앞 결과 줄이 없다 (차례로만)')
-        ad = adoption(st, target, sides=sides)
-        if ad['problems']:
-            raise Stop(*ad['problems'][0])
+        ns, ad, _paths = target_ledger_problem(repo, st, raw, commit, target, found)   # ★ 10-27 묶음 C2d — 같은 함수 (합치기 · 합친 예측 판정)
         lim = attempt_limit_problem(st, target, max(ns), (read_summary(d_in, 'ladder_summary.json')[0]
                                                          or read_summary(d_in, 'predict_summary.json')[0] or {}).get('plan', {}).get('content'))
         if lim and lim[0] == 'ATTEMPT_LIMIT':
@@ -3251,7 +3416,123 @@ def ledger_verdict_check(dirs, repo, attempt_dirs=(), commit=None):
             raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{d_in.name}: {target} 의 채택 시도가 아니다 (채택 = attempt_{ad["effective"]} · 원장 · 폴더 · 규칙이 '
                                                   f'정한다)')
         pub['targets'][target] = {'attempts': ad['attempts'], 'adopted': ad['adopted'], 'chain': ad['chain'], 'effective': ad['effective']}
+    if merged:                                                # ★ 10-27 묶음 C2d — 합친 예측마다 같은 대조 (사본 · 채택 · 출처 · 합친 런 · 남는 런)
+        pub['merged'] = {}
+        for d_m, sm in merged:
+            got = merged_ledger_check(d_m, sm, repo, st, raw, commit)
+            pub['merged'][str(d_m)] = {'commit': got['commit']}
+            pub['targets'].update(got['targets'])
     return pub
+
+
+def merged_ledger_check(d, s, repo, st, raw, commit):
+    """★ 10-27 묶음 C2d (Q9 §3-4 끝 줄 "판정 · 다시 판정이 같은 대조를 다시 한다") — 합친 예측 폴더 ↔ 판정 원장 (commit): 합치기 원장 커밋 = 조상 · 그 원장 =
+    sha · 바이트 접두 · 사본 (units/<대상>/attempt_<n>) = 원장 항목 (원장에 없는 · 다른 대상 · 다른 변이 = 멈춤) · 합치기가 연 대상마다 같은 원장 대조
+    (`target_ledger_problem` · 사본에서) · 채택 · 사슬 = 기록 · 단위 요약 출처 (`unit_summary_problem`) · 합친 런마다 source = 그 요청의 대상 · 채택 시도 ·
+    단위 안 런 · 자리 · 기계 · 결정 기록 사본 sha · 넘침 목록 (PREDICTED) · PREDICTED 이면 남는 채택 런 = UNIT_EXTRA → {'commit', 'targets'}."""
+    mg = s.get('merge') if isinstance(s.get('merge'), dict) else {}
+    if mg.get('schema') != MERGE_SCHEMA:
+        raise Stop('UNIT_PROVENANCE_MISMATCH', f'{d.name}: 합친 예측의 merge 칸 꼴 (schema {MERGE_SCHEMA})')
+    L = mg.get('ledger') if isinstance(mg.get('ledger'), dict) else {}
+    c_m = L.get('commit')
+    if not (_hex40(c_m) and ledger_is_ancestor(repo, c_m, commit)):
+        raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{d.name}: 합치기 원장 커밋 {str(c_m)[:12]} 이 판정 원장 커밋 {commit[:12]} 의 조상이 아니다')
+    blob = ledger_blob(repo, c_m)
+    if hashlib.sha256(blob).hexdigest() != L.get('sha256') or not raw.startswith(blob):
+        raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{d.name}: 합치기 원장 sha ≠ 그 커밋 원장 · 판정 원장의 바이트 접두가 아니다')
+    variant = s.get('variant')
+    plan = (s.get('plan') or {}).get('content') if isinstance(s.get('plan'), dict) else None
+    ub = d / UNITS_DIR
+    found = _attempt_folders(sorted(p for p in ub.iterdir() if p.is_dir())) if ub.is_dir() else {}
+    for k, ps in sorted(found.items()):
+        e = st['entries'].get(k)
+        tp = target_parts(e['target']) if e else None
+        if e is None or tp is None or tp[1] != variant or any(p.parent.name != target_dir(e['target']) for p in ps):
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{d.name}: 사본 {[str(p.relative_to(d)) for p in ps][:2]} ≠ 원장 항목 {k} (원장에 없는 · 다른 대상 · 다른 변이)')
+    want = merge_want(s)
+    ex = mg.get('expansion')
+    dsha = None
+    if ex is not None:
+        dsha = ex.get('sha256') if isinstance(ex, dict) else None
+        cp = d / EXPANSION_FILE
+        if not (isinstance(dsha, str) and cp.is_file() and sha256_file(cp) == dsha):
+            raise Stop('UNIT_PROVENANCE_MISMATCH', f'{d.name}: 결정 기록 사본 {EXPANSION_FILE} ≠ merge.expansion sha')
+        dec, _dsha = read_expansion(cp)
+        adj = [unit_name(o.get('c'), o.get('law'), rr) for o in s.get('origin') or [] if isinstance(o, dict) and o.get('status') == 'adjusted'
+               for rr in RJ_ROLES]
+        if s.get('status') == 'PREDICTED' and dec['points'] != adj:
+            raise Stop('UNIT_PROVENANCE_MISMATCH', f'{d.name}: 결정 기록 넘침 목록 ≠ 합친 예측의 origin 결정 ({len(dec["points"])} ↔ {len(adj)})')
+    units = mg.get('units') if isinstance(mg.get('units'), dict) else {}
+    lads = s.get('ladders') if isinstance(s.get('ladders'), dict) else {}
+    allowed = ((plan or {}).get('exec_policy') or {}).get('allowed_machines') or []
+    eff, pub_t = {}, {}
+    for t, u in sorted(units.items()):
+        tp = target_parts(t)
+        if tp is None or tp[1] != variant or not isinstance(u, dict):
+            raise Stop('UNIT_PROVENANCE_MISMATCH', f'{d.name}: merge.units 대상 {t!r} (이 변이의 단위 · 넘침 점이 아니다)')
+        ns, ad, paths = target_ledger_problem(repo, st, raw, commit, t, found)
+        lim = attempt_limit_problem(st, t, max(ns), plan) if ns else None
+        if lim and lim[0] == 'ATTEMPT_LIMIT':
+            raise Stop(*lim)
+        n = ad['effective']
+        if n is None or n != u.get('attempt') or ad['adopted'] != u.get('adopted') or ad['chain'] != u.get('chain'):
+            raise Stop('UNIT_PROVENANCE_MISMATCH', f'{d.name}: {t} 채택 {n} · 사슬 {ad["chain"]} ≠ 합친 기록 {u.get("attempt")} · {u.get("chain")}')
+        su, sha = read_summary(paths[n], UNIT_SUMMARY[tp[0]])
+        entry = st['entries'][n]
+        why = unit_summary_problem(su, tp[0], t, n, entry, want, dsha)
+        if why is None and (entry['machine'] not in allowed or u.get('machine') != entry['machine']):
+            why = f'기계 {u.get("machine")!r} · 원장 {entry["machine"]!r} · 허용 목록 {allowed}'
+        if why is None and (u.get('summary_sha256') != sha or u.get('folder') != f'{UNITS_DIR}/{target_dir(t)}/attempt_{n}'):
+            why = 'merge.units 기록 (요약 sha · 자리) ≠ 사본'
+        if why:
+            raise Stop('UNIT_PROVENANCE_MISMATCH', f'{d.name}: {t} attempt_{n}: {why}')
+        eff[t] = (n, {r.get('name'): r for r in su.get('runs') or [] if isinstance(r, dict)})
+        pub_t[t] = {'attempts': ad['attempts'], 'adopted': ad['adopted'], 'chain': ad['chain'], 'effective': n}
+    used = {t: set() for t in eff}
+    for r in s.get('runs') or []:
+        src = r.get('source') if isinstance(r.get('source'), dict) else {}
+        t = src.get('target')
+        rr = [k for k in RJ_ROLES if (lads.get(r.get('law')) or {}).get(k) == r.get('rj')]
+        want_t = (unit_target('point' if r.get('role') == 'origin8' else 'unit', variant, unit_name(r.get('c'), r.get('law'), rr[0]))
+                  if len(rr) == 1 else None)
+        n, runs_u = eff.get(t) or (None, {})
+        iname = f'{UNIT_PREFIX}{UNIT_RUN_INDEX.get(r.get("role"), 0):02d}_{r.get("role")}'
+        rec_u = runs_u.get(src.get('run'))
+        ok = (t is not None and t == want_t and t in eff and src.get('attempt') == n and src.get('run') == iname and rec_u is not None
+              and rec_u.get('outdir') == src.get('outdir') and all(rec_u.get(k) == r.get(k) for k in REQ_KEYS if k != 'name')
+              and r.get('outdir') == f'{UNITS_DIR}/{target_dir(t)}/attempt_{n}/{src.get("outdir")}' and r.get('machine') == (units.get(t) or {}).get('machine')
+              and iname not in used[t])
+        if not ok:
+            raise Stop('UNIT_PROVENANCE_MISMATCH', f'{d.name}: 합친 런 {r.get("name")} 의 출처 {src} ≠ 그 요청의 대상 {want_t} · 채택 시도 · 단위 안 런 · 자리')
+        used[t].add(iname)
+    if s.get('status') == 'PREDICTED':
+        extra = [f'{t}/{nm}' for t, (_n, runs_u) in sorted(eff.items()) for nm in sorted(runs_u) if nm not in used[t]]
+        for t in unit_targets(st, variant):
+            if t in eff:
+                continue
+            try:
+                _ns, ad, _p = target_ledger_problem(repo, st, raw, commit, t, found)
+                if ad['effective'] is not None:
+                    extra.append(f'{t}/attempt_{ad["effective"]}')
+            except Stop as e:
+                extra.append(f'{t} (대조 실패 {e.code})')
+        if extra:
+            raise Stop('UNIT_EXTRA', f'{d.name}: 합친 예측 (PREDICTED) 인데 채택 런이 남았다 ({extra[:4]}{" …" if len(extra) > 4 else ""})')
+    return {'commit': c_m, 'targets': pub_t}
+
+
+def run_request(prefix, n, kit, role, law, c, rj, arms, sv_cf, variant):
+    """런 요청 하나 → (이름 <앞자리><번호>_<역할>, 요청 dict, 중복 키) — `Runner` · ★ 10-27 묶음 C2d 합치기 fetch (`MergeFetch`) 가 같은 함수 · 팔 고르기 꼴이
+    틀리면 Stop NOT_REGISTERED (그 이름)."""
+    name = f'{prefix}{n:02d}_{role}'
+    al = None if isinstance(arms, int) else sorted(int(i) for i in arms)
+    n_arms = int(arms) if al is None else len(al)
+    if al is not None and (not al or len(set(al)) != len(al) or al[0] < 0 or al[-1] > 7 or al == list(range(n_arms))):
+        raise Stop('NOT_REGISTERED', f'팔 고르기 {al} — 0–7 · 중복 없음 · 0..N−1 접두 아님 (그건 ARMS=N)', name)
+    req = {'name': name, 'role': role, 'kit': kit, 'law': law, 'c': c, 'rj': rj, 'arms': n_arms, 'arm_list': al,
+           'variant': variant, 'sv_cf': bool(sv_cf)}
+    key = (kit, variant_raster(kit, variant), variant, law, c, rj_float(rj), tuple(arm_indices(req)))
+    return name, req, key
 
 
 class Runner:
@@ -3284,14 +3565,8 @@ class Runner:
 
     def _prepare(self, kit, role, law, c, rj, arms, sv_cf):
         self.n += 1
-        name = f'{self.prefix}{self.n:02d}_{role}'
-        al = None if isinstance(arms, int) else sorted(int(i) for i in arms)
-        n_arms = int(arms) if al is None else len(al)
-        if al is not None and (not al or len(set(al)) != len(al) or al[0] < 0 or al[-1] > 7 or al == list(range(n_arms))):
-            raise Stop('NOT_REGISTERED', f'팔 고르기 {al} — 0–7 · 중복 없음 · 0..N−1 접두 아님 (그건 ARMS=N)', name)
-        req = {'name': name, 'role': role, 'kit': kit, 'law': law, 'c': c, 'rj': rj, 'arms': n_arms, 'arm_list': al,
-               'variant': self.variant, 'sv_cf': bool(sv_cf)}
-        key = (kit, variant_raster(kit, self.variant), self.variant, law, c, rj_float(rj), tuple(arm_indices(req)))
+        name, req, key = run_request(self.prefix, self.n, kit, role, law, c, rj, arms, sv_cf, self.variant)
+        n_arms, al = req['arms'], req['arm_list']
         if key in self.keys:
             raise Stop('DUPLICATE_RUN', f'{kit} · {law} · c {c} · R_j {disp_rj(rj)} · 팔 {arm_indices(req)} 를 두 번 요청', name)
         self.keys.add(key)
@@ -3916,6 +4191,12 @@ class Predict:
         있는 점 · `checks['r_monotone_early']` · 넘침 없으면 끝 검사와 같은 점이라 건너뜀) → ③ 넘침 origin8 (법칙 → c → R) → ④ 끝 단조 (그대로).
         이 순서가 바꾸는 멈춤 우선순위 둘 (ⓐ 이른 단조 > 넘침 런의 멈춤 · ⓑ origin 표본 멈춤 > 앞 모서리 origin8 멈춤 · NOT_COMPUTED ↔ STOPPED 양쪽) =
         등록 개정 몫 (결과 0 건 · Q9 §7) · 이전 사슬과 모든 멈춤 우선순위가 같다고 쓰지 않는다 (Codex Q-I)."""
+        self.noop_first()
+        self._run_after_noop()
+
+    def noop_first(self):
+        """SBE c 1 no-op 기록 (사다리 끝 런 · 첫머리 · 옛 자리 · 옛 이름) — 예측 다시 계산 · ★ 10-27 묶음 C2d 단위 · 넘침 점 시도 입구가 같은 함수 (단위가
+        no-op 결과보다 먼저 DBE 를 풀지 않게 · 한 기계 사슬과 같은 첫 멈춤)."""
         if self.variant != 'SVORDER':        # SBE c 1 no-op — 주 · FIBRE · UNREG · GRID (SVORDER = 주 사다리 · SDCP 0 침대 양보 = no-op)
             for law in LAWS:
                 nr = self.ladders[law].get('noop') or {}
@@ -3928,6 +4209,8 @@ class Predict:
                 if not ok:
                     raise Stop('SAME_P_CONSISTENCY', f'SBE c 1 ↔ c 0 (사다리 R_j,0 확인 팔) 비트 다름 또는 SDCP 근접 ≠ 0 ({law} · 사다리 끝 no-op 런 '
                                                      f'기록) — S3 이 SBE 에서 no-op 이 아니다')
+
+    def _run_after_noop(self):
         for law in LAWS:
             for rr in RJ_ROLES:
                 for c in CS:
@@ -4326,9 +4609,13 @@ def load_ladders(dirs, variant, reg_path, contract, sid_reg, now_code=None):
 
 
 def stage_predict(a, contract):
+    if getattr(a, 'merge', None):                         # ★ 10-27 묶음 C2d — 합치기 (러너 없음 · 시도 꼴 아님)
+        return stage_merge(a, contract)
     rc_m = machine_missing_rc(a)
     if rc_m is not None:
         return rc_m
+    #  ★ 10-27 묶음 C2d (Q9 §3-1 · §3-2) — 단위 (--unit) · 넘침 점 (--point · --expand) 시도 = 같은 단계 입구 · 같은 관문 · 그 단위의 늘 필요한 런만
+    kind = 'unit' if getattr(a, 'unit', None) else ('point' if getattr(a, 'point', None) else None)
     att = attempt_open(a, 'predict')                     # ★ 10-27 묶음 C1b — 시도 꼴 (stage_ladder 와 같은 입구)
     if isinstance(att, int):
         return att
@@ -4339,10 +4626,20 @@ def stage_predict(a, contract):
         except Stop as e:
             print_stop(e)
             return 3
-    s = summary_base('predict', a)
+    s = summary_base('predict' if kind is None else kind, a)
     s['attempt'] = att.public() if att is not None else None
     s.update({'variant': a.variant, 'kit': a.kit or DBE_KIT, 'runs': [], 'ladders': {}, 'checks': None, 'origin': None,
               'env_scrubbed': [], 'after_main': None, 'sv_cf': None, 'bed': None, 'sv_graph_source': None})
+    if kind is not None:
+        nm = a.unit if kind == 'unit' else a.point
+        u_c, u_law, u_rr = unit_parse(nm)
+        s['unit'] = {'kind': kind, 'name': nm, 'target': att.entry['target'], 'law': u_law, 'c': u_c, 'rj_role': u_rr}
+        if kind == 'point':                               # 인용한 결정 기록 (파일 바이트 sha · 꼴 = 풀기 전 대조가 이미 봤다 · 끝 합치기가 대조)
+            try:
+                dsha = sha256_file(a.expand)
+            except OSError:
+                dsha = None
+            s['expansion'] = {'path': str(Path(a.expand).resolve()), 'sha256': dsha}
     ran = False
     try:
         if (a.kit or DBE_KIT) != DBE_KIT:
@@ -4374,8 +4671,8 @@ def stage_predict(a, contract):
         #  ★ 10-25 묶음 B (RCA2-03 · Q3 (가) · 판정문 §4 F8) — R 런 직전 SBE · DBE 킷 다시 해시 = S0 단계 1 · 2 보고의 원 입력 · 설정
         s['bed'] = bed_problem(s0reps, a.root, (SBE_KIT, DBE_KIT))
         rcls, rkw = (att.runner_cls(), att.runner_kw()) if att is not None else (Runner, {})   # ★ 10-27 묶음 C1b-2 — 재실행 = ResumeRunner
-        rn = rcls(a.runner, a.root, out, plan, a.variant, time.time() + a.max_hours * 3600.0, contract, dry=a.dry_run, prefix='P',
-                  machine=a.machine, **rkw)
+        rn = rcls(a.runner, a.root, out, plan, a.variant, time.time() + a.max_hours * 3600.0, contract, dry=a.dry_run,
+                  prefix=('P' if kind is None else UNIT_PREFIX), machine=a.machine, **rkw)
         s['resume'] = getattr(rn, 'resume', None)
         rn.sid_reg = sid_reg
         rn.s0_grid = s0_grid_seed(s0reps)
@@ -4394,12 +4691,20 @@ def stage_predict(a, contract):
             return 0
         out.mkdir(parents=True, exist_ok=True)
         ran = True
-        print(f'예측{" · 변이 " + a.variant if a.variant else ""} — DBE arm 0 · 네 모서리 × {{R_j,lo · R_j,0 · R_j,hi}} · origin 세 R '
-              f'(값은 봉인){" · SV 반사실 범위 " + str(scope) if scope else ""}')
+        if kind is None:
+            print(f'예측{" · 변이 " + a.variant if a.variant else ""} — DBE arm 0 · 네 모서리 × {{R_j,lo · R_j,0 · R_j,hi}} · origin 세 R '
+                  f'(값은 봉인){" · SV 반사실 범위 " + str(scope) if scope else ""}')
+        else:
+            print(f'{"단위" if kind == "unit" else "넘침 점"} {s["unit"]["name"]}{" · 변이 " + a.variant if a.variant else ""} — '
+                  f'{"모서리 arm 0 · origin 표본 arm 1 · 2" if kind == "unit" else "origin8 (8 팔)"} (값은 봉인 · 판정 함수는 합치기가)')
         try:
             try:
-                pr.run()
-                s['status'] = 'PREDICTED'
+                if kind is None:
+                    pr.run()
+                    s['status'] = 'PREDICTED'
+                else:
+                    unit_runs(pr, rn, kind, s['unit'], lads)     # ★ 10-27 묶음 C2d — 단위 · 넘침 점의 늘 필요한 런만
+                    s['status'] = UNIT_DONE[kind]
             finally:
                 s['checks'], s['origin'], s['runs'] = pr.checks, pr.origin, rn.records
                 s['sv_graph_source'] = rn.graph_src.public()
@@ -4416,16 +4721,497 @@ def stage_predict(a, contract):
     if a.dry_run and not ran:
         return 3
     out.mkdir(parents=True, exist_ok=True)
-    write_json(out / 'predict_summary.json', s)
+    sname = 'predict_summary.json' if kind is None else UNIT_SUMMARY[kind]
+    write_json(out / sname, s)
     if att is not None:
         rc_a = attempt_close(att, s)                      # ★ 10-27 묶음 C1b — 결과 줄 (그룹 종료 확인 뒤) · 못 쓰면 rc 3
         if rc_a is not None:
             return rc_a
+    done = 'PREDICTED' if kind is None else UNIT_DONE[kind]
     if s['status'] == 'PREDICTED':
         n_adj = sum(1 for o in (s['origin'] or []) if o['status'] == 'adjusted')
         print(f'예측 = PREDICTED · 런 {len(s["runs"])} · 같은 P 일관 통과 · origin 규칙이 옮긴 모서리 {n_adj}')
+    elif s['status'] == done:
+        print(f'{kind} {s["unit"]["name"]} = {done} · 런 {len(s["runs"])}')
     else:
-        print(f'예측 = {s["status"]}' + (f' (사유 {(s.get("stop") or {}).get("reason")})' if (s.get('stop') or {}).get('reason') else ''))
+        print(f'{"예측" if kind is None else kind} = {s["status"]}' + (f' (사유 {(s.get("stop") or {}).get("reason")})'
+                                                                    if (s.get('stop') or {}).get('reason') else ''))
+    print(f'요약 → {out / sname}')
+    return 0 if s['status'] == done else 3
+
+
+def unit_runs(pr, rn, kind, u, lads):
+    """★ 10-27 묶음 C2d (Q9 §3-1) — 단위 시도 = no-op 기록 (첫머리 · 예측과 같은 이름 · 단위가 no-op 결과보다 먼저 DBE 를 풀지 않게) → 모서리 arm 0
+    (SV 반사실 = 예측과 같은 범위 `Predict._sv_on`) → origin 표본 arm 1 · 2 (이 차례 · 한 기계) · 넘침 점 = origin8 8 팔 (결정 기록이 요구한 것만).
+    판정 함수 (same_p · W0 · origin 판정 · 단조) 는 여기서 부르지 않는다 (합치기가 다 모은 뒤 같은 함수로)."""
+    pr.noop_first()
+    rj = lads[u['law']][u['rj_role']]
+    if kind == 'unit':
+        rn.run(DBE_KIT, 'corner', u['law'], u['c'], rj, 1, pr._sv_on(u['rj_role']))
+        rn.run(DBE_KIT, 'origin', u['law'], u['c'], rj, ORIGIN_ARMS)
+    else:
+        rn.run(DBE_KIT, 'origin8', u['law'], u['c'], rj, 8)
+
+
+# ═════════════════════════ ★ 10-27 묶음 C2d 합치기 (Q9 §3-2 2 · 3 · §3-4 · §4 · author 10-27 approved bundle C) ═════════════════════════
+#: 단위 · 넘침 점 시도 안 런 번호 (unit_runs 차례 · 앞자리 UNIT_PREFIX)
+UNIT_RUN_INDEX = {'corner': 1, 'origin': 2, 'origin8': 1}
+RUN_DIR_RE = re.compile(r'[A-Za-z0-9_][A-Za-z0-9_.-]*')
+
+
+class ExpansionNeeded(Exception):
+    """합치기 다시 계산이 넘침에 닿았다 — 첫 합치기 (first · 결정 기록을 쓴다 · 점 = 넘침 목록 · attempts = 단위 채택 시도 sha 집합) · 끝 합치기의 빠진 점
+    (missing) · 멈춤 아님 · 판정 입력 아님 (상태 EXPANSION_NEEDED · rc 4)."""
+
+    def __init__(self, points=None, first=False, attempts=None, missing=None):
+        super().__init__('EXPANSION_NEEDED')
+        self.points, self.first, self.attempts, self.missing = points, first, attempts, missing
+
+
+def collect_attempts(paths):
+    """--merge 경로 → {n: [경로 …]} — attempt_<n> 폴더 · attempt_<n>.rejected.json 파일 = 그 자신 · 그 밖 폴더 = 바탕 (자식 중 시도 꼴) · 같은 실경로 = 한 번 ·
+    없는 경로 = Stop ATTEMPT_LEDGER_MISMATCH."""
+    found = {}
+    for x in paths:
+        p = Path(x)
+        if not p.exists():
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'--merge 경로 {x} 가 없다')
+        rp = p.resolve()
+        own = (rp.is_dir() and ATTEMPT_DIR_RE.fullmatch(rp.name)) or (rp.is_file() and ATTEMPT_SIDE_RE.fullmatch(rp.name))
+        for q in ([rp] if own else (sorted(rp.iterdir()) if rp.is_dir() else [])):
+            m = ATTEMPT_DIR_RE.fullmatch(q.name) if q.is_dir() else ATTEMPT_SIDE_RE.fullmatch(q.name)
+            if m:
+                found.setdefault(int(m.group(1)), [])
+                if q not in found[int(m.group(1))]:
+                    found[int(m.group(1))].append(q)
+    return found
+
+
+def unit_targets(st, variant):
+    """원장의 단위 · 넘침 점 대상 (그 변이) → 정렬 목록."""
+    out = set()
+    for e in st['entries'].values():
+        tp = target_parts(e['target'])
+        if tp is not None and tp[1] == variant:
+            out.add(e['target'])
+    return sorted(out)
+
+
+def merge_want(s):
+    """예측 · 단위 · 합친 요약 → 단위 출처 대조 칸 (Q9 §3-3 · §3-4 "위 출처 칸이 모든 채택 폴더에서 같다") — 변이 · 계획 · S0 계획 · S0 보고 (경로 뺀 칸) · 코드 키
+    (HEAD · 상대 경로 · 파일 지문 · 러너 · 환경 같음 단위) · 두 사다리 요약 sha · 주 예측 묶음 sha · SV 범위 · 침대 (경로 뺀 지문).  기계 · 원장 항목 · 단위
+    이름 · 환경 지문의 기록 전용 칸은 대조 밖 (다를 수 있다)."""
+    return {'variant': s.get('variant'), 'plan': (s.get('plan') or {}).get('sha256'), 's0': (s.get('s0_plan') or {}).get('sha256'),
+            's0_key': s0_records_key(s.get('s0_reports')), 'code': code_key(s.get('code') if isinstance(s.get('code'), dict) else {}),
+            'ladders': {law: (v or {}).get('summary_sha256') for law, v in sorted((s.get('ladders') or {}).items())},
+            'after_main': (s.get('after_main') or {}).get('summary_sha256'), 'sv_cf': s.get('sv_cf'), 'bed': s.get('bed')}
+
+
+def unit_summary_problem(su, kind, target, n, entry, want, dec_sha=None):
+    """단위 · 넘침 점 시도 요약 ↔ 합치기 (출처) → 사유 | None — 이 사슬의 그 단계 요약 · 단위 칸 = 대상 · attempt 칸 = 원장 항목 · 기계 = 항목 기계 · 출처 칸
+    (`merge_want`) 같음 · dirty 없음 · 넘침 점 = 인용한 결정 기록 sha = 이 합치기의 결정 기록 · 상태 = 완주 · 멈춤 · NOT_COMPUTED."""
+    if not isinstance(su, dict) or su.get('tool') != TOOL or su.get('schema') != SCHEMA or su.get('stage') != kind:
+        return f'{UNIT_SUMMARY[kind]} 이 이 사슬의 {kind} 요약이 아니다'
+    u = su.get('unit') if isinstance(su.get('unit'), dict) else {}
+    tp = target_parts(target)
+    if u.get('kind') != kind or u.get('target') != target or tp is None or u.get('name') != tp[2]:
+        return f'단위 칸 {u.get("kind")} · {u.get("target")} · {u.get("name")} ≠ 대상 {target}'
+    at = su.get('attempt') if isinstance(su.get('attempt'), dict) else {}
+    if at.get('n') != n or at.get('target') != target:
+        return f'attempt 칸 {at.get("n")} · {at.get("target")} ≠ 원장 항목 {n}'
+    if su.get('machine') != entry.get('machine'):
+        return f'기계 {su.get("machine")!r} ≠ 원장 항목 기계 {entry.get("machine")!r}'
+    why = code_dirty_problem(su.get('code'))
+    if why:
+        return why
+    got = merge_want(su)
+    diff = [k for k in ('variant', 'plan', 's0', 's0_key', 'code', 'ladders', 'after_main', 'sv_cf', 'bed') if got[k] != want[k]]
+    if diff:
+        return f'출처 칸 {diff} ≠ 합치기 (Q9 §3-4)'
+    if kind == 'point' and (su.get('expansion') or {}).get('sha256') != dec_sha:
+        return f'점 시도가 인용한 결정 기록 sha {str((su.get("expansion") or {}).get("sha256"))[:12]} ≠ 이 합치기의 결정 기록 {str(dec_sha)[:12]}'
+    if su.get('status') not in (UNIT_DONE[kind], 'STOPPED', 'NOT_COMPUTED'):
+        return f'상태 {su.get("status")!r}'
+    stp = su.get('stop')
+    if (su.get('status') == UNIT_DONE[kind]) != (stp is None) or (stp is not None and not (isinstance(stp, dict) and isinstance(stp.get('code'), str))):
+        return f'상태 {su.get("status")!r} ↔ 멈춤 기록 {stp!r}'
+    return None
+
+
+class MergeFetch:
+    """★ 10-27 묶음 C2d (Q9 §3-2 · §3-4 · §4) 합치기의 fetch — 한 기계 사슬과 같은 판정 함수 (`Predict`) 가 같은 차례로 요청하는 런을 채택된 단위 · 넘침 점
+    시도 폴더에서 키로 찾는다 (한 번씩):
+      · 대상 (요청의 법칙 · c · R → unit · origin8 = point) 을 처음 요청할 때 = 그 대상의 원장 대조 (`target_ledger_problem` · 미리 세고 그때 낸다 —
+        요청되지 않은 대상의 대조 결과 = unused_runs 에 기록만) → 채택 (재실행 사슬 끝 · 없음 = UNIT_MISSING · 넘침 점 = EXPANSION_NEEDED) → 그 대상 시도
+        폴더 전부 사본 (units/<대상>/attempt_<n> · 바이트 · 요약 sha = 결과 줄) → 출처 (`unit_summary_problem`)
+      · 런 = 그 시도 요약의 같은 차례 런 (요청 칸 같음) · rc 0 = 사본에서 같은 `read_run` (같은 계약 · sid 원장 · S0 격자 · census · 봉인 원천) · 러너가
+        멈춘 런 · 런 기록 전 멈춤 = 그 시도 요약의 멈춤을 이 런 요청에서 (부분 채택 · 한 기계 사슬과 같은 자리) · 런 이름 = 사슬 차례 (P<번호>_<역할>)
+      · 넘침 (`expand_hook`) = 결정 기록 없음 → ExpansionNeeded (첫 합치기) · 있음 → 다시 센 넘침 목록 · 단위 채택 시도 sha 집합 = 결정 기록 (구조 칸 ·
+        W0 · 환경 = 기록만 · 다르면 UNIT_PROVENANCE_MISMATCH = 칼날 보고 · Q9 개정 4 Q4)
+      · 끝 (`finish`) = 결정 기록이 있는데 넘침 없음 · 채택 런이 남음 (UNIT_EXTRA)."""
+
+    def __init__(self, repo, commit, raw, st, found, lads, variant, plan, contract, sid_reg, s0_grid, s0_census, graph_src, out, want,
+                 env, decision=None, dec_sha=None):
+        self.repo, self.commit, self.raw, self.st, self.found = Path(repo), commit, raw, st, found
+        self.lads, self.variant, self.plan, self.contract, self.sid_reg = lads, variant, plan, contract, sid_reg
+        self.s0_grid, self.s0_census, self.graph_src, self.out, self.want = s0_grid, s0_census, graph_src, Path(out), want
+        self.env, self.decision, self.dec_sha = env, decision, dec_sha
+        self.allowed = list((plan.get('exec_policy') or {}).get('allowed_machines') or [])
+        self.records, self.keys, self.n = [], set(), 0
+        self.opened, self.copied = {}, {}
+        self.hook_called = False
+        self.tinfo = {}
+        for t in unit_targets(st, variant):
+            info = {'ns': [k for k, e in st['entries'].items() if e['target'] == t], 'ad': None, 'paths': {}, 'problem': None}
+            try:
+                ns, ad, paths = target_ledger_problem(self.repo, st, raw, commit, t, found)
+                info.update(ad=ad, paths=paths)
+                lim = attempt_limit_problem(st, t, max(ns), plan) if ns else None
+                if lim and lim[0] == 'ATTEMPT_LIMIT':
+                    info['problem'] = lim
+            except Stop as e:
+                info['problem'] = (e.code, e.cause)
+            self.tinfo[t] = info
+
+    def _role_of(self, law, rj, name):
+        rr = [k for k in RJ_ROLES if self.lads[law][k] == rj]
+        if len(rr) != 1:
+            raise Stop('UNIT_PROVENANCE_MISMATCH', f'요청 R_j {disp_rj(rj)} 가 {law} 사다리의 R 하나가 아니다 ({rr})', name)
+        return rr[0]
+
+    def _copy(self, target, k, src):
+        if k in self.copied:
+            return self.copied[k]
+        dst = self.out / UNITS_DIR / target_dir(target) / src.name
+        try:
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            if src.is_dir():
+                shutil.copytree(src, dst, symlinks=True)
+            else:
+                shutil.copy2(src, dst)
+        except OSError as e:
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{src.name} 사본을 못 만든다 ({type(e).__name__}: {e})')
+        if folder_digest(dst) != self.st['results'][k]['folder_sha256']:
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{target_dir(target)}/{dst.name} 사본 요약 sha ≠ 원장 결과 줄 {k} (복사하는 사이 원본이 바뀌었다)')
+        self.copied[k] = dst
+        return dst
+
+    def _missing_points(self):
+        out = []
+        for p in (self.decision or {}).get('points') or []:
+            info = self.tinfo.get(unit_target('point', self.variant, p))
+            if info is None or not info['ns'] or (not info['problem'] and (info['ad'] or {}).get('effective') is None):
+                out.append(p)
+        return out
+
+    def _open(self, target, kind, name):
+        info = self.tinfo.get(target)
+        if info is not None and info['problem']:
+            raise Stop(info['problem'][0], f'{target}: {info["problem"][1]}', name)
+        n = ((info or {}).get('ad') or {}).get('effective')
+        if n is None:
+            if kind == 'point':                            # 넘침 점이 아직 없다 = 다음 단계 필요 (멈춤 아님 · Q9 §3-2 "넘침 런만 없으면 EXPANSION_NEEDED")
+                raise ExpansionNeeded(missing=self._missing_points())
+            raise Stop('UNIT_MISSING', f'{target}: 채택 시도가 없다 (원장 시도 {(info or {}).get("ns") or []} — 없음 · 결과 전 · 거부뿐)', name)
+        for k in info['ns']:
+            self._copy(target, k, info['paths'][k])
+        folder = self.copied[n]
+        su, sha = read_summary(folder, UNIT_SUMMARY[kind])
+        if su is None and (self.st['results'].get(n) or {}).get('status') == 'interrupted':
+            raise Stop('UNIT_MISSING', f'{target} attempt_{n}: 채택 시도가 끊겼다 (결과 줄 interrupted · 요약 없음 = 요청한 런을 알 수 없다 — 재실행 자격이면 '
+                                       f'--add --resume {n} · 아니면 그 단위 = 멈춤)', name)
+        entry = self.st['entries'][n]
+        why = unit_summary_problem(su, kind, target, n, entry, self.want, self.dec_sha)
+        if why is None and entry['machine'] not in self.allowed:
+            why = f'기계 {entry["machine"]!r} ∉ 계획 허용 목록 {self.allowed}'
+        if why:
+            raise Stop('UNIT_PROVENANCE_MISMATCH', f'{target} attempt_{n}: {why}', name)
+        u = {'n': n, 'ad': info['ad'], 'sum': su, 'sha': sha, 'rel': f'{UNITS_DIR}/{target_dir(target)}/{folder.name}', 'machine': entry['machine'],
+             'runs': {r.get('name'): r for r in su.get('runs') or [] if isinstance(r, dict)}, 'consumed': set()}
+        self.opened[target] = u
+        return u
+
+    def run(self, kit, role, law, c, rj, arms, sv_cf=False):
+        self.n += 1
+        name, req, key = run_request('P', self.n, kit, role, law, c, rj, arms, sv_cf, self.variant)
+        if key in self.keys:
+            raise Stop('DUPLICATE_RUN', f'{kit} · {law} · c {c} · R_j {disp_rj(rj)} · 팔 {arm_indices(req)} 를 두 번 요청', name)
+        self.keys.add(key)
+        kind = 'point' if role == 'origin8' else 'unit'
+        target = unit_target(kind, self.variant, unit_name(c, law, self._role_of(law, rj, name)))
+        u = self.opened.get(target) or self._open(target, kind, name)
+        iname = f'{UNIT_PREFIX}{UNIT_RUN_INDEX.get(role, 0):02d}_{role}'
+        rec0 = u['runs'].get(iname)
+        stop0 = (u['sum'].get('stop') if isinstance(u['sum'].get('stop'), dict) else None) or {}
+        if rec0 is None:
+            if stop0.get('run') == iname:                  # 그 시도가 런 기록 전에 그 런에서 멈췄다 (시간 · 폴더 · 요청 꼴) = 그 멈춤 (부분 채택)
+                raise Stop(stop0.get('code'), stop0.get('cause'), name, stop0.get('reason'))
+            raise Stop('UNIT_MISSING', f'{target} attempt_{u["n"]}: 요청 {role} · R_j {disp_rj(rj)} 의 런 {iname} 이 그 시도에 없다', name)
+        bad = [k for k in REQ_KEYS if k != 'name' and rec0.get(k) != req.get(k)]
+        od = rec0.get('outdir')
+        if bad or not (isinstance(od, str) and RUN_DIR_RE.fullmatch(od) and od.startswith(iname)):
+            raise Stop('UNIT_PROVENANCE_MISMATCH', f'{target} attempt_{u["n"]} 런 {iname} 요청 · 폴더 ≠ 다시 계산의 요청 (칸 {bad} · 폴더 {od!r})', name)
+        u['consumed'].add(iname)
+        rel = f'{u["rel"]}/{od}'
+        rec = dict(req, outdir=rel, rc=rec0.get('rc'), seconds=rec0.get('seconds'), arms_read=[], machine=u['machine'],
+                   group_cause=rec0.get('group_cause'), source={'target': target, 'attempt': u['n'], 'run': iname, 'outdir': od})
+        self.records.append(rec)
+        if rec0.get('rc') != 0:                            # 러너가 멈춘 런 = 그 시도 요약의 멈춤 (부분 채택 · 그 런이 요청될 때)
+            if stop0.get('run') != iname:
+                raise Stop('UNIT_PROVENANCE_MISMATCH', f'{target} attempt_{u["n"]} 런 {iname} rc {rec0.get("rc")!r} 인데 그 시도의 멈춤 런 = '
+                                                       f'{stop0.get("run")!r}', name)
+            raise Stop(stop0.get('code'), stop0.get('cause'), name, stop0.get('reason'))
+        outdir = self.out / rel
+        try:
+            arms_ = read_run(outdir, req, self.plan, self.contract, self.sid_reg, want_sha=[x.get('sha256') for x in rec0.get('arms_read') or []],
+                             s0_grid=self.s0_grid, s0_census=self.s0_census, graph_src=self.graph_src)
+        except Stop:
+            rec['arms_read'] = arm_file_shas(outdir)
+            raise
+        if stop0.get('run') == iname:                      # 그 시도는 이 런에서 멈췄다고 적었는데 같은 바이트의 다시 읽기가 지났다
+            raise Stop('UNIT_PROVENANCE_MISMATCH', f'{target} attempt_{u["n"]}: 그 시도는 런 {iname} 에서 {stop0.get("code")} 로 멈췄다고 적었는데 사본 다시 '
+                                                   f'읽기가 지났다', name)
+        rec['arms_read'] = [{k: a[k] for k in ARM_PUBLIC} for a in arms_]
+        print(f'  {name}: {role} · R_j {disp_rj(rj)} · {law} · c {c or "-"} · 팔 {arm_indices(req)} → {target} attempt_{u["n"]} 의 {iname} '
+              f'(기계 {u["machine"]} · 러너 0 회 · 팔 {len(arms_)} 사본 다시 대조)')
+        return arms_
+
+    def attempt_set(self):
+        """단위 채택 시도 sha 집합 — 연 단위마다 채택 사슬 [대상 · 번호 · 폴더 요약 sha] (차례)."""
+        out = []
+        for t, u in self.opened.items():
+            if target_parts(t)[0] == 'unit':
+                out += [[t, k, self.st['results'][k]['folder_sha256']] for k in u['ad']['chain']]
+        return sorted(out)
+
+    def expand_hook(self, over):
+        self.hook_called = True
+        pts = [unit_name(c, law, rr) for (c, law, rr) in over]
+        atts = self.attempt_set()
+        if self.decision is None:
+            raise ExpansionNeeded(points=pts, first=True, attempts=atts)
+        d = self.decision
+        if d['points'] != pts:
+            raise Stop('UNIT_PROVENANCE_MISMATCH', f'끝 합치기가 다시 센 넘침 목록 {pts} ≠ 결정 기록 {d["points"]} — 칼날 보고 (첫 합치기 기계 '
+                                                   f'{d.get("machine")!r} · 환경 지문 다른 칸 {_env_diff(d.get("env"), self.env)[:6]} · W0 = 봉인 · Q9 개정 4 Q4)')
+        if d['attempts'] != atts:
+            diff = [x for x in d['attempts'] if x not in atts] + [x for x in atts if x not in d['attempts']]
+            raise Stop('UNIT_PROVENANCE_MISMATCH', f'단위 채택 시도 sha 집합 ≠ 결정 기록 (다른 줄 {diff[:3]}) — 첫 합치기 뒤 단위 시도가 바뀌었다')
+
+    def finish(self):
+        """다시 계산이 끝까지 간 뒤 — 결정 기록이 있는데 넘침 없음 = UNIT_PROVENANCE_MISMATCH · 남는 채택 런 = UNIT_EXTRA (요청되지 않은 대상의 채택 시도 ·
+        연 대상의 요청되지 않은 런 · 대조가 실패한 요청되지 않은 대상 = 남는지 알 수 없다 = 보수 쪽)."""
+        if self.decision is not None and not self.hook_called:
+            raise Stop('UNIT_PROVENANCE_MISMATCH', '결정 기록을 받았는데 다시 계산에 넘침이 없다 (끝 합치기 = 첫 합치기와 같은 단위 시도여야)')
+        extra = []
+        for t, info in sorted(self.tinfo.items()):
+            if t in self.opened:
+                u = self.opened[t]
+                extra += [f'{t}/attempt_{u["n"]}/{nm}' for nm in sorted(u['runs']) if nm not in u['consumed']]
+            elif info['problem']:
+                extra.append(f'{t} (대조 실패 {info["problem"][0]})')
+            elif (info['ad'] or {}).get('effective') is not None:
+                extra.append(f'{t}/attempt_{info["ad"]["effective"]}')
+        if extra:
+            raise Stop('UNIT_EXTRA', f'다시 계산이 끝까지 갔는데 채택된 런이 남았다 ({extra[:4]}{" …" if len(extra) > 4 else ""}) — 요청되지 않은 단위 · 넘침 점 시도 '
+                                     f'(Q9 §3-2)')
+
+    def copy_all(self):
+        """모든 시도 사본 (요청되지 않은 대상 · 결과 전 · 거부 기록 포함 · 한 항목 = 폴더 하나일 때만 · Q9 §3-2 개정 3)."""
+        for t, info in sorted(self.tinfo.items()):
+            for k in info['ns']:
+                ps = self.found.get(k) or []
+                if k not in self.copied and len(ps) == 1:
+                    self._copy(t, k, ps[0])
+
+    def units_public(self):
+        return {t: {'attempt': u['n'], 'adopted': u['ad']['adopted'], 'chain': list(u['ad']['chain']), 'machine': u['machine'], 'folder': u['rel'],
+                    'summary_sha256': u['sha']} for t, u in sorted(self.opened.items())}
+
+    def attempts_public(self):
+        return [{'target': self.st['entries'][k]['target'], 'n': k, 'folder': f'{UNITS_DIR}/{target_dir(self.st["entries"][k]["target"])}/{p.name}',
+                 'folder_sha256': self.st['results'][k]['folder_sha256']} for k, p in sorted(self.copied.items())]
+
+    def unused_runs(self):
+        """요청되지 않은 런 · 대조 결과 (기록만 · 멈춤 아님 · 판정 입력 아님) — 대조가 실패한 요청되지 않은 대상 (check_failed:<멈춤>) · 사본 시도 요약의 런마다
+        (채택 시도 = not_requested · 재실행이 대신한 사슬 앞 시도 = replaced_by_resume · 그 밖 = not_adopted) · 팔 sha256."""
+        out = []
+        for t, info in sorted(self.tinfo.items()):
+            if info['problem'] and t not in self.opened:
+                out.append({'target': t, 'attempt': None, 'run': None, 'folder': None, 'arms_sha256': [], 'why': f'check_failed:{info["problem"][0]}'})
+                continue
+            ad, u, kind = info['ad'] or {}, self.opened.get(t), target_parts(t)[0]
+            for k in info['ns']:
+                p = self.copied.get(k)
+                if p is None or not p.is_dir():
+                    continue
+                su, _sha = read_summary(p, UNIT_SUMMARY[kind])
+                for r in (su or {}).get('runs') or []:
+                    if not isinstance(r, dict) or (u is not None and k == u['n'] and r.get('name') in u['consumed']):
+                        continue
+                    why = 'not_requested' if k == ad.get('effective') else ('replaced_by_resume' if k in (ad.get('chain') or []) else 'not_adopted')
+                    out.append({'target': t, 'attempt': k, 'run': r.get('name'), 'folder': f'{UNITS_DIR}/{target_dir(t)}/{p.name}/{r.get("outdir")}',
+                                'arms_sha256': [x.get('sha256') for x in r.get('arms_read') or [] if isinstance(x, dict)], 'why': why})
+        return out
+
+
+def ledger_bundle(repo, head, dst):
+    """원장 git 저장소 사본 (Q9 §3-2 개정 4 R4-07 · 커밋 대조용) — `git bundle create <dst> HEAD` · 그 묶음의 HEAD = 합치기 원장 커밋 → sha256."""
+    dst = Path(dst).resolve()
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    ledger_git(repo, 'bundle', 'create', str(dst), 'HEAD')
+    heads = ledger_git(repo, 'bundle', 'list-heads', str(dst)).stdout.decode('ascii', 'replace').split()
+    if head not in heads:
+        raise Stop('ATTEMPT_LEDGER_MISMATCH', f'원장 사본 묶음의 HEAD ≠ 합치기 원장 커밋 {head[:12]} (합치기 중 원장이 바뀌었다)')
+    return sha256_file(dst)
+
+
+def stage_merge(a, contract):
+    """★ 10-27 묶음 C2d (Q9 §3-2 2 · 3 · §3-4 · §4) — 합치기: 원장 (HEAD · 덧붙이기만 · 계획) → 사다리 (채택 사다리 시도 · 예측과 같은 `load_ladders` ·
+    관문) → (끝 합치기) 결정 기록 (꼴 · 변이 · 사다리 · 계획 · 원장 조상 · 접두 · 사본) → --merge 시도 폴더 (원장 항목 · 이 변이의 단위 · 넘침 점) → 같은
+    판정 함수 (`Predict` + `MergeFetch`) → 상태 PREDICTED · NOT_COMPUTED · STOPPED = `predict_summary.json` (+ merge 칸 · 사본 · 원장 묶음) · 넘침 =
+    EXPANSION_NEEDED (`merge_summary.json` · 첫 합치기 = 결정 기록 `expansion.json` · rc 4 · 멈춤 아님 · 판정 입력 아님).  러너는 봉인 원천 (SV 끝 그래프 조립만)
+    에만 쓴다 (풀이 없음)."""
+    rc_m = machine_missing_rc(a)
+    if rc_m is not None:
+        return rc_m
+    out = Path(a.out)
+    try:
+        outdir_empty_or_stop(out)
+    except Stop as e:
+        print_stop(e)
+        return 3
+    s = summary_base('predict', a)
+    s.update({'variant': a.variant, 'kit': a.kit or DBE_KIT, 'runs': [], 'ladders': {}, 'checks': None, 'origin': None,
+              'env_scrubbed': [], 'after_main': None, 'sv_cf': None, 'bed': None, 'sv_graph_source': None})
+    mg = {'schema': MERGE_SCHEMA, 'ledger': None, 'expansion': None, 'units': {}, 'attempts': [], 'unused_runs': [], 'missing_points': None}
+    s['merge'] = mg
+    fetch, exp, repo, head = None, None, None, None
+    try:
+        if (a.kit or DBE_KIT) != DBE_KIT:
+            raise Stop('NOT_REGISTERED', f'--kit {a.kit} (등록 {DBE_KIT})')
+        env_forbidden_or_stop()
+        repo = Path(a.ledger)
+        why = ledger_repo_problem(repo)
+        if why:
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', why)
+        head, raw = ledger_now(repo)
+        why = ledger_history_problem(repo, head)
+        if why:
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'원장 역사: {why}')
+        st = ledger_parse(raw)
+        mg['ledger'] = {'path': str(repo.resolve()), 'commit': head, 'sha256': hashlib.sha256(raw).hexdigest(), 'bundle': None, 'bundle_sha256': None}
+        ledger_inputs_check(a.ladders, repo, head, st, want_prefix='ladder:')
+        sid_reg = {}
+        lads, plan, plan_sha, code, s0rec, lad_after, s0reps = load_ladders(a.ladders, a.variant, a.registration, contract, sid_reg,
+                                                                            now_code=s['code'])
+        s['ladders'] = {k: {kk: v[kk] for kk in ('dir', 'summary_sha256', 'variant', 'R_j0', 'R_j_lo', 'R_j_hi')} for k, v in lads.items()}
+        s['plan'] = {'sha256': plan_sha, 'content': plan}
+        s['s0_plan'] = s0rec
+        s['s0_reports'] = s0reps
+        s['registration'] = check_plan_registered(plan_sha, a.registration)
+        plan_doc_or_stop(a.registration, plan)
+        exec_check_or_stop(plan, a.max_hours, a.machine, s['code'])
+        if plan_sha != st['header']['plan_sha256']:
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'원장 머리의 계획 {st["header"]["plan_sha256"][:12]} ≠ 사다리 계획 {plan_sha[:12]}')
+        if a.variant is not None:
+            s['after_main'] = check_after_main(a.after_main, plan_sha, s0rec['sha256'], s['code'])
+            if a.variant != 'SVORDER' and lad_after != s['after_main']:
+                raise Stop('MAIN_NOT_DONE', '변이 사다리가 묶인 주 예측 ≠ --after-main (같은 주 판정 단계 뒤여야)')
+        scope = plan['sv_cf_scope'] if a.variant is None else None
+        s['sv_cf'] = {'scope': scope, 'threshold': (plan['sv_cf_threshold'] if a.variant is None else None)}
+        for p in (Path(a.root) / SBE_KIT, Path(a.root) / DBE_KIT, Path(a.runner)):
+            if not p.exists():
+                raise Stop('KIT_MISSING', f'{p}')
+        s['bed'] = bed_problem(s0reps, a.root, (SBE_KIT, DBE_KIT))
+        dec, dsha = None, None
+        if a.expand:                                       # 끝 합치기 — 결정 기록 (구조 칸 대조 = 다시 계산의 넘침에서 · 여기 = 꼴 · 출처 · 원장 접두)
+            dec, dsha = read_expansion(a.expand)
+            if dec['variant'] != a.variant or dec['plan_sha256'] != plan_sha \
+                    or dec['ladders'] != {law: s['ladders'][law]['summary_sha256'] for law in LAWS}:
+                raise Stop('UNIT_PROVENANCE_MISMATCH', '결정 기록의 변이 · 계획 · 사다리 요약 sha ≠ 이 합치기')
+            c1 = dec['ledger']['commit']
+            if not ledger_is_ancestor(repo, c1, head):
+                raise Stop('ATTEMPT_LEDGER_MISMATCH', f'결정 기록의 원장 커밋 {c1[:12]} 이 이 원장 HEAD 의 조상이 아니다 (첫 · 끝 합치기 원장 = 바이트 접두 · '
+                                                      f'Q9 §3-5)')
+            b1 = ledger_blob(repo, c1)
+            if hashlib.sha256(b1).hexdigest() != dec['ledger']['sha256'] or not raw.startswith(b1):
+                raise Stop('ATTEMPT_LEDGER_MISMATCH', '결정 기록의 원장 sha ≠ 그 커밋 원장 · 이 원장의 바이트 접두가 아니다 (항목 줄 지우기 · 바꾸기 · Q9 §3-5)')
+            out.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(a.expand, out / EXPANSION_FILE)
+            if sha256_file(out / EXPANSION_FILE) != dsha:
+                raise Stop('UNIT_PROVENANCE_MISMATCH', '결정 기록 사본 ≠ 읽은 결정 기록 (읽는 사이 바뀌었다)')
+            mg['expansion'] = {'path': str(Path(a.expand).resolve()), 'sha256': dsha, 'copy': EXPANSION_FILE}
+        found = collect_attempts(a.merge)
+        for k, ps in sorted(found.items()):
+            e = st['entries'].get(k)
+            if e is None:
+                raise Stop('ATTEMPT_LEDGER_MISMATCH', f'원장에 없는 시도 폴더 {[str(p) for p in ps][:2]} (항목 {k})')
+            tp = target_parts(e['target'])
+            if tp is None or tp[1] != a.variant:
+                raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{ps[0]}: 대상 {e["target"]} 는 이 합치기 (변이 {a.variant!r}) 의 단위 · 넘침 점이 아니다 (합칠 대상이 아님)')
+        out.mkdir(parents=True, exist_ok=True)
+        deadline = time.time() + a.max_hours * 3600.0
+        gsrc = RunnerGraphSource(a.runner, a.root, out / GRAPH_SRC_DIR, deadline=deadline)
+        s['env_scrubbed'] = sorted(k for k in os.environ if ENV_SCRUB_RE.match(k) or k in ENV_SCRUB_NAMES)
+        fetch = MergeFetch(repo, head, raw, st, found, lads, a.variant, plan, contract, sid_reg, s0_grid_seed(s0reps), s0_census_seed(s0reps), gsrc, out,
+                           merge_want(s), (s['code'] or {}).get('env'), dec, dsha)
+        pr = Predict(fetch.run, lads, a.variant, sv_scope=scope, expand_hook=fetch.expand_hook)
+        print(f'합치기{" · 변이 " + a.variant if a.variant else ""}{" · 끝 (결정 기록)" if dec else ""} — 원장 {head[:12]} · 시도 폴더 {len(found)} · '
+              f'같은 판정 함수 · 같은 요청 순서 (값은 봉인 · 러너 = 봉인 원천 조립만)')
+        try:
+            try:
+                pr.run()
+                fetch.finish()
+                s['status'] = 'PREDICTED'
+            finally:
+                s['checks'], s['origin'], s['runs'] = pr.checks, pr.origin, fetch.records
+                s['sv_graph_source'] = gsrc.public()
+        except ExpansionNeeded as x:
+            exp = x
+            s['status'] = 'EXPANSION_NEEDED'
+        except Stop as e:
+            s['status'] = e.code if e.code in PREDICT_OUTCOMES else 'STOPPED'
+            raise
+    except Stop as e:
+        s['stop'] = e.record()
+        if s['status'] is None:
+            s['status'] = 'STOPPED'
+        print_stop(e)
+    out.mkdir(parents=True, exist_ok=True)
+    try:
+        if fetch is not None:                              # 모든 시도 사본 · 기록 (멈춘 합치기도 · 판정 · 다시 판정이 같은 대조를 다시 한다)
+            fetch.copy_all()
+            mg['units'], mg['attempts'], mg['unused_runs'] = fetch.units_public(), fetch.attempts_public(), fetch.unused_runs()
+        if mg['ledger'] is not None:
+            mg['ledger']['bundle_sha256'] = ledger_bundle(repo, head, out / LEDGER_COPY_DIR / LEDGER_BUNDLE)
+            mg['ledger']['bundle'] = f'{LEDGER_COPY_DIR}/{LEDGER_BUNDLE}'
+    except Stop as e:                                     # 사본 · 묶음을 못 만든 합치기 = 멈춤 (판정 입력 아님)
+        if s['stop'] is None:
+            s['stop'], s['status'] = e.record(), 'STOPPED'
+            exp = None
+        print_stop(e)
+    if exp is not None:
+        mg['missing_points'] = exp.missing if not exp.first else None
+        if exp.first:
+            dec_new = {'schema': EXPANSION_SCHEMA, 'variant': a.variant, 'points': exp.points, 'overflow': [list(unit_parse(p)) for p in exp.points],
+                       'attempts': exp.attempts, 'ledger': {'path': mg['ledger']['path'], 'commit': head, 'sha256': mg['ledger']['sha256']},
+                       'ladders': {law: s['ladders'][law]['summary_sha256'] for law in LAWS}, 'plan_sha256': s['plan']['sha256'],
+                       'machine': a.machine, 'env': (s['code'] or {}).get('env'), 'utc': _utc()}
+            write_json(out / EXPANSION_FILE, dec_new)
+            mg['expansion'] = {'path': str((out / EXPANSION_FILE).resolve()), 'sha256': sha256_file(out / EXPANSION_FILE), 'copy': EXPANSION_FILE}
+        s['stage'] = 'merge'
+        write_json(out / MERGE_SUMMARY, s)
+        what = (f'넘침 점 {len(exp.points)} — 결정 기록 {out / EXPANSION_FILE} 을 인용한 --point 시도 뒤 끝 합치기 (--expand)' if exp.first else
+                f'빠진 넘침 점 {exp.missing} — 그 점 시도 뒤 끝 합치기 다시')
+        print(f'EXPANSION_NEEDED — {what} (멈춤 아님 · 판정 입력 아님)')
+        print(f'요약 → {out / MERGE_SUMMARY}')
+        return RC_EXPANSION_NEEDED
+    write_json(out / 'predict_summary.json', s)
+    if s['status'] == 'PREDICTED':
+        print(f'합친 예측 = PREDICTED · 런 {len(s["runs"])} · 단위 · 넘침 점 {len(mg["units"])} · 남은 런 기록 {len(mg["unused_runs"])}')
+    else:
+        print(f'합친 예측 = {s["status"]}' + (f' (사유 {(s.get("stop") or {}).get("reason")})' if (s.get('stop') or {}).get('reason') else ''))
     print(f'요약 → {out / "predict_summary.json"}')
     return 0 if s['status'] == 'PREDICTED' else 3
 
@@ -4636,6 +5422,12 @@ def verdict_compute(dirs, reg_path, contract, root, graph_src=None, ledger=None)
     ★ 10-27 묶음 C1b — ledger = {'path', 'commit', 'attempt_dirs'} (원장 판정 · 입력 = 그 원장의 채택 시도만 · `ledger_verdict_check` · 판정 칸 ledger ·
     뒤에서 멈춰도 멈춤 기록에 원장 칸을 싣는다) · None = 원장 없는 판정 (옛 꼴 · ledger 칸 null)."""
     lpub = None
+    if ledger is None:                                        # ★ 10-27 묶음 C2d — 합친 예측 = 원장 판정만 (합치기의 원장 대조를 판정이 다시 한다 · Q9 §3-4)
+        for d in dirs:
+            sm, _sha = read_summary(Path(d), 'predict_summary.json')
+            if isinstance(sm, dict) and sm.get('merge') is not None:
+                raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{Path(d).name}: 합친 예측 (단위 합치기) = 원장 판정만 (--ledger <그 원장> · 합치기의 원장 · 사본 대조를 '
+                                                      f'다시 한다 · Q9 §3-4)')
     if ledger is not None:
         if not ledger.get('commit'):
             raise Stop('ATTEMPT_LEDGER_MISMATCH', f'원장 {ledger.get("path")} 의 HEAD 를 못 읽는다')
@@ -5063,7 +5855,7 @@ def recover_ledger(root, repo):
                        'by': 'recover', 'utc': _utc()}
             else:
                 s = None
-                for nm in ('ladder_summary.json', 'predict_summary.json'):
+                for nm in ('ladder_summary.json', 'predict_summary.json', UNIT_SUMMARY['unit'], UNIT_SUMMARY['point']):   # ★ 10-27 묶음 C2d — 단위 · 넘침 점
                     s = s or read_summary(f, nm)[0]
                 res = attempt_result_line(n, f, s, 'recover')
             ledger_append(repo, res, f'rint-r attempt {n} result {res["status"]} (recover)', expect=raw)
@@ -5104,7 +5896,7 @@ def stage_ledger(a):
             return 0
         if not (a.ledger_target and TARGET_RE.fullmatch(a.ledger_target)):
             raise Stop('NOT_REGISTERED', f'--ledger-target {a.ledger_target!r} (ladder:P0 · ladder:P1 · ladder:<법칙>:<FIBRE|UNREG|GRID> · predict · '
-                                         f'predict:<변이>)')
+                                         f'predict:<변이> · ★ C2d unit[:<변이>]:<단위> · point[:<변이>]:<단위> — 단위 = <법칙>_c<c>_<R 역할>)')
         head, raw = ledger_now(repo)
         st = ledger_parse(raw)
         plan, plan_sha = load_plan(a.plan)
@@ -5200,10 +5992,18 @@ def main(argv=None, contract=None):
     ap.add_argument('--add', action='store_true', help='ledger — 항목 하나 (--ledger-target · --machine · --plan · --runner · --root · 재실행 = --resume) · '
                                                        '시도 전에 커밋')
     ap.add_argument('--ledger-target', default=None, help='ledger --add — 대상 (ladder:P0 · ladder:P1 · ladder:<법칙>:<FIBRE|UNREG|GRID> · predict · '
-                                                          'predict:<변이>)')
+                                                          'predict:<변이> · ★ 10-27 묶음 C2d unit[:<변이>]:<단위> · point[:<변이>]:<단위>)')
     ap.add_argument('--resume', type=int, default=None, help='ledger --add — 재실행 항목의 원 시도 번호 (같은 대상 · 채택 시도 · 재실행 자격 · 같은 기계 · '
                                                             '환경 지문)')
     ap.add_argument('--attempt-dirs', nargs='+', default=None, help='verdict — 시도 폴더 바탕 (입력 폴더의 부모 밖에 둔 다른 시도 · 거부 기록)')
+    #  ★ 10-27 묶음 C2d (Q9 설계 §3-1 · §3-2 · author 10-27 approved bundle C) — 12 단위 · 넘침 점 · 합치기 (이름 = 구현 때 정하는 꼴)
+    ap.add_argument('--unit', default=None, help='predict — 단위 시도 (<법칙>_c<c>_<R 역할> 예 P0_c0_R_j0 · --ledger · --attempt 와만 · 모서리 arm 0 + origin '
+                                                 '표본 arm 1 · 2 · 요약 unit_summary.json · 원장 대상 unit[:<변이>]:<이름>)')
+    ap.add_argument('--point', default=None, help='predict — 넘침 점 시도 (단위 이름 꼴 · --expand <결정 기록> · --ledger · --attempt 와만 · origin8 · 요약 '
+                                                  'point_summary.json · 원장 대상 point[:<변이>]:<이름>)')
+    ap.add_argument('--expand', default=None, help='predict --point · --merge — 첫 합치기의 결정 기록 (expansion.json · 넘침 점 · 끝 합치기)')
+    ap.add_argument('--merge', nargs='+', default=None, help='predict — 합치기 (단위 · 넘침 점 시도 폴더 · 그 바탕 · --ledger 와 · --attempt 없이 · 넘침 있으면 '
+                                                             'rc 4 + expansion.json · 끝 합치기 = --expand)')
     a = ap.parse_args(argv)
     contract = RealContract() if contract is None else contract
     if a.show_results and a.stage != 'verdict':
@@ -5223,6 +6023,22 @@ def main(argv=None, contract=None):
         ap.error('--attempt-dirs 는 --stage verdict --ledger 에서만')
     if a.ledger and a.stage == 'plan-doc':
         ap.error('--ledger 는 plan-doc 에 쓰지 않는다')
+    if a.unit is not None or a.point is not None or a.merge is not None or a.expand is not None:      # ★ 10-27 묶음 C2d
+        if a.stage != 'predict':
+            ap.error('--unit · --point · --expand · --merge 는 --stage predict 에서만')
+        if sum(x is not None for x in (a.unit, a.point, a.merge)) > 1:
+            ap.error('--unit · --point · --merge 는 하나만 (시도 하나 = 단위 · 점 하나 · 합치기 = 시도 아님)')
+        if a.expand is not None and a.point is None and a.merge is None:
+            ap.error('--expand 는 --point · --merge 와만')
+        if a.point is not None and a.expand is None:
+            ap.error('--point 는 --expand <결정 기록> 과 (결정 기록이 요구한 origin8 런만)')
+        for nm in (a.unit, a.point):
+            if nm is not None and not UNIT_RE.fullmatch(nm):
+                ap.error(f'단위 · 넘침 점 이름 {nm!r} (<법칙>_c<c>_<R 역할> — 예 P0_c0_R_j0 · 법칙 P0 · P1 · c 0 · 1 · R R_j_lo · R_j0 · R_j_hi)')
+        if (a.unit is not None or a.point is not None) and (a.ledger is None or a.attempt is None):
+            ap.error('--unit · --point = 원장 시도만 (--ledger · --attempt · 원장 밖 런 금지 · Q9 §3-5)')
+        if a.merge is not None and (a.ledger is None or a.attempt is not None or a.dry_run):
+            ap.error('--merge 는 --ledger 와 (--attempt · --dry-run 없이 · 합치기 = 시도 아님)')
     if a.stage == 'ledger':
         if a.add and not (a.ledger_target and a.machine and a.plan and a.runner and a.root):
             ap.error('--stage ledger --add 는 --ledger-target · --machine · --plan · --runner · --root 가 필요하다')

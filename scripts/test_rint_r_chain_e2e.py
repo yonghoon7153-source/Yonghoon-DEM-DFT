@@ -1314,6 +1314,75 @@ def t_resume_real():
         (res0, rc1, rc3, r1, rc4, so4[-200:], rc5, s.get('status'), rs, r2, ref is None, so5[-300:]))
 
 
+def _json_diff(a, b, pre=''):
+    """두 JSON 값의 다른 자리 (경로 목록 · 보고용)."""
+    if isinstance(a, dict) and isinstance(b, dict):
+        out = []
+        for k in sorted(set(a) | set(b)):
+            out += _json_diff(a.get(k), b.get(k), f'{pre}{k}.')
+        return out
+    if isinstance(a, list) and isinstance(b, list) and len(a) == len(b):
+        out = []
+        for i, (x, y) in enumerate(zip(a, b)):
+            out += _json_diff(x, y, f'{pre}{i}.')
+        return out
+    return [] if a == b else [pre.rstrip('.')]
+
+
+def t_merge_fetch_real():
+    """★ 10-27 묶음 C2d (Q9 §3-2 fetch · §4 같음의 근거 · author 10-27 approved bundle C) 실물 — 합치기 fetch 가 기대는 바이트 가정을 실제 러너 · 실제 payload ·
+    합성 DBE 킷 (SDCP) · CPU 로 본다: 같은 요청 (DBE arm 0 SV 모서리 P0 · c 0 · R_j 1e6) 을 한 기계 사슬 이름 (P05_corner · 폴더 A) 과 단위 시도 이름
+    (U01_corner · 폴더 B) 로 두 번 → 팔 JSON 바이트 · σ 같음 (다르면 다른 칸 보고) · B 의 런 폴더를 다른 자리 (C/units/unit-P0_c0_R_j0/attempt_7/) 로 통째로
+    복사 → 사슬 read_run (합친 런 이름 · 실물 봉인 원천 = 러너 조립만 · 사본 경로) 통과 · SV 끝 그래프 귀속 verified · 팔 sha256 = B 의 기록.
+    (12 단위 · 합치기 단계 배선 = 가짜 러너 시험 UM01–UM16 · 이 시험 = 실물 바이트 가정 · 구현과 함께 · 고치기 전 판에서도 돈다)"""
+    ws = make_root('e16')
+    pp, _sp, _rp = make_plan_and_reg(ws)
+    plan = json.load(open(pp, encoding='utf-8'))
+    recs = {'stage2': RR.read_s0_report(os.path.join(TD, 's0_stage2.json'), 2), 'stage1': RR.read_s0_report(os.path.join(TD, 's0_stage1.json'), 1)}
+    seed_g, seed_c = RR.s0_grid_seed(recs), RR.s0_census_seed(recs)
+    sd = code_repo()
+    runner = os.path.join(sd, 'sdcp_gain_vox015_8arm.sh')
+    oa, ob = os.path.join(TD, 'runs', 'e16_a'), os.path.join(TD, 'runs', 'e16_b')
+    cdir = os.path.join(TD, 'runs', 'e16_c')
+    old_bk, old_here = RR.EXPECT_BACKEND, RR.HERE
+    RR.EXPECT_BACKEND, RR.HERE = 'cpu', Path(sd)
+    buf = io.StringIO()
+    got = {}
+    try:
+        with chain_env(ws), contextlib.redirect_stdout(buf), contextlib.redirect_stderr(buf):
+            for tag, o, prefix, n0 in (('a', oa, 'P', 4), ('b', ob, 'U', 0)):
+                rn = RR.Runner(runner, ws, o, plan, None, time.time() + 1800, RR.RealContract(), prefix=prefix, machine=E2E_MACH)
+                rn.s0_grid, rn.s0_census = seed_g, seed_c
+                rn.graph_src = RR.RunnerGraphSource(runner, ws, os.path.join(o, 'graph_src'), deadline=rn.deadline)
+                rn.n = n0
+                got[tag] = (rn.run(DBE_KIT, 'corner', 'P0', '0', RR.rj_key(1e6), 1, True), rn.records[0])
+            recb = got['b'][1]
+            dst = os.path.join(cdir, 'units', 'unit-P0_c0_R_j0', 'attempt_7', recb['outdir'])
+            shutil.copytree(os.path.join(ob, recb['outdir']), dst, symlinks=True)
+            req = {k: recb.get(k) for k in RR.REQ_KEYS}
+            req['name'] = 'P05_corner'
+            gs = RR.RunnerGraphSource(runner, ws, os.path.join(cdir, 'graph_src'))
+            got['c'] = RR.read_run(dst, req, plan, RR.RealContract(), {}, want_sha=[x['sha256'] for x in recb['arms_read']], s0_grid=seed_g,
+                                   s0_census=seed_c, graph_src=gs)
+    except RR.Stop as e:
+        chk('E16 실물 DBE SV 모서리 두 이름 · 사본 다시 읽기가 사슬 read_run 을 지난다', False, f'{e.code}: {e.cause} · {buf.getvalue()[-900:]}')
+        return
+    finally:
+        RR.EXPECT_BACKEND, RR.HERE = old_bk, old_here
+    (aa, ra), (ab, rb), ac = got['a'], got['b'], got['c']
+    fa = os.path.join(oa, ra['outdir'], ra['arms_read'][0]['file'])
+    fb = os.path.join(ob, rb['outdir'], rb['arms_read'][0]['file'])
+    same_bytes = open(fa, 'rb').read() == open(fb, 'rb').read()
+    diff = [] if same_bytes else _json_diff(json.load(open(fa, encoding='utf-8')), json.load(open(fb, encoding='utf-8')))
+    print(f'    보고 E16 — 이름 {ra["name"]} ↔ {rb["name"]} · 폴더 {ra["outdir"]} ↔ {rb["outdir"]} · 팔 JSON 바이트 같음 {same_bytes} · 다른 칸 {diff[:8]} · '
+          f'사본 다시 읽기 SV 귀속 {(ac[0].get("sv_graph") or {}).get("state")}')
+    chk('E16 ★ 10-27 묶음 C2d 실물 합치기 fetch 가정 — 같은 요청 · 다른 런 이름 (P05_corner · U01_corner) · 다른 폴더 = 팔 JSON 바이트 같음 · σ 같음 · SV 귀속 '
+        'verified 둘 다 · 단위 폴더 사본 (다른 자리) 의 read_run (합친 이름 · 실물 봉인 원천) 통과 · σ · 팔 sha256 = 단위 런 기록 · SV 귀속 verified',
+        same_bytes and aa[0]['sigma'] == ab[0]['sigma'] == ac[0]['sigma'] and ac[0]['sha256'] == rb['arms_read'][0]['sha256']
+        and all((x[0].get('sv_graph') or {}).get('state') == 'verified' for x in (aa, ab, ac)),
+        (same_bytes, diff[:8], [(x[0].get('sv_graph') or {}).get('state') for x in (aa, ab, ac)], buf.getvalue()[-400:]))
+
+
 def t_prod_form():
     ws = make_root('e6', kit_sh=KIT_SH_PROD)
     out = os.path.join(TD, 'runs', 'e6_P0')
@@ -1350,7 +1419,7 @@ def main():
     try:
         for tag, fn in (('E1', t_ladder), ('E6', t_prod_form), ('E8', t_zero_floor), ('E9', t_short_ceiling), ('E10', t_sv_census_dbe),
                         ('E11', t_no_venv), ('E12', t_graph_source), ('E13', t_runner_kill), ('E13t', t_timeout_kill),
-                        ('E13p', t_parent_kill), ('E14', t_ledger), ('E15', t_resume_real)):
+                        ('E13p', t_parent_kill), ('E14', t_ledger), ('E15', t_resume_real), ('E16', t_merge_fetch_real)):
             if sel and tag not in sel:
                 continue
             print(f'\n── {tag}')
