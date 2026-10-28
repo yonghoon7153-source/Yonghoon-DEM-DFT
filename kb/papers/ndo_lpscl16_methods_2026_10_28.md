@@ -31,8 +31,8 @@ evidenceScope: multi-source-primary
   첨자는 Word 첨자 · SI 식 3 개는 Word 수식 개체): 본문판 `kb/papers/ndo_lpscl16_methods_main_2026_10_28.docx` · SI 판 `kb/papers/ndo_lpscl16_methods_SI_2026_10_28.docx`.
 - 빌더 `tools/manuscripts/build_ndo_methods_docx.py` 가 **한 원본에서** Word 두 파일과 아래 md 본문 (`--md`) 을 같이 뽑는다 · `--check` = 인용 순서 · 누락 ·
   `--selftest` (일부러 깬 두 경우 — 첫 인용 순서 뒤바꿈 · 인용 빠짐 — 둘 다 잡음). 템플릿은 저장소의 B₂O₃ 본문판 docx (같은 패키지 · 본문만 갈아 끼운다).
-- 참고문헌 번호는 SI 판이 정한다 (처음 인용 순서 [1]–[14]). 본문판은 쓰는 문헌만 남기고 빌더가 **다시 매긴다** — 지금은 Marzari–Vanderbilt (SI [10]) 가 빠져 13 개
-  (SI [11]–[14] → 본문판 [10]–[13]). 원고 목록에 합칠 때 다시 매긴다.
+- 참고문헌 번호는 SI 판이 정한다 (처음 인용 순서 [1]–[15]). 본문판은 쓰는 문헌만 남기고 빌더가 **다시 매긴다** — 지금은 Marzari–Vanderbilt (SI [10]) 가 빠져 14 개
+  (SI [11]–[15] → 본문판 [10]–[14]). 원고 목록에 합칠 때 다시 매긴다.
 - **기록용 디테일은 원고에서 뺀다** (사용자 10-28 *'이딴 지엽적인건 좀 빼줄래? 아니 논문이 니 일기장이야?'* · *'이 수정들을 반영해서 짧은 버전도 마무리'*) —
   SI 에서 뺀 것: MP 조회 시기 · 도구 (mp_api) · pymatgen 클래스 이름 · PP 파일 이름 · GBRV 판 번호 · '2π 포함' · 빈 밴드 35 % · 섞음 0.3 · Broyden · CI 자동 선택 ·
   셀 반복 거리 · 홉 거리 · 3×3×3 원자 수 · 잔류 압력 · 화학계 원소 목록 · μ_Li⁰ 출처 · 'one extra electron …' · 유한셀 보정 문구 · 중간 x 확인 문장.
@@ -41,37 +41,37 @@ evidenceScope: multi-source-primary
 
 ---
 
-## 본문 압축판 — 4.5 절 (약 370 단어 · 참고문헌 13 개 · Word `kb/papers/ndo_lpscl16_methods_main_2026_10_28.docx`)
+## 본문 압축판 — 4.5 절 (약 450 단어 · 참고문헌 14 개 · Word `kb/papers/ndo_lpscl16_methods_main_2026_10_28.docx`)
 
 > 계별 세부 (k 격자 · smearing 폭 · 문턱 · 끝점 이완 · PP 파일 이름 · MP ID · 식 셋 · 셀 크기 한계) 는 SI 판으로 보냈다. 같은 사실만 쓴다.
 
 ***4.5. DFT calculations***
 
-DFT calculations were performed with Quantum ESPRESSO [1–3] using the Perdew–Burke–Ernzerhof (PBE) generalized gradient approximation (GGA) [4], with kinetic energy cutoffs of 60 and 480 Ry for the wavefunctions and charge density, respectively. The Brillouin zone was sampled with Monkhorst–Pack *k*-point grids [5], and further computational details are given in the Supplementary Material.
+DFT calculations were performed with Quantum ESPRESSO [1–3] using the Perdew–Burke–Ernzerhof (PBE) generalized gradient approximation (GGA) [4], with kinetic energy cutoffs of 60 and 480 Ry for the wavefunctions and charge density, respectively. The Brillouin zone was sampled with Γ-centered Monkhorst–Pack *k*-point grids [5]. Further computational details are given in the Supplementary Material.
 
-Li migration barriers (Fig. 3f,g) were calculated with the climbing-image nudged elastic band method [6] for a Li vacancy hopping between nearest-neighbor 8*c* sites. Antifluorite Li₂S and the Li–Nd alloy, represented by an ordered BiF₃-type Li₃Nd model, were modeled with 3 × 3 × 3 and 2 × 2 × 2 supercells of their primitive cells containing a negatively charged and a neutral Li vacancy, respectively, starting from the Materials Project structures [7]. Ultrasoft GBRV pseudopotentials were used for Li and S [8], and a projector augmented-wave (PAW) dataset from PSlibrary with the Nd 4*f* electrons frozen in the core was used for Nd [9].
+Li migration barriers (Fig. 3f,g) were calculated with the climbing-image nudged elastic band method [6] for a Li vacancy hopping between nearest-neighbor 8*c* sites. Antifluorite Li₂S and the Li–Nd alloy, represented by a hypothetical ordered BiF₃-type Li₃Nd model, were built from the Materials Project structures [7] and modeled with 3 × 3 × 3 and 2 × 2 × 2 supercells of their primitive cells, respectively. The Li vacancy was negatively charged in insulating Li₂S and neutral in metallic Li₃Nd. GBRV ultrasoft pseudopotentials were used for Li and S [8], and a projector augmented-wave (PAW) dataset from PSlibrary with the Nd 4*f* electrons frozen in the core was used for Nd [9]. The limitations of the Li₃Nd model are described in the Supplementary Material.
 
-The band gaps of Li₂S, Li₃P, Li₂O, Li₃PO₄, and LiCl (Fig. 3h) were obtained from the Kohn–Sham eigenvalues at the valence band maximum and conduction band minimum of non-self-consistent calculations with fixed occupations, after full relaxation of the Materials Project structures [7]; GBRV ultrasoft pseudopotentials were used for Li, S, and Cl [8], and PSlibrary datasets for P and O [9].
+The band gaps of Li₂S, Li₃P, Li₂O, β-Li₃PO₄, and LiCl (Fig. 3h) were taken as the difference between the lowest unoccupied and highest occupied Kohn–Sham eigenvalues of non-self-consistent calculations with fixed occupations, after full relaxation of the Materials Project structures [7]. GBRV ultrasoft pseudopotentials were used for Li, S, and Cl [8], and PSlibrary datasets were used for P and O [9]. Because PBE is known to underestimate band gaps, the calculated values were used for comparison among the phases.
 
-Interfacial reaction energies between the SEs and NCM were calculated as a function of voltage (Fig. 5e,f) following the approach of Richards et al. [10], as implemented in pymatgen [11], with the mixed GGA/GGA+*U* energies of the Materials Project database [7,12]. The SEs and NCM were represented by the convex-hull energies at their compositions, and the interface was treated as open to Li at a chemical potential *μ*<sub>Li</sub>(*φ*) = *μ*<sub>Li</sub>⁰ − *eφ* [13], where *μ*<sub>Li</sub>⁰ is the chemical potential of Li metal, *e* is the elementary charge, and *φ* is the applied voltage vs. Li/Li⁺. At each voltage, the reaction energy was taken as the most negative grand-potential reaction energy over all SE/NCM mixing ratios, and the corresponding reaction products were identified.
+Interfacial reaction energies between the SEs and NCM were calculated as a function of voltage (Fig. 5e,f) following the approach of Richards et al. [10], as implemented in pymatgen [11], using Materials Project energies [7] in the mixed GGA/GGA+*U* scheme with the MP2020 energy corrections [12,13]. The SEs and NCM were represented by the convex-hull energies at their compositions, and the interface was treated as open to Li at a chemical potential *μ*<sub>Li</sub>(*φ*) = *μ*<sub>Li</sub>⁰ − *eφ* [14], where *μ*<sub>Li</sub>⁰ is the chemical potential of Li metal, *e* is the elementary charge, and *φ* is the applied voltage vs. Li/Li⁺. At each voltage, the reaction energy was taken as the most negative grand-potential reaction energy over all SE/NCM mixing ratios, and the corresponding reaction products were identified. Because the unreacted SEs and NCM served as the reference, this energy also includes the decomposition of each reactant at the applied voltage.
 
-The band gaps of the Nd-containing CEI components (Fig. SX) were calculated with the same procedure, but with PAW datasets from PSlibrary for all elements, including the Nd dataset with the 4*f* electrons frozen in the core [9].
+The band gap of the Nd-containing CEI component NdP₅O₁₄ (Fig. SX) was calculated with the same procedure as for Fig. 3h, but with PAW datasets from PSlibrary for all elements, including the Nd dataset with the 4*f* electrons frozen in the core [9].
 
-## SI 전체판 — Computational details (약 680 단어 · 참고문헌 14 개 · Word `kb/papers/ndo_lpscl16_methods_SI_2026_10_28.docx`)
+## SI 전체판 — Computational details (약 800 단어 · 참고문헌 15 개 · Word `kb/papers/ndo_lpscl16_methods_SI_2026_10_28.docx`)
 
 > 참고문헌 14 개 (번호의 기준) · 식 셋 (S1–S3) 은 Word 에서 수식 개체다 (아래 LaTeX 는 같은 식).
 
 **Computational details** (Supplementary Material)
 
-DFT calculations were performed with Quantum ESPRESSO [1–3] using the Perdew–Burke–Ernzerhof (PBE) generalized gradient approximation (GGA) [4]. Kinetic energy cutoffs of 60 and 480 Ry were used for the wavefunctions and charge density, respectively, the Brillouin zone was sampled with Γ-centered Monkhorst–Pack *k*-point grids [5], and self-consistent calculations were converged to 10⁻⁸ Ry.
+DFT calculations were performed with Quantum ESPRESSO [1–3] using the Perdew–Burke–Ernzerhof (PBE) generalized gradient approximation (GGA) [4]. Kinetic energy cutoffs of 60 and 480 Ry were used for the wavefunctions and charge density, respectively. The Brillouin zone was sampled with Γ-centered Monkhorst–Pack *k*-point grids [5], and the self-consistent field was converged to an estimated energy error below 10⁻⁸ Ry.
 
-Li migration barriers were calculated with the climbing-image nudged elastic band (CI-NEB) method [6] for a Li vacancy hopping between nearest-neighbor 8*c* sites. Antifluorite Li₂S (*Fm*3̅*m*; mp-1153 in the Materials Project database [7]) and an ordered BiF₃-type Li₃Nd model (*Fm*3̅*m*; mp-976264, a hypothetical phase above the convex hull) were first relaxed with variable cell. Ultrasoft GBRV pseudopotentials were used for Li and S [8], and a projector augmented-wave (PAW) dataset from PSlibrary with the Nd 4*f* electrons frozen in the core was used for Nd [9]. The vacancies were placed in 3 × 3 × 3 (Li₂S, 80 atoms) and 2 × 2 × 2 (Li₃Nd, 31 atoms) supercells of the primitive cells, sampled with a 3 × 3 × 3 *k*-point grid. The vacancy in the insulating Li₂S was modeled in the negatively charged state (V<sub>Li</sub>⁻) with a uniform compensating background charge and Gaussian smearing of 0.005 Ry, whereas that in the metallic Li₃Nd was modeled as neutral with Marzari–Vanderbilt smearing [10] of 0.02 Ry.
+Li migration barriers were calculated with the climbing-image nudged elastic band (CI-NEB) method [6] for a Li vacancy hopping between nearest-neighbor 8*c* sites. Antifluorite Li₂S (mp-1153, *Fm*3̅*m*) and a hypothetical ordered BiF₃-type Li₃Nd model (mp-976264, *Fm*3̅*m*; above the convex hull), both taken from the Materials Project database [7], were first relaxed with respect to atomic positions and lattice parameters. GBRV ultrasoft pseudopotentials were used for Li and S [8], and a projector augmented-wave (PAW) dataset from PSlibrary with the Nd 4*f* electrons frozen in the core was used for Nd [9]. Because the Nd 4*f* electrons are in the core, all Nd-containing calculations were non-spin-polarized, and no Hubbard *U* correction was applied. The vacancies were placed in 3 × 3 × 3 (Li₂S, 80 atoms) and 2 × 2 × 2 (Li₃Nd, 31 atoms) supercells of the primitive cells, with a 3 × 3 × 3 *k*-point grid for both. The vacancy in insulating Li₂S was modeled in the negatively charged state (V<sub>Li</sub>⁻) with a uniform compensating background charge and Gaussian smearing of 0.005 Ry, whereas that in metallic Li₃Nd was modeled as neutral with Marzari–Vanderbilt smearing [10] of 0.02 Ry.
 
-The two vacancy endpoints were relaxed at fixed cell until all force components were below 10⁻³ Ry bohr⁻¹, and the minimum-energy path, represented by seven images including the two endpoints, was optimized until the force perpendicular to the path fell below 0.05 eV Å⁻¹. For Li₃Nd, both vacancy endpoints reconstructed substantially on relaxation from the ideal lattice, so the barrier refers to this locally reconstructed 2 × 2 × 2 model. A check with a 3 × 3 × 3 supercell was attempted, but its vacancy endpoints also reconstructed substantially and the CI-NEB between them did not converge; the Li₃Nd barrier is therefore not converged with respect to cell size.
+The two endpoint configurations were relaxed with the cell fixed until all force components were below 10⁻³ Ry bohr⁻¹, and the minimum-energy path, represented by seven images including the two endpoints, was optimized until the force perpendicular to the path on every image fell below 0.05 eV Å⁻¹. For Li₃Nd, both vacancy endpoints reconstructed substantially on relaxation from the ideal lattice, so the barrier refers to this locally reconstructed 2 × 2 × 2 model. A check with a 3 × 3 × 3 supercell was attempted, but its vacancy endpoints also reconstructed substantially and the CI-NEB between them did not converge; the Li₃Nd barrier is therefore not converged with respect to cell size.
 
-The band gaps of the interphase components in Fig. 3h were calculated for Li₂S (mp-1153, *Fm*3̅*m*), Li₃P (mp-736, *P*6₃/*mmc*), Li₂O (mp-1960, *Fm*3̅*m*), β-Li₃PO₄ (mp-13725, *Pmn*2₁), and rock-salt LiCl (mp-22905, *Fm*3̅*m*), starting from the Materials Project structures [7]. Ultrasoft GBRV pseudopotentials were used for Li, S, and Cl [8], and PSlibrary datasets for P (ultrasoft) and O (PAW) [9]. The structures were fully relaxed with Marzari–Vanderbilt smearing [10] of 0.01 Ry and a *k*-point spacing of 0.30 Å⁻¹, and the band gap was obtained from the Kohn–Sham eigenvalues at the valence band maximum and conduction band minimum of a non-self-consistent calculation with fixed occupations on a denser *k*-point grid (spacing 0.15 Å⁻¹).
+The band gaps of the interphase components in Fig. 3h were calculated for Li₂S (mp-1153, *Fm*3̅*m*), Li₃P (mp-736, *P*6₃/*mmc*), Li₂O (mp-1960, *Fm*3̅*m*), β-Li₃PO₄ (mp-13725, *Pmn*2₁), and rock-salt LiCl (mp-22905, *Fm*3̅*m*), starting from the Materials Project structures [7]. GBRV ultrasoft pseudopotentials were used for Li, S, and Cl [8], and PSlibrary datasets were used for P (ultrasoft) and O (PAW) [9]. The full relaxation and the subsequent self-consistent calculation used Marzari–Vanderbilt smearing [10] of 0.01 Ry and a *k*-point spacing of 0.30 Å⁻¹. The band gap was then taken as the difference between the lowest unoccupied and highest occupied Kohn–Sham eigenvalues of a non-self-consistent calculation with fixed occupations on a denser *k*-point grid (spacing 0.15 Å⁻¹), based on the self-consistent charge density. Because PBE is known to underestimate band gaps, the calculated values were used for comparison among the phases.
 
-Interfacial reaction energies between the solid electrolytes (SEs) and NCM (LiNi₀.₈Co₀.₁Mn₀.₁O₂) were calculated following the approach of Richards et al. [11], as implemented in pymatgen [12], using Materials Project energies [7] in the mixed GGA/GGA+*U* scheme [13]. LPSCl₁.₆ (Li₅.₄PS₄.₄Cl₁.₆), NdO-LPSCl₁.₆ (Li₅.₄₄Nd₀.₀₂P₀.₉₈S₄.₃₇O₀.₀₃Cl₁.₆), and NCM were represented by the convex-hull energies at their compositions. The interface was treated as open to Li, with the Li chemical potential set by the applied voltage *φ* (vs. Li/Li⁺) through Eq. (S1) [14], where *μ*<sub>Li</sub>⁰ is the chemical potential of Li metal and *e* is the elementary charge. With the grand potential of each phase defined by Eq. (S2), where *E* is its energy and *N*<sub>Li</sub> is its number of Li atoms, the reaction energy was obtained from Eq. (S3), where *x* is the fraction of SE in the SE/NCM mixture, *Φ*<sub>eq</sub>(*x*) is the grand potential of the equilibrium phases of the mixture, and *Φ*<sub>SE</sub> and *Φ*<sub>NCM</sub> are those of the unreacted SE and NCM; all grand potentials were normalized per atom excluding Li. The calculations were performed at six voltages between 2.5 and 4.5 V, and the reaction products were taken from the equilibrium phases at the minimizing *x*.
+Interfacial reaction energies between the solid electrolytes (SEs) and NCM (LiNi₀.₈Co₀.₁Mn₀.₁O₂) were calculated following the approach of Richards et al. [11], as implemented in pymatgen [12], using Materials Project energies [7] in the mixed GGA/GGA+*U* scheme [13] with the MP2020 energy corrections [14]. LPSCl₁.₆ (Li₅.₄PS₄.₄Cl₁.₆), NdO-LPSCl₁.₆ (Li₅.₄₄Nd₀.₀₂P₀.₉₈S₄.₃₇O₀.₀₃Cl₁.₆), and NCM were represented by the convex-hull energies at their compositions. The interface was treated as open to Li, with the Li chemical potential set by the applied voltage *φ* (vs. Li/Li⁺) through Eq. (S1) [15], where *μ*<sub>Li</sub>⁰ is the chemical potential of Li metal and *e* is the elementary charge. The grand potential of a phase or phase assemblage is given by Eq. (S2), where *E* is its energy and *N*<sub>Li</sub> is its number of Li atoms; all grand potentials were normalized per atom excluding Li. The reaction energy was obtained from Eq. (S3), where *x* is the fraction of SE in the SE/NCM mixture (per atom excluding Li), *Φ*<sub>eq</sub>(*x*) is the grand potential of the equilibrium phases of the mixture, and *Φ*<sub>SE</sub> and *Φ*<sub>NCM</sub> are those of the unreacted SE and NCM. Because the unreacted SE and NCM served as the reference, the reaction energy also includes the decomposition of each reactant at the applied voltage, in addition to their mutual reaction. The calculations were performed at 2.5, 3.0, 3.5, 4.0, 4.3, and 4.5 V, and the reaction products were taken from the equilibrium phases at the minimizing *x*.
 
 ```latex
 \mu_{\mathrm{Li}}(\varphi) = \mu_{\mathrm{Li}}^{0} - e\varphi \qquad (\mathrm{S}1)
@@ -85,14 +85,11 @@ Interfacial reaction energies between the solid electrolytes (SEs) and NCM (LiNi
 \Delta E_{\mathrm{rxn}}(\varphi) = \min_{x}\left[\Phi_{\mathrm{eq}}(x) - x\,\Phi_{\mathrm{SE}} - (1-x)\,\Phi_{\mathrm{NCM}}\right] \qquad (\mathrm{S}3)
 ```
 
-The band gaps of the Nd-containing cathode–electrolyte interphase components, including NdP₅O₁₄ (mp-560681, *Pmna*), were calculated with the same procedure, but with PAW datasets from PSlibrary for all elements [9]. Because the Nd 4*f* electrons are frozen in the core of the Nd dataset, the calculations were non-spin-polarized and no Hubbard *U* correction was applied.
+The band gap of the Nd-containing cathode–electrolyte interphase component NdP₅O₁₄ (mp-560681, *Pmna*; Fig. SX) was calculated with the same procedure as for Fig. 3h, but with PAW datasets from PSlibrary for all elements [9]. Because the Nd 4*f* electrons are frozen in the core, the calculated gap does not include the localized Nd 4*f* states.
 
-## 참고문헌 — SI 판 14 개 (Elsevier 꼴) · 본문판 13 개 = 아래에서 [10] Marzari–Vanderbilt 를 뺀 것 ([11]–[14] → [10]–[13])
+## 참고문헌 — SI 판 15 개 (Elsevier 꼴) · 본문판 14 개 = 아래에서 [10] Marzari–Vanderbilt 를 뺀 것 ([11]–[15] → [10]–[14])
 
-원고 (`ms.docx` · 사용자 10-27 업로드 · 저장소 밖) 의 [1] 꼴 그대로 (`저자, 제목, 저널 권 (연도) 쪽. https://doi.org/…`) · 저자는 전부 적었다 (원고 [1] 도 전부).
-QE 는 공식 인용 안내대로 셋 (2020 = GPU 판 · gabia NEB 가 `qe-7.4.1-gpu` neb.x · B₂O₃ 와 같은 판단) · PP 는 쓴 라이브러리 원 논문 (GBRV · PSlibrary — SSSP 를 거치지 않았다).
-
-[1] P. Giannozzi, S. Baroni, N. Bonini, M. Calandra, R. Car, C. Cavazzoni, D. Ceresoli, G. L. Chiarotti, M. Cococcioni, I. Dabo, A. Dal Corso, S. de Gironcoli, S. Fabris, G. Fratesi, R. Gebauer, U. Gerstmann, C. Gougoussis, A. Kokalj, M. Lazzeri, L. Martin-Samos, N. Marzari, F. Mauri, R. Mazzarello, S. Paolini, A. Pasquarello, L. Paulatto, C. Sbraccia, S. Scandolo, G. Sclauzero, A. P. Seitsonen, A. Smogunov, P. Umari, R. M. Wentzcovitch, QUANTUM ESPRESSO: a modular and open-source software project for quantum simulations of materials, J. Phys.: Condens. Matter 21 (2009) 395502. https://doi.org/10.1088/0953-8984/21/39/395502.
+원고 (`ms.docx` · 사용자 10-27 업로드 · 저장소 밖) 의 [1] P. Giannozzi, S. Baroni, N. Bonini, M. Calandra, R. Car, C. Cavazzoni, D. Ceresoli, G. L. Chiarotti, M. Cococcioni, I. Dabo, A. Dal Corso, S. de Gironcoli, S. Fabris, G. Fratesi, R. Gebauer, U. Gerstmann, C. Gougoussis, A. Kokalj, M. Lazzeri, L. Martin-Samos, N. Marzari, F. Mauri, R. Mazzarello, S. Paolini, A. Pasquarello, L. Paulatto, C. Sbraccia, S. Scandolo, G. Sclauzero, A. P. Seitsonen, A. Smogunov, P. Umari, R. M. Wentzcovitch, QUANTUM ESPRESSO: a modular and open-source software project for quantum simulations of materials, J. Phys.: Condens. Matter 21 (2009) 395502. https://doi.org/10.1088/0953-8984/21/39/395502.
 [2] P. Giannozzi, O. Andreussi, T. Brumme, O. Bunau, M. Buongiorno Nardelli, M. Calandra, R. Car, C. Cavazzoni, D. Ceresoli, M. Cococcioni, N. Colonna, I. Carnimeo, A. Dal Corso, S. de Gironcoli, P. Delugas, R. A. DiStasio Jr., A. Ferretti, A. Floris, G. Fratesi, G. Fugallo, R. Gebauer, U. Gerstmann, F. Giustino, T. Gorni, J. Jia, M. Kawamura, H.-Y. Ko, A. Kokalj, E. Küçükbenli, M. Lazzeri, M. Marsili, N. Marzari, F. Mauri, N. L. Nguyen, H.-V. Nguyen, A. Otero-de-la-Roza, L. Paulatto, S. Poncé, D. Rocca, R. Sabatini, B. Santra, M. Schlipf, A. P. Seitsonen, A. Smogunov, I. Timrov, T. Thonhauser, P. Umari, N. Vast, X. Wu, S. Baroni, Advanced capabilities for materials modelling with Quantum ESPRESSO, J. Phys.: Condens. Matter 29 (2017) 465901. https://doi.org/10.1088/1361-648X/aa8f79.
 [3] P. Giannozzi, O. Baseggio, P. Bonfà, D. Brunato, R. Car, I. Carnimeo, C. Cavazzoni, S. de Gironcoli, P. Delugas, F. Ferrari Ruffino, A. Ferretti, N. Marzari, I. Timrov, A. Urru, S. Baroni, Quantum ESPRESSO toward the exascale, J. Chem. Phys. 152 (2020) 154105. https://doi.org/10.1063/5.0005082.
 [4] J. P. Perdew, K. Burke, M. Ernzerhof, Generalized gradient approximation made simple, Phys. Rev. Lett. 77 (1996) 3865–3868. https://doi.org/10.1103/PhysRevLett.77.3865.
@@ -105,18 +102,22 @@ QE 는 공식 인용 안내대로 셋 (2020 = GPU 판 · gabia NEB 가 `qe-7.4.1
 [11] W. D. Richards, L. J. Miara, Y. Wang, J. C. Kim, G. Ceder, Interface stability in solid-state batteries, Chem. Mater. 28 (2016) 266–273. https://doi.org/10.1021/acs.chemmater.5b04082.
 [12] S. P. Ong, W. D. Richards, A. Jain, G. Hautier, M. Kocher, S. Cholia, D. Gunter, V. L. Chevrier, K. A. Persson, G. Ceder, Python Materials Genomics (pymatgen): A robust, open-source python library for materials analysis, Comput. Mater. Sci. 68 (2013) 314–319. https://doi.org/10.1016/j.commatsci.2012.10.028.
 [13] A. Jain, G. Hautier, S. P. Ong, C. J. Moore, C. C. Fischer, K. A. Persson, G. Ceder, Formation enthalpies by mixing GGA and GGA+U calculations, Phys. Rev. B 84 (2011) 045115. https://doi.org/10.1103/PhysRevB.84.045115.
-[14] Y. Zhu, X. He, Y. Mo, Origin of outstanding stability in the lithium solid electrolyte materials: Insights from thermodynamic analyses based on first-principles calculations, ACS Appl. Mater. Interfaces 7 (2015) 23685–23693. https://doi.org/10.1021/acsami.5b07517.
+[14] A. Wang, R. Kingsbury, M. McDermott, M. Horton, A. Jain, S. P. Ong, S. Dwaraknath, K. A. Persson, A framework for quantifying uncertainty in DFT energy corrections, Sci. Rep. 11 (2021) 15496. https://doi.org/10.1038/s41598-021-94550-5.
+[15] Y. Zhu, X. He, Y. Mo, Origin of outstanding stability in the lithium solid electrolyte materials: Insights from thermodynamic analyses based on first-principles calculations, ACS Appl. Mater. Interfaces 7 (2015) 23685–23693. https://doi.org/10.1021/acsami.5b07517.
 
 확인 방법: doi.org · crossref 는 이 세션 프록시가 막았다 (403 · 우회하지 않음). [1]–[5] · [8]–[10] 은 B₂O₃ 문서에서 대조한 저자·권·쪽 그대로 (DOI 는 표준 인용) ·
 [6] Henkelman 2000 · [7] MP 2013 (11 명 · DOAJ 목록) · [11] Richards 2016 (MIT DSpace) · [12] pymatgen (MIT DSpace · LBL) · [13] Jain 2011 (LBL · APS 수락본) 은 웹 검색 목록으로 저자·권·쪽·DOI 대조 ·
-[14] Zhu 2015 는 검색에 DOI 가 안 떴고 **litdb `zhu2015_esw_grand_potential_origin` 의 PDF 실물 풋터** (`10.1021/acsami.5b07517` · 옛 메모의 `5b01004` 는 오기) 로 확인했다.
+[14] Wang 2021 (MP2020 보정 · 10-28 독립 검토가 추가 제안) 은 웹 검색 (PMC8322326 · 출판사 목록) 으로 저자 8 명 · 권 · 번호 · DOI 대조 ·
+[15] Zhu 2015 는 검색에 DOI 가 안 떴고 **litdb `zhu2015_esw_grand_potential_origin` 의 PDF 실물 풋터** (`10.1021/acsami.5b07517` · 옛 메모의 `5b01004` 는 오기) 로 확인했다.
 
 ## 빈칸 · 확인할 것
 
 1. **Li₃Nd NEB 의 k 격자 (3 × 3 × 3) · Li PP** — repo 에 실행 입력이 없다 (gabia `/data/work/runs/sei_neb_v2_ccpath/li3nd/`). k 는 생성기 규칙
    (`tools/sei/build_neb_inputs.py` `kmesh` · `--kdens` 기본 0.04 · 2×2×2 면 높이 8.47 Å → ⌈2.95⌉ = 3) 으로 다시 셌고 Li PP 는 같은 pseudo 폴더 (`/data/work/pseudo` · GBRV li v1.4) 로 적었다.
-   NEB 를 돌린 QE 판도 기록에 없다. 같은 김에 **09-19 Nd CEI 띠틈 입력의 스핀 · U** 도 본다 — SI 의 *'non-spin-polarized and no Hubbard U'* 는 원장 선언
-   (`sei_electronic_class.json` *'`--nd_u 0 --no_nd_spin` 필수'*) 과 8 월 frozen-4f 런 (`sei_electronic.json` `spin_polarized` false) 이 근거이고 09-19 실행 입력은 안 봤다.
+   NEB 를 돌린 QE 판도 기록에 없다. 같은 김에 **09-19 Nd CEI 띠틈 입력의 스핀 · U** 도 본다 — SI 2 문단 *'all Nd-containing calculations were non-spin-polarized, and no Hubbard U'*
+   (10-28 검토 7 번으로 6 문단에서 옮김 · NEB 까지 덮는다) 중 NEB 쪽은 생성기에 nspin · Hubbard 줄이 아예 없다 (`build_neb_inputs.py` · 10-28 확인 · 둘째 줄과 같이 첫 줄 입력으로 확인). 띠틈 쪽은 원장 선언
+   (`sei_electronic_class.json` *'`--nd_u 0 --no_nd_spin` 필수'*) 과 8 월 frozen-4f 런 (`sei_electronic.json` `spin_polarized` false) 이 근거이고 09-19 실행 입력은 안 봤다 —
+   생성기는 `--no_nd_spin` 을 안 주면 스핀을 켠다 (`build_dft_inputs.py` `spinpol`) · U 는 frozen-4f 면 멈춘다. ⇒ **보내기 전에 둘째 줄을 본다** — nspin 2 가 찍히면 SI 2 문단을 고친다.
    또 **8 월 SEI 체인 (Fig. 3h) 의 P · O 파일 판** — 원장엔 세트 이름 (*'P rrkjus psl · O psl 0.1'*) 만 있고, 판 번호 `P.pbe-n-rrkjus_psl.1.0.0` 은 같은 세트를 쓴 gabia 탄성 입력
    (`db/inputs/elastic_modelc_2x_split_2026_09_26/qe/jobs.json`) 에서 가져왔다. 셋째 줄이 SEI 입력의 ATOMIC_SPECIES 를 직접 보여 준다.
    확인 블록 (gabia · 읽기만 · 둘째 줄이 아무것도 안 찍으면 nspin 1 · U 없음):
@@ -132,6 +133,7 @@ QE 는 공식 인용 안내대로 셋 (2020 = GPU 판 · gabia NEB 가 `qe-7.4.1
 5. **Fig. 5e,f 의 그림 구성 (원고 빈칸)** — Methods 는 NCM (NMC811) × LPSCl₁.₆ · NdO-LPSCl₁.₆ 로 썼다. 다른 양극 (LiCoO₂ · LiNiO₂ · LiMnO₂) 이나 다른 조성 (LPSCl · O only · Nd only …) 을 그리면
    SE · 양극 문장을 넓힌다 (값은 `db/properties/cei_figs/cei_reaction_energy_by_cathode_x002.csv` 에 다 있다 · LiMnO₂ 4.5 V 두 점은 끝점 = SE 자체 분해).
 6. **Fig. SX 의 Nd CEI 성분 (원고 빈칸)** — NdP₅O₁₄ 는 09-19 체인으로 계산했다 (사용자 10-28 *'ndp5o14도 계산하지 않았나'* → 맞다 · *Pmna* mp-560681 · SI 문단에 이름을 넣었다).
+   10-28 검토 11 번 → 원고 빈칸이 단수 (*'The Nd-containing CEI component [ ]'*) 라 본문 5 · SI 6 문단을 NdP₅O₁₄ 하나로 (단수) 고쳤다.
    값을 원고에 넣으면 단서 문장 (`HZ-cei-gap-ndp5o14-unreproduced`) 이 캡션이나 결과 쪽에 같이 가야 한다 (Methods 에는 값이 없다). 다른 후보 값 위치는 아래 출처 표.
 7. ✅ **SI 의 셀 크기 문장** — 사용자 10-28 *'우리 안한거는 빼도 되는거 아니야?'* → '안 한 것' 두 문장 (3×3×3 시도가 안 된 경위 · Li₂S 셀 수렴 미시험) 을 뺐다.
    Li₃Nd 의 *'재구성된 2×2×2 모델 · 셀 크기에 수렴 안 됨'* 한 문장은 남겼다 — 안 한 일이 아니라 장벽 숫자가 어떤 모델 값인지이고, `D-2026-10-26-li3nd-neb-si-conditional`
@@ -139,11 +141,45 @@ QE 는 공식 인용 안내대로 셋 (2020 = GPU 판 · gabia NEB 가 `qe-7.4.1
    ⏩ 사용자 10-28 *'li3nd 한해서 3*3*3은 크게 이완돼서 못했다 부분 추가할까?'* → Li₃Nd 만 3×3×3 시도 경위를 다시 넣었다 (해 봤는데 안 된 일 · 결정 SI 문장과 같은 뜻):
    *'A check with a 3 × 3 × 3 supercell (107 atoms) was attempted, but its vacancy endpoints also reconstructed substantially and the CI-NEB between them did not converge'*
    (`li3nd_p333_control_runlog_2026_10_11.json` `결정_실험_NEB_끝점_2026_10_26` — 3×3×3 끝점 이완 수렴 · 2×2×2 보다 더 큰 재배열 · 그 사이 NEB 30 스텝 미수렴 `neb_cc333_force_history_2026_08_27.json`).
+   ⏩ **끝 꼬리 *'…and is not compared with other phases'*** — 10-28 독립 검토 1 번이 '부모 결정의 뜻을 줄였다' 고 짚었다 → 사용자 AskUserQuestion *'빼 둔 채 · 예외 기록 (권고)'* →
+   `D-2026-10-28-li3nd-neb-si-ndo-tail` (**비준 active** · 이 원고 SI 에서만 꼬리 없이 · 원고 Fig. 3f,g 는 원고 그대로 (10-27) · 다른 문서 · 금지는 부모 그대로) · `HZ-li3nd-neb-si-conditional` 에 예외 줄.
 8. 참고문헌 번호를 원고 목록에 합치기 · 붙인 뒤 첨자 · italic · minus 다시 보기 (BML) · *'Fig. SX'* · *'Supplementary Material'* 은 원고 자리표시 그대로 뒀다.
 9. 10-27 CEI 생성물 11 종 띠틈 (kgy 진행 중 · 1저자 요청) 을 SI 에 넣게 되면 전이금속 상 문단 (스핀 · U · GBRV Co/Ni/Mn · Mn 상 90/1080 Ry) 을 더한다 —
-   카드 `db/properties/cei_product_gap_card_2026_10_27.json` + 개정 1.
+   카드 `db/properties/cei_product_gap_card_2026_10_27.json` + 개정 1. 그때 본문 5 · SI 6 문단의 NdP₅O₁₄ 단수 문장도 복수로 넓힌다 (판독 R1–R6 뒤).
 10. **PP 세트가 그림마다 다르다** — Fig. 3h (8 월 SEI · Li · S · Cl GBRV + P · O psl) 와 Fig. SX (9 월 CEI · 전부 PAW psl) — SI 에 각각 적었다. 한 세트로 맞추려면
     10-27 kgy 체인 (LiCl · Li₃PO₄ 만 PAW 로 다시 잰다) 에 Li₂S · Li₂O · Li₃P 를 더해야 한다 (사용자 결정 · 지금은 안 한다).
+
+## 독립 검토 (10-28) 반영 — 22 건
+
+서브에이전트 검토 (두 판 · 원장 · `sei_neb.json` · `cei_interface_V_x002_2026_09_28.json` · 두 생성기 대조 · 파일은 안 고침) → 지적마다 기록과 다시 대조한 뒤 반영했다.
+총평은 *'1–8 고치고 확인할 것 1 을 닫으면 보내도 된다'*.
+
+| # | 지적 | 처리 | 근거 |
+|---|---|---|---|
+| 1 | SI 3 이 부모 결정 문장의 끝 꼬리를 뺐다 | **사용자 결정 — 빼 둔 채 · 예외 기록** | `D-2026-10-28-li3nd-neb-si-ndo-tail` (비준 active) · 확인할 것 7 |
+| 2 | *'the same procedure'* 가 반응에너지 문단을 가리키는 것처럼 읽힌다 | 반영 — *'the same procedure as for Fig. 3h'* | 본문 5 · SI 6 |
+| 3 | 반응에너지에 반응물 각각의 자체 분해가 들어간다 (끝점 ≠ 0) | 반영 — 본문 4 · SI 5 끝 문장 | `interface_reactivity_v2.py` `is_endpoint` (열린계 `include_no_mixing_energy=True` · 끝점 = 순수상 grand-potential 자체 분해) |
+| 4 | 식 S3 의 *x* 기준이 없다 | 반영 — *'per atom excluding Li'* | pymatgen `norm=True` (Li 뺀 분율 조성) · Φ 정규화와 같은 기준 |
+| 5 | *'not converged'* → *'could not be established'* | **안 함** — 비준된 부모 결정 문장 그대로 (*'the value is therefore not converged with respect to cell size'*) | `D-2026-10-26-li3nd-neb-si-conditional` |
+| 6 | 띠틈 정의 문장 · nscf 가 읽는 SCF 밀도 | 반영 — LUMO − HOMO 고유값 차 · SCF 밀도 | `build_dft_inputs.py` 체인 (01 이완 → 02 scf → 03 fixed nscf) · *'(2π included)'* 는 안 넣음 (10-28 사용자 지엽 정리로 뺀 것) |
+| 7 | Nd 스핀 · U 문장이 NEB 를 안 덮는다 · 4f 준위 빠짐 | 반영 — SI 2 로 옮김 (*'all Nd-containing calculations'*) · SI 6 에 4f 준위 한 줄 | `build_neb_inputs.py` 에 nspin · Hubbard 없음 · 09-19 띠틈은 확인할 것 1 (보내기 전) |
+| 8 | 본문 2 의 *respectively* 겹침 · 전하 이유 | 반영 — 두 문장으로 · *'negatively charged in insulating Li₂S and neutral in metallic Li₃Nd'* | — |
+| 9 | *'nearest-neighbor 8c sites'* → *'8c sublattice'* (선택) | 안 함 — 지금 문장이 8c 끼리 최근접이라는 뜻으로 맞다 | — |
+| 10 | Fig. 3h 그림이 아직 MP 값 | 보내기 전 — 새 막대 CSV 와 같이 | `db/properties/ndo_fig3h_sei_gaps_qe_origin.csv` · 확인할 것 3 |
+| 11 | Fig. SX 단수 · 복수 | 반영 — NdP₅O₁₄ 하나 (단수) | 원고 결과 문단 빈칸 *'The Nd-containing CEI component [ ]'* |
+| 12 | 본문 ↔ SI 맞춤 (Γ-centered · β-Li₃PO₄ · hypothetical + SI 한계 안내) | 반영 | — |
+| 13 | 본문 1 *'performed with Quantum ESPRESSO'* 가 MP 에너지까지 덮어 보인다 | 반영 — *'using Materials Project energies'* | — |
+| 14 | 전압 여섯이 고르지 않다 | 반영 — 2.5 · 3.0 · 3.5 · 4.0 · 4.3 · 4.5 V | `cei_interface_V_x002_2026_09_28.json` `voltages_V` |
+| 15 | MP2020 보정 · Wang 2021 | 반영 — 참고문헌 [14] 추가 · 번호 다시 (SI 15 · 본문 14) | `interface_reactivity_v2.py` `get_entries` = mp_api `get_entries_in_chemsys` (`thermo_types` GGA_GGA+U · `compatible_only` 기본) · 웹 검색으로 서지 대조 |
+| 16 | PBE 띠틈 과소 문장 | 반영 — 본문 3 · SI 4 (*'used for comparison among the phases'*) | — |
+| 17 | 유한셀 정전 보정 문장 (선택) | 안 넣음 — 10-28 사용자 지엽 정리로 뺀 문장 (*'안 한 것'*) | 위 머리 목록 |
+| 18 | SI 1 쉼표 이음 · 10⁻⁸ 의 뜻 | 반영 — *'estimated energy error below 10⁻⁸ Ry'* | `build_dft_inputs.py` · `build_neb_inputs.py` `conv_thr 1.0d-8` |
+| 19 | SI 2–3 문체 | 반영 | — |
+| 20 | SI 3 *'endpoint configurations'* · *'on every image'* · 단위 환산 | 앞 둘 반영 · 환산은 안 넣음 (간결) | — |
+| 21 | SI 5 정의 셋이 한 문장 | 반영 — 식 S2 · S3 문장 나눔 | — |
+| 22 | 잔손질 (GBRV ultrasoft 통일 · mp-ID 꼴 · 본문 1 두 문장 · '(PBE)') | 반영 · '(PBE)' 정의는 둠 (띠틈 문장에서 다시 씀) | — |
+
+**보내기 전 (사용자)**: ① 확인할 것 1 블록 (gabia · 읽기만) — 둘째 줄이 nspin 2 를 찍으면 SI 2 를 고친다 ② Fig. 3h 막대를 새 CSV 값으로 ③ NdP₅O₁₄ 값을 빈칸에 넣으면 단서 문장 (`HZ-cei-gap-ndp5o14-unreproduced`) ④ 참고문헌을 원고 목록에 합칠 때 번호 다시.
 
 ## 원고 숫자의 출처 — Methods 와 맞추려면 볼 곳 (판단 없이 위치만)
 

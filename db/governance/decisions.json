@@ -10224,6 +10224,77 @@
     "근거_발화": "AskUserQuestion 답 (2026-10-28 · 이 세션): '몇으로 할까요?' → '592 GPU-h (Recommended)' · '언제 다시 시작할까요?' → 'CEI 끝나면 자동 (Recommended)' — 앞선 발화 '남은 7런 돌게 명령어줘'",
     "decision_digest": "sha256:5d69cd38ad55b9963ec76ec0768887722b2e73b4fd700b4ddc2a933af4d27119"
    }
+  },
+  {
+   "id": "D-2026-10-28-li3nd-neb-si-ndo-tail",
+   "schema_version": 2,
+   "kind": "policy",
+   "scope": "sei.li3nd.neb",
+   "slot": "li3nd_neb_ndo_manuscript_si_tail",
+   "applies_to": {
+    "systems": [
+     "li3nd"
+    ],
+    "tasks": [
+     "sei_neb"
+    ],
+    "methods": [
+     "qe_pbe_cineb"
+    ],
+    "use_cases": [
+     "manuscript_si"
+    ]
+   },
+   "title": "Li₃Nd NEB SI 단서 — NdO-LPSCl₁.₆ 원고 SI (Methods) 에서만 끝 꼬리 'and is not compared with other phases' 없이 (원고 Fig. 3f,g 는 원고 그대로 · 사용자 10-27)",
+   "statement": "D-2026-10-26-li3nd-neb-si-conditional 의 SI 단서 문장을 NdO-LPSCl₁.₆ 원고 (트랙 CEI · 1저자 = 실험 쪽 박재현) 의 SI Computational details 에 쓸 때만 마지막 꼬리 '…and is not compared with other phases' 를 뺀다. 나머지 단서 (가상 BiF₃ 형 Li₃Nd · mp-976264 · convex hull 위 · 두 끝점 재배열 → 재구성된 2×2×2 모델 위 장벽 · 3×3×3 시도에서 끝점 재배열 + CI-NEB 미수렴 · 셀 크기에 수렴 안 됨) 는 그대로 둔다. 값 (0.229 eV · E_hull 0.197 eV/atom · 끝점 ≈ 1.4 eV/셀) 은 Methods 에 안 쓴다 (사용자 10-28 'Methods 에 결과 값 없음'). 다른 원고 · 화면 · 편지 · 우리 문서에서는 부모 결정 문장이 그대로다 (꼬리 포함). 우리 쪽 금지 (Li₂S 0.305 와의 순위 · '수렴된 Li₃Nd 물성' · 실험·문헌 값과 나란히) 도 그대로다 — 원고 본문의 비교는 1저자 문장이고 사용자 10-27 결정으로 원고 그대로 둔다.",
+   "rationale": "원고 Fig. 3f,g · 결과 · 초록 · 결론이 Li₂S 와 Li₃Nd 장벽을 나란히 둔다. 사용자 10-27 '이 원고는 원고 그대로 · 다시 짚지 않는다' — 이 원고 SI 에 '다른 상과 비교하지 않는다' 를 넣으면 같은 논문 안에서 SI 가 그림과 어긋나고 사실상 다시 짚는 셈이 된다. 10-28 독립 검토가 '부모 결정의 뜻을 줄였다' 고 짚어서 예외를 명시적으로 남긴다 (조용히 빼지 않는다).",
+   "decision_state": "active",
+   "record_kind": "prospective",
+   "results_seen": true,
+   "results_seen_note": "값 (0.229) 과 원고 비교 문장을 본 뒤의 인용 범위 결정이다 — 값 · 부모 결정의 다른 조건을 바꾸지 않는다",
+   "card": "kb/questions/li3nd_pristine_reconstruction_2026_09_02.md",
+   "record": "kb/papers/ndo_lpscl16_methods_2026_10_28.md",
+   "depends_on": [
+    "D-2026-10-26-li3nd-neb-si-conditional"
+   ],
+   "supersedes": [],
+   "amends": "D-2026-10-26-li3nd-neb-si-conditional",
+   "evidence": [
+    "kb/papers/ndo_lpscl16_methods_2026_10_28.md (SI 3 문단 · 확인할 것 7)",
+    "tools/manuscripts/build_ndo_methods_docx.py P_SI[2] (꼬리 없음)",
+    "kb/open_items.md ⏭-NOW-z25 (사용자 10-27 원고 그대로 · 다시 짚지 않는다)"
+   ],
+   "reopen_criteria": [
+    "① 1저자가 원고에서 Li₂S 와의 장벽 비교를 빼면 꼬리를 되살린다 (부모 문장 그대로)",
+    "② 사용자가 바꾸면"
+   ],
+   "enforcement": "build_ndo_methods_docx.py P_SI[2] (꼬리 없음) · --verify-md 로 kb 문서와 글자 대조 · citation_hazards.json HZ-li3nd-neb-si-conditional 의 예외 줄",
+   "proposed_by": "claude-session-2026-10-28 (friendly)",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-10-28",
+     "state": "proposed",
+     "by": "agent",
+     "note": "독립 검토 (10-28) 1 번 — 두 갈래 (이 원고만 예외 기록 · 꼬리 복원) 중 예외 기록 권고"
+    },
+    {
+     "at": "2026-10-28",
+     "state": "active",
+     "by": "사용자 (SEI 트랙 · NdO 원고 계산 담당)",
+     "note": "비준 — AskUserQuestion 답 '빼 둔 채 · 예외 기록 (권고)'"
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-28T10:43:06Z",
+    "commit": "91682fae7b0effc9dc827402217912328c45bc56",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "AskUserQuestion 답 (2026-10-28 · 이 세션): '빼 둔 채 · 예외 기록 (권고)' — 질문에 두 갈래 (예외 기록 → 원고 안에서 그림과 SI 가 안 어긋남 · 꼬리 복원 → 원장과 맞지만 1저자가 SI 와 Fig. 3f,g 의 어긋남을 보게 됨) 를 적었다.",
+    "decision_digest": "sha256:e85c23c976df9816797b22dd7385700668d6098a1b632665161631e452b3032e"
+   }
   }
  ]
 }

@@ -680,7 +680,8 @@
    "id": "HZ-li3nd-neb-si-conditional",
    "decision": "D-2026-10-26-li3nd-neb-si-conditional",
    "binding_scope": "partial",
-   "binding_scope_why": "sei_neb.json 은 canonical_registry 에 등록 0 건이라 숫자 결속 자리가 없다 (HZ-sei-neb-retracted 와 같은 사정) — 화면은 id 로만 이름을 댄다"
+   "binding_scope_why": "sei_neb.json 은 canonical_registry 에 등록 0 건이라 숫자 결속 자리가 없다 (HZ-sei-neb-retracted 와 같은 사정) — 화면은 id 로만 이름을 댄다",
+   "⏩_2026_10_28_NdO_원고_SI_예외": "D-2026-10-28-li3nd-neb-si-ndo-tail (사용자 비준 10-28) — NdO-LPSCl₁.₆ 원고 SI (Methods) 에서만 끝 꼬리 'and is not compared with other phases' 없이 (원고 Fig. 3f,g 는 원고 그대로 · 사용자 10-27) · 나머지 단서 · 금지 · 다른 문서의 부모 문장은 그대로"
   }
  ],
  "_history": [
