@@ -111,10 +111,13 @@ QE 는 공식 인용 안내대로 셋 (2020 = GPU 판 · gabia NEB 가 `qe-7.4.1
    (`tools/sei/build_neb_inputs.py` `kmesh` · `--kdens` 기본 0.04 · 2×2×2 면 높이 8.47 Å → ⌈2.95⌉ = 3) 으로 다시 셌고 Li PP 는 같은 pseudo 폴더 (`/data/work/pseudo` · GBRV li v1.4) 로 적었다.
    NEB 를 돌린 QE 판도 기록에 없다. 같은 김에 **09-19 Nd CEI 띠틈 입력의 스핀 · U** 도 본다 — SI 의 *'non-spin-polarized and no Hubbard U'* 는 원장 선언
    (`sei_electronic_class.json` *'`--nd_u 0 --no_nd_spin` 필수'*) 과 8 월 frozen-4f 런 (`sei_electronic.json` `spin_polarized` false) 이 근거이고 09-19 실행 입력은 안 봤다.
+   또 **8 월 SEI 체인 (Fig. 3h) 의 P · O 파일 판** — 원장엔 세트 이름 (*'P rrkjus psl · O psl 0.1'*) 만 있고, 판 번호 `P.pbe-n-rrkjus_psl.1.0.0` 은 같은 세트를 쓴 gabia 탄성 입력
+   (`db/inputs/elastic_modelc_2x_split_2026_09_26/qe/jobs.json`) 에서 가져왔다. 셋째 줄이 SEI 입력의 ATOMIC_SPECIES 를 직접 보여 준다.
    확인 블록 (gabia · 읽기만 · 둘째 줄이 아무것도 안 찍으면 nspin 1 · U 없음):
    ```
    D=/data/work/runs/sei_neb_v2_ccpath/li3nd; ls $D | head -20; for f in $D/*.in; do echo "== $f"; grep -a -A1 K_POINTS "$f"; grep -a -A3 ATOMIC_SPECIES "$f"; done 2>/dev/null | head -60; grep -a -h -m1 "Program NEB\|Program PWSCF" $D/*.out 2>/dev/null | sort -u
    grep -a -h -i "nspin\|hubbard\|tot_magnetization" /data/work/runs/cei_gap/*/0*.in 2>/dev/null | sort | uniq -c; ls -d /data/work/runs/cei_gap/*/ | wc -l
+   grep -a -A6 ATOMIC_SPECIES /data/work/runs/sei_dft/li3po4_mp-13725/03_nscf_gap.in /data/work/runs/sei_dft/licl_mp-22905/03_nscf_gap.in 2>/dev/null
    ```
 2. ✅ ~~Fig. 3h MP 띠틈의 계산 종류~~ — **해당 없음** (10-28 · Fig. 3h 를 우리 QE 값으로 바꿔서 MP 띠틈의 출처는 안 따진다 · 확인 블록은 이력 `cc966284` 에 있다).
 3. ✅ **Fig. 3h 숫자 ↔ Methods 문장** — 사용자 10-28 *'우리 qe 값으로 하는게 맞는듯'* → 그림을 우리 QE 값으로 바꾼다 (Origin CSV `db/properties/ndo_fig3h_sei_gaps_qe_origin.csv`) ·
