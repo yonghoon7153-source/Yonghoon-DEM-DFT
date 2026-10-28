@@ -256,8 +256,43 @@ def constant_errors(plan=PLAN, ladder=LADDER, pair=PAIR_PARENT, roster=None) -> 
     return errs
 
 
+def _current(by, did, hops=10):
+    """결정 id → 원장이 **지금 유효하다고** 하는 결정 → (결정, 사슬, 오류).
+
+    superseded 이면 superseded_by 를 따라간다 (2026-10-28 · 상한 결정 D-2026-10-07 의 재개 조건
+    '상한에 닿으면 남은 런은 **새 결정**' 의 이행). 숫자는 여전히 원장에서만 온다 — 코드·CLI 로 못 올린다.
+    ⛔ 사슬이 끊기거나 (없는 id) 돌거나 (A → B → A) 너무 길면 오류다. 조용히 옛 결정으로 돌아가지 않는다.
+    """
+    chain, e = [did], by.get(did)
+    while e is not None and e.get("decision_state") == "superseded":
+        nxt = e.get("superseded_by")
+        if not nxt:
+            return None, chain, f"{chain[-1]} 가 superseded 인데 superseded_by 가 없다"
+        if nxt in chain or len(chain) > hops:
+            return None, chain + [nxt], f"대체 사슬이 돌거나 너무 길다 ({' → '.join(chain + [nxt])})"
+        chain.append(nxt)
+        e = by.get(nxt)
+        if e is None:
+            return None, chain, f"{chain[-2]} 의 superseded_by {nxt} 가 원장에 없다"
+    return e, chain, None
+
+
+def current_chain(path, did) -> str:
+    """화면용 — 'D-old → D-new' (대체가 없으면 id 하나). 못 읽으면 원래 id."""
+    try:
+        d = json.loads(Path(path).read_text(encoding="utf-8"))
+        items = d["decisions"] if isinstance(d, dict) else d
+        _e, chain, _err = _current({e.get("id"): e for e in items if isinstance(e, dict)}, did)
+        return " → ".join(chain)
+    except (OSError, ValueError, KeyError, TypeError):
+        return did
+
+
 def decision_gate(path, ids=(DECISION_CARD, DECISION_AMEND), cap_id=DECISION_AMEND) -> tuple[float | None, list[str]]:
-    """원장에서 결정들이 active 인지 · 상한 (cap_id 의 cost_cap) → (상한, 오류)."""
+    """원장에서 결정들이 active 인지 · 상한 (cap_id 의 cost_cap) → (상한, 오류).
+
+    superseded 결정은 superseded_by 사슬 끝의 결정으로 본다 (_current) — 그 끝이 active 여야 한다.
+    """
     try:
         d = json.loads(Path(path).read_text(encoding="utf-8"))
         items = d["decisions"] if isinstance(d, dict) else d
@@ -266,13 +301,18 @@ def decision_gate(path, ids=(DECISION_CARD, DECISION_AMEND), cap_id=DECISION_AME
     by = {e.get("id"): e for e in items if isinstance(e, dict)}
     errs, cap = [], None
     for did in ids:
-        e = by.get(did)
-        if e is None:
+        e, chain, cerr = _current(by, did)
+        if cerr:
+            errs.append(cerr)
+        elif e is None:
             errs.append(f"{did} 가 원장에 없다")
         elif e.get("decision_state") != "active":
-            errs.append(f"{did} 가 active 가 아니다 ({e.get('decision_state')!r})")
+            errs.append(f"{' → '.join(chain)} 가 active 가 아니다 ({e.get('decision_state')!r})")
     try:
-        cap = float(by[cap_id]["cost_cap"]["total_gpu_h"])
+        ce, _cc, cerr = _current(by, cap_id)
+        if cerr or ce is None:
+            raise KeyError(cap_id)
+        cap = float(ce["cost_cap"]["total_gpu_h"])
         if not cap > 0:
             raise ValueError
     except (KeyError, TypeError, ValueError):
@@ -957,7 +997,8 @@ def manifest_of(ctx) -> dict:
     return m
 
 
-def resume_check(ctx) -> tuple[dict | None, list[str]]:
+def resume_check(ctx, write=True) -> tuple[dict | None, list[str]]:
+    # write=False — dry_run 미리 보기: 같은 검사를 하되 정산·판독기 해시 이력을 디스크에 안 쓴다
     m = _read_json(ctx["out_root"] / "manifest.json")
     if m is None:
         return None, [f"--resume 인데 {ctx['out_root']}/manifest.json 이 없다"]
@@ -1011,7 +1052,7 @@ def resume_check(ctx) -> tuple[dict | None, list[str]]:
     if jsha and jsha != ctx.get("judge_sha256"):
         b.setdefault("judge_sha_changes", []).append({"at_utc": utc(), "manifest": jsha, "now": ctx.get("judge_sha256"),
                                                      "note": "판독기는 런 사이에 안 쓰인다 — 기록만 (회신 CT P2)"})
-    if todo or (jsha and jsha != ctx.get("judge_sha256")):
+    if write and (todo or (jsha and jsha != ctx.get("judge_sha256"))):
         _write_json(ctx["budget_path"], b)
     return b, errs
 
@@ -1153,7 +1194,7 @@ def run_main(a) -> int:
     say(f"v7 본 라운드 · T* = {ctx['T_star']} K (탐침 산출물 sha {ctx['probe_json_sha256'][:16]}) · 명단 {len(ro)} 런 "
         f"(부모 10 × P1/P2 × 시드 {list(MAIN_SEEDS)}) · 생산 {PROD_PS:g} ps · dt {DT_FS:g} fs · save {SAVE_FS:g} fs · "
         f"UMA {R.UMA_MODEL} {UMA_MODE}")
-    say(f"상한 {ctx['cap']} GPU-h (원장 {DECISION_MAIN}) · 단가 시작값 {MAIN_EST_GPU_H_PER_RUN} (탐침 실측 최댓값) · "
+    say(f"상한 {ctx['cap']} GPU-h (원장 {current_chain(ctx['decisions'], DECISION_MAIN)}) · 단가 시작값 {MAIN_EST_GPU_H_PER_RUN} (탐침 실측 최댓값) · "
         f"투영 {len(ro) * MAIN_EST_GPU_H_PER_RUN:.1f}")
     for s, row in ctx["prep"].items():
         say(f"  준비 {s}: {row['n_atoms']} 원자 · sha {row['sha256'][:16]} · fmax {row['final_fmax_eV_A']} · 입력 해시 = repo 구조 ✓")
@@ -1167,6 +1208,39 @@ def run_main(a) -> int:
         for e in errs:
             print(f"     · {e}", flush=True)
         return 2
+    if a.dry_run and a.resume:
+        # 2026-10-28 — 이어받기 검사를 읽기만으로 미리 본다 (대기 뒤 자동 시작이 그때 가서 거부되지 않게)
+        b_, rerrs = resume_check(ctx, write=False)
+        done_ = {st.get("tag") for st in (b_ or {}).get("steps", []) if st.get("ok")}
+        for x in ro:
+            p_ = ctx["out_root"] / "md" / tag_of(*x)
+            if (p_ / SUBDIR / f"T{int(x[0])}" / "msd.json").exists() and tag_of(*x) not in done_:
+                rerrs.append(f"{tag_of(*x)} 의 msd.json 이 있는데 budget 에 끝난 기록이 없다 (실제 이어받기는 rc 6)")
+            elif p_.exists() and tag_of(*x) not in done_:
+                rerrs.append(f"{tag_of(*x)} 폴더가 msd.json 없이 남아 있다 (실제 이어받기는 rc 11 — attic 으로 옮긴다)")
+        for s, row in ctx["prep"].items():
+            v_ = ctx["out_root"] / "prep" / f"{s}.prepared.xyz"
+            if not v_.is_file() or R.sha256(v_) != row["sha256"]:
+                rerrs.append(f"준비 사본 {v_.name} 가 없거나 해시가 다르다")
+        if rerrs:
+            say("⛔ 이어받기 검사 불통과 (dry_run · 읽기만) (rc 2):")
+            for e in rerrs:
+                print(f"     · {e}", flush=True)
+            return 2
+        used_ = float(b_.get("used_gpu_h") or 0.0)
+        say(f"이어받기 검사 통과 (읽기만) · 누적 {used_:.2f} GPU-h · 끝난 런 {len(done_)} / {len(ro)} · budget 상한 "
+            f"{b_.get('cap_gpu_h')} → 원장 {ctx['cap']:g}"
+            + (" (이어받기 때 맞추고 cap_changes 에 남긴다)" if b_.get("cap_gpu_h") != ctx["cap"] else " (같다)"))
+        nxt = next((x for x in ro if tag_of(*x) not in done_), None)
+        if nxt is not None:
+            measured = [float(st["gpu_h"]) for st in b_.get("steps", []) if st.get("ok")]
+            ok_, gwhy, unit = budget_gate(used_, measured, ctx["cap"], est=MAIN_EST_GPU_H_PER_RUN)
+            left = len(ro) - len(done_)
+            say(f"  다음 런 {tag_of(*nxt)} · 비용 미리 보기: {gwhy} · 단가가 {unit:.2f} 로 그대로면 남은 {left} 런 중 "
+                f"{min(left, int(max(ctx['cap'] - used_, 0.0) // unit))} 런 시작 (최악 어림)")
+            if not ok_:
+                say("⛔ 이 상한이면 다음 런을 시작하지 않는다 — 대기·시작하지 않는다 (rc 3)")
+                return 3
     if a.dry_run:
         say("명단 (고정 · 이 순서):")
         for i, x in enumerate(ro, 1):
@@ -1201,6 +1275,16 @@ def run_main(a) -> int:
             return 2
         say(f"↻ 이어받기 · 누적 {float(budget.get('used_gpu_h') or 0):.2f} GPU-h 승계 · 끝난 런 "
             f"{sum(1 for st in budget.get('steps', []) if st.get('ok'))}")
+        # 2026-10-28 — 게이트는 원장 상한 (ctx) 으로 돈다. budget.json 의 cap_gpu_h 는 감시 화면·--status 가 읽으니
+        # 원장 값으로 맞추고 바뀐 이력을 남긴다 (안 맞추면 화면이 옛 상한 461.4 · '남은 런 0' 을 보인다)
+        if budget.get("cap_gpu_h") != ctx["cap"]:
+            ch = current_chain(ctx["decisions"], DECISION_MAIN)
+            budget.setdefault("cap_changes", []).append(
+                {"at_utc": utc(), "from": budget.get("cap_gpu_h"), "to": ctx["cap"], "decision": ch,
+                 "note": "상한은 원장에서만 온다 — 이어받기 때 원장 값으로 맞췄다 (코드·CLI 로 안 올린다)"})
+            say(f"  상한 {budget.get('cap_gpu_h')} → {ctx['cap']:g} GPU-h (원장 {ch}) · budget.json 에 기록")
+            budget["cap_gpu_h"] = ctx["cap"]
+            _write_json(ctx["budget_path"], budget)
     else:
         (out_root / "prep").mkdir(exist_ok=True)
         for s, row in ctx["prep"].items():
@@ -1671,6 +1755,28 @@ def _selftest() -> int:
         ck("⛔음성 결정: 본 라운드 상한 결정이 proposed 면 잡는다",
            decision_gate(Path(dec), ids=(DECISION_MAIN,), cap_id=DECISION_MAIN)[1] == [] and
            (write_dec(main_state="proposed") or decision_gate(Path(dec), ids=(DECISION_MAIN,), cap_id=DECISION_MAIN)[1] != []))
+        # 2026-10-28 — 상한 결정이 superseded 면 superseded_by 사슬 끝의 상한을 쓴다 (음성 셋 포함)
+        sup = tmp / "decisions_sup.json"
+
+        def write_sup(rows):
+            sup.write_text(json.dumps({"decisions": rows}))
+        old_ = {"id": DECISION_MAIN, "decision_state": "superseded", "superseded_by": "D-new",
+                "cost_cap": {"total_gpu_h": 461.4}}
+        write_sup([old_, {"id": "D-new", "decision_state": "active", "cost_cap": {"total_gpu_h": 592}}])
+        c_, e_ = decision_gate(sup, ids=(DECISION_MAIN,), cap_id=DECISION_MAIN)
+        ck("대체된 상한 결정 → 사슬 끝 (active) 의 상한 592", c_ == 592 and e_ == []
+           and current_chain(sup, DECISION_MAIN) == f"{DECISION_MAIN} → D-new")
+        write_sup([old_, {"id": "D-new", "decision_state": "proposed", "cost_cap": {"total_gpu_h": 592}}])
+        ck("⛔음성 대체: 사슬 끝이 proposed 면 잡는다",
+           decision_gate(sup, ids=(DECISION_MAIN,), cap_id=DECISION_MAIN)[1] != [])
+        write_sup([old_])
+        c_, e_ = decision_gate(sup, ids=(DECISION_MAIN,), cap_id=DECISION_MAIN)
+        ck("⛔음성 대체: superseded_by 가 원장에 없으면 잡고 옛 상한 (461.4) 으로 돌아가지 않는다",
+           e_ != [] and c_ is None)
+        write_sup([old_, {"id": "D-new", "decision_state": "superseded", "superseded_by": DECISION_MAIN,
+                          "cost_cap": {"total_gpu_h": 592}}])
+        ck("⛔음성 대체: 사슬이 돌면 잡는다",
+           any("돌거나" in x for x in decision_gate(sup, ids=(DECISION_MAIN,), cap_id=DECISION_MAIN)[1]))
         write_dec()
         for i, st in enumerate(sorted({st for _, st, _ in ro} - set(PROBE_STRUCTURES))):
             (structs / f"{st}.xyz").write_text(f"4\n{lat}\nLi 0 0 {i + 5}\nLi 1 0 0\nS 0 1 0\nCl 0 0 1\n")
@@ -1760,6 +1866,70 @@ def _selftest() -> int:
         ck("⛔음성 계약: run_meta 시드를 바꾸면 판독기 결박이 잡는다",
            J.v7_main_binding_errors(o, 1000, pj, {(st, T, sd) for T, st, sd in ro}, J.scan(str(o))) != [])
         mp.write_text(keep)
+
+        print("── 상한 게이트 정지 → 대체 결정 → 이어받기 (2026-10-28 실제 경로) ──")
+        ck("같은 상한으로 이어받으면 cap_changes 를 안 남긴다 (m_kill)",
+           "cap_changes" not in (_read_json(tmp / "m_kill" / "budget.json") or {"cap_changes": 1}))
+        o = tmp / "m_cap2"
+        tg = tag_of(*ro[5])
+        write_dec(main_cap=29)
+        rc, txt = runm(o, env={"FAKE_BAD": f"{tg}=seed"})          # 5 런 끝 · 6 번째 실패 (rc 9)
+        (o / "attic").mkdir(); (o / "md" / tg).rename(o / "attic" / tg)
+        b = _read_json(o / "budget.json") or {}
+        for st in b["steps"]:                                       # 끝난 5 런을 5 GPU-h 로 — 누적 = 합 유지
+            if st.get("ok"):
+                st["gpu_h"] = 5.0
+        b["used_gpu_h"] = sum(float(st.get("gpu_h") or 0) for st in b["steps"])
+        _write_json(o / "budget.json", b)
+        rc, txt = runm(o, "--resume")
+        ck("상한 29 · 누적 25 + 단가 5 > 29 → 게이트 정지 rc 3 · 남은 런 35", rc == 3 and "남은 런 35" in txt)
+        b_before = (o / "budget.json").read_text()
+        rc, txt = runm(o, "--resume", "--dry_run")
+        ck("⛔음성 dry_run 이어받기 미리 보기: 같은 상한 29 면 다음 런을 못 띄운다 → 3 · budget 그대로",
+           rc == 3 and (o / "budget.json").read_text() == b_before)
+
+        def write_dec_cap2(state="active"):
+            dec.write_text(json.dumps({"decisions": [
+                {"id": DECISION_CARD, "decision_state": "active"},
+                {"id": DECISION_AMEND, "decision_state": "active", "cost_cap": {"total_gpu_h": 141}},
+                {"id": DECISION_MAIN, "decision_state": "superseded", "superseded_by": "D-cap2",
+                 "cost_cap": {"total_gpu_h": 29}},
+                {"id": "D-cap2", "decision_state": state, "cost_cap": {"total_gpu_h": 592}}]}))
+        write_dec_cap2("proposed")
+        rc, txt = runm(o, "--resume")
+        ck("⛔음성 대체 상한 결정이 proposed → 이어받기 거부 2 · budget 안 건드림",
+           rc == 2 and (o / "budget.json").read_text() == b_before)
+        write_dec_cap2()
+        rc, txt = runm(o, "--resume", "--dry_run")
+        ck("dry_run 이어받기 미리 보기 (대체 592): rc 0 · 검사 통과 · 상한 29 → 592 안내 · 남은 35 런 다 시작 · budget·폴더 그대로",
+           rc == 0 and "이어받기 검사 통과" in txt and "원장 592" in txt and "남은 35 런 중 35 런" in txt
+           and (o / "budget.json").read_text() == b_before and not (o / "md" / tg).exists())
+        mf = o / "manifest.json"; keep_m = mf.read_text()
+        mf.write_text(json.dumps({**json.loads(keep_m), "judge": {"sha256": "0" * 64}}))
+        rc, txt = runm(o, "--resume", "--dry_run")
+        ck("dry_run 은 판독기 해시 이력을 안 쓴다 (읽기만 · write=False) · rc 0", rc == 0 and (o / "budget.json").read_text() == b_before)
+        m_ = json.loads(keep_m); m_["roster"] = m_["roster"][1:] + m_["roster"][:1]; mf.write_text(json.dumps(m_))
+        rc, txt = runm(o, "--resume", "--dry_run")
+        ck("⛔음성 dry_run 미리 보기: manifest 명단 순서가 다르면 → 2 (실제 이어받기와 같은 거부)", rc == 2 and "명단" in txt)
+        mf.write_text(keep_m)
+        (o / "md" / tg).mkdir()
+        rc, txt = runm(o, "--resume", "--dry_run")
+        ck("⛔음성 dry_run 미리 보기: 다음 런 폴더가 남아 있으면 → 2 (실제는 rc 11 · attic 안내)", rc == 2 and "rc 11" in txt)
+        (o / "md" / tg).rmdir()
+        rc, txt = runm(o, "--resume")
+        b = _read_json(o / "budget.json") or {}
+        cc = (b.get("cap_changes") or [{}])[-1]
+        ck("대체 상한 592 로 이어받기 → rc 0 · 40 런 · budget 상한 592 · cap_changes 29 → 592 (사슬) · 누적 = 합",
+           rc == 0 and len([1 for st in b["steps"] if st.get("ok")]) == 40 and b.get("cap_gpu_h") == 592
+           and cc.get("from") == 29 and cc.get("to") == 592 and cc.get("decision") == f"{DECISION_MAIN} → D-cap2"
+           and f"원장 {DECISION_MAIN} → D-cap2" in txt
+           and abs(float(b["used_gpu_h"]) - sum(float(st.get("gpu_h") or 0) for st in b["steps"])) < 6e-5 * (1 + len(b["steps"])))
+        r_ = subprocess.run([sys.executable, str(Path(__file__).resolve()), "--status", "--out_root", str(o)],
+                            capture_output=True, text=True)
+        hdr = next((ln for ln in r_.stdout.splitlines() if ln.startswith("■ v7")), "")
+        ck("--status 머리줄: 이어받기 뒤 상한 592 (옛 29 아님 · 게이트 정지 줄의 '상한 29' 는 이력이라 남는다)",
+           "상한 592" in hdr and "상한 29 " not in hdr)
+        write_dec()
 
         print("── 정리 없이 끝난 시도 (SIGKILL · 전원) — 회신 CT P1-2 ──")
         o = tmp / "m_unset"

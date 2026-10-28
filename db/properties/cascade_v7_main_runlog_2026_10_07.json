@@ -233,5 +233,15 @@
   "남은_런": "7 (명단 34–40) · 판독 없음 (40 런 뒤 · 중간 집계 금지 그대로)",
   "다음": "결정의 재개 조건 '상한에 닿으면 멈추고 보고 → 남은 런을 돌릴지는 새 결정 (사용자)' — 사용자 결정 대기. 권고: CEI 갭 체인 (kgy · 같은 GPU) 이 끝난 뒤 cascade 혼자 · 새 상한 560 GPU-h (남은 6 런 평균 ≤ 15.5 면 7 런 다 시작 · 혼자면 런당 ≈ 11.8 → 끝 누적 어림 ≈ 530). 같이 돌리면 런당 ≈ 15–19 · 상한 ≈ 580 이 필요하고 GPU 가 빠듯하다 (cascade 런 GPU 최대 16,261 MiB + CEI pw.x).",
   "kgy_GPU_지금": "2,479 MiB · 98 % — CEI 갭 체인 pw.x (cascade 아님)"
+ },
+ "▶_재개_결정_2026_10_28": {
+  "사용자": "'남은 7런 돌게 명령어줘' → AskUserQuestion: 상한 '592 GPU-h (Recommended)' · 시작 'CEI 끝나면 자동 (Recommended)' — cascade 1저자 = 사용자",
+  "결정": "D-2026-10-28-cascade-v7-main-round-cap2 (active · 상한 592 = 누적 446.56 + 7 × 단가 최댓값 20.685) · 옛 D-2026-10-07-cascade-v7-main-round-cap 는 superseded (지문만 다시 냄)",
+  "러너_고침": "① decision_gate 가 superseded_by 사슬을 따라간다 (_current · 대체 넷 · 깨기 3/3 빨강) ② 이어받기 때 budget.json 의 cap_gpu_h 를 원장 상한으로 맞추고 cap_changes 에 이력 (from · to · 사슬) — 안 맞추면 감시 화면 (watch_cv7probe · --status) 이 옛 상한 461.4 · '남은 런 0' 을 보인다 (깨기 1/1 · 빨강 2 줄) ③ --main --resume --dry_run 이 이어받기 검사를 읽기만으로 미리 돈다 (resume_check write=False · 남은 런 폴더 · 준비 사본 해시 · 다음 런 비용 게이트 미리 보기 — 상한이 모자라면 rc 3) — 대기 뒤 자동 시작이 그때 가서 거부되지 않게 (깨기 4/4 빨강 · selftest: 상한 29 게이트 정지 → dry 같은 상한 rc 3 · proposed 대체 거부 · dry 592 rc 0 · 판독기 해시 이력 안 씀 · 명단 순서 → 2 · 남은 폴더 → 2 → active 592 로 40 런 · --status 머리줄 592) — DECISION_MAIN 상수·manifest 의 결정 목록은 그대로라 이어받기 검사가 안 바뀐다",
+  "절차": "kgy 스크립트 ~/cv7_resume_1028.sh (블록이 만든다) — 인자 없음: ① 읽기만 (uptime · tmux ls · GPU) ② tmux cv7main 이 있으면 멈춤 · ~/lldvar (git -C rev-parse) 에서 새 worktree ~/wt_cv7main_1028 (FETCH_HEAD · detached · 있으면 지우고 다시) ③ --main --resume --dry_run → ~/cv7_dry_1028.txt (상한 592 · 원장 사슬 · 이어받기 검사 통과 · 다음 런 비용 미리 보기) · rc 0 일 때만 ④ tmux cv7main = 같은 스크립트 --wait: tmux ceigap 이 없어질 때까지 5 분마다 보고 (7 일 넘으면 멈춤 · 러너 로그에 대기·시작 줄) → dry 와 같은 명령에서 --dry_run 만 뺀 이어받기 · 로그 <out_root>.log 이어 쓰기 · --settle 없음 (08:09 정지는 게이트 정지라 정산할 시도가 없다) · 옛 worktree ~/wt_cv7main_1007 · _1012 는 안 건드린다",
+  "어림": "CEI 끝 ≈ 10-29 (어림) → 혼자 런당 ≈ 11.8 GPU-h × 7 ≈ 3.4 일 → 끝 ≈ 11-02 · 끝 누적 어림 ≈ 530 (상한 592 는 천장)",
+  "판독": "없음 — 40 런 뒤 한 번 · 중간 집계 금지 (카드 그대로)",
+  "⏭": "사용자 붙여넣기 → dry rc · 상한 줄 · tmux cv7main 대기 줄을 여기에 적는다",
+  "⚠_감시": "대기 중엔 budget.json 이 아직 옛 상한 461.4 라 cv7_watch 가 '상한 461.4 · 남은 0' 을 보인다 — 이어받기가 시작되면 러너가 592 로 맞춘다 (cap_changes)"
  }
 }
