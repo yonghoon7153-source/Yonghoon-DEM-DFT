@@ -13559,82 +13559,138 @@
     {
       "id": "PC5-01",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "사전 공격 5 회차 (10-28 · 0c47df263 · 독립 작업 트리)",
       "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/PREATTACK_C.md",
       "title": "원장 끝 결과 줄 바꿔치기 (reset · amend · merge -s ours) = 판정 통과 — 결과 줄의 status · stop · cause · resume_ok 를 폴더에서 다시 셈하지 않고 역사 검사는 첫 부모 끝 커밋 교체를 못 본다 (runner_rc → resource · --resume 받음 · 채택 사슬 [1, 2])",
-      "note": "닫는 조건 후보 = 판정 · 합치기 · 풀기 전 대조가 attempt_result_line 을 폴더에서 다시 셈해 결과 줄 (utc · by 뺀 칸) 과 대조 + 시험 (끝 줄 교체 · -s ours)"
+      "note": "닫는 조건 후보 = 판정 · 합치기 · 풀기 전 대조가 attempt_result_line 을 폴더에서 다시 셈해 결과 줄 (utc · by 뺀 칸) 과 대조 + 시험 (끝 줄 교체 · -s ours)  ✅ 10-28 밤 고침 (1저자 Q1–Q3 권고대로 · 작업 트리 에이전트 · 시험 먼저 `b9fd47d7b` → 구현 `6bb3c064f` → 문서 `43a8abcaa` → 증거) · ⬜ 사전 공격 6 회차 → Codex 회차 ②.",
+      "claimed_fixed_sha": "6bb3c064f",
+      "evidence_tests": [
+        "scripts/test_rint_r_chain.py (407/407 · 문서 커밋 판 `43a8abcaa` · docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/logs/fullC1.log) — PC01 (끝 커밋 교체) · PC01m (합치기 길) · PC01i (예측 입력 길) · PC02 (merge -s ours 숨김) · 고치기 전 사슬 + 새 시험 = PC01m · PC01i 실패 (logs/old_B1.log · old_pc01i.log)",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/ (변이 32/32 잡힘 = mut_pc5_res.json · mut_pc5_re_res.json · 첫 판 생존 P01c → 시험 PC01i 더한 뒤 잡힘)",
+        "scripts/test_rint_r_chain_e2e.py (40 PASS · 0 FAIL · docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/logs/e2eC1.log)",
+        "scripts/check_kgy_py38.sh (Python 3.8.20 · numpy 1.24.4 · scipy 1.10.1 · 11 묶음 통과 · docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/logs/kgy_check.out)"
+      ]
     },
     {
       "id": "PC5-02",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "title": "자원 낱말 표의 CUDARuntimeError · CUDADriverError (cupy 클래스 이름) 가 모든 CUDA 오류를 resource 로 — device-side assert · misaligned · illegal instruction · invalid value · launch failed = 재실행 자격 (10-28 '코드 결함 = 자동 재시도 안 함' 의 부류)",
       "owner": "claude",
       "found_by": "사전 공격 5 회차 (10-28 · 0c47df263 · 독립 작업 트리)",
       "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/PREATTACK_C.md",
-      "note": "사전 공격 5 회차 보고 §1 · 탐침 = 같은 폴더 probe_unit.py · probe_real.py · 1저자 수정 계획 비준 전 (결과 0 건 · 코드 무변경)"
+      "note": "사전 공격 5 회차 보고 §1 · 탐침 = 같은 폴더 probe_unit.py · probe_real.py · 1저자 수정 계획 비준 전 (결과 0 건 · 코드 무변경)  ✅ 10-28 밤 고침 (1저자 Q1–Q3 권고대로 · 작업 트리 에이전트 · 시험 먼저 `b9fd47d7b` → 구현 `6bb3c064f` → 문서 `43a8abcaa` → 증거) · ⬜ 사전 공격 6 회차 → Codex 회차 ②.",
+      "claimed_fixed_sha": "6bb3c064f",
+      "evidence_tests": [
+        "scripts/test_rint_r_chain.py (407/407 · 문서 커밋 판 `43a8abcaa` · docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/logs/fullC1.log) — PC03 (자원 낱말 = 메모리 · 디스크 다섯 · 1저자 Q2) · PC04 (실경로 · cupy 클래스 이름만 있는 줄 = runner_rc) · PC20 (등록 R §10-5 ↔ 사슬 낱말)",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/ (변이 32/32 잡힘 = mut_pc5_res.json · mut_pc5_re_res.json · 첫 판 생존 P01c → 시험 PC01i 더한 뒤 잡힘)",
+        "scripts/test_rint_r_chain_e2e.py (40 PASS · 0 FAIL · docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/logs/e2eC1.log)",
+        "scripts/check_kgy_py38.sh (Python 3.8.20 · numpy 1.24.4 · scipy 1.10.1 · 11 묶음 통과 · docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/logs/kgy_check.out)"
+      ]
     },
     {
       "id": "PC5-03",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "title": "--stage recover 가 시작 기록의 chain_pid 생존을 보지 않고 살아 있는 사슬의 러너 그룹을 죽인다 (끝 기록 parent_dead ↔ 사슬은 rc −9 · 원인 None)",
       "owner": "claude",
       "found_by": "사전 공격 5 회차 (10-28 · 0c47df263 · 독립 작업 트리)",
       "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/PREATTACK_C.md",
-      "note": "사전 공격 5 회차 보고 §1 · 탐침 = 같은 폴더 probe_unit.py · probe_real.py · 1저자 수정 계획 비준 전 (결과 0 건 · 코드 무변경)"
+      "note": "사전 공격 5 회차 보고 §1 · 탐침 = 같은 폴더 probe_unit.py · probe_real.py · 1저자 수정 계획 비준 전 (결과 0 건 · 코드 무변경)  ✅ 10-28 밤 고침 (1저자 Q1–Q3 권고대로 · 작업 트리 에이전트 · 시험 먼저 `b9fd47d7b` → 구현 `6bb3c064f` → 문서 `43a8abcaa` → 증거) · ⬜ 사전 공격 6 회차 → Codex 회차 ②.",
+      "claimed_fixed_sha": "6bb3c064f",
+      "evidence_tests": [
+        "scripts/test_rint_r_chain.py (407/407 · 문서 커밋 판 `43a8abcaa` · docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/logs/fullC1.log) — PC05 (사슬 부모 chain_pid · 같은 부팅이 살아 있으면 recover 거부)",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/ (변이 32/32 잡힘 = mut_pc5_res.json · mut_pc5_re_res.json · 첫 판 생존 P01c → 시험 PC01i 더한 뒤 잡힘)",
+        "scripts/test_rint_r_chain_e2e.py (40 PASS · 0 FAIL · docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/logs/e2eC1.log)",
+        "scripts/check_kgy_py38.sh (Python 3.8.20 · numpy 1.24.4 · scipy 1.10.1 · 11 묶음 통과 · docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/logs/kgy_check.out)"
+      ]
     },
     {
       "id": "PC5-04",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "title": "recover 호스트 규칙 '같은 machine_id · 다른 boot_id = 재부팅 = 확인' — machine_id 는 기계 정체가 아님 (복제 이미지 · 컨테이너) · 살아 있는 표지 프로세스를 두고 confirmed true",
       "owner": "claude",
       "found_by": "사전 공격 5 회차 (10-28 · 0c47df263 · 독립 작업 트리)",
       "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/PREATTACK_C.md",
-      "note": "사전 공격 5 회차 보고 §1 · 탐침 = 같은 폴더 probe_unit.py · probe_real.py · 1저자 수정 계획 비준 전 (결과 0 건 · 코드 무변경)"
+      "note": "사전 공격 5 회차 보고 §1 · 탐침 = 같은 폴더 probe_unit.py · probe_real.py · 1저자 수정 계획 비준 전 (결과 0 건 · 코드 무변경)  ✅ 10-28 밤 고침 (1저자 Q1–Q3 권고대로 · 작업 트리 에이전트 · 시험 먼저 `b9fd47d7b` → 구현 `6bb3c064f` → 문서 `43a8abcaa` → 증거) · ⬜ 사전 공격 6 회차 → Codex 회차 ②.",
+      "claimed_fixed_sha": "6bb3c064f",
+      "evidence_tests": [
+        "scripts/test_rint_r_chain.py (407/407 · 문서 커밋 판 `43a8abcaa` · docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/logs/fullC1.log) — GR08 · PC06 (다른 부팅 recover = 미확인 · 1저자 Q3) · PC06b (운영자 확인 표지의 범위) · 고치기 전 사슬 = PC06b 실패 (logs/old_B1.log)",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/ (변이 32/32 잡힘 = mut_pc5_res.json · mut_pc5_re_res.json · 첫 판 생존 P01c → 시험 PC01i 더한 뒤 잡힘)",
+        "scripts/test_rint_r_chain_e2e.py (40 PASS · 0 FAIL · docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/logs/e2eC1.log)",
+        "scripts/check_kgy_py38.sh (Python 3.8.20 · numpy 1.24.4 · scipy 1.10.1 · 11 묶음 통과 · docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/logs/kgy_check.out)"
+      ]
     },
     {
       "id": "PC5-05",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "title": "재실행 시도가 단계 안 관문 (결과 전 · 예 --max-hours 오타 NOT_REGISTERED) 에서 멈추면 재실행 사슬 끝 = 자격 없음 → 대상 영구 멈춤 (풀기 전 대조 거부는 건너뜀 · adoption 이 side pre 재실행을 사슬에 넣음)",
       "owner": "claude",
       "found_by": "사전 공격 5 회차 (10-28 · 0c47df263 · 독립 작업 트리)",
       "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/PREATTACK_C.md",
-      "note": "사전 공격 5 회차 보고 §1 · 탐침 = 같은 폴더 probe_unit.py · probe_real.py · 1저자 수정 계획 비준 전 (결과 0 건 · 코드 무변경)"
+      "note": "사전 공격 5 회차 보고 §1 · 탐침 = 같은 폴더 probe_unit.py · probe_real.py · 1저자 수정 계획 비준 전 (결과 0 건 · 코드 무변경)  ✅ 10-28 밤 고침 (1저자 Q1–Q3 권고대로 · 작업 트리 에이전트 · 시험 먼저 `b9fd47d7b` → 구현 `6bb3c064f` → 문서 `43a8abcaa` → 증거) · ⬜ 사전 공격 6 회차 → Codex 회차 ②.",
+      "claimed_fixed_sha": "6bb3c064f",
+      "evidence_tests": [
+        "scripts/test_rint_r_chain.py (407/407 · 문서 커밋 판 `43a8abcaa` · docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/logs/fullC1.log) — PC07 (풀기 전 대조 밖 관문에서 결과 전 멈춤 → 재실행 사슬 안 끝남)",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/ (변이 32/32 잡힘 = mut_pc5_res.json · mut_pc5_re_res.json · 첫 판 생존 P01c → 시험 PC01i 더한 뒤 잡힘)",
+        "scripts/test_rint_r_chain_e2e.py (40 PASS · 0 FAIL · docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/logs/e2eC1.log)",
+        "scripts/check_kgy_py38.sh (Python 3.8.20 · numpy 1.24.4 · scipy 1.10.1 · 11 묶음 통과 · docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/logs/kgy_check.out)"
+      ]
     },
     {
       "id": "PC5-06",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "title": "요약 없는 시도의 결과 줄 (recover) = 원인 parent_dead 고정 · 런 로그의 NOT_RESOURCE 낱말 · 러너 rc 를 보지 않음 — ILLEGAL_ADDRESS 를 본 뒤 사슬 부모 SIGKILL → resume_ok true · 재실행 CALIBRATED · 사슬 예외 (Stop 아님) 도 같은 줄",
       "owner": "claude",
       "found_by": "사전 공격 5 회차 (10-28 · 0c47df263 · 독립 작업 트리)",
       "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/PREATTACK_C.md",
-      "note": "사전 공격 5 회차 보고 §1 · 탐침 = 같은 폴더 probe_unit.py · probe_real.py · 1저자 수정 계획 비준 전 (결과 0 건 · 코드 무변경)"
+      "note": "사전 공격 5 회차 보고 §1 · 탐침 = 같은 폴더 probe_unit.py · probe_real.py · 1저자 수정 계획 비준 전 (결과 0 건 · 코드 무변경)  ✅ 10-28 밤 고침 (1저자 Q1–Q3 권고대로 · 작업 트리 에이전트 · 시험 먼저 `b9fd47d7b` → 구현 `6bb3c064f` → 문서 `43a8abcaa` → 증거) · ⬜ 사전 공격 6 회차 → Codex 회차 ②.",
+      "claimed_fixed_sha": "6bb3c064f",
+      "evidence_tests": [
+        "scripts/test_rint_r_chain.py (407/407 · 문서 커밋 판 `43a8abcaa` · docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/logs/fullC1.log) — PC08–PC11 (요약 없는 시도 결과 줄 · 사슬 예외 원인 · 같은 낱말 규칙)",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/ (변이 32/32 잡힘 = mut_pc5_res.json · mut_pc5_re_res.json · 첫 판 생존 P01c → 시험 PC01i 더한 뒤 잡힘)",
+        "scripts/test_rint_r_chain_e2e.py (40 PASS · 0 FAIL · docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/logs/e2eC1.log)",
+        "scripts/check_kgy_py38.sh (Python 3.8.20 · numpy 1.24.4 · scipy 1.10.1 · 11 묶음 통과 · docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/logs/kgy_check.out)"
+      ]
     },
     {
       "id": "PC5-07",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "title": "group_members 가 상태 Z (주 스레드만 끝남 · 다른 스레드 삶) · environ 못 읽는 그룹 원을 없음으로 셈 · rc 0 경로는 원 pgid killpg 없음 → 확인 true 뒤 늦은 파일",
       "owner": "claude",
       "found_by": "사전 공격 5 회차 (10-28 · 0c47df263 · 독립 작업 트리)",
       "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/PREATTACK_C.md",
-      "note": "사전 공격 5 회차 보고 §1 · 탐침 = 같은 폴더 probe_unit.py · probe_real.py · 1저자 수정 계획 비준 전 (결과 0 건 · 코드 무변경)"
+      "note": "사전 공격 5 회차 보고 §1 · 탐침 = 같은 폴더 probe_unit.py · probe_real.py · 1저자 수정 계획 비준 전 (결과 0 건 · 코드 무변경)  ✅ 10-28 밤 고침 (1저자 Q1–Q3 권고대로 · 작업 트리 에이전트 · 시험 먼저 `b9fd47d7b` → 구현 `6bb3c064f` → 문서 `43a8abcaa` → 증거) · ⬜ 사전 공격 6 회차 → Codex 회차 ②.  한정 (구현 결정 · 사전 공격 6 회차 대상): pid 1 · 다른 실 uid · 그룹 시작 (since_ticks · 2 s 여유) 전 프로세스는 셈 밖 — 그룹 원이 su · sudo -u 로 실 uid 를 바꾸면 못 찾는다.",
+      "claimed_fixed_sha": "6bb3c064f",
+      "evidence_tests": [
+        "scripts/test_rint_r_chain.py (407/407 · 문서 커밋 판 `43a8abcaa` · docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/logs/fullC1.log) — PC14 (그룹 원 찾기 = 상태 Z 라도 산 스레드 · environ 못 읽음 = 미확인) · 고치기 전 사슬 = PC14 실패 (logs/old_B1.log)",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/ (변이 32/32 잡힘 = mut_pc5_res.json · mut_pc5_re_res.json · 첫 판 생존 P01c → 시험 PC01i 더한 뒤 잡힘)",
+        "scripts/test_rint_r_chain_e2e.py (40 PASS · 0 FAIL · docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/logs/e2eC1.log)",
+        "scripts/check_kgy_py38.sh (Python 3.8.20 · numpy 1.24.4 · scipy 1.10.1 · 11 묶음 통과 · docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/logs/kgy_check.out)"
+      ]
     },
     {
       "id": "PC5-08",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "title": "ledger_append 잠금 · 되돌림 없음 — 동시 --add 둘이 같은 번호 항목 둘을 커밋 (1/12) · git add 실패 뒤 커밋 안 된 줄이 남아 원장 전체 멈춤",
       "owner": "claude",
       "found_by": "사전 공격 5 회차 (10-28 · 0c47df263 · 독립 작업 트리)",
       "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/PREATTACK_C.md",
-      "note": "사전 공격 5 회차 보고 §1 · 탐침 = 같은 폴더 probe_unit.py · probe_real.py · 1저자 수정 계획 비준 전 (결과 0 건 · 코드 무변경)"
+      "note": "사전 공격 5 회차 보고 §1 · 탐침 = 같은 폴더 probe_unit.py · probe_real.py · 1저자 수정 계획 비준 전 (결과 0 건 · 코드 무변경)  ✅ 10-28 밤 고침 (1저자 Q1–Q3 권고대로 · 작업 트리 에이전트 · 시험 먼저 `b9fd47d7b` → 구현 `6bb3c064f` → 문서 `43a8abcaa` → 증거) · ⬜ 사전 공격 6 회차 → Codex 회차 ②.",
+      "claimed_fixed_sha": "6bb3c064f",
+      "evidence_tests": [
+        "scripts/test_rint_r_chain.py (407/407 · 문서 커밋 판 `43a8abcaa` · docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/logs/fullC1.log) — PC15 (원장 덧붙임 = 잠금 + git add · commit 실패 시 되돌림)",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/ (변이 32/32 잡힘 = mut_pc5_res.json · mut_pc5_re_res.json · 첫 판 생존 P01c → 시험 PC01i 더한 뒤 잡힘)",
+        "scripts/test_rint_r_chain_e2e.py (40 PASS · 0 FAIL · docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/logs/e2eC1.log)",
+        "scripts/check_kgy_py38.sh (Python 3.8.20 · numpy 1.24.4 · scipy 1.10.1 · 11 묶음 통과 · docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/logs/kgy_check.out)"
+      ]
     },
     {
       "id": "PC5-09",
@@ -13650,22 +13706,43 @@
     {
       "id": "PC5-10",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "title": "다시 판정이 같은 바탕 폴더의 나중 시도 (다른 대상) 하나로 REVERIFY_DIFF (원 판정 커밋의 원장에 없는 폴더)",
       "owner": "claude",
       "found_by": "사전 공격 5 회차 (10-28 · 0c47df263 · 독립 작업 트리)",
       "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/PREATTACK_C.md",
-      "note": "사전 공격 5 회차 보고 §1 · 탐침 = 같은 폴더 probe_unit.py · probe_real.py · 1저자 수정 계획 비준 전 (결과 0 건 · 코드 무변경)"
+      "note": "사전 공격 5 회차 보고 §1 · 탐침 = 같은 폴더 probe_unit.py · probe_real.py · 1저자 수정 계획 비준 전 (결과 0 건 · 코드 무변경)  ✅ 10-28 밤 고침 (1저자 Q1–Q3 권고대로 · 작업 트리 에이전트 · 시험 먼저 `b9fd47d7b` → 구현 `6bb3c064f` → 문서 `43a8abcaa` → 증거) · ⬜ 사전 공격 6 회차 → Codex 회차 ②.",
+      "claimed_fixed_sha": "6bb3c064f",
+      "evidence_tests": [
+        "scripts/test_rint_r_chain.py (407/407 · 문서 커밋 판 `43a8abcaa` · docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/logs/fullC1.log) — PC16 (다시 판정 = 판정 입력 대상 밖 시도는 흔들지 않음)",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/ (변이 32/32 잡힘 = mut_pc5_res.json · mut_pc5_re_res.json · 첫 판 생존 P01c → 시험 PC01i 더한 뒤 잡힘)",
+        "scripts/test_rint_r_chain_e2e.py (40 PASS · 0 FAIL · docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/logs/e2eC1.log)",
+        "scripts/check_kgy_py38.sh (Python 3.8.20 · numpy 1.24.4 · scipy 1.10.1 · 11 묶음 통과 · docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/fix_pc5_20261028/logs/kgy_check.out)"
+      ]
     },
     {
       "id": "PC5-11",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "title": "REPORT_C 숫자 (변이 207 · kgy 11 묶음 · 결정성 9/9 · 회귀 21 묶음) 의 원자료가 리포 밖 (메인 스크래치)",
       "owner": "claude",
       "found_by": "사전 공격 5 회차 (10-28 · 0c47df263 · 독립 작업 트리)",
       "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/PREATTACK_C.md",
-      "note": "사전 공격 5 회차 보고 §1 · 탐침 = 같은 폴더 probe_unit.py · probe_real.py · 1저자 수정 계획 비준 전 (결과 0 건 · 코드 무변경)"
+      "note": "사전 공격 5 회차 보고 §1 · 탐침 = 같은 폴더 probe_unit.py · probe_real.py · 1저자 수정 계획 비준 전 (결과 0 건 · 코드 무변경)  ✅ 10-28 밤 원자료 반입 (`43a8abcaa`) · ⬜ 사전 공격 6 회차 → Codex 회차 ②.",
+      "claimed_fixed_sha": "43a8abcaa",
+      "evidence_tests": [
+        "docs/reviews/rint2_rr_fix_evidence_20261023/report_c_raw/ (93 파일 + SHA256SUMS · 커밋 `43a8abcaa`)"
+      ]
+    },
+    {
+      "id": "SELF-140",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 세션 자기 점검 (10-28 밤 · 50kg 재개 도구 고침 통합 중 Q5 등록 §8-3 대조)",
+      "opened_in": "docs/50kg/kg50_resume_recheck_fix_plan_20261028.md",
+      "title": "수정 계획 Q3 의 \"D0.7 · D1 · D2 재개 = 정착 체크포인트라 무관\" 이 틀렸다 — Q5 등록 §8-3 ⑤ (Q3 (나) = W1 + W2) 는 W2 뒤 D0.7 본 런을 압축 체크포인트에서 이어 돌린다 → 1저자가 비준한 Q3 (가) 압축 체크포인트 재개 거부와 충돌 (W2 를 빠뜨리고 쓴 문장 · 1저자가 그 문장을 보고 비준)",
+      "note": "영향 = 운영 순서 (W2 뒤 본 런 이어 가기) · 도구 판정 · 결과 무관 · 런 0 (W2 는 Codex GO → D0.7 정착 끝 → W1 → 첫 압축 체크포인트 뒤).  같은 자리의 둘째 영향 = Q5 생성기 · 판독기 시험이 옛 도구 `-C` 출력을 글자로 고정 (§8-1 · §12-2 (마)) → 고친 도구와 함께 개정 필요.  닫는 조건 = 1저자 결정 (W2 뒤 본 런 이어 가기 · 10-28 밤 질문 Q2) 기록 + 등록 §8-3 ⑤ 개정 (또는 압축 재개 구현)."
     }
   ]
 }
