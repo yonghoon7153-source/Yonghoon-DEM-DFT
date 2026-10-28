@@ -31,6 +31,9 @@
   </div>
 </div>
 {% endif %}
+{# 메모 개수 · 다는 법 (2026-10-28) — 여백은 메모가 있을 때만 열려서, 0 건이면 이 줄이 유일한 안내다.
+   개념 페이지 · 문헌 모달과 같은 #pnotebadge (docnote.js paintBadge 가 채운다). #}
+<div class="muted" style="font-size:.74rem;margin:0 0 10px"><span id="pnotebadge"></span></div>
 {% endblock %}
 
 {% block scripts %}
@@ -46,7 +49,17 @@
     var body = document.getElementById('docbody');
     if (!body) return;
     if (window.figrefAttach) figrefAttach(body, FIGS, body);
-    if (window.mountDocNotes && REL) mountDocNotes(body, REL, document.getElementById('main'));
+    // 여백 메모의 host = 본문만 감싼 격자 (.dn-host · style.css). ⛔ 2026-10-28 전에는 #main 이라
+    //   여백이 페이지 맨 끝에 붙어서 메모가 문단 옆이 아니라 끝에 몰렸다 (kim2025 메모 27 개 · 실측).
+    var host = body.parentNode.classList && body.parentNode.classList.contains('dn-host')
+             ? body.parentNode : null;
+    if (!host) {
+      host = document.createElement('div');
+      host.className = 'dn-host';
+      body.parentNode.insertBefore(host, body);
+      host.appendChild(body);
+    }
+    if (window.mountDocNotes && REL) mountDocNotes(body, REL, host);
   }
   if (document.readyState === 'complete') setTimeout(go, 120);
   else window.addEventListener('load', function(){ setTimeout(go, 120); });

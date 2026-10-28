@@ -2449,6 +2449,35 @@ def test_sidebar_rail_toggle_present_and_layered():
     assert "max-width:none" in rail, rail
 
 
+
+def test_layout_width_rules_2026_10_28():
+    """화면 폭 규칙 (2026-10-28 · 사용자 신고 '최적화 안 돼 있다' → 102 쪽 실측 조사).
+
+    잠그는 것 (각각 실측 사고가 있었다):
+      ① 메모 여백은 dnote-on 일 때만 보인다 — 빈 460px 여백이 개념 페이지 본문을 428px 로 눌렀다.
+      ② .content 에 min-width:0 — flex 기본 min-width:auto 로 넓은 표가 있는 6 쪽이 1440 에서 넘쳤다.
+      ③ 1280px 이하에서 개념 페이지는 목차 열을 지키고 여백만 아래로 — `1fr` 한 열이면 본문이
+         2열 규칙과 부딪혀 1280 화면에서 페이지가 2034px 이 됐다.
+      ④ .doc 의 표는 스크롤 상자 + position:relative (KaTeX 숨은 MathML 칸이 빠져나가 2182px) ·
+         그림은 max-width:100% (3360px PNG 가 페이지를 3927px 로 늘렸다).
+    ⚠ 이 시험은 규칙 **글자**만 본다 — 실제 폭은 브라우저로 잰다 (docnote_paint.test.mjs · 조사 스크립트).
+    """
+    css = (D.ROOT / "webapp" / "static" / "css" / "style.css").read_text(encoding="utf-8")
+    assert re.search(r":not\(\.dnote-on\)\s*>\s*\.dnote-gut\{display:none\}", css), "①"
+    content = re.search(r"\n\.content\{([^}]*)\}", css).group(1)
+    assert "min-width:0" in content, ("②", content)
+    m1280 = css[css.index("@media(max-width:1280px){"):]
+    m1280 = m1280[:m1280.index("\n}") + 2]
+    assert ".concept-wrap.dnote-on{grid-template-columns:220px minmax(0,1fr)}" in m1280, "③"
+    assert ".concept-wrap.dnote-on{grid-template-columns:1fr}" not in css, "③ 옛 한 열 규칙이 돌아왔다"
+    table = re.search(r"\n\.doc table\{([^}]*)\}", css).group(1)
+    for k in ("display:block", "overflow-x:auto", "position:relative"):
+        assert k in table, ("④", k, table)
+    assert re.search(r"\.doc img\{max-width:100%", css), "④ 그림"
+    # 논문 정독 페이지는 본문만 감싼 .dn-host 가 여백 host 다 (#main 이면 메모가 끝에 몰린다)
+    paper = (D.ROOT / "webapp" / "templates" / "paper.html").read_text(encoding="utf-8")
+    assert "dn-host" in paper and "getElementById('main'))" not in paper, "논문 페이지 host"
+
 def test_governance_page_renders_every_ledger_row():
     """판정 원장 화면 — 세 원장이 **실제로 표에 찍혀야** 한다.
 

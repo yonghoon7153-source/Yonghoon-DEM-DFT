@@ -205,7 +205,17 @@
       lost.map(function (n) { return cardHtml(n, true); }).join("") +
       ok.map(function (n) { return cardHtml(n, false); }).join("");
     paintBadge();
+    syncOn();
     layout();
+  }
+
+  /* 여백은 **메모나 쓰는 중인 초안이 있을 때만** 편다 (2026-10-28).
+   * ⛔ 종전엔 mount 하자마자 dnote-on 을 붙여서 메모 0 건인 개념 페이지 15 쪽 전부에
+   *   빈 460px 여백이 잡혔다 — 1920 화면에서 본문이 428px 로 눌렸다 (사용자 신고 · 실측).
+   *   메모를 다는 길은 그대로다: 본문 오른쪽 클릭 → openDraft 가 여백을 연다. */
+  function syncOn() {
+    if (!cur || !cur.host) return;
+    cur.host.classList.toggle("dnote-on", cur.notes.length > 0 || !!cur.draftEl);
   }
 
   /* 카드를 자기 자리 높이에 맞춰 세로로 놓는다. 겹치면 아래로 민다 (Word 와 같다).
@@ -365,8 +375,10 @@
     var b = document.getElementById("pnotebadge");
     if (!b) return;
     var n = cur ? cur.notes.length : 0;
-    b.textContent = n ? "📝 메모 " + n : "";
-    b.title = n ? n + "건 — 본문 오른쪽 클릭으로 더 답니다" : "";
+    // 여백은 메모가 있을 때만 열리므로 (syncOn), 0 건일 때는 **다는 법**을 글자로 보인다
+    b.textContent = n ? "📝 메모 " + n : "📝 메모 0 · 본문 오른쪽 클릭으로 추가";
+    b.title = n ? n + "건 — 본문 오른쪽 클릭으로 더 답니다"
+                : "본문을 오른쪽 클릭하면 메모를 답니다 (여백은 메모가 생기면 열린다)";
   }
 
   /* ── 서버 ──────────────────────────────────────────────────────────────── */
@@ -382,8 +394,11 @@
         focusFromUrl();
       })
       .catch(function () {
-        if (cur) cur.gut.innerHTML = '<div class="dn-h">📝 메모</div>' +
+        if (!cur) return;
+        cur.gut.innerHTML = '<div class="dn-h">📝 메모</div>' +
           '<div class="muted" style="font-size:.74rem;padding:0 10px">못 불러왔어요</div>';
+        // 못 불러온 것은 보여야 한다 — 메모 0 건과 구분이 안 되면 메모가 사라진 줄 안다
+        if (cur.host) cur.host.classList.add("dnote-on");
       });
   }
 
@@ -525,6 +540,7 @@
     if (d) d.parentNode.removeChild(d);
     if (cur.draftEl && cur.draftEl.classList) cur.draftEl.classList.remove("dn-anch-live");
     cur.draftEl = null; cur.draftAnchor = "";
+    syncOn();
     layout();
   }
 
@@ -532,6 +548,7 @@
     killDraft();
     cur.draftEl = block;
     cur.draftAnchor = anchor;
+    syncOn();                  // 여백을 먼저 펴야 초안 카드 자리를 잴 수 있다
     block.classList.add("dn-anch-live");
     var d = document.createElement("div");
     d.className = "dn-draft";
@@ -574,7 +591,7 @@
       gut.className = "dnote-gut";
       hostEl.appendChild(gut);
     }
-    hostEl.classList.add("dnote-on");
+    hostEl.classList.remove("dnote-on");    // 메모를 읽은 뒤 render() 의 syncOn 이 정한다
     cur = { body: bodyEl, rel: rel, host: hostEl, gut: gut,
             notes: [], map: {}, draftEl: null, draftAnchor: "",
             pens: [], penOn: false, penColor: "yellow" };

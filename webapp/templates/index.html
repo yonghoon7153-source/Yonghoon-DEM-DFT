@@ -65,7 +65,7 @@
 {% for g in groups %}
 <div class="section-title" style="font-size:.82rem;margin-top:16px">{{ g.icon }} {{ g.label }}
   <span class="muted">— {{ g.n }}장</span></div>
-<div class="grid grid-3">{{ find_card(g.latest) }}</div>
+<div class="grid grid-latest">{{ find_card(g.latest) }}</div>
 {% if g.rest %}
 <details class="v3-fold">
   <summary>이 축의 이력 {{ g.rest|length }}건 — {{ g.rest[-1].d or '날짜 없음' }} ~ {{ g.rest[0].d or '' }}</summary>

@@ -347,6 +347,38 @@ if (!zoom.err) {
   chk(zoom.closed, "[그림확대] Esc 로 닫힌다");
 }
 
+/* 여백은 **메모나 초안이 있을 때만** 열린다 (2026-10-28).
+ * ⛔ 종전엔 mount 하자마자 여백을 열어서, 메모 0 건인 개념 페이지 15 쪽 전부에 빈 460px 여백이
+ *   잡혔고 1920 화면에서 본문이 428px 로 눌렸다 (사용자 신고 · 실측). 음성 경로가 핵심이다. */
+const gate = await pg.evaluate(async () => {
+  window.fetch = function () {
+    return Promise.resolve({ ok: true, json: () => Promise.resolve({ items: [] }) });
+  };
+  window.unmountDocNotes();
+  const host = document.getElementById("pmbox");
+  window.mountDocNotes(document.getElementById("body"), "kb/empty.md", host);
+  await new Promise((r) => setTimeout(r, 300));
+  const shown = () => { const g = host.querySelector(".dnote-gut");
+                        return !!g && getComputedStyle(g).display !== "none"; };
+  const empty = { on: host.classList.contains("dnote-on"), shown: shown() };
+  const p = document.querySelector("#body p");
+  p.dispatchEvent(new MouseEvent("contextmenu", { bubbles: true, cancelable: true }));
+  await new Promise((r) => setTimeout(r, 50));
+  const draft = { on: host.classList.contains("dnote-on"), shown: shown(),
+                  hasDraft: !!host.querySelector(".dn-draft") };
+  const x = host.querySelector(".dn-cancel");
+  if (x) x.click();
+  await new Promise((r) => setTimeout(r, 50));
+  const back = { on: host.classList.contains("dnote-on"), shown: shown() };
+  return { empty, draft, back };
+});
+chk(!gate.empty.on && !gate.empty.shown,
+    `[여백 열기·음성] 메모 0 건이면 여백을 안 연다 (dnote-on=${gate.empty.on}, 보임=${gate.empty.shown})`);
+chk(gate.draft.on && gate.draft.shown && gate.draft.hasDraft,
+    `[여백 열기] 본문 오른쪽 클릭 초안이면 연다 (dnote-on=${gate.draft.on}, 보임=${gate.draft.shown}, 초안=${gate.draft.hasDraft})`);
+chk(!gate.back.on && !gate.back.shown,
+    `[여백 열기] 초안을 취소하면 다시 닫는다 (dnote-on=${gate.back.on}, 보임=${gate.back.shown})`);
+
 await b.close();
 console.log(ok ? "docnote paint PASS" : "docnote paint FAIL");
 process.exit(ok ? 0 : 1);

@@ -83,7 +83,7 @@ Nd 4f               : 은둔자. 두꺼운 벽(5s/5p)에 갇혀 아무와도 안
 
 ## 5. 각 구조 motif가 갭 어디를 건드리나
 
-![motif level diagram](../../docs/figures/dos_pdos_smooth/motif_level_diagram.png)
+![motif level diagram](/api/file/docs/figures/dos_pdos_smooth/motif_level_diagram.png)
 
 | motif | frontier 상태 위치 | 갭 영향 | 메커니즘 |
 |---|---|---|---|
@@ -172,7 +172,7 @@ Nd³⁺가 **두 경로**로 CBM을 끌어내린다:
 ## 10. 4f를 빼고 본 갭
 (localized 4f는 전도 채널이 안 되니 "host gap"만 따로 보자는 관점)
 
-![4f-excluded gap](../../docs/figures/dos_pdos_smooth/nd_4f_excluded_gap.png)
+![4f-excluded gap](/api/file/docs/figures/dos_pdos_smooth/nd_4f_excluded_gap.png)
 
 - 빈 Nd 4f(UHB)는 **+1.1~1.9 eV** = host CBM(+0.53)보다 **~0.6 eV 위**. 찬 4f(LHB)는 −7.4 깊이.
 - **4f는 갭 안도 CBM도 아니다.** → **4f-excluded gap = host gap = 1.632 eV** (빼도 안 변함).

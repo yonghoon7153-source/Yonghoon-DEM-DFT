@@ -127,7 +127,9 @@ textarea:focus-visible,[tabindex]:focus-visible,.tabs button:focus-visible{
   border:1px solid var(--border);border-radius:8px;width:38px;height:38px;font-size:1.1rem;cursor:pointer;box-shadow:var(--shadow)}
 
 /* ── Content ───────────────────────────────────────────── */
-.content{margin-left:var(--sidebar-w);flex:1;max-width:1240px;padding:32px 40px 80px;width:100%}
+/* 2026-10-28 — 1240 → 1600 · min-width:0. 1920 화면에서 오른쪽 440px 이 늘 비었고, flex 기본
+   min-width:auto 때문에 넓은 표가 있는 6 쪽 (/todo · /governance …) 이 1440 에서 가로로 넘쳤다 (실측). */
+.content{margin-left:var(--sidebar-w);flex:1;max-width:1600px;min-width:0;padding:32px 40px 80px;width:100%}
 .page-header{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:22px;
   padding-bottom:16px;border-bottom:1px solid var(--border)}
 .page-header h1{font-size:1.65rem;color:var(--navy)}
@@ -141,6 +143,11 @@ textarea:focus-visible,[tabindex]:focus-visible,.tabs button:focus-visible{
 .grid{display:grid;gap:16px}
 .grid-3{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
 .grid-2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+/* 대시보드 '핵심 발견' 축마다 최신 1 장 — 3 칸 격자에 1 장이면 376px 기둥이 되고 옆 784px 이 비었다 (실측).
+   그 한 장은 줄 전체를 쓴다. 첨부 · 파일 격자는 카드 크기를 맞추려고 그대로 둔다. */
+.grid-latest{grid-template-columns:minmax(0,1fr)}
+/* 카드 안 mono id (litdb 논문 id 등) 가 안 꺾여서 카드 밖으로 넘쳤다 (개념 페이지 · 실측). */
+.card .mono{overflow-wrap:anywhere}
 .section-title{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);
   font-weight:700;margin:28px 0 12px}
 
@@ -311,10 +318,18 @@ textarea:focus-visible,[tabindex]:focus-visible,.tabs button:focus-visible{
 .search:focus:not(:focus-visible){outline:none}
 
 /* markdown doc */
-.doc{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:32px 40px;box-shadow:var(--shadow);max-width:900px}
+/* 2026-10-28 — 읽기 카드 900 → 1200px (1920 화면에서 카드 오른쪽 740px 이 비었다 · 실측). */
+.doc{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:32px 40px;box-shadow:var(--shadow);max-width:1200px}
+/* 그림은 카드 폭을 넘지 않는다 — 개념 페이지엔 이 규칙이 없어서 3360px PNG 가 페이지를 3927px 로 늘렸다 (실측). */
+.doc img{max-width:100%;height:auto}
 .doc h1,.doc h2{color:var(--navy);border-bottom:1px solid var(--border2);padding-bottom:6px;margin-top:28px}
 .doc h1{font-size:1.5rem} .doc h2{font-size:1.2rem} .doc h3{font-size:1rem;margin-top:20px}
-.doc table{border-collapse:collapse;width:100%;font-size:.84rem;margin:14px 0}
+/* 넓은 표는 카드 안에서 가로로 굴린다 (GitHub 마크다운과 같은 방식 · 짧은 표는 내용 폭으로 줄어든다).
+   종전엔 1451px 표가 900px 카드 밖으로 삐져나갔다 (kb/reviews/INDEX.md · talk 표 · 실측). */
+.doc table{border-collapse:collapse;width:100%;font-size:.84rem;margin:14px 0;display:block;overflow-x:auto;max-width:100%;position:relative}
+/* ⚠ position:relative 가 있어야 한다 — KaTeX 의 숨은 MathML 칸(.katex-mathml)은 absolute 라서, 스크롤 상자가
+   위치 지정 요소가 아니면 그 칸이 상자 밖으로 빠져나가 페이지를 넓힌다 (/concept/beta-gate 2182px · 실측). */
+.doc .katex-display{position:relative}
 .doc th,.doc td{border:1px solid var(--border);padding:7px 10px;text-align:left}
 .doc th{background:var(--bg);font-weight:700}
 .doc code,.sem-doc code{background:var(--bg);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:.86em}
@@ -1171,6 +1186,12 @@ tr.row-dim{opacity:.62}
    넓힌 대신 **겹치는 카드만 2열로** 갈라서(layout()), 안 겹치는 메모는 통폭을 다 쓴다. */
 :root{--dn-w:460px}
 .dnote-gut{position:relative;min-width:0}
+/* 여백은 host 가 dnote-on 일 때만 보인다 — docnote.js 가 메모·초안이 있을 때만 켠다 (2026-10-28). */
+:not(.dnote-on) > .dnote-gut{display:none}
+/* 논문 정독 페이지 (/paper/<slug>) — #docbody 를 감싼 .dn-host 가 여백의 host 다.
+   ⛔ 종전엔 #main 에 붙여서 메모 27 개가 문단 옆이 아니라 페이지 맨 끝에 몰렸다 (실측 · kim2025). */
+.dn-host.dnote-on{display:grid;grid-template-columns:minmax(0,1fr) var(--dn-w);gap:26px;align-items:start}
+.dn-host.dnote-on .dnote-gut{border-left:1px solid var(--border);padding-left:14px}
 #pmbox.dnote-on{max-width:min(1400px,96vw)!important;display:grid;
   grid-template-columns:minmax(0,1fr) var(--dn-w);
   grid-template-areas:"head head" "body gut"}
@@ -1184,12 +1205,24 @@ tr.row-dim{opacity:.62}
    그전 값으로 두면 1150px 화면에서 본문이 눌린다. */
 @media(max-width:1280px){
   #pmbox.dnote-on{grid-template-columns:minmax(0,1fr);grid-template-areas:"head" "body" "gut"}
-  .concept-wrap.dnote-on{grid-template-columns:1fr}
+  /* ⛔ 종전 값 `1fr` 한 열은 본문을 2열 (grid-column:2) 에 둔 규칙과 부딪혀서 961–1280px 에서
+     목차 · 여백이 30px 로 찌그러지고 본문이 화면 밖까지 늘었다 (1280 에서 페이지 2034px · 실측).
+     목차 열은 두고 여백만 본문 **아래**로 쌓는다. */
+  .concept-wrap.dnote-on{grid-template-columns:220px minmax(0,1fr)}
+  .concept-wrap.dnote-on .dnote-gut{grid-column:2;border-left:none;padding-left:0;
+    border-top:1px solid var(--border);padding-top:10px}
+  .dn-host.dnote-on{grid-template-columns:minmax(0,1fr)}
+  .dn-host.dnote-on .dnote-gut{border-left:none;padding-left:0;border-top:1px solid var(--border);padding-top:10px}
   /* 좁은 화면에선 자리 맞춤을 포기하고 그냥 아래에 쌓는다 — 억지로 맞추면 겹친다 */
   /* ⚠ layout() 이 인라인으로 잡아 둔 left/width 를 **되돌려야** 한다 —
      안 그러면 접힌 화면에서 카드가 반폭으로 남거나 왼쪽으로 삐져나간다. */
   .dnote-gut .dn-card,.dnote-gut .dn-draft{position:static!important;margin:0 0 8px;
     left:auto!important;right:auto!important;width:auto!important}
+}
+/* 960px 이하는 목차를 숨기고 한 열이다 — 위 1280 블록이 뒤에 있어서 여기서 다시 접는다. */
+@media(max-width:960px){
+  .concept-wrap.dnote-on{grid-template-columns:minmax(0,1fr)}
+  .concept-wrap.dnote-on .doc.concept,.concept-wrap.dnote-on .dnote-gut{grid-column:1}
 }
 .dn-h{position:sticky;top:0;z-index:2;background:var(--bg);padding:10px 12px 8px;
   font-size:.78rem;font-weight:700;color:var(--dim);display:flex;gap:6px;align-items:baseline}
