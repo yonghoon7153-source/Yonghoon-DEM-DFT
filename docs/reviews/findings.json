@@ -13420,6 +13420,116 @@
         "docs/session_20260923_progress.md (10-28 낮 · 오후 줄 — gawk 시간대 · 10-28 Rint 지시서부터 설치 · 대체 설정 · 프로세스 종료 · 다른 작업 트리 금지 줄 적용 · 그 에이전트 설치 없이 끝남)"
       ],
       "claimed_fixed_sha": "737a1f3f7"
+    },
+    {
+      "id": "PC5-01",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "사전 공격 5 회차 (10-28 · 0c47df263 · 독립 작업 트리)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/PREATTACK_C.md",
+      "title": "원장 끝 결과 줄 바꿔치기 (reset · amend · merge -s ours) = 판정 통과 — 결과 줄의 status · stop · cause · resume_ok 를 폴더에서 다시 셈하지 않고 역사 검사는 첫 부모 끝 커밋 교체를 못 본다 (runner_rc → resource · --resume 받음 · 채택 사슬 [1, 2])",
+      "note": "닫는 조건 후보 = 판정 · 합치기 · 풀기 전 대조가 attempt_result_line 을 폴더에서 다시 셈해 결과 줄 (utc · by 뺀 칸) 과 대조 + 시험 (끝 줄 교체 · -s ours)"
+    },
+    {
+      "id": "PC5-02",
+      "severity": "P2",
+      "status": "open",
+      "title": "자원 낱말 표의 CUDARuntimeError · CUDADriverError (cupy 클래스 이름) 가 모든 CUDA 오류를 resource 로 — device-side assert · misaligned · illegal instruction · invalid value · launch failed = 재실행 자격 (10-28 '코드 결함 = 자동 재시도 안 함' 의 부류)",
+      "owner": "claude",
+      "found_by": "사전 공격 5 회차 (10-28 · 0c47df263 · 독립 작업 트리)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/PREATTACK_C.md",
+      "note": "사전 공격 5 회차 보고 §1 · 탐침 = 같은 폴더 probe_unit.py · probe_real.py · 1저자 수정 계획 비준 전 (결과 0 건 · 코드 무변경)"
+    },
+    {
+      "id": "PC5-03",
+      "severity": "P2",
+      "status": "open",
+      "title": "--stage recover 가 시작 기록의 chain_pid 생존을 보지 않고 살아 있는 사슬의 러너 그룹을 죽인다 (끝 기록 parent_dead ↔ 사슬은 rc −9 · 원인 None)",
+      "owner": "claude",
+      "found_by": "사전 공격 5 회차 (10-28 · 0c47df263 · 독립 작업 트리)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/PREATTACK_C.md",
+      "note": "사전 공격 5 회차 보고 §1 · 탐침 = 같은 폴더 probe_unit.py · probe_real.py · 1저자 수정 계획 비준 전 (결과 0 건 · 코드 무변경)"
+    },
+    {
+      "id": "PC5-04",
+      "severity": "P2",
+      "status": "open",
+      "title": "recover 호스트 규칙 '같은 machine_id · 다른 boot_id = 재부팅 = 확인' — machine_id 는 기계 정체가 아님 (복제 이미지 · 컨테이너) · 살아 있는 표지 프로세스를 두고 confirmed true",
+      "owner": "claude",
+      "found_by": "사전 공격 5 회차 (10-28 · 0c47df263 · 독립 작업 트리)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/PREATTACK_C.md",
+      "note": "사전 공격 5 회차 보고 §1 · 탐침 = 같은 폴더 probe_unit.py · probe_real.py · 1저자 수정 계획 비준 전 (결과 0 건 · 코드 무변경)"
+    },
+    {
+      "id": "PC5-05",
+      "severity": "P2",
+      "status": "open",
+      "title": "재실행 시도가 단계 안 관문 (결과 전 · 예 --max-hours 오타 NOT_REGISTERED) 에서 멈추면 재실행 사슬 끝 = 자격 없음 → 대상 영구 멈춤 (풀기 전 대조 거부는 건너뜀 · adoption 이 side pre 재실행을 사슬에 넣음)",
+      "owner": "claude",
+      "found_by": "사전 공격 5 회차 (10-28 · 0c47df263 · 독립 작업 트리)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/PREATTACK_C.md",
+      "note": "사전 공격 5 회차 보고 §1 · 탐침 = 같은 폴더 probe_unit.py · probe_real.py · 1저자 수정 계획 비준 전 (결과 0 건 · 코드 무변경)"
+    },
+    {
+      "id": "PC5-06",
+      "severity": "P2",
+      "status": "open",
+      "title": "요약 없는 시도의 결과 줄 (recover) = 원인 parent_dead 고정 · 런 로그의 NOT_RESOURCE 낱말 · 러너 rc 를 보지 않음 — ILLEGAL_ADDRESS 를 본 뒤 사슬 부모 SIGKILL → resume_ok true · 재실행 CALIBRATED · 사슬 예외 (Stop 아님) 도 같은 줄",
+      "owner": "claude",
+      "found_by": "사전 공격 5 회차 (10-28 · 0c47df263 · 독립 작업 트리)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/PREATTACK_C.md",
+      "note": "사전 공격 5 회차 보고 §1 · 탐침 = 같은 폴더 probe_unit.py · probe_real.py · 1저자 수정 계획 비준 전 (결과 0 건 · 코드 무변경)"
+    },
+    {
+      "id": "PC5-07",
+      "severity": "P3",
+      "status": "open",
+      "title": "group_members 가 상태 Z (주 스레드만 끝남 · 다른 스레드 삶) · environ 못 읽는 그룹 원을 없음으로 셈 · rc 0 경로는 원 pgid killpg 없음 → 확인 true 뒤 늦은 파일",
+      "owner": "claude",
+      "found_by": "사전 공격 5 회차 (10-28 · 0c47df263 · 독립 작업 트리)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/PREATTACK_C.md",
+      "note": "사전 공격 5 회차 보고 §1 · 탐침 = 같은 폴더 probe_unit.py · probe_real.py · 1저자 수정 계획 비준 전 (결과 0 건 · 코드 무변경)"
+    },
+    {
+      "id": "PC5-08",
+      "severity": "P3",
+      "status": "open",
+      "title": "ledger_append 잠금 · 되돌림 없음 — 동시 --add 둘이 같은 번호 항목 둘을 커밋 (1/12) · git add 실패 뒤 커밋 안 된 줄이 남아 원장 전체 멈춤",
+      "owner": "claude",
+      "found_by": "사전 공격 5 회차 (10-28 · 0c47df263 · 독립 작업 트리)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/PREATTACK_C.md",
+      "note": "사전 공격 5 회차 보고 §1 · 탐침 = 같은 폴더 probe_unit.py · probe_real.py · 1저자 수정 계획 비준 전 (결과 0 건 · 코드 무변경)"
+    },
+    {
+      "id": "PC5-09",
+      "severity": "P3",
+      "status": "open",
+      "title": "검사 실패 흔적 = .unchecked/ 의 p2_*.json* 전부 — 쓰는 중 (.part) · 러너 검사 전 죽음도 resume_ok false (원인 timeout)",
+      "owner": "claude",
+      "found_by": "사전 공격 5 회차 (10-28 · 0c47df263 · 독립 작업 트리)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/PREATTACK_C.md",
+      "note": "사전 공격 5 회차 보고 §1 · 탐침 = 같은 폴더 probe_unit.py · probe_real.py · 1저자 수정 계획 비준 전 (결과 0 건 · 코드 무변경)"
+    },
+    {
+      "id": "PC5-10",
+      "severity": "P3",
+      "status": "open",
+      "title": "다시 판정이 같은 바탕 폴더의 나중 시도 (다른 대상) 하나로 REVERIFY_DIFF (원 판정 커밋의 원장에 없는 폴더)",
+      "owner": "claude",
+      "found_by": "사전 공격 5 회차 (10-28 · 0c47df263 · 독립 작업 트리)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/PREATTACK_C.md",
+      "note": "사전 공격 5 회차 보고 §1 · 탐침 = 같은 폴더 probe_unit.py · probe_real.py · 1저자 수정 계획 비준 전 (결과 0 건 · 코드 무변경)"
+    },
+    {
+      "id": "PC5-11",
+      "severity": "P3",
+      "status": "open",
+      "title": "REPORT_C 숫자 (변이 207 · kgy 11 묶음 · 결정성 9/9 · 회귀 21 묶음) 의 원자료가 리포 밖 (메인 스크래치)",
+      "owner": "claude",
+      "found_by": "사전 공격 5 회차 (10-28 · 0c47df263 · 독립 작업 트리)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/PREATTACK_C.md",
+      "note": "사전 공격 5 회차 보고 §1 · 탐침 = 같은 폴더 probe_unit.py · probe_real.py · 1저자 수정 계획 비준 전 (결과 0 건 · 코드 무변경)"
     }
   ]
 }
