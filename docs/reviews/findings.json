@@ -13789,6 +13789,106 @@
       "opened_in": "docs/50kg/kg50_resume_recheck_fix_plan_20261028.md",
       "title": "수정 계획 Q3 의 \"D0.7 · D1 · D2 재개 = 정착 체크포인트라 무관\" 이 틀렸다 — Q5 등록 §8-3 ⑤ (Q3 (나) = W1 + W2) 는 W2 뒤 D0.7 본 런을 압축 체크포인트에서 이어 돌린다 → 1저자가 비준한 Q3 (가) 압축 체크포인트 재개 거부와 충돌 (W2 를 빠뜨리고 쓴 문장 · 1저자가 그 문장을 보고 비준)",
       "note": "영향 = 운영 순서 (W2 뒤 본 런 이어 가기) · 도구 판정 · 결과 무관 · 런 0 (W2 는 Codex GO → D0.7 정착 끝 → W1 → 첫 압축 체크포인트 뒤).  같은 자리의 둘째 영향 = Q5 생성기 · 판독기 시험이 옛 도구 `-C` 출력을 글자로 고정 (§8-1 · §12-2 (마)) → 고친 도구와 함께 개정 필요.  닫는 조건 = 1저자 결정 (W2 뒤 본 런 이어 가기 · 10-28 밤 질문 Q2) 기록 + 등록 §8-3 ⑤ 개정 (또는 압축 재개 구현)."
+    },
+    {
+      "id": "KG50P-01",
+      "severity": "P1",
+      "status": "open",
+      "title": "(회귀 · KG50R-03 부류) 준비 구간에서 변수를 바꿨다 되돌리면 정적 대조 통과 — 실제 D2 r4 덱 두 줄 (`variable dt equal 2.0e-6` · `timestep ${dt}` 뒤 `variable dt equal 1.0e-6`) · 상태 대조가 끝 값만 봄 · LIGGGHTS 는 ${dt} 를 그 자리에서 치환 ⇒ 재개 dt 2 배 · 가짜 SLURM 사슬 시험 1 · 본 1 · 고치기 전 판은 막았다",
+      "note": "지금 도는 D2 덱 = 이 꼴 아님 (리뷰어 대조) · ⬜ 고침 = 준비 구간 상태 명령 줄 글자 대조 + 순서 보존 부분열 (작업 트리 에이전트 · 시험 먼저).",
+      "owner": "claude",
+      "found_by": "사전 공격 리뷰 (10-28 밤 · 독립 에이전트 · 고친 판 fb334928 · diff 만)",
+      "opened_in": "docs/reviews/kg50r_fix_evidence_20261028/preattack/REPORT.md"
+    },
+    {
+      "id": "KG50P-02",
+      "severity": "P2",
+      "status": "open",
+      "title": "restart 체크포인트에서 본 덱 그 run 의 꼬리 (every · start/stop · pre/post) 를 대조하지 않음 — 본 덱 `run 200000 every 1000 \"velocity all set 0 0 0\"` + 재개 덱 `run 180000` 통과 · every 안 include 도 못 봄 (고치기 전 판도 같음)",
+      "note": "⬜ 고침 = 본 덱 그 run 에 꼬리가 있으면 거부.",
+      "owner": "claude",
+      "found_by": "사전 공격 리뷰 (10-28 밤 · 독립 에이전트 · 고친 판 fb334928 · diff 만)",
+      "opened_in": "docs/reviews/kg50r_fix_evidence_20261028/preattack/REPORT.md"
+    },
+    {
+      "id": "KG50P-03",
+      "severity": "P3",
+      "status": "open",
+      "title": "본 제출이 작업 폴더의 덱 · 러너를 시험 때 시도 폴더 사본과 sha256 대조 없이 냄 — 시험 뒤 덱 · 러너를 바꿔도 본 제출 · tool.txt 에 체크포인트 sha · lmp_mpi 신원 없음 (Codex §10-5 일부만)",
+      "note": "⬜ 고침 = 본 제출 직전 sha256 대조 · 기록 칸 더함.",
+      "owner": "claude",
+      "found_by": "사전 공격 리뷰 (10-28 밤 · 독립 에이전트 · 고친 판 fb334928 · diff 만)",
+      "opened_in": "docs/reviews/kg50r_fix_evidence_20261028/preattack/REPORT.md"
+    },
+    {
+      "id": "KG50P-04",
+      "severity": "P3",
+      "status": "open",
+      "title": "본 sbatch 출력을 검사하지 않음 (시험 쪽 Q9d 와 다름) — 오류 글 + rc 1 이면 `✅ 본 제출 job sbatch: error: …` · main_job.txt 에 오류 글",
+      "note": "⬜ 고침 = 시험과 같은 규칙.",
+      "owner": "claude",
+      "found_by": "사전 공격 리뷰 (10-28 밤 · 독립 에이전트 · 고친 판 fb334928 · diff 만)",
+      "opened_in": "docs/reviews/kg50r_fix_evidence_20261028/preattack/REPORT.md"
+    },
+    {
+      "id": "KG50P-05",
+      "severity": "P3",
+      "status": "open",
+      "title": "G3 sane() 에 유한 검사 없음 — 비교 줄 KE nan 이면 mawk 본 제출 · gawk 거부 (gawk 도 -nan · +nan 통과) · G0 마지막 줄 검사 때문에 실제로 닿기 어려움",
+      "note": "⬜ 고침 = 비교 칸 유한 수 (두 awk 같은 판정).",
+      "owner": "claude",
+      "found_by": "사전 공격 리뷰 (10-28 밤 · 독립 에이전트 · 고친 판 fb334928 · diff 만)",
+      "opened_in": "docs/reviews/kg50r_fix_evidence_20261028/preattack/REPORT.md"
+    },
+    {
+      "id": "KG50P-06",
+      "severity": "P3",
+      "status": "open",
+      "title": "둘째 고리가 `read … < mode.txt` 실패를 보지 않음 · `C ./C` 두 철자가 첫 케이스 작업 폴더를 prev 로 밈 (본 0 = 우연)",
+      "note": "⬜ 고침 = read 실패 = 그 케이스 실패 · 케이스 이름 꼴 · 정규화 뒤 중복 = 시험 전 거부.",
+      "owner": "claude",
+      "found_by": "사전 공격 리뷰 (10-28 밤 · 독립 에이전트 · 고친 판 fb334928 · diff 만)",
+      "opened_in": "docs/reviews/kg50r_fix_evidence_20261028/preattack/REPORT.md"
+    },
+    {
+      "id": "KG50P-07",
+      "severity": "P3",
+      "status": "open",
+      "title": "큐 이름 검사가 C · C_ins · C_<이번 SFX>[t] · C_r<N>[t] 만 — 앞 호출이 다른 -x 였으면 그 본 런을 못 봄 (같은 케이스 본 런 둘 가능 · 고치기 전 판도 같음)",
+      "note": "한정 (이번 재확인 범위 밖 · 요청서 §0-2) — 운영 규칙 = 같은 케이스에 -x 를 바꾸지 않는다.",
+      "owner": "claude",
+      "found_by": "사전 공격 리뷰 (10-28 밤 · 독립 에이전트 · 고친 판 fb334928 · diff 만)",
+      "opened_in": "docs/reviews/kg50r_fix_evidence_20261028/preattack/REPORT.md"
+    },
+    {
+      "id": "KG50P-08",
+      "severity": "P3",
+      "status": "open",
+      "title": "체크포인트 대조가 파일 이름 (basename) 만 — 다른 케이스 폴더의 같은 이름 체크포인트도 -C 통과 (본 흐름은 도구가 체크포인트를 고르고 G1 이 잡음)",
+      "note": "한정 (요청서 §0-2).",
+      "owner": "claude",
+      "found_by": "사전 공격 리뷰 (10-28 밤 · 독립 에이전트 · 고친 판 fb334928 · diff 만)",
+      "opened_in": "docs/reviews/kg50r_fix_evidence_20261028/preattack/REPORT.md"
+    },
+    {
+      "id": "KG50P-09",
+      "severity": "P3",
+      "status": "open",
+      "title": "낱말 나누기가 LIGGGHTS 와 다름 (& 이음 · NBSP · CR 만 쓴 덱) — -C 통과 · LIGGGHTS 쪽이 오류로 멈추거나 아무것도 안 해 cut · G0 가 막음 (닫힌 실패)",
+      "note": "한정 (요청서 §0-2).",
+      "owner": "claude",
+      "found_by": "사전 공격 리뷰 (10-28 밤 · 독립 에이전트 · 고친 판 fb334928 · diff 만)",
+      "opened_in": "docs/reviews/kg50r_fix_evidence_20261028/preattack/REPORT.md"
+    },
+    {
+      "id": "KG50P-10",
+      "severity": "P3",
+      "status": "open",
+      "title": "허용 차이 ② (판 메시 file 이름) = 파일이 있는지만 · 내용 (판 높이) 안 봄 · 준비 구간 fix 순서 바꿈도 통과",
+      "note": "한정 후보 — after_settling 은 G2 PLATE HEIGHT 줄이 본다 · fix 순서는 KG50P-01 고침 (순서 보존) 이 같이 막을 것 (고친 뒤 다시 봄).",
+      "owner": "claude",
+      "found_by": "사전 공격 리뷰 (10-28 밤 · 독립 에이전트 · 고친 판 fb334928 · diff 만)",
+      "opened_in": "docs/reviews/kg50r_fix_evidence_20261028/preattack/REPORT.md"
     }
   ]
 }

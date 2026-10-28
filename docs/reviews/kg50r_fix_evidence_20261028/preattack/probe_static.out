@@ -1,0 +1,41 @@
+A_dt_redef             new rc=0  재개 덱 정적 대조: 통과 (문제 0)
+A_dt_redef             old rc=1  재개 덱 정적 대조: 실패 (문제 1)
+       ✗ 본 덱에 없는 줄: [variable dt equal 2.0e-6]
+A2_ctrl_literal_dt     new rc=1  재개 덱 정적 대조: 실패 (문제 1)
+       ✗ 재개 지점 timestep 다름: 본 덱 [timestep ${dt}] ↔ 재개 덱 [timestep 2.0e-6]
+A2_ctrl_literal_dt     old rc=1  재개 덱 정적 대조: 실패 (문제 2)
+       ✗ 본 덱에 없는 줄: [timestep 2.0e-6]
+       ✗ 재개 지점 timestep 다름: 본 덱 [timestep ${dt}] ↔ 재개 덱 [timestep 2.0e-6]
+B_main_every           new rc=0  재개 덱 정적 대조: 통과 (문제 0)
+B_main_every           old rc=0  재개 덱 정적 대조: 통과 (문제 0)
+B2_main_startstop      new rc=0  재개 덱 정적 대조: 통과 (문제 0)
+B2_main_startstop      old rc=0  재개 덱 정적 대조: 통과 (문제 0)
+B3_main_every_include  new rc=0  재개 덱 정적 대조: 통과 (문제 0)
+B3_main_every_include  old rc=0  재개 덱 정적 대조: 통과 (문제 0)
+C_stale_mesh_exists    new rc=0  재개 덱 정적 대조: 통과 (문제 0)
+C_stale_mesh_exists    old rc=0  재개 덱 정적 대조: 통과 (문제 0)
+C2_stale_mesh_missing  new rc=1  재개 덱 정적 대조: 실패 (문제 1)
+       ✗ 판 메시 파일 plate_stale.stl 가 작업 폴더에 없음 (첫 긴 run 뒤 명령)
+C2_stale_mesh_missing  old rc=1  재개 덱 정적 대조: 실패 (문제 2)
+       ✗ 판 메시 파일 plate_stale.stl 가 작업 폴더에 없음
+       ✗ 판 메시 파일 plate_stale.stl 가 작업 폴더에 없음 (재개 지점 뒤 줄)
+D_fix_order            new rc=0  재개 덱 정적 대조: 통과 (문제 0)
+D_fix_order            old rc=0  재개 덱 정적 대조: 통과 (문제 0)
+E_fix_redef            new rc=0  재개 덱 정적 대조: 통과 (문제 0)
+E_fix_redef            old rc=0  재개 덱 정적 대조: 통과 (문제 0)
+F_wall_refix           new rc=0  재개 덱 정적 대조: 통과 (문제 0)
+F_wall_refix           old rc=0  재개 덱 정적 대조: 통과 (문제 0)
+G_nbsp_in_fix          new rc=0  재개 덱 정적 대조: 통과 (문제 0)
+G_nbsp_in_fix          old rc=0  재개 덱 정적 대조: 통과 (문제 0)
+G2_tab_cr              new rc=0  재개 덱 정적 대조: 통과 (문제 0)
+G2_tab_cr              old rc=0  재개 덱 정적 대조: 통과 (문제 0)
+H_amp_nospace          new rc=0  재개 덱 정적 대조: 통과 (문제 0)
+H_amp_nospace          old rc=0  재개 덱 정적 대조: 통과 (문제 0)
+I_fullwidth_run        new rc=1  재개 덱 정적 대조: 실패 (문제 36)
+       ✗ 재개 덱 첫 긴 run 앞에 run 이 있음 (restart 체크포인트 = 본 덱 그 run 도중 · 10-28 KG50-18): [run １８００００] [run 1]
+       ✗ 남은 step 다름: 재개 끝 220001 ↔ 본 덱 그 run 끝 200001 ([run 200000])
+       ✗ 첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 64 개 ↔ 재개 덱 27 개 — 재개 덱에 없음 [write_restart restart_kg50_d2_b50/restart_after_settling.bin] [print "====== RESTART SAVED ======"]
+I_fullwidth_run        old rc=1  재개 덱 정적 대조: 실패 (문제 19)
+       ✗ 재개 지점 fix damp 다름: 본 덱 [fix damp all viscous 1.0e-5] ↔ 재개 덱 [fix damp all viscous 0.5]
+       ✗ 재개 지점 fix gravi 다름: 본 덱 [fix gravi all gravity 98.1 vector 0.0 0.0 -1.0] ↔ 재개 덱 [fix gravi all gravity 9.81 vector 0.0 0.0 -1.0]
+       ✗ 재개 지점 fix top_mesh 는 재개 덱에만 있음: [fix top_mesh all mesh/surface/stress file plate_kg50_d2_b50.stl type 1 scale 1.0 reference_point 0 0 0]

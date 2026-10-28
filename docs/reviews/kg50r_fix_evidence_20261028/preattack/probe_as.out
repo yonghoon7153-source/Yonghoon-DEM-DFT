@@ -1,0 +1,16 @@
+as_good            new rc=0   재개 덱 정적 대조: 통과 (문제 0)
+as_good            old rc=0   재개 덱 정적 대조: 통과 (문제 0)
+as_dt_redef        new rc=0   재개 덱 정적 대조: 통과 (문제 0)
+as_dt_redef        old rc=1   재개 덱 정적 대조: 실패 (문제 1)
+      ✗ 본 덱에 없는 줄: [variable dt equal 2.0e-6]
+as_seg_velocity    new rc=1   재개 덱 정적 대조: 실패 (문제 1)
+      ✗ 체크포인트 뒤 ~ 첫 긴 run 앞 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 35 개 ↔ 재개 덱 36 개 — 재개 덱에만 [velocity all set 0.0 0.0 0.0]
+as_seg_velocity    old rc=0   재개 덱 정적 대조: 통과 (문제 0)
+as_seg_run1_to_2   new rc=1   재개 덱 정적 대조: 실패 (문제 3)
+      ✗ 첫 긴 run 다름 (write_restart 체크포인트 · 10-28 KG50-19): 본 덱 그 뒤 [run 1] [run 200000] ↔ 재개 덱 read_restart 뒤 [run 2]
+      ✗ 체크포인트 뒤 ~ 첫 긴 run 앞 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 35 개 ↔ 재개 덱 3 개 — 재개 덱에 없음 [run 1] [variable z_max equal c_zmax]
+      ✗ 첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 27 개 ↔ 재개 덱 59 개 — 재개 덱에만 [variable z_max equal c_zmax] [variable plate_z equal ${z_max}+${r_AM_P}+${plate_margin}]
+as_seg_run1_to_2   old rc=1   재개 덱 정적 대조: 실패 (문제 18)
+      ✗ 재개 지점 fix damp 다름: 본 덱 [fix damp all viscous 0.5] ↔ 재개 덱 [fix damp all viscous 1.0e-5]
+      ✗ 재개 지점 fix gravi 다름: 본 덱 [fix gravi all gravity 9.81 vector 0.0 0.0 -1.0] ↔ 재개 덱 [fix gravi all gravity 98.1 vector 0.0 0.0 -1.0]
+      ✗ 재개 지점 fix top_mesh 가 재개 덱에 없음: 본 덱 [fix top_mesh all mesh/surface/stress file plate_kg50_d2_b50.stl type 1 scale 1.0 reference_point 0 0 0]
