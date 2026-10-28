@@ -122,7 +122,7 @@ The band gap of the Nd-containing cathode–electrolyte interphase component NdP
    (`db/inputs/elastic_modelc_2x_split_2026_09_26/qe/jobs.json`) 에서 가져왔다. 셋째 줄이 SEI 입력의 ATOMIC_SPECIES 를 직접 보여 준다.
    확인 블록 (gabia · 읽기만 · 둘째 줄이 아무것도 안 찍으면 nspin 1 · U 없음):
    ```
-   D=/data/work/runs/sei_neb_v2_ccpath/li3nd; ls $D | head -20; for f in $D/*.in; do echo "== $f"; grep -a -A1 K_POINTS "$f"; grep -a -A3 ATOMIC_SPECIES "$f"; done 2>/dev/null | head -60; grep -a -h -m1 "Program NEB\|Program PWSCF" $D/*.out 2>/dev/null | sort -u
+   D=/data/work/runs/sei_neb_v2_ccpath/li3nd; ls $D | head -20; for f in $D/*.in; do echo "== $f"; grep -a -A1 K_POINTS "$f"; grep -a -A3 ATOMIC_SPECIES "$f"; grep -a -i "nspin\|hubbard" "$f"; done 2>/dev/null | head -60; grep -a -h -m1 "Program NEB\|Program PWSCF" $D/*.out 2>/dev/null | sort -u
    grep -a -h -i "nspin\|hubbard\|tot_magnetization" /data/work/runs/cei_gap/*/0*.in 2>/dev/null | sort | uniq -c; ls -d /data/work/runs/cei_gap/*/ | wc -l
    grep -a -A6 ATOMIC_SPECIES /data/work/runs/sei_dft/li3po4_mp-13725/03_nscf_gap.in /data/work/runs/sei_dft/licl_mp-22905/03_nscf_gap.in 2>/dev/null
    ```
