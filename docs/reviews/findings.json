@@ -13621,12 +13621,13 @@
     {
       "id": "PC5-09",
       "severity": "P3",
-      "status": "open",
+      "status": "wontfix",
       "title": "검사 실패 흔적 = .unchecked/ 의 p2_*.json* 전부 — 쓰는 중 (.part) · 러너 검사 전 죽음도 resume_ok false (원인 timeout)",
       "owner": "claude",
       "found_by": "사전 공격 5 회차 (10-28 · 0c47df263 · 독립 작업 트리)",
       "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/PREATTACK_C.md",
-      "note": "사전 공격 5 회차 보고 §1 · 탐침 = 같은 폴더 probe_unit.py · probe_real.py · 1저자 수정 계획 비준 전 (결과 0 건 · 코드 무변경)"
+      "note": "사전 공격 5 회차 보고 §1 · 탐침 = 같은 폴더 probe_unit.py · probe_real.py · 1저자 수정 계획 비준 전 (결과 0 건 · 코드 무변경)",
+      "decision_note": "1저자 10-28 밤 *\"rint는 권고대로\"* = 수정 계획 Q1 (docs/reviews/rint2_pc5_fix_plan_20261028.md) — 고치지 않음: 쓰는 중 (.part) · 러너 검사 전 죽은 payload 를 검사 실패 흔적으로 세어 resume_ok false = 보수 쪽 오거부 (대상을 잃을 수 있음 · 거짓 수용 없음) · 한정으로 적음 (Codex 회차 ② 요청서 · 등록 R §10-5)."
     },
     {
       "id": "PC5-10",
