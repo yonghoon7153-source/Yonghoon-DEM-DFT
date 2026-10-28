@@ -51,7 +51,9 @@ import json
 import math
 import os
 import re
+import struct
 import sys
+from array import array
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -125,33 +127,117 @@ def _tok_finite(t):
 
 # ───────────────────────── LIGGGHTS 줄 규칙 (생성기 commands() 와 같음 · selftest ⓪e 가 대조) ─────────────────────────
 def _uncomment(s):
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    out, q = [], None
+    for ch in s:
+        if q:
+            out.append(ch)
+            if ch == q:
+                q = None
+        elif ch in '"\'':
+            q = ch
+            out.append(ch)
+        elif ch == '#':
+            break
+        else:
+            out.append(ch)
+    return ''.join(out)
 
 
 def norm(s):
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    return ' '.join(_uncomment(s).split())
 
 
 def commands(text):
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    res, buf, b0 = [], '', None
+    raw = text.split('\n')
+    for i, line in enumerate(raw, 1):
+        r = line.rstrip()
+        if b0 is None:
+            b0 = i
+        if r.endswith('&'):
+            buf += r[:-1] + ' '
+            continue
+        s = norm(buf + r)
+        buf = ''
+        if s:
+            res.append((s, b0, i))
+        b0 = None
+    if buf.strip():
+        s = norm(buf)
+        if s:
+            res.append((s, b0, len(raw)))
+    return res
 
 
 # ───────────────────────── manifest · 폴더 ─────────────────────────
 def expected_steps(s0, end, every):
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    return [s for s in range(((s0 + every - 1) // every) * every, end + 1, every)]
 
 
 def load_manifest(folder):
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    try:
+        with open(os.path.join(folder, 'q5_manifest.json'), encoding='utf-8') as f:
+            man = json.load(f)
+    except (OSError, ValueError) as e:
+        raise Refused(f'{folder}: q5_manifest.json 못 읽음 ({e})')
+    if not _on('manifest'):
+        return man
+    try:
+        W = man['window']
+        tm = man['type_map']
+        ok = (man['schema'] == BRANCH_SCHEMA and W in WINDOW_S and _is_int(man['np']) and man['np'] >= 1
+              and _finite(man['dt']) and man['dt'] > 0 and isinstance(man['dt_echo'], str) and _is_int(man['s0'])
+              and isinstance(man['runs'], list) and man['runs'] and all(_is_int(x) and x >= 1 for x in man['runs'])
+              and _is_int(man['end_step']) and man['end_step'] == man['s0'] + sum(man['runs']) and man['compare_step'] == man['end_step']
+              and man['checkpoint']['step'] == man['s0'] and isinstance(man['folder'], str)
+              and abs(man['dt'] * sum(man['runs']) - WINDOW_S[W]) <= 1e-9 * WINDOW_S[W]
+              and isinstance(tm, dict) and tm and all(isinstance(k, str) and re.fullmatch(r'[0-9]+', k) for k in tm)
+              and set(tm.values()) <= {'AM', 'SE'} and set(man['density']) == set(tm)
+              and all(_finite(man['density'][k]) and man['density'][k] > 0 for k in tm)
+              and _finite(man['area_sim']) and man['area_sim'] > 0)
+        for k in ('atom_dump', 'contact_dump'):
+            d = man[k]
+            ok = (ok and _is_int(d['every']) and d['every'] >= 1 and isinstance(d['dir'], str)
+                  and d['steps'] == expected_steps(man['s0'], man['end_step'], d['every'])
+                  and man['s0'] in d['steps'] and man['end_step'] in d['steps'])
+        ok = (ok and man['atom_dump']['columns'] == ATOM_COLS and man['contact_dump']['columns'] == CONTACT_COLS
+              and isinstance(man['deck']['file'], str) and isinstance(man['main_deck']['copy'], str)
+              and bool(re.fullmatch(r'[0-9a-f]{64}', man['deck']['sha256']))
+              and bool(re.fullmatch(r'[0-9a-f]{64}', man['main_deck']['sha256'])))
+    except (KeyError, TypeError, AttributeError):
+        ok = False
+    if not ok:
+        raise Refused(f'{folder}: q5_manifest.json 꼴 · 내부 일관성 (끝 step = s0 + run 합 · 덤프 step · 창 길이 Q3) 이 아니다')
+    return man
 
 
 def _read_bytes(path, what):
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    try:
+        with open(path, 'rb') as f:
+            return f.read()
+    except OSError as e:
+        raise Refused(f'{what} 못 읽음 ({e})')
 
 
 def check_ckpt(folder, man):
     """운영자 ckpt_sha256.txt — 두 줄 · 같은 sha256 · 둘째 = 이 가지 폴더의 사본 · 첫째 = 원본 (가지 폴더 밖)."""
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    rel = man['checkpoint']['rel_path']
+    try:
+        with open(os.path.join(folder, 'ckpt_sha256.txt'), encoding='utf-8') as f:
+            lines = [x for x in f.read().split('\n') if x.strip()]
+    except OSError:
+        _refuse('ckpt', f'{folder}: ckpt_sha256.txt 없음 (운영자 cp · sha256sum 줄 — 원본 · 사본 sha256 기록)')
+        return None
+    m = [re.fullmatch(r'([0-9a-f]{64})  (\S.*)', x) for x in lines]
+    if len(lines) != 2 or not all(m):
+        _refuse('ckpt', f'{folder}: ckpt_sha256.txt 가 sha256sum 두 줄이 아니다')
+        return None
+    (h1, p1), (h2, p2) = m[0].groups(), m[1].groups()
+    if h1 != h2:
+        _refuse('ckpt', f'{folder}: 체크포인트 원본 ↔ 사본 sha256 다름 ({h1[:12]}… ↔ {h2[:12]}…)')
+    if not (p2.endswith('/' + man['folder'] + '/' + rel) and p1.endswith('/' + rel) and ('/' + man['folder'] + '/') not in p1):
+        _refuse('ckpt', f'{folder}: ckpt_sha256.txt 경로가 원본 → 이 가지 폴더 사본 ({man["folder"]}/{rel}) 이 아니다')
+    return h2
 
 
 # ───────────────────────── 로그 ─────────────────────────
@@ -162,143 +248,626 @@ RE_HEADER = re.compile(r'^\s*Step\s+Atoms\b')
 
 
 def parse_log(path):
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    try:
+        with open(path, encoding='utf-8', errors='replace') as f:
+            lines = f.read().split('\n')
+    except OSError:
+        return None
+    blocks, cur, errors, plate, loops = [], None, [], [], []
+    for ln in lines:
+        if RE_ERROR.match(ln):
+            errors.append(ln)
+        m = RE_PLATE.match(ln)
+        if m:
+            plate.append(m.group(1))
+        m = RE_LOOP.match(ln)
+        if m:
+            loops.append(dict(procs=int(m.group(2)), steps=int(m.group(3)), atoms=int(m.group(4))))
+            if cur is not None:
+                cur['loop'] = loops[-1]
+            cur = None
+            continue
+        if RE_HEADER.match(ln):
+            cur = dict(header=ln.split(), rows=[], bad=[], loop=None)
+            blocks.append(cur)
+            continue
+        if cur is not None:
+            t = ln.split()
+            if t and re.fullmatch(r'[0-9]+', t[0]):
+                (cur['rows'] if len(t) == len(cur['header']) else cur['bad']).append(t)
+    return dict(lines=lines, blocks=blocks, errors=errors, plate=plate, loops=loops)
 
 
 def t0_eval(log, man):
     """T0 (§6) — 반환 (ok, 이유 목록, 원자 수 처음 · 끝)."""
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    why, runs = [], man['runs']
+    blocks = log['blocks']
+    if _on('t0_loop'):
+        done = [b['loop']['steps'] for b in blocks if b['loop'] is not None]
+        if len(blocks) != len(runs) or done != runs or len(log['loops']) != len(runs):
+            why.append(f'끝까지 안 돎 — thermo 묶음 {len(blocks)} · Loop time {len(log["loops"])} (step {done}) ≠ 덱 run {runs}')
+    if _on('t0_error') and log['errors']:
+        why.append(f'ERROR 줄 {len(log["errors"])} ({log["errors"][0][:80]})')
+    if _on('t0_finite'):
+        nf = sum(1 for b in blocks for r in b['rows'] for t in r[1:] if not _tok_finite(t))
+        bad = sum(len(b['bad']) for b in blocks)
+        if nf or bad:
+            why.append(f'thermo 비유한 {nf} · 열 수 다른 줄 {bad}')
+    last = blocks[-1]['rows'][-1][0] if blocks and blocks[-1]['rows'] else None
+    if _on('t0_end') and (last is None or int(last) != man['end_step']):
+        why.append(f'마지막 thermo step {last} ≠ 창 끝 {man["end_step"]}')
+    atoms = []
+    for b in blocks:
+        if 'Atoms' in b['header']:
+            k = b['header'].index('Atoms')
+            atoms += [r[k] for r in b['rows']]
+    return (not why), why, (atoms[0] if atoms else None), (atoms[-1] if atoms else None)
 
 
 def check_log_provenance(log, man, deck_text, t0_ok):
     """이 로그가 이 가지 덱 · 이 NP · 이 체크포인트의 실행인가 — 거부 사유 (문자열) 또는 None."""
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    if _on('np_procs') and any(x['procs'] != man['np'] for x in log['loops']):
+        return f'Loop time procs {sorted({x["procs"] for x in log["loops"]})} ≠ manifest NP {man["np"]}'
+    nl = [norm(x) for x in log['lines']]
+    if _on('dt_echo'):
+        # 덱 45 행 `timestep ${dt}` 의 치환 줄 (LIGGGHTS echo · %.15g) — 있으면 이 가지 dt 여야 (다른 dt = 다른 덱 · 늘 거부) ·
+        # 없으면 T0 통과일 때만 거부 (빈 · 시작 전 잘린 로그 = T0 실패 = 판정 불가 (기술) 로 둔다)
+        k = next((i for i, x in enumerate(nl) if x == 'timestep ${dt}'), None)
+        if k is None:
+            if t0_ok:
+                return '로그에 dt 치환 줄 (timestep ${dt} → timestep …) 이 없다 (덱 dt 가 실제로 쓰였는지 · §4-2)'
+        elif k + 1 >= len(nl) or nl[k + 1] != 'timestep ' + man['dt_echo']:
+            return f'로그의 dt 치환 줄 [{nl[k + 1] if k + 1 < len(nl) else ""}] ≠ timestep {man["dt_echo"]} (다른 dt · 다른 덱 · §4-2)'
+    if not t0_ok:
+        return None
+    if _on('echo'):
+        j = 0
+        for c, _a, _b in commands(deck_text):
+            while j < len(nl) and nl[j] != c:
+                j += 1
+            if j >= len(nl):
+                return f'로그 echo 에 가지 덱 명령이 (그 순서로) 없다: [{c[:80]}] — 이 덱으로 돈 로그가 아니다'
+            j += 1
+    if _on('start_step'):
+        first = log['blocks'][0]['rows'][0][0] if log['blocks'] and log['blocks'][0]['rows'] else None
+        if first is None or int(first) != man['s0']:
+            return f'첫 thermo step {first} ≠ 체크포인트 step {man["s0"]}'
+    return None
 
 
 def thermo_series(log, col_names):
     """마지막 묶음의 (step, 값) — col_names 중 처음 있는 열."""
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    if not log['blocks']:
+        return []
+    b = log['blocks'][-1]
+    k = next((b['header'].index(c) for c in col_names if c in b['header']), None)
+    if k is None:
+        return []
+    return [(int(r[0]), float(r[k])) for r in b['rows']]
 
 
 # ───────────────────────── 덤프 (줄 단위로 읽는다 · D0.7 contact ≈ 백만 줄) ─────────────────────────
 def _dump_files(folder, d):
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    path = os.path.join(folder, d['dir'])
+    try:
+        names = os.listdir(path)
+    except OSError:
+        names = []
+    got = {}
+    for n in names:
+        m = re.fullmatch(re.escape(d['prefix']) + r'([0-9]+)\.liggghts', n)
+        if m:
+            got.setdefault(int(m.group(1)), []).append(n)
+    return path, got
 
 
 def check_dump_set(folder, man, key):
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    path, got = _dump_files(folder, man[key])
+    want = set(man[key]['steps'])
+    dup = sorted(s for s, v in got.items() if len(v) > 1)
+    missing, extra = sorted(want - set(got)), sorted(set(got) - want)
+    if dup or missing or extra:
+        _refuse('dump_set', f'{folder}: {key} 덤프 — 빠짐 {missing[:5]} · 남음 {extra[:5]} · 같은 step 여러 파일 {dup[:5]}')
+    return {s: os.path.join(path, got[s][0]) for s in want if s in got}
 
 
 def _rows(path, kind, step, cols):
     """덤프 머리 검사 뒤 줄을 하나씩 낸다 — (n, box, 줄 iterator).  끝에서 줄 수 대조."""
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    try:
+        f = open(path, encoding='utf-8')
+    except OSError as e:
+        raise Refused(f'{path}: 못 읽음 ({e})')
+    try:
+        head = [f.readline().rstrip('\n') for _ in range(9)]
+    except UnicodeDecodeError as e:
+        f.close()
+        raise Refused(f'{path}: 못 읽음 ({e})')
+    if (head[0].strip() != 'ITEM: TIMESTEP' or head[2].strip() != f'ITEM: NUMBER OF {kind}'
+            or not head[4].startswith('ITEM: BOX BOUNDS') or not re.fullmatch(r'[0-9]+', head[1].strip())
+            or not re.fullmatch(r'[0-9]+', head[3].strip())):
+        f.close()
+        raise Refused(f'{path}: LIGGGHTS 덤프 머리가 아니다 (잘림 · 다른 꼴)')
+    if _on('dump_timestep') and int(head[1]) != step:
+        f.close()
+        raise Refused(f'{path}: ITEM: TIMESTEP {head[1].strip()} ≠ 파일 이름 · 기대 step {step}')
+    word = 'ATOMS' if kind == 'ATOMS' else 'ENTRIES'
+    if _on('dump_cols') and (head[8].split()[:2] != ['ITEM:', word] or head[8].split()[2:] != cols):
+        f.close()
+        raise Refused(f'{path}: 열 {head[8].split()[2:][:9]} ≠ manifest 열')
+    try:
+        box = [tuple(float(v) for v in head[5 + i].split()[:2]) for i in range(3)]
+    except ValueError:
+        f.close()
+        raise Refused(f'{path}: BOX BOUNDS 숫자가 아니다')
+    n = int(head[3])
+
+    def it():
+        k = 0
+        try:
+            for raw in f:
+                r = raw.rstrip('\n')
+                if r.startswith('ITEM:'):
+                    if _on('dump_frames'):
+                        raise Refused(f'{path}: 프레임이 하나가 아니다 (ITEM: 줄이 본문에)')
+                k += 1
+                yield r
+        finally:
+            f.close()
+        if _on('dump_rows') and k != n:
+            raise Refused(f'{path}: 줄 {k} ≠ NUMBER OF {kind} {n} (잘림 · 남음)')
+    return n, box, it()
 
 
 def _bad_row(path, r):
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    if _on('dump_format'):
+        raise Refused(f'{path}: 덤프 줄 꼴이 아니다 [{r[:80]}]')
 
 
 def read_atom_dump(path, step, man):
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    n, box, rows = _rows(path, 'ATOMS', step, man['atom_dump']['columns'])
+    tm = man['type_map']
+    ids, typ = array('q'), array('q')
+    val = [array('d') for _ in range(7)]
+    for r in rows:
+        t = r.split()
+        if not r.isascii() or len(t) != 9 or not re.fullmatch(r'[0-9]+', t[0]) or not re.fullmatch(r'[0-9]+', t[1]):
+            _bad_row(path, r)
+            continue                   # (관문을 끈 변이에서만 닿는다 — 깨진 줄이 조용히 빠지는 꼴)
+        if _on('type_known') and t[1] not in tm:
+            raise Refused(f'{path}: 모르는 type {t[1]} (type_map {sorted(tm)})')
+        ids.append(int(t[0]))
+        typ.append(int(t[1]))
+        for k in range(7):
+            try:
+                v = float(t[2 + k])
+            except ValueError:
+                v = float('nan')
+            if _on('dump_finite') and not math.isfinite(v):
+                raise Refused(f'{path}: 비유한 값 [{r[:80]}]')
+            val[k].append(v)
+    if _on('dump_dup_id') and len(set(ids)) != len(ids):
+        raise Refused(f'{path}: 중복 atom id')
+    h = hashlib.sha256()
+    for i in sorted(range(len(ids)), key=ids.__getitem__):
+        h.update(struct.pack('<qq7d', ids[i], typ[i], *(val[k][i] for k in range(7))))
+    return dict(step=step, n=len(ids), box=box, id=ids, type=typ, x=val[0], y=val[1], z=val[2], r=val[3], vx=val[4], vy=val[5],
+                vz=val[6], digest=h.hexdigest())
 
 
 def read_contact_dump(path, step, man, atoms):
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    _n, _box, rows = _rows(path, 'ENTRIES', step, man['contact_dump']['columns'])
+    known = set(atoms['id'])
+    seen = set()
+    i1, i2, dl = array('q'), array('q'), array('d')
+    for r in rows:
+        t = r.split()
+        if not r.isascii() or len(t) != 26 or not re.fullmatch(r'[0-9]+', t[6]) or not re.fullmatch(r'[0-9]+', t[7]):
+            _bad_row(path, r)      # id = 정수 글자만 (지수 표기 = %g 6 자리에서 잘린 id 일 수 있다)
+            continue
+        if _on('contact_finite') and not all(_tok_finite(x) for x in t):
+            raise Refused(f'{path}: 비유한 값 [{r[:80]}]')
+        a, b = int(t[6]), int(t[7])
+        if _on('contact_self') and a == b:
+            raise Refused(f'{path}: 자기 쌍 {a}')
+        key = (a, b) if a < b else (b, a)
+        if _on('contact_dup') and key in seen:
+            raise Refused(f'{path}: 중복 접촉 쌍 {key}')
+        seen.add(key)
+        if _on('contact_ids') and (a not in known or b not in known):
+            raise Refused(f'{path}: 같은 step atom 덤프에 없는 id ({a}, {b})')
+        i1.append(a)
+        i2.append(b)
+        dl.append(float(t[22]))
+    return dict(step=step, n=len(i1), id1=i1, id2=i2, delta=dl)
 
 
 def light_check(path, step, kind, man):
     """판정에 안 쓰는 덤프 — 머리 · 줄 수 · 프레임 (빠짐 · 잘림 · step)."""
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    cols = man['atom_dump']['columns'] if kind == 'ATOMS' else man['contact_dump']['columns']
+    _n, _box, rows = _rows(path, kind, step, cols)
+    for _r in rows:
+        pass
 
 
 # ───────────────────────── 관측량 ─────────────────────────
 def _pct(v, p):
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    v = sorted(v)
+    if not v:
+        return None
+    h = (len(v) - 1) * p / 100.0
+    lo = int(math.floor(h))
+    hi = min(lo + 1, len(v) - 1)
+    return v[lo] + (h - lo) * (v[hi] - v[lo])
 
 
 def observables(at, ct, man):
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    tm, rho = man['type_map'], man['density']
+    ph = [tm[str(t)] for t in at['type']]
+    out = {}
+    for P in ('SE', 'AM'):
+        sel = [i for i in range(at['n']) if ph[i] == P]
+        w = math.fsum(rho[str(at['type'][i])] * at['r'][i] ** 3 for i in sel)
+        wz = math.fsum(rho[str(at['type'][i])] * at['r'][i] ** 3 * at['z'][i] for i in sel)
+        out[f'O1.z_{P}'] = wz / w if sel and w > 0 else None
+    pid = dict(zip(at['id'], ph))
+    rad = dict(zip(at['id'], at['r']))
+    nA, nS = ph.count('AM'), ph.count('SE')
+    cnt = {'AM_AM': 0, 'AM_SE': 0, 'SE_SE': 0}
+    ov = {'AM_AM': [], 'AM_SE': [], 'SE_SE': []}
+    for a, b, d in zip(ct['id1'], ct['id2'], ct['delta']):
+        k = '_'.join(sorted((pid[a], pid[b])))
+        cnt[k] += 1
+        ra, rb = rad[a], rad[b]
+        ov[k].append(d / (ra * rb / (ra + rb)))
+    out['O2.cn_AM_AM'] = 2.0 * cnt['AM_AM'] / nA if nA else None
+    out['O2.cn_AM_SE'] = 1.0 * cnt['AM_SE'] / nA if nA else None
+    out['O2.cn_SE_SE'] = 2.0 * cnt['SE_SE'] / nS if nS else None
+    out['O2.cn_all'] = 2.0 * sum(cnt.values()) / at['n'] if at['n'] else None
+    top = [at['z'][i] + at['r'][i] for i in range(at['n'])]
+    rep = dict(counts=dict(n_AM=nA, n_SE=nS, **{'N_' + k: v for k, v in cnt.items()}),
+               R2_top_max=max(top) if top else None, R2_top_p99=_pct(top, 99),
+               R3={k: dict(p50=_pct(v, 50), p99=_pct(v, 99), n=len(v)) for k, v in ov.items()})
+    return out, rep
 
 
 def o3_mean(log, man):
     """O3 — 마지막 묶음 thermo pressMPa 의 창 마지막 0.05 s (끝 step − 0.05/dt … 끝 step · 양 끝 포함) 평균 · 표본 시각."""
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    n50 = round(O3_LAST_S / man['dt'])
+    lo = man['end_step'] - n50
+    ser = [(s, v) for s, v in thermo_series(log, ('pressMPa', 'v_pressMPa')) if lo <= s <= man['end_step']]
+    if not ser:
+        return None, []
+    times = [round((s - man['s0']) * man['dt'], 9) for s, _v in ser]
+    return math.fsum(v for _s, v in ser) / len(ser), times
 
 
 def r4_ratio(a_end, a_start, x_end):
     """R4 = RMS(x_X − x_A) / RMS(x_A(끝) − x_A(시작)) · 공통 id · x · y 주기 최소상 (A 끝 상자)."""
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    (xl, xh), (yl, yh), _z = a_end['box']
+    Lx, Ly = xh - xl, yh - yl
+
+    def mi(d, L):
+        return d - L * round(d / L) if L > 0 else d
+
+    def pos(at):
+        return {at['id'][i]: (at['x'][i], at['y'][i], at['z'][i]) for i in range(at['n'])}
+    pe, ps, px = pos(a_end), pos(a_start), pos(x_end)
+    com = sorted(set(pe) & set(ps) & set(px))
+    if not com:
+        return None
+    num = math.fsum(mi(px[i][0] - pe[i][0], Lx) ** 2 + mi(px[i][1] - pe[i][1], Ly) ** 2 + (px[i][2] - pe[i][2]) ** 2 for i in com)
+    den = math.fsum(mi(pe[i][0] - ps[i][0], Lx) ** 2 + mi(pe[i][1] - ps[i][1], Ly) ** 2 + (pe[i][2] - ps[i][2]) ** 2 for i in com)
+    return math.sqrt(num / den) if den > 0 else None
 
 
 def r5_share(at, log, man):
     """R5 (W2 · 보고) — Σ γ_type |v_z| / (P × 면적 × 10⁶) · 같은 step thermo P."""
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    damp = man.get('damp') or {}
+    g = {int(k): damp.get('gamma', 0.5) for k in man['type_map']}
+    if damp.get('scale'):
+        g[int(damp['scale']['type'])] = damp.get('gamma', 0.5) * float(damp['scale']['s'])
+    P = dict(thermo_series(log, ('pressMPa', 'v_pressMPa'))).get(at['step'])
+    if not P:
+        return None
+    return math.fsum(g[at['type'][i]] * abs(at['vz'][i]) for i in range(at['n'])) / (P * man['area_sim'] * 1e6)
 
 
 # ───────────────────────── 덤프 ↔ 로그 결합 ─────────────────────────
 def bind_dumps_to_log(folder, log, man, at0, atE, a0, a1):
     """덤프가 이 로그의 실행인가 — 원자 수 (첫 · 마지막 thermo Atoms = 시작 · 창 끝 덤프 줄 수) · W1 시작 zmax (첫 thermo
     c_zmax = 시작 덤프 z 최대 · 상대 1e-4 = 덤프 %g 6 자리 · thermo 글자 반올림 몫)."""
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    def as_int(x):
+        return int(x) if isinstance(x, str) and re.fullmatch(r'[0-9]+', x) else None
+    if _on('bind_atoms') and (as_int(a0) != at0['n'] or as_int(a1) != atE['n']):
+        raise Refused(f'{folder}: 로그 Atoms (처음 {a0} · 끝 {a1}) ≠ 덤프 원자 수 (시작 {at0["n"]} · 창 끝 {atE["n"]}) — 다른 실행의 덤프')
+    if not _on('bind_zmax'):
+        return
+    b = log['blocks'][0] if log['blocks'] else None
+    k = next((b['header'].index(c) for c in ('zmax', 'c_zmax') if b and c in b['header']), None)
+    if k is None:
+        if man['window'] == 'W1':
+            raise Refused(f'{folder}: W1 첫 thermo (판 높이 run) 에 zmax 열이 없다')
+        return
+    zl, zd = float(b['rows'][0][k]), max(at0['z'])
+    if abs(zl - zd) > 1e-4 * max(abs(zd), 1e-300):
+        raise Refused(f'{folder}: 첫 thermo zmax {zl:.8g} ≠ 시작 덤프 z 최대 {zd:.8g} — 시작 덤프가 이 로그의 실행이 아니다')
 
 
 # ───────────────────────── 가지 하나 ─────────────────────────
 def read_branch(folder, role, repo_verify=True):
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    man = load_manifest(folder)
+    if _on('role') and (man.get('branch') != role or ROLE_BED.get(role) != man.get('bed')
+                        or BEDS[ROLE_BED[role]]['case'] != man.get('case') or ROLE_KIND.get(role) != man.get('kind')):
+        raise Refused(f'{folder}: manifest 가지 {man.get("branch")} ({man.get("case")}) ≠ 역할 {role}')
+    db = _read_bytes(os.path.join(folder, man['deck']['file']), '가지 덱')
+    mb = _read_bytes(os.path.join(folder, man['main_deck']['copy']), '본 덱 사본')
+    if _on('deck_sha') and (_sha256_bytes(db) != man['deck']['sha256'] or _sha256_bytes(mb) != man['main_deck']['sha256']):
+        raise Refused(f'{folder}: 가지 덱 · 본 덱 사본 sha256 ≠ manifest')
+    rv = 'skipped (--no-repo-verify)'
+    if repo_verify and _on('repo_verify'):
+        try:
+            sys.path.insert(0, HERE)
+            import kg50_q5_branches as G      # 리포 생성기의 허용 목록 대조 (리포 안에서만)
+        except ImportError as e:
+            raise Refused(f'리포 생성기 (kg50_q5_branches) 를 못 불러옴 ({e}) — 리포 밖이면 --no-repo-verify')
+        p = G.verify_folder(folder)
+        if p:
+            raise Refused(f'{folder}: 허용 목록 다시 대조 실패 — ' + ' | '.join(p[:3]))
+        rv = 'ok'
+    ck = check_ckpt(folder, man)
+    log = parse_log(os.path.join(folder, 'log.liggghts'))
+    if log is None:
+        _refuse('log_missing', f'{folder}: log.liggghts 없음 (T0 를 볼 수 없다)')
+        log = dict(lines=[], blocks=[], errors=[], plate=[], loops=[])
+    ok, why, a0, a1 = t0_eval(log, man)
+    bad = check_log_provenance(log, man, db.decode('utf-8'), ok)
+    if bad:
+        raise Refused(f'{folder}: {bad}')
+    br = dict(role=role, folder=os.path.realpath(folder), man=man, repo_verify=rv, ckpt=ck,
+              t0=dict(ok=ok, why=why, atoms_first=a0, atoms_last=a1), log=log, plate=log['plate'][:1], atoms={})
+    s0, cs = man['s0'], man['compare_step']
+    if not ok:
+        _p, got = _dump_files(folder, man['atom_dump'])      # T0 실패 — 덤프 요구 없음 · 시작 상태 대조만 (있으면)
+        if s0 in got and len(got[s0]) == 1:
+            try:
+                br['atoms'][s0] = read_atom_dump(os.path.join(_p, got[s0][0]), s0, man)
+            except Refused:
+                pass
+        return br
+    afiles = check_dump_set(folder, man, 'atom_dump')
+    cfiles = check_dump_set(folder, man, 'contact_dump')
+    for s, p in sorted(afiles.items()):
+        if s in (s0, cs):
+            br['atoms'][s] = read_atom_dump(p, s, man)
+        else:
+            light_check(p, s, 'ATOMS', man)
+    if cs not in cfiles or cs not in br['atoms'] or s0 not in br['atoms']:
+        raise Refused(f'{folder}: 시작 · 창 끝 덤프 없음')
+    bind_dumps_to_log(folder, log, man, br['atoms'][s0], br['atoms'][cs], a0, a1)
+    for s, p in sorted(cfiles.items()):
+        if s != cs:
+            light_check(p, s, 'ENTRIES', man)
+    br['contact'] = read_contact_dump(cfiles[cs], cs, man, br['atoms'][cs])
+    br['obs'], br['rep'] = observables(br['atoms'][cs], br['contact'], man)
+    if man['window'] == 'W2':
+        br['obs']['O3.P'], br['o3_times'] = o3_mean(log, man)
+        br['rep']['R5_damp_share'] = r5_share(br['atoms'][cs], log, man)
+    ke = thermo_series(log, ('KinEng',))
+    br['rep']['R1_ke_end'] = ke[-1][1] if ke else None
+    return br
 
 
 # ───────────────────────── 판정 ─────────────────────────
 def _rel(x, a):
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    if x is None or a is None or not (_finite(x) and _finite(a)) or a == 0:
+        return None
+    return abs(x - a) / abs(a)
 
 
 def judge_item(tech_ok, a, f, x, tau, order=None):
     """결정 관측량 하나 — (결과, 이유, |F−A|/|A|, |X−A|/|A|).  순서 = §7 ① ② ③ ④ (order = selftest 변이용)."""
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    rf, rx = _rel(f, a), _rel(x, a)
+    for step in (order or ORDER):
+        if step == 'tech' and not tech_ok:
+            return UNDECIDED_TECH, '① X · A · F 중 T0 실패', rf, rx
+        if step in ('floor', 'fail') and (rf is None or rx is None):
+            return UNDECIDED, ('상대 차를 정할 수 없다 (값 없음 · 비유한 · |A| = 0 — §7 에 없는 자리 · 합격으로 두지 않는다)'), rf, rx
+        if step == 'floor' and rf > tau:
+            return UNDECIDED, f'② |F − A|/|A| {rf:.4g} > τ {tau:g} (이 창이 τ 를 가를 해상도가 없다)', rf, rx
+        if step == 'fail' and rx > tau:
+            return FAIL, f'③ |X − A|/|A| {rx:.4g} > τ {tau:g}', rf, rx
+    return PASS, f'④ |X − A|/|A| {rx:.4g} ≤ τ {tau:g} · 바닥 {rf:.4g} ≤ τ', rf, rx
 
 
 def worst(results):
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    rs = list(results)
+    if FAIL in rs:
+        return FAIL
+    if UNDECIDED_TECH in rs:
+        return UNDECIDED_TECH
+    if UNDECIDED in rs or not rs:
+        return UNDECIDED
+    return PASS
 
 
 def compare(here, bed, xrole, window):
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    d = BEDS[bed]
+    A, F, X = here.get(d['base']), here.get(d['floor']), here.get(xrole)
+    tech = all(b is not None and b['t0']['ok'] for b in (A, F, X))
+    tw = [f'{b["role"]}: ' + '; '.join(b['t0']['why']) for b in (A, F, X) if b is not None and not b['t0']['ok']]
+    items = {}
+    for o in DECISION[window]:
+        for it in ITEMS[o]:
+            vals = [b['obs'].get(it) if (b is not None and 'obs' in b) else None for b in (A, F, X)]
+            res, why, rf, rx = judge_item(tech, vals[0], vals[1], vals[2], TAU[o])
+            if res == UNDECIDED_TECH and tw:
+                why += ' — ' + ' | '.join(tw)
+            items[it] = dict(a=vals[0], f=vals[1], x=vals[2], rel_floor=rf, rel_x=rx, tau=TAU[o], result=res, why=why)
+    return dict(x=xrole, base=d['base'], floor=d['floor'], tech_ok=tech, items=items,
+                result=worst(v['result'] for v in items.values()))
 
 
 def _bed_checks(bed, here, window):
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    d = BEDS[bed]
+    if d['base'] not in here or d['floor'] not in here:
+        raise Refused(f'{bed}: 기준 {d["base"]} · 바닥 {d["floor"]} 둘 다 있어야 비교한다')
+    ms = {(b['man']['case'], b['man']['main_deck']['sha256'], b['man']['s0'], b['man']['window']) for b in here.values()}
+    if _on('bed') and len(ms) != 1:
+        raise Refused(f'{bed}: 가지들의 케이스 · 본 덱 · 체크포인트 step · 창이 같지 않다')
+    if _on('ckpt') and len({b['ckpt'] for b in here.values()}) != 1:
+        raise Refused(f'{bed}: 가지마다 체크포인트 sha256 이 다르다 (같은 체크포인트에서 시작이 아니다)')
+    if _on('floor_np') and here[d['floor']]['man']['np'] == here[d['base']]['man']['np']:
+        raise Refused(f'{bed}: 바닥 {d["floor"]} NP = 기준 {d["base"]} NP — 합산 순서가 같아 바닥이 0 이 된다')
+    s0 = here[d['base']]['man']['s0']
+    t0d = {r: b['atoms'][s0]['digest'] for r, b in here.items() if s0 in b['atoms']}
+    if _on('t0_identity') and len(set(t0d.values())) > 1:
+        raise Refused(f'{bed}: 시작 상태 (step {s0} atom 덤프) 가 가지마다 다르다 — 같은 체크포인트가 아니다')
+    ed = [(r, b['atoms'][b['man']['compare_step']]['digest']) for r, b in sorted(here.items())
+          if b['t0']['ok'] and b['man']['compare_step'] in b['atoms']]
+    dup = [(r1, r2) for i, (r1, h1) in enumerate(ed) for r2, h2 in ed[i + 1:] if h1 == h2]
+    if _on('end_identity') and dup:
+        raise Refused(f'{bed}: 끝 상태가 두 가지에서 바이트 같다 {dup} — 복사된 덤프 (다른 계산이 아니다)')
+    if window == 'W2' and _on('thermo_times'):
+        if len({tuple(b.get('o3_times') or ()) for b in here.values() if b['t0']['ok']}) > 1:
+            raise Refused(f'{bed}: O3 표본 시각이 가지마다 다르다 — 같은 시각 비교가 아니다')
 
 
 def _bed_report(bed, here):
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    d = BEDS[bed]
+    A = here[d['base']]
+    s0 = A['man']['s0']
+    rep = {}
+    for r, b in sorted(here.items()):
+        if not b['t0']['ok']:
+            continue
+        rr = dict(b['rep'])
+        if A['t0']['ok'] and r != d['base']:
+            rr['R4_rms_ratio'] = r4_ratio(A['atoms'][A['man']['compare_step']], A['atoms'][s0], b['atoms'][b['man']['compare_step']])
+            rr['R1_rel_vs_base'] = _rel(rr.get('R1_ke_end'), A['rep'].get('R1_ke_end'))
+        rr['R6_plate_height'] = b['plate'][0] if b['plate'] else None
+        if A['plate'] and b['plate'] and _tok_finite(A['plate'][0]) and _tok_finite(b['plate'][0]):
+            rr['R6_rel_vs_base'] = _rel(float(b['plate'][0]), float(A['plate'][0]))
+        rep[r] = rr
+    return rep
 
 
 def run(roles, repo_verify=True, main_log=None):
     """roles = {역할: 폴더}.  반환 판정 dict.  거부 = Refused."""
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    bad = sorted(set(roles) - set(ROLE_BED))
+    if bad:
+        raise Refused(f'모르는 역할 {bad} (등록 §3: A B C F · A3 C3 F3)')
+    reals = [os.path.realpath(p) for p in roles.values()]
+    if _on('same_folder') and len(set(reals)) != len(reals):
+        raise Refused('같은 폴더가 두 역할에 쓰였다')
+    brs = {r: read_branch(p, r, repo_verify) for r, p in sorted(roles.items())}
+    wins = sorted({b['man']['window'] for b in brs.values()})
+    if _on('window') and len(wins) != 1:
+        raise Refused(f'창이 섞였다 ({wins})')
+    window = brs[sorted(brs)[0]]['man']['window']
+    beds = {}
+    for bed, d in BEDS.items():
+        here = {r: brs[r] for r in brs if ROLE_BED[r] == bed}
+        if not here:
+            continue
+        _bed_checks(bed, here, window)
+        cmp_ = {k: compare(here, bed, d[k], window) for k in ('a', 'b') if d[k] and d[k] in here}
+        beds[bed] = dict(case=d['case'], comparisons=cmp_, report=_bed_report(bed, here))
+    a = beds.get('D0.7-50', {}).get('comparisons', {}).get('a')
+    bres = {bed: v['comparisons']['b'] for bed, v in beds.items() if 'b' in v['comparisons']}
+    if len(bres) == 2:
+        b_all, b_why = worst(v['result'] for v in bres.values()), '두 침대 중 나쁜 쪽 (불합격 > 판정 불가 > 합격)'
+    else:
+        b_all = UNDECIDED if bres else None
+        b_why = ('침대 하나만 읽음 (Q2 (가) — D0.7 C · D3 C3 둘 다 있어야 전체 (b))' if bres else '(b) 가지 없음')
+    out = dict(schema=SCHEMA, registration=REGISTRATION, registration_sha256=_reg_sha(), window=window,
+               tau=TAU, decision=list(DECISION[window]),
+               branches={r: dict(folder=b['folder'], case=b['man']['case'], kind=b['man']['kind'], np=b['man']['np'],
+                                 deck_sha256=b['man']['deck']['sha256'], ckpt_sha256=b['ckpt'], repo_verify=b['repo_verify'],
+                                 t0=b['t0'], obs=b.get('obs'), counts=(b.get('rep') or {}).get('counts'))
+                         for r, b in brs.items()},
+               beds=beds,
+               a=(dict(result=a['result'], why='X = B · 결정 관측량 중 나쁜 쪽') if a else None),
+               b=(dict(result=b_all, why=b_why, per_bed={k: v['result'] for k, v in bres.items()}) if b_all else None))
+    if window == 'W1':
+        for bed in bres:
+            if bres[bed]['result'] == PASS:
+                bres[bed]['qualifier'] = QUALIFIER_W1_B
+        if out['b'] and out['b']['result'] == PASS:
+            out['b']['qualifier'] = QUALIFIER_W1_B
+    if main_log:
+        out['R6_main_log'] = main_log_compare(main_log, brs.get('A'))
+    return out
 
 
 def main_log_compare(path, A):
     """§8-3 2 — 멈춘 본 런 로그의 체크포인트 뒤 첫 줄 (판 높이 run) · PLATE HEIGHT ↔ A (보고)."""
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    m = parse_log(path)
+    if m is None or A is None:
+        return dict(status='없음')
+    s0 = A['man']['s0']
+
+    def first_rows(lg):
+        for b in lg['blocks']:
+            if b['rows'] and int(b['rows'][0][0]) == s0:
+                return [' '.join(r) for r in b['rows'][:2]]
+        return None
+    a_rows, m_rows = first_rows(A['log']), first_rows(m)
+    mp = m['plate'][-1] if m['plate'] else None
+    return dict(status='읽음', thermo_same=(a_rows is not None and a_rows == m_rows), main_rows=m_rows, a_rows=a_rows,
+                plate_main=mp, plate_a=(A['plate'][0] if A['plate'] else None),
+                plate_same=bool(mp is not None and A['plate'] and mp == A['plate'][0]))
 
 
 def _reg_sha():
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    try:
+        with open(os.path.join(ROOT, REGISTRATION), 'rb') as f:
+            return _sha256_bytes(f.read())
+    except OSError:
+        return None
 
 
 def combine(w1, w2):
     """W1 · W2 판정 둘 → 창마다 따로 · 전체 = 나쁜 쪽 (§7)."""
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    if w1.get('schema') != SCHEMA or w2.get('schema') != SCHEMA or (w1.get('window'), w2.get('window')) != ('W1', 'W2'):
+        raise Refused('combine = W1 판정 · W2 판정 (이 판독기 JSON) 순서로')
+    out = dict(schema=SCHEMA + '+combine', registration=REGISTRATION, windows=['W1', 'W2'])
+    for k in ('a', 'b'):
+        rs = [x[k]['result'] for x in (w1, w2) if x.get(k)]
+        out[k] = dict(result=(worst(rs) if len(rs) == 2 else UNDECIDED),
+                      per_window={w: (x[k]['result'] if x.get(k) else None) for w, x in (('W1', w1), ('W2', w2))},
+                      why=('창마다 따로 · 나쁜 쪽' if len(rs) == 2 else '한 창에 이 판정이 없다'))
+    return out
 
 
 # ───────────────────────── 보고 ─────────────────────────
 def _f(x, nd=5):
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    return '—' if x is None else (f'{x:.{nd}g}' if isinstance(x, float) else str(x))
 
 
 def report(out):
-    raise NotImplementedError('구현 전 (시험 먼저)')
+    L = [f'# 50kg Q5 판정 — 창 {out["window"]} · 등록 {out["registration"]} §7 · τ = {out["tau"]}', '',
+         '| 가지 | 케이스 | NP | T0 | 원자 수 (처음 → 끝) | 허용 목록 다시 대조 | 메모 |', '|---|---|---|---|---|---|---|']
+    for r, b in out['branches'].items():
+        L.append(f'| {r} | {b["case"]} | {b["np"]} | {"통과" if b["t0"]["ok"] else "실패"} | {b["t0"]["atoms_first"]} → '
+                 f'{b["t0"]["atoms_last"]} | {b["repo_verify"]} | {"; ".join(b["t0"]["why"]) or "-"} |')
+    for bed, v in out['beds'].items():
+        for k, c in v['comparisons'].items():
+            L += ['', f'## {bed} — ({k}) {c["x"]} ↔ {c["base"]} (바닥 {c["floor"]}) = **{c["result"]}**'
+                  + (f' · 한정어: {c["qualifier"]}' if c.get('qualifier') else ''), '',
+                  '| 관측량 | A | F | X | \\|F−A\\|/\\|A\\| | \\|X−A\\|/\\|A\\| | τ | 판정 | 근거 |', '|---|---|---|---|---|---|---|---|---|']
+            for it, x in c['items'].items():
+                L.append(f'| {it} | {_f(x["a"])} | {_f(x["f"])} | {_f(x["x"])} | {_f(x["rel_floor"], 3)} | {_f(x["rel_x"], 3)} | '
+                         f'{x["tau"]:g} | {x["result"]} | {x["why"]} |')
+        if v['report']:
+            L += ['', f'보고 관측량 (판정 밖) — {bed}: ' + json.dumps({r: {k: x for k, x in rr.items() if k != 'counts'}
+                                                                for r, rr in v['report'].items()}, ensure_ascii=False)]
+    L.append('')
+    if out.get('a'):
+        L.append(f'**(a) dt: {out["a"]["result"]}** — {out["a"]["why"]}')
+    if out.get('b'):
+        L.append(f'**(b) 감쇠: {out["b"]["result"]}** — {out["b"]["why"]} · 침대별 {out["b"]["per_bed"]}'
+                 + (f' · 한정어: {out["b"]["qualifier"]}' if out['b'].get('qualifier') else ''))
+    return '\n'.join(L)
 
 
 def main(argv=None):

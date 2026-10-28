@@ -297,6 +297,11 @@ run 'resume_ckpt (재개 도구 · 가짜 SLURM)' python3 scripts/test_resume_ck
 #  ★ 2026-10-27 (50kg D3 칸 판정 · 판정 모드 Hertz = 1저자 결과 전) — 읽기 전용 판독기.  selftest 첫 항목이 등록 README §3 의 문턱 ·
 #    모드 · SE_Δ 식 · coverage 두 판정 (Physics · Hertz) 줄을 대조한다 ⇒ 결과를 보고 문턱을 옮기면 여기서 터진다 · 판정 순서 ①–④ · 변이 12/12 + Physics 5/5 잡음 · 실측 < 1 s.
 run 'kg50_d3_cell_verdict   --selftest' python3 scripts/kg50_d3_cell_verdict.py --selftest
+#  ★ 2026-10-28 (50kg Q5 dt · 감쇠 가지 · 등록 Q11 · 시험 먼저) — 가지 덱 생성기: 등록 문서 고정 줄 대조 · 본 덱 sha256 · 허용 목록
+#    대조 (명령 + 줄) · A · F = resume_ckpt.sh -C 문제 정확히 하나 · 러너 -n ↔ -np · 변이 12.  판독기: selftest 첫 항목 = 등록 §7 판정
+#    순서 ① ② ③ ④ (문장 + 행동 + 순서 변이) · O1 · O2 · O3 · T0 · 거부 · 변이 34 · 실측 < 5 s (구현 전 4/36 · 1/13).
+run 'kg50_q5_branches      --selftest' python3 scripts/kg50_q5_branches.py --selftest
+run 'kg50_q5_verdict       --selftest' python3 scripts/kg50_q5_verdict.py --selftest
 #  ★ 2026-10-24 (`SELF-132` · `SELF-133` · 1저자 Q2 (가)) — kgy 실행 환경 판 (Python 3.8 · numpy 1.24.4 · scipy 1.10.1 = kgy `~/dem-venv`) 에서
 #    R 경로 11 묶음 (S0 · S1 · S2/S3 · 계약 · 사슬 · 끝-끝 · 증서).  3.11 에서만 돌던 코드가 kgy 에서 멈춘 일 (08-16 · 08-25 · 10-24 세 번째) 을 막는다.
 #    인터프리터 없음 · 판 다름 = 실패 (건너뛰지 않는다) → `bash scripts/setup_kgy_py38.sh` (컨테이너 재시작 뒤 한 번) · 실측 ≈ 6–7 분.
