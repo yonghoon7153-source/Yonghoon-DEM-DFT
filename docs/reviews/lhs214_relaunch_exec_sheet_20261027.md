@@ -124,7 +124,7 @@ git diff --quiet "$B7" "$REV" -- $CORE docs/reviews/lhs_network_batch_registrati
 | V7 | 완료 영수증 둘 (ROOT 밖 · 같은 시각 T) | `<V5>_preflight_<MMDD_HHMMSS>.json` · `<V6>_preflight_<MMDD_HHMMSS>.json` (같은 이름 `.log` = 실행기 전체 로그) | `step0.txt` |
 | V8 | 로그 폴더 · 묶음 | `~/lhs_preflight_35f032737_<MMDD_HHMMSS>/` · 같은 이름 `.tgz` | 단계 6 |
 | V9 | 다운로드 경로 | `/mnt/c/Users/Administrator/Downloads` (yonghoon71@DESKTOP-IK8J81H) · 다른 PC = `/mnt/c/Users/안용훈/Downloads` | `DL=` |
-| V10 | 194 손 대조 확인자 | 1저자 | 묶음 §5 손 대조 표 |
+| V10 | 194 손 대조 확인자 | ✅ 1저자 — 10-28 밤 *"ㅇㅇ 권고대로 해"* (값 여섯 = 등록 값 = Codex S1 판정문 §4 독립 대조 일치 · 채운 표 = S2 새 판 `docs/reviews/codex_lhs214_relaunch_check_request_20261028.md` §2-5) | 묶음 §5 손 대조 표 |
 | V11 | 반입 폴더 (메인) | `docs/reviews/lhs214_wsl_preflight_35f032737_<MMDD>/` | 반입 커밋 |
 
 구 ROOT (10-14 · 지우지 · 옮기지 · retry · merge 하지 않는다 · 묶음 §5): `~/net194_1087a9b2f` · `~/netsupp20_1087a9b2f` · 영수증 `~/net194_1087a9b2f_preflight_1014_141953` · `~/netsupp20_1087a9b2f_preflight_1014_141953` (.json · .log).
@@ -542,6 +542,6 @@ b2c47e4fc anc_rc=0 remote=22 first=origin/claude/rint-pf2-handoff-20261022
 | S1 (`L214P-01` 두 줄) | ✅ Codex 닫힘 · GO (verified · 리뷰 핀 `b7a979032`) — **실제 발사 GO 아님** |
 | E1 자체시험 다섯 종료코드 | ✅ 회수 — 1저자 10-28 17:36 단계 2 화면 원문 `docs/reviews/lhs214_wsl_preflight_35f032737_1028/step2_screen_paste_1028_1736.txt` (fast16 · real4 · reread · runner · receipt `rc=0` · dirty 0) · 재실행 불요 (Codex §5) |
 | E2 수령표 연결 | ✅ Codex 독립 대조 (판정문 §4 · 194 여섯 칸 일치) + WSL 묶음 (`docs/reviews/lhs214_wsl_preflight_35f032737_1028/`) · 작업자 = 1저자 (WSL 17:32:39 KST) · 독립 대조 = Codex 10-28 |
-| 194 손 대조 확인 (V10 · 확인자 = 1저자) | ⬜ 1저자 확인 한 마디 (값 여섯 = Codex 대조 일치) |
+| 194 손 대조 확인 (V10 · 확인자 = 1저자) | ✅ 1저자 10-28 밤 *"ㅇㅇ 권고대로 해"* — 값 여섯 (n 194 · missing 0 · ids · raw 표 · 코호트 lhs · lhsx · code_fp/32) = 등록 값 = Codex 독립 대조 (S1 판정문 §4) 일치 · 채운 표 = `docs/reviews/codex_lhs214_relaunch_check_request_20261028.md` §2-5 |
 | `L214P-02` (P3 · 1140 행 LF) | open — 운영 = 전체 40자리 `--approved-sha` 늘 제공 · 고칠지 = 1저자 |
 | 다음 | S2 새 판 (§2-2) → 사전 공격 ①–④ → S2 발송 (1저자) → Codex → ⑤ 1저자 발사 승인 |
