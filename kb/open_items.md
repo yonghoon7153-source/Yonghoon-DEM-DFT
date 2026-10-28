@@ -22,9 +22,9 @@
 - ⏭ **다음**: ① gabia 조회 블록 (검사용 · MP API · PP 복사 · QE 안 돈다) → push ② 여기서 다형 확인 · 레지스트리 'declared' 등록 · 입력 생성 · kgy 러너 ③ kgy (Nd Q3′ ndq3p 뒤 · cascade 옆) ④ 판독 R1–R6 · Origin CSV.
 - ✅ **사용자 결정 셋 (카드 §9) — 10-27 '권고대로해 ㅇㅇ'**: ① vc-relax 허락 ② TM = MP 자성 배치 + MP U ③ 관측 다형 → `D-2026-10-27-cei-product-gaps` **비준 active** · CLAUDE.md 이완 예외 줄에 올림.
 - ✅ gabia 조회 (b44d899c · 문제 0): 다형 9 · MP 자성 · 갭 출처 (전부 GGA · NiP₂O₆ 만 GGA+U) · PP 복사. ⚠ **09-19 CEI 갭은 PAW psl 세트 · 08 SEI 갭 (LiCl · Li₂S · Li₃PO₄) 은 GBRV 세트였다** → 카드 '같은 PP' 전제 거짓 · CoS₂ MP 자리 모멘트 0 인데 요약 총 4.0 μB (그대로 옮기면 비자성 둔갑) · MnS₂ 규칙 결과 = Pnnm (hauerite 아님).
-- 🔔 **개정 1 비준 대기** (`D-2026-10-27-cei-product-gaps-amend1` · 카드 §12): PP = 09-19 PAW psl + GBRV Co·Ni·Mn · LiCl·Li₃PO₄ 다시 잼 · 대조 잡 = P₂O₅ (5.186) 하나 · TM 'Unknown' 처리 (a/nm/b/c) · MnP₂O₆ MP 대조 없음 · Mn 90/1080. 입력 12 · run_kgy.sh 준비 끝 (개정 1 proposed 면 '잠정 실행').
+- ✅ **개정 1 비준 (10-28 '그냥 이대로 비준하자' · active)** (`D-2026-10-27-cei-product-gaps-amend1` · 카드 §12 · 비준은 대조 잡·LiCl·Li₃PO₄ 결과 뒤 · 내용은 결과 전 그대로): PP = 09-19 PAW psl + GBRV Co·Ni·Mn · LiCl·Li₃PO₄ 다시 잼 · 대조 잡 = P₂O₅ (5.186) 하나 · TM 'Unknown' 처리 (a/nm/b/c) · MnP₂O₆ MP 대조 없음 · Mn 90/1080. 입력 12 · run_kgy.sh 준비 끝 (개정 1 proposed 면 '잠정 실행').
 - 🔔 박재현에게 그동안 MP 값을 줄지 (출처 꼬리표와 같이만 · 금속 넷은 '금속').
-- ▶ **kgy CEI 갭 체인 실행 중** (10-28 09:20 watch: 대조 잡 P₂O₅ 5.1864 ✅ Δ 0.0004 · LiCl 6.264 · Li₃PO₄ 5.930 (08 GBRV 대비 +0.004 · +0.018 · 기록만) · Li₂SO₄ 03 k 84/100 · 잠정 = 개정 1 비준 대기) · 자세한 감시 = `watch_gabia.py --sei_only` (순서 · 단계별 벽시계 · 자기모멘트 · 지금 단계의 BFGS/SCF/k 진행 · 대조 잡 · 러너 로그 끝).
+- ▶ **kgy CEI 갭 체인 실행 중** (10-28 09:20 watch: 대조 잡 P₂O₅ 5.1864 ✅ Δ 0.0004 · LiCl 6.264 · Li₃PO₄ 5.930 (08 GBRV 대비 +0.004 · +0.018 · 기록만) · Li₂SO₄ 03 k 84/100 · 개정 1 비준 10-28 → 정식) · 자세한 감시 = `watch_gabia.py --sei_only` (순서 · 단계별 벽시계 · 자기모멘트 · 지금 단계의 BFGS/SCF/k 진행 · 대조 잡 · 러너 로그 끝).
 - (그대로) Li₂S 4×4×4 러너 (gabia · 탄성 13_m 뒤) · Nd Q3′ kgy 실행 출력 대기.
 
 ### ⏭-NOW-z26. 2026-10-27 낮 — 웹앱 최신화 · litdb 9 편 병합 · NdO Intro 2–5문단 · site-analysis 1.11.0

@@ -10096,7 +10096,7 @@
    "title": "CEI 생성물 갭 개정 1 (결과 전) — PP 세트 = 09-19 CEI PAW psl + GBRV Co·Ni·Mn · LiCl·Li3PO4 다시 잼 · 대조 잡 = P2O5 하나 · MP 자성 'Unknown' 처리 규칙 · Mn 90/1080",
    "statement": "카드 §12 (개정 1) 이 정의다. ① PP 는 09-19 CEI 갭 세트 (PAW psl Li sl · P n · S nl · Cl nl · O n 0.1) + GBRV USPP Co 1.2 · Ni 1.4 · Mn 1.5 (md5 기록) — 08 SEI 갭은 GBRV 세트였으므로 LiCl · Li3PO4 β 를 이 세트로 다시 잰다 (08 값과의 차는 PP 세트 차이로만). ② 대조 잡은 09-19 P2O5 (5.186 eV) 하나 · |Δ| ≤ 0.02 eV · 옛 3 종은 취소. ③ TM 상태: MP 자리 모멘트가 MP 총 모멘트와 0.5 μB 안이면 그대로 · MP 가 NM 이면 비자성 · 자리값 0 인데 |총| > 0.5 면 총을 TM 자리에 나눔 · 자리값 0 · |총| ≤ 0.5 · NM 아님이면 2+ 고스핀 강자성 시작 (Mn 5 · Co 3 · Ni 2 μB) — 반강자성은 안 본다. ④ MP 대조는 근사가 같을 때만 (MnP2O6 은 MP 가 GGA 출처라 대조 없음). ⑤ Mn 화합물 컷오프 90/1080 Ry (GBRV 파일에 권장값 없음) · 나머지 60/480. ⑥ MnS2 는 규칙대로 Pnnm (MP '관측') — 상온 광물 hauerite 아님 · 둘 다 MP GGA 갭 0.",
    "rationale": "gabia 조회 (b44d899c) 가 카드 전제 둘을 깼다: 09-19 CEI 갭과 08 SEI 갭의 PP 세트가 달랐고 (그래서 옛 대조 잡은 기계 차이를 못 가른다), MP 자성 정보가 'Unknown' 인 TM 넷은 'MP 자성 배치' 를 옮길 수 없다 (CoS2 자리값 0 · 요약 총 4.0 μB — 그대로면 비자성으로 둔갑). 계산 0 건 · 결과 전 개정.",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "estimand",
    "results_seen": false,
    "results_seen_note": "우리 계산 0 건. 본 것은 MP 후보 표 · 자성 · 갭 출처 꼬리표 · gabia PP 파일 이름과 md5 뿐.",
@@ -10120,15 +10120,32 @@
     "견적": "대조 1 + 11 종 · 어림 20–30 GPU-h · 벽시계 3–5 일"
    },
    "proposed_by": "claude-session-2026-10-27 (friendly)",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-10-27",
      "state": "proposed",
      "by": "agent",
      "note": "gabia 조회 결과로 결과 전 개정 — 사용자 비준 대기 (트랙 CEI · 결정은 사용자)."
+    },
+    {
+     "at": "2026-10-28",
+     "state": "active",
+     "by": "사용자 (CEI 계산 담당 · 1저자는 실험 쪽 박재현)",
+     "note": "비준 — '그냥 이대로 비준하자' (직전 설명: PP 세트 · LiCl·Li3PO4 다시 잼 · 대조 잡 P2O5 · MP 'Unknown' 자성 규칙 · 같은 근사끼리만 MP 비교 · Mn 90/1080 · MnS2 Pnnm). 잠정 실행 → 정식."
     }
-   ]
+   ],
+   "비준_시점_결과": "비준 (10-28) 은 kgy 잠정 실행에서 대조 잡 P2O5 (5.1864 eV · Δ +0.0004 · 통과) · LiCl 6.264 · Li3PO4 β 5.930 eV 가 나온 뒤다. 개정 내용 (statement · 카드 §12 · 대조 잡 문턱 0.02 eV) 은 10-27 결과 전에 쓴 그대로이고 비준하면서 바꾼 글자가 없다.",
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-28T00:28:28Z",
+    "commit": "8f80c9d2c4490cbdb47e62589fd3810be3aa59ff",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "채팅 답 (2026-10-28 · 이 세션): '그냥 이대로 비준하자' — 직전에 개정 1 의 여섯 가지 (PP 세트 · LiCl·Li3PO4 다시 잼 · 대조 잡 P2O5 · 자성 'Unknown' 규칙 · MP 비교 조건 · Mn 컷오프) 와 MnS2 기록을 표로 설명했다.",
+    "decision_digest": "sha256:674a4c61be6617bd9638affd9cfa80275bea6a8a5bba1fba2d4a25a7f8f2e2c7"
+   }
   }
  ]
 }
