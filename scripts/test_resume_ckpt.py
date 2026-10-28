@@ -16,6 +16,9 @@ Codex probe_stale_trial.py 두 장면을 옮김 — 승인값 · 가짜 dem_rest
 끝나 Q1 을 못 본다) · G = 전체 프로그램 대조 (Codex 덱 고정물을 그대로 읽어 -C · 원본 → 시험 덱 → 관문 사슬) · X = 압축 체크포인트 재개
 거부 · L = G0 마지막 thermo 줄 · Loop step 수 (우리 재현 g0_lastrun/ 로그 포함) · I = 도구 신원 · 승인 · -T 본 제출 명령 (G0–G3 통과
 케이스만) · Q9 = 시험 전 거부의 보고 케이스 절.  Codex 고정물은 읽기만 한다 (신뢰하지 않는 입력 · 실행 안 함).
+10-28 밤 2 (독립 사전 공격 리뷰 · 고친 판 fb334928) — Y = 반례 A (준비 구간 변수 다시 정의 · 순서) · B (본 덱 체크포인트 run 꼬리 ·
+run every 안 include) · C (시험 뒤 덱 · 러너 바뀜 · 실행 영수증) · D (본 sbatch 출력) · E (G3 유한 수) · F (케이스 이름 · 시도 기록 읽기) ·
+시험 빈틈 셋 (재삽입 · G1 만 · G3 결손만 — 리뷰어 변이 py_reinsert · sh_g1 · sh_miss 가 살아남던 자리).
 
   python3 scripts/test_resume_ckpt.py                 # 고친 스크립트 (기본)
   python3 scripts/test_resume_ckpt.py --script <경로>  # 다른 판 (고치기 전 판 실패 확인용)
@@ -23,7 +26,7 @@ Codex probe_stale_trial.py 두 장면을 옮김 — 승인값 · 가짜 dem_rest
       # 장면마다 옛 판도 같은 입력으로 돌려 stdout · 보고 · 작업 폴더 파일 · 제출 여부를 대조 (임시 경로 · 날짜 시각만 맞춤 ·
       # 10-28 밤 새로 더한 줄 (표지 'KG50R' 가 든 줄) · 시도 폴더 · cut_*.txt 는 빼고 · 승인 인자 -A · -H 는 새 판에만)
       # → 묶음별 같음 / 다름 · 예전부터 있던 묶음 (K S D Q T N F C A P W) 에서 옛 판 · 새 판 둘 다 정상 (시험 · G0–G3 통과 / -C 통과)
-      #   인 장면에 다름이 있으면 rc 1 · 새 묶음 (R G X L I Q9) 의 다름 · 옛 판 정상인데 새 판이 거부한 장면은 목록으로 보고만
+      #   인 장면에 다름이 있으면 rc 1 · 새 묶음 (R G X L I Q9 Y) 의 다름 · 옛 판 정상인데 새 판이 거부한 장면은 목록으로 보고만
 """
 import glob
 import hashlib
@@ -61,12 +64,17 @@ NEW_MARK = 'KG50R'               # 10-28 밤 새로 더한 출력 줄의 표지 
 
 # 가짜 sbatch — 시험 job = 7000 + (이 루트에서 낸 시험 수) · 본 job = 9000 + (본 제출 수) (두 번 호출에도 번호가 겹치지 않게)
 #   FAKE_SBATCH_TRIAL_EMPTY = 시험 제출이 빈 출력 · FAKE_TOUCH_HELPER = 시험 제출 때 그 파일 (dem_restart.py) 에 한 줄 덧붙임
+#   10-28 밤 2 (사전 공격 C · D): FAKE_EDIT_AFTER_TRIAL = 시험 제출 때 그 파일 (작업 폴더 재개 덱 · 러너) 끝에 주석 한 줄 ·
+#   FAKE_SBATCH_MAIN_TEXT = 본 제출이 그 글을 내고 종료 코드 1 · FAKE_SBATCH_MAIN_SUFFIX = 본 job 번호 뒤에 그 꼬리 (--parsable 'id;cluster')
 STUB_SBATCH = r'''#!/bin/sh
 f=""; for a in "$@"; do f="$a"; done
 b=$(basename "$f" .sh); n=${b#run_}
+if [ "${b%t}" = "$b" ] && [ -n "$FAKE_SBATCH_MAIN_TEXT" ]; then echo "main $f" >> "$CAPTURE"; echo "$FAKE_SBATCH_MAIN_TEXT"; exit 1; fi
+if [ "${b%t}" = "$b" ] && [ -n "$FAKE_SBATCH_MAIN_SUFFIX" ]; then echo "main $f" >> "$CAPTURE"; echo "$((9000 + $(grep -c '^main' "$CAPTURE")))$FAKE_SBATCH_MAIN_SUFFIX"; exit 0; fi
 case "$b" in
   *t) echo "trial $f" >> "$CAPTURE"
       [ -n "$FAKE_TOUCH_HELPER" ] && echo "# 시험 제출 뒤 바뀜" >> "$FAKE_TOUCH_HELPER"
+      [ -n "$FAKE_EDIT_AFTER_TRIAL" ] && echo "# 시험 제출 뒤 바뀜 (사전 공격 C)" >> "$FAKE_EDIT_AFTER_TRIAL"
       [ -n "$FAKE_SBATCH_TRIAL_EMPTY" ] && exit 0
       [ -n "$FAKE_SBATCH_TRIAL_TEXT" ] && { echo "$FAKE_SBATCH_TRIAL_TEXT"; exit 1; }
       j=$((7000 + $(grep -c '^trial' "$CAPTURE")))
@@ -74,7 +82,9 @@ case "$b" in
   *) echo "main $f" >> "$CAPTURE"; echo $((9000 + $(grep -c '^main' "$CAPTURE")));;
 esac
 '''
-STUB_SACCT = '#!/bin/sh\nprintf "%s\\n" "$FAKE_SACCT"\nexit ${FAKE_SACCT_RC:-0}\n'
+#   10-28 밤 2 (사전 공격 F): FAKE_RM_MODE = 그 작업 폴더의 시도 폴더 mode.txt 를 지운다 (둘째 고리가 읽기 전 · sacct 를 처음 부를 때)
+STUB_SACCT = ('#!/bin/sh\n[ -n "$FAKE_RM_MODE" ] && rm -f "$FAKE_RM_MODE"/attempt_*/mode.txt\n'
+              'printf "%s\\n" "$FAKE_SACCT"\nexit ${FAKE_SACCT_RC:-0}\n')
 # 가짜 squeue — 호출 번호를 센다 ($CAPTURE.sq · 호출마다 harness 가 지움) · FAKE_SQUEUE_SECOND 면 둘째 호출부터 FAKE_SQUEUE_2 · _RC_2 ·
 #   -o '%i %j' 면 'id 이름' (줄에 칸 하나면 id 0) · 그 밖 (-o %j) 은 마지막 칸 (이름)
 STUB_SQUEUE = r'''#!/bin/sh
@@ -473,7 +483,8 @@ def invoke(ctx, script, res_text, trial_text, sacct='COMPLETED|0:0', sacct_rc=0,
                FAKE_SACCT=sacct, FAKE_SACCT_RC=str(sacct_rc), FAKE_SQUEUE=squeue, FAKE_SQUEUE_RC=str(squeue_rc),
                FAKE_TRIAL_LOG=tl, FAKE_RES=res, FAKE_CKPT=ckpt, FAKE_MODE=mode)
     for x in ('FAKE_SQUEUE_SECOND', 'FAKE_SQUEUE_2', 'FAKE_SQUEUE_RC_2', 'FAKE_SBATCH_TRIAL_EMPTY', 'FAKE_SBATCH_TRIAL_TEXT',
-              'FAKE_TOUCH_HELPER', 'FAKE_DEM_FAIL'):
+              'FAKE_TOUCH_HELPER', 'FAKE_DEM_FAIL', 'FAKE_EDIT_AFTER_TRIAL', 'FAKE_SBATCH_MAIN_TEXT', 'FAKE_SBATCH_MAIN_SUFFIX',
+              'FAKE_RM_MODE'):
         env.pop(x, None)
     if squeue2 is not None:
         env.update(FAKE_SQUEUE_SECOND='1', FAKE_SQUEUE_2=squeue2, FAKE_SQUEUE_RC_2=str(squeue_rc2))
@@ -1195,6 +1206,165 @@ def main():
     chk('Q9d 시험 sbatch 가 job 번호 아닌 글 (종료 코드 1) → 시험 job 으로 안 받음 · 본 제출 안 함 · 보고 케이스 절 (단계: 시험 제출 · KG50R-04)',
         r['trial'] and not r['main'] and '단계: 시험 제출' in r['rep'] and 'QOS limit' in r['rep'], r['out'] + r['rep'])
 
+    # ── Y: 10-28 밤 2 — 독립 사전 공격 리뷰 (고친 판 fb334928) 의 반례 A–F + 시험 빈틈 셋 (반례 폴더는 스크래치 · 여기는 v2 고정물로 같은 꼴) ──
+    #   A 준비 구간에서 변수를 바꿨다 되돌림 (LIGGGHTS 는 ${dt} 를 그 자리에서 치환 · 끝 상태 대조만으로는 같아 보인다) · 순서 · B 본 덱
+    #   체크포인트 run 꼬리 · C 시험 뒤 작업 폴더 덱 · 러너 바뀜 · 실행 영수증 · D 본 sbatch 출력 · E G3 유한 수 · F 케이스 이름 · 시도 기록
+    #   빈틈 = 재삽입 (본 덱이 삽입 fix 를 unfix 안 함) · G1 만 실패 · G3 결손만 — 그 관문 하나만 막는 입력
+    grp('Y')
+    tmp = tempfile.mkdtemp(prefix='rcky_')
+    try:
+        good = res_good()
+        with open(MAIN, encoding='utf-8') as f:
+            mtxt = f.read()
+        RRL = 'read_restart %s\n' % CKPT
+        DT1, DT2, TS1 = 'variable dt      equal 1.0e-6\n', 'variable dt      equal 2.0e-6\n', 'timestep        ${dt}\n'
+        assert good.count(RRL) == 1 and good.count(DT1) == 1 and good.count(TS1) == 1 and mtxt.count(DT1) == 1 and mtxt.count(TS1) == 1
+        a1 = good.replace(RRL, RRL + DT2 + TS1 + DT1)
+        a2 = good.replace(DT1, DT2).replace(TS1, TS1 + DT1)      # 실제 D2 r4 반례 꼴 (47 줄 2.0e-6 · timestep 뒤 1.0e-6)
+        for tag, text in (('read_restart 뒤 dt 2e-6 · timestep · dt 1e-6', a1), ('dt 정의 2e-6 · timestep 뒤 1e-6 (D2 r4 반례 꼴)', a2)):
+            rc, out = deckcheck_only(script, MAIN, write_tmp(tmp, 'ya.liggghts', text), CKPT, 20001)
+            chk('Y1 -C 준비 구간 변수 다시 정의 · %s → 거부 (글자 그대로 · 사전 공격 A)' % tag, rc != 0 and '글자 그대로 없음' in out, out)
+        asr = res_after('good', tmpl=True)
+        RRA = 'read_restart restart_%s/restart_after_settling.bin\n' % C
+        rc, out = deckcheck_only(script, MAIN, write_tmp(tmp, 'ya3.liggghts', asr.replace(RRA, RRA + DT2 + TS1 + DT1)), CKPT_AS, 200001)
+        chk('Y2 -C after_settling 준비 구간 dt 바꿈 · timestep · 되돌림 → 거부 (사전 공격 A)', rc != 0 and '글자 그대로 없음' in out, out)
+        # 순서 — 줄은 전부 본 덱에 있고 끝 상태도 같은데 즉시 치환 자리가 다르다 (본 덱: dt 1e-6 → timestep → dt 2e-6 = 실제 dt 1e-6)
+        m3 = write_tmp(tmp, 'y3m.liggghts', mtxt.replace(TS1, TS1 + DT2))
+        rc, out = deckcheck_only(script, m3, write_tmp(tmp, 'y3ok.liggghts', good.replace(TS1, TS1 + DT2)), CKPT, 20001)
+        chk('Y3 -C 본 덱이 dt 를 두 번 정의 · 재개 덱이 같은 순서 → 통과 (대조군)', rc == 0, out)
+        rc, out = deckcheck_only(script, m3, write_tmp(tmp, 'y3bad.liggghts', good.replace(TS1, DT2 + TS1)), CKPT, 20001)
+        chk('Y3b -C 같은 줄 · dt 2e-6 이 timestep 앞 (실제 dt 2 배 · 끝 상태는 같다) → 거부 (순서 · 사전 공격 A)',
+            rc != 0 and '순서가 본 덱 체크포인트 앞 순서와 다름' in out and '글자 그대로 없음' not in out, out)
+        FI, FG = 'fix integr all nve/sphere\n', 'fix gravi all gravity 98.1 vector 0.0 0.0 -1.0\n'
+        assert good.count(FI + FG) == 1
+        rc, out = deckcheck_only(script, MAIN, write_tmp(tmp, 'y4.liggghts', good.replace(FI + FG, FG + FI)), CKPT, 20001)
+        chk('Y4 -C 준비 구간 fix 순서 바꿈 (gravity ↔ nve/sphere · 줄은 같다) → 거부 (순서 · 사전 공격 J 가 A 로 닫힘)',
+            rc != 0 and '순서가 본 덱 체크포인트 앞 순서와 다름' in out, out)
+        rc, out = deckcheck_only(script, MAIN, write_tmp(tmp, 'y5.liggghts', good.replace(DT1, 'variable dt      equal 3.0e-6\n' + DT1)), CKPT, 20001)
+        chk('Y5 -C 준비 구간에 본 덱에 없는 상태 줄 (쓰기 전에 되돌림 · 끝 상태 같음) → 거부 (글자 그대로 · 사전 공격 A)',
+            rc != 0 and '글자 그대로 없음' in out, out)
+        r = run_case(script, None, 'ok', res_text=a2)
+        chk('Y6 본 흐름 · 준비 구간 dt 바꿈 (D2 r4 반례 꼴) → 시험 0 · 본 0 (사전 공격 A)', r['ntrial'] == 0 and r['nmain'] == 0, r['out'])
+        # B — 본 덱 체크포인트 run 의 꼬리 (재개 덱 첫 긴 run 은 꼬리 없는 한 줄이라 같은 동작을 못 낸다)
+        RUN0 = 'run 200000\n'
+        i0 = mtxt.index('restart 50000 restart_%s/restart_settling_*.bin\n' % C)
+        j0 = mtxt.index(RUN0, i0)
+
+        def mtail(t):
+            return mtxt[:j0] + t + mtxt[j0 + len(RUN0):]
+        for tag, tl in (('every velocity', 'run 200000 every 1000 "velocity all set 0.0 0.0 0.0"\n'),
+                        ('every include', 'run 200000 every 1000 "include extra.in"\n'),
+                        ('pre no post no', 'run 200000 pre no post no\n'), ('upto', 'run 200001 upto\n')):
+            rc, out = deckcheck_only(script, write_tmp(tmp, 'y7m.liggghts', mtail(tl)), write_tmp(tmp, 'y7r.liggghts', good), CKPT, 20001)
+            chk('Y7 -C 본 덱 체크포인트 run 꼬리 (%s) → 거부 (사전 공격 B)' % tag, rc != 0 and '본 덱 체크포인트 run 에 꼬리' in out, out)
+        rc, out = deckcheck_only(script, write_tmp(tmp, 'y7im.liggghts', mtxt.replace('run 100000\n', 'run 100000 every 1000 "include extra.in"\n', 1)),
+                                 write_tmp(tmp, 'y7ir.liggghts', good.replace('run 100000\n', 'run 100000 every 1000 "include extra.in"\n', 1)), CKPT, 20001)
+        chk('Y7c -C 뒤 구간 run every 안 include (두 덱 같은 줄) → 거부 (다룰 수 없는 구문 · run every 안까지)',
+            rc != 0 and '다룰 수 없는 구문' in out and 'include' in out, out)
+        r = run_case(script, 'good', 'ok', main_bytes=mtail('run 200000 every 1000 "velocity all set 0.0 0.0 0.0"\n').encode())
+        chk('Y7b 본 흐름 · 본 덱 체크포인트 run every → 시험 0 · 본 0 (사전 공격 B)', r['ntrial'] == 0 and r['nmain'] == 0, r['out'])
+        # C — 시험 뒤 작업 폴더의 재개 덱 · 러너가 바뀜 → 본 제출 직전 sha256 대조 · 실행 영수증
+        for tag, tgt in (('재개 덱', 'input_%s_%s.liggghts' % (C, SFX)), ('러너', 'run_%s_%s.sh' % (C, SFX))):
+            ctx = make_root()
+            try:
+                r = invoke(ctx, script, good, trial_log('ok'), env_more={'FAKE_EDIT_AFTER_TRIAL': os.path.join(ctx['L'], C, tgt)})
+            finally:
+                shutil.rmtree(ctx['tmp'], ignore_errors=True)
+            chk('Y8 시험 제출 뒤 작업 폴더 %s 가 바뀜 → 본 제출 직전 sha256 ≠ 시험 때 기록 → 본 제출 안 함 (사전 공격 C)' % tag,
+                r['trial'] and not r['main'] and '시험 때와 다름' in r['rep'], r['out'] + r['rep'])
+        ctx = make_root()
+        try:
+            lmp = os.path.join(ctx['stub'], 'lmp_mpi')
+            with open(lmp, 'w') as f:
+                f.write('#!/bin/sh\nexit 0\n')
+            os.chmod(lmp, 0o755)
+            ck_sha, lmp_sha = sha256f(os.path.join(ctx['S'], CKPT)), sha256f(lmp)
+            r = invoke(ctx, script, good, trial_log('ok'))
+        finally:
+            shutil.rmtree(ctx['tmp'], ignore_errors=True)
+        tt = next((v for k, v in r['att'].items() if k.endswith('/tool.txt')), '')
+        chk('Y9 시도 폴더 tool.txt = 재개 덱 · 러너 · 체크포인트 sha256 · lmp_mpi 경로 · sha256 (실행 영수증 · 사전 공격 C · Codex §10-5)',
+            r['main'] and ('체크포인트 %s sha256 %s' % (CKPT, ck_sha)) in tt and ('lmp_mpi %s sha256 %s' % (lmp, lmp_sha)) in tt
+            and '재개 덱 sha256 ' in tt and '러너 sha256 ' in tt, tt + r['rep'])
+        # D — 본 sbatch 출력 (시험 쪽 Q9d 와 같은 규칙)
+        r = run_case(script, 'good', 'ok', env_more={'FAKE_SBATCH_MAIN_TEXT': 'sbatch: error: QOSMaxSubmitJobPerUserLimit'})
+        a = dict((k.split('/', 1)[1], v) for k, v in r['att'].items() if '/' in k)
+        chk('Y10 본 sbatch 가 job 번호 아닌 글 (종료 코드 1) → ✅ 안 찍음 · ⛔ 본 제출 실패 · main_job.txt 없음 (사전 공격 D)',
+            r['main'] and '✅ 본 제출 job' not in r['rep'] and '⛔ 본 제출 실패' in r['rep'] and 'QOSMaxSubmitJobPerUserLimit' in r['rep']
+            and 'main_job.txt' not in a and '본 제출 실패' in a.get('result.txt', ''), r['rep'] + ' '.join(sorted(a)))
+        r = run_case(script, 'good', 'ok', env_more={'FAKE_SBATCH_MAIN_SUFFIX': ';clusterA'})
+        a = dict((k.split('/', 1)[1], v) for k, v in r['att'].items() if '/' in k)
+        chk('Y10b 본 sbatch --parsable 의 id;cluster → job 번호만 (✅ 9001 · main_job.txt 9001)',
+            '✅ 본 제출 job 9001 (' in r['rep'] and a.get('main_job.txt') == '9001\n', r['rep'] + ' '.join(sorted(a)))
+        # E — G3 비교 줄의 유한 수 (mawk · gawk 같은 판정 · nan · inf 어느 철자든)
+        for tok in ('nan', 'NaN', '+nan', '-nan', 'inf', '-inf', 'Infinity'):
+            rows = T_OK[:]
+            assert '0.0955' in rows[2]
+            rows[2] = rows[2].replace('0.0955', '%6s' % tok)
+            r = run_case(script, 'good', None, trial_text='\n'.join(['LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0)'] + rows) + '\n')
+            chk('Y11 시험 21000 줄 KE = %s (G3 비교 줄) → 본 제출 안 함 (사전 공격 E)' % tok, r['trial'] and not r['main'], r['rep'])
+        orig = ORIG_LOG.replace('   21000   312506         0.0950', '   21000   312506            nan')
+        assert orig != ORIG_LOG
+        r = run_case(script, 'good', 'ok', orig_log=orig)
+        chk('Y12 원 로그 21000 줄 KE = nan → 본 제출 안 함 (사전 공격 E)', r['trial'] and not r['main'], r['rep'])
+        # F — 케이스 이름 (두 철자 · 위험한 이름) · 둘째 고리의 시도 기록 읽기
+        ctx = make_root()
+        try:
+            r = invoke(ctx, script, good, trial_log('ok'), cases=[C, './' + C])
+            prev = glob.glob(os.path.join(ctx['L'], C + '.prev_*')) + glob.glob(os.path.join(ctx['L'], '.', C + '.prev_*'))
+        finally:
+            shutil.rmtree(ctx['tmp'], ignore_errors=True)
+        chk('Y13 케이스 두 철자 (C · ./C) → 둘째 시험 전 거부 (케이스 이름) · 시험 1 · 본 1 · 첫 작업 폴더가 prev 로 안 밀림 (사전 공격 F)',
+            r['ntrial'] == 1 and r['nmain'] == 1 and not prev and ('## ./%s — 시험 전 거부' % C) in r['rep'] and '케이스 이름' in r['rep'],
+            r['out'] + r['rep'] + ' prev=%s' % prev)
+        for bad in ('.', '..', 'a/b', 'a*', 'a b'):
+            ctx = make_root()
+            try:
+                before = sorted(os.listdir(ctx['L']))
+                r = invoke(ctx, script, good, trial_log('ok'), cases=[bad])
+                after = sorted(os.listdir(ctx['L']))
+            finally:
+                shutil.rmtree(ctx['tmp'], ignore_errors=True)
+            made = [x for x in after if x not in before and not x.startswith('resume_') and x != 'logs']
+            chk('Y14 케이스 이름 [%s] → 시험 전 거부 (케이스 이름) · 새 폴더 없음 (사전 공격 F)' % bad,
+                r['ntrial'] == 0 and r['nmain'] == 0 and not made and '케이스 이름' in r['out'], r['out'] + ' made=%s' % made)
+        ctx = make_root()
+        try:
+            r = invoke(ctx, script, good, trial_log('ok'), env_more={'FAKE_RM_MODE': os.path.join(ctx['L'], C)})
+        finally:
+            shutil.rmtree(ctx['tmp'], ignore_errors=True)
+        chk('Y15 둘째 고리에서 시도 폴더 mode.txt 를 못 읽음 → 그 케이스 본 제출 안 함 · 보고에 그 사유 (사전 공격 F)',
+            r['trial'] and not r['main'] and '시도 폴더 기록' in r['rep'] and '못 읽음' in r['rep'], r['out'] + r['rep'])
+        # 시험 빈틈 셋 (리뷰어 변이 생존 py_reinsert · sh_g1 · sh_miss) — 그 관문 하나만 막는 입력
+        UNF = 'unfix ins_mix\n'
+        assert mtxt.count(UNF) == 1
+        raw, take = [], False
+        for l in mtxt.splitlines(keepends=True):
+            take = take or bool(re.match(r'\s*fix\s+ins_mix\b', l))
+            if take:
+                raw.append(l)
+                if not l.rstrip().endswith('&'):
+                    break
+        PH1 = 'print "====== PHASE 1: SETTLING ======"\n'
+        assert good.count(PH1) == 1 and raw
+        rc, out = deckcheck_only(script, write_tmp(tmp, 'y16m.liggghts', mtxt.replace(UNF, '')),
+                                 write_tmp(tmp, 'y16r.liggghts', good.replace(PH1, ''.join(raw) + PH1)), CKPT, 20001)
+        chk('Y16 본 덱이 삽입 fix 를 unfix 안 함 · 재개 덱이 그 줄을 본 덱 순서 자리에 다시 선언 → 거부 (재삽입 · 그 문제 하나 · 빈틈 py_reinsert)',
+            rc != 0 and '재삽입' in out and '(문제 1)' in out, out)
+        rows = T_OK[:]
+        assert '0.1000' in rows[1]
+        rows[1] = rows[1].replace('0.1000', '0.1003')
+        r = run_case(script, 'good', None, trial_text='\n'.join(['LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0)'] + rows) + '\n')
+        chk('Y17 시험 setup 줄 KE 0.1000 → 0.1003 (G1 만 실패 · G0 · G3 통과) → 본 제출 안 함 (빈틈 sh_g1)',
+            r['trial'] and not r['main'] and '- G0 시험 정상 종료: 통과' in r['rep'] and '1e-6): 실패' in r['rep'] and '5 % 안' in r['rep'], r['rep'])
+        rows = [x for x in T_OK if not x.lstrip().startswith('22000 ')]
+        assert len(rows) == len(T_OK) - 1
+        r = run_case(script, 'good', None, trial_text='\n'.join(['LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0)'] + rows) + '\n')
+        chk('Y18 시험 로그에서 22000 줄 하나만 빠짐 (G0 · G1 · G3 첫 줄 통과) → G3 결손 → 본 제출 안 함 (빈틈 sh_miss)',
+            r['trial'] and not r['main'] and '결손' in r['rep'] and '- G0 시험 정상 종료: 통과' in r['rep'], r['rep'])
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
     print('%d PASS · %d FAIL' % (ok, fail))
     if CMP['old'] is not None:
         print('── 옛 판 대조 (--compare-old %s · 판정은 지금 판으로만 · 새 줄 (표지 %s) · 시도 폴더 · cut_*.txt 빼고) — 장면 %d'
@@ -1210,7 +1380,7 @@ def main():
             rows = [x for x in CMP['rows'] if x[0] == g]
             print('  묶음 %s: 같음 %d / %d' % (g, len([x for x in rows if not x[2]]), len(rows)))
         # 굳은 조건 (rc 1) = 예전부터 있던 장면 묶음 (K S D Q T N F C A P W) 에서 둘 다 정상인데 다름 — 영향 없는 settling ·
-        #   after_settling 정상 출력이 그대로인지.  10-28 밤 새 묶음 (R G X L I Q9) 은 새 행동을 시험하려고 만든 장면이라 보고만 한다
+        #   after_settling 정상 출력이 그대로인지.  10-28 밤 새 묶음 (R G X L I Q9 Y) 은 새 행동을 시험하려고 만든 장면이라 보고만 한다
         old_g = ('K', 'S', 'D', 'Q', 'T', 'N', 'F', 'C', 'A', 'P', 'W')
         both = [x for x in CMP['rows'] if x[3] and x[4]]
         nd = [x for x in both if x[2] and x[0] in old_g]
