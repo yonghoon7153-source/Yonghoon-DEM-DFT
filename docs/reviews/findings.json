@@ -13536,7 +13536,7 @@
       "found_by": "codex 10-28 LHS214 S1 재확인 (리뷰 핀 b7a979032 · 실제 생산 함수 launch_eligibility · supp20_input_receipt.receipt 로 합성 manifest 15 대조)",
       "opened_in": "docs/reviews/codex_lhs214_pin_syntax_review_20261028/codex_review_lhs214_pin_syntax_20261028.md",
       "title": "`launch_eligibility` (scripts/run_network_194_parallel.py:1140) 의 `_HEX40.match(g['sha'])` 가 SHA 뒤 LF 를 받는다 — 두 manifest 가 같은 SHA+LF 이고 승인값을 생략하면 rc 0 · 7자리 승인이면 마지막 한 자리만 같은 오값도 rc 0 (전체 40자리 승인 = F7 · G7 이 거부)",
-      "note": "판정문 §3 Q5 · Codex = 남은 P3 형식 경계 · 새 커밋 우회 P1 아님 · L214P-01 종결을 막지 않음 · *\"모든 발사 경로가 SHA 형식에 fail-closed\"* 일반화는 반박됨.  운영 (기존 실행표대로) = 전체 40자리 `--approved-sha` 를 늘 주고 두 실제 manifest 를 F7 · G7 에 통과 · 승인값 없는 rc 0 을 승인 핀 일치 증서로 쓰지 않음.  우리 확인 = HEAD 1140 행 `.match` 그대로.  ⬜ 고칠지 = 1저자 (봉인 밖 실행기 · 한 줄 · 시험 먼저).",
+      "note": "판정문 §3 Q5 · Codex = 남은 P3 형식 경계 · 새 커밋 우회 P1 아님 · L214P-01 종결을 막지 않음 · *\"모든 발사 경로가 SHA 형식에 fail-closed\"* 일반화는 반박됨.  운영 (기존 실행표대로) = 전체 40자리 `--approved-sha` 를 늘 주고 두 실제 manifest 를 F7 · G7 에 통과 · 승인값 없는 rc 0 을 승인 핀 일치 증서로 쓰지 않음.  우리 확인 = HEAD 1140 행 `.match` 그대로.  ⬜ 고칠지 = 1저자 (봉인 밖 실행기 · 한 줄 · 시험 먼저).  ★ 1저자 10-28 밤 *\"다 권고대로\"* (권고 정정) = 이번 214 발사는 B7 `35f032737` 그대로 (코드 무변경 · 지금 고치면 핀이 바뀌어 WSL 사전 점검을 다시 해야 함) · 발사 명령은 전체 40자리 승인 · 한 줄 수정 = 214 발사 뒤 (시험 먼저).",
       "evidence": [
         "docs/reviews/codex_lhs214_pin_syntax_review_20261028/codex_review_lhs214_pin_syntax_20261028.md"
       ]
