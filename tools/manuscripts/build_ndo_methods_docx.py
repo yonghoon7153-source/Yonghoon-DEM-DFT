@@ -12,13 +12,14 @@ B2O3 빌더 (2026-10-21 · 스크래치) 와 같은 방식: 템플릿의 styles�
 본문만 바꾼다 (이탤릭 절 제목 · 2 줄 간격 · 첫 줄 들여쓰기 · 글자 단위 아래/위첨자 · OMML 식 · 참고문헌).
 이 원고와 다른 점 (원고 [1] 의 Elsevier 꼴): 인용은 문장부호 앞의 보통 글자 [n] · 참고문헌은 제목·DOI 포함.
 `main` = 4.5 절 압축판 (식 없음) · `si` = Supplementary Material 의 Computational details (식 S1–S3).
-두 판이 처음 인용 순서의 참고문헌 14 개 한 목록을 같이 쓴다 (`--check` 가 본다).
+참고문헌 번호는 SI 가 정한다 (처음 인용 순서 · 14 개 · REFS 순서와 같아야 한다). 본문판은 쓰는 문헌만 남기고
+처음 인용 순서로 **다시 매긴다** (`renumber` · 지금은 Marzari–Vanderbilt 가 빠져 13 개). `--check` 가 둘 다 본다.
 `--md` 는 같은 문단을 md 로 (유니코드 첨자가 있으면 그것 · 없으면 <sub>/<sup>) — kb 문서 본문을 이 한 원본에서 뽑는다.
 `--verify-md` 는 kb 문서 안에 두 판의 md 문단이 **글자 그대로** 다 있는지 본다 (손으로 고친 쪽이 갈라지면 잡는다).
 
 미니 표기: *italic*  _{아래첨자}  ^{위첨자}.
-⛔ 이 도구가 못 하는 것: 문법·사실은 안 본다 · 문단 순서를 바꿔도 번호를 다시 매기지 않는다 (`--check` 는
-순서가 틀린 것만 알린다) · 원고 자체의 참고문헌 목록에 합치지 않는다 · 식 (S1–S3) 은 md 쪽 LaTeX 와
+⛔ 이 도구가 못 하는 것: 문법·사실은 안 본다 · SI 문단 순서를 바꿔도 SI 번호는 다시 매기지 않는다 (SI 가 기준 번호라
+`--check` 가 순서 어긋남만 알린다) · 원고 자체의 참고문헌 목록에 합치지 않는다 · 식 (S1–S3) 은 md 쪽 LaTeX 와
 대조하지 않는다 (OMML 은 이 파일 안의 정의가 정본) · Word 렌더 확인은 하지 않는다 (LibreOffice 로 따로).
 """
 import re, sys, shutil, zipfile, os, tempfile
@@ -26,20 +27,20 @@ from xml.sax.saxutils import escape
 
 # ---- content ------------------------------------------------------------------------
 P_MAIN = [
-"DFT calculations were performed with Quantum ESPRESSO [1–3] using the Perdew–Burke–Ernzerhof (PBE) generalized gradient approximation (GGA) [4], with kinetic energy cutoffs of 60 and 480 Ry for the wavefunctions and charge density, respectively. The Brillouin zone was sampled with Γ-centered Monkhorst–Pack *k*-point grids [5]; the grids, smearing parameters, and convergence thresholds of each calculation are given in the Supplementary Material.",
-"Li migration barriers (Fig. 3f,g) were calculated with the climbing-image nudged elastic band method [6] using seven images, for a Li vacancy hopping between nearest-neighbor Li sites. Li_{2}S was modeled with a 3 × 3 × 3 supercell of antifluorite Li_{2}S (mp-1153 in the Materials Project database [7]) containing a negatively charged Li vacancy compensated by a uniform background charge, and the Li–Nd alloy with a 2 × 2 × 2 supercell of an ordered BiF_{3}-type Li_{3}Nd model (mp-976264) containing a neutral Li vacancy. Ultrasoft pseudopotentials from the GBRV library were used for Li and S [8], and a projector augmented-wave (PAW) dataset from PSlibrary with the Nd 4*f* electrons frozen in the core was used for Nd [9]. Gaussian smearing was applied to Li_{2}S and Marzari–Vanderbilt smearing [10] to the metallic Li_{3}Nd.",
-"The band gaps of Li_{2}S, Li_{3}P, Li_{2}O, Li_{3}PO_{4}, and LiCl (Fig. 3h) were calculated for structures taken from the Materials Project database [7], with GBRV ultrasoft pseudopotentials for Li, S, and Cl [8] and PSlibrary datasets for P and O [9]. The lattice parameters and atomic positions were fully relaxed, and the band gaps were obtained from the Kohn–Sham eigenvalues at the valence band maximum and conduction band minimum of non-self-consistent calculations with fixed occupations on denser *k*-point grids.",
-"Interfacial reaction energies between the SEs and NCM (LiNi_{0.8}Co_{0.1}Mn_{0.1}O_{2}) were calculated as a function of voltage (Fig. 5e,f) following the approach of Richards et al. [11], as implemented in pymatgen [12], with the mixed GGA/GGA+*U* energies of the Materials Project database [7,13]. LPSCl_{1.6} (Li_{5.4}PS_{4.4}Cl_{1.6}) and NdO-LPSCl_{1.6} (Li_{5.44}Nd_{0.02}P_{0.98}S_{4.37}O_{0.03}Cl_{1.6}) were represented by the convex-hull energies at their compositions. The interface was treated as open to Li at a chemical potential *μ*_{Li}(*φ*) = *μ*_{Li}^{0} − *eφ* [14], where *μ*_{Li}^{0} is the chemical potential of Li metal, *e* is the elementary charge, and *φ* is the applied voltage vs. Li/Li^{+} (2.5–4.5 V). At each voltage, the reaction energy was taken as the most negative grand-potential reaction energy over all SE/NCM mixing ratios, normalized per atom excluding Li, and the corresponding reaction products were identified.",
+"DFT calculations were performed with Quantum ESPRESSO [1–3] using the Perdew–Burke–Ernzerhof (PBE) generalized gradient approximation (GGA) [4], with kinetic energy cutoffs of 60 and 480 Ry for the wavefunctions and charge density, respectively, and Monkhorst–Pack *k*-point grids [5]. Further computational details are given in the Supplementary Material.",
+"Li migration barriers (Fig. 3f,g) were calculated with the climbing-image nudged elastic band method [6] for a Li vacancy hopping between nearest-neighbor Li sites. Li_{2}S was modeled with a 3 × 3 × 3 supercell of antifluorite Li_{2}S containing a negatively charged Li vacancy, and the Li–Nd alloy with a 2 × 2 × 2 supercell of an ordered BiF_{3}-type Li_{3}Nd model containing a neutral Li vacancy, starting from the Materials Project structures [7]. Ultrasoft GBRV pseudopotentials were used for Li and S [8], and a projector augmented-wave (PAW) dataset from PSlibrary with the Nd 4*f* electrons frozen in the core was used for Nd [9].",
+"The band gaps of Li_{2}S, Li_{3}P, Li_{2}O, Li_{3}PO_{4}, and LiCl (Fig. 3h) were obtained from the Kohn–Sham eigenvalues at the valence band maximum and conduction band minimum of non-self-consistent calculations with fixed occupations, after full relaxation of the Materials Project structures [7]; GBRV ultrasoft pseudopotentials were used for Li, S, and Cl [8], and PSlibrary datasets for P and O [9].",
+"Interfacial reaction energies between the SEs and NCM were calculated as a function of voltage (Fig. 5e,f) following the approach of Richards et al. [11], as implemented in pymatgen [12], with the mixed GGA/GGA+*U* energies of the Materials Project database [7,13]. The SEs were represented by the convex-hull energies at their compositions, and the interface was treated as open to Li at a chemical potential *μ*_{Li}(*φ*) = *μ*_{Li}^{0} − *eφ* [14], where *μ*_{Li}^{0} is the chemical potential of Li metal, *e* is the elementary charge, and *φ* is the applied voltage vs. Li/Li^{+}. At each voltage, the reaction energy was taken as the most negative grand-potential reaction energy over all SE/NCM mixing ratios, and the corresponding reaction products were identified.",
 "The band gaps of the Nd-containing CEI components (Fig. SX) were calculated with the same procedure, but with PAW datasets from PSlibrary for all elements [9], with the Nd 4*f* electrons frozen in the core.",
 ]
 
 P_SI = [
-"DFT calculations were performed with Quantum ESPRESSO [1–3] using the Perdew–Burke–Ernzerhof (PBE) generalized gradient approximation (GGA) [4]. In all calculations, kinetic energy cutoffs of 60 and 480 Ry were used for the wavefunctions and charge density, respectively, the Brillouin zone was sampled with Γ-centered Monkhorst–Pack *k*-point grids [5], and self-consistent field (SCF) calculations were converged to 10^{−8} Ry with a mixing factor of 0.3.",
-"Li migration barriers were calculated with the climbing-image nudged elastic band (CI-NEB) method [6] for a Li vacancy hopping between nearest-neighbor 8*c* sites. Antifluorite Li_{2}S (*Fm*3̅*m*; mp-1153 in the Materials Project database [7]) and an ordered BiF_{3}-type Li_{3}Nd model (*Fm*3̅*m*; mp-976264, a hypothetical phase above the convex hull) were first relaxed with variable cell. Ultrasoft pseudopotentials from the GBRV library (v1.4) were used for Li and S [8], and the PAW dataset Nd.pbe-spdn-kjpaw_psl.1.0.0 from PSlibrary, in which the Nd 4*f* electrons are frozen in the core, was used for Nd [9]. Supercells of the primitive cells were then constructed, 3 × 3 × 3 for Li_{2}S (80 atoms after vacancy creation, shortest lattice translation 12.1 Å, hop distance 2.85 Å) and 2 × 2 × 2 for Li_{3}Nd (31 atoms, shortest lattice translation 10.4 Å, hop distance 3.67 Å), and both were sampled with a 3 × 3 × 3 *k*-point grid. Because Li_{2}S is an insulator, its vacancy was modeled in the negatively charged state (V_{Li}^{−}; one extra electron per supercell compensated by a uniform background charge, without a finite-size correction) with Gaussian smearing of 0.005 Ry, whereas the vacancy in metallic Li_{3}Nd was modeled as neutral with Marzari–Vanderbilt smearing [10] of 0.02 Ry.",
-"The two vacancy endpoints were relaxed at fixed cell until all force components were below 10^{−3} Ry bohr^{−1}. The minimum-energy path was represented by seven images and optimized with the Broyden scheme, with the climbing image selected automatically, until the force component perpendicular to the path fell below 0.05 eV Å^{−1}. For Li_{3}Nd, both vacancy endpoints reconstructed substantially on relaxation from the ideal lattice, so the barrier refers to this locally reconstructed 2 × 2 × 2 model. A check with a 3 × 3 × 3 supercell (107 atoms) was attempted, but its vacancy endpoints also reconstructed substantially and the CI-NEB between them did not converge; the Li_{3}Nd barrier is therefore not converged with respect to cell size.",
-"The band gaps of the interphase components in Fig. 3h were calculated for Li_{2}S (mp-1153, *Fm*3̅*m*), Li_{3}P (mp-736, *P*6_{3}/*mmc*), Li_{2}O (mp-1960, *Fm*3̅*m*), β-Li_{3}PO_{4} (mp-13725, *Pmn*2_{1}), and rock-salt LiCl (mp-22905, *Fm*3̅*m*), whose structures were taken from the Materials Project database [7]. Ultrasoft GBRV pseudopotentials (v1.4) were used for Li, S, and Cl [8], and PSlibrary datasets were used for P (ultrasoft, P.pbe-n-rrkjus_psl.1.0.0) and O (PAW, O.pbe-n-kjpaw_psl.0.1) [9]. The structures were relaxed with respect to both lattice parameters and atomic positions with Marzari–Vanderbilt smearing [10] of 0.01 Ry and a *k*-point spacing of at most 0.30 Å^{−1} (including the factor 2π). After an SCF calculation on the relaxed structure, a non-self-consistent calculation with fixed occupations was performed on a denser *k*-point grid (spacing of at most 0.15 Å^{−1}) with at least 35% more bands than occupied states, and the band gap was taken as the difference between the Kohn–Sham eigenvalues at the conduction band minimum and the valence band maximum.",
-"Interfacial reaction energies between the SEs and NCM (LiNi_{0.8}Co_{0.1}Mn_{0.1}O_{2}) were calculated following the approach of Richards et al. [11], with the GrandPotentialInterfacialReactivity class of pymatgen [12]. For each SE/NCM pair, the entries of the corresponding chemical system (Li–Ni–Co–Mn–P–S–O–Cl, with Nd added for NdO-LPSCl_{1.6}) were retrieved from the Materials Project database [7] with mixed GGA/GGA+*U* energies [13] (queried with the mp_api client in September 2026). LPSCl_{1.6} (Li_{5.4}PS_{4.4}Cl_{1.6}) and NdO-LPSCl_{1.6} (Li_{5.44}Nd_{0.02}P_{0.98}S_{4.37}O_{0.03}Cl_{1.6}), which are not in the database, were represented by the convex-hull energies at their compositions. The interface was treated as open to a Li reservoir whose chemical potential was set by the applied voltage *φ* (vs. Li/Li^{+}) through Eq. (S1) [14], where *μ*_{Li}^{0} is the energy per atom of Li metal (the lowest-energy elemental Li entry) and *e* is the elementary charge. With the grand potential of each phase defined by Eq. (S2), where *E* is its energy and *N*_{Li} is its number of Li atoms, the reaction energy at each voltage was obtained from Eq. (S3), where *x* (0 ≤ *x* ≤ 1) is the fraction of SE in the SE/NCM mixture, *Φ*_{eq}(*x*) is the grand potential of the equilibrium phases at the composition of the mixture, and *Φ*_{SE} and *Φ*_{NCM} are the grand potentials of the unreacted SE and NCM evaluated from their convex-hull energies; all grand potentials were normalized per atom excluding Li. The calculations were performed at *φ* = 2.5, 3.0, 3.5, 4.0, 4.3, and 4.5 V, and the reaction products were taken from the equilibrium phases at the minimizing *x*. At every voltage, the minimum for both SEs lies at an intermediate mixing fraction (0 < *x* < 1), that is, the reaction involves both the SE and NCM.",
-"The band gaps of the Nd-containing CEI components, including NdP_{5}O_{14} (mp-560681, *Pmna*), were calculated with the same procedure, but with PAW datasets from PSlibrary for all elements [9] (Li.pbe-sl-kjpaw_psl.1.0.0, P.pbe-n-kjpaw_psl.1.0.0, S.pbe-nl-kjpaw_psl.1.0.0, Cl.pbe-nl-kjpaw_psl.1.0.0, O.pbe-n-kjpaw_psl.0.1, and Nd.pbe-spdn-kjpaw_psl.1.0.0). Because the Nd 4*f* electrons are frozen in the core of the Nd dataset, the calculations were non-spin-polarized and no Hubbard *U* correction was applied. After relaxation, the residual pressures were within ±1 kbar.",
+"DFT calculations were performed with Quantum ESPRESSO [1–3] using the Perdew–Burke–Ernzerhof (PBE) generalized gradient approximation (GGA) [4]. Kinetic energy cutoffs of 60 and 480 Ry were used for the wavefunctions and charge density, respectively, the Brillouin zone was sampled with Γ-centered Monkhorst–Pack *k*-point grids [5], and self-consistent calculations were converged to 10^{−8} Ry.",
+"Li migration barriers were calculated with the climbing-image nudged elastic band (CI-NEB) method [6] for a Li vacancy hopping between nearest-neighbor 8*c* sites. Antifluorite Li_{2}S (*Fm*3̅*m*; mp-1153 in the Materials Project database [7]) and an ordered BiF_{3}-type Li_{3}Nd model (*Fm*3̅*m*; mp-976264, a hypothetical phase above the convex hull) were first relaxed with variable cell. Ultrasoft GBRV pseudopotentials were used for Li and S [8], and a projector augmented-wave (PAW) dataset from PSlibrary with the Nd 4*f* electrons frozen in the core was used for Nd [9]. The vacancies were placed in 3 × 3 × 3 (Li_{2}S, 80 atoms) and 2 × 2 × 2 (Li_{3}Nd, 31 atoms) supercells of the primitive cells, sampled with a 3 × 3 × 3 *k*-point grid. The vacancy in the insulating Li_{2}S was modeled in the negatively charged state (V_{Li}^{−}) with a uniform compensating background charge and Gaussian smearing of 0.005 Ry, whereas that in the metallic Li_{3}Nd was modeled as neutral with Marzari–Vanderbilt smearing [10] of 0.02 Ry.",
+"The two vacancy endpoints were relaxed at fixed cell until all force components were below 10^{−3} Ry bohr^{−1}, and the minimum-energy path, represented by seven images, was optimized until the force perpendicular to the path fell below 0.05 eV Å^{−1}. For Li_{3}Nd, both vacancy endpoints reconstructed substantially on relaxation from the ideal lattice, so the barrier refers to this locally reconstructed 2 × 2 × 2 model. A check with a 3 × 3 × 3 supercell was attempted, but its vacancy endpoints also reconstructed substantially and the CI-NEB between them did not converge; the Li_{3}Nd barrier is therefore not converged with respect to cell size.",
+"The band gaps of the interphase components in Fig. 3h were calculated for Li_{2}S (mp-1153, *Fm*3̅*m*), Li_{3}P (mp-736, *P*6_{3}/*mmc*), Li_{2}O (mp-1960, *Fm*3̅*m*), β-Li_{3}PO_{4} (mp-13725, *Pmn*2_{1}), and rock-salt LiCl (mp-22905, *Fm*3̅*m*), starting from the Materials Project structures [7]. Ultrasoft GBRV pseudopotentials were used for Li, S, and Cl [8], and PSlibrary datasets for P (ultrasoft) and O (PAW) [9]. The structures were fully relaxed with Marzari–Vanderbilt smearing [10] of 0.01 Ry and a *k*-point spacing of 0.30 Å^{−1}, and the band gap was obtained from the Kohn–Sham eigenvalues at the valence band maximum and conduction band minimum of a non-self-consistent calculation with fixed occupations on a denser *k*-point grid (spacing 0.15 Å^{−1}).",
+"Interfacial reaction energies between the SEs and NCM (LiNi_{0.8}Co_{0.1}Mn_{0.1}O_{2}) were calculated following the approach of Richards et al. [11], as implemented in pymatgen [12], using Materials Project energies [7] in the mixed GGA/GGA+*U* scheme [13]. LPSCl_{1.6} (Li_{5.4}PS_{4.4}Cl_{1.6}) and NdO-LPSCl_{1.6} (Li_{5.44}Nd_{0.02}P_{0.98}S_{4.37}O_{0.03}Cl_{1.6}) were represented by the convex-hull energies at their compositions. The interface was treated as open to Li, with the Li chemical potential set by the applied voltage *φ* (vs. Li/Li^{+}) through Eq. (S1) [14], where *μ*_{Li}^{0} is the chemical potential of Li metal and *e* is the elementary charge. With the grand potential of each phase defined by Eq. (S2), where *E* is its energy and *N*_{Li} is its number of Li atoms, the reaction energy was obtained from Eq. (S3), where *x* is the fraction of SE in the SE/NCM mixture, *Φ*_{eq}(*x*) is the grand potential of the equilibrium phases of the mixture, and *Φ*_{SE} and *Φ*_{NCM} are those of the unreacted SE and NCM; all grand potentials were normalized per atom excluding Li. The calculations were performed at six voltages between 2.5 and 4.5 V, and the reaction products were taken from the equilibrium phases at the minimizing *x*.",
+"The band gaps of the Nd-containing CEI components, including NdP_{5}O_{14} (mp-560681, *Pmna*), were calculated with the same procedure, but with PAW datasets from PSlibrary for all elements [9]. Because the Nd 4*f* electrons are frozen in the core of the Nd dataset, the calculations were non-spin-polarized and no Hubbard *U* correction was applied.",
 ]
 
 REFS = [
@@ -78,6 +79,7 @@ def cited(text):
 
 
 def check(paras, n_refs, label):
+    """SI 용 — 처음 인용 순서가 오름차순이고 1..n_refs 가 빠짐없이 쓰였는가 (SI 가 번호를 정한다)."""
     seq, seen, errs = [], set(), []
     for p in paras:
         for n in cited(p):
@@ -92,14 +94,66 @@ def check(paras, n_refs, label):
     return errs
 
 
+def renumber(paras, refs=None):
+    """본문판 용 — 쓰는 문헌만 처음 인용 순서로 1, 2, … 로 다시 매긴다. (새 문단, 새 문헌 목록) 을 돌려준다.
+
+    [1–3] · [7,13] 꼴을 다시 쓴다 (셋 이상 연속이면 범위, 아니면 쉼표). 목록 밖 번호는 ValueError.
+    """
+    refs = REFS if refs is None else refs
+    order = []
+    for p in paras:
+        for n in cited(p):
+            if n not in order:
+                order.append(n)
+    bad = [n for n in order if not 1 <= n <= len(refs)]
+    if bad:
+        raise ValueError(f"citations without a reference: {bad}")
+    mp = {g: k + 1 for k, g in enumerate(order)}
+
+    def fmt(nums):
+        nums, out, a = sorted(set(nums)), [], 0
+        while a < len(nums):
+            b = a
+            while b + 1 < len(nums) and nums[b + 1] == nums[b] + 1:
+                b += 1
+            out.append(f"{nums[a]}–{nums[b]}" if b - a >= 2 else ",".join(str(v) for v in nums[a:b + 1]))
+            a = b + 1
+        return "[" + ",".join(out) + "]"
+
+    new = [re.sub(r"\[\d+(?:\s*[–,]\s*\d+)*\]", lambda m: fmt([mp[n] for n in cited(m.group(0))]), p)
+           for p in paras]
+    return new, [refs[g - 1] for g in order]
+
+
+def check_all():
+    errs = check(P_SI, len(REFS), "si")
+    si, si_refs = renumber(P_SI)
+    if si != P_SI or si_refs != REFS:
+        errs.append("si: renumbering must be the identity (SI defines the reference numbers)")
+    try:
+        _, main_refs = renumber(P_MAIN)
+        if not main_refs:
+            errs.append("main: no citations")
+    except ValueError as e:
+        errs.append(f"main: {e}")
+    return errs
+
+
 def selftest():
     ok = True
     def t(c, m):
         nonlocal ok
         print(("  ok  " if c else "  FAIL ") + m); ok &= bool(c)
     t(cited("a [1–3] b [10,13] c [4].") == [1, 2, 3, 10, 13, 4], "cited() expands ranges and lists")
-    t(not check(P_MAIN, len(REFS), "main"), "main: ascending first citation, all 14 cited")
-    t(not check(P_SI, len(REFS), "si"), "si: ascending first citation, all 14 cited")
+    t(not check_all(), "si: ascending and complete (14) · main: renumbers cleanly")
+    nm, nr = renumber(P_MAIN)
+    t(len(nr) == 13 and REFS[9] not in nr and "[7,12]" in nm[3] and "[13]" in nm[3],
+      "main: Marzari–Vanderbilt dropped → 13 refs, [7,13]→[7,12] and [14]→[13]")
+    t(renumber(["a [2] b [5,7] c [1–3]."])[0] == ["a [1] b [2,3] c [1,4,5]."], "renumber(): first-appearance order, ranges and lists")
+    try:
+        renumber(["x [15]."]); t(False, "[negative] renumber() rejects a citation beyond the list")
+    except ValueError:
+        t(True, "[negative] renumber() rejects a citation beyond the list")
     # negative paths: the check must catch a swapped order and an uncited reference
     t(bool(check(["x [2] y [1]."], 2, "neg")), "[negative] out-of-order first citation is caught")
     t(bool(check(["x [1]."], 2, "neg")), "[negative] an uncited reference is caught")
@@ -116,7 +170,7 @@ def selftest():
     # verify_md: a complete document passes, a document with one word changed is caught
     d = tempfile.mkdtemp(prefix="ndo_md_")
     full = os.path.join(d, "full.md"); bad = os.path.join(d, "bad.md")
-    body = "\n\n".join(md(p) for p in P_MAIN + P_SI)
+    body = "\n\n".join(md(p) for p in renumber(P_MAIN)[0] + P_SI)
     open(full, "w", encoding="utf8").write(body)
     open(bad, "w", encoding="utf8").write(body.replace("seven images", "eight images", 1))
     t(verify_md(full) == [], "verify_md: every main/si paragraph found verbatim")
@@ -212,7 +266,7 @@ def verify_md(path):
     """kb 문서에 두 판의 md 문단이 글자 그대로 있는가. 없는 문단의 앞머리를 돌려준다."""
     text = open(path, encoding="utf8").read()
     miss = []
-    for label, paras in (("main", P_MAIN), ("si", P_SI)):
+    for label, paras in (("main", renumber(P_MAIN)[0]), ("si", P_SI)):
         for k, p in enumerate(paras, 1):
             if md(p) not in text:
                 miss.append(f"{label} 문단 {k}: {md(p)[:70]}…")
@@ -228,18 +282,19 @@ def build(tpl, out, variant):
         tpl_dir = tmp
     else:
         tpl_dir = tpl
+    paras, refs = renumber(P_MAIN if variant == "main" else P_SI)   # 본문판은 쓰는 문헌만 · 번호 다시
     if variant == "main":
-        body = [heading(HEAD_MAIN)] + [para(p) for p in P_MAIN]
+        body = [heading(HEAD_MAIN)] + [para(p) for p in paras]
         neq = 0
     else:
         body = [heading(HEAD_SI)]
-        for i, p in enumerate(P_SI):
+        for i, p in enumerate(paras):
             body.append(para(p))
             if i == EQ_AFTER_SI:
                 body += [eq_para(EQ_S1, "S1"), eq_para(EQ_S2, "S2"), eq_para(EQ_S3, "S3")]
         neq = 3
     body.append(heading("References"))
-    body += [para(f"[{i}]\t" + r, REF_PPR) for i, r in enumerate(REFS, 1)]
+    body += [para(f"[{i}]\t" + r, REF_PPR) for i, r in enumerate(refs, 1)]
 
     x = open(os.path.join(tpl_dir, "word", "document.xml"), encoding="utf8").read()
     head = x[: x.find("<w:body>") + len("<w:body>")]
@@ -259,10 +314,9 @@ def build(tpl, out, variant):
     shutil.rmtree(work)
     if tmp:
         shutil.rmtree(tmp)
-    paras = P_MAIN if variant == "main" else P_SI
     words = sum(len(re.sub(r"[*_^{}]", "", p).split()) for p in paras)
     print("wrote", out, os.path.getsize(out), "bytes;", variant, len(paras), "paragraphs,",
-          words, "words,", neq, "equations,", len(REFS), "references")
+          words, "words,", neq, "equations,", len(refs), "references")
 
 
 if __name__ == "__main__":
@@ -270,11 +324,12 @@ if __name__ == "__main__":
     if a[:1] == ["--selftest"]:
         sys.exit(0 if selftest() else 1)
     if a[:1] == ["--check"]:
-        errs = check(P_MAIN, len(REFS), "main") + check(P_SI, len(REFS), "si")
-        print("\n".join(errs) or "citations ok (main and si: ascending, all 14 cited)")
+        errs = check_all()
+        n_main = len(renumber(P_MAIN)[1]) if not errs else "?"
+        print("\n".join(errs) or f"citations ok (si: ascending, all {len(REFS)} cited · main: renumbered, {n_main} refs)")
         sys.exit(1 if errs else 0)
     if a[:1] == ["--md"]:
-        for p in (P_MAIN if a[1] == "main" else P_SI):
+        for p in renumber(P_MAIN if a[1] == "main" else P_SI)[0]:
             print(md(p) + "\n")
         sys.exit(0)
     if a[:1] == ["--verify-md"]:
