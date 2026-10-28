@@ -541,6 +541,9 @@ for i in idx:
         if hit('oom_after_mark'):                  # ★ 10-27 묶음 C1b — 첫 풀이 끝 표지 뒤 GPU 메모리 부족 (payload 없음 · 자원 원인 · 재실행 자격)
             print('cupy.cuda.memory.OutOfMemoryError: out of memory allocating 1024 bytes (fake)')
             sys.exit(1)
+        if hit('illegal_after_mark'):              # ★ 10-28 (REPORT_C §11 ⑧) — 표지 뒤 GPU 잘못된 주소 접근 (이 낱말 하나만 · 다른 자원 낱말 없음 · 코드 결함일 수 있다)
+            print('CUDA_ERROR_ILLEGAL_ADDRESS: an illegal memory access was encountered (fake)')
+            sys.exit(1)
         if hit('sleep_after_mark'):                # ★ 10-27 묶음 C1b — 표지 뒤 오래 (시간 초과 = 결과 뒤 · 재실행 자격)
             time.sleep(float(hit('sleep_after_mark').get('s', 30.0)))
     json.dump({'mpm_metrics': {'step3': st}}, open(os.path.join(out, _an), 'w'))
@@ -8010,6 +8013,44 @@ def t_AL19():
             'timeout': ('TIME_LIMIT', 'timeout', 'post', True), 'signal': ('RUNNER_RC', 'signal', 'post', True)}
     got = {k: (v[0], v[1].get('cause'), v[1].get('side'), v[1].get('resume_ok')) for k, v in out.items()}
     return got == want, got
+
+
+ILLEGAL_WORD = 'CUDA_ERROR_ILLEGAL_ADDRESS'
+
+
+@check('AL19b', '★ 10-28 (REPORT_C §11 ⑧ · 1저자 10-28 "Rint 권고대로") 자원 낱말 표 — 표지 뒤 러너 로그에 CUDA_ERROR_ILLEGAL_ADDRESS 만 (표의 다른 '
+                '낱말 없음 · 코드 결함일 수 있다) = 원인 runner_rc (resource 아님) · 결과 뒤 · 재실행 자격 False → --add --resume 1 = rc 3 '
+                'RESUME_NOT_ALLOWED (원장 무변경) · 대조 = 같은 꼴 GPU 메모리 부족 = resource · 자격 True · --resume 받음 (rc 0)')
+def t_AL19b():
+    if not chain_c1b2():
+        return False, '사슬에 재실행 실행 (ResumeRunner) 이 없다'
+
+    def go():
+        out = {}
+        for tag, do in (('ill', 'illegal_after_mark'), ('oom', 'oom_after_mark')):
+            d, _rc, _so = led_new(f'AL19b_{tag}')
+            _rc1, n1, _s1 = led_add(d, 'ladder:P0')
+            a = lad_att(f'AL19b_{tag}', world(f'AL19b_{tag}', dict(PW, faults=[{'do': do, 'match': {'rj': 'inf'}}])), d, n1)
+            run = (((a.get('sum') or {}).get('stop') or {}).get('run'))
+            lp = a['out'] / 'logs' / f'{run}.log'
+            log = lp.read_text(encoding='utf-8', errors='replace') if run and lp.is_file() else ''
+            raw = led_raw(d)
+            rc_add, _n2, so_add = led_add(d, 'ladder:P0', resume=n1)
+            out[tag] = {'stop': stop_code(a), 'res': led_result(d, 1) or {}, 'log': log, 'rc_add': rc_add,
+                        'refused': 'RESUME_NOT_ALLOWED' in so_add, 'ledger_same': led_raw(d) == raw}
+        return out
+    r = scen('AL19b', go)
+    ill, oom = r['ill'], r['oom']
+    others = [w for w in RR.RESOURCE_WORDS if w != ILLEGAL_WORD and w in ill['log']]
+    ri, ro = ill['res'], oom['res']
+    ok = (ILLEGAL_WORD in ill['log'] and not others
+          and ill['stop'] == 'RUNNER_RC' and ri.get('cause') == 'runner_rc' and ri.get('side') == 'post' and ri.get('resume_ok') is False
+          and ill['rc_add'] == 3 and ill['refused'] and ill['ledger_same']
+          and oom['stop'] == 'RUNNER_RC' and ro.get('cause') == 'resource' and ro.get('side') == 'post' and ro.get('resume_ok') is True
+          and oom['rc_add'] == 0 and not oom['ledger_same'])
+    return ok, {'ill': (ill['stop'], ri.get('cause'), ri.get('side'), ri.get('resume_ok'), ill['rc_add'], ill['refused'], ill['ledger_same'],
+                        ILLEGAL_WORD in ill['log'], others),
+                'oom': (oom['stop'], ro.get('cause'), ro.get('side'), ro.get('resume_ok'), oom['rc_add'], oom['ledger_same'])}
 
 
 @check('AL12d', '★ 10-27 묶음 C1b (Q9 §3-5 R4-07 · 구현과 함께 · 변이로 검증) — 곁가지를 `merge -s ours` 로 붙여 조상으로 만든 꼴: ⓐ 곁가지에서 시작한 시도 (시작 '
