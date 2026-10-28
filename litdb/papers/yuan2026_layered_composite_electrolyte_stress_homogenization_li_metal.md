@@ -15,7 +15,7 @@
 > slug `yuan2026_layered_composite_electrolyte_stress_homogenization_li_metal` · DOI `10.1038/s41467-026-78129-0` · type `exp (PEO-LiTFSI + 비정질 2D SiO₂ 나노시트 층상막 · 파우치 압력막 응력지도 · 나노압입/AFM/인장 · 전기화학 · XPS/⁷Li NMR/Raman/FTIR/EPR) + FEM (Ansys LS-DYNA 선형탄성) + 위상장 PFM (COMSOL 6.0) + DFT 보조 (DMol3 PBE 결합에너지 2개 + CDD 그림)` · PDF `litdb/inbox/Yuan 2026 - Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0).pdf` (본문 15 pp) + `… Sup) … SI.pdf` (SI 65 pp: 계산 방법 pp.2–9 · `Fig. S1`–`S40` · `Table S1`–`S12`) + `… Sup2 DFT structures ….zip` (구조 7 파일) + `… Sup3 data ….xlsx` (원자료 22 시트) · digested `2026-10-05` · status ✅ · 태그 **[외부·고분자 전해질]**
 
 > elements: Li, Si, O, C, H, N, F, S
-> methods: DFT, elastic, ESW, XPS, Raman
+> methods: DFT, elastic, ESW, XPS, Raman, NMR
 
 > **저자**: **Qunyao Yuan**¹ · Zhe-Tao Sun²³ · Gang Wang¹ · Ce Zhang¹ · Junyu Hou¹ · Changsheng Song¹ · Wu Sun¹ · Yuanfan Gu¹ · Tianke Zhu¹ · Zhaoyu Wen¹ · Xingyu Lei¹ · Yun Song¹ · Yongji Gong⁴⁵ · Dalin Sun¹ · **Shou-Hang Bo**²⁶ · **Xinyong Tao**⁷⁸\* · **Jie Zhao**¹\* — ¹Fudan 고분자분자공학 국가중점실험실 · 스마트소재·미래에너지학원 ²SJTU 미래배터리연구센터 ³UM–SJTU 공동학원 ⁴⁵Beihang ⁶SJTU 화학·화공학원 ⁷⁸浙江工业大学(ZJUT) · **접수 2024-09-13 · 수락 2026-09-16 (심사 2 년)** · *Article in Press* (최종 편집본 아님 — 인용 시 지위를 밝힌다) · OA **CC BY-NC-ND 4.0** · 자금: 국가 R&D 2022YFB2502000 · NSFC 52225208·52471223·22561142235 · 상하이 STCSM 23160714000·23520750400 · 박사후 2022TQ0065·2023M730614 · 이해상충 없음 · 심사 파일 공개 · **원자료(Sup3) + DFT 최적화 구조(Sup2) 공개**.
 > 기여: 위상장 = **Z.-T. Sun · S.-H. Bo**(SJTU) · 재료·전기화학 = Q. Yuan 외 · TGA·나노압입 = Y.-F. Gu · 압력막 시험 = IEST 사 기술지원(사사). **FEM·DFT 담당자는 기여란에 없다.**

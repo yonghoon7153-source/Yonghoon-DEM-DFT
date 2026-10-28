@@ -4403,6 +4403,7 @@ METHOD_MAP = {
     "neb": "neb", "ci-neb": "neb", "nudged elastic band": "neb",
     "esw": "esw", "grand-potential": "esw", "grand potential": "esw",
     "adhesion": "adhesion",
+    "nmr": "nmr_shift", "mas nmr": "nmr_shift", "solid-state nmr": "nmr_shift", "chemical shift": "nmr_shift",
 }
 _PSYMS = {s[0] for s in PERIODIC}
 
@@ -4497,6 +4498,7 @@ GLOSSARY_TOKENS = {
     "esw": ["electrochemical stability window", "grand potential", "grand-potential", "stability window"],
     "adhesion": ["work of adhesion", "interfacial energy", "adhesion energy"],
     "mlip": ["mlip", "machine-learned", "foundation model", "sevennet", "uma", "chgnet", "m3gnet", "neural network potential"],
+    "nmr_shift": ["nmr", "chemical shift", "magic angle spinning"],
 }
 
 def glossary_papers(term_id: str, limit: int = 14) -> list:

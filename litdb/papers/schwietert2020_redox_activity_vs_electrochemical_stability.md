@@ -8,7 +8,7 @@
 > slug `schwietert2020_redox_activity_vs_electrochemical_stability` · DOI `10.1038/s41563-019-0576-0` · type `DFT(VASP-PBE) + AIMD + 실험(전기화학·XRD·ssNMR)` · PDF `litdb/inbox/6. NatMater_2020_Schwietert_Clarifying_redox_activity_vs_ESW_MAIN.pdf` (본문 12 pp = 기사 8 pp + Methods 2 pp + Extended Data 2 pp) + `6. Sup) NatMater_2020_Schwietert_Clarifying_redox_SI.pdf` (SI 19 pp, Supplementary Fig 1–9 · Supplementary Table 1–7) · digested `2026-09-22` · status ✅ · 태그 **[외부·🔴 우리 §B 최대 반론·아지로다이트 정면]**
 
 > elements: Li, P, S, Cl, O, La, Zr, Al, Ge, In, C, Ni, Co, Mn
-> methods: DFT, AIMD, ESW
+> methods: DFT, AIMD, ESW, NMR
 
 > **저자**: Tammo K. Schwietert¹`‡`, Violetta A. Arszelewska¹`‡`, Chao Wang¹, Chuang Yu¹, Alexandros Vasileiadis¹, Niek J. J. de Klerk¹, Jart Hageman¹, Thomas Hupfer², Ingo Kerkamm², Yaolin Xu¹, Eveline van der Maas¹, Erik M. Kelder¹, **Swapna Ganapathy**¹\*, **Marnix Wagemaker**¹\*
 > ¹ Storage of Electrochemical Energy, Faculty of Radiation Science and Technology, **TU Delft** (Mekelweg 15, 2929JB Delft, NL) · ² **Robert Bosch GmbH**, Corporate Sector Research and Advance Engineering (Renningen) · `‡` Schwietert·Arszelewska 공동 1저자

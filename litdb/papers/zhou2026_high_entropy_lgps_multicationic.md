@@ -43,7 +43,7 @@
 
 
 > elements: Li, Ge, Si, Sn, Ti, W, P, S
-> methods: dft, aimd, neb, elf, msd, arrhenius, esw, xps, raman, functional, kpoint, pseudo
+> methods: dft, aimd, neb, elf, msd, arrhenius, esw, xps, raman, functional, kpoint, pseudo, nmr
 
 ---
 

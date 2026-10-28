@@ -6,9 +6,9 @@
 > (본문 12 pp 전수 + **SI 38 pp 전수** 정독 · 그림 36장 크로핑 · **본문 `Fig. 1`–`Fig. 4` + `Fig. S8` 고해상 실물 판독**)
 >
 > elements: Li, P, S, B, H, Cl, Co
-> methods: DFT, AIMD, MD
+> methods: DFT, AIMD, MD, NMR
 > *(⚠ 이 논문의 주력 기법인 **고체 NMR — MAS · SLR(1/T₁) · PFG · 2D EXSY** 는 webapp 용어집 어휘 목록에 없어
->  `methods:` 줄에 못 넣는다. 기법 설명은 §4.3·§6·§12 에 있다. 계산 쪽은 순수 AIMD 이고
+>  `methods:` 줄에 못 넣었다 → 2026-10-28 용어집에 `nmr_shift` (NMR 화학적 이동) 가 생겨 `NMR` 을 넣었다 (화학적 이동 카드 · SLR · PFG · EXSY 개별 항목은 아직 없다). 기법 설명은 §4.3·§6·§12 에 있다. 계산 쪽은 순수 AIMD 이고
 >  DOS/COHP/Bader/NEB/BVSE/탄성/포논/ESW 는 **전부 0건**이다.)*
 >
 > 🎤 **관련 발표**: `talks/lee2026_skku_mlip_materials_design.md` §99-10 대기열 **8번** · **덱 밖**(덱은 2026-07 자료집, 이 논문은 랩 발표목록 **[20]**) ·

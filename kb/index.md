@@ -1,12 +1,13 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-27 · managed-files: 549
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-28 · managed-files: 550
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 340건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 341건)
+- 2026-10-28 · `kb/concepts/nmr_shift.md` — NMR 화학적 이동 읽기 — 차폐 · ppm · up-field · 확정 (개념 카드)
 - 2026-10-26 · `kb/reports/weekly_2026_10_25.md` — 주간 정리 2026-10-19 ~ 10-25 (주간보고 초안) · 초안 (2026-10-26 · 도는 계산은 마지막 실측 기준 — kg…
 - 2026-10-26 · `kb/projects/handoff_2026_10_26_return_to_origin.md` — 본 세션 복귀 카드 — 대피 브랜치 claude/evac-2026-10-22 (82 커밋) 를 friendly 로 · fast-forward (2026-10-26) · 발송 대기 — 사용자가 §0 프롬프트를 본 세션 (friendly) …
 - 2026-10-26 · `kb/projects/merge_request_2026_10_26.md` — 머지 요청 — 대피 브랜치 claude/evac-2026-10-22 → claude/friendly-meitner-lldvar (2026-10-26 · fast-forward · 충돌 0) · 최종 — 10-26 실측 (friendly 끝 = 대피 인계 카드 a…
@@ -26,11 +27,10 @@
 - 2026-10-20 · `kb/projects/handoff_2026_10_20_return_to_origin.md` — 본 세션 복귀 카드 — 서브 세션 (10-15 → 10-20) 134 커밋을 본 세션으로 (2026-10-20) · 발송 대기 — 사용자가 §0 프롬프트를 본 세션 (…CTzs) 에 붙…
 - 2026-10-20 · `kb/papers/b2o3_bo_lpsc16_methods_2026_10_20.md` — B₂O₃ 원고 (BO-LPSC1.6 · paper #2) Computational Methods — 기록대로 · compact 판 (BML 가이드 반영) · 진행
 - 2026-10-19 · `kb/reviews/li2s1a_CX_prompt_li2s_glass_control_readout_2026_10_14.md` — CX 프롬프트 — li2s 소셀 유리 대조 계 B 600 K 판독: 규칙 적용 갈래 c2 (N_B 1/5) · 결과 전 선택 셋 확인 · 트랙 끝 제안 · 발송됨 (사용자 · 발송일 기록 없음 · 발송판 `kb/project…
-- 2026-10-19 · `kb/reviews/li2s1a_CX_reply_li2s_glass_control_readout_2026_10_19.md` — 회신 CX — 외부 1저자 (li2s 소셀 유리 대조 계 B 600 K 판독): Q-CX-1 c2 확정 · 문장 안에 단서 (경계 4 · 미통과 0 · C1 5/5) · 잣대 비대칭 한 줄 · N_eff 옆 금지 문구 · Q-CX-2 셋 수용 (③ 대조 잡은 상시 절차로) · Q-CX-3a 650 K 두 계 + Tg 거리 한계 결과 전 · 3b 순차 · 3c 문턱 5 + 통과 런도 네 지표 분포 기록 · p90² 포화 예상 · 3d 이 카드로 닫음 + 닫기 전 비용 0 둘 (A T₅₀ 네 시드 · 결정 Li₃PS₄ 1.88 의 상·출처) · 담금질 발견 둘 · 미해결 목록 7 · 수령 (2026-10-19 · 사용자 붙여넣기 'li2S는 이렇게 회…
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
-## concepts/ (14)
+## concepts/ (15)
 - `kb/concepts/bandgap.md` — Band gap — 밴드 갭 (전자 밴드 간극)
 - `kb/concepts/beta-gate.md` — β 게이트 — 확산영역 판정 (diffusive-regime gate)
 - `kb/concepts/bvse.md` — BVSE — Bond Valence Site Energy (결합가 자리 에너지)
@@ -42,6 +42,7 @@
 - `kb/concepts/msd_reading.md` — MSD 그림을 읽는 법 — 창 · σ · Ea 는 서로 무엇인가  (2026-09-07 · 확정 (개념 카드))
 - `kb/concepts/neb.md` — NEB / CI-NEB — 최소에너지경로 (Nudged Elastic Band)
 - `kb/concepts/neb_intermediate_minimum.md` — NEB 경로 가운데가 움푹 파이는 것 — 중간 준안정 자리  (2026-09-01 · 설명문)
+- `kb/concepts/nmr_shift.md` — NMR 화학적 이동 읽기 — 차폐 · ppm · up-field  (2026-10-28 · 확정 (개념 카드))
 - `kb/concepts/ordered_vs_disordered.md` — Ordered vs Disordered — 어떤 LPSCl 구조로 계산할 것인가
 - `kb/concepts/oxidation_vs_mechanical.md` — 산화안정성과 기계적물성 — 정의부터 DFT 계산까지  (2026-08-13 · 확정)
 - `kb/concepts/sdcp_self_doping_explainer_2026_08_26.md` — 자기도핑(self-doping)이란 무엇인가 — 프로톤이 아니라 수소 원자를 뗀다  (2026-08-26 · 정리완료)
@@ -612,4 +613,4 @@
 ## elements/ — 118개 (생성물/템플릿, 목록 생략)
 ## templates/ — 3개 (생성물/템플릿, 목록 생략)
 
-## litdb/ — digest 451개 (정본 목록: litdb/INDEX.md)
+## litdb/ — digest 454개 (정본 목록: litdb/INDEX.md)

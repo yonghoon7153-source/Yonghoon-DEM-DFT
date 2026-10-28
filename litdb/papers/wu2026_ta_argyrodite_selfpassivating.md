@@ -3,7 +3,7 @@
 > slug `wu2026_ta_argyrodite_selfpassivating` · DOI `10.1002/anie.202523225` · type `exp 주도 + DFT/AIMD 보조 (+ COMSOL phase-field)` · PDF `82ea256b-c0d36890(본문) + bc1e6898(SI)` · digested `2026-08-19` · status ✅ · 태그 **[외부]**
 
 > elements: Li, P, S, Cl, Br, Ta, Nb, Mo, W, Ce, La, Fe, Y, Cr, As, Bi, Sb, Si, Ge, Sn, In, O, Ni, Co, Mn
-> methods: DFT, AIMD, NEB, ICOHP, DOS, ESW, XPS, Raman
+> methods: DFT, AIMD, NEB, ICOHP, DOS, ESW, XPS, Raman, NMR
 
 > **저자**: Xin Wu, Lixin Liang, Bingxuan Du, Yiwen Liu, Zhenjie Zhang, Yu Shi, **Shaochun Tang\***, **Guangjin Hou\***, **Haoshen Zhou\***, **Ping He\*** (Nanjing University 에너지과학공학 + 고체미구조 국가연구실 / 대련화물연구소 DICP) · *Angew. Chem. Int. Ed.* **2026**, 65, e23225 · VIP + Very Important Paper · 접수 2025-10-22 · 수리 2025-11-28 · online 2025-12-04 · 본문 12 pp + SI 36 pp (Fig 1–6, Fig S1–S26, Table S1–S12)
 

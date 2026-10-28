@@ -10,7 +10,7 @@
 > slug `he2026_cryo4dstem_chloride_migration_moisture_argyrodite` · DOI **n/a — 미출판 원고** (저널·접수/게재일·DOI 표기 없음, Word 내보내기 PDF · 문서 생성 2026-10-14) · type `exp 주 (cryo-4D-STEM + ML 상분류 · STEM-EDS/EELS · in situ XRD/Raman · ³¹P MAS NMR · 실시간 H₂S · EIS · Li–In‖NCM811 셀) + DFT 보조 (VASP PBE-D3 · CI-NEB 2 경로 · 평면평균 정전위 · Cl 제거 구조 이완)` · PDF 업로드 `c406c6e8-12._Visualizing_surface-reaction-driven_chloride_migration_and_cascading_failure_in_sulfide_solid_electrolytes.pdf` (본문 + SI **한 파일 83 pp** — 본문 p.1–25 · Methods p.26–35 · 참고문헌 52편 p.35–41 · 기여/이해충돌 p.41–42 · SI p.43–83 = `Fig. S1`–`Fig. S38` + `Table S1`·`Table S2`) · digested `2026-10-27` · status ✅ · 태그 **[외부]**
 
 > elements: Li, P, S, Cl, O, H, Si, F
-> methods: DFT, NEB, Raman
+> methods: DFT, NEB, Raman, NMR
 
 > **저자**: **Xiaoya He**¹²† · **Haoran Zhang**²† · **Xinyang Yue**³† · Hang Liu¹ · Zian Mao¹ · Jialong Wang⁴ · Min Liu⁴ · Shufen Chu¹ · **Liwei Chen**³\* · **Zhaoxin Yu**⁴\* · **Xi Liu**³⁵\* · **Chuying Ouyang**⁴\* · **Ziyang Ning**⁴\* · **Yujun Xie**¹\* (¹ 上海交通大学 SJTU Global Institute of Future Technology · ² SJTU Global College · ³ SJTU 화학화공학원 In-situ Center / Frontiers Science Center for Transformative Molecules · ⁴ **CATL** (宁德时代, Ningde) · ⁵ 宁夏大学 Ningxia Univ.) · †공동 1저자 · 교신 6인
 > · 자금: NSFC **12474186 · 52401159 · 52425101**, SJTU AI for Engineering Initiative, Shanghai Magnolia Talent Plan Pujiang Project **25PJD063**

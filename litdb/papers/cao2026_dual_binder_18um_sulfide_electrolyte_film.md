@@ -15,7 +15,7 @@
 > slug `cao2026_dual_binder_18um_sulfide_electrolyte_film` · DOI `10.1002/adma.74533` · type `exp (건식 열압연 막 · 전기화학 · 7Li ssNMR · cryo-TEM · 나노압입 · MIP) + DFT 보조 (VASP PBE-D3 CI-NEB 3건)` · PDF `litdb/inbox/Cao 2026 - Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533).pdf` (본문 11 pp) + `litdb/inbox/Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf` (SI 25 pp: Experimental · `Fig. S1`–`S24` · `Table S1`–`S3`) · digested `2026-10-03` · status ✅ · 태그 **[외부]**
 
 > elements: Li, P, S, Cl, C, H, O, N, F
-> methods: DFT, NEB, ESW, XPS, Raman
+> methods: DFT, NEB, ESW, XPS, Raman, NMR
 
 > **저자**: **Defu Cao**¹²‡ · **Chao Wang**³‡ · Weiping Li²⁴ · Yang Li¹ · Jiacheng Zhu²⁴ · Hong Liu⁵ · Zhaoxiang Wang²⁴ · **Yejing Li**⁶\* · **Hao Zhang**⁷\* · **Xuefeng Wang**²⁴\* · Ce-Wen Nan⁵ · **Li-Zhen Fan**¹\* (‡공동 1저자) — ¹USTB Institute for Advanced Materials and Technology ²IOP-CAS 응집물리 국가연구센터 ³Eastern Institute of Technology (Ningbo) ⁴UCAS ⁵Tsinghua 신세라믹 국가중점실험실 ⁶USTB 전기화학 에너지저장 북경중점실험실(SI 에는 'State Key Lab of Advanced Metallurgy') ⁷Chemical Defense Institute (Beijing) · 접수 2026-03-18 · 개정 06-27 · 수락 07-25 · **OA 아님** (© Wiley-VCH, 'rights for text and data mining … reserved') · 자금: 국가 R&D 2023YFB2503902 · NSFC 22479009·52402275 · 북경 NSF 2244094 · 데이터: "SI 에 있다" (원구조·NEB 경로 파일은 **없다**)
 >

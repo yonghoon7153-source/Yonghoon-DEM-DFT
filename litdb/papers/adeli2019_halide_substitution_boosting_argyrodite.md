@@ -5,7 +5,7 @@
 
 
 > elements: Br Cl Li O P S
-> methods: bvse, dft, esw, functional, mlip, msd
+> methods: bvse, dft, esw, functional, mlip, msd, nmr
 
 ---
 

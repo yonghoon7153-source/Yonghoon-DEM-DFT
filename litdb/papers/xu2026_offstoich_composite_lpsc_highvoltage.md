@@ -6,7 +6,7 @@
 
 > slug `xu2026_offstoich_composite_lpsc_highvoltage` · DOI `10.1016/j.cej.2026.182279` · type `exp 전용 (원자단위 계산 0 — DFT·MD·BVSE·NEB 전부 없음)` · PDF 업로드 `1e22aa66-11._Locally_off-stoichiometric_…pdf` (본문 11 pp · refs 47) + `153f9230-11._Sup_Locally_off-stoichiometric_…pdf` (SI 18 pp · `Fig. S1`–`S21` · `Table S1`–`S3`) · 사용자 목록 #11 · digested `2026-10-27` · status ✅
 > elements: Li, P, S, Cl, O, Ni, Co, Mn
-> methods: XPS, Raman
+> methods: XPS, Raman, NMR
 
 > **저자**: Jiajie Xu, Huajun Xu, Wenrui Hu, Qingkun Zhu, Qiong Zhang, Xinyou He, Wei Xu, Zhiming Xiao, **Xinghui Liang\***, **Guobao Xu\***, **Gang Wang\***, **Xing Ou\*** — 湘潭大 Xiangtan Univ. (재료학원 · 박막재료·소자 湖南省 중점실험실 · 미래기술학원) + 中南大 Central South Univ. (야금환경학원 · 교육부 첨단전지재료 공정연구센터) + Quzhou Huayou Cobalt New Mat. 접수 2026-06-16 · 수정 09-15 · 수락 09-21 · 온라인 09-22. 지원 NSFC 22205191·12002294 · 湖南省 자연과학기금 2022JJ40435 · 湖南省 교육청 22A0116. **데이터: *"Data will be made available on request."*** **[외부]**
 >

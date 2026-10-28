@@ -8,7 +8,7 @@
 > slug `wang2020_br_rich_argyrodite_fast_ion_conduction_origin` · DOI `10.1021/acs.chemmater.9b05331` · type `mixed — exp (EIS · lab XRD · ⁶Li/⁷Li/³¹P MAS NMR · ⁷⁹Br QCPMG · ⁶Li→⁷Li 추적자 교환) + DFT (VASP-PBE 구조 · GIPAW ⁶Li 화학이동) + AIMD (Li 밀도맵 2장) · ⚠ 배치별 점프율은 자체 계산이 아니라 de Klerk 2016 (Li₆PS₅Cl · 450 K) 표값 차용` · PDF 본문 `ae97ed2c/55d3846b` (8 pp, 원고 번호 cm9b05331) = `litdb/inbox/Wang2020 ChemMater Fast Ion Conduction and Its Origin in Li6-xPS5-xBr1+x.pdf` + SI `ae97ed2c/e3f79cfb` (5 pp · Table S1–S5 · Fig. S1–S3) = `litdb/inbox/Sup) Wang2020 ChemMater Fast Ion Conduction and Its Origin in Li6-xPS5-xBr1+x.pdf` · digested `2026-10-13` · status ✅ · 태그 **[외부]** · **사용자 논문 세미나 발표 논문 (2026-10)**
 
 > elements: Li, P, S, Br, I
-> methods: DFT, AIMD
+> methods: DFT, AIMD, NMR
 
 > **저자**: **Pengbo Wang**, Haoyu Liu, Sawankumar Patel, **Xuyong Feng**, Po-Hsiu Chien, **Yan Wang** (Samsung Research America · MIT DMSE), **Yan-Yan Hu\*** (Florida State Univ. 화학·생화학 + NHMFL 자기공명센터) · Received 2019-12-23 · Revised 2020-04-10 · Published 2020-04-10 · NSF DMR-1847038 · NMR 전부 NHMFL (NSF/DMR-1644779 + State of Florida) · 이해상충 없음 · **[외부]**.
 >

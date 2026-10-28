@@ -7,7 +7,7 @@
 > slug `feng2020_li_deficient_argyrodite_cl_disorder` · DOI `10.1016/j.ensm.2020.04.042` · type `mixed — exp (EIS · 랩 XRD + 싱크로트론 Rietveld(x=0 만) · 고체 NMR ⁶Li/⁷Li/³¹P/³⁵Cl · ⁶Li→⁷Li tracer) + 계산 (VASP PBE 구조최적화 · AIMD)` · PDF 본문 `f60d68ee` (7 pp, 67–73) + SI `2d8aa7f2` (8 pp, Fig. S1–S7 · Table S1–S2) · inbox `Feng2020 EnergyStorageMater Enhanced ion conduction … Li6-xPS5-xCl1+x.pdf` (+ `Sup) …`) · digested `2026-10-13` · status ✅ · 태그 **[외부]** · **사용자 논문 세미나 발표 논문 (2026-10)**
 
 > elements: Li, P, S, Cl
-> methods: DFT, AIMD
+> methods: DFT, AIMD, NMR
 
 > **저자**: **Xuyong Feng**ᵃ† · **Po-Hsiu Chien**ᵃᶜ† (공동 1저자) · Yan Wangᵇ · Sawankumar Patelᵃ · Pengbo Wangᵃ · Haoyu Liuᵃ · Marcello Immediato-Scuottoᵃ · **Yan-Yan Hu**ᵃᶜ\* — ᵃFlorida State Univ. 화학·생화학과 · ᵇ**Samsung Research America** Advanced Materials Lab (Burlington, MA) · ᶜNHMFL(국립고자기장연구소) CIMAR. 투고 2020-03-18 · 수정 04-22 · 승인 04-28 · 온라인 05-07. 지원 NSF DMR-1808517 · NHMFL(NSF/DMR-1644779 + 플로리다주) · 싱크로트론 XRD = Argonne APS 11-BM. CRediT 상 계산(formal analysis)은 **Yan Wang**(Samsung). 본문 참고문헌 26 · SI 참고문헌 12.
 >

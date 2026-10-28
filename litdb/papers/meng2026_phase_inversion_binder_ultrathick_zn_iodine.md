@@ -8,7 +8,7 @@
 > slug `meng2026_phase_inversion_binder_ultrathick_zn_iodine` · DOI `10.1002/adma.74986` · type `exp (상전환 phase-inversion 습식 전극 제조 · PES–PVP binder · slurry 캐스팅 · 1.5 mm 자립 후막 활성탄 양극 · in-situ 광학/UV–vis/Raman · EIS impedance · DSC · ¹H NMR · Zn–I₂ 코인/Ah 파우치 · 수계 액체 전해질) + 분자 DFT (Gaussian09 B3LYP-D3(BJ)/def2-TZVPP//def2-SVP · SMD 물 · 결합에너지·ΔG) + 고전 MD (GROMACS 2018.8 · Amber99SB/GAFF · SPC/E · 이온 전하 ×0.70); DEM · MPM 없음` · PDF `1ed4f473-10._Phase_Inversion-Engineered_Ultrathick_Electrodes_…_RoomSubzero_Temperatures.pdf` (본문 12 pp · 그림 5) + SI `e3da243c-10._Sup2_Phase_Inversion-Engineered_…pdf` (43 pp · Fig. S1–S35 · Table S1–S4) + SI 동영상 `6b109d87-10._Sup_…mp4` (**안 봄** — 본문에서 인용되지 않고 Supporting File 2 로만 목록에 있다) · digested `2026-10-27` · status ✅ · 태그 **[외부]**
 
 > elements: Zn, I, C, N, O, S, H
-> methods: DFT, MD, Raman
+> methods: DFT, MD, Raman, NMR
 
 > **저자**: Fanxiang Meng⁺ · Peiyao Wang⁺ (공동 1저자) · Zeheng Lv · Huadong Jiang · Qilong Wu · Minghao Zhang · Wenhao Yang · Xue Li · **Cheng Chao Li\*** · **Yang Yang\*** — ¹Xiamen Univ. (State Key Lab. of Physical Chemistry of Solid Surfaces · 화학화공학원) · ²Kunming Univ. of Science and Technology (Yunnan 리튬전지 국가지방공동공정연구센터) · ³Guangdong Univ. of Technology (화공경공업학원) · 교신 licc@gdut.edu.cn · yangyang419@xmu.edu.cn · *Advanced Materials* 2026; 0:e74986 · 접수 2026-06-24 · 수정 2026-08-15 · 수락 2026-09-07 · © Wiley-VCH (OA 아님) · NSFC 22579141 · 22379125 + 중앙고교기본과연업무비 20720250114 · 키워드 aqueous Zn–I₂ · high areal capacity · low-temperature energy storage · povidone–iodine
 >
