@@ -51,7 +51,7 @@ Interfacial reaction energies between the SEs and NCM (LiNi₀.₈Co₀.₁Mn₀
 
 The band gaps of the Nd-containing CEI components (Fig. SX) were calculated with the same procedure, but with PAW datasets from PSlibrary for all elements [9], with the Nd 4*f* electrons frozen in the core.
 
-## SI 전체판 — Computational details (약 910 단어 · Word `kb/papers/ndo_lpscl16_methods_SI_2026_10_28.docx`)
+## SI 전체판 — Computational details (약 870 단어 · Word `kb/papers/ndo_lpscl16_methods_SI_2026_10_28.docx`)
 
 > 본문판과 같은 참고문헌 14 개 · 식 셋 (S1–S3) 은 Word 에서 수식 개체다 (아래 LaTeX 는 같은 식).
 
@@ -61,7 +61,7 @@ DFT calculations were performed with Quantum ESPRESSO [1–3] using the Perdew�
 
 Li migration barriers were calculated with the climbing-image nudged elastic band (CI-NEB) method [6] for a Li vacancy hopping between nearest-neighbor 8*c* sites. Antifluorite Li₂S (*Fm*3̅*m*; mp-1153 in the Materials Project database [7]) and an ordered BiF₃-type Li₃Nd model (*Fm*3̅*m*; mp-976264, a hypothetical phase above the convex hull) were first relaxed with variable cell. Ultrasoft pseudopotentials from the GBRV library (v1.4) were used for Li and S [8], and the PAW dataset Nd.pbe-spdn-kjpaw_psl.1.0.0 from PSlibrary, in which the Nd 4*f* electrons are frozen in the core, was used for Nd [9]. Supercells of the primitive cells were then constructed, 3 × 3 × 3 for Li₂S (80 atoms after vacancy creation, shortest lattice translation 12.1 Å, hop distance 2.85 Å) and 2 × 2 × 2 for Li₃Nd (31 atoms, shortest lattice translation 10.4 Å, hop distance 3.67 Å), and both were sampled with a 3 × 3 × 3 *k*-point grid. Because Li₂S is an insulator, its vacancy was modeled in the negatively charged state (V<sub>Li</sub>⁻; one extra electron per supercell compensated by a uniform background charge, without a finite-size correction) with Gaussian smearing of 0.005 Ry, whereas the vacancy in metallic Li₃Nd was modeled as neutral with Marzari–Vanderbilt smearing [10] of 0.02 Ry.
 
-The two vacancy endpoints were relaxed at fixed cell until all force components were below 10⁻³ Ry bohr⁻¹. The minimum-energy path was represented by seven images and optimized with the Broyden scheme, with the climbing image selected automatically, until the force component perpendicular to the path fell below 0.05 eV Å⁻¹. For Li₃Nd, both vacancy endpoints reconstructed substantially on relaxation from the ideal lattice, so the barrier refers to this locally reconstructed 2 × 2 × 2 model. A larger-cell check was not possible, because the 3 × 3 × 3 CI-NEB did not converge and the 3 × 3 × 3 cells reconstructed substantially on relaxation; the Li₃Nd barrier is therefore not converged with respect to cell size. The cell-size convergence of the Li₂S barrier was not tested.
+The two vacancy endpoints were relaxed at fixed cell until all force components were below 10⁻³ Ry bohr⁻¹. The minimum-energy path was represented by seven images and optimized with the Broyden scheme, with the climbing image selected automatically, until the force component perpendicular to the path fell below 0.05 eV Å⁻¹. For Li₃Nd, both vacancy endpoints reconstructed substantially on relaxation from the ideal lattice; the barrier therefore refers to this locally reconstructed 2 × 2 × 2 model and is not converged with respect to cell size.
 
 The band gaps of the interphase components in Fig. 3h were calculated for Li₂S (mp-1153, *Fm*3̅*m*), Li₃P (mp-736, *P*6₃/*mmc*), Li₂O (mp-1960, *Fm*3̅*m*), β-Li₃PO₄ (mp-13725, *Pmn*2₁), and rock-salt LiCl (mp-22905, *Fm*3̅*m*), whose structures were taken from the Materials Project database [7]. Ultrasoft GBRV pseudopotentials (v1.4) were used for Li, S, and Cl [8], and PSlibrary datasets were used for P (ultrasoft, P.pbe-n-rrkjus_psl.1.0.0) and O (PAW, O.pbe-n-kjpaw_psl.0.1) [9]. The structures were relaxed with respect to both lattice parameters and atomic positions with Marzari–Vanderbilt smearing [10] of 0.01 Ry and a *k*-point spacing of at most 0.30 Å⁻¹ (including the factor 2π). After an SCF calculation on the relaxed structure, a non-self-consistent calculation with fixed occupations was performed on a denser *k*-point grid (spacing of at most 0.15 Å⁻¹) with at least 35% more bands than occupied states, and the band gap was taken as the difference between the Kohn–Sham eigenvalues at the conduction band minimum and the valence band maximum.
 
@@ -124,8 +124,9 @@ QE 는 공식 인용 안내대로 셋 (2020 = GPU 판 · gabia NEB 가 `qe-7.4.1
    SE · 양극 문장을 넓힌다 (값은 `db/properties/cei_figs/cei_reaction_energy_by_cathode_x002.csv` 에 다 있다 · LiMnO₂ 4.5 V 두 점은 끝점 = SE 자체 분해).
 6. **Fig. SX 의 Nd CEI 성분 (원고 빈칸)** — NdP₅O₁₄ 는 09-19 체인으로 계산했다 (사용자 10-28 *'ndp5o14도 계산하지 않았나'* → 맞다 · *Pmna* mp-560681 · SI 문단에 이름을 넣었다).
    값을 원고에 넣으면 단서 문장 (`HZ-cei-gap-ndp5o14-unreproduced`) 이 캡션이나 결과 쪽에 같이 가야 한다 (Methods 에는 값이 없다). 다른 후보 값 위치는 아래 출처 표.
-7. **SI 의 셀 크기 두 문장** — Li₃Nd 는 `D-2026-10-26-li3nd-neb-si-conditional` 의 SI 문장에서 마지막 꼬리 (*'…is not compared with other phases'*) 만 뺐다
-   (원고 본문이 Li₂S 와의 비교를 그대로 두기로 해서 — 사용자 10-27). Li₂S 한 줄은 `sei_neb.json` `v2/li2s` `why_not_absolute` ① 그대로. 남길지 뺄지는 사용자.
+7. ✅ **SI 의 셀 크기 문장** — 사용자 10-28 *'우리 안한거는 빼도 되는거 아니야?'* → '안 한 것' 두 문장 (3×3×3 시도가 안 된 경위 · Li₂S 셀 수렴 미시험) 을 뺐다.
+   Li₃Nd 의 *'재구성된 2×2×2 모델 · 셀 크기에 수렴 안 됨'* 한 문장은 남겼다 — 안 한 일이 아니라 장벽 숫자가 어떤 모델 값인지이고, `D-2026-10-26-li3nd-neb-si-conditional`
+   (0.229 는 SI 에 단서와 같이) 의 조건이다. 이 줄까지 빼려면 그 결정을 바꿔야 한다 (사용자 · 비준된 SEI 트랙 결정).
 8. 참고문헌 번호를 원고 목록에 합치기 · 붙인 뒤 첨자 · italic · minus 다시 보기 (BML) · *'Fig. SX'* · *'Supplementary Material'* 은 원고 자리표시 그대로 뒀다.
 9. 10-27 CEI 생성물 11 종 띠틈 (kgy 진행 중 · 1저자 요청) 을 SI 에 넣게 되면 전이금속 상 문단 (스핀 · U · GBRV Co/Ni/Mn · Mn 상 90/1080 Ry) 을 더한다 —
    카드 `db/properties/cei_product_gap_card_2026_10_27.json` + 개정 1.
@@ -159,7 +160,7 @@ QE 는 공식 인용 안내대로 셋 (2020 = GPU 판 · gabia NEB 가 `qe-7.4.1
 | Li₃Nd k 3×3×3 | 생성기 규칙으로 다시 셈 | `build_neb_inputs.kmesh` (`--kdens` 0.04) × `db/structures/sei_li3nd_mp-976264.vasp` 2×2×2 (이 세션 계산 · 실행 입력 미확인 — 확인할 것 1) |
 | Nd frozen-4f PAW (z 11) | `Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF` | `build_neb_inputs.py` `PP_PIN` (sha256 18a3835e…35101) · `build_dft_inputs.py` 69 행 · `db/properties/sei_electronic.json` `pseudo_Nd` |
 | Li₃Nd = 가상 BiF₃ 꼴 (hull 위) · 끝점이 이상 격자에서 크게 재배열 · 3×3×3 NEB 미수렴 · 3×3×3 셀 재배열 | E_hull 0.197 eV/atom · 끝점 ≈ 1.4 eV/셀 (값은 SI 에 안 씀) | `D-2026-10-26-li3nd-neb-si-conditional` (SI 문장) · `db/properties/li3nd_p333_control_runlog_2026_10_11.json` `결정_실험_NEB_끝점_2026_10_26` · `kb/questions/li3nd_pristine_reconstruction_2026_09_02.md` |
-| Li₂S 셀 수렴 미시험 | `cell_convergence_status: untested` | `sei_neb.json` `v2/li2s` |
+| Li₂S 셀 수렴 미시험 (10-28 SI 에서 뺌 — 사용자 · 기록만) | `cell_convergence_status: untested` | `sei_neb.json` `v2/li2s` |
 | Fig. 3h = 우리 QE · 8 월 SEI 체인 (MP 구조 → vc-relax → scf → fixed-occ nscf) · β-Li₃PO₄ mp-13725 · 암염 LiCl mp-22905 | Li₂S 3.4379 · Li₃P 0.7092 · Li₂O 4.9860 · Li₃PO₄ 5.9121 · LiCl 6.2603 | `db/properties/sei_electronic.json` `results` (`method` *'fixed-occupation nscf eigenvalues (NOT DOS threshold)'* · `collected` 2026-08-07 · `source_dir` gabia `/data/work/runs/sei_dft`) · 구조 `db/properties/sei_structures_provenance.json` (MP · 2026-08-06) |
 | 8 월 체인 = 9 월과 같은 도구 규칙 (k 간격 · 밴드 수) | 밴드 수 5/5 규칙값 (16 · 16 · 26 · 59 · 35) · LiCl nk 35 = 9×9×9 Oh 기약 개수 | `sei_electronic.json` `nbnd` · `nk` 를 `build_dft_inputs.py` 규칙 (0.15 Å⁻¹ · 1.35 배 + 8) 과 대조 (10-28 이 세션) |
 | 8 월 SEI PP = Li · S · Cl GBRV v1.4 USPP · P psl rrkjus · O psl 0.1 PAW | | `cei_product_gap_card_2026_10_27.json` `12_개정_1_2026_10_27_결과_전` `A1_PP_세트` 끝 (*'08 SEI 세트'*) · NEB 와 같은 pseudo 폴더 `/data/work/pseudo` |
