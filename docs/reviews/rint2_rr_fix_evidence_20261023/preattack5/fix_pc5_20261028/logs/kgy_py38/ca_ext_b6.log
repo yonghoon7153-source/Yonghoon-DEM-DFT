@@ -1,0 +1,524 @@
+
+── R run_contract — cjunc · sdcp_mod 하위 블록 · 요청 칸 · p3ca · unknown:ca_ext · 영수증 · 요청 검사 · 증서 · CLI 회계
+  PASS  R1 하위 블록 등록 — cjunc · sdcp_mod 가 ptfe_face 와 같은 꼴 (모듈 · 검증기 · protocol 정본 키)
+  PASS  R2 protocol_ext 칸 정본에 접합 · 수정자 칸 (R_j · 법칙 둘 · s_min · tol_ff · P · c)
+  PASS  R3 접합 + 블록 = p3ca- + 16 hex · protocol_ok · ca_ext_record_ok
+  PASS  R4a 요청 칸 있고 블록 없음 → unknown:ca_ext · ca_ext_record_ok 거부
+  PASS  R4b 블록 있고 요청 칸 없음 → unknown:ca_ext
+  PASS  R4c 둘 다 없음 = 옛 p2 함수 그대로 (코호트 id 와 같은 식)
+  PASS  R5 요청 칸 모양 틀림 [문자열] (블록 없음) → unknown:ca_ext (조용히 p2 로 내려가지 않는다)
+  PASS  R5 요청 칸 모양 틀림 [빈 목록] (블록 없음) → unknown:ca_ext (조용히 p2 로 내려가지 않는다)
+  PASS  R5 요청 칸 모양 틀림 [모르는 이름] (블록 없음) → unknown:ca_ext (조용히 p2 로 내려가지 않는다)
+  PASS  R5 요청 칸 모양 틀림 [정렬 안 됨] (블록 없음) → unknown:ca_ext (조용히 p2 로 내려가지 않는다)
+  PASS  R5 요청 칸 모양 틀림 [중복] (블록 없음) → unknown:ca_ext (조용히 p2 로 내려가지 않는다)
+  PASS  R5 요청 칸 모양 틀림 [ptfe_face (요청 = ptfe_stamp)] (블록 없음) → unknown:ca_ext (조용히 p2 로 내려가지 않는다)
+  PASS  R5 요청 칸 모양 틀림 [None] (블록 없음) → unknown:ca_ext (조용히 p2 로 내려가지 않는다)
+  PASS  R6a 증거만 바뀜 → id 같음
+  PASS  R6b R_j 바뀜 → id 다름
+  PASS  R6c 미등록 면 법칙 바뀜 (cut → fused) → id 다름
+  PASS  R6d SDCP c = 0 · 1 → id 서로 다름 · 둘 다 정상
+  PASS  R6e 관찰 세대 (p3ca = 현행) · 낮춘 신고 거부
+  PASS  R7 ca_ext_record_ok 거부 [모델 판 다름]
+  PASS  R7 ca_ext_record_ok 거부 [길이 법칙 다름]
+  PASS  R7 ca_ext_record_ok 거부 [규칙 판 다름 (port)]
+  PASS  R7 ca_ext_record_ok 거부 [L_par 손으로 바꿈]
+  PASS  R7 ca_ext_record_ok 거부 [r_port 손으로 바꿈]
+  PASS  R7 ca_ext_record_ok 거부 [tol_P ≠ tol_ff]
+  PASS  R7 ca_ext_record_ok 거부 [R_j = 0 (정량 아님)]
+  PASS  R7 ca_ext_record_ok 거부 [R_j = inf]
+  PASS  R7 ca_ext_record_ok 거부 [R_j 문자열]
+  PASS  R7 ca_ext_record_ok 거부 [s_min = None (미등록 · 정량 거부)]
+  PASS  R7 ca_ext_record_ok 거부 [s_min 음수]
+  PASS  R7 ca_ext_record_ok 거부 [P1 (face_alpha 아님)]
+  PASS  R7 ca_ext_record_ok 거부 [protocol 의 ptfe_stamp ≠ 매니페스트]
+  PASS  R7 ca_ext_record_ok 거부 [ptfe_stamp 만 face_alpha (ptfe_face 블록 없음 · 접합 protocol 은 off)]
+  PASS  R7 ca_ext_record_ok 거부 [점 스탬프]
+  PASS  R7 ca_ext_record_ok 거부 [주기 xy]
+  PASS  R7 ca_ext_record_ok 거부 [필드 요청 (LEAN 4)]
+  PASS  R7 ca_ext_record_ok 거부 [집전체 계획 켬]
+  PASS  R7 ca_ext_record_ok 거부 [계면 표 (r1) 동시]
+  PASS  R7 ca_ext_record_ok 거부 [SDCP 브리지 진단 팔]
+  PASS  R7 ca_ext_record_ok 거부 [VGCF 절연 (σ 0)]
+  PASS  R7 ca_ext_record_ok 거부 [영수증 키 빠짐]
+  PASS  R7 ca_ext_record_ok 거부 [주 영수증 missing]
+  PASS  R7 ca_ext_record_ok 거부 [주 영수증 모르는 상태]
+  PASS  R7 ca_ext_record_ok 거부 [주 영수증 applied 인데 instance 0]
+  PASS  R7 ca_ext_record_ok 거부 [주 영수증 solved False]
+  PASS  R7 ca_ext_record_ok 거부 [주 영수증 원장 지문 ≠ 증거]
+  PASS  R7 ca_ext_record_ok 거부 [wetted 가 applied (v0 = 집전체 끔)]
+  PASS  R7 ca_ext_record_ok 거부 [이온 영수증 applied_without_request]
+  PASS  R7 ca_ext_record_ok 거부 [이온 계획 끔인데 이온 not_requested]
+  PASS  R7 ca_ext_record_ok 거부 [disabled 인데 사유 없음]
+  PASS  R7 ca_ext_record_ok 거부 [수 합 깨짐 (n_edge +1)]
+  PASS  R7 ca_ext_record_ok 거부 [P0 인데 절단 수 > 0]
+  PASS  R7 ca_ext_record_ok 거부 [극한 none_inf > 0 (R_j 유한)]
+  PASS  R7 ca_ext_record_ok 거부 [접합 간선 수 ≠ 영수증]
+  PASS  R7 ca_ext_record_ok 거부 [축약 수 ≠ 원장]
+  PASS  R7 ca_ext_record_ok 거부 [단락 상태]
+  PASS  R7 ca_ext_record_ok 거부 [거부 사유 남음]
+  PASS  R7 ca_ext_record_ok 거부 [진단 표 빠짐]
+  PASS  R7 ca_ext_record_ok 거부 [표지 다름]
+  PASS  R7 ca_ext_record_ok 거부 [한정어 빠짐]
+  PASS  R7 ca_ext_record_ok 거부 [수정자 c 기록 ↔ 블록 없음 불일치]
+  PASS  R7 ca_ext_record_ok 거부 [요청 칸에 sdcp_mod 만 더함 (블록 없음)]
+  PASS  R8 sdcp_mod 거부 [S2 블록 없음 (수정자만)]
+  PASS  R8 sdcp_mod 거부 [c = 0.5 (정량은 0 · 1 만)]
+  PASS  R8 sdcp_mod 거부 [tol_sj ≠ 접합 tol_ff]
+  PASS  R8 sdcp_mod 거부 [근접 수 ≠ 접합 원장]
+  PASS  R8 sdcp_mod 거부 [c = 1 인데 축약 0]
+  PASS  R8 sdcp_mod 거부 [판별 표지 거짓]
+  PASS  R8 sdcp_mod 거부 [접합 증거의 c ≠ 수정자 c]
+  PASS  R8 sdcp_mod 거부 [수정자 표지 다름]
+  PASS  R9 face_alpha + 접합 — ptfe_face 블록이 빈 꼴 (protocol · 증거 없음) = 거부 (★ Z3 조합은 받지만 각 블록 검증기는 그대로 · 조합 양성 = P15c · test_ca_ext_z3 AP1)
+  PASS  R10 커밋된 영수증 44 개 전부 — 새 함수 digest = 고치기 전 본문 digest (선택 칸 없음 = 옛 OUTDIR 이름 보존)
+  PASS  R10b 요청을 실은 영수증은 digest 가 다르다 (OUTDIR 이 갈린다)
+  PASS  R11a 요청 ↔ 블록 같음 → receipt_match 통과
+  PASS  R11b 요청 R_j ≠ 블록 R_j → 거부
+  PASS  R11c 요청 있는데 블록 없음 → 거부
+  PASS  R11d 요청 없는 영수증 + 접합 블록 팔 → 거부 (러너가 요청 안 한 실험)
+  PASS  R11e 수정자 요청 ↔ 블록 c 대조
+  PASS  R11f rtol — 선언 ↔ 매니페스트 backend.rtol 같음 통과 · 다르면 거부 · 선언 없는데 팔에 rtol = 거부 · 선언했는데 팔에 없음 = 거부
+  PASS  R11g 옛 영수증 + 옛 매니페스트 = 통과 (기존 거동 그대로)
+  PASS  R12a 요청 정상 → 문제 없음
+  PASS  R12b 요청 검사 거부 [모르는 하위 블록]
+  PASS  R12b 요청 검사 거부 [수정자만]
+  PASS  R12b 요청 검사 거부 [칸 빠짐]
+  PASS  R12b 요청 검사 거부 [모르는 칸]
+  PASS  R12b 요청 검사 거부 [R_j 음수]
+  PASS  R12b 요청 검사 거부 [P1]
+  PASS  R12b 요청 검사 거부 [c = 0.5]
+  PASS  R12b 요청 검사 거부 [dict 아님]
+  PASS  R13a 증서 정상 → 문제 없음
+  PASS  R13b 증서 거부 [없음]
+  PASS  R13b 증서 거부 [ok False]
+  PASS  R13b 증서 거부 [ok ↔ pass 모순]
+  PASS  R13b 증서 거부 [판 rtol 1e-8 (봉인 상한 밖) 인데 pass_a]
+  PASS  R13b 증서 거부 [불균형 문턱 밖 인데 pass_b]
+  PASS  R13b 증서 거부 [이어 풀기 Δσ 문턱 밖 인데 pass_c]
+  PASS  R13b 증서 거부 [다른 판본]
+  PASS  R13b 증서 거부 [봉인 상한 손으로]
+  PASS  R13b 증서 거부 [σ ≠ 결과 σ (증서 ↔ 결과 결합)]
+  PASS  R13b 증서 거부 [NaN 불균형]
+  PASS  R13b 증서 거부 [pass 가 문자열]
+  PASS  R13c 다음 세대 게시 조건 — p3ca + 증서 정상 = 통과 · 증서 없음 = 미게시 · p2 (옛 세대) = 해당 없음 (통과)
+  PASS  R13d 이온을 푼 다음 세대 팔은 이온 증서도 요구 (없으면 미게시 · 있으면 통과)
+  PASS  R14 새 플래그 여덟 = protocol_ext (ca_ext 칸 이름 · 정본 안)
+  PASS  R15 규칙 M (실물 파서 전수) 문제 0
+
+── P payload 끝-끝 — 접합 · 수정자 · 입구 거부 · 매니페스트 · 영수증 · 조합 정책 · --expect-physics ca_ext 칸
+  PASS  P-거부 [MISSING (R_j 없음)] → rc ≠ 0 · S2_CJUNC_REFUSED|MISSING|
+  PASS  P-거부 [MISSING (길이 법칙 없음)] → rc ≠ 0 · S2_CJUNC_REFUSED|MISSING|
+  PASS  P-거부 [MISSING (미등록 면 법칙 없음)] → rc ≠ 0 · S2_CJUNC_REFUSED|MISSING|
+  PASS  P-거부 [MISSING (s_min 없음 · 정량이면 거부)] → rc ≠ 0 · S2_CJUNC_REFUSED|MISSING|
+  PASS  P-거부 [MISSING (tol_ff 없음 · 기본값 없음)] → rc ≠ 0 · S2_CJUNC_REFUSED|MISSING|
+  PASS  P-거부 [MISSING (PTFE–접합 법칙 없음)] → rc ≠ 0 · S2_CJUNC_REFUSED|MISSING|
+  PASS  P-거부 [FLAG_WITHOUT_CJUNC (R_j 만)] → rc ≠ 0 · S2_CJUNC_REFUSED|FLAG_WITHOUT_CJUNC|
+  PASS  P-거부 [P1_NEEDS_FACE_ALPHA] → rc ≠ 0 · S2_CJUNC_REFUSED|P1_NEEDS_FACE_ALPHA|
+  PASS  P-거부 [P1_NEEDS_FACE_ALPHA (centerline)] → rc ≠ 0 · S2_CJUNC_REFUSED|P1_NEEDS_FACE_ALPHA|
+  PASS  P-거부 [PTFE_CENTERLINE (P0)] → rc ≠ 0 · S2_CJUNC_REFUSED|PTFE_CENTERLINE|
+  PASS  P-거부 [PTFE_CENTERLINE (P1)] → rc ≠ 0 · S2_CJUNC_REFUSED|PTFE_CENTERLINE|
+  PASS  P-거부 [PERIODIC] → rc ≠ 0 · S2_CJUNC_REFUSED|PERIODIC|
+  PASS  P-거부 [JOULE] → rc ≠ 0 · S2_CJUNC_REFUSED|JOULE|
+  PASS  P-거부 [STEP4_GRID] → rc ≠ 0 · S2_CJUNC_REFUSED|STEP4_GRID|
+  PASS  P-거부 [RINT] → rc ≠ 0 · S2_CJUNC_REFUSED|RINT|
+  PASS  P-거부 [NO_STEP3] → rc ≠ 0 · S2_CJUNC_REFUSED|NO_STEP3|
+  PASS  P-거부 [SDCP_BRIDGE (진단 팔)] → rc ≠ 0 · S2_CJUNC_REFUSED|SDCP_BRIDGE|
+  PASS  P-거부 [VGCF_INSULATING (σ 0)] → rc ≠ 0 · S2_CJUNC_REFUSED|VGCF_INSULATING|
+  PASS  P-거부 [FIELD (LEAN 4)] → rc ≠ 0 · S2_CJUNC_REFUSED|FIELD|
+  PASS  P-거부 [COLLECTOR] → rc ≠ 0 · S2_CJUNC_REFUSED|COLLECTOR|
+  PASS  P-거부 [THERMAL] → rc ≠ 0 · S2_CJUNC_REFUSED|THERMAL|
+  PASS  P-거부 [PORE] → rc ≠ 0 · S2_CJUNC_REFUSED|PORE|
+  PASS  P-거부 [STEP4] → rc ≠ 0 · S2_CJUNC_REFUSED|STEP4|
+  PASS  P-거부 [TRACKB] → rc ≠ 0 · S2_CJUNC_REFUSED|TRACKB|
+  PASS  P-거부 [VALUE (R_j 0)] → rc ≠ 0 · S2_CJUNC_REFUSED|VALUE|
+  PASS  P-거부 [VALUE (R_j nan)] → rc ≠ 0 · S2_CJUNC_REFUSED|VALUE|
+  PASS  P-거부 [VALUE (R_j inf)] → rc ≠ 0 · S2_CJUNC_REFUSED|VALUE|
+  PASS  P-거부 [VALUE (s_min 음수)] → rc ≠ 0 · S2_CJUNC_REFUSED|VALUE|
+  PASS  P-거부 [VALUE (tol_ff 음수)] → rc ≠ 0 · S2_CJUNC_REFUSED|VALUE|
+  PASS  P-거부 [NO_PHASE] → S2_CJUNC_REFUSED|NO_PHASE|
+  PASS  P-거부 [NO_FIBRE] → S2_CJUNC_REFUSED|NO_FIBRE|
+  PASS  P-거부 [SEGMENT (점 스탬프)] → S2_CJUNC_REFUSED|SEGMENT|
+  PASS  P-거부 [S3 수정자만 (S2 없이)] → S3_SDCP_MOD_REFUSED|NO_CJUNC|
+  PASS  P-거부 [c = 0.5 (정량은 0 · 1)] → rc ≠ 0
+  PASS  P1 접합 LEAN 2 — rc 0
+  PASS  P2 매니페스트 — 요청 칸 [cjunc] · 블록 · p3ca id · protocol_ok · ca_ext_record_ok
+  PASS  P3 protocol = CLI 값 (R_j 1e6 · len_scaled_v0 · cut · s_min 0.5 · tol_ff 0.5 · P0 · ptfe off)
+  PASS  P4 영수증 (LEAN 2 표) — 주 applied · wetted/bare disabled · 이온 disabled
+  PASS  P5 원장 — instance 1 · 간선 1 · 축약 0 · 풀림 · 접합 간선 1
+  PASS  P6 진단 미계산 (E2 · v0) — 소산 분담 None · je 없음 · 진단 표
+  PASS  P7 check_arm (sr01) 이 실제 산출물을 받는다
+  PASS  P8 σ_e 순서 — off (융합 = R_j → 0 극한) ≥ R_j 1e2 > 1e6 > 1e8 > 0 (직렬 사슬 · 같은 그래프)
+  PASS  P9 R_j 가 다르면 p3ca id 가 다르다 · 같은 R_j 의 두 침대 (SDCP 유무) 는 같은 id
+  PASS  P9b 같은 R_j · 같은 설정의 두 침대 (SDCP 유무) = 같은 p3ca id
+  PASS  P10 c = 1 — 요청 칸 [cjunc, sdcp_mod] · 블록 둘 · ca_ext_record_ok · 근접 1 · 축약 1
+  PASS  P11 c = 0 = 수정자 없는 접합과 σ 비트 같음 · c = 1 ≥ c = 0 (Rayleigh · 같은 그래프)
+  PASS  P12 SBE (SDCP 없음) + c = 1 = 근접 0 · σ 가 수정자 없는 접합과 비트 같음 · 판별 표지 False
+  PASS  P13 LEAN 3 — 이온 영수증 not_requested · σ_ion = off 비트 같음 · ca_ext_record_ok
+  PASS  P14 face_alpha + --step3-rtol 1e-12 = 허용 — rc 0 · ptfe_face 블록 · p3ca · 증서 ok · backend.rtol 기록 · ca_ext_record_ok
+  PASS  P14b face_alpha + rtol 팔 = 다음 세대 게시 조건 통과 · rtol 없는 face_alpha 팔 = 미게시 (증서 칸 없음)
+  PASS  P15 접합 + --step3-rtol 1e-12 = 허용 — rc 0 · cjunc 블록 · p3ca · 증서 ok (σ 결합) · backend.rtol · 게시 조건 통과
+  PASS  P15b rtol 은 규약 id 밖 (numeric) — 접합 + rtol 의 p3ca id = 접합만의 id
+  PASS  P15c ★ Z3 face_alpha + 접합 + rtol = 허용 (옛 FACE_ALPHA_COMBO 거부 뺌) — rc 0 · 하위 블록 ptfe_face + cjunc · 요청 칸 [cjunc] · p3ca · ca_ext_record_ok · 게시 조건 · 접합 protocol 의 ptfe_stamp = face_alpha
+  PASS  P16 선언 = 적용 (ca_ext 칸 포함) → rc 0
+  PASS  P17 선언 R_j ≠ 적용 → exit 4 · PROTOCOL_MISMATCH (ca_ext.cjunc.R_j_ohm)
+  PASS  P18 접합을 켰는데 선언에 s_min 칸이 없다 → 거부 (선언 안 한 축은 검사도 안 된다 · PASL-04 꼴)
+  PASS  P19 접합을 안 켰는데 ca_ext.cjunc 칸을 선언 → 거부 (요청 없는 선언)
+  PASS  P20 모르는 ca_ext 칸 선언 → 거부 (정본 밖)
+  PASS  P21 payload --selftest-temperature rc 0
+    보고 P (픽스처 · vox 1.0) σ_e off 0.03954460775870077 · 접합 R_j 1e2 0.03797504254157001 · 1e6 0.00039942576038441284 · 1e8 0.0003064190402482066 · DBE c0 0.000436958437355709 · c1 0.03954475178476161
+
+── S 해 상태 (영값 · 단락) · SV 반사실 노브 — 계약 · 러너 · payload (시험 먼저 · 10-21 D)
+  PASS  S0 run_contract.next_gen_state 가 있다 (다음 세대 해 상태 → positive · zero · short · legacy)
+  PASS  S1a 양의 해 → positive
+  PASS  S1b 바닥 영값 위상 (조기 반환 · 증서 VALID_ZERO_TOPOLOGY · σ 0) → zero
+  PASS  S1c 천장 단락 (J11 · 증서 ELECTRODE_SHORT · σ None) → short
+  PASS  S1d 옛 세대 (ca_ext 없음 · 요청 없음) → legacy (이 규칙 밖)
+  PASS  S2 영값 상태 거부 [σ 1e-9 (영값 사유인데 0 아님)] → (None, 사유)
+  PASS  S2 영값 상태 거부 [σ None (영값을 비워 둠)] → (None, 사유)
+  PASS  S2 영값 상태 거부 [결과 사유 없음 (증서만 조기 반환)] → (None, 사유)
+  PASS  S2 영값 상태 거부 [결과 사유 ≠ 증서 사유] → (None, 사유)
+  PASS  S2 영값 상태 거부 [전자 component complete (조기 반환인데 솔브 완료로 적음)] → (None, 사유)
+  PASS  S2 영값 상태 거부 [증서 ok False] → (None, 사유)
+  PASS  S2 영값 상태 거부 [증서 판본 다름] → (None, 사유)
+  PASS  S2 영값 상태 거부 [증서 출처 모름] → (None, 사유)
+  PASS  S2 영값 상태 거부 [증서 지문 hex 아님] → (None, 사유)
+  PASS  S2 영값 상태 거부 [증서 없음] → (None, 사유)
+  PASS  S2 영값 상태 거부 [증서 상태 NOT_CERTIFIABLE] → (None, 사유)
+  PASS  S2 영값 상태 거부 [증서 상태 모름] → (None, 사유)
+  PASS  S2 영값 상태 거부 [증서 격자 지문 ≠ 매니페스트 sid (다른 침대의 영값 증서)] → (None, 사유)
+  PASS  S2 영값 상태 거부 [증서 결합 판 없음 (옛 증서)] → (None, 사유)
+  PASS  S2 영값 상태 거부 [증서 접합 계획 행 지문 ≠ 매니페스트] → (None, 사유)
+  PASS  S3 단락 상태 거부 [σ 0.0 (단락을 유한 σ 로 위장)] → (None, 사유)
+  PASS  S3 단락 상태 거부 [σ 1e3 (단락을 유한 σ 로 위장)] → (None, 사유)
+  PASS  S3 단락 상태 거부 [증서 ok True] → (None, 사유)
+  PASS  S3 단락 상태 거부 [증서 사유가 영값 사유 (상태와 모순)] → (None, 사유)
+  PASS  S3 단락 상태 거부 [결과 사유 ≠ 증서 사유] → (None, 사유)
+  PASS  S3 단락 상태 거부 [접합 기록 short False] → (None, 사유)
+  PASS  S3 단락 상태 거부 [접합 기록 solved True] → (None, 사유)
+  PASS  S3 단락 상태 거부 [축약 0 (단락이 생길 수 없다)] → (None, 사유)
+  PASS  S3 단락 상태 거부 [접합 블록 없음] → (None, 사유)
+  PASS  S3 단락 상태 거부 [전자 component complete] → (None, 사유)
+  PASS  S3 단락 상태 거부 [증서 판본 다름] → (None, 사유)
+  PASS  S3 단락 상태 거부 [봉인 상수 손으로 (rtol_max)] → (None, 사유)
+  PASS  S3 단락 상태 거부 [증서 격자 지문 ≠ 매니페스트 sid (다른 침대의 단락 증서)] → (None, 사유)
+  PASS  S3 단락 상태 거부 [증서 결합 판 없음 (옛 증서)] → (None, 사유)
+  PASS  S3 단락 상태 거부 [증서 접합 원장 지문 ≠ 매니페스트] → (None, 사유)
+  PASS  S3i 단락 팔 + 이온 계획 — 이온 증서 정상 = short · 이온 증서 격자 지문 ≠ 매니페스트 = 거부 (채널 ionic 결합)
+  PASS  S3b 결합 거부의 사유 — 영값 셋 = STATE|zero| … CERT|bind| · 단락 셋 = STATE|short| CERT|bind| (옳은 이유)
+  PASS  S4 양의 해 거부 [증서 실패 (ok False)] → (None, 사유)
+  PASS  S4 양의 해 거부 [증서 없음] → (None, 사유)
+  PASS  S4 양의 해 거부 [σ ≠ 증서 σ] → (None, 사유)
+  PASS  S5a check_arm — 영값 상태 팔 (σ 0 · 증서 VALID_ZERO_TOPOLOGY) 를 받는다 (솔브 없음 = backend 기록 없음 · 정상)
+  PASS  S5b check_arm — 단락 상태 팔 (σ None · 증서 ELECTRODE_SHORT) 를 받는다
+  PASS  S5c check_arm 거부 [영값인데 σ 1e-9]
+  PASS  S5c check_arm 거부 [영값 증서 없음]
+  PASS  S5c check_arm 거부 [영값인데 component complete]
+  PASS  S5d check_arm 거부 [단락인데 σ 0.0 — 유한 σ 로 위장]
+  PASS  S5e check_arm — 증서 없는 영값 팔 (옛 꼴 · 증서 끔) 은 그대로 거부 (σ 0 을 증서 없이 받지 않는다)
+  PASS  S5f check_arm — 옛 세대 (p2) σ 0 팔은 그대로 거부 (이 규칙 밖 · 옛 거동)
+  PASS  S6a 조기 반환 팔 (솔브 0 · backend.rtol 없음) + 러너 rtol 선언 → receipt_match 통과 (결합할 솔브가 없다)
+  PASS  S6b 솔브가 돈 팔 (component complete) 인데 backend.rtol 없음 → 그대로 거부 (옛 결합)
+  PASS  S7a 러너 손잡이 표에 CJUNC_SV_CF (선언 칸 아님 = 하위 블록 None · 영수증 선택 칸 sv_counterfactual)
+  PASS  S7b CJUNC_SV_CF=1 → 문제 없음 · 영수증 sv_counterfactual True · 요청 칸 (cjunc) = 끈 것과 같다 (반사실은 protocol 밖)
+  PASS  S7c 끔 (비움 · 0) → 영수증에 칸 없음 (옛 영수증 바이트 · 옛 OUTDIR)
+  PASS  S7d 발사 전 거부 [CJUNC 없이] → RUNNER_CA_EXT|FLAG_WITHOUT_CJUNC|
+  PASS  S7d 발사 전 거부 [값 yes] → RUNNER_CA_EXT|VALUE|
+  PASS  S7d 발사 전 거부 [값 2] → RUNNER_CA_EXT|VALUE|
+  PASS  S7d 발사 전 거부 [값 " 1"] → RUNNER_CA_EXT|VALUE|
+  PASS  S7e payload 인자 · 이름 태그 — 켬 = " --step3-cjunc-sv-cf" 한 번 · 태그 끝 "_svcf" · 선언 (--expect-physics) 은 끈 것과 같다
+  PASS  S7f 영수증 digest — 켬 ≠ 끔 (OUTDIR 이 갈린다) · 끔 = 칸 없음의 옛 digest
+  PASS  S7g CLI 회계 — --step3-cjunc-sv-cf = solve (σ_e 해를 바꾸지 않는 추가 솔브 · 규약 id 밖)
+  PASS  S8a ca_ext_svcf.sv_cf_record (증거 투영 · D 모듈) 가 있다
+  PASS  S8b 투영 — computed = 비 그대로 (유한) · 표지 없음 · no_through_without_sv = 비 null + ratio_limit "inf" · JSON 유한 (allow_nan False)
+  PASS  S8c 요청 + computed 기록 → ca_ext_record_ok 통과 · id = 노브 끈 것과 같다 (반사실은 protocol 밖)
+  PASS  S8d 정상 기록 받음 [no_through_without_sv]
+  PASS  S8d 정상 기록 받음 [unconverged]
+  PASS  S8d 정상 기록 받음 [문턱 2 · 비 3 · SV_DEPENDENT]
+  PASS  S8e 반사실 기록 거부 [요청 있는데 기록 없음 (주 솔브 풀림)]
+  PASS  S8e 반사실 기록 거부 [기록 있는데 요청 없음]
+  PASS  S8e 반사실 기록 거부 [요청 문턱 0.5 (< 1 · 뜻 없음)]
+  PASS  S8e 반사실 기록 거부 [요청 모르는 칸]
+  PASS  S8e 반사실 기록 거부 [요청 ↔ 기록 문턱 다름]
+  PASS  S8e 반사실 기록 거부 [computed 인데 비 None]
+  PASS  S8e 반사실 기록 거부 [computed 인데 비 음수]
+  PASS  S8e 반사실 기록 거부 [computed 인데 비 문자열]
+  PASS  S8e 반사실 기록 거부 [computed 인데 inf 표지]
+  PASS  S8e 반사실 기록 거부 [모르는 상태인데 비가 있다]
+  PASS  S8e 반사실 기록 거부 [종류가 반사실이 아님 (cut_vv)]
+  PASS  S8e 반사실 기록 거부 [종류 없음]
+  PASS  S8e 반사실 기록 거부 [requested False]
+  PASS  S8e 반사실 기록 거부 [문턱 없는데 SV_DEPENDENT 표지]
+  PASS  S8e 반사실 기록 거부 [모르는 표지]
+  PASS  S8e 반사실 기록 거부 [no_through 인데 표지 없음]
+  PASS  S8f 문턱 2 · 비 3 인데 표지 없음 (문턱 판정과 기록이 갈림) → 거부
+  PASS  S8h 정의 무관 받음 [정의별 수 칸 이름이 바뀜 (n_sv_faces_cut 없음 · n_bridging_faces_cut 3 · 진단 기록)]
+  PASS  S8h 정의 무관 받음 [모르는 상태 · 비 없음 (사슬 = SV_UNCHECKED · 받는다)]
+  PASS  S8w 종류 · 규칙 = 등록 이름만 (10-23 사전 공격 리뷰 C5) → 거부 [다른 정의 이름 (kind counterfactual_cut_bridging_sv_faces) · 증서 구간]
+  PASS  S8w 종류 · 규칙 = 등록 이름만 (10-23 사전 공격 리뷰 C5) → 거부 [옛 정의 이름 (kind counterfactual_cut_sv_faces = SV 면 전부) · 증서 구간]
+  PASS  S8w 종류 · 규칙 = 등록 이름만 (10-23 사전 공격 리뷰 C5) → 거부 [리뷰 A4 (kind counterfactual_cut_sv_faces_all) · 증서 구간]
+  PASS  S8w 종류 · 규칙 = 등록 이름만 (10-23 사전 공격 리뷰 C5) → 거부 [종류 접두어만 같음 (kind counterfactual) · 증서 구간]
+  PASS  S8w 종류 · 규칙 = 등록 이름만 (10-23 사전 공격 리뷰 C5) → 거부 [종류 글자 아님 (목록) · 증서 구간]
+  PASS  S8w 종류 · 규칙 = 등록 이름만 (10-23 사전 공격 리뷰 C5) → 거부 [리뷰 A4 (rule some_other_rule) · 증서 구간]
+  PASS  S8w 종류 · 규칙 = 등록 이름만 (10-23 사전 공격 리뷰 C5) → 거부 [규칙 없음 · 증서 구간]
+  PASS  S8w 종류 · 규칙 = 등록 이름만 (10-23 사전 공격 리뷰 C5) → 거부 [규칙 None · 증서 구간]
+  PASS  S8w 종류 · 규칙 = 등록 이름만 (10-23 사전 공격 리뷰 C5) → 거부 [규칙 = 괄호 규칙 이름 · 증서 구간]
+  PASS  S8w 종류 · 규칙 = 등록 이름만 (10-23 사전 공격 리뷰 C5) → 거부 [다른 정의 이름 (kind counterfactual_cut_bridging_sv_faces) · 진단]
+  PASS  S8w 종류 · 규칙 = 등록 이름만 (10-23 사전 공격 리뷰 C5) → 거부 [옛 정의 이름 (kind counterfactual_cut_sv_faces = SV 면 전부) · 진단]
+  PASS  S8w 종류 · 규칙 = 등록 이름만 (10-23 사전 공격 리뷰 C5) → 거부 [리뷰 A4 (kind counterfactual_cut_sv_faces_all) · 진단]
+  PASS  S8w 종류 · 규칙 = 등록 이름만 (10-23 사전 공격 리뷰 C5) → 거부 [종류 접두어만 같음 (kind counterfactual) · 진단]
+  PASS  S8w 종류 · 규칙 = 등록 이름만 (10-23 사전 공격 리뷰 C5) → 거부 [종류 글자 아님 (목록) · 진단]
+  PASS  S8w 종류 · 규칙 = 등록 이름만 (10-23 사전 공격 리뷰 C5) → 거부 [리뷰 A4 (rule some_other_rule) · 진단]
+  PASS  S8w 종류 · 규칙 = 등록 이름만 (10-23 사전 공격 리뷰 C5) → 거부 [규칙 없음 · 진단]
+  PASS  S8w 종류 · 규칙 = 등록 이름만 (10-23 사전 공격 리뷰 C5) → 거부 [규칙 None · 진단]
+  PASS  S8w 종류 · 규칙 = 등록 이름만 (10-23 사전 공격 리뷰 C5) → 거부 [규칙 = 괄호 규칙 이름 · 진단]
+  PASS  S8w′ 등록 종류 · 규칙 (생산자 상수) → 받음 · 투영이 규칙을 옮긴다 (10-23 사전 공격 리뷰 C5)
+  PASS  S8h′ 증서 구간 기록 (비를 싣는 끝 computed) 에 끊은 다리 면 수 n_sv_faces_cut 없음 (이름이 바뀜) → 거부 (끝 증서를 끊은 그래프에 묶을 수 없다 · 10-23 사전 공격 리뷰 C1)
+  PASS  S8i 투영 — 정의별 수 칸 (n_*) 은 이름 그대로 옮긴다 · 사슬이 읽는 칸 (비 · 상태 · 표지 · 종류) 은 그대로
+  PASS  S8h″ 투영 — 판에 닿는 성분에서 끊은 쌍 수 (n_reach_pairs_cut · 아래 끝 · 위 끝) 를 정수 그대로 옮긴다 (10-23 묶음 A″)
+  PASS  S8h″ 증서 구간 기록에 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut 없음 → 실제 소비자 거부 (C1 ⑥ 을 판단할 수 없다 · 10-23 묶음 A″) [아래 끝 칸 없음 (덩어리 0 · computed)]
+  PASS  S8h″ 증서 구간 기록에 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut 없음 → 실제 소비자 거부 (C1 ⑥ 을 판단할 수 없다 · 10-23 묶음 A″) [아래 끝 칸 bool (투영이 버린다 = 칸 없음)]
+  PASS  S8h″ 증서 구간 기록에 판에 닿는 성분에서 끊은 쌍 수 n_reach_pairs_cut 없음 → 실제 소비자 거부 (C1 ⑥ 을 판단할 수 없다 · 10-23 묶음 A″) [위 끝 칸 없음 (덩어리 1 · 위 끝 computed)]
+  PASS  S8h‴ 투영 — 위 끝의 아래 끝 대비 끊은 쌍 수 (n_reach_pairs_cut_vs_lower) 를 정수 그대로 옮긴다 (10-25 묶음 B X3)
+  PASS  S8h‴ 증서 구간 기록의 위 끝에 아래 끝 대비 끊은 쌍 수 없음 → 실제 소비자 거부 (위 끝 ↔ 아래 끝을 판단할 수 없다 · 10-25 묶음 B X3 · X5) [위 끝 칸 없음 (덩어리 1 · 위 끝 computed)]
+  PASS  S8h‴ 증서 구간 기록의 위 끝에 아래 끝 대비 끊은 쌍 수 없음 → 실제 소비자 거부 (위 끝 ↔ 아래 끝을 판단할 수 없다 · 10-25 묶음 B X3 · X5) [위 끝 칸 bool (투영이 버린다 = 칸 없음)]
+  PASS  S8h‴ 증서 구간 기록의 위 끝에 아래 끝 대비 끊은 쌍 수 없음 → 실제 소비자 거부 (위 끝 ↔ 아래 끝을 판단할 수 없다 · 10-25 묶음 B X3 · X5) [위 끝 칸 없음 (덩어리 1 · 위 끝 +∞ · X5 = 상태와 무관)]
+  PASS  S8h⁗ 정상 — 진단 기록 (증서 없음 · 덩어리 1 · 위 끝 computed · 아래 끝 대비 끊은 쌍 수 6) 받음 (10-25 묶음 B5 대조의 기준)
+  PASS  S8h⁗ 진단 기록 (증서 없음) 의 위 끝 아래 끝 대비 끊은 쌍 수 꼴 → 실제 소비자 거부 (꼴 = `_removed_problem` · 10-25 묶음 B5 변이 보강 — 그 줄만 끈 검증기 = 받음) [음수 −1]
+  PASS  S8h⁗ 진단 기록 (증서 없음) 의 위 끝 아래 끝 대비 끊은 쌍 수 꼴 → 실제 소비자 거부 (꼴 = `_removed_problem` · 10-25 묶음 B5 변이 보강 — 그 줄만 끈 검증기 = 받음) [int64 밖 2**63]
+  PASS  S8g‴ 투영 — 주 해 · 아래 끝 · 위 끝 증서의 가중 그래프 지문 (fp_cjunc_graph) 을 글자 그대로 옮긴다 (10-26 묶음 B6)
+  PASS  S8g‴ 증서 구간 기록의 증서 그래프 지문 꼴 → 실제 소비자 거부 (지문 없는 증서 = 끝 그래프에 묶을 수 없다 · 10-26 묶음 B6) [주 해 증서 지문 없음]
+  PASS  S8g‴ 증서 구간 기록의 증서 그래프 지문 꼴 → 실제 소비자 거부 (지문 없는 증서 = 끝 그래프에 묶을 수 없다 · 10-26 묶음 B6) [아래 끝 증서 지문 없음]
+  PASS  S8g‴ 증서 구간 기록의 증서 그래프 지문 꼴 → 실제 소비자 거부 (지문 없는 증서 = 끝 그래프에 묶을 수 없다 · 10-26 묶음 B6) [위 끝 증서 지문 없음]
+  PASS  S8g‴ 증서 구간 기록의 증서 그래프 지문 꼴 → 실제 소비자 거부 (지문 없는 증서 = 끝 그래프에 묶을 수 없다 · 10-26 묶음 B6) [아래 끝 지문 대문자]
+  PASS  S8g‴ 증서 구간 기록의 증서 그래프 지문 꼴 → 실제 소비자 거부 (지문 없는 증서 = 끝 그래프에 묶을 수 없다 · 10-26 묶음 B6) [위 끝 지문 32 자]
+  PASS  S8g‴ 증서 구간 기록의 증서 그래프 지문 꼴 → 실제 소비자 거부 (지문 없는 증서 = 끝 그래프에 묶을 수 없다 · 10-26 묶음 B6) [주 해 지문 None]
+  PASS  S8g‴ 진단 기록 (증서 없음) = 지문 칸 없음 그대로 받음 (증서가 없으면 묶을 증서가 없다 · 판정 입력 아님)
+  PASS  S8j 투영 — 괄호 칸 (위 끝 상태 · 비 (+∞ = null + ratio_limit_hi "inf") · 위 끝 풀이 기록 (아래 끝과 같은 꼴 · +∞ = ratio_limit "inf") · 괄호 규칙 · 못 가른 덩어리 수) · JSON 유한 (allow_nan False)
+  PASS  S8k 괄호 정상 기록 받음 [덩어리 1 · [1, ∞] (리뷰어 꼴)]
+  PASS  S8k 괄호 정상 기록 받음 [덩어리 1 · [1.2, 3.4] (둘 다 computed)]
+  PASS  S8k 괄호 정상 기록 받음 [덩어리 1 · 위 끝 미수렴 (비 없음 = 사슬 못 읽음)]
+  PASS  S8k 괄호 정상 기록 받음 [덩어리 2 · 아래 끝 미수렴 · 위 끝 +∞]
+  PASS  S8k 괄호 정상 기록 받음 [덩어리 0 · 위 = 아래 (no_through)]
+  PASS  S8x5 정상 — 아래 끝 미수렴 · 위 끝 +∞ (위 끝 풀이 기록 · 끊은 다리 면 = 아래 끝) 받음 (10-25 묶음 B X5 대조의 기준)
+  PASS  S8x5 computed 끝 없는 기록의 수 칸 꼴 · ⑦ · ⑧ 관계 위반 → 실제 소비자 거부 (10-25 묶음 B X5 · 옛 판 = 받음) [아래 끝 n_reach_pairs_cut 없음]
+  PASS  S8x5 computed 끝 없는 기록의 수 칸 꼴 · ⑦ · ⑧ 관계 위반 → 실제 소비자 거부 (10-25 묶음 B X5 · 옛 판 = 받음) [아래 끝 n_reach_pairs_cut = n_sv_faces_cut + 1]
+  PASS  S8x5 computed 끝 없는 기록의 수 칸 꼴 · ⑦ · ⑧ 관계 위반 → 실제 소비자 거부 (10-25 묶음 B X5 · 옛 판 = 받음) [아래 끝 n_sv_faces_cut 없음]
+  PASS  S8x5 computed 끝 없는 기록의 수 칸 꼴 · ⑦ · ⑧ 관계 위반 → 실제 소비자 거부 (10-25 묶음 B X5 · 옛 판 = 받음) [위 끝 n_sv_faces_cut = 아래 끝 + 1 (⑦)]
+  PASS  S8x5 computed 끝 없는 기록의 수 칸 꼴 · ⑦ · ⑧ 관계 위반 → 실제 소비자 거부 (10-25 묶음 B X5 · 옛 판 = 받음) [위 끝 n_reach_pairs_cut 10**6 (> 아래 끝 + n_edges_cut)]
+  PASS  S8x5 computed 끝 없는 기록의 수 칸 꼴 · ⑦ · ⑧ 관계 위반 → 실제 소비자 거부 (10-25 묶음 B X5 · 옛 판 = 받음) [위 끝 n_reach_pairs_cut 없음]
+  PASS  S8x5 computed 끝 없는 기록의 수 칸 꼴 · ⑦ · ⑧ 관계 위반 → 실제 소비자 거부 (10-25 묶음 B X5 · 옛 판 = 받음) [위 끝 n_edges_cut 없음]
+  PASS  S8x5 computed 끝 없는 기록의 수 칸 꼴 · ⑦ · ⑧ 관계 위반 → 실제 소비자 거부 (10-25 묶음 B X5 · 옛 판 = 받음) [위 끝 n_reach_pairs_cut_vs_lower 없음]
+  PASS  S8x5 computed 끝 없는 기록의 수 칸 꼴 · ⑦ · ⑧ 관계 위반 → 실제 소비자 거부 (10-25 묶음 B X5 · 옛 판 = 받음) [위 끝 n_reach_pairs_cut_vs_lower = 위 끝 새 칸 − 아래 끝 새 칸 + 1]
+  PASS  S8l 괄호 기록 거부 [괄호 칸 없음 (옛 꼴 · status_hi 없음)]
+  PASS  S8l 괄호 기록 거부 [판정문 PRE2-impl-02 다섯째 꼴 (덩어리 1 · computed · 괄호 칸 없음)]
+  PASS  S8l 괄호 기록 거부 [덩어리 1 인데 위 끝 기록 없음 (한 번만 풂)]
+  PASS  S8l 괄호 기록 거부 [덩어리 0 인데 위 끝 기록 있음]
+  PASS  S8l 괄호 기록 거부 [덩어리 0 인데 위 비 ≠ 아래 비]
+  PASS  S8l 괄호 기록 거부 [덩어리 0 인데 위 상태 ≠ 아래 상태]
+  PASS  S8l 괄호 기록 거부 [위 끝 상태 빈 낱말]
+  PASS  S8l 괄호 기록 거부 [위 끝 computed 인데 비 None]
+  PASS  S8l 괄호 기록 거부 [위 끝 computed 인데 inf 표지]
+  PASS  S8l 괄호 기록 거부 [위 끝 no_through 인데 inf 표지 없음]
+  PASS  S8l 괄호 기록 거부 [위 끝 비 없는 상태인데 비가 있다]
+  PASS  S8l 괄호 기록 거부 [못 가른 덩어리 수 bool]
+  PASS  S8l 괄호 기록 거부 [못 가른 덩어리 수 음수]
+  PASS  S8l 괄호 기록 거부 [못 가른 덩어리 수 없음]
+  PASS  S8l 괄호 기록 거부 [괄호 규칙 없음]
+  PASS  S8l 괄호 기록 거부 [위 끝 칸 ≠ 위 끝 풀이 기록 (상태)]
+  PASS  S8l 괄호 기록 거부 [위 끝 칸 ≠ 위 끝 풀이 기록 (비)]
+  PASS  S8l 괄호 기록 거부 [덩어리 1 인데 위 끝 기록이 dict 아님]
+  PASS  S8l 괄호 기록 거부 [덩어리 1 인데 위 끝 기록 None]
+  PASS  S8m 사슬 꼴 (chain_view) — 아래 끝 · 위 끝 (+∞) · 못 가른 덩어리 수 · 위 끝 칸이 없는 옛 꼴 = 위 끝 None (못 읽음 · fail-closed)
+  PASS  S8o 증서 폭 상수 — ca_ext_svcf.CERT_TARGET_TOL = step3_conv_cert.CERT_TARGET_TOL · RATIO_FLOOR = (1 − τ)/(1 + τ) · 다시 셈 허용 1e-12
+  PASS  S8q 검증기 상수 = 생산자 상수 (★ 10-23 RCA2-01 · 04) — 지위 둘 · 영값 위상 그래프 이름표 · 위 끝 구조화 실패 · 등록 괄호 규칙 = 생산자 규칙 하나 · (★ 10-23 사전 공격 리뷰 C5) 반사실 종류 · 끊기 규칙 이름
+  PASS  S8n 수 대조 정상 받음 [증서 구간 기록 · 비 1.25 (주 해 · 아래 끝 증서 · 결합 칸)]
+  PASS  S8n 수 대조 정상 받음 [비 1 − 1e-9 (참 비 1 · 막다른 덩어리의 풀이 잡음 · 증서 폭 안)]
+  PASS  S8n 수 대조 정상 받음 [비 = (1 − τ)/(1 + τ) 정확 (칼날 · 받음)]
+  PASS  S8n 수 대조 정상 받음 [no_through (G_cut 0 · G_full 2.5 · 영값 위상 증서)]
+  PASS  S8n 수 대조 정상 받음 [괄호 [1.5, 1.5 × (1 − 1e-9)] (막다른 덩어리 · 위 = 아래 참 · 증서 폭 안)]
+  PASS  S8n 수 대조 정상 받음 [괄호 [1.5, 1.5 × RATIO_FLOOR] (칼날 · 받음)]
+  PASS  S8n 수 대조 정상 받음 [괄호 [1.2, 3.4] · 위 끝 증서 ok]
+  PASS  S8n 수 대조 정상 받음 [괄호 [+∞, +∞] (아래 · 위 관통 없음)]
+  PASS  S8n 수 대조 정상 받음 [진단 기록 (증서 없는 런 · 지위 diagnostic_uncertified · 판정 입력 아님)]
+  PASS  S8n 수 대조 정상 받음 [주 해 목표량 구간 [2.5(1 − 1e-5), 2.5(1 + 1e-5)] (폭 ≤ τ · 증서 통과)]
+  PASS  S8n 수 대조 거부 [판정문 ① 비 1.0 ≠ G_full/G_cut 1.25 (위 끝 칸도 1.0 · 덩어리 0 일관)]
+  PASS  S8n 수 대조 거부 [판정문 ② computed 인데 반사실 증서 ok False (ⓓ 실패)]
+  PASS  S8n 수 대조 거부 [판정문 ③ computed 인데 G_cut None]
+  PASS  S8n 수 대조 거부 [판정문 ④ 비 0.5 < 1 (G_cut 5 = 2 G_full · 비 = G 비 일관)]
+  PASS  S8n 수 대조 거부 [비 = RATIO_FLOOR 바로 아래 (nextafter · 칼날 밖)]
+  PASS  S8n 수 대조 거부 [증서 ok True 인데 pass_d False (플래그를 믿지 않는다)]
+  PASS  S8n 수 대조 거부 [증서 ok True 인데 상태 NOT_CERTIFIABLE]
+  PASS  S8n 수 대조 거부 [증서 꼴 dict 아님]
+  PASS  S8n 수 대조 거부 [computed 인데 G_cut 0.0]
+  PASS  S8n 수 대조 거부 [computed 인데 G_cut 음수]
+  PASS  S8n 수 대조 거부 [computed 인데 G_cut bool]
+  PASS  S8n 수 대조 거부 [computed 인데 G_cut bool True (G_full 1.25 · 비 1.25 = G 비 일관 · 셈 대조로는 안 걸린다)]
+  PASS  S8n 수 대조 거부 [computed 인데 G_full None]
+  PASS  S8n 수 대조 거부 [computed 인데 G_full 0.0]
+  PASS  S8n 수 대조 거부 [computed 인데 G_full 음수 (G_cut 도 음수 · 비 = G 비 1.25)]
+  PASS  S8n 수 대조 거부 [G_full 1e300 · G_cut 1e-300 (G 비 넘침 = +∞ · 비 1.25)]
+  PASS  S8n 수 대조 거부 [no_through 인데 G_cut 1.0 (관통 없음 = 0 이어야)]
+  PASS  S8n 수 대조 거부 [no_through 인데 G_cut None]
+  PASS  S8n 수 대조 거부 [no_through 인데 G_full None (비 +∞ 의 분자)]
+  PASS  S8n 수 대조 거부 [위 끝 비 4.0 ≠ G_full/G_cut_hi 3.4 (칸 · 풀이 기록 같이)]
+  PASS  S8n 수 대조 거부 [위 끝 증서 ok False]
+  PASS  S8n 수 대조 거부 [위 끝 computed 인데 G_cut None]
+  PASS  S8n 수 대조 거부 [위 끝 비 0.5 (아래 1.0 · G_cut_hi 5 · 일관)]
+  PASS  S8n 수 대조 거부 [위 끝 no_through 인데 G_cut 1.0]
+  PASS  S8n 수 대조 거부 [괄호 위 1.2 < 아래 3.0 (둘 다 일관 · Rayleigh 위반)]
+  PASS  S8n 수 대조 거부 [괄호 아래 +∞ 인데 위 유한 2.0]
+  PASS  S8n 수 대조 거부 [괄호 위 = 아래 × RATIO_FLOOR 바로 아래 (nextafter)]
+  PASS  S8n 수 대조 거부 [판정문 F3 ① computed 끝 증서 없음 (증서 구간 기록)]
+  PASS  S8n 수 대조 거부 [판정문 F3 ② 못 가른 덩어리 2 인데 제거 성분 0]
+  PASS  S8n 수 대조 거부 [판정문 F3 ③ 임의 괄호 규칙 (비지 않은 낱말)]
+  PASS  S8n 수 대조 거부 [판정문 F3 ④ 못 가른 덩어리 수 10^400 (위 끝 기록 · 제거 수도 10^400 = 서로 일관 · 의미 범위 밖)]
+  PASS  S8n 수 대조 거부 [판정문 F3 ⑤ 외부 증서 (다른 실제 회로의 통과 증서 — 게시 판 전류 0.4484304932735439)]
+  PASS  S8n 수 대조 거부 [옛 꼴 괄호 규칙 (lower_keep_upper_remove_fake_v1 — 등록 밖)]
+  PASS  S8n 수 대조 거부 [외부 증서 (게시 판 전류만 그 끝 G 로 · 목표량 구간 = 다른 회로)]
+  PASS  S8n 수 대조 거부 [외부 증서 (결합 칸 = 다른 런 · 격자 지문)]
+  PASS  S8n 수 대조 거부 [끝 증서 게시 판 전류 ≠ 그 끝 G (목표량 구간은 G 를 담음)]
+  PASS  S8n 수 대조 거부 [위 끝 증서 없음]
+  PASS  S8n 수 대조 거부 [주 해 증서 없음 (분자 G_full)]
+  PASS  S8n 수 대조 거부 [주 해 증서 게시 판 전류 ≠ G_full]
+  PASS  S8n 수 대조 거부 [주 해 증서 결합 판 없음]
+  PASS  S8n 수 대조 거부 [+∞ 끝 영값 위상 증서 없음]
+  PASS  S8n 수 대조 거부 [+∞ 끝 증서 = 양의 해 증서 (위상 증명 아님)]
+  PASS  S8n 수 대조 거부 [+∞ 끝 영값 증서 = 다른 그래프의 0 (조립 그래프 · 끊은 반사실 그래프 아님)]
+  PASS  S8n 수 대조 거부 [지위 칸 없음 (옛 기록)]
+  PASS  S8n 수 대조 거부 [지위 = 진단 인데 증서가 실려 있다]
+  PASS  S8n 수 대조 거부 [판정 근거 칸 변조 [9, 9]]
+  PASS  S8n 수 대조 거부 [판정 근거 칸 없음 (옛 투영)]
+  PASS  S8n 수 대조 거부 [제거 셀 수 < 성분 수 (못 가른 덩어리 2 · 셀 1)]
+  PASS  S8n 수 대조 거부 [제거 셀 수 10^400]
+  PASS  S8n 수 대조 거부 [끊은 간선 수 음수]
+  PASS  S8s 일관 변조 48 꼴 (판정 근거 칸 = 변조한 기록의 증서에서 다시 셈) — 전부 검증기 자신의 문장으로 거부 (칸 대조에 기대지 않음)
+  PASS  S8t 끝 증서 = 같은 기록의 주 해 증서 (일관 편집) → 실제 소비자 거부 [덩어리 0 · 아래 끝 증서 = 주 해 증서 (끊은 다리 면 4)]
+  PASS  S8t 끝 증서 = 같은 기록의 주 해 증서 (일관 편집) → 실제 소비자 거부 [덩어리 1 · 아래 끝 증서 = 주 해 증서 (위 끝 [3.4] 그대로)]
+  PASS  S8t 끝 증서 = 같은 기록의 주 해 증서 (일관 편집) → 실제 소비자 거부 [덩어리 1 · 위 끝 증서 = 주 해 증서 (아래 끝 비 1 · 위 끝 간선 6 뺌)]
+  PASS  S8n 증거 대조 거부 [census 불일치 (실제 census 못 가른 덩어리 2 · 기록 1)]
+  PASS  S8n 증거 대조 거부 [census 순서 모순 (못 가른 1 > 다리 놓는 0)]
+  PASS  S8n 증거 대조 거부 [census 칸 없음 (못 가른 · 다리 놓는 · 닿는 성분 수)]
+  PASS  S8n 증거 대조 거부 [솔브 기록 I_bot_code ≠ G_full]
+  PASS  S8n 증거 대조 거부 [솔브 기록 I_bot_code 없음]
+  PASS  S8n 증거 대조 거부 [증거 fp sid = 다른 런]
+  PASS  S8r 구간 함수 — +∞ 끝 = 끊은 반사실 그래프의 영값 위상 증서 (∞ · ∞) · 같은 기록에 다른 그래프의 0 (조립 그래프) = 못 정함 (None · None)
+  PASS  S8n 거부 사유 = 검증기 자신의 문장 (CAEXT|cjunc| sv_cf| …) — 예외 감싸기 (unverifiable) · 다른 검사로 거부된 꼴 없음
+  PASS  S8p 사슬 꼴 — 한 끝의 비 = 유한 양수 · +∞ (null + "inf") 만 읽음 · NaN · 음수 · 0 · ±∞ (finite 꼴) · bool · inf 꼴의 수 = None (못 읽음 · 사슬 SV_UNCHECKED) · 정상 1.25 · +∞ 그대로
+  PASS  SM0 상태 목록에 구조화 실패 이름 (기록 · 문서용 목록 · 이것만으로 끝내지 않는다 = SM1–SM4)
+  PASS  SM1 구조화 실패 받음 · 사슬 SV_UNCHECKED · 사유에 상태 이름 [census 0 · 다시 가른 수 1 (QD2 ⑧ 꼴 · 증서 구간)]
+  PASS  SM1 구조화 실패 받음 · 사슬 SV_UNCHECKED · 사유에 상태 이름 [census 1 · 다시 가른 수 2 (증서 구간)]
+  PASS  SM1 구조화 실패 받음 · 사슬 SV_UNCHECKED · 사유에 상태 이름 [census 2 · 다시 가른 수 0 (원장에서 덩어리가 사라짐)]
+  PASS  SM1 구조화 실패 받음 · 사슬 SV_UNCHECKED · 사유에 상태 이름 [census 0 · 다시 가른 수 1 (진단 기록 · 증서 없는 런)]
+  PASS  SM2 구조화 실패 꼴 거부 [다시 가른 수 = census 수 (1 · 1 — 상태의 정의와 모순)]
+  PASS  SM2 구조화 실패 꼴 거부 [다시 가른 수 = census 수 (0 · 0)]
+  PASS  SM2 구조화 실패 꼴 거부 [다시 가른 수 없음]
+  PASS  SM2 구조화 실패 꼴 거부 [다시 가른 수 bool]
+  PASS  SM2 구조화 실패 꼴 거부 [다시 가른 수 음수]
+  PASS  SM2 구조화 실패 꼴 거부 [다시 가른 수 10^400]
+  PASS  SM2 구조화 실패 꼴 거부 [사유 없음 (None)]
+  PASS  SM2 구조화 실패 꼴 거부 [사유 빈 글]
+  PASS  SM2 구조화 실패 꼴 거부 [사유 공백만]
+  PASS  SM2 구조화 실패 꼴 거부 [사유 글 아님 (수)]
+  PASS  SM2 구조화 실패 꼴 거부 [풀이 칸 — 비 2.0]
+  PASS  SM2 구조화 실패 꼴 거부 [풀이 칸 — inf 표지]
+  PASS  SM2 구조화 실패 꼴 거부 [풀이 칸 — G_cut 1.0]
+  PASS  SM2 구조화 실패 꼴 거부 [풀이 칸 — G_cut 0.0 (관통 없음을 숨김)]
+  PASS  SM2 구조화 실패 꼴 거부 [풀이 칸 — 잔차]
+  PASS  SM2 구조화 실패 꼴 거부 [풀이 칸 — CG info 0]
+  PASS  SM2 구조화 실패 꼴 거부 [풀이 칸 — 증서]
+  PASS  SM2 구조화 실패 꼴 거부 [풀이 칸 — backend]
+  PASS  SM2 구조화 실패 꼴 거부 [풀이 칸 — 제거 셀 수 3 (풀지 않은 끝)]
+  PASS  SM2 구조화 실패 꼴 거부 [풀이 칸 — 끊은 간선 수 6]
+  PASS  SM2 구조화 실패 꼴 거부 [풀이 칸 — 판 결합 끊은 수 0]
+  PASS  SM2 구조화 실패 꼴 거부 [풀이 칸 — SV 면 끊은 수 0]
+  PASS  SM2 구조화 실패 꼴 거부 [풀이 칸 — 판에 닿는 성분에서 끊은 쌍 수 0 (★ 10-23 묶음 A″)]
+  PASS  SM2 구조화 실패 꼴 거부 [풀이 칸 — 아래 끝 대비 판에 닿는 성분에서 끊은 쌍 수 0 (★ 10-25 묶음 B X3)]
+  PASS  SM2 구조화 실패 꼴 거부 [위 끝 칸 = 아래 끝 (census 1 · computed 1.25 — 구조화 실패를 위 끝 칸이 숨김)]
+  PASS  SM2 구조화 실패 꼴 거부 [위 끝 칸 = 아래 끝 (census 0 · computed 1.25)]
+  PASS  SM2 구조화 실패 꼴 거부 [위 끝 칸 상태 unconverged (위 끝 풀이 기록 = 구조화 실패)]
+  PASS  SM2 구조화 실패 꼴 거부 [위 끝 칸 상태 = 구조화 실패 · 위 끝 풀이 기록 상태 unconverged]
+  PASS  SM2 거부 사유 = 검증기 자신의 문장 (CAEXT|cjunc| sv_cf| …) — 예외 감싸기 (unverifiable) 로 거부된 꼴 없음
+  PASS  SM3 실제 생산자 → 실제 소비자 → 사슬 [꼴 ① 덩어리 하나 · census 0 (QD2 ⑧) · 증서 끔 (진단)] — 위 끝 = 구조화 실패 (다시 가른 수 1 · census 0 · 사유 · 풀이 칸 없음) · ca_ext_record_ok 받음 · 사슬 SV_UNCHECKED · 사유에 상태 이름
+  PASS  SM3 실제 생산자 → 실제 소비자 → 사슬 [꼴 ① 덩어리 하나 · census 0 (QD2 ⑧) · 증서 켬 (증서 구간)] — 위 끝 = 구조화 실패 (다시 가른 수 1 · census 0 · 사유 · 풀이 칸 없음) · ca_ext_record_ok 받음 · 사슬 SV_UNCHECKED · 사유에 상태 이름
+  PASS  SM3 실제 생산자 → 실제 소비자 → 사슬 [꼴 ② 두 성분 · census 1 (QD4) · 증서 끔 (진단)] — 위 끝 = 구조화 실패 (다시 가른 수 2 · census 1 · 사유 · 풀이 칸 없음) · ca_ext_record_ok 받음 · 사슬 SV_UNCHECKED · 사유에 상태 이름
+  PASS  SM3 실제 생산자 → 실제 소비자 → 사슬 [꼴 ② 두 성분 · census 1 (QD4) · 증서 켬 (증서 구간)] — 위 끝 = 구조화 실패 (다시 가른 수 2 · census 1 · 사유 · 풀이 칸 없음) · ca_ext_record_ok 받음 · 사슬 SV_UNCHECKED · 사유에 상태 이름
+  PASS  S8g 조기 반환 (바닥 · 영값) + 요청 · 기록 없음 → 통과 (주 솔브가 없으면 반사실도 없다)
+  PASS  S9a 영수증 sv_counterfactual True ↔ 증거 요청 있음 → 통과 · 영수증 칸 없음 ↔ 요청 있음 → 거부 · 영수증 True ↔ 요청 없음 → 거부
+  PASS  S10a payload._step3_early (조기 반환 해의 step3 조립 · 한 곳) 가 있다
+  PASS  S10b 단락 → σ None (유한 σ 로 위장 안 함) · 증서 복사 · 사유
+  PASS  S10c 영값 → σ 0.0 · 증서 복사
+  PASS  S10d 증서 끔 (칸 없음) → 옛 dict 그대로 (키 · 값 · 순서 = σ 0.0 · 사유 · vox)
+
+── SP 해 상태 · SV 반사실 — payload 끝-끝 (시험 먼저 · 10-21 D)
+  PASS  SP1 바닥 (R_j → ∞) 영값 침대 + rtol — rc 0 · σ 0.0 · 사유 no_through_component · 증서 복사 (VALID_ZERO_TOPOLOGY · early_return)
+  PASS  SP2 next_gen_state = zero · ca_ext_record_ok 통과
+  PASS  SP3 check_arm (러너가 쓰는 함수) 이 실제 영값 팔을 받는다
+  PASS  SP4 증서 끔 (rtol 없음) — 게시 거부 (rc 4 · 최종 파일 없음 · 옛 거동: 증서 없는 σ 0 = 수치 증거 실패) · 진단본 step3 = 옛 꼴 (증서 칸 없음 · σ 0.0) · next_gen_state 거부
+  PASS  SP5 노브 켬 — rc 0 · 증거 요청 {threshold: None} · 기록 (종류 = producer 상수 · 요청 · 상태 · 문턱 None · 표지 None) · ca_ext_record_ok
+  PASS  SP6 노브 켬 = 주 결과 그대로 — σ 비트 같음 · 증서 같음 · p3ca id 같음 · protocol 같음 · 끈 런에는 요청 · 기록 칸 없음
+  PASS  SP7 computed — 비 유한 ≥ 1 (Rayleigh · SV 면을 끊으면 G 가 줄거나 같다) · 끊은 면 수 int ≥ 0 · backend 기록
+  PASS  SP8 노브만 (접합 없이) → 입구 거부 S2_CJUNC_REFUSED|FLAG_WITHOUT_CJUNC|
+  PASS  SP9 천장 (R_j → 0) · 두 층 엇갈림 침대 · rtol — 실제 J11 단락: rc 0 · σ None (0 도 +∞ 도 아님) · 사유 cjunc_electrode_short · 증서 ELECTRODE_SHORT (early_return · ok False) · 축약 instance 1 · 전자 not_solvable
+  PASS  SP10 생산자 계약 — 단락 = 게시 불가 (next_gen_cert_ok 거부 · CERT|status| "게시 가능한 상태는 … 뿐") · 기록은 온전 (next_gen_state = short · ca_ext_record_ok 통과)
+  PASS  SP11 check_arm (러너가 옮기기 전 · 같은 함수) 이 단락 기록을 받는다 — 거부하면 러너 rc 1 → 사슬 RUNNER_RC (사유가 흐려진다)
+  PASS  SP12 사슬 이름 (등록 R 4판 §5-0 풀이 상태 셋) — 이 실제 단락 팔 = NOT_COMPUTED · 사유 ELECTRODE_SHORT (σ +∞ 로 판정에 오지 않는다)
+  PASS  SP13 같은 침대 대조 — 바닥 (R_j → ∞) = VALID_ZERO_TOPOLOGY (σ 0.0) · R_j 1e6 = POSITIVE_SOLVED (σ > 0) — 단락은 천장 축약에서만
+  PASS  SP14 두 섬유가 같은 덩어리를 지남 (payload · 실제 rasterize · 증서 켬) — rc 0 · 못 가른 덩어리 1 · 아래 끝 = 덩어리 그대로 (끊은 면 0 · 비 1 (1e-12) · computed) · 위 끝 = 덩어리를 뺀 판 (비를 싣는 상태 · 비 > 2) · 위 끝 풀이 기록 (뺀 셀 3 · computed 면 그 풀이의 증서 ok) · ca_ext_record_ok · next_gen_state = positive
+  PASS  SP15 사슬 판정 (문턱 2 · 실제 chain_view · sv_assess) — 두 섬유 꼴 = SV_UNCHECKED (괄호가 문턱에 걸침 · 옛 = 표지 없음) · 대조 (한 섬유만 지남) = SV_DEPENDENT · 대조 = 못 가른 덩어리 0 · 다시 풀지 않음 (위 = 아래 · 위 끝 기록 None) · ★ 10-23 지위 증서 구간 · 판정 근거 칸 · 기록의 주 해 증서 = 그 런의 step3 주 증서 (사슬 read_run 대조 칸)
+  PASS  SP16 위 끝 풀이는 주 결과를 바꾸지 않는다 — 두 섬유 침대 노브 켬 ↔ 끔: σ 비트 같음 · 주 증서 같음 (계획 행 지문 결합 칸 · 노브 켠 런의 가중 그래프 지문 칸 (10-26 B6 · 끈 런 = 칸 없음) 빼고) · 매니페스트 backend_last_solve 같음 · p3ca id 같음
+
+── SG payload 조립만 (--step3-cjunc-graph-only) — 봉인 원천 출력 (★ 10-26 B″ · 1저자 Q1 (가) · 시험 먼저)
+  PASS  SG1 조립만 런 — rc 0 · 출력 = 봉인 원천 기록 (run_contract.cjunc_graph_only_problem 통과 · graph_only True · 규칙 = carbon_junction.CJUNC_GRAPH_FP_RULE) · 실제 SV 런 (같은 인자 · 플래그 없음) rc 0
+  PASS  SG2 지문 = 실제 SV 런 증서 지문 — 주 = 주 해 증서 · 아래 = 아래 끝 증서 · 위 = 위 끝 풀이 증서 (못 가른 덩어리 1 · 셋 다 hex64) · 소비자 대조 (ca_ext_svcf.graph_problem · run_contract.ca_ext_record_ok(graphs=)) 통과
+  PASS  SG3 결합 칸 = 실제 SV 런 주 증서의 결합 (bind_version + 격자 · σ 표 · face 계획 · 접합 원장 · 계획 행 지문 — 같은 입력에서 다시 조립했다는 증거)
+  PASS  SG4 솔브 없음 · σ 없음 — 화면에 CG 줄 없음 · 출력 칸 = 고정 칸 (CJUNC_GRAPH_ONLY_KEYS · mpm_metrics · σ 없음) · .failed 없음 · .part 없음
+  PASS  SG5 환경 단위 = 이 인터프리터 (run_contract.env_unit_now — 사슬 env_record 와 같은 함수) · 비용 칸 (시간 둘 ≥ 0 · 최대 RSS kB int > 0)
+    보고 SG (픽스처 · 의미 없음) — 조립만 STEP3 0.0739293098449707 s · 조립 0.028645038604736328 s · 최대 RSS 95548 kB
+  PASS  SG6 SV 노브 끔 + 조립만 — rc 0 · 주 지문 = 노브 켠 조립만 주 지문 (노브는 주 계를 안 바꾼다) · 아래 · 위 None · 결합 = 계획 행 지문만 다름 (노브 켠 계획은 행 지문에 요청이 들어간다 · SP16)
+  PASS  SG7 DBE 꼴 (SDCP 점 하나 · 못 가른 덩어리 0) — 조립만 위 끝 None · 아래 끝 = 그 런 아래 끝 증서 지문 · 소비자 대조 통과 (위 끝 풀이 기록 없음 ↔ 원천 위 끝 없음)
+  PASS  SG8 입구 거부 (GPU 전 · 출력 없음) — 접합 없이 조립만 = S2_CJUNC_REFUSED|FLAG_WITHOUT_CJUNC| (그 플래그 이름) · 조립만 + rasterize-only = S2_CJUNC_REFUSED|GRAPH_ONLY_RASTERIZE_ONLY| (두 출력 꼴이 겹친다)
+  PASS  SG9 쓰기 실패 = 구조화 종료 (S2_CJUNC_GRAPH_ONLY|WRITE| · rc ≠ 0 · 최종 파일 · .part 없음 — 반쯤 쓰인 원천 파일을 남기지 않는다)
+
+── SGF 조립만 기록 꼴 — 칸마다 깨 본다 (★ 10-26 B″ 변이 보강 · run_contract.cjunc_graph_only_problem · 합성 · payload 없음)
+  PASS  SGF0 정직한 합성 기록 = 문제 없음 · 조기 반환 꼴 (지문 None · 사유 글) = 문제 없음 · 최대 RSS None = 문제 없음
+  PASS  SGF1 칸 안 값이 틀린 꼴 29 — 전부 그 칸의 코드 (GRAPH_ONLY|schema|graphs|reason|bind|env|cost|) 로 거부 (예외 아님)
+
+── Q 원장 문턱 한 곳 — registry_thresholds = 접합 protocol 의 원장 문턱 칸 = payload_prepare 가 cjunc_registry 에 넘기는 값 (★ 10-25 묶음 B X6 · 1저자 Q20 (가) · S0 단계 2 봉인 SV census 가 같은 함수 · 같은 문턱을 쓴다)
+  PASS  Q0 문턱 키 = cjunc_registry 의 이름 인자 (r_f · tol_ff · L_par · r_port · s_min · gap_tol · tol_P · tol_sj · r_ptfe · r_sdcp)
+  PASS  Q1 protocol 의 원장 문턱 칸 = registry_thresholds (정량 · 바닥 · 천장 · 값 · 형 같음)
+  PASS  Q2 payload_prepare → cjunc_registry 의 문턱 인자 = registry_thresholds (같은 값 · 그 밖 이름 인자 없음)
+  PASS  Q3 registry_thresholds 거부 — s_min · tol_ff 없음 (None) · NaN · ±inf · bool · 문자열 · 음수 (기본값 없음 · protocol 과 같은 검사)
+
+── B0u --old-scripts 대조의 경로 차이 · 허용 목록 (합성 · 기반 사본 없이 · ★ 10-21 D 브리프 묶음 5)
+  PASS  B0u-0 도구 (old_tree_diff · old_diff_problems · case_tags · OLD_DIFF_ALLOW) 가 한 곳 (이 파일 · z3 O 묶음이 import)
+  PASS  B0u-1 경로 차이 — 양쪽 dict 일 때만 내려감 · 목록 통째 · 새 칸 + · 없어진 칸 − · 값 ~ (1 ↔ 1.0 도 다름 = 바이트 기준) · 경로 순
+  PASS  B0u-2 같은 값 = 차이 없음 (NaN 끼리 · 키 순서 무관)
+  PASS  B0u-3 경우 표지 — off = 없음 · face_alpha + rtol = 둘 · cjunc
+  PASS  B0u-3b 경우 표지 — ★ 10-25 묶음 B (결정 11) 접합 + SV 반사실 + rtol = cjunc · sv_cf · rtol (sv_cf 는 --step3-cjunc-sv-cf 에서만)
+  PASS  B0u-4 [Z3 sid_off — face_alpha 경우] — 문제 0 · 허용 1
+  PASS  B0u-4 [Z3 sid_off — 끈 경우 (off) = 실패] — 문제 1 · 허용 0
+  PASS  B0u-4 [Z3 sid_off — rtol 경우 = 실패 (표지 밖)] — 문제 1 · 허용 0
+  PASS  B0u-4 [sid_off 꼬리 붙은 경로 = 실패 (전체 일치)] — 문제 1 · 허용 0
+  PASS  B0u-4 [sid_off 없어짐 (−) = 실패 (연산 다름)] — 문제 1 · 허용 0
+  PASS  B0u-4 [CG 반복 수 + 증서 반복 수 — rtol] — 문제 0 · 허용 3
+  PASS  B0u-4 [증서 v2 칸 · 판 — rtol] — 문제 0 · 허용 3
+  PASS  B0u-4 [증서 판 없어짐 (−) = 실패] — 문제 1 · 허용 0
+  PASS  B0u-4 [σ 값 바뀜 = 언제나 실패] — 문제 1 · 허용 0
+  PASS  B0u-4 [S1 부피 · 면 α 진단 — face_alpha] — 문제 0 · 허용 2
+  PASS  B0u-4 [S1 부피 칸 — cjunc 만 켠 경우 = 실패] — 문제 1 · 허용 0
+  PASS  B0u-4 [접합 SV 이름 바뀜 — cjunc] — 문제 0 · 허용 2
+  PASS  B0u-4 [p3ca id 바뀜 — cjunc 만 · face_alpha 는 실패] — 문제 1 · 허용 0
+  PASS  B0u-4 [접합 칸 — 끈 경우 = 실패] — 문제 1 · 허용 0
+  PASS  B0u-4 [RR SV 기록 새 칸 — 지위 · 주 해 증서 · 판정 근거 · 규칙 · 끊은 쌍 수 (아래 · 위) · 아래 끝 대비 · 증서 투영 · 위상 수 — sv_cf] — 문제 0 · 허용 13
+  PASS  B0u-4 [RR SV 새 칸 — sv_cf 없이 (접합만) = 실패] — 문제 2 · 허용 0
+  PASS  B0u-4 [RR SV 기존 칸 값 바뀜 (~) = 실패 (비 · 상태 · 위 끝 끊은 간선 수)] — 문제 3 · 허용 0
+  PASS  B0u-4 [RR SV 칸 없어짐 (−) = 실패] — 문제 1 · 허용 0
+  PASS  B0u-4 [RR — 아래 끝 자리의 아래 끝 대비 새 칸 (위 끝 칸만 허용) = 실패] — 문제 1 · 허용 0
+  PASS  B0u-5 --expect-identical = 허용 목록을 안 쓴다 (허용 칸도 실패)
+  PASS  B0u-6 기반 사본 환경 차이 (docs/ 없음 → 집전체 앵커 대체) = 실패 + 이유 표시 (허용 아님)
+  PASS  B0u-7 표 꼴 — (세대, 연산 ∈ {+,−,~}, 정규식, 경우 표지 ∈ {face_alpha, rtol, cjunc, sv_cf}, 사유) · 정규식 컴파일
+
+── B 끔 비트 동일 — 고치기 전 payload 와 대조 (--old-scripts)
+    (--old-scripts 없음 — 건너뜀 · 커밋 증거는 그 인자로 돌린 기록)
+
+501 PASS · 0 FAIL

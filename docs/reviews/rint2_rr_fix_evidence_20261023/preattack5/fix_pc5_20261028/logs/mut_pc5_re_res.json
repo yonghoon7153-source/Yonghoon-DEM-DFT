@@ -1,0 +1,14 @@
+[
+ {
+  "id": "P01c",
+  "why": "PC5-01 입력 시도 — 결과 줄 다시 셈 (ledger_inputs_check) 끔",
+  "only": "PC0,PC1,UM,AL,RS",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 78/79 PASS (188.3 s)   FAILED: ['PC01i']",
+  "fails": [
+   "FAIL  PC01i ★ 10-28 밤 PC5-01 예측 입력 길 (구현 중 변이 P01c 생존으로 찾음 ·"
+  ],
+  "seconds": 188.8
+ }
+]

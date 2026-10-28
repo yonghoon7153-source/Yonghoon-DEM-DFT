@@ -1,0 +1,18 @@
+  kgy 판 = Python 3.8.20 · numpy 1.24.4 · scipy 1.10.1 (/root/.local/share/uv/python/cpython-3.8.20-linux-x86_64-gnu/bin/python3.8)
+  ✓ run_contract :: run_contract selftest: 124/124 PASS
+  ✓ step3_rint :: STEP3 RINT SELFTEST PASS
+  ✓ ptfe_face_alpha :: 242 PASS · 0 FAIL
+  ✓ carbon_junction :: == test_carbon_junction: 466/466 PASS
+  ✓ ca_ext_b6 :: 501 PASS · 0 FAIL
+  ✓ ca_ext_runner :: 151 PASS · 0 FAIL
+  ✓ rint_r_chain :: test_rint_r_chain: 407/407 PASS (668.2 s)
+  ✓ rint_r_chain_e2e :: test_rint_r_chain_e2e: 40 PASS · 0 FAIL (442.3 s)
+  ✓ step3_target_cert :: == test_step3_target_cert [빠른 판]: 264/264 PASS (19.6 s)
+  ✓ step3_conv_cert :: == test_step3_conv_cert: 29/29 PASS
+  ✓ ca_s0_census :: 167 PASS · 0 FAIL
+✓ kgy 판 R 경로 시험 11 묶음 통과
+
+real	25m37.151s
+user	14m28.229s
+sys	6m42.416s
+rc=0

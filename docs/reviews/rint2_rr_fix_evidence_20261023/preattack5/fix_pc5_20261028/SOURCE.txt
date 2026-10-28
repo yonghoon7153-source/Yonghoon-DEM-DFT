@@ -1,0 +1,23 @@
+사전 공격 5 회차 수정 (10-28 밤 · 1저자 "rint는 권고대로") — 변이 · 회귀 실행 출력 (작업 트리 에이전트 · 스크래치에서 옮김 · 바이트 그대로)
+
+커밋: A b9fd47d7b (시험 먼저) · B 6bb3c064f (구현) · C 43a8abcaa (문서 · 웹앱) · 이 폴더 = 그 뒤 증거 커밋 (작업 트리 판을 통합 가지로 옮긴 sha · 내용 같음)
+환경: Python 3.11.15 (기본) · kgy 판 = Python 3.8.20 · numpy 1.24.4 · scipy 1.10.1 · BLAS 스레드 1 · nice 19 · 하나씩 차례로
+
+변이 (mutate_pc5.py · 사본 트리 = scripts 사본 + docs · webapp 링크 · 변이마다 원본에서 다시 쓰고 그 가드를 보는 시험 접두만)
+  mut_pc5_res.json · mut_pc5.log   BASE (변이 없음 · 92/92) + 32 변이 (새 가드 30 + X09 · X18) — 31 잡힘 · P01c 생존
+  mut_pc5_re_res.json · _re.log     P01c 다시 (시험 PC01i 더한 뒤) = 잡힘 (PC01i 실패)  ⇒ 32/32 잡힘
+  ⚠ 변이 때 사슬 = B 판에서 머리 설명문 (docstring) 한 단락을 더하기 전 판 (동작 같음 · 그 단락 = 커밋 B 에 들어 있음)
+
+회귀 (최종 트리 = C 커밋 판)
+  logs/fullC1.log                     test_rint_r_chain 407/407
+  logs/e2eC1.log                      test_rint_r_chain_e2e 40 PASS · 0 FAIL
+  logs/reg_test_rint_first_result.log 9/9 · reg_test_ca_s0_census.log 167 · reg_test_ca_ext_runner.log 151
+  logs/webC2.log                      webapp test_rint_explainer_page 91/91
+  logs/kgy_check.out · logs/kgy_py38/ bash scripts/check_kgy_py38.sh = 11 묶음 통과 (rc 0)
+
+중간 판 (기록)
+  logs/fullB1.log      구현 중 전체 401/404 (UM19 = 합치기 다시 셈이 옛 고정물의 결과 줄 칸 어긋남을 잡음 → 고정물 patch_line · K01 · PC20 = 문서 커밋 몫)
+  logs/btree_targeted.log · btree_web.log   B 커밋 판 (문서 = A 판) --only PC,GR,AL,RS,EP,K01,UM19 = 82/84 (K01 · PC20) · 웹앱 ⑬ 실패 = 문서 커밋 몫
+  logs/old_B1.log · old_pc01i.log           고치기 전 사슬 (b80f98f98) + 새 시험: PC01m · PC01i · PC06b · PC14 실패 (옳은 이유) · UM19 통과
+
+SHA256SUMS = 이 폴더 파일 (SOURCE.txt · SHA256SUMS 뺌) 의 sha256.  주소 · 비밀 훑기 (IP · 전자우편 · 토큰 · 키 꼴) = 없음.

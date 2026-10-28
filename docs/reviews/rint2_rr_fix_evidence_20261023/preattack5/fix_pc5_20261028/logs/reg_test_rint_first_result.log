@@ -1,0 +1,15 @@
+  PASS  F01 CG 해 → 표지 한 번 · kind cg_solution · σ 칸 없음 · 그룹 표지 실림 · payload 가 σ 를 찍기 전에 표지가 있다 · 임시 파일 남지 않음
+  PASS  F02 CG 없는 조기 반환 해 (σ 0) → 표지 (kind solve_return) · σ 를 찍기 전
+  PASS  F03 조립만 결과 (graph_only) → 표지 없음
+  PASS  F04 표지 자리에 쓸 수 없음 (부모 자리가 파일) → 감싸개 rc 5 · payload 가 σ 를 찍지 않는다 · 표지 없음
+  PASS  F05 표지가 이미 있다 → rc 2 · payload 를 돌리지 않는다 (σ 없음)
+  PASS  F06 인자 꼴 — 모자람 · 둘째가 mpm_webapp_payload.py 아님 → rc 2
+  PASS  F07 payload 의 SystemExit 3 → 감싸개 rc 3 (종료 코드 그대로) · 표지 없음 (풀이 전)
+  PASS  F08 같은 프로세스의 두 번째 풀이 = 표지를 다시 쓰지 않는다 (첫 결과만 · 같은 이름 · __main__ · argv 그대로)
+  PASS  F09 (구현과 함께 · 변이로 검증) 입구 검사 뒤 다른 프로세스가 같은 표지 자리를 먼저 씀 → 덮지 않는다 (그 내용 그대로) · 감싸개 rc 5 · σ 를 찍지 않는다
+
+test_rint_first_result: 9/9 PASS
+
+real	0m0.668s
+user	0m0.400s
+sys	0m0.088s

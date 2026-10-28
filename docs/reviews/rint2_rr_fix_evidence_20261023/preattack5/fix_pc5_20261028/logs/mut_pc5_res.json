@@ -1,0 +1,400 @@
+[
+ {
+  "id": "BASE",
+  "why": "변이 없음 (사본 트리 기준선)",
+  "only": "AL,GR,GR08,PC0,PC01,PC02,PC03,PC04,PC05,PC06,PC07,PC08,PC09,PC1,PC10,PC11,PC12,PC13,PC14,PC15,PC16,RS,UM",
+  "rc": 0,
+  "killed": false,
+  "summary": "test_rint_r_chain: 92/92 PASS (292.1 s)",
+  "fails": [],
+  "seconds": 292.8
+ },
+ {
+  "id": "P01a",
+  "why": "PC5-01 판정 · 합치기 — 결과 줄 다시 셈 (target_ledger_problem) 끔",
+  "only": "PC01,PC02",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 1/3 PASS (19.0 s)   FAILED: ['PC01', 'PC01m']",
+  "fails": [
+   "FAIL  PC01 ★ 10-28 밤 PC5-01 (사전 공격 5 회차 R1 · 끝 커밋 교체) — 정직한 ",
+   "FAIL  PC01m ★ 10-28 밤 PC5-01 합치기 길 (구현 중 UM19 고정물에서 찾음 · B 커"
+  ],
+  "seconds": 19.4
+ },
+ {
+  "id": "P01b",
+  "why": "PC5-01 재실행 풀기 전 — 사슬 다시 셈 (resume_chain_problem) 끔",
+  "only": "PC01",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 1/2 PASS (20.1 s)   FAILED: ['PC01']",
+  "fails": [
+   "FAIL  PC01 ★ 10-28 밤 PC5-01 (사전 공격 5 회차 R1 · 끝 커밋 교체) — 정직한 "
+  ],
+  "seconds": 20.6
+ },
+ {
+  "id": "P01c",
+  "why": "PC5-01 입력 시도 — 결과 줄 다시 셈 (ledger_inputs_check) 끔",
+  "only": "PC0,PC1,UM,AL,RS",
+  "rc": 0,
+  "killed": false,
+  "summary": "test_rint_r_chain: 78/78 PASS (256.7 s)",
+  "fails": [],
+  "seconds": 257.4
+ },
+ {
+  "id": "P01d",
+  "why": "PC5-01 원장 역사 — 첫 부모 밖 원장 커밋 (merge -s ours) 검사 끔",
+  "only": "PC02",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (3.6 s)   FAILED: ['PC02']",
+  "fails": [
+   "FAIL  PC02 ★ 10-28 밤 PC5-01 (사전 공격 5 회차 R1 · merge -s ours 숨"
+  ],
+  "seconds": 4.1
+ },
+ {
+  "id": "P02a",
+  "why": "PC5-02 자원 낱말 — cupy 클래스 이름 둘 되살림",
+  "only": "PC03,PC04",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/2 PASS (2.6 s)   FAILED: ['PC03', 'PC04']",
+  "fails": [
+   "FAIL  PC03 ★ 10-28 밤 PC5-02 (1저자 Q2 · 사전 공격 5 회차 U1) 자원 낱말 =",
+   "FAIL  PC04 ★ 10-28 밤 PC5-02 (사전 공격 5 회차 R2 · 실경로) — 표지 뒤 러너 "
+  ],
+  "seconds": 3.1
+ },
+ {
+  "id": "P02b",
+  "why": "PC5-02 낱말 규칙 — 잘못된 주소 (NOT_RESOURCE) 를 자원 낱말 뒤에 봄",
+  "only": "PC03",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (1.2 s)   FAILED: ['PC03']",
+  "fails": [
+   "FAIL  PC03 ★ 10-28 밤 PC5-02 (1저자 Q2 · 사전 공격 5 회차 U1) 자원 낱말 ="
+  ],
+  "seconds": 1.7
+ },
+ {
+  "id": "P03a",
+  "why": "PC5-03 recover — 산 사슬 부모 검사 끔",
+  "only": "PC05",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (1.7 s)   FAILED: ['PC05']",
+  "fails": [
+   "FAIL  PC05 ★ 10-28 밤 PC5-03 (사전 공격 5 회차 U6) — 사슬 부모 (시작 기록 c"
+  ],
+  "seconds": 2.3
+ },
+ {
+  "id": "P03b",
+  "why": "PC5-03 사슬 부모 — 시작 시각 대조 끔 (pid 다시 쓰임 = 산 사슬)",
+  "only": "PC05",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (5.5 s)   FAILED: ['PC05']",
+  "fails": [
+   "FAIL  PC05 ★ 10-28 밤 PC5-03 (사전 공격 5 회차 U6) — 사슬 부모 (시작 기록 c"
+  ],
+  "seconds": 6.0
+ },
+ {
+  "id": "P03c",
+  "why": "PC5-03 사슬 부모 — 시작 시각 칸 없음 = 죽은 사슬",
+  "only": "PC05",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (5.6 s)   FAILED: ['PC05']",
+  "fails": [
+   "FAIL  PC05 ★ 10-28 밤 PC5-03 (사전 공격 5 회차 U6) — 사슬 부모 (시작 기록 c"
+  ],
+  "seconds": 6.1
+ },
+ {
+  "id": "P04a",
+  "why": "PC5-04 recover — 다른 부팅을 볼 수 있는 쪽으로 (옛 재부팅 확인 꼴)",
+  "only": "PC06,GR08",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/3 PASS (2.1 s)   FAILED: ['GR08', 'PC06', 'PC06b']",
+  "fails": [
+   "FAIL  GR08 ★ 10-27 묶음 C2b — recover 의 호스트 규칙: 시작 기록의 machine",
+   "FAIL  PC06 ★ 10-28 밤 PC5-04 (1저자 Q3 · 사전 공격 5 회차 U2) — 원장 시도",
+   "FAIL  PC06b ★ 10-28 밤 PC5-04 (구현 중 변이로 찾음 · B 커밋) 운영자 확인 표지의"
+  ],
+  "seconds": 2.6
+ },
+ {
+  "id": "P04b",
+  "why": "PC5-04 recover — machine_id 다름 검사 끔",
+  "only": "GR08",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (1.2 s)   FAILED: ['GR08']",
+  "fails": [
+   "FAIL  GR08 ★ 10-27 묶음 C2b — recover 의 호스트 규칙: 시작 기록의 machine"
+  ],
+  "seconds": 1.7
+ },
+ {
+  "id": "P04c",
+  "why": "PC5-04 운영자 표지 — 시도 폴더 범위 끔 (바탕의 모든 그룹)",
+  "only": "PC06",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 1/2 PASS (2.1 s)   FAILED: ['PC06b']",
+  "fails": [
+   "FAIL  PC06b ★ 10-28 밤 PC5-04 (구현 중 변이로 찾음 · B 커밋) 운영자 확인 표지의"
+  ],
+  "seconds": 2.6
+ },
+ {
+  "id": "P04d",
+  "why": "PC5-04 운영자 표지 — 쓰이지 않은 표지 = rc 3 끔",
+  "only": "PC06",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 1/2 PASS (2.3 s)   FAILED: ['PC06b']",
+  "fails": [
+   "FAIL  PC06b ★ 10-28 밤 PC5-04 (구현 중 변이로 찾음 · B 커밋) 운영자 확인 표지의"
+  ],
+  "seconds": 2.9
+ },
+ {
+  "id": "P04e",
+  "why": "PC5-04 운영자 표지 — 번호 · 사유 꼴 검사 끔",
+  "only": "PC06",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 1/2 PASS (2.3 s)   FAILED: ['PC06']",
+  "fails": [
+   "FAIL  PC06 ★ 10-28 밤 PC5-04 (1저자 Q3 · 사전 공격 5 회차 U2) — 원장 시도"
+  ],
+  "seconds": 3.0
+ },
+ {
+  "id": "P05a",
+  "why": "PC5-05 채택 — 결과 전 멈춘 재실행 건너뜀 끔",
+  "only": "PC07",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (2.4 s)   FAILED: ['PC07']",
+  "fails": [
+   "FAIL  PC07 ★ 10-28 밤 PC5-05 (사전 공격 5 회차 R5) — 원 시도 OOM (표지 뒤"
+  ],
+  "seconds": 2.9
+ },
+ {
+  "id": "P06a",
+  "why": "PC5-06 요약 없는 시도 — 원인 = 늘 parent_dead · 읽음 (옛)",
+  "only": "PC08,PC09",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/2 PASS (3.6 s)   FAILED: ['PC08', 'PC09']",
+  "fails": [
+   "FAIL  PC08 ★ 10-28 밤 PC5-06 (사전 공격 5 회차 R6 · 실경로) — 표지 뒤 러너 ",
+   "FAIL  PC09 ★ 10-28 밤 PC5-06 (사전 공격 5 회차 U5) 요약 없는 시도의 결과 줄 ("
+  ],
+  "seconds": 4.2
+ },
+ {
+  "id": "P06b",
+  "why": "PC5-06 요약 있는 길 — 신호 · 시간 초과 · 그룹 미확인의 잘못된 주소 낱말 끔",
+  "only": "PC11",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (2.5 s)   FAILED: ['PC11']",
+  "fails": [
+   "FAIL  PC11 ★ 10-28 밤 PC5-06 같은 부류 (같은 낱말 규칙 · 요약 있는 길) — 표지 "
+  ],
+  "seconds": 3.1
+ },
+ {
+  "id": "P06c",
+  "why": "PC5-06 ② 사슬 예외 — 요약 · 결과 줄 없이 다시 올림 (사다리)",
+  "only": "PC10",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (2.1 s)   FAILED: ['PC10']",
+  "fails": [
+   "FAIL  PC10 ★ 10-28 밤 PC5-06 ② (사전 공격 5 회차 R3) 사슬 예외 (Stop 아님"
+  ],
+  "seconds": 2.8
+ },
+ {
+  "id": "P06d",
+  "why": "PC5-06 요약 없는 시도 — 런 로그 못 읽음 = 읽음으로",
+  "only": "PC09",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (1.4 s)   FAILED: ['PC09']",
+  "fails": [
+   "FAIL  PC09 ★ 10-28 밤 PC5-06 (사전 공격 5 회차 U5) 요약 없는 시도의 결과 줄 ("
+  ],
+  "seconds": 2.1
+ },
+ {
+  "id": "P06e",
+  "why": "PC5-06 결과 칸 — 못 읽음을 재실행 자격에서 뺌",
+  "only": "PC09",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (1.5 s)   FAILED: ['PC09']",
+  "fails": [
+   "FAIL  PC09 ★ 10-28 밤 PC5-06 (사전 공격 5 회차 U5) 요약 없는 시도의 결과 줄 ("
+  ],
+  "seconds": 2.0
+ },
+ {
+  "id": "P07a",
+  "why": "PC5-07 그룹 원 — Z 지도자의 산 스레드 끔 (Z = 끝남 · 옛)",
+  "only": "PC14",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (4.6 s)   FAILED: ['PC14']",
+  "fails": [
+   "FAIL  PC14 ★ 10-28 밤 PC5-07 (사전 공격 5 회차 U3) 그룹 원 찾기 — ⓐ 실경로:"
+  ],
+  "seconds": 5.1
+ },
+ {
+  "id": "P07b",
+  "why": "PC5-07 그룹 원 — environ 못 읽음 = 건너뜀 (옛)",
+  "only": "PC14",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (5.0 s)   FAILED: ['PC14']",
+  "fails": [
+   "FAIL  PC14 ★ 10-28 밤 PC5-07 (사전 공격 5 회차 U3) 그룹 원 찾기 — ⓐ 실경로:"
+  ],
+  "seconds": 5.6
+ },
+ {
+  "id": "P07c",
+  "why": "PC5-07 그룹 원 — 그룹 시작 전 프로세스 거름 끔",
+  "only": "PC14",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (4.7 s)   FAILED: ['PC14']",
+  "fails": [
+   "FAIL  PC14 ★ 10-28 밤 PC5-07 (사전 공격 5 회차 U3) 그룹 원 찾기 — ⓐ 실경로:"
+  ],
+  "seconds": 5.4
+ },
+ {
+  "id": "P07d",
+  "why": "PC5-07 그룹 원 — 다른 실 uid 거름 끔",
+  "only": "PC14",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (4.9 s)   FAILED: ['PC14']",
+  "fails": [
+   "FAIL  PC14 ★ 10-28 밤 PC5-07 (사전 공격 5 회차 U3) 그룹 원 찾기 — ⓐ 실경로:"
+  ],
+  "seconds": 5.3
+ },
+ {
+  "id": "P07e",
+  "why": "PC5-07 그룹 원 — pid 1 셈 밖 끔",
+  "only": "PC14,PC05,GR",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 14/16 PASS (40.2 s)   FAILED: ['PC05', 'PC14']",
+  "fails": [
+   "FAIL  PC05 ★ 10-28 밤 PC5-03 (사전 공격 5 회차 U6) — 사슬 부모 (시작 기록 c",
+   "FAIL  PC14 ★ 10-28 밤 PC5-07 (사전 공격 5 회차 U3) 그룹 원 찾기 — ⓐ 실경로:"
+  ],
+  "seconds": 40.7
+ },
+ {
+  "id": "P08a",
+  "why": "PC5-08 덧붙임 — 실패 뒤 되돌림 끔",
+  "only": "PC15",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (4.3 s)   FAILED: ['PC15']",
+  "fails": [
+   "FAIL  PC15 ★ 10-28 밤 PC5-08 (사전 공격 5 회차 U4 · U7) 원장 덧붙임 = 잠금"
+  ],
+  "seconds": 4.8
+ },
+ {
+  "id": "P08b",
+  "why": "PC5-08 덧붙임 — 배타 잠금 끔",
+  "only": "PC15",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (1.4 s)   FAILED: ['PC15']",
+  "fails": [
+   "FAIL  PC15 ★ 10-28 밤 PC5-08 (사전 공격 5 회차 U4 · U7) 원장 덧붙임 = 잠금"
+  ],
+  "seconds": 1.8
+ },
+ {
+  "id": "P08c",
+  "why": "PC5-08 --init — git 실패 뒤 되돌림 끔",
+  "only": "PC15",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (4.6 s)   FAILED: ['PC15']",
+  "fails": [
+   "FAIL  PC15 ★ 10-28 밤 PC5-08 (사전 공격 5 회차 U4 · U7) 원장 덧붙임 = 잠금"
+  ],
+  "seconds": 5.2
+ },
+ {
+  "id": "P10a",
+  "why": "PC5-10 다시 판정 — 다른 대상 시도 폴더 너그러움 끔 (옛)",
+  "only": "PC16",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (9.3 s)   FAILED: ['PC16']",
+  "fails": [
+   "FAIL  PC16 ★ 10-28 밤 PC5-10 (사전 공격 5 회차 R4) 다시 판정 — 원장 판정 (사"
+  ],
+  "seconds": 9.8
+ },
+ {
+  "id": "P10b",
+  "why": "PC5-10 다시 판정 — 같은 대상 뒤 시도도 너그럽게",
+  "only": "PC16",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (9.3 s)   FAILED: ['PC16']",
+  "fails": [
+   "FAIL  PC16 ★ 10-28 밤 PC5-10 (사전 공격 5 회차 R4) 다시 판정 — 원장 판정 (사"
+  ],
+  "seconds": 10.0
+ },
+ {
+  "id": "X09",
+  "why": "결과 줄 꼴 — rejected 인데 결과 뒤 · 재실행 자격 검사 끔",
+  "only": "PC12",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (1.8 s)   FAILED: ['PC12']",
+  "fails": [
+   "FAIL  PC12 ★ 10-28 밤 변이 구멍 X09 (사전 공격 5 회차 · 결과 줄 꼴) — 손으로 커"
+  ],
+  "seconds": 2.2
+ },
+ {
+  "id": "X18",
+  "why": "recover --ledger — 거부 기록 (rejected.json) 폴더 = rejected 결과 줄 끔",
+  "only": "PC13",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 0/1 PASS (1.7 s)   FAILED: ['PC13']",
+  "fails": [
+   "FAIL  PC13 ★ 10-28 밤 변이 구멍 X18 (사전 공격 5 회차 · recover --ledge"
+  ],
+  "seconds": 2.2
+ }
+]
