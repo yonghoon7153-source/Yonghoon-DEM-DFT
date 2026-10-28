@@ -12,6 +12,8 @@
 
 > **개정 5 (10-26)** — Codex 회차 ① (`docs/reviews/codex_review_rint2_rr_round1_20261026.md` §7 · Q-A – Q-M = 설계 방향 조건부 수용 · 묶음 C 구현 종결 아님) · 1저자 10-26 *"권고대로해"* (수정 계획 `docs/reviews/rint2_rr1_fix_plan_20261026.md` Q4 · Q5 (가)) = 인수 조건 ① "같은 프로세스" → 같은 사슬 부모의 동결 환경 · 재개 = 새 프로세스 + 전체 환경 지문 · ② 부모 사망에도 그룹 종료 확인 (supervisor / recovery) · ③ 최종 등급이 다르면 `REVERIFY_DIFF` · ⑥ = 개발 탐침 사전 원장 `docs/reviews/rint2_dev_probe_ledger_20261026.md` (§3-5 금지의 유일한 예외) — 자세히 §10.
 
+> **개정 6 (10-28) — 1저자 *"Rint 권고대로"*** — 묶음 C 코드 보고 `docs/reviews/rint2_rr_fix_evidence_20261023/REPORT_C.md` §11 결정 25 의 권고 묶음 (가 문서가 구현을 따른다 · 나 구현 그대로 · 다 등록 한 줄씩 · 라 GPU 런 · 마 W0 · 바 이름 · 동작 · 한정) + C3 문서 남은 것 (① ② ⑤) · **결과 0 건 · 문서 · 이름 정리 + RESOURCE_WORDS 한 낱말 제거** (`CUDA_ERROR_ILLEGAL_ADDRESS` 를 `scripts/rint_r_chain.py` 의 자원 낱말 표에서 뺐다 · 그 낱말만 있는 러너 실패 = 원인 `runner_rc` · 시험 `scripts/test_rint_r_chain.py` AL19b).  바뀐 절 = §3-2 (원장 접두 어긋남의 이름 = `ATTEMPT_LEDGER_MISMATCH` · 결정 기록에 W0 없음) · §7 (구현 이름 · 구현된 동작 · 한정 · 요청서에 한정으로 적을 것).  규칙 줄 (가 · 나 · 다 · 라 · C3) 의 정본 = 등록 R `docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md` §10-5 (10-28 블록) — 이 문서는 그 규칙을 되풀이하지 않는다.
+
 ## 0. 이번에 정하는 것 / 정하지 않는 것
 
 - 정하는 것 (설계): 예측 단계의 실행 단위 · 합치기 · 넘침 런의 순서 · 출처 대조 항목 · 시도 원장 (개정 1) · no-op 의 자리 (개정 3 = 사다리 단계 끝 · 같은 프로세스) · 결과 전 멈춤의 판정 규칙 (개정 2 · 3 = 폴더 + 러너가 기록한 원인) · 이른 R 단조 검사의 자리 (개정 2) · (개정 3) 부분 채택 · 같은 단위 시도의 차례 · 멈춘 런만 재실행 (같은 기계 · 같은 환경 · 비트 대조) · 풀기 전 대조와 거부 기록 · 칼날 문장 · 합친 런 이름 · (10-24 결정) 채택 뒤 같은 단위의 시도 = 멈춤 · (개정 4) 첫 풀이 끝 표지 · 러너 프로세스 그룹 · payload 자리 · 판 봉인과 풀기 전 대조 · 같은 단위 앞 시도 거부 · 재실행 사슬 · 재실행 환경 칸 · 원장 조상 대조 · 결정 기록 구조 대조 · 사다리 시도 원장 · no-op 결과의 자리 · 원장 밖 런 금지.
@@ -78,9 +80,9 @@
      - 이른 단조 검사 (개정 2 · Q24 (나)) — 넘침 런을 요청하기 **전에** 이미 있는 점으로 같은 판정 함수 (`r_monotone_problem`) 를 지금 `_r_monotone` 과 같은 순서 (법칙 → c → 최종 추정량 → origin) 로 부른다.  이미 있는 점 = 넘침이 없는 모서리의 최종 추정량 (= arm 0) · 모든 모서리의 origin 점 (corner_a0 · origin_a1 · origin_a2).  아직 없는 점 (넘친 모서리의 8 팔 평균 · origin8_a0–a7) 은 건너뛴다.  모순 = 멈춤 `R_MONOTONE_VIOLATION` (넘침 런 없이 · 결정 기록 없이) — 사유의 점 이름 = 새 순서에서 처음 만난 모순.
      - **이른 검사 기록 (개정 3 · 3차 사전 공격 P3)** — 넘침이 없으면 이른 검사의 점 = 끝 검사의 점 (같은 점 · 같은 순서) 이라 **한 번만 돌고 지금과 같은 칸 (`checks['r_monotone']`) 에 같은 꼴로 쓴다** (넘침 없는 꼴의 요약 · 멈춤 칸이 지금 코드와 같다).  넘침이 있으면 이른 검사 기록 = 따로 칸 (이름 = 구현 때) · 끝 검사 = 지금 그대로.
      - 넘침 없음 → 바로 끝까지 (아래 "끝 합치기" 와 같음).
-     - 넘침 있음 → 상태 `EXPANSION_NEEDED` + 결정 기록 (넘침 목록 · 채택된 시도 폴더 요약 sha256 집합 · W0 · 원장 sha256 · (개정 3) 첫 합치기 기계 · 환경 지문 — 개정 4 · Q4: W0 · 기계 · 환경 지문 = 기록만).  멈춤도 판정 입력도 아니다.
-   - **끝 합치기** = 넘침 런까지 모인 뒤: 첫 합치기 계산을 다시 해 결정 기록과 대조 (넘침 목록 · 시도 sha 집합 · 원장 접두 (§3-5) 같아야 · 다르면 `UNIT_PROVENANCE_MISMATCH` · 개정 4 · Q4 = W0 값은 대조하지 않는다) → 묶음 C 의 `Predict.run` (§2 새 순서) 과 같은 요청 순서로 끝까지 → 지금과 같은 꼴의 예측 폴더.
-     - ~~**첫 · 끝 합치기와 판정 = 같은 기계 · 같은 환경 지문 (개정 3)**~~ → **결정 기록 대조 = 구조 칸 (개정 4 · Q4 · R4-11)** — W0 = `math.log` 라 libm (glibc · Windows CRT) 이 다르면 끝자리가 다를 수 있다.  개정 3 은 그래서 같은 환경을 요구했지만, 그러면 다른 플랫폼 (예: Codex Windows) 의 다시 판정이 늘 멈추고 컨테이너 재시작으로 CPU 모델이 바뀌면 끝 합치기가 막혔다 (4차 사전 공격 R4-11).  개정 4 = 넘침 목록 · 채택 시도 폴더 요약 sha 집합 · 원장 접두만 대조하고, W0 값 · 환경 지문은 기록만 한다.  다시 센 넘침 목록이 결정 기록과 다르면 멈춤 `UNIT_PROVENANCE_MISMATCH` (사유 = 두 W0 · 두 환경 지문 = 칼날 보고).  판정 단계의 다른 log 계산 (등급 W) 이 끝자리 차로 다른 판정을 내는 꼴도 같은 칼날 보고다 (한정 · §3-5 칼날).
+     - 넘침 있음 → 상태 `EXPANSION_NEEDED` + 결정 기록 (넘침 목록 · 채택된 시도 폴더 요약 sha256 집합 · ~~W0 ·~~ 원장 sha256 · (개정 3) 첫 합치기 기계 · 환경 지문 — 개정 4 · Q4: ~~W0 ·~~ 기계 · 환경 지문 = 기록만).  멈춤도 판정 입력도 아니다.  **(개정 6 · REPORT_C §11 ⑬) W0 는 결정 기록에 넣지 않는다** — W0 는 σ 값에서 나와 봉인 대상이다 · 구현의 결정 기록 (`expansion.json` · `rint-r-expansion-v1`) 칸 = schema · variant · points · overflow · attempts · ledger (경로 · 커밋 · sha256) · ladders · plan_sha256 · machine · env · utc (`rint_r_chain.EXPANSION_KEYS` · W0 칸 없음).
+   - **끝 합치기** = 넘침 런까지 모인 뒤: 첫 합치기 계산을 다시 해 결정 기록과 대조 (넘침 목록 · 시도 sha 집합 · 원장 접두 (§3-5) 같아야 · ~~다르면 `UNIT_PROVENANCE_MISMATCH`~~ → (개정 6 · REPORT_C §11 ⑭ · 구현 이름) 넘침 목록 · 시도 sha 집합이 다르면 `UNIT_PROVENANCE_MISMATCH` · 원장 접두 (결정 기록의 원장 커밋이 지금 원장 HEAD 의 조상 · 그 커밋의 원장이 바이트 접두) 가 다르면 `ATTEMPT_LEDGER_MISMATCH` (§3-5 의 첫 · 끝 합치기 원장 접두 줄과 같은 이름) · 개정 4 · Q4 = W0 값은 대조하지 않는다 (개정 6 = 결정 기록에 W0 없음)) → 묶음 C 의 `Predict.run` (§2 새 순서) 과 같은 요청 순서로 끝까지 → 지금과 같은 꼴의 예측 폴더.
+     - ~~**첫 · 끝 합치기와 판정 = 같은 기계 · 같은 환경 지문 (개정 3)**~~ → **결정 기록 대조 = 구조 칸 (개정 4 · Q4 · R4-11)** — W0 = `math.log` 라 libm (glibc · Windows CRT) 이 다르면 끝자리가 다를 수 있다.  개정 3 은 그래서 같은 환경을 요구했지만, 그러면 다른 플랫폼 (예: Codex Windows) 의 다시 판정이 늘 멈추고 컨테이너 재시작으로 CPU 모델이 바뀌면 끝 합치기가 막혔다 (4차 사전 공격 R4-11).  개정 4 = 넘침 목록 · 채택 시도 폴더 요약 sha 집합 · 원장 접두만 대조하고, ~~W0 값 ·~~ 환경 지문은 기록만 한다 (개정 6 · W0 = 결정 기록에 없다 · 봉인).  다시 센 넘침 목록이 결정 기록과 다르면 멈춤 `UNIT_PROVENANCE_MISMATCH` (사유 = ~~두 W0 · 두 환경 지문~~ → (개정 6 · 구현 사유 글) 첫 합치기 기계 · 두 환경 지문의 다른 칸 · "W0 = 봉인" = 칼날 보고).  판정 단계의 다른 log 계산 (등급 W) 이 끝자리 차로 다른 판정을 내는 꼴도 같은 칼날 보고다 (한정 · §3-5 칼날).
      - 런 기록 (`runs`) = `Predict.run` 이 요청한 런만 · 요청 순서 그대로 · **(개정 3 · P3) 런 이름 = 한 기계 사슬이 그 요청 순서로 매기는 이름** (단위 안 러너 번호가 아님 — 단위마다 `P01_corner` (예측 러너 이름 = `P<번호>_<역할>` · 개정 4 R4-13 = 개정 3 의 `R01_corner` 오기) 가 되풀이돼 판정 결과의 증서 칸 키 `<예측 폴더 이름>/<런 이름>` (`rint_r_chain.py` `Replay.cert_reg`) 가 덮어써지는 것을 막는다).
    - **등록된 결과로 일찍 끝날 때 (개정 1 · D1 · 개정 3 부분 채택)** — `NOT_COMPUTED` (단락 · 증서 실패) · 등록 멈춤으로 다시 계산이 일찍 끝나면 그 결과가 곧 예측 결과다 (한 기계 사슬과 같은 상태 · 같은 런 수).  요청되지 않고 남은 런은 출처 칸 `unused_runs` (폴더 · sha256) 에만 남긴다.
    - 다시 계산이 끝까지 갔는데 남는 런 = 멈춤 `UNIT_EXTRA` · 요청된 런이 없음 = `UNIT_MISSING` (넘침 런만 없으면 `EXPANSION_NEEDED`).  (개정 4 · R4-08 (b)) 재실행이 대신한 원 시도의 멈춘 런 폴더 (표지 · 부분 payload) 는 남는 런이 아니다 — 재실행 대조 (§3-5) 대상 · `unused_runs` 에 기록.
@@ -212,6 +214,32 @@
 - (개정 4 · R4-06 (c) (d)) 판정 단계 (`_replay_ladder` · `_replay_predict`) 도 같은 묶음에서 바뀐다 — no-op 런 = 사다리 기록에서 다시 읽고 float 같음을 다시 대조 · 예측 다시 계산은 사다리 요약의 no-op 결과를 첫머리에서 같은 이름으로 낸다 · `checks['sbe_noop']` 꼴 같음 (지금 `_replay_ladder` 는 사다리 기록을 남김없이 읽어야 끝난다 = `rp.done()` → 옮기지 않으면 `REPLAY_MISMATCH`).
 - (개정 4 · R4-07) 원장 조상 · 바이트 접두 대조 · 합치기 입력 = 원장 git 저장소.
 - (개정 4 · R4-12) "2 대 · 지금 사슬" = 묶음 B (상대 경로 코드 키) 뒤.
+- **(개정 6 · 10-28 · 1저자 *"Rint 권고대로"* · REPORT_C §10 · §11 ⑯–㉕) 구현 이름 · 구현된 동작 · 한정** — 등록 R §10-1 – §10-3 개정은 이 이름으로 한다 (결과 0 건).
+  - 위 줄들의 이름을 구현이 그대로 썼다 (REPORT_C §10): `MACHINE_NOT_ALLOWED` · `ATTEMPT_LEDGER_MISMATCH` · `ATTEMPT_ORDER_MISMATCH` · `ATTEMPT_AFTER_ADOPTED` · `RESUME_NOT_ALLOWED` · `RESUME_MISMATCH` · `UNIT_MISSING` · `UNIT_EXTRA` · `UNIT_PROVENANCE_MISMATCH` · `EXPANSION_NEEDED` · `unused_runs` · `REVERIFY_DIFF`.
+  - 구현이 새로 지은 이름 (REPORT_C §10 표 그대로 · 위 줄들의 "이름 = 구현 때 정하는 꼴" 자리 · 거부 기록 이름 포함):
+
+    | 종류 | 이름 |
+    |---|---|
+    | CLI | `--stage plan-doc --plan [--registration --check-doc]` · `--machine` (사다리 · 예측 · ledger --add 필수) · `--stage ledger --ledger L --init --plan` / `--add --ledger-target --machine --plan --runner --root [--resume n]` · `--ledger L --attempt n` · `--stage verdict --ledger [--attempt-dirs]` · `--stage recover --out [--ledger]` · `--stage predict --unit <법칙>_c<c>_<R>` · `--point <이름> --expand <expansion.json>` · `--merge <폴더…> [--expand]` · `--reverify … --out` |
+    | 원장 대상 | `ladder:P0\|P1[:FIBRE\|UNREG\|GRID]` · `predict[:FIBRE\|UNREG\|GRID\|SVORDER]` · `unit[:V]:<이름>` · `point[:V]:<이름>` |
+    | 새 멈춤 | `PLAN_DOC_MISMATCH` · `GROUP_UNCONFIRMED` · `ATTEMPT_LIMIT` |
+    | 상태 · rc | 단위 · 점 요약 = `UNIT_DONE` · `POINT_DONE` · 합치기 = `EXPANSION_NEEDED` (rc 4) · 결과 줄 status `completed\|stopped\|rejected\|interrupted` · side `pre\|post` · cause `timeout · signal · parent_dead · group_unconfirmed · resource · runner_rc · gate · check · presolve` |
+    | 화면 줄 | `PLAN_DOC_SAME` · `LEDGER_INIT` · `ATTEMPT_ADDED n=` · `ATTEMPT_REJECTED` · `ATTEMPT_RESULT` · `ATTEMPT_OPEN` · `REVERIFY_SAME` |
+    | 칸 | 요약 · 런 `machine` · 사다리 `noop {law · rj · status · ok · stop}` · `checks.r_monotone_early` · `attempt` · 런 `group_cause` · `copied_from` · `source` · `resume {from · copied · rerun · compared · determinism}` · `merge {ledger · expansion · units · attempts · unused_runs[why] · missing_points}` · 판정 `ledger` · `ledger_input` |
+    | 거부 기록 · 원장 | `attempt_<n>/rejected.json` 또는 옆 파일 `attempt_<n>.rejected.json` (rint-r-rejected-v1: n · code · cause · ledger_commit) · `rint_r_attempts.jsonl` (rint-r-ledger-v1 · 머리 · 항목 · 결과 줄) · `attempt.json` (rint-r-attempt-v1) |
+    | 폴더 꼴 | `<out>/attempt_<n>/` · `<단계>/groups/<런>.launch.json` · `.end.json` (rint-r-group-v1) · `<런>/.unchecked/<팔>.json.first_result.json` (rint-first-result-v1) · 합치기 `units/<대상 ':'→'-'>/attempt_<n>` · `ledger/ledger.bundle` · `expansion.json` (rint-r-expansion-v1) · `merge_summary.json` (rint-r-merge-v1) · 판정 `verdict_env.json` (rint-r-verdict-env-v1) · `reverify_report.json` (rint-r-reverify-v1) |
+    | 실행 정책 칸 | `exec_policy {max_hours · max_attempts · allowed_machines · env_unit {python_minor · numpy · scipy} · retry_rule=pre_result_only_v1 · same_config=plan_code_bed_env_v1 · adoption=first_not_pre_result_v1 · attempt_dir=attempt_<n>}` · 블록 표지 `<!-- rint-r-plan-doc:begin v1 -->` … `<!-- rint-r-plan-doc:end -->` (등록 R 에는 블록 자리 밖에 이 글자를 적지 않는다 — 사슬이 등록 문서 전체에서 표지를 센다) · env `P2_ATTEMPT=1` · `RINT_RUN_TOKEN` |
+
+  - 구현된 동작 (REPORT_C §11 ⑯–㉒ · 등록 · 이 설계가 정하지 않은 자리 · 구현 그대로 · 1저자 10-28):
+    - ⑯ 합치기 사본 = 원장 시도 폴더 전부 (채택 · 요청되지 않은 대상 · 결과 전 · 거부 기록 포함 · `copy_all`) 를 통째로 바이트 복사 (폴더 요약 sha256 = 원장 결과 줄 대조) · 보관 = 그 합치기를 돈 기계의 캠페인 폴더 · 판정이 끝날 때까지 지우지 않는다 (1저자 10-28 · 크기 = 실침대 런 폴더만큼 — 아래 한정).
+    - ⑰ 첫 합치기의 넘침 = 상태 `EXPANSION_NEEDED` · rc 4 (멈춤 아님 · 판정 입력 아님) · 합치기 요약 = `merge_summary.json` · 결정 기록 = `expansion.json`.
+    - ⑱ 끝 합치기에서 빠진 넘침 점 = `EXPANSION_NEEDED` + `missing_points` (그 점의 시도가 모두 결과 전이어도 같다 — 그 점의 시도 뒤 끝 합치기를 다시).
+    - ⑲ 단위 시도마다 첫머리에서 no-op 검사 (두 사다리 요약의 no-op 기록 · §2-1).
+    - ⑳ 요청되지 않은 대상의 대조 실패 = `UNIT_EXTRA` (남는지 알 수 없다 = 보수 쪽 · 요청되지 않은 단위의 대조 결과 = `unused_runs` 기록 (§3-2) 은 그대로).
+    - ㉑ 다시 판정 보고 (`reverify_report.json`) 의 결과 칸 = 이름만 (값 봉인).
+    - ㉒ 판정 환경 옆 파일 (`verdict_env.json`) = 새 판정에만 있다 (그 전에 만든 판정 폴더에는 없다).
+  - 한정 (REPORT_C §11 ⑯ · ㉓ · ㉔ · ㉕): ⑯ 위 (사본 = 통째 바이트 · 실침대 크기 · 보관 = 그 기계의 캠페인 폴더) · ㉓ 감도 변이의 단위 · 합치기 경로 시험 = `SVORDER` 만 (시험 `scripts/test_rint_r_chain.py` UM22 · FIBRE · UNREG · GRID 의 단위 합치기 = 시험 없음) · ㉔ 합치기에 러너 · 킷이 필요 (SV 모서리 봉인 원천 = 러너 조립만 런) · ㉕ 다시 판정이 경로에 묶인다 (입력 폴더 · 원장 절대 경로 = 판정 기록의 `ledger_input`).
+  - **요청서에 한정으로 적을 것** (Codex 회차 ② 요청서 · 메인): ⑯ 합치기 사본 = 통째 바이트 복사 (보관 = 그 기계의 캠페인 폴더 · 판정 전 지우지 않음) · ㉓ 감도 변이의 단위 합치기 시험 = SVORDER 만 · ㉔ 합치기 = 러너 · 킷이 있는 기계에서만 · ㉕ 다시 판정 = 입력 폴더 · 원장 절대 경로에 묶임.
 
 ## 8. 시험 (구현 때 · 먼저)
 
