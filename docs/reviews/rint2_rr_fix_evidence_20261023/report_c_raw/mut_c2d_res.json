@@ -1,0 +1,562 @@
+[
+ {
+  "id": "MU01",
+  "why": "한 항목 폴더 둘 = 멈춤 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (7.7 s)   FAILED: ['UM14']"
+   ]
+  ]
+ },
+ {
+  "id": "MU02",
+  "why": "합치기 입구 — 원장에 없는 시도 폴더 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (8.0 s)   FAILED: ['UM14']"
+   ]
+  ]
+ },
+ {
+  "id": "MU03",
+  "why": "합치기 입구 — 합칠 대상 (이 변이의 단위 · 점) 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (8.3 s)   FAILED: ['UM14']"
+   ]
+  ]
+ },
+ {
+  "id": "MU04",
+  "why": "채택 없는 단위 = UNIT_MISSING 끔 (넘침 점처럼 EXPANSION_NEEDED)",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/2 PASS (9.1 s)   FAILED: ['UM05', 'UM15']"
+   ]
+  ]
+ },
+ {
+  "id": "MU05",
+  "why": "대상 원장 대조 실패를 처음 요청 때 냄 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/2 PASS (15.4 s)   FAILED: ['UM11', 'UM14']"
+   ]
+  ]
+ },
+ {
+  "id": "MU06",
+  "why": "단위 요약 출처 칸 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (9.1 s)   FAILED: ['UM15']"
+   ]
+  ]
+ },
+ {
+  "id": "MU07",
+  "why": "점 시도가 인용한 결정 기록 sha 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 1/2 PASS (22.8 s)   FAILED: ['UM07']"
+   ]
+  ]
+ },
+ {
+  "id": "MU08",
+  "why": "끝 합치기 넘침 목록 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (17.0 s)   FAILED: ['UM07']"
+   ]
+  ]
+ },
+ {
+  "id": "MU09",
+  "why": "끝 합치기 단위 시도 sha 집합 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (18.0 s)   FAILED: ['UM07']"
+   ]
+  ]
+ },
+ {
+  "id": "MU10",
+  "why": "결정 기록 원장 커밋 = 조상 끔",
+  "killed": false,
+  "rcs": [
+   0
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 1/1 PASS (17.4 s)"
+   ]
+  ]
+ },
+ {
+  "id": "MU11",
+  "why": "결정 기록 원장 sha 대조 끔 (접두만)",
+  "killed": false,
+  "rcs": [
+   0
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 2/2 PASS (24.3 s)"
+   ]
+  ]
+ },
+ {
+  "id": "MU12",
+  "why": "결정 기록인데 넘침 없음 = 멈춤 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (22.1 s)   FAILED: ['UM17']"
+   ]
+  ]
+ },
+ {
+  "id": "MU13",
+  "why": "합치기 남는 채택 런 = UNIT_EXTRA 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (21.9 s)   FAILED: ['UM06']"
+   ]
+  ]
+ },
+ {
+  "id": "MU14",
+  "why": "런 기록 전 멈춤 = 그 멈춤 (부분 채택) 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (12.0 s)   FAILED: ['UM19']"
+   ]
+  ]
+ },
+ {
+  "id": "MU15",
+  "why": "단위 런 요청 칸 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (10.1 s)   FAILED: ['UM19']"
+   ]
+  ]
+ },
+ {
+  "id": "MU16",
+  "why": "단위 런 폴더 이름 꼴 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (11.3 s)   FAILED: ['UM19']"
+   ]
+  ]
+ },
+ {
+  "id": "MU17",
+  "why": "러너가 멈춘 런 = 그 시도의 멈춤 끔 (읽기로)",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/2 PASS (12.3 s)   FAILED: ['UM18', 'UM19']"
+   ]
+  ]
+ },
+ {
+  "id": "MU18",
+  "why": "rc ≠ 0 인데 그 런에서 멈춘 기록 없음 = 출처 다름 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (12.4 s)   FAILED: ['UM19']"
+   ]
+  ]
+ },
+ {
+  "id": "MU19",
+  "why": "멈췄다고 적었는데 다시 읽기가 지남 = 출처 다름 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (13.1 s)   FAILED: ['UM19']"
+   ]
+  ]
+ },
+ {
+  "id": "MU20",
+  "why": "사본 요약 sha = 결과 줄 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (12.6 s)   FAILED: ['UM19']"
+   ]
+  ]
+ },
+ {
+  "id": "MU21",
+  "why": "원장 사본 묶음 HEAD = 합치기 원장 커밋 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (12.7 s)   FAILED: ['UM19']"
+   ]
+  ]
+ },
+ {
+  "id": "MU22",
+  "why": "원장 없는 판정의 합친 예측 거부 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (23.2 s)   FAILED: ['UM08']"
+   ]
+  ]
+ },
+ {
+  "id": "MU23",
+  "why": "판정 — 합친 런 출처 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (22.0 s)   FAILED: ['UM08']"
+   ]
+  ]
+ },
+ {
+  "id": "MU24",
+  "why": "판정 — merge.units 채택 기록 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (22.9 s)   FAILED: ['UM08']"
+   ]
+  ]
+ },
+ {
+  "id": "MU25",
+  "why": "판정 — 결정 기록 사본 sha 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (22.9 s)   FAILED: ['UM08']"
+   ]
+  ]
+ },
+ {
+  "id": "MU26",
+  "why": "판정 — 합친 예측의 남는 채택 런 = UNIT_EXTRA 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (20.8 s)   FAILED: ['UM20']"
+   ]
+  ]
+ },
+ {
+  "id": "MU27",
+  "why": "넘침 점 풀기 전 — 결정 기록에 없는 점 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (20.8 s)   FAILED: ['UM12']"
+   ]
+  ]
+ },
+ {
+  "id": "MU28",
+  "why": "넘침 점 풀기 전 — 사다리 요약 sha 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (21.0 s)   FAILED: ['UM12']"
+   ]
+  ]
+ },
+ {
+  "id": "MU29",
+  "why": "넘침 점 풀기 전 — 결정 기록 원장 조상 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (20.3 s)   FAILED: ['UM12']"
+   ]
+  ]
+ },
+ {
+  "id": "MU30",
+  "why": "결정 기록 꼴 — 넘침 목록 = 점 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (17.2 s)   FAILED: ['UM07']"
+   ]
+  ]
+ },
+ {
+  "id": "MU31",
+  "why": "단위 시도 첫머리 no-op 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (2.6 s)   FAILED: ['UM21']"
+   ]
+  ]
+ },
+ {
+  "id": "MU32",
+  "why": "단위 요약 상태 ↔ 멈춤 기록 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (11.7 s)   FAILED: ['UM19']"
+   ]
+  ]
+ },
+ {
+  "id": "MU33",
+  "why": "판정 기계 대조 — 합친 예측 갈래 끔 (한 기계 단계 규칙)",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (9.0 s)   FAILED: ['UM01']"
+   ]
+  ]
+ },
+ {
+  "id": "MU34",
+  "why": "CLI — 단위 · 점 · 합치기 하나만 끔",
+  "killed": false,
+  "rcs": [
+   0
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 1/1 PASS (7.4 s)"
+   ]
+  ]
+ },
+ {
+  "id": "MU35",
+  "why": "CLI — --point 는 --expand 와 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (8.5 s)   FAILED: ['UM13']"
+   ]
+  ]
+ },
+ {
+  "id": "MU36",
+  "why": "CLI — 단위 이름 꼴 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (8.1 s)   FAILED: ['UM13']"
+   ]
+  ]
+ },
+ {
+  "id": "MU37",
+  "why": "CLI — 단위 · 점 = 원장 시도만 끔",
+  "killed": false,
+  "rcs": [
+   0
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 1/1 PASS (8.5 s)"
+   ]
+  ]
+ },
+ {
+  "id": "MU38",
+  "why": "CLI — 합치기 = 시도 아님 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (8.9 s)   FAILED: ['UM13']"
+   ]
+  ]
+ },
+ {
+  "id": "MU39",
+  "why": "CLI — --expand 홀로 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (8.9 s)   FAILED: ['UM13']"
+   ]
+  ]
+ },
+ {
+  "id": "MU40",
+  "why": "넘침 점 없음 = EXPANSION_NEEDED 끔 (UNIT_MISSING 으로)",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (14.5 s)   FAILED: ['UM03']"
+   ]
+  ]
+ }
+]

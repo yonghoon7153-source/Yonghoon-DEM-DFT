@@ -1,0 +1,86 @@
+[
+ {
+  "id": "MV01",
+  "why": "판정 환경 옆 파일 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (3.9 s)   FAILED: ['RV01']"
+   ]
+  ]
+ },
+ {
+  "id": "MV02",
+  "why": "다시 판정 보고 — 등급 다름 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/2 PASS (10.5 s)   FAILED: ['RV02', 'RV03']"
+   ]
+  ]
+ },
+ {
+  "id": "MV03",
+  "why": "다시 판정 보고 — 다른 결과 칸 이름 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (3.4 s)   FAILED: ['RV02']"
+   ]
+  ]
+ },
+ {
+  "id": "MV04",
+  "why": "다시 판정 보고 폴더 = 빈 폴더 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (3.9 s)   FAILED: ['RV04']"
+   ]
+  ]
+ },
+ {
+  "id": "MV05",
+  "why": "다시 판정 보고 — 원 환경 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (3.7 s)   FAILED: ['RV01']"
+   ]
+  ]
+ },
+ {
+  "id": "MV06",
+  "why": "다시 판정 보고 — 다시 계산 등급 = 원 등급 (덮어쓰기 흉내)",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (3.7 s)   FAILED: ['RV02']"
+   ]
+  ]
+ }
+]

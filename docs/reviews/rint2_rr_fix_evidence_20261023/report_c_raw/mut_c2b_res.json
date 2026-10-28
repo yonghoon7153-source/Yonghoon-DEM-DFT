@@ -1,0 +1,716 @@
+[
+ {
+  "id": "MG01",
+  "why": "새 세션 (프로세스 그룹) 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/2 PASS (33.0 s)   FAILED: ['GR01', 'GR02']"
+   ]
+  ]
+ },
+ {
+  "id": "MG02",
+  "why": "멈출 때 그룹 SIGKILL 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/2 PASS (36.6 s)   FAILED: ['GR02', 'GR05']"
+   ]
+  ]
+ },
+ {
+  "id": "MG03",
+  "why": "스스로 끝난 뒤 남은 표지 프로세스 정리 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/2 PASS (4.5 s)   FAILED: ['GR03', 'GR04']"
+   ]
+  ]
+ },
+ {
+  "id": "MG04",
+  "why": "zombie 를 살아 있다고 셈",
+  "killed": false,
+  "rcs": [
+   0
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 3/3 PASS (12.9 s)"
+   ]
+  ]
+ },
+ {
+  "id": "MG05",
+  "why": "/proc 못 읽음 = 확인으로",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (1.0 s)   FAILED: ['GR11']"
+   ]
+  ]
+ },
+ {
+  "id": "MG06",
+  "why": "대기 상한 뒤 남음 = 확인으로",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/2 PASS (4.0 s)   FAILED: ['GR07', 'GR10']"
+   ]
+  ]
+ },
+ {
+  "id": "MG07",
+  "why": "사슬 런 미확인 멈춤 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/2 PASS (4.4 s)   FAILED: ['GR10', 'GR11']"
+   ]
+  ]
+ },
+ {
+  "id": "MG08",
+  "why": "시간 초과 = TIME_LIMIT 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (5.9 s)   FAILED: ['GR02']"
+   ]
+  ]
+ },
+ {
+  "id": "MG09",
+  "why": "기다림 중 신호 = 멈춤 사유 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (4.8 s)   FAILED: ['GR05']"
+   ]
+  ]
+ },
+ {
+  "id": "MG10",
+  "why": "정리 중 신호 = 멈춤 끔 (사슬 런)",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (1.0 s)   FAILED: ['GR12']"
+   ]
+  ]
+ },
+ {
+  "id": "MG11",
+  "why": "기다림 중 신호 처리기 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/2 PASS (7.9 s)   FAILED: ['GR05', 'GR12']"
+   ]
+  ]
+ },
+ {
+  "id": "MG12",
+  "why": "정리 중 신호 미룸 (바로 바꿈) 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (0.4 s)   FAILED: ['GR12']"
+   ]
+  ]
+ },
+ {
+  "id": "MG13",
+  "why": "처리기 되돌림 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/2 PASS (4.9 s)   FAILED: ['GR05', 'GR12']"
+   ]
+  ]
+ },
+ {
+  "id": "MG14",
+  "why": "정리 중 신호 → signal_after 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (0.9 s)   FAILED: ['GR12']"
+   ]
+  ]
+ },
+ {
+  "id": "MG15",
+  "why": "recover 다른 기계 규칙 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (0.4 s)   FAILED: ['GR08']"
+   ]
+  ]
+ },
+ {
+  "id": "MG16",
+  "why": "recover pid 이름공간 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (0.4 s)   FAILED: ['GR08']"
+   ]
+  ]
+ },
+ {
+  "id": "MG17",
+  "why": "recover 재부팅 = 같은 기계 조건 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (0.4 s)   FAILED: ['GR08']"
+   ]
+  ]
+ },
+ {
+  "id": "MG18",
+  "why": "recover 가 확인된 끝 기록도 다시 씀",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (1.1 s)   FAILED: ['GR09']"
+   ]
+  ]
+ },
+ {
+  "id": "MG19",
+  "why": "recover 미확인 rc 3 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/3 PASS (0.7 s)   FAILED: ['GR07', 'GR11', 'GR13']"
+   ]
+  ]
+ },
+ {
+  "id": "MG20",
+  "why": "recover 시작 기록 꼴 검사 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (0.4 s)   FAILED: ['GR13']"
+   ]
+  ]
+ },
+ {
+  "id": "MG21",
+  "why": "env 표지 찾기 (첫 칸만)",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/2 PASS (4.6 s)   FAILED: ['GR03', 'GR04']"
+   ]
+  ]
+ },
+ {
+  "id": "MG22",
+  "why": "Popen 전 시작 기록 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (0.4 s)   FAILED: ['GR13']"
+   ]
+  ]
+ },
+ {
+  "id": "MG23",
+  "why": "예외 다시 올림 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (0.4 s)   FAILED: ['GR13']"
+   ]
+  ]
+ },
+ {
+  "id": "MG24",
+  "why": "러너 env P2_ATTEMPT=1 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (2.8 s)   FAILED: ['GR01']"
+   ]
+  ]
+ },
+ {
+  "id": "MG25",
+  "why": "원천 런 미확인 = 원천 실패 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (0.4 s)   FAILED: ['GR14']"
+   ]
+  ]
+ },
+ {
+  "id": "MG26",
+  "why": "Popen 뒤 시작 기록 (pid · pgid) 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (2.8 s)   FAILED: ['GR01']"
+   ]
+  ]
+ },
+ {
+  "id": "MG27",
+  "why": "끝 기록 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (2.8 s)   FAILED: ['GR01']"
+   ]
+  ]
+ },
+ {
+  "id": "MG28",
+  "why": "원천 런 신호 = 멈춤 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (0.4 s)   FAILED: ['GR14']"
+   ]
+  ]
+ },
+ {
+  "id": "MG29",
+  "why": "원천 런 시간 초과 사유 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (0.3 s)   FAILED: ['GR14']"
+   ]
+  ]
+ },
+ {
+  "id": "MG30",
+  "why": "그룹 표지 env 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/2 PASS (4.5 s)   FAILED: ['GR03', 'GR04']"
+   ]
+  ]
+ },
+ {
+  "id": "MW01",
+  "why": "CG 없는 해 표지 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_first_result: 8/9 PASS   FAILED: ['F02 CG 없는 조기 반환 해 (σ 0) → 표지 (kind solve_return) · σ 를 찍기 전']"
+   ]
+  ]
+ },
+ {
+  "id": "MW02",
+  "why": "조립만 결과에도 표지",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_first_result: 8/9 PASS   FAILED: ['F03 조립만 결과 (graph_only) → 표지 없음']"
+   ]
+  ]
+ },
+ {
+  "id": "MW03",
+  "why": "표지 실패 = 멈춤 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_first_result: 7/9 PASS   FAILED: ['F04 표지 자리에 쓸 수 없음 (부모 자리가 파일) → 감싸개 rc 5 · payload 가 σ 를 찍지 않는다 · 표지 없음', 'F09 (구현과 함께 · 변이로 검증) 입구 검사 뒤 다른 프로세스가 같은 표지 자리를 먼저 씀 → 덮지 않는다 (그 내용 그대로) · 감싸개 rc 5 · σ 를 찍지 않는다']"
+   ]
+  ]
+ },
+ {
+  "id": "MW04",
+  "why": "입구 표지 있음 거부 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_first_result: 8/9 PASS   FAILED: ['F05 표지가 이미 있다 → rc 2 · payload 를 돌리지 않는다 (σ 없음)']"
+   ]
+  ]
+ },
+ {
+  "id": "MW05",
+  "why": "둘째 인자 = payload 검사 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_first_result: 8/9 PASS   FAILED: ['F06 인자 꼴 — 모자람 · 둘째가 mpm_webapp_payload.py 아님 → rc 2']"
+   ]
+  ]
+ },
+ {
+  "id": "MW06",
+  "why": "한 번만 쓰기 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_first_result: 7/9 PASS   FAILED: ['F01 CG 해 → 표지 한 번 · kind cg_solution · σ 칸 없음 · 그룹 표지 실림 · payload 가 σ 를 찍기 전에 표지가 있다 · 임시 파일 남지 않음', 'F08 같은 프로세스의 두 번째 풀이 = 표지를 다시 쓰지 않는다 (첫 결과만 · 같은 이름 · __main__ · argv 그대로)']"
+   ]
+  ]
+ },
+ {
+  "id": "MW07",
+  "why": "쓰기 직전 덮지 않기 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_first_result: 8/9 PASS   FAILED: ['F09 (구현과 함께 · 변이로 검증) 입구 검사 뒤 다른 프로세스가 같은 표지 자리를 먼저 씀 → 덮지 않는다 (그 내용 그대로) · 감싸개 rc 5 · σ 를 찍지 않는다']"
+   ]
+  ]
+ },
+ {
+  "id": "MW08",
+  "why": "payload argv 전달 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_first_result: 1/9 PASS   FAILED: ['F01 CG 해 → 표지 한 번 · kind cg_solution · σ 칸 없음 · 그룹 표지 실림 · payload 가 σ 를 찍기 전에 표지가 있다 · 임시 파일 남지 않음', 'F02 CG 없는 조기 반환 해 (σ 0) → 표지 (kind solve_return) · σ 를 찍기 전', 'F03 조립만 결과 (graph_only) → 표지 없음', 'F04 표지 자리에 쓸 수 없음 (부모 자리가 파일) → 감싸개 rc 5 · payload 가 σ 를 찍지 않는다 · 표지 없음', 'F05 표지가 이미 있다 → rc 2 · payload 를 돌리지 않는다 (σ 없음)', 'F07 payload 의 SystemExit 3 → 감싸개 rc 3 (종료 코드 그대로) · 표지 없음 (풀이 전)', 'F08 같은 프로세스의 두 번째 풀이 = 표지를 다시 쓰지 않는다 (첫 결과만 · 같은 이름 · __main__ · argv 그대로)', 'F09 (구현과 함께 · 변이로 검증) 입구 검사 뒤 다른 프로세스가 같은 표지 자리를 먼저 씀 → 덮지 않는다 (그 내용 그대로) · 감싸개 rc 5 · σ 를 찍지 않는다']"
+   ]
+  ]
+ },
+ {
+  "id": "MW09",
+  "why": "__main__ 이름 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_first_result: 8/9 PASS   FAILED: ['F08 같은 프로세스의 두 번째 풀이 = 표지를 다시 쓰지 않는다 (첫 결과만 · 같은 이름 · __main__ · argv 그대로)']"
+   ]
+  ]
+ },
+ {
+  "id": "MW10",
+  "why": "CG 해 직후 표지 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_first_result: 7/9 PASS   FAILED: ['F01 CG 해 → 표지 한 번 · kind cg_solution · σ 칸 없음 · 그룹 표지 실림 · payload 가 σ 를 찍기 전에 표지가 있다 · 임시 파일 남지 않음', 'F08 같은 프로세스의 두 번째 풀이 = 표지를 다시 쓰지 않는다 (첫 결과만 · 같은 이름 · __main__ · argv 그대로)']"
+   ]
+  ]
+ },
+ {
+  "id": "MW11",
+  "why": "감싸기 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_first_result: 3/9 PASS   FAILED: ['F01 CG 해 → 표지 한 번 · kind cg_solution · σ 칸 없음 · 그룹 표지 실림 · payload 가 σ 를 찍기 전에 표지가 있다 · 임시 파일 남지 않음', 'F02 CG 없는 조기 반환 해 (σ 0) → 표지 (kind solve_return) · σ 를 찍기 전', 'F04 표지 자리에 쓸 수 없음 (부모 자리가 파일) → 감싸개 rc 5 · payload 가 σ 를 찍지 않는다 · 표지 없음', 'F05 표지가 이미 있다 → rc 2 · payload 를 돌리지 않는다 (σ 없음)', 'F08 같은 프로세스의 두 번째 풀이 = 표지를 다시 쓰지 않는다 (첫 결과만 · 같은 이름 · __main__ · argv 그대로)', 'F09 (구현과 함께 · 변이로 검증) 입구 검사 뒤 다른 프로세스가 같은 표지 자리를 먼저 씀 → 덮지 않는다 (그 내용 그대로) · 감싸개 rc 5 · σ 를 찍지 않는다']"
+   ]
+  ]
+ },
+ {
+  "id": "MR01",
+  "why": "OUTDIR 글자 검사 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "8 PASS · 1 FAIL",
+    "  - N12c P2_ATTEMPT 의 OUTDIR 에 허용 밖 글자 (띄어쓰기) → ABORT · payload 미호출 (생성 스크립트에 박히는 경로)"
+   ]
+  ]
+ },
+ {
+  "id": "MR02",
+  "why": "P2_ATTEMPT 값 검사 끔 (아무 값 = 켬)",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "  - N12d P2_ATTEMPT 값 '0' (1 · 빈 값 밖) → rc 2 · ABORT · payload 미호출",
+    "  - N12d P2_ATTEMPT 값 ' 1' (1 · 빈 값 밖) → rc 2 · ABORT · payload 미호출"
+   ]
+  ]
+ },
+ {
+  "id": "MR03",
+  "why": "감싸개 파일 있음 검사 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "8 PASS · 1 FAIL",
+    "  - N12g (구현과 함께 · 변이로 검증) 시도 꼴인데 감싸개 파일이 없다 → 돌기 전 ABORT (rc 2 · 사유 감싸개) · payload 미호출 · 같은 링크 폴더의 끔 꼴 = 그대로 돈다 (팔 둘 — 폴더 자체는 멀쩡하다)"
+   ]
+  ]
+ },
+ {
+  "id": "MR04",
+  "why": ".unchecked 옛 파일 검사 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "8 PASS · 1 FAIL",
+    "  - N12f 시도 꼴 .unchecked/ 에 그 팔의 옛 파일 (payload · 표지 · .part) → ABORT (새 OUTDIR 로 · 옛 파일 그대로) · 그 팔 payload 미호출"
+   ]
+  ]
+ },
+ {
+  "id": "MR05",
+  "why": "킷 payload 줄 → 감싸개 바꾸기 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "8 PASS · 1 FAIL",
+    "  - N12a rc 0 · 팔 둘 OUTDIR · payload --out = OUTDIR/.unchecked/<팔> (절대) · 감싸개 표지 자리 = 그 팔 + .first_result.json · 표지 둘 (팔마다 · 진짜 payload 의 첫 σ 직후 · schema rint-first-result-v1 · σ 칸 없음) · .unchecked/ 에 payload 없음 (검사 뒤 옮김) · 킷 런 폴더에 payload 없음"
+   ]
+  ]
+ },
+ {
+  "id": "MR06",
+  "why": "킷 payload 줄 꼴 검사 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "8 PASS · 1 FAIL",
+    "  - N12e 킷 payload 줄이 `python3 \"$SCR/mpm_webapp_payload.py\"` 꼴이 아님 (따옴표 없음) → 시도 꼴 = ABORT (감싸개를 못 끼운다 · payload 미호출) · 끔 꼴 (P2_ATTEMPT 없음) = 그대로 돈다"
+   ]
+  ]
+ },
+ {
+  "id": "MR07",
+  "why": "시도 꼴 검사 대상 = .unchecked 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "  - N12a rc 0 · 팔 둘 OUTDIR · payload --out = OUTDIR/.unchecked/<팔> (절대) · 감싸개 표지 자리 = 그 팔 + .first_result.json · 표지 둘 (팔마다 · 진짜 payload 의 첫 σ 직후 · schema rint-first-result-v1 · σ 칸 없음) · .unchecked/ 에 payload 없음 (검사 뒤 옮김) · 킷 런 폴더에 payload 없음",
+    "  - N12f 시도 꼴 .unchecked/ 에 그 팔의 옛 파일 (payload · 표지 · .part) → ABORT (새 OUTDIR 로 · 옛 파일 그대로) · 그 팔 payload 미호출"
+   ]
+  ]
+ },
+ {
+  "id": "MR08",
+  "why": "payload --out = .unchecked 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "  - N12b 검사 실패 (payload 가 꼴 틀린 JSON 을 rc 0) → 러너 rc ≠ 0 · OUTDIR 팔 없음 · 그 payload = OUTDIR/.unchecked/ (시도 폴더 안 · 옛 = 킷 런 폴더 $RUN) · 킷 런 폴더에 payload 없음",
+    "  - N12f 시도 꼴 .unchecked/ 에 그 팔의 옛 파일 (payload · 표지 · .part) → ABORT (새 OUTDIR 로 · 옛 파일 그대로) · 그 팔 payload 미호출"
+   ]
+  ]
+ },
+ {
+  "id": "MR09",
+  "why": "생성 스크립트 --out 대조 = 시도 경로 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "  - N12b 검사 실패 (payload 가 꼴 틀린 JSON 을 rc 0) → 러너 rc ≠ 0 · OUTDIR 팔 없음 · 그 payload = OUTDIR/.unchecked/ (시도 폴더 안 · 옛 = 킷 런 폴더 $RUN) · 킷 런 폴더에 payload 없음",
+    "  - N12f 시도 꼴 .unchecked/ 에 그 팔의 옛 파일 (payload · 표지 · .part) → ABORT (새 OUTDIR 로 · 옛 파일 그대로) · 그 팔 payload 미호출"
+   ]
+  ]
+ },
+ {
+  "id": "MR10",
+  "why": "시도 꼴 켬 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "  - N12f 시도 꼴 .unchecked/ 에 그 팔의 옛 파일 (payload · 표지 · .part) → ABORT (새 OUTDIR 로 · 옛 파일 그대로) · 그 팔 payload 미호출",
+    "  - N12g (구현과 함께 · 변이로 검증) 시도 꼴인데 감싸개 파일이 없다 → 돌기 전 ABORT (rc 2 · 사유 감싸개) · payload 미호출 · 같은 링크 폴더의 끔 꼴 = 그대로 돈다 (팔 둘 — 폴더 자체는 멀쩡하다)"
+   ]
+  ]
+ }
+]

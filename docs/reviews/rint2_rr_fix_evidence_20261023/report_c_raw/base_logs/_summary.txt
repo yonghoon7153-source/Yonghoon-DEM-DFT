@@ -1,0 +1,22 @@
+rint_r_chain rc=0 108s :: test_rint_r_chain: 284/284 PASS (107.6 s)
+rint_r_chain_e2e rc=0 151s :: test_rint_r_chain_e2e: 26 PASS · 0 FAIL (150.7 s)
+ca_s0_census rc=0 19s :: 163 PASS · 0 FAIL
+carbon_junction rc=0 11s :: == test_carbon_junction: 466/466 PASS
+ca_ext_b6 rc=0 35s :: 501 PASS · 0 FAIL
+ca_ext_runner rc=0 67s :: 142 PASS · 0 FAIL
+ca_ext_verdict rc=0 22s :: 31 PASS · 0 FAIL
+ca_ext_z1 rc=0 22s :: 95 PASS · 0 FAIL  (21.7 s)
+ca_ext_z3 rc=0 20s :: test_ca_ext_z3: 84 PASS · 0 FAIL (19.3 s)
+ptfe_face_alpha rc=0 43s :: 242 PASS · 0 FAIL
+step3_target_cert rc=0 11s :: == test_step3_target_cert [빠른 판]: 264/264 PASS (10.3 s)
+step3_conv_cert rc=0 68s :: == test_step3_conv_cert: 30/30 PASS
+run_contract_selftest rc=0 1s :: run_contract selftest: 124/124 PASS
+step3_selftest_rint rc=0 0s :: STEP3 RINT SELFTEST PASS
+step3_selftest rc=0 1s :: SELFTEST PASS
+rint_receipts rc=0 22s :: 105 PASS · 0 FAIL
+web_ca_ext_labels rc=0 1s :: 92 PASS · 0 FAIL
+web_rint_explainer rc=0 0s :: == test_rint_explainer_page: 71/71 PASS
+web_rint_scope rc=0 0s :: 31 PASS · 0 FAIL
+discipline rc=0 21s :: ✓ 방법론 규율: 0 오류 (17 경고)
+discipline_selftest rc=0 62s :: check_method_discipline v3 selftest: 128/128 PASS
+DONE 

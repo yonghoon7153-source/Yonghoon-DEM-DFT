@@ -1,0 +1,4 @@
+rint_r_chain_e2e rc=0 388s :: test_rint_r_chain_e2e: 39 PASS · 0 FAIL (387.6 s)
+discipline rc=0 22s :: ✓ 방법론 규율: 0 오류 (17 경고)
+discipline_selftest rc=0 60s :: check_method_discipline v3 selftest: 128/128 PASS
+DONE rint_r_chain_e2e discipline discipline_selftest

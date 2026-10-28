@@ -1,0 +1,84 @@
+── ① 파일 · 한 파일로 닫힘
+  PASS  정적 파일이 webapp/static/explain/ 에 있다
+  PASS  <title> 이 있다
+  PASS  태그 짝이 맞다 (닫히지 않은 · 엇갈린 태그 0)
+  PASS  <script> 없음
+  PASS  외부 자원 (http · https · //) 없음
+── ② 내용 표지
+  PASS  그림 6 장 (<figure>)
+  PASS  그림마다 설명 (svg role="img" + aria-label)
+  PASS  "처음 보는 분께" 상자
+  PASS  CONTACT_FREE (지금 복셀 σ 의 빈틈) 설명
+  PASS  DBE 비교는 "독립 holdout 검증 아님" 표지
+  PASS  용어 칸 holdout 풀이 = DBE 4.68 은 현 세대 보정에 쓰였으므로 여기서 holdout 이 아니다 (사전 리뷰 10-21 PRE-design-07)
+── ③ α = 열린 면적 비율 (개구율)
+  PASS  거꾸로 쓴 문장 ("가리는 비율 α") 없음
+  PASS  α 를 열린 비율 · 개구율로 적는다
+── ④ 천 단위 콤마 없음 (보이는 글)
+  PASS  보이는 글의 천 단위 콤마 0 (찾은 것 [])
+── ⑤ 웹앱으로 돌아가는 링크
+  PASS  href="/" (DEM/MPM Analyzer 로)
+── ⑦ 핵심 수치 (정본 그대로)
+  PASS  SBE 실측 mS/cm 1.63
+  PASS  DBE 실측 mS/cm 4.68
+  PASS  현 세대 σ* S/cm 0.347
+  PASS  DBE 단독 보정 S/cm 2.618
+── ⑧ 10-22 결정 상자 ① ② ③ · 날짜 · 다크 모드 · 용어 (PF2 F · PRE2-design-09)
+  PASS  상자 다섯 — class="hl" 이 정확히 다섯 (id easy-1 · easy-2 · easy-3 · ★ 10-23 easy-4 · ★ 10-25 easy-5)
+  PASS  상자 ① 머리 = "★ 쉽게 말하면 ①"
+  PASS  상자 ① 글 = 수정 계획 §6 원문 그대로 (markdown 표지 뺀 글 · 공백 하나로)
+  PASS  상자 ② 머리 = "★ 쉽게 말하면 ②"
+  PASS  상자 ② 글 = 수정 계획 §6 원문 그대로 (markdown 표지 뺀 글 · 공백 하나로)
+  PASS  상자 ③ 머리 = "★ 쉽게 말하면 ③"
+  PASS  상자 ③ 글 = 수정 계획 §6 원문 그대로 (markdown 표지 뺀 글 · 공백 하나로)
+  PASS  상자 ① 핵심 문장 — "아래 끝 > 문턱 → SV_DEPENDENT"
+  PASS  상자 ① 핵심 문장 — "위 끝 ≤ 문턱 → 표지 없음"
+  PASS  상자 ① 핵심 문장 — "걸치면 SV_UNCHECKED"
+  PASS  상자 ① 핵심 문장 — "숫자는 예시"
+  PASS  상자 ① 핵심 문장 — "못 가른 덩어리가 없는 팔은 두 풀이가 같아 지금처럼 한 값이다"
+  PASS  상자 ② 핵심 문장 — "⑥ 숫자 탐침 (SBE · σ 봉인)"
+  PASS  상자 ② 핵심 문장 — "계획 하나 봉인"
+  PASS  상자 ② 핵심 문장 — "사슬이 계획 해시를 대조 · 다르면 멈춤"
+  PASS  상자 ③ 핵심 문장 — "10-31 에는 진행 보고만 한다"
+  PASS  상자 ③ 핵심 문장 — "팔을 줄이지 않는 이유"
+  PASS  상자 ③ 핵심 문장 — "⑥ 실측 직후를 결정점으로"
+  PASS  상자 ④ 머리 = "★ 쉽게 말하면 ④"
+  PASS  상자 ④ 글 = 수정 계획 (10-22) §2 원문 그대로 (markdown 표지 뺀 글 · 공백 하나로)
+  PASS  상자 ④ 핵심 문장 — "구간의 양끝으로 판정해 이 반례를 SV_DEPENDENT 로 잡는다"
+  PASS  상자 ④ 핵심 문장 — "참 비는 이 구간 안에 있다"
+  PASS  상자 ④ 핵심 문장 — "nominal"
+  PASS  상자 ④ 묶음 = 따로 section (id decisions-1023) · 머리에 날짜 10-23 · 상자 ④ 가 그 안에
+  PASS  머리 줄 (.sub) 에 "10-23 갱신"
+── ⑩ 10-25 결정 상자 ⑤ (묶음 B · Q2 · Q3 — 같은 코드 · 같은 침대)
+  PASS  상자 ⑤ 머리 = "★ 쉽게 말하면 ⑤"
+  PASS  상자 ⑤ 글 = 수정 계획 (10-22) §2 원문 그대로 (markdown 표지 뺀 글 · 공백 하나로)
+  PASS  상자 ⑤ 핵심 문장 — "같은 코드 · 같은 침대"
+  PASS  상자 ⑤ 핵심 문장 — "git 조회 실패 = 멈춤"
+  PASS  상자 ⑤ 핵심 문장 — "사슬 ↔ 러너를 서로 대조"
+  PASS  상자 ⑤ 핵심 문장 — "R 직전에 킷 파일을 다시 해시해 S0 보고와 대조한다"
+  PASS  상자 ⑤ 묶음 = 따로 section (id decisions-1025) · 머리에 날짜 10-25 · 상자 ⑤ 가 그 안에
+  PASS  상자 ⑤ 주석 — 원문 출처 (수정 계획 §2) · "지금" = 고치기 전 관문 · 등록 R 에 같은 상자
+  PASS  머리 줄 (.sub) 에 "10-25 갱신"
+  PASS  상자 묶음 머리에 날짜 10-22
+  PASS  머리 줄 (.sub) 에 "10-22 갱신"
+  PASS  "10-25 판정 목표" 낡은 날짜 없음 (보이는 글 · aria-label 모두 · 찾은 것 [])
+  PASS  남은 길에 등록 R §10-4 · 한정어 ⑰ 표지 — "10-31"
+  PASS  남은 길에 등록 R §10-4 · 한정어 ⑰ 표지 — "진행 보고"
+  PASS  남은 길에 등록 R §10-4 · 한정어 ⑰ 표지 — "감도 미완료"
+  PASS  남은 길에 등록 R §10-4 · 한정어 ⑰ 표지 — "주 판정"
+  PASS  6 절 목록 끝 항목 (주 판정 자리) = 등록 R §10-4 · 한정어 ⑰ — "10-31 판정 = 주 판정만" · "감도 미완료"
+  PASS  6 절 주석 = 등록 R §10-4 결과 전 문장 — "진행 보고만 한다" · "등록 팔은 줄이지 않는다"
+  PASS  그림 6 (넓은 · 좁은 판) 의 순서 = 상자 ② 바꾼 순서 (S0 1 → ⑥ → Codex → 계획 봉인 → S0 2 → 사다리 → 주 판정)
+  PASS  하이라이트 색 토큰 --hl · --hlb = 밝은 :root · 어두운 (media · data-theme) 셋 다 정의 · 어두운 값 ≠ 밝은 값 · 두 어두운 판 같음 {'--hl': ('#fff4d6', '#2c2516', '#2c2516'), '--hlb': ('#c9932a', '#e0a54a', '#e0a54a')}
+  PASS  .hl 상자 = 하이라이트 배경 var(--hl) · 테두리 var(--hlb)
+  PASS  용어 풀이에 "SV 반사실 비"
+── ⑥ 사이드바 링크 · 실제 서빙
+  PASS  base.html 사이드바에 링크
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+  PASS  GET /static/explain/rint_overview_20261021.html → 200
+  PASS  text/html 로 서빙
+  PASS  서빙된 바이트 = 리포 파일
+  PASS  렌더된 화면 (/seminar) 사이드바에 링크가 보인다
+
+== test_rint_explainer_page: 71/71 PASS

@@ -1,0 +1,189 @@
+[
+ {
+  "id": "MC01",
+  "why": "사다리 끝 no-op 런 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/2 PASS (1.4 s)   FAILED: ['NP01', 'NP02']"
+   ]
+  ]
+ },
+ {
+  "id": "MC02",
+  "why": "no-op float 같음 대조 끔 (늘 ok)",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (1.7 s)   FAILED: ['NP03']"
+   ]
+  ]
+ },
+ {
+  "id": "MC03",
+  "why": "no-op 기술 멈춤도 기록으로 삼킴 (사다리 STOPPED 아님)",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (1.6 s)   FAILED: ['NP05']"
+   ]
+  ]
+ },
+ {
+  "id": "MC04",
+  "why": "예측의 no-op 다시 읽기 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (1.7 s)   FAILED: ['NP07']"
+   ]
+  ]
+ },
+ {
+  "id": "MC05",
+  "why": "예측의 no-op 기록 꼴 검사 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/2 PASS (3.0 s)   FAILED: ['NP07', 'NP08']"
+   ]
+  ]
+ },
+ {
+  "id": "MC06",
+  "why": "판정의 no-op 다시 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (3.4 s)   FAILED: ['NP06']"
+   ]
+  ]
+ },
+ {
+  "id": "MC07",
+  "why": "예측 첫머리 no-op NOT_COMPUTED 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (1.6 s)   FAILED: ['NP04']"
+   ]
+  ]
+ },
+ {
+  "id": "MC08",
+  "why": "예측 첫머리 no-op 비트 다름 멈춤 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/2 PASS (2.8 s)   FAILED: ['P03', 'NP03']"
+   ]
+  ]
+ },
+ {
+  "id": "MC09",
+  "why": "이른 단조 검사 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 1/5 PASS (5.6 s)   FAILED: ['U17', 'U19', 'OR03', 'OR04']"
+   ]
+  ]
+ },
+ {
+  "id": "MC10",
+  "why": "이른 검사가 넘친 모서리의 최종 추정량 (arm 0) 도 본다",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/2 PASS (4.2 s)   FAILED: ['U19', 'OR04']"
+   ]
+  ]
+ },
+ {
+  "id": "MC11",
+  "why": "이른 검사 기록을 끝 검사 칸에 씀",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 2/5 PASS (6.2 s)   FAILED: ['U17', 'OR03', 'OR04']"
+   ]
+  ]
+ },
+ {
+  "id": "MC12",
+  "error": "old 가 0 번 (1 이어야)",
+  "killed": null
+ },
+ {
+  "id": "MC13",
+  "why": "no-op 기록 R_j,0 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (3.1 s)   FAILED: ['NP08']"
+   ]
+  ]
+ },
+ {
+  "id": "MC14",
+  "why": "no-op 기록 ok 꼴 (bool) 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (1.8 s)   FAILED: ['NP08']"
+   ]
+  ]
+ }
+]

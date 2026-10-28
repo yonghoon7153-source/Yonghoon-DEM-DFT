@@ -228,3 +228,4 @@
 - E13 고침: logs_e13fix/
 - 결정성: sid_311.json · sid_38.json
 - 변이: mut_*_res.json · mut_realpath_res.json
+- ★ (10-28 밤 · 사전 공격 5 회차 PC5-11) 위 목록 = 리포 사본 `docs/reviews/rint2_rr_fix_evidence_20261023/report_c_raw/` (바이트 그대로 · 93 파일 · `SHA256SUMS` · 출처 · 고른 것 = `SOURCE.txt`) — 위 "리포에 넣지 않았다 · 컨테이너가 바뀌면 없다" = 10-27 시점.

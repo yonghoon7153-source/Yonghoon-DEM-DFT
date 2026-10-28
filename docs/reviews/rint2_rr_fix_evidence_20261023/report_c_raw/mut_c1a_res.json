@@ -1,0 +1,343 @@
+[
+ {
+  "id": "M01",
+  "why": "규칙 칸 이름 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (3.3 s)   FAILED: ['EP04']"
+   ]
+  ]
+ },
+ {
+  "id": "M02",
+  "why": "max_hours 꼴 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (1.6 s)   FAILED: ['EP04']"
+   ]
+  ]
+ },
+ {
+  "id": "M03",
+  "why": "max_attempts 꼴 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (3.7 s)   FAILED: ['EP04']"
+   ]
+  ]
+ },
+ {
+  "id": "M04",
+  "why": "allowed_machines 꼴 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (2.4 s)   FAILED: ['EP04']"
+   ]
+  ]
+ },
+ {
+  "id": "M05",
+  "why": "env_unit 꼴 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (1.3 s)   FAILED: ['EP04']"
+   ]
+  ]
+ },
+ {
+  "id": "M06",
+  "why": "exec_policy 칸 집합 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (1.8 s)   FAILED: ['EP04']"
+   ]
+  ]
+ },
+ {
+  "id": "M07",
+  "why": "값 칸 null (⬜) 거부 끔 (사슬 · S0 단계 2 관문)",
+  "killed": true,
+  "rcs": [
+   1,
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (0.4 s)   FAILED: ['EP03']"
+   ],
+   [
+    "163 PASS · 4 FAIL",
+    "FAIL: L3ep R 런 계획 실행 정책 max_hours = null (⬜ · 단계 2 = DBE 열람 전 봉인) → 거부 · 사유 PLAN_NUMBER_UNREGISTERED exec_policy.max_hours | L3ep R 런 계획 실행 정책 max_attempts = null (⬜ · 단계 2 = DBE 열람 전 봉인) → 거부 · 사유 PLAN_NUMBER_UNREGISTERED exec_policy.max_attempts | L3ep R 런 계획 실행 정책 allowed_machines = null (⬜ · 단계 2 = DBE 열람 전 봉인) → 거부 · 사유 PLAN_NUMBER_UNREGISTERED exec_policy.allowed_machines | L3ep R 런 계획 실행 정책 env_unit = null (⬜ · 단계 2 = DBE 열람 전 봉인) → 거부 · 사유 PLAN_NUMBER_UNREGISTERED exec_policy.env_unit"
+   ]
+  ]
+ },
+ {
+  "id": "M08",
+  "why": "--max-hours = 계획 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (3.1 s)   FAILED: ['EP01']"
+   ]
+  ]
+ },
+ {
+  "id": "M09",
+  "why": "허용 기계 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (3.4 s)   FAILED: ['EP02']"
+   ]
+  ]
+ },
+ {
+  "id": "M10",
+  "why": "단계 입구 계획 봉인 판 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (0.8 s)   FAILED: ['EP05']"
+   ]
+  ]
+ },
+ {
+  "id": "M11",
+  "why": "사다리 문서 숫자 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (4.8 s)   FAILED: ['EP06']"
+   ]
+  ]
+ },
+ {
+  "id": "M12",
+  "why": "예측 문서 숫자 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (3.6 s)   FAILED: ['EP06']"
+   ]
+  ]
+ },
+ {
+  "id": "M13",
+  "why": "판정 문서 숫자 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (2.6 s)   FAILED: ['EP06']"
+   ]
+  ]
+ },
+ {
+  "id": "M14",
+  "why": "판정 계획 봉인 판 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (2.7 s)   FAILED: ['EP08']"
+   ]
+  ]
+ },
+ {
+  "id": "M15",
+  "why": "판정 기계 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (3.5 s)   FAILED: ['EP07']"
+   ]
+  ]
+ },
+ {
+  "id": "M16",
+  "why": "런 기록 기계 이름 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (2.6 s)   FAILED: ['EP07']"
+   ]
+  ]
+ },
+ {
+  "id": "M17",
+  "why": "--machine 필수 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (1.7 s)   FAILED: ['EP02']"
+   ]
+  ]
+ },
+ {
+  "id": "M19",
+  "why": "예측의 기록 계획 꼴 검사 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (3.8 s)   FAILED: ['EP12']"
+   ]
+  ]
+ },
+ {
+  "id": "M20",
+  "why": "판정의 기록 계획 꼴 검사 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (2.7 s)   FAILED: ['EP12']"
+   ]
+  ]
+ },
+ {
+  "id": "M21",
+  "why": "블록 표지 개수 (각 1) → 하나 이상",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (3.0 s)   FAILED: ['EP06']"
+   ]
+  ]
+ },
+ {
+  "id": "M22",
+  "why": "블록 내용 정확 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (3.5 s)   FAILED: ['EP06']"
+   ]
+  ]
+ },
+ {
+  "id": "M23",
+  "why": "--check-doc 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (3.0 s)   FAILED: ['EP06']"
+   ]
+  ]
+ },
+ {
+  "id": "M24",
+  "why": "런 기계 = 단계 기계 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (3.6 s)   FAILED: ['EP07']"
+   ]
+  ]
+ },
+ {
+  "id": "M25",
+  "why": "단계 기계 허용 목록 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (3.3 s)   FAILED: ['EP07']"
+   ]
+  ]
+ }
+]

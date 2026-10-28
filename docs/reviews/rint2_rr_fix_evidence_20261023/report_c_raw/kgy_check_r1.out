@@ -1,0 +1,14 @@
+  kgy 판 = Python 3.8.20 · numpy 1.24.4 · scipy 1.10.1 (/root/.local/share/uv/python/cpython-3.8.20-linux-x86_64-gnu/bin/python3.8)
+  ✓ run_contract :: run_contract selftest: 124/124 PASS
+  ✓ step3_rint :: STEP3 RINT SELFTEST PASS
+  ✓ ptfe_face_alpha :: 242 PASS · 0 FAIL
+  ✓ carbon_junction :: == test_carbon_junction: 466/466 PASS
+  ✓ ca_ext_b6 :: 501 PASS · 0 FAIL
+  ✓ ca_ext_runner :: 151 PASS · 0 FAIL
+  ✓ rint_r_chain :: test_rint_r_chain: 384/384 PASS (350.3 s)
+  ✗ rint_r_chain_e2e ::   PASS  E12d 같은 실제 원천 런 ctx 의 결합 칸 하나 (fp_sid) 만 다르게 → GraphSourceError (원천 조립 결합 ≠ 그 런 주 증서 결합    FAIL  E13b 실물 러너만 SIGKILL (표지 앞 · payload 프로세스가 떠 있음) → 사슬 = 러너 rc −9 · 그룹 (payload) 을 죽이고 종료 �   FAIL  E13e 실물 사슬 부모 SIGKILL (따로 프로세스 · 표지 앞) → 러너 그룹은 살아 있다 (payload 프로세스 · 끝 기록 없음 —   (로그 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint_c/logs_kgy/rint_r_chain_e2e.log)
+  ✓ step3_target_cert :: == test_step3_target_cert [빠른 판]: 264/264 PASS (11.5 s)
+  ✓ step3_conv_cert :: == test_step3_conv_cert: 29/29 PASS
+  ✓ ca_s0_census :: 167 PASS · 0 FAIL
+✗ kgy 판 R 경로 시험 실패 (로그 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rint_c/logs_kgy)
+rc=1

@@ -1,0 +1,72 @@
+[
+ {
+  "id": "MU10",
+  "why": "결정 기록 원장 커밋 = 조상 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (15.6 s)   FAILED: ['UM07']"
+   ]
+  ]
+ },
+ {
+  "id": "MU11",
+  "why": "결정 기록 원장 sha 대조 끔 (접두만)",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (16.7 s)   FAILED: ['UM07']"
+   ]
+  ]
+ },
+ {
+  "id": "MU34",
+  "why": "CLI — 단위 · 점 · 합치기 하나만 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (7.8 s)   FAILED: ['UM13']"
+   ]
+  ]
+ },
+ {
+  "id": "MU37",
+  "why": "CLI — 단위 · 점 = 원장 시도만 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (7.5 s)   FAILED: ['UM13']"
+   ]
+  ]
+ },
+ {
+  "id": "MU41",
+  "why": "끊긴 채택 시도 (요약 없음) = UNIT_MISSING 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (7.8 s)   FAILED: ['UM23']"
+   ]
+  ]
+ }
+]

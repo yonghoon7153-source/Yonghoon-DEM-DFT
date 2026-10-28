@@ -1,0 +1,44 @@
+[
+ {
+  "id": "MC12a",
+  "why": "no-op 런 c 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (1.6 s)   FAILED: ['NP08']"
+   ]
+  ]
+ },
+ {
+  "id": "MC12b",
+  "why": "no-op 런 rc 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (2.6 s)   FAILED: ['NP08']"
+   ]
+  ]
+ },
+ {
+  "id": "MC12c",
+  "why": "no-op 런 = 마지막 런 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (3.3 s)   FAILED: ['NP08']"
+   ]
+  ]
+ }
+]

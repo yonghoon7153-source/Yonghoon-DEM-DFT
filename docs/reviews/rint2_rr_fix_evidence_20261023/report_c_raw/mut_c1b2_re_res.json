@@ -1,0 +1,30 @@
+[
+ {
+  "id": "MQ08",
+  "why": "예측 재실행 = ResumeRunner 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (6.1 s)   FAILED: ['RS05']"
+   ]
+  ]
+ },
+ {
+  "id": "MQ11",
+  "why": "재실행 사슬 = 앞 끝의 자격 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (1.7 s)   FAILED: ['RS06']"
+   ]
+  ]
+ }
+]

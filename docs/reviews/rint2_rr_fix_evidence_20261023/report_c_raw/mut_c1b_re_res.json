@@ -1,0 +1,72 @@
+[
+ {
+  "id": "ML09",
+  "why": "끝 줄바꿈 검사 끔",
+  "killed": false,
+  "rcs": [
+   0
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 1/1 PASS (0.9 s)"
+   ]
+  ]
+ },
+ {
+  "id": "ML14",
+  "why": "원장 = 저장소 꼭대기 검사 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (0.7 s)   FAILED: ['AL16']"
+   ]
+  ]
+ },
+ {
+  "id": "ML40",
+  "why": "예측 입력 = 이 원장 시도 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (4.5 s)   FAILED: ['AL11c']"
+   ]
+  ]
+ },
+ {
+  "id": "ML48",
+  "why": "결과 전 · 뒤 기록 = 폴더 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 4/5 PASS (9.2 s)   FAILED: ['AL12']"
+   ]
+  ]
+ },
+ {
+  "id": "ML54",
+  "why": "recover 의 그룹 확인 뒤 결과 줄 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (1.2 s)   FAILED: ['AL13b']"
+   ]
+  ]
+ }
+]

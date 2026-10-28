@@ -1,0 +1,30 @@
+[
+ {
+  "id": "RP1",
+  "why": "실경로 — 러너가 끝난 (죽은) 뒤 남은 표지 프로세스 정리 · 종료 확인 끔 (run_in_group)",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "  - E13b 실물 러너만 SIGKILL (표지 앞 · payload 프로세스가 떠 있음) → 사슬 = 러너 rc −9 · 그룹 (payload) 을 죽이고 종료 확인 (끝 기록 확인 True · rc −9) · RUNNER_RC · 돌아온 뒤 표지 프로세스 0 · 표지 · 팔 payload 없음 (지연이 끝날 시간 뒤에도) · 킷 런 폴더에 payload 없음",
+    "  - E13c 실물 러너만 SIGKILL (표지 뒤 · 증서 풀이 중) → 사슬 = 그룹을 죽이고 확인 · RUNNER_RC · 표지 하나 (.unchecked/ · 결과 뒤 판정의 입력) · 팔 payload 없음 (지연이 끝날 시간 뒤에도 = payload 프로세스가 죽었다) · 표지 프로세스 0"
+   ]
+  ]
+ },
+ {
+  "id": "RP2",
+  "why": "실경로 — recover 의 그룹 죽이기 · 종료 확인 끔 (recover_group)",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "  - E13e 실물 사슬 부모 SIGKILL (따로 프로세스 · 표지 앞) → 러너 그룹은 살아 있다 (payload 프로세스 · 끝 기록 없음 — 부모 사망 + 지금 표지 없음 ≠ 종료 증거) · --stage recover → 그룹을 죽이고 확인 (끝 기록 by recover · 원인 parent_dead · rc 0) · 표지 프로세스 0 · 표지 · 팔 payload 없음 (지연 끝 뒤에도)",
+    "  - E13f 실물 사슬 부모 SIGKILL (표지 뒤) → recover 가 그룹을 죽이고 확인 · 표지 하나 (결과 뒤 판정의 입력) · 팔 payload 없음 (지연 끝 뒤에도) · 표지 프로세스 0"
+   ]
+  ]
+ }
+]

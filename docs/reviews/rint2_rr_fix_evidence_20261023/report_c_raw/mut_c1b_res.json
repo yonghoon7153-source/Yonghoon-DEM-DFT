@@ -1,0 +1,800 @@
+[
+ {
+  "id": "ML01",
+  "why": "원장 줄 정준 JSON 검사 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (0.9 s)   FAILED: ['AL17']"
+   ]
+  ]
+ },
+ {
+  "id": "ML02",
+  "why": "머리 줄 검사 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (0.9 s)   FAILED: ['AL17']"
+   ]
+  ]
+ },
+ {
+  "id": "ML03",
+  "why": "항목 번호 차례 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (1.0 s)   FAILED: ['AL17']"
+   ]
+  ]
+ },
+ {
+  "id": "ML04",
+  "why": "같은 항목 결과 줄 둘 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 4/5 PASS (8.6 s)   FAILED: ['AL12']"
+   ]
+  ]
+ },
+ {
+  "id": "ML05",
+  "why": "원장 꼴의 같은 대상 차례 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (0.7 s)   FAILED: ['AL06']"
+   ]
+  ]
+ },
+ {
+  "id": "ML06",
+  "why": "항목 계획 = 머리 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (1.1 s)   FAILED: ['AL17']"
+   ]
+  ]
+ },
+ {
+  "id": "ML07",
+  "why": "결과 줄 폴더 이름 검사 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (1.2 s)   FAILED: ['AL17']"
+   ]
+  ]
+ },
+ {
+  "id": "ML08",
+  "why": "완주 = 결과 뒤 검사 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (1.2 s)   FAILED: ['AL17']"
+   ]
+  ]
+ },
+ {
+  "id": "ML09",
+  "why": "끝 줄바꿈 검사 끔",
+  "killed": false,
+  "rcs": [
+   0
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 1/1 PASS (1.1 s)"
+   ]
+  ]
+ },
+ {
+  "id": "ML10",
+  "why": "모르는 kind 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (1.1 s)   FAILED: ['AL17']"
+   ]
+  ]
+ },
+ {
+  "id": "ML11",
+  "why": "커밋 안 한 고침 검사 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (1.4 s)   FAILED: ['AL16']"
+   ]
+  ]
+ },
+ {
+  "id": "ML12",
+  "why": "역사 덧붙이기만 검사 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 4/5 PASS (9.3 s)   FAILED: ['AL12']"
+   ]
+  ]
+ },
+ {
+  "id": "ML13",
+  "why": "원장 = git 저장소 검사 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (0.8 s)   FAILED: ['AL16']"
+   ]
+  ]
+ },
+ {
+  "id": "ML14",
+  "why": "원장 = 저장소 꼭대기 검사 끔",
+  "killed": false,
+  "rcs": [
+   0
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 1/1 PASS (0.7 s)"
+   ]
+  ]
+ },
+ {
+  "id": "ML15",
+  "why": "원장 ≠ 사슬 체크아웃 검사 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (0.8 s)   FAILED: ['AL18']"
+   ]
+  ]
+ },
+ {
+  "id": "ML16",
+  "why": "없는 번호 = 화면만 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (3.7 s)   FAILED: ['AL02']"
+   ]
+  ]
+ },
+ {
+  "id": "ML17",
+  "why": "결과 줄 있는 번호 = 화면만 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (3.7 s)   FAILED: ['AL02']"
+   ]
+  ]
+ },
+ {
+  "id": "ML18",
+  "why": "시도 폴더가 이미 있음 = 옆 거부 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/2 PASS (2.2 s)   FAILED: ['AL07', 'AL07b']"
+   ]
+  ]
+ },
+ {
+  "id": "ML19",
+  "why": "풀기 전 대상 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (1.5 s)   FAILED: ['AL18']"
+   ]
+  ]
+ },
+ {
+  "id": "ML20",
+  "why": "풀기 전 기계 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (1.5 s)   FAILED: ['AL04']"
+   ]
+  ]
+ },
+ {
+  "id": "ML21",
+  "why": "풀기 전 계획 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (1.5 s)   FAILED: ['AL09b']"
+   ]
+  ]
+ },
+ {
+  "id": "ML22",
+  "why": "풀기 전 코드 키 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 1/2 PASS (2.1 s)   FAILED: ['AL09']"
+   ]
+  ]
+ },
+ {
+  "id": "ML23",
+  "why": "풀기 전 환경 지문 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 1/2 PASS (1.7 s)   FAILED: ['AL09']"
+   ]
+  ]
+ },
+ {
+  "id": "ML24",
+  "why": "풀기 전 침대 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 1/2 PASS (1.2 s)   FAILED: ['AL09']"
+   ]
+  ]
+ },
+ {
+  "id": "ML25",
+  "why": "차례 (앞 결과 줄) 검사 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (1.2 s)   FAILED: ['AL13']"
+   ]
+  ]
+ },
+ {
+  "id": "ML26",
+  "why": "최대 시도 수 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (1.0 s)   FAILED: ['AL08']"
+   ]
+  ]
+ },
+ {
+  "id": "ML27",
+  "why": "채택 뒤 새 시도 거부 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (1.0 s)   FAILED: ['AL05']"
+   ]
+  ]
+ },
+ {
+  "id": "ML28",
+  "why": "재실행 자격 검사 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (0.9 s)   FAILED: ['AL05']"
+   ]
+  ]
+ },
+ {
+  "id": "ML29",
+  "why": "결과 전 시도 = 채택 아님 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (2.6 s)   FAILED: ['AL10']"
+   ]
+  ]
+ },
+ {
+  "id": "ML30",
+  "why": "채택 뒤 거부 기록 = 기록만 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (4.3 s)   FAILED: ['AL12c']"
+   ]
+  ]
+ },
+ {
+  "id": "ML31",
+  "why": "채택 뒤 흔적 = 멈춤 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (3.7 s)   FAILED: ['AL12c']"
+   ]
+  ]
+ },
+ {
+  "id": "ML32",
+  "why": "그룹 미확인 = 결과 줄 안 씀 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (1.0 s)   FAILED: ['AL13']"
+   ]
+  ]
+ },
+ {
+  "id": "ML33",
+  "why": "검사 실패 흔적 = 자격 없음 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (3.4 s)   FAILED: ['AL19']"
+   ]
+  ]
+ },
+ {
+  "id": "ML34",
+  "why": "결과 전 = 자격 없음 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (1.8 s)   FAILED: ['AL14']"
+   ]
+  ]
+ },
+ {
+  "id": "ML35",
+  "why": "자원 낱말 = resource 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (3.5 s)   FAILED: ['AL19']"
+   ]
+  ]
+ },
+ {
+  "id": "ML36",
+  "why": "그룹 신호 = signal 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (3.6 s)   FAILED: ['AL19']"
+   ]
+  ]
+ },
+ {
+  "id": "ML37",
+  "why": "시간 초과 = timeout 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (3.5 s)   FAILED: ['AL19']"
+   ]
+  ]
+ },
+ {
+  "id": "ML38",
+  "why": "미확인 원인 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (1.1 s)   FAILED: ['AL13']"
+   ]
+  ]
+ },
+ {
+  "id": "ML39",
+  "why": "런 없는 멈춤 = gate 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 1/2 PASS (7.0 s)   FAILED: ['AL11']"
+   ]
+  ]
+ },
+ {
+  "id": "ML40",
+  "why": "예측 입력 = 이 원장 시도 끔",
+  "killed": false,
+  "rcs": [
+   0
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 2/2 PASS (6.6 s)"
+   ]
+  ]
+ },
+ {
+  "id": "ML41",
+  "why": "예측 입력 = 채택 시도 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 1/2 PASS (7.6 s)   FAILED: ['AL11']"
+   ]
+  ]
+ },
+ {
+  "id": "ML42",
+  "why": "예측 입력 = 원장 시도 폴더 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 1/2 PASS (7.4 s)   FAILED: ['AL11']"
+   ]
+  ]
+ },
+ {
+  "id": "ML43",
+  "why": "예측 입력 폴더 요약 sha 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (4.1 s)   FAILED: ['AL11b']"
+   ]
+  ]
+ },
+ {
+  "id": "ML44",
+  "why": "판정 커밋 = HEAD 바이트 접두 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (2.3 s)   FAILED: ['AL12d']"
+   ]
+  ]
+ },
+ {
+  "id": "ML45",
+  "why": "판정의 역사 검사 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 4/5 PASS (9.2 s)   FAILED: ['AL12']"
+   ]
+  ]
+ },
+ {
+  "id": "ML46",
+  "why": "원장 밖 시도 폴더 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 4/5 PASS (9.8 s)   FAILED: ['AL12']"
+   ]
+  ]
+ },
+ {
+  "id": "ML47",
+  "why": "판정의 폴더 요약 sha 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 4/5 PASS (10.6 s)   FAILED: ['AL12']"
+   ]
+  ]
+ },
+ {
+  "id": "ML48",
+  "why": "결과 전 · 뒤 기록 = 폴더 끔",
+  "killed": false,
+  "rcs": [
+   0
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 5/5 PASS (10.7 s)"
+   ]
+  ]
+ },
+ {
+  "id": "ML49",
+  "why": "시작 커밋 조상 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (1.9 s)   FAILED: ['AL12b']"
+   ]
+  ]
+ },
+ {
+  "id": "ML50",
+  "why": "시작 커밋 바이트 접두 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (2.5 s)   FAILED: ['AL12d']"
+   ]
+  ]
+ },
+ {
+  "id": "ML51",
+  "why": "폴더 없는 시도 = 멈춤 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 4/5 PASS (10.4 s)   FAILED: ['AL12']"
+   ]
+  ]
+ },
+ {
+  "id": "ML52",
+  "why": "판정 입력 = 채택 시도 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (5.7 s)   FAILED: ['AL10']"
+   ]
+  ]
+ },
+ {
+  "id": "ML53",
+  "why": "판정 입력 = 원장 시도 폴더 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (4.3 s)   FAILED: ['AL12e']"
+   ]
+  ]
+ },
+ {
+  "id": "ML54",
+  "why": "recover 의 그룹 확인 뒤 결과 줄 끔",
+  "killed": false,
+  "rcs": [
+   0
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 1/1 PASS (1.1 s)"
+   ]
+  ]
+ },
+ {
+  "id": "ML55",
+  "why": "recover 결과 줄 by 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (1.2 s)   FAILED: ['AL13']"
+   ]
+  ]
+ },
+ {
+  "id": "ML56",
+  "why": "덧붙이기 전 다른 손 커밋 검사 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (0.9 s)   FAILED: ['AL20']"
+   ]
+  ]
+ },
+ {
+  "id": "ML57",
+  "why": "거부 기록 덮지 않기 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (0.7 s)   FAILED: ['AL07b']"
+   ]
+  ]
+ }
+]

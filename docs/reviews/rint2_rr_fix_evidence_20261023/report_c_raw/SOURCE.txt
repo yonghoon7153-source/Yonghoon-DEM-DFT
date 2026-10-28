@@ -1,0 +1,14 @@
+묶음 C 코드 보고 (REPORT_C.md) 의 숫자 원자료 — 리포 사본 (10-28 밤 · 사전 공격 5 회차 PC5-11 · 1저자 10-28 밤 "rint는 권고대로")
+
+출처 = 메인 세션 스크래치 rint_c/ (REPORT_C.md §13 "정리 · 근거 파일" 의 목록 · 10-27 묶음 C 에이전트 실행) · 파일 바이트 그대로 (고치지 않음 · 고른 것만)
+  회귀        base_logs/ (시작 · _summary.txt) · logs_final/ (끝 · _summary.txt) · logs_postfix/ (고침 뒤 · _summary.txt)  = REPORT_C §3 "회귀 21 묶음"
+  기존 경로   logs_offpath2/  = REPORT_C §4
+  kgy 판      logs_kgy_r1/ · kgy_check_r1.out · logs_kgy_r2/ · kgy_check_r2.out  = REPORT_C §5 "kgy 11 묶음"
+  E13 고침    logs_e13fix/
+  결정성      sid_311.json · sid_38.json  = REPORT_C §6 "결정성 9/9"
+  변이        mut_*_res.json (12 파일 · 줄 221 = 다시 돌림 `_re` · 나눔 `c2a_b` 포함 · mut_realpath_res.json = §8)  = REPORT_C §7 표 (합 207 · 표가
+              다시 돌림 · 나눔을 어떻게 셌는지 = 그 보고 §7 표의 "첫 판 생존 → 처리" 칸)
+
+SHA256SUMS = 이 폴더 파일 (SOURCE.txt · SHA256SUMS 뺌) 의 sha256 · 복사 뒤 스크래치 원본과 대조 = 같음 (93 파일).
+주소 · 비밀 훑기 (IP · 전자우편 · 토큰 · 키 꼴) = 없음 (10-28 밤).
+이 사본은 그 숫자를 다시 재지 않는다 — 다시 잰 값이 아니라 그때 찍힌 출력이다.

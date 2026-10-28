@@ -1,0 +1,76 @@
+
+── E1
+    보고 E1 — 사슬 rc 0 · 상태 CALIBRATED · 런 16 (['floor', 'ceiling', 'point', 'point', 'point', 'point', 'point', 'confirm', 'confirm', 'end_confirm', 'end_origin', 'end_confirm', 'end_origin', 'origin', 'origin8', 'sbe_noop']) · 46 s · 멈춤 None
+  PASS  E1a 실제 러너 — 바닥 · 천장 · 사다리 점 하나 이상이 rc 0 · 팔 계약 (정본 ca_ext_record_ok · check_arm · 수렴 증서) 통과
+  PASS  E1b 사다리가 등록 결과 이름으로 끝난다 (STOPPED · 계약 · 러너 멈춤 아님)
+  PASS  E1c 사다리 뒤 고정물 체크아웃 git status 빈칸 (러너 · payload 가 작업 트리 안 ignore 밖 파일을 안 만든다) · 요약 code = 깨끗 · rel = scripts/rint_r_chain.py · scripts/sdcp_gain_vox015_8arm.sh · 사슬 HEAD = 러너 HEAD · 환경 지문 단위 셋
+  PASS  E1d 같은 침대 (실물) — 요약 bed (SBE · 경로 없음) = S0 단계 1 기록 원 입력 · 설정 · arm 0 sid 지문 (런마다) = S0 off 격자 지문
+  PASS  E1m 실물 사다리 — 요약 machine · 런 기록 machine (런마다) = --machine kgy · 계획 실행 정책 봉인 (v3)
+  PASS  E1g 실물 그룹 기록 — 런마다 groups/<런>.launch.json · .end.json (확인 True · 원인 None · rc 0)
+  PASS  E1u 실물 시도 꼴 — 런마다 .unchecked/ 의 첫 풀이 끝 표지 = 그 런의 팔마다 하나 (진짜 감싸개 · 진짜 payload) · .unchecked/ 에 payload 남지 않음 · 킷 런 폴더에 payload 없음
+  PASS  E2a 바닥 · 천장 팔 — protocol 표지 inf · zero (R_j null · 0.0 · quantitative False · allow_rj_limits True) · 영수증 요청 같은 꼴
+  PASS  E2b 원장 수 — 바닥 = 접합 간선 0 · 극한 instance = instance 수 · 천장 = 간선 0 · 축약 = instance 수 (S3 c 0 · 몫 0)
+    보고 E3 (픽스처 · 의미 없음) — 바닥 0.00033886254177621693 · 천장 78.5401388624473 · 점 [(10000.0, 0.668518570460743), (1000000.0, 0.007077414715040319), (3162277.6601683795, 0.0024699048475950243), (5096738.9295045, 0.0016610837748603873), (5230000.0, 0.0016273940409552666), (5354782.66107625, 0.0015973678169455593), (5410000.0, 0.0015845230083109357), (10000000.0, 0.0010127696941881097), (100000000.0, 0.0004062537726538784)] S/cm · 표적 1.63 mS/cm
+  PASS  E3 σ 순서 — 바닥 < 사다리 점 (R_j 가 작을수록 높다) < 천장 (같은 그래프 · Rayleigh)
+  PASS  E4a off 격자 sid 지문 = 접합 원장 sid = 사슬 기록 (팔마다) · 같은 origin 런끼리 한 지문
+  PASS  E4b CG 반복 수 — 사슬 공개 기록 = 팔 step3.cg_iters = 증서 iters (int ≥ 1) · 이어 풀기 반복 수 int ≥ 0
+  PASS  E7 값 봉인 (실물) — 사슬 화면 · ladder_summary.json · 러너 로그에 팔 σ (결과 · 증서 · 이어 풀기) 숫자 없음
+  PASS  E5 origin 검사 — ARM_LIST=1,2 한 런 · 팔 a1 · a2 만 · 영수증 arm_list [1, 2] · OUTDIR 접미사 _arm2_arml1-2
+
+── E6
+    보고 E6 — 사슬 rc 3 · 상태 STOPPED · 멈춤 RUNNER_RC · 런 1 · payload 거부 사유 ['JOULE', 'STEP4_GRID']
+  PASS  E6 (현재 꼴 기록) 생산 킷 꼴 payload 줄 (--joule-heat · --save-step4-grid) = 첫 런 (바닥) 에서 payload 입구 거부 (JOULE · STEP4_GRID) → 러너 rc ≠ 0 → 사슬 RUNNER_RC (fail-closed · 팔 없음) — 실제 런을 막는 것
+
+── E8
+    보고 E8 — 사슬 rc 0 · 상태 CALIBRATED · 런 16 (['floor', 'ceiling', 'point', 'point', 'point', 'point', 'point', 'confirm', 'end_confirm', 'end_origin', 'end_origin', 'end_confirm', 'end_origin', 'origin', 'origin8', 'sbe_noop']) · 47 s · 멈춤 None · 상태 기록 {'0': 'positive', '10000.0': 'positive', '1000000.0': 'positive', '10000000.0': 'positive', '100000000.0': 'positive', '2850364.3411501427': 'positive', '2910000.0': 'positive', '2966709.588117325': 'positive', '3162277.6601683795': 'positive', 'inf': 'zero'}
+  PASS  E8a 바닥 (CJUNC_RJ=inf · AM 이 판에 안 닿음) = 실제 payload 조기 반환 해 → 팔 상태 zero (σ 0 · 증서 VALID_ZERO_TOPOLOGY) · 정본 계약 통과 · 사슬이 받아 다음 런 (천장) 으로
+  PASS  E8b 바닥 팔 — σ 정확히 0.0 · 증서 상태 VALID_ZERO_TOPOLOGY · 출처 early_return · 사유 = 결과 사유 (영값 위상) · 전자 not_solvable
+  PASS  E8c 사다리가 등록 결과 이름으로 끝난다 · 바닥에서 멈추지 않는다 (ARM_UNREADABLE · NOT_COMPUTED · 계약 · 러너 멈춤 아님)
+  PASS  E8u 바닥 조기 반환 해 (σ 0 · CG 없음) → 표지 하나 (kind solve_return · 진짜 감싸개)
+
+── E9
+    보고 E9 — 사슬 rc 3 · 상태 NOT_COMPUTED · 런 2 (['floor', 'ceiling']) · 4 s · 멈춤 NOT_COMPUTED · 사유 ELECTRODE_SHORT · 런 L02_ceiling
+  PASS  E9a 바닥 (R_j → ∞) = 실제 payload 영값 위상 (팔 상태 zero) · 천장 (R_j → 0) 런 = 러너 rc 0 (정본 check_arm 이 단락 기록을 받아 옮겼다) · 런 둘에서 멈춤
+  PASS  E9b 사다리 = 등록 결과 NOT_COMPUTED · 멈춤 코드 NOT_COMPUTED · 사유 ELECTRODE_SHORT · 멈춘 런 = 천장 (RUNNER_RC · CA_EXT_RECORD · ARM_CONTRACT · MANIFEST_MISMATCH 아님) · rc 3
+  PASS  E9c 천장 팔 (실물) — σ None · 사유 cjunc_electrode_short · 증서 ELECTRODE_SHORT (early_return · ok False) · 축약 instance ≥ 1 · 전자 not_solvable
+
+── E10
+  PASS  E10a 봉인 SV census (실제 S0 함수 · off 격자 · 봉인 s_min 0.6) = 실제 DBE arm 0 SV 런 (P0 c 0 · P1 c 1) 의 증거 census = 기록 census 사본 · 사슬 대조 무리 키 = 주 래스터 origin 0 · read_run 통과 (러너 rc 0 · 둘)
+  PASS  E10b 봉인 census 의 못 가른 수를 +1 한 대조 → 같은 실제 런 꼴 (P0 c 1) 의 read_run = S0_REPORT_MISMATCH (사유 census)
+
+── E11
+  PASS  E11a 사슬 env 에 MPM_NO_VENV · VIRTUAL_ENV 없음 + 러너 자리의 미끼 venv → 러너 rc 0 · 팔 계약 통과 · 미끼를 켜지 않음 (표지 파일 없음 · 러너 로그에 `[p2] venv` 줄 없음) · 고정물 체크아웃 깨끗 (venv/ = ignore 안)
+  PASS  E11b payload 실행 인터프리터 (exec_env.python) 의 같음 단위 (python 부 판 · numpy · scipy) = 사슬 환경 지문 env_record unit · python 전체 판 같음 (구성상 같음 = 확인 칸 · 판별 = E11a)
+
+── E12
+    보고 E12 — SV 런 3.6 s (그 안 원천 런 1.595 s) · 원천 payload STEP3 0.03843069076538086 s · 조립 0.013089179992675781 s · 최대 RSS 95976 kB · SV 상태 computed · 증서 구간 certified_interval · 귀속 {'state': 'verified', 'kind': None, 'why': None}
+  PASS  E12a 생산 기본 원천 (러너 조립만 · 실제 payload) — DBE arm 0 SV 모서리 (P1 · c 1 · R_j 1e6) 의 SV 기록 = 증서 구간 · 비를 싣는 끝 있음 (graph_applicable) · 끝 그래프 귀속 verified · 원천 런 하나 (상태 ok · rc 0 · 환경 단위 = 사슬 · 비용 칸 셋) · 원천 폴더 = 조립만 출력 하나 (cjgraph_p2_…_a0.json · 팔 JSON p2_* 없음 · 러너 영수증 cjunc_graph_only True = 팔 증명 불가 · N11i)
+  PASS  E12g ★ 10-27 묶음 C2b — 원천 런 (러너 조립만) 도 러너 프로세스 그룹 · 끝 기록 확인 True · 원인 None · rc 0 (원천 런마다)
+  PASS  E12b 원천이 돌려준 주 계 지문만 바꾼 꼴 (같은 실제 원천 런 · 반환 dict 의 main 만) → read_run 멈춤 CA_EXT_RECORD (사유 fp_cjunc_graph · RR1-01)
+  PASS  E12c 사슬 환경 단위가 원천 런과 다른 꼴 (사슬 env_record 의 numpy 판을 바꿔 끼움) → 원천 실패 (사유 환경 단위) → 그 SV 기록 귀속 = unverified (source_failed · 런 멈춤 아님 · verified 아님)
+  PASS  E12d 같은 실제 원천 런 ctx 의 결합 칸 하나 (fp_sid) 만 다르게 → GraphSourceError (원천 조립 결합 ≠ 그 런 주 증서 결합 · 칸 fp_sid)
+
+── E13
+  FAIL  E13b 실물 러너만 SIGKILL (표지 앞 · payload 프로세스가 떠 있음) → 사슬 = 러너 rc −9 · 그룹 (payload) 을 죽이고 종료 확인 (끝 기록 확인 True · rc −9) · RUNNER_RC · 돌아온 뒤 표지 프로세스 0 · 표지 · 팔 payload 없음 (지연이 끝날 시간 뒤에도) · 킷 런 폴더에 payload 없음  ((None, {'token': 'a1b0df6d9a2a231292667ef174784192', 'marks_at_kill': 1, 'alive_at_kill': []}, {'by': 'chain', 'cause': None, 'confirmed': True, 'ended_utc': '2026-10-27T13:56:03Z', 'killed': 0, 'left': [], 'left_after_exit': 0, 'name': 'K01_floor', 'rc': 0, 'schema': 'rint-r-group-v1', 'signal': None, 'token': 'a1b0df6d9a2a231292667ef174784192'}, [], ['K01_floor_arm1/.unchecked/p2_SBE_vgcf100_sph_fa_cjinf_c91450a6_c0_rt1em12_fb10000_a0.json.first_result.json', 'K01_floor_arm1/p2_SBE_vgcf100_sph_fa_cjinf_c91450a6_c0_rt1em12_fb10000_a0.json'], ['K01_floor_arm1/.unchecked/p2_SBE_vgcf100_sph_fa_cjinf_c91450a6_c0_rt1em12_fb10000_a0.json.first_result.json', 'K01_floor_arm1/p2_SBE_vgcf100_sph_fa_cjinf_c91450a6_c0_rt1em12_fb10000_a0.json'], [], '50 · 이어 풀기 4 · 잔차 8.2e-13 · 판 전류 불균형 1.8e-07 · 증서 ⓐⓑⓒⓓ ✓ · 판독 보장 오차 e 1.8e-07\nException in thread Thread-1:\nTraceback (most recent call last):\n  Fil)
+  PASS  E13c 실물 러너만 SIGKILL (표지 뒤 · 증서 풀이 중) → 사슬 = 그룹을 죽이고 확인 · RUNNER_RC · 표지 하나 (.unchecked/ · 결과 뒤 판정의 입력) · 팔 payload 없음 (지연이 끝날 시간 뒤에도 = payload 프로세스가 죽었다) · 표지 프로세스 0
+
+── E13t
+  PASS  E13d 실물 시간 초과 (deadline 6 s · 표지 앞 지연 20 s) → TIME_LIMIT · 끝 기록 원인 timeout · 확인 True · 표지 프로세스 0 · 표지 · 팔 payload 없음 (지연이 끝날 시간 뒤에도) · 킷 런 폴더에 payload 없음
+
+── E13p
+  FAIL  E13e 실물 사슬 부모 SIGKILL (따로 프로세스 · 표지 앞) → 러너 그룹은 살아 있다 (payload 프로세스 · 끝 기록 없음 — 부모 사망 + 지금 표지 없음 ≠ 종료 증거) · --stage recover → 그룹을 죽이고 확인 (끝 기록 by recover · 원인 parent_dead · rc 0) · 표지 프로세스 0 · 표지 · 팔 payload 없음 (지연 끝 뒤에도)  ({'token': '252a4b394f0ed5f2c9f7a16b8910de57', 'alive_after_parent': [], 'end_before': True, 'recover_rc': 0, 'recover_so': 'recover — 그룹 기록 0 개 정리 · 미확인 0\n', 'alive_after_recover': [], 'files_late': ['K01_floor_arm1/.unchecked/p2_SBE_vgcf100_sph_fa_cjinf_c91450a6_c0_rt1em12_fb10000_a0.json.first_result.json', 'K01_floor_arm1/p2_SBE_vgcf100_sph_fa_cjinf_c91450a6_c0_rt1em12_fb10000_a0.json'], 'end': {'by': 'chain', 'cause': None, 'confirmed': True, 'ended_utc': '2026-10-27T13:58:48Z', 'killed': 0, 'left': [], 'left_after_exit': 0, 'name': 'K01_floor', 'rc': 0, 'schema': 'rint-r-group-v1', 'signal': None, 'token': '252a4b394f0ed5f2c9f7a16b8910de57'}, 'kit_payloads': []})
+  PASS  E13f 실물 사슬 부모 SIGKILL (표지 뒤) → recover 가 그룹을 죽이고 확인 · 표지 하나 (결과 뒤 판정의 입력) · 팔 payload 없음 (지연 끝 뒤에도) · 표지 프로세스 0
+
+── E14
+  PASS  E14 ★ 10-27 묶음 C1b 실물 원장 시도 (사다리 P0 · 실물 러너 · payload) → --init · --add rc 0 · 사다리 CALIBRATED · 결과 줄 하나 (completed · 결과 뒤 · by chain · 폴더 요약 sha = 독립 계산) · 런마다 .unchecked/ 에 표지 · .unchecked/ 에 payload 없음 · 킷 런 폴더에 payload 없음
+
+── E15
+  PASS  E15 ★ 10-27 묶음 C1b-2 실물 재실행 — 바닥 런 표지 뒤 사슬 부모 SIGKILL → 결과 줄 없음 · recover --ledger rc 0 (interrupted · parent_dead · 결과 뒤 · 재실행 자격) · --add --resume 1 rc 0 · 재실행 시도 rc 0 · CALIBRATED · resume 칸 (원 시도 1 · 복사 0 · 새로 = 바닥 · 결정성 가정) · 결과 줄 completed · 사다리 칸 = 끊김 없는 실물 원장 사다리 (E14)
+
+── E16
+    보고 E16 — 이름 P05_corner ↔ U01_corner · 폴더 P05_corner_arm1 ↔ U01_corner_arm1 · 팔 JSON 바이트 같음 True · 다른 칸 [] · 사본 다시 읽기 SV 귀속 verified
+  PASS  E16 ★ 10-27 묶음 C2d 실물 합치기 fetch 가정 — 같은 요청 · 다른 런 이름 (P05_corner · U01_corner) · 다른 폴더 = 팔 JSON 바이트 같음 · σ 같음 · SV 귀속 verified 둘 다 · 단위 폴더 사본 (다른 자리) 의 read_run (합친 이름 · 실물 봉인 원천) 통과 · σ · 팔 sha256 = 단위 런 기록 · SV 귀속 verified
+
+test_rint_r_chain_e2e: 37 PASS · 2 FAIL (529.6 s)
+  - E13b 실물 러너만 SIGKILL (표지 앞 · payload 프로세스가 떠 있음) → 사슬 = 러너 rc −9 · 그룹 (payload) 을 죽이고 종료 확인 (끝 기록 확인 True · rc −9) · RUNNER_RC · 돌아온 뒤 표지 프로세스 0 · 표지 · 팔 payload 없음 (지연이 끝날 시간 뒤에도) · 킷 런 폴더에 payload 없음
+  - E13e 실물 사슬 부모 SIGKILL (따로 프로세스 · 표지 앞) → 러너 그룹은 살아 있다 (payload 프로세스 · 끝 기록 없음 — 부모 사망 + 지금 표지 없음 ≠ 종료 증거) · --stage recover → 그룹을 죽이고 확인 (끝 기록 by recover · 원인 parent_dead · rc 0) · 표지 프로세스 0 · 표지 · 팔 payload 없음 (지연 끝 뒤에도)

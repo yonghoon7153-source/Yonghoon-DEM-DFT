@@ -1,0 +1,170 @@
+[
+ {
+  "id": "MQ01",
+  "why": "재실행 = 끝난 런 복사 끔 (다 새로)",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (2.2 s)   FAILED: ['RS01']"
+   ]
+  ]
+ },
+ {
+  "id": "MQ02",
+  "why": "원천 런 끝남 = rc 0 끔 (멈춘 런도 복사)",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/2 PASS (3.7 s)   FAILED: ['RS01', 'RS02']"
+   ]
+  ]
+ },
+ {
+  "id": "MQ03",
+  "why": "남은 payload 바이트 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (2.7 s)   FAILED: ['RS02']"
+   ]
+  ]
+ },
+ {
+  "id": "MQ04",
+  "why": "결정성 기록 (대조 · 가정) 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (2.4 s)   FAILED: ['RS02']"
+   ]
+  ]
+ },
+ {
+  "id": "MQ05",
+  "why": "재실행 원천 폴더 요약 sha 대조 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (3.8 s)   FAILED: ['RS03']"
+   ]
+  ]
+ },
+ {
+  "id": "MQ06",
+  "why": "재실행 원천 = 사슬 끝 끔 (원 시도에서)",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (3.4 s)   FAILED: ['RS04']"
+   ]
+  ]
+ },
+ {
+  "id": "MQ07",
+  "why": "사다리 재실행 = ResumeRunner 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (2.5 s)   FAILED: ['RS01']"
+   ]
+  ]
+ },
+ {
+  "id": "MQ08",
+  "why": "예측 재실행 = ResumeRunner 끔",
+  "killed": false,
+  "rcs": [
+   0
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 1/1 PASS (7.4 s)"
+   ]
+  ]
+ },
+ {
+  "id": "MQ09",
+  "why": "재실행 환경 지문 = 원 시도 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (3.6 s)   FAILED: ['RS03']"
+   ]
+  ]
+ },
+ {
+  "id": "MQ10",
+  "why": "재실행 기계 = 원 시도 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (3.4 s)   FAILED: ['RS03']"
+   ]
+  ]
+ },
+ {
+  "id": "MQ11",
+  "why": "재실행 사슬 = 앞 끝의 자격 끔",
+  "killed": false,
+  "rcs": [
+   0
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 1/1 PASS (2.8 s)"
+   ]
+  ]
+ },
+ {
+  "id": "MQ12",
+  "why": "재실행 = 채택 시도의 재실행 끔",
+  "killed": true,
+  "rcs": [
+   1
+  ],
+  "tails": [
+   [
+    "",
+    "test_rint_r_chain: 0/1 PASS (3.3 s)   FAILED: ['RS03']"
+   ]
+  ]
+ }
+]
