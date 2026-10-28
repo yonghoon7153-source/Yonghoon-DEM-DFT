@@ -118,6 +118,51 @@ B_EDITS = (
 #: §4-3 C — 208 행
 C_EDIT = (208, 'fix damp all viscous 0.5', 'fix damp all viscous 0.5 scale 3 {s}')
 
+#: ── §12-2 창 W2 (⬜ 개정 초안 · 비준 전) — §4-1 뼈대에서 (가) 표만 다르다 ──
+W2_CASES = ('kg50_d07_b50',)      # §5 W2 표 = D0.7 넷 (질문 W2-6)
+W2_DROP = frozenset([50] + list(range(116, 151)) + [167, 170] + list(range(172, 198)) + [213]
+                    + list(range(225, MAIN_NLINES + 1)))
+W2_RESTART0_LINES = (RESTART0_LINE, 222)                       # 165 · 222 → restart 0 (가지는 restart 파일을 안 쓴다)
+W2_RUN_LINE = 224                                               # label loop_press → run 300000 (B 600000) · 225–228 뺌
+W2_RUN = {'base': 300000, 'floor': 300000, 'damp': 300000, 'dt_half': 600000}
+W2_THERMO = {'base': 1000, 'floor': 1000, 'damp': 1000, 'dt_half': 2000}
+W2_ATOM_EVERY, W2_CONTACT_EVERY = 10000, 100000                # Q12 (atom) · §12-2 (나) (contact · ⬜ W2-2)
+#: §12-2 B — W2 A 에서 바뀌는 줄 (W1 의 173 · 174 · 213 은 W2 덱에 없다 · run 줄은 224 자리)
+W2_B_EDITS = (
+    (43, 'variable dt equal 1.0e-6', 'variable dt equal 5.0e-7'),
+    (203, 'dump dmp_mesh all mesh/stl 5000 post_{case}/mesh_*.stl top_mesh',
+     'dump dmp_mesh all mesh/stl 10000 post_{case}/mesh_*.stl top_mesh'),
+    (212, 'thermo 1000', 'thermo 2000'),
+    (217, 'dump dmp_atom all custom 50000 post_{case}/atom_*.liggghts id type x y z radius vx vy vz c_strs[1] c_strs[2] c_strs[3] c_ke',
+     'dump dmp_atom all custom 100000 post_{case}/atom_*.liggghts id type x y z radius vx vy vz c_strs[1] c_strs[2] c_strs[3] c_ke'),
+)
+W2_CKPT_EVERY = 200000            # 본 덱 222 행 restart 간격
+W2_N_MIN = 600000                 # 압축 시작 400,002 (= 200,001 + 1 + 200,000) 뒤 첫 restart_compress
+W2_LOG_FIRST, W2_LOG_EVERY = 201000, 1000                      # §12-2 (라) 5 — 201,000 … N 의 1,000 배수 줄
+W2_LOG_ECHO = ('timestep 1e-06', 'fix damp all viscous 0.5', 'fix move_press all move/mesh mesh top_mesh linear 0.0 0.0 -0.01',
+               'restart 200000 restart_{case}/restart_compress_*.bin', '====== PHASE 3: COMPRESSION (Speed 0.01) ======')
+W2_PREFIX = 'q5w2_'
+#: §12-2 (마) — W2 A · F 정적 대조 문제 = 정확히 이 둘 (실제 도구 출력 · rc 1)
+EXPECTED_STATIC_PROBLEMS_W2 = (
+    '루프 몸 run 다름 (반복 안 restart 체크포인트 · 10-28 KG50-19): 본 덱 [label loop_press] [run 5000] ↔ 재개 덱 read_restart 뒤 '
+    '[run 300000]',
+    '재개 지점 뒤 순서 줄 수 다름: 본 덱 8 ↔ 재개 덱 0')
+W2_STATUS_DRAFT = '> **§12-2 상태: ⬜ 개정 초안 · 비준 전**'
+W2_STATUS_RATIFIED_RE = re.compile(r'^> \*\*§12-2 상태: ✅ 1저자 비준 \([^)\n]+\)\*\*', re.M)
+STATUS_DRAFT, STATUS_RATIFIED = '개정 초안 · 비준 전', '비준'
+PLATE_RECORD = 'plate_sha256.txt'
+
+#: ── §12-3 D3 로컬 직렬 (✅ 1저자 10-28) — A3 · C3 만 · mpirun · MPI 빌드 없음 · F3 = hit NP 2 (D1 끝난 뒤) ──
+LOCAL = dict(host='wsl', root='~/q5_local', suffix='_wsl', env='LMP_SERIAL', default='$HOME/src/LIGGGHTS-PUBLIC/src/lmp_serial',
+             fallback='lmp_serial', case='kg50_d3_b50_s1', branches=('A3', 'C3'))
+BINARY_RECORD = 'q5_binary.txt'
+#: 등록 머리 Q1 기록 — hit 원본 restart_after_settling.bin sha256 (로컬 사본이 이 값이어야)
+D3_CKPT_SHA256 = '1bf24069bb3876089adb6c7521d46c27f162de4e57ab6379d042913339607ea8'
+F3_LOCAL_REFUSAL = ('F3 = hit NP 2 · D1 끝난 뒤 (1저자 10-28 · 등록 §12-3) — 로컬 직렬 1 코어는 A3 와 합산 순서가 같아 '
+                    '바닥이 0 (같은 계산) · 로컬로 만들지 않는다')
+LOCAL_DEVIATION = ('등록 §12-3 (1저자 10-28) — D3 A3 · C3 = 로컬 WSL 직렬 LIGGGHTS 1 코어 (MPI 실행기 · MPI 빌드 없음) · '
+                   '등록 = hit · 덱 = hit 덱 바이트 같음 · 러너만 다름')
+
 #: 본 덱 고정 줄 — (종류, 기대) · 종류 cmd = 그 행에서 시작하는 명령 (정리 뒤) · re = 그 명령 정규식 · raw = 행 글자 그대로
 ANCHORS = {
     40: ('re', r'variable r_AM_P equal [0-9.eE+-]+'),
@@ -229,11 +274,53 @@ REGISTRATION_ANCHORS = (
     ('§8-2 폴더', '- 가지마다 새 폴더 (예: `~/dem_test/q5_kg50_d07_b50_<A|B|C|F>/` · hit `~/simulation/q5_kg50_d3_b50_s1_<A3|F3|C3>/` · '
                  '⬜ 이름) — 체크포인트 · 본 덱 · 가지 덱 · 러너를 복사 · 원본 · 사본 sha256 기록.'),
     ('§8-2 잡 이름', '- 잡 이름은 재개 도구의 큐 검사 이름 (`<case>` · `_ins` · `_r<N>[t]` · `_<SFX>[t]`) 과 겹치지 않게.'),
+    # ── §12 (10-28 개정) ──
+    ('Q1 sha256', '`restart_after_settling.bin` 3,207,824 B (Oct 26 20:31) · sha256 '
+                  '`1bf24069bb3876089adb6c7521d46c27f162de4e57ab6379d042913339607ea8`'),
+    ('§12 머리', '- **개정 (10-28 · 결과 0 건 · 런 0) = §12** — §12-1 판독기가 채운 세 자리 (✅ 1저자 10-28 결정) · §12-2 W2 줄 목록 · '
+                '덤프 간격 · 시작 step 규칙 (⬜ 개정 초안 · 비준 전 — W1 결과를 읽기 전에 비준)'),
+    ('§12-2 침대', '- 침대 = D0.7-50 만 (§5 W2 표 = A · B · C · F · NP 56 · 56 · 56 · 28)'),
+    ('§12-2 49–50', '| 49–50 | `read_restart …/restart_after_settling.bin` | `read_restart restart_kg50_d07_b50/restart_compress_<N>.bin` '
+                    '(N = (라)) | §5 |'),
+    ('§12-2 덤프', '| 171 뒤 q5 덤프 둘 | atom 66,667 · contact 200,001 | atom 10,000 · contact 100,000 ((나)) | Q12 · ⬜ W2-2 |'),
+    ('§12-2 172–197', '| 172–197 (판 높이 `run 1` · z_max · plate_z · print · 판 STL print) | 그대로 | 뺌 |'),
+    ('§12-2 213', '| 213 (안정화 `run 200000`) | 그대로 (W1 창 끝) | 뺌 |'),
+    ('§12-2 214–221', '| 214–221 (압축 print · `dmp_atom` 50,000 · `fix_modify` · 판 속도 · `fix move_press`) | 없음 | 그대로 |'),
+    ('§12-2 222', '| 222 (`restart 200000 …compress_*`) | 없음 | `restart 0` |'),
+    ('§12-2 224–228', '| 224–228 (압축 루프 `label` · `run 5000` · 압력 판정 · `jump`) | 없음 | 224 자리에 `run 300000` 한 줄 · '
+                      '225–228 뺌 |'),
+    ('§12-2 undump', '| `undump dq5a` · `undump dq5c` | 213 뒤 | `run 300000` 뒤 (끝) | §4-5 |'),
+    ('§12-2 B', '— W2 A 에서 바뀌는 줄: 43 `variable dt equal 5.0e-7` · 203 `dump dmp_mesh … 10000 …` · 212 `thermo 2000` · '
+                '217 `dump dmp_atom … 100000 …` · 224 `run 600000`.'),
+    ('§12-2 C · F', '- C = 208 행 `fix damp all viscous 0.5 scale 3 5.3696e-4` (§4-3 · W1 과 같음) · F = A 덱 그대로 · NP 28 (Q5).'),
+    ('§12-2 atom', '| atom `dq5a` (§4-5 와 같은 9 열) | 10,000 | Q12 · §5 | 31 / 61 |'),
+    ('§12-2 contact', '| contact `dq5c` (§4-5 와 같은 26 열) | **100,000** — ⬜ W2-2 |'),
+    ('§12-2 판 STL', '(다) 판 STL — 200 행 `fix top_mesh … file plate_kg50_d07_b50.stl …` 은 그대로 두고 그 파일 = 본 런 '
+                    '`post_kg50_d07_b50/mesh_<N>.stl` 의 사본 (운영자 cp · 원본 · 사본 sha256 = `plate_sha256.txt`'),
+    ('§12-2 (라) 1', '1. 입력 = D0.7-50 본 런의 log.liggghts **한 파일** (정착 끝 재개 (Q6 (가)) 뒤 그 런의 로그) — 생성기가 사본을 '
+                    'W2 가지 폴더 (`main_log_kg50_d07_b50.liggghts`) 에 두고 sha256 을 manifest 에 적는다.'),
+    ('§12-2 (라) 2', '2. 줄 = pressMPa 열이 있는 thermo 묶음의 행 중 **묶음 첫 줄 (run 시작 setup 줄) 을 뺀 것**'),
+    ('§12-2 (라) 3', '3. S_c = 그 줄 중 pressMPa > 0 인 가장 작은 step (정착 끝 step 200,001 뒤).'),
+    ('§12-2 (라) 4', '4. **N = 200,000 × ⌈S_c / 200,000⌉** (S_c 가 200,000 배수면 N = S_c — 그 step 의 체크포인트 상태가 이미 접촉을 '
+                    '담는다) · 600,000 보다 작으면 N = 600,000'),
+    ('§12-2 (라) 5', '5. 거부 (W2 가지 안 냄 · 1저자): 그 로그에 201,000 … N 의 1,000 배수 step 이 setup 아닌 줄로 하나씩 다 있지 않다'),
+    ('§12-2 (라) 5 echo', '로그 echo 에 본 덱의 `timestep 1e-06` 치환 줄 · `fix damp all viscous 0.5` · '
+                         '`fix move_press all move/mesh mesh top_mesh linear 0.0 0.0 -0.01` · '
+                         '`restart 200000 restart_kg50_d07_b50/restart_compress_*.bin` · PHASE 3 print 중 하나라도 없다'),
+    ('§12-2 (라) 6', '6. 생성기가 계산한다 (사람이 고르지 않는다 · `--main-log` 만 받는다)'),
+    ('§12-2 (마)', '(마) 정적 대조 — W2 A · F 에 `resume_ckpt.sh -C` 를 걸면 문제 = 정확히 둘 (rc 1'),
+    ('§12-2 (바)', '(바) 폴더 · 운영 — 가지 폴더 `q5w2_kg50_d07_b50_<A|B|C|F>/`'),
+    ('§12-3 결정', '- 결정 (1저자 10-28): A3 · C3 = 1저자 로컬 WSL 에서 직렬 LIGGGHTS 1 코어 — mpirun · MPI 빌드를 쓰지 않는다 · '
+                  'NP 1 = Q5 와 같음.  F3 = hit NP 2 (Q5 그대로) · D1-50 이 끝난 뒤.'),
+    ('§12-3 바이너리', '- 바이너리 — 환경 변수 `LMP_SERIAL` (⬜ L-1 이름) · 없으면 `$HOME/src/LIGGGHTS-PUBLIC/src/lmp_serial` · '
+                     '그것도 없으면 PATH 의 `lmp_serial` · MPI 빌드 (`ldd` 에 libmpi) = 러너가 거부.'),
+    ('§12-3 폴더', '- 폴더 · 경로 (⬜ L-2 이름): 로컬 루트 `~/q5_local` · 가지 `q5_kg50_d3_b50_s1_<A3|C3>_wsl` · 체크포인트 원본 = '
+                  'hit 파일을 가져온 사본 `~/q5_local/kg50_d3_b50_s1/restart_kg50_d3_b50_s1/restart_after_settling.bin`'),
 )
 
 #: 거부 관문 — selftest 변이 (하나를 끄면 그것을 겨눈 시험이 실패해야 한다).  생산에서는 늘 True.
 GUARDS = {k: True for k in ('registration', 'case', 'branch', 'np', 'window', 'pin', 'anchors', 's_check', 'allowlist',
-                            'static', 'runner', 'out_exists')}
+                            'static', 'runner', 'out_exists', 'host', 'w2_case', 'w2_log', 'w2_status')}
 
 
 class Refused(Exception):
@@ -335,9 +422,16 @@ def registration_check(path=None):
                 names.append(tok)
         if got != NP or names:
             probs.append(f'Q5 NP {got} ≠ 생성기 {NP}')
-    m = re.search(r'\| Q12 \| 덤프 간격 W1 atom ([0-9,]+) · contact ([0-9,]+) ·', txt)
-    if not m or (int(m.group(1).replace(',', '')), int(m.group(2).replace(',', ''))) != (ATOM_EVERY, CONTACT_EVERY):
-        probs.append(f'Q12 덤프 간격 ≠ 생성기 ({ATOM_EVERY} · {CONTACT_EVERY})')
+    m = re.search(r'\| Q12 \| 덤프 간격 W1 atom ([0-9,]+) · contact ([0-9,]+) · W2 atom ([0-9,]+) ·', txt)
+    if not m or (int(m.group(1).replace(',', '')), int(m.group(2).replace(',', '')), int(m.group(3).replace(',', ''))) != (
+            ATOM_EVERY, CONTACT_EVERY, W2_ATOM_EVERY):
+        probs.append(f'Q12 덤프 간격 ≠ 생성기 ({ATOM_EVERY} · {CONTACT_EVERY} · W2 {W2_ATOM_EVERY})')
+    m = re.search(r'\| contact `dq5c` \(§4-5 와 같은 26 열\) \| \*\*([0-9,]+)\*\*', txt)
+    if not m or int(m.group(1).replace(',', '')) != W2_CONTACT_EVERY:
+        probs.append(f'§12-2 (나) contact 간격 ≠ 생성기 {W2_CONTACT_EVERY}')
+    m = re.search(r'sha256 `([0-9a-f]{64})` → D3 가지 A3 · C3 · F3 = 이 파일', txt)
+    if not m or m.group(1) != D3_CKPT_SHA256:
+        probs.append('머리 Q1 기록 sha256 ≠ 생성기 D3_CKPT_SHA256')
     m = re.search(r'\| \(가\) AM 기준 \(권고\) \| [^|]+\| ([0-9.e+-]+) \| ([0-9.e+-]+) \|', txt)
     if not m or (m.group(1), m.group(2)) != (CASES['kg50_d07_b50']['s'], CASES['kg50_d3_b50_s1']['s']):
         probs.append('§4-3 s (가) ≠ 생성기 (%s · %s)' % (CASES['kg50_d07_b50']['s'], CASES['kg50_d3_b50_s1']['s']))
@@ -346,8 +440,11 @@ def registration_check(path=None):
             continue                               # 표는 `dump dmp_mesh … 5000 …` 로 줄여 적었다 (위 고정 줄)
         if f'| {ln} | `{a}` | `{b}` |' not in txt:
             probs.append(f'§4-2 {ln} 행 표 ≠ 생성기 ({a} → {b})')
-    if f'`{EXPECTED_STATIC_PROBLEM}` 하나 · 그 밖 문제 0 (rc 1)' not in txt:
+    if f'`{EXPECTED_STATIC_PROBLEM}` 하나 · 그 밖 문제 0 (rc 1).' not in txt:
         probs.append('§8-1 정적 대조 기대 문제 ≠ 생성기')
+    for s in EXPECTED_STATIC_PROBLEMS_W2:
+        if f'`{s}`' not in txt:
+            probs.append(f'§12-2 (마) 정적 대조 기대 ≠ 생성기 ({s[:40]}…)')
     return (not probs), probs
 
 
@@ -377,6 +474,62 @@ def source_premise_check(evidence_dir=None):
     if re.search(r'\bTIMESTEP\b', w + r):
         probs.append('restart 머리 열거에 TIMESTEP (dt) 가 있다')
     return (not probs), probs
+
+
+def synth_main_log(case, first_contact, last, *, np_=56, setup_spike=None, stab_contact=None, drop=(), dup=(), bad=None,
+                   error=False, echo_drop=None, dt_echo='1e-06', extra_col=None, atoms=12):
+    """selftest 합성 본 런 로그 (정착 끝 재개 뒤 · step 200,001 부터 · 본 덱 압축 루프 꼴) — §12-2 (라) 시험용.
+    pressMPa = 0 (first_contact 앞) · 그 뒤 양수 · setup_spike = 그 step 에서 시작하는 run 의 setup 줄만 양수 ·
+    stab_contact = 안정화 중 그 정규 줄만 양수 · drop · dup = 정규 줄 빼기 · 두 번 · bad = (step, 글자) · echo_drop = 그 echo 줄
+    빼기 (정리 뒤 글자) · extra_col = 그 step 정규 줄에 열 하나 더."""
+    hdr = '    Step    Atoms         KinEng            CPU       pressMPa '
+
+    def p(s, setup):
+        if setup and setup_spike is not None and s == setup_spike:
+            return 0.0123
+        if not setup and stab_contact is not None and s == stab_contact:
+            return 0.0007
+        return 0.0 if s < first_contact else 1e-4 * (s - first_contact + 1000) / 1000.0
+
+    def row(s, setup=False):
+        v = bad[1] if (bad and bad[0] == s and not setup) else '%.8g' % p(s, setup)
+        return f'  {s} {atoms} 2e-09 1.5 {v}' + (' 7' if (extra_col == s and not setup) else '')
+
+    def block(start, n):
+        out = [hdr, row(start, True)]
+        for s in range(((start // 1000) + 1) * 1000, start + n + 1, 1000):
+            if s in drop:
+                continue
+            out.append(row(s))
+            if s in dup:
+                out.append(row(s))
+        if (start + n) % 1000:
+            out.append(row(start + n))
+        return out + [f'Loop time of 1.5 on {np_} procs for {n} steps with {atoms} atoms, finish time Tue Oct 28 10:00:00 2026']
+
+    L = ['LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2025-08-25)', 'units           si', 'variable dt      equal 1.0e-6',
+         'timestep        ${dt}', 'timestep        ' + dt_echo, f'read_restart    restart_{case}/restart_after_settling.bin',
+         '  8 by 7 by 1 MPI processor grid', 'fix damp all viscous 1.0e-5', 'thermo_style    custom step atoms c_zmax',
+         'thermo          1', 'run 1', '    Step    Atoms         zmax ', f'  {S0} {atoms} 0.1 ', f'  {S0 + 1} {atoms} 0.1 ',
+         f'Loop time of 1 on {np_} procs for 1 steps with {atoms} atoms, finish time Tue Oct 28 09:00:00 2026',
+         '====== PLATE HEIGHT: 0.11 ======', 'fix gravi all gravity 9.81 vector 0.0 0.0 -1.0', 'unfix damp', 'fix damp all viscous 0.5',
+         'variable pressMPa equal abs(f_top_mesh[3])/0.0025/1000000', 'thermo_style    custom step atoms ke cpu v_pressMPa',
+         'thermo 1000', 'run 200000']
+    L += block(S0 + 1, 200000)
+    L += ['print "====== PHASE 3: COMPRESSION (Speed 0.01) ======"', '====== PHASE 3: COMPRESSION (Speed 0.01) ======',
+          'fix_modify      zwall_top energy yes', 'variable press_speed equal 0.01',
+          'fix move_press all move/mesh mesh top_mesh linear 0.0 0.0 -${press_speed}',
+          'fix move_press all move/mesh mesh top_mesh linear 0.0 0.0 -0.01', f'restart 200000 restart_{case}/restart_compress_*.bin',
+          'label loop_press']
+    s = S0 + 1 + 200000
+    while s < last:
+        L += ['run 5000'] + block(s, 5000) + ['Current Pressure: 0 MPa (Target: 0.3)']
+        s += 5000
+    if error:
+        L.append('ERROR: Lost atoms: original 12 current 11 (../thermo.cpp:389)')
+    if echo_drop is not None:
+        L = [x for x in L if norm(x) != echo_drop]
+    return '\n'.join(L) + '\n'
 
 
 # ───────────────────────── ① ② 본 덱 ─────────────────────────
@@ -893,6 +1046,7 @@ def main(argv=None):
 # ───────────────────────────── selftest ─────────────────────────────
 def selftest():
     import io
+    import time
     from contextlib import redirect_stdout
     tally = [0, 0]
 
@@ -904,7 +1058,7 @@ def selftest():
     def run(label, fn):
         try:
             fn()
-        except Exception as e:          # noqa: BLE001 — 구현 전 · 예외 = 그 묶음 실패로 센다
+        except (Exception, SystemExit) as e:    # noqa: BLE001 — 구현 전 · 예외 (모르는 CLI 인자 = argparse SystemExit) = 그 묶음 실패
             chk(f'{label} (예외)', False, f'{type(e).__name__}: {e}')
 
     def refused(fn, needle=None):
@@ -918,23 +1072,32 @@ def selftest():
 
     print('kg50_q5_branches selftest')
     ok, why = registration_check()
-    chk('⓪ 등록 문서 고정 줄 (§2 · §3 · §4-1 · §4-2 · §4-3 · §4-5 · §5 · §8 · Q2 · Q3 · Q5 · Q11 · Q12) = 생성기 상수', ok, why)
+    chk('⓪ 등록 문서 고정 줄 (§2 · §3 · §4-1 · §4-2 · §4-3 · §4-5 · §5 · §8 · §12 · Q1 · Q2 · Q3 · Q5 · Q11 · Q12) = 생성기 상수', ok, why)
     ok, why = source_premise_check()
     chk('⓪b LIGGGHTS 3d5c00f 원문 사본 — restart 머리에 dt 없음 · units 같으면 재설정 안 함 → B 의 43 행 dt 가 살아남는다', ok, why)
     D07, D3 = 'kg50_d07_b50', 'kg50_d3_b50_s1'
     repo_before = {c: _sha256_file(os.path.join(ROOT, CASES[c]['deck'])) for c in CASES}
+    reg_txt = _read(os.path.join(ROOT, REGISTRATION))
     tmp = tempfile.mkdtemp(prefix='q5st_')
-    built = {}
+    built, w2, loc = {}, {}, {}
     try:
+        def status_tests():
+            rat = reg_txt.replace(W2_STATUS_DRAFT, '> **§12-2 상태: ✅ 1저자 비준 (10-29)**', 1)
+            both = reg_txt.replace(W2_STATUS_DRAFT, W2_STATUS_DRAFT + '\n> **§12-2 상태: ✅ 1저자 비준 (10-29)**', 1)
+            none = reg_txt.replace(W2_STATUS_DRAFT, '> **§12-2 상태: ?**', 1)
+            chk('⓪c §12-2 상태 — 지금 등록 = 개정 초안 · 비준 전 · ✅ 줄로 바꾸면 비준 · 둘 다 · 둘 다 없음 = 정할 수 없음 (None)',
+                [amendment_status(x) for x in (reg_txt, rat, both, none)] == [STATUS_DRAFT, STATUS_RATIFIED, None, None])
+        run('⓪c 상태', status_tests)
+
         def g_build():
             for case in (D07, D3):
                 for br in CASES[case]['branches']:
                     built[br] = build_branch(case, br, NP[br], os.path.join(tmp, 'out'))
         run('G0 일곱 가지 만들기', g_build)
 
-        def rd(br, which='deck'):
-            m = built[br]
-            return _read(os.path.join(tmp, 'out', m['folder'], m[which]['file']))
+        def rd(br, which='deck', b=None, sub='out'):
+            m = (b or built)[br]
+            return _read(os.path.join(tmp, sub, m['folder'], m[which]['file']))
 
         def g1():
             m = built['A']
@@ -1083,7 +1246,390 @@ def selftest():
             with redirect_stdout(buf):
                 rc = main(['--verify', fol])
             chk('G7c CLI --verify rc 0', rc == 0, buf.getvalue()[-300:])
+            chk('G7d W1 manifest — host · 실행 방식 기록 (ibb sbatch · mpirun · hit mpirun) · 이탈 없음 (등록 host)',
+                (built['A']['host'], built['A']['launcher'], built['A3']['host'], built['A3']['launcher'], built['A']['deviation'],
+                 built['C3']['binary']) == ('ibb', 'sbatch · mpirun', 'hit', 'mpirun', None, None))
         run('G7 원본 · 다시 대조', g7)
+
+        # ── §12-2 (라) W2 시작 step — 본 런 로그 규칙 ──
+        logs = {}
+
+        def l_all():
+            def n_of(**kw):
+                return w2_start_from_log(synth_main_log(D07, **kw), D07)
+            r = n_of(first_contact=712000, last=820000)
+            chk('L1 첫 접촉 712,000 (setup 아닌 줄) → N 800,000 · 근거 줄 = 712000 행 · 정규 줄 수',
+                (r['n'], r['first_contact_step'], r['first_contact_row'].split()[0]) == (800000, 712000, '712000') and r['rows'] > 600, r)
+            chk('L1b S_c 가 200,000 배수 (800,000) → N = S_c', n_of(first_contact=800000, last=820000)['n'] == 800000)
+            chk('L1c 안정화 중 한 줄만 > 0 (250,000) → S_c 250,000 · N 600,000 (압축 뒤 첫 restart_compress)',
+                (lambda x: (x['first_contact_step'], x['n']))(n_of(first_contact=712000, last=820000, stab_contact=250000))
+                == (250000, 600000))
+            r = n_of(first_contact=712000, last=820000, setup_spike=595002)
+            chk('L1d setup 줄만 > 0 (595,002 · run 시작 줄) 은 뺀다 → S_c 712,000 · N 800,000 (그 줄을 셌다면 N 600,000)',
+                (r['first_contact_step'], r['n']) == (712000, 800000), r)
+            bad = [('L2 1,000 배수 줄 하나 빠짐 (750,000)', dict(drop=(750000,)), '빠짐'),
+                   ('L2b 같은 step 줄 둘 (750,000)', dict(dup=(750000,)), '둘'),
+                   ('L2c pressMPa nan', dict(bad=(750000, 'nan')), '글자'),
+                   ('L2d pressMPa 음수', dict(bad=(750000, '-0.5')), '글자'),
+                   ('L2e pressMPa 유니코드 숫자', dict(bad=(750000, '١')), '글자'),
+                   ('L2f 열 수 다른 줄', dict(extra_col=750000), '열 수'),
+                   ('L2g ERROR 줄', dict(error=True), 'ERROR'),
+                   ('L2h dt 치환 5e-07 (바뀐 덱 · Q7)', dict(dt_echo='5e-07'), 'timestep 1e-06'),
+                   ('L2i 감쇠 줄 없음 (바뀐 규약 · Q8)', dict(echo_drop='fix damp all viscous 0.5'), 'fix damp all viscous 0.5'),
+                   ('L2j restart_compress echo 없음 (다른 런)', dict(echo_drop='restart 200000 restart_kg50_d07_b50/restart_compress_*.bin'),
+                    'restart_compress'),
+                   ('L2k 로그가 N 에 못 미침 (790,000 까지)', dict(last=790000), '빠짐')]
+            for label, kw, needle in bad:
+                kw = dict(dict(first_contact=712000, last=820000), **kw)
+                chk(f'{label} → 거부', refused(lambda kw=kw: n_of(**kw), needle))
+            chk('L2l pressMPa > 0 줄 없음 (접촉 전) → 거부', refused(lambda: n_of(first_contact=900000, last=820000), '접촉 전'))
+            chk('L2m 다른 케이스 로그 (D3 echo) → 거부 (D0.7 로 읽으면 restart_compress echo 없음)',
+                refused(lambda: w2_start_from_log(synth_main_log(D3, 712000, 820000), D07), 'restart_compress'))
+            ws = [w2_watch(synth_main_log(D07, *a, **kw), D07)['status'] for a, kw in
+                  (((712000, 820000), {}), ((712000, 790000), {}), ((900000, 820000), {}), ((712000, 820000), dict(drop=(750000,))))]
+            chk('L3 운영 판단 (같은 규칙) — N 까지 있음 = ready · 첫 접촉 뒤 N 전 = wait · 접촉 전 = no_contact · N 지났는데 빠짐 = refused',
+                ws == ['ready', 'wait', 'no_contact', 'refused'], ws)
+            rcs = []
+            for k, (a, kw) in enumerate((((712000, 820000), {}), ((712000, 790000), {}), ((712000, 820000), dict(drop=(750000,))))):
+                p = os.path.join(tmp, f'watch_{k}.liggghts')
+                with open(p, 'w', encoding='utf-8') as f:
+                    f.write(synth_main_log(D07, *a, **kw))
+                with redirect_stdout(io.StringIO()):
+                    rcs.append(main(['--w2-start', p]))
+            chk('L3b CLI --w2-start rc = ready 0 · 기다림 3 · 거부 2', rcs == [0, 3, 2], rcs)
+            for k, kw in (('ok', {}), ('drop', dict(drop=(750000,))), ('d3', {})):
+                p = os.path.join(tmp, f'main_log_{k}.liggghts')
+                with open(p, 'w', encoding='utf-8') as f:
+                    f.write(synth_main_log(D3 if k == 'd3' else D07, 712000, 820000, **kw))
+                logs[k] = p
+        run('L W2 시작 step 규칙', l_all)
+
+        # ── §12-2 W2 가지 ──
+        def w_build():
+            for br in ('A', 'B', 'C', 'F'):
+                w2[br] = build_branch(D07, br, NP[br], os.path.join(tmp, 'w2'), 'W2', main_log=logs['ok'])
+        run('W0 W2 가지 넷 만들기', w_build)
+
+        def w1():
+            m = w2['A']
+            fol = os.path.join(tmp, 'w2', 'q5w2_kg50_d07_b50_A')
+            chk('W1 W2 A 폴더 = 가지 덱 · 러너 · 본 덱 사본 · 본 런 로그 사본 · manifest · SHA256SUMS (여섯)',
+                sorted(os.listdir(fol)) == sorted(['input_q5w2_kg50_d07_b50_A.liggghts', 'run_q5w2_kg50_d07_b50_A.sh',
+                                                   'main_deck_kg50_d07_b50.liggghts', 'main_log_kg50_d07_b50.liggghts',
+                                                   'q5_manifest.json', 'SHA256SUMS']), os.listdir(fol))
+            chk('W1b W2 A manifest — 창 W2 · s0 = N 800000 (첫 접촉 712000) · 끝 1100000 · run [300000] · thermo [1000] · atom 31 (10,000) · '
+                'contact 4 (100,000) · window_s 0.3 · 체크포인트 …restart_compress_800000.bin · 판 plate_kg50_d07_b50.stl ← '
+                'post_kg50_d07_b50/mesh_800000.stl · 로그 사본 sha256',
+                (m['window'], m['s0'], m['end_step'], m['runs'], m['thermo_every'], len(m['atom_dump']['steps']),
+                 m['contact_dump']['steps'], m['window_s'], m['checkpoint']['rel_path'], m['plate']['rel_path'], m['plate']['source'],
+                 m['w2_start']['first_contact_step'], m['w2_start']['main_log']['sha256'])
+                == ('W2', 800000, 1100000, [300000], [1000], 31, [800000, 900000, 1000000, 1100000], '0.3',
+                    'restart_kg50_d07_b50/restart_compress_800000.bin', 'plate_kg50_d07_b50.stl',
+                    '~/dem_test/kg50_d07_b50/post_kg50_d07_b50/mesh_800000.stl', 712000, _sha256_file(logs['ok'])), m)
+            chk('W1c §12-2 상태 = 개정 초안 · 비준 전 (지금 등록) — manifest · 덱 머리 줄 같음',
+                m['amendment'] == dict(section='§12-2', status=STATUS_DRAFT)
+                and '#   §12-2 상태: 개정 초안 · 비준 전' in rd('A', b=w2, sub='w2').split('\n'), m.get('amendment'))
+            chk('W1d W2 A 정적 대조 = 등록 §12-2 (마) 둘 (rc 1 · 실제 도구)',
+                m['static_check']['rc'] == 1 and m['static_check']['problems'] == list(EXPECTED_STATIC_PROBLEMS_W2), m['static_check'])
+            cmds = [x for x, _a, _b in commands(_strip_header(rd('A', b=w2, sub='w2')))]
+            rs = 'read_restart restart_kg50_d07_b50/restart_compress_800000.bin'
+            ia = cmds.index('print "====== RESTART SAVED ======"')
+            chk('W1e W2 A 명령 — read_restart …compress_800000 (processors 뒤 자리) · run = run 300000 하나 · label · jump · '
+                'write_restart · 판 높이 · 안정화 run 없음 · restart 0 둘 · fix move_press · dmp_atom 50000 있음 · q5 덤프 둘 = '
+                'RESTART SAVED print 뒤 · 끝 = run 300000 · undump 둘',
+                cmds.count(rs) == 1 and cmds.index(rs) == 15 and cmds[14] == 'processors * * 1'
+                and [x for x in cmds if x.startswith('run ')] == ['run 300000']
+                and not any(x.split()[0] in ('label', 'jump', 'write_restart') or x.startswith('if ') for x in cmds)
+                and 'variable z_max equal c_zmax' not in cmds and cmds.count('restart 0') == 2
+                and 'fix move_press all move/mesh mesh top_mesh linear 0.0 0.0 -${press_speed}' in cmds
+                and any(x.startswith('dump dmp_atom all custom 50000 ') for x in cmds)
+                and cmds[ia + 1: ia + 3] == _dump_lines(D07, 'W2') and cmds[-3:] == ['run 300000', 'undump dq5a', 'undump dq5c']
+                and _dump_lines(D07, 'W2')[0].startswith('dump dq5a all custom 10000 ')
+                and _dump_lines(D07, 'W2')[1].startswith('dump dq5c all local 100000 '), cmds[-6:])
+            mlines = _read(os.path.join(ROOT, CASES[D07]['deck'])).split('\n')
+            body = _strip_header(rd('A', b=w2, sub='w2')).split('\n')
+            new = set(_dump_lines(D07, 'W2') + UNDUMP_LINES + [rs, 'restart 0', 'run 300000'])
+            kept = [x for x in body if x not in new]
+            want = [mlines[k - 1] for k in range(1, MAIN_NLINES + 1)
+                    if k not in W2_DROP and k not in (READ_RESTART_LINE, W2_RUN_LINE) + W2_RESTART0_LINES]
+            chk('W1f W2 A 의 나머지 줄 = 본 덱 줄 바이트 그대로 (뺀 행 · 바꾼 행 밖 · 순서 그대로)', kept[:-1] == want and kept[-1] == '',
+                (len(kept), len(want)))
+            r = rd('A', 'runner', b=w2, sub='w2')
+            chk('W1g W2 러너 = ibb 본 러너 틀 · 잡 · 폴더 q5w2_kg50_d07_b50_A · -n 56 ↔ -np 56',
+                '#SBATCH --job-name=q5w2_kg50_d07_b50_A' in r and 'cd $HOME/dem_test/q5w2_kg50_d07_b50_A' in r
+                and '-np 56 lmp_mpi -in input_q5w2_kg50_d07_b50_A.liggghts' in r and runner_check(D07, 'A', 56, r, 'W2') == [], r)
+        run('W1 W2 A', w1)
+
+        def w2b():
+            ca = [x for x, _a, _b in commands(_strip_header(rd('A', b=w2, sub='w2')))]
+            cb = [x for x, _a, _b in commands(_strip_header(rd('B', b=w2, sub='w2')))]
+            dif = [(x, y) for x, y in zip(ca, cb) if x != y]
+            chk('W2 W2 B ↔ A = 명령 다섯만 다름 (§12-2: 43 dt · 203 mesh 10000 · 212 thermo 2000 · 217 dmp_atom 100000 · run 600000)',
+                len(ca) == len(cb) and [x for x, _y in dif] == ['variable dt equal 1.0e-6',
+                                                                'dump dmp_mesh all mesh/stl 5000 post_kg50_d07_b50/mesh_*.stl top_mesh',
+                                                                'thermo 1000', ca[[i for i, x in enumerate(ca)
+                                                                                   if x.startswith('dump dmp_atom ')][0]], 'run 300000']
+                and [y for _x, y in dif][0] == 'variable dt equal 5.0e-7' and [y for _x, y in dif][-1] == 'run 600000'
+                and [y for _x, y in dif][3].startswith('dump dmp_atom all custom 100000 '), dif)
+            m = w2['B']
+            ta = [round((s - 800000) * 1e-06, 9) for s in range(1100000 - 50000, 1100001, 1000)]
+            tb = [round((s - 800000) * 5e-07, 9) for s in range(1400000 - 100000, 1400001, 2000)]
+            chk('W2b W2 B manifest — dt 5e-07 · run [600000] · 끝 1400000 · thermo [2000] · atom 61 · contact 7 (A 덤프 시각 다 포함) · '
+                'O3 마지막 0.05 s 표본 51 = A 와 같은 시각',
+                (m['dt'], m['runs'], m['end_step'], m['thermo_every'], len(m['atom_dump']['steps']), len(m['contact_dump']['steps']))
+                == (5e-07, [600000], 1400000, [2000], 61, 7)
+                and all(800000 + 2 * (s - 800000) in m['contact_dump']['steps'] for s in w2['A']['contact_dump']['steps'])
+                and ta == tb and len(ta) == 51, m)
+            chk('W2c W2 B 정적 대조 안 함 (허용 목록만 · §12-2 (마))', m['static_check'] is None)
+        run('W2 W2 B', w2b)
+
+        def w3():
+            ca = [x for x, _a, _b in commands(_strip_header(rd('A', b=w2, sub='w2')))]
+            cc = [x for x, _a, _b in commands(_strip_header(rd('C', b=w2, sub='w2')))]
+            dif = [(x, y) for x, y in zip(ca, cc) if x != y]
+            chk('W3 W2 C ↔ A = 명령 하나 (208 scale 3 5.3696e-4)', len(ca) == len(cc)
+                and dif == [('fix damp all viscous 0.5', 'fix damp all viscous 0.5 scale 3 5.3696e-4')], dif)
+            chk('W3b W2 F 덱 = A 덱 바이트 · F 러너 -n 28 · F 정적 대조 = 둘', rd('F', b=w2, sub='w2') == rd('A', b=w2, sub='w2')
+                and '#SBATCH -n 28' in rd('F', 'runner', b=w2, sub='w2')
+                and w2['F']['static_check']['problems'] == list(EXPECTED_STATIC_PROBLEMS_W2))
+        run('W3 W2 C · F', w3)
+
+        def w4():
+            oa = w2['A']['operator_commands']
+            chk('W4 W2 운영자 명령 (초안) — 체크포인트 …restart_compress_800000.bin cp · ckpt_sha256.txt · mesh_800000.stl → '
+                'plate_kg50_d07_b50.stl · plate_sha256.txt · ⛔ 개정 초안 줄 · sbatch 없음',
+                any('cp ~/dem_test/kg50_d07_b50/restart_kg50_d07_b50/restart_compress_800000.bin ~/dem_test/q5w2_kg50_d07_b50_A/'
+                    'restart_kg50_d07_b50/' in x for x in oa)
+                and 'cp ~/dem_test/kg50_d07_b50/post_kg50_d07_b50/mesh_800000.stl ~/dem_test/q5w2_kg50_d07_b50_A/plate_kg50_d07_b50.stl' in oa
+                and any('plate_sha256.txt' in x for x in oa) and any('개정 초안 · 비준 전' in x for x in oa)
+                and not any('sbatch' in x for x in oa), oa)
+            reg = os.path.join(tmp, 'reg_ratified.md')
+            with open(reg, 'w', encoding='utf-8') as f:
+                f.write(reg_txt.replace(W2_STATUS_DRAFT, '> **§12-2 상태: ✅ 1저자 비준 (10-29)**', 1))
+            m = build_branch(D07, 'A', 56, os.path.join(tmp, 'w2r'), 'W2', main_log=logs['ok'], registration=reg)
+            o = m['operator_commands']
+            d = _read(os.path.join(tmp, 'w2r', m['folder'], m['deck']['file']))
+            chk('W4b 비준 판 등록 (✅ 줄) → manifest · 덱 머리 = 비준 · 운영자 sbatch 줄 · 체크포인트 · 판 STL gate 둘 · 덱 명령은 초안 판과 같음',
+                m['amendment']['status'] == STATUS_RATIFIED and '#   §12-2 상태: 비준' in d.split('\n')
+                and any('sbatch q5w2_kg50_d07_b50_A/run_q5w2_kg50_d07_b50_A.sh' in x and x.count('sort -u | wc -l') == 2 for x in o)
+                and [x for x, _a, _b in commands(_strip_header(d))] == [x for x, _a, _b in commands(_strip_header(rd('A', b=w2, sub='w2')))]
+                and verify_folder(os.path.join(tmp, 'w2r', m['folder'])) == [], o)
+        run('W4 운영자 · 비준 판', w4)
+
+        def w5():
+            chk('W5 --verify W2 폴더 넷 = 문제 0', all(verify_folder(os.path.join(tmp, 'w2', m['folder'])) == [] for m in w2.values()),
+                verify_folder(os.path.join(tmp, 'w2', w2['C']['folder'])))
+            src = os.path.join(tmp, 'w2', w2['A']['folder'])
+
+            def cp(tag):
+                d = os.path.join(tmp, 'w2v', tag, w2['A']['folder'])
+                shutil.copytree(src, d)
+                return d
+            d1 = cp('log')
+            with open(os.path.join(d1, 'main_log_kg50_d07_b50.liggghts'), 'a', encoding='utf-8') as f:
+                f.write('# 한 줄 더\n')
+            d2 = cp('n')
+            lp = os.path.join(d2, 'main_log_kg50_d07_b50.liggghts')
+            with open(lp, 'w', encoding='utf-8') as f:
+                f.write(synth_main_log(D07, 512000, 820000))
+            mp = os.path.join(d2, 'q5_manifest.json')
+            mm = json.loads(_read(mp))
+            mm['w2_start']['main_log']['sha256'] = _sha256_file(lp)
+            with open(mp, 'w', encoding='utf-8') as f:
+                json.dump(mm, f)
+            d3 = cp('every')
+            mp3 = os.path.join(d3, 'q5_manifest.json')
+            m3 = json.loads(_read(mp3))
+            m3['contact_dump']['every'] = 50000
+            m3['contact_dump']['steps'] = expected_steps(800000, 1100000, 50000)
+            with open(mp3, 'w', encoding='utf-8') as f:
+                json.dump(m3, f)
+            chk('W5b 로그 사본 한 줄 더 (sha256 다름) → 문제', any('로그 사본 sha256' in x for x in verify_folder(d1)), verify_folder(d1))
+            chk('W5c 로그 사본 = 첫 접촉 512,000 꼴 (sha256 맞춤) → 다시 센 N 600,000 ≠ manifest 800,000 → 문제',
+                any('시작 step 다시 계산 600000' in x for x in verify_folder(d2)), verify_folder(d2))
+            chk('W5d manifest contact 간격 50,000 (step 맞춤 · 판독기 내부 일관성은 통과하는 꼴) → 문제',
+                any('contact_dump' in x for x in verify_folder(d3)), verify_folder(d3))
+        run('W5 W2 다시 대조', w5)
+
+        def w6():
+            mt = _read(os.path.join(ROOT, CASES[D07]['deck']))
+            a, b = rd('A', b=w2, sub='w2'), rd('B', b=w2, sub='w2')
+            bad = [
+                ('W6 루프 남김 (run 300000 → label · run 5000)', a.replace('\nrun 300000\n', '\nlabel loop_press\n    run 5000\n'), 'A'),
+                ('W6b run 300001', a.replace('\nrun 300000\n', '\nrun 300001\n'), 'A'),
+                ('W6c 222 행 restart 200000 남김', a.replace('restart 0\n\nrun 300000',
+                                                            'restart 200000 restart_kg50_d07_b50/restart_compress_*.bin\n\nrun 300000'), 'A'),
+                ('W6d undump 하나 빠짐', a.replace('undump dq5c\n', ''), 'A'),
+                ('W6e 판 높이 run 1 남김', a.replace('print "====== RESTART SAVED ======"\n',
+                                                   'print "====== RESTART SAVED ======"\nthermo_style    custom step atoms c_zmax\nrun 1\n'), 'A'),
+                ('W6f B 에 thermo 1000 (212 행 바꿈 빠짐)', b.replace('thermo 2000', 'thermo 1000'), 'B'),
+                ('W6g read_restart …compress_600000 (N 다름)', a.replace('restart_compress_800000.bin', 'restart_compress_600000.bin'), 'A'),
+                ('W6h contact 덤프 50000', a.replace('local 100000 ', 'local 50000 '), 'A'),
+                ('W6i W1 덱을 W2 로 대조', rd('A'), 'A'),
+            ]
+            for label, txt, br in bad:
+                p = verify_branch_deck(mt, txt, D07, br, 'W2', 800000)
+                chk(f'{label} → 문제', bool(p), p)
+            chk('W6j 정상 W2 A · B · C = 문제 0', all(verify_branch_deck(mt, rd(x, b=w2, sub='w2'), D07, x, 'W2', 800000) == []
+                                                   for x in ('A', 'B', 'C')))
+        run('W6 W2 허용 목록', w6)
+
+        # ── §12-3 로컬 직렬 (A3 · C3) ──
+        def h_build():
+            for br in ('A3', 'C3'):
+                loc[br] = build_branch(D3, br, 1, os.path.join(tmp, 'wsl'), host='wsl')
+        run('H0 로컬 A3 · C3 만들기', h_build)
+
+        def h1():
+            m = loc['A3']
+            chk('H1 로컬 A3 manifest — 폴더 q5_kg50_d3_b50_s1_A3_wsl · host wsl · serial · NP 1 · 바이너리 (환경 변수 LMP_SERIAL · 기본 '
+                '$HOME/src/LIGGGHTS-PUBLIC/src/lmp_serial · PATH lmp_serial · 기록 q5_binary.txt) · 이탈 §12-3 · 체크포인트 원본 '
+                '~/q5_local/kg50_d3_b50_s1/… · Q1 sha256',
+                (m['folder'], m['host'], m['launcher'], m['np'], m['binary']['env'], m['binary']['default'], m['binary']['fallback'],
+                 m['binary']['record'], m['deviation']['section'], m['checkpoint']['source'], m['checkpoint']['registered_sha256'])
+                == ('q5_kg50_d3_b50_s1_A3_wsl', 'wsl', 'serial', 1, 'LMP_SERIAL', '$HOME/src/LIGGGHTS-PUBLIC/src/lmp_serial',
+                    'lmp_serial', 'q5_binary.txt', '§12-3', '~/q5_local/kg50_d3_b50_s1/restart_kg50_d3_b50_s1/restart_after_settling.bin',
+                    D3_CKPT_SHA256), m)
+            chk('H1b 로컬 A3 · C3 덱 = hit A3 · C3 덱 바이트 같음 (러너만 다름)',
+                rd('A3', b=loc, sub='wsl') == rd('A3') and rd('C3', b=loc, sub='wsl') == rd('C3'))
+            r = rd('A3', 'runner', b=loc, sub='wsl')
+            chk('H1c 로컬 러너 — mpirun · lmp_auto · sbatch 없음 · cd "$HOME/q5_local/q5_kg50_d3_b50_s1_A3_wsl" · LMP_SERIAL → 기본 경로 → '
+                'PATH lmp_serial · ldd libmpi 거부 · Q1 sha256 · setsid nohup "$B" -in input_…A3_wsl.liggghts > log_…A3_wsl_v1.out',
+                not any(w in r for w in ('mpirun', 'lmp_auto', 'sbatch', 'srun'))
+                and 'cd "$HOME/q5_local/q5_kg50_d3_b50_s1_A3_wsl"' in r and '${LMP_SERIAL:-}' in r
+                and '[ -x "$HOME/src/LIGGGHTS-PUBLIC/src/lmp_serial" ]' in r and 'else L=lmp_serial; fi' in r
+                and 'grep -q libmpi' in r and f'Q1={D3_CKPT_SHA256}' in r
+                and 'setsid nohup "$B" -in input_q5_kg50_d3_b50_s1_A3_wsl.liggghts > log_q5_kg50_d3_b50_s1_A3_wsl_v1.out 2>&1 < /dev/null &' in r
+                and runner_check(D3, 'A3', 1, r, 'W1', 'wsl') == [], r)
+            chk('H1d 로컬 A3 정적 대조 = 등록 §8-1 하나 (덱이 hit A3 와 같다)', m['static_check']['problems'] == [EXPECTED_STATIC_PROBLEM])
+            o = m['operator_commands']
+            stage = '~/q5_local/kg50_d3_b50_s1/restart_kg50_d3_b50_s1/restart_after_settling.bin'
+            chk('H1e 운영자 명령 (로컬) — hit 원본 scp (읽기만) → 같은 사본 · 등록 Q1 sha256 -c · SHA256SUMS -c · cp · ckpt_sha256.txt · '
+                'gate → bash ~/q5_local/<폴더>/run_<폴더>.sh',
+                any('scp <사용자>@<hit>:~/simulation/kg50_d3_b50_s1/restart_kg50_d3_b50_s1/restart_after_settling.bin' in x for x in o)
+                and any(x.startswith(f'echo "{D3_CKPT_SHA256}  $HOME/q5_local/kg50_d3_b50_s1/') and '| sha256sum -c' in x for x in o)
+                and f'mkdir -p ~/q5_local/q5_kg50_d3_b50_s1_A3_wsl/restart_kg50_d3_b50_s1 && cp {stage} '
+                    '~/q5_local/q5_kg50_d3_b50_s1_A3_wsl/restart_kg50_d3_b50_s1/' in o
+                and any('bash ~/q5_local/q5_kg50_d3_b50_s1_A3_wsl/run_q5_kg50_d3_b50_s1_A3_wsl.sh' in x and 'sort -u | wc -l' in x for x in o)
+                and not any('mpirun' in x or 'sbatch' in x or ' rm ' in x for x in o), o)
+            chk('H1f --verify 로컬 폴더 둘 = 문제 0 · 러너 한 글자 바꾸면 문제',
+                all(verify_folder(os.path.join(tmp, 'wsl', x['folder'])) == [] for x in loc.values())
+                and bool(runner_check(D3, 'A3', 1, r.replace('exit 2', 'exit 3', 1), 'W1', 'wsl')))
+        run('H1 로컬', h1)
+
+        def h2():
+            out = os.path.join(tmp, 'wslref')
+            os.makedirs(out)
+            chk('H2 F3 로컬 → 거부 ("F3 = hit NP 2 · D1 끝난 뒤")', refused(lambda: build_branch(D3, 'F3', 2, out, host='wsl'),
+                                                                     'F3 = hit NP 2 · D1 끝난 뒤'))
+            chk('H2b D0.7 가지 A · B · C · F 로컬 → 거부 (§12-3 = D3 A3 · C3 만)',
+                all(refused(lambda x=x: build_branch(D07, x, NP[x], out, host='wsl'), '로컬 직렬') for x in ('A', 'B', 'C', 'F')))
+            chk('H2c 로컬 A3 NP 2 → 거부 (Q5 = 1)', refused(lambda: build_branch(D3, 'A3', 2, out, host='wsl'), 'Q5'))
+            chk('H2d 모르는 host (hit2) → 거부', refused(lambda: build_branch(D3, 'A3', 1, out, host='hit2'), 'host'))
+            chk('H2e 로컬 + W2 → 거부', refused(lambda: build_branch(D3, 'A3', 1, out, 'W2', host='wsl', main_log=logs['d3']), 'W1 만'))
+            chk('H2f 거부 뒤 파일 0', os.listdir(out) == [], os.listdir(out))
+        run('H2 로컬 거부', h2)
+
+        def hr():
+            home = os.path.join(tmp, 'home')
+            root = os.path.join(home, 'q5_local')
+            q1 = hashlib.sha256(b'q5-local-ckpt').hexdigest()
+            m = build_branch(D3, 'A3', 1, root, host='wsl', q1=q1)          # selftest 이음새 — Q1 값만 시험 값
+            fol = os.path.join(root, m['folder'])
+            os.makedirs(os.path.join(fol, 'restart_kg50_d3_b50_s1'))
+            with open(os.path.join(fol, 'restart_kg50_d3_b50_s1', 'restart_after_settling.bin'), 'wb') as f:
+                f.write(b'q5-local-ckpt')
+            with open(os.path.join(fol, 'ckpt_sha256.txt'), 'w') as f:
+                f.write(f'{q1}  {home}/q5_local/kg50_d3_b50_s1/restart_kg50_d3_b50_s1/restart_after_settling.bin\n'
+                        f'{q1}  {fol}/restart_kg50_d3_b50_s1/restart_after_settling.bin\n')
+            src_dir = os.path.join(home, 'src', 'LIGGGHTS-PUBLIC', 'src')
+            os.makedirs(src_dir)
+            fake = ('#!/bin/bash\nprintf "%s\\n" "$PWD" "$@" > "$HOME/fake_called.txt"\n'
+                    'echo "LIGGGHTS (fake serial)" > log.liggghts\n')
+            for p in (os.path.join(src_dir, 'lmp_serial'), os.path.join(home, 'pathbin', 'lmp_serial'),
+                      os.path.join(home, 'mpibin', 'ldd')):
+                os.makedirs(os.path.dirname(p), exist_ok=True)
+                with open(p, 'w') as f:
+                    f.write(fake if not p.endswith('ldd') else '#!/bin/bash\necho "\tlibmpi.so.40 => /usr/lib/libmpi.so.40"\n')
+                os.chmod(p, 0o755)
+            pristine = os.path.join(tmp, 'pristine')
+            shutil.copytree(fol, pristine)
+
+            def go(env_extra=None, path_pre=None, mut=None):
+                if os.path.isdir(fol):
+                    shutil.rmtree(fol)
+                shutil.copytree(pristine, fol)
+                for x in ('fake_called.txt',):
+                    if os.path.exists(os.path.join(home, x)):
+                        os.remove(os.path.join(home, x))
+                if mut:
+                    mut()
+                env = {'HOME': home, 'PATH': (path_pre + ':' if path_pre else '') + os.environ.get('PATH', '/usr/bin:/bin'),
+                       'LANG': 'C.UTF-8'}
+                env.update(env_extra or {})
+                r = subprocess.run(['bash', os.path.join(fol, m['runner']['file'])], env=env, capture_output=True, text=True, timeout=60)
+                called = None
+                for _ in range(200):
+                    p = os.path.join(home, 'fake_called.txt')
+                    if os.path.exists(p) and os.path.exists(os.path.join(fol, 'log.liggghts')):
+                        time.sleep(0.05)
+                        called = _read(p).split('\n')
+                        break
+                    if r.returncode != 0:
+                        break
+                    time.sleep(0.05)
+                return r, called
+
+            r, called = go()
+            chk('HR1 로컬 러너 실행 (가짜 직렬 바이너리 · LMP_SERIAL 없음 → $HOME/src/LIGGGHTS-PUBLIC/src/lmp_serial) — rc 0 · 가지 폴더에서 '
+                '-in input_<폴더>.liggghts 만 · mpirun 없음',
+                r.returncode == 0 and called is not None and called[:3] == [fol, '-in', f'input_{m["folder"]}.liggghts']
+                and called[3:] == [''], (r.returncode, r.stdout[-300:], r.stderr[-300:], called))
+            rec = _read(os.path.join(fol, BINARY_RECORD)).split('\n') if os.path.exists(os.path.join(fol, BINARY_RECORD)) else []
+            chk('HR1b q5_binary.txt = mode serial · np 1 · binary <기본 경로> · sha256 = 가짜 바이너리 sha256 · libmpi none · host',
+                rec[:5] == ['mode serial', 'np 1', f'binary {src_dir}/lmp_serial',
+                            f'sha256 {_sha256_file(os.path.join(src_dir, "lmp_serial"))}', 'libmpi none']
+                and rec[5].startswith('host ') and len(rec[5]) > 5, rec)
+            r2 = subprocess.run(['bash', os.path.join(fol, m['runner']['file'])], env={'HOME': home, 'PATH': os.environ.get('PATH', '')},
+                                capture_output=True, text=True, timeout=60)
+            chk('HR2 log.liggghts 이미 있음 (다시 실행) → rc 2 · 덮어쓰지 않음', r2.returncode == 2 and 'log.liggghts' in r2.stdout, r2.stdout)
+
+            def bad_rec():
+                with open(os.path.join(fol, 'ckpt_sha256.txt'), 'w') as f:
+                    f.write(f'{"0" * 64}  /a/kg50_d3_b50_s1/restart_kg50_d3_b50_s1/restart_after_settling.bin\n'
+                            f'{"0" * 64}  {fol}/restart_kg50_d3_b50_s1/restart_after_settling.bin\n')
+
+            def bad_ckpt():
+                with open(os.path.join(fol, 'restart_kg50_d3_b50_s1', 'restart_after_settling.bin'), 'wb') as f:
+                    f.write(b'other')
+
+            def bad_sums():
+                p = os.path.join(fol, m['deck']['file'])
+                with open(p, 'a') as f:
+                    f.write('# 한 줄\n')
+            cases = [('HR3 ckpt_sha256.txt 값 ≠ 등록 Q1', dict(mut=bad_rec), '등록 Q1 sha256 이 아니다'),
+                     ('HR4 체크포인트 내용 sha256 ≠ 등록 Q1 (기록은 Q1 그대로)', dict(mut=bad_ckpt), 'sha256 ≠ 등록 Q1'),
+                     ('HR5 LMP_SERIAL = 없는 경로', dict(env_extra={'LMP_SERIAL': os.path.join(home, 'nope', 'lmp_serial')}),
+                      '직렬 바이너리 없음'),
+                     ('HR6 ldd 가 libmpi 를 보임 (MPI 빌드)', dict(path_pre=os.path.join(home, 'mpibin')), 'MPI 빌드'),
+                     ('HR7 SHA256SUMS 다름 (가지 덱 한 줄 더)', dict(mut=bad_sums), 'SHA256SUMS 다름')]
+            for label, kw, needle in cases:
+                rr, cc = go(**kw)
+                chk(f'{label} → rc 2 · 그 거부 글 · 바이너리 안 부름 · q5_binary.txt 없음',
+                    rr.returncode == 2 and needle in rr.stdout and cc is None and not os.path.exists(os.path.join(fol, BINARY_RECORD)),
+                    (rr.returncode, rr.stdout[-200:]))
+
+            def no_default():
+                os.rename(os.path.join(src_dir, 'lmp_serial'), os.path.join(src_dir, 'lmp_serial.off'))
+            rr, cc = go(path_pre=os.path.join(home, 'pathbin'), mut=no_default)
+            os.rename(os.path.join(src_dir, 'lmp_serial.off'), os.path.join(src_dir, 'lmp_serial'))
+            rec2 = _read(os.path.join(fol, BINARY_RECORD)).split('\n') if os.path.exists(os.path.join(fol, BINARY_RECORD)) else []
+            rr3, cc3 = go(env_extra={'LMP_SERIAL': os.path.join(home, 'pathbin', 'lmp_serial')})
+            rec3 = _read(os.path.join(fol, BINARY_RECORD)).split('\n') if os.path.exists(os.path.join(fol, BINARY_RECORD)) else []
+            chk('HR8 기본 경로 없음 → PATH 의 lmp_serial · LMP_SERIAL 있으면 그것 (기록 binary 줄)',
+                rr.returncode == 0 and cc is not None and f'binary {home}/pathbin/lmp_serial' in rec2
+                and rr3.returncode == 0 and cc3 is not None and f'binary {home}/pathbin/lmp_serial' in rec3, (rec2, rec3))
+        run('HR 로컬 러너 실행', hr)
 
         # ── 거부 (rc 2 · 파일 0) ──
         def r_all():
@@ -1097,7 +1643,11 @@ def selftest():
                 ('R2b D0.7 에 A3', lambda: build_branch(D07, 'A3', 1, out), '등록 가지'),
                 ('R2c 소문자 a', lambda: build_branch(D07, 'a', 56, out), '등록 가지'),
                 ('R3 등록 밖 침대 kg50_d1_b50', lambda: build_branch('kg50_d1_b50', 'A', 56, out), '등록 침대'),
-                ('R4 창 W2 (§5 줄 목록 없음 · Q12 contact 간격 없음)', lambda: build_branch(D07, 'A', 56, out, 'W2'), '§5'),
+                ('R4 모르는 창 W3', lambda: build_branch(D07, 'A', 56, out, 'W3'), '창'),
+                ('R4b W2 인데 --main-log 없음', lambda: build_branch(D07, 'A', 56, out, 'W2'), '--main-log'),
+                ('R4c W2 를 D3 에 (§5 W2 표 = D0.7 만 · 질문 W2-6)', lambda: build_branch(D3, 'A3', 1, out, 'W2', main_log=logs['d3']),
+                 'D0.7-50 만'),
+                ('R4d W2 본 런 로그 = 1,000 배수 줄 빠짐', lambda: build_branch(D07, 'A', 56, out, 'W2', main_log=logs['drop']), '빠짐'),
             ]
             for label, fn, needle in cases:
                 chk(f'{label} → 거부', refused(fn, needle))
@@ -1119,6 +1669,16 @@ def selftest():
             with redirect_stdout(io.StringIO()):
                 rc = main(['--case', D07, '--branch', 'B', '--np', '56', '--out', out])
             chk('R7b CLI 정상 = rc 0 · 폴더 하나', rc == 0 and os.listdir(out) == ['q5_kg50_d07_b50_B'])
+            buf = io.StringIO()
+            with redirect_stdout(buf):
+                rc = main(['--case', D07, '--branch', 'C', '--np', '56', '--window', 'W2', '--main-log', logs['ok'], '--out', out])
+            chk('R7c CLI W2 (초안) = rc 0 · 화면에 시작 step · ⚠ 개정 초안 · 비준 전 · 실행 금지',
+                rc == 0 and 'W2 시작 step N = 800000' in buf.getvalue() and '실행 금지' in buf.getvalue(), buf.getvalue()[-400:])
+            buf = io.StringIO()
+            with redirect_stdout(buf):
+                rc = main(['--case', D3, '--branch', 'F3', '--np', '2', '--host', 'wsl', '--out', out])
+            chk('R7d CLI 로컬 F3 = rc 2 · 거부 글 (F3 = hit NP 2 · D1 끝난 뒤)', rc == 2 and 'F3 = hit NP 2 · D1 끝난 뒤' in buf.getvalue(),
+                buf.getvalue()[-300:])
         run('R 거부', r_all)
 
         # ── 허용 목록 대조 (가지 덱을 손댄 꼴 → 문제) ──
@@ -1173,8 +1733,10 @@ def selftest():
 
             reg = os.path.join(mdir, 'reg.md')
             with open(reg, 'w', encoding='utf-8') as f:
-                f.write(_read(os.path.join(ROOT, REGISTRATION)).replace('| 213 | `run 200000` | `run 400000` |',
-                                                                        '| 213 | `run 200000` | `run 400001` |'))
+                f.write(reg_txt.replace('| 213 | `run 200000` | `run 400000` |', '| 213 | `run 200000` | `run 400001` |'))
+            reg_both = os.path.join(mdir, 'reg_both.md')
+            with open(reg_both, 'w', encoding='utf-8') as f:
+                f.write(reg_txt.replace(W2_STATUS_DRAFT, W2_STATUS_DRAFT + '\n> **§12-2 상태: ✅ 1저자 비준 (10-29)**', 1))
             fake = os.path.join(mdir, 'fake_resume.sh')
             with open(fake, 'w', encoding='utf-8') as f:
                 f.write('echo "  ✗ %s"\necho "  ✗ 다른 문제"\nexit 1\n' % EXPECTED_STATIC_PROBLEM)
@@ -1191,7 +1753,7 @@ def selftest():
                 'case': lambda: build_branch('kg50_d1_b50', 'A', 56, fresh()),
                 'branch': lambda: build_branch(D07, 'A3', 1, fresh()),
                 'np': lambda: build_branch(D07, 'B', 28, fresh()),
-                'window': lambda: build_branch(D07, 'B', 56, fresh(), 'W2'),
+                'window': lambda: build_branch(D07, 'B', 56, fresh(), 'W3'),
                 'pin': lambda: build_branch(D07, 'B', 56, fresh(), main_deck=p_pin),
                 'anchors': lambda: build_branch(D07, 'B', 56, fresh(), main_deck=p_anc, pinned=s_anc),
                 's_check': lambda: build_branch(D07, 'C', 56, fresh(), main_deck=p_s, pinned=s_s),
@@ -1200,6 +1762,10 @@ def selftest():
                 'static': lambda: build_branch(D07, 'A', 56, fresh(), resume_tool=fake),
                 'runner': lambda: build_branch(D07, 'B', 56, fresh(), runner_template=tmpl),
                 'out_exists': lambda: build_branch(D07, 'B', 56, pre),
+                'host': lambda: build_branch(D3, 'F3', 2, fresh(), host='wsl'),
+                'w2_case': lambda: build_branch(D3, 'A3', 1, fresh(), 'W2', main_log=logs['d3']),
+                'w2_log': lambda: build_branch(D07, 'B', 56, fresh(), 'W2', main_log=logs['drop']),
+                'w2_status': lambda: build_branch(D07, 'B', 56, fresh(), 'W2', main_log=logs['ok'], registration=reg_both),
             }
             for g in GUARDS:
                 fn = targeted.get(g)

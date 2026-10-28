@@ -81,13 +81,26 @@ QUALIFIER_W1_B = ('"안정화 창에서 감쇠 민감도 τ 안" 까지만 — �
                   '(§1-2 · W2 나 감시가 닫는다)')
 #: §7 ① ② ③ 순서 (selftest ⓪ 가 등록 문장 · 행동을 대조한다)
 ORDER = ('tech', 'floor', 'fail')
+#: Q5 — 등록 NP (역할마다).  manifest NP = 이 값 · 로그 Loop time procs · processor grid 곱 = manifest NP (10-28 · 등록 §12-3)
+NP_Q5 = {'A': 56, 'B': 56, 'C': 56, 'F': 28, 'A3': 1, 'C3': 1, 'F3': 2}
+#: §12-3 (1저자 10-28) — 로컬 WSL 직렬 (D3 A3 · C3) · 옛 manifest (host 칸 없음) = 케이스의 등록 host
+LOCAL_HOST = 'wsl'
+HOST_DEFAULT = {'kg50_d07_b50': 'ibb', 'kg50_d3_b50_s1': 'hit'}
+LAUNCHER_DEFAULT = {'ibb': 'sbatch · mpirun', 'hit': 'mpirun', LOCAL_HOST: 'serial'}
+BINARY_RECORD = 'q5_binary.txt'
+BINARY_KEYS = ('mode', 'np', 'binary', 'sha256', 'libmpi', 'host')
+RE_GRID = re.compile(r'^\s*([0-9]+) by ([0-9]+) by ([0-9]+) MPI processor grid\s*$')
+RE_VERSION = re.compile(r'^LIGGGHTS \(Version ')
+#: §12-2 — W2 가지는 비준 판으로 만든 것만 (1저자 10-28 순서: W2 개정 비준 → W1 결과 열람)
+W2_STATUS_RATIFIED = '비준'
 
 #: 거부 관문 — selftest 변이 (하나를 끄면 그것을 겨눈 시험이 실패해야 한다).  생산에서는 늘 True.
 GUARDS = {k: True for k in (
     'manifest', 'role', 'deck_sha', 'repo_verify', 'ckpt', 'log_missing', 'np_procs', 'dt_echo', 'echo', 'start_step',
     't0_loop', 't0_error', 't0_finite', 't0_end', 'dump_set', 'dump_timestep', 'dump_frames', 'dump_rows', 'dump_format',
     'dump_finite', 'dump_dup_id', 'dump_cols', 'type_known', 'contact_dup', 'contact_self', 'contact_ids', 'contact_finite',
-    'bed', 't0_identity', 'end_identity', 'floor_np', 'same_folder', 'window', 'thermo_times', 'bind_atoms', 'bind_zmax')}
+    'bed', 't0_identity', 'end_identity', 'floor_np', 'same_folder', 'window', 'thermo_times', 'bind_atoms', 'bind_zmax',
+    'np_registered', 'np_grid', 'binary_record', 'pair_machine', 'w2_ratified')}
 
 
 class Refused(Exception):
@@ -938,8 +951,27 @@ def registration_check(path=None):
         '| O3 | 판 압력 P — 창 마지막 0.05 s 의 thermo `v_pressMPa` 평균 | thermo | W2 | 판정 |',
         '| R3 | 겹침 δ/R* 50 · 99 % 분위 (쌍 종류별) | contact 덤프 (delta) | 둘 다 | 보고',
         '판정 순서를 selftest 첫 항목으로',
+        # ── §12-1 (✅ 1저자 10-28) 판독기가 채운 세 자리 = 이 파일의 구현 · §12-2 · §12-3 판독기 줄 ──
+        '| §6 O2 | *"평균 접촉 수 (AM–AM · AM–SE · SE–SE · 입자당)"* | 판정 항목 **넷** · 각각 τ 5 % (Q4) · 항목마다 따로 판정한 뒤 '
+        '나쁜 쪽 — `O2.cn_AM_AM` = 2 N(AM–AM) / n_AM (AM 하나당) · `O2.cn_AM_SE` = N(AM–SE) / n_AM (AM 하나당) · '
+        '`O2.cn_SE_SE` = 2 N(SE–SE) / n_SE (SE 하나당) · `O2.cn_all` = 2 (N(AM–AM) + N(AM–SE) + N(SE–SE)) / n (입자 하나당) |',
+        '| §7 상대 차를 못 정할 때 | ①–④ 만 (빈 자리) | 값 없음 (그 상 입자 0 · O3 표본 0) · 비유한 · \\|A\\| = 0 → 그 항목 '
+        '**판정 불가** (합격이 아니다) — 순서 = ① 기술 다음 · ② 바닥 앞 (T0 실패면 ① 판정 불가 (기술) 가 먼저) |',
+        '| §6 O3 · Q4 | *"창 마지막 0.05 s"* | 끝 step − 0.05 s / dt ≤ step ≤ 끝 step — **양 끝 포함** · 그 창의 마지막 thermo 묶음 행 · '
+        'dt 1 µs (A · C · F) = 50,000 step · thermo 1,000 → 표본 51 · dt 0.5 µs (B) = 100,000 step · thermo 2,000 → 같은 시각 51 · '
+        '표본 시각이 가지마다 다르면 입력 거부 |',
+        '판독기는 비준 전 판으로 만든 W2 가지를 거부한다 (판정 없음).',
+        '- 판독기: 로컬 가지 = 로그 `Loop time … on 1 procs` · `1 by 1 by 1 MPI processor grid` (NP = 등록 Q5) · `q5_binary.txt` '
+        '(mode serial · libmpi none) · 결과 JSON · 보고에 이탈 기록 · X ↔ A 의 기계 · 실행 방식 · (로컬이면) 바이너리 sha256 · 호스트 이름이 '
+        '같아야 (다르면 거부) · 바닥 기계 섞임 = 기록 (거부 아님).',
     )
     probs = [f'등록 줄 없음: {s[:80]}…' for s in need if s not in txt]
+    if ITEMS['O2'] != ('O2.cn_AM_AM', 'O2.cn_AM_SE', 'O2.cn_SE_SE', 'O2.cn_all'):
+        probs.append(f'O2 항목 {ITEMS["O2"]} ≠ 등록 §12-1 넷')
+    m = re.search(r'\| Q5 \| NP: A · B · C ([0-9]+) · F ([0-9]+) · D3 A3 · C3 ([0-9]+) · F3 ([0-9]+) \|', txt)
+    if not m or {'A': int(m.group(1)), 'B': int(m.group(1)), 'C': int(m.group(1)), 'F': int(m.group(2)), 'A3': int(m.group(3)),
+                 'C3': int(m.group(3)), 'F3': int(m.group(4))} != NP_Q5:
+        probs.append(f'Q5 NP ≠ 판독기 {NP_Q5}')
     m = re.search(r'\| Q4 \| O1 ([0-9.]+) % · O2 ([0-9.]+) % · O3 ([0-9.]+) % \(창 마지막 ([0-9.]+) s 평균\)', txt)
     if not m or tuple(float(x) / 100 for x in m.groups()[:3]) != (TAU['O1'], TAU['O2'], TAU['O3']) or float(m.group(4)) != O3_LAST_S:
         probs.append(f'Q4 문턱 ≠ 판독기 ({TAU} · 마지막 {O3_LAST_S} s)')
@@ -972,7 +1004,8 @@ def selftest():
     print('kg50_q5_verdict selftest')
     # ⓪ 판정 순서 — 첫 항목 (등록 문장 + 행동)
     ok, why = registration_check()
-    chk('⓪ 등록 §7 판정 순서 ① ② ③ ④ · (a) · (b) 묶기 · W1 한정어 · Q2 · Q3 · Q4 문턱 · §6 T0 · O1 · O2 · O3 · R3 줄 = 판독기', ok, why)
+    chk('⓪ 등록 §7 판정 순서 ① ② ③ ④ · (a) · (b) 묶기 · W1 한정어 · Q2 · Q3 · Q4 문턱 · Q5 NP · §6 T0 · O1 · O2 · O3 · R3 줄 · '
+        '§12-1 세 자리 · §12-2 · §12-3 판독기 줄 = 판독기', ok, why)
 
     def order_tests():
         t = TAU['O1']
@@ -1012,6 +1045,29 @@ def selftest():
                     mans[br] = G.build_branch(case, br, G.NP[br], base)
             hold['S'] = Synth(base, mans)
         go('V0 합성 자료 (생성기 가지 일곱 + 작은 침대)', setup)
+
+        def setup_wsl():
+            s = hold['S']
+            s.base_wsl = os.path.join(tmp, 'gen_wsl')
+            s.mans_wsl = {br: G.build_branch('kg50_d3_b50_s1', br, 1, s.base_wsl, host='wsl') for br in ('A3', 'C3')}
+        go('V0b 로컬 직렬 가지 (생성기 --host wsl · A3 · C3 · 등록 §12-3)', setup_wsl)
+
+        def setup_w2():
+            s = hold['S']
+            logp = os.path.join(tmp, 'main_log_w2.liggghts')
+            with open(logp, 'w', encoding='utf-8') as fh:
+                fh.write(G.synth_main_log('kg50_d07_b50', 712000, 820000))
+            reg = os.path.join(tmp, 'reg_ratified.md')
+            with open(os.path.join(ROOT, REGISTRATION), encoding='utf-8') as fh:
+                rt = fh.read()
+            with open(reg, 'w', encoding='utf-8') as fh:
+                fh.write(rt.replace(G.W2_STATUS_DRAFT, '> **§12-2 상태: ✅ 1저자 비준 (10-29)**', 1))
+            s.mans_w2, s.base_w2 = {}, {}
+            for key, rp in (('ratified', reg), ('draft', None)):
+                s.base_w2[key] = os.path.join(tmp, 'gen_w2_' + key)
+                s.mans_w2[key] = {br: G.build_branch('kg50_d07_b50', br, G.NP[br], s.base_w2[key], 'W2', main_log=logp, registration=rp)
+                                  for br in ('A', 'B', 'C', 'F')}
+        go('V0c W2 가지 (생성기 --window W2 · 합성 본 런 로그 · §12-2 비준 판 · 초안 판)', setup_w2)
 
         class _Lazy:
             def __getattr__(self, k):
@@ -1138,6 +1194,92 @@ def selftest():
             chk('V7c CLI 거부 (A · F 없이 B 만) = rc 2', rc == 2)
         go('V7 CLI', v7)
 
+        def v9():
+            out = run(S.prepare('v9', only=('A', 'B', 'C', 'F'), w2real='ratified'))
+            it = out['beds']['D0.7-50']['comparisons']['a']['items']
+            chk('V9 W2 실제 생성기 폴더 (§12-2 비준 판 · 리포 대조 켬 · 본 런 로그로 N 다시 계산) → 창 W2 · 결정 O2 넷 + O3 · (a) 합격 · '
+                'D0.7 (b) 합격 · 전체 (b) = 판정 불가 (침대 하나 — 등록 §12-2 질문 W2-6 의 지금 꼴)',
+                out['window'] == 'W2' and set(it) == set(ITEMS['O2'] + ITEMS['O3']) and out['a']['result'] == PASS
+                and out['beds']['D0.7-50']['comparisons']['b']['result'] == PASS and out['b']['result'] == UNDECIDED
+                and '침대 하나' in out['b']['why'] and all(b['repo_verify'] == 'ok' for b in out['branches'].values())
+                and out['branches']['A']['grid'] == '8 by 7 by 1', (out.get('a'), out.get('b')))
+            try:
+                run(S.prepare('v9b', only=('A', 'B', 'C', 'F'), w2real='draft'))
+                chk('V9b W2 실제 폴더 = §12-2 초안 판 (비준 전) → 거부 (판정 없음)', False)
+            except Refused as e:
+                chk('V9b W2 실제 폴더 = §12-2 초안 판 (비준 전) → 거부 (판정 없음)', '비준 전' in str(e), str(e))
+        go('V9 W2 실제 폴더', v9)
+
+        def v10():
+            out = run(S.prepare('v10', only=('A3', 'C3', 'F3'), wsl=('A3', 'C3')))
+            br = out['branches']
+            chk('V10 D3 A3 · C3 로컬 직렬 (생성기 --host wsl 폴더 · 로그 1 by 1 by 1 · on 1 procs · q5_binary.txt) + F3 hit NP 2 → 받아들임 · '
+                'D3 (b) 판정 · 가지마다 host · 실행 방식 · grid · 바이너리 기록',
+                out['b']['per_bed'] == {'D3-50 s1': PASS}
+                and (br['A3']['host'], br['A3']['launcher'], br['A3']['grid'], br['C3']['host'], br['F3']['host'], br['F3']['launcher'],
+                     br['F3']['grid']) == ('wsl', 'serial', '1 by 1 by 1', 'wsl', 'hit', 'mpirun', '2 by 1 by 1')
+                and (br['A3']['binary'] or {}).get('mode') == 'serial' and br['A3']['repo_verify'] == 'ok'
+                and br['A3']['log_version'].startswith('LIGGGHTS (Version '), (out.get('b'), br.get('A3')))
+            dv = out.get('deviations') or []
+            chk('V10b 이탈 기록 — A3 · C3 로컬 직렬 (등록 §12-3) 둘 + D3 바닥 F3 (hit) ↔ A3 (wsl) 기계 섞임 하나 · 보고에 이탈 절',
+                len(dv) == 3 and sum('로컬 WSL 직렬' in x for x in dv) == 2 and sum('바닥 F3' in x for x in dv) == 1
+                and '이탈 (등록과 다름' in report(out), dv)
+            out = run(S.prepare('v10x', only=('A', 'B', 'C', 'F')))
+            chk('V10c 등록 host 만 (D0.7 ibb) → 이탈 기록 없음', out.get('deviations') == [] and out['branches']['F']['grid'] == '7 by 4 by 1',
+                out.get('deviations'))
+        go('V10 로컬 직렬', v10)
+
+        def v11():
+            cnt = [0]
+
+            def why(only, repo_verify=True, edit=None, **kw):
+                cnt[0] += 1
+                R = S.prepare('v11_%d' % cnt[0], only=only, **kw)
+                if edit:
+                    edit(R)
+                try:
+                    run(R, repo_verify=repo_verify)
+                except Refused as e:
+                    return str(e)
+                return ''
+            D3, D7 = ('A3', 'C3', 'F3'), ('A', 'B', 'C', 'F')
+            b0 = Synth.binary_text()
+
+            def f_np30(R):
+                p = os.path.join(R['F'], 'q5_manifest.json')
+                with open(p, encoding='utf-8') as fh:
+                    m = json.load(fh)
+                m['np'] = 30
+                with open(p, 'w', encoding='utf-8') as fh:
+                    json.dump(m, fh)
+            cases = [
+                ('V11 로컬 A3 로그 on 2 procs (manifest NP 1)', dict(only=D3, wsl=('A3', 'C3'), log={'A3': dict(procs=2)}), 'procs'),
+                ('V11b 로컬 A3 grid 2 by 1 by 1', dict(only=D3, wsl=('A3', 'C3'), log={'A3': dict(grid='2 by 1 by 1')}), 'processor grid'),
+                ('V11c 로컬 A3 q5_binary.txt 없음', dict(only=D3, wsl=('A3', 'C3'), binary={'A3': None}), 'q5_binary.txt'),
+                ('V11d 로컬 A3 q5_binary.txt mode mpi', dict(only=D3, wsl=('A3', 'C3'), binary={'A3': b0.replace('mode serial', 'mode mpi')}),
+                 'q5_binary.txt'),
+                ('V11e 로컬 A3 libmpi 있음', dict(only=D3, wsl=('A3', 'C3'), binary={'A3': b0.replace('libmpi none', 'libmpi libmpi.so.40')}),
+                 'q5_binary.txt'),
+                ('V11f A3 로컬 ↔ C3 hit (X ↔ A 기계 다름)', dict(only=D3, wsl=('A3',)), '기계 · 실행 방식 다름'),
+                ('V11g A3 · C3 로컬 바이너리 sha256 다름', dict(only=D3, wsl=('A3', 'C3'), binary={'C3': b0.replace('sha256 ' + 'a' * 64,
+                                                                                                            'sha256 ' + 'b' * 64)}),
+                 '바이너리 sha256 · 호스트 이름 다름'),
+                ('V11g2 A3 · C3 로컬 같은 바이너리 · 다른 기계 (호스트 이름)', dict(only=D3, wsl=('A3', 'C3'),
+                                                                     binary={'C3': b0.replace('host wsl-test', 'host other-pc')}),
+                 '바이너리 sha256 · 호스트 이름 다름'),
+                ('V11h D0.7 F grid 7 by 7 by 1 (49 ≠ 28)', dict(only=D7, log={'F': dict(grid='7 by 7 by 1')}), 'processor grid'),
+                ('V11i D0.7 A grid 줄 둘', dict(only=D7, log={'A': dict(grid_lines=2)}), 'processor grid'),
+                ('V11j D0.7 B grid 줄 없음 (T0 통과)', dict(only=D7, log={'B': dict(grid_lines=0)}), 'processor grid'),
+                ('V11k D0.7 C grid 14 by 2 by 2 (곱 56 · z 2 ≠ processors * * 1)', dict(only=D7, log={'C': dict(grid='14 by 2 by 2')}),
+                 'processor grid'),
+                ('V11l D0.7 F manifest NP 30 · 로그 30 procs · grid 6 by 5 by 1 (리포 대조 끔) → 등록 Q5 28 아님',
+                 dict(only=D7, log={'F': dict(procs=30, grid='6 by 5 by 1')}, repo_verify=False, edit=f_np30), '등록 Q5'),
+            ]
+            for label, kw, needle in cases:
+                w = why(**kw)
+                chk(f'{label} → 거부', needle in w, w)
+        go('V11 NP · grid · 로컬 기록 거부', v11)
+
         def v8():
             R = S.prepare('v8', only=('A', 'B', 'C', 'F'))
             ml = os.path.join(tmp, 'main_log.liggghts')
@@ -1237,15 +1379,29 @@ class Synth:
                 f.write(' '.join(v) + '\n')
 
     @staticmethod
+    def grid_of(n):
+        """LAMMPS 꼴 processor grid (processors * * 1) — x·y = n · y = n 의 √ 이하 가장 큰 약수."""
+        y = next(a for a in range(int(n ** 0.5), 0, -1) if n % a == 0)
+        return f'{n // y} by {y} by 1'
+
+    @staticmethod
+    def binary_text(sha='a' * 64):
+        """(§12-3) 로컬 직렬 러너가 남기는 q5_binary.txt 꼴."""
+        return f'mode serial\nnp 1\nbinary /home/u/src/LIGGGHTS-PUBLIC/src/lmp_serial\nsha256 {sha}\nlibmpi none\nhost wsl-test\n'
+
+    @staticmethod
     def write_log(path, man, deck, ke_end=1e-9, plate='0.0123', drop_last_loop=False, error=False, nan=False, last_step=None,
-                  procs=None, press=1.0, dt_echo=None, drop_cmd=None, zmax='0.0055', atoms_end=12):
-        """LIGGGHTS 꼴 로그 — 덱 명령 echo (주석 · 이어 붙이기 정리) · timestep 치환 줄 · print 출력 · run 마다 thermo + Loop time."""
+                  procs=None, press=1.0, dt_echo=None, drop_cmd=None, zmax='0.0055', atoms_end=12, grid=None, grid_lines=1):
+        """LIGGGHTS 꼴 로그 — 덱 명령 echo (주석 · 이어 붙이기 정리) · timestep 치환 줄 · read_restart 뒤 processor grid 줄 · print 출력 ·
+        run 마다 thermo + Loop time."""
         out = ['LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2025-08-25)']
         runs, step, k = list(man['runs']), man['s0'], 0
         for c, _a, _b in commands(deck):
             if c == drop_cmd:
                 continue
             out.append(c)
+            if c.startswith('read_restart '):
+                out += ['  ' + (grid or Synth.grid_of(procs or man['np'])) + ' MPI processor grid'] * grid_lines
             if c == 'timestep ${dt}':
                 out.append('timestep ' + (dt_echo or man['dt_echo']))
             if c.startswith('print "====== PLATE HEIGHT'):
@@ -1277,9 +1433,10 @@ class Synth:
         with open(path, 'w') as f:
             f.write('\n'.join(out) + '\n')
 
-    def _w2(self, man):
-        """W2 합성 manifest · 덱 (생성기가 W2 를 거부하므로 selftest 안에서만 · 리포 대조 끔)."""
+    def _w2(self, man, status='비준'):
+        """W2 합성 manifest · 덱 (작은 덱 · selftest 안에서만 · 리포 대조 끔 · 생성기 실제 W2 폴더 시험 = V9)."""
         m = json.loads(json.dumps(man))
+        m['amendment'] = dict(section='§12-2', status=status)
         m['window'], m['s0'] = 'W2', 1000000
         m['runs'] = [600000] if m['kind'] == 'dt_half' else [300000]
         m['end_step'] = m['compare_step'] = m['s0'] + m['runs'][0]
@@ -1295,18 +1452,31 @@ class Synth:
         m['deck']['sha256'] = _sha256_bytes(deck.encode('utf-8'))
         return m, deck
 
-    def prepare(self, tag, only=None, zse=None, drop_ss=None, log=None, del_dumps=(), w2=False, press=None, thermo_every=None):
+    def prepare(self, tag, only=None, zse=None, drop_ss=None, log=None, del_dumps=(), w2=False, press=None, thermo_every=None,
+                wsl=(), w2real=None, binary=None, w2status='비준'):
+        """역할마다 생성기 폴더를 복사해 덤프 · 로그 · ckpt 기록을 쓴다.  wsl = 로컬 직렬 폴더 (§12-3 · q5_binary.txt) 를 쓸 역할 ·
+        w2real = 생성기 실제 W2 폴더 ('ratified' · 'draft') · binary = 역할 → q5_binary.txt 글자 (None = 파일 없음)."""
         roles = only or tuple(self.mans)
         self.n_tag += 1
         off = 1e-9 * self.n_tag
         out = {}
         for i, r in enumerate(roles):
-            man = self.mans[r]
+            if r in wsl:
+                man, base = self.mans_wsl[r], self.base_wsl
+            elif w2real:
+                man, base = self.mans_w2[w2real][r], self.base_w2[w2real]
+            else:
+                man, base = self.mans[r], self.base
             dst = os.path.join(self.root, tag, man['folder'])
-            self.shutil.copytree(os.path.join(self.base, man['folder']), dst)
+            self.shutil.copytree(os.path.join(base, man['folder']), dst)
             deck = None
+            if r in wsl:
+                bt = binary[r] if (binary and r in binary) else self.binary_text()
+                if bt is not None:
+                    with open(os.path.join(dst, BINARY_RECORD), 'w', encoding='utf-8') as f:
+                        f.write(bt)
             if w2:
-                man, deck = self._w2(man)
+                man, deck = self._w2(man, w2status)
                 if thermo_every and r in thermo_every:
                     man['thermo_every'] = [thermo_every[r]]
                 with open(os.path.join(dst, man['deck']['file']), 'w', encoding='utf-8') as f:
@@ -1329,7 +1499,8 @@ class Synth:
                 deck = f.read()
             self.write_log(os.path.join(dst, 'log.liggghts'), man, deck, press=(press or {}).get(r, 1.0), **(log or {}).get(r, {}))
             h = hashlib.sha256(('ckpt-' + man['case']).encode()).hexdigest()
-            root = '/home/u/dem_test' if man['case'] == 'kg50_d07_b50' else '/home/u/simulation'
+            root = ('/home/u/q5_local' if man.get('host') == LOCAL_HOST else
+                    '/home/u/dem_test' if man['case'] == 'kg50_d07_b50' else '/home/u/simulation')
             rel = man['checkpoint']['rel_path']
             with open(os.path.join(dst, 'ckpt_sha256.txt'), 'w') as f:
                 f.write(f'{h}  {root}/{man["case"]}/{rel}\n{h}  {root}/{man["folder"]}/{rel}\n')
@@ -1415,13 +1586,13 @@ class Synth:
             R = fresh(only=D7)
             man_edit(R['B'], lambda m: m.__setitem__('end_step', m['end_step'] + 1))
             return refused(R)
-        C['manifest'] = ('B manifest 끝 step +1 (s0 + run 합 아님)', c_manifest, ())
+        C['manifest'] = ('B manifest 끝 step +1 (s0 + run 합 아님)', c_manifest, ('repo_verify',))
 
         def c_role():
             R = fresh(only=D7)
             R2 = fresh(only=('F',))
             return refused({'A': R['A'], 'B': R['B'], 'C': R2['F'], 'F': R['F']})
-        C['role'] = ('다른 F 폴더를 C 역할로', c_role, ())
+        C['role'] = ('다른 F 폴더를 C 역할로', c_role, ('np_registered',))
 
         def c_deck_sha():
             R = fresh(only=D7)
@@ -1455,7 +1626,8 @@ class Synth:
             return refused(R)
         C['log_missing'] = ('B log.liggghts 없음', c_log, ('dt_echo',))
 
-        C['np_procs'] = ('F 로그 Loop time 56 procs (manifest 28)', lambda: refused(fresh(only=D7, log={'F': dict(procs=56)})), ())
+        C['np_procs'] = ('F 로그 Loop time 56 procs (manifest 28)', lambda: refused(fresh(only=D7, log={'F': dict(procs=56)})),
+                         ('np_grid',))
         C['dt_echo'] = ('B 로그 dt 치환 줄 1e-06 (B 덱 5e-07)', lambda: refused(fresh(only=D7, log={'B': dict(dt_echo='1e-06')})), ())
         C['echo'] = ('C 로그에 scale 감쇠 명령 echo 없음 (다른 덱으로 돈 로그)',
                      lambda: refused(fresh(only=D7, log={'C': dict(drop_cmd='fix damp all viscous 0.5 scale 3 5.3696e-4')})), ())
@@ -1654,7 +1826,23 @@ class Synth:
             R = fresh(only=D7, log={'F': dict(procs=56)})
             man_edit(R['F'], lambda m: m.__setitem__('np', 56))
             return refused(R, repo_verify=False)
-        C['floor_np'] = ('F NP 56 = A (manifest · 로그 맞춤 · 리포 대조 끔)', c_fnp, ())
+        C['floor_np'] = ('F NP 56 = A (manifest · 로그 맞춤 · 리포 대조 끔)', c_fnp, ('np_registered',))
+
+        # ── 10-28 (등록 §12) 관문 ──
+        def c_npreg():
+            R = fresh(only=D7, log={'F': dict(procs=30, grid='6 by 5 by 1')})
+            man_edit(R['F'], lambda m: m.__setitem__('np', 30))
+            return refused(R, repo_verify=False)
+        C['np_registered'] = ('F manifest NP 30 · 로그 30 procs · grid 6 by 5 by 1 (등록 Q5 28 아님 · 리포 대조 끔)', c_npreg, ())
+        C['np_grid'] = ('F 로그 grid 7 by 7 by 1 (곱 49 ≠ NP 28)', lambda: refused(fresh(only=D7, log={'F': dict(grid='7 by 7 by 1')})), ())
+        D3R = ('A3', 'C3', 'F3')
+        C['binary_record'] = ('로컬 A3 q5_binary.txt mode mpi',
+                              lambda: refused(fresh(only=D3R, wsl=('A3', 'C3'),
+                                                    binary={'A3': self.binary_text().replace('mode serial', 'mode mpi')})),
+                              ('pair_machine',))
+        C['pair_machine'] = ('A3 로컬 직렬 ↔ C3 hit (X ↔ A 기계 다름)', lambda: refused(fresh(only=D3R, wsl=('A3',))), ())
+        C['w2_ratified'] = ('W2 합성 가지 = §12-2 개정 초안 · 비준 전 (리포 대조 끔)',
+                            lambda: refused(fresh(only=D7, w2=True, w2status='개정 초안 · 비준 전'), repo_verify=False), ())
 
         def c_same():
             R = fresh(only=D7)

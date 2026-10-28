@@ -364,10 +364,10 @@
 - 결정 (1저자 10-28): A3 · C3 = 1저자 로컬 WSL 에서 직렬 LIGGGHTS 1 코어 — mpirun · MPI 빌드를 쓰지 않는다 · NP 1 = Q5 와 같음.  F3 = hit NP 2 (Q5 그대로) · D1-50 이 끝난 뒤.
 - 이탈: §2 표 · §4-4 · §5 시간 줄 · §8-2 의 "hit" (A3 · C3 를 돌리는 기계 · 바이너리).  덱은 hit A3 · C3 덱과 바이트 같다 (러너만 다름 · 생성기 `--host wsl`).
 - F3 를 로컬 직렬로 하지 않는 이유: 1 코어 직렬은 A3 와 합산 순서가 같다 → 같은 계산 · 바닥 0 (§3 *"바닥 = 합산 순서만 다른 같은 계산"*) → 생성기가 로컬 F3 를 거부한다.
-- 판정에 미치는 것: D3 바닥 F3 ↔ A3 = NP 만이 아니라 기계 · 바이너리도 다르다 → |F3 − A3| 에 기계 차가 섞여 바닥이 커질 수 있다 — §7 ② (판정 불가) 쪽으로만 움직인다 (바닥이 커져도 거짓 합격 · 거짓 불합격을 만들지 않는다).  C3 ↔ A3 = 같은 기계 · 같은 바이너리 (판독기가 바이너리 sha256 으로 확인 · 다르면 거부).
+- 판정에 미치는 것: D3 바닥 F3 ↔ A3 = NP 만이 아니라 기계 · 바이너리도 다르다 → |F3 − A3| 에 기계 차가 섞여 바닥이 커질 수 있다 — §7 ② (판정 불가) 쪽으로만 움직인다 (바닥이 커져도 거짓 합격 · 거짓 불합격을 만들지 않는다).  C3 ↔ A3 = 같은 기계 · 같은 바이너리 (판독기가 바이너리 sha256 · 호스트 이름으로 확인 · 다르면 거부).
 - 바이너리 — 환경 변수 `LMP_SERIAL` (⬜ L-1 이름) · 없으면 `$HOME/src/LIGGGHTS-PUBLIC/src/lmp_serial` · 그것도 없으면 PATH 의 `lmp_serial` · MPI 빌드 (`ldd` 에 libmpi) = 러너가 거부.  1저자 WSL 10-28 확인 (코디네이터 전달 · 이 세션에서 재지 않음): `~/src/LIGGGHTS-PUBLIC` = LIGGGHTS 공개 3d5c00f2 · 깨끗한 트리 · `src/fix_viscous.cpp` 74 행 `scale` (리포 Codex 사본 74 행과 같은 자리 · §4-3 문법) · `lmp_serial` 있음 (08-25 빌드).
 - 러너 검사 (hit 러너 · 운영자 줄이 하는 것 + 더 · 하나라도 실패 = 실행 안 함 rc 2): 폴더 `SHA256SUMS` · `ckpt_sha256.txt` 두 줄 같은 값 = 등록 Q1 sha256 (머리 비준 기록 · hit 원본 `1bf24069…`) · 체크포인트 있음 · `log.liggghts` 없음 (덮어쓰지 않음) · 바이너리 있음 · MPI 빌드 아님 → 바이너리 경로 · sha256 · 호스트를 `q5_binary.txt` 에 → `setsid nohup <바이너리> -in <가지 덱> > log_<가지>_v1.out` (hit 러너와 같은 꼴 · mpirun 없음).
-- 판독기: 로컬 가지 = 로그 `Loop time … on 1 procs` · `1 by 1 by 1 MPI processor grid` (NP = 등록 Q5) · `q5_binary.txt` (mode serial · libmpi none) · 결과 JSON · 보고에 이탈 기록 · X ↔ A 의 기계 · 실행 방식 · (로컬이면) 바이너리 sha256 이 같아야 (다르면 거부) · 바닥 기계 섞임 = 기록 (거부 아님).
+- 판독기: 로컬 가지 = 로그 `Loop time … on 1 procs` · `1 by 1 by 1 MPI processor grid` (NP = 등록 Q5) · `q5_binary.txt` (mode serial · libmpi none) · 결과 JSON · 보고에 이탈 기록 · X ↔ A 의 기계 · 실행 방식 · (로컬이면) 바이너리 sha256 · 호스트 이름이 같아야 (다르면 거부) · 바닥 기계 섞임 = 기록 (거부 아님).
 - 폴더 · 경로 (⬜ L-2 이름): 로컬 루트 `~/q5_local` · 가지 `q5_kg50_d3_b50_s1_<A3|C3>_wsl` · 체크포인트 원본 = hit 파일을 가져온 사본 `~/q5_local/kg50_d3_b50_s1/restart_kg50_d3_b50_s1/restart_after_settling.bin` (등록 Q1 sha256 대조 · 다르면 멈춤).
 
 | Q | 무엇 | 권고 |
