@@ -2559,6 +2559,10 @@ RESUME_CAUSES = frozenset({'timeout', 'signal', 'parent_dead', 'group_unconfirme
 #:   검사 실패 흔적 (.unchecked/ 의 팔 payload) 이 있으면 낱말과 무관하게 재실행 불가.
 RESOURCE_WORDS = ('OutOfMemoryError', 'CUDA_ERROR_OUT_OF_MEMORY', 'cudaErrorMemoryAllocation', 'MemoryError', 'No space left on device',
                   'CUDARuntimeError', 'CUDADriverError', 'CUDA_ERROR_LAUNCH_FAILED', 'cudaErrorLaunchFailure')
+#: 잘못된 주소 접근 (드라이버 · 런타임 이름) — 로그에 하나라도 있으면 다른 자원 낱말과 함께여도 원인 runner_rc (재실행 불가).  cupy 오류는
+#:   `CUDADriverError: CUDA_ERROR_ILLEGAL_ADDRESS` · `CUDARuntimeError: cudaErrorIllegalAddress` 꼴이라 낱말 하나를 빼는 것만으로는 resource 로 남는다
+#:   (✅ 10-28 등록 R §10-5 다 ⑧ 의 뜻 = 자동 재시도 안 함 · 시험 AL19c).
+NOT_RESOURCE_WORDS = ('CUDA_ERROR_ILLEGAL_ADDRESS', 'cudaErrorIllegalAddress')
 
 
 def ledger_line(obj):
@@ -3226,6 +3230,8 @@ def stop_cause(s, folder):
             txt = lp.read_text(encoding='utf-8', errors='replace') if lp is not None and lp.is_file() else ''
         except OSError:
             txt = ''
+        if any(w in txt for w in NOT_RESOURCE_WORDS):
+            return 'runner_rc'
         return 'resource' if any(w in txt for w in RESOURCE_WORDS) else 'runner_rc'
     return 'gate' if not s.get('runs') else 'check'
 
