@@ -1,13 +1,14 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-28 · managed-files: 550
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-28 · managed-files: 551
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 341건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 342건)
 - 2026-10-28 · `kb/concepts/nmr_shift.md` — NMR 화학적 이동 읽기 — 차폐 · ppm · up-field · 확정 (개념 카드)
+- 2026-10-28 · `kb/papers/ndo_lpscl16_methods_2026_10_28.md` — NdO-LPSCl₁.₆ 원고 4.5 DFT calculations — 기록대로 · B₂O₃ 와 같은 꼴 (본문판 + SI 판) · 진행
 - 2026-10-26 · `kb/reports/weekly_2026_10_25.md` — 주간 정리 2026-10-19 ~ 10-25 (주간보고 초안) · 초안 (2026-10-26 · 도는 계산은 마지막 실측 기준 — kg…
 - 2026-10-26 · `kb/projects/handoff_2026_10_26_return_to_origin.md` — 본 세션 복귀 카드 — 대피 브랜치 claude/evac-2026-10-22 (82 커밋) 를 friendly 로 · fast-forward (2026-10-26) · 발송 대기 — 사용자가 §0 프롬프트를 본 세션 (friendly) …
 - 2026-10-26 · `kb/projects/merge_request_2026_10_26.md` — 머지 요청 — 대피 브랜치 claude/evac-2026-10-22 → claude/friendly-meitner-lldvar (2026-10-26 · fast-forward · 충돌 0) · 최종 — 10-26 실측 (friendly 끝 = 대피 인계 카드 a…
@@ -26,7 +27,6 @@
 - 2026-10-22 · `kb/projects/handoff_2026_10_22_evacuation.md` — 대피 인계 — 2026-10-22 (friendly 세션 토큰 소진 → 서브 대시보드 세션 · 머지 때 충돌 0 설계 · W_ad 외주 2차 CZ 고침 설계 포함) · 진행
 - 2026-10-20 · `kb/projects/handoff_2026_10_20_return_to_origin.md` — 본 세션 복귀 카드 — 서브 세션 (10-15 → 10-20) 134 커밋을 본 세션으로 (2026-10-20) · 발송 대기 — 사용자가 §0 프롬프트를 본 세션 (…CTzs) 에 붙…
 - 2026-10-20 · `kb/papers/b2o3_bo_lpsc16_methods_2026_10_20.md` — B₂O₃ 원고 (BO-LPSC1.6 · paper #2) Computational Methods — 기록대로 · compact 판 (BML 가이드 반영) · 진행
-- 2026-10-19 · `kb/reviews/li2s1a_CX_prompt_li2s_glass_control_readout_2026_10_14.md` — CX 프롬프트 — li2s 소셀 유리 대조 계 B 600 K 판독: 규칙 적용 갈래 c2 (N_B 1/5) · 결과 전 선택 셋 확인 · 트랙 끝 제안 · 발송됨 (사용자 · 발송일 기록 없음 · 발송판 `kb/project…
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -534,7 +534,7 @@
 ## descriptors/ (1)
 - `kb/descriptors/coating_descriptor_catalog.md` — 황화물 코팅 소재 Descriptor Catalog
 
-## papers/ (23)
+## papers/ (24)
 - `kb/papers/adhesion_charts_comparison.md` — Adhesion Charts — 20 seeds vs Selected 5 seeds
 - `kb/papers/adhesion_literature_review.md` — Adhesion Interface Modeling — Literature Summary
 - `kb/papers/b2o3_bo_lpsc16_methods_2026_10_20.md` — B₂O₃ 원고 (BO-LPSC1.6 · paper #2) Computational Methods — 기록대로 · compact 판 (BML 가이드 반영)  (2026-10-20 · 진행)
@@ -549,6 +549,7 @@
 - `kb/papers/lpscl_vs_lpscl16_seminar_v1.md` — LPSCl vs LPSCl₁.₆ Seminar — Slide Master v1
 - `kb/papers/mechanism_anion_O_descriptor.md` — 메커니즘 — 할로겐 치환 Argyrodite / NCM 계면 접착
 - `kb/papers/narrative_with_literature_steps.md` — Paper #1 Narrative — Literature-Grounded Step-by-Step Guide
+- `kb/papers/ndo_lpscl16_methods_2026_10_28.md` — NdO-LPSCl₁.₆ 원고 4.5 DFT calculations — 기록대로 · B₂O₃ 와 같은 꼴 (본문판 + SI 판)  (2026-10-28 · 진행)
 - `kb/papers/origin_adhesion_guide.md` — Adhesion Bar Chart — Origin Guide (BML Standards)
 - `kb/papers/paper2_FINAL_briefing_2026_05_08.md` — Paper #2 — SE/NCM Adhesion: Final Comprehensive Briefing
 - `kb/papers/paper2_briefing_2026_05_08.md` — Paper #2 — SE/NCM Adhesion Mechanism: Briefing for First-Time Reader
