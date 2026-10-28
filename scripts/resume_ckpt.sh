@@ -198,18 +198,21 @@ def plain(lst):
 
 # ── 10-28 밤 전체 프로그램 대조 (Codex 재검토 KG50R-02 · 03 · 05 · 원장 KG50-10 · 18 · 1저자 Q2 (가) "50kg도 권고대로해") ──
 #   재개 덱 = [준비 구간: 체크포인트 시점 상태를 다시 선언] + [뒤 구간: 본 덱의 체크포인트 뒤를 명령 하나하나 그대로]
-#   뒤 구간 — restart 체크포인트 = 본 덱 그 run (남은 step 만 다름) 부터 끝까지 · write_restart 체크포인트 = 그 줄 다음 명령부터 끝까지
-#     (판 높이 run 1 같은 짧은 run · 첫 긴 run 까지 글자 그대로)
+#   뒤 구간 — restart 체크포인트 = 본 덱 그 run (남은 step 만 다름 · 그 run 에 꼬리 (every · pre · post · start · stop · upto …) 가 있으면
+#     거부 · 10-28 밤 2 사전 공격 B) 부터 끝까지 · write_restart 체크포인트 = 그 줄 다음 명령부터 끝까지 (판 높이 run 1 같은 짧은 run ·
+#     첫 긴 run 까지 글자 그대로)
 #   준비 구간 — 상태 명령 (STATE_CMD) 과, 본 덱 체크포인트 앞에 글자 그대로 있는 print · if (print · quit 만) · group (type 꼴) ·
-#     shell mkdir 만.  그 밖 (velocity · set · delete_atoms · run · label · jump · create_box · 모르는 명령 …) = 거부
-#   상태 — 준비 구간이 만든 것 = 본 덱 체크포인트 시점 것.  꼭 있어야 (빠짐 = 거부): fix · fix_modify · 전역 설정 · pair · restart ·
-#     atom/neigh/comm_modify.  재개 덱이 선언하면 같아야 (빠짐 = 허용 · 쓰는 곳은 아래 참조 검사 · c_/f_ 검사가 본다): compute · 변수 ·
-#     dump · region · thermo · 템플릿 fix.  재개 덱에만 있는 것 = 거부
+#     shell mkdir 만.  그 밖 (velocity · set · delete_atoms · run · label · jump · create_box · 모르는 명령 …) = 거부.
+#     10-28 밤 2 (사전 공격 A): 상태 명령 줄도 본 덱 체크포인트 앞에 글자 그대로 있어야 하고, 준비 구간 명령 순서 = 본 덱 체크포인트 앞
+#     명령의 순서 보존 부분열 (같은 변수를 두 번 정의하면 본 덱과 같은 순서 · 같은 정의만 — LIGGGHTS 는 ${x} 를 그 자리에서 치환한다)
+#   상태 — 준비 구간 끝의 상태 표 (마지막 정의) = 본 덱 체크포인트 시점 상태 표 (즉시 치환의 그 자리 값은 위 글자 · 순서 대조가 본다).
+#     꼭 있어야 (빠짐 = 거부): fix · fix_modify · 전역 설정 · pair · restart · atom/neigh/comm_modify.  재개 덱이 선언하면 같아야 (빠짐 =
+#     허용 · 쓰는 곳은 아래 참조 검사 · c_/f_ 검사가 본다): compute · 변수 · dump · region · thermo · 템플릿 fix.  재개 덱에만 있는 것 = 거부
 #   허용 차이 (목록 고정 · 시험): 첫 긴 run 남은 수 (restart 체크포인트) · 판 메시 fix 의 file 이름 (그 파일이 작업 폴더에 있을 때) ·
-#     shell mkdir ↔ mkdir -p · 위 '선언하면 같아야' 항목의 빠짐 · 템플릿 fix 재선언 (본 덱 줄 그대로)
+#     shell mkdir ↔ mkdir -p · 위 '선언하면 같아야' 항목의 빠짐 · 템플릿 fix 재선언 (본 덱 줄 그대로 · 순서 대조에서 뺀다)
 #   그 밖 — 변수 참조 (${x} · $x · v_x) 는 그 앞에 정의 · label 은 본 덱 · 재개 덱 각각 유일 · jump 목적지 = 재개 덱에 있고 본 덱 뒤 구간의 그
-#     label · include · next · jump SELF <label> 말고 다른 jump · 이름에 변수인 명령 = 거부 · 첫 긴 run = 꼬리 없는 run N 한 줄 (every ·
-#     pre · post · start · stop · upto · & 이음 = 거부) · read_restart 1 개 = 체크포인트
+#     label · 명령 자리 (최상위 · if 안 · run every 안) 의 include · next · jump SELF <label> 말고 다른 jump · 이름에 변수인 명령 = 거부 ·
+#     첫 긴 run = 꼬리 없는 run N 한 줄 (every · pre · post · start · stop · upto · & 이음 = 거부) · read_restart 1 개 = 체크포인트
 #   압축 체크포인트 (restart_compress_* · 반복 안 restart 체크포인트) = 거부 (KG50R-01 · 1저자 10-28 Q3 (가))
 STATE_CMD = {'fix', 'unfix', 'fix_modify', 'compute', 'uncompute', 'compute_modify', 'variable', 'dump', 'undump',
              'dump_modify', 'region', 'thermo', 'thermo_style', 'thermo_modify', 'timestep', 'neighbor', 'neigh_modify',
@@ -242,6 +245,16 @@ def unsupported(l):
             return c
         if c == 'jump' and not (len(cw) == 3 and cw[1] == 'SELF'):
             return 'jump 꼴 (jump SELF <label> 만)'
+        if c == 'run' and 'every' in cw[2:]:
+            # 10-28 밤 2 (사전 공격 B): run … every M "명령" … 의 명령도 본다 (그 안 include · next · jump 를 예전에는 못 봤다)
+            k = cw.index('every', 2)
+            for x in cw[k + 2:]:
+                if x == 'NULL':
+                    continue
+                xw = words(x)
+                if xw is None:
+                    return 'run every 명령 따옴표를 못 읽음'
+                todo.append(xw)
         if c == 'if':
             cs = if_cmds(cw)
             if cs is None:
@@ -414,6 +427,45 @@ def setup_check(Rs, Mp, probs):
             continue
         probs.append('재개 덱 준비 구간 명령 허용 안 됨 (10-28 KG50R-03 · 상태 명령 · 본 덱 체크포인트 앞에 글자 그대로 있는 print · '
                      'if (print · quit 만) · group type · shell mkdir 만): [%s]' % l)
+
+
+def setup_order(Rs, Mp, probs):
+    # 10-28 밤 2 (독립 사전 공격 A · KG50R-03 부류): 준비 구간 (read_restart 빼고) = 본 덱 체크포인트 앞 명령의 순서 보존 부분열.
+    #   상태 명령 줄은 본 덱 체크포인트 앞에 글자 그대로 있어야 하고 명령 순서 (상태 + 동작) 도 본 덱과 같아야 한다 — LIGGGHTS 는
+    #   ${x} 를 그 자리에서 치환하므로 끝 상태 표만 같아서는 안 된다 (변수를 바꿨다 되돌리면 끝 표는 같은데 timestep 은 2 배).
+    #   허용 차이 줄: 템플릿 fix (④ · 도구가 read_restart 바로 뒤에 넣는다) = 빼고 본다 · shell mkdir ↔ mkdir -p (③) · 판 메시 fix 의
+    #   file 이름 (② · 파일이 있는지는 상태 대조가 본다) = 같은 명령으로 본다
+    def tmpl(l):
+        w = words(l) or []
+        return len(w) >= 4 and w[0] == 'fix' and bool(TMPL.match(w[3]))
+
+    def eq(r, m):
+        if r == m:
+            return True
+        kr, km = mkdir_key(words(r) or []), mkdir_key(words(m) or [])
+        if kr is not None and kr == km:
+            return True
+        return mesh_file(m, r) is not None
+
+    Mq = [l for l in Mp if not tmpl(l)]
+    j, prev = 0, None
+    for l in Rs:
+        w = words(l)
+        if not w or tmpl(l):
+            continue                      # 따옴표 = 다룰 수 없는 구문 · 템플릿 = 상태 대조 (선언하면 같아야)
+        if not any(eq(l, m) for m in Mq):
+            if w[0] in STATE_CMD:
+                probs.append('재개 덱 준비 구간 상태 명령이 본 덱 체크포인트 앞에 글자 그대로 없음 (10-28 사전 공격 A · LIGGGHTS 는 '
+                             '${x} 를 그 자리에서 치환한다 — 끝 상태만 같아서는 안 된다): [%s]' % l)
+            continue                      # 동작 줄은 setup_check 가 이미 거부
+        k = j
+        while k < len(Mq) and not eq(l, Mq[k]):
+            k += 1
+        if k == len(Mq):
+            probs.append('재개 덱 준비 구간 명령 순서가 본 덱 체크포인트 앞 순서와 다름 (10-28 사전 공격 A · 순서 보존 부분열이어야 — '
+                         '같은 변수 다시 정의 · fix 순서): [%s] 는 본 덱에서 [%s] 보다 앞에만 있다' % (l, prev or '(처음)'))
+            return
+        j, prev = k + 1, l
 
 
 def mprefix_check(Mp, probs):
@@ -603,6 +655,11 @@ def check(main, res, ckpt, s0, W):
     if form:
         probs.append(form)
     pM, q = im, ir                        # 뒤 구간 시작 — 본 덱 pM · 재개 덱 q (준비 구간 = 재개 덱 q 앞 · 본 덱 상태 = pM 앞)
+    if kind == 'restart' and len(words(M[im]) or []) > 2:
+        # 10-28 밤 2 (사전 공격 B): 체크포인트가 든 본 덱 run 에 꼬리 (every · pre · post · start · stop · upto …) — 재개 덱 첫 긴 run 은
+        #   꼬리 없는 run N 한 줄이라 같은 동작을 낼 수 없다 (예전 = 남은 step 만 보고 꼬리를 안 봤다)
+        probs.append('본 덱 체크포인트 run 에 꼬리가 있음 (every · pre · post · start · stop · upto · 10-28 사전 공격 B — 재개 덱 첫 긴 run '
+                     '(꼬리 없는 run N 한 줄) 으로는 같은 동작을 낼 수 없다): [%s]' % M[im])
     if kind == 'restart':
         # D. 남은 step — restart 명령이 만든 체크포인트 · 그 run 앞에 반복 · 변수 run 이 없을 때
         step, step0, known = 0, 0, True
@@ -683,6 +740,7 @@ def check(main, res, ckpt, s0, W):
     if q is not None:
         mprefix_check(M[:pM], probs)
         setup_check([l for i, l in enumerate(R[:q]) if i != rs[0]], M[:pM], probs)
+        setup_order([l for i, l in enumerate(R[:q]) if i != rs[0]], M[:pM], probs)
         state_cmp(run_state(M[:pM], '본 덱 체크포인트 앞', probs), run_state(R[:q], '재개 덱 준비 구간', probs), W, notes, probs)
     var_refs(R, probs)
     label_check(M, R, pM, probs)
@@ -980,7 +1038,7 @@ stripc(){ deckcheck --strip-comments "$1"; }
 # (10-28 밤 KG50R-02 · 05) deckcheck --cut-trial <재개 덱> <-t> <시험 덱> — stdout '첫긴runN 시험run 첫긴run앞run합(못 세면 -) 원줄' · 0 /
 #   거부 = 이유 한 줄 · 1 (시험 덱 안 씀)
 if [ $CHK = 1 ]; then [ $# = 5 ] || { echo "사용: bash resume_ckpt.sh -C <본 덱> <재개 덱> <체크포인트> <S0> <작업 폴더>"; exit 2; }; deckcheck "$@"; exit $?; fi
-CASES="$*"; SFX=${SFX:-r$NP}
+CASES="$*"; CASEA=("$@"); SFX=${SFX:-r$NP}   # 10-28 밤 2 (사전 공격 F): 케이스 = 인자 하나하나 (낱말 나누기 · 글로브 없이)
 [ -n "$SUF" ] && [ -n "$CASES" ] || { echo "사용: bash resume_ckpt.sh -n 30 -s stop15_0927 <케이스…>"; exit 1; }
 [[ "$TS" =~ ^[1-9][0-9]*$ ]] || { echo "⛔ -t $TS — 1 이상 정수여야 (시험 예산 · 10-28 KG50R-05)"; exit 1; }
 # 10-28 밤 Q4 (Codex Q7): 본 제출 (-T 없음) = -A · -H 가 이 스크립트 · dem_restart.py 의 sha256 과 같을 때만 — 아니면 아무것도 하지 않는다
@@ -998,7 +1056,11 @@ reg(){ awk '/^ *Step +Atoms/{n=split($0,h);c=0;for(i=1;i<=n;i++)if(h[i]=="CPU")c
 tr2(){ awk -v s="$1" '/^ *Step +Atoms/{n=split($0,h);c=0;for(i=1;i<=n;i++)if(h[i]=="CPU")c=i;next} n>0&&NF==n&&c>0&&$1~/^[0-9]+$/&&$1==s&&$c+0>0{o="";for(i=1;i<=NF;i++){if(i==c)continue;o=o" "h[i]"="$i};r=o} END{print r}' "$2"; }
 same(){ awk -v a="$1" -v b="$2" -v t="$3" 'BEGIN{na=split(a,x," ");nb=split(b,y," ");if(na<3||na-nb)exit 1;for(i=1;i<=na;i++){split(x[i],p,"=");split(y[i],q,"=");if(p[1]<q[1]||p[1]>q[1])exit 1;if(match(p[2],/^[-+]?[0-9.]+([eE][-+]?[0-9]+)?$/)==0||match(q[2],/^[-+]?[0-9.]+([eE][-+]?[0-9]+)?$/)==0)exit 1;if(p[1]=="Step"||p[1]=="Atoms"){if(p[2]+0<q[2]+0||p[2]+0>q[2]+0)exit 1;continue};d=p[2]-q[2];if(d<0)d=-d;m=p[2];if(m<0)m=-m;if(d>t*m&&d>1e-12)exit 1};exit 0}'; }
 # 느슨한 역학 확인: 원자 수 같고, 압력 (있으면) 아니면 KE 가 5 % 안
-sane(){ awk -v a="$1" -v b="$2" 'BEGIN{na=split(a,x," ");nb=split(b,y," ");if(na<3||na-nb)exit 1;k="";for(i=1;i<=na;i++){split(x[i],p,"=");split(y[i],q,"=");A[p[1]]=p[2];B[q[1]]=q[2]};if(A["Atoms"]+0<B["Atoms"]+0||A["Atoms"]+0>B["Atoms"]+0)exit 1;k=("pressMPa" in A && A["pressMPa"]+0>1e-6)?"pressMPa":"KinEng";if((k in A)==0)exit 1;d=A[k]-B[k];if(d<0)d=-d;m=A[k];if(m<0)m=-m;exit (d>0.05*m && d>1e-12)}'; }
+# 10-28 밤 2 (사전 공격 E): 비교 칸 전부 유한한 수 (nan · inf 꼴 어느 철자든 거부 — mawk 는 nan 을 NaN 으로 읽어 비교가 다 거짓 → 통과 ·
+#   gawk 는 nan 을 0 으로 · +nan · -nan 은 NaN 으로 읽었다) · 두 줄의 칸 이름 · 순서 같아야 · 판정은 예전 그대로 (원자 수 · KE 또는 압력 5 %)
+#   종료 코드 0 = 5 % 안 · 1 = 5 % 넘음 (또는 칸 수 다름) · 2 = 유한한 수가 아닌 칸 · 칸 이름 다름
+sane(){ awk -v a="$1" -v b="$2" 'function fin(v){return v ~ /^[-+]?([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][-+]?[0-9]+)?$/}
+BEGIN{na=split(a,x," ");nb=split(b,y," ");if(na<3||na-nb)exit 1;k="";for(i=1;i<=na;i++){split(x[i],p,"=");split(y[i],q,"=");if(p[1]<q[1]||p[1]>q[1])exit 2;if(!fin(p[2])||!fin(q[2]))exit 2;A[p[1]]=p[2];B[q[1]]=q[2]};if(A["Atoms"]+0<B["Atoms"]+0||A["Atoms"]+0>B["Atoms"]+0)exit 1;k=("pressMPa" in A && A["pressMPa"]+0>1e-6)?"pressMPa":"KinEng";if((k in A)==0||(k in B)==0)exit 2;d=A[k]-B[k];if(d<0)d=-d;m=A[k];if(m<0)m=-m;exit (d>0.05*m && d>1e-12)}'; }
 sel(){ awk 'NR==9{n=0;split("id type x y z radius vx vy vz",w," ");for(k=1;k<=9;k++)for(i=3;i<=NF;i++)if($i==w[k]){n++;c[n]=i-2};next} NR>9{o=$c[1];for(k=2;k<=n;k++)o=o" "$c[k];print o}' "$1" | sort -n | md5sum | cut -c1-12; }
 # 시험 로그의 마지막 thermo 줄 step · 그 줄 번호 · 마지막 'Loop time of' 줄 번호 · 그 줄의 'for N steps' 의 N (없으면 -1)
 #   10-28 밤 (KG50R-07 · Q5): 마지막 thermo 줄 = 최신 머리 (Step Atoms …) 아래 · 칸 수 = 머리 칸 수 · 모든 칸이 유한한 수 (머리마다 처음부터)
@@ -1021,9 +1083,12 @@ echo "명령: bash resume_ckpt.sh -n $NP -s $SUF -r $L -x $SFX -t $TS$([ $TONLY 
 echo "- 도구 신원 (10-28 Q4 · Codex Q7 · KG50R): resume_ckpt.sh sha256 $TSHA ($SELF) · dem_restart.py sha256 ${HSHA:-없음} ($HELPER) · 승인 -A ${APT:-없음} · -H ${APH:-없음} ($([ -n "$APT" ] && [ "$APT" = "$TSHA" ] && [ "$APH" = "$HSHA" ] && echo '실제와 같음' || echo '없음 · 다름'))" >> $REP
 echo "- 시도 (10-28 KG50R-04): $ATT — 이번 호출이 낸 시험만 본 제출 대상 (작업 폴더의 옛 job · mode 파일은 읽지 않는다)" >> $REP
 SUBMITTED=""; SEEN=" "; TPASS=""
-for C in $CASES; do
+for C in "${CASEA[@]}"; do
   S=$L/$C.$SUF; W=$L/$C; X=$L/$C.prev_$STAMP; D=$W/input_${C}_$SFX.liggghts; RN=$W/run_${C}_$SFX.sh; AD=""
   echo; echo "████ $C"
+  # 10-28 밤 2 (사전 공격 F): 케이스 이름 = 글자 · 숫자 · _ . - (첫 글자 . - 아님) — / · 공백 · . · .. · 글로브 글자는 다른 폴더를 가리키거나
+  #   같은 케이스를 두 철자로 만든다 (C · ./C → 첫 케이스 작업 폴더를 prev 로 밀었다)
+  [[ "$C" =~ ^[A-Za-z0-9_][A-Za-z0-9_.-]*$ ]] || { rej "케이스 이름" "케이스 이름 [$C] — 글자 · 숫자 · _ . - 만 (첫 글자 . - 아님 · / · 공백 없음 · 10-28 사전 공격 F) — 건너뜀"; continue; }
   case "$SEEN" in *" $C "*) rej "케이스 목록" "같은 케이스가 목록에 두 번 — 두 번째는 건너뜀 (10-28 KG50R-04)"; continue;; esac; SEEN="$SEEN$C "
   [ -d $S ] || { rej "멈춘 폴더" "$S 없음 (원 런 폴더를 먼저 이 이름으로 옮겨 둘 것)"; continue; }
   PH=$(grep -a '^======' $S/log.liggghts | tail -1)
@@ -1109,6 +1174,14 @@ for C in $CASES; do
     # 10-28 밤 (KG50R-04 · Q4): 시도 폴더에 이번 시험의 입력 그대로 (덱 · 러너 · 계획 · 대조 기록 · 도구 신원)
     cp -p $D $TD $RN $W/run_${C}_${SFX}t.sh $W/plan_$SFX.txt $W/fixrun_$SFX.txt $W/deckcheck_$SFX.txt $W/cut_$SFX.txt $W/tp_$SFX.txt $AD/
     [ $STRIP = 1 ] && cp -p $W/strip_$SFX.txt $AD/
+    # 10-28 밤 2 (사전 공격 C · Codex §10-5): 실행 영수증 — 본 제출이 낼 재개 덱 · 러너 · 시험 덱 · 시험 러너 · 체크포인트 · lmp_mpi (이 셸
+    #   PATH 에서 찾은 것 · 잡 환경은 다를 수 있다) 의 sha256 · 본 제출 직전 재개 덱 · 러너 sha256 을 main_inputs.sha256 과 다시 대조
+    LMP=$(command -v lmp_mpi 2>/dev/null); LMS=""; [ -n "$LMP" ] && LMS=$(sha256sum < "$LMP" 2>/dev/null | cut -c1-64)
+    sha256sum $D $RN > $AD/main_inputs.sha256
+    printf '재개 덱 sha256 %s (%s)\n러너 sha256 %s (%s)\n시험 덱 sha256 %s\n시험 러너 sha256 %s\n체크포인트 %s sha256 %s\nlmp_mpi %s\n' \
+      "$(sha256sum < $D | cut -c1-64)" "${D##*/}" "$(sha256sum < $RN | cut -c1-64)" "${RN##*/}" "$(sha256sum < $TD | cut -c1-64)" \
+      "$(sha256sum < $W/run_${C}_${SFX}t.sh | cut -c1-64)" "$RR" "$(sha256sum < $W/$RR 2>/dev/null | cut -c1-64)" \
+      "$([ -n "$LMP" ] && echo "$LMP sha256 ${LMS:-못 읽음}" || echo '없음 (이 셸 PATH · 잡 환경은 다를 수 있다)')" >> $AD/tool.txt
     echo "모드 $M · S0 $S0 · 체크포인트 $RR · 시험 덱 첫 긴 run [run $CN] → [run $CTN] · 시험 예산 $NT" >> $AD/tool.txt
     J=$(sbatch --parsable $W/run_${C}_${SFX}t.sh); JR=$?
     # 10-28 밤 (KG50R-04): 시험 job = sbatch 성공 · 숫자 job 번호 (--parsable 'id' 또는 'id;cluster') 일 때만 — 이번 호출 목록 SUBMITTED 에 넣는다
@@ -1134,7 +1207,13 @@ for ENT in $SUBMITTED; do
     else QF=$((QF+1)); fi
     sleep 20
   done
-  read M S0 RR EXP TNT TDS < $AD/mode.txt; read LN < $AD/lastrun_n.txt
+  # 10-28 밤 2 (사전 공격 F): 시도 기록 (mode.txt · lastrun_n.txt) 을 못 읽으면 그 케이스 실패 — 예전 = read 실패를 안 봐 첫 고리의 값이 남았다
+  M=""; S0=""; RR=""; EXP=""; TNT=""; TDS=""; LN=""
+  if ! { read M S0 RR EXP TNT TDS < $AD/mode.txt && read LN < $AD/lastrun_n.txt; } 2>/dev/null || [ -z "$M" ] || ! [[ "$S0" =~ ^[0-9]+$ && "$EXP" =~ ^[0-9]+$ && "$LN" =~ ^[0-9]+$ ]]; then
+    { echo; echo "## $C"; echo "- 시도 (10-28 KG50R-04): $ATT · 이번 호출이 낸 시험 job $J (기록 $AD)"
+      echo "- ⛔ 본 제출 안 함 — 시도 폴더 기록 (mode.txt · lastrun_n.txt) 을 못 읽음 (10-28 사전 공격 F · 시험 job $J 의 결과는 사람이 본다)"; } >> $REP
+    echo "결정: 본 제출 안 함 — 시도 폴더 기록을 못 읽음" >> $AD/result.txt 2>/dev/null; continue
+  fi
   T=$(ls logs/output_${C}_${SFX}t_$J.out 2>/dev/null); T=${T:-/dev/null}; E=$(grep -ac ERROR $T)
   read LTS LTL LPL LPN <<< "$(lastrun $T)"
   # 10-28 밤 (KG50R-07): + 'Loop time … for N steps' 의 N = 시험 마지막 run (min(N, -t))
@@ -1166,7 +1245,7 @@ for ENT in $SUBMITTED; do
   a2=$(tr2 "$F2" $W/log.liggghts.$SUF); b2=$(tr2 "$F2" $T)
   if [ -z "$F2" ]; then G3=1; G3T="원 로그에 비교 구간 ($S0, $EXP] 정규 줄 없음 → 생략"
   elif [ -n "$MISS" ]; then G3=0; G3T="원 로그에 있는 비교 줄이 시험에 없음 (결손): $MISS"
-  elif sane "$a2" "$b2"; then G3=1; G3T="5 % 안"; else G3=0; G3T="5 % 넘음"; fi
+  elif sane "$a2" "$b2"; then G3=1; G3T="5 % 안"; else [ $? = 2 ] && G3T="비교 칸이 유한한 수가 아님 · 칸 이름 다름 (10-28 사전 공격 E)" || G3T="5 % 넘음"; G3=0; fi
   [ -f $W/log.liggghts ] && mv $W/log.liggghts $W/log.liggghts.${SFX}t
   { echo; echo "## $C"
     echo "- 시도 (10-28 KG50R-04): $ATT · 이번 호출이 낸 시험 job $J 만 승격 대상 (기록 $AD)"
@@ -1197,11 +1276,16 @@ for ENT in $SUBMITTED; do
       T2=$(sha256sum < "$SELF" 2>/dev/null | cut -c1-64); H2=$(sha256sum < $HELPER 2>/dev/null | cut -c1-64)
       [ -z "$BLK" ] && { [ "$T2" != "$APT" ] || [ "$H2" != "$APH" ]; } && BLK="도구 sha256 이 승인값과 다름 — 지금 resume_ckpt.sh ${T2:-없음} · dem_restart.py ${H2:-없음}"
       [ -z "$BLK" ] && [ -e $AD/main_job.txt ] && BLK="이 시도는 이미 본 제출함 (job $(cat $AD/main_job.txt))"
+      [ -z "$BLK" ] && ! sha256sum -c --status $AD/main_inputs.sha256 2>/dev/null && BLK="작업 폴더 재개 덱 · 러너가 시험 때와 다름 (sha256 ≠ $ATT/main_inputs.sha256 · 10-28 사전 공격 C)"
       if [ -n "$BLK" ]; then echo "- ⛔ 본 제출 안 함 (10-28 KG50R-04) — $BLK" >> $REP; echo "결정: 본 제출 안 함 — $BLK" >> $AD/result.txt
       else echo "- 본 제출 직전 다시 확인 (10-28 KG50R-04 · Q4): 큐에 그 케이스 잡 없음 (이번 시험 $J 뺌) · 도구 sha256 = 승인값" >> $REP
-        JM=$(sbatch --parsable $W/run_${C}_$SFX.sh)
-        if [ -n "$JM" ]; then echo "- ✅ 본 제출 job $JM (run_${C}_$SFX.sh, 제출 폴더 $L)" >> $REP; echo "$JM" > $AD/main_job.txt; echo "결정: 본 제출 job $JM" >> $AD/result.txt
-        else echo "- ⛔ 본 제출 실패 (sbatch 출력 없음)" >> $REP; echo "결정: 본 제출 실패 (sbatch 출력 없음)" >> $AD/result.txt; fi
+        # 10-28 밤 2 (사전 공격 D): 본 sbatch 도 시험 쪽 (Q9d) 과 같은 규칙 — 종료 코드 0 · 숫자 job 번호 ('id' 또는 'id;cluster') 일 때만 ✅
+        JM=$(sbatch --parsable $W/run_${C}_$SFX.sh); JMR=$?
+        if [ $JMR = 0 ] && [[ "$JM" =~ ^([0-9]+)(;[^[:space:]]*)?$ ]]; then JM=${BASH_REMATCH[1]}
+          echo "- ✅ 본 제출 job $JM (run_${C}_$SFX.sh, 제출 폴더 $L)" >> $REP; echo "$JM" > $AD/main_job.txt; echo "결정: 본 제출 job $JM" >> $AD/result.txt
+        else JX=$(printf '%s' "$JM" | tr '\n' ' ' | cut -c1-300)
+          echo "- ⛔ 본 제출 실패 (sbatch 종료 코드 $JMR · 출력 [$JX] · job 번호 꼴 아님 · 10-28 사전 공격 D — 큐를 손으로 확인)" >> $REP
+          echo "결정: 본 제출 실패 — sbatch 종료 코드 $JMR · 출력 [$JX]" >> $AD/result.txt; fi
       fi
     fi
   else echo "- ⛔ 본 제출 안 함 — 위 G0/G1/G2/G3 확인 후 사람이 판단" >> $REP; echo "결정: 본 제출 안 함 (G0–G3)" >> $AD/result.txt; fi
@@ -1209,7 +1293,7 @@ done
 # 10-28 밤 Q4 (Codex Q7): -T = 본 제출 명령 한 줄 (승인값 = 위 도구 신원 줄의 sha256 · 1저자가 확인한 뒤 · 새 시험부터 다시 돈다) —
 #   이번 -T 에서 G0–G3 를 통과한 케이스만 담는다 · 통과한 케이스가 없으면 "명령 없음" (거부 · 실패 뒤의 명령 줄이 통과처럼 읽히지 않게)
 if [ $TONLY = 1 ]; then
-  TOUT=$(for c in $CASES; do case " $TPASS " in *" $c "*) ;; *) printf ' %s' "$c";; esac; done)
+  TOUT=$(for c in "${CASEA[@]}"; do case " $TPASS " in *" $c "*) ;; *) printf ' %s' "$c";; esac; done)
   if [ -n "$TPASS" ]; then echo "- 본 제출 명령 (10-28 Q4 · KG50R · -T 를 뺀 같은 명령 + 승인값 · G0–G3 통과 케이스만${TOUT:+ · 빠짐:$TOUT} · 새 시험부터 다시): \`bash $SELF -n $NP -s $SUF -r $L -x $SFX -t $TS$([ $STRIP = 1 ] && echo ' -c') -A $TSHA -H ${HSHA:-없음}$TPASS\`" >> $REP
   else echo "- 본 제출 명령 없음 (10-28 Q4 · KG50R) — 이번 -T 에서 G0–G3 를 통과한 케이스가 없다 (거부 · 실패:$TOUT)" >> $REP; fi
 fi

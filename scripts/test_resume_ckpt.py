@@ -306,6 +306,10 @@ def res_variant(kind):
            'p_ifprint': ('variable n_ins equal count(all)\nif "${n_ins} < 309380" then &\n'
                          '    "print \'FATAL: partial insertion - bed composition differs (PS-01). aborting.\'" &\n'
                          '    "quit 1"\n')}
+    if kind == 'p_ifprint':
+        # 10-28 밤 2 (사전 공격 A · 순서 대조): 삽입 자기검사 블록은 본 덱에서 정착 단계 print 앞에 있다 — 그 자리 (본 덱 순서) 에 둔다
+        #   (예전 = 첫 긴 run 바로 앞 = restart 50000 뒤 · 이제 순서 보존 부분열이 아니라 거부된다 · 이 시험의 몫 = if-print 시험 덱)
+        return mutate(g, 'print "====== PHASE 1: SETTLING ======"\n', pre[kind] + 'print "====== PHASE 1: SETTLING ======"\n')
     if kind in pre:
         return mutate(g, 'run 180000\n', pre[kind] + 'run 180000\n')
     raise ValueError(kind)
@@ -661,8 +665,11 @@ def main():
                              ('plate_pse_r075_a_r30.stl',))
     # 10-28 밤 바꿈 (KG50R-01 · 1저자 Q3 (가)): 예전 기대 = 통과 — 그 쌍의 체크포인트 1,500,000 은 판정 1,500,002 의 2 step 앞 (위상 4,998) 인데
     #   재개 덱은 run 5000 을 새로 돌아 다음 판정이 1,505,000 (Codex §2 · 우리 r075_retro.md) → 압축 체크포인트 재개 = 거부가 기대값
-    chk('C1 실제 09-27 쌍 (압축 재개) → 거부 (압축 체크포인트 재개 = 지원 안 함 · 그 밖 문제 0 · 10-28 밤 Q3 로 기대 바꿈)',
-        rc != 0 and Q3MSG in out and '(문제 1)' in out, out)
+    # 10-28 밤 2 바꿈 (사전 공격 A): 그 쌍의 재개 덱 (dem_restart.py 실제 산출) 은 Phase 2 상태 fix (integr · gravi 9.81 · damp 0.5) 를 판 메시
+    #   fix 앞에 둔다 (본 덱 = 판 메시 fix 뒤에 gravi · damp 다시 정의) → 준비 구간 순서 문제 하나가 더 나온다 (문제 1 → 2)
+    chk('C1 실제 09-27 쌍 (압축 재개) → 거부 (압축 체크포인트 재개 = 지원 안 함 + 준비 구간 순서 · 10-28 밤 Q3 · 밤 2 A 로 기대 바꿈)',
+        rc != 0 and Q3MSG in out and '(문제 2)' in out and '[fix top_mesh all mesh/surface/stress file plate_pse_r075_a_r30.stl' in out
+        and '순서가 본 덱 체크포인트 앞 순서와 다름' in out, out)
     rc, out = deckcheck_only(script, m075, r075, 'restart_pse_r075_a/restart_compress_1500000.bin', 1500000)
     chk('C2 같은 쌍 · 새 판 메시 파일 없음 → 실패', rc != 0 and '판 메시 파일' in out, out)
     tmp = tempfile.mkdtemp(prefix='rckm_')
