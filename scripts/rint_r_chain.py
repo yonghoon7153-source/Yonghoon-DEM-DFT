@@ -2554,10 +2554,11 @@ RC_EXPANSION_NEEDED = 4
 #: 재실행 자격 원인 (Q9 §3-5 개정 4 — 자원 · 인프라 = 시간 초과 · 사슬이 받은 신호 · 사슬 부모 사망 (원인 기록 없음) · 그룹 종료 미확인 · 자원 낱말).
 #:   그 밖 원인 (gate = 런 전 관문 · check = 팔을 읽은 뒤 검사 · 수치 · 물리 · runner_rc = 낱말 없는 러너 rc) = 재실행 불가 (보수 쪽).
 RESUME_CAUSES = frozenset({'timeout', 'signal', 'parent_dead', 'group_unconfirmed', 'resource'})
-#: 러너 rc ≠ 0 인 런 로그의 자원 · 인프라 낱말 (정확한 글자 · CUDA 메모리 · 호스트 메모리 · 디스크 부족 · GPU 오류) — ⬜ 결정 필요 (구현 상수 · 빠진 낱말 =
-#:   재실행 불가 쪽).  검사 실패 흔적 (.unchecked/ 의 팔 payload) 이 있으면 낱말과 무관하게 재실행 불가.
+#: 러너 rc ≠ 0 인 런 로그의 자원 · 인프라 낱말 (정확한 글자 · CUDA 메모리 · 호스트 메모리 · 디스크 부족 · GPU 오류) — ✅ 10-28 등록 R §10-5 다 ⑧ (1저자
+#:   "Rint 권고대로" · 아홉 낱말 · 빠진 낱말 = 재실행 불가 쪽).  CUDA_ERROR_ILLEGAL_ADDRESS 는 뺐다 (코드 결함일 수 있다 → 원인 runner_rc · 시험 AL19b).
+#:   검사 실패 흔적 (.unchecked/ 의 팔 payload) 이 있으면 낱말과 무관하게 재실행 불가.
 RESOURCE_WORDS = ('OutOfMemoryError', 'CUDA_ERROR_OUT_OF_MEMORY', 'cudaErrorMemoryAllocation', 'MemoryError', 'No space left on device',
-                  'CUDARuntimeError', 'CUDADriverError', 'CUDA_ERROR_LAUNCH_FAILED', 'CUDA_ERROR_ILLEGAL_ADDRESS', 'cudaErrorLaunchFailure')
+                  'CUDARuntimeError', 'CUDADriverError', 'CUDA_ERROR_LAUNCH_FAILED', 'cudaErrorLaunchFailure')
 
 
 def ledger_line(obj):
