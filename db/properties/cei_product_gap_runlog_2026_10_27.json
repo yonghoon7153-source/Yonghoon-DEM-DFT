@@ -7,7 +7,7 @@
  "card": "db/properties/cei_product_gap_card_2026_10_27.json",
  "decision": "D-2026-10-27-cei-product-gaps (active · 10-27 '권고대로해 ㅇㅇ') + 개정 1 D-2026-10-27-cei-product-gaps-amend1 (active · 10-28 '그냥 이대로 비준하자')",
  "citable": false,
- "status": "kgy 실행 중 (정식 · 두 결정 active) — 대조 잡 통과 · 2 / 11 끝",
+ "status": "kgy 실행 중 (정식 · 두 결정 active) — 대조 잡 통과 · 5 / 11 끝 (닫힌 껍질 다섯) · NiP2O6 vc-relax 중 (10-28 19:14)",
  "단계": [
   {
    "step": "① gabia 조회 (검사용 · MP API · PP 파일 복사 · QE 안 돈다)",
@@ -26,7 +26,7 @@
   },
   {
    "step": "③ kgy — 대조 잡 P2O5 (|Δ| ≤ 0.02 eV 통과해야 다음) → 11 종 (닫힌 껍질 → TM 절연체 → TM 금속) · Nd Q3′ (ndq3p) 뒤 · cascade 옆",
-   "state": "▶ 실행 중 — 사용자 watch 10-28 09:20 (watch_gabia --sei_only)"
+   "state": "▶ 실행 중 — 사용자 watch 10-28 09:20 · 19:14 (watch_gabia --sei_only)"
   },
   {
    "step": "④ 판독 — 카드 §7 R1–R6 · 그림용 CSV (Origin) · 1저자 송부는 사용자를 통해",
@@ -84,6 +84,19 @@
   "PP_세트_차이_진단_개정1_A2": "08 GBRV 세트 값 대비 LiCl +0.004 (6.2603) · Li3PO4 β +0.018 (5.9121) eV — 기록만 (게이트 아님)",
   "도는_상": "Li2SO4 03_nscf_gap k 84/100 (08:52 시작) · 01+02 1.40 h",
   "벽시계_메모": "P2O5 5.13 h 는 cascade 와 GPU 를 같이 쓴 구간 (cascade 08:09 정지 전) 이 섞였다",
-  "화면_버그": "watch 가 작업 루트의 pseudo/ 를 13 번째 상으로 셌다 → watch_gabia.phase_dirs 로 고침 (입력 없는 폴더 제외)"
+  "화면_버그": "watch 가 작업 루트의 pseudo/ 를 13 번째 상으로 셌다 → watch_gabia.phase_dirs 로 고침 (입력 없는 폴더 제외)",
+  "관측_2026_10_28_1914": {
+   "출처": "사용자 붙여넣기 2026-10-28 19:14:00 KST (watch_gabia.py --sei_only · 읽기만) · 숫자는 화면 자리수 — 판독은 회수한 gap.json 으로",
+   "완주": "6 / 12 (대조 P2O5 + 닫힌 껍질 다섯) · 전부 6 단계 ✓ · 판정 '절연체'",
+   "새로_끝난_상": {
+    "Li2SO4_mp-aaaaagtg": "6.056 eV (VBM 1.344 · CBM 7.401) · 벽시계 2.06 h",
+    "SCl_mp-aaaabpoq": "2.656 eV (VBM 1.072 · CBM 3.727) · 벽시계 0.87 h · 분자결정 MP 셀 고정",
+    "SO2_mp-aaaabpak": "2.520 eV (VBM 0.511 · CBM 3.031) · 벽시계 0.26 h · 분자결정 MP 셀 고정"
+   },
+   "도는_상": "NiP2O6_mp-aaaabchz vc-relax ▶ · M 8.00 μB (선언 FM 시작 · MP 총 7.88 → 차이 0.12 < R4 문턱 0.2 · 최종 판정은 이완 · scf 뒤)",
+   "남은_상": "MnP2O6 (U Mn 3.9 · 90/1080) → 금속 선언 넷 CoS2 · NiS2 · MnS2 · Ni3S4 (03 없음 → 04 DOS · R3)",
+   "기계": "GPU 99 % · 4,998 / 24,576 MiB · QE 프로세스 2 (mpirun + pw.x = 잡 하나) · tmux ceigap + cv7main (cascade 대기 창 · CEI 끝나면 이어받기)",
+   "이상": "없음 — 대조 잡 통과 뒤 순서대로 진행 · 오류 표시 0"
+  }
  }
 }
