@@ -1,0 +1,101 @@
+kg50_q5_branches selftest
+  ✓ ⓪ 등록 문서 고정 줄 (§2 · §3 · §4-1 · §4-2 · §4-3 · §4-5 · §5 · §8 · §12 · Q1 · Q2 · Q3 · Q5 · Q11 · Q12) = 생성기 상수
+  ✓ ⓪b LIGGGHTS 3d5c00f 원문 사본 — restart 머리에 dt 없음 · units 같으면 재설정 안 함 → B 의 43 행 dt 가 살아남는다
+  ✓ ⓪c §12-2 상태 — 지금 등록 = 개정 초안 · 비준 전 · ✅ 줄로 바꾸면 비준 · 둘 다 · 둘 다 없음 = 정할 수 없음 (None)
+  ✓ ⓪d 등록 §12-4 정적 대조 기대 = W1 셋 · W2 넷 (등록 글자 · <case> · <N> 자리)
+  ✗ G0 일곱 가지 만들기 (예외) — Refused: resume_ckpt.sh -C 정적 대조 = rc 1 · 문제 ['체크포인트 뒤 ~ 첫 긴 run 앞 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 35 개 ↔ 재개 덱 37 개 — 재개 덱에만 [dump dq5a all custom 66667 post_kg50_d07_b50/q5atom_*.liggghts id type x y z radius vx vy vz] [dump dq5c all local 200001 post_kg50_d07_b50/q5contact_*.liggghts c_cpl[1
+  ✗ G1 A (예외) — KeyError: 'A'
+  ✗ G2 B (예외) — KeyError: 'A'
+  ✗ G3 C (예외) — KeyError: 'A'
+  ✗ G4 F (예외) — KeyError: 'F'
+  ✗ G5 D3 (예외) — KeyError: 'A3'
+  ✗ G6 운영자 명령 (예외) — KeyError: 'A'
+  ✓ G7 리포 본 덱 두 개 바이트 그대로 (원본 안 고침)
+  ✓ G7b --verify (만든 폴더 다시 대조) = 문제 0 (일곱 다)
+  ✗ G7c CLI --verify rc 0 —   ✗ q5_manifest.json 못 읽음 ([Errno 2] No such file or directory: '/tmp/q5st_5msrmqmr/out/q5_kg50_d07_b50_C/q5_manifest.json')
+가지 폴더 대조: 실패 (문제 1)
+
+  ✗ G7 원본 · 다시 대조 (예외) — KeyError: 'A'
+  ✓ L1 첫 접촉 712,000 (setup 아닌 줄) → N 800,000 · 근거 줄 = 712000 행 · 정규 줄 수
+  ✓ L1b S_c 가 200,000 배수 (800,000) → N = S_c
+  ✓ L1c 안정화 중 한 줄만 > 0 (250,000) → S_c 250,000 · N 600,000 (압축 뒤 첫 restart_compress)
+  ✓ L1d setup 줄만 > 0 (595,002 · run 시작 줄) 은 뺀다 → S_c 712,000 · N 800,000 (그 줄을 셌다면 N 600,000)
+  ✓ L2 1,000 배수 줄 하나 빠짐 (750,000) → 거부
+  ✓ L2b 같은 step 줄 둘 (750,000) → 거부
+  ✓ L2c pressMPa nan → 거부
+  ✓ L2d pressMPa 음수 → 거부
+  ✓ L2e pressMPa 유니코드 숫자 → 거부
+  ✓ L2f 열 수 다른 줄 → 거부
+  ✓ L2g ERROR 줄 → 거부
+  ✓ L2h dt 치환 5e-07 (바뀐 덱 · Q7) → 거부
+  ✓ L2i 감쇠 줄 없음 (바뀐 규약 · Q8) → 거부
+  ✓ L2j restart_compress echo 없음 (다른 런) → 거부
+  ✓ L2k 로그가 N 에 못 미침 (790,000 까지) → 거부
+  ✓ L2l pressMPa > 0 줄 없음 (접촉 전) → 거부
+  ✓ L2m 다른 케이스 로그 (D3 echo) → 거부 (D0.7 로 읽으면 restart_compress echo 없음)
+  ✓ L3 운영 판단 (같은 규칙) — N 까지 있음 = ready · 첫 접촉 뒤 N 전 = wait · 접촉 전 = no_contact · N 지났는데 빠짐 = refused
+  ✓ L3b CLI --w2-start rc = ready 0 · 기다림 3 · 거부 2
+  ✓ W1 W2 A 폴더 = 가지 덱 · 러너 · 본 덱 사본 · 본 런 로그 사본 · manifest · SHA256SUMS (여섯)
+  ✓ W1b W2 A manifest — 창 W2 · s0 = N 800000 (첫 접촉 712000) · 끝 1100000 · run [300000] · thermo [1000] · atom 31 (10,000) · contact 4 (100,000) · window_s 0.3 · 체크포인트 …restart_compress_800000.bin · 판 plate_kg50_d07_b50.stl ← post_kg50_d07_b50/mesh_800000.stl · 로그 사본 sha256
+  ✓ W1c §12-2 상태 = 개정 초안 · 비준 전 (지금 등록) — manifest · 덱 머리 줄 같음
+  ✓ W1d W2 A 정적 대조 = 등록 §12-4 W2 넷 (rc 1 · 실제 도구 · 10-28 밤 개정 · §12-2 (마) 앞섬)
+  ✓ W1e W2 A 명령 — read_restart …compress_800000 (processors 뒤 자리) · run = run 300000 하나 · label · jump · write_restart · 판 높이 · 안정화 run 없음 · restart 0 둘 · fix move_press · dmp_atom 50000 있음 · q5 덤프 둘 = RESTART SAVED print 뒤 · 끝 = run 300000 · undump 둘
+  ✓ W1f W2 A 의 나머지 줄 = 본 덱 줄 바이트 그대로 (뺀 행 · 바꾼 행 밖 · 순서 그대로)
+  ✓ W1g W2 러너 = ibb 본 러너 틀 · 잡 · 폴더 q5w2_kg50_d07_b50_A · -n 56 ↔ -np 56
+  ✓ W2 W2 B ↔ A = 명령 다섯만 다름 (§12-2: 43 dt · 203 mesh 10000 · 212 thermo 2000 · 217 dmp_atom 100000 · run 600000)
+  ✓ W2b W2 B manifest — dt 5e-07 · run [600000] · 끝 1400000 · thermo [2000] · atom 61 · contact 7 (A 덤프 시각 다 포함) · O3 마지막 0.05 s 표본 51 = A 와 같은 시각
+  ✓ W2c W2 B 정적 대조 안 함 (허용 목록만 · §12-2 (마))
+  ✓ W3 W2 C ↔ A = 명령 하나 (208 scale 3 5.3696e-4)
+  ✓ W3b W2 F 덱 = A 덱 바이트 · F 러너 -n 28 · F 정적 대조 = 둘
+  ✓ W4 W2 운영자 명령 (초안) — 체크포인트 …restart_compress_800000.bin cp · ckpt_sha256.txt · mesh_800000.stl → plate_kg50_d07_b50.stl · plate_sha256.txt · ⛔ 개정 초안 줄 · sbatch 없음
+  ✓ W4b 비준 판 등록 (✅ 줄) → manifest · 덱 머리 = 비준 · 운영자 sbatch 줄 · 체크포인트 · 판 STL gate 둘 · 덱 명령은 초안 판과 같음
+  ✓ W5 --verify W2 폴더 넷 = 문제 0
+  ✓ W5b 로그 사본 한 줄 더 (sha256 다름) → 문제
+  ✓ W5c 로그 사본 = 첫 접촉 512,000 꼴 (sha256 맞춤) → 다시 센 N 600,000 ≠ manifest 800,000 → 문제
+  ✓ W5d manifest contact 간격 50,000 (step 맞춤 · 판독기 내부 일관성은 통과하는 꼴) → 문제
+  ✗ W6 W2 허용 목록 (예외) — KeyError: 'A'
+  ✗ H0 로컬 A3 · C3 만들기 (예외) — Refused: resume_ckpt.sh -C 정적 대조 = rc 1 · 문제 ['체크포인트 뒤 ~ 첫 긴 run 앞 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 35 개 ↔ 재개 덱 37 개 — 재개 덱에만 [dump dq5a all custom 66667 post_kg50_d3_b50_s1/q5atom_*.liggghts id type x y z radius vx vy vz] [dump dq5c all local 200001 post_kg50_d3_b50_s1/q5contact_*.liggghts c_c
+  ✗ H1 로컬 (예외) — KeyError: 'A3'
+  ✓ H2 F3 로컬 → 거부 ("F3 = hit NP 2 · D1 끝난 뒤")
+  ✓ H2b D0.7 가지 A · B · C · F 로컬 → 거부 (§12-3 = D3 A3 · C3 만)
+  ✓ H2c 로컬 A3 NP 2 → 거부 (Q5 = 1)
+  ✓ H2d 모르는 host (hit2) → 거부
+  ✓ H2e 로컬 + W2 → 거부
+  ✓ H2f 거부 뒤 파일 0
+  ✗ HR 로컬 러너 실행 (예외) — Refused: resume_ckpt.sh -C 정적 대조 = rc 1 · 문제 ['체크포인트 뒤 ~ 첫 긴 run 앞 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 35 개 ↔ 재개 덱 37 개 — 재개 덱에만 [dump dq5a all custom 66667 post_kg50_d3_b50_s1/q5atom_*.liggghts id type x y z radius vx vy vz] [dump dq5c all local 200001 post_kg50_d3_b50_s1/q5contact_*.liggghts c_c
+  ✓ R1 A NP 28 (Q5 = 56) → 거부
+  ✓ R1b F NP 56 (Q5 = 28 — F 가 A 와 같은 분할이면 바닥이 0) → 거부
+  ✓ R1c A3 NP 2 (Q5 = 1) → 거부
+  ✓ R2 B3 (등록 가지 아님 · (a) 는 D0.7 만) → 거부
+  ✓ R2b D0.7 에 A3 → 거부
+  ✓ R2c 소문자 a → 거부
+  ✓ R3 등록 밖 침대 kg50_d1_b50 → 거부
+  ✓ R4 모르는 창 W3 → 거부
+  ✓ R4b W2 인데 --main-log 없음 → 거부
+  ✓ R4c W2 를 D3 에 (§5 W2 표 = D0.7 만 · 질문 W2-6) → 거부
+  ✓ R4d W2 본 런 로그 = 1,000 배수 줄 빠짐 → 거부
+  ✓ R* 거부 뒤 파일 0 (상위 폴더 비었음)
+  ✓ R5 본 덱 sha256 다름 (재료 줄 한 글자) → 거부
+  ✓ R6 가지 폴더가 이미 있음 (빈 폴더라도) → 거부 · 그대로
+  ✓ R7 CLI 거부 = rc 2 · 파일 0
+  ✓ R7b CLI 정상 = rc 0 · 폴더 하나
+  ✓ R7c CLI W2 (초안) = rc 0 · 화면에 시작 step · ⚠ 개정 초안 · 비준 전 · 실행 금지
+  ✓ R7d CLI 로컬 F3 = rc 2 · 거부 글 (F3 = hit NP 2 · D1 끝난 뒤)
+  ✗ V 허용 목록 (예외) — KeyError: 'A'
+  ✓ M registration: 켜면 거부 · 끄면 통과 (그 관문이 실제로 막는다)
+  ✓ M case: 켜면 거부 · 끄면 통과 (그 관문이 실제로 막는다)
+  ✗ M branch: 켜면 거부 · 끄면 통과 (그 관문이 실제로 막는다) — (True, True)
+  ✓ M np: 켜면 거부 · 끄면 통과 (그 관문이 실제로 막는다)
+  ✓ M window: 켜면 거부 · 끄면 통과 (그 관문이 실제로 막는다)
+  ✓ M pin: 켜면 거부 · 끄면 통과 (그 관문이 실제로 막는다)
+  ✓ M anchors: 켜면 거부 · 끄면 통과 (그 관문이 실제로 막는다)
+  ✓ M s_check: 켜면 거부 · 끄면 통과 (그 관문이 실제로 막는다)
+  ✓ M allowlist: 켜면 거부 · 끄면 통과 (그 관문이 실제로 막는다)
+  ✓ M static: 켜면 거부 · 끄면 통과 (그 관문이 실제로 막는다)
+  ✓ M runner: 켜면 거부 · 끄면 통과 (그 관문이 실제로 막는다)
+  ✓ M out_exists: 켜면 거부 · 끄면 통과 (그 관문이 실제로 막는다)
+  ✗ M host: 켜면 거부 · 끄면 통과 (그 관문이 실제로 막는다) — (True, True)
+  ✓ M w2_case: 켜면 거부 · 끄면 통과 (그 관문이 실제로 막는다)
+  ✓ M w2_log: 켜면 거부 · 끄면 통과 (그 관문이 실제로 막는다)
+  ✓ M w2_status: 켜면 거부 · 끄면 통과 (그 관문이 실제로 막는다)
+kg50_q5_branches selftest: FAIL (81/97)

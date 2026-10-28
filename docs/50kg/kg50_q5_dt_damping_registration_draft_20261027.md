@@ -383,11 +383,12 @@
 - 이미 만든 가지 폴더 = 그대로 유효 — 생성기 `--verify` · 판독기는 `-C` 를 다시 돌리지 않는다 (manifest 의 `static_check` = 그 폴더를 만든 도구의 기록).
 - 기대 = rc 1 · 문제 = 정확히 아래 줄 · 이 순서 (`<case>` = 케이스 이름 · `<N>` = W2 시작 step · 생성기가 바꿔 넣는다).
 
-W1 — A · F · A3 · F3 (셋 · 등록 바꿈 셋과 하나씩: §4-5 q5 덤프 둘 · 창 끝 = 213 행 뒤에서 끝남 · 165 행 `restart 0`):
+W1 — A · F · A3 · F3 (넷 · 등록 바꿈 셋: §4-5 q5 덤프 둘 · 창 끝 = 213 행 뒤에서 끝남 · 165 행 `restart 0` — 165 행은 준비 구간 글자 대조 (3) 와 재개 지점 restart (4) 두 줄로 보고된다 · 10-28 밤 2판):
 
 1. `체크포인트 뒤 ~ 첫 긴 run 앞 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 35 개 ↔ 재개 덱 37 개 — 재개 덱에만 [dump dq5a all custom 66667 post_<case>/q5atom_*.liggghts id type x y z radius vx vy vz] [dump dq5c all local 200001 post_<case>/q5contact_*.liggghts c_cpl[1] c_cpl[2] c_cpl[3] c_cpl[4] c_cpl[5] c_cpl[6] c_cpl[7] c_cpl[8] c_cpl[9] c_cpl[10] c_cpl[11] c_cpl[12] c_cpl[13] c_cpl[14] c_cpl[15] c_cpl[16] c_cpl[17] c_cpl[18] c_cpl[19] c_cpl[20] c_cpl[21] c_cpl[22] c_cpl[23] c_cpl[24] c_cpl[25] c_cpl[26]]`
 2. `첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 27 개 ↔ 재개 덱 2 개 — 바뀜 [print "====== PHASE 3: COMPRESSION (Speed 0.01) ======"] [dump dmp_atom all custom 50000 post_<case>/atom_*.liggghts id type x y z radius vx vy vz c_strs[1] c_strs[2] c_strs[3] c_ke] → [undump dq5a] [undump dq5c]`
-3. `재개 지점 restart 다름: 본 덱 [restart 50000 restart_<case>/restart_settling_*.bin] ↔ 재개 덱 [restart 0]`
+3. `재개 덱 준비 구간 상태 명령이 본 덱 체크포인트 앞에 글자 그대로 없음 (10-28 사전 공격 A · LIGGGHTS 는 ${x} 를 그 자리에서 치환한다 — 끝 상태만 같아서는 안 된다): [restart 0]`
+4. `재개 지점 restart 다름: 본 덱 [restart 50000 restart_<case>/restart_settling_*.bin] ↔ 재개 덱 [restart 0]`
 
 W2 — A · F (넷):
 
@@ -399,6 +400,7 @@ W2 — A · F (넷):
 - W2 첫 줄 = 도구가 압축 체크포인트 재개를 거부한다는 뜻 (KG50R-01 · 1저자 10-28 Q3 (가)) — W2 가지는 본 런을 잇는 재개가 아니라 고정 길이 `run` 의 가지라 기록만 한다 (판 정지 판정 없음 · §5).
 - ⚠ 한정: W2 셋째 줄 = 도구가 W2 덱의 준비 구간 (read_restart 뒤 ~ 첫 긴 run 앞 — q5 덤프 · `fix move_press` · `dmp_atom` · `restart 0` 자리) 의 경계를 못 정해 그 구간 · 상태 대조를 건너뛴다.  ⇒ W2 의 그 구간은 생성기 허용 목록 대조 하나로만 본다.  W2-7 의 "독립 확인" 은 체크포인트 꼴 · 첫 긴 run · 뒤 구간 · 변수 참조 · label 까지로 줄어든다.
 - B · C = 그대로 허용 목록 대조만 (§8-1 과 같음).
+- 2판 (10-28 밤 · 결과 0 건 · 런 0): 사전 공격 리뷰 A (원장 `KG50P-01` · 준비 구간 변수를 바꿨다 되돌리면 통과) 를 고친 도구 (sha256 `77c242375c4093023e609703ef471c64c2370d374e7533824412d96da5b1b9f8`) 가 W1 에 셋째 줄을 더 낸다 — 같은 등록 바꿈 (165 행 `restart 0`) 의 중복 보고 · 판정 (거부 rc 1) 같음 · W2 넷 그대로.  Q5-S1 원칙 (기대 = 고친 도구의 실제 출력 · 줄마다 등록 바꿈) 을 그대로 적용 (메인 · 1저자에게 보고).
 
 ### 12-5. W2 뒤 D0.7 본 런 이어 가기 — ✅ 1저자 10-28 밤 (Q5-S2 (가))
 

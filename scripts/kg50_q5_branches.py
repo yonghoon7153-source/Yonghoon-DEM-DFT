@@ -163,6 +163,7 @@ EXPECTED_STATIC_PROBLEMS_W2 = (
 EXPECTED_STATIC_W1 = (
     '체크포인트 뒤 ~ 첫 긴 run 앞 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 35 개 ↔ 재개 덱 37 개 — 재개 덱에만 [dump dq5a all custom 66667 post_<case>/q5atom_*.liggghts id type x y z radius vx vy vz] [dump dq5c all local 200001 post_<case>/q5contact_*.liggghts c_cpl[1] c_cpl[2] c_cpl[3] c_cpl[4] c_cpl[5] c_cpl[6] c_cpl[7] c_cpl[8] c_cpl[9] c_cpl[10] c_cpl[11] c_cpl[12] c_cpl[13] c_cpl[14] c_cpl[15] c_cpl[16] c_cpl[17] c_cpl[18] c_cpl[19] c_cpl[20] c_cpl[21] c_cpl[22] c_cpl[23] c_cpl[24] c_cpl[25] c_cpl[26]]',
     '첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 27 개 ↔ 재개 덱 2 개 — 바뀜 [print "====== PHASE 3: COMPRESSION (Speed 0.01) ======"] [dump dmp_atom all custom 50000 post_<case>/atom_*.liggghts id type x y z radius vx vy vz c_strs[1] c_strs[2] c_strs[3] c_ke] → [undump dq5a] [undump dq5c]',
+    '재개 덱 준비 구간 상태 명령이 본 덱 체크포인트 앞에 글자 그대로 없음 (10-28 사전 공격 A · LIGGGHTS 는 ${x} 를 그 자리에서 치환한다 — 끝 상태만 같아서는 안 된다): [restart 0]',
     '재개 지점 restart 다름: 본 덱 [restart 50000 restart_<case>/restart_settling_*.bin] ↔ 재개 덱 [restart 0]',
 )
 EXPECTED_STATIC_W2 = (
@@ -1324,7 +1325,7 @@ def build_branch(case, branch, np_, out_parent, window='W1', main_deck=None, *, 
             st = static_check(mp, dp, case, resume_tool, ck_rel, s0)
             if _on('static') and (st['rc'] != 1 or st['problems'] != exp_static):
                 raise Refused(f'resume_ckpt.sh -C 정적 대조 = rc {st["rc"]} · 문제 {st["problems"]} ≠ 등록 '
-                              f'§12-4 {"W2 넷" if window == "W2" else "W1 셋"}')
+                              f'§12-4 {"W2 넷" if window == "W2" else "W1 넷"}')
     ed = _edits(case, branch, window)
     if window == 'W2':
         changes = [f'49–50 → read_restart restart_{case}/restart_compress_{n}.bin', '116–150 뺌 (삽입 · 삽입 검사)', '165 → restart 0',
@@ -1629,8 +1630,8 @@ def selftest():
             chk('⓪c §12-2 상태 — 지금 등록 = 개정 초안 · 비준 전 · ✅ 줄로 바꾸면 비준 · 둘 다 · 둘 다 없음 = 정할 수 없음 (None)',
                 [amendment_status(x) for x in (reg_txt, rat, both, none)] == [STATUS_DRAFT, STATUS_RATIFIED, None, None])
         run('⓪c 상태', status_tests)
-        chk('⓪d 등록 §12-4 정적 대조 기대 = W1 셋 · W2 넷 (등록 글자 · <case> · <N> 자리)',
-            len(reg_static('W1', D07)) == 3 and len(reg_static('W2', D07, 800000)) == 4
+        chk('⓪d 등록 §12-4 정적 대조 기대 = W1 넷 (2판) · W2 넷 (등록 글자 · <case> · <N> 자리)',
+            len(reg_static('W1', D07)) == 4 and len(reg_static('W2', D07, 800000)) == 4
             and all('kg50_d07_b50' in x for x in reg_static('W1', D07)[:1])
             and reg_static('W2', D07, 800000)[0].endswith('restart_compress_800000.bin (이름 restart_compress_*)'))
 

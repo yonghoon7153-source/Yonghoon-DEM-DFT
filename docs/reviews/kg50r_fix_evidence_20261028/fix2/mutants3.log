@@ -1,0 +1,43 @@
+M1 Q1 둘째 고리 = 작업 폴더 job 파일 (예전) | 212 PASS · 4 FAIL | 실패: R1 R1 R2 R3
+M2 Q1 본 제출 직전 squeue 다시 조회 끔 | 213 PASS · 3 FAIL | 실패: R7 R8 R12
+M3 Q1 다시 조회에서 이번 시험 job 빼기 끔 | 215 PASS · 1 FAIL | 실패: R11
+M4 Q1 시험 sbatch 종료 코드 · job 번호 꼴 검사 끔 | 215 PASS · 1 FAIL | 실패: Q9d
+M5 Q1 같은 케이스 두 번 막기 끔 | 215 PASS · 1 FAIL | 실패: R13
+M6 Q1 옛 job · mode 파일 old_markers 옮기기 끔 | 215 PASS · 1 FAIL | 실패: R10
+M7 Q2 첫 긴 run 뒤 명령 대조 끔 | 206 PASS · 10 FAIL | 실패: D D D G1 G1 G1 G1 G1 G1 G4
+M8 Q2 준비 구간 명령 종류 검사 끔 | 209 PASS · 7 FAIL | 실패: P8 G1 G3 G3 G3 G3 G6
+M9 Q2 재개 지점 상태 대조 끔 | 209 PASS · 7 FAIL | 실패: D C2 G1 G3 G3 G3 Q9a
+M10 Q2 변수 참조 검사 끔 | 214 PASS · 2 FAIL | 실패: G1 G1
+M11 Q2 label · jump 검사 끔 | 214 PASS · 2 FAIL | 실패: W7 G1
+M12 Q2 다룰 수 없는 구문 검사 끔 | 211 PASS · 5 FAIL | 실패: G1 G3 G3 G3 Y7c
+M13 Q2 첫 긴 run 꼴 검사 끔 | 206 PASS · 10 FAIL | 실패: G1 G1 G1 G1 G1 G1 G1 G1 G4 G4
+M14 Q2 자른 시험 덱 명령 = 재개 덱 앞 + run 대조 끔 | 216 PASS · 0 FAIL | 실패: (없음 · 살아남음)
+M15 Q2 시험 예산 대조 (shell) 끔 | 216 PASS · 0 FAIL | 실패: (없음 · 살아남음)
+M16 Q2 read_restart = 체크포인트 검사 끔 | 215 PASS · 1 FAIL | 실패: G1
+M17 Q2 체크포인트 step 범위 검사 끔 | 215 PASS · 1 FAIL | 실패: G3
+M18 Q2 본 덱 체크포인트 앞 if 검사 끔 | 215 PASS · 1 FAIL | 실패: G3
+M19 Q2 변수 꼴 (equal · atom · string · delete 만) 검사 끔 | 215 PASS · 1 FAIL | 실패: G3
+M20 Q3 -C 압축 체크포인트 거부 끔 | 204 PASS · 12 FAIL | 실패: C1 W0 W6 W7 W10 W12 G2 X1 X1 X1 X1 X2
+M21 Q3 본 흐름 계획 compress 거부 끔 | 215 PASS · 1 FAIL | 실패: X3
+M22 Q4 시작 때 승인 인자 대조 끔 | 213 PASS · 3 FAIL | 실패: I1 I1 I1
+M23 Q4 본 제출 직전 sha256 다시 대조 끔 | 215 PASS · 1 FAIL | 실패: I3
+M24 Q5 마지막 줄 칸 수 · 유한 수 검사 끔 (예전 lastrun 꼴) | 213 PASS · 3 FAIL | 실패: L1 L3 L3
+M25 Q5 Loop for N steps = 마지막 run 검사 끔 | 215 PASS · 1 FAIL | 실패: L3
+M26 Q9 시험 전 거부 보고 케이스 절 끔 | 202 PASS · 14 FAIL | 실패: N1 R1 R1 R2 R3 R4 R5 R6 X3 Q9a Q9b Q9c Q9d Y13
+M27 Q4 -T 본 제출 명령 = 통과 케이스 있을 때만 끔 (늘 찍음) | 214 PASS · 2 FAIL | 실패: I5 I6
+M28 Q4 -T 본 제출 명령 = 통과 케이스만 끔 (전 케이스) | 215 PASS · 1 FAIL | 실패: I7
+N1 A 준비 구간 상태 줄 글자 그대로 검사 끔 | 212 PASS · 4 FAIL | 실패: Y1 Y1 Y2 Y5
+N2 A 준비 구간 순서 검사 끔 | 213 PASS · 3 FAIL | 실패: C1 Y3b Y4
+N3 A setup_order 부르기 끔 | 208 PASS · 8 FAIL | 실패: C1 Y1 Y1 Y2 Y3b Y4 Y5 Y6
+N4 B 본 덱 체크포인트 run 꼬리 검사 끔 | 211 PASS · 5 FAIL | 실패: Y7 Y7 Y7 Y7 Y7b
+N5 B run every 안 명령 보기 끔 | 215 PASS · 1 FAIL | 실패: Y7c
+N6 C 본 제출 직전 덱 · 러너 sha256 대조 끔 | 214 PASS · 2 FAIL | 실패: Y8 Y8
+N7 C 실행 영수증 tool.txt 기록 끔 | 215 PASS · 1 FAIL | 실패: Y9
+N8 D 본 sbatch 종료 코드 · job 번호 꼴 검사 끔 | 214 PASS · 2 FAIL | 실패: Y10 Y10b
+N9 E G3 비교 칸 유한 수 검사 끔 | 211 PASS · 5 FAIL | 실패: Y11 Y11 Y11 Y11 Y12
+N10 F 케이스 이름 검사 끔 | 210 PASS · 6 FAIL | 실패: Y13 Y14 Y14 Y14 Y14 Y14
+N11 F 케이스 = 인자 그대로 끔 (낱말 나누기) | 215 PASS · 1 FAIL | 실패: Y14
+N12 F 둘째 고리 시도 기록 읽기 검사 끔 | 215 PASS · 1 FAIL | 실패: Y15
+V1 리뷰어 py_reinsert (재삽입 검사 끔) | 215 PASS · 1 FAIL | 실패: Y16
+V2 리뷰어 sh_g1 (G1 대조 끔) | 215 PASS · 1 FAIL | 실패: Y17
+V3 리뷰어 sh_miss (G3 결손 검사 끔) | 215 PASS · 1 FAIL | 실패: Y18
