@@ -13390,6 +13390,32 @@
       "verification_note": "외부 보고서는 이 지적을 범위 한정 CLOSED로 판정했다. 이 status는 메인 수정 반입 SHA 확인 뒤의 구현 상태이며 외부 종결을 재개방하지 않는다. verified 전환에는 원장의 독립 검증자/조상 SHA 조건을 별도로 충족해야 한다. 실제 물리 GO가 아니다. 검증 원문: docs/reviews/codex_review_t12r01_closure_20261026/codex_review_t12r01_closure_20261026.md",
       "verified_in": "docs/reviews/codex_review_t12r01_closure_20261026/codex_review_t12r01_closure_20261026.md",
       "claimed_fixed_sha": "16c8d5171e1073a10a329fd9bb2b63a40ecf751c"
+    },
+    {
+      "id": "L214P-01",
+      "severity": "P3",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "LHS214 사전 점검 독립 검토 10-23 (Codex 작업 창 · docs/reviews/codex_review_lhs214_preflight_20261023.md §3)",
+      "opened_in": "docs/reviews/codex_review_lhs214_preflight_20261023.md",
+      "title": "`LHS214-PRE-01` (사전 검토 임시 ID) — LHS214 사전 점검 영수증의 `git.sha` 를 실행기 P7 · P10 이 `_HEX40.match` 로 검사 — 정규식이 `^[0-9a-f]{40}$` 라 `$` 가 끝 LF 앞에서도 맞아 승인된 40 자리 + LF 를 받는다 (형식 결함)",
+      "note": "수정 = scripts/run_network_194_parallel.py 2049 · 2082 줄 `_HEX40.match(gsha)` → `.fullmatch(gsha)` 두 곳만 (Codex 작업 창 10-24 · 1저자 10-24 *\"다 비준이야\"* · 본 가지 반입 10-27 `09bf1813c` · 기록 `b7a979032`).  시험 먼저 = 기준 스냅샷에서 6 경계 중 LF 하나 rc 1 → 수정 뒤 6/6 · 영수증 자기시험 123/123 양쪽 (Codex 쪽지 docs/collab/codex_to_claude/20261024-0300_lhs214-pin-syntax-fix.md · 증거 docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/).  봉인 32 · code_fp 그대로 (실행기는 CODE_FILES 32 · HANDOVER_FILES 2 밖).  닫지 않은 것 = `launch_eligibility` 1140 줄의 같은 `_HEX40.match(g['sha'])` (manifest `git.sha` · 원 수정 범위 밖 · S1 재확인 요청서 §0 · 질문 5).  등재 = 1저자 10-28 *\"lhs 권고대로\"* (실행표 docs/reviews/lhs214_relaunch_exec_sheet_20261027.md §5 Q6) · verified = S1 외부 판정 뒤.",
+      "claimed_fixed_sha": "09bf1813c",
+      "evidence_tests": [
+        "docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/ (6 경계 · 고치기 전 LF 1 건 rc 1 → 6/6 · receipt 자기시험 123/123 · Codex 작업 창 실행 기록)",
+        "docs/reviews/codex_lhs214_pin_syntax_recheck_request_20261027_main.md (S1 정정본 §2 · 메인 컨테이너 재대조)"
+      ]
+    },
+    {
+      "id": "SELF-139",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "메인 세션 (10-28 · 감시 에이전트 마지막 보고로 알게 됨)",
+      "opened_in": "docs/session_20260923_progress.md",
+      "title": "에이전트 지시서에 설치 · 시스템 설정 변경 금지를 적지 않아, 50kg 감시 도구 에이전트가 시험용으로 gawk 를 설치 · 제거 — 메인 게이트 int1028 이 도는 동안 3–4 분 시스템 `awk` 가 gawk 였다",
+      "note": "에이전트 보고 = 10:32–10:36 KST 쯤 (시각은 에이전트 기록 · 메인이 따로 재지 않음).  메인 확인 10-28: `awk` → /usr/bin/mawk (update-alternatives auto) · dpkg gawk = rc (지움) · 그 사이 게이트 단계 = `rint_r_chain_e2e` 하나 (통과) — 그 러너 scripts/sdcp_gain_vox015_8arm.sh 의 awk = 줄 길이 · RSS printf 셋 (889 · 914 · 915 줄) · 앞 단계 ca_ext_z3 와 e2e 파이썬 시험에는 awk 호출 없음 (grep).  영향 = 없다고 봄 (추정 · 확인 전).  닫는 조건 = push 뒤 그 단계 하나를 mawk 로 다시 돌려 통과 + 지시서 금지 줄 (설치 · 대체 설정 · 프로세스 종료 · 다른 작업 트리 · 메인 체크아웃) 을 10-28 Rint 지시서부터 적용한 것을 기록.",
+      "evidence_tests": []
     }
   ]
 }
