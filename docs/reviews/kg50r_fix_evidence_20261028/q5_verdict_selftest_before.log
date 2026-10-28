@@ -1,0 +1,23 @@
+kg50_q5_verdict selftest
+  ✓ ⓪ 등록 §7 판정 순서 ① ② ③ ④ · (a) · (b) 묶기 · W1 한정어 · Q2 · Q3 · Q4 문턱 · Q5 NP · §6 T0 · O1 · O2 · O3 · R3 줄 · §12-1 세 자리 · §12-2 · §12-3 판독기 줄 = 판독기
+  ✓ ⓪b 순서 — T0 실패 + 바닥 + X 다 넘음 → ① 판정 불가 (기술) · 바닥 + X 넘음 → ② 판정 불가 · X 만 → ③ 불합격 · |X−A| = τ (201/200) → ④ 합격 · 바닥 = τ → 합격 · 분모 0 · 값 없음 · nan → 판정 불가
+  ✓ ⓪c 묶기 — 불합격 > 판정 불가 (기술) > 판정 불가 > 합격 · 빈 목록 = 판정 불가
+  ✓ ⓪d 순서 변이 (① ② ③ 를 바꾼 세 꼴) → ⓪b 의 기대가 깨진다 (순서 시험이 순서를 본다)
+  ✓ ⓪e LIGGGHTS 줄 규칙 사본 = 생성기 commands() (kg50_d07_b50 본 덱)
+  ✓ ⓪e LIGGGHTS 줄 규칙 사본 = 생성기 commands() (kg50_d3_b50_s1 본 덱)
+  ✗ V0 합성 자료 (생성기 가지 일곱 + 작은 침대) (예외) — Refused: resume_ckpt.sh -C 정적 대조 = rc 1 · 문제 ['체크포인트 뒤 ~ 첫 긴 run 앞 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 35 개 ↔ 재개 덱 37 개 — 재개 덱에만 [dump dq5a all custom 66667 post_kg50_d07_b50/q5atom_*.liggghts id type x y z radius vx vy vz] [dump dq5c all local 200001 post_kg50_d07_b50/q5contact_*.liggghts c_cpl[1
+  ✗ V0b 로컬 직렬 가지 (생성기 --host wsl · A3 · C3 · 등록 §12-3) (예외) — KeyError: 'S'
+  ✗ V0c W2 가지 (생성기 --window W2 · 합성 본 런 로그 · §12-2 비준 판 · 초안 판) (예외) — KeyError: 'S'
+  ✗ V1 기준 (예외) — KeyError: 'S'
+  ✗ V2 판정 (예외) — KeyError: 'S'
+  ✗ V3 T0 (예외) — KeyError: 'S'
+  ✗ V4 침대 하나 (예외) — KeyError: 'S'
+  ✗ V5 combine (예외) — KeyError: 'S'
+  ✗ V6 W2 (예외) — KeyError: 'S'
+  ✗ V7 CLI (예외) — KeyError: 'S'
+  ✗ V9 W2 실제 폴더 (예외) — KeyError: 'S'
+  ✗ V10 로컬 직렬 (예외) — KeyError: 'S'
+  ✗ V11 NP · grid · 로컬 기록 거부 (예외) — KeyError: 'S'
+  ✗ V8 본 런 로그 (예외) — KeyError: 'S'
+  ✗ M 거부 · 변이 (예외) — KeyError: 'S'
+kg50_q5_verdict selftest: FAIL (6/21)

@@ -1,0 +1,153 @@
+kg50_q5_branches selftest
+  ✓ ⓪ 등록 문서 고정 줄 (§2 · §3 · §4-1 · §4-2 · §4-3 · §4-5 · §5 · §8 · §12 · Q1 · Q2 · Q3 · Q5 · Q11 · Q12) = 생성기 상수
+  ✓ ⓪b LIGGGHTS 3d5c00f 원문 사본 — restart 머리에 dt 없음 · units 같으면 재설정 안 함 → B 의 43 행 dt 가 살아남는다
+  ✓ ⓪c §12-2 상태 — 지금 등록 = 개정 초안 · 비준 전 · ✅ 줄로 바꾸면 비준 · 둘 다 · 둘 다 없음 = 정할 수 없음 (None)
+  ✓ ⓪d 등록 §12-4 정적 대조 기대 = W1 셋 · W2 넷 (등록 글자 · <case> · <N> 자리)
+  ✓ G1 A 폴더 = 가지 덱 · 러너 · 본 덱 사본 · manifest · SHA256SUMS (다섯 파일)
+  ✓ G1b A manifest — 체크포인트 step 200001 · 끝 400002 · atom 덤프 4 (200001 · 266668 · 333335 · 400002) · contact 2
+  ✓ G1c A 정적 대조 (resume_ckpt.sh -C) = rc 1 · 문제 셋 = 등록 §12-4 W1 글자 (10-28 밤 개정 · §8-1 앞섬)
+  ✓ G1d A 덱 명령 — read_restart 한 번 (49 행 자리) · 삽입 fix 0 · write_restart 0 · restart 0 · run 1 · run 200000 만
+  ✓ G1e q5 덤프 둘 = §4-5 글자 (<폴더> = post_kg50_d07_b50) · 172 행 앞 · undump 둘 = 213 행 run 뒤 끝
+  ✓ G1f A 의 나머지 줄 = 본 덱 줄 바이트 그대로 (뺀 행 · 바꾼 행 밖 · 순서 그대로)
+  ✓ G1g A 러너 = #SBATCH -n 56 ↔ mpirun -np 56 · cd $HOME/dem_test/q5_kg50_d07_b50_A · 잡 이름 q5_ (재개 도구 큐 이름과 안 겹침)
+  ✓ G1h 러너 ↔ 본 러너 run_kg50_d07_b50.sh — A = 넷만 다름 (job-name · output · cd · mpirun · -n 56 은 같다) · F = 다섯 (-n 28 더)
+  ✓ G1j 가지 덱 머리 = 주석 줄만 · & 로 끝나는 줄 없음 (LIGGGHTS 이어 붙이기) · ERROR 낱말 없음 (판독기 로그 ERROR 검사)
+  ✓ G1i SHA256SUMS = 네 파일 sha256 (sha256sum -c 꼴) · manifest 의 가지 덱 · 본 덱 sha256 과 같음
+  ✓ G2 B ↔ A = 명령 여섯만 다름 (§4-2: dt 5.0e-7 · thermo 2 · run 2 · mesh 10000 · thermo 2000 · run 400000)
+  ✓ G2b B manifest — dt 5e-07 (로그 치환 글자 5e-07) · 끝 600003 · atom 덤프 7 · contact 3 (200001 · 400002 · 600003) · 간격 그대로
+  ✓ G2c B 의 같은 시각 = A 시각 ×2 (A 400002 ↔ B 600003 · 333335 ↔ 466669) · 창 0.200001 s
+  ✓ G2d B 는 정적 대조를 판정하지 않는다 (허용 목록 대조만 · §8-1) · NP 56
+  ✓ G3 C ↔ A = 명령 하나 (208 행 fix damp all viscous 0.5 scale 3 5.3696e-4)
+  ✓ G3b C3 ↔ A3 = 명령 하나 (scale 3 4.2268e-2)
+  ✓ G3c s = 본 덱 ρ · r 로 다시 센 값의 다섯 자리 (5.369607e-04 · 4.226804e-02)
+  ✓ G3d 정착 감쇠 161 행 1.0e-5 · AM (type 1) 은 C 에서도 그대로
+  ✓ G4 F 덱 = A 덱 바이트 그대로 · F3 = A3 (§4-4)
+  ✓ G4b F 러너 -n 28 ↔ -np 28 · F3 hit 명령 -np 2 · A3 · C3 -np 1
+  ✓ G4c F · F3 · A3 정적 대조 = 등록 §12-4 W1 셋 (케이스 이름 자리)
+  ✓ G5 D3 — hit · ~/simulation/q5_kg50_d3_b50_s1_<X> · read_restart restart_kg50_d3_b50_s1/… · post_kg50_d3_b50_s1 덤프
+  ✓ G5b 가지 일곱의 폴더 이름 = §8-2 예 그대로
+  ✓ G6 운영자 명령 (ibb A) — 원 체크포인트는 cp 로 읽기만 · 두 sha256 → ckpt_sha256.txt · 같을 때만 sbatch (logs/ 제출 폴더)
+  ✓ G6b 운영자 명령 (hit C3) — Q1 ls -l 확인 줄 · ~/simulation/kg50_d3_b50_s1 원본 cp · 같을 때만 bash run_…sh
+  ✓ G7 리포 본 덱 두 개 바이트 그대로 (원본 안 고침)
+  ✓ G7b --verify (만든 폴더 다시 대조) = 문제 0 (일곱 다)
+  ✓ G7c CLI --verify rc 0
+  ✓ G7d W1 manifest — host · 실행 방식 기록 (ibb sbatch · mpirun · hit mpirun) · 이탈 없음 (등록 host)
+  ✓ L1 첫 접촉 712,000 (setup 아닌 줄) → N 800,000 · 근거 줄 = 712000 행 · 정규 줄 수
+  ✓ L1b S_c 가 200,000 배수 (800,000) → N = S_c
+  ✓ L1c 안정화 중 한 줄만 > 0 (250,000) → S_c 250,000 · N 600,000 (압축 뒤 첫 restart_compress)
+  ✓ L1d setup 줄만 > 0 (595,002 · run 시작 줄) 은 뺀다 → S_c 712,000 · N 800,000 (그 줄을 셌다면 N 600,000)
+  ✓ L2 1,000 배수 줄 하나 빠짐 (750,000) → 거부
+  ✓ L2b 같은 step 줄 둘 (750,000) → 거부
+  ✓ L2c pressMPa nan → 거부
+  ✓ L2d pressMPa 음수 → 거부
+  ✓ L2e pressMPa 유니코드 숫자 → 거부
+  ✓ L2f 열 수 다른 줄 → 거부
+  ✓ L2g ERROR 줄 → 거부
+  ✓ L2h dt 치환 5e-07 (바뀐 덱 · Q7) → 거부
+  ✓ L2i 감쇠 줄 없음 (바뀐 규약 · Q8) → 거부
+  ✓ L2j restart_compress echo 없음 (다른 런) → 거부
+  ✓ L2k 로그가 N 에 못 미침 (790,000 까지) → 거부
+  ✓ L2l pressMPa > 0 줄 없음 (접촉 전) → 거부
+  ✓ L2m 다른 케이스 로그 (D3 echo) → 거부 (D0.7 로 읽으면 restart_compress echo 없음)
+  ✓ L3 운영 판단 (같은 규칙) — N 까지 있음 = ready · 첫 접촉 뒤 N 전 = wait · 접촉 전 = no_contact · N 지났는데 빠짐 = refused
+  ✓ L3b CLI --w2-start rc = ready 0 · 기다림 3 · 거부 2
+  ✓ W1 W2 A 폴더 = 가지 덱 · 러너 · 본 덱 사본 · 본 런 로그 사본 · manifest · SHA256SUMS (여섯)
+  ✓ W1b W2 A manifest — 창 W2 · s0 = N 800000 (첫 접촉 712000) · 끝 1100000 · run [300000] · thermo [1000] · atom 31 (10,000) · contact 4 (100,000) · window_s 0.3 · 체크포인트 …restart_compress_800000.bin · 판 plate_kg50_d07_b50.stl ← post_kg50_d07_b50/mesh_800000.stl · 로그 사본 sha256
+  ✓ W1c §12-2 상태 = 개정 초안 · 비준 전 (지금 등록) — manifest · 덱 머리 줄 같음
+  ✓ W1d W2 A 정적 대조 = 등록 §12-4 W2 넷 (rc 1 · 실제 도구 · 10-28 밤 개정 · §12-2 (마) 앞섬)
+  ✓ W1e W2 A 명령 — read_restart …compress_800000 (processors 뒤 자리) · run = run 300000 하나 · label · jump · write_restart · 판 높이 · 안정화 run 없음 · restart 0 둘 · fix move_press · dmp_atom 50000 있음 · q5 덤프 둘 = RESTART SAVED print 뒤 · 끝 = run 300000 · undump 둘
+  ✓ W1f W2 A 의 나머지 줄 = 본 덱 줄 바이트 그대로 (뺀 행 · 바꾼 행 밖 · 순서 그대로)
+  ✓ W1g W2 러너 = ibb 본 러너 틀 · 잡 · 폴더 q5w2_kg50_d07_b50_A · -n 56 ↔ -np 56
+  ✓ W2 W2 B ↔ A = 명령 다섯만 다름 (§12-2: 43 dt · 203 mesh 10000 · 212 thermo 2000 · 217 dmp_atom 100000 · run 600000)
+  ✓ W2b W2 B manifest — dt 5e-07 · run [600000] · 끝 1400000 · thermo [2000] · atom 61 · contact 7 (A 덤프 시각 다 포함) · O3 마지막 0.05 s 표본 51 = A 와 같은 시각
+  ✓ W2c W2 B 정적 대조 안 함 (허용 목록만 · §12-2 (마))
+  ✓ W3 W2 C ↔ A = 명령 하나 (208 scale 3 5.3696e-4)
+  ✓ W3b W2 F 덱 = A 덱 바이트 · F 러너 -n 28 · F 정적 대조 = 둘
+  ✓ W4 W2 운영자 명령 (초안) — 체크포인트 …restart_compress_800000.bin cp · ckpt_sha256.txt · mesh_800000.stl → plate_kg50_d07_b50.stl · plate_sha256.txt · ⛔ 개정 초안 줄 · sbatch 없음
+  ✓ W4b 비준 판 등록 (✅ 줄) → manifest · 덱 머리 = 비준 · 운영자 sbatch 줄 · 체크포인트 · 판 STL gate 둘 · 덱 명령은 초안 판과 같음
+  ✓ W5 --verify W2 폴더 넷 = 문제 0
+  ✓ W5b 로그 사본 한 줄 더 (sha256 다름) → 문제
+  ✓ W5c 로그 사본 = 첫 접촉 512,000 꼴 (sha256 맞춤) → 다시 센 N 600,000 ≠ manifest 800,000 → 문제
+  ✓ W5d manifest contact 간격 50,000 (step 맞춤 · 판독기 내부 일관성은 통과하는 꼴) → 문제
+  ✓ W6 루프 남김 (run 300000 → label · run 5000) → 문제
+  ✓ W6b run 300001 → 문제
+  ✓ W6c 222 행 restart 200000 남김 → 문제
+  ✓ W6d undump 하나 빠짐 → 문제
+  ✓ W6e 판 높이 run 1 남김 → 문제
+  ✓ W6f B 에 thermo 1000 (212 행 바꿈 빠짐) → 문제
+  ✓ W6g read_restart …compress_600000 (N 다름) → 문제
+  ✓ W6h contact 덤프 50000 → 문제
+  ✓ W6i W1 덱을 W2 로 대조 → 문제
+  ✓ W6j 정상 W2 A · B · C = 문제 0
+  ✓ H1 로컬 A3 manifest — 폴더 q5_kg50_d3_b50_s1_A3_wsl · host wsl · serial · NP 1 · 바이너리 (환경 변수 LMP_SERIAL · 기본 $HOME/src/LIGGGHTS-PUBLIC/src/lmp_serial · PATH lmp_serial · 기록 q5_binary.txt) · 이탈 §12-3 · 체크포인트 원본 ~/q5_local/kg50_d3_b50_s1/… · Q1 sha256
+  ✓ H1b 로컬 A3 · C3 덱 = hit A3 · C3 덱 바이트 같음 (러너만 다름)
+  ✓ H1c 로컬 러너 — mpirun · lmp_auto · sbatch 없음 · cd "$HOME/q5_local/q5_kg50_d3_b50_s1_A3_wsl" · LMP_SERIAL → 기본 경로 → PATH lmp_serial · ldd libmpi 거부 · Q1 sha256 · setsid nohup "$B" -in input_…A3_wsl.liggghts > log_…A3_wsl_v1.out
+  ✓ H1d 로컬 A3 정적 대조 = 등록 §12-4 W1 셋 (덱이 hit A3 와 같다)
+  ✓ H1e 운영자 명령 (로컬) — hit 원본 scp (읽기만) → 같은 사본 · 등록 Q1 sha256 -c · SHA256SUMS -c · cp · ckpt_sha256.txt · gate → bash ~/q5_local/<폴더>/run_<폴더>.sh
+  ✓ H1f --verify 로컬 폴더 둘 = 문제 0 · 러너 한 글자 바꾸면 문제
+  ✓ H2 F3 로컬 → 거부 ("F3 = hit NP 2 · D1 끝난 뒤")
+  ✓ H2b D0.7 가지 A · B · C · F 로컬 → 거부 (§12-3 = D3 A3 · C3 만)
+  ✓ H2c 로컬 A3 NP 2 → 거부 (Q5 = 1)
+  ✓ H2d 모르는 host (hit2) → 거부
+  ✓ H2e 로컬 + W2 → 거부
+  ✓ H2f 거부 뒤 파일 0
+  ✓ HR1 로컬 러너 실행 (가짜 직렬 바이너리 · LMP_SERIAL 없음 → $HOME/src/LIGGGHTS-PUBLIC/src/lmp_serial) — rc 0 · 가지 폴더에서 -in input_<폴더>.liggghts 만 · mpirun 없음
+  ✓ HR1b q5_binary.txt = mode serial · np 1 · binary <기본 경로> · sha256 = 가짜 바이너리 sha256 · libmpi none · host
+  ✓ HR2 log.liggghts 이미 있음 (다시 실행) → rc 2 · 덮어쓰지 않음
+  ✓ HR3 ckpt_sha256.txt 값 ≠ 등록 Q1 → rc 2 · 그 거부 글 · 바이너리 안 부름 · q5_binary.txt 없음
+  ✓ HR4 체크포인트 내용 sha256 ≠ 등록 Q1 (기록은 Q1 그대로) → rc 2 · 그 거부 글 · 바이너리 안 부름 · q5_binary.txt 없음
+  ✓ HR5 LMP_SERIAL = 없는 경로 → rc 2 · 그 거부 글 · 바이너리 안 부름 · q5_binary.txt 없음
+  ✓ HR6 ldd 가 libmpi 를 보임 (MPI 빌드) → rc 2 · 그 거부 글 · 바이너리 안 부름 · q5_binary.txt 없음
+  ✓ HR7 SHA256SUMS 다름 (가지 덱 한 줄 더) → rc 2 · 그 거부 글 · 바이너리 안 부름 · q5_binary.txt 없음
+  ✓ HR8 기본 경로 없음 → PATH 의 lmp_serial · LMP_SERIAL 있으면 그것 (기록 binary 줄)
+  ✓ R1 A NP 28 (Q5 = 56) → 거부
+  ✓ R1b F NP 56 (Q5 = 28 — F 가 A 와 같은 분할이면 바닥이 0) → 거부
+  ✓ R1c A3 NP 2 (Q5 = 1) → 거부
+  ✓ R2 B3 (등록 가지 아님 · (a) 는 D0.7 만) → 거부
+  ✓ R2b D0.7 에 A3 → 거부
+  ✓ R2c 소문자 a → 거부
+  ✓ R3 등록 밖 침대 kg50_d1_b50 → 거부
+  ✓ R4 모르는 창 W3 → 거부
+  ✓ R4b W2 인데 --main-log 없음 → 거부
+  ✓ R4c W2 를 D3 에 (§5 W2 표 = D0.7 만 · 질문 W2-6) → 거부
+  ✓ R4d W2 본 런 로그 = 1,000 배수 줄 빠짐 → 거부
+  ✓ R* 거부 뒤 파일 0 (상위 폴더 비었음)
+  ✓ R5 본 덱 sha256 다름 (재료 줄 한 글자) → 거부
+  ✓ R6 가지 폴더가 이미 있음 (빈 폴더라도) → 거부 · 그대로
+  ✓ R7 CLI 거부 = rc 2 · 파일 0
+  ✓ R7b CLI 정상 = rc 0 · 폴더 하나
+  ✓ R7c CLI W2 (초안) = rc 0 · 화면에 시작 step · ⚠ 개정 초안 · 비준 전 · 실행 금지
+  ✓ R7d CLI 로컬 F3 = rc 2 · 거부 글 (F3 = hit NP 2 · D1 끝난 뒤)
+  ✓ V0 정상 A · B · C · A3 · C3 = 문제 0
+  ✓ V1 물리 줄 한 글자 (안정화 중력 9.81 → 9.80) → 문제
+  ✓ V2 명령 하나 더 (fix 줄) → 문제
+  ✓ V3 명령 하나 빠짐 (unfix damp) → 문제
+  ✓ V4 q5 atom 덤프 간격 66667 → 66666 → 문제
+  ✓ V5 두 명령 순서 바뀜 → 문제
+  ✓ V6 restart 0 → restart 50000 … → 문제
+  ✓ V7 B 에 일곱째 바꿈 (155 행 thermo 1000 → 2000) → 문제
+  ✓ V8 C 의 s 한 자리 (5.3696e-4 → 5.3697e-4) → 문제
+  ✓ V9 C 의 scale 을 주석으로 숨김 (# scale 3 …) → 문제
+  ✓ V10 A 덱을 B 로 대조 (바꿈 없음) → 문제
+  ✓ V11 머리 표지 없음 → 문제
+  ✓ V12 본 덱 주석 줄 하나 바뀜 (줄 단위) → 문제
+  ✓ V13 read_restart 두 번 → 문제
+  ✓ V14 머리 주석 줄이 & 로 끝남 (다음 줄을 삼킨다) → 문제
+  ✓ V15 머리 안에 명령 줄 → 문제
+  ✓ M registration: 켜면 거부 · 끄면 통과 (그 관문이 실제로 막는다)
+  ✓ M case: 켜면 거부 · 끄면 통과 (그 관문이 실제로 막는다)
+  ✓ M branch: 켜면 거부 · 끄면 통과 (그 관문이 실제로 막는다)
+  ✓ M np: 켜면 거부 · 끄면 통과 (그 관문이 실제로 막는다)
+  ✓ M window: 켜면 거부 · 끄면 통과 (그 관문이 실제로 막는다)
+  ✓ M pin: 켜면 거부 · 끄면 통과 (그 관문이 실제로 막는다)
+  ✓ M anchors: 켜면 거부 · 끄면 통과 (그 관문이 실제로 막는다)
+  ✓ M s_check: 켜면 거부 · 끄면 통과 (그 관문이 실제로 막는다)
+  ✓ M allowlist: 켜면 거부 · 끄면 통과 (그 관문이 실제로 막는다)
+  ✓ M static: 켜면 거부 · 끄면 통과 (그 관문이 실제로 막는다)
+  ✓ M runner: 켜면 거부 · 끄면 통과 (그 관문이 실제로 막는다)
+  ✓ M out_exists: 켜면 거부 · 끄면 통과 (그 관문이 실제로 막는다)
+  ✓ M host: 켜면 거부 · 끄면 통과 (그 관문이 실제로 막는다)
+  ✓ M w2_case: 켜면 거부 · 끄면 통과 (그 관문이 실제로 막는다)
+  ✓ M w2_log: 켜면 거부 · 끄면 통과 (그 관문이 실제로 막는다)
+  ✓ M w2_status: 켜면 거부 · 끄면 통과 (그 관문이 실제로 막는다)
+kg50_q5_branches selftest: PASS (151/151)
