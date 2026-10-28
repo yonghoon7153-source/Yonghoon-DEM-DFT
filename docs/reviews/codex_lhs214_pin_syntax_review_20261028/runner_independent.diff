@@ -1,0 +1,20 @@
+--- before
++++ fixed
+@@ -2046,7 +2046,7 @@
+     fp_now = code_fp(code_hashes())
+     gsha = g.get('sha') if isinstance(g.get('sha'), str) else ''
+     add('P7', '코드 — 로그 코드 줄 하나 · dirty=False · 영수증 git.dirty false · git sha 40 hex = 로그 짧은 sha 접두 · code_fp 로그 = 영수증 = 이 체크아웃 · CODE_FILES 수',
+-        cl7 is not None and cl7[2] == 'False' and g.get('dirty') is False and bool(_HEX40.match(gsha)) and bool(cl7[0]) and gsha.startswith(cl7[0])
++        cl7 is not None and cl7[2] == 'False' and g.get('dirty') is False and bool(_HEX40.fullmatch(gsha)) and bool(cl7[0]) and gsha.startswith(cl7[0])
+         and fp_now is not None and cl7[4] == rec.get('code_fp') == fp_now and cl7[5] == str(len(CODE_FILES)) and rec.get('code_files') == len(CODE_FILES),
+         dict(log=codes[:2], receipt=dict(git_sha=gsha, dirty=g.get('dirty'), code_fp=rec.get('code_fp'), code_files=rec.get('code_files')), checkout_code_fp=fp_now))
+     #  P8 — 기대 세대 · 원자료
+@@ -2079,7 +2079,7 @@
+         a = str(approved_sha).strip().lower()
+         short = cl7[0] if cl7 else ''
+         add('P10', '승인 SHA (7–40 hex · 접두) = 사전 점검 영수증 git sha · 로그 코드 줄 짧은 sha (1저자 Q3)',
+-            bool(re.fullmatch(r'[0-9a-f]{7,40}', a)) and bool(_HEX40.match(gsha)) and gsha.startswith(a) and bool(short) and gsha.startswith(short)
++            bool(re.fullmatch(r'[0-9a-f]{7,40}', a)) and bool(_HEX40.fullmatch(gsha)) and gsha.startswith(a) and bool(short) and gsha.startswith(short)
+             and (a.startswith(short) or short.startswith(a)), dict(approved=a, receipt_git_sha=gsha, log_short=short))
+     else:
+         warns.append('승인 SHA (--approved-sha) 를 주지 않았다 — 사전 점검 git 기록과 발사 승인 핀을 기계로 대조하지 않았다 (경고 · 실패 아님 · 1저자 Q3)')

@@ -1,0 +1,18 @@
+yonghoon71@DESKTOP-IK8J81H:~/dem-audit$ blk 2
+
+✓ 전부 통과 (16/16)
+fast16 rc=0
+
+✓ 전부 통과 (4/4)
+real4 rc=0
+
+✓ 전부 통과
+reread rc=0
+
+✓ 전부 통과 (139/139)
+runner rc=0
+
+supp20_input_receipt selftest: 123/123 PASS
+receipt rc=0
+dirty 줄 수 (자체 시험 뒤) = 0 (0 이어야 — 아니면 멈추고 그 줄을 붙여 넣는다)
+yonghoon71@DESKTOP-IK8J81H:~/dem-audit$

@@ -13511,7 +13511,7 @@
     {
       "id": "L214P-01",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "LHS214 사전 점검 독립 검토 10-23 (Codex 작업 창 · docs/reviews/codex_review_lhs214_preflight_20261023.md §3)",
       "opened_in": "docs/reviews/codex_review_lhs214_preflight_20261023.md",
@@ -13521,6 +13521,24 @@
       "evidence_tests": [
         "docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/ (6 경계 · 고치기 전 LF 1 건 rc 1 → 6/6 · receipt 자기시험 123/123 · Codex 작업 창 실행 기록)",
         "docs/reviews/codex_lhs214_pin_syntax_recheck_request_20261027_main.md (S1 정정본 §2 · 메인 컨테이너 재대조)"
+      ],
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_lhs214_pin_syntax_review_20261028/codex_review_lhs214_pin_syntax_20261028.md",
+      "verified_sha": "b7a979032",
+      "verified_scope": "판정문 §2 · Q1–Q3 = 실행기 P7 · P10 의 `_HEX40.fullmatch(gsha)` 두 줄 한정 닫힘 — 실제 영수증 2 × 원문 SHA 20 × 승인 방식 3 = 120 기대 일치 · 기존 경계 시험 6/6 · 영수증 자체시험 123/123 · 원문 SHA 를 정규화하지 않고 거부.  7자리 승인 = 접두 계약 그대로 (전체 SHA 일치 계약으로 바뀐 것 아님) · `launch_eligibility` 1140 행 LF 수용 = 남은 P3 (L214P-02) · 실제 214 발사 GO 아님.",
+      "verification_note": "2026-10-28 Codex S1 재확인 (리뷰 핀 b7a979032 · 실제 WSL 핀 35f032737 · WSL TGZ 9c05aef7… 독립 재검증 P0–P10 11/11 · 보충 24/24) = 닫힘 → 상태를 옮겼다.  우리 확인 = 수정 전 → 후 diff 두 줄 · 1140 행 그대로."
+    },
+    {
+      "id": "L214P-02",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-28 LHS214 S1 재확인 (리뷰 핀 b7a979032 · 실제 생산 함수 launch_eligibility · supp20_input_receipt.receipt 로 합성 manifest 15 대조)",
+      "opened_in": "docs/reviews/codex_lhs214_pin_syntax_review_20261028/codex_review_lhs214_pin_syntax_20261028.md",
+      "title": "`launch_eligibility` (scripts/run_network_194_parallel.py:1140) 의 `_HEX40.match(g['sha'])` 가 SHA 뒤 LF 를 받는다 — 두 manifest 가 같은 SHA+LF 이고 승인값을 생략하면 rc 0 · 7자리 승인이면 마지막 한 자리만 같은 오값도 rc 0 (전체 40자리 승인 = F7 · G7 이 거부)",
+      "note": "판정문 §3 Q5 · Codex = 남은 P3 형식 경계 · 새 커밋 우회 P1 아님 · L214P-01 종결을 막지 않음 · *\"모든 발사 경로가 SHA 형식에 fail-closed\"* 일반화는 반박됨.  운영 (기존 실행표대로) = 전체 40자리 `--approved-sha` 를 늘 주고 두 실제 manifest 를 F7 · G7 에 통과 · 승인값 없는 rc 0 을 승인 핀 일치 증서로 쓰지 않음.  우리 확인 = HEAD 1140 행 `.match` 그대로.  ⬜ 고칠지 = 1저자 (봉인 밖 실행기 · 한 줄 · 시험 먼저).",
+      "evidence": [
+        "docs/reviews/codex_lhs214_pin_syntax_review_20261028/codex_review_lhs214_pin_syntax_20261028.md"
       ]
     },
     {

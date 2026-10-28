@@ -1,0 +1,236 @@
+[
+  {
+    "path": "scripts/network_conductivity.py",
+    "git_sha": "b2e7c6e36e540fa1358a2613e1fd9c81e4a78c1b",
+    "sha256": "a525e2db98fd044f0aa9353b028a3d5c7164c006a8e870dda24e7a0991d9751e",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source\\scripts\\network_conductivity.py"
+  },
+  {
+    "path": "scripts/plastic_coverage.py",
+    "git_sha": "fd522fa8104ecc26397192a6cc3df4198d62a6f8",
+    "sha256": "cce27a34c0bf2e4f5c122e43d983aa3414a825ab461a00abd408dba02e151348",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source\\scripts\\plastic_coverage.py"
+  },
+  {
+    "path": "scripts/audit_constriction_deleted.py",
+    "git_sha": "f67dae2a2ff1bbc3334cc06ae855042cc2c246b2",
+    "sha256": "180287be199ea60e6a50ba6cd0baf854c18a18568c476f7e0200c2caca3faf9d",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source\\scripts\\audit_constriction_deleted.py"
+  },
+  {
+    "path": "scripts/extract_se_network_diagnostics.py",
+    "git_sha": "2a0bade80a3b6545edabbe83379c5c78616db790",
+    "sha256": "db7151b51252e60c42c2bc2a2b3173ae6f4b97a94226b51a97b1e357e028ea9a",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source\\scripts\\extract_se_network_diagnostics.py"
+  },
+  {
+    "path": "scripts/dem_analysis_core.py",
+    "git_sha": "629fb278118161e1ba1abcb00db0bcaa0f2cf1b6",
+    "sha256": "39fb19cb7eb962f11fe88546fa0ad93c4a9074846be13d15b27c2eae44fb620f",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source\\scripts\\dem_analysis_core.py"
+  },
+  {
+    "path": "scripts/analyze_contacts.py",
+    "git_sha": "e214dc377c61f3b625f186b20149bf9eb5314f94",
+    "sha256": "a383ada7aef3d13ba08bd84728a20b6207f9b124a01ce3852c01ae2518ca1aa9",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source\\scripts\\analyze_contacts.py"
+  },
+  {
+    "path": "scripts/analyze_contacts_bimodal.py",
+    "git_sha": "0ed6796c4458ba8066b98e73c50930c6433bfa74",
+    "sha256": "8afcc76030b747d8632014fa5b6cae1c1f066007b9247902caefb05288cf1ca5",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source\\scripts\\analyze_contacts_bimodal.py"
+  },
+  {
+    "path": "scripts/coverage_physics_vs_hertzian.py",
+    "git_sha": "d8325ff89facb008f15118074dda95cd4fef2541",
+    "sha256": "1bf4ee8c0061e69760596b05318e0b750605e85ad16f34176e74f31db80b6253",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source\\scripts\\coverage_physics_vs_hertzian.py"
+  },
+  {
+    "path": "scripts/parse_liggghts.py",
+    "git_sha": "c722145aeda89fd6c99fdf08c44b204e87a3dce4",
+    "sha256": "4fe3f1f32ebc4168978c7278b7a1d37b072d64fbf00e97d0933351337d223425",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source\\scripts\\parse_liggghts.py"
+  },
+  {
+    "path": "scripts/se_material.py",
+    "git_sha": "506caca0f8744ee89836a026685f0730ef478f94",
+    "sha256": "767a6a383d4581274b07ee79146a53fbe118f1f6eb0acb9ec0a5af21c9c9930c",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source\\scripts\\se_material.py"
+  },
+  {
+    "path": "scripts/metrics_json.py",
+    "git_sha": "a674863ae821cb5673b23ae09f2cfddf7eda405c",
+    "sha256": "baa671f895dd6103cf95c25647ee45877d98306f00ab15cd3968fbe4354a7702",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source\\scripts\\metrics_json.py"
+  },
+  {
+    "path": "scripts/tau_flux.py",
+    "git_sha": "d5f724635bc37b70a51163bcffad843e4c55c7c6",
+    "sha256": "c0a7da6e1b73bea97136f06803810dbe159bf5c4395d8d218a90217a58ef0f78",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source\\scripts\\tau_flux.py"
+  },
+  {
+    "path": "scripts/lhs_webapp_batch.py",
+    "git_sha": "081693abed37e824bf71941eafeac680344314e0",
+    "sha256": "b9d0199cc1bd23cd1ed5405a283081c2c3a31bc6ce256670c8a9b63d177b5668",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\lhs28\\repo\\scripts\\lhs_webapp_batch.py"
+  },
+  {
+    "path": "scripts/lhs_harvest_batch.py",
+    "git_sha": "77b028620779668aec1777b21a1a77be4bf1fbbd",
+    "sha256": "4d798c631ac893ca32018fde58145bc5c8a2e3e2a6423da61cb87bd13599148e",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\lhs28\\repo\\scripts\\lhs_harvest_batch.py"
+  },
+  {
+    "path": "scripts/lhs_descriptor_harvest.py",
+    "git_sha": "05686cf18da4b4da4f04d251bacd4c9f76a761c7",
+    "sha256": "96fa643e309aab46b2a5cbd59e2276ee16b99107a9a7514e5d9fdcaf5c2d8d9e",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\lhs28\\repo\\scripts\\lhs_descriptor_harvest.py"
+  },
+  {
+    "path": "webapp/app.py",
+    "git_sha": "0c818369e82f1a5c69bb72bd4c90bace38df426c",
+    "sha256": "3e82140f47c7e87b138f8a6f24b8f8575bc7476e91b8369b20cdf698b69b4bc1",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source\\webapp\\app.py"
+  },
+  {
+    "path": "webapp/pipeline_service.py",
+    "git_sha": "e7c00939d3a934c3ed22fd5554c2f515e8e24ae1",
+    "sha256": "8026169f61e8bddcceea3dfb42758bb6a4e599a28271d8159c387dfc2a79d4ef",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source\\webapp\\pipeline_service.py"
+  },
+  {
+    "path": "scripts/export_master_csv.py",
+    "git_sha": "24aa87ff113813570647bb6490130047dedbc35e",
+    "sha256": "2899dc2410ad8840dadf41993511c225d60f29f77edfdb2fac6703b25ccf767b",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source\\scripts\\export_master_csv.py"
+  },
+  {
+    "path": "scripts/type_map_resolve.py",
+    "git_sha": "31092eb1afda0b1316c3f4f7c716c0dd537b9920",
+    "sha256": "4a289c6412e4b8e1bc0fba573cb287966dfa00a053399097b587f1e14726bfe5",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\lhs28\\repo\\scripts\\type_map_resolve.py"
+  },
+  {
+    "path": "scripts/lens_geometry.py",
+    "git_sha": "53a20c31554740957c21a0fa52362df0b000cc97",
+    "sha256": "891ac67f8b6c1b4c7978b5e806800ae74f5c8791928d6ece19a29e5f3b212b77",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source\\scripts\\lens_geometry.py"
+  },
+  {
+    "path": "scripts/lhs_perc_extract.py",
+    "git_sha": "99d060ffec7eb68c21a5ac898840b121c578d96f",
+    "sha256": "0750d0964d006e64934e42e83b98fe0786115440f024fc5215d5d2aaf6396a16",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source\\scripts\\lhs_perc_extract.py"
+  },
+  {
+    "path": "scripts/press_units.py",
+    "git_sha": "a11fe7b082c11404493b727c4239ddc78106fbaf",
+    "sha256": "493fcc42f2ed4b880362c81766004cf96d0f3a3ed8514aeff9cfe6ed387842dd",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source\\scripts\\press_units.py"
+  },
+  {
+    "path": "scripts/grade_engine.py",
+    "git_sha": "dae17969ed4651226cbca7124f29850218660700",
+    "sha256": "9a4d27ea9e937298ab84c0cf1bcd4c4f4957317e783247fd047923758dc96efc",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source\\scripts\\grade_engine.py"
+  },
+  {
+    "path": "webapp/ledger_view.py",
+    "git_sha": "23cbb564cfa7fec95182e5f12b6774840f1f31a1",
+    "sha256": "ce445f36e01258fb2d46cc8c384b50c7545f87a97e5c1eb4785a0db64a8a7930",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source\\webapp\\ledger_view.py"
+  },
+  {
+    "path": "webapp/mpm_lab_register.py",
+    "git_sha": "02e6ac183727d553178445cb28034b41da20864c",
+    "sha256": "3b8318fb3980f1466ad2bb642f61924de3fb4d55c539690691cc86540f490967",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source\\webapp\\mpm_lab_register.py"
+  },
+  {
+    "path": "webapp/predictor_engine.py",
+    "git_sha": "808866f6c50841b7233cf13adae532b4accf9a41",
+    "sha256": "9b341d4e1bf74e071888213656afb8dde4de985081d704818ba5d6b629555c2d",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source\\webapp\\predictor_engine.py"
+  },
+  {
+    "path": "webapp/security.py",
+    "git_sha": "debba1fcd449667e625528108d004475b4026cc5",
+    "sha256": "6f9e98d8748bdd420e73f1db19df50ede1c5f9ce7fb60a25cdea582583de770f",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source\\webapp\\security.py"
+  },
+  {
+    "path": "webapp/storage_sync.py",
+    "git_sha": "dd51efeebd7d203e79b038cc3fb310485ca49ee3",
+    "sha256": "352314ffb1908998f51c1ec25289846b3644e736d2d8df5e145c41646edf811a",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source\\webapp\\storage_sync.py"
+  },
+  {
+    "path": "webapp/structure_predictor.py",
+    "git_sha": "dc16a33e9442148260f3ef5fff3e8a54bc443bc8",
+    "sha256": "e468d6dfe18db338a6d6afc7ec10fb867464b80a02d17d475ee4ee8068392064",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source\\webapp\\structure_predictor.py"
+  },
+  {
+    "path": "scripts/fracture_model.py",
+    "git_sha": "860a621575e013e9521430950a4eda9cc9559c54",
+    "sha256": "3cd8dabb3ebaea3950f53951f776fceabc82f9431633587fc7bd85a8dd9d8170",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source\\scripts\\fracture_model.py"
+  },
+  {
+    "path": "scripts/lhs_union_webapp.py",
+    "git_sha": "1926a05d6a4946d238751e3b6ca6cb3fc513fde6",
+    "sha256": "3f06e9d36060a366d79e1abb76b5fe07e23b51d63666f51ba3afeabf64211408",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source\\scripts\\lhs_union_webapp.py"
+  },
+  {
+    "path": "scripts/ml_design_structure.py",
+    "git_sha": "af2b465d5ab3c2e4a1850e50e9af0686ec84ffde",
+    "sha256": "35378c5eedae36a75074279066db1db81617c02c334b5d0e4c7f19a76d0bf628",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source\\scripts\\ml_design_structure.py"
+  },
+  {
+    "path": "scripts/lhs_design_dataset.py",
+    "git_sha": "a45e270443ff7fcedbfad14cc06bda8f4b67c4cc",
+    "sha256": "d1815155142e909200053c2d8e9de8c0a88c2dc6d3d9462ad18614a42845e1f0",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source\\scripts\\lhs_design_dataset.py"
+  },
+  {
+    "path": "scripts/g2_network_reread.py",
+    "git_sha": "24b3301086900a929d61cdad2786780e6c4bfe18",
+    "sha256": "0e2ec7ef37571268b85b0d17b71f7a2858aa2a7e6bcfadf4be1c6b5416dd5cd8",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source\\scripts\\g2_network_reread.py"
+  },
+  {
+    "path": "scripts/lhs_release_build.py",
+    "git_sha": "035585e86f3206289295b715d92e944e81348222",
+    "sha256": "3096e33fd0f1953363bcde251a77368366a0568c923447111a48a873ad4a1383",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source\\scripts\\lhs_release_build.py"
+  },
+  {
+    "path": "scripts/wsl_network_smoke.py",
+    "git_sha": "b43fea37a0c4467a0fef0ec6cff8a1d1eee5f4e5",
+    "sha256": "feb3e84b9c01d2dee28a158fbbd179e57a4c947325181c276d66d2cec1831b11",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source\\scripts\\wsl_network_smoke.py"
+  },
+  {
+    "path": "scripts/supp20_input_receipt.py",
+    "git_sha": "11a7e7a70f87a77f445ccac3159132e37e8af257",
+    "sha256": "3d6110be24d24bf91ad1e71232a2e5dad580cf95178d6135b13aa6ca6de6f950",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\lhs28\\repo\\scripts\\supp20_input_receipt.py"
+  },
+  {
+    "path": "scripts/run_network_194_parallel.py",
+    "git_sha": "6539a0b6a8290c69fd234b6c94b2d6119273da15",
+    "sha256": "3220be53fb89cd16c81f0273c8b9f7444f262c5311d02b2017756fd94fd66ac8",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\lhs28\\repo\\scripts\\run_network_194_parallel.py"
+  },
+  {
+    "path": "scripts/seal_s3_prerun.py",
+    "git_sha": "00ae7a776ece84d52451c14673167699c5d87cb9",
+    "sha256": "3a0bc628d2856964490d0b33a6b29c7ec6ae502d9572930ba4c105c6818ccf37",
+    "source": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint2_rereview_20261022\\source\\scripts\\seal_s3_prerun.py"
+  }
+]

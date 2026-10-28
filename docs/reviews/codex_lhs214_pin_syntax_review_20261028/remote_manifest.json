@@ -1,0 +1,133 @@
+[
+  {
+    "name": "0.b64",
+    "path": "AGENTS.md",
+    "ref": "b7a979032160dc1d9514c612aa36ff0d6c28bf54",
+    "git_sha": "2829b46196a08ffae439ddbdc20dc093cde511c4",
+    "sha256": "38b8708ba8a50c8a08819c7c4138763bce02b6dc6c5b8112f4c8aa386fb17ec3"
+  },
+  {
+    "name": "1.b64",
+    "path": "scripts/run_network_194_parallel.py",
+    "ref": "b7a979032160dc1d9514c612aa36ff0d6c28bf54",
+    "git_sha": "6539a0b6a8290c69fd234b6c94b2d6119273da15",
+    "sha256": "3220be53fb89cd16c81f0273c8b9f7444f262c5311d02b2017756fd94fd66ac8"
+  },
+  {
+    "name": "2.b64",
+    "path": "scripts/supp20_input_receipt.py",
+    "ref": "b7a979032160dc1d9514c612aa36ff0d6c28bf54",
+    "git_sha": "11a7e7a70f87a77f445ccac3159132e37e8af257",
+    "sha256": "3d6110be24d24bf91ad1e71232a2e5dad580cf95178d6135b13aa6ca6de6f950"
+  },
+  {
+    "name": "3.b64",
+    "path": "docs/reviews/lhs214_wsl_receipt_checklist_20261024.md",
+    "ref": "b7a979032160dc1d9514c612aa36ff0d6c28bf54",
+    "git_sha": "d36aa803a7928ceb4fe6cbfe223dc2e383a4c373",
+    "sha256": "87b7435293e81fe1f0ac8c58c5a504474e2e669171159e383be8dc13165eb2f5"
+  },
+  {
+    "name": "b2_0.b64",
+    "ref": "35f0327377a4213774010a090df4d224e50d29e1",
+    "path": "scripts/run_network_194_parallel.py",
+    "git_sha": "6539a0b6a8290c69fd234b6c94b2d6119273da15",
+    "dest": "wslpin/scripts/run_network_194_parallel.py",
+    "sha256": "3220be53fb89cd16c81f0273c8b9f7444f262c5311d02b2017756fd94fd66ac8"
+  },
+  {
+    "name": "b2_1.b64",
+    "ref": "35f0327377a4213774010a090df4d224e50d29e1",
+    "path": "scripts/supp20_input_receipt.py",
+    "git_sha": "11a7e7a70f87a77f445ccac3159132e37e8af257",
+    "dest": "wslpin/scripts/supp20_input_receipt.py",
+    "sha256": "3d6110be24d24bf91ad1e71232a2e5dad580cf95178d6135b13aa6ca6de6f950"
+  },
+  {
+    "name": "b2_2.b64",
+    "ref": "1baa0d9b7a9d5b2c6b101b5d203eacb1e18fd6ca",
+    "path": "scripts/run_network_194_parallel.py",
+    "git_sha": "6d7324135ac5f89a5e37c74c0a54ca09157c9668",
+    "dest": "before/scripts/run_network_194_parallel.py",
+    "sha256": "f4048aca55b912628278dbdd7b184ac449723736cd3f4f5cdc7eeca31294921a"
+  },
+  {
+    "name": "b2_4.b64",
+    "ref": "b7a979032160dc1d9514c612aa36ff0d6c28bf54",
+    "path": "docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/independent/review.md",
+    "git_sha": "8baf8bb9d561c2b2bbfa607f979602e5ea3bfd51",
+    "dest": "repo/docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/independent/review.md",
+    "sha256": "2ad3b5eae47ef2beb5b5a0fbb5734da757ea5047b9e1d87e323fd832b82940b3"
+  },
+  {
+    "name": "exec_sheet.b64",
+    "path": "docs/reviews/lhs214_relaunch_exec_sheet_20261027.md",
+    "ref": "claude/stoic-knuth-NObVQ (context only; absent at WSL pin)",
+    "git_sha": "b2b2533d5ceba59bea261d101e4c206f6f018d98",
+    "dest": "context/lhs214_relaunch_exec_sheet_20261027.md",
+    "sha256": "e15fe7bc9a600bac22de9bd1872ecac119043e07fb8f875fa13acf621196f808"
+  },
+  {
+    "name": "b3_0.b64",
+    "path": "docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/README.md",
+    "ref": "b7a979032160dc1d9514c612aa36ff0d6c28bf54",
+    "git_sha": "578c879cb1ab0ae717a1f7962f9b3ae52281d76e",
+    "sha256": "8f15a16148b3266d863d6b4ed27046a505508ecd046279843adf24dbf12f27f7"
+  },
+  {
+    "name": "b3_1.b64",
+    "path": "docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/full_gate_receipt.json",
+    "ref": "b7a979032160dc1d9514c612aa36ff0d6c28bf54",
+    "git_sha": "417d1a93773f88afb7bc3419ab3646674a5e3517",
+    "sha256": "709e9ecec4eae672db62e5588b7c5104fd93c695ddb9f6b3fef687ae3ee43b1c"
+  },
+  {
+    "name": "b3_2.b64",
+    "path": "scripts/lhs_harvest_batch.py",
+    "ref": "b7a979032160dc1d9514c612aa36ff0d6c28bf54",
+    "git_sha": "77b028620779668aec1777b21a1a77be4bf1fbbd",
+    "sha256": "4d798c631ac893ca32018fde58145bc5c8a2e3e2a6423da61cb87bd13599148e"
+  },
+  {
+    "name": "b3_3.b64",
+    "path": "scripts/lhs_webapp_batch.py",
+    "ref": "b7a979032160dc1d9514c612aa36ff0d6c28bf54",
+    "git_sha": "081693abed37e824bf71941eafeac680344314e0",
+    "sha256": "b9d0199cc1bd23cd1ed5405a283081c2c3a31bc6ce256670c8a9b63d177b5668"
+  },
+  {
+    "name": "b3_4.b64",
+    "path": "docs/reviews/codex_review_lhs214_preflight_20261023.md",
+    "ref": "b7a979032160dc1d9514c612aa36ff0d6c28bf54",
+    "git_sha": "9a986bfea92a02d00a25a9fbe6e98e6ac97e5724",
+    "sha256": "3e0630df967d551014761586d1d198258e47841942461879e39ac55e214c060b"
+  },
+  {
+    "name": "b4_0.b64",
+    "path": "scripts/lhs_descriptor_harvest.py",
+    "ref": "b7a979032160dc1d9514c612aa36ff0d6c28bf54",
+    "git_sha": "05686cf18da4b4da4f04d251bacd4c9f76a761c7",
+    "sha256": "96fa643e309aab46b2a5cbd59e2276ee16b99107a9a7514e5d9fdcaf5c2d8d9e"
+  },
+  {
+    "name": "b4_1.b64",
+    "path": "scripts/type_map_resolve.py",
+    "ref": "b7a979032160dc1d9514c612aa36ff0d6c28bf54",
+    "git_sha": "31092eb1afda0b1316c3f4f7c716c0dd537b9920",
+    "sha256": "4a289c6412e4b8e1bc0fba573cb287966dfa00a053399097b587f1e14726bfe5"
+  },
+  {
+    "name": "b4_2.b64",
+    "path": "docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/tools/check_pin_boundaries.py",
+    "ref": "b7a979032160dc1d9514c612aa36ff0d6c28bf54",
+    "git_sha": "f0d6c73f1fcc67bc5bcd1d4d79499e6cf92d0623",
+    "sha256": "cc8aa1018c328f2c7e09fda83c18c0107fddbd8a2bcb95d58e8d62bd3cc89a7c"
+  },
+  {
+    "name": "b4_3.b64",
+    "path": "docs/reviews/lhs214_pin_syntax_fix_evidence_20261024/independent/attack_lhs_pin.py",
+    "ref": "b7a979032160dc1d9514c612aa36ff0d6c28bf54",
+    "git_sha": "9bec1dfad05426c5a8172386b4345089174f47f3",
+    "sha256": "32d201ce969271493e69de7299808f5c069848548760c495af07b590e5ac2fc4"
+  }
+]

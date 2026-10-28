@@ -534,3 +534,14 @@ b2c47e4fc anc_rc=0 remote=22 first=origin/claude/rint-pf2-handoff-20261022
 ⇒ S2 인용 5 개 = 머리 조상 5/5 · S1 원본 · 체크리스트의 `ffbd438e7` 와 대응표 원 커밋 넷 = 머리 조상 아님 (원격 추적 ref `origin/codex/lhs214-relaunch` 하나에만 · 그 끝 = 854857e57) · 본 가지 반입 넷 · 그 밖 인용 커밋 = 머리 조상.
 
 한정: 이 컨테이너는 WSL 이 아니다 — 원자료 (dump) 실재 · fast16 · real4 · 실행기 · 영수증 selftest 는 여기서 돌리지 않았다 (지시 — 무거운 시험 금지).  원격 상태는 로컬 원격 추적 ref 기준이다 (fetch 안 함).  A-R 블록은 이 문서에서 그대로 떼어 다시 돌려 출력이 글자까지 같았다 (커밋 전).
+
+## 10-28 밤 — S1 Codex 판정 반입 (`docs/reviews/codex_lhs214_pin_syntax_review_20261028/`)
+
+| 항목 | 상태 |
+|---|---|
+| S1 (`L214P-01` 두 줄) | ✅ Codex 닫힘 · GO (verified · 리뷰 핀 `b7a979032`) — **실제 발사 GO 아님** |
+| E1 자체시험 다섯 종료코드 | ✅ 회수 — 1저자 10-28 17:36 단계 2 화면 원문 `docs/reviews/lhs214_wsl_preflight_35f032737_1028/step2_screen_paste_1028_1736.txt` (fast16 · real4 · reread · runner · receipt `rc=0` · dirty 0) · 재실행 불요 (Codex §5) |
+| E2 수령표 연결 | ✅ Codex 독립 대조 (판정문 §4 · 194 여섯 칸 일치) + WSL 묶음 (`docs/reviews/lhs214_wsl_preflight_35f032737_1028/`) · 작업자 = 1저자 (WSL 17:32:39 KST) · 독립 대조 = Codex 10-28 |
+| 194 손 대조 확인 (V10 · 확인자 = 1저자) | ⬜ 1저자 확인 한 마디 (값 여섯 = Codex 대조 일치) |
+| `L214P-02` (P3 · 1140 행 LF) | open — 운영 = 전체 40자리 `--approved-sha` 늘 제공 · 고칠지 = 1저자 |
+| 다음 | S2 새 판 (§2-2) → 사전 공격 ①–④ → S2 발송 (1저자) → Codex → ⑤ 1저자 발사 승인 |

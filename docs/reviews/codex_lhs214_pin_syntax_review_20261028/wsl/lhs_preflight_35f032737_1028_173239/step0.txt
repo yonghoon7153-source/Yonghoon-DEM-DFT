@@ -1,0 +1,10 @@
+2026-10-28 17:32:39 KST
+PIN=35f0327377a4213774010a090df4d224e50d29e1
+PY=/home/yonghoon71/Yonghoon-DEM-DFT/.venv/bin/python3
+R194=/home/yonghoon71/net194_35f032737_1028
+RS=/home/yonghoon71/netsupp20_35f032737_1028
+PF194=/home/yonghoon71/net194_35f032737_1028_preflight_1028_173239.json
+PFS=/home/yonghoon71/netsupp20_35f032737_1028_preflight_1028_173239.json
+LOGD=/home/yonghoon71/lhs_preflight_35f032737_1028_173239
+/home/yonghoon71/net194_1087a9b2f
+/home/yonghoon71/netsupp20_1087a9b2f

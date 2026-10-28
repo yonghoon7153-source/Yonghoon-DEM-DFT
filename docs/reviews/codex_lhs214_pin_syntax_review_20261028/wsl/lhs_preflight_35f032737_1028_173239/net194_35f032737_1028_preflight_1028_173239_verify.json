@@ -1,0 +1,96 @@
+{
+ "schema": "np194_preflight_verify/v1",
+ "receipt": "/home/yonghoon71/net194_35f032737_1028_preflight_1028_173239.json",
+ "expect_set": "production194",
+ "approved_sha": "35f0327377a4213774010a090df4d224e50d29e1",
+ "checks": [
+  {
+   "id": "P0",
+   "name": "사전 점검 완료 영수증 JSON 읽기 · schema np194_preflight_receipt/v1",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "P1",
+   "name": "전체 로그 = 영수증의 sha256 · 바이트 수 (실행기 자신이 잡은 로그 — 자르거나 거르거나 덧붙인 로그 = 다름)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "P2",
+   "name": "로그 INPUT_DIGEST_JSON 한 줄 · JSON · 키 = INPUT_DIGEST_KEYS 전부 = 영수증 input_digest · 사람이 읽는 입력 지문 줄 (하나) 과 같은 값 (SUPR-01)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "P3",
+   "name": "완료 — dry_run · completed true · 실행기 종료코드 0 (정수) · 예외 · 멈춘 사유 없음 · 로그 ⛔ 없음 · 완료 표지 (PREFLIGHT_DRY_RUN_COMPLETE rc 0) 하나 = 마지막 줄",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "P4",
+   "name": "import 관측 ON — 영수증 observe_imports true · 인자 true · argv 재해석 true (등록 생산 집합 = 관측 필수)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "P5",
+   "name": "필수 세 검사 (전이 의존 · 지연 import · fork) — 영수증 ok true (명시 값) · 로그 줄 하나씩 ✓",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "P6",
+   "name": "argv = 등록 명령 (run --dry-run --observe-imports --preflight-receipt · 코호트 = production194 · 덮어쓰기 · 허용 플래그 · --case 없음)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "P7",
+   "name": "코드 — 로그 코드 줄 하나 · dirty=False · 영수증 git.dirty false · git sha 40 hex = 로그 짧은 sha 접두 · code_fp 로그 = 영수증 = 이 체크아웃 · CODE_FILES 수",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "P8",
+   "name": "기대 망 세대 = 'g2' · 세대 계약 문제 0 · 유도 오류 없음 · 원자료 · 메시 문제 0 건 (로그 줄 하나씩 · 영수증)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "P9",
+   "name": "계획 — 이 체크아웃에서 같은 인자로 다시 만든 계획: 등록 집합 = 영수증 = production194 · 입력 지문 = 영수증 · 로그 코호트 줄 = 그 계획",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "P10",
+   "name": "승인 SHA (7–40 hex · 접두) = 사전 점검 영수증 git sha · 로그 코드 줄 짧은 sha (1저자 Q3)",
+   "ok": true,
+   "detail": ""
+  }
+ ],
+ "warnings": [],
+ "recomputed": {
+  "input_digest": {
+   "n": 194,
+   "ids_sha256": "a04282d7275bd8f92b0afb4ac8b045f72f3867ccebbb7813b530b3901fd7b3bf",
+   "raw_sha256_table_sha256": "da7c93f9a0887145ff171e381c8608cb79779d96aea5a595a25677dc361ef784",
+   "missing_raw_sha": [],
+   "cohort_tsv_sha256": {
+    "lhs": "32f00daa8394188d1e72531fd7fda1a8b47a9c279be76311ae7f2afa024b2809",
+    "lhsx": "0b85e8589917c9a3936ce29e9f36326993985ddd113ef32353a4ff96d981cb45"
+   }
+  },
+  "registered_production_set": "production194",
+  "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+  "why": ""
+ },
+ "log": {
+  "path": "/home/yonghoon71/net194_35f032737_1028_preflight_1028_173239.log",
+  "sha256": "6aa80dc1e75673482c13f69ab52e9f8ea1e8c6318af19e7638f4b9de34d133eb",
+  "bytes": 4628
+ },
+ "rc": 0
+}

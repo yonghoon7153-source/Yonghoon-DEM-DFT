@@ -1,0 +1,166 @@
+[
+  {
+    "path": "scripts/network_conductivity.py",
+    "same": true
+  },
+  {
+    "path": "scripts/plastic_coverage.py",
+    "same": true
+  },
+  {
+    "path": "scripts/audit_constriction_deleted.py",
+    "same": true
+  },
+  {
+    "path": "scripts/extract_se_network_diagnostics.py",
+    "same": true
+  },
+  {
+    "path": "scripts/dem_analysis_core.py",
+    "same": true
+  },
+  {
+    "path": "scripts/analyze_contacts.py",
+    "same": true
+  },
+  {
+    "path": "scripts/analyze_contacts_bimodal.py",
+    "same": true
+  },
+  {
+    "path": "scripts/coverage_physics_vs_hertzian.py",
+    "same": true
+  },
+  {
+    "path": "scripts/parse_liggghts.py",
+    "same": true
+  },
+  {
+    "path": "scripts/se_material.py",
+    "same": true
+  },
+  {
+    "path": "scripts/metrics_json.py",
+    "same": true
+  },
+  {
+    "path": "scripts/tau_flux.py",
+    "same": true
+  },
+  {
+    "path": "scripts/lhs_webapp_batch.py",
+    "same": true
+  },
+  {
+    "path": "scripts/lhs_harvest_batch.py",
+    "same": true
+  },
+  {
+    "path": "scripts/lhs_descriptor_harvest.py",
+    "same": true
+  },
+  {
+    "path": "scripts/export_master_csv.py",
+    "same": true
+  },
+  {
+    "path": "scripts/type_map_resolve.py",
+    "same": true
+  },
+  {
+    "path": "scripts/lens_geometry.py",
+    "same": true
+  },
+  {
+    "path": "scripts/lhs_perc_extract.py",
+    "same": true
+  },
+  {
+    "path": "scripts/press_units.py",
+    "same": true
+  },
+  {
+    "path": "scripts/grade_engine.py",
+    "same": true
+  },
+  {
+    "path": "scripts/fracture_model.py",
+    "same": true
+  },
+  {
+    "path": "scripts/lhs_union_webapp.py",
+    "same": true
+  },
+  {
+    "path": "scripts/ml_design_structure.py",
+    "same": true
+  },
+  {
+    "path": "scripts/lhs_design_dataset.py",
+    "same": true
+  },
+  {
+    "path": "scripts/g2_network_reread.py",
+    "same": true
+  },
+  {
+    "path": "scripts/lhs_release_build.py",
+    "same": true
+  },
+  {
+    "path": "scripts/lhs_perc_extract.py",
+    "same": true
+  },
+  {
+    "path": "scripts/type_map_resolve.py",
+    "same": true
+  },
+  {
+    "path": "scripts/wsl_network_smoke.py",
+    "same": true
+  },
+  {
+    "path": "scripts/supp20_input_receipt.py",
+    "same": true
+  },
+  {
+    "path": "scripts/run_network_194_parallel.py",
+    "same": true
+  },
+  {
+    "path": "scripts/seal_s3_prerun.py",
+    "same": true
+  },
+  {
+    "path": "webapp/app.py",
+    "same": true
+  },
+  {
+    "path": "webapp/pipeline_service.py",
+    "same": true
+  },
+  {
+    "path": "webapp/ledger_view.py",
+    "same": true
+  },
+  {
+    "path": "webapp/mpm_lab_register.py",
+    "same": true
+  },
+  {
+    "path": "webapp/predictor_engine.py",
+    "same": true
+  },
+  {
+    "path": "webapp/security.py",
+    "same": true
+  },
+  {
+    "path": "webapp/storage_sync.py",
+    "same": true
+  },
+  {
+    "path": "webapp/structure_predictor.py",
+    "same": true
+  }
+]

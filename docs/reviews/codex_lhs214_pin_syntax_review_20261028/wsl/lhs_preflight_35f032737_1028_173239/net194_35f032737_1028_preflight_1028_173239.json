@@ -1,0 +1,138 @@
+{
+ "schema": "np194_preflight_receipt/v1",
+ "runner": {
+  "path": "scripts/run_network_194_parallel.py",
+  "sha256": "3220be53fb89cd16c81f0273c8b9f7444f262c5311d02b2017756fd94fd66ac8",
+  "launcher_schema": "network_parallel_launcher/v1",
+  "launch_format": "network_parallel_launch/v3"
+ },
+ "argv": [
+  "run",
+  "--root",
+  "/home/yonghoon71/net194_35f032737_1028",
+  "--dry-run",
+  "--observe-imports",
+  "--preflight-receipt",
+  "/home/yonghoon71/net194_35f032737_1028_preflight_1028_173239.json"
+ ],
+ "process_argv": [
+  "scripts/run_network_194_parallel.py",
+  "run",
+  "--root",
+  "/home/yonghoon71/net194_35f032737_1028",
+  "--dry-run",
+  "--observe-imports",
+  "--preflight-receipt",
+  "/home/yonghoon71/net194_35f032737_1028_preflight_1028_173239.json"
+ ],
+ "cwd": "/home/yonghoon71/dem-audit",
+ "repo_root": "/home/yonghoon71/dem-audit",
+ "args": {
+  "cmd": "run",
+  "root": "/home/yonghoon71/net194_35f032737_1028",
+  "cohorts": "lhs,lhsx",
+  "case": [],
+  "order": "cost",
+  "dry_run": true,
+  "observe_imports": true,
+  "allow_dirty": false,
+  "allow_missing_raw": false,
+  "skip_batch_selftest": false,
+  "worker_script": "",
+  "root_from": "",
+  "root_to": "",
+  "python": "/home/yonghoon71/Yonghoon-DEM-DFT/.venv/bin/python3",
+  "lanes": 20,
+  "mem_budget_gb": null,
+  "mem_reserve_gb": 2.0,
+  "min_free_gb": 1.0,
+  "network_lock": "per-case",
+  "no_merge": false,
+  "preflight_receipt": "/home/yonghoon71/net194_35f032737_1028_preflight_1028_173239.json",
+  "lhs_harvest": "",
+  "lhs_cohort": "",
+  "lhsx_harvest": "",
+  "lhsx_cohort": "",
+  "lhss_harvest": "",
+  "lhss_cohort": ""
+ },
+ "dry_run": true,
+ "root": "/home/yonghoon71/net194_35f032737_1028",
+ "receipt_path": "/home/yonghoon71/net194_35f032737_1028_preflight_1028_173239.json",
+ "stage": "completed",
+ "started": "2026-10-28T17:36:35",
+ "ended": "2026-10-28T17:36:36",
+ "tz": "+0900",
+ "git": {
+  "sha": "35f0327377a4213774010a090df4d224e50d29e1",
+  "short": "35f032737",
+  "branch": "HEAD",
+  "dirty": false,
+  "porcelain": []
+ },
+ "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+ "code_files": 32,
+ "plan": {
+  "cohorts": [
+   "lhs",
+   "lhsx"
+  ],
+  "n": 194,
+  "registered_production_set": "production194"
+ },
+ "input_digest": {
+  "n": 194,
+  "ids_sha256": "a04282d7275bd8f92b0afb4ac8b045f72f3867ccebbb7813b530b3901fd7b3bf",
+  "raw_sha256_table_sha256": "da7c93f9a0887145ff171e381c8608cb79779d96aea5a595a25677dc361ef784",
+  "missing_raw_sha": [],
+  "cohort_tsv_sha256": {
+   "lhs": "32f00daa8394188d1e72531fd7fda1a8b47a9c279be76311ae7f2afa024b2809",
+   "lhsx": "0b85e8589917c9a3936ce29e9f36326993985ddd113ef32353a4ff96d981cb45"
+  }
+ },
+ "observe_imports": true,
+ "checks": {
+  "dependency_closure": {
+   "ok": true,
+   "n_files": 30,
+   "outside": [],
+   "errors": []
+  },
+  "lazy_import_census": {
+   "ok": true,
+   "n_lazy": 92,
+   "unclassified": []
+  },
+  "fork_census": {
+   "ok": true,
+   "n": 0,
+   "lines": []
+  }
+ },
+ "generation": {
+  "generation": "g2",
+  "n_problems": 0,
+  "modes": [
+   "hertz",
+   "physics",
+   "hertz_h12"
+  ],
+  "error": ""
+ },
+ "n_raw_problems": 0,
+ "warn": [
+  "처음 20 건 (큐 앞 = 가장 큰 침대) 의 메모리 추정 합 41.0 GB > MemAvailable 14.36 GB — 예산 관문이 동시 수를 줄인다 (추정은 real_14 기준 · WSL 시범으로 고칠 것)"
+ ],
+ "stop": [],
+ "aborted": null,
+ "completed": true,
+ "completion_marker": "PREFLIGHT_DRY_RUN_COMPLETE rc 0",
+ "exit_code": 0,
+ "exception": null,
+ "log": {
+  "path": "/home/yonghoon71/net194_35f032737_1028_preflight_1028_173239.log",
+  "sha256": "6aa80dc1e75673482c13f69ab52e9f8ea1e8c6318af19e7638f4b9de34d133eb",
+  "bytes": 4628,
+  "encoding": "utf-8"
+ }
+}

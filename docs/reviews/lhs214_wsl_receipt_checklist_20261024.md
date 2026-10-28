@@ -1,5 +1,7 @@
 # LHS214 WSL 사전 점검 — 실제 입력·영수증 체크리스트 (2026-10-24 KST)
 
+- ★ **10-28 실제 수령 (Codex S1 판정 Q4 · E2)**: WSL 묶음 tgz sha256 `9c05aef7…` = `docs/reviews/lhs214_wsl_preflight_35f032737_1028/` · 단계 2 종료코드 화면 원문 = `docs/reviews/lhs214_wsl_preflight_35f032737_1028/step2_screen_paste_1028_1736.txt` · Codex 독립 대조 (판정문 `docs/reviews/codex_lhs214_pin_syntax_review_20261028/codex_review_lhs214_pin_syntax_20261028.md` §4 · 194 여섯 칸 일치 · 보충 24/24) — 아래 "미수령" 표기는 10-24 시점이다.
+
 1저자의 현재 대화 **“다 비준이야”**를 설계·후속 수정·준비 진행의 비준으로 기록한다. 같은 비준을 다시 묻지 않는다. 실제 WSL 측정값, 확인자의 손 대조, 외부 반박 GO 및 실행 사실은 이 문장으로 채워지지 않는다. 이 문서는 실제 발사 명령이 아니다.
 
 기존 도구가 이미 충분하다. [다섯 단계 묶음](lhs214_relaunch_package_20261020.md) §3–5에 WSL 준비·수집·영수증 검증·묶음 생성 명령이 있고, [발사 확인 요청서](codex_lhs214_relaunch_check_request_20261020.md) §1·Q4에 반입할 자리가 있다. 새 collector는 만들지 않는다. 아래 표는 기존 절차에서 실제 값과 파일을 빠뜨리지 않도록 채우는 수령표다. 이번 로컬 합성 시험을 그 자리에 넣지 않는다.

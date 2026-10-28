@@ -1,0 +1,42 @@
+[
+  {
+    "path": "docs/reviews/lhs_network_batch_registration_20261007_g2.md",
+    "ref": "b7a979032160dc1d9514c612aa36ff0d6c28bf54",
+    "git_sha": "96dd6c5381edc3c6b833958081d42c73a53c4f4e"
+  },
+  {
+    "path": "docs/reviews/lhs_network_batch_registration_20261012_supp20.md",
+    "ref": "b7a979032160dc1d9514c612aa36ff0d6c28bf54",
+    "git_sha": "742a4da6a0e51cf53f6fe128e979b614033317b9"
+  },
+  {
+    "path": "docs/reviews/codex_sup20_fix_reverify_evidence_20261014/evidence/receipt_extra/alternate_cohort.tsv",
+    "ref": "b7a979032160dc1d9514c612aa36ff0d6c28bf54",
+    "git_sha": "453dc5c237422e5280cda3859ee588cd9fac3e0b"
+  },
+  {
+    "path": "docs/reviews/codex_sup20_fix_reverify_evidence_20261014/evidence/receipt_extra/wrong_tsv_full_log.log",
+    "ref": "b7a979032160dc1d9514c612aa36ff0d6c28bf54",
+    "git_sha": "d7f3c443dc5c1f7c36a19f27d3659237a5b53551"
+  },
+  {
+    "path": "docs/reviews/codex_sup20_fix_reverify_evidence_20261014/evidence/receipt_extra/wrong_tsv_registered_grep.log",
+    "ref": "b7a979032160dc1d9514c612aa36ff0d6c28bf54",
+    "git_sha": "c4abb752462662861b48fef65e726e6cdba71ceb"
+  },
+  {
+    "path": "docs/reviews/codex_sup20_fix_reverify_evidence_20261014/evidence/receipt_extra/observation_off_full_log.log",
+    "ref": "b7a979032160dc1d9514c612aa36ff0d6c28bf54",
+    "git_sha": "6ff8d73462f570bb3ababef3c808f4c34f318378"
+  },
+  {
+    "path": "docs/reviews/codex_sup20_fix_reverify_evidence_20261014/evidence/receipt_extra/observation_off_truncated_before_stop.log",
+    "ref": "b7a979032160dc1d9514c612aa36ff0d6c28bf54",
+    "git_sha": "c7da22e5767b452fba9c624e7a312458632a73e1"
+  },
+  {
+    "path": "docs/reviews/codex_sup20_fix_reverify_evidence_20261014/evidence/receipt_extra/missing_three_prerequisite_lines.log",
+    "ref": "b7a979032160dc1d9514c612aa36ff0d6c28bf54",
+    "git_sha": "196209332b9581b3ed1ef4a8241c4980689f8b19"
+  }
+]

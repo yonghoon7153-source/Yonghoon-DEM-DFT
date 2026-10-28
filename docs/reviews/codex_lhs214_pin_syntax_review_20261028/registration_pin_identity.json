@@ -1,0 +1,14 @@
+[
+  {
+    "path": "docs/reviews/lhs_network_batch_registration_20261007_g2.md",
+    "b7_git_sha": "96dd6c5381edc3c6b833958081d42c73a53c4f4e",
+    "wsl_git_sha": "96dd6c5381edc3c6b833958081d42c73a53c4f4e",
+    "same": true
+  },
+  {
+    "path": "docs/reviews/lhs_network_batch_registration_20261012_supp20.md",
+    "b7_git_sha": "742a4da6a0e51cf53f6fe128e979b614033317b9",
+    "wsl_git_sha": "742a4da6a0e51cf53f6fe128e979b614033317b9",
+    "same": true
+  }
+]

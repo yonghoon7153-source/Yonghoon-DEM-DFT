@@ -1,0 +1,12 @@
+{
+  "scope": "Local synthetic preflight and launch regressions; not WSL, B7, external GO, or a production run.",
+  "runner_sha256": "3220be53fb89cd16c81f0273c8b9f7444f262c5311d02b2017756fd94fd66ac8",
+  "receipt_sha256": "3d6110be24d24bf91ad1e71232a2e5dad580cf95178d6135b13aa6ca6de6f950",
+  "code_fp": "2149f8738bb20b6a311b3c5b344b9745271a3f1324cabfb4582c175c3983c3eb",
+  "code_files": 32,
+  "receipt_selftest_rc": 0,
+  "receipt_selftest_last_line": "supp20_input_receipt selftest: 123/123 PASS",
+  "boundary_cases": 6,
+  "failed_boundaries": [],
+  "test_rc": 0
+}

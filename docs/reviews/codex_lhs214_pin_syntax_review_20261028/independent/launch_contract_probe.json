@@ -1,0 +1,337 @@
+[
+  {
+    "case": "normal",
+    "approval": "full",
+    "rc": 0,
+    "bad": [],
+    "expected": [],
+    "eligibility_supp": {
+      "kind": "current",
+      "problems": [],
+      "historical": null,
+      "note": ""
+    },
+    "eligibility_primary": {
+      "kind": "current",
+      "problems": [],
+      "historical": null,
+      "note": ""
+    }
+  },
+  {
+    "case": "normal",
+    "approval": "prefix7",
+    "rc": 0,
+    "bad": [],
+    "expected": [],
+    "eligibility_supp": {
+      "kind": "current",
+      "problems": [],
+      "historical": null,
+      "note": ""
+    },
+    "eligibility_primary": {
+      "kind": "current",
+      "problems": [],
+      "historical": null,
+      "note": ""
+    }
+  },
+  {
+    "case": "normal",
+    "approval": "none",
+    "rc": 0,
+    "bad": [],
+    "expected": [],
+    "eligibility_supp": {
+      "kind": "current",
+      "problems": [],
+      "historical": null,
+      "note": ""
+    },
+    "eligibility_primary": {
+      "kind": "current",
+      "problems": [],
+      "historical": null,
+      "note": ""
+    }
+  },
+  {
+    "case": "supp_LF",
+    "approval": "full",
+    "rc": 1,
+    "bad": [
+      "F7",
+      "H1"
+    ],
+    "expected": [
+      "F7",
+      "H1"
+    ],
+    "eligibility_supp": {
+      "kind": "current",
+      "problems": [],
+      "historical": null,
+      "note": ""
+    },
+    "eligibility_primary": {
+      "kind": "current",
+      "problems": [],
+      "historical": null,
+      "note": ""
+    }
+  },
+  {
+    "case": "supp_LF",
+    "approval": "prefix7",
+    "rc": 1,
+    "bad": [
+      "F7",
+      "H1"
+    ],
+    "expected": [
+      "F7",
+      "H1"
+    ],
+    "eligibility_supp": {
+      "kind": "current",
+      "problems": [],
+      "historical": null,
+      "note": ""
+    },
+    "eligibility_primary": {
+      "kind": "current",
+      "problems": [],
+      "historical": null,
+      "note": ""
+    }
+  },
+  {
+    "case": "supp_LF",
+    "approval": "none",
+    "rc": 1,
+    "bad": [
+      "H1"
+    ],
+    "expected": [
+      "H1"
+    ],
+    "eligibility_supp": {
+      "kind": "current",
+      "problems": [],
+      "historical": null,
+      "note": ""
+    },
+    "eligibility_primary": {
+      "kind": "current",
+      "problems": [],
+      "historical": null,
+      "note": ""
+    }
+  },
+  {
+    "case": "primary_LF",
+    "approval": "full",
+    "rc": 1,
+    "bad": [
+      "G7",
+      "H1"
+    ],
+    "expected": [
+      "G7",
+      "H1"
+    ],
+    "eligibility_supp": {
+      "kind": "current",
+      "problems": [],
+      "historical": null,
+      "note": ""
+    },
+    "eligibility_primary": {
+      "kind": "current",
+      "problems": [],
+      "historical": null,
+      "note": ""
+    }
+  },
+  {
+    "case": "primary_LF",
+    "approval": "prefix7",
+    "rc": 1,
+    "bad": [
+      "G7",
+      "H1"
+    ],
+    "expected": [
+      "G7",
+      "H1"
+    ],
+    "eligibility_supp": {
+      "kind": "current",
+      "problems": [],
+      "historical": null,
+      "note": ""
+    },
+    "eligibility_primary": {
+      "kind": "current",
+      "problems": [],
+      "historical": null,
+      "note": ""
+    }
+  },
+  {
+    "case": "primary_LF",
+    "approval": "none",
+    "rc": 1,
+    "bad": [
+      "H1"
+    ],
+    "expected": [
+      "H1"
+    ],
+    "eligibility_supp": {
+      "kind": "current",
+      "problems": [],
+      "historical": null,
+      "note": ""
+    },
+    "eligibility_primary": {
+      "kind": "current",
+      "problems": [],
+      "historical": null,
+      "note": ""
+    }
+  },
+  {
+    "case": "both_LF",
+    "approval": "full",
+    "rc": 1,
+    "bad": [
+      "F7",
+      "G7"
+    ],
+    "expected": [
+      "F7",
+      "G7"
+    ],
+    "eligibility_supp": {
+      "kind": "current",
+      "problems": [],
+      "historical": null,
+      "note": ""
+    },
+    "eligibility_primary": {
+      "kind": "current",
+      "problems": [],
+      "historical": null,
+      "note": ""
+    }
+  },
+  {
+    "case": "both_LF",
+    "approval": "prefix7",
+    "rc": 1,
+    "bad": [
+      "F7",
+      "G7"
+    ],
+    "expected": [
+      "F7",
+      "G7"
+    ],
+    "eligibility_supp": {
+      "kind": "current",
+      "problems": [],
+      "historical": null,
+      "note": ""
+    },
+    "eligibility_primary": {
+      "kind": "current",
+      "problems": [],
+      "historical": null,
+      "note": ""
+    }
+  },
+  {
+    "case": "both_LF",
+    "approval": "none",
+    "rc": 0,
+    "bad": [],
+    "expected": [],
+    "eligibility_supp": {
+      "kind": "current",
+      "problems": [],
+      "historical": null,
+      "note": ""
+    },
+    "eligibility_primary": {
+      "kind": "current",
+      "problems": [],
+      "historical": null,
+      "note": ""
+    }
+  },
+  {
+    "case": "both_wrong_last",
+    "approval": "full",
+    "rc": 1,
+    "bad": [
+      "F7",
+      "G7"
+    ],
+    "expected": [
+      "F7",
+      "G7"
+    ],
+    "eligibility_supp": {
+      "kind": "current",
+      "problems": [],
+      "historical": null,
+      "note": ""
+    },
+    "eligibility_primary": {
+      "kind": "current",
+      "problems": [],
+      "historical": null,
+      "note": ""
+    }
+  },
+  {
+    "case": "both_wrong_last",
+    "approval": "prefix7",
+    "rc": 0,
+    "bad": [],
+    "expected": [],
+    "eligibility_supp": {
+      "kind": "current",
+      "problems": [],
+      "historical": null,
+      "note": ""
+    },
+    "eligibility_primary": {
+      "kind": "current",
+      "problems": [],
+      "historical": null,
+      "note": ""
+    }
+  },
+  {
+    "case": "both_wrong_last",
+    "approval": "none",
+    "rc": 0,
+    "bad": [],
+    "expected": [],
+    "eligibility_supp": {
+      "kind": "current",
+      "problems": [],
+      "historical": null,
+      "note": ""
+    },
+    "eligibility_primary": {
+      "kind": "current",
+      "problems": [],
+      "historical": null,
+      "note": ""
+    }
+  }
+]
