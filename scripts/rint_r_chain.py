@@ -135,8 +135,13 @@
 ★ 10-27 묶음 C2e (Q9 설계 개정 5 ③ · Codex 회차 ① ③): 판정 = 판정 프로세스 환경 옆 파일 (`verdict_env.json` · 판정 JSON 밖) · 다시 판정 = 바이트 대조 그대로
   (구조 대조가 같아도 최종 등급이 다르면 REVERIFY_DIFF · 약화 · 덮어쓰기 · 유리한 쪽 고르기 없음) + 보고 (원 · 다시 계산 등급 · 다른 공개 칸 · 다른 결과 칸 이름 =
   값 봉인 · 원 · 지금 환경 · 다른 환경 칸 · `--out <새 폴더>` = `reverify_report.json`)
+★ 10-28 밤 사전 공격 5 회차 (PC5-01–08 · 10 · 1저자 10-28 밤 "rint는 권고대로" · 규칙 정본 = 등록 R §10-5 아): 결과 줄 다시 셈 (`result_fields` ·
+  판정 · 합치기 · 입력 시도 · 재실행 풀기 전 · 원장 역사 = 첫 부모 위) · 자원 낱말 = 메모리 · 디스크 다섯 · 요약 없는 시도 원인 (`orphan_cause` · 같은 낱말
+  규칙) · 사슬 예외 = `CHAIN_EXCEPTION` · 산 사슬은 recover 하지 않음 (`chain_parent_alive`) · 다른 부팅 = 미확인 + `--operator-confirm` · `--operator-why` ·
+  Z 지도자의 산 스레드 · 못 읽는 environ = 미확인 · 원장 잠금 · 되돌림 (`ledger_lock`) · 다시 판정 = 판정 입력 밖 다른 대상 시도에 흔들리지 않음
 """
 import argparse
+import contextlib
 import glob
 import hashlib
 import json
@@ -423,8 +428,10 @@ STOPS = {
     'MACHINE_NOT_ALLOWED': '기계 이름표가 계획의 허용 목록 (exec_policy.allowed_machines) 밖 · 빈 이름 · 런 기록의 기계 ≠ 단계 기계 (★ 10-27 묶음 C1a · '
                            'C6 #15 · Q11 · Q9 §3-4)',
     'PLAN_DOC_MISMATCH': '등록 R 의 계획 숫자 블록 ≠ 계획 JSON 에서 생성한 블록 (없음 · 둘 · 값 다름 · 표지 하나만 · ★ 10-27 묶음 C1a · 판정문 C6 #30)',
-    'GROUP_UNCONFIRMED': '러너 프로세스 그룹이 다 끝났는지 확인하지 못했다 (그룹 표지 프로세스가 대기 상한 안에 남음 · /proc 를 못 읽음 · ★ 10-27 묶음 C2b · '
-                         'Codex 회차 ① ② — 그 런의 팔을 읽지 않는다 · 사람이 보고 --stage recover)',
+    'GROUP_UNCONFIRMED': '러너 프로세스 그룹이 다 끝났는지 확인하지 못했다 (그룹 표지 프로세스가 대기 상한 안에 남음 · /proc 를 못 읽음 · ★ 10-28 밤 PC5-07 '
+                         'environ 을 못 읽는 그룹 원 후보 · ★ 10-27 묶음 C2b · Codex 회차 ① ② — 그 런의 팔을 읽지 않는다 · 사람이 보고 --stage recover)',
+    'CHAIN_EXCEPTION': '사슬 자신의 예외 (Stop 아님 · 원장 시도 꼴 단계 안 · ★ 10-28 밤 PC5-06 ② — 요약 · 결과 줄 (원인 chain_exception · 재실행 불가) 을 쓴 뒤 '
+                       '예외를 다시 올린다)',
     #  ★ 10-27 묶음 C1b (RCA2-05 · Q4 (가) · Q9 설계 §3-2 · §3-4 · §3-5 · §7 의 이름 · author 10-27 approved bundle C) — 시도 원장 · 시도 폴더
     'ATTEMPT_LEDGER_MISMATCH': '시도 원장 · 시도 폴더 대조 실패 (원장 꼴 · 같은 항목 결과 줄 둘 · 덧붙이기만이 아닌 역사 · 커밋 안 한 고침 · 폴더 요약 sha ≠ '
                                '결과 줄 · 원장에 없는 시도 폴더 · 결과 줄 없는 시도 · 채택 아닌 시도 입력 · 결과 전 · 뒤 기록 ≠ 폴더 · Q9 §3-5)',
@@ -2342,30 +2349,131 @@ def host_ident():
     return {'machine_id': rd('/etc/machine-id'), 'boot_id': rd('/proc/sys/kernel/random/boot_id'), 'pidns': ns}
 
 
-def group_members(token):
-    """/proc 에서 env 그룹 표지 (`RINT_RUN_TOKEN=token`) 를 가진 살아 있는 프로세스 pid 목록 (zombie · dead · 이 프로세스 뺌) | None (/proc 를 못
-    읽음 = 확인 불가).  러너 · bash 부분 셸 · payload · 그 자식은 env 를 물려받는다 (setsid 로 그룹을 벗어나도 표지는 남는다) — env 를 지운 자식은 못
-    찾는다 (한정 · 러너 · payload 는 env 를 지우지 않는다)."""
+#: ★ 10-28 밤 PC5-07 — 프로세스 표 자리 (시험이 가짜 표로 바꾼다 · 생산 = /proc)
+PROC_DIR = '/proc'
+_DEAD_STATES = (b'Z', b'X', b'x')
+
+
+def proc_stat(pid, task=None):
+    """/proc/<pid>[/task/<tid>]/stat → (상태 bytes, 시작 시각 (부팅 뒤 클럭 틱 · 22 째 칸) int | None) · 없음 (사라짐) = None · 그 밖 못 읽음 = OSError."""
+    p = Path(PROC_DIR, str(pid)) if task is None else Path(PROC_DIR, str(pid), 'task', str(task))
     try:
-        names = os.listdir('/proc')
+        st = (p / 'stat').read_bytes()
+    except (FileNotFoundError, ProcessLookupError):
+        return None
+    fl = st[st.rfind(b')') + 2:].split()
+    if not fl:
+        return None
+    try:
+        start = int(fl[19])
+    except (IndexError, ValueError):
+        start = None
+    return fl[0], start
+
+
+def boot_ticks():
+    """지금 시각 = 부팅 뒤 클럭 틱 (/proc/uptime × SC_CLK_TCK · /proc/<pid>/stat 시작 시각과 같은 눈금) | None (못 읽음)."""
+    try:
+        up = float(Path('/proc/uptime').read_text(encoding='ascii').split()[0])
+        return int(up * os.sysconf('SC_CLK_TCK'))
+    except (OSError, ValueError, IndexError):
+        return None
+
+
+def _proc_ruid(base):
+    """/proc/<pid>/status 의 실 uid (Uid 첫 칸) | None (못 읽음)."""
+    try:
+        for ln in (Path(base) / 'status').read_text(encoding='ascii', errors='replace').splitlines():
+            if ln.startswith('Uid:'):
+                return int(ln.split()[1])
+    except (OSError, ValueError, IndexError):
+        return None
+    return None
+
+
+#: ★ 10-28 밤 PC5-07 — 그룹 표지 → 그룹 시작 틱 (`run_in_group` · `recover_group` 가 정리 동안 넣고 뺀다 · 한 인자 `group_members(token)` 자리를 그대로
+#:   두어 시험이 바꿔 끼우는 자리가 같다)
+GROUP_SINCE = {}
+
+
+def group_members(token, since=None, uid=None):
+    """/proc 에서 env 그룹 표지 (`RINT_RUN_TOKEN=token`) 를 가진 살아 있는 프로세스 pid 목록 (이 프로세스 뺌) | None (확인 불가).  러너 · bash 부분 셸 ·
+    payload · 그 자식은 env 를 물려받는다 (setsid 로 그룹을 벗어나도 표지는 남는다) — env 를 지운 자식은 못 찾는다 (한정 · 러너 · payload 는 env 를
+    지우지 않는다).  ★ 10-28 밤 PC5-07 (사전 공격 5 회차 PC-07):
+      · 상태 Z (주 스레드만 끝남) 라도 산 스레드 (`task/<tid>` 상태 Z · X 아님) 가 있으면 산 프로세스 — 그 스레드의 environ 으로 표지를 본다 (지도자의
+        environ = ESRCH) · 스레드가 다 끝났으면 (Z 만) 끝난 프로세스
+      · environ 을 못 읽는 프로세스 (사라짐 = ENOENT · ESRCH 뺌) = 그룹 원일 수 있으면 **확인 불가 (None)** — 그룹 원일 수 있다 = 같은 실 uid (root 면
+        다) · 그룹 시작 (`since` = 부팅 뒤 틱 · 없으면 모두) 뒤에 생긴 프로세스 (시작 전 프로세스는 이 그룹의 자손이 될 수 없다 · 다른 실 uid 프로세스 =
+        셈 밖 — 한정: 그룹 원이 su · sudo -u 로 실 uid 를 바꾸면 못 본다 · 러너 · payload 는 그러지 않는다 · 다른 터미널의 sudo 같은 프로세스로 확인이 늘
+        막히지 않게) · pid 1 (이 pid 이름공간의 init — 컨테이너에서 root 도 environ 을 못 읽는 일이 있다 · 그룹보다 먼저 있었고 pid 1 은 다시 쓰이지
+        않는다) 뺌 · uid = 셈하는 쪽 uid (기본 이 프로세스)."""
+    try:
+        names = os.listdir(PROC_DIR)
     except OSError:
         return None
-    me, out = os.getpid(), []
+    me, out, unsure = os.getpid(), [], False
+    uid = os.getuid() if uid is None else uid
+    since = GROUP_SINCE.get(token) if since is None else since
     needle = f'{GROUP_TOKEN_ENV}={token}'.encode('ascii')
     for e in names:
         if not e.isdigit() or int(e) == me:
             continue
+        base = Path(PROC_DIR, e)
         try:
-            st = Path('/proc', e, 'stat').read_bytes()
-            fl = st[st.rfind(b')') + 2:].split()
-            if not fl or fl[0] in (b'Z', b'X', b'x'):
+            ps = proc_stat(e)
+            if ps is None:
+                continue                                       # 사라졌다
+            env_src = base / 'environ'
+            if ps[0] in _DEAD_STATES:
+                live = None
+                try:
+                    for t in sorted(os.listdir(base / 'task')):
+                        ts = proc_stat(e, t)
+                        if ts is not None and ts[0] not in _DEAD_STATES:
+                            live = t
+                            break
+                except (FileNotFoundError, ProcessLookupError):
+                    live = None
+                if live is None:
+                    continue                                   # 스레드까지 다 끝났다
+                env_src = base / 'task' / live / 'environ'
+            try:
+                env = env_src.read_bytes()
+            except (FileNotFoundError, ProcessLookupError):
+                continue                                       # 사이에 끝났다
+            except OSError:
+                ru = _proc_ruid(base)
+                if (int(e) == 1 or (uid != 0 and ru is not None and ru != uid)
+                        or (since is not None and ps[1] is not None and ps[1] < since)):
+                    continue                                   # 이 그룹의 자손일 수 없다 (pid 1 = 이 pid 이름공간의 init — 그룹보다 먼저 있었고 다시 쓰이지 않는다)
+                unsure = True
                 continue
-            env = Path('/proc', e, 'environ').read_bytes()
         except OSError:
+            unsure = True
             continue
         if needle in env.split(b'\0'):
             out.append(int(e))
-    return sorted(out)
+    return None if unsure else sorted(out)
+
+
+def chain_parent_alive(L):
+    """★ 10-28 밤 PC5-03 — 시작 기록의 사슬 부모 (`chain_pid` · `chain_start` = 그 프로세스 시작 시각 틱) 가 이 부팅 · 이 pid 이름공간에서 아직 사나 →
+    True (산다 · 그 사슬이 그룹을 정리한다 — recover 하지 않는다) | False (끝났다 · pid 를 다른 프로세스가 다시 씀) | None (모름 — 칸 없음 · 꼴 틀림 ·
+    못 읽음 = 보수 쪽으로 산 것과 같이).  사슬 부모 = recover 를 부른 이 프로세스 자신이면 False (그 런을 기다리는 자리가 아니다 · 같은 프로세스 시험)."""
+    cp, cs = (L or {}).get('chain_pid'), (L or {}).get('chain_start')
+    if type(cp) is not int or cp <= 0:
+        return None
+    if cp == os.getpid():
+        return False
+    try:
+        ps = proc_stat(cp)
+    except OSError:
+        return None
+    if ps is None or ps[0] in _DEAD_STATES:
+        return False
+    if cs is None:
+        return True                                            # 시작 시각 칸 없음 + 그 pid 삶 = 다시 쓰였는지 모름 → 산 것으로 (보수)
+    return type(cs) is int and ps[1] == cs
 
 
 def group_kill_pids(pids):
@@ -2378,7 +2486,7 @@ def group_kill_pids(pids):
 
 def group_settle(token, limit=None):
     """그룹 (표지 프로세스) 이 다 끝날 때까지 SIGKILL 하고 기다린다 (대기 상한 `GROUP_GONE_WAIT_S`) → (확인 bool, 남은 pid 목록 | None (못 읽음),
-    죽인 프로세스 수)."""
+    죽인 프로세스 수).  ★ 10-28 밤 PC5-07 — 그룹 시작 틱 = `GROUP_SINCE[token]` (부르는 쪽이 넣는다 · `group_members` 가 못 읽는 프로세스를 거를 때)."""
     limit = GROUP_GONE_WAIT_S if limit is None else limit
     t_end = time.time() + limit
     killed = set()
@@ -2449,8 +2557,17 @@ def run_in_group(argv, cwd, env, logf, timeout, gdir, name, by='chain'):
     gdir = Path(gdir)
     gdir.mkdir(parents=True, exist_ok=True)
     token = os.urandom(16).hex()
+    #  ★ 10-28 밤 PC5-03 · 07 — 사슬 부모 시작 시각 (`chain_start` · recover 가 pid 다시 쓰임을 가른다) · 그룹 시작 틱 (`since_ticks` · 2 s 여유 · 못 읽는
+    #    프로세스 중 그룹 시작 전 프로세스를 셈 밖으로)
+    try:
+        me_stat = proc_stat(os.getpid())
+    except OSError:
+        me_stat = None
+    bt = boot_ticks()
+    since = (bt - 2 * os.sysconf('SC_CLK_TCK')) if bt is not None else None
     launch = {'schema': GROUP_SCHEMA, 'name': name, 'token': token, 'pid': None, 'pgid': None, 'argv': [str(a) for a in argv],
-              'host': host_ident(), 'started_utc': _utc(), 'by': by, 'chain_pid': os.getpid()}
+              'host': host_ident(), 'started_utc': _utc(), 'by': by, 'chain_pid': os.getpid(),
+              'chain_start': (me_stat[1] if me_stat else None), 'since_ticks': since}
     write_json_atomic(gdir / f'{name}.launch.json', launch)
     rc, cause, exc, p, sig = None, None, None, None, None
     pending = []
@@ -2493,7 +2610,11 @@ def run_in_group(argv, cwd, env, logf, timeout, gdir, name, by='chain'):
                 rc = p.wait(timeout=GROUP_GONE_WAIT_S)
             except subprocess.TimeoutExpired:
                 rc = None
-        confirmed, left, n_killed = group_settle(token)
+        GROUP_SINCE[token] = since
+        try:
+            confirmed, left, n_killed = group_settle(token)
+        finally:
+            GROUP_SINCE.pop(token, None)
         end = {'schema': GROUP_SCHEMA, 'name': name, 'token': token, 'rc': rc, 'cause': cause, 'signal': (signal_name(sig) if sig else None),
                'confirmed': bool(confirmed), 'left': left, 'left_after_exit': (n_killed if cause is None else None), 'killed': n_killed,
                'by': by, 'ended_utc': _utc()}
@@ -2552,17 +2673,28 @@ LEDGER_BUNDLE = 'ledger.bundle'
 EXPANSION_KEYS = frozenset({'schema', 'variant', 'points', 'overflow', 'attempts', 'ledger', 'ladders', 'plan_sha256', 'machine', 'env', 'utc'})
 RC_EXPANSION_NEEDED = 4
 #: 재실행 자격 원인 (Q9 §3-5 개정 4 — 자원 · 인프라 = 시간 초과 · 사슬이 받은 신호 · 사슬 부모 사망 (원인 기록 없음) · 그룹 종료 미확인 · 자원 낱말).
-#:   그 밖 원인 (gate = 런 전 관문 · check = 팔을 읽은 뒤 검사 · 수치 · 물리 · runner_rc = 낱말 없는 러너 rc) = 재실행 불가 (보수 쪽).
+#:   그 밖 원인 (gate = 런 전 관문 · check = 팔을 읽은 뒤 검사 · 수치 · 물리 · runner_rc = 낱말 없는 러너 rc · ★ 10-28 밤 PC5-06 chain_exception = 사슬
+#:   자신의 예외 (Stop 아님) · 그룹 끝 기록의 사슬 예외) = 재실행 불가 (보수 쪽).
 RESUME_CAUSES = frozenset({'timeout', 'signal', 'parent_dead', 'group_unconfirmed', 'resource'})
-#: 러너 rc ≠ 0 인 런 로그의 자원 · 인프라 낱말 (정확한 글자 · CUDA 메모리 · 호스트 메모리 · 디스크 부족 · GPU 오류) — ✅ 10-28 등록 R §10-5 다 ⑧ (1저자
-#:   "Rint 권고대로" · 아홉 낱말 · 빠진 낱말 = 재실행 불가 쪽).  CUDA_ERROR_ILLEGAL_ADDRESS 는 뺐다 (코드 결함일 수 있다 → 원인 runner_rc · 시험 AL19b).
-#:   검사 실패 흔적 (.unchecked/ 의 팔 payload) 이 있으면 낱말과 무관하게 재실행 불가.
-RESOURCE_WORDS = ('OutOfMemoryError', 'CUDA_ERROR_OUT_OF_MEMORY', 'cudaErrorMemoryAllocation', 'MemoryError', 'No space left on device',
-                  'CUDARuntimeError', 'CUDADriverError', 'CUDA_ERROR_LAUNCH_FAILED', 'cudaErrorLaunchFailure')
-#: 잘못된 주소 접근 (드라이버 · 런타임 이름) — 로그에 하나라도 있으면 다른 자원 낱말과 함께여도 원인 runner_rc (재실행 불가).  cupy 오류는
-#:   `CUDADriverError: CUDA_ERROR_ILLEGAL_ADDRESS` · `CUDARuntimeError: cudaErrorIllegalAddress` 꼴이라 낱말 하나를 빼는 것만으로는 resource 로 남는다
-#:   (✅ 10-28 등록 R §10-5 다 ⑧ 의 뜻 = 자동 재시도 안 함 · 시험 AL19c).
+#: 런 로그의 자원 낱말 (정확한 글자) — ★ 10-28 밤 PC5-02 (1저자 Q2 · 등록 R §10-5 PC5 블록) = **메모리 · 디스크 다섯만** (GPU 메모리 · 호스트 메모리 ·
+#:   디스크 부족).  옛 아홉 (10-28 낮) 의 cupy 오류 **클래스 이름** `CUDARuntimeError` · `CUDADriverError` 는 모든 CUDA 오류 줄에 들어 있어 device-side
+#:   assert · misaligned · illegal instruction · launch failed · invalid value 를 다 `resource` (재실행 자격) 로 읽었다 (사전 공격 5 회차 PC-02) — 빼고
+#:   `CUDA_ERROR_LAUNCH_FAILED` · `cudaErrorLaunchFailure` (커널 실행 중 예외 = 잘못된 주소와 같은 부류일 수 있다) 도 뺐다 → 그 밖 CUDA 오류 = 원인
+#:   `runner_rc` (자동 재실행 없음).  검사 실패 흔적 (.unchecked/ 의 팔 payload) 이 있으면 낱말과 무관하게 재실행 불가 (그대로).
+RESOURCE_WORDS = ('OutOfMemoryError', 'CUDA_ERROR_OUT_OF_MEMORY', 'cudaErrorMemoryAllocation', 'MemoryError', 'No space left on device')
+#: 잘못된 주소 접근 (드라이버 · 런타임 이름) — 로그에 하나라도 있으면 다른 자원 낱말과 함께여도 원인 runner_rc (재실행 불가 · 먼저 본다).  ★ 10-28 밤
+#:   PC5-06 — 시간 초과 · 신호 · 그룹 미확인 · 사슬 부모 사망 원인이어도 그 런 로그에 이 낱말이 있으면 runner_rc (같은 낱말 규칙 · 코드 결함 꼴을 신호 ·
+#:   부모 사망으로 비켜 재실행하지 않는다).  (✅ 10-28 등록 R §10-5 다 ⑧ 의 뜻 = 자동 재시도 안 함 · 시험 AL19c · PC08 · PC11).
 NOT_RESOURCE_WORDS = ('CUDA_ERROR_ILLEGAL_ADDRESS', 'cudaErrorIllegalAddress')
+#: ★ 10-28 밤 PC5-06 ② — 사슬 예외 (Stop 아님 · 원장 시도 꼴 단계 안) = 멈춤 이름 · 결과 줄 원인 (재실행 불가)
+CHAIN_EXCEPTION = 'CHAIN_EXCEPTION'
+#: ★ 10-28 밤 PC5-01 — 결과 줄에서 폴더 증거로 다시 세는 칸 (utc · by · 폴더 · 요약 sha 뺌 — 폴더 · 요약 sha 는 따로 대조)
+RECOUNT_KEYS = ('status', 'stop', 'side', 'cause', 'resume_ok')
+#: 단계 요약 이름 (recover · 다시 셈이 같은 차례로 읽는다)
+STAGE_SUMMARIES = ('ladder_summary.json', 'predict_summary.json', UNIT_SUMMARY['unit'], UNIT_SUMMARY['point'])
+#: ★ 10-28 밤 PC5-08 — 원장 잠금 (원장 저장소의 git 폴더 안 · 덧붙이기 = 배타 · 읽기 = 공유 · 대기 상한 = 구현 상수 · 판정 무관)
+LEDGER_LOCK_FILE = 'rint_r_ledger.lock'
+LEDGER_LOCK_WAIT_S = 120.0
 
 
 def ledger_line(obj):
@@ -2626,7 +2758,10 @@ def ledger_is_ancestor(repo, a, b):
 
 def ledger_history_problem(repo, commit):
     """원장 파일 역사 (첫 부모 차례 · 그 커밋까지) = 덧붙이기만 (판마다 앞 판의 바이트를 그대로 앞에 둔다) → 사유 | None (줄 지우기 · 바꾸기 =
-    사유 · Q9 §3-5 개정 3)."""
+    사유 · Q9 §3-5 개정 3).  ★ 10-28 밤 PC5-01 (사전 공격 5 회차 PC-01 · merge -s ours) — 원장 파일을 바꾼 커밋은 모두 첫 부모 역사 위에 있어야 한다
+    (그 커밋에서 닿는 커밋 중 원장 파일을 바꾼 병합 아닌 커밋이 첫 부모 역사 밖 = 병합으로 숨긴 원장 판 · 정직한 결과 줄 커밋을 둘째 부모로 숨기고 다른 줄로
+    본가지를 옮긴 꼴 = 사유 · 조상 대조가 그 숨긴 커밋을 조상으로 받지 않게).  끝 커밋 교체 (reset · amend · 정직한 커밋이 닿지 않음) 는 역사로 못 본다 →
+    결과 줄을 폴더 증거에서 다시 센다 (`result_line_problem`)."""
     p = ledger_git(repo, 'log', '--first-parent', '--format=%H', commit, '--', LEDGER_FILE, check=False)
     if p.returncode != 0:
         return '원장 역사를 못 읽는다'
@@ -2638,11 +2773,59 @@ def ledger_history_problem(repo, commit):
         if not q.stdout.startswith(prev):
             return f'커밋 {c[:12]} 이 앞 판의 줄을 바꿨다 · 지웠다 (덧붙이기만이 아니다)'
         prev = q.stdout
+    fp = ledger_git(repo, 'rev-list', '--first-parent', commit, check=False)
+    al = ledger_git(repo, 'rev-list', '--full-history', '--no-merges', commit, '--', LEDGER_FILE, check=False)
+    if fp.returncode != 0 or al.returncode != 0:
+        return '원장 역사 (첫 부모 · 원장 파일을 바꾼 커밋) 를 못 읽는다'
+    first = set(fp.stdout.decode('ascii', 'replace').split())
+    hidden = [c for c in al.stdout.decode('ascii', 'replace').split() if c not in first]
+    if hidden:
+        return (f'원장 파일을 바꾼 커밋 {hidden[0][:12]} (외 {len(hidden) - 1}) 이 첫 부모 역사 밖이다 (병합으로 숨긴 원장 판 · merge -s ours 꼴 — 원장 = '
+                f'한 줄 역사 · 덧붙이기만)')
     return None
 
 
-def ledger_now(repo):
-    """원장 = HEAD 커밋의 파일 (작업 파일 바이트 = HEAD blob · 커밋 안 한 고침 없음) → (HEAD sha, 바이트)."""
+def _ledger_lock_path(repo):
+    """원장 잠금 파일 자리 = 원장 저장소의 git 폴더 안 (작업 트리를 더럽히지 않는다 · `.git` 이 폴더가 아니면 git 에 묻는다)."""
+    g = Path(repo) / '.git'
+    if not g.is_dir():
+        out = ledger_git(repo, 'rev-parse', '--git-dir').stdout.decode('utf-8', 'replace').strip()
+        g = Path(out) if os.path.isabs(out) else Path(repo) / out
+    return g / LEDGER_LOCK_FILE
+
+
+@contextlib.contextmanager
+def ledger_lock(repo, exclusive=True, wait=None):
+    """★ 10-28 밤 PC5-08 (사전 공격 5 회차 PC-08) — 원장 잠금 (flock · 덧붙이기 = 배타 · 읽기 = 공유 · 다른 프로세스 · 같은 프로세스의 다른 스레드 모두) ·
+    대기 상한 (`LEDGER_LOCK_WAIT_S` · 넘으면 Stop ATTEMPT_LEDGER_MISMATCH) · 공유 잠금 자리를 못 만들면 (읽기 전용 저장소) 잠금 없이 읽는다 · 배타는 Stop.
+    잠금은 프로세스가 죽으면 풀린다 (flock)."""
+    import fcntl
+    wait = LEDGER_LOCK_WAIT_S if wait is None else wait
+    fd = None
+    try:
+        fd = os.open(str(_ledger_lock_path(repo)), os.O_RDWR | os.O_CREAT, 0o644)
+    except (OSError, Stop) as e:
+        if exclusive:
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'원장 잠금 파일을 못 연다 ({type(e).__name__}: {e})')
+    if fd is None:
+        yield
+        return
+    try:
+        t_end = time.time() + wait
+        while True:
+            try:
+                fcntl.flock(fd, (fcntl.LOCK_EX if exclusive else fcntl.LOCK_SH) | fcntl.LOCK_NB)
+                break
+            except BlockingIOError:
+                if time.time() >= t_end:
+                    raise Stop('ATTEMPT_LEDGER_MISMATCH', f'원장 잠금을 대기 상한 {wait:g} s 안에 못 잡았다 (다른 사슬 · 손이 원장을 쓰는 중) — 다시 시작')
+                time.sleep(0.05)
+        yield
+    finally:
+        os.close(fd)
+
+
+def _ledger_now(repo):
     head = ledger_head(repo)
     raw = ledger_blob(repo, head)
     lp = Path(repo) / LEDGER_FILE
@@ -2653,6 +2836,13 @@ def ledger_now(repo):
     if cur != raw:
         raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{lp} 작업 파일 ≠ HEAD (커밋하지 않은 고침 · 링크 · 못 읽음 — 원장은 커밋된 판만 읽는다)')
     return head, raw
+
+
+def ledger_now(repo):
+    """원장 = HEAD 커밋의 파일 (작업 파일 바이트 = HEAD blob · 커밋 안 한 고침 없음) → (HEAD sha, 바이트) · ★ 10-28 밤 PC5-08 — 공유 잠금 안에서 (덧붙이는 중인
+    다른 손의 반쯤 쓴 작업 파일을 커밋 안 한 고침으로 읽지 않게)."""
+    with ledger_lock(repo, exclusive=False):
+        return _ledger_now(repo)
 
 
 def _entry_problem(e, st):
@@ -2747,22 +2937,66 @@ def ledger_parse(raw):
     return st
 
 
-def ledger_append(repo, obj, msg, expect=None):
-    """원장에 줄 하나를 덧붙이고 커밋 → 새 HEAD.  덧붙이기 전 = 작업 파일 = HEAD (`ledger_now`) · expect = 읽어 둔 HEAD 바이트 (그 사이 다른 손이 커밋했으면
-    멈춤) · 덧붙인 뒤 원장 꼴을 다시 읽는다 (꼴이 틀리면 덧붙이지 않는다 — 커밋 전)."""
-    _head, raw = ledger_now(repo)
-    if expect is not None and raw != expect:
-        raise Stop('ATTEMPT_LEDGER_MISMATCH', '원장이 읽은 뒤 바뀌었다 (다른 손이 커밋했다) — 다시 시작')
-    new = raw + ledger_line(obj).encode('utf-8')
-    ledger_parse(new)
+def _ledger_committed(repo, new):
+    """HEAD 의 원장 파일 = new 인가 (커밋이 됐나 — 되돌림 판단 · 못 읽음 = False)."""
+    p = ledger_git(repo, 'show', f'HEAD:{LEDGER_FILE}', check=False)
+    return p.returncode == 0 and p.stdout == new
+
+
+def _ledger_rollback(repo, old):
+    """덧붙임 실패 뒤 되돌림 — 작업 파일 = old (원자적 · old None = 파일 없음) · 색인의 원장 = HEAD (실패해도 넘어간다 — 작업 파일이 HEAD 면 다음 읽기는
+    된다)."""
     lp = Path(repo) / LEDGER_FILE
-    with open(lp, 'ab') as f:
-        f.write(ledger_line(obj).encode('utf-8'))
+    if old is None:
+        try:
+            lp.unlink()
+        except FileNotFoundError:
+            pass
+        ledger_git(repo, 'rm', '-q', '--cached', '--ignore-unmatch', '--', LEDGER_FILE, check=False)
+        return
+    tmp = lp.with_name(f'{lp.name}.rollback.{os.getpid()}')
+    with open(tmp, 'wb') as f:
+        f.write(old)
         f.flush()
         os.fsync(f.fileno())
-    ledger_git(repo, 'add', '--', LEDGER_FILE)
-    ledger_git(repo, 'commit', '-q', '-m', msg, '--', LEDGER_FILE)
-    return ledger_head(repo)
+    os.replace(tmp, lp)
+    ledger_git(repo, 'reset', '-q', '--', LEDGER_FILE, check=False)
+
+
+def ledger_append(repo, obj, msg, expect=None):
+    """원장에 줄 하나를 덧붙이고 커밋 → 새 HEAD.  덧붙이기 전 = 작업 파일 = HEAD (`ledger_now`) · expect = 읽어 둔 HEAD 바이트 (그 사이 다른 손이 커밋했으면
+    멈춤) · 덧붙인 뒤 원장 꼴을 다시 읽는다 (꼴이 틀리면 덧붙이지 않는다 — 커밋 전).  ★ 10-28 밤 PC5-08 (사전 공격 5 회차 PC-08) — 읽기 · 대조 · 덧붙임 ·
+    커밋 = 배타 잠금 하나 안 (동시 --add 둘이 같은 번호 항목 둘을 커밋하지 않는다) · git add · commit 실패 (index.lock · 신호 · 시간 초과) = 작업 파일 · 색인을
+    읽은 판으로 되돌린다 (커밋 안 된 줄이 남아 원장 전체가 멈추지 않게) · 커밋은 됐는데 git 이 실패로 끝났으면 (HEAD = 새 판) 그 커밋을 돌려준다."""
+    with ledger_lock(repo, exclusive=True):
+        _head, raw = _ledger_now(repo)
+        if expect is not None and raw != expect:
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', '원장이 읽은 뒤 바뀌었다 (다른 손이 커밋했다) — 다시 시작')
+        line = ledger_line(obj).encode('utf-8')
+        new = raw + line
+        ledger_parse(new)
+        lp = Path(repo) / LEDGER_FILE
+        try:
+            with open(lp, 'ab') as f:
+                f.write(line)
+                f.flush()
+                os.fsync(f.fileno())
+            ledger_git(repo, 'add', '--', LEDGER_FILE)
+            ledger_git(repo, 'commit', '-q', '-m', msg, '--', LEDGER_FILE)
+        except BaseException as e:
+            try:
+                landed = _ledger_committed(repo, new)
+            except Stop:
+                landed = False
+            if not landed:
+                try:
+                    _ledger_rollback(repo, raw)
+                except (OSError, Stop):
+                    pass
+                raise
+            if not isinstance(e, Exception):
+                raise
+        return ledger_head(repo)
 
 
 def folder_digest(path):
@@ -2870,7 +3104,8 @@ def read_attempt(d):
 
 def adoption(st, target, sides=None, upto=None):
     """같은 대상 시도 (원장 차례) → {'attempts', 'adopted', 'chain', 'effective', 'problems'} — Q9 §3-5: 채택 = 처음 결과 전이 아닌 시도 (거부 · 결과 전
-    멈춤 = 건너뜀) · 그 재실행 사슬 (원 시도를 가리키는 재실행 · 앞 사슬 끝이 재실행 자격으로 멈췄을 때만 · 거부된 재실행 = 건너뜀) · 채택 뒤 돈 새 시도 =
+    멈춤 = 건너뜀) · 그 재실행 사슬 (원 시도를 가리키는 재실행 · 앞 사슬 끝이 재실행 자격으로 멈췄을 때만 · 거부된 재실행 · ★ 10-28 밤 PC5-05 결과 전 멈춘
+    재실행 (단계 안 관문 · 표지 · payload 없음) = 건너뜀 — 사슬을 끝내지 않는다 · 다시 재실행할 수 있다) · 채택 뒤 돈 새 시도 =
     ATTEMPT_AFTER_ADOPTED · 자격 없이 돈 재실행 = RESUME_NOT_ALLOWED · 결과 줄 없는 시도 = ATTEMPT_LEDGER_MISMATCH (recover 먼저).  sides = {n: 'pre' |
     'post'} (판정 = 폴더에서 · 없으면 결과 줄) · upto = 이 번호 앞만 (풀기 전 대조)."""
     ns = [k for k, e in st['entries'].items() if e['target'] == target and (upto is None or k < upto)]
@@ -2894,6 +3129,8 @@ def adoption(st, target, sides=None, upto=None):
             continue
         if not ran:
             continue                                          # 거부 기록만 = 기록만 (Q9 §3-4 R4-03)
+        if e['resume_of'] is not None and side == 'pre':
+            continue                                          # ★ 10-28 밤 PC5-05 — 결과 전 멈춘 재실행 (단계 안 관문 · 표지 · payload 없음) = 기록만 (사슬을 끝내지 않는다 · 다시 재실행)
         if e['resume_of'] == out['adopted'] and last['status'] != 'completed' and last['resume_ok']:
             out['chain'].append(k)
             last = r
@@ -3100,6 +3337,31 @@ def attempt_presolve_problem(st, e, n, target, a, stage):
         r = st['results'].get(eff)
         if read_attempt(src) is None or r is None or r['folder'] != src.name or folder_digest(src) != r['folder_sha256']:
             return ('RESUME_NOT_ALLOWED', f'재실행 원천 {src} (재실행 사슬 끝 attempt_{eff}) 가 없거나 원장 결과 줄과 다르다 (같은 기계 · 같은 바탕 폴더에서)')
+        return resume_chain_problem(st, e, n, a.out)
+    return None
+
+
+def resume_chain_problem(st, e, n, base):
+    """★ 10-28 밤 PC5-01 (사전 공격 5 회차 PC-01 · R1) 재실행 풀기 전 대조 — 재실행 자격을 원장 결과 줄만으로 믿지 않는다: 원 시도 + 그 원 시도를 가리키는
+    재실행 항목 (n 앞 · 같은 대상 · 풀기 전 거부 · 결과 전 멈춤 포함) 마다 같은 바탕 폴더에 그 결과 줄의 폴더 (시도 폴더 · 옆 거부 기록) 가 하나 · 요약 sha =
+    결과 줄 · 결과 줄의 셈한 칸 (status · stop · side · cause · resume_ok) = 폴더 증거에서 다시 센 값 → (멈춤, 사유) | None (재실행 = 같은 기계 · 같은
+    바탕 폴더 · 등록 R §10-5 나 ⑩).  (새 시도 (재실행 아님) 의 앞 시도는 다른 기계 · 바탕에 있을 수 있다 — 판정 · 합치기가 모두 다시 센다.)"""
+    orig = adoption(st, e['target'], upto=n)['adopted']
+    found = _attempt_folders([base])
+    for k in [k for k, x in st['entries'].items() if x['target'] == e['target'] and k < n and (k == orig or x['resume_of'] == orig)]:
+        r = st['results'].get(k)
+        cand = [p for p in found.get(k, []) if r is not None and p.name == r['folder']]
+        if len(cand) != 1:
+            return ('RESUME_NOT_ALLOWED', f'재실행 사슬 시도 {k} 의 폴더 ({(r or {}).get("folder")}) 가 같은 바탕 {base} 에 {len(cand)} 개 (재실행 = 같은 기계 · '
+                                          f'같은 바탕 폴더)')
+        if (cand[0].is_dir() and read_attempt(cand[0]) is None) or folder_digest(cand[0]) != r['folder_sha256']:
+            return ('RESUME_NOT_ALLOWED', f'재실행 사슬 시도 {cand[0].name} ≠ 원장 결과 줄 (요약 sha · attempt.json)')
+        try:
+            why = result_line_problem(k, cand[0], r)
+        except Stop as ex:
+            why = ex.cause
+        if why:
+            return ('ATTEMPT_LEDGER_MISMATCH', why)
     return None
 
 
@@ -3209,39 +3471,114 @@ def check_trace(folder, od=None):
     return False
 
 
+def words_cause(txt, default):
+    """런 로그 글 → 원인 (★ 10-28 밤 PC5-02 · 06 같은 낱말 규칙): 잘못된 주소 (`NOT_RESOURCE_WORDS` · 먼저) = runner_rc · 자원 낱말 (`RESOURCE_WORDS` ·
+    메모리 · 디스크 다섯) = resource · 없음 = default."""
+    if any(w in txt for w in NOT_RESOURCE_WORDS):
+        return 'runner_rc'
+    if any(w in txt for w in RESOURCE_WORDS):
+        return 'resource'
+    return default
+
+
+def run_log_text(base, run):
+    """<base>/logs/<run>.log 글 — 런 이름 없음 · 파일 없음 · 못 읽음 = '' (요약 있는 길 · 그 런 로그가 없으면 낱말 없음)."""
+    lp = Path(base) / 'logs' / f'{run}.log' if run else None
+    try:
+        return lp.read_text(encoding='utf-8', errors='replace') if lp is not None and lp.is_file() else ''
+    except OSError:
+        return ''
+
+
 def stop_cause(s, folder):
     """멈춘 단계 요약 → 원인 이름 (기록 · 재실행 자격) — timeout · signal · group_unconfirmed · resource (러너 rc · 그 런 로그에 자원 낱말) · runner_rc ·
-    gate (런 없이 멈춤) · check (팔을 읽은 뒤의 멈춤 · 등록 결과)."""
+    gate (런 없이 멈춤) · check (팔을 읽은 뒤의 멈춤 · 등록 결과) · ★ 10-28 밤 chain_exception (사슬 예외 · PC5-06 ②).  ★ 10-28 밤 PC5-06 (같은 낱말
+    규칙) — 재실행 자격 원인 (시간 초과 · 신호 · 그룹 미확인) 이어도 멈춘 런 로그에 잘못된 주소 낱말이 있으면 runner_rc (코드 결함 꼴을 신호 · 시간 초과로
+    비켜 재실행하지 않는다)."""
     code = (s.get('stop') or {}).get('code') or s.get('status')
-    if code == 'TIME_LIMIT':
-        return 'timeout'
-    if code == 'GROUP_UNCONFIRMED':
-        return 'group_unconfirmed'
+    txt = run_log_text(folder, (s.get('stop') or {}).get('run'))
+    if code == CHAIN_EXCEPTION:
+        return 'chain_exception'
     if code == 'RUNNER_RC':
         rr, _od = _stopped_run(s, folder)
         gc = (rr or {}).get('group_cause')
         if gc in ('signal', 'signal_after'):
-            return 'signal'
-        if gc == 'timeout':
-            return 'timeout'
-        run = (s.get('stop') or {}).get('run')
-        lp = Path(folder) / 'logs' / f'{run}.log' if run else None
+            base = 'signal'
+        elif gc == 'timeout':
+            base = 'timeout'
+        else:
+            return words_cause(txt, 'runner_rc')
+    elif code == 'TIME_LIMIT':
+        base = 'timeout'
+    elif code == 'GROUP_UNCONFIRMED':
+        base = 'group_unconfirmed'
+    else:
+        return 'gate' if not s.get('runs') else 'check'
+    return 'runner_rc' if any(w in txt for w in NOT_RESOURCE_WORDS) else base
+
+
+def orphan_cause(folder):
+    """★ 10-28 밤 PC5-06 (사전 공격 5 회차 PC-06) — 요약 없는 시도 (사슬 부모 사망 · 요약 전에 끝남) 의 원인 → (원인, 읽음 bool).  그 시도 폴더 아래 그룹
+    기록 (시작 · 끝 · 봉인 원천 graph_src 포함) 과 그 런 로그 (`<그룹 폴더의 부모>/logs/<런>.log`) · 러너 rc 를 요약 있는 길과 같은 낱말 규칙으로 (옛 =
+    늘 parent_dead):
+      · 끝 기록 by chain · 원인 None · rc 0 = 끝난 런 (건너뜀)
+      · by chain · 원인 None · 그 밖 rc (러너가 끝난 뒤 요약 전 사망) = 낱말 (없음 = runner_rc) · 시간 초과 · 신호 = timeout · signal (로그에 잘못된 주소 =
+        runner_rc) · exception (기다림 중 사슬 예외) = chain_exception
+      · by recover (그 런 도중 사슬 부모 사망) = 낱말 (없음 = parent_dead)
+    런 여럿 = 재실행 불가 원인이 하나라도 있으면 그것 (시작 차례 첫) · 아니면 마지막 · 끝나지 않은 런이 없으면 parent_dead (런 사이 사망) · 그룹 기록이 하나도
+    없음 · 기록 · 그 런 로그를 못 읽음 · 모르는 꼴 = 읽음 False (재실행 자격 없음 · 보수)."""
+    folder = Path(folder)
+    rows, ok = [], True
+    for lp in folder.rglob(f'{GROUPS_DIR}/*.launch.json'):
+        nm = lp.name[:-len('.launch.json')]
         try:
-            txt = lp.read_text(encoding='utf-8', errors='replace') if lp is not None and lp.is_file() else ''
+            L = json.loads(lp.read_text(encoding='utf-8'))
+            er = json.loads(lp.with_name(nm + '.end.json').read_text(encoding='utf-8'))
+        except (OSError, UnicodeDecodeError, ValueError):
+            ok = False
+            continue
+        if not (isinstance(L, dict) and isinstance(er, dict)):
+            ok = False
+            continue
+        rows.append((str(L.get('started_utc') or ''), str(lp), nm, lp.parent.parent, er))
+    if not rows:
+        return 'parent_dead', False
+    causes = []
+    for _t, _p, nm, base, er in sorted(rows, key=lambda x: (x[0], x[1])):
+        by, gc, rc = er.get('by'), er.get('cause'), er.get('rc')
+        if by == 'chain' and gc is None and rc == 0:
+            continue
+        lpth = base / 'logs' / f'{nm}.log'
+        try:
+            txt = lpth.read_text(encoding='utf-8', errors='replace')
         except OSError:
-            txt = ''
-        if any(w in txt for w in NOT_RESOURCE_WORDS):
-            return 'runner_rc'
-        return 'resource' if any(w in txt for w in RESOURCE_WORDS) else 'runner_rc'
-    return 'gate' if not s.get('runs') else 'check'
+            txt, ok = '', False
+        if by == 'recover':
+            c = words_cause(txt, 'parent_dead')
+        elif by != 'chain':
+            c, ok = 'parent_dead', False
+        elif gc is None:
+            c = words_cause(txt, 'runner_rc')
+        elif gc in ('timeout', 'signal', 'signal_after'):
+            c = 'runner_rc' if any(w in txt for w in NOT_RESOURCE_WORDS) else ('timeout' if gc == 'timeout' else 'signal')
+        elif gc == 'exception':
+            c = 'chain_exception'
+        else:
+            c, ok = 'parent_dead', False
+        causes.append(c)
+    bad = [c for c in causes if c not in RESUME_CAUSES]
+    return (bad[0] if bad else (causes[-1] if causes else 'parent_dead')), ok
 
 
-def attempt_result_line(n, folder, s, by):
-    """단계 요약 (없으면 None = 사슬 부모 사망) → 결과 줄."""
+def result_fields(folder, s):
+    """단계 요약 (없으면 None = 요약 없는 시도) → 결과 줄의 셈한 칸 (status · stop · side · cause · resume_ok) — 결과 줄 (사슬 · recover) 과 다시 셈 (판정 ·
+    합치기 · 풀기 전 대조) 이 같은 함수."""
     folder = Path(folder)
     side = folder_side(folder)
+    readable = True
     if s is None:
-        status, stop, cause = 'interrupted', None, 'parent_dead'
+        status, stop = 'interrupted', None
+        cause, readable = orphan_cause(folder)                 # ★ 10-28 밤 PC5-06 — 옛 = parent_dead 고정
         trace = check_trace(folder)
     else:
         done = s.get('status') in DONE_STATUSES
@@ -3251,12 +3588,51 @@ def attempt_result_line(n, folder, s, by):
         cause = None if done else stop_cause(s, folder)
         _rr, od = _stopped_run(s, folder)
         trace = False if done else (check_trace(folder, od) if od is not None else check_trace(folder))
-    resume_ok = status != 'completed' and side == 'post' and cause in RESUME_CAUSES and not trace
+    resume_ok = status != 'completed' and side == 'post' and cause in RESUME_CAUSES and not trace and readable
+    return {'status': status, 'stop': stop, 'side': side, 'cause': cause, 'resume_ok': bool(resume_ok)}
+
+
+def attempt_result_line(n, folder, s, by):
+    """단계 요약 (없으면 None = 사슬 부모 사망 · 요약 전에 끝남) → 결과 줄."""
+    folder = Path(folder)
+    f = result_fields(folder, s)
     dg = folder_digest(folder)
     if dg is None:
         raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{folder} 요약 sha 를 못 셈 (링크 · 특수 파일)')
-    return {'kind': 'result', 'n': n, 'status': status, 'stop': stop, 'side': side, 'cause': cause, 'resume_ok': bool(resume_ok),
-            'folder': folder.name, 'folder_sha256': dg, 'by': by, 'utc': _utc()}
+    return dict({'kind': 'result', 'n': n}, **f, folder=folder.name, folder_sha256=dg, by=by, utc=_utc())
+
+
+def result_recount(p):
+    """★ 10-28 밤 PC5-01 (사전 공격 5 회차 PC-01) — 시도 폴더 (또는 옆 거부 기록 파일) 의 증거에서 결과 줄의 셈한 칸을 다시 센다 — 결과 줄을 쓴 함수와 같은
+    함수 (거부 기록 = rejected · presolve · 결과 전 · 멈춤 = 그 기록의 이름 / 단계 요약 (사다리 · 예측 · 단위 · 점 차례) = `result_fields` / 요약 없음 =
+    같은 함수의 요약 없는 길) · 못 읽는 거부 기록 = Stop."""
+    p = Path(p)
+    rj = p if p.is_file() else p / REJECTED_FILE
+    if rj.is_file():
+        try:
+            rec = _json_strict(rj.read_bytes())
+        except Exception as e:                                # noqa: BLE001 — 못 읽음 = 대조 실패
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{p.name}: 거부 기록을 못 읽는다 ({type(e).__name__})')
+        if not isinstance(rec, dict):
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{p.name}: 거부 기록 꼴')
+        return {'status': 'rejected', 'stop': {'code': str(rec.get('code')), 'run': None, 'reason': None}, 'side': 'pre', 'cause': 'presolve',
+                'resume_ok': False}
+    s = None
+    for nm in STAGE_SUMMARIES:
+        s = s or read_summary(p, nm)[0]
+    return result_fields(p, s)
+
+
+def result_line_problem(k, p, r):
+    """결과 줄 r (항목 k) ↔ 폴더 p 의 증거에서 다시 센 칸 (`RECOUNT_KEYS` — utc · by · 폴더 · 요약 sha 뺌) → 사유 | None.  끝 커밋 교체 (reset · amend 뒤
+    원인 · 재실행 자격만 바꾼 줄) · 손으로 고친 결과 줄 · 다른 규칙 판으로 쓴 결과 줄을 잡는다 (요약 sha 가 같아도)."""
+    got = result_recount(p)
+    diff = [f for f in RECOUNT_KEYS if got[f] != r.get(f)]
+    if not diff:
+        return None
+    return (f'{Path(p).name}: 결과 줄 {k} 의 {", ".join(f"{f} {r.get(f)!r}" for f in diff)} ≠ 폴더 증거 (거부 기록 · 단계 요약 · 그룹 기록 · 런 로그 · '
+            f'.unchecked/) 에서 다시 센 값 ({", ".join(f"{f} {got[f]!r}" for f in diff)}) — 끝 줄 바꿔치기 · 손 고침 · 다른 규칙 판의 결과 줄 (★ 10-28 밤 '
+            f'PC5-01)')
 
 
 def attempt_close(att, s):
@@ -3293,6 +3669,9 @@ def ledger_inputs_check(dirs, repo, commit, st, want_prefix=None):
             raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{Path(d).name}: 원장 항목 · 결과 줄 ≠ 시도 폴더')
         if folder_digest(d) != r['folder_sha256'] or r['folder'] != Path(d).name:
             raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{Path(d).name}: 폴더 요약 sha ≠ 원장 결과 줄')
+        why = result_line_problem(n, d, r)                      # ★ 10-28 밤 PC5-01 — 입력 시도의 결과 줄 = 폴더 증거에서 다시 센 값
+        if why:
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', why)
         ad = adoption(st, a['target'])
         if ad['problems']:
             raise Stop(*ad['problems'][0])
@@ -3356,6 +3735,9 @@ def target_ledger_problem(repo, st, raw, commit, target, found):
         sides[k] = folder_side(p)
         if sides[k] != r['side']:
             raise Stop('ATTEMPT_LEDGER_MISMATCH', f'{p.name}: 결과 줄 {k} 의 결과 {r["side"]} ≠ 폴더 ({sides[k]} — 표지 · payload 유무)')
+        why = result_line_problem(k, p, r)                      # ★ 10-28 밤 PC5-01 — status · stop · cause · 재실행 자격도 폴더 증거에서 다시 센다
+        if why:
+            raise Stop('ATTEMPT_LEDGER_MISMATCH', why)
         if p.is_dir():
             a = read_attempt(p)
             if a is None or a['n'] != k or a['target'] != target:
@@ -3411,9 +3793,18 @@ def ledger_verdict_check(dirs, repo, attempt_dirs=(), commit=None):
         want[a['target']] = (a['n'], Path(d).resolve())
     mdirs = {x for x, _s in merged}
     found = _attempt_folders([Path(d).resolve().parent for d in dirs if Path(d).resolve() not in mdirs] + [Path(x) for x in attempt_dirs])
+    #  ★ 10-28 밤 PC5-10 (사전 공격 5 회차 PC-10 · R4) — 다시 판정 (commit = 원 판정 원장 커밋 ≠ 지금 HEAD): 그 커밋 원장에 없는 시도 폴더라도 지금 원장의
+    #    항목이고 판정 입력 대상 (합친 예측의 단위 · 점 대상 포함) 밖이면 (판정 뒤 같은 바탕에 돈 다른 대상 시도) 다시 판정을 흔들지 않는다 · 같은 대상의 뒤 시도 ·
+    #    지금 원장에도 없는 폴더 = 그대로 멈춤
+    keep = set(want) | {t for _d, sm in merged for t in (((sm.get('merge') or {}).get('units') or {}) if isinstance(sm.get('merge'), dict) else {})}
+    st_now = ledger_parse(raw_head) if commit != head else st
     for k in sorted(found):
-        if k not in st['entries']:
-            raise Stop('ATTEMPT_LEDGER_MISMATCH', f'원장에 없는 시도 폴더 {[p.name for p in found[k]]} (항목 {k})')
+        if k in st['entries']:
+            continue
+        en = st_now['entries'].get(k)
+        if commit != head and en is not None and en['target'] not in keep:
+            continue
+        raise Stop('ATTEMPT_LEDGER_MISMATCH', f'원장에 없는 시도 폴더 {[p.name for p in found[k]]} (항목 {k})')
     pub = {'path': str(repo.resolve()), 'commit': commit, 'sha256': hashlib.sha256(raw).hexdigest(),
            'attempt_dirs': [str(Path(x).resolve()) for x in attempt_dirs], 'targets': {}}
     for target, (n_in, d_in) in sorted(want.items()):
@@ -4416,6 +4807,18 @@ def check_after_main(after_dir, plan_sha, s0_sha, code):
     return {'dir': str(d), 'summary_sha256': sha}
 
 
+def chain_exception_record(s, e):
+    """★ 10-28 밤 PC5-06 ② (사전 공격 5 회차 PC-06 · R3) — 원장 시도 꼴 단계 안 사슬 예외 (Stop 아님 · 팔 읽기 · 판정 함수 · 기록 쓰기 결함) → 단계 요약에
+    멈춤 CHAIN_EXCEPTION (사유 = 예외 이름 · 글) · 상태 STOPPED · 화면에 traceback → 그 예외 (요약 · 결과 줄 (원인 chain_exception · 재실행 자격 없음 —
+    결정적 결함이면 재실행도 같은 자리에서 죽는다) 을 쓴 뒤 단계가 다시 올린다 · 옛 = 요약 · 결과 줄 없이 빠져 recover 가 parent_dead · 재실행 자격으로 적었다)."""
+    import traceback
+    traceback.print_exc()
+    s['stop'] = Stop(CHAIN_EXCEPTION, f'{type(e).__name__}: {str(e)[:300]}').record()
+    s['status'] = 'STOPPED'
+    print_stop(Stop(CHAIN_EXCEPTION, f'{type(e).__name__}: {str(e)[:300]}'))
+    return e
+
+
 # ═════════════════════════ (3) 사다리 단계 ═════════════════════════
 def machine_missing_rc(a):
     """★ 10-27 묶음 C1a (C6 #15 · Q11) — 사다리 · 예측 = `--machine` 필수 (없음 = 인자 오류 rc 2 · 러너 · 출력 폴더 없음).  argparse 가 아니라 단계
@@ -4446,7 +4849,7 @@ def stage_ladder(a, contract):
     s['attempt'] = att.public() if att is not None else None
     s.update({'law': a.law, 'variant': a.variant, 'kit': a.kit or SBE_KIT, 'runs': [], 'ladder': None, 'env_scrubbed': [],
               'after_main': None, 'bed': None, 'sv_graph_source': None, 'noop': None})
-    ran = False
+    ran, chain_exc = False, None
     try:
         if not _same(a.target, TARGET_SBE_MS) or a.law not in LAWS or (a.kit or SBE_KIT) != SBE_KIT or a.variant == 'SVORDER':
             raise Stop('NOT_REGISTERED', f'--target {a.target} (등록 {TARGET_SBE_MS}) · --law {a.law} · --kit {a.kit} '
@@ -4521,12 +4924,18 @@ def stage_ladder(a, contract):
         if s['status'] is None:
             s['status'] = 'STOPPED'
         print_stop(e)
+    except Exception as e:                                # noqa: BLE001 — ★ 10-28 밤 PC5-06 ② 원장 시도 꼴의 사슬 예외 = 원인 기록 뒤 다시 올림
+        if att is None:
+            raise
+        chain_exc = chain_exception_record(s, e)
     if a.dry_run and not ran:
         return 3
     out.mkdir(parents=True, exist_ok=True)
     write_json(out / 'ladder_summary.json', s)
     if att is not None:
         rc_a = attempt_close(att, s)                      # ★ 10-27 묶음 C1b — 결과 줄 (그룹 종료 확인 뒤) · 못 쓰면 rc 3
+        if chain_exc is not None:
+            raise chain_exc
         if rc_a is not None:
             return rc_a
     L = s.get('ladder') or {}
@@ -4650,7 +5059,7 @@ def stage_predict(a, contract):
             except OSError:
                 dsha = None
             s['expansion'] = {'path': str(Path(a.expand).resolve()), 'sha256': dsha}
-    ran = False
+    ran, chain_exc = False, None
     try:
         if (a.kit or DBE_KIT) != DBE_KIT:
             raise Stop('NOT_REGISTERED', f'--kit {a.kit} (등록 {DBE_KIT})')
@@ -4728,6 +5137,10 @@ def stage_predict(a, contract):
         if s['status'] is None:
             s['status'] = 'STOPPED'
         print_stop(e)
+    except Exception as e:                                # noqa: BLE001 — ★ 10-28 밤 PC5-06 ② 원장 시도 꼴의 사슬 예외 = 원인 기록 뒤 다시 올림
+        if att is None:
+            raise
+        chain_exc = chain_exception_record(s, e)
     if a.dry_run and not ran:
         return 3
     out.mkdir(parents=True, exist_ok=True)
@@ -4735,6 +5148,8 @@ def stage_predict(a, contract):
     write_json(out / sname, s)
     if att is not None:
         rc_a = attempt_close(att, s)                      # ★ 10-27 묶음 C1b — 결과 줄 (그룹 종료 확인 뒤) · 못 쓰면 rc 3
+        if chain_exc is not None:
+            raise chain_exc
         if rc_a is not None:
             return rc_a
     done = 'PREDICTED' if kind is None else UNIT_DONE[kind]
@@ -5829,44 +6244,89 @@ def reverify(vdir, contract, root, out=None):
     return 1
 
 
-def recover_group(lp, me):
-    """시작 기록 하나 (끝 기록 없음 · 또는 끝 기록 미확인) → 끝 기록 dict (by recover · 원인 parent_dead).  호스트 규칙: 같은 부팅 (boot_id) · 같은 pid
-    이름공간 = /proc 의 env 표지로 찾아 SIGKILL · 다 끝날 때까지 (`group_settle`) · 같은 기계 (machine_id) · 다른 부팅 = 그 부팅의 프로세스는 없다 (확인 ·
-    재부팅) · 그 밖 (다른 기계 · 다른 이름공간 · 기계를 모르는 다른 부팅) = 미확인 (여기서 그 프로세스를 볼 수 없다)."""
+def recover_group(lp, me, operator=None):
+    """시작 기록 하나 (끝 기록 없음 · 또는 끝 기록 미확인) → (끝 기록 dict (by recover · 원인 parent_dead) | None, 건드리지 않은 사유 | None).
+    호스트 규칙 (★ 10-28 밤 PC5-03 · 04 · 1저자 Q3):
+      · 같은 부팅 (boot_id) · 같은 pid 이름공간 · 같은 machine_id (값 비교 · 둘 다 모름 = 같음) — 사슬 부모 (시작 기록 chain_pid · chain_start) 가
+        살아 있으면 **건드리지 않는다** (끝 기록을 쓰지 않음 · 미확인 · 그 사슬이 그룹을 정리하고 끝 기록 · 결과 줄을 쓴다 · 살았는지 모름 = 같게 · 옛 =
+        살아 있는 사슬의 러너 그룹을 죽였다) · 아니면 /proc 의 env 표지로 찾아 SIGKILL · 다 끝날 때까지 (`group_settle` · 그룹 시작 틱 = since_ticks)
+      · 그 밖 (다른 · 모르는 부팅 · 다른 · 모르는 pid 이름공간 · 다른 machine_id) = **미확인** (여기서 그 프로세스를 볼 수 없다 · machine_id 는 기계 정체가 아니다 —
+        복제 디스크 이미지 · 같은 이미지의 컨테이너가 같은 값 · 옛 = 같은 machine_id 의 다른 부팅 = 재부팅 확인) · operator (운영자 확인 표지 {attempt ·
+        why} · 그 시도 폴더의 그룹만) 가 있으면 그 기록 (사유 · 시각 · 이 호스트 · 시작 기록 호스트) 과 함께 확인."""
     nm = lp.name[:-len('.launch.json')]
     try:
         L = json.loads(lp.read_text(encoding='utf-8'))
     except (OSError, UnicodeDecodeError, ValueError):
         L = None
     tok = (L or {}).get('token') if isinstance(L, dict) else None
-    confirmed, left, killed, why = False, None, 0, None
+    confirmed, left, killed, why, op_rec = False, None, 0, None, None
     if not (isinstance(tok, str) and re.fullmatch(r'[0-9a-f]{32}', tok)):
         why = '시작 기록 꼴 (그룹 표지) 을 못 읽는다'
     else:
         h = L.get('host') if isinstance(L.get('host'), dict) else {}
         same_boot = h.get('boot_id') is not None and h.get('boot_id') == me.get('boot_id')
         same_ns = h.get('pidns') is not None and h.get('pidns') == me.get('pidns')
-        same_machine = h.get('machine_id') is not None and h.get('machine_id') == me.get('machine_id')
-        other_machine = h.get('machine_id') is not None and me.get('machine_id') is not None and not same_machine
-        if other_machine:
-            why = '다른 기계 (machine_id) — 여기서 그 프로세스를 볼 수 없다'
-        elif same_boot and same_ns:
-            confirmed, left, killed = group_settle(tok)
-            why = None if confirmed else ('/proc 를 못 읽는다' if left is None else '표지 프로세스가 대기 상한 안에 남았다')
-        elif same_machine and h.get('boot_id') is not None and me.get('boot_id') is not None and not same_boot:
-            confirmed, left, why = True, [], '재부팅 — 그 부팅의 프로세스는 없다'
+        same_mid = h.get('machine_id') == me.get('machine_id')      # 다름 = 다른 환경의 표지 (보수) · 같음 = 같은 기계의 증거가 아니다 (부팅 · 이름공간이 정한다)
+        if same_boot and same_ns and same_mid:
+            alive = chain_parent_alive(L)
+            if alive is not False:
+                return None, (f'사슬 부모 (pid {L.get("chain_pid")!r}) 가 {"살아 있다" if alive else "살았는지 확인할 수 없다 (시작 기록 칸 · /proc)"} — 그 사슬이 '
+                              f'그룹을 정리한다 · 건드리지 않음 (끝 기록 · 결과 줄 없음 · 사슬이 끝난 뒤 다시 recover)')
+            since = L.get('since_ticks')
+            GROUP_SINCE[tok] = since if type(since) is int else None
+            try:
+                confirmed, left, killed = group_settle(tok)
+            finally:
+                GROUP_SINCE.pop(tok, None)
+            why = None if confirmed else ('/proc 를 못 읽는다 · environ 을 못 읽는 그룹 원 후보' if left is None else '표지 프로세스가 대기 상한 안에 남았다')
         else:
-            why = '다른 기계 · pid 이름공간 · (기계를 모르는) 다른 부팅 — 여기서 그 프로세스를 볼 수 없다'
-    return {'schema': GROUP_SCHEMA, 'name': nm, 'token': tok, 'rc': None, 'cause': 'parent_dead', 'signal': None, 'confirmed': bool(confirmed),
-            'left': left, 'left_after_exit': None, 'killed': killed, 'by': 'recover', 'why': why, 'host': me, 'ended_utc': _utc()}
+            what = ' · '.join(x for x, bad in (('다른 부팅 (boot_id · 모름)', not same_boot), ('다른 pid 이름공간 (모름)', not same_ns),
+                                                ('machine_id 다름', not same_mid))
+                              if bad)
+            if operator is not None:
+                confirmed, left = True, []
+                why = f'운영자 확인 — {operator["why"]} (여기서 볼 수 없는 그룹: {what})'
+                op_rec = {'attempt': operator['attempt'], 'why': operator['why'], 'scope': 'unseen_group', 'utc': _utc(), 'launch_host': h}
+            else:
+                why = (f'{what} — 여기서 그 프로세스를 볼 수 없다 (machine_id 는 기계 정체가 아니다 — 복제 이미지 · 컨테이너) · 운영자가 그 그룹이 끝났음을 '
+                       f'확인했으면 --ledger 와 --operator-confirm <시도 번호> --operator-why "<사유>"')
+    end = {'schema': GROUP_SCHEMA, 'name': nm, 'token': tok, 'rc': None, 'cause': 'parent_dead', 'signal': None, 'confirmed': bool(confirmed),
+           'left': left, 'left_after_exit': None, 'killed': killed, 'by': 'recover', 'why': why, 'host': me, 'ended_utc': _utc()}
+    if op_rec is not None:
+        end['operator'] = op_rec
+    return end, None
+
+
+def _attempt_of(lp, root):
+    """그룹 시작 기록 → 그 기록을 품은 시도 폴더 (root 아래 · attempt.json 이 있는 가장 가까운 조상) | None."""
+    root = Path(root).resolve()
+    for d in Path(lp).resolve().parents:
+        if read_attempt(d) is not None:
+            return d
+        if d == root:
+            break
+    return None
 
 
 def stage_recover(a):
     """★ 10-27 묶음 C2b (Codex 회차 ① ② · Q9 개정 5 ② · author 10-27 approved bundle C) — 사슬 부모가 죽은 뒤 (SIGKILL · 정전 · 컨테이너 재시작) 단계 ·
     시도 폴더 아래 `groups/*.launch.json` 중 끝 기록이 없거나 미확인인 것마다 그룹 종료를 확인한다 (`recover_group`) → 끝 기록 (by recover) · 하나라도
-    미확인 = rc 3 (다음 시도를 시작 · 채택하기 전에 사람이 본다 · "부모 사망 + 지금 표지 없음" 을 종료 증거로 쓰지 않는다)."""
+    미확인 = rc 3 (다음 시도를 시작 · 채택하기 전에 사람이 본다 · "부모 사망 + 지금 표지 없음" 을 종료 증거로 쓰지 않는다).  ★ 10-28 밤 PC5-03 — 사슬 부모가
+    산 그룹 = 건드리지 않음 (rc 3) · PC5-04 — 운영자 확인 표지 (`--operator-confirm <시도> --operator-why <사유>` · --ledger 와) = 그 시도 폴더의 여기서 볼 수
+    없는 그룹만 확인으로 (끝 기록 operator 칸) · 그 시도 폴더가 --out 아래 없으면 아무것도 하지 않고 rc 3 · 표지를 쓸 그룹이 없으면 rc 3."""
     root = Path(a.out)
     me = host_ident()
+    op, fo = None, None
+    if getattr(a, 'operator_confirm', None) is not None:
+        n_op = int(a.operator_confirm)
+        op = {'attempt': n_op, 'why': a.operator_why.strip()}
+        ra = read_attempt(root)
+        fo = root if (ra is not None and ra['n'] == n_op) else root / f'attempt_{n_op}'
+        rf = read_attempt(fo)
+        if rf is None or rf['n'] != n_op:
+            print(f'recover — 운영자 확인 표지의 시도 {n_op} 폴더 (attempt_{n_op}) 가 --out {root} 아래 없다 — 아무것도 하지 않는다 (rc 3)')
+            return 3
+        fo = fo.resolve()
     todo = []
     for lp in sorted(root.rglob(f'{GROUPS_DIR}/*.launch.json')):
         ep = lp.with_name(lp.name[:-len('.launch.json')] + '.end.json')
@@ -5876,13 +6336,22 @@ def stage_recover(a):
             e = None
         if not (isinstance(e, dict) and e.get('confirmed') is True):
             todo.append((lp, ep))
-    n_bad = 0
+    n_bad, n_used = 0, 0
     for lp, ep in todo:
-        end = recover_group(lp, me)
+        opx = op if (op is not None and _attempt_of(lp, root) == fo) else None
+        end, held = recover_group(lp, me, opx)
+        if held:
+            n_bad += 1
+            print(f'  recover {lp.parent.parent.name}/{lp.name[:-len(".launch.json")]}: 미확인 · {held}')
+            continue
         write_json_atomic(ep, end)
         n_bad += 0 if end['confirmed'] else 1
+        n_used += 1 if end.get('operator') else 0
         print(f'  recover {lp.parent.parent.name}/{end["name"]}: 종료 {"확인" if end["confirmed"] else "미확인"} · 죽인 프로세스 {end["killed"]}'
               + (f' · {end["why"]}' if end['why'] else ''))
+    if op is not None and n_used == 0:
+        print(f'recover — 운영자 확인 표지 (시도 {op["attempt"]}) 를 쓸 그룹 (여기서 볼 수 없는 · 끝 기록 없음 · 미확인) 이 그 시도 폴더에 없다 (rc 3)')
+        n_bad += 1
     print(f'recover — 그룹 기록 {len(todo)} 개 정리 · 미확인 {n_bad}' + (' (다음 시도 전에 사람이 본다)' if n_bad else ''))
     if getattr(a, 'ledger', None):
         n_bad += recover_ledger(root, Path(a.ledger))
@@ -5954,13 +6423,26 @@ def stage_ledger(a):
             plan, plan_sha = load_plan(a.plan)
             require_plan_numbers(plan)                        # 봉인 전 계획 = 원장 없음 (C1 — 봉인 전 계획이면 R 진입 거부)
             head = {'kind': 'header', 'schema': LEDGER_SCHEMA, 'plan_sha256': plan_sha, 'utc': _utc()}
-            ledger_parse(ledger_line(head).encode('utf-8'))
-            with open(lp, 'xb') as f:
-                f.write(ledger_line(head).encode('utf-8'))
-                f.flush()
-                os.fsync(f.fileno())
-            ledger_git(repo, 'add', '--', LEDGER_FILE)
-            ledger_git(repo, 'commit', '-q', '-m', f'rint-r ledger init (plan {plan_sha[:12]})', '--', LEDGER_FILE)
+            hb = ledger_line(head).encode('utf-8')
+            ledger_parse(hb)
+            with ledger_lock(repo, exclusive=True):             # ★ 10-28 밤 PC5-08 — 잠금 · git 실패면 만든 원장 파일을 되돌린다 (다시 --init 할 수 있게)
+                made = False
+                try:
+                    with open(lp, 'xb') as f:
+                        made = True
+                        f.write(hb)
+                        f.flush()
+                        os.fsync(f.fileno())
+                    ledger_git(repo, 'add', '--', LEDGER_FILE)
+                    ledger_git(repo, 'commit', '-q', '-m', f'rint-r ledger init (plan {plan_sha[:12]})', '--', LEDGER_FILE)
+                except BaseException:
+                    if made:
+                        try:
+                            if not _ledger_committed(repo, hb):
+                                _ledger_rollback(repo, None)
+                        except (OSError, Stop):
+                            pass
+                    raise
             print(f'LEDGER_INIT — {lp} · 계획 sha256 {plan_sha} · 커밋 {ledger_head(repo)}')
             return 0
         if not (a.ledger_target and TARGET_RE.fullmatch(a.ledger_target)):
@@ -6066,6 +6548,12 @@ def main(argv=None, contract=None):
     ap.add_argument('--resume', type=int, default=None, help='ledger --add — 재실행 항목의 원 시도 번호 (같은 대상 · 채택 시도 · 재실행 자격 · 같은 기계 · '
                                                             '환경 지문)')
     ap.add_argument('--attempt-dirs', nargs='+', default=None, help='verdict — 시도 폴더 바탕 (입력 폴더의 부모 밖에 둔 다른 시도 · 거부 기록)')
+    #  ★ 10-28 밤 PC5-04 (1저자 Q3) — 다른 부팅 · 다른 pid 이름공간 · 다른 machine_id 의 그룹 = 기본 미확인 · 운영자 확인 표지 (시도 · 사유)
+    ap.add_argument('--operator-confirm', type=int, default=None, help='recover --ledger — 운영자 확인 표지: 이 시도 번호 폴더의 그룹 중 여기서 볼 수 없는 그룹 '
+                                                                       '(다른 부팅 · pid 이름공간 · machine_id) 이 끝났음을 운영자가 확인했다 (--operator-why 와 · '
+                                                                       '끝 기록 operator 칸 = 사유 · 시각 · 호스트)')
+    ap.add_argument('--operator-why', default=None, help='recover --operator-confirm — 확인 사유 (빈 글 · 줄바꿈 금지 · 300 자 안 · 예 "kgy 재부팅 확인 · '
+                                                         'uptime 2 h · 사슬 프로세스 없음")')
     #  ★ 10-27 묶음 C2d (Q9 설계 §3-1 · §3-2 · author 10-27 approved bundle C) — 12 단위 · 넘침 점 · 합치기 (이름 = 구현 때 정하는 꼴)
     ap.add_argument('--unit', default=None, help='predict — 단위 시도 (<법칙>_c<c>_<R 역할> 예 P0_c0_R_j0 · --ledger · --attempt 와만 · 모서리 arm 0 + origin '
                                                  '표본 arm 1 · 2 · 요약 unit_summary.json · 원장 대상 unit[:<변이>]:<이름>)')
@@ -6093,6 +6581,12 @@ def main(argv=None, contract=None):
         ap.error('--attempt-dirs 는 --stage verdict --ledger 에서만')
     if a.ledger and a.stage == 'plan-doc':
         ap.error('--ledger 는 plan-doc 에 쓰지 않는다')
+    if a.operator_confirm is not None or a.operator_why is not None:   # ★ 10-28 밤 PC5-04
+        why = a.operator_why
+        if a.stage != 'recover' or not a.ledger or a.operator_confirm is None or why is None:
+            ap.error('--operator-confirm <시도> · --operator-why <사유> 는 --stage recover --ledger 에서만 · 둘 다')
+        if a.operator_confirm < 1 or not why.strip() or '\n' in why or '\r' in why or len(why) > 300:
+            ap.error('--operator-confirm = 1 이상 시도 번호 · --operator-why = 빈 글 · 줄바꿈 없는 300 자 안 사유')
     if a.unit is not None or a.point is not None or a.merge is not None or a.expand is not None:      # ★ 10-27 묶음 C2d
         if a.stage != 'predict':
             ap.error('--unit · --point · --expand · --merge 는 --stage predict 에서만')

@@ -900,9 +900,32 @@ def fixtures():
     FX['git_identity_real'] = RR.git_identity
 
 
+#: 등록 R §2-1 의 계획 숫자 블록 자리 줄 (봉인 커밋에서 이 줄 바로 아래에 `--stage plan-doc` 출력을 붙인다 · 등록 R §2-1 · §10-5 가 ②)
+PLAN_DOC_ANCHOR = '계획 숫자 블록 = 이 줄 바로 아래'
+
+
+def place_plan_block(text, blk):
+    """★ 10-28 밤 PC5 봉인 전 남은 #5 — 등록 글의 계획 숫자 블록 = §2-1 자리 줄 바로 아래 (봉인 커밋과 같은 자리 · 옛 고정물 = 글 끝에 덧붙임 → 봉인된 글이면
+    표지 둘) · 이미 블록이 있으면 (봉인된 글) 그 블록을 바꾼다 · blk None = 블록을 없앤다 (표지 0) · 표지 짝 · 자리 줄이 하나가 아니면 AssertionError (고정물이
+    등록 글의 꼴을 모른다)."""
+    b, e = PLAN_DOC_BEGIN, PLAN_DOC_END
+    nb, ne = text.count(b), text.count(e)
+    if nb or ne:
+        assert nb == ne == 1 and text.index(b) < text.index(e), f'등록 글의 계획 숫자 블록 표지 시작 {nb} · 끝 {ne}'
+        i, j = text.index(b), text.index(e) + len(e)
+        return text[:i] + (blk or '') + text[j:]
+    lines = text.split('\n')
+    hit = [k for k, ln in enumerate(lines) if PLAN_DOC_ANCHOR in ln]
+    assert len(hit) == 1, f'등록 글의 §2-1 블록 자리 줄 {len(hit)} 개'
+    if blk is None:
+        return text
+    return '\n'.join(lines[:hit[0] + 1] + ['', blk] + lines[hit[0] + 1:])
+
+
 def reg_copy(text, cell, name, s0cell=None, plan=None, block=True):
     """등록 사본 — 해시 두 줄 + ★ 10-27 묶음 C1 (C6 #30) 계획 숫자 블록 (그 계획을 이 시험이 **따로** 조립한 블록 · `doc_block` ·
-    block False = 블록 없음 꼴 · 고치기 전 판 = 블록이 있어도 읽지 않는다).  text = 등록 R 글 (★ 10-28 밤 PC5 §4 #5 — 봉인된 글 흉내도 받는다)."""
+    block False = 블록 없음 꼴 · 고치기 전 판 = 블록이 있어도 읽지 않는다).  text = 등록 R 글 (★ 10-28 밤 PC5 §4 #5 — 봉인된 글 흉내도 받는다 · 블록 자리 =
+    §2-1 자리 줄 바로 아래 · 이미 있으면 바꿈 · `place_plan_block`)."""
     s0cell = s0cell if s0cell is not None else f'`{FX["s0_sha"]}`'
     out = []
     for ln in text.splitlines():
@@ -911,10 +934,9 @@ def reg_copy(text, cell, name, s0cell=None, plan=None, block=True):
             cells[-2] = f' {cell if ln.startswith("| 계획 해시 |") else s0cell} '
             ln = '|'.join(cells)
         out.append(ln)
-    if block:
-        out += ['', doc_block(plan if plan is not None else FX['plan_obj'])]
+    t = place_plan_block('\n'.join(out) + '\n', doc_block(plan if plan is not None else FX['plan_obj']) if block else None)
     p = Path(TD) / name
-    p.write_text('\n'.join(out) + '\n', encoding='utf-8')
+    p.write_text(t, encoding='utf-8')
     return p
 
 
@@ -9076,9 +9098,11 @@ def t_UM17():
             (m['rc'], stop_code(m), len(ms.get('runs') or []), (ms.get('stop') or {}).get('run'), m['so'][-300:]))
 
 
-def s_units_mini(tag, W=None, name='P0_c0_R_j_lo', patch=None):
+def s_units_mini(tag, W=None, name='P0_c0_R_j_lo', patch=None, patch_line=True):
     """UMA 원장 clone (사다리 둘 결과 줄까지) + 첫 단위 시도 하나 (세계 W · patch = 결과 줄 쓰기 전에 그 시도 요약 파일을 손질 — 결과 줄 · 폴더 요약 = 손질한
-    폴더와 맞음 = 단위 단계 결함 흉내) + 합치기 (그 시도만 · 다음 단위 = UNIT_MISSING 이 정상)."""
+    폴더와 맞음 = 단위 단계 결함 흉내) + 합치기 (그 시도만 · 다음 단위 = UNIT_MISSING 이 정상).  ★ 10-28 밤 PC5-01 (B 커밋) — patch_line True (기본) =
+    사슬의 요약 (메모리) 도 같이 손질 → 결과 줄의 셈한 칸도 손질한 요약에서 (옛 = 파일만 손질 → 결과 줄 칸 = 손질 전 요약 · "원장과 맞음" 이 칸에서는 거짓이었다
+    → 지금 합치기는 결과 줄을 폴더 증거에서 다시 세어 ATTEMPT_LEDGER_MISMATCH 로 먼저 멈춘다 · 그 꼴 = patch_line False · 시험 PC01m)."""
     r = s_units_main()
 
     def go():
@@ -9092,6 +9116,8 @@ def s_units_mini(tag, W=None, name='P0_c0_R_j_lo', patch=None):
                 j = json.loads(p.read_text(encoding='utf-8'))
                 patch(j)
                 p.write_text(json.dumps(j, ensure_ascii=False), encoding='utf-8')
+                if patch_line:
+                    patch(s)
             return old(att, s)
         RR.attempt_close = close
         try:
@@ -9651,6 +9677,43 @@ def t_PC01():
             (res1.get('cause'), codes, why, add[0], add[2][-160:], (b or {}).get('rc'), rec, n_calls(w)))
 
 
+@check('PC01m', '★ 10-28 밤 PC5-01 합치기 길 (구현 중 UM19 고정물에서 찾음 · B 커밋) — 단위 시도 요약 파일만 손질 (멈춤 TIME_LIMIT · 런 없음) · 결과 줄 = '
+                '손질 전 요약 (완주) · 폴더 요약 sha = 손질한 폴더 (옛 UM19 고정물 꼴) → 합치기 = ATTEMPT_LEDGER_MISMATCH (사유 "다시 센 값" · 옛 = 결과 줄을 믿고 '
+                '합치기 fetch 가드 TIME_LIMIT 로 갔다)')
+def t_PC01m():
+    if not chain_c2d():
+        return False, '사슬에 --merge 가 없다'
+
+    def p_a(j):
+        j.update(runs=[], status='STOPPED', stop={'code': 'TIME_LIMIT', 'cause': '시험', 'run': 'U01_corner', 'reason': None, 'what': '시간 상한'})
+    m = s_units_mini('PC01m', patch=p_a, patch_line=False)['m']
+    st = (m['sum'] or {}).get('stop') or {}
+    return stop_code(m) == 'ATTEMPT_LEDGER_MISMATCH' and '다시 센' in str(st.get('cause')), (stop_code(m), str(st.get('cause'))[:240])
+
+
+@check('PC01i', '★ 10-28 밤 PC5-01 예측 입력 길 (구현 중 변이 P01c 생존으로 찾음 · B 커밋) — 주 캠페인 원장 clone 을 사다리 P1 결과 줄까지 되돌리고 그 끝 줄 (완주) '
+                '의 원인 칸만 바꿈 (commit --amend · 꼴 그대로 = 완주 · 결과 뒤 · 재실행 자격 없음 · 채택 그대로) → 예측 시도 = 입력 사다리 대조에서 멈춤 '
+                'ATTEMPT_LEDGER_MISMATCH (사유 "다시 센 값" · 러너 0 회 · 그 가드를 끄면 예측이 돈다)')
+def t_PC01i():
+    def go():
+        r = s_led_main()
+        d2 = led_reset_after(r['d'], 'PC01i', 'rint-r attempt 2 result completed')
+        lines = led_raw(d2).decode('utf-8').splitlines()
+        last = json.loads(lines[-1])
+        lines[-1] = json.dumps(dict(last, cause='resource'), sort_keys=True, separators=(',', ':'), ensure_ascii=False)
+        (d2 / LEDGER_NAME).write_text('\n'.join(lines) + '\n', encoding='utf-8')
+        git_(d2, 'commit', '-q', '--amend', '-am', '바꾼 끝 줄 (시험 · amend · 원인 칸만)')
+        _r, n3, _s = led_add(d2, 'predict')
+        w = world('PC01i_p')
+        p = pred_att('PC01i_pred', w, d2, n3, [r['l0']['out'], r['l1']['out']])
+        return last, p, n_calls(w)
+    last, p, calls = scen('PC01i', go)
+    st = (p['sum'] or {}).get('stop') or {}
+    return (last.get('kind') == 'result' and last.get('n') == 2 and last.get('status') == 'completed' and last.get('cause') is None
+            and stop_code(p) == 'ATTEMPT_LEDGER_MISMATCH' and '다시 센' in str(st.get('cause')) and calls == 0,
+            (last.get('n'), last.get('status'), last.get('cause'), stop_code(p), str(st.get('cause'))[:200], calls, p['rc']))
+
+
 @check('PC02', '★ 10-28 밤 PC5-01 (사전 공격 5 회차 R1 · merge -s ours 숨김) — 곁가지 (항목 커밋) 에 같은 결과 줄 (utc 만 다름 = 다시 센 칸 같음) 을 두고 '
                'merge -s ours 로 본가지를 옮김 (정직한 결과 커밋 = 조상이지만 첫 부모 역사 밖) → 원장 역사 검사 = 사유 (첫 부모 밖 원장 커밋 · 옛 = None) · '
                '판정 = ATTEMPT_LEDGER_MISMATCH · 정직한 원장 = 역사 None · 판정 원장 대조 통과')
@@ -9809,6 +9872,48 @@ def t_PC06():
             and out['res_wrong'] is None and out['ok'][0] == 0 and eo.get('confirmed') is True and op.get('attempt') == n1 and op.get('why') == why
             and ro.get('status') == 'interrupted' and ro.get('by') == 'recover' and ro.get('folder_sha256') == out['dig'],
             {k: v for k, v in out.items() if k not in ('dig',)})
+
+
+def pc06_attempt(d, base, n, target, host, tag):
+    """PC06b — 원장 항목 n 의 시도 폴더 (attempt.json · 그룹 시작 기록 하나 · 끝 기록 없음 · 사슬 부모 = 죽은 pid)."""
+    f = Path(base) / f'attempt_{n}'
+    (f / 'groups').mkdir(parents=True)
+    (f / 'attempt.json').write_text(json.dumps({'schema': 'rint-r-attempt-v1', 'n': n, 'target': target, 'machine': MACH, 'resume_of': None,
+                                                'ledger_commit': git_(d, 'rev-parse', 'HEAD')}), encoding='utf-8')
+    tok = hashlib.sha256(tag.encode()).hexdigest()[:32]
+    (f / 'groups' / 'L01_floor.launch.json').write_text(json.dumps({'schema': 'rint-r-group-v1', 'name': 'L01_floor', 'token': tok, 'pid': DEAD_PID,
+                                                                    'pgid': DEAD_PID, 'argv': ['bash'], 'host': host, 'started_utc': '2026-10-28T00:00:00Z',
+                                                                    'by': 'chain', 'chain_pid': DEAD_PID}), encoding='utf-8')
+    return f
+
+
+@check('PC06b', '★ 10-28 밤 PC5-04 (구현 중 변이로 찾음 · B 커밋) 운영자 확인 표지의 범위 — 바탕 폴더에 여기서 볼 수 없는 그룹을 가진 시도 둘 (다른 boot_id) · '
+                '--operator-confirm 1 → 시도 1 의 그룹만 확인 (operator 칸) · 시도 2 = 미확인 그대로 (operator 칸 없음 · 결과 줄 없음) · rc 3 · 볼 수 있는 그룹만 '
+                '가진 시도 (같은 호스트 · 죽은 사슬) 에 표지 = 쓰이지 않음 → rc 3 (끝 기록 = 보통 확인 · operator 칸 없음)')
+def t_PC06b():
+    def go():
+        d, _rc, _so = led_new('PC06b')
+        _r, n1, _s = led_add(d, 'ladder:P0')
+        _r, n2, _s = led_add(d, 'ladder:P1')
+        _r, n3, _s = led_add(d, 'predict')
+        me = RR.host_ident()
+        other = dict(me, boot_id='00000000-0000-0000-0000-000000000000' if me.get('boot_id') != '00000000-0000-0000-0000-000000000000'
+                     else '11111111-1111-1111-1111-111111111111')
+        base = Path(TD) / 'runs' / 'PC06b'
+        f1 = pc06_attempt(d, base, n1, 'ladder:P0', other, 'PC06b_1')
+        f2 = pc06_attempt(d, base, n2, 'ladder:P1', other, 'PC06b_2')
+        why = '재부팅 확인 (시도 1 만 · 시험)'
+        rc, so = call(['--stage', 'recover', '--out', str(base), '--ledger', str(d), '--operator-confirm', str(n1), '--operator-why', why])
+        out = {'rc': rc, 'e1': gr_records_raw(f1), 'e2': gr_records_raw(f2), 'r1': led_result(d, n1), 'r2': led_result(d, n2), 'so': so[-300:]}
+        f3 = pc06_attempt(d, Path(TD) / 'runs' / 'PC06b_vis', n3, 'predict', me, 'PC06b_3')
+        out['rc3'] = call(['--stage', 'recover', '--out', str(f3), '--ledger', str(d), '--operator-confirm', str(n3), '--operator-why', why])[0]
+        out['e3'] = gr_records_raw(f3)
+        return out
+    o = scen('PC06b', go)
+    e1, e2, e3, r1 = o['e1'] or {}, o['e2'] or {}, o['e3'] or {}, o['r1'] or {}
+    return (o['rc'] == 3 and e1.get('confirmed') is True and isinstance(e1.get('operator'), dict) and e2.get('confirmed') is False
+            and 'operator' not in e2 and r1.get('status') == 'interrupted' and o['r2'] is None and o['rc3'] == 3 and e3.get('confirmed') is True
+            and 'operator' not in e3, o)
 
 
 @check('PC07', '★ 10-28 밤 PC5-05 (사전 공격 5 회차 R5) — 원 시도 OOM (표지 뒤 · resource · 자격) → 재실행 시도가 단계 안 관문 (--max-hours 3 ≠ 계획 2 · '
@@ -10074,7 +10179,7 @@ def pc_fake_proc(root, pid, state='S', start=10 ** 9, uid=None, environ=b'', tas
 @check('PC14', '★ 10-28 밤 PC5-07 (사전 공격 5 회차 U3) 그룹 원 찾기 — ⓐ 실경로: 러너 (rc 0) 가 띄운 자식의 주 스레드만 끝남 (상태 Z · 다른 스레드 삶 · 2 s 뒤 '
                '파일) → 사슬이 그 프로세스를 찾아 죽인다 (끝 기록 확인 · left_after_exit ≥ 1 · 늦은 파일 없음 · 옛 = 못 봄 · 파일 생김) ⓑ 가짜 /proc: environ '
                '을 못 읽는 같은 사용자 프로세스 = 미확인 (None) · Z 지도자 + 산 스레드의 environ 에 표지 = 그룹 원 · 다 끝난 Z = 아님 · 그룹 시작 전에 생긴 '
-               '못 읽는 프로세스 · 다른 사용자 (root 아님) = 셈 밖')
+               '못 읽는 프로세스 · 다른 사용자 (root 아님) · pid 1 (이름공간 init · 못 읽음) = 셈 밖')
 def t_PC14():
     d = Path(TD) / 'runs' / 'PC14'
     d.mkdir(parents=True)
@@ -10111,6 +10216,11 @@ def t_PC14():
         pc_fake_proc(fp / 'other_uid', 900008, uid=os.getuid() + 4242, environ=None)
         got['other_uid_nonroot'] = RR.group_members(tok, uid=1000)
         got['same_uid_nonroot'] = RR.group_members(tok, uid=os.getuid() + 4242)
+        #  구현 중 찾음 (B 커밋) — 이 컨테이너의 pid 1 environ 은 root 도 못 읽는다 (EACCES) → since 없는 시작 기록 (옛 기록 · 고정물) 이면 늘 미확인이었다 ·
+        #  pid 1 = 이 pid 이름공간의 init (그룹보다 먼저 · 다시 쓰이지 않음) = 셈 밖
+        RR.PROC_DIR = str(fp / 'pid1')
+        pc_fake_proc(fp / 'pid1', 1, start=5, environ=None)
+        got['pid1'] = RR.group_members(tok)
     except TypeError as e:                                  # 고치기 전 판 = since · uid 인자 없음
         got['error'] = f'TypeError: {e}'
     finally:
@@ -10121,7 +10231,8 @@ def t_PC14():
                 pass
         else:
             RR.PROC_DIR = old
-    want = {'unread': None, 'zlive': [900002], 'zdead': [], 'member': [900005], 'old_since': [], 'other_uid_nonroot': [], 'same_uid_nonroot': None}
+    want = {'unread': None, 'zlive': [900002], 'zdead': [], 'member': [900005], 'old_since': [], 'other_uid_nonroot': [], 'same_uid_nonroot': None,
+            'pid1': []}
     return a_ok and got == want, ({'rc': rc, 'cause': cause, 'end': {k: end.get(k) for k in ('confirmed', 'left_after_exit', 'killed')},
                                    'late': late.exists()}, got)
 

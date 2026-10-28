@@ -242,9 +242,19 @@ def reg_text(text, sha, s0sha, plan):
             cells[-2] = f' `{sha if ln.startswith("| 계획 해시 |") else s0sha}` '
             ln = '|'.join(cells)
         out.append(ln)
-    if callable(getattr(RR, 'plan_doc_block', None)):
-        out += ['', RR.plan_doc_block(plan)]
-    return '\n'.join(out) + '\n'
+    t = '\n'.join(out) + '\n'
+    if not callable(getattr(RR, 'plan_doc_block', None)):
+        return t
+    #  ★ 10-28 밤 PC5 봉인 전 남은 #5 — 블록 자리 = §2-1 자리 줄 ("계획 숫자 블록 = 이 줄 바로 아래") 바로 아래 (봉인 커밋과 같은 자리 · 옛 = 글 끝에
+    #    덧붙임 → 봉인된 글이면 표지 둘 = PLAN_DOC_MISMATCH) · 이미 블록이 있으면 (봉인된 글) 그 블록을 바꾼다
+    b, e, blk = RR.PLAN_DOC_BEGIN, RR.PLAN_DOC_END, RR.plan_doc_block(plan)
+    if t.count(b) or t.count(e):
+        assert t.count(b) == t.count(e) == 1 and t.index(b) < t.index(e), '등록 글의 계획 숫자 블록 표지'
+        return t[:t.index(b)] + blk + t[t.index(e) + len(e):]
+    lines = t.split('\n')
+    hit = [i for i, ln in enumerate(lines) if '계획 숫자 블록 = 이 줄 바로 아래' in ln]
+    assert len(hit) == 1, f'등록 글의 §2-1 블록 자리 줄 {len(hit)} 개'
+    return '\n'.join(lines[:hit[0] + 1] + ['', blk] + lines[hit[0] + 1:])
 
 
 def make_plan_and_reg(ws=None):
