@@ -112,7 +112,11 @@ The band gap of the Nd-containing cathode–electrolyte interphase component NdP
 
 ## 빈칸 · 확인할 것
 
-1. **Li₃Nd NEB 의 k 격자 (3 × 3 × 3) · Li PP** — repo 에 실행 입력이 없다 (gabia `/data/work/runs/sei_neb_v2_ccpath/li3nd/`). k 는 생성기 규칙
+1. ✅ **닫힘 (10-28 · 사용자 gabia 붙여넣기 · `db/raw/ndo_methods_2026_10_28/gabia_check_1_2026_10_28.log`)** — 세 줄 다 Methods 문장과 같다 · 문장 고칠 것 없음:
+   ① Li₃Nd NEB `neb.in` · `pw_1.in` · `pw_2.in` = `K_POINTS automatic 3 3 3 0 0 0` (Γ 중심) · Li `li_pbe_v1.4.uspp.F.UPF` (GBRV) · Nd `Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF` · nspin · Hubbard 줄 없음 · **QE NEB v.7.4.1** (2026-08-13 시작)
+   ② 09-19 Nd CEI 띠틈 10 폴더의 `0*.in` 에 nspin · Hubbard · tot_magnetization 줄 **0** (→ nspin 1 · U 없음) — 같은 grep 이 생성기 출력 NiP₂O₆ 에선 `nspin = 2` · `HUBBARD` 를 찍는다 (양성 대조) · 폴더 파일 이름 `01_vcrelax.*` 은 `gabia_gpu_parallel_qe_2026_09_17.json` 에 있다 (글롭이 파일을 잡았다)
+   ③ 8 월 SEI Li₃PO₄ = Li GBRV · O `O.pbe-n-kjpaw_psl.0.1.UPF` · P `P.pbe-n-rrkjus_psl.1.0.0.UPF` · LiCl = Cl · Li GBRV v1.4.
+   (아래는 확인 전 기록 그대로) **Li₃Nd NEB 의 k 격자 (3 × 3 × 3) · Li PP** — repo 에 실행 입력이 없다 (gabia `/data/work/runs/sei_neb_v2_ccpath/li3nd/`). k 는 생성기 규칙
    (`tools/sei/build_neb_inputs.py` `kmesh` · `--kdens` 기본 0.04 · 2×2×2 면 높이 8.47 Å → ⌈2.95⌉ = 3) 으로 다시 셌고 Li PP 는 같은 pseudo 폴더 (`/data/work/pseudo` · GBRV li v1.4) 로 적었다.
    NEB 를 돌린 QE 판도 기록에 없다. 같은 김에 **09-19 Nd CEI 띠틈 입력의 스핀 · U** 도 본다 — SI 2 문단 *'all Nd-containing calculations were non-spin-polarized, and no Hubbard U'*
    (10-28 검토 7 번으로 6 문단에서 옮김 · NEB 까지 덮는다) 중 NEB 쪽은 생성기에 nspin · Hubbard 줄이 아예 없다 (`build_neb_inputs.py` · 10-28 확인 · 둘째 줄과 같이 첫 줄 입력으로 확인). 띠틈 쪽은 원장 선언
@@ -179,7 +183,7 @@ The band gap of the Nd-containing cathode–electrolyte interphase component NdP
 | 21 | SI 5 정의 셋이 한 문장 | 반영 — 식 S2 · S3 문장 나눔 | — |
 | 22 | 잔손질 (GBRV ultrasoft 통일 · mp-ID 꼴 · 본문 1 두 문장 · '(PBE)') | 반영 · '(PBE)' 정의는 둠 (띠틈 문장에서 다시 씀) | — |
 
-**보내기 전 (사용자)**: ① 확인할 것 1 블록 (gabia · 읽기만) — 둘째 줄이 nspin 2 를 찍으면 SI 2 를 고친다 ② Fig. 3h 막대를 새 CSV 값으로 ③ NdP₅O₁₄ 값을 빈칸에 넣으면 단서 문장 (`HZ-cei-gap-ndp5o14-unreproduced`) ④ 참고문헌을 원고 목록에 합칠 때 번호 다시.
+**보내기 전 (사용자)**: ① ✅ 확인할 것 1 — 10-28 닫힘 (세 줄 다 문장과 같다 · 고칠 것 없음) ② Fig. 3h 막대를 새 CSV 값으로 ③ NdP₅O₁₄ 값을 빈칸에 넣으면 단서 문장 (`HZ-cei-gap-ndp5o14-unreproduced`) ④ 참고문헌을 원고 목록에 합칠 때 번호 다시.
 
 ## 원고 숫자의 출처 — Methods 와 맞추려면 볼 곳 (판단 없이 위치만)
 
@@ -199,13 +203,13 @@ The band gap of the Nd-containing cathode–electrolyte interphase component NdP
 |---|---|---|
 | QE PBE · 60/480 Ry · SCF 10⁻⁸ Ry · 섞음 0.3 | 모든 우리 계산 | `tools/sei/build_neb_inputs.py` (`ECUTWFC`/`ECUTRHO` · `conv_thr = 1.0d-8` · `mixing_beta = 0.3`) · `tools/sei/build_dft_inputs.py` 37 · 780–783 행 · `db/properties/sei_neb.json` `method` |
 | Γ 중심 Monkhorst–Pack | `K_POINTS automatic … 0 0 0` | `build_dft_inputs.py` 801 행 · `build_neb_inputs.py` 723 · 818 · 913 행 |
-| QE 2020 (GPU 판) 인용 | gabia NEB = `qe-7.4.1-gpu` neb.x | CLAUDE.md §계산 자원 (gabia GPU 줄) — 런별 판은 기록에 없음 (확인할 것 1) |
+| QE 2020 (GPU 판) 인용 | gabia NEB = `qe-7.4.1-gpu` neb.x | ✅ `neb.out` 첫 줄 *Program NEB v.7.4.1 starts on 13Aug2026* (`db/raw/ndo_methods_2026_10_28/gabia_check_1_2026_10_28.log`) |
 | CI-NEB · 7 이미지 · CI 자동 · Broyden · 경로 문턱 0.05 eV/Å · 끝점 고정셀 이완 10⁻³ Ry/bohr | | `sei_neb.json` `results` (`num_of_images` 7 · `CI_scheme` auto) · `build_neb_inputs.py` 708 행 (`forc_conv_thr`) · 877 · 891 행 (`opt_scheme='broyden'` · `path_thr`) · 1585–1595 행 argparse 기본값 (images 7 · path_thr 0.05 · `--ci_scheme` 기본은 no-CI 라 v2 는 auto 를 줘서 돌렸다 — 기록 `CI_scheme` auto) |
 | Li₂S 3×3×3 · 80 원자 · λ₁ 12.1 Å · 홉 2.85 Å · V_Li⁻ (tot_charge −1) · jellium · gaussian 0.005 Ry · k 3×3×3 · 끝점 이완 · vc-relax 구조 | | `db/inputs/li2s_neb_cellconv_2026_10_09/v2_li2s_meta_gabia.json` · `sei_neb.json` `v2/li2s` (`cell_size_gate_metric` · `neighbor_shells`) |
 | Li·S GBRV v1.4 USPP | `li_pbe_v1.4.uspp.F.UPF` · `s_pbe_v1.4.uspp.F.UPF` | `db/inputs/li2s_neb_cellconv_2026_10_09/pseudo/` |
 | 보정 없음 (하전 공공) | | `sei_neb.json` `v2/li2s` `why_not_absolute` ② (jellium 근사 · 장벽은 neb.x 출력 그대로 — `tools/sei/collect_neb.py`) |
 | Li₃Nd 2×2×2 · 31 원자 · λ₁ 10.37 Å · 홉 3.67 Å (c→c) · 중성 · mv 0.02 Ry | | `sei_neb.json` `v2_ccpath/li3nd` · `build_neb_inputs.py` 637–649 행 (금속 분기) |
-| Li₃Nd k 3×3×3 | 생성기 규칙으로 다시 셈 | `build_neb_inputs.kmesh` (`--kdens` 0.04) × `db/structures/sei_li3nd_mp-976264.vasp` 2×2×2 (이 세션 계산 · 실행 입력 미확인 — 확인할 것 1) |
+| Li₃Nd k 3×3×3 | 생성기 규칙으로 다시 셈 | `build_neb_inputs.kmesh` (`--kdens` 0.04) × `db/structures/sei_li3nd_mp-976264.vasp` 2×2×2 · ✅ 실행 입력 `neb.in` · `pw_1/2.in` 도 `3 3 3 0 0 0` (`db/raw/ndo_methods_2026_10_28/gabia_check_1_2026_10_28.log`) |
 | Nd frozen-4f PAW (z 11) | `Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF` | `build_neb_inputs.py` `PP_PIN` (sha256 18a3835e…35101) · `build_dft_inputs.py` 69 행 · `db/properties/sei_electronic.json` `pseudo_Nd` |
 | Li₃Nd = 가상 BiF₃ 꼴 (hull 위) · 끝점이 이상 격자에서 크게 재배열 · 3×3×3 NEB 미수렴 · 3×3×3 셀 재배열 | E_hull 0.197 eV/atom · 끝점 ≈ 1.4 eV/셀 (값은 SI 에 안 씀) | `D-2026-10-26-li3nd-neb-si-conditional` (SI 문장) · `db/properties/li3nd_p333_control_runlog_2026_10_11.json` `결정_실험_NEB_끝점_2026_10_26` · `kb/questions/li3nd_pristine_reconstruction_2026_09_02.md` |
 | Li₂S 셀 수렴 미시험 (10-28 SI 에서 뺌 — 사용자 · 기록만) | `cell_convergence_status: untested` | `sei_neb.json` `v2/li2s` |
@@ -217,7 +221,7 @@ The band gap of the Nd-containing cathode–electrolyte interphase component NdP
 | 원자당 정규화 (Li 제외) | | `interface_reactivity_v2.py` 1426 행 주석 (pymatgen `norm=True` = 저장고 원소 뺀 원자수) |
 | NCM = LiNi₀.₈Co₀.₁Mn₀.₁O₂ · SE 조성 둘 | | 같은 원장 `results.NMC811.composition` · `reactions` (Li5.4P1S4.4Cl1.6 · Li5.44Nd0.02P0.98S4.37Cl1.6O0.03) · 원고 ms 16 · 18 의 조성식 |
 | 모든 전위에서 최소가 중간 x (0 < x < 1) | NMC811 × 두 SE 12 점 | 같은 원장 `endpoint_degenerate` 전부 false (LiMnO₂ 4.5 V 만 true — 이 원고 양극 아님) |
-| Nd CEI 띠틈 = PAW psl 세트 · frozen-4f · 비스핀 · U 없음 (비스핀 · U = 선언 + 8 월 frozen-4f 런 · 09-19 입력은 확인할 것 1) | Li sl · P n · S nl · Cl nl 1.0.0 · O n 0.1 · Nd spdn 1.0.0 | `cei_product_gap_card_2026_10_27.json` `12_개정_1_2026_10_27_결과_전` `A1_PP_세트` (09-19 세트) · md5 `db/raw/cei_product_gap_2026_10_27/pseudo_md5.txt` · `build_dft_inputs.py` 686–699 행 (frozen-4f 에 U 를 주면 멈춘다 · 스핀은 `--no_nd_spin` 을 줘야 꺼진다) · `db/properties/sei_electronic_class.json` declared 줄 (*'`--nd_u 0 --no_nd_spin` 필수'*) · `sei_electronic.json` `*_frozen4f` (`spin_polarized` false) |
+| Nd CEI 띠틈 = PAW psl 세트 · frozen-4f · 비스핀 · U 없음 (✅ 09-19 입력 10 폴더 nspin · Hubbard 0 줄 — `db/raw/ndo_methods_2026_10_28/gabia_check_1_2026_10_28.log`) | Li sl · P n · S nl · Cl nl 1.0.0 · O n 0.1 · Nd spdn 1.0.0 | `cei_product_gap_card_2026_10_27.json` `12_개정_1_2026_10_27_결과_전` `A1_PP_세트` (09-19 세트) · md5 `db/raw/cei_product_gap_2026_10_27/pseudo_md5.txt` · `build_dft_inputs.py` 686–699 행 (frozen-4f 에 U 를 주면 멈춘다 · 스핀은 `--no_nd_spin` 을 줘야 꺼진다) · `db/properties/sei_electronic_class.json` declared 줄 (*'`--nd_u 0 --no_nd_spin` 필수'*) · `sei_electronic.json` `*_frozen4f` (`spin_polarized` false) |
 | vc-relax mv 0.01 · k 간격 0.30 / nscf 0.15 Å⁻¹ (2π 포함) · 밴드 1.35 배 + 8 · fixed 점유 (8 월 SEI · 9 월 CEI 같은 규칙) | | `build_dft_inputs.py` 37–42 · 261–266 · 717 · 720–787 행 · `cei_gap_results_2026_09_19.json` `방법` |
 | 잔류 압력 ±1 kbar | −0.93 ~ +0.22 kbar (10 종) | `cei_gap_results_2026_09_19.json` `⛔_NdP5O14_미재현` `확인한_것_전부_정상` `수렴` |
 | MP 구조에서 시작 | 10 종 표적 | `db/properties/cei_gap_structures_2026_09_17.json` `targets` |
