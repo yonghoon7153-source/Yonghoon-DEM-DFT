@@ -31,8 +31,13 @@
   ckpt_sha256.txt (두 줄 · 같은 해시 · 침대 안 같음) · 로그 없음 · procs ≠ NP · dt 치환 줄 · 덱 명령 ↔ 로그 echo · 첫 step ·
   덤프 빠짐 · 남는 덤프 · TIMESTEP ≠ 이름 · 프레임 둘 · 줄 수 ≠ 머리 · 줄 꼴 · 비유한 · 중복 id · 모르는 type · 열 다름 ·
   접촉 중복 쌍 · 자기 쌍 · 원자 덤프에 없는 id · 시작 상태 (t0 덤프) 가 가지마다 다름 · 끝 상태가 두 가지에서 같음 ·
-  F 의 NP = A 의 NP · 같은 폴더 두 역할 · 창 · 침대 섞임 · (W2) O3 표본 시각이 가지마다 다름.
+  F 의 NP = A 의 NP · 같은 폴더 두 역할 · 창 · 침대 섞임 · (W2) O3 표본 시각이 가지마다 다름 ·
+  (10-28 · 등록 §12) manifest NP ≠ 등록 Q5 · 로그 MPI processor grid 가 한 줄이 아님 · x·y·z ≠ NP · z ≠ 1 ·
+  로컬 직렬 가지 (§12-3) 의 q5_binary.txt 없음 · 꼴 (mode serial · np · libmpi none · sha256) · X ↔ A 의 host · 실행 방식 ·
+  (로컬이면) 바이너리 sha256 다름 · W2 가지가 §12-2 비준 전 판으로 만들어짐.
   T0 실패 가지는 덤프를 요구하지 않는다 (그 비교 = 판정 불가 (기술)).
+기록 (판정 밖 · 결과에 남긴다 · §12-3): 가지마다 host · 실행 방식 · 바이너리 (로컬 = q5_binary.txt) · processor grid · LIGGGHTS 판 줄 ·
+  이탈 목록 — 로컬 직렬 가지 (등록 = hit) · 바닥 F ↔ 기준 A 기계 섞임 (바닥이 커질 수 있다 = 판정 불가 쪽으로만).
 
 사용 (리포 안 · 결과를 받은 기계)
     python3 scripts/kg50_q5_verdict.py --branch A=<폴더> --branch B=<폴더> --branch C=<폴더> --branch F=<폴더> \\
@@ -266,10 +271,14 @@ def parse_log(path):
             lines = f.read().split('\n')
     except OSError:
         return None
-    blocks, cur, errors, plate, loops = [], None, [], [], []
+    blocks, cur, errors, plate, loops, grids = [], None, [], [], [], []
+    version = next((ln.strip() for ln in lines if RE_VERSION.match(ln)), None)
     for ln in lines:
         if RE_ERROR.match(ln):
             errors.append(ln)
+        m = RE_GRID.match(ln)
+        if m:
+            grids.append(tuple(int(x) for x in m.groups()))
         m = RE_PLATE.match(ln)
         if m:
             plate.append(m.group(1))
@@ -288,7 +297,7 @@ def parse_log(path):
             t = ln.split()
             if t and re.fullmatch(r'[0-9]+', t[0]):
                 (cur['rows'] if len(t) == len(cur['header']) else cur['bad']).append(t)
-    return dict(lines=lines, blocks=blocks, errors=errors, plate=plate, loops=loops)
+    return dict(lines=lines, blocks=blocks, errors=errors, plate=plate, loops=loops, grids=grids, version=version)
 
 
 def t0_eval(log, man):
@@ -321,6 +330,13 @@ def check_log_provenance(log, man, deck_text, t0_ok):
     """이 로그가 이 가지 덱 · 이 NP · 이 체크포인트의 실행인가 — 거부 사유 (문자열) 또는 None."""
     if _on('np_procs') and any(x['procs'] != man['np'] for x in log['loops']):
         return f'Loop time procs {sorted({x["procs"] for x in log["loops"]})} ≠ manifest NP {man["np"]}'
+    if _on('np_grid'):
+        # (10-28 · §12-3) read_restart 가 찍는 'X by Y by Z MPI processor grid' — 한 줄 · X·Y·Z = NP · Z = 1 (덱 48 행 processors * * 1) ·
+        # 직렬 바이너리 = 1 by 1 by 1 · 없으면 T0 통과일 때만 거부 (빈 · 시작 전 잘린 로그 = T0 실패 = 판정 불가 (기술))
+        g = log.get('grids') or []
+        if len(g) > 1 or (g and (g[0][0] * g[0][1] * g[0][2] != man['np'] or g[0][2] != 1)) or (not g and t0_ok):
+            return (f'MPI processor grid {[" by ".join(map(str, x)) for x in g] or "없음"} ≠ NP {man["np"]} '
+                    '(한 줄 · x·y·z = NP · z = 1 · 덱 48 행 processors * * 1)')
     nl = [norm(x) for x in log['lines']]
     if _on('dt_echo'):
         # 덱 45 행 `timestep ${dt}` 의 치환 줄 (LIGGGHTS echo · %.15g) — 있으면 이 가지 dt 여야 (다른 dt = 다른 덱 · 늘 거부) ·
@@ -607,11 +623,40 @@ def bind_dumps_to_log(folder, log, man, at0, atE, a0, a1):
 
 
 # ───────────────────────── 가지 하나 ─────────────────────────
+def read_binary_record(folder, man):
+    """(§12-3) 로컬 직렬 러너가 남긴 q5_binary.txt — dict 또는 거부 사유.  키 여섯 한 번씩 · mode serial · np = manifest NP ·
+    libmpi none · sha256 64 자리 · binary · host 있음."""
+    try:
+        with open(os.path.join(folder, BINARY_RECORD), encoding='utf-8') as f:
+            lines = [x for x in f.read().split('\n') if x.strip()]
+    except (OSError, UnicodeDecodeError) as e:
+        return None, f'{BINARY_RECORD} 없음 · 못 읽음 ({e}) — 로컬 직렬 러너가 바이너리를 기록하지 않았다'
+    kv = {}
+    for x in lines:
+        k, sep, v = x.partition(' ')
+        if not sep or k not in BINARY_KEYS or k in kv:
+            return None, f'{BINARY_RECORD} 줄 꼴이 아니다 [{x[:60]}]'
+        kv[k] = v.strip()
+    if set(kv) != set(BINARY_KEYS):
+        return None, f'{BINARY_RECORD} 키 {sorted(kv)} ≠ {sorted(BINARY_KEYS)}'
+    if (kv['mode'] != 'serial' or kv['np'] != str(man.get('np')) or kv['libmpi'] != 'none'
+            or not re.fullmatch(r'[0-9a-f]{64}', kv['sha256']) or not kv['binary'] or not kv['host']):
+        return None, f'{BINARY_RECORD} = {kv} — 직렬 · NP {man.get("np")} · libmpi none · sha256 이 아니다 (등록 §12-3)'
+    return kv, None
+
+
 def read_branch(folder, role, repo_verify=True):
     man = load_manifest(folder)
     if _on('role') and (man.get('branch') != role or ROLE_BED.get(role) != man.get('bed')
                         or BEDS[ROLE_BED[role]]['case'] != man.get('case') or ROLE_KIND.get(role) != man.get('kind')):
         raise Refused(f'{folder}: manifest 가지 {man.get("branch")} ({man.get("case")}) ≠ 역할 {role}')
+    if _on('np_registered') and man.get('np') != NP_Q5.get(role):
+        raise Refused(f'{folder}: manifest NP {man.get("np")} ≠ 등록 Q5 {role} NP {NP_Q5.get(role)} (로그 NP 는 manifest NP 와 대조한다)')
+    if _on('w2_ratified') and man.get('window') == 'W2' and (man.get('amendment') or {}).get('status') != W2_STATUS_RATIFIED:
+        raise Refused(f'{folder}: W2 가지가 등록 §12-2 비준 전 판 ({(man.get("amendment") or {}).get("status")}) 으로 만들어졌다 — '
+                      '판정 없음 (비준 뒤 생성기로 다시 만든다)')
+    host = man.get('host') or HOST_DEFAULT.get(man.get('case'))
+    launcher = man.get('launcher') or LAUNCHER_DEFAULT.get(host)
     db = _read_bytes(os.path.join(folder, man['deck']['file']), '가지 덱')
     mb = _read_bytes(os.path.join(folder, man['main_deck']['copy']), '본 덱 사본')
     if _on('deck_sha') and (_sha256_bytes(db) != man['deck']['sha256'] or _sha256_bytes(mb) != man['main_deck']['sha256']):
@@ -631,13 +676,21 @@ def read_branch(folder, role, repo_verify=True):
     log = parse_log(os.path.join(folder, 'log.liggghts'))
     if log is None:
         _refuse('log_missing', f'{folder}: log.liggghts 없음 (T0 를 볼 수 없다)')
-        log = dict(lines=[], blocks=[], errors=[], plate=[], loops=[])
+        log = dict(lines=[], blocks=[], errors=[], plate=[], loops=[], grids=[], version=None)
+    binrec = None
+    if host == LOCAL_HOST:                     # §12-3 — 로컬 직렬 러너가 실행 직전에 남긴 바이너리 기록
+        binrec, why_b = read_binary_record(folder, man)
+        if why_b:
+            _refuse('binary_record', f'{folder}: {why_b}')
     ok, why, a0, a1 = t0_eval(log, man)
     bad = check_log_provenance(log, man, db.decode('utf-8'), ok)
     if bad:
         raise Refused(f'{folder}: {bad}')
+    g = log.get('grids') or []
     br = dict(role=role, folder=os.path.realpath(folder), man=man, repo_verify=rv, ckpt=ck,
-              t0=dict(ok=ok, why=why, atoms_first=a0, atoms_last=a1), log=log, plate=log['plate'][:1], atoms={})
+              t0=dict(ok=ok, why=why, atoms_first=a0, atoms_last=a1), log=log, plate=log['plate'][:1], atoms={},
+              host=host, launcher=launcher, binary=binrec, grid=(' by '.join(map(str, g[0])) if g else None),
+              version=log.get('version'))
     s0, cs = man['s0'], man['compare_step']
     if not ok:
         _p, got = _dump_files(folder, man['atom_dump'])      # T0 실패 — 덤프 요구 없음 · 시작 상태 대조만 (있으면)
@@ -731,6 +784,22 @@ def _bed_checks(bed, here, window):
         raise Refused(f'{bed}: 가지마다 체크포인트 sha256 이 다르다 (같은 체크포인트에서 시작이 아니다)')
     if _on('floor_np') and here[d['floor']]['man']['np'] == here[d['base']]['man']['np']:
         raise Refused(f'{bed}: 바닥 {d["floor"]} NP = 기준 {d["base"]} NP — 합산 순서가 같아 바닥이 0 이 된다')
+    if _on('pair_machine'):
+        # (10-28 · §12-3) X ↔ A = 같은 기계 · 같은 실행 방식 · (로컬이면) 같은 바이너리 — 아니면 X − A 에 기계 차가 섞인다.
+        # 바닥 F 는 기계가 달라도 된다 (바닥이 커질 뿐 · ② 판정 불가 쪽) — 이탈로 기록한다 (run)
+        A = here[d['base']]
+        for k in ('a', 'b'):
+            X = here.get(d[k]) if d[k] else None
+            if X is None:
+                continue
+            if (X['host'], X['launcher']) != (A['host'], A['launcher']):
+                raise Refused(f'{bed}: {X["role"]} ({X["host"]} · {X["launcher"]}) ↔ 기준 {A["role"]} ({A["host"]} · {A["launcher"]}) '
+                              '기계 · 실행 방식 다름 — 같은 계산의 비교가 아니다 (등록 §12-3)')
+            if X['host'] == LOCAL_HOST:
+                bx, ba = X.get('binary') or {}, A.get('binary') or {}
+                if (bx.get('sha256'), bx.get('host')) != (ba.get('sha256'), ba.get('host')):
+                    raise Refused(f'{bed}: {X["role"]} ↔ {A["role"]} 로컬 바이너리 sha256 · 호스트 이름 다름 ({bx.get("host")} ↔ '
+                                  f'{ba.get("host")}) — 같은 기계 · 같은 바이너리여야 (등록 §12-3)')
     s0 = here[d['base']]['man']['s0']
     t0d = {r: b['atoms'][s0]['digest'] for r, b in here.items() if s0 in b['atoms']}
     if _on('t0_identity') and len(set(t0d.values())) > 1:
@@ -792,12 +861,26 @@ def run(roles, repo_verify=True, main_log=None):
     else:
         b_all = UNDECIDED if bres else None
         b_why = ('침대 하나만 읽음 (Q2 (가) — D0.7 C · D3 C3 둘 다 있어야 전체 (b))' if bres else '(b) 가지 없음')
+    devs = []                                  # (10-28 · §12-3) 이탈 기록 — 판정 밖 · 결과에 남긴다
+    for r, b in sorted(brs.items()):
+        if b['host'] == LOCAL_HOST:
+            bi = b.get('binary') or {}
+            devs.append(f'{r} ({ROLE_BED[r]}): 로컬 WSL 직렬 1 코어 — 바이너리 {bi.get("binary")} (sha256 {bi.get("sha256", "")[:16]}…) · '
+                        f'grid {b.get("grid")} · 등록 = hit → 기계 · 바이너리 이탈 (등록 §12-3 · 1저자 10-28)')
+    for bed, d in BEDS.items():
+        A, F = brs.get(d['base']), brs.get(d['floor'])
+        if A and F and (F['host'], F['launcher']) != (A['host'], A['launcher']):
+            devs.append(f'{bed}: 바닥 {d["floor"]} ({F["host"]} · {F["launcher"]}) ↔ 기준 {d["base"]} ({A["host"]} · {A["launcher"]}) '
+                        '기계 · 실행 방식 다름 — 바닥에 기계 · 바이너리 차가 섞여 커질 수 있다 (② 판정 불가 쪽으로만 · 등록 §12-3)')
     out = dict(schema=SCHEMA, registration=REGISTRATION, registration_sha256=_reg_sha(), window=window,
                tau=TAU, decision=list(DECISION[window]),
                branches={r: dict(folder=b['folder'], case=b['man']['case'], kind=b['man']['kind'], np=b['man']['np'],
+                                 host=b['host'], launcher=b['launcher'], binary=b.get('binary'), grid=b.get('grid'),
+                                 log_version=b.get('version'),
                                  deck_sha256=b['man']['deck']['sha256'], ckpt_sha256=b['ckpt'], repo_verify=b['repo_verify'],
                                  t0=b['t0'], obs=b.get('obs'), counts=(b.get('rep') or {}).get('counts'))
                          for r, b in brs.items()},
+               deviations=devs,
                beds=beds,
                a=(dict(result=a['result'], why='X = B · 결정 관측량 중 나쁜 쪽') if a else None),
                b=(dict(result=b_all, why=b_why, per_bed={k: v['result'] for k, v in bres.items()}) if b_all else None))
@@ -859,10 +942,14 @@ def _f(x, nd=5):
 
 def report(out):
     L = [f'# 50kg Q5 판정 — 창 {out["window"]} · 등록 {out["registration"]} §7 · τ = {out["tau"]}', '',
-         '| 가지 | 케이스 | NP | T0 | 원자 수 (처음 → 끝) | 허용 목록 다시 대조 | 메모 |', '|---|---|---|---|---|---|---|']
+         '| 가지 | 케이스 | NP | host · 실행 | grid | T0 | 원자 수 (처음 → 끝) | 허용 목록 다시 대조 | 메모 |',
+         '|---|---|---|---|---|---|---|---|---|']
     for r, b in out['branches'].items():
-        L.append(f'| {r} | {b["case"]} | {b["np"]} | {"통과" if b["t0"]["ok"] else "실패"} | {b["t0"]["atoms_first"]} → '
+        L.append(f'| {r} | {b["case"]} | {b["np"]} | {b.get("host")} · {b.get("launcher")} | {b.get("grid")} | '
+                 f'{"통과" if b["t0"]["ok"] else "실패"} | {b["t0"]["atoms_first"]} → '
                  f'{b["t0"]["atoms_last"]} | {b["repo_verify"]} | {"; ".join(b["t0"]["why"]) or "-"} |')
+    if out.get('deviations'):
+        L += ['', '이탈 (등록과 다름 · 판정 밖 기록):'] + [f'- {x}' for x in out['deviations']]
     for bed, v in out['beds'].items():
         for k, c in v['comparisons'].items():
             L += ['', f'## {bed} — ({k}) {c["x"]} ↔ {c["base"]} (바닥 {c["floor"]}) = **{c["result"]}**'

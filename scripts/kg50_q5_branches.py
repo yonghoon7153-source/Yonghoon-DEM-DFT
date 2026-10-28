@@ -1,34 +1,42 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""50kg Q5 가지 덱 생성기 — 정착 끝 (after_settling) 체크포인트에서 dt ↔ dt/2 · 감쇠 가지 (등록 Q11 · 창 W1).
+"""50kg Q5 가지 덱 생성기 — 정착 끝 (after_settling) 체크포인트에서 dt ↔ dt/2 · 감쇠 가지 (등록 Q11 · 창 W1) +
+창 W2 (등록 §12-2 = 개정 초안 · 비준 전) + D3 로컬 직렬 러너 (등록 §12-3 · 1저자 10-28).
 
-등록 = `docs/50kg/kg50_q5_dt_damping_registration_draft_20261027.md` (1저자 10-27 밤 비준 · Q1–Q12 = 머리 비준 표).
+등록 = `docs/50kg/kg50_q5_dt_damping_registration_draft_20261027.md` (1저자 10-27 밤 비준 · Q1–Q12 = 머리 비준 표 · §12 = 10-28 개정).
   §2 침대 · 지점 — kg50_d07_b50 (v3 덱 · ibb) · kg50_d3_b50_s1 (v2 덱 · hit) · 체크포인트 restart_<case>/restart_after_settling.bin
        (step 200001 · 본 덱 170 행 write_restart)
   §3 가지 — A 본 덱 그대로 · B dt 1 µs → 0.5 µs (step 으로 센 수 ×2) · C 안정화 감쇠의 SE 몫만 γ_SE = 0.5·s
        (Q2 (가) AM 기준 s = m_SE/m_AM) · F = A 덱 그대로 · NP 만 다름 · D3 = A3 · C3 · F3 (같은 꼴 · B3 없음)
   Q5 NP — A · B · C 56 · F 28 · A3 · C3 1 · F3 2
   §4 덱 줄 — 뼈대 §4-1 · B §4-2 · C §4-3 · 출력 줄 §4-5 (덤프 간격 Q12 = W1 atom 66,667 · contact 200,001)
-  창 (Q3 (나) W1 + W2) — 이 생성기는 W1 만 만든다.  W2 는 거부한다: §5 가 W2 덱의 꼴 (압축 체크포인트 재개 + 고정 run) 만
-       적고 줄 목록이 없다 (§4 = W1 줄만) · Q12 에 W2 contact 덤프 간격이 없다 · W2 시작 체크포인트 step 은 본 런 뒤에 정해진다.
+  창 W2 — §12-2 (⬜ 개정 초안 · 비준 전) 대로: D0.7-50 만 · 본 런 압축 체크포인트 restart_compress_<N>.bin 에서 고정 길이
+       run (A · C · F 300,000 · B 600,000) · N = 본 런 로그에서 계산 (§12-2 (라) · `--main-log` · 사람이 고르지 않는다) ·
+       덤프 atom 10,000 · contact 100,000 · 판 STL = 200 행 그대로 (파일 = 본 런 mesh_<N>.stl 사본) · 비준 전이면 덱 머리 ·
+       manifest · 화면에 "개정 초안 · 비준 전" + 운영자 제출 줄을 막는다 (판독기는 비준 전 판으로 만든 W2 가지를 거부한다).
+  host — §12-3 (1저자 10-28): D3 A3 · C3 만 `--host wsl` = 로컬 WSL 직렬 LIGGGHTS 1 코어 (mpirun · MPI 빌드를 쓰지 않는다 ·
+       바이너리 = 환경 변수 LMP_SERIAL · 없으면 $HOME/src/LIGGGHTS-PUBLIC/src/lmp_serial · 그것도 없으면 PATH 의 lmp_serial) ·
+       덱 = hit 덱과 바이트 같음 · 러너만 다름 · F3 = hit NP 2 · D1 끝난 뒤 (로컬은 거부).
 
 하는 일 (본 덱 · 체크포인트 · 원 폴더는 읽기만 · 바꾸지 않는다):
-  ⓪ 등록 문서의 고정 줄 (§2 · §4 표 · 머리 비준 표 · §8) = 이 파일의 상수 — 다르면 거부 (결과 뒤 등록 이동 차단)
+  ⓪ 등록 문서의 고정 줄 (§2 · §4 표 · 머리 비준 표 · §8 · §12) = 이 파일의 상수 — 다르면 거부 (결과 뒤 등록 이동 차단)
   ① 본 덱 sha256 = 그 덱 묶음 manifest.json 의 deck_sha256 (v3 · v2) — 다르면 거부
   ② 본 덱의 고정 줄 (행 번호 + 내용) · 뺄 구역의 명령 꼴 · 끝 구역 명령 꼴 확인 — 다르면 거부 (어느 행 · 어느 § 인지 적는다)
-  ③ 가지 덱 = 본 덱을 줄 단위로 그대로 옮기고 등록된 줄만 바꿈 (§4-1 · §4-2 · §4-3 · §4-5)
+  ③ 가지 덱 = 본 덱을 줄 단위로 그대로 옮기고 등록된 줄만 바꿈 (§4-1 · §4-2 · §4-3 · §4-5 · W2 = §12-2 (가))
   ④ 허용 목록 대조 — 가지 덱 명령 (LIGGGHTS 줄 규칙 · resume_ckpt.sh 의 deck() 와 같음) ↔ 본 덱 명령에 등록 바꿈만
        적용한 목록 · 줄 단위로도 본 덱 줄 그대로인지 — 한 글자라도 다르면 거부 (파일을 하나도 쓰지 않는다)
-  ⑤ A · F · A3 · F3 = `resume_ckpt.sh -C` 정적 대조 문제가 정확히 하나 (§8-1: 재개 지점 뒤 순서 줄 수 12 ↔ 0 · rc 1)
+  ⑤ A · F · A3 · F3 = `resume_ckpt.sh -C` 정적 대조 문제가 정확히 하나 (§8-1: 재개 지점 뒤 순서 줄 수 12 ↔ 0 · rc 1) ·
+       W2 A · F = 정확히 둘 (§12-2 (마))
   ⑥ 러너 = 리포 러너 렌더 (`make_se_size_decks.render_ibb_runner` · `hit_command`) — ibb 러너는 본 러너와
-       job-name · output · -n · cd · mpirun 다섯 줄만 다르다 · `#SBATCH -n N` ↔ `mpirun … -np N` 짝 (N = Q5)
-  ⑦ 쓰기 = 새 폴더 하나 (<out>/q5_<case>_<가지>/ · 이미 있으면 거부) · 가지 덱 · 러너 · 본 덱 사본 · q5_manifest.json
-       (입력 · 출력 sha256) · SHA256SUMS — 임시 폴더에 다 쓴 뒤 이름 바꾸기 (거부 = 파일 0)
-  ⑧ 체크포인트 복사 · sha256 = 운영자 몫 — 정확한 cp · sha256sum 줄을 화면 · manifest 에 낸다 (같아야 제출)
+       job-name · output · -n · cd · mpirun 다섯 줄만 다르다 · `#SBATCH -n N` ↔ `mpirun … -np N` 짝 (N = Q5) ·
+       로컬 (§12-3) = 생성기 글자 그대로 (직렬 · 검사 · 바이너리 기록 q5_binary.txt)
+  ⑦ 쓰기 = 새 폴더 하나 (<out>/q5_<case>_<가지>/ · W2 q5w2_… · 로컬 …_wsl · 이미 있으면 거부) · 가지 덱 · 러너 · 본 덱 사본 ·
+       (W2 = 본 런 로그 사본) · q5_manifest.json (입력 · 출력 sha256) · SHA256SUMS — 임시 폴더에 다 쓴 뒤 이름 바꾸기 (거부 = 파일 0)
+  ⑧ 체크포인트 (W2 = + 판 STL) 복사 · sha256 = 운영자 몫 — 정확한 cp · sha256sum 줄을 화면 · manifest 에 낸다 (같아야 제출)
 
 물리 숫자는 새로 만들지 않는다 — 바뀌는 값 (dt 5.0e-7 · run 2 · 400000 · thermo 2 · 2000 · mesh 10000 · s 5.3696e-4 ·
-  4.2268e-2 · 덤프 간격 66667 · 200001 · NP) 은 전부 등록 문서 그대로이고, 본 덱 값 (dt 1.0e-6 · 밀도 · 반지름 · run 길이)
-  으로 맞는지 다시 센다 (dt/2 · step ×2 · s = ρ_SE r_SE³ / ρ_AM r_AM³ 다섯 자리).
+  4.2268e-2 · 덤프 간격 66667 · 200001 · NP · W2 run 300000 · 600000 · dmp_atom 100000 · 덤프 10000 · 100000) 은 전부 등록
+  문서 그대로이고, 본 덱 값 (dt 1.0e-6 · 밀도 · 반지름 · run 길이) 으로 맞는지 다시 센다 (dt/2 · step ×2 · s 다섯 자리).
 자리 표시 둘의 읽기: §4-1 `read_restart <가지 폴더>/…` = 러너가 cd 하는 가지 폴더 기준 상대 경로 · §4-5 덤프 `<폴더>` =
   본 덱 153 행이 만드는 `post_<case>/` (따로 `shell mkdir` 줄을 더하지 않으려고).
 ★ B 의 dt 줄 (43 행) 은 read_restart 앞에 있다 — LIGGGHTS 3d5c00f 의 restart 머리에는 dt 가 없고 units 가 같으면
@@ -37,6 +45,8 @@
 
 사용 (WSL · 리포 안 · 아무것도 띄우지 않는다)
     python3 scripts/kg50_q5_branches.py --case kg50_d07_b50 --branch A --np 56 --out ~/q5_build
+    python3 scripts/kg50_q5_branches.py --case kg50_d3_b50_s1 --branch A3 --np 1 --host wsl --out ~/q5_local
+    python3 scripts/kg50_q5_branches.py --case kg50_d07_b50 --branch A --np 56 --window W2 --main-log <본 런 log> --out ~/q5_build
     python3 scripts/kg50_q5_branches.py --verify ~/q5_build/q5_kg50_d07_b50_A
     python3 scripts/kg50_q5_branches.py --selftest
 웹앱 화면 없음 (일회성 등록 대조 도구 · 판정은 scripts/kg50_q5_verdict.py).
@@ -47,6 +57,7 @@ import argparse
 import difflib
 import hashlib
 import json
+import math
 import os
 import re
 import shutil
@@ -94,7 +105,7 @@ ATOM_COLS = ('id', 'type', 'x', 'y', 'z', 'radius', 'vx', 'vy', 'vz')
 CONTACT_COLS = tuple('c_cpl[%d]' % i for i in range(1, 27))
 TYPE_MAP = {1: 'AM', 2: 'AM', 3: 'SE'}             # 본 덱 55 행 (Type 1:AM_P, 2:AM_S, 3:SE) · §4-3 "type 3 = SE" · "AM (type 1)"
 SE_TYPE = 3
-WINDOW_S = {'W1': '0.200001'}                      # Q3 (나) — W1 = 판 높이 1 µs + 안정화 0.2 s
+WINDOW_S = {'W1': '0.200001', 'W2': '0.3'}         # Q3 (나) — W1 = 판 높이 1 µs + 안정화 0.2 s · W2 = 0.3 s (판 3 µm)
 DT_HALF = '5.0e-7'                                 # §4-2 43 행
 EXPECTED_STATIC_PROBLEM = '재개 지점 뒤 순서 줄 수 다름: 본 덱 12 ↔ 재개 덱 0'    # §8-1
 HEADER_END = '# ===== (q5 머리 끝) ====='
@@ -213,6 +224,16 @@ ANCHORS = {
     213: ('cmd', 'run 200000'),
     215: ('raw', '# --- 11. Phase 3: Compression ---'),
     216: ('cmd', 'print "====== PHASE 3: COMPRESSION (Speed 0.01) ======"'),
+    217: ('cmd', 'dump dmp_atom all custom 50000 post_{case}/atom_*.liggghts id type x y z radius vx vy vz c_strs[1] c_strs[2] '
+                 'c_strs[3] c_ke'),
+    218: ('cmd', 'fix_modify zwall_top energy yes'),
+    220: ('cmd', 'variable press_speed equal 0.01'),
+    221: ('cmd', 'fix move_press all move/mesh mesh top_mesh linear 0.0 0.0 -${press_speed}'),
+    222: ('cmd', 'restart 200000 restart_{case}/restart_compress_*.bin'),
+    224: ('cmd', 'label loop_press'),
+    225: ('cmd', 'run 5000'),
+    228: ('cmd', 'if "${current_press} < ${target_press}" then "jump SELF loop_press"'),
+    230: ('cmd', 'unfix move_press'),
     237: ('re', r'dump dmp_contact all local 10000 post_{case}/contact_\*\.liggghts' + ''.join(r' c_cpl\[%d\]' % i for i in range(1, 27))),
 }
 #: 뺄 구역의 명령 첫 낱말 (§4-1 116–150 = 삽입 · 삽입 검사) · 끝 구역 (214–) — 다른 명령이 섞이면 조용히 빼지 않는다
@@ -350,6 +371,16 @@ def _rel(path):
     return os.path.relpath(a, ROOT) if a.startswith(ROOT + os.sep) else a
 
 
+def _tok_finite(t):
+    """로그 글자 하나 — ASCII 숫자 글자 (float() 은 유니코드 숫자도 받는다) 이고 유한."""
+    if not t.isascii():
+        return False
+    try:
+        return math.isfinite(float(t))
+    except ValueError:
+        return False
+
+
 # ───────────────────────── LIGGGHTS 줄 규칙 (resume_ckpt.sh deck() 와 같음) ─────────────────────────
 def _uncomment(s):
     out, q = [], None
@@ -397,6 +428,15 @@ def commands(text):
 
 
 # ───────────────────────── ⓪ 등록 문서 · LIGGGHTS 소스 전제 ─────────────────────────
+def amendment_status(txt):
+    """§12-2 상태 줄 — '개정 초안 · 비준 전' · '비준' · None (둘 다 있음 · 둘 다 없음 = 정할 수 없음)."""
+    draft = any(ln.startswith(W2_STATUS_DRAFT) for ln in txt.split('\n'))
+    ratified = bool(W2_STATUS_RATIFIED_RE.search(txt))
+    if draft == ratified:
+        return None
+    return STATUS_DRAFT if draft else STATUS_RATIFIED
+
+
 def registration_check(path=None):
     """등록 문서의 고정 줄이 이 파일의 상수와 같은가.  반환 (ok, 문제 목록)."""
     p = path or os.path.join(ROOT, REGISTRATION)
@@ -474,6 +514,97 @@ def source_premise_check(evidence_dir=None):
     if re.search(r'\bTIMESTEP\b', w + r):
         probs.append('restart 머리 열거에 TIMESTEP (dt) 가 있다')
     return (not probs), probs
+
+
+# ───────────────────────── §12-2 (라) W2 시작 step — 본 런 로그 ─────────────────────────
+RE_LOOP = re.compile(r'^Loop time of (\S+) on ([0-9]+) procs.*? for ([0-9]+) steps with ([0-9]+) atoms')
+RE_HEADER = re.compile(r'^\s*Step\s+Atoms\b')
+RE_ERROR = re.compile(r'^\s*ERROR\b')
+
+
+def _w2_rows(lines):
+    """thermo 묶음 (pressMPa 열) 의 setup 아닌 줄 → {step: (pressMPa, 줄)} · 같은 step 둘 · 꼴이 다른 줄."""
+    rows, dup, bad, cur = {}, [], [], None
+    for ln in lines:
+        if RE_LOOP.match(ln):
+            cur = None
+            continue
+        if RE_HEADER.match(ln):
+            h = ln.split()
+            cur = dict(n=len(h), k=next((h.index(c) for c in ('pressMPa', 'v_pressMPa') if c in h), None), first=True)
+            continue
+        if cur is None:
+            continue
+        t = ln.split()
+        if not t or not re.fullmatch(r'[0-9]+', t[0]):
+            continue
+        if len(t) != cur['n']:
+            bad.append(ln.strip()[:60])
+            continue
+        if cur['first']:
+            cur['first'] = False                   # run 시작 setup 줄 — 판 압력을 믿을 수 없다 (§12-2 (라) 2)
+            continue
+        if cur['k'] is None:
+            continue
+        s, v = int(t[0]), t[cur['k']]
+        if not _tok_finite(v) or float(v) < 0:
+            bad.append(ln.strip()[:60])
+            continue
+        if s in rows:
+            dup.append(s)
+            continue
+        rows[s] = (float(v), ' '.join(t))
+    return rows, dup, bad
+
+
+def w2_watch(text, case):
+    """운영 — 본 런을 멈춰도 되는가 (같은 §12-2 (라) 규칙 · 사람이 고르지 않는다).
+    ready = N 까지 줄이 다 있고 규칙 통과 (restart_compress_<N>.bin 확인 뒤 멈춤) · wait = 첫 접촉 뒤인데 로그가 아직 N 전 ·
+    no_contact = pressMPa > 0 줄 없음 · refused = N 을 지났는데 규칙 거부 (빠짐 · 겹침 · echo …) — 1저자."""
+    try:
+        st = w2_start_from_log(text, case)
+        return dict(status='ready', **st)
+    except Refused as e:
+        why = str(e)
+    rows, _dup, _bad = _w2_rows(text.split('\n'))
+    last = max(rows) if rows else None
+    contact = sorted(s for s, (v, _r) in rows.items() if v > 0 and s > S0)
+    if not contact:
+        return dict(status='no_contact', last=last, why=why)
+    sc = contact[0]
+    n = max(W2_N_MIN, -(-sc // W2_CKPT_EVERY) * W2_CKPT_EVERY)
+    return dict(status='wait' if (last is None or last < n) else 'refused', first_contact_step=sc, n=n, last=last, why=why)
+
+
+def w2_start_from_log(text, case):
+    """§12-2 (라) — 본 런 로그 한 파일 → dict(n · first_contact_step · first_contact_row · rows).  못 정하면 Refused.
+    줄 = pressMPa 열이 있는 thermo 묶음의 행 중 묶음 첫 줄 (setup) 을 뺀 것 · S_c = pressMPa > 0 인 가장 작은 step (> 정착 끝) ·
+    N = 200,000 × ⌈S_c / 200,000⌉ (최소 600,000) · 201,000 … N 의 1,000 배수 줄이 하나씩 다 있어야."""
+    lines = text.split('\n')
+    probs = []
+    if any(RE_ERROR.match(x) for x in lines):
+        probs.append('ERROR 줄이 있다')
+    normed = {norm(x) for x in lines}
+    for e in W2_LOG_ECHO:
+        e = e.replace('{case}', case)
+        if e not in normed:
+            probs.append(f'로그 echo 에 [{e}] 가 없다 (다른 덱 · 다른 런)')
+    rows, dup, bad = _w2_rows(lines)
+    contact = sorted(s for s, (v, _r) in rows.items() if v > 0 and s > S0)
+    if not contact:
+        raise Refused('본 런 로그에 pressMPa > 0 인 줄이 없다 (setup 줄 빼고 · 정착 끝 뒤) — 아직 접촉 전 (§12-2 (라) 3)')
+    sc = contact[0]
+    n = max(W2_N_MIN, -(-sc // W2_CKPT_EVERY) * W2_CKPT_EVERY)
+    miss = [s for s in range(W2_LOG_FIRST, n + 1, W2_LOG_EVERY) if s not in rows]
+    if miss:
+        probs.append(f'1,000 배수 줄 빠짐 {len(miss)} ({miss[:4]} …) — 버퍼 유실 · 잘림 · 다른 런')
+    if dup:
+        probs.append(f'같은 step 줄 둘 {sorted(set(dup))[:4]} — 로그 이어 붙이기')
+    if bad:
+        probs.append(f'열 수 · pressMPa 글자가 다른 줄 {len(bad)} ([{bad[0]}])')
+    if probs and _on('w2_log'):
+        raise Refused('본 런 로그로 W2 시작 step 을 정할 수 없다 (§12-2 (라) 5) — ' + ' | '.join(probs[:5]))
+    return dict(n=n, first_contact_step=sc, first_contact_row=rows[sc][1], rows=len(rows), rule='§12-2 (라)')
 
 
 def synth_main_log(case, first_contact, last, *, np_=56, setup_spike=None, stab_contact=None, drop=(), dup=(), bad=None,
@@ -568,12 +699,14 @@ def check_anchors(text, case):
     if tail != TAIL_WORDS:
         probs.append(f'본 덱 214– (뺄 구역) 명령 꼴 ≠ 압축 · 이완 · 끝 상태 ({tail})')
     for c, l0, l1 in cmds:
-        a = l0 in DROP_LINES
-        if any((k in DROP_LINES) != a for k in range(l0, l1 + 1)):
-            probs.append(f'본 덱 {l0}–{l1} 행 명령이 뺄 구역 경계를 걸친다')
+        for what, drop in (('W1', DROP_LINES), ('W2', W2_DROP)):
+            a = l0 in drop
+            if any((k in drop) != a for k in range(l0, l1 + 1)):
+                probs.append(f'본 덱 {l0}–{l1} 행 명령이 {what} 뺄 구역 경계를 걸친다')
         if l0 in (167, 170) and l1 != l0:
             probs.append(f'본 덱 {l0} 행 명령이 한 줄이 아니다')
-    for ln in [x for x, _a, _b in B_EDITS] + [C_EDIT[0], RESTART0_LINE, READ_RESTART_LINE]:
+    for ln in sorted(set([x for x, _a, _b in B_EDITS] + [x for x, _a, _b in W2_B_EDITS]
+                         + [C_EDIT[0], RESTART0_LINE, READ_RESTART_LINE, W2_RUN_LINE] + list(W2_RESTART0_LINES))):
         if _uncomment(lines[ln - 1]).rstrip() != lines[ln - 1].rstrip() or lines[ln - 1].rstrip().endswith('&'):
             probs.append(f'본 덱 {ln} 행 (바꿀 줄) 에 주석 · 이어 붙이기가 있다')
     return probs
@@ -618,20 +751,21 @@ def _lead(raw):
     return raw[:len(raw) - len(raw.lstrip())]
 
 
-def _dump_lines(case):
-    return ['dump dq5a all custom %d post_%s/q5atom_*.liggghts %s' % (ATOM_EVERY, case, ' '.join(ATOM_COLS)),
-            'dump dq5c all local %d post_%s/q5contact_*.liggghts %s' % (CONTACT_EVERY, case, ' '.join(CONTACT_COLS))]
+def _dump_lines(case, window='W1'):
+    a, c = (W2_ATOM_EVERY, W2_CONTACT_EVERY) if window == 'W2' else (ATOM_EVERY, CONTACT_EVERY)
+    return ['dump dq5a all custom %d post_%s/q5atom_*.liggghts %s' % (a, case, ' '.join(ATOM_COLS)),
+            'dump dq5c all local %d post_%s/q5contact_*.liggghts %s' % (c, case, ' '.join(CONTACT_COLS))]
 
 
 UNDUMP_LINES = ['undump dq5a', 'undump dq5c']
 
 
-def _edits(case, branch):
+def _edits(case, branch, window='W1'):
     """가지마다 바꾸는 행 → (A 명령, 가지 명령)."""
     kind = KIND[branch]
     ed = {}
     if kind == 'dt_half':
-        for ln, a, b in B_EDITS:
+        for ln, a, b in (W2_B_EDITS if window == 'W2' else B_EDITS):
             ed[ln] = (a.replace('{case}', case), b.replace('{case}', case))
     elif kind == 'damp':
         ln, a, b = C_EDIT
@@ -658,8 +792,10 @@ def header(case, branch, main_sha):
             HEADER_END]
 
 
-def build_text(main_text, case, branch, main_sha):
-    """가지 덱 글자 — 본 덱 줄을 그대로 옮기고 등록 바꿈만 (§4-1 · §4-2 · §4-3 · §4-5)."""
+def build_text(main_text, case, branch, main_sha, window='W1', n=None, status=None, start=None):
+    """가지 덱 글자 — 본 덱 줄을 그대로 옮기고 등록 바꿈만 (§4-1 · §4-2 · §4-3 · §4-5 · W2 = §12-2 (가))."""
+    if window == 'W2':
+        return _w2_text(main_text, case, branch, main_sha, n, status, start)
     lines = main_text.split('\n')
     ed = _edits(case, branch)
     out = header(case, branch, main_sha)
@@ -682,8 +818,10 @@ def build_text(main_text, case, branch, main_sha):
     return '\n'.join(out) + '\n'
 
 
-def expected_commands(main_text, case, branch):
+def expected_commands(main_text, case, branch, window='W1', n=None):
     """등록 바꿈을 본 덱 **명령** 에 적용한 가지 명령 목록 — 생성기 (줄 바꿈) 와 다른 길.  본 덱 바꿀 줄이 등록 A 값이 아니면 문제."""
+    if window == 'W2':
+        return _w2_expected(main_text, case, branch, n)
     ed = _edits(case, branch)
     exp, probs = [], []
     for c, l0, _l1 in commands(main_text):
@@ -706,6 +844,90 @@ def expected_commands(main_text, case, branch):
     return exp, probs
 
 
+def _new_lines(case, branch, window='W1', n=None):
+    """줄 단위 대조에서 본 덱 줄이 아니어도 되는 등록 새 줄."""
+    if window == 'W2':
+        return _w2_new_lines(case, branch, n)
+    return set(_dump_lines(case) + UNDUMP_LINES + [f'read_restart restart_{case}/restart_after_settling.bin', 'restart 0'] +
+               [b for _a, b in _edits(case, branch).values()])
+
+
+# ───────────────────────── §12-2 W2 (⬜ 개정 초안 · 비준 전) ─────────────────────────
+def _w2_text(main_text, case, branch, main_sha, n, status, start):
+    """W2 가지 덱 글자 — §4-1 뼈대에서 §12-2 (가) 표만 다름."""
+    kind = KIND[branch]
+    who = {'base': 'A · F', 'floor': 'A · F', 'dt_half': 'B', 'damp': 'C'}[kind]
+    extra = ''
+    if kind == 'dt_half':
+        extra = ' · B: 43 dt 5.0e-7 · 203 mesh 10000 · 212 thermo 2000 · 217 dmp_atom 100000 · 224 run 600000'
+    elif kind == 'damp':
+        extra = f' · C: 208 fix damp all viscous 0.5 scale 3 {CASES[case]["s"]}'
+    out = [f'# ===== 50kg Q5 가지 {who} — {KIND_KO[kind]} · 창 W2 (§12-2) · scripts/kg50_q5_branches.py 생성 (손으로 고치지 말 것) =====',
+           f'#   등록 {REGISTRATION} §12-2 (W2 줄 목록 · 10-28 개정) · §3 · §4 (1저자 10-27 밤 비준 · Q1–Q12)',
+           f'#   §12-2 상태: {status}',
+           f'#   본 덱 {CASES[case]["deck"]} · sha256 {main_sha}',
+           '#   = §4-1 뼈대에서 §12-2 (가) 만 다름: 49–50 → read_restart …compress · 172–197 · 213 뺌 · 214–221 그대로 · 222 → restart 0 ·',
+           f'#     224–228 → run {W2_RUN[kind]} · 171 뒤 q5 덤프 둘 (atom {W2_ATOM_EVERY} · contact {W2_CONTACT_EVERY}) · run 뒤 undump 둘'
+           f'{extra}',
+           f'#   시작 step N = {n} (본 런 첫 접촉 step {start["first_contact_step"]} · §12-2 (라) · 본 런 로그 사본 main_log_{case}.liggghts '
+           f'sha256 {start["log_sha256"]})',
+           f'#   체크포인트 restart_{case}/restart_compress_{n}.bin · 판 STL plate_{case}.stl (= 본 런 post_{case}/mesh_{n}.stl) = 운영자가 '
+           '복사 · sha256 · NP = 러너 (Q5)',
+           HEADER_END]
+    lines = main_text.split('\n')
+    ed = _edits(case, branch, 'W2')
+    for k in range(1, MAIN_NLINES + 1):
+        raw = lines[k - 1]
+        if k in W2_DROP:
+            continue
+        if k == READ_RESTART_LINE:
+            out.append(f'read_restart restart_{case}/restart_compress_{n}.bin')
+        elif k in W2_RESTART0_LINES:
+            out.append(_lead(raw) + 'restart 0')
+        elif k == W2_RUN_LINE:
+            out.append(_lead(raw) + f'run {W2_RUN[kind]}')
+        elif k in ed:
+            out.append(_lead(raw) + ed[k][1])
+        else:
+            out.append(raw)
+        if k == INSERT_DUMPS_AFTER:
+            out += _dump_lines(case, 'W2')
+        if k == W2_RUN_LINE:
+            out += UNDUMP_LINES
+    return '\n'.join(out) + '\n'
+
+
+def _w2_expected(main_text, case, branch, n):
+    ed = _edits(case, branch, 'W2')
+    exp, probs = [], []
+    for c, l0, _l1 in commands(main_text):
+        if l0 in W2_DROP:
+            continue
+        if l0 == READ_RESTART_LINE:
+            exp.append(f'read_restart restart_{case}/restart_compress_{n}.bin')
+        elif l0 in W2_RESTART0_LINES:
+            exp.append('restart 0')
+        elif l0 == W2_RUN_LINE:
+            exp.append(f'run {W2_RUN[KIND[branch]]}')
+        elif l0 in ed:
+            if c != ed[l0][0]:
+                probs.append(f'본 덱 {l0} 행 [{c}] ≠ 등록 A 값 [{ed[l0][0]}]')
+            exp.append(ed[l0][1])
+        else:
+            exp.append(c)
+        if l0 == INSERT_DUMPS_AFTER:
+            exp += _dump_lines(case, 'W2')
+        if l0 == W2_RUN_LINE:
+            exp += list(UNDUMP_LINES)
+    return exp, probs
+
+
+def _w2_new_lines(case, branch, n):
+    return set(_dump_lines(case, 'W2') + UNDUMP_LINES + [f'read_restart restart_{case}/restart_compress_{n}.bin', 'restart 0',
+                                                          f'run {W2_RUN[KIND[branch]]}'] +
+               [b for _a, b in _edits(case, branch, 'W2').values()])
+
+
 def _strip_header(text):
     """생성기 머리 (주석 줄만 · & 로 끝나는 줄 없음 — LIGGGHTS 가 다음 줄을 주석에 이어 붙인다) 를 뗀 본문 · 아니면 None."""
     lines = text.split('\n')
@@ -717,15 +939,17 @@ def _strip_header(text):
     return '\n'.join(lines[k + 1:])
 
 
-def verify_branch_deck(main_text, branch_text, case, branch):
+def verify_branch_deck(main_text, branch_text, case, branch, window='W1', n=None):
     """④ 허용 목록 대조 — 문제 목록 (빈 목록 = 통과).  명령 단위 + 줄 단위 (본 덱 줄 그대로 · 순서)."""
     probs = []
     if case not in CASES or branch not in KIND or (_on('branch') and branch not in CASES[case]['branches']):
         return [f'가지 {branch} 는 {case} 의 등록 가지가 아니다']
+    if window == 'W2' and not (isinstance(n, int) and n > 0):
+        return ['W2 시작 step N 이 없다']
     body = _strip_header(branch_text)
     if body is None:
         return ['가지 덱 머리 (생성기 표지) 가 없다 · 머리에 주석 아닌 줄이 있다']
-    exp, p0 = expected_commands(main_text, case, branch)
+    exp, p0 = expected_commands(main_text, case, branch, window, n)
     probs += p0
     got = [c for c, _a, _b in commands(body)]
     if got != exp:
@@ -734,8 +958,7 @@ def verify_branch_deck(main_text, branch_text, case, branch):
             if tag != 'equal':
                 probs.append(f'허용 목록 밖 ({tag}): 기대 {exp[i1:i2][:3]} ↔ 가지 {got[j1:j2][:3]}')
     # 줄 단위 — 머리 뒤 줄 = 본 덱 줄 그대로 (순서대로) 또는 등록 새 줄 (명령이 기대와 같을 때)
-    new_ok = set(_dump_lines(case) + UNDUMP_LINES + [f'read_restart restart_{case}/restart_after_settling.bin', 'restart 0'] +
-                 [b for _a, b in _edits(case, branch).values()])
+    new_ok = _new_lines(case, branch, window, n)
     mlines = main_text.split('\n')
     j = 0
     for raw in body.split('\n')[:-1] if body.endswith('\n') else body.split('\n'):
@@ -751,11 +974,12 @@ def verify_branch_deck(main_text, branch_text, case, branch):
 
 
 # ───────────────────────── ⑤ 정적 대조 ─────────────────────────
-def static_check(main_path, deck_path, case, tool=None):
+def static_check(main_path, deck_path, case, tool=None, ckpt=None, s0=S0):
     """`resume_ckpt.sh -C` (재개 덱 정적 대조) — 출력 · 종료 코드 · 문제 줄."""
     tool = tool or os.path.join(ROOT, RESUME_TOOL)
+    ckpt = ckpt or f'restart_{case}/restart_after_settling.bin'
     with tempfile.TemporaryDirectory(prefix='q5W_') as w:
-        r = subprocess.run(['bash', tool, '-C', main_path, deck_path, f'restart_{case}/restart_after_settling.bin', str(S0), w],
+        r = subprocess.run(['bash', tool, '-C', main_path, deck_path, ckpt, str(s0), w],
                            capture_output=True, text=True, timeout=120)
     lines = r.stdout.splitlines()
     return dict(rc=r.returncode, problems=[x[4:] for x in lines if x.startswith('  ✗ ')],
@@ -769,14 +993,49 @@ RUNNER_DIFF_OK = (re.compile(r'^#SBATCH --job-name=\S+$'), re.compile(r'^#SBATCH
                   re.compile(r'^mpirun --oversubscribe --bind-to none -np [0-9]+ lmp_mpi -in \S+$'))
 
 
-def folder_name(case, branch):
-    return f'q5_{case}_{branch}'
+def folder_name(case, branch, window='W1', host=None):
+    """가지 폴더 = q5_<case>_<가지> (W1) · q5w2_<case>_<가지> (W2 · §12-2 (바)) · 로컬 (§12-3) = 꼬리 _wsl."""
+    return f'{W2_PREFIX if window == "W2" else "q5_"}{case}_{branch}{LOCAL["suffix"] if host == LOCAL["host"] else ""}'
 
 
-def render_runner(case, branch, np_, template_path=None):
-    """러너 글자 — ibb = 리포 러너 렌더 (본 러너와 같은 틀) · hit = hit_command (SLURM 없음)."""
+def _local_runner(case, branch, np_, fol, q1):
+    """§12-3 로컬 직렬 러너 글자 — mpirun 없음 · 검사 하나라도 실패하면 실행 안 함 (rc 2) · 바이너리 경로 · sha256 기록."""
+    root = LOCAL['root'].replace('~', '$HOME', 1)
+    env, dflt, fb = LOCAL['env'], LOCAL['default'], LOCAL['fallback']
+    ck = f'restart_{case}/restart_after_settling.bin'
+    deck, log = f'input_{fol}.liggghts', f'log_{fol}_v1.out'
+    return '\n'.join([
+        '#!/bin/bash',
+        f'# 50kg Q5 가지 {branch} — 로컬 WSL · 직렬 LIGGGHTS 1 코어 · MPI 실행기 없음 · NP {np_} (Q5) · 등록 §12-3 이탈 (등록 = hit) · '
+        'scripts/kg50_q5_branches.py 생성 (손으로 고치지 말 것)',
+        f'# 바이너리 = 환경 변수 {env} · 없으면 {dflt} · 그것도 없으면 PATH 의 {fb} · MPI 빌드 (ldd 에 libmpi) = 거부',
+        '# 검사 하나라도 실패 = 실행 안 함 (rc 2): 폴더 SHA256SUMS · ckpt_sha256.txt 두 줄 = 등록 Q1 sha256 · 체크포인트 sha256 · '
+        'log.liggghts 없음 · 바이너리',
+        'set -u',
+        f'cd "{root}/{fol}" || {{ echo "⛔ 가지 폴더 없음 — 실행 안 함"; exit 2; }}',
+        'sha256sum -c --quiet SHA256SUMS || { echo "⛔ SHA256SUMS 다름 — 실행 안 함"; exit 2; }',
+        f'Q1={q1}',
+        '[ -f ckpt_sha256.txt ] && [ "$(wc -l < ckpt_sha256.txt)" = 2 ] && [ "$(cut -d" " -f1 ckpt_sha256.txt | sort -u)" = "$Q1" ] '
+        '|| { echo "⛔ ckpt_sha256.txt 가 두 줄 · 같은 값 · 등록 Q1 sha256 이 아니다 — 실행 안 함"; exit 2; }',
+        f'[ "$(sha256sum {ck} 2>/dev/null | cut -d" " -f1)" = "$Q1" ] || {{ echo "⛔ 체크포인트 {ck} sha256 ≠ 등록 Q1 — 실행 안 함"; '
+        'exit 2; }',
+        '[ ! -e log.liggghts ] || { echo "⛔ log.liggghts 이미 있음 (덮어쓰지 않는다) — 실행 안 함"; exit 2; }',
+        f'if [ -n "${{{env}:-}}" ]; then L="${env}"; elif [ -x "{dflt}" ]; then L="{dflt}"; else L={fb}; fi',
+        'B=$(command -v "$L") || { echo "⛔ 직렬 바이너리 없음 ($L) — 실행 안 함"; exit 2; }',
+        '! ldd "$B" 2>/dev/null | grep -q libmpi || { echo "⛔ $B = MPI 빌드 (libmpi) — 로컬은 직렬만 (등록 §12-3) · 실행 안 함"; exit 2; }',
+        f'printf "mode serial\\nnp {np_}\\nbinary %s\\nsha256 %s\\nlibmpi none\\nhost %s\\n" "$B" "$(sha256sum "$B" | cut -d" " -f1)" '
+        f'"$(uname -n)" > {BINARY_RECORD}',
+        f'setsid nohup "$B" -in {deck} > {log} 2>&1 < /dev/null &',
+        f'echo "▶ {fol}: $B (pid $!) · log.liggghts · {log} · {BINARY_RECORD}"',
+        ''])
+
+
+def render_runner(case, branch, np_, template_path=None, window='W1', host=None, q1=None):
+    """러너 글자 — ibb = 리포 러너 렌더 (본 러너와 같은 틀) · hit = hit_command (SLURM 없음) · 로컬 = §12-3 직렬."""
+    fol = folder_name(case, branch, window, host)
+    if host == LOCAL['host']:
+        return _local_runner(case, branch, np_, fol, q1 or D3_CKPT_SHA256)
     import make_se_size_decks as MSD          # 덱 생성기의 러너 규약 (render_ibb_runner · hit_command) 을 그대로 쓴다
-    fol = folder_name(case, branch)
     try:
         if CASES[case]['host'] == 'ibb':
             tmpl = _read(template_path or os.path.join(ROOT, RUNNER_TEMPLATE))
@@ -790,11 +1049,18 @@ def render_runner(case, branch, np_, template_path=None):
             f'# 체크포인트 복사 · sha256 (ckpt_sha256.txt) 뒤에만 실행\n{cmd}\n')
 
 
-def runner_check(case, branch, np_, text):
-    """러너 대조 — 문제 목록.  ibb: 본 러너와 다섯 줄만 다름 · -n N ↔ -np N · cd · -in.  hit: 명령 한 줄 = hit_command."""
-    fol = folder_name(case, branch)
+def runner_check(case, branch, np_, text, window='W1', host=None, q1=None):
+    """러너 대조 — 문제 목록.  ibb: 본 러너와 다섯 줄만 다름 · -n N ↔ -np N · cd · -in.  hit: 명령 한 줄 = hit_command.
+    로컬: 생성기 글자 그대로 (§12-3)."""
+    fol = folder_name(case, branch, window, host)
     lines = text.split('\n')
     probs = []
+    if host == LOCAL['host']:
+        want = _local_runner(case, branch, np_, fol, q1 or D3_CKPT_SHA256)
+        if text != want:
+            d = [f'{a!r} ↔ {b!r}' for a, b in zip(want.split('\n'), lines) if a != b][:2]
+            probs.append(f'로컬 러너 ≠ 생성기 글자 (§12-3) — {d or "줄 수 다름"}')
+        return probs
     if CASES[case]['host'] == 'ibb':
         main = _read(os.path.join(ROOT, CASES[case]['main_runner'])).split('\n')
         if len(main) != len(lines):
@@ -821,8 +1087,16 @@ def expected_steps(s0, end, every):
     return [s for s in range(((s0 + every - 1) // every) * every, end + 1, every)]
 
 
+def _gate(rec):
+    return f'[ "$(wc -l < {rec})" = 2 ] && [ "$(cut -d" " -f1 {rec} | sort -u | wc -l)" = 1 ]'
+
+
 def operator_commands(man):
     """체크포인트 복사 · sha256 · 제출 — 운영자가 붙여 넣을 줄 (아무것도 띄우지 않는다)."""
+    if man.get('host') == LOCAL['host']:
+        return _operator_local(man)
+    if man.get('window') == 'W2':
+        return _operator_w2(man)
     case, fol, br, np_ = man['case'], man['folder'], man['branch'], man['np']
     c = CASES[case]
     root = c['run_root']
@@ -838,7 +1112,7 @@ def operator_commands(man):
             f'mkdir -p {root}/{fol}/restart_{case} && cp {src} {root}/{fol}/restart_{case}/',
             f'sha256sum {src} {dst} > {root}/{fol}/ckpt_sha256.txt && cat {root}/{fol}/ckpt_sha256.txt']
     rec = f'{root}/{fol}/ckpt_sha256.txt'
-    gate = f'[ "$(wc -l < {rec})" = 2 ] && [ "$(cut -d" " -f1 {rec} | sort -u | wc -l)" = 1 ]'
+    gate = _gate(rec)
     if c['host'] == 'ibb':
         out.append(f'{gate} && (cd {root} && mkdir -p logs && sbatch {fol}/run_{fol}.sh) || echo "⛔ 체크포인트 sha256 다름 · 없음 — '
                    '제출 안 함"')
@@ -847,29 +1121,103 @@ def operator_commands(man):
     return out
 
 
-def _check_request(case, branch, np_, window):
+def _operator_w2(man):
+    """§12-2 (바) — W2: 본 런 압축 체크포인트 · 판 STL (mesh_<N>.stl → plate_<case>.stl) 복사 · sha256 둘 · 비준 전이면 제출 줄 막음."""
+    case, fol, br, np_, n = man['case'], man['folder'], man['branch'], man['np'], man['s0']
+    c = CASES[case]
+    root, mf = c['run_root'], c['main_folder']
+    src, dst = f'{mf}/restart_{case}/restart_compress_{n}.bin', f'{root}/{fol}/restart_{case}/restart_compress_{n}.bin'
+    msrc, mdst = f'{mf}/post_{case}/mesh_{n}.stl', f'{root}/{fol}/plate_{case}.stl'
+    rec, prec = f'{root}/{fol}/ckpt_sha256.txt', f'{root}/{fol}/{PLATE_RECORD}'
+    draft = (man.get('amendment') or {}).get('status') != STATUS_RATIFIED
+    out = [f'# ── {c["host"]} · {fol} (가지 {br} · 창 W2 · NP {np_} · 시작 step {n} = 본 런 첫 접촉 step '
+           f'{man["w2_start"]["first_contact_step"]} 뒤 첫 restart_compress · §12-2 (라)) ──']
+    if draft:
+        out.append('# ⛔ §12-2 = 개정 초안 · 비준 전 — 실행 금지 (비준 뒤 생성기로 다시 만든다 · 아래 제출 줄은 막혀 있다)')
+    out += [f'# 본 런 (kg50_d07_b50) 이 restart_compress_{n}.bin 을 쓴 뒤 멈춘 (scancel) 뒤에만 (§8-3 5) · cpu-60 = 가지는 차례로',
+            f'cd {root}/{fol} && sha256sum -c SHA256SUMS',
+            f'mkdir -p {root}/{fol}/restart_{case} && cp {src} {root}/{fol}/restart_{case}/',
+            f'sha256sum {src} {dst} > {rec} && cat {rec}',
+            f'cp {msrc} {mdst}',
+            f'sha256sum {msrc} {mdst} > {prec} && cat {prec}']
+    gate = _gate(rec) + ' && ' + _gate(prec)
+    if draft:
+        out.append('echo "⛔ §12-2 개정 초안 · 비준 전 — 제출 안 함 (비준 뒤 생성기로 다시 만든다)"')
+    elif c['host'] == 'ibb':
+        out.append(f'{gate} && (cd {root} && mkdir -p logs && sbatch {fol}/run_{fol}.sh) || echo "⛔ 체크포인트 · 판 STL sha256 다름 · '
+                   '없음 — 제출 안 함"')
+    else:
+        out.append(f'{gate} && bash {root}/{fol}/run_{fol}.sh || echo "⛔ 체크포인트 · 판 STL sha256 다름 · 없음 — 실행 안 함"')
+    return out
+
+
+def _operator_local(man):
+    """§12-3 — 로컬: hit 원본을 가져온 사본 (등록 Q1 sha256 대조) → 가지 폴더 cp · sha256 둘 → 러너 (직렬 · 자체 검사)."""
+    case, fol, br, np_ = man['case'], man['folder'], man['branch'], man['np']
+    root = LOCAL['root']
+    rel = f'restart_{case}/restart_after_settling.bin'
+    stage, hit_src = f'{root}/{case}/{rel}', f'{CASES[case]["main_folder"]}/{rel}'
+    dst, rec = f'{root}/{fol}/{rel}', f'{root}/{fol}/ckpt_sha256.txt'
+    stage_h = stage.replace('~', '$HOME', 1)
+    return [f'# ── wsl · {fol} (가지 {br} · 로컬 직렬 1 코어 · MPI 실행기 없음 · NP {np_} · 등록 §12-3 이탈) ──',
+            '# D3 정착 끝 체크포인트 = hit 원본을 가져온 사본 (A3 · C3 같은 사본 · hit 원본은 읽기만) — 등록 Q1 sha256 과 다르면 멈춤',
+            f'mkdir -p {root}/{case}/restart_{case} && [ -s {stage} ] || scp <사용자>@<hit>:{hit_src} {root}/{case}/restart_{case}/',
+            f'echo "{D3_CKPT_SHA256}  {stage_h}" | sha256sum -c || echo "⛔ 등록 Q1 sha256 아님 — 멈춤"',
+            f'cd {root}/{fol} && sha256sum -c SHA256SUMS',
+            f'mkdir -p {root}/{fol}/restart_{case} && cp {stage} {root}/{fol}/restart_{case}/',
+            f'sha256sum {stage} {dst} > {rec} && cat {rec}',
+            f'{_gate(rec)} && bash {root}/{fol}/run_{fol}.sh || echo "⛔ 체크포인트 sha256 다름 · 없음 — 실행 안 함"']
+
+
+def _check_request(case, branch, np_, window, host=None, main_log=None):
     if _on('case') and case not in CASES:
         raise Refused(f'케이스 {case!r} 는 등록 침대가 아니다 (§2 · Q2: kg50_d07_b50 · kg50_d3_b50_s1 만)')
     if _on('branch') and (branch not in KIND or branch not in CASES[case]['branches']):
         raise Refused(f'가지 {branch!r} 는 {case} 의 등록 가지가 아니다 (§3 · {CASES[case]["branches"]} · B3 없음)')
     if _on('np') and NP.get(branch) != np_:
         raise Refused(f'가지 {branch} NP {np_} ≠ 등록 {NP.get(branch)} (Q5)')
-    if _on('window') and window != 'W1':
-        raise Refused(f'창 {window!r} — 이 생성기는 W1 만 (§5 W2 덱 = 꼴만 · 줄 목록 없음 (§4 = W1) · Q12 W2 contact 간격 없음 · '
-                      'W2 시작 step = 본 런 뒤) → 등록 개정 뒤')
+    if _on('window') and window not in WINDOW_S:
+        raise Refused(f'창 {window!r} — W1 (§4) · W2 (§12-2) 만')
+    if _on('host'):
+        if host not in (None, LOCAL['host']):
+            raise Refused(f'host {host!r} — 등록 host (ibb · hit) 또는 wsl (§12-3 로컬 직렬) 만')
+        if host == LOCAL['host']:
+            if branch == 'F3':
+                raise Refused(F3_LOCAL_REFUSAL)
+            if case != LOCAL['case'] or branch not in LOCAL['branches']:
+                raise Refused(f'로컬 직렬 (§12-3 · 1저자 10-28) = D3 A3 · C3 만 — {case} {branch} 는 등록 host ({CASES[case]["host"]})')
+            if window != 'W1':
+                raise Refused('로컬 직렬 (§12-3) = 창 W1 만 (W2 = D0.7 · §12-2)')
+    if window == 'W2':
+        if _on('w2_case') and case not in W2_CASES:
+            raise Refused(f'W2 = D0.7-50 만 (§5 W2 표 · §12-2 · 질문 W2-6) — {case} 는 W2 가지가 없다')
+        if not main_log:
+            raise Refused('W2 = --main-log (D0.7-50 본 런 log.liggghts) 가 있어야 시작 step N 을 정한다 (§12-2 (라))')
 
 
-def build_branch(case, branch, np_, out_parent, window='W1', main_deck=None, *, pinned=None, runner_template=None,
-                 resume_tool=None, registration=None, tamper=None):
-    """가지 폴더 하나 — 반환 manifest.  거부 = Refused (파일 0).  pinned · runner_template · resume_tool · registration · tamper =
+def build_branch(case, branch, np_, out_parent, window='W1', main_deck=None, *, host=None, main_log=None, pinned=None,
+                 runner_template=None, resume_tool=None, registration=None, tamper=None, q1=None):
+    """가지 폴더 하나 — 반환 manifest.  거부 = Refused (파일 0).  pinned · runner_template · resume_tool · registration · tamper · q1 =
     selftest 이음새 (생산 CLI 에 없음)."""
+    reg_path = registration or os.path.join(ROOT, REGISTRATION)
     if _on('registration'):
-        ok, why = registration_check(registration)
+        ok, why = registration_check(reg_path)
         if not ok:
             raise Refused('등록 문서 고정 줄 ≠ 생성기 — ' + ' | '.join(why[:5]))
-    _check_request(case, branch, np_, window)
+    _check_request(case, branch, np_, window, host, main_log)
     c = CASES[case]
-    fol = folder_name(case, branch)
+    hsel = LOCAL['host'] if host == LOCAL['host'] else None
+    status = None
+    if window == 'W2':
+        try:
+            status = amendment_status(_read(reg_path))
+        except OSError as e:
+            raise Refused(f'등록 문서 못 읽음 ({e})')
+        if status is None:
+            if _on('w2_status'):
+                raise Refused('§12-2 상태 줄을 정할 수 없다 (초안 · 비준 줄이 둘 다 있거나 둘 다 없다)')
+            status = STATUS_DRAFT
+    fol = folder_name(case, branch, window, hsel)
     dst = os.path.join(out_parent, fol)
     if _on('out_exists') and os.path.lexists(dst):
         raise Refused(f'{dst} 가 이미 있다 — 덮어쓰지 않는다')
@@ -897,23 +1245,45 @@ def build_branch(case, branch, np_, out_parent, window='W1', main_deck=None, *, 
     s_deck = s_from_deck(d)
     if _on('s_check') and KIND[branch] == 'damp' and '%.4e' % s_deck != '%.4e' % float(c['s']):
         raise Refused(f's (본 덱 ρ · r) {s_deck:.6e} ≠ 등록 {c["s"]} (§4-3 Q2 (가) · 다섯 자리)')
-    text = build_text(mtext, case, branch, msha)
+    kind = KIND[branch]
+    n, start, lbytes = None, None, None
+    if window == 'W2':
+        try:
+            lbytes = open(main_log, 'rb').read()
+            ltext = lbytes.decode('utf-8')
+        except (OSError, UnicodeDecodeError) as e:
+            raise Refused(f'본 런 로그 못 읽음 ({e})')
+        start = w2_start_from_log(ltext, case)
+        start['log_sha256'] = _sha256_bytes(lbytes)
+        n = start['n']
+    text = build_text(mtext, case, branch, msha, window, n, status, start)
     if tamper is not None:
         text = tamper(text)
     if _on('allowlist'):
-        p = verify_branch_deck(mtext, text, case, branch)
+        p = verify_branch_deck(mtext, text, case, branch, window, n)
         if p:
             raise Refused('허용 목록 대조 실패 — ' + ' | '.join(p[:5]))
-    rtext = render_runner(case, branch, np_, runner_template)
+    rtext = render_runner(case, branch, np_, runner_template, window, hsel, q1)
     if _on('runner'):
-        p = runner_check(case, branch, np_, rtext)
+        p = runner_check(case, branch, np_, rtext, window, hsel, q1)
         if p:
             raise Refused('러너 대조 실패 — ' + ' | '.join(p[:5]))
     dname, rname, mname = f'input_{fol}.liggghts', f'run_{fol}.sh', f'main_deck_{case}.liggghts'
-    kind = KIND[branch]
-    runs = [2, 400000] if kind == 'dt_half' else list(d['runs'])
+    lname = f'main_log_{case}.liggghts'
+    if window == 'W2':
+        runs, s0 = [W2_RUN[kind]], n
+        thermo = [W2_THERMO[kind]]
+        every_a, every_c = W2_ATOM_EVERY, W2_CONTACT_EVERY
+        ck_rel = f'restart_{case}/restart_compress_{n}.bin'
+        expected_static = list(EXPECTED_STATIC_PROBLEMS_W2)
+    else:
+        runs, s0 = ([2, 400000] if kind == 'dt_half' else list(d['runs'])), S0
+        thermo = [2, 2000] if kind == 'dt_half' else [1, 1000]
+        every_a, every_c = ATOM_EVERY, CONTACT_EVERY
+        ck_rel = f'restart_{case}/restart_after_settling.bin'
+        expected_static = [EXPECTED_STATIC_PROBLEM]
     dt = d['dt'] / 2 if kind == 'dt_half' else d['dt']
-    end = S0 + sum(runs)
+    end = s0 + sum(runs)
     with tempfile.TemporaryDirectory(prefix='q5chk_') as td:
         dp, mp = os.path.join(td, dname), os.path.join(td, mname)
         with open(dp, 'w', encoding='utf-8', newline='\n') as f:
@@ -922,45 +1292,71 @@ def build_branch(case, branch, np_, out_parent, window='W1', main_deck=None, *, 
             f.write(mbytes)
         st = None
         if kind in ('base', 'floor'):
-            st = static_check(mp, dp, case, resume_tool)
-            if _on('static') and (st['rc'] != 1 or st['problems'] != [EXPECTED_STATIC_PROBLEM]):
-                raise Refused(f'resume_ckpt.sh -C 정적 대조 = rc {st["rc"]} · 문제 {st["problems"]} ≠ 등록 하나 (§8-1)')
-    ed = _edits(case, branch)
-    changes = (['49–50 → read_restart restart_%s/restart_after_settling.bin' % case, '116–150 뺌 (삽입 · 삽입 검사)',
-                '165 → restart 0', '167 · 170 뺌 (정착 run · write_restart)', '171 뒤 → q5 덤프 둘',
-                '213 뒤 → undump 둘 · 214–257 뺌'] + [f'{ln} [{a}] → [{b}]' for ln, (a, b) in sorted(ed.items())])
+            st = static_check(mp, dp, case, resume_tool, ck_rel, s0)
+            if _on('static') and (st['rc'] != 1 or st['problems'] != expected_static):
+                raise Refused(f'resume_ckpt.sh -C 정적 대조 = rc {st["rc"]} · 문제 {st["problems"]} ≠ 등록 '
+                              f'{"§12-2 (마) 둘" if window == "W2" else "하나 (§8-1)"}')
+    ed = _edits(case, branch, window)
+    if window == 'W2':
+        changes = [f'49–50 → read_restart restart_{case}/restart_compress_{n}.bin', '116–150 뺌 (삽입 · 삽입 검사)', '165 → restart 0',
+                   '167 · 170 뺌 (정착 run · write_restart)', '171 뒤 → q5 덤프 둘 (atom 10000 · contact 100000)',
+                   '172–197 뺌 (판 높이 run 1 · 판 STL print)', '213 뺌 (안정화 run)', '214–221 그대로 (압축 준비)', '222 → restart 0',
+                   f'224–228 → run {W2_RUN[kind]} · 뒤 undump 둘 · 229–257 뺌']
+    else:
+        changes = ['49–50 → read_restart restart_%s/restart_after_settling.bin' % case, '116–150 뺌 (삽입 · 삽입 검사)',
+                   '165 → restart 0', '167 · 170 뺌 (정착 run · write_restart)', '171 뒤 → q5 덤프 둘',
+                   '213 뒤 → undump 둘 · 214–257 뺌']
+    changes += [f'{ln} [{a}] → [{b}]' for ln, (a, b) in sorted(ed.items())]
+    if hsel:
+        site = dict(host=LOCAL['host'], launcher='serial', run_root=LOCAL['root'], main_folder=f'{LOCAL["root"]}/{case}',
+                    binary=dict(env=LOCAL['env'], default=LOCAL['default'], fallback=LOCAL['fallback'], record=BINARY_RECORD,
+                                mpi='거부 (ldd 에 libmpi)'),
+                    deviation=dict(section='§12-3', text=LOCAL_DEVIATION))
+    else:
+        site = dict(host=c['host'], launcher='sbatch · mpirun' if c['host'] == 'ibb' else 'mpirun', run_root=c['run_root'],
+                    main_folder=c['main_folder'], binary=None, deviation=None)
     man = dict(
-        schema=SCHEMA, registration=REGISTRATION, registration_sha256=_sha256_file(registration or os.path.join(ROOT, REGISTRATION)),
+        schema=SCHEMA, registration=REGISTRATION, registration_sha256=_sha256_file(reg_path),
         generator='scripts/kg50_q5_branches.py', generator_sha256=_sha256_file(os.path.abspath(__file__)),
-        case=case, bed=c['bed'], branch=branch, kind=kind, window=window, np=np_, host=c['host'], folder=fol, job_name=fol,
+        case=case, bed=c['bed'], branch=branch, kind=kind, window=window, np=np_, host=site['host'], launcher=site['launcher'],
+        binary=site['binary'], deviation=site['deviation'], folder=fol, job_name=fol,
         main_deck=dict(repo_path=c['deck'], sha256=msha, pinned_by=c['deck_manifest'], copy=mname),
         deck=dict(file=dname, sha256=_sha256_bytes(text.encode('utf-8')), commands=len(commands(text))),
         runner=dict(file=rname, sha256=_sha256_bytes(rtext.encode('utf-8')), template=_rel(runner_template) if runner_template
-                    else RUNNER_TEMPLATE, main_runner=c['main_runner']),
-        checkpoint=dict(rel_path=f'restart_{case}/restart_after_settling.bin', step=S0,
-                        source=f'{c["main_folder"]}/restart_{case}/restart_after_settling.bin', sha256_record='ckpt_sha256.txt'),
-        dt=dt, dt_echo='%.15g' % dt, s0=S0, runs=runs, end_step=end, window_s=WINDOW_S['W1'], compare_step=end,
-        thermo_every=[2, 2000] if kind == 'dt_half' else [1, 1000],
-        atom_dump=dict(id='dq5a', every=ATOM_EVERY, dir=f'post_{case}', prefix='q5atom_', columns=list(ATOM_COLS),
-                       steps=expected_steps(S0, end, ATOM_EVERY)),
-        contact_dump=dict(id='dq5c', every=CONTACT_EVERY, dir=f'post_{case}', prefix='q5contact_', columns=list(CONTACT_COLS),
-                          steps=expected_steps(S0, end, CONTACT_EVERY)),
+                    else (None if hsel else RUNNER_TEMPLATE), main_runner=None if hsel else c['main_runner']),
+        checkpoint=dict(rel_path=ck_rel, step=s0, source=f'{site["main_folder"]}/{ck_rel}', sha256_record='ckpt_sha256.txt',
+                        registered_sha256=(q1 or D3_CKPT_SHA256) if hsel else None),
+        dt=dt, dt_echo='%.15g' % dt, s0=s0, runs=runs, end_step=end, window_s=WINDOW_S['W2' if window == 'W2' else 'W1'],
+        compare_step=end, thermo_every=thermo,
+        atom_dump=dict(id='dq5a', every=every_a, dir=f'post_{case}', prefix='q5atom_', columns=list(ATOM_COLS),
+                       steps=expected_steps(s0, end, every_a)),
+        contact_dump=dict(id='dq5c', every=every_c, dir=f'post_{case}', prefix='q5contact_', columns=list(CONTACT_COLS),
+                          steps=expected_steps(s0, end, every_c)),
         type_map={str(k): v for k, v in TYPE_MAP.items()}, density={str(k): v for k, v in d['density'].items()},
         radius_sim={str(k): v for k, v in d['radius'].items()}, area_sim=d['area'],
         damp=dict(gamma=0.5, scale=(dict(type=SE_TYPE, s=c['s'], s_from_deck='%.6e' % s_deck) if kind == 'damp' else None)),
         changes=changes, static_check=(None if st is None else {k: st[k] for k in ('rc', 'problems', 'notes', 'tool', 'tool_sha256')}),
-        static_expected=[EXPECTED_STATIC_PROBLEM] if kind in ('base', 'floor') else None,
+        static_expected=expected_static if kind in ('base', 'floor') else None,
     )
+    if window == 'W2':
+        man['amendment'] = dict(section='§12-2', status=status)
+        man['w2_start'] = dict(rule=start['rule'], n=n, first_contact_step=start['first_contact_step'],
+                               first_contact_row=start['first_contact_row'], rows=start['rows'],
+                               main_log=dict(copy=lname, sha256=start['log_sha256'], source=os.path.abspath(main_log)))
+        man['plate'] = dict(rel_path=f'plate_{case}.stl', source=f'{c["main_folder"]}/post_{case}/mesh_{n}.stl',
+                            sha256_record=PLATE_RECORD)
     man['operator_commands'] = operator_commands(man)
     mjson = json.dumps(man, ensure_ascii=False, indent=1) + '\n'
     files = {dname: text.encode('utf-8'), rname: rtext.encode('utf-8'), mname: mbytes, 'q5_manifest.json': mjson.encode('utf-8')}
-    sums = ''.join(f'{_sha256_bytes(b)}  {n}\n' for n, b in sorted(files.items()))
+    if window == 'W2':
+        files[lname] = lbytes
+    sums = ''.join(f'{_sha256_bytes(b)}  {nm}\n' for nm, b in sorted(files.items()))
     files['SHA256SUMS'] = sums.encode('utf-8')
     os.makedirs(out_parent, exist_ok=True)
     tmp = tempfile.mkdtemp(prefix=f'.{fol}.tmp', dir=out_parent)
     try:
-        for n, b in files.items():
-            with open(os.path.join(tmp, n), 'wb') as f:
+        for nm, b in files.items():
+            with open(os.path.join(tmp, nm), 'wb') as f:
                 f.write(b)
         os.rename(tmp, dst)
     finally:
@@ -969,8 +1365,59 @@ def build_branch(case, branch, np_, out_parent, window='W1', main_deck=None, *, 
     return man
 
 
+def _manifest_expected(man, case, branch, window, n):
+    """manifest 의 판정용 칸 (run · step · 덤프 간격 · 체크포인트) — 등록 상수로 다시 센 값과 같은가 · 문제 목록."""
+    kind = KIND[branch]
+    if window == 'W2':
+        runs, s0, thermo, ea, ec = [W2_RUN[kind]], n, [W2_THERMO[kind]], W2_ATOM_EVERY, W2_CONTACT_EVERY
+        ck = f'restart_{case}/restart_compress_{n}.bin'
+    else:
+        runs, s0 = ([2, 400000] if kind == 'dt_half' else [1, 200000]), S0
+        thermo, ea, ec = ([2, 2000] if kind == 'dt_half' else [1, 1000]), ATOM_EVERY, CONTACT_EVERY
+        ck = f'restart_{case}/restart_after_settling.bin'
+    end = s0 + sum(runs)
+    dt = 5e-07 if kind == 'dt_half' else 1e-06
+    want = dict(runs=runs, s0=s0, end_step=end, compare_step=end, thermo_every=thermo, dt=dt, dt_echo='%.15g' % dt,
+                window_s=WINDOW_S['W2' if window == 'W2' else 'W1'])
+    probs = [f'manifest {k} {man.get(k)!r} ≠ 등록 {v!r}' for k, v in want.items() if man.get(k) != v]
+    for key, ev in (('atom_dump', ea), ('contact_dump', ec)):
+        dd = man.get(key) or {}
+        if dd.get('every') != ev or dd.get('steps') != expected_steps(s0, end, ev):
+            probs.append(f'manifest {key} 간격 · step ≠ 등록 ({ev})')
+    if (man.get('checkpoint') or {}).get('rel_path') != ck or (man.get('checkpoint') or {}).get('step') != s0:
+        probs.append(f'manifest 체크포인트 ≠ [{ck}] (step {s0})')
+    return probs
+
+
+def _verify_w2(folder, man, db):
+    """W2 폴더 — 본 런 로그 사본 sha256 · 시작 step 다시 계산 (§12-2 (라)) · 개정 상태 = 덱 머리 · 반환 (문제, N 또는 None)."""
+    probs = []
+    st = (man.get('amendment') or {}).get('status')
+    if st not in (STATUS_DRAFT, STATUS_RATIFIED):
+        probs.append(f'manifest §12-2 상태 {st!r} 를 모른다')
+    elif f'#   §12-2 상태: {st}' not in db.decode('utf-8', 'replace').split('\n'):
+        probs.append('덱 머리의 §12-2 상태 ≠ manifest')
+    ws = man.get('w2_start') or {}
+    ml = ws.get('main_log') or {}
+    try:
+        lb = open(os.path.join(folder, ml.get('copy') or ''), 'rb').read()
+    except (OSError, TypeError) as e:
+        return probs + [f'본 런 로그 사본 못 읽음 ({e})'], None
+    if _sha256_bytes(lb) != ml.get('sha256'):
+        probs.append('본 런 로그 사본 sha256 ≠ manifest')
+    try:
+        start = w2_start_from_log(lb.decode('utf-8'), man['case'])
+    except (Refused, UnicodeDecodeError) as e:
+        return probs + [f'본 런 로그 사본으로 시작 step 을 다시 못 정함 ({e})'], None
+    if (start['n'], start['first_contact_step']) != (man.get('s0'), ws.get('first_contact_step')) or ws.get('n') != start['n']:
+        probs.append(f'시작 step 다시 계산 {start["n"]} (첫 접촉 {start["first_contact_step"]}) ≠ manifest {man.get("s0")} '
+                     f'(첫 접촉 {ws.get("first_contact_step")})')
+    return probs, start['n']
+
+
 def verify_folder(folder):
-    """만든 가지 폴더 다시 대조 (판독기 · 운영자) — 문제 목록.  manifest · 본 덱 사본 sha256 = 등록 덱 · 가지 덱 허용 목록 · 러너."""
+    """만든 가지 폴더 다시 대조 (판독기 · 운영자) — 문제 목록.  manifest · 본 덱 사본 sha256 = 등록 덱 · 가지 덱 허용 목록 · 러너 ·
+    판정용 칸 (run · step · 덤프) · W2 = 본 런 로그로 시작 step 다시 계산."""
     probs = []
     try:
         man = json.loads(_read(os.path.join(folder, 'q5_manifest.json')))
@@ -978,9 +1425,16 @@ def verify_folder(folder):
         return [f'q5_manifest.json 못 읽음 ({e})']
     if man.get('schema') != SCHEMA:
         return [f'manifest schema {man.get("schema")!r} ≠ {SCHEMA}']
-    case, branch = man.get('case'), man.get('branch')
-    if case not in CASES or branch not in CASES[case]['branches'] or man.get('window') != 'W1':
-        return [f'manifest 의 케이스 · 가지 · 창 ({case} · {branch} · {man.get("window")}) 이 등록 W1 가지가 아니다']
+    case, branch, window = man.get('case'), man.get('branch'), man.get('window')
+    reg_host = CASES[case]['host'] if case in CASES else None
+    host = man.get('host', reg_host)
+    hsel = LOCAL['host'] if host == LOCAL['host'] else None
+    if (case not in CASES or branch not in CASES[case]['branches'] or window not in WINDOW_S or host not in (reg_host, LOCAL['host'])
+            or (window == 'W2' and case not in W2_CASES)
+            or (hsel and (case != LOCAL['case'] or branch not in LOCAL['branches'] or window != 'W1'))):
+        return [f'manifest 의 케이스 · 가지 · 창 · host ({case} · {branch} · {window} · {host}) 가 등록 가지가 아니다 (§3 · §12-2 · §12-3)']
+    if man.get('folder') != folder_name(case, branch, window, hsel):
+        probs.append(f'manifest 폴더 이름 {man.get("folder")!r} ≠ {folder_name(case, branch, window, hsel)!r}')
     try:
         mb = open(os.path.join(folder, man['main_deck']['copy']), 'rb').read()
         db = open(os.path.join(folder, man['deck']['file']), 'rb').read()
@@ -994,26 +1448,57 @@ def verify_folder(folder):
         probs.append('가지 덱 sha256 ≠ manifest')
     if _sha256_bytes(rb) != man['runner'].get('sha256'):
         probs.append('러너 sha256 ≠ manifest')
-    probs += verify_branch_deck(mb.decode('utf-8'), db.decode('utf-8'), case, branch)
-    probs += runner_check(case, branch, man.get('np'), rb.decode('utf-8'))
+    n = None
+    if window == 'W2':
+        p, n = _verify_w2(folder, man, db)
+        probs += p
+        if n is None:
+            return probs
+    probs += _manifest_expected(man, case, branch, window, n)
+    probs += verify_branch_deck(mb.decode('utf-8'), db.decode('utf-8'), case, branch, window, n)
+    probs += runner_check(case, branch, man.get('np'), rb.decode('utf-8'), window, hsel)
     if type(man.get('np')) is not int or NP.get(branch) != man.get('np'):     # JSON true 는 1 과 같다고 나온다
         probs.append(f'manifest NP {man.get("np")!r} ≠ 등록 {NP.get(branch)} (Q5)')
     return probs
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description='50kg Q5 가지 덱 생성기 (등록 Q11 · W1 · 허용 목록 대조)')
+    ap = argparse.ArgumentParser(description='50kg Q5 가지 덱 생성기 (등록 Q11 · W1 · W2 = §12-2 개정 초안 · 로컬 직렬 = §12-3)')
     ap.add_argument('--case', choices=sorted(CASES), help='본 덱 케이스 (등록 §2)')
     ap.add_argument('--branch', help='가지 (D0.7: A B C F · D3: A3 C3 F3)')
-    ap.add_argument('--np', type=int, help='MPI 수 (등록 Q5 와 같아야 한다)')
-    ap.add_argument('--out', help='가지 폴더를 만들 상위 폴더 (그 안에 q5_<case>_<가지>/ · 이미 있으면 거부)')
-    ap.add_argument('--window', default='W1', help='창 (W1 만 · W2 는 등록 개정 뒤)')
+    ap.add_argument('--np', type=int, help='MPI 수 (등록 Q5 와 같아야 한다 · 로컬 직렬 = 1)')
+    ap.add_argument('--out', help='가지 폴더를 만들 상위 폴더 (그 안에 q5_<case>_<가지>/ · 이미 있으면 거부 · 로컬 = ~/q5_local)')
+    ap.add_argument('--window', default='W1', help='창 (W1 · W2 = 등록 §12-2 개정 초안 · --main-log 필요)')
+    ap.add_argument('--main-log', default=None, help='W2 — D0.7-50 본 런 log.liggghts (시작 step N 을 이 로그에서 계산 · §12-2 (라))')
+    ap.add_argument('--host', default=None, help='wsl = D3 A3 · C3 로컬 직렬 1 코어 (등록 §12-3) · 없으면 등록 host (ibb · hit)')
     ap.add_argument('--main-deck', default=None, help='본 덱 경로 (기본 = 리포 덱 · sha256 이 등록 덱과 같아야)')
     ap.add_argument('--verify', default=None, metavar='FOLDER', help='만든 가지 폴더를 다시 대조 (rc 0 = 통과)')
+    ap.add_argument('--w2-start', default=None, metavar='LOG',
+                    help='운영 — 본 런 log.liggghts 로 W2 시작 step 판단 (§12-2 (라) · 본 런을 멈춰도 되는가) · rc 0 ready · 3 기다림 · 2 거부')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args(argv)
     if a.selftest:
         return selftest()
+    if a.w2_start:
+        case = a.case or W2_CASES[0]
+        try:
+            with open(os.path.expanduser(a.w2_start), encoding='utf-8') as f:
+                r = w2_watch(f.read(), case)
+        except (OSError, UnicodeDecodeError) as e:
+            print(f'⛔ 본 런 로그 못 읽음 ({e})')
+            return 2
+        if r['status'] == 'ready':
+            print(f'✓ ready — 첫 접촉 step {r["first_contact_step"]} · N = {r["n"]} · 로그가 N 까지 다 있다 (§12-2 (라)) → 본 런 '
+                  f'restart_{case}/restart_compress_{r["n"]}.bin 이 있으면 본 런을 멈추고 (scancel) 생성기 --window W2 --main-log')
+            return 0
+        if r['status'] == 'no_contact':
+            print(f'… 접촉 전 — pressMPa > 0 줄 없음 (setup 줄 빼고 · 로그 마지막 step {r["last"]}) → 기다림')
+            return 3
+        if r['status'] == 'wait':
+            print(f'… 첫 접촉 step {r["first_contact_step"]} · N = {r["n"]} · 로그 마지막 step {r["last"]} < N → 기다림 (멈추지 않는다)')
+            return 3
+        print(f'⛔ N = {r["n"]} 을 지났는데 규칙 거부 (첫 접촉 step {r["first_contact_step"]}) — {r["why"]} → 1저자')
+        return 2
     if a.verify:
         p = verify_folder(a.verify)
         for x in p:
@@ -1024,20 +1509,34 @@ def main(argv=None):
         print('⛔ --case · --branch · --np · --out 이 다 필요하다 (또는 --verify · --selftest)')
         return 2
     try:
-        man = build_branch(a.case, a.branch, a.np, os.path.expanduser(a.out), a.window, a.main_deck)
+        man = build_branch(a.case, a.branch, a.np, os.path.expanduser(a.out), a.window, a.main_deck, host=a.host,
+                           main_log=os.path.expanduser(a.main_log) if a.main_log else None)
     except Refused as e:
         print(f'⛔ 거부 — 가지 덱 안 냄 (파일 0): {e}')
         return 2
     dst = os.path.join(os.path.expanduser(a.out), man['folder'])
-    print(f'✓ {dst}/  가지 {man["branch"]} ({man["kind"]}) · NP {man["np"]} · {man["host"]} · 창 W1 · 끝 step {man["end_step"]} · '
-          f'atom 덤프 {len(man["atom_dump"]["steps"])} · contact {len(man["contact_dump"]["steps"])}')
+    print(f'✓ {dst}/  가지 {man["branch"]} ({man["kind"]}) · NP {man["np"]} · {man["host"]} ({man["launcher"]}) · 창 {man["window"]} · '
+          f'끝 step {man["end_step"]} · atom 덤프 {len(man["atom_dump"]["steps"])} · contact {len(man["contact_dump"]["steps"])}')
+    if man['window'] == 'W2':
+        print(f'  W2 시작 step N = {man["s0"]} (본 런 첫 접촉 step {man["w2_start"]["first_contact_step"]} · §12-2 (라)) · '
+              f'§12-2 상태 = {man["amendment"]["status"]}')
+        if man['amendment']['status'] != STATUS_RATIFIED:
+            print('  ⚠ §12-2 = 개정 초안 · 비준 전 — 실행 금지 (비준 뒤 다시 만든다 · 운영자 제출 줄 막힘 · 판독기 거부)')
+    if man['deviation']:
+        print(f'  ⚠ 이탈 기록: {man["deviation"]["text"]}')
     for x in man['changes']:
         print('    · ' + x)
     if man['static_check'] is not None:
-        print(f'  resume_ckpt.sh -C = rc {man["static_check"]["rc"]} · 문제 {man["static_check"]["problems"]} (등록 §8-1 하나 = 통과)')
+        print(f'  resume_ckpt.sh -C = rc {man["static_check"]["rc"]} · 문제 {man["static_check"]["problems"]} (등록 '
+              f'{"§12-2 (마) 둘" if man["window"] == "W2" else "§8-1 하나"} = 통과)')
     print('\n# 운영자 (복사 · sha256 · 제출 — 1저자):')
-    print(f'scp -P <포트> -r {dst} <사용자>@<{man["host"]}>:{CASES[man["case"]]["run_root"]}/' if man['host'] == 'ibb'
-          else f'scp -r {dst} <사용자>@<hit>:{CASES[man["case"]]["run_root"]}/')
+    if man['host'] == LOCAL['host']:
+        if os.path.realpath(os.path.expanduser(a.out)) != os.path.realpath(os.path.expanduser(LOCAL['root'])):
+            print(f'# 러너는 {LOCAL["root"]}/{man["folder"]} 로 cd 한다 — --out 이 {LOCAL["root"]} 가 아니면 폴더를 그리로 옮긴다')
+    elif man['host'] == 'ibb':
+        print(f'scp -P <포트> -r {dst} <사용자>@<ibb>:{CASES[man["case"]]["run_root"]}/')
+    else:
+        print(f'scp -r {dst} <사용자>@<hit>:{CASES[man["case"]]["run_root"]}/')
     for x in man['operator_commands']:
         print(x)
     return 0
