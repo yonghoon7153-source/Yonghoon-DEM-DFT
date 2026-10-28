@@ -7,7 +7,7 @@
  "card": "db/properties/cei_product_gap_card_2026_10_27.json",
  "decision": "D-2026-10-27-cei-product-gaps (active · 10-27 '권고대로해 ㅇㅇ') + 개정 1 D-2026-10-27-cei-product-gaps-amend1 (active · 10-28 '그냥 이대로 비준하자')",
  "citable": false,
- "status": "kgy 실행 중 (정식 · 두 결정 active) — 대조 잡 통과 · 5 / 11 끝 (닫힌 껍질 다섯) · NiP2O6 vc-relax 중 (10-28 19:14)",
+ "status": "kgy 실행 중 (정식 · 두 결정 active) — 대조 잡 통과 · 5 / 11 끝 · NiP2O6 vc-relax BFGS 6 (10-28 20:11 · 스텝당 ≈ 1 h)",
  "단계": [
   {
    "step": "① gabia 조회 (검사용 · MP API · PP 파일 복사 · QE 안 돈다)",
@@ -97,6 +97,13 @@
    "남은_상": "MnP2O6 (U Mn 3.9 · 90/1080) → 금속 선언 넷 CoS2 · NiS2 · MnS2 · Ni3S4 (03 없음 → 04 DOS · R3)",
    "기계": "GPU 99 % · 4,998 / 24,576 MiB · QE 프로세스 2 (mpirun + pw.x = 잡 하나) · tmux ceigap + cv7main (cascade 대기 창 · CEI 끝나면 이어받기)",
    "이상": "없음 — 대조 잡 통과 뒤 순서대로 진행 · 오류 표시 0"
+  },
+  "관측_2026_10_28_2011": {
+   "출처": "사용자 붙여넣기 2026-10-28 ≈20:11 KST (watch_gabia.py --sei_only | grep -A5 '②b' · 읽기만)",
+   "도는_단계": "NiP2O6_mp-aaaabchz 01_vcrelax ▶ · 시작 10:41 (570 분 전) · BFGS 6 · SCF 끝 8 · 반복 #16 · 정확도 2.4e-10 Ry (conv_thr 1e-8 아래 → 이 스텝 SCF 는 막 수렴한 것으로 보임 · 조용 3.8 분 = 힘 · 응력 계산 구간으로 추정) · P −0.29 kbar · |F| 0.0170 Ry/bohr (합) · M 8.00 μB",
+   "속도": "이온 스텝당 ≈ 60–70 분 (570 분 / SCF 8–9) — 닫힌 껍질 다섯 (상 전체 0.26–2.46 h) 보다 훨씬 무겁다: nspin 2 · DFT+U (Ni 6.2 · ortho-atomic — 스텝마다 힘 · 응력) · SCF 16 회 · 36 원자 · k 4×4×3",
+   "어림_정정": "카드 어림 '새 9 종 0.5–3 h 씩 (TM 2 배)' · open_items 'CEI 끝 ≈ 10-29' 는 TM+U 상에서 너무 이르다 — 남은 BFGS 스텝 수는 예측하지 않는다 (BFGS) · MnP2O6 은 U + 90/1080 Ry 라 더 무겁다 · 남은 체인은 며칠 단위로 본다 → cascade v7 재개 (cv7main 대기) 도 그만큼 밀린다",
+   "이상": "없음 — 멈춘 게 아니다 (출력 3.8 분 전 갱신 · SCF 수렴 중) · 설정 변경 없음 (카드 그대로)"
   }
  }
 }
