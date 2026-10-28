@@ -25,6 +25,10 @@
   ⑪ (10-27 · 묶음 C3 · 1저자 10-23 Q4 (가) · author 10-27 approved bundle C) 쉽게 말하면 상자 ⑥ (재시도 봉인) 이 같은 꼴의 상자로 있고 ·
      상자 글 = 같은 수정 계획 §2 원문 그대로 · 핵심 문장 · 따로 section (10-27) · "빠진 것" = 고치기 전 사슬 주석 · 1저자 원문 (10-27) ·
      등록 R 에 같은 상자 · 머리 줄 10-27
+  ⑫ (10-28 · C3 ② · 1저자 10-28 *"Rint 권고대로"*) 낡은 세 자리에 날짜 표지 — "Q3-b … 미답" 이 나오는 요소 (p · td) 마다 "10-22 시점" +
+     10-23 답 (kgy · gabia) · 상자 밖 "191–231" 이 나오는 요소마다 "10-22 시점" · 상자 ① · ③ 바로 뒤 첫 요소 = 주석 (p.note) 에 "10-22 시점" +
+     낡은 글 ("드물게" → 지금 "범위 밖일 수 있음" · "191–231" → 지금 등록 R §10-4 "다시 어림 2") · 상자 글은 원문 그대로 (⑧) · 6 절 쉽게 말하면의
+     끝나는 날 (11-01 – 11-03) 에 "10-22 시점" · 머리 줄 10-28
 
   python3 webapp/test_rint_explainer_page.py
 """
@@ -166,6 +170,24 @@ def plan_box_text(mark, plan=PLAN):
     return None
 
 
+def _box_spans(src):
+    """상자 (`<div class="hl" id="easy-N">`) 마다 (id, 시작, 끝) — 안쪽 div 를 깊이로 센다 (끝 = 그 상자를 닫는 `</div>` 바로 뒤)."""
+    out = []
+    for m in re.finditer(r'<div class="hl" id="(easy-[1-9])">', src):
+        depth = 0
+        for t in re.finditer(r'<div\b|</div>', src[m.start():]):
+            depth += 1 if t.group(0) == '<div' else -1
+            if depth == 0:
+                out.append((m.group(1), m.start(), m.start() + t.end()))
+                break
+    return out
+
+
+def _vis(s):
+    """조각의 보이는 글 (태그 = 빈칸 · 공백 하나로)."""
+    return _squash(re.sub(r'<[^>]+>', ' ', s))
+
+
 def _css_block(src, rx):
     m = re.search(rx, src)
     return m.group(1) if m else ''
@@ -278,6 +300,28 @@ def main():
         'rint2_rereview_fix_plan_20261022.md' in nt_b6 and '고치기 전' in nt_b6 and '등록 R' in nt_b6
         and '10-27' in nt_b6 and 'Rint는 권고대로 해도돼' in nt_b6)
     chk('머리 줄 (.sub) 에 "10-27 갱신"', bool(sub4) and '10-27 갱신' in sub4.group(1))
+    print('── ⑫ 10-28 낡은 세 자리 날짜 표지 (C3 ② · 1저자 10-28 "Rint 권고대로")')
+    spans = _box_spans(src)
+    chk(f'상자 자리 여섯 (안쪽 div 깊이로 셈 · {[k for k, _a, _b in spans]})',
+        sorted(k for k, _a, _b in spans) == ['easy-1', 'easy-2', 'easy-3', 'easy-4', 'easy-5', 'easy-6'])
+
+    def _inside(pos):
+        return any(a <= pos < b for _k, a, b in spans)
+    els = [(m.start(), _vis(m.group(2))) for m in re.finditer(r'<(p|td)\b[^>]*>(.*?)</\1>', src, re.S)]
+    q3 = [t for _p, t in els if 'Q3-b' in t and '미답' in t]
+    chk(f'"Q3-b … 미답" 요소 {len(q3)} 개 (≥ 3) 모두 "10-22 시점" + 10-23 답 (kgy · gabia)',
+        len(q3) >= 3 and all('10-22 시점' in t and 'kgy' in t and 'gabia' in t for t in q3))
+    old_h = [t for p, t in els if '191–231' in t and not _inside(p)]
+    chk(f'상자 밖 "191–231" 요소 {len(old_h)} 개 (≥ 2) 모두 "10-22 시점"', len(old_h) >= 2 and all('10-22 시점' in t for t in old_h))
+    for box, words in (('easy-1', ('드물게', '범위 밖일 수 있음')), ('easy-3', ('191–231', '다시 어림 2'))):
+        end = next((b for k, _a, b in spans if k == box), None)
+        nm = re.match(r'\s*<p class="note"[^>]*>(.*?)</p>', src[end:], re.S) if end is not None else None
+        nt = _vis(nm.group(1)) if nm else ''
+        chk(f'상자 {box} 바로 뒤 첫 요소 = 주석 · "10-22 시점" + {words}', bool(nm) and '10-22 시점' in nt and all(w in nt for w in words))
+    s6e = re.search(r'<h2>6\. 남은 길[^<]*</h2>\s*<p class="easy">(.*?)</p>', src, re.S)
+    s6et = _vis(s6e.group(1)) if s6e else ''
+    chk('6 절 쉽게 말하면의 끝나는 날 (11-01 – 11-03) 에 "10-22 시점"', '11-01 – 11-03' in s6et and '10-22 시점' in s6et)
+    chk('머리 줄 (.sub) 에 "10-28 갱신"', bool(sub4) and '10-28 갱신' in sub4.group(1))
     hsec = re.search(r'<section class="hl-sec"[^>]*>\s*<h2[^>]*>(.*?)</h2>', src, re.S)
     chk('상자 묶음 머리에 날짜 10-22', bool(hsec) and '10-22' in re.sub(r'<[^>]+>', '', hsec.group(1)))
     sub = re.search(r'<p class="sub">(.*?)</p>', src, re.S)
