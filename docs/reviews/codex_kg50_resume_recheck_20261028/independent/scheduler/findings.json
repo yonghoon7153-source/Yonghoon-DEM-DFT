@@ -1,0 +1,46 @@
+[
+  {
+    "id": "SCHED-01",
+    "severity": "P1",
+    "title": "Stale trial marker bypasses current queue failure/busy skip",
+    "lines": [
+      661,
+      662,
+      711,
+      718,
+      719,
+      777,
+      779
+    ],
+    "verification": "SOURCE_CONTROL_FLOW; Bash reproduction prepared but runtime blocked",
+    "minimum_fix": "Invocation-local approved case/job registry; no persistent-file eligibility; queue checked at main submission; two-invocation regression tests",
+    "closure": {
+      "KG50-02": "partial",
+      "KG50-14": "partial"
+    }
+  },
+  {
+    "id": "SCHED-02",
+    "severity": "P2",
+    "title": "Continued run trial grows from2000 to182001 steps and is accepted as G0 expectation",
+    "lines": [
+      406,
+      445,
+      693,
+      703,
+      711,
+      732
+    ],
+    "verification": "Exact embedded Python check and trial_steps executed; trial slicer statically transcribed, not GNU awk executed",
+    "values": {
+      "normal_steps": 2000,
+      "continued_steps": 182001,
+      "normal_expected": 22001,
+      "continued_expected": 202002
+    },
+    "minimum_fix": "Reject unsupported continuation before submission or slice logical commands; enforce intended trial step budget",
+    "closure": {
+      "KG50-18": "partial"
+    }
+  }
+]

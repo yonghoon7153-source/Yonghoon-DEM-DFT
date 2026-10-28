@@ -1,0 +1,36 @@
+[
+  {
+    "path": "scripts/resume_ckpt.sh",
+    "git_sha": "77fb81df16d73a87c2c4f29d1909255649e7092c",
+    "local_git_sha": "77fb81df16d73a87c2c4f29d1909255649e7092c",
+    "matched": true
+  },
+  {
+    "path": "scripts/test_resume_ckpt.py",
+    "git_sha": "9b93b740b291edd947aa6d705005697b1d1d2cd6",
+    "error": false,
+    "local_git_sha": "9b93b740b291edd947aa6d705005697b1d1d2cd6",
+    "matched": true
+  },
+  {
+    "path": "docs/reviews/codex_kg50_resume_tool_recheck_request_20261027.md",
+    "git_sha": "337670324f67b30e1fc91b06b4b303dff4dd5df6",
+    "error": false,
+    "local_git_sha": "337670324f67b30e1fc91b06b4b303dff4dd5df6",
+    "matched": true
+  },
+  {
+    "path": "docs/data/kg50_resume_tests_20261027/README.md",
+    "git_sha": "97be281f294e081eb1765af8d0aad6dc7a5d0fdd",
+    "error": false,
+    "local_git_sha": "97be281f294e081eb1765af8d0aad6dc7a5d0fdd",
+    "matched": true
+  },
+  {
+    "path": "docs/data/kg50_resume_tests_20261027/resume_r4_1027_2230.md",
+    "git_sha": "ae440ce4b9182c79ced1a01006c16a07a5daf321",
+    "error": false,
+    "local_git_sha": "ae440ce4b9182c79ced1a01006c16a07a5daf321",
+    "matched": true
+  }
+]

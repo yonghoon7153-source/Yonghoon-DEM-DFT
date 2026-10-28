@@ -1,0 +1,4 @@
+#!/bin/sh
+for a in "$@"; do [ "$a" = "-j" ] && exit 0; done
+echo kg50_d07_b40
+exit 0

@@ -1,0 +1,18 @@
+tool sha256 e59c43e688b2b9a6c23a337ceee2b28214ed3f6c76bd69b7f2402f926336dae8
+awk 프로그램 (693 줄): {if($1=="run" && $2+0>1){n=$2+0; if(n>t)n=t; print "run " n; exit} print}
+awk = /usr/bin/mawk
+deck/baseline: 실제 awk 시험 덱 ↔ Codex 전사 = 같음 · run 줄: 129:run 2000 
+deck/changed_timestep_control: 실제 awk 시험 덱 ↔ Codex 전사 = 같음 · run 줄: 129:run 2000 
+deck/duplicate_loop_label: 실제 awk 시험 덱 ↔ Codex 전사 = 같음 · run 줄: 130:run 2000 
+deck/first_run_every: 실제 awk 시험 덱 ↔ Codex 전사 = 같음 · run 줄: 129:run 2000 
+deck/first_run_pre_no: 실제 awk 시험 덱 ↔ Codex 전사 = 같음 · run 줄: 129:run 2000 
+deck/first_run_upto_right: 실제 awk 시험 덱 ↔ Codex 전사 = 같음 · run 줄: 129:run 2000 
+deck/first_run_upto_wrong: 실제 awk 시험 덱 ↔ Codex 전사 = 같음 · run 줄: 129:run 2000 
+deck/missing_compute_control: 실제 awk 시험 덱 ↔ Codex 전사 = 같음 · run 줄: 128:run 2000 
+deck/missing_target_variable: 실제 awk 시험 덱 ↔ Codex 전사 = 같음 · run 줄: 128:run 2000 
+deck/suffix_delete: 실제 awk 시험 덱 ↔ Codex 전사 = 같음 · run 줄: 129:run 2000 
+deck/suffix_density: 실제 awk 시험 덱 ↔ Codex 전사 = 같음 · run 줄: 129:run 2000 
+deck/suffix_include: 실제 awk 시험 덱 ↔ Codex 전사 = 같음 · run 줄: 129:run 2000 
+deck/suffix_velocity: 실제 awk 시험 덱 ↔ Codex 전사 = 같음 · run 줄: 129:run 2000 
+scheduler/continued_first_long_run: 실제 awk 시험 덱 ↔ Codex 전사 = 같음 (CR 만 다름 · Windows CRLF 고정물) · run 줄: 125:run & 133:run 1 172:run 2000 
+scheduler/plain: 실제 awk 시험 덱 ↔ Codex 전사 = 같음 (CR 만 다름 · Windows CRLF 고정물) · run 줄: 125:run 2000 

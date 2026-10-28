@@ -1,0 +1,22 @@
+[
+  {
+    "scenario": "busy_queue",
+    "returncode": 3221225794,
+    "sbatch_calls": [],
+    "trial_submitted_in_this_invocation": false,
+    "preexisting_trial_job": 7001,
+    "main_submitted": false,
+    "stdout": "",
+    "execution_status": "NOT_EXECUTED_BASH_RUNTIME_BLOCKED"
+  },
+  {
+    "scenario": "queue_query_failure",
+    "returncode": 3221225794,
+    "sbatch_calls": [],
+    "trial_submitted_in_this_invocation": false,
+    "preexisting_trial_job": 7001,
+    "main_submitted": false,
+    "stdout": "",
+    "execution_status": "NOT_EXECUTED_BASH_RUNTIME_BLOCKED"
+  }
+]

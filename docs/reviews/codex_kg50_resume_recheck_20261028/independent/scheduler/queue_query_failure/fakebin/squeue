@@ -1,0 +1,3 @@
+#!/bin/sh
+for a in "$@"; do [ "$a" = "-j" ] && exit 0; done
+exit 1

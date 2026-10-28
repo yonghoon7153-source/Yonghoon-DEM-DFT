@@ -1,0 +1,5 @@
+  · 판 메시 파일만 다름: plate_pse_r075_a_r30.stl
+  · 판 메시 파일만 다름 (재개 지점 fix top_mesh): plate_pse_r075_a_r30.stl
+  · 루프 몸 run 같음 (반복 안 restart 체크포인트 · 10-28 KG50-19): 본 덱 [label loop_press] [run 5000] = 재개 덱 read_restart 뒤
+  재개 덱 정적 대조: 통과 (문제 0)
+rc=0

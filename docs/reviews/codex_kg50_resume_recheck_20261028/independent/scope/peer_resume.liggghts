@@ -1,0 +1,2 @@
+read_restart restart_settling_20001.bin
+run 180000 every 1000 "velocity all set 0 0 0"

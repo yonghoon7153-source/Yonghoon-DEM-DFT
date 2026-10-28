@@ -1,0 +1,20 @@
+[
+  {
+    "case": "plain",
+    "static_check_rc": 0,
+    "static_check_stdout": "  · 남은 step 같음: 끝 200001\n  재개 덱 정적 대조: 통과 (문제 0)\n",
+    "trial_steps_rc": 0,
+    "trial_steps_stdout": "2000 1 [run 2000]\n",
+    "trial_construction": "Static transcription of awk :693; actual GNU awk could not start in sandbox",
+    "g0_expected_final_step": 22001
+  },
+  {
+    "case": "continued_first_long_run",
+    "static_check_rc": 0,
+    "static_check_stdout": "  · 남은 step 같음: 끝 200001\n  재개 덱 정적 대조: 통과 (문제 0)\n",
+    "trial_steps_rc": 0,
+    "trial_steps_stdout": "182001 3 [run 180000] [run 1] [run 2000]\n",
+    "trial_construction": "Static transcription of awk :693; actual GNU awk could not start in sandbox",
+    "g0_expected_final_step": 202002
+  }
+]

@@ -1,0 +1,40 @@
+{
+  "kind": "synthetic arithmetic and field projection, not LIGGGHTS execution",
+  "ke_not_state_identity": {
+    "N_A": 2,
+    "N_B": 2,
+    "KE_A_J": 1.0,
+    "KE_B_J": 1.0,
+    "different_fields": [
+      "positions",
+      "velocity vectors",
+      "type",
+      "radius"
+    ],
+    "equal_KE": true,
+    "identical_states": false
+  },
+  "current_sel_ignores_rotation": {
+    "source": "scripts/resume_ckpt.sh:646",
+    "fields": [
+      "id",
+      "type",
+      "x",
+      "y",
+      "z",
+      "radius",
+      "vx",
+      "vy",
+      "vz"
+    ],
+    "omega_A": 0.0,
+    "omega_C": 123.0,
+    "equal_projected_atoms": true,
+    "equal_KE": true
+  },
+  "limits": [
+    "No inference about actual current KG50 particles or contact history",
+    "No DEM execution",
+    "Same-checkpoint two-reader agreement is an internal consistency check, not an independent pre-checkpoint physical-state comparison"
+  ]
+}

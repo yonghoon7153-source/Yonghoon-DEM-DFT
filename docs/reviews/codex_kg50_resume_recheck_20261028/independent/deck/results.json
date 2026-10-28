@@ -1,0 +1,594 @@
+{
+  "source": "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\repo\\scripts\\resume_ckpt.sh",
+  "source_sha256": "e59c43e688b2b9a6c23a337ceee2b28214ed3f6c76bd69b7f2402f926336dae8",
+  "embedded_bytes_sha256": "a0237d0272983c08ef8384126580db9ef30bef79f58a7a6770308f15e14b8336",
+  "trial_cutter_source": "  awk -v t=$TS '{if($1==\"run\" && $2+0>1){n=$2+0; if(n>t)n=t; print \"run \" n; exit} print}' $D > $W/input_${C}_${SFX}t.liggghts",
+  "static_cases": [
+    {
+      "case": "baseline",
+      "check": {
+        "argv": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\repo\\docs/data/kg50_decks_20261026_v2/kg50_d07_b40/input_kg50_d07_b40.liggghts",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\baseline.liggghts",
+          "restart_kg50_d07_b40/restart_settling_20001.bin",
+          "20001",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck"
+        ],
+        "rc": 0,
+        "stdout": "  · 남은 step 같음: 끝 200001\n  재개 덱 정적 대조: 통과 (문제 0)\n",
+        "stderr": ""
+      },
+      "trial_prefix_same_as_baseline": true,
+      "trial_prefix_sha256": "038267335faa144c64bbdfc930db12ee3a552eb7b7a70f9f6e8a35b474e0c407",
+      "trial_steps": {
+        "argv": [
+          "--trial-steps",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\baseline_trial.liggghts"
+        ],
+        "rc": 0,
+        "stdout": "2000 1 [run 2000]\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "suffix_velocity",
+      "check": {
+        "argv": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\repo\\docs/data/kg50_decks_20261026_v2/kg50_d07_b40/input_kg50_d07_b40.liggghts",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\suffix_velocity.liggghts",
+          "restart_kg50_d07_b40/restart_settling_20001.bin",
+          "20001",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck"
+        ],
+        "rc": 0,
+        "stdout": "  · 남은 step 같음: 끝 200001\n  재개 덱 정적 대조: 통과 (문제 0)\n",
+        "stderr": ""
+      },
+      "trial_prefix_same_as_baseline": true,
+      "trial_prefix_sha256": "038267335faa144c64bbdfc930db12ee3a552eb7b7a70f9f6e8a35b474e0c407",
+      "trial_steps": {
+        "argv": [
+          "--trial-steps",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\suffix_velocity_trial.liggghts"
+        ],
+        "rc": 0,
+        "stdout": "2000 1 [run 2000]\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "suffix_density",
+      "check": {
+        "argv": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\repo\\docs/data/kg50_decks_20261026_v2/kg50_d07_b40/input_kg50_d07_b40.liggghts",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\suffix_density.liggghts",
+          "restart_kg50_d07_b40/restart_settling_20001.bin",
+          "20001",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck"
+        ],
+        "rc": 0,
+        "stdout": "  · 남은 step 같음: 끝 200001\n  재개 덱 정적 대조: 통과 (문제 0)\n",
+        "stderr": ""
+      },
+      "trial_prefix_same_as_baseline": true,
+      "trial_prefix_sha256": "038267335faa144c64bbdfc930db12ee3a552eb7b7a70f9f6e8a35b474e0c407",
+      "trial_steps": {
+        "argv": [
+          "--trial-steps",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\suffix_density_trial.liggghts"
+        ],
+        "rc": 0,
+        "stdout": "2000 1 [run 2000]\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "suffix_delete",
+      "check": {
+        "argv": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\repo\\docs/data/kg50_decks_20261026_v2/kg50_d07_b40/input_kg50_d07_b40.liggghts",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\suffix_delete.liggghts",
+          "restart_kg50_d07_b40/restart_settling_20001.bin",
+          "20001",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck"
+        ],
+        "rc": 0,
+        "stdout": "  · 남은 step 같음: 끝 200001\n  재개 덱 정적 대조: 통과 (문제 0)\n",
+        "stderr": ""
+      },
+      "trial_prefix_same_as_baseline": true,
+      "trial_prefix_sha256": "038267335faa144c64bbdfc930db12ee3a552eb7b7a70f9f6e8a35b474e0c407",
+      "trial_steps": {
+        "argv": [
+          "--trial-steps",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\suffix_delete_trial.liggghts"
+        ],
+        "rc": 0,
+        "stdout": "2000 1 [run 2000]\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "suffix_include",
+      "check": {
+        "argv": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\repo\\docs/data/kg50_decks_20261026_v2/kg50_d07_b40/input_kg50_d07_b40.liggghts",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\suffix_include.liggghts",
+          "restart_kg50_d07_b40/restart_settling_20001.bin",
+          "20001",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck"
+        ],
+        "rc": 0,
+        "stdout": "  · 남은 step 같음: 끝 200001\n  재개 덱 정적 대조: 통과 (문제 0)\n",
+        "stderr": ""
+      },
+      "trial_prefix_same_as_baseline": true,
+      "trial_prefix_sha256": "038267335faa144c64bbdfc930db12ee3a552eb7b7a70f9f6e8a35b474e0c407",
+      "trial_steps": {
+        "argv": [
+          "--trial-steps",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\suffix_include_trial.liggghts"
+        ],
+        "rc": 0,
+        "stdout": "2000 1 [run 2000]\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "first_run_every",
+      "check": {
+        "argv": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\repo\\docs/data/kg50_decks_20261026_v2/kg50_d07_b40/input_kg50_d07_b40.liggghts",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\first_run_every.liggghts",
+          "restart_kg50_d07_b40/restart_settling_20001.bin",
+          "20001",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck"
+        ],
+        "rc": 0,
+        "stdout": "  · 남은 step 같음: 끝 200001\n  재개 덱 정적 대조: 통과 (문제 0)\n",
+        "stderr": ""
+      },
+      "trial_prefix_same_as_baseline": true,
+      "trial_prefix_sha256": "038267335faa144c64bbdfc930db12ee3a552eb7b7a70f9f6e8a35b474e0c407",
+      "trial_steps": {
+        "argv": [
+          "--trial-steps",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\first_run_every_trial.liggghts"
+        ],
+        "rc": 0,
+        "stdout": "2000 1 [run 2000]\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "first_run_pre_no",
+      "check": {
+        "argv": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\repo\\docs/data/kg50_decks_20261026_v2/kg50_d07_b40/input_kg50_d07_b40.liggghts",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\first_run_pre_no.liggghts",
+          "restart_kg50_d07_b40/restart_settling_20001.bin",
+          "20001",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck"
+        ],
+        "rc": 0,
+        "stdout": "  · 남은 step 같음: 끝 200001\n  재개 덱 정적 대조: 통과 (문제 0)\n",
+        "stderr": ""
+      },
+      "trial_prefix_same_as_baseline": true,
+      "trial_prefix_sha256": "038267335faa144c64bbdfc930db12ee3a552eb7b7a70f9f6e8a35b474e0c407",
+      "trial_steps": {
+        "argv": [
+          "--trial-steps",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\first_run_pre_no_trial.liggghts"
+        ],
+        "rc": 0,
+        "stdout": "2000 1 [run 2000]\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "first_run_upto_wrong",
+      "check": {
+        "argv": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\repo\\docs/data/kg50_decks_20261026_v2/kg50_d07_b40/input_kg50_d07_b40.liggghts",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\first_run_upto_wrong.liggghts",
+          "restart_kg50_d07_b40/restart_settling_20001.bin",
+          "20001",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck"
+        ],
+        "rc": 1,
+        "stdout": "  ✗ 남은 step 다름: 재개 끝 180000 ↔ 본 덱 그 run 끝 200001 ([run 180000 upto])\n  재개 덱 정적 대조: 실패 (문제 1)\n",
+        "stderr": ""
+      },
+      "trial_prefix_same_as_baseline": true,
+      "trial_prefix_sha256": "038267335faa144c64bbdfc930db12ee3a552eb7b7a70f9f6e8a35b474e0c407",
+      "trial_steps": {
+        "argv": [
+          "--trial-steps",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\first_run_upto_wrong_trial.liggghts"
+        ],
+        "rc": 0,
+        "stdout": "2000 1 [run 2000]\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "first_run_upto_right",
+      "check": {
+        "argv": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\repo\\docs/data/kg50_decks_20261026_v2/kg50_d07_b40/input_kg50_d07_b40.liggghts",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\first_run_upto_right.liggghts",
+          "restart_kg50_d07_b40/restart_settling_20001.bin",
+          "20001",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck"
+        ],
+        "rc": 0,
+        "stdout": "  · 남은 step 같음: 끝 200001\n  재개 덱 정적 대조: 통과 (문제 0)\n",
+        "stderr": ""
+      },
+      "trial_prefix_same_as_baseline": true,
+      "trial_prefix_sha256": "038267335faa144c64bbdfc930db12ee3a552eb7b7a70f9f6e8a35b474e0c407",
+      "trial_steps": {
+        "argv": [
+          "--trial-steps",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\first_run_upto_right_trial.liggghts"
+        ],
+        "rc": 0,
+        "stdout": "2000 1 [run 2000]\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "duplicate_loop_label",
+      "check": {
+        "argv": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\repo\\docs/data/kg50_decks_20261026_v2/kg50_d07_b40/input_kg50_d07_b40.liggghts",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\duplicate_loop_label.liggghts",
+          "restart_kg50_d07_b40/restart_settling_20001.bin",
+          "20001",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck"
+        ],
+        "rc": 0,
+        "stdout": "  · 남은 step 같음: 끝 200001\n  재개 덱 정적 대조: 통과 (문제 0)\n",
+        "stderr": ""
+      },
+      "trial_prefix_same_as_baseline": false,
+      "trial_prefix_sha256": "ce39c020138ea7914aabeafe84d9fe30cf7ba854e8c452674a92c3912d78ee25",
+      "trial_steps": {
+        "argv": [
+          "--trial-steps",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\duplicate_loop_label_trial.liggghts"
+        ],
+        "rc": 0,
+        "stdout": "2000 1 [run 2000]\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "missing_target_variable",
+      "check": {
+        "argv": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\repo\\docs/data/kg50_decks_20261026_v2/kg50_d07_b40/input_kg50_d07_b40.liggghts",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\missing_target_variable.liggghts",
+          "restart_kg50_d07_b40/restart_settling_20001.bin",
+          "20001",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck"
+        ],
+        "rc": 0,
+        "stdout": "  · 남은 step 같음: 끝 200001\n  재개 덱 정적 대조: 통과 (문제 0)\n",
+        "stderr": ""
+      },
+      "trial_prefix_same_as_baseline": false,
+      "trial_prefix_sha256": "1060729f5eaa8e8db9cfa1a762df84620feaecd8d3857fd99c340568172150cf",
+      "trial_steps": {
+        "argv": [
+          "--trial-steps",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\missing_target_variable_trial.liggghts"
+        ],
+        "rc": 0,
+        "stdout": "2000 1 [run 2000]\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "missing_compute_control",
+      "check": {
+        "argv": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\repo\\docs/data/kg50_decks_20261026_v2/kg50_d07_b40/input_kg50_d07_b40.liggghts",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\missing_compute_control.liggghts",
+          "restart_kg50_d07_b40/restart_settling_20001.bin",
+          "20001",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck"
+        ],
+        "rc": 1,
+        "stdout": "  · 남은 step 같음: 끝 200001\n  ✗ 재개 덱이 c_zmax 를 쓰는데 정의가 없음: [thermo_style custom step atoms c_zmax]\n  ✗ 재개 덱이 c_zmax 를 쓰는데 정의가 없음: [variable z_max equal c_zmax]\n  재개 덱 정적 대조: 실패 (문제 2)\n",
+        "stderr": ""
+      },
+      "trial_prefix_same_as_baseline": false,
+      "trial_prefix_sha256": "c9d8acd51d64ed67543cc5af3a2d78b4c8add4fc58d1bcd2cfcf23b4e2ecef43",
+      "trial_steps": {
+        "argv": [
+          "--trial-steps",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\missing_compute_control_trial.liggghts"
+        ],
+        "rc": 0,
+        "stdout": "2000 1 [run 2000]\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "changed_timestep_control",
+      "check": {
+        "argv": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\repo\\docs/data/kg50_decks_20261026_v2/kg50_d07_b40/input_kg50_d07_b40.liggghts",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\changed_timestep_control.liggghts",
+          "restart_kg50_d07_b40/restart_settling_20001.bin",
+          "20001",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck"
+        ],
+        "rc": 1,
+        "stdout": "  · 남은 step 같음: 끝 200001\n  ✗ 본 덱에 없는 줄: [timestep 2.0e-6]\n  ✗ 재개 지점 timestep 다름: 본 덱 [timestep ${dt}] ↔ 재개 덱 [timestep 2.0e-6]\n  재개 덱 정적 대조: 실패 (문제 2)\n",
+        "stderr": ""
+      },
+      "trial_prefix_same_as_baseline": false,
+      "trial_prefix_sha256": "8d58241657505205bb30a7e2c77fb3549ac52cfe9c8f81deb94d1d39a1a4aa91",
+      "trial_steps": {
+        "argv": [
+          "--trial-steps",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\changed_timestep_control_trial.liggghts"
+        ],
+        "rc": 0,
+        "stdout": "2000 1 [run 2000]\n",
+        "stderr": ""
+      }
+    }
+  ],
+  "fix_run_cases": [
+    {
+      "case": "one_short",
+      "result": {
+        "argv": [
+          "--fix-run",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\repo\\docs/data/kg50_decks_20261026_v2/kg50_d07_b40/input_kg50_d07_b40.liggghts",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\fix_one_short.liggghts",
+          "restart_kg50_d07_b40/restart_settling_20001.bin",
+          "20001",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck"
+        ],
+        "rc": 0,
+        "stdout": "  · 재개 덱 첫 긴 run 고침 (1저자 10-27 Q1 (가)): [run 179999] → [run 180000] — 본 덱 그 run 끝 200001 − 체크포인트 step 20001 (dem_restart.py 잔여는 끝 200000 = 1 step 짧음 · 원 줄 129 · 다시 대조 통과)\n",
+        "stderr": ""
+      },
+      "changed": true,
+      "only_one_run_step_change": true,
+      "recheck": {
+        "argv": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\repo\\docs/data/kg50_decks_20261026_v2/kg50_d07_b40/input_kg50_d07_b40.liggghts",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\fix_one_short.liggghts",
+          "restart_kg50_d07_b40/restart_settling_20001.bin",
+          "20001",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck"
+        ],
+        "rc": 0,
+        "stdout": "  · 남은 step 같음: 끝 200001\n  재개 덱 정적 대조: 통과 (문제 0)\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "two_short",
+      "result": {
+        "argv": [
+          "--fix-run",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\repo\\docs/data/kg50_decks_20261026_v2/kg50_d07_b40/input_kg50_d07_b40.liggghts",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\fix_two_short.liggghts",
+          "restart_kg50_d07_b40/restart_settling_20001.bin",
+          "20001",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck"
+        ],
+        "rc": 1,
+        "stdout": "  · 첫 긴 run 그대로 — 차이 +2 step (dem_restart.py 의 1 step 짧음 꼴만 고친다)\n",
+        "stderr": ""
+      },
+      "changed": false,
+      "only_one_run_step_change": true,
+      "recheck": {
+        "argv": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\repo\\docs/data/kg50_decks_20261026_v2/kg50_d07_b40/input_kg50_d07_b40.liggghts",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\fix_two_short.liggghts",
+          "restart_kg50_d07_b40/restart_settling_20001.bin",
+          "20001",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck"
+        ],
+        "rc": 1,
+        "stdout": "  ✗ 남은 step 다름: 재개 끝 199999 ↔ 본 덱 그 run 끝 200001 ([run 179998])\n  재개 덱 정적 대조: 실패 (문제 1)\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "one_short_with_physics_mismatch",
+      "result": {
+        "argv": [
+          "--fix-run",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\repo\\docs/data/kg50_decks_20261026_v2/kg50_d07_b40/input_kg50_d07_b40.liggghts",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\fix_one_short_with_physics_mismatch.liggghts",
+          "restart_kg50_d07_b40/restart_settling_20001.bin",
+          "20001",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck"
+        ],
+        "rc": 1,
+        "stdout": "  · 첫 긴 run 그대로 — 정적 대조 문제 3 개 (남은 step 다름 하나뿐일 때만 고친다)\n",
+        "stderr": ""
+      },
+      "changed": false,
+      "only_one_run_step_change": false,
+      "recheck": {
+        "argv": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\repo\\docs/data/kg50_decks_20261026_v2/kg50_d07_b40/input_kg50_d07_b40.liggghts",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\fix_one_short_with_physics_mismatch.liggghts",
+          "restart_kg50_d07_b40/restart_settling_20001.bin",
+          "20001",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck"
+        ],
+        "rc": 1,
+        "stdout": "  ✗ 본 덱에 없는 줄: [timestep 2.0e-6]\n  ✗ 재개 지점 timestep 다름: 본 덱 [timestep ${dt}] ↔ 재개 덱 [timestep 2.0e-6]\n  ✗ 남은 step 다름: 재개 끝 200000 ↔ 본 덱 그 run 끝 200001 ([run 179999])\n  재개 덱 정적 대조: 실패 (문제 3)\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "one_short_with_suffix_velocity",
+      "result": {
+        "argv": [
+          "--fix-run",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\repo\\docs/data/kg50_decks_20261026_v2/kg50_d07_b40/input_kg50_d07_b40.liggghts",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\fix_one_short_with_suffix_velocity.liggghts",
+          "restart_kg50_d07_b40/restart_settling_20001.bin",
+          "20001",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck"
+        ],
+        "rc": 0,
+        "stdout": "  · 재개 덱 첫 긴 run 고침 (1저자 10-27 Q1 (가)): [run 179999] → [run 180000] — 본 덱 그 run 끝 200001 − 체크포인트 step 20001 (dem_restart.py 잔여는 끝 200000 = 1 step 짧음 · 원 줄 129 · 다시 대조 통과)\n",
+        "stderr": ""
+      },
+      "changed": true,
+      "only_one_run_step_change": true,
+      "recheck": {
+        "argv": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\repo\\docs/data/kg50_decks_20261026_v2/kg50_d07_b40/input_kg50_d07_b40.liggghts",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\fix_one_short_with_suffix_velocity.liggghts",
+          "restart_kg50_d07_b40/restart_settling_20001.bin",
+          "20001",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck"
+        ],
+        "rc": 0,
+        "stdout": "  · 남은 step 같음: 끝 200001\n  재개 덱 정적 대조: 통과 (문제 0)\n",
+        "stderr": ""
+      }
+    }
+  ],
+  "strip_comment_cases": [
+    {
+      "case": "safe",
+      "result": {
+        "argv": [
+          "--strip-comments",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\strip_safe"
+        ],
+        "rc": 0,
+        "stdout": "  · input_test.liggghts: 줄 전체 주석 2 줄 뺌 · 남은 줄 2 · 비주석 줄 sha256 전 6f989c155550d63cbfa78076aa10092b8a4b66dc7beecab6dd1ecb906883a2cd = 후 6f989c155550d63cbfa78076aa10092b8a4b66dc7beecab6dd1ecb906883a2cd · LIGGGHTS 명령 2 개 같음\n  주석 줄 빼기 (-c): 통과 (덱 1 · 뺀 줄 2)\n",
+        "stderr": ""
+      },
+      "before_hex": "232077686f6c6520636f6d6d656e740d0a0923207365636f6e640a7072696e742022612023206222202320696e6c696e6520636f6d6d656e740d0a72756e20310a",
+      "after_hex": "7072696e742022612023206222202320696e6c696e6520636f6d6d656e740d0a72756e20310a",
+      "changed": true
+    },
+    {
+      "case": "continuation_comment",
+      "result": {
+        "argv": [
+          "--strip-comments",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\strip_continuation_comment"
+        ],
+        "rc": 1,
+        "stdout": "  ✗ input_test.liggghts: 주석 줄을 빼면 LIGGGHTS 명령이 바뀐다 (예: & 이어 붙이기 안의 주석 줄 · & 로 끝나는 주석 줄) — 1 번째 명령 전 [run] ↔ 후 [run 2000] · 손으로 봐야 함\n  주석 줄 빼기 (-c): 실패 — 어느 덱도 안 바꿈\n",
+        "stderr": ""
+      },
+      "before_hex": "72756e20260a2320696e746572706f73656420636f6d6d656e740a323030300a",
+      "after_hex": "72756e20260a2320696e746572706f73656420636f6d6d656e740a323030300a",
+      "changed": false
+    }
+  ],
+  "after_settling_cases": [
+    {
+      "case": "baseline",
+      "result": {
+        "argv": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\repo\\docs/data/kg50_decks_20261026_v2/kg50_d07_b40/input_kg50_d07_b40.liggghts",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\after_settling_baseline.liggghts",
+          "restart_kg50_d07_b40/restart_after_settling.bin",
+          "200001",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck"
+        ],
+        "rc": 0,
+        "stdout": "  · 첫 긴 run 같음 (write_restart 체크포인트 · 10-28 KG50-19): 본 덱 그 뒤 [run 1] [run 200000] = 재개 덱 read_restart 뒤\n  재개 덱 정적 대조: 통과 (문제 0)\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "first_long_changed_300000",
+      "result": {
+        "argv": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\repo\\docs/data/kg50_decks_20261026_v2/kg50_d07_b40/input_kg50_d07_b40.liggghts",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\after_settling_first_long_changed_300000.liggghts",
+          "restart_kg50_d07_b40/restart_after_settling.bin",
+          "200001",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck"
+        ],
+        "rc": 1,
+        "stdout": "  ✗ 첫 긴 run 다름 (write_restart 체크포인트 · 10-28 KG50-19): 본 덱 그 뒤 [run 1] [run 200000] ↔ 재개 덱 read_restart 뒤 [run 1] [run 300000]\n  재개 덱 정적 대조: 실패 (문제 1)\n",
+        "stderr": ""
+      }
+    },
+    {
+      "case": "damp_mismatch",
+      "result": {
+        "argv": [
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\repo\\docs/data/kg50_decks_20261026_v2/kg50_d07_b40/input_kg50_d07_b40.liggghts",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\after_settling_damp_mismatch.liggghts",
+          "restart_kg50_d07_b40/restart_after_settling.bin",
+          "200001",
+          "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck"
+        ],
+        "rc": 1,
+        "stdout": "  · 첫 긴 run 같음 (write_restart 체크포인트 · 10-28 KG50-19): 본 덱 그 뒤 [run 1] [run 200000] = 재개 덱 read_restart 뒤\n  ✗ 재개 지점 fix damp 다름: 본 덱 [fix damp all viscous 0.5] ↔ 재개 덱 [fix damp all viscous 1.0e-5]\n  재개 덱 정적 대조: 실패 (문제 1)\n",
+        "stderr": ""
+      }
+    }
+  ],
+  "supplied_compress_loop_case": {
+    "result": {
+      "argv": [
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\repo\\docs\\data\\pure_se_r075_20260927\\input_pse_r075_a.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\repo\\docs\\data\\pure_se_r075_20260927\\input_pse_r075_a_r30.liggghts",
+        "restart_pse_r075_a/restart_compress_1500000.bin",
+        "1500000",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck"
+      ],
+      "rc": 0,
+      "stdout": "  · 판 메시 파일만 다름: plate_pse_r075_a_r30.stl\n  · 판 메시 파일만 다름 (재개 지점 fix top_mesh): plate_pse_r075_a_r30.stl\n  · 루프 몸 run 같음 (반복 안 restart 체크포인트 · 10-28 KG50-19): 본 덱 [label loop_press] [run 5000] = 재개 덱 read_restart 뒤\n  재개 덱 정적 대조: 통과 (문제 0)\n",
+      "stderr": ""
+    },
+    "original_run_prefix": [
+      1,
+      200000,
+      1,
+      200000
+    ],
+    "loop_start": 400002,
+    "checkpoint": 1500000,
+    "chunk": 5000,
+    "position_within_original_loop_run": 4998,
+    "remaining_to_original_next_pressure_check": 2,
+    "original_next_pressure_check": 1500002,
+    "resume_next_pressure_check": 1505000,
+    "extra_steps_before_check": 4998,
+    "limitation": "Step arithmetic + actual static CLI only; no DEM pressure/trajectory was simulated.",
+    "first_numeric_remaining2_candidate": {
+      "argv": [
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\repo\\docs\\data\\pure_se_r075_20260927\\input_pse_r075_a.liggghts",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck\\loop_first_numeric_remaining2.liggghts",
+        "restart_pse_r075_a/restart_compress_1500000.bin",
+        "1500000",
+        "C:\\Users\\Administrator\\Documents\\Codex\\kg28\\independent\\deck"
+      ],
+      "rc": 1,
+      "stdout": "  · 판 메시 파일만 다름: plate_pse_r075_a_r30.stl\n  · 판 메시 파일만 다름 (재개 지점 fix top_mesh): plate_pse_r075_a_r30.stl\n  ✗ 루프 몸 run 다름 (반복 안 restart 체크포인트 · 10-28 KG50-19): 본 덱 [label loop_press] [run 5000] ↔ 재개 덱 read_restart 뒤 [label loop_press] [run 2]\n  재개 덱 정적 대조: 실패 (문제 1)\n",
+      "stderr": ""
+    },
+    "remaining2_candidate_limit": "This numeric-only change is NOT a complete correct resume deck: later iterations must remain 5000, so the actual fix needs a distinct initial partial-iteration path."
+  },
+  "limits": [
+    "No Bash, SLURM, MPI, LIGGGHTS, or real checkpoint execution.",
+    "Trial prefix uses literal one-line ASCII truncator semantics, not a different parser for general decks.",
+    "All production bytes are unchanged; extracted embedded Python body is byte-for-byte identical."
+  ]
+}

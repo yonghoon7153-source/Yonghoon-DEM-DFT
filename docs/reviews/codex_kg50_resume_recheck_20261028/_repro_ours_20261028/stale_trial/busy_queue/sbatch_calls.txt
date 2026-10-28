@@ -1,0 +1,1 @@
+--parsable /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/codex_kg50_recheck_1028/run_linux/independent/scheduler/busy_queue/kg50_d07_b40/run_kg50_d07_b40_r56.sh

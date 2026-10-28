@@ -1,0 +1,11 @@
+{
+  "method": "verbatim embedded Python functions; trial construction statically evaluated from awk :693; no Bash/DEM/SLURM execution",
+  "source_check_problems": [],
+  "source_check_notes": [
+    "남은 step 같음: 끝 200001"
+  ],
+  "trial_steps_rc": 0,
+  "trial_steps_stdout": "2000 1 [run 2000]",
+  "full_main_run_has_every": true,
+  "trial_run_has_every": false
+}

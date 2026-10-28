@@ -1,0 +1,34 @@
+#!/bin/bash
+set -u
+tl(){ awk -v s="$1" '/^ *Step +Atoms/{n=split($0,h);next} n>0 && NF==n && $1~/^[0-9]+$/ && $1==s {o=""; for(i=1;i<=NF;i++){if(h[i]=="CPU"||h[i]=="pressMPa")continue; o=o" "h[i]"="$i}; r=o} END{print r}' "$2"; }
+reg(){ awk '/^ *Step +Atoms/{n=split($0,h);c=0;for(i=1;i<=n;i++)if(h[i]=="CPU")c=i;next} n>0&&NF==n&&c>0&&$1~/^[0-9]+$/&&$c+0>0{print $1}' "$1"; }
+tr2(){ awk -v s="$1" '/^ *Step +Atoms/{n=split($0,h);c=0;for(i=1;i<=n;i++)if(h[i]=="CPU")c=i;next} n>0&&NF==n&&c>0&&$1~/^[0-9]+$/&&$1==s&&$c+0>0{o="";for(i=1;i<=NF;i++){if(i==c)continue;o=o" "h[i]"="$i};r=o} END{print r}' "$2"; }
+same(){ awk -v a="$1" -v b="$2" -v t="$3" 'BEGIN{na=split(a,x," ");nb=split(b,y," ");if(na<3||na-nb)exit 1;for(i=1;i<=na;i++){split(x[i],p,"=");split(y[i],q,"=");if(p[1]<q[1]||p[1]>q[1])exit 1;if(match(p[2],/^[-+]?[0-9.]+([eE][-+]?[0-9]+)?$/)==0||match(q[2],/^[-+]?[0-9.]+([eE][-+]?[0-9]+)?$/)==0)exit 1;if(p[1]=="Step"||p[1]=="Atoms"){if(p[2]+0<q[2]+0||p[2]+0>q[2]+0)exit 1;continue};d=p[2]-q[2];if(d<0)d=-d;m=p[2];if(m<0)m=-m;if(d>t*m&&d>1e-12)exit 1};exit 0}'; }
+# 느슨한 역학 확인: 원자 수 같고, 압력 (있으면) 아니면 KE 가 5 % 안
+sane(){ awk -v a="$1" -v b="$2" 'BEGIN{na=split(a,x," ");nb=split(b,y," ");if(na<3||na-nb)exit 1;k="";for(i=1;i<=na;i++){split(x[i],p,"=");split(y[i],q,"=");A[p[1]]=p[2];B[q[1]]=q[2]};if(A["Atoms"]+0<B["Atoms"]+0||A["Atoms"]+0>B["Atoms"]+0)exit 1;k=("pressMPa" in A && A["pressMPa"]+0>1e-6)?"pressMPa":"KinEng";if((k in A)==0)exit 1;d=A[k]-B[k];if(d<0)d=-d;m=A[k];if(m<0)m=-m;exit (d>0.05*m && d>1e-12)}'; }
+sel(){ awk 'NR==9{n=0;split("id type x y z radius vx vy vz",w," ");for(k=1;k<=9;k++)for(i=3;i<=NF;i++)if($i==w[k]){n++;c[n]=i-2};next} NR>9{o=$c[1];for(k=2;k<=n;k++)o=o" "$c[k];print o}' "$1" | sort -n | md5sum | cut -c1-12; }
+# 시험 로그의 마지막 thermo 줄 step · 그 줄 번호 · 마지막 'Loop time of' 줄 번호
+lastrun(){ awk '/^ *Step +Atoms/{q=1;next} /^Loop time of/{q=0;lp=NR;next} q&&$1~/^[0-9]+$/{s=$1;ln=NR} END{print s+0, ln+0, lp+0}' "$1"; }
+TD=$(mktemp -d) || exit 1
+cat > "$TD/bad_final.log" <<'EOF'
+Step Atoms KinEng CPU
+20001 312506 0.1000 0
+21000 312506 0.0955 1
+22000 312506 0.0902 2
+22001
+Loop time of 2 on 56 procs for 1999 steps with 312506 atoms
+EOF
+printf 'Malformed final row selected by lastrun: '; lastrun "$TD/bad_final.log"
+printf 'Malformed final row selected by strict tl: ['; tl 22001 "$TD/bad_final.log"; printf ']\n'
+# Only the leading regular-row values are checked; a second row is merely present.
+cat > "$TD/bad_late.log" <<'EOF'
+Step Atoms KinEng CPU
+20001 312506 0.1000 0
+21000 312506 0.0955 1
+22000 10 1000000 2
+22001 312506 0.0902 2.001
+Loop time of 2.001 on 56 procs for 2000 steps with 312506 atoms
+EOF
+printf 'Regular-row presence: '; reg "$TD/bad_late.log" | tr '\n' ' '; printf '\n'
+a='Step=21000 Atoms=312506 KinEng=0.0950'; b=$(tr2 21000 "$TD/bad_late.log")
+sane "$a" "$b"; printf 'G3 first-row sane rc=%s (22000 contains Atoms=10, KE=1000000)\n' "$?"

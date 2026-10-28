@@ -1,0 +1,56 @@
+[
+  {
+    "name": "missing_target_variable",
+    "problems": [],
+    "notes": [
+      "남은 step 같음: 끝 200001"
+    ]
+  },
+  {
+    "name": "missing_c_zmax_compute",
+    "problems": [
+      "재개 덱이 c_zmax 를 쓰는데 정의가 없음: [thermo_style custom step atoms c_zmax]",
+      "재개 덱이 c_zmax 를 쓰는데 정의가 없음: [variable z_max equal c_zmax]"
+    ],
+    "notes": [
+      "남은 step 같음: 끝 200001"
+    ]
+  },
+  {
+    "name": "duplicate_target_later",
+    "problems": [
+      "본 덱에 없는 줄: [variable target_press delete]"
+    ],
+    "notes": [
+      "남은 step 같음: 끝 200001"
+    ]
+  },
+  {
+    "name": "run_post_no",
+    "problems": [],
+    "notes": [
+      "남은 step 같음: 끝 200001"
+    ]
+  },
+  {
+    "name": "run_upto_same_end",
+    "problems": [],
+    "notes": [
+      "남은 step 같음: 끝 200001"
+    ]
+  },
+  {
+    "name": "run_every_action",
+    "problems": [],
+    "notes": [
+      "남은 step 같음: 끝 200001"
+    ]
+  },
+  {
+    "name": "run_pre_no",
+    "problems": [],
+    "notes": [
+      "남은 step 같음: 끝 200001"
+    ]
+  }
+]

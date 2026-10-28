@@ -1,0 +1,25 @@
+{
+  "source_files_unchanged": 42,
+  "pin": "f118c1fd1e3eb1a558299663dcee6a0bf83b9942",
+  "remote_git_blobs_matched": 5,
+  "executed": [
+    "unmodified embedded Python CLI: 24 deck observations",
+    "continued logical run: 2 cases",
+    "KE/state observability arithmetic"
+  ],
+  "not_executed": [
+    "Bash fake-SLURM integration",
+    "author 87-case suite",
+    "GNU awk integration",
+    "LIGGGHTS",
+    "MPI",
+    "WSL",
+    "real SLURM/ibb"
+  ],
+  "verdict": "HOLD",
+  "findings": {
+    "P1": 4,
+    "P2": 1,
+    "P3": 1
+  }
+}

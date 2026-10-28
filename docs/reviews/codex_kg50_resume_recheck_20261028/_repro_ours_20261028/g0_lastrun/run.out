@@ -1,0 +1,5 @@
+lastrun (bad_final: 1-token 22001 row) -> 22001 5 6
+tl 22001 strict -> [
+]
+reg (bad_late) -> 21000 22000 22001 
+G3 first-row sane rc=0 (row 22000 has Atoms=10 KE=1e6 but only F2=21000 compared)
