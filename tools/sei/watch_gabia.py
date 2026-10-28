@@ -474,6 +474,16 @@ def queue_line(root):
     return "순서: " + " → ".join(marks)
 
 
+def phase_dirs(root):
+    """작업 루트 아래 **상 폴더**만 (입력 0[0-6]_*.in 이 있는 것) — 이름순.
+
+    ⚠ 2026-10-28 kgy — run_kgy.sh 가 같은 루트에 `pseudo/` 를 둔다. 폴더면 다 세던 옛 판은
+      그걸 13 번째 상으로 찍었다 ('13종 · 완주 3/13').
+    """
+    return [os.path.basename(x) for x in sorted(glob.glob(os.path.join(root, "*")))
+            if os.path.isdir(x) and glob.glob(os.path.join(x, "0[0-6]_*.in"))]
+
+
 def gate_line(root):
     """<root>/control_gate.json (extract_gap.py --control_gate) → 한 줄. 없으면 None."""
     p = os.path.join(root, "control_gate.json")
@@ -1119,6 +1129,10 @@ def selftest():
     chk(_q == "순서: SO2 ◐ → Li2SO4 ▶ → Done ✓ → NoDir ·",
         f"queue_line: driver.sh 순서 · 상태 넷 (◐ = 01·02 만 끝) ({_q})")
     chk(queue_line(os.path.join(td, "없음")) is None, "⛔음성: driver.sh 없으면 순서를 지어내지 않는다")
+    os.makedirs(os.path.join(_sd, "pseudo"), exist_ok=True)
+    open(os.path.join(_sd, "pseudo", "S.UPF"), "w").write("x")
+    chk(phase_dirs(_sd) == ["Li2SO4_mp-2", "SO2_mp-1"],
+        f"⛔음성: 입력 없는 폴더 (pseudo) 는 상으로 안 센다 ({phase_dirs(_sd)})")
 
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
@@ -1156,8 +1170,7 @@ for m in sei_missing:
 # (루트, 태그) 목록 — 같은 태그가 여러 루트에 있으면 **둘 다** 보여 준다.
 #   덮어쓰면 어느 폴더의 결과인지 모르게 되고, 오늘 그것 때문에 완주한 계산을
 #   미착수로 읽었다.
-pairs = [(r, os.path.basename(x)) for r in sei_roots
-         for x in sorted(glob.glob(os.path.join(r, "*"))) if os.path.isdir(x)]
+pairs = [(r, t) for r in sei_roots for t in phase_dirs(r)]
 tags = [t for _r, t in pairs]
 multi = len(sei_roots) > 1
 if not pairs:
