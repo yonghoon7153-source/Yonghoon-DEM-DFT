@@ -22,7 +22,7 @@
 |---|---|
 | ⑤ 1저자 발사 승인 · 실제 실행 · 결과 · 등록 §5 관문 | ⛔ 별도 — 이 요청의 GO 는 발사 확인 범위이지 승인이 아니다 (실행표 §4-4 6 행) |
 | `L214P-01` (= `LHS214-PRE-01` · P7 · P10 두 줄) | 닫힘 — Codex S1 10-28 (원장 verified · 두 줄 한정) · 다시 묻지 않는다 |
-| `L214P-02` (P3 · `launch_eligibility` 1140 행 LF) | open — 이번 발사 = 코드 무변경 (B7 그대로) · 운영 = 전체 40 자리 `--approved-sha` (§3) · 한 줄 수정 = 214 발사 뒤 (메인 권고 · ⬜ 1저자 확인 대기) |
+| `L214P-02` (P3 · `launch_eligibility` 1140 행 LF) | open — 이번 발사 = 코드 무변경 (B7 그대로) · 운영 = 전체 40 자리 `--approved-sha` (§3) · 한 줄 수정 = 214 발사 뒤 (메인 권고 · ✅ 1저자 10-28 밤 *"다 권고대로"* (수정 = 214 발사 뒤)) |
 | v1.3 배포 | HOLD — H0 model_limit 행 = 주 타깃 배포 HOLD (194 §9-8 ⑤) |
 | S3 | 별도 HOLD — `scripts/network_conductivity.py` 바뀜 → 재봉인 의무 |
 | `L214R-S03` · `L214R-S05` | open · 한정 유지 |
@@ -137,7 +137,7 @@
 - 끝 블록 = 묶음 §4 376–385 줄 (⑤ 승인 뒤에만 · 같은 핀): 380 줄 194 `run --root "$R194" --observe-imports` → 382 줄 194 등록 §4 완료 뒤 확인 (audit · 재시도 예외) → 383 줄 보충 20 `run --root "$RS" --cohorts lhss --observe-imports` → 384 줄 발사 영수증 `--manifest "$RS/manifest.json" --primary-manifest "$R194/manifest.json" --approved-sha "$PIN"`.
 - `--approved-sha` 를 받는 명령 = 사전 점검 둘 (실행표 §4-2 167 · 172 줄 · 실행됨 · 둘 다 PIN 40) + 발사 뒤 384 줄 하나.  `run` 은 받지 않는다 (묶음 §3 293 줄).
 - 끝 블록의 `$PIN` = 단계 0 의 40 자리 (실행표 §4-2 138 줄) · 같은 단계 140 줄 `[ "$(git rev-parse HEAD)" = "$PIN" ]` 은 40 자리 HEAD 와 다르면 `⛔ 핀 다름` 을 찍는다 ⇒ 384 줄은 전체 40 자리 승인값을 준다 (생략 · 7 자리 아님).
-- `L214P-02` 와의 관계 (S1 판정문 §3 Q5 표 65–71 줄): `launch_eligibility` 1140 행 (발사 영수증의 F1 · G1) 은 SHA+LF 를 받지만, 전체 40 자리 승인값이면 F7 · G7 (`scripts/supp20_input_receipt.py` 357–361 줄 · 원문 `re.fullmatch(r'[0-9a-f]{40}', …)` + 승인값 접두) 이 거부한다 · 승인값을 빼면 rc 0 (7 자리면 마지막 한 자리만 다른 같은 오값 둘이 rc 0) — 끝 블록은 빼지도 줄이지도 않는다.  이번 발사 = 코드 무변경 (B7 그대로) · 한 줄 수정 = 214 발사 뒤 (메인 권고 · ⬜ 1저자 확인 대기).
+- `L214P-02` 와의 관계 (S1 판정문 §3 Q5 표 65–71 줄): `launch_eligibility` 1140 행 (발사 영수증의 F1 · G1) 은 SHA+LF 를 받지만, 전체 40 자리 승인값이면 F7 · G7 (`scripts/supp20_input_receipt.py` 357–361 줄 · 원문 `re.fullmatch(r'[0-9a-f]{40}', …)` + 승인값 접두) 이 거부한다 · 승인값을 빼면 rc 0 (7 자리면 마지막 한 자리만 다른 같은 오값 둘이 rc 0) — 끝 블록은 빼지도 줄이지도 않는다.  이번 발사 = 코드 무변경 (B7 그대로) · 한 줄 수정 = 214 발사 뒤 (메인 권고 · ✅ 1저자 10-28 밤 *"다 권고대로"* (수정 = 214 발사 뒤)).
 - 다른 셸이면 (379 줄) 변수 줄을 다시 쓰되 ROOT · 영수증 이름은 사전 점검 그대로 = `step0.txt` 값 — R194 `/home/yonghoon71/net194_35f032737_1028` · RS `/home/yonghoon71/netsupp20_35f032737_1028` (dry-run 은 ROOT 를 만들지 않는다 — 실행표 §4-2 144 줄 주석).  S1 판정문 §5 (124 줄) *"외부 발사 범위 확인, 실제 승인 PIN과 실행 직전 환경·ROOT 점검은 기존 절차대로 남는다"* = 단계 0 의 체크아웃 · 핀 일치 · dirty 줄 (실행표 §4-2 139–141 줄).
 - 구 ROOT (10-14 `~/net194_1087a9b2f` · `~/netsupp20_1087a9b2f` · 그 영수증) = 지우지 · 옮기지 · retry · merge 하지 않는다 · 실패 기록을 사후 성공으로 덮지 않는다 (묶음 §5 표 · 10-20 판정 §5 ⑤ · 10-28 단계 0 `ls -d` = 그 ROOT 둘 있음).
 
@@ -248,3 +248,11 @@ CL=<실행표 부록 A-C 의 닫힘 78 출력>        # 같은 AST 걷기 (시�
 IN="docs/data/lhs_descriptors_cov_1e09f661d docs/data/area_s2_cohort.tsv docs/data/lhs_union_20260927 docs/data/lhsx_descriptors_cov_1e09f661d docs/data/lhsx_descriptors_20260925 docs/data/lhsx_design_adapted_20260929.csv docs/data/lhss_descriptors_cov_1e09f661d docs/data/lhss_union_1e09f661d docs/data/lhss_design_adapted_20261012.csv docs/data/lhs_supp_runs_20261006 docs/data/lhs_supp_design_20261006.csv docs/data/case15_corner_20261001 docs/data/lhs_handover_20261001.csv docs/data/lhsx_handover_20261001.csv docs/data/real14_reference_20260928 docs/data/lhs_network194_11fcf91e8"
 for S in CORE CL IN; do git diff --quiet "$B7" "$REV" -- ${!S}; echo "$S rc=$?"; done      # 셋 다 0 이어야
 ```
+
+## 발송 전 메인 처리 (10-28 밤)
+
+- `L214P-02` 수정 시점 = ✅ 1저자 10-28 밤 *"다 권고대로"* (214 발사 뒤 · 이번 발사는 B7 코드 그대로).
+- 사전 공격 ③ (독립 반례) = 이번 판은 바뀐 코드가 없다 (B7 → 리뷰 핀 사이 LHS 핵심 40 · 닫힘 78 · 입력 16 경로 `git diff --quiet` rc 0) → 해당 없음.
+- 메인 같은 코드 재검증 (체크리스트 §4) = 하지 않았다 — S1 판정문 §4 의 Codex 독립 재검증 (194 P0–P10 11/11 · 보충 24/24) 에 기댄다 (한정).
+- 두 등록 §9 의 10-28 기록 = 발사 뒤에 적는다 (지금 적으면 리뷰 핀의 등록 바이트가 B7 과 달라진다 · 발사 체크아웃은 B7 그대로).
+- 리뷰 핀 = 이 문서가 들어간 메인 커밋 (push 뒤 40 자리를 발송 메시지에 적는다).
