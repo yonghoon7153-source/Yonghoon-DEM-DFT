@@ -59,42 +59,79 @@ grep -hE "INSERTED|====== (AM|SE)|FATAL" ~/simulation/kg50_d1_b50/log.liggghts
 - D0.7 압축 전 정착 끝 (after_settling) 에서 Q5 dt · 감쇠 대조 (KG50-04 · 결과 전 등록 뒤) — v2 README §4 와 같은 순서.
 - 한계 = v2 README §5 와 같다 (언로딩 없음 · gen-1 프로토콜 · 단분산 SE · 본 비교 시드 하나 · 감쇠 γ/m 크기 의존).
 
-## 4. Q5 dt · 감쇠 가지 — 창 W1 도구 (등록 Q11 · 10-28)
+## 4. Q5 dt · 감쇠 가지 — 도구 (등록 Q11 · 10-28 · §12 개정)
 
-- 등록 = `docs/50kg/kg50_q5_dt_damping_registration_draft_20261027.md` (1저자 10-27 밤 비준 · Q1–Q12).  도구 둘 (커밋 = *"50kg Q5 시험 먼저: 가지 덱 생성기 · 판독기 selftest"* → *"50kg Q5 구현: 가지 덱 생성기 · 판독기"*):
-  - `scripts/kg50_q5_branches.py` — 본 덱 + 가지 + NP → `q5_<case>_<가지>/` (가지 덱 · 러너 · 본 덱 사본 · `q5_manifest.json` · `SHA256SUMS`).  등록 §4 의 줄 바꿈만 허용 (그 밖 한 글자 = 거부 · 파일 0) · A · F · A3 · F3 = `resume_ckpt.sh -C` 문제 정확히 하나 (§8-1) · NP = Q5 (A · B · C 56 · F 28 · A3 · C3 1 · F3 2).
-  - `scripts/kg50_q5_verdict.py` — 돈 가지 폴더 → T0 · O1 · O2 (+ R1–R6) → §7 판정 ①–④ · (a) · (b) · W1 (b) 합격 한정어.  덤프 · 로그 · manifest · 체크포인트 sha256 기록이 하나라도 빠지거나 어긋나면 판정 없음 (rc 2) · T0 실패 = 판정 불가 (기술).
+- 등록 = `docs/50kg/kg50_q5_dt_damping_registration_draft_20261027.md` (1저자 10-27 밤 비준 · Q1–Q12 · **§12 = 10-28 개정** — §12-1 · §12-3 = 1저자 결정 · §12-2 W2 = ⬜ 개정 초안 · 비준 전).  도구 둘 (커밋 = *"50kg Q5 시험 먼저: 가지 덱 생성기 · 판독기 selftest"* → *"50kg Q5 구현: 가지 덱 생성기 · 판독기"* · 10-28 *"50kg Q5 시험 먼저: W2 (§12-2 개정 초안) · D3 로컬 직렬 (§12-3) · NP · grid selftest"* → *"50kg Q5 구현: W2 덱 … · D3 로컬 직렬 러너 … · 판독기 NP · grid · 이탈 기록"*):
+  - `scripts/kg50_q5_branches.py` — 본 덱 + 가지 + NP → `q5_<case>_<가지>/` (W2 = `q5w2_…` · 로컬 = 꼬리 `_wsl`) (가지 덱 · 러너 · 본 덱 사본 · W2 = 본 런 로그 사본 · `q5_manifest.json` · `SHA256SUMS`).  등록 §4 · §12-2 의 줄 바꿈만 허용 (그 밖 한 글자 = 거부 · 파일 0) · A · F · A3 · F3 = `resume_ckpt.sh -C` 문제 정확히 하나 (§8-1) · W2 A · F = 정확히 둘 (§12-2 (마)) · NP = Q5 (A · B · C 56 · F 28 · A3 · C3 1 · F3 2).
+  - `scripts/kg50_q5_verdict.py` — 돈 가지 폴더 → T0 · O1 · O2 (+ R1–R6) → §7 판정 ①–④ · (a) · (b) · W1 (b) 합격 한정어.  덤프 · 로그 · manifest · 체크포인트 sha256 기록이 하나라도 빠지거나 어긋나면 판정 없음 (rc 2) · T0 실패 = 판정 불가 (기술) · manifest NP = Q5 · 로그 procs · `MPI processor grid` = NP · 로컬 직렬 가지 = 이탈로 기록 (§12-3) · W2 = §12-2 비준 판으로 만든 가지만.
 - 읽기 둘 (자리 표시): §4-1 `read_restart <가지 폴더>/…` = 러너가 cd 하는 가지 폴더 기준 상대 경로 · §4-5 덤프 `<폴더>` = 본 덱 153 행이 만드는 `post_<case>/` (`shell mkdir` 줄을 더하지 않으려고).
 - B 의 dt 줄 (43 행) 은 `read_restart` 앞이다 — LIGGGHTS 3d5c00f restart 머리에 dt 가 없고 units 가 같으면 재설정하지 않는다 (Codex 증거 사본 `docs/reviews/codex_kg50_decks_review_20261026/evidence/kg50_restart/upstream_src_read_restart.cpp` · 생성기 selftest ⓪b).  판독기가 B 로그의 `timestep 5e-07` 치환 줄로 다시 확인한다.
-- `fix damp all viscous 0.5 scale 3 <s>` 를 ibb · hit 바이너리가 받는지 = 확인 전 (§4-3) — C · C3 첫 로그의 ERROR 0 · 끝까지 돎 (T0) 이 그 확인이다.
-- ⛔ W2 는 생성기가 거부한다 — §5 가 W2 덱의 꼴만 적고 줄 목록이 없다 (§4 = W1 줄만) · Q12 에 W2 contact 덤프 간격이 없다.  W2 덱 = 등록 개정 (줄 목록 · contact 간격) 뒤.  판독기의 O3 · R5 계산은 합성 시험만 지났다.
+- `fix damp all viscous 0.5 scale 3 <s>` 를 ibb · 로컬 바이너리가 받는지 = 확인 전 (§4-3) — C · C3 첫 로그의 ERROR 0 · 끝까지 돎 (T0) 이 그 확인이다 (1저자 WSL 소스 3d5c00f2 의 `src/fix_viscous.cpp` 74 행에 `scale` · 코디네이터 전달 · 이 세션에서 재지 않음).
+- ★ **순서 (1저자 10-28): §12-2 (W2 줄 목록) 비준 → 그 뒤에 W1 결과를 읽는다.**  W1 가지는 비준 전에도 돌려도 되지만 결과 (판독기 출력 · 덤프 · 로그 값) 는 비준 전에 열지 않는다.  비준 전 판으로 만든 W2 가지는 운영자 제출 줄이 막혀 있고 판독기가 거부한다 — 비준 뒤 생성기로 다시 만든다.
+- D3 (§12-3 · 1저자 10-28): **A3 · C3 = 1저자 로컬 WSL 직렬 1 코어** (MPI 실행기 · MPI 빌드 없음 · 덱 = hit 덱 바이트 같음) · **F3 = hit NP 2 · D1-50 이 끝난 뒤** (로컬 F3 = 생성기가 거부).  D3 바닥 F3 ↔ A3 는 기계 · 바이너리도 달라 판독기가 이탈로 기록한다 (바닥이 커질 수 있다 = ② 판정 불가 쪽으로만).
 
 ```bash
-# WSL — 가지 폴더 만들기 (아무것도 띄우지 않는다)
+# (가) WSL → ibb — D0.7 W1 가지 (아무것도 띄우지 않는다)
 cd ~/Yonghoon-DEM-DFT && git pull
 for X in B:56 C:56 F:28 A:56; do python3 scripts/kg50_q5_branches.py --case kg50_d07_b50 --branch ${X%%:*} --np ${X##*:} --out ~/q5_build; done
-for X in A3:1 C3:1 F3:2; do python3 scripts/kg50_q5_branches.py --case kg50_d3_b50_s1 --branch ${X%%:*} --np ${X##*:} --out ~/q5_build; done
 scp -P <포트> -r ~/q5_build/q5_kg50_d07_b50_{B,C,F,A} <사용자>@<ibb>:~/dem_test/
-scp -r ~/q5_build/q5_kg50_d3_b50_s1_{A3,C3,F3} <사용자>@<hit>:~/simulation/
 # ibb — 본 런 (kg50_d07_b50) 이 restart_after_settling.bin 을 쓴 뒤 멈춘 (scancel) 뒤에만 (§8-3 2 · Q6 (가)) · 가지마다 (X = B C F A 차례 · cpu-60)
 X=B
 cd ~/dem_test/q5_kg50_d07_b50_$X && sha256sum -c SHA256SUMS
 mkdir -p ~/dem_test/q5_kg50_d07_b50_$X/restart_kg50_d07_b50 && cp ~/dem_test/kg50_d07_b50/restart_kg50_d07_b50/restart_after_settling.bin ~/dem_test/q5_kg50_d07_b50_$X/restart_kg50_d07_b50/
 sha256sum ~/dem_test/kg50_d07_b50/restart_kg50_d07_b50/restart_after_settling.bin ~/dem_test/q5_kg50_d07_b50_$X/restart_kg50_d07_b50/restart_after_settling.bin > ~/dem_test/q5_kg50_d07_b50_$X/ckpt_sha256.txt && cat ~/dem_test/q5_kg50_d07_b50_$X/ckpt_sha256.txt
 [ "$(wc -l < ~/dem_test/q5_kg50_d07_b50_$X/ckpt_sha256.txt)" = 2 ] && [ "$(cut -d" " -f1 ~/dem_test/q5_kg50_d07_b50_$X/ckpt_sha256.txt | sort -u | wc -l)" = 1 ] && (cd ~/dem_test && mkdir -p logs && sbatch q5_kg50_d07_b50_$X/run_q5_kg50_d07_b50_$X.sh) || echo "⛔ 체크포인트 sha256 다름 · 없음 — 제출 안 함"
-# hit — Q1 먼저 (없으면 멈춤 · 1저자 · (가) D3 를 정착 끝까지 다시) · 가지마다 (X = A3 C3 F3)
-ls -l ~/simulation/kg50_d3_b50_s1/restart_kg50_d3_b50_s1/restart_after_settling.bin
-X=A3
+
+# (나) WSL 로컬 — D3 A3 · C3 (직렬 1 코어 · §12-3) · 폴더 = ~/q5_local/q5_kg50_d3_b50_s1_<X>_wsl (러너가 그 자리로 cd)
+cd ~/Yonghoon-DEM-DFT && git pull
+for X in A3 C3; do python3 scripts/kg50_q5_branches.py --case kg50_d3_b50_s1 --branch $X --np 1 --host wsl --out ~/q5_local; done
+# D3 정착 끝 체크포인트 = hit 원본을 한 번 가져와 등록 Q1 sha256 과 대조 (hit 원본은 읽기만 · 다르면 멈춤)
+mkdir -p ~/q5_local/kg50_d3_b50_s1/restart_kg50_d3_b50_s1 && [ -s ~/q5_local/kg50_d3_b50_s1/restart_kg50_d3_b50_s1/restart_after_settling.bin ] || scp <사용자>@<hit>:~/simulation/kg50_d3_b50_s1/restart_kg50_d3_b50_s1/restart_after_settling.bin ~/q5_local/kg50_d3_b50_s1/restart_kg50_d3_b50_s1/
+echo "1bf24069bb3876089adb6c7521d46c27f162de4e57ab6379d042913339607ea8  $HOME/q5_local/kg50_d3_b50_s1/restart_kg50_d3_b50_s1/restart_after_settling.bin" | sha256sum -c || echo "⛔ 등록 Q1 sha256 아님 — 멈춤"
+# 바이너리 = $HOME/src/LIGGGHTS-PUBLIC/src/lmp_serial (기본) · 다른 직렬 바이너리면 export LMP_SERIAL=<경로> · MPI 빌드 (ldd libmpi) = 러너가 거부
+X=A3   # 그다음 X=C3 — 같은 바이너리 · 각 1 코어 (동시에 돌려도 결과는 같다 · 1저자 판단)
+cd ~/q5_local/q5_kg50_d3_b50_s1_${X}_wsl && sha256sum -c SHA256SUMS
+mkdir -p ~/q5_local/q5_kg50_d3_b50_s1_${X}_wsl/restart_kg50_d3_b50_s1 && cp ~/q5_local/kg50_d3_b50_s1/restart_kg50_d3_b50_s1/restart_after_settling.bin ~/q5_local/q5_kg50_d3_b50_s1_${X}_wsl/restart_kg50_d3_b50_s1/
+sha256sum ~/q5_local/kg50_d3_b50_s1/restart_kg50_d3_b50_s1/restart_after_settling.bin ~/q5_local/q5_kg50_d3_b50_s1_${X}_wsl/restart_kg50_d3_b50_s1/restart_after_settling.bin > ~/q5_local/q5_kg50_d3_b50_s1_${X}_wsl/ckpt_sha256.txt && cat ~/q5_local/q5_kg50_d3_b50_s1_${X}_wsl/ckpt_sha256.txt
+[ "$(wc -l < ~/q5_local/q5_kg50_d3_b50_s1_${X}_wsl/ckpt_sha256.txt)" = 2 ] && [ "$(cut -d" " -f1 ~/q5_local/q5_kg50_d3_b50_s1_${X}_wsl/ckpt_sha256.txt | sort -u | wc -l)" = 1 ] && bash ~/q5_local/q5_kg50_d3_b50_s1_${X}_wsl/run_q5_kg50_d3_b50_s1_${X}_wsl.sh || echo "⛔ 체크포인트 sha256 다름 · 없음 — 실행 안 함"
+cat ~/q5_local/q5_kg50_d3_b50_s1_${X}_wsl/q5_binary.txt   # 러너가 실행 직전에 쓴 바이너리 경로 · sha256 · 호스트 (판독기가 A3 ↔ C3 를 대조)
+
+# (다) WSL → hit — D3 F3 (NP 2 · 등록 그대로 · D1-50 이 끝난 뒤 · 1저자 10-28)
+python3 scripts/kg50_q5_branches.py --case kg50_d3_b50_s1 --branch F3 --np 2 --out ~/q5_build
+scp -r ~/q5_build/q5_kg50_d3_b50_s1_F3 <사용자>@<hit>:~/simulation/
+ls -l ~/simulation/kg50_d3_b50_s1/restart_kg50_d3_b50_s1/restart_after_settling.bin   # Q1 — 없으면 멈춤 (1저자 · (가) D3 를 정착 끝까지 다시 · NP 1 · 같은 덱)
+X=F3
 cd ~/simulation/q5_kg50_d3_b50_s1_$X && sha256sum -c SHA256SUMS
 mkdir -p ~/simulation/q5_kg50_d3_b50_s1_$X/restart_kg50_d3_b50_s1 && cp ~/simulation/kg50_d3_b50_s1/restart_kg50_d3_b50_s1/restart_after_settling.bin ~/simulation/q5_kg50_d3_b50_s1_$X/restart_kg50_d3_b50_s1/
 sha256sum ~/simulation/kg50_d3_b50_s1/restart_kg50_d3_b50_s1/restart_after_settling.bin ~/simulation/q5_kg50_d3_b50_s1_$X/restart_kg50_d3_b50_s1/restart_after_settling.bin > ~/simulation/q5_kg50_d3_b50_s1_$X/ckpt_sha256.txt && cat ~/simulation/q5_kg50_d3_b50_s1_$X/ckpt_sha256.txt
 [ "$(wc -l < ~/simulation/q5_kg50_d3_b50_s1_$X/ckpt_sha256.txt)" = 2 ] && [ "$(cut -d" " -f1 ~/simulation/q5_kg50_d3_b50_s1_$X/ckpt_sha256.txt | sort -u | wc -l)" = 1 ] && bash ~/simulation/q5_kg50_d3_b50_s1_$X/run_q5_kg50_d3_b50_s1_$X.sh || echo "⛔ 체크포인트 sha256 다름 · 없음 — 실행 안 함"
-# 끝난 뒤 — 체크포인트 · 메시 덤프 빼고 가져와 WSL 리포에서 판정
+
+# (라) 끝난 뒤 — 체크포인트 · 메시 덤프 빼고 모아 WSL 리포에서 판정 — ⛔ §12-2 비준 전에는 판독기를 돌리지 않는다 (1저자 10-28 순서)
 tar czf ~/q5_w1_d07.tgz --exclude='*.bin' --exclude='mesh_*.stl' -C ~/dem_test q5_kg50_d07_b50_B q5_kg50_d07_b50_C q5_kg50_d07_b50_F q5_kg50_d07_b50_A
-tar czf ~/q5_w1_d3.tgz --exclude='*.bin' --exclude='mesh_*.stl' -C ~/simulation q5_kg50_d3_b50_s1_A3 q5_kg50_d3_b50_s1_C3 q5_kg50_d3_b50_s1_F3
+tar czf ~/q5_w1_d3_f3.tgz --exclude='*.bin' --exclude='mesh_*.stl' -C ~/simulation q5_kg50_d3_b50_s1_F3
 python3 scripts/kg50_q5_verdict.py --branch A=<폴더>/q5_kg50_d07_b50_A --branch B=<폴더>/q5_kg50_d07_b50_B --branch C=<폴더>/q5_kg50_d07_b50_C --branch F=<폴더>/q5_kg50_d07_b50_F \
-    --branch A3=<폴더>/q5_kg50_d3_b50_s1_A3 --branch C3=<폴더>/q5_kg50_d3_b50_s1_C3 --branch F3=<폴더>/q5_kg50_d3_b50_s1_F3 --json q5_w1.json
+    --branch A3=$HOME/q5_local/q5_kg50_d3_b50_s1_A3_wsl --branch C3=$HOME/q5_local/q5_kg50_d3_b50_s1_C3_wsl --branch F3=<폴더>/q5_kg50_d3_b50_s1_F3 --json q5_w1.json
+
+# (마) W2 — §12-2 비준 뒤에만 (생성기가 비준 판이면 제출 줄을 낸다)
+# 본 런 로그로 시작 step 판단 (같은 규칙 · 사람이 고르지 않는다 · --w2-start 는 표준 라이브러리만이라 이 파일 하나로 ibb 에서도 돈다)
+scp -P <포트> <사용자>@<ibb>:~/dem_test/kg50_d07_b50/log.liggghts ~/q5_build/main_log_kg50_d07_b50.liggghts
+python3 scripts/kg50_q5_branches.py --w2-start ~/q5_build/main_log_kg50_d07_b50.liggghts   # rc 0 ready · 3 기다림 (접촉 전 · N 전) · 2 거부 (1저자)
+# ready 이고 ibb 에 restart_kg50_d07_b50/restart_compress_<N>.bin 이 있으면 본 런을 멈춘다 (scancel · 1저자) → 그 로그로 다시 가져와 가지 넷
+for X in B:56 C:56 F:28 A:56; do python3 scripts/kg50_q5_branches.py --case kg50_d07_b50 --branch ${X%%:*} --np ${X##*:} --window W2 --main-log ~/q5_build/main_log_kg50_d07_b50.liggghts --out ~/q5_build; done
+scp -P <포트> -r ~/q5_build/q5w2_kg50_d07_b50_{B,C,F,A} <사용자>@<ibb>:~/dem_test/
+# ibb — 가지마다 생성기 화면 줄 그대로 (X = B C F A 차례 · N = 화면의 시작 step)
+X=B; N=<생성기 화면의 N>
+cd ~/dem_test/q5w2_kg50_d07_b50_$X && sha256sum -c SHA256SUMS
+mkdir -p ~/dem_test/q5w2_kg50_d07_b50_$X/restart_kg50_d07_b50 && cp ~/dem_test/kg50_d07_b50/restart_kg50_d07_b50/restart_compress_$N.bin ~/dem_test/q5w2_kg50_d07_b50_$X/restart_kg50_d07_b50/
+sha256sum ~/dem_test/kg50_d07_b50/restart_kg50_d07_b50/restart_compress_$N.bin ~/dem_test/q5w2_kg50_d07_b50_$X/restart_kg50_d07_b50/restart_compress_$N.bin > ~/dem_test/q5w2_kg50_d07_b50_$X/ckpt_sha256.txt && cat ~/dem_test/q5w2_kg50_d07_b50_$X/ckpt_sha256.txt
+cp ~/dem_test/kg50_d07_b50/post_kg50_d07_b50/mesh_$N.stl ~/dem_test/q5w2_kg50_d07_b50_$X/plate_kg50_d07_b50.stl
+sha256sum ~/dem_test/kg50_d07_b50/post_kg50_d07_b50/mesh_$N.stl ~/dem_test/q5w2_kg50_d07_b50_$X/plate_kg50_d07_b50.stl > ~/dem_test/q5w2_kg50_d07_b50_$X/plate_sha256.txt && cat ~/dem_test/q5w2_kg50_d07_b50_$X/plate_sha256.txt
+[ "$(wc -l < ~/dem_test/q5w2_kg50_d07_b50_$X/ckpt_sha256.txt)" = 2 ] && [ "$(cut -d" " -f1 ~/dem_test/q5w2_kg50_d07_b50_$X/ckpt_sha256.txt | sort -u | wc -l)" = 1 ] && [ "$(wc -l < ~/dem_test/q5w2_kg50_d07_b50_$X/plate_sha256.txt)" = 2 ] && [ "$(cut -d" " -f1 ~/dem_test/q5w2_kg50_d07_b50_$X/plate_sha256.txt | sort -u | wc -l)" = 1 ] && (cd ~/dem_test && mkdir -p logs && sbatch q5w2_kg50_d07_b50_$X/run_q5w2_kg50_d07_b50_$X.sh) || echo "⛔ 체크포인트 · 판 STL sha256 다름 · 없음 — 제출 안 함"
+# 끝난 뒤 — W2 판정 (결정 O2 · O3) · W1 과 합치기 (창마다 · 나쁜 쪽)
+python3 scripts/kg50_q5_verdict.py --branch A=<폴더>/q5w2_kg50_d07_b50_A --branch B=<폴더>/q5w2_kg50_d07_b50_B --branch C=<폴더>/q5w2_kg50_d07_b50_C --branch F=<폴더>/q5w2_kg50_d07_b50_F --json q5_w2.json
+python3 scripts/kg50_q5_verdict.py --combine q5_w1.json q5_w2.json
 ```
 
-- 각 생성기 실행이 같은 명령 (그 가지 이름 · 경로) 을 화면에 낸다 — 위는 같은 글자를 `$X` 로 묶은 것.  원 폴더 (`kg50_d07_b50.ins1` · `kg50_d07_b50` · hit `kg50_d3_b50_s1`) 에는 `cp` 로 읽기만 한다.
-- 시간 (§5 · 추정): ibb W1 가지 넷 10–20 h (차례로) · hit 가지 하나 1 h 안팎.  덤프 (Q12): D0.7 atom ≈ 50 MB × 19 장 · contact 수백 MB × 9 장 — ibb 할당량 확인.
+- 각 생성기 실행이 같은 명령 (그 가지 이름 · 경로) 을 화면에 낸다 — 위는 같은 글자를 `$X` 로 묶은 것.  원 폴더 (`kg50_d07_b50.ins1` · `kg50_d07_b50` · hit `kg50_d3_b50_s1`) 에는 `cp` · `scp` 로 읽기만 한다.
+- 시간 (§5 · 추정): ibb W1 가지 넷 10–20 h (차례로) · D3 가지 하나 1 h 안팎 (hit NP 1 원 런 기준 · 로컬 1 코어 시간은 첫 런으로) · W2 넷 15–31 h.  덤프 (Q12 · §12-2 (나)): D0.7 W1 atom ≈ 50 MB × 19 장 · contact 수백 MB × 9 장 · W2 atom ≈ 50 MB × 154 장 · contact 수백 MB × 19 장 · `dmp_atom` × 28 장 — ibb 할당량 확인.
+- ⚠ W2 의 (b) 는 지금 꼴이면 늘 판정 불가 — §5 W2 표 = D0.7 만인데 §7 (b) · 판독기는 D3 도 요구한다 (등록 §12-2 질문 W2-6 · 1저자).
