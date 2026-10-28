@@ -550,6 +550,13 @@ for i in idx:
         if hit('illegal_runtime_after_mark'):      # ★ 10-28 (AL19c) — cupy 런타임 꼴: CUDARuntimeError + cudaErrorIllegalAddress
             print('cupy_backends.cuda.api.runtime.CUDARuntimeError: cudaErrorIllegalAddress: an illegal memory access was encountered (fake)')
             sys.exit(1)
+        if hit('msg_after_mark'):                  # ★ 10-28 밤 PC5 (사전 공격 5 회차 R2) — 표지 뒤 주어진 한 줄 (cupy 꼴 CUDA 오류 등) 을 찍고 rc 1
+            print(hit('msg_after_mark').get('msg'), flush=True)
+            sys.exit(1)
+        if hit('msg_sleep_after_mark'):            # ★ 10-28 밤 PC5 (R6 · PC11) — 표지 뒤 한 줄을 찍고 오래 (사슬 부모를 죽이는 · 신호를 주는 창) 뒤 rc 1
+            print(hit('msg_sleep_after_mark').get('msg'), flush=True)
+            time.sleep(float(hit('msg_sleep_after_mark').get('s', 8.0)))
+            sys.exit(1)
         if hit('sleep_after_mark'):                # ★ 10-27 묶음 C1b — 표지 뒤 오래 (시간 초과 = 결과 뒤 · 재실행 자격)
             time.sleep(float(hit('sleep_after_mark').get('s', 30.0)))
     json.dump({'mpm_metrics': {'step3': st}}, open(os.path.join(out, _an), 'w'))
@@ -877,20 +884,8 @@ def fixtures():
     FX['reg_text'] = text
 
     def reg_with(cell, name, s0cell=f'`{s0sha}`', plan=None, block=True):
-        """등록 사본 — 해시 두 줄 + ★ 10-27 묶음 C1 (C6 #30) 계획 숫자 블록 (그 계획을 이 시험이 **따로** 조립한 블록 · `doc_block` ·
-        block False = 블록 없음 꼴 · 고치기 전 판 = 블록이 있어도 읽지 않는다)."""
-        out = []
-        for ln in text.splitlines():
-            if ln.startswith('| 계획 해시 |') or ln.startswith('| S0 계획 해시 |'):
-                cells = ln.split('|')
-                cells[-2] = f' {cell if ln.startswith("| 계획 해시 |") else s0cell} '
-                ln = '|'.join(cells)
-            out.append(ln)
-        if block:
-            out += ['', doc_block(plan if plan is not None else FX['plan_obj'])]
-        p = Path(TD) / name
-        p.write_text('\n'.join(out) + '\n', encoding='utf-8')
-        return p
+        """등록 사본 (`reg_copy` · 이 리포의 등록 R 글)."""
+        return reg_copy(text, cell, name, s0cell=s0cell, plan=plan, block=block)
     FX['reg_with'] = reg_with
     FX['plan'], FX['plan_sha'], FX['reg_ok'] = plan_set('plan', reg_name='reg_ok.md')
     sha = FX['plan_sha']
@@ -903,6 +898,24 @@ def fixtures():
     #    at_repo) · 파일 지문 = 고정물 scripts (사슬 함수 그대로)
     FX['s1'] = s0_report(1, 's1_main')
     FX['git_identity_real'] = RR.git_identity
+
+
+def reg_copy(text, cell, name, s0cell=None, plan=None, block=True):
+    """등록 사본 — 해시 두 줄 + ★ 10-27 묶음 C1 (C6 #30) 계획 숫자 블록 (그 계획을 이 시험이 **따로** 조립한 블록 · `doc_block` ·
+    block False = 블록 없음 꼴 · 고치기 전 판 = 블록이 있어도 읽지 않는다).  text = 등록 R 글 (★ 10-28 밤 PC5 §4 #5 — 봉인된 글 흉내도 받는다)."""
+    s0cell = s0cell if s0cell is not None else f'`{FX["s0_sha"]}`'
+    out = []
+    for ln in text.splitlines():
+        if ln.startswith('| 계획 해시 |') or ln.startswith('| S0 계획 해시 |'):
+            cells = ln.split('|')
+            cells[-2] = f' {cell if ln.startswith("| 계획 해시 |") else s0cell} '
+            ln = '|'.join(cells)
+        out.append(ln)
+    if block:
+        out += ['', doc_block(plan if plan is not None else FX['plan_obj'])]
+    p = Path(TD) / name
+    p.write_text('\n'.join(out) + '\n', encoding='utf-8')
+    return p
 
 
 def plan_set(name, reg_name=None, **over):
@@ -6905,14 +6918,22 @@ def t_GR06():
             (tok, before, end_before, rc, so[-300:], er, after, late))
 
 
-def gr_fake_launch(tag, host=None, token=None):
-    """끝 기록 없는 시작 기록 하나 (단계 폴더 모양) → (단계 폴더, 표지)."""
+#: ★ 10-28 밤 PC5-03 — 없는 pid (Linux pid_max 의 위끝 2**22 = 4194304 보다 크다 — 어떤 기계에서도 산 프로세스가 아니다 · 옛 고정물 = 1 = init 늘 삶)
+DEAD_PID = 2 ** 22 + 1
+
+
+def gr_fake_launch(tag, host=None, token=None, chain=None):
+    """끝 기록 없는 시작 기록 하나 (단계 폴더 모양) → (단계 폴더, 표지).  chain = 사슬 부모 칸 dict (기본 = 없는 pid · ★ 10-28 밤 PC5-03 — recover 가
+    사슬 부모가 살아 있으면 거부한다 · 옛 고정물 chain_pid 1 은 늘 살아 있는 init 이었다)."""
     out = Path(TD) / 'runs' / tag
     g = out / 'groups'
     g.mkdir(parents=True)
     tok = token or hashlib.sha256(tag.encode()).hexdigest()[:32]
     rec = {'schema': 'rint-r-group-v1', 'name': 'L01_floor', 'token': tok, 'pid': 999999, 'pgid': 999999,
-           'host': host if host is not None else RR.host_ident(), 'started_utc': '2026-10-27T00:00:00Z', 'by': 'chain', 'chain_pid': 1}
+           'host': host if host is not None else RR.host_ident(), 'started_utc': '2026-10-27T00:00:00Z', 'by': 'chain', 'chain_pid': DEAD_PID}
+    if chain is not None:
+        rec.pop('chain_pid')
+        rec.update(chain)
     (g / 'L01_floor.launch.json').write_text(json.dumps(rec), encoding='utf-8')
     return out, tok
 
@@ -6937,14 +6958,15 @@ def t_GR07():
             (rc, er, so[-200:]))
 
 
-@check('GR08', '★ 10-27 묶음 C2b — recover 의 호스트 규칙: 시작 기록의 machine_id 다름 (다른 기계) → 미확인 (rc 3) · 같은 기계 · boot_id 다름 (재부팅 = 그 부팅의 '
-               '프로세스는 없다) → 확인 True · 같은 기계 · 같은 부팅 · pid 이름공간 다름 (컨테이너 재시작 · 다른 컨테이너) → 미확인 · machine_id 모름 + boot_id '
-               '다름 → 미확인 (재부팅과 다른 기계를 못 가른다)')
+@check('GR08', '★ 10-27 묶음 C2b — recover 의 호스트 규칙: 시작 기록의 machine_id 다름 (다른 기계) → 미확인 (rc 3) · ★ 10-28 밤 PC5-04 (1저자 Q3) 같은 '
+               'machine_id · boot_id 다름 → **미확인** (rc 3 · machine_id 는 기계 정체가 아니다 — 복제 이미지 · 컨테이너 · 옛 = 재부팅 확인 True) · 같은 기계 · '
+               '같은 부팅 · pid 이름공간 다름 (컨테이너 재시작 · 다른 컨테이너) → 미확인 · machine_id 모름 + boot_id 다름 → 미확인 · 미확인 사유에 운영자 확인 '
+               '인자 (--operator-confirm) 안내')
 def t_GR08():
     if not callable(getattr(RR, 'host_ident', None)):
         return False, '사슬에 host_ident 가 없다'
     me = {'machine_id': 'm' * 32, 'boot_id': 'b' * 36, 'pidns': 'pid:[4026531836]'}
-    cases = (('other_machine', dict(me, machine_id='x' * 32), 3, False), ('reboot', dict(me, boot_id='c' * 36), 0, True),
+    cases = (('other_machine', dict(me, machine_id='x' * 32), 3, False), ('reboot', dict(me, boot_id='c' * 36), 3, False),
              ('other_pidns', dict(me, pidns='pid:[1]'), 3, False), ('unknown_machine_reboot', dict(me, machine_id=None, boot_id='c' * 36), 3, False))
     out = []
     old = RR.host_ident
@@ -6956,7 +6978,8 @@ def t_GR08():
             d, _tok = gr_fake_launch(f'GR08_{nm}', host=host)
             rc, so = call(['--stage', 'recover', '--out', str(d)])
             er = gr_records(d).get('L01_floor', (None, None))[1] or {}
-            out.append((nm, rc == want_rc and er.get('confirmed') is want_conf, rc, er.get('confirmed'), er.get('why')))
+            out.append((nm, rc == want_rc and er.get('confirmed') is want_conf and '--operator-confirm' in str(er.get('why')),
+                        rc, er.get('confirmed'), er.get('why')))
     finally:
         RR.host_ident = old
     return all(x[1] for x in out), [x for x in out if not x[1]]
@@ -7668,6 +7691,8 @@ def t_AL12c():
         for rel, body in files.items():
             (fd / rel).parent.mkdir(parents=True, exist_ok=True)
             (fd / rel).write_text(body, encoding='utf-8')
+        if nm == 'trace':                                       # ★ 10-28 밤 PC5-01 — 손 결과 줄 (완주) = 폴더 증거와 같게 (완주 단계 요약 · 다시 센 결과 줄이 같아야 원장 대조를 지난다)
+            shutil.copy2(r['l0']['out'] / 'ladder_summary.json', fd / 'ladder_summary.json')
         res = dict(led_result(d, 1), n=e['n'], folder=fd.name, folder_sha256=tree_digest(fd),
                    status=('completed' if nm == 'trace' else 'rejected'), side=('post' if nm == 'trace' else 'pre'),
                    stop=(None if nm == 'trace' else {'code': 'X', 'run': None, 'reason': None}), cause=(None if nm == 'trace' else 'presolve'))
@@ -8093,7 +8118,8 @@ def t_AL19c():
 
 
 @check('AL12d', '★ 10-27 묶음 C1b (Q9 §3-5 R4-07 · 구현과 함께 · 변이로 검증) — 곁가지를 `merge -s ours` 로 붙여 조상으로 만든 꼴: ⓐ 곁가지에서 시작한 시도 (시작 '
-                '커밋의 원장이 본가지 원장의 바이트 접두가 아님 · 본가지에는 비슷한 항목을 손으로) = 판정 ATTEMPT_ORDER_MISMATCH ⓑ 곁가지 HEAD 에서 낸 원장 판정을 붙인 뒤 '
+                '커밋의 원장이 본가지 원장의 바이트 접두가 아님 · 본가지에는 비슷한 항목을 손으로) = 판정 멈춤 — ★ 10-28 밤 PC5-01 뒤 = 더 이른 관문 '
+                'ATTEMPT_LEDGER_MISMATCH (원장 역사: 곁가지의 원장 커밋이 첫 부모 역사 밖 · 병합으로 숨김 · 옛 = ATTEMPT_ORDER_MISMATCH) ⓑ 곁가지 HEAD 에서 낸 원장 판정을 붙인 뒤 '
                 '다시 판정 = REVERIFY_DIFF (판정 커밋의 원장이 HEAD 의 바이트 접두가 아님)')
 def t_AL12d():
     if not chain_c1b():
@@ -8117,8 +8143,10 @@ def t_AL12d():
         rc, so = call(['--stage', 'verdict', '--reverify', str(v_side['out']), '--root', FX['root']])
         return a, b, v_side, v_main, rc, so
     a, b, v_side, v_main, rc, so = scen('AL12d', go)
-    return (a['rc'] == 0 and b['rc'] == 0 and stop_code(v_side) not in LEDGER_STOPS and stop_code(v_main) == 'ATTEMPT_ORDER_MISMATCH'
-            and rc == 1 and 'REVERIFY_DIFF' in so, (a['rc'], b['rc'], stop_code(v_side), stop_code(v_main), rc, so[-240:]))
+    why_main = str((((v_main.get('v') or {}).get('stop')) or {}).get('cause'))
+    return (a['rc'] == 0 and b['rc'] == 0 and stop_code(v_side) not in LEDGER_STOPS and stop_code(v_main) == 'ATTEMPT_LEDGER_MISMATCH'
+            and '첫 부모' in why_main and rc == 1 and 'REVERIFY_DIFF' in so,
+            (a['rc'], b['rc'], stop_code(v_side), stop_code(v_main), why_main[:200], rc, so[-240:]))
 
 
 # ── ★ 10-27 묶음 C1b-2 (Q9 §3-5 개정 3 · 4 재실행 · 개정 5 ① · Codex 회차 ① Q-J · author 10-27 approved bundle C) 멈춘 런부터 재실행 ──
@@ -8337,6 +8365,7 @@ def t_RS06():
     (fd / 'L01_floor_arm1' / '.unchecked' / 'p2_x.json.first_result.json').write_text('{}', encoding='utf-8')
     (fd / 'attempt.json').write_text(json.dumps({'schema': 'rint-r-attempt-v1', 'n': e['n'], 'target': 'ladder:P0', 'machine': MACH, 'resume_of': 1,
                                                  'ledger_commit': c0}), encoding='utf-8')
+    shutil.copy2(r['b']['out'] / 'ladder_summary.json', fd / 'ladder_summary.json')   # ★ 10-28 밤 PC5-01 — 손 결과 줄 (완주) = 폴더 증거와 같게
     led_hand(d, dict(led_result(d, 2), n=e['n'], folder=fd.name, folder_sha256=tree_digest(fd)))
     v = ver_led('RS06_v', [base / r['b']['out'].name], d)
     return stop_code(v) == 'RESUME_NOT_ALLOWED', (stop_code(v), ((v.get('v') or {}).get('stop') or {}).get('cause'))
@@ -9426,22 +9455,30 @@ def doc_tool_commands(path, tool):
 
 @check('K01', '★ PF2 F (10-22 · PRE2-design-05) 문서 명령 = 실제 인자 계약 — kgy 명령 · 등록 R §10-1 의 사슬 명령이 사슬 argparse 를 지난다 '
               '(단계 함수 = 받기만) · 감도 (--variant) = --after-main · S0 단계 2 명령 = --r-plan-path (관문 앞 인자 검사 그대로) · 두 문서의 '
-              '주 사다리 · 예측 · S0 단계 2 인자 이름이 같다 · 명령이 하나도 없으면 실패')
+              '주 사다리 · 예측 · S0 단계 2 인자 이름이 같다 · 명령이 하나도 없으면 실패 · ★ 10-28 밤 PC5 §4 #4 (판정 --ledger 필수와 맞게) — 사다리 · '
+              '예측 명령 (감도 포함) = 원장 시도 꼴 (--ledger · --attempt) · dry-run = 그 둘 없이 (시도 꼴 입구가 dry-run 을 거부) 나머지 인자 같음 · 판정 '
+              '(다시 판정 뺌) = --ledger · 두 문서 판정 인자 이름 같음 · 두 문서에 원장 --init · --add (인자 이름 같음)')
 def t_K01():
     import ca_s0_census as S0m
 
     class _Took(Exception):
         pass
     got, bad, names, n_var = {}, [], {}, 0
+    LED = frozenset({'--ledger', '--attempt'})
 
     def _stage(a, contract):
         got['a'] = a
         return 0
 
+    def _stage1(a):                                       # ★ 10-28 밤 PC5 §4 #4 — 원장 · recover 단계도 받기만
+        got['a'] = a
+        return 0
+
     def _vpc(*_a, **_k):
         raise _Took()
-    saved = (RR.stage_ladder, RR.stage_predict, RR.stage_verdict, S0m.verify_plan_commit)
+    saved = (RR.stage_ladder, RR.stage_predict, RR.stage_verdict, RR.stage_ledger, RR.stage_recover, S0m.verify_plan_commit)
     RR.stage_ladder = RR.stage_predict = RR.stage_verdict = _stage
+    RR.stage_ledger = RR.stage_recover = _stage1
     S0m.verify_plan_commit = _vpc
     try:
         for doc in (KGY_DOC, REG_DOC):
@@ -9458,13 +9495,26 @@ def t_K01():
                     bad.append(f'{dn}:{ln} {args[:2]} → {rc}')
                     continue
                 a = got['a']
+                opts = frozenset(t for t in args if t.startswith('--') and t not in ('--dry-run', '--machine'))
+                if a.stage in ('ladder', 'predict'):
+                    dry = bool(getattr(a, 'dry_run', False))
+                    led = getattr(a, 'ledger', None) is not None and getattr(a, 'attempt', None) is not None
+                    if dry and (getattr(a, 'ledger', None) is not None or getattr(a, 'attempt', None) is not None):
+                        bad.append(f'{dn}:{ln} {a.stage} --dry-run 에 --ledger · --attempt (시도 꼴 입구가 dry-run 을 거부 · rc 2)')
+                    elif not dry and not led:
+                        bad.append(f'{dn}:{ln} {a.stage} 명령이 원장 시도 꼴 (--ledger · --attempt) 이 아니다 (판정 --ledger 필수 · 원장 판정 = 원장 시도 폴더만)')
+                if a.stage == 'verdict' and not getattr(a, 'reverify', None):
+                    if getattr(a, 'ledger', None) is None:
+                        bad.append(f'{dn}:{ln} 판정 명령에 --ledger 가 없다 (등록 R §10-5 가 ⑨ · 필수)')
+                    names.setdefault((dn, 'verdict'), set()).add(opts)
+                if a.stage == 'ledger':
+                    names.setdefault((dn, 'ledger_init' if a.init else 'ledger_add'), set()).add(opts - {'--resume'})
                 if a.variant:
                     n_var += 1
                     if not a.after_main:
                         bad.append(f'{dn}:{ln} 감도 --variant {a.variant} 인데 --after-main 없음 (MAIN_NOT_DONE · 등록 R §10-1)')
                 elif a.stage in ('ladder', 'predict'):
-                    names.setdefault((dn, a.stage), set()).add(
-                        frozenset(t for t in args if t.startswith('--') and t not in ('--dry-run', '--machine')))
+                    names.setdefault((dn, a.stage + ('_dry' if getattr(a, 'dry_run', False) else '')), set()).add(opts)
             for ln, args in doc_tool_commands(doc, 'ca_s0_census.py'):
                 if (args[args.index('--stage') + 1] if '--stage' in args[:-1] else None) != '2':
                     continue
@@ -9478,16 +9528,752 @@ def t_K01():
                 except SystemExit as e:
                     bad.append(f'{dn}:{ln} S0 단계 2 → argparse rc {e.code}')
     finally:
-        RR.stage_ladder, RR.stage_predict, RR.stage_verdict, S0m.verify_plan_commit = saved
-    for k in ('ladder', 'predict', 's0-2'):
+        RR.stage_ladder, RR.stage_predict, RR.stage_verdict, RR.stage_ledger, RR.stage_recover, S0m.verify_plan_commit = saved
+    for k in ('ladder', 'predict', 's0-2', 'verdict', 'ledger_init', 'ledger_add'):
         kg, rg = names.get(('kgy', k), set()), names.get(('reg', k), set())
         if not kg or not rg:
             bad.append(f'{k}: 통과한 명령 없음 (kgy {len(kg)} · 등록 {len(rg)})')
         elif kg != rg or len(kg) != 1:
             bad.append(f'{k}: 인자 이름이 다르다 — kgy {sorted(sorted(x) for x in kg)} ↔ 등록 {sorted(sorted(x) for x in rg)}')
+    for dn in ('kgy', 'reg'):                              # ★ 10-28 밤 PC5 §4 #4 — dry-run = 원장 시도 꼴 인자 − (--ledger · --attempt)
+        for k in ('ladder', 'predict'):
+            full = names.get((dn, k), set())
+            for dset in names.get((dn, k + '_dry'), set()):
+                if len(full) != 1 or dset != next(iter(full)) - LED:
+                    bad.append(f'{dn} {k} --dry-run 인자 이름 {sorted(dset)} ≠ 원장 시도 꼴 인자 − (--ledger · --attempt) {sorted(sorted(x) for x in full)}')
     if n_var == 0:
         bad.append('감도 명령 (--variant) 이 하나도 없다 (kgy §3 예시)')
     return not bad, bad
+
+
+# ── ★ 10-28 밤 사전 공격 5 회차 (PC5-01–11 · 변이 구멍 X09 · X18 · 봉인 전 남은 넷 #4 · #5 · #8 · #9 · 1저자 10-28 밤 "rint는 권고대로") ──
+#    계획 = docs/reviews/rint2_pc5_fix_plan_20261028.md · 탐침 = docs/reviews/rint2_rr_fix_evidence_20261023/preattack5/ (probe_real.py R1–R6 ·
+#    probe_unit.py U1–U8) 를 상주 시험으로 옮김 (고치기 전 판에서 옳은 이유로 실패 · X09 · X18 = 고치기 전에도 통과 · 그 가드를 끄면 실패)
+PC_MSGS = {   # 이름: (러너 로그 한 줄 = cupy · 파이썬 꼴 · 기대 원인)
+    'illegal_driver': ('cupy_backends.cuda.api.driver.CUDADriverError: CUDA_ERROR_ILLEGAL_ADDRESS: an illegal memory access was encountered', 'runner_rc'),
+    'assert_runtime': ('cupy_backends.cuda.api.runtime.CUDARuntimeError: cudaErrorAssert: device-side assert triggered', 'runner_rc'),
+    'misaligned': ('cupy_backends.cuda.api.driver.CUDADriverError: CUDA_ERROR_MISALIGNED_ADDRESS: misaligned address', 'runner_rc'),
+    'illegal_instruction': ('cupy_backends.cuda.api.driver.CUDADriverError: CUDA_ERROR_ILLEGAL_INSTRUCTION: an illegal instruction was encountered',
+                            'runner_rc'),
+    'launch_failed': ('cupy_backends.cuda.api.driver.CUDADriverError: CUDA_ERROR_LAUNCH_FAILED: unspecified launch failure', 'runner_rc'),
+    'launch_failure_rt': ('cupy_backends.cuda.api.runtime.CUDARuntimeError: cudaErrorLaunchFailure: unspecified launch failure', 'runner_rc'),
+    'invalid_value': ('cupy_backends.cuda.api.runtime.CUDARuntimeError: cudaErrorInvalidValue: invalid argument', 'runner_rc'),
+    'class_only': ('cupy_backends.cuda.api.runtime.CUDARuntimeError', 'runner_rc'),
+    'oom_cupy': ('cupy.cuda.memory.OutOfMemoryError: out of memory allocating 1024 bytes', 'resource'),
+    'oom_driver': ('cupy_backends.cuda.api.driver.CUDADriverError: CUDA_ERROR_OUT_OF_MEMORY: out of memory', 'resource'),
+    'oom_runtime': ('cupy_backends.cuda.api.runtime.CUDARuntimeError: cudaErrorMemoryAllocation: out of memory', 'resource'),
+    'host_memory': ('MemoryError', 'resource'),
+    'disk_full': ("OSError: [Errno 28] No space left on device: 'p2_x.json'", 'resource'),
+    'python_bug': ("Traceback (most recent call last):\nKeyError: 'sigma'", 'runner_rc'),
+    'oom_and_illegal': ('cupy.cuda.memory.OutOfMemoryError: out of memory\n'
+                        'cupy_backends.cuda.api.driver.CUDADriverError: CUDA_ERROR_ILLEGAL_ADDRESS: an illegal memory access was encountered', 'runner_rc'),
+}
+PC_WORDS5 = ('OutOfMemoryError', 'CUDA_ERROR_OUT_OF_MEMORY', 'cudaErrorMemoryAllocation', 'MemoryError', 'No space left on device')
+PC_MARK = 'L01_floor_arm1/.unchecked/p2_SBE_vgcf100_a0.json.first_result.json'
+
+
+def pc_res(d, n, keys=('status', 'side', 'cause', 'resume_ok', 'by')):
+    r = led_result(d, n) or {}
+    return {k: r.get(k) for k in keys}
+
+
+def pc_folder(tag, files):
+    """가짜 시도 폴더 (attempt_1) — files {상대 경로: 글}."""
+    f = Path(TD) / 'pc' / tag / 'attempt_1'
+    f.mkdir(parents=True)
+    for rel, body in files.items():
+        (f / rel).parent.mkdir(parents=True, exist_ok=True)
+        (f / rel).write_text(body, encoding='utf-8')
+    return f
+
+
+def pc_group(f, name, end, log=None, sub='', t='2026-10-28T00:00:00Z'):
+    """그룹 시작 · 끝 기록 (+ 런 로그) 하나 — 끝 = 기본 (사슬 · 원인 None · rc None · 확인) 위에 end."""
+    base = Path(f) / sub if sub else Path(f)
+    (base / 'groups').mkdir(parents=True, exist_ok=True)
+    tok = hashlib.sha256(f'{base}|{name}'.encode()).hexdigest()[:32]
+    L = {'schema': 'rint-r-group-v1', 'name': name, 'token': tok, 'pid': DEAD_PID, 'pgid': DEAD_PID, 'argv': ['bash'], 'host': RR.host_ident(),
+         'started_utc': t, 'by': 'chain', 'chain_pid': DEAD_PID}
+    E = dict({'schema': 'rint-r-group-v1', 'name': name, 'token': tok, 'rc': None, 'cause': None, 'signal': None, 'confirmed': True, 'left': [],
+              'left_after_exit': None, 'killed': 0, 'by': 'chain', 'ended_utc': t}, **end)
+    (base / 'groups' / f'{name}.launch.json').write_text(json.dumps(L), encoding='utf-8')
+    (base / 'groups' / f'{name}.end.json').write_text(json.dumps(E), encoding='utf-8')
+    if log is not None:
+        (base / 'logs').mkdir(parents=True, exist_ok=True)
+        (base / 'logs' / f'{name}.log').write_text(log, encoding='utf-8')
+
+
+def git_rc(repo, *a):
+    import subprocess as _sp
+    return _sp.run(['git', '-C', str(repo), *GIT_CFG, *a], capture_output=True).returncode
+
+
+def pc_copy_base(src, tag):
+    dst = Path(TD) / 'runs' / tag
+    shutil.copytree(src, dst, symlinks=True)
+    return dst
+
+
+@check('PC01', '★ 10-28 밤 PC5-01 (사전 공격 5 회차 R1 · 끝 커밋 교체) — 정직한 결과 줄 (CUDA 잘못된 주소 = runner_rc · 재실행 자격 False) 을 ⓐ git reset --hard '
+               'HEAD~1 + 원인 · 재실행 자격만 바꾼 줄 ⓑ commit --amend 로 바꿈 → 판정 (원 시도 하나 · 바꾼 원장) = ATTEMPT_LEDGER_MISMATCH (폴더 증거에서 다시 센 '
+               '결과 줄 ≠ 원장 · 옛 = 원장 대조를 지나 INPUT_MISSING) · ⓐ 원장의 --add --resume 1 뒤 재실행 시도 = 풀기 전 거부 (ATTEMPT_LEDGER_MISMATCH · 러너 '
+               '0 회 · 옛 = CALIBRATED) · 정직한 원장 = 원장 대조 통과')
+def t_PC01():
+    def go():
+        d, _rc, _so = led_new('PC01')
+        _r, n1, _s = led_add(d, 'ladder:P0')
+        a = lad_att('PC01', world('PC01_a', dict(PW, faults=[{'do': 'illegal_driver_after_mark', 'match': {'rj': 'inf'}}])), d, n1)
+        res1 = led_result(d, n1) or {}
+        forged = dict(res1, cause='resource', resume_ok=True)
+        dr = led_clone(d, 'PC01_reset')
+        git_(dr, 'reset', '-q', '--hard', 'HEAD~1')
+        led_hand(dr, forged, msg='바꾼 끝 줄 (시험 · reset)')
+        dm = led_clone(d, 'PC01_amend')
+        lines = led_raw(dm).decode('utf-8').splitlines()
+        lines[-1] = json.dumps(forged, sort_keys=True, separators=(',', ':'), ensure_ascii=False)
+        (dm / LEDGER_NAME).write_text('\n'.join(lines) + '\n', encoding='utf-8')
+        git_(dm, 'commit', '-q', '--amend', '-am', '바꾼 끝 줄 (시험 · amend)')
+        v = {'honest': ver_led('PC01_vh', [a['out']], d), 'reset': ver_led('PC01_vr', [a['out']], dr), 'amend': ver_led('PC01_vm', [a['out']], dm)}
+        base_r = pc_copy_base(a['base'], 'PC01_rbase')
+        add = led_add(dr, 'ladder:P0', resume=n1)
+        w = world('PC01_b')
+        b = lad_att('PC01_rb', w, dr, add[1], base=base_r) if add[1] else None
+        return res1, v, add, b, w
+    res1, v, add, b, w = scen('PC01', go)
+    codes = {k: stop_code(x) for k, x in v.items()}
+    why = {k: str((((x.get('v') or {}).get('stop')) or {}).get('cause'))[:160] for k, x in v.items()}
+    rj = (b['out'] / 'rejected.json') if b else None
+    rec = json.loads(rj.read_text(encoding='utf-8')) if rj is not None and rj.exists() else {}
+    refused = (add[0] == 3 and ('RESUME_NOT_ALLOWED' in add[2] or 'ATTEMPT_LEDGER_MISMATCH' in add[2])) or \
+              (add[0] == 0 and b is not None and b['rc'] == 3 and rec.get('code') == 'ATTEMPT_LEDGER_MISMATCH' and n_calls(w) == 0)
+    return (res1.get('cause') == 'runner_rc' and res1.get('resume_ok') is False and codes['honest'] not in LEDGER_STOPS
+            and codes['reset'] == codes['amend'] == 'ATTEMPT_LEDGER_MISMATCH' and '다시 센' in why['reset'] and '다시 센' in why['amend'] and refused,
+            (res1.get('cause'), codes, why, add[0], add[2][-160:], (b or {}).get('rc'), rec, n_calls(w)))
+
+
+@check('PC02', '★ 10-28 밤 PC5-01 (사전 공격 5 회차 R1 · merge -s ours 숨김) — 곁가지 (항목 커밋) 에 같은 결과 줄 (utc 만 다름 = 다시 센 칸 같음) 을 두고 '
+               'merge -s ours 로 본가지를 옮김 (정직한 결과 커밋 = 조상이지만 첫 부모 역사 밖) → 원장 역사 검사 = 사유 (첫 부모 밖 원장 커밋 · 옛 = None) · '
+               '판정 = ATTEMPT_LEDGER_MISMATCH · 정직한 원장 = 역사 None · 판정 원장 대조 통과')
+def t_PC02():
+    def go():
+        d, _rc, _so = led_new('PC02')
+        _r, n1, _s = led_add(d, 'ladder:P0')
+        a = lad_att('PC02', world('PC02_a'), d, n1)
+        res1 = led_result(d, n1) or {}
+        ds = led_clone(d, 'PC02_ours')
+        honest = git_(ds, 'rev-parse', 'HEAD')
+        main = git_(ds, 'rev-parse', '--abbrev-ref', 'HEAD')
+        git_(ds, 'checkout', '-q', '-b', 'side', 'HEAD~1')
+        led_hand(ds, dict(res1, utc='2026-10-28T00:00:00Z'), msg='같은 결과 줄 · 다른 utc (시험)')
+        git_(ds, 'merge', '-q', '-s', 'ours', '--no-edit', main)
+        merged = git_(ds, 'rev-parse', 'HEAD')
+        git_(ds, 'checkout', '-q', main)
+        git_(ds, 'reset', '-q', '--hard', merged)
+        return {'hist_honest': RR.ledger_history_problem(d, RR.ledger_head(d)), 'hist_ours': RR.ledger_history_problem(ds, RR.ledger_head(ds)),
+                'anc': git_rc(ds, 'merge-base', '--is-ancestor', honest, merged) == 0,
+                'v_honest': stop_code(ver_led('PC02_vh', [a['out']], d)), 'v_ours': ver_led('PC02_vo', [a['out']], ds)}
+    r = scen('PC02', go)
+    why = str((((r['v_ours'].get('v') or {}).get('stop')) or {}).get('cause'))
+    return (r['hist_honest'] is None and isinstance(r['hist_ours'], str) and '첫 부모' in r['hist_ours'] and r['anc']
+            and r['v_honest'] not in LEDGER_STOPS and stop_code(r['v_ours']) == 'ATTEMPT_LEDGER_MISMATCH' and '첫 부모' in why,
+            (r['hist_honest'], r['hist_ours'], r['anc'], r['v_honest'], stop_code(r['v_ours']), why[:200]))
+
+
+@check('PC03', '★ 10-28 밤 PC5-02 (1저자 Q2 · 사전 공격 5 회차 U1) 자원 낱말 = 메모리 · 디스크 다섯만 (OutOfMemoryError · CUDA_ERROR_OUT_OF_MEMORY · '
+               'cudaErrorMemoryAllocation · MemoryError · No space left on device) — 러너 rc 1 · 표지 뒤 로그 한 줄마다 결과 줄 원인: cupy 꼴 device-side assert · '
+               'misaligned · illegal instruction · launch failed (드라이버 · 런타임) · invalid value · 클래스 이름만 · 잘못된 주소 · 파이썬 결함 = runner_rc · '
+               '재실행 자격 False (옛 = 클래스 이름 CUDARuntimeError · CUDADriverError 가 표에 있어 resource) · 메모리 · 디스크 = resource · True · '
+               'OOM + 잘못된 주소 = runner_rc')
+def t_PC03():
+    got, want = {}, {}
+    for nm, (msg, cause) in PC_MSGS.items():
+        f = pc_folder(f'PC03_{nm}', {PC_MARK: '{}\n', 'logs/L01_floor.log': '[p2] run\n' + msg + '\n'})
+        s = {'status': 'STOPPED', 'stop': {'code': 'RUNNER_RC', 'run': 'L01_floor', 'reason': None},
+             'runs': [{'name': 'L01_floor', 'outdir': 'L01_floor_arm1', 'rc': 1, 'group_cause': None}]}
+        r = RR.attempt_result_line(1, f, s, 'chain')
+        got[nm] = (r['cause'], r['side'], r['resume_ok'])
+        want[nm] = (cause, 'post', cause == 'resource')
+    words = tuple(getattr(RR, 'RESOURCE_WORDS', ()))
+    bad = {k: (got[k], want[k]) for k in got if got[k] != want[k]}
+    return not bad and sorted(words) == sorted(PC_WORDS5), (bad, words)
+
+
+@check('PC04', '★ 10-28 밤 PC5-02 (사전 공격 5 회차 R2 · 실경로) — 표지 뒤 러너 로그 = cupy 꼴 device-side assert · launch failed → 결과 줄 stopped · 결과 뒤 · '
+               'runner_rc · 재실행 자격 False → --add --resume 1 = rc 3 RESUME_NOT_ALLOWED (원장 무변경 · 옛 = resource · rc 0)')
+def t_PC04():
+    def go():
+        out = {}
+        for tag, nm in (('assert', 'assert_runtime'), ('launch', 'launch_failed')):
+            d, _rc, _so = led_new(f'PC04_{tag}')
+            _r, n1, _s = led_add(d, 'ladder:P0')
+            a = lad_att(f'PC04_{tag}', world(f'PC04_{tag}', dict(PW, faults=[{'do': 'msg_after_mark', 'msg': PC_MSGS[nm][0], 'match': {'rj': 'inf'}}])),
+                        d, n1)
+            raw = led_raw(d)
+            rc_add, _n2, so_add = led_add(d, 'ladder:P0', resume=n1)
+            out[tag] = (stop_code(a), pc_res(d, n1), rc_add, 'RESUME_NOT_ALLOWED' in so_add, led_raw(d) == raw)
+        return out
+    out = scen('PC04', go)
+    want = ('RUNNER_RC', {'status': 'stopped', 'side': 'post', 'cause': 'runner_rc', 'resume_ok': False, 'by': 'chain'}, 3, True, True)
+    return all(v == want for v in out.values()), out
+
+
+PC05_CHAIN = r'''
+import json, os, sys
+from pathlib import Path
+sys.path.insert(0, sys.argv[1])
+import rint_r_chain as RR
+d = Path(sys.argv[2])
+with open(d / 'log.txt', 'w') as lf:
+    rc, cause, end = RR.run_in_group(['bash', '-c', 'sleep ' + sys.argv[3]], str(d), dict(os.environ), lf, 60, d / 'groups', 'L01_floor')
+print(json.dumps({'rc': rc, 'cause': cause, 'confirmed': end['confirmed'], 'by': end['by']}), flush=True)
+'''
+
+
+@check('PC05', '★ 10-28 밤 PC5-03 (사전 공격 5 회차 U6) — 사슬 부모 (시작 기록 chain_pid · 따로 프로세스 · 러너 4 s) 가 살아 있는데 --stage recover → rc 3 · '
+               '끝 기록을 쓰지 않는다 · 러너 그룹 그대로 살아 있다 (옛 = 죽이고 by recover · parent_dead) · 사슬이 스스로 끝 기록 (by chain · rc 0 · 원인 None · '
+               '확인) · 사슬 부모 pid 의 시작 시각이 다름 (pid 다시 쓰임) = 산 사슬 아님 → recover 확인 (rc 0) · 시작 시각 칸 없음 + 그 pid 삶 = 미확인 (rc 3 · 보수)')
+def t_PC05():
+    def go():
+        import subprocess as _sp
+        d = Path(TD) / 'runs' / 'PC05'
+        (d / 'groups').mkdir(parents=True)
+        (d / 'chain.py').write_text(PC05_CHAIN, encoding='utf-8')
+        p = _sp.Popen([sys.executable, '-I', str(d / 'chain.py'), str(SCRIPTS), str(d), '4'], stdout=_sp.PIPE, text=True)
+        lp = d / 'groups' / 'L01_floor.launch.json'
+        t_end, L = time.time() + 20, {}
+        while time.time() < t_end:
+            try:
+                L = json.loads(lp.read_text(encoding='utf-8'))
+                if L.get('pid'):
+                    break
+            except (OSError, ValueError):
+                pass
+            time.sleep(0.05)
+        rc, so = call(['--stage', 'recover', '--out', str(d)])
+        end_after_recover = (d / 'groups' / 'L01_floor.end.json').exists()
+        alive_after = gr_alive(L.get('token')) if L.get('token') else None
+        chain_out = p.communicate(timeout=60)[0].strip()
+        er = json.loads((d / 'groups' / 'L01_floor.end.json').read_text(encoding='utf-8')) if (d / 'groups' / 'L01_floor.end.json').exists() else {}
+        o2, _t = gr_fake_launch('PC05_reused', chain={'chain_pid': os.getppid(), 'chain_start': 1})
+        rc2, so2 = call(['--stage', 'recover', '--out', str(o2)])
+        o3, _t = gr_fake_launch('PC05_nostart', chain={'chain_pid': os.getppid()})
+        rc3, so3 = call(['--stage', 'recover', '--out', str(o3)])
+        return {'rc': rc, 'so': so[-300:], 'end_after_recover': end_after_recover, 'alive_after': alive_after, 'chain_out': chain_out, 'er': er,
+                'chain_pid_ok': L.get('chain_pid') == p.pid, 'rc2': rc2, 'end2': gr_records_raw(o2), 'rc3': rc3, 'end3': gr_records_raw(o3)}
+    r = scen('PC05', go)
+    co = json.loads(r['chain_out']) if r['chain_out'].startswith('{') else {}
+    er, e2 = r['er'], r['end2'] or {}
+    return (r['chain_pid_ok'] and r['rc'] == 3 and r['end_after_recover'] is False and bool(r['alive_after']) and co.get('rc') == 0
+            and co.get('cause') is None and er.get('by') == 'chain' and er.get('confirmed') is True and er.get('rc') == 0
+            and r['rc2'] == 0 and e2.get('confirmed') is True and r['rc3'] == 3 and r['end3'] is None,
+            dict({k: r[k] for k in ('rc', 'end_after_recover', 'alive_after', 'chain_out', 'rc2', 'rc3', 'end3')}, er=er, e2=e2, so=r['so']))
+
+
+@check('PC06', '★ 10-28 밤 PC5-04 (1저자 Q3 · 사전 공격 5 회차 U2) — 원장 시도 폴더의 시작 기록이 같은 machine_id · 다른 boot_id (끝 기록 없음) → recover --ledger '
+               '= 미확인 rc 3 · 결과 줄 없음 (옛 = 재부팅 확인 · 결과 줄) · 운영자 확인 표지 (--operator-confirm <시도> --operator-why <사유>) → 확인 · 끝 기록 '
+               'operator 칸 (시도 · 사유) · 결과 줄 interrupted · by recover · 표지 칸 잘못 (--ledger 없음 · 빈 사유 = rc 2 · 이 바탕에 없는 시도 번호 = rc 3 · 그대로)')
+def t_PC06():
+    def go():
+        d, _rc, _so = led_new('PC06')
+        _r, n1, _s = led_add(d, 'ladder:P0')
+        f = Path(TD) / 'runs' / 'PC06' / f'attempt_{n1}'
+        (f / 'groups').mkdir(parents=True)
+        (f / 'attempt.json').write_text(json.dumps({'schema': 'rint-r-attempt-v1', 'n': n1, 'target': 'ladder:P0', 'machine': MACH, 'resume_of': None,
+                                                    'ledger_commit': git_(d, 'rev-parse', 'HEAD')}), encoding='utf-8')
+        me = RR.host_ident()
+        other = dict(me, boot_id='00000000-0000-0000-0000-000000000000' if me.get('boot_id') != '00000000-0000-0000-0000-000000000000'
+                     else '11111111-1111-1111-1111-111111111111')
+        tok = hashlib.sha256(b'PC06').hexdigest()[:32]
+        (f / 'groups' / 'L01_floor.launch.json').write_text(json.dumps({'schema': 'rint-r-group-v1', 'name': 'L01_floor', 'token': tok, 'pid': DEAD_PID,
+                                                                        'pgid': DEAD_PID, 'argv': ['bash'], 'host': other,
+                                                                        'started_utc': '2026-10-28T00:00:00Z', 'by': 'chain',
+                                                                        'chain_pid': DEAD_PID}), encoding='utf-8')
+        out = {}
+        out['default'] = call(['--stage', 'recover', '--out', str(f), '--ledger', str(d)])
+        out['end_default'], out['res_default'] = gr_records_raw(f), led_result(d, n1)
+        why = '재부팅 확인 (uptime · 사슬 프로세스 없음 · 시험)'
+        out['noledger'] = call(['--stage', 'recover', '--out', str(f), '--operator-confirm', str(n1), '--operator-why', why])[0]
+        out['empty_why'] = call(['--stage', 'recover', '--out', str(f), '--ledger', str(d), '--operator-confirm', str(n1), '--operator-why', '  '])[0]
+        out['wrong_n'] = call(['--stage', 'recover', '--out', str(f), '--ledger', str(d), '--operator-confirm', '9', '--operator-why', why])[0]
+        out['end_wrong'], out['res_wrong'] = gr_records_raw(f), led_result(d, n1)
+        out['ok'] = call(['--stage', 'recover', '--out', str(f), '--ledger', str(d), '--operator-confirm', str(n1), '--operator-why', why])
+        out['end_ok'], out['res_ok'] = gr_records_raw(f), led_result(d, n1)
+        out['dig'] = tree_digest(f)
+        return out, n1, why
+    out, n1, why = scen('PC06', go)
+    ed, ew, eo = out['end_default'] or {}, out['end_wrong'] or {}, out['end_ok'] or {}
+    op = eo.get('operator') if isinstance(eo.get('operator'), dict) else {}
+    ro = out['res_ok'] or {}
+    return (out['default'][0] == 3 and ed.get('confirmed') is False and 'machine_id' in str(ed.get('why')) and '--operator-confirm' in str(ed.get('why'))
+            and out['res_default'] is None and out['noledger'] == 2 and out['empty_why'] == 2 and out['wrong_n'] == 3 and ew.get('confirmed') is False
+            and out['res_wrong'] is None and out['ok'][0] == 0 and eo.get('confirmed') is True and op.get('attempt') == n1 and op.get('why') == why
+            and ro.get('status') == 'interrupted' and ro.get('by') == 'recover' and ro.get('folder_sha256') == out['dig'],
+            {k: v for k, v in out.items() if k not in ('dig',)})
+
+
+@check('PC07', '★ 10-28 밤 PC5-05 (사전 공격 5 회차 R5) — 원 시도 OOM (표지 뒤 · resource · 자격) → 재실행 시도가 단계 안 관문 (--max-hours 3 ≠ 계획 2 · '
+               'NOT_REGISTERED · 결과 전) 에서 멈춤 → 바른 인자로 --add --resume 1 = rc 0 (옛 = RESUME_NOT_ALLOWED · 대상 영구 멈춤) → 재실행 CALIBRATED · 채택 '
+               '사슬 [1, 3] (결과 전 멈춘 재실행 2 = 건너뜀) · 판정 원장 대조 통과')
+def t_PC07():
+    def go():
+        d, _rc, _so = led_new('PC07')
+        _r, n1, _s = led_add(d, 'ladder:P0')
+        a = lad_att('PC07', world('PC07_a', dict(PW, faults=[{'do': 'oom_after_mark', 'match': {'rj': 'inf'}}])), d, n1)
+        _r, n2, _s = led_add(d, 'ladder:P0', resume=n1)
+        b = lad_att('PC07', world('PC07_b'), d, n2, base=a['base'], max_hours='3')
+        r2 = pc_res(d, n2)
+        add3 = led_add(d, 'ladder:P0', resume=n1)
+        c = lad_att('PC07', world('PC07_c'), d, add3[1], base=a['base']) if add3[1] else None
+        ad = RR.adoption(RR.ledger_parse(led_raw(d)), 'ladder:P0')
+        v = ver_led('PC07_v', [c['out']], d) if c else None
+        return a, b, r2, add3, c, ad, v
+    a, b, r2, add3, c, ad, v = scen('PC07', go)
+    return (stop_code(a) == 'RUNNER_RC' and stop_code(b) == 'NOT_REGISTERED'
+            and r2 == {'status': 'stopped', 'side': 'pre', 'cause': 'gate', 'resume_ok': False, 'by': 'chain'} and add3[0] == 0
+            and c is not None and c['rc'] == 0 and (c['sum'] or {}).get('status') == 'CALIBRATED' and ad.get('chain') == [1, 3]
+            and ad.get('effective') == 3 and v is not None and stop_code(v) not in LEDGER_STOPS,
+            (stop_code(a), stop_code(b), r2, add3[0], add3[2][-160:], (c or {}).get('rc'), ad, v and stop_code(v)))
+
+
+@check('PC08', '★ 10-28 밤 PC5-06 (사전 공격 5 회차 R6 · 실경로) — 표지 뒤 러너 로그에 cupy 꼴 잘못된 주소 (그 뒤 잠) 를 본 뒤 사슬 부모 (따로 프로세스) SIGKILL → '
+               '요약 없음 · 결과 줄 없음 → recover --ledger = 결과 줄 interrupted · 결과 뒤 · 원인 runner_rc (런 로그 · 같은 낱말 규칙) · 재실행 자격 False → '
+               '--add --resume 1 = rc 3 RESUME_NOT_ALLOWED (옛 = parent_dead · 자격 True · 재실행 CALIBRATED)')
+def t_PC08():
+    import signal as _sig
+
+    def go():
+        d, _rc, _so = led_new('PC08')
+        _r, n1, _s = led_add(d, 'ladder:P0')
+        base = Path(TD) / 'runs' / 'PC08'
+        w = world('PC08', dict(PW, faults=[{'do': 'msg_sleep_after_mark', 'msg': PC_MSGS['illegal_driver'][0], 's': 8.0, 'match': {'rj': 'inf'}}]))
+        pr = gr_spawn_chain('PC08', ladder_argv(base) + ['--ledger', str(d), '--attempt', str(n1)], w)
+        logp = base / f'attempt_{n1}' / 'logs' / 'L01_floor.log'
+        t_end, seen = time.time() + 30, False
+        while time.time() < t_end and not seen:
+            try:
+                seen = 'CUDA_ERROR_ILLEGAL_ADDRESS' in logp.read_text(encoding='utf-8', errors='replace')
+            except OSError:
+                pass
+            time.sleep(0.05)
+        os.kill(pr.pid, _sig.SIGKILL)
+        pr.wait()
+        before = led_result(d, n1)
+        rc_rec, so_rec = call(['--stage', 'recover', '--out', str(base / f'attempt_{n1}'), '--ledger', str(d)], w)
+        r1 = pc_res(d, n1)
+        raw = led_raw(d)
+        rc_add, _n2, so_add = led_add(d, 'ladder:P0', resume=n1)
+        return seen, before, rc_rec, so_rec, r1, rc_add, so_add, led_raw(d) == raw
+    seen, before, rc_rec, so_rec, r1, rc_add, so_add, same = scen('PC08', go)
+    return (seen and before is None and rc_rec == 0
+            and r1 == {'status': 'interrupted', 'side': 'post', 'cause': 'runner_rc', 'resume_ok': False, 'by': 'recover'}
+            and rc_add == 3 and 'RESUME_NOT_ALLOWED' in so_add and same, (seen, before, rc_rec, so_rec[-200:], r1, rc_add, so_add[-160:], same))
+
+
+@check('PC09', '★ 10-28 밤 PC5-06 (사전 공격 5 회차 U5) 요약 없는 시도의 결과 줄 (recover) — 그룹 기록 · 런 로그 · 러너 rc 를 같은 낱말 규칙으로: recover 가 '
+               '끝낸 런 + 로그 잘못된 주소 = runner_rc · False · + 메모리 낱말 = resource · True · 낱말 없음 = parent_dead · True · 사슬이 끝 기록을 쓴 러너 rc 1 '
+               '(요약 전 사망) = 낱말 없음 runner_rc · 메모리 resource · 시간 초과 = timeout · + 잘못된 주소 = runner_rc · 신호 = signal · 사슬 예외 = '
+               'chain_exception · False · 로그 없음 = 자격 False (보수) · 다 끝난 런 = parent_dead · True · 그룹 기록 없음 + 표지 = 자격 False · 봉인 원천 '
+               '(graph_src) 런 = 같은 규칙 · 표지 없음 = 결과 전 False (옛 = 다 parent_dead · True)')
+def t_PC09():
+    ill, oom, plain = PC_MSGS['illegal_driver'][0] + '\n', PC_MSGS['oom_cupy'][0] + '\n', '[p2] run\n'
+    rec = {'by': 'recover', 'cause': 'parent_dead'}
+    cases = {   # 이름: (그룹 [(런, 끝 칸, 로그, 하위)], 표지, 기대 (원인, 결과, 자격))
+        'rec_illegal': ([('L01_floor', rec, ill, '')], True, ('runner_rc', 'post', False)),
+        'rec_oom': ([('L01_floor', rec, oom, '')], True, ('resource', 'post', True)),
+        'rec_plain': ([('L01_floor', rec, plain, '')], True, ('parent_dead', 'post', True)),
+        'chain_rc1': ([('L01_floor', {'rc': 1}, plain, '')], True, ('runner_rc', 'post', False)),
+        'chain_rc1_oom': ([('L01_floor', {'rc': 1}, oom, '')], True, ('resource', 'post', True)),
+        'chain_timeout': ([('L01_floor', {'cause': 'timeout'}, plain, '')], True, ('timeout', 'post', True)),
+        'chain_timeout_ill': ([('L01_floor', {'cause': 'timeout'}, ill, '')], True, ('runner_rc', 'post', False)),
+        'chain_signal': ([('L01_floor', {'cause': 'signal', 'signal': 'SIGTERM'}, plain, '')], True, ('signal', 'post', True)),
+        'chain_exception': ([('L01_floor', {'cause': 'exception'}, plain, '')], True, ('chain_exception', 'post', False)),
+        'rec_nolog': ([('L01_floor', rec, None, '')], True, ('parent_dead', 'post', False)),
+        'all_done': ([('L01_floor', {'rc': 0}, plain, '')], True, ('parent_dead', 'post', True)),
+        'no_groups': ([], True, ('parent_dead', 'post', False)),
+        'two_runs': ([('L01_floor', {'rc': 0}, plain, ''), ('L02_ceiling', rec, ill, '')], True, ('runner_rc', 'post', False)),
+        'graph_src': ([('L01_floor', {'rc': 0}, plain, ''), ('G01_L01_floor_a0', rec, ill, 'graph_src')], True, ('runner_rc', 'post', False)),
+        'pre_plain': ([('L01_floor', rec, plain, '')], False, ('parent_dead', 'pre', False)),
+    }
+    got = {}
+    for nm, (groups, mark, _w) in cases.items():
+        f = pc_folder(f'PC09_{nm}', {PC_MARK: '{}\n'} if mark else {})
+        for i, (run, end, log, sub) in enumerate(groups):
+            pc_group(f, run, end, log, sub=sub, t=f'2026-10-28T00:00:0{i}Z')
+        r = RR.attempt_result_line(1, f, None, 'recover')
+        got[nm] = (r['status'], r['cause'], r['side'], r['resume_ok'])
+    bad = {k: (got[k], ('interrupted',) + cases[k][2]) for k in cases if got[k] != ('interrupted',) + cases[k][2]}
+    return not bad, bad
+
+
+@check('PC10', '★ 10-28 밤 PC5-06 ② (사전 공격 5 회차 R3) 사슬 예외 (Stop 아님 · 팔 읽기 중 KeyError) — 원장 시도 → 단계 요약 (STOPPED · 멈춤 CHAIN_EXCEPTION · '
+               '사유에 예외 이름) · 결과 줄 by chain · 원인 chain_exception · 재실행 자격 False · 예외는 다시 올린다 (화면 · rc) → --add --resume 1 = rc 3 '
+               '(옛 = 요약 · 결과 줄 없음 → recover = parent_dead · 자격 True)')
+def t_PC10():
+    def go():
+        d, _rc, _so = led_new('PC10')
+        _r, n1, _s = led_add(d, 'ladder:P0')
+        orig = RR.read_run
+
+        def boom(*_a, **_k):
+            raise KeyError('시험: 팔 읽기 중 사슬 결함 (Stop 아님)')
+        RR.read_run = boom
+        exc = None
+        try:
+            lad_att('PC10', world('PC10_a'), d, n1)
+        except KeyError as e:
+            exc = repr(e)
+        finally:
+            RR.read_run = orig
+        f = Path(TD) / 'runs' / 'PC10' / f'attempt_{n1}'
+        s = json.loads((f / 'ladder_summary.json').read_text(encoding='utf-8')) if (f / 'ladder_summary.json').exists() else None
+        r1 = led_result(d, n1)
+        raw = led_raw(d)
+        rc_add, _n2, so_add = led_add(d, 'ladder:P0', resume=n1)
+        return exc, s, r1, rc_add, so_add, led_raw(d) == raw
+    exc, s, r1, rc_add, so_add, same = scen('PC10', go)
+    st = (s or {}).get('stop') or {}
+    r1 = r1 or {}
+    return (exc is not None and (s or {}).get('status') == 'STOPPED' and st.get('code') == 'CHAIN_EXCEPTION' and 'KeyError' in str(st.get('cause'))
+            and r1.get('by') == 'chain' and r1.get('status') == 'stopped' and r1.get('cause') == 'chain_exception' and r1.get('resume_ok') is False
+            and rc_add == 3 and same, (exc, (s or {}).get('status'), st, r1, rc_add, so_add[-160:]))
+
+
+@check('PC11', '★ 10-28 밤 PC5-06 같은 부류 (같은 낱말 규칙 · 요약 있는 길) — 표지 뒤 러너 로그에 잘못된 주소를 찍은 뒤 사슬이 SIGTERM (기다림 중 · 신호 원인) → '
+               '결과 줄 원인 runner_rc · 재실행 자격 False → --add --resume 1 = rc 3 (옛 = signal · 자격 True · 코드 결함 꼴을 신호로 비켜 재실행)')
+def t_PC11():
+    import signal as _sig
+    import threading
+
+    def go():
+        d, _rc, _so = led_new('PC11')
+        _r, n1, _s = led_add(d, 'ladder:P0')
+        hit_ = []
+
+        def guard(signum, frame):
+            hit_.append(signum)
+        old = _sig.signal(_sig.SIGTERM, guard)
+        logp = Path(TD) / 'runs' / 'PC11' / f'attempt_{n1}' / 'logs' / 'L01_floor.log'
+
+        def fire():
+            t_end = time.time() + 15.0
+            while time.time() < t_end:
+                try:
+                    if 'CUDA_ERROR_ILLEGAL_ADDRESS' in logp.read_text(encoding='utf-8', errors='replace'):
+                        break
+                except OSError:
+                    pass
+                time.sleep(0.05)
+            time.sleep(0.2)
+            os.kill(os.getpid(), _sig.SIGTERM)
+        try:
+            th = threading.Thread(target=fire)
+            th.start()
+            a = lad_att('PC11', world('PC11_a', dict(PW, faults=[{'do': 'msg_sleep_after_mark', 'msg': PC_MSGS['illegal_driver'][0], 's': 8.0,
+                                                                  'match': {'rj': 'inf'}}])), d, n1)
+            th.join()
+        finally:
+            _sig.signal(_sig.SIGTERM, old)
+        raw = led_raw(d)
+        rc_add, _n2, so_add = led_add(d, 'ladder:P0', resume=n1)
+        return stop_code(a), pc_res(d, n1), rc_add, led_raw(d) == raw, hit_
+    code, r1, rc_add, same, hit_ = scen('PC11', go)
+    return (code == 'RUNNER_RC' and r1 == {'status': 'stopped', 'side': 'post', 'cause': 'runner_rc', 'resume_ok': False, 'by': 'chain'}
+            and rc_add == 3 and same and not hit_, (code, r1, rc_add, same, hit_))
+
+
+@check('PC12', '★ 10-28 밤 변이 구멍 X09 (사전 공격 5 회차 · 결과 줄 꼴) — 손으로 커밋한 결과 줄 rejected 인데 결과 뒤 (재실행 자격 False · True) → 원장 꼴 거부 '
+               '(--add = rc 3 ATTEMPT_LEDGER_MISMATCH · 사유 "거부인데 결과 뒤" · 원장 무변경) · rejected · 결과 전 · 자격 True = 같은 멈춤 (다른 사유) · '
+               '정상 rejected 결과 전 = 통과 (그 가드를 끄면 첫 둘이 통과한다)')
+def t_PC12():
+    d, _rc, _so = led_new('PC12')
+    _r, _n1, _s = led_add(d, 'ladder:P0')
+    line = {'kind': 'result', 'n': 1, 'status': 'rejected', 'stop': {'code': 'MACHINE_NOT_ALLOWED', 'run': None, 'reason': None}, 'side': 'pre',
+            'cause': 'presolve', 'resume_ok': False, 'folder': 'attempt_1', 'folder_sha256': '0' * 64, 'by': 'chain', 'utc': 'x'}
+    got = {}
+    for tag, over in (('post', {'side': 'post'}), ('post_ok', {'side': 'post', 'resume_ok': True}), ('pre_ok', {'resume_ok': True}), ('fine', {})):
+        dd = led_clone(d, f'PC12_{tag}')
+        led_hand(dd, dict(line, **over))
+        raw = led_raw(dd)
+        rc, _n, so = led_add(dd, 'ladder:P1')
+        got[tag] = (rc, 'ATTEMPT_LEDGER_MISMATCH' in so, '거부인데 결과 뒤' in so, led_raw(dd) == raw)
+    return (got['post'] == (3, True, True, True) and got['post_ok'] == (3, True, True, True) and got['pre_ok'][:2] == (3, True)
+            and got['pre_ok'][3] and got['fine'][0] == 0, got)
+
+
+@check('PC13', '★ 10-28 밤 변이 구멍 X18 (사전 공격 5 회차 · recover --ledger 의 거부 기록 길) — 재실행 시도가 풀기 전 거부 (기계 이름 다름) 기록 (rejected.json) '
+               '만 쓰고 결과 줄 전에 죽은 꼴 → recover --ledger = 결과 줄 rejected · 결과 전 · presolve · 멈춤 = 거부 기록의 이름 (MACHINE_NOT_ALLOWED) · '
+               'by recover · 폴더 요약 sha = 독립 계산 → 다음 --add --resume 1 rc 0 (그 길을 끄면 interrupted · parent_dead 로 쓴다)')
+def t_PC13():
+    def go():
+        d, _rc, _so = led_new('PC13')
+        _r, n1, _s = led_add(d, 'ladder:P0')
+        base = Path(TD) / 'runs' / 'PC13'
+        lad_att('PC13', world('PC13_a', dict(PW, faults=[{'do': 'oom_after_mark', 'match': {'rj': 'inf'}}])), d, n1, base=base)
+        _r, n2, _s = led_add(d, 'ladder:P0', resume=n1)
+        old = RR.ledger_append
+
+        def dies(repo, obj, msg, expect=None):
+            if obj.get('kind') == 'result' and obj.get('n') == n2:
+                raise RR.Stop('ATTEMPT_LEDGER_MISMATCH', '결과 줄 커밋 전 죽음 흉내 (시험)')
+            return old(repo, obj, msg, expect=expect)
+        RR.ledger_append = dies
+        try:
+            w = world('PC13_b')
+            b = lad_att('PC13', w, d, n2, base=base, machine='gabia')
+        finally:
+            RR.ledger_append = old
+        f = base / f'attempt_{n2}'
+        rj = f / 'rejected.json'
+        before = led_result(d, n2)
+        rc_rec, so_rec = call(['--stage', 'recover', '--out', str(f), '--ledger', str(d)])
+        r2 = led_result(d, n2) or {}
+        add3 = led_add(d, 'ladder:P0', resume=n1)
+        return b['rc'], rj.exists(), before, rc_rec, so_rec, r2, add3, n_calls(w), tree_digest(f)
+    rc_b, has_rj, before, rc_rec, so_rec, r2, add3, calls, dig = scen('PC13', go)
+    return (rc_b == 3 and has_rj and before is None and rc_rec == 0 and r2.get('status') == 'rejected' and r2.get('side') == 'pre'
+            and r2.get('cause') == 'presolve' and r2.get('resume_ok') is False and (r2.get('stop') or {}).get('code') == 'MACHINE_NOT_ALLOWED'
+            and r2.get('by') == 'recover' and r2.get('folder_sha256') == dig and add3[0] == 0 and calls == 0,
+            (rc_b, has_rj, before, rc_rec, so_rec[-200:], r2, add3[0], add3[2][-120:], calls))
+
+
+PC14_CHILD = r'''
+import ctypes, os, sys, threading, time
+late = sys.argv[1]
+def w():
+    time.sleep(2.0)
+    open(late, "w").write("late %d\n" % os.getpid())
+threading.Thread(target=w).start()
+time.sleep(0.2)
+ctypes.CDLL(None).pthread_exit(None)
+'''
+
+
+def pc_fake_proc(root, pid, state='S', start=10 ** 9, uid=None, environ=b'', tasks=None):
+    """가짜 /proc 항목 (PC14) — stat (상태 · 시작 시각 = 22 째 칸) · status (Uid 첫 칸) · environ (bytes · None = 폴더 = 못 읽음) · tasks = {tid: (상태, environ)}."""
+    p = Path(root) / str(pid)
+    p.mkdir(parents=True)
+    rest = [state, '1', str(pid), str(pid), '0', '-1'] + ['0'] * 13 + [str(start)] + ['0'] * 20
+    (p / 'stat').write_text(f'{pid} (fake) ' + ' '.join(rest) + '\n', encoding='ascii')
+    u = os.getuid() if uid is None else uid
+    (p / 'status').write_text(f'Name:\tfake\nUid:\t{u}\t{u}\t{u}\t{u}\n', encoding='ascii')
+    if environ is None:
+        (p / 'environ').mkdir()
+    else:
+        (p / 'environ').write_bytes(environ)
+    for tid, (tst, tenv) in (tasks or {}).items():
+        t = p / 'task' / str(tid)
+        t.mkdir(parents=True)
+        trest = [tst, '1', str(pid), str(pid), '0', '-1'] + ['0'] * 13 + [str(start)] + ['0'] * 20
+        (t / 'stat').write_text(f'{tid} (fake) ' + ' '.join(trest) + '\n', encoding='ascii')
+        if tenv is None:
+            (t / 'environ').mkdir()
+        else:
+            (t / 'environ').write_bytes(tenv)
+
+
+@check('PC14', '★ 10-28 밤 PC5-07 (사전 공격 5 회차 U3) 그룹 원 찾기 — ⓐ 실경로: 러너 (rc 0) 가 띄운 자식의 주 스레드만 끝남 (상태 Z · 다른 스레드 삶 · 2 s 뒤 '
+               '파일) → 사슬이 그 프로세스를 찾아 죽인다 (끝 기록 확인 · left_after_exit ≥ 1 · 늦은 파일 없음 · 옛 = 못 봄 · 파일 생김) ⓑ 가짜 /proc: environ '
+               '을 못 읽는 같은 사용자 프로세스 = 미확인 (None) · Z 지도자 + 산 스레드의 environ 에 표지 = 그룹 원 · 다 끝난 Z = 아님 · 그룹 시작 전에 생긴 '
+               '못 읽는 프로세스 · 다른 사용자 (root 아님) = 셈 밖')
+def t_PC14():
+    d = Path(TD) / 'runs' / 'PC14'
+    d.mkdir(parents=True)
+    (d / 'child.py').write_text(PC14_CHILD, encoding='utf-8')
+    late = d / 'late.txt'
+    (d / 'runner.sh').write_text(f'#!/bin/bash\n"{sys.executable}" -I "{d / "child.py"}" "{late}" &\nsleep 0.6\nexit 0\n', encoding='utf-8')
+    with open(d / 'log.txt', 'w', encoding='utf-8') as lf:
+        rc, cause, end = RR.run_in_group(['bash', str(d / 'runner.sh')], str(d), dict(os.environ), lf, 30, d / 'groups', 'PC14')
+    time.sleep(3.0)
+    a_ok = rc == 0 and cause is None and end.get('confirmed') is True and (end.get('left_after_exit') or 0) >= 1 and not late.exists()
+    tok = 'a' * 32
+    needle = f'RINT_RUN_TOKEN={tok}'.encode()
+    fp = Path(TD) / 'pc' / 'PC14_proc'
+    old = getattr(RR, 'PROC_DIR', None)
+    got = {}
+    try:
+        RR.PROC_DIR = str(fp / 'unread')
+        pc_fake_proc(fp / 'unread', 900001, environ=None)
+        got['unread'] = RR.group_members(tok)
+        RR.PROC_DIR = str(fp / 'zlive')
+        pc_fake_proc(fp / 'zlive', 900002, state='Z', environ=b'', tasks={900002: ('Z', b''), 900003: ('S', b'A=1\0' + needle + b'\0')})
+        got['zlive'] = RR.group_members(tok)
+        RR.PROC_DIR = str(fp / 'zdead')
+        pc_fake_proc(fp / 'zdead', 900004, state='Z', environ=b'', tasks={900004: ('Z', b'')})
+        got['zdead'] = RR.group_members(tok)
+        RR.PROC_DIR = str(fp / 'member')
+        pc_fake_proc(fp / 'member', 900005, environ=needle + b'\0')
+        pc_fake_proc(fp / 'member', 900006, environ=b'X=1\0')
+        got['member'] = RR.group_members(tok)
+        RR.PROC_DIR = str(fp / 'old')
+        pc_fake_proc(fp / 'old', 900007, start=100, environ=None)
+        got['old_since'] = RR.group_members(tok, since=1000)
+        RR.PROC_DIR = str(fp / 'other_uid')
+        pc_fake_proc(fp / 'other_uid', 900008, uid=os.getuid() + 4242, environ=None)
+        got['other_uid_nonroot'] = RR.group_members(tok, uid=1000)
+        got['same_uid_nonroot'] = RR.group_members(tok, uid=os.getuid() + 4242)
+    except TypeError as e:                                  # 고치기 전 판 = since · uid 인자 없음
+        got['error'] = f'TypeError: {e}'
+    finally:
+        if old is None:
+            try:
+                del RR.PROC_DIR
+            except AttributeError:
+                pass
+        else:
+            RR.PROC_DIR = old
+    want = {'unread': None, 'zlive': [900002], 'zdead': [], 'member': [900005], 'old_since': [], 'other_uid_nonroot': [], 'same_uid_nonroot': None}
+    return a_ok and got == want, ({'rc': rc, 'cause': cause, 'end': {k: end.get(k) for k in ('confirmed', 'left_after_exit', 'killed')},
+                                   'late': late.exists()}, got)
+
+
+@check('PC15', '★ 10-28 밤 PC5-08 (사전 공격 5 회차 U4 · U7) 원장 덧붙임 = 잠금 · 되돌림 — ⓐ git index.lock 이 있을 때 --add → rc 3 · 작업 파일 = HEAD (되돌림 · '
+               '옛 = 커밋 안 된 줄이 남아 원장 전체 멈춤) · 잠금을 걷은 뒤 --add rc 0 (번호 1) ⓑ 두 스레드가 같은 원장 판 (expect) 으로 동시에 덧붙임 (덧붙이기 직전 '
+               '만나게 함) → 하나만 커밋 · 다른 하나 = ATTEMPT_LEDGER_MISMATCH · 원장 꼴 그대로 (항목 하나 · 옛 = 같은 번호 항목 둘) ⓒ --init 중 git 실패 → '
+               '원장 파일 되돌림 (없음) · 다시 --init rc 0')
+def t_PC15():
+    import threading
+    got = {}
+    d, _rc, _so = led_new('PC15a')
+    lock = d / '.git' / 'index.lock'
+    lock.write_text('', encoding='utf-8')
+    try:
+        rc1, _n1, so1 = led_add(d, 'ladder:P0')
+    finally:
+        lock.unlink()
+    clean = git_(d, 'status', '--porcelain') == ''
+    try:
+        RR.ledger_now(d)
+        now_ok = True
+    except RR.Stop:
+        now_ok = False
+    rc2, n2, _so2 = led_add(d, 'ladder:P0')
+    got['a'] = (rc1, clean, now_ok, rc2, n2)
+    d2, _rc, _so = led_new('PC15b')
+    _h, raw = RR.ledger_now(d2)
+    st = RR.ledger_parse(raw)
+    e0 = {'kind': 'entry', 'n': 1, 'target': 'ladder:P0', 'machine': 'kgy', 'resume_of': None, 'plan_sha256': st['header']['plan_sha256'],
+          'code_key_sha256': 'c' * 64, 'env': {}, 'bed': {}, 'utc': 'x'}
+    e1 = dict(e0, target='ladder:P1', machine='gabia')
+    bar = threading.Barrier(2, timeout=3.0)
+    orig = RR.ledger_parse
+
+    def meet(raw_):
+        try:
+            bar.wait()
+        except threading.BrokenBarrierError:
+            pass
+        return orig(raw_)
+    res = {}
+
+    def worker(i, e):
+        try:
+            res[i] = ('ok', RR.ledger_append(d2, e, f'entry {i} (시험)', expect=raw))
+        except RR.Stop as x:
+            res[i] = ('stop', x.code)
+        except Exception as x:                              # noqa: BLE001
+            res[i] = ('exc', repr(x)[:120])
+    RR.ledger_parse = meet
+    try:
+        ths = [threading.Thread(target=worker, args=(i, e)) for i, e in ((0, e0), (1, e1))]
+        for t in ths:
+            t.start()
+        for t in ths:
+            t.join(60)
+    finally:
+        RR.ledger_parse = orig
+    try:
+        n_ent = len(RR.ledger_parse(RR.ledger_blob(d2, RR.ledger_head(d2)))['entries'])
+    except RR.Stop as x:
+        n_ent = f'{x.code}: {x.cause[:80]}'
+    kinds = sorted(v[0] for v in res.values())
+    got['b'] = (kinds, n_ent, git_(d2, 'status', '--porcelain') == '', sorted(v[1] for v in res.values() if v[0] == 'stop'))
+    d3 = Path(TD) / 'ledgers' / 'PC15c'
+    d3.mkdir(parents=True)
+    git_(d3, 'init', '-q')
+    (d3 / '.git' / 'index.lock').write_text('', encoding='utf-8')
+    try:
+        rc3, _so3 = call(['--stage', 'ledger', '--ledger', str(d3), '--init', '--plan', str(FX['plan'])])
+    finally:
+        (d3 / '.git' / 'index.lock').unlink()
+    left = (d3 / LEDGER_NAME).exists()
+    rc4, _so4 = call(['--stage', 'ledger', '--ledger', str(d3), '--init', '--plan', str(FX['plan'])])
+    got['c'] = (rc3, left, rc4)
+    want = {'a': (3, True, True, 0, 1), 'b': (['ok', 'stop'], 1, True, ['ATTEMPT_LEDGER_MISMATCH']), 'c': (3, False, 0)}
+    return got == want, got
+
+
+@check('PC16', '★ 10-28 밤 PC5-10 (사전 공격 5 회차 R4) 다시 판정 — 원장 판정 (사다리 둘 · 예측 · 사본) 뒤 같은 바탕 폴더에 다른 대상 (ladder:P0:FIBRE) 시도 하나 '
+               '(풀기 전 거부) → --reverify = REVERIFY_SAME (rc 0 · 옛 = REVERIFY_DIFF "원장에 없는 시도 폴더") · 같은 대상 (ladder:P0) 의 뒤 시도 흔적 (손 항목 · '
+               '거부 기록) = 그대로 REVERIFY_DIFF')
+def t_PC16():
+    def go():
+        r = s_led_main()
+        d = led_clone(r['d'], 'PC16')
+        b0, b1, bp = (pc_copy_base(r[k]['base'], f'PC16_{k}') for k in ('l0', 'l1', 'p'))
+        v = ver_led('PC16_v', [b0 / 'attempt_1', b1 / 'attempt_2', bp / 'attempt_3'], d)
+        rv0 = call(['--stage', 'verdict', '--reverify', str(v['out']), '--root', FX['root']])
+        _rc4, n4, _s4 = led_add(d, 'ladder:P0:FIBRE')
+        x = lad_att('PC16_x', world('PC16_x'), d, n4, base=b0)
+        rv1 = call(['--stage', 'verdict', '--reverify', str(v['out']), '--root', FX['root']])
+        e5 = led_entry_like(d, 1)
+        c5 = led_hand(d, e5)
+        f5 = b0 / f'attempt_{e5["n"]}'
+        f5.mkdir()
+        (f5 / 'attempt.json').write_text(json.dumps({'schema': 'rint-r-attempt-v1', 'n': e5['n'], 'target': 'ladder:P0', 'machine': MACH, 'resume_of': None,
+                                                     'ledger_commit': c5}), encoding='utf-8')
+        (f5 / 'rejected.json').write_text(json.dumps({'schema': 'rint-r-rejected-v1', 'n': e5['n'], 'code': 'ATTEMPT_AFTER_ADOPTED', 'cause': '시험',
+                                                      'ledger_commit': c5, 'utc': 'x'}), encoding='utf-8')
+        led_hand(d, {'kind': 'result', 'n': e5['n'], 'status': 'rejected', 'stop': {'code': 'ATTEMPT_AFTER_ADOPTED', 'run': None, 'reason': None},
+                     'side': 'pre', 'cause': 'presolve', 'resume_ok': False, 'folder': f5.name, 'folder_sha256': tree_digest(f5), 'by': 'chain', 'utc': 'x'})
+        rv2 = call(['--stage', 'verdict', '--reverify', str(v['out']), '--root', FX['root']])
+        return v, rv0, x, rv1, rv2
+    v, rv0, x, rv1, rv2 = scen('PC16', go)
+    return (v['rc'] == 0 and rv0[0] == 0 and 'REVERIFY_SAME' in rv0[1] and x['rc'] == 3 and (x['out'] / 'rejected.json').exists()
+            and rv1[0] == 0 and 'REVERIFY_SAME' in rv1[1] and rv2[0] == 1 and 'REVERIFY_DIFF' in rv2[1],
+            (v['rc'], rv0[0], x['rc'], rv1[0], rv1[1][-240:], rv2[0], rv2[1][-160:]))
+
+
+def pc_seal(text, plan):
+    """봉인 커밋 흉내 — 등록 R 글의 §2-1 자리 줄 ("계획 숫자 블록 = 이 줄 바로 아래") 바로 아래에 계획 숫자 블록 (`doc_block`) 을 붙인 글."""
+    lines = text.splitlines()
+    hit = [i for i, ln in enumerate(lines) if '계획 숫자 블록 = 이 줄 바로 아래' in ln]
+    assert len(hit) == 1, f'§2-1 자리 줄 {len(hit)} 개'
+    return '\n'.join(lines[:hit[0] + 1] + ['', doc_block(plan)] + lines[hit[0] + 1:]) + '\n'
+
+
+@check('PC18', '★ 10-28 밤 봉인 전 남은 #5 (REPORT_C_decisions §4) 시험 고정물 등록 사본 — 계획 숫자 블록 = §2-1 자리 (§2-1 머리와 §2-1b 머리 사이) · 표지 각 하나 · '
+               '봉인된 등록 (블록이 §2-1 에 이미 있는 글) 의 사본도 표지 각 하나 · 블록 = 이 계획 · 사슬 plan_doc_problem None (옛 = 사본 끝에 덧붙임 → 봉인 글이면 '
+               '표지 둘 = PLAN_DOC_MISMATCH)')
+def t_PC18():
+    p = Path(FX['reg_ok']).read_text(encoding='utf-8')
+    i21, i21b = p.find('### 2-1. '), p.find('### 2-1b.')
+    ib = p.find(PLAN_DOC_BEGIN)
+    first = (p.count(PLAN_DOC_BEGIN), p.count(PLAN_DOC_END), 0 <= i21 < ib < i21b)
+    plan2 = dict(FX['plan_obj'], max_ladder_points=15)
+    sealed = pc_seal(REG_DOC.read_text(encoding='utf-8'), plan2)
+    q = reg_copy(sealed, f'`{FX["plan_sha"]}`', 'PC18_sealed.md')
+    qt = q.read_text(encoding='utf-8')
+    qi21, qi21b, qib = qt.find('### 2-1. '), qt.find('### 2-1b.'), qt.find(PLAN_DOC_BEGIN)
+    second = (qt.count(PLAN_DOC_BEGIN), qt.count(PLAN_DOC_END), 0 <= qi21 < qib < qi21b, RR.plan_doc_problem(q, FX['plan_obj']))
+    nob = reg_copy(sealed, f'`{FX["plan_sha"]}`', 'PC18_sealed_noblock.md', block=False).read_text(encoding='utf-8')
+    third = (nob.count(PLAN_DOC_BEGIN), nob.count(PLAN_DOC_END))
+    return first == (1, 1, True) and second == (1, 1, True, None) and third == (0, 0), (first, second, third)
+
+
+@check('PC20', '★ 10-28 밤 문서 ↔ 사슬 (PC5-02 · 봉인 전 남은 #8 · #9) — 등록 R §10-5 의 PC5 자원 낱말 줄 = 사슬 RESOURCE_WORDS 다섯 (백틱 · "다섯 낱말") · 등록 R '
+               '§10-4 상자 ⑥ 주석의 "구현 = 묶음 C 코드 (진행 중)" 낡은 글 없음 · 날짜 표지 (10-27 시점 · 10-28 반입) · Q9 §3-2 의 "요청되지 않은 단위" 문장 = '
+               'UNIT_EXTRA (구현 = 끝까지 간 다시 계산에서 멈춤)')
+def t_PC20():
+    reg = REG_DOC.read_text(encoding='utf-8')
+    q9 = (ROOT / 'docs' / 'reviews' / 'rint2_rr_fix_evidence_20261023' / 'q9_predict_units_design.md').read_text(encoding='utf-8')
+    words = tuple(getattr(RR, 'RESOURCE_WORDS', ()))
+    wl = [ln for ln in reg.splitlines() if 'PC5-02' in ln and '다섯 낱말' in ln]
+    w_ok = len(wl) == 1 and sorted(words) == sorted(PC_WORDS5) and all(f'`{w}`' in wl[0] for w in words)
+    box6 = [ln for ln in reg.splitlines() if '상자 글 = 수정 계획' in ln and '"빠진 것" = 10-27 고치기 전 사슬' in ln]
+    b_ok = '구현 = 묶음 C 코드 (진행 중)' not in reg and len(box6) == 1 and '10-27 시점' in box6[0] and '10-28' in box6[0]
+    ql = [ln for ln in q9.splitlines() if '요청되지 않은 단위의 대조 결과' in ln]
+    q_ok = len(ql) == 1 and 'UNIT_EXTRA' in ql[0]
+    return w_ok and b_ok and q_ok, {'words': (len(wl), words), 'box6': (len(box6), [x[-200:] for x in box6]), 'q9': [x[-200:] for x in ql]}
 
 
 # ═════════════════════════ 실행 ═════════════════════════

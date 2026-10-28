@@ -29,6 +29,8 @@
      10-23 답 (kgy · gabia) · 상자 밖 "191–231" 이 나오는 요소마다 "10-22 시점" · 상자 ① · ③ 바로 뒤 첫 요소 = 주석 (p.note) 에 "10-22 시점" +
      낡은 글 ("드물게" → 지금 "범위 밖일 수 있음" · "191–231" → 지금 등록 R §10-4 "다시 어림 2") · 상자 글은 원문 그대로 (⑧) · 6 절 쉽게 말하면의
      끝나는 날 (11-01 – 11-03) 에 "10-22 시점" · 머리 줄 10-28
+  ⑬ (10-28 밤 · 사전 공격 5 회차 봉인 전 남은 #9 · 1저자 10-28 밤 *"rint는 권고대로"*) 상자 ⑥ 주석의 "구현 = 묶음 C 코드 · 진행 중" = 날짜 표지
+     ("10-27 시점" + 10-28 반입) · 보이는 p · td 의 "진행 중" 은 모두 "시점" 표지와 함께 · 머리 줄 "10-28 밤 갱신"
 
   python3 webapp/test_rint_explainer_page.py
 """
@@ -322,6 +324,12 @@ def main():
     s6et = _vis(s6e.group(1)) if s6e else ''
     chk('6 절 쉽게 말하면의 끝나는 날 (11-01 – 11-03) 에 "10-22 시점"', '11-01 – 11-03' in s6et and '10-22 시점' in s6et)
     chk('머리 줄 (.sub) 에 "10-28 갱신"', bool(sub4) and '10-28 갱신' in sub4.group(1))
+    print('── ⑬ 10-28 밤 상자 ⑥ 주석 "진행 중" 날짜 표지 (사전 공격 5 회차 · 봉인 전 남은 #9 · 1저자 10-28 밤 "rint는 권고대로")')
+    chk('상자 ⑥ 주석 — 날짜 없는 "진행 중" 없음 · 날짜 표지 "10-27 시점" + 10-28 반입',
+        '진행 중' not in nt_b6.replace('10-27 시점 진행 중', '') and '10-27 시점' in nt_b6 and '10-28' in nt_b6 and '반입' in nt_b6)
+    stale_p = [t[:80] for _p, t in els if '진행 중' in t and '시점' not in t]
+    chk(f'보이는 요소 (p · td) 의 "진행 중" 은 모두 날짜 표지 ("시점") 와 함께 (찾은 것 {stale_p})', exists and not stale_p)
+    chk('머리 줄 (.sub) 에 "10-28 밤 갱신"', bool(sub4) and '10-28 밤 갱신' in sub4.group(1))
     hsec = re.search(r'<section class="hl-sec"[^>]*>\s*<h2[^>]*>(.*?)</h2>', src, re.S)
     chk('상자 묶음 머리에 날짜 10-22', bool(hsec) and '10-22' in re.sub(r'<[^>]+>', '', hsec.group(1)))
     sub = re.search(r'<p class="sub">(.*?)</p>', src, re.S)

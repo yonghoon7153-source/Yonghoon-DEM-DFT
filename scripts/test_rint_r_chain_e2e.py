@@ -35,6 +35,7 @@
   E13 ★ 10-27 묶음 C2b 실물 kill — 러너만 SIGKILL (표지 앞 · 뒤) · 시간 초과 · 사슬 부모 SIGKILL (표지 앞 · 뒤) + --stage recover
   E14 ★ 10-27 묶음 C1b 실물 원장 시도 — --init · --add · 사다리 시도 → 결과 줄 · 폴더 요약 sha (독립 계산) · 런마다 표지
   E15 ★ 10-27 묶음 C1b-2 실물 재실행 — 바닥 런 표지 뒤 사슬 부모 SIGKILL → recover --ledger → --add --resume → 재실행 시도 → CALIBRATED
+  E17 ★ 10-28 밤 PC5 §4 #5 시험 고정물 등록 사본 — 계획 숫자 블록 = §2-1 자리 · 표지 각 하나 · 봉인된 등록의 사본도 하나 (러너 없음 · 빠름)
   ★ 3판 — 계획 `rint-r-plan-v2` (결과 전 등록 숫자 넷 = 시험 값) · S0 계획 (`ca_s0_census.make_plan` · 정준 바이트) · 등록 사본 두 줄 · `--s0-plan`
 ⚠ PASS 는 사슬 · 러너 · payload 배선이 실물로 이어진다는 증거이지 R_j 값 · 판정의 물리 검증이 아니다 (픽스처 σ 는 의미 없다).
 """
@@ -231,6 +232,21 @@ def make_root(name, kit_sh=KIT_SH, am_floating=False, thin_cross=False):
     return ws
 
 
+def reg_text(text, sha, s0sha, plan):
+    """등록 사본 글 — 해시 두 줄 (| 계획 해시 | · | S0 계획 해시 |) + ★ 10-27 묶음 C1 (판정문 C6 #30) 계획 숫자 블록 (사슬 생성기 · 정확 대조 = 사슬이 본다 ·
+    생성기 꼴 자체 = test_rint_r_chain EP06).  text = 등록 R 글 (★ 10-28 밤 PC5 §4 #5 — 봉인된 글 흉내도 받는다)."""
+    out = []
+    for ln in text.splitlines():
+        if ln.startswith('| 계획 해시 |') or ln.startswith('| S0 계획 해시 |'):
+            cells = ln.split('|')
+            cells[-2] = f' `{sha if ln.startswith("| 계획 해시 |") else s0sha}` '
+            ln = '|'.join(cells)
+        out.append(ln)
+    if callable(getattr(RR, 'plan_doc_block', None)):
+        out += ['', RR.plan_doc_block(plan)]
+    return '\n'.join(out) + '\n'
+
+
 def make_plan_and_reg(ws=None):
     """★ 3판 — R 런 계획 v2 (결과 전 등록 숫자 넷 = 시험 값 · 등록 숫자 아님) · S0 단계 1 계획 (정본 make_plan · 정준 바이트) ·
     등록 사본 (| 계획 해시 | · | S0 계획 해시 | 두 줄)."""
@@ -253,19 +269,9 @@ def make_plan_and_reg(ws=None):
     sp = os.path.join(TD, 's0_plan.json')
     with open(sp, 'wb') as f:
         f.write(s0b)
-    out = []
-    for ln in open(REG_DOC, encoding='utf-8').read().splitlines():
-        if ln.startswith('| 계획 해시 |') or ln.startswith('| S0 계획 해시 |'):
-            cells = ln.split('|')
-            cells[-2] = f' `{sha if ln.startswith("| 계획 해시 |") else s0sha}` '
-            ln = '|'.join(cells)
-        out.append(ln)
-    #  ★ 10-27 묶음 C1 (판정문 C6 #30) — 등록 사본에 계획 숫자 블록 (사슬 생성기 · 정확 대조 = 사슬이 본다 · 생성기 꼴 자체 = test_rint_r_chain EP06)
-    if callable(getattr(RR, 'plan_doc_block', None)):
-        out += ['', RR.plan_doc_block(plan)]
     rp = os.path.join(TD, 'reg_ok.md')
     with open(rp, 'w', encoding='utf-8') as f:
-        f.write('\n'.join(out) + '\n')
+        f.write(reg_text(open(REG_DOC, encoding='utf-8').read(), sha, s0sha, plan))
     #  ★ PF2 B (10-22 · Q2) — S0 단계 2 보고 (가짜 · 꼴 = ca_s0_census 보고의 판정 칸) — 봉인 계획 해시 = 이 계획 둘
     #  ★ PF2 D (10-22 · PRE2-design-08) — 단계 1 · 2 보고의 census · registry 일곱 파일 지문 = 이 트리 실제 파일 (사슬 `S0_SAME_FILES` · 고치기 전 판 = 빈 목록)
     digests = [{'file': nm, 'sha256': hashlib.sha256(open(os.path.join(SCRIPTS, nm), 'rb').read()).hexdigest()}
@@ -1395,6 +1401,28 @@ def t_merge_fetch_real():
         (same_bytes, diff[:8], [(x[0].get('sv_graph') or {}).get('state') for x in (aa, ab, ac)], buf.getvalue()[-400:]))
 
 
+def t_reg_fixture():
+    """★ 10-28 밤 PC5 봉인 전 남은 #5 (REPORT_C_decisions §4) — 시험 고정물 등록 사본의 계획 숫자 블록 = §2-1 자리 (§2-1 머리와 §2-1b 머리 사이) · 표지 각
+    하나 · 봉인된 등록 (블록이 §2-1 에 이미 있는 글) 의 사본도 표지 각 하나 · 블록 = 이 계획 (사슬 plan_doc_problem None) — 옛 = 사본 끝에 덧붙임."""
+    pp, _sp, rp = make_plan_and_reg()
+    plan = json.load(open(pp, encoding='utf-8'))
+    sha = hashlib.sha256(open(pp, 'rb').read()).hexdigest()
+    b, e = RR.PLAN_DOC_BEGIN, RR.PLAN_DOC_END
+    t = open(rp, encoding='utf-8').read()
+    first = (t.count(b), t.count(e), 0 <= t.find('### 2-1. ') < t.find(b) < t.find('### 2-1b.'))
+    lines = open(REG_DOC, encoding='utf-8').read().splitlines()
+    hit = [i for i, ln in enumerate(lines) if '계획 숫자 블록 = 이 줄 바로 아래' in ln]
+    sealed = ('\n'.join(lines[:hit[0] + 1] + ['', RR.plan_doc_block(dict(plan, max_ladder_points=15))] + lines[hit[0] + 1:]) + '\n'
+              if len(hit) == 1 else '')
+    q = os.path.join(TD, 'reg_sealed_e17.md')
+    with open(q, 'w', encoding='utf-8') as f:
+        f.write(reg_text(sealed, sha, '0' * 64, plan))
+    s2 = open(q, encoding='utf-8').read()
+    second = (len(hit), s2.count(b), s2.count(e), 0 <= s2.find('### 2-1. ') < s2.find(b) < s2.find('### 2-1b.'), RR.plan_doc_problem(q, plan))
+    chk('E17 ★ 10-28 밤 PC5 §4 #5 시험 고정물 (make_plan_and_reg) 등록 사본 — 계획 숫자 블록 = §2-1 자리 · 표지 각 하나 · 봉인된 등록 (§2-1 에 블록) 의 사본도 표지 '
+        '각 하나 · 블록 = 이 계획 (plan_doc_problem None)', first == (1, 1, True) and second == (1, 1, 1, True, None), (first, second))
+
+
 def t_prod_form():
     ws = make_root('e6', kit_sh=KIT_SH_PROD)
     out = os.path.join(TD, 'runs', 'e6_P0')
@@ -1431,7 +1459,8 @@ def main():
     try:
         for tag, fn in (('E1', t_ladder), ('E6', t_prod_form), ('E8', t_zero_floor), ('E9', t_short_ceiling), ('E10', t_sv_census_dbe),
                         ('E11', t_no_venv), ('E12', t_graph_source), ('E13', t_runner_kill), ('E13t', t_timeout_kill),
-                        ('E13p', t_parent_kill), ('E14', t_ledger), ('E15', t_resume_real), ('E16', t_merge_fetch_real)):
+                        ('E13p', t_parent_kill), ('E14', t_ledger), ('E15', t_resume_real), ('E16', t_merge_fetch_real),
+                        ('E17', t_reg_fixture)):
             if sel and tag not in sel:
                 continue
             print(f'\n── {tag}')
