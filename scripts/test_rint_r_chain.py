@@ -544,6 +544,12 @@ for i in idx:
         if hit('illegal_after_mark'):              # ★ 10-28 (REPORT_C §11 ⑧) — 표지 뒤 GPU 잘못된 주소 접근 (이 낱말 하나만 · 다른 자원 낱말 없음 · 코드 결함일 수 있다)
             print('CUDA_ERROR_ILLEGAL_ADDRESS: an illegal memory access was encountered (fake)')
             sys.exit(1)
+        if hit('illegal_driver_after_mark'):       # ★ 10-28 (AL19c) — cupy 드라이버 꼴: 남은 자원 낱말 CUDADriverError 가 같은 줄에 함께 찍힌다
+            print('cupy_backends.cuda.api.driver.CUDADriverError: CUDA_ERROR_ILLEGAL_ADDRESS: an illegal memory access was encountered (fake)')
+            sys.exit(1)
+        if hit('illegal_runtime_after_mark'):      # ★ 10-28 (AL19c) — cupy 런타임 꼴: CUDARuntimeError + cudaErrorIllegalAddress
+            print('cupy_backends.cuda.api.runtime.CUDARuntimeError: cudaErrorIllegalAddress: an illegal memory access was encountered (fake)')
+            sys.exit(1)
         if hit('sleep_after_mark'):                # ★ 10-27 묶음 C1b — 표지 뒤 오래 (시간 초과 = 결과 뒤 · 재실행 자격)
             time.sleep(float(hit('sleep_after_mark').get('s', 30.0)))
     json.dump({'mpm_metrics': {'step3': st}}, open(os.path.join(out, _an), 'w'))
@@ -8051,6 +8057,39 @@ def t_AL19b():
     return ok, {'ill': (ill['stop'], ri.get('cause'), ri.get('side'), ri.get('resume_ok'), ill['rc_add'], ill['refused'], ill['ledger_same'],
                         ILLEGAL_WORD in ill['log'], others),
                 'oom': (oom['stop'], ro.get('cause'), ro.get('side'), ro.get('resume_ok'), oom['rc_add'], oom['ledger_same'])}
+
+
+@check('AL19c', '★ 10-28 (REPORT_C §11 ⑧ · 1저자 10-28 "Rint 권고대로" = 잘못된 주소 접근은 자동 재시도 안 함) — 실제 cupy 꼴 로그: 드라이버 '
+                '`CUDADriverError: CUDA_ERROR_ILLEGAL_ADDRESS` · 런타임 `CUDARuntimeError: cudaErrorIllegalAddress` (남은 자원 낱말이 같은 줄에 함께) = '
+                '원인 runner_rc · 결과 뒤 · 재실행 자격 False → --add --resume 1 = rc 3 RESUME_NOT_ALLOWED (원장 무변경)')
+def t_AL19c():
+    if not chain_c1b2():
+        return False, '사슬에 재실행 실행 (ResumeRunner) 이 없다'
+
+    def go():
+        out = {}
+        for tag, do in (('drv', 'illegal_driver_after_mark'), ('rt', 'illegal_runtime_after_mark')):
+            d, _rc, _so = led_new(f'AL19c_{tag}')
+            _rc1, n1, _s1 = led_add(d, 'ladder:P0')
+            a = lad_att(f'AL19c_{tag}', world(f'AL19c_{tag}', dict(PW, faults=[{'do': do, 'match': {'rj': 'inf'}}])), d, n1)
+            run = (((a.get('sum') or {}).get('stop') or {}).get('run'))
+            lp = a['out'] / 'logs' / f'{run}.log'
+            log = lp.read_text(encoding='utf-8', errors='replace') if run and lp.is_file() else ''
+            raw = led_raw(d)
+            rc_add, _n2, so_add = led_add(d, 'ladder:P0', resume=n1)
+            out[tag] = {'stop': stop_code(a), 'res': led_result(d, 1) or {}, 'log': log, 'rc_add': rc_add,
+                        'refused': 'RESUME_NOT_ALLOWED' in so_add, 'ledger_same': led_raw(d) == raw}
+        return out
+    r = scen('AL19c', go)
+    drv, rt = r['drv'], r['rt']
+    shown = ('CUDADriverError' in drv['log'] and 'CUDA_ERROR_ILLEGAL_ADDRESS' in drv['log']
+             and 'CUDARuntimeError' in rt['log'] and 'cudaErrorIllegalAddress' in rt['log'])
+    ok = shown and all(x['stop'] == 'RUNNER_RC' and x['res'].get('cause') == 'runner_rc' and x['res'].get('side') == 'post'
+                       and x['res'].get('resume_ok') is False and x['rc_add'] == 3 and x['refused'] and x['ledger_same'] for x in (drv, rt))
+    det = {k: (x['stop'], x['res'].get('cause'), x['res'].get('side'), x['res'].get('resume_ok'), x['rc_add'], x['refused'],
+               x['ledger_same']) for k, x in (('drv', drv), ('rt', rt))}
+    det['shown'] = shown
+    return ok, det
 
 
 @check('AL12d', '★ 10-27 묶음 C1b (Q9 §3-5 R4-07 · 구현과 함께 · 변이로 검증) — 곁가지를 `merge -s ours` 로 붙여 조상으로 만든 꼴: ⓐ 곁가지에서 시작한 시도 (시작 '
