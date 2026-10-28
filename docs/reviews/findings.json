@@ -12776,17 +12776,22 @@
     {
       "id": "RCA2-05",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-22 Rint ② 설계·구현 재검토 (검토 핀 0b3012460 · 비교 기준 5dc6f7f0b · 독립 해석 회로 · 실제 생산 함수 호출 · 작은 합성 S0 census 본체 · 실침대 · 생산 · 전체 CLI 실행 없음)",
       "opened_in": "docs/reviews/codex_review_rint2_rereview_20261022.md",
       "title": "(사전등록 절차) 시간 · 중단 · 재시도가 같은 계획의 기계적 봉인 밖이다 — --max-hours 는 계획 해시 · summary 밖 · 빈 출력 폴더가 시도 연결 · 채택 규칙을 대신하지 못함",
-      "note": "판정문 §4 RCA2-05 · 영향 = 결과를 본 뒤 계산 자원을 늘리거나 시도를 골라 같은 등록의 답으로 내는 경로 (그런 선택이 실제로 일어났다는 주장 아님) · 자리 (핀 0b3012460) = scripts/rint_r_chain.py:1789 (summary) · :1799 (빈 디렉터리) · :1894 · 2043 · 2572 (--max-hours) · 등록 §10-4.  최소 해결 = DBE 단계 2 열람 전에 (별도 실행 manifest 라도) 시간상한 · 최대 시도 수 · 재시도 가능한 실패 부류 · 동일 설정 요건 · 채택 순서 봉인 · 실패 시도 · 원 사유 · 다음 attempt ID 보존 · 물리 / 수치 실패를 보고 maxiter · 문턱 · origin · 계획 점수를 바꾸면 같은 등록의 재시도가 아니라 결과 열람 후 개발 / 개정 · 사람 규율만 택하면 그 한계를 명시하고 실행 영수증에 남김.  같은 봉인 목록 (판정문 §9 사전등록 실행값 · §6 C2-3 · C5 · §8) = SBE 탐침 뒤 DBE 열람 전 계획 · 숫자 · scope · 시간 · 재시도 · 기계 귀속 봉인 · SV 범위 = 현재 arm0 로 한정하거나 최종 8 팔 평균과 같은 추정량까지 확대 (현 all3 = arm0 corner 12/12 · origin3 0/12 · origin8 0/12 · registration/probe_results.json SV_all3_origin_scope) · 세 origin ↔ 고정 8 평균 (§8 반례) · 다중 기계 단계 폴더 귀속 · 새 위끝 · all3 비용 재계산 · s_min 문서 숫자 ↔ JSON 자동 생성 / 정확 대조.",
+      "note": "판정문 §4 RCA2-05 · 영향 = 결과를 본 뒤 계산 자원을 늘리거나 시도를 골라 같은 등록의 답으로 내는 경로 (그런 선택이 실제로 일어났다는 주장 아님) · 자리 (핀 0b3012460) = scripts/rint_r_chain.py:1789 (summary) · :1799 (빈 디렉터리) · :1894 · 2043 · 2572 (--max-hours) · 등록 §10-4.  최소 해결 = DBE 단계 2 열람 전에 (별도 실행 manifest 라도) 시간상한 · 최대 시도 수 · 재시도 가능한 실패 부류 · 동일 설정 요건 · 채택 순서 봉인 · 실패 시도 · 원 사유 · 다음 attempt ID 보존 · 물리 / 수치 실패를 보고 maxiter · 문턱 · origin · 계획 점수를 바꾸면 같은 등록의 재시도가 아니라 결과 열람 후 개발 / 개정 · 사람 규율만 택하면 그 한계를 명시하고 실행 영수증에 남김.  같은 봉인 목록 (판정문 §9 사전등록 실행값 · §6 C2-3 · C5 · §8) = SBE 탐침 뒤 DBE 열람 전 계획 · 숫자 · scope · 시간 · 재시도 · 기계 귀속 봉인 · SV 범위 = 현재 arm0 로 한정하거나 최종 8 팔 평균과 같은 추정량까지 확대 (현 all3 = arm0 corner 12/12 · origin3 0/12 · origin8 0/12 · registration/probe_results.json SV_all3_origin_scope) · 세 origin ↔ 고정 8 평균 (§8 반례) · 다중 기계 단계 폴더 귀속 · 새 위끝 · all3 비용 재계산 · s_min 문서 숫자 ↔ JSON 자동 생성 / 정확 대조.  ‖ 10-28 claimed_fixed (Rint 묶음 C · 1저자 10-27 *\"Rint는 권고대로 해도돼\"*): R 계획 실행 정책 칸 exec_policy {max_hours · max_attempts · allowed_machines · env_unit · retry_rule=pre_result_only_v1 · same_config=plan_code_bed_env_v1 · adoption=first_not_pre_result_v1 · attempt_dir=attempt_<n>} = 계획 해시 안 · 값 칸 null 이면 PLAN_NUMBER_UNREGISTERED · 기계 이름표 · 문서 숫자 블록 대조 (C1a `fcf20b822` · 시험 먼저 `2c1308bb2`) · 시도 원장 (git · 덧붙이기만 · 거부 · 실패 시도 · 원 사유 · 다음 번호 보존 · C1b `ae8ea5ebd`) · 멈춘 런부터 재실행 (같은 설정 대조 · C1b-2 `8b2bc633a`) · 러너 프로세스 그룹 · 첫 풀이 끝 표지 (C2b `4ed966b5d`) · 12 단위 · 합치기 (C2d `a74604e98`) · 다시 판정 (C2e `f1698cf83`) · 보고 docs/reviews/rint2_rr_fix_evidence_20261023/REPORT_C.md.  숫자 칸 (시간 상한 · 시도 수 · 허용 기계 · env 판) = 봉인 때 · 결정 25 = 1저자 · 시험 수 = 에이전트 실행 출력 (메인 게이트에서 다시).",
       "evidence_tests": [
         "docs/reviews/codex_rint2_rereview_evidence_20261022/registration/REVIEW.md",
         "docs/reviews/codex_rint2_rereview_evidence_20261022/registration/probe_results.json",
-        "docs/reviews/codex_rint2_rereview_evidence_20261022/_repro_ours_20261022/README.md"
-      ]
+        "docs/reviews/codex_rint2_rereview_evidence_20261022/_repro_ours_20261022/README.md",
+        "scripts/test_rint_r_chain.py (384 · 묶음 C · 고치기 전 284/294 · 에이전트)",
+        "scripts/test_rint_r_chain_e2e.py (39 · 에이전트)",
+        "scripts/test_rint_first_result.py (9 · 새 파일 · 에이전트)",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/REPORT_C.md"
+      ],
+      "claimed_fixed_sha": "fcf20b822"
     },
     {
       "id": "RCA2-06",
@@ -12814,17 +12819,19 @@
     {
       "id": "RCA2-07",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-22 Rint ② 설계·구현 재검토 (검토 핀 0b3012460 · 비교 기준 5dc6f7f0b · 독립 해석 회로 · 실제 생산 함수 호출 · 작은 합성 S0 census 본체 · 실침대 · 생산 · 전체 CLI 실행 없음)",
       "opened_in": "docs/reviews/codex_review_rint2_rereview_20261022.md",
       "title": "등록 R 의 \"총 ×100 상계\" 문구는 각 연장 간격 ≤ ×100 일 뿐 전체 팽창 상계가 아니다 (반례 비 443,434,903.8) · 시간 어림에 SV 위끝 네 풀이 누락 (191.353–231.409 h → 205.806–248.888 h)",
-      "note": "판정문 §4 RCA2-07 · ×100: 등록 R :94–95 · 586 · 구현 scripts/rint_r_chain.py:1611–1634 · 양의 수동 회로 S = A + B/(r+0.1) · r = R/10⁵ · T 1.63 · e 1e−4 · A 1.5972402759714026 · B 0.036035696431457015 → 참 위끝 22,551,224.3492 Ω · 실제 보수 끝 1e16 Ω · 비 443,434,903.8 · 15 점 · 역상폭 상한 none · 보수 감쌈은 안전 · 최소 수정 = \"각 연장 단계 비 ≤ 100 · 총 팽창 상계 없음\" · 재이분은 정보량 / 비용 선택이지 안전성 필수 아님.  시간: 등록 R :473 · 484 · 487 · 502 · docs/reviews/rint2_prereview2_20261022/design/run_budget2.py:25 · 기존 78 풀이 상당량이 새 못 가른 덩어리의 SV 위끝 네 풀이를 세지 않음 · 네 모서리에서 모두 풀면 같은 옛 가정으로 82 상당량 · 191.353–231.409 h → 205.806–248.888 h (새 실측 ETA 아님 · 위끝 topology 조기반환 · 다른 반복 수 · all3 · origin 확장은 따로 측정).  두 문구 결함만으로 새 수치 HOLD 를 더하지 않는다.  재현 = registration/probe_registration_current.py 및 비용 산술.",
+      "note": "판정문 §4 RCA2-07 · ×100: 등록 R :94–95 · 586 · 구현 scripts/rint_r_chain.py:1611–1634 · 양의 수동 회로 S = A + B/(r+0.1) · r = R/10⁵ · T 1.63 · e 1e−4 · A 1.5972402759714026 · B 0.036035696431457015 → 참 위끝 22,551,224.3492 Ω · 실제 보수 끝 1e16 Ω · 비 443,434,903.8 · 15 점 · 역상폭 상한 none · 보수 감쌈은 안전 · 최소 수정 = \"각 연장 단계 비 ≤ 100 · 총 팽창 상계 없음\" · 재이분은 정보량 / 비용 선택이지 안전성 필수 아님.  시간: 등록 R :473 · 484 · 487 · 502 · docs/reviews/rint2_prereview2_20261022/design/run_budget2.py:25 · 기존 78 풀이 상당량이 새 못 가른 덩어리의 SV 위끝 네 풀이를 세지 않음 · 네 모서리에서 모두 풀면 같은 옛 가정으로 82 상당량 · 191.353–231.409 h → 205.806–248.888 h (새 실측 ETA 아님 · 위끝 topology 조기반환 · 다른 반복 수 · all3 · origin 확장은 따로 측정).  두 문구 결함만으로 새 수치 HOLD 를 더하지 않는다.  재현 = registration/probe_registration_current.py 및 비용 산술.  ‖ 10-28 claimed_fixed (묶음 C3 문서 · 1저자 10-27 Q7 (가)): 등록 R ③ ③′ · PF2-Q1 = \"각 연장 단계 비 ≤ 100 · 총 팽창 상계 없음\" (`e743d50c9`) · §10-4 시간표 = Q9 설계 §6 꼴 · SV 위끝 네 풀이 포함 82 상당량 (`3a5143985`) · 다시 어림 가정 줄 (`3c108bba9`) · 구현 주석 (C1a `fcf20b822`).",
       "evidence_tests": [
         "docs/reviews/codex_rint2_rereview_evidence_20261022/registration/probe_registration_current.py",
         "docs/reviews/codex_rint2_rereview_evidence_20261022/registration/probe_results.json",
-        "docs/reviews/codex_rint2_rereview_evidence_20261022/_repro_ours_20261022/README.md"
-      ]
+        "docs/reviews/codex_rint2_rereview_evidence_20261022/_repro_ours_20261022/README.md",
+        "docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md (③ ③′ · §10-4 · e743d50c9 · 3a5143985 · 3c108bba9)"
+      ],
+      "claimed_fixed_sha": "e743d50c9"
     },
     {
       "id": "RCA2-08",
@@ -13256,6 +13263,35 @@
       ]
     },
     {
+      "id": "KG50-18",
+      "severity": "P3",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "재개 도구 Codex 재확인 요청서 작성 중 합성 재현 (50kg 문서 에이전트 · 10-27 밤 · 가짜 SLURM · 가짜 dem_restart.py FAKE_MODE=after_settling)",
+      "opened_in": "docs/reviews/codex_kg50_resume_tool_recheck_request_20261027.md",
+      "title": "after_settling 재개는 정상 시험도 G0 에서 떨어진다 — G0 기대 끝 = S0 + 시험 덱 마지막 run 수인데 재개 덱 첫 긴 run 앞에 판 높이 run 1 이 있어 실제 끝 = S0 + 2001 (202002 ↔ 기대 202001) → 본 제출 안 함 (닫힌 실패 · Q5 정착 끝 멈춤 → 이어 돌리기 길이 늘 막힘)",
+      "note": "요청서 §4-1 · 처방 (1저자 10-27 밤 *\"50kg 권고대로 해\"* ④) = 기대 끝 = S0 + 시험 덱 read_restart 뒤 run 합 · 합을 못 정하면 시험 전 거부 (이유 열 · 요청서 §4-3) · 같은 부류 = settling 재개 덱 첫 긴 run 앞 run (run 0 제외) 거부 (P9 · 합으로 바꾸면 옛 G0 이 우연히 막던 1 step 어긋남이 열린다) `18f59f58b` (시험 먼저 `257a11921`) · 절차 개정 3 `a499858d4` · 새 도구 sha256 e59c43e6….  settling 경로 = 고치기 전 판과 바이트 같음 (--compare-old · 장면 45 · 다름 0).  한계 = 합성만 (실제 dem_restart.py after_settling 산출 · ibb 실행 없음) · label 혼자 · print · quit 만 든 if 허용 · 거부 이유는 nohup 화면에만 · `&` 로 나뉜 run 은 시험 자르기를 빠져나감 (G0 TIMEOUT).",
+      "claimed_fixed_sha": "18f59f58b",
+      "evidence_tests": [
+        "scripts/test_resume_ckpt.py (87/87 · 18f59f58b · 고치기 전 67ba17809 판 = 57/87 · A 묶음 6 · P 묶음)",
+        "scripts/test_resume_ckpt.py --compare-old <67ba17809 판> (settling 묶음 장면 45 · 다름 0)"
+      ]
+    },
+    {
+      "id": "KG50-19",
+      "severity": "P2",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "재개 도구 Codex 재확인 요청서 작성 중 합성 재현 (50kg 문서 에이전트 · 10-27 밤 · -C 합성)",
+      "opened_in": "docs/reviews/codex_kg50_resume_tool_recheck_request_20261027.md",
+      "title": "write_restart · 압축 루프 체크포인트 재개 덱의 첫 긴 run 길이를 정적 대조가 보지 않는다 (fail-open) — 남은 step 검사 D 는 settling 꼴에서만 · E 는 첫 긴 run 다음 줄부터 → 안정화 run 200000 → 199999 · 100000 · 400000 · r075 루프 몸 run 5000 → 4000 이 전부 통과",
+      "note": "요청서 §4-2 · 처방 (1저자 10-27 밤 ⑤ · 같은 묶음) = write_restart 체크포인트 = 본 덱 그 뒤 run 들 ↔ 재개 덱 read_restart 뒤 run 들 글자 같음 · 압축 루프 = 루프 머리 label 부터 첫 긴 run 까지 같음 · 못 정하면 거부 · D 의 못 셈 = include · next · run 든 if · step 바꾸는 명령 (W11) · 체크포인트 줄 ↔ 루프 머리 사이 변수 run 거부 (W12) `18f59f58b` (시험 먼저 `257a11921`).  실제 09-27 r075 압축 쌍 = 그대로 통과 (화면 한 줄만 바뀜).  한계 = 글자 대조 (같은 뜻 다른 표기도 거부 · 닫힌 실패) · 이완 중 체크포인트 (KG50-11) · 루프 몸 둘째 긴 run 도중 체크포인트 · 뒤에서 jump 하는 다른 label 은 못 봄 · 합성만.",
+      "claimed_fixed_sha": "18f59f58b",
+      "evidence_tests": [
+        "scripts/test_resume_ckpt.py (87/87 · 18f59f58b · W 묶음 13 · 고치기 전 67ba17809 판에서 W 12 실패 · W5 = 지키는 시험)"
+      ]
+    },
+    {
       "id": "SELF-135",
       "severity": "P3",
       "status": "claimed_fixed",
@@ -13281,6 +13317,36 @@
       "claimed_fixed_sha": "31f55c641",
       "evidence_tests": [
         "docs/collab/claude_to_codex/20261026-1800_nonrint-facts.md 끝 정정 절 (31f55c641) — git grep -F 0aa6e41a2330ae78… 가 가리키는 세 자리 (unload_params.json · ibb_precheck1_screen.txt · precheck1 README) 와 같은 값"
+      ]
+    },
+    {
+      "id": "SELF-137",
+      "severity": "P3",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "Rint 묶음 C 코드 에이전트 · kgy 판 (Python 3.8.20 · numpy 1.24.4 · scipy 1.10.1) 1 회차 시험 (10-27)",
+      "opened_in": "docs/reviews/rint2_rr_fix_evidence_20261023/REPORT_C.md",
+      "title": "Rint 묶음 C e2e 시험 E13b · E13e 가 /proc/<pid>/cmdline 을 160 자로 잘라 읽어 kgy 판 (uv 3.8 인터프리터 경로 74 자) 에서 거짓 실패 (37/39) — 시험 도구 결함 (생산 코드 아님)",
+      "note": "고침 = 전체 명령줄 읽기 · 죽이는 손이 창을 실제로 봤는지 (saw_window) 를 E13b · c · e · f 에 `db97d0644` → kgy 판 2 회차 11 묶음 통과 · e2e 39/39 (3.11 · 3.8 · 에이전트 출력).  영향 = 시험 판정만 (생산 경로 · 러너 무관 · 사슬 쪽 = 런 rc 0 · 끝 기록 · 확인 True).",
+      "claimed_fixed_sha": "db97d0644",
+      "evidence_tests": [
+        "scripts/test_rint_r_chain_e2e.py (39/39 · db97d0644 · 3.11.15 · 3.8.20 · 에이전트)",
+        "docs/reviews/rint2_rr_fix_evidence_20261023/REPORT_C.md §5"
+      ]
+    },
+    {
+      "id": "SELF-138",
+      "severity": "P3",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "메인 세션 자기 진단 (10-27 15:3x UTC · 게이트 두 번 실패 뒤 고아 프로세스 SigIgn 확인) · 10-28 게이트 잘림",
+      "opened_in": "docs/session_20260923_progress.md",
+      "title": "게이트를 `( bash 감싸개 … & )` 로 띄워 자식들이 SIGINT 를 무시 (SigIgn 0x1001006) → 194 실행기 자기검사 ⑮ (SIGINT → rc 130) 가 90 s 뒤 TimeoutExpired · 게이트 두 번 실패 (157 ✓ · ✗ 4) · 고아 실행기 + 가짜 워커 남음 · 첫 실패를 '동시 에이전트 부하 탓' 으로 잘못 적음 (상태 파일) · 다음 회차는 Bash 백그라운드 기본 한도 30 분에 잘림 (timeout 안 줌 · 93 ✓ · 0 ✗)",
+      "note": "원인 = 비대화형 셸의 비동기 목록은 SIGINT · SIGQUIT 를 무시한 채 자식을 띄운다 · Python 은 시작 때 SIGINT 가 SIG_IGN 이면 기본 처리기를 깔지 않는다.  고침 = 운영 규칙 (CLAUDE.md 사전 공격 리뷰 절 · `d9fd58ca1`): 게이트는 Bash run_in_background + timeout 7200000 으로만 띄운다 · 고아 TERM 정리 · /tmp/np194_* 정리.  관찰 (고치지 않음) = 실행기 자기검사 ⑮ 는 물려받은 SIGINT 처리에 기대고 시간 초과 때 자식을 남긴다 — scripts/run_network_194_parallel.py 는 LHS214 발사 핀 대상이라 지금 바꾸지 않는다.  셋째 회차 (p1diag3) = kgy 판 rint_r_chain 단계에서 16:03 UTC 부터 컨테이너 재시작 (10-28 00:0x UTC) 까지 멈춤 — 같은 시각 다른 에이전트 시험과 동시 · 원인 미확인.",
+      "claimed_fixed_sha": "d9fd58ca1",
+      "evidence_tests": [
+        "CLAUDE.md (게이트 띄우는 규칙 · d9fd58ca1)",
+        "docs/session_20260923_progress.md 10-28 새벽 줄 (게이트 사고)"
       ]
     },
     {
