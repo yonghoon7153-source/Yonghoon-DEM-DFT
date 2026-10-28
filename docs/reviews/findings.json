@@ -13409,13 +13409,17 @@
     {
       "id": "SELF-139",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "메인 세션 (10-28 · 감시 에이전트 마지막 보고로 알게 됨)",
       "opened_in": "docs/session_20260923_progress.md",
       "title": "에이전트 지시서에 설치 · 시스템 설정 변경 금지를 적지 않아, 50kg 감시 도구 에이전트가 시험용으로 gawk 를 설치 · 제거 — 메인 게이트 int1028 이 도는 동안 3–4 분 시스템 `awk` 가 gawk 였다",
-      "note": "에이전트 보고 = 10:32–10:36 KST 쯤 (시각은 에이전트 기록 · 메인이 따로 재지 않음).  메인 확인 10-28: `awk` → /usr/bin/mawk (update-alternatives auto) · dpkg gawk = rc (지움) · 그 사이 게이트 단계 = `rint_r_chain_e2e` 하나 (통과) — 그 러너 scripts/sdcp_gain_vox015_8arm.sh 의 awk = 줄 길이 · RSS printf 셋 (889 · 914 · 915 줄) · 앞 단계 ca_ext_z3 와 e2e 파이썬 시험에는 awk 호출 없음 (grep).  영향 = 없다고 봄 (추정 · 확인 전).  닫는 조건 = push 뒤 그 단계 하나를 mawk 로 다시 돌려 통과 + 지시서 금지 줄 (설치 · 대체 설정 · 프로세스 종료 · 다른 작업 트리 · 메인 체크아웃) 을 10-28 Rint 지시서부터 적용한 것을 기록.",
-      "evidence_tests": []
+      "note": "에이전트 보고 = 10:32–10:36 KST 쯤 (시각은 에이전트 기록 · 메인이 따로 재지 않음).  메인 확인 10-28: `awk` → /usr/bin/mawk (update-alternatives auto) · dpkg gawk = rc (지움) · 그 사이 게이트 단계 = `rint_r_chain_e2e` 하나 (통과) — 그 러너 scripts/sdcp_gain_vox015_8arm.sh 의 awk = 줄 길이 · RSS printf 셋 (889 · 914 · 915 줄) · 앞 단계 ca_ext_z3 와 e2e 파이썬 시험에는 awk 호출 없음 (grep).  영향 = 없다고 봄 (추정 · 확인 전).  닫는 조건 = push 뒤 그 단계 하나를 mawk 로 다시 돌려 통과 + 지시서 금지 줄 (설치 · 대체 설정 · 프로세스 종료 · 다른 작업 트리 · 메인 체크아웃) 을 10-28 Rint 지시서부터 적용한 것을 기록.  ✅ 10-28 닫는 조건 충족: int1028b 게이트 rint_r_chain_e2e ✓ (mawk) · Rint 지시서부터 금지 줄 적용.",
+      "evidence_tests": [
+        "scripts/check_all.sh 게이트 int1028b (HEAD 737a1f3f7 · 10-28 · awk = mawk · gawk 지움) 의 rint_r_chain_e2e ✓ — gawk 시간대에 돌았던 단계를 mawk 로 다시 통과",
+        "docs/session_20260923_progress.md (10-28 낮 · 오후 줄 — gawk 시간대 · 10-28 Rint 지시서부터 설치 · 대체 설정 · 프로세스 종료 · 다른 작업 트리 금지 줄 적용 · 그 에이전트 설치 없이 끝남)"
+      ],
+      "claimed_fixed_sha": "737a1f3f7"
     }
   ]
 }
