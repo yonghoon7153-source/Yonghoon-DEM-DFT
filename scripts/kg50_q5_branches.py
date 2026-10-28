@@ -107,7 +107,7 @@ TYPE_MAP = {1: 'AM', 2: 'AM', 3: 'SE'}             # 본 덱 55 행 (Type 1:AM_P
 SE_TYPE = 3
 WINDOW_S = {'W1': '0.200001', 'W2': '0.3'}         # Q3 (나) — W1 = 판 높이 1 µs + 안정화 0.2 s · W2 = 0.3 s (판 3 µm)
 DT_HALF = '5.0e-7'                                 # §4-2 43 행
-EXPECTED_STATIC_PROBLEM = '재개 지점 뒤 순서 줄 수 다름: 본 덱 12 ↔ 재개 덱 0'    # §8-1
+EXPECTED_STATIC_PROBLEM = '재개 지점 뒤 순서 줄 수 다름: 본 덱 12 ↔ 재개 덱 0'    # §8-1 (옛 도구 출력 · 10-28 밤 §12-4 가 앞선다 · 역사)
 HEADER_END = '# ===== (q5 머리 끝) ====='
 
 #: §4-1 뼈대 — 본 덱 행 → 가지에서.  뺄 행 · 바꿀 행 · 넣을 자리 (행 뒤)
@@ -158,6 +158,28 @@ EXPECTED_STATIC_PROBLEMS_W2 = (
     '루프 몸 run 다름 (반복 안 restart 체크포인트 · 10-28 KG50-19): 본 덱 [label loop_press] [run 5000] ↔ 재개 덱 read_restart 뒤 '
     '[run 300000]',
     '재개 지점 뒤 순서 줄 수 다름: 본 덱 8 ↔ 재개 덱 0')
+#: §12-4 (1저자 10-28 밤 Q5-S1) — 고친 재개 도구 (KG50R-01–05 · 전체 프로그램 대조 · 압축 체크포인트 거부) 의 `-C` 출력 = 정확히 이 줄 · 이 순서 (rc 1).
+#   <case> = 케이스 이름 · <N> = W2 시작 step.  §8-1 의 한 줄 · §12-2 (마) 의 둘 (위 두 상수) = 옛 도구 출력 (역사 · 이 절이 앞선다).
+EXPECTED_STATIC_W1 = (
+    '체크포인트 뒤 ~ 첫 긴 run 앞 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 35 개 ↔ 재개 덱 37 개 — 재개 덱에만 [dump dq5a all custom 66667 post_<case>/q5atom_*.liggghts id type x y z radius vx vy vz] [dump dq5c all local 200001 post_<case>/q5contact_*.liggghts c_cpl[1] c_cpl[2] c_cpl[3] c_cpl[4] c_cpl[5] c_cpl[6] c_cpl[7] c_cpl[8] c_cpl[9] c_cpl[10] c_cpl[11] c_cpl[12] c_cpl[13] c_cpl[14] c_cpl[15] c_cpl[16] c_cpl[17] c_cpl[18] c_cpl[19] c_cpl[20] c_cpl[21] c_cpl[22] c_cpl[23] c_cpl[24] c_cpl[25] c_cpl[26]]',
+    '첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 27 개 ↔ 재개 덱 2 개 — 바뀜 [print "====== PHASE 3: COMPRESSION (Speed 0.01) ======"] [dump dmp_atom all custom 50000 post_<case>/atom_*.liggghts id type x y z radius vx vy vz c_strs[1] c_strs[2] c_strs[3] c_ke] → [undump dq5a] [undump dq5c]',
+    '재개 지점 restart 다름: 본 덱 [restart 50000 restart_<case>/restart_settling_*.bin] ↔ 재개 덱 [restart 0]',
+)
+EXPECTED_STATIC_W2 = (
+    '압축 체크포인트 재개 = 지원 안 함 (KG50R-01 · 1저자 10-28 Q3 (가)) — 체크포인트 restart_compress_<N>.bin (이름 restart_compress_*)',
+    '첫 긴 run 다름 (반복 안 restart 체크포인트 · 10-28 KG50R-01): 본 덱 [run 5000] ↔ 재개 덱 [run 300000]',
+    '재개 덱에 본 덱 체크포인트 뒤 첫 명령 [label loop_press] 이 없음 — 준비 구간 경계를 못 정함 (10-28 KG50R-03 · 준비 구간 · 상태 대조 건너뜀)',
+    '첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 19 개 ↔ 재개 덱 2 개 — 바뀜 [variable current_press equal "abs(f_top_mesh[3]) / 0.0025 / 1000000"] [print "Current Pressure: ${current_press} MPa (Target: ${target_press})"] → [undump dq5a] [undump dq5c]',
+)
+
+
+def expected_static(window, case, n=None):
+    """등록 §12-4 의 정적 대조 기대 (W1 셋 · W2 넷) — 자리 채움."""
+    if window == 'W2':
+        return [t.replace('<N>', str(n)) for t in EXPECTED_STATIC_W2]
+    return [t.replace('<case>', case) for t in EXPECTED_STATIC_W1]
+
+
 W2_STATUS_DRAFT = '> **§12-2 상태: ⬜ 개정 초안 · 비준 전**'
 W2_STATUS_RATIFIED_RE = re.compile(r'^> \*\*§12-2 상태: ✅ 1저자 비준 \([^)\n]+\)\*\*', re.M)
 STATUS_DRAFT, STATUS_RATIFIED = '개정 초안 · 비준 전', '비준'
@@ -480,11 +502,18 @@ def registration_check(path=None):
             continue                               # 표는 `dump dmp_mesh … 5000 …` 로 줄여 적었다 (위 고정 줄)
         if f'| {ln} | `{a}` | `{b}` |' not in txt:
             probs.append(f'§4-2 {ln} 행 표 ≠ 생성기 ({a} → {b})')
-    if f'`{EXPECTED_STATIC_PROBLEM}` 하나 · 그 밖 문제 0 (rc 1).' not in txt:
-        probs.append('§8-1 정적 대조 기대 문제 ≠ 생성기')
-    for s in EXPECTED_STATIC_PROBLEMS_W2:
-        if f'`{s}`' not in txt:
-            probs.append(f'§12-2 (마) 정적 대조 기대 ≠ 생성기 ({s[:40]}…)')
+    sec = txt.split('### 12-4.', 1)[1].split('\n### ', 1)[0] if '### 12-4.' in txt else ''
+    for head, ts in (('W1 —', EXPECTED_STATIC_W1), ('W2 —', EXPECTED_STATIC_W2)):
+        part = sec.split('\n' + head, 1)[1] if ('\n' + head) in sec else ''
+        got = []
+        for ln in part.split('\n')[1:]:
+            m = re.match(r'^[0-9]+\. `(.+)`$', ln)
+            if m:
+                got.append(m.group(1))
+            elif got and ln.strip():
+                break
+        if got != list(ts):
+            probs.append(f'§12-4 {head[:2]} 정적 대조 기대 (줄 · 순서) ≠ 생성기')
     return (not probs), probs
 
 
@@ -1275,13 +1304,13 @@ def build_branch(case, branch, np_, out_parent, window='W1', main_deck=None, *, 
         thermo = [W2_THERMO[kind]]
         every_a, every_c = W2_ATOM_EVERY, W2_CONTACT_EVERY
         ck_rel = f'restart_{case}/restart_compress_{n}.bin'
-        expected_static = list(EXPECTED_STATIC_PROBLEMS_W2)
+        exp_static = expected_static('W2', case, n)
     else:
         runs, s0 = ([2, 400000] if kind == 'dt_half' else list(d['runs'])), S0
         thermo = [2, 2000] if kind == 'dt_half' else [1, 1000]
         every_a, every_c = ATOM_EVERY, CONTACT_EVERY
         ck_rel = f'restart_{case}/restart_after_settling.bin'
-        expected_static = [EXPECTED_STATIC_PROBLEM]
+        exp_static = expected_static('W1', case)
     dt = d['dt'] / 2 if kind == 'dt_half' else d['dt']
     end = s0 + sum(runs)
     with tempfile.TemporaryDirectory(prefix='q5chk_') as td:
@@ -1293,9 +1322,9 @@ def build_branch(case, branch, np_, out_parent, window='W1', main_deck=None, *, 
         st = None
         if kind in ('base', 'floor'):
             st = static_check(mp, dp, case, resume_tool, ck_rel, s0)
-            if _on('static') and (st['rc'] != 1 or st['problems'] != expected_static):
+            if _on('static') and (st['rc'] != 1 or st['problems'] != exp_static):
                 raise Refused(f'resume_ckpt.sh -C 정적 대조 = rc {st["rc"]} · 문제 {st["problems"]} ≠ 등록 '
-                              f'{"§12-2 (마) 둘" if window == "W2" else "하나 (§8-1)"}')
+                              f'§12-4 {"W2 넷" if window == "W2" else "W1 셋"}')
     ed = _edits(case, branch, window)
     if window == 'W2':
         changes = [f'49–50 → read_restart restart_{case}/restart_compress_{n}.bin', '116–150 뺌 (삽입 · 삽입 검사)', '165 → restart 0',
@@ -1336,7 +1365,7 @@ def build_branch(case, branch, np_, out_parent, window='W1', main_deck=None, *, 
         radius_sim={str(k): v for k, v in d['radius'].items()}, area_sim=d['area'],
         damp=dict(gamma=0.5, scale=(dict(type=SE_TYPE, s=c['s'], s_from_deck='%.6e' % s_deck) if kind == 'damp' else None)),
         changes=changes, static_check=(None if st is None else {k: st[k] for k in ('rc', 'problems', 'notes', 'tool', 'tool_sha256')}),
-        static_expected=expected_static if kind in ('base', 'floor') else None,
+        static_expected=exp_static if kind in ('base', 'floor') else None,
     )
     if window == 'W2':
         man['amendment'] = dict(section='§12-2', status=status)
@@ -2255,7 +2284,7 @@ def selftest():
                 f.write(reg_txt.replace(W2_STATUS_DRAFT, W2_STATUS_DRAFT + '\n> **§12-2 상태: ✅ 1저자 비준 (10-29)**', 1))
             fake = os.path.join(mdir, 'fake_resume.sh')
             with open(fake, 'w', encoding='utf-8') as f:
-                f.write('echo "  ✗ %s"\necho "  ✗ 다른 문제"\nexit 1\n' % EXPECTED_STATIC_PROBLEM)
+                f.write('echo "  ✗ %s"\necho "  ✗ 다른 문제"\nexit 1\n' % EXPECTED_STATIC_W1[2])
             tmpl = os.path.join(mdir, 'runner_tmpl.sh')
             with open(tmpl, 'w', encoding='utf-8') as f:
                 f.write(_read(os.path.join(ROOT, RUNNER_TEMPLATE)).replace('#SBATCH --qos=cpu-60', '#SBATCH --qos=cpu-30'))
