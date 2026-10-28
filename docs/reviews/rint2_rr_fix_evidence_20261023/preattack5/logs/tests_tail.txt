@@ -1,0 +1,20 @@
+== test_rint_first_result (마지막 3 줄)
+  PASS  F09 (구현과 함께 · 변이로 검증) 입구 검사 뒤 다른 프로세스가 같은 표지 자리를 먼저 씀 → 덮지 않는다 (그 내용 그대로) · 감싸개 rc 5 · σ 를 찍지 않는다
+
+test_rint_first_result: 9/9 PASS
+== test_ca_s0_census (마지막 3 줄)
+  PASS  A4 S0-2 — α 블록에 σ · 전류 · 소산 칸 없음 (면 기하 · 수만)
+
+167 PASS · 0 FAIL
+== test_ca_ext_runner (마지막 3 줄)
+    (--old-runner 없음 — 건너뜀 · 커밋 증거는 그 인자로 돌린 기록)
+
+151 PASS · 0 FAIL
+== test_rint_r_chain (마지막 3 줄)
+  PASS  K01 ★ PF2 F (10-22 · PRE2-design-05) 문서 명령 = 실제 인자 계약 — kgy 명령 · 등록 R §10-1 의 사슬 명령이 사슬 argparse 를 지난다 (단계 함수 = 받기만) · 감도 (--variant) = --after-main · S0 단계 2 명령 = --r-plan-path (관문 앞 인자 검사 그대로) · 두 문서의 주 사다리 · 예측 · S0 단계 2 인자 이름이 같다 · 명령�
+
+test_rint_r_chain: 386/386 PASS (393.1 s)
+== test_rint_r_chain_e2e (마지막 3 줄)
+  PASS  E16 ★ 10-27 묶음 C2d 실물 합치기 fetch 가정 — 같은 요청 · 다른 런 이름 (P05_corner · U01_corner) · 다른 폴더 = 팔 JSON 바이트 같음 · σ 같음 · SV 귀속 verified 둘 다 · 단위 폴더 사본 (다른 자리) 의 read_run (합친 이름 · 실물 봉인 원천) 통과 · σ · 팔 sha256 = 단위 런 기록 · SV 귀속 verified
+
+test_rint_r_chain_e2e: 39 PASS · 0 FAIL (517.5 s)

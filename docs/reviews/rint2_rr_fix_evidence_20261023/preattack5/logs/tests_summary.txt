@@ -1,0 +1,6 @@
+test_rint_first_result rc=0 secs=1
+test_ca_s0_census rc=0 secs=22
+test_ca_ext_runner rc=0 secs=158
+test_rint_r_chain rc=0 secs=394
+test_rint_r_chain_e2e rc=0 secs=518
+DONE

@@ -1,0 +1,14 @@
+{"case": "illegal_address_driver (10-28 고침 · 대조)", "cause": "runner_rc", "probe": "U1", "resume_ok": false, "side": "post"}
+{"case": "device_side_assert_runtime", "cause": "resource", "probe": "U1", "resume_ok": true, "side": "post"}
+{"case": "misaligned_address_driver", "cause": "resource", "probe": "U1", "resume_ok": true, "side": "post"}
+{"case": "illegal_instruction_driver", "cause": "resource", "probe": "U1", "resume_ok": true, "side": "post"}
+{"case": "launch_failed_driver", "cause": "resource", "probe": "U1", "resume_ok": true, "side": "post"}
+{"case": "invalid_value_runtime", "cause": "resource", "probe": "U1", "resume_ok": true, "side": "post"}
+{"case": "python_bug (대조)", "cause": "runner_rc", "probe": "U1", "resume_ok": false, "side": "post"}
+{"boot_differs": true, "confirmed": true, "killed": 0, "machine_id_same": true, "members_before": [29651], "probe": "U2", "token_process_still_alive": true, "why": "재부팅 — 그 부팅의 프로세스는 없다"}
+{"cause": null, "confirmed": true, "killed": 0, "late_file_after_confirmed": true, "late_mtime_after_end": true, "left": [], "probe": "U3", "rc": 0}
+{"cause": "parent_dead", "note": "요약 없음 (부모 SIGKILL 이든 사슬 프로세스의 Stop 아닌 예외든 같은 줄)", "probe": "U5", "resume_ok": true, "side": "post", "status": "interrupted"}
+{"both_ok": 0, "examples": [{"committed_machines": null, "head_lines": 3, "parse": "ATTEMPT_LEDGER_MISMATCH: 원장: 3 째 줄 항목 번호 1 (차례 = 2)", "trial": 10, "workers": [[0, "ok", "2d8fc220a124a232ce1d9870c558393d46ec9748"], [1, "stop", "ATTEMPT_LEDGER_MISMATCH: 원장 git add -- rc 128 · fatal: Unable to create '/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a67"]]}], "ledger_unparseable_after": 1, "none_ok": 0, "one_ok": 12, "probe": "U4", "stop_but_line_committed": 0, "trials": 12}
+{"chain_alive_at_recover": true, "chain_pid_recorded": true, "chain_saw": "CHAIN_SAW rc=-9 cause=None confirmed=True by='chain'", "end_final": {"by": "recover", "cause": "parent_dead", "confirmed": true, "rc": null}, "probe": "U6", "recover_end": {"by": "recover", "cause": "parent_dead", "confirmed": true, "killed": 1}, "recover_rc": 0}
+{"append_with_lock": "ATTEMPT_LEDGER_MISMATCH: 원장 git add -- rc 128 · fatal: Unable to create '/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/", "next_ledger_read": "ATTEMPT_LEDGER_MISMATCH: /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/", "probe": "U7", "working_tree_after": "M rint_r_attempts.jsonl"}
+{"probe": "U8", "rows": [{"case": "marker_only (대조)", "cause": "timeout", "resume_ok": true, "side": "post"}, {"case": "part_file (쓰는 중 죽음)", "cause": "timeout", "resume_ok": false, "side": "post"}, {"case": "payload_before_runner_check (검사 전 죽음)", "cause": "timeout", "resume_ok": false, "side": "post"}]}

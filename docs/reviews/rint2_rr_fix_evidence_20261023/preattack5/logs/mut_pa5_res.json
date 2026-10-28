@@ -1,0 +1,209 @@
+[
+ {
+  "id": "X01",
+  "why": "합치기 — 원장 역사 (덧붙이기만) 검사 끔",
+  "only": "UM",
+  "rc": 0,
+  "killed": false,
+  "summary": "test_rint_r_chain: 23/23 PASS (91.3 s)",
+  "seconds": 91.8
+ },
+ {
+  "id": "X02",
+  "why": "합치기 — --max-hours · 기계 · 계획 봉인 판 대조 끔",
+  "only": "UM,EP",
+  "rc": 0,
+  "killed": false,
+  "summary": "test_rint_r_chain: 34/34 PASS (103.4 s)",
+  "seconds": 103.9
+ },
+ {
+  "id": "X03",
+  "why": "합치기 — 등록 계획 숫자 블록 대조 끔",
+  "only": "UM,EP",
+  "rc": 0,
+  "killed": false,
+  "summary": "test_rint_r_chain: 34/34 PASS (106.0 s)",
+  "seconds": 106.4
+ },
+ {
+  "id": "X04",
+  "why": "합치기 — 원장 머리 계획 = 사다리 계획 대조 끔",
+  "only": "UM",
+  "rc": 0,
+  "killed": false,
+  "summary": "test_rint_r_chain: 23/23 PASS (101.9 s)",
+  "seconds": 102.4
+ },
+ {
+  "id": "X05",
+  "why": "판정 — 최대 시도 수 (ATTEMPT_LIMIT) 대조 끔",
+  "only": "AL,UM",
+  "rc": 0,
+  "killed": false,
+  "summary": "test_rint_r_chain: 53/53 PASS (140.2 s)",
+  "seconds": 140.7
+ },
+ {
+  "id": "X06",
+  "why": "판정 — 같은 대상 입력 둘 (DUPLICATE_RUN) 끔",
+  "only": "AL",
+  "rc": 0,
+  "killed": false,
+  "summary": "test_rint_r_chain: 30/30 PASS (43.0 s)",
+  "seconds": 43.4
+ },
+ {
+  "id": "X07",
+  "why": "--add — --plan sha = 원장 머리 계획 대조 끔",
+  "only": "AL",
+  "rc": 0,
+  "killed": false,
+  "summary": "test_rint_r_chain: 30/30 PASS (41.6 s)",
+  "seconds": 42.1
+ },
+ {
+  "id": "X08",
+  "why": "--init — 봉인 전 계획 (null 칸) 거부 끔",
+  "only": "AL,EP",
+  "rc": 0,
+  "killed": false,
+  "summary": "test_rint_r_chain: 41/41 PASS (46.4 s)",
+  "seconds": 46.8
+ },
+ {
+  "id": "X09",
+  "why": "결과 줄 꼴 — rejected 인데 결과 뒤 · 재실행 자격 검사 끔",
+  "only": "AL",
+  "rc": 0,
+  "killed": false,
+  "summary": "test_rint_r_chain: 30/30 PASS (40.5 s)",
+  "seconds": 40.9
+ },
+ {
+  "id": "X10",
+  "why": "자원 낱말 — NOT_RESOURCE_WORDS (잘못된 주소) 끔",
+  "only": "AL19",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 2/3 PASS (6.0 s)   FAILED: ['AL19c']",
+  "seconds": 6.4
+ },
+ {
+  "id": "X11",
+  "why": "recover --ledger — 시도 폴더 ↔ 원장 항목 (대상 · 시작 커밋 조상) 대조 끔",
+  "only": "AL13,AL14,RS02",
+  "rc": 0,
+  "killed": false,
+  "summary": "test_rint_r_chain: 4/4 PASS (6.7 s)",
+  "seconds": 7.2
+ },
+ {
+  "id": "X12",
+  "why": "원장 꼴 — 항목 resume_of 꼴 (같은 대상 앞 항목) 검사 끔",
+  "only": "AL,RS",
+  "rc": 0,
+  "killed": false,
+  "summary": "test_rint_r_chain: 36/36 PASS (59.3 s)",
+  "seconds": 59.7
+ },
+ {
+  "id": "X13",
+  "why": "exec_policy — allowed_machines 중복 검사 끔",
+  "only": "EP",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 10/11 PASS (9.9 s)   FAILED: ['EP04']",
+  "seconds": 10.3
+ },
+ {
+  "id": "X14",
+  "why": "재실행 복사 — 복사 자리가 이미 있음 검사 끔",
+  "only": "RS",
+  "rc": 0,
+  "killed": false,
+  "summary": "test_rint_r_chain: 6/6 PASS (21.1 s)",
+  "seconds": 21.5
+ },
+ {
+  "id": "X15",
+  "why": "원장 읽기 — 원장 파일이 링크면 거부 끔",
+  "only": "AL",
+  "rc": 0,
+  "killed": false,
+  "summary": "test_rint_r_chain: 30/30 PASS (44.1 s)",
+  "seconds": 44.5
+ },
+ {
+  "id": "X16",
+  "why": "합친 예측 판정 — 같은 단위 런 두 번 사용 검사 끔",
+  "only": "UM",
+  "rc": 0,
+  "killed": false,
+  "summary": "test_rint_r_chain: 23/23 PASS (106.6 s)",
+  "seconds": 107.0
+ },
+ {
+  "id": "X17",
+  "why": "합치기 — 사다리 입력 = 이 원장 채택 사다리 시도 대조 끔",
+  "only": "UM",
+  "rc": 0,
+  "killed": false,
+  "summary": "test_rint_r_chain: 23/23 PASS (101.1 s)",
+  "seconds": 101.6
+ },
+ {
+  "id": "X18",
+  "why": "recover --ledger — 거부 기록 (rejected.json) 폴더 = rejected 결과 줄 끔",
+  "only": "AL,RS,GR",
+  "rc": 0,
+  "killed": false,
+  "summary": "test_rint_r_chain: 50/50 PASS (84.0 s)",
+  "seconds": 84.5
+ },
+ {
+  "id": "X19",
+  "why": "넘침 점 풀기 전 — 결정 기록 변이 대조 끔",
+  "only": "UM",
+  "rc": 0,
+  "killed": false,
+  "summary": "test_rint_r_chain: 23/23 PASS (105.9 s)",
+  "seconds": 106.4
+ },
+ {
+  "id": "X20",
+  "why": "넘침 점 풀기 전 — 결정 기록 계획 sha 대조 끔",
+  "only": "UM",
+  "rc": 0,
+  "killed": false,
+  "summary": "test_rint_r_chain: 23/23 PASS (100.6 s)",
+  "seconds": 101.1
+ },
+ {
+  "id": "X21",
+  "why": "끝 합치기 — 결정 기록 변이 · 계획 · 사다리 요약 sha 대조 끔",
+  "only": "UM",
+  "rc": 0,
+  "killed": false,
+  "summary": "test_rint_r_chain: 23/23 PASS (99.7 s)",
+  "seconds": 100.2
+ },
+ {
+  "id": "X22",
+  "why": "--add — 지금 코드 dirty · 환경 봉인 판 대조 끔",
+  "only": "AL,EP",
+  "rc": 0,
+  "killed": false,
+  "summary": "test_rint_r_chain: 41/41 PASS (44.4 s)",
+  "seconds": 44.9
+ },
+ {
+  "id": "X23",
+  "why": "--add — 허용 기계 대조 끔",
+  "only": "AL,EP",
+  "rc": 1,
+  "killed": true,
+  "summary": "test_rint_r_chain: 40/41 PASS (44.9 s)   FAILED: ['AL16']",
+  "seconds": 45.3
+ }
+]

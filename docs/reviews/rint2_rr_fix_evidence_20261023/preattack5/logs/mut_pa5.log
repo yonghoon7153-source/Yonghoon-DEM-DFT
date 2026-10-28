@@ -1,0 +1,24 @@
+X01 SURVIVED test_rint_r_chain: 23/23 PASS (91.3 s)
+X02 SURVIVED test_rint_r_chain: 34/34 PASS (103.4 s)
+X03 SURVIVED test_rint_r_chain: 34/34 PASS (106.0 s)
+X04 SURVIVED test_rint_r_chain: 23/23 PASS (101.9 s)
+X05 SURVIVED test_rint_r_chain: 53/53 PASS (140.2 s)
+X06 SURVIVED test_rint_r_chain: 30/30 PASS (43.0 s)
+X07 SURVIVED test_rint_r_chain: 30/30 PASS (41.6 s)
+X08 SURVIVED test_rint_r_chain: 41/41 PASS (46.4 s)
+X09 SURVIVED test_rint_r_chain: 30/30 PASS (40.5 s)
+X10 killed test_rint_r_chain: 2/3 PASS (6.0 s)   FAILED: ['AL19c']
+X11 SURVIVED test_rint_r_chain: 4/4 PASS (6.7 s)
+X12 SURVIVED test_rint_r_chain: 36/36 PASS (59.3 s)
+X13 killed test_rint_r_chain: 10/11 PASS (9.9 s)   FAILED: ['EP04']
+X14 SURVIVED test_rint_r_chain: 6/6 PASS (21.1 s)
+X15 SURVIVED test_rint_r_chain: 30/30 PASS (44.1 s)
+X16 SURVIVED test_rint_r_chain: 23/23 PASS (106.6 s)
+X17 SURVIVED test_rint_r_chain: 23/23 PASS (101.1 s)
+X18 SURVIVED test_rint_r_chain: 50/50 PASS (84.0 s)
+X19 SURVIVED test_rint_r_chain: 23/23 PASS (105.9 s)
+X20 SURVIVED test_rint_r_chain: 23/23 PASS (100.6 s)
+X21 SURVIVED test_rint_r_chain: 23/23 PASS (99.7 s)
+X22 SURVIVED test_rint_r_chain: 41/41 PASS (44.4 s)
+X23 killed test_rint_r_chain: 40/41 PASS (44.9 s)   FAILED: ['AL16']
+EXIT 0
