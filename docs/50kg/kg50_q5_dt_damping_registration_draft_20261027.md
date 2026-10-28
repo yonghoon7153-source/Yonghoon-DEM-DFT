@@ -375,3 +375,34 @@
 | L-1 | 바이너리 환경 변수 이름 `LMP_SERIAL` · 순서 = 변수 → `$HOME/src/LIGGGHTS-PUBLIC/src/lmp_serial` → PATH | 그대로 — 1저자 WSL 빌드 자리가 기본 · 변수로만 바꾼다 |
 | L-2 | 로컬 루트 `~/q5_local` · 가지 폴더 꼬리 `_wsl` | 그대로 — hit 가지 폴더 (`q5_kg50_d3_b50_s1_<X>`) 와 이름이 겹치지 않아 결과를 모을 때 섞이지 않는다 |
 | L-3 | 러너의 더한 검사 둘 — `log.liggghts` 가 있으면 실행 안 함 · MPI 빌드면 실행 안 함 | 그대로 — 다시 돌릴 때 옛 로그를 덮지 않는다 · 로컬 직렬 결정을 기계로 지킨다 |
+
+### 12-4. 정적 대조 기대 개정 — ✅ 1저자 10-28 밤 (Q5-S1 · 재개 도구 고침 뒤)
+
+- 비준: 1저자 10-28 밤 *"권고 가 이긴한데 나 이거 진짜 급한데"* = 수정 계획 `docs/50kg/kg50_resume_recheck_fix_plan_20261028.md` 의 Q5-S1 권고 (예) · 결과 0 건 열람 (D3 A3 · C3 결과 봉인 그대로) · 덱 바이트 무변경.
+- 왜: 재개 도구 `scripts/resume_ckpt.sh` 를 Codex 재검토 (10-28 · KG50R-01–05) 대로 고쳤다 — 전체 프로그램 대조 (명령 하나하나) · 압축 체크포인트 재개 거부.  같은 가지 덱에서 도구가 내는 문제 줄이 바뀌었다.  §8-1 의 한 줄 · §12-2 (마) 의 둘은 옛 도구 출력이다 — 같은 자리를 말하면 이 절이 앞선다.
+- 이미 만든 가지 폴더 = 그대로 유효 — 생성기 `--verify` · 판독기는 `-C` 를 다시 돌리지 않는다 (manifest 의 `static_check` = 그 폴더를 만든 도구의 기록).
+- 기대 = rc 1 · 문제 = 정확히 아래 줄 · 이 순서 (`<case>` = 케이스 이름 · `<N>` = W2 시작 step · 생성기가 바꿔 넣는다).
+
+W1 — A · F · A3 · F3 (셋 · 등록 바꿈 셋과 하나씩: §4-5 q5 덤프 둘 · 창 끝 = 213 행 뒤에서 끝남 · 165 행 `restart 0`):
+
+1. `체크포인트 뒤 ~ 첫 긴 run 앞 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 35 개 ↔ 재개 덱 37 개 — 재개 덱에만 [dump dq5a all custom 66667 post_<case>/q5atom_*.liggghts id type x y z radius vx vy vz] [dump dq5c all local 200001 post_<case>/q5contact_*.liggghts c_cpl[1] c_cpl[2] c_cpl[3] c_cpl[4] c_cpl[5] c_cpl[6] c_cpl[7] c_cpl[8] c_cpl[9] c_cpl[10] c_cpl[11] c_cpl[12] c_cpl[13] c_cpl[14] c_cpl[15] c_cpl[16] c_cpl[17] c_cpl[18] c_cpl[19] c_cpl[20] c_cpl[21] c_cpl[22] c_cpl[23] c_cpl[24] c_cpl[25] c_cpl[26]]`
+2. `첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 27 개 ↔ 재개 덱 2 개 — 바뀜 [print "====== PHASE 3: COMPRESSION (Speed 0.01) ======"] [dump dmp_atom all custom 50000 post_<case>/atom_*.liggghts id type x y z radius vx vy vz c_strs[1] c_strs[2] c_strs[3] c_ke] → [undump dq5a] [undump dq5c]`
+3. `재개 지점 restart 다름: 본 덱 [restart 50000 restart_<case>/restart_settling_*.bin] ↔ 재개 덱 [restart 0]`
+
+W2 — A · F (넷):
+
+1. `압축 체크포인트 재개 = 지원 안 함 (KG50R-01 · 1저자 10-28 Q3 (가)) — 체크포인트 restart_compress_<N>.bin (이름 restart_compress_*)`
+2. `첫 긴 run 다름 (반복 안 restart 체크포인트 · 10-28 KG50R-01): 본 덱 [run 5000] ↔ 재개 덱 [run 300000]`
+3. `재개 덱에 본 덱 체크포인트 뒤 첫 명령 [label loop_press] 이 없음 — 준비 구간 경계를 못 정함 (10-28 KG50R-03 · 준비 구간 · 상태 대조 건너뜀)`
+4. `첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 19 개 ↔ 재개 덱 2 개 — 바뀜 [variable current_press equal "abs(f_top_mesh[3]) / 0.0025 / 1000000"] [print "Current Pressure: ${current_press} MPa (Target: ${target_press})"] → [undump dq5a] [undump dq5c]`
+
+- W2 첫 줄 = 도구가 압축 체크포인트 재개를 거부한다는 뜻 (KG50R-01 · 1저자 10-28 Q3 (가)) — W2 가지는 본 런을 잇는 재개가 아니라 고정 길이 `run` 의 가지라 기록만 한다 (판 정지 판정 없음 · §5).
+- ⚠ 한정: W2 셋째 줄 = 도구가 W2 덱의 준비 구간 (read_restart 뒤 ~ 첫 긴 run 앞 — q5 덤프 · `fix move_press` · `dmp_atom` · `restart 0` 자리) 의 경계를 못 정해 그 구간 · 상태 대조를 건너뛴다.  ⇒ W2 의 그 구간은 생성기 허용 목록 대조 하나로만 본다.  W2-7 의 "독립 확인" 은 체크포인트 꼴 · 첫 긴 run · 뒤 구간 · 변수 참조 · label 까지로 줄어든다.
+- B · C = 그대로 허용 목록 대조만 (§8-1 과 같음).
+
+### 12-5. W2 뒤 D0.7 본 런 이어 가기 — ✅ 1저자 10-28 밤 (Q5-S2 (가))
+
+- §8-3 ⑤ 의 *"본 런 이어 돌리기 (재개 도구 compress 재개 · …)"* 는 재개 도구가 압축 체크포인트 재개를 거부하므로 (KG50R-01 · 1저자 10-28 Q3 (가)) 할 수 없다 → **W2 뒤 본 런 = 정착 끝 체크포인트 (`restart_after_settling.bin`) 에서 다시** (재개 도구 after_settling 재개 · 정착 끝 → N 구간을 한 번 더 돈다 · 추가 ≈ 5–14 h · NP 56 = §5 의 추정).
+- 같은 덱 · 같은 NP 의 다른 실현 (MPI 합산 순서) — W2 판정 (가지 ↔ A) 에는 무관.
+- 수정 계획의 Q3 칸 *"D0.7 · D1 · D2 재개 = 정착 체크포인트라 무관"* 은 W2 를 빠뜨린 문장이었다 (원장 `SELF-140`).
+- ⬜ 1저자 10-28 밤 질문 (본 런 순서 · §10 Q6 (다) = 본 런을 멈추지 않음 · 가지는 뒤에) 이 (다) 로 정해지면 이 절은 쓰이지 않는다 (본 런이 멈추지 않으므로 이어 갈 자리가 없다).

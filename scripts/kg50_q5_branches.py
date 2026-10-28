@@ -1577,6 +1577,19 @@ def selftest():
     D07, D3 = 'kg50_d07_b50', 'kg50_d3_b50_s1'
     repo_before = {c: _sha256_file(os.path.join(ROOT, CASES[c]['deck'])) for c in CASES}
     reg_txt = _read(os.path.join(ROOT, REGISTRATION))
+
+    def reg_static(window, case, n=None):
+        """등록 §12-4 (1저자 10-28 밤 Q5-S1) 의 정적 대조 기대 — 등록 글자에서 직접 읽는다 (생성기 상수와 따로)."""
+        sec = reg_txt.split('### 12-4.', 1)[1].split('\n### ', 1)[0]
+        part = sec.split('\n' + ('W1 —' if window == 'W1' else 'W2 —'), 1)[1]
+        out = []
+        for ln in part.split('\n')[1:]:
+            m_ = re.match(r'^[0-9]+\. `(.+)`$', ln)
+            if m_:
+                out.append(m_.group(1).replace('<case>', case).replace('<N>', str(n)))
+            elif out and ln.strip():
+                break
+        return out
     tmp = tempfile.mkdtemp(prefix='q5st_')
     built, w2, loc = {}, {}, {}
     try:
@@ -1587,6 +1600,10 @@ def selftest():
             chk('⓪c §12-2 상태 — 지금 등록 = 개정 초안 · 비준 전 · ✅ 줄로 바꾸면 비준 · 둘 다 · 둘 다 없음 = 정할 수 없음 (None)',
                 [amendment_status(x) for x in (reg_txt, rat, both, none)] == [STATUS_DRAFT, STATUS_RATIFIED, None, None])
         run('⓪c 상태', status_tests)
+        chk('⓪d 등록 §12-4 정적 대조 기대 = W1 셋 · W2 넷 (등록 글자 · <case> · <N> 자리)',
+            len(reg_static('W1', D07)) == 3 and len(reg_static('W2', D07, 800000)) == 4
+            and all('kg50_d07_b50' in x for x in reg_static('W1', D07)[:1])
+            and reg_static('W2', D07, 800000)[0].endswith('restart_compress_800000.bin (이름 restart_compress_*)'))
 
         def g_build():
             for case in (D07, D3):
@@ -1608,8 +1625,8 @@ def selftest():
             chk('G1b A manifest — 체크포인트 step 200001 · 끝 400002 · atom 덤프 4 (200001 · 266668 · 333335 · 400002) · contact 2',
                 m['s0'] == 200001 and m['end_step'] == 400002 and m['atom_dump']['steps'] == [200001, 266668, 333335, 400002]
                 and m['contact_dump']['steps'] == [200001, 400002] and m['compare_step'] == 400002, m.get('atom_dump'))
-            chk('G1c A 정적 대조 (resume_ckpt.sh -C) = rc 1 · 문제 하나 = 등록 §8-1 글자',
-                m['static_check']['rc'] == 1 and m['static_check']['problems'] == [EXPECTED_STATIC_PROBLEM], m['static_check'])
+            chk('G1c A 정적 대조 (resume_ckpt.sh -C) = rc 1 · 문제 셋 = 등록 §12-4 W1 글자 (10-28 밤 개정 · §8-1 앞섬)',
+                m['static_check']['rc'] == 1 and m['static_check']['problems'] == reg_static('W1', D07), m['static_check'])
             cmds = [x for x, _a, _b in commands(_strip_header(rd('A')))]
             chk('G1d A 덱 명령 — read_restart 한 번 (49 행 자리) · 삽입 fix 0 · write_restart 0 · restart 0 · run 1 · run 200000 만',
                 cmds.count('read_restart restart_kg50_d07_b50/restart_after_settling.bin') == 1
@@ -1703,9 +1720,9 @@ def selftest():
                 '#SBATCH -n 28' in rd('F', 'runner') and '-np 28 lmp_mpi' in rd('F', 'runner')
                 and '-np 2 $HOME/LIGGGHTS-PUBLIC/src/lmp_auto -in input_q5_kg50_d3_b50_s1_F3.liggghts' in rd('F3', 'runner')
                 and '-np 1 $HOME/LIGGGHTS-PUBLIC/src/lmp_auto' in rd('A3', 'runner') and '-np 1 ' in rd('C3', 'runner'))
-            chk('G4c F · F3 정적 대조 = 등록 하나', built['F']['static_check']['problems'] == [EXPECTED_STATIC_PROBLEM]
-                and built['F3']['static_check']['problems'] == [EXPECTED_STATIC_PROBLEM]
-                and built['A3']['static_check']['problems'] == [EXPECTED_STATIC_PROBLEM])
+            chk('G4c F · F3 · A3 정적 대조 = 등록 §12-4 W1 셋 (케이스 이름 자리)', built['F']['static_check']['problems'] == reg_static('W1', D07)
+                and built['F3']['static_check']['problems'] == reg_static('W1', D3)
+                and built['A3']['static_check']['problems'] == reg_static('W1', D3))
         run('G4 F', g4)
 
         def g5():
@@ -1828,8 +1845,8 @@ def selftest():
             chk('W1c §12-2 상태 = 개정 초안 · 비준 전 (지금 등록) — manifest · 덱 머리 줄 같음',
                 m['amendment'] == dict(section='§12-2', status=STATUS_DRAFT)
                 and '#   §12-2 상태: 개정 초안 · 비준 전' in rd('A', b=w2, sub='w2').split('\n'), m.get('amendment'))
-            chk('W1d W2 A 정적 대조 = 등록 §12-2 (마) 둘 (rc 1 · 실제 도구)',
-                m['static_check']['rc'] == 1 and m['static_check']['problems'] == list(EXPECTED_STATIC_PROBLEMS_W2), m['static_check'])
+            chk('W1d W2 A 정적 대조 = 등록 §12-4 W2 넷 (rc 1 · 실제 도구 · 10-28 밤 개정 · §12-2 (마) 앞섬)',
+                m['static_check']['rc'] == 1 and m['static_check']['problems'] == reg_static('W2', D07, m['s0']), m['static_check'])
             cmds = [x for x, _a, _b in commands(_strip_header(rd('A', b=w2, sub='w2')))]
             rs = 'read_restart restart_kg50_d07_b50/restart_compress_800000.bin'
             ia = cmds.index('print "====== RESTART SAVED ======"')
@@ -1890,7 +1907,7 @@ def selftest():
                 and dif == [('fix damp all viscous 0.5', 'fix damp all viscous 0.5 scale 3 5.3696e-4')], dif)
             chk('W3b W2 F 덱 = A 덱 바이트 · F 러너 -n 28 · F 정적 대조 = 둘', rd('F', b=w2, sub='w2') == rd('A', b=w2, sub='w2')
                 and '#SBATCH -n 28' in rd('F', 'runner', b=w2, sub='w2')
-                and w2['F']['static_check']['problems'] == list(EXPECTED_STATIC_PROBLEMS_W2))
+                and w2['F']['static_check']['problems'] == reg_static('W2', D07, w2['F']['s0']))
         run('W3 W2 C · F', w3)
 
         def w4():
@@ -2000,7 +2017,7 @@ def selftest():
                 and 'grep -q libmpi' in r and f'Q1={D3_CKPT_SHA256}' in r
                 and 'setsid nohup "$B" -in input_q5_kg50_d3_b50_s1_A3_wsl.liggghts > log_q5_kg50_d3_b50_s1_A3_wsl_v1.out 2>&1 < /dev/null &' in r
                 and runner_check(D3, 'A3', 1, r, 'W1', 'wsl') == [], r)
-            chk('H1d 로컬 A3 정적 대조 = 등록 §8-1 하나 (덱이 hit A3 와 같다)', m['static_check']['problems'] == [EXPECTED_STATIC_PROBLEM])
+            chk('H1d 로컬 A3 정적 대조 = 등록 §12-4 W1 셋 (덱이 hit A3 와 같다)', m['static_check']['problems'] == reg_static('W1', D3))
             o = m['operator_commands']
             stage = '~/q5_local/kg50_d3_b50_s1/restart_kg50_d3_b50_s1/restart_after_settling.bin'
             chk('H1e 운영자 명령 (로컬) — hit 원본 scp (읽기만) → 같은 사본 · 등록 Q1 sha256 -c · SHA256SUMS -c · cp · ckpt_sha256.txt · '
