@@ -42,7 +42,8 @@ nohup bash ~/dem_test/scripts/resume_ckpt.sh -T -n 56 -s ins1 -r ~/dem_test kg50
 mv ~/dem_test/kg50_d2_b50 ~/dem_test/kg50_d2_b50.ins1
 nohup bash ~/dem_test/scripts/resume_ckpt.sh -T -n 4 -s ins1 -r ~/dem_test kg50_d2_b50 > ~/dem_test/resume_d2_b50_T.log 2>&1 &
 grep -E "^ +kg50_d(07|2)_b50 +(compress|after_settling|settling) " ~/dem_test/kg50_d07_b50/plan_r56.txt ~/dem_test/kg50_d2_b50/plan_r4.txt
-# G0–G3 통과 확인 뒤 같은 두 명령을 -T 없이 (본 제출 · NP 56 · 4)
+# G0–G3 통과 확인 뒤 — -T 보고 끝 '본 제출 명령' 줄 그대로 (같은 명령 · -T 없이 · -A <resume_ckpt.sh sha256> -H <dem_restart.py sha256> ·
+#   새 시험부터 다시 돈다 · 승인값이 없거나 실제와 다르면 도구가 아무것도 하지 않는다 · 10-28 밤 개정 4 · NP 56 · 4)
 
 # WSL → hit · hit — D1-50 삽입 (NP 1) → 끝나면 1저자 hit_resume.sh 로 20 코어
 scp -r docs/data/kg50_decks_20261027_v3_b50/kg50_d1_b50 <사용자>@<hit>:~/simulation/
@@ -52,6 +53,7 @@ grep -hE "INSERTED|====== (AM|SE)|FATAL" ~/simulation/kg50_d1_b50/log.liggghts
 
 - ⛔ `run_kg50_d07_b50.sh` · `run_kg50_d2_b50.sh` (본 러너) 를 처음부터 직접 sbatch 하지 않는다 — 고코어 fresh 삽입은 기하적으로 불가능하다 (KG50-01) · 재개 도구가 쓰는 러너다.
 - ★ 10-27 밤 — 재개 전에 ibb 도구 판부터: `sha256sum ~/dem_test/scripts/resume_ckpt.sh` = 리포 `scripts/resume_ckpt.sh` 의 sha256 (10-27 밤 판 = 첫 긴 run 1 step 고침 · `docs/resume_ckpt_procedure_20260927.md` 끝 절 · KG50-17) · 10-27 ibb 사본은 09-27 판 (`bf82948e…` · `-T` 없음) 이었다.
+- ★ 10-28 밤 — 도구 개정 4 (`docs/resume_ckpt_procedure_20260927.md` 끝 절 · 원장 KG50R-01–05 · 07): 본 제출 = `-A` · `-H` 승인값 (그 판 `-T` 보고 머리 '도구 신원' 줄의 sha256 둘) 이 실제 파일과 같을 때만 · 이번 호출이 낸 시험만 본 제출로 · 정적 대조 = 전체 프로그램 대조 (모르는 명령 · 본 덱에 없는 줄 = 시험 전 거부) · 압축 (`restart_compress_*`) 체크포인트 재개 = 거부 · `-T` 보고 끝 '본 제출 명령' 줄 = 그 `-T` 에서 G0–G3 를 통과한 케이스만 (없으면 "본 제출 명령 없음").  ⛔ 순서 = 수정 계획 `docs/50kg/kg50_resume_recheck_fix_plan_20261028.md` 그대로 — 이 판의 Codex 짧은 재확인 GO 뒤 D0.7 `-T` (실제 ibb · 정착 체크포인트) → G0–G3 → 본 제출 (1저자 10-27 *"56코어 돌리는거는 go 나오고 하자"*).
 - 재개 시험 `-T` 의 화면에 `재개 덱 첫 긴 run 고침: [run 179999] → [run 180000]` 줄이 나오는 것이 정상이다 (dem_restart.py 의 settling 잔여가 1 step 짧은 꼴 · 정적 대조는 고친 뒤 처음부터 다시).
 - 재개 시험 `-T` 뒤 `plan_r<NP>.txt` 에 계획 줄이 있는지부터 본다 — `dem_restart.py` 의 실제 이름 목록은 리포에 없다 (이 덱이 그 도구를 지나는지 = 미확인).
 - 계획에 *"덱 검증 실패"* 가 나오면 같은 명령에 `-c` (작업 사본 덱의 줄 전체 주석만 빼기 · 원본 그대로 · `docs/resume_ckpt_procedure_20260927.md` 끝 절) — v3 덱은 주석에도 다른 케이스명이 없어 필요 없을 것으로 본다 (추정).  `-c` 를 쓰려면 ibb 사본 `~/dem_test/scripts/resume_ckpt.sh` 를 이 판으로 바꾼다 (sha256 이 바뀐다 · 재개 도구 Codex 재확인 대상).

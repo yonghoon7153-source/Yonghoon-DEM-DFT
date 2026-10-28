@@ -369,3 +369,75 @@ echo "(step·z: 이번 런 mesh 덤프 · P: 로그의 정규 thermo, 늦게 써
   - `&` 로 나뉜 run (시험 덱 자르기 awk 가 못 보는 꼴) 은 시험이 그 run 을 통째로 돈다 — 합은 맞게 세지만 시험이 1 시간을 넘기면 G0 (TIMEOUT) 이 막는다 (닫힌 실패).
   - 시험 전 거부 이유는 stdout (nohup 기록) 에만 나온다 — 보고 .md 의 케이스 절은 시험을 낸 케이스만 생긴다 (다른 시험 전 거부와 같은 자리 · 시험 N1 이 그 꼴을 지킨다).
   - settling 꼴의 새 거부는 그런 줄이 있는 덱에서만 결과가 바뀐다 — 본 덱 쪽 (include · next · run 이 든 if · step 을 바꾸는 명령) 은 v2 · v3 본 덱 · 09-27 r075 본 덱에 없다 (v2 · v3 의 삽입 자기검사 `if` 는 print · quit 만이라 지나간다 · 가짜 SLURM settling 장면이 모두 v2 본 덱으로 돈다).  재개 덱 쪽 (첫 긴 run 앞 run) 은 ibb D2-50 `-T` 가 기대 끝 22001 = S0 + 2000 으로 G0 을 지났으니 그 재개 덱에는 0 아닌 run 이 없었다 (추정 · 메인 세션 전달 · 그 덱은 리포에 없다).
+
+## 2026-10-28 밤 개정 4 — 이번 호출 시험만 승격 · 전체 프로그램 대조 · 압축 체크포인트 거부 · 도구 신원 승인 · G0 마지막 줄 (원장 KG50R-01–05 · 07 · 1저자 *"50kg도 권고대로해"*)
+
+- 왜: Codex 재검토 `docs/reviews/codex_kg50_resume_recheck_20261028/codex_review_kg50_resume_recheck_20261028.md` (리뷰 핀 `f118c1fd1` · 자동 본 제출 HOLD · P1 4 · P2 1 · P3 1) + 우리 재현 `docs/reviews/codex_kg50_resume_recheck_20261028/_repro_ours_20261028/README.md` (KG50R-04 를 Linux bash 로 실제로 돌려 두 장면 모두 본 제출 · G0 마지막 줄 = KG50R-07).  수정 계획 `docs/50kg/kg50_resume_recheck_fix_plan_20261028.md` — 1저자 10-28 밤 Q1 예 · Q2 (가) · Q3 (가) · Q4 예 · Q5 예 · Q6 (나) · Q7 예 · Q8 (가).
+- 고침 (G1–G3 문턱 · `-T` 뜻 그대로):
+  - **Q1 (KG50R-04 · KG50-02 · 14) 이번 호출이 낸 시험만 본 제출로.**  첫 고리에서 시험 sbatch 가 종료 코드 0 · 숫자 job 번호 (`--parsable` 의 `id` 또는 `id;cluster` → `id`) 를 돌려준 케이스만 메모리 목록에 넣고, 둘째 고리는 그 목록만 돈다 — 작업 폴더의 `job_<SFX>t.txt` · `mode_<SFX>.txt` 로 자격을 다시 만들지 않는다 (예전 = 큐 차단 · 정적 거부 뒤에도 옛 성공 시험으로 본 제출).
+    - 시도 폴더 `<작업 폴더>/attempt_<SFX>_<MMDD_HHMMSS>_<PID>/` — `tool.txt` (두 도구 sha256 · 승인값 · 시도 · 케이스 · 멈춘 폴더 · NP · `-t` · 시험을 내면 모드 · S0 · 체크포인트 · 시험 덱 첫 긴 run · 예산 한 줄) · 시험을 내면 그 시험의 재개 덱 · 시험 덱 · 러너 둘 · plan · fixrun · deckcheck · cut · tp (· strip) 사본 · `job_t.txt` · `mode.txt` · `lastrun_n.txt` · `result.txt` (G0–G3 · 결정) · 본 제출이면 `main_job.txt` · 시험 전 거부면 `reject.txt`.
+    - 멈춘 폴더에서 같이 복사된 옛 `job_*t.txt` · `mode_*.txt` 는 `<시도 폴더>/old_markers/` 로 옮긴다 (지우지 않는다 · 읽지 않는다).  예전 작업 폴더 (`<C>.prev_<시각>`) · `logs/` 의 옛 시험 로그는 손대지 않는다.  이번 시험의 `job_<SFX>t.txt` · `mode_<SFX>.txt` 는 예전처럼 작업 폴더에도 쓴다 (`ckpt_watch.sh` 가 읽는다 · 승격에는 안 쓴다).
+    - 본 제출 바로 전 — `squeue -u $USER -h -o '%i %j'` 다시: 그 케이스 잡 (C · C_ins · C_<SFX>[t] · C_r<N>[t] · 이번 시험 job 번호는 뺀다) 이 있거나 조회 실패면 본 제출 안 함 · 두 도구 sha256 다시 (승인값과 다르면 안 함) · 이 시도의 `main_job.txt` 가 이미 있으면 안 함.
+    - 같은 케이스 이름이 목록에 두 번이면 두 번째는 시험 전 거부 (예전 = 시험 2 · 본 2).
+  - **Q2 (KG50R-02 · 03 · 05 · KG50-10 · 18) 정적 대조 = 전체 프로그램 대조** (규칙 원문 = 도구 안 `check()` 앞 머리 주석) — 재개 덱 = [준비 구간] + [본 덱 체크포인트 뒤 구간을 논리 명령 하나하나 그대로]:
+    - 뒤 구간 — restart 체크포인트 = 본 덱 그 run (남은 step 만 다름) 부터 끝까지 · write_restart 체크포인트 = 그 줄 다음 명령부터 끝까지 (판 높이 `run 1` · 판 STL `print` · 판 fix · 첫 긴 run 까지 글자 그대로).  다르면 더함 · 빠짐 · 바뀜을 보인다 (difflib).
+    - 준비 구간 — 상태 명령 (도구 `STATE_CMD`: fix · unfix · fix_modify · compute · uncompute · compute_modify · variable · dump · undump · dump_modify · region · thermo · thermo_style · thermo_modify · timestep · neighbor · neigh_modify · atom_style · atom_modify · units · boundary · newton · dimension · processors · soft_particles · communicate · comm_style · comm_modify · restart · pair_style · pair_coeff) 과, 본 덱 체크포인트 앞에 **글자 그대로** 있는 `print` · `if` (print · quit 만) · `group … type …` · `shell mkdir` 만.  그 밖 (velocity · set · delete_atoms · run · label · jump · create_box · 모르는 명령) = 거부.
+    - 준비 구간이 만든 상태 = 본 덱 체크포인트 시점 상태.  꼭 있어야 (빠짐 = 거부): fix (템플릿 빼고) · fix_modify · 전역 설정 (timestep · neighbor · restart · pair_style …) · pair_coeff · *_modify.  선언하면 같아야 (빠짐 = 허용 · 쓰는 곳은 아래 참조 검사 · c_/f_ 검사): compute · 변수 · dump · region · thermo · 템플릿 fix.  재개 덱에만 있는 것 = 거부.
+    - 변수 참조 (`${x}` · `$x` · `v_x`) = 그 앞에 정의 · label = 본 덱 · 재개 덱 각각 유일 · jump 목적지 = 재개 덱에 있고 본 덱 뒤 구간의 그 label · `include` · `next` · `jump SELF <label>` 말고 다른 jump · 이름이 변수인 명령 = 어디서든 거부 · 본 덱 체크포인트 앞 `if` = print · quit · jump 만 · 변수 꼴 = equal · atom · string · delete 만 · read_restart = 1 개 · 그 파일 = 체크포인트 · restart 체크포인트 step 은 본 덱 그 run 범위 안.
+    - 첫 긴 run = 꼬리 없는 `run N` 원 줄 한 줄 — `every` · `pre` · `post` · `start` · `stop` · **`upto`** · 변수 · `&` 이음 = 거부 (`upto` 는 지원하지 않기로 정했다 · 시험 G1).
+    - **허용 차이 (목록 고정 · 시험)**: ① 첫 긴 run 남은 수 (restart 체크포인트 · 시험 F · K) ② 판 메시 fix 의 `file` 이름 (그 파일이 작업 폴더에 있을 때만 · G6 · C2) ③ `shell mkdir` ↔ `shell mkdir -p` (같은 디렉터리 · G6) ④ 템플릿 fix 재선언 · 빠짐 (G1 scheduler/plain) ⑤ '선언하면 같아야' 상태의 빠짐 (G1 baseline = thermo · 삽입 검사 변수 없음) ⑥ 본 덱 체크포인트 앞에 글자 그대로 있는 print · if · group type · shell mkdir (G1 baseline · P10).  그 밖의 더함 · 빠짐 · 바뀜 = 거부.
+    - 시험 덱 = `deckcheck --cut-trial` (같은 논리 명령 파서) — 첫 긴 run 앞 원 줄 그대로 + `run min(N, -t)` · 자른 덱을 다시 읽어 명령 = 재개 덱 첫 긴 run 앞 명령 + 그 run 일 때만 쓴다 · 정상 재개 덱에서는 예전 awk 절단기 (`$1=="run" && $2+0>1` 에서 자름) 와 바이트 같다 (시험 G5).
+    - 시험 예산 — 첫 긴 run 앞 run 합 + min(N, -t) = 시험 덱 run 합 (`--trial-steps`) · 마지막 run = `[run min(N, -t)]` · 아니면 시험 안 냄 · G0 기대 끝 = S0 + 그 합.  `-t` = 1 이상 정수.
+  - **Q3 (KG50R-01 · KG50-19 · KG50-11) 압축 체크포인트 재개 = 거부** — `-C` (체크포인트 이름 `restart_compress_*` · 또는 본 덱 반복 (label · jump) 안 restart 체크포인트) · 본 흐름 (dem_restart.py 계획 = compress → 시험 전 거부).  문구 = `압축 체크포인트 재개 = 지원 안 함 (KG50R-01 · 1저자 10-28 Q3 (가))`.  이완 중 `restart_compress_*` 도 같은 길.  09-27 r075 실제 쌍 = 이제 거부 (예전 = 통과).
+  - **Q4 (Codex Q7) 도구 신원** — 시작 때 이 스크립트 · `~/dem_test/dem_restart.py` sha256 을 stdout · 보고 머리 · 시도 폴더에.  본 제출 (`-T` 없음) = `-A <resume_ckpt.sh sha256>` · `-H <dem_restart.py sha256>` 이 실제 파일과 같을 때만 (둘 다 64 자 sha256 이 있어야) — 없거나 다르면 **아무것도 하지 않는다** (작업 폴더도 안 만든다 · rc 1) · 본 제출 바로 전 다시 대조.  `-T` = 기록만 + 보고 끝에 **본 제출 명령 한 줄 — 그 `-T` 에서 G0–G3 를 통과한 케이스만** (빠진 케이스는 이름만 · 통과한 케이스가 없으면 `본 제출 명령 없음`).
+  - **Q5 (KG50R-07) G0** = 예전 조건 ∧ 마지막 thermo 줄이 최신 머리 (`Step Atoms …`) 아래 · 칸 수 = 머리 칸 수 · 모든 칸이 유한한 수 ∧ 마지막 `Loop time of … for N steps` 의 N = 시험 마지막 run.
+  - **Q9** — 시험 전 거부 (같은 케이스 두 번 · 멈춘 폴더 없음 · 큐 조회 실패 · 큐 · 이전 폴더 · 복사 · 시도 폴더 · `-c` · dem_restart.py · 압축 · 템플릿 · 정적 대조 · 시험 덱 · 시험 제출) 도 보고에 케이스 절 `## <C> — 시험 전 거부 (10-28 Q9 · KG50R)` (단계 · 이유 · 시도).  stdout 의 거부 줄은 예전 글자 그대로.  (`docs/dem1/kg50_watch/kg50_watch.sh` 의 resume 열은 `## <C>` 절만 읽는다 — 시험 전 거부 절은 그 열에 안 잡히고 더 이른 보고의 판정이 보인다 · 예전에는 거부가 보고에 아예 없었다.)
+  - **Q6 (나) · 한정** — 상태 대조 = G1 첫 줄 (원자 수 · KE 등 1e-6) 로 대신한다 · **원 런 상태 증명이 아니다** (체크포인트를 따로 읽어 시험 S0 상태와 대조하는 reader 는 만들지 않았다 · 1저자 10-28 Q6 (나) · 덱 명령으로 상태를 바꾸는 길은 위 Q2 가 막는다).
+- 쓰는 법 (바뀜):
+
+```bash
+# ① 시험만 — 보고 머리 '도구 신원' 줄 = sha256 둘 · 보고 끝 '본 제출 명령' 줄 (G0–G3 통과 케이스만 · -T 없이 · -A · -H 승인값)
+bash ~/dem_test/scripts/resume_ckpt.sh -T -n 56 -s ins1 -r ~/dem_test kg50_d07_b50
+# ② 1저자가 sha256 두 값을 확인한 뒤 — 그 '본 제출 명령' 줄 그대로 (새 시험부터 다시 돌고 G0–G3 · 큐 · sha256 을 다시 본 뒤 본 제출)
+bash /home/<사용자>/dem_test/scripts/resume_ckpt.sh -n 56 -s ins1 -r /home/<사용자>/dem_test -x r56 -t 2000 -A <resume_ckpt.sh sha256> -H <dem_restart.py sha256> kg50_d07_b50
+```
+
+- 새로 보이는 줄 (가짜 SLURM 시험 장면 · v2 kg50_d07_b40 본 덱 · 경로 · sha256 · 시각만 줄임 · 새 줄에는 표지 `KG50R` 가 든다 — `--compare-old` 가 그 줄을 빼고 옛 판과 대조):
+
+```
+도구 신원 (10-28 Q4 · Codex Q7 · KG50R): resume_ckpt.sh sha256 <64> (<경로>) · dem_restart.py sha256 <64> (<경로>) · 시도 attempt_r56_1028_105629_16673
+  · 시험 덱 (10-28 KG50R-02 · 05 · 같은 논리 명령 파서): 재개 덱 첫 긴 run [run 180000] (원 줄 129) → [run 2000] · 시험 예산 = 첫 긴 run 앞 run 합 0 + 2000
+  · 첫 긴 run 뒤 명령 같음 (10-28 KG50R-03 · 명령 하나하나 64 개)
+  · 재개 지점 상태 대조 (10-28 KG50R-03): 본 덱 48 항목 · 재개 덱 43 항목 · 재개 덱이 다시 선언하지 않음 (선언하면 같아야 하는 것 · 쓰는 곳은 참조 검사): thermo · thermo_style · variable n_am_ins · variable n_ins · variable n_se_ins
+# -C 거부 예 (Codex suffix_velocity · 09-27 r075 압축 쌍)
+  ✗ 첫 긴 run 뒤 명령 다름 (10-28 KG50R-03 · 명령 하나하나): 본 덱 64 개 ↔ 재개 덱 65 개 — 재개 덱에만 [velocity all set 1.0 0.0 0.0]
+  ✗ 압축 체크포인트 재개 = 지원 안 함 (KG50R-01 · 1저자 10-28 Q3 (가)) — 체크포인트 restart_compress_1500000.bin (이름 restart_compress_*)
+# 보고
+- 도구 신원 (…): … · 승인 -A <64> · -H <64> (실제와 같음)                      ← -T 이면 "승인 -A 없음 · -H 없음 (없음 · 다름)"
+- 시도 (10-28 KG50R-04): attempt_r56_… — 이번 호출이 낸 시험만 본 제출 대상 (작업 폴더의 옛 job · mode 파일은 읽지 않는다)
+## kg50_d07_b40
+- 시도 (10-28 KG50R-04): attempt_r56_… · 이번 호출이 낸 시험 job 7001 만 승격 대상 (기록 <작업 폴더>/attempt_r56_…)
+- G0 마지막 줄 · Loop (10-28 KG50R-07): 마지막 thermo 줄 = 최신 머리 아래 · 칸 수 같음 · 모든 칸 유한 수 (step 22001 · 줄 6) · 'Loop time … for 2000 steps' ↔ 시험 마지막 run 2000 — 같음
+- 본 제출 직전 다시 확인 (10-28 KG50R-04 · Q4): 큐에 그 케이스 잡 없음 (이번 시험 7001 뺌) · 도구 sha256 = 승인값
+- ⛔ 본 제출 안 함 (10-28 KG50R-04) — 본 제출 직전 큐에 그 케이스 잡: kg50_d07_b40_r4 (이번 시험 7001 은 뺌)
+## kg50_d07_b40 — 시험 전 거부 (10-28 Q9 · KG50R)
+- ⛔ 시험 전 거부 (KG50R) — 단계: 큐 · 이유: kg50_d07_b40 의 잡 (kg50_d07_b40 · kg50_d07_b40_ins · kg50_d07_b40_r56[t] · kg50_d07_b40_r<N>[t]) 이 큐에 있음 — 건너뜀 · 시도 attempt_r56_… · 시험 · 본 제출 없음
+- 본 제출 명령 (10-28 Q4 · KG50R · -T 를 뺀 같은 명령 + 승인값 · G0–G3 통과 케이스만 · 새 시험부터 다시): `bash <경로>/resume_ckpt.sh -n 56 -s ins1 -r <루트> -x r56 -t 2000 -A <64> -H <64> kg50_d07_b40`
+- 본 제출 명령 없음 (10-28 Q4 · KG50R) — 이번 -T 에서 G0–G3 를 통과한 케이스가 없다 (거부 · 실패: kg50_d07_b40)
+# 승인값이 없거나 다르면 (stdout · 아무것도 안 함 · rc 1)
+⛔ 본 제출 승인 인자 (-A resume_ckpt.sh sha256 · -H dem_restart.py sha256) 가 없거나 실제 파일과 다름 — 아무것도 하지 않음 (10-28 Q4 · Codex Q7 · KG50R)
+```
+
+- 시험 = `scripts/test_resume_ckpt.py` 179 개 (옛 87 + 새 92 = R 14 · G 54 · X 6 · L 5 · I 9 · Q9 4) — 시험 먼저 커밋에서 고치기 전 판 (`e59c43e6…`) = 179 중 97 PASS · 82 FAIL (옛 87 중 기대를 바꾼 8 실패 · 79 통과 / 새 92 중 74 실패 · 18 통과 = 대조군 · 예전에도 거부하던 꼴 · 시험 덱 바이트 같음 · bad_late 기록) → 고친 판 179 PASS · 0 FAIL.  Python 3.11.15 · 3.8.20 (시험 파일 · 도구 안 `python3` 둘 다) 판정 같음 · 실행 ≈ 90 s (게이트 단계 주석의 "≈ 9 s" 는 옛 값).
+  - R = 같은 루트 두 번 호출 (A 작업 폴더 남김 · B 옛 작업 폴더를 멈춘 폴더로 다시 이름) · Codex `probe_stale_trial.py` 두 장면 (busy_queue · queue_query_failure) 은 승인값 · 가짜 dem_restart.py 를 주어 옮겼다 — 그 탐침 그대로는 `-A` · `-H` 가 없어 새 판의 승인 거부로 끝나 Q1 을 못 본다.  G = Codex 덱 고정물 그대로 `-C` 29 · 같은 부류 13 · 허용 차이 4 · 사슬 3 · 옛 awk 절단기와 바이트 4 · 루프 1.
+  - 기대를 바꾼 옛 시험 8: C1 · W0 (09-27 r075 압축 쌍 통과 → 거부 · Q3) · W6 · W7 · W10 · W12 (루프 몸 문구 → 압축 거부 · Q3) · P8 (`run 0 pre no post no` 받음 → 준비 구간 거부 · Q2) · N1 (보고 케이스 절 없음 → 있음 · Q9).
+  - **옛 판 대조** (`--compare-old <e59c43e6 판>` · stdout · 보고 · 작업 폴더 파일 · 시험 · 본 제출 여부 · 새 줄 (표지 `KG50R`) · 시도 폴더 · `cut_*.txt` 빼고): 예전부터 있던 묶음 (K S D Q T N F C A P W) 의 둘 다 정상 장면 (시험 · G0–G3 통과 / `-C` 통과) **다름 0** = settling · after_settling 정상 길 출력 그대로 · Python 3.8 도.  새 묶음의 둘 다 정상 장면 다름 3 = 보고만 (R13 같은 케이스 두 번 · G6 ② 판 메시 노트 줄 문구 · I7 빠진 케이스의 시험 전 거부 절이 남긴 빈 줄).  옛 판 정상 · 새 판 거부 43 (C · W 의 r075 압축 쌍 · P8 · R12 · G 29 · X 4 · L 4 · I 2).
+  - 돌연변이 28 (고친 판에서 관문 하나씩 끔) = 26 잡힘 · 생존 2 = 자른 시험 덱 다시 읽기 대조 · 셸 시험 예산 대조 — 절단기 · `--trial-steps` 가 맞는 한 닿지 않는 방어 (서로 같은 꼴을 막는다).
+  - `docs/dem1/kg50_watch/test_kg50_watch.sh` (도구 글자 대조 · 보고 꼴) = ✅ 165 · ❌ 0.
+- 이 개정 판 `scripts/resume_ckpt.sh` sha256 = `fb334928ff0c524e240f3166fea40245d298a40b9245a26fd720352e7b106f07` (10-28 개정 3 판 `e59c43e6…` 에서 바뀜) — ibb 사본을 바꿀 때 대조하고, 본 제출 `-A` 값이 된다.
+- 한계:
+  - **게이트 단계 둘이 이 판에서 실패한다** — `scripts/kg50_q5_branches.py --selftest` = `FAIL (61/84)` · `scripts/kg50_q5_verdict.py --selftest` = `FAIL (6/21)` (통과 / 센 수 · 예외로 뒤 묶음이 끊겨 센 수도 준다 · 옛 판 `PASS (150/150)` · `PASS (98/98)`).  Q5 등록 `docs/50kg/kg50_q5_dt_damping_registration_draft_20261027.md` §8-1 (비준) 이 옛 판 `-C` 의 문제 한 줄 `재개 지점 뒤 순서 줄 수 다름: 본 덱 12 ↔ 재개 덱 0` 을 글자로 고정했고 생성기가 그 줄을 대조한다.  이 판은 W1 가지 A · F · A3 · F3 덱에 문제 셋을 낸다 — ⓐ `체크포인트 뒤 ~ 첫 긴 run 앞 명령 다름 … 본 덱 35 개 ↔ 재개 덱 37 개 — 재개 덱에만 [dump dq5a …] [dump dq5c …]` ⓑ `첫 긴 run 뒤 명령 다름 … 본 덱 27 개 ↔ 재개 덱 2 개 — 바뀜 [print "====== PHASE 3 …"] [dump dmp_atom …] → [undump dq5a] [undump dq5c]` ⓒ `재개 지점 restart 다름: 본 덱 [restart 50000 restart_<case>/restart_settling_*.bin] ↔ 재개 덱 [restart 0]` = 등록된 가지 바꿈 (§4-5 덤프 · W1 끝 · 165 행 `restart 0`) 그대로.  W2 (§12-2 초안) 는 압축 체크포인트라 Q3 거부 줄이 앞에 든다.  ⬜ 등록 · 생성기 처리 = 1저자 (이 판에서 정하지 않았다).
+  - 덱 · 로그는 가짜 SLURM 시험 장면이다 (v2 본 덱 · 합성 재개 덱 · Codex 고정물 · 09-27 r075 실제 쌍) — 실제 ibb `dem_restart.py` 의 settling · after_settling 재개 덱 · 실제 LIGGGHTS 로그로 이 판을 돌린 적 없다.  새 대조는 예전보다 엄격하다 → 실제 덱에 시험 고정물에 없는 줄 (재개 덱에만 있는 명령 · 같은 뜻의 다른 표기) 이 있으면 시험 전 거부로 멈춘다 (닫힌 실패 · 손으로 본다).  특히 10-27 개정 2 의 첫 긴 run 1 step 고침은 정적 대조 문제가 `남은 step 다름` **하나**일 때만 돈다 → 실제 D2 재개 덱에서 다른 문제가 같이 나오면 고침이 안 돌고 시험을 내지 않는다.
+  - awk = mawk 1.3.4 (이 기계) 에서만 시험했다 — gawk (ibb) 로는 돌려 보지 않았다 (이 기계에 gawk 없음 · 새 awk 는 POSIX 범위: split · match · substr · ERE).
+  - CRLF 재개 덱 — `-C` 는 읽지만 본 흐름의 체크포인트 줄 추출 (셸) 은 예전처럼 CR 이 남아 진행하지 못한다 (옛 판 · 새 판 같음).
+  - region · group 이름을 쓰는 곳의 정의 대조는 없다 (변수 참조 · c_ · f_ 만) · 첫 긴 run 의 `upto` 는 지원하지 않는다 (거부).
