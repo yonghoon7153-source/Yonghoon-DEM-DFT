@@ -24,6 +24,7 @@
 - ✅ gabia 조회 (b44d899c · 문제 0): 다형 9 · MP 자성 · 갭 출처 (전부 GGA · NiP₂O₆ 만 GGA+U) · PP 복사. ⚠ **09-19 CEI 갭은 PAW psl 세트 · 08 SEI 갭 (LiCl · Li₂S · Li₃PO₄) 은 GBRV 세트였다** → 카드 '같은 PP' 전제 거짓 · CoS₂ MP 자리 모멘트 0 인데 요약 총 4.0 μB (그대로 옮기면 비자성 둔갑) · MnS₂ 규칙 결과 = Pnnm (hauerite 아님).
 - 🔔 **개정 1 비준 대기** (`D-2026-10-27-cei-product-gaps-amend1` · 카드 §12): PP = 09-19 PAW psl + GBRV Co·Ni·Mn · LiCl·Li₃PO₄ 다시 잼 · 대조 잡 = P₂O₅ (5.186) 하나 · TM 'Unknown' 처리 (a/nm/b/c) · MnP₂O₆ MP 대조 없음 · Mn 90/1080. 입력 12 · run_kgy.sh 준비 끝 (개정 1 proposed 면 '잠정 실행').
 - 🔔 박재현에게 그동안 MP 값을 줄지 (출처 꼬리표와 같이만 · 금속 넷은 '금속').
+- ▶ **kgy CEI 갭 체인 시작됨** (사용자 10-28 09:02 watch: gap.json 3 · 03_nscf_gap 도는 중 · VRAM 2.5 GB) · 자세한 감시 = `watch_gabia.py --sei_only` (순서 · 단계별 벽시계 · 자기모멘트 · 지금 단계의 BFGS/SCF/k 진행 · 대조 잡 · 러너 로그 끝).
 - (그대로) Li₂S 4×4×4 러너 (gabia · 탄성 13_m 뒤) · Nd Q3′ kgy 실행 출력 대기.
 
 ### ⏭-NOW-z26. 2026-10-27 낮 — 웹앱 최신화 · litdb 9 편 병합 · NdO Intro 2–5문단 · site-analysis 1.11.0
@@ -46,6 +47,7 @@
 ### ⏭-NOW-z25. 2026-10-27 — 본 세션 복귀 (evac 82 커밋 fast-forward) · W_ad 해제 파일 발송 · cascade v7 도는 중 (게이트 ≈ 33/40) · NdO 원고 같이 읽기 시작
 - ✅ **본 세션 복귀** (경우 A · `aaa275e2` → `5b6d67ba` · 강제 없이 push · ■2 전부 기대값: lint 0 · 결정 149 · 판정 8 · 규약 0 위반 · 웹 2 failed (대피 전부터의 둘) / 635 passed / 2 skipped · selftest 열한 개 통과). 이제 원격 회수 블록은 friendly 로.
 - ✅ **W_ad 단계 1–4 해제 파일 + 메일 업체 발송 (트랙 W_ad · 1저자 = 사용자)** — 사용자 10-27 *'wad는 보냈어'* (발송 시각 미상) · 빌드 기록 `⑧_해제_파일_발송_2026_10_27` · ⏭ 반송 → `--check` (등록부 sha 999aa2da…) → `--collect` · 은 V5 G5 는 DEM 회신 10 과 같이 (🔔).
+- ⛔ **cascade v7 상한 게이트로 정지 (10-28 08:09:20 · 설계대로)** — 33 / 40 · 누적 446.56 / 461.4 GPU-h · 남은 7 런 · 🔔 **새 상한 = 사용자 결정** (권고: CEI 갭 체인 끝난 뒤 혼자 · 560) · 런로그 `⛔_상한_게이트_정지_2026_10_28`.
 - 👁 **cascade v7 (트랙 cascade · 1저자 = 사용자)** — kgy 10-27 09:31 · 31 / 40 · 누적 420.23 / 461.4 GPU-h · [32] P2_Al2S3_F s2 끝 ≈ 17:48 · 게이트 어림 ≈ 33 / 40 에서 멈춤 (≈ 10-28 아침) · 🔔 상한 재비준 (40 런 다 = ≈ 545–560 · 상한은 러너 시작 때만 읽으므로 올리면 선 뒤 새 worktree 에서 `--main --resume`) · 런로그 `관측_2026_10_27_0931` · ⚠ 대피 세션 기록의 'kgy 도는 잡 없음' 은 틀렸다 (10-20 재개 · 출력 회수가 빠졌었다).
 - 👁 **gabia (사용자 10-27 *'gabia r2는 진즉에 끝났어'*)** — 탄성 modelc_2x 9 / 12 끝 · 13_m 진행 (새 출력 BFGS 11 · 09:31) · 12_p · 12_m 대기 (D-2026-10-14-elastic-60bfgs-gate-continue = 수렴까지 · 12 점 다 되면 fit). ⏭ 읽기 블록 → r2 닫는 숫자 (li3nd 런로그 `✅_r2_닫음_<날짜>`) · 13_m 이어받기 세 줄 · r2 드라이버 tmux · ⚠ 사용자 watch 가 `wt_li2sk_1023/tools/elastic/watch_elastic.sh` 를 쓴다 — 그 worktree 를 정리하기 전에 watch 를 `wt_r2el_1026` 쪽으로 옮긴다.
 - 📖 **NdO-LPSCl1.6 원고 같이 읽기 (트랙 CEI · 1저자 = 실험 쪽 · 사용자는 공저자 · 문장은 1저자 의도대로)** — 사용자 10-27 *'너무 비판적으로는 읽지말고 1저자가 쓰려고 하는 의도대로'* · 원고 docx + 그림 PDF 업로드 (저장소 밖 · 86 문단) · 사용자가 글을 붙이면 번역 · 해석 → 끝에 4.5 DFT Methods. 인용 규율만 짚는다: Fig. 3g Li₂S 0.305 eV = BLOCKED (`HZ-sei-neb-retracted`) · Li₃Nd 0.229 eV = SI 단서 문장만 · Li₂S 와 순위 금지 (`HZ-li3nd-neb-si-conditional`) → ✅ 사용자 10-27: 이 원고의 장벽 비교 · Fig. 3g 는 원고 그대로 · 다시 짚지 않는다 (z26) · Fig. 3h Li₂O 5.24 · Li₂S 3.90 = 금지 문구 (정정본 4.90 · 3.39 · Li₃PO₄ 5.82 · `HZ-sei-gaps-pre-20260913-nonground-polymorph`) · Fig. 5e,f 는 빈칸 (반응 에너지 대 전압).

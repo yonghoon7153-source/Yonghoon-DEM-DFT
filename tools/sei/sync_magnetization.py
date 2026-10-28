@@ -90,10 +90,17 @@ def main():
                              if os.path.isdir(x)) if a.all else [])
     if not dirs:
         sys.exit("쓰기: python3 tools/sei/sync_magnetization.py <작업폴더>   (또는 --all)")
+    changed = False
     for d in dirs:
-        print("  " + sync(d, a.dry_run))
-    if not a.dry_run:
-        print("\n바뀐 폴더는 03 부터 다시 돌린다:")
+        msg = sync(d, a.dry_run)
+        print("  " + msg)
+        changed |= ("tot_magnetization" in msg and "이미 맞다" not in msg and "⏭" not in msg
+                    and "⛔" not in msg)
+    # ⚠ 2026-10-28 — 이 안내를 **매번** 찍었다. run_sei_dft.sh 는 03 **전에** 이 도구를 부르므로
+    #   바뀐 게 없어도 러너 로그에 '03 부터 다시 돌린다' 가 남아 사람을 헷갈리게 했다 (kgy CEI 갭 체인).
+    #   실제로 03 입력을 고쳤고, 03 이 **이미 돈 뒤**에 따로 부른 경우에만 의미가 있다.
+    if changed and not a.dry_run:
+        print("\n바뀐 폴더에서 03 이 이미 돌았다면 03 부터 다시 돌린다:")
         print("  TAG=<tag> bash tools/sei/redo_stages.sh 03 04 05 06")
     return 0
 

@@ -83,13 +83,16 @@ def run_note(d):
 STAGES = [("01_vcrelax", "vc-rlx"), ("02_scf", "scf"), ("03_nscf_gap", "gap"),
           ("04_nscf_dos", "dos-k"), ("05_dos", "dos"), ("06_projwfc", "pdos")]
 BAR = "─" * 76
-FULL = "--full" in sys.argv        # 완주한 상까지 전부 펼친다 (기본은 접음)
+#: --sei_only (2026-10-28 · kgy CEI 갭 체인) — ①② 만 + 지금 도는 단계 자세히 + 대조 잡 + 러너 로그.
+#:   gabia 전용 칸 (SDCP · NEB · 고정셸 · /data/apps QE 빌드 · /data/work/pseudo Nd) 은 안 찍는다.
+SEI_ONLY = "--sei_only" in sys.argv
+FULL = "--full" in sys.argv or SEI_ONLY   # 완주한 상까지 전부 펼친다 (기본은 접음)
 
 # ⛔⛔ 2026-09-17 — 이 도구는 argparse 를 안 써서 **모르는 플래그를 조용히 무시했다.**
 #   `--sei_roots /data/work/runs/cei_gap` 을 줬는데 오류도 안 나고 **기본 루트(옛
 #   캠페인)** 를 그대로 보여줬다. 사람은 새 캠페인을 보고 있다고 믿는다.
 #   루트는 플래그가 아니라 환경변수 SEI / NEBW 로 준다 — 그렇게 말해 준다.
-_KNOWN_FLAGS = {"--full", "--selftest", "--relax", "--legacy"}
+_KNOWN_FLAGS = {"--full", "--selftest", "--relax", "--legacy", "--sei_only"}
 _unknown = [a for a in sys.argv[1:]
             if a.startswith("--") and a not in _KNOWN_FLAGS]
 if _unknown:
@@ -333,6 +336,156 @@ def read_gap(path):
         return None, f"수치 필드 손상: gap={d.get('gap')!r}"
     d.setdefault("tag", tag)
     return d, None
+
+
+# ── 체인 자세히 (2026-10-28 · 사용자 'cei는 더 자세한 watch 줄 수 없나') ─────────────
+def stage_stem(d, stem):
+    """01 단계 파일 이름 — 고정셀 상(분자결정)은 01_relax 다 (build_dft_inputs --fixed_cell).
+
+    ⚠ 이걸 안 보면 SO2 · S2Cl2 의 01 칸이 끝까지 '미착수' 로 보인다.
+    """
+    if stem == "01_vcrelax" and os.path.isfile(os.path.join(d, "01_relax.in")):
+        return "01_relax"
+    return stem
+
+
+_WALL = re.compile(r"PWSCF\s*:\s*.*?CPU\s+(.*?)\s*WALL")
+
+
+def wall_seconds(s):
+    """'1h23m' · '12m34.56s' · '45.67s' · '1d 2h 3m' → 초. 못 읽으면 None (0 으로 지어내지 않는다)."""
+    if not s:
+        return None
+    hits = re.findall(r"([\d.]+)\s*([dhms])", s)
+    if not hits:
+        return None
+    return sum(float(v) * {"d": 86400, "h": 3600, "m": 60, "s": 1}[u] for v, u in hits)
+
+
+def out_detail(text):
+    """QE pw.x 출력 글자 → 지금 어디쯤인가 (화면용). 못 읽은 항목은 None.
+
+    ⛔ 못 하는 것: 프로세스가 살아 있는지 모른다 (글자만 본다) · 수렴 판정이 아니다.
+    """
+    def last(pat, cast=float):
+        m = re.findall(pat, text)
+        return cast(m[-1]) if m else None
+    r = {"bfgs": last(r"number of bfgs steps\s*=\s*(\d+)", int),
+         "scf_iter": last(r"iteration #\s*(\d+)", int),
+         "scf_acc": last(r"estimated scf accuracy\s*<\s*([\d.eE+-]+)"),
+         "magn": last(r"total magnetization\s*=\s*(-?[\d.]+)\s*Bohr"),
+         "P_kbar": last(r"P=\s*(-?[\d.]+)"),
+         "force": last(r"Total force\s*=\s*([\d.]+)"),
+         "kpt": last(r"Computing kpt #:\s*(\d+)", int),
+         "nk": last(r"number of k points=\s*(\d+)", int),
+         "etot_Ry": last(r"!\s+total energy\s*=\s*(-?[\d.]+)\s*Ry"),
+         "n_scf_done": len(re.findall(r"!\s+total energy", text)),
+         "wall": None, "start": None}
+    m = _WALL.findall(text)
+    if m:
+        r["wall"] = m[-1].strip()
+    # QE: 'starts on 28Oct2026 at  8:52: 7' — 시·분·초 앞 빈칸이 들어간다
+    m = re.search(r"starts on\s+(\d{1,2}[A-Za-z]{3}\d{4})\s+at\s+"
+                  r"(\d{1,2}:\s?\d{1,2}:\s?\d{1,2})", text)
+    if m:
+        try:
+            r["start"] = datetime.strptime(f"{m.group(1)} {m.group(2).replace(' ', '')}",
+                                           "%d%b%Y %H:%M:%S")
+        except ValueError:
+            pass
+    return r
+
+
+def _read(p):
+    try:
+        return open(p, errors="ignore").read()
+    except OSError:
+        return None
+
+
+def tag_extra(d):
+    """한 상의 꼬리말 — 끝난 단계 벽시계 합 · 01/02 의 마지막 총 자기모멘트 (없으면 안 찍는다)."""
+    tot, mag = 0.0, None
+    for stem, _ in STAGES:
+        tx = _read(os.path.join(d, stage_stem(d, stem) + ".out"))
+        if not tx:
+            continue
+        r = out_detail(tx)
+        tot += wall_seconds(r["wall"]) or 0.0
+        if r["magn"] is not None and stem in ("01_vcrelax", "02_scf"):
+            mag = r["magn"]
+    return (f"  {tot / 3600:5.2f}h" if tot else "      —") + (f"  M {mag:6.2f}" if mag is not None else "")
+
+
+def running_detail(roots, now=None):
+    """가장 최근에 갱신된 단계 .out 하나 = 지금 도는 단계 (화면용 힌트 · ps 확인 아님)."""
+    outs = [o for r in roots for o in glob.glob(os.path.join(r, "*", "0[1-6]_*.out"))]
+    if not outs:
+        return ["②b 아직 시작한 단계가 없다"]
+    o = max(outs, key=os.path.getmtime)
+    tx = _read(o) or ""
+    r = out_detail(tx)
+    now = now or time.time()
+    quiet = (now - os.path.getmtime(o)) / 60.0
+    state = ("✓ 끝" if "JOB DONE" in tx else
+             "✗ 오류" if ("Error in routine" in tx or "MPI_ABORT" in tx) else
+             "▶ 도는 중" if quiet <= FRESH_MIN else "▸ 조용함")
+    head = (f"②b 지금: {os.path.basename(os.path.dirname(o))} · {os.path.basename(o)[:-4]} · "
+            f"{state} · 조용 {quiet:.1f} 분")
+    if r["start"]:
+        _el = (datetime.fromtimestamp(now) - r["start"]).total_seconds() / 60
+        head += f" · 시작 {r['start']:%m-%d %H:%M}" + (f" ({_el:.0f} 분 전)" if _el >= 0 else "")
+    parts = []
+    for k, f in (("bfgs", "BFGS {}"), ("n_scf_done", "SCF 끝 {}"), ("scf_iter", "반복 #{}"),
+                 ("scf_acc", "정확도 {:.1e} Ry"), ("etot_Ry", "E {:.5f} Ry"),
+                 ("P_kbar", "P {:+.2f} kbar"), ("force", "|F| {:.4f}"), ("magn", "M {:.2f} μB")):
+        if r[k] is None or (k == "n_scf_done" and r[k] == 0):
+            continue                       # 못 읽은 것은 안 찍는다 (0 으로 지어내지 않는다)
+        parts.append(f.format(r[k]))
+    if r["kpt"] is not None:
+        parts.append(f"k {r['kpt']}/{r['nk'] if r['nk'] is not None else '?'}")
+    return [head] + (["     " + " · ".join(parts)] if parts else [])
+
+
+def queue_line(root):
+    """<root>/driver.sh (run_kgy.sh 가 쓴다) 의 run_sei_dft.sh 순서 → 한 줄.
+
+    ✓ 끝 (gap.json 있음) · ▶ 지금 · ▸ 조용함 · ◐ 일부 끝 (멈춰 있음) · · 아직.
+
+    driver.sh 가 없으면 None — 순서를 지어내지 않는다.
+    """
+    txt = _read(os.path.join(root, "driver.sh"))
+    if not txt:
+        return None
+    order = []
+    for line in txt.splitlines():
+        if "run_sei_dft.sh" in line:
+            order += [t for t in line.split("run_sei_dft.sh", 1)[1].replace('"', " ").split()
+                      if not t.startswith(("-", "$", "|", "&", ";"))]
+    if not order:
+        return None
+    marks = []
+    for t in order:
+        d = os.path.join(root, t)
+        st = [done(d, stage_stem(d, s_)) for s_, _ in STAGES]
+        mk = ("✓" if os.path.isfile(os.path.join(d, "gap.json")) and "▶" not in st and "▸" not in st
+              else "▶" if "▶" in st else "▸" if "▸" in st else "◐" if "✓" in st else "·")
+        marks.append(f"{t.split('_mp')[0]} {mk}")
+    return "순서: " + " → ".join(marks)
+
+
+def gate_line(root):
+    """<root>/control_gate.json (extract_gap.py --control_gate) → 한 줄. 없으면 None."""
+    p = os.path.join(root, "control_gate.json")
+    if not os.path.isfile(p):
+        return None
+    try:
+        g = json.load(open(p, encoding="utf-8"))
+    except (OSError, ValueError):
+        return "대조 잡 판정 파일 손상 — control_gate.json"
+    rows = " · ".join(f"{str(x.get('tag')).split('_mp')[0]} {x.get('gap_eV', '—')} "
+                      f"(기준 {x.get('ref_eV')} · Δ {x.get('delta_eV', '—')})" for x in g.get("rows", []))
+    return f"대조 잡 {'✅ 통과' if g.get('pass') is True else '⛔ 실패'} — {rows}"
 
 
 def _neb_rows(ss):
@@ -897,6 +1050,76 @@ def selftest():
             f"⛔음성: 범례에 없는 글자를 내지 않는다 (낸 것 {_emit - _legend or '없음'})")
 
 
+    # ── 체인 자세히 (2026-10-28) ────────────────────────────────────────────
+    _vc = ("     Program PWSCF v.7.4.1 starts on 28Oct2026 at  8:52: 7 \n"
+           "     number of k points=    40\n"
+           "     iteration #  1     ecut=    60.00 Ry     beta= 0.30\n"
+           "     estimated scf accuracy    <       0.01234567 Ry\n"
+           "     total magnetization       =     4.00 Bohr mag/cell\n"
+           "     iteration #  9     ecut=    60.00 Ry     beta= 0.30\n"
+           "     estimated scf accuracy    <          5.2E-09 Ry\n"
+           "!    total energy              =   -1234.56789012 Ry\n"
+           "     Total force =     0.012345     Total SCF correction =     0.000010\n"
+           "          total   stress  (Ry/bohr**3)                   (kbar)     P=       -3.21\n"
+           "     number of scf cycles    =   3\n     number of bfgs steps    =   2\n")
+    _r = out_detail(_vc)
+    chk(_r["bfgs"] == 2 and _r["scf_iter"] == 9 and abs(_r["scf_acc"] - 5.2e-9) < 1e-15
+        and _r["magn"] == 4.0 and _r["P_kbar"] == -3.21 and _r["force"] == 0.012345
+        and _r["n_scf_done"] == 1 and _r["nk"] == 40, f"out_detail: vc-relax 줄을 읽는다 ({_r})")
+    chk(_r["start"] == datetime(2026, 10, 28, 8, 52, 7), "QE 시작 시각 ('at  8:52: 7' 빈칸 포함)")
+    _e = out_detail("")
+    chk(all(_e[k] is None for k in ("bfgs", "scf_iter", "magn", "P_kbar", "kpt", "start", "wall"))
+        and _e["n_scf_done"] == 0, "⛔음성: 빈 출력은 None — 0 으로 지어내지 않는다")
+    _ns = out_detail("     number of k points=   120\n     Computing kpt #:     1  total cpu\n"
+                     "     Computing kpt #:    37  total cpu time spent up to now is 1.0 secs\n"
+                     "     PWSCF        :   1h23m CPU      1h25m WALL\n\n   JOB DONE.\n")
+    chk(_ns["kpt"] == 37 and _ns["nk"] == 120 and _ns["wall"] == "1h25m", "nscf k 진행 · WALL")
+    chk(wall_seconds("1h25m") == 5100 and wall_seconds("12m34.50s") == 754.5
+        and wall_seconds("45.67s") == 45.67 and wall_seconds("1d 2h 3m") == 93780,
+        "WALL 꼴 넷")
+    chk(wall_seconds("") is None and wall_seconds("xx") is None, "⛔음성: 못 읽는 WALL → None")
+    _sd = os.path.join(td, "chain")
+    for t in ("SO2_mp-1", "Li2SO4_mp-2"):
+        os.makedirs(os.path.join(_sd, t), exist_ok=True)
+    open(os.path.join(_sd, "SO2_mp-1", "01_relax.in"), "w").write("x")
+    open(os.path.join(_sd, "Li2SO4_mp-2", "01_vcrelax.in"), "w").write("x")
+    chk(stage_stem(os.path.join(_sd, "SO2_mp-1"), "01_vcrelax") == "01_relax"
+        and stage_stem(os.path.join(_sd, "Li2SO4_mp-2"), "01_vcrelax") == "01_vcrelax"
+        and stage_stem(os.path.join(_sd, "SO2_mp-1"), "02_scf") == "02_scf",
+        "⛔음성: 고정셀 상의 01 칸은 01_relax (안 그러면 끝까지 '미착수')")
+    open(os.path.join(_sd, "SO2_mp-1", "01_relax.out"), "w").write(_vc + "     PWSCF  :  2m CPU  3m WALL\n   JOB DONE.\n")
+    open(os.path.join(_sd, "SO2_mp-1", "02_scf.out"), "w").write(
+        "     total magnetization       =     0.00 Bohr mag/cell\n     PWSCF  :  1m CPU  2m 60.00s WALL\n   JOB DONE.\n")
+    _x = tag_extra(os.path.join(_sd, "SO2_mp-1"))
+    chk("0.10h" in _x and "M   0.00" in _x, f"tag_extra: 벽시계 합 3m + 2m60s = 6 분 · M 0 ({_x!r})")
+    _x2 = tag_extra(os.path.join(_sd, "Li2SO4_mp-2"))
+    chk(_x2.strip() == "—", f"⛔음성: 출력 없으면 '—' (0h 로 안 찍는다) ({_x2!r})")
+    time.sleep(0.01)
+    open(os.path.join(_sd, "Li2SO4_mp-2", "03_nscf_gap.out"), "w").write(_ns.get("x", "") or
+        "     number of k points=   120\n     Computing kpt #:    37  total\n")
+    _rd = running_detail([_sd])
+    chk(_rd[0].startswith("②b 지금: Li2SO4_mp-2 · 03_nscf_gap · ▶") and "k 37/120" in _rd[-1],
+        f"running_detail: 가장 최근 .out = 도는 단계 ({_rd})")
+    chk(running_detail([os.path.join(td, "없음")]) == ["②b 아직 시작한 단계가 없다"],
+        "⛔음성: 출력이 없으면 지어내지 않는다")
+    json.dump({"pass": False, "rows": [{"tag": "P2O5_mp-x", "ref_eV": 5.186, "gap_eV": 5.25,
+                                         "delta_eV": 0.064}]},
+              open(os.path.join(_sd, "control_gate.json"), "w"))
+    chk(gate_line(_sd).startswith("대조 잡 ⛔ 실패") and "Δ 0.064" in gate_line(_sd),
+        "gate_line: 실패를 실패로")
+    json.dump({"pass": "yes", "rows": []}, open(os.path.join(_sd, "control_gate.json"), "w"))
+    chk(gate_line(_sd).startswith("대조 잡 ⛔"), "⛔음성: pass 가 True 가 아니면 통과로 안 찍는다")
+    chk(gate_line(os.path.join(td, "없음")) is None, "판정 파일 없으면 None")
+    open(os.path.join(_sd, "driver.sh"), "w").write(
+        'bash "/x/tools/sei/run_sei_dft.sh" SO2_mp-1\npython3 x --control_gate y || exit 3\n'
+        'bash "/x/tools/sei/run_sei_dft.sh" Li2SO4_mp-2 Done_mp-4 NoDir_mp-3\n')
+    os.makedirs(os.path.join(_sd, "Done_mp-4"), exist_ok=True)
+    json.dump({"gap": 1.0, "vbm": 0, "cbm": 1}, open(os.path.join(_sd, "Done_mp-4", "gap.json"), "w"))
+    _q = queue_line(_sd)
+    chk(_q == "순서: SO2 ◐ → Li2SO4 ▶ → Done ✓ → NoDir ·",
+        f"queue_line: driver.sh 순서 · 상태 넷 (◐ = 01·02 만 끝) ({_q})")
+    chk(queue_line(os.path.join(td, "없음")) is None, "⛔음성: driver.sh 없으면 순서를 지어내지 않는다")
+
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
 
@@ -944,7 +1167,8 @@ else:
     #:   여기가 `▸ 중단` 이었는데 함수는 도는 잡에도 ▸ 를 줬다 — 범례가 거짓말을 했다.
     print(f"① SEI DFT — {len(pairs)}종 × 6단계   "
           f"(✓ 완료 · ▶ 도는중({FRESH_MIN}분 내 갱신) · ▸ 조용함 · ✗ 오류 · 공백 미착수)")
-    print("   " + " " * 26 + "  ".join(f"{s:>6s}" for _, s in STAGES))
+    print("   " + " " * 26 + "  ".join(f"{s:>6s}" for _, s in STAGES)
+          + ("   벽시계  M(μB)   갭" if SEI_ONLY else ""))
     # ⚠ 화면은 **감시용**이다. 완주하고 건강한 것은 한 줄로 접고, 손볼 게 있는 것만
     #   펼친다 (2026-08-12: 13종 × 6단계를 다 찍으니 ④ NEB 가 화면 밖으로 밀렸다).
     ndone = 0
@@ -959,7 +1183,7 @@ else:
             _n = run_note(_root)
             print(f"   ┌ {root_label(_root)}" + (f"  — {_n}" if _n else ""))
         d = os.path.join(_root, t)
-        marks = [done(d, stem) for stem, _ in STAGES]
+        marks = [done(d, stage_stem(d, stem)) for stem, _ in STAGES]
         gj = os.path.join(d, "gap.json")
         g = ""
         if os.path.isfile(gj):
@@ -988,7 +1212,8 @@ else:
         if _ok and "손상" not in g and not FULL:
             _folded.setdefault(_root, []).append(t.split("_mp")[0])
         else:
-            print(f"   {t:26s}" + "  ".join(f"{m:>6s}" for m in marks) + g)
+            print(f"   {t:26s}" + "  ".join(f"{m:>6s}" for m in marks)
+                  + (tag_extra(d) if SEI_ONLY else "") + g)
     if _cur is not None and _folded.get(_cur):
         print(f"     ✓ 완주 {len(_folded[_cur])}: " + " · ".join(_folded[_cur]))
     print(f"   완주 {ndone}/{len(pairs)}"
@@ -996,7 +1221,8 @@ else:
 
     # 끊긴 것 = 재부팅 피해. 러너가 resume-safe 라 그냥 다시 걸면 된다.
     broken = [t for r, t in pairs
-              if any(done(os.path.join(r, t), s) == "▸" for s, _ in STAGES)]
+              if any(done(os.path.join(r, t), stage_stem(os.path.join(r, t), s)) == "▸"
+                     for s, _ in STAGES)]
     if broken and pw == 0:
         print(f"\n   ⚠ 중단된 조성 {len(broken)}개: {', '.join(broken)}")
         print("     러너는 resume-safe 다 — 끝난 단계는 건너뛰므로 그냥 다시 걸면 된다:")
@@ -1008,19 +1234,20 @@ else:
     #    "UMA NEB 로 전체 대체" 라는 설계 결정의 근거였다.)
     # ⚠ 빌드가 **여러 개**다 (gpu/cpu). 하나만 보면 "ph.x 없음" 으로 또 속는다 —
     #   실제로 ph.x·epsilon.x·ld1.x 는 CPU 빌드에만 있다 (2026-08-12 실측).
-    qb = sorted(glob.glob("/data/apps/qe-*/bin")) + sorted(glob.glob("/data/work/apps/qe-*/bin"))
+    qb = [] if SEI_ONLY else (sorted(glob.glob("/data/apps/qe-*/bin"))
+                              + sorted(glob.glob("/data/work/apps/qe-*/bin")))
     want = ("pw.x", "neb.x", "ph.x", "epsilon.x", "dos.x", "projwfc.x", "ld1.x")
     if qb:
         for b in qb:
             have = {os.path.basename(x) for x in glob.glob(os.path.join(b, "*"))}
             print(f"   QE {os.path.basename(os.path.dirname(b)):16s} "
                   + " ".join(f"{w}{'✓' if w in have else '✗'}" for w in want))
-    else:
+    elif not SEI_ONLY:
         print("   ⚠ QE 빌드 디렉터리를 못 찾았다 (/data/apps/qe-* · /data/work/apps/qe-*)")
 
     # ★ 환경 상태는 **기록해 두면 낡는다** — 화면에 상시 띄워야 5일 뒤에 안 속는다.
     #   (2026-08-12: kb 가 "frozen-4f 없음" 이라 5일간 막힌 줄 알았는데 이미 있었다.)
-    nd = sorted(glob.glob("/data/work/pseudo/Nd*.[uU][pP][fF]"))
+    nd = [] if SEI_ONLY else sorted(glob.glob("/data/work/pseudo/Nd*.[uU][pP][fF]"))
     if nd:
         for f in nd:
             z = None
@@ -1106,6 +1333,27 @@ else:
     print("② 갭 — 아직 gap.json 이 없다")
 
 print(BAR)
+
+if SEI_ONLY:
+    for _r in sei_roots:
+        for _fn in (queue_line, gate_line):
+            _gl = _fn(_r)
+            if _gl:
+                print("   " + _gl)
+    for _l in running_detail(sei_roots):
+        print(_l)
+    for _r in sei_roots:
+        _lt = _read(os.path.join(_r, "run.log"))
+        if _lt:
+            print("③ 러너 로그 끝:")
+            for _x in [x for x in _lt.splitlines() if x.strip()][-3:]:
+                print("   " + _x[:150])
+    _dfp = next((r for r in sei_roots if os.path.isdir(r)), None) or os.getcwd()
+    _df = sh("df -h %s | tail -1" % _dfp).split()
+    if len(_df) >= 5:
+        print(f"디스크 {_dfp}  {_df[2]} 사용 / {_df[1]}  (여유 {_df[3]}, {_df[4]})")
+    print(BAR)
+    sys.exit(0)
 
 # ── 3) SDCP 외주 번들 (**가장 최근 것**) ────────────────────────────────────
 #   ⚠ 옛 판은 2026-08-08 납품 zip 하나를 고정으로 가리켰다. 새 번들을 만들어도
