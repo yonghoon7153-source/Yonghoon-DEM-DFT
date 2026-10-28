@@ -1,0 +1,7 @@
+# NdO-LPSCl1.6 manuscript Fig. 3h (user 2026-10-28: use our QE values) - band gaps of interphase components. QE/PBE fixed-occupation nscf VBM/CBM eigenvalues (NOT read off DOS), August SEI chain (GBRV Li/S/Cl + PSlibrary P/O), structures from Materials Project. Source: db/properties/sei_electronic.json results.<key>.gap. Do not mix with Materials Project gap values. Bar order = manuscript order.
+phase,phase_origin_label,mp_id,space_group,band_gap_eV,band_gap_eV_full,source_key
+Li2S,Li\-(2)S,mp-1153,Fm-3m,3.44,3.4379,sei_electronic.json results.li2s_mp-1153.gap
+Li3P,Li\-(3)P,mp-736,P6_3/mmc,0.71,0.7092,sei_electronic.json results.li3p_mp-736.gap
+Li2O,Li\-(2)O,mp-1960,Fm-3m,4.99,4.9860,sei_electronic.json results.li2o_mp-1960.gap
+Li3PO4,Li\-(3)PO\-(4),mp-13725,Pmn2_1 (beta),5.91,5.9121,sei_electronic.json results.li3po4_mp-13725.gap
+LiCl,LiCl,mp-22905,Fm-3m (rock salt),6.26,6.2603,sei_electronic.json results.licl_mp-22905.gap
