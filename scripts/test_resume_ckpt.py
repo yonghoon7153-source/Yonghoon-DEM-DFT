@@ -1372,6 +1372,227 @@ def main():
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
 
+    # ── V: 10-30 (KG50R-F01 · Codex KG50RF-01 · P1 · 1저자 Q1 "권고대로") 준비 구간이 그 자리에서 쓰는 변수 값 ──
+    #   LIGGGHTS 는 ${x} · $x (따옴표 밖) 를 그 줄을 읽을 때 x 의 그때 값으로 바꾸고 equal 수식의 v_x 는 쓸 때 계산한다 (고정판
+    #   doc/variable.txt).  순서 보존 부분열 · 끝 상태 글자만으로는 중간 정의를 뺀 덱 · 실행 상태에 따라 바뀌는 equal 수식을 못 막았다.
+    #   반례 = Codex 넷 (받은 D2 덱 파생 둘 · 합성 둘 — 리포 D2 덱 · 이 시험 안 글자로 다시 만든다 · 합성 둘은 Codex 파일과 바이트 같음) +
+    #   같은 부류 (사슬 · 한 글자 $g · 템플릿 반지름 · $(...) · 같은 글자 정의가 본 덱에 둘 · 본 덱 앞 구간 반복 · } 없음 · string).
+    #   음성 = -C 거부 (문제에 KG50R-F01) + 본 흐름 (-T) 시험 0 · 양성 = 받은 D2 덱 · 보관 after_settling · v3 · 안전한 생략 · 상수 사슬 통과
+    grp('V')
+    tmp = tempfile.mkdtemp(prefix='rckv_')
+    try:
+        D2D = os.path.join(ROOT, 'docs/data/kg50_resume_tests_20261027/d2_main_1028_0942')
+        with open(os.path.join(D2D, 'input_kg50_d2_b50.liggghts'), encoding='utf-8') as f:
+            d2m = f.read()
+        with open(os.path.join(D2D, 'input_kg50_d2_b50_r4.liggghts'), encoding='utf-8') as f:
+            d2r = f.read()
+        D2CK, D2S0 = 'restart_kg50_d2_b50/restart_settling_20001.bin', 20001
+        FG = 'fix gravi all gravity 98.1 vector 0.0 0.0 -1.0\n'
+        GP = 'fix gravi all gravity ${g_probe} vector 0.0 0.0 -1.0\n'
+        TSD = 'timestep        ${dt}\n'
+        RAS = 'variable r_AM_S  equal 2.0e-3'
+        NI = 'variable n_ins equal count(all)\n'
+        assert d2m.count(FG) == 1 and d2r.count(FG) == 1 and d2m.count(TSD) == 1 and d2r.count(TSD) == 1
+        assert d2m.count(RAS) == 1 and d2r.count(RAS) == 1 and d2m.count(NI) == 1 and d2r.count(NI) == 1
+        PMG, INS1 = 'variable plate_margin equal 0.003\n', 'run 1\nunfix ins_mix\n'
+        assert d2m.count(PMG) == 1 and d2r.count(PMG) == 1 and d2m.count(INS1) == 1 and d2r.count(INS1) == 0
+
+        def gv(*xs):
+            # 'FIX' = fix gravi … ${g_probe} 한 줄 · 그 밖 = variable g_probe equal <값>
+            return ''.join(GP if x == 'FIX' else 'variable g_probe equal %s\n' % x for x in xs)
+
+        def d2(mrep, rrep, old=FG):
+            return d2m.replace(old, mrep), d2r.replace(old, rrep)
+        # Codex 합성 둘 (independent/program/cases/{drop_intermediate_variable_definition, runtime_dependent_eager_variable} — CRLF 그대로)
+        TDROP_M = ('units si\r\nvariable dt equal 1e-6\r\nvariable dt equal 2e-6\r\ntimestep ${dt}\r\nvariable dt equal 1e-6\r\n'
+                   'restart 10 restart_settling_*.bin\r\nrun 100\r\nprint "done"\r\n')
+        TDROP_R = ('units si\r\nread_restart restart_settling_50.bin\r\nvariable dt equal 1e-6\r\ntimestep ${dt}\r\nvariable dt equal 1e-6\r\n'
+                   'restart 10 restart_settling_*.bin\r\nrun 50\r\nprint "done"\r\n')
+        TEAG_M = 'units si\r\nvariable dt equal 1e-6*(step+1)\r\ntimestep ${dt}\r\nrestart 10 restart_settling_*.bin\r\nrun 100\r\nprint "done"\r\n'
+        TEAG_R = ('units si\r\nread_restart restart_settling_50.bin\r\nvariable dt equal 1e-6*(step+1)\r\ntimestep ${dt}\r\n'
+                  'restart 10 restart_settling_*.bin\r\nrun 50\r\nprint "done"\r\n')
+        TOK_M, TOK_R = TDROP_M.replace('variable dt equal 2e-6\r\n', ''), TDROP_R
+        TCK = ('restart_settling_50.bin', 50)
+        # v3 50×50 after_settling (write_restart 체크포인트) — 본 덱 앞 구간에 반복 (label · if jump): 첫 바퀴 timestep ${dt} = 1e-6 →
+        #   dt 2e-6 · n0 = 1 → jump → 둘째 바퀴 timestep 2e-6 · n0 = 2 → 나감 (본 덱 timestep = 2e-6 · 줄 순서로만 읽으면 1e-6) ·
+        #   재개 덱 = 반복 줄 없이 같은 줄 (V14 · 그 자리 값을 줄 순서로 못 정하는 본 덱 = 닫힌 실패)
+        with open(MAIN50, encoding='utf-8') as f:
+            t50 = f.read()
+        assert t50.count(TSD) == 1
+        m14 = t50.replace(TSD, 'variable n0 equal 0\nlabel pre0\n' + TSD + 'variable dt      equal 2.0e-6\nvariable n0 equal ${n0}+1\n'
+                          'if "${n0} < 2" then "jump SELF pre0"\n')
+        r14 = res_after('good', MAIN50, C50, tmpl=True)
+        assert r14.count(TSD) == 1
+        r14 = r14.replace(TSD, TSD + 'variable dt      equal 2.0e-6\n')
+        CK50 = ('restart_%s/restart_after_settling.bin' % C50, 200001)
+        AS50 = dict(mode='after_settling', orig_log=AS_LOG)
+        D2K = (D2CK, D2S0)
+        neg = [
+            ('V2 Codex d2_drop_intermediate_variable_definition (g 98.1 → 196.2 → fix ${g_probe} → 98.1 · 재개 덱이 196.2 만 뺌)',
+             d2(gv('98.1', '196.2', 'FIX', '98.1'), gv('98.1', 'FIX', '98.1')), D2K, {},
+             ['그 자리 치환 값이 본 덱과 다름', '${g_probe}', '196.2', '98.1']),
+            ('V3 Codex d2_runtime_dependent_eager_variable (두 덱 같은 g = 98.1*(step+1) · fix ${g_probe})',
+             d2(gv('98.1*(step+1)', 'FIX'), gv('98.1*(step+1)', 'FIX')), D2K, {}, ['실행 상태에 따라 바뀜', '${g_probe}', 'step']),
+            ('V4 Codex 합성 drop_intermediate_variable_definition (dt 1e-6 → 2e-6 → timestep ${dt} → 1e-6 · 2e-6 만 뺌)',
+             (TDROP_M, TDROP_R), TCK, {}, ['그 자리 치환 값이 본 덱과 다름', '${dt}', '2e-6', '1e-6']),
+            ('V5 Codex 합성 runtime_dependent_eager_variable (두 덱 같은 dt = 1e-6*(step+1) · timestep ${dt})',
+             (TEAG_M, TEAG_R), TCK, {}, ['실행 상태에 따라 바뀜', '${dt}', 'step']),
+            ('V6 사슬 — b = ${a}*2 정의 앞 a 중간 정의 (98.1) 를 뺌 · fix 가 v_b 로 씀',
+             d2('variable a_g equal 49.05\nvariable a_g equal 98.1\nvariable b_g equal ${a_g}*2\nvariable a_g equal 49.05\n'
+                'fix gravi all gravity v_b_g vector 0.0 0.0 -1.0\n',
+                'variable a_g equal 49.05\nvariable b_g equal ${a_g}*2\nvariable a_g equal 49.05\n'
+                'fix gravi all gravity v_b_g vector 0.0 0.0 -1.0\n'), D2K, {}, ['그 자리 치환 값이 본 덱과 다름', '${a_g}', '98.1', '49.05']),
+            ('V7 한 글자 $g — g 98.1 → 196.2 → fix $g → 98.1 · 196.2 만 뺌',
+             d2('variable g equal 98.1\nvariable g equal 196.2\nfix gravi all gravity $g vector 0.0 0.0 -1.0\nvariable g equal 98.1\n',
+                'variable g equal 98.1\nfix gravi all gravity $g vector 0.0 0.0 -1.0\nvariable g equal 98.1\n'), D2K, {},
+             ['그 자리 치환 값이 본 덱과 다름', '$g', '196.2']),
+            ('V8 템플릿 fix 반지름 ${r_AM_S} = 실행 상태 수식 2.0e-3*(1+step) (두 덱 같은 글자)',
+             d2(RAS + '*(1+step)', RAS + '*(1+step)', RAS), D2K, {}, ['실행 상태에 따라 바뀜', '${r_AM_S}', 'pts2']),
+            ('V9 $(...) 그 자리 식 — timestep $(v_dt) (두 덱 같은 글자)',
+             d2('timestep        $(v_dt)\n', 'timestep        $(v_dt)\n', TSD), D2K, {}, ['펼칠 수 없음', '$(v_dt)', '그 자리 식 = 지원 안 함']),
+            ('V12 같은 글자 fix 가 본 덱에 둘 — 재개 덱 fix 는 앞 것 자리 (g 98.1) 에 맞춰지고 본 덱 끝 상태 = 뒤 것 (g 196.2)',
+             d2(gv('98.1', 'FIX', '196.2', 'FIX', '98.1'), gv('98.1', 'FIX', '98.1')), D2K, {},
+             ['그 자리 치환을 펼치면', '재개 지점 fix gravi', '196.2']),
+            ('V13 같은 글자 b = ${a}*2 정의가 본 덱에 둘 — 끝 상태 b = 뒤 것 (a 98.1) ↔ 재개 덱 (a 49.05)',
+             d2('variable a_g equal 49.05\nvariable b_g equal ${a_g}*2\nvariable a_g equal 98.1\nvariable b_g equal ${a_g}*2\n'
+                'variable a_g equal 49.05\nfix gravi all gravity v_b_g vector 0.0 0.0 -1.0\n',
+                'variable a_g equal 49.05\nvariable b_g equal ${a_g}*2\nvariable a_g equal 49.05\n'
+                'fix gravi all gravity v_b_g vector 0.0 0.0 -1.0\n'), D2K, {}, ['그 자리 치환을 펼치면', '재개 지점 variable b_g', '98.1']),
+            ('V14 v3 after_settling — 본 덱 체크포인트 앞에 반복 (label · if jump) · 준비 구간 timestep ${dt} (줄 순서로만 읽으면 같다)',
+             (m14, r14), CK50, AS50, ['펼칠 수 없음', '흐름 줄', '${dt}']),
+            ('V15 ${ 닫는 } 없음 — timestep ${dt (두 덱 같은 글자)',
+             d2('timestep        ${dt\n', 'timestep        ${dt\n', TSD), D2K, {}, ['펼칠 수 없음', '${dt']),
+            ('V16 string 변수 = 정의 때 실행 상태 값 (variable s_ins string ${n_ins} · n_ins = count(all) · 두 덱 같은 글자)',
+             d2(NI + 'variable s_ins string ${n_ins}\n', NI + 'variable s_ins string ${n_ins}\n', NI), D2K, {},
+             ['실행 상태에 따라 바뀜', '${n_ins}', 'count']),
+            ('V20 string 값에 공백 (variable g_s string "98.1 vector 0.0 0.0 -1.0" · fix gravity ${g_s} — 치환 뒤 낱말이 갈림 · 닫힌 실패)',
+             d2('variable g_s string "98.1 vector 0.0 0.0 -1.0"\nfix gravi all gravity ${g_s}\n',
+                'variable g_s string "98.1 vector 0.0 0.0 -1.0"\nfix gravi all gravity ${g_s}\n'), D2K, {}, ['펼칠 수 없음', '공백']),
+            ('V21 v_ 로 쓰는 string 값이 수 글 아님 (g_s string abc · g = v_g_s*2 · 닫힌 실패)',
+             d2('variable g_s string abc\nvariable g_probe equal v_g_s*2\n' + GP, 'variable g_s string abc\nvariable g_probe equal v_g_s*2\n' + GP),
+             D2K, {}, ['펼칠 수 없음', 'v_g_s']),
+            ('V22 atom 변수를 ${} 로 씀 (닫힌 실패)',
+             d2('variable g_probe atom 98.1\n' + GP, 'variable g_probe atom 98.1\n' + GP), D2K, {}, ['펼칠 수 없음', 'atom']),
+            ('V23 PI (등록 상수 목록 밖 · 닫힌 실패)', d2(gv('98.1+0*PI', 'FIX'), gv('98.1+0*PI', 'FIX')), D2K, {}, ['실행 상태에 따라 바뀜', 'PI']),
+            ('V24 논리 연산자 || (등록 상수 목록 밖 · 닫힌 실패)', d2(gv('98.1*(1||0)', 'FIX'), gv('98.1*(1||0)', 'FIX')), D2K, {},
+             ['실행 상태에 따라 바뀜', '논리 연산자']),
+            ('V25 본 덱 체크포인트 앞 run every 안 variable (삽입 run 1 끝에 g = 196.2 · 재개 덱에는 그 run 이 없다 · 줄 순서로만 읽으면 98.1)',
+             (d2m.replace(PMG, PMG + 'variable g_probe equal 98.1\n').replace(INS1, 'run 1 every 1 "variable g_probe equal 196.2"\nunfix ins_mix\n')
+              .replace(FG, GP), d2r.replace(PMG, PMG + 'variable g_probe equal 98.1\n').replace(FG, GP)), D2K, {},
+             ['펼칠 수 없음', 'run 1 every 1']),
+            ('V26 판 메시 fix (file 이름만 다름 허용) 가 본 덱에 둘 · 끝 상태 = 뒤 것 (scale ${msc} = 2.0) ↔ 재개 덱 (1.0)',
+             d2('variable msc equal 1.0\nfix wmesh all mesh/surface file wall_kg50.stl type 1 scale ${msc}\nvariable msc equal 2.0\n'
+                'fix wmesh all mesh/surface file wall_kg50.stl type 1 scale ${msc}\nvariable msc equal 1.0\n' + FG,
+                'variable msc equal 1.0\nfix wmesh all mesh/surface file wall_kg50_r4.stl type 1 scale ${msc}\nvariable msc equal 1.0\n' + FG),
+             D2K, {'more_decks': (('wall_kg50_r4.stl', b'solid w\nendsolid w\n'),)}, ['판 메시 fix 에 그 자리 치환', 'wall_kg50_r4.stl']),
+            ('V28 v3 after_settling — 본 덱 체크포인트 앞 python 줄 (변수를 바꿀 수 있다 · 재개 덱에는 없음) · 준비 구간 timestep ${dt}',
+             (t50.replace(TSD, 'python pyx file pyx.py\n' + TSD), res_after('good', MAIN50, C50, tmpl=True)), CK50, AS50,
+             ['펼칠 수 없음', 'python pyx']),
+            ('V29 본 덱 체크포인트 앞 variable ${vn} equal 196.2 (이름 자리 치환 = g_probe 를 바꿈 · 재개 덱에는 없음 · 줄 순서로만 읽으면 98.1)',
+             (d2m.replace(PMG, PMG + 'variable vn string g_probe\nvariable g_probe equal 98.1\nvariable ${vn} equal 196.2\n').replace(FG, GP),
+              d2r.replace(PMG, PMG + 'variable vn string g_probe\nvariable g_probe equal 98.1\n').replace(FG, GP)), D2K, {},
+             ['펼칠 수 없음', '이름 · 꼴 자리']),
+            ('V32 $ 뒤 이름 글자 아님 — fix gravity 98.1$- (두 덱 같은 글자 · 닫힌 실패)',
+             d2('fix gravi all gravity 98.1$- vector 0.0 0.0 -1.0\n', 'fix gravi all gravity 98.1$- vector 0.0 0.0 -1.0\n'), D2K, {},
+             ['펼칠 수 없음', '$-']),
+            ('V34 v3 after_settling — 본 덱 체크포인트 앞 partition yes 1 variable dt equal 2.0e-6 (파티션 하나 = 실행 · 재개 덱에는 없음)',
+             (t50.replace(TSD, 'partition yes 1 variable dt equal 2.0e-6\n' + TSD), res_after('good', MAIN50, C50, tmpl=True)), CK50, AS50,
+             ['펼칠 수 없음', 'partition yes 1']),
+            ('V35 본 덱 삽입 run 1 every 1 안 if 안 variable g_probe 196.2 (겹친 명령 · 재개 덱에는 그 run 이 없다)',
+             (d2m.replace(PMG, PMG + 'variable g_probe equal 98.1\n')
+              .replace(INS1, 'run 1 every 1 "if \'1 > 0\' then \'variable g_probe equal 196.2\'"\nunfix ins_mix\n').replace(FG, GP),
+              d2r.replace(PMG, PMG + 'variable g_probe equal 98.1\n').replace(FG, GP)), D2K, {}, ['펼칠 수 없음', 'run 1 every 1']),
+            ('V36 본 덱 삽입 run 1 every 1 "variable dt equal 2.0e-6" (마지막 쓰는 자리 뒤 · 끝 상태 dt = 2e-6 ↔ 재개 덱 1e-6 · 뒤 구간이 ${dt} 를 쓰면 다름)',
+             (d2m.replace(INS1, 'run 1 every 1 "variable dt equal 2.0e-6"\nunfix ins_mix\n'), d2r), D2K, {},
+             ['재개 지점 variable dt 다름', '끝 상태 변수 표']),
+            # 아래 넷 = LIGGGHTS 자신도 오류로 끝내는 꼴 — 정적 대조가 닫힌 쪽 (KG50R-F01 문제 줄) 으로 끝나는지 (도구 오류 · 다른 까닭이 아니라)
+            ('V37 순환 참조 (g = v_g+1 · fix ${g_probe} · 두 덱 같은 글자)', d2(gv('v_g_probe+1', 'FIX'), gv('v_g_probe+1', 'FIX')), D2K, {},
+             ['펼칠 수 없음', '순환 참조']),
+            ('V38 v_x[i] (atom 변수 원자 하나 값 · g = v_a_v[1] · 두 덱 같은 글자)',
+             d2('variable a_v atom x\nvariable g_probe equal v_a_v[1]\n' + GP, 'variable a_v atom x\nvariable g_probe equal v_a_v[1]\n' + GP), D2K, {},
+             ['펼칠 수 없음', '원자 하나']),
+            ('V39 string 을 equal 로 다시 정의 (LIGGGHTS 오류 꼴 · 두 덱 같은 글자)',
+             d2('variable g_probe string 98.1\nvariable g_probe equal 196.2\n' + GP, 'variable g_probe string 98.1\nvariable g_probe equal 196.2\n' + GP),
+             D2K, {}, ['펼칠 수 없음', '다른 꼴']),
+            ('V40 equal 정의 인자 둘 (variable g_probe equal 98.1 2 · LIGGGHTS 오류 꼴 · 두 덱 같은 글자)',
+             d2('variable g_probe equal 98.1 2\n' + GP, 'variable g_probe equal 98.1 2\n' + GP), D2K, {}, ['펼칠 수 없음', '인자가 2 개']),
+        ]
+        for tag, (mt, rt), ck, kw, frags in neg:
+            mp = os.path.join(tmp, 'vm.liggghts')
+            with open(mp, 'w', encoding='utf-8', newline='') as f:
+                f.write(mt)
+            rp = os.path.join(tmp, 'vr.liggghts')
+            with open(rp, 'w', encoding='utf-8', newline='') as f:
+                f.write(rt)
+            rc, out = deckcheck_only(script, mp, rp, ck[0], ck[1], tuple(n for n, _ in kw.get('more_decks', ())))
+            bad = [l for l in out.splitlines() if l.startswith('  ✗ ') and 'KG50R-F01' in l]
+            chk('%s → -C 거부 (KG50R-F01 문제 · %s)' % (tag, ' · '.join(frags)),
+                rc != 0 and bad and all(any(x in l for l in bad) for x in frags), out)
+            # 본 흐름 = LF 사본 (셸 awk 가 CRLF 덱의 read_restart 경로 끝 \r 을 남겨 체크포인트를 못 찾는다 — 이번 범위 밖 · -C 는 CRLF 그대로)
+            r = run_case(script, None, None, res_text=rt.replace('\r\n', '\n'), trial_text=ok_log,
+                         main_bytes=mt.replace('\r\n', '\n').encode('utf-8'), ckpt=ck[0], extra=('-T',), **kw)
+            chk('%s → 본 흐름 (-T) 시험 0 · 본 0 (정적 대조 실패 · KG50R-F01)' % tag,
+                not r['trial'] and not r['main'] and '✗ 재개 덱 정적 대조 실패' in r['out'] and 'KG50R-F01' in r['out'], r['out'])
+        with open(os.path.join(CX_DECK, 'after_settling_baseline.liggghts'), encoding='utf-8') as f:
+            asbt = f.read()
+        with open(MAIN, encoding='utf-8') as f:
+            tmain = f.read()
+        pos = [
+            ('V1 받은 D2 덱 그대로 (timestep ${dt} · 템플릿 반지름 셋 = 상수 · print · if 의 ${n_ins} = 값 대조 밖)', (d2m, d2r), D2K,
+             '그 자리 치환 대조 (10-30 KG50R-F01): 명령 4 개 · 치환 4 곳'),
+            ('V1b 보관 after_settling 기준선 (Codex archived_after_settling_baseline = 리포 고정물 · 판 높이 블록 = write_restart 뒤 구간)',
+             (tmain, asbt), (CKPT_AS, 200001), '그 자리 치환 대조 (10-30 KG50R-F01): 명령 4 개 · 치환 4 곳'),
+            ('V1c v3 50×50 after_settling (템플릿 줄 포함)', (t50, res_after('good', MAIN50, C50, tmpl=True)), CK50,
+             '그 자리 치환 대조 (10-30 KG50R-F01): 명령 4 개 · 치환 4 곳'),
+            ('V1d Codex 합성 대조군 (dt 1e-6 한 번 · timestep ${dt})', (TOK_M, TOK_R), TCK, '그 자리 치환 대조 (10-30 KG50R-F01): 명령 1 개 · 치환 1 곳'),
+            ('V10 안전한 생략 (쓰기 전에 덮인 정의 196.2 만 뺌)', d2(gv('196.2', '98.1', 'FIX'), gv('98.1', 'FIX')), D2K, '명령 5 개 · 치환 5 곳'),
+            ('V11 상수 사슬 (a 49.05 · b = ${a}*2 · fix v_b · 두 덱 같음)',
+             d2('variable a_g equal 49.05\nvariable b_g equal ${a_g}*2\nfix gravi all gravity v_b_g vector 0.0 0.0 -1.0\n',
+                'variable a_g equal 49.05\nvariable b_g equal ${a_g}*2\nfix gravi all gravity v_b_g vector 0.0 0.0 -1.0\n'), D2K,
+             '명령 5 개 · 치환 5 곳'),
+            ('V17 string 상수 글 (variable g_s string 98.1 · fix ${g_s})',
+             d2('variable g_s string 98.1\nfix gravi all gravity ${g_s} vector 0.0 0.0 -1.0\n',
+                'variable g_s string 98.1\nfix gravi all gravity ${g_s} vector 0.0 0.0 -1.0\n'), D2K, '명령 5 개 · 치환 5 곳'),
+            ('V18 따옴표 안 ${dt} (그 자리 치환 아님 · 두 덱 같은 글자 · 쓰지 않음)',
+             d2(NI + 'variable dq equal "${dt}*2"\n', NI + 'variable dq equal "${dt}*2"\n', NI), D2K, '명령 4 개 · 치환 4 곳'),
+            ('V19 정해진 수학 함수 · 비교 연산자 (g = sqrt(9623.61)*(2>=1) · fix ${g_probe} · 두 덱 같음)',
+             d2(gv('sqrt(9623.61)*(2>=1)', 'FIX'), gv('sqrt(9623.61)*(2>=1)', 'FIX')), D2K, '명령 5 개 · 치환 5 곳'),
+            ('V30 v_ 로 쓰는 string 수 글 (g_s string 98.1 · g = v_g_s*1 · fix ${g_probe})',
+             d2('variable g_s string 98.1\nvariable g_probe equal v_g_s*1\n' + GP, 'variable g_s string 98.1\nvariable g_probe equal v_g_s*1\n' + GP),
+             D2K, '명령 5 개 · 치환 5 곳'),
+            ('V31 v_ 로 쓰는 string = 정의 때 넣은 equal 값 (a 98.1 · s = ${a} · g = v_s*1 · fix ${g_probe})',
+             d2('variable a_g equal 98.1\nvariable g_s string ${a_g}\nvariable g_probe equal v_g_s*1\n' + GP,
+                'variable a_g equal 98.1\nvariable g_s string ${a_g}\nvariable g_probe equal v_g_s*1\n' + GP), D2K, '명령 6 개 · 치환 6 곳'),
+            ('V33 string = 띄어 쓴 equal 값 (a "49.05 * 2" · s = ${a} · fix ${g_s} — LIGGGHTS 가 넣는 것은 수 98.1)',
+             d2('variable a_g equal "49.05 * 2"\nvariable g_s string ${a_g}\nfix gravi all gravity ${g_s} vector 0.0 0.0 -1.0\n',
+                'variable a_g equal "49.05 * 2"\nvariable g_s string ${a_g}\nfix gravi all gravity ${g_s} vector 0.0 0.0 -1.0\n'), D2K,
+             '명령 6 개 · 치환 6 곳'),
+            ('V27 판 메시 fix 하나 (scale ${msc} = 1.0 상수 · 재개 덱 file 이름만 다름 · 파일 있음)',
+             d2('variable msc equal 1.0\nfix wmesh all mesh/surface file wall_kg50.stl type 1 scale ${msc}\n' + FG,
+                'variable msc equal 1.0\nfix wmesh all mesh/surface file wall_kg50_r4.stl type 1 scale ${msc}\n' + FG), D2K,
+             '명령 5 개 · 치환 5 곳', ('wall_kg50_r4.stl',)),
+        ]
+        for row in pos:
+            tag, (mt, rt), ck, frag = row[:4]
+            mp = os.path.join(tmp, 'vm.liggghts')
+            with open(mp, 'w', encoding='utf-8', newline='') as f:
+                f.write(mt)
+            rp = os.path.join(tmp, 'vr.liggghts')
+            with open(rp, 'w', encoding='utf-8', newline='') as f:
+                f.write(rt)
+            rc, out = deckcheck_only(script, mp, rp, ck[0], ck[1], row[4] if len(row) > 4 else ())
+            chk('%s → -C 통과 (문제 0 · %s)' % (tag, frag), rc == 0 and '통과 (문제 0)' in out and frag in out, out)
+        # 본 흐름 대조군 — 음성 장면과 같은 덱 묶음 · 같은 꾸밈 (체크포인트 · 원 로그) 에서 정적 대조 통과 · 시험 냄 (음성의 시험 0 = 값 대조 때문)
+        for tag, (mt, rt), ck, kw in (('V1e 받은 D2 덱 그대로', (d2m, d2r), D2K, {}),
+                                      ('V1f Codex 합성 대조군', (TOK_M, TOK_R), TCK, {}),
+                                      ('V1g v3 after_settling 그대로', (t50, res_after('good', MAIN50, C50, tmpl=True)), CK50, AS50)):
+            r = run_case(script, None, None, res_text=rt.replace('\r\n', '\n'), trial_text=ok_log,
+                         main_bytes=mt.replace('\r\n', '\n').encode('utf-8'), ckpt=ck[0], extra=('-T',), **kw)
+            chk('%s · 본 흐름 (-T) → 정적 대조 통과 · 시험 냄 (값 대조가 정상 덱을 막지 않음 · 음성 장면의 대조군)' % tag,
+                r['trial'] and not r['main'] and '재개 덱 정적 대조: 통과' in r['out'], r['out'])
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
     print('%d PASS · %d FAIL' % (ok, fail))
     if CMP['old'] is not None:
         print('── 옛 판 대조 (--compare-old %s · 판정은 지금 판으로만 · 새 줄 (표지 %s) · 시도 폴더 · cut_*.txt 빼고) — 장면 %d'
