@@ -1,0 +1,53 @@
+PASS RB1 Codex .bak — 본 러너 -in …input_kg50_d07_b40_r56.liggghts.bak · 본 .bak 덱 = 첫 긴 run 뒤 velocity · 시험 .bak 덱 = 검사한 시험 덱과 바이트 같음 → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [MPI 실행 줄 -in [input_kg50_d07_b40_r56.liggghts.bak] ≠ 검사한 재개 덱 [input_kg50_d07_b40_r56.liggghts]] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB2 .bak 가 시험 쪽에만 닿음 — 작업 폴더에 시험 .bak 덱만 (검사한 시험 덱과 다름 · 본 .bak 없음) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [MPI 실행 줄 -in [input_kg50_d07_b40_r56.liggghts.bak] ≠ 검사한 재개 덱 [input_kg50_d07_b40_r56.liggghts]] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB3 cd = 멈춘 폴더 (작업 폴더 아님) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [cd 실제 경로 [] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB4 주석 속 정상 mpirun 줄 + 다른 실제 줄 (처음부터 덱 input_<C>.liggghts) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [주석 줄] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB4b 주석 줄 하나 (나머지 정상) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [주석 줄] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB5 MPI 실행 줄 두 번 (같은 줄) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [MPI 실행 줄이 두 번] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB6 다른 명령 줄 (cp 처음부터 덱 → 재개 덱) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [허용 목록에 없는 명령 줄] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB7a MPI 실행 줄 ; 이음 → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [셸 연결 · 치환 · 리디렉션 글자가 든 MPI 실행 줄] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB7b MPI 실행 줄 && 이음 → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [셸 연결 · 치환 · 리디렉션 글자가 든 MPI 실행 줄] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB8 cd 없음 → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [cd 줄 없음] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB9 cd 두 번 → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [cd 가 두 번] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB9b cd 두 번 (둘 다 작업 폴더) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [cd 가 두 번] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB25 MPI 실행 줄 없음 → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [MPI 실행 줄 없음] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB26 NUL 바이트 → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [NUL 글자] · 보고 시험 전 거부 절 (러너 관문)
+FAIL RB27 UTF-8 아닌 바이트 → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [UTF-8 이 아님] · 보고 시험 전 거부 절 (러너 관문) · 58d97e76f36990c1ec5d47 · -H b5a284952bf5f9d0341b606c7a8c948ff6041b0673417b9d9e02fbf106749685 (실제와 같음) | - 시도 (10-28 KG50R-04): attempt_r56_1029_225418_2507 — 이번 호출이 낸 시험만 본 제출 대상 (작업 폴더의 옛 job · mode 파일은 읽지 않는다) |  | ## kg50_d07_b40 — 시험 전 거부 (10-28 Q9 · KG50R) | - ⛔ 시험 전 거부 (KG50R) — 단계: 정적 대조 · 시험 덱 · 러너 · 이유: 시험 제출 안 함 · 헬퍼 러너 엄격 대조 실패 (10-30 KG50R-F02 · 1저자 Q2 · 러너 안 씀 · 시험 · 본 제출 안 함) — 문제 1: 줄 8 [�] — 허용 목록에 없는 명령 줄 (빈 줄 · 환경 줄 · cd · mpirun 한 줄만) · 시도 attempt_r56_1029_225418_2507 · 시험 · 본 제출 없음 |  | 일은 읽지 않는다) |  | ## kg50_d07_b40 — 시험 전 거부 (10-28 Q9 · KG50R) | - ⛔ 시험 전 거부 (KG50R) — 단계: 정적 대조 · 시험 덱 · 러너 · 이유: 시험 제출 안 함 · 헬퍼 러너 엄격 대조 실패 (10-30 KG50R-F02 · 1저자 Q2 · 러너 안 씀 · 시험 · 본 제출 안 함) — 문제 1: 줄 8 [�] — 허용 목록에 없는 명령 줄 (빈 줄 · 환경 줄 · cd · mpirun 한 줄만) · 시도 attempt_r56_1029_225418_2507 · 시험 · 본 제출 없음 |  ‖ sbatch=[] ‖ 돈 잡=[] ‖ 검사한 재개 덱 b73b508611c2 · 시험 덱 038267335faa
+PASS RB28 #SBATCH -n 줄에 다른 지시가 붙음 (-n 1 --nodes=2) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [#SBATCH -n 값] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB29 MPI 실행 줄 -np 숫자 없음 → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [MPI 실행 줄이 정해진 꼴이 아님] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB30 #SBATCH -n 값이 숫자 아님 → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [#SBATCH -n 값] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB10 -n 어긋남 (#SBATCH -n 1 뒤 --ntasks=8 · SLURM 은 뒤 지시 = 8 작업) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [작업 수 · 노드 지시] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB11 같은 #SBATCH 키 두 번 (--time) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [#SBATCH --time= 가 두 번] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB12 #SBATCH 가 명령 줄 뒤 (SLURM 이 안 읽는 자리) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [#SBATCH 줄이 명령 줄 뒤] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB13 환경 줄이 cd 뒤 → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [환경 줄이 cd 뒤] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB14 cd 경로에 .. 마디 (실제 경로는 작업 폴더와 같음) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [cd 경로가 안전한 절대 경로가 아님] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB15 MPI 실행 줄이 cd 앞 → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [MPI 실행 줄이 cd 앞] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB16 CRLF 줄 끝 → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [CR 글자] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB17 --job-name 다름 (큐 검사 이름 밖) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [#SBATCH --job-name= 값] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB18 --output 다름 (도구가 읽는 시험 로그 자리 밖) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [#SBATCH --output= 값] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB20 --qos 값에 공백 → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [안전한 낱말이 아님] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB22 첫 줄 #!/bin/sh → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [첫 줄이 #!/bin/bash 가 아님] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB23 --time 없음 → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [#SBATCH --time= 줄 없음] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB19 작업 폴더 실제 경로에 $ (루트 = 그 폴더를 가리키는 링크 · 헬퍼 cd = 링크 경로 · 러너 cd "…" 안에서 펼쳐질 글자) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [작업 폴더 실제 경로 [] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB21 NP 0 (-n 0) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [NP [0]] · 보고 시험 전 거부 절 (러너 관문)
+PASS RB24 접미사에 $ (-x r5$x · 덱 · 러너 이름에 그대로) → 시험 전 거부 · sbatch 0 회 (시험 · 본 없음 · mpirun 0) · KG50R-F02 이유 [재개 덱 절대 경로 [] · 보고 시험 전 거부 절 (러너 관문)
+PASS RBP1 실제 D2 헬퍼 러너 꼴 · ibb 꼴 별칭 (-r 별칭 · cd 실제 경로) a → 시험 1 · 본 1 · 러너가 실제로 돈 기록 둘 (시험 7001 → 본 9001)
+PASS RBP1 실제 D2 헬퍼 러너 꼴 · ibb 꼴 별칭 (-r 별칭 · cd 실제 경로) b → 시험 잡: cwd = 작업 폴더 실제 경로 · 인자 = mpirun … -in <작업 폴더 실제 경로>/input_kg50_d07_b40_r56t.liggghts · 읽은 바이트 = 검사한 시험 덱
+PASS RBP1 실제 D2 헬퍼 러너 꼴 · ibb 꼴 별칭 (-r 별칭 · cd 실제 경로) c → 본 잡: cwd = 작업 폴더 실제 경로 · 인자 = mpirun … -in <작업 폴더 실제 경로>/input_kg50_d07_b40_r56.liggghts · 읽은 바이트 = 검사한 재개 덱
+PASS RBP1 실제 D2 헬퍼 러너 꼴 · ibb 꼴 별칭 (-r 별칭 · cd 실제 경로) d → 본 · 시험 러너 = 도구 틀 (시험 쪽에서 따로 쓴 기대 바이트와 같음 · 환경 줄 순서 · qos · partition · 시험 --time=01:00:00)
+PASS RBP1 실제 D2 헬퍼 러너 꼴 · ibb 꼴 별칭 (-r 별칭 · cd 실제 경로) e → 실행 입력 영수증 = 다섯 (재개 덱 · 러너 · 시험 덱 · 시험 러너 · 체크포인트) · 러너가 읽는 절대 경로 · 실제 sha256
+PASS RBP1 실제 D2 헬퍼 러너 꼴 · ibb 꼴 별칭 (-r 별칭 · cd 실제 경로) f → 시도 폴더에 헬퍼 러너 원본 바이트 (-n · -np 고치기 전) · 보고에 러너 대조 통과 줄 · 잡 안 신원 줄
+PASS RBP1 실제 D2 헬퍼 러너 꼴 · ibb 꼴 별칭 (-r 별칭 · cd 실제 경로) g → 시험 로그 LMP_IDENTITY 기록 줄 (기록만 · 관문 아님) 의 덱 sha256 = 검사한 시험 덱
+PASS RBP2 기본 헬퍼 러너 꼴 · 반대 별칭 (-r 실제 루트 · cd 별칭 경로) a → 시험 1 · 본 1 · 러너가 실제로 돈 기록 둘 (시험 7001 → 본 9001)
+PASS RBP2 기본 헬퍼 러너 꼴 · 반대 별칭 (-r 실제 루트 · cd 별칭 경로) b → 시험 잡: cwd = 작업 폴더 실제 경로 · 인자 = mpirun … -in <작업 폴더 실제 경로>/input_kg50_d07_b40_r56t.liggghts · 읽은 바이트 = 검사한 시험 덱
+PASS RBP2 기본 헬퍼 러너 꼴 · 반대 별칭 (-r 실제 루트 · cd 별칭 경로) c → 본 잡: cwd = 작업 폴더 실제 경로 · 인자 = mpirun … -in <작업 폴더 실제 경로>/input_kg50_d07_b40_r56.liggghts · 읽은 바이트 = 검사한 재개 덱
+PASS RBP2 기본 헬퍼 러너 꼴 · 반대 별칭 (-r 실제 루트 · cd 별칭 경로) d → 본 · 시험 러너 = 도구 틀 (시험 쪽에서 따로 쓴 기대 바이트와 같음 · 환경 줄 순서 · qos · partition · 시험 --time=01:00:00)
+PASS RBP2 기본 헬퍼 러너 꼴 · 반대 별칭 (-r 실제 루트 · cd 별칭 경로) e → 실행 입력 영수증 = 다섯 (재개 덱 · 러너 · 시험 덱 · 시험 러너 · 체크포인트) · 러너가 읽는 절대 경로 · 실제 sha256
+PASS RBP2 기본 헬퍼 러너 꼴 · 반대 별칭 (-r 실제 루트 · cd 별칭 경로) f → 시도 폴더에 헬퍼 러너 원본 바이트 (-n · -np 고치기 전) · 보고에 러너 대조 통과 줄 · 잡 안 신원 줄
+PASS RBP2 기본 헬퍼 러너 꼴 · 반대 별칭 (-r 실제 루트 · cd 별칭 경로) g → 시험 로그 LMP_IDENTITY 기록 줄 (기록만 · 관문 아님) 의 덱 sha256 = 검사한 시험 덱
+PASS RBR1 시험 제출 뒤 시험 덱이 바뀜 → 시험 1 · 본 제출 0 · 보고에 그 사유 (KG50R-F02 · input_kg50_d07_b40_r56t.liggghts: FAILED)
+PASS RBR2 시험 제출 뒤 시험 러너가 바뀜 → 시험 1 · 본 제출 0 · 보고에 그 사유 (KG50R-F02 · run_kg50_d07_b40_r56t.sh: FAILED)
+PASS RBR3 시험 제출 뒤 체크포인트가 바뀜 → 시험 1 · 본 제출 0 · 보고에 그 사유 (KG50R-F02 · restart_settling_20001.bin: FAILED)
+PASS RBR4 시험 제출 뒤 영수증 파일 끝에 줄 하나 (sha256sum -c 는 그대로 통과하는 꼴) → 시험 1 · 본 제출 0 · 보고에 그 사유 (KG50R-F02 · 실행 입력 영수증)
+PASS RBR5 시험 제출 뒤 영수증 마지막 줄 (체크포인트) 지움 (sha256sum -c 는 남은 넷만 보고 통과하는 꼴) → 시험 1 · 본 제출 0 · 보고에 그 사유 (KG50R-F02 · 실행 입력 영수증)
+51 PASS · 1 FAIL

@@ -1,0 +1,44 @@
+# KG50R-F02 변이 시험 — 고친 도구 resume_ckpt_5f4ffb46.sh 의 새 관문을 하나씩 끄고 RB 묶음 (--only RB)
+# 이름 | 결과 | RB PASS/FAIL | 실패한 시험 | 기대 (표지만)
+M01_shebang | 잡힘 | 51/1 | RB22 | RB22
+M02_sbatch_after_cmd | 잡힘 | 51/1 | RB12 | RB12
+M03_sbatch_unknown_key | 잡힘 | 51/1 | RB10 | RB10
+M04_sbatch_dup_key | 잡힘 | 51/1 | RB11 | RB11
+M05a_jobname_value | 잡힘 | 51/1 | RB17 | RB17
+M05b_output_value | 잡힘 | 51/1 | RB18 | RB18
+M05c_n_value | 잡힘 | 50/2 | RB28 RB30 | RB28 RB30 (sed 를 정해진 꼴만 고치게 바꾼 뒤 닿음)
+M06_token_value | 잡힘 | 51/1 | RB20 | RB20
+M07_env_after_cd | 잡힘 | 51/1 | RB13 | RB13
+M08_cd_count | 잡힘 | 50/2 | RB9 RB9b | RB9b
+M09_cd_safe_path | 잡힘 | 51/1 | RB14 | RB14
+M10_cd_realpath | 잡힘 | 51/1 | RB3 | RB3
+M11_mpirun_count | 잡힘 | 51/1 | RB5 | RB5
+M12_mpirun_before_cd | 잡힘 | 51/1 | RB15 | RB15
+M13_comment_line | 잡힘 | 50/2 | RB4 RB4b | RB4b
+M14_mpirun_any_in | 잡힘 | 50/2 | RB1 RB2 | RB1 RB2
+M15_other_command | 잡힘 | 51/1 | RB6 | RB6
+M16_mpirun_meta_msg | 잡힘 | 50/2 | RB7a RB7b | RB7a RB7b (문구 · 거부는 다른 문구로 남음)
+M16b_meta_msg | 살아남음 | 52/0 | - | 없음 (문구만 · 그 줄은 아래 "허용 목록에 없는 명령 줄" 로 거부)
+M17_required_keys | 잡힘 | 51/1 | RB23 | RB23
+M18_cd_missing | 잡힘 | 51/1 | RB8 | RB8 (문구 · cd 앞 거부는 남음)
+M19_mpirun_missing | 잡힘 | 51/1 | RB25 | RB25
+M20_cr | 잡힘 | 51/1 | RB16 | RB16 (문구)
+M21_nul | 잡힘 | 51/1 | RB26 | RB26
+M22_utf8 | 잡힘 | 51/1 | RB27 | RB27 (문구)
+M23_np_valid | 잡힘 | 51/1 | RB21 | RB21
+M24_wr_safe | 잡힘 | 51/1 | RB19 | RB19
+M25_wr_consistent | 살아남음 | 52/0 | - | 없음 (WR = pwd -P 라 닿지 않음)
+M26_deck_path_safe | 잡힘 | 51/1 | RB24 | RB24
+M27_receipt_two | 잡힘 | 47/5 | RBP1 RBP2 RBR1 RBR2 RBR3 | RBR1 RBR2 RBR3 RBP1e RBP2e
+M28_receipt_memory | 잡힘 | 50/2 | RBR4 RBR5 | RBR4 RBR5
+M29_recheck_off | 잡힘 | 49/3 | RBR1 RBR2 RBR3 | RBR1 RBR2 RBR3
+M30_gate_ng_off | 잡힘 | 19/33 | RB1 RB10 RB11 RB12 RB13 RB14 RB15 RB16 RB17 RB18 RB19 RB2 RB20 RB21 RB22 RB23 RB24 RB25 RB26 RB27 RB28 RB29 RB3 RB30 RB4 RB4b RB5 RB6 RB7a RB7b RB8 RB9 RB9b | 음성 전부 (단계 표지 · 영수증 단계가 대신 막음)
+M31_old_derivation | 잡힘 | 11/41 | RB1 RB10 RB11 RB12 RB13 RB14 RB15 RB16 RB17 RB18 RB19 RB2 RB20 RB21 RB22 RB23 RB24 RB25 RB26 RB27 RB28 RB29 RB3 RB30 RB4 RB4b RB5 RB6 RB7a RB7b RB8 RB9 RB9b RBP1 RBP2 | 음성 전부 · RBP b c d
+M32_in_relative | 잡힘 | 46/6 | RBP1 RBP2 | RBP b c d
+M33_cd_logical_w | 잡힘 | 51/1 | RBP1 | RBP1d (별칭 장면)
+M34_helper_orig_off | 잡힘 | 50/2 | RBP1 RBP2 | RBP f
+M35_identity_off | 잡힘 | 48/4 | RBP1 RBP2 | RBP d f g
+M36_rm_stale_trial | 살아남음 | 52/0 | - | 없음 (새 루트라 옛 시험 러너가 없음 · 위생만)
+M39_loose_rewrite | 잡힘 | 49/3 | RB28 RB29 RB30 | RB28 RB29 RB30 (옛 -n · -np 고침 = 대조 전에 어긋남을 지움)
+M38_receipt_write_check | 살아남음 | 52/0 | - | 없음 (러너 관문이 먼저 막아 영수증 쓰기 실패에 닿지 않음 · 겹 방어)
+# 합계: 변이 41 · 잡힘 37 · 살아남음 4 · 못 만듦 0

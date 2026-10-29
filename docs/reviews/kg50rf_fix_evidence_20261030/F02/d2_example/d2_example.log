@@ -1,0 +1,43 @@
+runnerck 함수 줄 수: 177 · 도구 sha256 5f4ffb46ae70ad3926685f891c25daed721dd37a42bc3a3079a31e6eca4f188e
+헬퍼 러너 엄격 대조 통과 (10-30 KG50R-F02) — #SBATCH 6 · 환경 줄 6 · cd 실제 경로 = 작업 폴더 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/f02/d2sb/lustre/home/yonghoon/dem_test/kg50_d2_b50 → 본 · 시험 러너를 도구 틀로 씀 (cd "작업 폴더 실제 경로" · -in "검사한 덱 절대 경로" · 실행 줄 하나 · LMP_IDENTITY 기록 줄은 기록만)
+runnerck rc=0
+===== run_kg50_d2_b50_r4.sh (모래 상자 앞머리 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/f02/d2sb 를 지운 글 = ibb 에서 쓸 글)
+#!/bin/bash
+#SBATCH --job-name=kg50_d2_b50_r4
+#SBATCH --output=logs/output_kg50_d2_b50_r4_%j.out
+#SBATCH --qos=cpu-60
+#SBATCH --partition=cpu
+#SBATCH -n 4
+#SBATCH --time=5-00:00:00
+
+source ~/.bashrc
+conda activate myenv
+export OMP_NUM_THREADS=1
+export MKL_NUM_THREADS=1
+export OPENBLAS_NUM_THREADS=1
+export NUMEXPR_NUM_THREADS=1
+
+cd "/lustre/home/yonghoon/dem_test/kg50_d2_b50"
+echo "LMP_IDENTITY record-only (not a gate, 10-30 KG50R-F02): lmp_mpi=$(command -v lmp_mpi || echo none) sha256=$(sha256sum 2>/dev/null < "$(command -v lmp_mpi)" | cut -c1-64) deck=/lustre/home/yonghoon/dem_test/kg50_d2_b50/input_kg50_d2_b50_r4.liggghts sha256=$(sha256sum 2>/dev/null < "/lustre/home/yonghoon/dem_test/kg50_d2_b50/input_kg50_d2_b50_r4.liggghts" | cut -c1-64)"
+mpirun --oversubscribe --bind-to none -np 4 lmp_mpi -in "/lustre/home/yonghoon/dem_test/kg50_d2_b50/input_kg50_d2_b50_r4.liggghts"
+===== run_kg50_d2_b50_r4.sh sha256 (모래 상자 글) 93f861873ea369cdcaacacf9ec2fa522447c7b81950ff016d99253463e1afdf8
+===== run_kg50_d2_b50_r4t.sh (모래 상자 앞머리 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/f02/d2sb 를 지운 글 = ibb 에서 쓸 글)
+#!/bin/bash
+#SBATCH --job-name=kg50_d2_b50_r4t
+#SBATCH --output=logs/output_kg50_d2_b50_r4t_%j.out
+#SBATCH --qos=cpu-60
+#SBATCH --partition=cpu
+#SBATCH -n 4
+#SBATCH --time=01:00:00
+
+source ~/.bashrc
+conda activate myenv
+export OMP_NUM_THREADS=1
+export MKL_NUM_THREADS=1
+export OPENBLAS_NUM_THREADS=1
+export NUMEXPR_NUM_THREADS=1
+
+cd "/lustre/home/yonghoon/dem_test/kg50_d2_b50"
+echo "LMP_IDENTITY record-only (not a gate, 10-30 KG50R-F02): lmp_mpi=$(command -v lmp_mpi || echo none) sha256=$(sha256sum 2>/dev/null < "$(command -v lmp_mpi)" | cut -c1-64) deck=/lustre/home/yonghoon/dem_test/kg50_d2_b50/input_kg50_d2_b50_r4t.liggghts sha256=$(sha256sum 2>/dev/null < "/lustre/home/yonghoon/dem_test/kg50_d2_b50/input_kg50_d2_b50_r4t.liggghts" | cut -c1-64)"
+mpirun --oversubscribe --bind-to none -np 4 lmp_mpi -in "/lustre/home/yonghoon/dem_test/kg50_d2_b50/input_kg50_d2_b50_r4t.liggghts"
+===== run_kg50_d2_b50_r4t.sh sha256 (모래 상자 글) 08e8eaca8f91c54a1e40f698d4a76aed81e41e21ecf1af1abd37e5b8c39ab1ee
